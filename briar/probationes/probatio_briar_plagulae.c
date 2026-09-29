@@ -100,6 +100,27 @@ _membrum (
     redde (constans BriarMembrum*)xar_obtinere(membra, i);
 }
 
+/* linea declarationis nominis publici, aut -I si non publicum */
+interior s32
+_nomen_publicum (
+                   Xar* nomina,
+    constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; nomina != NIHIL && i < xar_numerus(nomina); i++)
+    {
+        constans BriarNomenPublicum* n = (constans BriarNomenPublicum*)
+            xar_obtinere(nomina, i);
+
+        si (chorda_aequalis_literis(n->titulus, titulus))
+        {
+            redde (s32)n->linea;
+        }
+    }
+    redde -I;
+}
+
 s32
 principale (vacuum)
 {
@@ -158,6 +179,115 @@ InternamentumChorda* intern;
         CREDO_VERUM (_membrum(membra, 0)->octeti.mensura > ZEPHYRUM);
         CREDO_NON_NIHIL (_membrum(membra, 1)->nexus);
         CREDO_AEQUALIS_I32 (_membrum(membra, 1)->linea_elementi, VIII);
+    }
+
+    imprimere("\n--- Probans membra perfecta: nomina, derivatio, "
+        "visibilia ---\n");
+    si (membra != NIHIL && xar_numerus(membra) == III)
+    {
+        constans BriarMembrum* folium  = _membrum(membra, 0);
+        constans BriarMembrum* media   = _membrum(membra, 1);
+        constans BriarMembrum* ramus   = _membrum(membra, 2);
+                          i32  k;
+                          b32  derivatum = FALSUM;
+
+        /* nomina publica cum linea declarationis; interior privatum.
+         * silva 'declarans': typedef = DECLARATOR (linea nominis, XI),
+         * functio = definitio tota (linea typi redditi, XIX) */
+        CREDO_AEQUALIS_S32 (_nomen_publicum(folium->nomina,
+            "FoliumRes"),
+            XI);
+        CREDO_AEQUALIS_S32 (_nomen_publicum(folium->nomina,
+            "folium_duplicare"), XIX);
+        CREDO_AEQUALIS_S32 (_nomen_publicum(folium->nomina,
+            "folium_secretum"), -I);
+        CREDO_VERUM (_nomen_publicum(media->nomina,
+            "media_quadruplicare") > ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_nomen_publicum(media->nomina,
+            "folium_duplicare"), -I);
+        /* media folium_regiones.h derivavit (derivatio per membra) */
+        per (k = ZEPHYRUM; media->derivata != NIHIL
+            && k < xar_numerus(media->derivata); k++)
+        {
+            si (chorda_aequalis_literis(*(chorda*)xar_obtinere(
+                    media->derivata, k), "folium_regiones.h"))
+            {
+                derivatum = VERUM;
+            }
+        }
+        CREDO_VERUM (derivatum);
+        /* caput parsurae PROPRIUM: sine folio, sine inclusione eius,
+         * sine lineis, sine custode; caput proiecti: omnia manent */
+        CREDO_FALSUM (_continet(piscina, media->caput_parsurae,
+            "} FoliumRes;"));
+        CREDO_VERUM (_continet(piscina, media->caput_parsurae,
+            "media_quadruplicare (s32 x);"));
+        CREDO_FALSUM (_continet(piscina, media->caput_parsurae,
+            "#ifndef"));
+        CREDO_VERUM (_continet(piscina, media->caput, "#ifndef"));
+        CREDO_FALSUM (_continet(piscina, media->caput_parsurae,
+            "#include \"folium_regiones.h\""));
+        CREDO_FALSUM (_continet(piscina, media->caput_parsurae,
+            "#line"));
+        CREDO_VERUM (_continet(piscina, media->caput,
+            "#include \"folium_regiones.h\""));
+        CREDO_VERUM (_continet(piscina, media->caput, "#line"));
+        CREDO_VERUM (_continet(piscina, media->corpus,
+            "media_quadruplicare"));
+        /* arbor TYPO-CORRECTA: parsura secunda media textum folium in
+         * praeludio habet, ergo 'FoliumRes' typus notus - nulla
+         * diagnosis typi ignoti manet (sine textu silva tolerat sed
+         * typum nescit) */
+        {
+            i32 d;
+            i32 ignoti = ZEPHYRUM;
+
+            per (d = ZEPHYRUM; d < xar_numerus(media->nexus); d++)
+            {
+                constans BriarNexusRes* r = (constans BriarNexusRes*)
+                    xar_obtinere(media->nexus, d);
+                insignatus integer q;
+
+                si (   !briar_nexus_regio_plana(r) || r->silva == NIHIL
+                    || r->silva->semantica == NIHIL)
+                {
+                    perge;
+                }
+                per (q = ZEPHYRUM; q < silva_c89_diagnostica_numerus(
+                    r->silva->semantica); q++)
+                {
+                    constans SemanticaDiagnosticum* dg =
+                        silva_c89_diagnosticum_per_indicem(
+                        r->silva->semantica, q);
+                    integer mn = -I;
+                    integer mx = ZEPHYRUM;
+
+                    /* in textu PRINCIPALI solum (praeludium + regio);
+                     * diagnoses capitum corporis aliena sunt */
+                    si (   dg->codex
+                        != (integer)EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS
+                        || dg->nodus == NIHIL)
+                    {
+                        perge;
+                    }
+                    silva_nodus_extensionem(dg->nodus,
+                        r->silva->parsura->fons_princeps, &mn, &mx);
+                    si (mn >= ZEPHYRUM)
+                    {
+                        ignoti = ignoti + I;
+                    }
+                }
+            }
+            CREDO_AEQUALIS_I32 (ignoti, ZEPHYRUM);
+        }
+        CREDO_VERUM (_nomen_publicum(media->nomina, "media_res")
+            > ZEPHYRUM);
+        /* ramus solum folium videt (frater media non importatus) */
+        CREDO_AEQUALIS_I32 (xar_numerus(ramus->visibilia), I);
+        CREDO_VERUM (xar_numerus(ramus->visibilia) == I
+            && strcmp((*(BriarMembrum**)xar_obtinere(ramus->visibilia,
+                0))->titulus, "folium") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(folium->visibilia), ZEPHYRUM);
     }
 
     imprimere("\n--- Probans viam contra plagulam, non cwd ---\n");

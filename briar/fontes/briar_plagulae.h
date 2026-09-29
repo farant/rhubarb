@@ -12,10 +12,16 @@
  * Circulus refutatur - politia, non mechanica: typi per capita genita
  * inter se inclusa non compilarent (spec par. 3.5, nota B6).
  *
+ * Membrum quodque POST dependentia sua perficitur: silva eius cum
+ * membris VISIBILIBUS solis (dependentia transitiva - frater non
+ * importatus non videtur), deinde partitio (briar_membrum_partiri),
+ * nomina publica, textus parsurae cum membris interioribus insertis.
+ *
  * Refutationes (causa + via plagulae importantis + linea elementi):
  * via absens, suffixum non '.thistle', plagula non exsistens, circulus
  * (catena nominata cum remedio), membrum sine regione C plana,
- * regio membri non parsata (causa silvae eius).
+ * titulus iteratus (plagulae genitae eiusdem nominis), regio membri
+ * non parsata aut non partita (causa eius, linea eius).
  */
 
 #ifndef BRIAR_PLAGULAE_H
@@ -28,6 +34,7 @@
 #include "internamentum.h"
 #include "materia_nodus.h"
 #include "silex.h"
+#include "briar_silva.h"
 
 /* membrum aedificationis */
 nomen structura {
@@ -39,6 +46,15 @@ nomen structura {
                                              * texta */
      constans character* via_importantis;  /* primus qui adduxit */
                     i32  linea_elementi;
+    /* post dependentia perfecta (silva cum visibilibus sola): */
+                 chorda caput;            /* include/<t>_regiones.h */
+                 chorda caput_parsurae;   /* sine lineis, membra
+                                             * interiora inserta */
+                 chorda  corpus;           /* fontes/<t>_regiones.c */
+                    Xar* derivata;         /* chorda: capita derivata */
+                    Xar* nomina;           /* BriarNomenPublicum */
+                    Xar* visibilia;        /* BriarMembrum*: dependentia
+                                             * transitiva, sola visa */
 } BriarMembrum;
 
 /* refutatio collectionis: causa + ubi (plagula et linea elementi) */
@@ -60,5 +76,13 @@ briar_membra_colligere (
       constans SilexFons*  fons,
                      Xar** membra,
         BriarMembraCausa*  causa);
+
+/* tabula derivationis ex membris (Xar de BriarMembrum): nomina
+ * publica -> caput, caput -> textus parsurae (briar_silva). Radix
+ * omnia membra videt (ea ipsa adduxit). */
+BriarSilvaMembra*
+briar_membra_silvae (
+    Piscina* piscina,
+        Xar* membra);
 
 #endif /* BRIAR_PLAGULAE_H */

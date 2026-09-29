@@ -81,6 +81,30 @@ briar_fabricare (
     constans BriarFabricaOptiones* optiones,
                            chorda  octeti);
 
+/* PARTITIO SOLA membri bibliothecae (spec par. 3.5): regiones C
+ * PLANAE (briar_nexus_regio_plana) partitae ut principales, SINE lege
+ * principali (bibliotheca principale non habet; si habet, numquam
+ * praebetur). caput = include/<t>_regiones.h (cum lineis, proiecto);
+ * caput_parsurae = idem SINE lineis (praeludium importantis - silva
+ * '#line' recusat); corpus = fontes/<t>_regiones.c; derivata = capita
+ * derivata (chorda). Nexus silva textus esse debet. */
+nomen structura {
+       b32  successus;
+    chorda  causa;
+       i32  linea_causae;
+    chorda  caput;
+    chorda  caput_parsurae;
+    chorda  corpus;
+       Xar* derivata;
+} BriarMembrumPartitum;
+
+BriarMembrumPartitum
+briar_membrum_partiri (
+                 Piscina* piscina,
+                     Xar* nexus,
+      constans character* via,
+      constans character* titulus);
+
 /* VISIO (par. 4.9): paginam litteratam in proiectum VITREUM addere -
  * plagula genita assets/TITULUS.visio.html et nomen eius in lista
  * _files plagulae assets/TITULUS.toml. Post briar_fabricare, ante

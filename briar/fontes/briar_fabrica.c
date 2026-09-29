@@ -137,6 +137,12 @@ _lineam_appendere (
 {
     character b[32];
 
+    /* via NIHIL: textus sine lineis (caput membri pro parsura
+     * importantis - silva '#line' recusat; spec par. 3.5) */
+    si (via == NIHIL)
+    {
+        redde;
+    }
     sprintf(b, "#line %d \"", (integer)linea);
     chorda_aedificator_appendere_literis(a, b);
     chorda_aedificator_appendere_literis(a, via);
@@ -791,12 +797,22 @@ _caput_fingere (
     chorda_aedificator_appendere_literis(a, titulus);
     chorda_aedificator_appendere_literis(a,
         "_regiones.h - a briar genitum ex ");
-    chorda_aedificator_appendere_literis(a, via);
+    chorda_aedificator_appendere_literis(a, via != NIHIL ? via
+        : "(textus parsurae)");
     chorda_aedificator_appendere_literis(a,
-        ": directivae, typi, prototypi regionum */\n#ifndef ");
-    chorda_aedificator_appendere_literis(a, custos);
-    chorda_aedificator_appendere_literis(a, "\n#define ");
-    chorda_aedificator_appendere_literis(a, custos);
+        ": directivae, typi, prototypi regionum */");
+    /* textus parsurae (via NIHIL) SINE custode: unitates membrorum
+     * in praeludio SEMEL ponuntur, dependentibus primum (briar_silva
+     * _parsare) - custos supervacuus. (Non quia semantica intra
+     * '#ifndef' caeca sit: planta custodis restituti typum notum
+     * reliquit, 2026-09-29.) */
+    si (via != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(a, "\n#ifndef ");
+        chorda_aedificator_appendere_literis(a, custos);
+        chorda_aedificator_appendere_literis(a, "\n#define ");
+        chorda_aedificator_appendere_literis(a, custos);
+    }
     /* capita implicita: latina.h + trias vulgaris (stdio/stdlib/string)
      * - plagula thistle scriptum est; imprimere sine stdio.h non
      * compilat */
@@ -811,9 +827,12 @@ _caput_fingere (
     _unitates_appendere(a, part->directivae, via);
     _unitates_appendere(a, part->typi, via);
     _unitates_appendere(a, part->prototypi, via);
-    chorda_aedificator_appendere_literis(a, "#endif /* ");
-    chorda_aedificator_appendere_literis(a, custos);
-    chorda_aedificator_appendere_literis(a, " */\n");
+    si (via != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(a, "#endif /* ");
+        chorda_aedificator_appendere_literis(a, custos);
+        chorda_aedificator_appendere_literis(a, " */\n");
+    }
     redde chorda_aedificator_finire(a);
 }
 
@@ -896,6 +915,56 @@ _probationem_fingere (
     _textum_mappatum_appendere(a, probatio->contextus, probatio,
         ZEPHYRUM, via);
     redde chorda_aedificator_finire(a);
+}
+
+BriarMembrumPartitum
+briar_membrum_partiri (
+                 Piscina* piscina,
+                     Xar* nexus,
+      constans character* via,
+      constans character* titulus)
+{
+    BriarMembrumPartitum m;
+     BriarFabricaFructus f;
+           BriarPartitio part;
+                     i32 i;
+
+    memset(&m, 0, magnitudo(m));
+    memset(&f, 0, magnitudo(f));
+    memset(&part, 0, magnitudo(part));
+    part.directivae  = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.typi        = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.prototypi   = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.corpora     = xar_creare(piscina, (i32)magnitudo(BriarUnitas));
+    part.derivata    = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; nexus != NIHIL && i < xar_numerus(nexus); i++)
+    {
+        constans BriarNexusRes* r = (constans BriarNexusRes*)
+            xar_obtinere(nexus, i);
+
+        si (!briar_nexus_regio_plana(r))
+        {
+            perge;
+        }
+        si (   r->silva == NIHIL || r->silva->parsura == NIHIL
+            || !_regionem_partiri(piscina, r, &part, &f))
+        {
+            m.causa = f.causa.mensura > ZEPHYRUM ? f.causa
+                : chorda_ex_literis("bibliotheca: regio membri non"
+                    " parsata", piscina);
+            m.linea_causae = f.linea_causae > ZEPHYRUM ? f.linea_causae
+                : r->linea_initium;
+            redde m;
+        }
+    }
+    /* principale membri (si adest) in part.princeps manet: numquam
+     * praebetur (spec par. 3.5) */
+    m.caput           = _caput_fingere(piscina, titulus, via, &part);
+    m.caput_parsurae  = _caput_fingere(piscina, titulus, NIHIL, &part);
+    m.corpus          = _corpus_fingere(piscina, titulus, via, &part);
+    m.derivata        = part.derivata;
+    m.successus       = VERUM;
+    redde m;
 }
 
 
