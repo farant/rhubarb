@@ -1193,6 +1193,7 @@ latificatio
 layer
 layers
 layout
+lazy
 lb
 lbrace
 lbracket
@@ -1482,6 +1483,7 @@ not
 nota1
 nota2
 nota3
+now
 np
 npa
 nprocessors

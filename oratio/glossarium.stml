@@ -799,8 +799,6 @@
   <vocabulum lemma="dlclose" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam claudere"/>
   <vocabulum lemma="dlerror" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: nuntius erroris ultimi"/>
   <vocabulum lemma="rtld" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: praefixum modorum RTLD_* (run-time link editor)"/>
-  <vocabulum lemma="lazy" lingua="anglica" classis="ignotum-permissum" nota="SOLUM in RTLD_LAZY (POSIX dlfcn.h)"/>
-  <vocabulum lemma="now" lingua="anglica" classis="ignotum-permissum" nota="SOLUM in RTLD_NOW (POSIX dlfcn.h)"/>
 
   <vocabulum lemma="incb" lingua="anglica" classis="ignotum-permissum" nota="Unicode Indic_Conjunct_Break (InCB): proprietas DerivedCoreProperties, UAX #29 GB9c (runae U4)"/>
 
