@@ -1,7 +1,10 @@
 # toml_arbor Plan — TOML 1.0 on materia (seventh client)
 
-**STATUS: OPEN 2026-09-28** — written from the approved spec; no task
-executed yet.
+**STATUS: CLOSED 2026-09-28** — Q1–Q14 executed in one day (Q7 → Q7a/Q7b
+and Q11 → Q11a/Q11b re-sliced by their measurements; Q13's corpus
+widening pulled into Q12, Fran option A). Every task's "Executed" note
+is the build history; spec §X is the as-built record; orientation in
+`toml/CLAUDE.md`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans
 > (inline, per house convention — no subagents) to implement this plan
@@ -1382,6 +1385,19 @@ toml_arbor.worklog.md` (opened at the first find during Q3–Q13),
   oracles and where they live), `MEMORY.md` line, `materia-fork.md`
   gains the seventh client.
 - [ ] **Step 5: Commit** — the files above, `[]`.
+
+**Executed 2026-09-28.** Measured first: the arc's commits touch no
+file in `materia/fontes` or `materia/grammatica` (substrate changes:
+none); `./materia/shim_probare.sh` NO LONGER EXISTS — the shim retired
+2026-09-25 (5f6f7465) and the silva oracle took its role, so the count
+was taken from its successor: `./materia/oraculum_probare.sh` sanum
+(468 files, pin 7a4847b0), materia suite 14/14; toml 13/13 suites,
+14,267 assertions. `toml/CLAUDE.md` already held the per-task sections
+(written as each task closed); added: status, totality/twin, briar,
+the gate table, laws T3–T8, birth lessons. Spec §X "As built" (deltas +
+AUDIENDA answered); phase-log RELATIO; worklog closed; ledger …TXF →
+impletum with ONE tail desideratum (TOML 1.1, writing TOML); memory:
+`toml-client.md` closed, `materia-fork.md` gains the seventh client.
 
 ---
 

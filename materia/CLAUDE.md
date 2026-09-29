@@ -12,8 +12,9 @@ syntax substrate is, the matter a grammar informs.
 **The fork is SEALED (2026-09-25, phase 5 T13):** silva consumes
 materia's substrate and its gates run green through it (the M3 law
 below, met). The freeze on silva is lifted; generic substrate work
-lands HERE and owes every client suite (css, md, oratio, html, crusta)
-plus silva's (silva, oracle, M3 — `./tools/portae_debitae.sh` knows).
+lands HERE and owes every client suite (css, md, oratio, html, crusta,
+toml) plus silva's (silva, oracle, M3 — `./tools/portae_debitae.sh`
+knows).
 Design: `project-specs/materia-spec.md`, decree `01M12FJR`; migration
 plan `project-specs/silva-migratio-plan.md`.
 

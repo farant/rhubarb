@@ -1,8 +1,12 @@
 # toml — TOML 1.0 as a materia client (seventh)
 
-**Status: building** (plan `project-specs/toml-arbor-plan.md`, Q1–Q12 done;
-Q7 was re-sliced: Q7a scalars, Q7b tables; Q8 oracle, Q9 tomllib, Q10 API, Q11 totality + computus, Q12 migration done).
-Spec: `project-specs/toml-arbor-spec.md` (decisions T1–T11).
+**Status: PLAN CLOSED 2026-09-28** (plan `project-specs/toml-arbor-plan.md`,
+Q1–Q14 in one day; Q7 and Q11 re-sliced by their measurements; every
+task's "Executed" note is the build history). Spec:
+`project-specs/toml-arbor-spec.md` (decisions T1–T11; **§X = as built,
+governs where the body differs**). Phase-log: `materia/phase-log.md`,
+2026-09-28 toml entries. Desideratum …TXF fulfilled; the tail is one
+desideratum (TOML 1.1, writing). Substrate changes: **none**.
 
 A total, byte-exact TOML tree on materia, a cooked view of typed values,
 every error located; proven by three oracles. Replaces `lib/toml.c`
@@ -144,6 +148,90 @@ project, silex resolves headers in client roots
 `toml/fontes`) and briar's corpus embeds them
 (`tools/corpus_infixum.sh`). Adding a file to `toml/fontes` changes
 what every generated project vendors.
+
+## Totality and the twin (Q11)
+
+`probatio_toml_totalitas` (6,136 generated cases: random bytes,
+mutation, truncation, CRLF, nesting, NUL): never crashes, emission ==
+source, a non-sana parse carries a diagnostic, cooking with and without
+the parsura agrees. Depth 100 000 is linear: the builder keeps a
+running bracket count (`unci`, changed only in `_impellere` /
+`_depellere`), cooking is a work stack (`Opus`), and a clean parse
+skips materia's quadratic derivation. materia's own limits (emission
+and STML at 100 000) are pinned `RUIT_CUM`, park …FAD8 — not ours to
+fix. `toml_computus` is the benchmark twin (crusta P10 shape), golden
+`probationes/fixa/computus/basis.tsv` over three frozen toml-test files.
+
+## briar (Q13)
+
+A `.thistle` uses `toml.h` with no `#include` — derived like any house
+header. The client roots are ONE list in two homes:
+`SILEX_RADICES_CLIENTIUM` (public, `include/silex.h`) and
+`RADICES_CLIENTIUM` (`tools/corpus_infixum.sh`); `probatio_silex`
+fails if they drift. `-bibliothecae`, `-bibliotheca toml -functiones`
+and `-amalgama` search `include/` then the roots. Fixture
+`briar/probationes/fixa/thistle/toml_config.thistle` (fabrica test,
+fumus XXI). **A new file-local type in `toml/fontes` must not share a
+name with any PUBLIC house name** — the amalgam skips such names when
+renaming privates and they collide (`Gradus`, found in Q13).
+
+## Gates
+
+| gate | asserts |
+|---|---|
+| `registrum` | generated tables == declaration; every locus named |
+| `lector` | modes, one token per byte, number-like classification |
+| `arbor` | builder laws, recovery, `TomlParsura` counts |
+| `corpus` | byte law on toml-test 679, house 12, wild 1,794 (sha256 checked) |
+| `stml` | two write-read cycles byte-equal, STRUCTURALIS + FIDELITAS, positions |
+| `canon` | 70 rules over every document, seal `b7568363`, drift both ways |
+| `scalaris` | decoding and every scalar diagnostic at its byte |
+| `coctum` | table modes, 8 structural codes with first definition, order |
+| `oraculum` | toml-test: 205/205 valid equal, 474/474 invalid rejected (pinned) |
+| `differentia` | tomllib: 679/679; wild zero disagreements, 1 divergence named |
+| `api` | `toml.h` incl. the 16 re-homed cases of the old library |
+| `totalitas` | never crash, emission == source, depth 100 000 in time |
+| `computus` | twin columns against `basis.tsv` |
+
+13 suites, 14,267 assertions (2026-09-28). The root `silex` and briar
+gates (`briar`, `briar-fumus`) also cover the client since Q12/Q13;
+`portae_debitae` owes `toml` for any `toml/fontes` change.
+
+## Laws (spec §0, as built)
+
+- T3 — the lector is a function of (mode CLAVIS/VALOR, position) plus
+  two switches the builder sets (depth; open statement); nothing is
+  relabelled afterwards.
+- T4 — every byte lands in the tree; `malum` recovers at the newline
+  (outside brackets) or `,`/closer (inside); every error is reported.
+- T5 — semantic rules live in cooking; one owner per diagnostic class
+  (scalar: `toml_scalaria_iudicare`; structure: `toml_coctum`; syntax:
+  derived, skipped when sana).
+- T6 — lookup paths are TOML keys lexed by the lector.
+- T7 — getters return VERUM only if present AND of that type; FALSUM
+  leaves the output untouched.
+- T8 — tables keep insertion order; every cooked value points at its
+  node (`TomlValor.nodus`, `.definitio` for the first definition).
+
+## Birth lessons
+
+- Count after fetching: a web summary said toml-test had 256/512
+  cases; the fetched list had 205/474.
+- Third-party corpora live as a MANIFEST (sha256 + path), and so does
+  the golden derived from them — a JSON golden would smuggle the
+  content back in.
+- "Iterative" is not "linear": measure time at depth 100 000, not only
+  survival (the builder walked the frame stack per token).
+- A gate that COUNTS hides a missing diagnostic; assert "carries a
+  diagnostic", not "not sana" (unterminated strings had none).
+- `tabula_dispersa` refuses a zero-length key; TOML's `""` lives
+  outside the index.
+- A gate that stays green under a plant is mute for that change
+  (`aedilis` never saw `toml/fontes`; `generata` did).
+- Retiring a library means finding every place that VENDORS it: silex
+  projects and briar's corpus carried `lib/toml.c`.
+- An `Xar` is segmented: never hand `xar_obtinere(x, 0)` on as a flat
+  array (briar's suggestions, Q13).
 
 ## Currere
 
