@@ -260,9 +260,8 @@ resize torture) — human-run via spectaculum.sh.
 
 ## 6. Named deferrals (carried from v1, unchanged owners)
 
-wcwidth/wide/combining (v2+; packed signum doesn't foreclose);
-DECSTBM scroll regions (evidence-gated on fructus); exposed-fd
-event loop (when saltuarius needs async); kitty protocol / curly
+~~wcwidth/wide/combining~~ (undeferred, see below); DECSTBM scroll
+regions (evidence-gated on fructus); exposed-fd event loop (when saltuarius needs async); kitty protocol / curly
 underlines / 256-quantizing emit; hover motion (`?1003`, no
 consumer yet); widgets = second library, permanently.
 
@@ -271,6 +270,17 @@ drag events (`?1002`, `TESSERA_MUS_TRACTUS`), synchronized output
 (`?2026`), bracketed paste (`?2004`, `TESSERA_EVENTUM_GLUTINUM`). The
 mode strings live in `fontes/tessera_modi.h` under a structural
 law-of-pairs probatio.*
+
+*Undeferred 2026-09-29 (runae U5–U7, `project-specs/unicode-width-graphemes-plan.md`):
+wide and combining cells. Widths come from `runae` (UCD 15.1, Ghostty's
+rule): `TESSERA_ORNAMENTUM_LATUM` / `_CONTINUATIO` ride `ornamenta`, as §1.3
+foresaw; grapheme clusters per D7 = a per-opus interned cluster table
+(`TESSERA_ORNAMENTUM_GRAPHEMA`, ID in `signum`); CUP containment after every
+wide or multi-rune cluster; `TesseraPolitica` from the environment
+(`tessera_politica_ambitus`: SIMPLEX under Apple_Terminal); and
+`tessera_graphema_ponere` places one drawable unit (the primitive saltuarius
+and folium paint with). Line breaking beyond folium's naive wrapper, bidi and
+shaping stay deferred — runae's next bricks, when something pulls them.*
 
 ## 7. Risks & notes register
 

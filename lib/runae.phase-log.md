@@ -421,3 +421,46 @@ terminal's:
 The "not flagged" rows are properties of the naive wrapper that a
 reader who does not read those scripts would not catch by eye; they are
 listed so the table does not claim more than was checked.
+
+## U8 — RELATIO (2026-09-29)
+
+**What was built (U1–U7, rhubarb-secunda → main).** `runae`, the text
+stack's first brick, on top of `utf8`:
+- per-rune width from pinned UCD 15.1 tables (generator + `-probare`,
+  generata gate VI), Ghostty's rule read from its code;
+- UAX #29 grapheme breaks with caller-held state, Ghostty's cluster
+  width, and a width POLICY (GRAPHEMATUM / SIMPLEX for Terminal.app);
+- text-level measurement: `runae_unitas_proxima` (the one drawable-unit
+  rule), `runae_latitudo_textus`, `runae_columnam_quaerere`.
+Consumers: tessera (wide cells, the per-opus cluster table, containment,
+`tessera_graphema_ponere`), excerptum (caret by columns), saltuarius
+(cursor and painting by columns), folium (the corpus viewer).
+
+**How it was checked.** ICU 74.2 by dlopen: 0 width differences over all
+1,114,112 codepoints, 0 boundary differences on all 35 Lapide samples
+(both as committed aurum files); GraphemeBreakTest 1187/1187; OpenTUI's
+map explained difference by difference; corpus-wide properties that
+compare independent walkers step by step; cell goldens; Fran's looks in
+Ghostty and Terminal.app at U5, U5b, U5c, U6d and U7b. Every rule shipped
+with plants caught by name; the mute ones were recorded and redone.
+
+**What the looks and gates found that the plan did not predict.**
+- Terminal.app does not join ZWJ families (→ SIMPLEX) but DOES widen a
+  spacing mark (the Mc rule was refuted and removed).
+- A spacing mark makes Hindi clusters 2 wide, so "wide" is a bad proxy
+  for "ideograph" when wrapping (folium's first golden).
+- saltuarius was erasing wide characters since U5 (confirmed red).
+- Ghostty recolours a reordered cluster under a block cursor.
+- The merge found main's amalgams stale and our U3 glossary permissions
+  breaking oratio's English accuracy pin.
+
+**Tool debts filed** (ledger): silva's nm gate blind to claimed data
+(…8RWX1), examen-corpus judging a missing binary (…5E5DC), the owed-gates
+tool writing genesis into a worktree ledger (…VSY50E, hit on …MKMD2),
+the aedilis gate depending on a gitignored input (…DTNTN8), amalgam
+drift (hit on …G73P), glossary permissions leaking into English prose
+(…XCMFG).
+
+**Deferred, on purpose:** line breaking (UAX #14), bidi, normalization,
+Thai dictionary breaks, kinsoku — each a later brick when something
+pulls it. The findings table (U7b) says which limits are ours.
