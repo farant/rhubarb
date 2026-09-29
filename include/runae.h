@@ -103,6 +103,17 @@ runae_graphema_ex_politica (
  * (runae_graphema_ex_politica). runae_latitudo runae SOLIUS non
  * mutatur (regimen ibi 0 manet: verum Unicode). */
 
+/* Unitas pingenda PRIMA [initium, finis) (runae U7a): reddit finem
+ * eius, latitudinem (0-II) in *latitudo. Ambulatio unitatum per hanc
+ * vocationem = ambulatio functionum infra. initium >= finis: initium,
+ * latitudo 0. */
+constans i8*
+runae_unitas_proxima (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32* latitudo);
+
 /* Columnae textus [initium, finis): summa latitudinum unitatum. */
 i32
 runae_latitudo_textus (

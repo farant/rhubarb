@@ -336,3 +336,25 @@ functions); painting goes one unit at a time through
 artefact (pre-base vowel sign under a block cursor) recorded as the
 terminal's. The ledger item …VRTHANR is now satisfied in all three named
 consumers (excerptum, tessera, saltuarius); it closes in U8.
+
+## U7a — the unit walk becomes public (2026-09-29)
+
+**INTENTIO (Fran approved).** folium's wrapper must walk text one unit at
+a time (end + width). The rule lived privately in `_unitas_pingenda`;
+without it public, folium would be the THIRD re-implementation (tessera
+keeps its copy on purpose — the corpus cross-check guards it; saltuarius
+pre-measured with `runae_graphema_ex_politica` + its own control check,
+which measures an overlong sequence as 1 column where tessera draws 3
+`?`). So: `runae_unitas_proxima(initium, finis, politica, &latitudo)`,
+same shape as `runae_graphema_ex_politica`; `runae_latitudo_textus` and
+`runae_columnam_quaerere` are rebuilt on it (no behaviour change);
+saltuarius's pre-measure uses it (the malformed-input case fixed).
+
+**Red first** (stub): 9 unit cases + the corpus property, which now
+compares every step of runae's walk with the test's independent walker
+(35 languages × 2 policies). **Green** 258/258. **Plants (compiling),
+caught by name:** control rule off (2 cases + 76 corpus steps),
+invalid-per-byte off (the overlong case), policy ignored (the SIMPLEX
+family; the first attempt did not apply — the formatter had wrapped the
+line — and was redone). Amalgams: the function is trimmed as unused in
+both; `.c` byte-identical, VERIFICATUM + idempotent.

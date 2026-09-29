@@ -33,9 +33,9 @@ saltuarius_pen_unitatem (
         *latitudo = I;
         redde cursor + I;
     }
-    /* latitudo PRIUS mensurata (graphema; invalidus = I, ut tessera
-     * pingit): unitas lata extra pannum non ponitur */
-    (vacuum)runae_graphema_ex_politica(cursor, finis,
+        /* latitudo PRIUS mensurata (unitas pingenda, ut tessera pingit):
+     * unitas lata extra pannum non ponitur */
+    (vacuum)runae_unitas_proxima(cursor, finis,
         saltuarius_pen_politica(opus), latitudo);
     si (*latitudo > reliqua)
     {

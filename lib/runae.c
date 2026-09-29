@@ -294,26 +294,32 @@ runae_graphema_proximum (
 
 /* UNITAS PINGENDA (runae.h): octetus C0/DEL aut invalidus = octetus
  * unus, I columna (signum substitutum pingitur); ceterum graphema */
-interior constans i8*
-_unitas_pingenda (
-      constans i8* cursor,
+constans i8*
+runae_unitas_proxima (
+      constans i8* initium,
       constans i8* finis,
     RunaePolitica  politica,
               i32* latitudo)
 {
-    constans i8* post = cursor;
+    constans i8* post = initium;
 
-    si (*cursor < 0x20 || *cursor == 0x7F)
+    *latitudo = ZEPHYRUM;
+    si (initium == NIHIL || initium >= finis)
+    {
+        redde initium;
+    }
+    si (*initium < 0x20 || *initium == 0x7F)
     {
         *latitudo = I;
-        redde cursor + I;
+        redde initium + I;
     }
     si (utf8_decodere(&post, finis) < ZEPHYRUM)
     {
         *latitudo = I;
-        redde cursor + I;
+        redde initium + I;
     }
-    redde runae_graphema_ex_politica(cursor, finis, politica, latitudo);
+    redde runae_graphema_ex_politica(initium, finis, politica,
+        latitudo);
 }
 
 i32
@@ -328,8 +334,9 @@ runae_latitudo_textus (
 
     dum (cursor < finis)
     {
-        cursor  = _unitas_pingenda(cursor, finis, politica, &latitudo);
-        summa   += latitudo;
+        cursor = runae_unitas_proxima(cursor, finis, politica,
+            &latitudo);
+        summa += latitudo;
     }
     redde summa;
 }
@@ -348,7 +355,8 @@ runae_columnam_quaerere (
 
     dum (cursor < finis)
     {
-        constans i8* post = _unitas_pingenda(cursor, finis, politica,
+        constans i8* post = runae_unitas_proxima(cursor, finis,
+            politica,
             &latitudo);
 
         si (columna < summa + latitudo)

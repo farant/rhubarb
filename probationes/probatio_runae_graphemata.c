@@ -249,6 +249,35 @@ hic_manens constans CasusColumnae CASUS_COLUMNARUM[] = {
       "y post familiam SIMPLEX" }
 };
 
+/* runae_unitas_proxima (U7a): octeti consumpti et latitudo */
+nomen structura {
+    constans character* octeti;
+         RunaePolitica  politica;
+                   i32  consumpti;
+                   i32  latitudo;
+    constans character* causa;
+} CasusUnitatis;
+
+hic_manens constans CasusUnitatis CASUS_UNITATUM[] = {
+    { "ab", RUNAE_POLITICA_GRAPHEMATUM, I, I, "a" },
+    { "\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, III, II,
+      "latum" },
+    { "e\xCC\x81" "x", RUNAE_POLITICA_GRAPHEMATUM, III, I,
+      "e + acutum" },
+    { "\x01" "b", RUNAE_POLITICA_GRAPHEMATUM, I, I, "regimen C0" },
+    { "\r\n", RUNAE_POLITICA_GRAPHEMATUM, I, I,
+      "CR: octetus unus (non CR LF)" },
+    { "\xE0\x80\x80", RUNAE_POLITICA_GRAPHEMATUM, I, I,
+      "series nimis longa: octetus unus" },
+    { "\xCC\x81" "a", RUNAE_POLITICA_GRAPHEMATUM, II, ZEPHYRUM,
+      "signum solum: latitudo 0" },
+    { FAMILIA "y", RUNAE_POLITICA_GRAPHEMATUM, XVIII, II,
+      "familia GRAPHEMATUM" },
+    { FAMILIA "y", RUNAE_POLITICA_SIMPLEX, VII, II,
+      "familia SIMPLEX: vir + ZWJ" },
+    { "", RUNAE_POLITICA_GRAPHEMATUM, ZEPHYRUM, ZEPHYRUM, "vacuum" }
+};
+
 /* Ambulator INDEPENDENS unitatum pingendarum (regula runae.h hic
  * iterum dicta, non vocata): reddit finem unitatis, latitudo in *lat */
 interior constans i8*
@@ -295,6 +324,27 @@ _columnas_corporis (
         constans i8* post = _unitas_ambulatoris(cursor, finis, politica,
             &lat);
 
+        /* runae_unitas_proxima gradum eundem facit (U7a) */
+        {
+                    i32  lat_runae;
+            constans i8* post_runae = runae_unitas_proxima(cursor,
+                finis, politica, &lat_runae);
+
+            si (post_runae != post || lat_runae != lat)
+            {
+                si (fracturae < III)
+                {
+                    imprimere("  FRACTA: %s: unitas ad %u: runae %d "
+                        "octeti lat %u, ambulator %d lat %u\n", lingua,
+                        (insignatus integer)(cursor - initium),
+                        (integer)(post_runae - cursor),
+                        (insignatus integer)lat_runae,
+                        (integer)(post - cursor),
+                        (insignatus integer)lat);
+                }
+                fracturae++;
+            }
+        }
         si (lat > ZEPHYRUM && (unitas % XVI) == ZEPHYRUM)
         {
                     i32  col_inventa;
@@ -547,6 +597,30 @@ principale (vacuum)
                     c->causa, (insignatus integer)lat,
                     (insignatus integer)c->latitudo);
             }
+            CREDO_AEQUALIS_I32 (lat, c->latitudo);
+        }
+        per (j = ZEPHYRUM;
+             j < (i32)(magnitudo(CASUS_UNITATUM)
+                       / magnitudo(CASUS_UNITATUM[0]));
+             j++)
+        {
+            constans CasusUnitatis* c        = &CASUS_UNITATUM[j];
+                       constans i8* initium  = (constans i8*)c->octeti;
+                               i32  lat      = XCIX;
+                       constans i8* post     = runae_unitas_proxima(
+                           initium, initium + strlen(c->octeti),
+                           c->politica, &lat);
+
+            si (   (i32)(post - initium) != c->consumpti
+                || lat                   != c->latitudo)
+            {
+                imprimere("  FRACTA: unitas %s: consumpti %d latitudo "
+                    "%u, exspectati %u et %u\n", c->causa,
+                    (integer)(post - initium), (insignatus integer)lat,
+                    (insignatus integer)c->consumpti,
+                    (insignatus integer)c->latitudo);
+            }
+            CREDO_AEQUALIS_I32 ((i32)(post - initium), c->consumpti);
             CREDO_AEQUALIS_I32 (lat, c->latitudo);
         }
         per (j = ZEPHYRUM;
