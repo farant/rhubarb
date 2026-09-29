@@ -393,6 +393,51 @@ InternamentumChorda* intern;
         }
     }
 
+    imprimere("\n--- Probans collectionem LEVEM (clavis ante parsuram)"
+        " ---\n");
+    {
+        Xar* nexus_r = _nexum_texere(piscina, intern, fons,
+            FIXA "radix.thistle");
+                     Xar* levia   = NIHIL;
+        BriarMembraCausa  cl;
+
+        CREDO_NON_NIHIL (nexus_r);
+        CREDO_VERUM (nexus_r != NIHIL && briar_membra_colligere_levia(
+            piscina, FIXA "radix.thistle", nexus_r, intern, &levia,
+            &cl));
+        CREDO_NON_NIHIL (levia);
+        si (   levia              != NIHIL && membra != NIHIL
+            && xar_numerus(levia) == xar_numerus(membra))
+        {
+            i32 k;
+
+            /* ordo idem (post-ordo), tituli idem, octeti iidem */
+            per (k = ZEPHYRUM; k < xar_numerus(levia); k++)
+            {
+                CREDO_VERUM (strcmp(_membrum(levia, k)->titulus,
+                    _membrum(membra, k)->titulus) == ZEPHYRUM);
+                CREDO_VERUM (chorda_aequalis(_membrum(levia, k)->octeti,
+                    _membrum(membra, k)->octeti));
+                /* levis: silva nulla, partitio nulla */
+                CREDO_NIHIL (_membrum(levia, k)->nomina);
+            }
+            /* clavis EADEM per constructionem */
+            CREDO_VERUM (strcmp(briar_membra_stampa(piscina, "s",
+                levia), briar_membra_stampa(piscina, "s", membra))
+                == ZEPHYRUM);
+        }
+        alioquin
+        {
+            CREDO_VERUM (FALSUM);   /* numerus membrorum differt */
+        }
+        /* refutationes eaedem ante silvam: circulus */
+        CREDO_FALSUM (briar_membra_colligere_levia(piscina,
+            FIXA "circulus_a.thistle", _nexum_texere(piscina, intern,
+            fons, FIXA "circulus_a.thistle"), intern, &levia, &cl));
+        CREDO_VERUM (_continet(piscina, cl.causa,
+            "partem communem in plagulam tertiam move"));
+    }
+
     imprimere("\n--- Probans circulum ---\n");
     CREDO_NIHIL (_colligere(piscina, intern, fons,
         FIXA "circulus_a.thistle", &causa));

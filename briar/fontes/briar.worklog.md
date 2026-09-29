@@ -1117,3 +1117,30 @@ functions would be defined in every unit including it; today it fails
 `-Wmissing-prototypes`. Needs per-branch partition (prototypes under
 the same conditional in the header, bodies under it in the .c).
 
+## 2026-09-29 — key before parse (the fast cache hit)
+
+Measured on a scratch copy of lapide's textus.thistle (now 9,668 lines):
+a cache hit cost 0.75 s, the document tree alone < 10 ms, `-partes`
+(tree + silva + fabrica) 0.80 s - a hit spent everything re-deriving a
+project it was about to discard. With the embedded corpus every key
+input is known from the tree, so the fast path computes the key through
+the SAME function as the full path (`_directorium_clavis`, extracted
+from main) and execs. Members come from a LIGHT walk (`leve` flag in
+MembraAmbulatio: registered right after their dependencies, before
+silva) - the gate asserts its stamp equals the full walk's. Result:
+0.00 s per hit (0.15 s the first, cold time). Key identity checked by
+`-struere` vs `-struere -iterum` for textus, radix, salve_vitreum,
+salve - all equal, so no one's cache moved.
+
+The gate is NOT timing. My first stage XXIV compared a generated
+5,400-line file's hit time to its `-partes` time - but that file's
+full path took only 0.03 s (0.00 x 4 < 0.03 passes by a hair; noise
+fails it). Every fixture's full path is < 0.1 s; even a thistle
+deriving a dozen house headers is 0.02 s. So textus's 0.8 s comes from
+something particular to it (not line count, not header count) - NOT
+investigated. The gate uses a trace instead: `BRIAR_VESTIGIUM=1` names
+a fast hit. Its plant is instructive: a fast key that diverges from
+the full key does not produce a wrong answer, it silently finds no
+binary and falls back to the slow path - key identity stays green,
+only the trace check goes red. That's the failure mode worth gating.
+

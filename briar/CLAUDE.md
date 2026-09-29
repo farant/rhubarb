@@ -122,9 +122,18 @@ Findings: `fontes/briar.worklog.md`.
   embedded. Key: embedded = corpus stamp + flags + bytes; disk =
   closure-content hash + flags + bytes (after fabrica). Both stamps
   gain ` fontes briar <hash>` (briar's own sources) and, with
-  bibliothecae, ` membra <hash>`. The key is computed AFTER the parse
-  and fabrica, so every run pays the parse even on a cache hit (plan 9
-  T1: ~0.55 s for lapide's 7,756-line `textus.thistle` as a member).
+  bibliothecae, ` membra <hash>`. **Fast hit (embedded corpus only):**
+  after the document tree + nexus, `_ictum_celerem_tentare` collects
+  members LIGHTLY (`briar_membra_colligere_levia`: no silva), takes the
+  form from the window element, computes the key through the SAME
+  `_directorium_clavis` as the full path, and execs `bin/<t>` (run,
+  `-probatio`, `-struere` without `-iterum`) — silva and the fabrica run
+  only when something must be built (lapide's 9,668-line textus: 0.75 s
+  → 0.00 s per run). Anything unusual (no binary, a refusal) falls
+  through to the full path, which speaks. `BRIAR_VESTIGIUM=1` names a
+  fast hit on stderr (fumus XXIV proves the branch with it, never with
+  timing). Disk corpus: the stamp is the closure hash, so the fabrica
+  always runs first.
 - Run = fabricate → write project if `bin/<t>` absent → `/bin/sh
   aedificare.sh` via `processus_exsequi` (10 min deadline; clang output
   to stderr on failure) → `processus_transformare` into `bin/<t>`.

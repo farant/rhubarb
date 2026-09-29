@@ -589,8 +589,8 @@ added or changed:
   through the corpus `SilexFons`), so each member's header TEXT goes
   into the prelude — no silex change. (5) lapide's `textus.thistle` is
   7,756 lines (not ~3,800): cold build 1.0 s, and ~0.55 s on EVERY
-  importer run, because briar parses before it computes the key (named,
-  not planned: a key from bytes before parsing).
+  importer run, because briar parses before it computes the key -
+  answered the same day by "key before parse" (§4.1).
 - **Members are finished after their dependencies** (post-order), each
   with only its OWN transitive members visible — a sibling it does not
   import is not seen, so a member cannot silently lean on the root's
@@ -682,6 +682,18 @@ marks a disk corpus `(discus)`.
 used to replay old generated code) and, when the thistle has
 bibliothecae (§3.5), ` membra <16 hex>` over every member's title,
 length and bytes (plan 9 T4, af1fbb8a).
+
+**Key before parse (2026-09-29).** With the EMBEDDED corpus every key
+input is known from the document tree: the stamp, briar's source hash,
+members' bytes (a LIGHT walk - same order and structural refusals, no
+silva), the flags (the form is VITREA exactly when a window element is
+present; a file with a window AND `principale` is refused, so it never
+has a cached binary), the chrome hash for vitrea. A run, `-probatio`
+or `-struere` without `-iterum` computes the key through the same
+function the full path uses and execs a cached binary at once;
+otherwise it falls through to the full path. Measured on lapide's
+9,668-line `textus.thistle`: 0.75 s → 0.00 s per hit. A disk corpus
+keeps the full path (its stamp needs the closure).
 
 **Flags, direction (Fran, 2026-09-04): DERIVE from the sources.** In
 v1 the base flag set is the string silex's generators carry

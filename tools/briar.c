@@ -809,6 +809,185 @@ _fasciculum_facere (
     redde ZEPHYRUM;
 }
 
+/* clavis proiecti (spec par. 4.1) -> directorium domus: stampa basis
+ * + fontes briar + membra (+ vestis si vitrea), vexilla formae,
+ * octeti. Via UNA pro cursu pleno et ictu celeri - claves eaedem per
+ * constructionem. NIHIL: *causa posita. */
+interior constans character*
+_directorium_clavis (
+                Piscina* piscina,
+     constans character* stampa_basis,
+             BriarForma  forma,
+                    Xar* membra,
+                 chorda  octeti,
+     constans character* titulus,
+            BriarVestis* vestis,
+                 chorda* causa)
+{
+     constans character* stampa;
+              character  clavis[17];
+     constans character* dir;
+
+    causa->datum    = NIHIL;
+    causa->mensura  = ZEPHYRUM;
+    /* fontes briar IPSIUS clavem intrant: fabrica mutata (e.g.
+     * prototypi regionis probationis) proiectum novum poscit etiam sub
+     * eodem commisso corporis - stampa SORDIDA inter aedificationes
+     * eadem manet, et cache codicem genitum veterem reddebat
+     * (2026-09-29) */
+    stampa = _texere(piscina, stampa_basis, " fontes briar ",
+        briar_aedificatio_fontes);
+    /* bibliothecae (spec par. 3.5): octeti membrorum omnium
+     * (transitive) clavem intrant - folio SOLO mutato radix ex cache
+     * valorem veterem reddebat (mensuratum plan IX T4: 28 pro 72) */
+    stampa = briar_membra_stampa(piscina, stampa, membra);
+    /* VISIO (par. 4.9): programma vitreum paginam suam in binario
+     * fert, ergo vestis clavem intrat (V5) - briar cum vestibus novis
+     * aedificat, paginam veterem e cache non reddit */
+    si (forma == BRIAR_FORMA_VITREA)
+    {
+        si (!briar_vestem_legere(piscina, &capsula_facies_briar, vestis,
+            causa))
+        {
+            redde NIHIL;
+        }
+        stampa = briar_stampa_vestita(piscina, stampa, vestis);
+    }
+    briar_fabrica_clavem_computare(stampa, briar_fabrica_vexilla(forma),
+        octeti, clavis);
+    dir = briar_domus_proiecti(piscina, titulus, clavis);
+    si (dir == NIHIL)
+    {
+        *causa = chorda_ex_literis("HOME ignotum", piscina);
+    }
+    redde dir;
+}
+
+/* currere: programma FIERI (exec binarium cum argumentis reliquis) */
+interior s32
+_programma_fieri (
+                   Piscina* piscina,
+        constans character* binarium,
+    constans BriarImperium* imp)
+{
+    constans character** ordo = (constans character**)piscina_allocare(
+        piscina, (memoriae_index)((imp->numerus_reliquorum + II)
+            * (i32)magnitudo(constans character*)));
+    i32 k;
+
+    ordo[0] = binarium;
+    per (k = ZEPHYRUM; k < imp->numerus_reliquorum; k++)
+    {
+        ordo[k + I] = imp->reliqua[k];
+    }
+    ordo[imp->numerus_reliquorum + I] = NIHIL;
+    fflush(stdout);
+    (vacuum)processus_transformare(ordo);
+    fprintf(stderr, "briar: exec defecit: %s\n", binarium);
+    redde I;
+}
+
+/* BRIAR_VESTIGIUM=1: ictus celer in stderr nominatur (cur non
+ * aedificatum sit; fumus XXIV ramum sic probat, non tempore) */
+interior vacuum
+_vestigium (
+    constans character* dir)
+{
+    constans character* v = getenv("BRIAR_VESTIGIUM");
+
+    si (v != NIHIL && v[0] == '1')
+    {
+        fprintf(stderr, "briar: ictus celer: %s\n", dir);
+    }
+}
+
+/* ICTUS CELER (clavis ante parsuram): corpore INFIXO stampa, vexilla
+ * (forma = elementum fenestrae adest), octeti et membra (collectio
+ * levis) ex arbore et nexu soli noscuntur - silva et fabrica (~0,8 s
+ * pro textu lapidis IXM lineis, mensuratum 2026-09-29) solum cum
+ * aedificandum est. Binarium adest -> exec statim. -I = via plena
+ * (binarium abest, refutatio, vestis fracta): ea causam propriam
+ * dicit. Plagula refutata (fenestra cum principali) binarium sub hac
+ * clave numquam habuit - octeti eidem, refutatio eadem. */
+interior s32
+_ictum_celerem_tentare (
+                   Piscina* piscina,
+    constans BriarImperium* imp,
+        constans SilexFons* fons,
+                       Xar* nexus,
+       InternamentumChorda* intern,
+                    chorda  octeti)
+{
+                     Xar* membra = NIHIL;
+        BriarMembraCausa  causa_membrorum;
+    BriarFabricaOptiones  optiones;
+              BriarForma  forma = BRIAR_FORMA_PLANA;
+             BriarVestis  vestis;
+                  chorda  causa;
+      constans character* titulus;
+      constans character* dir;
+                     i32  i;
+
+    si (!briar_membra_colligere_levia(piscina, imp->via, nexus, intern,
+            &membra, &causa_membrorum))
+    {
+        redde -I;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
+    {
+        constans BriarNexusRes* r = (constans BriarNexusRes*)
+            xar_obtinere(nexus, i);
+
+        si (   r->genus == BRIAR_NEXUS_STML
+            && briar_nexus_titulus_est(r, "fenestra"))
+        {
+            forma = BRIAR_FORMA_VITREA;
+        }
+    }
+    briar_optiones_plagulae(piscina, fons, imp->via, &optiones);
+    titulus = briar_fabrica_titulus(piscina, optiones.via_thistle);
+    dir = _directorium_clavis(piscina, fons->titulus, forma, membra,
+        octeti, titulus, &vestis, &causa);
+    si (dir == NIHIL)
+    {
+        redde -I;
+    }
+    si (imp->actio == BRIAR_ACTIO_PROBATIO)
+    {
+        constans character* probatio = _texere(piscina, dir,
+            "/bin/probatio_", titulus);
+        constans character* ordo[2];
+
+        si (!filum_existit(probatio))
+        {
+            redde -I;
+        }
+        _vestigium(dir);
+        ordo[0] = probatio;
+        ordo[1] = NIHIL;
+        fflush(stdout);
+        (vacuum)processus_transformare(ordo);
+        fprintf(stderr, "briar: exec defecit: %s\n", probatio);
+        redde I;
+    }
+    {
+        constans character* binarium = _texere(piscina, dir, "/bin/",
+            titulus);
+
+        si (!filum_existit(binarium))
+        {
+            redde -I;
+        }
+        _vestigium(dir);
+        si (imp->actio == BRIAR_ACTIO_STRUERE)
+        {
+            imprimere("%s\n", dir);
+            redde ZEPHYRUM;
+        }
+        redde _programma_fieri(piscina, binarium, imp);
+    }
+}
+
 s32
 principale (
       integer   argc,
@@ -827,10 +1006,8 @@ principale (
     BriarFabricaOptiones optiones;
      BriarFabricaFructus fructus;
                   chorda octeti;
-     constans character* stampa;
      constans character* dir;
      constans character* binarium;
-               character clavis[17];
              BriarVestis vestis_visionis;
                     Xar* membra = NIHIL;
         BriarMembraCausa causa_membrorum;
@@ -932,6 +1109,21 @@ principale (
         fprintf(stderr, "briar: nexus fractus\n");
         redde I;
     }
+    octeti.datum    = (i8*)textus;
+    octeti.mensura  = mensura;
+    si (   !e_disco && !imp.iterum
+        && (   imp.actio == BRIAR_ACTIO_CURRERE
+            || imp.actio == BRIAR_ACTIO_PROBATIO
+            || imp.actio == BRIAR_ACTIO_STRUERE))
+    {
+        s32 celer = _ictum_celerem_tentare(piscina, &imp, fons, nexus,
+            intern, octeti);
+
+        si (celer >= ZEPHYRUM)
+        {
+            redde celer;
+        }
+    }
     /* bibliothecae (spec par. 3.5): membra ANTE silvam radicis -
      * nomina eorum derivationi radicis praebentur */
     si (!briar_membra_colligere(piscina, imp.via, nexus, intern, fons,
@@ -951,8 +1143,6 @@ principale (
         fprintf(stderr, "briar: nexus fractus\n");
         redde I;
     }
-    octeti.datum    = (i8*)textus;
-    octeti.mensura  = mensura;
     briar_optiones_plagulae(piscina, fons, imp.via, &optiones);
     fructus = briar_fabricare_cum_membris(piscina, doc, nexus, fons,
         &optiones, octeti, membra);
@@ -1176,44 +1366,21 @@ principale (
         redde ZEPHYRUM;
         }
 
-    /* clavis: infixum = stampa corporis; discus = contenta clausurae */
-    stampa = e_disco ? briar_stampa_clausurae(piscina, fructus.clausura)
-                     : fons->titulus;
-    /* fontes briar IPSIUS clavem intrant: fabrica mutata (e.g.
-     * prototypi regionis probationis) proiectum novum poscit etiam sub
-     * eodem commisso corporis - stampa SORDIDA inter aedificationes
-     * eadem manet, et cache codicem genitum veterem reddebat
-     * (2026-09-29) */
-    stampa = _texere(piscina, stampa, " fontes briar ",
-        briar_aedificatio_fontes);
-    /* bibliothecae (spec par. 3.5): octeti membrorum omnium
-     * (transitive) clavem intrant - folio SOLO mutato radix ex cache
-     * valorem veterem reddebat (mensuratum plan IX T4: 28 pro 72) */
-    stampa = briar_membra_stampa(piscina, stampa, membra);
-    /* VISIO (par. 4.9): programma vitreum paginam suam in binario
-     * fert, ergo vestis clavem intrat (V5) - briar cum vestibus novis
-     * aedificat, paginam veterem e cache non reddit */
-    si (fructus.forma == BRIAR_FORMA_VITREA)
+    /* clavis: infixum = stampa corporis; discus = contenta clausurae
+     * (via eadem ac ictus celer: _directorium_clavis) */
     {
         chorda causa;
 
-        si (!briar_vestem_legere(piscina, &capsula_facies_briar,
-            &vestis_visionis, &causa))
+        dir = _directorium_clavis(piscina, e_disco
+            ? briar_stampa_clausurae(piscina, fructus.clausura)
+            : fons->titulus, fructus.forma, membra, octeti,
+            fructus.titulus, &vestis_visionis, &causa);
+        si (dir == NIHIL)
         {
             fprintf(stderr, "briar: %.*s\n", (integer)causa.mensura,
                 (constans character*)causa.datum);
             redde I;
         }
-        stampa = briar_stampa_vestita(piscina, stampa,
-            &vestis_visionis);
-    }
-    briar_fabrica_clavem_computare(stampa,
-        briar_fabrica_vexilla(fructus.forma), octeti, clavis);
-    dir = briar_domus_proiecti(piscina, fructus.titulus, clavis);
-    si (dir == NIHIL)
-    {
-        fprintf(stderr, "briar: HOME ignotum\n");
-        redde I;
     }
     binarium = _texere(piscina, dir, "/bin/", fructus.titulus);
 
@@ -1312,22 +1479,5 @@ principale (
         redde I;
     }
     /* currere: programma FIERI */
-    {
-        constans character** ordo =
-            (constans character**)piscina_allocare(
-            piscina, (memoriae_index)((imp.numerus_reliquorum + II)
-                * (i32)magnitudo(constans character*)));
-        i32 k;
-
-        ordo[0] = binarium;
-        per (k = ZEPHYRUM; k < imp.numerus_reliquorum; k++)
-        {
-            ordo[k + I] = imp.reliqua[k];
-        }
-        ordo[imp.numerus_reliquorum + I] = NIHIL;
-        fflush(stdout);
-        (vacuum)processus_transformare(ordo);
-        fprintf(stderr, "briar: exec defecit: %s\n", binarium);
-        redde I;
-    }
+    redde _programma_fieri(piscina, binarium, &imp);
 }

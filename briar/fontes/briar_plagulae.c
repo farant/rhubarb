@@ -26,6 +26,8 @@ nomen structura {
           TabulaDispersa* tituli;
                      Xar* membra;      /* BriarMembrum */
         BriarMembraCausa* causa;
+                     b32  leve;        /* sine silva et partitione
+                                        * (clavis ante parsuram) */
 } MembraAmbulatio;
 
 interior b32
@@ -388,6 +390,27 @@ _membrum_visitare (
             }
         }
     }
+    /* levis: membrum sine silva registratur (titulus, octeti, ordo) -
+     * satis clavi; refutationes silvae ad cursum plenum manent */
+    si (amb->leve)
+    {
+        BriarMembrum* m = (BriarMembrum*)xar_addere(amb->membra);
+
+        memset(m, 0, magnitudo(*m));
+        m->via              = via;
+        m->titulus          = titulus;
+        m->octeti           = textus;
+        m->documentum       = doc;
+        m->nexus            = nexus;
+        m->via_importantis  = via_importantis;
+        m->linea_elementi   = r->linea_initium;
+        m->visibilia        = visibilia;
+        tabula_dispersa_inserere(amb->perfecta, chorda_ex_literis(via,
+            p), (vacuum*)m);
+        tabula_dispersa_inserere(amb->tituli, chorda_ex_literis(titulus,
+            p), (vacuum*)chorda_ut_cstr(chorda_ex_literis(via, p), p));
+        redde m;
+    }
     sm = _silva_membra(p, visibilia);
     si (briar_silvam_texere_cum_membris(p, nexus, amb->fons, via, sm)
         < ZEPHYRUM)
@@ -474,15 +497,16 @@ _ambulare (
     redde VERUM;
 }
 
-b32
-briar_membra_colligere (
+interior b32
+_colligere (
                  Piscina*  piscina,
       constans character*  via_radicis,
                      Xar*  nexus_radicis,
      InternamentumChorda*  intern,
       constans SilexFons*  fons,
                      Xar** membra,
-        BriarMembraCausa*  causa)
+        BriarMembraCausa*  causa,
+                     b32   leve)
 {
        MembraAmbulatio  amb;
     constans character* radix;
@@ -509,6 +533,7 @@ briar_membra_colligere (
     amb.tituli = tabula_dispersa_creare_chorda(piscina, 32);
     amb.membra = xar_creare(piscina, (i32)magnitudo(BriarMembrum));
     amb.causa = causa;
+    amb.leve = leve;
     *(constans character**)xar_addere(amb.acervus) = radix;
     tabula_dispersa_inserere(amb.tituli, chorda_ex_literis(
         briar_fabrica_titulus(piscina, radix), piscina),
@@ -520,6 +545,33 @@ briar_membra_colligere (
     }
     *membra = amb.membra;
     redde VERUM;
+}
+
+b32
+briar_membra_colligere (
+                 Piscina*  piscina,
+      constans character*  via_radicis,
+                     Xar*  nexus_radicis,
+     InternamentumChorda*  intern,
+      constans SilexFons*  fons,
+                     Xar** membra,
+        BriarMembraCausa*  causa)
+{
+    redde _colligere(piscina, via_radicis, nexus_radicis, intern, fons,
+        membra, causa, FALSUM);
+}
+
+b32
+briar_membra_colligere_levia (
+                 Piscina*  piscina,
+      constans character*  via_radicis,
+                     Xar*  nexus_radicis,
+     InternamentumChorda*  intern,
+                     Xar** membra,
+        BriarMembraCausa*  causa)
+{
+    redde _colligere(piscina, via_radicis, nexus_radicis, intern, NIHIL,
+        membra, causa, VERUM);
 }
 
 /* clavis: titulus '\n' mensura '\n' octeti per membrum, post-ordine -

@@ -108,6 +108,12 @@
 #        (coniunctio '#ifndef' cum typo, coniunctio directivarum sola,
 #        '#ifdef' intra corpus) clang compilat et '11' imprimit - olim
 #        '#define' custodis bis emissus typum celabat
+#   XXIV. clavis ANTE parsuram (corpus infixum): ictus cache silvam et
+#        fabricam praeterit - '-struere' (ictus celer) == '-struere
+#        -iterum' (via plena) directorio pro radix (membra),
+#        salve_vitreum (vestis) et salve; BRIAR_VESTIGIUM=1 ictum
+#        celerem nominat, -iterum numquam (ramus probatus, non tempus;
+#        mensuratum manu: 0,75 s -> 0,00 s pro textu lapidis)
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -642,8 +648,25 @@ echo "FUMUS: XXIII. ./condiciones.thistle (#ifndef cum typo, directivae solae, #
     && [ "$(cat "$AREA/condiciones.log")" = 11 ] \
     || deficere "condiciones.thistle: '11' non impressum (directivae bis emissae?)" "$AREA/condiciones.log"
 
+# ---- XXIV. clavis ante parsuram (ictus celer) ----
+echo "FUMUS: XXIV. ictus celer: clavis eadem ac via plena, silva praeterita"
+for f in bibliotheca/radix.thistle salve_vitreum.thistle salve.thistle; do
+    PLENA="$( cd "$AREA" && "$BRIAR" -struere -iterum "$f" 2>/dev/null | tail -1 )"
+    CELER="$( cd "$AREA" && "$BRIAR" -struere "$f" 2>/dev/null | tail -1 )"
+    [ -n "$PLENA" ] && [ "$PLENA" = "$CELER" ] \
+        || deficere "$f: clavis ictus celeris ($CELER) != viae plenae ($PLENA)"
+done
+# ramus: ictus celer se nominat (BRIAR_VESTIGIUM), via plena non
+( cd "$AREA/bibliotheca" && BRIAR_VESTIGIUM=1 ./radix.thistle ) > "$AREA/celer.log" 2>&1
+grep -q '^briar: ictus celer: ' "$AREA/celer.log" && grep -q '^28$' "$AREA/celer.log" \
+    || deficere "radix: ictus celer non nominatus (silva non praeterita?)" "$AREA/celer.log"
+( cd "$AREA/bibliotheca" && BRIAR_VESTIGIUM=1 "$BRIAR" -struere -iterum radix.thistle ) > "$AREA/plena.log" 2>&1
+grep -q 'ictus celer' "$AREA/plena.log" \
+    && deficere "-iterum ictum celerem nominat (via plena praeterita)" "$AREA/plena.log"
+echo "FUMUS:    claves eaedem (radix, salve_vitreum, salve); ictus celer nominatus, -iterum viam plenam capit"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml, membra, condiciones)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml, membra, condiciones, ictus celer)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

@@ -79,6 +79,21 @@ briar_membra_colligere (
                      Xar** membra,
         BriarMembraCausa*  causa);
 
+/* collectio LEVIS (clavis ante parsuram, tools/briar.c): eadem
+ * ambulatio, eadem ordo post-ordinis, eaedem refutationes structurae
+ * (via, circulus, absens, sine regione plana, titulus iteratus), sed
+ * SINE silva et partitione - membra titulum, viam, octeti, nexum,
+ * visibilia ferunt; caput/corpus/nomina/statica NIHIL. Stampa
+ * (briar_membra_stampa) eadem ac collectionis plenae. */
+b32
+briar_membra_colligere_levia (
+                 Piscina*  piscina,
+      constans character*  via_radicis,
+                     Xar*  nexus_radicis,
+     InternamentumChorda*  intern,
+                     Xar** membra,
+        BriarMembraCausa*  causa);
+
 /* tabula derivationis ex membris (Xar de BriarMembrum): nomina
  * publica -> caput, caput -> textus parsurae (briar_silva). Radix
  * omnia membra videt (ea ipsa adduxit). */

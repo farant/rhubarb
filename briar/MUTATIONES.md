@@ -19,6 +19,12 @@ Leges chartae:
 
 ## inedita
 
+- ictus cache celer: extra arborem rhubarb (corpus infixum) clavis ex
+  octetis (plagula + bibliothecae) computatur ANTE silvam et fabricam -
+  programma iam aedificatum statim currit (textus lapidis IXM
+  linearum: 0,75 s -> 0,00 s per cursum). Clavis eadem ac antea (nulla
+  aedificatio nova). `BRIAR_VESTIGIUM=1` ictum celerem in stderr nominat.
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut
