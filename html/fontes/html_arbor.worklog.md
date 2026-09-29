@@ -985,3 +985,27 @@ Two things worth noting in the build:
 The file's README says plainly that it proves stability and never
 correctness — it is OUR output, so it says what we say. html5lib is
 the correctness oracle underneath; this only catches drift.
+
+## 2026-09-28 — flat read of a segmented Xar in the adoption agency (park …11BN)
+
+`_adoptionem_agere` handed `(GradusNovus*)xar_obtinere(novi, 0)` plus
+`xar_numerus(novi)` to `_acervum_reponere`, which read `novi[i]` as a
+flat array. Xar is SEGMENTED (first segment IV elements) and the
+adoption agency can fill `novi` with V (chain of III formatting clones
++ furthest block + the formatting clone). Same bug class briar hit in
+toml Q13 (its library suggestions).
+
+Measured: reachable — the suite drives `novi` to V (probe: e.g.
+`<b><i><u><s><div>x</b>y`). Latent in practice: segments are allocated
+lazily, back to back in step XIX, and a piscina growth rule keeps them
+in one block (a new block is sized from the OLD block's offset +
+request + base, so it always has room ≈ the previous fill; a 16-byte
+piscina did NOT separate them — noted on the ledger). Plant (garbage
+allocations between the `xar_addere`s): circuitus + oraculum SIGSEGV;
+same plant with the fix: 14/14.
+
+Fix: `_acervum_reponere` takes `constans Xar* novi` and indexes it
+(the other caller passes NIHIL, 0) — the type now forbids the flat
+read at this site. No permanent test: a guard needs the segments
+apart, and no public input can force that (the tiny-piscina attempt
+stayed green without the fix — mute, removed).
