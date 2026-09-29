@@ -37,6 +37,12 @@ Leges chartae:
   in corpore infixo - `-bibliothecae` eas enumerat, `-bibliotheca toml
   -functiones` signaturas dat, `-amalgama` eas complectitur; omne
   proiectum genitum eas vendit (instrumentum capsulae toml trahit).
+- `-bibliothecae`: XXV descriptiones novae cum verbis Anglicis
+  (`tabula_dispersa` = hash table, `internamentum` = string interning,
+  `piscina` = arena, `xar` = vector segmentatus, ...); sine descriptione
+  CXIII -> LXXXVIII (lapide documentation-ideas/017). `-dialectus`:
+  laqueus `atoi(c.datum)` -> `chorda_ut_s32` / `chorda_ut_s64`, quae
+  iam exsistunt et nunc documentantur (feature-requests/016).
 
 ## v3 — 2026-09-28
 

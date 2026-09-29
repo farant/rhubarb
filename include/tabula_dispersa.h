@@ -1,3 +1,4 @@
+/* tabula_dispersa.h - tabula friationis (hash table, map) */
 #ifndef TABULA_DISPERSA_H
 #define TABULA_DISPERSA_H
 

@@ -1,3 +1,4 @@
+/* iter_directoria.h - directoria ambulare (directory walk) */
 #ifndef ITER_DIRECTORIA_H
 #define ITER_DIRECTORIA_H
 

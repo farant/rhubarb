@@ -1,3 +1,4 @@
+/* filum.h - fila legere et scribere (file I/O) */
 #ifndef FILUM_H
 #define FILUM_H
 

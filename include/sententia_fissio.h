@@ -1,3 +1,4 @@
+/* sententia_fissio.h - textum in sententias findere (sentence split) */
 #ifndef SENTENTIA_FISSIO_H
 #define SENTENTIA_FISSIO_H
 

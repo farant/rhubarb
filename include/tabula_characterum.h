@@ -1,3 +1,4 @@
+/* tabula_characterum.h - craticula characterum 2D (text grid) */
 #ifndef TABULA_CHARACTERUM_H
 #define TABULA_CHARACTERUM_H
 

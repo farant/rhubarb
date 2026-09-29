@@ -1,4 +1,6 @@
-/* xar.h - "Codex Tabulae Exponentialis"
+/* xar.h - tabula crescens segmentata (growable array, vector)
+ * "Codex Tabulae Exponentialis" - segmenta NON contigua: numquam
+ * xar_obtinere(x, 0) ut tabulam planam lege
  *
  * Tabula crescens sine reallocatio
  *

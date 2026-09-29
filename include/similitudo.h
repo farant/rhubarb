@@ -1,3 +1,4 @@
+/* similitudo.h - congruentia nebulosa, genus fzf (fuzzy matching) */
 #ifndef SIMILITUDO_H
 #define SIMILITUDO_H
 

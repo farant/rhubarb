@@ -1,3 +1,4 @@
+/* numerus_romanus.h - numeri Romani legere, scribere (numerals) */
 #ifndef NUMERUS_ROMANUS_H
 #define NUMERUS_ROMANUS_H
 

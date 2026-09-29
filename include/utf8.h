@@ -1,5 +1,4 @@
-/*
- * utf8.h - Bibliotheca UTF-8 decodendi
+/* utf8.h - UTF-8 decodere et encodere (unicode, codepoints)
  *
  * Functiones purae pro decodendo UTF-8 ad codepoints.
  * Nulla allocatio, nulla dependentia praeter latina.h

@@ -1,3 +1,4 @@
+/* tempus.h - horologium et statisticae quadrorum (frame timer) */
 #ifndef TEMPUS_H
 #define TEMPUS_H
 

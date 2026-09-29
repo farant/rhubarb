@@ -1,3 +1,4 @@
+/* friatio.h - functiones friationis (hash functions) */
 #ifndef FRIATIO_H
 #define FRIATIO_H
 

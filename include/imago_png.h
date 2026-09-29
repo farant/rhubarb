@@ -1,5 +1,4 @@
-/*
- * imago_png.h - Imaginem in PNG codificare
+/* imago_png.h - imaginem in PNG codificare (PNG encoder)
  *
  * PORTABILE. Nullum stratum platformae, nulla dependentia: super
  * flatura (DEFLATE) et flatura_crc32 (IEEE 802.3, idem polynomium

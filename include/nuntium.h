@@ -1,3 +1,4 @@
+/* nuntium.h - serializatio binaria (protobuf-style encoding) */
 #ifndef NUNTIUM_H
 #define NUNTIUM_H
 

@@ -1,3 +1,4 @@
+/* argumenta.h - argumenta lineae mandati (CLI argument parser) */
 #ifndef ARGUMENTA_H
 #define ARGUMENTA_H
 

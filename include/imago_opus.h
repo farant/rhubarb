@@ -1,5 +1,4 @@
-/*
- * imago_opus.h - Image transformation operations
+/* imago_opus.h - imagines scalare (image resize, transforms)
  *
  * Operationes pro transformare imagines: scalare, etc.
  * Separatum ab imago.h (caricare) pro separatione concernuum.

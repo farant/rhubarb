@@ -1,3 +1,4 @@
+/* persistentia.h - repositorium eventuum (event sourcing storage) */
 #ifndef PERSISTENTIA_H
 #define PERSISTENTIA_H
 

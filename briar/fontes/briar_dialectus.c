@@ -62,6 +62,9 @@ interior constans character* LAQUEI[] = {
     "    Romanum 0-3999 macrum est (DI, MIX, CIV...); ultra: IV * M",
     "  - chorda {i32 mensura; i8* datum} sine NUL finali: imprime per",
     "    \"%.*s\", (integer)c.mensura, (constans character*)c.datum",
+    "  - atoi/strtol(c.datum) ULTRA mensuram legunt (sine NUL) et",
+    "    sordes tacent: chorda_ut_s32 / chorda_ut_s64 (FALSUM si",
+    "    vacua, sordes, superfluitas)",
     NIHIL
 };
 
