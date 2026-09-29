@@ -1,0 +1,15 @@
+#!/usr/bin/env briar
+# Radix vitrea
+
+A plain program importing a vitrea app's plain region.
+
+<bibliotheca via="vitrea_membrum.thistle"/>
+
+<c!>
+s32
+principale (vacuum)
+{
+    imprimere("%d\n", (integer)vitrea_triplicare(XIV));
+    redde ZEPHYRUM;
+}
+</c>

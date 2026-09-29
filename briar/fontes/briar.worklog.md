@@ -1017,3 +1017,38 @@ members get a partition-only entry. Side find: a region's `#ifndef`
 block is emitted twice by the partition (parcum …VF42V). Under zsh,
 never `source tools/vexilla.sh` from outside the tree (BASH_SOURCE is
 empty; it roots itself at `.` and writes build/vexilla.sigillum there).
+
+## 2026-09-29 — plan 9 Task 3: thistle bibliothecae build end to end
+
+`<bibliotheca via="x.thistle"/>` works: radix -> media/folium/sub-ramus
+diamond prints 28, its test region calls member functions and a member
+type, runs identically from /tmp by absolute path. Shape as built:
+members are finished AFTER their own dependencies (silva with only
+their transitive members visible - a sibling not imported is not seen),
+partitioned partition-only (`briar_membrum_partiri`), their public
+names (file scope, not static, not implicit, not main, declared in the
+region's own text; typedef line = declarator, function line =
+definition start) join the derivation table; the parse prelude gets
+each member's OWN unguarded text once, dependencies first. The fabrica
+puts member units in the project and on both build lines once each,
+feeds the closure their texts with member-header includes stripped
+(silex only knows corpus headers), and refuses a public name defined
+twice in one build before clang (root's line when the root is in the
+pair).
+
+Two of my hypotheses were WRONG and the plants caught them: (1) "the
+prelude substitution is proven" - the first plant stayed green; silva
+tolerates unknown types, so only an assertion on the FINAL tree's type
+knowledge (no TYPUS_NOMINATUS_IGNOTUS in the main text) discriminates;
+(2) "silva's semantics is blind inside #ifndef, so the guard must go" -
+the red that suggested it was a diagnostic from ANOTHER source file
+(extent -1 in the main text) that my test was counting; restoring the
+guard leaves the type known. Unguarded, once-each composition stays
+because it deduplicates the diamond without relying on guards.
+
+Found by the first end-to-end run: a member's exported header carried
+its STATIC prototypes, so every importing unit declared an unused
+static (-Wunused-function, bugs/002's class). Member headers now carry
+only public prototypes; static ones sit at the top of the member's own
+_regiones.c. The ROOT's header still carries its statics (unchanged;
+the dialect card's rule "no staticus in the main region" covers it).

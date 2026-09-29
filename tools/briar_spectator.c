@@ -23,6 +23,7 @@
 #include "briar_facies.h"
 #include "briar_imperium.h"
 #include "briar_nexus.h"
+#include "briar_plagulae.h"
 #include "briar_silva.h"
 #include "briar_symbolum.h"
 #include "internuntius.h"
@@ -120,6 +121,7 @@ _paginam_parare (
                 character clavis[17];
       constans character* domus;
       constans character* dir;
+                     Xar* membra = NIHIL;
 
     causa->datum    = NIHIL;
     causa->mensura  = ZEPHYRUM;
@@ -133,12 +135,24 @@ _paginam_parare (
     doc    = briar_arbor_parsare(piscina, textus, mensura);
     nexus  = briar_nexus_texere(piscina, doc, intern);
     (vacuum)briar_contexere(piscina, nexus, &fragmenta);
-    (vacuum)briar_silvam_texere(piscina, nexus, fons, via_thistle);
+    /* bibliothecae (spec par. 3.5): ut briar; refutatio membrorum
+     * paginam non prohibet (F4) - sine membris texitur */
+    {
+        BriarMembraCausa cm;
+
+        si (!briar_membra_colligere(piscina, via_thistle, nexus, intern,
+                fons, &membra, &cm))
+        {
+            membra = NIHIL;
+        }
+    }
+    (vacuum)briar_silvam_texere_cum_membris(piscina, nexus, fons,
+        via_thistle, briar_membra_silvae(piscina, membra));
     briar_optiones_plagulae(piscina, fons, via_thistle, &optiones);
     octeti.datum    = (i8*)textus;
     octeti.mensura  = mensura;
-    fructus = briar_fabricare(piscina, doc, nexus, fons, &optiones,
-        octeti);
+    fructus = briar_fabricare_cum_membris(piscina, doc, nexus, fons,
+        &optiones, octeti, membra);
     /* recusatio paginam NON prohibet (lex par. 4.6 F4): causa in
      * margine stabit */
     si (!briar_vestem_legere(piscina, &capsula_facies_briar, &vestis,

@@ -1,0 +1,17 @@
+#!/usr/bin/env briar
+# Statica a
+
+Imports `statica_b` and `statica_c`, which each keep a private
+(`interior`) `adiutor`: two members, one name, no conflict.
+
+<bibliotheca via="statica_b.thistle"/>
+<bibliotheca via="statica_c.thistle"/>
+
+<c!>
+s32
+principale (vacuum)
+{
+    imprimere("%d\n", (integer)(statica_b_valor() + statica_c_valor()));
+    redde ZEPHYRUM;
+}
+</c>

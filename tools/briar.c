@@ -51,6 +51,7 @@
 #include "briar_imperium.h"
 #include "briar_mutationes.h"
 #include "briar_nexus.h"
+#include "briar_plagulae.h"
 #include "briar_proiectio.h"
 #include "briar_silva.h"
 #include "compendium.h"
@@ -831,6 +832,8 @@ principale (
      constans character* binarium;
                character clavis[17];
              BriarVestis vestis_visionis;
+                    Xar* membra = NIHIL;
+        BriarMembraCausa causa_membrorum;
 
     piscina = piscina_generare_dynamicum("briar", 33554432);
     si (piscina == NIHIL)
@@ -924,9 +927,26 @@ principale (
     /* contextus (fragmenta contexta) ANTE silvam: radix cum '<<#x>>'
      * C non est */
     si (   nexus == NIHIL
-        || briar_contexere(piscina, nexus, &fragmenta) < ZEPHYRUM
-        || briar_silvam_texere(piscina, nexus, fons, imp.via)
-            < ZEPHYRUM)
+        || briar_contexere(piscina, nexus, &fragmenta) < ZEPHYRUM)
+    {
+        fprintf(stderr, "briar: nexus fractus\n");
+        redde I;
+    }
+    /* bibliothecae (spec par. 3.5): membra ANTE silvam radicis -
+     * nomina eorum derivationi radicis praebentur */
+    si (!briar_membra_colligere(piscina, imp.via, nexus, intern, fons,
+            &membra, &causa_membrorum))
+    {
+        fprintf(stderr, "%s:%d: %.*s\n",
+            causa_membrorum.via != NIHIL ? causa_membrorum.via
+                : imp.via,
+            (integer)causa_membrorum.linea,
+            (integer)causa_membrorum.causa.mensura,
+            (constans character*)causa_membrorum.causa.datum);
+        redde I;
+    }
+    si (briar_silvam_texere_cum_membris(piscina, nexus, fons, imp.via,
+            briar_membra_silvae(piscina, membra)) < ZEPHYRUM)
     {
         fprintf(stderr, "briar: nexus fractus\n");
         redde I;
@@ -934,8 +954,8 @@ principale (
     octeti.datum    = (i8*)textus;
     octeti.mensura  = mensura;
     briar_optiones_plagulae(piscina, fons, imp.via, &optiones);
-    fructus = briar_fabricare(piscina, doc, nexus, fons, &optiones,
-        octeti);
+    fructus = briar_fabricare_cum_membris(piscina, doc, nexus, fons,
+        &optiones, octeti, membra);
     /* '-html' recusationem TRANSIT: lex par. 4.6 F4 - pagina semper
      * redditur, causa in margine ad lineam suam. Plagula fracta est
      * ipsum momentum quo eam VIDERE maxime prodest (circulus inter

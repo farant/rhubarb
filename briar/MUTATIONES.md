@@ -53,6 +53,14 @@ Leges chartae:
   `-radix <via>`) programmati vitreo praemittuntur: `manus incipere
   briar x.thistle` nunc currit (lapide feature-requests/023); olim
   `vexillum ignotum: -vivum`.
+- `<bibliotheca via="textus.thistle"/>` (elementum, columna 0): regiones
+  C PLANAE plagulae alterius (functiones, typi) in omni regione C
+  praesto - `principale`, regiones ceterae, `-probatio` - sine
+  `#include`, derivatione ut caput domus (lapide feature-requests/015).
+  Transitiva; `via` contra directorium PLAGULAE (non cwd); `interior` /
+  `staticus` privata manent; `principale`, probatio, `methodus`,
+  fragmenta membri numquam praebentur. Refutationes cum sede: circulus
+  (cum remedio), nomen publicum bis, titulus iteratus, plagula absens.
 
 ## v3 — 2026-09-28
 

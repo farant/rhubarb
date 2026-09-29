@@ -108,3 +108,13 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   remedio); `radix_absens`, `radix_non` (`folium.md`),
   `radix_sine_via`, `radix_sine_c` -> `sine_c` (prosa sola):
   refutationes ad lineam elementi. Porta `probatio_briar_plagulae`.
+- (Task 3) `radix` gains a `munus="probatio"` region calling member
+  functions and `FoliumRes` (tests see members); `media` uses
+  `FoliumRes` as a type (`media_res`: the parse must KNOW it);
+  `folium` keeps an `interior` helper (static prototype in its body,
+  not its exported header). `radix_vitrea` -> `vitrea_membrum` (only
+  the plain region shared; no `internuntius`); `duplex_a` -> `duplex_b`
+  (public `commune` twice: refused at radix line 9); `statica_a` ->
+  `statica_b` + `statica_c` (private `adiutor` in both: builds, prints
+  5); `radix_mendosa` -> `membrum_mendosum` (clang names the member's
+  line 11).

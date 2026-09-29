@@ -11,6 +11,7 @@
 #include "briar_contextus.h"
 #include "briar_fabrica.h"
 #include "briar_nexus.h"
+#include "briar_plagulae.h"
 #include "briar_silva.h"
 #include "filum.h"
 #include "internamentum.h"
@@ -180,6 +181,70 @@ _continet (
     constans character* acus)
 {
     redde (b32)(strstr(chorda_ut_cstr(fenum, piscina), acus) != NIHIL);
+}
+
+/* fabricare CUM MEMBRIS (bibliotheca, spec par. 3.5), ut tools/briar.c:
+ * contextus, membra, silva cum membris, fabrica cum membris */
+interior BriarFabricaFructus
+_fabricare_cum_membris (
+               Piscina* piscina,
+   InternamentumChorda* intern,
+    constans SilexFons* fons,
+    constans character* via)
+{
+     BriarFabricaFructus  fructus;
+    BriarFabricaOptiones  optiones;
+               character* textus;
+                     i32  mensura = ZEPHYRUM;
+           MateriaNodus* doc;
+                    Xar* nexus;
+                    Xar* membra = NIHIL;
+        BriarMembraCausa  causa;
+                  chorda  octeti;
+
+    memset(&fructus, 0, magnitudo(fructus));
+    textus = _plagulam_legere(piscina, via, &mensura);
+    si (textus == NIHIL)
+    {
+        fructus.causa = chorda_ex_literis("plagula non lecta", piscina);
+        redde fructus;
+    }
+    doc    = briar_arbor_parsare(piscina, textus, mensura);
+    nexus  = briar_nexus_texere(piscina, doc, intern);
+    (vacuum)briar_contexere(piscina, nexus, NIHIL);
+    si (!briar_membra_colligere(piscina, via, nexus, intern, fons,
+            &membra, &causa))
+    {
+        fructus.causa = causa.causa;
+        redde fructus;
+    }
+    (vacuum)briar_silvam_texere_cum_membris(piscina, nexus, fons, via,
+        briar_membra_silvae(piscina, membra));
+    optiones.via_thistle   = via;
+    optiones.stampa        = "probatio";
+    optiones.fons_titulus  = "probatio";
+    octeti.datum           = (i8*)textus;
+    octeti.mensura         = mensura;
+    redde briar_fabricare_cum_membris(piscina, doc, nexus, fons,
+        &optiones, octeti, membra);
+}
+
+/* occurrentiae acus in feno */
+interior i32
+_occurrentia_numerare (
+               Piscina* piscina,
+                chorda  fenum,
+    constans character* acus)
+{
+    constans character* p = chorda_ut_cstr(fenum, piscina);
+                   i32  n = ZEPHYRUM;
+
+    dum ((p = strstr(p, acus)) != NIHIL)
+    {
+        n = n + I;
+        p = p + strlen(acus);
+    }
+    redde n;
 }
 
 /* recusatio: causa fragmentum continet, linea .thistle nominata,
@@ -700,6 +765,88 @@ principale (vacuum)
         CREDO_FALSUM (_clausura_habet(&f,
             "toml/fontes/toml_oraculum.c"));
         briar_silvam_solvere(nexus);
+    }
+
+    imprimere("\n--- Probans bibliothecam: membra in proiecto ---\n");
+    {
+        BriarFabricaFructus f = _fabricare_cum_membris(piscina, intern,
+            fons, "briar/probationes/fixa/bibliotheca/radix.thistle");
+        constans BriarPlagula* caput;
+        constans BriarPlagula* aed;
+        constans BriarPlagula* prob;
+        constans BriarPlagula* fh;
+        constans BriarPlagula* fc;
+
+        si (!f.successus)
+        {
+            imprimere("  RECUSATIO: %.*s\n", (integer)f.causa.mensura,
+                (constans character*)f.causa.datum);
+        }
+        CREDO_VERUM (f.successus);
+        caput  = _genita(&f, "include/radix_regiones.h");
+        aed    = _genita(&f, "aedificare.sh");
+        prob   = _genita(&f, "probare.sh");
+        fh     = _genita(&f, "include/folium_regiones.h");
+        fc     = _genita(&f, "fontes/folium_regiones.c");
+        CREDO_NON_NIHIL (_genita(&f, "include/media_regiones.h"));
+        CREDO_NON_NIHIL (_genita(&f, "fontes/media_regiones.c"));
+        CREDO_NON_NIHIL (_genita(&f, "fontes/ramus_regiones.c"));
+        CREDO_NON_NIHIL (fh);
+        CREDO_NON_NIHIL (fc);
+        si (   caput != NIHIL && aed != NIHIL && prob != NIHIL
+            && fh    != NIHIL && fc != NIHIL)
+        {
+            /* derivatio: caput radicis membra ADHIBITA includit */
+            CREDO_VERUM (_continet(piscina, caput->contentum,
+                "#include \"media_regiones.h\""));
+            CREDO_VERUM (_continet(piscina, caput->contentum,
+                "#include \"ramus_regiones.h\""));
+            CREDO_VERUM (_continet(piscina, caput->contentum,
+                "#include \"folium_regiones.h\""));
+            /* fons membri SEMEL in ordinibus (rhombus) */
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina,
+                aed->contentum, "fontes/folium_regiones.c"), I);
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina,
+                prob->contentum, "fontes/folium_regiones.c"), I);
+            CREDO_AEQUALIS_I32 (_occurrentia_numerare(piscina,
+                aed->contentum, "fontes/media_regiones.c"), I);
+            /* prototypus staticus in corpore membri, non in capite */
+            CREDO_FALSUM (_continet(piscina, fh->contentum,
+                "folium_secretum"));
+            CREDO_VERUM (_continet(piscina, fc->contentum,
+                "folium_secretum (vacuum);"));
+            CREDO_VERUM (_continet(piscina, fh->contentum,
+                "folium_duplicare (s32 x);"));
+        }
+    }
+    {
+        BriarFabricaFructus f = _fabricare_cum_membris(piscina, intern,
+            fons,
+            "briar/probationes/fixa/bibliotheca/radix_vitrea.thistle");
+
+        /* membrum vitreum: sola regio plana; nulla methodus */
+        CREDO_VERUM (f.successus);
+        CREDO_FALSUM (_clausura_habet(&f, "lib/internuntius.c"));
+        CREDO_NON_NIHIL (_genita(&f,
+            "fontes/vitrea_membrum_regiones.c"));
+    }
+    {
+        BriarFabricaFructus f = _fabricare_cum_membris(piscina, intern,
+            fons,
+            "briar/probationes/fixa/bibliotheca/duplex_a.thistle");
+
+        CREDO_FALSUM (f.successus);
+        CREDO_VERUM (f.causa.mensura > ZEPHYRUM && _continet(piscina,
+            f.causa, "nomen 'commune' in duabus plagulis"));
+        CREDO_AEQUALIS_I32 (f.linea_causae, IX);
+    }
+    {
+        BriarFabricaFructus f = _fabricare_cum_membris(piscina, intern,
+            fons,
+            "briar/probationes/fixa/bibliotheca/statica_a.thistle");
+
+        /* 'interior adiutor' in membris duobus: privata, sine lite */
+        CREDO_VERUM (f.successus);
     }
 
     imprimere("\n--- Probans prototypos regionis probationis ---\n");

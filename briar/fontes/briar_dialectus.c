@@ -68,6 +68,10 @@ interior constans character* LAQUEI[] = {
     "  - adiutores: briar prototypos generat in regione principali ET",
     "    probationis - 'staticus' non opus. staticus usus a principale",
     "    solo -probatio frangit (principale abest: non adhibitus)",
+    "  - elementum bibliotheca via=\"x.thistle\" (columna 0): regiones",
+    "    C planae eius praesto (sine #include); via contra plagulam;",
+    "    interior/staticus privata; circulus et nomen publicum bis",
+    "    refutantur",
     NIHIL
 };
 

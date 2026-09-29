@@ -343,6 +343,28 @@ fixtures `vitrea_membrum.thistle`, `duplex_a/b.thistle`,
   `staticus` = private rule; rebake before commit; commit with gates
   `briar`, `briar-fumus`; rebake after.
 
+**Executed 2026-09-29 (two commits: 890dbf92 derivation layer, then the
+build + surface).** As in the worklog: members finished after their
+dependencies with only their transitive members visible; public names
+into the derivation table; own unguarded parse text once each,
+dependencies first; partition-only entry; fabrica `_cum_membris` (units,
+build lines once each, closure with member includes stripped, duplicate
+public names refused before clang at the root's line); tools/briar.c and
+the spectator wired (the spectator renders without members on refusal,
+F4). End to end: radix 28, its `-probatio` green, same from /tmp,
+vitrea member 42 (plain region only, no internuntius), two members'
+private `adiutor` builds (5), a member's type error is reported at
+`membrum_mendosum.thistle:11`. Gates: plagulae 64/64, fabrica 294/294;
+plants: substitution off → red; guard restored → only the structural
+check red (my "semantics blind in #ifndef" hypothesis was false — a
+foreign-file diagnostic was being counted); a member source dropped
+from the lines → the predicted 2 reds. Deviations from the plan text:
+member headers carry only PUBLIC prototypes (statics move to the
+member's body — found by the first run); a duplicate member TITLE is
+refused (generated file names would collide). Not yet: cache key (T4),
+amalgam (T4), `-partes` (T4), macros from members (not derived — §9's
+bare-macro limitation applies).
+
 ### Task 4: Cache key, amalgam, `-partes`, fumus
 
 **Files:** `tools/briar.c`, `briar/fontes/briar_amalgama.c`,

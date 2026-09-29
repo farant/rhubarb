@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Radix mendosa
+
+Imports a member that does not compile.
+
+<bibliotheca via="membrum_mendosum.thistle"/>
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde mendosum();
+}
+</c>

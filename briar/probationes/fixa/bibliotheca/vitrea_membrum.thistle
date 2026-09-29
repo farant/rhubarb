@@ -1,0 +1,32 @@
+#!/usr/bin/env briar
+# Vitrea membrum
+
+A vitrea app used as a library: only its PLAIN C region is shared. Its
+window, page and `methodus` handler stay its own - an importer's
+closure must not gain `internuntius`.
+
+<fenestra titulus="membrum" latitudo="320" altitudo="200"/>
+
+<html!>
+<p>membrum</p>
+</html>
+
+<c! methodus="salve">
+#include "json.h"
+
+JsonValor*
+salve (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
+    chorda* culpa)
+{
+    (vacuum)argumenta; (vacuum)datum; (vacuum)culpa;
+    redde json_objectum_creare(piscina);
+}
+</c>
+
+<c!>
+s32
+vitrea_triplicare (s32 x)
+{
+    redde x + x + x;
+}
+</c>
