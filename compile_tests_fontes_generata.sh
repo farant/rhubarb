@@ -137,6 +137,8 @@ declare -a SOURCE_FILES=(
     "lib/registrum_widget.c"
     "lib/rete_posix.c"
     "lib/router.c"
+    "lib/runae.c"
+    "lib/runae_tabulae.c"
     "lib/sanctorale.c"
     "lib/schirmata.c"
     "lib/scrinium.c"

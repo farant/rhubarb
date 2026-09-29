@@ -23,7 +23,10 @@
 #        tesserae) per tools/porta_vetustatis.sh - hic aedilis.stml
 #        VERE tegitur;
 #   V.   sectio numerorum latina.h (ZEPHYRUM-MMMCMXCIX) == generator
-#        (tools/latina_numeri.sh; fons numerus_romanus_scribere).
+#        (tools/latina_numeri.sh; fons numerus_romanus_scribere);
+#   VI.  tabulae runarum (lib/runae_tabulae.c) == generator ex datis
+#        Unicode fixis (tools/runae_generare.sh -probare, spatia
+#        neglecta).
 # Stala per nomen; nihil tacite.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -118,6 +121,14 @@ if ./tools/latina_numeri.sh >"$TMP/numeri.log" 2>&1; then
     echo "  ok   numeri latina.h: sectio recens"
 else
     echo "  STALUM numeri latina.h: $(tail -1 "$TMP/numeri.log")"
+    fracta=1
+fi
+
+# ---- VI. tabulae runarum ----
+if ./tools/runae_generare.sh -probare >"$TMP/runae.log" 2>&1; then
+    echo "  ok   tabulae runarum: lib/runae_tabulae.c recens"
+else
+    echo "  STALUM tabulae runarum: $(tail -1 "$TMP/runae.log")"
     fracta=1
 fi
 

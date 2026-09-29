@@ -1077,4 +1077,22 @@
     <forma textus="scalarium" casus="genitivus" numerus="pluralis"/>
   </vocabulum>
 
+  <vocabulum lemma="graphema" lingua="latina" classis="substantivum" nota="Gk. graphema n. (graphematis), ut lexema: vox domus pro GRAPHEMATE UNICODE (grapheme cluster, UAX #29) - character quem lector unum videt, runae una aut plures; sedes lib/runae.c (runae, nucleus Unicode)">
+    <forma textus="graphema" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="graphematis" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="graphemati" casus="dativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="graphemate" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="graphemata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="graphematum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="graphematibus" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="ignorabilis" lingua="latina" classis="adiectivum" nota="ignorabilis, -e (classice: quod ignorari potest, ignotus): hic proprietas Unicode Default_Ignorable_Code_Point - runa quae, nisi reddi potest, invisibilis manet (latitudo 0); sedes tools/runae_generare.c">
+    <forma textus="ignorabilis" casus="nominativus" numerus="singularis"/>
+    <forma textus="ignorabile" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="ignorabilem" casus="accusativus" numerus="singularis"/>
+    <forma textus="ignorabili" casus="ablativus" numerus="singularis"/>
+    <forma textus="ignorabiles" casus="nominativus" numerus="pluralis"/>
+    <forma textus="ignorabilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
 </glossarium>

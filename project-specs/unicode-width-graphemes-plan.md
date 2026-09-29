@@ -124,8 +124,11 @@ like the amalgamator and the lexicon generator, with a staleness gate
 (generated `.c` == regeneration). pythonica is the alternative (faster
 to write, but a Python dependency in the build graph).
 
-**D5: width policy.** The library answers Unicode's question (Ghostty's
-semantics): 0 for controls, Mn/Me, default-ignorables; 2 for East Asian
+**D5: width policy.** (U2 made this exact by reading Ghostty's code: the
+rule in `lib/runae.phase-log.md` U2. Two corrections to the summary
+below: spacing marks, Mc, are 1, and "emoji presentation" isn't a
+separate rule; those characters are East Asian Wide.) The library
+answers Unicode's question (Ghostty's semantics): 0 for controls, Mn/Me, default-ignorables; 2 for East Asian
 W/F, emoji presentation, regional indicators; 1 otherwise; Ambiguous =
 1. Tessera adds containment (features/004): an explicit cursor
 position after every cell whose width is not 1, so a terminal that
