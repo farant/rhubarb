@@ -238,6 +238,9 @@ _auxilium (
         "  -mutationes charta mutationum (quid in quaque versione)\n"
         "  -f <radix>  arbor rhubarb (alioquin ascensus, alioquin"
         " corpus infixum)\n"
+        "  -vivum -retro -portus <n> -radix <via>\n"
+        "              vexilla atrii: programmati vitreo praemissa"
+        " (manus incipere)\n"
         "  --          post plagulam: vexilla programmati relinquere\n",
         (integer)versio.mensura, (constans character*)versio.datum);
 }

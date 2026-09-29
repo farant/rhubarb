@@ -49,6 +49,10 @@ Leges chartae:
   documentation-ideas/016). `-dialectus` regulam `staticus` nominat.
   Cache: fontes briar ipsius clavem intrant - briar mutatus proiectum
   novum aedificat etiam sine commisso novo.
+- vexilla atrii ante plagulam (`-vivum`, `-retro`, `-portus <n>`,
+  `-radix <via>`) programmati vitreo praemittuntur: `manus incipere
+  briar x.thistle` nunc currit (lapide feature-requests/023); olim
+  `vexillum ignotum: -vivum`.
 
 ## v3 — 2026-09-28
 
