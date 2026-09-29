@@ -1002,6 +1002,38 @@ principale (
             }
             imprimere("\n");
         }
+        /* bibliothecae (spec par. 3.5): via (relativa ad directorium
+         * radicis si sub eo), membra attacta, nomina publica */
+        {
+            chorda radix_dir = via_normalizare(via_directorium(
+                chorda_ex_literis(optiones.via_thistle, piscina),
+                piscina), piscina);
+
+            per (i = ZEPHYRUM; membra != NIHIL
+                && i < xar_numerus(membra); i++)
+            {
+                constans BriarMembrum* m = (constans BriarMembrum*)
+                    xar_obtinere(membra, i);
+                                chorda via_m = chorda_ex_literis(m->via,
+                                    piscina);
+
+                si (   via_m.mensura > radix_dir.mensura + I
+                    && memcmp(via_m.datum, radix_dir.datum,
+                        (size_t)radix_dir.mensura) == ZEPHYRUM
+                    && via_m.datum[radix_dir.mensura] == '/')
+                {
+                    via_m = chorda_sectio(via_m, radix_dir.mensura + I,
+                        via_m.mensura);
+                }
+                imprimere("%.*s\tbibliotheca:membra %d, nomina publica"
+                    " %d\n", (integer)via_m.mensura,
+                    (constans character*)via_m.datum,
+                    (integer)(m->visibilia != NIHIL
+                        ? xar_numerus(m->visibilia) : ZEPHYRUM),
+                    (integer)(m->nomina != NIHIL
+                        ? xar_numerus(m->nomina) : ZEPHYRUM));
+            }
+        }
         /* capita DERIVATA (per regionem), ante clausuram */
         per (i = ZEPHYRUM; i < xar_numerus(nexus); i++)
         {
@@ -1041,8 +1073,8 @@ principale (
 
         si (imp.actio == BRIAR_ACTIO_AMALGAMA)
         {
-        BriarAmalgamaFructus am = briar_amalgamare(piscina, &fructus,
-            fons, optiones.via_thistle);
+        BriarAmalgamaFructus am = briar_amalgamare_cum_membris(piscina,
+            &fructus, fons, optiones.via_thistle, membra);
                       chorda  causa;
                       chorda  directorium;
           constans character* dir_amalgamae;
@@ -1154,6 +1186,10 @@ principale (
      * (2026-09-29) */
     stampa = _texere(piscina, stampa, " fontes briar ",
         briar_aedificatio_fontes);
+    /* bibliothecae (spec par. 3.5): octeti membrorum omnium
+     * (transitive) clavem intrant - folio SOLO mutato radix ex cache
+     * valorem veterem reddebat (mensuratum plan IX T4: 28 pro 72) */
+    stampa = briar_membra_stampa(piscina, stampa, membra);
     /* VISIO (par. 4.9): programma vitreum paginam suam in binario
      * fert, ergo vestis clavem intrat (V5) - briar cum vestibus novis
      * aedificat, paginam veterem e cache non reddit */

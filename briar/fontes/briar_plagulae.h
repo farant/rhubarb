@@ -53,6 +53,8 @@ nomen structura {
                  chorda  corpus;           /* fontes/<t>_regiones.c */
                     Xar* derivata;         /* chorda: capita derivata */
                     Xar* nomina;           /* BriarNomenPublicum */
+                    Xar* statica;          /* BriarNomenPublicum:
+                                             * interiora (amalgama) */
                     Xar* visibilia;        /* BriarMembrum*: dependentia
                                              * transitiva, sola visa */
 } BriarMembrum;
@@ -84,5 +86,16 @@ BriarSilvaMembra*
 briar_membra_silvae (
     Piscina* piscina,
         Xar* membra);
+
+/* stampa clavis cache cum membris (spec par. 3.5: clavis omnes
+ * bibliothecas transitive continet): stampa + " membra " + XVI hex
+ * SHA-256 (titulus, mensura, octeti membri cuiusque, post-ordine).
+ * Sine membris stampa IPSA redditur - claves plagularum sine
+ * bibliotheca non moventur. */
+constans character*
+briar_membra_stampa (
+               Piscina* piscina,
+    constans character* stampa,
+                   Xar* membra);
 
 #endif /* BRIAR_PLAGULAE_H */

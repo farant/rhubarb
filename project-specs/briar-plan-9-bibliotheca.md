@@ -390,6 +390,42 @@ bare-macro limitation applies).
   Plant: stamp without members → XXII red at the key check. Commit
   with gates `briar`, `briar-fumus`.
 
+**Executed 2026-09-29.** Measured first: editing folium only left
+radix's cache dir unchanged and radix printed the stale 28 (true value
+72, shown by `-struere -iterum`); `-amalgama radix` exited 0 but the
+file did not compile alone (no member units at all); `-partes` already
+showed derived member headers. No re-slice. Built: `briar_membra_stampa`
+(briar_plagulae) appends ` membra <16 hex>` = SHA-256 over each member's
+title, `\n<length>\n`, bytes, post-order, and returns the stamp
+UNCHANGED with no members (no existing cache moves); tools/briar.c
+calls it after `fontes briar`. `briar_silva_nomina_statica` (one walk
+with the public list, `statica` flag) fills `BriarMembrum.statica`
+(static functions AND variables). `briar_amalgamare_cum_membris`:
+member headers after the corpus headers and before the root's header,
+member bodies after the corpus sources and before the root's regions,
+each once; EVERY static of a member renamed `s_<member>` around its
+body (no skip list, so the Gradus class cannot recur for members);
+`briar_amalgamare` without members on a fabrica that has them REFUSES
+(names the member) instead of writing a broken file. `-partes`:
+`<via relative to the root dir>\tbibliotheca:membra N, nomina publica
+M`. Fumus XXII (17 s whole fumus): run 28, `-probatio`, comment in
+folium moves the cache dir, arithmetic change prints 72 without
+`-iterum`, amalgams of radix and statica_a compile alone and print 28
+/ 5, radix's amalgam test green, three `-partes` lines. Gates:
+plagulae 82/82, amalgama 273/273, briar 20/20, fumus sanum. Plants:
+(A) stamp without the length prefix -> my FIRST test stayed green
+(`ab|c` vs `a|bc`: the next member's title separates them); the test
+now uses `X|mediaZ` vs `Xmedia|Z`, which collide without the prefix ->
+exactly that one red; (B) no member static renames -> 9 reds (predicted
+8; the 9th is `_paria_probare`'s "at least one #define"); (C) briar
+built stamping without members -> fumus XXII red at the key check.
+Deviations: the amalgam compile-alone check lives in fumus (the unit
+gate stays structural, like the corpus fixtures); statica_b/c gained a
+same-named `interior` variable `basis` (output still 5). Not done: the
+root's OWN statics are still not renamed in the amalgam (pre-existing;
+a root static equal to a member's public would collide there - the
+normal build usually refuses it too).
+
 ### Task 5: Records and seal
 
 - [ ] **Step 1:** spec §3.5 "As built" (deltas from B1–B6, Task 1's

@@ -61,6 +61,10 @@ Leges chartae:
   `staticus` privata manent; `principale`, probatio, `methodus`,
   fragmenta membri numquam praebentur. Refutationes cum sede: circulus
   (cum remedio), nomen publicum bis, titulus iteratus, plagula absens.
+  Cache: octeti membrorum omnium clavem intrant (membro SOLO mutato
+  aedificatur). `-amalgama` membra complectitur (statica cuiusque
+  renominata; plagula una clang sola compilat); `-partes` lineam
+  `bibliotheca:` per membrum dat (membra attacta, nomina publica).
 
 ## v3 — 2026-09-28
 

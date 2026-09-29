@@ -10,6 +10,7 @@
 #include "via.h"
 #include "tabula_dispersa.h"
 #include "chorda_aedificator.h"
+#include "sigillum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -430,6 +431,7 @@ _membrum_visitare (
         m->corpus     = pt.corpus;
         m->derivata   = pt.derivata;
         m->nomina     = briar_silva_nomina_publica(p, nexus);
+        m->statica    = briar_silva_nomina_statica(p, nexus);
         m->visibilia  = visibilia;
         tabula_dispersa_inserere(amb->perfecta, chorda_ex_literis(via,
             p), (vacuum*)m);
@@ -518,4 +520,47 @@ briar_membra_colligere (
     }
     *membra = amb.membra;
     redde VERUM;
+}
+
+/* clavis: titulus '\n' mensura '\n' octeti per membrum, post-ordine -
+ * mensura praefixa ne octeti inter membra translati clavem servent */
+constans character*
+briar_membra_stampa (
+               Piscina* piscina,
+    constans character* stampa,
+                   Xar* membra)
+{
+    SigillumContextus  ctx;
+             Sigillum  s;
+            character  hex[SIGILLUM_HEX_MENSURA];
+            character  mensura[32];
+                  i32  i;
+    ChordaAedificator* a;
+
+    si (membra == NIHIL || xar_numerus(membra) == ZEPHYRUM)
+    {
+        redde stampa;
+    }
+    sigillum_incipere(&ctx);
+    per (i = ZEPHYRUM; i < xar_numerus(membra); i++)
+    {
+        constans BriarMembrum* m = (constans BriarMembrum*)xar_obtinere(
+            membra, i);
+
+        sprintf(mensura, "\n%lu\n",
+            (insignatus longus)m->octeti.mensura);
+        sigillum_addere(&ctx, m->titulus,
+            (memoriae_index)strlen(m->titulus));
+        sigillum_addere(&ctx, mensura, (memoriae_index)strlen(mensura));
+        sigillum_addere(&ctx, m->octeti.datum,
+            (memoriae_index)m->octeti.mensura);
+    }
+    s = sigillum_finire(&ctx);
+    sigillum_hex(&s, hex);
+    hex[XVI]  = '\0';
+    a         = chorda_aedificator_creare(piscina, (memoriae_index)128);
+    chorda_aedificator_appendere_literis(a, stampa);
+    chorda_aedificator_appendere_literis(a, " membra ");
+    chorda_aedificator_appendere_literis(a, hex);
+    redde chorda_ut_cstr(chorda_aedificator_finire(a), piscina);
 }

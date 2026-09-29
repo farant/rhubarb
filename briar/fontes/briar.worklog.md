@@ -1052,3 +1052,33 @@ static (-Wunused-function, bugs/002's class). Member headers now carry
 only public prototypes; static ones sit at the top of the member's own
 _regiones.c. The ROOT's header still carries its statics (unchanged;
 the dialect card's rule "no staticus in the main region" covers it).
+
+## 2026-09-29 — plan 9 Task 4: members in the key, the amalgam, -partes
+
+The stale cache was a real user bug, not a hypothetical: after editing
+folium's arithmetic, radix printed 28 from cache (true 72). Members'
+bytes now enter the stamp (`briar_membra_stampa`); with no members the
+stamp is returned unchanged, so no existing thistle's cache moves.
+
+A mute assertion caught by its plant: I "proved" the length prefix with
+`ab|c` vs `a|bc`, but the NEXT member's title sits between the byte runs
+and already separates them - the plant (prefix dropped) stayed green. A
+real collision needs the title inside the bytes: `X|mediaZ` vs
+`Xmedia|Z`. Lesson (again): a separator you didn't write may be doing
+the work you think your code does - plant before believing.
+
+Amalgam: `-amalgama` on a thistle with bibliothecae used to exit 0 and
+write a file clang rejected (member units missing). Now members are
+emitted (headers before the root's header, bodies before the root's
+regions) and every member static - functions and file-scope variables -
+is renamed with the member's title as suffix. No skip list: the Q13
+Gradus bug came from a rename list that skipped privates equal to some
+public name; renaming ALL of a member's statics sidesteps that class.
+The old entry point refuses a fabrica with members rather than emit a
+broken amalgam. The root's own statics are still not renamed
+(pre-existing).
+
+Fumus XXII's first green run was red by MY ordering: the stage mutated
+folium (x3) before building the amalgam, then ran radix's test region,
+which expects doubling. Restore fixtures after a mutation check.
+

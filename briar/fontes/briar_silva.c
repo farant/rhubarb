@@ -1031,10 +1031,13 @@ briar_silvam_capitis_solvere (
     }
 }
 
-Xar*
-briar_silva_nomina_publica (
+/* nomina scopi fili regionum planarum: statica VERUM = interiora
+ * sola, FALSUM = publica sola (vide briar_silva.h) */
+interior Xar*
+_nomina_scopi_fili (
     Piscina* piscina,
-        Xar* nexus)
+        Xar* nexus,
+        b32  statica)
 {
                Xar* nomina = xar_creare(piscina,
                    (i32)magnitudo(BriarNomenPublicum));
@@ -1065,12 +1068,14 @@ briar_silva_nomina_publica (
                          chorda titulus;
                             i32 linea = I;
                             i32 j;
+                            b32 staticum = (b32)((s->repositio
+                                & REPOSITIO_STATICA) != ZEPHYRUM);
 
             si (   s->est_implicitum || s->ex_systemate
                 || s->profunditas != (insignatus integer)ZEPHYRUM
-                || (s->repositio & REPOSITIO_STATICA) != ZEPHYRUM
-                || s->genus == (s32)SYMBOLUM_PARAMETRUM
-                || s->declarans == NIHIL)
+                || staticum       != statica
+                || s->genus       == (s32)SYMBOLUM_PARAMETRUM
+                || s->declarans   == NIHIL)
             {
                 perge;
             }
@@ -1107,4 +1112,20 @@ briar_silva_nomina_publica (
         }
     }
     redde nomina;
+}
+
+Xar*
+briar_silva_nomina_publica (
+    Piscina* piscina,
+        Xar* nexus)
+{
+    redde _nomina_scopi_fili(piscina, nexus, FALSUM);
+}
+
+Xar*
+briar_silva_nomina_statica (
+    Piscina* piscina,
+        Xar* nexus)
+{
+    redde _nomina_scopi_fili(piscina, nexus, VERUM);
 }

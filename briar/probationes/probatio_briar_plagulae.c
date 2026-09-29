@@ -313,6 +313,86 @@ InternamentumChorda* intern;
         }
     }
 
+    imprimere("\n--- Probans stampam clavis (membra) et statica ---\n");
+    /* sine membris stampa IPSA: claves plagularum sine bibliotheca non
+     * moventur */
+    CREDO_VERUM (strcmp(briar_membra_stampa(piscina, "s", NIHIL), "s")
+        == ZEPHYRUM);
+    CREDO_VERUM (strcmp(briar_membra_stampa(piscina, "s",
+        xar_creare(piscina, (i32)magnitudo(BriarMembrum))), "s")
+        == ZEPHYRUM);
+    si (membra != NIHIL && xar_numerus(membra) == III)
+    {
+               BriarMembrum* folium = (BriarMembrum*)xar_obtinere(
+                   membra, 0);
+               BriarMembrum* media = (BriarMembrum*)xar_obtinere(membra,
+                   I);
+                     chorda  octeti_folii   = folium->octeti;
+                     chorda  octeti_mediae  = media->octeti;
+         constans character* titulus_folii  = folium->titulus;
+         constans character* ante = briar_membra_stampa(piscina, "s",
+             membra);
+        constans character* mutata;
+        constans character* translata;
+
+        CREDO_VERUM (strncmp(ante, "s membra ", (size_t)IX)
+            == ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)strlen(ante), XXV);
+        CREDO_VERUM (strcmp(ante, briar_membra_stampa(piscina, "s",
+            membra)) == ZEPHYRUM);
+        /* octetus unus additus in membro -> stampa alia */
+        folium->octeti = chorda_concatenare(octeti_folii,
+            chorda_ex_literis("\n", piscina), piscina);
+        mutata          = briar_membra_stampa(piscina, "s", membra);
+        folium->octeti  = octeti_folii;
+        CREDO_VERUM (strcmp(ante, mutata) != ZEPHYRUM);
+        /* titulus intrat (plagulae genitae eius nomen ferunt) */
+        folium->titulus  = "folium_alterum";
+        mutata           = briar_membra_stampa(piscina, "s", membra);
+        folium->titulus  = titulus_folii;
+        CREDO_VERUM (strcmp(ante, mutata) != ZEPHYRUM);
+        /* mensura praefixa: sine ea 'X' + titulus 'media' + 'mediaZ'
+         * et 'Xmedia' + 'media' + 'Z' fluxum EUNDEM darent (titulus
+         * sequens separator non est cum in octetis stat - planta
+         * prima, 'ab'/'c', muta fuit) */
+        folium->octeti  = chorda_ex_literis("X", piscina);
+        media->octeti   = chorda_ex_literis("mediaZ", piscina);
+        mutata          = briar_membra_stampa(piscina, "s", membra);
+        folium->octeti  = chorda_ex_literis("Xmedia", piscina);
+        media->octeti   = chorda_ex_literis("Z", piscina);
+        translata       = briar_membra_stampa(piscina, "s", membra);
+        folium->octeti  = octeti_folii;
+        media->octeti   = octeti_mediae;
+        CREDO_VERUM (strcmp(mutata, translata) != ZEPHYRUM);
+        CREDO_VERUM (strcmp(ante, briar_membra_stampa(piscina, "s",
+            membra)) == ZEPHYRUM);
+        /* statica membri (amalgama ea renominat): interior sola */
+        CREDO_VERUM (_nomen_publicum(folium->statica,
+            "folium_secretum") > ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_nomen_publicum(folium->statica,
+            "folium_duplicare"), -I);
+        CREDO_AEQUALIS_S32 (_nomen_publicum(folium->statica,
+            "FoliumRes"), -I);
+        CREDO_AEQUALIS_I32 (xar_numerus(media->statica), ZEPHYRUM);
+    }
+    {
+        Xar* sa = _colligere(piscina, intern, fons,
+            FIXA "statica_a.thistle", &causa);
+
+        CREDO_NON_NIHIL (sa);
+        si (sa != NIHIL && xar_numerus(sa) == II)
+        {
+            constans BriarMembrum* b = _membrum(sa, 0);
+
+            /* functio et variabile interior */
+            CREDO_VERUM (_nomen_publicum(b->statica, "adiutor")
+                > ZEPHYRUM);
+            CREDO_VERUM (_nomen_publicum(b->statica, "basis")
+                > ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(b->statica), II);
+        }
+    }
+
     imprimere("\n--- Probans circulum ---\n");
     CREDO_NIHIL (_colligere(piscina, intern, fons,
         FIXA "circulus_a.thistle", &causa));

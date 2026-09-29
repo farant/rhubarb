@@ -104,6 +104,14 @@ briar_silva_nomina_publica (
     Piscina* piscina,
         Xar* nexus);
 
+/* nomina INTERIORA (statica) scopi fili eadem lege (functiones et
+ * variabilia): amalgama ea per membrum renominat. Xar de
+ * BriarNomenPublicum. */
+Xar*
+briar_silva_nomina_statica (
+    Piscina* piscina,
+        Xar* nexus);
+
 /* Parsura C per silvam cum lexico SYSTEMATIS (silva-migratio T16b):
  * capita clausurae (Xar de SilexRes, '.h' sola, praeter 'excludere' -
  * caput principale ipsum; NIHIL licet) contextui praebentur, et

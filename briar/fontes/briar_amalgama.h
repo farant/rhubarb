@@ -36,6 +36,7 @@
 #include "xar.h"
 #include "silex.h"
 #include "briar_fabrica.h"
+#include "briar_plagulae.h"
 
 nomen structura {
        b32  successus;
@@ -51,6 +52,21 @@ briar_amalgamare (
     constans BriarFabricaFructus* fructus,
               constans SilexFons* fons,
               constans character* via_thistle);
+
+/* idem cum membris bibliothecarum (spec par. 3.5; Xar de
+ * BriarMembrum, post-ordine, ex briar_membra_colligere): capita
+ * membrorum post capita corporis et ante caput regionum radicis,
+ * corpora eorum post fontes corporis et ante regiones radicis,
+ * quodque semel; statica membri cuiusque OMNIA '#define s s_<m>'
+ * ante corpus, '#undef' post. Fabrica cum membris sine membris hic
+ * datis -> recusatio (amalgama fracta numquam scribitur). */
+BriarAmalgamaFructus
+briar_amalgamare_cum_membris (
+                         Piscina* piscina,
+    constans BriarFabricaFructus* fructus,
+              constans SilexFons* fons,
+              constans character* via_thistle,
+                             Xar* membra);
 
 /* plagulas in directorium scribere (iuxta plagulam thistle); plagula
  * exsistens quae NON a briar genita est non superscribitur (causa) */
