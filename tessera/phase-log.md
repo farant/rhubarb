@@ -1202,3 +1202,12 @@ exactly at the end.
 ponere), overflow padding off (ponere), the writer advancing by 1
 (graphemata). Amalgam VERIFICATUM + idempotent, header mirrored
 (`tessera_graphema_ponere` exported), saltuarius 13/13 on it.
+
+## FOLIUM, THE CORPUS VIEWER (runae U7b, 2026-09-29)
+
+A new instrumentum beside spectaculum: `./tessera/folium.sh` pages the
+35 Lapide samples (or any UTF-8 files) wrapped to the terminal width.
+Its pure part lives in `instrumenta/folium/` (not `fontes/`, not the
+amalgam — layout is not tessera's); `compile_probationes.sh` links it
+for `probatio_tessera_folium`. Narrative, tests and the findings table:
+`lib/runae.phase-log.md` ("U7b").

@@ -1129,6 +1129,19 @@
     <forma textus="iteratore" casus="ablativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
 
+  <vocabulum lemma="involutio" lingua="latina" classis="substantivum" nota="involutio, -onis f. (involvere): involutio textus = linea longa in lineas latitudinis datae fracta (line wrapping); sedes tessera/instrumenta/folium (folium, runae U7)">
+    <forma textus="involutio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="involutionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="involutioni" casus="dativus" numerus="singularis" genus="femininum"/>
+    <forma textus="involutionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="involutione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="involutiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="involutionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="siamensis" lingua="latina" classis="adiectivum" nota="Siamensis, -e (Siam): lingua Siamensis = Thai (probatio_tessera_folium.c, runae U7)">
+    <forma textus="siamensis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="siamense" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
   <vocabulum lemma="sinicus" lingua="latina" classis="adiectivum" nota="Sinicus, -a, -um (classice: Sinarum, Chinensis): littera Sinica = character CJK (probatio_tessera_latae.c, runae U5)">
     <forma textus="sinicus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="sinica" casus="nominativus" numerus="singularis" genus="femininum"/>

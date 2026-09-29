@@ -358,3 +358,66 @@ invalid-per-byte off (the overlong case), policy ignored (the SIMPLEX
 family; the first attempt did not apply — the formatter had wrapped the
 line — and was redone). Amalgams: the function is trimmed as unused in
 both; `.c` byte-identical, VERIFICATUM + idempotent.
+
+## U7b — folium, the Lapide corpus viewer (2026-09-29)
+
+**INTENTIO (Fran approved).** A tessera instrumentum next to spectaculum.
+Name: `lector` was proposed, then changed to **`folium`** (a leaf of a
+book) because tessera already has `TesseraLector` (the input reader).
+Layout, keeping tessera's pin (grid + input forever; layout is a future
+separate library):
+- `tessera/instrumenta/folium/folium_pagina.{h,c}` — the PURE part:
+  `folium_involvere` (wrap to a width → `FoliumLinea {initium, finis,
+  latitudo}` + statistics) and `folium_paginam_pingere` (a page into a
+  TesseraOpus; controls → space). Linked by tessera's test runner, not by
+  the library or the amalgam. `aedilis.stml` gained the root.
+- `tessera/instrumenta/principalia/folium.c` + `tessera/folium.sh`
+  (generated source list): loads the 35 corpus samples (or given
+  files), pages (space/j/k/PgUp/PgDn, g/G), languages (]/[ and arrows),
+  re-wraps on resize, status line with language, page, units, columns,
+  wide and zero-width counts, policy.
+
+**Wrapping, deliberately naive:** paragraphs are the file's lines (\r
+trimmed); break after a space, or between units either of which is
+wide BY NATURE (first rune width 2: CJK, emoji); otherwise hard-break
+before the unit that would overflow (Thai, long words); a unit wider
+than the line sits alone; blank paragraphs kept.
+
+**The golden caught a real bug on first look.** The first rule was
+"either unit is wide" by CLUSTER width — but under Ghostty's rule a
+spacing mark (Mc) makes `लि` 2 wide, so Hindi words broke in the middle
+("कोर्नेलि|यूस"). Fixed to the first rune's own width; a case pins it.
+
+**Tests (probatio_tessera_folium):** 9 small cases (space, CJK, Thai,
+over-wide unit, blank paragraph, CRLF, space-then-wide, Mc cluster, break
+after wide) + zero width refused; INVARIANTS over 35 languages × 2
+policies × widths 40 and 17, computed independently from runae
+(lossless reassembly, true width ≤ limit unless a lone unit, unit
+boundaries, every break legal, statistics = sums): 140 wraps, 0
+failures; drawing: every row read back == its line (10/10 for each
+golden); a tab draws as a space; goldens `probationes/fixa/folium/
+{ja,hi,yo}.40x10.txt` (page 1, written with FOLIUM_AURUM_SCRIBERE=1 and
+checked by eye). Red first (stubs); plants (compiling), all caught by
+name: no space break, cluster-width "wide" (case + corpus legality +
+hi golden), no break after wide, no hard break (Thai + corpus width),
+CR kept, controls not spaced. Two plants first failed to apply / tested
+the wrong thing and were redone.
+
+**Terminal look (Fran, 2026-09-29): all 35 languages looked good; no
+problems seen.** Findings table — what is ours and what is the
+terminal's:
+
+| Area | Seen | Whose | Note |
+|---|---|---|---|
+| CJK (ja, zh, ko) | right | — | wide cells + containment |
+| Indic (hi, bn, gu, ml, ta) in Ghostty | right | — | Mc = 2 agrees with Ghostty |
+| Indic in Terminal.app | narrower conjuncts (U5c look) | terminal | renders rows as shaped text |
+| Pre-base vowel sign under a block cursor | vanishes (U6d look, saltuarius) | terminal | Ghostty recolours glyphs by anchor cell |
+| RTL (ar, fa, he) | not flagged | ours, by design | no bidi: words are drawn in memory order; the bidi brick is not built |
+| Thai line breaks | not flagged | ours, by design | naive hard break mid-word; real breaking needs a dictionary |
+| Japanese line starts (・、。) | not flagged | ours, by design | no kinsoku rules |
+| ZWJ families in Terminal.app | three emoji | terminal (modelled) | SIMPLEX policy (U5c) |
+
+The "not flagged" rows are properties of the naive wrapper that a
+reader who does not read those scripts would not catch by eye; they are
+listed so the table does not claim more than was checked.
