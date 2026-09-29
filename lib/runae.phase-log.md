@@ -108,3 +108,50 @@ hand-edited table → `-probare` red.
 - `compile_tests_fontes_generata.sh` regenerated (+runae.c,
   +runae_tabulae.c).
 - The research note and plan D5 were corrected against Ghostty's code.
+
+## U3 — WIDTH ORACLE (2026-09-28)
+
+### INTENTIO
+
+An independent derivation of the same table: `tools/runae_oraculum.c`
+opens ICU4C 74.2 (Homebrew, Unicode 15.1) with `dlopen` and looks up
+`u_charType`, `u_hasBinaryProperty`, `u_getIntPropertyValue`,
+`u_getUnicodeVersion` by STRING name (no ICU headers, which are C99/C++
+and fail the house flags; no English identifiers in the source; enum
+values hand-copied from `unicode/uchar.h` 74.2 with the source name in
+a comment). It applies the SAME Ghostty rule to ICU's properties
+instead of our UCD files, and refuses to run unless ICU's Unicode
+version equals `RUNAE_VERSIO`.
+
+Three modes:
+- default: every codepoint vs `runae_latitudo`; zero differences
+  expected (a difference = a parser bug in our generator, a data
+  difference, or a misread enum).
+- `-aurum`: writes ICU's answer as contiguous ranges to
+  `probationes/fixa/runae/aurum_icu.txt` (committed, like toml's
+  tomllib aurum), and `probatio_runae.c` gains a PERMANENT check that
+  the table equals the aurum on every codepoint, with no ICU needed at
+  test time.
+- `-opentui`: OpenTUI's `unicode-width-map.zon` (3,909 entries) against
+  our widths; every difference is classified (Mc, controls, DI, RI, …)
+  and recorded as a named POLICY row (their policy, not a standard).
+  Dev-time only, since opentui isn't in the tree.
+
+Red first for the permanent check: the aurum gate is written against an
+empty aurum file (it must fail: no coverage). Plants: a misread enum
+(W ↔ Na) in the oracle → differences named; a hand-edited aurum line →
+the gate names the range.
+
+**U3 FACTUM (oracle).**
+- `tools/runae_oraculum.c` + `.sh` (ICU4C 74.2 via dlopen by name):
+  0 differences over 1,114,112 codepoints.
+- The aurum (`probationes/fixa/runae/aurum_icu.txt`, 951 ranges) is now a
+  permanent check in `probatio_runae.c`: red first (empty aurum:
+  coverage fails), then green.
+- Plants: a misread EAW enum in the oracle → 182,519 differences; an
+  aurum range's width edited → named per codepoint with its range; an
+  aurum line deleted → "non contiguum" named.
+- OpenTUI: 29 differences = 15 version (Unicode 17 made them W) + 14
+  policy (their hand-widened emoji-capable symbols), none a bug.
+- examen lexicon gained `dlfcn.h` (auspex-certified, planted);
+  `examen-corpus` holds.

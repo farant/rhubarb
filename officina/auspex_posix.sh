@@ -108,6 +108,9 @@ emittere_asserta() {
     done <<< "$TABULA_DIRENT"
     echo "IUNGO_ASSERTA(DT_DIR == 4);"
     echo "IUNGO_ASSERTA(PROT_READ == 0x01 && PROT_WRITE == 0x02);"
+    # dlfcn (runae U3, 2026-09-28)
+    echo "IUNGO_ASSERTA(RTLD_LAZY == 0x1 && RTLD_NOW == 0x2);"
+    echo "IUNGO_ASSERTA(RTLD_LOCAL == 0x4 && RTLD_GLOBAL == 0x8);"
     echo "IUNGO_ASSERTA(MAP_PRIVATE == 0x0002 && MAP_ANON == 0x1000);"
     echo "IUNGO_ASSERTA(sizeof(struct termios) == 72);"
     while read -r campus off mensura; do
@@ -204,6 +207,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <ifaddrs.h>"
     echo "#include <sys/utsname.h>"
     echo "#include <net/if.h>"
+    echo "#include <dlfcn.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"

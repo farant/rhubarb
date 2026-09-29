@@ -786,6 +786,17 @@
   <vocabulum lemma="assert" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="macrum ISO C89 assert.h; systema_c89.h 2026-09-25 silva-migratio T16a"/>
   <vocabulum lemma="menu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen rei interfaciei (menu applicationis macOS), ut plist; fenestra_menu_addere et EVENTUS_MENU 2026-09-14 (plan 8)"/>
 
+  <!-- dlfcn.h (runae U3, 2026-09-28): nomina POSIX fixa in lexico examinis
+       (silva/fontes/systema_posix.h) - non vertenda; 'lazy'/'now' SOLUM ut
+       partes RTLD_LAZY/RTLD_NOW tolerantur -->
+  <vocabulum lemma="dlopen" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam dynamicam aperire"/>
+  <vocabulum lemma="dlsym" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: symbolum titulo quaerere"/>
+  <vocabulum lemma="dlclose" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam claudere"/>
+  <vocabulum lemma="dlerror" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: nuntius erroris ultimi"/>
+  <vocabulum lemma="rtld" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: praefixum modorum RTLD_* (run-time link editor)"/>
+  <vocabulum lemma="lazy" lingua="anglica" classis="ignotum-permissum" nota="SOLUM in RTLD_LAZY (POSIX dlfcn.h)"/>
+  <vocabulum lemma="now" lingua="anglica" classis="ignotum-permissum" nota="SOLUM in RTLD_NOW (POSIX dlfcn.h)"/>
+
   <!-- ================= TERMINI T13/T14 (oraculum UD; nexus renovatus 2026-09-05) =================
        verba plagularum T13 quae tabula symbolorum post commissionem T13
        demum indexavit (excubitor post successum renovat): pinna

@@ -55,3 +55,39 @@
   (classical) went into `oratio/glossarium.stml`. `gc` became
   `V_CATEGORIA_NULLA`, `iamo` became `V_MEDIAE_FINALES` (Hangul medial and
   final letters), and `RUNAE_UNICODUM_VERSIO` became `RUNAE_VERSIO`.
+
+## 2026-09-28: U3, the ICU oracle
+
+- ICU is opened with `dlopen` and its functions looked up by STRING name
+  (`u_charType_74` …). That keeps ICU's C99/C++ headers and English
+  identifiers out of house code. The function-pointer cast goes through
+  `memcpy` (ISO C forbids converting an object pointer to a function
+  pointer; -pedantic would reject it). Enum values are hand-copied from
+  `unicode/uchar.h` 74.2 with the ICU name in a comment; a misread enum
+  is exactly what the W↔Na plant simulated (182,519 differences, named).
+- examen didn't know `dlfcn.h` (the first house use; only vendored
+  sqlite had it). I healed the lexicon the house way: a `dlfcn.h` section
+  in `silva/fontes/systema_posix.h`, and RTLD_* values certified in
+  `officina/auspex_posix.sh` (a plant with RTLD_NOW 0x3 → "TU nostrum
+  DISSENTIT"). `examen-corpus` still holds.
+- Result: 0 differences over all 1,114,112 codepoints between the
+  UCD-generated table and ICU's properties under the same rule. It's
+  committed as `probationes/fixa/runae/aurum_icu.txt` (951 ranges, 13
+  KB), and `probatio_runae.c` checks every codepoint against it
+  permanently, with no ICU needed. The aurum also guards coverage
+  (contiguous ranges up to U+10FFFF).
+- OpenTUI's map (3,907 entries) differs on 29 codepoints, all "we say 1,
+  they say 2":
+  - 15 are VERSION differences: OpenTUI's data is Unicode 17.0, where the
+    I Ching trigrams U+2630–2637 and mono/digrams U+268A–268F became W,
+    and U+1F6D8 (LANDSLIDE) is new and W. They agree after a version
+    bump.
+  - 14 are POLICY: OpenTUI hand-widens text-default emoji-capable
+    symbols (‼ ⁉ ☢ ☣ ⚛ ⛑, heart ornaments U+2760–2767), which are N/A
+    even in 17.0 (`utf8.zig` `eawToWidth`, the hand ranges after the W/F
+    test). Ghostty and runae keep them 1; VS16 widens them per cluster
+    (U4).
+  - Zero differences on marks, controls or default-ignorables: OpenTUI's
+    "Mc = 0" never shows up because its map has no Mc entries.
+- Python's unicodedata (Unicode 15.0) was not run: ICU matched exactly,
+  and a 15.0 source would only add version noise.

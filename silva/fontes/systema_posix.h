@@ -512,3 +512,16 @@ pid_t getpid(void);
  * vera adhibet. */
 long sysconf(int nomen);
 #define _SC_NPROCESSORS_ONLN 58
+
+/* <sectio caput="dlfcn.h"/> dlfcn.h - bibliothecae dynamicae (runae
+ * U3, 2026-09-28: tools/runae_oraculum.c ICU4C per titulos aperit).
+ * Valores Darwin; auspex_posix.sh eos certificat. */
+#define RTLD_LAZY   0x1
+#define RTLD_NOW    0x2
+#define RTLD_LOCAL  0x4
+#define RTLD_GLOBAL 0x8
+
+void* dlopen(const char* via, int modus);
+void* dlsym(void* bibliotheca, const char* titulus);
+int   dlclose(void* bibliotheca);
+char* dlerror(void);

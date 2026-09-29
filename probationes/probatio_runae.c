@@ -8,6 +8,12 @@
  * U+0301 = ZEPHYRUM. Deinde totalitas per omnem codicem et corpus
  * Lapidis: linguae latae (ja/zh/ko) runas II habent, linguae signorum
  * (ar/hi/th/yo) runas ZEPHYRUM, en/la neutras.
+ *
+ * AURUM ORACULI (U3): probationes/fixa/runae/aurum_icu.txt, latitudo
+ * cuiusque codicis per ICU4C (tools/runae_oraculum.sh -aurum) ut
+ * intervalla contigua 'PRIMA..ULTIMA LATITUDO'. Tabula nostra ex
+ * fasciculis UCD, aurum ex proprietatibus ICU: derivationes
+ * independentes, in omni codice aequales esse debent.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -83,6 +89,136 @@ hic_manens constans CasusLatitudinis CASUS[] = {
     { 0x110000, I, "invalida: ultra U+10FFFF" },
     { 0x7FFFFFFF, I, "invalida: maxima" }
 };
+
+#define AURUM_VIA "probationes/fixa/runae/aurum_icu.txt"
+#define DISCORDIAE_IMPRIMENDAE X
+
+/* Numerum hex legere a *k; reddit FALSUM si nullus digitus */
+interior b32
+_hex_legere (
+    chorda  textus,
+       i32* k,
+       s32* valor)
+{
+    s32 v        = ZEPHYRUM;
+    i32 initium  = *k;
+
+    dum (*k < textus.mensura)
+    {
+         i8 c = textus.datum[*k];
+        s32 d;
+
+        si (c >= '0' && c <= '9')
+        {
+            d = (s32)(c - '0');
+        }
+        alioquin si (c >= 'A' && c <= 'F')
+        {
+            d = (s32)(c - 'A') + X;
+        }
+        alioquin
+        {
+            frange;
+        }
+        si (v <= 0x10FFFF)
+        {
+            v = v * XVI + d;
+        }
+        (*k)++;
+    }
+    *valor = v;
+    redde (b32)(*k > initium);
+}
+
+/* Aurum totum iudicare: intervalla contigua 0..U+10FFFF, et tabula
+ * eandem latitudinem in omni codice. Reddit discordias (-1 = forma
+ * mala aut tegumen deficiens). */
+interior s32
+_aurum_iudicare (
+    chorda textus)
+{
+    i32 k           = ZEPHYRUM;
+    s32 proxima     = ZEPHYRUM;   /* runa proxima exspectata */
+    s32 discordiae  = ZEPHYRUM;
+
+    dum (k < textus.mensura)
+    {
+        s32 prima;
+        s32 ultima;
+        s32 latitudo;
+        s32 runa;
+
+        si (textus.datum[k] == '#')
+        {
+            dum (k < textus.mensura && textus.datum[k] != '\n')
+            {
+                k++;
+            }
+            k++;
+            perge;
+        }
+        si (   !_hex_legere(textus, &k, &prima)
+            || k + II > textus.mensura || textus.datum[k] != '.'
+            || textus.datum[k + I] != '.')
+        {
+            imprimere("  FRACTA: aurum forma mala ad octetum %u\n",
+                (insignatus integer)k);
+            redde -I;
+        }
+        k += II;
+        si (   !_hex_legere(textus, &k, &ultima) || k >= textus.mensura
+            || textus.datum[k] != ' ')
+        {
+            imprimere("  FRACTA: aurum forma mala ad octetum %u\n",
+                (insignatus integer)k);
+            redde -I;
+        }
+        k++;
+        si (!_hex_legere(textus, &k, &latitudo))
+        {
+            imprimere("  FRACTA: aurum forma mala ad octetum %u\n",
+                (insignatus integer)k);
+            redde -I;
+        }
+        si (k < textus.mensura && textus.datum[k] == '\n')
+        {
+            k++;
+        }
+        si (prima != proxima || ultima < prima || ultima > 0x10FFFF)
+        {
+            imprimere("  FRACTA: aurum intervallum U+%04X..U+%04X non "
+                "contiguum (exspectata U+%04X)\n",
+                (insignatus integer)prima, (insignatus integer)ultima,
+                (insignatus integer)proxima);
+            redde -I;
+        }
+        per (runa = prima; runa <= ultima; runa++)
+        {
+            si ((s32)runae_latitudo(runa) != latitudo)
+            {
+                si (discordiae < DISCORDIAE_IMPRIMENDAE)
+                {
+                    imprimere("  FRACTA: U+%04X runae %u, aurum %u "
+                        "(intervallum U+%04X..U+%04X)\n",
+                        (insignatus integer)runa,
+                        (insignatus integer)runae_latitudo(runa),
+                        (insignatus integer)latitudo,
+                        (insignatus integer)prima,
+                        (insignatus integer)ultima);
+                }
+                discordiae++;
+            }
+        }
+        proxima = ultima + I;
+    }
+    si (proxima != 0x110000)
+    {
+        imprimere("  FRACTA: aurum tegit usque ad U+%04X, non U+10FFFF\n",
+            (insignatus integer)proxima);
+        redde -I;
+    }
+    redde discordiae;
+}
 
 /* Linguae corporis et exspectationes */
 nomen structura {
@@ -164,6 +300,17 @@ principale (vacuum)
             (insignatus integer)numeri[II],
             (insignatus integer)numeri[III]);
         CREDO_VERUM (totalis);
+    }
+
+    /* Aurum oraculi ICU */
+    {
+        chorda aurum = filum_legere_totum(AURUM_VIA, piscina);
+           s32 discordiae;
+
+        imprimere("\n--- Aurum oraculi (ICU) ---\n");
+        discordiae = _aurum_iudicare(aurum);
+        imprimere("  discordiae: %d\n", (integer)discordiae);
+        CREDO_AEQUALIS_S32 (discordiae, ZEPHYRUM);
     }
 
     /* Corpus Lapidis */
