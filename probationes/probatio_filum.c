@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 s32 principale (vacuum)
 {
@@ -1167,6 +1168,59 @@ s32 principale (vacuum)
 
         (vacuum)filum_delere(testis);
         (vacuum)filum_delere(aliena);
+    }
+
+
+    /* ==================================================
+     * Probans filum_seram_capere (lapide feature-requests/020)
+     * ================================================== */
+
+    {
+        /* in build/ arboris, non /tmp: arbores duae simul probantes
+         * eandem seram contenderent */
+        constans character* via = "build/probatio_filum.sera";
+                 FilumSera* a;
+                 FilumSera* b;
+                     pid_t  filius;
+                   integer  status;
+
+        imprimere("\n--- Probans filum_seram_capere ---\n");
+        (vacuum)filum_delere(via);
+
+        a = filum_seram_capere(via, ZEPHYRUM, piscina);
+        CREDO_NON_NIHIL(a);
+        CREDO_VERUM(filum_existit(via));
+        /* altera apertura, idem processus: exclusa, post moram NIHIL */
+        CREDO_NIHIL(filum_seram_capere(via, L, piscina));
+        filum_seram_liberare(a);
+        filum_seram_liberare(a);    /* iterata: nihil agit */
+        /* filum serae manet, sera libera */
+        CREDO_VERUM(filum_existit(via));
+        b = filum_seram_capere(via, ZEPHYRUM, piscina);
+        CREDO_NON_NIHIL(b);
+        filum_seram_liberare(b);
+
+        /* MORS liberat: filius capit et exit SINE liberatione */
+        filius = fork();
+        si (filius == ZEPHYRUM)
+        {
+            FilumSera* f = filum_seram_capere(via, ZEPHYRUM, piscina);
+
+            _exit(f != NIHIL ? ZEPHYRUM : I);
+        }
+        CREDO_VERUM(filius > ZEPHYRUM);
+        CREDO_VERUM(waitpid(filius, &status, ZEPHYRUM) == filius);
+        CREDO_VERUM(WIFEXITED(status)
+            && WEXITSTATUS(status) == ZEPHYRUM);
+        b = filum_seram_capere(via, ZEPHYRUM, piscina);
+        CREDO_NON_NIHIL(b);
+        filum_seram_liberare(b);
+
+        /* recusationes */
+        CREDO_NIHIL(filum_seram_capere(NIHIL, ZEPHYRUM, piscina));
+        CREDO_NIHIL(filum_seram_capere("build", ZEPHYRUM, piscina));
+        filum_seram_liberare(NIHIL);
+        (vacuum)filum_delere(via);
     }
 
 

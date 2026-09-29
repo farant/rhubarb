@@ -121,6 +121,10 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(SIGBUS == 10 && SIGALRM == 14);"
     echo "IUNGO_ASSERTA(OFF(stat, st_mtime) == 48 && OFF(stat, st_atime) == 32);"
     echo "IUNGO_ASSERTA(O_WRONLY == 0x0001 && O_CREAT == 0x0200 && O_TRUNC == 0x0400);"
+    echo "IUNGO_ASSERTA(O_RDONLY == 0x0000 && O_RDWR == 0x0002);"
+    # flock (filum_seram_capere, 2026-09-29)
+    echo "IUNGO_ASSERTA(LOCK_SH == 0x01 && LOCK_EX == 0x02);"
+    echo "IUNGO_ASSERTA(LOCK_NB == 0x04 && LOCK_UN == 0x08);"
     # ifaddrs (rete_posix.c, 2026-08-01): forma catenae +
     # vexilla. ifa_data ULTIMUM utroque in systemate; campos
     # post ifa_netmask non tangimus, sed offsets priores

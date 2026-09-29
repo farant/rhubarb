@@ -283,4 +283,43 @@ constans character*
 filum_error_recens (
     vacuum);
 
+
+/* ==================================================
+ * Sera (lapide feature-requests/020)
+ * ================================================== */
+
+/* SERA EXCLUSIVA super filum 'via' per flock(2): filum creatur si abest
+ * et NUMQUAM deletur (existentia fili seram NON significat - sera
+ * nucleo tenetur). Sera processui pertinet et a nucleo LIBERATUR cum
+ * processus moritur: nulla sera stala, nulla regula aetatis. Descriptor
+ * FD_CLOEXEC fert, ergo processus filii (processus_exsequi) seram non
+ * hereditant nec post mortem patris tenent.
+ *
+ * TENE per totam seriem LEGERE -> PROBARE -> APPENDERE, non circa
+ * appendere solum: status ante seram lectus iam falsus esse potest
+ * (seq duplicatum). Ideo nulla 'filum_appendere_sub_sera' hic.
+ *
+ *   FilumSera* s = filum_seram_capere("eventa.jsonl.sera", MM, p);
+ *   si (s == NIHIL) { ... occupata post II s ... }
+ *   ... legere, probare, filum_appendere ...
+ *   filum_seram_liberare(s);
+ *
+ * mora_ms: quamdiu exspectare (ZEPHYRUM = semel conari). NIHIL si
+ * tempus exhaustum aut filum aperiri nequit. Duae capturae in EODEM
+ * processu quoque se excludunt (flock per aperturam fili). POSIX
+ * solum (sub _WIN32 NIHIL). */
+nomen structura FilumSera FilumSera;
+
+FilumSera*
+filum_seram_capere (
+    constans character* via,
+                   i32  mora_ms,
+               Piscina* piscina);
+
+/* Seram liberare et descriptorem claudere; NIHIL tolerat; iterata
+ * nihil agit. */
+vacuum
+filum_seram_liberare (
+    FilumSera* sera);
+
 #endif /* FILUM_H */

@@ -14,6 +14,9 @@
     #include <sys/stat.h>
     #include <unistd.h>
     #include <dirent.h>
+    #include <fcntl.h>
+    #include <sys/file.h>
+    #include <time.h>
 #endif
 
 
@@ -1252,4 +1255,86 @@ filum_error_recens (
 {
     si (!_filum_error_est) redde NIHIL;
     redde _filum_error_buffer;
+}
+
+
+/* ==================================================
+ * Sera (lapide feature-requests/020)
+ * ================================================== */
+
+structura FilumSera {
+    integer descriptor;    /* -I post liberationem */
+};
+
+FilumSera*
+filum_seram_capere (
+    constans character* via,
+                   i32  mora_ms,
+               Piscina* piscina)
+{
+#ifdef _WIN32
+    (vacuum)via;
+    (vacuum)mora_ms;
+    (vacuum)piscina;
+    redde NIHIL;
+#else
+     FilumSera* sera;
+       integer  descriptor;
+           i32  exspectatum = ZEPHYRUM;
+
+    si (via == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    descriptor = open(via, O_RDWR | O_CREAT, 0644);
+    si (descriptor < ZEPHYRUM)
+    {
+        redde NIHIL;    /* e.g. directorium, permissio */
+    }
+    /* filii (processus_exsequi) descriptorem ne hereditent: sera
+     * aliter vitam patris excederet */
+    (vacuum)fcntl(descriptor, F_SETFD, FD_CLOEXEC);
+    dum (flock(descriptor, LOCK_EX | LOCK_NB) != ZEPHYRUM)
+    {
+        structura timespec pausa;
+
+        si (errno == EINTR)
+        {
+            perge;
+        }
+        si (errno != EWOULDBLOCK || exspectatum >= mora_ms)
+        {
+            (vacuum)close(descriptor);
+            redde NIHIL;
+        }
+        pausa.tv_sec   = ZEPHYRUM;
+        pausa.tv_nsec  = X * M * M;    /* X ms */
+        (vacuum)nanosleep(&pausa, NIHIL);
+        exspectatum = exspectatum + X;
+    }
+    sera = (FilumSera*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(FilumSera));
+    si (sera == NIHIL)
+    {
+        (vacuum)close(descriptor);
+        redde NIHIL;
+    }
+    sera->descriptor = descriptor;
+    redde sera;
+#endif
+}
+
+vacuum
+filum_seram_liberare (
+    FilumSera* sera)
+{
+    si (sera == NIHIL || sera->descriptor < ZEPHYRUM)
+    {
+        redde;
+    }
+#ifndef _WIN32
+    (vacuum)flock(sera->descriptor, LOCK_UN);
+    (vacuum)close(sera->descriptor);
+#endif
+    sera->descriptor = -I;
 }

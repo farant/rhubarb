@@ -22,6 +22,9 @@
 #   adversarii   probatio_silva_arbor_parsura (T7b)          24       24
 #   haruspex     silva/haruspex.sh (TU contra clang)         243      279
 #
+#   latinae 182 -> 181 (2026-09-29): lib/toml.c deletum in toml Q12
+#     (74642c4f) - cliens toml/fontes eum substituit; porta tunc non
+#     debita erat, ergo contractio hic primum visa.
 #   * 2026-09-25 (silva-migratio T10d): M1 subarbores OMNES generum
 #     probandorum confert, non IV per genus - shim (nodi supremi
 #     omnes) recessit. 281 -> 492, corpus idem, utroque oraculo.
@@ -52,7 +55,7 @@ sera_capere "$BUILD/cursor.sera" || exit 2
 PIGNORA="
 subarbores fixum 492
 planae     fixum 78
-latinae    vivum 182
+latinae    vivum 181
 hospes     fixum 40
 adversarii fixum 24
 haruspex   vivum 279
