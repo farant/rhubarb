@@ -163,6 +163,41 @@ gitignored); the corpus in `probationes/fixa/runae/corpus/<lingua>.txt`;
 tests in `probationes/probatio_runae*.c`. NB the entities precedent's
 generator is Python (stdlib); D4 keeps this one in C89.
 
+**D7 revisited after U5 (evidence, 2026-09-28).** Fran's look in
+Terminal.app and Ghostty: layout is right everywhere, but DROPPING
+width-0 runes changes text. Hindi loses its virama, so न्द splits and
+हिन्दी reads "hinadī"; é becomes e. Spacing marks (Mc) kept in their own
+cells stay aligned, because Ghostty clusters ह+ि into exactly the two
+cells we gave it. So a cell must be able to hold a whole cluster.
+Proposal **U5b: grapheme cells**, options for Fran:
+
+- **(a) per-opus cluster table (recommended).** A multi-codepoint cluster
+  is stored once in a small table owned by the opus (arena bytes +
+  open-addressing index), and the cell's `signum` holds its 32-bit ID
+  with a `TESSERA_ORNAMENTUM_GRAPHEMA` marker (0x100, not SGR, like
+  LATUM). Interning makes equal clusters equal IDs, so the front/back
+  diff stays an integer comparison and emission just writes the stored
+  bytes. Memory grows only with DISTINCT clusters ever drawn, so
+  "steady state allocates nothing" holds once a screen's clusters have
+  been seen. A cap (e.g. 64K clusters, 64 bytes each) degrades to base
+  + U+FFFD, never breaks. Single-codepoint cells keep today's packed
+  signum (ASCII-transparent pin intact).
+- (b) fixed inline side array: N extra bytes per cell in both buffers.
+  Simple, but ~7 MB at the 512×256 maximum for a cap that still cuts a
+  25-byte family emoji.
+- (c) refcounted pool with generations (OpenTUI): the most machinery,
+  built for mutation patterns tessera doesn't have.
+
+Not `internamentum`: it's a global singleton returning 64-bit pointers
+(a signum is 32 bits), and it would pull `tabula_dispersa` and `chorda`
+bodies into the amalgam.
+
+Width = `runae_graphema_proximum` (Ghostty's rule; U4 already matches
+Ghostty on its tests). Containment also after every multi-codepoint
+cluster, not only wide ones (the research note: clusters are where
+terminals disagree most). The Hindi/Yoruba/Arabic rows in spectaculum
+become the look.
+
 ## 4. Tasks
 
 **U1: corpus.** Extraction tool (materia html → text) + the pinned
