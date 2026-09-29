@@ -54,7 +54,10 @@ nomen structura {
 
 nomen structura {
                Piscina* piscina;    /* creationis - sarcinae etc. */
-    constans character* via_git;    /* ".../.git" absoluta */
+    constans character* via_git;    /* ".../.git" absoluta: HEAD */
+    constans character* via_communis; /* objects, refs, packed-refs,
+                                       * config; == via_git nisi in
+                                       * arbore operis (commondir) */
                    Xar* sarcinae;   /* GitSarcina */
 } GitRepositorium;
 
