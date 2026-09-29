@@ -106,4 +106,79 @@ imago_extrahere_et_scalare (
     ImagoScalaModus  modus,
             Piscina* piscina);
 
+
+/* ==================================================
+ * Creare, excidere, transcribere, rectangulum (lapide FR-021)
+ *
+ * SINE scala et SINE mixtura alpha: pixela RGBA substituuntur.
+ * Omnia ad margines praecisa (regio extra = nihil, non error).
+ * Imago vacua = pixela NIHIL, dimensiones 0. (TabulaPixelorum
+ * fenestrae est tabula FENESTRAE - i32 RGBA8888 cum scala; delineare
+ * in eam pingit, non in Imago. Imago hic manet sine fenestra.)
+ * ================================================== */
+
+/*
+ * imago_creare - Imago nova colore uno plena (RGBA)
+ *
+ * Dimensio nulla -> imago vacua.
+ */
+Imago
+imago_creare (
+         i32  latitudo,
+         i32  altitudo,
+          i8  r,
+          i8  g,
+          i8  b,
+          i8  a,
+     Piscina* piscina);
+
+/*
+ * imago_excidere - Regionem exscindere SINE scala
+ *
+ * Regio ad fontem praecisa (intersectio): (III, III, V, V) in IV x IV
+ * -> I x I. Regio tota extra aut vacua -> imago vacua.
+ */
+Imago
+imago_excidere (
+    constans Imago* fons,
+               i32  x,
+               i32  y,
+               i32  latitudo,
+               i32  altitudo,
+           Piscina* piscina);
+
+/*
+ * imago_transcribere - Fontem in dest ad (dx, dy) transcribere
+ *
+ * Pixela dest SUBSTITUUNTUR (etiam alpha fontis nulla) - transcriptio,
+ * non compositio. dx, dy negativi licent; praecisio in omnibus
+ * marginibus; tota extra = nihil mutatum.
+ */
+vacuum
+imago_transcribere (
+             Imago* dest,
+    constans Imago* fons,
+               s32  dx,
+               s32  dy);
+
+/*
+ * imago_rectangulum - Ambitus rectanguli, crassitudine INTRORSUM
+ *
+ * [x, x + latitudo) x [y, y + altitudo); crassitudo pixela intra
+ * marginem. Crassitudo >= dimidium lateris brevioris -> plenum;
+ * crassitudo 0 -> nihil. Praecisum ad imaginem (x, y negativi licent).
+ */
+vacuum
+imago_rectangulum (
+    Imago* dest,
+      s32  x,
+      s32  y,
+      i32  latitudo,
+      i32  altitudo,
+      i32  crassitudo,
+       i8  r,
+       i8  g,
+       i8  b,
+       i8  a);
+
 #endif /* IMAGO_OPUS_H */

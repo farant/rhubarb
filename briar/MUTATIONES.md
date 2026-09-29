@@ -19,6 +19,14 @@ Leges chartae:
 
 ## inedita
 
+- `imago_opus`: `imago_creare` (colore uno plena), `imago_excidere`
+  (regio SINE scala, ad fontem praecisa), `imago_transcribere` (fons in
+  dest ad dx, dy - pixela substituuntur, dx/dy negativi licent),
+  `imago_rectangulum` (ambitus crassitudine introrsum) - omnia ad
+  margines praecisa (lapide feature-requests/021). `imago_extrahere_et_
+  scalare` cum regione EXTRA fontem iam imaginem vacuam reddit (olim I x
+  I et lectio extra limites).
+
 - ictus cache celer: extra arborem rhubarb (corpus infixum) clavis ex
   octetis (plagula + bibliothecae) computatur ANTE silvam et fabricam -
   programma iam aedificatum statim currit (textus lapidis IXM
