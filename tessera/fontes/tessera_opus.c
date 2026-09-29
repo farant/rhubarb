@@ -177,6 +177,28 @@ tessera_aperire (
         redde NIHIL;
     }
 
+    /* tabula graphematum (runae U5b): praeparata, crescit tantum */
+    opus->graphemata_octeti = (i8*)piscina_allocare(piscina,
+        (memoriae_index)TESSERA_GRAPHEMATA_OCTETI);
+    opus->graphemata_initia = (i32*)piscina_allocare_ordinatum(piscina,
+        (memoriae_index)TESSERA_GRAPHEMATA_MAXIMA * magnitudo(i32), IV);
+    opus->graphemata_longitudines = (i8*)piscina_allocare(piscina,
+        (memoriae_index)TESSERA_GRAPHEMATA_MAXIMA);
+    opus->graphemata_index = (i32*)piscina_allocare_ordinatum(piscina,
+        (memoriae_index)(II * TESSERA_GRAPHEMATA_MAXIMA) * magnitudo(i32),
+        IV);
+    si (   opus->graphemata_octeti       == NIHIL
+        || opus->graphemata_initia       == NIHIL
+        || opus->graphemata_longitudines == NIHIL
+        || opus->graphemata_index        == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(opus->graphemata_index, ZEPHYRUM,
+        (memoriae_index)(II * TESSERA_GRAPHEMATA_MAXIMA) * magnitudo(i32));
+    opus->graphemata_octeti_usi  = ZEPHYRUM;
+    opus->graphemata_numerus     = ZEPHYRUM;
+
     opus->cursor_x                        = -I;
     opus->cursor_y                        = -I;
     opus->cursor_x_actus                  = -I;
@@ -335,7 +357,8 @@ _dimidium_solvere (
         TesseraCellula* initium = &opus->tergum[_index(x - I, y)];
 
         initium->signum     = ZEPHYRUM;
-        initium->ornamenta  &= ~(i32)TESSERA_ORNAMENTUM_LATUM;
+        initium->ornamenta &= ~(i32)(TESSERA_ORNAMENTUM_LATUM
+                                     | TESSERA_ORNAMENTUM_GRAPHEMA);
     }
     si (   (cella->ornamenta & TESSERA_ORNAMENTUM_LATUM)
         && _in_finibus(opus, x + I, y))
@@ -347,16 +370,74 @@ _dimidium_solvere (
     }
 }
 
-vacuum
-tessera_cellulam_ponere (
+/* Graphema plurium runarum internare: ID (idem pro octetis aequalibus)
+ * aut -1 si limes (tabula plena, arena plena, graphema longius).
+ * Dispersio FNV-1a, tentatio linearis; loculi ID+1 (0 = vacuus). */
+interior s32
+_graphema_internare (
+    TesseraOpus* opus,
+    constans i8* octeti,
+            i32  mensura)
+{
+    i32 friatio = 2166136261u;
+    i32 mascula = (i32)(II * TESSERA_GRAPHEMATA_MAXIMA) - I;
+    i32 loculus;
+    i32 k;
+    i32 id;
+
+    si (mensura <= ZEPHYRUM || mensura > TESSERA_GRAPHEMA_OCTETI_MAXIMI)
+    {
+        redde -I;
+    }
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        friatio ^= (i32)octeti[k];
+        friatio *= 16777619;
+    }
+    loculus = friatio & mascula;
+    dum (opus->graphemata_index[loculus] != ZEPHYRUM)
+    {
+        id = opus->graphemata_index[loculus] - I;
+        si (   (i32)opus->graphemata_longitudines[id] == mensura
+            && memcmp(opus->graphemata_octeti
+                + opus->graphemata_initia[id],
+                   octeti, (memoriae_index)mensura) == ZEPHYRUM)
+        {
+            redde (s32)id;
+        }
+        loculus = (loculus + I) & mascula;
+    }
+    si (   opus->graphemata_numerus >= (i32)TESSERA_GRAPHEMATA_MAXIMA
+        || opus->graphemata_octeti_usi + mensura
+               > (i32)TESSERA_GRAPHEMATA_OCTETI)
+    {
+        redde -I;   /* limes: vocans ad runam primam redit */
+    }
+    id = opus->graphemata_numerus++;
+    memcpy(opus->graphemata_octeti + opus->graphemata_octeti_usi,
+        octeti,
+        (memoriae_index)mensura);
+    opus->graphemata_initia[id]        = opus->graphemata_octeti_usi;
+    opus->graphemata_longitudines[id]  = (i8)mensura;
+    opus->graphemata_octeti_usi        += mensura;
+    opus->graphemata_index[loculus]    = id + I;
+    redde (s32)id;
+}
+
+/* Nucleus collocationis: latitudo data (I aut II), graphema = signum
+ * est ID internatum. Regulae U5: dimidia scissa vacuantur, columna
+ * ultima spatium fit. */
+interior vacuum
+_cellulam_collocare (
       TesseraOpus* opus,
               s32  x,
               s32  y,
               i32  signum,
-    TesseraStilus  stilus)
+    TesseraStilus  stilus,
+              i32  latitudo,
+              b32  graphema)
 {
     TesseraCellula* cella;
-               i32  latitudo;
                i32  ornamenta =
                    stilus.ornamenta & TESSERA_ORNAMENTA_STILI;
 
@@ -364,7 +445,6 @@ tessera_cellulam_ponere (
     {
         redde;  /* praecisio taciturna */
     }
-    latitudo = _latitudo_signi(signum);
     _dimidium_solvere(opus, x, y);
     si (latitudo == II)
     {
@@ -376,7 +456,8 @@ tessera_cellulam_ponere (
         {
             signum    = ZEPHYRUM;   /* columna ultima: spatium, numquam
                                      * scissa neque involuta */
-            latitudo  = I;
+            latitudo = I;
+            graphema = FALSUM;
         }
     }
     cella                  = &opus->tergum[_index(x, y)];
@@ -384,7 +465,8 @@ tessera_cellulam_ponere (
     cella->color_litterae  = stilus.color_litterae;
     cella->color_fundi     = stilus.color_fundi;
     cella->ornamenta       = ornamenta
-        | ((latitudo == II) ? TESSERA_ORNAMENTUM_LATUM : ZEPHYRUM);
+        | ((latitudo == II) ? TESSERA_ORNAMENTUM_LATUM : ZEPHYRUM)
+        | (graphema ? TESSERA_ORNAMENTUM_GRAPHEMA : ZEPHYRUM);
     si (latitudo == II)
     {
         TesseraCellula* continuatio = &opus->tergum[_index(x + I, y)];
@@ -395,6 +477,18 @@ tessera_cellulam_ponere (
         continuatio->ornamenta       = ornamenta
             | TESSERA_ORNAMENTUM_CONTINUATIO;
     }
+}
+
+vacuum
+tessera_cellulam_ponere (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+              i32  signum,
+    TesseraStilus  stilus)
+{
+    _cellulam_collocare(opus, x, y, signum, stilus,
+        _latitudo_signi(signum), FALSUM);
 }
 
 TesseraCellula
@@ -408,6 +502,46 @@ tessera_cellulam_legere (
         redde CELLULA_VACUA;
     }
     redde opus->tergum[_index(x, y)];
+}
+
+i32
+tessera_cellulae_octeti (
+    constans TesseraOpus* opus,
+                     s32  x,
+                     s32  y,
+                      i8* exitus,
+                     i32  capacitas)
+{
+    TesseraCellula cella;
+               i32 n;
+               i32 k;
+
+    si (opus == NIHIL || exitus == NIHIL || !_in_finibus(opus, x, y))
+    {
+        redde ZEPHYRUM;
+    }
+    cella = opus->tergum[_index(x, y)];
+    si (cella.ornamenta & TESSERA_ORNAMENTUM_GRAPHEMA)
+    {
+        n = (i32)opus->graphemata_longitudines[cella.signum];
+        si (n > capacitas)
+        {
+            redde ZEPHYRUM;
+        }
+        memcpy(exitus, opus->graphemata_octeti
+            + opus->graphemata_initia[cella.signum], (memoriae_index)n);
+        redde n;
+    }
+    n = tessera_signum_mensura(cella.signum);
+    si (n > capacitas)
+    {
+        redde ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        exitus[k] = (i8)((cella.signum >> (VIII * k)) & 0xFF);
+    }
+    redde n;
 }
 
 /* Nucleus scriptionis (parametra constantia - scribere_literis
@@ -433,44 +567,68 @@ _octetos_scribere (
     finis   = datum + mensura;
     dum (cursor < finis)
     {
-        i8 primus = *cursor;
+                  i8  primus      = *cursor;
+         constans i8* post_runae  = cursor;
+         constans i8* post;
+                 s32  runa;
+                 i32  latitudo;
 
         si (primus < 0x20 || primus == 0x7F)
         {
             /* octetus regiminis -> '?' */
-            tessera_cellulam_ponere(opus, cx, y, '?', stilus);
+            _cellulam_collocare(opus, cx, y, '?', stilus, I, FALSUM);
             cursor++;
+            cx++;
+            perge;
+        }
+        runa = utf8_decodere(&post_runae, finis);
+        si (runa < ZEPHYRUM)
+        {
+            /* series invalida -> '?' (octetus unus) */
+            _cellulam_collocare(opus, cx, y, '?', stilus, I, FALSUM);
+            cursor++;
+            cx++;
+            perge;
+        }
+        /* graphema (UAX #29) et latitudo eius (Ghostty) */
+        post = runae_graphema_proximum(cursor, finis, &latitudo);
+        si (latitudo == ZEPHYRUM)
+        {
+            cursor = post;   /* signum sine basi: nihil pingitur */
+            perge;
+        }
+        si (post == post_runae)
+        {
+            _cellulam_collocare(opus, cx, y,
+                tessera_signum_ex_octetis(cursor, (i32)(post - cursor)),
+                stilus, latitudo, FALSUM);
         }
         alioquin
         {
-            constans i8* post = cursor;
-                    s32  runa = utf8_decodere(&post, finis);
+            s32 id = _graphema_internare(opus, cursor, (i32)(post
+                - cursor));
 
-            si (runa < ZEPHYRUM)
+            si (id >= ZEPHYRUM)
             {
-                /* series invalida -> '?' (octetus unus) */
-                tessera_cellulam_ponere(opus, cx, y, '?', stilus);
-                cursor++;
+                _cellulam_collocare(opus, cx, y, (i32)id, stilus,
+                    latitudo,
+                    VERUM);
             }
             alioquin
             {
-                i32 n         = (i32)(post - cursor);
-                i32 latitudo  = runae_latitudo(runa);
-
-                cursor = post;
-                si (latitudo == ZEPHYRUM)
+                /* limes tabulae: runa prima sola (modus U5) */
+                latitudo = runae_latitudo(runa);
+                si (latitudo > ZEPHYRUM)
                 {
-                    /* signum componens / ZWJ / VS: cellula unam runam
-                     * tenet - omittitur (graphemata in tessera: D7) */
-                    perge;
+                    _cellulam_collocare(opus, cx, y,
+                        tessera_signum_ex_octetis(cursor,
+                            (i32)(post_runae - cursor)),
+                        stilus, latitudo, FALSUM);
                 }
-                tessera_cellulam_ponere(opus, cx, y,
-                    tessera_signum_ex_octetis(cursor - n, n), stilus);
-                cx += (s32)latitudo;
-                perge;
             }
         }
-        cx++;
+        cursor  = post;
+        cx      += (s32)latitudo;
     }
 }
 
@@ -741,7 +899,21 @@ tessera_praesentare (
                     stilus_validus = VERUM;
                 }
             }
-            tessera_signum_scribere(opus->aed, cella->signum);
+            si (cella->ornamenta & TESSERA_ORNAMENTUM_GRAPHEMA)
+            {
+                chorda graphema;
+
+                graphema.datum    = opus->graphemata_octeti
+                    + opus->graphemata_initia[cella->signum];
+                graphema.mensura  = (i32)
+                    opus->graphemata_longitudines[cella->signum];
+                chorda_aedificator_appendere_chorda(opus->aed,
+                    graphema);
+            }
+            alioquin
+            {
+                tessera_signum_scribere(opus->aed, cella->signum);
+            }
             opus->frons[idx] = *cella;
             opus->fructus.cellulae_mutatae++;
             mutatae_quadri++;
@@ -750,13 +922,15 @@ tessera_praesentare (
             pos_x = x + ((cella->ornamenta & TESSERA_ORNAMENTUM_LATUM)
                              ? II : I);
             pos_y = y;
-            si (cella->ornamenta & TESSERA_ORNAMENTUM_LATUM)
-            {
-                /* CONTINENTIA: terminal dissentiens de latitudine
+                        si (cella->ornamenta & (TESSERA_ORNAMENTUM_LATUM
+                                    | TESSERA_ORNAMENTUM_GRAPHEMA))
+                        {
+                /* CONTINENTIA (etiam post graphema plurium runarum:
+                 * ibi terminalia maxime dissentiunt): terminal dissentiens de latitudine
                  * cellulam unam laedit, non ordinem - CUP ante
                  * proximam (features/004) */
                 pos_x = -I;
-            }
+                        }
             si (pos_x >= (s32)opus->latitudo)
             {
                 pos_x = -I;  /* involutio numquam creditur */

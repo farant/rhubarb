@@ -406,3 +406,20 @@ quit).
 - The amalgam grew 230 KB → 372 KB (the width table, ~40 KB of data as
   decimal source). The unused-function harvest settled at 4 rounds;
   tessera uses only `runae_latitudo`.
+
+## 2026-09-28: runae U5b, grapheme cells (opus)
+
+- Blanking bug caught at design time: `_dimidium_solvere` sets signum 0 on
+  a wide start; if that start was a GRAPHEMA cell the marker survived,
+  and signum 0 then reads as cluster ID 0 (someone else's bytes). Blanking
+  now clears GRAPHEMA; a test and a plant pin it.
+- Editio refuses a multi-line anchor whose replacement has a different
+  line/token shape ("forma perderetur"); plants must keep the shape (swap
+  one operand, e.g. `| ZEPHYRUM`).
+- The emission buffer is still pre-sized at ~20 bytes per cell; a screen
+  dense with long clusters can grow it once (a bounded arena leak). Noted,
+  not tuned.
+- Terminal.app vs Ghostty measured (phase-log U5b FACTUM): Terminal.app
+  sums codepoint widths (Mc = 0) and doesn't join ZWJ families. Its
+  rendering of the REST of such a row shifts one cell even though CUP puts
+  the cursor right: containment can't fix a terminal's own row layout.

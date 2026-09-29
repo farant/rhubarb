@@ -61,6 +61,7 @@ typedef struct TesseraChordaAedificator TesseraChordaAedificator;
 #define TESSERA_ORNAMENTUM_LATUM        0x40
 #define TESSERA_ORNAMENTUM_CONTINUATIO  0x80
 #define TESSERA_ORNAMENTA_STILI         0x3F
+#define TESSERA_ORNAMENTUM_GRAPHEMA     0x100 /* signum = ID graphematis */
 
 typedef struct TesseraCellula {
     unsigned int signum;          /* UTF-8 compactum; 0 = vacuum */
@@ -162,6 +163,11 @@ TesseraPons* tessera_pons_posix_creare(TesseraPiscina* piscina);
 #define TESSERA_LATITUDO_MAXIMA 512
 #define TESSERA_ALTITUDO_MAXIMA 256
 
+/* Graphemata internata (runae U5b): limites tabulae per opus */
+#define TESSERA_GRAPHEMATA_MAXIMA      16384
+#define TESSERA_GRAPHEMA_OCTETI_MAXIMI 64
+#define TESSERA_GRAPHEMATA_OCTETI      262144
+
 typedef struct TesseraFructus {
     unsigned int cellulae_collatae;
     unsigned int cellulae_mutatae;
@@ -187,6 +193,12 @@ struct TesseraOpus {
     int                       cursor_visibilis_actus;
     int                       primum;
     TesseraFructus            fructus;
+    unsigned char*            graphemata_octeti;      /* arena */
+    unsigned int              graphemata_octeti_usi;
+    unsigned int*             graphemata_initia;      /* ID -> offset */
+    unsigned char*            graphemata_longitudines;
+    unsigned int              graphemata_numerus;
+    unsigned int*             graphemata_index;       /* ID+1, 0 vacuum */
 };
 
 TesseraOpus* tessera_aperire(TesseraPiscina* piscina,
@@ -203,6 +215,8 @@ void tessera_cellulam_ponere(TesseraOpus* opus, int x, int y,
     unsigned int signum, TesseraStilus stilus);
 TesseraCellula tessera_cellulam_legere(const TesseraOpus* opus,
     int x, int y);
+unsigned int tessera_cellulae_octeti(const TesseraOpus* opus, int x, int y,
+    unsigned char* exitus, unsigned int capacitas);
 void tessera_scribere(TesseraOpus* opus, int x, int y,
     TesseraChorda textus, TesseraStilus stilus);
 void tessera_scribere_literis(TesseraOpus* opus, int x, int y,

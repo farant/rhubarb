@@ -159,10 +159,12 @@ principale (vacuum)
     CREDO_VERUM (_cella_est(opus, II, II, ZEPHYRUM,
         TESSERA_ORNAMENTUM_CONTINUATIO));
 
-    /* Signum componens omissum (latitudo 0) */
+    /* Signum componens: ab U5b graphema unum (latitudo I) - 'q' in
+     * columna proxima (U5 signum omittebat) */
     imprimere("\n--- Signum componens ---\n");
     tessera_scribere_literis(opus, IV, ZEPHYRUM, "e\xCC\x81q", nat);
-    CREDO_VERUM (_cella_est(opus, IV, ZEPHYRUM, (i32)'e', ZEPHYRUM));
+    CREDO_VERUM (_cella(opus, IV, ZEPHYRUM).ornamenta
+        & TESSERA_ORNAMENTUM_GRAPHEMA);
     CREDO_VERUM (_cella_est(opus, V, ZEPHYRUM, (i32)'q', ZEPHYRUM));
 
     /* Vexilla latitudinis ex stilo vocantis ablata */

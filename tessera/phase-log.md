@@ -1026,3 +1026,79 @@ emoji and a Hindi line, in more than one terminal.
   (Mc) in their own cells stay aligned, because Ghostty clusters ह+ि into
   exactly the two cells we gave it. Recommendation recorded in the plan:
   tessera cells hold grapheme clusters (features/005), as U5b.
+
+## GRAPHEME CELLS (runae U5b, 2026-09-28)
+
+Decision D7 = (a) (Fran): a per-opus cluster table.
+
+### INTENTIO
+
+- **Cell encoding:** a cluster of ONE rune keeps today's packed signum;
+  a cluster of several runes is interned once in the opus's table, and
+  the cell's signum holds its ID with `TESSERA_ORNAMENTUM_GRAPHEMA` 0x100
+  (not SGR, masked from styles like LATUM/CONTINUATIO). Equal clusters →
+  equal IDs, so the frame diff stays an integer comparison.
+- **Table** (flat fields appended to `TesseraOpus`, mirrored in the
+  hand-written `tessera.h`): arena bytes, an ID → (offset, length) map,
+  and an open-addressing index (FNV-1a, linear probing; slots hold
+  ID+1). Allocated at `tessera_aperire` with fixed caps:
+  `TESSERA_GRAPHEMATA_MAXIMA` 16384 clusters,
+  `TESSERA_GRAPHEMA_OCTETI_MAXIMI` 64 bytes per cluster, a 256 KiB
+  arena (~450 KB per opus, next to 4 MB of cells). Grow-only: IDs are
+  never reused, because frons and tergum may both still hold them.
+  Beyond a cap (table full or cluster too long) the cell degrades to
+  the cluster's first rune alone (the U5 behaviour), never breaks.
+- **Writing:** `_octetos_scribere` walks clusters with
+  `runae_graphema_proximum` (control bytes and invalid UTF-8 still
+  become '?'); width-0 clusters (a lone mark with no base) are dropped;
+  a cluster's width is Ghostty's cluster width (Mc widens, VS16 after a
+  base widens, ZWJ sequences 2).
+- **Emission:** a GRAPHEMA cell writes its stored bytes; after ANY
+  multi-rune cluster, containment (CUP before the next cell), because
+  clusters are where terminals disagree most (research note).
+- **API:** `tessera_cellulae_octeti(opus, x, y, exitus, capacitas)`
+  returns a cell's UTF-8 bytes whichever encoding it uses (tests need
+  it, and so will consumers like saltuarius and the viewer).
+
+Red first: `probatio_tessera_graphemata.c` (e+U+0301 as one width-1
+cell; हिन्दी as two width-2 clusters, matching Ghostty; ❤️ and a ZWJ family
+as one wide cluster; equal clusters share an ID; the first-frame
+bytes with a CUP after the cluster; a cluster over 64 bytes degrades to
+its base; a lone mark is dropped; redrawing known clusters allocates
+nothing; overwriting a cluster with ASCII clears the marker). Plants:
+interning off (a new ID each time), the containment after clusters
+off, the length cap off. Terminal step: spectaculum's Hindi, accent,
+emoji and new Arabic/Yoruba rows.
+
+**U5b FACTUM (grapheme cells).**
+- Per-opus cluster table (interned; ID in signum + `GRAPHEMA` 0x100;
+  16384 clusters / 64 bytes each / 256 KiB arena; past a cap → first
+  rune), writing by `runae_graphema_proximum`, emission of the stored
+  bytes with containment after every multi-rune cluster, the accessor
+  `tessera_cellulae_octeti`, and blanking a wide cluster's start clears
+  `GRAPHEMA` (else signum 0 reads as cluster ID 0).
+- Red first: `probatio_tessera_graphemata.c`; U5's "mark dropped"
+  expectation updated.
+- Green: tessera 10/10, saltuarius 13/13, amalgam VERIFICATUM +
+  idempotent.
+- Four compiling plants caught by name (interning, containment after
+  clusters, length cap, GRAPHEMA on blanking).
+
+**Fran's terminal look (2026-09-28):**
+- **Ghostty:** every row right and every bar aligned: हिन्दी with its
+  conjunct, café, ❤️ as colour emoji, Arabic with all harakat (shaped,
+  LTR since nothing does bidi), Yoruba tone marks, the ZWJ family as one
+  glyph.
+- **Terminal.app:** text right (café, Arabic, Yoruba, ❤️, CJK), but two
+  WIDTH disagreements:
+  - हि drawn 1 cell where Ghostty's rule says 2: it sums codepoint
+    widths, spacing mark = 0.
+  - The ZWJ family isn't joined (👨 👩 👧, 6 cells vs our 2).
+  - In both rows everything to the right is DRAWN one cell left (our bar
+    and even the frame border), though the cursor is right. Containment
+    protects the cursor, not a terminal's own rendering of the rest of
+    a line it measured differently.
+- Follow-up (Fran agreed): U5c, a width policy chosen from the
+  ENVIRONMENT (not a query): `TERM_PROGRAM=Apple_Terminal` → clusters
+  measured as the sum of per-codepoint widths, as OpenTUI's `WidthMethod`
+  does.

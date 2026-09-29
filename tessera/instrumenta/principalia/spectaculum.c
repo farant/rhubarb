@@ -97,9 +97,9 @@ _scaenam_pingere (
 
     /* latitudo runarum (runae U5): textus ab XII, '|' in columna
      * fixa XLVI - si terminal latitudines nostras sequitur, lineae
-     * aequantur; si dissentit, damnum intra textum manet (CUP post
-     * cellulam latam). Signa componentia (hi, e+U+0301) omittuntur
-     * donec graphemata in tessera (D7). */
+          * aequantur; si dissentit, damnum intra textum manet (CUP post
+     * cellulam latam et post graphema). Signa componentia in
+     * graphematibus manent (runae U5b: tabula graphematum). */
     {
         hic_manens constans character* constans EXEMPLA[][II] = {
             { "CJK",    "\xE6\x97\xA5\xE6\x9C\xAC\xE8\xAA\x9E "
@@ -110,12 +110,20 @@ _scaenam_pingere (
                         "\xE2\x9D\xA4\xEF\xB8\x8F" },
             { "hindi",  "\xE0\xA4\xB9\xE0\xA4\xBF\xE0\xA4\xA8"
                         "\xE0\xA5\x8D\xE0\xA4\xA6\xE0\xA5\x80" },
-            { "e+acut", "cafe\xCC\x81 (componens omissum)" },
-            { "mixtum", "a\xE4\xB8\xAD" "b\xF0\x9F\x98\x80" "c" }
+            { "e+acut", "cafe\xCC\x81 (graphema: e + U+0301)" },
+            { "mixtum", "a\xE4\xB8\xAD" "b\xF0\x9F\x98\x80" "c" },
+            { "arabica", "\xD9\x83\xD9\x8F\xD9\x88\xD8\xB1\xD9\x92"
+                         "\xD9\x86\xD9\x90\xD9\x8A\xD9\x84\xD9\x90"
+                         "\xD9\x8A\xD9\x8F\xD9\x88\xD8\xB3\xD9\x92" },
+            { "yoruba", "\xC3\x80w\xE1\xBB\x8Dn \xE1\xBB\x8C\xCC\x80"
+                        "r\xE1\xBB\x8D\xCC\x80" },
+            { "familia", "\xF0\x9F\x91\xA8\xE2\x80\x8D\xF0\x9F\x91\xA9"
+                         "\xE2\x80\x8D\xF0\x9F\x91\xA7 \xE2\x9D\xA4"
+                         "\xEF\xB8\x8F" }
         };
         s32 j;
 
-        per (j = ZEPHYRUM; j < V && XI + j < (s32)alt - IV; j++)
+        per (j = ZEPHYRUM; j < VIII && XI + j < (s32)alt - IV; j++)
         {
             tessera_scribere_literis(opus, II, XI + j,
                 EXEMPLA[j][ZEPHYRUM],

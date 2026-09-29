@@ -26,6 +26,14 @@
 #define TESSERA_LATITUDO_MAXIMA 512
 #define TESSERA_ALTITUDO_MAXIMA 256
 
+/* Graphemata (runae U5b): graphema plurium runarum semel internatur in
+ * tabula operis; cellula ID eius fert (TESSERA_ORNAMENTUM_GRAPHEMA).
+ * Tabula crescit tantum (ID numquam reusatur - frons et tergum eum
+ * tenere possunt); ultra limites cellula ad runam primam redit. */
+#define TESSERA_GRAPHEMATA_MAXIMA      16384
+#define TESSERA_GRAPHEMA_OCTETI_MAXIMI 64
+#define TESSERA_GRAPHEMATA_OCTETI      262144
+
 /* Numeratores ut productum (mos silvae: fructus, non depuratio) */
 nomen structura {
     i32 cellulae_collatae;
@@ -52,6 +60,14 @@ structura TesseraOpus {
                   b32  cursor_visibilis_actus;
                   b32  primum;   /* quadrum primum = pictura plena */
        TesseraFructus  fructus;
+
+    /* Tabula graphematum internatorum (ID = index) */
+                   i8* graphemata_octeti;       /* arena */
+                  i32  graphemata_octeti_usi;
+                  i32* graphemata_initia;       /* ID -> offset arenae */
+                   i8* graphemata_longitudines; /* ID -> octeti */
+                  i32  graphemata_numerus;
+                  i32* graphemata_index;        /* dispersio: ID+1, 0 vacuum */
 };
 
 /* Pons REQUISITUS in Phase A (defalta posix = Phase B) */
@@ -100,6 +116,17 @@ tessera_cellulam_legere (
     constans TesseraOpus* opus,
                      s32  x,
                      s32  y);
+
+/* Octeti UTF-8 cellulae (signum compactum aut graphema internatum) in
+ * exitus[capacitas]; reddit numerum octetorum (0 = vacua aut
+ * continuatio aut capacitas nimis parva). */
+i32
+tessera_cellulae_octeti (
+    constans TesseraOpus* opus,
+                     s32  x,
+                     s32  y,
+                      i8* exitus,
+                     i32  capacitas);
 
 /* Textum scribere: limites runarum UTF-8 ambulantur, quaeque runa
  * cellulam unam (latitudo 1 praesumpta); octeti regiminis et series

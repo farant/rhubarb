@@ -28,7 +28,6 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
     "_evadere_json",
     "_format_duplex",
     "_format_integer_s32",
-    "chorda_aedificator_appendere_chorda",
     "chorda_aedificator_appendere_evasus_json",
     "chorda_aedificator_appendere_f64",
     "chorda_aedificator_appendere_hex_i32",
@@ -56,11 +55,5 @@ interior constans character* constans EXCLUDENDA_UTF8[] = {
 };
 
 interior constans character* constans EXCLUDENDA_RUNAE[] = {
-    "_classis",
-    "_extensio",
-    "_nulla_in_graphemate",
-    "runae_graphema_proximum",
-    "runae_rumpitur",
-    "runae_rupturam_initiare",
     NIHIL
 };

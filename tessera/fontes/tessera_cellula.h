@@ -44,6 +44,8 @@
 /* Vexilla latitudinis (non SGR; ponuntur SOLUM a tessera) */
 #define TESSERA_ORNAMENTUM_LATUM        0x40  /* runa latitudinis II */
 #define TESSERA_ORNAMENTUM_CONTINUATIO  0x80  /* dimidium secundum */
+#define TESSERA_ORNAMENTUM_GRAPHEMA     0x100 /* signum = ID graphematis
+                                               * internati (runae U5b) */
 #define TESSERA_ORNAMENTA_STILI         0x3F  /* bits SGR soli */
 
 

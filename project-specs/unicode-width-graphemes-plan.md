@@ -171,6 +171,8 @@ cells stay aligned, because Ghostty clusters ह+ि into exactly the two
 cells we gave it. So a cell must be able to hold a whole cluster.
 Proposal **U5b: grapheme cells**, options for Fran:
 
+**DECISUM 2026-09-28: Fran chose (a).**
+
 - **(a) per-opus cluster table (recommended).** A multi-codepoint cluster
   is stored once in a small table owned by the opus (arena bytes +
   open-addressing index), and the cell's `signum` holds its 32-bit ID
@@ -197,6 +199,14 @@ Ghostty on its tests). Containment also after every multi-codepoint
 cluster, not only wide ones (the research note: clusters are where
 terminals disagree most). The Hindi/Yoruba/Arabic rows in spectaculum
 become the look.
+
+**U5b done 2026-09-28; U5c agreed (Fran):** after the look, Terminal.app
+sums codepoint widths (spacing marks 0) and doesn't join ZWJ families,
+while Ghostty matches runae. U5c = a width POLICY chosen from the
+environment (`TERM_PROGRAM=Apple_Terminal` → clusters measured as the sum
+of per-codepoint widths; otherwise Ghostty's cluster rule), a second
+cluster-width function in runae and a policy field in the opus. Reading
+the environment is not a query (research note, mitigation 4).
 
 ## 4. Tasks
 
