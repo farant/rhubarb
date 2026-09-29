@@ -32,7 +32,7 @@ hic_manens b32 _monitiones_tacitae = FALSUM;
  * aedilis.stml <inclusa>. Instrumentum capsulae (tools/capsula_
  * generare.c) clientem toml trahit, ergo omne proiectum a silice
  * genitum eas vendit, compilat (fontes .c) et includit (-I). */
-hic_manens constans character* constans SILEX_RADICES_CLIENTIUM[] = {
+constans character* constans SILEX_RADICES_CLIENTIUM[] = {
     "materia/fontes/",
     "toml/fontes/",
     NIHIL
@@ -90,15 +90,9 @@ _via_vendicata (
     redde _radix_clientis(via) >= 0;
 }
 
-/* caput vendicatum -> nomen quo citatur ('include/x.h' aut radix
- * clientis + 'x.h' -> 'x.h'); FALSUM si non caput vendicatum */
-interior b32
-_nomen_capitis_vendicati (
-     chorda  via,
-     chorda* titulus_capitis);
-
-interior b32
-_nomen_capitis_vendicati (
+/* vide silex.h */
+b32
+silex_titulus_capitis (
      chorda  via,
      chorda* titulus_capitis)
 {
@@ -4677,7 +4671,7 @@ silex_renovare (
         {
             chorda nomen_v;
 
-            si (_nomen_capitis_vendicati(clavis, &nomen_v))
+            si (silex_titulus_capitis(clavis, &nomen_v))
             {
                 chorda* cella = (chorda*)xar_addere(nomina);
 
@@ -5054,7 +5048,7 @@ silex_partes (
                         chorda nomen_v;
 
                         si (   pl == NIHIL
-                            || !_nomen_capitis_vendicati(pl->via,
+                            || !silex_titulus_capitis(pl->via,
                                 &nomen_v)
                             || !_praefixum_habet(pl->origo,
                                 "vendicata:"))

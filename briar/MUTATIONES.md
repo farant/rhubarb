@@ -19,6 +19,25 @@ Leges chartae:
 
 ## inedita
 
+- FRANGIT: `toml` novum - cliens materiae TOML 1.0 integer
+  (`toml/fontes/toml.h`), `lib/toml.c` vetus remotum. Vetera -> nova:
+  `toml_legere(t, p)` -> `toml_legere(t, via, p)`; `toml_error(doc)` ->
+  `toml_diagnostica_scribere(p, doc, VERUM)` (omnia vitia cum
+  `via:linea:columna` et caret); `toml_capere_chorda(doc, k)` ->
+  `toml_chorda(doc, k, &c)` (FALSUM si abest - ordinarium tuum
+  explicitum scribe); `toml_capere_numerum` -> `toml_integer` (s64);
+  `toml_capere_boolean` -> `toml_boolean`; `toml_capere_tabulatum` ->
+  `toml_chordae(doc, k, p, &xar)`. Novum: `[tabulae]` servantur (clavis
+  punctata `toml_chorda(doc, "llama-server.versio", &c)`),
+  enumeratio (`toml_tabulae_*`, `toml_seriei_*`), clavis iterata
+  refutatur nominata cum sede priore, fluitantes, tempora, tabulae
+  inlineae, series tabularum (lapide feature-requests/013). Sine
+  `#include`: `toml.h` ex usu derivatur ut quodvis caput domus.
+- corpus: radices clientium materiae (`materia/fontes`, `toml/fontes`)
+  in corpore infixo - `-bibliothecae` eas enumerat, `-bibliotheca toml
+  -functiones` signaturas dat, `-amalgama` eas complectitur; omne
+  proiectum genitum eas vendit (instrumentum capsulae toml trahit).
+
 ## v3 — 2026-09-28
 
 FRANGIT: `MMMM` et `MMMMXCVI` remota - plagulae eis utentes `IV * M`

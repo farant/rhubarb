@@ -662,3 +662,17 @@ script lacked the files — some other path copied them; not chased.
 What settles the change is building the generated project: `sh vitreum/aedificare.sh` →
 capsula_generare compiled with the toml client under the house flags,
 ran on the project's config, app built.
+
+## 2026-09-28 — client roots made public (toml Q13)
+
+`SILEX_RADICES_CLIENTIUM` is no longer static: declared `externus` in
+silex.h, NIHIL-terminated, so briar and the drift guard read the SAME
+array silex resolves with. `_nomen_capitis_vendicati` is published as
+`silex_titulus_capitis(via, &titulus)` (FALSUM when the path is not a
+sold header) — briar's derivation needed exactly this mapping and a
+second copy would drift. Drift guard in probatio_silex: parses
+`RADICES_CLIENTIUM=(…)` out of tools/corpus_infixum.sh and asserts the
+C list equals it in order (trailing `/` tolerated) and ends at II. Plant:
+C order swapped → red; restored → green. The open question from the
+Q12 entry (why the exists-check passed before the resolver change) is
+still not chased.

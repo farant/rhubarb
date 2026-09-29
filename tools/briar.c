@@ -256,43 +256,109 @@ hic_manens constans character* constans FORMAE_FONTIUM[] = {
 #define FORMARUM_FONTIUM_NUMERUS \
     ((i32)(magnitudo(FORMAE_FONTIUM) / magnitudo(FORMAE_FONTIUM[0])))
 
-/* via fontis k bibliothecae 'appellatio' (sine '.h') */
+/* via fontis k bibliothecae 'appellatio' (sine '.h') cuius caput in
+ * 'radix' sedet: include/ -> formae lib/; radix clientis (toml Q13) ->
+ * fons unus iuxta caput ('<radix>x.c'), ceterae formae NIHIL */
 interior constans character*
 _fontis_via (
                 Piscina* piscina,
                  chorda  appellatio,
+     constans character* radix,
                     i32  k)
 {
     character* via = (character*)piscina_allocare(piscina,
-        (memoriae_index)appellatio.mensura + XXXII);
+        (memoriae_index)appellatio.mensura
+            + (memoriae_index)strlen(radix)
+        + XXXII);
 
+    si (strcmp(radix, "include/") != ZEPHYRUM)
+    {
+        si (k != ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        sprintf(via, "%s%s.c", radix, chorda_ut_cstr(appellatio,
+            piscina));
+        redde via;
+    }
     sprintf(via, FORMAE_FONTIUM[k], chorda_ut_cstr(appellatio,
         piscina));
     redde via;
 }
 
-/* nomina bibliothecarum (capita include/ sine '.h') */
+/* nomina bibliothecarum (capita sine '.h'): include/ primum, deinde
+ * radices clientium ordine (SILEX_RADICES_CLIENTIUM - ordo quo silex
+ * caput quaerit). 'radices' (NIHIL licet): Xar parallelum de
+ * 'constans character*', radix cuiusque ('include/' aut radix). */
 interior Xar*
 _bibliothecarum_nomina (
-               Piscina* piscina,
-    constans SilexFons* fons)
+               Piscina*  piscina,
+    constans SilexFons*  fons,
+                   Xar** radices)
 {
-    Xar* capita = silex_fons_enumerare(fons, "include", ".h", piscina);
     Xar* nomina = xar_creare(piscina, (i32)magnitudo(chorda));
-    i32  k;
+    Xar* rr     = xar_creare(piscina,
+                      (i32)magnitudo(constans character*));
+    s32 r;   /* -I = include/ */
+    i32 k;
 
-    per (k = ZEPHYRUM; capita != NIHIL && nomina != NIHIL
-         && k < xar_numerus(capita); k++)
+    per (r = -I; nomina != NIHIL && rr != NIHIL
+         && (r < ZEPHYRUM || SILEX_RADICES_CLIENTIUM[r] != NIHIL); r++)
     {
-        chorda  c = *(chorda*)xar_obtinere(capita, k);
-        chorda* n = (chorda*)xar_addere(nomina);
+        constans character* radix = r < ZEPHYRUM ? "include/"
+            : SILEX_RADICES_CLIENTIUM[r];
+         character  directorium[LXIV];
+               Xar* capita;
 
-        si (n != NIHIL)
+        /* directorium sine '/' caudali */
+        sprintf(directorium, "%.*s", (integer)strlen(radix) - I, radix);
+        capita = silex_fons_enumerare(fons, directorium, ".h", piscina);
+        per (k = ZEPHYRUM; capita != NIHIL && k < xar_numerus(capita);
+             k++)
         {
-            *n = chorda_sectio(c, ZEPHYRUM, c.mensura - II);
+                         chorda   c = *(chorda*)xar_obtinere(capita, k);
+                         chorda*  n = (chorda*)xar_addere(nomina);
+             constans character** q = (constans character**)xar_addere(
+                 rr);
+
+            si (n != NIHIL && q != NIHIL)
+            {
+                *n = chorda_sectio(c, ZEPHYRUM, c.mensura - II);
+                *q = radix;
+            }
         }
     }
+    si (radices != NIHIL)
+    {
+        *radices = rr;
+    }
     redde nomina;
+}
+
+/* radix capitis 'appellatio' (ordo quaestionis) aut NIHIL */
+interior constans character*
+_radix_bibliothecae (
+               Piscina* piscina,
+    constans SilexFons* fons,
+    constans character* appellatio)
+{
+    character* via = (character*)piscina_allocare(piscina,
+        (memoriae_index)strlen(appellatio) + LXIV);
+          s32 r;
+
+    per (r = -I; r < ZEPHYRUM || SILEX_RADICES_CLIENTIUM[r] != NIHIL;
+         r++)
+    {
+        constans character* radix = r < ZEPHYRUM ? "include/"
+            : SILEX_RADICES_CLIENTIUM[r];
+
+        sprintf(via, "%s%s.h", radix, appellatio);
+        si (silex_fons_existit(fons, via, piscina))
+        {
+            redde radix;
+        }
+    }
+    redde NIHIL;
 }
 
 interior vacuum
@@ -311,7 +377,8 @@ _bibliothecas_enumerare (
     constans SilexFons* fons,
                     b32 e_disco)
 {
-    Xar* nomina    = _bibliothecarum_nomina(piscina, fons);
+    Xar* radices   = NIHIL;
+    Xar* nomina    = _bibliothecarum_nomina(piscina, fons, &radices);
     i32  latitudo  = VI;
     i32  sine      = ZEPHYRUM;
     i32  k;
@@ -332,28 +399,35 @@ _bibliothecas_enumerare (
         "descriptio");
     per (k = ZEPHYRUM; k < xar_numerus(nomina); k++)
     {
-           chorda  n = *(chorda*)xar_obtinere(nomina, k);
+                chorda  n = *(chorda*)xar_obtinere(nomina, k);
+    constans character* radix = *(constans character**)xar_obtinere(
+        radices, k);
         character  fontes[VIII];
         character* caput_via = (character*)piscina_allocare(piscina,
-            (memoriae_index)n.mensura + XVI);
+            (memoriae_index)n.mensura + (memoriae_index)strlen(radix)
+            + XVI);
            b32 inventum = FALSUM;
         chorda textus;
         chorda desc;
            i32 f;
            i32 p = ZEPHYRUM;
 
-        sprintf(caput_via, "include/%s.h", chorda_ut_cstr(n, piscina));
+        sprintf(caput_via, "%s%s.h", radix, chorda_ut_cstr(n, piscina));
         textus = silex_fons_legere(fons, caput_via, piscina, &inventum);
         desc = briar_bibliotheca_descriptio(textus, chorda_ex_literis(
-            caput_via + VIII, piscina));
+            caput_via + strlen(radix), piscina));
         fontes[p++]  = 'h';
         fontes[p]    = '\0';
         per (f = ZEPHYRUM; f < FORMARUM_FONTIUM_NUMERUS; f++)
         {
-            constans character* v = _fontis_via(piscina, n, f);
+             constans character* v = _fontis_via(piscina, n, radix, f);
+                      character  signum;
 
-            character signum = v[strlen(v) - I] == 'm' ? 'm' : 'c';
-
+            si (v == NIHIL)
+            {
+                perge;
+            }
+            signum = v[strlen(v) - I] == 'm' ? 'm' : 'c';
             si (   silex_fons_existit(fons, v, piscina)
                 && strchr(fontes, signum) == NIHIL)
             {
@@ -518,14 +592,19 @@ _bibliothecam_ostendere (
                     b32 solae_functiones)
 {
     character* caput_via = (character*)piscina_allocare(piscina,
-        (memoriae_index)strlen(appellatio) + XVI);
+        (memoriae_index)strlen(appellatio) + LXIV);   /* radix + ".h" */
     i32 f;
 
-    sprintf(caput_via, "include/%s.h", appellatio);
-    si (!silex_fons_existit(fons, caput_via, piscina))
+    constans character* radix = _radix_bibliothecae(piscina, fons,
+        appellatio);
+
+    sprintf(caput_via, "%s%s.h", radix != NIHIL ? radix : "include/",
+        appellatio);
+    si (radix == NIHIL)
     {
-           Xar* nomina    = _bibliothecarum_nomina(piscina, fons);
-        chorda  quaesita  = chorda_ex_literis(appellatio, piscina);
+           Xar* nomina = _bibliothecarum_nomina(piscina, fons,
+               NIHIL);
+        chorda quaesita = chorda_ex_literis(appellatio, piscina);
 
         SimilitudoFructus optimi[V];
                       i32 n = ZEPHYRUM;
@@ -533,11 +612,19 @@ _bibliothecam_ostendere (
 
         si (nomina != NIHIL && xar_numerus(nomina) > ZEPHYRUM)
         {
+            /* Xar segmentata est: tabula contigua per copiam, non
+             * xar_obtinere(nomina, ZEPHYRUM) ut tabula (segmenta
+             * contigua solum casu piscinae erant) */
+            chorda* tabula = (chorda*)piscina_allocare(piscina,
+                (memoriae_index)xar_numerus(nomina)
+                * (memoriae_index)magnitudo(chorda));
+
+            (vacuum)xar_copiare_ad_tabulam(nomina, tabula, ZEPHYRUM,
+                xar_numerus(nomina));
             /* decurtata: nomen male scriptum in cauda ('sorss') -
              * praefixum optimum punctatur (subsequentia sola nihil
              * inveniret) */
-            n = similitudo_optima_decurtata(quaesita,
-                (constans chorda*)xar_obtinere(nomina, ZEPHYRUM),
+            n = similitudo_optima_decurtata(quaesita, tabula,
                 xar_numerus(nomina), optimi, V);
         }
         fprintf(stderr, "briar: bibliotheca ignota: %s", appellatio);
@@ -563,8 +650,13 @@ _bibliothecam_ostendere (
     {
         per (f = ZEPHYRUM; f < FORMARUM_FONTIUM_NUMERUS; f++)
         {
-            (vacuum)_plagulam_ostendere(piscina, fons, _fontis_via(
-                piscina, chorda_ex_literis(appellatio, piscina), f));
+            constans character* v = _fontis_via(piscina,
+                chorda_ex_literis(appellatio, piscina), radix, f);
+
+            si (v != NIHIL)
+            {
+                (vacuum)_plagulam_ostendere(piscina, fons, v);
+            }
         }
     }
     redde ZEPHYRUM;

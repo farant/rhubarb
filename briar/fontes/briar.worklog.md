@@ -922,3 +922,55 @@ T16b), `__attribute__` (bugs/010, T17a), located syntax errors with
 excerpts (bugs/001, T19b-1), explained messages (T19b-2 + closer
 fix). Lesson: a silva change that alters briar's user-visible behavior
 owes a `## inedita` line in the same commit.
+
+## 2026-09-28 — client roots in the .thistle-facing paths (toml Q13)
+
+Q12 had already embedded `materia/fontes` + `toml/fontes` in the corpus
+(corpus_infixum) so generated projects could build the capsula tool; Q13
+taught the `.thistle`-facing paths to SEE them. The list lives in two
+homes: `RADICES_CLIENTIUM` in tools/corpus_infixum.sh (crusta) and
+`SILEX_RADICES_CLIENTIUM` in lib/silex.c (now public in silex.h).
+probatio_silex parses the crusta array and compares it to the C one in
+order (plant: C order swapped → red; restored).
+
+- Derivation (briar_silva `_symbola_legere`): header names now come
+  from `silex_titulus_capitis` (was silex's private
+  `_nomen_capitis_vendicati`), so a symbol in `toml/fontes/toml.h`
+  derives `toml.h` exactly as an include/ symbol derives its header.
+  The symbol table awk reads the roots' headers and `.c` statics.
+- tools/briar.c: `-bibliothecae` walks include/ then each root
+  (`_bibliothecarum_nomina`, `_radix_bibliothecae`, `_fontis_via`);
+  `-bibliotheca toml -functiones` prints the 17 toml.h signatures under
+  `==== toml/fontes/toml.h ====`. The `caput_via` buffer grew `+LXIV`
+  (a root prefix is longer than `include/`).
+- briar_amalgama: `_caput_visitare` searches include/ then the roots
+  (`_radix_clientis`, `_caput_est`, `_fons_est`); the amalgam of the
+  toml fixture compiles alone and runs.
+
+Measured (Step 1): derivation ambiguity — 0 public/public collisions
+between the roots' headers and include/. But ONE private/public
+collision surfaced in `-amalgama`: `Gradus` was a file-local typedef in
+BOTH toml_arbor.c and toml_scalaris.c while also being declared public
+elsewhere, and the amalgam's renaming list skips a private name that
+equals a public one — so the two copies collided. Renamed
+`GradusAedificationis` / `GradusAmbulationis`. Measure private/public
+too, not just public/public. Size: the roots are 634 KB of source
+(materia 453 KB + toml 181 KB) against 15.1 MB of lib/+include/ (~4%);
+bin/briar 13.4 MB.
+
+Twice this change wrote `i32 r = -I` for a countdown (briar.c,
+briar_amalgama.c) — i32 is UNSIGNED here; `s32`. examen caught both.
+Fixture briar/probationes/fixa/thistle/toml_config.thistle (fabrica
+test + fumus stage XXI); MUTATIONES `## inedita`: FRANGIT toml + corpus
+roots.
+
+Found at commit time (briar-fumus XVII red): `-bibliotheca sorss`
+suggested `eventus_stml, filum, arbor2_…` — `_bibliothecam_ostendere`
+handed `(chorda*)xar_obtinere(nomina, 0)` to `similitudo_optima_decurtata`
+as a flat array, but Xar is SEGMENTED (first segment IV elements). It
+worked only while the segments happened to be adjacent in the piscina;
+Q13's name walk allocates between `xar_addere`s (roots list, paths), so
+every name past the first segment was scored from foreign memory. This
+was also the "`tomll` doesn't suggest `toml`" quirk. Fix: copy through
+`xar_copiare_ad_tabulam` into a contiguous table. Same flat cast lives
+in html_arbor.c (`_acervum_reponere` with `novi`) — ledger.

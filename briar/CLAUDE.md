@@ -24,10 +24,12 @@ Findings: `fontes/briar.worklog.md`.
   first argument after the file (`./x.thistle -probatio`), `--` ends
   flags.
 - **Library docs (no plagula):** `briar -bibliothecae` lists the
-  corpus's `include/*.h` (name, `h c m` sources, the header's first-line
-  description; last line counts those WITHOUT one = doc debt);
-  `briar -bibliotheca <nomen> [-fons]` prints the header (+ `lib/`
-  sources). Same corpus precedence as a run. Descriptions come from the
+  corpus's `include/*.h`, then each CLIENT ROOT's headers
+  (`SILEX_RADICES_CLIENTIUM`: `materia/fontes`, `toml/fontes` — header
+  and source side by side) (name, `h c m` sources, the header's
+  first-line description; last line counts those WITHOUT one = doc
+  debt); `briar -bibliotheca <nomen> [-fons]` prints the header (+ its
+  `lib/` sources, or the `.c` beside it in a root). Same corpus precedence as a run. Descriptions come from the
   `/* x.h - …` convention (`briar_bibliotheca_descriptio`); enumeration
   is `silex_fons_enumerare`. Fumus XVII.
 - **Dialect card:** `briar -dialectus` = integer typedefs, clang flags
@@ -56,8 +58,8 @@ Findings: `fontes/briar.worklog.md`.
   compiles ALONE — line 2 of the file's banner is the exact compile
   line. Headers in dependency order (`postulata_posix.h` first), the
   regions header, lib sources with EVERY static renamed per file
-  (`#define x x_<stem>` / `#undef`, lists = the `lib/` rows of
-  `corpus.symbola.tsv`), regions, main; local includes blanked, `#line
+  (`#define x x_<stem>` / `#undef`, lists = the `lib/` and client-root
+  `.c` rows of `corpus.symbola.tsv`), regions, main; local includes blanked, `#line
   1 "<via>"` per file. v1 refuses vitrea, `vendor/`, `.m` (spec §9).
   Never overwrites a file it did not write (banner check).
 - **`-app`** (spec §4.8, plan 7) = `<t>.app` beside the thistle. Builds
@@ -143,7 +145,9 @@ Findings: `fontes/briar.worklog.md`.
   headers by TEXT from the silex corpus, never disk; result in
   `res->silva` (`BriarSilva {piscina, parsura, semantica}`,
   `briar_silvam_solvere` frees); `briar_nexus_linea_silvae` maps lines.
-  **Includes are DERIVED** (house headers only): pass one collects
+  **Includes are DERIVED** (house headers only — `include/` AND the
+  client roots, so a script using `toml_chorda` gets `toml.h`, fixture
+  `toml_config.thistle`, fumus XXI): pass one collects
   implicit symbols + unknown types, `corpus.symbola.tsv` (baked from
   the identifier index by `tools/corpus_infixum.sh`; the runner
   regenerates it) maps them to headers, pass two parses with them;
@@ -256,6 +260,13 @@ and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
   appears twice; fragments may reference fragments; the probatio may
   reference any fragment. A fragment's `#include` lines reach the
   generated header through the roots that weave it.
+- **Client roots** (toml Q12/Q13): ONE list in two languages —
+  `SILEX_RADICES_CLIENTIUM` (lib/silex.c, public in silex.h) and
+  `RADICES_CLIENTIUM` (tools/corpus_infixum.sh); `probatio_silex` fails
+  if they differ. A new materia client ships to scripts by one line in
+  each, after checking its private names do not equal a public name
+  elsewhere (the amalgam's static list skips public names: toml's two
+  private `Gradus` typedefs collided with `sententiae.h`'s — renamed).
 - A script needs NO `#include` for house headers (see `derivatum.thistle`);
   a bare object-like macro or enum constant with no function from its
   header nearby is the one thing derivation misses — include it yourself.

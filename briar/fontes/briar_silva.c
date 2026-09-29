@@ -162,7 +162,8 @@ _errorem_quaerere (
 }
 
 /* tabula symbolum -> caput domus (corpus.symbola.tsv e fonte: symbolum,
- * genus, caput 'include/x.h'); ambigua = symbola in capitibus duobus */
+ * genus, caput 'include/x.h' aut radicis clientis); ambigua = symbola in
+ * capitibus duobus */
 nomen structura {
     TabulaDispersa* capita;    /* symbolum -> chorda* caput ('x.h') */
     TabulaDispersa* ambigua;   /* symbolum -> chorda* caput alterum */
@@ -250,15 +251,13 @@ _symbola_legere (
                         {
                 perge;
                         }
-            /* ordines capitum soli: 'include/x.h' -> 'x.h'; ordines
-             * fontium lib (statica, pro -amalgama) hic praetereuntur */
-            si (   caput.mensura <= VIII
-                || memcmp(caput.datum, "include/", (size_t)VIII)
-                    != ZEPHYRUM)
+            /* ordines capitum soli: 'include/x.h' aut radix clientis
+             * + 'x.h' (toml Q13: toml/fontes/toml.h) -> 'x.h'; ordines
+             * fontium (statica, pro -amalgama) hic praetereuntur */
+            si (!silex_titulus_capitis(caput, &caput))
             {
                 perge;
             }
-            caput = chorda_sectio(caput, VIII, caput.mensura);
             si (tabula_dispersa_invenire(t.capita, symbolum, &prior))
             {
                 si (!chorda_aequalis(*(chorda*)prior, caput))

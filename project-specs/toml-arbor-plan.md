@@ -1327,6 +1327,38 @@ implementation file (found in Step 1), `briar/MUTATIONES.md`.
   `tools/briar_struere.sh`, `tools/briar_spectator_struere.sh`), gates
   `briar`, `briar-fumus`; commit; rebake again for the stamp.
 
+**Executed 2026-09-28.** Measured first: (1) derivation ambiguity — 0
+public/public collisions between the roots' headers and `include/`;
+but `-amalgama` found ONE private/public collision: `Gradus`, a
+file-local typedef in both `toml_arbor.c` and `toml_scalaris.c` that
+equals a public name, which the amalgam's renaming list skips by rule →
+renamed `GradusAedificationis` / `GradusAmbulationis`. (2) Size: the
+roots are 634 KB of source (materia 453 + toml 181) against 15.1 MB of
+`lib/`+`include/`; already embedded since Q12. (3) The lookup: three
+places assumed `include/` — derivation's header naming
+(`briar_silva._symbola_legere`), `-bibliothecae`/`-functiones`
+(`tools/briar.c`), the amalgam's header visit (`briar_amalgama`). (4)
+include paths: already `-I<root>` from Q12's silex change.
+
+Done:
+- ONE list, two homes, a guard: `RADICES_CLIENTIUM` (corpus_infixum.sh)
+  and `SILEX_RADICES_CLIENTIUM` (now public in `silex.h`); probatio_silex
+  parses the crusta list and asserts equality in order (plant: C order
+  swapped → red). `silex_titulus_capitis` published (was silex-private)
+  and used by briar's derivation.
+- `-bibliothecae` lists the `materia_*` and `toml*` libraries;
+  `-bibliotheca toml -functiones` prints the 17 `toml.h` signatures;
+  `-amalgama` searches include/ then the roots.
+- Fixture `briar/probationes/fixa/thistle/toml_config.thistle` (no
+  `#include`; sections kept, root enumerated, duplicate key refused at
+  `config.toml:3:1`): fabrica test block + `briar_fumus` stage XXI (run,
+  `-probatio`, amalgam compiled ALONE and run, `-bibliothecae`,
+  `-functiones`).
+- MUTATIONES `## inedita`: FRANGIT toml (old call → new, one line
+  each) + the corpus roots line. briar/CLAUDE.md: the client-roots law.
+- Gates run: briar suite + rebake + spectator, `briar_fumus` (XXI
+  green), `silex_semen_fumus`, silex (drift guard + plant).
+
 ---
 
 ## Task Q14: Closure — records, ledger, memory

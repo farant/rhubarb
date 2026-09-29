@@ -112,9 +112,23 @@ nomen structura {
     constans character* erratum;      /* si !successus: causa */
 } SilexNovumFructus;
 
+/* RADICES CLIENTIUM materiae ('materia/fontes/', 'toml/fontes/'; NIHIL
+ * terminat): caput et implementatio in eodem directorio. Caput in
+ * include/ primum, deinde hic ordine quaeritur. Idem index ac
+ * RADICES_CLIENTIUM in tools/corpus_infixum.sh (probatio_silex
+ * conferre cogit). */
+externus constans character* constans SILEX_RADICES_CLIENTIUM[];
+
+/* caput vendicatum ('include/x.h' aut radix clientis + 'x.h') -> nomen
+ * quo citatur ('x.h'); FALSUM si via caput vendicatum non est */
+b32
+silex_titulus_capitis (
+     chorda  via,
+     chorda* titulus_capitis);
+
 /* clausura bibliothecarum: BFS ex seminibus (nomina capitum,
  * e.g. "chorda.h"); Xar de SilexRes (include/... et lib/... et
- * vendor/...); NIHIL si fons NIHIL */
+ * vendor/... et radicum clientium); NIHIL si fons NIHIL */
 Xar*
 silex_clausuram_colligere (
     Piscina*                      piscina,

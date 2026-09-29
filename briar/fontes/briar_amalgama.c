@@ -72,6 +72,42 @@ _terminatur (
             == ZEPHYRUM);
 }
 
+/* radix clientis viae (SILEX_RADICES_CLIENTIUM) aut NIHIL - caput et
+ * fons in eodem directorio (toml Q13) */
+interior constans character*
+_radix_clientis (
+    chorda via)
+{
+    i32 r;
+
+    per (r = ZEPHYRUM; SILEX_RADICES_CLIENTIUM[r] != NIHIL; r++)
+    {
+        si (_incipit(via, SILEX_RADICES_CLIENTIUM[r]))
+        {
+            redde SILEX_RADICES_CLIENTIUM[r];
+        }
+    }
+    redde NIHIL;
+}
+
+/* caput vendicatum: include/ aut radix clientis + '.h' */
+interior b32
+_caput_est (
+    chorda via)
+{
+    redde _incipit(via, "include/")
+        || (_radix_clientis(via) != NIHIL && _terminatur(via, ".h"));
+}
+
+/* fons vendicatus: lib/ aut radix clientis + '.c' */
+interior b32
+_fons_est (
+    chorda via)
+{
+    redde _incipit(via, "lib/")
+        || (_radix_clientis(via) != NIHIL && _terminatur(via, ".c"));
+}
+
 interior vacuum
 _recusare (
     BriarAmalgamaFructus* f,
@@ -260,7 +296,7 @@ _statica_legere (
 
             si (   symbolum.mensura == ZEPHYRUM
                 || genus.mensura    == ZEPHYRUM
-                || !_incipit(plagula, "lib/"))
+                || !_fons_est(plagula))
             {
                 perge;
             }
@@ -353,11 +389,24 @@ _caput_visitare (
         i      = f + I;
         si (briar_amalgama_inclusio_localis(linea, &nomen_capitis))
         {
-            chorda via = chorda_concatenare(_literae(o->piscina,
-                "include/"), nomen_capitis, o->piscina);
-            vacuum* v = NIHIL;
+            /* include/ primum, deinde radices (ordo silicis) */
+             vacuum* v = NIHIL;
+                s32  r;   /* -I = include/ */
 
-            si (tabula_dispersa_invenire(o->per_viam, via, &v))
+            per (r = -I; v == NIHIL && (r < ZEPHYRUM
+                 || SILEX_RADICES_CLIENTIUM[r] != NIHIL); r++)
+            {
+                constans character* radix = r < ZEPHYRUM ? "include/"
+                    : SILEX_RADICES_CLIENTIUM[r];
+                chorda via = chorda_concatenare(_literae(o->piscina,
+                    radix), nomen_capitis, o->piscina);
+
+                si (!tabula_dispersa_invenire(o->per_viam, via, &v))
+                {
+                    v = NIHIL;
+                }
+            }
+            si (v != NIHIL)
             {
                 _caput_visitare(o, (constans SilexRes*)v);
             }
@@ -399,7 +448,7 @@ _capita_ordinare (
         constans SilexRes* r = (constans SilexRes*)xar_obtinere(
             clausura, i);
 
-        si (_incipit(r->via, "include/"))
+        si (_caput_est(r->via))
         {
             _caput_visitare(&o, r);
         }
@@ -427,9 +476,13 @@ _fontes_ordinare (
         constans SilexRes* c =
             *(constans SilexRes**)xar_obtinere(capita,
             i);
-        chorda via = chorda_concatenare(chorda_concatenare(
-            _literae(piscina, "lib/"), _stirps(c->via), piscina),
-            _literae(piscina, ".c"), piscina);
+        constans character* radix = _radix_clientis(c->via);
+                    chorda  via = chorda_concatenare(chorda_concatenare(
+                        _literae(piscina, radix
+                            != NIHIL ? radix : "lib/"),
+                        _stirps(c->via), piscina), _literae(piscina,
+                        ".c"),
+                        piscina);
         vacuum* v = NIHIL;
 
         si (   tabula_dispersa_invenire(per_viam, via, &v)
@@ -447,7 +500,7 @@ _fontes_ordinare (
         constans SilexRes* r = (constans SilexRes*)xar_obtinere(
             clausura, i);
 
-        si (_incipit(r->via, "lib/") && !tabula_dispersa_continet(visa,
+        si (   _fons_est(r->via) && !tabula_dispersa_continet(visa,
             r->via))
         {
             constans SilexRes** cella = (constans SilexRes**)xar_addere(
@@ -686,7 +739,7 @@ briar_amalgamare (
                 " - amalgama v1 recusat"));
             redde f;
         }
-        si (!_incipit(r->via, "include/") && !_incipit(r->via, "lib/"))
+        si (!_caput_est(r->via) && !_fons_est(r->via))
         {
             _recusare(&f, piscina, _texere(piscina,
                 "plagula clausurae ignota: ", chorda_ut_cstr(r->via,

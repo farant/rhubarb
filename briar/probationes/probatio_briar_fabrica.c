@@ -661,6 +661,47 @@ principale (vacuum)
         briar_silvam_solvere(nexus);
     }
 
+    imprimere("\n--- Probans toml: cliens materiae derivatum ---\n");
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/toml_config.thistle",
+            &nexus);
+        constans BriarPlagula* caput;
+        constans BriarPlagula* aed;
+
+        si (!f.successus)
+        {
+            imprimere("  RECUSATIO: %.*s\n", (integer)f.causa.mensura,
+                (constans character*)f.causa.datum);
+        }
+        CREDO_VERUM (f.successus);
+        caput  = _genita(&f, "include/toml_config_regiones.h");
+        aed    = _genita(&f, "aedificare.sh");
+        CREDO_NON_NIHIL (caput);
+        CREDO_NON_NIHIL (aed);
+        si (caput != NIHIL && aed != NIHIL)
+        {
+            /* toml.h e radice clientis derivatum, ut caput domus */
+            CREDO_VERUM (_continet(piscina, caput->contentum,
+                "#include \"toml.h\"\n"));
+            /* ordo radices clientium includit et fontes earum nectit */
+            CREDO_VERUM (_continet(piscina, aed->contentum,
+                "-Imateria/fontes -Itoml/fontes"));
+            CREDO_VERUM (_continet(piscina, aed->contentum,
+                "toml/fontes/toml.c"));
+        }
+        CREDO_VERUM (_clausura_habet(&f, "toml/fontes/toml.h"));
+        CREDO_VERUM (_clausura_habet(&f, "toml/fontes/toml.c"));
+        CREDO_VERUM (_clausura_habet(&f, "toml/fontes/toml_coctum.c"));
+        CREDO_VERUM (_clausura_habet(&f,
+            "materia/fontes/materia_nodus.c"));
+        /* oraculum et computus non trahuntur (nemo eos includit) */
+        CREDO_FALSUM (_clausura_habet(&f,
+            "toml/fontes/toml_oraculum.c"));
+        briar_silvam_solvere(nexus);
+    }
+
         imprimere("\n--- Probans fragmenta: #line per cursum, fragmenta"
             " extra inventarium ---\n");
     {

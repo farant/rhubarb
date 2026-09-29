@@ -16,7 +16,7 @@
 
 
 /* ==================================================
- * Gradus
+ * GradusAedificationis
  * ================================================== */
 
 nomen enumeratio {
@@ -41,13 +41,13 @@ nomen structura {
      GradusGenus  genus;
     MateriaNodus* nodus;
              i32  status;
-} Gradus;
+} GradusAedificationis;
 
 nomen structura {
                 Piscina* piscina;
              TomlLector  lector;
     MateriaLexiconRatum  lexicon;
-                    Xar* gradus;      /* Gradus per valorem */
+                    Xar* gradus;      /* GradusAedificationis */
                     Xar* pendentia;   /* MateriaToken* trivia */
            MateriaToken* prior;
                     b32  post_lineam;
@@ -60,13 +60,14 @@ nomen structura {
                     i32 unci;
 } Aedificatio;
 
-interior Gradus*
+interior GradusAedificationis*
 _vertex (
     Aedificatio* p)
 {
     i32 n = xar_numerus(p->gradus);
 
-    redde n > ZEPHYRUM ? (Gradus*)xar_obtinere(p->gradus, n
+    redde n > ZEPHYRUM ? (GradusAedificationis*)xar_obtinere(p->gradus,
+        n
         - I) : NIHIL;
 }
 
@@ -159,8 +160,9 @@ _impellere (
     MateriaNodus* nodus,
              i32  status)
 {
-     Gradus* g = (Gradus*)xar_addere(p->gradus);
-        i32  n;
+     GradusAedificationis* g =
+         (GradusAedificationis*)xar_addere(p->gradus);
+                      i32 n;
 
     si (g == NIHIL)
     {
@@ -380,7 +382,7 @@ _tradere (
      Aedificatio* p,
     MateriaNodus* filius)
 {
-    Gradus* g = _vertex(p);
+    GradusAedificationis* g = _vertex(p);
 
     si (g == NIHIL)
     {
@@ -426,7 +428,7 @@ interior vacuum
 _depellere (
     Aedificatio* p)
 {
-    Gradus* g = _vertex(p);
+    GradusAedificationis* g = _vertex(p);
 
     si (   g != NIHIL
         && (g->genus == GRADUS_SERIES || g->genus == GRADUS_COMPACTA)
@@ -443,7 +445,7 @@ interior vacuum
 _claudere (
     Aedificatio* p)
 {
-    Gradus g = *_vertex(p);
+    GradusAedificationis g = *_vertex(p);
 
     _depellere(p);
     commutatio (g.genus)
@@ -555,7 +557,8 @@ _in_uncis (
 
     per (k = n - I; k >= ZEPHYRUM && k < n; k--)
     {
-        Gradus* g = (Gradus*)xar_obtinere(p->gradus, k);
+        GradusAedificationis* g =
+            (GradusAedificationis*)xar_obtinere(p->gradus, k);
 
         si (g->genus == GRADUS_SERIES || g->genus == GRADUS_COMPACTA)
         {
@@ -584,8 +587,8 @@ _tractare (
      Aedificatio* p,
     MateriaToken* t)
 {
-     Gradus* g          = _vertex(p);
-        s32  genus_lex  = t->genus;
+     GradusAedificationis* g          = _vertex(p);
+                      s32  genus_lex  = t->genus;
 
     commutatio (g->genus)
     {
@@ -721,7 +724,7 @@ _tractare (
                     (i32)TOML_INCLUSA_TOK_CLAUSURA,
                     t);
                 {
-                    Gradus s = *g;
+                    GradusAedificationis s = *g;
 
                     _depellere(p);
                     _tradere(p, s.nodus);
@@ -752,7 +755,7 @@ _tractare (
                     (i32)TOML_INCLUSA_TOK_CLAUSURA,
                     t);
                 {
-                    Gradus s = *g;
+                    GradusAedificationis s = *g;
 
                     _depellere(p);
                     _tradere(p, s.nodus);
@@ -809,7 +812,7 @@ _tractare (
 
 interior TomlModus
 _modus (
-    constans Gradus* g)
+    constans GradusAedificationis* g)
 {
     commutatio (g->genus)
     {
@@ -866,7 +869,8 @@ toml_arbor_parsare (
     p.post_lineam      = VERUM;
     p.memoria_defecit  = FALSUM;
     p.unci             = ZEPHYRUM;
-    p.gradus           = xar_creare(piscina, (i32)magnitudo(Gradus));
+    p.gradus = xar_creare(piscina,
+        (i32)magnitudo(GradusAedificationis));
     p.pendentia = xar_creare(piscina,
         (i32)magnitudo(MateriaToken*));
     si (   p.gradus == NIHIL || p.pendentia == NIHIL
@@ -881,7 +885,7 @@ toml_arbor_parsare (
 
     dum (!p.memoria_defecit)
     {
-        Gradus* g = _vertex(&p);
+        GradusAedificationis* g = _vertex(&p);
         MateriaToken* t;
 
         toml_lector_profunditatem_ponere(&p.lector, _unci_aperti(&p));

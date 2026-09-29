@@ -81,3 +81,11 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   (pagina plagulae fractae). Quinque adversa cetera contra causam +
   lineam BRIAR IPSIUS probantur, non contra aurea: minus fragile, et
   relationem probat non octetos.
+
+## toml (toml Q13, 2026-09-28)
+
+- `thistle/toml_config.thistle` — cliens materiae toml SINE `#include`:
+  exemplum lapide feature-requests/013 (sectiones duae, `versio` in
+  utraque), enumeratio radicis, clavis iterata nominata (`config.toml:
+  3:1`). Porta fabricae (derivatio, clausura, `-I` radicum) et fumus
+  XXI (cursus, -probatio, -amalgama, -bibliothecae, -functiones).

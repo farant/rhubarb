@@ -89,6 +89,12 @@
 #        fert), linea 'aedificatum:' (tempus, fontes, commissum),
 #        --version == -versio, -h linea I == -versio, -mutationes == charta
 #        octetis; capita vN stricte descendentia
+#   XXI. cliens materiae toml (toml Q13): ./toml_config.thistle sine
+#        #include -> 'llama-server b11201' et 'poppler 26.09.0'
+#        (toml.h derivatum, radices clientium in corpore INFIXO);
+#        -probatio viridis (clavis bis nominata); -amalgama clang sola
+#        compilat et currit; -bibliothecae lineam toml fert;
+#        -bibliotheca toml -functiones toml_chorda nominat
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -136,7 +142,7 @@ done
 [ -f "$RADIX/probationes/fixa/icones/fons_256.png" ] \
     || { echo "FUMUS: fixum abest: probationes/fixa/icones/fons_256.png" >&2; exit 2; }
 FIXA="$RADIX/briar/probationes/fixa/thistle"
-for f in salve punctum derivatum fragmenta salve_vitreum adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
+for f in salve punctum derivatum fragmenta salve_vitreum toml_config adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
     [ -f "$FIXA/$f.thistle" ] || { echo "FUMUS: fixum abest: $f.thistle" >&2; exit 2; }
 done
 [ -f "$RADIX/project-specs/exempla/salutatio.thistle" ] \
@@ -174,6 +180,7 @@ deficere () {
 
 cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$FIXA/fragmenta.thistle" "$FIXA/salve_vitreum.thistle" \
+   "$FIXA/toml_config.thistle" \
    "$FIXA/adversa/probatio_rubra.thistle" "$FIXA/adversa/duo_principalia.thistle" \
    "$FIXA/adversa/fragmentum_erratum.thistle" \
    "$FIXA/adversa/fragmentum_circulus.thistle" \
@@ -527,8 +534,38 @@ V_LINEA="$( cd "$AREA" && "$BRIAR" -versio | head -1 )"
     || deficere "-mutationes != briar/MUTATIONES.md (octeti)" "$AREA/mutationes.log"
 echo "FUMUS:    versio v$N_FONS ex charta ($V_LINEA), inedita $N_INED, aedificatum, --version, -mutationes == fons"
 
+# ---- XXI. cliens materiae toml (radices clientium, toml Q13) ----
+echo "FUMUS: XXI. ./toml_config.thistle (toml derivatum), -probatio, -amalgama, -bibliothecae"
+( cd "$AREA" && ./toml_config.thistle ) > "$AREA/toml_cursus.log" 2>&1 \
+    || deficere "toml_config.thistle defecit" "$AREA/toml_cursus.log"
+grep -q '^llama-server b11201$' "$AREA/toml_cursus.log" \
+    && grep -q '^poppler 26.09.0$' "$AREA/toml_cursus.log" \
+    || deficere "toml_config: versiones sectionum non impressae" "$AREA/toml_cursus.log"
+( cd "$AREA" && ./toml_config.thistle -probatio ) > "$AREA/toml_probatio.log" 2>&1 \
+    && grep -q 'OMNIA PRAETERIERUNT' "$AREA/toml_probatio.log" \
+    || deficere "toml_config -probatio rubra" "$AREA/toml_probatio.log"
+( cd "$AREA" && ./toml_config.thistle -amalgama ) > "$AREA/toml_amalgama.log" 2>&1 \
+    || deficere "toml_config -amalgama defecit" "$AREA/toml_amalgama.log"
+for p in toml_config probatio_toml_config; do
+    ORDO="$(sed -n '2s/^ \* //p' "$AREA/$p.c")"
+    ( cd "$AREA" && eval "$ORDO" ) > "$AREA/${p}_clang.log" 2>&1 \
+        || deficere "amalgama $p.c clang sola non compilat" "$AREA/${p}_clang.log"
+done
+( cd "$AREA" && ./toml_config ) > "$AREA/toml_amalgama_cursus.log" 2>&1
+grep -q '^poppler 26.09.0$' "$AREA/toml_amalgama_cursus.log" \
+    || deficere "amalgama toml_config: 'poppler 26.09.0' non impressum" "$AREA/toml_amalgama_cursus.log"
+( cd "$AREA" && ./probatio_toml_config ) > "$AREA/toml_amalgama_probatio.log" 2>&1 \
+    || deficere "probatio amalgamae toml_config rubra" "$AREA/toml_amalgama_probatio.log"
+grep -q '^toml  *h c  *TOML 1.0' "$AREA/bibl.log" \
+    || deficere "-bibliothecae: linea toml (h c + descriptio) deest" "$AREA/bibl.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca toml -functiones ) > "$AREA/func_toml.log" 2>&1 \
+    && grep -q '^==== toml/fontes/toml.h (functiones [0-9]*) ====$' "$AREA/func_toml.log" \
+    && grep -q ' toml_chorda (constans TomlDocumentum\* doc, constans character\* via_clavium, chorda\* exitus);$' "$AREA/func_toml.log" \
+    || deficere "-bibliotheca toml -functiones: toml_chorda deest" "$AREA/func_toml.log"
+echo "FUMUS:    toml: cursum, probatum, amalgamatum ($(wc -l < "$AREA/toml_config.c" | tr -d ' ') lineae), bibliotheca, functiones"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

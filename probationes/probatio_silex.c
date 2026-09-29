@@ -196,6 +196,79 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
+    /* ========================================================
+     * PROBARE: radices clientium - index C (SILEX_RADICES_CLIENTIUM)
+     * == index crustae (tools/corpus_infixum.sh RADICES_CLIENTIUM),
+     * ordine: silex caput quaerit, briar corpus infigit - duae
+     * sedes, una veritas (toml Q13)
+     * ======================================================== */
+
+    {
+        chorda scriptum = filum_legere_totum("tools/corpus_infixum.sh",
+                               piscina);
+        chorda acus     = chorda_ex_literis("\nRADICES_CLIENTIUM=(",
+                               piscina);
+           i32 k;
+           i32 n        = ZEPHYRUM;
+           s32 initium  = (s32)-I;
+
+        imprimere("\n--- Probans radices clientium: C == crusta ---\n");
+        CREDO_NON_NIHIL (scriptum.datum);
+        per (k = ZEPHYRUM; scriptum.datum != NIHIL
+             && k + acus.mensura <= scriptum.mensura; k++)
+        {
+            si (memcmp(scriptum.datum + k, acus.datum,
+                    (size_t)acus.mensura) == ZEPHYRUM)
+            {
+                initium = (s32)(k + acus.mensura);
+                frange;
+            }
+        }
+        CREDO_VERUM (initium >= ZEPHYRUM);
+        si (initium >= ZEPHYRUM)
+        {
+            i32 j = (i32)initium;
+
+            dum (j < scriptum.mensura && scriptum.datum[j] != ')')
+            {
+                i32 a;
+                i32 m;
+
+                dum (j < scriptum.mensura && scriptum.datum[j] == ' ')
+                {
+                    j++;
+                }
+                a = j;
+                dum (   j < scriptum.mensura && scriptum.datum[j] != ' '
+                     && scriptum.datum[j] != ')')
+                {
+                    j++;
+                }
+                si (j == a)
+                {
+                    frange;
+                }
+                m = (i32)strlen(SILEX_RADICES_CLIENTIUM[n] != NIHIL
+                    ? SILEX_RADICES_CLIENTIUM[n] : "");
+                /* 'toml/fontes' == 'toml/fontes/' sine '/' caudali */
+                CREDO_NON_NIHIL (SILEX_RADICES_CLIENTIUM[n]);
+                CREDO_VERUM (SILEX_RADICES_CLIENTIUM[n] != NIHIL
+                    && m == (j - a) + I
+                    && memcmp(SILEX_RADICES_CLIENTIUM[n],
+                        scriptum.datum + a, (size_t)(j - a))
+                            == ZEPHYRUM);
+                si (SILEX_RADICES_CLIENTIUM[n] == NIHIL)
+                {
+                    frange;
+                }
+                n++;
+            }
+        }
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_NIHIL (SILEX_RADICES_CLIENTIUM[II]);
+    }
+
     /* tabula rasa (percursus prior) */
     {
         constans character* argumenta_rm[4];
