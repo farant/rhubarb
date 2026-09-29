@@ -19,6 +19,12 @@ Leges chartae:
 
 ## inedita
 
+- `manus clavis a` / `manus clavis 7`: littera aut numerus SOLUS (sine
+  modificatore) pressio UNA clavis nativa est (keydown + keyup) - olim
+  recusatum. Brevitates paginae in `document` ('a', 'n', '1'-'9') nunc
+  via nativa probantur (lapide feature-requests/024). Maiuscula sola
+  ('A') Shift implicat; textus (chorda) per `scribere` manet.
+
 - `imago_opus`: `imago_creare` (colore uno plena), `imago_excidere`
   (regio SINE scala, ad fontem praecisa), `imago_transcribere` (fons in
   dest ad dx, dy - pixela substituuntur, dx/dy negativi licent),

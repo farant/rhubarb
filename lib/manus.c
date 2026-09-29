@@ -1643,10 +1643,9 @@ manus_clavem (
                 "manus_clavem: clavis IGNOTA - nomina posita sunt"
                 " (Enter Tab Escape Space Backspace Delete"
                 " ArrowUp/Down/Left/Right Home End PageUp PageDown"
-                " F1-F12), praefixis Cmd+ Ctrl+ Shift+ Alt+."
-                " Littera sola CUM modificatore quoque licet"
-                " ('Cmd+c'); sine modificatore textum per"
-                " 'scribere' pone, non per claves");
+                " F1-F12), littera aut numerus unus ('a', '7',"
+                " 'Cmd+c'), praefixis Cmd+ Ctrl+ Shift+ Alt+."
+                " Textum (chordam) per 'scribere' pone");
         }
         alioquin
         {

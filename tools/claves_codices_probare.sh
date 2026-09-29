@@ -1,5 +1,6 @@
 #!/bin/sh
-# claves_codices_probare.sh - tabulam CODICES_LITTERARUM contra
+# claves_codices_probare.sh - tabulas CODICES_LITTERARUM et
+# CODICES_NUMERORUM (lapide FR-024, 2026-09-29) contra
 # auctoritatem systematis (Carbon kVK_ANSI_*) probare.
 #
 # CUR SEORSUM ET NON IN SUITA: tabula in lib/fenestra_macos.m
@@ -24,8 +25,12 @@ TABULA=$(sed -n '/kVK_ANSI_\* pro a\.\.z/,/};/p' lib/fenestra_macos.m \
     | grep '^[[:space:]]*[0-9][0-9,[:space:]]*$' \
     | grep -o '[0-9]\+' | tr '\n' ',' | sed 's/,$//')
 
-if [ -z "$TABULA" ]; then
-    echo "claves: tabulam in lib/fenestra_macos.m invenire non potui" >&2
+NUMERI=$(sed -n '/kVK_ANSI_\* pro 0\.\.9/,/};/p' lib/fenestra_macos.m \
+    | grep '^[[:space:]]*[0-9][0-9,[:space:]]*$' \
+    | grep -o '[0-9]\+' | tr '\n' ',' | sed 's/,$//')
+
+if [ -z "$TABULA" ] || [ -z "$NUMERI" ]; then
+    echo "claves: tabulam (litterarum aut numerorum) in lib/fenestra_macos.m invenire non potui" >&2
     exit 2
 fi
 
@@ -37,6 +42,10 @@ cat > "$OPUS/probatio.m" <<EOF
 #include <stdio.h>
 int main(void){
   int mei[] = {$TABULA};
+  int mei_n[] = {$NUMERI};
+  int veri_n[10] = {kVK_ANSI_0,kVK_ANSI_1,kVK_ANSI_2,kVK_ANSI_3,
+    kVK_ANSI_4,kVK_ANSI_5,kVK_ANSI_6,kVK_ANSI_7,kVK_ANSI_8,kVK_ANSI_9};
+  int nn = (int)(sizeof(mei_n)/sizeof(mei_n[0]));
   int veri[26] = {kVK_ANSI_A,kVK_ANSI_B,kVK_ANSI_C,kVK_ANSI_D,kVK_ANSI_E,
     kVK_ANSI_F,kVK_ANSI_G,kVK_ANSI_H,kVK_ANSI_I,kVK_ANSI_J,kVK_ANSI_K,
     kVK_ANSI_L,kVK_ANSI_M,kVK_ANSI_N,kVK_ANSI_O,kVK_ANSI_P,kVK_ANSI_Q,
@@ -51,7 +60,14 @@ int main(void){
       malae++;
     }
   }
-  printf("%s (%d discrepantiae ex XXVI)\n",
+  if (nn != 10) { printf("tabula X numeros non habet (%d)\n", nn); return 2; }
+  for (i = 0; i < 10; i++) {
+    if (mei_n[i] != veri_n[i]) {
+      printf("DISCREPAT %c: tabula=%d systema=%d\n", '0'+i, mei_n[i], veri_n[i]);
+      malae++;
+    }
+  }
+  printf("%s (%d discrepantiae ex XXXVI)\n",
          malae ? "PRAVA" : "OMNES CONGRUUNT", malae);
   return malae ? 1 : 0;
 }

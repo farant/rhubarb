@@ -1261,8 +1261,10 @@ _modificantes_legere (
  * modificatorum res macOS sunt. Imperium nomen SOLUM transmittit,
  * ergo neutrum systema alterius scientiam portat.
  *
- * Litterae ABSUNT de industria (vide fenestra.h): codex positionem
- * nominat, non litteram. Nomina infra positione stabilia sunt.
+ * Litterae et numeri hic ABSUNT: tabulas proprias habent
+ * (CODICES_LITTERARUM, CODICES_NUMERORUM in fenestra_claviarius) -
+ * codex positionem nominat, non litteram. Nomina infra positione
+ * stabilia sunt.
  */
 
 nomen structura {
@@ -1315,10 +1317,16 @@ fenestra_claviarius (
     /* Praefixa modificatorum, cumulabilia (sedes una) */
     modi = _modificantes_legere(&p);
 
-    /* LITTERA CUM MODIFICATORE - 'Cmd+c', 'Cmd+Shift+z'.
+    /* LITTERA aut NUMERUS UNUS - 'a', '7', 'Cmd+c', 'Cmd+Shift+z'.
      *
-     * SINE MODIFICATORE RECUSATUR: textus per 'scribere' it, quae
-     * dispositionis omnino nescia est. Haec via imperiis servit.
+     * SINE MODIFICATORE quoque (lapide feature-requests/024,
+     * 2026-09-29; olim recusatum): pressio UNA clavis nativa (keydown
+     * + keyup), ut digitus hominis - brevitates paginae ('a', 'n',
+     * '1'-'9' in document) eam audiunt, et 'premere-textum' sine foco
+     * nullum keydown excitat. TEXTUS (chorda) per 'scribere' manet.
+     * Littera MAIUSCULA sola Shift implicat, ut in claviatura vera.
+     * Shift cum numero numerum servat - signum ('!') dispositionis
+     * res est, non divinatur.
      *
      * QUOD AEQUIVALENTIAM MENU REGIT - MENSURATUM 2026-08-15, et
      * mensura consilium mutavit: AppKit aequivalentias per
@@ -1341,9 +1349,10 @@ fenestra_claviarius (
      * 'a' scribit positionem 'KeyQ' premit, ergo noster 'KeyA' ab eo
      * differret. 'e.key' ubique rectum manet - et id est quod codex
      * legere debet.) */
-    si (modi != ZEPHYRUM && p[0] != '\0' && p[1] == '\0'
+    si (   p[0] != '\0' && p[1] == '\0'
         && ((p[0] >= 'a' && p[0] <= 'z')
-            || (p[0] >= 'A' && p[0] <= 'Z')))
+            || (p[0] >= 'A' && p[0] <= 'Z')
+            || (p[0] >= '0' && p[0] <= '9')))
     {
         /* kVK_ANSI_* pro a..z, ordine litterarum.
          *
@@ -1361,14 +1370,36 @@ fenestra_claviarius (
             0, 11,  8,  2, 14,  3,  5,  4, 34, 38, 40, 37, 46,
            45, 31, 35, 12, 15,  1, 17, 32,  9, 13,  7, 16,  6
         };
+        /* kVK_ANSI_* pro 0..9, ordine numerorum (idem scriptum
+         * probat) */
+        interior constans i32 CODICES_NUMERORUM[X] = {
+           29, 18, 19, 20, 21, 23, 22, 26, 28, 25
+        };
         character littera[2];
-        i32       index;
         i32       codex;
 
+        si (p[0] >= '0' && p[0] <= '9')
+        {
+            littera[0]  = p[0];
+            littera[1]  = '\0';
+            codex       = CODICES_NUMERORUM[(i32)(p[0] - '0')];
+            fenestra_clavem_capere(fenestra);
+            si (!fenestra_clavem_immittere(fenestra, codex, modi,
+                    littera, VERUM))
+            {
+                redde FALSUM;
+            }
+            redde fenestra_clavem_immittere(fenestra, codex, modi,
+                littera, FALSUM);
+        }
+        /* maiuscula sola = Shift implicitum (claviatura vera) */
+        si (p[0] >= 'A' && p[0] <= 'Z')
+        {
+            modi = modi | (i32)NSEventModifierFlagShift;
+        }
         littera[0] = (character)((p[0] >= 'A' && p[0] <= 'Z')
             ? (p[0] + ('a' - 'A')) : p[0]);
-        index = (i32)(littera[0] - 'a');
-        codex = CODICES_LITTERARUM[index];
+        codex = CODICES_LITTERARUM[(i32)(littera[0] - 'a')];
 
         /* Shift depressus litteram MAIUSCULAM parit:
          * 'charactersIgnoringModifiers' modificatores ignorat PRAETER

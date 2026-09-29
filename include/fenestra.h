@@ -627,13 +627,13 @@ fenestra_clavem_capere (
  * Modificatores praefixi: 'Cmd+' 'Ctrl+' 'Shift+' 'Alt+' (aut 'Opt+'),
  * cumulabiles: "Cmd+Shift+ArrowLeft".
  *
- * LITTERA SOLA CUM MODIFICATORE quoque licet: "Cmd+c",
- * "Cmd+Shift+z". Imperiis servit (aequivalentiae menu, brevitates
- * applicationis).
- *
- * SINE MODIFICATORE littera RECUSATUR - non quod fieri non possit,
- * sed quod textus per 'manus_scribere' iter suum habet, quod
- * dispositionis omnino nescium est.
+ * LITTERA aut NUMERUS UNUS, cum modificatore aut sine: "a", "7",
+ * "Cmd+c", "Cmd+Shift+z" - pressio UNA nativa (keydown + keyup), ut
+ * digitus hominis: aequivalentiae menu et brevitates paginae ('a',
+ * 'n', '1'-'9' in document; lapide feature-requests/024). Maiuscula
+ * sola ("A") Shift implicat. Shift cum numero numerum servat (signum
+ * dispositionis res est). TEXTUS (chorda) per 'manus_scribere' manet,
+ * quod dispositionis omnino nescium est.
  *
  * Dispositio hic NON obstat, quamquam prima specie obstare videtur.
  * MENSURATUM 2026-08-15: AppKit aequivalentias per characteres
