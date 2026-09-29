@@ -153,6 +153,57 @@ worklog entry. Probes live in the scratchpad.
   `silva.commissio(msg, ['project-specs/briar-plan-9-bibliotheca.md',
   'briar/fontes/briar.worklog.md'], [])`.
 
+**Executed 2026-09-29 — no re-slice; two additions to Task 3.**
+Measured:
+1. **Non-root file (AUDIENDA 1):** no root assumption — `f.titulus`
+   and every `#line` path come from `optiones->via_thistle`
+   (`briar_fabrica_titulus`). BUT `briar_fabricare` REFUSES a file with
+   neither `principale` nor the window element ("nihil currendum"), and
+   a pure-library thistle is a natural member → members need a
+   PARTITION-ONLY entry (inventory → partition of plain regions →
+   `_caput_fingere` / `_corpus_fingere`), not the whole fabrica. Added
+   to Task 3.
+2. **Member's own derivations (AUDIENDA 2):** self-contained. The
+   generated `_regiones.h` carries the file's derived includes
+   (`chorda.h` for fragmenta); `_regiones.c` includes only that header
+   and compiles ALONE with the project's `-I`.
+3. **Plain predicate (AUDIENDA 3):** `inv.app` DOES hold `methodus`
+   regions (only fragments and `munus="probatio"` are excluded). A
+   member's plain region = `c`, not `id=`, not probatio, NO `methodus`
+   attribute.
+4. **Parse question — option A holds, no silex change.** The first
+   parse TOLERATES an unknown type (scratch `sonda_ignotus`: silva
+   accepts, clang reports). Derivation already collects BOTH implicit
+   functions (`est_implicitum`) and unknown type names
+   (`EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS`) through `_caput_addere` —
+   members' public names only need to join that symbol table
+   (symbol → `<m>_regiones.h`); the existing ambiguity check then
+   refuses a member name that collides with a corpus symbol, located.
+   The SECOND parse cannot `#include` a generated header (silva
+   resolves includes through the corpus `SilexFons` only;
+   `briar_silva_parsare`'s extra parameter is `excludere`, not an
+   overlay) → `_parsare` writes the member header's TEXT into the
+   prelude instead of an `#include` line, WITHOUT `#line` (silva rejects
+   it): `_lineam_appendere` gains a "no line" mode (via NIHIL). Scratch
+   `sonda_praeludium` confirmed silva parses guard + include + typedef +
+   prototype + uses in one text. Prelude text is also the path silva's
+   semantics handles best (quaestio …RYPY8DFZ: includes via the MAIN
+   source misreport implicit calls; via the prelude they do not). The
+   compile-side `_regiones.h` keeps a normal `#include
+   "<m>_regiones.h"` (the file exists in the project). Added to Task 3.
+5. **Cost (AUDIENDA 5):** lapide `textus.thistle` is 7,756 lines (not
+   ~3,800), 2 C regions, no `methodus`: cold build 1.0 s, warm run
+   0.55 s — paid on EVERY run, since briar parses before computing the
+   key. As a member it adds ~0.5 s per importer run (vs a subprocess +
+   full log replay per call today). Named, not planned: key from bytes
+   BEFORE parsing.
+
+Found on the way (not this plan): the partition emits a region's
+`#ifndef … #endif` block twice (directives group + the unit spanning
+it), so a typedef inside it is lost (ledger parcum …VF42V). Sourcing
+`tools/vexilla.sh` from zsh OUTSIDE the tree (BASH_SOURCE empty) takes
+`.` as root and writes a stray `build/vexilla.sigillum` there — removed.
+
 ### Task 2: Members — collect, resolve, refuse (briar_plagulae)
 
 **Files:** create `briar/fontes/briar_plagulae.h/.c`,
@@ -246,6 +297,17 @@ fixtures `vitrea_membrum.thistle`, `duplex_a/b.thistle`,
   `s32 commune (vacuum)` (public) → refused with both thistle lines;
   both define `staticus s32 adiutor (vacuum)` → builds.
 - [ ] **Step 2: run red** (`./briar/compile_probationes.sh fabrica`).
+- [ ] **Step 3a (from Task 1): partition-only entry.** A fabrica
+  function that runs inventory → plain-region partition (predicate:
+  `c`, not `id=`, not `munus="probatio"`, no `methodus`) →
+  `_caput_fingere` / `_corpus_fingere` for a member, WITHOUT the main
+  rule (a library thistle has no `principale`), returning its two
+  units, its exported names and its derived headers.
+- [ ] **Step 3b (from Task 1): member header text in the prelude.**
+  `_lineam_appendere` gains a no-`#line` mode (via NIHIL); `_parsare`
+  writes each derived MEMBER header's text (that mode) into the
+  prelude in place of its `#include` line, counting its lines into
+  `r->praeludium`. Corpus headers keep `#include`.
 - [ ] **Step 3: implement per Task 1 Step 4's decision:** members'
   public names (from their partitions' prototypes/typedefs, excluding
   `principale`) enter `_symbola_legere`'s table as symbol → header

@@ -1001,3 +1001,19 @@ generator change was invisible to cached scripts until the next commit
 (briar's own source hash, already printed by `-versio`) now enters the
 stamp. Demonstrated: a comment-only change in briar_fabrica.c moves the
 fixture's cache directory (c5dee022… -> 4ca416d6…).
+
+## 2026-09-29 — plan 9 Task 1: measurements for thistle bibliothecae
+
+Recorded in full in project-specs/briar-plan-9-bibliotheca.md (Task 1
+"Executed"). The load-bearing facts: (1) the first silva pass tolerates
+unknown types and derivation already maps BOTH implicit functions and
+unknown type names through `_caput_addere`, so members only add names to
+the symbol table; (2) the second pass cannot `#include` a generated
+header (includes resolve through the corpus SilexFons), so the member
+header's text goes into the prelude, without `#line`; (3) `inv.app`
+includes `methodus` regions - members need their own "plain" predicate;
+(4) `briar_fabricare` refuses a file without `principale`/window, so
+members get a partition-only entry. Side find: a region's `#ifndef`
+block is emitted twice by the partition (parcum …VF42V). Under zsh,
+never `source tools/vexilla.sh` from outside the tree (BASH_SOURCE is
+empty; it roots itself at `.` and writes build/vexilla.sigillum there).
