@@ -1191,6 +1191,66 @@ probatio_utf8(Piscina* piscina)
 
 
 /* ========================================================================
+ * PROBATIONES - CAPERE CUM ORDINARIO ET VIA (lapide FR-019)
+ * ======================================================================== */
+
+interior vacuum
+probatio_capere_et_via(Piscina* piscina)
+{
+    JsonResultus  res;
+       JsonValor* r;
+          chorda  vacua = chorda_ex_literis("-", piscina);
+          chorda  c;
+
+    imprimere("--- Probans json_capere_* et json_via ---\n");
+    res = json_legere_literis("{\"seq\":7,\"t\":\"sententia\","
+        "\"n\":null,\"f\":1.5,\"b\":true,\"s\":\"12\","
+        "\"a\":{\"b\":[10,{\"c\":\"x\"}],\"0\":\"clavis\"}}", piscina);
+    CREDO_VERUM(res.successus);
+    r = res.radix;
+
+    /* praesentia et genus congruens */
+    CREDO_AEQUALIS_I32((i32)json_capere_integer(r, "seq", -I), VII);
+    c = json_capere_chorda(r, "t", vacua);
+    CREDO_VERUM(chorda_aequalis_literis(c, "sententia"));
+    CREDO_VERUM(json_capere_boolean(r, "b", FALSUM));
+    /* abest, null, genus alienum -> ordinarium */
+    CREDO_VERUM(json_capere_integer(r, "abest", -I) == -I);
+    CREDO_VERUM(json_capere_integer(r, "n", -I) == -I);
+    CREDO_VERUM(json_capere_integer(r, "f", -I) == -I);
+    CREDO_VERUM(json_capere_integer(r, "s", -I) == -I);
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(r, "seq",
+        vacua), "-"));
+    CREDO_VERUM(json_capere_boolean(r, "t", VERUM));
+    /* objectum NIHIL aut non objectum */
+    CREDO_VERUM(json_capere_integer(NIHIL, "seq", III) == III);
+    CREDO_VERUM(json_capere_integer(json_objectum_capere(r, "seq"), "x",
+        III) == III);
+
+    /* json_via */
+    CREDO_AEQUALIS_I32((i32)json_ad_integer(json_via(r, "a.b.0")), X);
+    c = json_ad_chorda(json_via(r, "a.b.1.c"));
+    CREDO_VERUM(chorda_aequalis_literis(c, "x"));
+    /* segmentum numericum in OBJECTO = clavis */
+    CREDO_VERUM(chorda_aequalis_literis(json_ad_chorda(json_via(r,
+        "a.0")), "clavis"));
+    CREDO_VERUM(json_via(r, "seq") == json_objectum_capere(r, "seq"));
+    CREDO_NIHIL(json_via(r, "a.b.2"));
+    CREDO_NIHIL(json_via(r, "a.b.x"));
+    CREDO_NIHIL(json_via(r, "seq.x"));
+    CREDO_NIHIL(json_via(r, "a..b"));
+    CREDO_NIHIL(json_via(r, ""));
+    CREDO_NIHIL(json_via(r, "a."));
+    CREDO_NIHIL(json_via(NIHIL, "a"));
+    /* compositio: via deinde capere cum ordinario */
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(json_via(r,
+        "a.b.1"), "c", vacua), "x"));
+    CREDO_VERUM(chorda_aequalis_literis(json_capere_chorda(json_via(r,
+        "a.nihil"), "c", vacua), "-"));
+}
+
+
+/* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
@@ -1228,6 +1288,7 @@ main (void)
     probatio_chordae_strictae(piscina);
     probatio_claves_duplicatae(piscina);
     probatio_utf8(piscina);
+    probatio_capere_et_via(piscina);
 
     credo_imprimere_compendium();
 
