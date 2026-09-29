@@ -264,3 +264,32 @@ function in its next commit and crops to an exact square instead.
 at `:11`, `:13`, `:156`, `:158` (house width 50). `git blame`: `e288f0c59`,
 2026-01-03 — eight months older than this change, which touches only the
 new arm. Reformatting unrelated lines would widen a one-defect commit.
+
+## 2026-09-29 — FR-021: creare, excidere, transcribere, rectangulum
+
+lapide's `recensio.thistle imago` carried its own crop/blit/outline; now
+in the library. Interpreted, not transcribed: the requested `componere`
+became `imago_transcribere` because it COPIES (pixels replaced, alpha
+too) - "componere" promises alpha compositing, which would be a
+different, later function. Positions that can sensibly be negative
+(`dx`, `dy`, a rectangle's `x`, `y`) are `s32`; everything clips at all
+four edges. `TabulaPixelorum` (fenestra's framebuffer: packed i32 +
+window size + scale) is not an Imago; `delineare` draws into windows,
+these functions keep images window-free.
+
+Found next door: `imago_extrahere_et_scalare` clamped only the region's
+SIZE - with `crop_x >= width`, `cw` went negative, `cw == 0` missed it,
+the output clamped to 1x1 and the pixel loop read out of bounds. A crop
+exactly AT the edge gives 0 and was already caught (my first test used
+that and stayed green - moved it strictly past the edge).
+
+Two planted faults taught something. (1) The rectangle's "filled when
+thickness >= half" branch was REDUNDANT: top and bottom bands already
+cover everything and the sides become empty ranges - a plant removing it
+would have been mute, so the branch was deleted instead. (2) Unclipped
+negative `dx` stayed GREEN with dx and dy both negative: the stray write
+landed one pixel BEFORE the buffer (piscina memory, invisible to any
+image assertion) and (0,0) got the right value by coincidence. A
+negative dx with a POSITIVE dy moves the stray write onto the previous
+row's last pixel - inside the image, observable, red.
+

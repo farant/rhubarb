@@ -413,9 +413,10 @@ manus_movere (
  * sub manu hominis. 'Cmd+k' (quod nullum menu tenet) paginam
  * attingit, cum e.key/e.code/e.keyCode rectis.
  *
- * TEXTUM PER 'manus_scribere' PONE: littera SINE modificatore
- * recusatur, quia scribere iter proprium habet quod dispositionis
- * nescium est.
+ * LITTERA aut NUMERUS SOLUS ("a", "7", "A" = Shift+a): pressio UNA
+ * nativa - brevitates paginae in document eam audiunt (lapide
+ * feature-requests/024; 'premere-textum' sine foco nullum keydown
+ * excitat). TEXTUM (chorda) per 'manus_scribere' pone.
  *
  * FALSUM (et manus fracta) si nomen ignotum aut app claviarium non
  * praebuit - causa UTRUMQUE distinguit. */

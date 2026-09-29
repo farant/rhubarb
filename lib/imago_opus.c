@@ -471,11 +471,14 @@ imago_extrahere_et_scalare (
     cw = (s32)crop_lat;
     ch = (s32)crop_alt;
 
-    /* Clamp crop region ad limites fontis */
+    /* Clamp crop region ad limites fontis. Regio EXTRA fontem (cx >=
+     * fons_lat) latitudinem NEGATIVAM dabat, quam 'cw == 0' non
+     * capiebat - output I x I et lectio extra limites (inventum
+     * FR-021) */
     si (cx + cw > fons_lat) cw = fons_lat - cx;
     si (cy + ch > fons_alt) ch = fons_alt - cy;
 
-    si (cw == 0 || ch == 0)
+    si (cw <= 0 || ch <= 0)
     {
         redde dest;
     }
@@ -672,4 +675,216 @@ imago_extrahere_et_scalare (
     #undef SCALE_FP_ONE
 
     redde dest;
+}
+
+
+/* ==================================================
+ * Creare, excidere, transcribere, rectangulum (lapide FR-021)
+ * ================================================== */
+
+Imago
+imago_creare (
+         i32  latitudo,
+         i32  altitudo,
+          i8  r,
+          i8  g,
+          i8  b,
+          i8  a,
+     Piscina* piscina)
+{
+    Imago im;
+      i32 i;
+
+    im.pixela    = NIHIL;
+    im.latitudo  = ZEPHYRUM;
+    im.altitudo  = ZEPHYRUM;
+    si (   piscina  == NIHIL || latitudo == ZEPHYRUM
+        || altitudo == ZEPHYRUM)
+    {
+        redde im;
+    }
+    im.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(latitudo * altitudo * IV));
+    si (im.pixela == NIHIL)
+    {
+        redde im;
+    }
+    im.latitudo = latitudo;
+    im.altitudo = altitudo;
+    per (i = ZEPHYRUM; i < latitudo * altitudo; i++)
+    {
+        im.pixela[i * IV]        = r;
+        im.pixela[i * IV + I]    = g;
+        im.pixela[i * IV + II]   = b;
+        im.pixela[i * IV + III]  = a;
+    }
+    redde im;
+}
+
+Imago
+imago_excidere (
+    constans Imago* fons,
+               i32  x,
+               i32  y,
+               i32  latitudo,
+               i32  altitudo,
+           Piscina* piscina)
+{
+    Imago im;
+      i32 w;
+      i32 h;
+      i32 k;
+
+    im.pixela    = NIHIL;
+    im.latitudo  = ZEPHYRUM;
+    im.altitudo  = ZEPHYRUM;
+    si (   fons == NIHIL || fons->pixela == NIHIL || piscina == NIHIL
+        || x    >= fons->latitudo || y >= fons->altitudo)
+    {
+        redde im;
+    }
+    /* intersectio cum fonte (sine scala) */
+    w = latitudo < fons->latitudo - x ? latitudo : fons->latitudo - x;
+    h = altitudo < fons->altitudo - y ? altitudo : fons->altitudo - y;
+    si (w == ZEPHYRUM || h == ZEPHYRUM)
+    {
+        redde im;
+    }
+    im.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(w * h * IV));
+    si (im.pixela == NIHIL)
+    {
+        redde im;
+    }
+    im.latitudo = w;
+    im.altitudo = h;
+    per (k = ZEPHYRUM; k < h; k++)
+    {
+        memcpy(im.pixela + k * w * IV,
+            fons->pixela + ((y + k) * fons->latitudo + x) * IV,
+            (size_t)(w * IV));
+    }
+    redde im;
+}
+
+vacuum
+imago_transcribere (
+             Imago* dest,
+    constans Imago* fons,
+               s32  dx,
+               s32  dy)
+{
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 y;
+
+    si (   dest == NIHIL || dest->pixela == NIHIL || fons == NIHIL
+        || fons->pixela == NIHIL)
+    {
+        redde;
+    }
+    /* praecisio in marginibus quattuor, coordinatis dest */
+    x0 = dx > ZEPHYRUM ? dx : ZEPHYRUM;
+    y0 = dy > ZEPHYRUM ? dy : ZEPHYRUM;
+    x1 = dx + (s32)fons->latitudo;
+    y1 = dy + (s32)fons->altitudo;
+    si (x1 > (s32)dest->latitudo)
+    {
+        x1 = (s32)dest->latitudo;
+    }
+    si (y1 > (s32)dest->altitudo)
+    {
+        y1 = (s32)dest->altitudo;
+    }
+    si (x0 >= x1 || y0 >= y1)
+    {
+        redde;
+    }
+    per (y = y0; y < y1; y++)
+    {
+        memcpy(dest->pixela + (y * (s32)dest->latitudo + x0) * IV,
+            fons->pixela + ((y - dy) * (s32)fons->latitudo + (x0 - dx))
+                * IV,
+            (size_t)((x1 - x0) * IV));
+    }
+}
+
+/* rectangulum plenum [x0, x1) x [y0, y1), praecisum ad imaginem */
+interior vacuum
+_rectangulum_plenum (
+    Imago* dest,
+      s32  x0,
+      s32  y0,
+      s32  x1,
+      s32  y1,
+       i8  r,
+       i8  g,
+       i8  b,
+       i8  a)
+{
+    s32 x;
+    s32 y;
+
+    si (x0 < ZEPHYRUM)
+    {
+        x0 = ZEPHYRUM;
+    }
+    si (y0 < ZEPHYRUM)
+    {
+        y0 = ZEPHYRUM;
+    }
+    si (x1 > (s32)dest->latitudo)
+    {
+        x1 = (s32)dest->latitudo;
+    }
+    si (y1 > (s32)dest->altitudo)
+    {
+        y1 = (s32)dest->altitudo;
+    }
+    per (y = y0; y < y1; y++)
+    {
+        per (x = x0; x < x1; x++)
+        {
+            i8* p = dest->pixela + (y * (s32)dest->latitudo + x) * IV;
+
+            p[ZEPHYRUM]  = r;
+            p[I]         = g;
+            p[II]        = b;
+            p[III]       = a;
+        }
+    }
+}
+
+vacuum
+imago_rectangulum (
+    Imago* dest,
+      s32  x,
+      s32  y,
+      i32  latitudo,
+      i32  altitudo,
+      i32  crassitudo,
+       i8  r,
+       i8  g,
+       i8  b,
+       i8  a)
+{
+    s32 w = (s32)latitudo;
+    s32 h = (s32)altitudo;
+    s32 c = (s32)crassitudo;
+
+    si (   dest == NIHIL || dest->pixela == NIHIL || w == ZEPHYRUM
+        || h    == ZEPHYRUM || c == ZEPHYRUM)
+    {
+        redde;
+    }
+    /* quattuor latera introrsum: supra, infra, sinistrum, dextrum.
+     * Crassitudo dimidium attingens plenum dat SINE casu proprio:
+     * supra et infra se tegunt, latera intervalla vacua fiunt */
+    _rectangulum_plenum(dest, x, y, x + w, y + c, r, g, b, a);
+    _rectangulum_plenum(dest, x, y + h - c, x + w, y + h, r, g, b, a);
+    _rectangulum_plenum(dest, x, y + c, x + c, y + h - c, r, g, b, a);
+    _rectangulum_plenum(dest, x + w - c, y + c, x + w, y + h - c, r, g,
+        b, a);
 }

@@ -62,6 +62,8 @@
 # QUAE FENESTRAM VERAM APERIUNT ('-agere' solum; manu currenda, non in
 # suite - scrinium poscunt):
 #   XIV. app vitrea per bin/manus agitur: affordantiae >= I (bulla),
+#        littera et numerus SOLI ('manus clavis a', 'clavis 7') keydown
+#        NATIVUM in document dant (e.key a, 7; lapide FR-024),
 #        premere, textus corporis 'salve, munde' continet; Cmd+Shift+v
 #        (res menu Visio, par. 4.9) -> effusio 'visio aperta'
 #   XV.  spectator per bin/manus: pagina onerata ('#principale' in
@@ -146,7 +148,7 @@ if [ ! -x "$BRIAR" ]; then
     exit 2
 fi
 if [ "$AGERE" = 1 ] && [ ! -x bin/manus ]; then
-    echo "FUMUS: bin/manus abest - ./compile_tools.sh manus_instrumentum prius" >&2
+    echo "FUMUS: bin/manus abest - ./tools/manus_struere.sh prius" >&2
     exit 2
 fi
 # gradus XIII: fasciculus alienus struitur, plutil et iconutil oracula
@@ -691,6 +693,27 @@ echo "FUMUS:    affordantiae: $N_AFF"
 "$RADIX/bin/manus" -s "$PORTUS" premere-textum tange > "$AREA/premere.log" 2>&1 \
     || { sublevare; deficere "premere 'tange' defecit" "$AREA/premere.log"; }
 CORPUS="$("$RADIX/bin/manus" -s "$PORTUS" -exspecta textus body 2>"$AREA/textus.err")"
+# FR-024: littera et numerus SOLI -> keydown nativum in document
+# (brevitates paginae; auditor per aestimare positus, nulla fixtura)
+"$RADIX/bin/manus" -s "$PORTUS" aestimare \
+    'window.__claves=[];document.addEventListener("keydown",function(e){window.__claves.push(e.key)});"positum"' \
+    > "$AREA/claves.log" 2>&1 \
+    || { sublevare; deficere "auditor keydown non positus" "$AREA/claves.log"; }
+for k in a 7; do
+    "$RADIX/bin/manus" -s "$PORTUS" clavis "$k" >> "$AREA/claves.log" 2>&1 \
+        || { sublevare; deficere "manus clavis $k defecit (littera sine modificatore recusata?)" "$AREA/claves.log"; }
+done
+k=0
+# aestimare JSON reddit: chorda cum virgulis duplicibus
+until [ "$("$RADIX/bin/manus" -s "$PORTUS" aestimare 'window.__claves.join(",")' 2>>"$AREA/claves.log")" = '"a,7"' ]; do
+    k=$((k + 1))
+    if [ "$k" -ge 20 ]; then
+        sublevare
+        deficere "keydown in document non 'a,7' (claves nativae non pervenerunt)" "$AREA/claves.log"
+    fi
+    sleep 0.25
+done
+echo "FUMUS:    claves solae: keydown a, 7 in document"
 # visio (par. 4.9): Cmd+Shift+v per menu applicationis -> fenestra
 # altera; principale genitum 'visio aperta' imprimit (atrium tacet)
 "$RADIX/bin/manus" -s "$PORTUS" clavis Cmd+Shift+v > "$AREA/visio.log" 2>&1 \

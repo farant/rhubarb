@@ -83,3 +83,33 @@ DURING the pump; the event is in the ring before the caller drains it.
   `"menu"` -> `"menus"` gave exactly 2 reds; restored.
 - `menu` is IGNOTUM to the lexicon -> `ignotum-permissum` glossary line,
   as `plist` got.
+
+## 2026-09-29 — bare letters and digits as native key presses (lapide FR-024)
+
+`fenestra_claviarius` used to refuse a letter without a modifier, on the
+reasoning that TEXT goes through `scribere` (layout-unaware). The lapide
+tester had a real case the refusal blocked: single-letter shortcuts on
+`document` ('a', 'n', '1'-'9') with nothing focused, where `premere-
+textum` fires no keydown. A single key is not text - it is what a
+finger does - so a bare letter or digit is now one native press
+(keydown + keyup). Strings still go through `scribere`. A bare capital
+implies Shift (a real keyboard's behaviour); Shift + digit keeps the
+digit (the symbol, '!' etc., is a layout fact, not guessed).
+
+Digits needed codes: `CODICES_NUMERORUM` (kVK_ANSI_0..9 = 29 18 19 20
+21 23 22 26 28 25 - NOT sequential). `tools/claves_codices_probare.sh`
+now checks all XXXVI against Carbon; a planted 5<->6 swap is named.
+
+Verified only through a real window: briar `fumus -agere` XIV installs
+a keydown listener via `manus aestimare`, sends `clavis a` and `clavis
+7`, reads back. Planted (old refusal): red at `manus clavis a`. First
+green attempt failed on MY check - `aestimare` prints JSON, so the value
+is `"a,7"` with quotes; the keys had arrived (verified by hand: e.key a,
+7; activeElement BODY, i.e. nothing focused - the tester's exact case).
+
+Found on the way: `bin/manus` was stale since 2026-08-17 - it is built
+by `tools/manus_struere.sh`, but the fumus's own hint said
+`./compile_tools.sh manus_instrumentum`, which builds a DIFFERENT file
+(bin/manus_instrumentum). Hint fixed. The tester's report shows the same
+stale binary date.
+

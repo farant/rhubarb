@@ -298,6 +298,158 @@ principale (vacuum)
                     != ZEPHYRUM);
     }
 
+    /* ---- FR-021 (lapide): creare, excidere, transcribere,
+     * rectangulum - sine scala, praecisa ad margines ---- */
+    {
+        Imago fons;
+        Imago nova;
+        Imago pars;
+        Imago dest;
+          s32 x;
+          s32 y;
+          b32 omnes = VERUM;
+
+        imprimere("\n--- FR-021: creare, excidere, transcribere,"
+            " rectangulum ---\n");
+        nova = imago_creare(III, II, X, XX, XXX, CCLV, piscina);
+        CREDO_AEQUALIS_I32(nova.latitudo, III);
+        CREDO_AEQUALIS_I32(nova.altitudo, II);
+        per (y = ZEPHYRUM; nova.pixela != NIHIL && y < II; y++)
+        {
+            per (x = ZEPHYRUM; x < III; x++)
+            {
+                omnes = omnes && _legere(&nova, x, y, ZEPHYRUM) == X
+                    && _legere(&nova, x, y, II) == XXX
+                    && _legere(&nova, x, y, III) == CCLV;
+            }
+        }
+        CREDO_VERUM(nova.pixela != NIHIL && omnes);
+        CREDO_NIHIL(imago_creare(ZEPHYRUM, II, 0, 0, 0, 0,
+            piscina).pixela);
+
+        /* fons IV x IV: R = x + X*y, A = CCLV */
+        fons = _fingere(IV, IV, piscina);
+        per (y = ZEPHYRUM; y < IV; y++)
+        {
+            per (x = ZEPHYRUM; x < IV; x++)
+            {
+                _ponere(&fons, x, y, x + X * y, ZEPHYRUM, ZEPHYRUM,
+                    CCLV);
+            }
+        }
+        /* excidere intra: pixela exacta, sine scala */
+        pars = imago_excidere(&fons, I, I, II, II, piscina);
+        CREDO_AEQUALIS_I32(pars.latitudo, II);
+        CREDO_AEQUALIS_I32(pars.altitudo, II);
+        CREDO_VERUM(pars.pixela != NIHIL
+            && _legere(&pars, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) == XI
+            && _legere(&pars, I, ZEPHYRUM, ZEPHYRUM) == XII
+            && _legere(&pars, ZEPHYRUM, I, ZEPHYRUM) == XXI
+            && _legere(&pars, I, I, ZEPHYRUM) == XXII);
+        /* regio fontem excedens: intersectio */
+        pars = imago_excidere(&fons, III, III, V, V, piscina);
+        CREDO_AEQUALIS_I32(pars.latitudo, I);
+        CREDO_AEQUALIS_I32(pars.altitudo, I);
+        CREDO_VERUM(pars.pixela != NIHIL
+            && _legere(&pars, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) == XXXIII);
+        /* regio tota extra, aut vacua: imago vacua */
+        CREDO_NIHIL(imago_excidere(&fons, V, ZEPHYRUM, II, II,
+            piscina).pixela);
+        CREDO_NIHIL(imago_excidere(&fons, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, II, piscina).pixela);
+
+        /* transcribere: pixela SUBSTITUUNTUR (etiam alpha nulla) */
+        dest = imago_creare(IV, IV, CCLV, CCLV, CCLV, CCLV, piscina);
+        pars = imago_excidere(&fons, ZEPHYRUM, ZEPHYRUM, II, II,
+            piscina);
+        _ponere(&pars, I, I, VII, VII, VII, ZEPHYRUM);
+        imago_transcribere(&dest, &pars, III, III);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, III, III, ZEPHYRUM),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, II, III, ZEPHYRUM),
+            CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, III, II, ZEPHYRUM),
+            CCLV);
+        /* dx, dy negativi: pars (I, I) ad dest (0, 0) */
+        imago_transcribere(&dest, &pars, -I, -I);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM), VII);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, ZEPHYRUM,
+            III), ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, I, ZEPHYRUM,
+            ZEPHYRUM), CCLV);
+        /* dx negativus, dy positivus: praecisio SINISTRA in medio
+         * imaginis - scriptura errans ante initium ordinis pixelum
+         * ULTIMUM ordinis prioris tangeret (planta prima, dx dy ambo
+         * negativi, muta fuit: ante bufferem scribebat, invisibile) */
+        imago_transcribere(&dest, &pars, -I, II);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, III, I, ZEPHYRUM),
+            CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, II,
+            ZEPHYRUM), I);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, III,
+            ZEPHYRUM), VII);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, I, II, ZEPHYRUM),
+            CCLV);
+        /* tota extra: nihil mutatum */
+        imago_transcribere(&dest, &pars, IV, ZEPHYRUM);
+        imago_transcribere(&dest, &pars, -II, ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, I,
+            ZEPHYRUM), CCLV);
+
+        /* rectangulum: ambitus introrsum */
+        dest = imago_creare(V, V, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, CCLV,
+            piscina);
+        imago_rectangulum(&dest, ZEPHYRUM, ZEPHYRUM, V, V, I, CCLV,
+            ZEPHYRUM, ZEPHYRUM, CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM), CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, IV, II, ZEPHYRUM),
+            CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, II, IV, ZEPHYRUM),
+            CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, I, I, ZEPHYRUM),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, II, II, ZEPHYRUM),
+            ZEPHYRUM);
+        /* crassitudo II: anulus secundus, centrum liberum */
+        imago_rectangulum(&dest, ZEPHYRUM, ZEPHYRUM, V, V, II,
+            ZEPHYRUM, CCLV, ZEPHYRUM, CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, I, I, I), CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, II, II, I), ZEPHYRUM);
+        /* crassitudo >= dimidium: plenum */
+        imago_rectangulum(&dest, ZEPHYRUM, ZEPHYRUM, V, V, III,
+            ZEPHYRUM, ZEPHYRUM, CCLV, CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, II, II, II), CCLV);
+        /* praecisum: rectangulum (-II, -II, IV, IV) - margines x=I,
+         * y=I intra imaginem; (0, 0) intactum */
+        dest = imago_creare(V, V, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, CCLV,
+            piscina);
+        imago_rectangulum(&dest, -II, -II, IV, IV, I, CCLV, ZEPHYRUM,
+            ZEPHYRUM, CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, I, ZEPHYRUM, ZEPHYRUM),
+            CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, I, ZEPHYRUM),
+            CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, I, I, ZEPHYRUM), CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM), ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, II, II, ZEPHYRUM),
+            ZEPHYRUM);
+        /* crassitudo nulla: nihil */
+        imago_rectangulum(&dest, ZEPHYRUM, ZEPHYRUM, V, V, ZEPHYRUM,
+            CCLV, CCLV, CCLV, CCLV);
+        CREDO_AEQUALIS_I32((i32)_legere(&dest, IV, IV, ZEPHYRUM),
+            ZEPHYRUM);
+
+        /* vicinum (inventum FR-021): extrahere_et_scalare cum regione
+         * EXTRA fontem - latitudo negativa, lectio extra limites */
+        CREDO_NIHIL(imago_extrahere_et_scalare(&fons, X, ZEPHYRUM, II,
+            II, IV, IV, IMAGO_SCALA_PROXIMUS, piscina).pixela);
+        CREDO_NIHIL(imago_extrahere_et_scalare(&fons, ZEPHYRUM, V, II,
+            II, IV, IV, IMAGO_SCALA_PROXIMUS, piscina).pixela);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
