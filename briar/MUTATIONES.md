@@ -19,6 +19,17 @@ Leges chartae:
 
 ## inedita
 
+## v4 — 2026-09-29
+
+FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut
+`toml_error` utentes ad `toml` novum migrent (tabula infra). Nova:
+plagulae inter se codicem communicant per `<bibliotheca via="x.thistle"/>`
+(lapide feature-requests/015); TOML 1.0 integer (feature-requests/013);
+vexilla atrii programmatibus vitreis praemittuntur (feature-requests/023);
+adiutores probationis sine `staticus` (documentation-ideas/016);
+descriptiones bibliothecarum (documentation-ideas/017,
+feature-requests/016); directivae condicionales in regione C.
+
 - FRANGIT: `toml` novum - cliens materiae TOML 1.0 integer
   (`toml/fontes/toml.h`), `lib/toml.c` vetus remotum. Vetera -> nova:
   `toml_legere(t, p)` -> `toml_legere(t, via, p)`; `toml_error(doc)` ->
