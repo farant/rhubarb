@@ -1,0 +1,18 @@
+#!/usr/bin/env briar
+# Folium
+
+A leaf library: no `principale`, one type and one function. Reached by
+`radix` directly, through `media`, and through `sub/ramus` - linked
+once.
+
+<c!>
+nomen structura {
+    s32 valor;
+} FoliumRes;
+
+s32
+folium_duplicare (s32 x)
+{
+    redde x + x;
+}
+</c>

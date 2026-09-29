@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Radix absens
+
+Names a library that does not exist.
+
+<bibliotheca via="absens.thistle"/>
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde ZEPHYRUM;
+}
+</c>

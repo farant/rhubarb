@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Radix sine c
+
+Imports a file with no plain C region.
+
+<bibliotheca via="sine_c.thistle"/>
+
+<c!>
+s32
+principale (vacuum)
+{
+    redde ZEPHYRUM;
+}
+</c>

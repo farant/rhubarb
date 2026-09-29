@@ -276,6 +276,20 @@ briar_membra_colligere (
   change yet: members are collected by nobody). Message cites
   feature-requests/015 and the fixtures.
 
+**Executed 2026-09-29.** `briar_plagulae.{h,c}` (`briar_membra_colligere`,
+`BriarMembrum`, `BriarMembraCausa`): depth-first walk with an in-progress
+stack (cycle, chain named with its remedy) and a finished set (each
+member once), post-order output; via resolved against the importer's
+directory (`via_directorium` + `via_iungere` + `via_normalizare`); refusals
+at the element's line (no via, not `.thistle`, missing, no plain C region,
+a member region's own parse error). Gate `probatio_briar_plagulae` 44/44
+(diamond + `sub/..` path, same absolute vias from cwd `/tmp`, cycle, four
+refusals); plant (both "already a member" checks removed) → exactly the
+predicted 1 red (`xar_numerus(membra) == III`). The test's `chdir` is an
+examen SUSPECTUM (lexicon lacks it; verdict ACCIPE) - left, not worth a
+judge change. Deviation: the recursion is depth-first over imports (depth
+= import chain, tiny), not the house's iterative frame stack.
+
 ### Task 3: Derive, partition, build (the user-visible task)
 
 **Files:** `briar/fontes/briar_silva.c/.h`, `briar/fontes/briar_fabrica.c/.h`,

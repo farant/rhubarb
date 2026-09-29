@@ -97,3 +97,14 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   documentation-ideas/016): ante emendationem `-Wmissing-prototypes` et
   declaratio implicita. Porta fabricae: prototypus in unitate
   probationis genita, principale probationis non prototypatum.
+
+## bibliotheca (planum IX, 2026-09-29)
+
+- `bibliotheca/` — membra per elementum bibliothecae (spec par. 3.5;
+  lapide feature-requests/015). `folium` (bibliotheca sine principale),
+  `media` (folium importat), `sub/ramus` (via `../folium.thistle`),
+  `radix` (media, folium, sub/ramus: rhombus - folium SEMEL, post-ordo
+  folium, media, ramus); `circulus_a` <-> `circulus_b` (circulus cum
+  remedio); `radix_absens`, `radix_non` (`folium.md`),
+  `radix_sine_via`, `radix_sine_c` -> `sine_c` (prosa sola):
+  refutationes ad lineam elementi. Porta `probatio_briar_plagulae`.

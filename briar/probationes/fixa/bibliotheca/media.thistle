@@ -1,0 +1,14 @@
+#!/usr/bin/env briar
+# Media
+
+A middle library that itself uses `folium`.
+
+<bibliotheca via="folium.thistle"/>
+
+<c!>
+s32
+media_quadruplicare (s32 x)
+{
+    redde folium_duplicare(folium_duplicare(x));
+}
+</c>

@@ -1,0 +1,22 @@
+#!/usr/bin/env briar
+# Radix
+
+The importing program. `folium` is reached three ways (directly, via
+`media`, via `sub/ramus`): members in post-order are folium, media,
+ramus - each once.
+
+<bibliotheca via="media.thistle"/>
+<bibliotheca via="folium.thistle"/>
+<bibliotheca via="sub/ramus.thistle"/>
+
+<c!>
+s32
+principale (vacuum)
+{
+    FoliumRes r;
+
+    r.valor = media_quadruplicare(V) + ramus_octuplicare(I);
+    imprimere("%d\n", (integer)r.valor);
+    redde ZEPHYRUM;
+}
+</c>
