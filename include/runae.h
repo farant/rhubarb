@@ -1,7 +1,8 @@
 /* runae.h - Nucleus Unicode (acervus textus, stratum primum)
  *
- * Proprietates runarum (codepoints) ex TABULIS GENERATIS e datis Unicode
- * fixis (probationes/fixa/unicode/<versio>/, tools/runae_generare.sh).
+ * Proprietates runarum (codepoints) ex TABULIS GENERATIS e datis
+ * Unicode fixis (probationes/fixa/unicode/<versio>/,
+ * tools/runae_generare.sh).
  * Lapis primus: LATITUDO in cellulis terminalis. Postea hic (cum
  * trahuntur): rupturae graphematum (UAX #29), normalizatio, casus,
  * rupturae linearum, bidi. Locale (collatio, formae) NUMQUAM hic.
@@ -56,6 +57,16 @@ runae_rumpitur (
              s32  runa,
     RunaeRuptura* ruptura);
 
+/* Politica latitudinis graphematum: GRAPHEMATUM = regula Ghostty
+ * (modus 2027, ordinaria); SIMPLEX = ut Terminal.app (mensuratum
+ * 2026-09-28, aspectibus duobus): ZWJ pictographa NON iungit (quodque
+ * emoji graphema suum, latitudo <= II). Cetera eadem - etiam signum
+ * spatians (Mc) amplificat: Terminal.app hi II cellulas dat. */
+nomen enumeratio {
+    RUNAE_POLITICA_GRAPHEMATUM = 0,
+    RUNAE_POLITICA_SIMPLEX
+} RunaePolitica;
+
 /* Graphema primum octetorum UTF-8 [initium, finis): reddit
  * indicatorem post id et latitudinem eius (0-II) in *latitudo.
  * Segmentatio per runae_rumpitur; latitudo regula Ghostty
@@ -69,5 +80,14 @@ runae_graphema_proximum (
     constans i8* initium,
     constans i8* finis,
             i32* latitudo);
+
+/* Idem sub politica data (SIMPLEX: vide supra). runae_graphema_proximum
+ * = politica GRAPHEMATUM. */
+constans i8*
+runae_graphema_ex_politica (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32* latitudo);
 
 #endif /* RUNAE_H */

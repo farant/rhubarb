@@ -154,6 +154,25 @@ hic_manens constans CasusGraphematis CASUS_GRAPHEMATUM[] = {
 
 
 /* ==================================================
+  * IV. Politica SIMPLEX (Terminal.app, mensurata 2026-09-28): ZWJ
+ *     pictographa non iungit; Mc amplificat, VS16 manet
+ * ================================================== */
+
+hic_manens constans CasusGraphematis CASUS_SIMPLICES[] = {
+    { "\xE0\xA4\x95\xE0\xA4\xBF", II, II, "ka + i (Mc amplificat)" },
+    { "\xF0\x9F\x91\xA8\xE2\x80\x8D\xF0\x9F\x91\xA9\xE2\x80\x8D"
+      "\xF0\x9F\x91\xA7", II, II,
+          "familia: vir + ZWJ solum (GB11 non)" },
+    { "\xE2\x9D\xA4\xEF\xB8\x8F", II, II, "cor + VS16 (manet II)" },
+    { "\xF0\x9F\x91\x8B\xF0\x9F\x8F\xBF", II, II,
+        "manus + modificator" },
+    { "\xF0\x9F\x87\xA6\xF0\x9F\x87\xA7", II, II, "vexillum (par RI)" },
+    { "e\xCC\x81", II, I, "e + acutum" },
+    { "\xE4\xB8\xAD", I, II, "zhong solum" }
+};
+
+
+/* ==================================================
  * III. Aurum graphematum
  * ================================================== */
 
@@ -299,6 +318,48 @@ principale (vacuum)
             CREDO_VERUM (runae_graphema_proximum(vacuum_textus,
                 vacuum_textus, &latitudo) == vacuum_textus);
             CREDO_AEQUALIS_I32 (latitudo, ZEPHYRUM);
+        }
+    }
+
+        /* IV. Politica SIMPLEX */
+    {
+        i32 j;
+
+        imprimere("\n--- Politica SIMPLEX ---\n");
+        per (j = ZEPHYRUM;
+             j < (i32)(magnitudo(CASUS_SIMPLICES)
+                       / magnitudo(CASUS_SIMPLICES[0]));
+             j++)
+        {
+            constans CasusGraphematis* c      = &CASUS_SIMPLICES[j];
+                        constans i8* initium  = (constans i8*)c->octeti;
+                        constans i8* finis = initium
+                            + strlen(c->octeti);
+                         constans i8* post;
+                         constans i8* cursor;
+                                 i32  latitudo;
+                                 i32  runae = ZEPHYRUM;
+
+            post = runae_graphema_ex_politica(initium, finis,
+                RUNAE_POLITICA_SIMPLEX, &latitudo);
+            cursor = initium;
+            dum (cursor < post)
+            {
+                (vacuum)utf8_decodere(&cursor, post);
+                runae++;
+            }
+            si (   runae    != c->runae_graphematis
+                || latitudo != c->latitudo)
+            {
+                imprimere("  FRACTA: SIMPLEX %s: runae %u latitudo %u, "
+                    "exspectatae %u et %u\n", c->causa,
+                    (insignatus integer)runae,
+                    (insignatus integer)latitudo,
+                    (insignatus integer)c->runae_graphematis,
+                    (insignatus integer)c->latitudo);
+            }
+            CREDO_AEQUALIS_I32 (runae, c->runae_graphematis);
+            CREDO_AEQUALIS_I32 (latitudo, c->latitudo);
         }
     }
 

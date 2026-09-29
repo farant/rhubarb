@@ -267,8 +267,8 @@ _intrare (
         {
             /* cache primo (via plena in arena persistenti -
              * stillicidium parvum per aperturam, notatum) */
-                        chorda  partes[II];
-                        chorda  via_plena;
+                        chorda partes[II];
+                        chorda via_plena;
                SaltuariusLiber* liber;
             constans character* causa;
 
@@ -740,6 +740,8 @@ principale (
         fprintf(stderr, "saltuarius: apertura fracta\n");
         redde I;
     }
+    /* latitudo graphematum ut terminal hic eam metitur (ambitus) */
+    tessera_politicam_ponere(app.opus, tessera_politica_ambitus());
 
     _silvam_seminare(&app, app.limes, app.res->radix);
 

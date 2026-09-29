@@ -190,6 +190,13 @@ TesseraPons* tessera_pons_posix_creare(TesseraPiscina* piscina);
 #define TESSERA_GRAPHEMA_OCTETI_MAXIMI 64
 #define TESSERA_GRAPHEMATA_OCTETI      262144
 
+/* Politica latitudinis graphematum (runae U5c): ex ambitu eligitur */
+typedef enum TesseraPolitica {
+    TESSERA_POLITICA_GRAPHEMATUM = 0,   /* regula Ghostty */
+    TESSERA_POLITICA_SIMPLEX            /* ut Terminal.app: ZWJ non
+                                         * iungit */
+} TesseraPolitica;
+
 typedef struct TesseraFructus {
     unsigned int cellulae_collatae;
     unsigned int cellulae_mutatae;
@@ -221,6 +228,7 @@ struct TesseraOpus {
     unsigned char*            graphemata_longitudines;
     unsigned int              graphemata_numerus;
     unsigned int*             graphemata_index;       /* ID+1, 0 vacuum */
+    TesseraPolitica           politica;
 };
 
 TesseraOpus* tessera_aperire(TesseraPiscina* piscina,
@@ -237,6 +245,9 @@ void tessera_cellulam_ponere(TesseraOpus* opus, int x, int y,
     unsigned int signum, TesseraStilus stilus);
 TesseraCellula tessera_cellulam_legere(const TesseraOpus* opus,
     int x, int y);
+void tessera_politicam_ponere(TesseraOpus* opus,
+    TesseraPolitica politica);
+TesseraPolitica tessera_politica_ambitus(void);
 unsigned int tessera_cellulae_octeti(const TesseraOpus* opus, int x, int y,
     unsigned char* exitus, unsigned int capacitas);
 void tessera_scribere(TesseraOpus* opus, int x, int y,
@@ -4645,8 +4656,9 @@ tessera_utf8_est_continuatio (
 /* ================= ex include/runae.h ================= */
 /* runae.h - Nucleus Unicode (acervus textus, stratum primum)
  *
- * Proprietates runarum (codepoints) ex TABULIS GENERATIS e datis Unicode
- * fixis (probationes/fixa/unicode/<versio>/, tools/runae_generare.sh).
+ * Proprietates runarum (codepoints) ex TABULIS GENERATIS e datis
+ * Unicode fixis (probationes/fixa/unicode/<versio>/,
+ * tools/runae_generare.sh).
  * Lapis primus: LATITUDO in cellulis terminalis. Postea hic (cum
  * trahuntur): rupturae graphematum (UAX #29), normalizatio, casus,
  * rupturae linearum, bidi. Locale (collatio, formae) NUMQUAM hic.
@@ -4699,19 +4711,24 @@ tessera_runae_rumpitur (
              s32  runa,
     RunaeRuptura* ruptura);
 
-/* Graphema primum octetorum UTF-8 [initium, finis): reddit
- * indicatorem post id et latitudinem eius (0-II) in *latitudo.
- * Segmentatio per runae_rumpitur; latitudo regula Ghostty
- * (graphemeWidth): runae primae latitudo; VS16/VS15 post basim
- * variationis emoji = II/I (aliter nihil); runa sequens non nulla in
- * graphemate = II. Series UTF-8 invalida = graphema suum, latitudo I.
- * NON fluens: graphema integrum aut finem logicum praebe.
- * initium >= finis: reddit initium, latitudo 0. */
+/* Politica latitudinis graphematum: GRAPHEMATUM = regula Ghostty
+ * (modus 2027, ordinaria); SIMPLEX = ut Terminal.app (mensuratum
+ * 2026-09-28, aspectibus duobus): ZWJ pictographa NON iungit (quodque
+ * emoji graphema suum, latitudo <= II). Cetera eadem - etiam signum
+ * spatians (Mc) amplificat: Terminal.app hi II cellulas dat. */
+nomen enumeratio {
+    RUNAE_POLITICA_GRAPHEMATUM = 0,
+    RUNAE_POLITICA_SIMPLEX
+} RunaePolitica;
+
+/* Idem sub politica data (SIMPLEX: vide supra). runae_graphema_proximum
+ * = politica GRAPHEMATUM. */
 static constans i8*
-tessera_runae_graphema_proximum (
-    constans i8* initium,
-    constans i8* finis,
-            i32* latitudo);
+tessera_runae_graphema_ex_politica (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32* latitudo);
 
 #endif /* RUNAE_H */
 
@@ -5104,6 +5121,18 @@ tessera_latitudo (
 i32
 tessera_altitudo (
     constans TesseraOpus* opus);
+
+/* Politica latitudinis ponere - statim post tessera_aperire (cellulae
+ * latitudines quibus pictae sunt servant). Ordinaria: GRAPHEMATUM. */
+vacuum
+tessera_politicam_ponere (
+        TesseraOpus* opus,
+    TesseraPolitica  politica);
+
+/* Politica ex ambitu (non quaestio terminalis): TERM_PROGRAM
+ * "Apple_Terminal" -> SIMPLEX, aliter GRAPHEMATUM. */
+TesseraPolitica
+tessera_politica_ambitus (vacuum);
 
 /* Regionem activam implere (signum 0 = vacuum, stilus datus) */
 vacuum
@@ -6190,16 +6219,19 @@ tessera_runae_rumpitur (
 }
 
 static constans i8*
-tessera_runae_graphema_proximum (
-    constans i8* initium,
-    constans i8* finis,
-            i32* latitudo)
+tessera_runae_graphema_ex_politica (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32* latitudo)
 {
-    constans i8* cursor = initium;
+        constans i8* cursor = initium;
+
              s32 prior;
              s32 ultima;   /* Ghostty 'prev': runa ultima cum effectu */
              i32 lat;
     RunaeRuptura ruptura;
+
 
     *latitudo = ZEPHYRUM;
     si (initium >= finis)
@@ -6224,6 +6256,12 @@ tessera_runae_graphema_proximum (
         {
             frange;   /* invalida aut limes: graphema finitur */
         }
+        si (   politica        == RUNAE_POLITICA_SIMPLEX
+            && _classis(prior) == RUNAE_CLASSIS_IUNCTOR
+            && _classis(runa)  == RUNAE_CLASSIS_PICTOGRAPHUM)
+        {
+            frange;   /* SIMPLEX: ZWJ pictographa non iungit (GB11 non) */
+        }
         si (runa == 0xFE0F || runa == 0xFE0E)
         {
             /* VS16/VS15 solum post basim variationis; aliter nullus
@@ -6234,7 +6272,7 @@ tessera_runae_graphema_proximum (
                 ultima  = runa;
             }
         }
-        alioquin si (!_nulla_in_graphemate(runa))
+                alioquin si (!_nulla_in_graphemate(runa))
         {
             lat     = II;   /* runa latitudinem conferens */
             ultima  = runa;
@@ -10248,6 +10286,7 @@ tessera_aperire (
         (memoriae_index)(II * TESSERA_GRAPHEMATA_MAXIMA) * magnitudo(i32));
     opus->graphemata_octeti_usi  = ZEPHYRUM;
     opus->graphemata_numerus     = ZEPHYRUM;
+    opus->politica               = TESSERA_POLITICA_GRAPHEMATUM;
 
     opus->cursor_x                        = -I;
     opus->cursor_y                        = -I;
@@ -10336,6 +10375,30 @@ tessera_altitudo (
     constans TesseraOpus* opus)
 {
     redde (opus != NIHIL) ? opus->altitudo : ZEPHYRUM;
+}
+
+vacuum
+tessera_politicam_ponere (
+        TesseraOpus* opus,
+    TesseraPolitica  politica)
+{
+    si (opus != NIHIL)
+    {
+        opus->politica = politica;
+    }
+}
+
+TesseraPolitica
+tessera_politica_ambitus (vacuum)
+{
+    constans character* programma = getenv("TERM_PROGRAM");
+
+    si (   programma                           != NIHIL
+        && strcmp(programma, "Apple_Terminal") == ZEPHYRUM)
+    {
+        redde TESSERA_POLITICA_SIMPLEX;
+    }
+    redde TESSERA_POLITICA_GRAPHEMATUM;
 }
 
 vacuum
@@ -10641,7 +10704,10 @@ _octetos_scribere (
             perge;
         }
         /* graphema (UAX #29) et latitudo eius (Ghostty) */
-        post = tessera_runae_graphema_proximum(cursor, finis, &latitudo);
+        post = tessera_runae_graphema_ex_politica(cursor, finis,
+            (opus->politica == TESSERA_POLITICA_SIMPLEX)
+                ? RUNAE_POLITICA_SIMPLEX : RUNAE_POLITICA_GRAPHEMATUM,
+            &latitudo);
         si (latitudo == ZEPHYRUM)
         {
             cursor = post;   /* signum sine basi: nihil pingitur */

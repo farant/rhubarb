@@ -1102,3 +1102,60 @@ emoji and new Arabic/Yoruba rows.
   ENVIRONMENT (not a query): `TERM_PROGRAM=Apple_Terminal` → clusters
   measured as the sum of per-codepoint widths, as OpenTUI's `WidthMethod`
   does.
+
+## WIDTH POLICY FROM THE ENVIRONMENT (runae U5c, 2026-09-28)
+
+### INTENTIO
+
+**What Terminal.app does, from Fran's U5b screenshots (3 data points):**
+- हि is 1 cell: spacing marks (Mc) count 0 there, not 1.
+- the ZWJ family is three separate emoji: no pictograph join across ZWJ.
+- ❤️ is 2 cells: VS16 IS honoured.
+So it isn't a plain codepoint sum (that would make ❤️ 1). The policy that
+fits all three is **SIMPLEX**: Ghostty's cluster rule with two changes,
+(1) a spacing mark does not widen its cluster, (2) ZWJ does not join
+pictographs (GB11 off, so each emoji becomes its own cluster and every
+cluster stays ≤ 2 cells, which the cell model can hold). Everything else
+(VS16/VS15, modifiers, RI pairs, Mn/Me zero) is unchanged. Flags are
+untested so far (the look adds a flag row).
+
+**runae:** `RunaePolitica` { `RUNAE_POLITICA_GRAPHEMATUM` (Ghostty, the
+default), `RUNAE_POLITICA_SIMPLEX` } and
+`runae_graphema_ex_politica(initium, finis, politica, &latitudo)`;
+`runae_graphema_proximum` becomes its GRAPHEMATUM wrapper.
+`runae_rumpitur` stays pure UAX #29.
+
+**tessera:** its own `TesseraPolitica` (runae's enum isn't public in the
+amalgam), an opus field (default GRAPHEMATUM), `tessera_politicam_ponere`,
+and `tessera_politica_ambitus()`, which reads `TERM_PROGRAM` (ISO C
+`getenv`, not a query): `Apple_Terminal` → SIMPLEX, else GRAPHEMATUM.
+**No auto-detection in `tessera_aperire`**: the test suite would then
+behave differently depending on which terminal runs it. Apps opt in with
+one line (spectaculum, saltuarius). Set the policy right after opening:
+cells keep the widths they were drawn with.
+
+Red first: SIMPLEX cases in `probatio_runae_graphemata.c` (क+ि = 1; the
+family's first cluster is 👨+ZWJ, width 2; ❤️ still 2; 👋🏿 2; a flag 2)
+and in `probatio_tessera_graphemata.c` (हि a 1-cell cluster; the family
+as three wide cells). Plants: SIMPLEX's Mc exception off, its ZWJ break
+off. Terminal step: spectaculum in Terminal.app (policy from the
+environment) with a flag and a skin-tone row added; Ghostty unchanged.
+
+**U5c FACTUM (width policy).**
+- `RunaePolitica` / `runae_graphema_ex_politica` in runae; tessera's
+  `TesseraPolitica`, the opus field, `tessera_politicam_ponere`,
+  `tessera_politica_ambitus` (`TERM_PROGRAM=Apple_Terminal` → SIMPLEX;
+  no auto-detection, apps opt in: spectaculum, saltuarius).
+- Red first; plants caught.
+- **Fran's Terminal.app look REVISED the hypothesis:**
+  - The ZWJ rule was confirmed: the family row aligned.
+  - The spacing-mark rule was REFUTED: हि squeezed to 1 cell made the
+    ि vanish (overdrawn), so Terminal.app gives हि 2 like Ghostty. In
+    U5b the shift came from the conjunct न्दी, not हि; I had
+    misattributed it.
+  - SIMPLEX now differs from Ghostty in the ZWJ rule ONLY.
+  - Conjuncts, flags and skin tones draw narrower in Terminal.app (it
+    renders rows as shaped text); that's recorded as its limit in the
+    research note, not modelled.
+- Ghostty (GRAPHEMATUM) looked great with the new rows.
+- Suite 10/10, saltuarius 13/13, amalgam VERIFICATUM + idempotent.

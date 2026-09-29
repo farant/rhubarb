@@ -168,6 +168,13 @@ TesseraPons* tessera_pons_posix_creare(TesseraPiscina* piscina);
 #define TESSERA_GRAPHEMA_OCTETI_MAXIMI 64
 #define TESSERA_GRAPHEMATA_OCTETI      262144
 
+/* Politica latitudinis graphematum (runae U5c): ex ambitu eligitur */
+typedef enum TesseraPolitica {
+    TESSERA_POLITICA_GRAPHEMATUM = 0,   /* regula Ghostty */
+    TESSERA_POLITICA_SIMPLEX            /* ut Terminal.app: ZWJ non
+                                         * iungit */
+} TesseraPolitica;
+
 typedef struct TesseraFructus {
     unsigned int cellulae_collatae;
     unsigned int cellulae_mutatae;
@@ -199,6 +206,7 @@ struct TesseraOpus {
     unsigned char*            graphemata_longitudines;
     unsigned int              graphemata_numerus;
     unsigned int*             graphemata_index;       /* ID+1, 0 vacuum */
+    TesseraPolitica           politica;
 };
 
 TesseraOpus* tessera_aperire(TesseraPiscina* piscina,
@@ -215,6 +223,9 @@ void tessera_cellulam_ponere(TesseraOpus* opus, int x, int y,
     unsigned int signum, TesseraStilus stilus);
 TesseraCellula tessera_cellulam_legere(const TesseraOpus* opus,
     int x, int y);
+void tessera_politicam_ponere(TesseraOpus* opus,
+    TesseraPolitica politica);
+TesseraPolitica tessera_politica_ambitus(void);
 unsigned int tessera_cellulae_octeti(const TesseraOpus* opus, int x, int y,
     unsigned char* exitus, unsigned int capacitas);
 void tessera_scribere(TesseraOpus* opus, int x, int y,

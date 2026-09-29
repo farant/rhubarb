@@ -34,6 +34,15 @@
 #define TESSERA_GRAPHEMA_OCTETI_MAXIMI 64
 #define TESSERA_GRAPHEMATA_OCTETI      262144
 
+/* Politica latitudinis graphematum (runae U5c): GRAPHEMATUM = regula
+ * Ghostty (ordinaria); SIMPLEX = ut Terminal.app (ZWJ pictographa non
+ * iungit). Ex AMBITU eligitur (tessera_politica_ambitus:
+ * TERM_PROGRAM), numquam quaeritur. */
+nomen enumeratio {
+    TESSERA_POLITICA_GRAPHEMATUM = 0,
+    TESSERA_POLITICA_SIMPLEX
+} TesseraPolitica;
+
 /* Numeratores ut productum (mos silvae: fructus, non depuratio) */
 nomen structura {
     i32 cellulae_collatae;
@@ -64,10 +73,11 @@ structura TesseraOpus {
     /* Tabula graphematum internatorum (ID = index) */
                    i8* graphemata_octeti;       /* arena */
                   i32  graphemata_octeti_usi;
-                  i32* graphemata_initia;       /* ID -> offset arenae */
+                  i32* graphemata_initia;       /* ID -> offset */
                    i8* graphemata_longitudines; /* ID -> octeti */
                   i32  graphemata_numerus;
-                  i32* graphemata_index;        /* dispersio: ID+1, 0 vacuum */
+                  i32* graphemata_index;        /* ID+1; 0 vacuum */
+      TesseraPolitica  politica;      /* latitudinis graphematum */
 };
 
 /* Pons REQUISITUS in Phase A (defalta posix = Phase B) */
@@ -95,6 +105,18 @@ tessera_latitudo (
 i32
 tessera_altitudo (
     constans TesseraOpus* opus);
+
+/* Politica latitudinis ponere - statim post tessera_aperire (cellulae
+ * latitudines quibus pictae sunt servant). Ordinaria: GRAPHEMATUM. */
+vacuum
+tessera_politicam_ponere (
+        TesseraOpus* opus,
+    TesseraPolitica  politica);
+
+/* Politica ex ambitu (non quaestio terminalis): TERM_PROGRAM
+ * "Apple_Terminal" -> SIMPLEX, aliter GRAPHEMATUM. */
+TesseraPolitica
+tessera_politica_ambitus (vacuum);
 
 /* Regionem activam implere (signum 0 = vacuum, stilus datus) */
 vacuum

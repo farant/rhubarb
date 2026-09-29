@@ -200,7 +200,7 @@ cluster, not only wide ones (the research note: clusters are where
 terminals disagree most). The Hindi/Yoruba/Arabic rows in spectaculum
 become the look.
 
-**U5b done 2026-09-28; U5c agreed (Fran):** after the look, Terminal.app
+**U5c done 2026-09-28: after a second look, SIMPLEX = the ZWJ rule only (the spacing-mark rule was refuted; see the research note's Terminal.app table).** Original note — **U5b done 2026-09-28; U5c agreed (Fran):** after the look, Terminal.app
 sums codepoint widths (spacing marks 0) and doesn't join ZWJ families,
 while Ghostty matches runae. U5c = a width POLICY chosen from the
 environment (`TERM_PROGRAM=Apple_Terminal` → clusters measured as the sum

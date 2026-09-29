@@ -119,11 +119,21 @@ _scaenam_pingere (
                         "r\xE1\xBB\x8D\xCC\x80" },
             { "familia", "\xF0\x9F\x91\xA8\xE2\x80\x8D\xF0\x9F\x91\xA9"
                          "\xE2\x80\x8D\xF0\x9F\x91\xA7 \xE2\x9D\xA4"
-                         "\xEF\xB8\x8F" }
+                         "\xEF\xB8\x8F" },
+            { "vexilla", "\xF0\x9F\x87\xBB\xF0\x9F\x87\xA6 "
+                         "\xF0\x9F\x87\xAF\xF0\x9F\x87\xB5" },
+            { "cutis", "\xF0\x9F\x91\x8B\xF0\x9F\x8F\xBF "
+                       "\xF0\x9F\x91\x8D\xF0\x9F\x8F\xBB" }
         };
         s32 j;
 
-        per (j = ZEPHYRUM; j < VIII && XI + j < (s32)alt - IV; j++)
+        tessera_scribere_literis(opus, II, X,
+            (opus->politica == TESSERA_POLITICA_SIMPLEX)
+                ? "latitudo - politica SIMPLEX (Apple_Terminal)"
+                : "latitudo - politica GRAPHEMATUM (Ghostty)",
+            tessera_stilus(TESSERA_COLOR_NATIVUS, TESSERA_COLOR_NATIVUS,
+                TESSERA_ORNAMENTUM_OBSCURUM));
+        per (j = ZEPHYRUM; j < X && XI + j < (s32)alt - IV; j++)
         {
             tessera_scribere_literis(opus, II, XI + j,
                 EXEMPLA[j][ZEPHYRUM],
@@ -178,6 +188,8 @@ principale (vacuum)
         fprintf(stderr, "spectaculum: apertura fracta\n");
         redde I;
     }
+    /* latitudo graphematum ut terminal hic eam metitur (ambitus) */
+    tessera_politicam_ponere(opus, tessera_politica_ambitus());
 
     strcpy(status, "salve! claves preme...");
     dum (currens)

@@ -174,6 +174,34 @@ principale (vacuum)
     tessera_cellulam_ponere(opus, ZEPHYRUM, ZEPHYRUM, (i32)'q', nat);
     CREDO_VERUM (_cella_est(opus, ZEPHYRUM, ZEPHYRUM, "q", ZEPHYRUM));
 
+        /* Politica SIMPLEX (Terminal.app): hi manet latum (II);
+     * familia = tria emoji lata (ZWJ non iungit) */
+    {
+        TesseraPonsMemoriae* pm_s =
+            tessera_pons_memoriae_creare(piscina,
+            XVI, II);
+        TesseraOpus* s = tessera_aperire(piscina, &pm_s->pons);
+
+        imprimere("\n--- Politica SIMPLEX ---\n");
+        CREDO_NON_NIHIL (s);
+        tessera_politicam_ponere(s, TESSERA_POLITICA_SIMPLEX);
+        tessera_scribere_literis(s, ZEPHYRUM, ZEPHYRUM,
+            SYLLABA_PRIMA "x",
+            nat);
+        CREDO_VERUM (_cella_est(s, ZEPHYRUM, ZEPHYRUM, SYLLABA_PRIMA,
+            TESSERA_ORNAMENTUM_GRAPHEMA | TESSERA_ORNAMENTUM_LATUM));
+        CREDO_VERUM (_cella_est(s, II, ZEPHYRUM, "x", ZEPHYRUM));
+        tessera_scribere_literis(s, ZEPHYRUM, I, FAMILIA, nat);
+        CREDO_VERUM (_cella_est(s, ZEPHYRUM, I,
+            "\xF0\x9F\x91\xA8\xE2\x80\x8D",
+            TESSERA_ORNAMENTUM_GRAPHEMA | TESSERA_ORNAMENTUM_LATUM));
+        CREDO_VERUM (_cella_est(s, II, I,
+            "\xF0\x9F\x91\xA9\xE2\x80\x8D",
+            TESSERA_ORNAMENTUM_GRAPHEMA | TESSERA_ORNAMENTUM_LATUM));
+        CREDO_VERUM (_cella_est(s, IV, I, "\xF0\x9F\x91\xA7",
+            TESSERA_ORNAMENTUM_LATUM));
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

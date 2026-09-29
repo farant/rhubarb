@@ -127,3 +127,27 @@
   a Linker, so ta is untouched. The corpus is sharp enough to see that.
 - The table grew from 104 to 120 unique blocks (~40 KB); widths still
   match ICU on every codepoint (the aurum_icu check).
+
+## 2026-09-28: U5c, width policy
+
+- SIMPLEX was derived from three Terminal.app observations (हि = 1 cell,
+  the ZWJ family unjoined, ❤️ = 2), not from documentation. It is a
+  HYPOTHESIS about Terminal.app until the look confirms it; flags and
+  skin tones are its first untested predictions (both 2).
+- The red run showed the policy is minimal: of seven SIMPLEX cases, only
+  the two that differ from Ghostty failed before the implementation.
+- Editio refused, rightly, a deletion that changed the code's shape;
+  `tolerans='spatia'` is the documented verbatim escape for a deliberate
+  removal. It also reported `sana: False` when my stub put a statement
+  before declarations (C89 violation), so its verdict is worth reading
+  every time.
+- tessera doesn't auto-detect: a `getenv` inside `tessera_aperire` would
+  make the test suite depend on the terminal it runs in. Apps opt in
+  with `tessera_politicam_ponere(opus, tessera_politica_ambitus())`.
+- CORRECTION after the second Terminal.app look: its हि is 2 cells (like
+  Ghostty); my "Mc = 0" reading of the U5b screenshot was wrong. The
+  shift there came from the conjunct न्दी. Squeezing हि to 1 made the ि
+  disappear (our next cluster was drawn over it), which is how the
+  mistake became visible. SIMPLEX keeps only the ZWJ rule. Lesson: one
+  screenshot row with two clusters can't say WHICH cluster disagreed;
+  isolate the clusters (one per row) when measuring a terminal.

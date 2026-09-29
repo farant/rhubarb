@@ -55,5 +55,6 @@ interior constans character* constans EXCLUDENDA_UTF8[] = {
 };
 
 interior constans character* constans EXCLUDENDA_RUNAE[] = {
+    "runae_graphema_proximum",
     NIHIL
 };

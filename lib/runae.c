@@ -213,16 +213,19 @@ runae_rumpitur (
 }
 
 constans i8*
-runae_graphema_proximum (
-    constans i8* initium,
-    constans i8* finis,
-            i32* latitudo)
+runae_graphema_ex_politica (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32* latitudo)
 {
-    constans i8* cursor = initium;
+        constans i8* cursor = initium;
+
              s32 prior;
              s32 ultima;   /* Ghostty 'prev': runa ultima cum effectu */
              i32 lat;
     RunaeRuptura ruptura;
+
 
     *latitudo = ZEPHYRUM;
     si (initium >= finis)
@@ -247,6 +250,12 @@ runae_graphema_proximum (
         {
             frange;   /* invalida aut limes: graphema finitur */
         }
+        si (   politica        == RUNAE_POLITICA_SIMPLEX
+            && _classis(prior) == RUNAE_CLASSIS_IUNCTOR
+            && _classis(runa)  == RUNAE_CLASSIS_PICTOGRAPHUM)
+        {
+            frange;   /* SIMPLEX: ZWJ pictographa non iungit (GB11 non) */
+        }
         si (runa == 0xFE0F || runa == 0xFE0E)
         {
             /* VS16/VS15 solum post basim variationis; aliter nullus
@@ -257,7 +266,7 @@ runae_graphema_proximum (
                 ultima  = runa;
             }
         }
-        alioquin si (!_nulla_in_graphemate(runa))
+                alioquin si (!_nulla_in_graphemate(runa))
         {
             lat     = II;   /* runa latitudinem conferens */
             ultima  = runa;
@@ -271,4 +280,14 @@ runae_graphema_proximum (
     }
     *latitudo = lat;
     redde cursor;
+}
+
+constans i8*
+runae_graphema_proximum (
+    constans i8* initium,
+    constans i8* finis,
+            i32* latitudo)
+{
+    redde runae_graphema_ex_politica(initium, finis,
+        RUNAE_POLITICA_GRAPHEMATUM, latitudo);
 }

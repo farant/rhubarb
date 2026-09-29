@@ -4,6 +4,7 @@
 #include "tessera_modi.h"
 #include "utf8.h"
 #include "runae.h"
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -198,6 +199,7 @@ tessera_aperire (
         (memoriae_index)(II * TESSERA_GRAPHEMATA_MAXIMA) * magnitudo(i32));
     opus->graphemata_octeti_usi  = ZEPHYRUM;
     opus->graphemata_numerus     = ZEPHYRUM;
+    opus->politica               = TESSERA_POLITICA_GRAPHEMATUM;
 
     opus->cursor_x                        = -I;
     opus->cursor_y                        = -I;
@@ -286,6 +288,30 @@ tessera_altitudo (
     constans TesseraOpus* opus)
 {
     redde (opus != NIHIL) ? opus->altitudo : ZEPHYRUM;
+}
+
+vacuum
+tessera_politicam_ponere (
+        TesseraOpus* opus,
+    TesseraPolitica  politica)
+{
+    si (opus != NIHIL)
+    {
+        opus->politica = politica;
+    }
+}
+
+TesseraPolitica
+tessera_politica_ambitus (vacuum)
+{
+    constans character* programma = getenv("TERM_PROGRAM");
+
+    si (   programma                           != NIHIL
+        && strcmp(programma, "Apple_Terminal") == ZEPHYRUM)
+    {
+        redde TESSERA_POLITICA_SIMPLEX;
+    }
+    redde TESSERA_POLITICA_GRAPHEMATUM;
 }
 
 vacuum
@@ -591,7 +617,10 @@ _octetos_scribere (
             perge;
         }
         /* graphema (UAX #29) et latitudo eius (Ghostty) */
-        post = runae_graphema_proximum(cursor, finis, &latitudo);
+        post = runae_graphema_ex_politica(cursor, finis,
+            (opus->politica == TESSERA_POLITICA_SIMPLEX)
+                ? RUNAE_POLITICA_SIMPLEX : RUNAE_POLITICA_GRAPHEMATUM,
+            &latitudo);
         si (latitudo == ZEPHYRUM)
         {
             cursor = post;   /* signum sine basi: nihil pingitur */
