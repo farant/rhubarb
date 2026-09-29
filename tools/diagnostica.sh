@@ -30,7 +30,7 @@ compilare () {
 for f in piscina chorda chorda_aedificator xar friatio tabula_dispersa \
          internamentum stml stml_macros selectio similitudo canon credo \
          processus_posix css_lexema html_lexema entitates_html \
-         entitates_html_tabula excerptum utf8 \
+         entitates_html_tabula excerptum utf8 runae runae_tabulae \
          iter_directoria via; do
     compilare "$RADIX_DIR/lib/$f.c" "$BUILD_DIR/$f.o"
 done

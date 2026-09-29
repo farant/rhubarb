@@ -13,6 +13,8 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "iter_directoria"
     "piscina"
+    "runae"
+    "runae_tabulae"
     "selectio"
     "sigillum"
     "stml"

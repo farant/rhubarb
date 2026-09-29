@@ -234,8 +234,6 @@ interior constans character* constans EXCLUDENDA_EXCERPTI[] = {
 
 interior constans character* constans EXCLUDENDA_UTF8[] = {
     "utf8_codere",
-    "utf8_decodere",
-    "utf8_longitudo_byte",
     "utf8_numerare_runas",
     "utf8_prior_runa",
     "utf8_proxima_runa",

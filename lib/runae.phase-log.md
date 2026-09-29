@@ -244,3 +244,33 @@ Terminal.app look). Commit e4b08570.
 and `lib/excerptum`'s caret move from rune counts to `runae` widths (the
 ledger's measured cases 広 / e+U+0301 become tests), then U7 (the Lapide
 viewer), U8 (RELATIO, ledger …VRTHANR → impletum, merge to main).
+
+## U6a — the diagnostics caret measures columns (2026-09-28)
+
+**INTENTIO (Fran approved the U6 split: U6a excerptum, U6b saltuarius +
+`tessera_graphema_ponere`).** The caret in `lib/excerptum` counted UTF-8
+characters; the ledger's measured cases (…VRTHANR) become tests.
+
+**Red first:** 7 new cases (two measured cases on the single-location
+path, `a広b` tildes, a wide first cluster, an empty span on a wide
+cluster, a start inside a cluster, and the measured `a { 広: red } }`
+through `excerptum_scribere_multa` — the path the product calls).
+6 red; the empty span was already right (kept as a regression guard).
+
+**Green:** `_signum_scribere` walks clusters via
+`runae_graphema_proximum` (default policy: diagnostics have no terminal
+handle). 79/79 after a control-byte case was added (see plants).
+Details and rules: `lib/excerptum.worklog.md` (2026-09-28).
+
+**Plants (compiling), caught by name:** spaces per cluster not width;
+tildes per cluster; start-inside-cluster ignored; control width 0 —
+this last one was GREEN at first (no case), so `a\x01b` was added.
+
+**Blast radius:** excerptum is in the silva amalgam and in toml, css,
+silva, materia and crusta probationes lists and `tools/diagnostica.sh`
+(the pre-commit hook's own tool); 22 silva launcher snippets
+regenerated. The amalgam leaked `RUNAE_GRADUS_*` as global data, which
+silva's nm gate cannot see (it compares only against silva's own six
+dependency objects) → exact renames `SILVA_RUNAE_GRADUS_*`; quaestio
+…8RWX1 filed for the gate. officina's amalgam does not carry excerptum
+(its manifest "staleness" was only missing objects in this worktree).

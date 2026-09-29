@@ -3,10 +3,10 @@
  *
  * Contractus: margo numeri lineae (cifrae, minimum IV) + " | ",
  * linea fontis (CR sublato, moderatores praeter tabulam ut spatium),
- * deinde margo vacuus + '^' ad initium et '~' per CHARACTEREM UTF-8
- * usque ad finem tractus aut lineae. Tabula in margine sub linea
- * SERVATUR, ergo signum columnam veram tenet etiam in fonte
- * tabulato.
+ * deinde margo vacuus + '^' ad graphema initium continens et '~' per
+ * COLUMNAS reliquas (latitudo graphematum per runae) usque ad finem
+ * tractus aut lineae. Tabula in margine sub linea SERVATUR, ergo
+ * signum columnam veram tenet etiam in fonte tabulato.
  *
  * Chordae expectatae hic CONTRACTUS sunt: codicem ad eas emenda,
  * numquam eas ad codicem.
@@ -223,6 +223,34 @@ principale (vacuum)
     _probare(piscina, "q\n", ZEPHYRUM, (s32)I, (i32)12345,
         "12345 | q\n      | ^\n");
 
+    imprimere("\n--- Latitudo graphematum (runae) ---\n");
+    /* CASUS MENSURATI (desideratum …VRTHANR, 2026-09-17): '広' II
+     * columnas tenet - signum sub '=' ad columnam III, non II */
+    _probare(piscina, "\xE5\xBA\x83 = x\n", (s32)IV, (s32)V, I,
+        "   1 | \xE5\xBA\x83 = x\n     |    ^\n");
+    /* 'e' + U+0301 graphema UNUM columnae unius - signum ad columnam
+     * II, non III */
+    _probare(piscina, "e\xCC\x81 = x\n", (s32)IV, (s32)V, I,
+        "   1 | e\xCC\x81 = x\n     |   ^\n");
+    /* tilde per LATITUDINEM: 'a', '広', 'b' = IV columnae */
+    _probare(piscina, "a\xE5\xBA\x83" "b\n", ZEPHYRUM, (s32)V, I,
+        "   1 | a\xE5\xBA\x83" "b\n     | ^~~~\n");
+    /* tractus graphemate lato incipiens: '^' columnam primam, '~'
+     * alteram tenet */
+    _probare(piscina, "\xE5\xBA\x83\n", ZEPHYRUM, (s32)III, I,
+        "   1 | \xE5\xBA\x83\n     | ^~\n");
+    /* tractus vacuus super graphema latum: '^' solum */
+    _probare(piscina, "\xE5\xBA\x83\n", ZEPHYRUM, ZEPHYRUM, I,
+        "   1 | \xE5\xBA\x83\n     | ^\n");
+    /* moderator in linea ' ' pingitur, ergo columnam UNAM tenet -
+     * runae ei latitudinem ZEPHYRUM dat (Cc); signum eam sequi non
+     * debet */
+    _probare(piscina, "a\x01" "b\n", (s32)II, (s32)III, I,
+        "   1 | a b\n     |   ^\n");
+    /* initium INTRA graphema (signum componens): signum sub basi */
+    _probare(piscina, "e\xCC\x81x\n", (s32)I, (s32)III, I,
+        "   1 | e\xCC\x81x\n     | ^\n");
+
     imprimere("\n--- Fenestra lineae longae ---\n");
     /* ad limitem IPSUM nihil mutatur: clientes priores (C89, bash,
      * css ordinarium) octetim iidem manere debent */
@@ -279,6 +307,20 @@ principale (vacuum)
             "   1 | test a -nt b\n"
             "     |      ^ hic\n"
             "     |        ^~~ et hic\n");
+    }
+
+    /* VIA PRODUCTI (materia_pictor per _multa solum vocat): casus
+     * mensuratus '広' ibi quoque - 'a { 広: red } }' */
+    {
+        hic_manens constans ExcerptumSedes LATA[] = {
+            { (s32)IX, (s32)XII, I, "hic" }
+        };
+
+        /* 'red' ad octetum IX, columnam VIII (広 = II columnae) */
+        _probare_multa(piscina, "a { \xE5\xBA\x83: red } }\n", LATA,
+            (i32)I,
+            "   1 | a { \xE5\xBA\x83: red } }\n"
+            "     | " "        " "^~~ hic\n");
     }
 
     /* MARGO SEMEL MENSURATUS: minimum latitudinis IV est, ergo prima

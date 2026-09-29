@@ -121,3 +121,59 @@ finds the `^` column and checks that the content line carries `X`
 there. An expected string hand-computed by me would have repeated the
 same arithmetic the code does, and a three-column error would have sat
 in both halves agreeing with itself.
+
+## 2026-09-28 — the caret measures columns (runae U6a)
+
+The caret used to emit one space per UTF-8 *character* before the
+tract and one `~` per character inside it. That was wrong in both
+directions, which is why no correction factor could fix it (ledger
+…VRTHANR, measured 2026-09-17): `広` holds two columns but counted one,
+`e` + U+0301 holds one but counted two.
+
+Now `_signum_scribere` walks **grapheme clusters** with
+`runae_graphema_proximum` (UAX #29 + Ghostty's width rule, the
+GRAPHEMATUM policy — diagnostics have no terminal handle, so no
+environment policy; a ZWJ family on Terminal.app is the one place
+this can disagree with what the user sees). Rules:
+
+- before the tract: each cluster emits `latitudo` spaces, a tab stays
+  a tab;
+- `initium` inside a cluster (e.g. on a combining mark) puts the `^`
+  under that cluster's base;
+- `^` takes the first column of the tract, `~` covers the rest of its
+  WIDTH (`広` alone = `^~`); an empty tract is `^` alone, as before;
+- a control byte counts ONE column, because `_lineam_scribere` prints
+  it as a space. runae says 0 (Cc) — without the special case in
+  `_graphema` the caret drifts left. The old code got this right by
+  accident (non-continuation byte = 1); a plant proved no test held it,
+  so `a\x01b` is now a case.
+
+ASCII is unchanged byte for byte (all 70 prior cases green). The 160
+limit of the long-line window still counts BYTES, deliberately: a CJK
+line of 160 bytes is ~106 columns, so the window arrives a little
+late, but the caret stays right because both writers walk from the same
+`principium`.
+
+**Blast radius, measured.** excerptum is in the silva amalgam and in
+five hand-kept probationes lists (toml, css, silva, materia, crusta)
+plus `tools/diagnostica.sh` (the pre-commit hook's tool — found only when
+the hook refused to link),
+and ~22 silva launcher snippets derive from it. The first Editio
+apply failed inside examen itself — examen *links* excerptum, so the
+judge could not be built until the snippets were regenerated. Order
+that worked: edit → regenerate every `# regeneratio:` snippet →
+hand lists → `silva/amalgamare.sh` (builds objects, then stops at porta
+0) → `amalgama_excludenda_generare.sh silva` → `amalgama_fontes_generare.sh
+silva` → `amalgamare.sh` VERIFICATUM.
+
+**Data leak the gate didn't see.** The amalgam makes claimed functions
+static but not DATA: `RUNAE_GRADUS_PRIMUS/SECUNDUS` came out as global
+`S` symbols. Silva's nm gate (step 5) only intersects against its own
+six RADIX_FONTES objects, so it stayed green; saltuarius (which will
+link lib/runae_tabulae.o next to silva.o in U6b) would have failed with
+duplicate symbols. Fixed with exact renames to `SILVA_RUNAE_GRADUS_*`,
+the same fix tessera needed at U5.
+
+Plants (all compile), each caught by name: spaces per cluster instead
+of per width (2), tildes per cluster (2), initium-inside-cluster
+ignored (1), control width 0 (1, after adding the case).

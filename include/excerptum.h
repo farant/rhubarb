@@ -1,9 +1,10 @@
 /* excerptum.h - Excerptum fontis cum signo sub tractu (forma
  * diagnosticorum compilatorum): margo numeri lineae, linea fontis
  * (CR sublato, moderatores praeter tabulam ut spatium), deinde
- * '^' ad initium et '~' per characterem UTF-8 usque ad finem
- * tractus aut lineae. Tabula in margine sub linea servatur, ergo
- * signum columnam veram tenet.
+ * '^' ad graphema initium continens et '~' per columnas reliquas
+ * usque ad finem tractus aut lineae. Columnae = latitudo graphematum
+ * (runae: '広' II, 'e' + U+0301 I); tabula in margine sub linea
+ * servatur, ergo signum columnam veram tenet.
  *
  * PICTURA sola: sedem materia dat (MateriaTractus), formam haec.
  * Ergo nihil de arboribus scit et a quolibet fonte vocari potest.

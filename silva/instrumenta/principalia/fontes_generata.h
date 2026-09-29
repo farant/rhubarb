@@ -28,7 +28,9 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "materia/fontes/materia_arbor.h", NIHIL, EXCLUDENDA_MATERIA_ARBOR, FALSUM, VERUM },
     { "materia/fontes/materia_diagnosticum.h", NIHIL, NIHIL, FALSUM, VERUM },
     { "include/excerptum.h", NIHIL, EXCLUDENDA_EXCERPTI, FALSUM, VERUM },
-    { "include/utf8.h", NIHIL, EXCLUDENDA_UTF8, FALSUM, VERUM }
+    { "include/utf8.h", NIHIL, EXCLUDENDA_UTF8, FALSUM, VERUM },
+    { "include/runae.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "include/runae_tabulae.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -49,7 +51,9 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "materia/fontes/materia_token.c", NIHIL, EXCLUDENDA_MATERIA_TOKEN, VERUM, VERUM },
     { "materia/fontes/materia_arbor_aequalitas.c", NIHIL, EXCLUDENDA_MATERIA_ARBOR, VERUM, VERUM },
     { "lib/excerptum.c", NIHIL, EXCLUDENDA_EXCERPTI, VERUM, VERUM },
-    { "lib/utf8.c", NIHIL, EXCLUDENDA_UTF8, VERUM, VERUM }
+    { "lib/utf8.c", NIHIL, EXCLUDENDA_UTF8, VERUM, VERUM },
+    { "lib/runae.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "lib/runae_tabulae.c", NIHIL, NIHIL, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {

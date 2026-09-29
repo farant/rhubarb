@@ -84,6 +84,8 @@ declare -a RADIX_FONTES=(
     # una sedes, excerpta 'hic coepit'/'hic exspectatur' (T19b-1)
     "excerptum"
     "utf8"
+    "runae"
+    "runae_tabulae"
 )
 
 FILTER="${1:-}"

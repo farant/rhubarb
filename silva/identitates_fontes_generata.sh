@@ -10,6 +10,8 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "moneta"
     "piscina"
+    "runae"
+    "runae_tabulae"
     "selectio"
     "stml"
     "stml_macros"

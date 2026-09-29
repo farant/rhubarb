@@ -208,7 +208,13 @@ interior constans Renominatio TYPI_EXACTI[] = {
       "SILVA_ARBOR_COMPARATIO_FIDELITAS" },
     /* lexicon frontis (silva_lexicon_c89.c, T13b): datum externum
      * sine praefixo - S43 (nulla collisio hospitis) praefixum poscit */
-    { "LEXICON_C89",                  "SILVA_LEXICON_C89" }
+    { "LEXICON_C89",                  "SILVA_LEXICON_C89" },
+    /* tabulae runae (excerptum per runae, U6a): data vendicata quae
+     * praefixa functionum non tangunt - sine his symbola globalia cum
+     * lib/runae_tabulae.o consumptoris (saltuarius) colliderent. Porta
+     * nm (gradus 5) id NON videt: solum RADIX_FONTES silvae confert */
+    { "RUNAE_GRADUS_PRIMUS",          "SILVA_RUNAE_GRADUS_PRIMUS" },
+    { "RUNAE_GRADUS_SECUNDUS",        "SILVA_RUNAE_GRADUS_SECUNDUS" }
 };
 
 /* Praefixa functionum - longissimum primum (chorda_aedificator_

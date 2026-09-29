@@ -61,6 +61,8 @@ declare -a RADIX_FONTES=(
     "stml_macros"
     "excerptum"
     "utf8"
+    "runae"
+    "runae_tabulae"
     "iter_directoria"
     "via"
     "filum"

@@ -1,6 +1,7 @@
 /* excerptum.c - Vide excerptum.h. */
 
 #include "excerptum.h"
+#include "runae.h"
 #include "utf8.h"
 
 /* FENESTRA lineae longissimae. Excerptum plenum terminale INUNDAT
@@ -13,9 +14,12 @@
  * utrimque pro contextu) et puncta tria '...' notantur. SIGNUM eandem
  * fenestram accipit - ambo scriptores ab eodem 'principium' ambulant
  * - ergo columna vera manet sine calculo altero.
- *
  * SUB limite nihil mutatur: lineae C89, bash et css ordinariae
- * OCTETIM eaedem manent. Ergo clientes priores immoti. */
+ * OCTETIM eaedem manent. Ergo clientes priores immoti.
+ *
+ * Limes OCTETOS numerat, non columnas (runae U6a consulto): linea
+ * CJK CLX octetorum circa CVI columnas tenet - fenestra paulo
+ * serius intrat, signum tamen rectum manet. */
 #define LATITUDO_MAXIMA  ((s32)160)
 #define MARGO_FENESTRAE  ((s32)40)
 #define LATITUDO_PUNCTORUM  ((s32)3)
@@ -201,6 +205,32 @@ _lineam_scribere (
 /* signum sub linea: '^' ad initium, '~' per CHARACTEREM UTF-8 usque
  * ad finem tractus aut lineae; tabula in margine servatur, ergo
  * columna vera manet. Nota (si adest) post signum. */
+/* graphema quod ad octetum 'i' incipit: reddit octetum post id et
+ * columnas eius in *latitudo, ut _lineam_scribere id pingit -
+ * moderatores (' ' ibi) I; tabula I (a vocante servatur); ceterum
+ * runae (latitudo Ghostty, graphemata UAX #29) */
+interior s32
+_graphema (
+    constans character* fons,
+                   s32  i,
+                   s32  terminus,
+                   i32* latitudo)
+{
+    constans i8* initium = (constans i8*)fons + i;
+
+    si ((i32)(insignatus character)fons[i] < 0x20)
+    {
+        *latitudo = I;
+        redde i + I;
+    }
+    redde i + (s32)(runae_graphema_proximum(initium,
+        (constans i8*)fons + terminus, latitudo) - initium);
+}
+
+/* signum sub linea: spatia per LATITUDINEM graphematum ante initium
+ * (tabula servatur, ergo columna vera manet), '^' ad graphema
+ * initium continens, '~' per columnas reliquas tractus usque ad
+ * finem eius aut lineae. Nota (si adest) post signum. */
 interior vacuum
 _signum_scribere (
      ChordaAedificator* exitus,
@@ -216,6 +246,9 @@ _signum_scribere (
 {
     s32 finis_lineae;
     s32 i;
+    s32 post;
+    i32 columnae;
+    i32 k;
 
     _marginem(exitus, linea, FALSUM, latitudo);
     /* '...' spatium columnae occupat: signum idem accipiat, aliter
@@ -227,31 +260,41 @@ _signum_scribere (
             chorda_aedificator_appendere_character(exitus, ' ');
         }
     }
-    per (i = principium; i < initium && i < terminus; i++)
+    i = principium;
+    dum (i < initium && i < terminus)
     {
+        post = _graphema(fons, i, terminus, &columnae);
+        si (post > initium)
+        {
+            frange;   /* initium intra graphema: signum sub eo */
+        }
         si (fons[i] == '\t')
         {
             chorda_aedificator_appendere_character(exitus, '\t');
         }
-        alioquin si (!utf8_est_continuatio((i8)fons[i]))
+        alioquin
         {
-            chorda_aedificator_appendere_character(exitus, ' ');
+            per (k = ZEPHYRUM; k < columnae; k++)
+            {
+                chorda_aedificator_appendere_character(exitus, ' ');
+            }
         }
+        i = post;
     }
     chorda_aedificator_appendere_character(exitus, '^');
-    finis_lineae  = finis < terminus ? finis : terminus;
-    i             = initium;
-    si (i < finis_lineae)
+    /* '~' per columnas tractus praeter primam ('^'); tractus vacuus
+     * signum solum habet */
+    finis_lineae = finis < terminus ? finis : terminus;
+    si (finis > initium)
     {
-        i++;
-        dum (i < finis_lineae && utf8_est_continuatio((i8)fons[i]))
+        i32 summa = ZEPHYRUM;
+
+        dum (i < finis_lineae)
         {
-            i++;
+            i      = _graphema(fons, i, terminus, &columnae);
+            summa  += columnae;
         }
-    }
-    per (; i < finis_lineae; i++)
-    {
-        si (!utf8_est_continuatio((i8)fons[i]))
+        per (k = I; k < summa; k++)
         {
             chorda_aedificator_appendere_character(exitus, '~');
         }
