@@ -71,9 +71,11 @@ with exact conformance files. See §6.
 - **UCD text files: none in the tree.** Fetching them from unicode.org
   is a network request (house rule: ask Fran first).
 - **Corpus: `../lapide`** (935 MB, 3,938 HTML files, 35 languages).
-  Files per language: la 1,253 · lt 1,251 · es/fr/it/pt 198 ·
-  de/ja/pl 56 · ar/id 55 · ko 16 · bn ceb el fa gu he hi hu ig ml nl
-  ro ru rw sv sw ta th tl tr vi yo zh 10 each. What it exercises:
+  Files per language (by `hreflang`: the unsuffixed files are
+  ENGLISH, and Lapide files Latin under `_lt`): en 1,253 · la (`_lt`)
+  1,251 · es/fr/it/pt 198 · de/ja/pl 56 · ar/id 55 · ko 16 · bn ceb el
+  fa gu he hi hu ig ml nl ro ru rw sv sw ta th tl tr vi yo zh 10 each;
+  all 35 have `01_Preliminares`. What it exercises:
 
   | Scripts | Languages | Stresses |
   |---|---|---|
@@ -82,7 +84,7 @@ with exact conformance files. See §6.
   | Thai | th | combining marks above/below, no spaces between words |
   | Latin + combining tone marks | yo, ig, vi | combining marks on Latin |
   | RTL | ar, he, fa | bidi (terminals mostly don't; out of scope, §6) |
-  | Greek, Cyrillic, Latin-extended | el, ru, lt, pl, hu, ro, tr… | width 1 baseline, precomposed letters |
+  | Greek, Cyrillic, Latin and Latin-extended | el, ru, la, en, pl, hu, ro, tr… | width 1 baseline, precomposed letters |
 
   The house HTML parser (materia's html client) can extract the text.
 
