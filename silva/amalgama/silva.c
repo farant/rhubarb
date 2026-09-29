@@ -6674,6 +6674,7 @@ nomen size_t                                 memoriae_index;
 #endif /* LATINA_H */
 
 /* ================= ex include/piscina.h ================= */
+/* piscina.h - arena memoriae: liberatio tota semel (arena, pool) */
 #ifndef PISCINA_H
 #define PISCINA_H
 
@@ -6740,6 +6741,7 @@ silva_piscina_summa_apex_usus (
 #endif
 
 /* ================= ex include/chorda.h ================= */
+/* chorda.h - chorda: mensura + datum, SINE NUL (string slice) */
 #ifndef CHORDA_H
 #define CHORDA_H
 
@@ -6812,6 +6814,7 @@ silva_chorda_praecidere (
 #endif /* CHORDA_H */
 
 /* ================= ex include/chorda_aedificator.h ================= */
+/* chorda_aedificator.h - chordas accumulare (string builder) */
 #ifndef CHORDA_AEDIFICATOR_H
 #define CHORDA_AEDIFICATOR_H
 
@@ -6949,6 +6952,7 @@ silva_chorda_aedificator_finire (
 #endif /* CHORDA_AEDIFICATOR_H */
 
 /* ================= ex include/friatio.h ================= */
+/* friatio.h - functiones friationis (hash functions) */
 #ifndef FRIATIO_H
 #define FRIATIO_H
 
@@ -7014,6 +7018,7 @@ silva_friatio_fnv1a_literis (
 #endif /* FRIATIO_H */
 
 /* ================= ex include/tabula_dispersa.h ================= */
+/* tabula_dispersa.h - tabula friationis (hash table, map) */
 #ifndef TABULA_DISPERSA_H
 #define TABULA_DISPERSA_H
 
@@ -7164,7 +7169,9 @@ tabula_friare_fnv1a (
 #endif /* TABULA_DISPERSA_H */
 
 /* ================= ex include/xar.h ================= */
-/* xar.h - "Codex Tabulae Exponentialis"
+/* xar.h - tabula crescens segmentata (growable array, vector)
+ * "Codex Tabulae Exponentialis" - segmenta NON contigua: numquam
+ * xar_obtinere(x, 0) ut tabulam planam lege
  *
  * Tabula crescens sine reallocatio
  *
@@ -7347,6 +7354,7 @@ silva_xar_mutare (
 #endif /* XAR_H */
 
 /* ================= ex include/internamentum.h ================= */
+/* internamentum.h - chordae internatae (string interning) */
 #ifndef INTERNAMENTUM_H
 #define INTERNAMENTUM_H
 structura SilvaInternamentumChorda {
@@ -7395,6 +7403,7 @@ silva_chorda_internare_ex_literis (
 #endif /* INTERNAMENTUM_H */
 
 /* ================= ex include/stml.h ================= */
+/* stml.h - STML, XML domus: legere et scribere (markup parser) */
 #ifndef STML_H
 #define STML_H
 
@@ -7832,6 +7841,7 @@ nomen structura {
 #endif /* STML_H */
 
 /* ================= ex include/selectio.h ================= */
+/* selectio.h - selectores CSS super arborem STML (queries) */
 #ifndef SELECTIO_H
 #define SELECTIO_H
 
@@ -9839,8 +9849,7 @@ excerptum_scribere_multa (
 #endif /* EXCERPTUM_H */
 
 /* ================= ex include/utf8.h ================= */
-/*
- * utf8.h - Bibliotheca UTF-8 decodendi
+/* utf8.h - UTF-8 decodere et encodere (unicode, codepoints)
  *
  * Functiones purae pro decodendo UTF-8 ad codepoints.
  * Nulla allocatio, nulla dependentia praeter latina.h
