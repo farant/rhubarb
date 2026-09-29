@@ -154,7 +154,7 @@ hic_manens constans CasusGraphematis CASUS_GRAPHEMATUM[] = {
 
 
 /* ==================================================
-  * IV. Politica SIMPLEX (Terminal.app, mensurata 2026-09-28): ZWJ
+ * IV. Politica SIMPLEX (Terminal.app, mensurata 2026-09-28): ZWJ
  *     pictographa non iungit; Mc amplificat, VS16 manet
  * ================================================== */
 
@@ -170,6 +170,167 @@ hic_manens constans CasusGraphematis CASUS_SIMPLICES[] = {
     { "e\xCC\x81", II, I, "e + acutum" },
     { "\xE4\xB8\xAD", I, II, "zhong solum" }
 };
+
+
+/* ==================================================
+ * V. Textus pingendus (U6b): runae_latitudo_textus et
+ *    runae_columnam_quaerere - UNITAS PINGENDA (runae.h)
+ * ================================================== */
+
+#define FAMILIA "\xF0\x9F\x91\xA8\xE2\x80\x8D" \
+                "\xF0\x9F\x91\xA9\xE2\x80\x8D" \
+                "\xF0\x9F\x91\xA7"
+
+nomen structura {
+    constans character* octeti;
+         RunaePolitica  politica;
+                   i32  latitudo;
+    constans character* causa;
+} CasusTextus;
+
+hic_manens constans CasusTextus CASUS_TEXTUS[] = {
+    { "", RUNAE_POLITICA_GRAPHEMATUM, ZEPHYRUM, "vacuum" },
+    { "abc", RUNAE_POLITICA_GRAPHEMATUM, III, "ASCII" },
+    { "a\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, IV,
+        "a guang b" },
+    { "e\xCC\x81" "x", RUNAE_POLITICA_GRAPHEMATUM, II,
+        "e + acutum, x" },
+    { "a\x01" "b", RUNAE_POLITICA_GRAPHEMATUM, III, "regimen C0 = I" },
+    { "\t", RUNAE_POLITICA_GRAPHEMATUM, I, "tabula (C0) = I" },
+    { "\r\n", RUNAE_POLITICA_GRAPHEMATUM, II,
+      "CR LF: octeti bini, non graphema unum" },
+    { "\x7F", RUNAE_POLITICA_GRAPHEMATUM, I, "DEL = I" },
+    { "\xC2\x80", RUNAE_POLITICA_GRAPHEMATUM, ZEPHYRUM,
+      "regimen C1 = 0 (tessera nihil pingit)" },
+    { "\xCC\x81", RUNAE_POLITICA_GRAPHEMATUM, ZEPHYRUM,
+        "signum solum" },
+    { "\xE0\x80\x80", RUNAE_POLITICA_GRAPHEMATUM, III,
+      "series nimis longa: I per octetum (tessera '?' per octetum)" },
+    { "a\xFF", RUNAE_POLITICA_GRAPHEMATUM, II, "octetus invalidus" },
+    { FAMILIA, RUNAE_POLITICA_GRAPHEMATUM, II, "familia GRAPHEMATUM" },
+    { FAMILIA, RUNAE_POLITICA_SIMPLEX, VI, "familia SIMPLEX" }
+};
+
+nomen structura {
+    constans character* octeti;
+         RunaePolitica  politica;
+                   i32  columna;
+                   i32  offset;   /* initium unitatis tegentis */
+                   i32  columna_initii;
+    constans character* causa;
+} CasusColumnae;
+
+hic_manens constans CasusColumnae CASUS_COLUMNARUM[] = {
+    { "a\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, ZEPHYRUM,
+        ZEPHYRUM,
+      ZEPHYRUM, "a" },
+    { "a\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, I, I, I,
+      "guang, dimidium primum" },
+    { "a\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, II, I, I,
+      "guang, dimidium alterum -> initium" },
+    { "a\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, III, IV, III,
+        "b" },
+    { "a\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, IV, V, IV,
+      "finis textus" },
+    { "a\xE5\xBA\x83" "b", RUNAE_POLITICA_GRAPHEMATUM, XCIX, V, IV,
+      "ultra finem -> finis" },
+    { "\xCC\x81" "a", RUNAE_POLITICA_GRAPHEMATUM, ZEPHYRUM, II,
+        ZEPHYRUM,
+      "signum solum nihil tegit: a" },
+    { "a\x01" "b", RUNAE_POLITICA_GRAPHEMATUM, II, II, II,
+      "b post regimen" },
+    { "x" FAMILIA "y", RUNAE_POLITICA_GRAPHEMATUM, II, I, I,
+      "familia GRAPHEMATUM: dimidium alterum" },
+    { "x" FAMILIA "y", RUNAE_POLITICA_GRAPHEMATUM, III, XIX, III,
+      "y post familiam GRAPHEMATUM" },
+    { "x" FAMILIA "y", RUNAE_POLITICA_SIMPLEX, III, VIII, III,
+      "SIMPLEX: femina (graphema alterum)" },
+    { "x" FAMILIA "y", RUNAE_POLITICA_SIMPLEX, VII, XIX, VII,
+      "y post familiam SIMPLEX" }
+};
+
+/* Ambulator INDEPENDENS unitatum pingendarum (regula runae.h hic
+ * iterum dicta, non vocata): reddit finem unitatis, latitudo in *lat */
+interior constans i8*
+_unitas_ambulatoris (
+      constans i8* cursor,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32* lat)
+{
+    constans i8* post = cursor;
+
+    si (*cursor < 0x20 || *cursor == 0x7F)
+    {
+        *lat = I;
+        redde cursor + I;
+    }
+    si (utf8_decodere(&post, finis) < ZEPHYRUM)
+    {
+        *lat = I;
+        redde cursor + I;
+    }
+    redde runae_graphema_ex_politica(cursor, finis, politica, lat);
+}
+
+/* Proprietas per corpus: columna initii cuiusque unitatis visibilis
+ * (quaeque XVI-a, ne quadratum tempus) ad idem initium redit; latitudo
+ * tota = summa. Reddit numerum fracturarum. */
+interior i32
+_columnas_corporis (
+                chorda  textus,
+         RunaePolitica  politica,
+    constans character* lingua)
+{
+    constans i8* initium    = textus.datum;
+    constans i8* finis      = textus.datum + textus.mensura;
+    constans i8* cursor     = initium;
+            i32  columna    = ZEPHYRUM;
+            i32  unitas     = ZEPHYRUM;
+            i32  fracturae  = ZEPHYRUM;
+
+    dum (cursor < finis)
+    {
+                i32  lat;
+        constans i8* post = _unitas_ambulatoris(cursor, finis, politica,
+            &lat);
+
+        si (lat > ZEPHYRUM && (unitas % XVI) == ZEPHYRUM)
+        {
+                    i32  col_inventa;
+            constans i8* inventum = runae_columnam_quaerere(initium,
+                finis,
+                politica, columna + lat - I, &col_inventa);
+
+            si (inventum != cursor || col_inventa != columna)
+            {
+                si (fracturae < III)
+                {
+                    imprimere("  FRACTA: %s: columna %u -> offset %u "
+                        "(exspectatum %u), columna initii %u\n", lingua,
+                        (insignatus integer)(columna + lat - I),
+                        (insignatus integer)(inventum - initium),
+                        (insignatus integer)(cursor - initium),
+                        (insignatus integer)col_inventa);
+                }
+                fracturae++;
+            }
+        }
+        columna += lat;
+        unitas++;
+        cursor = post;
+    }
+    si (runae_latitudo_textus(initium, finis, politica) != columna)
+    {
+        imprimere("  FRACTA: %s: latitudo textus %u, summa %u\n",
+            lingua,
+            (insignatus integer)runae_latitudo_textus(initium, finis,
+                politica),
+            (insignatus integer)columna);
+        fracturae++;
+    }
+    redde fracturae;
+}
 
 
 /* ==================================================
@@ -321,7 +482,7 @@ principale (vacuum)
         }
     }
 
-        /* IV. Politica SIMPLEX */
+    /* IV. Politica SIMPLEX */
     {
         i32 j;
 
@@ -363,7 +524,59 @@ principale (vacuum)
         }
     }
 
-    /* III. Aurum graphematum (oraculum ICU) */
+    /* V. Textus pingendus: casus */
+    {
+        i32 j;
+
+        imprimere("\n--- Textus pingendus: latitudo et columnae ---\n");
+        per (j = ZEPHYRUM;
+             j < (i32)(magnitudo(CASUS_TEXTUS)
+                       / magnitudo(CASUS_TEXTUS[0]));
+             j++)
+        {
+            constans CasusTextus* c        = &CASUS_TEXTUS[j];
+                     constans i8* initium  = (constans i8*)c->octeti;
+                             i32  lat      =
+                                 runae_latitudo_textus(initium,
+                                 initium + strlen(c->octeti),
+                                 c->politica);
+
+            si (lat != c->latitudo)
+            {
+                imprimere("  FRACTA: %s: latitudo %u, exspectata %u\n",
+                    c->causa, (insignatus integer)lat,
+                    (insignatus integer)c->latitudo);
+            }
+            CREDO_AEQUALIS_I32 (lat, c->latitudo);
+        }
+        per (j = ZEPHYRUM;
+             j < (i32)(magnitudo(CASUS_COLUMNARUM)
+                       / magnitudo(CASUS_COLUMNARUM[0]));
+             j++)
+        {
+            constans CasusColumnae* c        = &CASUS_COLUMNARUM[j];
+                       constans i8* initium  = (constans i8*)c->octeti;
+                               i32  col      = XCIX;
+                       constans i8* inventum = runae_columnam_quaerere(
+                           initium, initium + strlen(c->octeti),
+                           c->politica, c->columna, &col);
+
+            si (   (i32)(inventum - initium) != c->offset
+                || col                       != c->columna_initii)
+            {
+                imprimere("  FRACTA: %s: offset %u columna %u, "
+                    "exspectata %u et %u\n", c->causa,
+                    (insignatus integer)(inventum - initium),
+                    (insignatus integer)col,
+                    (insignatus integer)c->offset,
+                    (insignatus integer)c->columna_initii);
+            }
+            CREDO_AEQUALIS_I32 ((i32)(inventum - initium), c->offset);
+            CREDO_AEQUALIS_I32 (col, c->columna_initii);
+        }
+    }
+
+    /* III. Aurum graphematum (oraculum ICU) + VI. columnae corporis */
     {
         chorda aurum    = filum_legere_totum(AURUM_VIA, piscina);
            i32 k        = ZEPHYRUM;
@@ -415,6 +628,11 @@ principale (vacuum)
                 lingua);
             textus = filum_legere_totum(via, piscina);
             _limites_corporis(textus, &numerus, &friatio);
+            /* VI. columnae per corpus, politica utraque */
+            CREDO_AEQUALIS_I32 (_columnas_corporis(textus,
+                RUNAE_POLITICA_GRAPHEMATUM, lingua), ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (_columnas_corporis(textus,
+                RUNAE_POLITICA_SIMPLEX, lingua), ZEPHYRUM);
             si (numerus != numerus_aurum || friatio != friatio_aurum)
             {
                 imprimere("  FRACTA: %s: graphemata %u (aurum %u), friatio "

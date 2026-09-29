@@ -291,3 +291,73 @@ runae_graphema_proximum (
     redde runae_graphema_ex_politica(initium, finis,
         RUNAE_POLITICA_GRAPHEMATUM, latitudo);
 }
+
+/* UNITAS PINGENDA (runae.h): octetus C0/DEL aut invalidus = octetus
+ * unus, I columna (signum substitutum pingitur); ceterum graphema */
+interior constans i8*
+_unitas_pingenda (
+      constans i8* cursor,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32* latitudo)
+{
+    constans i8* post = cursor;
+
+    si (*cursor < 0x20 || *cursor == 0x7F)
+    {
+        *latitudo = I;
+        redde cursor + I;
+    }
+    si (utf8_decodere(&post, finis) < ZEPHYRUM)
+    {
+        *latitudo = I;
+        redde cursor + I;
+    }
+    redde runae_graphema_ex_politica(cursor, finis, politica, latitudo);
+}
+
+i32
+runae_latitudo_textus (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica)
+{
+    constans i8* cursor  = initium;
+            i32  summa   = ZEPHYRUM;
+            i32  latitudo;
+
+    dum (cursor < finis)
+    {
+        cursor  = _unitas_pingenda(cursor, finis, politica, &latitudo);
+        summa   += latitudo;
+    }
+    redde summa;
+}
+
+constans i8*
+runae_columnam_quaerere (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32  columna,
+              i32* columna_initii)
+{
+    constans i8* cursor  = initium;
+            i32  summa   = ZEPHYRUM;
+            i32  latitudo;
+
+    dum (cursor < finis)
+    {
+        constans i8* post = _unitas_pingenda(cursor, finis, politica,
+            &latitudo);
+
+        si (columna < summa + latitudo)
+        {
+            frange;   /* haec unitas columnam tegit */
+        }
+        summa   += latitudo;
+        cursor  = post;
+    }
+    *columna_initii = summa;
+    redde cursor;
+}

@@ -55,6 +55,9 @@ interior constans character* constans EXCLUDENDA_UTF8[] = {
 };
 
 interior constans character* constans EXCLUDENDA_RUNAE[] = {
+    "_unitas_pingenda",
+    "runae_columnam_quaerere",
     "runae_graphema_proximum",
+    "runae_latitudo_textus",
     NIHIL
 };

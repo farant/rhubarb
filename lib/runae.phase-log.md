@@ -274,3 +274,48 @@ silva's nm gate cannot see (it compares only against silva's own six
 dependency objects) → exact renames `SILVA_RUNAE_GRADUS_*`; quaestio
 …8RWX1 filed for the gate. officina's amalgam does not carry excerptum
 (its manifest "staleness" was only missing objects in this worktree).
+
+## U6b — text-level measurement in runae (2026-09-29)
+
+**INTENTIO (Fran, 2026-09-29).** Fran asked whether U6's saltuarius work
+was reusable. The model-side math (a span's width; column → the start of
+the unit covering it) has four consumers — excerptum, saltuarius, the
+U7 viewer, tessera — so it moved into runae instead of
+`saltuarius_liber.c`. U6 re-split: U6b runae, U6c
+`tessera_graphema_ponere`, U6d saltuarius. Names sealed:
+`runae_latitudo_textus`, `runae_columnam_quaerere`. Decision (a): the
+text-level functions count what the house DRAWS.
+
+**The unit rule (UNITAS PINGENDA, runae.h):** a C0 or DEL byte = one
+byte, 1 column (every house painter draws a substitute: tessera `?`,
+excerptum/saltuarius ` `); an invalid byte = one byte, 1 column
+(tessera draws `?` per byte — `utf8_decodere` alone would swallow a
+whole overlong/surrogate sequence as one); otherwise a grapheme under the
+given policy. C1 stays 0 (tessera draws nothing for it).
+`runae_latitudo` for a single rune is unchanged (Cc = 0, Unicode's
+truth). A zero-width unit covers no column, so `columnam_quaerere` skips
+it; a column inside a wide unit snaps to its start; past the end →
+`finis` and the total width.
+
+**Red first:** stubs; 14 width cases and 12 column cases (`a広b` both
+halves, a zero-width skip, the control rule, the family under both
+policies) red by name.
+
+**Green:** 238/238 in probatio_runae_graphemata, including a corpus
+property on all 35 languages × both policies: an INDEPENDENT walker in
+the test restates the unit rule; every 16th visible unit, queried at its
+LAST column, must map back to its own start and start column, and the
+total width must equal the walked sum.
+
+**Plants (compiling), caught by name:** control rule off (4 cases + the
+corpus, via newlines); invalid-per-byte off (the overlong case); wide
+snap off (3 cases + the corpus); policy ignored (the SIMPLEX family). The
+policy plant first failed to COMPILE (unused parameter) and was redone.
+
+**Amalgams:** the new functions are unused in both, so they are trimmed:
+tessera's exclusions regenerated as-is; silva needed `runae` added to its
+trimmed bases in `fontes_politica.sh` (the exclusions generator refused
+"nomen inclassificabile" until then). The manifest must be regenerated
+BEFORE and AFTER the exclusions (fontes → excludenda → fontes →
+amalgamare). Both amalgam `.c` files are byte-identical to before;
+VERIFICATUM + idempotent.

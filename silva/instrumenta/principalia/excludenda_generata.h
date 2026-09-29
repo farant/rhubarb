@@ -239,3 +239,10 @@ interior constans character* constans EXCLUDENDA_UTF8[] = {
     "utf8_proxima_runa",
     NIHIL
 };
+
+interior constans character* constans EXCLUDENDA_RUNAE[] = {
+    "_unitas_pingenda",
+    "runae_columnam_quaerere",
+    "runae_latitudo_textus",
+    NIHIL
+};

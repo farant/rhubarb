@@ -90,4 +90,38 @@ runae_graphema_ex_politica (
     RunaePolitica  politica,
               i32* latitudo);
 
+
+/* ==================================================
+ * Textus pingendus: latitudo et columnae
+ * ================================================== */
+
+/* UNITAS PINGENDA (regula communis functionum infra, Fran 2026-09-29,
+ * optio a): octetus regiminis C0 aut DEL = unitas unius octeti, I
+ * columna - pictores domus signum substitutum pingunt (tessera '?',
+ * excerptum et saltuarius ' '); octetus invalidus = unitas unius
+ * octeti, I columna (tessera '?' per octetum); ceterum graphema
+ * (runae_graphema_ex_politica). runae_latitudo runae SOLIUS non
+ * mutatur (regimen ibi 0 manet: verum Unicode). */
+
+/* Columnae textus [initium, finis): summa latitudinum unitatum. */
+i32
+runae_latitudo_textus (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica);
+
+/* Unitas quae columnam 'columna' TEGIT (prima cuius columnae
+ * [initium, initium + latitudo) columnam continent): reddit initium
+ * eius, columnam initii in *columna_initii. Columna intra graphema
+ * latum -> initium eius (ad graphema adstringitur). Unitates
+ * latitudinis 0 nihil tegunt, ergo praetereuntur. Columna ultra
+ * textum -> finis, *columna_initii = latitudo textus tota. */
+constans i8*
+runae_columnam_quaerere (
+      constans i8* initium,
+      constans i8* finis,
+    RunaePolitica  politica,
+              i32  columna,
+              i32* columna_initii);
+
 #endif /* RUNAE_H */

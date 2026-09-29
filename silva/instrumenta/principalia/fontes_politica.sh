@@ -86,6 +86,7 @@ excludenda_pro() {
         materia_annotationes) echo "EXCLUDENDA_MATERIA_ANNOTATIONES" ;;
         excerptum)          echo "EXCLUDENDA_EXCERPTI" ;;
         utf8)               echo "EXCLUDENDA_UTF8" ;;
+        runae)              echo "EXCLUDENDA_RUNAE" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -102,8 +103,9 @@ bases_excludendae() {
     echo "materia_lexicon materia_annotationes"
     # excerptum + utf8: silva_mortes_scribere (silva_frons) forma
     # mortium publica (silva-migratio T19b-1) - excerptum_scribere
-    # simplex et utf8 plura amalgamati inusitata
-    echo "excerptum utf8"
+    # simplex et utf8 plura amalgamati inusitata; runae per excerptum
+    # (U6a) - functiones textus (U6b) silvae inusitatae
+    echo "excerptum utf8 runae"
 }
 
 # corpora SOCIA: basis cuius caput functiones corporum plurium
