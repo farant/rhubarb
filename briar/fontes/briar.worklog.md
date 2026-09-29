@@ -1082,3 +1082,12 @@ Fumus XXII's first green run was red by MY ordering: the stage mutated
 folium (x3) before building the amalgam, then ran radix's test region,
 which expects doubling. Restore fixtures after a mutation check.
 
+
+## 2026-09-29 — plan 9 closed (Task 5, records)
+
+Spec §3.5 now carries "As built". Two doc truths had rotted without
+anyone noticing: briar/CLAUDE.md said the embedded key is computed
+"before any parse" (not true since the silva/derivation path moved the
+key after the fabrica — plan 9 T1 measured the parse on every run), and
+its gate list named 16 of 20 gate files. A plan's records step is the
+cheap moment to diff docs against what exists.

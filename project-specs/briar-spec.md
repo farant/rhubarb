@@ -11,7 +11,8 @@ identifiers, as in pictor-spec.md.*
 
 *v1.11 (2026-09-29) adds §3.5, `<bibliotheca via="x.thistle"/>` -
 sharing plain C between thistles (lapide feature-requests/015;
-PROPOSITUM, element form and plain-C scope decided with Fran).*
+element form and plain-C scope decided with Fran). BUILT the same day
+by plan 9 (`briar-plan-9-bibliotheca.md`); "As built" closes §3.5.*
 
 *v1.10 (2026-09-14) adds §4.9, the visio in the app — every vitrea
 program briar builds embeds its own literate page and shows it from a
@@ -481,7 +482,7 @@ its third, "a function used as a VALUE is not derived", stays open
 §9 with the bare-macro case).
 
 
-### 3.5 Bibliotheca — sharing code between thistles (v1.11, 2026-09-29, PROPOSITUM)
+### 3.5 Bibliotheca — sharing code between thistles (v1.11, 2026-09-29, DECISUS — built, plan 9)
 
 lapide feature-requests/015: `recensio.thistle` needs the event-log
 projection that `textus.thistle` already computes (types + a dozen
@@ -569,6 +570,85 @@ reverse (a plain importer of a vitrea file shares only its plain
 regions); (5) the cost for `recensio` → `textus` (textus is ~3,800
 lines): build time before/after, and the subprocess calls removed.
 
+**As built (plan 9, 2026-09-29; T1 f0159f9d, T2 b5f36b04, T3 890dbf92 +
+5e876bc2, T4 af1fbb8a).** B1–B6 held as decided. What the building
+added or changed:
+
+- **AUDIENDA answered (T1).** (1) Nothing assumes the root: titles and
+  `#line` paths come from `via_thistle` — but `briar_fabricare` refuses
+  a file with neither `principale` nor a window, so members get a
+  PARTITION-ONLY entry (`briar_membrum_partiri`: plain regions →
+  header + body, no main rule). (2) A member's `_regiones.c` carries
+  its own derived includes and compiles alone. (3) `inv.app` held
+  `methodus` regions, so "plain" is its own predicate
+  (`briar_nexus_regio_plana`: `c`, not `id=`, not probatio, no
+  `methodus`). (4) The parse question: pass one tolerates unknown
+  types and derivation already collects unknown TYPES as well as
+  implicit functions, so members only add names to the symbol table;
+  pass two cannot `#include` a generated header (silva resolves
+  through the corpus `SilexFons`), so each member's header TEXT goes
+  into the prelude — no silex change. (5) lapide's `textus.thistle` is
+  7,756 lines (not ~3,800): cold build 1.0 s, and ~0.55 s on EVERY
+  importer run, because briar parses before it computes the key (named,
+  not planned: a key from bytes before parsing).
+- **Members are finished after their dependencies** (post-order), each
+  with only its OWN transitive members visible — a sibling it does not
+  import is not seen, so a member cannot silently lean on the root's
+  other imports.
+- **Parse text**: each member's own header text, UNGUARDED, inserted
+  once, dependencies first (`BriarSilvaMembra.ordo`) — composition
+  dedups the diamond, no guard needed (a plant disproved the idea that
+  guards blinded silva's semantics; the red was another file's
+  diagnostic).
+- **A member's exported header carries PUBLIC prototypes only**; its
+  static prototypes sit at the top of its own `_regiones.c` (the first
+  end-to-end run found every importing unit declaring an unused static
+  — `-Wunused-function`, bugs/002's class). The ROOT's header is
+  unchanged (its statics stay there).
+- **Public names** (`briar_silva_nomina_publica`): file scope, not
+  static, not implicit, not `main`, declared in the region's own text;
+  the line is the declarator for a typedef and the definition start
+  for a function.
+- **Refusals as worded** (at the element's or the name's line):
+  `bibliotheca sine via (linea N)` · `… non est plagula .thistle` ·
+  `… plagula non exsistit` · `bibliotheca circularis: a.thistle ->
+  b.thistle -> a.thistle - partem communem in plagulam tertiam move` ·
+  `… regio C plana nulla (nihil commune)` · NEW: `bibliotheca: titulus
+  'x' iteratus: <via>, <via>` (two members with one title would write
+  the same generated files) · `nomen 'x' in duabus plagulis: a:12,
+  b:40 - nomen publicum unum per aedificationem; alterum renomina aut
+  'interior' fac` (checked before clang; the root's line when the
+  root is one of the pair).
+- **Cache key** (§4.1): `briar_membra_stampa` appends ` membra <16
+  hex>` = SHA-256 over each member's title, `\n<length>\n` and bytes,
+  in post-order. No members → the stamp is returned UNCHANGED, so no
+  existing cache moved. Measured before the fix: editing folium only,
+  radix printed the stale 28 (true 72).
+- **Amalgam**: member headers after the corpus headers and before the
+  root's header; member bodies after the corpus sources and before the
+  root's regions; each once. EVERY static of a member (functions and
+  file-scope variables, `briar_silva_nomina_statica`) is renamed
+  `s_<member>` around its body — no skip list, so the Gradus class
+  (a private equal to some public, skipped) cannot occur for members.
+  `briar_amalgamare` without members on a fabrica that has them
+  refuses, naming the member, instead of writing a file clang rejects
+  (what `-amalgama` did before T4). The ROOT's own statics are still
+  not renamed (pre-existing: a root static equal to a member's public
+  collides in the amalgam; the normal build usually refuses it too).
+- **`-partes`**: one line per member, `<via relative to the root's
+  directory>\tbibliotheca:membra N, nomina publica M` (N = members it
+  reaches).
+- **Not derived from members**: bare object-like macros and enum
+  constants (§9's bare-macro limitation applies to members too).
+- **The spectator** collects members like a run; on a refusal it
+  renders WITHOUT them (F4: the page is always written).
+- Gates: `probatio_briar_plagulae` (82), fabrica cases (294), amalgama
+  cases (273), fumus stage XXII (run, `-probatio`, key moves with a
+  member, new value without `-iterum`, two amalgams compiled alone,
+  `-partes`). Every one planted red; one first test was MUTE (the
+  length prefix "proved" by `ab|c` vs `a|bc`, which the next member's
+  title already separates) and was replaced.
+
 ## 4. The fabrica — tree to binary
 
 ### 4.1 Build home and cache
@@ -596,6 +676,12 @@ order>` — the key moves exactly when a file that goes into the project
 changes; the house `filum` has no mtime accessor, and a content hash
 is both cheaper and more honest than an mtime walk. `briar -versio`
 marks a disk corpus `(discus)`.
+
+**Stamp additions:** `fontes briar <hash>` (briar's own source hash,
+2026-09-29, c452f4b5 — a generator change under the same corpus commit
+used to replay old generated code) and, when the thistle has
+bibliothecae (§3.5), ` membra <16 hex>` over every member's title,
+length and bytes (plan 9 T4, af1fbb8a).
 
 **Flags, direction (Fran, 2026-09-04): DERIVE from the sources.** In
 v1 the base flag set is the string silex's generators carry
@@ -1481,6 +1567,8 @@ Modified: `include/silex.h` + `lib/silex.c` (§4.4, promotion only);
 - **P8 fasciculus (§4.8) — DONE (plan 7, 2026-09-14; T1 d84399c5, T2 f5c7c2de, T3 200592be, T4 dbec0b2f, T5 bd0e1831, default icon af2c7fa8, T6 fumus + seal). MEASURED: `bin/briar` 10.7 MB before, 11.3 MB with the JPEG default, 12.8 MB with the transparent PNG; `briar -app kalendarium.thistle` 3 s inside the tree, and the vitrea app RUNS from its bundle (its page is capsula-compiled into the binary); the default icon yields 10 iconset files, a 256 px `-icon` 7; A8: Dock and Finder showed a changed icon immediately. AS BUILT, beyond the plan: the tree removal refuses the root by `st_dev`/`st_ino` identity (so `//` and `/tmp/..` too) and bounds its re-read loop; the examen's POSIX lexicon lacked ENOENT, lstat, rmdir and symlink (healed 160c680f, auspex-certified); the silva suite had been red since 2026-09-11 behind radix-only commits — lib census pin, stale latina datum, stale excludenda manifests — and was healed first (5b6b049b); A5's absent version is fasciculum's default 1.0; the default icon became a PNG; the consilium's gate plant for the duplicate `<briar>` is `r == NIHIL` (equal tokens, no clang self-comparison warning). FUMUS: headless 12 s with stage XIII; the planted skipped deletion failed it at "plagula stala superest"; `-agere` ran for the FIRST time (39 s, green) after two fixes — stage XV exposed a plan-6 spectator bug (`manus incipere` adds `-portus N` and the spectator took `N` as the thistle path), and stage XVI measured that `open --args -vivum -portus` reaches atrium, driven with `manus adhaerere` (a manus session is not a raw port; `finire` on an attached session leaves the app running).**
 
 - **P9 visio (§4.9) — DONE (plan 8, 2026-09-14; T1 94aaf5a1 fenestra menu seam, T2 c8a9bbb1 atrium `visio` and the second window, T3 8813c51f page asset + chrome in the key + generated main, T4 fumus IV/XIV + seal). Gates born red and planted: eventus_stml 2/2, atrium 1/1, facies 7/7 (plants 1 and 1), fabrica 2 then 1 (golden regenerated with its cause); fumus IV and XIV each failed on their plant. Fumus headless 12.1 s, `-agere` 39.2 s. As built in §4.9.**
+
+- **P10 bibliotheca (§3.5) — DONE (plan 9, 2026-09-29; T1 f0159f9d measurement, T2 b5f36b04 members, T3 890dbf92 + 5e876bc2 derivation and build, T4 af1fbb8a key + amalgam + `-partes` + fumus XXII, T5 records). Answers lapide feature-requests/015. End to end: radix → media/folium/sub-ramus diamond prints 28 (folium linked once), its `-probatio` sees members, same from /tmp; a vitrea member shares only its plain region (42); two members' private `adiutor` build (5) and amalgamate; a member's type error is reported at `membrum_mendosum.thistle:11`. Whole fumus 17 s. As built in §3.5.**
 
 ## 9. Named deferrals
 

@@ -62,6 +62,27 @@ Findings: `fontes/briar.worklog.md`.
   `.c` rows of `corpus.symbola.tsv`), regions, main; local includes blanked, `#line
   1 "<via>"` per file. v1 refuses vitrea, `vendor/`, `.m` (spec §9).
   Never overwrites a file it did not write (banner check).
+- **Bibliothecae** (spec §3.5, plan 9, lapide feature-requests/015):
+  a column-0 `<bibliotheca via="x.thistle"/>` makes x's PLAIN C regions
+  (no `methodus`, not probatio, not `id=` fragments; minus `principale`)
+  callable from every region of the importer, `-probatio` included,
+  with no `#include`. `via=` is relative to the IMPORTING file, never
+  the cwd; transitive, each member once, cycles refused. Pipeline:
+  `briar_membra_colligere` (briar_plagulae) walks the elements
+  post-order and FINISHES each member after its own dependencies (its
+  silva sees only its transitive members; `briar_membrum_partiri`
+  partitions; public and static names from silva) → the root's silva
+  gets members' public names in its derivation table
+  (`briar_silvam_texere_cum_membris`, `briar_membra_silvae`) and each
+  member's own header TEXT in the prelude, once, dependencies first →
+  `briar_fabricare_cum_membris` adds `include/<m>_regiones.h` +
+  `fontes/<m>_regiones.c`, lists each source once on both build lines,
+  refuses a public name defined twice before clang. Key: `briar_membra_
+  stampa` (members' titles + lengths + bytes; unchanged with no members).
+  `-amalgama` → `briar_amalgamare_cum_membris` (every member static
+  renamed `s_<member>`). `-partes` prints `<via>\tbibliotheca:membra N,
+  nomina publica M`. Fixtures `probationes/fixa/bibliotheca/`; gates
+  plagulae, fabrica, amalgama; fumus XXII.
 - **`-app`** (spec §4.8, plan 7) = `<t>.app` beside the thistle. Builds
   as a run does, then `briar_fasciculum_consilium` (pure: identity
   `org.rhubarb.briar.<t>` with `_`→`-`, or `<briar identitas=…>` judged
@@ -98,8 +119,12 @@ Findings: `fontes/briar.worklog.md`.
   regenerates when the table does not NAME the icon path, not only on
   timestamps).
 - Corpus: `-f` > ascent from cwd (disk, `-versio` says `(discus)`) >
-  embedded. Key: embedded = corpus stamp + flags + bytes (before any
-  parse); disk = closure-content hash + flags + bytes (after fabrica).
+  embedded. Key: embedded = corpus stamp + flags + bytes; disk =
+  closure-content hash + flags + bytes (after fabrica). Both stamps
+  gain ` fontes briar <hash>` (briar's own sources) and, with
+  bibliothecae, ` membra <hash>`. The key is computed AFTER the parse
+  and fabrica, so every run pays the parse even on a cache hit (plan 9
+  T1: ~0.55 s for lapide's 7,756-line `textus.thistle` as a member).
 - Run = fabricate → write project if `bin/<t>` absent → `/bin/sh
   aedificare.sh` via `processus_exsequi` (10 min deadline; clang output
   to stderr on failure) → `processus_transformare` into `bin/<t>`.
@@ -153,6 +178,10 @@ Findings: `fontes/briar.worklog.md`.
   regenerates it) maps them to headers, pass two parses with them;
   `res->silva->capita_derivata`, written first into the generated
   header and the probatio unit; `-partes` lists them as `derivatum`
+- `briar_plagulae` (plan 9): members of a build — `BriarMembrum` (via,
+  title, bytes, nexus, generated header/body, derived headers, public
+  and static names, visible members), `briar_membra_colligere`,
+  `briar_membra_silvae`, `briar_membra_stampa`
 - `briar_amalgama`: fabrica fructus → `<t>.c` [+ `probatio_<t>.c`]
   (`briar_amalgamare`), `briar_amalgama_scribere` (banner-guarded
   overwrite), `briar_amalgama_inclusio_localis` (silex's include-line
@@ -195,7 +224,7 @@ Findings: `fontes/briar.worklog.md`.
 ## Gates (`./briar/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 registrum · lexema · arbor · stml · canon · totalitas · computus · nexus
 · silva · fabrica · imperium · amalgama · contextus · facies · spectator ·
-fasciculum (sixteen files;
+fasciculum · bibliotheca · dialectus · mutationes · plagulae (twenty files;
 every one born red by a planted fault — see the worklog). Goldens:
 `fixa/contextus/fragmenta.contextus` (`BRIAR_CONTEXTUS_SCRIBERE=1`),
 `fixa/fabrica/fragmenta/`. Fixtures: `probationes/fixa/thistle/` (+ `adversa/`),
@@ -267,6 +296,12 @@ and the silva amalgam as one object (cold ~21 s once; warm suite ~9 s).
   each, after checking its private names do not equal a public name
   elsewhere (the amalgam's static list skips public names: toml's two
   private `Gradus` typedefs collided with `sententiae.h`'s — renamed).
+- **A member's exported header carries PUBLIC prototypes only** (its
+  statics are declared at the top of its own `_regiones.c`): an
+  importing unit that saw a static prototype it never defines fails
+  `-Wunused-function`. A member sees only what IT imports, never the
+  root's other members. Parse text for members goes in UNGUARDED and
+  once each — composition dedups the diamond, not include guards.
 - A script needs NO `#include` for house headers (see `derivatum.thistle`);
   a bare object-like macro or enum constant with no function from its
   header nearby is the one thing derivation misses — include it yourself.

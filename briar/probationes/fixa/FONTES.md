@@ -118,3 +118,13 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   `statica_b` + `statica_c` (private `adiutor` in both: builds, prints
   5); `radix_mendosa` -> `membrum_mendosum` (clang names the member's
   line 11).
+- (Task 4) `statica_b`/`statica_c` gain a private VARIABLE `basis` of the
+  same name (the amalgam must rename variables as well as functions;
+  output still 5). Porta `probatio_briar_amalgama`: `statica_a` and
+  `radix` amalgamated with members (order, each once, every member
+  static `s_<membrum>`, publics never). Fumus XXII copies `radix`,
+  `folium`, `media`, `sub/ramus`, `statica_a/b/c` out of the tree:
+  run 28, `-probatio`, a comment in `folium` moves the cache dir,
+  `folium` tripled -> radix 72 without `-iterum` (then restored),
+  amalgams of `radix` / `statica_a` compiled alone (28, 5), `-partes`
+  lines (folium 0/2, media 1/2, sub/ramus 1/1).

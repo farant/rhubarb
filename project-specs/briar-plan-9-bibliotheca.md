@@ -1,5 +1,10 @@
 # briar plan 9 — bibliotheca: sharing plain C between thistles
 
+> **DONE 2026-09-29.** T1 f0159f9d (measurement, no re-slice) · T2
+> b5f36b04 (members) · T3 890dbf92 + 5e876bc2 (derivation, build, user
+> surface) · T4 af1fbb8a (key, amalgam, `-partes`, fumus XXII) · T5
+> records. Answers lapide feature-requests/015. As built: spec §3.5.
+
 > **For agentic workers:** execute task by task with the executing-plans
 > discipline (test first, run red, implement, run green, plant, commit),
 > INLINE on main, ONE TASK PER TURN with Fran's approval, no subagents.
@@ -437,6 +442,19 @@ normal build usually refuses it too).
   the lapide round (feature-requests/015 answered by commit X); memory
   `briar-project.md` line.
 - [ ] **Step 4:** commit records; rebake if MUTATIONES moved.
+
+**Executed 2026-09-29.** Spec: §3.5 heading DECISUS (built), an "As
+built" block (AUDIENDA answers, the deltas: members finished after
+their dependencies with only their own imports visible, unguarded
+once-each parse text, public-only member headers, the duplicate-title
+refusal, refusal wordings as coded, key, amalgam, `-partes`, what is
+not derived), §4.1 stamp additions, P10 in the plan list.
+`briar/CLAUDE.md`: a Bibliothecae bullet, the key paragraph (the
+"before any parse" claim was no longer true — every run parses before
+the key), `briar_plagulae` in the map, a law on member headers; its
+gate list said sixteen files and named 16 of the TWENTY that exist
+(`bibliotheca`, `dialectus`, `mutationes`, `plagulae` were missing) —
+corrected. FONTES.md: the Task 4 uses. Ledger note on the lapide round.
 
 ## Spec coverage (self-review against §3.5)
 
