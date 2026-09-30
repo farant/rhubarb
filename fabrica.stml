@@ -8,4 +8,8 @@
      in proiectum silicis vertebat et suitam radicis rubram faciebat
      (quaestio 01M1YBVSHB). Proiecta scaffoldata (latina.h + lib/
      vendicata) hanc plagulam numquam ferunt. Canon: fabrica.canon. -->
-<fabrica titulus="rhubarb"/>
+<fabrica titulus="rhubarb">
+  <!-- subsystemata quorum aedificatio.stml bin/fabrica legit
+       (dialectus fabrica v2, plan 1a T2-T3); '.' = radix ipsa -->
+  <subsystema via="."/>
+</fabrica>

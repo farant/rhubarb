@@ -563,6 +563,16 @@ Verdict rules (the gate pins each):
   line order in the scratch script.
 - [ ] **Step 6: commit.** Gates: radix (+ whatever commissio adds).
 
+> **Executed 2026-09-30** (commit below). CLI as specified; celer
+> NON IUDICATUM does not fail the exit. Root declarations via
+> `<subsystema via="."/>` + root `aedificatio.stml` (the judge itself).
+> Gate `tools/fabrica_fumus.sh` IX stages (registered in PORTAE at T8).
+> Code preceded the gate — each behavior then proven red by a plant
+> (A: self-first order → IX only; B: cross-subsystem duplicate → V
+> only). Orphans on the live tree: 8 (not 2). The mtime stale-build bug
+> struck during plant B's restore (see lib/fabrica.worklog.md; ledger
+> ictus). Run time 0.02 s.
+
 ### Task T4: the amalgam chain declared
 
 **Files:** `silva/aedificatio.stml`, `tessera/aedificatio.stml`,

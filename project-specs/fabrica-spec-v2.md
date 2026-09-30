@@ -68,7 +68,9 @@ memory.
      `generata` stage **VI** (d391af9f, arrived with the secunda
      merge). The amalgam comparison built today is stage **VII** now,
      not VI.
-5. **Stale manifests**: `build/aedilis/probatio_toml/` and
+5. **Stale manifests** (corrected at T3: bin/fabrica finds EIGHT, the
+   six others from deleted lapifex/eventus_inspector test roots):
+   `build/aedilis/probatio_toml/` and
    `build/aedilis/probatio_arbor_quaestio/` name deleted files
    (`lib/toml.c`, `lib/arbor_quaestio.c`) — the orphan class
    "declaration whose inputs vanished", distinct from "output nobody

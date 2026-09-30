@@ -1,0 +1,17 @@
+<!-- aedificatio.stml (radix) - declarationes actionum radicis
+     (dialectus aedificatio, aedificatio.canon; bin/fabrica legit per
+     fabrica.stml). Plan 1a: T3 iudicem ipsum declarat; T5 generata
+     radicis, T7 binaria installata sequuntur. -->
+<aedificatio>
+  <!-- iudex ipse: primus iudicatur (stalus iudex sententias
+       ceteras suspectas facit). Relatio '-provenientia' a T7. -->
+  <actio titulus="fabrica" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/fabrica_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/fabrica/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/fabrica_struere.sh"/>
+    <exitus via="bin/fabrica" provenientia="relatio"/>
+  </actio>
+</aedificatio>

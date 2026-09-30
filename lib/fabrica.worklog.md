@@ -59,3 +59,34 @@ scriptura`. Readers: `fabrica_declarationes_legere`,
   -atis) in oratio/glossarium.stml.
 - The root `fabrica.stml` itself is unchanged until T4 has subsystems
   to list; silex reads only its existence (lib/silex.c:277).
+
+## 2026-09-30 — T3: bin/fabrica, bootstrap, fumus
+
+`tools/fabrica.c` (CLI + real seam), `tools/fabrica_struere.sh`
+(aedilis → generated struere.sh → rm+cp; 15 objects), root
+`fabrica.stml` gains `<subsystema via="."/>` and a root
+`aedificatio.stml` declares the judge itself. `bin/fabrica iudicare`
+on the live tree: 0.02 s; first line `IGNOTUM bin/fabrica - sine
+provenientia` until T7.
+
+- **Only declared binaries are asked `-provenientia`.** A binary that
+  ignores unknown flags could act (bin/manus sends keys). T7 must only
+  declare RELATIO for binaries whose installers write provenance.
+- **Exit contract:** NON IUDICATUM (celer) does not fail the run — it
+  is a mode chosen, not a defect; STALUM/IGNOTUM → 1; nothing judged or
+  broken declarations → 2 (a broken declaration is never skipped).
+- **Titles unique ACROSS subsystems** too (scratch dirs are per title):
+  checked in the tool, since the lib reader sees one file at a time.
+- **Orphans: 8, not the 2 spec v2 §0.5 named** — I had only grepped for
+  the two deleted files I knew (toml, arbor_quaestio); six lapifex/
+  eventus_inspector manifests also point at deleted test roots.
+- **Code came before the gate** (plan order was test first). Made up
+  for by proving stages red with plants: A (self-first ordering removed)
+  → only IX red; B (cross-subsystem duplicate check removed) → only V
+  red. Stage VI alone could NOT prove ordering (one artifact) — IX added.
+- **The stale-build bug, live:** restoring plant B's source by `cp`
+  landed in the same second as the plant's object compile; the
+  aedilis-generated struere.sh (`fons -nt obj`) skipped recompiling and
+  bin/fabrica kept the plant — fumus stayed red over byte-identical
+  source. `touch` + rebuild fixed it. Ledger: ictus on park 01KZYN4VPZ.
+  This is exactly slice 2's target (objects by digest).
