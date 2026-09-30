@@ -386,3 +386,36 @@ binaries reinstalled. Spike detour worth keeping: my first "all -O2"
 link was slower than "sigillum only" — BSD sed has no `\|` in basic
 regex, so the substitution silently did nothing and the binary was the
 -O0 one. A surprising measurement is a question about the measurement.
+
+## 2026-09-30 — T8 part 2: lock, the Q36 line, the oracle gate
+
+- **Lock.** `-plenus` takes `build/fabrica/sera` via `filum_seram_capere`
+  (flock; the kernel releases it when the process dies — no stale lock
+  file logic). Held → exit 2, "iudex plenus alius currit". Celer takes
+  no lock (writes nothing). Fumus XII holds the lock from python
+  `fcntl.flock` (same kernel lock) and checks both sides.
+- **Q36 line.** "IGNOTUM: N binaria in bin/ sine declaratione (numerus
+  solus)" — planned in T7 Step 6, never built. Informational like
+  orphans: it does NOT set exit 1, else celer would always exit 1 (36
+  test/compile_tools binaries today). Fumus XIII.
+- **Oracle gate** `tools/fabrica_oraculum.sh`, registered as `fabrica`
+  (and the smoke gate as `fabrica-fumus`; both in PORTAE and in the
+  ledger inventory 'suitae probationum'). Runs generata, then
+  `-plenus -omnia` (sequentially — never both at once), maps both to
+  per-artifact recens / non; STALUM and IGNOTUM are both "non", which
+  dissolves the known generata-IV-calls-breakage-STALUM mismatch.
+  Silence counts: an artifact generata judges but fabrica does not =
+  DISCORDIA ("declaratio abest?"). Clean tree: 49 compared, 0
+  disagreements, 24 fabrica-only (excludenda, silva tables, capsulae),
+  ~3.5 min.
+- **Plant.** entitates declaration removed + a comment word in the
+  committed lib/runae_tabulae.c → exactly one DISCORDIA (entitates,
+  fabrica TACET); runae agreed (both "non"). My FIRST plant appended
+  `/* … */` inside the header comment → the file stopped compiling →
+  generata IV (which compiles) said STALUM for two amalgamator
+  manifests while fabrica (which doesn't) said RECENS: two
+  "disagreements" that were the plant's fault. Second time this
+  session a plant failed to compile; habit recorded (syntax-check the
+  plant before any gate). On a tree that does not compile, the oracle
+  can disagree on stage IV — that is honest: the two gates measure
+  different things there, and radix is red anyway.

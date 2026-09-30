@@ -545,6 +545,71 @@ _orphana_imprimere (
 
 
 /* ==================================================
+ * Q36: binaria in bin/ sine declaratione (numerus solus)
+ * ================================================== */
+
+/* Plagulae in bin/ quas nulla actio ut exitum nominat. Numerus solus
+ * (spec v2 Q36): binaria probationum et compile_tools singillatim non
+ * iudicantur - linea una, ut orphana, exitum non mutat (aliter celer
+ * semper I redderet). */
+interior i32
+_binaria_sine_declaratione (
+    constans Xar* actiones,
+         Piscina* piscina)
+{
+     DirectoriumIterator* iterator;
+    DirectoriumIntroitus* introitus;
+                     i32  numerus;
+
+    numerus   = ZEPHYRUM;
+    iterator  = directorium_iterator_aperire("bin", piscina);
+    si (iterator == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    dum ((introitus = directorium_iterator_proximum(iterator)) != NIHIL)
+    {
+        chorda via;
+           b32 declaratum;
+           i32 i;
+
+        si (   introitus->genus == INTROITUS_DIRECTORIUM
+            || chorda_aequalis_literis(introitus->titulus, ".")
+            || chorda_aequalis_literis(introitus->titulus, ".."))
+        {
+            perge;
+        }
+        via = chorda_concatenare(chorda_ex_literis("bin/", piscina),
+            introitus->titulus, piscina);
+        declaratum = FALSUM;
+        per (i = ZEPHYRUM; !declaratum && i < xar_numerus(actiones);
+             i++)
+        {
+            FabricaActio* actio;
+                     i32  j;
+
+            actio = (FabricaActio*)xar_obtinere(actiones, i);
+            per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+            {
+                si (chorda_aequalis(((FabricaExitus*)xar_obtinere(
+                        actio->exitus, j))->via, via))
+                {
+                    declaratum = VERUM;
+                    frange;
+                }
+            }
+        }
+        si (!declaratum)
+        {
+            numerus++;
+        }
+    }
+    directorium_iterator_claudere(iterator);
+    redde numerus;
+}
+
+
+/* ==================================================
  * iudicare
  * ================================================== */
 
@@ -622,6 +687,7 @@ _iudicare (
 {
       FabricaSutura  sutura;
             Memoria  memoria;
+          FilumSera* sera;
                 Xar* actiones;
                 Xar* ordo;
                 Xar* sententiae;
@@ -670,6 +736,27 @@ _iudicare (
         fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
             (constans character*)causa.datum);
         redde II;
+    }
+
+    /* SERA sub -plenus: generatores clausuras et scripturas VACUANT -
+     * iudex plenus alter simul eas sub pedibus huius deleret (T6:
+     * factum, claves ternae per actionem). flock: nucleus eam cum
+     * processu liberat, nulla sera stala. Celer nihil scribit:
+     * libera. */
+    sera = NIHIL;
+    si (plenus)
+    {
+        (vacuum)filum_directorium_creare_cum_parentibus(
+            "build/fabrica");
+        sera = filum_seram_capere("build/fabrica/sera", ZEPHYRUM,
+            piscina);
+        si (sera == NIHIL)
+        {
+            fprintf(stderr, "fabrica: iudex plenus alius currit "
+                "(build/fabrica/sera tenetur) - exspecta eum aut "
+                "siste\n");
+            redde II;
+        }
     }
 
     fabrica_suturam_parare(&sutura);
@@ -810,9 +897,21 @@ _iudicare (
         }
     }
 
-    /* orphana solum sine filtro artificiorum (vexilla non filtrant) */
+    /* orphana et binaria sine declaratione solum sine filtro
+     * artificiorum (vexilla non filtrant) */
     orphana = _eligitur(argc, argv, II, chorda_ex_literis("", piscina))
         ? _orphana_imprimere(piscina) : ZEPHYRUM;
+    si (_eligitur(argc, argv, II, chorda_ex_literis("", piscina)))
+    {
+        i32 sine;
+
+        sine = _binaria_sine_declaratione(actiones, piscina);
+        si (sine > 0)
+        {
+            printf("IGNOTUM: %u binaria in bin/ sine declaratione "
+                "(numerus solus, Q36)\n", (insignatus integer)sine);
+        }
+    }
     printf("fabrica: %u recentia, %u stala, %u ignota, %u non iudicata"
         "%s, %u orphana\n",
         (insignatus integer)recentia, (insignatus integer)stala,
@@ -822,6 +921,7 @@ _iudicare (
     {
         scrinium_claudere(memoria.scrinium);
     }
+    filum_seram_liberare(sera);
     redde (stala + ignota > 0) ? I : ZEPHYRUM;
 }
 
