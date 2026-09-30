@@ -190,6 +190,8 @@ principale (vacuum)
     }
     /* latitudo graphematum ut terminal hic eam metitur (ambitus) */
     tessera_politicam_ponere(opus, tessera_politica_ambitus());
+    /* profunditas colorum ex ambitu (quadrans Q4) */
+    tessera_colores_ponere(opus, tessera_colores_ambitus());
 
     strcpy(status, "salve! claves preme...");
     dum (currens)

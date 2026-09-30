@@ -59,12 +59,95 @@ _positum_emittere (
     chorda_aedificator_appendere_character(aed, 'H');
 }
 
+/* Index xterm CCLVI proximus (XVI-CCLV) per distantiam RGB quadratam:
+ * cubus (gradus 0/95/135/175/215/255 per canalem; in aequalitate
+ * gradus inferior) aut griseus (8 + 10k, k 0-23; proximus mediae RGB,
+ * quia distantia ad griseum in gradu convexa est). Aequalitas:
+ * cubus. */
+interior i32
+_cclvi (
+    i32 color)
+{
+    hic_manens constans i32 GRADUS[VI] = { 0, 95, 135, 175, 215, 255 };
+                        i32 index[III];
+                        i32 d_cubi    = ZEPHYRUM;
+                        i32 d_grisei  = ZEPHYRUM;
+                        i32 summa     = ZEPHYRUM;
+                        i32 griseus;
+                        i32 k;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        s32 c = (s32)((color >> (XVI - VIII * k)) & 0xFF);
+        s32 d;
+        i32 j;
+
+        index[k] = ZEPHYRUM;
+        per (j = I; j < VI; j++)
+        {
+            s32 prior  = c - (s32)GRADUS[index[k]];
+            s32 hic    = c - (s32)GRADUS[j];
+
+            si (hic * hic < prior * prior)
+            {
+                index[k] = j;
+            }
+        }
+        d       = c - (s32)GRADUS[index[k]];
+        d_cubi  += (i32)(d * d);
+        summa   += (i32)c;
+    }
+    griseus = (summa / III < VIII) ? ZEPHYRUM
+                                   : (summa / III - VIII + V) / X;
+    si (griseus > XXIII)
+    {
+        griseus = XXIII;
+    }
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        s32 d = (s32)((color >> (XVI - VIII * k)) & 0xFF)
+            - (s32)(VIII + X * griseus);
+
+        d_grisei += (i32)(d * d);
+    }
+    si (d_grisei < d_cubi)
+    {
+        redde CCXXXII + griseus;
+    }
+    redde XVI + XXXVI * index[0] + VI * index[1] + index[2];
+}
+
+/* Colorem SGR emittere: praefixum ";38;" aut ";48;", deinde "2;R;G;B"
+ * (PLENI) aut "5;n" (CCLVI) */
+interior vacuum
+_colorem_emittere (
+      ChordaAedificator* aed,
+     constans character* praefixum,
+                    i32  color,
+         TesseraColores  colores)
+{
+    chorda_aedificator_appendere_literis(aed, praefixum);
+    si (colores == TESSERA_COLORES_CCLVI)
+    {
+        chorda_aedificator_appendere_literis(aed, "5;");
+        chorda_aedificator_appendere_i32(aed, _cclvi(color));
+        redde;
+    }
+    chorda_aedificator_appendere_literis(aed, "2;");
+    chorda_aedificator_appendere_i32(aed, (color >> XVI) & 0xFF);
+    chorda_aedificator_appendere_character(aed, ';');
+    chorda_aedificator_appendere_i32(aed, (color >> VIII) & 0xFF);
+    chorda_aedificator_appendere_character(aed, ';');
+    chorda_aedificator_appendere_i32(aed, color & 0xFF);
+}
+
 /* SGR: reditio plena + ornamenta + colores (nativus = nihil -
  * reditio nuda defaltas terminalis dat) */
 interior vacuum
 _stilum_emittere (
-         ChordaAedificator* aed,
-    constans TesseraStilus* st)
+          ChordaAedificator* aed,
+     constans TesseraStilus* st,
+             TesseraColores  colores)
 {
     chorda_aedificator_appendere_literis(aed, "\033[0");
     si (st->ornamenta & TESSERA_ORNAMENTUM_CRASSUM)
@@ -93,26 +176,11 @@ _stilum_emittere (
     }
     si (st->color_litterae != TESSERA_COLOR_NATIVUS)
     {
-        chorda_aedificator_appendere_literis(aed, ";38;2;");
-        chorda_aedificator_appendere_i32(aed,
-            (st->color_litterae >> XVI) & 0xFF);
-        chorda_aedificator_appendere_character(aed, ';');
-        chorda_aedificator_appendere_i32(aed,
-            (st->color_litterae >> VIII) & 0xFF);
-        chorda_aedificator_appendere_character(aed, ';');
-        chorda_aedificator_appendere_i32(aed,
-            st->color_litterae & 0xFF);
+        _colorem_emittere(aed, ";38;", st->color_litterae, colores);
     }
     si (st->color_fundi != TESSERA_COLOR_NATIVUS)
     {
-        chorda_aedificator_appendere_literis(aed, ";48;2;");
-        chorda_aedificator_appendere_i32(aed,
-            (st->color_fundi >> XVI) & 0xFF);
-        chorda_aedificator_appendere_character(aed, ';');
-        chorda_aedificator_appendere_i32(aed,
-            (st->color_fundi >> VIII) & 0xFF);
-        chorda_aedificator_appendere_character(aed, ';');
-        chorda_aedificator_appendere_i32(aed, st->color_fundi & 0xFF);
+        _colorem_emittere(aed, ";48;", st->color_fundi, colores);
     }
     chorda_aedificator_appendere_character(aed, 'm');
 }
@@ -200,6 +268,7 @@ tessera_aperire (
     opus->graphemata_octeti_usi  = ZEPHYRUM;
     opus->graphemata_numerus     = ZEPHYRUM;
     opus->politica               = TESSERA_POLITICA_GRAPHEMATUM;
+    opus->colores                = TESSERA_COLORES_PLENI;
 
     opus->cursor_x                        = -I;
     opus->cursor_y                        = -I;
@@ -312,6 +381,38 @@ tessera_politica_ambitus (vacuum)
         redde TESSERA_POLITICA_SIMPLEX;
     }
     redde TESSERA_POLITICA_GRAPHEMATUM;
+}
+
+vacuum
+tessera_colores_ponere (
+       TesseraOpus* opus,
+    TesseraColores  colores)
+{
+    si (opus != NIHIL)
+    {
+        opus->colores  = colores;
+        opus->primum   = VERUM;   /* frons tota iterum emittitur */
+    }
+}
+
+TesseraColores
+tessera_colores_ambitus (vacuum)
+{
+    constans character* profunditas  = getenv("COLORTERM");
+    constans character* programma    = getenv("TERM_PROGRAM");
+
+    si (   profunditas != NIHIL
+        && (   strcmp(profunditas, "truecolor") == ZEPHYRUM
+            || strcmp(profunditas, "24bit") == ZEPHYRUM))
+    {
+        redde TESSERA_COLORES_PLENI;
+    }
+    si (   programma                           != NIHIL
+        && strcmp(programma, "Apple_Terminal") == ZEPHYRUM)
+    {
+        redde TESSERA_COLORES_CCLVI;
+    }
+    redde TESSERA_COLORES_PLENI;
 }
 
 vacuum
@@ -943,7 +1044,8 @@ tessera_praesentare (
                     || !tessera_stilus_aequalis(stilus_currens,
                            stilus_cellae))
                 {
-                    _stilum_emittere(opus->aed, &stilus_cellae);
+                    _stilum_emittere(opus->aed, &stilus_cellae,
+                        opus->colores);
                     stilus_currens = stilus_cellae;
                     stilus_validus = VERUM;
                 }

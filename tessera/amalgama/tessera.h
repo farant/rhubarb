@@ -175,6 +175,13 @@ typedef enum TesseraPolitica {
                                          * iungit */
 } TesseraPolitica;
 
+/* Profunditas colorum emissionis (quadrans Q4): PLENI = 38;2 / 48;2;
+ * CCLVI = 38;5 / 48;5 (cubus xterm + grisei). Cellulae RGB servant. */
+typedef enum TesseraColores {
+    TESSERA_COLORES_PLENI = 0,
+    TESSERA_COLORES_CCLVI
+} TesseraColores;
+
 typedef struct TesseraFructus {
     unsigned int cellulae_collatae;
     unsigned int cellulae_mutatae;
@@ -207,6 +214,7 @@ struct TesseraOpus {
     unsigned int              graphemata_numerus;
     unsigned int*             graphemata_index;       /* ID+1, 0 vacuum */
     TesseraPolitica           politica;
+    TesseraColores            colores;
 };
 
 TesseraOpus* tessera_aperire(TesseraPiscina* piscina,
@@ -226,6 +234,10 @@ TesseraCellula tessera_cellulam_legere(const TesseraOpus* opus,
 void tessera_politicam_ponere(TesseraOpus* opus,
     TesseraPolitica politica);
 TesseraPolitica tessera_politica_ambitus(void);
+/* Profunditas: COLORTERM truecolor/24bit -> PLENI; TERM_PROGRAM
+ * Apple_Terminal -> CCLVI; aliter PLENI */
+void tessera_colores_ponere(TesseraOpus* opus, TesseraColores colores);
+TesseraColores tessera_colores_ambitus(void);
 unsigned int tessera_cellulae_octeti(const TesseraOpus* opus, int x, int y,
     unsigned char* exitus, unsigned int capacitas);
 /* Unitatem pingendam PRIMAM [initium, finis) ad (x, y) ponere:

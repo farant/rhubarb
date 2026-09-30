@@ -218,6 +218,8 @@ principale (
     }
     /* latitudo graphematum ut terminal hic eam metitur (ambitus) */
     tessera_politicam_ponere(f.opus, tessera_politica_ambitus());
+    /* profunditas colorum ex ambitu (quadrans Q4) */
+    tessera_colores_ponere(f.opus, tessera_colores_ambitus());
     f.politica = (f.opus->politica == TESSERA_POLITICA_SIMPLEX)
         ? RUNAE_POLITICA_SIMPLEX : RUNAE_POLITICA_GRAPHEMATUM;
     f.currens  = ZEPHYRUM;

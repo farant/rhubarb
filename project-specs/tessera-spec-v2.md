@@ -262,8 +262,8 @@ resize torture) — human-run via spectaculum.sh.
 
 ~~wcwidth/wide/combining~~ (undeferred, see below); DECSTBM scroll
 regions (evidence-gated on fructus); exposed-fd event loop (when saltuarius needs async); kitty protocol / curly
-underlines / 256-quantizing emit; hover motion (`?1003`, no
-consumer yet); widgets = second library, permanently.
+underlines / ~~256-quantizing emit~~ (undeferred, see below); hover
+motion (`?1003`, no consumer yet); widgets = second library, permanently.
 
 *Undeferred 2026-09-28 (tessera 1.2, `project-specs/tessera-1-2-plan.md`):
 drag events (`?1002`, `TESSERA_MUS_TRACTUS`), synchronized output
@@ -281,6 +281,12 @@ wide or multi-rune cluster; `TesseraPolitica` from the environment
 `tessera_graphema_ponere` places one drawable unit (the primitive saltuarius
 and folium paint with). Line breaking beyond folium's naive wrapper, bidi and
 shaping stay deferred — runae's next bricks, when something pulls them.*
+
+*Undeferred 2026-09-30 (quadrans Q4, `project-specs/quadrans-plan.md`):
+256-colour emission. `TesseraColores` (PLENI / CCLVI) from the
+environment (`tessera_colores_ambitus`: COLORTERM truecolor/24bit, else
+TERM_PROGRAM=Apple_Terminal → 256); cells keep RGB, quantization happens
+at emission into the xterm cube + greys.*
 
 ## 7. Risks & notes register
 

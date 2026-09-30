@@ -49,7 +49,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "TesseraPons", "TesseraPonsMemoriae",
     "TesseraFructus", "TesseraOpus",
     "TesseraEventumGenus", "TesseraClavis", "TesseraMusGenus",
-        "TesseraEventum", "TesseraLector", "TesseraPolitica", NIHIL
+        "TesseraEventum", "TesseraLector", "TesseraPolitica",
+        "TesseraColores", NIHIL
 };
 
 /* Definitiones tag quas tessera.h PLENE possidet */

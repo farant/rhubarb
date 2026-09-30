@@ -1211,3 +1211,12 @@ Its pure part lives in `instrumenta/folium/` (not `fontes/`, not the
 amalgam — layout is not tessera's); `compile_probationes.sh` links it
 for `probatio_tessera_folium`. Narrative, tests and the findings table:
 `lib/runae.phase-log.md` ("U7b").
+
+## COLOUR DEPTH FROM THE ENVIRONMENT (quadrans Q4, 2026-09-30)
+
+`TesseraColores` (PLENI 24-bit / CCLVI 256) chosen by
+`tessera_colores_ambitus` (COLORTERM, then TERM_PROGRAM=Apple_Terminal),
+quantized at emission only. Undefers spec-v2 §6's "256-quantizing emit".
+Fran's look: Terminal.app finally shows spectaculum's colour bar and the
+red background, no blue text. Narrative: `lib/quadrans.phase-log.md`
+(Q4).

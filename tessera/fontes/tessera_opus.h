@@ -43,6 +43,17 @@ nomen enumeratio {
     TESSERA_POLITICA_SIMPLEX
 } TesseraPolitica;
 
+/* Profunditas colorum emissionis (quadrans Q4, spec-v2 par. 6): PLENI =
+ * SGR 38;2 / 48;2 (XXIV bitorum, ordinaria); CCLVI = 38;5 / 48;5 in
+ * cubo xterm 6x6x6 (indices XVI-CCXXXI) et XXIV griseis (CCXXXII-
+ * CCLV), proximus per distantiam RGB quadratam (XVI colores thematis
+ * numquam - usor eos mutat). Cellulae RGB verum SERVANT; quantizatio
+ * in EMISSIONE sola. Ex AMBITU eligitur, numquam quaeritur. */
+nomen enumeratio {
+    TESSERA_COLORES_PLENI = 0,
+    TESSERA_COLORES_CCLVI
+} TesseraColores;
+
 /* Numeratores ut productum (mos silvae: fructus, non depuratio) */
 nomen structura {
     i32 cellulae_collatae;
@@ -78,6 +89,7 @@ structura TesseraOpus {
                   i32  graphemata_numerus;
                   i32* graphemata_index;        /* ID+1; 0 vacuum */
       TesseraPolitica  politica;      /* latitudinis graphematum */
+       TesseraColores  colores;       /* profunditas emissionis */
 };
 
 /* Pons REQUISITUS in Phase A (defalta posix = Phase B) */
@@ -117,6 +129,19 @@ tessera_politicam_ponere (
  * "Apple_Terminal" -> SIMPLEX, aliter GRAPHEMATUM. */
 TesseraPolitica
 tessera_politica_ambitus (vacuum);
+
+/* Profunditatem colorum ponere (ordinaria: PLENI); cellulae non
+ * mutantur - frons tota iterum emittitur */
+vacuum
+tessera_colores_ponere (
+       TesseraOpus* opus,
+    TesseraColores  colores);
+
+/* Profunditas ex ambitu (non quaestio terminalis): COLORTERM
+ * "truecolor"/"24bit" -> PLENI; aliter TERM_PROGRAM "Apple_Terminal"
+ * (48;2 male legit, runae U5) -> CCLVI; aliter PLENI. */
+TesseraColores
+tessera_colores_ambitus (vacuum);
 
 /* Regionem activam implere (signum 0 = vacuum, stilus datus) */
 vacuum

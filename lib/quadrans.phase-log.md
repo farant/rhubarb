@@ -136,3 +136,42 @@ both photographs, the ratchet. **Plants (compiling), all caught by name:**
 fg/bg swapped, width halved as in quadrant mode, the error rebuild
 flipping top and bottom (only the exactness assertion sees this one),
 equal pixels not a space.
+
+## Q4 — tessera's colour policy (2026-09-30)
+
+**INTENTIO (plan D4, the real decision).** Terminal.app has no 24-bit
+colour and MISREADS `48;2;R;G;B` (U5 look: the trailing parameter turned
+text blue). A quadrant image puts a 24-bit background on nearly every
+cell, so images there would be garbage. tessera gains a colour policy
+shaped exactly like the width policy (runae U5c):
+- `TesseraColores`: `TESSERA_COLORES_PLENI` (38;2/48;2, default) and
+  `TESSERA_COLORES_CCLVI` (38;5/48;5 into the xterm 6×6×6 cube 16–231
+  and the 24 greys 232–255; never the 16 theme colours, which users
+  remap); field `colores` appended to `TesseraOpus`;
+- `tessera_colores_ponere` (forces a full repaint — cells unchanged,
+  encoding changed), `tessera_colores_ambitus`: COLORTERM
+  truecolor/24bit → PLENI; else TERM_PROGRAM Apple_Terminal → CCLVI;
+  else PLENI. Environment, never a query (the thesis);
+- quantization at EMISSION only (`_cclvi` + one `_colorem_emittere`):
+  cells keep true RGB, goldens stay exact. Nearest cube colour per
+  channel (tie → lower level) vs nearest grey (the grey nearest the RGB
+  mean — distance to a grey is convex in its level); cube wins ties;
+- spectaculum, saltuarius and folium opt in from the environment.
+
+**Red first:** stubs; the 256 goldens and the environment rule red by
+name. **Green:** tessera 13/13 — byte goldens on hand-computed points
+(red → 196, 808080 → 244 the exact grey, white → 231, black → 16,
+336699 → 60 where the cube beats the grey), native colour emits no
+38/48, cells keep RGB, and the environment for BOTH policies (the width
+policy's environment rule had never been tested). **Plants (compiling),
+all caught by name:** grey never chosen, cube level stuck, CCLVI
+ignored at emission, COLORTERM ignored.
+
+Amalgam: public header mirrors the enum, the field (exact order) and
+the two functions; `TesseraColores` added to the amalgamator's
+CADENDA_TYPEDEF (the header owns the type — same as TesseraPolitica at
+U5c; without it: "typedef redefinition"). VERIFICATUM + idempotent;
+saltuarius 13/13.
+
+**Fran's look (Terminal.app, spectaculum):** the colour bar and the red
+background behind 中 now show; no blue text.

@@ -747,6 +747,8 @@ principale (
     }
     /* latitudo graphematum ut terminal hic eam metitur (ambitus) */
     tessera_politicam_ponere(app.opus, tessera_politica_ambitus());
+    /* profunditas colorum ex ambitu (quadrans Q4) */
+    tessera_colores_ponere(app.opus, tessera_colores_ambitus());
 
     _silvam_seminare(&app, app.limes, app.res->radix);
 
