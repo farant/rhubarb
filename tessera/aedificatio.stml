@@ -89,4 +89,23 @@
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="tessera/spectaculum_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
+  <actio titulus="fragmentum_tessera_effigies" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>tessera/effigies_fontes_generata.sh
+      <verbum! (>tessera/instrumenta/principalia/effigies.c
+      <verbum! (>tessera/instrumenta/effigies/effigies_pictura.c
+      <verbum! (>tessera/fontes/tessera_cellula.c
+      <verbum! (>tessera/fontes/tessera_eventum.c
+      <verbum! (>tessera/fontes/tessera_opus.c
+      <verbum! (>tessera/fontes/tessera_pons_memoriae.c
+      <verbum! (>tessera/fontes/tessera_pons_posix.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__effigies_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="tessera/effigies_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
 </aedificatio>
