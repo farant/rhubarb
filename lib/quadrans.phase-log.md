@@ -225,3 +225,45 @@ limit ignored, fg/bg swapped.
 - chafa in Ghostty drew real pixels (it detected the kitty graphics
   protocol; `--symbols` does not apply) — `chafa -f symbols --symbols
   quad …` forces the character comparison.
+
+## Q6 — the Aquinas palette mode (2026-09-30)
+
+**INTENTIO (plan D4, the optional palette look).**
+`effigies_palettam_applicare` (effigies module, not `quadrans` — which
+stays allocation-free and knows nothing of dithering): the scaled image
+→ Atkinson error diffusion into the 16 Aquinas colours
+(`dithering_atkinson_colorum` + `dithering_indices_ad_rgba`) → a new
+opaque image in the piscina. The viewer's `p` key toggles it; its error
+figure is measured against the UNdithered image, so the pixel-level cost
+of the look is shown honestly.
+
+**Design finding:** the palette pairs with EXTREMA — after dithering
+every pixel is a palette colour, EXTREMA takes two actual pixels as a
+cell's colours, so cells stay exactly inside the palette; MEDIA averages
+and drifts out of it. The test pins this as a property.
+
+**Why no metric judges this mode:** dithering is deliberately pixel-
+INACCURATE (it scatters colours for the eye to average). Against the
+undithered reference at 80×48 cells:
+
+| photograph | plain MEDIA | palette + EXTREMA | palette + MEDIA |
+|---|---|---|---|
+| assumptio (137×96) | 3360 | 112260 | 93568 |
+| christus_sculptus (160×73) | 1990 | 74237 | 64930 |
+
+~30× worse per pixel, as expected — the look decides.
+
+**Red first** (a stub returning the image unchanged). **Green:** tessera
+14/14 — a dithered gradient is all palette colours, fully opaque, same
+size, and uses ≥ 3 CHROMATIC palette colours (7 in practice); EXTREMA
+cells on it stay in the palette; the photo measurement asserts only that
+the palette costs accuracy. The runner's library list gained dithering,
+imago and imago_opus (the photos load in this suite).
+
+**Plants (compiling):** no dithering (caught), indices not converted
+(caught — first version did not compile, redone), a GREYS-ONLY palette —
+**mute at first**: the test only checked membership, and greys are
+members. Strengthened with the chromatic-colours assertion, then caught
+(0 chromatic colours).
+
+**Fran's look (2026-09-30): "that looks good!"**

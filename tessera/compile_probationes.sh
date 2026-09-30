@@ -59,6 +59,9 @@ declare -a RADIX_FONTES=(
     "runae"
     "runae_tabulae"
     "quadrans"
+    "dithering"
+    "imago"
+    "imago_opus"
     "credo"
 )
 

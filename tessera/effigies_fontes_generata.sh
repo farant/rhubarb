@@ -3,6 +3,7 @@
 declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
+    "dithering"
     "imago"
     "imago_opus"
     "piscina"

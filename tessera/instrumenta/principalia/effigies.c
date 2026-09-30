@@ -8,9 +8,10 @@
  * reconstructionis (quadrans_error).
  *
  * Claves: m = modus (QUADRANTES / DIMIDIUM); c = colores (MEDIA /
- * EXTREMA, planum D2 - oculo iudicandum); ] / dextra = imago
- * proxima; [ / sinistra = prior; q = exire. Amplitudo mutata: iterum
- * aptatur.
+ * EXTREMA, planum D2 - oculo iudicandum); p = paletta Aquinas (Q6:
+ * XVI colores per Atkinson; error contra imaginem NON diffusam);
+ * ] / dextra = imago proxima; [ / sinistra = prior; q = exire.
+ * Amplitudo mutata: iterum aptatur.
  *
  * Curre per: ./tessera/effigies.sh [imagines...] (ordinarie: imagines
  * probationis in probationes/fixa/quadrans)
@@ -72,7 +73,8 @@ _pingere (
                        i32  index,
                        i32  numerus,
              QuadransModus  modus,
-           QuadransColores  colores)
+           QuadransColores  colores,
+                       b32  paletta)
 {
     TesseraStilus nativus = tessera_stilus_nativus();
     TesseraStilus status  = tessera_stilus(TESSERA_COLOR_NATIVUS,
@@ -112,8 +114,17 @@ _pingere (
                     * magnitudo(QuadransCellula));
             si (scalata.pixela != NIHIL && cellulae != NIHIL)
             {
-                quadrans_computare(&scalata, ZEPHYRUM, ZEPHYRUM,
-                    sub_lat,
+                /* paletta: cellulae ex imagine diffusa, error tamen
+                 * contra scalatam (pretium aspectus verum) */
+                Imago fons = paletta
+                    ? effigies_palettam_applicare(&scalata, arena)
+                    : scalata;
+
+                si (fons.pixela == NIHIL)
+                {
+                    fons = scalata;
+                }
+                quadrans_computare(&fons, ZEPHYRUM, ZEPHYRUM, sub_lat,
                     sub_alt, &o, cellulae);
                 effigies_pingere(opus, (s32)((lat - c_lat) / II),
                     (s32)((alt - c_alt) / II), cellulae, c_lat, c_alt);
@@ -125,14 +136,15 @@ _pingere (
     }
     tessera_replere(opus, ZEPHYRUM, (s32)alt, (s32)lat, I, (i32)' ',
         status);
-    sprintf(linea, " %s %u/%u | %ux%u -> %ux%u cellulae | %s %s | %s | "
-        "error %u.%02u | m c ] [ q", e->titulus,
+    sprintf(linea, " %s %u/%u | %ux%u -> %ux%u cellulae | %s %s%s | %s "
+        "| error %u.%02u | m c p ] [ q", e->titulus,
         (insignatus integer)(index + I), (insignatus integer)numerus,
         (insignatus integer)e->imago.latitudo,
         (insignatus integer)e->imago.altitudo,
         (insignatus integer)c_lat, (insignatus integer)c_alt,
         (modus == QUADRANS_DIMIDIUM) ? "DIMIDIUM" : "QUADRANTES",
         (colores == QUADRANS_EXTREMA) ? "EXTREMA" : "MEDIA",
+        paletta ? " PALETTA" : "",
         (opus->colores == TESSERA_COLORES_CCLVI) ? "CCLVI" : "PLENI",
         (insignatus integer)(error / C), (insignatus integer)(error
             % C));
@@ -155,6 +167,7 @@ principale (
              i32  index   = ZEPHYRUM;
     QuadransModus modus   = QUADRANS_QUADRANTES;
   QuadransColores colores = QUADRANS_MEDIA;
+             b32  paletta = FALSUM;
              b32  currens = VERUM;
              s32  k;
 
@@ -214,7 +227,7 @@ principale (
         TesseraEventum ev;
 
         _pingere(opus, &imagines[index], index, numerus, modus,
-            colores);
+            colores, paletta);
         commutatio (tessera_eventum_expectare(initus, &ev, -I))
         {
             casus TESSERA_EVENTUM_CLAVIS:
@@ -226,6 +239,10 @@ principale (
                 {
                     modus = (modus == QUADRANS_QUADRANTES)
                         ? QUADRANS_DIMIDIUM : QUADRANS_QUADRANTES;
+                }
+                alioquin si (ev.runa == (s32)'p')
+                {
+                    paletta = (b32)!paletta;
                 }
                 alioquin si (ev.runa == (s32)'c')
                 {

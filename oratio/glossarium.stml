@@ -1141,6 +1141,12 @@
     <forma textus="involutiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
     <forma textus="involutionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="paletta" lingua="latina" classis="substantivum" nota="paletta, -ae f. (Latinitas recentior; Ital. paletta): tabula colorum pictoris - hic paletta Aquinas XVI colorum (dithering.h); sedes tessera/instrumenta/effigies (quadrans Q6)">
+    <forma textus="paletta" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="palettae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="palettam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="palettarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="siamensis" lingua="latina" classis="adiectivum" nota="Siamensis, -e (Siam): lingua Siamensis = Thai (probatio_tessera_folium.c, runae U7)">
     <forma textus="siamensis" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="siamense" casus="nominativus" numerus="singularis" genus="neutrum"/>

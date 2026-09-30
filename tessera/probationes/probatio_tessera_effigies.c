@@ -8,6 +8,9 @@
  *      0x8096E2), colores; spatium fundum servat.
  * III. Via tota: imago minima -> quadrans_computare -> effigies_pingere
  *      -> cellulae relectae.
+ * IV.  Paletta (Q6): imago diffusa solis coloribus Aquinas constat
+ *      (opaca, mensura eadem); EXTREMA super eam in paletta manet;
+ *      mensura photographiarum contra imaginem NON diffusam.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -19,9 +22,62 @@
 #include "tessera_opus.h"
 #include "quadrans.h"
 #include "effigies_pictura.h"
+#include "dithering.h"
+#include "imago.h"
+#include "imago_opus.h"
 #include "credo.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+/* Index coloris 0x00RRGGBB in paletta Aquinas; -1 si abest */
+interior s32
+_index_palettae (
+    i32 color)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < AQUINAS_COLORUM_NUMERUS; k++)
+    {
+        i32 p = ((i32)AQUINAS_PALETTE[k][0] << XVI)
+            | ((i32)AQUINAS_PALETTE[k][1] << VIII)
+            | (i32)AQUINAS_PALETTE[k][2];
+
+        si (p == color)
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+interior b32
+_in_paletta (
+    i32 color)
+{
+    redde (b32)(_index_palettae(color) >= ZEPHYRUM);
+}
+
+/* Cellulas imaginis computare (regio tota) in piscina */
+interior QuadransCellula*
+_cellulae (
+             Piscina* piscina,
+      constans Imago* im,
+     QuadransColores  colores,
+                 i32* lat,
+                 i32* alt)
+{
+    QuadransOptiones  o = quadrans_optiones_ordinariae();
+     QuadransCellula* c;
+
+    o.colores = colores;
+    quadrans_mensurare(&o, im->latitudo, im->altitudo, lat, alt);
+    c = (QuadransCellula*)piscina_allocare(piscina,
+        (memoriae_index)(*lat * *alt) * magnitudo(QuadransCellula));
+    quadrans_computare(im, ZEPHYRUM, ZEPHYRUM, im->latitudo,
+        im->altitudo, &o, c);
+    redde c;
+}
 
 interior vacuum
 _mensura (
@@ -149,6 +205,151 @@ principale (vacuum)
             0x20);
         CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, I,
             I).color_fundi, 0xFF0000);
+    }
+
+    imprimere("\n--- IV. Paletta Aquinas ---\n");
+    {
+                  Imago  im;
+                  Imago  diffusa;
+        QuadransCellula* c;
+                    i32  lat;
+                    i32  alt;
+                    i32  k;
+                    i32  extra = ZEPHYRUM;
+                    i32  opaca = ZEPHYRUM;
+                    b32  usus[AQUINAS_COLORUM_NUMERUS];
+                    i32  chromatici = ZEPHYRUM;
+
+        memset(usus, ZEPHYRUM, magnitudo(usus));
+        im.latitudo = XXXII;
+        im.altitudo = XVI;
+        im.pixela    = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(XXXII * XVI * IV));
+        per (k = ZEPHYRUM; k < XXXII * XVI; k++)
+        {
+            im.pixela[k * IV]        = (i8)((k % XXXII) * VIII);
+            im.pixela[k * IV + I]    = (i8)((k / XXXII) * XVI);
+            im.pixela[k * IV + II]   = (i8)0x80;
+            im.pixela[k * IV + III]  = (i8)0xFF;
+        }
+        diffusa = effigies_palettam_applicare(&im, piscina);
+        CREDO_NON_NIHIL (diffusa.pixela);
+        CREDO_AEQUALIS_I32 (diffusa.latitudo, XXXII);
+        CREDO_AEQUALIS_I32 (diffusa.altitudo, XVI);
+        si (diffusa.pixela != NIHIL)
+        {
+            per (k = ZEPHYRUM; k < XXXII * XVI; k++)
+            {
+                i32 color = ((i32)diffusa.pixela[k * IV] << XVI)
+                    | ((i32)diffusa.pixela[k * IV + I] << VIII)
+                    | (i32)diffusa.pixela[k * IV + II];
+
+                si (!_in_paletta(color))
+                {
+                    extra++;
+                }
+                alioquin
+                {
+                    usus[_index_palettae(color)] = VERUM;
+                }
+                si (diffusa.pixela[k * IV + III] == 0xFF)
+                {
+                    opaca++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (extra, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (opaca, XXXII * XVI);
+            /* paletta TOTA adhibetur: gradiens (rubrum et viride super
+             * caeruleum medium) colores chromaticos poscit, non griseos
+             * solos (grisei: 0, 1, 3, 4, 5, 15 - dithering.h) */
+            per (k = ZEPHYRUM; k < AQUINAS_COLORUM_NUMERUS; k++)
+            {
+                si (   usus[k] && k != 0 && k != I && k != III
+                    && k != IV && k != V && k != XV)
+                {
+                    chromatici++;
+                }
+            }
+            imprimere("  colores chromatici adhibiti: %u\n",
+                (insignatus integer)chromatici);
+            CREDO_VERUM (chromatici >= III);
+            /* EXTREMA super imaginem diffusam: colores in paletta */
+            c = _cellulae(piscina, &diffusa, QUADRANS_EXTREMA, &lat,
+                &alt);
+            extra = ZEPHYRUM;
+            per (k = ZEPHYRUM; k < lat * alt; k++)
+            {
+                si (   !_in_paletta(c[k].color_litterae)
+                    || !_in_paletta(c[k].color_fundi))
+                {
+                    extra++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (extra, ZEPHYRUM);
+        }
+    }
+    {
+        hic_manens constans character* constans PHOTOGRAPHIAE[] = {
+            "assumptio", "christus_sculptus"
+        };
+        constans character* radix = getenv("RHUBARB_RADIX");
+                       i32  k;
+
+        per (k = ZEPHYRUM; k < II; k++)
+        {
+                   character  via[DXII];
+                ImagoFructus  f;
+                       Imago  referentia;
+                       Imago  diffusa;
+            QuadransOptiones  o = quadrans_optiones_ordinariae();
+             QuadransCellula* c;
+                         i32  sub_lat;
+                         i32  sub_alt;
+                         i32  lat;
+                         i32  alt;
+                         i32  simplex;
+                         i32  paletta_extrema;
+                         i32  paletta_media;
+
+            sprintf(via, "%s/probationes/fixa/quadrans/%s.jpg",
+                radix != NIHIL ? radix : "..", PHOTOGRAPHIAE[k]);
+            f = imago_caricare_ex_file(via, piscina);
+            CREDO_VERUM (f.successus);
+            si (!f.successus)
+            {
+                perge;
+            }
+            effigies_mensurare(f.imago.latitudo, f.imago.altitudo, LXXX,
+                XLVIII, QUADRANS_QUADRANTES,
+                EFFIGIES_ASPECTUS_ORDINARIUS,
+                &sub_lat, &sub_alt);
+            referentia = imago_scalare(&f.imago, sub_lat, sub_alt,
+                IMAGO_SCALA_AREA, piscina);
+            diffusa = effigies_palettam_applicare(&referentia, piscina);
+            c = _cellulae(piscina, &referentia, QUADRANS_MEDIA, &lat,
+                &alt);
+            simplex = quadrans_error(&referentia, ZEPHYRUM, ZEPHYRUM,
+                sub_lat, sub_alt, &o, c);
+            c = _cellulae(piscina, &diffusa, QUADRANS_EXTREMA, &lat,
+                &alt);
+            paletta_extrema = quadrans_error(&referentia, ZEPHYRUM,
+                ZEPHYRUM, sub_lat, sub_alt, &o, c);
+            c = _cellulae(piscina, &diffusa, QUADRANS_MEDIA, &lat,
+                &alt);
+            paletta_media = quadrans_error(&referentia, ZEPHYRUM,
+                ZEPHYRUM, sub_lat, sub_alt, &o, c);
+            imprimere("  %-18s %ux%u: simplex %6u  "
+                "paletta+extrema %6u  paletta+media %6u\n",
+                PHOTOGRAPHIAE[k],
+                (insignatus integer)sub_lat,
+                (insignatus integer)sub_alt,
+                (insignatus integer)simplex,
+                (insignatus integer)paletta_extrema,
+                (insignatus integer)paletta_media);
+            /* paletta informationem perdit */
+            CREDO_VERUM (simplex < paletta_extrema);
+            CREDO_VERUM (simplex < paletta_media);
+        }
     }
 
     credo_imprimere_compendium();

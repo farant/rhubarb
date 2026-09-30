@@ -2,6 +2,7 @@
 
 #include "effigies_pictura.h"
 #include "utf8.h"
+#include "dithering.h"
 
 vacuum
 effigies_mensurare (
@@ -76,4 +77,34 @@ effigies_pingere (
                     ZEPHYRUM));
         }
     }
+}
+
+Imago
+effigies_palettam_applicare (
+    constans Imago* imago,
+           Piscina* piscina)
+{
+               Imago nova;
+                 b32 colores[AQUINAS_COLORUM_NUMERUS];
+    DitheringFructus fructus;
+
+    nova.latitudo  = imago->latitudo;
+    nova.altitudo  = imago->altitudo;
+    nova.pixela    = NIHIL;
+    dithering_praeparare_omnes(colores);
+    fructus = dithering_atkinson_colorum(imago->pixela, imago->latitudo,
+        imago->altitudo, colores, piscina);
+    si (!fructus.successus || fructus.indices == NIHIL)
+    {
+        redde nova;
+    }
+    nova.pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)imago->latitudo
+            * (memoriae_index)imago->altitudo * IV);
+    si (nova.pixela != NIHIL)
+    {
+        dithering_indices_ad_rgba(fructus.indices, nova.pixela,
+            imago->latitudo, imago->altitudo);
+    }
+    redde nova;
 }
