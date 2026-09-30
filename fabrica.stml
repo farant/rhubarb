@@ -12,4 +12,7 @@
   <!-- subsystemata quorum aedificatio.stml bin/fabrica legit
        (dialectus fabrica v2, plan 1a T2-T3); '.' = radix ipsa -->
   <subsystema via="."/>
+  <subsystema via="silva"/>
+  <subsystema via="tessera"/>
+  <subsystema via="officina"/>
 </fabrica>

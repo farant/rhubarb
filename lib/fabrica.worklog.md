@@ -90,3 +90,46 @@ provenientia` until T7.
   bin/fabrica kept the plant — fumus stayed red over byte-identical
   source. `touch` + rebuild fixed it. Ledger: ictus on park 01KZYN4VPZ.
   This is exactly slice 2's target (objects by digest).
+
+## 2026-09-30 — T4: the amalgam chain declared
+
+Scratch mode (`FABRICA_SCRIPTURA`, exported ABSOLUTE by bin/fabrica —
+`silva/amalgamare.sh` cds into silva/) in the three amalgamators (sibling
+of AMALGAMA_COMPARARE: skip porta_vetustatis, generate only, exit),
+`amalgama_fontes_generare.sh` (final mv lands in scratch) and
+`amalgama_excludenda_generare.sh`. All nine regenerations byte-equal to
+the committed files (silva manifest 22 s dominates); `-plenus` over the
+nine: 42 s, 9 RECENS.
+
+- **fontes_generata.h reads ITSELF** (lines 98-109: the committed file's
+  order is the "praelatio"), so the output is declared as an input too.
+  The planner ignores the self-edge.
+- **excludenda writes IN PLACE during its mechanism** (the amalgamator
+  recompiles against the committed header each round), restoring the
+  committed copy by EXIT trap. Scratch mode behaves like -probare: copy
+  the result out, trap restores. Known deviation from "the judge never
+  writes over a committed file": transient, and kill -9 skips the trap —
+  same exposure as generata IV today.
+- **excludenda links objects from `<sub>/build/` that amalgamare.sh
+  compiles** ("obiecta calefacta", undeclared input in build/). Found
+  when an INVALID first plant (a `/*` inside an open comment →
+  -Wcomment) broke silva/build objects: the next run, in dependency
+  order, hit excludenda before amalgamare and failed "constructio
+  amalgamatoris (gyrus 1)". Reproduced by deleting
+  silva/build/silva_token.o. Declared now (silva: 9 objects by name;
+  tessera/officina: DIRECTORIUM of the build dir, names only). Stale-but-
+  present objects remain mtime-judged inside the generator → slice 2.
+- **Oracle mapping for T8:** generata IV reported a COMPILE failure as
+  "STALUM manifestum amalgamatoris tessera"; fabrica separates IGNOTUM
+  (generator broke) from STALUM. The agreement gate must map, not
+  string-compare.
+- **Bug found by -plenus:** orphans were skipped whenever ANY argument
+  was present (flags included). Fixed (only artifact filters skip), and
+  fumus VIII now also runs `-plenus` in a temp root (born red on the old
+  binary).
+- **Agreement (valid plant, a word in silva_token.h's first comment):**
+  fabrica STALUM silva/amalgama/silva.c only (1 line) + 8 RECENS;
+  generata STALUM VII silva only (2 diff lines = one line changed).
+- **Inputs are NOT complete** (the radices' aedilis closures are not
+  declared) — fine for regeneration verdicts, NOT for T6 records. Each
+  subsystem file says so in its header comment.

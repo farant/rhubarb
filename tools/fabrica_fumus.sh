@@ -10,7 +10,8 @@
 #   V    titulus duplex TRANS subsystemata -> 2, ambae sedes
 #   VI   arbor viva: iudex ipse PRIMA linea (IGNOTUM usque ad T7)
 #   VII  digestum fabrica -> LXIV hex; actio ignota -> 2
-#   VIII manifestum cuius scopus abest -> ORPHANUM nominatum
+#   VIII manifestum cuius scopus abest -> ORPHANUM nominatum (et sub
+#        -plenus: vexillum filtrum non est)
 #   IX   iudex PRIMUS etiam post artificium stalum prius declaratum
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
@@ -57,7 +58,13 @@ if [ "$rc" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/o" && [ "$rc2" -eq 2 ]; then
 mkdir -p "$ORPH"
 printf '<aedilis-manifestum\n    scopus="nusquam/fumus_fabricae.c"\n   varians="macos">\n</aedilis-manifestum>\n' > "$ORPH/manifestum.stml"
 "$F" iudicare > "$T/o" 2>&1
-if grep -q "^ORPHANUM: $ORPH/ (scopus nusquam/fumus_fabricae.c absens)" "$T/o"; then echo "  VIII manifestum orphanum nominatum    OK"; else echo "  VIII FRACTUM"; grep ORPHANUM "$T/o" | head -3; fracta=1; fi
+# idem sub -plenus (vitium T4: quodvis argumentum, vexillum quoque,
+# orphana celabat) - radix temporaria, ne regeneratio tota curratur
+radix '<fabrica titulus="t"><subsystema via="p"/></fabrica>'
+mkdir -p "$T/r/p" "$T/r/build/aedilis/orba"; actio sola > "$T/r/p/aedificatio.stml"
+printf '<aedilis-manifestum scopus="nusquam.c" varians="macos">\n</aedilis-manifestum>\n' > "$T/r/build/aedilis/orba/manifestum.stml"
+(cd "$T/r" && "$F" iudicare -plenus) > "$T/o2" 2>&1
+if grep -q "^ORPHANUM: $ORPH/ (scopus nusquam/fumus_fabricae.c absens)" "$T/o" && grep -q '^ORPHANUM: build/aedilis/orba/' "$T/o2"; then echo "  VIII manifestum orphanum nominatum    OK"; else echo "  VIII FRACTUM"; grep ORPHANUM "$T/o" | head -3; fracta=1; fi
 
 # IX - ordo: iudex PRIMUS etiam cum artificium stalum ANTE eum
 # declaratum est (VI in arbore viva unum artificium solum habet -

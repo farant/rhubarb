@@ -237,5 +237,12 @@ if [ "$PROBARE" -eq 1 ]; then
     exit 1
 fi
 
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T4): exitus in
+# directorium scripturae, via eadem ac commissa; arbor intacta
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    mkdir -p "$FABRICA_SCRIPTURA/$SEDES" || exit 1
+    mv "$STATIO/fontes_generata.h.novum" "$FABRICA_SCRIPTURA/$EXITUS"
+    exit 0
+fi
 mv "$STATIO/fontes_generata.h.novum" "$EXITUS"
 echo "amalgama_fontes_generare ($PROIECTUM): $EXITUS ($CAPITA_N capita, $CORPORA_N corpora)"

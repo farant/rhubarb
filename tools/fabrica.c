@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define MORA_GENERATORIS_MS 600000
 #define MORA_RELATIONIS_MS  5000
@@ -177,7 +178,27 @@ _currere (
     }
     argumenta[numerus] = NIHIL;
 
-    (vacuum)setenv("FABRICA_SCRIPTURA", scriptura_dir, 1);
+    /* via ABSOLUTA: scripta directorium mutant (silva/amalgamare.sh
+     * 'cd silva') - via relativa ibi alibi caderet */
+    si (scriptura_dir[0] == '/')
+    {
+        (vacuum)setenv("FABRICA_SCRIPTURA", scriptura_dir, 1);
+    }
+    alioquin
+    {
+        character sedes[4096];
+
+        si (   getcwd(sedes, magnitudo(sedes)) == NIHIL
+            || strlen(sedes) + strlen(scriptura_dir) + 2
+                > magnitudo(sedes))
+        {
+            *causa_out = chorda_ex_literis("getcwd fractum", piscina);
+            redde FALSUM;
+        }
+        strcat(sedes, "/");
+        strcat(sedes, scriptura_dir);
+        (vacuum)setenv("FABRICA_SCRIPTURA", sedes, 1);
+    }
     resultus = processus_exsequi(
         (constans character* constans*)argumenta, MORA_GENERATORIS_MS,
         piscina);
@@ -536,7 +557,9 @@ _iudicare (
     si (xar_numerus(sententiae) == 0)
     {
         fprintf(stderr, "fabrica: nihil iudicatum (nulla artificia "
-            "declarata%s)\n", argc > II ? " congruunt" : "");
+            "declarata%s)\n",
+            _eligitur(argc, argv, II, chorda_ex_literis("", piscina))
+                ? "" : " congruunt");
         redde II;
     }
 
@@ -629,7 +652,9 @@ _iudicare (
         }
     }
 
-    orphana = (argc > II) ? ZEPHYRUM : _orphana_imprimere(piscina);
+    /* orphana solum sine filtro artificiorum (vexilla non filtrant) */
+    orphana = _eligitur(argc, argv, II, chorda_ex_literis("", piscina))
+        ? _orphana_imprimere(piscina) : ZEPHYRUM;
     printf("fabrica: %u recentia, %u stala, %u ignota, %u non iudicata"
         "%s, %u orphana\n",
         (insignatus integer)recentia, (insignatus integer)stala,

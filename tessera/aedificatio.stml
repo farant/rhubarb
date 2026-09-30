@@ -1,0 +1,47 @@
+<!-- tessera/aedificatio.stml - declarationes aedificationis tessera (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Plan 1a T4: catena amalgamatis - manifesta amalgamatoris
+     (aedilis) -> amalgama tessera.c commissa, provenientia regeneratione.
+     INGRESSUS NONDUM PLENI: clausura radicum (capita et corpora quae
+     aedilis ambulat) hic non declaratur - iudicium per regenerationem
+     id non eget; memoria (T6) sigillis his NON fidat donec clausurae
+     declarentur (plan 1a T6 gradus 3). -->
+<aedificatio>
+  <!-- praelatio ordinis ex exitu COMMISSO legitur (generator
+       idempotens per constructionem) - ergo exitus et ingressus -->
+  <actio titulus="fontes_tessera" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/amalgama_fontes_generare.sh
+      <verbum! (>tessera
+    </mandatum>
+    <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="instrumentum" via="bin/aedilis"/>
+    <ingressus genus="directorium" via="tessera/fontes"/>
+    <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
+    <exitus via="tessera/instrumenta/principalia/fontes_generata.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="excludenda_tessera" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/amalgama_excludenda_generare.sh
+      <verbum! (>tessera
+    </mandatum>
+    <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
+    <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
+    <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- tessera/build/mech_*.o per globum nexa (vectis calefacit):
+         directorium nomina solum tegit, non contentum - slice 2 -->
+    <ingressus genus="directorium" via="tessera/build"/>
+    <exitus via="tessera/instrumenta/principalia/excludenda_generata.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="amalgama_tessera" genus="generator">
+    <mandatum>
+      <verbum! (>./tessera/amalgamare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
+    <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/excludenda_generata.h"/>
+    <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
+    <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <exitus via="tessera/amalgama/tessera.c" provenientia="regeneratio"/>
+  </actio>
+</aedificatio>

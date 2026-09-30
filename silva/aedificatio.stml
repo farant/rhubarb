@@ -1,0 +1,57 @@
+<!-- silva/aedificatio.stml - declarationes aedificationis silva (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Plan 1a T4: catena amalgamatis - manifesta amalgamatoris
+     (aedilis) -> amalgama silva.c commissa, provenientia regeneratione.
+     INGRESSUS NONDUM PLENI: clausura radicum (capita et corpora quae
+     aedilis ambulat) hic non declaratur - iudicium per regenerationem
+     id non eget; memoria (T6) sigillis his NON fidat donec clausurae
+     declarentur (plan 1a T6 gradus 3). -->
+<aedificatio>
+  <!-- praelatio ordinis ex exitu COMMISSO legitur (generator
+       idempotens per constructionem) - ergo exitus et ingressus -->
+  <actio titulus="fontes_silva" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/amalgama_fontes_generare.sh
+      <verbum! (>silva
+    </mandatum>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="instrumentum" via="bin/aedilis"/>
+    <ingressus genus="directorium" via="silva/fontes"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_generata.h"/>
+    <exitus via="silva/instrumenta/principalia/fontes_generata.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="excludenda_silva" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/amalgama_excludenda_generare.sh
+      <verbum! (>silva
+    </mandatum>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_generata.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
+    <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- obiecta CALEFACTA a silva/amalgamare.sh (vectis) nexa -
+         ingressus in build/ non declaratus olim: obiectum absens
+         'generator fractus' ambiguum dabat (T4, mensuratum). Recentia
+         eorum per mtime manet usque ad slice 2. -->
+    <ingressus genus="fasciculus" via="silva/build/piscina.o"/>
+    <ingressus genus="fasciculus" via="silva/build/chorda.o"/>
+    <ingressus genus="fasciculus" via="silva/build/chorda_aedificator.o"/>
+    <ingressus genus="fasciculus" via="silva/build/xar.o"/>
+    <ingressus genus="fasciculus" via="silva/build/tabula_dispersa.o"/>
+    <ingressus genus="fasciculus" via="silva/build/friatio.o"/>
+    <ingressus genus="fasciculus" via="silva/build/silva_token.o"/>
+    <ingressus genus="fasciculus" via="silva/build/silva_lexema.o"/>
+    <ingressus genus="fasciculus" via="silva/build/materia_token.o"/>
+    <exitus via="silva/instrumenta/principalia/excludenda_generata.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="amalgama_silva" genus="generator">
+    <mandatum>
+      <verbum! (>./silva/amalgamare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_generata.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/excludenda_generata.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
+    <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <exitus via="silva/amalgama/silva.c" provenientia="regeneratio"/>
+  </actio>
+</aedificatio>

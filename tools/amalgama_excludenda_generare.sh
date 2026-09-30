@@ -299,6 +299,17 @@ for b in $BASES; do
     SUMMA=$((SUMMA + n))
 done
 
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T4): mechanismus
+# EXITUM ipsum inter gyros scribit (amalgamator contra eum
+# recompilatur), ergo ut -probare: exitus in scripturam copiatur,
+# exemplar commissum per laqueum EXIT redditur. Scriptio in arbore
+# TRANSIENS (kill -9 laqueum praeterit - idem ac -probare hodie).
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    mkdir -p "$FABRICA_SCRIPTURA/$SEDES" || exit 1
+    cp "$EXITUS" "$FABRICA_SCRIPTURA/$EXITUS" || exit 1
+    exit 0
+fi
+
 if [ "$PROBARE" -eq 1 ]; then
     # exemplar per laqueum EXIT redditur - hic solum iudicamus
     if [ ! -f "$EXEMPLAR" ]; then

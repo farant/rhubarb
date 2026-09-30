@@ -607,6 +607,17 @@ Verdict rules (the gate pins each):
 - [ ] **Step 6: commit.** Gates: generata, silva (amalgam scripts),
   tessera, officina.
 
+> **Executed 2026-09-30** (commit below). Nine artifacts declared and
+> RECENS under `-plenus` (42 s); agreement with generata on a valid
+> plant (silva.c only). Deviations/finds (lib/fabrica.worklog.md):
+> fontes_generata.h is its own input (praelatio); excludenda writes in
+> place transiently (trap-restored); excludenda links `<sub>/build/`
+> objects built by amalgamare.sh — declared now (found via an invalid
+> first plant that broke them); FABRICA_SCRIPTURA exported absolute;
+> orphans-under-flags bug fixed (fumus VIII). Declared inputs do NOT
+> yet cover the radices' closures — T6 must add them before records
+> may skip regeneration for these actions.
+
 ### Task T5: generated sources declared
 
 **Files:** `silva/aedificatio.stml` (lexicon, grammar tables), root
