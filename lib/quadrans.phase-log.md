@@ -304,3 +304,60 @@ version didn't compile — redone), pane fitting neglected, not centred —
 all four caught. saltuarius 13/13.
 
 **Fran's look (2026-09-30): "that looks great".**
+
+---
+
+## Q8 — RELATIO (2026-09-30)
+
+**What was built (Q1–Q7, rhubarb-secunda → main).** `quadrans`, a pure
+library (no allocation, integer maths, no tessera dependency) that turns
+an `Imago` region into terminal cells — block glyph + foreground +
+background:
+- QUADRANTES (2×2 sub-pixels, 16 glyphs; OpenTUI's most-different-pair
+  split) and DIMIDIUM (▀, 1×2, exact colours);
+- colourings MEDIA (group means, the default) and EXTREMA (OpenTUI's
+  two extreme pixels);
+- `quadrans_error` (exact integer MSE, hundredths) + an aurum RATCHET
+  file of errors that may only fall;
+- `quadrans_aptare` (fit without distortion; cell aspect a parameter,
+  default 1:2, never queried).
+Around it: tessera's colour policy (PLENI 24-bit / CCLVI 256-colour,
+from the environment; quantized only at emission); `effigies`, the
+viewer (m / c / p / ] / [; status line shows the error); the Aquinas
+palette via Atkinson (`effigies_palettam_applicare`); saltuarius's image
+preview (recognized by signature, computed at the disk edge, blitted
+allocation-free).
+
+**How it was checked.** Hand-computed synthetic blocks for all 16 masks
+and every tie; the ratchet on two of Fran's photographs plus gradient,
+checker and noise; byte goldens for 256-colour emission; headless cell
+goldens through the memory pons (effigies, saltuarius columns); Fran's
+looks in Ghostty and Terminal.app at Q4, Q5, Q6, Q7. Every rule shipped
+with compiling plants caught by name; the mute ones (greys-only palette)
+were recorded and the test strengthened.
+
+**What the measurements and looks decided.**
+- MEDIA ≈ 46% of EXTREMA's error on photographs (it can never be worse
+  — same partition, least-squares colours). Default = MEDIA. Fran's
+  eye: MEDIA best in Terminal.app; in Ghostty EXTREMA reads like a
+  sharpening filter and may look better — recorded, NOT acted on.
+- Same terminal grid: quadrants beat half-blocks 3.8× (painting) to 7.3×
+  (bust). Horizontal detail matters more than exact colour.
+- Terminal.app misreads 24-bit SGR; with the 256 path images show
+  correctly (Q4 look). The colour policy is the width policy's twin.
+- The palette mode is ~30× worse per pixel by design (dithering
+  scatters colour for the eye); it pairs with EXTREMA, which keeps
+  cells inside the palette.
+- chafa needs `-f symbols` to compare like for like (it used Ghostty's
+  graphics protocol by default).
+
+**Answered from module 011's open questions:** extremes vs group means
+(measured: means); aspect handling (the caller's pre-scale, now
+`quadrans_aptare` in the library, parameterized). Still open: sextants
+and braille modes; defaulting the colouring from the colour depth
+(PLENI → EXTREMA?) — a possible follow-up from the Q5 look.
+
+**Deferred, on purpose:** kitty graphics / sixel (feature 017 — this is
+their query-free fallback), sextants, braille, animation/bandwidth
+(~40 bytes of SGR per cell is fine for previews, poor for video), the
+fenestra closed loop (module 010 does not exist yet).

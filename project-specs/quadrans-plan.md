@@ -8,6 +8,10 @@ approving each; tasks with a terminal step end with Fran's own look
 before the commit. Names marked (unsealed) are working names; Fran
 names. Decisions D1–D8 below are PROPOSED — Fran decides before Q1.*
 
+**Executed 2026-09-30:** Q1–Q8 done (D1–D8 approved; D2 = MEDIA by
+measurement). Narrative and measurements: `lib/quadrans.phase-log.md`
+(RELATIO in Q8).
+
 ## 1. Goal
 
 Draw an RGBA image into terminal cells with no graphics protocol and no
