@@ -50,7 +50,15 @@ EXITUS="$SEDES/fontes_generata.h"
 # shellcheck source=/dev/null
 . "$POLITICA"
 
-./tools/aedilis_struere.sh || exit 1
+# Sub iudice fabricae (FABRICA_SCRIPTURA) instrumenta NON restruuntur:
+# iudex nihil installat, et bin/aedilis relinkatum octetis differt
+# (LC_UUID non ex contento - T6: clavis memoriae omnis fragmenti per
+# cursum mutabatur). Recentia bin/aedilis ab actione sua iudicatur.
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    [ -x bin/aedilis ] || si_fracta "bin/aedilis deest (./tools/aedilis_struere.sh)"
+else
+    ./tools/aedilis_struere.sh || exit 1
+fi
 
 STATIO="build/aedilis/amalgama_fontes/$PROIECTUM"
 rm -rf "$STATIO"

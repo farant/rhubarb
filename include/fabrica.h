@@ -35,9 +35,17 @@ nomen enumeratio {
     FABRICA_INGRESSUS_CONFIGURATIO,  /* aedilis.stml tota */
     FABRICA_INGRESSUS_INSTRUMENTUM,  /* binarium instrumenti */
     FABRICA_INGRESSUS_DIRECTORIUM,   /* nomina ordinata */
-    FABRICA_INGRESSUS_PLAGULAE       /* plagulae directorii, gradu 0,
+    FABRICA_INGRESSUS_PLAGULAE,      /* plagulae directorii, gradu 0,
                                       * suffixis filtratae (corpus
                                       * infixum briar/silicis) */
+    FABRICA_INGRESSUS_MANIFESTA,     /* directorium manifestorum
+                                      * (.stml, gradu 0): quodque
+                                      * explicatur, nomina quoque
+                                      * sigillantur (T6 fragmenta) */
+    FABRICA_INGRESSUS_RADICES        /* configuratio aedilis: nomina
+                                      * directoriorum inclusorum
+                                      * OMNIUM quae nominat (caput
+                                      * novum resolutionem mutat) */
 } FabricaGenusIngressus;
 
 nomen enumeratio {
@@ -80,6 +88,13 @@ nomen structura {
                      Xar* ingressus;  /* FabricaIngressus */
                      Xar* exitus;     /* FabricaExitus */
                   chorda  sedes;      /* "plagula:linea" */
+                     b32  memorabilis; /* memorabilis="verum": ingressus
+                                        * PROBABILITER pleni (clausurae
+                                        * manifestis derivatae) -
+                                        * verificatio memorata
+                                        * regenerationem supplet (T6).
+                                        * Absens = FALSUM: regeneratur
+                                        * semper sub -plenus. */
 } FabricaActio;
 
 /* Sutura: machina discum et processus per eam SOLAM tangit. */
@@ -101,16 +116,33 @@ nomen structura {
     /* binarium '-provenientia' rogare; FALSUM = nulla relatio */
     b32 (*rogare)(vacuum* datum, constans character* via,
                   Piscina* piscina, chorda* relatio_out);
-    /* memoria: VERUM si verificatio (titulus, ingressus, artificium)
-     * iam scripta. NIHIL licet (sine memoria). */
+    /* memoria: VERUM si verificatio (titulus, clavis, artificium)
+     * iam scripta; 'ingressus' = CLAVIS: sigillum ingressuum et
+     * mandati (radix nova in mandato verificationem veterem solvit). NIHIL licet (sine memoria). Consulitur pro
+     * actionibus memorabilibus SOLIS. */
     b32 (*meminisse)(vacuum* datum, constans character* titulus,
                      constans Sigillum* ingressus,
                      constans Sigillum* artificium);
+    /* verificationem scribere: vocatur SOLUM post RECENS per
+     * regenerationem actionis memorabilis (numquam post relationem aut
+     * memoriam ipsam). NIHIL licet. */
+    vacuum (*inscribere)(vacuum* datum, constans character* titulus,
+                         constans Sigillum* ingressus,
+                         constans Sigillum* artificium);
     /* memoria sigillorum PER CURSUM (via -> Sigillum*): plagula quae
      * multis ingressibus communis est semel legitur et sigillatur
      * (capsula corporis XLIX MB tribus binariis; ingressus actionis
      * per exitum). NIHIL licet. Arbor intra cursum immota ponitur. */
     TabulaDispersa* sigilla;
+    /* regenerationes PER CURSUM (titulus actionis -> chorda* causa;
+     * mensura 0 = cursus felix): generator semel per actionem currit,
+     * etsi exitus multos habet (silva: XXII fragmenta ex generatore
+     * uno). NIHIL licet (tum per exitum currit). */
+    TabulaDispersa* regenerationes;
+    /* sigilla ingressuum PER CURSUM (titulus actionis -> sigillum aut
+     * causa): actio exituum multorum semel explicatur (silva: XXII
+     * exitus, LIV manifesta). NIHIL licet. */
+    TabulaDispersa* digesta;
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae

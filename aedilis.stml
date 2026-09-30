@@ -26,6 +26,7 @@
     <via (>md/fontes
     <via (>officina/instrumenta
     <via (>silva/fontes
+    <via (>officina/amalgama
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

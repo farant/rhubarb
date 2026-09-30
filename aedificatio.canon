@@ -26,6 +26,11 @@
       <optio>formatio</optio>
       <optio>institutio</optio>
     </attributum>
+    <attributum nomen="memorabilis" genus="veritas"
+      nota="verum: ingressus PROBABILITER pleni (clausurae manifestis
+            aedilis derivatae) - verificatio memorata (build/fabrica.db)
+            regenerationem supplet. Absens = falsum: sub -plenus semper
+            regeneratur (plan 1a T6, decretum 01M3RDBCB8)"/>
     <liberum nomen="mandatum" maximum="1"/>
     <liberum nomen="ingressus" minimum="1"/>
     <liberum nomen="exitus" minimum="1"/>
@@ -47,8 +52,13 @@
       <optio>instrumentum</optio>
       <optio>directorium</optio>
       <optio>plagulae</optio>
+      <optio>manifesta</optio>
+      <optio>radices</optio>
     </attributum>
-    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="via" genus="textus" necessarium="verum"
+      nota="manifesta: directorium manifestorum aedilis (--manifestum),
+            quodque .stml explicatum; radices: configuratio aedilis,
+            nomina directoriorum inclusorum OMNIUM sigillata"/>
     <attributum nomen="suffixa" genus="textus"
       nota="plagulae solum: suffixa spatio separata ('.c .h'); absens =
             omnes plagulae directorii (profunditate 0)"/>

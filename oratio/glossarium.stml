@@ -1158,4 +1158,15 @@
     <forma textus="subsystematum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
 
+  <vocabulum lemma="regenerare" lingua="latina" classis="verbum" nota="Lat. eccl. regenerare (Tertullianus, de baptismo): denuo gignere; hic artificium generatum ex ingressibus hodiernis iterum facere ut cum commisso comparetur; sedes lib/fabrica.c (_regenerare: generator semel per actionem et cursum, fabrica plan 1a T6)">
+    <forma textus="regenerare" modus="infinitivus"/>
+  </vocabulum>
+
+  <vocabulum lemma="verificatio" lingua="latina" classis="substantivum" nota="Lat. med. verificatio (verificare, verum facere): hic tripla memorata (titulus actionis, sigillum ingressuum, sigillum artificii) post regenerationem congruentem scripta, ut iudex eam iterum non currat; sedes tools/fabrica_memoria.c, probationes/probatio_fabrica.c (fabrica plan 1a T6)">
+    <forma textus="verificatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="verificationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="verificationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="verificationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
 </glossarium>

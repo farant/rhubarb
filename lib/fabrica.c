@@ -80,13 +80,16 @@ vacuum
 fabrica_suturam_parare (
     FabricaSutura* sutura)
 {
-    sutura->datum      = NIHIL;
-    sutura->legere     = NIHIL;
-    sutura->enumerare  = NIHIL;
-    sutura->currere    = NIHIL;
-    sutura->rogare     = NIHIL;
-    sutura->meminisse  = NIHIL;
-    sutura->sigilla    = NIHIL;
+    sutura->datum           = NIHIL;
+    sutura->legere          = NIHIL;
+    sutura->enumerare       = NIHIL;
+    sutura->currere         = NIHIL;
+    sutura->rogare          = NIHIL;
+    sutura->meminisse       = NIHIL;
+    sutura->inscribere      = NIHIL;
+    sutura->sigilla         = NIHIL;
+    sutura->regenerationes  = NIHIL;
+    sutura->digesta         = NIHIL;
 }
 
 
@@ -349,7 +352,25 @@ _directorium_explicare (
             Particula* particula;
                   i32  i;
                   i32  numerus;
+               chorda  clavis;
+               vacuum* memoratum;
 
+    /* memoria per cursum (clavis cum '/' finali, ut in particula):
+     * radices inclusionum ab actionibus multis nominantur */
+    clavis = _iungere(piscina, "", via, "/");
+    si (   sutura->sigilla != NIHIL
+        && tabula_dispersa_invenire(sutura->sigilla, clavis,
+               &memoratum))
+    {
+        particula = (Particula*)xar_addere(particulae);
+        si (particula == NIHIL)
+        {
+            redde FALSUM;
+        }
+        particula->via     = clavis;
+        particula->octeti  = *(Sigillum*)memoratum;
+        redde VERUM;
+    }
     si (   sutura->enumerare == NIHIL
         || !sutura->enumerare(sutura->datum,
                chorda_ut_cstr(via, piscina), piscina, &nomina))
@@ -378,13 +399,26 @@ _directorium_explicare (
     }
     /* '/' finalis: directorium numquam cum plagula eiusdem viae
      * confunditur */
-    particula->via        = _iungere(piscina, "", via, "/");
+    particula->via        = clavis;
     {
         chorda nomina_iuncta;
 
         nomina_iuncta = chorda_aedificator_finire(aedificator);
         particula->octeti = sigillum_computare(nomina_iuncta.datum,
             (memoriae_index)nomina_iuncta.mensura);
+    }
+    si (sutura->sigilla != NIHIL)
+    {
+        Sigillum* locus;
+
+        locus = (Sigillum*)piscina_allocare(piscina,
+            magnitudo(Sigillum));
+        si (locus != NIHIL)
+        {
+            *locus = particula->octeti;
+            (vacuum)tabula_dispersa_inserere(sutura->sigilla, clavis,
+                locus);
+        }
     }
     redde VERUM;
 }
@@ -478,6 +512,110 @@ _plagulas_explicare (
     redde VERUM;
 }
 
+/* MANIFESTA: directorium manifestorum (fragmenta T6: generator unam
+ * clausuram per radicem scribit). Quodque '.stml' gradu 0 explicatur
+ * ut MANIFESTUM; nomina directorii quoque sigillantur (radix deleta
+ * manifestum suum aufert). Directorium absens (clonus recens,
+ * generator numquam cucurrit) -> FALSUM nominatum. */
+interior b32
+_manifesta_explicare (
+     constans FabricaSutura* sutura,
+                     chorda  via,
+               constans Xar* exclusa,
+                    Piscina* piscina,
+                        Xar* particulae,
+                     chorda* causa_out)
+{
+    Xar* nomina;
+    i32  i;
+
+    si (!_directorium_explicare(sutura, via, piscina, particulae,
+            causa_out))
+    {
+        redde FALSUM;
+    }
+    (vacuum)sutura->enumerare(sutura->datum, chorda_ut_cstr(via,
+        piscina), piscina, &nomina);
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        chorda titulus;
+
+        titulus = *(chorda*)xar_obtinere(nomina, i);
+        si (!chorda_terminatur(titulus, chorda_ex_literis(".stml",
+                piscina)))
+        {
+            perge;
+        }
+        si (!_manifestum_explicare(sutura, _iungere(piscina, "",
+                _iungere(piscina, "", via, "/"),
+                chorda_ut_cstr(titulus, piscina)),
+                exclusa, piscina, particulae, causa_out))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* RADICES: configuratio aedilis legitur, sectionis inclusarum viae
+ * (capturae crudae) - nomina cuiusque directorii sigillantur (caput
+ * novum in radice resolutionem obumbrare potest, Review Focus 2).
+ * Sectio absens aut vacua -> FALSUM: radices nullae = tegmen nullum,
+ * numquam tacite. */
+interior b32
+_radices_explicare (
+     constans FabricaSutura* sutura,
+                     chorda  via,
+                    Piscina* piscina,
+                        Xar* particulae,
+                     chorda* causa_out)
+{
+    InternamentumChorda* intern;
+           StmlResultus  lectum;
+                 chorda  contentum;
+              StmlNodus* inclusa;
+                    Xar* nodi;
+                    i32  i;
+
+    si (!sutura->legere(sutura->datum, chorda_ut_cstr(via, piscina),
+            piscina, &contentum))
+    {
+        _causam_ponere(causa_out, piscina, "configuratio absens: ",
+            via, "");
+        redde FALSUM;
+    }
+    intern = internamentum_creare(piscina);
+    si (intern == NIHIL)
+    {
+        redde FALSUM;
+    }
+    lectum   = stml_legere(contentum, piscina, intern);
+    inclusa  = (lectum.successus && lectum.elementum_radix != NIHIL)
+        ? stml_invenire_liberum(lectum.elementum_radix, "inclusa")
+        : NIHIL;
+    nodi = (inclusa != NIHIL)
+        ? stml_invenire_omnes_liberos(inclusa, "via", piscina) : NIHIL;
+    si (nodi == NIHIL || xar_numerus(nodi) == 0)
+    {
+        _causam_ponere(causa_out, piscina,
+            "configuratio sine sectione inclusa: ", via, "");
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
+    {
+        chorda radix;
+
+        radix = chorda_praecidere(stml_textus_valor(
+            *(StmlNodus**)xar_obtinere(nodi, i), piscina));
+        si (!_directorium_explicare(sutura, radix, piscina,
+                particulae, causa_out))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 b32
 fabrica_ingressus_sigillare (
      constans FabricaSutura* sutura,
@@ -518,6 +656,14 @@ fabrica_ingressus_sigillare (
                 frange;
             casus FABRICA_INGRESSUS_DIRECTORIUM:
                 bonum = _directorium_explicare(sutura, ingressus->via,
+                    piscina, particulae, causa_out);
+                frange;
+            casus FABRICA_INGRESSUS_MANIFESTA:
+                bonum = _manifesta_explicare(sutura, ingressus->via,
+                    exclusa, piscina, particulae, causa_out);
+                frange;
+            casus FABRICA_INGRESSUS_RADICES:
+                bonum = _radices_explicare(sutura, ingressus->via,
                     piscina, particulae, causa_out);
                 frange;
             ordinarius:
@@ -707,6 +853,131 @@ _relationem_iudicare (
             chorda_sectio(hodie, 0, VIII), "...)"));
 }
 
+/* sigillum actionis memoratum per cursum (sutura->digesta) */
+nomen structura {
+         b32 bonum;
+    Sigillum sigillum;
+      chorda causa;
+} DigestumMemoratum;
+
+/* fabrica_actionem_sigillare SEMEL per actionem et cursum: exitus
+ * multi (silva XXII) ingressus eosdem non iterum explicant. Defectus
+ * quoque memoratur (causa eadem). */
+interior b32
+_actionem_sigillare_semel (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                   Piscina* piscina,
+                  Sigillum* sigillum_out,
+                    chorda* causa_out)
+{
+               vacuum* memoratum;
+    DigestumMemoratum* locus;
+                  b32  bonum;
+
+    si (   sutura->digesta != NIHIL
+        && tabula_dispersa_invenire(sutura->digesta, actio->titulus,
+               &memoratum))
+    {
+        locus          = (DigestumMemoratum*)memoratum;
+        *sigillum_out  = locus->sigillum;
+        *causa_out     = locus->causa;
+        redde locus->bonum;
+    }
+    bonum = fabrica_actionem_sigillare(sutura, actio, piscina,
+        sigillum_out, causa_out);
+    si (sutura->digesta != NIHIL)
+    {
+        locus = (DigestumMemoratum*)piscina_allocare(piscina,
+            magnitudo(DigestumMemoratum));
+        si (locus != NIHIL)
+        {
+            locus->bonum     = bonum;
+            locus->sigillum  = *sigillum_out;
+            locus->causa     = *causa_out;
+            (vacuum)tabula_dispersa_inserere(sutura->digesta,
+                actio->titulus, locus);
+        }
+    }
+    redde bonum;
+}
+
+/* Clavis memoriae: sigillum ingressuum ET mandati (verbum NUL ...).
+ * Radix nova in mandato declarata ingressus nondum mutat (manifesta
+ * eius nondum scripta) - sine mandato verificatio vetus congrueret.
+ * Digesta institutionum (relatio) intacta manent. */
+interior Sigillum
+_clavem_memoriae (
+    constans FabricaActio* actio,
+        constans Sigillum* ingressus)
+{
+    SigillumContextus contextus;
+                  i32 i;
+
+    sigillum_incipere(&contextus);
+    sigillum_addere(&contextus, ingressus->octeti, SIGILLUM_OCTETI);
+    per (i = ZEPHYRUM; i < xar_numerus(actio->mandatum); i++)
+    {
+        chorda verbum;
+
+        verbum = *(chorda*)xar_obtinere(actio->mandatum, i);
+        sigillum_addere(&contextus, verbum.datum,
+            (memoriae_index)verbum.mensura);
+        sigillum_addere(&contextus, "", 1);
+    }
+    redde sigillum_finire(&contextus);
+}
+
+/* Generatorem actionis currere SEMEL per cursum (exitus multi,
+ * generator unus): exitus cursus - felix aut causa fracti - in
+ * sutura->regenerationes memoratur; exitus sequentes scripturam
+ * eandem legunt. */
+interior b32
+_regenerare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  scriptura_dir,
+                   Piscina* piscina,
+                    chorda* causa_out)
+{
+    vacuum* memoratum;
+    chorda* locus;
+       b32  felix;
+
+    si (   sutura->regenerationes != NIHIL
+        && tabula_dispersa_invenire(sutura->regenerationes,
+               actio->titulus, &memoratum))
+    {
+        *causa_out = *(chorda*)memoratum;
+        redde causa_out->mensura == 0;
+    }
+    causa_out->datum    = NIHIL;
+    causa_out->mensura  = ZEPHYRUM;
+    felix = sutura->currere(sutura->datum, actio->mandatum,
+        chorda_ut_cstr(scriptura_dir, piscina), piscina, causa_out);
+    si (felix)
+    {
+        causa_out->datum    = NIHIL;
+        causa_out->mensura  = ZEPHYRUM;
+    }
+    alioquin si (causa_out->mensura == 0)
+    {
+        /* fractus sine causa: memoria 'mensura 0 = felix' falleret */
+        *causa_out = chorda_ex_literis("causa ignota", piscina);
+    }
+    si (sutura->regenerationes != NIHIL)
+    {
+        locus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        si (locus != NIHIL)
+        {
+            *locus = *causa_out;
+            (vacuum)tabula_dispersa_inserere(sutura->regenerationes,
+                actio->titulus, locus);
+        }
+    }
+    redde felix;
+}
+
 FabricaIudicium
 fabrica_iudicare (
      constans FabricaSutura* sutura,
@@ -716,6 +987,7 @@ fabrica_iudicare (
                     Piscina* piscina)
 {
      Sigillum ingressus;
+     Sigillum clavis;
      Sigillum artificium;
        chorda causa;
        chorda commissum;
@@ -727,7 +999,7 @@ fabrica_iudicare (
 
     causa.datum    = NIHIL;
     causa.mensura  = ZEPHYRUM;
-    si (!fabrica_actionem_sigillare(sutura, actio, piscina, &ingressus,
+    si (!_actionem_sigillare_semel(sutura, actio, piscina, &ingressus,
             &causa))
     {
         redde _iudicium(exitus->via, FABRICA_IGNOTUM, causa);
@@ -746,9 +1018,14 @@ fabrica_iudicare (
     }
     artificium = sigillum_computare(commissum.datum,
         (memoriae_index)commissum.mensura);
-    si (   sutura->meminisse != NIHIL
+    clavis = _clavem_memoriae(actio, &ingressus);
+    /* memoria SOLUM pro actione memorabili: ingressus aliter non
+     * probabiliter pleni, et verificatio vetus mutationem ingressus
+     * non declarati celaret */
+    si (   actio->memorabilis
+        && sutura->meminisse != NIHIL
         && sutura->meminisse(sutura->datum,
-               chorda_ut_cstr(actio->titulus, piscina), &ingressus,
+               chorda_ut_cstr(actio->titulus, piscina), &clavis,
                &artificium))
     {
         redde _iudicium(exitus->via, FABRICA_RECENS,
@@ -765,8 +1042,7 @@ fabrica_iudicare (
         : actio->titulus;
     scriptura_dir = _iungere(piscina, "build/fabrica/scriptura/",
         actio->titulus, "");
-    si (!sutura->currere(sutura->datum, actio->mandatum,
-            chorda_ut_cstr(scriptura_dir, piscina), piscina, &causa))
+    si (!_regenerare(sutura, actio, scriptura_dir, piscina, &causa))
     {
         redde _iudicium(exitus->via, FABRICA_IGNOTUM,
             _iungere(piscina, "generator fractus: ", generator,
@@ -786,6 +1062,12 @@ fabrica_iudicare (
     }
     si (chorda_aequalis(effusio, commissum))
     {
+        si (actio->memorabilis && sutura->inscribere != NIHIL)
+        {
+            sutura->inscribere(sutura->datum,
+                chorda_ut_cstr(actio->titulus, piscina), &clavis,
+                &artificium);
+        }
         redde _iudicium(exitus->via, FABRICA_RECENS,
             chorda_ex_literis("regeneratio congruit", piscina));
     }
@@ -889,6 +1171,14 @@ _genus_ingressus (
     alioquin si (chorda_aequalis_literis(valor, "plagulae"))
     {
         *genus = FABRICA_INGRESSUS_PLAGULAE;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "manifesta"))
+    {
+        *genus = FABRICA_INGRESSUS_MANIFESTA;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "radices"))
+    {
+        *genus = FABRICA_INGRESSUS_RADICES;
     }
     alioquin
     {
@@ -1024,6 +1314,20 @@ fabrica_declarationes_legere (
             redde _recusare(piscina, causa_out, actio.sedes,
                 "genus actionis ignotum",
                 valor != NIHIL ? *valor : nihil);
+        }
+        valor = stml_attributum_capere(nodus, "memorabilis");
+        si (valor == NIHIL || chorda_aequalis_literis(*valor, "falsum"))
+        {
+            actio.memorabilis = FALSUM;
+        }
+        alioquin si (chorda_aequalis_literis(*valor, "verum"))
+        {
+            actio.memorabilis = VERUM;
+        }
+        alioquin
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "memorabilis nec verum nec falsum", *valor);
         }
         actio.mandatum = _mandatum_legere(nodus, piscina);
 

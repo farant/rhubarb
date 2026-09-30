@@ -44,4 +44,49 @@
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
     <exitus via="tessera/amalgama/tessera.c" provenientia="regeneratio"/>
   </actio>
+  <!-- FRAGMENTA RADIX_FONTES (plan 1a T6): MEMORABILIA - ingressus
+       probabiliter pleni: generator manifestum unum per radicem in
+       build/fabrica/clausurae/ scribit (aedilis --manifestum), iudex
+       eas explicat (genus 'manifesta'); radices = nomina directoriorum
+       inclusorum aedilis.stml. Verificatio (build/fabrica.db) cum
+       clave ingressuum ET mandati regenerationem supplet. aedilis per
+       FONTES suos (manifestum), non per binarium: relinkatum octetis
+       differt (LC_UUID), clavis per cursum mutaretur. -->
+  <actio titulus="fragmentum_tessera_folium" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>tessera/folium_fontes_generata.sh
+      <verbum! (>tessera/instrumenta/principalia/folium.c
+      <verbum! (>tessera/instrumenta/folium/folium_pagina.c
+      <verbum! (>tessera/fontes/tessera_cellula.c
+      <verbum! (>tessera/fontes/tessera_eventum.c
+      <verbum! (>tessera/fontes/tessera_opus.c
+      <verbum! (>tessera/fontes/tessera_pons_memoriae.c
+      <verbum! (>tessera/fontes/tessera_pons_posix.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__folium_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="tessera/folium_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="fragmentum_tessera_spectaculum" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>tessera/spectaculum_fontes_generata.sh
+      <verbum! (>tessera/instrumenta/principalia/spectaculum.c
+      <verbum! (>tessera/fontes/tessera_cellula.c
+      <verbum! (>tessera/fontes/tessera_eventum.c
+      <verbum! (>tessera/fontes/tessera_opus.c
+      <verbum! (>tessera/fontes/tessera_pons_memoriae.c
+      <verbum! (>tessera/fontes/tessera_pons_posix.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__spectaculum_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="tessera/spectaculum_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
 </aedificatio>

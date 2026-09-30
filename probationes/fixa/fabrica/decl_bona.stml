@@ -1,5 +1,5 @@
 <aedificatio>
-  <actio titulus="amalgama_silva" genus="generator">
+  <actio titulus="amalgama_silva" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./silva/amalgamare.sh
       <verbum! (>-comparare

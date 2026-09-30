@@ -89,4 +89,48 @@
     <exitus via="silva/fontes/silva_tabulae_c89.h" provenientia="regeneratio"/>
     <exitus via="silva/c89.canon" provenientia="regeneratio"/>
   </actio>
+  <!-- FRAGMENTA RADIX_FONTES (plan 1a T6): MEMORABILIA - ingressus
+       probabiliter pleni: generator manifestum unum per radicem in
+       build/fabrica/clausurae/ scribit (aedilis --manifestum), iudex
+       eas explicat (genus 'manifesta'); radices = nomina directoriorum
+       inclusorum aedilis.stml. Verificatio (build/fabrica.db) cum
+       clave ingressuum ET mandati regenerationem supplet. aedilis per
+       FONTES suos (manifestum), non per binarium: relinkatum octetis
+       differt (LC_UUID), clavis per cursum mutaretur. -->
+  <actio titulus="fragmenta_silva" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/silva_fontes_generare.sh
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/silva"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/silva_fontes_generare.sh"/>
+    <!-- globus radicum tempore currendi expansus; principalia in linea
+         '# principalia:' fragmenti cuiusque (sui ipsius ingressus) -->
+    <ingressus genus="plagulae" via="silva/fontes" suffixa=".c"/>
+    <ingressus genus="plagulae" via="silva" suffixa="_fontes_generata.sh"/>
+    <exitus via="silva/ambigua_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/arbor_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/auspex_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/censor_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/computus_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/differre_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/emendare_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/emitte_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/examen_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/formator_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/generare_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/haruspex_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/identitates_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/impressor_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/infidelis_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/lustrum_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/nexus_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/origo_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/percursus_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/quaestio_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/renominare_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/selecta_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
 </aedificatio>

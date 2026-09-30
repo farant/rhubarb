@@ -1,7 +1,7 @@
 /* fabrica.c - bin/fabrica: iudex aedificationis domus (plan 1a T3)
  *
  * Usus (ex radice repositorii):
- *   bin/fabrica iudicare [-plenus] [artificium...]
+ *   bin/fabrica iudicare [-plenus] [-omnia] [artificium...]
  *       quae artificia ex ingressibus hodiernis NON facta sint, cur,
  *       et ordinem sanationis. Sine -plenus = celer: nulla
  *       regeneratio (artificia regenerabilia NON IUDICATA dicuntur,
@@ -42,10 +42,12 @@
 #include "tabula_dispersa.h"
 #include "fabrica.h"
 #include "provenientia.h"
+#include "scrinium.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #define MORA_GENERATORIS_MS 600000
@@ -261,6 +263,128 @@ _rogare (
 
 
 /* ==================================================
+ * Memoria verificationum (build/fabrica.db; plan 1a T6)
+ *
+ * Ordo = (titulus, clavis, artificium): clavis = sigillum ingressuum
+ * ET mandati, artificium = sigillum commissi - ambo congruere debent
+ * (artificium manu mutatum numquam memoria tegitur). Nucleus solus
+ * decernit quando scribitur (post regenerationem congruentem actionis
+ * memorabilis) et quando legitur (actio memorabilis). sqlite HIC
+ * solum, numquam in lib/ (nexus caeci obiectorum build/).
+ * ================================================== */
+
+nomen structura {
+    Scrinium* scrinium;
+     Piscina* piscina;
+} Memoria;
+
+hic_manens constans character* constans MIGRATIONES_MEMORIAE[I] = {
+    "CREATE TABLE verificationes ("
+    " titulus TEXT NOT NULL, clavis TEXT NOT NULL,"
+    " artificium TEXT NOT NULL, tempus INTEGER NOT NULL,"
+    " PRIMARY KEY (titulus, clavis, artificium))"
+};
+
+interior vacuum
+_hex_ligare (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+     constans Sigillum* sigillum,
+               Piscina* piscina)
+{
+    character hex[SIGILLUM_HEX_MENSURA];
+
+    sigillum_hex(sigillum, hex);
+    (vacuum)scrinium_ligare_textum(enuntiatum, index,
+        chorda_ex_literis(hex, piscina));
+}
+
+interior b32
+_meminisse (
+                vacuum* datum,
+    constans character* titulus,
+     constans Sigillum* clavis,
+     constans Sigillum* artificium)
+{
+               Memoria* memoria;
+    ScriniumEnuntiatum* enuntiatum;
+                   b32  inventum;
+
+    memoria    = (Memoria*)datum;
+    enuntiatum = scrinium_praeparare(memoria->scrinium,
+        "SELECT 1 FROM verificationes WHERE titulus = ?"
+        " AND clavis = ? AND artificium = ?");
+    si (enuntiatum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    (vacuum)scrinium_ligare_textum(enuntiatum, I,
+        chorda_ex_literis(titulus, memoria->piscina));
+    _hex_ligare(enuntiatum, II, clavis, memoria->piscina);
+    _hex_ligare(enuntiatum, III, artificium, memoria->piscina);
+    inventum = (scrinium_gradi(enuntiatum) == SCRINIUM_ORDO);
+    scrinium_finire(enuntiatum);
+    redde inventum;
+}
+
+interior vacuum
+_inscribere (
+                vacuum* datum,
+    constans character* titulus,
+     constans Sigillum* clavis,
+     constans Sigillum* artificium)
+{
+               Memoria* memoria;
+    ScriniumEnuntiatum* enuntiatum;
+
+    memoria    = (Memoria*)datum;
+    enuntiatum = scrinium_praeparare(memoria->scrinium,
+        "INSERT OR REPLACE INTO verificationes"
+        " (titulus, clavis, artificium, tempus) VALUES (?, ?, ?, ?)");
+    si (enuntiatum == NIHIL)
+    {
+        redde;
+    }
+    (vacuum)scrinium_ligare_textum(enuntiatum, I,
+        chorda_ex_literis(titulus, memoria->piscina));
+    _hex_ligare(enuntiatum, II, clavis, memoria->piscina);
+    _hex_ligare(enuntiatum, III, artificium, memoria->piscina);
+    (vacuum)scrinium_ligare_numerum(enuntiatum, IV,
+        (s64)time(NIHIL));
+    si (scrinium_gradi(enuntiatum) != SCRINIUM_FACTUM)
+    {
+        fprintf(stderr, "fabrica: verificatio non scripta (%s): %s\n",
+            titulus, scrinium_error(memoria->scrinium));
+    }
+    scrinium_finire(enuntiatum);
+}
+
+/* build/fabrica.db aperire; FALSUM (cautio impressa) = iudicium sine
+ * memoria - numquam fractum propter memoriam */
+interior b32
+_memoriam_aperire (
+    Memoria* memoria,
+    Piscina* piscina)
+{
+    memoria->piscina = piscina;
+    si (!filum_directorium_creare_cum_parentibus("build"))
+    {
+        redde FALSUM;
+    }
+    memoria->scrinium = scrinium_aperire(piscina, "build/fabrica.db");
+    si (   memoria->scrinium == NIHIL
+        || !scrinium_migrare(memoria->scrinium, MIGRATIONES_MEMORIAE,
+        I))
+    {
+        fprintf(stderr, "fabrica: CAUTIO memoria build/fabrica.db "
+            "aperiri nequit - iudicium sine memoria\n");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Declarationes
  * ================================================== */
 
@@ -457,12 +581,20 @@ _eligitur (
 
 interior vacuum
 _sententiam_imprimere (
-    constans Sententia* sententia)
+    constans Sententia* sententia,
+                   b32  omnia)
 {
     constans character* signum;
 
     commutatio (sententia->iudicium.status)
     {
+        casus FABRICA_RECENS:
+            si (!omnia)
+            {
+                redde;
+            }
+            signum = "RECENS";
+            frange;
         casus FABRICA_STALUM:
             signum = "STALUM";
             frange;
@@ -489,11 +621,13 @@ _iudicare (
       Piscina*  piscina)
 {
       FabricaSutura  sutura;
+            Memoria  memoria;
                 Xar* actiones;
                 Xar* ordo;
                 Xar* sententiae;
              chorda  causa;
                 b32  plenus;
+                b32  omnia;
                 s32  a;
                 i32  i;
                 i32  j;
@@ -503,12 +637,19 @@ _iudicare (
                 i32  non_iudicata;
                 i32  orphana;
 
-    plenus = FALSUM;
+    plenus  = FALSUM;
+    omnia   = FALSUM;
     per (a = II; a < argc; a++)
     {
         si (strcmp(argv[a], "-plenus") == 0)
         {
             plenus = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-omnia") == 0)
+        {
+            /* RECENS quoque cum causa ('memoria', 'regeneratio
+             * congruit', 'relatio congruit') - plantae T6 */
+            omnia = VERUM;
         }
         alioquin si (argv[a][0] == '-')
         {
@@ -536,9 +677,18 @@ _iudicare (
     sutura.enumerare  = _enumerare;
     sutura.currere    = _currere;
     sutura.rogare     = _rogare;
-    sutura.meminisse  = NIHIL;
+    si (_memoriam_aperire(&memoria, piscina))
+    {
+        sutura.datum       = &memoria;
+        sutura.meminisse   = _meminisse;
+        sutura.inscribere  = _inscribere;
+    }
     /* memoria sigillorum per cursum: communis semel sigillatur */
     sutura.sigilla    = tabula_dispersa_creare_chorda(piscina, 1024);
+    /* generator semel per actionem (exitus multi, cursus unus) */
+    sutura.regenerationes = tabula_dispersa_creare_chorda(piscina, 64);
+    /* sigillum ingressuum semel per actionem */
+    sutura.digesta = tabula_dispersa_creare_chorda(piscina, 128);
 
     sententiae = xar_creare(piscina, (i32)magnitudo(Sententia));
     per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
@@ -581,7 +731,7 @@ _iudicare (
         si (chorda_aequalis_literis(s->iudicium.artificium,
                 "bin/fabrica"))
         {
-            _sententiam_imprimere(s);
+            _sententiam_imprimere(s, omnia);
         }
     }
     recentia      = ZEPHYRUM;
@@ -611,7 +761,7 @@ _iudicare (
         si (!chorda_aequalis_literis(s->iudicium.artificium,
                 "bin/fabrica"))
         {
-            _sententiam_imprimere(s);
+            _sententiam_imprimere(s, omnia);
         }
     }
 
@@ -668,6 +818,10 @@ _iudicare (
         (insignatus integer)recentia, (insignatus integer)stala,
         (insignatus integer)ignota, (insignatus integer)non_iudicata,
         plenus ? "" : " (celer)", (insignatus integer)orphana);
+    si (sutura.datum != NIHIL)
+    {
+        scrinium_claudere(memoria.scrinium);
+    }
     redde (stala + ignota > 0) ? I : ZEPHYRUM;
 }
 
@@ -736,7 +890,8 @@ interior vacuum
 _usus (vacuum)
 {
     fprintf(stderr,
-        "usus: bin/fabrica iudicare [-plenus] [artificium...]\n"
+        "usus: bin/fabrica iudicare [-plenus] [-omnia] "
+        "[artificium...]\n"
         "      bin/fabrica digestum TITULUS\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "
         "2 nihil iudicatum)\n");

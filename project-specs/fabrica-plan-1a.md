@@ -718,6 +718,23 @@ sqlite; tool-only), declarations for the 37 committed
   per-artifact "memoria" / "regeneratum" reason. Restore.
 - [ ] **Step 7: commit.** Gates: radix, generata.
 
+> **Executed 2026-09-30** (commit below). Mark named `memorabilis`
+> (Fran). Step 3 took branch (b): `--enumerare` wrote no manifest →
+> aedilis `--manifestum VIA`; generators keep one manifest per root in
+> `build/fabrica/clausurae/`; new input kinds `manifesta` and `radices`
+> (include-root listings from aedilis.stml); 17 memorabilis actions for
+> all 38 snippets (silva as one 22-output action — Fran). Record key =
+> input digest + argv. Added (not in plan): run-once memos per judge
+> run (generator per action, action digest, directory listings);
+> silva_fontes_generare derives each root once (238 → 35.6 s).
+> Deviations: no `duratio_ms`, no separate `fabrica_memoria.c`.
+> Found: `officina/amalgama` missing include root (vindex closure
+> incomplete) → added; a T4 generator relinked `bin/aedilis` on every
+> judge run and the link is not reproducible → guarded, and snippets
+> name aedilis's sources instead of its bytes. **Win: `-plenus` 166 s
+> → 46.7 s** (38 `memoria`); plant exact. Open for T8: celer 2.64 s
+> (> 2 s; 46 MB hashed at -O0) and a lock against concurrent judges.
+
 ### Task T7: installed binaries answer `-provenientia`
 
 **Files:** Create `include/provenientia.h`, `lib/provenientia.c`,

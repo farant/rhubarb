@@ -290,3 +290,87 @@ globs + named files.
   ~4.7 s — note for T8's session-start hook.
 - zsh non-splitting bit my timing loop once more (`$sel` one word →
   nothing matched → "0.00 s"): a too-good number is a question.
+
+## 2026-09-30 — T6: records (`memorabilis`), and the snippet win
+
+**Win measured (clean, sequential):** `bin/fabrica iudicare -plenus` on
+an unchanged tree: 166 s with no records → **46.7 s** with records (38
+snippets `memoria`; the rest — amalgams, grammar tables, capsulae,
+numerals — still regenerate: they are NOT memorabilis, their inputs are
+hand lists). Quick mode now reports the 38 snippets RECENS by record
+instead of NON IUDICATUM; 2.64 s (budget 2 s — see below).
+
+**Mechanism.**
+- `actio memorabilis="verum"` (canon `genus="veritas"`; absent =
+  falsum; anything else refused with via:linea). Records consulted AND
+  written only for memorabilis actions; written only after a
+  regeneration that matched (never after relatio or a record hit).
+- Record key = sha256(input digest ‖ argv words NUL-separated): a new
+  root added to a declaration's mandatum does not change the inputs
+  until the generator runs (manifests not yet written) — without argv
+  in the key the old record would still match. Plant (argv loop
+  zeroed) → exactly that assertion red.
+- Row matches only if titulus, key AND artifact digest match (Review
+  Focus 1: hand-edited artifact → STALUM, never `memoria`).
+- sqlite lives in tools/fabrica.c only (scrinium), build/fabrica.db,
+  table verificationes(titulus, clavis, artificium, tempus). Deviation
+  from plan: no `duratio_ms` (the seam has no duration; YAGNI), no
+  separate tools/fabrica_memoria.c (one file, no annotation machinery).
+
+**Snippet inputs (Step 3 = branch b).** `bin/aedilis --enumerare`
+returned before writing any manifest. Added `--manifestum VIA` (only
+with --enumerare; explicit path — the default build/aedilis/<basename>/
+would collide with installed binaries' manifests). Generators
+(fontes_generare, silva_fontes_generare, compile_tests_fontes_generare,
+gesta/fontes_generare) write one manifest per root into
+build/fabrica/clausurae/<snippet>/ (emptied first) and honour
+FABRICA_SCRIPTURA. New input kinds: `manifesta` (dir of manifests,
+each explicated, names digested) and `radices` (listings of every
+include root named in aedilis.stml — 26 dirs; hand-listing them in 17
+declarations was the alternative). 17 memorabilis actions cover all 38
+snippets (silva = ONE action, 22 outputs, Fran's choice).
+- silva_fontes_generare.sh derives each distinct root ONCE (promptuarium
+  per run): 238 s → 35.6 s, output byte-identical. The 22 snippets had
+  each re-derived the same 25 silva/fontes/*.c roots.
+- P1's warning found a real gap: `officina/amalgama` was not an include
+  root (vindex.sh passes it as -I) → vindex's closure had
+  `inresoluta "officina.h"`. Added to aedilis.stml (no basename
+  collisions); side effect: every installed binary STALUM (configuratio
+  input) → reinstalled.
+
+**Run-once memos (per judge run), all on the seam, all NIHIL-safe:**
+`regenerationes` (generator once per action, failures too — T1 ran it
+once per OUTPUT: silva would have run 22×), `digesta` (action input
+digest once — celer was 9.4 s: 22 × 0.38 s re-explicating silva's 54
+manifests), directory listings in `sigilla` under "via/" (26 include
+roots × 17 actions). `-plenus` 78 → 64 s before records existed.
+
+**Bugs on the way (the instructive ones):**
+- **Records never hit** in the first clean two-pass run (0 `memoria`).
+  Particle trace (FABRICA_VESTIGIUM, temporary printf) showed the input
+  set identical in celer, standalone and -plenus — yet stored keys
+  differed per run. Diff of two standalone traces: `bin/aedilis` bytes
+  changed. Cause: tools/amalgama_fontes_generare.sh (a T4 generator)
+  runs `aedilis_struere.sh` UNCONDITIONALLY → every judge run relinked
+  bin/aedilis (the judge writing installed state), and the link is NOT
+  reproducible (149 bytes: LC_UUID + code signature; `strings` equal).
+  Fixes: under FABRICA_SCRIPTURA the generator only requires bin/aedilis;
+  snippet actions name aedilis's SOURCES (build/aedilis/aedilis/
+  manifestum.stml) instead of the binary — the binary's fidelity to its
+  sources is judged by its own relatio action. A bin/ hash snapshot
+  around a -plenus is now empty (checked).
+- **Two judges ran concurrently** (my zsh glob error did not abort the
+  command list; I relaunched) and emptied each other's clausurae and
+  scratch dirs → 3 keys per action after "2 runs". A lock belongs in
+  the 1b envelope; noted for T8/1b.
+
+**Plant (Step 6):** comment appended to gesta/instrumenta/fori_principale.c
+(in exactly one manifest) → `RECENS gesta/fori_fontes_generata.sh -
+regeneratio congruit`, all 37 others `memoria`; restored → fori
+`memoria` again under the original key.
+
+**Open for T8:** celer 2.64 s > 2 s. Dominated by compile_tests' closure
+(652 files, 46 MB: sqlite3.c, biblia_dr.c, capsula_libri.c) hashed at
+-O0 (sample: `_bloccum_comprimere` 307/700). Honest fix: sigillum at -O2
+(needs a per-object compile rule in aedilis). A stat-keyed digest cache
+would violate "never mtime".
