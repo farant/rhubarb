@@ -270,7 +270,12 @@ declarations (excubitor's 460 orphan objects are the preview).
   declaration files take ANOTHER name (never `fabrica.stml`, which
   silex finds by ascent); the name is fixed in T2.
 - **Q34 → raw**: `capsula_mensor.c` committed as the generator emits
-  it (P2); capsulae are not formatted.
+  it (P2); capsulae are not formatted. **Widened in P2 (route B,
+  Fran):** the pre-commit hook formatted every committed C file, so
+  "raw" was impossible; now any file whose first line carries
+  `GENERATUM` is committed as its generator's exact output, and the
+  lexicon, runae and entitates tables are raw too — generate→format
+  (§I.2) is retired for them, and their gates compare exactly.
 - **Q35 → as recommended**: excubitor stays until slice 2, then oracle
   then delete (with `fabrica.tsv`); its six dead `silva_tabulae_*`
   rows are deleted now (folded into P2).

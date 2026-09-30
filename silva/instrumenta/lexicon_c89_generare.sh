@@ -75,7 +75,7 @@ fi
 # ---- caput: enumeratio indicum + declaratio ----
 {
 cat <<'HCAPUT'
-/* silva_lexicon_c89.h - Indices generum lexicalium C89
+/* silva_lexicon_c89.h - GENERATUM: indices generum lexicalium C89
  *
  * GENERATUM per silva/instrumenta/lexicon_c89_generare.sh.
  * NOLI MANU EMENDARE.
@@ -106,7 +106,7 @@ HCAUDA
 
 {
 cat <<'CAPUT'
-/* silva_lexicon_c89.c - Descriptor lexicalis C89 pro materia
+/* silva_lexicon_c89.c - GENERATUM: descriptor lexicalis C89 pro materia
  *
  * GENERATUM per silva/instrumenta/lexicon_c89_generare.sh.
  * NOLI MANU EMENDARE - fontes sunt silva_token.h (enumeratio) et

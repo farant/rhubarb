@@ -233,15 +233,27 @@ does not amend.
 - [ ] **Step 4: commit** both paths. Gates owed: whatever commissio
   adds (mensor).
 
-> **Executed 2026-09-29** (commit below). Capsula regenerated raw:
-> 2,112 lines of diff, whitespace-stripped bytes `cmp`-equal to HEAD;
-> raw form carries 704 formator divergences — accepted by Q34 (the
-> other raw capsulae do the same, forum 19,128). Six dead rows
-> deleted; `./excubitor.sh silva_tabulae` verdict identical before and
-> after (inspecta 8, STALA 5 — mtime of the 09-29 generare run; NOTE
-> the plan's `silva/` filter inspects 0 objects, a vacuous PURUS).
-> `tools/mensor_ui_struere.sh` → capsula byte-identical after the
-> build.
+> **Executed 2026-09-29 — in TWO commits; the first was half.**
+> d09e6dd1 deleted the six dead `fabrica.tsv` rows (verdict of
+> `./excubitor.sh silva_tabulae` identical before/after: inspecta 8,
+> STALA 5 by mtime; NOTE the `silva/` filter inspects 0 objects — a
+> vacuous PURUS). Its capsula half SILENTLY DID NOT LAND: the
+> pre-commit hook (`tools/unci-git/pre-commit:123-149`, whole-file
+> formatting since 2026-09-01) reformatted the raw capsula back into
+> HEAD's bytes, git saw no change, and the next mensor_ui build
+> dirtied the tree again. Root cause of the whole generate→format
+> pattern (lexicon, runae, entitates): the hook, not a choice.
+> Fran chose **route B**: a generated file is committed as its
+> generator's exact output. Second commit: the hook skips any staged
+> file whose FIRST LINE contains the word `GENERATUM` (unci fumus
+> XIX, born red); capsula_generare, runae_generare, entitates and the
+> lexicon generator write `GENERATUM` on line 1; seven TOML capsulae,
+> runae_tabulae.c, entitates_html_tabula.c, silva_lexicon_c89.{c,h}
+> re-committed raw (content identical to HEAD with line 1 dropped and
+> whitespace stripped — measured per file); runae `-probare` and
+> generata II now compare EXACTLY (born red against the formatted
+> files); generata gains stage VIII (entitates, exact). T5's
+> `formatio` kind is no longer needed for these families.
 
 ### Task T1: lib/fabrica core (pure)
 

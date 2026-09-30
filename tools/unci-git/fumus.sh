@@ -24,6 +24,8 @@
 #   VI-VIII scriptura automatica formae: functio appensa formatur et
 #       index reponitur; commissio partialis intacta + monitum; plagula
 #       nova tota formata (fixum tractum fumus_formae.c, checkout)
+#   XIX plagula GENERATA (GENERATUM in linea prima) NON formatur -
+#       octeti generatoris commissi (fabrica P2, via B, 2026-09-29)
 # Planta = declaratio in 'per' (C99): examen 'nodi erroris' REICE
 # (mensuratum 2026-09-01; '//' et declaratio post sententiam ACCIPE -
 # lacunae examinis, non plantae).
@@ -96,7 +98,19 @@ if git diff --quiet -- "$FIX" && git diff --cached --quiet -- "$FIX"; then
     git add -f -- "$NOVA"
     "$UNCUS" > "$T/forma_nova.out" 2>&1; rc=$?
     if [ "$rc" -eq 0 ] && grep -q 'FORMATA' "$T/forma_nova.out" && git show ":$NOVA" | grep -q '^f (vacuum)$'; then echo "  VIII plagula nova: tota formata          OK"; else echo "  VIII FRACTUM (rc=$rc)"; cat "$T/forma_nova.out"; fracta=1; fi
-    rm -f "$NOVA" "$T/index2"
+    rm -f "$NOVA"
+    # XIX - plagula GENERATA (verbum GENERATUM in linea prima): veritas
+    # eius generator est, ergo scriptura formae OMITTITUR (Franus
+    # 2026-09-29, fabrica P2 via B) - octeti in indice intacti
+    GEN="tools/unci-git/.fumus_generatum.c"
+    printf '/* .fumus_generatum.c - GENERATUM a fumo unci (NE MANU EDITES) */\n#include "latina.h"\n\ninterior vacuum\nf(vacuum)\n{\n    redde;\n}\n' > "$GEN"
+    cp "$GEN" "$T/generatum_ante.c"
+    git read-tree HEAD
+    git add -f -- "$GEN"
+    "$UNCUS" > "$T/forma_gen.out" 2>&1; rc=$?
+    if [ "$rc" -eq 0 ] && ! grep -q 'FORMATA' "$T/forma_gen.out" && grep -q 'GENERATUM' "$T/forma_gen.out" \
+       && git show ":$GEN" | cmp -s - "$T/generatum_ante.c"; then echo "  XIX plagula GENERATA: non formata       OK"; else echo "  XIX FRACTUM (rc=$rc)"; cat "$T/forma_gen.out"; fracta=1; fi
+    rm -f "$GEN" "$T/index2"
     unset GIT_INDEX_FILE
     git checkout HEAD -- "$FIX"
 else
@@ -179,5 +193,5 @@ rm -f "$NONTR"
 ./silva/nexus.sh -renovare > /dev/null 2>&1
 
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XVIII/XVIII)"
+echo "fumus unci: sanum (XIX/XIX)"
 exit 0

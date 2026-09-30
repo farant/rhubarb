@@ -35,7 +35,7 @@ import html.entities
 t = html.entities.html5
 rows = sorted(t.items())
 out = []
-out.append('/* entitates_html_tabula.c - GENERATA '
+out.append('/* entitates_html_tabula.c - GENERATUM '
            '(tools/entitates_html_generare.sh)')
 out.append(' * ex html.entities.html5 Pythonis (WHATWG entities.json).')
 out.append(' * NOLI MANU EDERE - regenera et confer (-probare). Ordine')

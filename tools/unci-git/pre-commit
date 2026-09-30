@@ -124,6 +124,14 @@ if [ -z "${UNCUS_VIAE:-}" ]; then
     for via in $(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
         | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/'); do
         [ -f "$via" ] || continue
+        # plagula GENERATA (verbum GENERATUM in linea prima): veritas
+        # eius generator est - commissa = effusio generatoris octetim,
+        # ne generatio proxima arborem sordidet et portae generatorum
+        # spatia ignoscere cogantur (fabrica P2, via B, 2026-09-29)
+        if git show ":$via" 2>/dev/null | head -n 1 | grep -qw 'GENERATUM'; then
+            echo "formator (pre-commit): $via GENERATUM - non formata (octeti generatoris)" >&2
+            continue
+        fi
         if [ -n "$(git diff --name-only -- "$via" 2>/dev/null)" ]; then
             echo "formator (pre-commit): $via NON formata - arbor operis ab indice differt (commissio partialis)" >&2
             continue
