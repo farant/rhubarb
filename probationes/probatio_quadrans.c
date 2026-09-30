@@ -10,14 +10,28 @@
  *      paris obscurus).
  * V.   Alpha contra fundum; regio impar (pixela extra = fundus);
  *      regio extra imaginem; imago NIHIL; mensurae.
+ * VI.  Error reconstructionis (Q2): casus manu computati; optiones
+ *      ordinariae = MEDIA (decisio D2 mensurata).
+ * VII. Mensura D2 super imagines (photographiae Frani + synthetica):
+ *      MEDIA <= EXTREMA in omni imagine (theorema: media gregis errorem
+ *      quadratum pro partitione fixa minuit - violatio = vitium); aurum
+ *      errorum commissum solum decrescit (QUADRANS_AURUM_SCRIBERE=1
+ *      scribit).
  */
 #include "latina.h"
 #include "piscina.h"
 #include "imago_typus.h"
+#include "imago.h"
+#include "imago_opus.h"
 #include "quadrans.h"
 #include "credo.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+#define AURUM_VIA "probationes/fixa/quadrans/aurum_errores.txt"
+#define MENSURA_LAT CLX
+#define MENSURA_ALT XCVI
 
 /* quadrantChars OpenTUI (bita TL 8, TR 4, BL 2, BR 1) */
 hic_manens constans s32 FIGURAE[XVI] = {
@@ -106,6 +120,58 @@ _cella (
     CREDO_AEQUALIS_S32 (c.runa, runa);
     CREDO_AEQUALIS_I32 (c.color_litterae, litterae);
     CREDO_AEQUALIS_I32 (c.color_fundi, fundi);
+}
+
+/* Error unius imaginis sub colore dato (regio tota) */
+interior i32
+_error_imaginis (
+            Piscina* piscina,
+     constans Imago* im,
+    QuadransColores  colores)
+{
+    QuadransOptiones  o = quadrans_optiones_ordinariae();
+     QuadransCellula* c;
+                 i32  lat;
+                 i32  alt;
+
+    o.colores = colores;
+    quadrans_mensurare(&o, im->latitudo, im->altitudo, &lat, &alt);
+    c = (QuadransCellula*)piscina_allocare(piscina,
+        (memoriae_index)(lat * alt) * magnitudo(QuadransCellula));
+    quadrans_computare(im, ZEPHYRUM, ZEPHYRUM, im->latitudo,
+        im->altitudo,
+        &o, c);
+    redde quadrans_error(im, ZEPHYRUM, ZEPHYRUM, im->latitudo,
+        im->altitudo, &o, c);
+}
+
+/* Aurum: lineae 'titulus extrema media'; -1 si abest */
+interior vacuum
+_aurum_legere (
+    constans character* titulus,
+                   s32* extrema,
+                   s32* media)
+{
+          FILE* f = fopen(AURUM_VIA, "r");
+     character  t[LXIV];
+        longus  e;
+        longus  m;
+
+    *extrema  = -I;
+    *media    = -I;
+    si (f == NIHIL)
+    {
+        redde;
+    }
+    dum (fscanf(f, "%63s %ld %ld", t, &e, &m) == III)
+    {
+        si (strcmp(t, titulus) == ZEPHYRUM)
+        {
+            *extrema  = (s32)e;
+            *media    = (s32)m;
+        }
+    }
+    fclose(f);
 }
 
 s32
@@ -237,6 +303,149 @@ principale (vacuum)
         quadrans_mensurare(&o, ZEPHYRUM, ZEPHYRUM, &lat, &alt);
         CREDO_AEQUALIS_I32 (lat, ZEPHYRUM);
         CREDO_AEQUALIS_I32 (alt, ZEPHYRUM);
+    }
+
+    imprimere("\n--- VI. Error reconstructionis ---\n");
+    {
+                   Imago im  = _imago(piscina, II, II);
+        QuadransOptiones o   = quadrans_optiones_ordinariae();
+         QuadransCellula c;
+                     i32 k;
+
+        /* decisio D2 (mensura VII): MEDIA ordinaria */
+        CREDO_AEQUALIS_I32 ((i32)o.colores, (i32)QUADRANS_MEDIA);
+        /* tres gradus grisei (III supra), manu: EXTREMA 9375 / 12 =
+         * 781,25 -> 78125; MEDIA 4689 / 12 = 390,75 -> 39075 */
+        _pixelum(&im, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, 0xFF);
+        _pixelum(&im, I, ZEPHYRUM, 0x0A0A0A, 0xFF);
+        _pixelum(&im, ZEPHYRUM, I, 0xC8C8C8, 0xFF);
+        _pixelum(&im, I, I, 0xFFFFFF, 0xFF);
+        per (k = ZEPHYRUM; k < II; k++)
+        {
+            o.colores = (k == ZEPHYRUM) ? QUADRANS_EXTREMA
+                                        : QUADRANS_MEDIA;
+            quadrans_computare(&im, ZEPHYRUM, ZEPHYRUM, II, II, &o, &c);
+            CREDO_AEQUALIS_I32 (quadrans_error(&im, ZEPHYRUM, ZEPHYRUM,
+                II, II, &o, &c), (k == ZEPHYRUM) ? 78125 : 39075);
+        }
+        /* bloccus duorum colorum: reconstructio perfecta */
+        _pixelum(&im, I, ZEPHYRUM, ZEPHYRUM, 0xFF);
+        _pixelum(&im, ZEPHYRUM, I, 0xFFFFFF, 0xFF);
+        quadrans_computare(&im, ZEPHYRUM, ZEPHYRUM, II, II, &o, &c);
+        CREDO_AEQUALIS_I32 (quadrans_error(&im, ZEPHYRUM, ZEPHYRUM, II,
+            II, &o, &c), ZEPHYRUM);
+        /* regio vacua */
+        CREDO_AEQUALIS_I32 (quadrans_error(&im, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, ZEPHYRUM, &o, &c), ZEPHYRUM);
+    }
+
+    imprimere("\n--- VII. Mensura D2 (EXTREMA contra MEDIA) ---\n");
+    {
+        hic_manens constans character* constans TITULI[] = {
+            "assumptio", "christus_sculptus", "gradiens", "tabula",
+            "strepitus"
+        };
+        b32 scribere = (b32)(getenv("QUADRANS_AURUM_SCRIBERE")
+            != NIHIL);
+        FILE* aurum = scribere ? fopen(AURUM_VIA, "w") : NIHIL;
+         i32  k;
+
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            Imago im;
+              s32 extrema;
+              s32 media;
+              s32 aurum_extrema;
+              s32 aurum_media;
+
+            si (k < II)
+            {
+                   character via[CXXVIII];
+                ImagoFructus f;
+
+                sprintf(via, "probationes/fixa/quadrans/%s.jpg",
+                    TITULI[k]);
+                f = imago_caricare_ex_file(via, piscina);
+                CREDO_VERUM (f.successus);
+                si (!f.successus)
+                {
+                    perge;
+                }
+                im = imago_scalare_ad_limites(&f.imago, MENSURA_LAT,
+                    MENSURA_ALT, IMAGO_SCALA_AREA, piscina);
+            }
+            alioquin
+            {
+                i32 px;
+                i32 py;
+                i32 semen = 12345;
+
+                im = _imago(piscina, MENSURA_LAT, MENSURA_ALT);
+                per (py = ZEPHYRUM; py < MENSURA_ALT; py++)
+                {
+                    per (px = ZEPHYRUM; px < MENSURA_LAT; px++)
+                    {
+                        i32 color;
+
+                        si (k == II)
+                        {
+                            color = ((px * 0xFF / (MENSURA_LAT - I))
+                                << XVI)
+                                | ((py * 0xFF / (MENSURA_ALT - I))
+                                    << VIII)
+                                | 0x80;
+                        }
+                        alioquin si (k == III)
+                        {
+                            color = ((px + py) % II) ? 0xFFFFFF
+                                                     : ZEPHYRUM;
+                        }
+                        alioquin
+                        {
+                            semen = semen * 1103515245u + 12345u;
+                            color = (semen >> VIII) & 0xFFFFFF;
+                        }
+                        _pixelum(&im, px, py, color, 0xFF);
+                    }
+                }
+            }
+            extrema = (s32)_error_imaginis(piscina, &im,
+                QUADRANS_EXTREMA);
+            media = (s32)_error_imaginis(piscina, &im,
+                QUADRANS_MEDIA);
+            imprimere("  %-18s %4ux%-3u extrema %9d  media %9d  "
+                "(%3d%%)\n",
+                TITULI[k], (insignatus integer)im.latitudo,
+                (insignatus integer)im.altitudo, (integer)extrema,
+                (integer)media,
+                (integer)(extrema > ZEPHYRUM ? media * C
+                    / extrema : C));
+            CREDO_VERUM (media <= extrema);
+            si (aurum != NIHIL)
+            {
+                fprintf(aurum, "%s %d %d\n", TITULI[k],
+                    (integer)extrema,
+                    (integer)media);
+            }
+            _aurum_legere(TITULI[k], &aurum_extrema, &aurum_media);
+            si (!scribere)
+            {
+                si (aurum_extrema < ZEPHYRUM || extrema > aurum_extrema
+                    || media > aurum_media)
+                {
+                    imprimere("  FRACTA: %s: aurum %d/%d\n", TITULI[k],
+                        (integer)aurum_extrema, (integer)aurum_media);
+                }
+                CREDO_VERUM (aurum_extrema >= ZEPHYRUM);
+                CREDO_VERUM (extrema <= aurum_extrema);
+                CREDO_VERUM (media <= aurum_media);
+            }
+        }
+        si (aurum != NIHIL)
+        {
+            fclose(aurum);
+            imprimere("  aurum scriptum: %s\n", AURUM_VIA);
+        }
     }
 
     credo_imprimere_compendium();

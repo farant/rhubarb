@@ -44,8 +44,11 @@ nomen enumeratio {
     QUADRANS_QUADRANTES = 0    /* 2x2 pixela per cellulam, XVI glyphi */
 } QuadransModus;
 
-/* Colores cellulae mixtae (planum D2; Q2 mensurat): EXTREMA = pixela
- * paris extremi (OpenTUI); MEDIA = media cuiusque gregis */
+/* Colores cellulae mixtae (planum D2): EXTREMA = pixela paris extremi
+ * (OpenTUI); MEDIA = media cuiusque gregis - ORDINARIA: Q2 mensuravit
+ * errorem in photographiis ad XLVI% EXTREMAE (theorema: media gregis
+ * errorem quadratum pro partitione fixa minuit; aurum in
+ * probationes/fixa/quadrans/aurum_errores.txt) */
 nomen enumeratio {
     QUADRANS_EXTREMA = 0,
     QUADRANS_MEDIA
@@ -57,7 +60,7 @@ nomen structura {
                 i32 fundus;    /* 0x00RRGGBB: alpha et extra-fines */
 } QuadransOptiones;
 
-/* Optiones ordinariae: QUADRANTES, EXTREMA, fundus niger */
+/* Optiones ordinariae: QUADRANTES, MEDIA, fundus niger */
 QuadransOptiones
 quadrans_optiones_ordinariae (vacuum);
 
@@ -86,5 +89,21 @@ quadrans_computare (
                           i32  altitudo,
     constans QuadransOptiones* optiones,
               QuadransCellula* exitus);
+
+/* Error reconstructionis (planum D7b): cellulae (ex quadrans_computare
+ * super EANDEM regionem et optiones) in pixela revertuntur - bitum
+ * positum = color litterae, ceterum color fundi - et cum pixelis fontis
+ * (contra fundum compositis) conferuntur. Reddit errorem quadratum
+ * MEDIUM per canalem in CENTESIMIS (integer; 0 = perfecta). Regio
+ * vacua: 0. */
+i32
+quadrans_error (
+               constans Imago* imago,
+                          s32  x,
+                          s32  y,
+                          i32  latitudo,
+                          i32  altitudo,
+    constans QuadransOptiones* optiones,
+     constans QuadransCellula* cellulae);
 
 #endif /* QUADRANS_H */

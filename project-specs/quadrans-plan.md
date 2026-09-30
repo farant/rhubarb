@@ -71,7 +71,11 @@ EXTREME pixels of the most-different pair; the alternative is the MEAN
 of each group. Proposal: implement both behind a flag, measure the
 reconstruction error (D7) on the image set (D6), make the winner the
 default, and record the numbers. Uniform cells (mask 0 / 15) use the
-block's mean either way.
+block's mean either way. **Settled 2026-09-30 (Q2): MEDIA** — 46% of
+EXTREMA's error on both photographs (it can never lose on this metric:
+same partition, least-squares means); numbers and ratchet in
+`lib/quadrans.phase-log.md`. Whether EXTREMA looks sharper is for the
+Q5 look.
 
 **D3 — modes in v1.** QUADRANTES (2×2, 16 glyphs) and DIMIDIUM (▀/▄,
 1×2 — two colours per cell, exact). Sextants (2×3, U+1FB00, uneven font

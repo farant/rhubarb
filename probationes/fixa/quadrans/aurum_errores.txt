@@ -1,0 +1,5 @@
+assumptio 10924 5113
+christus_sculptus 4536 2087
+gradiens 47 30
+tabula 0 0
+strepitus 292813 147210

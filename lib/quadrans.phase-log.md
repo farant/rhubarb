@@ -56,3 +56,48 @@ Formatter note: `(s32)RUBER(a) - (s32)RUBER(b)` with function-like
 colour macros drew "one space before a binary operator (4 for 1)" from
 the formator; the code is cleaner with an interior `_canalis(c, k)`
 anyway, and the macros are gone.
+
+## Q2 — the error metric, and D2 decided (2026-09-30)
+
+**INTENTIO.** `quadrans_error`: rebuild each cell's 2-colour pattern
+(bit set = foreground, else background; a space = background), compare
+with the source composited over `fundus`, return the MEAN squared error
+per channel in HUNDREDTHS (integer, i64 sum — exact, so it can be
+committed). Then measure D2 — EXTREMA (OpenTUI) vs MEDIA (group means).
+
+**Theory before the numbers.** For a FIXED partition of the four pixels
+the group mean minimizes the squared error of each group; MEDIA uses the
+same partition as EXTREMA, so MEDIA ≤ EXTREMA always. The measurement
+says by HOW MUCH; the test asserts the inequality on every image as an
+independent check (a violation would be a bug, not a result). Whether
+the extremes LOOK sharper is a question for Fran's look (Q5), not for
+this metric.
+
+**Hand cases (red first against a stub):** the three-grey block —
+EXTREMA 9375/12 → 78125, MEDIA 4689/12 → 39075; a two-colour block → 0;
+an empty region → 0.
+
+**The measurement** (photographs scaled with `IMAGO_SCALA_AREA` to fit
+160×96 sub-pixels ≈ an 80×48-cell terminal):
+
+| image | sub-pixels | EXTREMA | MEDIA | MEDIA/EXTREMA |
+|---|---|---|---|---|
+| assumptio (Fran) | 68×95 | 10924 | 5113 | 46% |
+| christus_sculptus (Fran) | 105×95 | 4536 | 2087 | 46% |
+| gradiens | 160×96 | 47 | 30 | 63% |
+| tabula (1-px checker) | 160×96 | 0 | 0 | exact |
+| strepitus (LCG noise) | 160×96 | 292813 | 147210 | 50% |
+
+On the photographs MEDIA halves the error (RMSE per channel ~10.5 → 7.2
+levels on the painting, 6.7 → 4.6 on the bust). **D2: MEDIA is the
+default** (`quadrans_optiones_ordinariae`), pinned by a test. The numbers
+are `probationes/fixa/quadrans/aurum_errores.txt` — a RATCHET: every
+error may only fall (`QUADRANS_AURUM_SCRIBERE=1` rewrites it after a
+deliberate improvement).
+
+**Green** 162/162. **Plants (compiling), all caught by name:**
+reconstruction always using the foreground (hand cases + ratchet on all
+5), quadrant index transposed (hand cases + ratchet), default back to
+EXTREMA (the default assertion — the measurement sets its colouring
+explicitly, so only that case sees it), MEDIA quietly degraded (a Q1 case
++ the MEDIA ratchet on 4 images).

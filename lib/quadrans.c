@@ -186,14 +186,31 @@ _bloccus (
     redde c;
 }
 
+/* Bita figurae (index in FIGURAE); runa ignota = 0 (fundus totus) */
+interior i32
+_bita_figurae (
+    s32 runa)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < XVI; k++)
+    {
+        si (FIGURAE[k] == runa)
+        {
+            redde k;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
 QuadransOptiones
 quadrans_optiones_ordinariae (vacuum)
 {
     QuadransOptiones o;
 
-    o.modus    = QUADRANS_QUADRANTES;
-    o.colores  = QUADRANS_EXTREMA;
-    o.fundus   = ZEPHYRUM;
+    o.modus        = QUADRANS_QUADRANTES;
+        o.colores  = QUADRANS_MEDIA;   /* D2 mensurata (Q2) */
+    o.fundus       = ZEPHYRUM;
     redde o;
 }
 
@@ -247,4 +264,46 @@ quadrans_computare (
             exitus[j * lat + i] = _bloccus(px, optiones->colores);
         }
     }
+}
+
+i32
+quadrans_error (
+               constans Imago* imago,
+                          s32  x,
+                          s32  y,
+                          i32  latitudo,
+                          i32  altitudo,
+    constans QuadransOptiones* optiones,
+     constans QuadransCellula* cellulae)
+{
+    i64 summa = ZEPHYRUM;
+    i64 n;
+    i32 lat;
+    i32 alt;
+    i32 px;
+    i32 py;
+
+    si (latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    quadrans_mensurare(optiones, latitudo, altitudo, &lat, &alt);
+    per (py = ZEPHYRUM; py < altitudo; py++)
+    {
+        per (px = ZEPHYRUM; px < latitudo; px++)
+        {
+            constans QuadransCellula* c = &cellulae[(py / II) * lat
+                + px / II];
+            i32 quadrans_pixeli = (py % II) * II + (px % II);
+            i32 restitutum = (_bita_figurae(c->runa)
+                & (VIII >> quadrans_pixeli))
+                ? c->color_litterae : c->color_fundi;
+
+            summa += (i64)_distantia(_pixelum(imago, x, y, latitudo,
+                altitudo, (s32)px, (s32)py, optiones->fundus),
+                restitutum);
+        }
+    }
+    n = (i64)latitudo * (i64)altitudo * III;
+    redde (i32)((summa * C + n / II) / n);
 }
