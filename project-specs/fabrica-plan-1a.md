@@ -793,6 +793,12 @@ comment (origo annotatio; absent-until-generated is allowed).
 > FIXED: the manifest's `scopus` (the tool's main source) was never in
 > the digest — found through two binaries sharing a digest. Part 2b:
 > briar, spectator, silex.
+>
+> **Executed (part 2b) 2026-09-30** (commit below): briar, spectator,
+> silex — 15 installed binaries RECENS. Found and fixed silex_struere's
+> link, broken since 74642c4f (duplicate materia objects). Open: corpus
+> freshness ("rebake after lib/") needs a tree input or corpus action;
+> celer measured 6.0 s (> 2 s) — per-run digest memo proposed.
 
 ### Task T8: surfaces and the oracle gate
 

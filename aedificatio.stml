@@ -138,6 +138,55 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/mensor_ui" provenientia="relatio"/>
   </actio>
+  <!-- T7 pars IIb: briar, spectator, silex. Clausura aedilis (plena
+       post P1) + quae installator ipse generat (facies, icon,
+       MUTATIONES). NON TECTUM: corpus infixum (lib/ include/ vendor/
+       tota) - plagula capsulae in clausura est, sed ab installatore
+       per mtime regeneratur; 'rebake post lib/' plene tegendum
+       ingressum arboris poscit (quaestio ad Franum). -->
+  <actio titulus="briar" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/briar_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/briar/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/briar_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <ingressus genus="fasciculus" via="briar/MUTATIONES.md"/>
+    <ingressus genus="fasciculus" via="briar/icon/app-icon-transparent.png"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.css"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
+    <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
+    <exitus via="bin/briar" provenientia="relatio"/>
+  </actio>
+  <actio titulus="briar_spectator" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/briar_spectator_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/briar_spectator/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/briar_spectator_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.css"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
+    <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
+    <exitus via="bin/briar-spectator" provenientia="relatio"/>
+  </actio>
+  <actio titulus="silex" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/silex_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/silex/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/silex_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/silex" provenientia="relatio"/>
+  </actio>
   <!-- plan 1a T5: generata radicis -->
   <actio titulus="numeri_latinae" genus="generator">
     <mandatum>

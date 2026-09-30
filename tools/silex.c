@@ -13,7 +13,11 @@
  * Aedificatio: ./tools/silex_struere.sh (capsula frontis +
  * obiecta suite; compile_tools.sh capsulam nesciret) */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/silex.c"/> */
+
 #include "latina.h"
+#include "provenientia.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "argumenta.h"
@@ -725,6 +729,9 @@ _symbolum_ad_conditionem (
     redde fructus;
 }
 
+externus constans ProvenientiaRelatio provenientia_silex;
+
+
 s32
 principale (
       integer   argc,
@@ -743,6 +750,10 @@ principale (
     SilexNovumOptiones  optiones;
      SilexNovumFructus  fructus;
 
+    si (provenientia_respondere(argc, argv, &provenientia_silex))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("silex", 65536);
     si (piscina == NIHIL)
     {

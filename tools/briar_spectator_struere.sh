@@ -52,10 +52,13 @@ for o in build/*.o; do
 done
 
 mkdir -p bin
+# provenientia (fabrica T7)
+PROV_OBJ="$(./tools/provenientia_obiectum.sh briar_spectator bin/briar-spectator tools/briar_spectator.c)" || exit 1
 echo "  [spectator] tools/briar_spectator.c + briar + atrium/vitrea"
 clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     -Ibriar/fontes -Isilva/amalgama \
-    tools/briar_spectator.c build/capsula_corpus_silicis.c \
+    tools/briar_spectator.c "$PROV_OBJ" \
+    build/capsula_corpus_silicis.c \
     $OBJ $ADDITA \
     -framework Cocoa -framework Security -framework WebKit \
     -o bin/briar-spectator || exit 1

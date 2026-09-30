@@ -111,14 +111,21 @@ silva_obiecta="$silva_obiecta $MATERIA_OBIECTA"
 bibliothecae_obiecta=""
 for o in build/*.o; do
     case "$(basename "$o")" in probatio_*) continue ;; esac
+    # obiectum quod supra ipsi struimus (materia in silva/build) non
+    # iterum nectendum: ab 74642c4f (toml Q12, 2026-09-28) cursor
+    # radicis materia_*.o in build/ quoque ponit -> symbola duplicata,
+    # nexus silicis FRACTUS usque ad T7 fabricae (ubi inventum)
+    case " $silva_obiecta " in *"/$(basename "$o") "*) continue ;; esac
     bibliothecae_obiecta="$bibliothecae_obiecta $o"
 done
 
 mkdir -p bin
+# provenientia (fabrica T7); lib/provenientia.o venit per build/*.o
+PROV_OBJ="$(./tools/provenientia_obiectum.sh silex bin/silex tools/silex.c)" || exit 1
 echo "  [silex] tools/silex.c + capsula_silex_frons.c + corpus"
 clang "${GCC_FLAGS[@]}" -Iinclude -Isilva/fontes \
     -Isilva/instrumenta \
-    tools/silex.c tools/silex_assets/capsula_silex_frons.c \
+    tools/silex.c tools/silex_assets/capsula_silex_frons.c "$PROV_OBJ" \
     build/capsula_corpus_silicis.c \
     $bibliothecae_obiecta \
     $silva_obiecta \
