@@ -19,6 +19,14 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `quadrans` nova (imago in cellulas terminalis) - regio
+  imaginis (`Imago`) in cellulas quadrantum (2x2, XVI figurae) aut
+  dimidiorum (▀) vertitur: runa + color litterae + color fundi
+  (`quadrans_computare`, `quadrans_mensurare`); colores MEDIA (ordinarii)
+  aut EXTREMA; `quadrans_aptare` imaginem sine distortione aptat;
+  `quadrans_error` errorem reconstructionis metitur. Pura: nulla
+  allocatio, mathematica integra.
+
 - corpus: `runae` nova (nucleus Unicode, acervi textus stratum primum;
   `runae_tabulae` tabulae eius generatae ex Unicode 15.1.0) - latitudo
   runae in cellulis terminalis (`runae_latitudo`, regula Ghostty),
