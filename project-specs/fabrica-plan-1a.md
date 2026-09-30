@@ -862,6 +862,20 @@ comment (origo annotatio; absent-until-generated is allowed).
   history (Q15).
 - [ ] **Step 5: commit.** Gates: fabrica (new), generata, owed.
 
+> **Executed 2026-09-30** (four commits). (0) aedilis `<compilatio>`,
+> flags in the object name; sigillum -O2 → celer 2.65 → 1.37 s
+> (e7462c2c). (1) Oracle gate `fabrica` + smoke gate `fabrica-fumus`
+> registered (PORTAE + inventory); 49 artifacts agree with generata, 0
+> disagreements, 24 fabrica-only; plant exact (b6a68b9e, with the lock
+> and the Q36 line). (2) SessionStart hook, silent when current; birth
+> test planted (3c66eaa3). (3) Fran chose option B: `bin/fabrica
+> iudicare -plenus -tacta VIA…` + `fabrica_actio_tacta` (core); commissio
+> judges the GENERATED artifacts its paths touch before any gate and
+> refuses on STALUM/IGNOTUM with the healing plan (`sine_fabrica`);
+> installed binaries are never judged there. Live check: a hand-edited
+> snippet refused with its regeneration command. (4) Spec v2 §VII "As
+> built". Deviations: Q36 count informational; `-tacta` generated-only.
+
 ---
 
 ## Self-review (2026-09-29)

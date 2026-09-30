@@ -19,6 +19,8 @@
 #        sera liberata -> currit (T8: duo iudices plena clausuras
 #        mutuo vacuaverant, T6)
 #   XIII binaria in bin/ sine declaratione -> linea una numerata (Q36)
+#   XIV  -tacta: via tangens -> generatum iudicatum, installatum NON;
+#        via nulla tangens -> exitus 0 'nulla ... tacta' (commissio, T8)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -114,6 +116,16 @@ printf '<aedificatio>\n  <actio titulus="d" genus="institutio">\n    <ingressus 
 (cd "$T/r" && "$F" iudicare) > "$T/o" 2>&1
 if grep -q '^IGNOTUM: 1 binaria in bin/ sine declaratione' "$T/o"; then echo "  XIII bin/ sine declaratione numerata  OK"; else echo "  XIII FRACTUM"; cat "$T/o"; fracta=1; fi
 
+# XIV (T8 gradus III): -tacta - generatum tactum iudicatur (hic
+# IGNOTUM: mandatum vacuum), institutio eiusdem ingressus NON
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+: > "$T/r/a"; : > "$T/r/b"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="i" genus="institutio">\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="bin/i" provenientia="relatio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" iudicare -plenus -tacta a) > "$T/o" 2>&1; rc=$?
+(cd "$T/r" && "$F" iudicare -plenus -tacta alia) > "$T/o2" 2>&1; rc2=$?
+if [ "$rc" -eq 1 ] && grep -q '^IGNOTUM b ' "$T/o" && ! grep -q 'bin/i' "$T/o" \
+   && [ "$rc2" -eq 0 ] && grep -q 'nulla artificia generata a viis tacta' "$T/o2"; then echo "  XIV  -tacta: generata tacta sola       OK"; else echo "  XIV  FRACTUM (rc=$rc rc2=$rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XIII/XIII)"
+echo "fumus fabricae: sanum (XIV/XIV)"
 exit 0

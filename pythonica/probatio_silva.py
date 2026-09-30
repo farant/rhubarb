@@ -17,6 +17,24 @@ os.makedirs(T, exist_ok=True)
 fracta = []
 
 
+def _fabrica_ficta(rc, effusio='', via_argv=None):
+    """bin/fabrica fictus: argv (si via_argv) scribit, effusionem et
+    exitum datum reddit - commissiones probationum hermeticae manent"""
+    via = os.path.join(T, 'fabrica_ficta_%d' % rc)
+    with open(via, 'w') as f:
+        f.write('#!/bin/bash\n')
+        if via_argv:
+            f.write('printf "%%s\\n" "$@" > %s\n' % via_argv)
+        f.write('printf %%s %s\n' % repr(effusio).replace('\\n', '\n'))
+        f.write('exit %d\n' % rc)
+    os.chmod(via, 0o755)
+    return via
+
+
+# omnes commissiones probationum sub fabrica ficta sana (exitus 0)
+silva.FABRICA_BIN = _fabrica_ficta(0, 'fabrica: nulla artificia generata a viis tacta\n')
+
+
 def credo(cond, titulus):
     print(('  ok   ' if cond else '  FRACTUM ') + titulus)
     if not cond:
@@ -1975,6 +1993,74 @@ finally:
     silva._portae_fictae()
     import shutil
     shutil.rmtree(_cd, ignore_errors=True)
+
+# ---- fabrica ante portas (plan 1a T8 gradus III) ----
+print('\n--- fabrica: artificia generata tacta ante portas ---')
+_fb_verum = silva.FABRICA_BIN
+try:
+    _argv = os.path.join(T, 'fabrica_argv.txt')
+    # exitus 0: pergit; argumenta: iudicare -plenus -tacta viae
+    silva.FABRICA_BIN = _fabrica_ficta(0, 'fabrica: 1 recentia\n', _argv)
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        silva._fabricam_exigere(['lib/a.c', 'x/b.sh'])
+    credo(open(_argv).read().split() == ['iudicare', '-plenus', '-tacta', 'lib/a.c', 'x/b.sh'],
+          'fabrica: argv = iudicare -plenus -tacta viae')
+    credo('\nfabrica: 1 recentia' in buf.getvalue(), 'fabrica: exitus 0 pergit, linea ultima impressa')
+    # exitus 1: SilvaError cum STALUM et sanatione
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM g/x.c - regeneratio differt\nSANATIO:\n  ./gen.sh   # g\n')
+    err = None
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    credo(err is not None and 'STALUM g/x.c' in err and './gen.sh' in err and 'sine_fabrica' in err,
+          'fabrica: exitus 1 obstat cum verdicto et sanatione')
+    # exitus 2: iudicare nequit (sera) - obstat
+    silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')
+    err = None
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    credo(err is not None and 'iudicare nequit' in err and 'alius currit' in err,
+          'fabrica: exitus 2 obstat (sera tenetur)')
+    # sine_fabrica causa: non currit; vacua: refutatur
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM numquam\n')
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        silva._fabricam_exigere(['lib/a.c'], sine_fabrica='probatio: consulto')
+    credo('fabrica OMISSA: probatio: consulto' in buf.getvalue(), 'fabrica: sine_fabrica causam imprimit, non currit')
+    err = None
+    try:
+        silva._fabricam_exigere(['lib/a.c'], sine_fabrica='  ')
+    except silva.SilvaError as ex:
+        err = str(ex)
+    credo(err is not None and 'sine_fabrica causam poscit' in err, 'fabrica: sine_fabrica vacua refutatur')
+    # bin/fabrica deest: MONITUM, non obstat (clonus recens)
+    silva.FABRICA_BIN = os.path.join(T, 'fabrica_nusquam')
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        silva._fabricam_exigere(['lib/a.c'])
+    credo('MONITUM: bin/fabrica deest' in buf.getvalue(), 'fabrica: deest monet, non obstat')
+    # commissio ipsa eam vocat ANTE portas (exitus 1 -> nihil cursum).
+    # Hermetica: via ABSENS, portae nullae - si vocatio deest, commissio
+    # in 'nec in disco' cadit (numquam committit), assertio rubra munda
+    # (planta prima: porta ficta prior manserat, scriptum deletum -> ruina)
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM g/x.c - regeneratio differt\n')
+    err = None
+    with contextlib.redirect_stdout(io.StringIO()):
+        try:
+            silva.commissio('nihil', ['pythonica/via_absens_fabricae.txt'], portae=[],
+                            recepta=False, sine_debitis='probatio fabricae')
+        except Exception as ex:
+            err = str(ex)
+    credo(err is not None and 'FABRICA (ante portas)' in err,
+          'commissio: fabrica obstat ANTE portas')
+finally:
+    silva.FABRICA_BIN = _fb_verum
 
 print()
 if fracta:

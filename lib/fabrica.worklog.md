@@ -419,3 +419,28 @@ regex, so the substitution silently did nothing and the binary was the
   plant before any gate). On a tree that does not compile, the oracle
   can disagree on stage IV — that is honest: the two gates measure
   different things there, and radix is red anyway.
+
+## 2026-09-30 — T8 part 4: the commit check (Fran's option B)
+
+`fabrica_actio_tacta` (core) answers "does this path touch this
+action": an expanded input (same `_particulas_colligere` as the digest —
+the two cannot disagree), an output, or a new/deleted file in a
+directory the action lists (directorium/radices/manifesta: "dir/"
+particle; plagulae: its dir + suffix). Inputs that cannot be expanded →
+touched (the judge will say IGNOTUM). `bin/fabrica iudicare -plenus
+-tacta VIA…` judges only touched REGENERATIO outputs (installed binaries
+are not committed — the session hook names those); nothing touched →
+exit 0, so exit 2 keeps meaning "could not judge" (lock, broken
+declarations). `silva.commissio` → `_fabricam_exigere` after the lint,
+before gates; `commissio_umbra` runs it once before its snapshots.
+Measured: docs-only commit 0 s; lib/qr.c ~57 s (compile_tests snippet);
+silva/fontes/silva_nodus.c touches 46 artifacts.
+- pythonica tests stub the binary via `silva.FABRICA_BIN` for the whole
+  file (every commissio test would otherwise run the real judge).
+- My first commissio-level test used gate 'ficta-petita' left over from
+  an earlier section (script deleted) — with the check planted away, the
+  suite CRASHED instead of reporting one FRACTUM. Made hermetic (absent
+  path, no gates, broad except): planted → one clean red. A plant whose
+  red is a crash tells you less than you think.
+- Live: hand-edited gesta/fori_fontes_generata.sh → refused, STALUM
+  "lineae differentes: 12", SANATIO names the fontes_generare command.
