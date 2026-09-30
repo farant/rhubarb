@@ -27,6 +27,117 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
+  <!-- T7 pars II: binaria installata. Ingressus = clausura aedilis
+       (manifestum, plenum post P1) etiam ubi installator indice manu
+       struit; installator ipse et scriptor provenientiae. -->
+  <actio titulus="aedilis" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/aedilis_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/aedilis_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/aedilis" provenientia="relatio"/>
+  </actio>
+  <actio titulus="canon_examen" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/canon_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/canon_examen/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/canon_examen" provenientia="relatio"/>
+  </actio>
+  <actio titulus="canon_coquere" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/canon_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/canon_coquere/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/canon_coquere" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura_examen" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_examen/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura_examen" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura_canones" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_canones/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura_canones" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura_glossae" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_glossae/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura_glossae" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_quaesitor/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura" provenientia="relatio"/>
+  </actio>
+  <actio titulus="stml" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/stml_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/stml/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/stml_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/stml" provenientia="relatio"/>
+  </actio>
+  <actio titulus="mensor" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/mensor_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/mensor/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/mensor_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/mensor" provenientia="relatio"/>
+  </actio>
+  <actio titulus="mensor_ui" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/mensor_ui_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/mensor_ui/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/mensor_ui_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/mensor_ui" provenientia="relatio"/>
+  </actio>
   <!-- plan 1a T5: generata radicis -->
   <actio titulus="numeri_latinae" genus="generator">
     <mandatum>

@@ -29,9 +29,13 @@
  *   (exitus II disciplina domus: nihil onerari NON est successus,
  *    et porta quae in solo zephyro pendet mendacium tacitum est)
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/natura_examen.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
+#include "provenientia.h"
 #include "natura.h"
 #include "canon.h"
 #include "filum.h"
@@ -1353,6 +1357,9 @@ sedes_referre (
     }
 }
 
+externus constans ProvenientiaRelatio provenientia_natura_examen;
+
+
 s32
 principale (
           s32   numerus,
@@ -1376,6 +1383,11 @@ principale (
                      i32  ostensa;
                      i32  j;
 
+    si (provenientia_respondere(numerus, argumenta,
+            &provenientia_natura_examen))
+    {
+        redde ZEPHYRUM;
+    }
     radix           = "natura";
     plagula         = NIHIL;
     tabulae         = NIHIL;

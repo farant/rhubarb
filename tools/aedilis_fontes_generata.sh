@@ -9,6 +9,7 @@ declare -a RADIX_FONTES=(
     "friatio"
     "internamentum"
     "piscina"
+    "provenientia"
     "selectio"
     "stml"
     "tabula_dispersa"

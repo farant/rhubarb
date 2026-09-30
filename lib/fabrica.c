@@ -151,6 +151,20 @@ fabrica_manifestum_legere (
     }
     *viae_out         = _xar_chordarum(piscina);
     *inresolutae_out  = _xar_chordarum(piscina);
+    /* SCOPUS = fons principalis: manifestum eum in attributo SOLO
+     * nominat, numquam inter obiecta - sine hoc mutatio fontis
+     * principalis binarium stalum non faceret (T7, inventum per
+     * digesta aequalia canon_examen / canon_coquere) */
+    {
+        chorda* scopus;
+
+        scopus = stml_attributum_capere(lectum.elementum_radix,
+            "scopus");
+        si (scopus != NIHIL)
+        {
+            _chordam_addere(*viae_out, *scopus);
+        }
+    }
     /* systemata consulto omissa: plagulae nostrae non sunt */
     _sectionem_colligere(lectum.elementum_radix, "obiecta", "obiectum",
         piscina, *viae_out);

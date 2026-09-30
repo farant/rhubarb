@@ -47,7 +47,11 @@
  * Spec: project-specs/stml-instrumentum-spec.md
  * Aedificatio: ./tools/stml_struere.sh */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/stml.c"/> */
+
 #include "latina.h"
+#include "provenientia.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "internamentum.h"
@@ -546,11 +550,18 @@ _vertere_currere (
     redde _exitum_emittere("vertere", versio.html, arg.ad);
 }
 
+externus constans ProvenientiaRelatio provenientia_stml;
+
+
 integer
 principale (
       integer   argc,
     character** argv)
 {
+    si (provenientia_respondere(argc, argv, &provenientia_stml))
+    {
+        redde ZEPHYRUM;
+    }
     si (argc < II)
     {
         _usus_imprimere();

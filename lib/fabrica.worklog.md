@@ -200,3 +200,32 @@ FIRST in principale (fabrica: before its cwd guard — works from /tmp).
 - Inputs of an installed binary: its aedilis manifest (complete since P1)
   + aedilis.stml + installer + writer script. Not declared: compiler
   identity, include-root listings (a new shadowing header) — noted.
+
+## 2026-09-30 — T7 (part 2a): ten more installed binaries
+
+aedilis, canon_examen, canon_coquere, natura_examen, natura_canones,
+natura_glossae, natura, stml, mensor, mensor_ui now answer
+`-provenientia` and are declared RELATIO (12 installed binaries RECENS).
+Two installer variants: aedilis-generated struere.sh (mensor, mensor_ui:
+the manus recipe) and HAND-built (aedilis, canon, natura, stml): new
+`tools/provenientia_obiectum.sh T ARTIFICIUM SCOPUS` refreshes the aedilis
+manifest (the digest follows the true closure even when the build uses a
+hand list), writes the provenance file, ALWAYS compiles it (no mtime
+trap) and prints the object path for the link line. stml's closure loop
+skips `build/fabrica/provenientia/*` (basename `stml` would collide with
+lib/stml.c's object). aedilis's committed snippet regenerated (+provenientia).
+
+- **HOLE FOUND AND FIXED — the main source was never in the digest.**
+  An aedilis manifest names the scope file only in its `scopus`
+  attribute, never among `obiecta`; `fabrica_manifestum_legere` read
+  sections only. Editing `tools/manus_instrumentum.c` itself would NOT
+  have made bin/manus stale. Found because bin/canon_examen and
+  bin/canon_coquere reported the SAME digest despite different mains.
+  Reader now adds `scopus` (gate: count 5 → 6 + scope present, born red).
+  All installs went STALUM (new digest definition), rebuilt → RECENS;
+  plant on tools/canon_examen.c → canon_examen STALUM, canon_coquere not.
+- Plant on lib/canon.c → exactly the binaries whose MANIFESTS list it
+  (canon_examen, canon_coquere, natura_examen); natura_canones/glossae/
+  natura link canon.o via their hand list but do not use it — the digest
+  follows use, not the link line.
+- mensor_ui (GUI) answers the flag and returns before any window.

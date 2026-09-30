@@ -21,7 +21,7 @@ declare -a INCLUDE_FLAGS=( "-I$RADIX_DIR/include" )
 
 # stml_macros: canon.c stml_expandere vocat (iudicium expansum)
 FONTES=(
-    canon stml stml_macros similitudo chorda chorda_aedificator
+    canon stml stml_macros similitudo chorda chorda_aedificator provenientia
     piscina xar
     internamentum tabula_dispersa friatio selectio filum
 )
@@ -41,12 +41,14 @@ for f in "${FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" canon_examen bin/canon_examen tools/canon_examen.c)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/canon_examen.c" \
-    $obj_files -o "$RADIX_DIR/bin/canon_examen" || exit 1
+    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/canon_examen" || exit 1
 echo "bin/canon_examen paratum" >&2
 
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" canon_coquere bin/canon_coquere tools/canon_coquere.c)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/canon_coquere.c" \
-    $obj_files -o "$RADIX_DIR/bin/canon_coquere" || exit 1
+    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/canon_coquere" || exit 1
 echo "bin/canon_coquere paratum" >&2

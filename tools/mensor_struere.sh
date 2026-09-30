@@ -12,6 +12,11 @@ cd "$RADIX_DIR"
 mkdir -p bin
 
 bin/aedilis tools/mensor.c >/dev/null || { echo "mensor: aedilis fracta"; exit 1; }
+# provenientia (fabrica T7): '-provenientia' respondetur
+[ -x bin/fabrica ] || ./tools/fabrica_struere.sh >/dev/null || {
+    echo "mensor: fabrica non structa"; exit 1; }
+./tools/provenientia_scribere.sh mensor bin/mensor || {
+    echo "mensor: provenientia fracta"; exit 1; }
 sh build/aedilis/mensor/struere.sh >/dev/null || { echo "mensor: structura fracta"; exit 1; }
 # SIGNATURA: destinatio TOLLENDA ante copiam.
 #

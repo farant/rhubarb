@@ -15,7 +15,11 @@
  * Exitus: 0 = sanum; 2 = NIHIL CURSUM EST (disciplina domus:
  *   nihil onerari NON est successus).
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/natura_canones.c"/> */
+
 #include "natura_canones.h"
+#include "provenientia.h"
 #include "filum.h"
 #include "iter_directoria.h"
 #include <string.h>
@@ -1815,6 +1819,9 @@ _canonem_totum_scribere (
     redde VERUM;
 }
 
+externus constans ProvenientiaRelatio provenientia_natura_canones;
+
+
 s32
 principale (
           s32   numerus,
@@ -1833,6 +1840,11 @@ principale (
                    i32  vulnera;
                    s32  i;
 
+    si (provenientia_respondere(numerus, argumenta,
+            &provenientia_natura_canones))
+    {
+        redde ZEPHYRUM;
+    }
     radix         = "natura";
     inspiciendum  = NIHIL;
     modulus       = NIHIL;

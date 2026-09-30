@@ -12,8 +12,12 @@
  * Spec: project-specs/aedilis-spec-v2.md; parcum 01KXJ2HV.
  */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/aedilis.c"/> */
+
 #include "postulata_posix.h"   /* getpid: plagulae temporariae per processum */
 #include "latina.h"
+#include "provenientia.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -908,6 +912,9 @@ _corpus_currere (
     redde exitus;
 }
 
+externus constans ProvenientiaRelatio provenientia_aedilis;
+
+
 s32
 principale (
           s32   numerus_argumentorum,
@@ -932,6 +939,11 @@ principale (
     clock_t              initium;
     clock_t              finis;
 
+    si (provenientia_respondere(numerus_argumentorum, argumenta_cruda,
+            &provenientia_aedilis))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("aedilis", 16777216);
     si (piscina == NIHIL)
     {

@@ -479,8 +479,28 @@ s32 principale (vacuum)
         causa.mensura  = ZEPHYRUM;
         CREDO_VERUM(fabrica_manifestum_legere(parvum, piscina, &viae,
             &inresolutae, &causa));
-        /* obiecta II + capita II + vendor I; systemata NON */
-        CREDO_AEQUALIS_I32(xar_numerus(viae), V);
+        /* scopus I + obiecta II + capita II + vendor I; systemata NON.
+         * SCOPUS (fons principalis) inter viae: manifestum eum in
+         * attributo solo nominat - sine eo mutatio fontis principalis
+         * binarium stalum non faceret (T7: canon_examen et
+         * canon_coquere digestum IDEM ferebant) */
+        CREDO_AEQUALIS_I32(xar_numerus(viae), VI);
+        {
+            i32 k;
+            b32 scopus_inventus;
+
+            scopus_inventus = FALSUM;
+            per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+            {
+                si (chorda_aequalis_literis(
+                        *(chorda*)xar_obtinere(viae, k),
+                        "tools/parvum.c"))
+                {
+                    scopus_inventus = VERUM;
+                }
+            }
+            CREDO_VERUM(scopus_inventus);
+        }
         CREDO_AEQUALIS_I32(xar_numerus(inresolutae), ZEPHYRUM);
         {
             i32 i;
@@ -512,6 +532,7 @@ s32 principale (vacuum)
         _ponere(&discus, "include/alpha.h", "ah\n");
         _ponere(&discus, "include/beta.h", "bh\n");
         _ponere(&discus, "vendor/gamma.c", "g\n");
+        _ponere(&discus, "tools/parvum.c", "int principale;\n");
         a = _actio(piscina, "m", FABRICA_ACTIO_INSTITUTIO);
         _ingressum_addere(a, FABRICA_INGRESSUS_MANIFESTUM,
             "build/m.stml", piscina);

@@ -786,6 +786,13 @@ comment (origo annotatio; absent-until-generated is allowed).
 > the judge itself; fumus XI added); pre-T7 bootstrap needs pass-1
 > tolerance. Part 2 (mensor, mensor_ui, stml, aedilis, natura, canon,
 > briar, spectator, silex) follows.
+>
+> **Executed (part 2a) 2026-09-30** (commit below): ten more binaries
+> (aedilis, canon x2, natura x4, stml, mensor, mensor_ui) — 12 RECENS.
+> Hand-built installers via `tools/provenientia_obiectum.sh`. HOLE
+> FIXED: the manifest's `scopus` (the tool's main source) was never in
+> the digest — found through two binaries sharing a digest. Part 2b:
+> briar, spectator, silex.
 
 ### Task T8: surfaces and the oracle gate
 

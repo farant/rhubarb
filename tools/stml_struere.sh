@@ -28,6 +28,9 @@ fi
 OBIECTA=()
 while IFS=$'\t' read -r genus pars; do
     [ "$genus" = "O" ] || continue
+    # provenientia (T7): plagula generata seorsum compilatur - nomen
+    # basis 'stml' cum obiecto lib/stml.c collideret
+    case "$pars" in build/fabrica/provenientia/*) continue ;; esac
     base="$(basename "$pars" .c)"
     obj="build/$base.o"
     if [ ! -f "$obj" ]; then
@@ -45,7 +48,8 @@ fi
 
 mkdir -p bin
 echo "  [stml] tools/stml.c + ${#OBIECTA[@]} obiecta clausurae"
-clang "${GCC_FLAGS[@]}" -Iinclude tools/stml.c "${OBIECTA[@]}" \
+PROV_OBJ="$(./tools/provenientia_obiectum.sh stml bin/stml tools/stml.c)" || exit 1
+clang "${GCC_FLAGS[@]}" -Iinclude tools/stml.c "${OBIECTA[@]}" "$PROV_OBJ" \
     -o bin/stml || exit 1
 echo "aedificatum: bin/stml"
 

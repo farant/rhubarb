@@ -32,9 +32,13 @@
  * Definitiones intra= nomina qualificata accipiunt:
  *   <elementum nomen="regula" intra="nexus"> -> PraefNexusRegula.
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/canon_coquere.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
+#include "provenientia.h"
 #include "canon.h"
 #include "filum.h"
 #include <stdio.h>
@@ -1147,6 +1151,9 @@ _corpus_emittere (
  * Principale
  * ================================================== */
 
+externus constans ProvenientiaRelatio provenientia_canon_coquere;
+
+
 s32
 principale (
           s32   numerus,
@@ -1167,6 +1174,11 @@ principale (
     FILE*                f;
     s32                  i;
 
+    si (provenientia_respondere(numerus, argumenta,
+            &provenientia_canon_coquere))
+    {
+        redde ZEPHYRUM;
+    }
     via_canonis   = NIHIL;
     praefixum     = NIHIL;
     via_capitis   = NIHIL;
