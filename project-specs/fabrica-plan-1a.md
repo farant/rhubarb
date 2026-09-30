@@ -448,6 +448,14 @@ Verdict rules (the gate pins each):
 - [ ] **Step 6: commit** (header, lib, test, fixture, regenerated
   snippet, worklog). Gates: radix, generata (snippet regenerated).
 
+> **Executed 2026-09-29** (commit below). As planned, with: enum
+> names after the Latin lint — `FABRICA_ACTIO_INSTITUTIO` (not
+> INSTALLATIO) and type `FabricaProvenientia`; the STALUM causa reads
+> `regeneratio differt (lineae differentes: N)` (decimal). Plant
+> (Step 5) refined: the swap assert did not pin the path (see
+> lib/fabrica.worklog.md); a rename assert was added and went red
+> alone. 55/55. Blind link verified (`nm -u` + `compile_tools.sh`).
+
 ### Task T2: the declaration dialect
 
 **Files:** `fabrica.stml`, `fabrica.canon` (dialect v2),

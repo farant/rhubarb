@@ -1,0 +1,26 @@
+<aedilis-manifestum
+             scopus="tools/parvum.c"
+            varians="macos"
+          generatum="1790703621"
+          commissum="77d32fcc">
+  <obiecta>
+    <obiectum
+          via="lib/alpha.c"
+        caput="include/alpha.h"
+        origo="derivatum"/>
+    <obiectum via="lib/beta.c" caput="include/beta.h" origo="derivatum"/>
+  </obiecta>
+  <capita>
+    <caput via="include/alpha.h" origo="derivatum" (> <inclusio via="include/beta.h"/>
+    <caput via="include/beta.h" origo="derivatum"/>
+  </capita>
+  <systemata>
+    <caput via="stdio.h"/>
+  </>
+  <vendores>
+    <fons via="vendor/gamma.c">
+      <vexillum!(>-O2
+    </fons>
+  </vendores>
+  <vexilla-annotata/>
+</aedilis-manifestum>

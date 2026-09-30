@@ -1,0 +1,159 @@
+#ifndef FABRICA_H
+#define FABRICA_H
+
+#include "latina.h"
+#include "chorda.h"
+#include "piscina.h"
+#include "xar.h"
+#include "sigillum.h"
+
+
+/* ==================================================
+ * FABRICA - stratum aedificationis domus (iudex)
+ *
+ * Artificium (plagula producta: in build/, commissa, aut
+ * installata) ex INGRESSIBUS per ACTIONEM fit. Iudex dicit quod
+ * artificium ex ingressibus hodiernis NON factum sit, cur, et ordinem
+ * sanationis - nihil aedificat. Vetus = sigilla ingressuum hodierna
+ * != sigilla nota (relata aut regeneratione comparata). Numquam
+ * mtime, numquam "exstat".
+ *
+ * Machina PURA: discum et processus per suturam solam (FabricaSutura)
+ * tangit - probatio super tabulam in memoria currit, bin/fabrica
+ * suturam veram praebet. NIHIL hic sqlite aut symbola extra lib/
+ * nectit: quattuor installatores obiecta build/ CAECE nectunt.
+ *
+ * Spec: project-specs/fabrica-spec-v2.md; planum fabrica-plan-1a.md
+ * (T1); parcum 01KZYN4VPZ.
+ * ================================================== */
+
+nomen enumeratio {
+    FABRICA_INGRESSUS_FASCICULUS = ZEPHYRUM, /* octeti plagulae */
+    FABRICA_INGRESSUS_MANIFESTUM,    /* viae manifesti aedilis */
+    FABRICA_INGRESSUS_CONFIGURATIO,  /* aedilis.stml tota */
+    FABRICA_INGRESSUS_INSTRUMENTUM,  /* binarium instrumenti */
+    FABRICA_INGRESSUS_DIRECTORIUM    /* nomina ordinata */
+} FabricaGenusIngressus;
+
+nomen enumeratio {
+    FABRICA_ACTIO_GENERATOR = ZEPHYRUM,
+    FABRICA_ACTIO_FORMATIO,
+    FABRICA_ACTIO_INSTITUTIO
+} FabricaGenusActionis;
+
+nomen enumeratio {
+    FABRICA_PROVENIENTIA_REGENERATIO = ZEPHYRUM,
+    FABRICA_PROVENIENTIA_RELATIO
+} FabricaProvenientia;
+
+nomen enumeratio {
+    FABRICA_RECENS = ZEPHYRUM,
+    FABRICA_STALUM,
+    FABRICA_IGNOTUM,
+    FABRICA_NON_IUDICATUM          /* celer: regeneratio omissa */
+} FabricaStatus;
+
+nomen structura {
+    FabricaGenusIngressus genus;
+                   chorda via;
+} FabricaIngressus;
+
+nomen structura {
+                       chorda via;        /* artificium */
+                       chorda scriptura;  /* via relativa intra
+                                           * directorium scripturae
+                                           * ubi regeneratio cadit */
+    FabricaProvenientia provenientia;
+} FabricaExitus;
+
+nomen structura {
+                  chorda  titulus;
+    FabricaGenusActionis  genus;
+                     Xar* mandatum;   /* chorda: argv fixum */
+                     Xar* ingressus;  /* FabricaIngressus */
+                     Xar* exitus;     /* FabricaExitus */
+                  chorda  sedes;      /* "plagula:linea" */
+} FabricaActio;
+
+/* Sutura: machina discum et processus per eam SOLAM tangit. */
+nomen structura {
+    vacuum* datum;
+    /* FALSUM = plagula absens */
+    b32 (*legere)(vacuum* datum, constans character* via,
+                  Piscina* piscina, chorda* contentum_out);
+    /* nomina (chorda) ordinata; FALSUM = directorium absens */
+    b32 (*enumerare)(vacuum* datum, constans character* via,
+                     Piscina* piscina, Xar** nomina_out);
+    /* mandatum currere (argv fixum) cum directorio scripturae
+     * VACUO (sutura id ante cursum vacuat - reliquiae cursus prioris
+     * generatorem mutum celarent); FABRICA_SCRIPTURA = scriptura_dir.
+     * FALSUM + causa (ultima linea) si fractum. */
+    b32 (*currere)(vacuum* datum, constans Xar* mandatum,
+                   constans character* scriptura_dir,
+                   Piscina* piscina, chorda* causa_out);
+    /* binarium '-provenientia' rogare; FALSUM = nulla relatio */
+    b32 (*rogare)(vacuum* datum, constans character* via,
+                  Piscina* piscina, chorda* relatio_out);
+    /* memoria: VERUM si verificatio (titulus, ingressus, artificium)
+     * iam scripta. NIHIL licet (sine memoria). */
+    b32 (*meminisse)(vacuum* datum, constans character* titulus,
+                     constans Sigillum* ingressus,
+                     constans Sigillum* artificium);
+} FabricaSutura;
+
+nomen structura {
+           chorda artificium;
+    FabricaStatus status;
+           chorda causa;
+} FabricaIudicium;
+
+/* Viae manifesti aedilis: obiecta, capita, vendores (systemata NON -
+ * plagulae nostrae non sunt) et inresolutae (sectio citatarum nusquam
+ * inventarum, 982fec44). Xar de chorda. FALSUM + causa si
+ * malformatum. */
+b32
+fabrica_manifestum_legere (
+                 chorda   contentum,
+                Piscina*  piscina,
+                    Xar** viae_out,
+                    Xar** inresolutae_out,
+                 chorda*  causa_out);
+
+/* Sigillum copiae ingressuum: pro quoque ingressu ordine viae,
+ * "via NUL sigillum(octetorum)"; manifestum in viae suas explicatur
+ * (manifestum ipsum NON - generatum= et commissum= in eo mutantur),
+ * directorium in nomina sua (via cum '/' finali, ne cum plagula
+ * eiusdem viae confundatur). Exclusa (Xar de chorda, NIHIL licet)
+ * praetermittuntur. FALSUM + causa: ingressus absens, manifestum
+ * incompletum (inresoluta nominata). */
+b32
+fabrica_ingressus_sigillare (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* actio,
+               constans Xar* exclusa,
+                    Piscina* piscina,
+                   Sigillum* sigillum_out,
+                     chorda* causa_out);
+
+/* Iudicium unius exitus actionis. plenus FALSUM = celer
+ * (regeneratio numquam; relatio et memoria licent). Directorium
+ * scripturae: build/fabrica/scriptura/TITULUS (actionis). */
+FabricaIudicium
+fabrica_iudicare (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* actio,
+     constans FabricaExitus* exitus,
+                        b32  plenus,
+                    Piscina* piscina);
+
+/* Actiones ordine dependentiae: actio cuius ingressus exitus
+ * alterius est post eam; ceteroquin ordo datus (stabilis). Xar de
+ * FabricaActio* in actiones datas. NIHIL + causa in cyclo, titulis
+ * nominatis. */
+Xar*
+fabrica_ordinare (
+    constans Xar* actiones,   /* FabricaActio (valore) */
+         Piscina* piscina,
+          chorda* causa_out);
+
+#endif /* FABRICA_H */
