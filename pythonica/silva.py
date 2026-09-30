@@ -1565,6 +1565,12 @@ PORTAE = {
     # (silva-migratio T19a)
     'generata': (['./tools/generata_probare.sh'],
                  r'generata: (sana|FRACTA)'),
+    # fabrica (plan 1a T8): oraculum = iudex plenus cum generata per
+    # artificium consentit (Q15); fumus = porta natalis bin/fabrica
+    'fabrica': (['./tools/fabrica_oraculum.sh'],
+                r'oraculum fabricae: (consensus|DISCORDIA)'),
+    'fabrica-fumus': (['./tools/fabrica_fumus.sh'],
+                      r'fumus fabricae: (sanum|FRACTUM)'),
     'diagnostica': (['./tools/diagnostica_fumus.sh'],
                     r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],

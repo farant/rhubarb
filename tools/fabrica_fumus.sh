@@ -15,6 +15,10 @@
 #   IX   iudex PRIMUS etiam post artificium stalum prius declaratum
 #   X    -provenientia ex quovis directorio
 #   XI   digestum == ingressus relatus (una functio sigilli)
+#   XII  -plenus sub sera alius (build/fabrica/sera) -> 2, nominata;
+#        sera liberata -> currit (T8: duo iudices plena clausuras
+#        mutuo vacuaverant, T6)
+#   XIII binaria in bin/ sine declaratione -> linea una numerata (Q36)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -89,6 +93,27 @@ D="$("$F" digestum fabrica 2>/dev/null)"
 R="$("$F" -provenientia | sed -n 's/^ingressus //p')"
 if [ -n "$D" ] && [ "$D" = "$R" ]; then echo "  XI   digestum == relatio binarii      OK"; else echo "  XI   FRACTUM (digestum $D, relatio $R)"; fracta=1; fi
 
+# XII (T8): sera iudicii pleni - flock(2) per python (eadem sera
+# nuclei ac filum_seram_capere), radix temporaria
+radix '<fabrica titulus="t"><subsystema via="p"/></fabrica>'
+mkdir -p "$T/r/p" "$T/r/build/fabrica"; actio sola > "$T/r/p/aedificatio.stml"
+python3 -c 'import fcntl,sys,time
+f=open(sys.argv[1],"a"); fcntl.flock(f,fcntl.LOCK_EX)
+open(sys.argv[2],"w").close(); time.sleep(60)' "$T/r/build/fabrica/sera" "$T/tenet" &
+TENENS=$!
+n=0; while [ ! -f "$T/tenet" ] && [ "$n" -lt 100 ]; do sleep 0.1; n=$((n+1)); done
+(cd "$T/r" && "$F" iudicare -plenus) > "$T/o" 2>&1; rc=$?
+kill "$TENENS" 2>/dev/null; wait "$TENENS" 2>/dev/null
+(cd "$T/r" && "$F" iudicare -plenus) > "$T/o2" 2>&1; rc2=$?
+if [ "$rc" -eq 2 ] && grep -q 'build/fabrica/sera' "$T/o" && [ "$rc2" -ne 2 ]; then echo "  XII  -plenus sub sera aliena -> 2      OK"; else echo "  XII  FRACTUM (rc=$rc rc2=$rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
+# XIII (Q36): bin/ sine declaratione numeratur, declarata non
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+mkdir -p "$T/r/bin"; : > "$T/r/bin/declaratum"; : > "$T/r/bin/ignotum"; : > "$T/r/a"
+printf '<aedificatio>\n  <actio titulus="d" genus="institutio">\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="bin/declaratum" provenientia="relatio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" iudicare) > "$T/o" 2>&1
+if grep -q '^IGNOTUM: 1 binaria in bin/ sine declaratione' "$T/o"; then echo "  XIII bin/ sine declaratione numerata  OK"; else echo "  XIII FRACTUM"; cat "$T/o"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XI/XI)"
+echo "fumus fabricae: sanum (XIII/XIII)"
 exit 0
