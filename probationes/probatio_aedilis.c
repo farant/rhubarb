@@ -45,6 +45,20 @@ _fix_addere (
     }
 }
 
+interior vacuum
+_formam_addere (
+    Xar* xar,
+    b32  angulata)
+{
+    b32* locus;
+
+    locus = (b32*)xar_addere(xar);
+    si (locus != NIHIL)
+    {
+        *locus = angulata;
+    }
+}
+
 interior b32
 _extractor_fixturarum (
                 vacuum*  datum,
@@ -52,15 +66,29 @@ _extractor_fixturarum (
                Piscina*  piscina,
                    Xar** directivae_out,
                    Xar** annotationes_out,
-                   b32*  ex_oraculo_out)
+                   b32*  ex_oraculo_out,
+                   Xar** angulatae_out)
 {
     (vacuum)datum;
     *directivae_out = xar_creare(piscina, (i32)magnitudo(chorda));
     *annotationes_out = xar_creare(piscina,
         (i32)magnitudo(chorda));
     *ex_oraculo_out = FALSUM;
+    /* forma ignota ubique praeter citata.c: regula vetus
+     * (inresoluta = systema) ibi probatur */
+    *angulatae_out = NIHIL;
 
-    si (strstr(via, "fons/scopus.c") != NIHIL)
+    si (strstr(via, "fons/citata.c") != NIHIL)
+    {
+        *angulatae_out = xar_creare(piscina, (i32)magnitudo(b32));
+        _fix_addere(*directivae_out, "alpha.h", piscina);
+        _formam_addere(*angulatae_out, FALSUM);
+        _fix_addere(*directivae_out, "nusquam.h", piscina);
+        _formam_addere(*angulatae_out, FALSUM);
+        _fix_addere(*directivae_out, "stdint.h", piscina);
+        _formam_addere(*angulatae_out, VERUM);
+    }
+    alioquin si (strstr(via, "fons/scopus.c") != NIHIL)
     {
         _fix_addere(*directivae_out, "alpha.h", piscina);
         _fix_addere(*directivae_out, "beta.h", piscina);
@@ -899,6 +927,62 @@ s32 principale (vacuum)
             }
             CREDO_VERUM(beta_inventum);
         }
+    }
+
+
+    /* ==================================================
+     * PROBARE: inclusiones citatae inresolutae (fabrica P1).
+     * Caput citatum nusquam inventum NON est systema verum -
+     * manifestum sine eo tacite incompletum est. Sectio
+     * inresolutarum id nominat; systemata et --partes ut olim
+     * manent (consumptores XII+ ea legunt).
+     * ================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+             AedilisFructus* fructus;
+                     chorda  causa;
+                     chorda  manifestum;
+
+        imprimere("\n--- Probans citatas inresolutas ---\n");
+
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        CREDO_NON_NIHIL(configuratio);
+
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/citata.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_NON_NIHIL(fructus->inresolutae);
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->inresolutae), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(fructus->inresolutae, ZEPHYRUM),
+            "nusquam.h");
+        /* systemata ut olim: ambae inresolutae ibi */
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->systemata), II);
+
+        manifestum = aedilis_manifestum_scribere(fructus, piscina,
+            "abc1234");
+        CREDO_CHORDA_CONTINET(manifestum,
+            chorda_ex_literis("inresolutae", piscina));
+        CREDO_CHORDA_CONTINET(manifestum,
+            chorda_ex_literis("nusquam.h", piscina));
+
+        /* forma ignota (scopus.c): regula vetus, manifestum SINE
+         * sectione - manifesta radicum sanarum octetim eadem */
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_AEQUALIS_I32(xar_numerus(fructus->inresolutae),
+            ZEPHYRUM);
+        manifestum = aedilis_manifestum_scribere(fructus, piscina,
+            "abc1234");
+        CREDO_FALSUM(chorda_continet(manifestum,
+            chorda_ex_literis("inresolutae", piscina)));
     }
 
 

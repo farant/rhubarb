@@ -823,6 +823,8 @@ aedilis_derivare (
         (i32)magnitudo(AedilisVendor));
     fructus->vexilla_annotata = _xar_chordarum(piscina);
 
+    fructus->inresolutae = _xar_chordarum(piscina);
+
     machina.piscina       = piscina;
     machina.configuratio  = configuratio;
     machina.fructus       = fructus;
@@ -883,6 +885,7 @@ aedilis_derivare (
               chorda  includens_dir;
                  Xar* directivae;
                  Xar* annotationes;
+                 Xar* angulatae;
         AedilisCaput* caput_fontis;
                  b32  ex_oraculo;
                  i32  i;
@@ -913,11 +916,13 @@ aedilis_derivare (
 
         directivae    = NIHIL;
         annotationes  = NIHIL;
+        angulatae     = NIHIL;
         ex_oraculo    = FALSUM;
         si (!extractor(extractor_datum,
                 chorda_ut_cstr(_iungere_binas(configuratio->radix,
                     fons, piscina), piscina),
-                piscina, &directivae, &annotationes, &ex_oraculo))
+                piscina, &directivae, &annotationes, &ex_oraculo,
+                &angulatae))
         {
             _causam_ponere(causa_out, piscina,
                 "plagula imparsabilis: ", fons);
@@ -939,14 +944,24 @@ aedilis_derivare (
 
             si (resoluta.mensura == 0)
             {
-                /* nusquam inventa = caput systematis (sine forma
-                 * anguli/quotae indiscernibile - vide worklog) */
+                /* nusquam inventa = caput systematis (regula
+                 * vetus, consumptoribus --partes servata). Forma
+                 * CITATA nota = caput nostrum quod radices inclusae
+                 * non tegunt: manifestum incompletum, ergo et inter
+                 * inresolutas nominatur (fabrica P1) */
                 si (!tabula_dispersa_continet(
                         machina.visa_systematum, rogata))
                 {
                     (vacuum)tabula_dispersa_inserere(
                         machina.visa_systematum, rogata, NIHIL);
                     _chordam_addere(fructus->systemata, rogata);
+                    si (   angulatae != NIHIL
+                        && i < xar_numerus(angulatae)
+                        && !*(b32*)xar_obtinere(angulatae, i))
+                    {
+                        _chordam_addere(fructus->inresolutae,
+                            rogata);
+                    }
                 }
                 perge;
             }
@@ -1433,6 +1448,26 @@ aedilis_manifestum_scribere (
             intern, "via",
             *(chorda*)xar_obtinere(fructus->systemata, i));
         (vacuum)stml_liberum_addere(sectio, nodus);
+    }
+
+    /* sectio inresolutarum SOLUM si non vacua: manifesta radicum
+     * sanarum octetim eadem manent */
+    numerus = xar_numerus(fructus->inresolutae);
+    si (numerus > 0)
+    {
+        sectio = stml_elementum_creare(piscina, intern,
+            "inresolutae");
+        (vacuum)stml_liberum_addere(radix, sectio);
+        per (i = 0; i < numerus; i++)
+        {
+            StmlNodus* nodus;
+
+            nodus = stml_elementum_creare(piscina, intern, "caput");
+            (vacuum)stml_attributum_addere_chorda(nodus, piscina,
+                intern, "via",
+                *(chorda*)xar_obtinere(fructus->inresolutae, i));
+            (vacuum)stml_liberum_addere(sectio, nodus);
+        }
     }
 
     sectio = stml_elementum_creare(piscina, intern, "vendores");

@@ -359,7 +359,8 @@ _extractor_silvae (
                Piscina*  piscina,
                    Xar** directivae_out,
                    Xar** annotationes_out,
-                   b32*  ex_oraculo_out)
+                   b32*  ex_oraculo_out,
+                   Xar** angulatae_out)
 {
     ExtractorDatum* extractoris;
     SilvaPiscina*   arboris;
@@ -376,6 +377,8 @@ _extractor_silvae (
     *annotationes_out = xar_creare(piscina,
         (i32)magnitudo(chorda));
     *ex_oraculo_out = FALSUM;
+    /* cursus -MM (.m) vias iam resolutas reddit: forma ignota */
+    *angulatae_out = NIHIL;
 
     longitudo_viae = strlen(via);
     si (   longitudo_viae > 2 && via[longitudo_viae - 2] == '.'
@@ -391,6 +394,7 @@ _extractor_silvae (
     {
         redde FALSUM;
     }
+    *angulatae_out = xar_creare(piscina, (i32)magnitudo(b32));
 
     arboris = silva_piscina_generare_dynamicum("aedilis_arbor",
         8388608);
@@ -424,6 +428,15 @@ _extractor_silvae (
         _chordam_in_xar(*directivae_out,
             _chordam_copiare(vista.via->datum, vista.via->mensura,
                 piscina));
+        {
+            b32* forma;
+
+            forma = (b32*)xar_addere(*angulatae_out);
+            si (forma != NIHIL)
+            {
+                *forma = vista.est_angulata ? VERUM : FALSUM;
+            }
+        }
     }
 
     cruda = silva_lexare_cruda(arboris,
@@ -478,6 +491,7 @@ _extractor_silvae (
 nomen structura {
     Xar* directivae;
     Xar* annotationes;
+    Xar* angulatae;
     b32  ex_oraculo;
     b32  fructus;
 } MemoriaExtractoris;
@@ -495,7 +509,8 @@ _extractor_memor (
                Piscina*  piscina,
                    Xar** directivae_out,
                    Xar** annotationes_out,
-                   b32*  ex_oraculo_out)
+                   b32*  ex_oraculo_out,
+                   Xar** angulatae_out)
 {
         ExtractorMemor* memor;
     MemoriaExtractoris* m;
@@ -517,15 +532,18 @@ _extractor_memor (
         }
         m->directivae    = NIHIL;
         m->annotationes  = NIHIL;
+        m->angulatae     = NIHIL;
         m->ex_oraculo    = FALSUM;
         m->fructus = _extractor_silvae(memor->intus, via,
             memor->piscina,
-            &m->directivae, &m->annotationes, &m->ex_oraculo);
+            &m->directivae, &m->annotationes, &m->ex_oraculo,
+            &m->angulatae);
         (vacuum)tabula_dispersa_inserere(memor->tabula,
             chorda_ex_literis(via, memor->piscina), m);
     }
     *directivae_out    = m->directivae;
     *annotationes_out  = m->annotationes;
+    *angulatae_out     = m->angulatae;
     *ex_oraculo_out    = m->ex_oraculo;
     redde m->fructus;
 }
@@ -1037,6 +1055,25 @@ principale (
         fprintf(stderr, "AEDILIS RECUSAT: %.*s\n",
             (s32)causa.mensura, (constans character*)causa.datum);
         redde 1;
+    }
+    /* inclusiones citatae inresolutae: manifestum INCOMPLETUM.
+     * Nominantur, numquam recusantur (decretum phasis A) - fabrica
+     * eas iudicat (P1). Exitus immutatus. */
+    {
+        i32 i;
+        i32 numerus;
+
+        numerus = xar_numerus(fructus->inresolutae);
+        per (i = 0; i < numerus; i++)
+        {
+            chorda* via;
+
+            via = (chorda*)xar_obtinere(fructus->inresolutae, i);
+            fprintf(stderr, "AEDILIS CAUTIO: inclusio citata "
+                "inresoluta \"%.*s\" (scopus %s)\n",
+                (s32)via->mensura, (constans character*)via->datum,
+                scopus_cstr);
+        }
     }
 
     si (argumenta_habet_vexillum(lecta, "--differentia"))

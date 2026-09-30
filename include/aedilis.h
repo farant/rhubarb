@@ -32,6 +32,10 @@
  *   ex_oraculo_out:   VERUM = cursus minoritatis (-MM pro .m);
  *                     directivae tunc viae IAM RESOLUTAE
  *                     relativae radici sunt
+ *   angulatae_out:    Xar de b32, directivis parallela - VERUM =
+ *                     forma angulata, FALSUM = citata. NIHIL
+ *                     licet (forma ignota): inresoluta tunc ut
+ *                     olim systema solum habetur
  * Chordae redditae in piscinam datam copiandae sunt (vita earum
  * vitam extractionis excedit). FALSUM = plagula illegibilis aut
  * imparsabilis -> machina recusat. */
@@ -41,7 +45,8 @@ nomen b32 (*AedilisExtractor)(
     Piscina*            piscina,
     Xar**               directivae_out,
     Xar**               annotationes_out,
-    b32*                ex_oraculo_out);
+    b32*                ex_oraculo_out,
+    Xar**               angulatae_out);
 
 
 /* ====================================================
@@ -133,6 +138,10 @@ nomen structura {
        Xar* obiecta;           /* AedilisObiectum (valore) */
        Xar* capita;            /* AedilisCaput (valore) */
        Xar* systemata;         /* chorda */
+       Xar* inresolutae;       /* chorda: citatae nusquam inventae -
+                                * pars systematum, sed manifestum
+                                * sine eis INCOMPLETUM est (fabrica
+                                * P1); forma ignota = nullae */
        Xar* vendores;          /* AedilisVendor (valore) */
        Xar* vexilla_annotata;  /* chorda */
 } AedilisFructus;

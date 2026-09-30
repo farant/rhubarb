@@ -22,6 +22,10 @@
     <via (>tessera/fontes
     <via (>tessera/instrumenta/folium
     <via (>saltuarius/fontes
+    <via (>briar/fontes
+    <via (>md/fontes
+    <via (>officina/instrumenta
+    <via (>silva/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89
