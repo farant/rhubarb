@@ -175,3 +175,53 @@ saltuarius 13/13.
 
 **Fran's look (Terminal.app, spectaculum):** the colour bar and the red
 background behind 中 now show; no blue text.
+
+## Q5 — the viewer, `effigies` (2026-09-30)
+
+**INTENTIO (plan D5, D8; name `effigies` sealed by Fran — `pictura`
+was already a common word in tessera).** Shaped like folium:
+- `tessera/instrumenta/effigies/effigies_pictura.{h,c}` (pure, linked by
+  tessera's test runner; not in `fontes/` or the amalgam):
+  `effigies_mensurare` fits an image to a cell area WITHOUT distortion —
+  the cell aspect (w/h) is a parameter in hundredths (default 50 = 1:2,
+  never queried); a quadrant sub-pixel is half a cell each way (tall),
+  a half-block pixel a whole cell wide and half tall (square at 1:2);
+  scales up or down, integer maths. `effigies_pingere` places cells
+  (codepoint → UTF-8 → packed signum; colours → stilus).
+- `tessera/instrumenta/principalia/effigies.c` + `tessera/effigies.sh`
+  (generated source list: imago, imago_opus, quadrans resolved by
+  aedilis; `aedilis.stml` root added): loads the images given (default:
+  Fran's two photographs), fits the screen minus the status line with
+  IMAGO_SCALA_AREA, centres; keys m (mode), c (colouring — added so D2's
+  perceptual half could be judged), ] / [ (image), q; resize re-fits.
+  Status: name, source size → cells, mode + colouring, colour depth,
+  error.
+
+**Red first** (stubs; the fitting cases and the placement red by name).
+**Green:** the fitting cases (square 100×100 in 40×10 cells → 40×20
+sub-pixels = 20×10 cells, square on screen; half-block → 20×20, the same
+footprint; wide 400×100 → 80×10; tall → 10×20; a 1×1 image scaled UP to
+fill; square cells, aspect 100 → 20×20; empty → 0×0), placement (▀ →
+0x8096E2 = E2 96 80, colours; a space keeps its background), and an end-
+to-end 4×2 image (▘ + a red space) read back. **Plants (compiling), all
+caught by name:** half-block treated as quadrants (first did not apply —
+the formatter had realigned the line — redone), aspect ignored, width
+limit ignored, fg/bg swapped.
+
+**Fran's look:**
+- proportions right (the 1:2 cell assumption holds on his fonts);
+- **Terminal.app: QUADRANTES + MEDIA definitely the best**;
+- **Ghostty: EXTREMA "might actually be better — perceptually it feels
+  like a sharpening filter"**. That is close to literally what it is:
+  taking the most-different pair as the cell's colours pushes each cell
+  toward local contrast (unsharp-mask-like). The error metric penalizes
+  it; the eye, at full colour depth, may like it. Under 256 colours the
+  extra contrast plausibly turns harsh — consistent with MEDIA winning in
+  Terminal.app. One look, so recorded, not acted on: the library default
+  stays MEDIA (the measured one). A candidate later: the viewer's default
+  colouring follows the colour depth (PLENI → EXTREMA, CCLVI → MEDIA),
+  or a MEDIA-plus-mild-sharpening colouring measured with a perceptual
+  metric.
+- chafa in Ghostty drew real pixels (it detected the kitty graphics
+  protocol; `--symbols` does not apply) — `chafa -f symbols --symbols
+  quad …` forces the character comparison.

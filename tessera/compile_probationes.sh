@@ -45,6 +45,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$TESSERA_DIR/fontes"
     "-I$TESSERA_DIR/probationes"
     "-I$TESSERA_DIR/instrumenta/folium"
+    "-I$TESSERA_DIR/instrumenta/effigies"
 )
 
 # Rhubarb lib sources tessera depends on during development (vendoring
@@ -57,6 +58,7 @@ declare -a RADIX_FONTES=(
     "utf8"
     "runae"
     "runae_tabulae"
+    "quadrans"
     "credo"
 )
 
@@ -86,7 +88,8 @@ while IFS= read -r caput_via; do
         CAPUT_RECENS="$caput_via"
     fi
 done < <(find "$RADIX_DIR/include" "$TESSERA_DIR/fontes" \
-    "$TESSERA_DIR/instrumenta/folium" -name '*.h' 2>/dev/null)
+    "$TESSERA_DIR/instrumenta/folium" "$TESSERA_DIR/instrumenta/effigies" \
+    -name '*.h' 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
@@ -114,7 +117,8 @@ done
 shopt -s nullglob
 # instrumenta/folium: pars PURA instrumenti folium (runae U7) - extra
 # bibliothecam et amalgama, sed probationibus eius nexa
-for src in "$TESSERA_DIR"/fontes/*.c "$TESSERA_DIR"/instrumenta/folium/*.c; do
+for src in "$TESSERA_DIR"/fontes/*.c "$TESSERA_DIR"/instrumenta/folium/*.c \
+           "$TESSERA_DIR"/instrumenta/effigies/*.c; do
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then

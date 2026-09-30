@@ -21,6 +21,7 @@
     <via (>tessera/amalgama
     <via (>tessera/fontes
     <via (>tessera/instrumenta/folium
+    <via (>tessera/instrumenta/effigies
     <via (>saltuarius/fontes
   </inclusa>
   <vexilla>
