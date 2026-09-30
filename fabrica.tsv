@@ -26,12 +26,6 @@ obiectum	tessera/build/amalgama_verificatio.o	tessera/amalgama/tessera.c
 generatum	silva/amalgama/silva.c	silva/fontes/
 generatum	officina/amalgama/officina.c	officina/fontes/
 generatum	tessera/amalgama/tessera.c	tessera/fontes/
-generatum	silva/grammatica/silva_tabulae_c89.c	silva/grammatica/c89.stml
-generatum	silva/grammatica/silva_tabulae_c89.h	silva/grammatica/c89.stml
-generatum	silva/grammatica/silva_tabulae_sceleti.c	silva/grammatica/sceletum.stml
-generatum	silva/grammatica/silva_tabulae_sceleti.h	silva/grammatica/sceletum.stml
-generatum	silva/grammatica/silva_tabulae_imparilis.c	silva/grammatica/sceletum_imparilis.stml
-generatum	silva/grammatica/silva_tabulae_imparilis.h	silva/grammatica/sceletum_imparilis.stml
 binarium	officina/build/legatus/legatus	officina/build/legatus/
 # unitates legati (speculum legatus.sh; legatus VIGILIAM SUI ex his
 # ordinibus construit - .c radices clausurae inclusionum)

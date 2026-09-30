@@ -203,6 +203,20 @@ does not amend.
   worklog). Gates: radix (aedilis), generata. Rebuild `bin/aedilis`
   (`./tools/aedilis_struere.sh`) after.
 
+> **Executed 2026-09-29 — 982fec44.** DEVIATION (Step 2): the entry
+> stays in `systemata` too; `inresolutae` is a named subset, because
+> Step 1 found ~12 consumers of `--partes` (speculum keeps every non-S
+> row) and no reader of manifest sections. Step 7 branch (a): all four
+> roots added (briar/fontes, md/fontes, officina/instrumenta,
+> silva/fontes); silex links hermetically from its aedilis closure;
+> briar's hermetic link misses only the six symbols of the units
+> `briar_struere.sh` generates (identity + three capsulae) — closure
+> otherwise complete (27 → 73 objects; spectator 43 → 77). Step 8
+> branch (a): generata green, amalgam manifests unchanged, snippets
+> 38/0. Plant: 14 CAUTIO lines (not 15 — `compendium.h` now resolves
+> via officina/instrumenta), as predicted. Worklog:
+> tools/aedilis.worklog.md 2026-09-29.
+
 ### Task P2: capsula_mensor raw, excubitor's dead rows
 
 **Files:** `apps/mensor/assets/capsula_mensor.c`, `fabrica.tsv:29-34`.
@@ -218,6 +232,16 @@ does not amend.
   -tacitus silva/` verdict line unchanged from before Step 2.
 - [ ] **Step 4: commit** both paths. Gates owed: whatever commissio
   adds (mensor).
+
+> **Executed 2026-09-29** (commit below). Capsula regenerated raw:
+> 2,112 lines of diff, whitespace-stripped bytes `cmp`-equal to HEAD;
+> raw form carries 704 formator divergences — accepted by Q34 (the
+> other raw capsulae do the same, forum 19,128). Six dead rows
+> deleted; `./excubitor.sh silva_tabulae` verdict identical before and
+> after (inspecta 8, STALA 5 — mtime of the 09-29 generare run; NOTE
+> the plan's `silva/` filter inspects 0 objects, a vacuous PURUS).
+> `tools/mensor_ui_struere.sh` → capsula byte-identical after the
+> build.
 
 ### Task T1: lib/fabrica core (pure)
 
