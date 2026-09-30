@@ -3,3 +3,5 @@ christus_sculptus 4536 2087
 gradiens 47 30
 tabula 0 0
 strepitus 292813 147210
+assumptio_modi 5113 19412
+christus_sculptus_modi 2087 15146

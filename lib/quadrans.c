@@ -186,6 +186,22 @@ _bloccus (
     redde c;
 }
 
+/* DIMIDIUM: superius sub U+2580 (FIGURAE[XII]) ut color litterae,
+ * inferius ut fundus; aequalia = spatium */
+interior QuadransCellula
+_dimidium (
+    i32 superius,
+    i32 inferius)
+{
+    QuadransCellula c;
+
+    c.runa            = (superius == inferius) ? FIGURAE[0]
+                                               : FIGURAE[XII];
+    c.color_litterae  = superius;
+    c.color_fundi     = inferius;
+    redde c;
+}
+
 /* Bita figurae (index in FIGURAE); runa ignota = 0 (fundus totus) */
 interior i32
 _bita_figurae (
@@ -222,8 +238,8 @@ quadrans_mensurare (
                           i32* cellulae_lat,
                           i32* cellulae_alt)
 {
-    (vacuum)optiones;   /* QUADRANTES solus modus (planum D3) */
-    *cellulae_lat = (latitudo + I) / II;
+    *cellulae_lat = (optiones->modus == QUADRANS_DIMIDIUM)
+        ? latitudo : (latitudo + I) / II;
     *cellulae_alt = (altitudo + I) / II;
 }
 
@@ -247,21 +263,35 @@ quadrans_computare (
     {
         per (i = ZEPHYRUM; i < lat; i++)
         {
-            i32 px[IV];
-            s32 rx = (s32)(i * II);
             s32 ry = (s32)(j * II);
 
-            px[0] = _pixelum(imago, x, y, latitudo, altitudo, rx, ry,
-                optiones->fundus);
-            px[1] = _pixelum(imago, x, y, latitudo, altitudo, rx + I,
-                ry,
-                optiones->fundus);
-            px[2] = _pixelum(imago, x, y, latitudo, altitudo, rx, ry
-                + I,
-                optiones->fundus);
-            px[3] = _pixelum(imago, x, y, latitudo, altitudo, rx + I,
-                ry + I, optiones->fundus);
-            exitus[j * lat + i] = _bloccus(px, optiones->colores);
+            si (optiones->modus == QUADRANS_DIMIDIUM)
+            {
+                exitus[j * lat + i] = _dimidium(
+                    _pixelum(imago, x, y, latitudo, altitudo, (s32)i,
+                    ry,
+                        optiones->fundus),
+                    _pixelum(imago, x, y, latitudo, altitudo, (s32)i,
+                        ry + I, optiones->fundus));
+            }
+            alioquin
+            {
+                i32 px[IV];
+                s32 rx = (s32)(i * II);
+
+                px[0] = _pixelum(imago, x, y, latitudo, altitudo, rx,
+                    ry,
+                    optiones->fundus);
+                px[1] = _pixelum(imago, x, y, latitudo, altitudo, rx
+                    + I,
+                    ry, optiones->fundus);
+                px[2] = _pixelum(imago, x, y, latitudo, altitudo, rx,
+                    ry + I, optiones->fundus);
+                px[3] = _pixelum(imago, x, y, latitudo, altitudo, rx
+                    + I,
+                    ry + I, optiones->fundus);
+                exitus[j * lat + i] = _bloccus(px, optiones->colores);
+            }
         }
     }
 }
@@ -292,12 +322,18 @@ quadrans_error (
     {
         per (px = ZEPHYRUM; px < latitudo; px++)
         {
+                        b32 dimidium = (b32)(optiones->modus
+                            == QUADRANS_DIMIDIUM);
             constans QuadransCellula* c = &cellulae[(py / II) * lat
-                + px / II];
+                + (dimidium ? px : px / II)];
             i32 quadrans_pixeli = (py % II) * II + (px % II);
-            i32 restitutum = (_bita_figurae(c->runa)
-                & (VIII >> quadrans_pixeli))
-                ? c->color_litterae : c->color_fundi;
+            b32 litterae = dimidium
+                ? (b32)(c->runa == FIGURAE[XII]
+                    && (py % II) == ZEPHYRUM)
+                : (b32)((_bita_figurae(c->runa)
+                        & (VIII >> quadrans_pixeli)) != ZEPHYRUM);
+            i32 restitutum = litterae ? c->color_litterae
+                                      : c->color_fundi;
 
             summa += (i64)_distantia(_pixelum(imago, x, y, latitudo,
                 altitudo, (s32)px, (s32)py, optiones->fundus),

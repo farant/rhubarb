@@ -17,6 +17,10 @@
  *      quadratum pro partitione fixa minuit - violatio = vitium); aurum
  *      errorum commissum solum decrescit (QUADRANS_AURUM_SCRIBERE=1
  *      scribit).
+ * VIII. DIMIDIUM (Q3): figura superior, spatium, altitudo impar,
+ *      exactitudo (error 0 in resolutione propria); comparatio aequa
+ *      modorum pro EODEM rete cellularum (80x48): reconstructio in
+ *      reticulum 160x96 contra referentiam eandem (in aurum quoque).
  */
 #include "latina.h"
 #include "piscina.h"
@@ -143,6 +147,44 @@ _error_imaginis (
         &o, c);
     redde quadrans_error(im, ZEPHYRUM, ZEPHYRUM, im->latitudo,
         im->altitudo, &o, c);
+}
+
+/* Error DIMIDII contra referentiam R (latitudo R = 2 x latitudo
+ * cellularum aut minus uno): pixelum R (px, py) = cellula (px / 2,
+ * py / 2), superius si py par (figura -> color litterae) */
+interior i32
+_error_dimidii_contra (
+              constans Imago* referentia,
+    constans QuadransCellula* c,
+                         i32  lat)
+{
+    i64 summa = ZEPHYRUM;
+    i64 n;
+    i32 px;
+    i32 py;
+
+    per (py = ZEPHYRUM; py < referentia->altitudo; py++)
+    {
+        per (px = ZEPHYRUM; px < referentia->latitudo; px++)
+        {
+            constans QuadransCellula* q = &c[(py / II) * lat + px / II];
+                         constans i8* r = referentia->pixela
+                             + (py * referentia->latitudo + px) * IV;
+            i32 color = (q->runa == 0x2580 && (py % II) == ZEPHYRUM)
+                ? q->color_litterae : q->color_fundi;
+            i32 k;
+
+            per (k = ZEPHYRUM; k < III; k++)
+            {
+                s32 d = (s32)r[k]
+                    - (s32)((color >> (XVI - VIII * k)) & 0xFF);
+
+                summa += (i64)(d * d);
+            }
+        }
+    }
+    n = (i64)referentia->latitudo * (i64)referentia->altitudo * III;
+    redde (i32)((summa * C + n / II) / n);
 }
 
 /* Aurum: lineae 'titulus extrema media'; -1 si abest */
@@ -445,6 +487,112 @@ principale (vacuum)
         {
             fclose(aurum);
             imprimere("  aurum scriptum: %s\n", AURUM_VIA);
+        }
+    }
+
+    imprimere("\n--- VIII. DIMIDIUM ---\n");
+    {
+                Imago im  = _imago(piscina, I, III);
+     QuadransOptiones o   = quadrans_optiones_ordinariae();
+      QuadransCellula c[II];
+                  i32 lat;
+                  i32 alt;
+
+        o.modus = QUADRANS_DIMIDIUM;
+        quadrans_mensurare(&o, III, III, &lat, &alt);
+        CREDO_AEQUALIS_I32 (lat, III);
+        CREDO_AEQUALIS_I32 (alt, II);
+        _pixelum(&im, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, 0xFF);
+        _pixelum(&im, ZEPHYRUM, I, 0xFFFFFF, 0xFF);
+        quadrans_computare(&im, ZEPHYRUM, ZEPHYRUM, I, II, &o, c);
+        _cella(c[0], 0x2580, ZEPHYRUM, 0xFFFFFF,
+            "dimidium nigrum/album");
+        _pixelum(&im, ZEPHYRUM, I, ZEPHYRUM, 0xFF);
+        quadrans_computare(&im, ZEPHYRUM, ZEPHYRUM, I, II, &o, c);
+        _cella(c[0], 0x20, ZEPHYRUM, ZEPHYRUM, "dimidium aequale");
+        /* altitudo impar: pixelum inferius ultimum = fundus */
+        _pixelum(&im, ZEPHYRUM, ZEPHYRUM, 0xFF0000, 0xFF);
+        _pixelum(&im, ZEPHYRUM, I, 0xFF0000, 0xFF);
+        _pixelum(&im, ZEPHYRUM, II, 0xFF0000, 0xFF);
+        o.fundus = 0x0000FF;
+        quadrans_computare(&im, ZEPHYRUM, ZEPHYRUM, I, III, &o, c);
+        _cella(c[0], 0x20, 0xFF0000, 0xFF0000, "dimidium rubrum");
+        _cella(c[1], 0x2580, 0xFF0000, 0x0000FF, "dimidium impar");
+    }
+    {
+        hic_manens constans character* constans PHOTOGRAPHIAE[] = {
+            "assumptio", "christus_sculptus"
+        };
+        b32 scribere = (b32)(getenv("QUADRANS_AURUM_SCRIBERE")
+            != NIHIL);
+        FILE* aurum = scribere ? fopen(AURUM_VIA, "a") : NIHIL;
+         i32  k;
+
+        per (k = ZEPHYRUM; k < II; k++)
+        {
+                   character  via[CXXVIII];
+                   character  titulus[LXIV];
+                ImagoFructus  f;
+                       Imago  referentia;
+                       Imago  dimidia;
+            QuadransOptiones  o = quadrans_optiones_ordinariae();
+             QuadransCellula* c;
+                         i32  lat;
+                         i32  alt;
+                         s32  quadrantes;
+                         s32  dimidium;
+                         s32  aurum_q;
+                         s32  aurum_d;
+
+            sprintf(via, "probationes/fixa/quadrans/%s.jpg",
+                PHOTOGRAPHIAE[k]);
+            f = imago_caricare_ex_file(via, piscina);
+            CREDO_VERUM (f.successus);
+            si (!f.successus)
+            {
+                perge;
+            }
+            referentia = imago_scalare_ad_limites(&f.imago, MENSURA_LAT,
+                MENSURA_ALT, IMAGO_SCALA_AREA, piscina);
+            quadrantes = (s32)_error_imaginis(piscina, &referentia,
+                QUADRANS_MEDIA);
+            dimidia = imago_scalare(&f.imago,
+                (referentia.latitudo + I) / II, referentia.altitudo,
+                IMAGO_SCALA_AREA, piscina);
+            o.modus = QUADRANS_DIMIDIUM;
+            quadrans_mensurare(&o, dimidia.latitudo, dimidia.altitudo,
+                &lat, &alt);
+            c = (QuadransCellula*)piscina_allocare(piscina,
+                (memoriae_index)(lat * alt)
+                    * magnitudo(QuadransCellula));
+            quadrans_computare(&dimidia, ZEPHYRUM, ZEPHYRUM,
+                dimidia.latitudo, dimidia.altitudo, &o, c);
+            /* exactitudo in resolutione propria */
+            CREDO_AEQUALIS_I32 (quadrans_error(&dimidia, ZEPHYRUM,
+                ZEPHYRUM, dimidia.latitudo, dimidia.altitudo, &o, c),
+                ZEPHYRUM);
+            dimidium = (s32)_error_dimidii_contra(&referentia, c, lat);
+            imprimere("  %-18s idem rete: quadrantes %6d  "
+                "dimidium %6d\n",
+                PHOTOGRAPHIAE[k], (integer)quadrantes,
+                (integer)dimidium);
+            sprintf(titulus, "%s_modi", PHOTOGRAPHIAE[k]);
+            si (aurum != NIHIL)
+            {
+                fprintf(aurum, "%s %d %d\n", titulus,
+                    (integer)quadrantes, (integer)dimidium);
+            }
+            _aurum_legere(titulus, &aurum_q, &aurum_d);
+            si (!scribere)
+            {
+                CREDO_VERUM (aurum_q >= ZEPHYRUM);
+                CREDO_VERUM (quadrantes <= aurum_q);
+                CREDO_VERUM (dimidium <= aurum_d);
+            }
+        }
+        si (aurum != NIHIL)
+        {
+            fclose(aurum);
         }
     }
 

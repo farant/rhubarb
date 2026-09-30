@@ -40,8 +40,13 @@ nomen structura {
     i32 color_fundi;
 } QuadransCellula;
 
+/* QUADRANTES: 2x2 pixela per cellulam, XVI figurae (supra).
+ * DIMIDIUM: 1x2 - pixelum superius = color litterae sub U+2580,
+ * inferius = color fundi; pixela aequalia = spatium. Colores EXACTI,
+ * resolutio horizontalis dimidia. */
 nomen enumeratio {
-    QUADRANS_QUADRANTES = 0    /* 2x2 pixela per cellulam, XVI glyphi */
+    QUADRANS_QUADRANTES = 0,
+    QUADRANS_DIMIDIUM
 } QuadransModus;
 
 /* Colores cellulae mixtae (planum D2): EXTREMA = pixela paris extremi
@@ -65,7 +70,8 @@ QuadransOptiones
 quadrans_optiones_ordinariae (vacuum);
 
 /* Cellulae regionis latitudo x altitudo PIXELORUM: in *cellulae_lat x
- * *cellulae_alt (QUADRANTES: dimidium sursum rotundatum) */
+ * *cellulae_alt (QUADRANTES: utrumque dimidium sursum rotundatum;
+ * DIMIDIUM: latitudo eadem, altitudo dimidia sursum rotundata) */
 vacuum
 quadrans_mensurare (
     constans QuadransOptiones* optiones,
@@ -75,7 +81,8 @@ quadrans_mensurare (
                           i32* cellulae_alt);
 
 /* Regionem [x, x + latitudo) x [y, y + altitudo) pixelorum imaginis in
- * cellulas vertere: cellula (i, j) = pixela (x + 2i .. +1,
+ * cellulas vertere (DIMIDIUM: cellula (i, j) = pixela (x + i, y + 2j ..
+ * +1)); QUADRANTES: cellula (i, j) = pixela (x + 2i .. +1,
  * y + 2j .. +1).
  * exitus: cellulae_lat x cellulae_alt (quadrans_mensurare), ordine
  * linearum, a vocante praebitae. Pixela extra imaginem aut regionem =

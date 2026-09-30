@@ -101,3 +101,38 @@ reconstruction always using the foreground (hand cases + ratchet on all
 EXTREMA (the default assertion — the measurement sets its colouring
 explicitly, so only that case sees it), MEDIA quietly degraded (a Q1 case
 + the MEDIA ratchet on 4 images).
+
+## Q3 — half-block mode (2026-09-30)
+
+**INTENTIO.** `QUADRANS_DIMIDIUM` (planum D3): a cell is 1×2 pixels; the
+top pixel is the foreground under U+2580 (▀), the bottom the background;
+equal pixels give a space (same reason as Q1's uniform block). Colours
+are EXACT per pixel; horizontal resolution is halved.
+`quadrans_mensurare` gives cells = width × half the height;
+`quadrans_error` rebuilds the mode too.
+
+**Measuring it honestly.** At its OWN resolution the half-block is exact,
+so its error is 0 — true, and useless as a comparison. The fair question
+is "for the same terminal": an 80×48-cell grid is 160×96 sub-pixels for
+quadrants but 80×96 for half-blocks. The test scales each photograph to
+both grids (IMAGO_SCALA_AREA), rebuilds the half-block result at 160×96
+(each pixel covers two columns) and compares both with the SAME 160×96
+reference:
+
+| photograph | quadrants (MEDIA) | half-blocks | ratio |
+|---|---|---|---|
+| assumptio | 5113 | 19412 | 3.8× |
+| christus_sculptus | 2087 | 15146 | 7.3× |
+
+Doubling horizontal detail matters far more than exact per-cell colour —
+most on the bust, whose detail is fine texture. **The viewer's default
+should be quadrants** (Q5), half-blocks an option. Both comparison
+numbers are in the aurum ratchet (`<name>_modi` lines).
+
+**Red first** (cases red by name; the comparison read nonsense before
+the mode existed). **Green** 186/186 — the ▀ split, equal → space, an odd
+height (missing bottom pixel = `fundus`), sizes, exactness (error 0) on
+both photographs, the ratchet. **Plants (compiling), all caught by name:**
+fg/bg swapped, width halved as in quadrant mode, the error rebuild
+flipping top and bottom (only the exactness assertion sees this one),
+equal pixels not a space.

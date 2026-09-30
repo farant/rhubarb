@@ -80,7 +80,10 @@ Q5 look.
 **D3 — modes in v1.** QUADRANTES (2×2, 16 glyphs) and DIMIDIUM (▀/▄,
 1×2 — two colours per cell, exact). Sextants (2×3, U+1FB00, uneven font
 coverage) and braille (2×4, one colour) are later modes when something
-pulls them.
+pulls them. *Q3 measured the trade-off (2026-09-30): for the same cell
+grid, quadrants' error is 3.8× (painting) to 7.3× (bust) LOWER than
+half-blocks' — detail beats exact colour; the viewer defaults to
+quadrants.*
 
 **D4 — colour depth: THE decision.** Proposal: tessera gains a colour
 policy exactly like the width policy (`TesseraPolitica`, runae U5c):
