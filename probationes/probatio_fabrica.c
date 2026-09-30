@@ -1380,6 +1380,103 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * PROBARE: actio tacta a viis commissis (T8 gradus III)
+     * ================================================== */
+
+    {
+            DiscusFictus  discus;
+           FabricaSutura  sutura;
+            FabricaActio* a;
+            FabricaActio* m;
+            FabricaActio* p;
+        FabricaIngressus* ingressus;
+                     Xar* viae;
+      constans character* nomina[II];
+      constans character* src_nomina[I];
+
+        imprimere("\n--- Probans actionem tactam ---\n");
+        _discum_parare(&discus, &sutura, piscina);
+        _ponere(&discus, "lib/x.c", "int x;\n");
+        _ponere(&discus, "gen/exitus.c", "g\n");
+        nomina[0] = "a.h";
+        nomina[1] = "b.h";
+        _directorium_ponere(&discus, "include", nomina, II);
+        a = _actio(piscina, "a", FABRICA_ACTIO_GENERATOR);
+        _ingressum_addere(a, FABRICA_INGRESSUS_FASCICULUS, "lib/x.c",
+            piscina);
+        _ingressum_addere(a, FABRICA_INGRESSUS_DIRECTORIUM, "include",
+            piscina);
+        (vacuum)_exitum_addere(a, "gen/exitus.c",
+            FABRICA_PROVENIENTIA_REGENERATIO, piscina);
+
+        viae = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("lib/y.c",
+            piscina);
+        /* via aliena -> non tacta */
+        CREDO_FALSUM(fabrica_actio_tacta(&sutura, a, viae, piscina));
+        /* ingressus ipse -> tacta */
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("lib/x.c",
+            piscina);
+        CREDO_VERUM(fabrica_actio_tacta(&sutura, a, viae, piscina));
+        /* plagula nova in directorio enumerato (include/nova.h) */
+        viae = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("include/nova.h",
+            piscina);
+        CREDO_VERUM(fabrica_actio_tacta(&sutura, a, viae, piscina));
+        /* exitus ipse commissus -> tacta */
+        viae = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("gen/exitus.c",
+            piscina);
+        CREDO_VERUM(fabrica_actio_tacta(&sutura, a, viae, piscina));
+
+        /* manifestum: plagula in clausura eius */
+        _ponere(&discus, "build/m.stml",
+            "<aedilis-manifestum scopus=\"tools/m.c\">\n"
+            "  <capita><caput via=\"include/a.h\"/></capita>\n"
+            "</aedilis-manifestum>\n");
+        _ponere(&discus, "tools/m.c", "int m;\n");
+        _ponere(&discus, "include/a.h", "int a;\n");
+        m = _actio(piscina, "m", FABRICA_ACTIO_GENERATOR);
+        _ingressum_addere(m, FABRICA_INGRESSUS_MANIFESTUM,
+            "build/m.stml",
+            piscina);
+        viae = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("include/a.h",
+            piscina);
+        CREDO_VERUM(fabrica_actio_tacta(&sutura, m, viae, piscina));
+
+        /* plagulae: plagula nova suffixo congruens in directorio */
+        src_nomina[0] = "a.c";
+        _directorium_ponere(&discus, "src", src_nomina, I);
+        _ponere(&discus, "src/a.c", "int a;\n");
+        p = _actio(piscina, "p", FABRICA_ACTIO_INSTITUTIO);
+        _ingressum_addere(p, FABRICA_INGRESSUS_PLAGULAE, "src",
+            piscina);
+        ingressus = (FabricaIngressus*)xar_obtinere(p->ingressus,
+            ZEPHYRUM);
+        ingressus->suffixa = chorda_ex_literis(".c", piscina);
+        viae = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("src/nova.c",
+            piscina);
+        CREDO_VERUM(fabrica_actio_tacta(&sutura, p, viae, piscina));
+        viae = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("src/notae.md",
+            piscina);
+        CREDO_FALSUM(fabrica_actio_tacta(&sutura, p, viae, piscina));
+
+        /* ingressus absens -> tacta (conservativum: iudex IGNOTUM
+         * nominabit, numquam tacite praetermittitur) */
+        _ingressum_addere(a, FABRICA_INGRESSUS_FASCICULUS,
+            "lib/abest.c",
+            piscina);
+        viae = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(viae) = chorda_ex_literis("doc/nihil.md",
+            piscina);
+        CREDO_VERUM(fabrica_actio_tacta(&sutura, a, viae, piscina));
+    }
+
+
+    /* ==================================================
      * PROBARE: regeneratio semel per actionem et cursum (T6)
      * ================================================== */
 

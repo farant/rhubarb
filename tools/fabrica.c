@@ -2,6 +2,9 @@
  *
  * Usus (ex radice repositorii):
  *   bin/fabrica iudicare [-plenus] [-omnia] [artificium...]
+ *   bin/fabrica iudicare -plenus -tacta VIA...
+ *       artificia GENERATA quae viae (commissionis) tangunt; nullum
+ *       tactum = exitus 0 (silva.commissio, T8).
  *       quae artificia ex ingressibus hodiernis NON facta sint, cur,
  *       et ordinem sanationis. Sine -plenus = celer: nulla
  *       regeneratio (artificia regenerabilia NON IUDICATA dicuntur,
@@ -694,6 +697,8 @@ _iudicare (
              chorda  causa;
                 b32  plenus;
                 b32  omnia;
+                b32  tacta;
+                Xar* viae_tactae;
                 s32  a;
                 i32  i;
                 i32  j;
@@ -705,11 +710,20 @@ _iudicare (
 
     plenus  = FALSUM;
     omnia   = FALSUM;
+    tacta   = FALSUM;
     per (a = II; a < argc; a++)
     {
         si (strcmp(argv[a], "-plenus") == 0)
         {
             plenus = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-tacta") == 0)
+        {
+            /* argumenta positionalia = viae commissionis: artificia
+             * GENERATA (regeneratio) quae tangunt iudicantur, non
+             * installata (binaria non committuntur; uncus sessionis ea
+             * nominat). Nullum tactum = exitus 0 (T8 gradus III) */
+            tacta = VERUM;
         }
         alioquin si (strcmp(argv[a], "-omnia") == 0)
         {
@@ -721,6 +735,17 @@ _iudicare (
         {
             fprintf(stderr, "fabrica: vexillum ignotum %s\n", argv[a]);
             redde II;
+        }
+    }
+
+    viae_tactae = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (a = II; tacta && a < argc; a++)
+    {
+        si (argv[a][0] != '-')
+        {
+            *(chorda*)xar_addere(viae_tactae) =
+                chorda_ex_literis(argv[a],
+                piscina);
         }
     }
 
@@ -783,13 +808,27 @@ _iudicare (
         FabricaActio* actio;
 
         actio = *(FabricaActio**)xar_obtinere(ordo, i);
+        si (   tacta
+            && !fabrica_actio_tacta(&sutura, actio, viae_tactae,
+            piscina))
+        {
+            perge;
+        }
         per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
         {
             FabricaExitus* exitus;
                 Sententia* sententia;
 
             exitus = (FabricaExitus*)xar_obtinere(actio->exitus, j);
-            si (!_eligitur(argc, argv, II, exitus->via))
+            si (tacta)
+            {
+                si (exitus->provenientia
+                    != FABRICA_PROVENIENTIA_REGENERATIO)
+                {
+                    perge;
+                }
+            }
+            alioquin si (!_eligitur(argc, argv, II, exitus->via))
             {
                 perge;
             }
@@ -798,6 +837,12 @@ _iudicare (
             sententia->iudicium = fabrica_iudicare(&sutura, actio,
                 exitus, plenus, piscina);
         }
+    }
+    si (xar_numerus(sententiae) == 0 && tacta)
+    {
+        printf("fabrica: nulla artificia generata a viis tacta\n");
+        filum_seram_liberare(sera);
+        redde ZEPHYRUM;
     }
     si (xar_numerus(sententiae) == 0)
     {
@@ -899,9 +944,12 @@ _iudicare (
 
     /* orphana et binaria sine declaratione solum sine filtro
      * artificiorum (vexilla non filtrant) */
-    orphana = _eligitur(argc, argv, II, chorda_ex_literis("", piscina))
+    orphana = (!tacta
+               && _eligitur(argc, argv, II, chorda_ex_literis("",
+               piscina)))
         ? _orphana_imprimere(piscina) : ZEPHYRUM;
-    si (_eligitur(argc, argv, II, chorda_ex_literis("", piscina)))
+    si (   !tacta
+        && _eligitur(argc, argv, II, chorda_ex_literis("", piscina)))
     {
         i32 sine;
 
@@ -992,6 +1040,7 @@ _usus (vacuum)
     fprintf(stderr,
         "usus: bin/fabrica iudicare [-plenus] [-omnia] "
         "[artificium...]\n"
+        "      bin/fabrica iudicare -plenus -tacta VIA...\n"
         "      bin/fabrica digestum TITULUS\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "
         "2 nihil iudicatum)\n");

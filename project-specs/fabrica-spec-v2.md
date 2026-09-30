@@ -321,3 +321,51 @@ depend on it), or park it and let T7 report those three as IGNOTUM?
 
 Also still waiting (from before this spec): the three likely-dead dev
 tools (`compile_genera_biblia.sh`, `glr_debug.sh`, `glr_quaestio.sh`).
+
+## VII. As built — slice 1a (2026-09-30)
+
+Commits: P1 982fec44 · P2 d09e6dd1 + c918661e · T1 36970f18 · T2
+6077db28 · T3 80dad714 · T4 a48ffd3e · T5 98d6bac6 · T7 e68a8aac,
+944afe57, b12d0007 · memo + `plagulae` e7881679 · T6 f556ee69 · T8
+e7462c2c, b6a68b9e, 3c66eaa3, and the commissio commit that closes
+T8. Narrative per task: `project-specs/fabrica-plan-1a.md` (Executed
+notes); finds at find-time: `lib/fabrica.worklog.md`.
+
+**What exists.**
+
+| piece | where | what it does |
+|---|---|---|
+| core (pure) | `include/fabrica.h`, `lib/fabrica.c` | input kinds (fasciculus, manifestum, configuratio, instrumentum, directorium, plagulae, manifesta, radices); input-set digest; declarations reader; verdicts RECENS/STALUM/IGNOTUM/NON_IUDICATUM; dependency order; `fabrica_actio_tacta`. Disk and processes only through `FabricaSutura` (legere, enumerare, currere, rogare, meminisse, inscribere + per-run memos sigilla, regenerationes, digesta). |
+| CLI | `tools/fabrica.c` → `bin/fabrica` | `iudicare [-plenus] [-omnia] [artificium…]`, `iudicare -plenus -tacta VIA…`, `digestum TITULUS`, `-provenientia`. Records in `build/fabrica.db` (sqlite via scrinium, tool-only). Lock `build/fabrica/sera` under `-plenus`. |
+| declarations | `fabrica.stml` (root: subsystems) → `<sub>/aedificatio.stml` (canon `aedificatio.canon`) | 88 artifacts: 15 installed binaries (RELATIO), 73 committed generated files (REGENERATIO; 17 actions `memorabilis`, covering the 38 snippets). |
+| provenance | `include/provenientia.h`, `lib/provenientia.c`, `tools/provenientia_scribere.sh`, `tools/provenientia_obiectum.sh` | each installed binary answers `-provenientia` with the digest it was built from. |
+| aedilis | `--manifestum VIA`; `<inresolutae>`; `<compilatio>` | complete closures; per-source compile flags carried in the object name. |
+| gates | `fabrica-fumus` (XIV stages), `fabrica` (oracle vs generata, per artifact) | both in PORTAE and the inventory 'suitae probationum'. |
+| surfaces | `.claude/hooks/fabrica-celer.sh` (SessionStart); `silva.commissio` → `_fabricam_exigere` | celer at session start, silent when current; before gates, every commit judges the generated artifacts its paths touch and refuses on STALUM/IGNOTUM with the healing plan (`sine_fabrica='<causa>'` to skip). |
+
+**Numbers (measured).** celer 1.37 s warm (target < 2 s; was 2.65 s
+before sigillum -O2). `-plenus` unchanged tree: 166 s cold → 46.7 s
+with records. `silva_fontes_generare.sh` 238 s → 35.6 s. Oracle: 49
+artifacts compared with generata, 0 disagreements, 24 fabrica-only;
+~3.5 min. Commit check: 0 s for untouched paths, ~57 s for a
+compile_tests-closure file, up to ~3 min for a file in nearly every
+closure.
+
+**Deviations from this spec and the plan.** T7 before T6 (Fran), T6
+caches only `memorabilis` actions; `plagulae`, `manifesta`, `radices`
+input kinds (not planned); per-run memos (not planned); record key
+includes argv; snippet actions name aedilis's SOURCES, not its binary
+(the macOS link is not byte-reproducible, LC_UUID); `-tacta` judges
+only committed generated artifacts, never installed binaries (those
+are the session hook's job); the Q36 count is informational (does not
+set exit 1). generata stays until the oracle has agreed on real
+history (Q15).
+
+**Known limits.** Hand-listed actions (amalgam chain, silva tables,
+capsulae, numerals, runae, entitates) always regenerate under
+`-plenus` — their inputs are declared by hand and not provably
+complete. A tree that does not compile can make the oracle disagree at
+generata stage IV (generata compiles there, fabrica does not). The
+8 orphan manifest directories are reported, never cleaned. Slices 1b
+(executor), 2 (runners, shared objects), 3 (gates as actions), 4
+(query idiom) are not begun; each gets its own spec pass and plan.

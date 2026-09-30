@@ -2173,6 +2173,45 @@ def lint_latinus_praevium(viae):
     return r.returncode == 0, (r.stderr + r.stdout).strip()
 
 
+# iudex fabricae (plan 1a T8 gradus III, Fran optio B): commissio
+# artificia GENERATA quae viae eius tangunt iudicat (-plenus -tacta);
+# STALUM/IGNOTUM obstat cum sanatione. Probationes FABRICA_BIN fingunt.
+FABRICA_BIN = os.path.join(RADIX, 'bin', 'fabrica')
+
+
+def _fabricam_exigere(viae, sine_fabrica=None):
+    """bin/fabrica iudicare -plenus -tacta VIAE ante portas. exitus 0 =
+    pergit; 1 = artificium generatum tactum STALUM/IGNOTUM - SilvaError
+    cum lineis et sanatione; 2 = iudicare nequit (sera tenetur,
+    declarationes fractae) - SilvaError. bin/fabrica deest = MONITUM
+    (clonus recens), non obstat. sine_fabrica='<causa>' omittit (causa
+    impressa); vacua = SilvaError."""
+    if sine_fabrica is not None:
+        if not str(sine_fabrica).strip():
+            raise SilvaError('sine_fabrica causam poscit: cur iudicium'
+                             ' fabricae omittitur? - nihil cursum')
+        print('fabrica OMISSA: %s' % sine_fabrica)
+        return
+    if not os.path.exists(FABRICA_BIN):
+        print('MONITUM: bin/fabrica deest - artificia generata tacta non'
+              ' iudicata (./tools/fabrica_struere.sh)')
+        return
+    print('fabrica iudicat artificia generata tacta (%d viae)...' % len(viae))
+    r = subprocess.run([FABRICA_BIN, 'iudicare', '-plenus', '-tacta'] + list(viae),
+                       cwd=RADIX, capture_output=True, text=True)
+    lineae = [l for l in (r.stdout + r.stderr).splitlines()
+              if l and not l.startswith('ORPHANUM')]
+    if r.returncode == 0:
+        print(lineae[-1] if lineae else 'fabrica: sana')
+        return
+    genus = ('artificia generata tacta NON recentia' if r.returncode == 1
+             else 'iudicare nequit (exitus %d)' % r.returncode)
+    raise SilvaError(
+        'FABRICA (ante portas): %s - nihil cursum, nihil commissum.\n  %s\n'
+        'Sana (ordo SANATIO supra) et regenerata committe, aut'
+        " sine_fabrica='<causa>'." % (genus, '\n  '.join(lineae[-40:])))
+
+
 def _lint_praevium_exigere(viae):
     sana, relatio = lint_latinus_praevium(viae)
     if not sana:
@@ -2184,7 +2223,8 @@ def _lint_praevium_exigere(viae):
 
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
               opus=None, actor='claude', sine_debitis=None,
-              _debitae_additae=False):
+              sine_fabrica=None, _debitae_additae=False,
+              _fabrica_facta=False):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
     non honorat; pipestatus fallit). portae: nomina aut (nomen,
     filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
@@ -2210,7 +2250,10 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     viae debent (portae_debitae) petitis ADDUNTUR et CURRUNT, linea una
     cum causa; manu debitae nominantur. sine_debitis='<causa>' eas
     omittit (causa impressa; vacua = causa praevia). _debitae_additae:
-    commissio_umbra eas iam addidit."""
+    commissio_umbra eas iam addidit. FABRICA (T8): post lint, ante
+    portas, bin/fabrica iudicat artificia generata a viis tacta
+    (_fabricam_exigere); sine_fabrica='<causa>' omittit;
+    _fabrica_facta: commissio_umbra id iam fecit."""
     causae = []
     for v in viae:
         if v in VETITAE:
@@ -2231,6 +2274,8 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     if verificare:
         _lint_praevium_exigere(viae)
+    if not _fabrica_facta:
+        _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
@@ -2876,7 +2921,7 @@ def _totum_actorum(acta):
 
 
 def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
-                    siccum=False, sine_debitis=None):
+                    siccum=False, sine_debitis=None, sine_fabrica=None):
     """Portae umbrae SERIATIM (tempora non contendunt - mensurae suitae
     fidae manent), quaeque in clone photographiae suae (editio pergit),
     deinde commissio contra recepta OMNIA (plagulae viae contra blobs
@@ -2887,9 +2932,11 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     nihil commissum. Reddit (hash | None, [(nomen, compendium,
     totum_secunda)]). Portae DEBITAE (vide commissio) hic ante umbras
     adduntur, ut in umbra quoque currant; sine_debitis ut in commissio.
-    Lint latinus praevius ANTE umbras (ut in commissio)."""
+    Lint latinus praevius et iudicium fabricae ANTE umbras (ut in
+    commissio; sine_fabrica idem)."""
     if verificare:
         _lint_praevium_exigere(viae)
+    _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:
         if not str(sine_debitis).strip():
             raise SilvaError('sine_debitis causam poscit (ut --no-verify):'
@@ -2924,7 +2971,8 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     h = None
     if not siccum:
         h = commissio(nuntius, viae, portae=[v for v, _, _, _ in recepta],
-                      verificare=verificare, _debitae_additae=True)
+                      verificare=verificare, _debitae_additae=True,
+                      _fabrica_facta=True)
     for v, _, _, _ in recepta:
         receptum_delere(v)
     return h, [(n, r.compendium, tot) for _, n, r, tot in recepta]

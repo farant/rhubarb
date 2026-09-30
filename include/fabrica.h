@@ -118,8 +118,9 @@ nomen structura {
                   Piscina* piscina, chorda* relatio_out);
     /* memoria: VERUM si verificatio (titulus, clavis, artificium)
      * iam scripta; 'ingressus' = CLAVIS: sigillum ingressuum et
-     * mandati (radix nova in mandato verificationem veterem solvit). NIHIL licet (sine memoria). Consulitur pro
-     * actionibus memorabilibus SOLIS. */
+     * mandati (radix nova in mandato verificationem veterem solvit).
+     * NIHIL licet (sine memoria). Consulitur pro actionibus
+     * memorabilibus SOLIS. */
     b32 (*meminisse)(vacuum* datum, constans character* titulus,
                      constans Sigillum* ingressus,
                      constans Sigillum* artificium);
@@ -240,6 +241,20 @@ chorda
 fabrica_provenientia_via (
      chorda  titulus,
     Piscina* piscina);
+
+/* VERUM si via quaevis 'viae' (Xar de chorda, e.g. plagulae
+ * commissionis) actionem TANGIT: ingressus eius explicatus (plagula
+ * ipsa, manifesti, PLAGULARUM), exitus eius, aut plagula nova/deleta
+ * in directorio quod actio enumerat (directorium, radices, manifesta:
+ * directorium viae + '/'; plagulae: directorium ingressus, suffixo
+ * congruens). Ingressus explicari nequeunt -> VERUM (conservativum:
+ * iudex IGNOTUM nominabit). T8: commissio iudicat sola tacta. */
+b32
+fabrica_actio_tacta (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+              constans Xar* viae,
+                   Piscina* piscina);
 
 /* Sigillum actionis UT iudex et 'bin/fabrica digestum' id computant:
  * ingressus MINUS plagula provenientiae eius (quae digestum ipsum fert

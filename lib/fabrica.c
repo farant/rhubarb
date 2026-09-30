@@ -616,26 +616,21 @@ _radices_explicare (
     redde VERUM;
 }
 
-b32
-fabrica_ingressus_sigillare (
+/* Particulae omnium ingressuum actionis (explicatae, non ordinatae):
+ * via UNA explicationis pro sigillo ET pro 'tacta' - dissentire
+ * nequeunt. */
+interior b32
+_particulas_colligere (
      constans FabricaSutura* sutura,
       constans FabricaActio* actio,
                constans Xar* exclusa,
                     Piscina* piscina,
-                   Sigillum* sigillum_out,
+                        Xar* particulae,
                      chorda* causa_out)
 {
-                  Xar* particulae;
-    SigillumContextus  contextus;
-                  i32  i;
-                  i32  numerus;
-               chorda  prior;
+    i32 i;
+    i32 numerus;
 
-    particulae = xar_creare(piscina, (i32)magnitudo(Particula));
-    si (particulae == NIHIL)
-    {
-        redde FALSUM;
-    }
     numerus = xar_numerus(actio->ingressus);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -676,6 +671,31 @@ fabrica_ingressus_sigillare (
             redde FALSUM;
         }
     }
+    redde VERUM;
+}
+
+b32
+fabrica_ingressus_sigillare (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* actio,
+               constans Xar* exclusa,
+                    Piscina* piscina,
+                   Sigillum* sigillum_out,
+                     chorda* causa_out)
+{
+                  Xar* particulae;
+    SigillumContextus  contextus;
+                  i32  i;
+                  i32  numerus;
+               chorda  prior;
+
+    particulae = xar_creare(piscina, (i32)magnitudo(Particula));
+    si (   particulae == NIHIL
+        || !_particulas_colligere(sutura, actio, exclusa, piscina,
+               particulae, causa_out))
+    {
+        redde FALSUM;
+    }
 
     xar_ordinare(particulae, _particulas_comparare);
 
@@ -703,6 +723,88 @@ fabrica_ingressus_sigillare (
     }
     *sigillum_out = sigillum_finire(&contextus);
     redde VERUM;
+}
+
+b32
+fabrica_actio_tacta (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+              constans Xar* viae,
+                   Piscina* piscina)
+{
+       Xar* particulae;
+    chorda  causa;
+       i32  i;
+       i32  j;
+
+    particulae     = xar_creare(piscina, (i32)magnitudo(Particula));
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    si (   particulae == NIHIL
+        || !_particulas_colligere(sutura, actio, NIHIL, piscina,
+               particulae, &causa))
+    {
+        redde VERUM;   /* conservativum: iudex IGNOTUM nominabit */
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(viae); i++)
+    {
+        chorda via;
+        chorda directorium;
+        chorda titulus;
+        chorda directorium_cum_virgula;
+           s32 k;
+
+        via  = *(chorda*)xar_obtinere(viae, i);
+        k    = (s32)via.mensura - I;
+        dum (k >= 0 && via.datum[k] != (i8)'/')
+        {
+            k--;
+        }
+        directorium  = chorda_sectio(via, 0, (k > 0) ? (i32)k : 0);
+        titulus      = chorda_sectio(via, (i32)(k + I), via.mensura);
+        directorium_cum_virgula = _iungere(piscina, "", directorium,
+            "/");
+
+        /* ingressus explicatus aut nomina directorii enumerati */
+        per (j = ZEPHYRUM; j < xar_numerus(particulae); j++)
+        {
+            chorda particulae_via;
+
+            particulae_via = ((Particula*)xar_obtinere(particulae,
+                j))->via;
+            si (   chorda_aequalis(particulae_via, via)
+                || chorda_aequalis(particulae_via,
+                       directorium_cum_virgula))
+            {
+                redde VERUM;
+            }
+        }
+        /* exitus ipse */
+        per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+        {
+            si (chorda_aequalis(((FabricaExitus*)xar_obtinere(
+                    actio->exitus, j))->via, via))
+            {
+                redde VERUM;
+            }
+        }
+        /* plagula nova/deleta suffixo congruens in directorio
+         * PLAGULARUM (particula directorii nulla) */
+        per (j = ZEPHYRUM; j < xar_numerus(actio->ingressus); j++)
+        {
+            FabricaIngressus* ingressus;
+
+            ingressus = (FabricaIngressus*)xar_obtinere(
+                actio->ingressus, j);
+            si (   ingressus->genus == FABRICA_INGRESSUS_PLAGULAE
+                && chorda_aequalis(ingressus->via, directorium)
+                && _suffixo_congruit(titulus, ingressus->suffixa))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
 }
 
 chorda
