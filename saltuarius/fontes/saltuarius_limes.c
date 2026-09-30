@@ -4,6 +4,9 @@
 #include "iter_directoria.h"
 #include "filum.h"
 #include "via.h"
+#include "imago.h"
+#include "imago_opus.h"
+#include "quadrans.h"
 #include <string.h>
 
 /* Chordam in literis NUL-terminatas transcribere (bibliothecae
@@ -113,11 +116,13 @@ saltuarius_limes_creare (
     {
         redde NIHIL;
     }
-    limes->nota_indicis    = piscina_notare(limes->indicis);
-    limes->nota_praevisus  = piscina_notare(limes->praevisus);
-    limes->tab_parens      = tab_parens;
-    limes->tab_currens     = tab_currens;
-    limes->tab_praevisus   = tab_praevisus;
+    limes->nota_indicis       = piscina_notare(limes->indicis);
+    limes->nota_praevisus     = piscina_notare(limes->praevisus);
+    limes->tab_parens         = tab_parens;
+    limes->tab_currens        = tab_currens;
+        limes->tab_praevisus  = tab_praevisus;
+    limes->amplitudo_lat      = ZEPHYRUM;
+    limes->amplitudo_alt      = ZEPHYRUM;
     redde limes;
 }
 
@@ -195,6 +200,105 @@ saltuarius_limes_indices (
     redde legibile;
 }
 
+/* Signum imaginis in octetis primis: PNG (89 50 4E 47 0D 0A 1A 0A)
+ * aut JPEG (FF D8 FF) */
+interior b32
+_est_imago (
+    chorda textus)
+{
+    hic_manens constans i8 PNG[VIII] = {
+        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A
+    };
+
+    si (   textus.mensura                  >= VIII
+        && memcmp(textus.datum, PNG, VIII) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde (b32)(   textus.mensura >= III && textus.datum[0] == 0xFF
+                && textus.datum[1] == 0xD8 && textus.datum[2] == 0xFF);
+}
+
+/* Imaginem decodificare, ad pannum praevisus aptare (quadrans_aptare,
+ * QUADRANTES, aspectus ordinarius), scalare (AREA) et in cellulas
+ * vertere - omnia in arena praevisus, ut pingere nihil allocet.
+ * Amplitudo ignota aut decodificatio fracta -> nuntius. */
+interior vacuum
+_imaginem_praeparare (
+        SaltuariusLimes* limes,
+     SaltuariusColumnae* columnae,
+                 chorda  textus)
+{
+        ImagoFructus f;
+     SaltuariusMetra metra;
+    QuadransOptiones o = quadrans_optiones_ordinariae();
+               Imago scalata;
+                 i32 sub_lat;
+                 i32 sub_alt;
+                 i32 lat;
+                 i32 alt;
+
+    columnae->praevisus_genus = SALT_PRAEVISUS_NUNTIUS;
+    si (   limes->amplitudo_lat == ZEPHYRUM
+        || limes->amplitudo_alt == ZEPHYRUM)
+    {
+        columnae->praevisus_nuntius = chorda_ex_literis("(imago)",
+            limes->praevisus);
+        redde;
+    }
+    f = imago_caricare_ex_memoria(textus.datum, textus.mensura,
+        limes->praevisus);
+    si (!f.successus)
+    {
+        columnae->praevisus_nuntius = chorda_ex_literis(
+            "(imago non legibilis)", limes->praevisus);
+        redde;
+    }
+    saltuarius_columnae_metiri(limes->amplitudo_lat,
+        limes->amplitudo_alt,
+        &metra);
+    quadrans_aptare(f.imago.latitudo, f.imago.altitudo,
+        (i32)metra.praevisus_lat, (i32)metra.contentum_alt,
+        QUADRANS_QUADRANTES, QUADRANS_ASPECTUS_ORDINARIUS, &sub_lat,
+        &sub_alt);
+    si (sub_lat == ZEPHYRUM || sub_alt == ZEPHYRUM)
+    {
+        columnae->praevisus_nuntius = chorda_ex_literis("(imago)",
+            limes->praevisus);
+        redde;
+    }
+    scalata = imago_scalare(&f.imago, sub_lat, sub_alt,
+        IMAGO_SCALA_AREA,
+        limes->praevisus);
+    quadrans_mensurare(&o, sub_lat, sub_alt, &lat, &alt);
+    columnae->praevisus_cellulae = (QuadransCellula*)piscina_allocare(
+        limes->praevisus,
+        (memoriae_index)(lat * alt) * magnitudo(QuadransCellula));
+    si (   scalata.pixela               == NIHIL
+        || columnae->praevisus_cellulae == NIHIL)
+    {
+        columnae->praevisus_nuntius = chorda_ex_literis(
+            "(imago non legibilis)", limes->praevisus);
+        redde;
+    }
+    quadrans_computare(&scalata, ZEPHYRUM, ZEPHYRUM, sub_lat, sub_alt,
+        &o,
+        columnae->praevisus_cellulae);
+    columnae->praevisus_genus      = SALT_PRAEVISUS_IMAGO;
+    columnae->praevisus_imago_lat  = lat;
+    columnae->praevisus_imago_alt  = alt;
+}
+
+vacuum
+saltuarius_limes_amplitudo (
+    SaltuariusLimes* limes,
+                i32  latitudo,
+                i32  altitudo)
+{
+    limes->amplitudo_lat = latitudo;
+    limes->amplitudo_alt = altitudo;
+}
+
 vacuum
 saltuarius_limes_praevisum (
            SaltuariusLimes* limes,
@@ -206,10 +310,14 @@ saltuarius_limes_praevisum (
                            chorda  via_selecti;
 
     piscina_reficere(limes->praevisus, limes->nota_praevisus);
-    columnae->praevisus_genus           = SALT_PRAEVISUS_NIHIL;
-    columnae->praevisus_tab             = NIHIL;
-    columnae->praevisus_textus.mensura  = ZEPHYRUM;
-    columnae->praevisus_textus.datum    = NIHIL;
+    columnae->praevisus_genus             = SALT_PRAEVISUS_NIHIL;
+    columnae->praevisus_tab               = NIHIL;
+    columnae->praevisus_textus.mensura    = ZEPHYRUM;
+        columnae->praevisus_textus.datum  = NIHIL;
+    /* arena refecta: cellulae priores iam invalidae */
+    columnae->praevisus_cellulae   = NIHIL;
+    columnae->praevisus_imago_lat  = ZEPHYRUM;
+    columnae->praevisus_imago_alt  = ZEPHYRUM;
 
     selectum = saltuarius_tabularium_selectum(limes->tab_currens);
     si (selectum == NIHIL)
@@ -265,6 +373,13 @@ saltuarius_limes_praevisum (
                     (selectum->mensura > ZEPHYRUM)
                         ? "(non legibile)" : "(vacuum)",
                     limes->praevisus);
+                redde;
+            }
+            /* IMAGO (quadrans Q7): signum PNG aut JPEG ANTE custodiam
+             * binarii (imagines NUL plenae sunt) */
+            si (_est_imago(textus))
+            {
+                _imaginem_praeparare(limes, columnae, textus);
                 redde;
             }
             /* custodia binarii: NUL in primis 512 octetis */

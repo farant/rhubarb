@@ -17,6 +17,9 @@
  *      quadratum pro partitione fixa minuit - violatio = vitium); aurum
  *      errorum commissum solum decrescit (QUADRANS_AURUM_SCRIBERE=1
  *      scribit).
+ * IX.  quadrans_aptare (Q7, ex effigies translatum): casus manu
+ *      computati (quadratum, latum, altum, minimum sursum scalatum,
+ *      vacuum; DIMIDIUM; aspectus cellulae quadratus).
  * VIII. DIMIDIUM (Q3): figura superior, spatium, altitudo impar,
  *      exactitudo (error 0 in resolutione propria); comparatio aequa
  *      modorum pro EODEM rete cellularum (80x48): reconstructio in
@@ -185,6 +188,31 @@ _error_dimidii_contra (
     }
     n = (i64)referentia->latitudo * (i64)referentia->altitudo * III;
     redde (i32)((summa * C + n / II) / n);
+}
+
+interior vacuum
+_mensura (
+              i32  img_lat,
+              i32  img_alt,
+    QuadransModus  modus,
+              i32  aspectus,
+              i32  sub_lat,
+              i32  sub_alt,
+    constans character* causa)
+{
+    i32 lat = XCIX;
+    i32 alt = XCIX;
+
+    quadrans_aptare(img_lat, img_alt, XL, X, modus, aspectus, &lat,
+        &alt);
+    si (lat != sub_lat || alt != sub_alt)
+    {
+        imprimere("  FRACTA: %s: %ux%u, exspectata %ux%u\n", causa,
+            (insignatus integer)lat, (insignatus integer)alt,
+            (insignatus integer)sub_lat, (insignatus integer)sub_alt);
+    }
+    CREDO_AEQUALIS_I32 (lat, sub_lat);
+    CREDO_AEQUALIS_I32 (alt, sub_alt);
 }
 
 /* Aurum: lineae 'titulus extrema media'; -1 si abest */
@@ -595,6 +623,22 @@ principale (vacuum)
             fclose(aurum);
         }
     }
+
+    imprimere("\n--- IX. Aptatio (intra XL x X cellulas) ---\n");
+    /* quadratum: sub-pixelum quadrantis 1:2 altum -> 40x20 (20x10
+     * cellulae, in scrinio quadratae) */
+    _mensura(C, C, QUADRANS_QUADRANTES, L, XL, XX, "quadratum");
+    _mensura(C, C, QUADRANS_DIMIDIUM, L, XX, XX, "quadratum dimidium");
+    /* latum: latitudo limitat -> 80x10 */
+    _mensura(CD, C, QUADRANS_QUADRANTES, L, LXXX, X, "latum");
+    /* altum: 10x20 */
+    _mensura(C, CD, QUADRANS_QUADRANTES, L, X, XX, "altum");
+    /* minimum 1x1 sursum scalatum ad altitudinem: 40x20 */
+    _mensura(I, I, QUADRANS_QUADRANTES, L, XL, XX, "minimum");
+    /* cellula quadrata (aspectus C): sub-pixelum quadratum -> 20x20 */
+    _mensura(C, C, QUADRANS_QUADRANTES, C, XX, XX, "cellula quadrata");
+    _mensura(ZEPHYRUM, C, QUADRANS_QUADRANTES, L, ZEPHYRUM, ZEPHYRUM,
+        "vacuum");
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

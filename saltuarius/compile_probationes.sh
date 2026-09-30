@@ -66,6 +66,9 @@ declare -a RADIX_FONTES=(
     "utf8"
     "runae"
     "runae_tabulae"
+    "quadrans"
+    "imago"
+    "imago_opus"
     "credo"
 )
 

@@ -159,6 +159,9 @@ saltuarius_columnae_creare (
     columnae->praevisus_textus.datum     = NIHIL;
     columnae->praevisus_nuntius.mensura  = ZEPHYRUM;
     columnae->praevisus_nuntius.datum    = NIHIL;
+    columnae->praevisus_cellulae         = NIHIL;
+    columnae->praevisus_imago_lat        = ZEPHYRUM;
+    columnae->praevisus_imago_alt        = ZEPHYRUM;
     redde columnae;
 }
 
@@ -237,6 +240,19 @@ saltuarius_columnae_pingere (
         casus SALT_PRAEVISUS_TEXTUS:
             _praevisum_textus_pingere(opus,
                 columnae->praevisus_textus, &metra);
+            frange;
+        casus SALT_PRAEVISUS_IMAGO:
+            /* cellulae praeparatae (limes): in medio panni ponuntur */
+            saltuarius_pen_cellulas(opus,
+                metra.praevisus_x
+                    + (metra.praevisus_lat
+                       - (s32)columnae->praevisus_imago_lat) / II,
+                metra.contentum_y
+                    + (metra.contentum_alt
+                       - (s32)columnae->praevisus_imago_alt) / II,
+                columnae->praevisus_cellulae,
+                columnae->praevisus_imago_lat,
+                columnae->praevisus_imago_alt);
             frange;
         casus SALT_PRAEVISUS_NUNTIUS:
             (vacuum)saltuarius_pen_textum(opus, metra.praevisus_x,

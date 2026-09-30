@@ -18,6 +18,7 @@
 #include "chorda.h"
 #include "tessera.h"
 #include "runae.h"
+#include "quadrans.h"
 
 /* Politica runarum operis (TesseraPolitica -> RunaePolitica):
  * mensura saltuarii eadem ac pictura tesserae */
@@ -51,6 +52,17 @@ saltuarius_pen_textum (
               i32  mensura,
               i32  latitudo_max,
     TesseraStilus  stilus);
+
+/* Cellulas quadrantum lat x alt (ordine linearum) ab (x, y) ponere
+ * (quadrans Q7): runa -> signum compactum, colores -> stilus */
+vacuum
+saltuarius_pen_cellulas (
+                 TesseraOpus* opus,
+                         s32  x,
+                         s32  y,
+    constans QuadransCellula* cellulae,
+                         i32  lat,
+                         i32  alt);
 
 /* Literis NUL-terminatis */
 vacuum

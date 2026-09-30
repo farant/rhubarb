@@ -40,6 +40,10 @@ nomen structura {
     SaltuariusTabularium* tab_parens;
     SaltuariusTabularium* tab_currens;
     SaltuariusTabularium* tab_praevisus;
+    /* amplitudo scrinii (cellulae) pro imagine in pannum praevisus
+     * aptanda (quadrans Q7); 0 = ignota -> imago non computatur */
+                     i32 amplitudo_lat;
+                     i32 amplitudo_alt;
 } SaltuariusLimes;
 
 /* Creare limitem: arenas refectionis generat; tabularia (ex arena
@@ -50,6 +54,14 @@ saltuarius_limes_creare (
     SaltuariusTabularium* tab_parens,
     SaltuariusTabularium* tab_currens,
     SaltuariusTabularium* tab_praevisus);
+
+/* Amplitudinem scrinii ponere (initio et post AMPLITUDO); praevisum
+ * deinde iterum implendum si imago in eo est */
+vacuum
+saltuarius_limes_amplitudo (
+    SaltuariusLimes* limes,
+                i32  latitudo,
+                i32  altitudo);
 
 /* Arenas destruere (exitus app) */
 vacuum
@@ -70,7 +82,10 @@ saltuarius_limes_indices (
 
 /* Praevisum ex disco implere pro introitu selecto currentis:
  * directorium -> index; filum -> textus (custodiae: magnum,
- * binarium, non legibile); alius -> nuntius. Columnae aptantur. */
+ * binarium, non legibile); IMAGO (signum PNG aut JPEG in octetis
+ * primis, ANTE custodiam binarii) -> cellulae quadrantum ad pannum
+ * aptatae (quadrans Q7; decodificatio fracta -> nuntius); alius ->
+ * nuntius. Columnae aptantur. */
 vacuum
 saltuarius_limes_praevisum (
            SaltuariusLimes* limes,

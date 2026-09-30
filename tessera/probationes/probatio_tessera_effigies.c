@@ -1,9 +1,7 @@
 /* probatio_tessera_effigies.c - effigies: aptatio et pictura (quadrans
  * Q5)
  *
- * I.   effigies_mensurare: casus manu computati (quadratum, latum,
- *      altum, minimum sursum scalatum, vacuum; DIMIDIUM; aspectus
- *      cellulae quadratus).
+ * I.   (aptatio in probatio_quadrans, IX - quadrans_aptare)
  * II.  effigies_pingere: runa -> signum compactum (U+2580 = E2 96 80 ->
  *      0x8096E2), colores; spatium fundum servat.
  * III. Via tota: imago minima -> quadrans_computare -> effigies_pingere
@@ -79,31 +77,6 @@ _cellulae (
     redde c;
 }
 
-interior vacuum
-_mensura (
-              i32  img_lat,
-              i32  img_alt,
-    QuadransModus  modus,
-              i32  aspectus,
-              i32  sub_lat,
-              i32  sub_alt,
-    constans character* causa)
-{
-    i32 lat = XCIX;
-    i32 alt = XCIX;
-
-    effigies_mensurare(img_lat, img_alt, XL, X, modus, aspectus, &lat,
-        &alt);
-    si (lat != sub_lat || alt != sub_alt)
-    {
-        imprimere("  FRACTA: %s: %ux%u, exspectata %ux%u\n", causa,
-            (insignatus integer)lat, (insignatus integer)alt,
-            (insignatus integer)sub_lat, (insignatus integer)sub_alt);
-    }
-    CREDO_AEQUALIS_I32 (lat, sub_lat);
-    CREDO_AEQUALIS_I32 (alt, sub_alt);
-}
-
 s32
 principale (vacuum)
 {
@@ -123,22 +96,6 @@ principale (vacuum)
     pm    = tessera_pons_memoriae_creare(piscina, VIII, II);
     opus  = tessera_aperire(piscina, &pm->pons);
     CREDO_NON_NIHIL (opus);
-
-    imprimere("\n--- I. Aptatio (intra XL x X cellulas) ---\n");
-    /* quadratum: sub-pixelum quadrantis 1:2 altum -> 40x20 (20x10
-     * cellulae, in scrinio quadratae) */
-    _mensura(C, C, QUADRANS_QUADRANTES, L, XL, XX, "quadratum");
-    _mensura(C, C, QUADRANS_DIMIDIUM, L, XX, XX, "quadratum dimidium");
-    /* latum: latitudo limitat -> 80x10 */
-    _mensura(CD, C, QUADRANS_QUADRANTES, L, LXXX, X, "latum");
-    /* altum: 10x20 */
-    _mensura(C, CD, QUADRANS_QUADRANTES, L, X, XX, "altum");
-    /* minimum 1x1 sursum scalatum ad altitudinem: 40x20 */
-    _mensura(I, I, QUADRANS_QUADRANTES, L, XL, XX, "minimum");
-    /* cellula quadrata (aspectus C): sub-pixelum quadratum -> 20x20 */
-    _mensura(C, C, QUADRANS_QUADRANTES, C, XX, XX, "cellula quadrata");
-    _mensura(ZEPHYRUM, C, QUADRANS_QUADRANTES, L, ZEPHYRUM, ZEPHYRUM,
-        "vacuum");
 
     imprimere("\n--- II. Pictura cellularum ---\n");
     {
@@ -319,9 +276,9 @@ principale (vacuum)
             {
                 perge;
             }
-            effigies_mensurare(f.imago.latitudo, f.imago.altitudo, LXXX,
+            quadrans_aptare(f.imago.latitudo, f.imago.altitudo, LXXX,
                 XLVIII, QUADRANS_QUADRANTES,
-                EFFIGIES_ASPECTUS_ORDINARIUS,
+                QUADRANS_ASPECTUS_ORDINARIUS,
                 &sub_lat, &sub_alt);
             referentia = imago_scalare(&f.imago, sub_lat, sub_alt,
                 IMAGO_SCALA_AREA, piscina);

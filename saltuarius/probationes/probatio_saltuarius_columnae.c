@@ -9,7 +9,8 @@
  * Scaenae: dispositio, panni + suffixa + selectio INVERSUM,
  * praevisus directorii/textus (incl. purgatio \t et \r), motus
  * selectionis inter picturas (nihil manet), vacuum, nuntius,
- * truncatio ad limitem panni (separator intactus).
+ * truncatio ad limitem panni (separator intactus), IMAGO (quadrans
+ * Q7: cellulae praeparatae in medio panni, separator intactus).
  */
 #include "latina.h"
 #include "piscina.h"
@@ -339,6 +340,46 @@ principale (vacuum)
             TESSERA_SIGNUM_SIMPLEX_V);
         CREDO_AEQUALIS_S32 (
             saltuarius_proba_quaerere(opus, VII, "1/1"), XXXVII);
+    }
+
+
+    /* ========================================================
+     * PROBARE: praevisus IMAGO (quadrans Q7) - cellulae in medio
+     * panni (praevisus 31..59 = XXIX lata, contentum 1..10)
+     * ======================================================== */
+
+    {
+        QuadransCellula cellulae[II];
+
+        imprimere("\n--- Probans praevisum imaginis ---\n");
+        /* scaena 'amplitudo mutata' supra XL x VIII reliquit: LX x XII
+         * restituitur, ut positio manu computata valeat */
+        tessera_pons_memoriae_amplitudo(pm, LX, XII);
+        CREDO_VERUM (tessera_magnitudinem_renovare(opus));
+        cellulae[0].runa               = 0x2580;
+        cellulae[0].color_litterae     = 0xFF0000;
+        cellulae[0].color_fundi        = 0x0000FF;
+        cellulae[1].runa               = 0x20;
+        cellulae[1].color_litterae     = 0x00FF00;
+        cellulae[1].color_fundi        = 0x00FF00;
+        columnae->praevisus_genus      = SALT_PRAEVISUS_IMAGO;
+        columnae->praevisus_cellulae   = cellulae;
+        columnae->praevisus_imago_lat  = II;
+        columnae->praevisus_imago_alt  = I;
+        saltuarius_columnae_pingere(columnae, res, opus);
+        /* x = 31 + (29 - 2) / 2 = 44; y = 1 + (10 - 1) / 2 = 5 */
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, XLIV, V).signum,
+            0x8096E2);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, XLIV, V).color_litterae,
+            0xFF0000);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, XLIV, V).color_fundi,
+            0x0000FF);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, XLV, V).signum, 0x20);
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, XLV, V).color_fundi,
+            0x00FF00);
+        /* separator intactus */
+        CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, XXX, V).signum,
+            PROBA_CELLA(opus, XXX, IV).signum);
     }
 
     credo_imprimere_compendium();

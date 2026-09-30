@@ -2,7 +2,7 @@
  * terminal verum!)
  *
  * Imaginem (PNG, JPEG ... per imago) ad scrinium aptat sine distortione
- * (effigies_mensurare, aspectus cellulae 1:2), per IMAGO_SCALA_AREA
+ * (quadrans_aptare, aspectus cellulae 1:2), per IMAGO_SCALA_AREA
  * scalat, in cellulas quadrantum vertit (quadrans) et in medio pingit.
  * Linea status: titulus, mensurae, modus, profunditas colorum, error
  * reconstructionis (quadrans_error).
@@ -99,8 +99,8 @@ _pingere (
 
         o.modus    = modus;
         o.colores  = colores;
-        effigies_mensurare(e->imago.latitudo, e->imago.altitudo, lat,
-            alt, modus, EFFIGIES_ASPECTUS_ORDINARIUS, &sub_lat,
+        quadrans_aptare(e->imago.latitudo, e->imago.altitudo, lat,
+            alt, modus, QUADRANS_ASPECTUS_ORDINARIUS, &sub_lat,
             &sub_alt);
         si (sub_lat > ZEPHYRUM && sub_alt > ZEPHYRUM)
         {

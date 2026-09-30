@@ -755,9 +755,13 @@ principale (
     si (!saltuarius_limes_indices(app.limes, app.res, app.columnae,
         NIHIL))
     {
-        saltuarius_res_nuntiare(app.res, "(radix non legibilis)",
-            NUNTIUS_QUADRA);
+                saltuarius_res_nuntiare(app.res,
+                    "(radix non legibilis)",
+                    NUNTIUS_QUADRA);
     }
+    /* amplitudo pro imaginibus in pannum praevisus aptandis (Q7) */
+    saltuarius_limes_amplitudo(app.limes, tessera_latitudo(app.opus),
+        tessera_altitudo(app.opus));
     saltuarius_limes_praevisum(app.limes, app.res, app.columnae);
 
     dum (app.res->currens)
@@ -797,9 +801,15 @@ principale (
 
         commutatio (tessera_eventum_expectare(lector, &ev, CCL))
         {
-            casus TESSERA_EVENTUM_AMPLITUDO:
+                        casus TESSERA_EVENTUM_AMPLITUDO:
             casus TESSERA_EVENTUM_RESUMPTUM:
                 (vacuum)tessera_magnitudinem_renovare(app.opus);
+                /* imago praevisus ad pannum novum iterum aptatur */
+                saltuarius_limes_amplitudo(app.limes,
+                    tessera_latitudo(app.opus),
+                    tessera_altitudo(app.opus));
+                saltuarius_limes_praevisum(app.limes, app.res,
+                    app.columnae);
                 frange;
             ordinarius:
                 frange;

@@ -65,6 +65,10 @@ nomen structura {
                 i32 fundus;    /* 0x00RRGGBB: alpha et extra-fines */
 } QuadransOptiones;
 
+/* ASPECTUS cellulae (latitudo / altitudo) in centesimis: numquam
+ * quaeritur (thesis tesserae), PARAMETRUS est; ordinarie L = 1:2. */
+#define QUADRANS_ASPECTUS_ORDINARIUS L
+
 /* Optiones ordinariae: QUADRANTES, MEDIA, fundus niger */
 QuadransOptiones
 quadrans_optiones_ordinariae (vacuum);
@@ -96,6 +100,24 @@ quadrans_computare (
                           i32  altitudo,
     constans QuadransOptiones* optiones,
               QuadransCellula* exitus);
+
+/* Sub-pixela ad imaginem img_lat x img_alt pixelorum intra cellulas
+ * max_lat x max_alt aptandam (scalatio sursum aut deorsum), ut in
+ * scrinio sine distortione appareat (planum D5): *sub_lat x *sub_alt
+ * (>= I si imago non vacua; 0 aliter). Sub-pixelum QUADRANTUM dimidia
+ * cellula latum et dimidia altum est (cum 1:2 altum); DIMIDII cellula
+ * tota latum et dimidia altum (cum 1:2 quadratum). Vocans imaginem
+ * ad has mensuras scalat (imago_opus) et deinde computat. */
+vacuum
+quadrans_aptare (
+              i32  img_lat,
+              i32  img_alt,
+              i32  max_lat,
+              i32  max_alt,
+    QuadransModus  modus,
+              i32  aspectus,
+              i32* sub_lat,
+              i32* sub_alt);
 
 /* Error reconstructionis (planum D7b): cellulae (ex quadrans_computare
  * super EANDEM regionem et optiones) in pixela revertuntur - bitum

@@ -18,6 +18,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "tessera.h"
+#include "quadrans.h"
 #include "saltuarius_tabularium.h"
 #include "saltuarius_res.h"
 
@@ -25,7 +26,8 @@ nomen enumeratio {
     SALT_PRAEVISUS_NIHIL = 0,
     SALT_PRAEVISUS_DIRECTORIUM,  /* praevisus_tab pingitur */
     SALT_PRAEVISUS_TEXTUS,       /* praevisus_textus pingitur */
-    SALT_PRAEVISUS_NUNTIUS       /* praevisus_nuntius (celatum) */
+    SALT_PRAEVISUS_NUNTIUS,      /* praevisus_nuntius (celatum) */
+    SALT_PRAEVISUS_IMAGO         /* praevisus_cellulae (quadrans Q7) */
 } SaltuariusPraevisusGenus;
 
 nomen structura {
@@ -35,6 +37,11 @@ nomen structura {
         SaltuariusTabularium* praevisus_tab;
                       chorda  praevisus_textus;
                       chorda  praevisus_nuntius;
+    /* IMAGO: cellulae a limite in arena praevisus PRAEPARATAE (aptatae
+     * ad pannum) - pingere solum ponit, nihil allocat */
+             QuadransCellula* praevisus_cellulae;
+                         i32  praevisus_imago_lat;
+                         i32  praevisus_imago_alt;
 } SaltuariusColumnae;
 
 /* Mensurae dispositionis - publicae quia clicus (A3) pannum ex

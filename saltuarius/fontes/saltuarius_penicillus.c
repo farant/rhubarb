@@ -2,6 +2,7 @@
 
 #include "saltuarius_penicillus.h"
 #include "runae.h"
+#include "utf8.h"
 
 RunaePolitica
 saltuarius_pen_politica (
@@ -74,6 +75,35 @@ saltuarius_pen_textum (
         cursor   = post;
     }
     redde positae;
+}
+
+vacuum
+saltuarius_pen_cellulas (
+                 TesseraOpus* opus,
+                         s32  x,
+                         s32  y,
+    constans QuadransCellula* cellulae,
+                         i32  lat,
+                         i32  alt)
+{
+    i32 i;
+    i32 j;
+
+    per (j = ZEPHYRUM; j < alt; j++)
+    {
+        per (i = ZEPHYRUM; i < lat; i++)
+        {
+             constans QuadransCellula* c = &cellulae[j * lat + i];
+                                   i8  octeti[IV];
+                                  s32  n = utf8_codere(c->runa, octeti);
+
+            tessera_cellulam_ponere(opus, x + (s32)i, y + (s32)j,
+                tessera_signum_ex_octetis(octeti,
+                    n > ZEPHYRUM ? (i32)n : ZEPHYRUM),
+                tessera_stilus(c->color_litterae, c->color_fundi,
+                    ZEPHYRUM));
+        }
+    }
 }
 
 vacuum

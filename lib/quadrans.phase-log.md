@@ -267,3 +267,40 @@ members. Strengthened with the chromatic-colours assertion, then caught
 (0 chromatic colours).
 
 **Fran's look (2026-09-30): "that looks good!"**
+
+---
+
+## Q7 — saltuarius image preview (2026-09-30)
+
+**INTENTIO (plan Q7).** saltuarius's preview pane shows a picture when the
+selected file is one, instead of "(filum binarium)". Recognition by
+SIGNATURE, not suffix: PNG `89 50 4E 47 0D 0A 1A 0A` or JPEG `FF D8 FF`,
+checked BEFORE the binary guard (images are full of NULs). The limes
+(disk edge) decodes, fits, scales (AREA) and computes the cells into its
+preview arena, so `columnae_pingere` still allocates nothing per frame;
+the columns module only centres and blits the stored cells
+(`saltuarius_pen_cellulas`). The limes needs the pane size to fit, so it
+gained `saltuarius_limes_amplitudo` (called at startup and on
+AMPLITUDO/RESUMPTUM, followed by a fresh `praevisum`). Notes: size
+unknown → "(imago)"; decode failure → "(imago non legibilis)"; the
+existing 1 MB preview cap still applies ("(filum magnum)").
+
+**API move:** the fitting maths left effigies for `lib/quadrans` as
+`quadrans_aptare(img_lat, img_alt, max_lat, max_alt, modus, aspectus,
+&sub_lat, &sub_alt)` + `QUADRANS_ASPECTUS_ORDINARIUS` (L = cell 1:2), so
+saltuarius does not reach into tessera's instrumenta tree. effigies calls
+it too; its fitting tests moved to probatio_quadrans section IX
+(quadrans 200/200, tessera 14/14).
+
+**Tests:** probatio_saltuarius_limes "imagines" (a copied
+christus_sculptus.jpg and a corrupt fracta.jpg: unknown size → NUNTIUS;
+80×24 → IMAGO inside the pane touching one limit; corrupt → the note);
+probatio_saltuarius_columnae IMAGO case (exact cells + colours at the
+centred position, separator intact). One fix on the way: an earlier
+scene resized the pons to 40×8, so the section restores 60×12 first.
+
+**Plants (compiling):** JPEG not recognized, size not stored (first
+version didn't compile — redone), pane fitting neglected, not centred —
+all four caught. saltuarius 13/13.
+
+**Fran's look (2026-09-30): "that looks great".**

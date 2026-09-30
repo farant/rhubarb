@@ -6,7 +6,9 @@
  * ex disco (ordinati, parens selectum per titulum), praevisus
  * omnium generum (directorium/textus/magnum/binarium/vacuum/non
  * intrabile/non legibile), selectandum in ascensu, MEMORIA FRENATA
- * (refectio arenae: usus non crescit trans refectiones).
+ * (refectio arenae: usus non crescit trans refectiones), IMAGINES
+ * (quadrans Q7: photographia -> cellulae ad pannum aptatae; JPEG
+ * fractum -> nuntius; amplitudo ignota -> nuntius).
  */
 #include "latina.h"
 #include "piscina.h"
@@ -17,6 +19,7 @@
 #include <stdlib.h>
 
 #define FIXUM "/tmp/saltuarius_limes_fixum"
+#define FIXUM_IMAGINUM "/tmp/saltuarius_limes_imagines"
 
 interior vacuum
 _arborem_figere (vacuum)
@@ -311,6 +314,72 @@ principale (vacuum)
     }
 
     (vacuum)system("rm -rf " FIXUM);
+
+
+    /* ========================================================
+     * PROBARE: imagines (quadrans Q7) - arbor propria, ne indices
+     * supra mutentur
+     * ======================================================== */
+
+    {
+                 character  mandatum[DXII];
+        constans character* radix = getenv("RHUBARB_RADIX");
+        SaltuariusRes* res_imaginum;
+        SaltuariusMetra metra;
+        FILE* f;
+
+        imprimere("\n--- Probans imagines ---\n");
+        sprintf(mandatum, "rm -rf " FIXUM_IMAGINUM " && mkdir -p "
+            FIXUM_IMAGINUM " && cp '%s/probationes/fixa/quadrans/"
+            "christus_sculptus.jpg' " FIXUM_IMAGINUM "/pictura.jpg",
+            radix != NIHIL ? radix : "..");
+        (vacuum)system(mandatum);
+        f = fopen(FIXUM_IMAGINUM "/fracta.jpg", "wb");
+        si (f)
+        {
+            fputs("\xFF\xD8\xFF\xE0 non est imago", f);
+            fclose(f);
+        }
+        res_imaginum = saltuarius_res_creare(piscina, FIXUM_IMAGINUM);
+        CREDO_VERUM (saltuarius_limes_indices(limes, res_imaginum,
+            columnae, NIHIL));
+        /* fracta.jpg (0) pictura.jpg (I) */
+        CREDO_AEQUALIS_I32 ((i32)currens->numerus, II);
+
+        /* amplitudo ignota: imago non computatur, nuntius */
+        currens->selectio = I;
+        saltuarius_limes_praevisum(limes, res_imaginum, columnae);
+        CREDO_AEQUALIS_I32 ((i32)columnae->praevisus_genus,
+            (i32)SALT_PRAEVISUS_NUNTIUS);
+
+        /* amplitudo LXXX x XXIV: pannus praevisus; imago aptata */
+        saltuarius_limes_amplitudo(limes, LXXX, XXIV);
+        saltuarius_columnae_metiri(LXXX, XXIV, &metra);
+        saltuarius_limes_praevisum(limes, res_imaginum, columnae);
+        CREDO_AEQUALIS_I32 ((i32)columnae->praevisus_genus,
+            (i32)SALT_PRAEVISUS_IMAGO);
+        CREDO_NON_NIHIL (columnae->praevisus_cellulae);
+        CREDO_VERUM (columnae->praevisus_imago_lat > ZEPHYRUM);
+        CREDO_VERUM (columnae->praevisus_imago_lat
+            <= (i32)metra.praevisus_lat);
+        CREDO_VERUM (columnae->praevisus_imago_alt
+            <= (i32)metra.contentum_alt);
+        /* christus_sculptus 800x729 in pannum: latitudo aut altitudo
+         * plena (aptatio tangit limitem unum) */
+        CREDO_VERUM (   columnae->praevisus_imago_lat
+                         == (i32)metra.praevisus_lat
+                     || columnae->praevisus_imago_alt
+                         == (i32)metra.contentum_alt);
+
+        /* JPEG fractum: nuntius, non binarium */
+        currens->selectio = ZEPHYRUM;
+        saltuarius_limes_praevisum(limes, res_imaginum, columnae);
+        CREDO_AEQUALIS_I32 ((i32)columnae->praevisus_genus,
+            (i32)SALT_PRAEVISUS_NUNTIUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS (columnae->praevisus_nuntius,
+            "(imago non legibilis)");
+    }
+
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
