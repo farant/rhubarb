@@ -63,6 +63,15 @@ nomen structura {
        Xar* vexilla;    /* chorda */
 } AedilisRegulaVendor;
 
+/* Regula compilationis per fontem NOSTRUM (sectio 'compilatio'):
+ * vexilla post communia addita; nomen obiecti ea fert
+ * (lib__sigillum__O2.o), ut obiectum commune vexillis aliis numquam
+ * per mtime recens videatur (fabrica T8: sigillum -O2). */
+nomen structura {
+    chorda  fons;       /* e.g. "lib/sigillum.c" */
+       Xar* vexilla;    /* chorda */
+} AedilisRegulaCompilationis;
+
 nomen structura {
     chorda  caput;      /* e.g. "include/aliquid.h" */
        Xar* obiecta;    /* chorda: fontes obiectorum */
@@ -75,6 +84,7 @@ nomen structura {
        Xar* variantes;  /* chorda: praelatio variantium, ordine */
        Xar* regulae_nexus;   /* AedilisRegulaNexus (valore) */
        Xar* regulae_vendor;  /* AedilisRegulaVendor (valore) */
+       Xar* regulae_compilationis; /* AedilisRegulaCompilationis */
        Xar* irregularia;     /* AedilisIrregulare (valore) */
 } AedilisConfiguratio;
 

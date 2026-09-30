@@ -826,6 +826,17 @@ comment (origo annotatio; absent-until-generated is allowed).
 
 ### Task T8: surfaces and the oracle gate
 
+> **Amended 2026-09-30 (after T6, with Fran):** T8 gains (0) a
+> per-source compile rule in aedilis.stml (`compilatio`, flags carried
+> in the OBJECT NAME so a flag change can never be hidden by mtime) with
+> `lib/sigillum.c` at -O2 — measured: celer 2.65 s → ~1.45 s, identical
+> verdicts (all-objects -O2: ~1.1 s, not worth the scope); (5) a lock
+> against concurrent `-plenus` runs (two judges emptied each other's
+> clausurae in T6); (6) the Q36 line "IGNOTUM: N binaria in bin/ sine
+> declaratione" — planned in T7 Step 6, never built. Step 3's cost is
+> an open design question (a widely-included edit makes `-plenus` on
+> intersecting actions ~1–2 min per commit) — options to Fran at Step 3.
+
 **Files:** Create `tools/fabrica_oraculum.sh`,
 `.claude/hooks/fabrica-celer.sh`; modify `pythonica/silva.py`
 (`PORTAE`, `commissio`), `.claude/settings.json` (SessionStart).

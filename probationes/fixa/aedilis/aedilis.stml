@@ -18,6 +18,11 @@
       <vexillum! (>-O2 -DLIBRUM=1
     </fons>
   </vendor>
+  <compilatio>
+    <fons via="lib/alpha.c">
+      <vexillum! (>-O2
+    </fons>
+  </compilatio>
   <irregularia>
     <regula caput="include/delta.h">
       <obiectum (>lib/delta_verum.c

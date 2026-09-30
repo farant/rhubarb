@@ -39,6 +39,7 @@
     <liberum nomen="variantes"    maximum="1"/>
     <liberum nomen="nexus"        maximum="1"/>
     <liberum nomen="vendor"       maximum="1"/>
+    <liberum nomen="compilatio"   maximum="1"/>
     <liberum nomen="irregularia"  maximum="1"/>
   </elementum>
 
@@ -91,6 +92,16 @@
   <elementum nomen="fons">
     <attributum nomen="via" genus="textus" necessarium="verum"/>
     <liberum nomen="vexillum" minimum="1"/>
+  </elementum>
+
+  <!-- ================= COMPILATIO ================= -->
+
+  <elementum nomen="compilatio"
+    nota="regulae compilationis per fontem NOSTRUM: vexilla post
+          communia addita; nomen obiecti ea fert (lib__x__O2.o), ut
+          obiectum commune vexillis aliis per mtime numquam recens
+          videatur (fabrica T8: sigillum -O2)">
+    <liberum nomen="fons" minimum="1"/>
   </elementum>
 
   <!-- ================= IRREGULARIA ================= -->

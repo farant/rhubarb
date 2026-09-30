@@ -73,6 +73,14 @@
       <vexillum! (>-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1
     </fons>
   </vendor>
+  <!-- compilatio: vexilla per fontem nostrum, nomine obiecti lata
+       (lib__sigillum__O2.o). sigillum -O2 (fabrica T8, mensuratum):
+       XLVI MB II,8x celerius, iudicium celer II,65 s -> ~I,45 s. -->
+  <compilatio>
+    <fons via="lib/sigillum.c">
+      <vexillum! (>-O2
+    </fons>
+  </compilatio>
   <!-- irregularia vacua: exceptiones caput->corpus nunc IN
        capitibus ipsis vivunt (annotatio "corpus", quae cum proba
        conventionis COMPONITUR). Regulae hic manent pro capitibus

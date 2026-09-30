@@ -374,3 +374,15 @@ regeneratio congruit`, all 37 others `memoria`; restored → fori
 -O0 (sample: `_bloccum_comprimere` 307/700). Honest fix: sigillum at -O2
 (needs a per-object compile rule in aedilis). A stat-keyed digest cache
 would violate "never mtime".
+
+## 2026-09-30 — T8 part 1: sigillum at -O2 via aedilis `compilatio`
+
+celer 2.65 s → 1.37 s warm (1.93 s first run) — under the 2 s budget
+for the session hook. Mechanism lives in aedilis (tools/aedilis.worklog.md).
+Every aedilis-built tool linking sigillum benefits (fabrica, mensor,
+mensor_ui, forum, pictor); briar/spectator/silex link the root runner's
+build/*.o blind and are unaffected. aedilis.stml changed → all installed
+binaries reinstalled. Spike detour worth keeping: my first "all -O2"
+link was slower than "sigillum only" — BSD sed has no `\|` in basic
+regex, so the substitution silently did nothing and the binary was the
+-O0 one. A surprising measurement is a question about the measurement.

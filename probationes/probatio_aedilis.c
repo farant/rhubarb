@@ -485,6 +485,13 @@ s32 principale (vacuum)
             xar_numerus(configuratio->regulae_vendor), I);
         CREDO_AEQUALIS_I32(
             xar_numerus(configuratio->irregularia), I);
+        /* regula compilationis per fontem (fabrica T8: sigillum -O2) */
+        CREDO_AEQUALIS_I32(
+            xar_numerus(configuratio->regulae_compilationis), I);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            ((AedilisRegulaCompilationis*)xar_obtinere(
+                configuratio->regulae_compilationis, ZEPHYRUM))->fons,
+            "lib/alpha.c");
 
         /* configuratio absens = recusatio */
         CREDO_NIHIL(aedilis_configurationem_legere(piscina,
@@ -762,8 +769,21 @@ s32 principale (vacuum)
         scriptum = aedilis_scriptum_scribere(fructus,
             configuratio, piscina, FALSUM, "abc1234");
         CREDO_CHORDA_NON_VACUA(scriptum);
+        /* regula compilationis: vexilla addita ET nomen obiecti ea
+         * ferens - obiectum commune (build/aedilis/obiecta) vexillis
+         * aliis numquam per mtime pro recenti habetur */
         CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
-            "compilare \"lib/alpha.c\" \"lib__alpha.o\"",
+            "compilare \"lib/alpha.c\" \"lib__alpha__O2.o\" \"-O2\"",
+            piscina));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "\"$OBIECTA_DIR/lib__alpha__O2.o\" \\", piscina));
+        CREDO_FALSUM(chorda_continet(scriptum, chorda_ex_literis(
+            "lib__alpha.o", piscina)));
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "$INCLUSA ${3:-} -c", piscina));
+        /* fons sine regula: nomen et linea intacta */
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "compilare \"lib/alpha_socius.c\" \"lib__alpha_socius.o\"\n",
             piscina));
         CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
             "compilare \"lib/beta_macos.m\"", piscina));

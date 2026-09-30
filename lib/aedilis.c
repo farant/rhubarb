@@ -245,6 +245,8 @@ aedilis_configurationem_legere (
         (i32)magnitudo(AedilisRegulaVendor));
     configuratio->irregularia = xar_creare(piscina,
         (i32)magnitudo(AedilisIrregulare));
+    configuratio->regulae_compilationis = xar_creare(piscina,
+        (i32)magnitudo(AedilisRegulaCompilationis));
 
     sectio = stml_invenire_liberum(radix_nodus, "inclusa");
     si (sectio != NIHIL)
@@ -309,6 +311,36 @@ aedilis_configurationem_legere (
                 regula->obiectum = *obiectum;
                 regula->vexilla = _vexilla_colligere(nodus,
                     piscina);
+            }
+        }
+    }
+
+    sectio = stml_invenire_liberum(radix_nodus, "compilatio");
+    si (sectio != NIHIL)
+    {
+        Xar* fontes;
+
+        fontes = stml_invenire_omnes_liberos(sectio, "fons",
+            piscina);
+        numerus = xar_numerus(fontes);
+        per (i = 0; i < numerus; i++)
+        {
+                             StmlNodus* nodus;
+                                chorda* fons;
+            AedilisRegulaCompilationis* regula;
+
+            nodus  = *(StmlNodus**)xar_obtinere(fontes, i);
+            fons   = stml_attributum_capere(nodus, "via");
+            si (fons == NIHIL)
+            {
+                perge;
+            }
+            regula = (AedilisRegulaCompilationis*)xar_addere(
+                configuratio->regulae_compilationis);
+            si (regula != NIHIL)
+            {
+                regula->fons     = *fons;
+                regula->vexilla  = _vexilla_colligere(nodus, piscina);
             }
         }
     }
@@ -1540,6 +1572,118 @@ _obiecti_nomen (
     redde chorda_aedificator_finire(aedificator);
 }
 
+/* Regula compilationis fontis (NIHIL = nulla) */
+interior constans AedilisRegulaCompilationis*
+_regula_compilationis (
+    constans AedilisConfiguratio* configuratio,
+                          chorda  fons)
+{
+    i32 i;
+
+    si (   configuratio                        == NIHIL
+        || configuratio->regulae_compilationis == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = 0; i < xar_numerus(configuratio->regulae_compilationis);
+         i++)
+    {
+        AedilisRegulaCompilationis* regula;
+
+        regula = (AedilisRegulaCompilationis*)xar_obtinere(
+            configuratio->regulae_compilationis, i);
+        si (chorda_aequalis(regula->fons, fons))
+        {
+            redde regula;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Nomen obiecti sub regula: "lib__x.o" -> "lib__x__O2.o" (vexilla,
+ * cursus non alphanumerici in '_' contracti). Sine regula = nomen
+ * commune. Vexilla in NOMINE: obiectum aliis vexillis structum
+ * numquam per mtime recens videtur. */
+interior chorda
+_obiecti_nomen_sub_regula (
+    constans AedilisConfiguratio* configuratio,
+                          chorda  fons,
+                         Piscina* piscina)
+{
+    constans AedilisRegulaCompilationis* regula;
+                      ChordaAedificator* suffixum;
+                      ChordaAedificator* titulus_novus;
+                                 chorda  titulus_communis;
+                                 chorda  cauda;
+                                    i32  i;
+                                    i32  j;
+
+    titulus_communis  = _obiecti_nomen(fons, piscina);
+    regula            = _regula_compilationis(configuratio, fons);
+    si (regula == NIHIL || xar_numerus(regula->vexilla) == 0)
+    {
+        redde titulus_communis;
+    }
+    suffixum = chorda_aedificator_creare(piscina, 64);
+    per (i = 0; i < xar_numerus(regula->vexilla); i++)
+    {
+        chorda vexillum;
+
+        vexillum = *(chorda*)xar_obtinere(regula->vexilla, i);
+        per (j = 0; j < vexillum.mensura; j++)
+        {
+            character c;
+
+            c = (character)vexillum.datum[j];
+            si (   (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+                || (c >= '0' && c <= '9'))
+            {
+                (vacuum)chorda_aedificator_appendere_character(
+                    suffixum, c);
+            }
+            alioquin
+            {
+                (vacuum)chorda_aedificator_appendere_character(
+                    suffixum, '_');
+            }
+        }
+        (vacuum)chorda_aedificator_appendere_character(suffixum, '_');
+    }
+    /* cursus '_' contracti, extremi dempti: "-O2 -DX=1" -> "O2_DX_1" */
+    cauda          = chorda_aedificator_finire(suffixum);
+    titulus_novus  = chorda_aedificator_creare(piscina, 128);
+    (vacuum)chorda_aedificator_appendere_chorda(titulus_novus,
+        chorda_sectio(titulus_communis, 0, titulus_communis.mensura
+            - II));
+    (vacuum)chorda_aedificator_appendere_literis(titulus_novus, "__");
+    {
+        b32 prior_separator;
+        b32 scriptum_aliquid;
+
+        prior_separator   = FALSUM;
+        scriptum_aliquid  = FALSUM;
+        per (i = 0; i < cauda.mensura; i++)
+        {
+            si (cauda.datum[i] == (i8)'_')
+            {
+                prior_separator = VERUM;
+                perge;
+            }
+            si (prior_separator && scriptum_aliquid)
+            {
+                (vacuum)chorda_aedificator_appendere_character(
+                    titulus_novus, '_');
+            }
+            (vacuum)chorda_aedificator_appendere_character(titulus_novus,
+                (character)cauda.datum[i]);
+            prior_separator   = FALSUM;
+            scriptum_aliquid  = VERUM;
+        }
+    }
+    (vacuum)chorda_aedificator_appendere_literis(titulus_novus, ".o");
+    redde chorda_aedificator_finire(titulus_novus);
+}
+
 interior vacuum
 _scriptum_vexilla_iungere (
     ChordaAedificator* aedificator,
@@ -1558,6 +1702,33 @@ _scriptum_vexilla_iungere (
         chorda_aedificator_appendere_chorda(aedificator,
             *(chorda*)xar_obtinere(vexilla, i));
     }
+}
+
+/* Linea 'compilare "fons" "obiectum" ["vexilla"]' scripti emissi;
+ * vexilla solum sub regula compilationis */
+interior vacuum
+_compilationem_scribere (
+               ChordaAedificator* s,
+    constans AedilisConfiguratio* configuratio,
+                          chorda  fons,
+                         Piscina* piscina)
+{
+    constans AedilisRegulaCompilationis* regula;
+
+    chorda_aedificator_appendere_literis(s, "compilare \"");
+    chorda_aedificator_appendere_chorda(s, fons);
+    chorda_aedificator_appendere_literis(s, "\" \"");
+    chorda_aedificator_appendere_chorda(s,
+        _obiecti_nomen_sub_regula(configuratio, fons, piscina));
+    chorda_aedificator_appendere_literis(s, "\"");
+    regula = _regula_compilationis(configuratio, fons);
+    si (regula != NIHIL && xar_numerus(regula->vexilla) > 0)
+    {
+        chorda_aedificator_appendere_literis(s, " \"");
+        _scriptum_vexilla_iungere(s, regula->vexilla);
+        chorda_aedificator_appendere_literis(s, "\"");
+    }
+    chorda_aedificator_appendere_literis(s, "\n");
 }
 
 /* Vexillum in xar addere nisi iam adest (deduplicatio nexus) */
@@ -1701,7 +1872,7 @@ aedilis_scriptum_scribere (
         " $fons (generatum nondum?)\" >&2; exit 1; }\n"
         "    if vetustum \"$obj\" \"$fons\"; then\n"
         "        echo \"  [obiectum] $fons\"\n"
-        "        clang $VEXILLA $INCLUSA -c \"$fons\" -o"
+        "        clang $VEXILLA $INCLUSA ${3:-} -c \"$fons\" -o"
         " \"$obj\" || exit 1\n"
         "    fi\n"
         "}\n\n");
@@ -1714,12 +1885,8 @@ aedilis_scriptum_scribere (
 
         obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta,
             i);
-        chorda_aedificator_appendere_literis(s, "compilare \"");
-        chorda_aedificator_appendere_chorda(s, obiectum->via);
-        chorda_aedificator_appendere_literis(s, "\" \"");
-        chorda_aedificator_appendere_chorda(s,
-            _obiecti_nomen(obiectum->via, piscina));
-        chorda_aedificator_appendere_literis(s, "\"\n");
+        _compilationem_scribere(s, configuratio, obiectum->via,
+            piscina);
     }
 
     /* vendicata (vexilla propria, vetustas fonte solo) */
@@ -1759,18 +1926,15 @@ aedilis_scriptum_scribere (
     }
 
     /* scopus ipse */
-    chorda_aedificator_appendere_literis(s, "compilare \"");
-    chorda_aedificator_appendere_chorda(s, fructus->scopus);
-    chorda_aedificator_appendere_literis(s, "\" \"");
-    chorda_aedificator_appendere_chorda(s,
-        _obiecti_nomen(fructus->scopus, piscina));
-    chorda_aedificator_appendere_literis(s, "\"\n\n");
+    _compilationem_scribere(s, configuratio, fructus->scopus, piscina);
+    chorda_aedificator_appendere_literis(s, "\n");
 
     /* nexus */
     chorda_aedificator_appendere_literis(s,
         "clang $VEXILLA \\\n    \"$OBIECTA_DIR/");
     chorda_aedificator_appendere_chorda(s,
-        _obiecti_nomen(fructus->scopus, piscina));
+        _obiecti_nomen_sub_regula(configuratio, fructus->scopus,
+            piscina));
     chorda_aedificator_appendere_literis(s, "\" \\\n");
     numerus = xar_numerus(fructus->obiecta);
     per (i = 0; i < numerus; i++)
@@ -1782,7 +1946,8 @@ aedilis_scriptum_scribere (
         chorda_aedificator_appendere_literis(s,
             "    \"$OBIECTA_DIR/");
         chorda_aedificator_appendere_chorda(s,
-            _obiecti_nomen(obiectum->via, piscina));
+            _obiecti_nomen_sub_regula(configuratio, obiectum->via,
+                piscina));
         chorda_aedificator_appendere_literis(s, "\" \\\n");
     }
     numerus = xar_numerus(fructus->vendores);

@@ -785,3 +785,22 @@ and speculum keeps every row that is not `S` — a new row class would leak
 header names into its closure, and moving entries out of `S` could reorder
 rows the committed amalgam manifests derive from. So `--partes` and
 `systemata` are unchanged; `inresolutae` is a named subset.
+
+## 2026-09-30 — `compilatio`: per-source compile flags (fabrica T8)
+
+New aedilis.stml section, mirroring `<vendor>`:
+`<compilatio><fons via="lib/sigillum.c"><vexillum! (>-O2</fons></compilatio>`.
+The generated script's `compilare` takes an optional third argument
+(`clang $VEXILLA $INCLUSA ${3:-} -c`), and the object NAME carries the
+flags: `lib__sigillum__O2.o` (non-alphanumeric runs collapsed to `_`).
+Why the name: objects in build/aedilis/obiecta are shared by name and
+`vetustum()` is mtime-only — adding a flag would otherwise leave the old
+-O0 object "fresh" forever. A different name makes a flag change a
+different object; nothing to reason about. The old `lib__sigillum.o`
+stays for any script generated before the rule.
+Measured before choosing scope: sha256 over 46 MB 0.654 → 0.233 s
+(2.8×); fabrica celer 2.65 → 1.37 s with sigillum alone, ~1.1 s with
+every object -O2 (not worth the scope). Plant (renaming disabled) → the
+three naming assertions red, flag/untouched-source assertions green.
+Canon: aedilis.canon gains `compilatio` (reuses the global `fons`);
+canon_examen checked live against a scratch copy with an unknown child.
