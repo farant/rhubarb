@@ -1,0 +1,5 @@
+<aedificatio>
+  <actio titulus="orba" genus="generator">
+    <ingressus genus="fasciculus" via="a.txt"/>
+  </actio>
+</aedificatio>

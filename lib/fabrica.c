@@ -619,6 +619,363 @@ fabrica_iudicare (
 
 
 /* ==================================================
+ * Declarationes
+ * ================================================== */
+
+/* a + b + c + d (b, d litterae) */
+interior chorda
+_quattuor (
+                Piscina* piscina,
+                 chorda  a,
+     constans character* b,
+                 chorda  c,
+     constans character* d)
+{
+    ChordaAedificator* aedificator;
+
+    aedificator = chorda_aedificator_creare(piscina, 128);
+    si (aedificator == NIHIL)
+    {
+        redde a;
+    }
+    (vacuum)chorda_aedificator_appendere_chorda(aedificator, a);
+    (vacuum)chorda_aedificator_appendere_literis(aedificator, b);
+    (vacuum)chorda_aedificator_appendere_chorda(aedificator, c);
+    (vacuum)chorda_aedificator_appendere_literis(aedificator, d);
+    redde chorda_aedificator_finire(aedificator);
+}
+
+interior chorda
+_sedes (
+               Piscina* piscina,
+    constans character* via,
+             StmlNodus* nodus)
+{
+    character linea[32];
+
+    sprintf(linea, ":%u", (insignatus integer)nodus->linea);
+    redde _iungere(piscina, via, chorda_ex_literis(linea, piscina), "");
+}
+
+interior b32
+_genus_actionis (
+                   chorda  valor,
+     FabricaGenusActionis* genus)
+{
+    si (chorda_aequalis_literis(valor, "generator"))
+    {
+        *genus = FABRICA_ACTIO_GENERATOR;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "formatio"))
+    {
+        *genus = FABRICA_ACTIO_FORMATIO;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "institutio"))
+    {
+        *genus = FABRICA_ACTIO_INSTITUTIO;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior b32
+_genus_ingressus (
+                    chorda  valor,
+     FabricaGenusIngressus* genus)
+{
+    si (chorda_aequalis_literis(valor, "fasciculus"))
+    {
+        *genus = FABRICA_INGRESSUS_FASCICULUS;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "manifestum"))
+    {
+        *genus = FABRICA_INGRESSUS_MANIFESTUM;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "configuratio"))
+    {
+        *genus = FABRICA_INGRESSUS_CONFIGURATIO;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "instrumentum"))
+    {
+        *genus = FABRICA_INGRESSUS_INSTRUMENTUM;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "directorium"))
+    {
+        *genus = FABRICA_INGRESSUS_DIRECTORIUM;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior b32
+_provenientia (
+                  chorda  valor,
+     FabricaProvenientia* provenientia)
+{
+    si (chorda_aequalis_literis(valor, "regeneratio"))
+    {
+        *provenientia = FABRICA_PROVENIENTIA_REGENERATIO;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "relatio"))
+    {
+        *provenientia = FABRICA_PROVENIENTIA_RELATIO;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* recusatio: causa = "sedes: nuntius 'valor'" */
+interior Xar*
+_recusare (
+                Piscina* piscina,
+                 chorda* causa_out,
+                 chorda  sedes,
+     constans character* nuntius,
+                 chorda  valor)
+{
+    si (causa_out != NIHIL)
+    {
+        *causa_out = _quattuor(piscina, sedes,
+            chorda_ut_cstr(_iungere(piscina, ": ",
+                chorda_ex_literis(nuntius, piscina), " '"), piscina),
+            valor, "'");
+    }
+    redde NIHIL;
+}
+
+interior Xar*
+_mandatum_legere (
+    StmlNodus* actio_nodus,
+      Piscina* piscina)
+{
+    StmlNodus* mandatum;
+          Xar* verba;
+          Xar* nodi;
+          i32  i;
+
+    verba     = _xar_chordarum(piscina);
+    mandatum  = stml_invenire_liberum(actio_nodus, "mandatum");
+    si (mandatum == NIHIL || verba == NIHIL)
+    {
+        redde verba;
+    }
+    nodi = stml_invenire_omnes_liberos(mandatum, "verbum", piscina);
+    per (i = ZEPHYRUM; nodi != NIHIL && i < xar_numerus(nodi); i++)
+    {
+        _chordam_addere(verba, stml_textus_valor(
+            *(StmlNodus**)xar_obtinere(nodi, i), piscina));
+    }
+    redde verba;
+}
+
+Xar*
+fabrica_declarationes_legere (
+                 chorda  contentum,
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa_out)
+{
+    StmlResultus  lectum;
+             Xar* actiones;
+             Xar* nodi;
+          chorda  nihil;
+             i32  i;
+
+    nihil   = chorda_ex_literis("", piscina);
+    lectum  = stml_legere(contentum, piscina, intern);
+    si (   !lectum.successus
+        || lectum.elementum_radix == NIHIL
+        || !chorda_aequalis_literis(*lectum.elementum_radix->titulus,
+               "aedificatio"))
+    {
+        redde _recusare(piscina, causa_out,
+            chorda_ex_literis(via, piscina),
+            "radix non aedificatio (aut STML fractum)", nihil);
+    }
+    actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+    nodi = stml_invenire_omnes_liberos(lectum.elementum_radix, "actio",
+        piscina);
+    per (i = ZEPHYRUM; nodi != NIHIL && i < xar_numerus(nodi); i++)
+    {
+           StmlNodus* nodus;
+        FabricaActio  actio;
+              chorda* valor;
+                 Xar* filii;
+                 i32  j;
+
+        nodus        = *(StmlNodus**)xar_obtinere(nodi, i);
+        actio.sedes  = _sedes(piscina, via, nodus);
+
+        valor = stml_attributum_capere(nodus, "titulus");
+        si (valor == NIHIL)
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "actio sine titulo", nihil);
+        }
+        actio.titulus = *valor;
+        per (j = ZEPHYRUM; j < xar_numerus(actiones); j++)
+        {
+            si (chorda_aequalis(actio.titulus,
+                    ((FabricaActio*)xar_obtinere(actiones,
+                    j))->titulus))
+            {
+                redde _recusare(piscina, causa_out, actio.sedes,
+                    "titulus duplex", actio.titulus);
+            }
+        }
+
+        valor = stml_attributum_capere(nodus, "genus");
+        si (valor == NIHIL || !_genus_actionis(*valor, &actio.genus))
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "genus actionis ignotum",
+                valor != NIHIL ? *valor : nihil);
+        }
+        actio.mandatum = _mandatum_legere(nodus, piscina);
+
+        actio.ingressus = xar_creare(piscina,
+            (i32)magnitudo(FabricaIngressus));
+        filii = stml_invenire_omnes_liberos(nodus, "ingressus",
+            piscina);
+        per (j = ZEPHYRUM; filii != NIHIL && j < xar_numerus(filii);
+             j++)
+        {
+                   StmlNodus* filius;
+            FabricaIngressus* ingressus;
+                      chorda* genus;
+                      chorda* ingressus_via;
+
+            filius = *(StmlNodus**)xar_obtinere(filii, j);
+            genus = stml_attributum_capere(filius, "genus");
+            ingressus_via = stml_attributum_capere(filius, "via");
+            ingressus = (FabricaIngressus*)xar_addere(actio.ingressus);
+            si (   genus == NIHIL
+                || !_genus_ingressus(*genus, &ingressus->genus))
+            {
+                redde _recusare(piscina, causa_out,
+                    _sedes(piscina, via, filius),
+                    "genus ingressus ignotum",
+                    genus != NIHIL ? *genus : nihil);
+            }
+            si (ingressus_via == NIHIL)
+            {
+                redde _recusare(piscina, causa_out,
+                    _sedes(piscina, via, filius), "ingressus sine via",
+                    nihil);
+            }
+            ingressus->via = *ingressus_via;
+        }
+        si (xar_numerus(actio.ingressus) == 0)
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "actio sine ingressu", actio.titulus);
+        }
+
+        actio.exitus = xar_creare(piscina,
+            (i32)magnitudo(FabricaExitus));
+        filii = stml_invenire_omnes_liberos(nodus, "exitus", piscina);
+        per (j = ZEPHYRUM; filii != NIHIL && j < xar_numerus(filii);
+             j++)
+        {
+                StmlNodus* filius;
+            FabricaExitus* exitus;
+                   chorda* exitus_via;
+                   chorda* provenientia;
+                   chorda* scriptura;
+
+            filius      = *(StmlNodus**)xar_obtinere(filii, j);
+            exitus_via  = stml_attributum_capere(filius, "via");
+            provenientia = stml_attributum_capere(filius,
+                "provenientia");
+            scriptura  = stml_attributum_capere(filius, "scriptura");
+            exitus     = (FabricaExitus*)xar_addere(actio.exitus);
+            si (exitus_via == NIHIL)
+            {
+                redde _recusare(piscina, causa_out,
+                    _sedes(piscina, via, filius), "exitus sine via",
+                    nihil);
+            }
+            si (   provenientia == NIHIL
+                || !_provenientia(*provenientia, &exitus->provenientia))
+            {
+                redde _recusare(piscina, causa_out,
+                    _sedes(piscina, via, filius),
+                    "provenientia ignota",
+                    provenientia != NIHIL ? *provenientia : nihil);
+            }
+            exitus->via = *exitus_via;
+            exitus->scriptura = (scriptura != NIHIL)
+                ? *scriptura : *exitus_via;
+        }
+        si (xar_numerus(actio.exitus) == 0)
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "actio sine exitu", actio.titulus);
+        }
+        *(FabricaActio*)xar_addere(actiones) = actio;
+    }
+    redde actiones;
+}
+
+Xar*
+fabrica_subsystemata_legere (
+                 chorda  contentum,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa_out)
+{
+    StmlResultus  lectum;
+             Xar* viae;
+             Xar* nodi;
+             i32  i;
+
+    lectum = stml_legere(contentum, piscina, intern);
+    si (   !lectum.successus
+        || lectum.elementum_radix == NIHIL
+        || !chorda_aequalis_literis(*lectum.elementum_radix->titulus,
+               "fabrica"))
+    {
+        si (causa_out != NIHIL)
+        {
+            *causa_out = chorda_ex_literis(
+                "fabrica.stml: radix non fabrica (aut STML fractum)",
+                piscina);
+        }
+        redde NIHIL;
+    }
+    viae = _xar_chordarum(piscina);
+    nodi = stml_invenire_omnes_liberos(lectum.elementum_radix,
+        "subsystema", piscina);
+    per (i = ZEPHYRUM; nodi != NIHIL && i < xar_numerus(nodi); i++)
+    {
+        StmlNodus* nodus;
+           chorda* via;
+
+        nodus  = *(StmlNodus**)xar_obtinere(nodi, i);
+        via    = stml_attributum_capere(nodus, "via");
+        si (via == NIHIL)
+        {
+            redde _recusare(piscina, causa_out,
+                _sedes(piscina, "fabrica.stml", nodus),
+                "subsystema sine via", chorda_ex_literis("", piscina));
+        }
+        _chordam_addere(viae, *via);
+    }
+    redde viae;
+}
+
+
+/* ==================================================
  * Ordo
  * ================================================== */
 

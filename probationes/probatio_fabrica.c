@@ -15,6 +15,7 @@
 #include "xar.h"
 #include "filum.h"
 #include "sigillum.h"
+#include "internamentum.h"
 #include "fabrica.h"
 #include "credo.h"
 #include <stdio.h>
@@ -755,6 +756,118 @@ s32 principale (vacuum)
         CREDO_VERUM(_continet(causa, "C", piscina));
         CREDO_VERUM(_continet(causa, "D", piscina));
         CREDO_VERUM(_continet(causa, "cyclus", piscina));
+    }
+
+
+    /* ==================================================
+     * PROBARE: declarationes (T2)
+     * ================================================== */
+
+    {
+         InternamentumChorda* intern;
+                      chorda  contentum;
+                      chorda  causa;
+                         Xar* actiones;
+                         Xar* subsystemata;
+                FabricaActio* actio;
+               FabricaExitus* exitus;
+            FabricaIngressus* ingressus;
+
+        imprimere("\n--- Probans declarationes ---\n");
+        intern         = internamentum_creare(piscina);
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+
+        contentum = filum_legere_totum(
+            "probationes/fixa/fabrica/decl_bona.stml", piscina);
+        actiones = fabrica_declarationes_legere(contentum,
+            "silva/aedificatio.stml", piscina, intern, &causa);
+        CREDO_NON_NIHIL(actiones);
+        CREDO_AEQUALIS_I32(xar_numerus(actiones), II);
+
+        actio = (FabricaActio*)xar_obtinere(actiones, ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(actio->titulus,
+            "amalgama_silva");
+        CREDO_AEQUALIS_I32((i32)actio->genus,
+            (i32)FABRICA_ACTIO_GENERATOR);
+        CREDO_CHORDA_AEQUALIS_LITERIS(actio->sedes,
+            "silva/aedificatio.stml:2");
+        CREDO_AEQUALIS_I32(xar_numerus(actio->mandatum), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(actio->mandatum, ZEPHYRUM),
+            "./silva/amalgamare.sh");
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(actio->mandatum, I), "-comparare");
+        CREDO_AEQUALIS_I32(xar_numerus(actio->ingressus), V);
+        ingressus = (FabricaIngressus*)xar_obtinere(actio->ingressus,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)ingressus->genus,
+            (i32)FABRICA_INGRESSUS_MANIFESTUM);
+        ingressus = (FabricaIngressus*)xar_obtinere(actio->ingressus,
+            III);
+        CREDO_AEQUALIS_I32((i32)ingressus->genus,
+            (i32)FABRICA_INGRESSUS_DIRECTORIUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(ingressus->via, "include");
+        exitus = (FabricaExitus*)xar_obtinere(actio->exitus, ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(exitus->via,
+            "silva/amalgama/silva.c");
+        CREDO_AEQUALIS_I32((i32)exitus->provenientia,
+            (i32)FABRICA_PROVENIENTIA_REGENERATIO);
+        CREDO_CHORDA_AEQUALIS_LITERIS(exitus->scriptura,
+            "silva/amalgama/silva_nova.c");
+
+        actio = (FabricaActio*)xar_obtinere(actiones, I);
+        CREDO_AEQUALIS_I32((i32)actio->genus,
+            (i32)FABRICA_ACTIO_INSTITUTIO);
+        CREDO_AEQUALIS_I32(xar_numerus(actio->mandatum), ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(actio->sedes,
+            "silva/aedificatio.stml:15");
+        exitus = (FabricaExitus*)xar_obtinere(actio->exitus, ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)exitus->provenientia,
+            (i32)FABRICA_PROVENIENTIA_RELATIO);
+        /* scriptura absens = via ipsa */
+        CREDO_CHORDA_AEQUALIS_LITERIS(exitus->scriptura, "bin/manus");
+
+        /* recusationes: linea nominata */
+        contentum = filum_legere_totum(
+            "probationes/fixa/fabrica/decl_genus_ignotum.stml",
+            piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern, &causa));
+        CREDO_VERUM(_continet(causa, "d.stml:6", piscina));
+        CREDO_VERUM(_continet(causa, "compilatio", piscina));
+
+        contentum = filum_legere_totum(
+            "probationes/fixa/fabrica/decl_sine_exitu.stml", piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern, &causa));
+        CREDO_VERUM(_continet(causa, "d.stml:2", piscina));
+        CREDO_VERUM(_continet(causa, "sine exitu", piscina));
+
+        /* titulus duplex: directoria scripturae colliderent */
+        contentum = filum_legere_totum(
+            "probationes/fixa/fabrica/decl_titulus_duplex.stml",
+            piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern, &causa));
+        CREDO_VERUM(_continet(causa, "d.stml:6", piscina));
+        CREDO_VERUM(_continet(causa, "gemina", piscina));
+
+        /* radix: subsystemata */
+        contentum = filum_legere_totum(
+            "probationes/fixa/fabrica/radix_bona.stml", piscina);
+        subsystemata = fabrica_subsystemata_legere(contentum, piscina,
+            intern, &causa);
+        CREDO_NON_NIHIL(subsystemata);
+        CREDO_AEQUALIS_I32(xar_numerus(subsystemata), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            *(chorda*)xar_obtinere(subsystemata, I), "tessera");
+
+        /* radix aliena (declaratio, non fabrica) -> NIHIL */
+        contentum = filum_legere_totum(
+            "probationes/fixa/fabrica/decl_bona.stml", piscina);
+        CREDO_NIHIL(fabrica_subsystemata_legere(contentum, piscina,
+            intern, &causa));
     }
 
 

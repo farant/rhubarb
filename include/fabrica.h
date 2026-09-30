@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "sigillum.h"
+#include "internamentum.h"
 
 
 /* ==================================================
@@ -155,5 +156,30 @@ fabrica_ordinare (
     constans Xar* actiones,   /* FabricaActio (valore) */
          Piscina* piscina,
           chorda* causa_out);
+
+/* Declarationes subsystematis legere (dialectus aedificatio,
+ * aedificatio.canon): Xar de FabricaActio (valore), sedes
+ * "via:linea". Recusat (NIHIL + causa cum "via:linea"): radix
+ * aliena, genus actionis aut ingressus aut provenientiae ignotum,
+ * actio sine titulo, sine ingressu, sine exitu, titulus duplex
+ * (directoria scripturae colliderent). scriptura absens = via
+ * exitus. */
+Xar*
+fabrica_declarationes_legere (
+                 chorda  contentum,
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa_out);
+
+/* Radix fabrica.stml (dialectus fabrica v2): viae subsystematum
+ * (Xar de chorda), ordine documenti. NIHIL + causa si radix non
+ * fabrica est aut subsystema sine via. */
+Xar*
+fabrica_subsystemata_legere (
+                 chorda  contentum,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa_out);
 
 #endif /* FABRICA_H */

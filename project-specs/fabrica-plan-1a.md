@@ -515,6 +515,14 @@ Verdict rules (the gate pins each):
   the reader); observe; restore.
 - [ ] **Step 6: commit.** Gates: radix, canon (commissio adds).
 
+> **Executed 2026-09-30** (commit below). Names as proposed (Fran:
+> "looks good"). One layout correction: `verbum` captures go one per
+> line (a raw capture eats to end of line). Reader also refuses a
+> duplicate `titulus` (scratch-dir collision) — the one rule the canon
+> cannot express; `decl_titulus_duplex.stml` passes the canon by
+> design. Gate 88/88; plant on `minimum="1"` as predicted. Glossary:
+> `subsystema`. Root `fabrica.stml` untouched until T4.
+
 ### Task T3: bin/fabrica and its bootstrap
 
 **Files:** Create `tools/fabrica.c`, `tools/fabrica_struere.sh`.

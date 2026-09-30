@@ -1151,5 +1151,11 @@
     <forma textus="sinicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="sinicae" casus="genitivus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="subsystema" lingua="latina" classis="substantivum" nota="Gk. sub + systema n. (subsystematis), ut graphema: pars repositorii cum declarationibus aedificationis suis (silva, tessera, officina ...); radix fabrica.stml ea enumerat; sedes lib/fabrica.c (fabrica_subsystemata_legere, fabrica plan 1a T2)">
+    <forma textus="subsystema" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="subsystematis" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="subsystemata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="subsystematum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
 
 </glossarium>

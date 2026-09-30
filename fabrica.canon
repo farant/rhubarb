@@ -2,15 +2,28 @@
   fabrica.canon
   Canon dialecti FABRICA (fabrica.stml, radix repositorii) - signum
   declaratum officinae bibliothecarum quod silex_fabricam_invenire
-  in ascensu quaerit (2026-09-07). Elementum unum, attributum unum:
-  titulus = nomen fabricae (rhubarb). Nihil aliud - signum est, non
-  configuratio; optiones fabricae (viae include/lib) hic NON vivunt
-  donec consumptor eas postulet.
+  in ascensu quaerit (2026-09-07). titulus = nomen fabricae
+  (rhubarb). Silex EXISTENTIAM solam legit (lib/silex.c:277).
+
+  VERSIO II (2026-09-30, fabrica plan 1a T2, decisio Q33): consumptor
+  quem versio I exspectabat ('optiones hic NON vivunt donec consumptor
+  eas postulet') advenit - stratum aedificationis. Liberi 'subsystema'
+  subsystemata enumerant quorum declarationes (aedificatio.stml,
+  canon aedificatio.canon) bin/fabrica legit. Plagula eiusdem nominis
+  INFRA radicem numquam ponenda: silex eam ascendens inveniret et
+  directorium illud pro radice officinae haberet.
 -->
-<canon dialectus="fabrica" versio="1">
+<canon dialectus="fabrica" versio="2">
 
   <elementum nomen="fabrica" radix="verum">
     <attributum nomen="titulus" genus="textus" necessarium="verum"/>
+    <liberum nomen="subsystema"/>
+  </elementum>
+
+  <elementum nomen="subsystema"
+    nota="directorium (radici relativum) cuius aedificatio.stml
+          declarationes fert">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
   </elementum>
 
 </canon>

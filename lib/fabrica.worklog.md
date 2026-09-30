@@ -34,3 +34,28 @@ Decisions made while building:
 - Lint renames: INSTALLATIO → INSTITUTIO (house says "institutum:
   ~/.bin/stml"), `FabricaGenusProvenientiae` → `FabricaProvenientia`.
   The plan/spec prose still says "installatio" for the kind.
+
+## 2026-09-30 — T2: the declaration dialect
+
+Names as approved by Fran (spec v2 §VI, plan T2 Step 1): root
+`fabrica.stml` gains `subsystema via=` children (dialect `fabrica` v2);
+each subsystem's `aedificatio.stml` holds `actio titulus genus` →
+`mandatum`/`verbum`, `ingressus genus via`, `exitus via provenientia
+scriptura`. Readers: `fabrica_declarationes_legere`,
+`fabrica_subsystemata_legere`; `sedes` = "via:linea" from
+`StmlNodus.linea` (1-based).
+
+- The placeholder I showed Fran put `<verbum!(>…` and `</mandatum>` on
+  one line — a raw capture eats to end of line, so the command is one
+  argument per line (as `aedilis.stml` writes its flags).
+- **Canon vs reader split.** The canon judges shape (kinds as `electio`,
+  `minimum="1"` on ingressus/exitus); the reader refuses the same things
+  with the line named AND the one rule a canon cannot say: duplicate
+  `titulus` in a file (scratch dirs `build/fabrica/scriptura/TITULUS`
+  would collide). `decl_titulus_duplex.stml` passes the canon by design.
+- Plant: `minimum="1"` dropped from `exitus` → `decl_sine_exitu` passes
+  the canon (VITIA 0), reader still refuses; restored → VITIA 1.
+- `subsystemata` is a new word → glossary entry `subsystema` (neuter,
+  -atis) in oratio/glossarium.stml.
+- The root `fabrica.stml` itself is unchanged until T4 has subsystems
+  to list; silex reads only its existence (lib/silex.c:277).
