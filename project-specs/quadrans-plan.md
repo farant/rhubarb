@@ -100,8 +100,11 @@ constant, in case a font disagrees. `quadrans` itself only samples.
 **D6 — the image set.** Synthetic images built in the test (every mask,
 gradients, checkerboards, alpha ramps) + the 5 committed PNGs + ONE or
 TWO photographs, checked in with provenance like the UCD files (D3 of
-the runae plan). Needs Fran: either his own photos, or a public-domain
-image fetched once (a network fetch — ask first).
+the runae plan). **Settled 2026-09-30:** Fran supplied two —
+`probationes/fixa/quadrans/assumptio.jpg` (Baroque Assumption: saturated
+colour, radiant glow) and `christus_sculptus.jpg` (painted terracotta
+bust before a dark gradient: banding, texture); see PROVENIENTIA.md
+there. `imago` reads JPEG (stb_image, `include/imago.h`).
 
 **D7 — the oracle.** (a) The 16 masks and their tie-breaking, derived
 from OpenTUI's code, as exact cases. (b) An OBJECTIVE error metric:
