@@ -24,9 +24,13 @@
  * non defectus.
  * ================================================== */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/natura.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
+#include "provenientia.h"
 #include "natura.h"
 #include "filum.h"
 #include "iter_directoria.h"
@@ -2074,6 +2078,9 @@ _usum_scribere (vacuum)
         "modulum poscunt)\n");
 }
 
+externus constans ProvenientiaRelatio provenientia_natura;
+
+
 integer
 main (
       integer   argumentorum_numerus,
@@ -2088,6 +2095,11 @@ main (
                integer  i;
                    i32  onerata;
 
+    si (provenientia_respondere(argumentorum_numerus, argumenta,
+            &provenientia_natura))
+    {
+        redde ZEPHYRUM;
+    }
     radix     = RADIX_MORIS;
     mandatum  = NIHIL;
     petitum   = NIHIL;

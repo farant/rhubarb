@@ -20,9 +20,13 @@
  *   (disciplina domus: instrumentum quod nihil iudicavit successus
  *    non est - plagula sine canone TACERE non debet)
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/canon_examen.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
+#include "provenientia.h"
 #include "canon.h"
 #include "filum.h"
 #include <stdio.h>
@@ -388,6 +392,9 @@ index_scribere (
     redde VERUM;
 }
 
+externus constans ProvenientiaRelatio provenientia_canon_examen;
+
+
 s32
 principale (
           s32   numerus,
@@ -404,6 +411,11 @@ principale (
 
     i32 indexatae;
 
+    si (provenientia_respondere(numerus, argumenta,
+            &provenientia_canon_examen))
+    {
+        redde ZEPHYRUM;
+    }
     canon_expressus  = NIHIL;
     machina          = FALSUM;
     iudicatae        = ZEPHYRUM;

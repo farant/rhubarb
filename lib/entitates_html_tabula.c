@@ -1,4 +1,4 @@
-/* entitates_html_tabula.c - GENERATA (tools/entitates_html_generare.sh)
+/* entitates_html_tabula.c - GENERATUM (tools/entitates_html_generare.sh)
  * ex html.entities.html5 Pythonis (WHATWG entities.json).
  * NOLI MANU EDERE - regenera et confer (-probare). Ordine
  * octetorum titulorum: quaestio binaria in entitates_html.c.
@@ -2241,3 +2241,4 @@ constans EntitasHtml ENTITATES_HTML[] = {
 };
 
 constans i32 ENTITATES_HTML_NUMERUS = (i32)2231;
+

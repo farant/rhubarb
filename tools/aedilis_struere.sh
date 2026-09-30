@@ -68,6 +68,9 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || ! [ "$obj" -nt "$SILVA_H" ]; th
 fi
 obj_files="$obj_files $obj"
 
+# provenientia (fabrica T7): manifestum per bin/aedilis PRIOREM (si
+# adest) - ovum primum 'ignotum' scribit, cursus proximus corrigit
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" aedilis bin/aedilis tools/aedilis.c)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SCRIPT_DIR/aedilis.c" \
-    $obj_files -o "$RADIX_DIR/bin/aedilis" || exit 1
+    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/aedilis" || exit 1
 echo "bin/aedilis paratum" >&2

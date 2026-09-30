@@ -758,3 +758,49 @@ that has no header of its own. Of the 40 generated manifests in the
 house only silva's amalgam manifest moved; the rest are byte-identical
 (clients get materia through their own build scripts, not aedilis).
 `aedilis.stml` is still covered by no gate (portae_debitae: INTECTA).
+
+## 2026-09-29 — quoted includes resolved nowhere are NAMED (fabrica P1)
+
+The 09-25 materia/fontes gap (above) was the general class, not a one-off:
+an unresolved `#include "x.h"` is filed as a system header, so a manifest
+whose headers live outside `<inclusa>` is silently incomplete. Measured
+for the fabrica spec v2: briar 15 such includes (manifest 27 objects vs
+79 linked), spectator 9, silex 2. silva has carried the include form since
+b5e9a8f (`est_angulata`); aedilis never read it.
+
+Change: `AedilisExtractor` gains `Xar** angulatae_out` (b32 per directive,
+NIHIL = form unknown → the old rule). The fruit gains `inresolutae`
+(quoted includes resolved nowhere); the manifest gains a section of that
+name ONLY when non-empty (clean roots' manifests stay byte-identical);
+`bin/aedilis` prints `AEDILIS CAUTIO: inclusio citata inresoluta ...` to
+stderr, exit code unchanged (phase-A decree: report, never refuse — the
+fabrica judges).
+
+Deviation from plan 1a P1 Step 2 (which said the entry leaves
+`systemata`): it STAYS in `systemata` too. Step 1 found no reader of the
+manifest file's sections (speculum copies it whole), but ~12 consumers of
+`--partes` (amalgama_fontes_generare/ligare/auditor, silva.py closures,
+arbor/computus/diagnostica, speculum, census_recensere, briar runner...),
+and speculum keeps every row that is not `S` — a new row class would leak
+header names into its closure, and moving entries out of `S` could reorder
+rows the committed amalgam manifests derive from. So `--partes` and
+`systemata` are unchanged; `inresolutae` is a named subset.
+
+## 2026-09-30 — `compilatio`: per-source compile flags (fabrica T8)
+
+New aedilis.stml section, mirroring `<vendor>`:
+`<compilatio><fons via="lib/sigillum.c"><vexillum! (>-O2</fons></compilatio>`.
+The generated script's `compilare` takes an optional third argument
+(`clang $VEXILLA $INCLUSA ${3:-} -c`), and the object NAME carries the
+flags: `lib__sigillum__O2.o` (non-alphanumeric runs collapsed to `_`).
+Why the name: objects in build/aedilis/obiecta are shared by name and
+`vetustum()` is mtime-only — adding a flag would otherwise leave the old
+-O0 object "fresh" forever. A different name makes a flag change a
+different object; nothing to reason about. The old `lib__sigillum.o`
+stays for any script generated before the rule.
+Measured before choosing scope: sha256 over 46 MB 0.654 → 0.233 s
+(2.8×); fabrica celer 2.65 → 1.37 s with sigillum alone, ~1.1 s with
+every object -O2 (not worth the scope). Plant (renaming disabled) → the
+three naming assertions red, flag/untouched-source assertions green.
+Canon: aedilis.canon gains `compilatio` (reuses the global `fons`);
+canon_examen checked live against a scratch copy with an unknown child.

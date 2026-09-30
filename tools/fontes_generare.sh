@@ -27,15 +27,32 @@ if [ ! -x bin/aedilis ]; then
     ./tools/aedilis_struere.sh || exit 1
 fi
 
+# clausurae (fabrica T6): manifestum unum per radicem, ut iudex
+# ingressus fragmenti VEROS sigillet (actio memorabilis). Directorium
+# ante cursum vacuatur - radix ablata manifestum suum non relinquit.
+clausurae="build/fabrica/clausurae/$(echo "${exitus%.sh}" | sed 's|/|__|g')"
+rm -rf "$clausurae"
+mkdir -p "$clausurae"
+
 lista="$(
     for scopus in "$@"; do
-        ./bin/aedilis "$scopus" --enumerare || exit 1
+        ./bin/aedilis "$scopus" --enumerare \
+            --manifestum "$clausurae/$(echo "$scopus" | sed 's|/|__|g').stml" \
+            || exit 1
     done | awk '/^lib\/.*\.c$/ { sub(/^lib\//,""); sub(/\.c$/,""); print }' \
          | sort -u
 )"
 if [ -z "$lista" ]; then
     echo "fontes_generare: derivatio vacua - recusatum" >&2
     exit 1
+fi
+
+# FABRICA_SCRIPTURA (iudex fabricae): fragmentum in scripturam, arbor
+# intacta; clausurae tamen in build/ (status aedificationis, non arbor)
+destinatio="$exitus"
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    destinatio="$FABRICA_SCRIPTURA/$exitus"
+    mkdir -p "$(dirname "$destinatio")"
 fi
 
 {
@@ -46,6 +63,6 @@ fi
         echo "    \"$f\""
     done
     echo ")"
-} > "$exitus"
+} > "$destinatio"
 
 echo "$exitus scriptum ($(echo "$lista" | wc -l | tr -d ' ') fontes)"

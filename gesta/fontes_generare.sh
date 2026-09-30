@@ -16,15 +16,32 @@ if [ ! -x bin/aedilis ]; then
     ./tools/aedilis_struere.sh || exit 1
 fi
 
+# clausurae (fabrica T6): manifestum unum per probationem ->
+# build/fabrica/clausurae/gesta/ (ingressus 'manifesta' actionis
+# memorabilis); vacuatum ante cursum
+clausurae="build/fabrica/clausurae/gesta"
+rm -rf "$clausurae"
+mkdir -p "$clausurae"
+
 lista="$(
     for p in gesta/probationes/probatio_*.c; do
-        ./bin/aedilis "$p" --enumerare || exit 1
+        ./bin/aedilis "$p" --enumerare \
+            --manifestum "$clausurae/$(echo "$p" | sed 's|/|__|g').stml" \
+            || exit 1
     done | awk '/^lib\/.*\.c$/ { sub(/^lib\//,""); sub(/\.c$/,""); print }' \
          | sort -u
 )"
 if [ -z "$lista" ]; then
     echo "fontes_generare: derivatio vacua - recusatum" >&2
     exit 1
+fi
+
+# FABRICA_SCRIPTURA (iudex fabricae): fragmentum in scripturam, arbor
+# intacta
+destinatio="gesta/fontes_generata.sh"
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    destinatio="$FABRICA_SCRIPTURA/gesta/fontes_generata.sh"
+    mkdir -p "$(dirname "$destinatio")"
 fi
 
 {
@@ -36,6 +53,6 @@ fi
         echo "    \"$f\""
     done
     echo ")"
-} > gesta/fontes_generata.sh
+} > "$destinatio"
 
 echo "gesta/fontes_generata.sh scriptum ($(echo "$lista" | wc -l | tr -d ' ') fontes)"

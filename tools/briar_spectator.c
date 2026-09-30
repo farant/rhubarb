@@ -14,8 +14,12 @@
  * Aedificatio: ./tools/briar_spectator_struere.sh
  */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/briar_spectator.c"/> */
+
 #include "postulata_posix.h"
 #include "latina.h"
+#include "provenientia.h"
 #include "atrium.h"
 #include "briar_arbor.h"
 #include "briar_contextus.h"
@@ -241,6 +245,9 @@ _symbolum_tractare (
     redde fructus;
 }
 
+externus constans ProvenientiaRelatio provenientia_briar_spectator;
+
+
 s32
 principale (
       integer   argc,
@@ -259,6 +266,11 @@ principale (
       constans character* titulus;
                  integer  k;
 
+    si (provenientia_respondere(argc, argv,
+            &provenientia_briar_spectator))
+    {
+        redde ZEPHYRUM;
+    }
     /* plagula ANTE atrium_vexilla_legere legenda: illud argv suis
      * vexillis consumit ('-radix', '-portus'...) */
     per (k = I; k < argc; k++)

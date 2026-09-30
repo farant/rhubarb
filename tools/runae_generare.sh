@@ -9,9 +9,9 @@
 # Usus: ./tools/runae_generare.sh            # scribit
 #       ./tools/runae_generare.sh -probare   # tabula commissa recens? 0/1
 #
-# -probare SPATIA NEGLEGIT: formator plagulam commissam post
-# generationem format (ut lexicon silvae in generata_probare.sh II) -
-# comparatio exacta tabulam recentem rancidam vocaret.
+# -probare EXACTA (cmp): plagula commissa = effusio generatoris
+# octetim (GENERATUM in linea prima - uncus pre-commit eam non format;
+# fabrica P2 via B, 2026-09-29). Olim spatia neglegebat.
 
 set -u
 export LC_ALL=C
@@ -48,11 +48,16 @@ if [ "$PROBARE" = 1 ]; then
     TMP="$(mktemp)"
     trap 'rm -f "$TMP"' EXIT
     "$BIN" "$UCD" "$TMP" 2>/dev/null || exit 2
-    if [ "$(tr -d '[:space:]' < "$TMP")" = "$(tr -d '[:space:]' < "$EXITUS")" ]; then
+    if cmp -s "$TMP" "$EXITUS"; then
         echo "runae_generare: $EXITUS recens (Unicode $VERSIO)"
         exit 0
     fi
     echo "runae_generare: $EXITUS RANCIDA (regenera: ./tools/runae_generare.sh)"
     exit 1
+fi
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T5)
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    EXITUS="$FABRICA_SCRIPTURA/$EXITUS"
+    mkdir -p "$(dirname "$EXITUS")" || exit 2
 fi
 "$BIN" "$UCD" "$EXITUS"

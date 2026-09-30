@@ -73,10 +73,13 @@ for o in briar/build/*.o; do
 done
 
 mkdir -p bin
+# provenientia (fabrica T7): '-provenientia' respondetur; digestum
+# clausuram aedilis sequitur (bin/aedilis tools/briar.c)
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" briar bin/briar tools/briar.c)" || exit 1
 echo "  [briar] tools/briar.c + corpus"
 clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     -Ibriar/fontes -Isilva/amalgama -Iofficina/instrumenta \
-    tools/briar.c build/capsula_corpus_silicis.c \
+    tools/briar.c lib/provenientia.c "$PROV_OBJ" build/capsula_corpus_silicis.c \
     build/capsula_icon_briar.c build/capsula_mutationes_briar.c \
     build/briar_aedificatio.c \
     build/imago.o $OBJ \

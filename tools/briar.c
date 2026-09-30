@@ -28,7 +28,11 @@
  * Aedificatio binarii: tools/briar_struere.sh.
  */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/briar.c"/> */
+
 #include "latina.h"
+#include "provenientia.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -988,6 +992,9 @@ _ictum_celerem_tentare (
     }
 }
 
+externus constans ProvenientiaRelatio provenientia_briar;
+
+
 s32
 principale (
       integer   argc,
@@ -1012,6 +1019,10 @@ principale (
                     Xar* membra = NIHIL;
         BriarMembraCausa causa_membrorum;
 
+    si (provenientia_respondere(argc, argv, &provenientia_briar))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("briar", 33554432);
     si (piscina == NIHIL)
     {

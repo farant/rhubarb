@@ -21,9 +21,13 @@
  * EXITUS: 0 = factum, I = fractum, II = NIHIL ACTUM (usus malus).
  */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/mensor.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
+#include "provenientia.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -596,6 +600,9 @@ _usus (vacuum)
         " MENSOR_VOLUMEN\n");
 }
 
+externus constans ProvenientiaRelatio provenientia_mensor;
+
+
 integer
 main (
       integer   argc,
@@ -604,6 +611,10 @@ main (
     Piscina* piscina;
     integer  codex;
 
+    si (provenientia_respondere(argc, argv, &provenientia_mensor))
+    {
+        redde ZEPHYRUM;
+    }
     si (argc < II)
     {
         _usus();

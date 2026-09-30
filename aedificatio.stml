@@ -1,0 +1,493 @@
+<!-- aedificatio.stml (radix) - declarationes actionum radicis
+     (dialectus aedificatio, aedificatio.canon; bin/fabrica legit per
+     fabrica.stml). Plan 1a: T3 iudicem ipsum declarat; T5 generata
+     radicis, T7 binaria installata sequuntur. -->
+<aedificatio>
+  <!-- iudex ipse: primus iudicatur (stalus iudex sententias
+       ceteras suspectas facit). Relatio '-provenientia' a T7. -->
+  <actio titulus="fabrica" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/fabrica_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/fabrica/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/fabrica_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/fabrica" provenientia="relatio"/>
+  </actio>
+  <!-- binaria installata (T7): SOLA cum relatione '-provenientia'
+       declarantur - binarium vexillum ignorans aliquid facere posset -->
+  <actio titulus="manus" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/manus_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/manus_instrumentum/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/manus_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/manus" provenientia="relatio"/>
+  </actio>
+  <!-- T7 pars II: binaria installata. Ingressus = clausura aedilis
+       (manifestum, plenum post P1) etiam ubi installator indice manu
+       struit; installator ipse et scriptor provenientiae. -->
+  <actio titulus="aedilis" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/aedilis_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/aedilis_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/aedilis" provenientia="relatio"/>
+  </actio>
+  <actio titulus="canon_examen" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/canon_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/canon_examen/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/canon_examen" provenientia="relatio"/>
+  </actio>
+  <actio titulus="canon_coquere" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/canon_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/canon_coquere/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/canon_coquere" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura_examen" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_examen/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura_examen" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura_canones" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_canones/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura_canones" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura_glossae" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_glossae/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura_glossae" provenientia="relatio"/>
+  </actio>
+  <actio titulus="natura" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/natura_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/natura_quaesitor/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura" provenientia="relatio"/>
+  </actio>
+  <actio titulus="stml" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/stml_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/stml/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/stml_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/stml" provenientia="relatio"/>
+  </actio>
+  <actio titulus="mensor" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/mensor_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/mensor/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/mensor_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/mensor" provenientia="relatio"/>
+  </actio>
+  <actio titulus="mensor_ui" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/mensor_ui_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/mensor_ui/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/mensor_ui_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/mensor_ui" provenientia="relatio"/>
+  </actio>
+  <!-- T7 pars IIb: briar, spectator, silex. Clausura aedilis (plena
+       post P1) + quae installator ipse generat (facies, icon,
+       MUTATIONES). corpus infixum per ingressus 'plagulae' (decisio
+       Frani 2026-09-30: 'rebake post lib/' tegitur). -->
+  <actio titulus="briar" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/briar_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/briar/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/briar_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <ingressus genus="fasciculus" via="briar/MUTATIONES.md"/>
+    <ingressus genus="fasciculus" via="briar/icon/app-icon-transparent.png"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.css"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
+    <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
+         post lib/' tectum - plagula lib/ extra clausuram mutata
+         corpus mutat, ergo et binarium -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor"/>
+    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
+    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
+    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
+    <ingressus genus="fasciculus" via="canones.registrum"/>
+    <ingressus genus="fasciculus" via="natura/natura.canon"/>
+    <ingressus genus="fasciculus" via="aedilis.canon"/>
+    <ingressus genus="fasciculus" via="canon.canon"/>
+    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
+    <exitus via="bin/briar" provenientia="relatio"/>
+  </actio>
+  <actio titulus="briar_spectator" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/briar_spectator_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/briar_spectator/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/briar_spectator_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.css"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
+    <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
+         post lib/' tectum - plagula lib/ extra clausuram mutata
+         corpus mutat, ergo et binarium -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor"/>
+    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
+    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
+    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
+    <ingressus genus="fasciculus" via="canones.registrum"/>
+    <ingressus genus="fasciculus" via="natura/natura.canon"/>
+    <ingressus genus="fasciculus" via="aedilis.canon"/>
+    <ingressus genus="fasciculus" via="canon.canon"/>
+    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
+    <exitus via="bin/briar-spectator" provenientia="relatio"/>
+  </actio>
+  <actio titulus="silex" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/silex_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/silex/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/silex_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
+         post lib/' tectum - plagula lib/ extra clausuram mutata
+         corpus mutat, ergo et binarium -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor"/>
+    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
+    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
+    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
+    <ingressus genus="fasciculus" via="canones.registrum"/>
+    <ingressus genus="fasciculus" via="natura/natura.canon"/>
+    <ingressus genus="fasciculus" via="aedilis.canon"/>
+    <ingressus genus="fasciculus" via="canon.canon"/>
+    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
+    <exitus via="bin/silex" provenientia="relatio"/>
+  </actio>
+  <!-- plan 1a T5: generata radicis -->
+  <actio titulus="numeri_latinae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/latina_numeri.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/latina_numeri.sh"/>
+    <ingressus genus="fasciculus" via="tools/latina_numeri.c"/>
+    <ingressus genus="fasciculus" via="lib/numerus_romanus.c"/>
+    <ingressus genus="fasciculus" via="include/numerus_romanus.h"/>
+    <!-- pars manu scripta latina.h octetim copiatur: sui ipsius
+         ingressus -->
+    <ingressus genus="fasciculus" via="include/latina.h"/>
+    <exitus via="include/latina.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="runae_tabulae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/runae_generare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/runae_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/runae_generare.c"/>
+    <ingressus genus="fasciculus" via="include/runae.h"/>
+    <ingressus genus="directorium" via="probationes/fixa/unicode/15.1.0"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/DerivedCoreProperties.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/DerivedGeneralCategory.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/EastAsianWidth.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/GraphemeBreakProperty.txt"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/emoji-data.txt"/>
+    <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- data ex tabula html.entities PYTHONIS legitur: ingressus EXTRA
+       repositorium, per binarium python3 declaratus (versio mutata ->
+       sigillum mutatum) -->
+  <actio titulus="entitates_html" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/entitates_html_generare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/entitates_html_generare.sh"/>
+    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
+    <exitus via="lib/entitates_html_tabula.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- capsulae ex TOML (tools/capsula_regenerare.sh). Duae sine TOML
+       (book_assets/capsula_libri.c, probationes/capsula_assets.c)
+       generatorem ignotum habent: NON declaratae - desideratum
+       inventarii generatorum (01M3R27R5J) -->
+  <actio titulus="capsula_forum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>apps/forum/assets/forum.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="apps/forum/assets/forum.toml"/>
+    <ingressus genus="fasciculus" via="apps/forum/assets/index.html"/>
+    <exitus via="apps/forum/assets/capsula_forum.c" provenientia="regeneratio"/>
+    <exitus via="apps/forum/assets/capsula_forum.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_mensor" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>apps/mensor/assets/mensor.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="apps/mensor/assets/mensor.toml"/>
+    <ingressus genus="fasciculus" via="apps/mensor/assets/index.html"/>
+    <exitus via="apps/mensor/assets/capsula_mensor.c" provenientia="regeneratio"/>
+    <exitus via="apps/mensor/assets/capsula_mensor.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_villa" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>apps/villa/assets/villa.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="apps/villa/assets/villa.toml"/>
+    <ingressus genus="fasciculus" via="apps/villa/assets/index.html"/>
+    <exitus via="apps/villa/assets/capsula_villa.c" provenientia="regeneratio"/>
+    <exitus via="apps/villa/assets/capsula_villa.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_hospes" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>probationes/hospes_assets/hospes.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="probationes/hospes_assets/hospes.toml"/>
+    <ingressus genus="fasciculus" via="probationes/hospes_assets/index.html"/>
+    <exitus via="probationes/hospes_assets/capsula_hospes.c" provenientia="regeneratio"/>
+    <exitus via="probationes/hospes_assets/capsula_hospes.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_tabella" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>probationes/tabella_assets/tabella.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="probationes/tabella_assets/tabella.toml"/>
+    <ingressus genus="fasciculus" via="probationes/tabella_assets/index.html"/>
+    <exitus via="probationes/tabella_assets/capsula_tabella.c" provenientia="regeneratio"/>
+    <exitus via="probationes/tabella_assets/capsula_tabella.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_templates" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>probationes/vitrea_assets/vitrea.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="probationes/vitrea_assets/vitrea.toml"/>
+    <ingressus genus="fasciculus" via="probationes/vitrea_assets/index.html"/>
+    <exitus via="probationes/vitrea_assets/capsula_templates.c" provenientia="regeneratio"/>
+    <exitus via="probationes/vitrea_assets/capsula_templates.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_silex_frons" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>tools/silex_assets/silex.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="tools/silex_assets/silex.toml"/>
+    <ingressus genus="fasciculus" via="tools/silex_assets/index.html"/>
+    <ingressus genus="fasciculus" via="tools/silex_assets/mensa.js"/>
+    <ingressus genus="fasciculus" via="tools/silex_assets/repositorium.js"/>
+    <exitus via="tools/silex_assets/capsula_silex_frons.c" provenientia="regeneratio"/>
+    <exitus via="tools/silex_assets/capsula_silex_frons.h" provenientia="regeneratio"/>
+  </actio>
+  <!-- FRAGMENTA RADIX_FONTES (plan 1a T6): MEMORABILIA - ingressus
+       probabiliter pleni: generator manifestum unum per radicem in
+       build/fabrica/clausurae/ scribit (aedilis --manifestum), iudex
+       eas explicat (genus 'manifesta'); radices = nomina directoriorum
+       inclusorum aedilis.stml. Verificatio (build/fabrica.db) cum
+       clave ingressuum ET mandati regenerationem supplet. aedilis per
+       FONTES suos (manifestum), non per binarium: relinkatum octetis
+       differt (LC_UUID), clavis per cursum mutaretur. -->
+  <actio titulus="fragmentum_gesta_fori" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>gesta/fori_fontes_generata.sh
+      <verbum! (>gesta/instrumenta/fori_principale.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__fori_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="gesta/fori_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="fragmentum_gesta_tabularium" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>gesta/tabularium_fontes_generata.sh
+      <verbum! (>gesta/instrumenta/tabularium_principale.c
+      <verbum! (>gesta/fontes/gesta.c
+      <verbum! (>gesta/fontes/tabularium.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabularium_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="gesta/tabularium_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="fragmentum_gesta_tabulariumd" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>gesta/tabulariumd_fontes_generata.sh
+      <verbum! (>gesta/instrumenta/tabulariumd_principale.c
+      <verbum! (>gesta/fontes/gesta.c
+      <verbum! (>gesta/fontes/tabularium.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabulariumd_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="gesta/tabulariumd_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="fragmentum_saltuarius" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>saltuarius/saltuarius_fontes_generata.sh
+      <verbum! (>saltuarius/instrumenta/principalia/saltuarius.c
+      <verbum! (>saltuarius/fontes/saltuarius_bibliotheca.c
+      <verbum! (>saltuarius/fontes/saltuarius_claves.c
+      <verbum! (>saltuarius/fontes/saltuarius_columnae.c
+      <verbum! (>saltuarius/fontes/saltuarius_liber.c
+      <verbum! (>saltuarius/fontes/saltuarius_limes.c
+      <verbum! (>saltuarius/fontes/saltuarius_nexus.c
+      <verbum! (>saltuarius/fontes/saltuarius_origo.c
+      <verbum! (>saltuarius/fontes/saltuarius_penicillus.c
+      <verbum! (>saltuarius/fontes/saltuarius_quaestio.c
+      <verbum! (>saltuarius/fontes/saltuarius_res.c
+      <verbum! (>saltuarius/fontes/saltuarius_structura.c
+      <verbum! (>saltuarius/fontes/saltuarius_tabularium.c
+      <verbum! (>saltuarius/fontes/saltuarius_visum.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/saltuarius__saltuarius_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="saltuarius/saltuarius_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="fragmentum_aedilis" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/fontes_generare.sh
+      <verbum! (>tools/aedilis_fontes_generata.sh
+      <verbum! (>tools/aedilis.c
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/tools__aedilis_fontes_generata"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
+    <exitus via="tools/aedilis_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="fragmentum_gesta" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./gesta/fontes_generare.sh
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="gesta/fontes_generare.sh"/>
+    <ingressus genus="plagulae" via="gesta/probationes" suffixa=".c"/>
+    <exitus via="gesta/fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="fragmentum_compile_tests" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/compile_tests_fontes_generare.sh
+    </mandatum>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/compile_tests"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="tools/compile_tests_fontes_generare.sh"/>
+    <!-- globus probationes/probatio_*.c: superset .c (conservativum) -->
+    <ingressus genus="plagulae" via="probationes" suffixa=".c"/>
+    <exitus via="compile_tests_fontes_generata.sh" provenientia="regeneratio"/>
+  </actio>
+</aedificatio>

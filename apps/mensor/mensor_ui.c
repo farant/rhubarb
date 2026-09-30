@@ -11,9 +11,13 @@
  * LEGIT SOLUM. Nihil scribit, nihil mutat.
  */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/mensor_ui.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
+#include "provenientia.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -280,6 +284,9 @@ _datum_struere (
     redde chorda_aedificator_finire(a);
 }
 
+externus constans ProvenientiaRelatio provenientia_mensor_ui;
+
+
 integer
 main (
       integer   argc,
@@ -297,6 +304,10 @@ main (
     constans character* imago_via;
                    s32  mora_picturae;   /* SIGNATUM: -I = nondum petita */
 
+    si (provenientia_respondere(argc, argv, &provenientia_mensor_ui))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("mensor_ui", M * M * XVI);
     si (piscina == NIHIL)
     {

@@ -19,9 +19,13 @@
  * Exitus: 0 relatio/porta-serena, 1 porta cum lacunis, 2 NIHIL
  * CURSUM (argumenta mala, corpus vacuum) - numquam sanitas tacita.
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/natura_glossae.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
+#include "provenientia.h"
 #include "natura.h"
 #include "filum.h"
 #include "iter_directoria.h"
@@ -976,6 +980,9 @@ _paginam_scribere (
     redde VERUM;
 }
 
+externus constans ProvenientiaRelatio provenientia_natura_glossae;
+
+
 s32
 principale (
           s32   numerus,
@@ -1001,6 +1008,11 @@ principale (
                      i32  summa_habentia[NG_LINGUAE_MAXIMAE];
                      i32  summa_omnia;
 
+    si (provenientia_respondere(numerus, argumenta,
+            &provenientia_natura_glossae))
+    {
+        redde ZEPHYRUM;
+    }
     radix            = "natura";
     lista_linguarum  = "la,en,fr";
     via_html         = NIHIL;

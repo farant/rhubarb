@@ -14,6 +14,12 @@ mkdir -p bin
 
 bin/aedilis tools/manus_instrumentum.c >/dev/null || {
     echo "manus: aedilis fracta"; exit 1; }
+# provenientia (fabrica T7): digestum ingressuum in binarium scribitur;
+# 'bin/fabrica iudicare' bin/manus stalum nominat cum fons mutatur
+[ -x bin/fabrica ] || ./tools/fabrica_struere.sh >/dev/null || {
+    echo "manus: fabrica non structa"; exit 1; }
+./tools/provenientia_scribere.sh manus bin/manus || {
+    echo "manus: provenientia fracta"; exit 1; }
 sh build/aedilis/manus_instrumentum/struere.sh >/dev/null || {
     echo "manus: structura fracta"; exit 1; }
 # SIGNATURA: destinatio TOLLENDA ante copiam.

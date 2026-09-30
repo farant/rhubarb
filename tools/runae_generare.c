@@ -638,7 +638,7 @@ _emittere (
         redde FALSUM;
     }
     fprintf(f,
-        "/* runae_tabulae.c - GENERATA: tools/runae_generare.sh (NE EDITA MANU)\n"
+        "/* runae_tabulae.c - GENERATUM: tools/runae_generare.sh (NE EDITA MANU)\n"
         " *\n"
         " * Ex datis Unicode %s (probationes/fixa/unicode/%s/). Tabula duorum\n"
         " * graduum (include/runae_tabulae.h): %u trunci unici CCLVI octetorum.\n"

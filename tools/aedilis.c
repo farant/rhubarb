@@ -12,8 +12,12 @@
  * Spec: project-specs/aedilis-spec-v2.md; parcum 01KXJ2HV.
  */
 
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/aedilis.c"/> */
+
 #include "postulata_posix.h"   /* getpid: plagulae temporariae per processum */
 #include "latina.h"
+#include "provenientia.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -359,7 +363,8 @@ _extractor_silvae (
                Piscina*  piscina,
                    Xar** directivae_out,
                    Xar** annotationes_out,
-                   b32*  ex_oraculo_out)
+                   b32*  ex_oraculo_out,
+                   Xar** angulatae_out)
 {
     ExtractorDatum* extractoris;
     SilvaPiscina*   arboris;
@@ -376,6 +381,8 @@ _extractor_silvae (
     *annotationes_out = xar_creare(piscina,
         (i32)magnitudo(chorda));
     *ex_oraculo_out = FALSUM;
+    /* cursus -MM (.m) vias iam resolutas reddit: forma ignota */
+    *angulatae_out = NIHIL;
 
     longitudo_viae = strlen(via);
     si (   longitudo_viae > 2 && via[longitudo_viae - 2] == '.'
@@ -391,6 +398,7 @@ _extractor_silvae (
     {
         redde FALSUM;
     }
+    *angulatae_out = xar_creare(piscina, (i32)magnitudo(b32));
 
     arboris = silva_piscina_generare_dynamicum("aedilis_arbor",
         8388608);
@@ -424,6 +432,15 @@ _extractor_silvae (
         _chordam_in_xar(*directivae_out,
             _chordam_copiare(vista.via->datum, vista.via->mensura,
                 piscina));
+        {
+            b32* forma;
+
+            forma = (b32*)xar_addere(*angulatae_out);
+            si (forma != NIHIL)
+            {
+                *forma = vista.est_angulata ? VERUM : FALSUM;
+            }
+        }
     }
 
     cruda = silva_lexare_cruda(arboris,
@@ -478,6 +495,7 @@ _extractor_silvae (
 nomen structura {
     Xar* directivae;
     Xar* annotationes;
+    Xar* angulatae;
     b32  ex_oraculo;
     b32  fructus;
 } MemoriaExtractoris;
@@ -495,7 +513,8 @@ _extractor_memor (
                Piscina*  piscina,
                    Xar** directivae_out,
                    Xar** annotationes_out,
-                   b32*  ex_oraculo_out)
+                   b32*  ex_oraculo_out,
+                   Xar** angulatae_out)
 {
         ExtractorMemor* memor;
     MemoriaExtractoris* m;
@@ -517,15 +536,18 @@ _extractor_memor (
         }
         m->directivae    = NIHIL;
         m->annotationes  = NIHIL;
+        m->angulatae     = NIHIL;
         m->ex_oraculo    = FALSUM;
         m->fructus = _extractor_silvae(memor->intus, via,
             memor->piscina,
-            &m->directivae, &m->annotationes, &m->ex_oraculo);
+            &m->directivae, &m->annotationes, &m->ex_oraculo,
+            &m->angulatae);
         (vacuum)tabula_dispersa_inserere(memor->tabula,
             chorda_ex_literis(via, memor->piscina), m);
     }
     *directivae_out    = m->directivae;
     *annotationes_out  = m->annotationes;
+    *angulatae_out     = m->angulatae;
     *ex_oraculo_out    = m->ex_oraculo;
     redde m->fructus;
 }
@@ -890,6 +912,9 @@ _corpus_currere (
     redde exitus;
 }
 
+externus constans ProvenientiaRelatio provenientia_aedilis;
+
+
 s32
 principale (
           s32   numerus_argumentorum,
@@ -914,6 +939,11 @@ principale (
     clock_t              initium;
     clock_t              finis;
 
+    si (provenientia_respondere(numerus_argumentorum, argumenta_cruda,
+            &provenientia_aedilis))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("aedilis", 16777216);
     si (piscina == NIHIL)
     {
@@ -938,6 +968,9 @@ principale (
         "Sextum capitum contra clang -MM comparare (sine emissione)");
     argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
         "Obiecta clausurae nuda imprimere (consumptoribus)");
+    argumenta_addere_optionem(parser, NIHIL, "--manifestum",
+        "Cum --enumerare: manifestum etiam ad viam datam scribere "
+        "(fabrica: clausura fragmenti memorabilis)");
     argumenta_addere_vexillum(parser, NIHIL, "--partes",
         "Partes fructus ut TSV imprimere (O/C/S/V via)");
     argumenta_addere_optionem(parser, NIHIL, "--corpus",
@@ -954,6 +987,14 @@ principale (
     lecta = argumenta_parsere(parser, (i32)numerus_argumentorum,
         (constans character* constans*)argumenta_cruda);
 
+    si (   argumenta_obtinere_optionem(lecta, "--manifestum",
+               piscina).mensura > 0
+        && !argumenta_habet_vexillum(lecta, "--enumerare"))
+    {
+        fprintf(stderr,
+            "usus: aedilis <fons.c> --enumerare --manifestum <via>\n");
+        redde 1;
+    }
     corpus_dir = argumenta_obtinere_optionem(lecta, "--corpus",
         piscina);
     si (corpus_dir.mensura > 0)
@@ -1038,6 +1079,25 @@ principale (
             (s32)causa.mensura, (constans character*)causa.datum);
         redde 1;
     }
+    /* inclusiones citatae inresolutae: manifestum INCOMPLETUM.
+     * Nominantur, numquam recusantur (decretum phasis A) - fabrica
+     * eas iudicat (P1). Exitus immutatus. */
+    {
+        i32 i;
+        i32 numerus;
+
+        numerus = xar_numerus(fructus->inresolutae);
+        per (i = 0; i < numerus; i++)
+        {
+            chorda* via;
+
+            via = (chorda*)xar_obtinere(fructus->inresolutae, i);
+            fprintf(stderr, "AEDILIS CAUTIO: inclusio citata "
+                "inresoluta \"%.*s\" (scopus %s)\n",
+                (s32)via->mensura, (constans character*)via->datum,
+                scopus_cstr);
+        }
+    }
 
     si (argumenta_habet_vexillum(lecta, "--differentia"))
     {
@@ -1047,9 +1107,35 @@ principale (
 
     si (argumenta_habet_vexillum(lecta, "--enumerare"))
     {
-        i32 i;
-        i32 numerus;
+           i32 i;
+           i32 numerus;
+        chorda via_manifesti;
 
+        /* --manifestum: clausura quam enumeratio legit, ad viam
+         * EXPLICITAM (non build/aedilis/<basis>/ - basis communis
+         * manifestum binarii installati obrueret). Sine commisso
+         * git: fabrica sigillo manifesti non utitur, et DLXXX
+         * derivationes silvae totidem cursus git vitant. */
+        via_manifesti = argumenta_obtinere_optionem(lecta,
+            "--manifestum", piscina);
+        si (via_manifesti.mensura > 0)
+        {
+            chorda via_parens;
+
+            via_parens = via_directorium(via_manifesti, piscina);
+            si (   !filum_directorium_creare_cum_parentibus(
+                       chorda_ut_cstr(via_parens, piscina))
+                || !filum_scribere(chorda_ut_cstr(via_manifesti,
+                       piscina),
+                       aedilis_manifestum_scribere(fructus, piscina,
+                           NIHIL)))
+            {
+                fprintf(stderr, "AEDILIS RECUSAT: manifestum non "
+                    "scriptum: %.*s\n", (s32)via_manifesti.mensura,
+                    (constans character*)via_manifesti.datum);
+                redde 1;
+            }
+        }
         numerus = xar_numerus(fructus->obiecta);
         per (i = 0; i < numerus; i++)
         {

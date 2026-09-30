@@ -50,7 +50,15 @@ EXITUS="$SEDES/fontes_generata.h"
 # shellcheck source=/dev/null
 . "$POLITICA"
 
-./tools/aedilis_struere.sh || exit 1
+# Sub iudice fabricae (FABRICA_SCRIPTURA) instrumenta NON restruuntur:
+# iudex nihil installat, et bin/aedilis relinkatum octetis differt
+# (LC_UUID non ex contento - T6: clavis memoriae omnis fragmenti per
+# cursum mutabatur). Recentia bin/aedilis ab actione sua iudicatur.
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    [ -x bin/aedilis ] || si_fracta "bin/aedilis deest (./tools/aedilis_struere.sh)"
+else
+    ./tools/aedilis_struere.sh || exit 1
+fi
 
 STATIO="build/aedilis/amalgama_fontes/$PROIECTUM"
 rm -rf "$STATIO"
@@ -237,5 +245,12 @@ if [ "$PROBARE" -eq 1 ]; then
     exit 1
 fi
 
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T4): exitus in
+# directorium scripturae, via eadem ac commissa; arbor intacta
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    mkdir -p "$FABRICA_SCRIPTURA/$SEDES" || exit 1
+    mv "$STATIO/fontes_generata.h.novum" "$FABRICA_SCRIPTURA/$EXITUS"
+    exit 0
+fi
 mv "$STATIO/fontes_generata.h.novum" "$EXITUS"
 echo "amalgama_fontes_generare ($PROIECTUM): $EXITUS ($CAPITA_N capita, $CORPORA_N corpora)"

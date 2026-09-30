@@ -29,6 +29,12 @@ set -eu
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 TOKEN_H="$RADIX/silva/fontes/silva_token.h"
 ARBOR_C="$RADIX/silva/fontes/silva_arbor.c"
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T5): sine argumento
+# exitus in directorium scripturae, via eadem ac commissa
+if [ $# -eq 0 ] && [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    set -- "$FABRICA_SCRIPTURA/silva/fontes"
+    mkdir -p "$1" || exit 1
+fi
 EXITUS_DIR="${1:-$RADIX/silva/fontes}"
 
 for f in "$TOKEN_H" "$ARBOR_C"; do
@@ -75,7 +81,7 @@ fi
 # ---- caput: enumeratio indicum + declaratio ----
 {
 cat <<'HCAPUT'
-/* silva_lexicon_c89.h - Indices generum lexicalium C89
+/* silva_lexicon_c89.h - GENERATUM: indices generum lexicalium C89
  *
  * GENERATUM per silva/instrumenta/lexicon_c89_generare.sh.
  * NOLI MANU EMENDARE.
@@ -106,7 +112,7 @@ HCAUDA
 
 {
 cat <<'CAPUT'
-/* silva_lexicon_c89.c - Descriptor lexicalis C89 pro materia
+/* silva_lexicon_c89.c - GENERATUM: descriptor lexicalis C89 pro materia
  *
  * GENERATUM per silva/instrumenta/lexicon_c89_generare.sh.
  * NOLI MANU EMENDARE - fontes sunt silva_token.h (enumeratio) et

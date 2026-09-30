@@ -1,0 +1,19 @@
+<aedificatio>
+  <actio titulus="amalgama_silva" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./silva/amalgamare.sh
+      <verbum! (>-comparare
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/silva/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="instrumentum" via="bin/aedilis"/>
+    <ingressus genus="directorium" via="include"/>
+    <ingressus genus="fasciculus" via="silva/fontes_politica.sh"/>
+    <exitus via="silva/amalgama/silva.c" provenientia="regeneratio"
+            scriptura="silva/amalgama/silva_nova.c"/>
+  </actio>
+  <actio titulus="manus" genus="institutio">
+    <ingressus genus="manifestum" via="build/aedilis/manus_instrumentum/manifestum.stml"/>
+    <exitus via="bin/manus" provenientia="relatio"/>
+  </actio>
+</aedificatio>

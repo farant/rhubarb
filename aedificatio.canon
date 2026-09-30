@@ -1,0 +1,79 @@
+<!--
+  aedificatio.canon
+  Canon dialecti AEDIFICATIO (<subsystema>/aedificatio.stml) -
+  declarationes actionum fabricae (project-specs/fabrica-spec-v2.md,
+  planum fabrica-plan-1a.md T2). Actio = ingressus -> exitus per
+  genus typatum (nulla lingua expressionum - decretum Canonis).
+  Lector: fabrica_declarationes_legere (lib/fabrica.c), qui praeterea
+  titulum duplicem recusat (directoria scripturae colliderent) -
+  regula quam canon dicere non potest.
+
+  Mandatum = argv fixum, verbum unum per lineam (captura crudam: nec
+  fuga nec quotae). Nomina a Frano approbata 2026-09-29.
+-->
+<canon dialectus="aedificatio" versio="1">
+
+  <elementum nomen="aedificatio" radix="verum">
+    <liberum nomen="actio" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="actio">
+    <attributum nomen="titulus" genus="nomen" necessarium="verum"
+      nota="nomen directorii scripturae quoque
+            (build/fabrica/scriptura/TITULUS) - unicum per plagulam"/>
+    <attributum nomen="genus" genus="electio" necessarium="verum">
+      <optio>generator</optio>
+      <optio>formatio</optio>
+      <optio>institutio</optio>
+    </attributum>
+    <attributum nomen="memorabilis" genus="veritas"
+      nota="verum: ingressus PROBABILITER pleni (clausurae manifestis
+            aedilis derivatae) - verificatio memorata (build/fabrica.db)
+            regenerationem supplet. Absens = falsum: sub -plenus semper
+            regeneratur (plan 1a T6, decretum 01M3RDBCB8)"/>
+    <liberum nomen="mandatum" maximum="1"/>
+    <liberum nomen="ingressus" minimum="1"/>
+    <liberum nomen="exitus" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="mandatum">
+    <liberum nomen="verbum" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="verbum" textus="verum"
+    nota="captura lineae: '<verbum! (>./silva/amalgamare.sh' - argumentum
+          unum, octetis suis"/>
+
+  <elementum nomen="ingressus">
+    <attributum nomen="genus" genus="electio" necessarium="verum">
+      <optio>fasciculus</optio>
+      <optio>manifestum</optio>
+      <optio>configuratio</optio>
+      <optio>instrumentum</optio>
+      <optio>directorium</optio>
+      <optio>plagulae</optio>
+      <optio>manifesta</optio>
+      <optio>radices</optio>
+    </attributum>
+    <attributum nomen="via" genus="textus" necessarium="verum"
+      nota="manifesta: directorium manifestorum aedilis (--manifestum),
+            quodque .stml explicatum; radices: configuratio aedilis,
+            nomina directoriorum inclusorum OMNIUM sigillata"/>
+    <attributum nomen="suffixa" genus="textus"
+      nota="plagulae solum: suffixa spatio separata ('.c .h'); absens =
+            omnes plagulae directorii (profunditate 0)"/>
+  </elementum>
+
+  <elementum nomen="exitus">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="provenientia" genus="electio"
+      necessarium="verum">
+      <optio>regeneratio</optio>
+      <optio>relatio</optio>
+    </attributum>
+    <attributum nomen="scriptura" genus="textus"
+      nota="via intra directorium scripturae ubi regeneratio cadit;
+            absens = via ipsa"/>
+  </elementum>
+
+</canon>

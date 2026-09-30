@@ -1,0 +1,10 @@
+<aedificatio>
+  <actio titulus="gemina" genus="generator">
+    <ingressus genus="fasciculus" via="a.txt"/>
+    <exitus via="b.txt" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="gemina" genus="generator">
+    <ingressus genus="fasciculus" via="c.txt"/>
+    <exitus via="d.txt" provenientia="regeneratio"/>
+  </actio>
+</aedificatio>

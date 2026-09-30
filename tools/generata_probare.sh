@@ -13,8 +13,9 @@
 #   I.   amalgamata tria: caput vivum == caput VERBATIM intra .c
 #        (amalgama dimidiata, ...XHAW3H) - tools/amalgama_caput.sh;
 #   II.  lexicon C89 generatum (silva_lexicon_c89.{c,h}) == generator
-#        hodiernus (spatia neglecta: formator plagulam commissam
-#        post generationem format);
+#        hodiernus OCTETIM (plagulae GENERATUM in linea prima ferunt,
+#        uncus pre-commit eas non format - fabrica P2 via B;
+#        olim spatia neglecta);
 #   III. snippets RADIX_FONTES (*_fontes_generata.sh, ab aedile) ==
 #        regeneratio per mandatum 'regeneratio:' cuiusque. Generatores
 #        IN LOCO scribunt - copiae ante servantur et SEMPER (trap)
@@ -25,11 +26,13 @@
 #   V.   sectio numerorum latina.h (ZEPHYRUM-MMMCMXCIX) == generator
 #        (tools/latina_numeri.sh; fons numerus_romanus_scribere);
 #   VI.  tabulae runarum (lib/runae_tabulae.c) == generator ex datis
-#        Unicode fixis (tools/runae_generare.sh -probare, spatia
-#        neglecta);
+#        Unicode fixis (tools/runae_generare.sh -probare, octetim);
 #   VII. amalgamata .c TOTA == regeneratio hodierna (AMALGAMA_COMPARARE=1
 #        ./X/amalgamare.sh: generatio sola, sine verificationibus) -
-#        commenta capitum quoque (quaestio ...G73P, 2026-09-29).
+#        commenta capitum quoque (quaestio ...G73P, 2026-09-29);
+#   VIII. tabula entitatum HTML (lib/entitates_html_tabula.c) ==
+#        generator (tools/entitates_html_generare.sh -probare,
+#        octetim) - olim sine custode (fabrica spec v2 par. 0.4).
 # Stala per nomen; nihil tacite.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -55,11 +58,10 @@ mkdir -p "$TMP/lexicon"
 if ./silva/instrumenta/lexicon_c89_generare.sh "$TMP/lexicon" \
         >"$TMP/lexicon.log" 2>&1; then
     for f in silva_lexicon_c89.c silva_lexicon_c89.h; do
-        if [ "$(tr -s ' \t\n' ' ' < "silva/fontes/$f")" \
-             = "$(tr -s ' \t\n' ' ' < "$TMP/lexicon/$f")" ]; then
+        if cmp -s "silva/fontes/$f" "$TMP/lexicon/$f"; then
             echo "  ok   lexicon: silva/fontes/$f recens"
         else
-            echo "  STALUM lexicon: silva/fontes/$f != generator (./silva/instrumenta/lexicon_c89_generare.sh, deinde formator -scribere)"
+            echo "  STALUM lexicon: silva/fontes/$f != generator (./silva/instrumenta/lexicon_c89_generare.sh)"
             fracta=1
         fi
     done
@@ -153,6 +155,14 @@ for p in silva tessera officina; do
         fracta=1
     fi
 done
+
+# ---- VIII. tabula entitatum HTML ----
+if ./tools/entitates_html_generare.sh -probare >"$TMP/entitates.log" 2>&1; then
+    echo "  ok   entitates: lib/entitates_html_tabula.c recens"
+else
+    echo "  STALUM entitates: $(tail -1 "$TMP/entitates.log")"
+    fracta=1
+fi
 
 stala=0
 for s in "${SNIPPETS[@]}"; do

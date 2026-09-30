@@ -24,6 +24,34 @@ fi
 
 mkdir -p silva/build
 
+# clausurae (fabrica T6): manifestum unum per radicem DISTINCTAM ->
+# build/fabrica/clausurae/silva/ (ingressus 'manifesta' actionis
+# memorabilis). Derivatio quoque semel per radicem: globus
+# silva/fontes/*.c omnibus fragmentis communis est (XXII x XXV
+# derivationes eaedem olim, ~CCXXXVIII s).
+clausurae="build/fabrica/clausurae/silva"
+rm -rf "$clausurae"
+mkdir -p "$clausurae"
+promptuarium="silva/build/fontes_promptuarium.$$"
+mkdir -p "$promptuarium"
+trap 'rm -rf "$promptuarium"' EXIT
+
+# exitus aedilis radicis (obiecta) - semel derivatus, deinde e
+# promptuario; manifestum simul scriptum
+derivare() {
+    local clavis
+    clavis="$(echo "$1" | sed 's|/|__|g')"
+    if [ ! -f "$promptuarium/$clavis" ]; then
+        if ! ./bin/aedilis "$1" --enumerare \
+                --manifestum "$clausurae/$clavis.stml" \
+                > "$promptuarium/$clavis.nov"; then
+            return 1
+        fi
+        mv "$promptuarium/$clavis.nov" "$promptuarium/$clavis"
+    fi
+    cat "$promptuarium/$clavis"
+}
+
 for snip in silva/*_fontes_generata.sh; do
     principalia="$(sed -n 's/^# principalia: //p' "$snip")"
     if [ -z "$principalia" ]; then
@@ -42,7 +70,7 @@ for snip in silva/*_fontes_generata.sh; do
     acc="silva/build/fontes_acc.$$"
     : > "$acc"
     for scopus in $principalia silva/fontes/*.c; do
-        if ! ./bin/aedilis "$scopus" --enumerare >> "$acc"; then
+        if ! derivare "$scopus" >> "$acc"; then
             echo "silva_fontes_generare: derivatio fracta in $scopus ($snip)" >&2
             rm -f "$acc"
             exit 1
@@ -56,6 +84,12 @@ for snip in silva/*_fontes_generata.sh; do
         exit 1
     fi
 
+    # FABRICA_SCRIPTURA (iudex): fragmentum in scripturam, arbor intacta
+    destinatio="$snip"
+    if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+        destinatio="$FABRICA_SCRIPTURA/$snip"
+        mkdir -p "$(dirname "$destinatio")"
+    fi
     {
         echo "# $(basename "$snip") - GENERATUM AB AEDILE - NE MANU EDITES"
         echo "# regeneratio: ./tools/silva_fontes_generare.sh"
@@ -65,6 +99,6 @@ for snip in silva/*_fontes_generata.sh; do
             echo "    \"$f\""
         done
         echo ")"
-    } > "$snip"
+    } > "$destinatio"
     echo "$snip scriptum ($(echo "$lista" | wc -l | tr -d ' ') fontes)"
 done

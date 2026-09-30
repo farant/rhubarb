@@ -97,7 +97,7 @@ done
 echo "  [porta 0] vetustas manifestorum"
 # AMALGAMA_COMPARARE: porta generata IV manifesta IAM iudicavit (bis
 # currere ~XXX s silvae constabat) - hic omittitur
-if [ "${AMALGAMA_COMPARARE:-0}" != 1 ]; then
+if [ "${AMALGAMA_COMPARARE:-0}" != 1 ] && [ -z "${FABRICA_SCRIPTURA:-}" ]; then
     "$RADIX_DIR/tools/porta_vetustatis.sh" tessera "$BUILD_DIR/vetustas" || exit 1
 fi
 
@@ -112,6 +112,17 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
 # commissa == regeneratio hodierna. Olim nulla porta id videbat -
 # amalgamata_probare compilat tantum, generata I caput solum confert
 # (quaestio ...G73P, quater icta). Exitus 0 recens, 1 rancida, 2 fracta.
+# FABRICA_SCRIPTURA (bin/fabrica iudicare -plenus, plan 1a T4):
+# generatio SOLA in directorium scripturae, via eadem ac commissa
+# (tessera/amalgama/tessera.c); nihil in arbore scribitur, nulla
+# verificatio - iudex octetos confert. Exitus 0 scriptum, 2 fractum.
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    mkdir -p "$FABRICA_SCRIPTURA/tessera/amalgama" || exit 2
+    "$BUILD_DIR/amalgamator" "$RADIX_DIR" \
+        "$FABRICA_SCRIPTURA/tessera/amalgama/tessera.c" \
+        > "$BUILD_DIR/scriptura_tessera.log" 2>&1 || exit 2
+    exit 0
+fi
 if [ "${AMALGAMA_COMPARARE:-0}" = 1 ]; then
     "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$BUILD_DIR/comparatio_tessera.c" \
         > "$BUILD_DIR/comparatio_tessera.log" 2>&1 || exit 2

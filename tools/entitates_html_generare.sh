@@ -35,7 +35,7 @@ import html.entities
 t = html.entities.html5
 rows = sorted(t.items())
 out = []
-out.append('/* entitates_html_tabula.c - GENERATA '
+out.append('/* entitates_html_tabula.c - GENERATUM '
            '(tools/entitates_html_generare.sh)')
 out.append(' * ex html.entities.html5 Pythonis (WHATWG entities.json).')
 out.append(' * NOLI MANU EDERE - regenera et confer (-probare). Ordine')
@@ -71,5 +71,10 @@ if [ "$PROBARE" = "1" ]; then
     exit 1
 fi
 
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T5)
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    EXITUS="$FABRICA_SCRIPTURA/$EXITUS"
+    mkdir -p "$(dirname "$EXITUS")" || exit 1
+fi
 generare > "$EXITUS"
 echo "entitates_html: scriptum $EXITUS ($(grep -c '^    { "' "$EXITUS") tituli)"

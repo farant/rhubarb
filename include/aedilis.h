@@ -32,6 +32,10 @@
  *   ex_oraculo_out:   VERUM = cursus minoritatis (-MM pro .m);
  *                     directivae tunc viae IAM RESOLUTAE
  *                     relativae radici sunt
+ *   angulatae_out:    Xar de b32, directivis parallela - VERUM =
+ *                     forma angulata, FALSUM = citata. NIHIL
+ *                     licet (forma ignota): inresoluta tunc ut
+ *                     olim systema solum habetur
  * Chordae redditae in piscinam datam copiandae sunt (vita earum
  * vitam extractionis excedit). FALSUM = plagula illegibilis aut
  * imparsabilis -> machina recusat. */
@@ -41,7 +45,8 @@ nomen b32 (*AedilisExtractor)(
     Piscina*            piscina,
     Xar**               directivae_out,
     Xar**               annotationes_out,
-    b32*                ex_oraculo_out);
+    b32*                ex_oraculo_out,
+    Xar**               angulatae_out);
 
 
 /* ====================================================
@@ -58,6 +63,15 @@ nomen structura {
        Xar* vexilla;    /* chorda */
 } AedilisRegulaVendor;
 
+/* Regula compilationis per fontem NOSTRUM (sectio 'compilatio'):
+ * vexilla post communia addita; nomen obiecti ea fert
+ * (lib__sigillum__O2.o), ut obiectum commune vexillis aliis numquam
+ * per mtime recens videatur (fabrica T8: sigillum -O2). */
+nomen structura {
+    chorda  fons;       /* e.g. "lib/sigillum.c" */
+       Xar* vexilla;    /* chorda */
+} AedilisRegulaCompilationis;
+
 nomen structura {
     chorda  caput;      /* e.g. "include/aliquid.h" */
        Xar* obiecta;    /* chorda: fontes obiectorum */
@@ -70,6 +84,7 @@ nomen structura {
        Xar* variantes;  /* chorda: praelatio variantium, ordine */
        Xar* regulae_nexus;   /* AedilisRegulaNexus (valore) */
        Xar* regulae_vendor;  /* AedilisRegulaVendor (valore) */
+       Xar* regulae_compilationis; /* AedilisRegulaCompilationis */
        Xar* irregularia;     /* AedilisIrregulare (valore) */
 } AedilisConfiguratio;
 
@@ -133,6 +148,10 @@ nomen structura {
        Xar* obiecta;           /* AedilisObiectum (valore) */
        Xar* capita;            /* AedilisCaput (valore) */
        Xar* systemata;         /* chorda */
+       Xar* inresolutae;       /* chorda: citatae nusquam inventae -
+                                * pars systematum, sed manifestum
+                                * sine eis INCOMPLETUM est (fabrica
+                                * P1); forma ignota = nullae */
        Xar* vendores;          /* AedilisVendor (valore) */
        Xar* vexilla_annotata;  /* chorda */
 } AedilisFructus;

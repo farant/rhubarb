@@ -16,6 +16,11 @@ bin/capsula_generare apps/mensor/assets/mensor.toml >/dev/null \
     || { echo "mensor_ui: capsula fracta"; exit 1; }
 bin/aedilis apps/mensor/mensor_ui.c >/dev/null \
     || { echo "mensor_ui: aedilis fracta"; exit 1; }
+# provenientia (fabrica T7): '-provenientia' respondetur
+[ -x bin/fabrica ] || ./tools/fabrica_struere.sh >/dev/null || {
+    echo "mensor_ui: fabrica non structa"; exit 1; }
+./tools/provenientia_scribere.sh mensor_ui bin/mensor_ui || {
+    echo "mensor_ui: provenientia fracta"; exit 1; }
 sh build/aedilis/mensor_ui/struere.sh >/dev/null \
     || { echo "mensor_ui: structura fracta"; exit 1; }
 # SIGNATURA: destinatio TOLLENDA ante copiam.

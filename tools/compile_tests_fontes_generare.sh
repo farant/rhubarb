@@ -50,11 +50,20 @@ fi
 TEMPORARIUM=$(mktemp)
 trap 'rm -f "$TEMPORARIUM"' EXIT
 
+# clausurae (fabrica T6): manifestum unum per principale ->
+# build/fabrica/clausurae/compile_tests/ (ingressus 'manifesta' actionis
+# memorabilis); vacuatum ante cursum
+CLAUSURAE="build/fabrica/clausurae/compile_tests"
+rm -rf "$CLAUSURAE"
+mkdir -p "$CLAUSURAE"
+
 for f in probationes/probatio_*.c \
          tools/generare.c tools/capsula_generare.c \
          instrumenta/nuntium_schema_generare.c; do
     case "$f" in *_benchmark.c) continue ;; esac
-    if ! ./bin/aedilis "$f" --enumerare >> "$TEMPORARIUM"; then
+    if ! ./bin/aedilis "$f" --enumerare \
+            --manifestum "$CLAUSURAE/$(echo "$f" | sed 's|/|__|g').stml" \
+            >> "$TEMPORARIUM"; then
         echo "compile_tests_fontes_generare: derivatio fracta: $f" >&2
         exit 1
     fi
@@ -79,6 +88,11 @@ if [ -n "$DUPLICATA" ]; then
 fi
 
 DESTINATIO="$EXITUS"
+# FABRICA_SCRIPTURA (iudex fabricae): fragmentum in scripturam, arbor
+# intacta
+if [ -n "${FABRICA_SCRIPTURA:-}" ] && [ "$PROBARE" -eq 0 ]; then
+    DESTINATIO="$FABRICA_SCRIPTURA/$EXITUS"
+fi
 if [ "$PROBARE" -eq 1 ]; then
     DESTINATIO="$TEMPORARIUM.novum"
     trap 'rm -f "$TEMPORARIUM" "$TEMPORARIUM.novum"' EXIT
