@@ -17,8 +17,8 @@
 
 /* particula copiae sigillandae: via et octeti eius */
 nomen structura {
-    chorda via;
-    chorda contentum;
+      chorda via;
+    Sigillum octeti;   /* sigillum contenti */
 } Particula;
 
 interior chorda
@@ -74,6 +74,19 @@ _chordam_addere (
     {
         *locus = valor;
     }
+}
+
+vacuum
+fabrica_suturam_parare (
+    FabricaSutura* sutura)
+{
+    sutura->datum      = NIHIL;
+    sutura->legere     = NIHIL;
+    sutura->enumerare  = NIHIL;
+    sutura->currere    = NIHIL;
+    sutura->rogare     = NIHIL;
+    sutura->meminisse  = NIHIL;
+    sutura->sigilla    = NIHIL;
 }
 
 
@@ -225,25 +238,50 @@ _particulam_legere (
 {
     Particula* particula;
        chorda  contentum;
+       vacuum* memoratum;
+     Sigillum  octeti;
 
     si (_exclusum_est(exclusa, via))
     {
         redde VERUM;
     }
-    si (!sutura->legere(sutura->datum, chorda_ut_cstr(via, piscina),
-            piscina, &contentum))
+    si (   sutura->sigilla != NIHIL
+        && tabula_dispersa_invenire(sutura->sigilla, via, &memoratum))
     {
-        _causam_ponere(causa_out, piscina, "ingressus absens: ", via,
-            "");
-        redde FALSUM;
+        octeti = *(Sigillum*)memoratum;
+    }
+    alioquin
+    {
+        si (!sutura->legere(sutura->datum,
+                chorda_ut_cstr(via, piscina), piscina, &contentum))
+        {
+            _causam_ponere(causa_out, piscina, "ingressus absens: ",
+                via, "");
+            redde FALSUM;
+        }
+        octeti = sigillum_computare(contentum.datum,
+            (memoriae_index)contentum.mensura);
+        si (sutura->sigilla != NIHIL)
+        {
+            Sigillum* locus;
+
+            locus = (Sigillum*)piscina_allocare(piscina,
+                magnitudo(Sigillum));
+            si (locus != NIHIL)
+            {
+                *locus = octeti;
+                (vacuum)tabula_dispersa_inserere(sutura->sigilla, via,
+                    locus);
+            }
+        }
     }
     particula = (Particula*)xar_addere(particulae);
     si (particula == NIHIL)
     {
         redde FALSUM;
     }
-    particula->via        = via;
-    particula->contentum  = contentum;
+    particula->via     = via;
+    particula->octeti  = octeti;
     redde VERUM;
 }
 
@@ -341,7 +379,102 @@ _directorium_explicare (
     /* '/' finalis: directorium numquam cum plagula eiusdem viae
      * confunditur */
     particula->via        = _iungere(piscina, "", via, "/");
-    particula->contentum  = chorda_aedificator_finire(aedificator);
+    {
+        chorda nomina_iuncta;
+
+        nomina_iuncta = chorda_aedificator_finire(aedificator);
+        particula->octeti = sigillum_computare(nomina_iuncta.datum,
+            (memoriae_index)nomina_iuncta.mensura);
+    }
+    redde VERUM;
+}
+
+/* VERUM si nomen uno suffixorum (spatio separatorum) terminatur;
+ * suffixa vacua = omnia */
+interior b32
+_suffixo_congruit (
+    chorda titulus,
+    chorda suffixa)
+{
+    i32 i;
+
+    si (suffixa.mensura == 0)
+    {
+        redde VERUM;
+    }
+    i = ZEPHYRUM;
+    dum (i < suffixa.mensura)
+    {
+        i32 initium;
+
+        dum (i < suffixa.mensura && suffixa.datum[i] == ' ')
+        {
+            i++;
+        }
+        initium = i;
+        dum (i < suffixa.mensura && suffixa.datum[i] != ' ')
+        {
+            i++;
+        }
+        si (   i > initium
+            && chorda_terminatur(titulus,
+                   chorda_sectio(suffixa, initium, i)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* PLAGULAE: plagulae directorii profunditate 0, suffixis filtratae,
+ * CONTENTIS sigillatae (via cuiusque in sigillo - plagula nova aut
+ * deleta sigillum mutat). Subdirectoria praetermittuntur (corpus
+ * infixum globis 'lib/X.c' profunditate 0 utitur). */
+interior b32
+_plagulas_explicare (
+        constans FabricaSutura* sutura,
+     constans FabricaIngressus* ingressus,
+                  constans Xar* exclusa,
+                       Piscina* piscina,
+                           Xar* particulae,
+                        chorda* causa_out)
+{
+    Xar* nomina;
+    i32  i;
+
+    si (   sutura->enumerare == NIHIL
+        || !sutura->enumerare(sutura->datum,
+               chorda_ut_cstr(ingressus->via, piscina), piscina,
+               &nomina))
+    {
+        _causam_ponere(causa_out, piscina, "directorium absens: ",
+            ingressus->via, "");
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        chorda  titulus;
+        chorda  via;
+           Xar* filii;
+
+        titulus = *(chorda*)xar_obtinere(nomina, i);
+        si (!_suffixo_congruit(titulus, ingressus->suffixa))
+        {
+            perge;
+        }
+        via = _iungere(piscina, "", _iungere(piscina, "",
+            ingressus->via, "/"), chorda_ut_cstr(titulus, piscina));
+        si (sutura->enumerare(sutura->datum,
+                chorda_ut_cstr(via, piscina), piscina, &filii))
+        {
+            perge;   /* subdirectorium */
+        }
+        si (!_particulam_legere(sutura, via, exclusa, piscina,
+                particulae, causa_out))
+        {
+            redde FALSUM;
+        }
+    }
     redde VERUM;
 }
 
@@ -379,6 +512,10 @@ fabrica_ingressus_sigillare (
                 bonum = _manifestum_explicare(sutura, ingressus->via,
                     exclusa, piscina, particulae, causa_out);
                 frange;
+            casus FABRICA_INGRESSUS_PLAGULAE:
+                bonum = _plagulas_explicare(sutura, ingressus, exclusa,
+                    piscina, particulae, causa_out);
+                frange;
             casus FABRICA_INGRESSUS_DIRECTORIUM:
                 bonum = _directorium_explicare(sutura, ingressus->via,
                     piscina, particulae, causa_out);
@@ -411,9 +548,8 @@ fabrica_ingressus_sigillare (
         {
             perge;
         }
-        prior = particula->via;
-        octeti = sigillum_computare(particula->contentum.datum,
-            (memoriae_index)particula->contentum.mensura);
+        prior   = particula->via;
+        octeti  = particula->octeti;
         sigillum_addere(&contextus, particula->via.datum,
             (memoriae_index)particula->via.mensura);
         sigillum_addere(&contextus, "", 1);
@@ -750,6 +886,10 @@ _genus_ingressus (
     {
         *genus = FABRICA_INGRESSUS_DIRECTORIUM;
     }
+    alioquin si (chorda_aequalis_literis(valor, "plagulae"))
+    {
+        *genus = FABRICA_INGRESSUS_PLAGULAE;
+    }
     alioquin
     {
         redde FALSUM;
@@ -918,6 +1058,13 @@ fabrica_declarationes_legere (
                     nihil);
             }
             ingressus->via = *ingressus_via;
+            {
+                chorda* suffixa;
+
+                suffixa = stml_attributum_capere(filius, "suffixa");
+                ingressus->suffixa = (suffixa != NIHIL)
+                    ? *suffixa : chorda_ex_literis("", piscina);
+            }
         }
         si (xar_numerus(actio.ingressus) == 0)
         {

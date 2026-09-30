@@ -799,6 +799,13 @@ comment (origo annotatio; absent-until-generated is allowed).
 > link, broken since 74642c4f (duplicate materia objects). Open: corpus
 > freshness ("rebake after lib/") needs a tree input or corpus action;
 > celer measured 6.0 s (> 2 s) — per-run digest memo proposed.
+>
+> **Follow-up (Fran's decisions, 2026-09-30):** per-run digest memo
+> (`FabricaSutura.sigilla`, + `fabrica_suturam_parare`) and a new input
+> kind `plagulae` (depth-0 directory files, `suffixa` filter) mirroring
+> the corpus globs on briar/spectator/silex. celer 1.66 s warm; a lib/
+> file outside every closure now marks exactly the three corpus
+> binaries stale.
 
 ### Task T8: surfaces and the oracle gate
 

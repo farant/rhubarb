@@ -46,6 +46,7 @@ nomen structura {
                    b32  fractus;
                    i32  cursus;
     constans character* relatio;       /* NIHIL = sine provenientia */
+                   i32  lecturae;      /* vocationes legere (memoria) */
 } DiscusFictus;
 
 interior FasciculusFictus*
@@ -131,6 +132,7 @@ _legere (
     FasciculusFictus* f;
 
     (vacuum)piscina;
+    ((DiscusFictus*)datum)->lecturae++;
     f = _fasciculum_invenire((DiscusFictus*)datum, via);
     si (f == NIHIL)
     {
@@ -248,6 +250,9 @@ _discum_parare (
     discus->fractus        = FALSUM;
     discus->cursus         = ZEPHYRUM;
     discus->relatio        = NIHIL;
+    discus->lecturae       = ZEPHYRUM;
+
+    fabrica_suturam_parare(sutura);
 
     sutura->datum      = discus;
     sutura->legere     = _legere;
@@ -255,6 +260,7 @@ _discum_parare (
     sutura->currere    = _currere;
     sutura->rogare     = _rogare;
     sutura->meminisse  = NIHIL;
+    sutura->sigilla    = NIHIL;
 }
 
 
@@ -295,9 +301,10 @@ _ingressum_addere (
 {
     FabricaIngressus* ingressus;
 
-    ingressus         = (FabricaIngressus*)xar_addere(actio->ingressus);
-    ingressus->genus  = genus;
-    ingressus->via    = chorda_ex_literis(via, piscina);
+    ingressus = (FabricaIngressus*)xar_addere(actio->ingressus);
+    ingressus->genus = genus;
+    ingressus->via = chorda_ex_literis(via, piscina);
+    ingressus->suffixa = chorda_ex_literis("", piscina);
 }
 
 interior FabricaExitus*
@@ -943,6 +950,105 @@ s32 principale (vacuum)
         _ponere(&discus, "lib/manus.c", "int manus_nova;\n");
         CREDO_VERUM(fabrica_actionem_sigillare(&sutura, cum, piscina,
             &s2, &causa));
+        CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
+            == 0);
+    }
+
+
+    /* ==================================================
+     * PROBARE: memoria sigillorum per cursum (celer < II s)
+     * ================================================== */
+
+    {
+         DiscusFictus  discus;
+        FabricaSutura  sutura;
+         FabricaActio* a;
+             Sigillum  s1;
+             Sigillum  s2;
+                  i32  lecturae;
+
+        imprimere("\n--- Probans memoriam sigillorum ---\n");
+        _discum_parare(&discus, &sutura, piscina);
+        _ponere(&discus, "lib/x.c", "int x;\n");
+        _ponere(&discus, "lib/y.c", "int y;\n");
+        a = _actio(piscina, "m", FABRICA_ACTIO_GENERATOR);
+        _ingressum_addere(a, FABRICA_INGRESSUS_FASCICULUS, "lib/x.c",
+            piscina);
+        _ingressum_addere(a, FABRICA_INGRESSUS_FASCICULUS, "lib/y.c",
+            piscina);
+        sutura.sigilla = tabula_dispersa_creare_chorda(piscina, 16);
+
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s1));
+        lecturae = discus.lecturae;
+        CREDO_AEQUALIS_I32(lecturae, II);
+        /* iterum: nulla lectio, sigillum idem */
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
+        CREDO_AEQUALIS_I32(discus.lecturae, lecturae);
+        CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
+        /* memoria PER CURSUM: mutatio intra cursum non videtur (id
+         * consulto - iudicium unum, arbor una) */
+        _ponere(&discus, "lib/x.c", "int z;\n");
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
+        CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
+    }
+
+
+    /* ==================================================
+     * PROBARE: ingressus PLAGULAE (corpus infixum)
+     * ================================================== */
+
+    {
+            DiscusFictus  discus;
+           FabricaSutura  sutura;
+            FabricaActio* a;
+        FabricaIngressus* ingressus;
+                Sigillum  s1;
+                Sigillum  s2;
+      constans character* nomina[IV];
+      constans character* nomina_plus[V];
+
+        imprimere("\n--- Probans plagulas directorii ---\n");
+        _discum_parare(&discus, &sutura, piscina);
+        nomina[0] = "a.c";
+        nomina[1] = "b.h";
+        nomina[2] = "notae.md";
+        nomina[3] = "sub.c";
+        _directorium_ponere(&discus, "src", nomina, IV);
+        /* sub.c DIRECTORIUM est, suffixo congruens: praetermittitur */
+        _directorium_ponere(&discus, "src/sub.c", nomina, ZEPHYRUM);
+        _ponere(&discus, "src/a.c", "int a;\n");
+        _ponere(&discus, "src/b.h", "int b;\n");
+        _ponere(&discus, "src/notae.md", "notae\n");
+        a = _actio(piscina, "p", FABRICA_ACTIO_INSTITUTIO);
+        _ingressum_addere(a, FABRICA_INGRESSUS_PLAGULAE, "src",
+            piscina);
+        ingressus = (FabricaIngressus*)xar_obtinere(a->ingressus,
+            ZEPHYRUM);
+        ingressus->suffixa = chorda_ex_literis(".c .h", piscina);
+
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s1));
+        /* plagula suffixo non congruens: nihil confert */
+        _ponere(&discus, "src/notae.md", "notae mutatae\n");
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
+        CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
+        /* contentum congruentis mutatum -> aliud */
+        _ponere(&discus, "src/b.h", "int b2;\n");
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
+        CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
+            == 0);
+        /* plagula nova congruens -> aliud (rebake post lib/) */
+        _ponere(&discus, "src/b.h", "int b;\n");
+        nomina_plus[0] = "a.c";
+        nomina_plus[1] = "b.h";
+        nomina_plus[2] = "d.c";
+        nomina_plus[3] = "notae.md";
+        nomina_plus[4] = "sub.c";
+        discus.directoria = xar_creare(piscina,
+            (i32)magnitudo(DirectoriumFictum));
+        _directorium_ponere(&discus, "src", nomina_plus, V);
+        _directorium_ponere(&discus, "src/sub.c", nomina, ZEPHYRUM);
+        _ponere(&discus, "src/d.c", "int d;\n");
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
         CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
             == 0);
     }

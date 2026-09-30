@@ -140,10 +140,8 @@
   </actio>
   <!-- T7 pars IIb: briar, spectator, silex. Clausura aedilis (plena
        post P1) + quae installator ipse generat (facies, icon,
-       MUTATIONES). NON TECTUM: corpus infixum (lib/ include/ vendor/
-       tota) - plagula capsulae in clausura est, sed ab installatore
-       per mtime regeneratur; 'rebake post lib/' plene tegendum
-       ingressum arboris poscit (quaestio ad Franum). -->
+       MUTATIONES). corpus infixum per ingressus 'plagulae' (decisio
+       Frani 2026-09-30: 'rebake post lib/' tegitur). -->
   <actio titulus="briar" genus="institutio">
     <mandatum>
       <verbum! (>./tools/briar_struere.sh
@@ -159,6 +157,26 @@
     <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
     <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
     <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
+         post lib/' tectum - plagula lib/ extra clausuram mutata
+         corpus mutat, ergo et binarium -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor"/>
+    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
+    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
+    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
+    <ingressus genus="fasciculus" via="canones.registrum"/>
+    <ingressus genus="fasciculus" via="natura/natura.canon"/>
+    <ingressus genus="fasciculus" via="aedilis.canon"/>
+    <ingressus genus="fasciculus" via="canon.canon"/>
+    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
     <exitus via="bin/briar" provenientia="relatio"/>
   </actio>
   <actio titulus="briar_spectator" genus="institutio">
@@ -174,6 +192,26 @@
     <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
     <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
     <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
+         post lib/' tectum - plagula lib/ extra clausuram mutata
+         corpus mutat, ergo et binarium -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor"/>
+    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
+    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
+    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
+    <ingressus genus="fasciculus" via="canones.registrum"/>
+    <ingressus genus="fasciculus" via="natura/natura.canon"/>
+    <ingressus genus="fasciculus" via="aedilis.canon"/>
+    <ingressus genus="fasciculus" via="canon.canon"/>
+    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
     <exitus via="bin/briar-spectator" provenientia="relatio"/>
   </actio>
   <actio titulus="silex" genus="institutio">
@@ -185,6 +223,26 @@
     <ingressus genus="fasciculus" via="tools/silex_struere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
+         post lib/' tectum - plagula lib/ extra clausuram mutata
+         corpus mutat, ergo et binarium -->
+    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
+    <ingressus genus="plagulae" via="include" suffixa=".h"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="vendor"/>
+    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
+    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
+    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
+    <ingressus genus="fasciculus" via="canones.registrum"/>
+    <ingressus genus="fasciculus" via="natura/natura.canon"/>
+    <ingressus genus="fasciculus" via="aedilis.canon"/>
+    <ingressus genus="fasciculus" via="canon.canon"/>
+    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
     <exitus via="bin/silex" provenientia="relatio"/>
   </actio>
   <!-- plan 1a T5: generata radicis -->

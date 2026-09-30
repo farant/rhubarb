@@ -7,6 +7,7 @@
 #include "xar.h"
 #include "sigillum.h"
 #include "internamentum.h"
+#include "tabula_dispersa.h"
 
 
 /* ==================================================
@@ -33,7 +34,10 @@ nomen enumeratio {
     FABRICA_INGRESSUS_MANIFESTUM,    /* viae manifesti aedilis */
     FABRICA_INGRESSUS_CONFIGURATIO,  /* aedilis.stml tota */
     FABRICA_INGRESSUS_INSTRUMENTUM,  /* binarium instrumenti */
-    FABRICA_INGRESSUS_DIRECTORIUM    /* nomina ordinata */
+    FABRICA_INGRESSUS_DIRECTORIUM,   /* nomina ordinata */
+    FABRICA_INGRESSUS_PLAGULAE       /* plagulae directorii, gradu 0,
+                                      * suffixis filtratae (corpus
+                                      * infixum briar/silicis) */
 } FabricaGenusIngressus;
 
 nomen enumeratio {
@@ -57,6 +61,8 @@ nomen enumeratio {
 nomen structura {
     FabricaGenusIngressus genus;
                    chorda via;
+                   chorda suffixa;   /* PLAGULAE: ".c .h" (spatio
+                                      * separata); vacua = omnes */
 } FabricaIngressus;
 
 nomen structura {
@@ -100,7 +106,20 @@ nomen structura {
     b32 (*meminisse)(vacuum* datum, constans character* titulus,
                      constans Sigillum* ingressus,
                      constans Sigillum* artificium);
+    /* memoria sigillorum PER CURSUM (via -> Sigillum*): plagula quae
+     * multis ingressibus communis est semel legitur et sigillatur
+     * (capsula corporis XLIX MB tribus binariis; ingressus actionis
+     * per exitum). NIHIL licet. Arbor intra cursum immota ponitur. */
+    TabulaDispersa* sigilla;
 } FabricaSutura;
+
+/* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
+ * praebet ponit - membrum novum postea additum sic tutum manet
+ * (T7: 'sigilla' additum, sutura instrumenti membrum non posuit,
+ * monstrator purgamenti -> Bus error). */
+vacuum
+fabrica_suturam_parare (
+    FabricaSutura* sutura);
 
 nomen structura {
            chorda artificium;

@@ -39,6 +39,7 @@
 #include "processus.h"
 #include "internamentum.h"
 #include "sigillum.h"
+#include "tabula_dispersa.h"
 #include "fabrica.h"
 #include "provenientia.h"
 
@@ -530,12 +531,14 @@ _iudicare (
         redde II;
     }
 
-    sutura.datum      = NIHIL;
+    fabrica_suturam_parare(&sutura);
     sutura.legere     = _legere;
     sutura.enumerare  = _enumerare;
     sutura.currere    = _currere;
     sutura.rogare     = _rogare;
     sutura.meminisse  = NIHIL;
+    /* memoria sigillorum per cursum: communis semel sigillatur */
+    sutura.sigilla    = tabula_dispersa_creare_chorda(piscina, 1024);
 
     sententiae = xar_creare(piscina, (i32)magnitudo(Sententia));
     per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
@@ -688,12 +691,14 @@ _digestum (
     {
         redde II;
     }
-    sutura.datum      = NIHIL;
+    fabrica_suturam_parare(&sutura);
     sutura.legere     = _legere;
     sutura.enumerare  = _enumerare;
     sutura.currere    = NIHIL;
     sutura.rogare     = NIHIL;
     sutura.meminisse  = NIHIL;
+    /* memoria sigillorum per cursum: communis semel sigillatur */
+    sutura.sigilla    = tabula_dispersa_creare_chorda(piscina, 1024);
     per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
     {
          FabricaActio* actio;

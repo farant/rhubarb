@@ -46,8 +46,12 @@
       <optio>configuratio</optio>
       <optio>instrumentum</optio>
       <optio>directorium</optio>
+      <optio>plagulae</optio>
     </attributum>
     <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="suffixa" genus="textus"
+      nota="plagulae solum: suffixa spatio separata ('.c .h'); absens =
+            omnes plagulae directorii (profunditate 0)"/>
   </elementum>
 
   <elementum nomen="exitus">

@@ -260,3 +260,33 @@ manifests' prediction (briar, spectator; not silex).
   design hashing inputs PER OUTPUT (tabulae_silvae: 7x, capsulae: 2x),
   even in celer. Fix proposed: a per-run file-digest memo in the core
   (each file hashed once; the corpus shared by three binaries).
+
+## 2026-09-30 — digest memo + `plagulae` input (Fran's decisions after T7)
+
+**Memo.** `FabricaSutura.sigilla` (TabulaDispersa via → Sigillum*, per
+run): each file read and hashed once per run. Particula now carries the
+content digest, not the content. celer 6.0 s → 1.39 s (before the corpus
+inputs). Plant (lookup disabled): the no-reread and per-run asserts went
+red, digest equality stayed green — as predicted.
+- **Bus error on the way:** adding a field to FabricaSutura left the
+  tool's stack-allocated sutura with a garbage `sigilla` (my replace
+  missed the formatter-aligned lines). New `fabrica_suturam_parare()`
+  NIHILs every field; the tool and the gate call it first, so future
+  fields default safe.
+
+**`plagulae` input kind** (Fran chose (a), a tree input; built as
+depth-0 "files of a directory" with `suffixa=".c .h"` because the
+corpus globs are depth 0 — lib/ has 14 nested files the corpus does not
+embed). Subdirectories skipped; each file's path is in the digest, so a
+new or deleted matching file changes it. Plant (suffix filter always
+true) → only the "non-matching file contributes nothing" assert red.
+Declared on briar, spectator, silex to mirror corpus_infixum.sh's
+globs + named files.
+- **Coverage proven:** a comment appended to lib/qr.c — in NO binary's
+  closure — made exactly briar, briar-spectator, silex STALUM. The
+  "rebake after lib/" ritual is now a named verdict with a command.
+- **Timing:** celer steady 1.66 s (warm cache, 15 installed + 35
+  generated declared). Cold cache right after heavy builds measured
+  ~4.7 s — note for T8's session-start hook.
+- zsh non-splitting bit my timing loop once more (`$sel` one word →
+  nothing matched → "0.00 s"): a too-good number is a question.
