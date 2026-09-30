@@ -130,6 +130,7 @@ declare -a SOURCE_FILES=(
     "lib/plist.c"
     "lib/processus_posix.c"
     "lib/qr.c"
+    "lib/quadrans.c"
     "lib/quaerere.c"
     "lib/quaestiones_lectio.c"
     "lib/reactor.c"
