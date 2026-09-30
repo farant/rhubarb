@@ -182,4 +182,25 @@ fabrica_subsystemata_legere (
     InternamentumChorda* intern,
                  chorda* causa_out);
 
+/* Via plagulae provenientiae actionis (conventio T7):
+ * build/fabrica/provenientia/TITULUS.c - installator eam scribit
+ * (tools/provenientia_scribere.sh), binarium eam nectit. */
+chorda
+fabrica_provenientia_via (
+     chorda  titulus,
+    Piscina* piscina);
+
+/* Sigillum actionis UT iudex et 'bin/fabrica digestum' id computant:
+ * ingressus MINUS plagula provenientiae eius (quae digestum ipsum fert
+ * - sine exclusione omne binarium statim post institutionem stalum
+ * esset). Functio UNA pro ambobus: scriptum et iudex dissentire
+ * nequeunt. */
+b32
+fabrica_actionem_sigillare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                   Piscina* piscina,
+                  Sigillum* sigillum_out,
+                    chorda* causa_out);
+
 #endif /* FABRICA_H */

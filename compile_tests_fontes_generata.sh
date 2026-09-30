@@ -130,6 +130,7 @@ declare -a SOURCE_FILES=(
     "lib/planta_lectio.c"
     "lib/plist.c"
     "lib/processus_posix.c"
+    "lib/provenientia.c"
     "lib/qr.c"
     "lib/quaerere.c"
     "lib/quaestiones_lectio.c"

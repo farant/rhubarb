@@ -12,7 +12,20 @@
     <ingressus genus="manifestum" via="build/aedilis/fabrica/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/fabrica_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/fabrica" provenientia="relatio"/>
+  </actio>
+  <!-- binaria installata (T7): SOLA cum relatione '-provenientia'
+       declarantur - binarium vexillum ignorans aliquid facere posset -->
+  <actio titulus="manus" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/manus_struere.sh
+    </mandatum>
+    <ingressus genus="manifestum" via="build/aedilis/manus_instrumentum/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/manus_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
   <!-- plan 1a T5: generata radicis -->
   <actio titulus="numeri_latinae" genus="generator">

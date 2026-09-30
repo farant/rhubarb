@@ -8,11 +8,13 @@
 #   III  radix sine subsystematibus -> 2 'nihil iudicatum'
 #   IV   subsystema declaratum sine aedificatio.stml -> 2, nominatum
 #   V    titulus duplex TRANS subsystemata -> 2, ambae sedes
-#   VI   arbor viva: iudex ipse PRIMA linea (IGNOTUM usque ad T7)
+#   VI   arbor viva: iudex ipse RECENS (relatio T7)
 #   VII  digestum fabrica -> LXIV hex; actio ignota -> 2
 #   VIII manifestum cuius scopus abest -> ORPHANUM nominatum (et sub
 #        -plenus: vexillum filtrum non est)
 #   IX   iudex PRIMUS etiam post artificium stalum prius declaratum
+#   X    -provenientia ex quovis directorio
+#   XI   digestum == ingressus relatus (una functio sigilli)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -48,8 +50,9 @@ mkdir -p "$T/r/p" "$T/r/q"; actio gemina > "$T/r/p/aedificatio.stml"; actio gemi
 (cd "$T/r" && "$F" iudicare) > "$T/o" 2>&1; rc=$?
 if [ "$rc" -eq 2 ] && grep -q "q/aedificatio.stml:2: titulus duplex 'gemina' (prior p/aedificatio.stml:2)" "$T/o"; then echo "  V    titulus duplex trans subsyst. -> 2 OK"; else echo "  V    FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
 
-"$F" iudicare > "$T/o" 2>&1; rc=$?
-if [ "$rc" -eq 1 ] && head -1 "$T/o" | grep -q '^IGNOTUM bin/fabrica - sine provenientia'; then echo "  VI   iudex ipse prima linea          OK"; else echo "  VI   FRACTUM (rc=$rc)"; head -3 "$T/o"; fracta=1; fi
+# VI (T7): iudex ipse RECENS - relatio sua digesto hodierno congruit
+"$F" iudicare bin/fabrica > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && ! grep -q '^STALUM\|^IGNOTUM' "$T/o"; then echo "  VI   iudex ipse recens (relatio)      OK"; else echo "  VI   FRACTUM (rc=$rc)"; head -3 "$T/o"; fracta=1; fi
 
 "$F" digestum fabrica > "$T/o" 2>&1; rc=$?
 "$F" digestum nusquam_actio > "$T/o2" 2>&1; rc2=$?
@@ -75,6 +78,17 @@ printf '<aedificatio>\n  <actio titulus="fabrica" genus="institutio">\n    <ingr
 (cd "$T/r" && "$F" iudicare) > "$T/o" 2>&1; rc=$?
 if [ "$rc" -eq 1 ] && head -1 "$T/o" | grep -q '^IGNOTUM bin/fabrica' && grep -q '^STALUM b\|^IGNOTUM b ' "$T/o"; then echo "  IX   iudex primus ante stala priora   OK"; else echo "  IX   FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
 
+# X (T7): '-provenientia' ex QUOVIS directorio (ante custodiam cwd)
+(cd "$T" && "$F" -provenientia) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && [ "$(sed -n 1p "$T/o")" = "provenientia 1" ] && grep -q '^artificium bin/fabrica$' "$T/o"; then echo "  X    -provenientia extra radicem       OK"; else echo "  X    FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
+# XI (T7): 'digestum' == ingressus relatus - scriptum (installator) et
+# iudex EADEM functione sigillant (T7: _digestum olim exclusionem
+# omittebat, tres digesta diversa)
+D="$("$F" digestum fabrica 2>/dev/null)"
+R="$("$F" -provenientia | sed -n 's/^ingressus //p')"
+if [ -n "$D" ] && [ "$D" = "$R" ]; then echo "  XI   digestum == relatio binarii      OK"; else echo "  XI   FRACTUM (digestum $D, relatio $R)"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (IX/IX)"
+echo "fumus fabricae: sanum (XI/XI)"
 exit 0

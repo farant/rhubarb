@@ -47,12 +47,17 @@
  * vecta.
  */
 
+/* plagula provenientiae a tools/manus_struere.sh generata (fabrica T7):
+ * binarium '-provenientia' respondet */
+/* <aedilis obiectum="build/fabrica/provenientia/manus.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "manus.h"
+#include "provenientia.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -619,6 +624,9 @@ _auxilium (vacuum)
 }
 
 
+externus constans ProvenientiaRelatio provenientia_manus;
+
+
 /* ==================================================
  * Principale
  * ================================================== */
@@ -642,6 +650,10 @@ principale (
                   Mora   mora      = MANUS_MORA_ORDINARIA;
                    s32   codex     = ZEPHYRUM;
 
+    si (provenientia_respondere(argc, argv, &provenientia_manus))
+    {
+        redde ZEPHYRUM;
+    }
     si (argc < II)
     {
         redde _auxilium();

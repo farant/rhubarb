@@ -871,6 +871,62 @@ s32 principale (vacuum)
     }
 
 
+    /* ==================================================
+     * PROBARE: plagula provenientiae exclusa (T7, Review Focus 3)
+     * ================================================== */
+
+    {
+              DiscusFictus  discus;
+             FabricaSutura  sutura;
+              FabricaActio* cum;
+              FabricaActio* sine;
+                  Sigillum  s1;
+                  Sigillum  s2;
+                    chorda  causa;
+
+        imprimere("\n--- Probans provenientiam exclusam ---\n");
+        _discum_parare(&discus, &sutura, piscina);
+        causa = chorda_ex_literis("", piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            fabrica_provenientia_via(chorda_ex_literis("manus",
+            piscina),
+                piscina),
+            "build/fabrica/provenientia/manus.c");
+
+        _ponere(&discus, "lib/manus.c", "int manus;\n");
+        _ponere(&discus, "build/fabrica/provenientia/manus.c", "H1\n");
+        cum = _actio(piscina, "manus", FABRICA_ACTIO_INSTITUTIO);
+        _ingressum_addere(cum, FABRICA_INGRESSUS_FASCICULUS,
+            "lib/manus.c", piscina);
+        _ingressum_addere(cum, FABRICA_INGRESSUS_FASCICULUS,
+            "build/fabrica/provenientia/manus.c", piscina);
+        sine = _actio(piscina, "manus", FABRICA_ACTIO_INSTITUTIO);
+        _ingressum_addere(sine, FABRICA_INGRESSUS_FASCICULUS,
+            "lib/manus.c", piscina);
+
+        /* plagula provenientiae nihil ad sigillum confert */
+        CREDO_VERUM(fabrica_actionem_sigillare(&sutura, cum, piscina,
+            &s1, &causa));
+        CREDO_VERUM(fabrica_actionem_sigillare(&sutura, sine, piscina,
+            &s2, &causa));
+        CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
+
+        /* digestum novum in ea scriptum -> sigillum idem (aliter
+         * binarium statim post institutionem stalum esset) */
+        _ponere(&discus, "build/fabrica/provenientia/manus.c", "H2\n");
+        CREDO_VERUM(fabrica_actionem_sigillare(&sutura, cum, piscina,
+            &s2, &causa));
+        CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
+
+        /* fons verus mutatus -> sigillum aliud */
+        _ponere(&discus, "lib/manus.c", "int manus_nova;\n");
+        CREDO_VERUM(fabrica_actionem_sigillare(&sutura, cum, piscina,
+            &s2, &causa));
+        CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
+            == 0);
+    }
+
+
     /* ================================================== */
 
     /* Compendium                                          */

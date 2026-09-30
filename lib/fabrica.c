@@ -409,6 +409,36 @@ fabrica_ingressus_sigillare (
     redde VERUM;
 }
 
+chorda
+fabrica_provenientia_via (
+     chorda  titulus,
+    Piscina* piscina)
+{
+    redde _iungere(piscina, "build/fabrica/provenientia/", titulus,
+        ".c");
+}
+
+b32
+fabrica_actionem_sigillare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                   Piscina* piscina,
+                  Sigillum* sigillum_out,
+                    chorda* causa_out)
+{
+    Xar* exclusa;
+
+    exclusa = _xar_chordarum(piscina);
+    si (exclusa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _chordam_addere(exclusa,
+        fabrica_provenientia_via(actio->titulus, piscina));
+    redde fabrica_ingressus_sigillare(sutura, actio, exclusa, piscina,
+        sigillum_out, causa_out);
+}
+
 
 /* ==================================================
  * Iudicium
@@ -547,8 +577,8 @@ fabrica_iudicare (
 
     causa.datum    = NIHIL;
     causa.mensura  = ZEPHYRUM;
-    si (!fabrica_ingressus_sigillare(sutura, actio, NIHIL, piscina,
-            &ingressus, &causa))
+    si (!fabrica_actionem_sigillare(sutura, actio, piscina, &ingressus,
+            &causa))
     {
         redde _iudicium(exitus->via, FABRICA_IGNOTUM, causa);
     }

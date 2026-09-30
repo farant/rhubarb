@@ -164,3 +164,39 @@ byte-identical to the committed file. `-plenus` over 35: 78 s.
   only the entitates one: (a) and (c) are coverage the house lacked.
 - Inputs still incomplete where a generator is compiled from a whole
   directory (tabulae_silvae: silva/fontes names only) — T6 caution.
+
+## 2026-09-30 — T7 (part 1): -provenientia; bin/fabrica and bin/manus
+
+Order changed with Fran: T7 before T6 (decretum 01M3RDBCB8). Built:
+`include/provenientia.h` + `lib/provenientia.c` (pure `provenientia_textus`
++ `provenientia_respondere`, which prints that same text — one format),
+`tools/provenientia_scribere.sh` (writes build/fabrica/provenientia/T.c
+only on change and then DELETES its object, so the same-second mtime trap
+of T3 cannot keep an old digest), `fabrica_provenientia_via` +
+`fabrica_actionem_sigillare` (the one digest function for judge AND
+`bin/fabrica digestum`, provenance file excluded). Tools answer the flag
+FIRST in principale (fabrica: before its cwd guard — works from /tmp).
+
+- **The "one function" rule broke on day one**: I switched the judge to
+  `fabrica_actionem_sigillare` but left `_digestum` on the unexcluded one
+  → three different digests (embedded / digestum / judge). The judge
+  itself reported the fresh bin/fabrica STALUM on its first run. Fixed;
+  fumus XI now asserts `digestum == ingressus reported` (born red by
+  planting the old call: VI and XI red).
+- **Bootstrap:** the pre-T7 bin/fabrica cannot exclude the provenance
+  file, which aedilis now lists in the closure → "ingressus absens".
+  fabrica_struere.sh builds TWICE; pass 1 tolerates (PROVENIENTIA_TOLERANS
+  → "ignotum"), pass 2 writes the digest computed by the binary just
+  built.
+- **The danger, live:** while manus's build was failing, `bin/manus
+  -provenientia` ran the OLD binary, which treated the flag as a command
+  ("nulla sessio viva"). Harmless here — and exactly why only binaries
+  declared with provenance are ever asked.
+- **The six-week bug, caught:** a comment line appended to lib/manus.c →
+  `STALUM bin/manus - ingressus mutati post institutionem`, healing
+  command named; rebuild → RECENS. (My first plant silently did not
+  apply — sed matched nothing — and "2 recentia" proved nothing; always
+  check the plant's diff.)
+- Inputs of an installed binary: its aedilis manifest (complete since P1)
+  + aedilis.stml + installer + writer script. Not declared: compiler
+  identity, include-root listings (a new shadowing header) — noted.

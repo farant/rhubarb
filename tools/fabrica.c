@@ -24,6 +24,10 @@
  * Declarationes: fabrica.stml (radix) -> subsystema/aedificatio.stml.
  * Spec: project-specs/fabrica-spec-v2.md; lib/fabrica.c. */
 
+/* plagula provenientiae (fabrica T7; tools/fabrica_struere.sh bis
+ * struit - digestum a binario ipso computatum) */
+/* <aedilis obiectum="build/fabrica/provenientia/fabrica.c"/> */
+
 #include "postulata_posix.h"
 
 #include "latina.h"
@@ -36,6 +40,7 @@
 #include "internamentum.h"
 #include "sigillum.h"
 #include "fabrica.h"
+#include "provenientia.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -701,7 +706,10 @@ _digestum (
             perge;
         }
         causa = chorda_ex_literis("", piscina);
-        si (!fabrica_ingressus_sigillare(&sutura, actio, NIHIL, piscina,
+        /* EADEM functio ac iudex (fabrica_iudicare): plagula
+         * provenientiae exclusa - aliter scriptum et iudex
+         * dissentirent (T7: sic factum, statim deprehensum) */
+        si (!fabrica_actionem_sigillare(&sutura, actio, piscina,
                 &sigillum, &causa))
         {
             fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
@@ -715,6 +723,9 @@ _digestum (
     fprintf(stderr, "fabrica: actio ignota '%s'\n", titulus);
     redde II;
 }
+
+externus constans ProvenientiaRelatio provenientia_fabrica;
+
 
 interior vacuum
 _usus (vacuum)
@@ -734,6 +745,11 @@ principale (
      Piscina* piscina;
          s32  exitus;
 
+    /* ante custodiam cwd: relatio ex quovis directorio */
+    si (provenientia_respondere(argc, argv, &provenientia_fabrica))
+    {
+        redde ZEPHYRUM;
+    }
     si (argc < II)
     {
         _usus();

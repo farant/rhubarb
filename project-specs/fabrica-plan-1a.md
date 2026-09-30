@@ -9,6 +9,15 @@
 > from `fabrica-spec-v2.md` (2474e4c2; decisions Q33–Q37 in its §VI and
 > ledger decretum 01M3QYCN6Q).
 
+> **ORDER CHANGED 2026-09-30 (Fran, after T5):** P1, P2, T1–T5, **T7,
+> then T6**, T8. Reason: T7's inputs (aedilis manifests, complete since
+> P1) are sound and it fixes the motivating bug (bin/manus stale six
+> weeks); T6's cache is only as good as declared inputs, and T4/T5's
+> are honest but incomplete. T6 gains a per-action **cacheable** mark:
+> a record may skip regeneration ONLY for actions whose inputs are
+> provably complete (manifest-derived); hand-listed actions always
+> regenerate under `-plenus`.
+
 **Goal:** `bin/fabrica iudicare` names every registered artifact that is
 not built from today's inputs — committed amalgams, committed generated
 sources, installed binaries — with the reason and an ordered healing
@@ -659,7 +668,13 @@ generators: `silva/instrumenta/lexicon_c89_generare.sh`,
 > two TOML-less capsulae are left undeclared (desideratum 01M3R27R5J)
 > rather than inventing an "unknown provenance" kind.
 
-### Task T6: records, and the snippet win
+### Task T6: records, and the snippet win (runs AFTER T7)
+
+> **Amended 2026-09-30:** records are consulted only for actions marked
+> cacheable (attribute on `actio`, name fixed with Fran at T6 start;
+> default: not cacheable). A cacheable action must have manifest-derived
+> or otherwise provably complete inputs — Step 3's measurement decides
+> which actions qualify; the rest keep regenerating.
 
 **Files:** `tools/fabrica.c` (records), `tools/fabrica_memoria.c` (NEW,
 sqlite; tool-only), declarations for the 37 committed
@@ -763,6 +778,14 @@ comment (origo annotatio; absent-until-generated is allowed).
 - [ ] **Step 7: commit** (in two commits if large: library + manus;
   then the rest). Gates: radix, briar, briar-fumus (briar main
   touched), and owed.
+
+> **Executed (part 1) 2026-09-30** (commit below): library, writer
+> script, bin/fabrica (built twice for a self-computed digest) and
+> bin/manus declared RELATIO and RECENS; the six-week bug caught by a
+> plant. Deviations: `_digestum` first missed the exclusion (caught by
+> the judge itself; fumus XI added); pre-T7 bootstrap needs pass-1
+> tolerance. Part 2 (mensor, mensor_ui, stml, aedilis, natura, canon,
+> briar, spectator, silex) follows.
 
 ### Task T8: surfaces and the oracle gate
 
