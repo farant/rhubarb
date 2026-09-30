@@ -71,5 +71,10 @@ if [ "$PROBARE" = "1" ]; then
     exit 1
 fi
 
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T5)
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    EXITUS="$FABRICA_SCRIPTURA/$EXITUS"
+    mkdir -p "$(dirname "$EXITUS")" || exit 1
+fi
 generare > "$EXITUS"
 echo "entitates_html: scriptum $EXITUS ($(grep -c '^    { "' "$EXITUS") tituli)"

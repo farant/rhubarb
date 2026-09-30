@@ -109,14 +109,21 @@ if [ $# -ge 1 ]; then
 else
     # Sine argumentis: OMNES grammaticae commissae regenerantur
     # (post QUAMLIBET mutationem grammaticae - silva/CLAUDE.md)
+    # FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T5): exitus in
+    # directorium scripturae (via absoluta), viae eaedem ac commissae
+    P=""
+    if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+        P="$FABRICA_SCRIPTURA/silva/"
+        mkdir -p "${P}fontes" || exit 1
+    fi
     "$BUILD_DIR/generator" grammatica/sceletum.stml \
-        SILVA_SCELETUM fontes/silva_tabulae_sceleti || exit 1
+        SILVA_SCELETUM "${P}fontes/silva_tabulae_sceleti" || exit 1
     "$BUILD_DIR/generator" grammatica/sceletum_imparilis.stml \
-        SILVA_IMPARILIS fontes/silva_tabulae_imparilis || exit 1
+        SILVA_IMPARILIS "${P}fontes/silva_tabulae_imparilis" || exit 1
     # c89 SOLA canonem gignit: sola documenta <parsura> producit
     # (sceletum/imparilis grammaticae probationis sunt)
     "$BUILD_DIR/generator" grammatica/c89.stml \
-        SILVA_C89 fontes/silva_tabulae_c89 \
+        SILVA_C89 "${P}fontes/silva_tabulae_c89" \
         amalgama/silva.h instrumenta/principalia/hospes.c \
-        c89.canon c89 || exit 1
+        "${P}c89.canon" c89 || exit 1
 fi

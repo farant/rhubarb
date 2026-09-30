@@ -54,4 +54,39 @@
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
     <exitus via="silva/amalgama/silva.c" provenientia="regeneratio"/>
   </actio>
+  <!-- plan 1a T5: generata silvae (GENERATUM in linea prima -
+       committuntur ut effusio generatoris octetim, c918661e) -->
+  <actio titulus="lexicon_c89" genus="generator">
+    <mandatum>
+      <verbum! (>./silva/instrumenta/lexicon_c89_generare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="silva/instrumenta/lexicon_c89_generare.sh"/>
+    <ingressus genus="fasciculus" via="silva/fontes/silva_token.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/silva_arbor.c"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/silva_canon_coquere.c"/>
+    <exitus via="silva/fontes/silva_lexicon_c89.c" provenientia="regeneratio"/>
+    <exitus via="silva/fontes/silva_lexicon_c89.h" provenientia="regeneratio"/>
+  </actio>
+  <!-- generator ex silva/fontes/*.c compilatur (obiecta per mtime in
+       silva/build) - directorium nomina solum tegit: T6 cave -->
+  <actio titulus="tabulae_silvae" genus="generator">
+    <mandatum>
+      <verbum! (>./silva/generare.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="silva/generare.sh"/>
+    <ingressus genus="fasciculus" via="silva/grammatica/sceletum.stml"/>
+    <ingressus genus="fasciculus" via="silva/grammatica/sceletum_imparilis.stml"/>
+    <ingressus genus="fasciculus" via="silva/grammatica/c89.stml"/>
+    <ingressus genus="fasciculus" via="silva/amalgama/silva.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/hospes.c"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/generator.c"/>
+    <ingressus genus="directorium" via="silva/fontes"/>
+    <exitus via="silva/fontes/silva_tabulae_sceleti.c" provenientia="regeneratio"/>
+    <exitus via="silva/fontes/silva_tabulae_sceleti.h" provenientia="regeneratio"/>
+    <exitus via="silva/fontes/silva_tabulae_imparilis.c" provenientia="regeneratio"/>
+    <exitus via="silva/fontes/silva_tabulae_imparilis.h" provenientia="regeneratio"/>
+    <exitus via="silva/fontes/silva_tabulae_c89.c" provenientia="regeneratio"/>
+    <exitus via="silva/fontes/silva_tabulae_c89.h" provenientia="regeneratio"/>
+    <exitus via="silva/c89.canon" provenientia="regeneratio"/>
+  </actio>
 </aedificatio>

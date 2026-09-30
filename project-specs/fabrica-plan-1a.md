@@ -652,6 +652,13 @@ generators: `silva/instrumenta/lexicon_c89_generare.sh`,
   STALUM. Restore each.
 - [ ] **Step 6: commit.** Gates: generata + owed.
 
+> **Executed 2026-09-30** (commit below). 26 artifacts added (35 total;
+> +`silva/c89.canon`, generated too); no formatio (route B); capsulae via
+> new `tools/capsula_regenerare.sh`. `-plenus` 78 s, 35 RECENS; three
+> plants red as predicted (two outside any old gate). Deviation: the
+> two TOML-less capsulae are left undeclared (desideratum 01M3R27R5J)
+> rather than inventing an "unknown provenance" kind.
+
 ### Task T6: records, and the snippet win
 
 **Files:** `tools/fabrica.c` (records), `tools/fabrica_memoria.c` (NEW,

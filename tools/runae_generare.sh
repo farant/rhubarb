@@ -55,4 +55,9 @@ if [ "$PROBARE" = 1 ]; then
     echo "runae_generare: $EXITUS RANCIDA (regenera: ./tools/runae_generare.sh)"
     exit 1
 fi
+# FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T5)
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    EXITUS="$FABRICA_SCRIPTURA/$EXITUS"
+    mkdir -p "$(dirname "$EXITUS")" || exit 2
+fi
 "$BIN" "$UCD" "$EXITUS"
