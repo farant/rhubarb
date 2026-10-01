@@ -196,6 +196,12 @@ painter's order.
   by 1, scala applied to glyph size.
 
 **T4 — terminal adapter, pixel path + compositing** (D7).
+- **Prerequisite (found in T3, 2026-10-01):** the pure pixel-table
+  functions (`tabula_pixelorum_vacare`, `_obtinere_pixelum`, …) live in
+  `lib/fenestra_macos.m`. Linking the rasterizer therefore pulls Cocoa +
+  `-framework` into any program, saltuarius included. Move them into a
+  plain library first. That is a no-behaviour-change step for fenestra,
+  and fenestra's suites are the gate.
 - `imago`, `polygonum` and diagonal `linea` via offscreen →
   AREA → quadrans.
 - Painter's-order overwrite; background kept under text.

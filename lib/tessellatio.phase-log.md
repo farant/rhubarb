@@ -153,3 +153,92 @@ Root suite 177/177. Formatting: the five touched files were written
 with `formator -scribere` before the final test runs. `layout.c` and
 `importatio_visus.c` reflowed wholesale (they were far from conformant;
 the pre-commit hook formats whole files anyway). No new Latin words.
+
+## T3 — the terminal adapter, cell-native path (2026-10-01)
+
+**INTENTIO (D2, D3, D5, D6).** `include/tessellatio.h` + `lib/tessellatio.c`,
+pure: `Mandata` + `Modulus` + a width policy → a caller-sized grid of
+`TessellatioCellula`. A cell holds EITHER:
+- a text unit (pointer + length into the Mandata's own text, so
+  clusters survive; valid while the Mandata lives);
+- OR junction bits (up 1 / right 2 / down 4 / left 8);
+- OR nothing.
+
+Plus fg/bg as 0x00RRGGBB. `latitudo` is 2 for a wide unit, and the
+following cell is its continuation (0), as in tessera. Functions:
+- `tessellatio_computare`;
+- `tessellatio_runa_juncturae` (bits → ─ │ ┌ ┐ └ ┘ ├ ┤ ┬ ┴ ┼; a lone bit
+  draws the full line of its axis);
+- `tessellatio_mensor` (the terminal's RUNARUM rule, for layout).
+
+Rules, in painter's order:
+- **Text:** runae units from the floor cell. `\n` returns to the start
+  column. The background is KEPT (labels over panels). Zero-width units
+  are skipped. A wide unit whose second half falls outside the clip or
+  extent is skipped.
+- **Filled rectangle:** nearest-edge cells get the background; text and
+  junctions are cleared.
+- **Outline:** border cells get junction bits (corners and sides); a
+  1×1 outline vanishes.
+- **Axis line:** floor cells; bits are OR-ed, so crossings and corners
+  merge; it covers text.
+- **Covering half of a wide unit** blanks the other half (tessera's
+  rule).
+- **Coetus:** the transform is EXACTLY the native rasterizer's
+  (origo + local × scala; scala moves positions, never enlarges text).
+  The clip is converted to cells by nearest edges and ∩ the parent's.
+- `imago`, `polygonum` and oblique lines are skipped here (T4).
+
+Colours resolve through `thema` / `color` directly, not through
+`delineare_mandata`'s `color_ex_mandato`.
+
+**Why not `color_ex_mandato`: an architectural find.** Linking
+`delineare_mandata` pulls `lib/fenestra_macos.m` + `-framework`, because
+the PURE pixel-table functions (`tabula_pixelorum_vacare`,
+`tabula_pixelorum_obtinere_pixelum`, …) are defined in the Cocoa file.
+tessellatio must not drag a GUI framework into terminal programs
+(saltuarius). T3 avoids it. **T4 cannot:** its pixel path rasterizes
+into an offscreen TabulaPixelorum. So T4's first step is to move those
+pure functions out of `fenestra_macos.m` into a plain library (plan
+updated).
+
+**PREDICTED, then built.** The main scene (20×8 cells: a filled panel,
+an outlined box, "Ok 中é" on the panel, two crossing lines through the
+box → ┼ and ┴, a clipped group where 中 would straddle the clip edge, a
+scaled group) was written out by hand BEFORE the code and matched on the
+first green run.
+
+One prediction of mine was WRONG, and the test was fixed before
+implementing. I expected a 2-px filled rectangle at x = 13 to vanish.
+But its right edge at 15 is exactly 2.5 cells, and the nearest-edge rule
+rounds halves UP, so it covers a cell. The rule is "edges round to the
+nearest cell edge", not "small rectangles vanish". The test now uses a
+1-px rectangle (edges 13 and 14 both round to 12) and says why.
+
+**Green:** `probatio_tessellatio` covers:
+- the junction table (all 16);
+- the predicted scene + 14 colour/width assertions (fg/bg per role, 中
+  width 2 + continuation, background kept under text);
+- the overwrite rules (narrow on a continuation; narrow on a first half;
+  negative x; `\n` back to a negative start column);
+- a line covering text; a filled rectangle clearing junctions;
+- the vanishing cases;
+- THEMA/INDEX resolution;
+- the corner scene (below).
+
+**Plants (compiling, 0 errors):**
+- B (clip ignored): caught (the clipped rows).
+- C (a wide unit advancing by 1): caught.
+- **A (left/right bits swapped on lines): MUTE at first.** The middle of
+  a line is symmetric, and a lone end bit draws ─ either way. Only a
+  corner shows it. Added the corner scene (two L-shapes: ┘ and ┌), and
+  then A was caught (┐ for ┌, └ for ┘).
+- **D (scale enlarges text): MUTE at first**, as predicted, because the
+  scaled group held one character. Changed it to "xy", and then D was
+  caught ("x y").
+
+**Lint:**
+- `tessellatio` added to the glossary (a Latin noun: the laying of
+  tesserae, opus tessellatum);
+- `cel` → `cellula`, `ax/ay/bx/by` → `initium_x/_y`, `finis_x/_y`;
+- `CAERUL` → `CAERULEUS`.
