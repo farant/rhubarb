@@ -291,6 +291,14 @@ fabrica_actionem_enumerare (
   `./tools/fabrica_oraculum.sh` consensus. Worklog entry (what fit,
   what did not). Commit. Gates: radix, fabrica, fabrica-fumus (+ owed).
 
+> **Executed 2026-10-01** (commit below). Fit cleanly: no kind switch
+> left (status and locus-shape switches remain). Deviation:
+> `FabricaStrategia.genus_ordinarium` (one home for the default output
+> type); reader also refuses an input-only type as output. Oracle:
+> old/new judge on one tree identical (145 verdicts, 64 digests) after
+> a record-ordering artefact (worklog). Plant: 15 predicted actions +
+> `fabrica` itself (its own closure, not predicted). 166 → 213.
+
 ### Task T2: composites, preconditions, `ignota`
 
 **Opens with names (Fran):** PLACEHOLDERS — composite element
@@ -409,6 +417,13 @@ fabrica_praecondiciones_probare (
 - [ ] **Step 7: commit.** Worklog. Gates: radix, fabrica,
   fabrica-fumus, examen-canon if owed.
 
+> **Executed 2026-10-01** (commit below). Names as placeholdered
+> (Fran). Composites `installata` (15) and `amalgamata` (9) declared;
+> every composite explained at load (broken = exit 2). Precondition
+> edge general (order without digest), `ignota` reachable only by it.
+> XV red against the pre-composite judge; plant exact (4 assertions).
+> 213 → 259.
+
 ### Task T3: `sanare` — the executor and its envelope
 
 **Files:** `include/fabrica.h`, `lib/fabrica.c` (`fabrica_sanare`),
@@ -525,6 +540,12 @@ fabrica_sanare (
 - [ ] **Step 8: plant.** Remove the memo purge. Predict: the memo
   block red, nothing else. Restore. Commit. Gates: radix, fabrica,
   fabrica-fumus (+ owed).
+
+> **Executed 2026-10-01** (commit below). As specified; the memo test
+> models two real stale-memo paths (self-input generator feeding a
+> binary; post-condition reusing the pre-run regeneration). Dogfood:
+> briar/spectator/silex healed (5 min), relatio == digestum ×3. Fumus
+> XVI–XX red against the T2 judge. Plant exact (4). 259 → 299.
 
 ### Task T4: footprints and the envelope's check
 

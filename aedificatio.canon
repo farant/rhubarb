@@ -15,6 +15,26 @@
 
   <elementum nomen="aedificatio" radix="verum">
     <liberum nomen="actio" minimum="1"/>
+    <liberum nomen="compositum"/>
+  </elementum>
+
+  <elementum nomen="compositum"
+    nota="artificium ex artificiis (spec 1b par. II.3): lista PLANA
+          partium nominatarum, nulla expressio. Iudicium = pessimum
+          partium (RECENS lt NON IUDICATUM lt IGNOTUM lt STALUM).
+          Partes trans subsystemata licent; exitus 'ignota' pars esse
+          nequit (lector recusat). Nomina a Frano approbata
+          2026-10-01">
+    <attributum nomen="titulus" genus="nomen" necessarium="verum"/>
+    <liberum nomen="pars" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="pars"
+    nota="nomen UNUM exacte: artificium (via exitus), actio (omnes
+          exitus eius) aut compositum (aliud, acyclice)">
+    <attributum nomen="artificium" genus="textus"/>
+    <attributum nomen="actio" genus="nomen"/>
+    <attributum nomen="compositum" genus="nomen"/>
   </elementum>
 
   <elementum nomen="actio">
@@ -32,8 +52,16 @@
             regenerationem supplet. Absens = falsum: sub -plenus semper
             regeneratur (plan 1a T6, decretum 01M3RDBCB8)"/>
     <liberum nomen="mandatum" maximum="1"/>
+    <liberum nomen="praecondicio"/>
     <liberum nomen="ingressus" minimum="1"/>
     <liberum nomen="exitus" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="praecondicio"
+    nota="actio REALIZANDA ante hanc - ordo sine sigillo (plan 1b T2):
+          instrumenta quae installator vocat, obiecta caece nexa
+          (strategia ignota, quae sola hac via attingitur)">
+    <attributum nomen="actio" genus="nomen" necessarium="verum"/>
   </elementum>
 
   <elementum nomen="mandatum">
@@ -70,10 +98,20 @@
       necessarium="verum">
       <optio>regeneratio</optio>
       <optio>relatio</optio>
+      <optio>ignota</optio>
     </attributum>
     <attributum nomen="scriptura" genus="textus"
       nota="via intra directorium scripturae ubi regeneratio cadit;
             absens = via ipsa"/>
+    <attributum nomen="genus" genus="electio"
+      nota="genus artificii (quomodo observetur; spec 1b par. II.2).
+            Absens = genus ordinarium strategiae: relatio -> binarium,
+            regeneratio -> fasciculus. Lector recusat strategiam quam
+            genus non admittit (binarium non reproducibile: numquam
+            regeneratio)">
+      <optio>fasciculus</optio>
+      <optio>binarium</optio>
+    </attributum>
   </elementum>
 
 </canon>

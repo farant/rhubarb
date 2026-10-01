@@ -483,3 +483,130 @@ siblings RECENS.
 - The inventory's candidate search missed natura/cocta/*.canon (marker
   on line 2, after the XML declaration) - it is a lower bound, as its
   description says; rows added.
+
+## 2026-10-01 — plan 1b T1: the two interfaces (behaviour-preserving)
+
+The vocabulary fit today's code with no forcing: the eight input kinds
+became `FabricaGenus` structs (sigillare = the old `_X_explicare`
+bodies, untouched; three documentation names share the file-bytes
+implementation), the two provenances became `FabricaStrategia` structs
+(regeneratio carries memoria in front of it, gated by `memorabilis` as
+before; relatio wraps `_relationem_iudicare`). `_particulas_colligere`
+calls `genus->sigillare`; `fabrica_iudicare` = sigillare once, then
+`exitus->strategia->iudicare`. No switch on a kind remains; the two
+switches left are on verdict status (CLI counting) and on locus SHAPE
+(`_locus_tangit`: plagula / plagulae / arbor), which is geometry.
+
+`-tacta` is now generic: `fabrica_actionem_enumerare` (each type's
+`enumerare`, or derived from its particles: file -> PLAGULA, `dir/` ->
+PLAGULAE) plus each output type's `locare`. The old special case for
+plagulae (new file matching the suffix) is the plagulae type's own
+`enumerare` adding a PLAGULAE locus with its suffixes.
+
+Deviations from the plan's Interfaces block: `FabricaStrategia` gained
+`genus_ordinarium` (the output type when a declaration names none:
+relatio -> binarium, regeneratio -> fasciculus) - the reader and the
+test helper both use it, so the default lives in one place. The reader
+also refuses an output whose type has no `locare` ("genus ingressus
+solum, exitus esse nequit").
+
+Oracle (two judges, one tree): `build/fabrica/vetus` (pre-edit binary)
+and the new `bin/fabrica` gave byte-identical `iudicare -plenus -omnia`
+(145 lines) and `digestum` for all 64 actions. One apparent difference
+on the first comparison was ORDER, not behaviour: the edit changed
+lib/fabrica.c, which is in the compile_tests snippet's closure, so the
+first judge to run missed its record, regenerated ('regeneratio
+congruit') and wrote a record the second judge then hit ('memoria').
+Re-running the new judge -> identical. Lesson for any future
+two-binary oracle: warm records with BOTH binaries, or compare after a
+second pass. First -plenus after the edit: 119 s (record misses).
+
+Against the pre-edit capture (different tree, by design): briar,
+briar_spectator, silex STALUM (lib/*.c is in their corpus plagulae);
+digests of fabrica, briar, briar_spectator, silex,
+fragmentum_compile_tests moved. T3's sanare heals the three binaries.
+
+Plant: plagulae registered with the file-bytes sigillare. Core: the
+plagulae block red only (5 assertions; genera and tacta blocks green -
+enumerare for plagulae is separate). Digests: the 15 actions with a
+plagulae input fail "ingressus absens" exactly as predicted; a 16th,
+`fabrica`, changed digest for a reason not predicted - the planted
+lib/fabrica.c is in the judge's own closure (bytes changed, not a
+failure). Restored; digests identical again. Assertions 166 -> 213.
+
+## 2026-10-01 — plan 1b T2: composites, preconditions, `ignota`
+
+Names (Fran, 2026-10-01): `compositum titulus` with `pars` children
+(exactly one of `artificium=`, `actio=`, `compositum=`), and
+`praecondicio actio=` as a child of `actio`. Composites are read from
+the same subsystem files by a second reader (`fabrica_composita_legere`)
+so the action reader's signature did not change; the CLI collects them
+across subsystems (duplicate titles refused) and EXPLAINS every one at
+load, so a broken composite fails every judge run (exit 2), never
+silently.
+
+Worst-of is computed on a FLAT list (`fabrica_compositum_explicare`
+flattens nested composites, de-duplicated, first-appearance order);
+since worst-of is associative the flat answer equals the nested one -
+a single function, no recursion over verdicts. Order: RECENS <
+NON IUDICATUM < IGNOTUM < STALUM. The causa always starts with the
+status word ("STALUM: bin/briar, ..."; "RECENS: omnes partes recentes
+(9)"), at most three names then "+N" in Roman numerals.
+
+`ignota` is a third strategy with `iudicatur` FALSUM. Rules enforced at
+load (`fabrica_praecondiciones_probare` + explicare): a precondition
+must name an existing action; an `ignota` output may never be another
+action's INPUT (only a precondition reaches it) nor a composite part.
+The precondition edge is general (order without digest) - T5 also uses
+it for tools installers call. `fabrica_ordinare` treats it as an edge.
+
+Live: `bin/fabrica iudicare installata` (0.9 s) -> the three binaries
+stale since T1 and `COMPOSITUM installata - STALUM: bin/briar,
+bin/briar-spectator, bin/silex`; `-plenus amalgamata` -> 9 RECENS
+(41 s). Fumus XV: red against the pre-composite judge (it took `omnia`
+for a path: exit 2), green now. Plant: IGNOTUM ranked above STALUM ->
+exactly the 4 predicted assertions red, XV green (no IGNOTUM part).
+A `-Wfortify-source` overflow in a 32-byte sprintf buffer slipped past
+the root test build and was caught only by fabrica_struere's flags -
+the two builds' flags differ (noted, not chased). Assertions 213 -> 259.
+
+## 2026-10-01 — plan 1b T3: `sanare`
+
+`fabrica_sanare` (core, pure) walks the dependency order over the
+scope (selected outputs' actions + everything above them via
+`_pendet`, which includes precondition edges): judge NOW (plenus) ->
+all RECENS: nothing; an upstream FRACTUM/OMISSUM: OMISSUM naming it;
+else realize `ignota` preconditions once per run, `agere`, EMPTY the
+three per-run memos, re-judge -> SANATUM or FRACTUM ("exitus 0 sed non
+RECENS"). Actions whose outputs are all `ignota` are only ever run as
+preconditions. `-siccum`: AGENDUM for stale-now, FORTASSE for
+recent-now-but-downstream-of-an-AGENDUM.
+
+The memo-purge test needed a real stale-memo path to be honest.
+Found two: (1) an action that reads its own output (praelatio, as
+fontes_generata.h does) memoizes the OLD digest of that file; a
+downstream BINARY (relatio) judged afterwards would use the old digest,
+match its old relation, and never be rebuilt. (2) The post-condition
+re-judge would reuse the pre-run regeneration memo instead of
+regenerating. Plant (purge disabled) -> exactly those 4 assertions red.
+The test disk grew scripted generators (`ScriptumFictum`, keyed by
+mandatum[0]): output = prefix + TODAY's content of a source file, so
+dependencies are modelled for real, and the same script drives both
+the scratch regeneration and the in-place `agere`.
+
+Tool: `agere` = processus_exsequi with FABRICA_SCRIPTURA unset, 30 min
+deadline, log `build/fabrica/acta/TITULUS.log` (command, effusio,
+erratum - separate, the process API captures them apart), cauda = last
+20 lines. CLI checks the judge itself FIRST (celer) and refuses before
+the lock if bin/fabrica is not RECENS; lock shared with -plenus.
+
+Live: entitates_html output planted stale (blank line appended) ->
+`sanare lib/entitates_html_tabula.c` restored it byte-for-byte (git
+diff empty), 0.17 s total. Whole-tree `-siccum`: exactly briar,
+briar_spectator, silex (125 s - records cold after the lib edits);
+`sanare`: 3 SANATUM (briar 215 s, spectator 6.9 s, silex 11.0 s; 5 min
+total), then `installata` all RECENS and each `-provenientia` ==
+`digestum` (spec par. VI oracle). Fumus XVI-XX red against the T2
+judge (no verb), green now. 259 -> 299 assertions. Glossary: sanatio.
+Every lib/*.c edit re-stales the three corpus binaries; heal with
+`bin/fabrica sanare installata` after committing.

@@ -1181,4 +1181,26 @@
     <forma textus="verificationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
+  <vocabulum lemma="praecondicio" lingua="latina" classis="substantivum" nota="Lat. rec. prae + condicio (condicio quae ante stat): hic actio realizanda ANTE aliam, ordo sine sigillo - obiecta caece nexa (strategia ignota) et instrumenta quae installator vocat; sedes lib/fabrica.c (fabrica_praecondiciones_probare, FabricaActio.praecondiciones, fabrica plan 1b T2)">
+    <forma textus="praecondicio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praecondicionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="praecondicionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praecondiciones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="praecondicionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="pessimus" lingua="latina" classis="adiectivum" nota="Lat. class. pessimus, superlativus mali: hic iudicium compositi = PESSIMUM partium ordine RECENS lt NON IUDICATUM lt IGNOTUM lt STALUM (associativum: planum == nidificatum); sedes lib/fabrica.c (fabrica_iudicia_coniungere, fabrica plan 1b T2)">
+    <forma textus="pessimus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pessimum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pessimi" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+
+  <vocabulum lemma="sanatio" lingua="latina" classis="substantivum" nota="Lat. class. sanatio (Cicero; sanare): hic actum unum executoris fabricae - actio artificii stali ordine dependentiae acta et iterum iudicata (SANATUM, FRACTUM, OMISSUM ...); sedes lib/fabrica.c (fabrica_sanare, FabricaSanatio), tools/fabrica.c (bin/fabrica sanare; fabrica plan 1b T3)">
+    <forma textus="sanatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sanationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="sanationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sanationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="sanationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
 </glossarium>
