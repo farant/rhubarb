@@ -19,7 +19,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
-#include "fenestra.h"
+#include "eventus.h"
 #include "mandatum.h"
 #include "componens.h"
 #include "motus.h"

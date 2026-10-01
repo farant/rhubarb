@@ -16,7 +16,7 @@
 
 #include "latina.h"
 #include "xar.h"
-#include "fenestra.h"
+#include "eventus.h"
 #include "mandatum.h"   /* Punctum */
 
 
