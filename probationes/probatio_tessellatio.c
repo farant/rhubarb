@@ -11,6 +11,9 @@
 #include "modulus.h"
 #include "tessellatio.h"
 #include "imago_typus.h"
+#include "componens.h"
+#include "figura.h"
+#include "filum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -180,6 +183,29 @@ _imago_rubra (
         im.pixela[k * IV + III]  = (i8)CCLV;
     }
     redde im;
+}
+
+/* Figura tituli ut pictoris (fundus + textus ad 2,2) - pro scaena
+ * pictor.arbor (figurae pictoris verae Cocoa trahunt, parcum 003) */
+interior vacuum
+_figura_tituli (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    ColorMandati fundus;
+    ColorMandati littera;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    fundus.genus   = COLOR_MANDATI_THEMA;
+    fundus.valor   = (i32)COLOR_BACKGROUND;
+    littera.genus  = COLOR_MANDATI_THEMA;
+    littera.valor  = (i32)COLOR_TEXT;
+    mandata_rectangulum(m, _fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
+        c->fines.altitudo), fundus, VERUM);
+    mandata_textus(m, II, II, c->titulus, ZEPHYRUM, littera);
 }
 
 s32 principale (vacuum)
@@ -526,6 +552,108 @@ s32 principale (vacuum)
         NIGER,
         _fons, &imagines, NIHIL, cellulae);
     CREDO_AEQUALIS_I32(cellulae[V + I].color_fundi, NIGER);
+
+    imprimere("\n--- VI. textus: margo PROXIMUS (T5b, D5 emendata) ---\n");
+    modulus  = modulus_creare(VI, VIII, XXXVI, XVI);       /* 6 x 2 */
+    m        = mandata_creare(piscina, intern);
+    /* (4,6): pavimentum (0,0), proximum (1,1) - cellula maxime tecta */
+    mandata_textus(m, IV, VI, chorda_ex_literis("t", piscina), ZEPHYRUM,
+        _rgba(ALBUS));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        NIHIL, NIHIL, NIHIL, cellulae);
+    CREDO_VERUM(cellulae[ZEPHYRUM].unitas == NIHIL);
+    CREDO_VERUM(cellulae[VI + I].unitas != NIHIL
+        && cellulae[VI + I].unitas[0] == 't');
+    /* pictor in parvo: fascia y 4..16 -> linea 1; titulus y 6 eadem */
+    m = mandata_creare(piscina, intern);
+    mandata_rectangulum(m, _fines(ZEPHYRUM, IV, XXXVI, XII),
+        _rgba(CAERULEUS), VERUM);
+    mandata_textus(m, II, VI, chorda_ex_literis("ab", piscina),
+        ZEPHYRUM,
+        _rgba(ALBUS));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        NIHIL, NIHIL, NIHIL, cellulae);
+    CREDO_VERUM(cellulae[VI].unitas != NIHIL
+        && cellulae[VI].unitas[0] == 'a');
+    CREDO_AEQUALIS_I32(cellulae[VI].color_fundi, CAERULEUS);
+    CREDO_VERUM(cellulae[ZEPHYRUM].unitas == NIHIL);
+    /* lineae PAVIMENTUM servant: y 7 in linea 0 */
+    m = mandata_creare(piscina, intern);
+    mandata_linea(m, _punctum(ZEPHYRUM, VII), _punctum(XXXV, VII), I,
+        _rgba(FLAVUS));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        NIHIL, NIHIL, NIHIL, cellulae);
+    CREDO_VERUM(cellulae[ZEPHYRUM].juncturae != ZEPHYRUM);
+    CREDO_VERUM(cellulae[VI].juncturae == ZEPHYRUM);
+
+    imprimere("\n--- VII. scaena pictor.arbor (exemplar, praedictum) ---\n");
+    {
+                 chorda  fons;
+              character* cstr;
+              Componens* radix;
+        FiguraRegistrum* reg;
+                    i32  p;
+                    s32  l;
+     TessellatioCellula* grandes;
+     constans character* exspectata[XXX];
+              character  medium[CXXVIII];
+              character  summum[CCLVI];        /* ─ = III octeti */
+
+        fons =
+            filum_legere_totum("probationes/pictor/pictor.arbor.stml",
+            piscina);
+        CREDO_VERUM(fons.mensura > ZEPHYRUM);
+        cstr = (character*)piscina_allocare(piscina,
+            (memoriae_index)fons.mensura + I);
+        memcpy(cstr, fons.datum, (memoriae_index)fons.mensura);
+        cstr[fons.mensura] = '\0';
+        radix = componens_legere_stml(cstr, piscina, intern);
+        reg = figura_registrum_creare(piscina);
+        CREDO_NON_NIHIL(radix);
+        per (p = ZEPHYRUM; p < (i32)PARTES_NUMERUS; p++)
+        {
+            figura_registrare(reg, (Partes)p, ZEPHYRUM,
+                p
+                    == (i32)PARTES_TITULUS ? _figura_tituli : figura_finium,
+                NIHIL);
+        }
+        m = mandata_creare(piscina, intern);
+        pingere(radix, reg, ZEPHYRUM, m);
+        modulus  = modulus_creare(VI, VIII, CCCLX, CCXL);   /* 60 x 30 */
+        grandes  =
+            (TessellatioCellula*)piscina_allocare_ordinatum(piscina,
+            (memoriae_index)(LX * XXX) * magnitudo(TessellatioCellula),
+            VIII);
+        tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+            NIGER, NIHIL, NIHIL, NIHIL, grandes);
+        /* summum: ┬ (margo prospectus, translatio -5, cum radice) +
+         * ─ x LI + ┬ + VII spatia; medium: │ + LI + │ + VII; linea 29:
+         * titulus SUPER fasciam suam (fascia margines delet) */
+        strcpy(summum, "\xE2\x94\xAC");
+        per (l = ZEPHYRUM; l < LI; l++)
+        {
+            strcat(summum, "\xE2\x94\x80");
+        }
+        strcat(summum, "\xE2\x94\xAC       ");
+        strcpy(medium, "\xE2\x94\x82");
+        per (l = ZEPHYRUM; l < LI; l++)
+        {
+            strcat(medium, " ");
+        }
+        strcat(medium, "\xE2\x94\x82       ");
+        exspectata[ZEPHYRUM] = summum;
+        per (l = I; l < XXIX; l++)
+        {
+            exspectata[l] = medium;
+        }
+        exspectata[XXIX] =
+            "penicillus                                        "
+            "          ";
+        CREDO_VERUM(_scaena_congruit(grandes, LX, XXX, exspectata));
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

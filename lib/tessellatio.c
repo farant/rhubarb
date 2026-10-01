@@ -171,9 +171,11 @@ _textum_ponere (
     TessellatioCellula* b;
 
     color           = _color(x->color);
-    columna_initii  = modulus_columna(ctx->modulus, px);
+    /* margo PROXIMUS (D5 emendata, T5b): glyphus = capsula cellulae;
+     * cellula maxime tecta, non pavimentum (titulus in fascia sua) */
+    columna_initii  = modulus_columna_proxima(ctx->modulus, px);
     columna         = columna_initii;
-    linea           = modulus_linea(ctx->modulus, py);
+    linea           = modulus_linea_proxima(ctx->modulus, py);
     p               = x->textus.datum;
     finis           = p + x->textus.mensura;
     dum (p != NIHIL && p < finis)

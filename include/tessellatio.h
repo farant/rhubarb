@@ -11,8 +11,11 @@
  * unitas lata; cellula sequens = CONTINUATIO (latitudo 0).
  *
  * TRANSFORMATIO coetus = rasterizatoris nativi exacte: origo + locale *
- * scala; sectio ∩ parentis. Positio primitivi = PAVIMENTUM (columna,
- * linea); rectangula impleta et sectio = margines PROXIMI (D5).
+ * scala; sectio ∩ parentis. Lineae = PAVIMENTUM (linea pixeli unius
+ * intra cellulam pavimenti iacet); TEXTUS, rectangula impleta et
+ * sectio = margines PROXIMI (D5; textus emendatus T5b, Franus
+ * 2026-10-01: glyphus capsula cellulae est - cellula maxime tecta;
+ * titulus fasciae non-congruae in fascia sua manet).
  *
  * VIA CELLULARUM (D6, ordine pictoris; posterior priorem tegit):
  * - textus: unitates runae (sub politica) a cellula positionis; '\n'

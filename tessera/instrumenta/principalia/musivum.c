@@ -170,12 +170,12 @@ _scaena_probationis (
         _rgb(0x80C0FF));
     mandata_linea(m, _punctum(CCCXLVIII, XX), _punctum(CCCXLVIII, XCII),
         I, _rgb(0x80C0FF));
-    _textus(m, CXCVIII, XXVIII, "lingua", 0xFFFF80);
-    _textus(m, CCLXXVI, XXVIII, "salutatio", 0xFFFF80);
-    _textus(m, CXCVIII, LII, "Latina", 0xFFFFFF);
-    _textus(m, CCLXXVI, LII, "Salve!", 0xFFFFFF);
-    _textus(m, CXCVIII, LXXVI, "\xE4\xB8\xAD\xE6\x96\x87", 0xFFFFFF);
-    _textus(m, CCLXXVI, LXXVI, "\xE4\xBD\xA0\xE5\xA5\xBD", 0xFFFFFF);
+    _textus(m, CXCVIII, XXIV, "lingua", 0xFFFF80);
+    _textus(m, CCLXXVI, XXIV, "salutatio", 0xFFFF80);
+    _textus(m, CXCVIII, XLVIII, "Latina", 0xFFFFFF);
+    _textus(m, CCLXXVI, XLVIII, "Salve!", 0xFFFFFF);
+    _textus(m, CXCVIII, LXXII, "\xE4\xB8\xAD\xE6\x96\x87", 0xFFFFFF);
+    _textus(m, CCLXXVI, LXXII, "\xE4\xBD\xA0\xE5\xA5\xBD", 0xFFFFFF);
     /* via pixelorum: triangulum, linea obliqua */
     triangulum[ZEPHYRUM]  = _punctum(CXCII, CVIII);
     triangulum[I]         = _punctum(CCCXLVIII, CVIII);

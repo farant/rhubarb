@@ -416,3 +416,41 @@ good to me!"** Seen in the screenshot:
   ABOVE its 12-px status bar. Text uses floor (230 → row 28) and the bar
   uses nearest edge (228 → row 29). Recommendation: text uses nearest
   edge (the cell it overlaps most); lines keep floor.
+
+## T5b — text by nearest edge (D5 amended; Fran, 2026-10-01)
+
+**INTENTIO.** pictor's label sat one row ABOVE its 12-px status bar:
+- text used floor (y 230 → row 28);
+- the filled bar used the nearest edge (228 → 29).
+
+Fran approved the recommendation:
+- **text uses the NEAREST edge.** A glyph is a cell-sized box, and the
+  nearest edge of its corner is the cell it overlaps MOST.
+- **lines keep floor.** A 1-px line at y = 7 lies inside row 0.
+
+The change is one line in `_textum_ponere`, and the header's D5 text is
+rewritten. Every text position in the existing tests is cell-aligned
+(floor = nearest), so nothing else moved. The showcase's table labels at
+y = 28 sat exactly at a half (28/8 = 3.5 → 4) and would have dropped a
+row, so they were moved to y = 24/48/72 (cell tops).
+
+**Red first:**
+- (4,6) → (1,1) instead of (0,0);
+- pictor in miniature (a bar at y 4..16 = row 1, its label at y = 6 on
+  the same row);
+- a guard that lines keep floor (y 7 → row 0);
+- the **pictor.arbor 60×30 golden, written by hand**, built through
+  `componens_legere_stml` + `pingere` with `figura_finium` + the minimal
+  title figura. Its rows 0–27 already matched before the change; only
+  28/29 were red, exactly the predicted shift.
+
+**A test bug caught by the platform:** the top-row golden (┬ + 51 × ─ +
+┬ + 7 spaces = 166 bytes of UTF-8) overflowed a 128-byte buffer.
+macOS's fortified `strcat` trapped (`__chk_fail_overflow`, rc 133). That
+showed as "the log stops after section VI" (buffered output was lost),
+and lldb named it. Buffer → 256.
+
+**Plants (compiling, 0 errors):**
+- A: text back to floor → the hand cases + the golden;
+- B: lines by nearest edge (overcorrection) → the y = 7 guard + T4's
+  case E (its line at y = 4 jumped to row 1).
