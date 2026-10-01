@@ -554,6 +554,7 @@ _actio (
         (i32)magnitudo(FabricaLocus));
     actio->communia = xar_creare(piscina,
         (i32)magnitudo(FabricaLocus));
+    actio->dependentiae = NIHIL;
     redde actio;
 }
 
@@ -1413,6 +1414,23 @@ s32 principale (vacuum)
             &s2, &causa));
         CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
             == 0);
+
+        /* FAMILIA (1b T5, D2): actio 'canon' binaria duo, plagula
+         * provenientiae per BINARIUM (canon_examen.c) - directorium
+         * provenientiae totum excluditur, non solum TITULUS.c */
+        _ponere(&discus, "build/fabrica/provenientia/canon_examen.c",
+            "H1\n");
+        cum = _actio(piscina, "canon", FABRICA_ACTIO_INSTITUTIO);
+        _ingressum_addere(cum, "fasciculus", "lib/manus.c", piscina);
+        _ingressum_addere(cum, "fasciculus",
+            "build/fabrica/provenientia/canon_examen.c", piscina);
+        sine = _actio(piscina, "canon", FABRICA_ACTIO_INSTITUTIO);
+        _ingressum_addere(sine, "fasciculus", "lib/manus.c", piscina);
+        CREDO_VERUM(fabrica_actionem_sigillare(&sutura, cum, piscina,
+            &s1, &causa));
+        CREDO_VERUM(fabrica_actionem_sigillare(&sutura, sine, piscina,
+            &s2, &causa));
+        CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
     }
 
 
@@ -2756,6 +2774,124 @@ s32 principale (vacuum)
         ordo   = _ordinare_fictas(piscina, actiones, II);
         undae  = fabrica_undas_formare(ordo, piscina);
         CREDO_AEQUALIS_I32(xar_numerus(undae), II);
+    }
+
+
+    /* ==================================================
+     * PROBARE: dependentiae per locos (plan 1b T5)
+     * ================================================== */
+
+    {
+          DiscusFictus  discus;
+         FabricaSutura  sutura;
+          FabricaActio* g;
+          FabricaActio* b;
+          FabricaActio* t;
+          FabricaActio* u;
+                   Xar* actiones;
+                   Xar* ordo;
+                   Xar* sanationes;
+        FabricaSanatio* sanatio;
+                chorda  causa;
+
+        imprimere("\n--- Probans dependentias per locos ---\n");
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+
+        /* I. arcus per CLAUSURAM manifesti: B (declarata ante G) legit
+         * gen/x.h solum per manifestum suum - G eum producit. Sine
+         * computatione: nullus arcus, ordo declarationis (B primum) */
+        _discum_parare(&discus, &sutura, piscina);
+        _ponere(&discus, "a", "a\n");
+        _ponere(&discus, "tools/b.c", "int b;\n");
+        _ponere(&discus, "gen/x.h", "vetus\n");
+        _ponere(&discus, "bin/b", "b\n");
+        _ponere(&discus, "build/b.stml",
+            "<aedilis-manifestum scopus=\"tools/b.c\">\n"
+            "  <capita><caput via=\"gen/x.h\"/></capita>\n"
+            "</aedilis-manifestum>\n");
+        _scriptum_addere(&discus, "gen_g", "gen/x.h", NIHIL, "novum\n",
+            0, FALSUM);
+        /* B nunc recens: generator eius "b" scribit, ut bin/b */
+        _scriptum_addere(&discus, "gen_b", "bin/b", NIHIL, "b\n", 0,
+            FALSUM);
+        b = _actio_scripta(piscina, "B", "gen_b", "a", "bin/b",
+            "regeneratio");
+        _ingressum_addere(b, "manifestum", "build/b.stml", piscina);
+        g = _actio_scripta(piscina, "G", "gen_g", "a", "gen/x.h",
+            "regeneratio");
+        actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+        *(FabricaActio*)xar_addere(actiones) = *b;
+        *(FabricaActio*)xar_addere(actiones) = *g;
+        ordo = fabrica_ordinare(actiones, piscina, &causa);
+        CREDO_CHORDA_AEQUALIS_LITERIS((*(FabricaActio**)xar_obtinere(
+            ordo, ZEPHYRUM))->titulus, "B");
+        CREDO_VERUM(fabrica_dependentias_computare(&sutura, actiones,
+            piscina, &causa));
+        ordo = fabrica_ordinare(actiones, piscina, &causa);
+        CREDO_NON_NIHIL(ordo);
+        CREDO_CHORDA_AEQUALIS_LITERIS((*(FabricaActio**)xar_obtinere(
+            ordo, ZEPHYRUM))->titulus, "G");
+        /* sanare -siccum sequitur: G agendum, B post eam fortasse */
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, VERUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "B");
+        CREDO_VERUM(sanatio != NIHIL
+            && sanatio->eventus == FABRICA_FORTASSE);
+
+        /* II. instrumentum nihil enumerat: U instrumentum bin/t
+         * adhibet,
+         * T (producens bin/t) clausuram cum exitu U legit - cyclus
+         * bootstrap nullus */
+        _discum_parare(&discus, &sutura, piscina);
+        _ponere(&discus, "a", "a\n");
+        _ponere(&discus, "tools/t.c", "int t;\n");
+        _ponere(&discus, "gen/u.c", "u\n");
+        _ponere(&discus, "bin/t", "t\n");
+        _ponere(&discus, "build/t.stml",
+            "<aedilis-manifestum scopus=\"tools/t.c\">\n"
+            "  <obiecta><obiectum via=\"gen/u.c\"/></obiecta>\n"
+            "</aedilis-manifestum>\n");
+        t = _actio(piscina, "T", FABRICA_ACTIO_INSTITUTIO);
+        _ingressum_addere(t, "manifestum", "build/t.stml", piscina);
+        (vacuum)_exitum_addere(t, "bin/t", "relatio", piscina);
+        u = _actio(piscina, "U", FABRICA_ACTIO_GENERATOR);
+        _ingressum_addere(u, "instrumentum", "bin/t", piscina);
+        _ingressum_addere(u, "fasciculus", "a", piscina);
+        (vacuum)_exitum_addere(u, "gen/u.c", "regeneratio", piscina);
+        actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+        *(FabricaActio*)xar_addere(actiones) = *t;
+        *(FabricaActio*)xar_addere(actiones) = *u;
+        CREDO_VERUM(fabrica_dependentias_computare(&sutura, actiones,
+            piscina, &causa));
+        ordo = fabrica_ordinare(actiones, piscina, &causa);
+        CREDO_NON_NIHIL(ordo);
+        CREDO_CHORDA_AEQUALIS_LITERIS((*(FabricaActio**)xar_obtinere(
+            ordo, ZEPHYRUM))->titulus, "U");
+        CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
+            actiones, I))->dependentiae), ZEPHYRUM);
+
+        /* III. clonus recens: ingressus absens (gen/y nondum scriptum)
+         * -> via declarata arcum dat; IV. praelatio: actio exitum suum
+         * legens sibi non pendet */
+        _discum_parare(&discus, &sutura, piscina);
+        _ponere(&discus, "a", "a\n");
+        g = _actio_scripta(piscina, "G", "gen_g", "a", "gen/y",
+            "regeneratio");
+        _ingressum_addere(g, "fasciculus", "gen/y", piscina);
+        b = _actio_scripta(piscina, "B", "gen_b", "gen/y", "gen/z",
+            "regeneratio");
+        actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+        *(FabricaActio*)xar_addere(actiones) = *b;
+        *(FabricaActio*)xar_addere(actiones) = *g;
+        CREDO_VERUM(fabrica_dependentias_computare(&sutura, actiones,
+            piscina, &causa));
+        ordo = fabrica_ordinare(actiones, piscina, &causa);
+        CREDO_NON_NIHIL(ordo);
+        CREDO_CHORDA_AEQUALIS_LITERIS((*(FabricaActio**)xar_obtinere(
+            ordo, ZEPHYRUM))->titulus, "G");
+        CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
+            actiones, I))->dependentiae), ZEPHYRUM);
     }
 
 

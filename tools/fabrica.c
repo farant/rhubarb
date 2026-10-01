@@ -1097,6 +1097,30 @@ _sententiam_imprimere (
         (constans character*)sententia->iudicium.causa.datum);
 }
 
+/* ordo per LOCOS (plan 1b T5): dependentiae ex 'enumerare' (clausurae
+ * manifestorum quoque), deinde ordo. Sigilla communia cum iudicio quod
+ * sequitur (memoria per cursum: nihil bis sigillatur). */
+interior Xar*
+_ordinare_per_locos (
+               Xar* actiones,
+    TabulaDispersa* sigilla,
+           Piscina* piscina,
+            chorda* causa_out)
+{
+    FabricaSutura levis;
+
+    fabrica_suturam_parare(&levis);
+    levis.legere     = _legere;
+    levis.enumerare  = _enumerare;
+    levis.sigilla    = sigilla;
+    si (!fabrica_dependentias_computare(&levis, actiones, piscina,
+            causa_out))
+    {
+        redde NIHIL;
+    }
+    redde fabrica_ordinare(actiones, piscina, causa_out);
+}
+
 interior s32
 _iudicare (
           s32   argc,
@@ -1106,6 +1130,7 @@ _iudicare (
       FabricaSutura  sutura;
             Memoria  memoria;
           FilumSera* sera;
+     TabulaDispersa* sigilla;
                 Xar* actiones;
                 Xar* ordo;
                 Xar* sententiae;
@@ -1221,7 +1246,8 @@ _iudicare (
             *(chorda*)xar_addere(electa) = argumentum;
         }
     }
-    ordo   = fabrica_ordinare(actiones, piscina, &causa);
+    sigilla  = tabula_dispersa_creare_chorda(piscina, 1024);
+    ordo     = _ordinare_per_locos(actiones, sigilla, piscina, &causa);
     si (ordo == NIHIL)
     {
         fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
@@ -1261,8 +1287,9 @@ _iudicare (
         sutura.meminisse   = _meminisse;
         sutura.inscribere  = _inscribere;
     }
-    /* memoria sigillorum per cursum: communis semel sigillatur */
-    sutura.sigilla    = tabula_dispersa_creare_chorda(piscina, 1024);
+    /* memoria sigillorum per cursum: communis semel sigillatur (iam
+     * impleta per ordinem per locos) */
+    sutura.sigilla    = sigilla;
     /* generator semel per actionem (exitus multi, cursus unus) */
     sutura.regenerationes = tabula_dispersa_creare_chorda(piscina, 64);
     /* sigillum ingressuum semel per actionem */
@@ -1546,6 +1573,7 @@ _sanare (
       FabricaSutura  sutura;
             Memoria  memoria;
           FilumSera* sera;
+     TabulaDispersa* sigilla;
                 Xar* actiones;
                 Xar* composita;
                 Xar* ordo;
@@ -1578,8 +1606,9 @@ _sanare (
     {
         redde II;
     }
-    causa  = chorda_ex_literis("", piscina);
-    ordo   = fabrica_ordinare(actiones, piscina, &causa);
+    causa    = chorda_ex_literis("", piscina);
+    sigilla  = tabula_dispersa_creare_chorda(piscina, 1024);
+    ordo     = _ordinare_per_locos(actiones, sigilla, piscina, &causa);
     si (ordo == NIHIL)
     {
         fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
@@ -1638,8 +1667,7 @@ _sanare (
     sutura.agere = _agere;
     sutura.vestigium_capere = _vestigium_capere;
     _directoria_extra = _directoria_extra_colligere(actiones, piscina);
-    sutura.sigilla = tabula_dispersa_creare_chorda(piscina,
-        1024);
+    sutura.sigilla = sigilla;
     sutura.regenerationes = tabula_dispersa_creare_chorda(piscina, 64);
     sutura.digesta = tabula_dispersa_creare_chorda(piscina,
         128);

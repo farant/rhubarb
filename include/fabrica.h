@@ -119,6 +119,12 @@ nomen structura {
                      Xar* communia;   /* FabricaLocus: area COMMUNIS
                                        * (cache idempotens, obiecta
                                        * per mtime): numquam simul */
+                     Xar* dependentiae; /* chorda: tituli actionum
+                                         * quarum exitus ingressus
+                                         * 'enumerat' (clausurae
+                                         * manifestorum quoque). NIHIL
+                                         * = non computatae: ordo per
+                                         * vias declaratas (T5) */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -337,8 +343,26 @@ fabrica_iudicare (
                         b32  plenus,
                     Piscina* piscina);
 
+/* Dependentiae per LOCOS (plan 1b T5): pro quaque actione, actiones
+ * quarum exitus aliquis in loco ingressus eius cadit - verbum
+ * 'enumerare' cuiusque generis, ergo clausurae manifestorum quoque
+ * (latina.h, silva.c, capsulae in clausuris). Ingressus qui enumerari
+ * nequit (manifestum absens, clonus recens): via declarata. Genus
+ * 'instrumentum' nihil enumerat: instrumentum ADHIBETUR, non
+ * consumitur (cyclus bootstrap aedilis -> amalgama -> fontes ->
+ * aedilis sic frangitur). Actio se ipsam numquam (praelatio).
+ * actio->dependentiae ponitur; fabrica_ordinare, sanare, undae eas
+ * sequuntur. FALSUM solum si memoria deficit. */
+b32
+fabrica_dependentias_computare (
+    constans FabricaSutura* sutura,
+                       Xar* actiones,   /* FabricaActio (valore) */
+                   Piscina* piscina,
+                    chorda* causa_out);
+
 /* Actiones ordine dependentiae: actio cuius ingressus exitus
- * alterius est, aut quae eam praecondicionem nominat, post eam;
+ * alterius est (aut, computatis dependentiis, quam ingressus eius
+ * enumerat), aut quae eam praecondicionem nominat, post eam;
  * ceteroquin ordo datus (stabilis). Xar de FabricaActio* in actiones
  * datas. NIHIL + causa in cyclo, titulis nominatis. */
 Xar*
@@ -449,7 +473,9 @@ fabrica_praecondiciones_probare (
           chorda* causa_out);
 
 /* Sigillum actionis UT iudex et 'bin/fabrica digestum' id computant:
- * ingressus MINUS plagula provenientiae eius (quae digestum ipsum fert
+ * ingressus MINUS directorium provenientiae TOTUM (build/fabrica/
+ * provenientia/: plagulae digestum ipsum ferunt; familia binariorum
+ * plagulam per binarium habet - 1b T5)
  * - sine exclusione omne binarium statim post institutionem stalum
  * esset). Functio UNA pro ambobus: scriptum et iudex dissentire
  * nequeunt. */

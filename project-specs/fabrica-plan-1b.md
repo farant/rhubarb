@@ -663,6 +663,19 @@ D6 measure silva.h/hospes.c - declare as outputs or stop the touch.
 Done = `bin/fabrica sanare` over every action with NO "extra
 vestigium" (the T4 measurement script re-run: every write inside a
 footprint).
+Also found by the first live `sanare installata` after T4 (cold paths
+the warm measurement missed): briar's corpus regeneration writes
+gitignored ROOT files `corpus.symbola.tsv`, `corpus.versio`,
+`corpus_silicis.toml` (+4) - they belong to the corpus action (T6);
+silex links `silva/build/*.o` - `silva/build` communis for silex.
+
+> **Part A1 executed 2026-10-01** (commit below): ordering edges from
+> `enumerare` (manifest closures) - one bootstrap cycle, broken by
+> `instrumentum` enumerating nothing (Fran); D1; D2 (families merged;
+> whole provenance directory excluded from digests). D3–D6 found
+> larger than planned: D5 and D6 are undeclared GENERATED outputs
+> (latina_datum by the amalgamator; spliced tables in silva.h and
+> hospes.c), both also written in place under the judge.
 
 **Opens with a measurement and two decisions (Fran):**
 1. Object stores each installer links blind (expected from §0.3 and

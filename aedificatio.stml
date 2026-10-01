@@ -49,91 +49,52 @@
     <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
     <exitus via="bin/aedilis" provenientia="relatio"/>
   </actio>
-  <actio titulus="canon_examen" genus="institutio">
+  <!-- FAMILIA (plan 1b T5, D2): scriptum unum binaria duo struit - actio una, exitus duo eiusdem generis; digestum actionis in utroque -->
+  <actio titulus="canon" genus="institutio">
     <mandatum>
       <verbum! (>./tools/canon_struere.sh
     </mandatum>
     <vestigium via="build/aedilis/canon_examen"/>
     <vestigium via="bin/canon_examen.dSYM"/>
-    <vestigium via="build/canon" communis="verum"/>
-    <ingressus genus="manifestum" via="build/aedilis/canon_examen/manifestum.stml"/>
-    <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
-    <exitus via="bin/canon_examen" provenientia="relatio"/>
-  </actio>
-  <actio titulus="canon_coquere" genus="institutio">
-    <mandatum>
-      <verbum! (>./tools/canon_struere.sh
-    </mandatum>
     <vestigium via="build/aedilis/canon_coquere"/>
     <vestigium via="bin/canon_coquere.dSYM"/>
-    <vestigium via="build/canon" communis="verum"/>
+    <vestigium via="build/canon"/>
+    <vestigium via="build/fabrica/provenientia" forma="plagulae" suffixa="canon_examen.c canon_examen.o canon_coquere.c canon_coquere.o"/>
+    <ingressus genus="manifestum" via="build/aedilis/canon_examen/manifestum.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/canon_coquere/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/canon_examen" provenientia="relatio"/>
     <exitus via="bin/canon_coquere" provenientia="relatio"/>
   </actio>
-  <actio titulus="natura_examen" genus="institutio">
+  <!-- FAMILIA (plan 1b T5, D2): scriptum unum binaria quattuor struit - actio una -->
+  <actio titulus="natura" genus="institutio">
     <mandatum>
       <verbum! (>./tools/natura_struere.sh
     </mandatum>
     <vestigium via="build/aedilis/natura_examen"/>
     <vestigium via="bin/natura_examen.dSYM"/>
-    <vestigium via="build/natura" communis="verum"/>
-    <vestigium via="build/aedilis/natura_quaesitor" communis="verum"/>
-    <ingressus genus="manifestum" via="build/aedilis/natura_examen/manifestum.stml"/>
-    <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
-    <exitus via="bin/natura_examen" provenientia="relatio"/>
-  </actio>
-  <actio titulus="natura_canones" genus="institutio">
-    <mandatum>
-      <verbum! (>./tools/natura_struere.sh
-    </mandatum>
     <vestigium via="build/aedilis/natura_canones"/>
     <vestigium via="bin/natura_canones.dSYM"/>
-    <vestigium via="build/natura" communis="verum"/>
-    <vestigium via="build/aedilis/natura_quaesitor" communis="verum"/>
-    <ingressus genus="manifestum" via="build/aedilis/natura_canones/manifestum.stml"/>
-    <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
-    <exitus via="bin/natura_canones" provenientia="relatio"/>
-  </actio>
-  <actio titulus="natura_glossae" genus="institutio">
-    <mandatum>
-      <verbum! (>./tools/natura_struere.sh
-    </mandatum>
     <vestigium via="build/aedilis/natura_glossae"/>
     <vestigium via="bin/natura_glossae.dSYM"/>
-    <vestigium via="build/natura" communis="verum"/>
-    <vestigium via="build/aedilis/natura_quaesitor" communis="verum"/>
-    <ingressus genus="manifestum" via="build/aedilis/natura_glossae/manifestum.stml"/>
-    <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
-    <exitus via="bin/natura_glossae" provenientia="relatio"/>
-  </actio>
-  <actio titulus="natura" genus="institutio">
-    <mandatum>
-      <verbum! (>./tools/natura_struere.sh
-    </mandatum>
     <vestigium via="build/aedilis/natura_quaesitor"/>
     <vestigium via="bin/natura.dSYM"/>
-    <vestigium via="build/natura" communis="verum"/>
+    <vestigium via="build/natura"/>
+    <vestigium via="build/fabrica/provenientia" forma="plagulae" suffixa="natura_examen.c natura_examen.o natura_canones.c natura_canones.o natura_glossae.c natura_glossae.o natura.c natura.o"/>
+    <ingressus genus="manifestum" via="build/aedilis/natura_examen/manifestum.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/natura_canones/manifestum.stml"/>
+    <ingressus genus="manifestum" via="build/aedilis/natura_glossae/manifestum.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/natura_quaesitor/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <exitus via="bin/natura_examen" provenientia="relatio"/>
+    <exitus via="bin/natura_canones" provenientia="relatio"/>
+    <exitus via="bin/natura_glossae" provenientia="relatio"/>
     <exitus via="bin/natura" provenientia="relatio"/>
   </actio>
   <actio titulus="stml" genus="institutio">
@@ -748,11 +709,7 @@
     <pars actio="fabrica"/>
     <pars actio="manus"/>
     <pars actio="aedilis"/>
-    <pars actio="canon_examen"/>
-    <pars actio="canon_coquere"/>
-    <pars actio="natura_examen"/>
-    <pars actio="natura_canones"/>
-    <pars actio="natura_glossae"/>
+    <pars actio="canon"/>
     <pars actio="natura"/>
     <pars actio="stml"/>
     <pars actio="mensor"/>
