@@ -199,3 +199,18 @@ input events, so D6's format doesn't apply.
   parameter name; renamed `si_abest`.
 
 pictor, villa and forum build with the grown `Eventus`.
+
+**A2 addendum (Fran's question: "the compact style might be a result
+of running the stml formatter?").** Checked:
+- the writer's pretty output is ALREADY formatter-stable;
+- the toy file was NOT formatter output (`stml formare -probare`: it
+  diverges; the formatter existed since 09-01, before the toy file of
+  09-05);
+- the decisive fact: `stml formare` of the toy file == the old-writer
+  golden, byte for byte.
+
+So the toy recording was formatted into house style, the separate golden
+was deleted, and the test is the plan's ORIGINAL oracle: reading the
+recording and writing it back gives the file itself. Plant D (the sparse
+rule broken) is still caught. probatio_pictor_toy (which replays this
+file) is green.

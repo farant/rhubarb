@@ -295,27 +295,19 @@ s32 principale (vacuum)
         e = (Eventus*)xar_obtinere(index, VII);
         CREDO_VERUM (e->datum.clavis.codex == EVENTUS_CODEX_IGNOTUS);
         CREDO_VERUM (e->datum.clavis.typus == (character)XXVII);
-        /* rescriptura OCTETIM eadem atque scriptoris VETERIS: attributa
-         * nova solum si non ordinaria. (toy.eventus.stml manu scriptum
-         * est - forma compacta - ergo non ipsum oraculum; aurum =
-         * effusio scriptoris HEAD ante A2 super eadem eventa,
-         * probationes/fixa/eventus/toy.rescriptum.stml.) */
+        /* rescriptura OCTETIM eadem: attributa nova solum si non
+         * ordinaria. toy.eventus.stml forma domus est (stml formare -
+         * Franus 2026-10-01: forma compacta manu scripta erat; formatum
+         * octetim = effusio scriptoris veteris, ergo plagula IPSA
+         * oraculum est). */
+        rescriptum = eventus_scribere_stml(index, piscina, intern,
+            VERUM);
+        si (!chorda_aequalis(rescriptum, fons))
         {
-            chorda aurum = filum_legere_totum(
-                "probationes/fixa/eventus/toy.rescriptum.stml",
-                piscina);
-
-            CREDO_CHORDA_NON_VACUA (aurum);
-            rescriptum = eventus_scribere_stml(index, piscina, intern,
-                VERUM);
-            si (!chorda_aequalis(rescriptum, aurum))
-            {
-                imprimere("  rescriptum:\n%.*s\n",
-                    (int)rescriptum.mensura,
-                    (constans character*)rescriptum.datum);
-            }
-            CREDO_VERUM (chorda_aequalis(rescriptum, aurum));
+            imprimere("  rescriptum:\n%.*s\n", (int)rescriptum.mensura,
+                (constans character*)rescriptum.datum);
         }
+        CREDO_VERUM (chorda_aequalis(rescriptum, fons));
     }
 
     imprimere("\n");
