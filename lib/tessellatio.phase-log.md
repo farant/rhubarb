@@ -281,3 +281,67 @@ its OWN HEADER.
 - silex links every `build/*.o` wholesale and uses none of the moved
   functions, so it is unaffected (its struere installs into ~/.bin, so
   it was not run from the worktree).
+
+## T4b — the pixel path and compositing (2026-10-01)
+
+**INTENTIO (D7).**
+- `delineare_mandata_selecta(m, tabula, fons, ctx, filtrum,
+  filtrum_ctx)`: the native rasterizer with a primitive predicate
+  (`DelineareFiltrum`). Coetus are ALWAYS walked, so transform and clip
+  stay exact. `delineare_mandata` = selecta with NIHIL (unchanged; its
+  golden passes).
+- A predicate, not a genus mask, because lines split by GEOMETRY:
+  axis-aligned ones are cell-native, oblique ones take the pixel path.
+  Axiality survives translation and integer scale, so the predicate can
+  look at local points.
+- `tessellatio_computare` gains `fons`, `fons_ctx` and `piscina` (an
+  API change to T3's function, which had no consumers yet).
+  `piscina == NIHIL` skips the pixel path, which is T3's behaviour.
+
+**The lower layer, `_stratum_pixelorum`:**
+1. If any primitive passes `_via_pixelorum` (imago, polygonum, oblique
+   linea), allocate a table of (columns × cell w) × (rows × cell h).
+   The extent's partial cell is excluded, so the scale is exact.
+2. Clear it to the background.
+3. `delineare_mandata_selecta`, then IMAGO_SCALA_AREA to (columns × 2,
+   rows × 2).
+4. `quadrans` (QUADRANTES, MEDIA, fundus) → cells. Block glyphs
+   U+2580..259F point into a static UTF-8 table (`BLOCCI`), so they are
+   always valid. A uniform block is a background-coloured space, the
+   same as an empty T3 cell.
+
+The cell-native pass then runs on top in painter's order, unchanged.
+Text keeps the cell's background, so a label over an image keeps the
+image colour. A filled rectangle or a line replaces the block glyph.
+
+**PREDICTED, then built** (30×24 px at 6×8 = 5×3 cells, 3×4 px per
+sub-pixel):
+- A: a cell-aligned red 12×16 image → spaces on exactly 0xFF0000.
+- B: a 3×8 strip = the left half of a cell → `▐` with a BLACK fg (black
+  is the darker of the two, so it is the ink, on the right) on a red bg.
+- C: "ab" over the image keeps the red bg.
+- D: a filled rectangle drawn after covers it.
+- E: a lone axis line leaves the background under its junctions.
+- F: an oblique line → glyphs on the diagonal only.
+- G: a filled triangle → a uniform corner and a background far corner.
+- H: no piscina → the image is skipped.
+
+All held on the first green run.
+
+**Plants (compiling, 0 errors):**
+- A: the pixel layer applied AFTER the cell layer → the label and the
+  covering rectangle are lost.
+- B: the scale transposed (rows × 2 by columns × 2) → 8 assertions
+  across A/B/F.
+- C: the filter ignored → the axis line smears into the pixel layer
+  (E). It also caught an unpredicted effect: the label TEXT got
+  rasterized into the pixel layer, which changed its background.
+
+**Lint:** `delineare_mandata_filtrata` → `delineare_mandata_selecta`
+(the participle *filtrata* is unknown to the lexicon; *selecta* is
+house usage, cf. `selecta.sh`); `ip` → `imagines`.
+
+**Cost note:** the pixel path allocates about (extent × 4) × 2 bytes
+per call (the table + the scaled image + the cells). The caller resets
+the piscina per frame. Scenes without pixel-path primitives allocate
+nothing (the scan comes first).

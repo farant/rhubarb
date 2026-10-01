@@ -4,6 +4,8 @@
 #include "color.h"
 #include "thema.h"
 #include "runae.h"
+#include "imago_opus.h"
+#include "quadrans.h"
 
 #define SCAENAE_MAXIMAE LXIV
 
@@ -35,6 +37,28 @@ interior constans s32 JUNCTURAE[XVI] = {
     0x2502, 0x2502, 0x250C, 0x251C,    /*   │  │  ┌  ├ */
     0x2500, 0x2518, 0x2500, 0x2534,    /*   ─  ┘  ─  ┴ */
     0x2510, 0x2524, 0x252C, 0x253C     /*   ┐  ┤  ┬  ┼ */
+};
+
+/* Glyphi U+2580..U+259F (quadrantes, dimidia, plenus) in UTF-8:
+ * E2 96 (80 + k) - unitates cellularum viae pixelorum huc monstrant
+ * (statica: semper valida). */
+interior constans i8 BLOCCI[XXXII][III] = {
+    {0xE2, 0x96, 0x80}, {0xE2, 0x96, 0x81}, {0xE2, 0x96, 0x82}, {0xE2,
+        0x96, 0x83},
+    {0xE2, 0x96, 0x84}, {0xE2, 0x96, 0x85}, {0xE2, 0x96, 0x86}, {0xE2,
+        0x96, 0x87},
+    {0xE2, 0x96, 0x88}, {0xE2, 0x96, 0x89}, {0xE2, 0x96, 0x8A}, {0xE2,
+        0x96, 0x8B},
+    {0xE2, 0x96, 0x8C}, {0xE2, 0x96, 0x8D}, {0xE2, 0x96, 0x8E}, {0xE2,
+        0x96, 0x8F},
+    {0xE2, 0x96, 0x90}, {0xE2, 0x96, 0x91}, {0xE2, 0x96, 0x92}, {0xE2,
+        0x96, 0x93},
+    {0xE2, 0x96, 0x94}, {0xE2, 0x96, 0x95}, {0xE2, 0x96, 0x96}, {0xE2,
+        0x96, 0x97},
+    {0xE2, 0x96, 0x98}, {0xE2, 0x96, 0x99}, {0xE2, 0x96, 0x9A}, {0xE2,
+        0x96, 0x9B},
+    {0xE2, 0x96, 0x9C}, {0xE2, 0x96, 0x9D}, {0xE2, 0x96, 0x9E}, {0xE2,
+        0x96, 0x9F}
 };
 
 ModulusMensor
@@ -383,12 +407,112 @@ _scaenam_impellere (
     redde s;
 }
 
+/* Filtrum viae pixelorum (D6): imago, polygonum, linea obliqua.
+ * Axialitas transformatione (translatio, scala integra) non mutatur. */
+interior b32
+_via_pixelorum (
+    constans Mandatum* x,
+               vacuum* ctx)
+{
+    (vacuum)ctx;
+    si (x->genus == MANDATUM_IMAGO || x->genus == MANDATUM_POLYGONUM)
+    {
+        redde VERUM;
+    }
+    si (x->genus == MANDATUM_LINEA && x->numerus_punctorum >= II)
+    {
+        redde (b32)(   x->puncta[ZEPHYRUM].x != x->puncta[I].x
+                    && x->puncta[ZEPHYRUM].y != x->puncta[I].y);
+    }
+    redde FALSUM;
+}
+
+/* Stratum inferius (D7): primitiva viae pixelorum in tabulam
+ * (columnae x cellula_latitudo, lineae x cellula_altitudo) super fundum,
+ * AREA ad (columnae x 2, lineae x 2), quadrans -> cellulae. Nihil
+ * agitur si nullum primitivum viae pixelorum adest. */
+interior vacuum
+_stratum_pixelorum (
+    constans Contextus* ctx,
+      constans Mandata* m,
+                   i32  fundus,
+             ImagoFons  fons,
+                vacuum* fons_ctx,
+               Piscina* piscina)
+{
+     TabulaPixelorum* tabula;
+               Imago  imago;
+               Imago  scalata;
+    QuadransOptiones  optiones;
+     QuadransCellula* quadra;
+                 i32  i;
+                 i32  n;
+                 b32  adest;
+                 s32  k;
+                 i32  runa;
+
+    adest  = FALSUM;
+    n      = mandata_numerus(m);
+    per (i = ZEPHYRUM; i < n && !adest; i++)
+    {
+        adest = _via_pixelorum(mandata_obtinere(m, i), NIHIL);
+    }
+    si (!adest || ctx->columnae <= ZEPHYRUM || ctx->lineae <= ZEPHYRUM)
+    {
+        redde;
+    }
+    tabula = tabula_pixelorum_creare_nuda(piscina,
+        (i32)(ctx->columnae * ctx->modulus->cellula_latitudo),
+        (i32)(ctx->lineae * ctx->modulus->cellula_altitudo));
+    si (tabula == NIHIL)
+    {
+        redde;
+    }
+    tabula_pixelorum_vacare(tabula, color_ad_pixelum(color_ex_rgba(
+        (i8)((fundus >> XVI) & 0xFF), (i8)((fundus >> VIII) & 0xFF),
+        (i8)(fundus & 0xFF), (i8)CCLV)));
+    delineare_mandata_selecta(m, tabula, fons, fons_ctx,
+        _via_pixelorum,
+        NIHIL);
+    imago    = imago_ex_tabula(tabula);
+    scalata  = imago_scalare(&imago, (i32)(ctx->columnae * II),
+        (i32)(ctx->lineae * II), IMAGO_SCALA_AREA, piscina);
+    quadra   = (QuadransCellula*)piscina_allocare(piscina,
+        (memoriae_index)(ctx->columnae * ctx->lineae)
+            * magnitudo(QuadransCellula));
+    si (scalata.pixela == NIHIL || quadra == NIHIL)
+    {
+        redde;
+    }
+    optiones         = quadrans_optiones_ordinariae();
+    optiones.fundus  = fundus;
+    quadrans_computare(&scalata, ZEPHYRUM, ZEPHYRUM,
+        (i32)(ctx->columnae * II), (i32)(ctx->lineae * II), &optiones,
+        quadra);
+    per (k = ZEPHYRUM; k < ctx->columnae * ctx->lineae; k++)
+    {
+        TessellatioCellula* c = &ctx->cellulae[k];
+
+        runa               = (i32)quadra[k].runa;
+        c->color_litterae  = (i32)quadra[k].color_litterae;
+        c->color_fundi     = (i32)quadra[k].color_fundi;
+        si (runa >= 0x2580 && runa <= 0x259F)
+        {
+            c->unitas   = BLOCCI[runa - 0x2580];
+            c->mensura  = III;
+        }
+    }
+}
+
 vacuum
 tessellatio_computare (
         constans Mandata* m,
         constans Modulus* modulus,
            RunaePolitica  politica,
                      i32  fundus,
+               ImagoFons  fons,
+                  vacuum* fons_ctx,
+                 Piscina* piscina,
       TessellatioCellula* exitus)
 {
              Contextus  ctx;
@@ -415,6 +539,10 @@ tessellatio_computare (
     si (m == NIHIL)
     {
         redde;
+    }
+    si (piscina != NIHIL)
+    {
+        _stratum_pixelorum(&ctx, m, fundus, fons, fons_ctx, piscina);
     }
     scaenae[ZEPHYRUM].origo_x  = ZEPHYRUM;
     scaenae[ZEPHYRUM].origo_y  = ZEPHYRUM;

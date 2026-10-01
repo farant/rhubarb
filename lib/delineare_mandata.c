@@ -334,6 +334,18 @@ delineare_mandata (
             ImagoFons  fons,
                vacuum* ctx)
 {
+    delineare_mandata_selecta(m, tabula, fons, ctx, NIHIL, NIHIL);
+}
+
+vacuum
+delineare_mandata_selecta (
+      constans Mandata* m,
+       TabulaPixelorum* tabula,
+             ImagoFons  fons,
+                vacuum* ctx,
+      DelineareFiltrum  filtrum,
+                vacuum* filtrum_ctx)
+{
     ContextusDelineandi* dctx;
                  Scaena  scaenae[SCAENAE_MAXIMAE];
                     i32  altitudo;
@@ -376,7 +388,7 @@ delineare_mandata (
                 sectionem_applicare(dctx, &scaenae[altitudo]);
             }
         }
-        alioquin
+        alioquin si (filtrum == NIHIL || filtrum(x, filtrum_ctx))
         {
             primitivum_pingere(dctx, tabula, &scaenae[altitudo], x,
                                fons, ctx);

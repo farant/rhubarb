@@ -10,6 +10,7 @@
 #include "mandatum.h"
 #include "modulus.h"
 #include "tessellatio.h"
+#include "imago_typus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -133,6 +134,54 @@ _scaena_congruit (
     redde congruit;
 }
 
+/* Fons imaginum probationis: "rubrum" 12x16, "dimidium" 3x8 (ambo
+ * rubra opaca) */
+nomen structura {
+    Imago rubrum;
+    Imago dimidium;
+} ImaginesProbationis;
+
+interior constans Imago*
+_fons (
+    chorda  provenientia,
+    vacuum* ctx)
+{
+    ImaginesProbationis* imagines = (ImaginesProbationis*)ctx;
+
+    si (chorda_aequalis_literis(provenientia, "rubrum"))
+    {
+        redde &imagines->rubrum;
+    }
+    si (chorda_aequalis_literis(provenientia, "dimidium"))
+    {
+        redde &imagines->dimidium;
+    }
+    redde NIHIL;
+}
+
+interior Imago
+_imago_rubra (
+    Piscina* piscina,
+        i32  lat,
+        i32  alt)
+{
+    Imago im;
+      i32 k;
+
+    im.latitudo = lat;
+    im.altitudo = alt;
+    im.pixela    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(lat * alt * IV));
+    per (k = ZEPHYRUM; k < lat * alt; k++)
+    {
+        im.pixela[k * IV]        = (i8)CCLV;
+        im.pixela[k * IV + I]    = ZEPHYRUM;
+        im.pixela[k * IV + II]   = ZEPHYRUM;
+        im.pixela[k * IV + III]  = (i8)CCLV;
+    }
+    redde im;
+}
+
 s32 principale (vacuum)
 {
                  Piscina* piscina;
@@ -147,6 +196,9 @@ s32 principale (vacuum)
                      i32  k;
       constans character* scaena_a[VIII];
       constans character* nexus[XVI];
+                 Piscina* pixela;
+     ImaginesProbationis  imagines;
+                 Punctum  triangulum[III];
 
     piscina = piscina_generare_dynamicum("probatio_tessellatio",
         CCLVI * M);
@@ -224,7 +276,7 @@ s32 principale (vacuum)
     mandata_coetus_finire(m, coetus);
     tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
         NIGER,
-        cellulae);
+        NIHIL, NIHIL, NIHIL, cellulae);
     scaena_a[0] = "               │    ";
     scaena_a[1] = "           ┌───┼──┐ ";
     scaena_a[2] = "  Ok 中é   │   │  │ ";
@@ -275,7 +327,7 @@ s32 principale (vacuum)
         ZEPHYRUM, _rgba(ALBUS));
     tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
         NIGER,
-        cellulae);
+        NIHIL, NIHIL, NIHIL, cellulae);
     CREDO_VERUM(cellulae[ZEPHYRUM].unitas == NIHIL
         && cellulae[ZEPHYRUM].latitudo == I);
     CREDO_VERUM(cellulae[I].unitas != NIHIL
@@ -301,7 +353,7 @@ s32 principale (vacuum)
         VERUM);
     tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
         NIGER,
-        cellulae);
+        NIHIL, NIHIL, NIHIL, cellulae);
     CREDO_VERUM(cellulae[I].unitas == NIHIL
         && cellulae[I].juncturae == TESSELLATIO_JUNCTURA_DEORSUM);
     CREDO_AEQUALIS_I32(cellulae[VI + I].juncturae,
@@ -323,7 +375,7 @@ s32 principale (vacuum)
         VERUM);
     tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
         NIGER,
-        cellulae);
+        NIHIL, NIHIL, NIHIL, cellulae);
     per (k = ZEPHYRUM; k < XII; k++)
     {
         CREDO_VERUM(cellulae[k].juncturae == ZEPHYRUM
@@ -351,7 +403,7 @@ s32 principale (vacuum)
             VIII),
             I, _rgba(ALBUS));
         tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
-            NIGER, cellulae);
+            NIGER, NIHIL, NIHIL, NIHIL, cellulae);
         anguli[ZEPHYRUM]  = "  │┌──";
         anguli[I]         = "──┘│  ";
         CREDO_VERUM(_scaena_congruit(cellulae, VI, II, anguli));
@@ -373,7 +425,7 @@ s32 principale (vacuum)
         mandata_rectangulum(m, _fines(VI, ZEPHYRUM, VI, VIII), index_c,
             VERUM);
         tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
-            NIGER, cellulae);
+            NIGER, NIHIL, NIHIL, NIHIL, cellulae);
         expect = thema_color(COLOR_TEXT);
         CREDO_AEQUALIS_I32(cellulae[ZEPHYRUM].color_litterae,
             ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
@@ -383,6 +435,97 @@ s32 principale (vacuum)
             ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
                 | expect.b);
     }
+
+    imprimere("\n--- V. via pixelorum (T4, praedicta) ---\n");
+    pixela       = piscina_generare_dynamicum("tessellatio_pixela",
+        IV * M * M);
+    imagines.rubrum    = _imago_rubra(piscina, XII, XVI);
+    imagines.dimidium  = _imago_rubra(piscina, III, VIII);
+    modulus            = modulus_creare(VI, VIII, XXX, XXIV);     /* 5 x 3 */
+    /* A + C + D: imago congrua; titulus super eam; rectangulum post */
+    m = mandata_creare(piscina, intern);
+    mandata_imago(m, chorda_ex_literis("rubrum", piscina),
+        _fines(VI, VIII, XII, XVI));
+    mandata_textus(m, VI, VIII, chorda_ex_literis("ab", piscina),
+        ZEPHYRUM, _rgba(ALBUS));
+    mandata_rectangulum(m, _fines(XII, XVI, VI, VIII), _rgba(CAERULEUS),
+        VERUM);
+    /* B: dimidium sinistrum cellulae (1,0) */
+    mandata_imago(m, chorda_ex_literis("dimidium", piscina),
+        _fines(VI, ZEPHYRUM, III, VIII));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        _fons, &imagines, pixela, cellulae);
+    c = &cellulae[V + I];                                     /* (1,1) */
+    CREDO_VERUM(c->unitas != NIHIL && c->unitas[0] == 'a');
+    CREDO_AEQUALIS_I32(c->color_fundi, 0xFF0000);
+    CREDO_AEQUALIS_I32(c->color_litterae, ALBUS);
+    CREDO_AEQUALIS_I32(cellulae[V + II].color_fundi, 0xFF0000);
+    c = &cellulae[X + I];                                     /* (1,2) */
+    CREDO_VERUM(c->unitas == NIHIL);
+    CREDO_AEQUALIS_I32(c->color_fundi, 0xFF0000);
+    c = &cellulae[X + II];                                    /* (2,2) */
+    CREDO_VERUM(c->unitas == NIHIL);
+    CREDO_AEQUALIS_I32(c->color_fundi, CAERULEUS);
+    c = &cellulae[I];                                         /* (1,0) */
+    CREDO_VERUM(c->unitas != NIHIL && c->mensura == III
+        && memcmp(c->unitas, "\xE2\x96\x90", III) == ZEPHYRUM);  /* ▐ */
+    CREDO_AEQUALIS_I32(c->color_litterae, NIGER);
+    CREDO_AEQUALIS_I32(c->color_fundi, 0xFF0000);
+    CREDO_VERUM(cellulae[ZEPHYRUM].unitas == NIHIL
+        && cellulae[ZEPHYRUM].color_fundi == NIGER);
+    CREDO_VERUM(cellulae[V + III].unitas == NIHIL
+        && cellulae[V + III].color_fundi == NIGER);
+    /* E: linea axialis sola - via pixelorum eam NON pingit (filtrum) */
+    m = mandata_creare(piscina, intern);
+    mandata_imago(m, chorda_ex_literis("dimidium", piscina),
+        _fines(ZEPHYRUM, XVI, III, VIII));
+    mandata_linea(m, _punctum(ZEPHYRUM, IV), _punctum(XXIX, IV), I,
+        _rgba(FLAVUS));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        _fons, &imagines, pixela, cellulae);
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        CREDO_VERUM(cellulae[k].juncturae != ZEPHYRUM
+            && cellulae[k].color_fundi == NIGER);
+    }
+    /* F: linea obliqua -> glyphi in diagonali solum */
+    m = mandata_creare(piscina, intern);
+    mandata_linea(m, _punctum(ZEPHYRUM, ZEPHYRUM), _punctum(XXIX,
+        XXIII),
+        I, _rgba(FLAVUS));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        _fons, &imagines, pixela, cellulae);
+    CREDO_VERUM(cellulae[ZEPHYRUM].unitas != NIHIL);
+    CREDO_VERUM(cellulae[V + II].unitas != NIHIL);
+    CREDO_VERUM(cellulae[X + IV].unitas != NIHIL);
+    CREDO_VERUM(cellulae[IV].unitas == NIHIL
+        && cellulae[IV].color_fundi == NIGER);
+    CREDO_VERUM(cellulae[X].unitas == NIHIL
+        && cellulae[X].color_fundi == NIGER);
+    /* G: triangulum impletum */
+    m                     = mandata_creare(piscina, intern);
+    triangulum[ZEPHYRUM]  = _punctum(ZEPHYRUM, ZEPHYRUM);
+    triangulum[I]         = _punctum(XXIX, ZEPHYRUM);
+    triangulum[II]        = _punctum(ZEPHYRUM, XXIII);
+    mandata_polygonum(m, triangulum, III, _rgba(CAERULEUS), VERUM);
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        _fons, &imagines, pixela, cellulae);
+    CREDO_VERUM(cellulae[ZEPHYRUM].unitas == NIHIL
+        && cellulae[ZEPHYRUM].color_fundi == CAERULEUS);
+    CREDO_VERUM(cellulae[X + IV].unitas == NIHIL
+        && cellulae[X + IV].color_fundi == NIGER);
+    /* H: sine piscina via pixelorum omittitur (T3) */
+    m = mandata_creare(piscina, intern);
+    mandata_imago(m, chorda_ex_literis("rubrum", piscina),
+        _fines(VI, VIII, XII, XVI));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER,
+        _fons, &imagines, NIHIL, cellulae);
+    CREDO_AEQUALIS_I32(cellulae[V + I].color_fundi, NIGER);
 
     imprimere("\n");
     credo_imprimere_compendium();

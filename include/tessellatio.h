@@ -25,7 +25,13 @@
  *   et latera); cellula una (1x1) evanescit;
  * - linea axialis: juncturae OR-antur (┼ ├ ┬ ex intersectionibus);
  *   textum tegit;
- * - imago, polygonum, linea obliqua: NON hic (via pixelorum, T4).
+ * - imago, polygonum, linea obliqua: VIA PIXELORUM (D7, T4) - si
+ *   piscina datur, ea sola (delineare_mandata_selecta, transformatione
+ *   et sectione nativis) in tabulam extensionis rasterizantur, per
+ *   IMAGO_SCALA_AREA ad columnas x 2, lineas x 2 scalantur, quadrans
+ *   (QUADRANTES, MEDIA, fundus) cellulas dat; STRATUM INFERIUS: via
+ *   cellularum supra ordine pictoris (textus fundum cellulae imaginis
+ *   servat). Piscina NIHIL: via pixelorum omittitur (T3).
  * Dimidium unitatis latae tectum: dimidium alterum spatium fit (regula
  * tesserae).
  */
@@ -38,6 +44,8 @@
 #include "latina.h"
 #include "mandatum.h"
 #include "modulus.h"
+#include "piscina.h"
+#include "delineare_mandata.h"   /* ImagoFons; rasterizator sine Cocoa */
 
 #define TESSELLATIO_JUNCTURA_SURSUM    I
 #define TESSELLATIO_JUNCTURA_DEXTRA    II
@@ -61,13 +69,21 @@ tessellatio_mensor (
 /* Mandata -> cellulae. exitus: columnae x lineae cellularum quas
  * modulus_extensio_cellularum(modulus) reddit, ordine linearum;
  * initio omnes vacuae cum fundo 'fundus' et littera 'fundus'.
- * Colores Mandatorum per thema resolvuntur (THEMA, INDEX, RGBA). */
+ * Colores Mandatorum per thema resolvuntur (THEMA, INDEX, RGBA).
+ * fons/fons_ctx: imagines per nomen (ut delineare_mandata). piscina:
+ * memoria viae pixelorum (tabula extensionis + scalata + cellulae
+ * quadrantum, ~ extensio x IV octeti) - vocans per quadrum reficit;
+ * NIHIL = via pixelorum omittitur. Glyphi quadrantum: unitas in
+ * tabulam staticam (validi semper). */
 vacuum
 tessellatio_computare (
         constans Mandata* m,
         constans Modulus* modulus,
            RunaePolitica  politica,
                      i32  fundus,
+               ImagoFons  fons,
+                  vacuum* fons_ctx,
+                 Piscina* piscina,
       TessellatioCellula* exitus);
 
 /* Juncturae -> runa delineandi (─ │ ┌ ┐ └ ┘ ├ ┤ ┬ ┴ ┼); 0 si nullae.

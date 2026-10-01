@@ -68,6 +68,24 @@ delineare_mandata (
             ImagoFons  fons,
                vacuum* ctx);
 
+/* Filtrum primitivorum: VERUM = pinge. Coetus SEMPER ambulantur
+ * (transformatio et sectio exactae) - filtrum primitiva sola iudicat.
+ * tessellatio (T4) eo via pixelorum sola rasterizat. */
+nomen b32 (*DelineareFiltrum)(
+    constans Mandatum* x,
+               vacuum* ctx);
+
+/* delineare_mandata cum filtro; filtrum NIHIL = omnia (idem ac
+ * delineare_mandata). */
+vacuum
+delineare_mandata_selecta (
+      constans Mandata* m,
+       TabulaPixelorum* tabula,
+             ImagoFons  fons,
+                vacuum* ctx,
+      DelineareFiltrum  filtrum,
+                vacuum* filtrum_ctx);
+
 
 /* ==================================================
  * Modulus scopi nativi (tessellatio D1, D4)
