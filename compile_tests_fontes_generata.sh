@@ -105,6 +105,7 @@ declare -a SOURCE_FILES=(
     "lib/mensa.c"
     "lib/mensura.c"
     "lib/mimen.c"
+    "lib/modulus.c"
     "lib/moneta.c"
     "lib/motus.c"
     "lib/multipart.c"
