@@ -819,3 +819,56 @@ with the core's locus rules (scratchpad vestigia_probare.py): 70/70 exit
 0, 0 writes outside a footprint. Warm only - cold paths (the corpus,
 silva/build) were measured separately during B1; a cold whole-tree
 measurement belongs with T6/T7.
+
+## 2026-10-01 — plan 1b T6: briar decomposed (Fran: option a')
+
+Finding that changed the option: the corpus stamp was FUNCTIONAL, not
+informational - corpus.versio is embedded in the capsule; lib/silex.c
+shows it as the corpus title and briar uses it as the cache key of
+embedded-corpus projects (~/.rhubarb/briar/<titulus>-<clavis>). As
+`commit=... dies=...` it changed on EVERY regeneration (orphaning those
+project dirs) and could not be judged. Now `sigillum=<SHA-256>` over the
+exact files the capsule embeds (paths + per-file digests, LC_ALL=C
+order): reproducible, and a better key - it moves exactly with content.
+Build identity stays in `briar -versio`'s `aedificatum:` line and
+-provenientia. Tester-visible: MUTATIONES.md '## inedita' bullet.
+
+Shadow root (tools/capsula_radicis.sh): capsula_generare resolves globs
+from - and writes next to - its TOML, which must sit at the repo root.
+Under FABRICA_SCRIPTURA the scratch dir gets symlinks to the needed
+top-level inputs, TOML and generated inputs (corpus.versio, symbol
+table) are written there, outputs land in scratch/build/: embedded
+names identical, real root untouched (verified by mtime). Corpus
+regeneration is DETERMINISTIC (two scratch runs byte-identical) and
+takes ~10 s (it was 3+ min inside silex_struere.sh only because the
+mtime logic and nexus ran cold there). Under FABRICA_SCRIPTURA or
+FABRICA_AGIT the capsule scripts always regenerate (fabrica judges);
+by hand they keep the mtime skip. Linkers skip capsule regeneration
+under FABRICA_AGIT; briar suite --obiecta skips symbol table and facies.
+
+Actions: corpus_silicis (memorabilis; owns corpus.versio, toml, symbol
+table; nexus cache + silva/build communis), capsula_{facies,icon,
+mutationes}_briar; links take the capsules as inputs (edges) instead of
+the corpus's plagulae. Composites `briar` (6 parts) and `silex` (4).
+
+Bug found in T4's snapshot: the tree walk FOLLOWED symlinked
+directories (the iterator reports them as directories despite the
+comment saying otherwise) - the shadow roots' symlinks made real
+briar/build and silva/build writes reappear under scratch paths,
+outside every footprint. Fix: recurse only into REAL directories
+(`lstat` + S_ISDIR; S_ISLNK is not in silva's POSIX lexicon, examen
+flagged it). Also: silex's own link writes silva/build (it compiles silva
+objects there) - restored as silex's communis area.
+
+Measured: MUTATIONES.md edit -> exactly capsula_mutationes_briar + link
++ copy (actions 7 s; corpus/facies/icon untouched); a lib/*.c edit ->
+corpus once (9.6 s), both links, both copies, clean. BUT the whole
+command took 2-3 min: the judge re-verifies everything upstream of
+briar by regeneration, including the amalgam chain (silva.c is in
+briar's closure), which is not memorabilis. Judge cost now dominates -
+follow-up: memorabilis for the amalgam chain once its inputs are proven
+complete (1a T4 left the radices' closures undeclared).
+The first T6 commit was refused by gate silex-semen: it proved "the
+embedded corpus was used" by grepping for the OLD stamp (`corpus
+commit=`). Its intent holds; pattern now `corpus sigillum=`. The only
+consumer of the stamp's format.

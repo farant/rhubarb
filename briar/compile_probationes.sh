@@ -36,13 +36,18 @@ mkdir -p "$BUILD_DIR"
 
 # tabula symbolum -> caput (corpus.symbola.tsv): nexus derivationis
 # inclusionum eam e fonte disci legit - hic genita si vetus
-source "$RADIX_DIR/tools/corpus_infixum.sh"
-( cd "$RADIX_DIR" && corpus_symbola_generare ) || { echo "FRACTA: corpus.symbola.tsv" ; exit 1; }
+# --obiecta (actio obiecta_briar): tabula et capsula probationibus solis
+# serviunt - omittuntur (actiones corpus_silicis, capsula_facies_briar
+# eas producunt; 1b T6)
+if [ "${1:-}" != "--obiecta" ]; then
+    source "$RADIX_DIR/tools/corpus_infixum.sh"
+    ( cd "$RADIX_DIR" && corpus_symbola_generare ) || { echo "FRACTA: corpus.symbola.tsv" ; exit 1; }
 
-# vestis faciei infixa: porta spectatoris eam contra plagulas discI
-# confert (capsula stala = vitium verum, non molestia)
-source "$RADIX_DIR/tools/briar_facies_capsula.sh"
-( cd "$RADIX_DIR" && briar_facies_capsula_regenerare ) || { echo "FRACTA: capsula faciei" ; exit 1; }
+    # vestis faciei infixa: porta spectatoris eam contra plagulas discI
+    # confert (capsula stala = vitium verum, non molestia)
+    source "$RADIX_DIR/tools/briar_facies_capsula.sh"
+    ( cd "$RADIX_DIR" && briar_facies_capsula_regenerare ) || { echo "FRACTA: capsula faciei" ; exit 1; }
+fi
 
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"

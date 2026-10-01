@@ -24,15 +24,20 @@ if [ ! -x bin/capsula_generare ] && [ -z "$(ls -A build/*.o 2>/dev/null)" ]; the
     exit 1
 fi
 
-source "$SCRIPT_DIR/corpus_infixum.sh"
-corpus_infixum_regenerare || exit 1
-source "$SCRIPT_DIR/briar_facies_capsula.sh"
-briar_facies_capsula_regenerare || exit 1
-source "$SCRIPT_DIR/briar_icon_capsula.sh"
-briar_icon_capsula_regenerare || exit 1
-# charta mutationum: versio binarii EX ea legitur (briar -versio)
-source "$SCRIPT_DIR/briar_mutationes_capsula.sh"
-briar_mutationes_capsula_regenerare || exit 1
+# capsulae: actiones fabricae suae (1b T6) - sub executore
+# (FABRICA_AGIT) hoc scriptum SOLUM nectit (sanare eas ante ordinat);
+# manu vocatum eas, si recentiores fontes, regenerat
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    source "$SCRIPT_DIR/corpus_infixum.sh"
+    corpus_infixum_regenerare || exit 1
+    source "$SCRIPT_DIR/briar_facies_capsula.sh"
+    briar_facies_capsula_regenerare || exit 1
+    source "$SCRIPT_DIR/briar_icon_capsula.sh"
+    briar_icon_capsula_regenerare || exit 1
+    # charta mutationum: versio binarii EX ea legitur (briar -versio)
+    source "$SCRIPT_DIR/briar_mutationes_capsula.sh"
+    briar_mutationes_capsula_regenerare || exit 1
+fi
 # identitas aedificationis (bugs/011 lapidis): tempus, sigillum
 # fontium briar IPSIUS (instrumentum, fontes, charta, compendium) et
 # commissum - SORDIDUM si hi fontes mutationes non commissas ferunt.

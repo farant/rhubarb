@@ -61,8 +61,13 @@ fi
 
 # corpus bibliothecarum: capsula infixa - bloccus COMMUNIS cum
 # tools/briar_struere.sh (tools/corpus_infixum.sh)
-source "$SCRIPT_DIR/corpus_infixum.sh"
-corpus_infixum_regenerare || exit 1
+# capsulae: actiones fabricae suae (1b T6) - sub executore
+# (FABRICA_AGIT) hoc scriptum SOLUM nectit (sanare eas ante ordinat);
+# manu vocatum eas, si recentiores fontes, regenerat
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    source "$SCRIPT_DIR/corpus_infixum.sh"
+    corpus_infixum_regenerare || exit 1
+fi
 
 # obiecta silvae (machina differentiae unitatum --unitates) -
 # lacus idem quo differre.sh (silva/build), vexillae eaedem

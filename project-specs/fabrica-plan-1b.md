@@ -814,6 +814,16 @@ appears (none expected).
   stamp): one line in `briar/MUTATIONES.md` under `## inedita`.
   Worklog. Gates: radix, fabrica, fabrica-fumus, briar, silex (+ owed).
 
+> **Executed 2026-10-01** (commit below). Option a' (Fran): the stamp
+> was functional (briar cache key, silex corpus title) - now a content
+> SIGILLUM, reproducible and a better key. Shadow root
+> (tools/capsula_radicis.sh) lets root-glob capsules regenerate in
+> scratch. Corpus deterministic, ~10 s. T4 snapshot bug fixed (it
+> followed symlinked dirs). MUTATIONES edit -> 3 actions (7 s); lib
+> edit -> corpus once + both links + copies. Judge cost (amalgam chain
+> regenerated, not memorabilis) now dominates: 2-3 min per `sanare
+> briar`.
+
 ### Task T7: `cursus` records, estimates, closing
 
 **Files:** `tools/fabrica.c` (table, seam members, `-siccum`

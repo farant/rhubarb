@@ -28,10 +28,15 @@ if [ -z "$(ls -A build/atrium.o build/vitrea_macos.o 2>/dev/null)" ]; then
     exit 1
 fi
 
-source "$SCRIPT_DIR/corpus_infixum.sh"
-corpus_infixum_regenerare || exit 1
-source "$SCRIPT_DIR/briar_facies_capsula.sh"
-briar_facies_capsula_regenerare || exit 1
+# capsulae: actiones fabricae suae (1b T6) - sub executore
+# (FABRICA_AGIT) hoc scriptum SOLUM nectit (sanare eas ante ordinat);
+# manu vocatum eas, si recentiores fontes, regenerat
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    source "$SCRIPT_DIR/corpus_infixum.sh"
+    corpus_infixum_regenerare || exit 1
+    source "$SCRIPT_DIR/briar_facies_capsula.sh"
+    briar_facies_capsula_regenerare || exit 1
+fi
 
 # obiecta briaris (probationes exclusae)
 OBJ=""

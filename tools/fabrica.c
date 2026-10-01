@@ -473,6 +473,17 @@ _vestigium_addere (
     v->mensura    = (s64)status.st_size;
 }
 
+/* directorium VERUM (lstat: nexus symbolicus modum suum, non
+ * destinationis, refert) */
+interior b32
+_directorium_verum_est (
+    constans character* via)
+{
+    structura stat status;
+
+    redde lstat(via, &status) == 0 && S_ISDIR(status.st_mode);
+}
+
 /* arbor recursive (nexus symbolici non sequuntur; .git radicis
  * praetermittitur) */
 interior vacuum
@@ -506,7 +517,12 @@ _arborem_photographare (
                   chorda_ex_literis("/", piscina), piscina),
                   introitus->titulus, piscina)
             : chorda_transcribere(introitus->titulus, piscina);
-        si (introitus->genus == INTROITUS_DIRECTORIUM)
+        /* lstat: nexus symbolicus ad directorium NON sequitur (iterator
+         * eum ut directorium refert) - radices umbrae scripturae (1b
+         * T6) arborem veram per nexus ostendunt; secuta, scriptura vera
+         * bis appareret, sub via umbrae extra omne vestigium */
+        si (   introitus->genus == INTROITUS_DIRECTORIUM
+            && _directorium_verum_est(chorda_ut_cstr(via, piscina)))
         {
             _arborem_photographare(via, vestigia, piscina);
         }

@@ -29,15 +29,6 @@
     </mandatum>
     <vestigium via="briar/build"/>
     <vestigium via="build/test_logs/briar.log" forma="plagula"/>
-    <!-- suite briar corpus infixum quoque regenerat (mensuratum 1b T5) -->
-    <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
-    <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
-    <vestigium via="corpus.symbola.tsv" forma="plagula" communis="verum"/>
-    <vestigium via="corpus.versio" forma="plagula" communis="verum"/>
-    <vestigium via="corpus_silicis.toml" forma="plagula" communis="verum"/>
-    <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
-    <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
-    <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="fasciculus" via="briar/compile_probationes.sh"/>
     <exitus via="briar/build" provenientia="ignota"/>
   </actio>
@@ -182,46 +173,21 @@
        post P1) + quae installator ipse generat (facies, icon,
        MUTATIONES). corpus infixum per ingressus 'plagulae' (decisio
        Frani 2026-09-30: 'rebake post lib/' tegitur). -->
-  <actio titulus="briar" genus="institutio">
+  <!-- CAPSULAE BRIAR ET CORPUS (1b T6, Q40): olim intra briar_struere.sh
+       (et silex, spectator, suite briar) - nunc actiones suae, per
+       regenerationem iudicatae (radix umbra: tools/capsula_radicis.sh).
+       corpus.versio = SIGILLUM contentorum (Fran, optio a'). -->
+  <actio titulus="corpus_silicis" genus="generator" memorabilis="verum">
     <mandatum>
-      <verbum! (>./tools/briar_struere.sh
+      <verbum! (>./tools/corpus_infixum.sh
     </mandatum>
-    <praecondicio actio="aedilis"/>
-    <praecondicio actio="obiecta_radicis"/>
-    <praecondicio actio="obiecta_briar"/>
-    <vestigium via="build/aedilis/briar"/>
-    <vestigium via="bin/briar.dSYM"/>
-    <vestigium via="build/briar_aedificatio.c" forma="plagula"/>
-    <vestigium via="build/capsula_facies_briar.c" forma="plagula"/>
-    <vestigium via="build/capsula_facies_briar.h" forma="plagula"/>
-    <vestigium via="build/capsula_icon_briar.c" forma="plagula"/>
-    <vestigium via="build/capsula_icon_briar.h" forma="plagula"/>
-    <vestigium via="build/capsula_mutationes_briar.c" forma="plagula"/>
-    <vestigium via="build/capsula_mutationes_briar.h" forma="plagula"/>
-    <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
-    <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
-    <!-- corpus infixum (tools/corpus_infixum.sh, mensuratum 1b T5):
-         commune briar et silici donec T6 actionem suam ei dat -->
-    <vestigium via="corpus.symbola.tsv" forma="plagula" communis="verum"/>
-    <vestigium via="corpus.versio" forma="plagula" communis="verum"/>
-    <vestigium via="corpus_silicis.toml" forma="plagula" communis="verum"/>
+    <vestigium via="corpus.symbola.tsv" forma="plagula"/>
+    <vestigium via="corpus.versio" forma="plagula"/>
+    <vestigium via="corpus_silicis.toml" forma="plagula"/>
+    <!-- nexus silvae: cache arboris (incrementalis), alii quoque -->
     <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
     <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
     <vestigium via="silva/build" communis="verum"/>
-    <ingressus genus="manifestum" via="build/aedilis/briar/manifestum.stml"/>
-    <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="fasciculus" via="tools/briar_struere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
-    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
-    <ingressus genus="fasciculus" via="briar/MUTATIONES.md"/>
-    <ingressus genus="fasciculus" via="briar/icon/app-icon-transparent.png"/>
-    <ingressus genus="fasciculus" via="briar/facies/facies.css"/>
-    <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
-    <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
-    <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
-    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
-         post lib/' tectum - plagula lib/ extra clausuram mutata
-         corpus mutat, ergo et binarium -->
     <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
     <ingressus genus="plagulae" via="include" suffixa=".h"/>
     <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
@@ -239,6 +205,70 @@
     <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
     <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
     <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
+    <ingressus genus="fasciculus" via="tools/capsula_radicis.sh"/>
+    <exitus via="build/capsula_corpus_silicis.c" provenientia="regeneratio"/>
+    <exitus via="build/capsula_corpus_silicis.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_facies_briar" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/briar_facies_capsula.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.css"/>
+    <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
+    <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
+    <ingressus genus="fasciculus" via="tools/briar_facies_capsula.sh"/>
+    <ingressus genus="fasciculus" via="tools/capsula_radicis.sh"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <exitus via="build/capsula_facies_briar.c" provenientia="regeneratio"/>
+    <exitus via="build/capsula_facies_briar.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_icon_briar" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/briar_icon_capsula.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="briar/icon/app-icon-transparent.png"/>
+    <ingressus genus="fasciculus" via="tools/briar_icon_capsula.sh"/>
+    <ingressus genus="fasciculus" via="tools/capsula_radicis.sh"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <exitus via="build/capsula_icon_briar.c" provenientia="regeneratio"/>
+    <exitus via="build/capsula_icon_briar.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_mutationes_briar" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./tools/briar_mutationes_capsula.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="briar/MUTATIONES.md"/>
+    <ingressus genus="fasciculus" via="tools/briar_mutationes_capsula.sh"/>
+    <ingressus genus="fasciculus" via="tools/capsula_radicis.sh"/>
+    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
+    <exitus via="build/capsula_mutationes_briar.c" provenientia="regeneratio"/>
+    <exitus via="build/capsula_mutationes_briar.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="briar" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/briar_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <praecondicio actio="obiecta_radicis"/>
+    <praecondicio actio="obiecta_briar"/>
+    <vestigium via="build/aedilis/briar"/>
+    <vestigium via="bin/briar.dSYM"/>
+    <vestigium via="build/briar_aedificatio.c" forma="plagula"/>
+    <ingressus genus="manifestum" via="build/aedilis/briar/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/briar_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
+    <!-- capsulae: actiones suae (1b T6) - arcus ad eas -->
+    <ingressus genus="fasciculus" via="build/capsula_corpus_silicis.c"/>
+    <ingressus genus="fasciculus" via="build/capsula_corpus_silicis.h"/>
+    <ingressus genus="fasciculus" via="build/capsula_facies_briar.c"/>
+    <ingressus genus="fasciculus" via="build/capsula_facies_briar.h"/>
+    <ingressus genus="fasciculus" via="build/capsula_icon_briar.c"/>
+    <ingressus genus="fasciculus" via="build/capsula_icon_briar.h"/>
+    <ingressus genus="fasciculus" via="build/capsula_mutationes_briar.c"/>
+    <ingressus genus="fasciculus" via="build/capsula_mutationes_briar.h"/>
     <exitus via="bin/briar" provenientia="relatio"/>
   </actio>
   <actio titulus="briar_spectator" genus="institutio">
@@ -255,30 +285,11 @@
     <ingressus genus="fasciculus" via="tools/briar_spectator_struere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
-    <ingressus genus="fasciculus" via="briar/facies/facies.css"/>
-    <ingressus genus="fasciculus" via="briar/facies/facies.html"/>
-    <ingressus genus="fasciculus" via="briar/facies/facies.js"/>
-    <ingressus genus="fasciculus" via="briar/facies/md-html-facies.stml"/>
-    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
-         post lib/' tectum - plagula lib/ extra clausuram mutata
-         corpus mutat, ergo et binarium -->
-    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
-    <ingressus genus="plagulae" via="include" suffixa=".h"/>
-    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
-    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
-    <ingressus genus="plagulae" via="vendor"/>
-    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
-    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
-    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
-    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
-    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
-    <ingressus genus="fasciculus" via="canones.registrum"/>
-    <ingressus genus="fasciculus" via="natura/natura.canon"/>
-    <ingressus genus="fasciculus" via="aedilis.canon"/>
-    <ingressus genus="fasciculus" via="canon.canon"/>
-    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
-    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
-    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
+    <!-- capsulae: actiones suae (1b T6) -->
+    <ingressus genus="fasciculus" via="build/capsula_corpus_silicis.c"/>
+    <ingressus genus="fasciculus" via="build/capsula_corpus_silicis.h"/>
+    <ingressus genus="fasciculus" via="build/capsula_facies_briar.c"/>
+    <ingressus genus="fasciculus" via="build/capsula_facies_briar.h"/>
     <exitus via="bin/briar-spectator" provenientia="relatio"/>
   </actio>
   <actio titulus="silex" genus="institutio">
@@ -289,41 +300,16 @@
     <praecondicio actio="obiecta_radicis"/>
     <vestigium via="build/aedilis/silex"/>
     <vestigium via="bin/silex.dSYM"/>
-    <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
-    <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
-    <!-- corpus infixum (tools/corpus_infixum.sh, mensuratum 1b T5):
-         commune briar et silici donec T6 actionem suam ei dat -->
-    <vestigium via="corpus.symbola.tsv" forma="plagula" communis="verum"/>
-    <vestigium via="corpus.versio" forma="plagula" communis="verum"/>
-    <vestigium via="corpus_silicis.toml" forma="plagula" communis="verum"/>
-    <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
-    <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
+    <!-- silex obiecta silvae in silva/build compilat (mensuratum 1b T6) -->
     <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/silex/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/silex_struere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <ingressus genus="fasciculus" via="tools/provenientia_obiectum.sh"/>
-    <!-- corpus infixum (tools/corpus_infixum.sh, globi eius): 'rebake
-         post lib/' tectum - plagula lib/ extra clausuram mutata
-         corpus mutat, ergo et binarium -->
-    <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
-    <ingressus genus="plagulae" via="include" suffixa=".h"/>
-    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
-    <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
-    <ingressus genus="plagulae" via="vendor"/>
-    <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
-    <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
-    <ingressus genus="fasciculus" via="natura/cocta/semina.census"/>
-    <ingressus genus="fasciculus" via="tools/capsula_generare.c"/>
-    <ingressus genus="fasciculus" via="tools/corpus_infixum.sh"/>
-    <ingressus genus="fasciculus" via="canones.registrum"/>
-    <ingressus genus="fasciculus" via="natura/natura.canon"/>
-    <ingressus genus="fasciculus" via="aedilis.canon"/>
-    <ingressus genus="fasciculus" via="canon.canon"/>
-    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
-    <ingressus genus="fasciculus" via="silva/fontes/systema_c89.h"/>
-    <ingressus genus="fasciculus" via="silva/fontes/systema_posix.h"/>
+    <!-- capsula corporis: actio sua (1b T6) -->
+    <ingressus genus="fasciculus" via="build/capsula_corpus_silicis.c"/>
+    <ingressus genus="fasciculus" via="build/capsula_corpus_silicis.h"/>
     <exitus via="bin/silex" provenientia="relatio"/>
   </actio>
   <!-- plan 1a T5: generata radicis -->
@@ -825,6 +811,20 @@
     <pars actio="institutio_briar_spectator"/>
     <pars actio="institutio_silex"/>
     <pars actio="institutio_stml"/>
+  </compositum>
+  <compositum titulus="briar">
+    <pars actio="corpus_silicis"/>
+    <pars actio="capsula_facies_briar"/>
+    <pars actio="capsula_icon_briar"/>
+    <pars actio="capsula_mutationes_briar"/>
+    <pars actio="briar"/>
+    <pars actio="institutio_briar"/>
+  </compositum>
+  <compositum titulus="silex">
+    <pars actio="corpus_silicis"/>
+    <pars actio="capsula_silex_frons"/>
+    <pars actio="silex"/>
+    <pars actio="institutio_silex"/>
   </compositum>
   <compositum titulus="amalgamata">
     <pars actio="fontes_silva"/>

@@ -6,13 +6,22 @@
 # ergo capsula stala = versio mendax: regeneratur cum charta recentior
 # est aut tabula viam eius non nominat (exemplar:
 # tools/briar_icon_capsula.sh). Bloccus COMMUNIS cum briar_struere.sh.
+#
+# Manu vocatum: regeneratur solum cum fons recentior; sub iudice
+# (FABRICA_SCRIPTURA, radix umbra) et executore (FABRICA_AGIT) semper
+# (fabrica 1b T6, tools/capsula_radicis.sh).
+
+# shellcheck source=/dev/null
+source "$(dirname "${BASH_SOURCE[0]}")/capsula_radicis.sh"
+
 briar_mutationes_capsula_regenerare () {
+    : "${CAPSULA_RADIX:=$(pwd)}"
     local TABULA="build/capsula_mutationes_briar.c"
-    local CHARTA="briar/MUTATIONES.md"
 
     mkdir -p build
-    if [ -f "$TABULA" ] && ! [ "$CHARTA" -nt "$TABULA" ] \
-       && grep -qF "$CHARTA" "$TABULA"; then
+    local CHARTA="briar/MUTATIONES.md"
+    if [ "${CAPSULA_SEMPER:-0}" != 1 ] && [ -f "$TABULA" ] \
+       && ! [ "$CHARTA" -nt "$TABULA" ] && grep -qF "$CHARTA" "$TABULA"; then
         return 0
     fi
     cat > mutationes_briar.toml <<'TOML'
@@ -20,11 +29,13 @@ briar_mutationes_capsula_regenerare () {
 mutationes_briar_files = ["briar/MUTATIONES.md"]
 mutationes_briar_compress = false
 TOML
-    if [ ! -x bin/capsula_generare ]; then
-        ./compile_tools.sh capsula_generare >/dev/null || return 1
-    fi
-    ./bin/capsula_generare mutationes_briar.toml || return 1
-    mv capsula_mutationes_briar.h capsula_mutationes_briar.c build/ || return 1
+    capsula_radicis_generare mutationes_briar || return 1
     rm -f mutationes_briar.toml
     return 0
 }
+
+# actio fabricae 'capsula_mutationes_briar' (plan 1b T6): scriptum directe vocatum
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+    capsula_radicis_parare briar || exit 1
+    briar_mutationes_capsula_regenerare || exit 1
+fi

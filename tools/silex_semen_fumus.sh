@@ -104,8 +104,9 @@ echo "FUMUS: I. silex novum $TITULUS -vitrea"
     || deficere "aedificare.sh non genitum" "$AREA/novum.log"
 
 # Corpus infixum adhibitum esse PROBANDUM - si silex fabricam in
-# disco invenisset, porta semitam falsam probaret.
-grep -q "corpus commit=" "$AREA/novum.log" \
+# disco invenisset, porta semitam falsam probaret. Stampa corporis =
+# 'sigillum=...' (fabrica 1b T6; olim 'commit=... dies=...').
+grep -q "corpus sigillum=" "$AREA/novum.log" \
     || deficere "corpus infixum NON adhibitum (fabrica in disco
     inventa?) - porta semitam distributionis probare desiit" \
         "$AREA/novum.log"
