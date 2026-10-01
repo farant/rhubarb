@@ -191,7 +191,7 @@ already complies (it never emits DUPLEX: `derivare.c` does).
 - Q26: Shift+drag is left to the terminal.
 - Q27: lifecycle events are in the vocabulary and recorded.
 
-**PROPOSED (Fran decides before the plan):**
+**D1–D8: APPROVED by Fran 2026-10-01 ("that sounds great"), including D8 = (a), module 002 as Phase B.** (The text below is kept as proposed.)
 
 **D1 — the header split, the T4a way.** `include/eventus.h` holds the
 kinds, `clavis_t`, `MOD_*`, `mus_botton_t`, `Eventus` and
