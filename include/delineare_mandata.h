@@ -27,6 +27,7 @@
 #include "fenestra.h"
 #include "imago_typus.h"
 #include "mandatum.h"
+#include "modulus.h"
 
 
 /* ==================================================
@@ -66,5 +67,24 @@ delineare_mandata (
       TabulaPixelorum* tabula,
             ImagoFons  fons,
                vacuum* ctx);
+
+
+/* ==================================================
+ * Modulus scopi nativi (tessellatio D1, D4)
+ * ================================================== */
+
+/* Modulus quem hic scopus DECLARAT: cellula = cellula textus fenestrae
+ * (tabula_pixelorum_cellula_textus; textus scalam coetus non sequitur,
+ * V1), extensio = tabula. Textus ab hoc rasterizatore pictus intra
+ * modulus_textum_metiri(modulus, mensor) iacet (probatum). */
+Modulus
+delineare_mandata_modulus (
+    constans TabulaPixelorum* tabula);
+
+/* Mensor huius scopi: MODULUS_MENSOR_FONTIS (fons_6x8 runam quamque
+ * una cellula pingit). */
+ModulusMensor
+delineare_mandata_mensor (
+    vacuum);
 
 #endif /* DELINEARE_MANDATA_H */

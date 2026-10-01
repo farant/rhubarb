@@ -30,18 +30,22 @@ pingere_characterem_praecisum (
     {
         pixelum_y = y + ordo;
         /* Praetermittere si ordo extra aream praecisionis */
-        si (pixelum_y < praecisio_y || pixelum_y >= praecisio_y + praecisio_altitudo) perge;
+        si (   pixelum_y < praecisio_y
+            || pixelum_y >= praecisio_y + praecisio_altitudo) perge;
 
         bits = glypha[ordo];
-        per (columna = ZEPHYRUM; columna < FONS_LATITUDO_REDDENDI; columna++)
+        per (columna = ZEPHYRUM; columna
+            < FONS_LATITUDO_REDDENDI; columna++)
         {
             pixelum_x = x + columna;
             /* Praetermittere si columna extra aream praecisionis */
-            si (pixelum_x < praecisio_x || pixelum_x >= praecisio_x + praecisio_latitudo) perge;
+            si (   pixelum_x < praecisio_x
+                || pixelum_x >= praecisio_x + praecisio_latitudo) perge;
 
             si (bits & (0x80 >> columna))
             {
-                tabula_pixelorum_ponere_pixelum(tabula, pixelum_x, pixelum_y, color);
+                tabula_pixelorum_ponere_pixelum(tabula, pixelum_x,
+                    pixelum_y, color);
             }
         }
     }
@@ -67,14 +71,25 @@ tabula_pixelorum_pingere_characterem (
     {
         bits = glypha[ordo];
         /* Reddere usque ad VIII pixela sed solum procedere cursor per VI */
-        per (columna = ZEPHYRUM; columna < FONS_LATITUDO_REDDENDI; columna++)
+        per (columna = ZEPHYRUM; columna
+            < FONS_LATITUDO_REDDENDI; columna++)
         {
             si (bits & (0x80 >> columna))
             {
-                tabula_pixelorum_ponere_pixelum(tabula, x + columna, y + ordo, color);
+                tabula_pixelorum_ponere_pixelum(tabula, x + columna, y
+                    + ordo, color);
             }
         }
     }
+}
+
+vacuum
+tabula_pixelorum_cellula_textus (
+    i32* latitudo,
+    i32* altitudo)
+{
+    *latitudo = FONS_LATITUDO;
+    *altitudo = FONS_ALTITUDO;
 }
 
 vacuum
@@ -118,7 +133,8 @@ tabula_pixelorum_pingere_chordam (
                 glypha = fons_codepoint_ad_glypham(runa);
             }
 
-            tabula_pixelorum_pingere_characterem(tabula, x, y, (character)glypha, color);
+            tabula_pixelorum_pingere_characterem(tabula, x, y,
+                (character)glypha, color);
             x += FONS_LATITUDO;
         }
     }
@@ -145,7 +161,8 @@ tabula_pixelorum_pingere_characterem_scalatum (
     {
         bits = glypha[ordo];
         /* Reddere usque ad VIII pixela sed solum procedere cursor per VI */
-        per (columna = ZEPHYRUM; columna < FONS_LATITUDO_REDDENDI; columna++)
+        per (columna = ZEPHYRUM; columna
+            < FONS_LATITUDO_REDDENDI; columna++)
         {
             si (bits & (0x80 >> columna))
             {
@@ -155,8 +172,12 @@ tabula_pixelorum_pingere_characterem_scalatum (
                     per (sx = ZEPHYRUM; sx < scala; sx++)
                     {
                         tabula_pixelorum_ponere_pixelum(tabula,
-                                                         x + columna * scala + sx,
-                                                         y + ordo * scala + sy,
+                                                         x
+                                                             + columna * scala
+                                                             + sx,
+                                                         y
+                                                             + ordo * scala
+                                                             + sy,
                                                          color);
                     }
                 }
@@ -205,7 +226,8 @@ tabula_pixelorum_pingere_chordam_scalatam (
                 glypha = fons_codepoint_ad_glypham(runa);
             }
 
-            tabula_pixelorum_pingere_characterem_scalatum(tabula, x, y, (character)glypha, color, scala);
+            tabula_pixelorum_pingere_characterem_scalatum(tabula, x, y,
+                (character)glypha, color, scala);
             x += FONS_LATITUDO * scala;
         }
     }
@@ -260,11 +282,14 @@ tabula_pixelorum_pingere_chordam_praecisum (
             }
 
             /* Solum pingere si character saltem partim visibilis */
-            si (x + FONS_LATITUDO >= praecisio_x && y + FONS_ALTITUDO >= praecisio_y)
+            si (   x + FONS_LATITUDO >= praecisio_x
+                && y + FONS_ALTITUDO >= praecisio_y)
             {
-                pingere_characterem_praecisum(tabula, x, y, (character)glypha, color,
+                pingere_characterem_praecisum(tabula, x, y,
+                    (character)glypha, color,
                                                praecisio_x, praecisio_y,
-                                               praecisio_latitudo, praecisio_altitudo);
+                                               praecisio_latitudo,
+                                               praecisio_altitudo);
             }
             x += FONS_LATITUDO;
         }

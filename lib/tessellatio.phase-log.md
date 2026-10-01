@@ -74,3 +74,82 @@ pre-check with IGNOTUM (no manifest under build/aedilis). Running the
 SANATIO lines (`natura_struere`, `canon_struere`, then the three
 regenerators) fixed it, and git was unchanged. Recorded in the secunda
 memory.
+
+## T2 — the native adapter declares its metric (2026-10-01)
+
+**INTENTIO (D1: "the target declares").** The font header `fons_6x8.h`
+stays the ONE source of the numbers. It is regenerated wholesale by
+`tools/fons_merge.c` (`./fons_merge > include/fons_6x8.h`, defines
+included), so moving the constants elsewhere would make two sources of
+truth after the next merge. It also carries a static glyph table, so it
+can't be included cheaply. Instead:
+- fenestra's text drawer declares its cell:
+  `tabula_pixelorum_cellula_textus(&lat, &alt)`, in `fenestra.h` next
+  to the text functions, implemented in `fenestra_textus.c`, which
+  includes the font;
+- `delineare_mandata_modulus(tabula)` returns that cell plus the table
+  as the extent;
+- `delineare_mandata_mensor()` returns FONTIS.
+
+`delineare_mandata.h` now includes `modulus.h`, so every program that
+links the rasterizer also links modulus + runae (aedilis resolves this;
+pictor builds).
+
+**Red first** (the stubs gave cell 0 → 1 and the RUNARUM rule).
+**Green:**
+- direct values: 6×8, extent 64×48, FONTIS.
+- **A property tying measurement to drawing.** Each sample text is drawn
+  through the real adapter, then measured with the native metric:
+  - zero ink outside the measured box;
+  - the box is TIGHT: there is ink in its last cell column and its last
+    line.
+
+  The samples: "Ok", "Hg|", 中 (drawn as TOFU), e + U+0301, a two-line
+  text, an invalid byte, "été".
+- **The same containment for every drawable glyph** (printable ASCII +
+  Latin-1, 0x21–0xFF).
+- The `mandata_prima` image golden, byte-identical.
+
+**FINDING: two glyphs overflow their cell.** `>` (U+003E) and `}`
+(U+007D) put their tip in column 6 (bit 0x02). That pixel falls in the
+first column of the NEXT character's cell, so `>H` can touch. This is
+original HP 100LX data (the same in `fons_6x8.h.backup`). Every other
+glyph stays within 6 columns, which confirms the advance empirically.
+The test NAMES the two exceptions. Any new overflow fails, and so does
+an exception that stops overflowing (a font fix would update it).
+Whether to redraw them is Fran's call (open question).
+
+**Magic numbers replaced** (the plan's scope): `layout.c` (two copies of
+the click → character conversion) and `importatio_visus.c` now call
+`tabula_pixelorum_cellula_textus`.
+
+**NOT swept**, recorded instead (2026-10-01 inventory): the same 6/8
+cell constants remain in:
+- `widget.c:246` (plus a bare `/ (VIII)` at 248);
+- `pagina.c:176,325`;
+- `libro_paginarum.c:522`;
+- `navigator_entitatum.c:2405`;
+- `pinacotheca_visus.c:156,284,438`;
+- `calendario_visus.c:202` (plus `s32` copies at 399/1300);
+- `schirmata.c:200,1000,1481`.
+
+They mix `i32`/`s32`, inline initializers, and bare literals, so a regex
+can't tell a cell-size VI from any other 6. A complete sweep means
+reading each file. A partial one would look finished. These all belong
+to the older widget generation; a lint ("no literal cell metric outside
+the drawer") would be the durable fix (cf. features/021's lint idea).
+
+**Plants (compiling, 0 errors):**
+- A: the drawer declares 8 (REDDENDI). Caught by the direct value, the
+  tightness check, and the named-exceptions check: with an 8-wide box
+  the exceptions stop overflowing, which also fails.
+- B: the drawer ADVANCES by 8. Caught by containment and the image
+  golden.
+- C: the native mensor = RUNARUM. Caught by the rule check, 中's
+  tightness (TOFU fills only the first of the two measured cells), and
+  e + U+0301's containment (fenestra draws 2 cells, runae measures 1).
+
+Root suite 177/177. Formatting: the five touched files were written
+with `formator -scribere` before the final test runs. `layout.c` and
+`importatio_visus.c` reflowed wholesale (they were far from conformant;
+the pre-commit hook formats whole files anyway). No new Latin words.

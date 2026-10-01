@@ -391,3 +391,32 @@ delineare_mandata (
     }
     delineare_restituere_contextum(dctx);
 }
+
+
+/* ==================================================
+ * Modulus scopi nativi
+ * ================================================== */
+
+Modulus
+delineare_mandata_modulus (
+    constans TabulaPixelorum* tabula)
+{
+    i32 lat;
+    i32 alt;
+
+    tabula_pixelorum_cellula_textus(&lat, &alt);
+    redde modulus_creare((s32)lat, (s32)alt,
+        tabula ? (s32)tabula->latitudo : ZEPHYRUM,
+        tabula ? (s32)tabula->altitudo : ZEPHYRUM);
+}
+
+ModulusMensor
+delineare_mandata_mensor (
+    vacuum)
+{
+    ModulusMensor r;
+
+    r.genus     = MODULUS_MENSOR_FONTIS;
+    r.politica  = RUNAE_POLITICA_GRAPHEMATUM;
+    redde r;
+}

@@ -859,6 +859,16 @@ tabula_pixelorum_pingere_characterem (
           character  c,
                 i32  color);
 
+/* Cellula textus: progressus characteris et gradus lineae quibus
+ * tabula_pixelorum_pingere_chordam utitur (fons_6x8: VI x VIII; scala
+ * I). Fons solus veritatem fert - hic declaratur, ne numeri VI et VIII
+ * alibi repetantur (tessellatio T2).
+ */
+vacuum
+tabula_pixelorum_cellula_textus (
+    i32* latitudo,
+    i32* altitudo);
+
 /* Pingere chordam
  *
  * tabula: tabula pixelorum

@@ -122,7 +122,8 @@ _praeparare_imaginem (
         /* Allocare buffer pro RGBA dithered */
         mensura = (memoriae_index)(visus->preview_latitudo *
                                    visus->preview_altitudo * IV);
-        visus->rgba_dithered = (i8*)piscina_allocare(visus->piscina, mensura);
+        visus->rgba_dithered = (i8*)piscina_allocare(visus->piscina,
+            mensura);
         visus->necesse_redithering = VERUM;
     }
 }
@@ -195,9 +196,10 @@ importatio_visus_creare (
     }
 
     visus->piscina = piscina;
-    visus->piscina_scratch = piscina_generare_dynamicum("importatio_scratch", M * X);
-    visus->habet_imaginem = FALSUM;
-    visus->activus = FALSUM;
+    visus->piscina_scratch =
+        piscina_generare_dynamicum("importatio_scratch", M * X);
+    visus->habet_imaginem  = FALSUM;
+    visus->activus         = FALSUM;
 
     /* Initiare canvas dimensions (will be set properly in reddere) */
     visus->canvas_latitudo = 0;
@@ -456,8 +458,10 @@ importatio_visus_reset_view (
     /* Reset crop center to center of source image */
     si (visus->habet_imaginem)
     {
-        visus->crop_center_x = (i32)visus->imago_originalis.latitudo / II;
-        visus->crop_center_y = (i32)visus->imago_originalis.altitudo / II;
+        visus->crop_center_x = (i32)visus->imago_originalis.latitudo
+            / II;
+        visus->crop_center_y = (i32)visus->imago_originalis.altitudo
+            / II;
     }
     visus->dragging = FALSUM;
 
@@ -501,15 +505,18 @@ importatio_visus_reddere (
         redde;
     }
 
-    char_w = VI * scala;  /* 6 pixels per character width */
-    char_h = VIII * scala; /* 8 pixels per character height */
+    /* cellula textus fenestrae (fons_6x8), scalata */
+    tabula_pixelorum_cellula_textus(&char_w, &char_h);
+    char_w = char_w * scala;
+    char_h = char_h * scala;
 
     /* Update canvas dimensions from widget size (with small border) */
     {
-        i32 padding_top = 1;
-        i32 padding_bottom = 2;
-        i32 new_canvas_w = latitudo * char_w;
-        i32 new_canvas_h = altitudo * char_h - padding_top - padding_bottom;
+        i32 padding_top     = 1;
+        i32 padding_bottom  = 2;
+        i32 new_canvas_w    = latitudo * char_w;
+        i32 new_canvas_h = altitudo * char_h - padding_top
+            - padding_bottom;
 
         /* If canvas size changed, need to re-prepare */
         si (   new_canvas_w != (i32)visus->canvas_latitudo
@@ -538,7 +545,8 @@ importatio_visus_reddere (
     /* Si non activus, monstrare message */
     si (!visus->activus)
     {
-        label = chorda_ex_literis("Nulla importatio activa", visus->piscina);
+        label = chorda_ex_literis("Nulla importatio activa",
+            visus->piscina);
         tabula_pixelorum_pingere_chordam_scalatam(
             tabula,
             px + (pw / II) - ((i32)label.mensura * char_w / II),
@@ -550,7 +558,8 @@ importatio_visus_reddere (
     }
 
     /* Delineare imaginem dithered */
-    si (visus->dithering_fructus.successus && visus->rgba_dithered != NIHIL)
+    si (   visus->dithering_fructus.successus
+        && visus->rgba_dithered != NIHIL)
     {
         /* Center image in panel */
         dest_x = px + (pw - visus->preview_latitudo) / II;
@@ -564,7 +573,8 @@ importatio_visus_reddere (
                 i32 src_idx, dx, dy;
                 insignatus character r, g, b;
 
-                src_idx = (img_y * visus->preview_latitudo + img_x) * IV;
+                src_idx = (img_y * visus->preview_latitudo
+                    + img_x) * IV;
 
                 dx = dest_x + img_x;
                 dy = dest_y + img_y;
@@ -577,9 +587,15 @@ importatio_visus_reddere (
                 {
                     i32 dest_idx_pixel;
                     dest_idx_pixel = dy * (i32)tabula->latitudo + dx;
-                    r = (insignatus character)visus->rgba_dithered[src_idx + 0];
-                    g = (insignatus character)visus->rgba_dithered[src_idx + 1];
-                    b = (insignatus character)visus->rgba_dithered[src_idx + 2];
+                    r =
+                        (insignatus character)visus->rgba_dithered[src_idx
+                            + 0];
+                    g =
+                        (insignatus character)visus->rgba_dithered[src_idx
+                            + 1];
+                    b =
+                        (insignatus character)visus->rgba_dithered[src_idx
+                            + 2];
                     tabula->pixela[dest_idx_pixel] = (i32)RGB(r, g, b);
                 }
             }
@@ -656,8 +672,10 @@ importatio_visus_tractare_eventum (
         /* Clamp crop center to valid range */
         si (new_center_x < crop_w / II) new_center_x = crop_w / II;
         si (new_center_y < crop_h / II) new_center_y = crop_h / II;
-        si (new_center_x > src_w - crop_w / II) new_center_x = src_w - crop_w / II;
-        si (new_center_y > src_h - crop_h / II) new_center_y = src_h - crop_h / II;
+        si (new_center_x > src_w - crop_w / II) new_center_x = src_w
+                                                    - crop_w / II;
+        si (new_center_y > src_h - crop_h / II) new_center_y = src_h
+                                                    - crop_h / II;
 
         /* Apply immediately - no debounce (values are clamped positive) */
         visus->crop_center_x          = (i32)new_center_x;
@@ -694,7 +712,8 @@ importatio_visus_obtinere_fructum (
                 i32*  altitudo,
              chorda*  titulus)
 {
-    si (visus == NIHIL || !visus->activus || !visus->dithering_fructus.successus)
+    si (   visus == NIHIL || !visus->activus
+        || !visus->dithering_fructus.successus)
     {
         redde FALSUM;
     }
