@@ -89,7 +89,9 @@ echo "aedificatum: bin/briar"
 # institutio: exemplum in ~/.bin (in PATH) - '#!/usr/bin/env briar'
 # eum ibi invenit; rm ante cp (macOS binarium superscriptum SIGKILL
 # dat - inodus recens obligatorius)
-mkdir -p "$HOME/.bin"
-rm -f "$HOME/.bin/briar"
-cp bin/briar "$HOME/.bin/briar"
-echo "institutum: ~/.bin/briar"
+# institutio in ~/.bin: actio fabricae sua ('institutio_briar', 1b T5) -
+# sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
+# etiam instituit
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    ./tools/instituere.sh bin/briar || exit 1
+fi

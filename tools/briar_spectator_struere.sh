@@ -65,7 +65,9 @@ clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
 echo "aedificatum: bin/briar-spectator"
 
 # rm ante cp: macOS binarium superscriptum SIGKILL dat
-mkdir -p "$HOME/.bin"
-rm -f "$HOME/.bin/briar-spectator"
-cp bin/briar-spectator "$HOME/.bin/briar-spectator"
-echo "institutum: ~/.bin/briar-spectator"
+# institutio in ~/.bin: actio fabricae sua ('institutio_briar_spectator', 1b T5) -
+# sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
+# etiam instituit
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    ./tools/instituere.sh bin/briar-spectator || exit 1
+fi

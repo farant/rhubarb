@@ -548,6 +548,7 @@ _actio (
         (i32)magnitudo(FabricaExitus));
     actio->sedes        = chorda_ex_literis("fixa:1", piscina);
     actio->memorabilis  = FALSUM;
+    actio->celer        = FALSUM;
     actio->praecondiciones = xar_creare(piscina,
         (i32)magnitudo(chorda));
     actio->vestigia = xar_creare(piscina,
@@ -2892,6 +2893,42 @@ s32 principale (vacuum)
             ordo, ZEPHYRUM))->titulus, "G");
         CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
             actiones, I))->dependentiae), ZEPHYRUM);
+    }
+
+
+    /* ==================================================
+     * PROBARE: celer="verum" - regeneratio vilis sub iudicio celeri
+     * (plan 1b T5)
+     * ================================================== */
+
+    {
+          DiscusFictus  discus;
+         FabricaSutura  sutura;
+          FabricaActio* a;
+       FabricaIudicium  iudicium;
+
+        imprimere("\n--- Probans celer ---\n");
+        _discum_parare(&discus, &sutura, piscina);
+        _ponere(&discus, "a", "a\n");
+        _ponere(&discus, "X", "vetus\n");
+        _scriptum_addere(&discus, "gen_a", "X", NIHIL, "novum\n", 0,
+            FALSUM);
+        a = _actio_scripta(piscina, "A", "gen_a", "a", "X",
+            "regeneratio");
+        /* sine celer: iudicium celere regenerationem omittit */
+        iudicium = fabrica_iudicare(&sutura, a,
+            (FabricaExitus*)xar_obtinere(a->exitus, ZEPHYRUM), FALSUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status,
+            (i32)FABRICA_NON_IUDICATUM);
+        CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
+        /* celer: regeneratio etiam sub celeri -> STALUM verum */
+        a->celer = VERUM;
+        iudicium = fabrica_iudicare(&sutura, a,
+            (FabricaExitus*)xar_obtinere(a->exitus, ZEPHYRUM), FALSUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_STALUM);
+        CREDO_AEQUALIS_I32(discus.cursus, I);
     }
 
 

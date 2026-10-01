@@ -46,6 +46,10 @@
       <optio>formatio</optio>
       <optio>institutio</optio>
     </attributum>
+    <attributum nomen="celer" genus="veritas"
+      nota="verum: regeneratio tam vilis ut sub iudicio CELERI quoque
+            currat (copiae ~/.bin: uncus sessionis eas videt). Absens =
+            falsum: sub celeri NON IUDICATUM (plan 1b T5)"/>
     <attributum nomen="memorabilis" genus="veritas"
       nota="verum: ingressus PROBABILITER pleni (clausurae manifestis
             aedilis derivatae) - verificatio memorata (build/fabrica.db)

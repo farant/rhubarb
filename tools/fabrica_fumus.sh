@@ -36,6 +36,10 @@
 #        (plan 1b T4)
 #   XXIII sanare: FABRICA_AGIT=1 in actis (scripta productores
 #        nidificatos omittunt; plan 1b T5 D3/D4)
+#   XXIV copia ~/.bin (HOME in radice temporaria - ~/.bin VERUM numquam
+#        tangitur): absens -> STALUM sub celeri; sanare -> instituta;
+#        binarium mutatum -> STALUM sub celeri; copia impossibilis ->
+#        FRACTUM per exitum (plan 1b T5, Q42)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -215,6 +219,29 @@ printf 'if [ -z "$FABRICA_SCRIPTURA" ] && [ "${FABRICA_AGIT:-}" != 1 ]; then ech
 (cd "$T/r" && "$F" sanare b) > "$T/o" 2>&1; rc=$?
 if [ "$rc" -eq 0 ] && grep -q '^SANATUM *g ' "$T/o"; then echo "  XXIII FABRICA_AGIT in actis          OK"; else echo "  XXIII FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
 
+# XXIV (1b T5): copia ~/.bin; HOME redirectus, ~/.bin verum custoditur
+VERUM_ANTE="$(shasum "$HOME/.bin/briar" 2>/dev/null)"
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+mkdir -p "$T/r/bin" "$T/r/tools" "$T/domus"
+cp tools/instituere.sh "$T/r/tools/instituere.sh"
+printf 'binarium I\n' > "$T/r/bin/x"
+printf '<aedificatio>\n  <actio titulus="institutio_x" genus="institutio" celer="verum">\n    <mandatum>\n      <verbum! (>./tools/instituere.sh\n      <verbum! (>bin/x\n    </mandatum>\n    <ingressus genus="fasciculus" via="bin/x"/>\n    <exitus via="~/.bin/x" scriptura="x" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && HOME="$T/domus" "$F" iudicare) > "$T/o" 2>&1; rc1=$?
+(cd "$T/r" && HOME="$T/domus" "$F" sanare) > "$T/o2" 2>&1; rc2=$?
+COPIA=1; cmp -s "$T/r/bin/x" "$T/domus/.bin/x" && COPIA=0
+(cd "$T/r" && HOME="$T/domus" "$F" iudicare) > "$T/o3" 2>&1; rc3=$?
+printf 'binarium II\n' > "$T/r/bin/x"
+(cd "$T/r" && HOME="$T/domus" "$F" iudicare) > "$T/o4" 2>&1; rc4=$?
+chmod 555 "$T/domus/.bin"
+(cd "$T/r" && HOME="$T/domus" "$F" sanare) > "$T/o5" 2>&1; rc5=$?
+chmod 755 "$T/domus/.bin"
+VERUM_POST="$(shasum "$HOME/.bin/briar" 2>/dev/null)"
+if [ "$rc1" -eq 1 ] && grep -q '^STALUM ~/.bin/x - artificium absens' "$T/o" \
+   && [ "$rc2" -eq 0 ] && [ "$COPIA" -eq 0 ] \
+   && [ "$rc3" -eq 0 ] && [ "$rc4" -eq 1 ] && grep -q '^STALUM ~/.bin/x' "$T/o4" \
+   && [ "$rc5" -eq 1 ] && grep -q '^FRACTUM *institutio_x .*exitus 1' "$T/o5" \
+   && [ "$VERUM_ANTE" = "$VERUM_POST" ]; then echo "  XXIV copia ~/.bin (HOME redirectus)   OK"; else echo "  XXIV FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5)"; cat "$T/o" "$T/o2" "$T/o3" "$T/o4" "$T/o5"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXIII/XXIII)"
+echo "fumus fabricae: sanum (XXIV/XXIV)"
 exit 0

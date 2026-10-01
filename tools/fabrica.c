@@ -77,6 +77,36 @@
  * Sutura vera
  * ================================================== */
 
+/* '~/X' -> $HOME/X (exitus extra arborem: copiae ~/.bin, 1b T5);
+ * via nominata in declaratione '~/...' manet */
+interior constans character*
+_domum_expandere (
+    constans character* via,
+               Piscina* piscina)
+{
+    constans character* domus;
+             character* plena;
+
+    si (via[0] != '~' || via[1] != '/')
+    {
+        redde via;
+    }
+    domus = getenv("HOME");
+    si (domus == NIHIL)
+    {
+        redde via;
+    }
+    plena = (character*)piscina_allocare(piscina,
+        (memoriae_index)(strlen(domus) + strlen(via)));
+    si (plena == NIHIL)
+    {
+        redde via;
+    }
+    strcpy(plena, domus);
+    strcat(plena, via + I);
+    redde plena;
+}
+
 interior b32
 _legere (
                 vacuum* datum,
@@ -85,6 +115,7 @@ _legere (
                 chorda* contentum_out)
 {
     (vacuum)datum;
+    via = _domum_expandere(via, piscina);
     si (!filum_existit(via) || filum_directorium_existit(via))
     {
         redde FALSUM;

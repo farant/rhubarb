@@ -101,7 +101,12 @@ nomen structura {
                      Xar* ingressus;  /* FabricaIngressus */
                      Xar* exitus;     /* FabricaExitus */
                   chorda  sedes;      /* "plagula:linea" */
-                     b32  memorabilis; /* memorabilis="verum": ingressus
+                     b32  celer;       /* celer="verum": regeneratio
+                                        * tam vilis ut sub iudicio
+                                        * CELERI quoque currat (copiae
+                                        * ~/.bin - uncus sessionis eas
+                                        * videt; plan 1b T5) */
+                     b32 memorabilis; /* memorabilis="verum": ingressus
                                         * PROBABILITER pleni (clausurae
                                         * manifestis derivatae) -
                                         * verificatio memorata

@@ -757,6 +757,16 @@ if (a)), `aedificatio.canon`, root `aedificatio.stml`,
   sanare installata` (or a title). Worklog. Gates: radix, fabrica,
   fabrica-fumus, compile_tools/briar/silex suites as owed.
 
+> **Executed 2026-10-01** in five commits (A1 d8327b36, A2 4da395a9,
+> B1 507f0ace, B2 below). Beyond the plan: ordering edges by places
+> (manifest closures) and the one bootstrap cycle broken by
+> `instrumentum`; families merged with the whole provenance directory
+> excluded from digests; D5/D6 were undeclared GENERATED outputs, not
+> transient edits; mechanism objects as `ignota` preconditions too.
+> Names (Fran): `--obiecta` (`-obiecta` for amalgamare.sh), `celer`,
+> FABRICA_AGIT. Done check: 70/70 actions, 0 writes outside a footprint
+> (warm). 317 → 337 assertions; fumus XXIII–XXIV.
+
 ### Task T6: briar decomposed
 
 **Opens with a measurement and a decision (Fran):**

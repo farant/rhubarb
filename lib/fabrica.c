@@ -1428,7 +1428,8 @@ _regeneratione_iudicare (
         redde _iudicium(exitus->via, FABRICA_RECENS,
             chorda_ex_literis("memoria", piscina));
     }
-    si (!plenus || sutura->currere == NIHIL)
+    /* celer: regeneratio omissa nisi actio 'celer' (vilis) sit */
+    si ((!plenus && !actio->celer) || sutura->currere == NIHIL)
     {
         redde _iudicium(exitus->via, FABRICA_NON_IUDICATUM,
             chorda_ex_literis("celer: regeneratio omissa", piscina));
@@ -1726,6 +1727,20 @@ fabrica_declarationes_legere (
             redde _recusare(piscina, causa_out, actio.sedes,
                 "genus actionis ignotum",
                 valor != NIHIL ? *valor : nihil);
+        }
+        valor = stml_attributum_capere(nodus, "celer");
+        si (valor == NIHIL || chorda_aequalis_literis(*valor, "falsum"))
+        {
+            actio.celer = FALSUM;
+        }
+        alioquin si (chorda_aequalis_literis(*valor, "verum"))
+        {
+            actio.celer = VERUM;
+        }
+        alioquin
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "celer nec verum nec falsum", *valor);
         }
         valor = stml_attributum_capere(nodus, "memorabilis");
         si (valor == NIHIL || chorda_aequalis_literis(*valor, "falsum"))

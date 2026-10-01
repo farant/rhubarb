@@ -145,7 +145,6 @@
     <praecondicio actio="obiecta_radicis"/>
     <vestigium via="build/aedilis/stml"/>
     <vestigium via="bin/stml.dSYM"/>
-    <vestigium via="~/.bin/stml" forma="plagula"/>
     <ingressus genus="manifestum" via="build/aedilis/stml/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/stml_struere.sh"/>
@@ -193,7 +192,6 @@
     <vestigium via="build/aedilis/briar"/>
     <vestigium via="bin/briar.dSYM"/>
     <vestigium via="build/briar_aedificatio.c" forma="plagula"/>
-    <vestigium via="~/.bin/briar" forma="plagula"/>
     <vestigium via="build/capsula_facies_briar.c" forma="plagula"/>
     <vestigium via="build/capsula_facies_briar.h" forma="plagula"/>
     <vestigium via="build/capsula_icon_briar.c" forma="plagula"/>
@@ -252,7 +250,6 @@
     <praecondicio actio="obiecta_briar"/>
     <vestigium via="build/aedilis/briar_spectator"/>
     <vestigium via="bin/briar-spectator.dSYM"/>
-    <vestigium via="~/.bin/briar-spectator" forma="plagula"/>
     <ingressus genus="manifestum" via="build/aedilis/briar_spectator/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/briar_spectator_struere.sh"/>
@@ -292,7 +289,6 @@
     <praecondicio actio="obiecta_radicis"/>
     <vestigium via="build/aedilis/silex"/>
     <vestigium via="bin/silex.dSYM"/>
-    <vestigium via="~/.bin/silex" forma="plagula"/>
     <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
     <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
     <!-- corpus infixum (tools/corpus_infixum.sh, mensuratum 1b T5):
@@ -770,6 +766,46 @@
     <exitus via="probationes/capsula_assets.h" provenientia="regeneratio"/>
   </actio>
 
+  <!-- INSTITUTIONES (1b T5, Q42): copia ~/.bin actio sua - fasciculus
+       per regenerationem (generator 'cp') iudicatus, celer (uncus
+       sessionis copiam post binarium manentem videt). Nexus (relatio)
+       et copia: genera diversa, actiones diversae. -->
+  <actio titulus="institutio_briar" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/briar
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/briar"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/briar" scriptura="briar" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="institutio_briar_spectator" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/briar-spectator
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/briar-spectator"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/briar-spectator" scriptura="briar-spectator" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="institutio_silex" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/silex
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/silex"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/silex" scriptura="silex" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="institutio_stml" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/stml
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/stml"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/stml" scriptura="stml" provenientia="regeneratio"/>
+  </actio>
   <!-- COMPOSITA (plan 1b T2): artificia ex artificiis, iudicium =
        pessimum partium. 'bin/fabrica iudicare installata' - partes et
        linea COMPOSITUM post eas. Partes trans subsystemata. -->
@@ -785,6 +821,10 @@
     <pars actio="briar"/>
     <pars actio="briar_spectator"/>
     <pars actio="silex"/>
+    <pars actio="institutio_briar"/>
+    <pars actio="institutio_briar_spectator"/>
+    <pars actio="institutio_silex"/>
+    <pars actio="institutio_stml"/>
   </compositum>
   <compositum titulus="amalgamata">
     <pars actio="fontes_silva"/>

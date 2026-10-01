@@ -785,3 +785,37 @@ T6 gives the corpus its own action. The blind-link bug class shown
 live: a planted briar source edit makes obiecta_briar rebuild the
 stale .o BEFORE the link (PRAEPARATUM), where before the installer
 linked the old object under a digest naming the new source.
+
+## 2026-10-01 — plan 1b T5, part B2: ~/.bin copies, celer, ~ expansion (T5 done)
+
+The four `~/.bin` installers split (Q42): the link stays the
+`_struere.sh` action (relatio); the copy is `institutio_X` (file,
+regeneratio, memorabilis, celer) running new tools/instituere.sh
+(`rm` then `cp || exit 1`; under FABRICA_SCRIPTURA it copies into the
+scratch dir). The `_struere.sh` scripts call instituere.sh only when NOT
+under FABRICA_AGIT, so a human running them by hand still installs.
+`celer="verum"` (Fran): regeneration cheap enough to run in the QUICK
+judge too - the session hook now sees ~/.bin lagging bin/ (quick judge
+of installata incl. 4 copies: 2.1 s). `~/` paths expand from HOME in the
+tool's read seam (`_domum_expandere`). installata = 19 parts.
+Fumus XXIV with HOME in the temp root: absent -> STALUM under celer;
+sanare creates ~/.bin and copies; changed bin/x -> STALUM under celer;
+unwritable ~/.bin -> FRACTUM by exit code (the masked-cp class of spec
+par. 0.6 can no longer exit 0); the real ~/.bin/briar digest checked
+unchanged. Red against the T2 judge.
+
+Plant lesson: the first ~-expansion plant (call removed) did NOT build -
+the now-unused static function is an error under the build flags - so
+fabrica_struere failed silently (output suppressed), the OLD bin/fabrica
+stayed, XXIV stayed green and XI went red on the half-built judge.
+`clang -fsyntax-only` does not see -Werror=unused-function: a plant is
+checked by BUILDING it with the real flags. Valid plant (short-circuit
+inside the function): XXIV only.
+
+T5 done check: the T4 measurement re-run under FABRICA_AGIT over all 70
+actions (64 - 4 merged + latina_datum + 3 mechanism stores + 2 object
+stores + 4 copies), every write checked against the declared footprint
+with the core's locus rules (scratchpad vestigia_probare.py): 70/70 exit
+0, 0 writes outside a footprint. Warm only - cold paths (the corpus,
+silva/build) were measured separately during B1; a cold whole-tree
+measurement belongs with T6/T7.

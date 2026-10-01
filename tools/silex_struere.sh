@@ -136,7 +136,9 @@ echo "aedificatum: bin/silex"
 # institutio: exemplum in ~/.bin (in PATH) - proiecta silicetum
 # silicem sine via fabricae vocant; rm ante cp (macOS binarium
 # superscriptum SIGKILL dat - inodus recens obligatorius)
-mkdir -p "$HOME/.bin"
-rm -f "$HOME/.bin/silex"
-cp bin/silex "$HOME/.bin/silex"
-echo "institutum: ~/.bin/silex"
+# institutio in ~/.bin: actio fabricae sua ('institutio_silex', 1b T5) -
+# sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
+# etiam instituit
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    ./tools/instituere.sh bin/silex || exit 1
+fi
