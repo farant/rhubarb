@@ -1084,6 +1084,12 @@
     <forma textus="nanosecundae" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="nanosecundas" casus="accusativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="microsecunda" lingua="latina" classis="substantivum" nota="vox technica (micro + secunda, pars 10^-6 secundi), soror nanosecundae: mora dormiendi; sedes fenestra_dormire(i32 microsecundae) in include/fenestra_tempus.h">
+    <forma textus="microsecunda" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="microsecundae" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="microsecundarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="microsecundis" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="scalaris" lingua="latina" classis="adiectivum" nota="scalaris, -e (classice: scalarum, gradibus pertinens; WORDS caret): sensu mathematico valor SIMPLEX, non compositus (chorda, numerus, boolean, tempus - non tabula, non series); sedes toml/fontes/toml_scalaris.{h,c} (toml_scalaria_iudicare, toml_scalarem_coquere)">
     <forma textus="scalaris" casus="nominativus" numerus="singularis"/>
     <forma textus="scalare" casus="nominativus" numerus="singularis" genus="neutrum"/>

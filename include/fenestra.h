@@ -11,6 +11,7 @@
 #include "fasti.h"   /* Mora: duratio millisecundorum */
 #include "tabula_pixelorum.h"   /* typus, pixela, textus (puri) */
 #include "eventus.h"            /* vocabularium initus (purum) */
+#include "fenestra_tempus.h"     /* horologium platformae (purum) */
 
 
 /* ==================================================
@@ -615,42 +616,5 @@ fenestra_praesentare_pixela (
            Fenestra* fenestra,
     TabulaPixelorum* tabula);
 
-
-/* ==================================================
- * Functiones Temporis Platformae
- * ================================================== */
-
-/* Obtinere pulsus temporis ad altam praecisionem
- *
- * Reddit: numerus pulsuum ex tempore arbitrario
- */
-i64
-fenestra_tempus_obtinere_pulsus (
-    vacuum);
-
-/* Obtinere frequentiam horologii
- *
- * Reddit: pulsus per secundum
- */
-f64
-fenestra_tempus_obtinere_frequentiam (
-    vacuum);
-
-/* Tempus currens in millisecundis - pulsus * M / frequentia. Sedes
- * UNICA horologii pro eventibus (ludus: tempus est datum in eventu).
- *
- * Reddit: millisecundae ex tempore arbitrario (eodem ac pulsus)
- */
-s64
-fenestra_tempus_ms (
-    vacuum);
-
-/* Dormire pro microsecundis datis
- *
- * microsecundae: numerus microsecundarum dormire
- */
-vacuum
-fenestra_dormire (
-    i32 microsecundae);
 
 #endif /* FENESTRA_H */

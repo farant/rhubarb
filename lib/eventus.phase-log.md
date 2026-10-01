@@ -214,3 +214,108 @@ was deleted, and the test is the plan's ORIGINAL oracle: reading the
 recording and writing it back gives the file itself. Plant D (the sparse
 rule broken) is still caught. probatio_pictor_toy (which replays this
 file) is green.
+
+## A3a — keys and text from fenestra (2026-10-01)
+
+**Design change from the plan.** The plan said to test "through the
+injection API", but injected NSEvents need a live window + event loop,
+which can't run headless (`probatio_fenestra.c` is an interactive loop).
+So it is a pure core + thin Cocoa glue, as the house does elsewhere. Two
+new PURE modules (tagged `<aedilis nexus="purus"/>`; the nexus check is
+now 13/13):
+- **`claves_physicae`:** `claves_codex_ex_macos(s32)`, a switch over
+  Apple's kVK_* constants (cross-checked against fenestra's
+  `convertere_clavem`). 114 = kVK_Help = the PC Insert position.
+  Phase B adds kitty key numbers here.
+- **`eventus_cauda`:** the event queue (ring of 256) + a per-poll text
+  buffer (64 KiB). `eventus_cauda_lectio_incipit` resets the buffer ONLY
+  if the queue is empty (views of unextracted events stay valid).
+  `eventus_caudae_textum_impellere` COPIES the bytes; on overflow it
+  truncates with `truncatum`; a full ring increments `amissa`. The
+  terminal source (phase B) will reuse it.
+
+**fenestra (`fenestra_macos.m`):**
+- the ring is replaced by `EventusCauda`;
+- the Fenestra struct now comes from `piscina_allocare_ordinatum(..., VIII)`
+  (plain `piscina_allocare` is byte-packed, and the struct holds
+  pointers and s64), with the queue explicitly initialised;
+- `lectio_incipit` runs at each poll;
+- one key path `_clavem_impellere`:
+  - codex (physical);
+  - runa = the unshifted codepoint;
+  - actio (ITERATA from `isARepeat`, SOLUTA on release);
+  - side bits already present in the raw `modifierFlags`;
+  - `typus` kept;
+  - then a TEXT event (same tempus), unless control, Apple private-use
+    (F700..F8FF: arrows, F-keys) or under Cmd/Ctrl (shortcuts aren't
+    typing).
+
+**Unshifted rune: two attempts.** `charactersIgnoringModifiers` ignores
+everything EXCEPT Shift ("A" for Shift+a).
+- The first fix was Carbon's `UCKeyTranslate`. It needs
+  `-framework Carbon`, and about eight scripts link fenestra by hand
+  (compile_tests, compile_library, silex (lib/silex.c), briar
+  spectator, vitrea …), so adding a framework would have rippled into a
+  released product. Reverted.
+- `-[NSEvent charactersByApplyingModifiers:0]` (AppKit, macOS 10.15+)
+  gives the same answer with Cocoa alone.
+
+**Look tool:** `tools/auscultator.c` + `tools/auscultator.sh` (built by
+aedilis) open a window and print each event as one STML line.
+
+**Tests:**
+- `probatio_claves_physicae`: all 83 kVK pairs, AND every one of our 83
+  codes reachable (no gaps), unknowns → IGNOTUS;
+- `probatio_eventus_cauda`: FIFO, full → amissa, text COPIED, views
+  survive a non-empty poll, truncation.
+
+**Plants (compiling, 0 errors), all caught:**
+- buffer always reset;
+- text not copied;
+- amissa not counted;
+- Digit5/6 swapped (wrong mapping AND an unreachable code).
+
+**Fran's look (2026-10-01): "everything looks okay".** The log
+confirmed:
+- a → `codex KeyA runa 97` + TEXT "a";
+- Shift+a → runa 97 (unshifted), TEXT "A", left-Shift bit 0x2;
+- Ctrl+I → `KeyI`, no text (≠ Tab: the lossless point);
+- Tab → no text;
+- Cmd+C → no text, left-Cmd bit 0x8;
+- HOLD a → ITERATA after ~500 ms, then every ~84 ms (macOS defaults),
+  each with its TEXT event; SOLUTA on release.
+
+**Findings:**
+- **Dead keys do NOT compose through raw NSEvents.** Option+e carries
+  EMPTY characters (typus 0, no text). é needs the Cocoa text-input
+  system (NSTextInputClient / interpretKeyEvents:). Native `praeeditio`
+  stays FALSE until then. Park (terminal-planning parks/004).
+- Bit 0x100 is set on every event: macOS's always-on "non-coalesced"
+  flag, harmless.
+- The pointer jumps OUTSIDE the window (x 289 → 939 as it leaves
+  600×400): pre-existing, events from outside the content view. That's
+  for A3b, with coalescing.
+
+**A3a, the first commit attempt failed. Finding: `tempus` linked all of
+Cocoa.** aedilis's gate: 10 tests (actor, http, hospitium, tractator,
+vitrea_servus, …) failed to LINK, missing eventus_cauda / utf8 symbols.
+They reach `fenestra_macos.m` not through fenestra.h but through
+`lib/tempus.c`'s `<aedilis obiectum="lib/fenestra_macos.m"/>`. tempus
+needed three clock functions, so it declared them `extern` and linked
+the WHOLE Cocoa window file. aedilis does not walk annotated objects,
+so fenestra_macos.m's new dependencies never entered those closures.
+
+The functions are pure mach/POSIX (`mach_absolute_time`,
+`mach_timebase_info`, `usleep`). Fix, the T4a pattern:
+- `include/fenestra_tempus.h` (`nexus="purus"`; 14 pure headers now),
+  with its declarations cut verbatim from fenestra.h, which includes it;
+- `lib/fenestra_tempus_macos.c` (the platform-variant rule;
+  `postulata_posix.h` first), with its definitions cut verbatim from the
+  .m;
+- `tempus.c` includes the header (the annotation and the hand-written
+  externs are deleted).
+
+All 10 tests build and link NO fenestra_macos at all. tempus users no
+longer drag Cocoa. `compile_library.sh`'s hard-coded fenestra list
+gained the new file. examen ACCIPE (2 suspecta: the mach functions are
+absent from the POSIX lexicon).

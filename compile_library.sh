@@ -80,7 +80,7 @@ print_usage() {
         name=$(basename "$src" .c)
         echo "  $name"
     done
-    echo "  fenestra  (special: fenestra_macos.m + fenestra_textus.c)"
+    echo "  fenestra  (special: fenestra_macos.m + fenestra_textus.c + fenestra_tempus_macos.c)"
 }
 
 compile_library() {
@@ -92,7 +92,7 @@ compile_library() {
 
     # Special case: fenestra has multiple source files and needs Objective-C
     if [ "$lib_name" == "fenestra" ]; then
-        lib_files="lib/fenestra_macos.m lib/fenestra_textus.c"
+        lib_files="lib/fenestra_macos.m lib/fenestra_textus.c lib/fenestra_tempus_macos.c"
         compiler="clang"
         extra_flags="-framework Cocoa"
     else

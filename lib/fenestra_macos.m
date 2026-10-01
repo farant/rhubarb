@@ -7,22 +7,21 @@
 #include <string.h>
 #include <unistd.h>
 #include "fenestra.h"
+#include "eventus_cauda.h"
+#include "claves_physicae.h"
+#include "utf8.h"
 
 /* Forward declarations pro struct Fenestra */
 @class FenestraVisus;
 @class FenestraDelegatus;
-
-#define MAXIMUS_EVENTUUM CCLVI
 
 structura Fenestra {
     Piscina* piscina;
     NSWindow *fenestra_ns;
     FenestraVisus *visus;
     FenestraDelegatus *delegatus;
-    Eventus eventus[MAXIMUS_EVENTUUM];
-    i32 eventus_caput;
-    i32 eventus_cauda;
-    i32 eventus_numerus;
+    EventusCauda cauda;   /* lib/eventus_cauda: anulus + onera per
+                           * lectionem (eventus A3) */
     b32 plena_visio;      /* Status plenae visionis */
     b32 cursor_occultus;  /* Si cursor systematis occultatus */
 };
@@ -257,20 +256,14 @@ impellere_eventum (
     Fenestra* fenestra,
     constans Eventus* eventus)
 {
-    Eventus* sedes;
+    Eventus e;
 
-    si (fenestra->eventus_numerus >= MAXIMUS_EVENTUUM)
-    {
-        redde; /* Cauda eventuum plena */
-    }
-
-    sedes  = &fenestra->eventus[fenestra->eventus_cauda];
-    *sedes = *eventus;
     /* Stampa UNICA: caudae omnes (NSEvent, immittere) hic transeunt.
-     * Tempus a vocatore datum (replay, immittere) servatur. */
-    si (sedes->tempus == ZEPHYRUM) { sedes->tempus = fenestra_tempus_ms(); }
-    fenestra->eventus_cauda = (fenestra->eventus_cauda + I) % MAXIMUS_EVENTUUM;
-    fenestra->eventus_numerus++;
+     * Tempus a vocatore datum (replay, immittere) servatur. Cauda plena:
+     * eventus abicitur (amissa numerantur). */
+    e = *eventus;
+    si (e.tempus == ZEPHYRUM) { e.tempus = fenestra_tempus_ms(); }
+    (vacuum)eventus_caudae_impellere(&fenestra->cauda, &e);
 }
 
 interior b32
@@ -278,15 +271,7 @@ extrahere_eventum (
     Fenestra* fenestra,
     Eventus* eventus)
 {
-    si (fenestra->eventus_numerus == ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-
-    *eventus = fenestra->eventus[fenestra->eventus_caput];
-    fenestra->eventus_caput = (fenestra->eventus_caput + I) % MAXIMUS_EVENTUUM;
-    fenestra->eventus_numerus--;
-    redde VERUM;
+    redde eventus_caudae_extrahere(&fenestra->cauda, eventus);
 }
 
 /* Scopus rei menu: pressio in EVENTUS_MENU fenestrae suae vertitur -
@@ -337,10 +322,14 @@ fenestra_creare (
             _menu_ordinarium_ponere();
         }
 
-        fenestra = piscina_allocare(piscina, magnitudo(Fenestra));
+        /* ordinatum: piscina_allocare octetis compactum est (alineatio
+         * I) - structura monstratores et s64 fert (eventus A3) */
+        fenestra = piscina_allocare_ordinatum(piscina,
+            magnitudo(Fenestra), VIII);
         si (!fenestra) redde NIHIL;
 
         fenestra->piscina = piscina;
+        eventus_caudam_initiare(&fenestra->cauda);
 
         /* Creare masquam styli fenestrae */
         mamma_styli = 0;
@@ -491,6 +480,109 @@ fenestra_debet_claudere (
     redde fenestra->delegatus.debet_claudere;
 }
 
+/* Runa quam dispositio PRAESENS pro clave dat SINE modificatoribus
+ * (Shift quoque: spec Q9 'clavis logica'). charactersIgnoringModifiers
+ * Shift NON ignorat ("A" pro Shift+a, "!" pro Shift+1) - ergo
+ * charactersByApplyingModifiers:0 (AppKit, macOS 10.15+; NON Carbon:
+ * UCKeyTranslate -framework Carbon poscebat, quod octo scripta
+ * nexus manu scripta - silex, briar spectator inter ea - tangeret).
+ * Regimen et zona privata Apple (F700..F8FF: sagittae, functiones) ->
+ * 0 (clavis nominata, non runa). */
+interior s32
+_runa_sine_maiuscula (
+    NSEvent* eventus_ns)
+{
+               NSString* nudi;
+     constans character* utf8;
+            constans i8* p;
+                    s32  runa;
+
+    si (   [eventus_ns type] != NSEventTypeKeyDown
+        && [eventus_ns type] != NSEventTypeKeyUp)
+    {
+        redde ZEPHYRUM;
+    }
+    nudi = [eventus_ns charactersByApplyingModifiers:0];
+    si (nudi == nil || [nudi length] == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    utf8 = [nudi UTF8String];
+    si (utf8 == NULL)
+    {
+        redde ZEPHYRUM;
+    }
+    p     = (constans i8*)utf8;
+    runa  = utf8_decodere(&p, p + strlen(utf8));
+    si (runa < 0x20 || runa == 0x7F || (runa >= 0xF700 && runa <= 0xF8FF))
+    {
+        redde ZEPHYRUM;
+    }
+    redde runa;
+}
+
+/* Eventum clavis (eventus A3a): logica (clavis, runa), physica (codex),
+ * actio (ITERATA ex isARepeat; SOLUTA in liberatione), latera (in
+ * modifierFlags crudis iam). typus servatur (spec D2 gradus I). Post
+ * depressionem: EVENTUS_TEXTUS COMMISSUM (eodem tempore) si characteres
+ * TEXTUS sunt - non regimen, non zona privata (sagittae), non sub Cmd
+ * aut Ctrl (brevitates, non scriptura). */
+interior vacuum
+_clavem_impellere (
+    Fenestra* fenestra,
+     NSEvent* eventus_ns,
+         b32  depressa)
+{
+              Eventus  eventus;
+            NSString* characteres;
+                  s64  tempus;
+                  i32  modi;
+
+    memset(&eventus, ZEPHYRUM, magnitudo(Eventus));
+    tempus  = fenestra_tempus_ms();
+    modi    = (i32)[eventus_ns modifierFlags];
+    eventus.genus   = depressa ? EVENTUS_CLAVIS_DEPRESSUS
+                               : EVENTUS_CLAVIS_LIBERATUS;
+    eventus.tempus  = tempus;
+    eventus.datum.clavis.clavis        = convertere_clavem(
+        [eventus_ns keyCode]);
+    eventus.datum.clavis.modificantes  = modi;
+    eventus.datum.clavis.codex         = claves_codex_ex_macos(
+        (s32)[eventus_ns keyCode]);
+    eventus.datum.clavis.runa          = _runa_sine_maiuscula(
+        eventus_ns);
+    eventus.datum.clavis.actio = !depressa ? EVENTUS_ACTIO_SOLUTA
+        : ([eventus_ns isARepeat] ? EVENTUS_ACTIO_ITERATA
+                                  : EVENTUS_ACTIO_PRESSA);
+    characteres = [eventus_ns characters];
+    eventus.datum.clavis.typus = ([characteres length] > ZEPHYRUM)
+        ? (character)[characteres characterAtIndex:ZEPHYRUM] : '\0';
+    impellere_eventum(fenestra, &eventus);
+
+    si (   depressa && [characteres length] > ZEPHYRUM
+        && (modi & (MOD_SUPER | MOD_IMPERIUM)) == ZEPHYRUM)
+    {
+        constans character* utf8 = [characteres UTF8String];
+        constans i8*        p    = (constans i8*)utf8;
+        constans i8*        finis;
+                       s32  prima;
+
+        si (utf8 == NULL)
+        {
+            redde;
+        }
+        finis  = p + strlen(utf8);
+        prima  = utf8_decodere(&p, finis);
+        si (   prima >= 0x20 && prima != 0x7F
+            && !(prima >= 0xF700 && prima <= 0xF8FF))
+        {
+            (vacuum)eventus_caudae_textum_impellere(&fenestra->cauda,
+                tempus, (constans i8*)utf8, (i32)strlen(utf8),
+                EVENTUS_ORIGO_SCRIPTA);
+        }
+    }
+}
+
 vacuum
 fenestra_perscrutari_eventus (
     Fenestra* fenestra)
@@ -498,6 +590,10 @@ fenestra_perscrutari_eventus (
     NSEvent *eventus_ns;
     interior NSSize magnitudo_ultima = {0};
     NSSize magnitudo_currens;
+
+    /* lectio nova: onera (textus) vacantur si cauda vacua (visus
+     * eventuum extractorum consumpti; eventus A3) */
+    eventus_cauda_lectio_incipit(&fenestra->cauda);
 
     @autoreleasepool {
 
@@ -523,43 +619,13 @@ fenestra_perscrutari_eventus (
                      * respondenti destinatum est. */
                     perge;
 
-                casus NSEventTypeKeyDown: {
-                    NSString* characteres;
-
-                    eventus.genus = EVENTUS_CLAVIS_DEPRESSUS;
-                    eventus.datum.clavis.clavis = convertere_clavem([eventus_ns keyCode]);
-                    eventus.datum.clavis.modificantes = (i32)[eventus_ns modifierFlags];
-
-                    /* Extrahere characterem typatum ex NSEvent */
-                    characteres = [eventus_ns characters];
-                    si ([characteres length] > ZEPHYRUM) {
-                        eventus.datum.clavis.typus = (character)[characteres characterAtIndex:ZEPHYRUM];
-                    } alioquin {
-                        eventus.datum.clavis.typus = '\0';
-                    }
-
-                    impellere_eventum(fenestra, &eventus);
+                casus NSEventTypeKeyDown:
+                    _clavem_impellere(fenestra, eventus_ns, VERUM);
                     frange;
-                }
 
-                casus NSEventTypeKeyUp: {
-                    NSString* characteres;
-
-                    eventus.genus = EVENTUS_CLAVIS_LIBERATUS;
-                    eventus.datum.clavis.clavis = convertere_clavem([eventus_ns keyCode]);
-                    eventus.datum.clavis.modificantes = (i32)[eventus_ns modifierFlags];
-
-                    /* Extrahere characterem typatum ex NSEvent */
-                    characteres = [eventus_ns characters];
-                    si ([characteres length] > ZEPHYRUM) {
-                        eventus.datum.clavis.typus = (character)[characteres characterAtIndex:ZEPHYRUM];
-                    } alioquin {
-                        eventus.datum.clavis.typus = '\0';
-                    }
-
-                    impellere_eventum(fenestra, &eventus);
+                casus NSEventTypeKeyUp:
+                    _clavem_impellere(fenestra, eventus_ns, FALSUM);
                     frange;
-                }
 
                 casus NSEventTypeLeftMouseDown:
                 casus NSEventTypeRightMouseDown:
@@ -1609,42 +1675,5 @@ fenestra_praesentare_pixela (
  * Functiones Temporis pro Tempus Bibliotheca
  * ================================================== */
 
-i64
-fenestra_tempus_obtinere_pulsus (
-    vacuum)
-{
-    redde (i64)mach_absolute_time();
-}
-
-s64
-fenestra_tempus_ms (
-    vacuum)
-{
-    f64 pulsus;
-    f64 frequentia;   /* pulsus per secundum (f64) */
-
-    pulsus     = (f64)fenestra_tempus_obtinere_pulsus();
-    frequentia = fenestra_tempus_obtinere_frequentiam();
-    si (frequentia <= 0.0) { redde ZEPHYRUM; }
-    redde (s64)((pulsus * 1000.0) / frequentia);
-}
-
-f64
-fenestra_tempus_obtinere_frequentiam (
-    vacuum)
-{
-    mach_timebase_info_data_t informatio;
-
-    mach_timebase_info(&informatio);
-    redde 1e9 * (f64)informatio.denom / (f64)informatio.numer;
-}
-
-vacuum
-fenestra_dormire (
-    i32 microsecundae)
-{
-    si (microsecundae > ZEPHYRUM)
-    {
-        usleep((unsigned int)microsecundae);
-    }
-}
+/* fenestra_tempus_*, fenestra_dormire: lib/fenestra_tempus_macos.c
+ * (mach/POSIX puri; eventus A3a) */
