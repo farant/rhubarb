@@ -541,6 +541,12 @@ fabrica_sanare (
   block red, nothing else. Restore. Commit. Gates: radix, fabrica,
   fabrica-fumus (+ owed).
 
+> **Executed 2026-10-01** (commit below). As specified; the memo test
+> models two real stale-memo paths (self-input generator feeding a
+> binary; post-condition reusing the pre-run regeneration). Dogfood:
+> briar/spectator/silex healed (5 min), relatio == digestum ×3. Fumus
+> XVI–XX red against the T2 judge. Plant exact (4). 259 → 299.
+
 ### Task T4: footprints and the envelope's check
 
 **Opens with a measurement, then names (Fran):** PLACEHOLDERS — owned

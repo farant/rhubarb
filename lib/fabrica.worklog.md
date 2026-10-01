@@ -569,3 +569,44 @@ exactly the 4 predicted assertions red, XV green (no IGNOTUM part).
 A `-Wfortify-source` overflow in a 32-byte sprintf buffer slipped past
 the root test build and was caught only by fabrica_struere's flags -
 the two builds' flags differ (noted, not chased). Assertions 213 -> 259.
+
+## 2026-10-01 — plan 1b T3: `sanare`
+
+`fabrica_sanare` (core, pure) walks the dependency order over the
+scope (selected outputs' actions + everything above them via
+`_pendet`, which includes precondition edges): judge NOW (plenus) ->
+all RECENS: nothing; an upstream FRACTUM/OMISSUM: OMISSUM naming it;
+else realize `ignota` preconditions once per run, `agere`, EMPTY the
+three per-run memos, re-judge -> SANATUM or FRACTUM ("exitus 0 sed non
+RECENS"). Actions whose outputs are all `ignota` are only ever run as
+preconditions. `-siccum`: AGENDUM for stale-now, FORTASSE for
+recent-now-but-downstream-of-an-AGENDUM.
+
+The memo-purge test needed a real stale-memo path to be honest.
+Found two: (1) an action that reads its own output (praelatio, as
+fontes_generata.h does) memoizes the OLD digest of that file; a
+downstream BINARY (relatio) judged afterwards would use the old digest,
+match its old relation, and never be rebuilt. (2) The post-condition
+re-judge would reuse the pre-run regeneration memo instead of
+regenerating. Plant (purge disabled) -> exactly those 4 assertions red.
+The test disk grew scripted generators (`ScriptumFictum`, keyed by
+mandatum[0]): output = prefix + TODAY's content of a source file, so
+dependencies are modelled for real, and the same script drives both
+the scratch regeneration and the in-place `agere`.
+
+Tool: `agere` = processus_exsequi with FABRICA_SCRIPTURA unset, 30 min
+deadline, log `build/fabrica/acta/TITULUS.log` (command, effusio,
+erratum - separate, the process API captures them apart), cauda = last
+20 lines. CLI checks the judge itself FIRST (celer) and refuses before
+the lock if bin/fabrica is not RECENS; lock shared with -plenus.
+
+Live: entitates_html output planted stale (blank line appended) ->
+`sanare lib/entitates_html_tabula.c` restored it byte-for-byte (git
+diff empty), 0.17 s total. Whole-tree `-siccum`: exactly briar,
+briar_spectator, silex (125 s - records cold after the lib edits);
+`sanare`: 3 SANATUM (briar 215 s, spectator 6.9 s, silex 11.0 s; 5 min
+total), then `installata` all RECENS and each `-provenientia` ==
+`digestum` (spec par. VI oracle). Fumus XVI-XX red against the T2
+judge (no verb), green now. 259 -> 299 assertions. Glossary: sanatio.
+Every lib/*.c edit re-stales the three corpus binaries; heal with
+`bin/fabrica sanare installata` after committing.

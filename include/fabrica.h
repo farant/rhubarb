@@ -136,6 +136,14 @@ nomen structura {
     chorda  sedes;
 } FabricaCompositum;
 
+/* Actum: exitus unius cursus mandati IN LOCO (sanare, plan 1b T3) */
+nomen structura {
+       s32 codex;        /* exitus processus; -1 = non incepit aut
+                          * terminus excessus */
+       i32 duratio_ms;
+    chorda cauda;        /* ultimae lineae (erratum, aliter effusio) */
+} FabricaActum;
+
 /* Sutura: machina discum et processus per eam SOLAM tangit. */
 nomen structura {
     vacuum* datum;
@@ -183,6 +191,14 @@ nomen structura {
      * causa): actio exituum multorum semel explicatur (silva: XXII
      * exitus, LIV manifesta). NIHIL licet. */
     TabulaDispersa* digesta;
+    /* mandatum actionis IN LOCO currere (FABRICA_SCRIPTURA nulla:
+     * generatores in arbore scribunt), effusionem in acta_via
+     * scribere. FALSUM = incipi non potuit aut terminus excessus
+     * (causa in cauda). NIHIL licet: sanare tum siccum solum potest
+     * (plan 1b T3). */
+    b32 (*agere)(vacuum* datum, constans FabricaActio* actio,
+                 constans character* acta_via, Piscina* piscina,
+                 FabricaActum* actum_out);
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
@@ -423,6 +439,50 @@ fabrica_actionem_sigillare (
      constans FabricaActio* actio,
                    Piscina* piscina,
                   Sigillum* sigillum_out,
+                    chorda* causa_out);
+
+
+/* ==================================================
+ * SANARE (plan 1b T3): iudicare, agere, iterum iudicare
+ * ================================================== */
+
+nomen enumeratio {
+    FABRICA_SANATUM = ZEPHYRUM, /* actum, exitus RECENS post */
+    FABRICA_PRAEPARATUM,        /* praecondicio (ignota) acta,
+                                 * exitus 0 */
+    FABRICA_FRACTUM,            /* codex != 0, terminus, aut post-
+                                 * condicio non RECENS */
+    FABRICA_OMISSUM,            /* dependentia fracta aut omissa */
+    FABRICA_AGENDUM,            /* siccum: stalum/ignotum nunc */
+    FABRICA_FORTASSE            /* siccum: post actionem agendam */
+} FabricaEventus;
+
+nomen structura {
+     constans FabricaActio* actio;
+            FabricaEventus  eventus;
+                    chorda  causa;
+                       i32  duratio_ms;
+} FabricaSanatio;
+
+/* Sanare. 'electa': viae artificiorum (Xar de chorda; NIHIL = omnia);
+ * actiones earum et omnes supra eas (ingressus, praecondiciones) in
+ * ambitu. Per ordinem: exitus actionis NUNC iudicantur (plenus);
+ * omnes RECENS -> nihil (non relatum); dependentia FRACTUM/OMISSUM ->
+ * OMISSUM; aliter praecondiciones ignotae (semel per cursum), agere,
+ * memoriae per cursum (sigilla, digesta, regenerationes) VACANTUR,
+ * exitus iterum iudicantur -> SANATUM aut FRACTUM. Actiones quarum
+ * exitus omnes 'ignota' sunt praecondicione SOLA realizantur. siccum:
+ * nihil agitur (AGENDUM, FORTASSE). Acta:
+ * build/fabrica/acta/TITULUS.log.
+ * Xar de FabricaSanatio (vacua = nihil agendum); NIHIL + causa si via
+ * electa a nulla actione producitur. */
+Xar*
+fabrica_sanare (
+    constans FabricaSutura* sutura,
+              constans Xar* ordo,      /* FabricaActio*, ordinatae */
+              constans Xar* electa,
+                       b32  siccum,
+                   Piscina* piscina,
                     chorda* causa_out);
 
 #endif /* FABRICA_H */

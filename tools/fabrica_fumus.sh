@@ -24,6 +24,13 @@
 #   XV   compositum nominatum: partes iudicantur, linea COMPOSITUM
 #        pessimum nominat (pars stala), pars recens non nominatur
 #        (plan 1b T2)
+#   XVI  sanare: stalum -> SANATUM, in loco scriptum, deinde RECENS
+#   XVII sanare: exitus 0 sine scriptura -> FRACTUM 'exitus 0 sed non
+#        RECENS' (post-condicio; installator 'cp' larvatus, spec 0.6)
+#   XVIII sanare: superior fractus -> inferior OMISSUM nominans eum
+#   XIX  sanare sub sera aliena -> 2, sera nominata
+#   XX   sanare cum iudice ipso non recenti -> 2, fabrica_struere.sh
+#        nominatum, nihil actum (plan 1b T3)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -139,6 +146,50 @@ printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n
 (cd "$T/r" && "$F" iudicare -plenus omnia) > "$T/o" 2>&1; rc=$?
 if [ "$rc" -eq 1 ] && grep -q '^STALUM b ' "$T/o" && grep -q '^COMPOSITUM omnia - STALUM: b$' "$T/o"; then echo "  XV   compositum: pessimum partium      OK"; else echo "  XV   FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
 
+# XVI-XX (1b T3): sanare. Generator scriptus: sub iudice (FABRICA_SCRIPTURA)
+# in scripturam, sub sanare in loco ('.')
+sanare_radix () {
+    radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+    : > "$T/r/a"; printf 'vetus\n' > "$T/r/b"; printf 'c:vetus\n' > "$T/r/c"
+    printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="h" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_c.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="b"/>\n    <exitus via="c" provenientia="regeneratio"/>\n  </actio>\n%s</aedificatio>\n' "$1" > "$T/r/aedificatio.stml"
+    printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "c:%%s" "$(cat b)" > "$D/c"\n' > "$T/r/gen_c.sh"
+}
+sanare_radix ''
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/b"\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare) > "$T/o" 2>&1; rc=$?
+(cd "$T/r" && "$F" iudicare -plenus) > "$T/o2" 2>&1; rc2=$?
+if [ "$rc" -eq 0 ] && grep -q '^SANATUM *g ' "$T/o" && grep -q '^SANATUM *h ' "$T/o" && [ "$(cat "$T/r/b")" = "novum" ] && [ "$rc2" -eq 0 ]; then echo "  XVI  sanare: stala sanata, deinde recentia OK"; else echo "  XVI  FRACTUM (rc=$rc rc2=$rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
+sanare_radix ''
+printf '[ -n "$FABRICA_SCRIPTURA" ] && printf "novum\\n" > "$FABRICA_SCRIPTURA/b"\nexit 0\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare b) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q '^FRACTUM *g .*exitus 0 sed non RECENS' "$T/o"; then echo "  XVII sanare: exitus 0 non RECENS -> FRACT. OK"; else echo "  XVII FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
+sanare_radix ''
+printf 'if [ -n "$FABRICA_SCRIPTURA" ]; then printf "novum\\n" > "$FABRICA_SCRIPTURA/b"; exit 0; fi\necho "fractura scripta" >&2; exit 3\n' > "$T/r/gen_b.sh"
+printf 'c:alienum\n' > "$T/r/c"
+(cd "$T/r" && "$F" sanare) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q '^FRACTUM *g .*exitus 3: fractura scripta' "$T/o" && grep -q '^OMISSUM *h - dependentia fracta: g' "$T/o" && [ -f "$T/r/build/fabrica/acta/g.log" ]; then echo "  XVIII sanare: superior fractus -> OMISSUM OK"; else echo "  XVIII FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
+sanare_radix ''
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/b"\n' > "$T/r/gen_b.sh"
+mkdir -p "$T/r/build/fabrica"; rm -f "$T/tenet"
+python3 -c 'import fcntl,sys,time
+f=open(sys.argv[1],"a"); fcntl.flock(f,fcntl.LOCK_EX)
+open(sys.argv[2],"w").close(); time.sleep(60)' "$T/r/build/fabrica/sera" "$T/tenet" &
+TENENS=$!
+n=0; while [ ! -f "$T/tenet" ] && [ "$n" -lt 100 ]; do sleep 0.1; n=$((n+1)); done
+(cd "$T/r" && "$F" sanare) > "$T/o" 2>&1; rc=$?
+kill "$TENENS" 2>/dev/null; wait "$TENENS" 2>/dev/null
+if [ "$rc" -eq 2 ] && grep -q 'build/fabrica/sera' "$T/o" && [ "$(cat "$T/r/b")" = "vetus" ]; then echo "  XIX  sanare sub sera aliena -> 2       OK"; else echo "  XIX  FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
+# XX: radix declarat bin/fabrica (relatio) quod abest -> iudex non
+# recens; generator in loco signum relinqueret si curreret
+sanare_radix '  <actio titulus="fabrica" genus="institutio">\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="bin/fabrica" provenientia="relatio"/>\n  </actio>\n'
+printf 'D="${FABRICA_SCRIPTURA:-.}"; [ -z "$FABRICA_SCRIPTURA" ] && : > signum_acti; printf "novum\\n" > "$D/b"\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 2 ] && grep -q 'fabrica_struere.sh' "$T/o" && [ ! -f "$T/r/signum_acti" ]; then echo "  XX   iudex non recens -> 2, nihil actum OK"; else echo "  XX   FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XV/XV)"
+echo "fumus fabricae: sanum (XX/XX)"
 exit 0
