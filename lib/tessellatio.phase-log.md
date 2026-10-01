@@ -345,3 +345,74 @@ house usage, cf. `selecta.sh`); `ip` → `imagines`.
 per call (the table + the scaled image + the cells). The caller resets
 the piscina per frame. Scenes without pixel-path primitives allocate
 nothing (the scan comes first).
+
+## T5 — placement, the musivum viewer, Fran's look (2026-10-01)
+
+**INTENTIO (D2 placement, D8).** The viewer is named `musivum` (opus
+musivum, mosaic work; unsealed). The plan's working name `tessellatio`
+would have collided with `lib/tessellatio.c` in object and manifest
+names (fabrica already hit `stml` vs `lib/stml.c`).
+
+- **`tessera/instrumenta/musivum/musivum_pictura.{h,c}`**, the THIN
+  placement. It is outside tessera's `fontes/` and amalgam, like folium
+  and effigies.
+  - Units go through `tessera_graphema_ponere` (wide, clusters,
+    control → '?').
+  - Junctions → the drawing rune → a packed signum.
+  - An empty cell → a space with its background.
+  - A continuation is skipped: the wide unit places it.
+- **`tessera/instrumenta/principalia/musivum.c` + `tessera/musivum.sh`**,
+  with a generated source list (27 sources, all plain libraries), an
+  aedilis root, and a fabrica declaration mirroring effigies' (judged
+  RECENS). Scenes:
+  - the built-in showcase (60×20 cells at 6×8): a title bar; a framed
+    panel holding Fran's *Assumptio* (pixel path) with a label over it;
+    中文/été/ελληνικά/👨‍👩‍👧; a ruled table (┌┬┐├┼┤└┴┘); a triangle and a
+    diagonal (pixel path); a clipped group;
+  - pictor's `pictor.arbor.stml` through `pingere`;
+  - any Mandata STML file given as an argument.
+- **Keys:** `m` = metric (6×8 / 8×16 / 1×1); `]` / `[` = scene; `q`.
+- **`-textus COLS ROWS`** prints every scene headlessly (no TTY), which
+  is how the scenes were checked before the look.
+- The tessera runner gained the tessellatio closure, computed by aedilis
+  (no Cocoa), plus the musivum include/glob.
+
+**`otool -L tessera/build/musivum` → libSystem only.** T4a's promise,
+checked on the real binary.
+
+**pictor's real figurae pull Cocoa.** `pictor_figurae.h` →
+`pictor_documentum` → fenestra/Cocoa, plus volumen and scrinium. So the
+viewer uses `figura_finium` + a minimal title figura equal to pictor's
+(filled bar + text at 2,2), and says so in its status line. Park 003 in
+terminal-planning.
+
+**Red first** (a stub). **Green:** `probatio_tessera_musivum` covers
+four hand cells (`a`; 中 → LATUM + CONTINUATIO; ┼ with its fg; a green
+space) and end to end (filled rect + "ok" + an axis line → rows " ok "
+and ────────, backgrounds). Tessera 15/15.
+
+**Plants (compiling, 0 errors):**
+- A: the continuation not skipped (breaks 中);
+- B: junctions drawn as spaces;
+- C: fg/bg swapped.
+
+All caught.
+
+**Fran's look (2026-10-01, screenshot mandata.jpg): "it looks pretty
+good to me!"** Seen in the screenshot:
+- the photo mosaic;
+- the label on the image's own per-cell colours;
+- seamless joins (Ghostty draws box glyphs itself);
+- CJK/Greek/emoji on the grid without moving the panel border;
+- the clip at exactly 10 cells.
+
+**Findings from the look:**
+- **The pixel path DIMS thin features.** The 1-px yellow diagonal reads
+  dim olive: area averaging puts about 1/12 of its colour into each
+  3×4-px sub-pixel. The triangle's dark fringe is the same effect.
+  Candidate fix: rasterize at sub-pixel resolution directly instead of
+  render-then-downsample. Park 002.
+- **Open, Fran to decide (amends D5):** pictor's label lands one row
+  ABOVE its 12-px status bar. Text uses floor (230 → row 28) and the bar
+  uses nearest edge (228 → row 29). Recommendation: text uses nearest
+  edge (the cell it overlaps most); lines keep floor.

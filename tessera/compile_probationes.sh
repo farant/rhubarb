@@ -46,6 +46,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$TESSERA_DIR/probationes"
     "-I$TESSERA_DIR/instrumenta/folium"
     "-I$TESSERA_DIR/instrumenta/effigies"
+    "-I$TESSERA_DIR/instrumenta/musivum"
 )
 
 # Rhubarb lib sources tessera depends on during development (vendoring
@@ -63,6 +64,23 @@ declare -a RADIX_FONTES=(
     "imago"
     "imago_opus"
     "credo"
+    # tessellatio T5 (musivum): clausura lib/tessellatio per aedilis
+    # mensa 2026-10-01 - sine Cocoa (tabula_pixelorum.h, T4a)
+    "color"
+    "delineare"
+    "delineare_mandata"
+    "fenestra_textus"
+    "fons"
+    "friatio"
+    "internamentum"
+    "mandatum"
+    "modulus"
+    "selectio"
+    "stml"
+    "tabula_dispersa"
+    "tessellatio"
+    "thema"
+    "xar"
 )
 
 FILTER="${1:-}"
@@ -92,6 +110,7 @@ while IFS= read -r caput_via; do
     fi
 done < <(find "$RADIX_DIR/include" "$TESSERA_DIR/fontes" \
     "$TESSERA_DIR/instrumenta/folium" "$TESSERA_DIR/instrumenta/effigies" \
+    "$TESSERA_DIR/instrumenta/musivum" \
     -name '*.h' 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
@@ -121,7 +140,8 @@ shopt -s nullglob
 # instrumenta/folium: pars PURA instrumenti folium (runae U7) - extra
 # bibliothecam et amalgama, sed probationibus eius nexa
 for src in "$TESSERA_DIR"/fontes/*.c "$TESSERA_DIR"/instrumenta/folium/*.c \
-           "$TESSERA_DIR"/instrumenta/effigies/*.c; do
+           "$TESSERA_DIR"/instrumenta/effigies/*.c \
+           "$TESSERA_DIR"/instrumenta/musivum/*.c; do
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then

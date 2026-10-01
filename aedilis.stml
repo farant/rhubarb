@@ -22,6 +22,7 @@
     <via (>tessera/fontes
     <via (>tessera/instrumenta/folium
     <via (>tessera/instrumenta/effigies
+    <via (>tessera/instrumenta/musivum
     <via (>saltuarius/fontes
     <via (>briar/fontes
     <via (>md/fontes
