@@ -508,10 +508,7 @@ _plagulam_processare (
 
 
 /* ==================================================
- * Datum latinum (optionale - silva): plagulae datum ex
- * include/latina.h emittuntur (series octetorum - limes 509
- * characterum C89). Viae/custos/tituli ex manifesto; contentum
- * byte-identicum emissioni pristinae.
+ * Auxilia viarum
  * ================================================== */
 
 interior constans character*
@@ -521,79 +518,6 @@ _basis_viae (
     constans character* solidus = strrchr(via, '/');
 
     redde (solidus != NIHIL) ? (solidus + I) : via;
-}
-
-interior b32
-_latina_datum_emittere (
-             constans character* radix,
-                    constans i8* textus,
-                            i32  mensura,
-    constans AmalgamaManifestum* m)
-{
-    character via[VIA_MAXIMA];
-    FILE* pl;
-    i32 k;
-
-    sprintf(via, "%s/%s", radix, m->latina_datum_via_capitis);
-    pl = fopen(via, "wb");
-    si (pl == NIHIL)
-    {
-        fprintf(stderr, "amalgamator: %s non apertum\n", via);
-        redde FALSUM;
-    }
-    fprintf(pl, "%s", m->latina_datum_prooemium);
-    fprintf(pl,
-        "\n"
-        "#ifndef %s\n"
-        "#define %s\n"
-        "\n"
-        "#include \"latina.h\"\n"
-        "\n"
-        "externus constans character %s[];\n"
-        "externus constans i32       %s;\n"
-        "\n"
-        "#endif /* %s */\n",
-        m->latina_datum_custos, m->latina_datum_custos,
-        m->latina_datum_titulus_textus,
-        m->latina_datum_titulus_mensurae,
-        m->latina_datum_custos);
-    fclose(pl);
-
-    sprintf(via, "%s/%s", radix, m->latina_datum_via_corporis);
-    pl = fopen(via, "wb");
-    si (pl == NIHIL)
-    {
-        fprintf(stderr, "amalgamator: %s non apertum\n", via);
-        redde FALSUM;
-    }
-    fprintf(pl,
-        "/* %s - GENERATUM ex include/latina.h - NE MANU MUTES */\n"
-        "\n"
-        "#include \"%s\"\n"
-        "\n"
-        "constans character %s[] = {\n",
-        _basis_viae(m->latina_datum_via_corporis),
-        _basis_viae(m->latina_datum_via_capitis),
-        m->latina_datum_titulus_textus);
-    per (k = ZEPHYRUM; k < mensura; k += XII)
-    {
-        i32 finis = (k + XII < mensura) ? (k + XII) : mensura;
-        i32 j;
-
-        fprintf(pl, "    ");
-        per (j = k; j < finis; j++)
-        {
-            fprintf(pl, (j == k) ? "%d" : ", %d", (int)textus[j]);
-        }
-        fprintf(pl, (finis < mensura) ? ",\n" : "\n");
-    }
-    fprintf(pl,
-        "};\n"
-        "\n"
-        "constans i32 %s = %d;\n",
-        m->latina_datum_titulus_mensurae, (int)mensura);
-    fclose(pl);
-    redde VERUM;
 }
 
 
@@ -637,15 +561,9 @@ silva_amalgama_currere (
         redde FALSUM;
     }
 
-    /* Passus 0: datum latinum (si manifestum id petit) */
-    si (manifestum->latina_datum_via_capitis != NIHIL)
-    {
-        si (!_latina_datum_emittere(radix, latina, mensura_latinae,
-                manifestum))
-        {
-            redde FALSUM;
-        }
-    }
+    /* Passus 0 (datum latinum) olim hic: nunc actio fabricae sua
+     * (silva/latina_datum_generare.sh, 1b T5 D5) - amalgamator plagulas
+     * eius solum legit, numquam scribit */
 
     /* Corpus primum aedificatur (includenda systematis inter
      * processionem colliguntur), prooemium postea praeponitur */

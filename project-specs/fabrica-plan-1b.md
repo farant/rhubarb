@@ -677,6 +677,11 @@ silex links `silva/build/*.o` - `silva/build` communis for silex.
 > (latina_datum by the amalgamator; spliced tables in silva.h and
 > hospes.c), both also written in place under the judge.
 
+> **Part A2 executed 2026-10-01** (commit below): FABRICA_AGIT (D3/D4);
+> D5 = own action `latina_datum` (amalgamator only reads); D6 = splice
+> in scratch, silva.h/hospes.c declared; mechanism objects as `ignota`
+> preconditions (`amalgamare.sh -obiecta`). Fumus XXIII.
+
 **Opens with a measurement and two decisions (Fran):**
 1. Object stores each installer links blind (expected from §0.3 and
    `briar_struere.sh`: root `build/*.o` for silex, stml, briar,

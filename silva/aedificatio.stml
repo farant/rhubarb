@@ -23,11 +23,40 @@
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_generata.h"/>
     <exitus via="silva/instrumenta/principalia/fontes_generata.h" provenientia="regeneratio"/>
   </actio>
+  <!-- LATINA DATUM (1b T5, D5): textus latina.h ut datum C - olim
+       amalgamator silvae has plagulas commissas in omni cursu (iudice
+       quoque) scribebat; nunc actio sua, amalgamator eas solum legit -->
+  <actio titulus="latina_datum" genus="generator" memorabilis="verum">
+    <mandatum>
+      <verbum! (>./silva/latina_datum_generare.sh
+    </mandatum>
+    <vestigium via="build/latina_datum" forma="plagula"/>
+    <vestigium via="build/latina_datum.dSYM"/>
+    <ingressus genus="fasciculus" via="include/latina.h"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/latina_datum.c"/>
+    <ingressus genus="fasciculus" via="silva/latina_datum_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/vexilla.sh"/>
+    <exitus via="silva/fontes/silva_latina_datum.h" provenientia="regeneratio"/>
+    <exitus via="silva/fontes/silva_latina_datum.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- OBIECTA MECHANISMI (1b T5): silva/build/*.o per mtime structa,
+       a generatore excludendorum CAECE nexa - strategia ignota,
+       praecondicio sola (numquam iudicatur) -->
+  <actio titulus="obiecta_mechanismi_silva" genus="generator">
+    <mandatum>
+      <verbum! (>./silva/amalgamare.sh
+      <verbum! (>-obiecta
+    </mandatum>
+    <vestigium via="silva/build" forma="plagulae" suffixa=".o"/>
+    <ingressus genus="fasciculus" via="silva/amalgamare.sh"/>
+    <exitus via="silva/build" provenientia="ignota"/>
+  </actio>
   <actio titulus="excludenda_silva" genus="generator">
     <mandatum>
       <verbum! (>./tools/amalgama_excludenda_generare.sh
       <verbum! (>silva
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_silva"/>
     <vestigium via="build/aedilis/excludenda" communis="verum"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
@@ -45,12 +74,16 @@
     <ingressus genus="fasciculus" via="silva/build/silva_token.o"/>
     <ingressus genus="fasciculus" via="silva/build/silva_lexema.o"/>
     <ingressus genus="fasciculus" via="silva/build/materia_token.o"/>
+    <!-- amalgamator legit (1b T5, D5): arcus ad latina_datum -->
+    <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.c"/>
     <exitus via="silva/instrumenta/principalia/excludenda_generata.h" provenientia="regeneratio"/>
   </actio>
   <actio titulus="amalgama_silva" genus="generator">
     <mandatum>
       <verbum! (>./silva/amalgamare.sh
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_silva"/>
     <vestigium via="silva/build" communis="verum"/>
     <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
     <vestigium via="build/aedilis/excludenda" communis="verum"/>
@@ -59,6 +92,9 @@
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/excludenda_generata.h"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- amalgamator legit (1b T5, D5): arcus ad latina_datum -->
+    <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.h"/>
+    <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.c"/>
     <exitus via="silva/amalgama/silva.c" provenientia="regeneratio"/>
   </actio>
   <!-- plan 1a T5: generata silvae (GENERATUM in linea prima -
@@ -96,6 +132,9 @@
     <exitus via="silva/fontes/silva_tabulae_c89.c" provenientia="regeneratio"/>
     <exitus via="silva/fontes/silva_tabulae_c89.h" provenientia="regeneratio"/>
     <exitus via="silva/c89.canon" provenientia="regeneratio"/>
+    <!-- regiones SPLICITAE in plagulis manu scriptis (1b T5, D6) -->
+    <exitus via="silva/amalgama/silva.h" provenientia="regeneratio"/>
+    <exitus via="silva/instrumenta/principalia/hospes.c" provenientia="regeneratio"/>
   </actio>
   <!-- FRAGMENTA RADIX_FONTES (plan 1a T6): MEMORABILIA - ingressus
        probabiliter pleni: generator manifestum unum per radicem in

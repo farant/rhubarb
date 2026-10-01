@@ -23,24 +23,38 @@
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <exitus via="officina/instrumenta/principalia/fontes_generata.h" provenientia="regeneratio"/>
   </actio>
+  <!-- OBIECTA MECHANISMI (1b T5): officina/build/*.o per mtime structa,
+       a generatore excludendorum CAECE nexa - strategia ignota,
+       praecondicio sola (numquam iudicatur) -->
+  <actio titulus="obiecta_mechanismi_officina" genus="generator">
+    <mandatum>
+      <verbum! (>./officina/amalgamare.sh
+      <verbum! (>-obiecta
+    </mandatum>
+    <vestigium via="officina/build" forma="plagulae" suffixa=".o"/>
+    <ingressus genus="fasciculus" via="officina/amalgamare.sh"/>
+    <exitus via="officina/build" provenientia="ignota"/>
+  </actio>
   <actio titulus="excludenda_officina" genus="generator">
     <mandatum>
       <verbum! (>./tools/amalgama_excludenda_generare.sh
       <verbum! (>officina
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_officina"/>
     <vestigium via="build/aedilis/excludenda" communis="verum"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
-    <!-- officina/build/mech_*.o per globum nexa (vectis calefacit):
-         directorium nomina solum tegit, non contentum - slice 2 -->
-    <ingressus genus="directorium" via="officina/build"/>
+    <!-- officina/build/mech_*.o per globum nexa: praecondicio
+         obiecta_mechanismi_officina (1b T5; olim ingressus directorii,
+         nomina solum tegens) -->
     <exitus via="officina/instrumenta/principalia/excludenda_generata.h" provenientia="regeneratio"/>
   </actio>
   <actio titulus="amalgama_officina" genus="generator">
     <mandatum>
       <verbum! (>./officina/amalgamare.sh
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_officina"/>
     <vestigium via="officina/build"/>
     <vestigium via="silva/build" communis="verum"/>
     <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>

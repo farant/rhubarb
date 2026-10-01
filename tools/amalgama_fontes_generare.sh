@@ -54,7 +54,9 @@ EXITUS="$SEDES/fontes_generata.h"
 # iudex nihil installat, et bin/aedilis relinkatum octetis differt
 # (LC_UUID non ex contento - T6: clavis memoriae omnis fragmenti per
 # cursum mutabatur). Recentia bin/aedilis ab actione sua iudicatur.
-if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+# FABRICA_AGIT (sanare, 1b T5 D3): idem - aedilis actio sua est, et
+# arcus ad eam cyclum bootstrap faceret (aedilis ex amalgamate struitur)
+if [ -n "${FABRICA_SCRIPTURA:-}" ] || [ -n "${FABRICA_AGIT:-}" ]; then
     [ -x bin/aedilis ] || si_fracta "bin/aedilis deest (./tools/aedilis_struere.sh)"
 else
     ./tools/aedilis_struere.sh || exit 1

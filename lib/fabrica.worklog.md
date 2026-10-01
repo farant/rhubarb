@@ -711,3 +711,46 @@ amalgama_silva, also in place under the judge), D6 (tabulae_silvae's
 generator SPLICES tables into committed silva.h and hospes.c - written
 in place even in scratch mode: the judge writes the tree). silex's cold
 corpus path writes ~35 build/ and root files - T6's corpus action.
+
+## 2026-10-01 — plan 1b T5, part A2: D3–D6 (Fran: FABRICA_AGIT, D5a, D6)
+
+D3/D4: `agere` sets FABRICA_AGIT=1 for every action (envelope
+convention beside FABRICA_SCRIPTURA). Under it amalgamare.sh (x3) skips
+porta_vetustatis (which ran the fontes generator - relinking aedilis -
+and the excludenda generator in place) and amalgama_fontes_generare.sh
+uses the existing bin/aedilis; scripts run by hand keep their
+conveniences. Fumus XXIII pins it (plant: setenv removed -> XXIII only).
+
+D5 was NOT a transient edit: silva_latina_datum.{c,h} are committed
+files GENERATED from include/latina.h by the silva amalgamator's
+'passus 0' on every run (excludenda_silva, amalgama_silva, and the
+judge's scratch runs too). Now their own action `latina_datum` (new
+silva/instrumenta/principalia/latina_datum.c, stdio only;
+silva/latina_datum_generare.sh, scratch-aware, memorabilis); the
+amalgamator only reads them (emission + 6 manifest fields removed from
+silva_amalgama.{c,h} and the three amalgamators). .c byte-identical;
+.h preamble corrected to name the new generator (it claimed the
+amalgamator) - so silva.c changed too (the amalgam carries it), healed
+by sanare.
+
+D6: tabulae_silvae's generator SPLICES tables into hand-written
+silva.h and hospes.c; in scratch mode it now copies them into the
+scratch dir and splices there (before: the judge rewrote the committed
+files). Both declared outputs; plant (byte in the spliced region) ->
+STALUM 1 line, sanare restored it octet-exact.
+
+Found by the first whole-tree sanare: excludenda_tessera/officina link
+<sub>/build/mech_*.o built by amalgamare.sh step 1 (another action) -
+stale after the silva_amalgama struct change, so the amalgamator broke.
+A blind-linked object store, the Part B pattern: amalgamare.sh gains
+`-obiecta` (step 1 only, exit 0) and three `ignota` actions
+obiecta_mechanismi_{silva,tessera,officina} are preconditions of their
+excludenda and amalgama actions (the 1a `directorium <sub>/build` input
+- names only - removed: the ignota rule refused it, rightly). Second
+whole-tree sanare: PRAEPARATUM x2, SANATUM x2, all else RECENS; full
+judge 149 recent (145 + latina_datum x2 + silva.h + hospes.c).
+
+Noted, not changed: directory-listing loci (radices) make every
+generator writing into an include root an order edge of every snippet
+- conservative-correct, but one failure cascades OMISSUM widely (seen
+once: 18 snippets blamed amalgama_tessera).

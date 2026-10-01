@@ -23,24 +23,38 @@
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
     <exitus via="tessera/instrumenta/principalia/fontes_generata.h" provenientia="regeneratio"/>
   </actio>
+  <!-- OBIECTA MECHANISMI (1b T5): tessera/build/*.o per mtime structa,
+       a generatore excludendorum CAECE nexa - strategia ignota,
+       praecondicio sola (numquam iudicatur) -->
+  <actio titulus="obiecta_mechanismi_tessera" genus="generator">
+    <mandatum>
+      <verbum! (>./tessera/amalgamare.sh
+      <verbum! (>-obiecta
+    </mandatum>
+    <vestigium via="tessera/build" forma="plagulae" suffixa=".o"/>
+    <ingressus genus="fasciculus" via="tessera/amalgamare.sh"/>
+    <exitus via="tessera/build" provenientia="ignota"/>
+  </actio>
   <actio titulus="excludenda_tessera" genus="generator">
     <mandatum>
       <verbum! (>./tools/amalgama_excludenda_generare.sh
       <verbum! (>tessera
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_tessera"/>
     <vestigium via="build/aedilis/excludenda" communis="verum"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
-    <!-- tessera/build/mech_*.o per globum nexa (vectis calefacit):
-         directorium nomina solum tegit, non contentum - slice 2 -->
-    <ingressus genus="directorium" via="tessera/build"/>
+    <!-- tessera/build/mech_*.o per globum nexa: praecondicio
+         obiecta_mechanismi_tessera (1b T5; olim ingressus directorii,
+         nomina solum tegens) -->
     <exitus via="tessera/instrumenta/principalia/excludenda_generata.h" provenientia="regeneratio"/>
   </actio>
   <actio titulus="amalgama_tessera" genus="generator">
     <mandatum>
       <verbum! (>./tessera/amalgamare.sh
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_tessera"/>
     <vestigium via="tessera/build"/>
     <vestigium via="silva/build" communis="verum"/>
     <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>

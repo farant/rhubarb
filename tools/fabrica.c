@@ -365,9 +365,15 @@ _agere (
     fflush(stdout);
 
     (vacuum)unsetenv("FABRICA_SCRIPTURA");
+    /* FABRICA_AGIT (1b T5, D3/D4): sub executore scripta productores
+     * NIDIFICATOS omittunt (portae vetustatis, aedilis restructus) -
+     * fabrica eos ut actiones suas ordine iam currit; manu vocata
+     * scripta commoditates suas servant */
+    (vacuum)setenv("FABRICA_AGIT", "1", 1);
     resultus = processus_exsequi(
         (constans character* constans*)argumenta, MORA_SANATIONIS_MS,
         piscina);
+    (vacuum)unsetenv("FABRICA_AGIT");
 
     (vacuum)chorda_aedificator_appendere_literis(acta,
         "\n== effusio ==\n");

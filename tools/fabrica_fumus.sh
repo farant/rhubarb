@@ -34,6 +34,8 @@
 #   XXI  sanare: scriptura extra vestigium -> FRACTUM nominans eam
 #   XXII sanare -siccum: actiones independentes disiunctae -> unda una
 #        (plan 1b T4)
+#   XXIII sanare: FABRICA_AGIT=1 in actis (scripta productores
+#        nidificatos omittunt; plan 1b T5 D3/D4)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -207,6 +209,12 @@ printf 'vetus\n' > "$T/r/d"; printf 'c:vetus' > "$T/r/c"
 (cd "$T/r" && "$F" sanare -siccum b d) > "$T/o" 2>&1; rc=$?
 if [ "$rc" -eq 1 ] && grep -q '^  I: g k$' "$T/o" && [ "$(cat "$T/r/b")" = "vetus" ]; then echo "  XXII -siccum: undae (simul possent)   OK"; else echo "  XXII FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
 
+# XXIII (1b T5): generator in loco SOLUM sub FABRICA_AGIT scribit
+sanare_radix ''
+printf 'if [ -z "$FABRICA_SCRIPTURA" ] && [ "${FABRICA_AGIT:-}" != 1 ]; then echo "FABRICA_AGIT deest" >&2; exit 4; fi\nD="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/b"\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare b) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q '^SANATUM *g ' "$T/o"; then echo "  XXIII FABRICA_AGIT in actis          OK"; else echo "  XXIII FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXII/XXII)"
+echo "fumus fabricae: sanum (XXIII/XXIII)"
 exit 0
