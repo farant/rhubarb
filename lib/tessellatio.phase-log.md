@@ -454,3 +454,81 @@ and lldb named it. Buffer → 256.
 - A: text back to floor → the hand cases + the golden;
 - B: lines by nearest edge (overcorrection) → the y = 7 guard + T4's
   case E (its line at y = 4 jumped to row 1).
+
+## T6 — RELATIO (2026-10-01)
+
+**What was built (T1–T5b, rhubarb-secunda → main).** The terminal is a
+render target for `Mandata`, ludus's display list. Pieces:
+- **`modulus`** (`include/modulus.h`, `lib/modulus.c`), the drawing
+  layer's metric. It holds the cell size in our pixels, the extent, and
+  a reserved rational screen ratio. Conversions are floor and nearest
+  edge (manual floor division: C89 leaves negative division to the
+  implementation). Text measurement uses the TARGET's rule: FONTIS =
+  one cell per decode step, as fenestra draws; RUNARUM = runae units.
+  中 = 6 px natively, 12 in the terminal.
+- **The native target declares its metric:**
+  `tabula_pixelorum_cellula_textus`, `delineare_mandata_modulus`,
+  `delineare_mandata_mensor`. `layout.c` (×2) and `importatio_visus.c`
+  read it.
+- **`tabula_pixelorum.h`**, the pure pixel table split out of
+  `fenestra.h`. aedilis links by HEADER, so including fenestra.h meant
+  Cocoa. The rasterizer and every terminal program are now Cocoa-free
+  (`otool`: libSystem only).
+- **`delineare_mandata_selecta`**: the native rasterizer with a
+  primitive predicate (coetus always walked).
+- **`tessellatio`** (`include/tessellatio.h`, `lib/tessellatio.c`),
+  `Mandata` → cells, pure:
+  - the cell-native path: text units (clusters intact, wide +
+    continuation), filled rectangles, outlines and axis lines as merged
+    junctions;
+  - the pixel path: images, polygons and oblique lines → offscreen →
+    AREA → quadrans, as the lower layer;
+  - painter's order; the native coetus transform exactly; clip in cells.
+- **`musivum`** (tessera instrumentum): thin placement into
+  `TesseraOpus` plus a viewer (showcase, pictor's arbor, STML files;
+  metric switching; a headless `-textus` mode).
+
+**How it was checked.**
+- Hand-predicted scenes, written BEFORE the code:
+  - the T3 main scene (20×8);
+  - T4's eight pixel cases (including `▐` with a black ink on red);
+  - the T5 placement cells;
+  - the T5b pictor arbor golden (60×30).
+- A property tying measurement to drawing (text drawn through the native
+  adapter lies inside, and tightly inside, its measured box), run over
+  every glyph of the font.
+- The `mandata_prima` image golden byte-identical; root suite 178/178,
+  briar 20/20, tessera 15/15.
+- About 20 compiling plants, every one caught by name. Four were mute
+  at first and their tests were strengthened:
+  - left/right line bits (→ a corner scene);
+  - scale on text (→ "xy");
+  - plus T1–T2 cases that the property caught.
+- Fran's look (mandata.jpg): "it looks pretty good to me!".
+
+**What the work found that the plan did not predict.**
+- **aedilis links by header, not by symbol.** Moving functions is not
+  enough to escape a heavy header; the pure part needs its own header.
+- **The font has two overflowing glyphs:** `>` and `}` put a pixel in
+  column 6 (HP 100LX data). They are named in the test. Redrawing them is
+  Fran's call.
+- **The 6/8 cell constant is in 9 more files** of the old widget
+  generation (inventory in T2). It needs reading, not a regex. A
+  "no literal cell metric outside the drawer" lint is the durable fix.
+- **D5 amended:** text by nearest edge, so labels on non-aligned bars
+  stay on them; lines by floor.
+- **My own wrong prediction** (T3): "small rectangles vanish". The rule
+  is edge rounding, and the test said why before any code existed.
+
+**Parked** (terminal-planning parks):
+- 002, the pixel path dims thin features (rasterize vector shapes at
+  sub-pixel resolution, keep the mean for images);
+- 003, pictor's real figurae pull Cocoa (the same header split as T4a
+  needed).
+
+**Deferred, on purpose:**
+- `componere` taking the metric (layout per target, the next plan);
+- events (module 013, `ludus_tessera`);
+- the design vocabulary (features/021);
+- the device ratio (reserved in `Modulus`);
+- big text via quadrans.

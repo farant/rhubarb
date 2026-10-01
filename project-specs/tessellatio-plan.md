@@ -5,6 +5,10 @@ Fran's drawing-layer metric (module 012's units question,
 2026-09-30). This is the layer the design-vocabulary research
 (features/021) will build on.*
 
+**Executed 2026-10-01:** T1–T6 done, plus T4a (the pixel table split out
+of fenestra.h) and T5b (D5 amended: text by nearest edge). The viewer is
+named `musivum`. Narrative and RELATIO: `lib/tessellatio.phase-log.md`.
+
 *Worktree `../rhubarb-secunda`. Executed INLINE, one task per turn, with
 Fran approving each. Tasks with a terminal step end with Fran's own look
 before the commit. Names marked (unsealed) are working names, and Fran

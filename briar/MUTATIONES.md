@@ -19,6 +19,24 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `modulus` nova (modulus strati delineandi) - cellula in
+  pixelis nostris, extensio, proportio schirmi (rationalis, reservata);
+  columna/linea pavimento, margines proximi (divisio negativa manu,
+  C89); `modulus_textum_metiri` per mensorem SCOPI (FONTIS: runa =
+  cellula, ut fons_6x8 pingit; RUNARUM: unitates runae). Pura.
+
+- corpus: `tessellatio` nova (Mandata in cellulas terminalis) - textus
+  (graphemata integra, latae), rectangula, margines et lineae axiales
+  per juncturas (┼ ├ ┬ ...), via pixelorum (imago, polygonum, linea
+  obliqua -> quadrans) ut stratum inferius, ordine pictoris; sine
+  tessera, sine Cocoa.
+
+- corpus: caput `tabula_pixelorum.h` novum - tabula pixelorum PURA
+  (typus, pixela, RGB/RGBA, textus fons_6x8 et mensura) ex fenestra.h
+  divisa; fenestra.h id includit (nihil mutatum vocantibus). Rasterizare
+  sine fenestra: `delineare_mandata_selecta` (filtrum primitivorum),
+  `delineare_mandata_modulus` / `_mensor`.
+
 - corpus: `quadrans` nova (imago in cellulas terminalis) - regio
   imaginis (`Imago`) in cellulas quadrantum (2x2, XVI figurae) aut
   dimidiorum (▀) vertitur: runa + color litterae + color fundi
