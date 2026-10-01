@@ -1153,6 +1153,23 @@
     <forma textus="tessellationem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="tessellatione" casus="ablativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="suspensio" lingua="latina" classis="substantivum" nota="suspensio, -onis f. (suspendere): processus suspensus (Ctrl+Z, SIGTSTP) - EVENTUS_SUSPENSIO (eventus.h, eventus A2)">
+    <forma textus="suspensio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="suspensionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="suspensionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="suspensione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="resumptio" lingua="latina" classis="substantivum" nota="resumptio, -onis f. (resumere; Latinitas posterior): processus resumptus (fg, SIGCONT) - EVENTUS_RESUMPTIO (eventus.h, eventus A2)">
+    <forma textus="resumptio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="resumptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="resumptionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="resumptione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="gradatus" lingua="latina" classis="adiectivum" nota="gradatus, -a, -um (gradus; Latinitas posterior): per gradus - rotula GRADATA = rota muris aut terminalis per gradus (notches), contra PRAECISA (trackpad) - eventus.h, eventus A2">
+    <forma textus="gradatus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="gradata" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="gradatum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
   <vocabulum lemma="siamensis" lingua="latina" classis="adiectivum" nota="Siamensis, -e (Siam): lingua Siamensis = Thai (probatio_tessera_folium.c, runae U7)">
     <forma textus="siamensis" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="siamense" casus="nominativus" numerus="singularis" genus="neutrum"/>

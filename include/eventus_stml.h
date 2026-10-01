@@ -43,6 +43,17 @@ eventus_genus_t
 eventus_genus_ex_titulo (
     constans character* titulus);
 
+/* Codex physicus <-> titulus W3C ("KeyA", "ArrowLeft", "F12",
+ * "CapsLock"; IGNOTUS = "Unidentified"). Ignotus titulus ->
+ * EVENTUS_CODEX_IGNOTUS. (eventus A2) */
+constans character*
+eventus_codex_titulus (
+    EventusCodex codex);
+
+EventusCodex
+eventus_codex_ex_titulo (
+    constans character* titulus);
+
 
 /* ==================================================
  * SERIALIZATIO

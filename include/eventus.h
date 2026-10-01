@@ -20,6 +20,7 @@
  */
 
 #include "latina.h"
+#include "chorda.h"
 
 
 /* ==================================================
@@ -49,7 +50,14 @@ nomen enumeratio {
     EVENTUS_FOCUS_AMISSUS,
     EVENTUS_FOCUS_PETITUS,
     /* res menu applicationis pressa (fenestra_menu_addere) */
-    EVENTUS_MENU
+    EVENTUS_MENU,
+    /* Vocabularium sine iactura (eventus A2; spec par. III) - ADDITA
+     * ad finem: tituli in plagulis, ordo tabulae titulorum crescit. */
+    EVENTUS_TEXTUS,          /* textus commissus aut componens */
+    EVENTUS_DEPOSITIO,       /* viae depositae (aut glutinum promotum) */
+    EVENTUS_SUSPENSIO,       /* processus suspensus (terminalis) */
+    EVENTUS_RESUMPTIO,       /* processus resumptus */
+    EVENTUS_FACULTATES       /* facultates fontis (primus; et mutatae) */
 } eventus_genus_t;
 
 
@@ -137,6 +145,140 @@ nomen enumeratio {
 
 
 /* ==================================================
+ * Modificantes LATERUM (eventus A2)
+ * ==================================================
+ * Valores = larvae macOS 'device-dependent' (NX_DEVICE*): fenestra
+ * modifierFlags crudos iam fert, ergo latera iam in eventibus et
+ * plagulis sunt. Conventio vocabularii: fontes alii (terminalis per
+ * kitty) in has vertunt. Solum si facultas 'latera'. */
+#define MOD_IMPERIUM_SINISTER  0x0001
+#define MOD_SHIFT_SINISTER     0x0002
+#define MOD_SHIFT_DEXTER       0x0004
+#define MOD_SUPER_SINISTER     0x0008
+#define MOD_SUPER_DEXTER       0x0010
+#define MOD_ALT_SINISTER       0x0020
+#define MOD_ALT_DEXTER         0x0040
+#define MOD_IMPERIUM_DEXTER    0x2000
+
+
+/* ==================================================
+ * Codex PHYSICUS clavis (spec D3: subsectio W3C 'code')
+ * ==================================================
+ * Positio clavis, non dispositio (clavis logica in 'clavis' et
+ * 'runa'). Tituli plagularum = nomina W3C ("KeyA", "ArrowLeft") per
+ * eventus_codex_titulus (eventus_stml.h). Litterae et numeri ut
+ * ORDINES: EVENTUS_CODEX_LITTERAE + (c - 'A'), EVENTUS_CODEX_NUMERI
+ * + d, EVENTUS_CODEX_FUNCTIONES + (n - 1) pro F1..F12. */
+
+nomen enumeratio {
+    EVENTUS_CODEX_IGNOTUS = ZEPHYRUM,
+    EVENTUS_CODEX_LITTERAE,                          /* KeyA .. KeyZ */
+    EVENTUS_CODEX_NUMERI = EVENTUS_CODEX_LITTERAE + XXVI, /* Digit0..9 */
+    EVENTUS_CODEX_FUNCTIONES = EVENTUS_CODEX_NUMERI + X,  /* F1..F12 */
+    EVENTUS_CODEX_SPATIUM = EVENTUS_CODEX_FUNCTIONES + XII,
+    EVENTUS_CODEX_REDITUS,
+    EVENTUS_CODEX_TABULA,
+    EVENTUS_CODEX_RETRORSUM,
+    EVENTUS_CODEX_EFFUGIUM,
+    EVENTUS_CODEX_SAGITTA_SINISTRA,
+    EVENTUS_CODEX_SAGITTA_DEXTRA,
+    EVENTUS_CODEX_SAGITTA_SURSUM,
+    EVENTUS_CODEX_SAGITTA_DEORSUM,
+    EVENTUS_CODEX_DOMUS,
+    EVENTUS_CODEX_FINIS,
+    EVENTUS_CODEX_PAGINA_SURSUM,
+    EVENTUS_CODEX_PAGINA_DEORSUM,
+    EVENTUS_CODEX_DELERE,
+    EVENTUS_CODEX_INSERERE,
+    EVENTUS_CODEX_GRAVIS,             /* Backquote */
+    EVENTUS_CODEX_MINUS,
+    EVENTUS_CODEX_AEQUALE,
+    EVENTUS_CODEX_UNCUS_SINISTER,     /* BracketLeft */
+    EVENTUS_CODEX_UNCUS_DEXTER,
+    EVENTUS_CODEX_VIRGULA_INVERSA,    /* Backslash */
+    EVENTUS_CODEX_PUNCTUM_VIRGULA,    /* Semicolon */
+    EVENTUS_CODEX_APOSTROPHUS,        /* Quote */
+    EVENTUS_CODEX_VIRGULA,            /* Comma */
+    EVENTUS_CODEX_PUNCTUM,            /* Period */
+    EVENTUS_CODEX_VIRGULA_OBLIQUA,    /* Slash */
+    EVENTUS_CODEX_MAIUSCULA_SINISTRA, /* ShiftLeft */
+    EVENTUS_CODEX_MAIUSCULA_DEXTRA,
+    EVENTUS_CODEX_IMPERIUM_SINISTRUM, /* ControlLeft */
+    EVENTUS_CODEX_IMPERIUM_DEXTRUM,
+    EVENTUS_CODEX_ALTERUM_SINISTRUM,  /* AltLeft */
+    EVENTUS_CODEX_ALTERUM_DEXTRUM,
+    EVENTUS_CODEX_SUPER_SINISTRUM,    /* MetaLeft */
+    EVENTUS_CODEX_SUPER_DEXTRUM,
+    EVENTUS_CODEX_SERA_MAIUSCULARUM,  /* CapsLock */
+    EVENTUS_CODICES_NUMERUS
+} EventusCodex;
+
+/* Actio clavis: ITERATA = auto-repetitio (genus DEPRESSUS manet);
+ * SOLUTA in LIBERATUS. */
+nomen enumeratio {
+    EVENTUS_ACTIO_PRESSA = ZEPHYRUM,
+    EVENTUS_ACTIO_ITERATA,
+    EVENTUS_ACTIO_SOLUTA
+} EventusActio;
+
+nomen enumeratio {
+    EVENTUS_INDICATOR_MUS = ZEPHYRUM,
+    EVENTUS_INDICATOR_STILUS,
+    EVENTUS_INDICATOR_TACTUS
+} EventusIndicatorGenus;
+
+#define EVENTUS_PRESSIO_IGNOTA (-1)   /* pressio 0..M; mus, terminalis */
+#define EVENTUS_EXEMPLA_MAXIMA LXIV   /* spec D5 */
+
+/* Exemplum motus coaliti (spec Q13): positio + tempus */
+nomen structura {
+    s32 x;
+    s32 y;
+    s64 tempus;
+} EventusExemplum;
+
+nomen enumeratio {
+    EVENTUS_ROTULA_IGNOTA = ZEPHYRUM,  /* plagulae veteres (f32 sola) */
+    EVENTUS_ROTULA_PRAECISA,            /* trackpad: pixela */
+    EVENTUS_ROTULA_GRADATA             /* rota, terminalis: gradus */
+} EventusRotulaGenus;
+
+nomen enumeratio {
+    EVENTUS_TEXTUS_COMMISSUM = ZEPHYRUM,
+    EVENTUS_TEXTUS_COMPONENS           /* praeeditio IME */
+} EventusTextusGenus;
+
+nomen enumeratio {
+    EVENTUS_ORIGO_SCRIPTA = ZEPHYRUM,  /* typed */
+    EVENTUS_ORIGO_GLUTINATA,           /* pasted */
+    EVENTUS_ORIGO_COMPOSITA            /* IME commit, dead keys */
+} EventusOrigo;
+
+/* Facultates trinae */
+#define EVENTUS_FACULTAS_NULLA       ZEPHYRUM
+#define EVENTUS_FACULTAS_FORTASSE    I    /* scriptura copiae: OSC 52 */
+#define EVENTUS_FACULTAS_CERTA       II
+#define EVENTUS_DEPOSITIO_NULLA      ZEPHYRUM
+#define EVENTUS_DEPOSITIO_HEURISTICA I    /* glutinum viarum promotum */
+#define EVENTUS_DEPOSITIO_NATIVA     II
+
+/* Quod fons NARRARE potest (spec Q4, Q17): semel primus, iterum si
+ * discit (per observationem, numquam per quaestionem). */
+nomen structura {
+    b32 liberationes;       /* SOLUTA nuntiatur */
+    b32 codex_physicus;     /* 'codex' verus */
+    b32 tabula_distincta;   /* Tab != Ctrl+I */
+    b32 latera;             /* MOD_*_SINISTER/DEXTER */
+    b32 super;              /* hover (motus sine botone) */
+    b32 praeeditio;         /* TEXTUS COMPONENS */
+    i32 scriptura_copiae;   /* EVENTUS_FACULTAS_* */
+    i32 depositio;          /* EVENTUS_DEPOSITIO_* */
+    s32 gradus_rotulae;     /* pixela nostra per gradum (GRADATA) */
+    b32 pressio;            /* pressio indicatoris vera */
+} EventusFacultates;
+
+
+/* ==================================================
  * Typi - Eventus
  * ================================================== */
 
@@ -155,20 +297,47 @@ nomen structura {
             i32 altitudo;
         } mutare_magnitudinem;
         structura {
-             clavis_t clavis;
-            character typus;          /* Character typed (0 if none/special key) */
-                  i32 modificantes;
+             clavis_t clavis;        /* LOGICA (nominata; ASCII ut olim) */
+            character typus;         /* DEPRECATUM (spec D2): textus in
+                                      * EVENTUS_TEXTUS */
+                  i32 modificantes;  /* MOD_* + latera */
+                  s32 runa;          /* runa sine maiuscula (logica) */
+         EventusCodex codex;         /* PHYSICUS; IGNOTUS si nescitur */
+         EventusActio actio;
         } clavis;
         structura {
-                     i32 x;
+                     i32 x;          /* pixela NOSTRA */
                      i32 y;
             mus_botton_t botton;
                      i32 modificantes;
+                     s32 indicator;           /* 0 = mus */
+    EventusIndicatorGenus indicator_genus;
+                     s32 pressio;             /* 0..M; IGNOTA = -1 */
+    constans EventusExemplum* exempla;        /* VISUS (Q16) */
+                     i32 numerus_exemplorum;
         } mus;
         structura {
-            f32 delta_x;
+            f32 delta_x;             /* DEPRECATUM (spec D2) */
             f32 delta_y;
+            s32 dx;                  /* pixela nostra, integra */
+            s32 dy;
+            EventusRotulaGenus genus;
         } rotula;
+        structura {
+                chorda contentum;    /* VISUS usque ad lectionem proximam */
+    EventusTextusGenus genus;
+                   s32 cursor;       /* COMPONENS: octetus */
+          EventusOrigo origo;
+                   b32 truncatum;
+        } textus;
+        structura {
+               i32 x;
+               i32 y;
+            chorda viae;             /* VISUS: viae absolutae, '\n' */
+               i32 numerus;
+               b32 promota;          /* glutinum terminalis promotum */
+        } depositio;
+        EventusFacultates facultates;
         structura {
             i32 signum;         /* a fenestra_menu_addere datum */
         } menu;

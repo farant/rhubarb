@@ -116,3 +116,86 @@ broken, each with its chain named; restored → 11/11.
 **Note:** the fixture's aedilis.stml gained a second nexus rule
 (`proprium_macos`); the configuration test's pin on that count was
 updated (1 → 2) deliberately.
+
+## A2 — the lossless fields, capabilities, physical codes, recording (2026-10-01)
+
+**INTENTIO (spec par. III; D2 step 1 shape; D3).** `Eventus` grows; nothing
+is removed.
+- **Key:** `runa` (unshifted codepoint, the logical identity), `codex`
+  (`EventusCodex`, physical, W3C subset), `actio` (PRESSA / ITERATA /
+  SOLUTA). `typus` is marked DEPRECATED but kept.
+- **Pointer:** `indicator`, `indicator_genus` (MUS / STILUS / TACTUS),
+  `pressio` (0..1000, `EVENTUS_PRESSIO_IGNOTA` = −1), `exempla` (a VIEW)
+  + `numerus_exemplorum`.
+- **Scroll:** integer `dx`/`dy` + `genus` (IGNOTA for old recordings /
+  PRAECISA / GRADATA). The f32 deltas are DEPRECATED but kept.
+- **New union members:** `textus` (contentum VIEW, genus, cursor, origo,
+  truncatum), `depositio` (x, y, viae VIEW, numerus, promota),
+  `facultates` (`EventusFacultates`).
+- **New kinds APPENDED:** TEXTUS, DEPOSITIO, SUSPENSIO, RESUMPTIO,
+  FACULTATES (the title table grows at the end).
+- **Side modifiers:** `MOD_*_SINISTER/DEXTER` with values = macOS
+  device-dependent masks. fenestra ALREADY copied raw `modifierFlags`, so
+  the side bits were already in events and recordings. Other sources map
+  into this convention.
+- **`EventusCodex`:** 84 codes (letters, digits and F-keys as RANGES:
+  `EVENTUS_CODEX_LITTERAE + (c − 'A')`), so there is no per-letter
+  identifier for the Latin lint. STML titles are W3C's own strings
+  ("KeyA", "ArrowLeft", "CapsLock"; IGNOTUS = "Unidentified"). The title
+  table is generated from the enum order, and the test pins 84 + a
+  round-trip of all codes.
+
+**`eventus_stml`:**
+- **SPARSE writing:** a new attribute appears only when it differs from
+  its default, so old events re-serialize unchanged.
+- The reader defaults absent attributes (pressure → IGNOTA, so an old
+  mouse event never claims pressure 0).
+- **Text payloads** (`contentum`, `viae`) use an attribute with a minimal
+  percent-encoding: `%`, `"` and control bytes become %XX; UTF-8 stays
+  raw. It is exact (leading spaces, newlines) and readable. A quote
+  cannot live in an STML attribute (stml.h), and text-node whitespace
+  semantics are subtle.
+- **Samples** are `<exemplum x y tempus/>` children.
+- Payloads read back are COPIED into the reading piscina (the recording
+  owns its bytes, FRAN Q16).
+
+**FINDING: the plan's oracle was wrong.** "Re-serialize toy.eventus.stml
+byte-identically" assumed the file came from the writer. It was
+HAND-WRITTEN (f84e06b3, compact one-line form); the writer pretty-prints
+attributes on aligned lines. The right promise is "the new writer writes
+old events exactly as the OLD writer did". The golden
+`probationes/fixa/eventus/toy.rescriptum.stml` was produced by
+temporarily restoring HEAD's `eventus_stml.c`, running a probe on the toy
+events, and restoring the new writer. The test compares byte for byte.
+
+**Red first:**
+- titles of the new kinds;
+- all 84 codes;
+- a round-trip of every new field, including a hard paste text (leading
+  spaces, a quote, `%`, a newline, e + combining acute, é, 中) and paths
+  with a quote and `%`;
+- samples copied (not the caller's pointer);
+- the toy recording's mouse pressure IGNOTA and its key's codex IGNOTUS;
+- the golden.
+
+**Plants (compiling, 0 errors), all caught:**
+- A: `runa` never written;
+- B: `typus` no longer read (the toy reading and the old round-trip);
+- C: code titles shifted by one (8+ assertions);
+- D: the sparse rule broken (pressure always written → golden mismatch);
+- E: the quote not escaped. The WHOLE document became unparseable, as
+  stml.h warns.
+
+**AUDIENDA closed:** `persistentia_*`'s "eventus" are data-model events
+(create entity, set property) that only share the prefix. They store no
+input events, so D6's format doesn't apply.
+
+**Lint:**
+- "precisa" was my Latin error; it is now *praecisa* (praecidere; cf.
+  the house's *praecisio*);
+- `tituli_rotularum` → `tituli_rotulae`;
+- glossary: *suspensio*, *resumptio*, *gradatus*;
+- my own slip: `ordinarius` (a latina.h macro = `default`) used as a
+  parameter name; renamed `si_abest`.
+
+pictor, villa and forum build with the grown `Eventus`.
