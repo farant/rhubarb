@@ -291,6 +291,14 @@ fabrica_actionem_enumerare (
   `./tools/fabrica_oraculum.sh` consensus. Worklog entry (what fit,
   what did not). Commit. Gates: radix, fabrica, fabrica-fumus (+ owed).
 
+> **Executed 2026-10-01** (commit below). Fit cleanly: no kind switch
+> left (status and locus-shape switches remain). Deviation:
+> `FabricaStrategia.genus_ordinarium` (one home for the default output
+> type); reader also refuses an input-only type as output. Oracle:
+> old/new judge on one tree identical (145 verdicts, 64 digests) after
+> a record-ordering artefact (worklog). Plant: 15 predicted actions +
+> `fabrica` itself (its own closure, not predicted). 166 → 213.
+
 ### Task T2: composites, preconditions, `ignota`
 
 **Opens with names (Fran):** PLACEHOLDERS — composite element

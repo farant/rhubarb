@@ -74,6 +74,15 @@
     <attributum nomen="scriptura" genus="textus"
       nota="via intra directorium scripturae ubi regeneratio cadit;
             absens = via ipsa"/>
+    <attributum nomen="genus" genus="electio"
+      nota="genus artificii (quomodo observetur; spec 1b par. II.2).
+            Absens = genus ordinarium strategiae: relatio -> binarium,
+            regeneratio -> fasciculus. Lector recusat strategiam quam
+            genus non admittit (binarium non reproducibile: numquam
+            regeneratio)">
+      <optio>fasciculus</optio>
+      <optio>binarium</optio>
+    </attributum>
   </elementum>
 
 </canon>

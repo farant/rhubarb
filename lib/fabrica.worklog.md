@@ -483,3 +483,53 @@ siblings RECENS.
 - The inventory's candidate search missed natura/cocta/*.canon (marker
   on line 2, after the XML declaration) - it is a lower bound, as its
   description says; rows added.
+
+## 2026-10-01 — plan 1b T1: the two interfaces (behaviour-preserving)
+
+The vocabulary fit today's code with no forcing: the eight input kinds
+became `FabricaGenus` structs (sigillare = the old `_X_explicare`
+bodies, untouched; three documentation names share the file-bytes
+implementation), the two provenances became `FabricaStrategia` structs
+(regeneratio carries memoria in front of it, gated by `memorabilis` as
+before; relatio wraps `_relationem_iudicare`). `_particulas_colligere`
+calls `genus->sigillare`; `fabrica_iudicare` = sigillare once, then
+`exitus->strategia->iudicare`. No switch on a kind remains; the two
+switches left are on verdict status (CLI counting) and on locus SHAPE
+(`_locus_tangit`: plagula / plagulae / arbor), which is geometry.
+
+`-tacta` is now generic: `fabrica_actionem_enumerare` (each type's
+`enumerare`, or derived from its particles: file -> PLAGULA, `dir/` ->
+PLAGULAE) plus each output type's `locare`. The old special case for
+plagulae (new file matching the suffix) is the plagulae type's own
+`enumerare` adding a PLAGULAE locus with its suffixes.
+
+Deviations from the plan's Interfaces block: `FabricaStrategia` gained
+`genus_ordinarium` (the output type when a declaration names none:
+relatio -> binarium, regeneratio -> fasciculus) - the reader and the
+test helper both use it, so the default lives in one place. The reader
+also refuses an output whose type has no `locare` ("genus ingressus
+solum, exitus esse nequit").
+
+Oracle (two judges, one tree): `build/fabrica/vetus` (pre-edit binary)
+and the new `bin/fabrica` gave byte-identical `iudicare -plenus -omnia`
+(145 lines) and `digestum` for all 64 actions. One apparent difference
+on the first comparison was ORDER, not behaviour: the edit changed
+lib/fabrica.c, which is in the compile_tests snippet's closure, so the
+first judge to run missed its record, regenerated ('regeneratio
+congruit') and wrote a record the second judge then hit ('memoria').
+Re-running the new judge -> identical. Lesson for any future
+two-binary oracle: warm records with BOTH binaries, or compare after a
+second pass. First -plenus after the edit: 119 s (record misses).
+
+Against the pre-edit capture (different tree, by design): briar,
+briar_spectator, silex STALUM (lib/*.c is in their corpus plagulae);
+digests of fabrica, briar, briar_spectator, silex,
+fragmentum_compile_tests moved. T3's sanare heals the three binaries.
+
+Plant: plagulae registered with the file-bytes sigillare. Core: the
+plagulae block red only (5 assertions; genera and tacta blocks green -
+enumerare for plagulae is separate). Digests: the 15 actions with a
+plagulae input fail "ingressus absens" exactly as predicted; a 16th,
+`fabrica`, changed digest for a reason not predicted - the planted
+lib/fabrica.c is in the judge's own closure (bytes changed, not a
+failure). Restored; digests identical again. Assertions 166 -> 213.

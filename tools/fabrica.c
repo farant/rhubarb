@@ -822,8 +822,9 @@ _iudicare (
             exitus = (FabricaExitus*)xar_obtinere(actio->exitus, j);
             si (tacta)
             {
-                si (exitus->provenientia
-                    != FABRICA_PROVENIENTIA_REGENERATIO)
+                /* commissa generata solum: strategia quae octetis
+                 * comparat */
+                si (!exitus->strategia->octetis_comparat)
                 {
                     perge;
                 }

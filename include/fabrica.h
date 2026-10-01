@@ -29,24 +29,14 @@
  * (T1); parcum 01KZYN4VPZ.
  * ================================================== */
 
-nomen enumeratio {
-    FABRICA_INGRESSUS_FASCICULUS = ZEPHYRUM, /* octeti plagulae */
-    FABRICA_INGRESSUS_MANIFESTUM,    /* viae manifesti aedilis */
-    FABRICA_INGRESSUS_CONFIGURATIO,  /* aedilis.stml tota */
-    FABRICA_INGRESSUS_INSTRUMENTUM,  /* binarium instrumenti */
-    FABRICA_INGRESSUS_DIRECTORIUM,   /* nomina ordinata */
-    FABRICA_INGRESSUS_PLAGULAE,      /* plagulae directorii, gradu 0,
-                                      * suffixis filtratae (corpus
-                                      * infixum briar/silicis) */
-    FABRICA_INGRESSUS_MANIFESTA,     /* directorium manifestorum
-                                      * (.stml, gradu 0): quodque
-                                      * explicatur, nomina quoque
-                                      * sigillantur (T6 fragmenta) */
-    FABRICA_INGRESSUS_RADICES        /* configuratio aedilis: nomina
-                                      * directoriorum inclusorum
-                                      * OMNIUM quae nominat (caput
-                                      * novum resolutionem mutat) */
-} FabricaGenusIngressus;
+/* VOCABULARIUM (spec 1b par. II): GENUS artificii dicit quomodo
+ * OBSERVETUR (enumerare, sigillare, locare); STRATEGIA dicit quomodo
+ * exitus RECENS esse sciatur (iudicare). Registra nominibus quaeruntur
+ * (fabrica_genus_invenire, fabrica_strategia_invenire) - machina
+ * numquam super genus commutat. Genus novum = structura nova in
+ * lib/fabrica.c, numquam enumeratio crescens. */
+nomen structura FabricaGenus     FabricaGenus;
+nomen structura FabricaStrategia FabricaStrategia;
 
 nomen enumeratio {
     FABRICA_ACTIO_GENERATOR = ZEPHYRUM,
@@ -55,30 +45,53 @@ nomen enumeratio {
 } FabricaGenusActionis;
 
 nomen enumeratio {
-    FABRICA_PROVENIENTIA_REGENERATIO = ZEPHYRUM,
-    FABRICA_PROVENIENTIA_RELATIO
-} FabricaProvenientia;
-
-nomen enumeratio {
     FABRICA_RECENS = ZEPHYRUM,
     FABRICA_STALUM,
     FABRICA_IGNOTUM,
     FABRICA_NON_IUDICATUM          /* celer: regeneratio omissa */
 } FabricaStatus;
 
+/* particula: quod ingressus ad sigillum actionis confert - via
+ * (plagula, aut directorium cum '/' finali, ne cum plagula eiusdem
+ * viae confundatur) et sigillum eius */
 nomen structura {
-    FabricaGenusIngressus genus;
-                   chorda via;
-                   chorda suffixa;   /* PLAGULAE: ".c .h" (spatio
-                                      * separata); vacua = omnes */
+      chorda via;
+    Sigillum octeti;
+} FabricaParticula;
+
+/* locus: ubi artificium habitat (locare) aut quod ingressus legit et
+ * custodit (enumerare) - forma geometrica, non genus */
+nomen enumeratio {
+    FABRICA_LOCUS_PLAGULA = ZEPHYRUM,  /* via ipsa */
+    FABRICA_LOCUS_PLAGULAE,            /* plagulae directorii gradu 0,
+                                        * suffixis filtratae */
+    FABRICA_LOCUS_ARBOR                /* arbor tota sub via */
+} FabricaFormaLoci;
+
+nomen structura {
+    FabricaFormaLoci forma;
+              chorda via;
+              chorda suffixa;   /* PLAGULAE: ".c .h" (spatio
+                                 * separata); vacua = omnes */
+} FabricaLocus;
+
+nomen structura {
+     constans FabricaGenus* genus;
+                    chorda  via;
+                    chorda  suffixa;   /* plagulae: ".c .h" (spatio
+                                       * separata); vacua = omnes */
 } FabricaIngressus;
 
 nomen structura {
-                       chorda via;        /* artificium */
-                       chorda scriptura;  /* via relativa intra
-                                           * directorium scripturae
-                                           * ubi regeneratio cadit */
-    FabricaProvenientia provenientia;
+                        chorda via;        /* artificium */
+                        chorda scriptura;  /* via relativa intra
+                                             * directorium scripturae
+                                             * ubi regeneratio cadit */
+        constans FabricaGenus* genus;      /* absens in declaratione:
+                                             * genus ordinarium
+                                             * strategiae */
+    constans FabricaStrategia* strategia;  /* attributum
+                                             * 'provenientia' */
 } FabricaExitus;
 
 nomen structura {
@@ -159,6 +172,65 @@ nomen structura {
     FabricaStatus status;
            chorda causa;
 } FabricaIudicium;
+
+/* GENUS: quomodo artificium observetur. Verba NIHIL licent ubi
+ * dictum. */
+structura FabricaGenus {
+    constans character* titulus;   /* nomen in declaratione */
+    /* sigillare: particulas (FabricaParticula) ingressus addere -
+     * quod sigillum actionis confert. FALSUM + causa: absens,
+     * malformatum, incompletum. Exclusa (Xar de chorda, NIHIL licet)
+     * praetermittuntur. */
+    b32 (*sigillare)(constans FabricaSutura* sutura,
+                     constans FabricaIngressus* ingressus,
+                     constans Xar* exclusa, Piscina* piscina,
+                     Xar* particulae, chorda* causa_out);
+    /* enumerare: loci (FabricaLocus) quos ingressus legit aut custodit
+     * (commissio '-tacta'). NIHIL = ex particulis sigillandi:
+     * plagula -> PLAGULA, 'dir/' -> PLAGULAE sine suffixis. */
+    b32 (*enumerare)(constans FabricaSutura* sutura,
+                     constans FabricaIngressus* ingressus,
+                     Piscina* piscina, Xar* loci,
+                     chorda* causa_out);
+    /* locare: loci quos exitus huius generis scribit. NIHIL = genus
+     * ingressus solum (exitus esse nequit). */
+    b32 (*locare)(constans FabricaExitus* exitus, Piscina* piscina,
+                  Xar* loci);
+    /* VERUM: octeti ex ingressibus determinati (regeneratio licet).
+     * Binarium FALSUM: LC_UUID et signatura (mensuratum, 1a T6). */
+    b32 reproducibile;
+};
+
+/* STRATEGIA: quomodo exitus RECENS esse sciatur, genere et actione
+ * producente datis (regeneratio = 'curre productorem meum'). */
+structura FabricaStrategia {
+    constans character* titulus;          /* 'provenientia' */
+    constans character* genus_ordinarium; /* genus exitus sine
+                                           * attributo genus */
+    /* VERUM: artificium octetis comparatur - '-tacta' id solum
+     * iudicat (commissa generata); genus reproducibile postulat */
+    b32 octetis_comparat;
+    /* iudicium exitus, ingressibus actionis IAM sigillatis. plenus
+     * FALSUM = celer. */
+    FabricaIudicium (*iudicare)(constans FabricaSutura* sutura,
+                                constans FabricaActio* actio,
+                                constans FabricaExitus* exitus,
+                                constans Sigillum* ingressus,
+                                b32 plenus, Piscina* piscina);
+};
+
+/* Registra: fasciculus, configuratio, instrumentum (octeti plagulae;
+ * nomina tria, implementatio una), directorium, manifestum, plagulae,
+ * manifesta, radices, binarium. NIHIL si titulus ignotus. */
+constans FabricaGenus*
+fabrica_genus_invenire (
+    chorda titulus);
+
+/* Registra: regeneratio (memoria ante eam, actionibus memorabilibus
+ * solis), relatio. NIHIL si titulus ignotus. */
+constans FabricaStrategia*
+fabrica_strategia_invenire (
+    chorda titulus);
 
 /* Viae manifesti aedilis: obiecta, capita, vendores (systemata NON -
  * plagulae nostrae non sunt) et inresolutae (sectio citatarum nusquam
@@ -242,13 +314,23 @@ fabrica_provenientia_via (
      chorda  titulus,
     Piscina* piscina);
 
+/* Loci (FabricaLocus) omnium ingressuum actionis: verbum 'enumerare'
+ * cuiusque generis (aut ex particulis eius). FALSUM + causa si
+ * ingressus explicari nequit. */
+b32
+fabrica_actionem_enumerare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                   Piscina* piscina,
+                       Xar* loci,
+                    chorda* causa_out);
+
 /* VERUM si via quaevis 'viae' (Xar de chorda, e.g. plagulae
- * commissionis) actionem TANGIT: ingressus eius explicatus (plagula
- * ipsa, manifesti, PLAGULARUM), exitus eius, aut plagula nova/deleta
- * in directorio quod actio enumerat (directorium, radices, manifesta:
- * directorium viae + '/'; plagulae: directorium ingressus, suffixo
- * congruens). Ingressus explicari nequeunt -> VERUM (conservativum:
- * iudex IGNOTUM nominabit). T8: commissio iudicat sola tacta. */
+ * commissionis) actionem TANGIT: locus ingressus eius (PLAGULA ipsa;
+ * plagula nova/deleta in PLAGULIS suffixo congruens; via sub ARBORE)
+ * aut locus exitus eius ('locare'). Ingressus explicari nequeunt ->
+ * VERUM (conservativum: iudex IGNOTUM nominabit). T8: commissio
+ * iudicat sola tacta. */
 b32
 fabrica_actio_tacta (
     constans FabricaSutura* sutura,
