@@ -14,6 +14,8 @@
       <verbum! (>./tools/amalgama_fontes_generare.sh
       <verbum! (>silva
     </mandatum>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="instrumentum" via="bin/aedilis"/>
@@ -26,6 +28,7 @@
       <verbum! (>./tools/amalgama_excludenda_generare.sh
       <verbum! (>silva
     </mandatum>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
@@ -48,6 +51,10 @@
     <mandatum>
       <verbum! (>./silva/amalgamare.sh
     </mandatum>
+    <vestigium via="silva/build" communis="verum"/>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/excludenda_generata.h"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/fontes_politica.sh"/>
@@ -73,6 +80,7 @@
     <mandatum>
       <verbum! (>./silva/generare.sh
     </mandatum>
+    <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="fasciculus" via="silva/generare.sh"/>
     <ingressus genus="fasciculus" via="silva/grammatica/sceletum.stml"/>
     <ingressus genus="fasciculus" via="silva/grammatica/sceletum_imparilis.stml"/>
@@ -101,6 +109,7 @@
     <mandatum>
       <verbum! (>./tools/silva_fontes_generare.sh
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/silva"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/silva"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>

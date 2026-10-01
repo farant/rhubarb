@@ -638,7 +638,31 @@ fabrica_undas_formare (
 - [ ] **Step 7: commit.** Worklog. Gates: radix, fabrica,
   fabrica-fumus, examen-canon if owed.
 
+> **Executed 2026-10-01** (commit below). Step 1 measured all 64
+> actions (snapshot 0.45 s; table in lib/fabrica.worklog.md): 52
+> footprints declared; SIX defect classes, not one (D1 mensor_ui
+> capsula; D2 canon/natura sibling relinks; D3 generators relink
+> bin/aedilis in place; D4 amalgama rewrites excludenda's output; D5
+> transient in-place edit of silva_latina_datum.{c,h}; D6 tabulae_silvae
+> touches silva.h, hospes.c). Fran 2026-10-01: names as placeholdered;
+> D1–D6 fixed in T5; D2 by MERGING each family into one action
+> (same-type multi-output). Born red live on D1. Envelope gained the
+> executor's own state (fabrica.db{,-wal,-shm}, sera) - found by the
+> live plant, excluded from wave conflicts. Deviation: comparare and
+> undae take no sutura. 299 → 317.
+
 ### Task T5: installers — preconditions, link/copy split, fixes
+
+**Inherited from T4 (Fran 2026-10-01):** fix defects D1–D6 (T4
+executed note): D2 by merging `canon_examen`+`canon_coquere` and the
+four `natura_*` into one action each (several `binarium` outputs, one
+script); D3 generators never build bin/aedilis (precondition edge to
+`aedilis`); D4 amalgamare stops regenerating excludenda (declared edge
+instead); D5 the latina_datum transient edit moves to a scratch copy;
+D6 measure silva.h/hospes.c - declare as outputs or stop the touch.
+Done = `bin/fabrica sanare` over every action with NO "extra
+vestigium" (the T4 measurement script re-run: every write inside a
+footprint).
 
 **Opens with a measurement and two decisions (Fran):**
 1. Object stores each installer links blind (expected from §0.3 and

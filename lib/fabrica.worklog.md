@@ -610,3 +610,58 @@ total), then `installata` all RECENS and each `-provenientia` ==
 judge (no verb), green now. 259 -> 299 assertions. Glossary: sanatio.
 Every lib/*.c edit re-stales the three corpus binaries; heal with
 `bin/fabrica sanare installata` after committing.
+
+## 2026-10-01 — plan 1b T4: footprints
+
+Step 1 measured every declared action's write set: snapshot (path,
+mtime ns, size) of the whole tree minus .git plus ~/.bin, run the
+mandatum in place, snapshot, diff - 29 377 files, 0.45 s per python
+snapshot; all 64 actions exit 0, tree content unchanged (writes are
+mtime-only rewrites). Script + raw JSON were scratchpad-only.
+
+Legit footprints (declared on 52 actions): owned
+`build/aedilis/<target>/`, `bin/X.dSYM/`, snippet
+`build/fabrica/clausurae/<s>/`, `tessera|officina/build/`,
+`build/latina_numeri*`, briar's build/ capsules; SHARED (communis):
+`build/aedilis/obiecta/`, `silva/build/` (formator, censor, amalgamator
+objects - five actions), `build/aedilis/{amalgama_fontes, excludenda,
+caput}/` (six amalgam-chain actions), `build/canon/`, `build/natura/`,
+`build/aedilis/natura_quaesitor/`, `materia/build/coctor/` (six
+registries), the corpus capsule (briar + silex). ~/.bin/X declared as
+vestigium for the four installers until T5 splits the copy out.
+
+Defects (NOT declared; T5 fixes): D1 mensor_ui rewrites committed
+capsula_mensor.{c,h}; D2 canon_examen/canon_coquere and the four
+natura_* each relink their siblings (one script per family); D3
+fontes_* and amalgama_* relink bin/aedilis in place (the 1a guard only
+covers FABRICA_SCRIPTURA); D4 amalgama_* rewrites the excludenda
+action's excludenda_generata.h (nested producer); D5 excludenda_silva
+and amalgama_silva rewrite silva/fontes/silva_latina_datum.{c,h} in
+place, trap-restored; D6 tabulae_silvae touches silva/amalgama/silva.h
+and silva/instrumenta/principalia/hospes.c (committed, undeclared).
+
+Mechanism: `fabrica_vestigia_comparare` (merge walk of two sorted
+snapshots; new, deleted, or mtime/size-changed paths outside the
+footprint) - an identical rewrite IS a write (mtime). The live plant
+(comment in mensor_ui.c) first named a THIRD path, build/fabrica.db-shm:
+the executor's own sqlite state. Executor state (fabrica.db{,-wal,-shm},
+sera) is now in every action's envelope for the write check but NOT for
+waves (it is common to all, so it would have serialized every pair).
+Re-planting the SAME comment after a run is a no-op (the binary was
+rebuilt from it: RECENS) - plants must differ each time.
+
+Waves (`-siccum`): greedy by dependency level; two actions share a wave
+iff no edge, footprints disjoint (prefix-conservative), neither has a
+communis area. Live: briar | briar_spectator | silex (corpus capsule is
+shared). Tool: tree walk with lstat (mtime field differs macOS/Linux:
+one #if in the tool, not filum.h - a filum.h change owes ~29 gates).
+Fixture bug found: sanare_radix inserted extra actions with printf %s,
+so `\n` stayed literal (XX had passed on that malformed STML; now %b).
+Plant (mtime ignored) -> exactly the identical-rewrite assertion red.
+299 -> 317.
+Commit refused once by examen (pre-commit): the tool's mtime `#if
+defined(__APPLE__) ... #else st_mtim` - examen evaluates the UNGUARDED
+branch against silva's Darwin lexicon, which has no st_mtim. House
+pattern (lib/vigilia.c): guard the LINUX branch (`#ifdef __linux__`),
+leave Darwin unguarded. Run ./silva/examen.sh on touched C before
+committing.

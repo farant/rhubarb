@@ -14,6 +14,8 @@
       <verbum! (>./tools/amalgama_fontes_generare.sh
       <verbum! (>officina
     </mandatum>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="instrumentum" via="bin/aedilis"/>
@@ -26,6 +28,7 @@
       <verbum! (>./tools/amalgama_excludenda_generare.sh
       <verbum! (>officina
     </mandatum>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
@@ -38,6 +41,11 @@
     <mandatum>
       <verbum! (>./officina/amalgamare.sh
     </mandatum>
+    <vestigium via="officina/build"/>
+    <vestigium via="silva/build" communis="verum"/>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/excludenda_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
@@ -65,6 +73,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__colloquium_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__colloquium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -85,6 +94,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__cursor_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__cursor_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -105,6 +115,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__fusor_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__fusor_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -125,6 +136,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__interpretare_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__interpretare_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -143,6 +155,7 @@
       <verbum! (>silva/instrumenta/nexus_ordines.c
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__legatus_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__legatus_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -161,6 +174,7 @@
       <verbum! (>silva/instrumenta/nexus_ordines.c
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__sonda_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__sonda_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -178,6 +192,7 @@
       <verbum! (>officina/instrumenta/vindex_visum.c
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__vindex_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__vindex_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>

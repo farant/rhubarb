@@ -9,6 +9,8 @@
     <mandatum>
       <verbum! (>./tools/fabrica_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/fabrica"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/fabrica/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/fabrica_struere.sh"/>
@@ -21,6 +23,8 @@
     <mandatum>
       <verbum! (>./tools/manus_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/manus_instrumentum"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/manus_instrumentum/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/manus_struere.sh"/>
@@ -34,6 +38,10 @@
     <mandatum>
       <verbum! (>./tools/aedilis_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/aedilis"/>
+    <vestigium via="bin/aedilis.dSYM"/>
+    <vestigium via="build/aedilis" forma="plagulae" suffixa=".o"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/aedilis_struere.sh"/>
@@ -45,6 +53,9 @@
     <mandatum>
       <verbum! (>./tools/canon_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/canon_examen"/>
+    <vestigium via="bin/canon_examen.dSYM"/>
+    <vestigium via="build/canon" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/canon_examen/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
@@ -56,6 +67,9 @@
     <mandatum>
       <verbum! (>./tools/canon_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/canon_coquere"/>
+    <vestigium via="bin/canon_coquere.dSYM"/>
+    <vestigium via="build/canon" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/canon_coquere/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/canon_struere.sh"/>
@@ -67,6 +81,10 @@
     <mandatum>
       <verbum! (>./tools/natura_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/natura_examen"/>
+    <vestigium via="bin/natura_examen.dSYM"/>
+    <vestigium via="build/natura" communis="verum"/>
+    <vestigium via="build/aedilis/natura_quaesitor" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/natura_examen/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
@@ -78,6 +96,10 @@
     <mandatum>
       <verbum! (>./tools/natura_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/natura_canones"/>
+    <vestigium via="bin/natura_canones.dSYM"/>
+    <vestigium via="build/natura" communis="verum"/>
+    <vestigium via="build/aedilis/natura_quaesitor" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/natura_canones/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
@@ -89,6 +111,10 @@
     <mandatum>
       <verbum! (>./tools/natura_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/natura_glossae"/>
+    <vestigium via="bin/natura_glossae.dSYM"/>
+    <vestigium via="build/natura" communis="verum"/>
+    <vestigium via="build/aedilis/natura_quaesitor" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/natura_glossae/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
@@ -100,6 +126,9 @@
     <mandatum>
       <verbum! (>./tools/natura_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/natura_quaesitor"/>
+    <vestigium via="bin/natura.dSYM"/>
+    <vestigium via="build/natura" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/natura_quaesitor/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/natura_struere.sh"/>
@@ -111,6 +140,9 @@
     <mandatum>
       <verbum! (>./tools/stml_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/stml"/>
+    <vestigium via="bin/stml.dSYM"/>
+    <vestigium via="~/.bin/stml" forma="plagula"/>
     <ingressus genus="manifestum" via="build/aedilis/stml/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/stml_struere.sh"/>
@@ -122,6 +154,8 @@
     <mandatum>
       <verbum! (>./tools/mensor_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/mensor"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/mensor/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/mensor_struere.sh"/>
@@ -132,6 +166,8 @@
     <mandatum>
       <verbum! (>./tools/mensor_ui_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/mensor_ui"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/mensor_ui/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/mensor_ui_struere.sh"/>
@@ -146,6 +182,18 @@
     <mandatum>
       <verbum! (>./tools/briar_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/briar"/>
+    <vestigium via="bin/briar.dSYM"/>
+    <vestigium via="build/briar_aedificatio.c" forma="plagula"/>
+    <vestigium via="~/.bin/briar" forma="plagula"/>
+    <vestigium via="build/capsula_facies_briar.c" forma="plagula"/>
+    <vestigium via="build/capsula_facies_briar.h" forma="plagula"/>
+    <vestigium via="build/capsula_icon_briar.c" forma="plagula"/>
+    <vestigium via="build/capsula_icon_briar.h" forma="plagula"/>
+    <vestigium via="build/capsula_mutationes_briar.c" forma="plagula"/>
+    <vestigium via="build/capsula_mutationes_briar.h" forma="plagula"/>
+    <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
+    <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/briar/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/briar_struere.sh"/>
@@ -183,6 +231,9 @@
     <mandatum>
       <verbum! (>./tools/briar_spectator_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/briar_spectator"/>
+    <vestigium via="bin/briar-spectator.dSYM"/>
+    <vestigium via="~/.bin/briar-spectator" forma="plagula"/>
     <ingressus genus="manifestum" via="build/aedilis/briar_spectator/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/briar_spectator_struere.sh"/>
@@ -218,6 +269,11 @@
     <mandatum>
       <verbum! (>./tools/silex_struere.sh
     </mandatum>
+    <vestigium via="build/aedilis/silex"/>
+    <vestigium via="bin/silex.dSYM"/>
+    <vestigium via="~/.bin/silex" forma="plagula"/>
+    <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
+    <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/silex/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/silex_struere.sh"/>
@@ -250,6 +306,8 @@
     <mandatum>
       <verbum! (>./tools/latina_numeri.sh
     </mandatum>
+    <vestigium via="build/latina_numeri" forma="plagula"/>
+    <vestigium via="build/latina_numeri.dSYM"/>
     <ingressus genus="fasciculus" via="tools/latina_numeri.sh"/>
     <ingressus genus="fasciculus" via="tools/latina_numeri.c"/>
     <ingressus genus="fasciculus" via="lib/numerus_romanus.c"/>
@@ -389,6 +447,7 @@
       <verbum! (>gesta/fori_fontes_generata.sh
       <verbum! (>gesta/instrumenta/fori_principale.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/gesta__fori_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__fori_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -404,6 +463,7 @@
       <verbum! (>gesta/fontes/gesta.c
       <verbum! (>gesta/fontes/tabularium.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/gesta__tabularium_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabularium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -419,6 +479,7 @@
       <verbum! (>gesta/fontes/gesta.c
       <verbum! (>gesta/fontes/tabularium.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/gesta__tabulariumd_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabulariumd_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -445,6 +506,7 @@
       <verbum! (>saltuarius/fontes/saltuarius_tabularium.c
       <verbum! (>saltuarius/fontes/saltuarius_visum.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/saltuarius__saltuarius_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/saltuarius__saltuarius_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -458,6 +520,7 @@
       <verbum! (>tools/aedilis_fontes_generata.sh
       <verbum! (>tools/aedilis.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/tools__aedilis_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/tools__aedilis_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -469,6 +532,7 @@
     <mandatum>
       <verbum! (>./gesta/fontes_generare.sh
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/gesta"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -481,6 +545,7 @@
     <mandatum>
       <verbum! (>./tools/compile_tests_fontes_generare.sh
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/compile_tests"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/compile_tests"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -502,6 +567,7 @@
     <mandatum>
       <verbum! (>./tools/natura_canones.sh
     </mandatum>
+    <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="plagulae" via="natura" suffixa=".genera"/>
     <ingressus genus="fasciculus" via="tools/natura_canones.sh"/>
     <ingressus genus="manifestum" via="build/aedilis/natura_canones/manifestum.stml"/>
@@ -547,6 +613,7 @@
     <mandatum>
       <verbum! (>./tools/canon_coquere.sh
     </mandatum>
+    <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="fasciculus" via="cocta.registrum"/>
     <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
     <ingressus genus="fasciculus" via="natura/cocta/planta.canon"/>
@@ -576,6 +643,7 @@
       <verbum! (>crusta/grammatica/crusta.registrum.stml
       <verbum! (>-scribere
     </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
     <ingressus genus="fasciculus" via="crusta/grammatica/crusta.registrum.stml"/>
     <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
     <ingressus genus="fasciculus" via="materia/coquere.sh"/>
@@ -590,6 +658,7 @@
       <verbum! (>css/grammatica/css.registrum.stml
       <verbum! (>-scribere
     </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
     <ingressus genus="fasciculus" via="css/grammatica/css.registrum.stml"/>
     <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
     <ingressus genus="fasciculus" via="materia/coquere.sh"/>
@@ -604,6 +673,7 @@
       <verbum! (>html/grammatica/html.registrum.stml
       <verbum! (>-scribere
     </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
     <ingressus genus="fasciculus" via="html/grammatica/html.registrum.stml"/>
     <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
     <ingressus genus="fasciculus" via="materia/coquere.sh"/>
@@ -618,6 +688,7 @@
       <verbum! (>md/grammatica/md.registrum.stml
       <verbum! (>-scribere
     </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
     <ingressus genus="fasciculus" via="md/grammatica/md.registrum.stml"/>
     <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
     <ingressus genus="fasciculus" via="materia/coquere.sh"/>
@@ -632,6 +703,7 @@
       <verbum! (>oratio/grammatica/oratio.registrum.stml
       <verbum! (>-scribere
     </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
     <ingressus genus="fasciculus" via="oratio/grammatica/oratio.registrum.stml"/>
     <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
     <ingressus genus="fasciculus" via="materia/coquere.sh"/>
@@ -646,6 +718,7 @@
       <verbum! (>toml/grammatica/toml.registrum.stml
       <verbum! (>-scribere
     </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
     <ingressus genus="fasciculus" via="toml/grammatica/toml.registrum.stml"/>
     <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
     <ingressus genus="fasciculus" via="materia/coquere.sh"/>

@@ -47,18 +47,30 @@
 #include "fabrica.h"
 #include "provenientia.h"
 #include "scrinium.h"
+#include "numerus_romanus.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #define MORA_GENERATORIS_MS 600000
 #define MORA_RELATIONIS_MS  5000
 /* sanare: terminus unus per actum (briar ~3 min, obiecta radicis
  * frigida ~150 s); termini per actionem non in 1b */
 #define MORA_SANATIONIS_MS  1800000
+
+/* mtime cum nanosecundis: nomen membri inter systemata differt
+ * (stratum independentiae: hic solum, instrumentum non nucleus).
+ * Bracchium Linux CUSTODITUR, non Apple (ut lib/vigilia.c): lexicon
+ * silvae Darwin-veritas est, examen bracchium sine custodia aestimat */
+#ifdef __linux__
+#define FABRICA_MTIME(st) ((st).st_mtim)
+#else
+#define FABRICA_MTIME(st) ((st).st_mtimespec)
+#endif
 
 
 /* ==================================================
@@ -378,6 +390,236 @@ _agere (
     actum_out->cauda = _ultimae_lineae(resultus.erratum.mensura > 0
         ? resultus.erratum : resultus.effusio, XX);
     redde VERUM;
+}
+
+
+/* ==================================================
+ * Photographia arboris (plan 1b T4): vestigium_capere
+ * ================================================== */
+
+/* directoria '~/...' quae declarationes nominant (exitus aut
+ * vestigia extra arborem) - _sanare ea ponit ante photographias */
+hic_manens Xar* _directoria_extra = NIHIL;
+
+interior s32
+_vestigia_ordinare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(((constans FabricaVestigium*)a)->via,
+        ((constans FabricaVestigium*)b)->via);
+}
+
+interior vacuum
+_vestigium_addere (
+                   Xar* vestigia,
+                chorda  via_nominata,
+    constans character* via_vera)
+{
+      structura stat  status;
+  structura timespec  tempus;
+    FabricaVestigium* v;
+
+    si (lstat(via_vera, &status) != 0)
+    {
+        redde;
+    }
+    v = (FabricaVestigium*)xar_addere(vestigia);
+    si (v == NIHIL)
+    {
+        redde;
+    }
+    tempus = FABRICA_MTIME(status);
+    v->via = via_nominata;
+    v->tempus_ns  = (s64)tempus.tv_sec * (s64)M * (s64)M * (s64)M
+        + (s64)tempus.tv_nsec;
+    v->mensura    = (s64)status.st_size;
+}
+
+/* arbor recursive (nexus symbolici non sequuntur; .git radicis
+ * praetermittitur) */
+interior vacuum
+_arborem_photographare (
+      chorda  directorium,
+         Xar* vestigia,
+     Piscina* piscina)
+{
+     DirectoriumIterator* iterator;
+    DirectoriumIntroitus* introitus;
+
+    iterator = directorium_iterator_aperire(directorium.mensura > 0
+        ? chorda_ut_cstr(directorium, piscina) : ".", piscina);
+    si (iterator == NIHIL)
+    {
+        redde;
+    }
+    dum ((introitus = directorium_iterator_proximum(iterator)) != NIHIL)
+    {
+        chorda via;
+
+        si (   chorda_aequalis_literis(introitus->titulus, ".")
+            || chorda_aequalis_literis(introitus->titulus, "..")
+            || (   directorium.mensura == 0
+                && chorda_aequalis_literis(introitus->titulus, ".git")))
+        {
+            perge;
+        }
+        via = (directorium.mensura > 0)
+            ? chorda_concatenare(chorda_concatenare(directorium,
+                  chorda_ex_literis("/", piscina), piscina),
+                  introitus->titulus, piscina)
+            : chorda_transcribere(introitus->titulus, piscina);
+        si (introitus->genus == INTROITUS_DIRECTORIUM)
+        {
+            _arborem_photographare(via, vestigia, piscina);
+        }
+        alioquin
+        {
+            _vestigium_addere(vestigia, via, chorda_ut_cstr(via,
+                piscina));
+        }
+    }
+    directorium_iterator_claudere(iterator);
+}
+
+/* directorium '~/X' (HOME expanditur; via nominata manet '~/X/...') */
+interior vacuum
+_directorium_extra_photographare (
+      chorda  nominatum,
+         Xar* vestigia,
+     Piscina* piscina)
+{
+     DirectoriumIterator* iterator;
+    DirectoriumIntroitus* introitus;
+      constans character* domus;
+                  chorda  verum;
+
+    domus = getenv("HOME");
+    si (domus == NIHIL)
+    {
+        redde;
+    }
+    verum = chorda_concatenare(chorda_ex_literis(domus, piscina),
+        chorda_sectio(nominatum, I, nominatum.mensura), piscina);
+    iterator = directorium_iterator_aperire(chorda_ut_cstr(verum,
+        piscina), piscina);
+    si (iterator == NIHIL)
+    {
+        redde;
+    }
+    dum ((introitus = directorium_iterator_proximum(iterator)) != NIHIL)
+    {
+        chorda pars;
+
+        si (   chorda_aequalis_literis(introitus->titulus, ".")
+            || chorda_aequalis_literis(introitus->titulus, ".."))
+        {
+            perge;
+        }
+        pars = chorda_concatenare(chorda_ex_literis("/", piscina),
+            introitus->titulus, piscina);
+        _vestigium_addere(vestigia,
+            chorda_concatenare(nominatum, pars, piscina),
+            chorda_ut_cstr(chorda_concatenare(verum, pars,
+            piscina),
+                piscina));
+    }
+    directorium_iterator_claudere(iterator);
+}
+
+interior b32
+_vestigium_capere (
+     vacuum*  datum,
+    Piscina*  piscina,
+        Xar** vestigia_out)
+{
+    Xar* vestigia;
+    i32  i;
+
+    (vacuum)datum;
+    vestigia = xar_creare(piscina, (i32)magnitudo(FabricaVestigium));
+    si (vestigia == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _arborem_photographare(chorda_ex_literis("", piscina), vestigia,
+        piscina);
+    per (i = ZEPHYRUM;
+         _directoria_extra != NIHIL
+             && i < xar_numerus(_directoria_extra);
+         i++)
+    {
+        _directorium_extra_photographare(
+            *(chorda*)xar_obtinere(_directoria_extra, i), vestigia,
+            piscina);
+    }
+    xar_ordinare(vestigia, _vestigia_ordinare);
+    *vestigia_out = vestigia;
+    redde VERUM;
+}
+
+/* directoria '~/...' ex exitibus et vestigiis declaratis */
+interior Xar*
+_directoria_extra_colligere (
+    constans Xar* actiones,
+         Piscina* piscina)
+{
+    Xar* directoria;
+    i32  i;
+    i32  j;
+
+    directoria = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        FabricaActio* actio;
+                 Xar* viae;
+
+        actio  = (FabricaActio*)xar_obtinere(actiones, i);
+        viae   = xar_creare(piscina, (i32)magnitudo(chorda));
+        per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+        {
+            *(chorda*)xar_addere(viae) = ((FabricaExitus*)xar_obtinere(
+                actio->exitus, j))->via;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(actio->vestigia); j++)
+        {
+            *(chorda*)xar_addere(viae) = ((FabricaLocus*)xar_obtinere(
+                actio->vestigia, j))->via;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(viae); j++)
+        {
+            chorda via;
+               s32 k;
+               i32 l;
+               b32 iam;
+
+            via = *(chorda*)xar_obtinere(viae, j);
+            si (via.mensura < III || via.datum[0] != '~')
+            {
+                perge;
+            }
+            k = (s32)via.mensura - I;
+            dum (k > 0 && via.datum[k] != '/')
+            {
+                k--;
+            }
+            via = chorda_sectio(via, 0, (i32)k);
+            iam = FALSUM;
+            per (l = ZEPHYRUM; l < xar_numerus(directoria); l++)
+            {
+                si (chorda_aequalis(*(chorda*)xar_obtinere(directoria,
+                        l), via))
+                {
+                    iam = VERUM;
+                }
+            }
+            si (!iam)
+            {
+                *(chorda*)xar_addere(directoria) = via;
+            }
+        }
+    }
+    redde directoria;
 }
 
 
@@ -1389,11 +1631,13 @@ _sanare (
     }
 
     fabrica_suturam_parare(&sutura);
-    sutura.legere     = _legere;
-    sutura.enumerare  = _enumerare;
-    sutura.currere    = _currere;
-    sutura.rogare     = _rogare;
-    sutura.agere      = _agere;
+    sutura.legere = _legere;
+    sutura.enumerare = _enumerare;
+    sutura.currere = _currere;
+    sutura.rogare = _rogare;
+    sutura.agere = _agere;
+    sutura.vestigium_capere = _vestigium_capere;
+    _directoria_extra = _directoria_extra_colligere(actiones, piscina);
     sutura.sigilla = tabula_dispersa_creare_chorda(piscina,
         1024);
     sutura.regenerationes = tabula_dispersa_creare_chorda(piscina, 64);
@@ -1510,6 +1754,39 @@ _sanare (
                     commissa = VERUM;
                 }
             }
+        }
+    }
+    si (siccum && xar_numerus(sanationes) > 0)
+    {
+        Xar* agendae;
+        Xar* undae;
+
+        /* undae (Q41): quae SIMUL currere possent - monstratur solum */
+        agendae = xar_creare(piscina, (i32)magnitudo(FabricaActio*));
+        per (i = ZEPHYRUM; i < xar_numerus(sanationes); i++)
+        {
+            *(constans FabricaActio**)xar_addere(agendae) =
+                ((FabricaSanatio*)xar_obtinere(sanationes, i))->actio;
+        }
+        undae = fabrica_undas_formare(agendae, piscina);
+        printf("UNDAE (simul possent; sanare seriatim currit):\n");
+        per (i = ZEPHYRUM; undae != NIHIL
+            && i < xar_numerus(undae); i++)
+        {
+            Xar* membra;
+
+            membra = *(Xar**)xar_obtinere(undae, i);
+            printf("  %s:", chorda_ut_cstr(numerus_romanus_exprimere(
+                (i64)(i + I), NIHIL, piscina), piscina));
+            per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
+            {
+                FabricaActio* actio;
+
+                actio = *(FabricaActio**)xar_obtinere(membra, j);
+                printf(" %.*s", (s32)actio->titulus.mensura,
+                    (constans character*)actio->titulus.datum);
+            }
+            printf("\n");
         }
     }
     si (siccum)

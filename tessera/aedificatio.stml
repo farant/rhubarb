@@ -14,6 +14,8 @@
       <verbum! (>./tools/amalgama_fontes_generare.sh
       <verbum! (>tessera
     </mandatum>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="instrumentum" via="bin/aedilis"/>
@@ -26,6 +28,7 @@
       <verbum! (>./tools/amalgama_excludenda_generare.sh
       <verbum! (>tessera
     </mandatum>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
@@ -38,6 +41,11 @@
     <mandatum>
       <verbum! (>./tessera/amalgamare.sh
     </mandatum>
+    <vestigium via="tessera/build"/>
+    <vestigium via="silva/build" communis="verum"/>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/excludenda_generata.h"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
@@ -64,6 +72,7 @@
       <verbum! (>tessera/fontes/tessera_pons_memoriae.c
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/tessera__folium_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__folium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -82,6 +91,7 @@
       <verbum! (>tessera/fontes/tessera_pons_memoriae.c
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/tessera__spectaculum_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__spectaculum_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -101,6 +111,7 @@
       <verbum! (>tessera/fontes/tessera_pons_memoriae.c
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/tessera__effigies_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__effigies_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>

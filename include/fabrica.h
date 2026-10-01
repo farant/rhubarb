@@ -113,6 +113,12 @@ nomen structura {
                                             * ordo sine sigillo (plan 1b
                                             * T2). Exitus 'ignota' sola
                                             * hac via attinguntur. */
+                     Xar* vestigia;   /* FabricaLocus: opera propria
+                                       * (scriptura, directoria
+                                       * vacuata) - plan 1b T4 */
+                     Xar* communia;   /* FabricaLocus: area COMMUNIS
+                                       * (cache idempotens, obiecta
+                                       * per mtime): numquam simul */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -135,6 +141,15 @@ nomen structura {
        Xar* partes;   /* FabricaPars */
     chorda  sedes;
 } FabricaCompositum;
+
+/* Vestigium: plagula una in photographia arboris (plan 1b T4).
+ * Scriptura detegitur per tempus aut mensuram - rescriptio octetis
+ * eisdem quoque (tempus novum) nominatur. */
+nomen structura {
+    chorda via;
+       s64 tempus_ns;   /* mtime */
+       s64 mensura;
+} FabricaVestigium;
 
 /* Actum: exitus unius cursus mandati IN LOCO (sanare, plan 1b T3) */
 nomen structura {
@@ -199,6 +214,11 @@ nomen structura {
     b32 (*agere)(vacuum* datum, constans FabricaActio* actio,
                  constans character* acta_via, Piscina* piscina,
                  FabricaActum* actum_out);
+    /* photographia: arbor tota (sine .git) et loci declarati extra
+     * arborem ('~/'), Xar de FabricaVestigium ORDINATA per viam.
+     * NIHIL licet: sanare tum vestigia non probat (plan 1b T4). */
+    b32 (*vestigium_capere)(vacuum* datum, Piscina* piscina,
+                            Xar** vestigia_out);
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
@@ -440,6 +460,34 @@ fabrica_actionem_sigillare (
                    Piscina* piscina,
                   Sigillum* sigillum_out,
                     chorda* causa_out);
+
+
+/* ==================================================
+ * VESTIGIA (plan 1b T4): actio scribit SOLUM intra vestigium suum
+ * ================================================== */
+
+/* Viae (Xar de chorda) novae, deletae aut mutatae (tempus aut
+ * mensura) inter photographias 'ante' et 'post' (ordinatae) EXTRA
+ * vestigium actionis: 'locare' exituum + vestigia + communia +
+ * involucrum (build/fabrica/acta/TITULUS.log,
+ * build/fabrica/provenientia/TITULUS.{c,o},
+ * build/fabrica/scriptura/TITULUS/, build/fabrica.db{,-wal,-shm},
+ * build/fabrica/sera). Vacua = sanum. */
+Xar*
+fabrica_vestigia_comparare (
+    constans FabricaActio* actio,
+             constans Xar* ante,
+             constans Xar* post,
+                  Piscina* piscina);
+
+/* Undae: actiones (Xar de FabricaActio*, ordinatae) quae SIMUL
+ * currere possent - nulla dependentia inter eas, vestigia disiuncta,
+ * neutra communia tangit. Xar de Xar de FabricaActio*, ordine undarum.
+ * Monstratur solum (Q41: sanare seriatim currit). */
+Xar*
+fabrica_undas_formare (
+    constans Xar* ordo,
+         Piscina* piscina);
 
 
 /* ==================================================

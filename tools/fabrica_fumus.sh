@@ -31,6 +31,9 @@
 #   XIX  sanare sub sera aliena -> 2, sera nominata
 #   XX   sanare cum iudice ipso non recenti -> 2, fabrica_struere.sh
 #        nominatum, nihil actum (plan 1b T3)
+#   XXI  sanare: scriptura extra vestigium -> FRACTUM nominans eam
+#   XXII sanare -siccum: actiones independentes disiunctae -> unda una
+#        (plan 1b T4)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -151,7 +154,7 @@ if [ "$rc" -eq 1 ] && grep -q '^STALUM b ' "$T/o" && grep -q '^COMPOSITUM omnia 
 sanare_radix () {
     radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
     : > "$T/r/a"; printf 'vetus\n' > "$T/r/b"; printf 'c:vetus\n' > "$T/r/c"
-    printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="h" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_c.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="b"/>\n    <exitus via="c" provenientia="regeneratio"/>\n  </actio>\n%s</aedificatio>\n' "$1" > "$T/r/aedificatio.stml"
+    printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="h" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_c.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="b"/>\n    <exitus via="c" provenientia="regeneratio"/>\n  </actio>\n%b</aedificatio>\n' "$1" > "$T/r/aedificatio.stml"
     printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "c:%%s" "$(cat b)" > "$D/c"\n' > "$T/r/gen_c.sh"
 }
 sanare_radix ''
@@ -190,6 +193,20 @@ printf 'D="${FABRICA_SCRIPTURA:-.}"; [ -z "$FABRICA_SCRIPTURA" ] && : > signum_a
 (cd "$T/r" && "$F" sanare) > "$T/o" 2>&1; rc=$?
 if [ "$rc" -eq 2 ] && grep -q 'fabrica_struere.sh' "$T/o" && [ ! -f "$T/r/signum_acti" ]; then echo "  XX   iudex non recens -> 2, nihil actum OK"; else echo "  XX   FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
 
+# XXI (1b T4): g scribit b (exitus) ET alia.txt (extra vestigium)
+sanare_radix ''
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/b"; [ -z "$FABRICA_SCRIPTURA" ] && : > alia.txt; exit 0\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare b) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q '^FRACTUM *g .*scripsit extra vestigium: alia.txt' "$T/o"; then echo "  XXI  scriptura extra vestigium -> FRACT. OK"; else echo "  XXI  FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
+# XXII (1b T4): g (b) et k (d) independentes, ambae stalae -> unda una
+sanare_radix '  <actio titulus="k" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_d.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="d" provenientia="regeneratio"/>\n  </actio>\n'
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/b"\n' > "$T/r/gen_b.sh"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/d"\n' > "$T/r/gen_d.sh"
+printf 'vetus\n' > "$T/r/d"; printf 'c:vetus' > "$T/r/c"
+(cd "$T/r" && "$F" sanare -siccum b d) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q '^  I: g k$' "$T/o" && [ "$(cat "$T/r/b")" = "vetus" ]; then echo "  XXII -siccum: undae (simul possent)   OK"; else echo "  XXII FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XX/XX)"
+echo "fumus fabricae: sanum (XXII/XXII)"
 exit 0
