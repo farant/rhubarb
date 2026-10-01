@@ -1561,47 +1561,9 @@ fenestra_creare_tabulam_pixelorum (
     redde tabula;
 }
 
-vacuum
-tabula_pixelorum_vacare (
-    TabulaPixelorum* tabula,
-    i32 color)
-{
-    i32 pixela_totalia;
-    i32 i;
-
-    si (!tabula || !tabula->pixela) redde;
-
-    pixela_totalia = tabula->latitudo * tabula->altitudo;
-    per (i = ZEPHYRUM; i < pixela_totalia; i++)
-    {
-        tabula->pixela[i] = color;
-    }
-}
-
-vacuum
-tabula_pixelorum_ponere_pixelum (
-    TabulaPixelorum* tabula,
-    i32 x,
-    i32 y,
-    i32 color)
-{
-    si (!tabula || !tabula->pixela) redde;
-    si (x < ZEPHYRUM || x >= tabula->latitudo || y < ZEPHYRUM || y >= tabula->altitudo) redde;
-
-    tabula->pixela[y * tabula->latitudo + x] = color;
-}
-
-i32
-tabula_pixelorum_obtinere_pixelum (
-    TabulaPixelorum* tabula,
-    i32 x,
-    i32 y)
-{
-    si (!tabula || !tabula->pixela) redde ZEPHYRUM;
-    si (x < ZEPHYRUM || x >= tabula->latitudo || y < ZEPHYRUM || y >= tabula->altitudo) redde ZEPHYRUM;
-
-    redde tabula->pixela[y * tabula->latitudo + x];
-}
+/* tabula_pixelorum_vacare / _ponere_pixelum / _obtinere_pixelum: in
+ * lib/fenestra_textus.c (tabula_pixelorum.h; puri, sine Cocoa -
+ * tessellatio T4) */
 
 vacuum
 fenestra_praesentare_pixela (

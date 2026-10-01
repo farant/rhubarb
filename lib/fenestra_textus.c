@@ -1,5 +1,6 @@
-/* Redditionis textus pro fenestra */
-#include "fenestra.h"
+/* Tabula pixelorum PURA (tabula_pixelorum.h): pixela et textus - sine
+ * fenestra, sine Cocoa */
+#include "tabula_pixelorum.h"
 #include "fons_6x8.h"
 #include "utf8.h"
 #include "fons.h"
@@ -337,4 +338,55 @@ fons_altitudo_chordae (
     i32 scala)
 {
     redde FONS_ALTITUDO * scala;
+}
+
+
+/* ==================================================
+ * Pixela (ex fenestra_macos.m motae, tessellatio T4)
+ * ================================================== */
+
+vacuum
+tabula_pixelorum_vacare (
+    TabulaPixelorum* tabula,
+                i32  color)
+{
+    i32 pixela_totalia;
+    i32 i;
+
+    si (!tabula || !tabula->pixela) redde;
+
+    pixela_totalia = tabula->latitudo * tabula->altitudo;
+    per (i = ZEPHYRUM; i < pixela_totalia; i++)
+    {
+        tabula->pixela[i] = color;
+    }
+}
+
+vacuum
+tabula_pixelorum_ponere_pixelum (
+    TabulaPixelorum* tabula,
+                i32  x,
+                i32  y,
+                i32  color)
+{
+    si (!tabula || !tabula->pixela) redde;
+    si (   x < ZEPHYRUM || x >= tabula->latitudo || y < ZEPHYRUM
+        || y
+                                                                                                                          >= tabula->altitudo) redde;
+
+    tabula->pixela[y * tabula->latitudo + x] = color;
+}
+
+i32
+tabula_pixelorum_obtinere_pixelum (
+    TabulaPixelorum* tabula,
+                i32  x,
+                i32  y)
+{
+    si (!tabula || !tabula->pixela) redde ZEPHYRUM;
+    si (   x < ZEPHYRUM || x >= tabula->latitudo || y < ZEPHYRUM
+        || y
+                                                                                                                          >= tabula->altitudo) redde ZEPHYRUM;
+
+    redde tabula->pixela[y * tabula->latitudo + x];
 }

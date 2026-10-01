@@ -3,7 +3,7 @@
 
 #include "latina.h"
 #include "piscina.h"
-#include "fenestra.h"
+#include "tabula_pixelorum.h"
 #include "color.h"
 
 

@@ -242,3 +242,42 @@ nearest cell edge", not "small rectangles vanish". The test now uses a
   tesserae, opus tessellatum);
 - `cel` → `cellula`, `ax/ay/bx/by` → `initium_x/_y`, `finis_x/_y`;
 - `CAERUL` → `CAERULEUS`.
+
+## T4a — the pixel table leaves fenestra (2026-10-01)
+
+**INTENTIO (T4's prerequisite, found in T3).** Make rasterizing possible
+without linking Cocoa.
+
+**Finding: aedilis links by HEADER, not by symbol.** Including
+`fenestra.h` brings `fenestra_macos.m` (the platform-variant rule,
+"macos posix") + `-framework Cocoa` (the aedilis.stml rule), whatever is
+called. Moving the three pure functions into a new `.c` (first attempt)
+changed nothing: the new file wasn't even linked. The pure part needs
+its OWN HEADER.
+
+**Done:**
+- `include/tabula_pixelorum.h`, new. It contains `TabulaPixelorum`,
+  `tabula_pixelorum_vacare` / `_ponere_pixelum` / `_obtinere_pixelum`,
+  the `RGB`/`RGBA` macros, text drawing, `tabula_pixelorum_cellula_textus`,
+  and `fons_latitudo_chordae` / `fons_altitudo_chordae`. All of it was
+  cut verbatim from `fenestra.h`.
+- Its corpus annotation names the EXISTING `lib/fenestra_textus.c`
+  (an established pattern: biblia.h → biblia_dr.c).
+- The three pixel functions moved verbatim from `fenestra_macos.m` into
+  `fenestra_textus.c`. That file now includes `tabula_pixelorum.h`, not
+  `fenestra.h`; otherwise its own include closure would pull Cocoa back.
+- `fenestra.h` includes `tabula_pixelorum.h`, so every existing caller
+  sees exactly what it saw before.
+- `delineare.h` / `delineare_mandata.h` include only `tabula_pixelorum.h`.
+- **Why keep the name `fenestra_textus.c`:** silex
+  (`probatio_silex.c`) and briar (`probatio_briar_fabrica.c`) assert that
+  fenestra.h's closure contains it. Deleting or renaming it would have
+  rippled into a released product for no gain.
+
+**Verified:**
+- A probe TU including only `delineare_mandata.h` + `tessellatio.h` now
+  links NO `fenestra_macos.m` and no framework, only plain libraries.
+- Root suite 178/178. briar 20/20. pictor builds.
+- silex links every `build/*.o` wholesale and uses none of the moved
+  functions, so it is unaffected (its struere installs into ~/.bin, so
+  it was not run from the worktree).

@@ -24,7 +24,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "color.h"
-#include "fenestra.h"
+#include "tabula_pixelorum.h"
 #include "imago_typus.h"
 #include "mandatum.h"
 #include "modulus.h"
