@@ -55,7 +55,9 @@ compile_tool() {
     # Make sure libraries are compiled
     if [ ! -d "$BUILD_DIR" ] || [ -z "$(ls -A $BUILD_DIR/*.o 2>/dev/null)" ]; then
         echo -e "${YELLOW}Building libraries first...${RESET}"
-        ./compile_tests.sh --libs-only 2>/dev/null || ./compile_tests.sh dummy 2>&1 | head -20
+        # --obiecta (fabrica 1b T5): modus verus, exitus custoditur
+        # (olim '--libs-only' filtrum nihil congruens, exitus 2 neglectus)
+        ./compile_tests.sh --obiecta || return 1
     fi
 
     # Create bin directory

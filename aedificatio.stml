@@ -5,10 +5,47 @@
 <aedificatio>
   <!-- iudex ipse: primus iudicatur (stalus iudex sententias
        ceteras suspectas facit). Relatio '-provenientia' a T7. -->
+  <!-- OBIECTA (1b T5, Q38): thesauri obiectorum per mtime structi quos
+       installatores CAECE nectunt - strategia ignota, praecondicio sola
+       (numquam iudicatur, numquam pars). Slice 2 obiecta per sigilla. -->
+  <actio titulus="obiecta_radicis" genus="generator">
+    <mandatum>
+      <verbum! (>./compile_tests.sh
+      <verbum! (>--obiecta
+    </mandatum>
+    <vestigium via="build" forma="plagulae" suffixa=".o"/>
+    <!-- compile_libraries amalgamata commissa compilat (porta
+         amalgamata_probare.sh): acta eius -->
+    <vestigium via="build/amalgamata.txt" forma="plagula"/>
+    <vestigium via="build/amalgamata_probatio"/>
+    <vestigium via="build/test_logs/radix.log" forma="plagula"/>
+    <ingressus genus="fasciculus" via="compile_tests.sh"/>
+    <exitus via="build" provenientia="ignota"/>
+  </actio>
+  <actio titulus="obiecta_briar" genus="generator">
+    <mandatum>
+      <verbum! (>./briar/compile_probationes.sh
+      <verbum! (>--obiecta
+    </mandatum>
+    <vestigium via="briar/build"/>
+    <vestigium via="build/test_logs/briar.log" forma="plagula"/>
+    <!-- suite briar corpus infixum quoque regenerat (mensuratum 1b T5) -->
+    <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
+    <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
+    <vestigium via="corpus.symbola.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="corpus.versio" forma="plagula" communis="verum"/>
+    <vestigium via="corpus_silicis.toml" forma="plagula" communis="verum"/>
+    <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="silva/build" communis="verum"/>
+    <ingressus genus="fasciculus" via="briar/compile_probationes.sh"/>
+    <exitus via="briar/build" provenientia="ignota"/>
+  </actio>
   <actio titulus="fabrica" genus="institutio">
     <mandatum>
       <verbum! (>./tools/fabrica_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/fabrica"/>
     <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/fabrica/manifestum.stml"/>
@@ -23,6 +60,7 @@
     <mandatum>
       <verbum! (>./tools/manus_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/manus_instrumentum"/>
     <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/manus_instrumentum/manifestum.stml"/>
@@ -54,6 +92,7 @@
     <mandatum>
       <verbum! (>./tools/canon_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/canon_examen"/>
     <vestigium via="bin/canon_examen.dSYM"/>
     <vestigium via="build/aedilis/canon_coquere"/>
@@ -74,6 +113,7 @@
     <mandatum>
       <verbum! (>./tools/natura_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/natura_examen"/>
     <vestigium via="bin/natura_examen.dSYM"/>
     <vestigium via="build/aedilis/natura_canones"/>
@@ -101,6 +141,8 @@
     <mandatum>
       <verbum! (>./tools/stml_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
+    <praecondicio actio="obiecta_radicis"/>
     <vestigium via="build/aedilis/stml"/>
     <vestigium via="bin/stml.dSYM"/>
     <vestigium via="~/.bin/stml" forma="plagula"/>
@@ -115,6 +157,7 @@
     <mandatum>
       <verbum! (>./tools/mensor_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/mensor"/>
     <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/mensor/manifestum.stml"/>
@@ -127,6 +170,7 @@
     <mandatum>
       <verbum! (>./tools/mensor_ui_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
     <vestigium via="build/aedilis/mensor_ui"/>
     <vestigium via="build/aedilis/obiecta" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/mensor_ui/manifestum.stml"/>
@@ -143,6 +187,9 @@
     <mandatum>
       <verbum! (>./tools/briar_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
+    <praecondicio actio="obiecta_radicis"/>
+    <praecondicio actio="obiecta_briar"/>
     <vestigium via="build/aedilis/briar"/>
     <vestigium via="bin/briar.dSYM"/>
     <vestigium via="build/briar_aedificatio.c" forma="plagula"/>
@@ -155,6 +202,14 @@
     <vestigium via="build/capsula_mutationes_briar.h" forma="plagula"/>
     <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
     <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, mensuratum 1b T5):
+         commune briar et silici donec T6 actionem suam ei dat -->
+    <vestigium via="corpus.symbola.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="corpus.versio" forma="plagula" communis="verum"/>
+    <vestigium via="corpus_silicis.toml" forma="plagula" communis="verum"/>
+    <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/briar/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/briar_struere.sh"/>
@@ -192,6 +247,9 @@
     <mandatum>
       <verbum! (>./tools/briar_spectator_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
+    <praecondicio actio="obiecta_radicis"/>
+    <praecondicio actio="obiecta_briar"/>
     <vestigium via="build/aedilis/briar_spectator"/>
     <vestigium via="bin/briar-spectator.dSYM"/>
     <vestigium via="~/.bin/briar-spectator" forma="plagula"/>
@@ -230,11 +288,21 @@
     <mandatum>
       <verbum! (>./tools/silex_struere.sh
     </mandatum>
+    <praecondicio actio="aedilis"/>
+    <praecondicio actio="obiecta_radicis"/>
     <vestigium via="build/aedilis/silex"/>
     <vestigium via="bin/silex.dSYM"/>
     <vestigium via="~/.bin/silex" forma="plagula"/>
     <vestigium via="build/capsula_corpus_silicis.c" forma="plagula" communis="verum"/>
     <vestigium via="build/capsula_corpus_silicis.h" forma="plagula" communis="verum"/>
+    <!-- corpus infixum (tools/corpus_infixum.sh, mensuratum 1b T5):
+         commune briar et silici donec T6 actionem suam ei dat -->
+    <vestigium via="corpus.symbola.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="corpus.versio" forma="plagula" communis="verum"/>
+    <vestigium via="corpus_silicis.toml" forma="plagula" communis="verum"/>
+    <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
+    <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="manifestum" via="build/aedilis/silex/manifestum.stml"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="fasciculus" via="tools/silex_struere.sh"/>

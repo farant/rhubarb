@@ -754,3 +754,34 @@ Noted, not changed: directory-listing loci (radices) make every
 generator writing into an include root an order edge of every snippet
 - conservative-correct, but one failure cascades OMISSUM widely (seen
 once: 18 snippets blamed amalgama_tessera).
+
+## 2026-10-01 — plan 1b T5, part B1: object stores and tool edges
+
+Measured: two blind-linked stores, as expected - root build/*.o (silex,
+stml, briar via build/imago.o, briar_spectator; compile_tools.sh too,
+not a fabrica action) and briar/build/*.o (briar, spectator). Both get a
+real objects-only mode (Fran: `--obiecta`, the runners' double-dash
+convention; amalgamare.sh kept its single-dash `-obiecta` from A2):
+compile_tests.sh --obiecta = compile_libraries, exit 0/1 (replaces the
+`--libs-only` filter that matched nothing and exited 2 - compile_tools
+now checks the code); briar/compile_probationes.sh --obiecta = objects
+and helpers, exit before the test loop. Declared `ignota` actions
+obiecta_radicis, obiecta_briar; preconditions on their linkers; tool
+edge: every installer except aedilis has precondition aedilis
+(fabrica: no edge - aedilis's installer calls bin/fabrica digestum;
+the self-check covers it; capsula_generare is undeclared).
+
+The footprint check sharpened the declarations in three live plants:
+obiecta_radicis also writes build/amalgamata.txt,
+build/amalgamata_probatio/ (compile_libraries runs the amalgam compile
+gate) and build/test_logs/radix.log; obiecta_briar writes
+build/test_logs/briar.log AND regenerates the corpus capsule (the briar
+suite embeds it). Corpus write set measured directly (touch a lib file,
+snapshot around corpus_infixum_regenerare): capsule .c/.h,
+corpus.symbola.tsv, corpus.versio, corpus_silicis.toml (root,
+gitignored), build/nexus.tsv, build/inclusiones.tsv, silva/build
+objects - declared communis on briar, silex and obiecta_briar until
+T6 gives the corpus its own action. The blind-link bug class shown
+live: a planted briar source edit makes obiecta_briar rebuild the
+stale .o BEFORE the link (PRAEPARATUM), where before the installer
+linked the old object under a digest naming the new source.

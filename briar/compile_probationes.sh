@@ -111,6 +111,14 @@ declare -a RADIX_FONTES=(
     "icones"
 )
 
+# --obiecta (fabrica 1b T5): SOLA obiecta briar/build/*.o (cum
+# adiumentis) struuntur, exitus 0 - nulla probatio. Actio 'obiecta_briar'
+# (ignota) praecondicio est briar et spectatoris, qui ea CAECE nectunt.
+OBIECTA=0
+if [ "${1:-}" = "--obiecta" ]; then
+    OBIECTA=1
+    shift
+fi
 FILTER="${1:-}"
 
 if [ -n "$FILTER" ]; then
@@ -298,6 +306,11 @@ done
 source "$RADIX_DIR/tools/mensor_suitae.sh"
 mensor_suitae_incipere "briar."
 total=0 ; passed=0 ; failed_names=""
+if [ "$OBIECTA" -eq 1 ]; then
+    echo "obiecta briar parata"
+    exit 0
+fi
+
 for test_file in "$BRIAR_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"
     if [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]]; then

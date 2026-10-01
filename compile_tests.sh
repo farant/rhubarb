@@ -1053,6 +1053,7 @@ MURUS_FASCIS=""
 WATCH_MODE=0
 DEBUG_MODE=0
 CLEAN_MODE=0
+OBIECTA_MODE=0
 RETICULARIS=0
 MACHINA=0
 for arg in "$@"; do
@@ -1062,6 +1063,8 @@ for arg in "$@"; do
         DEBUG_MODE=1
     elif [ "$arg" == "--clean" ]; then
         CLEAN_MODE=1
+    elif [ "$arg" == "--obiecta" ]; then
+        OBIECTA_MODE=1
     elif [ "$arg" == "-reticularis" ] || [ "$arg" == "--reticularis" ]; then
         RETICULARIS=1
     elif [ "$arg" == "-machina" ] || [ "$arg" == "--machina" ]; then
@@ -1144,6 +1147,16 @@ fi
 # Add debug symbols if debug mode
 if [ $DEBUG_MODE -eq 1 ]; then
     GCC_FLAGS+=("-g")
+fi
+
+# --obiecta (fabrica 1b T5): SOLA obiecta bibliothecarum (build/*.o)
+# struuntur, exitus 0 bene / 1 fractum - nulla probatio. Actio
+# 'obiecta_radicis' (strategia ignota) praecondicio est installatorum
+# qui build/*.o CAECE nectunt (silex, stml, briar, spectator). Olim
+# '--libs-only': filtrum quod nihil congruebat, exitus 2 'nihil cursum'.
+if [ $OBIECTA_MODE -eq 1 ]; then
+    compile_libraries || exit 1
+    exit 0
 fi
 
 # Main execution
