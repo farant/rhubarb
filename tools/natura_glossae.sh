@@ -34,6 +34,11 @@ done
 
 case "${1-}" in
 -pagina)
+    # FABRICA_SCRIPTURA (iudex fabricae): pagina in scripturam
+    if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+        mkdir -p "$FABRICA_SCRIPTURA/$(dirname "$PAGINA")" || exit 2
+        exec "$PORTA" -html "$FABRICA_SCRIPTURA/$PAGINA"
+    fi
     exec "$PORTA" -html "$PAGINA"
     ;;
 -probare)

@@ -130,9 +130,10 @@ qs_quaestio_legere_nodum (
             }
         }
     }
-    res->selector = NIHIL;
-    res->causa = NIHIL;
-    res->parametrum = xar_creare(piscina, (i32)magnitudo(QsParametrum*));
+    res->selector  = NIHIL;
+    res->causa     = NIHIL;
+    res->parametrum = xar_creare(piscina,
+        (i32)magnitudo(QsParametrum*));
     {
         i32 n;
         i32 i;

@@ -444,3 +444,42 @@ silva/fontes/silva_nodus.c touches 46 artifacts.
   red is a crash tells you less than you think.
 - Live: hand-edited gesta/fori_fontes_generata.sh → refused, STALUM
   "lineae differentes: 12", SANATIO names the fontes_generare command.
+
+## 2026-09-30 — cooked generated files declared (from the inventory)
+
+The inventory 'generata commissa (fabrica)' (ledger 01M3TBHT) named
+committed generated files no declaration covered. Declared now (root
+aedificatio.stml, section 'GENERATA COCTA', hand-listed inputs, NOT
+memorabilis): canones_cocti (natura_canones.sh: 36 canons + semina.census
+= 37 outputs), lectores_cocti (canon_coquere.sh: 4 reader files; input
+natura/cocta/planta.canon orders it after canones_cocti), glossae_pagina
+(natura_glossae.sh -pagina), registrum_<g> x6 (materia/coquere.sh,
+2 files each), capsula_assets. 56 artifacts, all RECENS by regeneration
+(5.7 s). Plant: line appended to glossae.html + comment appended to
+lib/quaestiones_lectio.c -> exactly those two STALUM, the reader's three
+siblings RECENS.
+- Scratch modes added: canon_coquere.sh (its -probare path: generate,
+  substitute paths, FORMAT, then copy - the reader embeds its own paths),
+  natura_canones.sh (and it skips its nested call of canon_coquere.sh
+  under the judge), natura_glossae.sh -pagina, materia coctor.c (C:
+  -scribere under FABRICA_SCRIPTURA writes below that root). Each
+  verified byte-identical against the tree before declaring.
+- STALE FOUND, nobody had noticed: both cooked readers (canon_coquere
+  -probare: RANCIDUS) - the generator formats its output with the house
+  formatter, and the formatter evolved; the diff was whitespace only
+  (token streams identical, checked). natura/cocta/glossae.html stale
+  since 2026-08-07 (187 -> 468 glossed terms) - real content drift. Both
+  regenerated. Lesson in the declaration: the readers' inputs include the
+  FORMATTER's sources.
+- The registries were NOT unguarded: each client suite compares them
+  byte-for-byte via materia_registrum_recens (the coctor source says so:
+  "porta rancoris eadem quam probationes clientium vocant"). My inventory
+  cell was wrong; corrected.
+- capsula_libri NOT declared: libri.toml globs book_assets/*.txt, which
+  is gitignored; ~3,300 local Gutenberg books today vs 11 in the
+  committed capsule. Regeneration in scratch produced a 3.6 GB file
+  (deleted). Not reproducible from the tree - a snapshot fixture; what
+  to do with it is Fran's call.
+- The inventory's candidate search missed natura/cocta/*.canon (marker
+  on line 2, after the XML declaration) - it is a lower bound, as its
+  description says; rows added.

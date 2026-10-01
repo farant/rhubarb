@@ -490,4 +490,181 @@
     <ingressus genus="plagulae" via="probationes" suffixa=".c"/>
     <exitus via="compile_tests_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
+  <!-- GENERATA COCTA (inventarium 'generata commissa (fabrica)',
+       2026-09-30): canones naturae, lectores ex canonibus, pagina
+       glossarum, registra grammaticarum materiae, capsula probationis.
+       Ingressus manu (non memorabiles - regenerantur sub -plenus).
+       Lectores FORMATOREM per generationem adhibent: fontes eius
+       ingressus sunt (forma mutata = lector stalus, mensuratum).
+       capsula_libri NON declarata: libri *.txt in .gitignore, ergo
+       ex arbore non reproducibilis (fixura, non artificium). -->
+  <actio titulus="canones_cocti" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/natura_canones.sh
+    </mandatum>
+    <ingressus genus="plagulae" via="natura" suffixa=".genera"/>
+    <ingressus genus="fasciculus" via="tools/natura_canones.sh"/>
+    <ingressus genus="manifestum" via="build/aedilis/natura_canones/manifestum.stml"/>
+    <exitus via="natura/cocta/acta.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/actus.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/animal.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/architectura_machinae.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/causa.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/cliens.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/commercium.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/communicatio.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/corporalia.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/documentatio.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/elementa_programmatis.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/fabricatio.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/formae_datorum.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/identificatio.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/individua.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/iudicium.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/laboratorium.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/lingua_programmandi.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/locus.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/mensura.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/morbus.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/norma.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/obligatio.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/operatio.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/opus_scriptum.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/organizatio.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/persona.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/pharmacon.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/plagula_computatralis.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/planta.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/praescriptum.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/schema.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/semina.census" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/systema_operativum.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/tempus.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/vectura.canon" provenientia="regeneratio"/>
+    <exitus via="natura/cocta/versio.canon" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="lectores_cocti" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/canon_coquere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="cocta.registrum"/>
+    <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
+    <ingressus genus="fasciculus" via="natura/cocta/planta.canon"/>
+    <ingressus genus="fasciculus" via="tools/canon_coquere.sh"/>
+    <ingressus genus="manifestum" via="build/aedilis/canon_coquere/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="silva/formator.sh"/>
+    <ingressus genus="fasciculus" via="silva/instrumenta/principalia/formator.c"/>
+    <ingressus genus="plagulae" via="silva/fontes" suffixa=".c .h"/>
+    <exitus via="include/quaestiones_lectio.h" provenientia="regeneratio"/>
+    <exitus via="lib/quaestiones_lectio.c" provenientia="regeneratio"/>
+    <exitus via="include/planta_lectio.h" provenientia="regeneratio"/>
+    <exitus via="lib/planta_lectio.c" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="glossae_pagina" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/natura_glossae.sh
+      <verbum! (>-pagina
+    </mandatum>
+    <ingressus genus="plagulae" via="natura" suffixa=".genera"/>
+    <ingressus genus="fasciculus" via="tools/natura_glossae.sh"/>
+    <ingressus genus="manifestum" via="build/aedilis/natura_glossae/manifestum.stml"/>
+    <exitus via="natura/cocta/glossae.html" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="registrum_crusta" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>crusta/grammatica/crusta.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <ingressus genus="fasciculus" via="crusta/grammatica/crusta.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="crusta/fontes/crusta_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="crusta/fontes/crusta_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="registrum_css" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>css/grammatica/css.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <ingressus genus="fasciculus" via="css/grammatica/css.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="css/fontes/css_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="css/fontes/css_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="registrum_html" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>html/grammatica/html.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <ingressus genus="fasciculus" via="html/grammatica/html.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="html/fontes/html_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="html/fontes/html_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="registrum_md" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>md/grammatica/md.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <ingressus genus="fasciculus" via="md/grammatica/md.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="md/fontes/md_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="md/fontes/md_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="registrum_oratio" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>oratio/grammatica/oratio.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <ingressus genus="fasciculus" via="oratio/grammatica/oratio.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="oratio/fontes/oratio_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="oratio/fontes/oratio_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="registrum_toml" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>toml/grammatica/toml.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <ingressus genus="fasciculus" via="toml/grammatica/toml.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="toml/fontes/toml_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="toml/fontes/toml_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="capsula_assets" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/capsula_regenerare.sh
+      <verbum! (>probationes/test_capsula.toml
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/capsula_regenerare.sh"/>
+    <ingressus genus="instrumentum" via="bin/capsula_generare"/>
+    <ingressus genus="fasciculus" via="probationes/test_capsula.toml"/>
+    <ingressus genus="fasciculus" via="probationes/test_assets/hello.txt"/>
+    <ingressus genus="fasciculus" via="probationes/test_assets/lorem.txt"/>
+    <exitus via="probationes/capsula_assets.c" provenientia="regeneratio"/>
+    <exitus via="probationes/capsula_assets.h" provenientia="regeneratio"/>
+  </actio>
 </aedificatio>

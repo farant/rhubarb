@@ -99,7 +99,7 @@ facti=0
 while IFS='	' read -r canon praefixum caput corpus; do
     case "$canon" in ''|\#*) continue ;; esac
 
-    if [ "${1:-}" = "-probare" ]; then
+    if [ "${1:-}" = "-probare" ] || [ -n "${FABRICA_SCRIPTURA:-}" ]; then
         "$PORTA" "$canon" -praefixum "$praefixum" \
             -caput "$TMPD/probandum.h" -corpus "$TMPD/probandum.c" \
             2>/dev/null || { echo "canon_coquere: '$canon' coqui nequit" >&2; exit 2; }
@@ -122,6 +122,17 @@ while IFS='	' read -r canon praefixum caput corpus; do
         # differrent et porta rancorem falsum nuntiaret.
         _formare "$TMPD/probandum2.h"
         _formare "$TMPD/probandum2.c"
+        # FABRICA_SCRIPTURA (iudex fabricae): semita probationis ipsa
+        # (viae substitutae, forma applicata) in scripturam copiatur -
+        # arbor intacta, octeti idem ac regeneratio in loco
+        if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+            mkdir -p "$FABRICA_SCRIPTURA/$(dirname "$caput")" \
+                     "$FABRICA_SCRIPTURA/$(dirname "$corpus")" || exit 2
+            cp "$TMPD/probandum2.h" "$FABRICA_SCRIPTURA/$caput" || exit 2
+            cp "$TMPD/probandum2.c" "$FABRICA_SCRIPTURA/$corpus" || exit 2
+            facti=$((facti + 1))
+            continue
+        fi
         if ! cmp -s "$TMPD/probandum2.h" "$caput" \
            || ! cmp -s "$TMPD/probandum2.c" "$corpus"; then
             echo "canon_coquere: RANCIDUS $caput / $corpus (fons: $canon) - regenera: ./tools/canon_coquere.sh" >&2

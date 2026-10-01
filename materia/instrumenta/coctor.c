@@ -52,6 +52,32 @@ _via_radice (
     redde v;
 }
 
+/* directoria parentia viae creare (FABRICA_SCRIPTURA) */
+interior b32
+_parentes_creare (
+                Piscina* piscina,
+     constans character* via)
+{
+    character* parens;
+    character* virgula;
+       size_t  n;
+
+    n       = strlen(via) + I;
+    parens  = (character*)piscina_allocare(piscina, (memoriae_index)n);
+    si (parens == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memcpy(parens, via, n);
+    virgula = strrchr(parens, '/');
+    si (virgula == NIHIL)
+    {
+        redde VERUM;
+    }
+    *virgula = '\0';
+    redde filum_directorium_creare_cum_parentibus(parens);
+}
+
 /* via declarationis radici relativa (praefixum 'radix/' demptum) */
 interior constans character*
 _via_relativa (
@@ -204,6 +230,30 @@ principale (
     si (via_capitis == NIHIL || via_fontis == NIHIL)
     {
         redde II;
+    }
+    /* FABRICA_SCRIPTURA (iudex fabricae): -scribere in scripturam,
+     * arbor intacta. Textus viam declarationis (radici relativam)
+     * fert, non viam exitus - octeti idem ac scriptio in loco. */
+    {
+        constans character* scriptura;
+
+        scriptura = getenv("FABRICA_SCRIPTURA");
+        si (   scribere && scriptura != NIHIL
+            && scriptura[ZEPHYRUM] != '\0')
+        {
+            via_capitis  = _via_radice(piscina, scriptura,
+                coctio.via_capitis);
+            via_fontis   = _via_radice(piscina, scriptura,
+                coctio.via_fontis);
+            si (   via_capitis == NIHIL || via_fontis == NIHIL
+                || !_parentes_creare(piscina, via_capitis)
+                || !_parentes_creare(piscina, via_fontis))
+            {
+                fprintf(stderr, "coctor: scriptura parari nequit "
+                    "(%s)\n", scriptura);
+                redde II;
+            }
+        }
     }
     si (scribere)
     {

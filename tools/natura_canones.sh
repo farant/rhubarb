@@ -154,6 +154,11 @@ conferre_aut_scribere () {
         # exemplar vetus tollitur: aliter porta quae nihil scripsit
         # cum exemplari PRIORIS moduli conferret.
         rm -f "$PROBANDUM"
+    elif [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+        # iudex fabricae: in scripturam, arbor intacta (emissor viam
+        # non coquit - octeti idem)
+        scriptum="$FABRICA_SCRIPTURA/$vera"
+        mkdir -p "$(dirname "$scriptum")" || exit 2
     else
         scriptum="$vera"
     fi
@@ -236,6 +241,13 @@ if [ "$PROBARE" = "1" ]; then
 fi
 
 echo "natura_canones: canones $facti cocti" >&2
+
+# Sub iudice fabricae saltus secundus omittitur: lectores sua actio
+# fabricae iudicat (catena per ingressum planta.canon ordinata), et
+# lectores arboris contra canones SCRIPTURAE conferre falsum esset.
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    exit 0
+fi
 
 # ------------------------------------------------------------------
 # SALTUS SECUNDUS, EO MOMENTO QUO RANCOR NASCITUR

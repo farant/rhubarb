@@ -509,34 +509,34 @@ structura PlantaPlantaHistoria {
 };
 
 structura PlantaRosaceae {
-                         StmlNodus* nodus;
-                            chorda* nomen_v;
-             PlantaRosaceaeHabitus  habitus;
-              PlantaRosaceaeDurata  durata;
-    PlantaRosaceaeFoliaPermanentia  folia_permanentia;
-                               s64  altitudo_matura;
-                               b32  altitudo_matura_praesens;
-          PlantaRosaceaeStatusVita  status_vita;
-                            chorda* auctor_nominis;
-                            chorda* nomen_publicatum_in;
-                            chorda* pollinatur_a;
-               PlantaRosaceaeAnima  anima;
-                            chorda* massa;
-                               b32  perituram;
-                               b32  perituram_praesens;
-      PlantaRosaceaeStatusConditio  status_conditio;
-                            chorda* sita_in;
-               PlantaRosaceaeRadix* radix;
-              PlantaRosaceaeCaulis* caulis;
-              PlantaRosaceaeFolium* folium;
-                PlantaRosaceaeFlos* flos;
-             PlantaRosaceaeFructus* fructus;
-               PlantaRosaceaeSemen* semen;
-                               Xar* generat;   /* PlantaRosaceaeGenerat* */
-                               Xar* laborat;   /* PlantaRosaceaeLaborat* */
-            PlantaRosaceaeHistoria* historia;
-                               Xar* nota;   /* PlantaNota* */
-                               Xar* glossa;   /* PlantaGlossa* */
+    StmlNodus*  nodus;
+    chorda*     nomen_v;
+    PlantaRosaceaeHabitus habitus;
+    PlantaRosaceaeDurata durata;
+    PlantaRosaceaeFoliaPermanentia folia_permanentia;
+    s64         altitudo_matura;
+    b32         altitudo_matura_praesens;
+    PlantaRosaceaeStatusVita status_vita;
+    chorda*     auctor_nominis;
+    chorda*     nomen_publicatum_in;
+    chorda*     pollinatur_a;
+    PlantaRosaceaeAnima anima;
+    chorda*     massa;
+    b32         perituram;
+    b32         perituram_praesens;
+    PlantaRosaceaeStatusConditio status_conditio;
+    chorda*     sita_in;
+    PlantaRosaceaeRadix* radix;
+    PlantaRosaceaeCaulis* caulis;
+    PlantaRosaceaeFolium* folium;
+    PlantaRosaceaeFlos* flos;
+    PlantaRosaceaeFructus* fructus;
+    PlantaRosaceaeSemen* semen;
+    Xar*        generat;   /* PlantaRosaceaeGenerat* */
+    Xar*        laborat;   /* PlantaRosaceaeLaborat* */
+    PlantaRosaceaeHistoria* historia;
+    Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaRosaceaeRadix {
@@ -661,34 +661,34 @@ structura PlantaRosaHistoria {
 };
 
 structura PlantaRosaCanina {
-                           StmlNodus* nodus;
-                              chorda* nomen_v;
-             PlantaRosaCaninaHabitus  habitus;
-              PlantaRosaCaninaDurata  durata;
-    PlantaRosaCaninaFoliaPermanentia  folia_permanentia;
-                                 s64  altitudo_matura;
-                                 b32  altitudo_matura_praesens;
-          PlantaRosaCaninaStatusVita  status_vita;
-                              chorda* auctor_nominis;
-                              chorda* nomen_publicatum_in;
-                              chorda* pollinatur_a;
-               PlantaRosaCaninaAnima  anima;
-                              chorda* massa;
-                                 b32  perituram;
-                                 b32  perituram_praesens;
-      PlantaRosaCaninaStatusConditio  status_conditio;
-                              chorda* sita_in;
-               PlantaRosaCaninaRadix* radix;
-              PlantaRosaCaninaCaulis* caulis;
-              PlantaRosaCaninaFolium* folium;
-                PlantaRosaCaninaFlos* flos;
-             PlantaRosaCaninaFructus* fructus;
-               PlantaRosaCaninaSemen* semen;
-                                 Xar* generat;   /* PlantaRosaCaninaGenerat* */
-                                 Xar* laborat;   /* PlantaRosaCaninaLaborat* */
-            PlantaRosaCaninaHistoria* historia;
-                                 Xar* nota;   /* PlantaNota* */
-                                 Xar* glossa;   /* PlantaGlossa* */
+    StmlNodus*  nodus;
+    chorda*     nomen_v;
+    PlantaRosaCaninaHabitus habitus;
+    PlantaRosaCaninaDurata durata;
+    PlantaRosaCaninaFoliaPermanentia folia_permanentia;
+    s64         altitudo_matura;
+    b32         altitudo_matura_praesens;
+    PlantaRosaCaninaStatusVita status_vita;
+    chorda*     auctor_nominis;
+    chorda*     nomen_publicatum_in;
+    chorda*     pollinatur_a;
+    PlantaRosaCaninaAnima anima;
+    chorda*     massa;
+    b32         perituram;
+    b32         perituram_praesens;
+    PlantaRosaCaninaStatusConditio status_conditio;
+    chorda*     sita_in;
+    PlantaRosaCaninaRadix* radix;
+    PlantaRosaCaninaCaulis* caulis;
+    PlantaRosaCaninaFolium* folium;
+    PlantaRosaCaninaFlos* flos;
+    PlantaRosaCaninaFructus* fructus;
+    PlantaRosaCaninaSemen* semen;
+    Xar*        generat;   /* PlantaRosaCaninaGenerat* */
+    Xar*        laborat;   /* PlantaRosaCaninaLaborat* */
+    PlantaRosaCaninaHistoria* historia;
+    Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaRosaCaninaRadix {
@@ -813,34 +813,34 @@ structura PlantaMalusHistoria {
 };
 
 structura PlantaMalusDomestica {
-                               StmlNodus* nodus;
-                                  chorda* nomen_v;
-             PlantaMalusDomesticaHabitus  habitus;
-              PlantaMalusDomesticaDurata  durata;
-    PlantaMalusDomesticaFoliaPermanentia  folia_permanentia;
-                                     s64  altitudo_matura;
-                                     b32  altitudo_matura_praesens;
-          PlantaMalusDomesticaStatusVita  status_vita;
-                                  chorda* auctor_nominis;
-                                  chorda* nomen_publicatum_in;
-                                  chorda* pollinatur_a;
-               PlantaMalusDomesticaAnima  anima;
-                                  chorda* massa;
-                                     b32  perituram;
-                                     b32  perituram_praesens;
-      PlantaMalusDomesticaStatusConditio  status_conditio;
-                                  chorda* sita_in;
-               PlantaMalusDomesticaRadix* radix;
-              PlantaMalusDomesticaCaulis* caulis;
-              PlantaMalusDomesticaFolium* folium;
-                PlantaMalusDomesticaFlos* flos;
-             PlantaMalusDomesticaFructus* fructus;
-               PlantaMalusDomesticaSemen* semen;
-                                     Xar* generat;   /* PlantaMalusDomesticaGenerat* */
-                                     Xar* laborat;   /* PlantaMalusDomesticaLaborat* */
-            PlantaMalusDomesticaHistoria* historia;
-                                     Xar* nota;   /* PlantaNota* */
-                                     Xar* glossa;   /* PlantaGlossa* */
+    StmlNodus*  nodus;
+    chorda*     nomen_v;
+    PlantaMalusDomesticaHabitus habitus;
+    PlantaMalusDomesticaDurata durata;
+    PlantaMalusDomesticaFoliaPermanentia folia_permanentia;
+    s64         altitudo_matura;
+    b32         altitudo_matura_praesens;
+    PlantaMalusDomesticaStatusVita status_vita;
+    chorda*     auctor_nominis;
+    chorda*     nomen_publicatum_in;
+    chorda*     pollinatur_a;
+    PlantaMalusDomesticaAnima anima;
+    chorda*     massa;
+    b32         perituram;
+    b32         perituram_praesens;
+    PlantaMalusDomesticaStatusConditio status_conditio;
+    chorda*     sita_in;
+    PlantaMalusDomesticaRadix* radix;
+    PlantaMalusDomesticaCaulis* caulis;
+    PlantaMalusDomesticaFolium* folium;
+    PlantaMalusDomesticaFlos* flos;
+    PlantaMalusDomesticaFructus* fructus;
+    PlantaMalusDomesticaSemen* semen;
+    Xar*        generat;   /* PlantaMalusDomesticaGenerat* */
+    Xar*        laborat;   /* PlantaMalusDomesticaLaborat* */
+    PlantaMalusDomesticaHistoria* historia;
+    Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaMalusDomesticaRadix {
@@ -889,34 +889,34 @@ structura PlantaMalusDomesticaHistoria {
 };
 
 structura PlantaGrannySmith {
-                            StmlNodus* nodus;
-                               chorda* nomen_v;
-             PlantaGrannySmithHabitus  habitus;
-              PlantaGrannySmithDurata  durata;
-    PlantaGrannySmithFoliaPermanentia  folia_permanentia;
-                                  s64  altitudo_matura;
-                                  b32  altitudo_matura_praesens;
-          PlantaGrannySmithStatusVita  status_vita;
-                               chorda* auctor_nominis;
-                               chorda* nomen_publicatum_in;
-                               chorda* pollinatur_a;
-               PlantaGrannySmithAnima  anima;
-                               chorda* massa;
-                                  b32  perituram;
-                                  b32  perituram_praesens;
-      PlantaGrannySmithStatusConditio  status_conditio;
-                               chorda* sita_in;
-               PlantaGrannySmithRadix* radix;
-              PlantaGrannySmithCaulis* caulis;
-              PlantaGrannySmithFolium* folium;
-                PlantaGrannySmithFlos* flos;
-             PlantaGrannySmithFructus* fructus;
-               PlantaGrannySmithSemen* semen;
-                                  Xar* generat;   /* PlantaGrannySmithGenerat* */
-                                  Xar* laborat;   /* PlantaGrannySmithLaborat* */
-            PlantaGrannySmithHistoria* historia;
-                                  Xar* nota;   /* PlantaNota* */
-                                  Xar* glossa;   /* PlantaGlossa* */
+    StmlNodus*  nodus;
+    chorda*     nomen_v;
+    PlantaGrannySmithHabitus habitus;
+    PlantaGrannySmithDurata durata;
+    PlantaGrannySmithFoliaPermanentia folia_permanentia;
+    s64         altitudo_matura;
+    b32         altitudo_matura_praesens;
+    PlantaGrannySmithStatusVita status_vita;
+    chorda*     auctor_nominis;
+    chorda*     nomen_publicatum_in;
+    chorda*     pollinatur_a;
+    PlantaGrannySmithAnima anima;
+    chorda*     massa;
+    b32         perituram;
+    b32         perituram_praesens;
+    PlantaGrannySmithStatusConditio status_conditio;
+    chorda*     sita_in;
+    PlantaGrannySmithRadix* radix;
+    PlantaGrannySmithCaulis* caulis;
+    PlantaGrannySmithFolium* folium;
+    PlantaGrannySmithFlos* flos;
+    PlantaGrannySmithFructus* fructus;
+    PlantaGrannySmithSemen* semen;
+    Xar*        generat;   /* PlantaGrannySmithGenerat* */
+    Xar*        laborat;   /* PlantaGrannySmithLaborat* */
+    PlantaGrannySmithHistoria* historia;
+    Xar*        nota;   /* PlantaNota* */
+    Xar*        glossa;   /* PlantaGlossa* */
 };
 
 structura PlantaGrannySmithRadix {
