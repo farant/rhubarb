@@ -108,7 +108,33 @@ nomen structura {
                                         * regenerationem supplet (T6).
                                         * Absens = FALSUM: regeneratur
                                         * semper sub -plenus. */
+                     Xar* praecondiciones; /* chorda: tituli actionum
+                                            * REALIZANDARUM ante hanc -
+                                            * ordo sine sigillo (plan 1b
+                                            * T2). Exitus 'ignota' sola
+                                            * hac via attinguntur. */
 } FabricaActio;
+
+/* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
+ * plana partium nominatarum (nulla expressio: decretum Canonis).
+ * Iudicium = pessimum partium. */
+nomen enumeratio {
+    FABRICA_PARS_ARTIFICIUM = ZEPHYRUM, /* via exitus */
+    FABRICA_PARS_ACTIO,                 /* omnes exitus actionis */
+    FABRICA_PARS_COMPOSITUM             /* compositum aliud */
+} FabricaFormaPartis;
+
+nomen structura {
+    FabricaFormaPartis forma;
+                chorda titulus;
+                chorda sedes;
+} FabricaPars;
+
+nomen structura {
+    chorda  titulus;
+       Xar* partes;   /* FabricaPars */
+    chorda  sedes;
+} FabricaCompositum;
 
 /* Sutura: machina discum et processus per eam SOLAM tangit. */
 nomen structura {
@@ -210,6 +236,9 @@ structura FabricaStrategia {
     /* VERUM: artificium octetis comparatur - '-tacta' id solum
      * iudicat (commissa generata); genus reproducibile postulat */
     b32 octetis_comparat;
+    /* FALSUM: 'ignota' - numquam iudicatur; exitus eius praecondicio
+     * sola est (numquam pars compositi, numquam ingressus) */
+    b32 iudicatur;
     /* iudicium exitus, ingressibus actionis IAM sigillatis. plenus
      * FALSUM = celer. */
     FabricaIudicium (*iudicare)(constans FabricaSutura* sutura,
@@ -227,7 +256,8 @@ fabrica_genus_invenire (
     chorda titulus);
 
 /* Registra: regeneratio (memoria ante eam, actionibus memorabilibus
- * solis), relatio. NIHIL si titulus ignotus. */
+ * solis), relatio, ignota (praecondicio: numquam iudicatur). NIHIL si
+ * titulus ignotus. */
 constans FabricaStrategia*
 fabrica_strategia_invenire (
     chorda titulus);
@@ -272,9 +302,9 @@ fabrica_iudicare (
                     Piscina* piscina);
 
 /* Actiones ordine dependentiae: actio cuius ingressus exitus
- * alterius est post eam; ceteroquin ordo datus (stabilis). Xar de
- * FabricaActio* in actiones datas. NIHIL + causa in cyclo, titulis
- * nominatis. */
+ * alterius est, aut quae eam praecondicionem nominat, post eam;
+ * ceteroquin ordo datus (stabilis). Xar de FabricaActio* in actiones
+ * datas. NIHIL + causa in cyclo, titulis nominatis. */
 Xar*
 fabrica_ordinare (
     constans Xar* actiones,   /* FabricaActio (valore) */
@@ -337,6 +367,50 @@ fabrica_actio_tacta (
      constans FabricaActio* actio,
               constans Xar* viae,
                    Piscina* piscina);
+
+/* Composita plagulae declarationum (elementa 'compositum' cum
+ * partibus 'pars': artificium=, actio= aut compositum=, unum
+ * exacte). NIHIL + causa "via:linea": compositum sine titulo aut sine
+ * parte, pars sine nomine aut nominibus pluribus, titulus duplex.
+ * Xar de FabricaCompositum (fortasse vacua). */
+Xar*
+fabrica_composita_legere (
+                 chorda  contentum,
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa_out);
+
+/* Artificia compositi 'titulus', plana et sine duplicibus (Xar de
+ * chorda, ordine primae apparitionis). NIHIL + causa: compositum
+ * ignotum, pars ignota, cyclus (tituli nominati), pars cuius strategia
+ * non iudicatur (praecondicio). Pessimum associativum est: planum ==
+ * nidificatum. */
+Xar*
+fabrica_compositum_explicare (
+     constans Xar* composita,  /* FabricaCompositum */
+     constans Xar* actiones,   /* FabricaActio */
+           chorda  titulus,
+          Piscina* piscina,
+           chorda* causa_out);
+
+/* Pessimum iudiciorum (Xar de FabricaIudicium) ordine RECENS <
+ * NON_IUDICATUM < IGNOTUM < STALUM; causa nominat artificia pessima
+ * (III, deinde "+N"). artificium = titulus. */
+FabricaIudicium
+fabrica_iudicia_coniungere (
+     constans Xar* iudicia,
+           chorda  titulus,
+          Piscina* piscina);
+
+/* Praecondiciones omnium actionum: actio nominata exstat; exitus
+ * strategiae non iudicatae numquam ingressus alterius (praecondicio
+ * sola licet). FALSUM + causa "sedes: ...". */
+b32
+fabrica_praecondiciones_probare (
+    constans Xar* actiones,
+         Piscina* piscina,
+          chorda* causa_out);
 
 /* Sigillum actionis UT iudex et 'bin/fabrica digestum' id computant:
  * ingressus MINUS plagula provenientiae eius (quae digestum ipsum fert

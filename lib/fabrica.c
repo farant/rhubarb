@@ -7,6 +7,7 @@
 #include "chorda_aedificator.h"
 #include "internamentum.h"
 #include "stml.h"
+#include "numerus_romanus.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -1433,20 +1434,43 @@ _regeneratione_iudicare (
             chorda_ex_literis(numerus, piscina), ")"));
 }
 
+/* IGNOTA: numquam iudicatur (machina eam non vocat; vocata tamen
+ * IGNOTUM honestum reddit) - praecondicio sola (spec 1b par. II.3) */
+interior FabricaIudicium
+_ignote_iudicare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+    constans FabricaExitus* exitus,
+         constans Sigillum* ingressus,
+                       b32  plenus,
+                   Piscina* piscina)
+{
+    (vacuum)sutura;
+    (vacuum)actio;
+    (vacuum)ingressus;
+    (vacuum)plenus;
+    redde _iudicium(exitus->via, FABRICA_IGNOTUM, chorda_ex_literis(
+        "ignota: praecondicio, numquam iudicatur", piscina));
+}
 
 /* ordo membrorum: titulus, genus_ordinarium, octetis_comparat,
- * iudicare */
+ * iudicatur, iudicare */
 interior constans FabricaStrategia _strategia_regeneratio = {
-    "regeneratio", "fasciculus", VERUM, _regeneratione_iudicare
+    "regeneratio", "fasciculus", VERUM, VERUM, _regeneratione_iudicare
 };
 
 interior constans FabricaStrategia _strategia_relatio = {
-    "relatio", "binarium", FALSUM, _relatione_iudicare
+    "relatio", "binarium", FALSUM, VERUM, _relatione_iudicare
+};
+
+interior constans FabricaStrategia _strategia_ignota = {
+    "ignota", "fasciculus", FALSUM, FALSUM, _ignote_iudicare
 };
 
 interior constans FabricaStrategia* constans _strategiae[] = {
     &_strategia_regeneratio,
-    &_strategia_relatio
+    &_strategia_relatio,
+    &_strategia_ignota
 };
 
 constans FabricaStrategia*
@@ -1677,6 +1701,26 @@ fabrica_declarationes_legere (
         }
         actio.mandatum = _mandatum_legere(nodus, piscina);
 
+        actio.praecondiciones = _xar_chordarum(piscina);
+        filii = stml_invenire_omnes_liberos(nodus, "praecondicio",
+            piscina);
+        per (j = ZEPHYRUM; filii != NIHIL && j < xar_numerus(filii);
+             j++)
+        {
+            StmlNodus* filius;
+               chorda* nominata;
+
+            filius    = *(StmlNodus**)xar_obtinere(filii, j);
+            nominata  = stml_attributum_capere(filius, "actio");
+            si (nominata == NIHIL)
+            {
+                redde _recusare(piscina, causa_out,
+                    _sedes(piscina, via, filius),
+                    "praecondicio sine actione", nihil);
+            }
+            _chordam_addere(actio.praecondiciones, *nominata);
+        }
+
         actio.ingressus = xar_creare(piscina,
             (i32)magnitudo(FabricaIngressus));
         filii = stml_invenire_omnes_liberos(nodus, "ingressus",
@@ -1853,10 +1897,514 @@ fabrica_subsystemata_legere (
 
 
 /* ==================================================
+ * Composita et praecondiciones (plan 1b T2)
+ * ================================================== */
+
+Xar*
+fabrica_composita_legere (
+                 chorda  contentum,
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa_out)
+{
+    StmlResultus  lectum;
+             Xar* composita;
+             Xar* nodi;
+          chorda  nihil;
+             i32  i;
+
+    nihil   = chorda_ex_literis("", piscina);
+    lectum  = stml_legere(contentum, piscina, intern);
+    si (   !lectum.successus
+        || lectum.elementum_radix == NIHIL
+        || !chorda_aequalis_literis(*lectum.elementum_radix->titulus,
+               "aedificatio"))
+    {
+        redde _recusare(piscina, causa_out,
+            chorda_ex_literis(via, piscina),
+            "radix non aedificatio (aut STML fractum)", nihil);
+    }
+    composita = xar_creare(piscina, (i32)magnitudo(FabricaCompositum));
+    nodi = stml_invenire_omnes_liberos(lectum.elementum_radix,
+        "compositum", piscina);
+    per (i = ZEPHYRUM; nodi != NIHIL && i < xar_numerus(nodi); i++)
+    {
+                StmlNodus* nodus;
+        FabricaCompositum  compositum;
+                   chorda* valor;
+                      Xar* filii;
+                      i32  j;
+
+        nodus             = *(StmlNodus**)xar_obtinere(nodi, i);
+        compositum.sedes  = _sedes(piscina, via, nodus);
+        valor             = stml_attributum_capere(nodus, "titulus");
+        si (valor == NIHIL)
+        {
+            redde _recusare(piscina, causa_out, compositum.sedes,
+                "compositum sine titulo", nihil);
+        }
+        compositum.titulus = *valor;
+        per (j = ZEPHYRUM; j < xar_numerus(composita); j++)
+        {
+            si (chorda_aequalis(compositum.titulus,
+                    ((FabricaCompositum*)xar_obtinere(composita,
+                    j))->titulus))
+            {
+                redde _recusare(piscina, causa_out, compositum.sedes,
+                    "titulus compositi duplex", compositum.titulus);
+            }
+        }
+        compositum.partes = xar_creare(piscina,
+            (i32)magnitudo(FabricaPars));
+        filii = stml_invenire_omnes_liberos(nodus, "pars", piscina);
+        per (j = ZEPHYRUM; filii != NIHIL && j < xar_numerus(filii);
+             j++)
+        {
+              StmlNodus* filius;
+            FabricaPars  pars;
+                 chorda* artificium;
+                 chorda* actio;
+                 chorda* aliud;
+                    i32  numerus;
+
+            filius      = *(StmlNodus**)xar_obtinere(filii, j);
+            pars.sedes  = _sedes(piscina, via, filius);
+            artificium  = stml_attributum_capere(filius, "artificium");
+            actio       = stml_attributum_capere(filius, "actio");
+            aliud       = stml_attributum_capere(filius, "compositum");
+            numerus     = (artificium != NIHIL ? I : ZEPHYRUM)
+                + (actio != NIHIL ? I : ZEPHYRUM)
+                + (aliud != NIHIL ? I : ZEPHYRUM);
+            si (numerus != I)
+            {
+                redde _recusare(piscina, causa_out, pars.sedes,
+                    "pars nomen unum exacte postulat (artificium, "
+                    "actio aut compositum)", nihil);
+            }
+            si (artificium != NIHIL)
+            {
+                pars.forma    = FABRICA_PARS_ARTIFICIUM;
+                pars.titulus  = *artificium;
+            }
+            alioquin si (actio != NIHIL)
+            {
+                pars.forma    = FABRICA_PARS_ACTIO;
+                pars.titulus  = *actio;
+            }
+            alioquin
+            {
+                pars.forma    = FABRICA_PARS_COMPOSITUM;
+                pars.titulus  = *aliud;
+            }
+            *(FabricaPars*)xar_addere(compositum.partes) = pars;
+        }
+        si (xar_numerus(compositum.partes) == 0)
+        {
+            redde _recusare(piscina, causa_out, compositum.sedes,
+                "compositum sine parte", compositum.titulus);
+        }
+        *(FabricaCompositum*)xar_addere(composita) = compositum;
+    }
+    redde composita;
+}
+
+interior b32
+_chordam_continet (
+     constans Xar* xar,
+           chorda  valor)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(xar); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(xar, i), valor))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* exitum addere (semel); exitus non iudicatus recusatur */
+interior b32
+_partem_exitum_addere (
+    constans FabricaExitus* exitus,
+                    chorda  sedes,
+                       Xar* viae,
+                   Piscina* piscina,
+                    chorda* causa_out)
+{
+    si (!exitus->strategia->iudicatur)
+    {
+        (vacuum)_recusare(piscina, causa_out, sedes,
+            "pars est praecondicio (strategia numquam iudicata)",
+            exitus->via);
+        redde FALSUM;
+    }
+    si (!_chordam_continet(viae, exitus->via))
+    {
+        _chordam_addere(viae, exitus->via);
+    }
+    redde VERUM;
+}
+
+/* compositum 'titulus' in viae explicare; acervus = tituli in cursu
+ * (cyclus) */
+interior b32
+_compositum_colligere (
+     constans Xar* composita,
+     constans Xar* actiones,
+           chorda  titulus,
+           chorda  sedes,
+              Xar* acervus,
+              Xar* viae,
+          Piscina* piscina,
+           chorda* causa_out)
+{
+    constans FabricaCompositum* compositum;
+                           i32  i;
+                           i32  j;
+                           i32  k;
+
+    compositum = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(composita); i++)
+    {
+        si (chorda_aequalis(((FabricaCompositum*)xar_obtinere(
+                composita, i))->titulus, titulus))
+        {
+            compositum = (FabricaCompositum*)xar_obtinere(composita, i);
+        }
+    }
+    si (compositum == NIHIL)
+    {
+        (vacuum)_recusare(piscina, causa_out, sedes,
+            "compositum ignotum", titulus);
+        redde FALSUM;
+    }
+    si (_chordam_continet(acervus, titulus))
+    {
+        ChordaAedificator* aedificator;
+
+        aedificator = chorda_aedificator_creare(piscina, 128);
+        si (aedificator == NIHIL)
+        {
+            redde FALSUM;
+        }
+        (vacuum)chorda_aedificator_appendere_literis(aedificator,
+            "cyclus inter composita: ");
+        per (i = ZEPHYRUM; i < xar_numerus(acervus); i++)
+        {
+            (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+                *(chorda*)xar_obtinere(acervus, i));
+            (vacuum)chorda_aedificator_appendere_literis(aedificator,
+                " -> ");
+        }
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+            titulus);
+        si (causa_out != NIHIL)
+        {
+            *causa_out = chorda_aedificator_finire(aedificator);
+        }
+        redde FALSUM;
+    }
+    _chordam_addere(acervus, titulus);
+    per (i = ZEPHYRUM; i < xar_numerus(compositum->partes); i++)
+    {
+        constans FabricaPars* pars;
+                         b32  inventa;
+
+        pars     = (FabricaPars*)xar_obtinere(compositum->partes, i);
+        inventa  = FALSUM;
+        si (pars->forma == FABRICA_PARS_COMPOSITUM)
+        {
+            si (!_compositum_colligere(composita, actiones,
+                    pars->titulus, pars->sedes, acervus, viae, piscina,
+                    causa_out))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(actiones); j++)
+        {
+            constans FabricaActio* actio;
+
+            actio = (FabricaActio*)xar_obtinere(actiones, j);
+            si (   pars->forma == FABRICA_PARS_ACTIO
+                && chorda_aequalis(actio->titulus, pars->titulus))
+            {
+                inventa = VERUM;
+                per (k = ZEPHYRUM; k < xar_numerus(actio->exitus); k++)
+                {
+                    si (!_partem_exitum_addere(
+                            (FabricaExitus*)xar_obtinere(actio->exitus,
+                            k), pars->sedes, viae, piscina, causa_out))
+                    {
+                        redde FALSUM;
+                    }
+                }
+            }
+            si (pars->forma == FABRICA_PARS_ARTIFICIUM)
+            {
+                per (k = ZEPHYRUM; k < xar_numerus(actio->exitus); k++)
+                {
+                    constans FabricaExitus* exitus;
+
+                    exitus = (FabricaExitus*)xar_obtinere(actio->exitus,
+                        k);
+                    si (!chorda_aequalis(exitus->via, pars->titulus))
+                    {
+                        perge;
+                    }
+                    inventa = VERUM;
+                    si (!_partem_exitum_addere(exitus, pars->sedes,
+                        viae,
+                            piscina, causa_out))
+                    {
+                        redde FALSUM;
+                    }
+                }
+            }
+        }
+        si (!inventa)
+        {
+            (vacuum)_recusare(piscina, causa_out, pars->sedes,
+                pars->forma == FABRICA_PARS_ACTIO
+                    ? "pars ignota (actio nulla)"
+                    : "pars ignota (artificium nullum declaratum)",
+                pars->titulus);
+            redde FALSUM;
+        }
+    }
+    (vacuum)xar_removere_ultimum(acervus);
+    redde VERUM;
+}
+
+Xar*
+fabrica_compositum_explicare (
+     constans Xar* composita,
+     constans Xar* actiones,
+           chorda  titulus,
+          Piscina* piscina,
+           chorda* causa_out)
+{
+    Xar* acervus;
+    Xar* viae;
+
+    acervus  = _xar_chordarum(piscina);
+    viae     = _xar_chordarum(piscina);
+    si (acervus == NIHIL || viae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!_compositum_colligere(composita, actiones, titulus,
+            chorda_ex_literis("fabrica", piscina), acervus, viae,
+            piscina, causa_out))
+    {
+        redde NIHIL;
+    }
+    redde viae;
+}
+
+/* gravitas status: pessimum = maximum */
+interior i32
+_gravitas (
+    FabricaStatus status)
+{
+    commutatio (status)
+    {
+        casus FABRICA_RECENS:
+            redde ZEPHYRUM;
+        casus FABRICA_NON_IUDICATUM:
+            redde I;
+        casus FABRICA_IGNOTUM:
+            redde II;
+        ordinarius:
+            redde III;
+    }
+}
+
+interior constans character*
+_status_titulus (
+    FabricaStatus status)
+{
+    commutatio (status)
+    {
+        casus FABRICA_RECENS:
+            redde "RECENS";
+        casus FABRICA_NON_IUDICATUM:
+            redde "NON IUDICATUM";
+        casus FABRICA_IGNOTUM:
+            redde "IGNOTUM";
+        ordinarius:
+            redde "STALUM";
+    }
+}
+
+FabricaIudicium
+fabrica_iudicia_coniungere (
+     constans Xar* iudicia,
+           chorda  titulus,
+          Piscina* piscina)
+{
+        FabricaStatus  pessimum;
+    ChordaAedificator* aedificator;
+                  i32  i;
+                  i32  nominatae;
+                  i32  reliquae;
+            character  numerus[64];
+
+    pessimum = FABRICA_RECENS;
+    per (i = ZEPHYRUM; i < xar_numerus(iudicia); i++)
+    {
+        FabricaStatus status;
+
+        status = ((FabricaIudicium*)xar_obtinere(iudicia, i))->status;
+        si (_gravitas(status) > _gravitas(pessimum))
+        {
+            pessimum = status;
+        }
+    }
+    aedificator = chorda_aedificator_creare(piscina, 128);
+    si (aedificator == NIHIL)
+    {
+        redde _iudicium(titulus, pessimum, chorda_ex_literis("",
+            piscina));
+    }
+    si (pessimum == FABRICA_RECENS)
+    {
+        sprintf(numerus, "RECENS: omnes partes recentes (%u)",
+            (insignatus integer)xar_numerus(iudicia));
+        redde _iudicium(titulus, pessimum, chorda_ex_literis(numerus,
+            piscina));
+    }
+    (vacuum)chorda_aedificator_appendere_literis(aedificator,
+        _status_titulus(pessimum));
+    (vacuum)chorda_aedificator_appendere_literis(aedificator, ": ");
+    nominatae  = ZEPHYRUM;
+    reliquae   = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(iudicia); i++)
+    {
+        constans FabricaIudicium* iudicium;
+
+        iudicium = (FabricaIudicium*)xar_obtinere(iudicia, i);
+        si (iudicium->status != pessimum)
+        {
+            perge;
+        }
+        si (nominatae >= III)
+        {
+            reliquae++;
+            perge;
+        }
+        si (nominatae > 0)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(aedificator,
+                ", ");
+        }
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+            iudicium->artificium);
+        nominatae++;
+    }
+    si (reliquae > 0)
+    {
+        chorda romanus;
+
+        (vacuum)chorda_aedificator_appendere_literis(aedificator, " +");
+        romanus = numerus_romanus_exprimere((i64)reliquae, NIHIL,
+            piscina);
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+            romanus);
+    }
+    redde _iudicium(titulus, pessimum,
+        chorda_aedificator_finire(aedificator));
+}
+
+b32
+fabrica_praecondiciones_probare (
+    constans Xar* actiones,
+         Piscina* piscina,
+          chorda* causa_out)
+{
+    i32 i;
+    i32 j;
+    i32 k;
+    i32 l;
+
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        constans FabricaActio* actio;
+
+        actio = (FabricaActio*)xar_obtinere(actiones, i);
+        per (j = ZEPHYRUM;
+             actio->praecondiciones != NIHIL
+             && j < xar_numerus(actio->praecondiciones);
+             j++)
+        {
+            chorda nominata;
+               b32 inventa;
+
+            nominata = *(chorda*)xar_obtinere(actio->praecondiciones,
+                j);
+            inventa = FALSUM;
+            per (k = ZEPHYRUM; k < xar_numerus(actiones); k++)
+            {
+                si (chorda_aequalis(((FabricaActio*)xar_obtinere(
+                        actiones, k))->titulus, nominata))
+                {
+                    inventa = VERUM;
+                }
+            }
+            si (!inventa)
+            {
+                (vacuum)_recusare(piscina, causa_out, actio->sedes,
+                    "praecondicio ignota (actio nulla)", nominata);
+                redde FALSUM;
+            }
+        }
+        /* exitus ignotus ut ingressus: verdictum eius numquam notum -
+         * sigillum quoque nullum habet sensum */
+        per (j = ZEPHYRUM; j < xar_numerus(actio->ingressus); j++)
+        {
+            chorda via;
+
+            via = ((FabricaIngressus*)xar_obtinere(actio->ingressus,
+                j))->via;
+            per (k = ZEPHYRUM; k < xar_numerus(actiones); k++)
+            {
+                constans FabricaActio* altera;
+
+                altera = (FabricaActio*)xar_obtinere(actiones, k);
+                per (l = ZEPHYRUM; l < xar_numerus(altera->exitus); l++)
+                {
+                    constans FabricaExitus* exitus;
+
+                    exitus = (FabricaExitus*)xar_obtinere(
+                        altera->exitus, l);
+                    si (   !exitus->strategia->iudicatur
+                        && chorda_aequalis(exitus->via, via))
+                    {
+                        (vacuum)_recusare(piscina, causa_out,
+                            actio->sedes,
+                            "ingressus est exitus numquam iudicatus - "
+                            "praecondicio sola licet", via);
+                        redde FALSUM;
+                    }
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Ordo
  * ================================================== */
 
-/* VERUM si posterior exitum prioris legit */
+/* VERUM si posterior exitum prioris legit aut priorem praecondicionem
+ * nominat */
 interior b32
 _pendet (
     constans FabricaActio* posterior,
@@ -1865,6 +2413,18 @@ _pendet (
     i32 i;
     i32 j;
 
+    /* praecondicio: ordo sine sigillo */
+    per (i = ZEPHYRUM;
+         posterior->praecondiciones != NIHIL
+         && i < xar_numerus(posterior->praecondiciones);
+         i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(
+                posterior->praecondiciones, i), prior->titulus))
+        {
+            redde VERUM;
+        }
+    }
     per (i = ZEPHYRUM; i < xar_numerus(posterior->ingressus); i++)
     {
         FabricaIngressus* ingressus;

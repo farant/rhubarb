@@ -21,6 +21,9 @@
 #   XIII binaria in bin/ sine declaratione -> linea una numerata (Q36)
 #   XIV  -tacta: via tangens -> generatum iudicatum, installatum NON;
 #        via nulla tangens -> exitus 0 'nulla ... tacta' (commissio, T8)
+#   XV   compositum nominatum: partes iudicantur, linea COMPOSITUM
+#        pessimum nominat (pars stala), pars recens non nominatur
+#        (plan 1b T2)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -126,6 +129,16 @@ printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <ingressus g
 if [ "$rc" -eq 1 ] && grep -q '^IGNOTUM b ' "$T/o" && ! grep -q 'bin/i' "$T/o" \
    && [ "$rc2" -eq 0 ] && grep -q 'nulla artificia generata a viis tacta' "$T/o2"; then echo "  XIV  -tacta: generata tacta sola       OK"; else echo "  XIV  FRACTUM (rc=$rc rc2=$rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
 
+# XV (1b T2): compositum - generatores scripti: b novum scribit (stalum
+# contra 'vetus' commissum), c idem (recens)
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+: > "$T/r/a"; printf 'vetus\n' > "$T/r/b"; printf 'idem\n' > "$T/r/c"
+printf 'printf "novum\\n" > "$FABRICA_SCRIPTURA/b"\n' > "$T/r/gen_b.sh"
+printf 'printf "idem\\n" > "$FABRICA_SCRIPTURA/c"\n' > "$T/r/gen_c.sh"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="h" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_c.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="c" provenientia="regeneratio"/>\n  </actio>\n  <compositum titulus="omnia">\n    <pars artificium="b"/>\n    <pars actio="h"/>\n  </compositum>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" iudicare -plenus omnia) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q '^STALUM b ' "$T/o" && grep -q '^COMPOSITUM omnia - STALUM: b$' "$T/o"; then echo "  XV   compositum: pessimum partium      OK"; else echo "  XV   FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XIV/XIV)"
+echo "fumus fabricae: sanum (XV/XV)"
 exit 0

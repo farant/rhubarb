@@ -352,6 +352,8 @@ _actio (
         (i32)magnitudo(FabricaExitus));
     actio->sedes        = chorda_ex_literis("fixa:1", piscina);
     actio->memorabilis  = FALSUM;
+    actio->praecondiciones = xar_creare(piscina,
+        (i32)magnitudo(chorda));
     redde actio;
 }
 
@@ -1632,7 +1634,7 @@ s32 principale (vacuum)
         /* registrum strategiarum */
         CREDO_NON_NIHIL(_strategia("regeneratio", piscina));
         CREDO_NON_NIHIL(_strategia("relatio", piscina));
-        CREDO_NIHIL(_strategia("ignota", piscina));
+        CREDO_NIHIL(_strategia("compilatio", piscina));
         CREDO_VERUM(_strategia("regeneratio",
             piscina)->octetis_comparat);
         CREDO_FALSUM(_strategia("relatio", piscina)->octetis_comparat);
@@ -1723,6 +1725,235 @@ s32 principale (vacuum)
         }
         CREDO_VERUM(plagulae_inventae);
         CREDO_VERUM(plagula_inventa);
+    }
+
+
+    /* ==================================================
+     * PROBARE: composita et praecondiciones (plan 1b T2)
+     * ================================================== */
+
+    {
+        InternamentumChorda* intern;
+                     chorda  contentum;
+                     chorda  causa;
+                        Xar* actiones;
+                        Xar* composita;
+                        Xar* viae;
+                        Xar* iudicia;
+                        Xar* ordo;
+            FabricaIudicium  iudicium;
+            FabricaIudicium* locus;
+                        i32  i;
+
+        imprimere("\n--- Probans composita et praecondiciones ---\n");
+        intern         = internamentum_creare(piscina);
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+
+        /* strategia ignota: numquam iudicatur */
+        CREDO_NON_NIHIL(_strategia("ignota", piscina));
+        CREDO_FALSUM(_strategia("ignota", piscina)->iudicatur);
+        CREDO_VERUM(_strategia("regeneratio", piscina)->iudicatur);
+        CREDO_VERUM(_strategia("relatio", piscina)->iudicatur);
+
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"g\" genus=\"generator\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"a\"/>\n"
+            "    <exitus via=\"x\" provenientia=\"regeneratio\"/>\n"
+            "    <exitus via=\"y\" provenientia=\"regeneratio\"/>\n"
+            "  </actio>\n"
+            "  <actio titulus=\"i\" genus=\"institutio\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"a\"/>\n"
+            "    <exitus via=\"bin/i\" provenientia=\"relatio\"/>\n"
+            "  </actio>\n"
+            "  <actio titulus=\"o\" genus=\"generator\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"a\"/>\n"
+            "    <exitus via=\"build/o\" provenientia=\"ignota\"/>\n"
+            "  </actio>\n"
+            "  <compositum titulus=\"omnia\">\n"
+            "    <pars actio=\"g\"/>\n"
+            "    <pars compositum=\"binaria\"/>\n"
+            "    <pars artificium=\"x\"/>\n"
+            "  </compositum>\n"
+            "  <compositum titulus=\"binaria\">\n"
+            "    <pars artificium=\"bin/i\"/>\n"
+            "  </compositum>\n"
+            "  <compositum titulus=\"cyclus_a\">\n"
+            "    <pars compositum=\"cyclus_b\"/>\n"
+            "  </compositum>\n"
+            "  <compositum titulus=\"cyclus_b\">\n"
+            "    <pars compositum=\"cyclus_a\"/>\n"
+            "  </compositum>\n"
+            "  <compositum titulus=\"orbum\">\n"
+            "    <pars artificium=\"nusquam\"/>\n"
+            "  </compositum>\n"
+            "  <compositum titulus=\"cum_praecondicione\">\n"
+            "    <pars artificium=\"build/o\"/>\n"
+            "  </compositum>\n"
+            "</aedificatio>\n", piscina);
+        actiones = fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern, &causa);
+        CREDO_NON_NIHIL(actiones);
+        composita = fabrica_composita_legere(contentum, "d.stml",
+            piscina, intern, &causa);
+        CREDO_NON_NIHIL(composita);
+        CREDO_AEQUALIS_I32(xar_numerus(composita), VI);
+
+        /* planum, sine duplicibus, ordine primae apparitionis -
+         * nidificatum == planum (pessimum associativum) */
+        viae = fabrica_compositum_explicare(composita, actiones,
+            chorda_ex_literis("omnia", piscina), piscina, &causa);
+        CREDO_NON_NIHIL(viae);
+        CREDO_AEQUALIS_I32(xar_numerus(viae), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(viae,
+            ZEPHYRUM), "x");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(viae, I),
+            "y");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(viae, II),
+            "bin/i");
+
+        /* cyclus: tituli ambo nominati */
+        CREDO_NIHIL(fabrica_compositum_explicare(composita, actiones,
+            chorda_ex_literis("cyclus_a", piscina), piscina, &causa));
+        CREDO_VERUM(_continet(causa, "cyclus", piscina));
+        CREDO_VERUM(_continet(causa, "cyclus_a", piscina));
+        CREDO_VERUM(_continet(causa, "cyclus_b", piscina));
+
+        /* pars ignota: sedes et nomen */
+        CREDO_NIHIL(fabrica_compositum_explicare(composita, actiones,
+            chorda_ex_literis("orbum", piscina), piscina, &causa));
+        CREDO_VERUM(_continet(causa, "d.stml:30", piscina));
+        CREDO_VERUM(_continet(causa, "nusquam", piscina));
+
+        /* exitus ignotus pars esse nequit (pessimum semper IGNOTUM) */
+        CREDO_NIHIL(fabrica_compositum_explicare(composita, actiones,
+            chorda_ex_literis("cum_praecondicione", piscina), piscina,
+            &causa));
+        CREDO_VERUM(_continet(causa, "praecondicio", piscina));
+
+        /* compositum ignotum */
+        CREDO_NIHIL(fabrica_compositum_explicare(composita, actiones,
+            chorda_ex_literis("nullum", piscina), piscina, &causa));
+        CREDO_VERUM(_continet(causa, "compositum ignotum", piscina));
+
+        /* lector: pars nominibus duobus, compositum sine parte */
+        CREDO_NIHIL(fabrica_composita_legere(chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <compositum titulus=\"c\">\n"
+            "    <pars actio=\"g\" artificium=\"x\"/>\n"
+            "  </compositum>\n"
+            "</aedificatio>\n", piscina), "d.stml", piscina, intern,
+            &causa));
+        CREDO_VERUM(_continet(causa, "d.stml:3", piscina));
+        CREDO_NIHIL(fabrica_composita_legere(chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <compositum titulus=\"c\">\n"
+            "  </compositum>\n"
+            "</aedificatio>\n", piscina), "d.stml", piscina, intern,
+            &causa));
+        CREDO_VERUM(_continet(causa, "sine parte", piscina));
+
+        /* pessimum partium */
+        iudicia = xar_creare(piscina, (i32)magnitudo(FabricaIudicium));
+        locus = (FabricaIudicium*)xar_addere(iudicia);
+        locus->artificium = chorda_ex_literis("x", piscina);
+        locus->status = FABRICA_RECENS;
+        locus->causa = chorda_ex_literis("", piscina);
+        iudicium = fabrica_iudicia_coniungere(iudicia,
+            chorda_ex_literis("c", piscina), piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        locus              = (FabricaIudicium*)xar_addere(iudicia);
+        locus->artificium  = chorda_ex_literis("z", piscina);
+        locus->status      = FABRICA_IGNOTUM;
+        locus->causa       = chorda_ex_literis("", piscina);
+        iudicium = fabrica_iudicia_coniungere(iudicia,
+            chorda_ex_literis("c", piscina), piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        CREDO_VERUM(_continet(iudicium.causa, "z", piscina));
+        locus              = (FabricaIudicium*)xar_addere(iudicia);
+        locus->artificium  = chorda_ex_literis("y", piscina);
+        locus->status      = FABRICA_STALUM;
+        locus->causa       = chorda_ex_literis("", piscina);
+        iudicium = fabrica_iudicia_coniungere(iudicia,
+            chorda_ex_literis("c", piscina), piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_STALUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(iudicium.artificium, "c");
+        CREDO_VERUM(_continet(iudicium.causa, "y", piscina));
+        /* pars non pessima non nominatur */
+        CREDO_FALSUM(_continet(iudicium.causa, "z", piscina));
+        /* plures quam III pessimae: "+N" */
+        per (i = ZEPHYRUM; i < IV; i++)
+        {
+            locus              = (FabricaIudicium*)xar_addere(iudicia);
+            locus->artificium  = chorda_ex_literis("w", piscina);
+            locus->status      = FABRICA_STALUM;
+            locus->causa       = chorda_ex_literis("", piscina);
+        }
+        iudicium = fabrica_iudicia_coniungere(iudicia,
+            chorda_ex_literis("c", piscina), piscina);
+        CREDO_VERUM(_continet(iudicium.causa, "+II", piscina));
+
+        /* praecondiciones: p praecondicionem o nominat, ante eam
+         * declarata - ordo o ante p */
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"p\" genus=\"institutio\">\n"
+            "    <praecondicio actio=\"o\"/>\n"
+            "    <ingressus genus=\"fasciculus\" via=\"a\"/>\n"
+            "    <exitus via=\"bin/p\" provenientia=\"relatio\"/>\n"
+            "  </actio>\n"
+            "  <actio titulus=\"o\" genus=\"generator\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"a\"/>\n"
+            "    <exitus via=\"build/o\" provenientia=\"ignota\"/>\n"
+            "  </actio>\n"
+            "</aedificatio>\n", piscina);
+        actiones = fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern, &causa);
+        CREDO_NON_NIHIL(actiones);
+        CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
+            actiones, ZEPHYRUM))->praecondiciones), I);
+        CREDO_VERUM(fabrica_praecondiciones_probare(actiones, piscina,
+            &causa));
+        ordo = fabrica_ordinare(actiones, piscina, &causa);
+        CREDO_NON_NIHIL(ordo);
+        CREDO_CHORDA_AEQUALIS_LITERIS((*(FabricaActio**)xar_obtinere(
+            ordo, ZEPHYRUM))->titulus, "o");
+
+        /* praecondicio ignota */
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"p\" genus=\"institutio\">\n"
+            "    <praecondicio actio=\"nulla\"/>\n"
+            "    <ingressus genus=\"fasciculus\" via=\"a\"/>\n"
+            "    <exitus via=\"bin/p\" provenientia=\"relatio\"/>\n"
+            "  </actio>\n"
+            "</aedificatio>\n", piscina);
+        actiones = fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern, &causa);
+        CREDO_FALSUM(fabrica_praecondiciones_probare(actiones, piscina,
+            &causa));
+        CREDO_VERUM(_continet(causa, "d.stml:2", piscina));
+        CREDO_VERUM(_continet(causa, "nulla", piscina));
+
+        /* exitus ignotus ut INGRESSUS: praecondicio sola licet */
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"q\" genus=\"generator\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"build/o\"/>\n"
+            "    <exitus via=\"z\" provenientia=\"regeneratio\"/>\n"
+            "  </actio>\n"
+            "  <actio titulus=\"o\" genus=\"generator\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"a\"/>\n"
+            "    <exitus via=\"build/o\" provenientia=\"ignota\"/>\n"
+            "  </actio>\n"
+            "</aedificatio>\n", piscina);
+        actiones = fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern, &causa);
+        CREDO_FALSUM(fabrica_praecondiciones_probare(actiones, piscina,
+            &causa));
+        CREDO_VERUM(_continet(causa, "praecondicio", piscina));
+        CREDO_VERUM(_continet(causa, "build/o", piscina));
     }
 
 

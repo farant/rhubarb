@@ -396,13 +396,15 @@ _memoriam_aperire (
  * fracta numquam tacite omittitur. */
 interior Xar*
 _declarationes_colligere (
-    Piscina* piscina)
+    Piscina*  piscina,
+        Xar** composita_out)
 {
     InternamentumChorda* intern;
                  chorda  radix;
                  chorda  causa;
                     Xar* subsystemata;
                     Xar* omnes;
+                    Xar* composita;
                     i32  i;
 
     intern  = internamentum_creare(piscina);
@@ -416,11 +418,14 @@ _declarationes_colligere (
             (constans character*)causa.datum);
         redde NIHIL;
     }
-    omnes = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+    omnes      = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+    composita  = xar_creare(piscina, (i32)magnitudo(FabricaCompositum));
     per (i = ZEPHYRUM; i < xar_numerus(subsystemata); i++)
     {
         chorda  via;
+        chorda  contentum;
            Xar* actiones;
+           Xar* sua;
            i32  j;
 
         via = chorda_concatenare(*(chorda*)xar_obtinere(subsystemata,
@@ -433,14 +438,47 @@ _declarationes_colligere (
                 (constans character*)via.datum);
             redde NIHIL;
         }
-        actiones = fabrica_declarationes_legere(
-            filum_legere_totum(chorda_ut_cstr(via, piscina), piscina),
+        contentum = filum_legere_totum(chorda_ut_cstr(via, piscina),
+            piscina);
+        actiones = fabrica_declarationes_legere(contentum,
             chorda_ut_cstr(via, piscina), piscina, intern, &causa);
-        si (actiones == NIHIL)
+        sua = (actiones != NIHIL)
+            ? fabrica_composita_legere(contentum,
+                  chorda_ut_cstr(via, piscina), piscina, intern, &causa)
+            : NIHIL;
+        si (actiones == NIHIL || sua == NIHIL)
         {
             fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
                 (constans character*)causa.datum);
             redde NIHIL;
+        }
+        /* titulus compositi unicus TRANS subsystemata */
+        per (j = ZEPHYRUM; j < xar_numerus(sua); j++)
+        {
+            FabricaCompositum* compositum;
+                          i32  k;
+
+            compositum = (FabricaCompositum*)xar_obtinere(sua, j);
+            per (k = ZEPHYRUM; k < xar_numerus(composita); k++)
+            {
+                FabricaCompositum* prior;
+
+                prior = (FabricaCompositum*)xar_obtinere(composita, k);
+                si (chorda_aequalis(prior->titulus,
+                        compositum->titulus))
+                {
+                    fprintf(stderr, "fabrica: %.*s: titulus compositi "
+                        "duplex '%.*s' (prior %.*s)\n",
+                        (s32)compositum->sedes.mensura,
+                        (constans character*)compositum->sedes.datum,
+                        (s32)compositum->titulus.mensura,
+                        (constans character*)compositum->titulus.datum,
+                        (s32)prior->sedes.mensura,
+                        (constans character*)prior->sedes.datum);
+                    redde NIHIL;
+                }
+            }
+            *(FabricaCompositum*)xar_addere(composita) = *compositum;
         }
         per (j = ZEPHYRUM; j < xar_numerus(actiones); j++)
         {
@@ -470,6 +508,29 @@ _declarationes_colligere (
             }
             *(FabricaActio*)xar_addere(omnes) = *actio;
         }
+    }
+    /* post omnes declarationes: praecondiciones et composita trans
+     * subsystemata probantur - fracta numquam tacite */
+    si (!fabrica_praecondiciones_probare(omnes, piscina, &causa))
+    {
+        fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
+            (constans character*)causa.datum);
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(composita); i++)
+    {
+        si (fabrica_compositum_explicare(composita, omnes,
+                ((FabricaCompositum*)xar_obtinere(composita,
+                i))->titulus, piscina, &causa) == NIHIL)
+        {
+            fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
+                (constans character*)causa.datum);
+            redde NIHIL;
+        }
+    }
+    si (composita_out != NIHIL)
+    {
+        *composita_out = composita;
     }
     redde omnes;
 }
@@ -621,30 +682,26 @@ nomen structura {
        FabricaActio* actio;
 } Sententia;
 
+/* electa NIHIL = nullum filtrum; aliter via in ea */
 interior b32
-_eligitur (
-             s32   argc,
-       character** argv,
-             s32   primum,
-          chorda   via)
+_electum (
+     constans Xar* electa,
+           chorda  via)
 {
-    s32 i;
-    b32 filtrum;
+    i32 i;
 
-    filtrum = FALSUM;
-    per (i = primum; i < argc; i++)
+    si (electa == NIHIL)
     {
-        si (argv[i][0] == '-')
-        {
-            perge;
-        }
-        filtrum = VERUM;
-        si (chorda_aequalis_literis(via, argv[i]))
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(electa); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(electa, i), via))
         {
             redde VERUM;
         }
     }
-    redde !filtrum;
+    redde FALSUM;
 }
 
 interior vacuum
@@ -699,6 +756,9 @@ _iudicare (
                 b32  omnia;
                 b32  tacta;
                 Xar* viae_tactae;
+                Xar* composita;
+                Xar* electa;
+                Xar* nominata;
                 s32  a;
                 i32  i;
                 i32  j;
@@ -749,12 +809,60 @@ _iudicare (
         }
     }
 
-    actiones = _declarationes_colligere(piscina);
+    actiones = _declarationes_colligere(piscina, &composita);
     si (actiones == NIHIL)
     {
         redde II;
     }
     causa  = chorda_ex_literis("", piscina);
+
+    /* argumenta positionalia (sine -tacta): via artificii aut titulus
+     * COMPOSITI (partes eius eliguntur, iudicium coniunctum post eas
+     * imprimitur) */
+    electa    = NIHIL;
+    nominata  = xar_creare(piscina, (i32)magnitudo(FabricaCompositum*));
+    per (a = II; !tacta && a < argc; a++)
+    {
+        chorda argumentum;
+           b32 compositum_est;
+
+        si (argv[a][0] == '-')
+        {
+            perge;
+        }
+        si (electa == NIHIL)
+        {
+            electa = xar_creare(piscina, (i32)magnitudo(chorda));
+        }
+        argumentum      = chorda_ex_literis(argv[a], piscina);
+        compositum_est  = FALSUM;
+        per (i = ZEPHYRUM; i < xar_numerus(composita); i++)
+        {
+            FabricaCompositum* compositum;
+                          Xar* partes;
+
+            compositum = (FabricaCompositum*)xar_obtinere(composita, i);
+            si (!chorda_aequalis(compositum->titulus, argumentum))
+            {
+                perge;
+            }
+            compositum_est                              = VERUM;
+            *(FabricaCompositum**)xar_addere(nominata)  = compositum;
+            partes = fabrica_compositum_explicare(composita, actiones,
+                compositum->titulus, piscina, &causa);
+            per (j = ZEPHYRUM; partes != NIHIL
+                && j < xar_numerus(partes);
+                 j++)
+            {
+                *(chorda*)xar_addere(electa) =
+                    *(chorda*)xar_obtinere(partes, j);
+            }
+        }
+        si (!compositum_est)
+        {
+            *(chorda*)xar_addere(electa) = argumentum;
+        }
+    }
     ordo   = fabrica_ordinare(actiones, piscina, &causa);
     si (ordo == NIHIL)
     {
@@ -820,6 +928,19 @@ _iudicare (
                 Sententia* sententia;
 
             exitus = (FabricaExitus*)xar_obtinere(actio->exitus, j);
+            /* praecondicio (strategia ignota): numquam iudicatur */
+            si (!exitus->strategia->iudicatur)
+            {
+                si (omnia && _electum(electa, exitus->via))
+                {
+                    printf("PRAECONDICIO %.*s - %.*s (ignota, numquam "
+                        "iudicatur)\n", (s32)exitus->via.mensura,
+                        (constans character*)exitus->via.datum,
+                        (s32)actio->titulus.mensura,
+                        (constans character*)actio->titulus.datum);
+                }
+                perge;
+            }
             si (tacta)
             {
                 /* commissa generata solum: strategia quae octetis
@@ -829,7 +950,7 @@ _iudicare (
                     perge;
                 }
             }
-            alioquin si (!_eligitur(argc, argv, II, exitus->via))
+            alioquin si (!_electum(electa, exitus->via))
             {
                 perge;
             }
@@ -849,8 +970,7 @@ _iudicare (
     {
         fprintf(stderr, "fabrica: nihil iudicatum (nulla artificia "
             "declarata%s)\n",
-            _eligitur(argc, argv, II, chorda_ex_literis("", piscina))
-                ? "" : " congruunt");
+            electa == NIHIL ? "" : " congruunt");
         redde II;
     }
 
@@ -896,6 +1016,37 @@ _iudicare (
         {
             _sententiam_imprimere(s, omnia);
         }
+    }
+
+    /* composita nominata: pessimum partium, post partes */
+    per (i = ZEPHYRUM; i < xar_numerus(nominata); i++)
+    {
+        FabricaCompositum* compositum;
+          FabricaIudicium  coniunctum;
+                      Xar* partes;
+                      Xar* iudicia;
+
+        compositum = *(FabricaCompositum**)xar_obtinere(nominata, i);
+        partes = fabrica_compositum_explicare(composita, actiones,
+            compositum->titulus, piscina, &causa);
+        iudicia = xar_creare(piscina, (i32)magnitudo(FabricaIudicium));
+        per (j = ZEPHYRUM; j < xar_numerus(sententiae); j++)
+        {
+            Sententia* s;
+
+            s = (Sententia*)xar_obtinere(sententiae, j);
+            si (_electum(partes, s->iudicium.artificium))
+            {
+                *(FabricaIudicium*)xar_addere(iudicia) = s->iudicium;
+            }
+        }
+        coniunctum = fabrica_iudicia_coniungere(iudicia,
+            compositum->titulus, piscina);
+        printf("COMPOSITUM %.*s - %.*s\n",
+            (s32)coniunctum.artificium.mensura,
+            (constans character*)coniunctum.artificium.datum,
+            (s32)coniunctum.causa.mensura,
+            (constans character*)coniunctum.causa.datum);
     }
 
     /* SANATIO: actiones artificiorum stalorum/ignotorum, ordine
@@ -945,12 +1096,9 @@ _iudicare (
 
     /* orphana et binaria sine declaratione solum sine filtro
      * artificiorum (vexilla non filtrant) */
-    orphana = (!tacta
-               && _eligitur(argc, argv, II, chorda_ex_literis("",
-               piscina)))
+    orphana = (!tacta && electa == NIHIL)
         ? _orphana_imprimere(piscina) : ZEPHYRUM;
-    si (   !tacta
-        && _eligitur(argc, argv, II, chorda_ex_literis("", piscina)))
+    si (!tacta && electa == NIHIL)
     {
         i32 sine;
 
@@ -989,7 +1137,7 @@ _digestum (
            chorda  causa;
               i32  i;
 
-    actiones = _declarationes_colligere(piscina);
+    actiones = _declarationes_colligere(piscina, NIHIL);
     si (actiones == NIHIL)
     {
         redde II;

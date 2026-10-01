@@ -1175,4 +1175,18 @@
     <forma textus="verificationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
+  <vocabulum lemma="praecondicio" lingua="latina" classis="substantivum" nota="Lat. rec. prae + condicio (condicio quae ante stat): hic actio realizanda ANTE aliam, ordo sine sigillo - obiecta caece nexa (strategia ignota) et instrumenta quae installator vocat; sedes lib/fabrica.c (fabrica_praecondiciones_probare, FabricaActio.praecondiciones, fabrica plan 1b T2)">
+    <forma textus="praecondicio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praecondicionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="praecondicionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="praecondiciones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="praecondicionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="pessimus" lingua="latina" classis="adiectivum" nota="Lat. class. pessimus, superlativus mali: hic iudicium compositi = PESSIMUM partium ordine RECENS lt NON IUDICATUM lt IGNOTUM lt STALUM (associativum: planum == nidificatum); sedes lib/fabrica.c (fabrica_iudicia_coniungere, fabrica plan 1b T2)">
+    <forma textus="pessimus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pessimum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pessimi" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+
 </glossarium>

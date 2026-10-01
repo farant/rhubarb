@@ -667,4 +667,36 @@
     <exitus via="probationes/capsula_assets.c" provenientia="regeneratio"/>
     <exitus via="probationes/capsula_assets.h" provenientia="regeneratio"/>
   </actio>
+
+  <!-- COMPOSITA (plan 1b T2): artificia ex artificiis, iudicium =
+       pessimum partium. 'bin/fabrica iudicare installata' - partes et
+       linea COMPOSITUM post eas. Partes trans subsystemata. -->
+  <compositum titulus="installata">
+    <pars actio="fabrica"/>
+    <pars actio="manus"/>
+    <pars actio="aedilis"/>
+    <pars actio="canon_examen"/>
+    <pars actio="canon_coquere"/>
+    <pars actio="natura_examen"/>
+    <pars actio="natura_canones"/>
+    <pars actio="natura_glossae"/>
+    <pars actio="natura"/>
+    <pars actio="stml"/>
+    <pars actio="mensor"/>
+    <pars actio="mensor_ui"/>
+    <pars actio="briar"/>
+    <pars actio="briar_spectator"/>
+    <pars actio="silex"/>
+  </compositum>
+  <compositum titulus="amalgamata">
+    <pars actio="fontes_silva"/>
+    <pars actio="excludenda_silva"/>
+    <pars actio="amalgama_silva"/>
+    <pars actio="fontes_tessera"/>
+    <pars actio="excludenda_tessera"/>
+    <pars actio="amalgama_tessera"/>
+    <pars actio="fontes_officina"/>
+    <pars actio="excludenda_officina"/>
+    <pars actio="amalgama_officina"/>
+  </compositum>
 </aedificatio>

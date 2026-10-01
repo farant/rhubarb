@@ -533,3 +533,39 @@ plagulae input fail "ingressus absens" exactly as predicted; a 16th,
 `fabrica`, changed digest for a reason not predicted - the planted
 lib/fabrica.c is in the judge's own closure (bytes changed, not a
 failure). Restored; digests identical again. Assertions 166 -> 213.
+
+## 2026-10-01 — plan 1b T2: composites, preconditions, `ignota`
+
+Names (Fran, 2026-10-01): `compositum titulus` with `pars` children
+(exactly one of `artificium=`, `actio=`, `compositum=`), and
+`praecondicio actio=` as a child of `actio`. Composites are read from
+the same subsystem files by a second reader (`fabrica_composita_legere`)
+so the action reader's signature did not change; the CLI collects them
+across subsystems (duplicate titles refused) and EXPLAINS every one at
+load, so a broken composite fails every judge run (exit 2), never
+silently.
+
+Worst-of is computed on a FLAT list (`fabrica_compositum_explicare`
+flattens nested composites, de-duplicated, first-appearance order);
+since worst-of is associative the flat answer equals the nested one -
+a single function, no recursion over verdicts. Order: RECENS <
+NON IUDICATUM < IGNOTUM < STALUM. The causa always starts with the
+status word ("STALUM: bin/briar, ..."; "RECENS: omnes partes recentes
+(9)"), at most three names then "+N" in Roman numerals.
+
+`ignota` is a third strategy with `iudicatur` FALSUM. Rules enforced at
+load (`fabrica_praecondiciones_probare` + explicare): a precondition
+must name an existing action; an `ignota` output may never be another
+action's INPUT (only a precondition reaches it) nor a composite part.
+The precondition edge is general (order without digest) - T5 also uses
+it for tools installers call. `fabrica_ordinare` treats it as an edge.
+
+Live: `bin/fabrica iudicare installata` (0.9 s) -> the three binaries
+stale since T1 and `COMPOSITUM installata - STALUM: bin/briar,
+bin/briar-spectator, bin/silex`; `-plenus amalgamata` -> 9 RECENS
+(41 s). Fumus XV: red against the pre-composite judge (it took `omnia`
+for a path: exit 2), green now. Plant: IGNOTUM ranked above STALUM ->
+exactly the 4 predicted assertions red, XV green (no IGNOTUM part).
+A `-Wfortify-source` overflow in a 32-byte sprintf buffer slipped past
+the root test build and was caught only by fabrica_struere's flags -
+the two builds' flags differ (noted, not chased). Assertions 213 -> 259.

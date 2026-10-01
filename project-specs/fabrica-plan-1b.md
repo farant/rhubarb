@@ -417,6 +417,13 @@ fabrica_praecondiciones_probare (
 - [ ] **Step 7: commit.** Worklog. Gates: radix, fabrica,
   fabrica-fumus, examen-canon if owed.
 
+> **Executed 2026-10-01** (commit below). Names as placeholdered
+> (Fran). Composites `installata` (15) and `amalgamata` (9) declared;
+> every composite explained at load (broken = exit 2). Precondition
+> edge general (order without digest), `ignota` reachable only by it.
+> XV red against the pre-composite judge; plant exact (4 assertions).
+> 213 → 259.
+
 ### Task T3: `sanare` — the executor and its envelope
 
 **Files:** `include/fabrica.h`, `lib/fabrica.c` (`fabrica_sanare`),
