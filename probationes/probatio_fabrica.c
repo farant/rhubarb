@@ -53,7 +53,14 @@ nomen structura {
                    Xar* scripta;       /* ScriptumFictum (1b T3) */
                    i32  acta;          /* vocationes agere */
                    s64  horologium;    /* scripturae numeratae (T4) */
+                   Xar* cursus_ficti;  /* CursusFictus (1b T7) */
 } DiscusFictus;
+
+/* tabula cursus ficta (1b T7) */
+nomen structura {
+    chorda titulus;
+       i32 duratio_ms;
+} CursusFictus;
 
 /* generator scriptus (plan 1b T3): verbum = mandatum[0] actionis.
  * Contentum = praefixum + contentum(fons) - fons DISCI HODIERNI
@@ -372,6 +379,50 @@ _agere (
     redde VERUM;
 }
 
+interior vacuum
+_cursum_inscribere (
+                     vacuum* datum,
+    constans FabricaSanatio* sanatio)
+{
+    DiscusFictus* discus;
+    CursusFictus* cursus;
+
+    discus = (DiscusFictus*)datum;
+    cursus = (CursusFictus*)xar_addere(discus->cursus_ficti);
+    si (cursus != NIHIL)
+    {
+        cursus->titulus     = sanatio->actio->titulus;
+        cursus->duratio_ms  = sanatio->duratio_ms;
+    }
+}
+
+/* duratio cursus ULTIMI tituli */
+interior b32
+_cursum_legere (
+                vacuum* datum,
+    constans character* titulus,
+                   i32* duratio_ms_out)
+{
+    DiscusFictus* discus;
+             b32  inventum;
+             i32  i;
+
+    discus    = (DiscusFictus*)datum;
+    inventum  = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(discus->cursus_ficti); i++)
+    {
+        CursusFictus* cursus;
+
+        cursus = (CursusFictus*)xar_obtinere(discus->cursus_ficti, i);
+        si (chorda_aequalis_literis(cursus->titulus, titulus))
+        {
+            *duratio_ms_out  = cursus->duratio_ms;
+            inventum         = VERUM;
+        }
+    }
+    redde inventum;
+}
+
 interior s32
 _vestigia_comparare_via (
     constans vacuum* a,
@@ -507,18 +558,22 @@ _discum_parare (
         (i32)magnitudo(ScriptumFictum));
     discus->acta        = ZEPHYRUM;
     discus->horologium  = ZEPHYRUM;
+    discus->cursus_ficti = xar_creare(piscina,
+        (i32)magnitudo(CursusFictus));
 
     fabrica_suturam_parare(sutura);
 
-    sutura->datum             = discus;
-    sutura->legere            = _legere;
-    sutura->enumerare         = _enumerare;
-    sutura->currere           = _currere;
-    sutura->rogare            = _rogare;
-    sutura->agere             = _agere;
-    sutura->vestigium_capere  = _vestigium_capere;
-    sutura->meminisse         = NIHIL;
-    sutura->sigilla           = NIHIL;
+    sutura->datum              = discus;
+    sutura->legere             = _legere;
+    sutura->enumerare          = _enumerare;
+    sutura->currere            = _currere;
+    sutura->rogare             = _rogare;
+    sutura->agere              = _agere;
+    sutura->vestigium_capere   = _vestigium_capere;
+    sutura->cursum_inscribere  = _cursum_inscribere;
+    sutura->cursum_legere      = _cursum_legere;
+    sutura->meminisse          = NIHIL;
+    sutura->sigilla            = NIHIL;
 }
 
 
@@ -2929,6 +2984,67 @@ s32 principale (vacuum)
             piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_STALUM);
         CREDO_AEQUALIS_I32(discus.cursus, I);
+    }
+
+
+    /* ==================================================
+     * PROBARE: cursus et aestimationes (plan 1b T7)
+     * ================================================== */
+
+    {
+          DiscusFictus  discus;
+         FabricaSutura  sutura;
+          FabricaActio* actiones[III];
+                   Xar* ordo;
+                   Xar* sanationes;
+        FabricaSanatio* sanatio;
+                chorda  causa;
+                   i32  scripti;
+
+        imprimere("\n--- Probans cursum ---\n");
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        /* A frangitur (actum: scribitur), C omittitur (non scribitur),
+         * D sanatur (scribitur) */
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        _ponere(&discus, "a", "a\n");
+        _ponere(&discus, "X", "vetus\n");
+        _ponere(&discus, "Y", "C:alienum\n");
+        _ponere(&discus, "Z", "vetus\n");
+        _scriptum_addere(&discus, "gen_a", "X", NIHIL, "novum\n", I,
+            VERUM);
+        _scriptum_addere(&discus, "gen_c", "Y", "X", "C:", 0, FALSUM);
+        _scriptum_addere(&discus, "gen_d", "Z", NIHIL, "novum\n", 0,
+            FALSUM);
+        actiones[0] = _actio_scripta(piscina, "A", "gen_a", "a", "X",
+            "regeneratio");
+        actiones[1] = _actio_scripta(piscina, "C", "gen_c", "X", "Y",
+            "regeneratio");
+        actiones[2] = _actio_scripta(piscina, "D", "gen_d", "a", "Z",
+            "regeneratio");
+        ordo = _ordinare_fictas(piscina, actiones, III);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_AEQUALIS_I32(xar_numerus(discus.cursus_ficti), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(((CursusFictus*)xar_obtinere(
+            discus.cursus_ficti, ZEPHYRUM))->titulus, "A");
+        CREDO_CHORDA_AEQUALIS_LITERIS(((CursusFictus*)xar_obtinere(
+            discus.cursus_ficti, I))->titulus, "D");
+
+        /* siccum: nihil scribitur; A aestimatur ex cursu priore (A
+         * adhuc stalum), C fortasse sine cursu priore -> ignotum */
+        scripti = xar_numerus(discus.cursus_ficti);
+        _memorias_parare(&sutura, piscina);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, VERUM,
+            piscina, &causa);
+        CREDO_AEQUALIS_I32(xar_numerus(discus.cursus_ficti), scripti);
+        sanatio = _sanatio_invenire(sanationes, "A");
+        CREDO_VERUM(sanatio != NIHIL && sanatio->tempus_notum
+            && sanatio->duratio_ms == I);
+        sanatio = _sanatio_invenire(sanationes, "C");
+        CREDO_VERUM(sanatio != NIHIL && !sanatio->tempus_notum);
     }
 
 

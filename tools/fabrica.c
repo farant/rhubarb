@@ -692,11 +692,18 @@ nomen structura {
      Piscina* piscina;
 } Memoria;
 
-hic_manens constans character* constans MIGRATIONES_MEMORIAE[I] = {
+/* migratio II (plan 1b T7): cursus - omne actum sanationis (tempus,
+ * duratio, eventus, causa); -siccum ex eo aestimat, lens 'tempus'
+ * inventarii impletur */
+hic_manens constans character* constans MIGRATIONES_MEMORIAE[II] = {
     "CREATE TABLE verificationes ("
     " titulus TEXT NOT NULL, clavis TEXT NOT NULL,"
     " artificium TEXT NOT NULL, tempus INTEGER NOT NULL,"
-    " PRIMARY KEY (titulus, clavis, artificium))"
+    " PRIMARY KEY (titulus, clavis, artificium))",
+    "CREATE TABLE cursus ("
+    " titulus TEXT NOT NULL, initium INTEGER NOT NULL,"
+    " duratio_ms INTEGER NOT NULL, eventus TEXT NOT NULL,"
+    " causa TEXT NOT NULL)"
 };
 
 interior vacuum
@@ -788,7 +795,7 @@ _memoriam_aperire (
     memoria->scrinium = scrinium_aperire(piscina, "build/fabrica.db");
     si (   memoria->scrinium == NIHIL
         || !scrinium_migrare(memoria->scrinium, MIGRATIONES_MEMORIAE,
-        I))
+        II))
     {
         fprintf(stderr, "fabrica: CAUTIO memoria build/fabrica.db "
             "aperiri nequit - iudicium sine memoria\n");
@@ -1617,6 +1624,88 @@ _causam_imprimere (
     }
 }
 
+/* textus vacuus VERUS: scrinium_ligare_textum chordam vacuam cuius
+ * datum NIHIL est ut SQL NULL ligat (sqlite3_bind_text cum NULL) -
+ * causa sanati vacua 'NOT NULL' frangebat (1b T7) */
+hic_manens character TEXTUS_VACUUS[I] = { '\0' };
+
+/* cursus (1b T7): actum scribere; tempus = initium ~ finis - duratio */
+interior vacuum
+_cursum_inscribere (
+                     vacuum* datum,
+    constans FabricaSanatio* sanatio)
+{
+               Memoria* memoria;
+    ScriniumEnuntiatum* enuntiatum;
+
+    memoria    = (Memoria*)datum;
+    enuntiatum = scrinium_praeparare(memoria->scrinium,
+        "INSERT INTO cursus (titulus, initium, duratio_ms, eventus,"
+        " causa) VALUES (?, ?, ?, ?, ?)");
+    si (enuntiatum == NIHIL)
+    {
+        redde;
+    }
+    (vacuum)scrinium_ligare_textum(enuntiatum, I,
+        sanatio->actio->titulus);
+    (vacuum)scrinium_ligare_numerum(enuntiatum, II,
+        (s64)time(NIHIL) - (s64)(sanatio->duratio_ms / M));
+    (vacuum)scrinium_ligare_numerum(enuntiatum, III,
+        (s64)sanatio->duratio_ms);
+    (vacuum)scrinium_ligare_textum(enuntiatum, IV, chorda_ex_literis(
+        _eventus_titulus(sanatio->eventus), memoria->piscina));
+    si (sanatio->causa.mensura > 0)
+    {
+        (vacuum)scrinium_ligare_textum(enuntiatum, V, sanatio->causa);
+    }
+    alioquin
+    {
+        chorda vacua;
+
+        vacua.datum    = (i8*)TEXTUS_VACUUS;
+        vacua.mensura  = ZEPHYRUM;
+        (vacuum)scrinium_ligare_textum(enuntiatum, V, vacua);
+    }
+    si (scrinium_gradi(enuntiatum) != SCRINIUM_FACTUM)
+    {
+        fprintf(stderr, "fabrica: cursus non scriptus: %s\n",
+            scrinium_error(memoria->scrinium));
+    }
+    scrinium_finire(enuntiatum);
+}
+
+/* duratio cursus ULTIMI sanati (aut praeparati) tituli */
+interior b32
+_cursum_legere (
+                vacuum* datum,
+    constans character* titulus,
+                   i32* duratio_ms_out)
+{
+               Memoria* memoria;
+    ScriniumEnuntiatum* enuntiatum;
+                   b32  inventum;
+
+    memoria    = (Memoria*)datum;
+    enuntiatum = scrinium_praeparare(memoria->scrinium,
+        "SELECT duratio_ms FROM cursus WHERE titulus = ?"
+        " AND eventus IN ('SANATUM', 'PRAEPARATUM')"
+        " ORDER BY initium DESC, rowid DESC LIMIT 1");
+    si (enuntiatum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    (vacuum)scrinium_ligare_textum(enuntiatum, I,
+        chorda_ex_literis(titulus, memoria->piscina));
+    inventum = (scrinium_gradi(enuntiatum) == SCRINIUM_ORDO);
+    si (inventum)
+    {
+        *duratio_ms_out = (i32)scrinium_columna_numerus(enuntiatum,
+            ZEPHYRUM);
+    }
+    scrinium_finire(enuntiatum);
+    redde inventum;
+}
+
 interior s32
 _sanare (
           s32   argc,
@@ -1640,6 +1729,8 @@ _sanare (
                 i32  j;
                 i32  numeri[VI];
                 i32  duratio;
+                i32  aestimatio;
+                i32  sine_tempore;
 
     siccum = FALSUM;
     per (a = II; a < argc; a++)
@@ -1767,9 +1858,11 @@ _sanare (
     }
     si (_memoriam_aperire(&memoria, piscina))
     {
-        sutura.datum       = &memoria;
-        sutura.meminisse   = _meminisse;
-        sutura.inscribere  = _inscribere;
+        sutura.datum              = &memoria;
+        sutura.meminisse          = _meminisse;
+        sutura.inscribere         = _inscribere;
+        sutura.cursum_inscribere  = _cursum_inscribere;
+        sutura.cursum_legere      = _cursum_legere;
     }
 
     printf("fabrica sanare%s: iudicium plenum, ordine dependentiae\n",
@@ -1793,8 +1886,10 @@ _sanare (
     {
         numeri[i] = ZEPHYRUM;
     }
-    duratio   = ZEPHYRUM;
-    commissa  = FALSUM;
+    duratio       = ZEPHYRUM;
+    aestimatio    = ZEPHYRUM;
+    sine_tempore  = ZEPHYRUM;
+    commissa      = FALSUM;
     per (i = ZEPHYRUM; i < xar_numerus(sanationes); i++)
     {
         FabricaSanatio* sanatio;
@@ -1805,9 +1900,25 @@ _sanare (
         printf("%-11s %.*s", _eventus_titulus(sanatio->eventus),
             (s32)sanatio->actio->titulus.mensura,
             (constans character*)sanatio->actio->titulus.datum);
-        si (   sanatio->eventus != FABRICA_AGENDUM
-            && sanatio->eventus != FABRICA_FORTASSE
-            && sanatio->eventus != FABRICA_OMISSUM)
+        si (   sanatio->eventus == FABRICA_AGENDUM
+            || sanatio->eventus == FABRICA_FORTASSE)
+        {
+            /* aestimatio ex cursu ultimo (1b T7) */
+            si (sanatio->tempus_notum)
+            {
+                printf(" (~%u.%u s)",
+                    (insignatus integer)(sanatio->duratio_ms / M),
+                    (insignatus integer)((sanatio->duratio_ms % M)
+                        / C));
+                aestimatio += sanatio->duratio_ms;
+            }
+            alioquin
+            {
+                printf(" (tempus ignotum)");
+                sine_tempore++;
+            }
+        }
+        alioquin si (sanatio->eventus != FABRICA_OMISSUM)
         {
             printf(" (%u.%u s)",
                 (insignatus integer)(sanatio->duratio_ms / M),
@@ -1872,9 +1983,12 @@ _sanare (
     }
     si (siccum)
     {
-        printf("fabrica sanare -siccum: %u agenda, %u fortasse\n",
+        printf("fabrica sanare -siccum: %u agenda, %u fortasse - "
+            "aestimatio ~%u s (%u sine tempore)\n",
             (insignatus integer)numeri[FABRICA_AGENDUM],
-            (insignatus integer)numeri[FABRICA_FORTASSE]);
+            (insignatus integer)numeri[FABRICA_FORTASSE],
+            (insignatus integer)(aestimatio / M),
+            (insignatus integer)sine_tempore);
     }
     alioquin
     {

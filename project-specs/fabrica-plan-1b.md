@@ -864,6 +864,13 @@ estimates), `include/fabrica.h` (seam members), `lib/fabrica.c`
   after; deviations); MEMORY `fabrica-project.md`; worklog; ledger
   note on the park. Commit. Gates: radix, fabrica, fabrica-fumus.
 
+> **Executed 2026-10-01** (commit below). Migration II (branch b);
+> no `codex` column (the causa carries "exitus N"); estimates need
+> `tempus_notum`. Found: empty causa bound as SQL NULL by scrinium -
+> fixed locally, library question to Fran (…BVN7). Timing lens filled
+> from T5's warm measurement (20 rows). Spec par. X "As built". PLAN 1b
+> COMPLETE.
+
 ## Not in 1b (stated)
 
 Parallel execution (Q41: after the footprint check has proven itself,

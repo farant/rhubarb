@@ -37,6 +37,7 @@
  * lib/fabrica.c, numquam enumeratio crescens. */
 nomen structura FabricaGenus     FabricaGenus;
 nomen structura FabricaStrategia FabricaStrategia;
+nomen structura FabricaSanatio   FabricaSanatio;
 
 nomen enumeratio {
     FABRICA_ACTIO_GENERATOR = ZEPHYRUM,
@@ -230,6 +231,14 @@ nomen structura {
      * NIHIL licet: sanare tum vestigia non probat (plan 1b T4). */
     b32 (*vestigium_capere)(vacuum* datum, Piscina* piscina,
                             Xar** vestigia_out);
+    /* cursus (plan 1b T7): post quodque actum VERUM (sanatum,
+     * fractum, praeparatum - non omissum, numquam siccum) sanatio
+     * scribitur; legere = duratio cursus ULTIMI sanati tituli (FALSUM:
+     * nullus). NIHIL licent. */
+    vacuum (*cursum_inscribere)(vacuum* datum,
+                                constans FabricaSanatio* sanatio);
+    b32 (*cursum_legere)(vacuum* datum, constans character* titulus,
+                         i32* duratio_ms_out);
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
@@ -536,12 +545,15 @@ nomen enumeratio {
     FABRICA_FORTASSE            /* siccum: post actionem agendam */
 } FabricaEventus;
 
-nomen structura {
+structura FabricaSanatio {
      constans FabricaActio* actio;
             FabricaEventus  eventus;
                     chorda  causa;
-                       i32  duratio_ms;
-} FabricaSanatio;
+                       i32  duratio_ms;   /* siccum: AESTIMATIO ex
+                                           * cursu ultimo (si notum) */
+                       b32 tempus_notum; /* FALSUM: siccum sine
+                                           * cursu priore (1b T7) */
+};
 
 /* Sanare. 'electa': viae artificiorum (Xar de chorda; NIHIL = omnia);
  * actiones earum et omnes supra eas (ingressus, praecondiciones) in

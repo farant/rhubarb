@@ -40,6 +40,8 @@
 #        tangitur): absens -> STALUM sub celeri; sanare -> instituta;
 #        binarium mutatum -> STALUM sub celeri; copia impossibilis ->
 #        FRACTUM per exitum (plan 1b T5, Q42)
+#   XXV  cursus: actio sanata in build/fabrica.db scribitur; -siccum
+#        postea tempus aestimat, non 'tempus ignotum' (plan 1b T7)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -242,6 +244,16 @@ if [ "$rc1" -eq 1 ] && grep -q '^STALUM ~/.bin/x - artificium absens' "$T/o" \
    && [ "$rc5" -eq 1 ] && grep -q '^FRACTUM *institutio_x .*exitus 1' "$T/o5" \
    && [ "$VERUM_ANTE" = "$VERUM_POST" ]; then echo "  XXIV copia ~/.bin (HOME redirectus)   OK"; else echo "  XXIV FRACTUM (rc=$rc1 $rc2 $rc3 $rc4 $rc5)"; cat "$T/o" "$T/o2" "$T/o3" "$T/o4" "$T/o5"; fracta=1; fi
 
+# XXV (1b T7): cursus - sanare scribit, -siccum aestimat
+sanare_radix ''
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "novum\\n" > "$D/b"\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare -siccum b) > "$T/o" 2>&1; rc1=$?
+(cd "$T/r" && "$F" sanare b) > "$T/o2" 2>&1; rc2=$?
+printf 'vetus\n' > "$T/r/b"
+(cd "$T/r" && "$F" sanare -siccum b) > "$T/o3" 2>&1; rc3=$?
+if [ "$rc1" -eq 1 ] && grep -q '^AGENDUM *g (tempus ignotum)' "$T/o" \
+   && [ "$rc2" -eq 0 ] && [ "$rc3" -eq 1 ] && grep -q '^AGENDUM *g (~[0-9]*\.[0-9] s)' "$T/o3"; then echo "  XXV  cursus: siccum aestimat         OK"; else echo "  XXV  FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXIV/XXIV)"
+echo "fumus fabricae: sanum (XXV/XXV)"
 exit 0

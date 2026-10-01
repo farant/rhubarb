@@ -2179,6 +2179,20 @@ def lint_latinus_praevium(viae):
 FABRICA_BIN = os.path.join(RADIX, 'bin', 'fabrica')
 
 
+def _viae_commissae(viae):
+    """viae (ex 'viae') quas git sequitur (ls-files) - fabricae ante
+    portas: artificium stalum NON commissum (build/, ~/.bin) commissionem
+    non obstat (fabrica 1b T7). Probationes substituunt VIAE_COMMISSAE."""
+    if not viae:
+        return set()
+    r = subprocess.run(['git', 'ls-files', '-z', '--'] + list(viae),
+                       cwd=RADIX, capture_output=True, text=True)
+    return set(x for x in r.stdout.split('\0') if x)
+
+
+VIAE_COMMISSAE = _viae_commissae
+
+
 def _fabricam_exigere(viae, sine_fabrica=None):
     """bin/fabrica iudicare -plenus -tacta VIAE ante portas. exitus 0 =
     pergit; 1 = artificium generatum tactum STALUM/IGNOTUM - SilvaError
@@ -2204,6 +2218,18 @@ def _fabricam_exigere(viae, sine_fabrica=None):
     if r.returncode == 0:
         print(lineae[-1] if lineae else 'fabrica: sana')
         return
+    # 1b T7: regeneratio etiam artificia in build/ iudicat (capsulae,
+    # corpus) - commissio de COMMISSIS solis iudicat; stala non commissa
+    # nominantur, non obstant (sanare ea sanat)
+    if r.returncode == 1:
+        malae = [l.split(' ', 2)[1] for l in lineae
+                 if l.startswith(('STALUM ', 'IGNOTUM ')) and len(l.split(' ', 2)) > 1]
+        if malae and not VIAE_COMMISSAE(malae):
+            print('fabrica: %d artificia NON commissa non recentia (%s) -'
+                  ' commissionem non obstant; bin/fabrica sanare ea sanat'
+                  % (len(malae), ', '.join(malae[:3])
+                     + (' +%d' % (len(malae) - 3) if len(malae) > 3 else '')))
+            return
     genus = ('artificia generata tacta NON recentia' if r.returncode == 1
              else 'iudicare nequit (exitus %d)' % r.returncode)
     raise SilvaError(

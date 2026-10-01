@@ -75,18 +75,20 @@ vacuum
 fabrica_suturam_parare (
     FabricaSutura* sutura)
 {
-    sutura->datum             = NIHIL;
-    sutura->legere            = NIHIL;
-    sutura->enumerare         = NIHIL;
-    sutura->currere           = NIHIL;
-    sutura->rogare            = NIHIL;
-    sutura->meminisse         = NIHIL;
-    sutura->inscribere        = NIHIL;
-    sutura->sigilla           = NIHIL;
-    sutura->regenerationes    = NIHIL;
-    sutura->digesta           = NIHIL;
-    sutura->agere             = NIHIL;
-    sutura->vestigium_capere  = NIHIL;
+    sutura->datum              = NIHIL;
+    sutura->legere             = NIHIL;
+    sutura->enumerare          = NIHIL;
+    sutura->currere            = NIHIL;
+    sutura->rogare             = NIHIL;
+    sutura->meminisse          = NIHIL;
+    sutura->inscribere         = NIHIL;
+    sutura->sigilla            = NIHIL;
+    sutura->regenerationes     = NIHIL;
+    sutura->digesta            = NIHIL;
+    sutura->agere              = NIHIL;
+    sutura->vestigium_capere   = NIHIL;
+    sutura->cursum_inscribere  = NIHIL;
+    sutura->cursum_legere      = NIHIL;
 }
 
 
@@ -3326,23 +3328,52 @@ _index_actionis (
     redde -I;
 }
 
+/* sanationem addere: eventus solus decernit - actum (sanatum,
+ * fractum, praeparatum) in cursu scribitur; siccum (agendum,
+ * fortasse) tempus ex cursu ultimo aestimat; omissum neutrum (1b T7) */
 interior vacuum
-_sanationem_addere (
-                       Xar* sanationes,
-     constans FabricaActio* actio,
-            FabricaEventus  eventus,
-                    chorda  causa,
-                       i32  duratio_ms)
+_sanationem_notare (
+     constans FabricaSutura* sutura,
+                    Piscina* piscina,
+                        Xar* sanationes,
+      constans FabricaActio* actio,
+             FabricaEventus  eventus,
+                     chorda  causa,
+                        i32  duratio_ms)
 {
     FabricaSanatio* sanatio;
 
     sanatio = (FabricaSanatio*)xar_addere(sanationes);
-    si (sanatio != NIHIL)
+    si (sanatio == NIHIL)
     {
-        sanatio->actio       = actio;
-        sanatio->eventus     = eventus;
-        sanatio->causa       = causa;
-        sanatio->duratio_ms  = duratio_ms;
+        redde;
+    }
+    sanatio->actio         = actio;
+    sanatio->eventus       = eventus;
+    sanatio->causa         = causa;
+    sanatio->duratio_ms    = duratio_ms;
+    sanatio->tempus_notum  = VERUM;
+    commutatio (eventus)
+    {
+        casus FABRICA_SANATUM:
+        casus FABRICA_FRACTUM:
+        casus FABRICA_PRAEPARATUM:
+            si (sutura->cursum_inscribere != NIHIL)
+            {
+                sutura->cursum_inscribere(sutura->datum, sanatio);
+            }
+            frange;
+        casus FABRICA_AGENDUM:
+        casus FABRICA_FORTASSE:
+            sanatio->duratio_ms    = ZEPHYRUM;
+            sanatio->tempus_notum  = sutura->cursum_legere != NIHIL
+                && sutura->cursum_legere(sutura->datum,
+                       chorda_ut_cstr(actio->titulus, piscina),
+                       &sanatio->duratio_ms);
+            frange;
+        ordinarius:
+            sanatio->tempus_notum = FALSUM;
+            frange;
     }
 }
 
@@ -3467,7 +3498,8 @@ fabrica_sanare (
         si (impedita)
         {
             status[i] = SANANDI_OMISSUM;
-            _sanationem_addere(sanationes, actio, FABRICA_OMISSUM,
+            _sanationem_notare(sutura, piscina, sanationes, actio,
+                FABRICA_OMISSUM,
                 _iungere(piscina, "dependentia fracta: ", fracta, ""),
                 ZEPHYRUM);
             perge;
@@ -3488,7 +3520,8 @@ fabrica_sanare (
                                *(FabricaActio**)xar_obtinere(ordo, j)))
                     {
                         status[i] = SANANDI_FORTASSE;
-                        _sanationem_addere(sanationes, actio,
+                        _sanationem_notare(sutura, piscina, sanationes,
+                            actio,
                             FABRICA_FORTASSE, _iungere(piscina,
                                 "post ", (*(FabricaActio**)xar_obtinere(
                                 ordo, j))->titulus, ""), ZEPHYRUM);
@@ -3505,7 +3538,8 @@ fabrica_sanare (
         si (siccum)
         {
             status[i] = SANANDI_AGENDUM;
-            _sanationem_addere(sanationes, actio, FABRICA_AGENDUM,
+            _sanationem_notare(sutura, piscina, sanationes, actio,
+                FABRICA_AGENDUM,
                 causa,
                 ZEPHYRUM);
             perge;
@@ -3533,7 +3567,7 @@ fabrica_sanare (
                     ordo, (i32)k), piscina, &duratio, &causa))
             {
                 status[k] = SANANDI_PRAEPARATUM;
-                _sanationem_addere(sanationes,
+                _sanationem_notare(sutura, piscina, sanationes,
                     *(FabricaActio**)xar_obtinere(ordo, (i32)k),
                     FABRICA_PRAEPARATUM, chorda_ex_literis("", piscina),
                     duratio);
@@ -3541,7 +3575,7 @@ fabrica_sanare (
             alioquin
             {
                 status[k] = SANANDI_FRACTUM;
-                _sanationem_addere(sanationes,
+                _sanationem_notare(sutura, piscina, sanationes,
                     *(FabricaActio**)xar_obtinere(ordo, (i32)k),
                     FABRICA_FRACTUM, causa, duratio);
             }
@@ -3561,7 +3595,8 @@ fabrica_sanare (
                     || status[k] == SANANDI_OMISSUM))
             {
                 status[i] = SANANDI_OMISSUM;
-                _sanationem_addere(sanationes, actio, FABRICA_OMISSUM,
+                _sanationem_notare(sutura, piscina, sanationes, actio,
+                    FABRICA_OMISSUM,
                     _iungere(piscina, "praecondicio fracta: ",
                         *(chorda*)xar_obtinere(actio->praecondiciones,
                         j),
@@ -3578,7 +3613,8 @@ fabrica_sanare (
         si (!_actionem_agere(sutura, actio, piscina, &duratio, &causa))
         {
             status[i] = SANANDI_FRACTUM;
-            _sanationem_addere(sanationes, actio, FABRICA_FRACTUM,
+            _sanationem_notare(sutura, piscina, sanationes, actio,
+                FABRICA_FRACTUM,
                 causa,
                 duratio);
             perge;
@@ -3587,13 +3623,15 @@ fabrica_sanare (
         si (!_exitus_recentes(sutura, actio, piscina, &causa))
         {
             status[i] = SANANDI_FRACTUM;
-            _sanationem_addere(sanationes, actio, FABRICA_FRACTUM,
+            _sanationem_notare(sutura, piscina, sanationes, actio,
+                FABRICA_FRACTUM,
                 _iungere(piscina, "exitus 0 sed non RECENS: ", causa,
                     ""), duratio);
             perge;
         }
         status[i] = SANANDI_SANATUM;
-        _sanationem_addere(sanationes, actio, FABRICA_SANATUM,
+        _sanationem_notare(sutura, piscina, sanationes, actio,
+            FABRICA_SANATUM,
             chorda_ex_literis("", piscina), duratio);
     }
     redde sanationes;

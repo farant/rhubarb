@@ -1997,6 +1997,10 @@ finally:
 # ---- fabrica ante portas (plan 1a T8 gradus III) ----
 print('\n--- fabrica: artificia generata tacta ante portas ---')
 _fb_verum = silva.FABRICA_BIN
+_commissae_verae = silva.VIAE_COMMISSAE
+# viae probationum fictae (g/x.c): commissae ponuntur, nisi ubi casus
+# NON commissorum probatur (1b T7)
+silva.VIAE_COMMISSAE = lambda viae: set(viae)
 try:
     _argv = os.path.join(T, 'fabrica_argv.txt')
     # exitus 0: pergit; argumenta: iudicare -plenus -tacta viae
@@ -2039,6 +2043,20 @@ try:
     except silva.SilvaError as ex:
         err = str(ex)
     credo(err is not None and 'sine_fabrica causam poscit' in err, 'fabrica: sine_fabrica vacua refutatur')
+    # 1b T7: stala NON commissa (build/ capsulae) non obstant, nominantur;
+    # commissa obstant ut antea
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM build/capsula_x.c - regeneratio differt\nSANATIO:\n  ./c.sh   # c\n')
+    silva.VIAE_COMMISSAE = lambda viae: set()
+    buf = io.StringIO()
+    err = None
+    try:
+        with contextlib.redirect_stdout(buf):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    credo(err is None and 'NON commissa' in buf.getvalue() and 'build/capsula_x.c' in buf.getvalue(),
+          'fabrica: stalum NON commissum nominatur, non obstat')
+    silva.VIAE_COMMISSAE = lambda viae: set(viae)
     # bin/fabrica deest: MONITUM, non obstat (clonus recens)
     silva.FABRICA_BIN = os.path.join(T, 'fabrica_nusquam')
     buf = io.StringIO()
@@ -2060,6 +2078,7 @@ try:
     credo(err is not None and 'FABRICA (ante portas)' in err,
           'commissio: fabrica obstat ANTE portas')
 finally:
+    silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum
 
 print()

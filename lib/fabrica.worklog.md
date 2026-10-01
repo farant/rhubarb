@@ -872,3 +872,43 @@ The first T6 commit was refused by gate silex-semen: it proved "the
 embedded corpus was used" by grepping for the OLD stamp (`corpus
 commit=`). Its intent holds; pattern now `corpus sigillum=`. The only
 consumer of the stamp's format.
+
+## 2026-10-01 — plan 1b T7: cursus, estimates, closing
+
+`cursus` = migration II of build/fabrica.db (titulus, initium,
+duratio_ms, eventus, causa). Core: one helper `_sanationem_notare`
+decides by the event alone - SANATUM/FRACTUM/PRAEPARATUM are recorded
+(they ran), OMISSUM never, AGENDUM/FORTASSE (siccum) get an estimate
+from the last SANATUM/PRAEPARATUM run and `tempus_notum` (unknown is
+not 0 ms). `-siccum` prints `~T s` or `tempus ignotum` and a total.
+FabricaSanatio became a tagged struct (forward typedef) - the seam
+names it before its definition.
+
+Found: the first real run recorded NOTHING - every insert failed with
+'NOT NULL constraint failed: cursus.causa', hidden by my own output
+filter. A healed action's empty causa is a chorda whose datum is NIHIL;
+scrinium_ligare_textum passes it to sqlite3_bind_text, which binds NULL.
+Fixed locally (TEXTUS_VACUUS); the library question - should an empty
+chorda always bind as '' - is filed for Fran (…BVN7), since lib/scrinium.c
+has many consumers. Fumus XXV; plant (never record) -> the count
+assertion red, then a crash on the empty log (exit 139), XXV red.
+
+Timing lens: the producers inventory's 'tempus' was blank for most
+rows; filled the 18 blank producer rows + 2 new producer rows
+(latina_datum_generare.sh, instituere.sh) from T5's warm measurement of
+all 70 actions (existing hand-written cells left alone); cursus is the
+living source from now on. Closing: spec 1b par. X 'As built'; parks
+…AR15 (amalgam chain memorabilis - the judge dominates sanare time) and
+…6X0 (cold footprint measurement).
+The first T7 commit was refused by the commit-time check (1a T8): a
+lib/*.c edit staled `corpus_silicis`, whose output lives in build/ and
+is never committed. Since T6, regeneratio outputs include build
+artifacts (corpus, capsules), so the check would block every lib commit
+until a `sanare`. The check's question is "touched AND committed".
+pythonica/silva.py: STALUM/IGNOTUM lines whose paths git does not track
+(VIAE_COMMISSAE, `git ls-files`; tests stub it) are named with a sanare
+hint and do not block; committed ones block as before. Pythonica test
+added (stale build capsule passes with a note). On the way: the
+pythonica suite first failed in an UNRELATED oratio oracle test - its
+objects were stale after today's regenerations (the oracle refused,
+'compile_probationes.sh registrum primum'); rebuilding them fixed it.
