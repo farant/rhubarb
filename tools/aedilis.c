@@ -823,6 +823,98 @@ _chordas_comparare (
  * Extractor memor capita semel parsat trans scopos (cursus unus pro
  * CLVI). Fons recusatus: 'RECUSAT<tab>causa' sub sectione sua, ceteri
  * perguntur, exitus 1 in fine - consumptor sectionem vacuam clamat. */
+/* --nexus-purus (eventus A1b): capita radicum inclusarum (non
+ * recursive) quae <aedilis nexus="purus"/> ferunt per extractorem
+ * (silva, non grep) inveniuntur; quodque per
+ * aedilis_nexum_purum_probare iudicatur. Exitus 0 = omnia promissa
+ * servata; 1 = fractum (causa: catena nominata). */
+interior integer
+_nexum_purum_currere (
+                         Piscina* piscina,
+    constans AedilisConfiguratio* configuratio,
+                  ExtractorMemor* memor)
+{
+    i32 d;
+    i32 radices;
+    i32 promittentia  = 0;
+    i32 fracta        = 0;
+
+    radices = xar_numerus(configuratio->inclusa);
+    per (d = 0; d < radices; d++)
+    {
+              chorda dir =
+                  *(chorda*)xar_obtinere(configuratio->inclusa,
+                  d);
+           character* dir_cstr  = chorda_ut_cstr(dir, piscina);
+                 DIR* h         = opendir(dir_cstr);
+    structura dirent* introitus;
+
+        si (h == NIHIL)
+        {
+            perge;
+        }
+        dum ((introitus = readdir(h)) != NIHIL)
+        {
+             memoriae_index  l = strlen(introitus->d_name);
+                  character* via;
+                        Xar* directivae;
+                        Xar* annotationes;
+                        Xar* angulatae;
+                        b32  ex_oraculo;
+                        i32  a;
+                        b32  promittit = FALSUM;
+                     chorda  causa;
+
+            si (   l < 3 || introitus->d_name[l - 2] != '.'
+                || introitus->d_name[l - 1] != 'h')
+            {
+                perge;
+            }
+            via = (character*)piscina_allocare(piscina,
+                strlen(dir_cstr) + l + 2);
+            si (via == NIHIL)
+            {
+                perge;
+            }
+            sprintf(via, "%s/%s", dir_cstr, introitus->d_name);
+            si (   !_extractor_memor(memor, via, piscina, &directivae,
+                    &annotationes, &ex_oraculo, &angulatae)
+                || annotationes == NIHIL)
+            {
+                perge;
+            }
+            per (a = 0; a < xar_numerus(annotationes); a++)
+            {
+                si (chorda_aequalis_literis(
+                        *(chorda*)xar_obtinere(annotationes, a),
+                        "nexus purus"))
+                {
+                    promittit = VERUM;
+                }
+            }
+            si (!promittit)
+            {
+                perge;
+            }
+            promittentia++;
+            causa.datum    = NIHIL;
+            causa.mensura  = 0;
+            si (!aedilis_nexum_purum_probare(piscina, configuratio, via,
+                    _extractor_memor, memor, &causa))
+            {
+                fracta++;
+                fprintf(stderr, "AEDILIS NEXUS PURUS FRACTUS: %.*s\n",
+                    (s32)causa.mensura,
+                    (constans character*)causa.datum);
+            }
+        }
+        closedir(h);
+    }
+    printf("nexus purus: %u capita promittunt, %u fracta\n",
+        (insignatus integer)promittentia, (insignatus integer)fracta);
+    redde (fracta > 0 || promittentia == 0) ? 1 : 0;
+}
+
 interior integer
 _corpus_currere (
                          Piscina* piscina,
@@ -975,6 +1067,9 @@ principale (
         "Partes fructus ut TSV imprimere (O/C/S/V via)");
     argumenta_addere_optionem(parser, NIHIL, "--corpus",
         "Directorium: clausurae OMNIUM fontium .c eius (sectiones F via; cum --partes)");
+    argumenta_addere_vexillum(parser, NIHIL, "--nexus-purus",
+        "Capita <aedilis nexus=\"purus\"/> radicum inclusarum iudicare "
+        "(clausura sine regula nexus; eventus A1b)");
     argumenta_addere_vexillum(parser, NIHIL, "--aristae",
         "Aristas graphi inclusionum imprimere (includens inclusum)");
     argumenta_addere_vexillum(parser, NIHIL, "--ordo",
@@ -997,7 +1092,13 @@ principale (
     }
     corpus_dir = argumenta_obtinere_optionem(lecta, "--corpus",
         piscina);
-    si (corpus_dir.mensura > 0)
+    si (argumenta_habet_vexillum(lecta, "--nexus-purus"))
+    {
+        scopus.datum    = NIHIL;
+        scopus.mensura  = 0;
+        scopus_cstr     = NIHIL;
+    }
+    alioquin si (corpus_dir.mensura > 0)
     {
         si (   argumenta_numerus_positionalium(lecta) != 0
             || !argumenta_habet_vexillum(lecta, "--partes"))
@@ -1063,6 +1164,10 @@ principale (
     {
         fprintf(stderr, "AEDILIS RECUSAT: memoria extractoris deest\n");
         redde 1;
+    }
+    si (argumenta_habet_vexillum(lecta, "--nexus-purus"))
+    {
+        redde _nexum_purum_currere(piscina, configuratio, &memor);
     }
     si (scopus_cstr == NIHIL)
     {

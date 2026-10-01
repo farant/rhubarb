@@ -1,6 +1,9 @@
 #ifndef EVENTUS_H
 #define EVENTUS_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* eventus.h - Vocabularium initus commune: genera eventuum, claves,
  * modificantes, bottones, Eventus (project-specs/eventus-spec.md D1).
  *

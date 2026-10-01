@@ -26,6 +26,9 @@
 #ifndef MODULUS_H
 #define MODULUS_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* <aedilis corpus="lib/modulus.c"/> */
 
 #include "latina.h"

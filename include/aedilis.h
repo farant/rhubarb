@@ -154,6 +154,9 @@ nomen structura {
                                 * P1); forma ignota = nullae */
        Xar* vendores;          /* AedilisVendor (valore) */
        Xar* vexilla_annotata;  /* chorda */
+       Xar* pura;              /* chorda: plagulae clausurae quae
+                                * <aedilis nexus="purus"/> ferunt
+                                * (eventus A1b) */
 } AedilisFructus;
 
 /* Clausuram scopi derivare (punctum fixum trans plagulas).
@@ -178,6 +181,24 @@ aedilis_capita_ordinare (
     constans AedilisFructus* fructus,
                     Piscina* piscina,
                      chorda* causa_out);
+
+/* NEXUS PURUS (eventus A1b, Franus 2026-10-01): plagula quae
+ * <aedilis nexus="purus"/> fert promittit clausuram SUAM nullum
+ * obiectum regula nexus (aedilis.stml sectio 'nexus': frameworks,
+ * e.g. fenestra_macos -> Cocoa) ferre - nihil ultra bibliothecam C.
+ * Plagulam ut scopum derivat; VERUM = pura aut nihil promissum
+ * (sine annotatione); FALSUM + causa: obiectum, vexilla regulae,
+ * catena capitum ab ipsa plagula ("a.h -> b.h -> lib/b_macos.m
+ * [-framework Cocoa]"). Recusatio derivationis -> FALSUM + causa
+ * eius. */
+b32
+aedilis_nexum_purum_probare (
+                         Piscina* piscina,
+    constans AedilisConfiguratio* configuratio,
+              constans character* via,
+                AedilisExtractor  extractor,
+                          vacuum* extractor_datum,
+                          chorda* causa_out);
 
 /* Fructum ut manifestum STML scribere (chorda emissa).
  * commissum NIHIL = attributum omissum. */

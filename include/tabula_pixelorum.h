@@ -1,6 +1,9 @@
 #ifndef TABULA_PIXELORUM_H
 #define TABULA_PIXELORUM_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* <aedilis corpus="lib/fenestra_textus.c"/> */
 /* tabula_pixelorum.h - Tabula pixelorum PURA: typus, pixela, colores,
  * textus (fons_6x8) et mensura eius. Sine fenestra, sine Cocoa.

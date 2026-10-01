@@ -72,6 +72,14 @@ for f in probationes/probatio_*.c; do
     echo "bona: $basis"
 done
 
+# NEXUS PURUS (eventus A1b, 2026-10-01): capita <aedilis nexus="purus"/>
+# clausuram sine regula nexus (frameworks) servant; catena fracta
+# nominatur. Nullum promittens = porta mortua -> fracta quoque.
+if ! ./bin/aedilis --nexus-purus 2>&1; then
+    echo "FRACTA (nexus purus)"
+    fracta="$fracta nexus_purus"
+fi
+
 finis=$(date +%s)
 echo ""
 echo "PORTA AEDILIS: $numerus probationes, $((finis - initium))s"

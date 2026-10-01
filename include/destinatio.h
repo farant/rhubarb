@@ -13,6 +13,9 @@
 #ifndef DESTINATIO_H
 #define DESTINATIO_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* <aedilis corpus="lib/destinatio.c"/> */
 
 #include "latina.h"

@@ -855,7 +855,8 @@ aedilis_derivare (
         (i32)magnitudo(AedilisVendor));
     fructus->vexilla_annotata = _xar_chordarum(piscina);
 
-    fructus->inresolutae = _xar_chordarum(piscina);
+    fructus->inresolutae  = _xar_chordarum(piscina);
+    fructus->pura         = _xar_chordarum(piscina);
 
     machina.piscina       = piscina;
     machina.configuratio  = configuratio;
@@ -1120,6 +1121,19 @@ aedilis_derivare (
             {
                 _chordam_addere(fructus->vexilla_annotata,
                     reliquum);
+            }
+            alioquin si (chorda_aequalis_literis(verbum, "nexus"))
+            {
+                /* promissum nexus puri (eventus A1b): valor unicus
+                 * 'purus'; ceteri recusantur clamose (error typi
+                 * promissum tacite tolleret) */
+                si (!chorda_aequalis_literis(reliquum, "purus"))
+                {
+                    _causam_ponere(causa_out, piscina,
+                        "nexus ignotum (solum 'purus'): ", annotatio);
+                    redde NIHIL;
+                }
+                _chordam_addere(fructus->pura, fons);
             }
             alioquin
             {
@@ -2013,4 +2027,209 @@ aedilis_scriptum_scribere (
     chorda_aedificator_appendere_literis(s, "\"\n");
 
     redde chorda_aedificator_finire(s);
+}
+
+
+/* ====================================================
+ * Nexus purus (eventus A1b) - SCHEMA: rubrum primum
+ * ==================================================== */
+
+b32
+aedilis_nexum_purum_probare (
+                         Piscina* piscina,
+    constans AedilisConfiguratio* configuratio,
+              constans character* via,
+                AedilisExtractor  extractor,
+                          vacuum* extractor_datum,
+                          chorda* causa_out)
+{
+        AedilisFructus* fructus;
+        TabulaDispersa* parentes;
+                chorda  via_ch;
+                   b32  promissum;
+                   i32  i;
+                   i32  j;
+                   i32  numerus;
+
+    fructus = aedilis_derivare(piscina, configuratio, via, NIHIL,
+        extractor, extractor_datum, causa_out);
+    si (fructus == NIHIL)
+    {
+        redde FALSUM;   /* causa a derivatione */
+    }
+    via_ch     = chorda_ex_literis(via, piscina);
+    promissum  = FALSUM;
+    numerus    = xar_numerus(fructus->pura);
+    per (i = 0; i < numerus; i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(fructus->pura, i),
+                via_ch))
+        {
+            promissum = VERUM;
+        }
+    }
+    si (!promissum)
+    {
+        redde VERUM;    /* nihil promissum */
+    }
+
+    /* implementatio PROPRIA capitis promittentis: caput ut scopus
+     * eam non trahit (proba conventionis in INCLUSIS solum) - sine
+     * hac 'fenestra.h' purum se dicere posset (lacuna per plantam
+     * mutam inventa) */
+    {
+        chorda  propria;
+           Xar* vexilla;
+
+        propria = _obiectum_probare(configuratio,
+            configuratio->variantes,
+            via_ch, piscina);
+        vexilla = (propria.mensura > 0)
+            ? _regulam_nexus_invenire(configuratio, propria, piscina)
+            : NIHIL;
+        si (vexilla != NIHIL && xar_numerus(vexilla) > 0)
+        {
+            si (causa_out != NIHIL)
+            {
+                ChordaAedificator* aed = chorda_aedificator_creare(
+                    piscina, 256);
+
+                si (aed != NIHIL)
+                {
+                    chorda_aedificator_appendere_literis(aed,
+                        "nexus purus fractus: ");
+                    chorda_aedificator_appendere_chorda(aed, via_ch);
+                    chorda_aedificator_appendere_literis(aed, " -> ");
+                    chorda_aedificator_appendere_chorda(aed, propria);
+                    chorda_aedificator_appendere_literis(aed, " [");
+                    per (j = 0; j < xar_numerus(vexilla); j++)
+                    {
+                        si (j > 0)
+                        {
+                            chorda_aedificator_appendere_literis(aed,
+                                " ");
+                        }
+                        chorda_aedificator_appendere_chorda(aed,
+                            *(chorda*)xar_obtinere(vexilla, j));
+                    }
+                    chorda_aedificator_appendere_literis(aed, "]");
+                    *causa_out = chorda_aedificator_finire(aed);
+                }
+            }
+            redde FALSUM;
+        }
+    }
+
+    /* parentes capitum (primus inventus) pro catena nominanda */
+    parentes  = tabula_dispersa_creare_chorda(piscina, 256);
+    numerus   = xar_numerus(fructus->capita);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisCaput* caput = (AedilisCaput*)xar_obtinere(
+            fructus->capita, i);
+        i32 n = (caput->inclusa == NIHIL)
+            ? 0 : xar_numerus(caput->inclusa);
+
+        per (j = 0; j < n; j++)
+        {
+            chorda filius = *(chorda*)xar_obtinere(caput->inclusa, j);
+
+            si (!tabula_dispersa_continet(parentes, filius))
+            {
+                chorda* sedes = (chorda*)piscina_allocare(piscina,
+                    magnitudo(chorda));
+
+                si (sedes != NIHIL)
+                {
+                    *sedes = caput->via;
+                    (vacuum)tabula_dispersa_inserere(parentes, filius,
+                        sedes);
+                }
+            }
+        }
+    }
+
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisObiectum* ob = (AedilisObiectum*)xar_obtinere(
+            fructus->obiecta, i);
+         ChordaAedificator* aed;
+                    chorda  catena[LXIV];
+                       i32  longitudo;
+                    chorda  gradus;
+                       s32  k;
+
+        si (   ob->vexilla_nexus              == NIHIL
+            || xar_numerus(ob->vexilla_nexus) == 0)
+        {
+            perge;
+        }
+        /* catena retrorsum: caput obiecti -> parentes -> (via) */
+        longitudo  = 0;
+        gradus     = ob->caput;
+        dum (   gradus.mensura > 0 && longitudo < LXIV
+             && !chorda_aequalis(gradus, via_ch))
+        {
+            vacuum* p;
+               i32  v;
+               b32  visum = FALSUM;
+
+            /* cyclus inclusionum (custodes capitum eum licitum
+             * faciunt): caput iam in catena = finis, ne circuat */
+            per (v = 0; v < longitudo; v++)
+            {
+                si (chorda_aequalis(catena[v], gradus))
+                {
+                    visum = VERUM;
+                }
+            }
+            si (visum)
+            {
+                frange;
+            }
+            catena[longitudo++] = gradus;
+            si (   !tabula_dispersa_invenire(parentes, gradus, &p)
+                || p == NIHIL)
+            {
+                frange;
+            }
+            gradus = *(chorda*)p;
+        }
+        si (causa_out != NIHIL)
+        {
+            aed = chorda_aedificator_creare(piscina, 512);
+            si (aed != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    "nexus purus fractus: ");
+                chorda_aedificator_appendere_chorda(aed, via_ch);
+                /* s32: i32 insignatum est - 'j >= 0' numquam
+                 * falsum, j ad 2^32 - 1 volveretur */
+                per (k = (s32)longitudo - 1; k >= 0; k--)
+                {
+                    chorda_aedificator_appendere_literis(aed, " -> ");
+                    chorda_aedificator_appendere_chorda(aed, catena[k]);
+                }
+                chorda_aedificator_appendere_literis(aed, " -> ");
+                chorda_aedificator_appendere_chorda(aed, ob->via);
+                chorda_aedificator_appendere_literis(aed, " [");
+                per (j = 0; j
+                    < (i32)xar_numerus(ob->vexilla_nexus); j++)
+                {
+                    si (j > 0)
+                    {
+                        chorda_aedificator_appendere_literis(aed, " ");
+                    }
+                    chorda_aedificator_appendere_chorda(aed,
+                        *(chorda*)xar_obtinere(ob->vexilla_nexus,
+                            (i32)j));
+                }
+                chorda_aedificator_appendere_literis(aed, "]");
+                *causa_out = chorda_aedificator_finire(aed);
+            }
+        }
+        redde FALSUM;
+    }
+    redde VERUM;
 }

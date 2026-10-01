@@ -14,6 +14,9 @@
 #ifndef DISPENSATOR_H
 #define DISPENSATOR_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* <aedilis corpus="lib/dispensator.c"/> */
 
 #include "latina.h"

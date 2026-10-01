@@ -158,6 +158,47 @@ _extractor_fixturarum (
     {
         _fix_addere(*directivae_out, "cyclus_a.h", piscina);
     }
+    alioquin si (strstr(via, "include/purum.h") != NIHIL)
+    {
+        /* nexus purus (A1b): clausura sine regula nexus */
+        _fix_addere(*directivae_out, "gamma.h", piscina);
+        _fix_addere(*annotationes_out, "nexus purus", piscina);
+    }
+    alioquin si (strstr(via, "include/impurum.h") != NIHIL)
+    {
+        /* promittit, sed beta.h -> lib/beta_macos.m (Cocoa) */
+        _fix_addere(*directivae_out, "beta.h", piscina);
+        _fix_addere(*annotationes_out, "nexus purus", piscina);
+    }
+    alioquin si (strstr(via, "include/orbis_a.h") != NIHIL)
+    {
+        /* catena cum cyclo (b <-> c): nominatio non circuit */
+        _fix_addere(*directivae_out, "orbis_b.h", piscina);
+        _fix_addere(*annotationes_out, "nexus purus", piscina);
+    }
+    alioquin si (strstr(via, "include/orbis_b.h") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "orbis_c.h", piscina);
+    }
+    alioquin si (strstr(via, "include/orbis_c.h") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "orbis_b.h", piscina);
+        _fix_addere(*directivae_out, "beta.h", piscina);
+    }
+    alioquin si (strstr(via, "include/proprium.h") != NIHIL)
+    {
+        /* promittit; implementatio PROPRIA (lib/proprium_macos.m)
+         * regulam nexus fert - caput ipsum, non inclusum */
+        _fix_addere(*annotationes_out, "nexus purus", piscina);
+    }
+    alioquin si (strstr(via, "lib/proprium_macos.m") != NIHIL)
+    {
+        *ex_oraculo_out = VERUM;
+    }
+    alioquin si (strstr(via, "include/nexus_ignotum.h") != NIHIL)
+    {
+        _fix_addere(*annotationes_out, "nexus mixtus", piscina);
+    }
     alioquin si (   strstr(via, "include/gamma.h")   != NIHIL
                  || strstr(via, "include/delta.h")   != NIHIL
                  || strstr(via, "include/epsilon.h") != NIHIL)
@@ -479,8 +520,9 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(
             *(chorda*)xar_obtinere(configuratio->variantes,
                 ZEPHYRUM), "macos");
+        /* II: beta_macos + proprium_macos (eventus A1b) */
         CREDO_AEQUALIS_I32(
-            xar_numerus(configuratio->regulae_nexus), I);
+            xar_numerus(configuratio->regulae_nexus), II);
         CREDO_AEQUALIS_I32(
             xar_numerus(configuratio->regulae_vendor), I);
         CREDO_AEQUALIS_I32(
@@ -1003,6 +1045,95 @@ s32 principale (vacuum)
             "abc1234");
         CREDO_FALSUM(chorda_continet(manifestum,
             chorda_ex_literis("inresolutae", piscina)));
+    }
+
+
+    /* ========================================================
+     * PROBARE: nexus purus (eventus A1b) - <aedilis nexus="purus"/>
+     * promittit clausuram SINE regula nexus (frameworks)
+     * ======================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+             AedilisFructus* fructus;
+                     chorda  causa;
+
+        imprimere("\n--- Probans nexum purum ---\n");
+
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        CREDO_NON_NIHIL(configuratio);
+
+        /* purum: promissum servatum */
+        CREDO_VERUM(aedilis_nexum_purum_probare(piscina, configuratio,
+            "include/purum.h", _extractor_fixturarum, NIHIL, &causa));
+
+        /* impurum: obiectum, vexillum, catena NOMINANTUR */
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        CREDO_FALSUM(aedilis_nexum_purum_probare(piscina, configuratio,
+            "include/impurum.h", _extractor_fixturarum, NIHIL,
+            &causa));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("lib/beta_macos.m", piscina));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("-framework Cocoa", piscina));
+        CREDO_CHORDA_CONTINET(causa, chorda_ex_literis(
+            "include/impurum.h -> include/beta.h -> lib/beta_macos.m",
+            piscina));
+
+        /* cyclus in catena (b <-> c): catena semel, non circuit */
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        CREDO_FALSUM(aedilis_nexum_purum_probare(piscina, configuratio,
+            "include/orbis_a.h", _extractor_fixturarum, NIHIL, &causa));
+        CREDO_CHORDA_CONTINET(causa, chorda_ex_literis(
+            "include/orbis_a.h -> include/orbis_b.h -> include/orbis_c.h"
+            " -> include/beta.h -> lib/beta_macos.m", piscina));
+        CREDO_FALSUM(chorda_continet(causa, chorda_ex_literis(
+            "orbis_c.h -> include/orbis_b.h", piscina)));
+
+        /* sine annotatione: nihil promissum -> VERUM. scopus.c
+         * beta.h includit, ergo lib/beta_macos.m (Cocoa) VERE in
+         * clausura est - sed nihil promisit. (Olim beta.h ipsum ut
+         * scopus: planta 'promissum neglectum' MUTA erat - caput ut
+         * scopus implementationem suam non trahit.) */
+        CREDO_VERUM(aedilis_nexum_purum_probare(piscina, configuratio,
+            "fons/scopus.c", _extractor_fixturarum, NIHIL, &causa));
+
+        /* caput promittens cuius implementatio PROPRIA nexum fert:
+         * fractum (lacuna inventa per plantam mutam) */
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        CREDO_FALSUM(aedilis_nexum_purum_probare(piscina, configuratio,
+            "include/proprium.h", _extractor_fixturarum, NIHIL,
+            &causa));
+        CREDO_CHORDA_CONTINET(causa, chorda_ex_literis(
+            "include/proprium.h -> lib/proprium_macos.m [-framework"
+            " Cocoa]", piscina));
+
+        /* verbum nexus agnoscitur in derivatione (scopus includens
+         * caput purum non recusatur); purum in fructu notatur */
+        fructus = aedilis_derivare(piscina, configuratio,
+            "include/purum.h", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+        si (fructus != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(xar_numerus(fructus->pura), I);
+        }
+
+        /* valor ignotus: recusatio clamosa */
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        fructus = aedilis_derivare(piscina, configuratio,
+            "include/nexus_ignotum.h", NIHIL, _extractor_fixturarum,
+            NIHIL, &causa);
+        CREDO_NIHIL(fructus);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("nexus", piscina));
     }
 
 

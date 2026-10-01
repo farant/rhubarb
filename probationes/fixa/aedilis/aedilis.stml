@@ -12,6 +12,9 @@
     <regula obiectum="beta_macos">
       <vexillum! (>-framework Cocoa
     </regula>
+    <regula obiectum="proprium_macos">
+      <vexillum! (>-framework Cocoa
+    </regula>
   </nexus>
   <vendor>
     <fons via="vendor/librum.c">

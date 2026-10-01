@@ -18,6 +18,9 @@
 #ifndef DELINEARE_MANDATA_H
 #define DELINEARE_MANDATA_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* <aedilis corpus="lib/delineare_mandata.c"/> */
 
 #include "latina.h"

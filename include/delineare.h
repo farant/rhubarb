@@ -1,6 +1,9 @@
 #ifndef DELINEARE_H
 #define DELINEARE_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 #include "latina.h"
 #include "piscina.h"
 #include "tabula_pixelorum.h"

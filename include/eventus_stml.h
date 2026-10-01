@@ -18,6 +18,9 @@
 #ifndef EVENTUS_STML_H
 #define EVENTUS_STML_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* <aedilis corpus="lib/eventus_stml.c"/> */
 
 #include "latina.h"

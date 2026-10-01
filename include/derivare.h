@@ -12,6 +12,9 @@
 #ifndef DERIVARE_H
 #define DERIVARE_H
 
+/* <aedilis nexus="purus"/> - clausura sine regula nexus (nulla
+ * framework; eventus A1b: bin/aedilis --nexus-purus) */
+
 /* <aedilis corpus="lib/derivare.c"/> */
 
 #include "latina.h"
