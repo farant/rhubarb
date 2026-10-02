@@ -866,3 +866,25 @@ Also: the suite aborts at the oraculum.sh test (IndexError, not a
 credo) when the oratio objects are stale after a lib change (xar
 today, T7 before) - everything after it silently never runs. Rebuild:
 ./oratio/compile_probationes.sh registrum.
+
+## 2026-10-02 - the hidden abort, fixed in two layers
+
+1. Class: `sys.excepthook = _abortum` in probatio_silva.py. Any uncaught
+   exception now ends with `PYTHONICA: FRACTA N + ABORTUM (<exc>,
+   probatio_silva.py:<line>) - probationes sequentes NON cursae`, so the
+   gate's signum matches and the verdict carries the cause; before, the
+   gate said only '(signum absens)'. Plant A (raise at line 81): named.
+   Unplanned proof: with oratio/build absent the suite crashed EARLIER
+   (silva.Oratio, line 504) and the verdict carried the oracle's remedy
+   ('compile_probationes.sh registrum primum').
+2. Local: `credo(..., causa=)` prints a tool's stderr on failure; the
+   oraculum `-regulae -ab` test passes it and SKIPS its dependent step
+   with an explicit FRACTUM instead of crashing on `.group(1)` of None.
+   Plant B (input file absent): cause named, suite ran to the end,
+   `PYTHONICA: FRACTA 2`.
+The flat script still cannot continue past an exception in general -
+that would mean sections; not done. Side finds: oratio/oraculum.sh
+silently IGNORES an unknown flag (my first plant, '-planta_ignota',
+stayed green) - oratio is paused, noted only. And a lesson in plants:
+moving a build dir aside and back with `mv` nested it when something
+recreated the dir meanwhile - restore by checking the target is absent.

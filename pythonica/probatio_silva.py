@@ -52,10 +52,32 @@ def _tempora_lineae():
     return [l.split('\t') for l in open(silva.TEMPORA_VIA).read().splitlines()]
 
 
-def credo(cond, titulus):
+def credo(cond, titulus, causa=None):
+    """causa: textus (e.g. stderr instrumenti) in fractura impressus -
+    remedium quod instrumentum nominat non in actis sepelitur"""
     print(('  ok   ' if cond else '  FRACTUM ') + titulus)
     if not cond:
         fracta.append(titulus)
+        if causa:
+            for linea in str(causa).strip().splitlines()[-5:]:
+                print('      causa: ' + linea)
+
+
+def _abortum(genus, ex, tb):
+    """exceptio non capta = ABORTUM NOMINATUM: sine hoc signum portae
+    ('PYTHONICA: sana|FRACTA') aberat ('signum absens'), causa in
+    actis sepulta, et probationes sequentes tacite non currebant
+    (2026-10-02: oraculum oratio rancidum -> IndexError)."""
+    import traceback
+    traceback.print_exception(genus, ex, tb)
+    lineae = [f.lineno for f in traceback.extract_tb(tb)
+              if os.path.abspath(f.filename) == os.path.abspath(__file__)]
+    print('\nPYTHONICA: FRACTA %d + ABORTUM (%s: %s, probatio_silva.py:%s)'
+          ' - probationes sequentes NON cursae'
+          % (len(fracta), genus.__name__, ex, lineae[-1] if lineae else '?'))
+
+
+sys.excepthook = _abortum
 
 
 FONS = ('#include "latina.h"\n'
@@ -1485,12 +1507,16 @@ os.makedirs(os.path.dirname(via_ab), exist_ok=True)
 open(via_ab, 'w').write('# sent_id = a-1\n# text = Puella rosam amat.\n1\tPuella\tpuella\tNOUN\t_\t_\t3\tnsubj\t_\t_\n2\trosam\trosa\tNOUN\t_\t_\t3\tobj\t_\t_\n3\tamat\tamo\tVERB\t_\t_\t0\troot\t_\tSpaceAfter=No\n4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n\n')
 def _ordines_ab(n):
     r = subprocess.run(['./oratio/oraculum.sh', '-regulae', '-ab', str(n), '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
-    return r.returncode, [l for l in r.stdout.splitlines() if l.startswith('#  regulae ')]
-rc, omnes = _ordines_ab(100000)
-credo(rc == 0 and len(omnes) == 1 and omnes[0].endswith('(omnes):'), 'oraculum.sh -regulae -ab N: N supra summam = ordo (omnes) solus')
-summa = int(re.search(r'regulae (\d+) \(omnes\)', omnes[0]).group(1))
-rc, duo = _ordines_ab(summa - 1)
-credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa - 1)) and duo[1] == omnes[0] and 'crudus' not in duo[0], 'oraculum.sh -regulae -ab N: ordines a regulis N solum, crudus omissus')
+    return r.returncode, [l for l in r.stdout.splitlines() if l.startswith('#  regulae ')], r.stderr
+rc, omnes, err_ab = _ordines_ab(100000)
+credo(rc == 0 and len(omnes) == 1 and omnes[0].endswith('(omnes):'), 'oraculum.sh -regulae -ab N: N supra summam = ordo (omnes) solus', causa='exitus %d: %s' % (rc, err_ab))
+m_summa = re.search(r'regulae (\d+) \(omnes\)', omnes[0]) if omnes else None
+if m_summa:
+    summa = int(m_summa.group(1))
+    rc, duo, err_ab = _ordines_ab(summa - 1)
+    credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa - 1)) and duo[1] == omnes[0] and 'crudus' not in duo[0], 'oraculum.sh -regulae -ab N: ordines a regulis N solum, crudus omissus', causa='exitus %d: %s' % (rc, err_ab))
+else:
+    credo(False, 'oraculum.sh -regulae -ab N: ordines a regulis N solum (OMISSUM - summa regularum ignota, vide fracturam supra)')
 # T19g bis: -errata -machina - ordines PARTITIO (summa = verba aurea IV) et ERRATUM (nullum: nemo decidit in thesauro minimo)
 r_er = subprocess.run(['./oratio/oraculum.sh', '-errata', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
 part = [l.split('\t') for l in r_er.stdout.splitlines() if '\tPARTITIO\t' in l]
