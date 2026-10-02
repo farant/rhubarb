@@ -35,6 +35,15 @@ numerus=0
 fracta=""
 initium=$(date +%s)
 
+# MEMORIA ORACULI (2026-10-02): clang -MM effusio per fontem SEMEL per
+# cursum (CCCCCCCXXIX invocationes pro CCI fontibus olim; differentia
+# CLIII s -> LXXIV s, effusiones CXCIX probationum octetim eaedem).
+# Directorium RECENS omni cursu, deletum in fine: arbor intra cursum
+# gelata est, inter cursus non - memoria vetus capita falsa daret
+# (planta: introitus fictus -> 'ORACULUM SOLUM' fictum).
+MEMORIA_ORACULI="$(mktemp -d)"
+trap 'rm -rf "$MEMORIA_ORACULI"' EXIT
+
 for f in probationes/probatio_*.c; do
     basis="$(basename "$f" .c)"
     case "$basis" in
@@ -62,7 +71,8 @@ for f in probationes/probatio_*.c; do
             continue
         fi
     fi
-    if ! ./bin/aedilis "$f" --differentia > "build/aedilis/porta_$basis.diff" 2>&1; then
+    if ! ./bin/aedilis "$f" --differentia --memoria-oraculi "$MEMORIA_ORACULI" \
+            > "build/aedilis/porta_$basis.diff" 2>&1; then
         echo "DIFFERENTIA: $basis"
         grep -E "NOS SOLI|ORACULUM SOLUM|RECUSAT" \
             "build/aedilis/porta_$basis.diff" | head -5

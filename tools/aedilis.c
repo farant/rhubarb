@@ -40,6 +40,9 @@
 nomen structura {
                   SilvaContextus* contextus;
     constans AedilisConfiguratio* configuratio;
+    /* --memoria-oraculi <dir>: effusio clang -MM per fontem, intra
+     * cursum UNUM portae (arbor gelata, vexilla eadem) - NIHIL = sine */
+              constans character* memoria_oraculi;
 } ExtractorDatum;
 
 /* Chordam ex octetis alienis in piscinam copiare (vistae silvae
@@ -259,6 +262,7 @@ _extractor_oraculi (
                    i32  i;
                    i32  numerus;
     constans character* via_temporaria;
+    constans character* via_memoriae;
 
     mandatum = chorda_aedificator_creare(piscina, 512);
     chorda_aedificator_appendere_literis(mandatum, "clang -MM");
@@ -281,13 +285,57 @@ _extractor_oraculi (
     mandatum_cstr = chorda_ut_cstr(
         chorda_aedificator_finire(mandatum), piscina);
 
-    si (system(mandatum_cstr) != 0)
+    /* MEMORIA ORACULI (2026-10-02): porta aedilis -MM CCCCCCCXXIX
+     * vicibus pro CCI fontibus currebat (~CXLI s, dimidium portae) -
+     * effusio fontis idem in omni clausura eius cursu uno. Clavis = via
+     * fontis ('/' -> '__'); solum effusio SUCCESSA servatur. */
+    via_memoriae = NIHIL;
+    si (extractoris->memoria_oraculi != NIHIL)
     {
-        (vacuum)remove(via_temporaria);
-        redde FALSUM;
+        ChordaAedificator* clavis;
+                      i32  k;
+
+        clavis = chorda_aedificator_creare(piscina, 256);
+        chorda_aedificator_appendere_literis(clavis,
+            extractoris->memoria_oraculi);
+        chorda_aedificator_appendere_literis(clavis, "/");
+        per (k = 0; via[k] != '\0'; k++)
+        {
+            si (via[k] == '/')
+            {
+                chorda_aedificator_appendere_literis(clavis, "__");
+            }
+            alioquin
+            {
+                character unus[II];
+
+                unus[0] = via[k];
+                unus[I] = '\0';
+                chorda_aedificator_appendere_literis(clavis, unus);
+            }
+        }
+        chorda_aedificator_appendere_literis(clavis, ".mm");
+        via_memoriae = chorda_ut_cstr(chorda_aedificator_finire(clavis),
+            piscina);
     }
-    textus = filum_legere_totum(via_temporaria, piscina);
-    (vacuum)remove(via_temporaria);
+    si (via_memoriae != NIHIL && filum_existit(via_memoriae))
+    {
+        textus = filum_legere_totum(via_memoriae, piscina);
+    }
+    alioquin
+    {
+        si (system(mandatum_cstr) != 0)
+        {
+            (vacuum)remove(via_temporaria);
+            redde FALSUM;
+        }
+        textus = filum_legere_totum(via_temporaria, piscina);
+        (vacuum)remove(via_temporaria);
+        si (via_memoriae != NIHIL && textus.mensura > 0)
+        {
+            (vacuum)filum_scribere(via_memoriae, textus);
+        }
+    }
     si (textus.mensura == 0)
     {
         redde FALSUM;
@@ -1090,6 +1138,9 @@ principale (
         "Scriptum etiam ad viam datam servare");
     argumenta_addere_vexillum(parser, NIHIL, "--differentia",
         "Sextum capitum contra clang -MM comparare (sine emissione)");
+    argumenta_addere_optionem(parser, NIHIL, "--memoria-oraculi",
+        "Cum --differentia: effusiones clang -MM per fontem in "
+        "directorio dato servare/legere (cursus unus portae)");
     argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
         "Obiecta clausurae nuda imprimere (consumptoribus)");
     argumenta_addere_optionem(parser, NIHIL, "--manifestum",
@@ -1189,11 +1240,19 @@ principale (
         fprintf(stderr, "AEDILIS RECUSAT: contextus deest\n");
         redde 1;
     }
-    extractoris.contextus = contextus;
-    extractoris.configuratio = configuratio;
-    memor.intus = &extractoris;
-    memor.piscina = piscina;
-    memor.tabula = tabula_dispersa_creare_chorda(piscina, 512);
+    extractoris.contextus     = contextus;
+    extractoris.configuratio  = configuratio;
+    {
+        chorda memoria;
+
+        memoria = argumenta_obtinere_optionem(lecta,
+            "--memoria-oraculi", piscina);
+        extractoris.memoria_oraculi = (memoria.mensura > 0)
+            ? chorda_ut_cstr(memoria, piscina) : NIHIL;
+    }
+    memor.intus    = &extractoris;
+    memor.piscina  = piscina;
+    memor.tabula   = tabula_dispersa_creare_chorda(piscina, 512);
     si (memor.tabula == NIHIL)
     {
         fprintf(stderr, "AEDILIS RECUSAT: memoria extractoris deest\n");
