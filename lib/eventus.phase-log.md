@@ -907,3 +907,79 @@ look, not by any suite).
 
 **Lint:** `sgr` added to the glossary (an acronym); a helper renamed to
 `_octetos_tradere` (*lexemator* isn't a house word).
+
+## B2a — `interpres_terminalis`: legacy tokens → Eventus (2026-10-02)
+
+**Sealed by Fran:**
+- the name (*interpres*, the Roman go-between who rendered one tongue
+  into another);
+- the split: B2a legacy, B2b kitty;
+- the legacy text policy: KEY + TEXT, HONEST.
+
+**The boundary.** The decoder is PURE: a `SeriesLexema` in, Eventus
+pushed into phase A's `EventusCauda` (text copied, motion merged). Its
+only state is the alt prefix (a lone ESC before the next token). The
+PIPELINE stays in the source:
+- the ESC timeout (the source hands evacuated sequences in with
+  `post_moram`);
+- the stashed partials;
+- the raw channels, with entry points `interpres_x10` and
+  `interpres_glutinum`.
+
+This is what keeps the alt prefix and the timeout logic from existing
+twice when B3/B5 rebase tessera.
+
+**Decoding (tables translated from tessera's B1b reader into the
+Eventus vocabulary):**
+- **printables:** per rune KEY PRESSA (clavis: letters UPPERCASE as in
+  fenestra; runa: letters lowercase; codex IGNOTUS; NO shift bit) +
+  TEXT SCRIPTA carrying the case. No TEXT under alt or ctrl (the
+  terminal already decided it's a shortcut).
+- **controls, honest:** `\r` Enter, `\t` Tab, DEL Backspace; `\n` =
+  Ctrl+J; 0x08 = Ctrl+H; NUL = Ctrl+Space; 0x01..0x1A Ctrl+letter;
+  0x1C..0x1F Ctrl+symbol. tessera's merges (`\n`→Enter, 0x08→Backspace)
+  will be ITS projection (B5).
+- **alt:** a lone-ESC FUGA arms MOD_ALT for the next key, and ONLY the
+  next. ESC dispatch = alt+char. After a timeout: ESC = Escape (codex
+  IGNOTUS: it could be Ctrl+[), ESC ESC = two, `ESC x` = alt+x, other
+  partials dropped.
+- **named keys** (CSI A-D/H/F/Z, `~` codes 1-8 and F1-F12, SS3 A-D/H/F
+  and P-S): the codex is SET because the sequence names the physical
+  key. xterm modifier param: shift 1, alt 2, ctrl 4, meta 8 → super.
+  `praefixum` adds alt. Insert has no `clavis_t`, so clavis IGNOTA +
+  codex INSERERE.
+- **mouse** (SGR, X10): pointer at the CELL CENTRE in our pixels;
+  press/release/motion (held or hover; motion goes through the queue's
+  merge); wheel = ROTULA GRADATA, one notch = one cell height (64 → dy
+  +, 65 → dy −, 66 → dx +, 67 → dx −; the sign is an assumption, which
+  B4's conformance run checks against fenestra).
+- focus `CSI I` / `CSI O`; paste → TEXT GLUTINATA; OSC/DCS/APC and the
+  paste markers produce nothing.
+
+**Tests (`probatio_interpres_terminalis`, 61 assertions):** red first
+(58 against a stub). Byte vectors go through `series_terminalis` (input
+mode) + the decoder; events are rendered compactly (`KA:a TA`,
+`Kup+C#ArrowUp`, `DL@25,30`, `W0,20g`).
+
+The first green attempt HUNG (exit 137 after 190 s): the test's hex
+renderer counted DOWN with an `i32` (UNSIGNED here), so `k >= 0` was
+never false. clang `-Wextra` doesn't flag it, which is the memory's
+classic trap, hit again; it's now `s32` with a comment. Then one test
+typo (9 for an 8-byte string).
+
+Three compiling plants caught by name: 1-based coordinates not shifted;
+the alt prefix never cleared; text emitted under alt.
+
+**Lint:** reused tessera's names (`_clavem_tildae`, `_modificantes_csi`)
+instead of coining `tildam` / `xterm` words.
+
+**B2a's first commit was REFUSED by `generata`:** the tessera amalgam
+was 3 lines stale against B1b's COMMITTED source. Cause: in B1b I
+edited `tessera_eventum.c` (the `memcpy` line) AFTER formatting it,
+then regenerated the amalgam from the unformatted text. The pre-commit
+hook reformatted the source at commit time, after the gates had
+compared it, and the two drifted by one line wrap. Fix: the regenerated
+amalgam rides with B2a (plus the tessera gate). main already fixed the
+trap in dfd9a2a4 ("commissio: forma ANTE iudicium": formatting before
+the gates). Until secunda merges main: run the formatter after the LAST
+edit, and regenerate derived files after that.

@@ -89,6 +89,7 @@ declare -a SOURCE_FILES=(
     "lib/insula.c"
     "lib/internamentum.c"
     "lib/internuntius.c"
+    "lib/interpres_terminalis.c"
     "lib/iter_directoria.c"
     "lib/js_lexema.c"
     "lib/json.c"

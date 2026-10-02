@@ -10965,7 +10965,8 @@ _moram_tractare (
             i32 m = (l.crudum.mensura < TESSERA_RELIQUIAE_CAPACITAS)
                 ? l.crudum.mensura : TESSERA_RELIQUIAE_CAPACITAS;
 
-            memcpy(lector->reliquiae, l.crudum.datum, (memoriae_index)m);
+            memcpy(lector->reliquiae, l.crudum.datum,
+                (memoriae_index)m);
             lector->reliquiae_mensura  = m;
             lector->reliquiae_genus    = RELIQUIAE_SGR;
         }

@@ -72,21 +72,50 @@ collector stay in the reader.
 - **Plant:** the reader bypassing the tokenizer for one sequence kind
   (a debt must stay unpaid → the harness says so).
 
-**B2 — decode tokens → Eventus (module 003's decode side).** A pure
-decoder (tokens + modes → Eventus), no tessera dependency:
-- legacy keys (C0, CSI `~`, SS3, xterm `1;m` modifiers) → logical key +
-  runa, honestly lossy (`codex` IGNOTUS where legacy can't tell);
-- kitty `CSI … u` (disambiguate, event types → PRESSA/ITERATA/SOLUTA,
-  alternate keys, associated text) → codex via kitty numbers
-  (`claves_physicae` gains them; Ghostty's table as the reference);
-- mouse SGR 1006 → pointer in OUR pixels via the Modulus (cell centre),
-  buttons, wheel as GRADATA, motion;
-- bracketed paste → TEXT `origo` GLUTINATA; focus in/out;
-- the first kitty sequence seen → a `FACULTATES` update (learned,
-  never queried).
-- **Red first:** a byte-vector table per family. **Plants:** kitty
-  release read as press; mouse coordinates off by one (1-based);
-  paste text decoded as keys.
+**B2 — `interpres_terminalis`: tokens → Eventus (module 003's decode
+side).** Name, split and legacy policy SEALED by Fran 2026-10-02. A PURE
+decoder: `SeriesLexema` in, Eventus pushed into an `EventusCauda`
+(phase A's queue: text copied, motion merged). Token-level state only
+(the alt prefix: a lone ESC before the next token; kitty learning in
+B2b). The PIPELINE (timeouts, stashed partials, raw side channels: X10
+bytes, paste body, foreign tails) stays in the source (B3; today in
+tessera's reader, B1b), which hands the decoder tokens, a `post_moram`
+flag for evacuated sequences, and raw-channel entry points
+(`_x10`, `_glutinum`).
+
+**B2a — legacy.**
+- printable bytes: per rune KEY PRESSA (clavis: letters UPPERCASE as in
+  fenestra; runa: letters lowercase; codex IGNOTUS; NO shift bit, since
+  legacy can't tell Shift from Caps Lock) + TEXT (SCRIPTA), the text
+  carrying the case. No TEXT under alt or ctrl.
+- controls HONEST: `\r` Enter, `\t` Tab (= Ctrl+I, capability
+  `tabula_distincta` FALSE), DEL Backspace, `\n` = Ctrl+J, 0x08 =
+  Ctrl+H, other C0 = Ctrl+letter / Ctrl+symbol. tessera's lossy merges
+  (`\n`→Enter, 0x08→Backspace) become ITS projection (B5).
+- alt: a lone ESC (FUGA) before the next key = MOD_ALT; ESC dispatch =
+  alt+char; after a timeout: ESC = Escape, ESC ESC = two, `ESC x` = alt+x.
+- CSI/SS3 keys: arrows, Home/End, PgUp/PgDn, Insert/Delete, F1-F12,
+  Shift+Tab (CSI Z); xterm modifier param (shift 1, alt 2, ctrl 4,
+  meta 8 → super). Codex SET where the sequence names the physical key
+  (arrows, navigation, F-keys, Shift+Tab); IGNOTUS where legacy is
+  ambiguous (Enter = Ctrl+M, Tab = Ctrl+I).
+- mouse SGR `CSI < b;x;y M/m` → pointer at the CELL CENTRE in our pixels
+  (the cell size is given at init); press/release/motion (buttons held
+  or hover); wheel → ROTULA GRADATA (one notch = one cell height);
+  modifiers 4/8/16. X10 via `_x10`. Focus `CSI I` / `CSI O`.
+- paste via `_glutinum` → TEXT origo GLUTINATA (copied, truncated).
+- **Red first:** byte vectors through `series_terminalis` (input mode)
+  + the decoder into a queue. **Plants:** 1-based mouse coordinates
+  not shifted; alt prefix not cleared; text emitted under ctrl.
+
+**B2b — kitty.** `CSI keycode[:shifted[:base]] [;mods[:event]]
+[;text] u` and event-type subfields on legacy-form keys → PRESSA /
+ITERATA / SOLUTA, side-less modifiers + super/hyper/meta/caps/num,
+associated text; the BASE-LAYOUT key → `EventusCodex` (the closest kitty
+gets to a physical position); kitty's functional key numbers (57344+)
+learned by `claves_physicae`; the first kitty sequence seen updates the
+capabilities. **Plants:** a release read as press; the base key
+ignored.
 
 **B3 — the terminal source over tessera.** The library an app uses:
 declares modes (`?1003` any-motion, `?1006`, `?2004`, `?1004`, kitty
