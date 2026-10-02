@@ -993,3 +993,36 @@ down from ~200 s. Also measured and dropped: a digest-only key on
 aedilis's sources for the amalgam chain would miss on exactly the
 edits the binary key misses on (aedilis's closure beyond the chains'
 is ~10 house files), so `instrumentum bin/aedilis` stays.
+
+## 2026-10-02 - why the `fabrica` gate took ~270 s: generata relinked aedilis
+
+tempora.tsv showed the `fabrica` gate (tools/fabrica_oraculum.sh) at
+272 s. It runs the whole generata gate, then `iudicare -plenus`, then
+compares. Measured separately: generata 162 s; -plenus right after it
+117 s with 29 judge regenerations - and 16 s when run again at once.
+generata was invalidating the memos, through three timestamp leaks that
+ended in one relink:
+1. tools/aedilis_struere.sh relinked bin/aedilis on EVERY call
+   (generata reaches it via amalgama_fontes_generare.sh and the snippet
+   generators). macOS links are not byte-reproducible (LC_UUID), and the
+   amalgam chain + fragmentum_compile_tests key on `instrumentum
+   bin/aedilis` -> ~100 s of misses after every generata, which the
+   oracle gate inflicted on itself.
+2. tools/amalgama_caput.sh rewrote build/aedilis/caput/silva.h every call.
+3. generata stage III restored every snippet with cp on exit, and
+   tools/fontes_generare.sh rewrote its snippet unconditionally - so
+   tools/aedilis_fontes_generata.sh (which aedilis_struere sources) was
+   always newer than the binary.
+Fixes: new tools/nexus_recens.sh (binarium_recens: strictly newer than
+every input, never under FABRICA_AGIT; nectere_atomice: link to a temp
+name + mv, dSYM carried) shared by aedilis_struere.sh and
+natura_struere.sh (which had its own copy since this morning); 2 and 3
+write/restore only when content differs. Measured: bin/aedilis
+byte-identical across a generata run; -plenus after generata 117 s ->
+16.8 s; the oracle gate 272 s -> 221 s (that run included one legitimate
+relink; steady state ~180 s). Plant: binarium_recens forced stale ->
+digest changes on every run. Lesson, three times in one afternoon: a
+generator must not rewrite unchanged output - mtime is an input to
+everything that still judges by mtime.
+Remaining: the oracle runs generata in full (162 s) even when the
+`generata` gate already ran in the same commit.

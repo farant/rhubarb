@@ -55,6 +55,10 @@ if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
     mkdir -p "$(dirname "$destinatio")"
 fi
 
+# scriptura SOLUM si contentum mutatum (2026-10-02): rescriptio omni
+# cursu mtime fragmenti renovabat - structores qui per mtime iudicant
+# (aedilis_struere.sh fragmentum suum fontat) semper relinkabant
+novum="$destinatio.novum.$$"
 {
     echo "# $(basename "$exitus") - GENERATUM AB AEDILE - NE MANU EDITES"
     echo "# regeneratio: ./tools/fontes_generare.sh $exitus $*"
@@ -63,6 +67,11 @@ fi
         echo "    \"$f\""
     done
     echo ")"
-} > "$destinatio"
+} > "$novum"
+if cmp -s "$novum" "$destinatio"; then
+    rm -f "$novum"
+else
+    mv -f "$novum" "$destinatio"
+fi
 
 echo "$exitus scriptum ($(echo "$lista" | wc -l | tr -d ' ') fontes)"

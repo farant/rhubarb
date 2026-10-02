@@ -86,8 +86,12 @@ for s in "${SNIPPETS[@]}"; do
     cp "$s" "$TMP/copiae/$s"
 done
 _restituere () {
+    # SOLUM si differt (2026-10-02): cp omnium mtime fragmentorum
+    # renovabat - aedilis_struere.sh fragmentum suum fontat et per mtime
+    # iudicat, ergo omnis porta generata bin/aedilis relinkabat
+    # (LC_UUID: memoriae fabricae ~C s irritae)
     for s in "${SNIPPETS[@]}"; do
-        cp "$TMP/copiae/$s" "$s"
+        cmp -s "$TMP/copiae/$s" "$s" || cp "$TMP/copiae/$s" "$s"
     done
     rm -rf "$TMP"
 }

@@ -71,6 +71,24 @@ obj_files="$obj_files $obj"
 # provenientia (fabrica T7): manifestum per bin/aedilis PRIOREM (si
 # adest) - ovum primum 'ignotum' scribit, cursus proximus corrigit
 PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" aedilis bin/aedilis tools/aedilis.c)" || exit 1
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SCRIPT_DIR/aedilis.c" \
-    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/aedilis" || exit 1
-echo "bin/aedilis paratum" >&2
+# nexus SOLUM si stalum, ATOMICE (tools/nexus_recens.sh): relinkatio
+# omni vocatione memorias fabricae irritabat (LC_UUID). Ingressus:
+# obiecta, fons, PLAGULA provenientiae (.c - obiectum eius semper
+# recompilatur), capita (include/ + caput amalgamatis), vexilla, haec
+# scripta.
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/nexus_recens.sh"
+# shellcheck disable=SC2046,SC2086
+if binarium_recens "$RADIX_DIR/bin/aedilis" $obj_files \
+        "$SCRIPT_DIR/aedilis.c" "$RADIX_DIR/${PROV_OBJ%.o}.c" \
+        "$SCRIPT_DIR/vexilla.sh" "$SCRIPT_DIR/aedilis_struere.sh" \
+        "$SCRIPT_DIR/aedilis_fontes_generata.sh" "$SCRIPT_DIR/nexus_recens.sh" \
+        $(find "$RADIX_DIR/include" "$CAPUT_DIR" -name '*.h'); then
+    echo "bin/aedilis recens" >&2
+else
+    # shellcheck disable=SC2086
+    nectere_atomice "$RADIX_DIR/bin/aedilis" "${GCC_FLAGS[@]}" \
+        "${INCLUDE_FLAGS[@]}" "$SCRIPT_DIR/aedilis.c" \
+        $obj_files "$RADIX_DIR/$PROV_OBJ" || exit 1
+    echo "bin/aedilis paratum" >&2
+fi
