@@ -845,3 +845,24 @@ report and NO gate runs. The lint's own red path is the hook smoke's
 reads tracked files only) and a test must not touch the git index.
 Plant: pre-check call removed → a gate runs and git (not the pre-check)
 refuses; restored.
+
+## 2026-10-02 - gate and commit-phase timings (build/portae/tempora.tsv)
+
+Receipts carried pass/fail but no duration, so the biggest wait in the
+workflow (a commit owing ~29 gates, ~30 min) was the one cost nobody
+recorded. `_tempus_notare` appends one TSV line per gate run in
+`porta()` (live and umbra, marked ' (umbra)') and per pre-gate phase
+of `commissio` (lint, fabrica, portae debitae): UTC time, genus,
+titulus, seconds, sana, rc. A failed write warns on stderr and never
+fails a gate.
+
+Leak found on the way: the umbra workers are fresh processes that
+import silva with the default path, so the suite's fake gates landed
+in the REAL tempora.tsv even with silva.TEMPORA_VIA redirected.
+`SILVA_TEMPORA_VIA` (env, inherited by children) now overrides; the
+suite sets both and ends with a guard - the real file's size must be
+unchanged by the run. Plant: drop the env line -> guard red, restored.
+Also: the suite aborts at the oraculum.sh test (IndexError, not a
+credo) when the oratio objects are stale after a lib change (xar
+today, T7 before) - everything after it silently never runs. Rebuild:
+./oratio/compile_probationes.sh registrum.

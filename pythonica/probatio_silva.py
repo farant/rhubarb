@@ -34,6 +34,23 @@ def _fabrica_ficta(rc, effusio='', via_argv=None):
 # omnes commissiones probationum sub fabrica ficta sana (exitus 0)
 silva.FABRICA_BIN = _fabrica_ficta(0, 'fabrica: nulla artificia generata a viis tacta\n')
 
+# tempora portarum et phasium (parcum fabricae …AR15): in T, numquam in
+# build/portae/tempora.tsv vivum (portae fictae ibi mentirentur)
+# (env: operarii umbrae, processus filii, silvam de novo important)
+_TEMPORA_VERA = os.path.join(silva.PORTAE_DIR, 'tempora.tsv')
+_tempora_vera_ante = (os.path.getsize(_TEMPORA_VERA)
+                      if os.path.exists(_TEMPORA_VERA) else -1)
+silva.TEMPORA_VIA = os.path.join(T, 'tempora.tsv')
+os.environ['SILVA_TEMPORA_VIA'] = silva.TEMPORA_VIA
+if os.path.exists(silva.TEMPORA_VIA):
+    os.unlink(silva.TEMPORA_VIA)
+
+
+def _tempora_lineae():
+    if not os.path.exists(silva.TEMPORA_VIA):
+        return []
+    return [l.split('\t') for l in open(silva.TEMPORA_VIA).read().splitlines()]
+
 
 def credo(cond, titulus):
     print(('  ok   ' if cond else '  FRACTUM ') + titulus)
@@ -902,6 +919,10 @@ try:
     p1 = silva.porta('ficta-numerans')
     credo(p1.sana and cursus_n() == 1 and silva.receptum_vivum('ficta-numerans').sana,
           'porta numerans: cursa semel, receptum sanum')
+    lt = [l for l in _tempora_lineae() if l[1:3] == ['porta', 'ficta-numerans']]
+    credo(len(lt) == 1 and len(lt[0]) == 6 and re.match(r'^\d+\.\d$', lt[0][3])
+          and lt[0][4:] == ['1', '0'],
+          'porta: tempus notatum (linea una: genus, titulus, duratio, sana, rc)')
     effusus = io.StringIO()
     try:
         with contextlib.redirect_stdout(effusus):
@@ -915,6 +936,9 @@ try:
     except silva.SilvaError:
         pass
     credo(cursus_n() == 2, 'commissio recepta=False: porta iterum cursa')
+    phases = set(l[2] for l in _tempora_lineae() if l[1] == 'phasis')
+    credo({'fabrica', 'portae debitae'} <= phases,
+          'commissio: phases ante portas temporibus notatae (%s)' % sorted(phases))
     open(novum, 'w').write('x')
     try:
         try:
@@ -2080,6 +2104,10 @@ try:
 finally:
     silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum
+
+credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
+       else -1) == _tempora_vera_ante,
+      'tempora vera (build/portae/tempora.tsv) a probationibus intacta')
 
 print()
 if fracta:

@@ -44,6 +44,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 from collections import namedtuple
 
 RADIX = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1733,6 +1734,22 @@ def porta_viae(via):
     raise SilvaError('porta viae ignota: %s' % via)
 
 
+def _tempus_notare(genus, titulus, initium, sana=None, rc=None):
+    """linea una in TEMPORA_VIA (append): tempus UTC, genus (porta |
+    phasis), titulus, duratio_s, sana (1/0/vacuum), rc. Scriptura
+    fracta portam numquam frangit - nominatur in stderr."""
+    linea = '%s\t%s\t%s\t%.1f\t%s\t%s\n' % (
+        time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), genus,
+        titulus, time.time() - initium,
+        '' if sana is None else int(bool(sana)), '' if rc is None else rc)
+    try:
+        os.makedirs(os.path.dirname(TEMPORA_VIA), exist_ok=True)
+        with open(TEMPORA_VIA, 'a') as f:
+            f.write(linea)
+    except OSError as ex:
+        sys.stderr.write('tempora non notata (%s): %s' % (ex, linea))
+
+
 def porta(nomen, filtrum=None, radix=None, receptum=True):
     """portam currere: Porta(nomen, cucurrit, sana, compendium, rc,
     acta, fracturae, rancida, receptum). sana SOLUM si cucurrit ET
@@ -1752,6 +1769,7 @@ def porta(nomen, filtrum=None, radix=None, receptum=True):
     imperium, signum = PORTAE[nomen]
     args = list(imperium) + ([filtrum] if filtrum else [])
     sig = sigillum_arboris() if (radix is None and receptum) else None
+    initium = time.time()
     r = _curre(args, cwd=radix)
     acta = _ANSI.sub('', r.stdout + r.stderr)
     m = re.search(signum, acta)
@@ -1764,6 +1782,9 @@ def porta(nomen, filtrum=None, radix=None, receptum=True):
     rancida = sig is not None and sig != sigillum_arboris()
     p = Porta(nomen, cucurrit, sana, compendium, r.returncode, acta, fr,
               rancida)
+    _tempus_notare('porta', nomen + ('.' + filtrum if filtrum else '')
+                   + (' (umbra)' if radix is not None else ''),
+                   initium, sana, r.returncode)
     if sig is not None:
         p = p._replace(receptum=_receptum_vivum_scribere(p, filtrum, sig))
     return p
@@ -2299,13 +2320,19 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             ' commissum:\n  %s' % (len(causae), '\n  '.join(
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     if verificare:
+        initium = time.time()
         _lint_praevium_exigere(viae)
+        _tempus_notare('phasis', 'lint', initium)
     if not _fabrica_facta:
+        initium = time.time()
         _fabricam_exigere(viae, sine_fabrica)
+        _tempus_notare('phasis', 'fabrica', initium)
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
+        initium = time.time()
         portae = _portae_debitas_addere(viae, portae)
+        _tempus_notare('phasis', 'portae debitae', initium)
     ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
@@ -2378,6 +2405,13 @@ import hashlib
 import time
 
 PORTAE_DIR = os.path.join(RADIX, 'build', 'portae')
+# tempora portarum et phasium commissionis (parcum fabricae …AR15,
+# 2026-10-02): recepta durationem non ferebant - commissio (portae
+# debitae ~XXX min) erat sumptus maximus NON mensuratus
+# SILVA_TEMPORA_VIA: probationes viam temporariam ponunt, quam processus
+# filii (operarii umbrae) hereditate accipiunt
+TEMPORA_VIA = (os.environ.get('SILVA_TEMPORA_VIA')
+               or os.path.join(PORTAE_DIR, 'tempora.tsv'))
 Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
                       'compendium rc sigillum rancida finis fracturae '
                       'photographia', defaults=([], None))
