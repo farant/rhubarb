@@ -22,6 +22,10 @@ structura Fenestra {
     FenestraDelegatus *delegatus;
     EventusCauda cauda;   /* lib/eventus_cauda: anulus + onera per
                            * lectionem (eventus A3) */
+    f64 residuum_x;       /* rotula: fractiones nondum emissae */
+    f64 residuum_y;
+    b32 rotula_praecisa;  /* genus rotulae ultimum (mutatum: residua
+                           * vacantur) */
     b32 plena_visio;      /* Status plenae visionis */
     b32 cursor_occultus;  /* Si cursor systematis occultatus */
 };
@@ -258,12 +262,20 @@ impellere_eventum (
 {
     Eventus e;
 
-    /* Stampa UNICA: caudae omnes (NSEvent, immittere) hic transeunt.
+    /* Stampa UNICA: eventa omnia (NSEvent, immittere) hic transeunt.
      * Tempus a vocatore datum (replay, immittere) servatur. Cauda plena:
      * eventus abicitur (amissa numerantur). */
     e = *eventus;
     si (e.tempus == ZEPHYRUM) { e.tempus = fenestra_tempus_ms(); }
-    (vacuum)eventus_caudae_impellere(&fenestra->cauda, &e);
+    si (e.genus == EVENTUS_MUS_MOTUS)
+    {
+        /* motus coalescit per lectionem cum exemplis (eventus A3b) */
+        (vacuum)eventus_caudae_motum_impellere(&fenestra->cauda, &e);
+    }
+    alioquin
+    {
+        (vacuum)eventus_caudae_impellere(&fenestra->cauda, &e);
+    }
 }
 
 interior b32
@@ -294,6 +306,179 @@ extrahere_eventum (
 }
 @end
 
+/* Tempus eventus EX NSEvent (eventus A3b): [NSEvent timestamp] =
+ * secundae ab initio systematis, horologium IDEM ac mach_absolute_time
+ * (mensuratum 2026-10-01: differentia 0.003 ms) - ergo ms nostra
+ * directe. Ante: tempus LECTIONIS stampabatur, eventa omnia lectionis
+ * unius idem fere tempus ferebant (exemplum 3 ms ante eventum, XVIII
+ * pixela distans). 0 (eventus sine tempore) -> horologium nunc. */
+interior s64
+_tempus_eventus (
+    NSEvent* eventus_ns)
+{
+    NSTimeInterval secundae = [eventus_ns timestamp];
+
+    si (secundae <= 0.0)
+    {
+        redde fenestra_tempus_ms();
+    }
+    redde (s64)(secundae * 1000.0);
+}
+
+/* Gradus rotulae: pixela NOSTRA per lineam quam rota sine praecisione
+ * nuntiat (scrollingDelta in lineis). XVI = linea una litterarum
+ * domus. Facultas publicata (gradus_rotulae), non lex: consumens qui
+ * gradus vult dy / gradus_rotulae computat. */
+#define FENESTRA_GRADUS_ROTULAE  XVI
+
+/* Facultates fenestrae macOS (spec Q4, Q17) - eventus PRIMUS caudae.
+ * praeeditio FALSUM donec NSTextInputClient (park 004); depositio
+ * NULLA donec implementata; pressio FALSUM: mus pressionem non
+ * nuntiat (stilus/Force Touch postea). */
+interior vacuum
+_facultates_impellere (
+    Fenestra* fenestra)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus = EVENTUS_FACULTATES;
+    e.datum.facultates.liberationes      = VERUM;
+    e.datum.facultates.codex_physicus    = VERUM;
+    e.datum.facultates.tabula_distincta  = VERUM;
+    e.datum.facultates.latera            = VERUM;
+    e.datum.facultates.super             = VERUM;
+    e.datum.facultates.praeeditio        = FALSUM;
+    e.datum.facultates.scriptura_copiae  = EVENTUS_FACULTAS_CERTA;
+    e.datum.facultates.depositio         = EVENTUS_DEPOSITIO_NULLA;
+    e.datum.facultates.gradus_rotulae    = FENESTRA_GRADUS_ROTULAE;
+    e.datum.facultates.pressio           = FALSUM;
+    impellere_eventum(fenestra, &e);
+}
+
+/* Scala pixelorum NOSTRORUM per punctum fenestrae: tabula pixelorum
+ * praesentata / visus contenti (1.0 si nulla tabula adhuc). */
+interior vacuum
+_scalam_obtinere (
+    Fenestra* fenestra,
+         f64* scala_x,
+         f64* scala_y)
+{
+        NSRect  contentum;
+    CGImageRef  imago;
+
+    contentum  = [[fenestra->fenestra_ns contentView] frame];
+    imago      = (__bridge CGImageRef)objc_getAssociatedObject(
+        fenestra->visus, "imagoPixelorum");
+    *scala_x = 1.0;
+    *scala_y = 1.0;
+    si (imago && contentum.size.width > 0.0 && contentum.size.height > 0.0)
+    {
+        *scala_x = (f64)CGImageGetWidth(imago) / contentum.size.width;
+        *scala_y = (f64)CGImageGetHeight(imago) / contentum.size.height;
+    }
+}
+
+/* Positio indicatoris in pixelis NOSTRIS (origo summa sinistra).
+ * locationInWindow ad fenestram EVENTUS refertur - et eventus sine
+ * fenestra (motus extra fenestram clavem) coordinatas SCREENI fert
+ * (vitium mensuratum in aspectu A3a: saltus 743,16 -> 96,363). Ergo
+ * per screenum in fenestram NOSTRAM semper convertitur. Extra
+ * contentum: ad margines COARCTATUR - interim, donec x/y s32 fiant
+ * (eventus A3c, Franus 2026-10-01); antea f64 negativum -> i32
+ * comportatio indefinita erat. Pressio IGNOTA (mus). */
+interior vacuum
+_murem_implere (
+    Fenestra* fenestra,
+     NSEvent* eventus_ns,
+     Eventus* eventus)
+{
+    NSPoint  punctum;
+     NSRect  rectum;
+     NSRect  contentum;
+        f64  x;
+        f64  y;
+        f64  scala_x;
+        f64  scala_y;
+        f64  maximum_x;
+        f64  maximum_y;
+
+    punctum = [eventus_ns locationInWindow];
+    si ([eventus_ns window] != fenestra->fenestra_ns)
+    {
+        rectum = NSMakeRect(punctum.x, punctum.y, 0.0, 0.0);
+        si ([eventus_ns window] != nil)
+        {
+            rectum = [[eventus_ns window] convertRectToScreen:rectum];
+        }
+        punctum = [fenestra->fenestra_ns convertRectFromScreen:rectum]
+            .origin;
+    }
+    contentum = [[fenestra->fenestra_ns contentView] frame];
+    _scalam_obtinere(fenestra, &scala_x, &scala_y);
+    x = punctum.x * scala_x;
+    y = (contentum.size.height - punctum.y) * scala_y;
+    maximum_x = contentum.size.width * scala_x - 1.0;
+    maximum_y = contentum.size.height * scala_y - 1.0;
+    si (x < 0.0) { x = 0.0; }
+    si (y < 0.0) { y = 0.0; }
+    si (x > maximum_x) { x = (maximum_x > 0.0) ? maximum_x : 0.0; }
+    si (y > maximum_y) { y = (maximum_y > 0.0) ? maximum_y : 0.0; }
+    eventus->datum.mus.x             = (i32)x;
+    eventus->datum.mus.y             = (i32)y;
+    eventus->datum.mus.modificantes  = (i32)[eventus_ns modifierFlags];
+    eventus->datum.mus.indicator     = ZEPHYRUM;
+    eventus->datum.mus.indicator_genus = EVENTUS_INDICATOR_MUS;
+    eventus->datum.mus.pressio       = EVENTUS_PRESSIO_IGNOTA;
+    eventus->tempus                  = _tempus_eventus(eventus_ns);
+}
+
+/* Rotula integra (spec Q14): trackpad (hasPreciseScrollingDeltas) ->
+ * PRAECISA, puncta in pixela nostra scalata; rota -> GRADATA, lineae
+ * x FENESTRA_GRADUS_ROTULAE. Fractiones in residuis fenestrae manent
+ * (eventus_residuum_integrare); genere mutato vacantur. delta_x/y f32
+ * (DEPRECATA) ut olim crudi. Signum: idem ac scrollingDelta. */
+interior vacuum
+_rotulam_implere (
+    Fenestra* fenestra,
+     NSEvent* eventus_ns,
+     Eventus* eventus)
+{
+    b32  praecisa;
+    f64  scala_x;
+    f64  scala_y;
+
+    eventus->tempus = _tempus_eventus(eventus_ns);
+    praecisa = [eventus_ns hasPreciseScrollingDeltas] ? VERUM : FALSUM;
+    si (praecisa != fenestra->rotula_praecisa)
+    {
+        fenestra->residuum_x       = 0.0;
+        fenestra->residuum_y       = 0.0;
+        fenestra->rotula_praecisa  = praecisa;
+    }
+    eventus->datum.rotula.delta_x = (f32)[eventus_ns scrollingDeltaX];
+    eventus->datum.rotula.delta_y = (f32)[eventus_ns scrollingDeltaY];
+    si (praecisa)
+    {
+        _scalam_obtinere(fenestra, &scala_x, &scala_y);
+        eventus->datum.rotula.genus = EVENTUS_ROTULA_PRAECISA;
+        eventus->datum.rotula.dx = eventus_residuum_integrare(
+            &fenestra->residuum_x, [eventus_ns scrollingDeltaX] * scala_x);
+        eventus->datum.rotula.dy = eventus_residuum_integrare(
+            &fenestra->residuum_y, [eventus_ns scrollingDeltaY] * scala_y);
+    }
+    alioquin
+    {
+        eventus->datum.rotula.genus = EVENTUS_ROTULA_GRADATA;
+        eventus->datum.rotula.dx = FENESTRA_GRADUS_ROTULAE
+            * eventus_residuum_integrare(&fenestra->residuum_x,
+                  [eventus_ns scrollingDeltaX]);
+        eventus->datum.rotula.dy = FENESTRA_GRADUS_ROTULAE
+            * eventus_residuum_integrare(&fenestra->residuum_y,
+                  [eventus_ns scrollingDeltaY]);
+    }
+}
+
 Fenestra*
 fenestra_creare (
     Piscina*                       piscina,
@@ -320,6 +505,13 @@ fenestra_creare (
             TransformProcessType(&psn, kProcessTransformToForegroundApplication);
 
             _menu_ordinarium_ponere();
+
+            /* Coalitio motus AppKit EXTINGUITUR (eventus A3b): ea
+             * motus in cauda systematis iungit et intermedios ABICIT
+             * (aspectus: saltus 461,143 -> 374,0 sine exemplo). Nos
+             * per lectionem coalescimus cum exemplis (spec Q13, D5) -
+             * ergo omnia exempla hardware nobis veniant. */
+            [NSEvent setMouseCoalescingEnabled:NO];
         }
 
         /* ordinatum: piscina_allocare octetis compactum est (alineatio
@@ -328,8 +520,14 @@ fenestra_creare (
             magnitudo(Fenestra), VIII);
         si (!fenestra) redde NIHIL;
 
-        fenestra->piscina = piscina;
+        fenestra->piscina          = piscina;
+        fenestra->residuum_x       = 0.0;
+        fenestra->residuum_y       = 0.0;
+        fenestra->rotula_praecisa  = FALSUM;
+        fenestra->plena_visio      = FALSUM;
+        fenestra->cursor_occultus  = FALSUM;
         eventus_caudam_initiare(&fenestra->cauda);
+        _facultates_impellere(fenestra);
 
         /* Creare masquam styli fenestrae */
         mamma_styli = 0;
@@ -539,7 +737,7 @@ _clavem_impellere (
                   i32  modi;
 
     memset(&eventus, ZEPHYRUM, magnitudo(Eventus));
-    tempus  = fenestra_tempus_ms();
+    tempus  = _tempus_eventus(eventus_ns);
     modi    = (i32)[eventus_ns modifierFlags];
     eventus.genus   = depressa ? EVENTUS_CLAVIS_DEPRESSUS
                                : EVENTUS_CLAVIS_LIBERATUS;
@@ -603,8 +801,10 @@ fenestra_perscrutari_eventus (
                                                  dequeue:YES]))
         {
 
-            Eventus eventus = {ZEPHYRUM};
+            Eventus eventus;
 
+            /* totum nullum (unio: {0} solum membrum primum ponit) */
+            memset(&eventus, ZEPHYRUM, magnitudo(Eventus));
             commutatio ([eventus_ns type])
             {
                 ordinarius:
@@ -629,127 +829,45 @@ fenestra_perscrutari_eventus (
 
                 casus NSEventTypeLeftMouseDown:
                 casus NSEventTypeRightMouseDown:
-                casus NSEventTypeOtherMouseDown: {
-                    NSRect rectangulum_contenti;
-                    CGImageRef imago_pixelorum;
-                    f64 window_x, window_y;
-                    f64 bitmap_latitudo, bitmap_altitudo;
-                    f64 scala_x, scala_y;
-
-                    rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
+                casus NSEventTypeOtherMouseDown:
                     eventus.genus = EVENTUS_MUS_DEPRESSUS;
-
-                    /* Obtinere imaginem bitmap ad computandum scalam */
-                    imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(fenestra->visus, "imagoPixelorum");
-
-                    si (imago_pixelorum) {
-                        /* Computare scalam inter fenestram et bitmap */
-                        bitmap_latitudo = (f64)CGImageGetWidth(imago_pixelorum);
-                        bitmap_altitudo = (f64)CGImageGetHeight(imago_pixelorum);
-                        scala_x = bitmap_latitudo / rectangulum_contenti.size.width;
-                        scala_y = bitmap_altitudo / rectangulum_contenti.size.height;
-
-                        /* Convertere coordinatas fenestrae ad coordinatas bitmap */
-                        window_x = [eventus_ns locationInWindow].x;
-                        window_y = rectangulum_contenti.size.height - [eventus_ns locationInWindow].y;
-
-                        eventus.datum.mus.x = (i32)(window_x * scala_x);
-                        eventus.datum.mus.y = (i32)(window_y * scala_y);
-                    } alioquin {
-                        /* Fallback si nullum bitmap */
-                        eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
-                        eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
-                    }
-
-                    eventus.datum.mus.botton = ([eventus_ns type] == NSEventTypeLeftMouseDown) ? MUS_SINISTER :
-                                               ([eventus_ns type] == NSEventTypeRightMouseDown) ? MUS_DEXTER :
-                                               MUS_MEDIUS;
-                    eventus.datum.mus.modificantes = (i32)[eventus_ns modifierFlags];
+                    _murem_implere(fenestra, eventus_ns, &eventus);
+                    eventus.datum.mus.botton =
+                        ([eventus_ns type] == NSEventTypeLeftMouseDown)
+                            ? MUS_SINISTER
+                        : ([eventus_ns type] == NSEventTypeRightMouseDown)
+                            ? MUS_DEXTER : MUS_MEDIUS;
                     impellere_eventum(fenestra, &eventus);
                     frange;
-                }
 
                 casus NSEventTypeLeftMouseUp:
                 casus NSEventTypeRightMouseUp:
-                casus NSEventTypeOtherMouseUp: {
-                    NSRect rectangulum_contenti;
-                    CGImageRef imago_pixelorum;
-                    f64 window_x, window_y;
-                    f64 bitmap_latitudo, bitmap_altitudo;
-                    f64 scala_x, scala_y;
-
-                    rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
+                casus NSEventTypeOtherMouseUp:
                     eventus.genus = EVENTUS_MUS_LIBERATUS;
-
-                    imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(fenestra->visus, "imagoPixelorum");
-                    si (imago_pixelorum) {
-                        bitmap_latitudo = (f64)CGImageGetWidth(imago_pixelorum);
-                        bitmap_altitudo = (f64)CGImageGetHeight(imago_pixelorum);
-                        scala_x = bitmap_latitudo / rectangulum_contenti.size.width;
-                        scala_y = bitmap_altitudo / rectangulum_contenti.size.height;
-
-                        window_x = [eventus_ns locationInWindow].x;
-                        window_y = rectangulum_contenti.size.height - [eventus_ns locationInWindow].y;
-
-                        eventus.datum.mus.x = (i32)(window_x * scala_x);
-                        eventus.datum.mus.y = (i32)(window_y * scala_y);
-                    } alioquin {
-                        eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
-                        eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
-                    }
-
-                    eventus.datum.mus.botton = ([eventus_ns type] == NSEventTypeLeftMouseUp) ? MUS_SINISTER :
-                                               ([eventus_ns type] == NSEventTypeRightMouseUp) ? MUS_DEXTER :
-                                               MUS_MEDIUS;
-                    eventus.datum.mus.modificantes = (i32)[eventus_ns modifierFlags];
+                    _murem_implere(fenestra, eventus_ns, &eventus);
+                    eventus.datum.mus.botton =
+                        ([eventus_ns type] == NSEventTypeLeftMouseUp)
+                            ? MUS_SINISTER
+                        : ([eventus_ns type] == NSEventTypeRightMouseUp)
+                            ? MUS_DEXTER : MUS_MEDIUS;
                     impellere_eventum(fenestra, &eventus);
                     frange;
-                }
 
+                /* re-occultatio cursoris per motum REMOTA (2026-07-23):
+                 * hide iteratum numerum referentiarum NSCursor
+                 * inflabat - fons cursoris perpetuo occulti */
                 casus NSEventTypeMouseMoved:
                 casus NSEventTypeLeftMouseDragged:
                 casus NSEventTypeRightMouseDragged:
-                casus NSEventTypeOtherMouseDragged: {
-                    NSRect rectangulum_contenti;
-                    CGImageRef imago_pixelorum;
-                    f64 window_x, window_y;
-                    f64 bitmap_latitudo, bitmap_altitudo;
-                    f64 scala_x, scala_y;
-
-                    rectangulum_contenti = [[fenestra->fenestra_ns contentView] frame];
+                casus NSEventTypeOtherMouseDragged:
                     eventus.genus = EVENTUS_MUS_MOTUS;
-
-                    imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(fenestra->visus, "imagoPixelorum");
-                    si (imago_pixelorum) {
-                        bitmap_latitudo = (f64)CGImageGetWidth(imago_pixelorum);
-                        bitmap_altitudo = (f64)CGImageGetHeight(imago_pixelorum);
-                        scala_x = bitmap_latitudo / rectangulum_contenti.size.width;
-                        scala_y = bitmap_altitudo / rectangulum_contenti.size.height;
-
-                        window_x = [eventus_ns locationInWindow].x;
-                        window_y = rectangulum_contenti.size.height - [eventus_ns locationInWindow].y;
-
-                        eventus.datum.mus.x = (i32)(window_x * scala_x);
-                        eventus.datum.mus.y = (i32)(window_y * scala_y);
-                    } alioquin {
-                        eventus.datum.mus.x = (i32)[eventus_ns locationInWindow].x;
-                        eventus.datum.mus.y = (i32)(rectangulum_contenti.size.height - [eventus_ns locationInWindow].y);
-                    }
-
-                    eventus.datum.mus.modificantes = (i32)[eventus_ns modifierFlags];
-
-                    /* re-occultatio per motum REMOTA (2026-07-23):
-                     * hide iteratum numerum referentiarum NSCursor
-                     * inflabat - fons cursoris perpetuo occulti */
-
+                    _murem_implere(fenestra, eventus_ns, &eventus);
                     impellere_eventum(fenestra, &eventus);
                     frange;
-                }
 
                 casus NSEventTypeScrollWheel:
                     eventus.genus = EVENTUS_MUS_ROTULA;
-                    eventus.datum.rotula.delta_x = (f32)[eventus_ns scrollingDeltaX];
-                    eventus.datum.rotula.delta_y = (f32)[eventus_ns scrollingDeltaY];
+                    _rotulam_implere(fenestra, eventus_ns, &eventus);
                     impellere_eventum(fenestra, &eventus);
                     frange;
             }

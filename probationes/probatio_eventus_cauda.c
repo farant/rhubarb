@@ -1,6 +1,7 @@
 /* probatio_eventus_cauda.c - cauda eventuum fontis (eventus A3a):
  * anulus FIFO, plena -> amissa, textus COPIATUS, vita visuum per
- * lectionem, truncatio. */
+ * lectionem, truncatio; (A3b) motus coalitus cum exemplis, residuum
+ * rotulae. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -20,6 +21,23 @@ _eventum (
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus   = genus;
     e.tempus  = tempus;
+    redde e;
+}
+
+interior Eventus
+_motum (
+    s32 x,
+    s32 y,
+    s64 tempus,
+    i32 modificantes)
+{
+    Eventus e;
+
+    e                         = _eventum(EVENTUS_MUS_MOTUS, tempus);
+    e.datum.mus.x             = (i32)x;
+    e.datum.mus.y             = (i32)y;
+    e.datum.mus.modificantes  = modificantes;
+    e.datum.mus.pressio       = EVENTUS_PRESSIO_IGNOTA;
     redde e;
 }
 
@@ -92,7 +110,7 @@ s32 principale (vacuum)
         ZEPHYRUM, EVENTUS_ORIGO_SCRIPTA));
 
     imprimere("\n--- IV. vita visuum: cauda non vacua servat ---\n");
-    eventus_cauda_lectio_incipit(c);                  /* vacua: vacatur */
+    eventus_cauda_lectio_incipit(c);            /* vacua: vacatur */
     CREDO_AEQUALIS_I32 (c->textus_mensura, ZEPHYRUM);
     CREDO_VERUM (eventus_caudae_textum_impellere(c, VII,
         (constans i8*)"primum", VI, EVENTUS_ORIGO_SCRIPTA));
@@ -123,6 +141,122 @@ s32 principale (vacuum)
         CREDO_VERUM (e.datum.textus.truncatum);
         CREDO_AEQUALIS_I32 (e.datum.textus.contentum.mensura,
             EVENTUS_CAUDA_TEXTUS);
+    }
+
+    imprimere("\n--- VI. motus coalitus: X -> I cum IX exemplis ---\n");
+    dum (eventus_caudae_extrahere(c, &e))
+    {
+    }
+    eventus_cauda_lectio_incipit(c);
+    per (k = ZEPHYRUM; k < X; k++)
+    {
+        e = _motum((s32)k, (s32)(II * k), (s64)(C + k), ZEPHYRUM);
+        CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    }
+    CREDO_AEQUALIS_I32 (c->numerus, I);
+    CREDO_VERUM (eventus_caudae_extrahere(c, &e));
+    CREDO_VERUM (e.genus == EVENTUS_MUS_MOTUS);
+    CREDO_AEQUALIS_I32 (e.datum.mus.x, IX);           /* ultima vera */
+    CREDO_AEQUALIS_I32 (e.datum.mus.y, XVIII);
+    CREDO_VERUM (e.tempus == (s64)(C + IX));
+    CREDO_AEQUALIS_I32 (e.datum.mus.numerus_exemplorum, IX);
+    CREDO_NON_NIHIL (e.datum.mus.exempla);
+    CREDO_VERUM (e.datum.mus.exempla[0].x == 0
+        && e.datum.mus.exempla[0].y == 0
+        && e.datum.mus.exempla[0].tempus == (s64)C);
+    CREDO_VERUM (e.datum.mus.exempla[VIII].x == VIII
+        && e.datum.mus.exempla[VIII].y == XVI
+        && e.datum.mus.exempla[VIII].tempus == (s64)(C + VIII));
+
+    imprimere("\n--- VII. coalitio terminos servat ---\n");
+    eventus_cauda_lectio_incipit(c);
+    /* modificantes diversi: duo eventa */
+    e = _motum(I, I, I, ZEPHYRUM);
+    CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    e = _motum(II, II, II, MOD_SHIFT);
+    CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    CREDO_AEQUALIS_I32 (c->numerus, II);
+    /* eventus alius inter motus: numquam trans eum */
+    e                   = _eventum(EVENTUS_MUS_DEPRESSUS, III);
+    e.datum.mus.botton  = MUS_SINISTER;
+    CREDO_VERUM (eventus_caudae_impellere(c, &e));
+    e = _motum(IV, IV, IV, MOD_SHIFT);
+    CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    CREDO_AEQUALIS_I32 (c->numerus, IV);
+    /* botton diversus: novum eventum */
+    e                   = _motum(V, V, V, MOD_SHIFT);
+    e.datum.mus.botton  = MUS_SINISTER;
+    CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    CREDO_AEQUALIS_I32 (c->numerus, V);
+    /* indicator diversus (stilus): novum eventum */
+    e                      = _motum(VI, VI, VI, MOD_SHIFT);
+    e.datum.mus.botton     = MUS_SINISTER;
+    e.datum.mus.indicator  = I;
+    CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    CREDO_AEQUALIS_I32 (c->numerus, VI);
+    dum (eventus_caudae_extrahere(c, &e))
+    {
+        CREDO_AEQUALIS_I32 (e.datum.mus.numerus_exemplorum, ZEPHYRUM);
+    }
+
+    imprimere("\n--- VIII. LXIV exempla: antiquissima servantur ---\n");
+    eventus_cauda_lectio_incipit(c);
+    per (k = ZEPHYRUM; k < C; k++)
+    {
+        e = _motum((s32)k, ZEPHYRUM, (s64)k, ZEPHYRUM);
+        CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    }
+    CREDO_VERUM (eventus_caudae_extrahere(c, &e));
+    CREDO_AEQUALIS_I32 (e.datum.mus.numerus_exemplorum,
+        EVENTUS_EXEMPLA_MAXIMA);
+    CREDO_AEQUALIS_I32 (e.datum.mus.x, XCIX);         /* finis verus */
+    CREDO_VERUM (e.datum.mus.exempla[0].x == 0);
+    CREDO_VERUM (e.datum.mus.exempla[LXIII].x == LXIII);
+
+    imprimere("\n--- IX. vita exemplorum per lectionem ---\n");
+    eventus_cauda_lectio_incipit(c);            /* vacua: vacatur */
+    CREDO_AEQUALIS_I32 (c->exempla_mensura, ZEPHYRUM);
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        e = _motum((s32)(L + k), ZEPHYRUM, (s64)k, ZEPHYRUM);
+        CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    }
+    CREDO_AEQUALIS_I32 (c->exempla_mensura, II);
+    /* lectio nova, motus nondum extractus: exempla NON vacantur */
+    eventus_cauda_lectio_incipit(c);
+    CREDO_AEQUALIS_I32 (c->exempla_mensura, II);
+    e = _eventum(EVENTUS_CLAVIS_DEPRESSUS, X);
+    CREDO_VERUM (eventus_caudae_impellere(c, &e));
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        e = _motum((s32)(LX + k), ZEPHYRUM, (s64)(XX + k), ZEPHYRUM);
+        CREDO_VERUM (eventus_caudae_motum_impellere(c, &e));
+    }
+    CREDO_VERUM (eventus_caudae_extrahere(c, &primus));
+    CREDO_AEQUALIS_I32 (primus.datum.mus.numerus_exemplorum, II);
+    CREDO_VERUM (eventus_caudae_extrahere(c, &e));    /* clavis */
+    CREDO_VERUM (eventus_caudae_extrahere(c, &e));
+    CREDO_AEQUALIS_I32 (e.datum.mus.numerus_exemplorum, II);
+    CREDO_VERUM (e.datum.mus.exempla[0].x == LX
+        && e.datum.mus.exempla[I].x == LXI);
+    /* visus primi intactus post secundum */
+    CREDO_VERUM (primus.datum.mus.exempla[0].x == L
+        && primus.datum.mus.exempla[I].x == LI);
+    eventus_cauda_lectio_incipit(c);
+    CREDO_AEQUALIS_I32 (c->exempla_mensura, ZEPHYRUM);
+
+    imprimere("\n--- X. residuum rotulae ---\n");
+    {
+        f64 r = 0.0;
+
+        CREDO_AEQUALIS_S32 (eventus_residuum_integrare(&r, 0.4), 0);
+        CREDO_AEQUALIS_S32 (eventus_residuum_integrare(&r, 0.4), 0);
+        CREDO_AEQUALIS_S32 (eventus_residuum_integrare(&r, 0.4), 1);
+        CREDO_VERUM (r > 0.19 && r < 0.21);
+        CREDO_AEQUALIS_S32 (eventus_residuum_integrare(&r, -2.5), -2);
+        CREDO_VERUM (r < -0.29 && r > -0.31);
+        CREDO_AEQUALIS_S32 (eventus_residuum_integrare(&r, 7.0), 6);
+        CREDO_VERUM (r > 0.69 && r < 0.71);
     }
 
     imprimere("\n");

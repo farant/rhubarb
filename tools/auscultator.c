@@ -6,7 +6,11 @@
  * physicus, runa logica, actio, latera in modificantibus), textus
  * separatus, mus, rotula. Exitus: fenestram claudere.
  *
- * Curre per: ./tools/auscultator.sh
+ * Curre per: ./tools/auscultator.sh [mora_ms]
+ *
+ * mora_ms (A3b): post lectionem quamque dormire - applicatio lenta
+ * (quadrum ~XVI ms) simulatur, ut motus coalitus cum exemplis
+ * appareat; sine mora fere quisque motus solus legitur.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -16,17 +20,25 @@
 #include "eventus_stml.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 s32
-principale (vacuum)
+principale (
+          s32   argc,
+    character** argv)
 {
                  Piscina* piscina;
      InternamentumChorda* intern;
     FenestraConfiguratio  configuratio;
                 Fenestra* fenestra;
                  Eventus  eventus;
-                     b32  currens = VERUM;
+                     b32  currens  = VERUM;
+                     s32  mora     = ZEPHYRUM;
 
+    si (argc > I)
+    {
+        mora = (s32)atoi(argv[I]);
+    }
     piscina = piscina_generare_dynamicum("auscultator", 16777216);
     si (piscina == NIHIL)
     {
@@ -50,8 +62,8 @@ principale (vacuum)
     }
     fenestra_monstrare(fenestra);
     fenestra_clavem_capere(fenestra);
-    printf("auscultator: scribe, preme, move, rota in fenestra; claude ut "
-        "exeas.\n");
+    printf("auscultator: scribe, preme, move, rota in fenestra; "
+        "claude ut exeas.\n");
     fflush(stdout);
     dum (currens && !fenestra_debet_claudere(fenestra))
     {
@@ -72,6 +84,10 @@ principale (vacuum)
             printf("%.*s\n", (int)linea.mensura,
                 (constans character*)linea.datum);
             fflush(stdout);
+        }
+        si (mora > ZEPHYRUM)
+        {
+            fenestra_dormire((i32)mora * M);
         }
     }
     fenestra_destruere(fenestra);

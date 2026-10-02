@@ -7,11 +7,12 @@ vacuum
 eventus_caudam_initiare (
     EventusCauda* cauda)
 {
-    cauda->caput           = ZEPHYRUM;
-    cauda->finis           = ZEPHYRUM;
-    cauda->numerus         = ZEPHYRUM;
-    cauda->amissa          = ZEPHYRUM;
-    cauda->textus_mensura  = ZEPHYRUM;
+    cauda->caput            = ZEPHYRUM;
+    cauda->finis            = ZEPHYRUM;
+    cauda->numerus          = ZEPHYRUM;
+    cauda->amissa           = ZEPHYRUM;
+    cauda->textus_mensura   = ZEPHYRUM;
+    cauda->exempla_mensura  = ZEPHYRUM;
 }
 
 vacuum
@@ -22,7 +23,8 @@ eventus_cauda_lectio_incipit (
      * solum si nullum restat */
     si (cauda->numerus == ZEPHYRUM)
     {
-        cauda->textus_mensura = ZEPHYRUM;
+        cauda->textus_mensura   = ZEPHYRUM;
+        cauda->exempla_mensura  = ZEPHYRUM;
     }
 }
 
@@ -73,6 +75,72 @@ eventus_caudae_textum_impellere (
         (memoriae_index)capit);
     cauda->textus_mensura += capit;
     redde eventus_caudae_impellere(cauda, &e);
+}
+
+b32
+eventus_caudae_motum_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus)
+{
+    Eventus* ultimus;
+
+    si (cauda->numerus == ZEPHYRUM)
+    {
+        redde eventus_caudae_impellere(cauda, eventus);
+    }
+    ultimus = &cauda->eventus[(cauda->finis + EVENTUS_CAUDA_CAPACITAS
+        - I)
+        % EVENTUS_CAUDA_CAPACITAS];
+    si (   ultimus->genus               != EVENTUS_MUS_MOTUS
+        || ultimus->datum.mus.botton    != eventus->datum.mus.botton
+        || ultimus->datum.mus.modificantes
+               != eventus->datum.mus.modificantes
+        || ultimus->datum.mus.indicator != eventus->datum.mus.indicator
+        || ultimus->datum.mus.indicator_genus
+               != eventus->datum.mus.indicator_genus)
+    {
+        redde eventus_caudae_impellere(cauda, eventus);
+    }
+
+    /* positio ultimi exemplum fit - si capit (D5: antiquissima
+     * servantur). Exempla ultimi in fine tabulae iacent: nullus
+     * eventus post eum exempla addidit. */
+    si (   ultimus->datum.mus.numerus_exemplorum
+        < EVENTUS_EXEMPLA_MAXIMA
+        && cauda->exempla_mensura < EVENTUS_CAUDA_EXEMPLA)
+    {
+        EventusExemplum* ex = &cauda->exempla[cauda->exempla_mensura];
+
+        si (ultimus->datum.mus.numerus_exemplorum == ZEPHYRUM)
+        {
+            ultimus->datum.mus.exempla = ex;
+        }
+        ex->x       = (s32)ultimus->datum.mus.x;
+        ex->y       = (s32)ultimus->datum.mus.y;
+        ex->tempus  = ultimus->tempus;
+        cauda->exempla_mensura++;
+        ultimus->datum.mus.numerus_exemplorum++;
+    }
+    ultimus->datum.mus.x        = eventus->datum.mus.x;
+    ultimus->datum.mus.y        = eventus->datum.mus.y;
+    ultimus->datum.mus.pressio  = eventus->datum.mus.pressio;
+    ultimus->tempus             = eventus->tempus;
+    redde VERUM;
+}
+
+s32
+eventus_residuum_integrare (
+     f64* residuum,
+     f64  delta)
+{
+    s32 integra;
+
+    /* f64 -> s32: C89 versus ZEPHYRUM truncat (definitum, dissimile
+     * divisioni negativae) */
+    *residuum  = *residuum + delta;
+    integra    = (s32)*residuum;
+    *residuum  = *residuum - (f64)integra;
+    redde integra;
 }
 
 b32

@@ -319,3 +319,75 @@ All 10 tests build and link NO fenestra_macos at all. tempus users no
 longer drag Cocoa. `compile_library.sh`'s hard-coded fenestra list
 gained the new file. examen ACCIPE (2 suspecta: the mach functions are
 absent from the POSIX lexicon).
+
+## A3b — motion merging with samples, integer scroll, capabilities (2026-10-01)
+
+**Pure core (`eventus_cauda`):**
+- `eventus_caudae_motum_impellere`: a MOTUS merges into the queue's LAST
+  event (not yet extracted) when that event is a MOTUS with the same
+  button, modifiers and pointer (id + kind). The old position becomes a
+  sample (x, y, tempus) and the new one replaces it.
+  - The samples of one event are contiguous in the queue's buffer
+    (`EVENTUS_CAUDA_EXEMPLA` = IV * MXXIV), because only the last event
+    grows. The view points into the buffer.
+  - At most 64 samples, keeping the oldest; the final position is always
+    exact (D5).
+  - The buffer is cleared under the same rule as text: at the start of a
+    read, and only if the queue is empty.
+- `eventus_residuum_integrare`: returns the whole part of an
+  accumulator. The f64 → s32 cast truncates toward zero, which C89
+  defines (unlike negative integer division).
+
+Tests VI–X were red first. Four plants were caught by name: samples not
+cleared per read; the cap off by one (65); merging that ignores modifiers;
+rounding instead of truncating.
+
+**fenestra:**
+- Motion goes through the merge in `impellere_eventum`.
+- One position helper, `_murem_implere`, replaces three copy-pasted blocks.
+- `_rotulam_implere`: `hasPreciseScrollingDeltas` → PRAECISA, scaled to
+  our pixels; otherwise GRADATA, lines × `FENESTRA_GRADUS_ROTULAE` (XVI).
+  Each window keeps its remainders, and they are cleared when the scroll
+  kind changes.
+- `_facultates_impellere`: the first event of every window. praeeditio
+  is FALSE (park 004), depositio NULLA, clipboard CERTA, pressio FALSE.
+- auscultator takes `[mora_ms]` to imitate an app that reads once per
+  frame.
+
+**Found during Fran's looks:**
+1. **Screen coordinates.** A move outside the key window arrives with
+   `[event window] == nil`, and its `locationInWindow` is in SCREEN
+   coordinates. That was the A3a jump 743,16 → 96,363. Positions are now
+   always converted through the screen into OUR window.
+   - Off-window positions are clamped to the edges for now. Before this,
+     a negative f64 was cast to the unsigned i32, which is undefined;
+     on this CPU it happened to give 0.
+   - Fran chose to make `mus.x`/`mus.y` s32 in A3c.
+2. **Poll-time stamps.** Events were stamped when we READ them, so a
+   whole batch got nearly the same time (a sample 3 ms from its event
+   while 18 px away). They now carry `[NSEvent timestamp]`, which runs on
+   the same clock as `mach_absolute_time` (measured: they differ by
+   0.003 ms). `_tempus_eventus` converts it.
+3. **Samples stay rare on macOS.** With a 50 ms read delay there is still
+   about one move per read, stamped with the latest hardware time.
+   - My best explanation: the window server keeps only the newest
+     pending move for an app that hasn't fetched it.
+   - `[NSEvent setMouseCoalescingEnabled:NO]` (AppKit's own merging) is
+     now set at NSApp creation, but it had no visible effect. It stays
+     as a no-loss setting.
+   - AppKit has no API for the lost positions of a mouse. A drawing app
+     wants fine strokes has to fetch often.
+   - The terminal source (phase B) will be the opposite: motion reports
+     are bytes and nothing merges them.
+4. **Scroll.**
+   - Fran's trackpad reports whole-point deltas, so the remainder carry
+     is invisible here (the unit test covers it).
+   - The zero events are gesture boundaries: finger lift, then
+     momentum, then momentum end. The vocabulary has no phase and no
+     momentum, so this is parked as terminal-planning 006, a spec
+     addition.
+   - The wheel path (GRADATA) has not been seen yet; it needs a real
+     wheel.
+5. **Resize.** The resize event reports the FRAME size (428 for a 400
+   content area). It predates eventus and is parked as terminal-planning
+   005.

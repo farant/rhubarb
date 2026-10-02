@@ -5,7 +5,7 @@
  * terminalis (phasis B) eadem utetur. Tempus NON hic stampatur (horologium
  * platformae est): fons tempus implet ante impulsum.
  *
- * ONERA (textus, exempla) in tabulis INTERNIS caudae copiantur; visus
+ * ONERA (textus, exempla motus) in tabulis INTERNIS caudae copiantur; visus
  * eventuum (datum.textus.contentum) in eas monstrant. VITA: usque ad
  * lectionem proximam (eventus_cauda_lectio_incipit) - SED tabulae
  * vacantur SOLUM si cauda vacua est: eventa nondum extracta visus suos
@@ -23,15 +23,18 @@
 
 #define EVENTUS_CAUDA_CAPACITAS  CCLVI       /* eventa */
 #define EVENTUS_CAUDA_TEXTUS     65536       /* octeti oneris textus */
+#define EVENTUS_CAUDA_EXEMPLA    (IV * MXXIV) /* exempla motus coaliti */
 
 nomen structura {
-    Eventus eventus[EVENTUS_CAUDA_CAPACITAS];
-        i32 caput;
-        i32 finis;
-        i32 numerus;
-        i32 amissa;          /* eventa abiecta: cauda plena */
-         i8 textus[EVENTUS_CAUDA_TEXTUS];
-        i32 textus_mensura;
+            Eventus eventus[EVENTUS_CAUDA_CAPACITAS];
+                i32 caput;
+                i32 finis;
+                i32 numerus;
+                i32 amissa;          /* eventa abiecta: cauda plena */
+                 i8 textus[EVENTUS_CAUDA_TEXTUS];
+                i32 textus_mensura;
+    EventusExemplum exempla[EVENTUS_CAUDA_EXEMPLA];
+                i32 exempla_mensura;
 } EventusCauda;
 
 vacuum
@@ -59,6 +62,26 @@ eventus_caudae_textum_impellere (
         constans i8* octeti,
                 i32  mensura,
        EventusOrigo  origo);
+
+/* EVENTUS_MUS_MOTUS cum COALITIONE (spec Q10, Q13, D5): si eventus
+ * ULTIMUS caudae (nondum extractus) MOTUS est cum eisdem bottone,
+ * modificantibus, indicatore - positio eius (x, y, tempus) exemplum
+ * fit et novus eam supplet; alioquin impellitur ut eventus novus.
+ * Exempla eventus unius CONTIGUA sunt (solum ultimus crescit), visus
+ * in tabulam caudae. Plura quam EVENTUS_EXEMPLA_MAXIMA (aut tabula
+ * plena): antiquissima servantur, positio ultima semper vera. */
+b32
+eventus_caudae_motum_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus);
+
+/* Pars integra residui (rotula; spec Q14): *residuum += delta, pars
+ * integra (versus ZEPHYRUM truncata) redditur et a residuo demitur.
+ * Fons residuum per fenestram tenet - fractiones non pereunt. */
+s32
+eventus_residuum_integrare (
+     f64* residuum,
+     f64  delta);
 
 /* Eventum antiquissimum extrahere; FALSUM si vacua. */
 b32
