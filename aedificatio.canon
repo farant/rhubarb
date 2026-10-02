@@ -55,6 +55,12 @@
             aedilis derivatae) - verificatio memorata (build/fabrica.db)
             regenerationem supplet. Absens = falsum: sub -plenus semper
             regeneratur (plan 1a T6, decretum 01M3RDBCB8)"/>
+    <attributum nomen="lectiones" genus="veritas"
+      nota="verum: actio per LIBRUM LECTIONUM suum clavatur (plan 2
+            T2) - quod instrumenta domus vere legerunt, quaesiverunt,
+            enumeraverunt (FABRICA_LECTIONES) sigillatur et ingressus
+            manifestorum supplet; ingressus declarati (scripta, argv)
+            manent. Absens = falsum"/>
     <liberum nomen="mandatum" maximum="1"/>
     <liberum nomen="praecondicio"/>
     <liberum nomen="vestigium"/>

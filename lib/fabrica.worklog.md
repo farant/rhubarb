@@ -1080,3 +1080,25 @@ by memo: their declared inputs name materia/fontes, coctor.c and the
 script, but not the lib/ sources the script compiles - exactly the
 hand-proved-input hole T2's traces close (a ledger of coquere's build
 would have listed lib/filum.c). Fixed the list; rebake 7 sanata.
+
+## 2026-10-02 - plan 2 T2 (part 1): verifying traces in the judge
+
+`lectiones="verum"` on an action (aedificatio.canon) makes the judge
+key it on its last congruent run's ledger. The core picks the ledger
+path (build/fabrica/lectiones/<titulus>.tsv) and passes it to
+`currere`; after a CONGRUENT regeneration it reads the ledger through
+the seam, drops S lines, the judge's scratch dir, the ledger dir and
+absolute paths outside the tree (after stripping `sutura->radix`),
+dedups (genus, via), and digests each entry's present state: L =
+content, A/X = presence, D = sorted names; an E line makes the trace
+unverifiable (not stored). Stored under (titulus, input key, artifact
+digest) - same key as verificationes (ruling: a trace is only valid
+for the declared inputs and output it was recorded with). Judge: trace
+congruent -> RECENS "lectiones congruunt", even under celer.
+Tests (in-memory disk, born red): first run stores 3 entries (scratch
+and S dropped); unchanged -> no run; L content change, A path created,
+D name added, declared input changed -> regeneration; failed run
+stores nothing; action without lectiones never asks. Plant (comparison
+always congruent) -> 4 red. Tool: migration III table `lectiones`
+(digests as 32-byte blobs - no hex parser exists), FABRICA_LECTIONES
+set absolute per regeneration (old file removed first), radix = cwd.

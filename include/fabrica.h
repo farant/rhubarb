@@ -8,6 +8,7 @@
 #include "sigillum.h"
 #include "internamentum.h"
 #include "tabula_dispersa.h"
+#include "lectiones.h"
 
 
 /* ==================================================
@@ -114,6 +115,10 @@ nomen structura {
                                         * regenerationem supplet (T6).
                                         * Absens = FALSUM: regeneratur
                                         * semper sub -plenus. */
+                     b32 lectiones;   /* lectiones="verum" (plan 2 T2):
+                                       * clavis = vestigium libri
+                                       * lectionum (L A X D) ultimi
+                                       * cursus congruentis */
                      Xar* praecondiciones; /* chorda: tituli actionum
                                             * REALIZANDARUM ante hanc -
                                             * ordo sine sigillo (plan 1b
@@ -172,6 +177,15 @@ nomen structura {
 } FabricaActum;
 
 /* Sutura: machina discum et processus per eam SOLAM tangit. */
+/* lectio una vestigii (plan 2 T2): genus, via (arbori relativa),
+ * sigillum status eius tempore cursus (L: contenta; A/X: praesentia;
+ * D: nomina ordinata) */
+nomen structura {
+    LectioGenus genus;
+         chorda via;
+       Sigillum sigillum;
+} FabricaLectio;
+
 nomen structura {
     vacuum* datum;
     /* FALSUM = plagula absens */
@@ -186,6 +200,8 @@ nomen structura {
      * FALSUM + causa (ultima linea) si fractum. */
     b32 (*currere)(vacuum* datum, constans Xar* mandatum,
                    constans character* scriptura_dir,
+                   constans character* liber_via,  /* plan 2 T2:
+                                     * FABRICA_LECTIONES; NIHIL = nullus */
                    Piscina* piscina, chorda* causa_out,
                    i32* duratio_ms_out);  /* parcum …AR15: tempus
                                            * regenerationis (cursus) */
@@ -241,6 +257,21 @@ nomen structura {
                                 constans FabricaSanatio* sanatio);
     b32 (*cursum_legere)(vacuum* datum, constans character* titulus,
                          i32* duratio_ms_out);
+    /* vestigia lectionum (plan 2 T2): clavis = (titulus, sigillum
+     * ingressuum declaratorum, sigillum artificii) ut verificationes;
+     * legere FALSUM = nullum. NIHIL licent (sine vestigiis). */
+    b32 (*lectiones_legere)(vacuum* datum, constans character* titulus,
+                            constans Sigillum* ingressus,
+                            constans Sigillum* artificium,
+                            Piscina* piscina, Xar** lectiones_out);
+    vacuum (*lectiones_scribere)(vacuum* datum,
+                                 constans character* titulus,
+                                 constans Sigillum* ingressus,
+                                 constans Sigillum* artificium,
+                                 constans Xar* lectiones);
+    /* praefixum absolutum arboris, ex viis libri demendum (instrumenta
+     * vias absolutas scribere possunt); vacua = nihil demitur */
+    chorda radix;
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
