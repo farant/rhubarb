@@ -62,6 +62,7 @@ declare -a RADIX_FONTES=(
     "friatio"
     "filum"
     "via"
+    "lectiones"
     "iter_directoria"
     "utf8"
     "runae"

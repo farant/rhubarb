@@ -23,7 +23,7 @@ declare -a INCLUDE_FLAGS=( "-I$RADIX_DIR/include" )
 FONTES=(
     canon stml stml_macros similitudo chorda chorda_aedificator provenientia
     piscina xar
-    internamentum tabula_dispersa friatio selectio filum
+    internamentum tabula_dispersa friatio selectio filum lectiones
 )
 
 newest_header () {

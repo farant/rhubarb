@@ -1,6 +1,7 @@
 #include "postulata_posix.h"
 #include "via.h"
 #include "chorda_aedificator.h"
+#include "lectiones.h"
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -498,12 +499,16 @@ via_existit (
     memcpy(buffer, via.datum, (size_t)via.mensura);
     buffer[via.mensura] = '\0';
 
-    /* Verificare existentiam per stat() */
+    /* Verificare existentiam per stat(); liber lectionum (fabrica
+     * plan 2): resolutio inclusionum aedilis hic transit - quaesita
+     * absentia = dependentia negativa (obumbratio) */
     si (stat(buffer, &info) == ZEPHYRUM)
     {
+        lectiones_notare(LECTIO_EXSTAT, buffer);
         redde VERUM;
     }
 
+    lectiones_notare(LECTIO_ABSENS, buffer);
     redde FALSUM;
 }
 

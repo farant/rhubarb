@@ -18,6 +18,7 @@
 #include "postulata_posix.h"   /* getpid: plagulae temporariae per processum */
 #include "latina.h"
 #include "provenientia.h"
+#include "lectiones.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -930,8 +931,12 @@ _nexum_purum_currere (
 
         si (h == NIHIL)
         {
+            lectiones_notare(LECTIO_ABSENS, dir_cstr);
             perge;
         }
+        /* radix inclusionum enumerata: nomina = dependentia
+         * (obumbratio - fabrica plan 2) */
+        lectiones_notare(LECTIO_ENUMERAVIT, dir_cstr);
         dum ((introitus = readdir(h)) != NIHIL)
         {
              memoriae_index  l = strlen(introitus->d_name);
@@ -1010,6 +1015,10 @@ _corpus_currere (
     integer           exitus;
 
     d = opendir(directorium);
+    si (d != NIHIL)
+    {
+        lectiones_notare(LECTIO_ENUMERAVIT, directorium);
+    }
     si (d == NIHIL)
     {
         fprintf(stderr,

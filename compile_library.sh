@@ -27,6 +27,7 @@ declare -a SOURCE_FILES=(
     "lib/internamentum.c"
     "lib/chorda_aedificator.c"
     "lib/filum.c"
+    "lib/lectiones.c"
     "lib/xar.c"
     "lib/via.c"
     "lib/argumenta.c"

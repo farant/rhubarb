@@ -1041,3 +1041,35 @@ whole gate 61 s (was 221-272 s), 51 compared, consensus; after one
 tracked file changed the receipt read "rancidum" and generata ran in
 full (174 s), consensus. Retiring generata (Q15) stays open until a
 longer run of agreement.
+
+## 2026-10-02 - plan 2 T1: the read-ledger spike (PASS)
+
+Recorder lib/lectiones.c (`lectiones_notare(genus, via)`): env
+FABRICA_LECTIONES names the file; one write() per line with O_APPEND;
+two forked children x 500 lines -> 1000 whole lines. Hooks: filum reads
+(L on success, A on failure), existence/status (X/A), via_existit (X/A
+- aedilis's include resolution), iter_directoria and aedilis's two raw
+opendir loops (D). The lexicon lacked O_APPEND: added (Darwin 0x0008),
+auspex_posix certifies it against the real header.
+Bug found by the test: a descriptor cached across "variable unset"
+kept writing into a file deleted meanwhile (same path, new inode) -
+"off" now closes the descriptor.
+Blast radius: filum.c and via.c now need lectiones.o in every link. 12
+generated source snippets regenerated; 7 hand lists edited (briar,
+crusta, saltuarius, toml runners; canon_struere, diagnostica,
+natura_struere).
+SPIKE (tools/lectiones_spica.sh) on silva/fontes/silva_token.c,
+lib/xar.c, toml/probationes/probatio_toml_api.c: every manifest entry
+that exists in the tree was CONTENT-read (L); extras are aedilis.stml
+(configuration) and the root itself; system headers (stdio.h,
+sys/wait.h...) are named by the manifest but never read - the compiler
+identity (Q6) covers them. Shadowing data comes from failed lookups
+(A: 511 / 206 / 2058), not listings (aedilis --enumerare records no D).
+Gate lesson: my first criterion accepted X (existence) as coverage; a
+plant removing content reads stayed GREEN because every resolved header
+gets an X. A trace from X alone would miss header edits. Coverage now
+means L only; the same plant is red (latina.h, piscina.h, xar.h named).
+First commit attempt refused by generata stage V: tools/latina_numeri.sh
+links lib/filum.c by PATH - my hand-list search matched bare names only.
+Five path-form lists fixed (latina_numeri.sh, compile_library.sh,
+compile_sputnik.sh, compile_lector.sh, glr_quaestio.sh).
