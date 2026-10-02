@@ -17,6 +17,15 @@
  * '\n' = Ctrl+J, 0x08 = Ctrl+H (proiectio tesserae eas coniungit, B5).
  * Codex POSITUS ubi series clavem physicam nominat (sagittae,
  * navigatio, F1-F12, Shift+Tab).
+ *
+ * KITTY (eventus B2b): 'CSI clavis[:maiuscula[:basis]] [;modi[:genus]]
+ * [;textus] u' et formae legacy cum subcampo generis (CSI 1;5:3 A):
+ * PRESSA/ITERATA/SOLUTA, modificatores kitty omnes (Caps, Num quoque),
+ * textus associatus (solum si campus adest), codex ex clavi BASIS
+ * (claves_codex_ex_littera) aut ex numero functionali
+ * (claves_codex_ex_kitty). Series kitty prima: facultates discuntur
+ * (tabula distincta; soluta et codex secundum vexilla impulsa) et
+ * eventus FACULTATES impellitur ANTE clavem.
  */
 
 #ifndef INTERPRES_TERMINALIS_H
@@ -30,10 +39,23 @@
 #include "eventus_cauda.h"
 #include "series_terminalis.h"
 
+/* Vexilla kitty (CSI > f u) quae fons impellit: decodificator scit
+ * quid absentia campi significet (e.g. basis absens + ALTERNAE =
+ * basis eadem ac clavis). */
+#define INTERPRES_KITTY_DISCERNERE  0x01   /* Esc, Ctrl+I != Tab */
+#define INTERPRES_KITTY_GENERA      0x02   /* iterata, soluta */
+#define INTERPRES_KITTY_ALTERNAE    0x04   /* clavis basis (codex) */
+#define INTERPRES_KITTY_OMNES       0x08   /* omnes claves ut CSI u */
+#define INTERPRES_KITTY_TEXTUS      0x10   /* textus associatus */
+
 nomen structura {
-    s32 cellula_latitudo;   /* pixela NOSTRA per cellulam (Modulus) */
-    s32 cellula_altitudo;   /* et gradus rotulae (linea una) */
-    b32 alterum_pendens;    /* ESC solus abruptus: alterum proximae */
+              s32 cellula_latitudo; /* pixela NOSTRA per cellulam */
+              s32 cellula_altitudo; /* et gradus rotulae (linea una) */
+              b32 alterum_pendens;  /* ESC solus abruptus: alterum */
+              i32 kitty_vexilla;    /* a fonte impulsa (B3) */
+              b32 kitty_visus;      /* series kitty iam visa */
+EventusFacultates facultates;       /* legacy ab initio; kitty discitur
+                                     * (eventus FACULTATES) */
 } InterpresTerminalis;
 
 /* Cellula in pixelis nostris: mus ad CENTRUM cellulae ponitur. */

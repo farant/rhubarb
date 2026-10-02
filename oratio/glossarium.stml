@@ -1067,6 +1067,7 @@
   <vocabulum lemma="dcs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ECMA-48: DCS (Device Control String, ESC P) - nomen protocolli; sedes SERIES_DCS in include/series_terminalis.h"/>
   <vocabulum lemma="apc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ECMA-48: APC (Application Program Command, ESC _) - nomen protocolli (kitty graphics); sedes SERIES_APC in include/series_terminalis.h"/>
   <vocabulum lemma="sgr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ECMA-48: SGR (Select Graphic Rendition, CSI ... m) - nomen protocolli; mus SGR (?1006, CSI &lt; ... M/m); sedes RELIQUIAE_SGR in tessera/fontes/tessera_eventum.c"/>
+  <vocabulum lemma="kitty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen terminalis et protocolli eius claviaturae (CSI ... u: claves sine iactura, solutiones, clavis basis); sedes claves_codex_ex_kitty (include/claves_physicae.h), INTERPRES_KITTY_* (include/interpres_terminalis.h)"/>
   <vocabulum lemma="praemultiplicatus" lingua="latina" classis="adiectivum" nota="color per alpha iam multiplicatus (R x A / 255): forma quam iconutil in planis ARGB exspectat et per alpha dividit (mensuratum 2026-09-12); vox technica ex prae + multiplicare"><forma textus="praemultiplicata"/></vocabulum>
 
   <!-- ================= TERMINI T38 (decretor, 2026-09-15) ================= -->

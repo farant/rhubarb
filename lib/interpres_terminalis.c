@@ -8,6 +8,7 @@
 
 #include "interpres_terminalis.h"
 #include "utf8.h"
+#include "claves_physicae.h"
 #include <string.h>
 
 #define MODIFICATOR_MAXIMUS CCLVI   /* ultra: invalidum (ingens) */
@@ -41,7 +42,42 @@ _modificantes_csi (
     si (bits & VIII)
     { fructus |= MOD_SUPER;
     }
+    /* kitty: XVI hyper et XXXII meta sine pari in vocabulario */
+    si (bits & LXIV)
+    { fructus |= MOD_CAPS_LOCK;
+    }
+    si (bits & CXXVIII)
+    { fructus |= MOD_NUM_LOCK;
+    }
     redde fructus;
+}
+
+/* Clavis cum actione (B2b): SOLUTA -> genus LIBERATUS */
+interior i32
+_clavem_actio (
+    EventusCauda* cauda,
+             s64  tempus,
+        clavis_t  clavis,
+             s32  runa,
+             i32  modificantes,
+    EventusCodex  codex,
+    EventusActio  actio)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus = (actio == EVENTUS_ACTIO_SOLUTA)
+        ? EVENTUS_CLAVIS_LIBERATUS : EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus               = tempus;
+    e.datum.clavis.clavis  = clavis;
+    e.datum.clavis.typus         = ((s32)clavis > ZEPHYRUM
+                                    && (s32)clavis < CXXVIII)
+                                   ? (character)clavis : '\0';
+    e.datum.clavis.modificantes  = modificantes;
+    e.datum.clavis.runa          = runa;
+    e.datum.clavis.codex         = codex;
+    e.datum.clavis.actio         = actio;
+    redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
 }
 
 interior i32
@@ -53,20 +89,9 @@ _clavem (
              i32  modificantes,
     EventusCodex  codex)
 {
-    Eventus e;
-
-    memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus                = EVENTUS_CLAVIS_DEPRESSUS;
-    e.tempus               = tempus;
-    e.datum.clavis.clavis  = clavis;
-    e.datum.clavis.typus         = ((s32)clavis > ZEPHYRUM
-                                    && (s32)clavis < CXXVIII)
-                                   ? (character)clavis : '\0';
-    e.datum.clavis.modificantes  = modificantes;
-    e.datum.clavis.runa          = runa;
-    e.datum.clavis.codex         = codex;
-    e.datum.clavis.actio         = EVENTUS_ACTIO_PRESSA;
-    redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+    redde _clavem_actio(cauda, tempus, clavis, runa, modificantes,
+        codex,
+        EVENTUS_ACTIO_PRESSA);
 }
 
 /* Runa imprimibilis -> clavis logica (litterae MAIUSCULAE ut fenestra;
@@ -148,26 +173,37 @@ _finalem (
     EventusCauda* cauda,
              s64  tempus,
              i32  finale,
-             i32  modificantes)
+             i32  modificantes,
+    EventusActio  actio)
 {
     commutatio (finale)
     {
-        casus 'A': redde _clavem(cauda, tempus, CLAVIS_SURSUM, ZEPHYRUM,
-                       modificantes, EVENTUS_CODEX_SAGITTA_SURSUM);
-        casus 'B': redde _clavem(cauda, tempus, CLAVIS_DEORSUM,
+        casus 'A': redde _clavem_actio(cauda, tempus, CLAVIS_SURSUM,
                        ZEPHYRUM,
-                       modificantes, EVENTUS_CODEX_SAGITTA_DEORSUM);
-        casus 'C': redde _clavem(cauda, tempus, CLAVIS_DEXTER, ZEPHYRUM,
-                       modificantes, EVENTUS_CODEX_SAGITTA_DEXTRA);
-        casus 'D': redde _clavem(cauda, tempus, CLAVIS_SINISTER,
+                       modificantes, EVENTUS_CODEX_SAGITTA_SURSUM,
+                       actio);
+        casus 'B': redde _clavem_actio(cauda, tempus, CLAVIS_DEORSUM,
                        ZEPHYRUM,
-                       modificantes, EVENTUS_CODEX_SAGITTA_SINISTRA);
-        casus 'H': redde _clavem(cauda, tempus, CLAVIS_DOMUS, ZEPHYRUM,
-                       modificantes, EVENTUS_CODEX_DOMUS);
-        casus 'F': redde _clavem(cauda, tempus, CLAVIS_FINIS, ZEPHYRUM,
-                       modificantes, EVENTUS_CODEX_FINIS);
-        casus 'Z': redde _clavem(cauda, tempus, CLAVIS_TABULA, ZEPHYRUM,
-                       modificantes | MOD_SHIFT, EVENTUS_CODEX_TABULA);
+                       modificantes, EVENTUS_CODEX_SAGITTA_DEORSUM,
+                       actio);
+        casus 'C': redde _clavem_actio(cauda, tempus, CLAVIS_DEXTER,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_SAGITTA_DEXTRA,
+                       actio);
+        casus 'D': redde _clavem_actio(cauda, tempus, CLAVIS_SINISTER,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_SAGITTA_SINISTRA,
+                       actio);
+        casus 'H': redde _clavem_actio(cauda, tempus, CLAVIS_DOMUS,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_DOMUS, actio);
+        casus 'F': redde _clavem_actio(cauda, tempus, CLAVIS_FINIS,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_FINIS, actio);
+        casus 'Z': redde _clavem_actio(cauda, tempus, CLAVIS_TABULA,
+                       ZEPHYRUM,
+                       modificantes | MOD_SHIFT, EVENTUS_CODEX_TABULA,
+                       actio);
         ordinarius:
             frange;
     }
@@ -180,11 +216,13 @@ _functionem (
     EventusCauda* cauda,
              s64  tempus,
              s32  n,
-             i32  modificantes)
+             i32  modificantes,
+    EventusActio  actio)
 {
-    redde _clavem(cauda, tempus, (clavis_t)((s32)CLAVIS_F1 + n - I),
+    redde _clavem_actio(cauda, tempus, (clavis_t)((s32)CLAVIS_F1 + n
+        - I),
         ZEPHYRUM, modificantes,
-        (EventusCodex)((s32)EVENTUS_CODEX_FUNCTIONES + n - I));
+        (EventusCodex)((s32)EVENTUS_CODEX_FUNCTIONES + n - I), actio);
 }
 
 /* '~'-codices (xterm/vt220) */
@@ -193,45 +231,50 @@ _clavem_tildae (
     EventusCauda* cauda,
              s64  tempus,
              s32  codex,
-             i32  modificantes)
+             i32  modificantes,
+    EventusActio  actio)
 {
     commutatio (codex)
     {
         casus I:
         casus VII:
-            redde _clavem(cauda, tempus, CLAVIS_DOMUS, ZEPHYRUM,
-                modificantes, EVENTUS_CODEX_DOMUS);
+            redde _clavem_actio(cauda, tempus, CLAVIS_DOMUS, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_DOMUS, actio);
         casus IV:
         casus VIII:
-            redde _clavem(cauda, tempus, CLAVIS_FINIS, ZEPHYRUM,
-                modificantes, EVENTUS_CODEX_FINIS);
+            redde _clavem_actio(cauda, tempus, CLAVIS_FINIS, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_FINIS, actio);
         casus II:
-            redde _clavem(cauda, tempus, CLAVIS_IGNOTA, ZEPHYRUM,
-                modificantes, EVENTUS_CODEX_INSERERE);
+            redde _clavem_actio(cauda, tempus, CLAVIS_IGNOTA, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_INSERERE, actio);
         casus III:
-            redde _clavem(cauda, tempus, CLAVIS_DELERE, ZEPHYRUM,
-                modificantes, EVENTUS_CODEX_DELERE);
+            redde _clavem_actio(cauda, tempus, CLAVIS_DELERE, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_DELERE, actio);
         casus V:
-            redde _clavem(cauda, tempus, CLAVIS_PAGINA_SURSUM, ZEPHYRUM,
-                modificantes, EVENTUS_CODEX_PAGINA_SURSUM);
-        casus VI:
-            redde _clavem(cauda, tempus, CLAVIS_PAGINA_DEORSUM,
+            redde _clavem_actio(cauda, tempus, CLAVIS_PAGINA_SURSUM,
                 ZEPHYRUM,
-                modificantes, EVENTUS_CODEX_PAGINA_DEORSUM);
+                modificantes, EVENTUS_CODEX_PAGINA_SURSUM, actio);
+        casus VI:
+            redde _clavem_actio(cauda, tempus, CLAVIS_PAGINA_DEORSUM,
+                ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_PAGINA_DEORSUM, actio);
         ordinarius:
             frange;
     }
     si (codex >= XI && codex <= XV)
     {
-        redde _functionem(cauda, tempus, codex - X, modificantes);
+        redde _functionem(cauda, tempus, codex - X, modificantes,
+            actio);
     }
     si (codex >= XVII && codex <= XXI)
     {
-        redde _functionem(cauda, tempus, codex - XI, modificantes);
+        redde _functionem(cauda, tempus, codex - XI, modificantes,
+            actio);
     }
     si (codex == XXIII || codex == XXIV)
     {
-        redde _functionem(cauda, tempus, codex - XII, modificantes);
+        redde _functionem(cauda, tempus, codex - XII, modificantes,
+            actio);
     }
     redde ZEPHYRUM;   /* ignota (200/201 glutinum: fons) */
 }
@@ -305,6 +348,194 @@ _murem (
     redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
 }
 
+/* Campi CSI (kitty): parametra per ';' in campos, ':' subcampos
+ * dividit (separatores bitus i = ':' post parametrum i). */
+#define CAMPI_MAXIMI III
+
+nomen structura {
+    s32 valor[CAMPI_MAXIMI][SERIES_PARAMETRA_MAXIMA];
+    i32 numerus[CAMPI_MAXIMI];
+} CampiCsi;
+
+interior vacuum
+_campos_legere (
+    constans SeriesLexema* l,
+                 CampiCsi* c)
+{
+    i32 k;
+    i32 f = ZEPHYRUM;
+
+    memset(c, ZEPHYRUM, magnitudo(CampiCsi));
+    per (k = ZEPHYRUM; k < l->numerus_parametrorum; k++)
+    {
+        si (f < CAMPI_MAXIMI)
+        {
+            c->valor[f][c->numerus[f]] = l->parametra[k];
+            c->numerus[f]++;
+        }
+        si (!(l->separatores & ((i32)I << k)))
+        {
+            f++;      /* ';' post parametrum k: campus novus */
+        }
+    }
+}
+
+interior s32
+_campus (
+    constans CampiCsi* c,
+                  i32  campus,
+                  i32  pars,
+                  s32  si_abest)
+{
+    si (campus >= CAMPI_MAXIMI || pars >= c->numerus[campus])
+    {
+        redde si_abest;
+    }
+    /* campus vacuus (';;') = 0 = absens */
+    redde (c->valor[campus][pars] == ZEPHYRUM)
+        ? si_abest : c->valor[campus][pars];
+}
+
+/* genus kitty: 1 pressa, 2 iterata, 3 soluta */
+interior EventusActio
+_actio_kitty (
+    s32 genus)
+{
+    si (genus == II)
+    {
+        redde EVENTUS_ACTIO_ITERATA;
+    }
+    si (genus == III)
+    {
+        redde EVENTUS_ACTIO_SOLUTA;
+    }
+    redde EVENTUS_ACTIO_PRESSA;
+}
+
+/* Series kitty prima: facultates discuntur (per observationem - fons
+ * vexilla impulit, terminalis respondendo ea accepit) et eventus
+ * FACULTATES ANTE clavem impellitur. */
+interior i32
+_kitty_discere (
+    InterpresTerminalis* in,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+    Eventus e;
+
+    si (in->kitty_visus)
+    {
+        redde ZEPHYRUM;
+    }
+    in->kitty_visus                  = VERUM;
+    in->facultates.tabula_distincta  = VERUM;
+    in->facultates.liberationes           =
+        (b32)((in->kitty_vexilla & INTERPRES_KITTY_GENERA) != ZEPHYRUM);
+    in->facultates.codex_physicus         =
+        (b32)((in->kitty_vexilla & INTERPRES_KITTY_ALTERNAE)
+            != ZEPHYRUM);
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_FACULTATES;
+    e.tempus            = tempus;
+    e.datum.facultates  = in->facultates;
+    redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+}
+
+/* Clavis 'CSI clavis[:maiuscula[:basis]] ;modi[:genus] ;textus u' */
+interior i32
+_kitty_clavem (
+    InterpresTerminalis* in,
+      constans CampiCsi* c,
+                    i32  modi,
+           EventusActio  actio,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+             s32 k       = _campus(c, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+             s32 basis   = _campus(c, ZEPHYRUM, II, ZEPHYRUM);
+    EventusCodex codex   = claves_codex_ex_kitty(k);
+        clavis_t clavis  = CLAVIS_IGNOTA;
+             s32 runa    = ZEPHYRUM;
+             i32 n;
+             i32 j;
+
+    commutatio (k)
+    {
+        casus XXVII:  clavis = CLAVIS_EFFUGIUM;   frange;
+        casus XIII:   clavis = CLAVIS_REDITUS;    frange;
+        casus IX:     clavis = CLAVIS_TABULA;     frange;
+        casus CXXVII: clavis = CLAVIS_RETRORSUM;  frange;
+        casus 57358:  clavis = CLAVIS_CAPS_LOCK;  frange;
+        casus 57360:  clavis = CLAVIS_NUM_LOCK;   frange;
+        casus 57441:  clavis = CLAVIS_SINISTER_SHIFT;    frange;
+        casus 57447:  clavis = CLAVIS_DEXTER_SHIFT;      frange;
+        casus 57442:  clavis = CLAVIS_SINISTER_IMPERIUM; frange;
+        casus 57448:  clavis = CLAVIS_DEXTER_IMPERIUM;   frange;
+        casus 57443:  clavis = CLAVIS_SINISTER_ALT;      frange;
+        casus 57449:  clavis = CLAVIS_DEXTER_ALT;        frange;
+        casus 57444:  clavis = CLAVIS_SINISTER_SUPER;    frange;
+        casus 57450:  clavis = CLAVIS_DEXTER_SUPER;      frange;
+        casus 57409:  clavis = (clavis_t)'.'; runa = '.'; frange;
+        casus 57410:  clavis = (clavis_t)'/'; runa = '/'; frange;
+        casus 57411:  clavis = (clavis_t)'*'; runa = '*'; frange;
+        casus 57412:  clavis = (clavis_t)'-'; runa = '-'; frange;
+        casus 57413:  clavis = (clavis_t)'+'; runa = '+'; frange;
+        casus 57414:  clavis = CLAVIS_REDITUS;              frange;
+        casus 57415:  clavis = (clavis_t)'='; runa = '='; frange;
+        casus 57416:  clavis = (clavis_t)','; runa = ','; frange;
+        casus 57417:  clavis = CLAVIS_SINISTER;       frange;
+        casus 57418:  clavis = CLAVIS_DEXTER;         frange;
+        casus 57419:  clavis = CLAVIS_SURSUM;         frange;
+        casus 57420:  clavis = CLAVIS_DEORSUM;        frange;
+        casus 57421:  clavis = CLAVIS_PAGINA_SURSUM;  frange;
+        casus 57422:  clavis = CLAVIS_PAGINA_DEORSUM; frange;
+        casus 57423:  clavis = CLAVIS_DOMUS;          frange;
+        casus 57424:  clavis = CLAVIS_FINIS;          frange;
+        casus 57426:  clavis = CLAVIS_DELERE;         frange;
+        ordinarius:
+            si (k >= 57399 && k <= 57408)
+            {
+                /* tabula numerica 0-9 (codex nullus in vocabulario) */
+                clavis  = (clavis_t)('0' + (k - 57399));
+                runa    = (s32)('0' + (k - 57399));
+            }
+            alioquin si (k < 57344 || k > 63743)
+            {
+                /* runa (dispositionis currentis, sine maiuscula) */
+                runa    = k;
+                clavis  = (k >= 'a'
+                    && k <= 'z') ? (clavis_t)(k - 'a' + 'A')
+                        : (k >= 0x20 && k < 0x7F) ? (clavis_t)k
+                        : CLAVIS_IGNOTA;
+                codex   = (basis
+                    != ZEPHYRUM) ? claves_codex_ex_littera(basis)
+                        : (in->kitty_vexilla & INTERPRES_KITTY_ALTERNAE)
+                            ? claves_codex_ex_littera(k)
+                            : EVENTUS_CODEX_IGNOTUS;
+            }
+            frange;
+    }
+    n = _clavem_actio(cauda, tempus, clavis, runa, modi, codex, actio);
+    /* textus associatus: solum si campus adest (vexillum TEXTUS) */
+    si (actio != EVENTUS_ACTIO_SOLUTA && c->numerus[II] > ZEPHYRUM)
+    {
+         i8 octeti[SERIES_PARAMETRA_MAXIMA * IV];
+        i32 m = ZEPHYRUM;
+
+        per (j = ZEPHYRUM; j < c->numerus[II]; j++)
+        {
+            m += (i32)utf8_codere(c->valor[II][j], octeti + m);
+        }
+        si (m > ZEPHYRUM)
+        {
+            n += eventus_caudae_textum_impellere(cauda, tempus, octeti,
+                m,
+                EVENTUS_ORIGO_SCRIPTA) ? I : ZEPHYRUM;
+        }
+    }
+    redde n;
+}
+
 interior b32
 _sola_fuga (
     constans SeriesLexema* l)
@@ -350,6 +581,17 @@ interpres_initiare (
     interpres->cellula_latitudo  = cellula_latitudo;
     interpres->cellula_altitudo  = cellula_altitudo;
     interpres->alterum_pendens   = FALSUM;
+    interpres->kitty_vexilla     = ZEPHYRUM;
+    interpres->kitty_visus       = FALSUM;
+    /* legacy: quod terminalis sine kitty narrare potest */
+    memset(&interpres->facultates, ZEPHYRUM,
+        magnitudo(EventusFacultates));
+    /* super: ?1003 a fonte petitum */
+    interpres->facultates.super             = VERUM;
+    interpres->facultates.scriptura_copiae  = EVENTUS_FACULTAS_FORTASSE;
+    interpres->facultates.depositio =
+        EVENTUS_DEPOSITIO_HEURISTICA;
+    interpres->facultates.gradus_rotulae = cellula_altitudo;
 }
 
 i32
@@ -442,17 +684,20 @@ interpres_lexema (
 
         casus SERIES_CSI:
         {
-            s32 p0 = (l->numerus_parametrorum >= I) ? l->parametra[0]
-                                                    : ZEPHYRUM;
+                CampiCsi c;
+                     s32 p0;
+            EventusActio actio;
 
             in->alterum_pendens = FALSUM;
-            /* kitty (':') B2b; intermedia, privata praeter '<' */
+            /* intermedia, privata praeter '<' (e.g. '?31u' responsum
+             * vexillorum kitty, DA): ignota */
             si (   l->numerus_intermediorum > ZEPHYRUM
-                || l->separatores != ZEPHYRUM
                 || (l->privatum != ZEPHYRUM && l->privatum != '<'))
             {
                 redde ZEPHYRUM;
             }
+            p0 = (l->numerus_parametrorum >= I) ? l->parametra[0]
+                                                : ZEPHYRUM;
             si (l->privatum == '<')
             {
                 si (   (l->finale == 'M' || l->finale == 'm')
@@ -463,39 +708,52 @@ interpres_lexema (
                 }
                 redde ZEPHYRUM;
             }
-            si (l->numerus_parametrorum == ZEPHYRUM && l->finale == 'I')
+            si (   l->numerus_parametrorum == ZEPHYRUM
+                && (l->finale == 'I' || l->finale == 'O'))
             {
                 Eventus e;
 
                 memset(&e, ZEPHYRUM, magnitudo(Eventus));
-                e.genus   = EVENTUS_FOCUS;
+                e.genus   = (l->finale == 'I') ? EVENTUS_FOCUS
+                                               : EVENTUS_DEFOCUS;
                 e.tempus  = tempus;
                 redde eventus_caudae_impellere(cauda,
                     &e) ? I : ZEPHYRUM;
             }
-            si (l->numerus_parametrorum == ZEPHYRUM && l->finale == 'O')
-            {
-                Eventus e;
-
-                memset(&e, ZEPHYRUM, magnitudo(Eventus));
-                e.genus   = EVENTUS_DEFOCUS;
-                e.tempus  = tempus;
-                redde eventus_caudae_impellere(cauda,
-                    &e) ? I : ZEPHYRUM;
-            }
-            modi = (l->numerus_parametrorum >= II)
-                ? _modificantes_csi(l->parametra[I]) : ZEPHYRUM;
+            _campos_legere(l, &c);
+            modi   = _modificantes_csi(_campus(&c, I, ZEPHYRUM, I));
+            actio  = _actio_kitty(_campus(&c, I, I, I));
             si (l->praefixum)
             {
                 modi |= MOD_ALT;   /* ESC ESC [ A = alterum + sursum */
             }
+            /* kitty: 'u', aut pars generis in forma legacy */
+            si (l->finale == 'u' || c.numerus[I] >= II)
+            {
+                n = _kitty_discere(in, tempus, cauda);
+            }
+            si (l->finale == 'u')
+            {
+                redde n + _kitty_clavem(in, &c, modi, actio, tempus,
+                    cauda);
+            }
             si (l->finale == '~')
             {
-                redde (l->numerus_parametrorum >= I)
-                    ? _clavem_tildae(cauda, tempus, p0,
-                    modi) : ZEPHYRUM;
+                redde n + ((c.numerus[ZEPHYRUM] >= I)
+                    ? _clavem_tildae(cauda, tempus, p0, modi, actio)
+                    : ZEPHYRUM);
             }
-            redde _finalem(cauda, tempus, (i32)l->finale, modi);
+            /* kitty F1 F2 F4: CSI P Q S (F3 = CSI 13~: CSI R = CPR) */
+            si (   l->finale == 'P' || l->finale == 'Q'
+                || l->finale == 'S')
+            {
+                redde n + _functionem(cauda, tempus,
+                    (l->finale == 'S') ? IV : (s32)(l->finale - 'P')
+                        + I,
+                    modi, actio);
+            }
+            redde n + _finalem(cauda, tempus, (i32)l->finale, modi,
+                actio);
         }
 
         casus SERIES_SS:
@@ -513,9 +771,11 @@ interpres_lexema (
             si (l->finale >= 'P' && l->finale <= 'S')
             {
                 redde _functionem(cauda, tempus,
-                    (s32)(l->finale - 'P') + I, modi);
+                    (s32)(l->finale - 'P') + I, modi,
+                    EVENTUS_ACTIO_PRESSA);
             }
-            redde _finalem(cauda, tempus, (i32)l->finale, modi);
+            redde _finalem(cauda, tempus, (i32)l->finale, modi,
+                EVENTUS_ACTIO_PRESSA);
 
         ordinarius:
             /* OSC, DCS, APC (responsa), NIHIL */

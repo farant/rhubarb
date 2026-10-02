@@ -983,3 +983,57 @@ amalgam rides with B2a (plus the tessera gate). main already fixed the
 trap in dfd9a2a4 ("commissio: forma ANTE iudicium": formatting before
 the gates). Until secunda merges main: run the formatter after the LAST
 edit, and regenerate derived files after that.
+
+## B2b — kitty keyboard decoding (2026-10-02)
+
+**`claves_physicae` gains two tables:**
+- `claves_codex_ex_littera`: a US base-layout character → physical code
+  (letters, digits, the 12 punctuation keys, space; uppercase and
+  non-ASCII → IGNOTUS). Cross-checked against the macOS kVK table:
+  same position, same code.
+- `claves_codex_ex_kitty`: kitty's functional numbers → codex.
+  - Escape 27, Enter 13, Tab 9, Backspace 127, Caps Lock 57358, and the
+    eight SIDED modifiers 57441..57450 (Ghostty `kitty.zig`, MIT, pin
+    12752b2).
+  - Keypad and F13+ have no code in our vocabulary → IGNOTUS.
+
+**The decoder:**
+- CSI parameters are split into kitty FIELDS (`;`) and parts (`:`) from
+  the tokenizer's `separatores` bitset (`_campos_legere`); an empty field
+  = absent.
+- `CSI key[:shifted[:base]] [;mods[:event]] [;text] u`:
+  - event → PRESSA / ITERATA / SOLUTA (release = genus LIBERATUS);
+  - the kitty modifier set: Caps/Num Lock added, hyper/meta have no
+    counterpart;
+  - associated text ONLY when the field is present;
+  - the codex from the BASE key; if the base is absent and ALTERNAE was
+    pushed, base = key; otherwise IGNOTUS.
+  - Escape/Enter/Tab/Backspace are now unambiguous, so they get a codex;
+    Ctrl+I = `105;5u` ≠ Tab.
+  - Sided modifier keys, the keypad, Caps/Num Lock.
+- Legacy-form keys carry the event part too: `CSI 1;5:3A`, `~` keys,
+  and kitty's F1/F2/F4 as `CSI P/Q/S` (F3 is `CSI 13~`, because `CSI R`
+  is the cursor-position reply and is ignored).
+- The named-key helpers carry `actio` (`_clavem_actio`; `_clavem` =
+  PRESSA).
+- **Learning by observation:** the decoder holds its `EventusFacultates`
+  (legacy defaults from init: clipboard FORTASSE, drop HEURISTICA, notch
+  = cell height). The FIRST kitty sequence (`u`, or an event part) sets
+  `tabula_distincta`, plus `liberationes` / `codex_physicus` from the
+  flags the source PUSHED (`kitty_vexilla`, set by B3), and pushes a
+  FACULTATES event BEFORE the key.
+- `CSI ? flags u` (the flags reply) is ignored, as are DA replies.
+
+**Tests:**
+- red first: 19 kitty assertions in `probatio_interpres_terminalis` (now
+  80) and 64 in `probatio_claves_physicae` (stubs);
+- cases: the AZERTY `q` → KeyA; Cyrillic ф + text; release and repeat
+  of `a` and the arrows; the left Shift alone; caps-lock state; a
+  keypad digit; legacy after kitty unchanged; without ALTERNAE the
+  codex is unknown;
+- three compiling plants caught: release read as press; the base key
+  ignored (AZERTY `q` then reports KeyQ, the exact failure it guards);
+  capabilities never learned.
+
+**Lint:** `kitty` entered the glossary (a protocol name); the field
+part is `pars`.

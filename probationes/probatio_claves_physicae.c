@@ -99,6 +99,79 @@ s32 principale (vacuum)
     CREDO_VERUM (claves_codex_ex_macos(200) == EVENTUS_CODEX_IGNOTUS);
     CREDO_VERUM (claves_codex_ex_macos(-I) == EVENTUS_CODEX_IGNOTUS);
 
+    imprimere("\n--- IV. dispositio US basica (B2b) ---\n");
+    {
+        constans character* signa = "`-=[]\\;',./ ";
+        constans character* tituli[XIV];
+                       i32  j;
+
+        tituli[0]  = "Backquote";    tituli[1]  = "Minus";
+        tituli[2]  = "Equal";        tituli[3]  = "BracketLeft";
+        tituli[4]  = "BracketRight"; tituli[5]  = "Backslash";
+        tituli[6]  = "Semicolon";    tituli[7]  = "Quote";
+        tituli[8]  = "Comma";        tituli[9]  = "Period";
+        tituli[10] = "Slash";        tituli[11] = "Space";
+        per (j = ZEPHYRUM; j < XII; j++)
+        {
+            CREDO_VERUM (strcmp(eventus_codex_titulus(
+                claves_codex_ex_littera((s32)signa[j])), tituli[j])
+                == ZEPHYRUM);
+        }
+        per (j = ZEPHYRUM; j < XXVI; j++)
+        {
+            CREDO_VERUM (claves_codex_ex_littera((s32)('a' + j))
+                == (EventusCodex)(EVENTUS_CODEX_LITTERAE + j));
+        }
+        per (j = ZEPHYRUM; j < X; j++)
+        {
+            CREDO_VERUM (claves_codex_ex_littera((s32)('0' + j))
+                == (EventusCodex)(EVENTUS_CODEX_NUMERI + j));
+        }
+        /* concordia cum macOS: eadem positio */
+        CREDO_VERUM (claves_codex_ex_littera('q')
+            == claves_codex_ex_macos(XII));
+        CREDO_VERUM (claves_codex_ex_littera(';')
+            == claves_codex_ex_macos(XLI));
+        CREDO_VERUM (claves_codex_ex_littera('A')
+            == EVENTUS_CODEX_IGNOTUS);
+        CREDO_VERUM (claves_codex_ex_littera(0x444)
+            == EVENTUS_CODEX_IGNOTUS);
+    }
+
+    imprimere("\n--- V. kitty: claves functionales ---\n");
+    {
+                       s32  numeri[XIII];
+        constans character* tituli[XIII];
+                       i32  j;
+
+        numeri[0]  = XXVII;  tituli[0]  = "Escape";
+        numeri[1]  = XIII;   tituli[1]  = "Enter";
+        numeri[2]  = IX;     tituli[2]  = "Tab";
+        numeri[3]  = CXXVII; tituli[3]  = "Backspace";
+        numeri[4]  = 57358;  tituli[4]  = "CapsLock";
+        numeri[5]  = 57441;  tituli[5]  = "ShiftLeft";
+        numeri[6]  = 57447;  tituli[6]  = "ShiftRight";
+        numeri[7]  = 57442;  tituli[7]  = "ControlLeft";
+        numeri[8]  = 57448;  tituli[8]  = "ControlRight";
+        numeri[9]  = 57443;  tituli[9]  = "AltLeft";
+        numeri[10] = 57449;  tituli[10] = "AltRight";
+        numeri[11] = 57444;  tituli[11] = "MetaLeft";
+        numeri[12] = 57450;  tituli[12] = "MetaRight";
+        per (j = ZEPHYRUM; j < XIII; j++)
+        {
+            CREDO_VERUM (strcmp(eventus_codex_titulus(
+                claves_codex_ex_kitty(numeri[j])), tituli[j])
+                    == ZEPHYRUM);
+        }
+        /* runae, F13, tabula numerica: sine codice */
+        CREDO_VERUM (claves_codex_ex_kitty(XCVII)
+            == EVENTUS_CODEX_IGNOTUS);
+        CREDO_VERUM (claves_codex_ex_kitty(57376)
+            == EVENTUS_CODEX_IGNOTUS);
+        CREDO_VERUM (claves_codex_ex_kitty(57399)
+            == EVENTUS_CODEX_IGNOTUS);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;

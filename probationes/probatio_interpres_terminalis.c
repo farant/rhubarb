@@ -61,6 +61,9 @@ _clavis_titulus (
         casus CLAVIS_FINIS:          redde "end";
         casus CLAVIS_PAGINA_SURSUM:  redde "pgup";
         casus CLAVIS_PAGINA_DEORSUM: redde "pgdn";
+        casus CLAVIS_SINISTER_SHIFT: redde "lshift";
+        casus CLAVIS_DEXTER_SHIFT:   redde "rshift";
+        casus CLAVIS_CAPS_LOCK:      redde "caps";
         casus CLAVIS_IGNOTA:         redde "?";
         ordinarius:                  redde NIHIL;
     }
@@ -83,6 +86,12 @@ _modos (
     si (m & MOD_SUPER)
     { chorda_aedificator_appendere_literis(a, "+M");
     }
+    si (m & MOD_CAPS_LOCK)
+    { chorda_aedificator_appendere_literis(a, "+L");
+    }
+    si (m & MOD_NUM_LOCK)
+    { chorda_aedificator_appendere_literis(a, "+N");
+    }
 }
 
 interior vacuum
@@ -97,7 +106,14 @@ _eventum_reddere (
     commutatio (e->genus)
     {
         casus EVENTUS_CLAVIS_DEPRESSUS:
-            chorda_aedificator_appendere_character(a, 'K');
+        casus EVENTUS_CLAVIS_LIBERATUS:
+            /* K pressa, K* iterata, k soluta (B2b) */
+            chorda_aedificator_appendere_character(a,
+                (e->genus == EVENTUS_CLAVIS_LIBERATUS) ? 'k' : 'K');
+            si (e->datum.clavis.actio == EVENTUS_ACTIO_ITERATA)
+            {
+                chorda_aedificator_appendere_character(a, '*');
+            }
             t = _clavis_titulus(e->datum.clavis.clavis);
             si (t)
             {
@@ -177,6 +193,21 @@ _eventum_reddere (
             frange;
         casus EVENTUS_FOCUS:
             chorda_aedificator_appendere_literis(a, "F+");
+            frange;
+        casus EVENTUS_FACULTATES:
+            chorda_aedificator_appendere_literis(a, "Fac:");
+            si (e->datum.facultates.liberationes)
+            {
+                chorda_aedificator_appendere_character(a, 'L');
+            }
+            si (e->datum.facultates.codex_physicus)
+            {
+                chorda_aedificator_appendere_character(a, 'C');
+            }
+            si (e->datum.facultates.tabula_distincta)
+            {
+                chorda_aedificator_appendere_character(a, 'T');
+            }
             frange;
         casus EVENTUS_DEFOCUS:
             chorda_aedificator_appendere_literis(a, "F-");
@@ -373,6 +404,45 @@ s32 principale (vacuum)
         XXXIII + II, XXXIII + I, M, b.cauda), I);
     CREDO_CHORDA_AEQUALIS_LITERIS (_cauda_reddere(&b),
         "DL@25,30 U0@25,30");
+
+    imprimere("\n--- VII. kitty (B2b): vexilla 1|2|4|8|16 ---\n");
+    interpres_initiare(&b.interpres, X, XX);
+    b.interpres.kitty_vexilla = 0x1F;
+    /* prima series kitty: facultates discuntur, ante clavem */
+    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "Fac:LCT KA:a#KeyA"));
+    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "KA:a#KeyA"));
+    CREDO_VERUM (_videre(&b, "\x1b[97;;97u", FALSUM, "KA:a#KeyA Ta"));
+    CREDO_VERUM (_videre(&b, "\x1b[97:65;2;65u", FALSUM,
+        "KA:a+S#KeyA TA"));
+    CREDO_VERUM (_videre(&b, "\x1b[97;1:2;97u", FALSUM,
+        "K*A:a#KeyA Ta"));
+    CREDO_VERUM (_videre(&b, "\x1b[97;1:3u", FALSUM, "kA:a#KeyA"));
+    /* Ctrl+I != Tab */
+    CREDO_VERUM (_videre(&b, "\x1b[105;5u", FALSUM, "KI:i+C#KeyI"));
+    CREDO_VERUM (_videre(&b, "\x1b[9u", FALSUM, "Ktab#Tab"));
+    /* AZERTY 'q' in positione US 'a'; Cyrillica cum textu */
+    CREDO_VERUM (_videre(&b, "\x1b[113::97u", FALSUM, "KQ:q#KeyA"));
+    CREDO_VERUM (_videre(&b, "\x1b[1092::97;1;1092u", FALSUM,
+        "K?:U+444#KeyA T%209%132"));
+    /* formae legacy cum genere */
+    CREDO_VERUM (_videre(&b, "\x1b[1;1:3A", FALSUM, "kup#ArrowUp"));
+    CREDO_VERUM (_videre(&b, "\x1b[1;5:2A", FALSUM, "K*up+C#ArrowUp"));
+    CREDO_VERUM (_videre(&b, "\x1b[P\x1b[1;2Q\x1b[13~", FALSUM,
+        "Kf1#F1 Kf2+S#F2 Kf3#F3"));
+    CREDO_VERUM (_videre(&b, "\x1b[12;5R", FALSUM, ""));   /* CPR */
+    CREDO_VERUM (_videre(&b, "\x1b[27u\x1b[13u\x1b[127u", FALSUM,
+        "Kesc#Escape Kret#Enter Kbs#Backspace"));
+    CREDO_VERUM (_videre(&b, "\x1b[57441;2u\x1b[57441;1:3u", FALSUM,
+        "Klshift+S#ShiftLeft klshift#ShiftLeft"));
+    CREDO_VERUM (_videre(&b, "\x1b[97;65u", FALSUM, "KA:a+L#KeyA"));
+    CREDO_VERUM (_videre(&b, "\x1b[57400u", FALSUM, "K1:1"));
+    CREDO_VERUM (_videre(&b, "\x1b[?31u", FALSUM, ""));
+    /* legacy post kitty: idem */
+    CREDO_VERUM (_videre(&b, "\x1b[1;5A", FALSUM, "Kup+C#ArrowUp"));
+    /* sine ALTERNAE et sine basi: codex nescitur */
+    interpres_initiare(&b.interpres, X, XX);
+    b.interpres.kitty_vexilla = INTERPRES_KITTY_DISCERNERE;
+    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "Fac:T KA:a"));
 
     imprimere("\n");
     credo_imprimere_compendium();

@@ -103,3 +103,58 @@ claves_codex_ex_macos (
             redde EVENTUS_CODEX_IGNOTUS;
     }
 }
+
+EventusCodex
+claves_codex_ex_littera (
+    s32 runa)
+{
+    si (runa >= 'a' && runa <= 'z')
+    {
+        redde (EventusCodex)(EVENTUS_CODEX_LITTERAE + (runa - 'a'));
+    }
+    si (runa >= '0' && runa <= '9')
+    {
+        redde (EventusCodex)(EVENTUS_CODEX_NUMERI + (runa - '0'));
+    }
+    commutatio (runa)
+    {
+        casus '`':  redde EVENTUS_CODEX_GRAVIS;
+        casus '-':  redde EVENTUS_CODEX_MINUS;
+        casus '=':  redde EVENTUS_CODEX_AEQUALE;
+        casus '[':  redde EVENTUS_CODEX_UNCUS_SINISTER;
+        casus ']':  redde EVENTUS_CODEX_UNCUS_DEXTER;
+        casus '\\': redde EVENTUS_CODEX_VIRGULA_INVERSA;
+        casus ';':  redde EVENTUS_CODEX_PUNCTUM_VIRGULA;
+        casus '\'': redde EVENTUS_CODEX_APOSTROPHUS;
+        casus ',':  redde EVENTUS_CODEX_VIRGULA;
+        casus '.':  redde EVENTUS_CODEX_PUNCTUM;
+        casus '/':  redde EVENTUS_CODEX_VIRGULA_OBLIQUA;
+        casus ' ':  redde EVENTUS_CODEX_SPATIUM;
+        ordinarius: redde EVENTUS_CODEX_IGNOTUS;
+    }
+}
+
+/* kitty 'functional key definitions' (kitty doc keyboard-protocol;
+ * Ghostty src/input/kitty.zig, MIT, pin 12752b2) */
+EventusCodex
+claves_codex_ex_kitty (
+    s32 numerus)
+{
+    commutatio (numerus)
+    {
+        casus XXVII:  redde EVENTUS_CODEX_EFFUGIUM;
+        casus XIII:   redde EVENTUS_CODEX_REDITUS;
+        casus IX:     redde EVENTUS_CODEX_TABULA;
+        casus CXXVII: redde EVENTUS_CODEX_RETRORSUM;
+        casus 57358:  redde EVENTUS_CODEX_SERA_MAIUSCULARUM;
+        casus 57441:  redde EVENTUS_CODEX_MAIUSCULA_SINISTRA;
+        casus 57447:  redde EVENTUS_CODEX_MAIUSCULA_DEXTRA;
+        casus 57442:  redde EVENTUS_CODEX_IMPERIUM_SINISTRUM;
+        casus 57448:  redde EVENTUS_CODEX_IMPERIUM_DEXTRUM;
+        casus 57443:  redde EVENTUS_CODEX_ALTERUM_SINISTRUM;
+        casus 57449:  redde EVENTUS_CODEX_ALTERUM_DEXTRUM;
+        casus 57444:  redde EVENTUS_CODEX_SUPER_SINISTRUM;
+        casus 57450:  redde EVENTUS_CODEX_SUPER_DEXTRUM;
+        ordinarius:   redde EVENTUS_CODEX_IGNOTUS;
+    }
+}
