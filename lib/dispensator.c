@@ -445,11 +445,13 @@ tractare_unum (
 
     consumptus = mittere(d, &des, e);
 
-    /* Tab innatus: modificans I (shift) = praecedens */
+    /* Tab innatus per clavem LOGICAM (eventus A5): typus '\t' etiam
+     * Ctrl+I fert. Shift = MOD_SHIFT (olim '& I' - qui bitus lateris
+     * Ctrl sinistri est: Ctrl+Tab retro, Shift+Tab ante ibat). */
     si (   !consumptus && e->genus == EVENTUS_CLAVIS_DEPRESSUS
-        && e->datum.clavis.typus == '\t')
+        && e->datum.clavis.clavis == CLAVIS_TABULA)
     {
-        focus_novus = (e->datum.clavis.modificantes & I)
+        focus_novus = (e->datum.clavis.modificantes & MOD_SHIFT)
             ? destinatio_focus_praecedens(d->arbor, focus, d->scratch)
             : destinatio_focus_proximum(d->arbor, focus, d->scratch);
         si (!chorda_vacua(focus_novus))

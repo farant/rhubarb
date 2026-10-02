@@ -501,3 +501,65 @@ Not yet in the table:
 - resize (park 005: the event reports the frame size);
 - scroll (there is no injection API for scroll);
 - the terminal column (B4).
+
+## A5 — ludus consumers by logical key + drag derivation (2026-10-02)
+
+**dispensator, Tab traversal.**
+- Tab is now `clavis == CLAVIS_TABULA`, not `typus == '\t'`. Ctrl+I also
+  carries `typus '\t'`, so it used to move focus.
+- **A second, older bug:** "back" was `modificantes & I`. 0x1 is the
+  LEFT CONTROL device bit, not Shift. With real fenestra flags,
+  Shift+Tab (0x20002) went FORWARD and Ctrl+Tab (0x40001) went BACK.
+  The tests never saw it because manus_ludus passed `I` meaning
+  "shift". It is now `& MOD_SHIFT`. The manus test passes the real
+  flags (`MOD_SHIFT | MOD_SHIFT_SINISTER`).
+- **Test design:** the toy tree has TWO focusables (b1, tabula), so from
+  either one forward and back land on the other, and direction is
+  invisible. The direction tests start from NO focus: forward → first
+  (b1), back → last (tabula). The manus test can't tell direction; the
+  dispensator test can.
+
+**pictor.**
+- Escape is `clavis == CLAVIS_EFFUGIUM`.
+- The pencil is `runa == 'p'` (logical: the current layout's unshifted
+  character), and only with neither Cmd nor Ctrl. Before this, Cmd+P
+  (print) and Ctrl+P selected the pencil.
+
+**manus_ludus.** Synthesized keys fill the vocabulary from `typus`, the
+same way fenestra does:
+- clavis: letters UPPERCASE ASCII (as fenestra: KeyA → 65); other
+  values are clavis_t ASCII itself (Tab 9, Escape 27);
+- runa: lowercase letter, or the printable character;
+- codex: by US position (letters, digits, named keys, otherwise
+  IGNOTUS);
+- actio: PRESSA, then SOLUTA.
+
+manus does NOT yet emit a TEXT event after a key. No ludus consumer
+reads text yet, and a stack payload passed into the dispensator would
+have to survive any recorder that holds it. That waits for the first
+text widget.
+
+**derivare: drag (spec D4).**
+- A press, then a motion BEYOND `distantia` (IV) on either axis →
+  TRACTUS_INCIPIT, carrying the press ORIGIN (x/y), the time of the
+  crossing motion, and the press button.
+- Each later motion → TRACTUS at the current position.
+- Release → TRACTUS_FINIT.
+- Starting a drag clears the pending first click, so a drag is never
+  the first half of a double-click.
+- Derived events come AFTER their raw event, as DUPLEX does.
+- The three kinds are appended to the enum and the title table
+  ("tractus_incipit", "tractus", "tractus_finit"). The writer gives
+  them pointer fields; the reader's fall-through branch already reads
+  them.
+- destinatio counts them as pointer-positioned, so capture wins.
+
+**Tests:**
+- Red first: derivare (the exact 4 px boundary is no drag; INCIPIT is
+  at the origin; FINIT; a click without motion; hover without a press;
+  drag vs double-click); dispensator (Ctrl+I; Shift+Tab and Ctrl+Tab
+  from no focus); pictor (Ctrl+P, Cmd+P).
+- Five compiling plants caught by name: the threshold `>=`; Tab by
+  typus again; pictor ignoring modifiers; a drag still setting up a
+  double-click; INCIPIT at the current position.
+- pictor, villa and forum build.

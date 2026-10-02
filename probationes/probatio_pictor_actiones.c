@@ -212,6 +212,13 @@ s32 principale (vacuum)
     insula_scriptorem_ponere(repo, chorda_ex_literis("", piscina));
     dispensator_recomponere(d);
     CREDO_MANUS_LUDUS_ABEST(m, "[actio=penicillus.ictus]");
+    /* A5: Ctrl+P et Cmd+P (imprimere!) brevitates sunt, non 'p' */
+    CREDO_VERUM(manus_ludus_clavem(m, 'p',
+        MOD_IMPERIUM | MOD_IMPERIUM_SINISTER));
+    CREDO_MANUS_LUDUS_ABEST(m, "[actio=penicillus.ictus]");
+    CREDO_VERUM(manus_ludus_clavem(m, 'p',
+        MOD_SUPER | MOD_SUPER_SINISTER));
+    CREDO_MANUS_LUDUS_ABEST(m, "[actio=penicillus.ictus]");
     CREDO_VERUM(manus_ludus_clavem(m, 'p', ZEPHYRUM));
     {
         chorda* a2;

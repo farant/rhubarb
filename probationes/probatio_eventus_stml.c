@@ -101,6 +101,12 @@ s32 principale (vacuum)
         == EVENTUS_RESUMPTIO);
     CREDO_VERUM (strcmp(eventus_genus_titulus(EVENTUS_FACULTATES),
         "facultates") == ZEPHYRUM);
+    /* A5: tractus derivati (tabula titulorum cum enumeratione) */
+    CREDO_VERUM (eventus_genus_ex_titulo("tractus_incipit")
+        == EVENTUS_TRACTUS_INCIPIT);
+    CREDO_VERUM (eventus_genus_ex_titulo("tractus") == EVENTUS_TRACTUS);
+    CREDO_VERUM (strcmp(eventus_genus_titulus(EVENTUS_TRACTUS_FINIT),
+        "tractus_finit") == ZEPHYRUM);
 
     imprimere("\n--- A2: codices physici (W3C) ---\n");
     {

@@ -15,7 +15,9 @@ hic_manens constans character* tituli[] = {
     "mus_intravit", "mus_exiit", "focus_captus", "focus_amissus",
     "focus_petitus", "menu",
     /* eventus A2 */
-    "textus", "depositio", "suspensio", "resumptio", "facultates"
+    "textus", "depositio", "suspensio", "resumptio", "facultates",
+    /* eventus A5: derivata */
+    "tractus_incipit", "tractus", "tractus_finit"
 };
 #define TITULI_NUMERUS ((i32)(magnitudo(tituli) / magnitudo(tituli[0])))
 
@@ -256,6 +258,9 @@ eventus_scribere_stml (
             casus EVENTUS_MUS_LIBERATUS:
             casus EVENTUS_MUS_MOTUS:
             casus EVENTUS_MUS_DUPLEX:
+            casus EVENTUS_TRACTUS_INCIPIT:
+            casus EVENTUS_TRACTUS:
+            casus EVENTUS_TRACTUS_FINIT:
                 attr_s(n, piscina, intern, "x", e->datum.mus.x);
                 attr_s(n, piscina, intern, "y", e->datum.mus.y);
                 attr_s(n, piscina, intern, "botton",

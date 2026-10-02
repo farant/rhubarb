@@ -91,6 +91,10 @@ manus_ludus_trahere (
       constans Punctum* puncta,
                    i32  n);
 
+/* Clavis pressa et liberata. modificantes = vexilla ut fenestra ea
+ * fert (MOD_* + latera, e.g. MOD_SHIFT | MOD_SHIFT_SINISTER). Campi
+ * vocabularii (clavis logica, runa, codex, actio) ex typo implentur
+ * (eventus A5). */
 b32
 manus_ludus_clavem (
      ManusLudus* m,

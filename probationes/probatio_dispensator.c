@@ -38,20 +38,24 @@ clavis (
     e.genus               = EVENTUS_CLAVIS_DEPRESSUS;
     e.tempus              = t;
     e.datum.clavis.typus  = typus;
+    /* clavis logica: clavis_t ASCII ipsum fert (Tab IX, Effugium
+     * XXVII) - ut fenestra */
+    e.datum.clavis.clavis = (clavis_t)typus;
     redde e;
 }
 
 s32 principale (vacuum)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-     InsulaRepositorium* repo;
-         ActioRegistrum* reg;
-              ToyStatus  toy;
-            Dispensator* d;
-                Eventus  e;
-                 chorda* a;
-                    i32  n0;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+      InsulaRepositorium* repo;
+          ActioRegistrum* reg;
+               ToyStatus  toy;
+             Dispensator* d;
+                 Eventus  e;
+                  chorda* a;
+                  chorda  vacua_focus;
+                     i32  n0;
 
     piscina = piscina_generare_dynamicum("probatio_dispensator",
         LXIV * M);
@@ -154,6 +158,32 @@ s32 principale (vacuum)
     dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "tabula");
     e = clavis(II * M + CCCXX, '\t');
+    dispensator_tractare(d, &e);
+    CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
+
+    imprimere("\n--- A5: Tab per clavem logicam, Shift verum ---\n");
+    /* Ctrl+I: characteres '\t' (typus) sed clavis 'I' - focus NON
+     * movetur (Tab != Ctrl+I) */
+    e                            = clavis(II * M + CD, '\t');
+    e.datum.clavis.clavis        = (clavis_t)'I';
+    e.datum.clavis.modificantes  = MOD_IMPERIUM | MOD_IMPERIUM_SINISTER;
+    dispensator_tractare(d, &e);
+    CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
+    /* directio: DUO focusabiles (b1, tabula) - ex foco b1 et ante et
+     * retro 'tabula' est. Ex foco NULLO directio videtur: ante ->
+     * primus (b1), retro -> ultimus (tabula). */
+    /* Shift+Tab cum vexillis veris macOS (0x20002) -> retro */
+    vacua_focus.datum    = NIHIL;
+    vacua_focus.mensura  = ZEPHYRUM;
+    dispensator_focus_ponere(d, vacua_focus);
+    e                            = clavis(II * M + CDX, '\t');
+    e.datum.clavis.modificantes  = MOD_SHIFT | MOD_SHIFT_SINISTER;
+    dispensator_tractare(d, &e);
+    CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "tabula");
+    /* Ctrl+Tab (0x40001): ante, NON retro - bitus 0x1 latus Ctrl est */
+    dispensator_focus_ponere(d, vacua_focus);
+    e                            = clavis(II * M + CDXX, '\t');
+    e.datum.clavis.modificantes  = MOD_IMPERIUM | MOD_IMPERIUM_SINISTER;
     dispensator_tractare(d, &e);
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
 

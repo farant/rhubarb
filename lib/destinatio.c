@@ -14,7 +14,9 @@ est_muris_positus (
     eventus_genus_t g)
 {
     redde g == EVENTUS_MUS_DEPRESSUS || g == EVENTUS_MUS_LIBERATUS
-        || g == EVENTUS_MUS_MOTUS || g == EVENTUS_MUS_DUPLEX;
+        || g == EVENTUS_MUS_MOTUS || g == EVENTUS_MUS_DUPLEX
+        || g == EVENTUS_TRACTUS_INCIPIT || g == EVENTUS_TRACTUS
+        || g == EVENTUS_TRACTUS_FINIT;
 }
 
 interior b32

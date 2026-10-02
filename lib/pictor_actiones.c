@@ -156,7 +156,7 @@ pictor_penicillus_ictus (
             redde VERUM;
         casus EVENTUS_CLAVIS_DEPRESSUS:
             si (   chorda_vacua(motus->captura)
-                || ev->datum.clavis.typus != (character)XXVII)
+                || ev->datum.clavis.clavis != CLAVIS_EFFUGIUM)
             {
                 redde FALSUM;
             }
@@ -187,7 +187,11 @@ pictor_instrumentum_eligere (
     {
         redde FALSUM;
     }
-    si (ev->datum.clavis.typus == 'p')
+    /* clavis LOGICA (runa sine maiuscula, dispositionis praesentis);
+     * sub Cmd/Ctrl brevitas est (Cmd+P imprimere), non 'p' (A5) */
+    si (   ev->datum.clavis.runa == 'p'
+        && (ev->datum.clavis.modificantes & (MOD_SUPER | MOD_IMPERIUM))
+               == ZEPHYRUM)
     {
         redde mutare_ephemera(repo, instrumentum_ponere,
             litterae_penicillus);

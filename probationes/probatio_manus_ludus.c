@@ -134,8 +134,10 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(a);
     CREDO_VERUM(manus_ludus_clavem(m, '\t', ZEPHYRUM));
     CREDO_MANUS_LUDUS_FOCUS(m, "b1");
-    /* shift-Tab retro */
-    CREDO_VERUM(manus_ludus_clavem(m, '\t', I));
+    /* shift-Tab retro - vexilla vera macOS (A5: olim 'I', qui
+     * bitus lateris Ctrl est) */
+    CREDO_VERUM(manus_ludus_clavem(m, '\t',
+        MOD_SHIFT | MOD_SHIFT_SINISTER));
     CREDO_MANUS_LUDUS_FOCUS(m, "tabula");
 
     imprimere("\n--- exspectare movet tempus (quies) ---\n");

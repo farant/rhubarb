@@ -326,6 +326,67 @@ manus_ludus_trahere (
     redde VERUM;
 }
 
+/* Clavis synthetica ex typo (eventus A5): campi vocabularii ut
+ * fenestra eos implet - clavis LOGICA (clavis_t ASCII fert; litterae
+ * MAIUSCULAE ut fenestra: KeyA -> 65), runa sine maiuscula (litterae
+ * minusculae; signa alia: ipsum signum - dispositio ignota), codex
+ * PHYSICUS ex positione US (litterae, numeri, claves nominatae; alia
+ * IGNOTUS). typus servatur (DEPRECATUM). */
+interior vacuum
+_clavem_implere (
+      Eventus* e,
+    character  typus)
+{
+    s32 c = (s32)(i8)typus;
+
+    e->datum.clavis.typus  = typus;
+    e->datum.clavis.codex  = EVENTUS_CODEX_IGNOTUS;
+    e->datum.clavis.runa   = ZEPHYRUM;
+    si (c >= 'a' && c <= 'z')
+    {
+        e->datum.clavis.clavis  = (clavis_t)(c - 'a' + 'A');
+        e->datum.clavis.runa    = c;
+        e->datum.clavis.codex   = (EventusCodex)(EVENTUS_CODEX_LITTERAE
+            + (c - 'a'));
+        redde;
+    }
+    si (c >= 'A' && c <= 'Z')
+    {
+        e->datum.clavis.clavis  = (clavis_t)c;
+        e->datum.clavis.runa    = c - 'A' + 'a';
+        e->datum.clavis.codex   = (EventusCodex)(EVENTUS_CODEX_LITTERAE
+            + (c - 'A'));
+        redde;
+    }
+    e->datum.clavis.clavis = (clavis_t)c;
+    si (c >= '0' && c <= '9')
+    {
+        e->datum.clavis.codex = (EventusCodex)(EVENTUS_CODEX_NUMERI
+            + (c - '0'));
+    }
+    si (c >= XXXII && c < CXXVII)
+    {
+        e->datum.clavis.runa = c;
+    }
+    commutatio (c)
+    {
+        casus XXXII:  e->datum.clavis.codex = EVENTUS_CODEX_SPATIUM;
+                      frange;
+        casus IX:     e->datum.clavis.codex = EVENTUS_CODEX_TABULA;
+                      frange;
+        casus XIII:   e->datum.clavis.codex = EVENTUS_CODEX_REDITUS;
+                      frange;
+        casus VIII:   e->datum.clavis.codex = EVENTUS_CODEX_RETRORSUM;
+                      frange;
+        casus XXVII:  e->datum.clavis.codex = EVENTUS_CODEX_EFFUGIUM;
+                      frange;
+        casus CXXVII: e->datum.clavis.codex = EVENTUS_CODEX_DELERE;
+                      frange;
+        ordinarius:
+                      frange;
+    }
+}
+
 b32
 manus_ludus_clavem (
      ManusLudus* m,
@@ -339,14 +400,16 @@ manus_ludus_clavem (
         redde FALSUM;
     }
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
-    e.tempus                     = m->tempus;
-    e.datum.clavis.typus         = typus;
+    e.genus   = EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus  = m->tempus;
+    _clavem_implere(&e, typus);
     e.datum.clavis.modificantes  = modificantes;
+    e.datum.clavis.actio         = EVENTUS_ACTIO_PRESSA;
     dispensator_tractare(m->d, &e);
-    m->tempus  += m->gradus_ms;
-    e.genus    = EVENTUS_CLAVIS_LIBERATUS;
-    e.tempus   = m->tempus;
+    m->tempus             += m->gradus_ms;
+    e.genus               = EVENTUS_CLAVIS_LIBERATUS;
+    e.tempus              = m->tempus;
+    e.datum.clavis.actio  = EVENTUS_ACTIO_SOLUTA;
     dispensator_tractare(m->d, &e);
     m->tempus += m->gradus_ms;
     redde VERUM;

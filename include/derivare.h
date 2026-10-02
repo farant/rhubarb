@@ -1,7 +1,11 @@
 /* derivare.h - Derivatio eventuum PURA ex fluxu crudo
  *
  * Duplex ictus ex TEMPORE eventuum (numquam ex horologio), gradus
- * primus. Hover/focus derivantur in dispensatore post destinationem
+ * primus. Tractus (eventus A5; spec D4): pressio + motus ULTRA
+ * 'distantia' pixela (in axe utrovis) -> TRACTUS_INCIPIT (x/y =
+ * origo pressionis), deinde TRACTUS per motum, TRACTUS_FINIT in
+ * liberatione. Tractus ictum primum duplicis NON parat.
+ * Hover/focus derivantur in dispensatore post destinationem
  * (id geometricum poscunt). Independens a strategia destinationis.
  *
  * USUS:
@@ -33,6 +37,11 @@ nomen structura {
         b32 habet_ultimum;
         s64 intervallum_ms;
         i32 distantia;
+    /* tractus (A5) */
+         b32 armatus;    /* pressio sine liberatione */
+         b32 trahens;    /* limen transitum */
+     Punctum origo;
+mus_botton_t botton;
 } Derivator;
 
 
@@ -46,8 +55,8 @@ derivator_initiare (
           s64  intervallum_ms,
           i32  distantia);
 
-/* Appendit eventum crudum, deinde derivata (DUPLEX) ad effusionem
- * (Xar de Eventus). */
+/* Appendit eventum crudum, deinde derivata (DUPLEX, TRACTUS_*) ad
+ * effusionem (Xar de Eventus). */
 vacuum
 derivare (
            Derivator* d,

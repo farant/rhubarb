@@ -57,7 +57,14 @@ nomen enumeratio {
     EVENTUS_DEPOSITIO,       /* viae depositae (aut glutinum promotum) */
     EVENTUS_SUSPENSIO,       /* processus suspensus (terminalis) */
     EVENTUS_RESUMPTIO,       /* processus resumptus */
-    EVENTUS_FACULTATES       /* facultates fontis (primus; et mutatae) */
+    EVENTUS_FACULTATES,      /* facultates fontis (primus; et mutatae) */
+    /* Tractus DERIVATI (eventus A5; spec D4): a ludo (derivare) solum,
+     * numquam a fonte. INCIPIT: x/y = ORIGO (ubi pressio fuit), tempus
+     * motus qui limen transiit; TRACTUS: positio currens; FINIT:
+     * positio liberationis. botton = botton pressionis. */
+    EVENTUS_TRACTUS_INCIPIT,
+    EVENTUS_TRACTUS,
+    EVENTUS_TRACTUS_FINIT
 } eventus_genus_t;
 
 
