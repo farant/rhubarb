@@ -14,6 +14,16 @@ RADIX_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 BUILD_DIR="$RADIX_DIR/build/natura"
 mkdir -p "$BUILD_DIR" "$RADIX_DIR/bin"
 
+# SERA (2026-10-02, frigida_probare): probationes natura (glossae,
+# quaesitor, canones) hoc scriptum IPSAE vocant si binarium abest - in
+# clone recenti parallelae eadem obiecta et binaria simul scribebant
+# ('structor fefellit (codex 1)'). Sera domus (tools/sera.sh): vocatio
+# secunda exspectat (linea una in stderr), deinde obiecta recentia et
+# binaria recentia invenit et nihil nectit.
+# shellcheck source=/dev/null
+source "$RADIX_DIR/tools/sera.sh"
+sera_capere "$BUILD_DIR/struere.sera" || exit 2
+
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"
 declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
@@ -43,27 +53,58 @@ for f in "${FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_examen bin/natura_examen tools/natura_examen.c natura)" || exit 1
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-    "$SCRIPT_DIR/natura_examen.c" \
-    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura_examen" || exit 1
-echo "bin/natura_examen paratum" >&2
+# nectere <titulus> <binarium relativum> <fons provenientiae> <argumenta
+# clang...>: binarium per nomen temporarium + mv (renominatio atomica -
+# processus binarium VETUS currens non turbatur; scriptura in loco
+# eum necaret, macOS). Sine FABRICA_AGIT nectit solum si binarium
+# absens aut vetustius obiectis, fontibus, PLAGULA provenientiae (.c -
+# scribitur solum si mutata; obiectum eius SEMPER recompilatur, ergo
+# mtime eius nihil dicit), vexillis, hoc scripto; sub executore
+# fabricae SEMPER (fabrica stalitatem iudicat)
+_recens () {   # <binarium> <ingressus...> -> 0 si binarium STRICTE recentius
+    local binarium="$1" f
+    shift
+    [ -f "$binarium" ] || return 1
+    for f in "$@"; do
+        [ -e "$f" ] || continue          # vexilla (-I...) non plagulae
+        # aequalitas (idem secundum) = stalum: '! bin -nt f', non
+        # 'f -nt bin' (lint:nt-aequalitas - opus tacite omissum)
+        ! [ "$binarium" -nt "$f" ] && return 1
+    done
+    return 0
+}
+nectere () {
+    local titulus="$1" binarium="$2" fons_prov="$3" prov exitus
+    shift 3
+    prov="$("$SCRIPT_DIR/provenientia_obiectum.sh" "$titulus" "$binarium" "$fons_prov" natura)" || exit 1
+    exitus="$RADIX_DIR/$binarium"
+    # shellcheck disable=SC2086
+    if [ -z "${FABRICA_AGIT:-}" ] && _recens "$exitus" $obj_files \
+            "$RADIX_DIR/${prov%.o}.c" "$@" "$RADIX_DIR/tools/vexilla.sh" \
+            "$SCRIPT_DIR/natura_struere.sh"; then
+        echo "$binarium recens" >&2
+        return 0
+    fi
+    # shellcheck disable=SC2086
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$@" $obj_files \
+        "$RADIX_DIR/$prov" -o "$exitus.novum.$$" \
+        || { rm -f "$exitus.novum.$$"; rm -rf "$exitus.novum.$$.dSYM"; exit 1; }
+    mv -f "$exitus.novum.$$" "$exitus" || exit 1
+    # vexilla -g: dsymutil fasciculum <exitus>.dSYM iuxta nomen
+    # temporarium ponit - cum binario transfertur (aliter reliquiae)
+    if [ -d "$exitus.novum.$$.dSYM" ]; then
+        rm -rf "$exitus.dSYM"
+        mv "$exitus.novum.$$.dSYM" "$exitus.dSYM" || exit 1
+    fi
+    echo "$binarium paratum" >&2
+}
 
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_canones bin/natura_canones tools/natura_canones.c natura)" || exit 1
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$SCRIPT_DIR" \
-    "$SCRIPT_DIR/natura_canones.c" \
-    "$SCRIPT_DIR/natura_canones_emissio.c" \
-    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura_canones" || exit 1
-echo "bin/natura_canones paratum" >&2
-
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_glossae bin/natura_glossae tools/natura_glossae.c natura)" || exit 1
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-    "$SCRIPT_DIR/natura_glossae.c" \
-    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura_glossae" || exit 1
-echo "bin/natura_glossae paratum" >&2
-
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura bin/natura tools/natura_quaesitor.c natura)" || exit 1
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-    "$SCRIPT_DIR/natura_quaesitor.c" \
-    $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura" || exit 1
-echo "bin/natura paratum" >&2
+nectere natura_examen bin/natura_examen tools/natura_examen.c \
+    "$SCRIPT_DIR/natura_examen.c"
+nectere natura_canones bin/natura_canones tools/natura_canones.c \
+    "-I$SCRIPT_DIR" "$SCRIPT_DIR/natura_canones.c" \
+    "$SCRIPT_DIR/natura_canones_emissio.c"
+nectere natura_glossae bin/natura_glossae tools/natura_glossae.c \
+    "$SCRIPT_DIR/natura_glossae.c"
+nectere natura bin/natura tools/natura_quaesitor.c \
+    "$SCRIPT_DIR/natura_quaesitor.c"

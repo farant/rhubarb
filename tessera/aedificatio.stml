@@ -165,6 +165,7 @@
       <verbum! (>tessera/fontes/tessera_pons_memoriae.c
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/tessera__musivum_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__musivum_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>

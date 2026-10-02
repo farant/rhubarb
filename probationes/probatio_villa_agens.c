@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "json.h"
 #include "filum.h"
 
@@ -42,23 +43,34 @@ _addere_chordam (
     redde e;
 }
 
-/* probationem ad finem pulsare (porta contra ansam aeternam) */
-interior i32
+/* probationem ad finem pulsare: tectum TEMPORIS (LX s), non numeri
+ * pulsuum. processus_pulsare non obstat (exspectatio nulla), ergo
+ * tectum vetus 'MM M pulsus' erat ~I-II s secundum CPU: in arbore
+ * frigida (suite tota simul compilans) stipes tardior erat, ansa
+ * probatione currente exibat, et villa_probatio_ultima NIHIL dabat
+ * sine causa nominata (frigida_probare 2026-10-02). Inter pulsus
+ * dormit (I ms) ne ansa vacua CPU ardeat. Redde: VERUM si finita. */
+interior b32
 _ad_finem_pulsare (
     VillaAgens* a)
 {
-    i32 pulsus = ZEPHYRUM;
+             time_t initium;
+    structura timespec  pausa;
 
+    pausa.tv_sec   = ZEPHYRUM;
+    pausa.tv_nsec  = 1000000L;
+    initium        = time(NIHIL);
     dum (villa_probationes_currentes(a) > ZEPHYRUM)
     {
         (vacuum)villa_agens_pulsare(a);
-        pulsus++;
-        si (pulsus > 2000000)
+        si (difftime(time(NIHIL), initium) > LX)
         {
-            frange;
+            imprimere("  probatio non finita intra LX s\n");
+            redde FALSUM;
         }
+        (vacuum)nanosleep(&pausa, NIHIL);
     }
-    redde pulsus;
+    redde VERUM;
 }
 
 s32 principale (vacuum)
@@ -247,7 +259,7 @@ s32 principale (vacuum)
             chorda_ex_literis("gemma", piscina), u, &causa));
         /* NON OBSTAT: probatio in cursu est statim post initium */
         CREDO_AEQUALIS_I32 (villa_probationes_currentes(a), (i32)I);
-        CREDO_VERUM (_ad_finem_pulsare(a) > ZEPHYRUM);
+        CREDO_VERUM (_ad_finem_pulsare(a));
 
         p = villa_probatio_ultima(a, chorda_ex_literis("s1",
             piscina));

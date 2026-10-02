@@ -766,6 +766,19 @@ run_all_tests() {
         fi
     done <<< "$all_files"
 
+    # Instrumenta natura SEMEL praestructa (2026-10-02, frigida_probare):
+    # probationes quae './tools/natura_struere.sh' ipsae vocant si
+    # binarium abest (glossae, quaesitor, canones) in clone recenti
+    # parallelae simul struebant ('structor fefellit'). Mos daemonis
+    # tabularii supra; praestructio ex probationibus electis derivatur
+    # (nulla lista manu). Structor sera sua quoque custoditur.
+    if [ -n "$test_files" ] && echo "$test_files" | grep . \
+            | xargs grep -l 'natura_struere\.sh' > /dev/null 2>&1; then
+        if ! ./tools/natura_struere.sh > /dev/null 2>&1; then
+            echo -e "${RED}natura_struere.sh fractus (praestructio probationum natura)${RESET}"
+        fi
+    fi
+
     # Compile and run regular tests: PARALLELAE cum FILA > 1 (2026-09-02),
     # seriatim (via vetus, lldb --debug) cum FILA = 1. Operarius
     # probatio_una (exportatus, xargs -P) compilat + nectit + currit

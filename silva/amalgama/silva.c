@@ -16496,8 +16496,8 @@ _elementa_permutare (
                 i8* b,
     memoriae_index  mensura)
 {
-                i8  temporalis[CCLVI];
-    memoriae_index  frustum;
+                i8 temporalis[CCLVI];
+    memoriae_index frustum;
 
     dum (mensura > ZEPHYRUM)
     {
