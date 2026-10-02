@@ -191,6 +191,10 @@ s32 principale (vacuum)
         e->datum.rotula.dx = -XII;
         e->datum.rotula.dy = XXX;
         e->datum.rotula.genus = EVENTUS_ROTULA_PRAECISA;
+        /* B3a: positio et modificantes rotulae (shift/ctrl + rota) */
+        e->datum.rotula.x = -VII;
+        e->datum.rotula.y = CCC;
+        e->datum.rotula.modificantes = MOD_IMPERIUM;
         e = addere(index, EVENTUS_DEPOSITIO, M + IV);
         e->datum.depositio.x = VII;
         e->datum.depositio.y = VIII;
@@ -257,6 +261,9 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (e->datum.rotula.dx, -XII);
         CREDO_AEQUALIS_S32 (e->datum.rotula.dy, XXX);
         CREDO_VERUM (e->datum.rotula.genus == EVENTUS_ROTULA_PRAECISA);
+        CREDO_AEQUALIS_S32 (e->datum.rotula.x, -VII);
+        CREDO_AEQUALIS_S32 (e->datum.rotula.y, CCC);
+        CREDO_AEQUALIS_I32 (e->datum.rotula.modificantes, MOD_IMPERIUM);
         CREDO_VERUM (e->datum.rotula.delta_y < -1.4f);
         e = (Eventus*)xar_obtinere(index2, IV);
         CREDO_AEQUALIS_S32 (e->datum.depositio.x, VII);

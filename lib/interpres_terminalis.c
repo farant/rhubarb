@@ -54,6 +54,33 @@ _modificantes_csi (
 
 /* Clavis cum actione (B2b): SOLUTA -> genus LIBERATUS */
 interior i32
+_clavem_typo (
+    EventusCauda* cauda,
+             s64  tempus,
+        clavis_t  clavis,
+             s32  runa,
+             i32  modificantes,
+    EventusCodex  codex,
+    EventusActio  actio,
+       character  typus)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus = (actio == EVENTUS_ACTIO_SOLUTA)
+        ? EVENTUS_CLAVIS_LIBERATUS : EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus                     = tempus;
+    e.datum.clavis.clavis        = clavis;
+    e.datum.clavis.typus         = typus;
+    e.datum.clavis.modificantes  = modificantes;
+    e.datum.clavis.runa          = runa;
+    e.datum.clavis.codex         = codex;
+    e.datum.clavis.actio         = actio;
+    redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+}
+
+/* typus ex clave (nominatae: regimen eius, e.g. '\r', '\t') */
+interior i32
 _clavem_actio (
     EventusCauda* cauda,
              s64  tempus,
@@ -63,21 +90,9 @@ _clavem_actio (
     EventusCodex  codex,
     EventusActio  actio)
 {
-    Eventus e;
-
-    memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus = (actio == EVENTUS_ACTIO_SOLUTA)
-        ? EVENTUS_CLAVIS_LIBERATUS : EVENTUS_CLAVIS_DEPRESSUS;
-    e.tempus               = tempus;
-    e.datum.clavis.clavis  = clavis;
-    e.datum.clavis.typus         = ((s32)clavis > ZEPHYRUM
-                                    && (s32)clavis < CXXVIII)
-                                   ? (character)clavis : '\0';
-    e.datum.clavis.modificantes  = modificantes;
-    e.datum.clavis.runa          = runa;
-    e.datum.clavis.codex         = codex;
-    e.datum.clavis.actio         = actio;
-    redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+    redde _clavem_typo(cauda, tempus, clavis, runa, modificantes, codex,
+        actio, ((s32)clavis > ZEPHYRUM && (s32)clavis < CXXVIII)
+                   ? (character)clavis : '\0');
 }
 
 interior i32
@@ -119,8 +134,11 @@ _runae_clavem (
     {
         clavis = (clavis_t)r;
     }
-    redde _clavem(cauda, tempus, clavis, runa, modificantes,
-        EVENTUS_CODEX_IGNOTUS);
+    /* typus = character VERUS (ut fenestra characters[0]): 'A' ab
+     * 'a' discernit etiam ubi textus deest (alterum) - B3a */
+    redde _clavem_typo(cauda, tempus, clavis, runa, modificantes,
+        EVENTUS_CODEX_IGNOTUS, EVENTUS_ACTIO_PRESSA,
+        (r > ZEPHYRUM && r < CXXVIII) ? (character)r : '\0');
 }
 
 /* Octetus regiminis (C0, DEL) -> clavis. HONESTA: '\n' = Ctrl+J,
@@ -313,12 +331,20 @@ _murem (
     {
         s32 g = in->cellula_altitudo;
 
-        si (solutio)
+        si (solutio || (b & XXXII))
         {
-            redde ZEPHYRUM;   /* rota solutionem non habet */
+            /* rota solutionem non habet; motus + rota (96/97) tacite,
+             * ut tessera (B3a) */
+            redde ZEPHYRUM;
         }
-        e.genus               = EVENTUS_MUS_ROTULA;
-        e.datum.rotula.genus  = EVENTUS_ROTULA_GRADATA;
+        /* B3a: positio (centrum cellulae) et modificantes */
+        e.datum.rotula.x  = (x - I) * in->cellula_latitudo
+                            + in->cellula_latitudo / II;
+        e.datum.rotula.y  = (y - I) * in->cellula_altitudo
+                            + in->cellula_altitudo / II;
+        e.datum.rotula.modificantes  = modi;
+        e.genus                      = EVENTUS_MUS_ROTULA;
+        e.datum.rotula.genus         = EVENTUS_ROTULA_GRADATA;
         e.datum.rotula.dy      = (basis == ZEPHYRUM) ? g
                                : (basis == I) ? -g : ZEPHYRUM;
         e.datum.rotula.dx      = (basis == II) ? g

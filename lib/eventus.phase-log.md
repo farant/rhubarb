@@ -1037,3 +1037,34 @@ edit, and regenerate derived files after that.
 
 **Lint:** `kitty` entered the glossary (a protocol name); the field
 part is `pars`.
+
+## B3a-i — scroll position + modifiers; decoder fidelity (2026-10-02)
+
+Fran sealed B3: the name `rivus_terminalis`, and architecture (A), ONE
+pipeline moved out of tessera with tessera's reader becoming a
+projection at once (B5 folded in). Designing that projection exposed
+three gaps, fixed here first, in their own commit, because one is a
+vocabulary change and owes the wide gates.
+
+1. **A vocabulary gap: scroll had no position and no modifiers.**
+   tessera's vectors expect shift+wheel, ctrl+wheel and the cell under
+   the pointer; fenestra had all of it in the NSEvent and DROPPED it.
+   `datum.rotula` gains `x`, `y` (our pixels, like the pointer) and
+   `modificantes`, appended at the end of the struct. The
+   `eventus_stml` writer is sparse, so the old recordings stay
+   byte-identical (toy test green), and the reader reads them. fenestra
+   fills them through a `_positionem` helper shared with the pointer
+   (the same screen→window conversion). The decoder fills them (cell
+   centre, wheel modifier bits). It also lets ludus target a scroll by
+   pointer later (today it goes to focus).
+2. **`typus` = the ACTUAL character** for rune keys (fenestra's meaning:
+   `characters[0]`). Alt has no TEXT, so `typus` is the only record of
+   alt+`A` vs alt+`a`; the projection needs it ("alt+A" vector). The
+   key constructor became `_clavem_typo` (explicit typus);
+   `_clavem_actio` derives it from the clavis as before.
+3. **motion+wheel (SGR 96/97) dropped,** as tessera does.
+
+Red first: 3 in `probatio_eventus_stml` (rotula x/y/mods round trip),
+8 in `probatio_interpres_terminalis` (wheel renders `@x,y` + mods,
+shift+wheel, motion+wheel silent, typus ×4). pictor, villa and forum
+build.

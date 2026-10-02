@@ -190,6 +190,12 @@ _eventum_reddere (
             {
                 chorda_aedificator_appendere_character(a, 'g');
             }
+            /* B3a: positio et modificantes rotulae */
+            chorda_aedificator_appendere_character(a, '@');
+            chorda_aedificator_appendere_s32(a, e->datum.rotula.x);
+            chorda_aedificator_appendere_character(a, ',');
+            chorda_aedificator_appendere_s32(a, e->datum.rotula.y);
+            _modos(a, e->datum.rotula.modificantes);
             frange;
         casus EVENTUS_FOCUS:
             chorda_aedificator_appendere_literis(a, "F+");
@@ -277,6 +283,36 @@ _decodere (
     redde _cauda_reddere(b);
 }
 
+/* typus eventus primi (clavis) ex octetis */
+interior character
+_typus (
+                  Banca* b,
+     constans character* fons)
+{
+      constans i8* ptr    = (constans i8*)fons;
+      constans i8* finis  = ptr + strlen(fons);
+     SeriesLexema  l;
+          Eventus  e;
+        character  t;
+
+    dum (series_lexema_proximum(b->lector, &ptr, finis, &l)
+        != SERIES_NIHIL)
+    {
+        (vacuum)interpres_lexema(&b->interpres, &l, FALSUM, M,
+            b->cauda);
+    }
+    t = '\0';
+    si (eventus_caudae_extrahere(b->cauda, &e))
+    {
+        t = e.datum.clavis.typus;
+    }
+    dum (eventus_caudae_extrahere(b->cauda, &e))
+    {
+    }
+    eventus_cauda_lectio_incipit(b->cauda);
+    redde t;
+}
+
 interior b32
 _videre (
                   Banca* b,
@@ -326,6 +362,13 @@ s32 principale (vacuum)
     CREDO_VERUM (_videre(&b, "5!", FALSUM, "K5:5 T5 K!:! T!"));
     CREDO_VERUM (_videre(&b, " ", FALSUM, "Kspc:U+20 T%32"));
     CREDO_VERUM (_videre(&b, "\xc3\xa9", FALSUM, "K?:U+e9 T%195%169"));
+
+    /* B3a: typus = character VERUS (ut fenestra: characters[0]) -
+     * proiectio alt+A ab alt+a discernit */
+    CREDO_VERUM (_typus(&b, "\x1b" "A") == 'A');
+    CREDO_VERUM (_typus(&b, "\x1b" "a") == 'a');
+    CREDO_VERUM (_typus(&b, "A") == 'A');
+    CREDO_VERUM (_typus(&b, "?") == '?');
 
     imprimere("\n--- II. regimina honesta ---\n");
     CREDO_VERUM (_videre(&b, "\r", FALSUM, "Kret"));
@@ -386,10 +429,14 @@ s32 principale (vacuum)
     /* motus coalitus in cauda (exempla) */
     CREDO_VERUM (_videre(&b, "\x1b[<35;4;2M\x1b[<35;5;2M", FALSUM,
         "M0@45,30"));
-    CREDO_VERUM (_videre(&b, "\x1b[<64;1;1M", FALSUM, "W0,20g"));
-    CREDO_VERUM (_videre(&b, "\x1b[<65;1;1M", FALSUM, "W0,-20g"));
-    CREDO_VERUM (_videre(&b, "\x1b[<66;1;1M", FALSUM, "W20,0g"));
-    CREDO_VERUM (_videre(&b, "\x1b[<67;1;1M", FALSUM, "W-20,0g"));
+    CREDO_VERUM (_videre(&b, "\x1b[<64;1;1M", FALSUM, "W0,20g@5,10"));
+    CREDO_VERUM (_videre(&b, "\x1b[<65;1;1M", FALSUM, "W0,-20g@5,10"));
+    CREDO_VERUM (_videre(&b, "\x1b[<66;1;1M", FALSUM, "W20,0g@5,10"));
+    CREDO_VERUM (_videre(&b, "\x1b[<67;1;1M", FALSUM, "W-20,0g@5,10"));
+    /* B3a: shift+rota cum positione; motus + rota tacite (tessera) */
+    CREDO_VERUM (_videre(&b, "\x1b[<68;11;6M", FALSUM,
+        "W0,20g@105,110+S"));
+    CREDO_VERUM (_videre(&b, "\x1b[<96;1;1M\x1b[<97;1;1M", FALSUM, ""));
     CREDO_VERUM (_videre(&b, "\x1b[<4;1;1M\x1b[<8;1;1M\x1b[<16;1;1M",
         FALSUM, "DL@5,10+S DL@5,10+A DL@5,10+C"));
 

@@ -117,16 +117,49 @@ learned by `claves_physicae`; the first kitty sequence seen updates the
 capabilities. **Plants:** a release read as press; the base key
 ignored.
 
-**B3 — the terminal source over tessera.** The library an app uses:
-declares modes (`?1003` any-motion, `?1006`, `?2004`, `?1004`, kitty
-`CSI > flags u` pushed and popped), queues through `eventus_cauda`,
-publishes capabilities first, owns the ESC timeout via `_pendet`,
-OSC 52 clipboard write (capability FORTASSE), paste → DEPOSITIO
-promotion (paths heuristic, `promota`).
-- **Look:** a terminal auscultator (same STML lines as fenestra's) in
-  Terminal.app and in Ghostty, if installed.
-- **Plants:** modes not popped on exit (the terminal left in kitty
-  mode); capabilities not first.
+**B3 — `rivus_terminalis`, the terminal source.** SEALED by Fran
+2026-10-02: the name (*rivus*, a stream) and architecture (A): ONE
+pipeline, MOVED out of tessera's reader into `lib/rivus_terminalis`,
+with tessera's reader becoming at once a PROJECTION of its Eventus
+output (B5 folded in). tessera's 1,534 vector assertions guard the move.
+
+rivus is PURE (it lives in lib/, below tessera, so it can't read
+through tessera's bridge). The caller pushes bytes (`rivus_tradere`),
+asks how long to wait (`rivus_mora_ms`: 0 nothing pending, 25 escape,
+3000 paste), reports silence (`rivus_moram`), and pulls events
+(`rivus_eventum`, decoding lazily, so motion is NOT merged for the
+projection). It owns: the raw buffer, `series_terminalis` (input mode),
+`interpres_terminalis`, the queue, the timeout rules and stashed
+partials (H7/H8), X10 bytes, foreign tails, the paste collector.
+
+**B3a-i — a vocabulary gap + two decoder fidelity fixes** (found while
+designing the projection):
+- `datum.rotula` gains `x`, `y` and `modificantes`: shift+wheel,
+  ctrl+wheel and the pointer position exist in BOTH sources (tessera's
+  vectors expect them; fenestra had them and dropped them). The
+  eventus_stml writer is sparse, fenestra fills them, the decoder fills
+  them.
+- The decoder's `typus` carries the ACTUAL character (fenestra's
+  meaning: characters[0]), so a projection can tell alt+`A` from
+  alt+`a`.
+- motion+wheel (SGR 96/97) is dropped, as tessera does.
+
+**B3a-ii — the pipeline moved + tessera as a projection.** Eventus →
+`TesseraEventum`: Ctrl+J → Enter, Ctrl+H → Backspace (the lossy merges),
+pixels → cells (cell centre / cell size), botton unknown → pulsus 3,
+hover/focus/capabilities/typed text dropped, pasted text → GLUTINUM.
+The amalgam vendors the Eventus stack (`eventus_cauda`, `interpres`,
+`claves_physicae`, `rivus`). **Bar:** every vector and
+`probatio_tessera_eventum` unchanged. **Plants:** the projection
+merging motions; the cell conversion off by one.
+
+**B3b — the source as a source.** An eager read for Eventus consumers
+(motion merged per read, as in fenestra); mode declaration (`?1003`,
+`?1006`, `?2004`, `?1004`, kitty `CSI > 31 u` pushed and `CSI < u`
+popped); capabilities first; OSC 52 clipboard write; paste → DEPOSITIO
+promotion (paths heuristic). **Look:** a terminal auscultator (the same
+STML lines as fenestra's) in Terminal.app and Ghostty. **Plants:** modes
+not popped on exit; capabilities not first.
 
 **B4 — the terminal runner of the SAME conformance table.** The
 table's terminal column (bytes) filled for the A4 scenarios; a runner
@@ -134,9 +167,7 @@ feeds bytes through B2/B3 and compares. Capability-keyed `excusationes`
 (no releases without kitty, Ctrl+I == Tab in legacy) become real.
 - **Plant:** an excuse applied without its capability.
 
-**B5 — `TesseraEventum` as a projection of Eventus.** tessera's public
-type stays; its meaning is derived from B2's decode, so key semantics
-live ONCE. The vectors prove nothing visible changed.
+**B5 — folded into B3a-ii** (Fran's architecture (A)).
 
 **B6 — cross-target replay.** Record a session in the terminal (the
 notarius), replay it SEMANTICALLY in fenestra (and back), divergences
