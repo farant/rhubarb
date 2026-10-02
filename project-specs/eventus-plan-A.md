@@ -8,6 +8,10 @@ with a window step end with Fran's look before the commit. Phase B (the
 terminal: module 002 tokenizer → decode → source) gets its own plan after
 A's RELATIO.*
 
+**EXECUTED 2026-10-02** (A1–A7; A3 and A6 split during execution into
+A3a/b/c and A6a/b - see `lib/eventus.phase-log.md`, RELATIO at its end).
+AUDIENDA outcomes: there too.
+
 ## 0. Facts this plan rests on (read 2026-10-01)
 
 - **The event queue.** fenestra queues `Eventus` values in a fixed ring

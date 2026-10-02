@@ -19,6 +19,34 @@ Leges chartae:
 
 ## inedita
 
+- corpus: caput `eventus.h` novum - vocabularium initus commune ex
+  fenestra.h divisum (fenestra.h id includit), sine iactura auctum:
+  codex physicus W3C (`EventusCodex`), runa logica, actio
+  (PRESSA/ITERATA/SOLUTA), latera modificantium, EVENTUS_TEXTUS
+  separatus, indicator (id, genus, pressio, exempla), rotula integra
+  (dx/dy + genus), depositio, facultates; genera derivata
+  TRACTUS_INCIPIT/TRACTUS/TRACTUS_FINIT. FRANGIT: `datum.mus.x/y` et
+  `datum.depositio.x/y` nunc s32 (olim i32) - plagula quae ea in i32
+  ponit sub -Wsign-conversion castrum explicitum poscit.
+
+- corpus: `eventus_cauda` nova (cauda eventuum fontis: anulus, textus
+  per lectionem copiatus, motus coalitus cum exemplis, residuum
+  rotulae), `claves_physicae` nova (kVK macOS -> EventusCodex),
+  `eventus_conformitas` nova (tabula conformitatis fontium), caput
+  `fenestra_tempus.h` novum (horologium fenestrae ex fenestra.h
+  divisum; fenestra.h id includit). Purae.
+
+- corpus: plagulae NOTATAE - `EventusNotatum` (eventus + scopus),
+  `eventus_notata_scribere_stml` / `_legere_stml`,
+  `dispensator_notarium_ponere` (notarius), `destinatio_ad_locale`,
+  `manus_ludus_iterare` (iteratio CRUDA aut SEMANTICA cum
+  divergentiis).
+
+- corpus (mores): dispensator Tab per clavem LOGICAM - Ctrl+I focum non
+  iam movet; retro per MOD_SHIFT (olim bitus 0x1, qui latus Ctrl est).
+  `manus_ludus_clavem` modificantes ut fenestra eos fert
+  (`MOD_SHIFT | MOD_SHIFT_SINISTER`), non iam 'I' pro Shift.
+
 - corpus: `modulus` nova (modulus strati delineandi) - cellula in
   pixelis nostris, extensio, proportio schirmi (rationalis, reservata);
   columna/linea pavimento, margines proximi (divisio negativa manu,

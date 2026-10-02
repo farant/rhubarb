@@ -666,3 +666,81 @@ not reporting divergences.
 The motions under capture never diverge: the strategy routes them to
 the captured component whatever the geometry. That is correct: they
 were delivered to tabula, and still would be.
+
+## A7 — RELATIO: phase A (2026-10-02)
+
+**What was built.** One lossless input vocabulary (`include/eventus.h`),
+filled by fenestra and consumed by ludus, with a conformance table,
+recording and replay.
+
+| Task | Commit | What |
+|---|---|---|
+| A1 | 18b9ff00 | `eventus.h` split out of `fenestra.h`; ludus's core links no Cocoa |
+| A1b | 4941f626 | `<aedilis nexus="purus"/>` promise + `--nexus-purus` gate |
+| A2 | 6b223156 | the vocabulary grows (codex, runa, actio, sides, text, pointer id/pressure/samples, integer scroll, drop, capabilities); eventus_stml sparse |
+| A3a | 35382b69 | fenestra fills keys + text; `claves_physicae`, `eventus_cauda`; `fenestra_tempus` split (tempus no longer links Cocoa); auscultator |
+| A3b | 5556477f | motion merged per read with samples; integer scroll; capabilities first; real NSEvent timestamps; screen-coordinate fix |
+| A3c | 09d67e5f | pointer coordinates s32 (Fran) |
+| A4 | faf9d02a | conformance table + `tools/conformitas.sh` (8/8) |
+| A5 | 08fabe21 | ludus by logical key (Tab, Escape, 'p'); drag derivation |
+| A6a | e92824a2 | the notarius: recordings with targets |
+| A6b | 2b1a3eb4 | RAW / SEMANTIC replay + divergence |
+
+**How it was proven.** Every task went red first, with plants that
+COMPILE and are caught by name (about 30 in all). The window tasks
+ended with Fran's look through the auscultator. The conformance table
+runs against a real window, and semantic replay was proven against a
+moved layout.
+
+**What we found (the reusable lessons):**
+1. **aedilis links by HEADER, and an annotated object isn't walked.**
+   `tempus.c` linked ALL of Cocoa for three clock functions; ten tests
+   broke the moment fenestra_macos.m grew. Hence the
+   `nexus="purus"` promise, now held by 15 headers.
+2. **macOS input facts:**
+   - an event outside the key window carries SCREEN coordinates;
+   - AppKit adds `NSEventModifierFlagFunction` to arrow keys;
+   - the window server keeps only the newest pending move for an app
+     that hasn't fetched yet, so per-read samples are rare on native
+     windows. The terminal source will be the opposite.
+   - `[NSEvent timestamp]` runs on the same clock as
+     `mach_absolute_time` (0.003 ms).
+3. **Old bugs the vocabulary exposed:**
+   - Tab's "back" tested `& 1` (the left-Ctrl side bit), not Shift;
+   - Ctrl+I moved focus, and Cmd+P selected pictor's pencil;
+   - schirmata treated a drag off the left edge as "in the right panel";
+   - a negative f64 cast to an unsigned i32 was undefined behaviour.
+4. **Process:** plain `commissio` runs gates in the LIVE tree, and
+   `commissio_umbra` snapshots per gate. Freeze the tree while any
+   commit's gates run (a failed A5 commit taught it).
+5. **Test design:** with two focusables, Tab direction is invisible
+   except from no focus. A probe beats an assumption (the umbra overlay
+   in probatio_destinatio).
+
+**AUDIENDA (the spec's open measurements):**
+- CLOSED: `persistentia_*` stores no input events (A2).
+- CLOSED: `tools/eventus_inspector.c` inspects persistentia's
+  DATA-MODEL events, so it could never be the look tool; the
+  auscultator was written instead (A3a).
+- CLOSED: injection carries the raw modifier bits through, side bits
+  included (A4 table).
+- CARRIED: injection cannot synthesize a REPEAT (`isARepeat:NO` is
+  hard-coded), so the conformance table has no repeat scenario yet.
+- CARRIED (park 004): IME and dead keys. `[NSEvent characters]` is
+  empty for a dead key, so composition needs `NSTextInputClient`;
+  `praeeditio` stays FALSE.
+- CARRIED (phase B): kitty → W3C mapping; what Terminal.app sends for a
+  file drop; the `typus` deletion inventory (D2 step 3).
+
+**Parks filed** (terminal-planning):
+- 004: IME / dead keys;
+- 005: the resize event reports the frame size;
+- 006: scroll phase + momentum missing from the vocabulary;
+- 007: one pictor hang, not reproduced (capture with `sample`).
+
+**Not done in phase A:**
+- scroll injection (so no scroll scenario in the table);
+- manus emitting TEXT events (waits for the first text widget);
+- `typus` deletion (D2 step 3).
+
+Phase B (the terminal source) gets its own plan after this RELATIO.
