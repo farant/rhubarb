@@ -888,3 +888,23 @@ silently IGNORES an unknown flag (my first plant, '-planta_ignota',
 stayed green) - oratio is paused, noted only. And a lesson in plants:
 moving a build dir aside and back with `mv` nested it when something
 recreated the dir meanwhile - restore by checking the target is absent.
+
+## 2026-10-02 - owed gates: one aedilis per directory (--corpus)
+
+Profiled `portae_debitae(['lib/xar.c'])` (cProfile): 139.7 s wall under
+load, 137.2 s of it reading output from 437 `aedilis X --partes`
+processes, Python's own work ~1.5 s. The cost is aedilis re-parsing the
+same headers in every process, not Python. `_clausurae` now runs
+`aedilis --corpus <dir> --partes` for a directory when at least half of
+its .c files are wanted (one process, headers parsed once through the
+extractor memo), single calls otherwise (lib/: 3 of 186 wanted - per
+file 3.2 s vs corpus 5.2 s; tools/: 8 of 40, 4.3 s).
+Equivalence, all 437 sources of the xar case: 0 differing closures,
+0 unknown on either side; 69.0 s -> 17.2 s; portae_debitae(lib/xar.c)
+17.4 s, 33 owed gates as before.
+Unknown (= gate owed) when: a file RECUSAT in its corpus section, a
+single call fails, or a corpus process exits other than 0/1 - a crash
+may leave a section printed but empty, and an empty closure would mean
+"no gate owed". `AEDILIS_BIN` is a seam (fake aedilis in the suite);
+four tests pin the paths; plant (crash guard removed) -> the crash
+test red, others green.

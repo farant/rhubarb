@@ -2131,6 +2131,50 @@ finally:
     silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum
 
+# _clausurae (parcum fabricae …AR15): --corpus pro directorio dimidia
+# parte petito, singuli ceteri; clausura ignota (None = porta debetur)
+# si fons recusatus, si processus corporis RUIT (sectiones incompletae)
+_CL = os.path.join(T, 'clausurae')
+os.makedirs(_CL, exist_ok=True)
+for _n in ('a.c', 'b.c', 'mala.c'):
+    open(os.path.join(_CL, _n), 'w').write('int x;\n')
+_cl = os.path.relpath(_CL, RADIX)
+
+
+def _aedilis_fictus(titulus, ruina):
+    via = os.path.join(T, titulus)
+    with open(via, 'w') as f:
+        f.write('#!/bin/bash\n'
+                'if [ "$1" = "--corpus" ]; then\n'
+                '  for f in "$2"/*.c; do printf "F\\t%s\\n" "$f"\n'
+                '    case "$f" in *mala.c) printf "RECUSAT\\tficta\\n";;\n'
+                '      *) printf "O\\t%s\\nC\\tx.h\\n" "$f";; esac; done\n'
+                + ('  exit 139\n' if ruina else '  exit 1\n') +
+                'fi\n'
+                'case "$1" in *mala.c) exit 1;; esac\n'
+                'printf "O\\t%s\\nC\\tx.h\\n" "$1"\n')
+    os.chmod(via, 0o755)
+    return via
+
+
+_ab_verum = silva.AEDILIS_BIN
+try:
+    _fa, _fb, _fm = (os.path.join(_cl, n) for n in ('a.c', 'b.c', 'mala.c'))
+    silva.AEDILIS_BIN = _aedilis_fictus('aedilis_fictus', False)
+    _r = silva._clausurae([_fa, _fb, _fm])
+    credo(_r[_fa] == {_fa, 'x.h'} and _r[_fb] == {_fb, 'x.h'} and _r[_fm] is None,
+          '_clausurae --corpus: sectiones per fontem; fons recusatus solus ignotus', causa=repr(_r))
+    _r = silva._clausurae([_fa])
+    credo(_r[_fa] == {_fa, 'x.h'}, '_clausurae: fons unus ex tribus = aedilis singulus', causa=repr(_r))
+    _r = silva._clausurae([_fm])
+    credo(_r[_fm] is None, '_clausurae: fons singulus recusatus = ignotus', causa=repr(_r))
+    silva.AEDILIS_BIN = _aedilis_fictus('aedilis_ruens', True)
+    _r = silva._clausurae([_fa, _fb, _fm])
+    credo(all(v is None for v in _r.values()),
+          '_clausurae: corpus RUENS (exitus CXXXIX) = omnes ignoti, numquam sectiones incompletae', causa=repr(_r))
+finally:
+    silva.AEDILIS_BIN = _ab_verum
+
 credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
        else -1) == _tempora_vera_ante,
       'tempora vera (build/portae/tempora.tsv) a probationibus intacta')

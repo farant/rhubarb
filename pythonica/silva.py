@@ -1979,30 +1979,65 @@ def _index(valor):
     return [x.strip() for x in valor.split(',') if x.strip()]
 
 
+# substituibilis in probationibus (aedilis fictus: recusatio, ruina)
+AEDILIS_BIN = os.path.join(RADIX, 'bin', 'aedilis')
+
+
 def _clausurae(fontes, fila=4):
-    """{fons: set(viarum) | None} per 'bin/aedilis <fons> --partes'
-    (lineae O fontes, C capita, V vendor). Fila IV per Popen (domus
-    filis caret; processus soli). None = clausura ignota."""
-    aedilis = os.path.join(RADIX, 'bin', 'aedilis')
-    fructus, cursus, restant = {}, [], list(fontes)
+    """{fons: set(viarum) | None} per bin/aedilis (lineae O fontes, C
+    capita, V vendor). Directorium cuius fontes .c petuntur dimidia
+    parte saltem: 'aedilis --corpus <dir> --partes' (processus UNUS,
+    capita semel parsata per memoriam extractoris); ceteri: 'aedilis
+    <fons> --partes' singuli. Mensuratum 2026-10-02 (parcum fabricae
+    …AR15): CDXXXVII processus per fontem LXXVIII s, hoc modo XX s,
+    clausurae aequales omnes. Fila IV per Popen (domus filis caret).
+    None = clausura ignota (= porta debetur): fons recusatus (RECUSAT
+    in sectione sua), sectio absens, aut processus corporis non 0/1
+    exiens (ruina - sectiones eius incompletae esse possunt)."""
+    aedilis = AEDILIS_BIN
+    per_dir = {}
+    for f in fontes:
+        per_dir.setdefault(os.path.dirname(f), []).append(f)
+    opera = []
+    for d in sorted(per_dir):
+        omnes = glob.glob(os.path.join(RADIX, d or '.', '*.c'))
+        if d and 2 * len(per_dir[d]) >= len(omnes):
+            opera.append((per_dir[d], [aedilis, '--corpus', d, '--partes']))
+        else:
+            opera.extend(([f], [aedilis, f, '--partes']) for f in per_dir[d])
+    fructus = dict((f, None) for f in fontes)
 
-    def metere(fons, pr):
+    def metere(petiti, pr):
         out, _ = pr.communicate()
-        if pr.returncode != 0:
-            fructus[fons] = None
-            return
-        fructus[fons] = set(l.split('\t', 1)[1] for l in out.splitlines()
-                            if l[:2] in ('O\t', 'C\t', 'V\t'))
+        if len(petiti) == 1 and pr.returncode != 0:
+            return                       # fons singulus recusatus
+        if pr.returncode not in (0, 1):
+            return                       # corpus ruit: omnes ignoti
+        sectiones, recusati = {}, set()
+        cur = petiti[0] if '--corpus' not in pr.args else None
+        if cur is not None:
+            sectiones[cur] = set()
+        for l in out.splitlines():
+            if l.startswith('F\t'):
+                cur = l[2:]
+                sectiones[cur] = set()
+            elif l.startswith('RECUSAT'):
+                recusati.add(cur)
+            elif cur is not None and l[:2] in ('O\t', 'C\t', 'V\t'):
+                sectiones[cur].add(l.split('\t', 1)[1])
+        for f in petiti:
+            if f in sectiones and f not in recusati:
+                fructus[f] = sectiones[f]
 
+    cursus, restant = [], list(opera)
     while restant or cursus:
         while restant and len(cursus) < fila:
-            f = restant.pop(0)
-            cursus.append((f, subprocess.Popen(
-                [aedilis, f, '--partes'], cwd=RADIX, text=True,
-                errors='replace', stdout=subprocess.PIPE,
-                stderr=subprocess.DEVNULL)))
-        f, pr = cursus.pop(0)
-        metere(f, pr)
+            petiti, imperium = restant.pop(0)
+            cursus.append((petiti, subprocess.Popen(
+                imperium, cwd=RADIX, text=True, errors='replace',
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)))
+        petiti, pr = cursus.pop(0)
+        metere(petiti, pr)
     return fructus
 
 
