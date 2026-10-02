@@ -916,13 +916,20 @@ silex_clausuram_colligere (
                  * plagulae omnino exprimi non possunt.
                  *
                  * tcp_posix ET processus_posix eodem die bis
-                 * momorderunt. */
+                 * momorderunt.
+                 *
+                 * _macos.c (2026-10-02): fenestra_tempus_macos.c
+                 * (eventus A3a, fusio secundae) nulli suffixo
+                 * congruebat - programmata vitrea briar sine eo
+                 * nectebant (fenestra_dormire indefinitum, briar-fumus
+                 * X). Ordo = praelatio variantium aedilis.stml
+                 * ('macos posix'); copia est, non fons - parcum. */
                 constans character* constans suffixa[] = {
-                    "_macos.m", "_posix.c", "_impl.c"
+                    "_macos.m", "_macos.c", "_posix.c", "_impl.c"
                 };
                 i32 s_i;
 
-                per (s_i = 0; s_i < III && !inventum; s_i = s_i + I)
+                per (s_i = 0; s_i < IV && !inventum; s_i = s_i + I)
                 {
                     ChordaAedificator* aed_s =
                         chorda_aedificator_creare(piscina,
@@ -962,7 +969,7 @@ silex_clausuram_colligere (
                 _monere(
                     "silex: monitio - nulla implementatio pro"
                     " %.*s (temptata: lib/%.*s.c, _macos.m,"
-                    " _posix.c, _impl.c).\n"
+                    " _macos.c, _posix.c, _impl.c).\n"
                     "  si caput SOLUM est (macra, data), neglege;"
                     " aliter plagulam MANU adde.\n",
                     (integer)caput.mensura,

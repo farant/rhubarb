@@ -676,3 +676,16 @@ C list equals it in order (trailing `/` tolerated) and ends at II. Plant:
 C order swapped → red; restored → green. The open question from the
 Q12 entry (why the exists-check passed before the resolver change) is
 still not chased.
+
+## 2026-10-02 - _macos.c joins the implementation suffixes (merge regression)
+
+After the secunda merge, briar-fumus stage X failed to link vitrea
+programs: fenestra_dormire, fenestra_tempus_ms, ... undefined. The
+eventus work moved them into lib/fenestra_tempus_macos.c, and the
+header -> implementation search here tries X.c, X_macos.m, X_posix.c,
+X_impl.c - a `_macos` file ending in `.c` matched none. The root build
+was fine: aedilis resolves variants from aedilis.stml (`praelatio="macos
+posix"`). Added "_macos.c" between _macos.m and _posix.c (aedilis's
+preference order). briar-fumus red (link error) -> green after a
+rebake. The suffix list is still a COPY of aedilis's rule - park
+…V2ET: read it from aedilis instead.
