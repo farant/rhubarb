@@ -845,3 +845,66 @@ report and NO gate runs. The lint's own red path is the hook smoke's
 reads tracked files only) and a test must not touch the git index.
 Plant: pre-check call removed → a gate runs and git (not the pre-check)
 refuses; restored.
+
+## 2026-10-02 - gate and commit-phase timings (build/portae/tempora.tsv)
+
+Receipts carried pass/fail but no duration, so the biggest wait in the
+workflow (a commit owing ~29 gates, ~30 min) was the one cost nobody
+recorded. `_tempus_notare` appends one TSV line per gate run in
+`porta()` (live and umbra, marked ' (umbra)') and per pre-gate phase
+of `commissio` (lint, fabrica, portae debitae): UTC time, genus,
+titulus, seconds, sana, rc. A failed write warns on stderr and never
+fails a gate.
+
+Leak found on the way: the umbra workers are fresh processes that
+import silva with the default path, so the suite's fake gates landed
+in the REAL tempora.tsv even with silva.TEMPORA_VIA redirected.
+`SILVA_TEMPORA_VIA` (env, inherited by children) now overrides; the
+suite sets both and ends with a guard - the real file's size must be
+unchanged by the run. Plant: drop the env line -> guard red, restored.
+Also: the suite aborts at the oraculum.sh test (IndexError, not a
+credo) when the oratio objects are stale after a lib change (xar
+today, T7 before) - everything after it silently never runs. Rebuild:
+./oratio/compile_probationes.sh registrum.
+
+## 2026-10-02 - the hidden abort, fixed in two layers
+
+1. Class: `sys.excepthook = _abortum` in probatio_silva.py. Any uncaught
+   exception now ends with `PYTHONICA: FRACTA N + ABORTUM (<exc>,
+   probatio_silva.py:<line>) - probationes sequentes NON cursae`, so the
+   gate's signum matches and the verdict carries the cause; before, the
+   gate said only '(signum absens)'. Plant A (raise at line 81): named.
+   Unplanned proof: with oratio/build absent the suite crashed EARLIER
+   (silva.Oratio, line 504) and the verdict carried the oracle's remedy
+   ('compile_probationes.sh registrum primum').
+2. Local: `credo(..., causa=)` prints a tool's stderr on failure; the
+   oraculum `-regulae -ab` test passes it and SKIPS its dependent step
+   with an explicit FRACTUM instead of crashing on `.group(1)` of None.
+   Plant B (input file absent): cause named, suite ran to the end,
+   `PYTHONICA: FRACTA 2`.
+The flat script still cannot continue past an exception in general -
+that would mean sections; not done. Side finds: oratio/oraculum.sh
+silently IGNORES an unknown flag (my first plant, '-planta_ignota',
+stayed green) - oratio is paused, noted only. And a lesson in plants:
+moving a build dir aside and back with `mv` nested it when something
+recreated the dir meanwhile - restore by checking the target is absent.
+
+## 2026-10-02 - owed gates: one aedilis per directory (--corpus)
+
+Profiled `portae_debitae(['lib/xar.c'])` (cProfile): 139.7 s wall under
+load, 137.2 s of it reading output from 437 `aedilis X --partes`
+processes, Python's own work ~1.5 s. The cost is aedilis re-parsing the
+same headers in every process, not Python. `_clausurae` now runs
+`aedilis --corpus <dir> --partes` for a directory when at least half of
+its .c files are wanted (one process, headers parsed once through the
+extractor memo), single calls otherwise (lib/: 3 of 186 wanted - per
+file 3.2 s vs corpus 5.2 s; tools/: 8 of 40, 4.3 s).
+Equivalence, all 437 sources of the xar case: 0 differing closures,
+0 unknown on either side; 69.0 s -> 17.2 s; portae_debitae(lib/xar.c)
+17.4 s, 33 owed gates as before.
+Unknown (= gate owed) when: a file RECUSAT in its corpus section, a
+single call fails, or a corpus process exits other than 0/1 - a crash
+may leave a section printed but empty, and an empty closure would mean
+"no gate owed". `AEDILIS_BIN` is a seam (fake aedilis in the suite);
+four tests pin the paths; plant (crash guard removed) -> the crash
+test red, others green.

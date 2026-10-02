@@ -13,11 +13,17 @@
 # eodem secundo quo compilatio (T3, ictus in parco 01KZYN4VPZ) binarium
 # cum digesto vetere relinqueret.
 #
-# Usus: ./tools/provenientia_scribere.sh TITULUS ARTIFICIUM
+# Usus: ./tools/provenientia_scribere.sh TITULUS ARTIFICIUM [ACTIO]
+#
+# ACTIO (plan 1b T5, D2): actio cuius digestum scribitur, si plura
+# binaria ex actione una fiunt (familia canon, natura) - plagula et
+# symbolum nomen BINARII (TITULUS) servant, digestum ACTIONIS est.
+# Absens = TITULUS.
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 1
-T="${1:?usus: provenientia_scribere.sh TITULUS ARTIFICIUM}"
-A="${2:?usus: provenientia_scribere.sh TITULUS ARTIFICIUM}"
+T="${1:?usus: provenientia_scribere.sh TITULUS ARTIFICIUM [ACTIO]}"
+A="${2:?usus: provenientia_scribere.sh TITULUS ARTIFICIUM [ACTIO]}"
+ACTIO="${3:-$T}"
 DIR="build/fabrica/provenientia"
 EXITUS="$DIR/$T.c"
 OBIECTUM="build/aedilis/obiecta/build__fabrica__provenientia__$T.o"
@@ -28,13 +34,13 @@ mkdir -p "$DIR" || exit 1
 # PROVENIENTIA_TOLERANS=1 (cursus primus fabricae ipsius): binarium
 # PRIOR exclusionem plagulae provenientiae nescire potest (ante T7
 # structum) - tunc 'ignotum' scribitur, cursus secundus corrigit
-if [ -x bin/fabrica ] && H="$(bin/fabrica digestum "$T" 2>/dev/null)"; then
+if [ -x bin/fabrica ] && H="$(bin/fabrica digestum "$ACTIO" 2>/dev/null)"; then
     :
 elif [ "${PROVENIENTIA_TOLERANS:-0}" = 1 ] || [ ! -x bin/fabrica ]; then
     H="ignotum"
 else
-    echo "provenientia_scribere: digestum $T fractum:" >&2
-    bin/fabrica digestum "$T" >&2
+    echo "provenientia_scribere: digestum $ACTIO fractum:" >&2
+    bin/fabrica digestum "$ACTIO" >&2
     exit 1
 fi
 C="$(git rev-parse --short=8 HEAD 2>/dev/null || echo ignotum)"

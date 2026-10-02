@@ -28,10 +28,15 @@ if [ -z "$(ls -A build/atrium.o build/vitrea_macos.o 2>/dev/null)" ]; then
     exit 1
 fi
 
-source "$SCRIPT_DIR/corpus_infixum.sh"
-corpus_infixum_regenerare || exit 1
-source "$SCRIPT_DIR/briar_facies_capsula.sh"
-briar_facies_capsula_regenerare || exit 1
+# capsulae: actiones fabricae suae (1b T6) - sub executore
+# (FABRICA_AGIT) hoc scriptum SOLUM nectit (sanare eas ante ordinat);
+# manu vocatum eas, si recentiores fontes, regenerat
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    source "$SCRIPT_DIR/corpus_infixum.sh"
+    corpus_infixum_regenerare || exit 1
+    source "$SCRIPT_DIR/briar_facies_capsula.sh"
+    briar_facies_capsula_regenerare || exit 1
+fi
 
 # obiecta briaris (probationes exclusae)
 OBJ=""
@@ -65,7 +70,9 @@ clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
 echo "aedificatum: bin/briar-spectator"
 
 # rm ante cp: macOS binarium superscriptum SIGKILL dat
-mkdir -p "$HOME/.bin"
-rm -f "$HOME/.bin/briar-spectator"
-cp bin/briar-spectator "$HOME/.bin/briar-spectator"
-echo "institutum: ~/.bin/briar-spectator"
+# institutio in ~/.bin: actio fabricae sua ('institutio_briar_spectator', 1b T5) -
+# sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
+# etiam instituit
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    ./tools/instituere.sh bin/briar-spectator || exit 1
+fi

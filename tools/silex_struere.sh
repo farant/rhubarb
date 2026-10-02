@@ -61,8 +61,13 @@ fi
 
 # corpus bibliothecarum: capsula infixa - bloccus COMMUNIS cum
 # tools/briar_struere.sh (tools/corpus_infixum.sh)
-source "$SCRIPT_DIR/corpus_infixum.sh"
-corpus_infixum_regenerare || exit 1
+# capsulae: actiones fabricae suae (1b T6) - sub executore
+# (FABRICA_AGIT) hoc scriptum SOLUM nectit (sanare eas ante ordinat);
+# manu vocatum eas, si recentiores fontes, regenerat
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    source "$SCRIPT_DIR/corpus_infixum.sh"
+    corpus_infixum_regenerare || exit 1
+fi
 
 # obiecta silvae (machina differentiae unitatum --unitates) -
 # lacus idem quo differre.sh (silva/build), vexillae eaedem
@@ -136,7 +141,9 @@ echo "aedificatum: bin/silex"
 # institutio: exemplum in ~/.bin (in PATH) - proiecta silicetum
 # silicem sine via fabricae vocant; rm ante cp (macOS binarium
 # superscriptum SIGKILL dat - inodus recens obligatorius)
-mkdir -p "$HOME/.bin"
-rm -f "$HOME/.bin/silex"
-cp bin/silex "$HOME/.bin/silex"
-echo "institutum: ~/.bin/silex"
+# institutio in ~/.bin: actio fabricae sua ('institutio_silex', 1b T5) -
+# sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
+# etiam instituit
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    ./tools/instituere.sh bin/silex || exit 1
+fi

@@ -2,44 +2,86 @@
      aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
      Plan 1a T4: catena amalgamatis - manifesta amalgamatoris
      (aedilis) -> amalgama officina.c commissa, provenientia regeneratione.
-     INGRESSUS NONDUM PLENI: clausura radicum (capita et corpora quae
-     aedilis ambulat) hic non declaratur - iudicium per regenerationem
-     id non eget; memoria (T6) sigillis his NON fidat donec clausurae
-     declarentur (plan 1a T6 gradus 3). -->
+     CATENA MEMORABILIS (parcum fabricae …AR15, 2026-10-01): ingressus
+     probabiliter pleni per clausuras (genus 'manifesta', modus fragmentorum
+     plan 1a T6). fontes_officina manifestum unum per radicem scribit
+     (build/fabrica/clausurae/officina__amalgama); excludenda_officina clausuram amalgamatoris ipsius
+     (amalgamator.c + mechanismus communis, build/fabrica/clausurae/officina__mechanismus).
+     Scriptor cuiusque directorii est actio quae id ipsa legit (inclusio
+     nova = plagula clausurae mutata = clavis mutata = rescriptio);
+     amalgama_officina infra in catena solum legit. aedilis per BINARIUM
+     (instrumentum, sine arcu: aedilis ex amalgamate struitur - manifestum
+     eius cyclum faceret). Clang ambiens manet. -->
 <aedificatio>
   <!-- praelatio ordinis ex exitu COMMISSO legitur (generator
        idempotens per constructionem) - ergo exitus et ingressus -->
-  <actio titulus="fontes_officina" genus="generator">
+  <actio titulus="fontes_officina" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/amalgama_fontes_generare.sh
       <verbum! (>officina
     </mandatum>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
+    <vestigium via="build/fabrica/clausurae/officina__amalgama"/>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__amalgama"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="instrumentum" via="bin/aedilis"/>
+    <ingressus genus="fasciculus" via="tools/amalgama_fontes_generare.sh"/>
     <ingressus genus="directorium" via="officina/fontes"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <exitus via="officina/instrumenta/principalia/fontes_generata.h" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="excludenda_officina" genus="generator">
+  <!-- OBIECTA MECHANISMI (1b T5): officina/build/*.o per mtime structa,
+       a generatore excludendorum CAECE nexa - strategia ignota,
+       praecondicio sola (numquam iudicatur) -->
+  <actio titulus="obiecta_mechanismi_officina" genus="generator">
+    <mandatum>
+      <verbum! (>./officina/amalgamare.sh
+      <verbum! (>-obiecta
+    </mandatum>
+    <vestigium via="officina/build" forma="plagulae" suffixa=".o"/>
+    <ingressus genus="fasciculus" via="officina/amalgamare.sh"/>
+    <exitus via="officina/build" provenientia="ignota"/>
+  </actio>
+  <actio titulus="excludenda_officina" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./tools/amalgama_excludenda_generare.sh
       <verbum! (>officina
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_officina"/>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
+    <vestigium via="build/fabrica/clausurae/officina__mechanismus"/>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__amalgama"/>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__mechanismus"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="instrumentum" via="bin/aedilis"/>
+    <ingressus genus="fasciculus" via="tools/amalgama_excludenda_generare.sh"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
-    <!-- officina/build/mech_*.o per globum nexa (vectis calefacit):
-         directorium nomina solum tegit, non contentum - slice 2 -->
-    <ingressus genus="directorium" via="officina/build"/>
+    <!-- officina/build/mech_*.o per globum nexa: praecondicio
+         obiecta_mechanismi_officina (1b T5; olim ingressus directorii,
+         nomina solum tegens) -->
     <exitus via="officina/instrumenta/principalia/excludenda_generata.h" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="amalgama_officina" genus="generator">
+  <actio titulus="amalgama_officina" genus="generator" memorabilis="verum">
     <mandatum>
       <verbum! (>./officina/amalgamare.sh
     </mandatum>
+    <praecondicio actio="obiecta_mechanismi_officina"/>
+    <vestigium via="officina/build"/>
+    <vestigium via="silva/build" communis="verum"/>
+    <vestigium via="build/aedilis/amalgama_fontes" communis="verum"/>
+    <vestigium via="build/aedilis/excludenda" communis="verum"/>
+    <vestigium via="build/aedilis/caput" communis="verum"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/excludenda_generata.h"/>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__amalgama"/>
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__mechanismus"/>
+    <ingressus genus="radices" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="officina/amalgamare.sh"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
     <exitus via="officina/amalgama/officina.c" provenientia="regeneratio"/>
@@ -65,6 +107,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__colloquium_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__colloquium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -85,6 +128,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__cursor_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__cursor_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -105,6 +149,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__fusor_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__fusor_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -125,6 +170,7 @@
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__interpretare_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__interpretare_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -143,6 +189,7 @@
       <verbum! (>silva/instrumenta/nexus_ordines.c
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__legatus_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__legatus_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -161,6 +208,7 @@
       <verbum! (>silva/instrumenta/nexus_ordines.c
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__sonda_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__sonda_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>
@@ -178,6 +226,7 @@
       <verbum! (>officina/instrumenta/vindex_visum.c
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
+    <vestigium via="build/fabrica/clausurae/officina__vindex_fontes_generata"/>
     <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__vindex_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
     <ingressus genus="radices" via="aedilis.stml"/>

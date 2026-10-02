@@ -36,13 +36,18 @@ mkdir -p "$BUILD_DIR"
 
 # tabula symbolum -> caput (corpus.symbola.tsv): nexus derivationis
 # inclusionum eam e fonte disci legit - hic genita si vetus
-source "$RADIX_DIR/tools/corpus_infixum.sh"
-( cd "$RADIX_DIR" && corpus_symbola_generare ) || { echo "FRACTA: corpus.symbola.tsv" ; exit 1; }
+# --obiecta (actio obiecta_briar): tabula et capsula probationibus solis
+# serviunt - omittuntur (actiones corpus_silicis, capsula_facies_briar
+# eas producunt; 1b T6)
+if [ "${1:-}" != "--obiecta" ]; then
+    source "$RADIX_DIR/tools/corpus_infixum.sh"
+    ( cd "$RADIX_DIR" && corpus_symbola_generare ) || { echo "FRACTA: corpus.symbola.tsv" ; exit 1; }
 
-# vestis faciei infixa: porta spectatoris eam contra plagulas discI
-# confert (capsula stala = vitium verum, non molestia)
-source "$RADIX_DIR/tools/briar_facies_capsula.sh"
-( cd "$RADIX_DIR" && briar_facies_capsula_regenerare ) || { echo "FRACTA: capsula faciei" ; exit 1; }
+    # vestis faciei infixa: porta spectatoris eam contra plagulas discI
+    # confert (capsula stala = vitium verum, non molestia)
+    source "$RADIX_DIR/tools/briar_facies_capsula.sh"
+    ( cd "$RADIX_DIR" && briar_facies_capsula_regenerare ) || { echo "FRACTA: capsula faciei" ; exit 1; }
+fi
 
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"
@@ -111,6 +116,14 @@ declare -a RADIX_FONTES=(
     "icones"
 )
 
+# --obiecta (fabrica 1b T5): SOLA obiecta briar/build/*.o (cum
+# adiumentis) struuntur, exitus 0 - nulla probatio. Actio 'obiecta_briar'
+# (ignota) praecondicio est briar et spectatoris, qui ea CAECE nectunt.
+OBIECTA=0
+if [ "${1:-}" = "--obiecta" ]; then
+    OBIECTA=1
+    shift
+fi
 FILTER="${1:-}"
 
 if [ -n "$FILTER" ]; then
@@ -298,6 +311,11 @@ done
 source "$RADIX_DIR/tools/mensor_suitae.sh"
 mensor_suitae_incipere "briar."
 total=0 ; passed=0 ; failed_names=""
+if [ "$OBIECTA" -eq 1 ]; then
+    echo "obiecta briar parata"
+    exit 0
+fi
+
 for test_file in "$BRIAR_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"
     if [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]]; then

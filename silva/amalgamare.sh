@@ -91,6 +91,14 @@ for f in "silva_token" "silva_lexema"; do
     obj_files="$obj_files $obj"
 done
 
+# -obiecta (fabrica 1b T5): SOLA obiecta passus 1 struuntur, exitus 0.
+# Actio 'obiecta_mechanismi_silva' (strategia ignota) praecondicio est
+# excludendorum et amalgamationis: generator excludendorum haec obiecta
+# CAECE nectit, et stala (caput mutatum) amalgamatorem corrumpunt.
+if [ "${1:-}" = "-obiecta" ]; then
+    exit 0
+fi
+
 # ---- 1.5 PORTA VETUSTATIS: manifesta derivationi congruere ----
 # POST obiecta, ANTE amalgamationem. Non prius: probatio
 # excludendorum amalgamatorem NECTIT, qui obiecta calefacta petit -
@@ -102,7 +110,12 @@ done
 echo "  [porta 0] vetustas manifestorum"
 # AMALGAMA_COMPARARE: porta generata IV manifesta IAM iudicavit (bis
 # currere ~XXX s silvae constabat) - hic omittitur
-if [ "${AMALGAMA_COMPARARE:-0}" != 1 ] && [ -z "${FABRICA_SCRIPTURA:-}" ]; then
+# FABRICA_AGIT (bin/fabrica sanare, 1b T5 D3/D4): porta omittitur -
+# fontes_generata.h et excludenda_generata.h actiones suae sunt, ante
+# hanc ordine sanatae (porta eas in loco rescribebat, aedilem
+# relinkabat)
+if [ "${AMALGAMA_COMPARARE:-0}" != 1 ] && [ -z "${FABRICA_SCRIPTURA:-}" ] \
+    && [ -z "${FABRICA_AGIT:-}" ]; then
     "$RADIX_DIR/tools/porta_vetustatis.sh" silva "$BUILD_DIR/vetustas" || exit 1
 fi
 

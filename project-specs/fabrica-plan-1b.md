@@ -638,7 +638,49 @@ fabrica_undas_formare (
 - [ ] **Step 7: commit.** Worklog. Gates: radix, fabrica,
   fabrica-fumus, examen-canon if owed.
 
+> **Executed 2026-10-01** (commit below). Step 1 measured all 64
+> actions (snapshot 0.45 s; table in lib/fabrica.worklog.md): 52
+> footprints declared; SIX defect classes, not one (D1 mensor_ui
+> capsula; D2 canon/natura sibling relinks; D3 generators relink
+> bin/aedilis in place; D4 amalgama rewrites excludenda's output; D5
+> transient in-place edit of silva_latina_datum.{c,h}; D6 tabulae_silvae
+> touches silva.h, hospes.c). Fran 2026-10-01: names as placeholdered;
+> D1–D6 fixed in T5; D2 by MERGING each family into one action
+> (same-type multi-output). Born red live on D1. Envelope gained the
+> executor's own state (fabrica.db{,-wal,-shm}, sera) - found by the
+> live plant, excluded from wave conflicts. Deviation: comparare and
+> undae take no sutura. 299 → 317.
+
 ### Task T5: installers — preconditions, link/copy split, fixes
+
+**Inherited from T4 (Fran 2026-10-01):** fix defects D1–D6 (T4
+executed note): D2 by merging `canon_examen`+`canon_coquere` and the
+four `natura_*` into one action each (several `binarium` outputs, one
+script); D3 generators never build bin/aedilis (precondition edge to
+`aedilis`); D4 amalgamare stops regenerating excludenda (declared edge
+instead); D5 the latina_datum transient edit moves to a scratch copy;
+D6 measure silva.h/hospes.c - declare as outputs or stop the touch.
+Done = `bin/fabrica sanare` over every action with NO "extra
+vestigium" (the T4 measurement script re-run: every write inside a
+footprint).
+Also found by the first live `sanare installata` after T4 (cold paths
+the warm measurement missed): briar's corpus regeneration writes
+gitignored ROOT files `corpus.symbola.tsv`, `corpus.versio`,
+`corpus_silicis.toml` (+4) - they belong to the corpus action (T6);
+silex links `silva/build/*.o` - `silva/build` communis for silex.
+
+> **Part A1 executed 2026-10-01** (commit below): ordering edges from
+> `enumerare` (manifest closures) - one bootstrap cycle, broken by
+> `instrumentum` enumerating nothing (Fran); D1; D2 (families merged;
+> whole provenance directory excluded from digests). D3–D6 found
+> larger than planned: D5 and D6 are undeclared GENERATED outputs
+> (latina_datum by the amalgamator; spliced tables in silva.h and
+> hospes.c), both also written in place under the judge.
+
+> **Part A2 executed 2026-10-01** (commit below): FABRICA_AGIT (D3/D4);
+> D5 = own action `latina_datum` (amalgamator only reads); D6 = splice
+> in scratch, silva.h/hospes.c declared; mechanism objects as `ignota`
+> preconditions (`amalgamare.sh -obiecta`). Fumus XXIII.
 
 **Opens with a measurement and two decisions (Fran):**
 1. Object stores each installer links blind (expected from §0.3 and
@@ -715,6 +757,16 @@ if (a)), `aedificatio.canon`, root `aedificatio.stml`,
   sanare installata` (or a title). Worklog. Gates: radix, fabrica,
   fabrica-fumus, compile_tools/briar/silex suites as owed.
 
+> **Executed 2026-10-01** in five commits (A1 d8327b36, A2 4da395a9,
+> B1 507f0ace, B2 below). Beyond the plan: ordering edges by places
+> (manifest closures) and the one bootstrap cycle broken by
+> `instrumentum`; families merged with the whole provenance directory
+> excluded from digests; D5/D6 were undeclared GENERATED outputs, not
+> transient edits; mechanism objects as `ignota` preconditions too.
+> Names (Fran): `--obiecta` (`-obiecta` for amalgamare.sh), `celer`,
+> FABRICA_AGIT. Done check: 70/70 actions, 0 writes outside a footprint
+> (warm). 317 → 337 assertions; fumus XXIII–XXIV.
+
 ### Task T6: briar decomposed
 
 **Opens with a measurement and a decision (Fran):**
@@ -762,6 +814,16 @@ appears (none expected).
   stamp): one line in `briar/MUTATIONES.md` under `## inedita`.
   Worklog. Gates: radix, fabrica, fabrica-fumus, briar, silex (+ owed).
 
+> **Executed 2026-10-01** (commit below). Option a' (Fran): the stamp
+> was functional (briar cache key, silex corpus title) - now a content
+> SIGILLUM, reproducible and a better key. Shadow root
+> (tools/capsula_radicis.sh) lets root-glob capsules regenerate in
+> scratch. Corpus deterministic, ~10 s. T4 snapshot bug fixed (it
+> followed symlinked dirs). MUTATIONES edit -> 3 actions (7 s); lib
+> edit -> corpus once + both links + copies. Judge cost (amalgam chain
+> regenerated, not memorabilis) now dominates: 2-3 min per `sanare
+> briar`.
+
 ### Task T7: `cursus` records, estimates, closing
 
 **Files:** `tools/fabrica.c` (table, seam members, `-siccum`
@@ -801,6 +863,13 @@ estimates), `include/fabrica.h` (seam members), `lib/fabrica.c`
 - [ ] **Step 4: close.** Spec 1b "As built" (numbers of §VII, before →
   after; deviations); MEMORY `fabrica-project.md`; worklog; ledger
   note on the park. Commit. Gates: radix, fabrica, fabrica-fumus.
+
+> **Executed 2026-10-01** (commit below). Migration II (branch b);
+> no `codex` column (the causa carries "exitus N"); estimates need
+> `tempus_notum`. Found: empty causa bound as SQL NULL by scrinium -
+> fixed locally, library question to Fran (…BVN7). Timing lens filled
+> from T5's warm measurement (20 rows). Spec par. X "As built". PLAN 1b
+> COMPLETE.
 
 ## Not in 1b (stated)
 

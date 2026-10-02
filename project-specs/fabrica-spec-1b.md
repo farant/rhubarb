@@ -377,3 +377,59 @@ All recommendations accepted; the Q45 placeholders are the names.
 - **Q46 → aggregate composites in 1b.**
 - **Q47 → types in lib over the seam**; a type needing more gets a new
   seam member (as `meminisse` did).
+
+## X. As built (2026-10-01)
+
+Plan `fabrica-plan-1b.md`, executed inline in one day; commits
+78804873 (T1), 8f813101 (T2), 38bcf610 (T3), ba244fac (T4), d8327b36 /
+4da395a9 / 507f0ace / b4a77df0 (T5 A1/A2/B1/B2), e2d39037 (T6), T7 below.
+
+| §VII target | after 1b |
+|---|---|
+| post-merge healing: 15 installers + 1 generator copied by hand | `bin/fabrica sanare [composite]`: judge, run in dependency order, re-judge; preconditions realized once; logs in build/fabrica/acta/ |
+| two growing enums (8 + 2) | two registries (types: sigillare/enumerare/locare; strategies: regeneratio, relatio, ignota; memoria in front of regeneratio) - no switch on a kind |
+| install durations unknown (41/70 blank) | `cursus` table records every action; `-siccum` estimates; timing lens filled (warm measurement of all 70 actions) |
+| masked ~/.bin copy failure exits 0 | copies are actions (`institutio_X`, `tools/instituere.sh`, `|| exit 1`): FRACTUM by exit code; exit 0 but output not current = FRACTUM by post-condition |
+| footprint violations found by accident | envelope snapshot check: 9 defect classes found and fixed; done check 70/70 actions, 0 writes outside a footprint (warm) |
+
+Beyond the spec (found by measuring, decided with Fran): ordering edges
+from `enumerare` (manifest closures were invisible to ordering); the
+one bootstrap cycle (aedilis -> amalgam -> fontes -> aedilis) broken by
+`instrumentum` enumerating nothing; FABRICA_AGIT (scripts skip nested
+producers under the executor, keep conveniences by hand); families
+canon (2) and natura (4) as one action each, the whole provenance
+directory excluded from digests; `silva_latina_datum` and the spliced
+tables of silva.h/hospes.c were undeclared GENERATED outputs, also
+written by the judge in place - now declared, generated in scratch;
+mechanism and object stores as `ignota` preconditions with real
+`-obiecta`/`--obiecta` modes; `celer` (cheap regeneration under the
+quick judge, so the session hook sees ~/.bin lag); the corpus stamp was
+FUNCTIONAL (briar cache key) - now a content sigillum, reproducible;
+shadow root for root-glob capsules; the snapshot no longer follows
+symlinks. 166 -> 344 core assertions; fumus 14 -> 25 stages.
+
+Known limits after 1b: the judge, not the actions, now dominates time
+(`sanare briar`: 7 s of actions, 2-3 min total - the amalgam chain is
+re-verified by regeneration, not memorabilis); writes are checked only
+warm (cold paths measured piecemeal); reads are not checked;
+directory-listing edges cascade OMISSUM widely; serial execution
+(waves only shown). Next: slice 2 (content-addressed objects) and the
+desideratum on granular actions (ledger ...V2H6Q).
+
+**Addendum 2026-10-02 (park …AR15, closed).** The first limit above is
+resolved, and it had two causes, not one. (1) The amalgam chain is now
+memorabilis: fontes_X and excludenda_X write the closure manifests their
+own keys read (`build/fabrica/clausurae/X__amalgama`, `X__mechanismus`),
+amalgama_X reads both; `radices` digest include-root listings but no
+longer make ordering edges (they made fontes_silva wait on
+amalgama_silva). (2) Most of the missing wall time was not the judge at
+all: the footprint snapshot was sorted with `xar_ordinare`, then an
+O(n^2) selection sort - ~8 s per snapshot, two per action; now a stable
+merge sort. No-op `sanare -siccum installata` 41.5 -> 18.5 s; `-plenus`
+74.6 -> 22.3 s; a rebake's unrecorded time ~200 s -> ~17 s. The judge's
+own regenerations are recorded in `cursus` (IUDICIUM), and gate timings
+in `build/portae/tempora.tsv`. Still open: cold footprints (…6X0);
+lectores_cocti and tabulae_silvae not memorabilis; the snippet
+generators run aedilis once per file (fragmentum_compile_tests ~59 s per
+miss) - batching and a content-digest cache of aedilis results belong
+to slice 2.

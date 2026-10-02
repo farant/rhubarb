@@ -251,16 +251,6 @@ interior constans character* constans ASSERTIONES =
     "    (XAR_MAXIMUS_SEGMENTORUM == 64) ? 1 : -1];\n";
 
 /* Prooemium capitis dati latini (byte-identicum emissioni pristinae) */
-interior constans character* constans LATINA_DATUM_PROOEMIUM =
-    "/* silva_latina_datum.h - Textus latina.h ut datum (Phase 7 Chunk A)\n"
-    " *\n"
-    " * GENERATUM ex include/latina.h per amalgamatorem - NE MANU MUTES\n"
-    " * (regeneratur per silva/amalgamare.sh). Copia compilata definitionum\n"
-    " * latinarum: silva_contextus_latinam_addere eam praebet - \"compiled-in\n"
-    " * defaults\" interview ad litteram, sine fonte veritatis secundo (datum\n"
-    " * IPSA plagula vendicata est).\n"
-    " */\n";
-
 /* Listas manifesti machinis emittere (tools/amalgama_auditor.sh) */
 interior vacuum
 _enumerare (vacuum)
@@ -327,14 +317,6 @@ s32 principale (s32 argc, character** argv)
     manifestum.via_capitis = "silva/amalgama/silva.h";
     manifestum.prooemium = PROOEMIUM;
     manifestum.assertiones = ASSERTIONES;
-    manifestum.latina_datum_via_capitis =
-        "silva/fontes/silva_latina_datum.h";
-    manifestum.latina_datum_via_corporis =
-        "silva/fontes/silva_latina_datum.c";
-    manifestum.latina_datum_prooemium         = LATINA_DATUM_PROOEMIUM;
-    manifestum.latina_datum_custos            = "SILVA_LATINA_DATUM_H";
-    manifestum.latina_datum_titulus_textus    = "silva_latina_textus";
-    manifestum.latina_datum_titulus_mensurae  = "silva_latina_mensura";
 
     si (!silva_amalgama_currere(piscina, argv[I], argv[II],
             &manifestum))

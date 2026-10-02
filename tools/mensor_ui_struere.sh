@@ -1,9 +1,12 @@
 #!/bin/bash
 # tools/mensor_ui_struere.sh - fabrica bin/mensor_ui (explorator vitreae)
 #
-# Capsulam REGENERAT primum: facies in binario vehitur, ergo
-# index.html mutatum sine hoc gradu INVISIBILE manet - et binarium
-# vetus recte structum videtur.
+# Capsulam (apps/mensor/assets/capsula_mensor.{c,h}, COMMISSAM) non iam
+# regenerat (fabrica 1b T5, D1): actio 'capsula_mensor' eam producit et
+# 'bin/fabrica sanare' eam ANTE hoc nectit (arcus per clausuram
+# manifesti). Index.html mutatum: 'bin/fabrica sanare bin/mensor_ui'
+# capsulam et binarium ordine sanat; hoc scriptum solum capsulam
+# commissam nectit.
 #
 # Usus: ./tools/mensor_ui_struere.sh
 set -u
@@ -12,8 +15,6 @@ RADIX_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$RADIX_DIR"
 mkdir -p bin
 
-bin/capsula_generare apps/mensor/assets/mensor.toml >/dev/null \
-    || { echo "mensor_ui: capsula fracta"; exit 1; }
 bin/aedilis apps/mensor/mensor_ui.c >/dev/null \
     || { echo "mensor_ui: aedilis fracta"; exit 1; }
 # provenientia (fabrica T7): '-provenientia' respondetur

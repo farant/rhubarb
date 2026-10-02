@@ -55,7 +55,9 @@ echo "aedificatum: bin/stml"
 
 # institutio: exemplum in ~/.bin (in PATH); rm ante cp (macOS
 # binarium superscriptum SIGKILL dat - inodus recens obligatorius)
-mkdir -p "$HOME/.bin"
-rm -f "$HOME/.bin/stml"
-cp bin/stml "$HOME/.bin/stml"
-echo "institutum: ~/.bin/stml"
+# institutio in ~/.bin: actio fabricae sua ('institutio_stml', 1b T5) -
+# sub executore (FABRICA_AGIT) hoc scriptum SOLUM nectit; manu vocatum
+# etiam instituit
+if [ -z "${FABRICA_AGIT:-}" ]; then
+    ./tools/instituere.sh bin/stml || exit 1
+fi

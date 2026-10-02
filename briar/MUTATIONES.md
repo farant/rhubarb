@@ -101,6 +101,13 @@ Leges chartae:
   linearum: 0,75 s -> 0,00 s per cursum). Clavis eadem ac antea (nulla
   aedificatio nova). `BRIAR_VESTIGIUM=1` ictum celerem in stderr nominat.
 
+- stampa corporis infixi = SIGILLUM contentorum (`corpus
+  sigillum=...`), non iam `commit=... dies=...`: eadem dum corpus idem
+  est, ergo proiecta in `~/.rhubarb/briar/` corporis eiusdem non iam
+  orbantur post aedificationem novam (clavis olim omni aedificatione
+  mutabatur). Identitas aedificationis: linea `aedificatum:` et
+  `-provenientia` (fabrica 1b T6).
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

@@ -382,7 +382,11 @@ xar_tollere (
 /* Xar Ordinare - Ordinare in loco
  * "Ordinare tabulam in loco usans comparatorem"
  *
- * Usans selection sort (simplex, O(n²), sed stabilis pro parvis tabulis)
+ * Fusio STABILIS (aequalia ordinem insertionis servant), O(n log n).
+ * Scriptura temporaria 2n elementorum ex piscina tabulae, post
+ * ordinationem reddita (notatio) - ergo comparator ex piscina tabulae
+ * NE allocet. Piscina certae magnitudinis sine spatio: insertio
+ * stabilis in loco (O(n^2), sine allocatione).
  */
 vacuum
 xar_ordinare (

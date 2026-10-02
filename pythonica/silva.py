@@ -44,6 +44,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 from collections import namedtuple
 
 RADIX = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1733,6 +1734,22 @@ def porta_viae(via):
     raise SilvaError('porta viae ignota: %s' % via)
 
 
+def _tempus_notare(genus, titulus, initium, sana=None, rc=None):
+    """linea una in TEMPORA_VIA (append): tempus UTC, genus (porta |
+    phasis), titulus, duratio_s, sana (1/0/vacuum), rc. Scriptura
+    fracta portam numquam frangit - nominatur in stderr."""
+    linea = '%s\t%s\t%s\t%.1f\t%s\t%s\n' % (
+        time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), genus,
+        titulus, time.time() - initium,
+        '' if sana is None else int(bool(sana)), '' if rc is None else rc)
+    try:
+        os.makedirs(os.path.dirname(TEMPORA_VIA), exist_ok=True)
+        with open(TEMPORA_VIA, 'a') as f:
+            f.write(linea)
+    except OSError as ex:
+        sys.stderr.write('tempora non notata (%s): %s' % (ex, linea))
+
+
 def porta(nomen, filtrum=None, radix=None, receptum=True):
     """portam currere: Porta(nomen, cucurrit, sana, compendium, rc,
     acta, fracturae, rancida, receptum). sana SOLUM si cucurrit ET
@@ -1752,6 +1769,7 @@ def porta(nomen, filtrum=None, radix=None, receptum=True):
     imperium, signum = PORTAE[nomen]
     args = list(imperium) + ([filtrum] if filtrum else [])
     sig = sigillum_arboris() if (radix is None and receptum) else None
+    initium = time.time()
     r = _curre(args, cwd=radix)
     acta = _ANSI.sub('', r.stdout + r.stderr)
     m = re.search(signum, acta)
@@ -1764,6 +1782,9 @@ def porta(nomen, filtrum=None, radix=None, receptum=True):
     rancida = sig is not None and sig != sigillum_arboris()
     p = Porta(nomen, cucurrit, sana, compendium, r.returncode, acta, fr,
               rancida)
+    _tempus_notare('porta', nomen + ('.' + filtrum if filtrum else '')
+                   + (' (umbra)' if radix is not None else ''),
+                   initium, sana, r.returncode)
     if sig is not None:
         p = p._replace(receptum=_receptum_vivum_scribere(p, filtrum, sig))
     return p
@@ -1958,30 +1979,65 @@ def _index(valor):
     return [x.strip() for x in valor.split(',') if x.strip()]
 
 
+# substituibilis in probationibus (aedilis fictus: recusatio, ruina)
+AEDILIS_BIN = os.path.join(RADIX, 'bin', 'aedilis')
+
+
 def _clausurae(fontes, fila=4):
-    """{fons: set(viarum) | None} per 'bin/aedilis <fons> --partes'
-    (lineae O fontes, C capita, V vendor). Fila IV per Popen (domus
-    filis caret; processus soli). None = clausura ignota."""
-    aedilis = os.path.join(RADIX, 'bin', 'aedilis')
-    fructus, cursus, restant = {}, [], list(fontes)
+    """{fons: set(viarum) | None} per bin/aedilis (lineae O fontes, C
+    capita, V vendor). Directorium cuius fontes .c petuntur dimidia
+    parte saltem: 'aedilis --corpus <dir> --partes' (processus UNUS,
+    capita semel parsata per memoriam extractoris); ceteri: 'aedilis
+    <fons> --partes' singuli. Mensuratum 2026-10-02 (parcum fabricae
+    …AR15): CDXXXVII processus per fontem LXXVIII s, hoc modo XX s,
+    clausurae aequales omnes. Fila IV per Popen (domus filis caret).
+    None = clausura ignota (= porta debetur): fons recusatus (RECUSAT
+    in sectione sua), sectio absens, aut processus corporis non 0/1
+    exiens (ruina - sectiones eius incompletae esse possunt)."""
+    aedilis = AEDILIS_BIN
+    per_dir = {}
+    for f in fontes:
+        per_dir.setdefault(os.path.dirname(f), []).append(f)
+    opera = []
+    for d in sorted(per_dir):
+        omnes = glob.glob(os.path.join(RADIX, d or '.', '*.c'))
+        if d and 2 * len(per_dir[d]) >= len(omnes):
+            opera.append((per_dir[d], [aedilis, '--corpus', d, '--partes']))
+        else:
+            opera.extend(([f], [aedilis, f, '--partes']) for f in per_dir[d])
+    fructus = dict((f, None) for f in fontes)
 
-    def metere(fons, pr):
+    def metere(petiti, pr):
         out, _ = pr.communicate()
-        if pr.returncode != 0:
-            fructus[fons] = None
-            return
-        fructus[fons] = set(l.split('\t', 1)[1] for l in out.splitlines()
-                            if l[:2] in ('O\t', 'C\t', 'V\t'))
+        if len(petiti) == 1 and pr.returncode != 0:
+            return                       # fons singulus recusatus
+        if pr.returncode not in (0, 1):
+            return                       # corpus ruit: omnes ignoti
+        sectiones, recusati = {}, set()
+        cur = petiti[0] if '--corpus' not in pr.args else None
+        if cur is not None:
+            sectiones[cur] = set()
+        for l in out.splitlines():
+            if l.startswith('F\t'):
+                cur = l[2:]
+                sectiones[cur] = set()
+            elif l.startswith('RECUSAT'):
+                recusati.add(cur)
+            elif cur is not None and l[:2] in ('O\t', 'C\t', 'V\t'):
+                sectiones[cur].add(l.split('\t', 1)[1])
+        for f in petiti:
+            if f in sectiones and f not in recusati:
+                fructus[f] = sectiones[f]
 
+    cursus, restant = [], list(opera)
     while restant or cursus:
         while restant and len(cursus) < fila:
-            f = restant.pop(0)
-            cursus.append((f, subprocess.Popen(
-                [aedilis, f, '--partes'], cwd=RADIX, text=True,
-                errors='replace', stdout=subprocess.PIPE,
-                stderr=subprocess.DEVNULL)))
-        f, pr = cursus.pop(0)
-        metere(f, pr)
+            petiti, imperium = restant.pop(0)
+            cursus.append((petiti, subprocess.Popen(
+                imperium, cwd=RADIX, text=True, errors='replace',
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)))
+        petiti, pr = cursus.pop(0)
+        metere(petiti, pr)
     return fructus
 
 
@@ -2179,6 +2235,20 @@ def lint_latinus_praevium(viae):
 FABRICA_BIN = os.path.join(RADIX, 'bin', 'fabrica')
 
 
+def _viae_commissae(viae):
+    """viae (ex 'viae') quas git sequitur (ls-files) - fabricae ante
+    portas: artificium stalum NON commissum (build/, ~/.bin) commissionem
+    non obstat (fabrica 1b T7). Probationes substituunt VIAE_COMMISSAE."""
+    if not viae:
+        return set()
+    r = subprocess.run(['git', 'ls-files', '-z', '--'] + list(viae),
+                       cwd=RADIX, capture_output=True, text=True)
+    return set(x for x in r.stdout.split('\0') if x)
+
+
+VIAE_COMMISSAE = _viae_commissae
+
+
 def _fabricam_exigere(viae, sine_fabrica=None):
     """bin/fabrica iudicare -plenus -tacta VIAE ante portas. exitus 0 =
     pergit; 1 = artificium generatum tactum STALUM/IGNOTUM - SilvaError
@@ -2204,6 +2274,18 @@ def _fabricam_exigere(viae, sine_fabrica=None):
     if r.returncode == 0:
         print(lineae[-1] if lineae else 'fabrica: sana')
         return
+    # 1b T7: regeneratio etiam artificia in build/ iudicat (capsulae,
+    # corpus) - commissio de COMMISSIS solis iudicat; stala non commissa
+    # nominantur, non obstant (sanare ea sanat)
+    if r.returncode == 1:
+        malae = [l.split(' ', 2)[1] for l in lineae
+                 if l.startswith(('STALUM ', 'IGNOTUM ')) and len(l.split(' ', 2)) > 1]
+        if malae and not VIAE_COMMISSAE(malae):
+            print('fabrica: %d artificia NON commissa non recentia (%s) -'
+                  ' commissionem non obstant; bin/fabrica sanare ea sanat'
+                  % (len(malae), ', '.join(malae[:3])
+                     + (' +%d' % (len(malae) - 3) if len(malae) > 3 else '')))
+            return
     genus = ('artificia generata tacta NON recentia' if r.returncode == 1
              else 'iudicare nequit (exitus %d)' % r.returncode)
     raise SilvaError(
@@ -2273,13 +2355,19 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             ' commissum:\n  %s' % (len(causae), '\n  '.join(
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     if verificare:
+        initium = time.time()
         _lint_praevium_exigere(viae)
+        _tempus_notare('phasis', 'lint', initium)
     if not _fabrica_facta:
+        initium = time.time()
         _fabricam_exigere(viae, sine_fabrica)
+        _tempus_notare('phasis', 'fabrica', initium)
     if sine_debitis is not None:
         print('portae debitae OMISSAE: %s' % sine_debitis)
     elif not _debitae_additae:
+        initium = time.time()
         portae = _portae_debitas_addere(viae, portae)
+        _tempus_notare('phasis', 'portae debitae', initium)
     ante = _sigilla_viarum(viae)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
@@ -2352,6 +2440,13 @@ import hashlib
 import time
 
 PORTAE_DIR = os.path.join(RADIX, 'build', 'portae')
+# tempora portarum et phasium commissionis (parcum fabricae …AR15,
+# 2026-10-02): recepta durationem non ferebant - commissio (portae
+# debitae ~XXX min) erat sumptus maximus NON mensuratus
+# SILVA_TEMPORA_VIA: probationes viam temporariam ponunt, quam processus
+# filii (operarii umbrae) hereditate accipiunt
+TEMPORA_VIA = (os.environ.get('SILVA_TEMPORA_VIA')
+               or os.path.join(PORTAE_DIR, 'tempora.tsv'))
 Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
                       'compendium rc sigillum rancida finis fracturae '
                       'photographia', defaults=([], None))

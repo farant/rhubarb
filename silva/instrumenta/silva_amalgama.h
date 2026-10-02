@@ -61,15 +61,6 @@ nomen structura {
     constans character* prooemium;    /* commentarius initialis exitus */
     constans character* assertiones;  /* textus C post capita vendicata;
                                        * NIHIL licet */
-
-    /* Datum latinum (silva solum); via_capitis NIHIL = non emittere */
-    constans character* latina_datum_via_capitis;
-    constans character* latina_datum_via_corporis;
-    constans character* latina_datum_prooemium;  /* commentarius capitis
-                                                  * INTEGER (sine custode) */
-    constans character* latina_datum_custos;
-    constans character* latina_datum_titulus_textus;
-    constans character* latina_datum_titulus_mensurae;
 } AmalgamaManifestum;
 
 /* Currere: legere, transformare, componere, scribere. VERUM = bene. */

@@ -165,12 +165,6 @@ principale (
     manifestum.prooemium = PROOEMIUM;
     manifestum.assertiones = NIHIL;  /* macra duplicata identica =
                                       * custodia derivae gratuita */
-    manifestum.latina_datum_via_capitis       = NIHIL;   /* silvae solum */
-    manifestum.latina_datum_via_corporis      = NIHIL;
-    manifestum.latina_datum_prooemium         = NIHIL;
-    manifestum.latina_datum_custos            = NIHIL;
-    manifestum.latina_datum_titulus_textus    = NIHIL;
-    manifestum.latina_datum_titulus_mensurae  = NIHIL;
 
     si (!silva_amalgama_currere(piscina, argv[I], argv[II],
             &manifestum))

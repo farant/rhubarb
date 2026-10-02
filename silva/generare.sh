@@ -115,6 +115,13 @@ else
     if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
         P="$FABRICA_SCRIPTURA/silva/"
         mkdir -p "${P}fontes" || exit 1
+        # silva.h et hospes.c plagulae MANU scriptae sunt quarum
+        # regiones generator SPLICIT: in scriptura exemplar committi
+        # spliciatur (1b T5, D6 - antea iudex eas in arbore rescribebat)
+        mkdir -p "${P}amalgama" "${P}instrumenta/principalia" || exit 1
+        cp amalgama/silva.h "${P}amalgama/silva.h" || exit 1
+        cp instrumenta/principalia/hospes.c \
+            "${P}instrumenta/principalia/hospes.c" || exit 1
     fi
     "$BUILD_DIR/generator" grammatica/sceletum.stml \
         SILVA_SCELETUM "${P}fontes/silva_tabulae_sceleti" || exit 1
@@ -124,6 +131,6 @@ else
     # (sceletum/imparilis grammaticae probationis sunt)
     "$BUILD_DIR/generator" grammatica/c89.stml \
         SILVA_C89 "${P}fontes/silva_tabulae_c89" \
-        amalgama/silva.h instrumenta/principalia/hospes.c \
+        "${P}amalgama/silva.h" "${P}instrumenta/principalia/hospes.c" \
         "${P}c89.canon" c89 || exit 1
 fi

@@ -34,11 +34,50 @@ def _fabrica_ficta(rc, effusio='', via_argv=None):
 # omnes commissiones probationum sub fabrica ficta sana (exitus 0)
 silva.FABRICA_BIN = _fabrica_ficta(0, 'fabrica: nulla artificia generata a viis tacta\n')
 
+# tempora portarum et phasium (parcum fabricae …AR15): in T, numquam in
+# build/portae/tempora.tsv vivum (portae fictae ibi mentirentur)
+# (env: operarii umbrae, processus filii, silvam de novo important)
+_TEMPORA_VERA = os.path.join(silva.PORTAE_DIR, 'tempora.tsv')
+_tempora_vera_ante = (os.path.getsize(_TEMPORA_VERA)
+                      if os.path.exists(_TEMPORA_VERA) else -1)
+silva.TEMPORA_VIA = os.path.join(T, 'tempora.tsv')
+os.environ['SILVA_TEMPORA_VIA'] = silva.TEMPORA_VIA
+if os.path.exists(silva.TEMPORA_VIA):
+    os.unlink(silva.TEMPORA_VIA)
 
-def credo(cond, titulus):
+
+def _tempora_lineae():
+    if not os.path.exists(silva.TEMPORA_VIA):
+        return []
+    return [l.split('\t') for l in open(silva.TEMPORA_VIA).read().splitlines()]
+
+
+def credo(cond, titulus, causa=None):
+    """causa: textus (e.g. stderr instrumenti) in fractura impressus -
+    remedium quod instrumentum nominat non in actis sepelitur"""
     print(('  ok   ' if cond else '  FRACTUM ') + titulus)
     if not cond:
         fracta.append(titulus)
+        if causa:
+            for linea in str(causa).strip().splitlines()[-5:]:
+                print('      causa: ' + linea)
+
+
+def _abortum(genus, ex, tb):
+    """exceptio non capta = ABORTUM NOMINATUM: sine hoc signum portae
+    ('PYTHONICA: sana|FRACTA') aberat ('signum absens'), causa in
+    actis sepulta, et probationes sequentes tacite non currebant
+    (2026-10-02: oraculum oratio rancidum -> IndexError)."""
+    import traceback
+    traceback.print_exception(genus, ex, tb)
+    lineae = [f.lineno for f in traceback.extract_tb(tb)
+              if os.path.abspath(f.filename) == os.path.abspath(__file__)]
+    print('\nPYTHONICA: FRACTA %d + ABORTUM (%s: %s, probatio_silva.py:%s)'
+          ' - probationes sequentes NON cursae'
+          % (len(fracta), genus.__name__, ex, lineae[-1] if lineae else '?'))
+
+
+sys.excepthook = _abortum
 
 
 FONS = ('#include "latina.h"\n'
@@ -902,6 +941,10 @@ try:
     p1 = silva.porta('ficta-numerans')
     credo(p1.sana and cursus_n() == 1 and silva.receptum_vivum('ficta-numerans').sana,
           'porta numerans: cursa semel, receptum sanum')
+    lt = [l for l in _tempora_lineae() if l[1:3] == ['porta', 'ficta-numerans']]
+    credo(len(lt) == 1 and len(lt[0]) == 6 and re.match(r'^\d+\.\d$', lt[0][3])
+          and lt[0][4:] == ['1', '0'],
+          'porta: tempus notatum (linea una: genus, titulus, duratio, sana, rc)')
     effusus = io.StringIO()
     try:
         with contextlib.redirect_stdout(effusus):
@@ -915,6 +958,9 @@ try:
     except silva.SilvaError:
         pass
     credo(cursus_n() == 2, 'commissio recepta=False: porta iterum cursa')
+    phases = set(l[2] for l in _tempora_lineae() if l[1] == 'phasis')
+    credo({'fabrica', 'portae debitae'} <= phases,
+          'commissio: phases ante portas temporibus notatae (%s)' % sorted(phases))
     open(novum, 'w').write('x')
     try:
         try:
@@ -1461,12 +1507,16 @@ os.makedirs(os.path.dirname(via_ab), exist_ok=True)
 open(via_ab, 'w').write('# sent_id = a-1\n# text = Puella rosam amat.\n1\tPuella\tpuella\tNOUN\t_\t_\t3\tnsubj\t_\t_\n2\trosam\trosa\tNOUN\t_\t_\t3\tobj\t_\t_\n3\tamat\tamo\tVERB\t_\t_\t0\troot\t_\tSpaceAfter=No\n4\t.\t.\tPUNCT\t_\t_\t3\tpunct\t_\t_\n\n')
 def _ordines_ab(n):
     r = subprocess.run(['./oratio/oraculum.sh', '-regulae', '-ab', str(n), '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
-    return r.returncode, [l for l in r.stdout.splitlines() if l.startswith('#  regulae ')]
-rc, omnes = _ordines_ab(100000)
-credo(rc == 0 and len(omnes) == 1 and omnes[0].endswith('(omnes):'), 'oraculum.sh -regulae -ab N: N supra summam = ordo (omnes) solus')
-summa = int(re.search(r'regulae (\d+) \(omnes\)', omnes[0]).group(1))
-rc, duo = _ordines_ab(summa - 1)
-credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa - 1)) and duo[1] == omnes[0] and 'crudus' not in duo[0], 'oraculum.sh -regulae -ab N: ordines a regulis N solum, crudus omissus')
+    return r.returncode, [l for l in r.stdout.splitlines() if l.startswith('#  regulae ')], r.stderr
+rc, omnes, err_ab = _ordines_ab(100000)
+credo(rc == 0 and len(omnes) == 1 and omnes[0].endswith('(omnes):'), 'oraculum.sh -regulae -ab N: N supra summam = ordo (omnes) solus', causa='exitus %d: %s' % (rc, err_ab))
+m_summa = re.search(r'regulae (\d+) \(omnes\)', omnes[0]) if omnes else None
+if m_summa:
+    summa = int(m_summa.group(1))
+    rc, duo, err_ab = _ordines_ab(summa - 1)
+    credo(rc == 0 and len(duo) == 2 and duo[0].startswith('#  regulae %d:' % (summa - 1)) and duo[1] == omnes[0] and 'crudus' not in duo[0], 'oraculum.sh -regulae -ab N: ordines a regulis N solum, crudus omissus', causa='exitus %d: %s' % (rc, err_ab))
+else:
+    credo(False, 'oraculum.sh -regulae -ab N: ordines a regulis N solum (OMISSUM - summa regularum ignota, vide fracturam supra)')
 # T19g bis: -errata -machina - ordines PARTITIO (summa = verba aurea IV) et ERRATUM (nullum: nemo decidit in thesauro minimo)
 r_er = subprocess.run(['./oratio/oraculum.sh', '-errata', '-machina', via_ab], cwd=RADIX, capture_output=True, text=True)
 part = [l.split('\t') for l in r_er.stdout.splitlines() if '\tPARTITIO\t' in l]
@@ -1997,6 +2047,10 @@ finally:
 # ---- fabrica ante portas (plan 1a T8 gradus III) ----
 print('\n--- fabrica: artificia generata tacta ante portas ---')
 _fb_verum = silva.FABRICA_BIN
+_commissae_verae = silva.VIAE_COMMISSAE
+# viae probationum fictae (g/x.c): commissae ponuntur, nisi ubi casus
+# NON commissorum probatur (1b T7)
+silva.VIAE_COMMISSAE = lambda viae: set(viae)
 try:
     _argv = os.path.join(T, 'fabrica_argv.txt')
     # exitus 0: pergit; argumenta: iudicare -plenus -tacta viae
@@ -2039,6 +2093,20 @@ try:
     except silva.SilvaError as ex:
         err = str(ex)
     credo(err is not None and 'sine_fabrica causam poscit' in err, 'fabrica: sine_fabrica vacua refutatur')
+    # 1b T7: stala NON commissa (build/ capsulae) non obstant, nominantur;
+    # commissa obstant ut antea
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM build/capsula_x.c - regeneratio differt\nSANATIO:\n  ./c.sh   # c\n')
+    silva.VIAE_COMMISSAE = lambda viae: set()
+    buf = io.StringIO()
+    err = None
+    try:
+        with contextlib.redirect_stdout(buf):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    credo(err is None and 'NON commissa' in buf.getvalue() and 'build/capsula_x.c' in buf.getvalue(),
+          'fabrica: stalum NON commissum nominatur, non obstat')
+    silva.VIAE_COMMISSAE = lambda viae: set(viae)
     # bin/fabrica deest: MONITUM, non obstat (clonus recens)
     silva.FABRICA_BIN = os.path.join(T, 'fabrica_nusquam')
     buf = io.StringIO()
@@ -2060,7 +2128,56 @@ try:
     credo(err is not None and 'FABRICA (ante portas)' in err,
           'commissio: fabrica obstat ANTE portas')
 finally:
+    silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum
+
+# _clausurae (parcum fabricae …AR15): --corpus pro directorio dimidia
+# parte petito, singuli ceteri; clausura ignota (None = porta debetur)
+# si fons recusatus, si processus corporis RUIT (sectiones incompletae)
+_CL = os.path.join(T, 'clausurae')
+os.makedirs(_CL, exist_ok=True)
+for _n in ('a.c', 'b.c', 'mala.c'):
+    open(os.path.join(_CL, _n), 'w').write('int x;\n')
+_cl = os.path.relpath(_CL, RADIX)
+
+
+def _aedilis_fictus(titulus, ruina):
+    via = os.path.join(T, titulus)
+    with open(via, 'w') as f:
+        f.write('#!/bin/bash\n'
+                'if [ "$1" = "--corpus" ]; then\n'
+                '  for f in "$2"/*.c; do printf "F\\t%s\\n" "$f"\n'
+                '    case "$f" in *mala.c) printf "RECUSAT\\tficta\\n";;\n'
+                '      *) printf "O\\t%s\\nC\\tx.h\\n" "$f";; esac; done\n'
+                + ('  exit 139\n' if ruina else '  exit 1\n') +
+                'fi\n'
+                'case "$1" in *mala.c) exit 1;; esac\n'
+                'printf "O\\t%s\\nC\\tx.h\\n" "$1"\n')
+    os.chmod(via, 0o755)
+    return via
+
+
+_ab_verum = silva.AEDILIS_BIN
+try:
+    _fa, _fb, _fm = (os.path.join(_cl, n) for n in ('a.c', 'b.c', 'mala.c'))
+    silva.AEDILIS_BIN = _aedilis_fictus('aedilis_fictus', False)
+    _r = silva._clausurae([_fa, _fb, _fm])
+    credo(_r[_fa] == {_fa, 'x.h'} and _r[_fb] == {_fb, 'x.h'} and _r[_fm] is None,
+          '_clausurae --corpus: sectiones per fontem; fons recusatus solus ignotus', causa=repr(_r))
+    _r = silva._clausurae([_fa])
+    credo(_r[_fa] == {_fa, 'x.h'}, '_clausurae: fons unus ex tribus = aedilis singulus', causa=repr(_r))
+    _r = silva._clausurae([_fm])
+    credo(_r[_fm] is None, '_clausurae: fons singulus recusatus = ignotus', causa=repr(_r))
+    silva.AEDILIS_BIN = _aedilis_fictus('aedilis_ruens', True)
+    _r = silva._clausurae([_fa, _fb, _fm])
+    credo(all(v is None for v in _r.values()),
+          '_clausurae: corpus RUENS (exitus CXXXIX) = omnes ignoti, numquam sectiones incompletae', causa=repr(_r))
+finally:
+    silva.AEDILIS_BIN = _ab_verum
+
+credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
+       else -1) == _tempora_vera_ante,
+      'tempora vera (build/portae/tempora.tsv) a probationibus intacta')
 
 print()
 if fracta:

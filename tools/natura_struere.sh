@@ -43,26 +43,26 @@ for f in "${FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_examen bin/natura_examen tools/natura_examen.c)" || exit 1
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_examen bin/natura_examen tools/natura_examen.c natura)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/natura_examen.c" \
     $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura_examen" || exit 1
 echo "bin/natura_examen paratum" >&2
 
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_canones bin/natura_canones tools/natura_canones.c)" || exit 1
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_canones bin/natura_canones tools/natura_canones.c natura)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$SCRIPT_DIR" \
     "$SCRIPT_DIR/natura_canones.c" \
     "$SCRIPT_DIR/natura_canones_emissio.c" \
     $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura_canones" || exit 1
 echo "bin/natura_canones paratum" >&2
 
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_glossae bin/natura_glossae tools/natura_glossae.c)" || exit 1
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura_glossae bin/natura_glossae tools/natura_glossae.c natura)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/natura_glossae.c" \
     $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura_glossae" || exit 1
 echo "bin/natura_glossae paratum" >&2
 
-PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura bin/natura tools/natura_quaesitor.c)" || exit 1
+PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" natura bin/natura tools/natura_quaesitor.c natura)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/natura_quaesitor.c" \
     $obj_files "$RADIX_DIR/$PROV_OBJ" -o "$RADIX_DIR/bin/natura" || exit 1

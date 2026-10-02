@@ -46,6 +46,10 @@
       <optio>formatio</optio>
       <optio>institutio</optio>
     </attributum>
+    <attributum nomen="celer" genus="veritas"
+      nota="verum: regeneratio tam vilis ut sub iudicio CELERI quoque
+            currat (copiae ~/.bin: uncus sessionis eas videt). Absens =
+            falsum: sub celeri NON IUDICATUM (plan 1b T5)"/>
     <attributum nomen="memorabilis" genus="veritas"
       nota="verum: ingressus PROBABILITER pleni (clausurae manifestis
             aedilis derivatae) - verificatio memorata (build/fabrica.db)
@@ -53,6 +57,7 @@
             regeneratur (plan 1a T6, decretum 01M3RDBCB8)"/>
     <liberum nomen="mandatum" maximum="1"/>
     <liberum nomen="praecondicio"/>
+    <liberum nomen="vestigium"/>
     <liberum nomen="ingressus" minimum="1"/>
     <liberum nomen="exitus" minimum="1"/>
   </elementum>
@@ -62,6 +67,25 @@
           instrumenta quae installator vocat, obiecta caece nexa
           (strategia ignota, quae sola hac via attingitur)">
     <attributum nomen="actio" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="vestigium"
+    nota="locus quem actio PRAETER exitus suos scribit (plan 1b T4):
+          opera propria (directoria vacuata, obiecta, .dSYM) aut,
+          communis=verum, area COMMUNIS (cache idempotens, obiecta per
+          mtime) - actiones communia tangentes numquam simul. Sanare
+          scripturam extra vestigium FRACTUM nominat. Nomina a Frano
+          approbata 2026-10-01">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="forma" genus="electio"
+      nota="absens = arbor (tota sub via)">
+      <optio>arbor</optio>
+      <optio>plagulae</optio>
+      <optio>plagula</optio>
+    </attributum>
+    <attributum nomen="suffixa" genus="textus"
+      nota="plagulae solum: gradu 0, suffixa spatio separata"/>
+    <attributum nomen="communis" genus="veritas"/>
   </elementum>
 
   <elementum nomen="mandatum">

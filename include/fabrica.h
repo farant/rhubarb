@@ -37,6 +37,7 @@
  * lib/fabrica.c, numquam enumeratio crescens. */
 nomen structura FabricaGenus     FabricaGenus;
 nomen structura FabricaStrategia FabricaStrategia;
+nomen structura FabricaSanatio   FabricaSanatio;
 
 nomen enumeratio {
     FABRICA_ACTIO_GENERATOR = ZEPHYRUM,
@@ -101,7 +102,12 @@ nomen structura {
                      Xar* ingressus;  /* FabricaIngressus */
                      Xar* exitus;     /* FabricaExitus */
                   chorda  sedes;      /* "plagula:linea" */
-                     b32  memorabilis; /* memorabilis="verum": ingressus
+                     b32  celer;       /* celer="verum": regeneratio
+                                        * tam vilis ut sub iudicio
+                                        * CELERI quoque currat (copiae
+                                        * ~/.bin - uncus sessionis eas
+                                        * videt; plan 1b T5) */
+                     b32 memorabilis; /* memorabilis="verum": ingressus
                                         * PROBABILITER pleni (clausurae
                                         * manifestis derivatae) -
                                         * verificatio memorata
@@ -113,6 +119,18 @@ nomen structura {
                                             * ordo sine sigillo (plan 1b
                                             * T2). Exitus 'ignota' sola
                                             * hac via attinguntur. */
+                     Xar* vestigia;   /* FabricaLocus: opera propria
+                                       * (scriptura, directoria
+                                       * vacuata) - plan 1b T4 */
+                     Xar* communia;   /* FabricaLocus: area COMMUNIS
+                                       * (cache idempotens, obiecta
+                                       * per mtime): numquam simul */
+                     Xar* dependentiae; /* chorda: tituli actionum
+                                         * quarum exitus ingressus
+                                         * 'enumerat' (clausurae
+                                         * manifestorum quoque). NIHIL
+                                         * = non computatae: ordo per
+                                         * vias declaratas (T5) */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -135,6 +153,15 @@ nomen structura {
        Xar* partes;   /* FabricaPars */
     chorda  sedes;
 } FabricaCompositum;
+
+/* Vestigium: plagula una in photographia arboris (plan 1b T4).
+ * Scriptura detegitur per tempus aut mensuram - rescriptio octetis
+ * eisdem quoque (tempus novum) nominatur. */
+nomen structura {
+    chorda via;
+       s64 tempus_ns;   /* mtime */
+       s64 mensura;
+} FabricaVestigium;
 
 /* Actum: exitus unius cursus mandati IN LOCO (sanare, plan 1b T3) */
 nomen structura {
@@ -159,7 +186,9 @@ nomen structura {
      * FALSUM + causa (ultima linea) si fractum. */
     b32 (*currere)(vacuum* datum, constans Xar* mandatum,
                    constans character* scriptura_dir,
-                   Piscina* piscina, chorda* causa_out);
+                   Piscina* piscina, chorda* causa_out,
+                   i32* duratio_ms_out);  /* parcum …AR15: tempus
+                                           * regenerationis (cursus) */
     /* binarium '-provenientia' rogare; FALSUM = nulla relatio */
     b32 (*rogare)(vacuum* datum, constans character* via,
                   Piscina* piscina, chorda* relatio_out);
@@ -199,6 +228,19 @@ nomen structura {
     b32 (*agere)(vacuum* datum, constans FabricaActio* actio,
                  constans character* acta_via, Piscina* piscina,
                  FabricaActum* actum_out);
+    /* photographia: arbor tota (sine .git) et loci declarati extra
+     * arborem ('~/'), Xar de FabricaVestigium ORDINATA per viam.
+     * NIHIL licet: sanare tum vestigia non probat (plan 1b T4). */
+    b32 (*vestigium_capere)(vacuum* datum, Piscina* piscina,
+                            Xar** vestigia_out);
+    /* cursus (plan 1b T7): post quodque actum VERUM (sanatum,
+     * fractum, praeparatum - non omissum, numquam siccum) sanatio
+     * scribitur; legere = duratio cursus ULTIMI sanati tituli (FALSUM:
+     * nullus). NIHIL licent. */
+    vacuum (*cursum_inscribere)(vacuum* datum,
+                                constans FabricaSanatio* sanatio);
+    b32 (*cursum_legere)(vacuum* datum, constans character* titulus,
+                         i32* duratio_ms_out);
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
@@ -317,8 +359,26 @@ fabrica_iudicare (
                         b32  plenus,
                     Piscina* piscina);
 
+/* Dependentiae per LOCOS (plan 1b T5): pro quaque actione, actiones
+ * quarum exitus aliquis in loco ingressus eius cadit - verbum
+ * 'enumerare' cuiusque generis, ergo clausurae manifestorum quoque
+ * (latina.h, silva.c, capsulae in clausuris). Ingressus qui enumerari
+ * nequit (manifestum absens, clonus recens): via declarata. Genus
+ * 'instrumentum' nihil enumerat: instrumentum ADHIBETUR, non
+ * consumitur (cyclus bootstrap aedilis -> amalgama -> fontes ->
+ * aedilis sic frangitur). Actio se ipsam numquam (praelatio).
+ * actio->dependentiae ponitur; fabrica_ordinare, sanare, undae eas
+ * sequuntur. FALSUM solum si memoria deficit. */
+b32
+fabrica_dependentias_computare (
+    constans FabricaSutura* sutura,
+                       Xar* actiones,   /* FabricaActio (valore) */
+                   Piscina* piscina,
+                    chorda* causa_out);
+
 /* Actiones ordine dependentiae: actio cuius ingressus exitus
- * alterius est, aut quae eam praecondicionem nominat, post eam;
+ * alterius est (aut, computatis dependentiis, quam ingressus eius
+ * enumerat), aut quae eam praecondicionem nominat, post eam;
  * ceteroquin ordo datus (stabilis). Xar de FabricaActio* in actiones
  * datas. NIHIL + causa in cyclo, titulis nominatis. */
 Xar*
@@ -429,7 +489,9 @@ fabrica_praecondiciones_probare (
           chorda* causa_out);
 
 /* Sigillum actionis UT iudex et 'bin/fabrica digestum' id computant:
- * ingressus MINUS plagula provenientiae eius (quae digestum ipsum fert
+ * ingressus MINUS directorium provenientiae TOTUM (build/fabrica/
+ * provenientia/: plagulae digestum ipsum ferunt; familia binariorum
+ * plagulam per binarium habet - 1b T5)
  * - sine exclusione omne binarium statim post institutionem stalum
  * esset). Functio UNA pro ambobus: scriptum et iudex dissentire
  * nequeunt. */
@@ -440,6 +502,34 @@ fabrica_actionem_sigillare (
                    Piscina* piscina,
                   Sigillum* sigillum_out,
                     chorda* causa_out);
+
+
+/* ==================================================
+ * VESTIGIA (plan 1b T4): actio scribit SOLUM intra vestigium suum
+ * ================================================== */
+
+/* Viae (Xar de chorda) novae, deletae aut mutatae (tempus aut
+ * mensura) inter photographias 'ante' et 'post' (ordinatae) EXTRA
+ * vestigium actionis: 'locare' exituum + vestigia + communia +
+ * involucrum (build/fabrica/acta/TITULUS.log,
+ * build/fabrica/provenientia/TITULUS.{c,o},
+ * build/fabrica/scriptura/TITULUS/, build/fabrica.db{,-wal,-shm},
+ * build/fabrica/sera). Vacua = sanum. */
+Xar*
+fabrica_vestigia_comparare (
+    constans FabricaActio* actio,
+             constans Xar* ante,
+             constans Xar* post,
+                  Piscina* piscina);
+
+/* Undae: actiones (Xar de FabricaActio*, ordinatae) quae SIMUL
+ * currere possent - nulla dependentia inter eas, vestigia disiuncta,
+ * neutra communia tangit. Xar de Xar de FabricaActio*, ordine undarum.
+ * Monstratur solum (Q41: sanare seriatim currit). */
+Xar*
+fabrica_undas_formare (
+    constans Xar* ordo,
+         Piscina* piscina);
 
 
 /* ==================================================
@@ -454,15 +544,20 @@ nomen enumeratio {
                                  * condicio non RECENS */
     FABRICA_OMISSUM,            /* dependentia fracta aut omissa */
     FABRICA_AGENDUM,            /* siccum: stalum/ignotum nunc */
-    FABRICA_FORTASSE            /* siccum: post actionem agendam */
+    FABRICA_FORTASSE,           /* siccum: post actionem agendam */
+    FABRICA_IUDICIUM            /* regeneratio iudicis (cursus solum,
+                                 * numquam sanatio; parcum …AR15) */
 } FabricaEventus;
 
-nomen structura {
+structura FabricaSanatio {
      constans FabricaActio* actio;
             FabricaEventus  eventus;
                     chorda  causa;
-                       i32  duratio_ms;
-} FabricaSanatio;
+                       i32  duratio_ms;   /* siccum: AESTIMATIO ex
+                                           * cursu ultimo (si notum) */
+                       b32 tempus_notum; /* FALSUM: siccum sine
+                                           * cursu priore (1b T7) */
+};
 
 /* Sanare. 'electa': viae artificiorum (Xar de chorda; NIHIL = omnia);
  * actiones earum et omnes supra eas (ingressus, praecondiciones) in
