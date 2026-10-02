@@ -2233,6 +2233,24 @@ def lint_latinus_praevium(viae):
 # artificia GENERATA quae viae eius tangunt iudicat (-plenus -tacta);
 # STALUM/IGNOTUM obstat cum sanatione. Probationes FABRICA_BIN fingunt.
 FABRICA_BIN = os.path.join(RADIX, 'bin', 'fabrica')
+# forma ANTE iudicium (parcum …QGT1): sutura (probationes fictum ponunt)
+FORMA_BIN = os.path.join(RADIX, 'tools', 'formare_viae.sh')
+
+
+def _formam_praeparare(viae):
+    """plagulas .c/.h viarum in arbore operis FORMARE ante lint,
+    fabricam et portas (tools/formare_viae.sh - regulae eaedem ac uncus,
+    sedes una). Olim uncus formabat POST iudicium: artificium generatum
+    ex plagula reformata (amalgama silvae ex lib/xar.c, e5112e37) stalum
+    committebatur. Nunc octeti iudicati = octeti commissi. Forma monet,
+    numquam obstat; lineae scripti (FORMATA, monita) impressae."""
+    formandae = [v for v in viae if v.endswith(('.c', '.h'))]
+    if not formandae:
+        return
+    r = _curre([FORMA_BIN] + formandae)
+    for linea in (r.stdout + r.stderr).splitlines():
+        if linea.strip():
+            print(linea)
 
 
 def _viae_commissae(viae):
@@ -2355,6 +2373,9 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             ' commissum:\n  %s' % (len(causae), '\n  '.join(
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     if verificare:
+        initium = time.time()
+        _formam_praeparare(viae)
+        _tempus_notare('phasis', 'forma', initium)
         initium = time.time()
         _lint_praevium_exigere(viae)
         _tempus_notare('phasis', 'lint', initium)
@@ -3028,8 +3049,9 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     totum_secunda)]). Portae DEBITAE (vide commissio) hic ante umbras
     adduntur, ut in umbra quoque currant; sine_debitis ut in commissio.
     Lint latinus praevius et iudicium fabricae ANTE umbras (ut in
-    commissio; sine_fabrica idem)."""
+    commissio; sine_fabrica idem). Forma ANTE omnia (…QGT1)."""
     if verificare:
+        _formam_praeparare(viae)
         _lint_praevium_exigere(viae)
     _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:

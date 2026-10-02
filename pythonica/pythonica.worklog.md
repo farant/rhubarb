@@ -908,3 +908,31 @@ may leave a section printed but empty, and an empty closure would mean
 "no gate owed". `AEDILIS_BIN` is a seam (fake aedilis in the suite);
 four tests pin the paths; plant (crash guard removed) -> the crash
 test red, others green.
+
+## 2026-10-02 - format BEFORE judging (park …QGT1)
+
+The pre-commit hook formatted staged C files AFTER commissio had run the
+fabrica check and the gates. A generated artifact derived from a
+reformatted source could therefore be committed stale: e5112e37
+committed the silva amalgam from lib/xar.c as written (double-aligned
+declarations), the hook reformatted xar.c, and the committed amalgam no
+longer matched a regeneration (2 whitespace lines; found by a later
+sanare). Neither _fabricam_exigere nor generata could see it - both ran
+before the hook.
+- tools/formare_viae.sh: the hook's formatting rules in ONE place (.c/.h
+  only; scratchpad/build/fixa/amalgama/archivum excluded; GENERATUM never;
+  knotapel/vendor changed lines only, else whole file). Two modes:
+  working tree (commissio) and -index (hook: partial-commit refusal +
+  git add). The hook now calls it instead of carrying its own loop.
+- commissio and commissio_umbra run it FIRST (phase 'forma' in
+  tempora.tsv), before lint, fabrica and gates: judged bytes = committed
+  bytes, and the hook then finds nothing to change. verificare=False
+  skips it, like --no-verify skips the hook.
+- FORMA_BIN seam; test: fake formatter + fake fabrica log to one file,
+  order must be forma -> fabrica (only .c/.h passed); plant (call
+  removed) -> red. Real check: this morning's double alignment planted
+  back into lib/xar.c, the script restored the committed form; the
+  amalgam and a .sh passed alongside were left alone.
+- Side lesson: the plant/restore touched xar.c's mtime, the oratio
+  objects went stale, and the suite's new causa= output named it at once
+  ("STALUM oratio/build/xar.o POST lib/xar.c").

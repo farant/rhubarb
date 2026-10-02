@@ -2131,6 +2131,47 @@ finally:
     silva.VIAE_COMMISSAE = _commissae_verae
     silva.FABRICA_BIN = _fb_verum
 
+# FORMA ANTE IUDICIUM (parcum …QGT1): commissio plagulas .c/.h per
+# tools/formare_viae.sh format ANTE fabricam (uncus olim POST formabat:
+# artificium ex plagula reformata stalum committebatur). Hermetica: forma
+# et fabrica ficta in actum UNUM scribunt; fabrica exitu 1 commissionem
+# sistit (via absens - numquam committitur).
+_acta_ordinis = os.path.join(T, 'ordo_formae.txt')
+_forma_ficta = os.path.join(T, 'forma_ficta.sh')
+_fabrica_ordinis = os.path.join(T, 'fabrica_ordinis.sh')
+open(_forma_ficta, 'w').write('#!/bin/bash\necho "forma $*" >> %s\n' % _acta_ordinis)
+open(_fabrica_ordinis, 'w').write('#!/bin/bash\necho fabrica >> %s\n'
+                                  'printf "STALUM g/x.c - regeneratio differt\\n"\nexit 1\n'
+                                  % _acta_ordinis)
+os.chmod(_forma_ficta, 0o755)
+os.chmod(_fabrica_ordinis, 0o755)
+_forma_vera, _fabrica_vera_ordinis = silva.FORMA_BIN, silva.FABRICA_BIN
+_commissae_verae_ordinis = silva.VIAE_COMMISSAE
+try:
+    silva.FORMA_BIN, silva.FABRICA_BIN = _forma_ficta, _fabrica_ordinis
+    silva.VIAE_COMMISSAE = lambda viae: set(viae)
+    for _verificare in (True, False):
+        if os.path.exists(_acta_ordinis):
+            os.unlink(_acta_ordinis)
+        with contextlib.redirect_stdout(io.StringIO()):
+            try:
+                silva.commissio('nihil', ['pythonica/via_absens_formae.c',
+                                          'pythonica/via_absens_formae.txt'],
+                                portae=[], recepta=False, verificare=_verificare,
+                                sine_debitis='probatio formae')
+            except Exception:
+                pass
+        _ordo = open(_acta_ordinis).read().splitlines() if os.path.exists(_acta_ordinis) else []
+        if _verificare:
+            credo(_ordo == ['forma pythonica/via_absens_formae.c', 'fabrica'],
+                  'commissio: forma (solae .c/.h) ANTE iudicium fabricae', causa=repr(_ordo))
+        else:
+            credo(_ordo == ['fabrica'],
+                  'commissio verificare=False: nulla forma (ut uncus --no-verify)', causa=repr(_ordo))
+finally:
+    silva.FORMA_BIN, silva.FABRICA_BIN = _forma_vera, _fabrica_vera_ordinis
+    silva.VIAE_COMMISSAE = _commissae_verae_ordinis
+
 # _clausurae (parcum fabricae …AR15): --corpus pro directorio dimidia
 # parte petito, singuli ceteri; clausura ignota (None = porta debetur)
 # si fons recusatus, si processus corporis RUIT (sectiones incompletae)
