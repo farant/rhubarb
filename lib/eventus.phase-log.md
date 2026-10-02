@@ -1186,3 +1186,50 @@ event count on a long run, coalesced read, mode bytes). Plants caught:
 kitty not popped on exit; capabilities not first. tessera 1534/1534 +
 68/68; the interpres, series, cauda, claves, eventus_stml suites green;
 the four demos link.
+
+## B3b-ii — OSC 52 write; paste → DEPOSITIO promotion (2026-10-02)
+
+**Clipboard write is its own module, `copia_terminalis`.** The plan put
+OSC 52 in rivus. Built there first, it pulled `base64` into tessera's
+amalgam: tessera never writes the clipboard, the amalgamator dropped
+the function, and base64.c's two FILE-SCOPE tables were left orphaned
+(-Werror). Excluding base64 from tessera's policy then broke the demos,
+which link `lib/rivus_terminalis.c` directly and do need it. Moving the
+tables inside base64's functions would have been the general fix, but
+base64.c isn't formatter-clean, so touching it meant a whole-file
+reformat of a foundation library for this. The honest split was
+simpler: rivus is INPUT, the clipboard write is OUTPUT.
+`copia_terminalis_componere(piscina, textus, mensura)` returns
+`ESC ] 52 ; c ; base64 ESC \` (ST, not BEL; empty text = an empty
+payload). tessera never includes it, so base64 never reaches its
+amalgam. The capability stays FORTASSE: a terminal never confirms.
+
+**Paste → DEPOSITIO is DECLARED** (`RIVUS_MODUS_DEPOSITIO`, which brings
+?2004 with it, like SUPER brings the mouse). Undeclared, a paste of
+paths is text: an editor pasting `/usr/bin` wants text. Declared, the
+capability says HEURISTICA (the decoder's default is now NULLA; it
+claimed HEURISTICA unasked). Exit resets super and depositio.
+
+The heuristic (`_vias_legere`, text only, no filesystem): tokens split
+on unescaped whitespace, shell-style `\x`, `'...'`, `"..."` (with
+`\" \\ \$ \``), `file://` and `file://localhost/` URIs with %XX
+decoded; EVERY token must be absolute, with no newline or NUL, or the
+paste stays text. `~/x`, an unterminated quote, prose with one path,
+blank space: text. A truncated paste is never promoted. Output is
+written to a second 64 KiB buffer (it never grows: separators and
+escapes only shrink).
+
+**Position: the last pointer cell the decoder saw** (Fran's call), cell
+centre in our pixels, 0,0 when no pointer has been seen. The decoder
+now remembers `indicator_x/y` in `_murem` (one computation shared by
+press, motion and wheel). `interpres_depositio` pushes the event; the
+queue copies the paths (`eventus_caudae_depositionem_impellere`, a view
+into its text table like TEXT). Paths can't be truncated meaningfully,
+so a full table REFUSES (FALSUM, nothing pushed) and rivus falls back
+to the text event.
+
+Tests (red first): `probatio_eventus_cauda` +9 (copy, view into the
+table, refusal), `probatio_rivus_terminalis` 103, new
+`probatio_copia_terminalis` 3. Plants caught: promotion without the
+declaration; backslash escape ignored; position ignored; BEL instead
+of ST. tessera 1534/1534; the four demos link.

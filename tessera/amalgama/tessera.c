@@ -5397,6 +5397,14 @@ tessera_eventus_caudae_motum_impellere (
           EventusCauda* cauda,
       constans Eventus* eventus);
 
+/* EVENTUS_DEPOSITIO cum viis COPIATIS (datum.depositio.viae visus
+ * vocantis -> tabula caudae). Viae truncari nequeunt: tabula sine loco
+ * -> FALSUM, nihil impulsum (vocans textum reddere potest). */
+static b32
+tessera_eventus_caudae_depositionem_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus);
+
 /* Eventum antiquissimum extrahere; FALSUM si vacua. */
 static b32
 tessera_eventus_caudae_extrahere (
@@ -5454,6 +5462,9 @@ nomen structura {
               b32 alterum_pendens;  /* ESC solus abruptus: alterum */
               i32 kitty_vexilla;    /* a fonte impulsa (B3) */
               b32 kitty_visus;      /* series kitty iam visa */
+              s32 indicator_x;      /* positio muris ultima (pixela;
+                                     * 0,0 nondum visa): depositio */
+              s32 indicator_y;
 EventusFacultates facultates;       /* legacy ab initio; kitty discitur
                                      * (eventus FACULTATES) */
 } InterpresTerminalis;
@@ -5499,6 +5510,19 @@ tessera_interpres_glutinum (
                     s64  tempus,
            EventusCauda* cauda);
 
+/* Glutinum promotum (eventus B3b): viae absolutae '\n' iunctae ->
+ * EVENTUS_DEPOSITIO (promota) ad indicatorem ultimum (terminal locum
+ * depositionis non narrat). Redde 0 si tabula caudae sine loco (vocans
+ * textum reddat). */
+static i32
+tessera_interpres_depositio (
+    InterpresTerminalis* interpres,
+            constans i8* viae,
+                    i32  mensura,
+                    i32  numerus,
+                    s64  tempus,
+           EventusCauda* cauda);
+
 #endif /* INTERPRES_TERMINALIS_H */
 
 /* ================= ex include/rivus_terminalis.h ================= */
@@ -5541,12 +5565,16 @@ tessera_interpres_glutinum (
  *   GLUTINUM  ?2004: glutinum uncis inclusum
  *   FOCUS     ?1004: focus I / O
  *   KITTY     CSI > 31 u impellitur, CSI < u extrahitur
+ *   DEPOSITIO glutinum VIARUM absolutarum -> EVENTUS_DEPOSITIO
+ *             (promota; positio = indicator ultimus visus, 0,0 si
+ *             nullus - terminal locum non narrat); GLUTINUM includit
  * RIVUS_MODI_MAXIMUM = octeti quos buffer modorum capere debet. */
 #define RIVUS_MODUS_MUS       0x01
 #define RIVUS_MODUS_SUPER     0x02
 #define RIVUS_MODUS_GLUTINUM  0x04
 #define RIVUS_MODUS_FOCUS     0x08
 #define RIVUS_MODUS_KITTY     0x10
+#define RIVUS_MODUS_DEPOSITIO 0x20
 #define RIVUS_MODI_MAXIMUM    LXIV
 
 /* Cellula in pixelis nostris (interpres: mus ad centrum cellulae). */
@@ -10474,6 +10502,31 @@ tessera_eventus_caudae_textum_impellere (
 }
 
 static b32
+tessera_eventus_caudae_depositionem_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus)
+{
+    Eventus e;
+        i32 mensura = eventus->datum.depositio.viae.mensura;
+
+    si (mensura > EVENTUS_CAUDA_TEXTUS - cauda->textus_mensura)
+    {
+        redde FALSUM;
+    }
+    e = *eventus;
+    e.datum.depositio.viae.datum = cauda->textus
+        + cauda->textus_mensura;
+    si (mensura > ZEPHYRUM)
+    {
+        memcpy(cauda->textus + cauda->textus_mensura,
+            eventus->datum.depositio.viae.datum,
+            (memoriae_index)mensura);
+    }
+    cauda->textus_mensura += mensura;
+    redde tessera_eventus_caudae_impellere(cauda, &e);
+}
+
+static b32
 tessera_eventus_caudae_motum_impellere (
           EventusCauda* cauda,
       constans Eventus* eventus)
@@ -10857,6 +10910,11 @@ _murem (
     }
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.tempus = tempus;
+    /* centrum cellulae; memoratur pro depositione (B3b) */
+    in->indicator_x = (x - I) * in->cellula_latitudo
+                      + in->cellula_latitudo / II;
+    in->indicator_y = (y - I) * in->cellula_altitudo
+                      + in->cellula_altitudo / II;
     si (b & LXIV)
     {
         s32 g = in->cellula_altitudo;
@@ -10868,10 +10926,8 @@ _murem (
             redde ZEPHYRUM;
         }
         /* B3a: positio (centrum cellulae) et modificantes */
-        e.datum.rotula.x  = (x - I) * in->cellula_latitudo
-                            + in->cellula_latitudo / II;
-        e.datum.rotula.y  = (y - I) * in->cellula_altitudo
-                            + in->cellula_altitudo / II;
+        e.datum.rotula.x             = in->indicator_x;
+        e.datum.rotula.y             = in->indicator_y;
         e.datum.rotula.modificantes  = modi;
         e.genus                      = EVENTUS_MUS_ROTULA;
         e.datum.rotula.genus         = EVENTUS_ROTULA_GRADATA;
@@ -10886,10 +10942,8 @@ _murem (
     botton = (basis == ZEPHYRUM) ? MUS_SINISTER
            : (basis == I) ? MUS_MEDIUS
            : (basis == II) ? MUS_DEXTER : (mus_botton_t)ZEPHYRUM;
-    e.datum.mus.x                = (x - I) * in->cellula_latitudo
-                                   + in->cellula_latitudo / II;
-    e.datum.mus.y                = (y - I) * in->cellula_altitudo
-                                   + in->cellula_altitudo / II;
+    e.datum.mus.x                = in->indicator_x;
+    e.datum.mus.y                = in->indicator_y;
     e.datum.mus.botton           = botton;
     e.datum.mus.modificantes     = modi;
     e.datum.mus.indicator_genus  = EVENTUS_INDICATOR_MUS;
@@ -11149,14 +11203,16 @@ tessera_interpres_initiare (
     interpres->alterum_pendens   = FALSUM;
     interpres->kitty_vexilla     = ZEPHYRUM;
     interpres->kitty_visus       = FALSUM;
+    interpres->indicator_x       = ZEPHYRUM;
+    interpres->indicator_y       = ZEPHYRUM;
     /* legacy: quod terminalis sine kitty narrare potest */
     memset(&interpres->facultates, ZEPHYRUM,
         magnitudo(EventusFacultates));
     /* super FALSUM donec ?1003 declaratur (rivus_modos_intrare) */
     interpres->facultates.scriptura_copiae  = EVENTUS_FACULTAS_FORTASSE;
-    interpres->facultates.depositio =
-        EVENTUS_DEPOSITIO_HEURISTICA;
-    interpres->facultates.gradus_rotulae = cellula_altitudo;
+    /* depositio NULLA donec promotio declaratur (rivus, B3b) */
+    interpres->facultates.depositio       = EVENTUS_DEPOSITIO_NULLA;
+    interpres->facultates.gradus_rotulae  = cellula_altitudo;
 }
 
 static i32
@@ -11381,6 +11437,33 @@ tessera_interpres_glutinum (
         EVENTUS_ORIGO_GLUTINATA) ? I : ZEPHYRUM;
 }
 
+static i32
+tessera_interpres_depositio (
+    InterpresTerminalis* interpres,
+            constans i8* viae,
+                    i32  mensura,
+                    i32  numerus,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+    Eventus e;
+    /* visus vocantis (constans): cauda copiat, non scribit */
+    unio { constans i8* l; i8* m; } u;
+
+    u.l = viae;
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                         = EVENTUS_DEPOSITIO;
+    e.tempus                        = tempus;
+    e.datum.depositio.x             = interpres->indicator_x;
+    e.datum.depositio.y             = interpres->indicator_y;
+    e.datum.depositio.viae.datum    = u.m;
+    e.datum.depositio.viae.mensura  = mensura;
+    e.datum.depositio.numerus       = numerus;
+    e.datum.depositio.promota       = VERUM;
+    redde tessera_eventus_caudae_depositionem_impellere(cauda, &e) ? I
+                                                           : ZEPHYRUM;
+}
+
 /* ================= ex lib/rivus_terminalis.c ================= */
 
 #define RELIQUIAE_NULLAE ZEPHYRUM
@@ -11417,13 +11500,15 @@ structura TesseraRivusTerminalis {
              i32  glutinum_mensura;
              i32  congruentes;       /* octeti termini congruentes */
              b32  glutinum_truncatum;
+              i8* viae;              /* glutinum promotum (B3b) */
 
     /* modi declarati (RIVUS_MODUS_*), ZEPHYRUM = nulli */
              i32 modi_intrati;
 };
 
 #define MODI_OMNES (RIVUS_MODUS_MUS | RIVUS_MODUS_SUPER \
-    | RIVUS_MODUS_GLUTINUM | RIVUS_MODUS_FOCUS | RIVUS_MODUS_KITTY)
+    | RIVUS_MODUS_GLUTINUM | RIVUS_MODUS_FOCUS | RIVUS_MODUS_KITTY \
+    | RIVUS_MODUS_DEPOSITIO)
 
 /* vexilla impulsa (31): discernere, genera, alternae, omnes, textus */
 #define KITTY_IMPULSA (INTERPRES_KITTY_DISCERNERE \
@@ -11550,6 +11635,197 @@ _glutino_addere (
     }
 }
 
+/* Spatium album inter vias (nec citatum nec effugitum) */
+interior b32
+_album (
+    i8 c)
+{
+    redde (b32)(c == ' ' || c == '\t' || c == '\n' || c == '\r');
+}
+
+interior s32
+_hexadecimalis (
+    i8 c)
+{
+    si (c >= '0' && c <= '9')
+    {
+        redde (s32)(c - '0');
+    }
+    si (c >= 'a' && c <= 'f')
+    {
+        redde (s32)(c - 'a') + X;
+    }
+    si (c >= 'A' && c <= 'F')
+    {
+        redde (s32)(c - 'A') + X;
+    }
+    redde -I;
+}
+
+/* Via una in exitus[initium..*finis): 'file://' (et 'localhost')
+ * demitur, %XX decodificatur; absoluta esse debet, sine '\n' et NUL.
+ * FALSUM = non via. */
+interior b32
+_viam_probare (
+     i8* exitus,
+    i32  initium,
+    i32* finis)
+{
+     i8* v = exitus + initium;
+    i32  n = *finis - initium;
+    i32  k;
+
+    si (n >= VII && memcmp(v, "file://", VII) == ZEPHYRUM)
+    {
+        i32 demenda  = VII;
+        i32 j        = ZEPHYRUM;
+
+        si (   n - VII                          >= IX
+            && memcmp(v + VII, "localhost", IX) == ZEPHYRUM)
+        {
+            demenda += IX;
+        }
+        memmove(v, v + demenda, (memoriae_index)(n - demenda));
+        n -= demenda;
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            s32 alta = (k + II < n) ? _hexadecimalis(v[k + I]) : -I;
+            s32 humilis = (k + II < n) ? _hexadecimalis(v[k + II]) : -I;
+
+            si (v[k] == '%' && alta >= ZEPHYRUM && humilis >= ZEPHYRUM)
+            {
+                v[j]  = (i8)(alta * XVI + humilis);
+                k     += II;
+            }
+            alioquin
+            {
+                v[j] = v[k];
+            }
+            j++;
+        }
+        n = j;
+    }
+    si (n == ZEPHYRUM || v[ZEPHYRUM] != '/')
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (v[k] == '\n' || v[k] == '\0')
+        {
+            redde FALSUM;
+        }
+    }
+    *finis = initium + n;
+    redde VERUM;
+}
+
+/* Glutinum -> viae absolutae '\n' iunctae (more conchae: '\x',
+ * '...', "..." cum \" \\ \$ \`; file:// URI). Exitus <= textus
+ * (effugia et separatores numquam crescunt). Redde numerum viarum; 0 =
+ * non viae (textus manet). */
+interior i32
+_vias_legere (
+    constans i8* t,
+            i32  n,
+             i8* exitus,
+            i32* mensura)
+{
+    i32 i        = ZEPHYRUM;
+    i32 o        = ZEPHYRUM;
+    i32 numerus  = ZEPHYRUM;
+
+    per (;;)
+    {
+        i32 initium;
+         i8 citatio = ZEPHYRUM;
+
+        dum (i < n && _album(t[i]))
+        {
+            i++;
+        }
+        si (i >= n)
+        {
+            frange;
+        }
+        si (numerus > ZEPHYRUM)
+        {
+            exitus[o] = '\n';
+            o++;
+        }
+        initium = o;
+        dum (i < n)
+        {
+            i8 c = t[i];
+
+            si (citatio == '\'')
+            {
+                si (c == '\'')
+                {
+                    citatio = ZEPHYRUM;
+                }
+                alioquin
+                {
+                    exitus[o] = c;
+                    o++;
+                }
+                i++;
+                perge;
+            }
+            si (citatio == '"')
+            {
+                si (c == '"')
+                {
+                    citatio = ZEPHYRUM;
+                    i++;
+                    perge;
+                }
+                si (   c == '\\' && i + I < n
+                    && (   t[i + I] == '"' || t[i + I] == '\\'
+                        || t[i + I] == '$' || t[i + I] == '`'))
+                {
+                    i++;
+                }
+                exitus[o] = t[i];
+                o++;
+                i++;
+                perge;
+            }
+            si (_album(c))
+            {
+                frange;
+            }
+            si (c == '\\')
+            {
+                si (i + I >= n)
+                {
+                    redde ZEPHYRUM;
+                }
+                exitus[o] = t[i + I];
+                o++;
+                i += II;
+                perge;
+            }
+            si (c == '\'' || c == '"')
+            {
+                citatio = c;
+                i++;
+                perge;
+            }
+            exitus[o] = c;
+            o++;
+            i++;
+        }
+        si (citatio != ZEPHYRUM || !_viam_probare(exitus, initium, &o))
+        {
+            redde ZEPHYRUM;
+        }
+        numerus++;
+    }
+    *mensura = o;
+    redde numerus;
+}
+
 /* Glutinum finitum: TEXT GLUTINATA (copiatum in caudam), truncatum
  * notatur in eventu ipso */
 interior vacuum
@@ -11557,7 +11833,25 @@ _glutinum_finire (
     TesseraRivusTerminalis* r,
                 s64  tempus)
 {
-    si (r->glutinum_mensura == ZEPHYRUM)
+    i32 viae_mensura  = ZEPHYRUM;
+    i32 numerus       = ZEPHYRUM;
+
+    /* promotio declarata: glutinum integrum viarum -> DEPOSITIO; si
+     * non viae aut cauda sine loco, textus manet */
+    si (   (r->modi_intrati & RIVUS_MODUS_DEPOSITIO)
+        && !r->glutinum_truncatum && r->glutinum_mensura > ZEPHYRUM)
+    {
+        numerus = _vias_legere(r->glutinum, r->glutinum_mensura,
+            r->viae,
+            &viae_mensura);
+    }
+    si (   numerus > ZEPHYRUM
+        && tessera_interpres_depositio(&r->interpres, r->viae, viae_mensura,
+               numerus, tempus, r->cauda) > ZEPHYRUM)
+    {
+        /* promotum */
+    }
+    alioquin si (r->glutinum_mensura == ZEPHYRUM)
     {
         /* glutinum VACUUM est eventus (cauda textum vacuum recusat) */
         Eventus e;
@@ -11812,7 +12106,11 @@ tessera_rivus_creare (
         magnitudo(EventusCauda), VIII);
     r->glutinum = (i8*)tessera_piscina_allocare(piscina,
         (memoriae_index)RIVUS_GLUTINUM_CAPACITAS);
-    si (r->series == NIHIL || r->cauda == NIHIL || r->glutinum == NIHIL)
+    r->viae     = (i8*)tessera_piscina_allocare(piscina,
+        (memoriae_index)RIVUS_GLUTINUM_CAPACITAS);
+    si (   r->series   == NIHIL || r->cauda == NIHIL
+        || r->glutinum == NIHIL
+        || r->viae     == NIHIL)
     {
         redde NIHIL;
     }

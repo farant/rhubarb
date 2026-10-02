@@ -46,12 +46,16 @@
  *   GLUTINUM  ?2004: glutinum uncis inclusum
  *   FOCUS     ?1004: focus I / O
  *   KITTY     CSI > 31 u impellitur, CSI < u extrahitur
+ *   DEPOSITIO glutinum VIARUM absolutarum -> EVENTUS_DEPOSITIO
+ *             (promota; positio = indicator ultimus visus, 0,0 si
+ *             nullus - terminal locum non narrat); GLUTINUM includit
  * RIVUS_MODI_MAXIMUM = octeti quos buffer modorum capere debet. */
 #define RIVUS_MODUS_MUS       0x01
 #define RIVUS_MODUS_SUPER     0x02
 #define RIVUS_MODUS_GLUTINUM  0x04
 #define RIVUS_MODUS_FOCUS     0x08
 #define RIVUS_MODUS_KITTY     0x10
+#define RIVUS_MODUS_DEPOSITIO 0x20
 #define RIVUS_MODI_MAXIMUM    LXIV
 
 nomen structura RivusTerminalis RivusTerminalis;

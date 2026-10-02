@@ -2,7 +2,8 @@
  * B3a): quod proiectio tesserae non ostendit - morae poscendae, motus
  * NON coalescit (decodificatio pigra), glutinum trans traditiones
  * scissum, glutinum vacuum, capacitas, reliquiae muris post moram.
- * B3b: facultates primae, lectio coalita, modi declarati. */
+ * B3b: facultates primae, lectio coalita, modi declarati; glutinum
+ * viarum -> DEPOSITIO (declaratum). */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -35,6 +36,7 @@ s32 principale (vacuum)
 {
             Piscina* piscina;
     RivusTerminalis* r;
+    RivusTerminalis* novus;
             Eventus  e;
                  i8  magnum[CCC];
                  i8  modi[RIVUS_MODI_MAXIMUM];
@@ -193,6 +195,73 @@ s32 principale (vacuum)
         IV), ZEPHYRUM);
     CREDO_AEQUALIS_I32 (rivus_interpres(r)->kitty_vexilla, ZEPHYRUM);
     CREDO_FALSUM (rivus_eventum(r, M, &e));
+
+    imprimere("\n--- IX. glutinum viarum -> DEPOSITIO ---\n");
+    /* non declaratum: textus manet */
+    _tradere(r, "\x1b[200~/tmp/a\x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_TEXTUS
+        && chorda_aequalis_literis(e.datum.textus.contentum, "/tmp/a"));
+    /* declaratum: ?2004 secum trahit, facultas HEURISTICA */
+    numerus = rivus_modos_intrare(r, RIVUS_MODUS_DEPOSITIO, modi,
+        RIVUS_MODI_MAXIMUM);
+    CREDO_VERUM (_octeti_aequales(modi, numerus, "\033[?2004h"));
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_FACULTATES
+        && e.datum.facultates.depositio
+            == EVENTUS_DEPOSITIO_HEURISTICA);
+    /* positio = indicator ultimus (cellula III,II -> 25,30) */
+    _tradere(r, "\x1b[<0;3;2M\x1b[<0;3;2m");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    _tradere(r, "\x1b[200~/Users/fran/a\\ b.txt /tmp/c\x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_DEPOSITIO);
+    CREDO_VERUM (chorda_aequalis_literis(e.datum.depositio.viae,
+        "/Users/fran/a b.txt\n/tmp/c"));
+    CREDO_AEQUALIS_I32 (e.datum.depositio.numerus, II);
+    CREDO_VERUM (e.datum.depositio.promota);
+    CREDO_VERUM (e.datum.depositio.x == XXV
+        && e.datum.depositio.y == XXX);
+    /* citationes, file:// (localhost, %20) */
+    _tradere(r, "\x1b[200~'/a b' \"/c\\\"d\"\nfile:///e%20f "
+        "file://localhost/g\x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_DEPOSITIO);
+    CREDO_VERUM (chorda_aequalis_literis(e.datum.depositio.viae,
+        "/a b\n/c\"d\n/e f\n/g"));
+    CREDO_AEQUALIS_I32 (e.datum.depositio.numerus, IV);
+    /* non viae: textus manet */
+    _tradere(r, "\x1b[200~/tmp/a and more\x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_TEXTUS && chorda_aequalis_literis(
+        e.datum.textus.contentum, "/tmp/a and more"));
+    _tradere(r, "\x1b[200~~/x\x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_TEXTUS);
+    _tradere(r, "\x1b[200~'/a\x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_TEXTUS);
+    _tradere(r, "\x1b[200~ \n \x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_TEXTUS);
+    /* exitus: promotio cessat */
+    numerus = rivus_modos_exire(r, modi, RIVUS_MODI_MAXIMUM);
+    CREDO_VERUM (_octeti_aequales(modi, numerus, "\033[?2004l"));
+    _tradere(r, "\x1b[200~/tmp/a\x1b[201~");
+    CREDO_VERUM (rivus_eventum(r, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_TEXTUS);
+    /* indicator numquam visus: positio 0,0 */
+    novus = rivus_creare(piscina, X, XX);
+    CREDO_NON_NIHIL (novus);
+    CREDO_VERUM (rivus_eventum(novus, M, &e));          /* facultates */
+    CREDO_VERUM (rivus_modos_intrare(novus, RIVUS_MODUS_DEPOSITIO, modi,
+        RIVUS_MODI_MAXIMUM) > ZEPHYRUM);
+    CREDO_VERUM (rivus_eventum(novus, M, &e));          /* facultates */
+    _tradere(novus, "\x1b[200~/x\x1b[201~");
+    CREDO_VERUM (rivus_eventum(novus, M, &e));
+    CREDO_VERUM (e.genus == EVENTUS_DEPOSITIO && e.datum.depositio.x
+        == ZEPHYRUM && e.datum.depositio.y == ZEPHYRUM);
 
     imprimere("\n");
     credo_imprimere_compendium();

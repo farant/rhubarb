@@ -54,6 +54,9 @@ nomen structura {
               b32 alterum_pendens;  /* ESC solus abruptus: alterum */
               i32 kitty_vexilla;    /* a fonte impulsa (B3) */
               b32 kitty_visus;      /* series kitty iam visa */
+              s32 indicator_x;      /* positio muris ultima (pixela;
+                                     * 0,0 nondum visa): depositio */
+              s32 indicator_y;
 EventusFacultates facultates;       /* legacy ab initio; kitty discitur
                                      * (eventus FACULTATES) */
 } InterpresTerminalis;
@@ -96,6 +99,19 @@ interpres_glutinum (
     InterpresTerminalis* interpres,
             constans i8* octeti,
                     i32  mensura,
+                    s64  tempus,
+           EventusCauda* cauda);
+
+/* Glutinum promotum (eventus B3b): viae absolutae '\n' iunctae ->
+ * EVENTUS_DEPOSITIO (promota) ad indicatorem ultimum (terminal locum
+ * depositionis non narrat). Redde 0 si tabula caudae sine loco (vocans
+ * textum reddat). */
+i32
+interpres_depositio (
+    InterpresTerminalis* interpres,
+            constans i8* viae,
+                    i32  mensura,
+                    i32  numerus,
                     s64  tempus,
            EventusCauda* cauda);
 

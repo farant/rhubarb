@@ -169,7 +169,10 @@ Split by Fran's approval (2026-10-02) into three:
   is declared, Q24); FACULTATES first in the stream and again on
   declaration. **Plants:** kitty not popped; capabilities not first.
 - **B3b-ii — OSC 52 write + paste → DEPOSITIO promotion** (declared,
-  like hover; the heuristic is text-only, no filesystem).
+  like hover; the heuristic is text-only, no filesystem). As built: OSC
+  52 is its own module `copia_terminalis` (output, not input; keeps
+  base64 out of tessera's amalgam). Drop position = the last pointer
+  cell the decoder saw, 0,0 if none (Fran, 2026-10-02).
 - **B3b-iii — raw mode as a platform layer** (`lib/terminalis_macos.c`:
   raw on/off, read with a timeout, write; Fran approved the lib/ layer
   over tessera's bridge) + the terminal auscultator + **Look** in

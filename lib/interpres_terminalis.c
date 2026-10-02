@@ -327,6 +327,11 @@ _murem (
     }
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.tempus = tempus;
+    /* centrum cellulae; memoratur pro depositione (B3b) */
+    in->indicator_x = (x - I) * in->cellula_latitudo
+                      + in->cellula_latitudo / II;
+    in->indicator_y = (y - I) * in->cellula_altitudo
+                      + in->cellula_altitudo / II;
     si (b & LXIV)
     {
         s32 g = in->cellula_altitudo;
@@ -338,10 +343,8 @@ _murem (
             redde ZEPHYRUM;
         }
         /* B3a: positio (centrum cellulae) et modificantes */
-        e.datum.rotula.x  = (x - I) * in->cellula_latitudo
-                            + in->cellula_latitudo / II;
-        e.datum.rotula.y  = (y - I) * in->cellula_altitudo
-                            + in->cellula_altitudo / II;
+        e.datum.rotula.x             = in->indicator_x;
+        e.datum.rotula.y             = in->indicator_y;
         e.datum.rotula.modificantes  = modi;
         e.genus                      = EVENTUS_MUS_ROTULA;
         e.datum.rotula.genus         = EVENTUS_ROTULA_GRADATA;
@@ -356,10 +359,8 @@ _murem (
     botton = (basis == ZEPHYRUM) ? MUS_SINISTER
            : (basis == I) ? MUS_MEDIUS
            : (basis == II) ? MUS_DEXTER : (mus_botton_t)ZEPHYRUM;
-    e.datum.mus.x                = (x - I) * in->cellula_latitudo
-                                   + in->cellula_latitudo / II;
-    e.datum.mus.y                = (y - I) * in->cellula_altitudo
-                                   + in->cellula_altitudo / II;
+    e.datum.mus.x                = in->indicator_x;
+    e.datum.mus.y                = in->indicator_y;
     e.datum.mus.botton           = botton;
     e.datum.mus.modificantes     = modi;
     e.datum.mus.indicator_genus  = EVENTUS_INDICATOR_MUS;
@@ -619,14 +620,16 @@ interpres_initiare (
     interpres->alterum_pendens   = FALSUM;
     interpres->kitty_vexilla     = ZEPHYRUM;
     interpres->kitty_visus       = FALSUM;
+    interpres->indicator_x       = ZEPHYRUM;
+    interpres->indicator_y       = ZEPHYRUM;
     /* legacy: quod terminalis sine kitty narrare potest */
     memset(&interpres->facultates, ZEPHYRUM,
         magnitudo(EventusFacultates));
     /* super FALSUM donec ?1003 declaratur (rivus_modos_intrare) */
     interpres->facultates.scriptura_copiae  = EVENTUS_FACULTAS_FORTASSE;
-    interpres->facultates.depositio =
-        EVENTUS_DEPOSITIO_HEURISTICA;
-    interpres->facultates.gradus_rotulae = cellula_altitudo;
+    /* depositio NULLA donec promotio declaratur (rivus, B3b) */
+    interpres->facultates.depositio       = EVENTUS_DEPOSITIO_NULLA;
+    interpres->facultates.gradus_rotulae  = cellula_altitudo;
 }
 
 i32
@@ -849,4 +852,31 @@ interpres_glutinum (
     redde eventus_caudae_textum_impellere(cauda, tempus, octeti,
         mensura,
         EVENTUS_ORIGO_GLUTINATA) ? I : ZEPHYRUM;
+}
+
+i32
+interpres_depositio (
+    InterpresTerminalis* interpres,
+            constans i8* viae,
+                    i32  mensura,
+                    i32  numerus,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+    Eventus e;
+    /* visus vocantis (constans): cauda copiat, non scribit */
+    unio { constans i8* l; i8* m; } u;
+
+    u.l = viae;
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                         = EVENTUS_DEPOSITIO;
+    e.tempus                        = tempus;
+    e.datum.depositio.x             = interpres->indicator_x;
+    e.datum.depositio.y             = interpres->indicator_y;
+    e.datum.depositio.viae.datum    = u.m;
+    e.datum.depositio.viae.mensura  = mensura;
+    e.datum.depositio.numerus       = numerus;
+    e.datum.depositio.promota       = VERUM;
+    redde eventus_caudae_depositionem_impellere(cauda, &e) ? I
+                                                           : ZEPHYRUM;
 }
