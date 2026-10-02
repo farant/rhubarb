@@ -1026,3 +1026,18 @@ generator must not rewrite unchanged output - mtime is an input to
 everything that still judges by mtime.
 Remaining: the oracle runs generata in full (162 s) even when the
 `generata` gate already ran in the same commit.
+
+## 2026-10-02 - oracle reuses the generata gate's live receipt (Fran: option a)
+
+After the relink fix the `fabrica` gate still ran the whole generata
+(~160 s) although the `generata` gate had just run in the same commit.
+A live receipt already stores the gate's full output
+(build/portae/generata.viva.json.acta) and is valid only while the tree
+signature is unchanged (silva.receptum_vivum). tools/fabrica_oraculum.sh
+now uses that output when the receipt is valid and sane - same tree,
+deterministic generators, same output - and runs generata otherwise;
+FABRICA_ORACULUM_RECENS=1 forces a fresh run. Measured: valid receipt ->
+whole gate 61 s (was 221-272 s), 51 compared, consensus; after one
+tracked file changed the receipt read "rancidum" and generata ran in
+full (174 s), consensus. Retiring generata (Q15) stays open until a
+longer run of agreement.

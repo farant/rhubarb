@@ -26,7 +26,31 @@ trap 'rm -rf "$T"' EXIT
 
 # ---- I. generata (sequentialiter: generatores eadem clausurarum
 # directoria scribunt ac iudex plenus - numquam simul) ----
-./tools/generata_probare.sh > "$T/generata" 2>&1
+# RECEPTUM VIVUM (2026-10-02, Fran optio a): porta generata in eadem
+# commissione iam cucurrit (~CLX s) - si receptum eius vivum SANUM est
+# (sigillum arboris idem ac in cursu eius: silva.receptum_vivum), acta
+# eius eadem sunt quae cursus novus daret (generatores determinati,
+# arbor eadem) et adhibentur. Arbor mutata, receptum absens aut non
+# sanum -> generata currit ut olim. FABRICA_ORACULUM_RECENS=1 cursum
+# novum cogit.
+ACTA_RECEPTI=""
+if [ -z "${FABRICA_ORACULUM_RECENS:-}" ]; then
+    ACTA_RECEPTI="$(python3 -c '
+import os, sys
+sys.path.insert(0, "pythonica")
+import silva
+p = silva.receptum_vivum("generata")
+via = silva._receptum_vivum_via("generata") + ".acta"
+if p is not None and p.sana and os.path.exists(via):
+    print(via)
+' 2>/dev/null)"
+fi
+if [ -n "$ACTA_RECEPTI" ]; then
+    cp "$ACTA_RECEPTI" "$T/generata"
+    echo "  generata ex recepto vivo (arbor eadem): $ACTA_RECEPTI"
+else
+    ./tools/generata_probare.sh > "$T/generata" 2>&1
+fi
 if ! grep -qE '^generata: (sana|FRACTA)$' "$T/generata"; then
     echo "oraculum fabricae: generata sine linea finali"
     tail -5 "$T/generata" | sed 's/^/    /'
