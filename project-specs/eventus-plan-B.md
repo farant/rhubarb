@@ -161,6 +161,20 @@ promotion (paths heuristic). **Look:** a terminal auscultator (the same
 STML lines as fenestra's) in Terminal.app and Ghostty. **Plants:** modes
 not popped on exit; capabilities not first.
 
+Split by Fran's approval (2026-10-02) into three:
+- **B3b-i — the pure source surface.** `rivus_eventum_coalitum` (decode
+  everything present when the queue is empty, then extract: motion
+  coalesces per read); `rivus_modos_intrare` / `_exire` (bytes
+  returned, not written; exit = exact reverse; `?1003` only when SUPER
+  is declared, Q24); FACULTATES first in the stream and again on
+  declaration. **Plants:** kitty not popped; capabilities not first.
+- **B3b-ii — OSC 52 write + paste → DEPOSITIO promotion** (declared,
+  like hover; the heuristic is text-only, no filesystem).
+- **B3b-iii — raw mode as a platform layer** (`lib/terminalis_macos.c`:
+  raw on/off, read with a timeout, write; Fran approved the lib/ layer
+  over tessera's bridge) + the terminal auscultator + **Look** in
+  Terminal.app and Ghostty (answers the two B3 AUDIENDA).
+
 **B4 — the terminal runner of the SAME conformance table.** The
 table's terminal column (bytes) filled for the A4 scenarios; a runner
 feeds bytes through B2/B3 and compares. Capability-keyed `excusationes`

@@ -622,8 +622,7 @@ interpres_initiare (
     /* legacy: quod terminalis sine kitty narrare potest */
     memset(&interpres->facultates, ZEPHYRUM,
         magnitudo(EventusFacultates));
-    /* super: ?1003 a fonte petitum */
-    interpres->facultates.super             = VERUM;
+    /* super FALSUM donec ?1003 declaratur (rivus_modos_intrare) */
     interpres->facultates.scriptura_copiae  = EVENTUS_FACULTAS_FORTASSE;
     interpres->facultates.depositio =
         EVENTUS_DEPOSITIO_HEURISTICA;

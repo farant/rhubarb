@@ -1132,3 +1132,57 @@ full suite: vectors 1534/1534, eventum 68/68. The four demos link.
 **Order lesson, again:** format after the LAST edit, THEN regenerate
 the amalgam; the other way round leaves a stale amalgam for `generata`
 to refuse (B2a paid for that once).
+
+## B3b-i — eager read, declared modes, capabilities first (2026-10-02)
+
+Fran approved B3b split three ways (pure surface / OSC 52 + paste
+promotion / raw-mode layer + auscultator + look) and raw mode as a lib/
+platform layer. This is the pure surface.
+
+- **`rivus_eventum_coalitum`**: when the queue is EMPTY, decode
+  everything present (until half the queue is used), then extract.
+  Decoding only on an empty queue keeps the payload tables (text,
+  samples) clearing, which they do only when the queue is empty; and it
+  gives the spec's "coalesce per read": consecutive motions in one read
+  become one MOTUS with samples. The lazy `rivus_eventum` stays for
+  tessera's projection.
+- **Declared modes**: `rivus_modos_intrare(r, modi, buffer, cap)`
+  returns the bytes (rivus stays pure: it never writes) in the order
+  ?1000 ?1002 ?1003 ?1006 ?2004 ?1004, then `CSI > 31 u`;
+  `rivus_modos_exire` returns the exact reverse of what was entered
+  (kitty popped first) and forgets it, so a second exit writes nothing.
+  `?1003` only when SUPER is declared (spec Q24), and SUPER brings the
+  mouse set with it. Entering sets `kitty_vexilla` (31) and
+  `facultates.super`, and publishes FACULTATES again. Twice without an
+  exit, or a buffer under `RIVUS_MODI_MAXIMUM`: nothing written, state
+  untouched (kitty is a STACK in the terminal; a double push would
+  leave one behind).
+- **Capabilities first**: `rivus_creare` queues FACULTATES before
+  anything else (tessera's projection drops it; its loop skips dropped
+  events). The decoder's default `super` is now FALSE: nothing is
+  hovered until ?1003 is declared (it said VERUM, "requested by the
+  source", which tessera never requested).
+
+**Bug found (latent since B3a-ii):** a printable run went to the
+decoder in ONE step, and each rune makes KEY + TEXT, so 256 typed bytes
+(no bracketed paste, or a fast typist over a slow link) made 512 events
+for a 256-slot queue: half silently lost. Runs are now cut at 64 bytes
+on a rune boundary (`CURSUS_MAXIMUS`), so one step makes at most 128
+events. The capacity test now counts events, red before the fix.
+
+**Amalgam:** tessera doesn't declare modes, so the amalgamator drops
+`rivus_modos_*`; a file-scope static table left behind became an
+unused variable under -Werror. The table now lives INSIDE the one
+helper that uses it (`_modos_scribere`), and goes out with it.
+
+**Tool trap (cost a confusing half hour):** with a broken amalgam,
+`compile_tests.sh` fails at the amalgam step, does NOT rebuild lib
+objects, and still runs the OLD test binary and reports its verdict. A
+plant I had reverted kept "failing" because its build was the one
+being run. Always read the runner's own output, not only the test log.
+
+Tests: `probatio_rivus_terminalis` 69 (red first: capabilities first,
+event count on a long run, coalesced read, mode bytes). Plants caught:
+kitty not popped on exit; capabilities not first. tessera 1534/1534 +
+68/68; the interpres, series, cauda, claves, eventus_stml suites green;
+the four demos link.

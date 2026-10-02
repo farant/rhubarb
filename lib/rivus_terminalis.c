@@ -15,6 +15,10 @@
 #define RELIQUIAE_FUGA   I      /* ESC solus, iam Effugium redditus */
 #define RELIQUIAE_SGR    II     /* CSI < dimidia */
 
+/* Cursus imprimibilis per passum: runa quaeque CLAVIS + TEXTUS, ergo
+ * passus unus <= II * LXIV eventa - cauda (CCLVI) numquam superfluit */
+#define CURSUS_MAXIMUS LXIV
+
 #define CODEX_INITII_GLUTINI CC                 /* CSI 200 ~ */
 #define TERMINUS_GLUTINI     "\033[201~"
 #define TERMINI_LONGITUDO    ((i32)(magnitudo(TERMINUS_GLUTINI) - I))
@@ -41,7 +45,18 @@ structura RivusTerminalis {
              i32  glutinum_mensura;
              i32  congruentes;       /* octeti termini congruentes */
              b32  glutinum_truncatum;
+
+    /* modi declarati (RIVUS_MODUS_*), ZEPHYRUM = nulli */
+             i32 modi_intrati;
 };
+
+#define MODI_OMNES (RIVUS_MODUS_MUS | RIVUS_MODUS_SUPER \
+    | RIVUS_MODUS_GLUTINUM | RIVUS_MODUS_FOCUS | RIVUS_MODUS_KITTY)
+
+/* vexilla impulsa (31): discernere, genera, alternae, omnes, textus */
+#define KITTY_IMPULSA (INTERPRES_KITTY_DISCERNERE \
+    | INTERPRES_KITTY_GENERA | INTERPRES_KITTY_ALTERNAE \
+    | INTERPRES_KITTY_OMNES | INTERPRES_KITTY_TEXTUS)
 
 
 /* ==================================================
@@ -61,6 +76,63 @@ _consumere (
     memmove(r->buffer, r->buffer + numerus,
         (memoriae_index)(r->mensura - numerus));
     r->mensura -= numerus;
+}
+
+/* Octeti modorum: intrandi ordine tabulae, exeundi ordine INVERSO.
+ * MUS ?1006 post ?1003 (forma SGR ultima, ut tessera_modi.h). Tabula
+ * INTRA functionem: amalgama quae modos non adhibet eam cum functione
+ * demittit (staticum inusitatum = -Werror). */
+interior i32
+_modos_scribere (
+    i32  modi,
+    b32  exeundo,
+     i8* buffer)
+{
+    hic_manens constans structura {
+                       i32  modus;
+        constans character* intrandi;
+        constans character* exeundi;
+    } MODI[] = {
+        { RIVUS_MODUS_MUS,      "\033[?1000h", "\033[?1000l" },
+        { RIVUS_MODUS_MUS,      "\033[?1002h", "\033[?1002l" },
+        { RIVUS_MODUS_SUPER,    "\033[?1003h", "\033[?1003l" },
+        { RIVUS_MODUS_MUS,      "\033[?1006h", "\033[?1006l" },
+        { RIVUS_MODUS_GLUTINUM, "\033[?2004h", "\033[?2004l" },
+        { RIVUS_MODUS_FOCUS,    "\033[?1004h", "\033[?1004l" },
+        { RIVUS_MODUS_KITTY,    "\033[>31u",   "\033[<u"     }
+    };
+    s32 numerus  = (s32)(magnitudo(MODI) / magnitudo(MODI[0]));
+    i32 n        = ZEPHYRUM;
+    s32 j;
+
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+                        s32  k = exeundo ? numerus - I - j : j;
+         constans character* t = exeundo ? MODI[k].exeundi
+                                         : MODI[k].intrandi;
+
+        si (MODI[k].modus & modi)
+        {
+            i32 longitudo = (i32)strlen(t);
+
+            memcpy(buffer + n, t, (memoriae_index)longitudo);
+            n += longitudo;
+        }
+    }
+    redde n;
+}
+
+/* FACULTATES interpretis in caudam (primum fluxus; modi mutati) */
+interior vacuum
+_facultates_impellere (
+    RivusTerminalis* r)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_FACULTATES;
+    e.datum.facultates  = r->interpres.facultates;
+    (vacuum)eventus_caudae_impellere(r->cauda, &e);
 }
 
 interior b32
@@ -264,6 +336,15 @@ _cursum_tradere (
             }
         }
     }
+    /* passus finitus (cauda): sectio ad initium runae */
+    si (finis - initium > CURSUS_MAXIMUS)
+    {
+        finis = initium + CURSUS_MAXIMUS;
+        dum (finis > initium && utf8_est_continuatio(*finis))
+        {
+            finis--;
+        }
+    }
     p = finis;
     si (p > initium)
     {
@@ -411,6 +492,7 @@ rivus_creare (
     interpres_initiare(&r->interpres, cellula_latitudo,
         cellula_altitudo);
     eventus_caudam_initiare(r->cauda);
+    _facultates_impellere(r);     /* primum fluxus (spec Q4) */
     redde r;
 }
 
@@ -463,6 +545,75 @@ rivus_eventum (
         }
     }
     redde FALSUM;
+}
+
+b32
+rivus_eventum_coalitum (
+    RivusTerminalis* r,
+                s64  tempus,
+            Eventus* eventus)
+{
+    /* decodificatio solum cauda VACUA: onera tum vacantur, et motus
+     * huius lectionis in caudam coalescunt (dimidium caudae: passus
+     * unus <= II * CURSUS_MAXIMUS eventa) */
+    si (r->cauda->numerus == ZEPHYRUM)
+    {
+        eventus_cauda_lectio_incipit(r->cauda);
+        dum (   r->cauda->numerus < EVENTUS_CAUDA_CAPACITAS / II
+             && _passus(r, tempus))
+        {
+        }
+    }
+    redde eventus_caudae_extrahere(r->cauda, eventus);
+}
+
+i32
+rivus_modos_intrare (
+    RivusTerminalis* r,
+                i32  modi,
+                 i8* buffer,
+                i32  capacitas)
+{
+    i32 n;
+
+    si (modi & RIVUS_MODUS_SUPER)
+    {
+        modi |= RIVUS_MODUS_MUS;
+    }
+    modi &= MODI_OMNES;
+    si (   r->modi_intrati != ZEPHYRUM || modi == ZEPHYRUM
+        || capacitas < RIVUS_MODI_MAXIMUM)
+    {
+        redde ZEPHYRUM;
+    }
+    n                = _modos_scribere(modi, FALSUM, buffer);
+    r->modi_intrati  = modi;
+    r->interpres.kitty_vexilla =
+        (modi & RIVUS_MODUS_KITTY) ? KITTY_IMPULSA : ZEPHYRUM;
+    r->interpres.facultates.super = (b32)((modi & RIVUS_MODUS_SUPER)
+        != ZEPHYRUM);
+    _facultates_impellere(r);
+    redde n;
+}
+
+i32
+rivus_modos_exire (
+    RivusTerminalis* r,
+                 i8* buffer,
+                i32  capacitas)
+{
+    i32 n;
+
+    si (r->modi_intrati == ZEPHYRUM || capacitas < RIVUS_MODI_MAXIMUM)
+    {
+        redde ZEPHYRUM;
+    }
+    n                           = _modos_scribere(r->modi_intrati,
+        VERUM,
+        buffer);
+    r->modi_intrati             = ZEPHYRUM;
+    r->interpres.kitty_vexilla  = ZEPHYRUM;
+    redde n;
 }
 
 s32

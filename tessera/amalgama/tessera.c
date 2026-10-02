@@ -5517,7 +5517,11 @@ tessera_interpres_glutinum (
  * trahit (rivus_eventum). Decodificatio PIGRA: lexema unum quoad
  * eventum
  * adest - motus NON coalescit (proiectio tesserae eventum quemque
- * videt).
+ * videt). Consumptores Eventus rivus_eventum_coalitum legunt (motus
+ * per lectionem coalescit, ut in fenestra; spec Q10).
+ *
+ * FACULTATES primum eventum fluxus sunt (spec Q4), iterum cum modi
+ * declarantur aut kitty primum videtur.
  *
  * VISUS (textus eventuum) valent usque ad rivus_eventum proximum.
  */
@@ -5529,6 +5533,21 @@ tessera_interpres_glutinum (
 #define RIVUS_MORA_FUGAE_MS       XXV       /* ESC solus vs series */
 #define RIVUS_MORA_GLUTINI_MS     (III * M) /* silentium: finis */
 #define RIVUS_GLUTINUM_CAPACITAS  65536     /* = EVENTUS_CAUDA_TEXTUS */
+
+/* Modi quos applicatio DECLARAT (eventus B3b). Rivus octetos scribendos
+ * reddit, non scribit (PURUS). Terminal modum ignotum tacite neglegit.
+ *   MUS       ?1000 ?1002 ?1006: pressio, tractus, forma SGR
+ *   SUPER     ?1003 hover (spec Q24: solum declaratum); MUS includit
+ *   GLUTINUM  ?2004: glutinum uncis inclusum
+ *   FOCUS     ?1004: focus I / O
+ *   KITTY     CSI > 31 u impellitur, CSI < u extrahitur
+ * RIVUS_MODI_MAXIMUM = octeti quos buffer modorum capere debet. */
+#define RIVUS_MODUS_MUS       0x01
+#define RIVUS_MODUS_SUPER     0x02
+#define RIVUS_MODUS_GLUTINUM  0x04
+#define RIVUS_MODUS_FOCUS     0x08
+#define RIVUS_MODUS_KITTY     0x10
+#define RIVUS_MODI_MAXIMUM    LXIV
 
 /* Cellula in pixelis nostris (interpres: mus ad centrum cellulae). */
 static TesseraRivusTerminalis*
@@ -11133,8 +11152,7 @@ tessera_interpres_initiare (
     /* legacy: quod terminalis sine kitty narrare potest */
     memset(&interpres->facultates, ZEPHYRUM,
         magnitudo(EventusFacultates));
-    /* super: ?1003 a fonte petitum */
-    interpres->facultates.super             = VERUM;
+    /* super FALSUM donec ?1003 declaratur (rivus_modos_intrare) */
     interpres->facultates.scriptura_copiae  = EVENTUS_FACULTAS_FORTASSE;
     interpres->facultates.depositio =
         EVENTUS_DEPOSITIO_HEURISTICA;
@@ -11369,6 +11387,10 @@ tessera_interpres_glutinum (
 #define RELIQUIAE_FUGA   I      /* ESC solus, iam Effugium redditus */
 #define RELIQUIAE_SGR    II     /* CSI < dimidia */
 
+/* Cursus imprimibilis per passum: runa quaeque CLAVIS + TEXTUS, ergo
+ * passus unus <= II * LXIV eventa - cauda (CCLVI) numquam superfluit */
+#define CURSUS_MAXIMUS LXIV
+
 #define CODEX_INITII_GLUTINI CC                 /* CSI 200 ~ */
 #define TERMINUS_GLUTINI     "\033[201~"
 #define TERMINI_LONGITUDO    ((i32)(magnitudo(TERMINUS_GLUTINI) - I))
@@ -11395,7 +11417,18 @@ structura TesseraRivusTerminalis {
              i32  glutinum_mensura;
              i32  congruentes;       /* octeti termini congruentes */
              b32  glutinum_truncatum;
+
+    /* modi declarati (RIVUS_MODUS_*), ZEPHYRUM = nulli */
+             i32 modi_intrati;
 };
+
+#define MODI_OMNES (RIVUS_MODUS_MUS | RIVUS_MODUS_SUPER \
+    | RIVUS_MODUS_GLUTINUM | RIVUS_MODUS_FOCUS | RIVUS_MODUS_KITTY)
+
+/* vexilla impulsa (31): discernere, genera, alternae, omnes, textus */
+#define KITTY_IMPULSA (INTERPRES_KITTY_DISCERNERE \
+    | INTERPRES_KITTY_GENERA | INTERPRES_KITTY_ALTERNAE \
+    | INTERPRES_KITTY_OMNES | INTERPRES_KITTY_TEXTUS)
 
 
 /* ==================================================
@@ -11415,6 +11448,19 @@ _consumere (
     memmove(r->buffer, r->buffer + numerus,
         (memoriae_index)(r->mensura - numerus));
     r->mensura -= numerus;
+}
+
+/* FACULTATES interpretis in caudam (primum fluxus; modi mutati) */
+interior vacuum
+_facultates_impellere (
+    TesseraRivusTerminalis* r)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_FACULTATES;
+    e.datum.facultates  = r->interpres.facultates;
+    (vacuum)tessera_eventus_caudae_impellere(r->cauda, &e);
 }
 
 interior b32
@@ -11618,6 +11664,15 @@ _cursum_tradere (
             }
         }
     }
+    /* passus finitus (cauda): sectio ad initium runae */
+    si (finis - initium > CURSUS_MAXIMUS)
+    {
+        finis = initium + CURSUS_MAXIMUS;
+        dum (finis > initium && tessera_utf8_est_continuatio(*finis))
+        {
+            finis--;
+        }
+    }
     p = finis;
     si (p > initium)
     {
@@ -11765,6 +11820,7 @@ tessera_rivus_creare (
     tessera_interpres_initiare(&r->interpres, cellula_latitudo,
         cellula_altitudo);
     tessera_eventus_caudam_initiare(r->cauda);
+    _facultates_impellere(r);     /* primum fluxus (spec Q4) */
     redde r;
 }
 
