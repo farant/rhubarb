@@ -628,3 +628,41 @@ pre-extraction copy was verified as exactly A5's change), and A5 was
 recommitted with the tree frozen. A6a was drafted in the scratchpad
 meanwhile as an apply-script. Memory corrected: freeze the tree while
 ANY commit's gates run.
+
+## A6b — RAW / SEMANTIC replay + divergence (2026-10-02)
+
+**`manus_ludus_iterare(m, notata, modus, divergentiae)`.** It lives in
+manus_ludus because manus already drives the dispensator synthetically
+and owns `manus_ludus_ad_schirmum`, the exact local→screen inverse of
+targeting.
+- **CRUDA** delivers the events as recorded; targeting runs again.
+- **SEMANTICA** sends each pointer event that has a target to its
+  component, found by id in the CURRENT tree. The position is
+  `ad_schirmum(component, scopus_x/y)`. If the target is missing, the
+  raw position is used.
+- **Divergence is reported in BOTH modes, before each event is
+  delivered:** what the RECORDED position would hit now (the dispensator's
+  own strategy, so capture counts), against the recorded target. It
+  returns the count and fills `Xar de ManusDivergentia {index,
+  scopus_notatus, scopus_crudus}`.
+
+**The proof (`probatio_iteratio`).** The toy layout gained
+`translatio_y` (b1 and tabula move down). Three tests that initialised
+`ToyStatus` field by field now use `memset`.
+- A: the toy session recorded by the notarius gives the reference end
+  state (both insulae + focus).
+- B: SEMANTIC, same layout: 0 divergences, state = A.
+- C: RAW, layout moved down XV: **2 divergences**, index 0 and 1 (b1's
+  press and release; recorded `b1`, raw now `radix`). `numerus` is
+  absent, so state ≠ A.
+- D: SEMANTIC, same moved layout: the SAME 2 divergences are reported,
+  but **state = A**: semantic replay survives the layout change.
+- E: `divergentiae` may be NIHIL.
+
+Red first (against the stub). Two compiling plants caught: **semantic
+replay using the raw position** (the plan's plant) and semantic mode
+not reporting divergences.
+
+The motions under capture never diverge: the strategy routes them to
+the captured component whatever the geometry. That is correct: they
+were delivered to tabula, and still would be.

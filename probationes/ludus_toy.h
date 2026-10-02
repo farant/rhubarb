@@ -27,6 +27,8 @@ nomen structura {
     i32 compositiones;
     i32 derivata;                    /* T5: eventus derivati traditi */
     i32 compositiones_in_traditione; /* T5: numerus in traditione */
+    s32 translatio_y;                  /* A6b: b1 et tabula deorsum
+                                      * (iteratio semantica) */
 } ToyStatus;
 
 nomen structura {
@@ -69,7 +71,7 @@ toy_componere (
     componens_ponere_actio(radix, "fugere");
     b1          = componens_creare(p, in, "b1", PARTES_BOTTONE);
     f.x         = X;
-    f.y         = X;
+    f.y         = X + ((ToyStatus*)ctx)->translatio_y;
     f.latitudo  = L;
     f.altitudo  = XX;
     componens_ponere_fines(b1, f);
@@ -79,7 +81,7 @@ toy_componere (
     componens_addere_liberum(radix, b1);
     tabula      = componens_creare(p, in, "tabula", PARTES_TABULA);
     f.x         = LXX;
-    f.y         = X;
+    f.y         = X + ((ToyStatus*)ctx)->translatio_y;
     f.latitudo  = C;
     f.altitudo  = LXXX;
     componens_ponere_fines(tabula, f);

@@ -462,3 +462,83 @@ manus_ludus_causa (
     }
     redde m->causa;
 }
+
+
+/* ==================================================
+ * Iteratio (eventus A6b)
+ * ================================================== */
+
+i32
+manus_ludus_iterare (
+       ManusLudus* m,
+     constans Xar* notata,
+    ManusIteratio  modus,
+              Xar* divergentiae)
+{
+    i32 i;
+    i32 numerus = ZEPHYRUM;
+
+    si (!m || !notata)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(notata); i++)
+    {
+        constans EventusNotatum* en = (constans EventusNotatum*)
+            xar_obtinere(notata, i);
+                         Eventus e  = en->eventus;
+
+        si (   en->scopus.mensura > ZEPHYRUM
+            && (   e.genus == EVENTUS_MUS_DEPRESSUS
+                || e.genus == EVENTUS_MUS_LIBERATUS
+                || e.genus == EVENTUS_MUS_MOTUS))
+        {
+             Destinatio  des;
+              Componens* nunc;
+              Componens* c;
+                 chorda  crudus;
+
+            /* divergentia: quid positio NOTATA nunc tangit (ante
+             * traditionem - status ut in sessione notata) */
+            des = m->d->strategia(m->d->arbor, &m->d->motus,
+                dispensator_focus(m->d), &e, m->piscina);
+            nunc    = destinatio_componens(&des);
+            crudus  = nunc ? nunc->id : chorda_nulla();
+            si (!chorda_aequalis(crudus, en->scopus))
+            {
+                numerus++;
+                si (divergentiae)
+                {
+                    ManusDivergentia* dv = (ManusDivergentia*)
+                        xar_addere(divergentiae);
+
+                    dv->index           = i;
+                    dv->scopus_notatus  = en->scopus;
+                    dv->scopus_crudus   = chorda_transcribere(crudus,
+                        m->piscina);
+                }
+            }
+            si (modus == MANUS_ITERATIO_SEMANTICA)
+            {
+                c = componens_invenire_per_id(m->d->arbor, en->scopus);
+                si (c)
+                {
+                    Punctum locale;
+                    Punctum schirmum;
+
+                    locale.x = en->scopus_x;
+                    locale.y = en->scopus_y;
+                    schirmum = manus_ludus_ad_schirmum(m, c, locale);
+                    e.datum.mus.x = schirmum.x;
+                    e.datum.mus.y = schirmum.y;
+                }
+            }
+        }
+        dispensator_tractare(m->d, &e);
+        si (e.tempus > m->tempus)
+        {
+            m->tempus = e.tempus;
+        }
+    }
+    redde numerus;
+}

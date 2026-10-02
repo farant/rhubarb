@@ -101,6 +101,40 @@ manus_ludus_clavem (
       character  typus,
             i32  modificantes);
 
+
+/* ==================================================
+ * Iteratio plagulae notatae (eventus A6b; spec D6)
+ * ================================================== */
+
+nomen enumeratio {
+    MANUS_ITERATIO_CRUDA = ZEPHYRUM,  /* positiones ut notatae */
+    MANUS_ITERATIO_SEMANTICA          /* scopus + locale -> positio
+                                       * ex arbore PRAESENTI */
+} ManusIteratio;
+
+/* Divergentia: eventus muris cuius positio notata NUNC alium
+ * componentem tangit quam scopus notatus (vacuus: nullus). */
+nomen structura {
+       i32 index;
+    chorda scopus_notatus;
+    chorda scopus_crudus;
+} ManusDivergentia;
+
+/* Plagulam notatam (Xar de EventusNotatum) dispensatori tradere.
+ * CRUDA: eventus ut notati (destinatio iterum currit). SEMANTICA:
+ * eventus muris cum scopo ad componentem eius id in arbore praesenti
+ * diriguntur - positio = scopus_x/y per manus_ludus_ad_schirmum;
+ * scopus absens -> positio cruda. DIVERGENTIAE in modo utroque
+ * nuntiantur (ante traditionem cuiusque eventus): positio cruda contra
+ * scopum notatum. Redde numerum divergentiarum; divergentiae (si non
+ * NIHIL) Xar de ManusDivergentia impletur. */
+i32
+manus_ludus_iterare (
+       ManusLudus* m,
+     constans Xar* notata,
+    ManusIteratio  modus,
+              Xar* divergentiae);
+
 /* Tempus procedit; pulsus dispensatori (sedes quietis). */
 vacuum
 manus_ludus_exspectare (

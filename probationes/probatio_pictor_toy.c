@@ -12,6 +12,7 @@
 #include "pictor_commune.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 s32 principale (vacuum)
 {
@@ -40,9 +41,7 @@ s32 principale (vacuum)
     repo = insula_repositorium_creare(piscina, intern,
         "<documentum/>", "<ephemera/>");
     reg = actio_registrum_creare(piscina, intern);
-    toy.compositiones = ZEPHYRUM;
-    toy.derivata = ZEPHYRUM;
-    toy.compositiones_in_traditione = ZEPHYRUM;
+    memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
     toy_registrare(reg, &toy);
     d = dispensator_creare(piscina, intern, repo, reg, toy_componere,
                            &toy, CCC);
