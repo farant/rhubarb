@@ -1,0 +1,166 @@
+<!-- conformitas.stml - tabula conformitatis fontium eventuum (eventus
+     A4; spec D7). Lector: lib/eventus_conformitas.c. Cursor fenestrae:
+     ./tools/conformitas.sh (in postulatione; fenestra retro aperitur).
+
+     immissio <clavis>: codex = macOS kVK (a=0, i=34, Tab=48, Escape=53,
+     sagittae 123..126), modificantes = NSEventModifierFlags cruda
+     (Shift 131072 + latus sinistrum 2; Ctrl 262144 + 1; Alt 524288 +
+     32), characteres UTF-8. <mus>: genus ut fenestra_musarius.
+     expectata: attributa quae scaena nominat (scriptura rara: actio
+     'pressa', runa 0 non scribuntur - ergo non nominantur).
+     'genera' = genera considerata; aliorum generum eventa omittuntur.
+     terminalis (octeti, phasis B4) nondum.
+
+     SAGITTAE: AppKit NSEventModifierFlagFunction (0x800000 = 8388608)
+     sagittis ipse addit (etiam immissis; hardware idem) - modificantes
+     crudi id ferunt: Shift+sinistra = 0x820002 = 8519682. Mensuratum
+     2026-10-01 (cursus primus A4). -->
+<conformitas>
+  <scaena
+    titulus="shift-a"
+     genera="clavis_depressus clavis_liberatus textus"
+         ((>
+    <immissio((>
+      <clavis
+               codex="0"
+        modificantes="131074"
+         characteres="A"
+            depressa="1"/>
+      <clavis
+               codex="0"
+        modificantes="131074"
+         characteres="A"
+            depressa="0"/>
+    <expectata(((>
+      <eventus
+               genus="clavis_depressus"
+               codex="KeyA"
+                runa="97"
+        modificantes="131074"/>
+      <eventus genus="textus" contentum="A"/>
+      <eventus genus="clavis_liberatus" codex="KeyA" actio="soluta"/>
+  <scaena
+    titulus="tabula"
+     genera="clavis_depressus clavis_liberatus textus"
+         ((>
+    <immissio((>
+      <clavis
+               codex="48"
+        modificantes="0"
+         characteres="&#9;"
+            depressa="1"/>
+      <clavis
+               codex="48"
+        modificantes="0"
+         characteres="&#9;"
+            depressa="0"/>
+    <expectata((>
+      <eventus genus="clavis_depressus" codex="Tab"/>
+      <eventus genus="clavis_liberatus" codex="Tab" actio="soluta"/>
+  <scaena
+    titulus="ctrl-i"
+     genera="clavis_depressus clavis_liberatus textus"
+         ((>
+    <immissio((>
+      <clavis
+               codex="34"
+        modificantes="262145"
+         characteres="&#9;"
+            depressa="1"/>
+      <clavis
+               codex="34"
+        modificantes="262145"
+         characteres="&#9;"
+            depressa="0"/>
+    <expectata((>
+      <eventus
+               genus="clavis_depressus"
+               codex="KeyI"
+                runa="105"
+        modificantes="262145"/>
+      <eventus genus="clavis_liberatus" codex="KeyI" actio="soluta"/>
+  <scaena titulus="sagittae" genera="clavis_depressus textus" ((>
+    <immissio>
+      <clavis
+               codex="123"
+        modificantes="131074"
+         characteres="&#xF702;"
+            depressa="1"/>
+      <clavis
+               codex="124"
+        modificantes="524320"
+         characteres="&#xF703;"
+            depressa="1"/>
+      <clavis
+               codex="126"
+        modificantes="0"
+         characteres="&#xF700;"
+            depressa="1"/>
+      <clavis
+               codex="125"
+        modificantes="0"
+         characteres="&#xF701;"
+            depressa="1"/>
+    </>
+    <expectata>
+      <eventus
+               genus="clavis_depressus"
+               codex="ArrowLeft"
+        modificantes="8519682"/>
+      <eventus
+               genus="clavis_depressus"
+               codex="ArrowRight"
+        modificantes="8912928"/>
+      <eventus
+               genus="clavis_depressus"
+               codex="ArrowUp"
+        modificantes="8388608"/>
+      <eventus
+               genus="clavis_depressus"
+               codex="ArrowDown"
+        modificantes="8388608"/>
+    </>
+  <scaena titulus="effugium" genera="clavis_depressus textus" ((>
+    <immissio(> <clavis codex="53" modificantes="0" characteres="&#27;" depressa="1"/>
+    <expectata(> <eventus genus="clavis_depressus" codex="Escape"/>
+  <scaena
+    titulus="ictus"
+     genera="mus_depressus mus_liberatus mus_duplex"
+         ((>
+    <immissio((>
+      <mus genus="depressio" x="10" y="20"/>
+      <mus genus="liberatio" x="10" y="20"/>
+    <expectata((>
+      <eventus genus="mus_depressus" x="10" y="20" botton="1"/>
+      <eventus genus="mus_liberatus" x="10" y="20" botton="1"/>
+  <scaena
+    titulus="ictus-duplex-crudus"
+     genera="mus_depressus mus_liberatus mus_duplex"
+         ((>
+    <immissio>
+      <mus genus="depressio" x="40" y="40"/>
+      <mus genus="liberatio" x="40" y="40"/>
+      <mus genus="depressio" x="40" y="40"/>
+      <mus genus="liberatio" x="40" y="40"/>
+    </>
+    <expectata>
+      <eventus genus="mus_depressus" x="40" y="40"/>
+      <eventus genus="mus_liberatus" x="40" y="40"/>
+      <eventus genus="mus_depressus" x="40" y="40"/>
+      <eventus genus="mus_liberatus" x="40" y="40"/>
+    </>
+  <scaena
+    titulus="tractus"
+     genera="mus_depressus mus_motus mus_liberatus"
+         ((>
+    <immissio>
+      <mus genus="depressio" x="10" y="10"/>
+      <mus genus="tractus" x="20" y="20"/>
+      <mus genus="tractus" x="30" y="30"/>
+      <mus genus="liberatio" x="30" y="30"/>
+    </>
+    <expectata(((>
+      <eventus genus="mus_depressus" x="10" y="10"/>
+      <eventus genus="mus_motus" x="30" y="30"/>
+      <eventus genus="mus_liberatus" x="30" y="30"/>
+</conformitas>

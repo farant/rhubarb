@@ -438,3 +438,66 @@ found ~85 reads in 23 files):
 
 **Look:** below y=493, left x=−26, above y=−76, right x=667. Samples
 are signed too (x=−1, y=−31). pictor, villa and forum build.
+
+## A4 — the conformance table + fenestra runner (2026-10-01)
+
+**Pure core: `eventus_conformitas`** (`nexus purus`; 15 headers now
+promise it). It reads the table (`<conformitas><scaena titulus genera>`
+with `<immissio>` (`<clavis codex modificantes characteres depressa>`,
+`<mus genus x y>`) and `<expectata>` (`<eventus .../>`)), and compares a
+scenario against an actual stream:
+- `genera` lists the kinds CONSIDERED. Other kinds are dropped (real
+  mouse moves, capabilities, resize). A considered kind the expectation
+  doesn't list is a failure: text under Ctrl must not appear.
+- Order exact, count exact.
+- Expected attributes are a SUBSET of the actual ones. `tempus` is
+  always ignored, and children (samples) are not compared.
+- The actual events are written by `eventus_scribere_stml` and re-read,
+  so titles and forms are the recordings' own. A side effect of the
+  sparse writer: defaults (`actio` PRESSA, `runa` 0) are absent, so a
+  scenario cannot name them.
+- The diagnosis names the first difference (`eventus 1: contentum
+  expectatum "a", actuale "A"`) followed by both streams.
+
+The unit test was red first (the stub). Four compiling plants were
+caught by name: ignoring order; not filtering kinds; tolerating extra
+events (count `<` instead of `!=`); comparing `tempus`.
+
+**Runner: `tools/conformitas.sh [tabula]`, on demand** (not a suite
+member: it opens a real window).
+- `FENESTRA_RETRO`: the window opens behind the others and takes no
+  focus. Injected events go into the app's own queue, which is the queue
+  fenestra reads, so focus doesn't matter.
+- Per scenario: drain, inject, then read until 100 ms pass with no new
+  event (500 ms at most).
+- Text and sample VIEWS are copied while collecting: they only live
+  until the next read. Without the copy, a later read would overwrite
+  earlier text.
+- Exit 0 means all conform, 1 means some don't, 2 means the table is
+  bad.
+
+**First run (the plan's deliberate mismatch):** shift-a expected text
+"a" and FAILED with the right diagnosis, which proves the runner can
+fail.
+
+The same run found **a real fact: AppKit adds
+`NSEventModifierFlagFunction` (0x800000) to arrow keys itself**, for
+injected events too, the same as hardware. Shift+Left = 0x820002 =
+8519682. The table now records it, with a comment, rather than hiding
+it.
+
+The other six conformed on the first run:
+- Tab ≠ Ctrl+I (codex Tab / KeyI, and no text under Ctrl);
+- Escape;
+- a click;
+- a RAW double-click is two press/release pairs, with no `mus_duplex`
+  from the source (it was considered, so its absence is checked);
+- a drag: two `tractus` injections arrive as ONE merged MOTUS ending at
+  30,30. This is the A3b merging, proven through the real NSEvent path.
+
+**8/8 conform.**
+
+Not yet in the table:
+- resize (park 005: the event reports the frame size);
+- scroll (there is no injection API for scroll);
+- the terminal column (B4).
