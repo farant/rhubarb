@@ -50,7 +50,9 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "TesseraFructus", "TesseraOpus",
     "TesseraEventumGenus", "TesseraClavis", "TesseraMusGenus",
         "TesseraEventum", "TesseraLector", "TesseraPolitica",
-        "TesseraColores", NIHIL
+        "TesseraColores",
+    /* eventus B1b: lexemator vendicatus, tessera.h typum possidet */
+    "SeriesLector", NIHIL
 };
 
 /* Definitiones tag quas tessera.h PLENE possidet */
@@ -68,6 +70,7 @@ interior constans Renominatio TYPI_EXACTI[] = {
     { "PiscinaNotatio",    "TesseraPiscinaNotatio" },
     { "chorda",            "TesseraChorda" },
     { "ChordaAedificator", "TesseraChordaAedificator" },
+    { "SeriesLector",      "TesseraSeriesLector" },
     /* DATA vendicata (tabulae runae): praefixa functionum ea non
      * tangunt - sine his symbola globalia cum hospite runae
      * collideret (nm mensuratum, runae U5) */
@@ -81,6 +84,7 @@ interior constans Renominatio PRAEFIXA_FUNCTIONUM[] = {
     { "piscina_",            "tessera_piscina_" },
     { "chorda_",             "tessera_chorda_" },
     { "runae_",              "tessera_runae_" },
+    { "series_",             "tessera_series_" },
     { "utf8_",               "tessera_utf8_" }
 };
 

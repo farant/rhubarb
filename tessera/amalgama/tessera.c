@@ -294,6 +294,7 @@ int tessera_magnitudinem_renovare(TesseraOpus* opus);
  * ================================================== */
 
 #define TESSERA_LECTOR_BUFFER 64
+#define TESSERA_RELIQUIAE_CAPACITAS 64    /* <= SERIES_CRUDUM_MAXIMUM */
 #define TESSERA_MORA_FUGAE_MS 25
 #define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
 #define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
@@ -358,6 +359,10 @@ typedef struct TesseraEventum {
     int                 glutinum_truncatum;
 } TesseraEventum;
 
+/* lexemator fluminis terminalis (series_terminalis vendicatus,
+ * eventus B1b) - opacus */
+typedef struct TesseraSeriesLector TesseraSeriesLector;
+
 typedef struct TesseraLector {
     TesseraPons*  pons;
     unsigned char buffer[TESSERA_LECTOR_BUFFER];
@@ -365,6 +370,14 @@ typedef struct TesseraLector {
     unsigned int  latitudo_nota;
     unsigned int  altitudo_nota;
     unsigned char* glutinum;      /* collector glutini */
+    TesseraSeriesLector* series;  /* lexemator, modo initus */
+    int           alterum_pendens;
+    int           x10_pendens;
+    int           alienum_pendens;
+    unsigned char reliquiae[TESSERA_RELIQUIAE_CAPACITAS];
+    unsigned int  reliquiae_mensura;
+    unsigned int  reliquiae_genus;
+    int           fuga_reddenda;
 } TesseraLector;
 
 TesseraLector* tessera_lector_creare(TesseraPiscina* piscina,
@@ -4810,6 +4823,144 @@ externus constans i8  TESSERA_RUNAE_GRADUS_SECUNDUS[];
 
 #endif /* RUNAE_TABULAE_H */
 
+/* ================= ex include/series_terminalis.h ================= */
+/* series_terminalis.h - Lexemator fluminis terminalis (DEC/Williams)
+ *
+ * Grammatica octetorum terminalis, utraque directione: quod applicatio
+ * scribit (emulator consumit) et quod terminalis reddit (claves, mus,
+ * glutinum, responsa). Octeti intrant, LEXEMATA exeunt. SENSUM non
+ * possidet: quid CSI 'A' significet (sursum? cursor?) strata superiora
+ * decernunt. Nullum tempus, nulla UTF-8, nulla allocatio post
+ * creationem.
+ * (eventus B1a; terminal-planning modules/002; machina vt100.net
+ * dec_ansi_parser, ex Ghostty Parser.zig / parse_table.zig, MIT, pin
+ * 12752b2.)
+ *
+ * DIVERGENTIAE A WILLIAMS/GHOSTTY (consultae; omnes initus serviunt):
+ * - C1 octeti (0x80..0x9F) NON agnoscuntur: continuationes UTF-8 sunt,
+ *   ut cetera imprimuntur (Franus, planum B par. III).
+ * - DEL (0x7F) in solo = EXSEQUI (clavis retrorsum), non imprimere.
+ * - CSI cum ':' quovis finali SERVATUR (separatores): kitty claves
+ *   'CSI 97:65;2u' mittit; Ghostty eas extra 'm' abicit.
+ * - ESC N / ESC O + octetus = lexema UNUM (SERIES_SS; parametra
+ *   licent: 'ESC O 2 P'). Ghostty ESC O statim mittit.
+ * - ESC ante seriem (ESC ESC [ A) non perit: 'praefixum' VERUM.
+ * - Series abrupta (ESC, CAN, SUB in medio; ESC + octetus altus) =
+ *   SERIES_FUGA cum octetis crudis, NON tacite abiecta; octetus
+ *   abrumpens NON consumitur (vocatio proxima eum tractat).
+ * - 'ESC \' post chordam (OSC/DCS/APC) = terminator, consumptum; nullum
+ *   lexema ESC '\' sequitur.
+ * - DCS TOTUM (non hook/put/unhook) et truncatum (Franus).
+ * Ut Ghostty: plus quam SERIES_PARAMETRA_MAXIMA parametra -> series
+ * TOTA abicitur (csi_ignore) - SGR dimidia peior est quam nulla.
+ *
+ * VISUS: 'textus' et 'crudum' valent usque ad vocationem proximam
+ * (IMPRIMERE: visus in initum vocantis, valet dum initus).
+ *
+ * TEMPUS: lector solum 'pendet' nuntiat; vocans (lector initus) cum
+ * mora
+ * sua 'evacuare' vocat ut ESC solum aut seriem dimidiam reddat.
+ */
+
+#ifndef SERIES_TERMINALIS_H
+#define SERIES_TERMINALIS_H
+
+#define SERIES_PARAMETRA_MAXIMA   XXIV         /* Ghostty MAX_PARAMS */
+#define SERIES_INTERMEDIA_MAXIMA  IV           /* Ghostty */
+#define SERIES_CHORDA_MAXIMA      (II * MXXIV) /* osc.zig */
+#define SERIES_CRUDUM_MAXIMUM     LXIV         /* octeti crudi seriei */
+#define SERIES_PARAMETRUM_MAXIMUM 0x7FFFFFFF   /* saturatio */
+
+nomen enumeratio {
+    SERIES_NIHIL = ZEPHYRUM,  /* initus consumptus, nullum lexema */
+    SERIES_IMPRIMERE,         /* cursus imprimibilis (visus) */
+    SERIES_EXSEQUI,           /* C0 aut DEL; octetus in 'finale' */
+    SERIES_ESC,               /* ESC + intermedia + finale */
+    SERIES_CSI,               /* ESC [ privatum? parametra intermedia
+                               * finale */
+    SERIES_SS,                /* ESC N|O parametra? finale (SS2/SS3) */
+    SERIES_OSC,               /* ESC ] corpus BEL|ST (textus) */
+    SERIES_DCS,               /* ESC P parametra intermedia finale
+                               * corpus ST (textus) */
+    SERIES_APC,               /* ESC _ | ^ | X corpus ST (introductor
+                               * dicit APC, PM, SOS) */
+    SERIES_FUGA               /* series abrupta aut evacuata: crudum */
+} SeriesGenus;
+
+nomen structura {
+    SeriesGenus genus;
+            s32 parametra[SERIES_PARAMETRA_MAXIMA];
+            i32 numerus_parametrorum;
+            i32 separatores;    /* bitus i: ':' POST parametrum i */
+             i8 intermedia[SERIES_INTERMEDIA_MAXIMA];
+            i32 numerus_intermediorum;
+             i8 privatum;       /* '?' '>' '<' '=' aut 0 */
+             i8 introductor;    /* octetus post ESC ('[' ']' 'P' 'N'
+                                 * 'O' '_' '^' 'X') aut 0 */
+             i8 finale;         /* finale; EXSEQUI: octetus regiminis */
+            b32 praefixum;      /* ESC solum seriem praecessit */
+         TesseraChorda textus;         /* IMPRIMERE, OSC, DCS, APC */
+         TesseraChorda crudum;         /* octeti seriei (ESC ... finale) */
+            b32 truncatum;      /* corpus aut intermedia praecisa */
+} SeriesLexema;
+
+/* Lector novus in statu solo; tabula transitionum hic struitur. */
+static TesseraSeriesLector*
+tessera_series_lectorem_creare (
+    TesseraPiscina* piscina);
+
+/* MODUS INITUS (eventus B1b): grammatica directionis INITUS - quod
+ * terminalis reddit, non quod applicatio scribit. Octeti idem ambigui
+ * sunt (ESC P = DCS aut alt+P); responsa vera terminalium solum formas
+ * certas habent, ergo in modo initus:
+ * - ESC + (0x20..0x2F) = ESC finale (alt+spatium, alt+!), non
+ *   intermedia (designatio characterum numquam ex terminali venit);
+ * - ESC + C0 aut DEL = FUGA (ESC solus, octetus NON consumptus) -
+ *   vocans ut alterum + regimen legit (alt+reditus, alt+retrorsum);
+ * - ESC N, ESC X, ESC ^ = ESC finale (SS2, SOS, PM numquam reddita);
+ * - ESC P + octetus finalis (0x40..0x7E) STATIM = ESC finale 'P' +
+ *   octetus non consumptus (responsa DCS digito, '>', '!' aut '$'
+ *   incipiunt; 'alt+P a' una lectione venit). ESC ] et ESC _ series
+ *   manent: alt+] / alt+_ per moram vocantis (FUGA introductoris)
+ *   leguntur.
+ * Modus scriptionis (ordinarius, FALSUM) DEC purum manet. Purgatio
+ * modum servat. */
+static vacuum
+tessera_series_lectorem_initus_ponere (
+    TesseraSeriesLector* lector,
+             b32  initus);
+
+/* Ad statum solum redire (seriem pendentem abicere sine lexemate). */
+static vacuum
+tessera_series_lectorem_purgare (
+    TesseraSeriesLector* lector);
+
+/* Lexema proximum ex [*ptr, finis): *ptr promovetur. SERIES_NIHIL si
+ * initus consumptus sine lexemate completo - series dimidia in statu
+ * manet et vocatione proxima perficitur (scissura quaevis licet). */
+static SeriesGenus
+tessera_series_lexema_proximum (
+     TesseraSeriesLector*  lector,
+      constans i8** ptr,
+      constans i8*  finis,
+     SeriesLexema*  lexema);
+
+/* VERUM si in medio seriei (ESC solum, CSI dimidia, chorda aperta). */
+static b32
+tessera_series_lector_pendet (
+    constans TesseraSeriesLector* lector);
+
+/* Post moram vocantis: series pendens ut SERIES_FUGA redditur (crudum,
+ * introductor, praefixum), lector ad solum redit. FALSUM si nihil
+ * reddendum (non pendet, aut solum 'ESC' terminatoris chordae
+ * exspectabatur). */
+static b32
+tessera_series_lectorem_evacuare (
+    TesseraSeriesLector* lector,
+    SeriesLexema* lexema);
+
+#endif /* SERIES_TERMINALIS_H */
+
 /* ================= ex tessera/fontes/tessera_cellula.h ================= */
 /* tessera_cellula.h - Cellula, stilus, colores, signa (Phase A)
  *
@@ -5042,6 +5193,15 @@ tessera_pons_posix_creare (
  * et mathematicam casus vult; cellula.signum compactus manet -
  * nomina diversa confusionem vetant.
  *
+ * LEXEMATOR (eventus B1b): grammatica octetorum = series_terminalis
+ * (lib/, modo initus): OSC/DCS/APC responsa tacite consumuntur, ESC ESC
+ * seriem = praefixum (ALTERUM), series abrupta abicitur. Lector
+ * SEMANTICAM solum possidet, et casus crudos: mus X10 (tres octeti
+ * post CSI M), formae alienae (CSI [ + cauda: Linux console, putty),
+ * glutinum. MORA (moram vocantis lexemator non videt): series pendens
+ * evacuatur - ESC solus = FUGA, 'ESC x' = alterum + x, cetera
+ * abiciuntur; mus SGR dimidia (CSI <) et ESC solus RELIQUIAE fiunt,
+ * quae continuationi sequenti (';5M', '[<..', '[M..') redduntur (H8).
  * LECTOR: buffer gestationis 64 octetorum (series trans lectiones
  * QUOTLIBET scissae accumulantur - legitur dum octeti intra moram
  * ~25ms adveniunt; sola lectio vacua moram exactam facit); ESC solum
@@ -5064,6 +5224,7 @@ tessera_pons_posix_creare (
 #define TESSERA_EVENTUM_H
 
 #define TESSERA_LECTOR_BUFFER 64
+#define TESSERA_RELIQUIAE_CAPACITAS 64    /* <= SERIES_CRUDUM_MAXIMUM */
 #define TESSERA_MORA_FUGAE_MS 25
 #define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
 #define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
@@ -8661,6 +8822,819 @@ constans i8 TESSERA_RUNAE_GRADUS_SECUNDUS[30720] = {
     12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12
 };
 
+/* ================= ex lib/series_terminalis.c ================= */
+
+nomen enumeratio {
+    STATUS_SOLUM = ZEPHYRUM,
+    STATUS_FUGAE,               /* post ESC */
+    STATUS_FUGAE_INTERMEDIA,
+    STATUS_CSI_INITIUM,
+    STATUS_CSI_PARAMETRUM,
+    STATUS_CSI_INTERMEDIA,
+    STATUS_CSI_IGNORARE,
+    STATUS_SS,                  /* post ESC N|O (divergentia) */
+    STATUS_DCS_INITIUM,
+    STATUS_DCS_PARAMETRUM,
+    STATUS_DCS_INTERMEDIA,
+    STATUS_DCS_TRANSITUS,       /* corpus DCS */
+    STATUS_DCS_IGNORARE,
+    STATUS_OSC,
+    STATUS_APC,                 /* SOS / PM / APC */
+    STATUS_NUMERUS
+} SeriesStatus;
+
+nomen enumeratio {
+    ACTIO_NULLA = ZEPHYRUM,
+    ACTIO_IGNORARE,
+    ACTIO_IMPRIMERE,
+    ACTIO_EXSEQUI,
+    ACTIO_COLLIGERE,
+    ACTIO_PRIVATUM,
+    ACTIO_PARAMETRUM,
+    ACTIO_ESC,
+    ACTIO_CSI,
+    ACTIO_SS,
+    ACTIO_DCS_INCIPERE,
+    ACTIO_PONERE
+} SeriesActio;
+
+structura TesseraSeriesLector {
+    /* tabula transitionum: [octetus][status] */
+     i8 tabula_status[CCLVI][STATUS_NUMERUS];
+     i8 tabula_actio[CCLVI][STATUS_NUMERUS];
+
+    i32 status;
+    b32 initus;           /* modus initus (B1b): vide caput */
+    b32 post_chordam;     /* ESC chordam clausit: '\' terminator */
+    b32 crudum_esc;       /* proxima vocatio crudum = "ESC" incipit */
+
+    /* series in constructione */
+     s32 parametra[SERIES_PARAMETRA_MAXIMA];
+     i32 numerus_parametrorum;
+     i32 separatores;
+     s32 accumulator;
+     i32 digiti;            /* digiti in accumulatore */
+      i8 intermedia[SERIES_INTERMEDIA_MAXIMA];
+     i32 numerus_intermediorum;
+      i8 privatum;
+      i8 introductor;
+      i8 finale_dcs;
+     b32 praefixum;
+     b32 truncatum;
+
+      i8 TesseraChorda[SERIES_CHORDA_MAXIMA];
+     i32 tessera_chorda_mensura;
+      i8 crudum[SERIES_CRUDUM_MAXIMUM];
+     i32 crudum_mensura;
+};
+
+
+/* ==================================================
+ * Tabula
+ * ================================================== */
+
+interior vacuum
+_regula (
+    TesseraSeriesLector* lx,
+             i32  ab,
+             i32  ad,
+             i32  status,
+             i32  status_novus,
+             i32  actio)
+{
+    i32 c;
+
+    per (c = ab; c <= ad; c++)
+    {
+        lx->tabula_status[c][status]  = (i8)status_novus;
+        lx->tabula_actio[c][status]   = (i8)actio;
+    }
+}
+
+/* C0 sine CAN (0x18), SUB (0x1A), ESC (0x1B): illi ante tabulam */
+interior vacuum
+_regula_c0 (
+    TesseraSeriesLector* lx,
+             i32  status,
+             i32  actio)
+{
+    _regula(lx, 0x00, 0x17, status, status, actio);
+    _regula(lx, 0x19, 0x19, status, status, actio);
+    _regula(lx, 0x1C, 0x1F, status, status, actio);
+}
+
+interior vacuum
+_tabulam_struere (
+    TesseraSeriesLector* lx)
+{
+    i32 s;
+
+    /* ordinarium: status manet, nihil agitur (Ghostty .none) */
+    per (s = ZEPHYRUM; s < STATUS_NUMERUS; s++)
+    {
+        _regula(lx, 0x00, 0xFF, s, s, ACTIO_NULLA);
+    }
+
+    /* solum: C0 et DEL exsequi (div: DEL); 0x80+ imprimere (div: C1
+     * non agnita) */
+    _regula_c0(lx, STATUS_SOLUM, ACTIO_EXSEQUI);
+    /* CAN, SUB in solo: regimina ut cetera (in serie abrumpunt) */
+    _regula(lx, 0x18, 0x18, STATUS_SOLUM, STATUS_SOLUM, ACTIO_EXSEQUI);
+    _regula(lx, 0x1A, 0x1A, STATUS_SOLUM, STATUS_SOLUM, ACTIO_EXSEQUI);
+    _regula(lx, 0x20, 0x7E, STATUS_SOLUM, STATUS_SOLUM,
+        ACTIO_IMPRIMERE);
+    _regula(lx, 0x7F, 0x7F, STATUS_SOLUM, STATUS_SOLUM, ACTIO_EXSEQUI);
+    _regula(lx, 0x80, 0xFF, STATUS_SOLUM, STATUS_SOLUM,
+        ACTIO_IMPRIMERE);
+
+    /* fugae (post ESC) */
+    _regula_c0(lx, STATUS_FUGAE, ACTIO_EXSEQUI);
+    _regula(lx, 0x7F, 0x7F, STATUS_FUGAE, STATUS_FUGAE, ACTIO_IGNORARE);
+    _regula(lx, 0x20, 0x2F, STATUS_FUGAE, STATUS_FUGAE_INTERMEDIA,
+        ACTIO_COLLIGERE);
+    _regula(lx, 0x30, 0x4D, STATUS_FUGAE, STATUS_SOLUM, ACTIO_ESC);
+    _regula(lx, 0x4E, 0x4F, STATUS_FUGAE, STATUS_SS, ACTIO_NULLA);
+    _regula(lx, 0x50, 0x50, STATUS_FUGAE, STATUS_DCS_INITIUM,
+        ACTIO_NULLA);
+    _regula(lx, 0x51, 0x57, STATUS_FUGAE, STATUS_SOLUM, ACTIO_ESC);
+    _regula(lx, 0x58, 0x58, STATUS_FUGAE, STATUS_APC, ACTIO_NULLA);
+    _regula(lx, 0x59, 0x5A, STATUS_FUGAE, STATUS_SOLUM, ACTIO_ESC);
+    _regula(lx, 0x5B, 0x5B, STATUS_FUGAE, STATUS_CSI_INITIUM,
+        ACTIO_NULLA);
+    _regula(lx, 0x5C, 0x5C, STATUS_FUGAE, STATUS_SOLUM, ACTIO_ESC);
+    _regula(lx, 0x5D, 0x5D, STATUS_FUGAE, STATUS_OSC, ACTIO_NULLA);
+    _regula(lx, 0x5E, 0x5F, STATUS_FUGAE, STATUS_APC, ACTIO_NULLA);
+    _regula(lx, 0x60, 0x7E, STATUS_FUGAE, STATUS_SOLUM, ACTIO_ESC);
+
+    /* fugae intermedia */
+    _regula_c0(lx, STATUS_FUGAE_INTERMEDIA, ACTIO_EXSEQUI);
+    _regula(lx, 0x20, 0x2F, STATUS_FUGAE_INTERMEDIA,
+        STATUS_FUGAE_INTERMEDIA, ACTIO_COLLIGERE);
+    _regula(lx, 0x7F, 0x7F, STATUS_FUGAE_INTERMEDIA,
+        STATUS_FUGAE_INTERMEDIA, ACTIO_IGNORARE);
+    _regula(lx, 0x30, 0x7E, STATUS_FUGAE_INTERMEDIA, STATUS_SOLUM,
+        ACTIO_ESC);
+
+    /* csi initium */
+    _regula_c0(lx, STATUS_CSI_INITIUM, ACTIO_EXSEQUI);
+    _regula(lx, 0x7F, 0x7F, STATUS_CSI_INITIUM, STATUS_CSI_INITIUM,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x40, 0x7E, STATUS_CSI_INITIUM, STATUS_SOLUM,
+        ACTIO_CSI);
+    _regula(lx, 0x3A, 0x3A, STATUS_CSI_INITIUM, STATUS_CSI_IGNORARE,
+        ACTIO_NULLA);
+    _regula(lx, 0x20, 0x2F, STATUS_CSI_INITIUM, STATUS_CSI_INTERMEDIA,
+        ACTIO_COLLIGERE);
+    _regula(lx, 0x30, 0x39, STATUS_CSI_INITIUM, STATUS_CSI_PARAMETRUM,
+        ACTIO_PARAMETRUM);
+    _regula(lx, 0x3B, 0x3B, STATUS_CSI_INITIUM, STATUS_CSI_PARAMETRUM,
+        ACTIO_PARAMETRUM);
+    _regula(lx, 0x3C, 0x3F, STATUS_CSI_INITIUM, STATUS_CSI_PARAMETRUM,
+        ACTIO_PRIVATUM);
+
+    /* csi parametrum */
+    _regula_c0(lx, STATUS_CSI_PARAMETRUM, ACTIO_EXSEQUI);
+    _regula(lx, 0x30, 0x3B, STATUS_CSI_PARAMETRUM,
+        STATUS_CSI_PARAMETRUM,
+        ACTIO_PARAMETRUM);
+    _regula(lx, 0x7F, 0x7F, STATUS_CSI_PARAMETRUM,
+        STATUS_CSI_PARAMETRUM,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x40, 0x7E, STATUS_CSI_PARAMETRUM, STATUS_SOLUM,
+        ACTIO_CSI);
+    _regula(lx, 0x3C, 0x3F, STATUS_CSI_PARAMETRUM, STATUS_CSI_IGNORARE,
+        ACTIO_NULLA);
+    _regula(lx, 0x20, 0x2F, STATUS_CSI_PARAMETRUM,
+        STATUS_CSI_INTERMEDIA,
+        ACTIO_COLLIGERE);
+
+    /* csi intermedia */
+    _regula_c0(lx, STATUS_CSI_INTERMEDIA, ACTIO_EXSEQUI);
+    _regula(lx, 0x20, 0x2F, STATUS_CSI_INTERMEDIA,
+        STATUS_CSI_INTERMEDIA,
+        ACTIO_COLLIGERE);
+    _regula(lx, 0x7F, 0x7F, STATUS_CSI_INTERMEDIA,
+        STATUS_CSI_INTERMEDIA,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x40, 0x7E, STATUS_CSI_INTERMEDIA, STATUS_SOLUM,
+        ACTIO_CSI);
+    _regula(lx, 0x30, 0x3F, STATUS_CSI_INTERMEDIA, STATUS_CSI_IGNORARE,
+        ACTIO_NULLA);
+
+    /* csi ignorare: series mala tota consumitur, tacite (Ghostty) */
+    _regula_c0(lx, STATUS_CSI_IGNORARE, ACTIO_EXSEQUI);
+    _regula(lx, 0x20, 0x3F, STATUS_CSI_IGNORARE, STATUS_CSI_IGNORARE,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x7F, 0x7F, STATUS_CSI_IGNORARE, STATUS_CSI_IGNORARE,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x40, 0x7E, STATUS_CSI_IGNORARE, STATUS_SOLUM,
+        ACTIO_IGNORARE);
+
+    /* ss (div): ESC N|O parametra? finale - 'ESC O 2 P' */
+    _regula_c0(lx, STATUS_SS, ACTIO_EXSEQUI);
+    _regula(lx, 0x30, 0x39, STATUS_SS, STATUS_SS, ACTIO_PARAMETRUM);
+    _regula(lx, 0x3B, 0x3B, STATUS_SS, STATUS_SS, ACTIO_PARAMETRUM);
+    _regula(lx, 0x7F, 0x7F, STATUS_SS, STATUS_SS, ACTIO_IGNORARE);
+    _regula(lx, 0x20, 0x2F, STATUS_SS, STATUS_SOLUM, ACTIO_SS);
+    _regula(lx, 0x3A, 0x3A, STATUS_SS, STATUS_SOLUM, ACTIO_SS);
+    _regula(lx, 0x3C, 0x7E, STATUS_SS, STATUS_SOLUM, ACTIO_SS);
+
+    /* dcs initium */
+    _regula_c0(lx, STATUS_DCS_INITIUM, ACTIO_IGNORARE);
+    _regula(lx, 0x7F, 0x7F, STATUS_DCS_INITIUM, STATUS_DCS_INITIUM,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x20, 0x2F, STATUS_DCS_INITIUM, STATUS_DCS_INTERMEDIA,
+        ACTIO_COLLIGERE);
+    _regula(lx, 0x3A, 0x3A, STATUS_DCS_INITIUM, STATUS_DCS_IGNORARE,
+        ACTIO_NULLA);
+    _regula(lx, 0x30, 0x39, STATUS_DCS_INITIUM, STATUS_DCS_PARAMETRUM,
+        ACTIO_PARAMETRUM);
+    _regula(lx, 0x3B, 0x3B, STATUS_DCS_INITIUM, STATUS_DCS_PARAMETRUM,
+        ACTIO_PARAMETRUM);
+    _regula(lx, 0x3C, 0x3F, STATUS_DCS_INITIUM, STATUS_DCS_PARAMETRUM,
+        ACTIO_PRIVATUM);
+    _regula(lx, 0x40, 0x7E, STATUS_DCS_INITIUM, STATUS_DCS_TRANSITUS,
+        ACTIO_DCS_INCIPERE);
+
+    /* dcs parametrum */
+    _regula_c0(lx, STATUS_DCS_PARAMETRUM, ACTIO_IGNORARE);
+    _regula(lx, 0x30, 0x39, STATUS_DCS_PARAMETRUM,
+        STATUS_DCS_PARAMETRUM,
+        ACTIO_PARAMETRUM);
+    _regula(lx, 0x3B, 0x3B, STATUS_DCS_PARAMETRUM,
+        STATUS_DCS_PARAMETRUM,
+        ACTIO_PARAMETRUM);
+    _regula(lx, 0x7F, 0x7F, STATUS_DCS_PARAMETRUM,
+        STATUS_DCS_PARAMETRUM,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x3A, 0x3A, STATUS_DCS_PARAMETRUM, STATUS_DCS_IGNORARE,
+        ACTIO_NULLA);
+    _regula(lx, 0x3C, 0x3F, STATUS_DCS_PARAMETRUM, STATUS_DCS_IGNORARE,
+        ACTIO_NULLA);
+    _regula(lx, 0x20, 0x2F, STATUS_DCS_PARAMETRUM,
+        STATUS_DCS_INTERMEDIA,
+        ACTIO_COLLIGERE);
+    _regula(lx, 0x40, 0x7E, STATUS_DCS_PARAMETRUM, STATUS_DCS_TRANSITUS,
+        ACTIO_DCS_INCIPERE);
+
+    /* dcs intermedia */
+    _regula_c0(lx, STATUS_DCS_INTERMEDIA, ACTIO_IGNORARE);
+    _regula(lx, 0x20, 0x2F, STATUS_DCS_INTERMEDIA,
+        STATUS_DCS_INTERMEDIA,
+        ACTIO_COLLIGERE);
+    _regula(lx, 0x7F, 0x7F, STATUS_DCS_INTERMEDIA,
+        STATUS_DCS_INTERMEDIA,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x30, 0x3F, STATUS_DCS_INTERMEDIA, STATUS_DCS_IGNORARE,
+        ACTIO_NULLA);
+    _regula(lx, 0x40, 0x7E, STATUS_DCS_INTERMEDIA, STATUS_DCS_TRANSITUS,
+        ACTIO_DCS_INCIPERE);
+
+    /* dcs transitus (corpus) et ignorare */
+    _regula_c0(lx, STATUS_DCS_TRANSITUS, ACTIO_PONERE);
+    _regula(lx, 0x20, 0x7E, STATUS_DCS_TRANSITUS, STATUS_DCS_TRANSITUS,
+        ACTIO_PONERE);
+    _regula(lx, 0x7F, 0x7F, STATUS_DCS_TRANSITUS, STATUS_DCS_TRANSITUS,
+        ACTIO_IGNORARE);
+    _regula(lx, 0x80, 0xFF, STATUS_DCS_TRANSITUS, STATUS_DCS_TRANSITUS,
+        ACTIO_PONERE);
+    _regula(lx, 0x00, 0xFF, STATUS_DCS_IGNORARE, STATUS_DCS_IGNORARE,
+        ACTIO_IGNORARE);
+
+    /* osc: C0 ignorantur (BEL ante tabulam terminat); 0x20+ corpus */
+    _regula_c0(lx, STATUS_OSC, ACTIO_IGNORARE);
+    _regula(lx, 0x20, 0xFF, STATUS_OSC, STATUS_OSC, ACTIO_PONERE);
+
+    /* apc / pm / sos: omnia corpus (BEL quoque) */
+    _regula_c0(lx, STATUS_APC, ACTIO_PONERE);
+    _regula(lx, 0x20, 0xFF, STATUS_APC, STATUS_APC, ACTIO_PONERE);
+}
+
+
+/* ==================================================
+ * Auxilia
+ * ================================================== */
+
+/* Visus sine copia: chorda.datum non-constans est, initus et
+ * tabulae lectoris constantia (unio contra -Wcast-qual, mos domus) */
+interior TesseraChorda
+_visus (
+    constans i8* octeti,
+            i32  mensura)
+{
+    TesseraChorda c;
+    unio { constans i8* l; i8* m; } u;
+
+    u.l        = octeti;
+    c.datum    = u.m;
+    c.mensura  = mensura;
+    redde c;
+}
+
+interior vacuum
+_seriem_vacare (
+    TesseraSeriesLector* lx)
+{
+    lx->numerus_parametrorum   = ZEPHYRUM;
+    lx->separatores            = ZEPHYRUM;
+    lx->accumulator            = ZEPHYRUM;
+    lx->digiti                 = ZEPHYRUM;
+    lx->numerus_intermediorum  = ZEPHYRUM;
+    lx->privatum               = ZEPHYRUM;
+    lx->introductor            = ZEPHYRUM;
+    lx->finale_dcs             = ZEPHYRUM;
+    lx->praefixum              = FALSUM;
+    lx->truncatum              = FALSUM;
+    lx->tessera_chorda_mensura         = ZEPHYRUM;
+}
+
+interior vacuum
+_crudum_addere (
+    TesseraSeriesLector* lx,
+              i8  c)
+{
+    si (lx->crudum_mensura < SERIES_CRUDUM_MAXIMUM)
+    {
+        lx->crudum[lx->crudum_mensura] = c;
+        lx->crudum_mensura++;
+    }
+}
+
+interior vacuum
+_chordae_addere (
+    TesseraSeriesLector* lx,
+             i8  c)
+{
+    si (lx->tessera_chorda_mensura < SERIES_CHORDA_MAXIMA)
+    {
+        lx->TesseraChorda[lx->tessera_chorda_mensura] = c;
+        lx->tessera_chorda_mensura++;
+    }
+    alioquin
+    {
+        lx->truncatum = VERUM;
+    }
+}
+
+/* Accumulatorem in parametrum vertere (si digiti adsunt) */
+interior vacuum
+_parametrum_figere (
+    TesseraSeriesLector* lx)
+{
+    si (   lx->digiti > ZEPHYRUM
+        && lx->numerus_parametrorum < SERIES_PARAMETRA_MAXIMA)
+    {
+        lx->parametra[lx->numerus_parametrorum] = lx->accumulator;
+        lx->numerus_parametrorum++;
+    }
+}
+
+interior vacuum
+_parametrum (
+    TesseraSeriesLector* lx,
+             i32  c)
+{
+    s32 d;
+
+    si (c == ';' || c == ':')
+    {
+        /* nimia: separator neglectus; series in fine abicitur */
+        si (lx->numerus_parametrorum >= SERIES_PARAMETRA_MAXIMA)
+        {
+            redde;
+        }
+        lx->parametra[lx->numerus_parametrorum] = lx->accumulator;
+        si (c == ':')
+        {
+            lx->separatores = lx->separatores
+                | ((i32)I << lx->numerus_parametrorum);
+        }
+        lx->numerus_parametrorum++;
+        lx->accumulator  = ZEPHYRUM;
+        lx->digiti       = ZEPHYRUM;
+        redde;
+    }
+    d = (s32)(c - '0');
+    si (lx->accumulator > (SERIES_PARAMETRUM_MAXIMUM - d) / X)
+    {
+        lx->accumulator = SERIES_PARAMETRUM_MAXIMUM;
+    }
+    alioquin
+    {
+        lx->accumulator = lx->accumulator * X + d;
+    }
+    lx->digiti++;
+}
+
+/* Lexema ex statu seriei (parametra, intermedia, crudum ...) */
+interior vacuum
+_lexema_implere (
+    constans TesseraSeriesLector* lx,
+             SeriesLexema* l,
+              SeriesGenus  genus,
+                      i32  finale)
+{
+    memset(l, ZEPHYRUM, magnitudo(SeriesLexema));
+    l->genus                 = genus;
+    l->numerus_parametrorum  = lx->numerus_parametrorum;
+    memcpy(l->parametra, lx->parametra,
+        (memoriae_index)lx->numerus_parametrorum * magnitudo(s32));
+    l->separatores            = lx->separatores;
+    l->numerus_intermediorum  = lx->numerus_intermediorum;
+    memcpy(l->intermedia, lx->intermedia,
+        (memoriae_index)lx->numerus_intermediorum);
+    l->privatum     = lx->privatum;
+    l->introductor  = lx->introductor;
+    l->finale       = (i8)finale;
+    l->praefixum    = lx->praefixum;
+    l->truncatum    = lx->truncatum;
+    l->crudum       = _visus(lx->crudum, lx->crudum_mensura);
+}
+
+interior vacuum
+_fugam_implere (
+    constans TesseraSeriesLector* lx,
+             SeriesLexema* l)
+{
+    _lexema_implere(lx, l, SERIES_FUGA, ZEPHYRUM);
+    l->numerus_parametrorum   = ZEPHYRUM;
+    l->separatores            = ZEPHYRUM;
+    l->numerus_intermediorum  = ZEPHYRUM;
+    l->privatum               = ZEPHYRUM;
+    l->truncatum              = FALSUM;
+}
+
+/* Modus initus: series incepta (ESC P) re vera
+ * 'alterum + introductor' erat - ESC finale introductor, octetus
+ * currens NON consumptus. */
+interior vacuum
+_alterum_reddere (
+    TesseraSeriesLector* lx,
+    SeriesLexema* l,
+              i8  finale)
+{
+    lx->introductor = ZEPHYRUM;
+    _lexema_implere(lx, l, SERIES_ESC, (i32)finale);
+    l->numerus_parametrorum  = ZEPHYRUM;
+    l->separatores           = ZEPHYRUM;
+    lx->status               = STATUS_SOLUM;
+}
+
+interior b32
+_est_chorda (
+    i32 status)
+{
+    redde status == STATUS_OSC || status == STATUS_APC
+        || status == STATUS_DCS_TRANSITUS
+        || status == STATUS_DCS_IGNORARE;
+}
+
+/* Chordam clausam reddere (OSC, APC, DCS); DCS_IGNORARE: nihil */
+interior b32
+_chordam_reddere (
+    constans TesseraSeriesLector* lx,
+             SeriesLexema* l)
+{
+    SeriesGenus genus;
+            i32 finale = ZEPHYRUM;
+
+    si (lx->status == STATUS_DCS_IGNORARE)
+    {
+        redde FALSUM;
+    }
+    genus = (lx->status == STATUS_OSC) ? SERIES_OSC
+          : (lx->status == STATUS_APC) ? SERIES_APC : SERIES_DCS;
+    si (genus == SERIES_DCS)
+    {
+        finale = (i32)lx->finale_dcs;
+    }
+    _lexema_implere(lx, l, genus, finale);
+    l->textus = _visus(lx->TesseraChorda, lx->tessera_chorda_mensura);
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Publica
+ * ================================================== */
+
+static TesseraSeriesLector*
+tessera_series_lectorem_creare (
+    TesseraPiscina* piscina)
+{
+    TesseraSeriesLector* lx;
+
+    lx = (TesseraSeriesLector*)tessera_piscina_allocare_ordinatum(piscina,
+        magnitudo(TesseraSeriesLector), VIII);
+    si (lx == NIHIL)
+    {
+        redde NIHIL;
+    }
+    _tabulam_struere(lx);
+    lx->initus = FALSUM;
+    tessera_series_lectorem_purgare(lx);
+    redde lx;
+}
+
+static vacuum
+tessera_series_lectorem_initus_ponere (
+    TesseraSeriesLector* lx,
+             b32  initus)
+{
+    lx->initus = initus;
+}
+
+static vacuum
+tessera_series_lectorem_purgare (
+    TesseraSeriesLector* lx)
+{
+    lx->status          = STATUS_SOLUM;
+    lx->post_chordam    = FALSUM;
+    lx->crudum_esc      = FALSUM;
+    lx->crudum_mensura  = ZEPHYRUM;
+    _seriem_vacare(lx);
+}
+
+static SeriesGenus
+tessera_series_lexema_proximum (
+     TesseraSeriesLector*  lx,
+      constans i8** ptr,
+      constans i8*  finis,
+     SeriesLexema*  l)
+{
+    /* ESC qui chordam clausit seriem proximam incipit (crudum) */
+    si (lx->crudum_esc)
+    {
+        lx->crudum_esc      = FALSUM;
+        lx->crudum[0]       = (i8)0x1B;
+        lx->crudum_mensura  = I;
+    }
+
+    dum (*ptr < finis)
+    {
+        i32 c = ((i32)**ptr) & 0xFF;
+        i32 status_novus;
+        i32 actio;
+
+        /* ---- ESC: initium, praefixum, terminator, abruptio ---- */
+        si (c == 0x1B)
+        {
+            si (_est_chorda(lx->status))
+            {
+                b32 habet;
+
+                (*ptr)++;
+                habet             = _chordam_reddere(lx, l);
+                lx->status        = STATUS_FUGAE;
+                lx->post_chordam  = VERUM;
+                lx->crudum_esc    = VERUM;
+                _seriem_vacare(lx);
+                si (habet)
+                {
+                    redde l->genus;
+                }
+                perge;
+            }
+            si (   lx->status == STATUS_SOLUM
+                || (lx->status == STATUS_FUGAE && lx->post_chordam))
+            {
+                (*ptr)++;
+                lx->status        = STATUS_FUGAE;
+                lx->post_chordam  = FALSUM;
+                _seriem_vacare(lx);
+                lx->crudum[0]       = (i8)0x1B;
+                lx->crudum_mensura  = I;
+                perge;
+            }
+            si (lx->status == STATUS_FUGAE)
+            {
+                /* ESC ESC: praefixum (alterum + series) */
+                (*ptr)++;
+                lx->praefixum = VERUM;
+                _crudum_addere(lx, (i8)c);
+                perge;
+            }
+            /* series dimidia abrupta: FUGA, ESC non consumptus */
+            _fugam_implere(lx, l);
+            lx->status = STATUS_SOLUM;
+            redde SERIES_FUGA;
+        }
+
+        /* ---- CAN, SUB: abruptio ---- */
+        si ((c == 0x18 || c == 0x1A) && lx->status != STATUS_SOLUM)
+        {
+            si (lx->status == STATUS_FUGAE && lx->post_chordam)
+            {
+                lx->status        = STATUS_SOLUM;
+                lx->post_chordam  = FALSUM;
+                perge;
+            }
+            _fugam_implere(lx, l);
+            lx->status = STATUS_SOLUM;
+            redde SERIES_FUGA;
+        }
+
+        /* ---- post chordam: '\' terminator, alioquin series nova */
+        si (lx->status == STATUS_FUGAE && lx->post_chordam)
+        {
+            si (c == '\\')
+            {
+                (*ptr)++;
+                lx->status        = STATUS_SOLUM;
+                lx->post_chordam  = FALSUM;
+                perge;
+            }
+            lx->post_chordam = FALSUM;
+        }
+
+        /* ---- MODUS INITUS: alterum + clavis, non series ---- */
+        si (lx->initus && lx->status == STATUS_FUGAE)
+        {
+            si (c < 0x20 || c == 0x7F)
+            {
+                /* alterum + regimen: FUGA, octetus non consumptus */
+                _fugam_implere(lx, l);
+                lx->status = STATUS_SOLUM;
+                redde SERIES_FUGA;
+            }
+            si (   (c >= 0x20 && c <= 0x2F)
+                || c == 'N' || c == 'X' || c == '^')
+            {
+                (*ptr)++;
+                _crudum_addere(lx, (i8)c);
+                lx->status = STATUS_SOLUM;
+                _lexema_implere(lx, l, SERIES_ESC, c);
+                redde SERIES_ESC;
+            }
+        }
+        si (lx->initus)
+        {
+            si (   lx->status == STATUS_DCS_INITIUM
+                && c >= 0x40 && c <= 0x7E
+                && lx->numerus_parametrorum == ZEPHYRUM
+                && lx->digiti == ZEPHYRUM && lx->privatum == ZEPHYRUM
+                && lx->numerus_intermediorum == ZEPHYRUM)
+            {
+                _alterum_reddere(lx, l, (i8)'P');
+                redde SERIES_ESC;
+            }
+        }
+
+        /* ---- ESC + octetus altus: ESC solus (alterum + UTF-8) ---- */
+        si (lx->status == STATUS_FUGAE && c >= 0x80)
+        {
+            _fugam_implere(lx, l);
+            lx->status = STATUS_SOLUM;
+            redde SERIES_FUGA;
+        }
+
+        /* ---- OSC: BEL terminat ---- */
+        si (lx->status == STATUS_OSC && c == 0x07)
+        {
+            (*ptr)++;
+            (vacuum)_chordam_reddere(lx, l);
+            lx->status = STATUS_SOLUM;
+            redde SERIES_OSC;
+        }
+
+        status_novus  = (i32)lx->tabula_status[c][lx->status];
+        actio         = (i32)lx->tabula_actio[c][lx->status];
+
+        /* ---- solum: cursus imprimibilis (visus in initum) ---- */
+        si (actio == ACTIO_IMPRIMERE)
+        {
+            constans i8* initium = *ptr;
+
+            dum (*ptr < finis)
+            {
+                i32 d = ((i32)**ptr) & 0xFF;
+
+                si (lx->tabula_actio[d][STATUS_SOLUM]
+                    != ACTIO_IMPRIMERE)
+                {
+                    frange;
+                }
+                (*ptr)++;
+            }
+            memset(l, ZEPHYRUM, magnitudo(SeriesLexema));
+            l->genus   = SERIES_IMPRIMERE;
+            l->textus  = _visus(initium, (i32)(*ptr - initium));
+            redde SERIES_IMPRIMERE;
+        }
+
+        (*ptr)++;
+        si (actio == ACTIO_EXSEQUI)
+        {
+            /* regimen: lexema proprium; series (si qua) manet */
+            memset(l, ZEPHYRUM, magnitudo(SeriesLexema));
+            l->genus   = SERIES_EXSEQUI;
+            l->finale  = (i8)c;
+            redde SERIES_EXSEQUI;
+        }
+        _crudum_addere(lx, (i8)c);
+
+        /* introductor: octetus qui fugam in seriem vertit */
+        si (   lx->status   == STATUS_FUGAE
+            && status_novus != STATUS_FUGAE
+            && status_novus != STATUS_FUGAE_INTERMEDIA
+            && status_novus != STATUS_SOLUM)
+        {
+            lx->introductor     = (i8)c;
+            lx->tessera_chorda_mensura  = ZEPHYRUM;
+        }
+
+        commutatio (actio)
+        {
+            casus ACTIO_COLLIGERE:
+                si (lx->numerus_intermediorum
+                    < SERIES_INTERMEDIA_MAXIMA)
+                {
+                    lx->intermedia[lx->numerus_intermediorum] = (i8)c;
+                    lx->numerus_intermediorum++;
+                }
+                alioquin
+                {
+                    lx->truncatum = VERUM;
+                }
+                frange;
+
+            casus ACTIO_PRIVATUM:
+                lx->privatum = (i8)c;
+                frange;
+
+            casus ACTIO_PARAMETRUM:
+                _parametrum(lx, c);
+                frange;
+
+            casus ACTIO_PONERE:
+                _chordae_addere(lx, (i8)c);
+                frange;
+
+            casus ACTIO_DCS_INCIPERE:
+                si (lx->numerus_parametrorum >= SERIES_PARAMETRA_MAXIMA)
+                {
+                    status_novus = STATUS_DCS_IGNORARE;
+                }
+                alioquin
+                {
+                    _parametrum_figere(lx);
+                    lx->finale_dcs      = (i8)c;
+                    lx->tessera_chorda_mensura  = ZEPHYRUM;
+                }
+                frange;
+
+            casus ACTIO_ESC:
+                lx->status = status_novus;
+                _lexema_implere(lx, l, SERIES_ESC, c);
+                redde SERIES_ESC;
+
+            casus ACTIO_CSI:
+            casus ACTIO_SS:
+                lx->status = status_novus;
+                si (lx->numerus_parametrorum >= SERIES_PARAMETRA_MAXIMA)
+                {
+                    perge;      /* nimia: tota abicitur (Ghostty) */
+                }
+                _parametrum_figere(lx);
+                _lexema_implere(lx, l,
+                    (actio == ACTIO_CSI) ? SERIES_CSI : SERIES_SS, c);
+                redde l->genus;
+
+            ordinarius:
+                frange;
+        }
+        lx->status = status_novus;
+    }
+    redde SERIES_NIHIL;
+}
+
+static b32
+tessera_series_lector_pendet (
+    constans TesseraSeriesLector* lx)
+{
+    redde (b32)(lx->status != STATUS_SOLUM);
+}
+
+static b32
+tessera_series_lectorem_evacuare (
+    TesseraSeriesLector* lx,
+    SeriesLexema* l)
+{
+    si (lx->status == STATUS_SOLUM)
+    {
+        redde FALSUM;
+    }
+    si (lx->status == STATUS_FUGAE && lx->post_chordam)
+    {
+        lx->status        = STATUS_SOLUM;
+        lx->post_chordam  = FALSUM;
+        redde FALSUM;
+    }
+    _fugam_implere(lx, l);
+    lx->status = STATUS_SOLUM;
+    redde VERUM;
+}
+
 /* ================= ex tessera/fontes/tessera_cellula.c ================= */
 
 TesseraStilus
@@ -9527,184 +10501,112 @@ _murem_classificare (
     redde PARS_COMPLETUM;
 }
 
-/* CSI: buffer[0]=ESC buffer[1]='['. Parametra numerica leguntur,
- * octetus finalis 0x40-0x7E. Mus SGR: '<' post CSI. */
+/* Reliquiae post moram (H8) */
+#define RELIQUIAE_NULLAE ZEPHYRUM
+#define RELIQUIAE_FUGA   I      /* ESC solus, iam FUGA redditus */
+#define RELIQUIAE_SGR    II     /* CSI < dimidia */
+
+/* CSI completa (lexema): mus SGR, glutinum, claves. Forma ignota nobis
+ * (intermedia, ':' separatores, privatum praeter '<') tacite consumitur
+ * (strepitus regiminis clavem phantasma fieri non debet). Mus X10
+ * (CSI M sine parametris) et forma aliena (CSI [) octetos CRUDOS
+ * sequentes poscunt: status ponitur, _parsare eos legit. */
 interior ParsFructus
-_csi_parsare (
-     TesseraLector* lector,
-    TesseraEventum* ev,
-               i32* consumendum)
+_csi_tractare (
+            TesseraLector* lector,
+    constans SeriesLexema* l,
+           TesseraEventum* ev)
 {
-          i32 i        = II;
-          b32 est_mus  = FALSUM;
-          b32 privata  = FALSUM;
-          s32 parametra[IV];
-          i32 numerus_parametrorum  = ZEPHYRUM;
-          s32 valor_currens         = ZEPHYRUM;
-          b32 valor_visus           = FALSUM;
-    character finalis               = '\0';
+          i32 n        = l->numerus_parametrorum;
+    character finalis  = (character)l->finale;
+          i32 modificatores;
 
-    /* Mus X10 (ESC [ M cb cx cy): onus TRES octeti CRUDI (+32, +33,
-     * +33) statim post 'M', sine parametris - terminalia quae 1006
-     * (SGR) ignorant eum mittunt. Sine hoc CSI M tacite consumeretur
-     * et onus claves phantasma fieret (H3; 0x7F = retrorsum!). */
-    si (i < lector->mensura && lector->buffer[i] == 'M')
+    si (   l->numerus_intermediorum > ZEPHYRUM
+        || l->separatores != ZEPHYRUM
+        || (l->privatum != ZEPHYRUM && l->privatum != '<'))
     {
-        s32 cb;
-
-        si (lector->mensura < VI)
-        {
-            redde PARS_INCOMPLETUM;
-        }
-        *consumendum  = VI;
-        cb            = (s32)lector->buffer[III] - XXXII;
-        si (   cb < ZEPHYRUM || lector->buffer[IV] < XXXIII
-            || lector->buffer[V] < XXXIII)
-        {
-            redde PARS_PRAETERITUM;   /* onus malum: consumptum */
-        }
-        redde _murem_classificare(ev, cb,
-            (s32)lector->buffer[IV] - XXXIII,
-            (s32)lector->buffer[V] - XXXIII,
-            (cb & III) == III && !(cb & LXIV) && !(cb & XXXII));
+        redde PARS_PRAETERITUM;
     }
-    si (i < lector->mensura && lector->buffer[i] == '<')
+    si (l->privatum == ZEPHYRUM && n == ZEPHYRUM)
     {
-        est_mus = VERUM;
-        i++;
-    }
-    /* Grammatica CSI: parametra 0x30-0x3F, intermedia 0x20-0x2F,
-     * finalis 0x40-0x7E. Praefixa privata (?, >, =) sequentiam
-     * TOTAM ignotam faciunt - sed usque ad finalem scanditur
-     * (\033[?1049h etc. octetos phantasma non effundit). */
-    dum (i < lector->mensura)
-    {
-        i8 b = lector->buffer[i];
-
-        si (b >= '0' && b <= '9')
+        /* Mus X10 (ESC [ M cb cx cy): onus TRES octeti CRUDI (+32,
+         * +33, +33) - terminalia quae 1006 (SGR) ignorant eum mittunt;
+         * sine hoc onus claves phantasma fieret (H3; 0x7F!) */
+        si (finalis == 'M')
         {
-            /* limes: parametrum ultra PARAMETRUM_MAXIMUM crescere
-             * desinit (nullum overflow signatum - initus hostilis);
-             * valor > limite = "ingens", ubique invalidus */
-            si (valor_currens <= PARAMETRUM_MAXIMUM)
-            {
-                valor_currens = valor_currens * X + (s32)(b - '0');
-            }
-            valor_visus    = VERUM;
-            i++;
+            lector->x10_pendens = VERUM;
+            redde PARS_PRAETERITUM;
         }
-        alioquin si (b == ';')
+        /* Linux console 'CSI [ A', putty 'CSI [ 5 ~': cauda usque ad
+         * finalem tacite consumitur (ALIENA) */
+        si (finalis == '[')
         {
-            si (numerus_parametrorum < IV)
-            {
-                parametra[numerus_parametrorum++] = valor_currens;
-            }
-            valor_currens  = ZEPHYRUM;
-            valor_visus    = FALSUM;
-            i++;
-        }
-        alioquin si (b >= 0x30 && b <= 0x3F)
-        {
-            privata = VERUM;  /* ?, >, =, : - privata/ignota */
-            i++;
-        }
-        alioquin si (b >= 0x20 && b <= 0x2F)
-        {
-            privata = VERUM;  /* intermedia - forma ignota nobis */
-            i++;
-        }
-        alioquin si (b >= 0x40 && b <= 0x7E)
-        {
-            finalis = (character)b;
-            i++;
-            frange;
-        }
-        alioquin
-        {
-            /* octetus regiminis INTRA seriem: series abrupta -
-             * partem visam consumere, octetum relinquere */
-            *consumendum = i;
+            lector->alienum_pendens = VERUM;
             redde PARS_PRAETERITUM;
         }
     }
-    si (finalis == '\0')
-    {
-        redde PARS_INCOMPLETUM;
-    }
-    si (privata)
-    {
-        *consumendum = i;
-        redde PARS_PRAETERITUM;  /* tota tacite consumpta */
-    }
-    si (valor_visus && numerus_parametrorum < IV)
-    {
-        parametra[numerus_parametrorum++] = valor_currens;
-    }
-    *consumendum = i;
-
-    si (   est_mus && (finalis == 'M' || finalis == 'm')
-        && numerus_parametrorum >= III)
+    si (   l->privatum == '<' && (finalis == 'M' || finalis == 'm')
+        && n           >= III)
     {
         /* coordinatae 1-basatae -> 0 */
-        redde _murem_classificare(ev, parametra[ZEPHYRUM],
-            parametra[I] - I, parametra[II] - I, finalis == 'm');
+        redde _murem_classificare(ev, l->parametra[ZEPHYRUM],
+            l->parametra[I] - I, l->parametra[II] - I, finalis == 'm');
     }
-
+    modificatores = (n >= II) ? _modificatores_csi(l->parametra[I])
+                              : ZEPHYRUM;
+    si (l->praefixum)
     {
-        i32 modificatores = (numerus_parametrorum >= II)
-            ? _modificatores_csi(parametra[I]) : ZEPHYRUM;
-
-        si (   finalis             == '~' && numerus_parametrorum == I
-            && parametra[ZEPHYRUM] == CODEX_INITII_GLUTINI)
-        {
-            redde PARS_GLUTINUM;
-        }
-        si (finalis == '~' && numerus_parametrorum >= I)
-        {
-            si (_clavem_tildae(parametra[ZEPHYRUM], ev,
-                    modificatores))
-            {
-                redde PARS_COMPLETUM;
-            }
-            redde PARS_PRAETERITUM;
-        }
-        si (_clavem_finalem(finalis, ev, modificatores))
+        /* ESC ESC [ A = alterum + sursum (Franus 2026-09-28) */
+        modificatores |= TESSERA_MODIFICATOR_ALTERUM;
+    }
+    si (   finalis                == '~' && n == I
+        && l->parametra[ZEPHYRUM] == CODEX_INITII_GLUTINI)
+    {
+        redde PARS_GLUTINUM;
+    }
+    si (finalis == '~' && n >= I)
+    {
+        si (_clavem_tildae(l->parametra[ZEPHYRUM], ev, modificatores))
         {
             redde PARS_COMPLETUM;
         }
-    }
-    redde PARS_PRAETERITUM;  /* CSI ignota tacite consumpta */
-}
-
-/* SS3: ESC O <finalis> - frecce + F1-F4 (modus applicationis) */
-interior ParsFructus
-_ss3_parsare (
-     TesseraLector* lector,
-    TesseraEventum* ev,
-               i32* consumendum)
-{
-    character finalis;
-
-    si (lector->mensura < III)
-    {
-        redde PARS_INCOMPLETUM;
-    }
-    finalis       = (character)lector->buffer[II];
-    si (finalis == 0x1B)
-    {
-        /* ESC intra SS3: series abrupta - "ESC O" tacite abicitur,
-         * ESC novam seriem incipit (ut in CSI) */
-        *consumendum = II;
         redde PARS_PRAETERITUM;
     }
-    *consumendum  = III;
-    si (_clavem_finalem(finalis, ev, ZEPHYRUM))
+    si (_clavem_finalem(finalis, ev, modificatores))
+    {
+        redde PARS_COMPLETUM;
+    }
+    redde PARS_PRAETERITUM;
+}
+
+/* SS3 (ESC O [parametrum] finalis): frecce + F1-F4 (modus
+ * applicationis); 'ESC O 2 P' = maiuscula + F1 (xterm vetus).
+ * Minusculae (rxvt) et ceterae tacite. */
+interior ParsFructus
+_ss_tractare (
+    constans SeriesLexema* l,
+           TesseraEventum* ev)
+{
+    character finalis = (character)l->finale;
+          i32 modificatores;
+
+    si (l->introductor != 'O' || l->numerus_intermediorum > ZEPHYRUM)
+    {
+        redde PARS_PRAETERITUM;
+    }
+    modificatores = (l->numerus_parametrorum >= I)
+        ? _modificatores_csi(l->parametra[ZEPHYRUM]) : ZEPHYRUM;
+    si (l->praefixum)
+    {
+        modificatores |= TESSERA_MODIFICATOR_ALTERUM;
+    }
+    si (_clavem_finalem(finalis, ev, modificatores))
     {
         redde PARS_COMPLETUM;
     }
     si (finalis >= 'P' && finalis <= 'S')
     {
-        _clavem_ponere(ev, TESSERA_CLAVIS_FUNCTIO, ZEPHYRUM);
+        _clavem_ponere(ev, TESSERA_CLAVIS_FUNCTIO, modificatores);
         ev->numerus = (i32)(finalis - 'P') + I;  /* P-S = F1-F4 */
         redde PARS_COMPLETUM;
     }
@@ -9748,124 +10650,348 @@ _regimen_parsare (
     }
 }
 
-/* Unum eventum a fronte bufferis parsare temptare */
+/* FUGA lexematoris ex ESC solis constat (ESC, ESC ESC)? */
+interior b32
+_sola_fuga (
+    constans SeriesLexema* l)
+{
+    i32 k;
+
+    si (l->crudum.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < l->crudum.mensura; k++)
+    {
+        si (l->crudum.datum[k] != (i8)0x1B)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Octetos lexematori tradere (status eius restituitur; nullum lexema
+ * completur - reliquiae praefixum seriei pendentis sunt) */
+interior vacuum
+_octetos_tradere (
+    TesseraLector* lector,
+      constans i8* octeti,
+              i32  mensura)
+{
+     constans i8* p = octeti;
+    SeriesLexema  l;
+
+    dum (   p < octeti + mensura
+         && tessera_series_lexema_proximum(lector->series, &p, octeti + mensura,
+                &l) != SERIES_NIHIL)
+    {
+    }
+}
+
+/* Reliquiae post moram (H8) continuationi redduntur si initus novus
+ * eam continuare videtur; alioquin abiciuntur. FALSUM = nondum
+ * decernitur ('[' solum post ESC: octetus proximus intra moram
+ * dicet). */
+interior b32
+_reliquias_reddere (
+    TesseraLector* lector)
+{
+    b32 congruit  = FALSUM;
+     i8 b         = lector->buffer[ZEPHYRUM];
+
+    si (lector->reliquiae_genus == RELIQUIAE_FUGA)
+    {
+        si (lector->mensura == I && b == '[')
+        {
+            redde FALSUM;
+        }
+        congruit = lector->mensura >= II && b == '['
+            && (lector->buffer[I] == '<' || lector->buffer[I] == 'M');
+    }
+    alioquin si (lector->reliquiae_genus == RELIQUIAE_SGR)
+    {
+        congruit = (b >= '0' && b <= '9') || b == ';' || b == 'M'
+            || b == 'm';
+    }
+    si (congruit)
+    {
+        _octetos_tradere(lector, lector->reliquiae,
+            lector->reliquiae_mensura);
+    }
+    lector->reliquiae_genus    = RELIQUIAE_NULLAE;
+    lector->reliquiae_mensura  = ZEPHYRUM;
+    redde VERUM;
+}
+
+/* Mus X10: tres octeti crudi post CSI M */
+interior ParsFructus
+_x10_parsare (
+     TesseraLector* lector,
+    TesseraEventum* ev)
+{
+            s32 cb;
+    ParsFructus fructus;
+
+    si (lector->mensura < III)
+    {
+        redde PARS_INCOMPLETUM;
+    }
+    lector->x10_pendens  = FALSUM;
+    cb                   = (s32)lector->buffer[ZEPHYRUM] - XXXII;
+    si (   cb < ZEPHYRUM || lector->buffer[I] < XXXIII
+        || lector->buffer[II] < XXXIII)
+    {
+        _consumere(lector, III);
+        redde PARS_PRAETERITUM;   /* onus malum: consumptum */
+    }
+    fructus = _murem_classificare(ev, cb,
+        (s32)lector->buffer[I] - XXXIII,
+        (s32)lector->buffer[II] - XXXIII,
+        (cb & III) == III && !(cb & LXIV) && !(cb & XXXII));
+    _consumere(lector, III);
+    redde fructus;
+}
+
+/* Forma aliena: cauda usque ad octetum finalem (0x40-0x7E) */
+interior ParsFructus
+_alienum_consumere (
+    TesseraLector* lector)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < lector->mensura; k++)
+    {
+        si (lector->buffer[k] >= 0x40 && lector->buffer[k] <= 0x7E)
+        {
+            _consumere(lector, k + I);
+            lector->alienum_pendens = FALSUM;
+            redde PARS_PRAETERITUM;
+        }
+    }
+    _consumere(lector, lector->mensura);
+    redde PARS_INCOMPLETUM;
+}
+
+/* Runa prima cursus imprimibilis; ceterae in buffere manent (lexemator
+ * in solo est - reditus intra cursum innocuus). */
+interior ParsFructus
+_runam_parsare (
+            TesseraLector* lector,
+    constans SeriesLexema* l,
+           TesseraEventum* ev)
+{
+    constans i8* initium          = l->textus.datum;
+    constans i8* finis            = initium + l->textus.mensura;
+    constans i8* cursor           = initium;
+            s32  longitudo_runae  = tessera_utf8_longitudo_byte(*initium);
+            s32  runa;
+            i32  ante = (i32)(initium - lector->buffer);
+
+    si (   longitudo_runae > ZEPHYRUM
+        && (i32)longitudo_runae > l->textus.mensura
+        && finis == lector->buffer + lector->mensura)
+    {
+        _consumere(lector, ante);
+        redde PARS_INCOMPLETUM;  /* runa dimidia in fine */
+    }
+    runa = tessera_utf8_decodere(&cursor, finis);
+    si (runa < ZEPHYRUM)
+    {
+        _consumere(lector, ante);
+        si (lector->alterum_pendens)
+        {
+            /* invalidum post ESC: FUGA, octetus mox abicitur */
+            lector->alterum_pendens = FALSUM;
+            _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
+            redde PARS_COMPLETUM;
+        }
+        _consumere(lector, I);   /* octetus invalidus abicitur */
+        redde PARS_PRAETERITUM;
+    }
+    _runam_ponere(ev, runa,
+        lector->alterum_pendens ? TESSERA_MODIFICATOR_ALTERUM
+                                : ZEPHYRUM);
+    lector->alterum_pendens = FALSUM;
+    _consumere(lector, (i32)(cursor - lector->buffer));
+    redde PARS_COMPLETUM;
+}
+
+/* Unum eventum a fronte bufferis parsare temptare: lexema unum per
+ * series_terminalis, deinde sensus eius. */
 interior ParsFructus
 _parsare (
      TesseraLector* lector,
     TesseraEventum* ev)
 {
-             i8 primus;
-            i32 consumendum = ZEPHYRUM;
-    ParsFructus fructus;
+      constans i8* ptr;
+     SeriesLexema  l;
+      SeriesGenus  g;
+              i32  consumpti;
 
+    si (   lector->mensura > ZEPHYRUM
+        && lector->reliquiae_genus != RELIQUIAE_NULLAE
+        && !_reliquias_reddere(lector))
+    {
+        redde PARS_INCOMPLETUM;   /* '[' post ESC: exspecta */
+    }
+    si (lector->x10_pendens)
+    {
+        redde _x10_parsare(lector, ev);
+    }
+    si (lector->alienum_pendens)
+    {
+        redde _alienum_consumere(lector);
+    }
     si (lector->mensura == ZEPHYRUM)
     {
-        redde PARS_VACUUM;
+        redde (tessera_series_lector_pendet(lector->series)
+               || lector->alterum_pendens)
+            ? PARS_INCOMPLETUM : PARS_VACUUM;
     }
-    primus = lector->buffer[ZEPHYRUM];
+    ptr        = lector->buffer;
+    g          = tessera_series_lexema_proximum(lector->series, &ptr,
+        lector->buffer + lector->mensura, &l);
+    consumpti  = (i32)(ptr - lector->buffer);
 
-    si (primus == 0x1B)
+    commutatio (g)
     {
-        si (lector->mensura == I)
-        {
-            redde PARS_INCOMPLETUM;  /* FUGA sola? mora dicet */
-        }
-        si (lector->buffer[I] == '[')
-        {
-            fructus = _csi_parsare(lector, ev, &consumendum);
-            si (   fructus == PARS_COMPLETUM
-                || fructus == PARS_PRAETERITUM
-                || fructus == PARS_GLUTINUM)
-            {
-                _consumere(lector, consumendum);
-            }
-            redde fructus;
-        }
-        si (lector->buffer[I] == 'O')
-        {
-            fructus = _ss3_parsare(lector, ev, &consumendum);
-            si (   fructus == PARS_COMPLETUM
-                || fructus == PARS_PRAETERITUM)
-            {
-                _consumere(lector, consumendum);
-            }
-            redde fructus;
-        }
-        /* ALTERUM + clavis: octetum post ESC parsare */
-        {
-            i8 alter = lector->buffer[I];
+        casus SERIES_IMPRIMERE:
+            redde _runam_parsare(lector, &l, ev);
 
-            si (alter == 0x1B)
+        casus SERIES_EXSEQUI:
+            _consumere(lector, consumpti);
+            _regimen_parsare(l.finale, ev, lector->alterum_pendens
+                ? TESSERA_MODIFICATOR_ALTERUM : ZEPHYRUM);
+            lector->alterum_pendens = FALSUM;
+            redde PARS_COMPLETUM;
+
+        casus SERIES_FUGA:
+            /* abrupta: ESC solus = alterum clavis proximae
+             * (alt+reditus,
+             * alt+e acutum); series dimidia tacite abicitur */
+            _consumere(lector, consumpti);
+            si (_sola_fuga(&l))
             {
-                /* ESC ESC: FUGA una, altera manet */
-                _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
-                _consumere(lector, I);
-                redde PARS_COMPLETUM;
+                lector->alterum_pendens = VERUM;
             }
-            si (alter < 0x20 || alter == 0x7F)
-            {
-                _regimen_parsare(alter, ev,
-                    TESSERA_MODIFICATOR_ALTERUM);
-                _consumere(lector, II);
-                redde PARS_COMPLETUM;
-            }
-            {
-                constans i8* cursor  = lector->buffer + I;
-                constans i8* finis   = lector->buffer + lector->mensura;
-                        s32  longitudo_runae =
-                            tessera_utf8_longitudo_byte(lector->buffer[I]);
-                s32 runa;
-
-                si (   longitudo_runae > ZEPHYRUM
-                    && (i32)longitudo_runae > lector->mensura - I)
-                {
-                    redde PARS_INCOMPLETUM;
-                }
-                runa = tessera_utf8_decodere(&cursor, finis);
-                si (runa < ZEPHYRUM)
-                {
-                    /* invalidum post ESC: FUGA + octetum relinquere */
-                    _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
-                    _consumere(lector, I);
-                    redde PARS_COMPLETUM;
-                }
-                _runam_ponere(ev, runa, TESSERA_MODIFICATOR_ALTERUM);
-                _consumere(lector,
-                    (i32)(cursor - lector->buffer));
-                redde PARS_COMPLETUM;
-            }
-        }
-    }
-
-    si (primus < 0x20 || primus == 0x7F)
-    {
-        _regimen_parsare(primus, ev, ZEPHYRUM);
-        _consumere(lector, I);
-        redde PARS_COMPLETUM;
-    }
-
-    /* runa UTF-8 */
-    {
-        constans i8* cursor = lector->buffer;
-        constans i8* finis = lector->buffer + lector->mensura;
-                s32  longitudo_runae = tessera_utf8_longitudo_byte(primus);
-                s32  runa;
-
-        si (   longitudo_runae > ZEPHYRUM
-            && (i32)longitudo_runae > lector->mensura)
-        {
-            redde PARS_INCOMPLETUM;  /* runa dimidia in fine */
-        }
-        runa = tessera_utf8_decodere(&cursor, finis);
-        si (runa < ZEPHYRUM)
-        {
-            _consumere(lector, I);   /* octetus invalidus abicitur */
             redde PARS_PRAETERITUM;
-        }
-        _runam_ponere(ev, runa, ZEPHYRUM);
-        _consumere(lector, (i32)(cursor - lector->buffer));
-        redde PARS_COMPLETUM;
+
+        casus SERIES_ESC:
+            /* ALTERUM + clavis (modus initus: ESC P a, ESC N) */
+            _consumere(lector, consumpti);
+            si (   l.numerus_intermediorum > ZEPHYRUM
+                || l.finale < 0x20 || l.finale > 0x7E)
+            {
+                redde PARS_PRAETERITUM;
+            }
+            _runam_ponere(ev, (s32)l.finale,
+                TESSERA_MODIFICATOR_ALTERUM);
+            redde PARS_COMPLETUM;
+
+        casus SERIES_CSI:
+            _consumere(lector, consumpti);
+            redde _csi_tractare(lector, &l, ev);
+
+        casus SERIES_SS:
+            _consumere(lector, consumpti);
+            redde _ss_tractare(&l, ev);
+
+        casus SERIES_NIHIL:
+            _consumere(lector, consumpti);
+            redde tessera_series_lector_pendet(lector->series)
+                ? PARS_INCOMPLETUM : PARS_PRAETERITUM;
+
+        ordinarius:
+            /* OSC, DCS, APC: responsa terminalis tacite (H2) */
+            _consumere(lector, consumpti);
+            redde PARS_PRAETERITUM;
     }
+}
+
+/* Mora exacta cum serie aut runa pendente: quid reddendum. */
+interior TesseraEventumGenus
+_moram_tractare (
+     TesseraLector* lector,
+    TesseraEventum* ev)
+{
+    SeriesLexema l;
+
+    si (lector->x10_pendens)
+    {
+        /* X10 dimidium: onus abicitur (H7) */
+        lector->x10_pendens  = FALSUM;
+        lector->mensura      = ZEPHYRUM;
+        redde TESSERA_EVENTUM_NIHIL;
+    }
+    si (lector->alienum_pendens)
+    {
+        lector->alienum_pendens = FALSUM;
+        redde TESSERA_EVENTUM_NIHIL;
+    }
+    si (tessera_series_lector_pendet(lector->series))
+    {
+        si (!tessera_series_lectorem_evacuare(lector->series, &l))
+        {
+            /* solum terminator chordae */
+            redde TESSERA_EVENTUM_NIHIL;
+        }
+        si (_sola_fuga(&l))
+        {
+            _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
+            /* ESC ESC: ambae moram transierunt - altera STATIM
+             * proxima exspectatione (non iterum morata) */
+            lector->fuga_reddenda = (b32)(l.crudum.mensura >= II);
+            si (!lector->fuga_reddenda)
+            {
+                /* mus forte sequetur ('[<..', '[M..'): H8 */
+                lector->reliquiae[ZEPHYRUM]  = (i8)0x1B;
+                lector->reliquiae_mensura    = I;
+                lector->reliquiae_genus      = RELIQUIAE_FUGA;
+            }
+            redde ev->genus;
+        }
+        si (l.crudum.mensura == II)
+        {
+            /* 'ESC [' / 'ESC O' / 'ESC P' solum = alterum + octetus */
+            _runam_ponere(ev, (s32)l.crudum.datum[I],
+                TESSERA_MODIFICATOR_ALTERUM);
+            redde ev->genus;
+        }
+        si (   l.crudum.mensura   >= III && l.crudum.datum[I] == '['
+            && l.crudum.datum[II] == '<')
+        {
+            /* mus SGR dimidia: servatur pro continuatione (H8) */
+            i32 m = (l.crudum.mensura < TESSERA_RELIQUIAE_CAPACITAS)
+                ? l.crudum.mensura : TESSERA_RELIQUIAE_CAPACITAS;
+
+            memcpy(lector->reliquiae, l.crudum.datum, (memoriae_index)m);
+            lector->reliquiae_mensura  = m;
+            lector->reliquiae_genus    = RELIQUIAE_SGR;
+        }
+        /* series dimidia abicitur (H7) */
+        redde TESSERA_EVENTUM_NIHIL;
+    }
+    si (lector->reliquiae_genus != RELIQUIAE_NULLAE)
+    {
+        /* '[' post ESC sine continuatione: reliquiae abiciuntur, '['
+         * ut runa legitur */
+        lector->reliquiae_genus    = RELIQUIAE_NULLAE;
+        lector->reliquiae_mensura  = ZEPHYRUM;
+        redde TESSERA_EVENTUM_NIHIL;
+    }
+    si (lector->alterum_pendens)
+    {
+        /* 'ESC' + runa dimidia: FUGA; runa dimidia mox abicitur */
+        lector->alterum_pendens = FALSUM;
+        _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
+        redde ev->genus;
+    }
+    si (lector->mensura > ZEPHYRUM)
+    {
+        _consumere(lector, I);   /* runa dimidia abicitur */
+    }
+    redde TESSERA_EVENTUM_NIHIL;
 }
 
 /* Octetum corpori glutini addere; ultra capacitatem abicitur et
@@ -10006,8 +11132,20 @@ tessera_lector_creare (
     {
         redde NIHIL;
     }
-    lector->pons     = pons;
-    lector->mensura  = ZEPHYRUM;
+    lector->series = tessera_series_lectorem_creare(piscina);
+    si (lector->series == NIHIL)
+    {
+        redde NIHIL;
+    }
+    tessera_series_lectorem_initus_ponere(lector->series, VERUM);
+    lector->pons               = pons;
+    lector->mensura            = ZEPHYRUM;
+    lector->alterum_pendens    = FALSUM;
+    lector->x10_pendens        = FALSUM;
+    lector->alienum_pendens    = FALSUM;
+    lector->reliquiae_mensura  = ZEPHYRUM;
+    lector->reliquiae_genus    = RELIQUIAE_NULLAE;
+    lector->fuga_reddenda      = FALSUM;
     si (!pons->amplitudo(pons->datum, &lector->latitudo_nota,
             &lector->altitudo_nota))
     {
@@ -10056,6 +11194,17 @@ tessera_eventum_expectare (
             eventum->altitudo      = alt;
             redde eventum->genus;
         }
+    }
+
+    /* ESC ESC post moram: FUGA altera statim */
+    si (lector->fuga_reddenda)
+    {
+        lector->fuga_reddenda = FALSUM;
+        _clavem_ponere(eventum, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
+        lector->reliquiae[ZEPHYRUM]  = (i8)0x1B;
+        lector->reliquiae_mensura    = I;
+        lector->reliquiae_genus      = RELIQUIAE_FUGA;
+        redde eventum->genus;
     }
 
     /* Octeti gestati primum */
@@ -10116,14 +11265,7 @@ tessera_eventum_expectare (
     }
     si (fructus == PARS_INCOMPLETUM)
     {
-        /* mora exacta: ESC solum = FUGA; runa dimidia abicitur */
-        si (lector->buffer[ZEPHYRUM] == 0x1B)
-        {
-            _clavem_ponere(eventum, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
-            _consumere(lector, I);
-            redde eventum->genus;
-        }
-        _consumere(lector, I);
+        redde _moram_tractare(lector, eventum);
     }
     redde TESSERA_EVENTUM_NIHIL;
 }

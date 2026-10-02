@@ -240,6 +240,17 @@ _repetere (
 }
 
 /* Corpus scissurarum: fluxus deterministici (sine mora). */
+/* Corpus modi initus (B1b): responsa vera et claves alterum */
+hic_manens constans character* corpus_initus[] = {
+    "\033 \033!\0335",
+    "\x1bNa\x1bPa\x1b]a\x07\x1b_x\x1b\\",
+    "\x1b\r\x1b\x7f\x1b\x01",
+    "\x1bP>|kitty(0.40.1)\x1b\\",
+    "\x1b]4;0;#fff\x07y\x1b]11;rgb:0/0/0\x1b\\",
+    "\x1b_Gi=1;OK\x1b\\x",
+    "\x1bOA\x1b[1;5A\x1b\x1b[A"
+};
+
 hic_manens constans character* corpus[] = {
     "\x9E\x9C" "a\x19",
     "\x1b(B",
@@ -286,6 +297,7 @@ s32 principale (vacuum)
           Piscina* piscina_hostilis;
      SeriesLector* lx;
      SeriesLector* lector_hostilis;
+     SeriesLector* li;
      SeriesLexema  l;
               i32  k;
               s32  n;
@@ -514,6 +526,71 @@ s32 principale (vacuum)
                         (constans character*)integrum.datum,
                         (int)alterum.mensura,
                         (constans character*)alterum.datum);
+                }
+                discrepantiae++;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+
+    imprimere("\n--- VI. modus initus (B1b) ---\n");
+    li = series_lectorem_creare(piscina);
+    CREDO_NON_NIHIL (li);
+    series_lectorem_initus_ponere(li, VERUM);
+    CREDO_VERUM (_videre(li, piscina, "\x1b ", "ESC f=\\x20"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b!", "ESC f=!"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b(B", "ESC f=( | IMP T=B"));
+    CREDO_VERUM (_videre(li, piscina, "\x1bNa", "ESC f=N | IMP T=a"));
+    CREDO_VERUM (_videre(li, piscina, "\x1bXa", "ESC f=X | IMP T=a"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b^a", "ESC f=^ | IMP T=a"));
+    CREDO_VERUM (_videre(li, piscina, "\x1bPa", "ESC f=P | IMP T=a"));
+    /* OSC, APC series manent etiam in modo initus */
+    CREDO_VERUM (_videre(li, piscina, "\x1b]a\x07", "OSC i=] T=a"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b_x\x1b\\", "APC i=_ T=x"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b\r",
+        "FUGA C=\\x1b | EXS f=\\x0d"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b\x7f",
+        "FUGA C=\\x1b | EXS f=\\x7f"));
+    /* responsa vera manent series */
+    CREDO_VERUM (_videre(li, piscina, "\x1bP>|kitty(0.40.1)\x1b\\",
+        "DCS i=P p=> f=| T=kitty(0.40.1)"));
+    CREDO_VERUM (_videre(li, piscina, "\x1bP1+r544e\x1b\\",
+        "DCS i=P P=1 I=+ f=r T=544e"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b]4;0;#fff\x07",
+        "OSC i=] T=4;0;#fff"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b_Gi=1;OK\x1b\\",
+        "APC i=_ T=Gi=1;OK"));
+    CREDO_VERUM (_videre(li, piscina, "\x1bOA", "SS i=O f=A"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b\x1b[A",
+        "CSI i=[ f=A PRAE"));
+    /* modus scriptionis immutatus: ESC N = SS2, ESC SP = intermedium */
+    CREDO_VERUM (_videre(lx, piscina, "\x1bNa", "SS i=N f=a"));
+    CREDO_VERUM (_videre(lx, piscina, "\x1b(B", "ESC I=( f=B"));
+    /* purgatio modum servat */
+    series_lectorem_purgare(li);
+    CREDO_VERUM (_videre(li, piscina, "\x1bNa", "ESC f=N | IMP T=a"));
+    /* scissurae in modo initus */
+    discrepantiae = ZEPHYRUM;
+    per (k = ZEPHYRUM;
+         k < (i32)(magnitudo(corpus_initus)
+             / magnitudo(corpus_initus[0]));
+         k++)
+    {
+         constans i8* f = (constans i8*)corpus_initus[k];
+                 i32  m = (i32)strlen(corpus_initus[k]);
+              chorda  integrum;
+                 s32  s;
+
+        integrum = _fluxus(li, f, m, ZEPHYRUM, VERUM, piscina);
+        per (s = -I; s < (s32)m; s++)
+        {
+            si (   s != ZEPHYRUM && !chorda_aequalis(integrum,
+                    _fluxus(li, f, m, s, VERUM, piscina)))
+            {
+                si (discrepantiae == ZEPHYRUM)
+                {
+                    imprimere("  corpus_initus[%u] scissio %d\n",
+                        (unsigned)k, (int)s);
                 }
                 discrepantiae++;
             }

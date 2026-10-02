@@ -64,13 +64,10 @@ nomen structura {
     EventumExspectatum  eventa[VECTOR_EVENTA_MAXIMA]; /* genus NIHIL = finis */
 } VectorInitus;
 
-/* Causae debitorum: macro nominata per causam (CAUSA_*), ut forma
- * debita sine causa frangat. */
-#define CAUSA_H2 "H2 ad 002 lexemator: ESC ] / ESC P / ESC _ (OSC, DCS, APC) non comprehenduntur - alt+']' (aut P, _) + corpus ut runae phantasma (+ alt+'\\\\' aut ctrl+g ad terminum)"
-#define CAUSA_FUGAE_PRAEFIXUM "ad 002 lexemator: ESC ante seriem (ESC ESC [ A) fuga spuria + clavis sine alterum emittit; exspectatum (DECISUM Frani 2026-09-28) = clavis + ALTERUM, ut ESC + clavis simplex"
-#define CAUSA_H7 "H7 ad 002: series PARTIALIS post moram ut fuga + runae phantasma redditur; exspectatum (consilium Frani): abicitur tacite, praeter ESC O / ESC [ = alt+O / alt+[ (xterm alt+O ipsum mittit)"
-#define CAUSA_H8 "H8 ad 002: series muris trans moram scissa (ssh lentus) - pars prior fuga + phantasmata, continuatio phantasmata; exspectatum (OpenTUI): mus integer (pars servatur; continuatio sine ESC post fugam recuperatur)"
-#define CAUSA_ALIENA "forma terminalis alieni (Linux console CSI [ A, putty [[5~, rxvt 2$) finalem falsum habet -> reliqua clavis phantasma; exspectatum: tacite consumpta, ut ceterae formae alienae (rxvt ^, SS3 minusculae)"
+/* Causae debitorum: macro nominata per causam (CAUSA_*). Nullae
+ * hodie - debita XXVII (CVIII formae) a lexematore series_terminalis
+ * soluta et promota (eventus B1b, 2026-10-02; vide
+ * lib/eventus.phase-log.md). */
 
 /* MORA in octetis vectoris: mora exacta HIC (pons frustorum signum
  * tollit et frustum vacuum inserit). 0xFE in UTF-8 numquam occurrit;
@@ -463,14 +460,14 @@ hic_manens constans VectorInitus VECTORES_CLAVIUM[] = {
       { EX_RUNA('x', ZEPHYRUM), EX_CLAVIS(TESSERA_CLAVIS_FUGA,
           ZEPHYRUM) } },
     { "OSC 11 responsum ST", OCT("\033]11;rgb:0000/0000/0000\033\\"),
-      FALSUM, VECTOR_DEBITUM, CAUSA_H2, { EX_NIHIL } },
+      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
     { "OSC 10 responsum BEL", OCT("\033]10;rgb:ffff/ffff/ffff\x07"),
-      FALSUM, VECTOR_DEBITUM, CAUSA_H2, { EX_NIHIL } },
+      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
     { "ESC praefixum + CSI A (OpenTUI: meta+sursum)", OCT("\033\033[A"),
-      FALSUM, VECTOR_DEBITUM, CAUSA_FUGAE_PRAEFIXUM,
+      FALSUM, VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ALT) } },
     { "ESC praefixum + CSI 1;5A", OCT("\033\033[1;5A"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_FUGAE_PRAEFIXUM,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, IMP | ALT) } }
 };
 
@@ -895,64 +892,67 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
       { EX_NIHIL } },
 
     /* debita - H2 (OSC, DCS, APC) */
-    { "OSC BEL", OCT("\033]4;0;#ffffff\x07"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H2, { EX_NIHIL } },
+    { "OSC BEL", OCT("\033]4;0;#ffffff\x07"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "OSC ST", OCT("\033]4;0;rgb:ff/ff/ff\033\\"), FALSUM,
-        VECTOR_DEBITUM,
-      CAUSA_H2, { EX_NIHIL } },
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "DCS XTVERSION", OCT("\033P>|kitty(0.40.1)\033\\"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H2, { EX_NIHIL } },
-    { "APC kitty", OCT("\033_Gi=1;OK\033\\"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H2, { EX_NIHIL } },
+      VECTOR_VALET, NIHIL, { EX_NIHIL } },
+    { "APC kitty", OCT("\033_Gi=1;OK\033\\"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "OSC + DCS + APC",
         OCT("\033]4;0;#fff\x07\033P>|test\033\\\033_OK\033\\"),
-      FALSUM, VECTOR_DEBITUM, CAUSA_H2, { EX_NIHIL } },
-    { "x + OSC + y", OCT("x\033]4;0;#fff\x07y"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_H2, { EX_RUNA('x', ZEPHYRUM), EX_RUNA('y', ZEPHYRUM) } },
+      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
+    { "x + OSC + y", OCT("x\033]4;0;#fff\x07y"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_RUNA('x', ZEPHYRUM), EX_RUNA('y', ZEPHYRUM) } },
 
     /* debita - H7 (series partialis post moram) */
-    { "ESC O + mora = alt+O", OCT("\033O"), VERUM, VECTOR_DEBITUM,
-        CAUSA_H7,
+    { "ESC O + mora = alt+O", OCT("\033O"), VERUM, VECTOR_VALET,
+        NIHIL,
       { EX_RUNA('O', ALT) } },
-    { "ESC [ + mora = alt+[", OCT("\033["), VERUM, VECTOR_DEBITUM,
-        CAUSA_H7,
+    { "ESC [ + mora = alt+[", OCT("\033["), VERUM, VECTOR_VALET,
+        NIHIL,
       { EX_RUNA('[', ALT) } },
-    { "CSI 123 + mora", OCT("\033[123"), VERUM, VECTOR_DEBITUM,
-        CAUSA_H7,
+    { "CSI 123 + mora", OCT("\033[123"), VERUM, VECTOR_VALET,
+        NIHIL,
       { EX_NIHIL } },
     { "CSI 1;5 + mora + A", OCT("\033[1;5" MORA "A"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H7, { EX_RUNA('A', ZEPHYRUM) } },
+      VECTOR_VALET, NIHIL, { EX_RUNA('A', ZEPHYRUM) } },
     { "CSI 24;80 + mora + R", OCT("\033[24;80" MORA "R"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H7, { EX_RUNA('R', ZEPHYRUM) } },
+      VECTOR_VALET, NIHIL, { EX_RUNA('R', ZEPHYRUM) } },
     { "OSC partialis + mora", OCT("\033]incomplete"), VERUM,
-        VECTOR_DEBITUM,
-      CAUSA_H7, { EX_NIHIL } },
-    { "DCS partialis + mora", OCT("\033Ppartial"), VERUM,
-        VECTOR_DEBITUM,
-      CAUSA_H7, { EX_NIHIL } },
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+    /* responsum DCS VERUM dimidium (XTVERSION): 'ESC P' + littera
+     * 'alt+P + littera' est (vector alt+P SEQUENS), non DCS - Franus
+     * 2026-10-02 (eventus B1b) */
+    { "DCS partialis + mora", OCT("\033P>|kit"), VERUM,
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "APC partialis + mora", OCT("\033_partial"), VERUM,
-        VECTOR_DEBITUM,
-      CAUSA_H7, { EX_NIHIL } },
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "OSC 52 partialis + mora", OCT("\033]52;c;"), VERUM,
-        VECTOR_DEBITUM,
-      CAUSA_H7, { EX_NIHIL } },
-    { "x10 partialis + mora", OCT("\033[M !"), VERUM, VECTOR_DEBITUM,
-      CAUSA_H7, { EX_NIHIL } },
+        VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+    { "x10 partialis + mora", OCT("\033[M !"), VERUM, VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
     { "CSI XL digitorum + mora",
         OCT("\033[1111111111111111111111111111111111111111"), VERUM,
-      VECTOR_DEBITUM, CAUSA_H7, { EX_NIHIL } },
+      VECTOR_VALET, NIHIL, { EX_NIHIL } },
 
     /* debita - H8 (mus trans moram) */
     { "sgr scissa per moram", OCT("\033[<0;20" MORA ";5M"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H8,
+      VECTOR_VALET, NIHIL,
       { EX_MUS(TESSERA_MUS_PRESSUS, XIX, IV, ZEPHYRUM) } },
     { "fuga, mora, continuatio sgr", OCT("\033" MORA "[<64;38;15M"),
         FALSUM,
-      VECTOR_DEBITUM, CAUSA_H8,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
         EX_MUS(TESSERA_MUS_ROTA_SURSUM, XXXVII, XIV, ZEPHYRUM) } },
     { "fuga, mora, continuatio x10", OCT("\033" MORA "[M !!"), FALSUM,
-      VECTOR_DEBITUM, CAUSA_H8,
+      VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM),
         EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
 
@@ -967,13 +967,13 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
           ZEPHYRUM) } },
 
     /* debita - formae alienae */
-    { "Linux console [[A (F1)", OCT("\033[[A"), FALSUM, VECTOR_DEBITUM,
-      CAUSA_ALIENA, { EX_NIHIL } },
-    { "putty [[5~", OCT("\033[[5~"), FALSUM, VECTOR_DEBITUM,
-        CAUSA_ALIENA,
+    { "Linux console [[A (F1)", OCT("\033[[A"), FALSUM, VECTOR_VALET,
+      NIHIL, { EX_NIHIL } },
+    { "putty [[5~", OCT("\033[[5~"), FALSUM, VECTOR_VALET,
+        NIHIL,
       { EX_NIHIL } },
-    { "rxvt 2$ + mora", OCT("\033[2$"), VERUM, VECTOR_DEBITUM,
-        CAUSA_ALIENA,
+    { "rxvt 2$ + mora", OCT("\033[2$"), VERUM, VECTOR_VALET,
+        NIHIL,
       { EX_NIHIL } },
 
     /* parametrum ingens (T4b: limes, olim overflow = UB) */

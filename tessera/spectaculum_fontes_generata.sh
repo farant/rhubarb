@@ -6,5 +6,6 @@ declare -a RADIX_FONTES=(
     "piscina"
     "runae"
     "runae_tabulae"
+    "series_terminalis"
     "utf8"
 )

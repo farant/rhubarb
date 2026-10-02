@@ -92,6 +92,27 @@ SeriesLector*
 series_lectorem_creare (
     Piscina* piscina);
 
+/* MODUS INITUS (eventus B1b): grammatica directionis INITUS - quod
+ * terminalis reddit, non quod applicatio scribit. Octeti idem ambigui
+ * sunt (ESC P = DCS aut alt+P); responsa vera terminalium solum formas
+ * certas habent, ergo in modo initus:
+ * - ESC + (0x20..0x2F) = ESC finale (alt+spatium, alt+!), non
+ *   intermedia (designatio characterum numquam ex terminali venit);
+ * - ESC + C0 aut DEL = FUGA (ESC solus, octetus NON consumptus) -
+ *   vocans ut alterum + regimen legit (alt+reditus, alt+retrorsum);
+ * - ESC N, ESC X, ESC ^ = ESC finale (SS2, SOS, PM numquam reddita);
+ * - ESC P + octetus finalis (0x40..0x7E) STATIM = ESC finale 'P' +
+ *   octetus non consumptus (responsa DCS digito, '>', '!' aut '$'
+ *   incipiunt; 'alt+P a' una lectione venit). ESC ] et ESC _ series
+ *   manent: alt+] / alt+_ per moram vocantis (FUGA introductoris)
+ *   leguntur.
+ * Modus scriptionis (ordinarius, FALSUM) DEC purum manet. Purgatio
+ * modum servat. */
+vacuum
+series_lectorem_initus_ponere (
+    SeriesLector* lector,
+             b32  initus);
+
 /* Ad statum solum redire (seriem pendentem abicere sine lexemate). */
 vacuum
 series_lectorem_purgare (

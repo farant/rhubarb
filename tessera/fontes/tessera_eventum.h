@@ -24,6 +24,15 @@
  * et mathematicam casus vult; cellula.signum compactus manet -
  * nomina diversa confusionem vetant.
  *
+ * LEXEMATOR (eventus B1b): grammatica octetorum = series_terminalis
+ * (lib/, modo initus): OSC/DCS/APC responsa tacite consumuntur, ESC ESC
+ * seriem = praefixum (ALTERUM), series abrupta abicitur. Lector
+ * SEMANTICAM solum possidet, et casus crudos: mus X10 (tres octeti
+ * post CSI M), formae alienae (CSI [ + cauda: Linux console, putty),
+ * glutinum. MORA (moram vocantis lexemator non videt): series pendens
+ * evacuatur - ESC solus = FUGA, 'ESC x' = alterum + x, cetera
+ * abiciuntur; mus SGR dimidia (CSI <) et ESC solus RELIQUIAE fiunt,
+ * quae continuationi sequenti (';5M', '[<..', '[M..') redduntur (H8).
  * LECTOR: buffer gestationis 64 octetorum (series trans lectiones
  * QUOTLIBET scissae accumulantur - legitur dum octeti intra moram
  * ~25ms adveniunt; sola lectio vacua moram exactam facit); ESC solum
@@ -49,8 +58,10 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "tessera_pons.h"
+#include "series_terminalis.h"
 
 #define TESSERA_LECTOR_BUFFER 64
+#define TESSERA_RELIQUIAE_CAPACITAS 64    /* <= SERIES_CRUDUM_MAXIMUM */
 #define TESSERA_MORA_FUGAE_MS 25
 #define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
 #define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
@@ -130,6 +141,14 @@ nomen structura {
             i32  altitudo_nota;
              i8* glutinum;       /* collector: TESSERA_GLUTINUM_CAPACITAS,
                                   * in creatione allocatus */
+   SeriesLector* series;         /* lexemator, modo initus (B1b) */
+             b32 alterum_pendens; /* ESC solus abruptus: alterum */
+             b32 x10_pendens;    /* post CSI M: tres octeti crudi */
+             b32 alienum_pendens; /* post CSI [: usque ad finalem */
+              i8 reliquiae[TESSERA_RELIQUIAE_CAPACITAS]; /* post moram */
+             i32 reliquiae_mensura;
+             i32 reliquiae_genus; /* 0 nullae, 1 ESC, 2 SGR dimidia */
+             b32 fuga_reddenda;  /* ESC ESC post moram: FUGA altera */
 } TesseraLector;
 
 TesseraLector*

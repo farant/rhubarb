@@ -57,6 +57,8 @@ declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
     "utf8"
+    # eventus B1b: lector initus super lexematorem
+    "series_terminalis"
     "runae"
     "runae_tabulae"
     "quadrans"

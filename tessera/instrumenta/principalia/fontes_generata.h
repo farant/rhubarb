@@ -13,7 +13,8 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/utf8.h", NIHIL, EXCLUDENDA_UTF8, FALSUM, VERUM },
     { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM },
     { "include/runae.h", NIHIL, EXCLUDENDA_RUNAE, FALSUM, VERUM },
-    { "include/runae_tabulae.h", NIHIL, NIHIL, FALSUM, VERUM }
+    { "include/runae_tabulae.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "include/series_terminalis.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -21,7 +22,8 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/chorda_aedificator.c", NIHIL, EXCLUDENDA_AEDIFICATORIS, VERUM, VERUM },
     { "lib/utf8.c", NIHIL, EXCLUDENDA_UTF8, VERUM, VERUM },
     { "lib/runae.c", NIHIL, EXCLUDENDA_RUNAE, VERUM, VERUM },
-    { "lib/runae_tabulae.c", NIHIL, NIHIL, VERUM, VERUM }
+    { "lib/runae_tabulae.c", NIHIL, NIHIL, VERUM, VERUM },
+    { "lib/series_terminalis.c", NIHIL, NIHIL, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {

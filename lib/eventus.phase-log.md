@@ -821,3 +821,89 @@ protocol acronyms (`csi` was already tolerated from older code).
 
 **Not yet:** tessera uses none of this; that's B1b, where the 27
 debt vectors get paid.
+
+## B1b — tessera's reader on the tokenizer (2026-10-02)
+
+**The bar held, and the debts were paid.** `probatio_tessera_eventum`
+68/68 is UNCHANGED. The vector harness went from 1,425 assertions with
+108 debt shapes (27 vectors) to **1,534 with 0 debts**: all 27 were
+promoted by name, and the `CAUSA_*` macros were deleted.
+
+**Shape.** `tessera_eventum.c` keeps all its SEMANTICS (the key tables,
+`_modificatores_csi`, mouse classification, control bytes, the paste
+collector) and the reader loop. The hand-rolled `_csi_parsare` /
+`_ss3_parsare` / `_parsare` over the gestation buffer became one token
+per call from `series_terminalis` (INPUT MODE), plus handlers:
+- `_csi_tractare`: mouse SGR, paste start, keys; unknown forms
+  silently consumed;
+- `_ss_tractare`;
+- `_runam_parsare`: the first rune of a printable run; the rest stays
+  in the buffer, which is safe because the tokenizer is in ground;
+- `_moram_tractare`: the timeout.
+
+Three RAW side channels stay in the reader, because they aren't DEC
+grammar:
+- X10 mouse: 3 raw bytes after `CSI M` (AUDIENDA closed: a reader
+  special case);
+- foreign tails: `CSI [` then bytes up to a final (Linux console
+  `[[A`, putty `[[5~`);
+- the paste body (unchanged).
+
+**Timeout rules (`_moram_tractare`):**
+- the pending sequence is EVACUATED;
+- a lone ESC = Escape;
+- `ESC ESC` = Escape now, and the SECOND Escape at the very next call,
+  without waiting again (both have already outlived the timeout;
+  re-feeding it to the tokenizer made `ESC ESC` + timeout + `a` read
+  alt+a: the first run's one VALET failure);
+- `ESC x` alone = alt+x (`ESC [`, `ESC O`, `ESC P`);
+- anything else is discarded (H7);
+- RELIQUIAE (H8): a half SGR mouse report (`CSI <…`) and a lone ESC
+  already given out as Escape are stashed. They are fed back to the
+  tokenizer only if the next bytes continue them (`;5M`, `[<…`,
+  `[M…`). `[` alone after an ESC waits one more read; the split forms
+  needed this (the first run's 4 remaining debt shapes).
+
+**Tokenizer INPUT MODE** (`series_lectorem_initus_ponere`; output
+stays pure DEC, tested). Input and output share bytes but not meaning:
+- `ESC` + 0x20..0x2F = ESC final (alt+space, alt+!), not an
+  intermediate;
+- `ESC` + C0/DEL = FUGA (lone ESC), the byte not consumed → alt+control;
+- `ESC N/X/^` = ESC final (terminals never send SS2/SOS/PM);
+- `ESC P` + a letter immediately = alt+P + letter. Real DCS replies
+  start with a digit, `>`, `!` or `$`.
+- I first also made `ESC ]` + non-digit and `ESC _` + non-`G` into alt
+  keys, then REMOVED both: no VALET vector types alt+] or alt+_, and
+  the rules broke realistic debts (`ESC _ OK`). Those two stay strings;
+  a typed alt+] still works through the timeout (FUGA introductor →
+  alt+]).
+
+**The one contradiction in the test data** (Fran decided, 2026-10-02):
+VALET `alt+P` SEQUENS (`ESC P a` in one read → alt+P, `a`) vs debt
+"DCS partialis + mora" (`ESC P partial` → nothing). Both start
+`ESC P` + a lowercase letter, so no rule passes both. The debt's bytes
+became a realistic half reply, `ESC P >|kit`; H7's intent is unchanged.
+
+**Amalgam.** tessera vendors `series_terminalis`:
+- `SeriesLector` → `TesseraSeriesLector`, with the typedef dropped
+  (tessera.h owns it);
+- `series_` → `tessera_series_`;
+- the HAND-WRITTEN `tessera.h` mirrors `TesseraLector`'s new fields in
+  source order (the harvest build caught the stale struct). The stash
+  size is the tessera-owned `TESSERA_RELIQUIAE_CAPACITAS 64`, written in
+  digits in BOTH headers, so an identical redefinition is legal and a
+  differing one is a compile error (LXIV vs 64 would not be
+  "identical").
+- Verified: standalone at full severity, host 7/7, nm intersection 0.
+
+The four demo source lists (`*_fontes_generata.sh`) were regenerated;
+spectaculum failed to LINK before that (caught by building it for the
+look, not by any suite).
+
+**Plants (compiling, caught by name):**
+- reliquiae never returned → the three H8 vectors;
+- `praefixum` ignored → both ESC-prefix vectors;
+- input mode off → the alt+control family.
+
+**Lint:** `sgr` added to the glossary (an acronym); a helper renamed to
+`_octetos_tradere` (*lexemator* isn't a house word).

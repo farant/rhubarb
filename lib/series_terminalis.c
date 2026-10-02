@@ -52,6 +52,7 @@ structura SeriesLector {
      i8 tabula_actio[CCLVI][STATUS_NUMERUS];
 
     i32 status;
+    b32 initus;           /* modus initus (B1b): vide caput */
     b32 post_chordam;     /* ESC chordam clausit: '\' terminator */
     b32 crudum_esc;       /* proxima vocatio crudum = "ESC" incipit */
 
@@ -451,6 +452,22 @@ _fugam_implere (
     l->truncatum              = FALSUM;
 }
 
+/* Modus initus: series incepta (ESC P) re vera
+ * 'alterum + introductor' erat - ESC finale introductor, octetus
+ * currens NON consumptus. */
+interior vacuum
+_alterum_reddere (
+    SeriesLector* lx,
+    SeriesLexema* l,
+              i8  finale)
+{
+    lx->introductor = ZEPHYRUM;
+    _lexema_implere(lx, l, SERIES_ESC, (i32)finale);
+    l->numerus_parametrorum  = ZEPHYRUM;
+    l->separatores           = ZEPHYRUM;
+    lx->status               = STATUS_SOLUM;
+}
+
 interior b32
 _est_chorda (
     i32 status)
@@ -502,8 +519,17 @@ series_lectorem_creare (
         redde NIHIL;
     }
     _tabulam_struere(lx);
+    lx->initus = FALSUM;
     series_lectorem_purgare(lx);
     redde lx;
+}
+
+vacuum
+series_lectorem_initus_ponere (
+    SeriesLector* lx,
+             b32  initus)
+{
+    lx->initus = initus;
 }
 
 vacuum
@@ -607,6 +633,39 @@ series_lexema_proximum (
                 perge;
             }
             lx->post_chordam = FALSUM;
+        }
+
+        /* ---- MODUS INITUS: alterum + clavis, non series ---- */
+        si (lx->initus && lx->status == STATUS_FUGAE)
+        {
+            si (c < 0x20 || c == 0x7F)
+            {
+                /* alterum + regimen: FUGA, octetus non consumptus */
+                _fugam_implere(lx, l);
+                lx->status = STATUS_SOLUM;
+                redde SERIES_FUGA;
+            }
+            si (   (c >= 0x20 && c <= 0x2F)
+                || c == 'N' || c == 'X' || c == '^')
+            {
+                (*ptr)++;
+                _crudum_addere(lx, (i8)c);
+                lx->status = STATUS_SOLUM;
+                _lexema_implere(lx, l, SERIES_ESC, c);
+                redde SERIES_ESC;
+            }
+        }
+        si (lx->initus)
+        {
+            si (   lx->status == STATUS_DCS_INITIUM
+                && c >= 0x40 && c <= 0x7E
+                && lx->numerus_parametrorum == ZEPHYRUM
+                && lx->digiti == ZEPHYRUM && lx->privatum == ZEPHYRUM
+                && lx->numerus_intermediorum == ZEPHYRUM)
+            {
+                _alterum_reddere(lx, l, (i8)'P');
+                redde SERIES_ESC;
+            }
         }
 
         /* ---- ESC + octetus altus: ESC solus (alterum + UTF-8) ---- */
