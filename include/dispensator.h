@@ -64,7 +64,9 @@ nomen structura {
                     s64  quies_ms;
                     Xar* effusio;                /* Xar de Eventus */
                     Xar* differenda;             /* ad limen */
-                    i32  compositiones;
+                    Xar* notata;   /* notarius: Xar de EventusNotatum;
+                                    * NIHIL = non notatur (A6) */
+                    i32 compositiones;
 } Dispensator;
 
 
@@ -106,6 +108,18 @@ dispensator_pulsare (
 vacuum
 dispensator_recomponere (
     Dispensator* d);
+
+/* NOTARIUS (eventus A6; spec D6): eventa CRUDA quae dispensator
+ * accipit (pulsus quoque - quies ex eis pendet) in Xar de
+ * EventusNotatum appenduntur, cum destinato: eventus muris ->
+ * scopus = id componentis cui traditur (captum si captura), scopus_x/y
+ * in spatio eius (destinatio_ad_locale); ceteri sine scopo. Id in
+ * piscinam dispensatoris copiatur (arbores piscinas reddunt).
+ * NIHIL = notarius tollitur. Plagula: eventus_notata_scribere_stml. */
+vacuum
+dispensator_notarium_ponere (
+    Dispensator* d,
+            Xar* notata);
 
 
 /* Sedes 'put' (brainstorm XVI §1): eventus derivatus ad id

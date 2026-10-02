@@ -63,6 +63,17 @@ destinatio_geometrica (
     constans Eventus* ev,
              Piscina* piscina);
 
+/* Punctum schirmi in spatium componentis c (inversio catenae
+ * parentum: fines, translatio, scala) - EADEM arithmetica ac
+ * destinatio geometrica: pro destinato geometrico = punctum_locale.
+ * Pro destinato CAPTO (punctum_locale ad ictum geometricum pertinet)
+ * hoc punctum eius locale dat (eventus A6: notarius). Extra c:
+ * negativum aut ultra fines. */
+Punctum
+destinatio_ad_locale (
+    constans Componens* c,
+               Punctum  schirmum);
+
 /* Componens destinatum: primus ascensus (captum si adest); NIHIL si
  * ascensus vacuus. */
 Componens*

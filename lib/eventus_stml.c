@@ -226,6 +226,188 @@ attr_textus (
         chorda_aedificator_finire(aed), p));
 }
 
+/* Nodus <eventus/> unius - corpus commune scriptorum (eventus A6:
+ * plagula simplex et notata). */
+interior StmlNodus*
+_eventum_nodare (
+      constans Eventus* e,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    StmlNodus* n;
+          s32  codex_typi;
+          i32  k;
+
+    n = stml_elementum_creare(piscina, intern, "eventus");
+    stml_attributum_addere(n, piscina, intern, "genus",
+                           eventus_genus_titulus(e->genus));
+    attr_longus(n, piscina, intern, "tempus", e->tempus);
+    commutatio (e->genus)
+    {
+        casus EVENTUS_MUS_DEPRESSUS:
+        casus EVENTUS_MUS_LIBERATUS:
+        casus EVENTUS_MUS_MOTUS:
+        casus EVENTUS_MUS_DUPLEX:
+        casus EVENTUS_TRACTUS_INCIPIT:
+        casus EVENTUS_TRACTUS:
+        casus EVENTUS_TRACTUS_FINIT:
+            attr_s(n, piscina, intern, "x", e->datum.mus.x);
+            attr_s(n, piscina, intern, "y", e->datum.mus.y);
+            attr_s(n, piscina, intern, "botton",
+                (s32)e->datum.mus.botton);
+            attr_s(n, piscina, intern, "modificantes",
+                   (s32)e->datum.mus.modificantes);
+            si (e->datum.mus.indicator != ZEPHYRUM)
+            {
+                attr_s(n, piscina, intern, "indicator",
+                    e->datum.mus.indicator);
+            }
+            si (   e->datum.mus.indicator_genus
+                != EVENTUS_INDICATOR_MUS
+                && (i32)e->datum.mus.indicator_genus < III)
+            {
+                stml_attributum_addere(n, piscina, intern,
+                    "indicator_genus",
+                    tituli_indicatorum[e->datum.mus.indicator_genus]);
+            }
+            si (   e->datum.mus.pressio != EVENTUS_PRESSIO_IGNOTA
+                && e->datum.mus.pressio != ZEPHYRUM)
+            {
+                attr_s(n, piscina, intern, "pressio",
+                    e->datum.mus.pressio);
+            }
+            per (k = ZEPHYRUM; e->datum.mus.exempla != NIHIL
+                 && k < e->datum.mus.numerus_exemplorum; k++)
+            {
+                StmlNodus* x = stml_elementum_creare(piscina,
+                    intern,
+                    "exemplum");
+
+                attr_s(x, piscina, intern, "x",
+                    e->datum.mus.exempla[k].x);
+                attr_s(x, piscina, intern, "y",
+                    e->datum.mus.exempla[k].y);
+                attr_longus(x, piscina, intern, "tempus",
+                    e->datum.mus.exempla[k].tempus);
+                stml_liberum_addere(n, x);
+            }
+            frange;
+        casus EVENTUS_CLAVIS_DEPRESSUS:
+        casus EVENTUS_CLAVIS_LIBERATUS:
+            attr_s(n, piscina, intern, "clavis",
+                (s32)e->datum.clavis.clavis);
+            codex_typi =
+                (s32)(insignatus character)e->datum.clavis.typus;
+            attr_s(n, piscina, intern, "typus", codex_typi);
+            attr_s(n, piscina, intern, "modificantes",
+                   (s32)e->datum.clavis.modificantes);
+            si (e->datum.clavis.runa != ZEPHYRUM)
+            {
+                attr_s(n, piscina, intern, "runa",
+                    e->datum.clavis.runa);
+            }
+            si (e->datum.clavis.codex != EVENTUS_CODEX_IGNOTUS)
+            {
+                stml_attributum_addere(n, piscina, intern, "codex",
+                    eventus_codex_titulus(e->datum.clavis.codex));
+            }
+            si (   e->datum.clavis.actio != EVENTUS_ACTIO_PRESSA
+                && (i32)e->datum.clavis.actio < III)
+            {
+                stml_attributum_addere(n, piscina, intern, "actio",
+                    tituli_actionum[e->datum.clavis.actio]);
+            }
+            frange;
+        casus EVENTUS_MUS_ROTULA:
+            attr_f(n, piscina, intern, "delta_x",
+                e->datum.rotula.delta_x);
+            attr_f(n, piscina, intern, "delta_y",
+                e->datum.rotula.delta_y);
+            si (   e->datum.rotula.dx    != ZEPHYRUM
+                || e->datum.rotula.dy    != ZEPHYRUM
+                || e->datum.rotula.genus != EVENTUS_ROTULA_IGNOTA)
+            {
+                attr_s(n, piscina, intern, "dx",
+                    e->datum.rotula.dx);
+                attr_s(n, piscina, intern, "dy",
+                    e->datum.rotula.dy);
+                si ((i32)e->datum.rotula.genus < III)
+                {
+                    stml_attributum_addere(n, piscina, intern,
+                        "genus_rotulae",
+                        tituli_rotulae[e->datum.rotula.genus]);
+                }
+            }
+            frange;
+        casus EVENTUS_MUTARE_MAGNITUDINEM:
+            attr_s(n, piscina, intern, "latitudo",
+                   (s32)e->datum.mutare_magnitudinem.latitudo);
+            attr_s(n, piscina, intern, "altitudo",
+                   (s32)e->datum.mutare_magnitudinem.altitudo);
+            frange;
+        casus EVENTUS_TEXTUS:
+            attr_textus(n, piscina, intern, "contentum",
+                e->datum.textus.contentum);
+            si ((i32)e->datum.textus.genus < II)
+            {
+                stml_attributum_addere(n, piscina, intern,
+                    "genus_textus",
+                    tituli_textuum[e->datum.textus.genus]);
+            }
+            attr_s(n, piscina, intern, "cursor",
+                e->datum.textus.cursor);
+            si ((i32)e->datum.textus.origo < III)
+            {
+                stml_attributum_addere(n, piscina, intern, "origo",
+                    tituli_originum[e->datum.textus.origo]);
+            }
+            attr_s(n, piscina, intern, "truncatum",
+                (s32)(e->datum.textus.truncatum ? I : ZEPHYRUM));
+            frange;
+        casus EVENTUS_DEPOSITIO:
+            attr_s(n, piscina, intern, "x",
+                e->datum.depositio.x);
+            attr_s(n, piscina, intern, "y",
+                e->datum.depositio.y);
+            attr_textus(n, piscina, intern, "viae",
+                e->datum.depositio.viae);
+            attr_s(n, piscina, intern, "numerus",
+                (s32)e->datum.depositio.numerus);
+            attr_s(n, piscina, intern, "promota",
+                (s32)(e->datum.depositio.promota ? I : ZEPHYRUM));
+            frange;
+        casus EVENTUS_FACULTATES:
+        {
+            constans EventusFacultates* f = &e->datum.facultates;
+
+            attr_s(n, piscina, intern, "liberationes",
+                (s32)(f->liberationes ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "codex_physicus",
+                (s32)(f->codex_physicus ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "tabula_distincta",
+                (s32)(f->tabula_distincta ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "latera",
+                (s32)(f->latera ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "super",
+                (s32)(f->super ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "praeeditio",
+                (s32)(f->praeeditio ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "scriptura_copiae",
+                (s32)f->scriptura_copiae);
+            attr_s(n, piscina, intern, "depositio",
+                (s32)f->depositio);
+            attr_s(n, piscina, intern, "gradus_rotulae",
+                f->gradus_rotulae);
+            attr_s(n, piscina, intern, "pressio",
+                (s32)(f->pressio ? I : ZEPHYRUM));
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+    redde n;
+}
+
 /* Attributa nova SOLUM si non ordinaria: plagulae veteres octetim
  * eaedem rescribuntur (probatio toy.eventus.stml). */
 chorda
@@ -237,184 +419,16 @@ eventus_scribere_stml (
 {
     StmlNodus* radix;
     StmlNodus* n;
-      Eventus* e;
-          s32  codex_typi;
           i32  i;
-          i32  k;
           i32  num;
 
     radix  = stml_elementum_creare(piscina, intern, "eventus_index");
     num    = xar_numerus(eventus);
     per (i = ZEPHYRUM; i < num; i++)
     {
-        e = (Eventus*)xar_obtinere(eventus, i);
-        n = stml_elementum_creare(piscina, intern, "eventus");
-        stml_attributum_addere(n, piscina, intern, "genus",
-                               eventus_genus_titulus(e->genus));
-        attr_longus(n, piscina, intern, "tempus", e->tempus);
-        commutatio (e->genus)
-        {
-            casus EVENTUS_MUS_DEPRESSUS:
-            casus EVENTUS_MUS_LIBERATUS:
-            casus EVENTUS_MUS_MOTUS:
-            casus EVENTUS_MUS_DUPLEX:
-            casus EVENTUS_TRACTUS_INCIPIT:
-            casus EVENTUS_TRACTUS:
-            casus EVENTUS_TRACTUS_FINIT:
-                attr_s(n, piscina, intern, "x", e->datum.mus.x);
-                attr_s(n, piscina, intern, "y", e->datum.mus.y);
-                attr_s(n, piscina, intern, "botton",
-                    (s32)e->datum.mus.botton);
-                attr_s(n, piscina, intern, "modificantes",
-                       (s32)e->datum.mus.modificantes);
-                si (e->datum.mus.indicator != ZEPHYRUM)
-                {
-                    attr_s(n, piscina, intern, "indicator",
-                        e->datum.mus.indicator);
-                }
-                si (   e->datum.mus.indicator_genus
-                    != EVENTUS_INDICATOR_MUS
-                    && (i32)e->datum.mus.indicator_genus < III)
-                {
-                    stml_attributum_addere(n, piscina, intern,
-                        "indicator_genus",
-                        tituli_indicatorum[e->datum.mus.indicator_genus]);
-                }
-                si (   e->datum.mus.pressio != EVENTUS_PRESSIO_IGNOTA
-                    && e->datum.mus.pressio != ZEPHYRUM)
-                {
-                    attr_s(n, piscina, intern, "pressio",
-                        e->datum.mus.pressio);
-                }
-                per (k = ZEPHYRUM; e->datum.mus.exempla != NIHIL
-                     && k < e->datum.mus.numerus_exemplorum; k++)
-                {
-                    StmlNodus* x = stml_elementum_creare(piscina,
-                        intern,
-                        "exemplum");
-
-                    attr_s(x, piscina, intern, "x",
-                        e->datum.mus.exempla[k].x);
-                    attr_s(x, piscina, intern, "y",
-                        e->datum.mus.exempla[k].y);
-                    attr_longus(x, piscina, intern, "tempus",
-                        e->datum.mus.exempla[k].tempus);
-                    stml_liberum_addere(n, x);
-                }
-                frange;
-            casus EVENTUS_CLAVIS_DEPRESSUS:
-            casus EVENTUS_CLAVIS_LIBERATUS:
-                attr_s(n, piscina, intern, "clavis",
-                    (s32)e->datum.clavis.clavis);
-                codex_typi =
-                    (s32)(insignatus character)e->datum.clavis.typus;
-                attr_s(n, piscina, intern, "typus", codex_typi);
-                attr_s(n, piscina, intern, "modificantes",
-                       (s32)e->datum.clavis.modificantes);
-                si (e->datum.clavis.runa != ZEPHYRUM)
-                {
-                    attr_s(n, piscina, intern, "runa",
-                        e->datum.clavis.runa);
-                }
-                si (e->datum.clavis.codex != EVENTUS_CODEX_IGNOTUS)
-                {
-                    stml_attributum_addere(n, piscina, intern, "codex",
-                        eventus_codex_titulus(e->datum.clavis.codex));
-                }
-                si (   e->datum.clavis.actio != EVENTUS_ACTIO_PRESSA
-                    && (i32)e->datum.clavis.actio < III)
-                {
-                    stml_attributum_addere(n, piscina, intern, "actio",
-                        tituli_actionum[e->datum.clavis.actio]);
-                }
-                frange;
-            casus EVENTUS_MUS_ROTULA:
-                attr_f(n, piscina, intern, "delta_x",
-                    e->datum.rotula.delta_x);
-                attr_f(n, piscina, intern, "delta_y",
-                    e->datum.rotula.delta_y);
-                si (   e->datum.rotula.dx    != ZEPHYRUM
-                    || e->datum.rotula.dy    != ZEPHYRUM
-                    || e->datum.rotula.genus != EVENTUS_ROTULA_IGNOTA)
-                {
-                    attr_s(n, piscina, intern, "dx",
-                        e->datum.rotula.dx);
-                    attr_s(n, piscina, intern, "dy",
-                        e->datum.rotula.dy);
-                    si ((i32)e->datum.rotula.genus < III)
-                    {
-                        stml_attributum_addere(n, piscina, intern,
-                            "genus_rotulae",
-                            tituli_rotulae[e->datum.rotula.genus]);
-                    }
-                }
-                frange;
-            casus EVENTUS_MUTARE_MAGNITUDINEM:
-                attr_s(n, piscina, intern, "latitudo",
-                       (s32)e->datum.mutare_magnitudinem.latitudo);
-                attr_s(n, piscina, intern, "altitudo",
-                       (s32)e->datum.mutare_magnitudinem.altitudo);
-                frange;
-            casus EVENTUS_TEXTUS:
-                attr_textus(n, piscina, intern, "contentum",
-                    e->datum.textus.contentum);
-                si ((i32)e->datum.textus.genus < II)
-                {
-                    stml_attributum_addere(n, piscina, intern,
-                        "genus_textus",
-                        tituli_textuum[e->datum.textus.genus]);
-                }
-                attr_s(n, piscina, intern, "cursor",
-                    e->datum.textus.cursor);
-                si ((i32)e->datum.textus.origo < III)
-                {
-                    stml_attributum_addere(n, piscina, intern, "origo",
-                        tituli_originum[e->datum.textus.origo]);
-                }
-                attr_s(n, piscina, intern, "truncatum",
-                    (s32)(e->datum.textus.truncatum ? I : ZEPHYRUM));
-                frange;
-            casus EVENTUS_DEPOSITIO:
-                attr_s(n, piscina, intern, "x",
-                    e->datum.depositio.x);
-                attr_s(n, piscina, intern, "y",
-                    e->datum.depositio.y);
-                attr_textus(n, piscina, intern, "viae",
-                    e->datum.depositio.viae);
-                attr_s(n, piscina, intern, "numerus",
-                    (s32)e->datum.depositio.numerus);
-                attr_s(n, piscina, intern, "promota",
-                    (s32)(e->datum.depositio.promota ? I : ZEPHYRUM));
-                frange;
-            casus EVENTUS_FACULTATES:
-            {
-                constans EventusFacultates* f = &e->datum.facultates;
-
-                attr_s(n, piscina, intern, "liberationes",
-                    (s32)(f->liberationes ? I : ZEPHYRUM));
-                attr_s(n, piscina, intern, "codex_physicus",
-                    (s32)(f->codex_physicus ? I : ZEPHYRUM));
-                attr_s(n, piscina, intern, "tabula_distincta",
-                    (s32)(f->tabula_distincta ? I : ZEPHYRUM));
-                attr_s(n, piscina, intern, "latera",
-                    (s32)(f->latera ? I : ZEPHYRUM));
-                attr_s(n, piscina, intern, "super",
-                    (s32)(f->super ? I : ZEPHYRUM));
-                attr_s(n, piscina, intern, "praeeditio",
-                    (s32)(f->praeeditio ? I : ZEPHYRUM));
-                attr_s(n, piscina, intern, "scriptura_copiae",
-                    (s32)f->scriptura_copiae);
-                attr_s(n, piscina, intern, "depositio",
-                    (s32)f->depositio);
-                attr_s(n, piscina, intern, "gradus_rotulae",
-                    f->gradus_rotulae);
-                attr_s(n, piscina, intern, "pressio",
-                    (s32)(f->pressio ? I : ZEPHYRUM));
-                frange;
-            }
-            ordinarius:
-                frange;
-        }
+        n = _eventum_nodare(
+            (constans Eventus*)xar_obtinere(eventus, i), piscina,
+            intern);
         stml_liberum_addere(radix, n);
     }
     redde stml_scribere(radix, piscina, pulchrum);
@@ -562,6 +576,163 @@ capere_textum (
     redde r;
 }
 
+/* Eventum unum ex nodo <eventus/> - corpus commune lectorum
+ * (eventus A6). e iam nullum. */
+interior vacuum
+_eventum_legere (
+    StmlNodus* n,
+      Eventus* e,
+      Piscina* piscina)
+{
+    chorda* g;
+
+    g = stml_attributum_capere(n, "genus");
+    e->genus  = g ? eventus_genus_ex_titulo(chorda_ut_cstr(*g,
+        piscina))
+                  : EVENTUS_NIHIL;
+    e->tempus = capere_longus(n, "tempus");
+    si (   e->genus == EVENTUS_CLAVIS_DEPRESSUS
+        || e->genus == EVENTUS_CLAVIS_LIBERATUS)
+    {
+        chorda* codex;
+
+        e->datum.clavis.clavis = (clavis_t)capere_s(n,
+            "clavis");
+        e->datum.clavis.typus = (character)capere_s(n,
+            "typus");
+        e->datum.clavis.modificantes = (i32)capere_s(n,
+            "modificantes");
+        e->datum.clavis.runa  = capere_s(n, "runa");
+        codex                 = stml_attributum_capere(n, "codex");
+        e->datum.clavis.codex = codex
+            ? eventus_codex_ex_titulo(chorda_ut_cstr(*codex,
+                piscina))
+            : EVENTUS_CODEX_IGNOTUS;
+        e->datum.clavis.actio = (EventusActio)capere_titulum(n,
+            "actio", tituli_actionum, III,
+            (s32)EVENTUS_ACTIO_PRESSA, piscina);
+    }
+    alioquin si (e->genus == EVENTUS_MUS_ROTULA)
+    {
+        e->datum.rotula.delta_x  = capere_f(n, "delta_x");
+        e->datum.rotula.delta_y  = capere_f(n, "delta_y");
+        e->datum.rotula.dx       = capere_s(n, "dx");
+        e->datum.rotula.dy       = capere_s(n, "dy");
+        e->datum.rotula.genus = (EventusRotulaGenus)
+            capere_titulum(n, "genus_rotulae", tituli_rotulae,
+                III, (s32)EVENTUS_ROTULA_IGNOTA, piscina);
+    }
+    alioquin si (e->genus == EVENTUS_MUTARE_MAGNITUDINEM)
+    {
+        e->datum.mutare_magnitudinem.latitudo = (i32)capere_s(n,
+            "latitudo");
+        e->datum.mutare_magnitudinem.altitudo = (i32)capere_s(n,
+            "altitudo");
+    }
+    alioquin si (e->genus == EVENTUS_TEXTUS)
+    {
+        e->datum.textus.contentum = capere_textum(n,
+            "contentum",
+            piscina);
+        e->datum.textus.genus = (EventusTextusGenus)
+            capere_titulum(n, "genus_textus", tituli_textuum,
+            II,
+                (s32)EVENTUS_TEXTUS_COMMISSUM, piscina);
+        e->datum.textus.cursor = capere_s(n, "cursor");
+        e->datum.textus.origo = (EventusOrigo)capere_titulum(n,
+            "origo", tituli_originum, III,
+            (s32)EVENTUS_ORIGO_SCRIPTA, piscina);
+        e->datum.textus.truncatum = (b32)(capere_s(n,
+            "truncatum") != ZEPHYRUM);
+    }
+    alioquin si (e->genus == EVENTUS_DEPOSITIO)
+    {
+        e->datum.depositio.x = capere_s(n, "x");
+        e->datum.depositio.y = capere_s(n, "y");
+        e->datum.depositio.viae = capere_textum(n, "viae",
+            piscina);
+        e->datum.depositio.numerus = (i32)capere_s(n,
+            "numerus");
+        e->datum.depositio.promota = (b32)(capere_s(n,
+            "promota") != ZEPHYRUM);
+    }
+    alioquin si (e->genus == EVENTUS_FACULTATES)
+    {
+        EventusFacultates* f = &e->datum.facultates;
+
+        f->liberationes      = (b32)(capere_s(n, "liberationes")
+            != ZEPHYRUM);
+        f->codex_physicus    = (b32)(capere_s(n,
+            "codex_physicus") != ZEPHYRUM);
+        f->tabula_distincta  = (b32)(capere_s(n,
+            "tabula_distincta") != ZEPHYRUM);
+        f->latera            = (b32)(capere_s(n, "latera")
+            != ZEPHYRUM);
+        f->super             = (b32)(capere_s(n, "super")
+            != ZEPHYRUM);
+        f->praeeditio        = (b32)(capere_s(n, "praeeditio")
+            != ZEPHYRUM);
+        f->scriptura_copiae  = (i32)capere_s(n,
+            "scriptura_copiae");
+        f->depositio       = (i32)capere_s(n, "depositio");
+        f->gradus_rotulae  = capere_s(n, "gradus_rotulae");
+        f->pressio           = (b32)(capere_s(n, "pressio")
+            != ZEPHYRUM);
+    }
+    alioquin
+    {
+         StmlNodus* x;
+               i32  numerus;
+               i32  k;
+
+        e->datum.mus.x = capere_s(n, "x");
+        e->datum.mus.y = capere_s(n, "y");
+        e->datum.mus.botton = (mus_botton_t)capere_s(n,
+            "botton");
+        e->datum.mus.modificantes = (i32)capere_s(n,
+            "modificantes");
+        e->datum.mus.indicator = capere_s(n, "indicator");
+        e->datum.mus.indicator_genus = (EventusIndicatorGenus)
+            capere_titulum(n, "indicator_genus",
+                tituli_indicatorum, III,
+                (s32)EVENTUS_INDICATOR_MUS, piscina);
+        e->datum.mus.pressio = habet(n, "pressio")
+            ? capere_s(n, "pressio") : EVENTUS_PRESSIO_IGNOTA;
+        /* exempla COPIATA in piscinam (plagula possidet) */
+        numerus = ZEPHYRUM;
+        per (x = stml_primus_liberum(n); x != NIHIL;
+             x = stml_frater_proximus(x))
+        {
+            si (x->genus == STML_NODUS_ELEMENTUM)
+            { numerus++;
+            }
+        }
+        si (numerus > ZEPHYRUM)
+        {
+            EventusExemplum* ex = (EventusExemplum*)
+                piscina_allocare(piscina,
+                (memoriae_index)numerus
+                    * magnitudo(EventusExemplum));
+
+            k = ZEPHYRUM;
+            per (x = stml_primus_liberum(n); ex != NIHIL
+                 && x != NIHIL; x = stml_frater_proximus(x))
+            {
+                si (x->genus != STML_NODUS_ELEMENTUM)
+                { perge;
+                }
+                ex[k].x       = capere_s(x, "x");
+                ex[k].y       = capere_s(x, "y");
+                ex[k].tempus  = capere_longus(x, "tempus");
+                k++;
+            }
+            e->datum.mus.exempla             = ex;
+            e->datum.mus.numerus_exemplorum  = (ex != NIHIL)
+                ? k : ZEPHYRUM;
+        }
+    }
+}
+
 Xar*
 eventus_legere_stml (
      constans character* cstr,
@@ -572,7 +743,6 @@ eventus_legere_stml (
              Xar* index;
        StmlNodus* n;
          Eventus* e;
-          chorda* g;
 
     res = stml_legere_ex_literis(cstr, piscina, intern);
     si (!res.successus || !res.elementum_radix)
@@ -586,153 +756,87 @@ eventus_legere_stml (
         {
             e = (Eventus*)xar_addere(index);
             memset(e, ZEPHYRUM, magnitudo(Eventus));
-            g = stml_attributum_capere(n, "genus");
-            e->genus  = g ? eventus_genus_ex_titulo(chorda_ut_cstr(*g,
-                piscina))
-                          : EVENTUS_NIHIL;
-            e->tempus = capere_longus(n, "tempus");
-            si (   e->genus == EVENTUS_CLAVIS_DEPRESSUS
-                || e->genus == EVENTUS_CLAVIS_LIBERATUS)
-            {
-                chorda* codex;
-
-                e->datum.clavis.clavis = (clavis_t)capere_s(n,
-                    "clavis");
-                e->datum.clavis.typus = (character)capere_s(n,
-                    "typus");
-                e->datum.clavis.modificantes = (i32)capere_s(n,
-                    "modificantes");
-                e->datum.clavis.runa = capere_s(n, "runa");
-                codex = stml_attributum_capere(n, "codex");
-                e->datum.clavis.codex = codex
-                    ? eventus_codex_ex_titulo(chorda_ut_cstr(*codex,
-                        piscina))
-                    : EVENTUS_CODEX_IGNOTUS;
-                e->datum.clavis.actio = (EventusActio)capere_titulum(n,
-                    "actio", tituli_actionum, III,
-                    (s32)EVENTUS_ACTIO_PRESSA, piscina);
-            }
-            alioquin si (e->genus == EVENTUS_MUS_ROTULA)
-            {
-                e->datum.rotula.delta_x  = capere_f(n, "delta_x");
-                e->datum.rotula.delta_y  = capere_f(n, "delta_y");
-                e->datum.rotula.dx       = capere_s(n, "dx");
-                e->datum.rotula.dy       = capere_s(n, "dy");
-                e->datum.rotula.genus = (EventusRotulaGenus)
-                    capere_titulum(n, "genus_rotulae", tituli_rotulae,
-                        III, (s32)EVENTUS_ROTULA_IGNOTA, piscina);
-            }
-            alioquin si (e->genus == EVENTUS_MUTARE_MAGNITUDINEM)
-            {
-                e->datum.mutare_magnitudinem.latitudo = (i32)capere_s(n,
-                    "latitudo");
-                e->datum.mutare_magnitudinem.altitudo = (i32)capere_s(n,
-                    "altitudo");
-            }
-            alioquin si (e->genus == EVENTUS_TEXTUS)
-            {
-                e->datum.textus.contentum = capere_textum(n,
-                    "contentum",
-                    piscina);
-                e->datum.textus.genus = (EventusTextusGenus)
-                    capere_titulum(n, "genus_textus", tituli_textuum,
-                    II,
-                        (s32)EVENTUS_TEXTUS_COMMISSUM, piscina);
-                e->datum.textus.cursor = capere_s(n, "cursor");
-                e->datum.textus.origo = (EventusOrigo)capere_titulum(n,
-                    "origo", tituli_originum, III,
-                    (s32)EVENTUS_ORIGO_SCRIPTA, piscina);
-                e->datum.textus.truncatum = (b32)(capere_s(n,
-                    "truncatum") != ZEPHYRUM);
-            }
-            alioquin si (e->genus == EVENTUS_DEPOSITIO)
-            {
-                e->datum.depositio.x = capere_s(n, "x");
-                e->datum.depositio.y = capere_s(n, "y");
-                e->datum.depositio.viae = capere_textum(n, "viae",
-                    piscina);
-                e->datum.depositio.numerus = (i32)capere_s(n,
-                    "numerus");
-                e->datum.depositio.promota = (b32)(capere_s(n,
-                    "promota") != ZEPHYRUM);
-            }
-            alioquin si (e->genus == EVENTUS_FACULTATES)
-            {
-                EventusFacultates* f = &e->datum.facultates;
-
-                f->liberationes      = (b32)(capere_s(n, "liberationes")
-                    != ZEPHYRUM);
-                f->codex_physicus    = (b32)(capere_s(n,
-                    "codex_physicus") != ZEPHYRUM);
-                f->tabula_distincta  = (b32)(capere_s(n,
-                    "tabula_distincta") != ZEPHYRUM);
-                f->latera            = (b32)(capere_s(n, "latera")
-                    != ZEPHYRUM);
-                f->super             = (b32)(capere_s(n, "super")
-                    != ZEPHYRUM);
-                f->praeeditio        = (b32)(capere_s(n, "praeeditio")
-                    != ZEPHYRUM);
-                f->scriptura_copiae  = (i32)capere_s(n,
-                    "scriptura_copiae");
-                f->depositio       = (i32)capere_s(n, "depositio");
-                f->gradus_rotulae  = capere_s(n, "gradus_rotulae");
-                f->pressio           = (b32)(capere_s(n, "pressio")
-                    != ZEPHYRUM);
-            }
-            alioquin
-            {
-                 StmlNodus* x;
-                       i32  numerus;
-                       i32  k;
-
-                e->datum.mus.x = capere_s(n, "x");
-                e->datum.mus.y = capere_s(n, "y");
-                e->datum.mus.botton = (mus_botton_t)capere_s(n,
-                    "botton");
-                e->datum.mus.modificantes = (i32)capere_s(n,
-                    "modificantes");
-                e->datum.mus.indicator = capere_s(n, "indicator");
-                e->datum.mus.indicator_genus = (EventusIndicatorGenus)
-                    capere_titulum(n, "indicator_genus",
-                        tituli_indicatorum, III,
-                        (s32)EVENTUS_INDICATOR_MUS, piscina);
-                e->datum.mus.pressio = habet(n, "pressio")
-                    ? capere_s(n, "pressio") : EVENTUS_PRESSIO_IGNOTA;
-                /* exempla COPIATA in piscinam (plagula possidet) */
-                numerus = ZEPHYRUM;
-                per (x = stml_primus_liberum(n); x != NIHIL;
-                     x = stml_frater_proximus(x))
-                {
-                    si (x->genus == STML_NODUS_ELEMENTUM)
-                    { numerus++;
-                    }
-                }
-                si (numerus > ZEPHYRUM)
-                {
-                    EventusExemplum* ex = (EventusExemplum*)
-                        piscina_allocare(piscina,
-                        (memoriae_index)numerus
-                            * magnitudo(EventusExemplum));
-
-                    k = ZEPHYRUM;
-                    per (x = stml_primus_liberum(n); ex != NIHIL
-                         && x != NIHIL; x = stml_frater_proximus(x))
-                    {
-                        si (x->genus != STML_NODUS_ELEMENTUM)
-                        { perge;
-                        }
-                        ex[k].x       = capere_s(x, "x");
-                        ex[k].y       = capere_s(x, "y");
-                        ex[k].tempus  = capere_longus(x, "tempus");
-                        k++;
-                    }
-                    e->datum.mus.exempla             = ex;
-                    e->datum.mus.numerus_exemplorum  = (ex != NIHIL)
-                        ? k : ZEPHYRUM;
-                }
-            }
+            _eventum_legere(n, e, piscina);
         }
         n = stml_frater_proximus(n);
     }
     redde index;
+}
+
+
+/* ==================================================
+ * PLAGULAE NOTATAE (eventus A6; spec D6)
+ * ==================================================
+ * Eventus + scopus (id componentis destinati) + scopus_x/scopus_y
+ * (punctum in spatio eius). Attributa scopi SOLUM si scopus adest:
+ * plagula sine scopis = plagula simplex, octetim. */
+
+chorda
+eventus_notata_scribere_stml (
+           constans Xar* notata,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                    b32  pulchrum)
+{
+    StmlNodus* radix;
+    StmlNodus* n;
+          i32  i;
+
+    radix = stml_elementum_creare(piscina, intern, "eventus_index");
+    per (i = ZEPHYRUM; i < xar_numerus(notata); i++)
+    {
+        constans EventusNotatum* en = (constans EventusNotatum*)
+            xar_obtinere(notata, i);
+
+        n = _eventum_nodare(&en->eventus, piscina, intern);
+        si (en->scopus.mensura > ZEPHYRUM)
+        {
+            stml_attributum_addere(n, piscina, intern, "scopus",
+                chorda_ut_cstr(en->scopus, piscina));
+            attr_s(n, piscina, intern, "scopus_x", en->scopus_x);
+            attr_s(n, piscina, intern, "scopus_y", en->scopus_y);
+        }
+        stml_liberum_addere(radix, n);
+    }
+    redde stml_scribere(radix, piscina, pulchrum);
+}
+
+Xar*
+eventus_notata_legere_stml (
+     constans character* cstr,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    StmlResultus  res;
+             Xar* notata;
+       StmlNodus* n;
+
+    res = stml_legere_ex_literis(cstr, piscina, intern);
+    si (!res.successus || !res.elementum_radix)
+    {
+        redde NIHIL;
+    }
+    notata  = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
+    n       = stml_primus_liberum(res.elementum_radix);
+    dum (n)
+    {
+        si (n->genus == STML_NODUS_ELEMENTUM)
+        {
+            EventusNotatum* en;
+                    chorda* scopus;
+
+            en = (EventusNotatum*)xar_addere(notata);
+            memset(en, ZEPHYRUM, magnitudo(EventusNotatum));
+            _eventum_legere(n, &en->eventus, piscina);
+            scopus = stml_attributum_capere(n, "scopus");
+            si (scopus)
+            {
+                en->scopus    = *scopus;   /* internatum: vivit */
+                en->scopus_x  = capere_s(n, "scopus_x");
+                en->scopus_y  = capere_s(n, "scopus_y");
+            }
+        }
+        n = stml_frater_proximus(n);
+    }
+    redde notata;
 }

@@ -72,4 +72,20 @@ eventus_legere_stml (
                 Piscina* piscina,
     InternamentumChorda* intern);
 
+/* Plagulae NOTATAE (eventus A6; spec D6): Xar de EventusNotatum -
+ * eventus + scopus (scopus, scopus_x, scopus_y; sparsa: absentes si
+ * scopus vacuus). Plagula simplex legitur cum scopis vacuis. */
+chorda
+eventus_notata_scribere_stml (
+           constans Xar* notata,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                    b32  pulchrum);
+
+Xar*
+eventus_notata_legere_stml (
+     constans character* cstr,
+                Piscina* piscina,
+    InternamentumChorda* intern);
+
 #endif /* EVENTUS_STML_H */

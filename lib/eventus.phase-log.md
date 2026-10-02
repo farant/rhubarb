@@ -563,3 +563,68 @@ text widget.
   typus again; pictor ignoring modifiers; a drag still setting up a
   double-click; INCIPIT at the current position.
 - pictor, villa and forum build.
+
+## A6a — the notarius: recording with targets (2026-10-02)
+
+The plan's "the dispensator's recorder writes `scopus`" assumed a
+recorder. There wasn't one: the only recording (toy.eventus.stml) was
+hand-written. Fran split A6: A6a = the recorder + format; A6b = RAW /
+SEMANTIC replay + divergence + the nudged-layout proof. Names (Fran):
+**notarius** (the Roman shorthand scribe) / **EventusNotatum**.
+
+**Shape.**
+- `EventusNotatum {Eventus eventus; chorda scopus; s32 scopus_x,
+  scopus_y;}` lives in `eventus.h`. The target sits BESIDE the event,
+  not inside it: a target isn't source data.
+- `dispensator_notarium_ponere(d, Xar*)` switches the notarius on;
+  NIHIL switches it off. It notes every RAW event the dispensator
+  receives (effusio[0]; derived events are never noted).
+  - Pulses (`EVENTUS_NIHIL`) ARE noted: quies (idle time) runs on them,
+    and the toy recording itself contains one.
+  - Pointer kinds get the component the event is DELIVERED to (the
+    captured one if capture holds) and the point in that component's
+    space. Keys get no target.
+- The target is resolved from the OLD tree, before delivery. The id is
+  copied into the dispensator's piscina, because the tree piscinae are
+  recycled ping-pong.
+- `destinatio_ad_locale(c, schirmum)` inverts the chain of parents
+  (fines, translatio, scala) with EXACTLY `invenire`'s arithmetic. For
+  a geometric hit it equals `punctum_locale` (tested). For a captured
+  component it gives what `punctum_locale` can't, because that belongs
+  to the geometric hit (the A3c finding).
+- `eventus_stml`: the per-event writer and reader bodies were extracted
+  (`_eventum_nodare`, `_eventum_legere`), so the plain and noted
+  formats share them.
+  - `eventus_notata_scribere/legere_stml` add `scopus`, `scopus_x` and
+    `scopus_y` sparsely (absent without a target). A plain recording
+    reads back with empty targets.
+
+**Tests (`probatio_notarius`, toy-based). Red first** (with
+`_notare` / `ad_locale` stubbed):
+- every event is noted, the pulse included;
+- b1 at (25,10); tabula at (50,40); Escape has no target;
+- without targets, the recording equals the HAND-WRITTEN toy file
+  BYTE FOR BYTE;
+- a noted round trip is byte-stable;
+- under capture, a motion outside tabula is noted as `tabula` at
+  (−5,40);
+- switching the notarius off stops noting.
+
+`probatio_destinatio`: ad_locale = punctum_locale through the panel's
+translation, and negative outside. My first point, (75,55), sat under
+the test's `umbra` overlay; a probe showed it and the test now uses
+(125,60).
+
+Three compiling plants caught: noting derived events; ad_locale ignoring
+`translatio`; skipping pulses.
+
+**Process finding (cost a failed A5 commit).** Plain `silva.commissio`
+runs its gates in the LIVE tree. `commissio_umbra` snapshots per gate,
+one after another, so later gates also see later edits. I edited
+eventus_stml.c (the A6 extraction) during A5's gates; a gate compiled
+the half-done file ("unused variable") and A5 was refused. Recovery:
+the A6 work was saved aside, the three files were restored to A5 (the
+pre-extraction copy was verified as exactly A5's change), and A5 was
+recommitted with the tree frozen. A6a was drafted in the scratchpad
+meanwhile as an apply-script. Memory corrected: freeze the tree while
+ANY commit's gates run.

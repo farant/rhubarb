@@ -88,6 +88,46 @@ invenire (
     redde NIHIL;
 }
 
+/* p schirmi in spatium LIBERORUM a (ut invenire descendit) */
+interior Punctum
+_in_spatium_liberorum (
+    constans Componens* a,
+               Punctum  p)
+{
+    s32 scala;
+
+    si (a->parens)
+    {
+        p = _in_spatium_liberorum(a->parens, p);
+    }
+    scala = (s32)a->scala;
+    si (scala <= ZEPHYRUM)
+    {
+        scala = I;
+    }
+    p.x = (p.x - a->fines.x - a->translatio.x) / scala;
+    p.y = (p.y - a->fines.y - a->translatio.y) / scala;
+    redde p;
+}
+
+Punctum
+destinatio_ad_locale (
+    constans Componens* c,
+               Punctum  schirmum)
+{
+    Punctum p;
+
+    si (!c)
+    {
+        redde schirmum;
+    }
+    p = c->parens ? _in_spatium_liberorum(c->parens, schirmum)
+                  : schirmum;
+    p.x = p.x - c->fines.x;
+    p.y = p.y - c->fines.y;
+    redde p;
+}
+
 interior Xar*
 ascensus_ex (
     Componens* c,

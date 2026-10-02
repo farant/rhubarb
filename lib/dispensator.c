@@ -259,6 +259,7 @@ dispensator_creare (
     d->quies_ms = quies_ms;
     d->effusio = xar_creare(piscina, (i32)magnitudo(Eventus));
     d->differenda = xar_creare(piscina, (i32)magnitudo(Differendum));
+    d->notata = NIHIL;
     motus_initiare(&d->motus, piscina);
     derivator_initiare(&d->derivator, CCC, IV);
     d->arbor_activa = I;          /* recomponere permutat ad 0 */
@@ -403,10 +404,46 @@ limen_transire (
     dispensator_recomponere(d);
 }
 
+/* Notarius (A6): eventum crudum cum destinato suo notare. Destinatum
+ * ex arbore VETERE (ante traditionem): id in piscinam dispensatoris
+ * copiatur - piscinae arborum vicissim redduntur. */
+interior vacuum
+_notare (
+          Dispensator* d,
+     constans Eventus* e,
+  constans Destinatio* des)
+{
+     EventusNotatum* en;
+          Componens* destinatum;
+            Punctum  p;
+
+    en = (EventusNotatum*)xar_addere(d->notata);
+    memset(en, ZEPHYRUM, magnitudo(EventusNotatum));
+    en->eventus = *e;
+    si (   e->genus != EVENTUS_MUS_DEPRESSUS
+        && e->genus != EVENTUS_MUS_LIBERATUS
+        && e->genus != EVENTUS_MUS_MOTUS)
+    {
+        redde;
+    }
+    destinatum = destinatio_componens(des);
+    si (!destinatum)
+    {
+        redde;
+    }
+    p.x           = e->datum.mus.x;
+    p.y           = e->datum.mus.y;
+    p             = destinatio_ad_locale(destinatum, p);
+    en->scopus    = chorda_transcribere(destinatum->id, d->piscina);
+    en->scopus_x  = p.x;
+    en->scopus_y  = p.y;
+}
+
 interior vacuum
 tractare_unum (
          Dispensator* d,
-    constans Eventus* e)
+    constans Eventus* e,
+                 b32  crudus)
 {
     PiscinaNotatio  nota;
         Destinatio  des;
@@ -419,6 +456,10 @@ tractare_unum (
     focus = dispensator_focus(d);
     des = d->strategia(d->arbor, &d->motus, focus, e, d->scratch);
     destinatum = destinatio_componens(&des);
+    si (crudus && d->notata)
+    {
+        _notare(d, e, &des);
+    }
 
     /* super derivatur */
     si (   e->genus == EVENTUS_MUS_MOTUS
@@ -507,8 +548,21 @@ dispensator_tractare (
     n = xar_numerus(d->effusio);
     per (i = ZEPHYRUM; i < n; i++)
     {
+        /* effusio[0] = eventus crudus (derivare eum primum ponit) */
         tractare_unum(d,
-            (constans Eventus*)xar_obtinere(d->effusio, i));
+            (constans Eventus*)xar_obtinere(d->effusio, i),
+            (b32)(i == ZEPHYRUM));
+    }
+}
+
+vacuum
+dispensator_notarium_ponere (
+    Dispensator* d,
+            Xar* notata)
+{
+    si (d)
+    {
+        d->notata = notata;
     }
 }
 

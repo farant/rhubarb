@@ -352,4 +352,17 @@ nomen structura {
     } datum;
 } Eventus;
 
+/* Eventus NOTATUS (eventus A6; spec D6): eventus crudus + destinatum
+ * eius a dispensatore resolutum - notarius (dispensator_notarium_
+ * ponere) scribit, non fons. scopus = id componentis (vacuus: nullus,
+ * e.g. clavis), scopus_x/y = punctum in spatio eius. Plagula:
+ * eventus_notata_scribere_stml. Eventus ipse scopum non fert: scopus
+ * datum fontis non est. */
+nomen structura {
+    Eventus eventus;
+     chorda scopus;
+        s32 scopus_x;
+        s32 scopus_y;
+} EventusNotatum;
+
 #endif /* EVENTUS_H */

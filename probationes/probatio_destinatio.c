@@ -187,6 +187,29 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "radix");
     CREDO_AEQUALIS_I32(xar_numerus(d.ascensus), I);
 
+    imprimere("\n--- A6: destinatio_ad_locale = punctum_locale ---\n");
+    /* tabula in panno translato (0,50): schirmo (125,60) -> locale
+     * (5,10) - catena parentum cum translatione */
+    e = mus(EVENTUS_MUS_DEPRESSUS, CXXV, LX);
+    d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "tabula");
+    {
+        Punctum s;
+        Punctum l;
+
+        s.x  = CXXV;
+        s.y  = LX;
+        l    = destinatio_ad_locale(tabula, s);
+        CREDO_AEQUALIS_S32(l.x, d.punctum_locale.x);
+        CREDO_AEQUALIS_S32(l.y, d.punctum_locale.y);
+        CREDO_AEQUALIS_S32(l.x, V);
+        CREDO_AEQUALIS_S32(l.y, X);
+        /* extra tabulam sinistrorsum: negativum */
+        s.x  = CXV;
+        l    = destinatio_ad_locale(tabula, s);
+        CREDO_AEQUALIS_S32(l.x, -V);
+    }
+
     imprimere("\n--- A3c: extra fenestram (x negativum) ---\n");
     /* sinistrorsum b1 (10..60) et radicis: nihil tangitur - non b1,
      * non radix (positio vera, non ad marginem coarctata) */
