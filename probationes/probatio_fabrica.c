@@ -2954,6 +2954,46 @@ s32 principale (vacuum)
             ordo, ZEPHYRUM))->titulus, "G");
         CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
             actiones, I))->dependentiae), ZEPHYRUM);
+
+        /* V. radices nihil enumerant (parcum …AR15): R radices
+         * aedilis.stml sigillat (radix 'gen'), P in 'gen' scribit et
+         * exitum R legit. Radices = sigillum obumbrationis, ordo ex
+         * manifestis - aliter cyclus (catena amalgamatoris: fontes_X
+         * radicem silva/amalgama sigillat, amalgama_X ibi scribit) */
+        {
+            constans character* gen_nomina[I];
+
+            _discum_parare(&discus, &sutura, piscina);
+            _ponere(&discus, "a", "a\n");
+            _ponere(&discus, "aedilis.stml",
+                "<aedilis>\n"
+                "  <inclusa>\n"
+                "    <via (>gen\n"
+                "  </inclusa>\n"
+                "</aedilis>\n");
+            gen_nomina[0] = "p.h";
+            _directorium_ponere(&discus, "gen", gen_nomina, I);
+            b = _actio_scripta(piscina, "P", "gen_p", "out/r",
+                "gen/p.h", "regeneratio");
+            g = _actio_scripta(piscina, "R", "gen_r", "a", "out/r",
+                "regeneratio");
+            _ingressum_addere(g, "radices", "aedilis.stml", piscina);
+            actiones = xar_creare(piscina,
+                (i32)magnitudo(FabricaActio));
+            *(FabricaActio*)xar_addere(actiones) = *b;
+            *(FabricaActio*)xar_addere(actiones) = *g;
+            CREDO_VERUM(fabrica_dependentias_computare(&sutura,
+                actiones, piscina, &causa));
+            ordo = fabrica_ordinare(actiones, piscina, &causa);
+            CREDO_NON_NIHIL(ordo);
+            si (ordo != NIHIL)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS((*(FabricaActio**)
+                    xar_obtinere(ordo, ZEPHYRUM))->titulus, "R");
+            }
+            CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)
+                xar_obtinere(actiones, I))->dependentiae), ZEPHYRUM);
+        }
     }
 
 

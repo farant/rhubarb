@@ -930,3 +930,52 @@ wall, 32 regenerations, 71.4 s inside them. The amalgam chain
 lectores_cocti 9.7 s; tabulae_silvae 2.5 s. The cold first run was
 146 s (fragmentum_compile_tests 66 s). Next: prove the chain's inputs
 complete and mark it memorabilis, then measure again.
+
+## 2026-10-01 - park …AR15 step 2: the amalgam chain is memorabilis
+
+The nine chain actions (fontes_X, excludenda_X, amalgama_X for silva,
+tessera, officina) now declare complete inputs and are memorabilis,
+following the 1a T6 snippet pattern (genus 'manifesta'):
+- fontes_X writes one aedilis manifest per root into
+  build/fabrica/clausurae/X__amalgama (aedilis now accepts
+  `--manifestum` with `--partes`, so the closure comes free with the
+  derivation it already runs).
+- excludenda_X writes the amalgamator's OWN closure (amalgamator.c +
+  silva_amalgama.c + silva_unitates.c) into X__mechanismus; it builds
+  and runs that binary, and the mech_*.o / silva/build objects come from
+  the same sources.
+- amalgama_X reads both. Soundness rule: a manifest directory is
+  written by an action whose own key reads it - a new #include is an
+  edit to a file already in the closure, so the writer misses and
+  rewrites. A reader downstream of the writer is fine; a reader that
+  could hit while the writer doesn't run would not be.
+- Both generators check a postcondition (one manifest per root/source):
+  an empty directory digests to nothing and the memo would always hit.
+  Plant: aedilis taking `--partes --manifestum` but skipping the write
+  -> "clausurae incompletae: 0 manifesta pro 5 radicibus", refused.
+
+Two snags on the way:
+1. Cycle: `radices` turned each aedilis include root's listing into an
+   ordering edge onto every producer writing there; silva/amalgama is
+   such a root, so fontes_silva waited on amalgama_silva. Radices are a
+   shadowing DIGEST; real per-file edges come from the manifests. Now
+   `_nihil_enumerare`, like instrumentum (T5). Test V red first (cycle).
+   This also drops redundant edges for the 13 snippet actions.
+2. aedilis's own manifest (the snippet precedent) would be a second
+   cycle (aedilis is built from the silva amalgam) - the chain keeps
+   `instrumentum bin/aedilis`: a relink costs one miss, never a wrong hit.
+
+Plants on the real tree (full -plenus judge, cursus IUDICIUM rows):
+- A: comment appended to silva/fontes/silva_lexema.h (closure header,
+  undeclared by name) -> the silva chain reruns, silva.c STALUM;
+  tessera/officina excludenda+amalgama rerun (lexer is in their
+  amalgamator), their fontes hit. Correct on every row.
+- M: comment appended to silva/instrumenta/silva_amalgama.h (mechanism
+  only) -> excludenda+amalgama x3 rerun, no fontes, all RECENS.
+
+Numbers: no-op `sanare -siccum installata` 41.5 s -> 19.7 s; full
+`-plenus` steady state 74.6 s -> 22.3 s (of which corpus_silicis 10.7 s,
+stale from this edit, a hit once healed). Left: lectores_cocti 3-10 s,
+tabulae_silvae 2.3 s. A real heal (`sanare installata`) still spends
+~2 min of wall time nowhere in cursus - suspect the per-action footprint
+snapshots (park …6X0's ground), unmeasured. Clang stays ambient.

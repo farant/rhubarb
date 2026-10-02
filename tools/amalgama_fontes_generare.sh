@@ -73,12 +73,38 @@ radices > "$STATIO/radices.txt"
 [ -s "$STATIO/radices.txt" ] || si_fracta "radices vacuae"
 : > "$STATIO/partes.tsv"
 : > "$STATIO/aristae.tsv"
+# clausurae (parcum fabricae …AR15): manifestum unum per radicem, ut
+# iudex ingressus VEROS catenae amalgamatoris sigillet (fontes,
+# excludenda, amalgama memorabiles). Directorium ante cursum vacuatur -
+# radix ablata manifestum suum non relinquit. In build/ etiam sub
+# iudice (status aedificationis, non arbor).
+CLAUSURAE="build/fabrica/clausurae/${PROIECTUM}__amalgama"
+if [ "$PROBARE" -eq 0 ]; then
+    rm -rf "$CLAUSURAE"
+    mkdir -p "$CLAUSURAE"
+fi
 while IFS= read -r radix; do
-    ./bin/aedilis "$radix" --partes >> "$STATIO/partes.tsv" \
-        || si_fracta "derivatio fracta: $radix"
+    if [ "$PROBARE" -eq 0 ]; then
+        ./bin/aedilis "$radix" --partes \
+            --manifestum "$CLAUSURAE/$(echo "$radix" | sed 's|/|__|g').stml" \
+            >> "$STATIO/partes.tsv" \
+            || si_fracta "derivatio fracta: $radix"
+    else
+        ./bin/aedilis "$radix" --partes >> "$STATIO/partes.tsv" \
+            || si_fracta "derivatio fracta: $radix"
+    fi
     ./bin/aedilis "$radix" --aristae >> "$STATIO/aristae.tsv" \
         || si_fracta "aristae fractae: $radix"
 done < "$STATIO/radices.txt"
+# postcondicio clausurarum: manifestum per radicem. Directorium vacuum
+# (aedilis vexillum tacite neglegens) nihil sigillaret - memoria
+# fabricae semper congrueret, tacite falsa
+if [ "$PROBARE" -eq 0 ]; then
+    NUMERUS_MANIFESTORUM=$(find "$CLAUSURAE" -name '*.stml' | wc -l | tr -d ' ')
+    NUMERUS_RADICUM=$(wc -l < "$STATIO/radices.txt" | tr -d ' ')
+    [ "$NUMERUS_MANIFESTORUM" = "$NUMERUS_RADICUM" ] \
+        || si_fracta "clausurae incompletae: $NUMERUS_MANIFESTORUM manifesta pro $NUMERUS_RADICUM radicibus ($CLAUSURAE)"
+fi
 sort -u "$STATIO/aristae.tsv" > "$STATIO/aristae_unicae.tsv"
 
 # copiae (exclusa politicae + latina = linea mechanismi)

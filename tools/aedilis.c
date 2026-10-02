@@ -778,6 +778,37 @@ _partes_imprimere (
     }
 }
 
+/* --manifestum: clausura quam enumeratio aut partes legunt, ad viam
+ * EXPLICITAM (non build/aedilis/<basis>/ - basis communis manifestum
+ * binarii installati obrueret). Sine commisso git: fabrica sigillo
+ * manifesti non utitur, et DLXXX derivationes silvae totidem cursus
+ * git vitant. Via vacua = nihil agitur. */
+interior b32
+_manifestum_scribere_si_petitum (
+    constans AedilisFructus* fructus,
+                     chorda  via_manifesti,
+                    Piscina* piscina)
+{
+    chorda via_parens;
+
+    si (via_manifesti.mensura == 0)
+    {
+        redde VERUM;
+    }
+    via_parens = via_directorium(via_manifesti, piscina);
+    si (   !filum_directorium_creare_cum_parentibus(
+               chorda_ut_cstr(via_parens, piscina))
+        || !filum_scribere(chorda_ut_cstr(via_manifesti, piscina),
+               aedilis_manifestum_scribere(fructus, piscina, NIHIL)))
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: manifestum non "
+            "scriptum: %.*s\n", (s32)via_manifesti.mensura,
+            (constans character*)via_manifesti.datum);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 interior b32
 _desinit_in_c (
     constans character* titulus)
@@ -934,6 +965,7 @@ principale (
     chorda               scopus;
     chorda               varians;
     chorda               manifestum;
+    chorda               via_manifesti;
     character*           scopus_cstr;
     constans character*  varians_cstr;
     clock_t              initium;
@@ -969,8 +1001,8 @@ principale (
     argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
         "Obiecta clausurae nuda imprimere (consumptoribus)");
     argumenta_addere_optionem(parser, NIHIL, "--manifestum",
-        "Cum --enumerare: manifestum etiam ad viam datam scribere "
-        "(fabrica: clausura fragmenti memorabilis)");
+        "Cum --enumerare aut --partes: manifestum etiam ad viam datam "
+        "scribere (fabrica: clausura actionis memorabilis)");
     argumenta_addere_vexillum(parser, NIHIL, "--partes",
         "Partes fructus ut TSV imprimere (O/C/S/V via)");
     argumenta_addere_optionem(parser, NIHIL, "--corpus",
@@ -987,12 +1019,14 @@ principale (
     lecta = argumenta_parsere(parser, (i32)numerus_argumentorum,
         (constans character* constans*)argumenta_cruda);
 
-    si (   argumenta_obtinere_optionem(lecta, "--manifestum",
-               piscina).mensura > 0
-        && !argumenta_habet_vexillum(lecta, "--enumerare"))
+    via_manifesti = argumenta_obtinere_optionem(lecta,
+        "--manifestum", piscina);
+    si (   via_manifesti.mensura > 0
+        && !argumenta_habet_vexillum(lecta, "--enumerare")
+        && !argumenta_habet_vexillum(lecta, "--partes"))
     {
-        fprintf(stderr,
-            "usus: aedilis <fons.c> --enumerare --manifestum <via>\n");
+        fprintf(stderr, "usus: aedilis <fons.c> --enumerare|--partes "
+            "--manifestum <via>\n");
         redde 1;
     }
     corpus_dir = argumenta_obtinere_optionem(lecta, "--corpus",
@@ -1107,34 +1141,13 @@ principale (
 
     si (argumenta_habet_vexillum(lecta, "--enumerare"))
     {
-           i32 i;
-           i32 numerus;
-        chorda via_manifesti;
+        i32 i;
+        i32 numerus;
 
-        /* --manifestum: clausura quam enumeratio legit, ad viam
-         * EXPLICITAM (non build/aedilis/<basis>/ - basis communis
-         * manifestum binarii installati obrueret). Sine commisso
-         * git: fabrica sigillo manifesti non utitur, et DLXXX
-         * derivationes silvae totidem cursus git vitant. */
-        via_manifesti = argumenta_obtinere_optionem(lecta,
-            "--manifestum", piscina);
-        si (via_manifesti.mensura > 0)
+        si (!_manifestum_scribere_si_petitum(fructus, via_manifesti,
+                piscina))
         {
-            chorda via_parens;
-
-            via_parens = via_directorium(via_manifesti, piscina);
-            si (   !filum_directorium_creare_cum_parentibus(
-                       chorda_ut_cstr(via_parens, piscina))
-                || !filum_scribere(chorda_ut_cstr(via_manifesti,
-                       piscina),
-                       aedilis_manifestum_scribere(fructus, piscina,
-                           NIHIL)))
-            {
-                fprintf(stderr, "AEDILIS RECUSAT: manifestum non "
-                    "scriptum: %.*s\n", (s32)via_manifesti.mensura,
-                    (constans character*)via_manifesti.datum);
-                redde 1;
-            }
+            redde 1;
         }
         numerus = xar_numerus(fructus->obiecta);
         per (i = 0; i < numerus; i++)
@@ -1151,6 +1164,13 @@ principale (
 
     si (argumenta_habet_vexillum(lecta, "--partes"))
     {
+        /* amalgama fontium (parcum …AR15): clausura radicis ut
+         * ingressus actionis memorabilis */
+        si (!_manifestum_scribere_si_petitum(fructus, via_manifesti,
+                piscina))
+        {
+            redde 1;
+        }
         _partes_imprimere(fructus);
         redde 0;
     }

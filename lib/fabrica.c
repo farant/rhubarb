@@ -841,8 +841,14 @@ interior constans FabricaGenus _genus_manifesta = {
     "manifesta", _manifesta_sigillare, NIHIL, NIHIL, FALSUM
 };
 
+/* radices SIGILLANTUR (obumbratio: caput novum in radice priore), non
+ * ENUMERANTUR: ordo ex manifestis (plagulae vere lectae). Arcus ad
+ * omnem producentem in radice cyclum faceret ubi actio radicem legit
+ * in quam actio posterior scribit (parcum …AR15: fontes_silva
+ * sigillat silva/amalgama, amalgama_silva ibi scribit) - ut
+ * instrumentum (T5) */
 interior constans FabricaGenus _genus_radices = {
-    "radices", _radices_sigillare, NIHIL, NIHIL, FALSUM
+    "radices", _radices_sigillare, _nihil_enumerare, NIHIL, FALSUM
 };
 
 interior constans FabricaGenus* constans _genera[] = {

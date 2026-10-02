@@ -72,6 +72,37 @@ rm -rf "$STATIO"
 mkdir -p "$STATIO"
 
 # ------------------------------------------------------------------
+# CLAUSURAE MECHANISMI (parcum fabricae …AR15): amalgamator.c proiecti
+# + mechanismus communis = fontes binarii quem haec messis struit et
+# currit (obiecta silvae et mech_*.o ex iisdem fontibus). Manifestum
+# unum per fontem, ut excludenda et amalgama (memorabiles) clausuram
+# VERAM amalgamatoris sigillent. Scriptor est actio cuius clavis eadem
+# manifesta legit: inclusio nova = plagula clausurae mutata = clavis
+# mutata = cursus qui manifestum rescribit. Amalgama (infra in catena)
+# ea solum legit.
+# ------------------------------------------------------------------
+if [ "$PROBARE" -eq 0 ]; then
+    [ -x bin/aedilis ] || si_fracta "bin/aedilis deest (./tools/aedilis_struere.sh)"
+    CLAUSURAE_MECHANISMI="build/fabrica/clausurae/${PROIECTUM}__mechanismus"
+    rm -rf "$CLAUSURAE_MECHANISMI"
+    mkdir -p "$CLAUSURAE_MECHANISMI"
+    # shellcheck source=/dev/null
+    . tools/mechanismus_fontes.sh
+    NUMERUS_FONTIUM=0
+    for fons in "$SEDES/amalgamator.c" $(mechanismus_silvae_fontes); do
+        ./bin/aedilis "$fons" --enumerare --manifestum \
+            "$CLAUSURAE_MECHANISMI/$(echo "$fons" | sed 's|/|__|g').stml" \
+            > /dev/null || si_fracta "clausura mechanismi fracta: $fons"
+        NUMERUS_FONTIUM=$((NUMERUS_FONTIUM + 1))
+    done
+    # postcondicio: manifestum per fontem (directorium vacuum nihil
+    # sigillaret - memoria tacite falsa)
+    NUMERUS_MANIFESTORUM=$(find "$CLAUSURAE_MECHANISMI" -name '*.stml' | wc -l | tr -d ' ')
+    [ "$NUMERUS_MANIFESTORUM" = "$NUMERUS_FONTIUM" ] \
+        || si_fracta "clausurae mechanismi incompletae: $NUMERUS_MANIFESTORUM manifesta pro $NUMERUS_FONTIUM fontibus"
+fi
+
+# ------------------------------------------------------------------
 # CUSTODIA EXITUS: _caput_emittere in EXITUM ipsum scribit, et ante
 # ansam semel (listae VACUAE), quia amalgamator singulis gyris cum
 # listis novis recompilatur - ergo scriptio in plagulam veram opus
