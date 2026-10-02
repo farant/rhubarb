@@ -744,3 +744,80 @@ moved layout.
 - `typus` deletion (D2 step 3).
 
 Phase B (the terminal source) gets its own plan after this RELATIO.
+
+# Phase B — the terminal source (plan `project-specs/eventus-plan-B.md`)
+
+D8 decided by Fran (2026-10-02): (a), tokenizer first. Sealed: name
+`series_terminalis`; DCS whole and truncated in v1; C1 8-bit controls
+not recognized; a separate library; the table built at creation.
+
+## B1a — `series_terminalis`, the tokenizer (2026-10-02)
+
+**Shape.** Pull API: `series_lexema_proximum(lector, &ptr, finis,
+&lexema)` returns ONE token per call (`SeriesLexema`):
+- IMPRIMERE: a printable run, as a zero-copy view into the input;
+- EXSEQUI: a C0 control or DEL;
+- ESC, CSI, SS (SS2/SS3), OSC, DCS, APC (also PM/SOS, via
+  `introductor`);
+- FUGA: an aborted or flushed sequence, with its raw bytes.
+
+Fields: parameters (24) + a `separatores` bitset (`:` after param i),
+intermediates (4), `privatum` (`? > < =`), `introductor` (the byte after
+ESC), `finale`, `praefixum`, `textus` (a string payload ≤ 2048 bytes,
+copied, `truncatum`), and `crudum` (the sequence's raw bytes, ≤ 64).
+Split sequences stay in the reader's state; `_pendet` / `_evacuare` let
+the CALLER own the ESC timeout. Nothing is allocated after creation.
+
+**The state machine** is Ghostty's `parse_table.zig` (MIT, pin 12752b2)
+as a rules function (`_tabulam_struere`, one `_regula` line per row of
+the vt100.net diagram), built into a [256][15] table at creation. ESC,
+CAN/SUB and string terminators are handled BEFORE the table, because
+the divergences live there.
+
+**Deliberate divergences from Ghostty (all for input):**
+- C1 not recognized (0x80+ prints: UTF-8);
+- DEL in ground is a control (the backspace key);
+- CSI with `:` kept for any final (kitty `CSI 97:65;2u`; Ghostty drops
+  non-`m`);
+- `ESC N|O [params] final` is ONE token (application-mode arrows
+  `ESC O A`, xterm `ESC O 2 P`);
+- `ESC ESC …` sets `praefixum` (Fran's FUGAE_PRAEFIXUM decision);
+- an aborted sequence becomes FUGA with its raw bytes, the aborting
+  byte NOT consumed;
+- `ESC \` after a string is swallowed as its terminator;
+- ESC followed by a high byte = a lone ESC (FUGA) + the UTF-8 run
+  (alt+é).
+
+As in Ghostty: more than 24 params drops the WHOLE sequence (a half SGR
+is worse than none), and `csi_ignore` completes silently.
+
+**Tests (`probatio_series_terminalis`, 167 assertions):**
+- I: Ghostty's 24 Parser.zig tests ported (C1 and the colon rule
+  asserted as OUR behaviour);
+- II: the divergences, one test each;
+- III: pendet/evacuare (lone ESC, `ESC [`, `ESC O`, a half mouse
+  report, `ESC ESC`; after a string closed by ESC, the timeout returns
+  nothing);
+- IV: the SPLIT SWEEP: 37 sequences, each fed whole, at every 2-way
+  split, and byte by byte. The renders (adjacent printable runs merged,
+  raw bytes included) must be identical;
+- V: hostile input (10,000 params, a 1 MB unterminated OSC, 64 KiB of
+  random bytes in random chunks): bounded, and the reader's piscina
+  usage is UNCHANGED after creation.
+
+Red first: 141 failures against a stub. The first implementation
+failed 4:
+- 1 real bug: CAN/SUB in GROUND were swallowed, because the C0 helper
+  excludes them for the in-sequence abort path and ground never got a
+  rule;
+- 1 typo in my expected string.
+
+Four compiling plants caught by name: the param cap off by one; `:`
+read as `;`; state lost between calls (caught by the SWEEP: the
+property test earns its keep); OSC terminated only by BEL.
+
+**Lint:** `esc`, `osc`, `dcs`, `apc` entered the glossary as tolerated
+protocol acronyms (`csi` was already tolerated from older code).
+
+**Not yet:** tessera uses none of this; that's B1b, where the 27
+debt vectors get paid.
