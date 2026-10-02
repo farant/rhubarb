@@ -256,8 +256,8 @@ eventus_scribere_stml (
             casus EVENTUS_MUS_LIBERATUS:
             casus EVENTUS_MUS_MOTUS:
             casus EVENTUS_MUS_DUPLEX:
-                attr_s(n, piscina, intern, "x", (s32)e->datum.mus.x);
-                attr_s(n, piscina, intern, "y", (s32)e->datum.mus.y);
+                attr_s(n, piscina, intern, "x", e->datum.mus.x);
+                attr_s(n, piscina, intern, "y", e->datum.mus.y);
                 attr_s(n, piscina, intern, "botton",
                     (s32)e->datum.mus.botton);
                 attr_s(n, piscina, intern, "modificantes",
@@ -371,9 +371,9 @@ eventus_scribere_stml (
                 frange;
             casus EVENTUS_DEPOSITIO:
                 attr_s(n, piscina, intern, "x",
-                    (s32)e->datum.depositio.x);
+                    e->datum.depositio.x);
                 attr_s(n, piscina, intern, "y",
-                    (s32)e->datum.depositio.y);
+                    e->datum.depositio.y);
                 attr_textus(n, piscina, intern, "viae",
                     e->datum.depositio.viae);
                 attr_s(n, piscina, intern, "numerus",
@@ -642,8 +642,8 @@ eventus_legere_stml (
             }
             alioquin si (e->genus == EVENTUS_DEPOSITIO)
             {
-                e->datum.depositio.x = (i32)capere_s(n, "x");
-                e->datum.depositio.y = (i32)capere_s(n, "y");
+                e->datum.depositio.x = capere_s(n, "x");
+                e->datum.depositio.y = capere_s(n, "y");
                 e->datum.depositio.viae = capere_textum(n, "viae",
                     piscina);
                 e->datum.depositio.numerus = (i32)capere_s(n,
@@ -680,8 +680,8 @@ eventus_legere_stml (
                        i32  numerus;
                        i32  k;
 
-                e->datum.mus.x = (i32)capere_s(n, "x");
-                e->datum.mus.y = (i32)capere_s(n, "y");
+                e->datum.mus.x = capere_s(n, "x");
+                e->datum.mus.y = capere_s(n, "y");
                 e->datum.mus.botton = (mus_botton_t)capere_s(n,
                     "botton");
                 e->datum.mus.modificantes = (i32)capere_s(n,

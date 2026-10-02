@@ -161,7 +161,8 @@ concha_creare (
             }
         }
 
-        persistentia = persistentia_nuntium_creare(piscina, config->via_persistentia);
+        persistentia = persistentia_nuntium_creare(piscina,
+            config->via_persistentia);
     }
     alioquin
     {
@@ -210,7 +211,8 @@ concha_creare (
     layout_registrare_defalta(reg_widget);
 
     /* Creare contextum widget */
-    ctx = contextus_widget_creare(piscina, intern, repositorium, reg_commandi, reg_widget, NIHIL, NIHIL);
+    ctx = contextus_widget_creare(piscina, intern, repositorium,
+        reg_commandi, reg_widget, NIHIL, NIHIL);
     si (!ctx)
     {
         imprimere("Concha: non potest creare contextum widget\n");
@@ -255,15 +257,17 @@ concha_creare (
     pinacotheca_visus_init(ctx);
 
     /* Registrare built-in commands (non-widget) */
-    registrum_commandi_registrare(reg_commandi, "date", _concha_command_date, NIHIL);
+    registrum_commandi_registrare(reg_commandi, "date",
+        _concha_command_date, NIHIL);
 
     /* Configurare fenestram */
-    fenestra_config.titulus = config->titulus ? config->titulus : "Concha";
-    fenestra_config.x = C;
-    fenestra_config.y = C;
-    fenestra_config.latitudo = config->latitudo;
-    fenestra_config.altitudo = config->altitudo;
-    fenestra_config.vexilla = FENESTRA_ORDINARIA;
+    fenestra_config.titulus =
+        config->titulus ? config->titulus : "Concha";
+    fenestra_config.x         = C;
+    fenestra_config.y         = C;
+    fenestra_config.latitudo  = config->latitudo;
+    fenestra_config.altitudo  = config->altitudo;
+    fenestra_config.vexilla   = FENESTRA_ORDINARIA;
 
     /* Creare fenestram */
     fenestra = fenestra_creare(piscina, &fenestra_config);
@@ -276,7 +280,8 @@ concha_creare (
     concha->fenestra = fenestra;
 
     /* Creare tabulam pixelorum */
-    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, config->altitudo);
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
+        config->altitudo);
     si (!tabula)
     {
         imprimere("Concha: non potest creare tabulam\n");
@@ -305,7 +310,8 @@ concha_registrare_widget (
         redde FALSUM;
     }
 
-    redde registrum_widget_registrare(concha->reg_widget, titulus, factory);
+    redde registrum_widget_registrare(concha->reg_widget, titulus,
+        factory);
 }
 
 b32
@@ -320,7 +326,8 @@ concha_registrare_commandi (
         redde FALSUM;
     }
 
-    registrum_commandi_registrare(concha->reg_commandi, nomen_cmd, functio, datum);
+    registrum_commandi_registrare(concha->reg_commandi, nomen_cmd,
+        functio, datum);
     redde VERUM;
 }
 
@@ -386,8 +393,10 @@ concha_currere (
                 || eventus.genus == EVENTUS_MUS_DEPRESSUS
                 || eventus.genus == EVENTUS_MUS_LIBERATUS)
             {
-                concha->mus_x = eventus.datum.mus.x;
-                concha->mus_y = eventus.datum.mus.y;
+                /* (i32): extra fenestram negativum -> numerus magnus, qui
+                 * nullum rectum tangit (A3c: mus.x s32; generatio vetus i32) */
+                concha->mus_x = (i32)eventus.datum.mus.x;
+                concha->mus_y = (i32)eventus.datum.mus.y;
             }
 
             si (eventus.genus == EVENTUS_CLAUDERE)
@@ -399,10 +408,13 @@ concha_currere (
                 b32 tractatus;
 
                 /* Schirmata tractat omnes eventus (screens, focus, routing, etc) */
-                tractatus = schirmata_tractare_eventum(concha->schirmata, &eventus);
+                tractatus =
+                    schirmata_tractare_eventum(concha->schirmata,
+                    &eventus);
 
                 /* Si pagina reddidit FALSUM (ESC in normal mode), exire */
-                si (!tractatus && eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
+                si (   !tractatus
+                    && eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
                 {
                     si (eventus.datum.clavis.clavis == CLAVIS_EFFUGIUM)
                     {
@@ -425,7 +437,8 @@ concha_currere (
         /* Reddere cursor si plena visio */
         si (fenestra_est_plena_visio(concha->fenestra))
         {
-            cursor_reddere(concha->tabula, concha->mus_x, concha->mus_y);
+            cursor_reddere(concha->tabula, concha->mus_x,
+                concha->mus_y);
         }
 
         /* Praesentare pixela */

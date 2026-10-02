@@ -306,8 +306,9 @@ nomen structura {
          EventusActio actio;
         } clavis;
         structura {
-                     i32 x;          /* pixela NOSTRA */
-                     i32 y;
+                     s32 x;          /* pixela NOSTRA; extra fenestram
+                                      * negativa aut >= latitudo (A3c) */
+                     s32 y;
             mus_botton_t botton;
                      i32 modificantes;
                      s32 indicator;           /* 0 = mus */
@@ -331,8 +332,8 @@ nomen structura {
                    b32 truncatum;
         } textus;
         structura {
-               i32 x;
-               i32 y;
+               s32 x;
+               s32 y;
             chorda viae;             /* VISUS: viae absolutae, '\n' */
                i32 numerus;
                b32 promota;          /* glutinum terminalis promotum */

@@ -278,7 +278,8 @@ _intrare_inserere (
 
     /* Copiare textum ad edit buffer */
     arc->edit_longitudo = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < (i32)carta->textus.mensura && i < DXII - I; i++)
+    per (i = ZEPHYRUM; i < (i32)carta->textus.mensura
+        && i < DXII - I; i++)
     {
         arc->edit_buffer[i] = (character)carta->textus.datum[i];
         arc->edit_longitudo++;
@@ -326,7 +327,8 @@ _exire_inserere (
     arc->edit_buffer[arc->edit_longitudo] = '\0';
 
     /* Internare novum textum */
-    nova_chorda = chorda_internare_ex_literis(arc->ctx->intern, arc->edit_buffer);
+    nova_chorda = chorda_internare_ex_literis(arc->ctx->intern,
+        arc->edit_buffer);
     si (nova_chorda)
     {
         carta->textus = *nova_chorda;
@@ -336,7 +338,8 @@ _exire_inserere (
     _calculare_dimensiones(carta);
 
     /* Detegere si folder (pro UI feedback - relatio creatur in salvare) */
-    carta->est_folder = (carta->textus.datum && carta->textus.mensura > ZEPHYRUM
+    carta->est_folder = (carta->textus.datum
+        && carta->textus.mensura > ZEPHYRUM
         && carta->textus.datum[ZEPHYRUM] == '>');
 
     arc->modus = ARC_MODUS_SELECTA;
@@ -504,7 +507,8 @@ _est_in_link (
     i32 link_initium;
     i32 link_finis;
 
-    si (_detecta_linkum(textus, longitudo, positio, &link_initium, &link_finis))
+    si (_detecta_linkum(textus, longitudo, positio, &link_initium,
+        &link_finis))
     {
         redde (positio >= link_initium && positio < link_finis);
     }
@@ -557,10 +561,11 @@ _pixel_ad_char_index (
 
     /* Calculare positio visualis cartae in pixelis
      * NOTA: carta->x/y jam sunt widget-relativum pixela */
-    carta_px_x = (arc->widget_x * char_lat) + carta->x;
-    carta_px_y = (arc->widget_y * char_alt) + carta->y;
-    vis_x = carta_px_x + inset;
-    vis_y = (i32)((s32)carta_px_y + (s32)inset + (CARTA_OFFSET_VERTICALIS * (s32)arc->scala));
+    carta_px_x  = (arc->widget_x * char_lat) + carta->x;
+    carta_px_y  = (arc->widget_y * char_alt) + carta->y;
+    vis_x       = carta_px_x + inset;
+    vis_y = (i32)((s32)carta_px_y + (s32)inset
+        + (CARTA_OFFSET_VERTICALIS * (s32)arc->scala));
 
     /* Positio textus (cum padding) */
     text_px_x = vis_x + CARTA_PADDING * char_lat;
@@ -685,7 +690,9 @@ _ordinare_per_z_index_asc (
         temp  = indices[i];
         j     = (s32)i - I;
 
-        dum (j >= ZEPHYRUM && arc->cartae[indices[j]].z_index > arc->cartae[temp].z_index)
+        dum (   j >= ZEPHYRUM
+             && arc->cartae[indices[j]].z_index
+                > arc->cartae[temp].z_index)
         {
             indices[j + I] = indices[j];
             j--;
@@ -724,7 +731,9 @@ _ordinare_per_z_index_desc (
         temp  = indices[i];
         j     = (s32)i - I;
 
-        dum (j >= ZEPHYRUM && arc->cartae[indices[j]].z_index < arc->cartae[temp].z_index)
+        dum (   j >= ZEPHYRUM
+             && arc->cartae[indices[j]].z_index
+                < arc->cartae[temp].z_index)
         {
             indices[j + I] = indices[j];
             j--;
@@ -828,7 +837,9 @@ _invenire_vel_creare_schirmam (
 
     /* Usare scaffoldare - creat cum UUID deterministico ex "Schirma" + slug
      * Idempotens: reddit existentem si iam creata */
-    schirma_entitas = arc->ctx->repo->entitas_scaffoldare(arc->ctx->repo->datum, "Schirma", slug);
+    schirma_entitas =
+        arc->ctx->repo->entitas_scaffoldare(arc->ctx->repo->datum,
+        "Schirma", slug);
     si (!schirma_entitas)
     {
         redde NIHIL;
@@ -836,18 +847,22 @@ _invenire_vel_creare_schirmam (
 
     /* Ponere proprietates (scaffoldare non ponit proprietates) */
     clavis_slug = chorda_internare_ex_literis(arc->ctx->intern, "slug");
-    slug_valor = entitas_proprietas_capere(schirma_entitas, clavis_slug);
+    slug_valor = entitas_proprietas_capere(schirma_entitas,
+        clavis_slug);
 
     si (!slug_valor)
     {
         /* Nova entitas - ponere proprietates */
-        arc->ctx->repo->proprietas_ponere(arc->ctx->repo->datum, schirma_entitas, "slug", slug);
-        arc->ctx->repo->proprietas_ponere(arc->ctx->repo->datum, schirma_entitas, "titulus", slug);
+        arc->ctx->repo->proprietas_ponere(arc->ctx->repo->datum,
+            schirma_entitas, "slug", slug);
+        arc->ctx->repo->proprietas_ponere(arc->ctx->repo->datum,
+            schirma_entitas, "titulus", slug);
 
         /* Addere #Radix tag solum pro schirma radice */
         si (strcmp(slug, "root") == ZEPHYRUM)
         {
-            arc->ctx->repo->nota_addere(arc->ctx->repo->datum, schirma_entitas, "#Radix");
+            arc->ctx->repo->nota_addere(arc->ctx->repo->datum,
+                schirma_entitas, "#Radix");
         }
     }
 
@@ -891,7 +906,8 @@ arx_caeli_navigare_ad (
     slug_effectivum = slug ? slug : "root";
 
     /* Ponere novum slug */
-    slug_interned = chorda_internare_ex_literis(arc->ctx->intern, slug_effectivum);
+    slug_interned = chorda_internare_ex_literis(arc->ctx->intern,
+        slug_effectivum);
     si (slug_interned)
     {
         arc->schirma_currens_slug = *slug_interned;
@@ -900,7 +916,8 @@ arx_caeli_navigare_ad (
     /* Invenire vel creare entitatem schirmae */
     si (arc->ctx->repo)
     {
-        schirma_entitas = _invenire_vel_creare_schirmam(arc, slug_effectivum);
+        schirma_entitas = _invenire_vel_creare_schirmam(arc,
+            slug_effectivum);
         si (schirma_entitas)
         {
             arc->schirma_currens_id = *schirma_entitas->id;
@@ -949,10 +966,12 @@ arx_caeli_retro (
         /* Invenire entitatem schirmae */
         si (arc->ctx->repo && arc->schirma_currens_slug.datum)
         {
-            slug_cstr = chorda_ut_cstr(arc->schirma_currens_slug, arc->ctx->piscina);
+            slug_cstr = chorda_ut_cstr(arc->schirma_currens_slug,
+                arc->ctx->piscina);
             si (slug_cstr)
             {
-                schirma_entitas = _invenire_vel_creare_schirmam(arc, slug_cstr);
+                schirma_entitas = _invenire_vel_creare_schirmam(arc,
+                    slug_cstr);
                 si (schirma_entitas)
                 {
                     arc->schirma_currens_id = *schirma_entitas->id;
@@ -1003,7 +1022,8 @@ arx_caeli_carta_creare (
     carta->x = px_x;
     carta->y = px_y;
 
-    textus_interned = chorda_internare_ex_literis(arc->ctx->intern, "Nova carta");
+    textus_interned = chorda_internare_ex_literis(arc->ctx->intern,
+        "Nova carta");
     si (textus_interned)
     {
         carta->textus = *textus_interned;
@@ -1051,7 +1071,8 @@ arx_caeli_carta_delere (
     /* Delere entitas ex repositorio si existit */
     si (arc->entitas_ids[index] != NIHIL && arc->ctx->repo != NIHIL)
     {
-        arc->ctx->repo->entitas_delere(arc->ctx->repo->datum, arc->entitas_ids[index]);
+        arc->ctx->repo->entitas_delere(arc->ctx->repo->datum,
+            arc->entitas_ids[index]);
     }
 
     /* Movere cartas et entitas_ids post index */
@@ -1158,8 +1179,10 @@ arx_caeli_verificare_collisio (
         carta = &arc->cartae[i];
 
         /* AABB intersection test */
-        overlap_x = (x < carta->x + carta->latitudo) && (x + latitudo > carta->x);
-        overlap_y = (y < carta->y + carta->altitudo) && (y + altitudo > carta->y);
+        overlap_x = (x < carta->x + carta->latitudo)
+            && (x + latitudo > carta->x);
+        overlap_y = (y < carta->y + carta->altitudo)
+            && (y + altitudo > carta->y);
 
         si (overlap_x && overlap_y)
         {
@@ -1256,7 +1279,8 @@ _movere_carta_ad_schirmam (
       Relatio* nova_relatio;
           i32  i;
 
-    si (!arc || !arc->ctx->repo || index < ZEPHYRUM || index >= arc->numerus_cartarum)
+    si (   !arc || !arc->ctx->repo || index < ZEPHYRUM
+        || index >= arc->numerus_cartarum)
     {
         redde;
     }
@@ -1274,14 +1298,16 @@ _movere_carta_ad_schirmam (
     }
 
     entitas_id = arc->entitas_ids[index];
-    entitas = arc->ctx->repo->capere_entitatem(arc->ctx->repo->datum, entitas_id);
+    entitas = arc->ctx->repo->capere_entitatem(arc->ctx->repo->datum,
+        entitas_id);
 
     si (entitas == NIHIL)
     {
         redde;
     }
 
-    slug_novus_cstr = chorda_ut_cstr(nova_schirma_slug, arc->ctx->piscina);
+    slug_novus_cstr = chorda_ut_cstr(nova_schirma_slug,
+        arc->ctx->piscina);
     si (!slug_novus_cstr)
     {
         redde;
@@ -1295,8 +1321,11 @@ _movere_carta_ad_schirmam (
     }
 
     /* Invenire et delere veterem "continet" relationem per back-reference */
-    genus_continet = chorda_internare_ex_literis(arc->ctx->intern, "continet");
-    relationes_ad = arc->ctx->repo->capere_relationes_ad(arc->ctx->repo->datum, entitas_id);
+    genus_continet = chorda_internare_ex_literis(arc->ctx->intern,
+        "continet");
+    relationes_ad =
+        arc->ctx->repo->capere_relationes_ad(arc->ctx->repo->datum,
+        entitas_id);
 
     si (relationes_ad)
     {
@@ -1313,9 +1342,11 @@ _movere_carta_ad_schirmam (
             rel = *rel_ptr;
 
             /* Verificare si est "continet" relatio */
-            si (rel->genus && chorda_aequalis(*rel->genus, *genus_continet))
+            si (   rel->genus
+                && chorda_aequalis(*rel->genus, *genus_continet))
             {
-                arc->ctx->repo->relatio_delere(arc->ctx->repo->datum, rel->id);
+                arc->ctx->repo->relatio_delere(arc->ctx->repo->datum,
+                    rel->id);
                 frange;
             }
         }
@@ -1398,7 +1429,8 @@ _reddere_carta (
         textus_datum      = (i8*)arc->edit_buffer;
         textus_longitudo  = arc->edit_longitudo;
 
-        _obtinere_dimensiones_textus(textus_datum, textus_longitudo, &num_lin, &max_lat);
+        _obtinere_dimensiones_textus(textus_datum, textus_longitudo,
+            &num_lin, &max_lat);
 
         px_lat = (max_lat + (CARTA_PADDING * II) + II) * char_lat;
         px_alt = (num_lin + (CARTA_PADDING * II) + II) * char_alt;
@@ -1426,10 +1458,11 @@ _reddere_carta (
     px_y = (widget_y * char_alt) + carta->y;
 
     /* Calculare limites visuales (inset a limitibus logicis) */
-    inset = CARTA_INSET_VISUAL * scala;
-    radius = CARTA_RADIUS_ANGULI * scala;
-    vis_x = px_x + inset;
-    vis_y = (i32)((s32)px_y + (s32)inset + (CARTA_OFFSET_VERTICALIS * (s32)scala));  /* Shift up */
+    inset   = CARTA_INSET_VISUAL * scala;
+    radius  = CARTA_RADIUS_ANGULI * scala;
+    vis_x   = px_x + inset;
+    vis_y = (i32)((s32)px_y + (s32)inset
+        + (CARTA_OFFSET_VERTICALIS * (s32)scala));  /* Shift up */
     vis_lat = px_lat - (inset * II);
     vis_alt = px_alt - (inset * II) - (CARTA_TRIM_INFERIOR * scala);  /* Trim bottom */
 
@@ -1471,10 +1504,12 @@ _reddere_carta (
     }
 
     /* Pingere fondum cum angulis rotundis */
-    delineare_rectangulum_rotundum_plenum(ctx, vis_x, vis_y, vis_lat, vis_alt, radius, color_background);
+    delineare_rectangulum_rotundum_plenum(ctx, vis_x, vis_y, vis_lat,
+        vis_alt, radius, color_background);
 
     /* Pingere border cum angulis rotundis */
-    delineare_rectangulum_rotundum(ctx, vis_x, vis_y, vis_lat, vis_alt, radius, color_border);
+    delineare_rectangulum_rotundum(ctx, vis_x, vis_y, vis_lat, vis_alt,
+        radius, color_border);
 
     /* Pingere textum per characterem (pro link highlighting) */
     {
@@ -1534,8 +1569,10 @@ _reddere_carta (
         i32 j;
         f32 blink;
 
-        cursor_px_x = vis_x + (CARTA_PADDING + arc->cursor_columna) * char_lat;
-        cursor_px_y = vis_y + (CARTA_PADDING + arc->cursor_linea) * char_alt;
+        cursor_px_x = vis_x + (CARTA_PADDING
+            + arc->cursor_columna) * char_lat;
+        cursor_px_y = vis_y + (CARTA_PADDING
+            + arc->cursor_linea) * char_alt;
 
         /* Blink cursor - unda quadrata cum frequentia 2Hz */
         blink = unda_quadratus((f32)tempus_nunc(), 2.0f, 1.0f);
@@ -1605,16 +1642,20 @@ arx_caeli_reddere (
     px_alt  = altitudo * char_alt;
 
     color_background = thema_color(COLOR_BACKGROUND);
-    color_border = focused ? thema_color(COLOR_BORDER) : thema_color(COLOR_TEXT_DIM);
+    color_border =
+        focused ? thema_color(COLOR_BORDER) : thema_color(COLOR_TEXT_DIM);
 
     /* Pingere fondum */
-    delineare_rectangulum_plenum(ctx, px_x, px_y, px_lat, px_alt, color_background);
+    delineare_rectangulum_plenum(ctx, px_x, px_y, px_lat, px_alt,
+        color_background);
 
     /* Pingere border */
-    delineare_rectangulum(ctx, px_x, px_y, px_lat, px_alt, color_border);
+    delineare_rectangulum(ctx, px_x, px_y, px_lat, px_alt,
+        color_border);
 
     /* Reddere titulum schirmae si non in radice */
-    si (arc->schirma_currens_slug.datum != NIHIL && arc->schirma_currens_slug.mensura > ZEPHYRUM)
+    si (   arc->schirma_currens_slug.datum != NIHIL
+        && arc->schirma_currens_slug.mensura > ZEPHYRUM)
     {
          chorda  titulus;
             i32  titulus_x;
@@ -1632,10 +1673,14 @@ arx_caeli_reddere (
 
             si (schirma_entitas)
             {
-                clavis_titulus = chorda_internare_ex_literis(arc->ctx->intern, "titulus");
+                clavis_titulus =
+                    chorda_internare_ex_literis(arc->ctx->intern,
+                    "titulus");
                 si (clavis_titulus)
                 {
-                    titulus_proprietas = entitas_proprietas_capere(schirma_entitas, clavis_titulus);
+                    titulus_proprietas =
+                        entitas_proprietas_capere(schirma_entitas,
+                        clavis_titulus);
                     si (titulus_proprietas && titulus_proprietas->datum)
                     {
                         titulus = *titulus_proprietas;
@@ -1645,7 +1690,8 @@ arx_caeli_reddere (
         }
 
         /* Centrare titulum in parte superiore */
-        titulus_x = px_x + (px_lat - (i32)titulus.mensura * char_lat) / II;
+        titulus_x = px_x + (px_lat - (i32)titulus.mensura * char_lat)
+            / II;
 
         tabula_pixelorum_pingere_chordam(
             tabula,
@@ -1682,11 +1728,13 @@ arx_caeli_reddere (
             b32 est_selecta;
             b32 in_inserere;
 
-            idx = sorted_indices[i];
-            est_selecta = (idx == arc->index_selecta);
-            in_inserere = (est_selecta && arc->modus == ARC_MODUS_INSERERE);
+            idx          = sorted_indices[i];
+            est_selecta  = (idx == arc->index_selecta);
+            in_inserere = (est_selecta
+                && arc->modus == ARC_MODUS_INSERERE);
 
-            _reddere_carta(arc, ctx, &arc->cartae[idx], idx, x, y, scala, est_selecta, in_inserere);
+            _reddere_carta(arc, ctx, &arc->cartae[idx], idx, x, y,
+                scala, est_selecta, in_inserere);
         }
     }
 
@@ -1720,16 +1768,22 @@ arx_caeli_reddere (
         ghost_px_alt  = carta->altitudo * char_alt;
 
         /* Calculare limites visuales ghost */
-        ghost_inset = CARTA_INSET_VISUAL * scala;
-        ghost_radius = CARTA_RADIUS_ANGULI * scala;
-        ghost_vis_x = ghost_px_x + ghost_inset;
-        ghost_vis_y = (i32)((s32)ghost_px_y + (s32)ghost_inset + (CARTA_OFFSET_VERTICALIS * (s32)scala));
+        ghost_inset   = CARTA_INSET_VISUAL * scala;
+        ghost_radius  = CARTA_RADIUS_ANGULI * scala;
+        ghost_vis_x   = ghost_px_x + ghost_inset;
+        ghost_vis_y = (i32)((s32)ghost_px_y + (s32)ghost_inset
+            + (CARTA_OFFSET_VERTICALIS * (s32)scala));
         ghost_vis_lat = ghost_px_lat - (ghost_inset * II);
-        ghost_vis_alt = ghost_px_alt - (ghost_inset * II) - (CARTA_TRIM_INFERIOR * scala);
+        ghost_vis_alt = ghost_px_alt - (ghost_inset * II)
+            - (CARTA_TRIM_INFERIOR * scala);
 
         /* Assecurare dimensiones minimae */
-        si (ghost_vis_lat < ghost_radius * II + II) ghost_vis_lat = ghost_radius * II + II;
-        si (ghost_vis_alt < ghost_radius * II + II) ghost_vis_alt = ghost_radius * II + II;
+        si (ghost_vis_lat < ghost_radius * II + II) ghost_vis_lat =
+                                                        ghost_radius * II
+                                                            + II;
+        si (ghost_vis_alt < ghost_radius * II + II) ghost_vis_alt =
+                                                        ghost_radius * II
+                                                            + II;
 
         si (arc->trahere_validum)
         {
@@ -1742,9 +1796,12 @@ arx_caeli_reddere (
 
         /* Pingere fondum ghost cum angulis rotundis */
         ghost_background = color_ex_palette(PALETTE_WHITE);
-        delineare_rectangulum_rotundum_plenum(ctx, ghost_vis_x, ghost_vis_y,
-                                              ghost_vis_lat, ghost_vis_alt,
-                                              ghost_radius, ghost_background);
+        delineare_rectangulum_rotundum_plenum(ctx, ghost_vis_x,
+            ghost_vis_y,
+                                              ghost_vis_lat,
+                                              ghost_vis_alt,
+                                              ghost_radius,
+                                              ghost_background);
 
         /* Pingere border ghost cum angulis rotundis */
         delineare_rectangulum_rotundum(ctx, ghost_vis_x, ghost_vis_y,
@@ -1757,7 +1814,8 @@ arx_caeli_reddere (
 
         per (j = ZEPHYRUM; j <= (i32)carta->textus.mensura; j++)
         {
-            si (j == (i32)carta->textus.mensura || carta->textus.datum[j] == '\n')
+            si (   j                      == (i32)carta->textus.mensura
+                || carta->textus.datum[j] == '\n')
             {
                 linea.datum    = carta->textus.datum + linea_start;
                 linea.mensura  = j - linea_start;
@@ -1808,8 +1866,9 @@ arx_caeli_tractare_eventum (
         char_alt = VIII * arc->scala;
 
         /* Convertere ad pixel coordinates relative ad widget */
-        px_x = eventus->datum.mus.x - (arc->widget_x * char_lat);
-        px_y = eventus->datum.mus.y - (arc->widget_y * char_alt);
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        px_x = (i32)eventus->datum.mus.x - (arc->widget_x * char_lat);
+        px_y = (i32)eventus->datum.mus.y - (arc->widget_y * char_alt);
 
         /* Si in modus inserere, exire primo (salvat mutationes) */
         si (arc->modus == ARC_MODUS_INSERERE)
@@ -1836,15 +1895,19 @@ arx_caeli_tractare_eventum (
                     Xar* portal_rels;
 
                 carta_entitas = arc->ctx->repo->capere_entitatem(
-                    arc->ctx->repo->datum, arc->entitas_ids[carta_index]);
+                    arc->ctx->repo->datum,
+                    arc->entitas_ids[carta_index]);
 
                 si (carta_entitas)
                 {
-                    genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
+                    genus_portal =
+                        chorda_internare_ex_literis(arc->ctx->intern,
+                        "portal_ad");
                     portal_rels = entitas_relationes_generis_capere(
                         carta_entitas, genus_portal, arc->ctx->piscina);
 
-                    si (portal_rels && xar_numerus(portal_rels) > ZEPHYRUM)
+                    si (   portal_rels
+                        && xar_numerus(portal_rels) > ZEPHYRUM)
                     {
                         Relatio* rel;
                         Entitas* dest_schirma;
@@ -1852,24 +1915,34 @@ arx_caeli_tractare_eventum (
                          chorda* dest_slug;
 
                         /* entitas_relationes_generis_capere reddit Xar de Relatio (non Relatio*) */
-                        rel = (Relatio*)xar_obtinere(portal_rels, ZEPHYRUM);
+                        rel = (Relatio*)xar_obtinere(portal_rels,
+                            ZEPHYRUM);
                         si (rel)
                         {
-                            dest_schirma = arc->ctx->repo->capere_entitatem(
-                                arc->ctx->repo->datum, rel->destinatio_id);
+                            dest_schirma =
+                                arc->ctx->repo->capere_entitatem(
+                                arc->ctx->repo->datum,
+                                rel->destinatio_id);
 
                             si (dest_schirma)
                             {
-                                clavis_slug = chorda_internare_ex_literis(arc->ctx->intern, "slug");
-                                dest_slug = entitas_proprietas_capere(dest_schirma, clavis_slug);
+                                clavis_slug =
+                                    chorda_internare_ex_literis(arc->ctx->intern,
+                                    "slug");
+                                dest_slug =
+                                    entitas_proprietas_capere(dest_schirma,
+                                    clavis_slug);
 
                                 si (dest_slug && dest_slug->datum)
                                 {
                                     character* slug_cstr;
-                                    slug_cstr = chorda_ut_cstr(*dest_slug, arc->ctx->piscina);
+                                    slug_cstr =
+                                        chorda_ut_cstr(*dest_slug,
+                                        arc->ctx->piscina);
                                     si (slug_cstr)
                                     {
-                                        arx_caeli_navigare_ad(arc, slug_cstr);
+                                        arx_caeli_navigare_ad(arc,
+                                            slug_cstr);
                                     }
                                 }
                             }
@@ -1884,8 +1957,8 @@ arx_caeli_tractare_eventum (
                 s32 char_index;
 
                 char_index = _pixel_ad_char_index(arc, carta,
-                                                   eventus->datum.mus.x,
-                                                   eventus->datum.mus.y);
+                                                   (i32)eventus->datum.mus.x,
+                                                   (i32)eventus->datum.mus.y);
 
                 si (char_index >= ZEPHYRUM && arc->link_callback)
                 {
@@ -1911,12 +1984,15 @@ arx_caeli_tractare_eventum (
 
                         per (k = ZEPHYRUM; k < link_len; k++)
                         {
-                            link_buffer[k] = (character)carta->textus.datum[link_initium + I + k];
+                            link_buffer[k] =
+                                (character)carta->textus.datum[link_initium
+                                    + I + k];
                         }
                         link_buffer[link_len] = '\0';
 
                         /* Vocare callback */
-                        arc->link_callback(arc->link_callback_datum, link_buffer);
+                        arc->link_callback(arc->link_callback_datum,
+                            link_buffer);
                         redde VERUM;
                     }
                 }
@@ -1948,8 +2024,9 @@ arx_caeli_tractare_eventum (
         char_alt = VIII * arc->scala;
 
         /* Convertere ad pixel coordinates relative ad widget */
-        px_x = eventus->datum.mus.x - (arc->widget_x * char_lat);
-        px_y = eventus->datum.mus.y - (arc->widget_y * char_alt);
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        px_x = (i32)eventus->datum.mus.x - (arc->widget_x * char_lat);
+        px_y = (i32)eventus->datum.mus.y - (arc->widget_y * char_alt);
 
         /* Si in modus inserere, exire primo (salvat mutationes) */
         si (arc->modus == ARC_MODUS_INSERERE)
@@ -1978,8 +2055,8 @@ arx_caeli_tractare_eventum (
                 s32 char_index;
 
                 char_index = _pixel_ad_char_index(arc, carta,
-                                                   eventus->datum.mus.x,
-                                                   eventus->datum.mus.y);
+                                                   (i32)eventus->datum.mus.x,
+                                                   (i32)eventus->datum.mus.y);
 
                 si (char_index >= ZEPHYRUM)
                 {
@@ -2005,11 +2082,14 @@ arx_caeli_tractare_eventum (
 
                         per (k = ZEPHYRUM; k < link_len; k++)
                         {
-                            link_buffer[k] = (character)carta->textus.datum[link_initium + I + k];
+                            link_buffer[k] =
+                                (character)carta->textus.datum[link_initium
+                                    + I + k];
                         }
                         link_buffer[link_len] = '\0';
 
-                        arc->link_callback(arc->link_callback_datum, link_buffer);
+                        arc->link_callback(arc->link_callback_datum,
+                            link_buffer);
                         redde VERUM;
                     }
                 }
@@ -2029,14 +2109,18 @@ arx_caeli_tractare_eventum (
                 /* Calculare offset in pixelis
                  * carta->x/y jam sunt widget-relativum pixela
                  * Convertere ad screen pixels pro offset */
-                carta_screen_px_x = (arc->widget_x * char_lat) + carta->x;
-                carta_screen_px_y = (arc->widget_y * char_alt) + carta->y;
-                arc->trahere_offset_px_x = eventus->datum.mus.x - carta_screen_px_x;
-                arc->trahere_offset_px_y = eventus->datum.mus.y - carta_screen_px_y;
+                carta_screen_px_x = (arc->widget_x * char_lat)
+                    + carta->x;
+                carta_screen_px_y = (arc->widget_y * char_alt)
+                    + carta->y;
+                arc->trahere_offset_px_x = (i32)eventus->datum.mus.x
+                    - carta_screen_px_x;
+                arc->trahere_offset_px_y = (i32)eventus->datum.mus.y
+                    - carta_screen_px_y;
 
                 /* Initiare trahere_px pro ghost rendering */
-                arc->trahere_px_x = eventus->datum.mus.x;
-                arc->trahere_px_y = eventus->datum.mus.y;
+                arc->trahere_px_x = (i32)eventus->datum.mus.x;
+                arc->trahere_px_y = (i32)eventus->datum.mus.y;
 
                 /* trahere_grid_x/y nunc tenent widget-relativum pixela */
                 arc->trahere_grid_x   = carta->x;
@@ -2077,8 +2161,10 @@ arx_caeli_tractare_eventum (
             /* Calculare positio ghost in pixelis (relativa ad widget) */
             widget_px_x = (s32)arc->widget_x * char_lat;
             widget_px_y = (s32)arc->widget_y * char_alt;
-            ghost_px_x = (s32)eventus->datum.mus.x - (s32)arc->trahere_offset_px_x - widget_px_x;
-            ghost_px_y = (s32)eventus->datum.mus.y - (s32)arc->trahere_offset_px_y - widget_px_y;
+            ghost_px_x = (s32)eventus->datum.mus.x
+                - (s32)arc->trahere_offset_px_x - widget_px_x;
+            ghost_px_y = (s32)eventus->datum.mus.y
+                - (s32)arc->trahere_offset_px_y - widget_px_y;
 
             /* Cohibere ghost intra limites widget (in pixelis)
              * NOTA: Cohibere dextrum/fundum primo, deinde sinistrum/summum,
@@ -2114,8 +2200,10 @@ arx_caeli_tractare_eventum (
             arc->trahere_grid_y = (i32)ghost_px_y;
 
             /* Recalculare trahere_px ex positione cohibita (screen pixels) */
-            arc->trahere_px_x = (i32)(ghost_px_x + (s32)arc->trahere_offset_px_x + widget_px_x);
-            arc->trahere_px_y = (i32)(ghost_px_y + (s32)arc->trahere_offset_px_y + widget_px_y);
+            arc->trahere_px_x = (i32)(ghost_px_x
+                + (s32)arc->trahere_offset_px_x + widget_px_x);
+            arc->trahere_px_y = (i32)(ghost_px_y
+                + (s32)arc->trahere_offset_px_y + widget_px_y);
 
             /* Nulla collisio - cartae possunt overlap */
             arc->trahere_validum = VERUM;
@@ -2152,15 +2240,20 @@ arx_caeli_tractare_eventum (
                     Xar* portal_rels;
 
                 folder_entitas = arc->ctx->repo->capere_entitatem(
-                    arc->ctx->repo->datum, arc->entitas_ids[folder_index]);
+                    arc->ctx->repo->datum,
+                    arc->entitas_ids[folder_index]);
 
                 si (folder_entitas)
                 {
-                    genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
+                    genus_portal =
+                        chorda_internare_ex_literis(arc->ctx->intern,
+                        "portal_ad");
                     portal_rels = entitas_relationes_generis_capere(
-                        folder_entitas, genus_portal, arc->ctx->piscina);
+                        folder_entitas, genus_portal,
+                        arc->ctx->piscina);
 
-                    si (portal_rels && xar_numerus(portal_rels) > ZEPHYRUM)
+                    si (   portal_rels
+                        && xar_numerus(portal_rels) > ZEPHYRUM)
                     {
                         Relatio* rel;
                         Entitas* dest_schirma;
@@ -2168,16 +2261,23 @@ arx_caeli_tractare_eventum (
                          chorda* dest_slug;
 
                         /* entitas_relationes_generis_capere reddit Xar de Relatio (non Relatio*) */
-                        rel = (Relatio*)xar_obtinere(portal_rels, ZEPHYRUM);
+                        rel = (Relatio*)xar_obtinere(portal_rels,
+                            ZEPHYRUM);
                         si (rel)
                         {
-                            dest_schirma = arc->ctx->repo->capere_entitatem(
-                                arc->ctx->repo->datum, rel->destinatio_id);
+                            dest_schirma =
+                                arc->ctx->repo->capere_entitatem(
+                                arc->ctx->repo->datum,
+                                rel->destinatio_id);
 
                             si (dest_schirma)
                             {
-                                clavis_slug = chorda_internare_ex_literis(arc->ctx->intern, "slug");
-                                dest_slug = entitas_proprietas_capere(dest_schirma, clavis_slug);
+                                clavis_slug =
+                                    chorda_internare_ex_literis(arc->ctx->intern,
+                                    "slug");
+                                dest_slug =
+                                    entitas_proprietas_capere(dest_schirma,
+                                    clavis_slug);
 
                                 si (dest_slug && dest_slug->datum)
                                 {
@@ -2274,7 +2374,8 @@ arx_caeli_tractare_eventum (
                     si (arc->edit_buffer[index - I] == '\n')
                     {
                         arc->cursor_linea--;
-                        arc->cursor_columna = _latitudo_lineae(arc, arc->cursor_linea);
+                        arc->cursor_columna = _latitudo_lineae(arc,
+                            arc->cursor_linea);
                         /* Corrigere quia linea nondum mutata */
                         linea_lat = ZEPHYRUM;
                         per (i = ZEPHYRUM; i < index - I; i++)
@@ -2296,7 +2397,8 @@ arx_caeli_tractare_eventum (
                     }
 
                     /* Movere characteres */
-                    per (i = index - I; i < arc->edit_longitudo - I; i++)
+                    per (i = index - I; i < arc->edit_longitudo
+                        - I; i++)
                     {
                         arc->edit_buffer[i] = arc->edit_buffer[i + I];
                     }
@@ -2315,7 +2417,8 @@ arx_caeli_tractare_eventum (
                 alioquin si (arc->cursor_linea > ZEPHYRUM)
                 {
                     arc->cursor_linea--;
-                    arc->cursor_columna = _latitudo_lineae(arc, arc->cursor_linea);
+                    arc->cursor_columna = _latitudo_lineae(arc,
+                        arc->cursor_linea);
                 }
                 redde VERUM;
             }
@@ -2330,8 +2433,10 @@ arx_caeli_tractare_eventum (
                 alioquin
                 {
                     /* Numerare lineas */
-                    _obtinere_dimensiones_textus((i8*)arc->edit_buffer, arc->edit_longitudo,
-                                                  &num_lineae, &linea_lat);
+                    _obtinere_dimensiones_textus((i8*)arc->edit_buffer,
+                        arc->edit_longitudo,
+                                                  &num_lineae,
+                                                  &linea_lat);
                     si (arc->cursor_linea < num_lineae - I)
                     {
                         arc->cursor_linea++;
@@ -2346,7 +2451,8 @@ arx_caeli_tractare_eventum (
                 si (arc->cursor_linea > ZEPHYRUM)
                 {
                     arc->cursor_linea--;
-                    linea_lat = _latitudo_lineae(arc, arc->cursor_linea);
+                    linea_lat = _latitudo_lineae(arc,
+                        arc->cursor_linea);
                     si (arc->cursor_columna > linea_lat)
                     {
                         arc->cursor_columna = linea_lat;
@@ -2357,12 +2463,14 @@ arx_caeli_tractare_eventum (
 
             si (clavis == CLAVIS_DEORSUM)
             {
-                _obtinere_dimensiones_textus((i8*)arc->edit_buffer, arc->edit_longitudo,
+                _obtinere_dimensiones_textus((i8*)arc->edit_buffer,
+                    arc->edit_longitudo,
                                               &num_lineae, &linea_lat);
                 si (arc->cursor_linea < num_lineae - I)
                 {
                     arc->cursor_linea++;
-                    linea_lat = _latitudo_lineae(arc, arc->cursor_linea);
+                    linea_lat = _latitudo_lineae(arc,
+                        arc->cursor_linea);
                     si (arc->cursor_columna > linea_lat)
                     {
                         arc->cursor_columna = linea_lat;
@@ -2384,7 +2492,8 @@ arx_caeli_tractare_eventum (
                     {
                         arc->edit_buffer[i] = arc->edit_buffer[i - I];
                     }
-                    arc->edit_buffer[index] = eventus->datum.clavis.typus;
+                    arc->edit_buffer[index] =
+                        eventus->datum.clavis.typus;
                     arc->edit_longitudo++;
 
                     arc->cursor_columna++;
@@ -2432,7 +2541,8 @@ arx_caeli_carcare (
     /* Obtinere slug ut C string (DEBET esse null-terminatum!) */
     si (arc->schirma_currens_slug.datum)
     {
-        slug_str = chorda_ut_cstr(arc->schirma_currens_slug, arc->ctx->piscina);
+        slug_str = chorda_ut_cstr(arc->schirma_currens_slug,
+            arc->ctx->piscina);
     }
     alioquin
     {
@@ -2447,7 +2557,8 @@ arx_caeli_carcare (
     }
 
     /* Capere cartas per relatio "continet" */
-    genus_continet = chorda_internare_ex_literis(arc->ctx->intern, "continet");
+    genus_continet = chorda_internare_ex_literis(arc->ctx->intern,
+        "continet");
     entitates = arc->ctx->repo->capere_entitates_relatae(
         arc->ctx->repo->datum, schirma_entitas, genus_continet);
 
@@ -2457,14 +2568,17 @@ arx_caeli_carcare (
     }
 
     /* Internare claves semel */
-    clavis_textus = chorda_internare_ex_literis(arc->ctx->intern, "textus");
+    clavis_textus = chorda_internare_ex_literis(arc->ctx->intern,
+        "textus");
     clavis_x = chorda_internare_ex_literis(arc->ctx->intern, "x");
     clavis_y = chorda_internare_ex_literis(arc->ctx->intern, "y");
     clavis_z = chorda_internare_ex_literis(arc->ctx->intern, "z_index");
-    genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
+    genus_portal = chorda_internare_ex_literis(arc->ctx->intern,
+        "portal_ad");
 
     /* Iterare per entitates */
-    per (i = ZEPHYRUM; i < xar_numerus(entitates) && arc->numerus_cartarum < CARTAE_MAXIMUS; i++)
+    per (i = ZEPHYRUM; i < xar_numerus(entitates)
+        && arc->numerus_cartarum < CARTAE_MAXIMUS; i++)
     {
         Entitas** entitas_slot;
         Entitas*  entitas;
@@ -2489,7 +2603,8 @@ arx_caeli_carcare (
         arc->entitas_ids[arc->numerus_cartarum] = entitas->id;
 
         /* Capere proprietates */
-        textus_valor = entitas_proprietas_capere(entitas, clavis_textus);
+        textus_valor = entitas_proprietas_capere(entitas,
+            clavis_textus);
         x_valor = entitas_proprietas_capere(entitas, clavis_x);
         y_valor = entitas_proprietas_capere(entitas, clavis_y);
         z_valor = entitas_proprietas_capere(entitas, clavis_z);
@@ -2500,7 +2615,8 @@ arx_caeli_carcare (
         }
         alioquin
         {
-            chorda* defectus = chorda_internare_ex_literis(arc->ctx->intern, "");
+            chorda* defectus =
+                chorda_internare_ex_literis(arc->ctx->intern, "");
             si (defectus)
             {
                 carta->textus = *defectus;
@@ -2549,8 +2665,10 @@ arx_caeli_carcare (
         }
 
         /* Detegere folder per portal_ad relatio */
-        portal_relationes = entitas_relationes_generis_capere(entitas, genus_portal, arc->ctx->piscina);
-        carta->est_folder = (portal_relationes && xar_numerus(portal_relationes) > ZEPHYRUM);
+        portal_relationes = entitas_relationes_generis_capere(entitas,
+            genus_portal, arc->ctx->piscina);
+        carta->est_folder = (portal_relationes
+            && xar_numerus(portal_relationes) > ZEPHYRUM);
 
         /* Calculare dimensiones */
         _calculare_dimensiones(carta);
@@ -2578,7 +2696,8 @@ arx_caeli_salvare (
     /* Obtinere slug ut C string (DEBET esse null-terminatum!) */
     si (arc->schirma_currens_slug.datum)
     {
-        slug_str = chorda_ut_cstr(arc->schirma_currens_slug, arc->ctx->piscina);
+        slug_str = chorda_ut_cstr(arc->schirma_currens_slug,
+            arc->ctx->piscina);
     }
     alioquin
     {
@@ -2599,12 +2718,16 @@ arx_caeli_salvare (
         /* Si iam habemus entity ID, usare capere_entitatem */
         si (arc->entitas_ids[i] != NIHIL)
         {
-            entitas = arc->ctx->repo->capere_entitatem(arc->ctx->repo->datum, arc->entitas_ids[i]);
+            entitas =
+                arc->ctx->repo->capere_entitatem(arc->ctx->repo->datum,
+                arc->entitas_ids[i]);
         }
         alioquin
         {
             /* Prima vice: creare novam entitas */
-            entitas = arc->ctx->repo->entitas_creare(arc->ctx->repo->datum, "Carta");
+            entitas =
+                arc->ctx->repo->entitas_creare(arc->ctx->repo->datum,
+                "Carta");
             si (entitas != NIHIL)
             {
                 /* Memorare entity ID */
@@ -2693,18 +2816,26 @@ arx_caeli_salvare (
                 slug = chorda_kebab(titulus, arc->ctx->piscina);
                 si (slug.mensura > ZEPHYRUM)
                 {
-                    dest_slug_cstr = chorda_ut_cstr(slug, arc->ctx->piscina);
+                    dest_slug_cstr = chorda_ut_cstr(slug,
+                        arc->ctx->piscina);
                     si (dest_slug_cstr)
                     {
                         /* Invenire vel creare destinationem schirmae */
-                        dest_schirma = _invenire_vel_creare_schirmam(arc, dest_slug_cstr);
+                        dest_schirma =
+                            _invenire_vel_creare_schirmam(arc,
+                            dest_slug_cstr);
                         si (dest_schirma)
                         {
                             /* Verificare si relatio iam existit */
-                            genus_portal = chorda_internare_ex_literis(arc->ctx->intern, "portal_ad");
-                            extantes = entitas_relationes_generis_capere(entitas, genus_portal, arc->ctx->piscina);
+                            genus_portal =
+                                chorda_internare_ex_literis(arc->ctx->intern,
+                                "portal_ad");
+                            extantes =
+                                entitas_relationes_generis_capere(entitas,
+                                genus_portal, arc->ctx->piscina);
 
-                            si (!extantes || xar_numerus(extantes) == ZEPHYRUM)
+                            si (   !extantes
+                                || xar_numerus(extantes) == ZEPHYRUM)
                             {
                                 /* Creare nova relatio: Carta --[portal_ad]--> Schirma */
                                 arc->ctx->repo->relatio_addere(
@@ -2802,7 +2933,8 @@ _arx_caeli_command_handler (
 
     /* Legere argumentum post commandum (skip leading space) */
     idx = ZEPHYRUM;
-    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo
+        && idx < LX; col++)
     {
         c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
 
@@ -2868,7 +3000,8 @@ arx_caeli_salvare_status (
     }
 
     /* Scaffoldare entitas (creat si non existit) */
-    entitas = repo->entitas_scaffoldare(repo->datum, "ArcCaeliStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "ArcCaeliStatus",
+        entitas_id);
     si (!entitas)
     {
         redde;
@@ -2911,7 +3044,8 @@ arx_caeli_carcare_status (
     }
 
     /* Scaffoldare entitas (obtinere existentem vel creare) */
-    entitas = repo->entitas_scaffoldare(repo->datum, "ArcCaeliStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "ArcCaeliStatus",
+        entitas_id);
     si (!entitas)
     {
         /* Nulla entitas - navigare ad root */

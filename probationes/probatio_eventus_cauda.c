@@ -34,8 +34,8 @@ _motum (
     Eventus e;
 
     e                         = _eventum(EVENTUS_MUS_MOTUS, tempus);
-    e.datum.mus.x             = (i32)x;
-    e.datum.mus.y             = (i32)y;
+    e.datum.mus.x             = x;
+    e.datum.mus.y             = y;
     e.datum.mus.modificantes  = modificantes;
     e.datum.mus.pressio       = EVENTUS_PRESSIO_IGNOTA;
     redde e;
@@ -156,8 +156,8 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (c->numerus, I);
     CREDO_VERUM (eventus_caudae_extrahere(c, &e));
     CREDO_VERUM (e.genus == EVENTUS_MUS_MOTUS);
-    CREDO_AEQUALIS_I32 (e.datum.mus.x, IX);           /* ultima vera */
-    CREDO_AEQUALIS_I32 (e.datum.mus.y, XVIII);
+    CREDO_AEQUALIS_S32 (e.datum.mus.x, IX);           /* ultima vera */
+    CREDO_AEQUALIS_S32 (e.datum.mus.y, XVIII);
     CREDO_VERUM (e.tempus == (s64)(C + IX));
     CREDO_AEQUALIS_I32 (e.datum.mus.numerus_exemplorum, IX);
     CREDO_NON_NIHIL (e.datum.mus.exempla);
@@ -209,7 +209,7 @@ s32 principale (vacuum)
     CREDO_VERUM (eventus_caudae_extrahere(c, &e));
     CREDO_AEQUALIS_I32 (e.datum.mus.numerus_exemplorum,
         EVENTUS_EXEMPLA_MAXIMA);
-    CREDO_AEQUALIS_I32 (e.datum.mus.x, XCIX);         /* finis verus */
+    CREDO_AEQUALIS_S32 (e.datum.mus.x, XCIX);         /* finis verus */
     CREDO_VERUM (e.datum.mus.exempla[0].x == 0);
     CREDO_VERUM (e.datum.mus.exempla[LXIII].x == LXIII);
 

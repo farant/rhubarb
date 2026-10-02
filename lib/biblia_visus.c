@@ -60,7 +60,8 @@ biblia_visus_creare (
         redde NIHIL;
     }
 
-    visus = (BibliaVisus*)piscina_allocare(piscina, magnitudo(BibliaVisus));
+    visus = (BibliaVisus*)piscina_allocare(piscina,
+        magnitudo(BibliaVisus));
     si (!visus)
     {
         redde NIHIL;
@@ -142,7 +143,8 @@ _biblia_visus_calculare_paginationem (
     lineae_usae                       = ZEPHYRUM;
     versus_idx                        = ZEPHYRUM;
 
-    dum (versus_idx < versus_in_capitulo && pagina_idx < BIBLIA_PAGINAE_MAXIMUS)
+    dum (   versus_idx < versus_in_capitulo
+         && pagina_idx < BIBLIA_PAGINAE_MAXIMUS)
     {
            chorda versus;
               i32 versus_longitudo;
@@ -151,7 +153,8 @@ _biblia_visus_calculare_paginationem (
         character num_buffer[VIII];
 
         versus = biblia_versus(visus->biblia,
-            visus->liber_currens, visus->capitulum_currens, versus_idx + I);
+            visus->liber_currens, visus->capitulum_currens, versus_idx
+                + I);
 
         si (versus.mensura == ZEPHYRUM)
         {
@@ -177,12 +180,14 @@ _biblia_visus_calculare_paginationem (
             alioquin
             {
                 remaining_chars = versus_longitudo - first_line_chars;
-                lineae_versus = I + ((remaining_chars + chars_disponibiles - I) / chars_disponibiles);
+                lineae_versus = I + ((remaining_chars
+                    + chars_disponibiles - I) / chars_disponibiles);
             }
         }
 
         /* Check if verse fits on current page */
-        si (lineae_usae + lineae_versus > lineae_disponibiles && lineae_usae > ZEPHYRUM)
+        si (   lineae_usae + lineae_versus > lineae_disponibiles
+            && lineae_usae > ZEPHYRUM)
         {
             /* Start new page at this verse */
             visus->paginae_limites[pagina_idx] = versus_idx;
@@ -236,10 +241,11 @@ _biblia_visus_reddere_toc (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -266,7 +272,8 @@ _biblia_visus_reddere_toc (
     /* Libri Veteris Testamenti (0-45) - vertical flow */
     {
         i32 ot_numerus = LIBER_PRIMUS_NT;  /* 46 books */
-        i32 libri_per_columna = (ot_numerus + COLUMNAE_NUMERUS - I) / COLUMNAE_NUMERUS;
+        i32 libri_per_columna = (ot_numerus + COLUMNAE_NUMERUS - I)
+            / COLUMNAE_NUMERUS;
         i32 linea_initium = linea;
 
         per (liber_idx = ZEPHYRUM; liber_idx < ot_numerus; liber_idx++)
@@ -277,7 +284,8 @@ _biblia_visus_reddere_toc (
                            i32  linea_liber;
 
             col = liber_idx / libri_per_columna;
-            linea_liber = linea_initium + (liber_idx % libri_per_columna);
+            linea_liber = linea_initium + (liber_idx
+                % libri_per_columna);
 
             titulis = biblia_nomen_libri(visus->biblia, liber_idx);
             si (titulis)
@@ -305,7 +313,8 @@ _biblia_visus_reddere_toc (
     /* Libri Novi Testamenti (46-72) - vertical flow */
     {
         i32 nt_numerus = LIBRI_NUMERUS - LIBER_PRIMUS_NT;  /* 27 books */
-        i32 libri_per_columna = (nt_numerus + COLUMNAE_NUMERUS - I) / COLUMNAE_NUMERUS;
+        i32 libri_per_columna = (nt_numerus + COLUMNAE_NUMERUS - I)
+            / COLUMNAE_NUMERUS;
         i32 linea_initium = linea;
         i32 nt_idx;
 
@@ -337,7 +346,8 @@ _biblia_visus_reddere_toc (
 
     /* Instructiones */
     linea += III;
-    titulus = _chorda_ex_cstr("Click book name to read. Press Escape to exit.");
+    titulus =
+        _chorda_ex_cstr("Click book name to read. Press Escape to exit.");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
         titulus, pixelum_text_dim, scala);
@@ -385,10 +395,11 @@ _biblia_visus_reddere_lectio (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -403,12 +414,14 @@ _biblia_visus_reddere_lectio (
     (vacuum)pixelum_text_dim;
 
     /* === Header: Book Chapter === */
-    nomen_libri = biblia_nomen_libri(visus->biblia, visus->liber_currens);
+    nomen_libri = biblia_nomen_libri(visus->biblia,
+        visus->liber_currens);
     si (!nomen_libri)
     {
         nomen_libri = "???";
     }
-    sprintf(titulus_buffer, "%s %d", nomen_libri, visus->capitulum_currens);
+    sprintf(titulus_buffer, "%s %d", nomen_libri,
+        visus->capitulum_currens);
     titulus = _chorda_ex_cstr(titulus_buffer);
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
@@ -456,7 +469,8 @@ _biblia_visus_reddere_lectio (
         color_ruber_obscurus  = color_ex_rgb((i8)139, (i8)0, (i8)0);
         pixelum_numerus       = color_ad_pixelum(color_ruber_obscurus);
 
-        per (versus_idx = visus->versus_initium; versus_idx < versus_in_capitulo; versus_idx++)
+        per (versus_idx = visus->versus_initium; versus_idx
+            < versus_in_capitulo; versus_idx++)
         {
                chorda versus;
             character versus_buffer[DXII];  /* 512 chars max */
@@ -469,7 +483,8 @@ _biblia_visus_reddere_lectio (
                   i32 col_currens;
 
             versus = biblia_versus(visus->biblia,
-                visus->liber_currens, visus->capitulum_currens, versus_idx + I);
+                visus->liber_currens, visus->capitulum_currens,
+                versus_idx + I);
 
             si (versus.mensura == ZEPHYRUM)
             {
@@ -486,11 +501,13 @@ _biblia_visus_reddere_lectio (
             {
                 versus_longitudo = DX;
             }
-            memcpy(versus_buffer, versus.datum, (size_t)versus_longitudo);
+            memcpy(versus_buffer, versus.datum,
+                (size_t)versus_longitudo);
             versus_buffer[versus_longitudo] = '\0';
 
             /* Estimate lines needed (rough) */
-            lineae_versus = ((num_longitudo + versus_longitudo) + chars_disponibiles - I) / chars_disponibiles;
+            lineae_versus = ((num_longitudo + versus_longitudo)
+                + chars_disponibiles - I) / chars_disponibiles;
             si (lineae_versus < I) lineae_versus = I;
 
             /* Check if verse fits */
@@ -552,18 +569,21 @@ _biblia_visus_reddere_lectio (
                     /* If no space found, break at limit */
                 }
 
-                memcpy(line_buffer, versus_buffer + pos, (size_t)break_pos);
+                memcpy(line_buffer, versus_buffer + pos,
+                    (size_t)break_pos);
                 line_buffer[break_pos]  = '\0';
                 line_chorda             = _chorda_ex_cstr(line_buffer);
 
                 tabula_pixelorum_pingere_chordam_scalatam(tabula,
-                    (x + PADDING + col_currens) * char_lat, linea * char_alt,
+                    (x + PADDING + col_currens) * char_lat,
+                    linea * char_alt,
                     line_chorda, pixelum_text, scala);
 
                 pos += break_pos;
 
                 /* Skip leading space on new line */
-                dum (pos < versus_longitudo && versus_buffer[pos] == ' ')
+                dum (   pos < versus_longitudo
+                     && versus_buffer[pos] == ' ')
                 {
                     pos++;
                 }
@@ -584,7 +604,8 @@ _biblia_visus_reddere_lectio (
         i32 footer_y;
 
         footer_y = y + altitudo - I;
-        sprintf(nav_buffer, "Page %d/%d", visus->index_paginae + I, visus->paginae_numerus);
+        sprintf(nav_buffer, "Page %d/%d", visus->index_paginae + I,
+            visus->paginae_numerus);
         titulus = _chorda_ex_cstr(nav_buffer);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
             (x + latitudo - XVI) * char_lat, footer_y * char_alt,
@@ -624,7 +645,8 @@ biblia_visus_reddere (
 
     si (visus->in_toc)
     {
-        _biblia_visus_reddere_toc(visus, tabula, x, y, latitudo, altitudo, scala);
+        _biblia_visus_reddere_toc(visus, tabula, x, y, latitudo,
+            altitudo, scala);
     }
     alioquin
     {
@@ -647,10 +669,12 @@ biblia_visus_reddere (
         /* Ensure versus_initium matches current page */
         si (visus->paginae_numerus > ZEPHYRUM)
         {
-            visus->versus_initium = visus->paginae_limites[visus->index_paginae];
+            visus->versus_initium =
+                visus->paginae_limites[visus->index_paginae];
         }
 
-        _biblia_visus_reddere_lectio(visus, tabula, x, y, latitudo, altitudo, scala);
+        _biblia_visus_reddere_lectio(visus, tabula, x, y, latitudo,
+            altitudo, scala);
     }
 }
 
@@ -673,7 +697,8 @@ _biblia_visus_pagina_proxima (
         /* Go to next chapter */
         i32 capitula_in_libro;
 
-        capitula_in_libro = biblia_capitula_in_libro(visus->biblia, visus->liber_currens);
+        capitula_in_libro = biblia_capitula_in_libro(visus->biblia,
+            visus->liber_currens);
 
         si (visus->capitulum_currens < capitula_in_libro)
         {
@@ -716,9 +741,11 @@ _biblia_visus_pagina_prior (
         {
             /* Go to previous book, last chapter */
             visus->liber_currens--;
-            visus->capitulum_currens = biblia_capitula_in_libro(visus->biblia, visus->liber_currens);
-            visus->cache_liber = (i32)(-1);  /* Force recalculation */
-            visus->index_paginae = BIBLIA_PAGINAE_MAXIMUS;  /* Will be clamped */
+            visus->capitulum_currens =
+                biblia_capitula_in_libro(visus->biblia,
+                visus->liber_currens);
+            visus->cache_liber    = (i32)(-1);  /* Force recalculation */
+            visus->index_paginae  = BIBLIA_PAGINAE_MAXIMUS;  /* Will be clamped */
         }
         /* else stay at beginning */
     }
@@ -730,7 +757,8 @@ _biblia_visus_capitulum_proximum (
 {
     i32 capitula_in_libro;
 
-    capitula_in_libro = biblia_capitula_in_libro(visus->biblia, visus->liber_currens);
+    capitula_in_libro = biblia_capitula_in_libro(visus->biblia,
+        visus->liber_currens);
 
     si (visus->capitulum_currens < capitula_in_libro)
     {
@@ -762,9 +790,11 @@ _biblia_visus_capitulum_priorem (
     {
         /* Go to previous book, last chapter */
         visus->liber_currens--;
-        visus->capitulum_currens = biblia_capitula_in_libro(visus->biblia, visus->liber_currens);
-        visus->index_paginae = ZEPHYRUM;
-        visus->cache_liber = (i32)(-1);  /* Force recalculation */
+        visus->capitulum_currens =
+            biblia_capitula_in_libro(visus->biblia,
+            visus->liber_currens);
+        visus->index_paginae  = ZEPHYRUM;
+        visus->cache_liber    = (i32)(-1);  /* Force recalculation */
     }
 }
 
@@ -798,7 +828,8 @@ _biblia_visus_tractare_click_toc (
     /* Check OT section - vertical flow */
     {
         i32 ot_numerus = LIBER_PRIMUS_NT;  /* 46 books */
-        i32 libri_per_columna = (ot_numerus + COLUMNAE_NUMERUS - I) / COLUMNAE_NUMERUS;
+        i32 libri_per_columna = (ot_numerus + COLUMNAE_NUMERUS - I)
+            / COLUMNAE_NUMERUS;
         i32 liber_idx;
 
         per (liber_idx = ZEPHYRUM; liber_idx < ot_numerus; liber_idx++)
@@ -810,7 +841,8 @@ _biblia_visus_tractare_click_toc (
             constans character* titulis;
 
             col = liber_idx / libri_per_columna;
-            linea_liber = linea_ot_start + (liber_idx % libri_per_columna);
+            linea_liber = linea_ot_start + (liber_idx
+                % libri_per_columna);
             col_x = PADDING + (col * COLUMNA_LATITUDO);
 
             titulis   = biblia_nomen_libri(visus->biblia, liber_idx);
@@ -838,7 +870,8 @@ _biblia_visus_tractare_click_toc (
     /* Check NT section - vertical flow */
     {
         i32 nt_numerus = LIBRI_NUMERUS - LIBER_PRIMUS_NT;  /* 27 books */
-        i32 libri_per_columna = (nt_numerus + COLUMNAE_NUMERUS - I) / COLUMNAE_NUMERUS;
+        i32 libri_per_columna = (nt_numerus + COLUMNAE_NUMERUS - I)
+            / COLUMNAE_NUMERUS;
         i32 nt_idx;
 
         per (nt_idx = ZEPHYRUM; nt_idx < nt_numerus; nt_idx++)
@@ -942,9 +975,10 @@ biblia_visus_tractare_eventum (
     {
         si (visus->in_toc)
         {
+            /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
             redde _biblia_visus_tractare_click_toc(visus,
-                eventus->datum.mus.x,
-                eventus->datum.mus.y);
+                (i32)eventus->datum.mus.x,
+                (i32)eventus->datum.mus.y);
         }
     }
 
@@ -1116,8 +1150,10 @@ biblia_visus_navigare_ad (
     {
         /* Need to calculate pagination first */
         _biblia_visus_calculare_paginationem(visus,
-            visus->latitudo_characterum > ZEPHYRUM ? visus->latitudo_characterum : LXXX,
-            visus->altitudo_linearum > ZEPHYRUM ? visus->altitudo_linearum : XL);
+            visus->latitudo_characterum
+                > ZEPHYRUM ? visus->latitudo_characterum : LXXX,
+            visus->altitudo_linearum
+                > ZEPHYRUM ? visus->altitudo_linearum : XL);
 
         /* Find page containing verse (0-indexed internally) */
         {
@@ -1126,7 +1162,8 @@ biblia_visus_navigare_ad (
 
             versus_idx = versus - I;  /* Convert to 0-indexed */
 
-            per (pagina = (s32)visus->paginae_numerus - I; pagina >= ZEPHYRUM; pagina--)
+            per (pagina = (s32)visus->paginae_numerus - I; pagina
+                >= ZEPHYRUM; pagina--)
             {
                 si (visus->paginae_limites[pagina] <= versus_idx)
                 {
@@ -1171,7 +1208,8 @@ _biblia_command_handler (
 
     /* Legere argumentum post commandum (skip leading space) */
     idx = ZEPHYRUM;
-    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo
+        && idx < LX; col++)
     {
         c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
 
@@ -1210,7 +1248,8 @@ biblia_visus_init (
     }
 
     /* Registrare $bible command */
-    registrum_commandi_registrare(ctx->reg_commandi, "bible", _biblia_command_handler, ctx);
+    registrum_commandi_registrare(ctx->reg_commandi, "bible",
+        _biblia_command_handler, ctx);
 }
 
 vacuum
@@ -1228,7 +1267,8 @@ biblia_visus_salvare_status (
     }
 
     /* Scaffoldare entitas (creat si non existit) */
-    entitas = repo->entitas_scaffoldare(repo->datum, "BibliaStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "BibliaStatus",
+        entitas_id);
     si (!entitas)
     {
         redde;
@@ -1240,15 +1280,18 @@ biblia_visus_salvare_status (
 
     /* Salvare liber_currens */
     sprintf(valor, "%d", visus->liber_currens);
-    repo->proprietas_ponere(repo->datum, entitas, "liber_currens", valor);
+    repo->proprietas_ponere(repo->datum, entitas, "liber_currens",
+        valor);
 
     /* Salvare capitulum_currens */
     sprintf(valor, "%d", visus->capitulum_currens);
-    repo->proprietas_ponere(repo->datum, entitas, "capitulum_currens", valor);
+    repo->proprietas_ponere(repo->datum, entitas, "capitulum_currens",
+        valor);
 
     /* Salvare index_paginae */
     sprintf(valor, "%d", visus->index_paginae);
-    repo->proprietas_ponere(repo->datum, entitas, "index_paginae", valor);
+    repo->proprietas_ponere(repo->datum, entitas, "index_paginae",
+        valor);
 }
 
 vacuum
@@ -1267,22 +1310,26 @@ biblia_visus_carcare_status (
     }
 
     /* Obtinere entitas */
-    entitas = repo->entitas_scaffoldare(repo->datum, "BibliaStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "BibliaStatus",
+        entitas_id);
     si (!entitas)
     {
         redde;
     }
 
     /* Carcare in_toc */
-    clavis = chorda_internare_ex_literis(internamentum_globale(), "in_toc");
+    clavis = chorda_internare_ex_literis(internamentum_globale(),
+        "in_toc");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
-        visus->in_toc = (valor->datum[ZEPHYRUM] == '1') ? VERUM : FALSUM;
+        visus->in_toc = (valor->datum[ZEPHYRUM]
+            == '1') ? VERUM : FALSUM;
     }
 
     /* Carcare liber_currens */
-    clavis = chorda_internare_ex_literis(internamentum_globale(), "liber_currens");
+    clavis = chorda_internare_ex_literis(internamentum_globale(),
+        "liber_currens");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
@@ -1294,7 +1341,8 @@ biblia_visus_carcare_status (
     }
 
     /* Carcare capitulum_currens */
-    clavis = chorda_internare_ex_literis(internamentum_globale(), "capitulum_currens");
+    clavis = chorda_internare_ex_literis(internamentum_globale(),
+        "capitulum_currens");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
@@ -1306,7 +1354,8 @@ biblia_visus_carcare_status (
     }
 
     /* Carcare index_paginae */
-    clavis = chorda_internare_ex_literis(internamentum_globale(), "index_paginae");
+    clavis = chorda_internare_ex_literis(internamentum_globale(),
+        "index_paginae");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {

@@ -11,8 +11,8 @@
 interior Eventus
 mus_depressus (
     s64 tempus,
-    i32 x,
-    i32 y)
+    s32 x,
+    s32 y)
 {
     Eventus e;
     memset(&e, ZEPHYRUM, magnitudo(Eventus));

@@ -627,8 +627,9 @@ importatio_visus_tractare_eventum (
     si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
     {
         visus->dragging      = VERUM;
-        visus->drag_start_x  = eventus->datum.mus.x;
-        visus->drag_start_y  = eventus->datum.mus.y;
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        visus->drag_start_x = (i32)eventus->datum.mus.x;
+        visus->drag_start_y = (i32)eventus->datum.mus.y;
         /* Use pending values as starting point */
         visus->drag_start_crop_x = visus->crop_center_x_pendens;
         visus->drag_start_crop_y = visus->crop_center_y_pendens;

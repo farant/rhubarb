@@ -42,8 +42,8 @@ nodus (
 interior Eventus
 mus (
     eventus_genus_t genus,
-                i32 x,
-                i32 y)
+                s32 x,
+                s32 y)
 {
     Eventus e;
 
@@ -186,6 +186,20 @@ s32 principale (vacuum)
     d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
     CREDO_CHORDA_AEQUALIS_LITERIS(d.id_geometricum, "radix");
     CREDO_AEQUALIS_I32(xar_numerus(d.ascensus), I);
+
+    imprimere("\n--- A3c: extra fenestram (x negativum) ---\n");
+    /* sinistrorsum b1 (10..60) et radicis: nihil tangitur - non b1,
+     * non radix (positio vera, non ad marginem coarctata) */
+    e = mus(EVENTUS_MUS_MOTUS, -V, XV);
+    d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
+    CREDO_VERUM(chorda_vacua(d.id_geometricum));
+    /* tractus extra fenestram: captura tenet (punctum_locale ictus
+     * GEOMETRICI est - hic nullus, ergo 0) */
+    motus_captura_ponere(&motus, chorda_ex_literis("b1", piscina));
+    d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
+    CREDO_VERUM(destinatio_componens(&d) == b1);
+    CREDO_VERUM(chorda_vacua(d.id_geometricum));
+    motus_captura_tollere(&motus);
 
     imprimere("\n--- Captura vincit geometriam ---\n");
     motus_captura_ponere(&motus, chorda_ex_literis("tabula", piscina));

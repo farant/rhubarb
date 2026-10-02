@@ -235,10 +235,10 @@ mus (
     Eventus e;
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus            = genus;
-    e.tempus           = m->tempus;
-        e.datum.mus.x  = (i32)x;
-    e.datum.mus.y      = (i32)y;
+    e.genus        = genus;
+    e.tempus       = m->tempus;
+    e.datum.mus.x  = x;
+    e.datum.mus.y  = y;
     dispensator_tractare(m->d, &e);
     m->tempus += m->gradus_ms;
 }

@@ -139,11 +139,13 @@ _dialogus_importatio_reddere (
 
         si (visus->modus_coloris)
         {
-            label = chorda_ex_literis("Modus: Coloris [C/G]", di->piscina);
+            label = chorda_ex_literis("Modus: Coloris [C/G]",
+                di->piscina);
         }
         alioquin
         {
-            label = chorda_ex_literis("Modus: Griseus [C/G]", di->piscina);
+            label = chorda_ex_literis("Modus: Griseus [C/G]",
+                di->piscina);
         }
         tabula_pixelorum_pingere_chordam_scalatam(
             tabula, mode_px, mode_py, label,
@@ -244,7 +246,8 @@ _dialogus_importatio_reddere (
 
             si (fructus.mutatum)
             {
-                importatio_visus_ponere_punctum(visus, i, fructus.valor);
+                importatio_visus_ponere_punctum(visus, i,
+                    fructus.valor);
             }
         }
     }
@@ -377,14 +380,16 @@ _dialogus_importatio_tractare_eventum (
         || eventus->genus == EVENTUS_MUS_ROTULA)
     {
         di->eventus_currens  = eventus;
-        di->eventus_mus_x    = eventus->datum.mus.x;
-        di->eventus_mus_y    = eventus->datum.mus.y;
+        /* (i32): extra fenestram negativum -> numerus magnus, qui
+         * nullum rectum tangit (A3c: mus.x s32; generatio vetus i32) */
+        di->eventus_mus_x = (i32)eventus->datum.mus.x;
+        di->eventus_mus_y = (i32)eventus->datum.mus.y;
     }
     alioquin si (eventus->genus == EVENTUS_MUS_MOTUS)
     {
         /* Semper renovare positio muris */
-        di->eventus_mus_x = eventus->datum.mus.x;
-        di->eventus_mus_y = eventus->datum.mus.y;
+        di->eventus_mus_x = (i32)eventus->datum.mus.x;
+        di->eventus_mus_y = (i32)eventus->datum.mus.y;
 
         /* Solum salvare si non overwriting release event */
         si (   di->eventus_currens        == NIHIL
@@ -425,7 +430,8 @@ _dialogus_importatio_tractare_eventum (
         {
             importatio_visus_ponere_modus(visus, VERUM);
         }
-        alioquin si ((clavis == 'g' || clavis == 'G') && !di->titulus_focused)
+        alioquin si (   (clavis == 'g' || clavis == 'G')
+                     && !di->titulus_focused)
         {
             importatio_visus_ponere_modus(visus, FALSUM);
         }
@@ -496,12 +502,14 @@ dialogus_importatio_creare (
     di->abicere_clicked  = FALSUM;
 
     /* Configurare dialogus base */
-    di->dialogus.datum = di;
-    di->dialogus.piscina = piscina;
-    di->dialogus.reddere = _dialogus_importatio_reddere;
-    di->dialogus.tractare_eventum = _dialogus_importatio_tractare_eventum;
+    di->dialogus.datum    = di;
+    di->dialogus.piscina  = piscina;
+    di->dialogus.reddere  = _dialogus_importatio_reddere;
+    di->dialogus.tractare_eventum =
+        _dialogus_importatio_tractare_eventum;
     di->dialogus.destruere = _dialogus_importatio_destruere;
-    di->dialogus.titulus = chorda_ex_literis("Importare Imaginem", piscina);
+    di->dialogus.titulus = chorda_ex_literis("Importare Imaginem",
+        piscina);
 
     fprintf(stderr, "Dialogus importatio creatus\n");
 

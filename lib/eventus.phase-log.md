@@ -391,3 +391,50 @@ rounding instead of truncating.
 5. **Resize.** The resize event reports the FRAME size (428 for a 400
    content area). It predates eventus and is parked as terminal-planning
    005.
+
+## A3c — pointer coordinates are s32 (2026-10-01)
+
+Fran's decision, after A3b found the off-window case: `mus.x/y` and
+`depositio.x/y` are `s32`, the same as `EventusExemplum`. A pointer off
+the window reports its TRUE position: negative to the left or above,
+≥ width/height to the right or below. fenestra's interim clamp is gone.
+`_murem_implere` uses `floor`: −0.5 is pixel −1 (outside), not 0.
+
+**The inventory was the compiler.** I changed the type and let
+`-Wsign-conversion` mark every site where the sign matters (a grep had
+found ~85 reads in 23 files):
+- **eventus_stml, eventus_cauda, manus_ludus:** direct `s32`, with the
+  casts removed.
+- **derivare, destinatio, calendario_visus, the importatio drag delta,
+  arx's drag ghost:** they already cast to `(s32)`, so nothing changed.
+- **Old widget generation (`i32` coordinate space):**
+  - press / double-click sites (arx_caeli, widget, schirmata, layout,
+    biblia_visus, importatio_visus): an explicit `(i32)` cast, EXACT
+    because a press always happens inside the window;
+  - hover stores (elementa, concha, dialogus_importatio): `(i32)` cast.
+    Off the window, a negative wraps to ≥ 2^31, which fails every
+    `x < px + w` test and the cursor's bounds check, so it hits
+    nothing. That is correct.
+  - Each site carries a comment saying which of the two it is.
+- **A real bug: `schirmata.c:1339`.** `i32 mus_x` was tested against
+  `>= 320`, so a drag off the left edge counted as "in the right panel".
+  It is now a signed local. The same code reads `datum.mus` for ROTULA
+  events, but the union lays out the scroll fields differently. That is
+  an old bug, only commented.
+
+**Tests:**
+- **eventus_stml (red first):** read `x="-12"` and ask `x < 0`. It
+  failed 3× under `i32`. The value itself survived the wrap, so
+  "can the consumer ask the sign" was the real difference.
+- **destinatio (a guard, not red before: it already cast):** (−5, 15)
+  hits nothing (not the edge button, not the root). A drag out of the
+  window stays with its capture.
+  - Learned while writing it: `punctum_locale` belongs to the
+    GEOMETRIC hit, not the captured component, so it is 0 off-window.
+    A consumer that drags outside the window computes its local point
+    itself.
+- **Plants:** the STML reader clamping negatives; destinatio clamping
+  to the edge. Both caught by name.
+
+**Look:** below y=493, left x=−26, above y=−76, right x=667. Samples
+are signed too (x=−1, y=−31). pictor, villa and forum build.

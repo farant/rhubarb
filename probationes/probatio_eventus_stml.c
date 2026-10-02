@@ -77,7 +77,7 @@ s32 principale (vacuum)
     e = (Eventus*)xar_obtinere(index2, ZEPHYRUM);
     CREDO_VERUM (e->genus == EVENTUS_MUS_DEPRESSUS);
     CREDO_VERUM (e->tempus == M);
-    CREDO_AEQUALIS_I32 (e->datum.mus.x, X);
+    CREDO_AEQUALIS_S32 (e->datum.mus.x, X);
     CREDO_AEQUALIS_I32 (e->datum.mus.modificantes, II);
     e = (Eventus*)xar_obtinere(index2, I);
     CREDO_VERUM (e->genus == EVENTUS_CLAVIS_DEPRESSUS);
@@ -253,7 +253,7 @@ s32 principale (vacuum)
         CREDO_VERUM (e->datum.rotula.genus == EVENTUS_ROTULA_PRAECISA);
         CREDO_VERUM (e->datum.rotula.delta_y < -1.4f);
         e = (Eventus*)xar_obtinere(index2, IV);
-        CREDO_AEQUALIS_I32 (e->datum.depositio.x, VII);
+        CREDO_AEQUALIS_S32 (e->datum.depositio.x, VII);
         CREDO_VERUM (chorda_aequalis_literis(e->datum.depositio.viae,
             "/a b/\"c\"\n/d%"));
         CREDO_AEQUALIS_I32 (e->datum.depositio.numerus, II);
@@ -308,6 +308,38 @@ s32 principale (vacuum)
                 (constans character*)rescriptum.datum);
         }
         CREDO_VERUM (chorda_aequalis(rescriptum, fons));
+    }
+
+    imprimere("\n--- A3c: positio extra fenestram (s32) ---\n");
+    {
+        chorda rescriptum;
+
+        /* indicator sinistrorsum/sursum extra fenestram: x, y
+         * NEGATIVA - consumens interrogare potest 'x < 0' (i32 hoc
+         * numquam verum reddebat) */
+        index = eventus_legere_stml(
+            "<eventus_index>"
+            "<eventus genus=\"mus_motus\" tempus=\"1\" x=\"-12\" y=\"-3\"/>"
+            "<eventus genus=\"depositio\" tempus=\"2\" x=\"-7\" y=\"-8\" "
+            "viae=\"/a\" numerus=\"1\"/>"
+            "</eventus_index>",
+            piscina, intern);
+        CREDO_NON_NIHIL (index);
+        CREDO_AEQUALIS_I32 (xar_numerus(index), II);
+        e = (Eventus*)xar_obtinere(index, ZEPHYRUM);
+        CREDO_VERUM (e->datum.mus.x < ZEPHYRUM);
+        CREDO_VERUM (e->datum.mus.y < ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (e->datum.mus.x, -12);
+        CREDO_AEQUALIS_S32 (e->datum.mus.y, -3);
+        e = (Eventus*)xar_obtinere(index, I);
+        CREDO_VERUM (e->datum.depositio.x < ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (e->datum.depositio.y, -8);
+        rescriptum = eventus_scribere_stml(index, piscina, intern,
+            FALSUM);
+        CREDO_VERUM (chorda_continet(rescriptum,
+            chorda_ex_literis("x=\"-12\"", piscina)));
+        CREDO_VERUM (chorda_continet(rescriptum,
+            chorda_ex_literis("y=\"-8\"", piscina)));
     }
 
     imprimere("\n");

@@ -138,7 +138,8 @@ manager_widget_ponere_focus (
     ManagerWidget* manager,
               s32  index)
 {
-    si (!manager || index < ZEPHYRUM || index >= manager->numerus_widgetorum)
+    si (   !manager || index < ZEPHYRUM
+        || index >= manager->numerus_widgetorum)
     {
         redde;
     }
@@ -244,21 +245,28 @@ manager_widget_tractare_eventum (
         b32 est_duplex;
 
         character_latitudo  = VI;  /* 6 pixels per character (scala = 1) */
-        click_x_char        = eventus->datum.mus.x / character_latitudo;
-        click_y_char        = eventus->datum.mus.y / (VIII);  /* 8 pixels per character height */
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        click_x_char = (i32)eventus->datum.mus.x
+            / character_latitudo;
+        click_y_char = (i32)eventus->datum.mus.y / (VIII);  /* 8 pixels per character height */
 
-        manager_widget_focus_ad_punctum(manager, click_x_char, click_y_char);
+        manager_widget_focus_ad_punctum(manager, click_x_char,
+            click_y_char);
 
         /* Detectio duplex click */
-        nunc = tempus_nunc();
-        delta = nunc - manager->tempus_ultimus_click;
-        diff_x = (s32)eventus->datum.mus.x - (s32)manager->ultimus_click_x;
-        diff_y = (s32)eventus->datum.mus.y - (s32)manager->ultimus_click_y;
+        nunc   = tempus_nunc();
+        delta  = nunc - manager->tempus_ultimus_click;
+        diff_x = (s32)eventus->datum.mus.x
+            - (s32)manager->ultimus_click_x;
+        diff_y = (s32)eventus->datum.mus.y
+            - (s32)manager->ultimus_click_y;
 
         /* Verificare si intra limites temporis et distantiae */
         est_duplex = (delta < DUPLEX_CLICK_TEMPUS
-            && diff_x < DUPLEX_CLICK_DISTANTIA && diff_x > -DUPLEX_CLICK_DISTANTIA
-            && diff_y < DUPLEX_CLICK_DISTANTIA && diff_y > -DUPLEX_CLICK_DISTANTIA);
+            && diff_x < DUPLEX_CLICK_DISTANTIA
+            && diff_x > -DUPLEX_CLICK_DISTANTIA
+            && diff_y < DUPLEX_CLICK_DISTANTIA
+            && diff_y > -DUPLEX_CLICK_DISTANTIA);
 
         si (est_duplex)
         {
@@ -272,8 +280,8 @@ manager_widget_tractare_eventum (
         {
             /* Memorare hunc click pro detectione futura */
             manager->tempus_ultimus_click  = nunc;
-            manager->ultimus_click_x       = eventus->datum.mus.x;
-            manager->ultimus_click_y       = eventus->datum.mus.y;
+            manager->ultimus_click_x       = (i32)eventus->datum.mus.x;
+            manager->ultimus_click_y       = (i32)eventus->datum.mus.y;
         }
     }
 
@@ -285,7 +293,9 @@ manager_widget_tractare_eventum (
 
         si (focused_widget->tractare_eventum)
         {
-            consumptus = focused_widget->tractare_eventum(focused_widget, &eventus_ad_widget);
+            consumptus =
+                focused_widget->tractare_eventum(focused_widget,
+                &eventus_ad_widget);
 
             si (consumptus)
             {

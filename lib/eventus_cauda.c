@@ -115,8 +115,8 @@ eventus_caudae_motum_impellere (
         {
             ultimus->datum.mus.exempla = ex;
         }
-        ex->x       = (s32)ultimus->datum.mus.x;
-        ex->y       = (s32)ultimus->datum.mus.y;
+        ex->x       = ultimus->datum.mus.x;
+        ex->y       = ultimus->datum.mus.y;
         ex->tempus  = ultimus->tempus;
         cauda->exempla_mensura++;
         ultimus->datum.mus.numerus_exemplorum++;

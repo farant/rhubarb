@@ -3,6 +3,7 @@
 #import <Carbon/Carbon.h>
 #import <objc/runtime.h>
 #import <mach/mach_time.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -384,9 +385,10 @@ _scalam_obtinere (
  * fenestra (motus extra fenestram clavem) coordinatas SCREENI fert
  * (vitium mensuratum in aspectu A3a: saltus 743,16 -> 96,363). Ergo
  * per screenum in fenestram NOSTRAM semper convertitur. Extra
- * contentum: ad margines COARCTATUR - interim, donec x/y s32 fiant
- * (eventus A3c, Franus 2026-10-01); antea f64 negativum -> i32
- * comportatio indefinita erat. Pressio IGNOTA (mus). */
+ * contentum: positio VERA (s32, eventus A3c - Franus 2026-10-01):
+ * negativa sinistrorsum/sursum, >= latitudo/altitudo dextrorsum/
+ * deorsum. floor, non truncatio: -0.5 extra est (pixelum -1), non 0.
+ * Pressio IGNOTA (mus). */
 interior vacuum
 _murem_implere (
     Fenestra* fenestra,
@@ -400,8 +402,6 @@ _murem_implere (
         f64  y;
         f64  scala_x;
         f64  scala_y;
-        f64  maximum_x;
-        f64  maximum_y;
 
     punctum = [eventus_ns locationInWindow];
     si ([eventus_ns window] != fenestra->fenestra_ns)
@@ -418,14 +418,8 @@ _murem_implere (
     _scalam_obtinere(fenestra, &scala_x, &scala_y);
     x = punctum.x * scala_x;
     y = (contentum.size.height - punctum.y) * scala_y;
-    maximum_x = contentum.size.width * scala_x - 1.0;
-    maximum_y = contentum.size.height * scala_y - 1.0;
-    si (x < 0.0) { x = 0.0; }
-    si (y < 0.0) { y = 0.0; }
-    si (x > maximum_x) { x = (maximum_x > 0.0) ? maximum_x : 0.0; }
-    si (y > maximum_y) { y = (maximum_y > 0.0) ? maximum_y : 0.0; }
-    eventus->datum.mus.x             = (i32)x;
-    eventus->datum.mus.y             = (i32)y;
+    eventus->datum.mus.x             = (s32)floor(x);
+    eventus->datum.mus.y             = (s32)floor(y);
     eventus->datum.mus.modificantes  = (i32)[eventus_ns modifierFlags];
     eventus->datum.mus.indicator     = ZEPHYRUM;
     eventus->datum.mus.indicator_genus = EVENTUS_INDICATOR_MUS;

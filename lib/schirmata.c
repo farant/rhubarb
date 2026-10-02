@@ -60,7 +60,8 @@ _schirmata_commutare_widget_callback (
         schirmata_commutare_ad_biblia_visus(schirmata);
         si (argumentum)
         {
-            biblia_visus_navigare_ad(schirmata->biblia_visus, argumentum);
+            biblia_visus_navigare_ad(schirmata->biblia_visus,
+                argumentum);
         }
     }
     alioquin si (strcmp(widget_titulus, "librarium") == ZEPHYRUM)
@@ -183,7 +184,8 @@ _schirmata_libro_tractare_eventum (
     }
 
     /* Tractare mouse clicks pro tag detection (commands et links) */
-    si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->schirmata->ctx->reg_commandi)
+    si (   eventus->genus == EVENTUS_MUS_DEPRESSUS
+        && datum->schirmata->ctx->reg_commandi)
     {
         RegioClicca regio;
                 i32 click_x;
@@ -201,11 +203,15 @@ _schirmata_libro_tractare_eventum (
         character_altitudo = VIII; /* 8 pixels per character */
 
         /* Convertere pixel ad character coordinates */
-        click_x = (eventus->datum.mus.x / character_latitudo) - widget->x - I;
-        click_y = (eventus->datum.mus.y / character_altitudo) - widget->y - I;
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        click_x = ((i32)eventus->datum.mus.x / character_latitudo)
+            - widget->x - I;
+        click_y = ((i32)eventus->datum.mus.y / character_altitudo)
+            - widget->y - I;
 
         /* Tentare detegere tag ad click position */
-        si (pagina_obtinere_regio_ad_punctum(pagina, click_y, click_x, &regio))
+        si (pagina_obtinere_regio_ad_punctum(pagina, click_y, click_x,
+            &regio))
         {
             si (strcmp(regio.genus, "command") == ZEPHYRUM)
             {
@@ -217,7 +223,8 @@ _schirmata_libro_tractare_eventum (
                 ctx.piscina       = datum->schirmata->ctx->piscina;
                 ctx.datum_custom  = datum->libro;
 
-                registrum_commandi_executare(datum->schirmata->ctx->reg_commandi, regio.datum, &ctx);
+                registrum_commandi_executare(datum->schirmata->ctx->reg_commandi,
+                    regio.datum, &ctx);
 
                 redde VERUM;
             }
@@ -245,7 +252,8 @@ _schirmata_libro_tractare_eventum (
                     {
                         libro_pagina_ultima(datum->libro);
                     }
-                    alioquin si (link[ZEPHYRUM] >= '0' && link[ZEPHYRUM] <= '9')
+                    alioquin si (   link[ZEPHYRUM] >= '0'
+                                 && link[ZEPHYRUM] <= '9')
                     {
                         s32 page_num = atoi(link) - I;
                         libro_navigare_ad(datum->libro, page_num);
@@ -304,7 +312,8 @@ _schirmata_navigator_tractare_eventum (
 
     datum = (SchirmataNavigatorDatum*)widget->datum;
 
-    redde navigator_entitatum_tractare_eventum(datum->navigator, eventus);
+    redde navigator_entitatum_tractare_eventum(datum->navigator,
+        eventus);
 }
 
 
@@ -451,7 +460,8 @@ _schirmata_sputnik_syntaxis_tractare_eventum (
 
     datum = (SchirmataSputnikSyntaxisDatum*)widget->datum;
 
-    redde sputnik_syntaxis_tractare_eventum(datum->sputnik_syntaxis, eventus);
+    redde sputnik_syntaxis_tractare_eventum(datum->sputnik_syntaxis,
+        eventus);
 }
 
 
@@ -573,7 +583,8 @@ _schirmata_librarium_visus_tractare_eventum (
 
     datum = (SchirmataLibrariumVisusDatum*)widget->datum;
 
-    redde librarium_visus_tractare_eventum(datum->librarium_visus, eventus);
+    redde librarium_visus_tractare_eventum(datum->librarium_visus,
+        eventus);
 }
 
 
@@ -659,7 +670,8 @@ _schirmata_calendario_visus_tractare_eventum (
 
     datum = (SchirmataCalendarioVisusDatum*)widget->datum;
 
-    redde calendario_visus_tractare_eventum(datum->calendario_visus, eventus);
+    redde calendario_visus_tractare_eventum(datum->calendario_visus,
+        eventus);
 }
 
 
@@ -702,7 +714,8 @@ _schirmata_importatio_visus_tractare_eventum (
 
     datum = (SchirmataImportatioVisusDatum*)widget->datum;
 
-    redde importatio_visus_tractare_eventum(datum->importatio_visus, eventus);
+    redde importatio_visus_tractare_eventum(datum->importatio_visus,
+        eventus);
 }
 
 
@@ -745,7 +758,8 @@ _schirmata_pinacotheca_visus_tractare_eventum (
 
     datum = (SchirmataPinacothecaVisusDatum*)widget->datum;
 
-    redde pinacotheca_visus_tractare_eventum(datum->pinacotheca_visus, eventus);
+    redde pinacotheca_visus_tractare_eventum(datum->pinacotheca_visus,
+        eventus);
 }
 
 
@@ -768,7 +782,8 @@ _salvare_status (
     si (pagina)
     {
         schirma->libro_status.cursor_linea = pagina->vim.cursor_linea;
-        schirma->libro_status.cursor_columna = pagina->vim.cursor_columna;
+        schirma->libro_status.cursor_columna =
+            pagina->vim.cursor_columna;
         schirma->libro_status.modo = pagina->vim.modo;
     }
 }
@@ -788,7 +803,8 @@ _restituere_status (
     si (pagina)
     {
         pagina->vim.cursor_linea = schirma->libro_status.cursor_linea;
-        pagina->vim.cursor_columna = schirma->libro_status.cursor_columna;
+        pagina->vim.cursor_columna =
+            schirma->libro_status.cursor_columna;
         pagina->vim.modo = schirma->libro_status.modo;
     }
 }
@@ -813,22 +829,26 @@ _salvare_widget_status (
     si (schirma->modus_arx_caeli)
     {
         sprintf(entitas_id, "ArcCaeliStatus::%d", schirma_index);
-        arx_caeli_salvare_status(schirmata->arx_caeli, schirmata->ctx->repo, entitas_id);
+        arx_caeli_salvare_status(schirmata->arx_caeli,
+            schirmata->ctx->repo, entitas_id);
     }
     alioquin si (schirma->modus_biblia_visus)
     {
         sprintf(entitas_id, "BibliaStatus::%d", schirma_index);
-        biblia_visus_salvare_status(schirmata->biblia_visus, schirmata->ctx->repo, entitas_id);
+        biblia_visus_salvare_status(schirmata->biblia_visus,
+            schirmata->ctx->repo, entitas_id);
     }
     alioquin si (schirma->modus_librarium)
     {
         sprintf(entitas_id, "LibrariumStatus::%d", schirma_index);
-        librarium_visus_salvare_status(schirmata->librarium_visus, schirmata->ctx->repo, entitas_id);
+        librarium_visus_salvare_status(schirmata->librarium_visus,
+            schirmata->ctx->repo, entitas_id);
     }
     alioquin si (schirma->modus_thema_visus)
     {
         sprintf(entitas_id, "ThemaStatus::%d", schirma_index);
-        thema_visus_salvare_status(schirmata->thema_visus, schirmata->ctx->repo, entitas_id);
+        thema_visus_salvare_status(schirmata->thema_visus,
+            schirmata->ctx->repo, entitas_id);
     }
     /* SputnikSyntaxis est read-only - nihil salvare */
 }
@@ -853,22 +873,26 @@ _carcare_widget_status (
     si (schirma->modus_arx_caeli)
     {
         sprintf(entitas_id, "ArcCaeliStatus::%d", schirma_index);
-        arx_caeli_carcare_status(schirmata->arx_caeli, schirmata->ctx->repo, entitas_id);
+        arx_caeli_carcare_status(schirmata->arx_caeli,
+            schirmata->ctx->repo, entitas_id);
     }
     alioquin si (schirma->modus_biblia_visus)
     {
         sprintf(entitas_id, "BibliaStatus::%d", schirma_index);
-        biblia_visus_carcare_status(schirmata->biblia_visus, schirmata->ctx->repo, entitas_id);
+        biblia_visus_carcare_status(schirmata->biblia_visus,
+            schirmata->ctx->repo, entitas_id);
     }
     alioquin si (schirma->modus_librarium)
     {
         sprintf(entitas_id, "LibrariumStatus::%d", schirma_index);
-        librarium_visus_carcare_status(schirmata->librarium_visus, schirmata->ctx->repo, entitas_id);
+        librarium_visus_carcare_status(schirmata->librarium_visus,
+            schirmata->ctx->repo, entitas_id);
     }
     alioquin si (schirma->modus_thema_visus)
     {
         sprintf(entitas_id, "ThemaStatus::%d", schirma_index);
-        thema_visus_carcare_status(schirmata->thema_visus, schirmata->ctx->repo, entitas_id);
+        thema_visus_carcare_status(schirmata->thema_visus,
+            schirmata->ctx->repo, entitas_id);
     }
     /* SputnikSyntaxis est read-only - nihil carcare */
 }
@@ -900,7 +924,8 @@ _creare_schirma_layout (
     schirma->manager = manager;
 
     /* Creare libro widget datum */
-    libro_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataLibroDatum));
+    libro_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataLibroDatum));
     si (!libro_datum)
     {
         redde FALSUM;
@@ -926,7 +951,8 @@ _creare_schirma_layout (
         navigator = navigator_entitatum_creare(schirmata->ctx);
         si (navigator)
         {
-            nav_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataNavigatorDatum));
+            nav_datum = piscina_allocare(schirmata->ctx->piscina,
+                magnitudo(SchirmataNavigatorDatum));
             si (nav_datum)
             {
                 nav_datum->navigator  = navigator;
@@ -1083,7 +1109,8 @@ _reddere_tabulam_schirmarum (
         label.datum    = (i8*)buffer;
         label.mensura  = III;
 
-        color_text = est_activum ? color_text_activum : color_text_normal;
+        color_text =
+            est_activum ? color_text_activum : color_text_normal;
 
         tabula_pixelorum_pingere_chordam(
             tabula,
@@ -1116,24 +1143,31 @@ _reddere_tabulam_schirmarum (
             si (aed != NIHIL)
             {
                 /* Obtinere nomina omnium celebrationum (mobiles et fixae) */
-                nomina_celebrationum = calendarium_nomen_celebrationum(hodie, piscina_temp);
+                nomina_celebrationum =
+                    calendarium_nomen_celebrationum(hodie,
+                    piscina_temp);
 
                 si (nomina_celebrationum.mensura > ZEPHYRUM)
                 {
                     /* Celebrationes - Date */
-                    chorda_aedificator_appendere_chorda(aed, nomina_celebrationum);
+                    chorda_aedificator_appendere_chorda(aed,
+                        nomina_celebrationum);
                     chorda_aedificator_appendere_literis(aed, " - ");
                 }
 
                 /* Addere datum */
-                fasti_scribere_diem(aed, hodie, FASTI_FORMA_ANGLICA_LONGA);
+                fasti_scribere_diem(aed, hodie,
+                    FASTI_FORMA_ANGLICA_LONGA);
                 chorda_display = chorda_aedificator_spectare(aed);
 
                 margin_dextra = VIII;
-                display_x = tabula->latitudo - (i32)chorda_display.mensura * character_latitudo - margin_dextra;
+                display_x = tabula->latitudo
+                    - (i32)chorda_display.mensura * character_latitudo
+                    - margin_dextra;
                 display_y = (i32)(tab_y + I);
 
-                per (col = ZEPHYRUM; col < (i32)chorda_display.mensura; col++)
+                per (col = ZEPHYRUM; col
+                    < (i32)chorda_display.mensura; col++)
                 {
                     tabula_pixelorum_pingere_characterem(
                         tabula,
@@ -1210,7 +1244,8 @@ schirmata_creare (
     schirmata->thema_visus = thema_visus_creare(ctx->piscina);
     schirmata->sputnik_syntaxis = sputnik_syntaxis_creare(ctx->piscina);
     schirmata->biblia_visus = biblia_visus_creare(ctx->piscina);
-    schirmata->librarium_visus = librarium_visus_creare(ctx->piscina, ctx);
+    schirmata->librarium_visus = librarium_visus_creare(ctx->piscina,
+        ctx);
     schirmata->fons_visus = fons_visus_creare(ctx->piscina);
     schirmata->calendario_visus = calendario_visus_creare(ctx->piscina);
     schirmata->pinacotheca_visus = pinacotheca_visus_creare(ctx);
@@ -1251,7 +1286,8 @@ schirmata_commutare_ad (
     }
 
     /* Salvare status schirmae currentis */
-    _salvare_status(&schirmata->schirmae[schirmata->index_currens], schirmata->libro);
+    _salvare_status(&schirmata->schirmae[schirmata->index_currens],
+        schirmata->libro);
     _salvare_widget_status(schirmata, schirmata->index_currens);
 
     /* Commutare */
@@ -1321,13 +1357,15 @@ schirmata_tractare_eventum (
     schirma = &schirmata->schirmae[schirmata->index_currens];
 
     /* Tractare dialogum si activus */
-    si (schirma->dialogus != NIHIL && schirma->dialogus->tractare_eventum != NIHIL)
+    si (   schirma->dialogus                   != NIHIL
+        && schirma->dialogus->tractare_eventum != NIHIL)
     {
         DialogusFructus fructus;
                     b32 in_right_panel = FALSUM;
 
         /* Si in modus importatio, tractare mouse events in right panel separatim */
-        si (schirma->modus_importatio_visus && schirma->importatio_visus != NIHIL)
+        si (   schirma->modus_importatio_visus
+            && schirma->importatio_visus != NIHIL)
         {
             /* Determinare si mouse est in right panel (secunda dimidia fenestrae) */
             si (   eventus->genus == EVENTUS_MUS_DEPRESSUS
@@ -1335,15 +1373,20 @@ schirmata_tractare_eventum (
                 || eventus->genus == EVENTUS_MUS_MOTUS
                 || eventus->genus == EVENTUS_MUS_ROTULA)
             {
-                i32 fenestra_latitudo  = 640; /* hardcoded ut in probatio_combinado */
-                i32 mus_x              = eventus->datum.mus.x;
+                /* s32 (A3c): tractus extra fenestram sinistrorsum x
+                 * negativum habet - i32 eum 'in panello dextro'
+                 * faciebat. NB: ROTULA hic datum.mus legit, sed unio
+                 * rotulae aliter iacet (vitium vetus, non mutatum). */
+                s32 fenestra_latitudo  = 640; /* hardcoded ut in probatio_combinado */
+                s32 mus_x              = eventus->datum.mus.x;
 
                 /* Right panel starts at half width */
                 si (mus_x >= fenestra_latitudo / II)
                 {
                     in_right_panel = VERUM;
                     /* Tradere eventum ad importatio_visus */
-                    importatio_visus_tractare_eventum(schirma->importatio_visus, eventus);
+                    importatio_visus_tractare_eventum(schirma->importatio_visus,
+                        eventus);
                 }
             }
         }
@@ -1351,17 +1394,21 @@ schirmata_tractare_eventum (
         /* Tradere eventum ad dialogum (nisi erat in right panel) */
         si (!in_right_panel)
         {
-            fructus = schirma->dialogus->tractare_eventum(schirma->dialogus, eventus);
+            fructus =
+                schirma->dialogus->tractare_eventum(schirma->dialogus,
+                eventus);
         }
         alioquin
         {
             fructus = DIALOGUS_CURRENS;
         }
 
-        si (fructus == DIALOGUS_CONFIRMATUS || fructus == DIALOGUS_ABORTUS)
+        si (   fructus == DIALOGUS_CONFIRMATUS
+            || fructus == DIALOGUS_ABORTUS)
         {
             /* Si erat importatio, tractare fructum */
-            si (schirma->modus_importatio_visus && schirma->importatio_visus != NIHIL)
+            si (   schirma->modus_importatio_visus
+                && schirma->importatio_visus != NIHIL)
             {
                 character titulus_salvatus[CXXVIII];
                       b32 salvatum;
@@ -1377,7 +1424,8 @@ schirmata_tractare_eventum (
                     chorda titulus;
 
                     si (importatio_visus_obtinere_fructum(
-                            schirma->importatio_visus, &indices, &lat, &alt, &titulus))
+                            schirma->importatio_visus, &indices, &lat,
+                            &alt, &titulus))
                     {
                         EntitasRepositorium* repo;
                                     Entitas* imago;
@@ -1390,23 +1438,27 @@ schirmata_tractare_eventum (
 
                         si (repo == NIHIL)
                         {
-                            fprintf(stderr, "Fractura: repositorium non disponibilis\n");
+                            fprintf(stderr,
+                                "Fractura: repositorium non disponibilis\n");
                         }
                         alioquin
                         {
                             /* Creare entitatem per repositorium (auto-generato UUID) */
-                            imago = repo->entitas_creare(repo->datum, "Vultus::Imago");
+                            imago = repo->entitas_creare(repo->datum,
+                                "Vultus::Imago");
                             si (imago != NIHIL)
                             {
                                 /* Convertere titulum ad null-terminated */
                                 si (titulus.mensura < CXXVIII)
                                 {
-                                    memcpy(titulus_buf, titulus.datum, titulus.mensura);
+                                    memcpy(titulus_buf, titulus.datum,
+                                        titulus.mensura);
                                     titulus_buf[titulus.mensura] = '\0';
                                 }
                                 alioquin
                                 {
-                                    memcpy(titulus_buf, titulus.datum, CXXVII);
+                                    memcpy(titulus_buf, titulus.datum,
+                                        CXXVII);
                                     titulus_buf[CXXVII] = '\0';
                                 }
 
@@ -1415,9 +1467,12 @@ schirmata_tractare_eventum (
                                 sprintf(alt_buf, "%d", alt);
 
                                 /* Ponere proprietates */
-                                repo->proprietas_ponere(repo->datum, imago, "titulus", titulus_buf);
-                                repo->proprietas_ponere(repo->datum, imago, "latitudo", lat_buf);
-                                repo->proprietas_ponere(repo->datum, imago, "altitudo", alt_buf);
+                                repo->proprietas_ponere(repo->datum,
+                                    imago, "titulus", titulus_buf);
+                                repo->proprietas_ponere(repo->datum,
+                                    imago, "latitudo", lat_buf);
+                                repo->proprietas_ponere(repo->datum,
+                                    imago, "altitudo", alt_buf);
 
                                 /* Ponere datum (palette indices) ut blobum */
                                 mensura_indices = lat * alt;
@@ -1425,8 +1480,10 @@ schirmata_tractare_eventum (
                                     repo->datum, imago, "datum",
                                     indices, mensura_indices);
 
-                                fprintf(stderr, "Imago salvata: %s (%d x %d, %d bytes)\n",
-                                    titulus_buf, lat, alt, mensura_indices);
+                                fprintf(stderr,
+                                    "Imago salvata: %s (%d x %d, %d bytes)\n",
+                                    titulus_buf, lat, alt,
+                                    mensura_indices);
 
                                 /* Memorare titulum pro navigatio */
                                 strcpy(titulus_salvatus, titulus_buf);
@@ -1434,7 +1491,8 @@ schirmata_tractare_eventum (
                             }
                             alioquin
                             {
-                                fprintf(stderr, "Fractura: non potest creare entitatem\n");
+                                fprintf(stderr,
+                                    "Fractura: non potest creare entitatem\n");
                             }
                         }
                     }
@@ -1448,7 +1506,8 @@ schirmata_tractare_eventum (
                 /* Commutare ad pinacotheca (si salvatum) vel navigator */
                 si (salvatum)
                 {
-                    schirmata_commutare_ad_pinacotheca(schirmata, titulus_salvatus);
+                    schirmata_commutare_ad_pinacotheca(schirmata,
+                        titulus_salvatus);
                 }
                 alioquin
                 {
@@ -1484,8 +1543,9 @@ schirmata_tractare_eventum (
         /* Fenestra altitudo in pixelis (hardcoded ut in probatio_combinado) */
         fenestra_altitudo = CDLXXX;  /* 480 */
 
-        click_y = eventus->datum.mus.y;
-        click_x = eventus->datum.mus.x;
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        click_y = (i32)eventus->datum.mus.y;
+        click_x = (i32)eventus->datum.mus.x;
 
         /* Tab bar est ad fundum fenestrae: altitudo - character_altitudo - 2 */
         tab_y_min = fenestra_altitudo - character_altitudo - II;
@@ -1552,7 +1612,8 @@ schirmata_tractare_eventum (
                 si (clavis >= '1' && clavis <= '9')
                 {
                     schirmata->praefixum_activum = FALSUM;
-                    schirmata_commutare_ad(schirmata, (s32)(clavis - '1'));
+                    schirmata_commutare_ad(schirmata, (s32)(clavis
+                        - '1'));
                     redde VERUM;
                 }
                 /* 0 = schirma 9 (decima) */
@@ -1563,11 +1624,14 @@ schirmata_tractare_eventum (
                     redde VERUM;
                 }
                 /* ctrl-a iterum = passare ad widget */
-                si ((clavis == 'a' || clavis == 'A') && (eventus->datum.clavis.modificantes & MOD_IMPERIUM))
+                si (   (clavis == 'a' || clavis == 'A')
+                    && (eventus->datum.clavis.modificantes & MOD_IMPERIUM))
                 {
                     schirmata->praefixum_activum = FALSUM;
-                    manager = schirmata->schirmae[schirmata->index_currens].manager;
-                    redde manager_widget_tractare_eventum(manager, eventus);
+                    manager =
+                        schirmata->schirmae[schirmata->index_currens].manager;
+                    redde manager_widget_tractare_eventum(manager,
+                        eventus);
                 }
 
                 /* Clavis non recognita - reset praefixum */
@@ -1582,7 +1646,8 @@ schirmata_tractare_eventum (
     /* Detegere ctrl-a (A quia convertere_clavem reddit maiusculas) */
     si (eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
     {
-        si (   (eventus->datum.clavis.clavis == 'a' || eventus->datum.clavis.clavis == 'A')
+        si (   (eventus->datum.clavis.clavis == 'a'
+            || eventus->datum.clavis.clavis == 'A')
             && (eventus->datum.clavis.modificantes & MOD_IMPERIUM))
         {
             schirmata->praefixum_activum  = VERUM;
@@ -1591,7 +1656,8 @@ schirmata_tractare_eventum (
         }
 
         /* Detegere Cmd+V (paste) - initiare importationem imaginis */
-        si (   (eventus->datum.clavis.clavis == 'v' || eventus->datum.clavis.clavis == 'V')
+        si (   (eventus->datum.clavis.clavis == 'v'
+            || eventus->datum.clavis.clavis == 'V')
             && (eventus->datum.clavis.modificantes & MOD_SUPER))
         {
             si (schirmata_initiare_importationem_ex_clipboard(schirmata))
@@ -1719,7 +1785,8 @@ schirmata_commutare_ad_arx_caeli (
     manager = schirma->manager;
 
     /* Creare arx caeli datum */
-    arc_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataArcCaeliDatum));
+    arc_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataArcCaeliDatum));
     si (!arc_datum)
     {
         redde;
@@ -1730,9 +1797,10 @@ schirmata_commutare_ad_arx_caeli (
     /* Substituere widget index 1 */
     si (manager->numerus_widgetorum > I)
     {
-        manager->widgets[I].datum = arc_datum;
-        manager->widgets[I].reddere = _schirmata_arx_caeli_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_arx_caeli_tractare_eventum;
+        manager->widgets[I].datum    = arc_datum;
+        manager->widgets[I].reddere  = _schirmata_arx_caeli_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_arx_caeli_tractare_eventum;
         manager->focus_index = I;
     }
 
@@ -1767,7 +1835,8 @@ schirmata_commutare_ad_navigator (
     schirma = &schirmata->schirmae[schirmata->index_currens];
 
     si (   !schirma->modus_arx_caeli && !schirma->modus_thema_visus
-        && !schirma->modus_sputnik_syntaxis && !schirma->modus_biblia_visus
+        && !schirma->modus_sputnik_syntaxis
+        && !schirma->modus_biblia_visus
         && !schirma->modus_librarium && !schirma->modus_fons_visus)
     {
         /* Iam in modus navigator */
@@ -1784,7 +1853,8 @@ schirmata_commutare_ad_navigator (
         redde;
     }
 
-    nav_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataNavigatorDatum));
+    nav_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataNavigatorDatum));
     si (!nav_datum)
     {
         redde;
@@ -1795,9 +1865,10 @@ schirmata_commutare_ad_navigator (
     /* Substituere widget index 1 */
     si (manager->numerus_widgetorum > I)
     {
-        manager->widgets[I].datum = nav_datum;
-        manager->widgets[I].reddere = _schirmata_navigator_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_navigator_tractare_eventum;
+        manager->widgets[I].datum    = nav_datum;
+        manager->widgets[I].reddere  = _schirmata_navigator_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_navigator_tractare_eventum;
     }
 
     schirma->modus_arx_caeli         = FALSUM;
@@ -1841,7 +1912,8 @@ schirmata_commutare_ad_thema_visus (
     manager = schirma->manager;
 
     /* Creare thema visus datum */
-    thema_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataThemaVisusDatum));
+    thema_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataThemaVisusDatum));
     si (!thema_datum)
     {
         redde;
@@ -1852,9 +1924,10 @@ schirmata_commutare_ad_thema_visus (
     /* Substituere widget index 1 */
     si (manager->numerus_widgetorum > I)
     {
-        manager->widgets[I].datum = thema_datum;
-        manager->widgets[I].reddere = _schirmata_thema_visus_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_thema_visus_tractare_eventum;
+        manager->widgets[I].datum    = thema_datum;
+        manager->widgets[I].reddere  = _schirmata_thema_visus_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_thema_visus_tractare_eventum;
         manager->focus_index = I;
     }
 
@@ -1899,7 +1972,8 @@ schirmata_commutare_ad_sputnik_syntaxis (
     manager = schirma->manager;
 
     /* Creare sputnik syntaxis datum */
-    syntaxis_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataSputnikSyntaxisDatum));
+    syntaxis_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataSputnikSyntaxisDatum));
     si (!syntaxis_datum)
     {
         redde;
@@ -1911,8 +1985,10 @@ schirmata_commutare_ad_sputnik_syntaxis (
     si (manager->numerus_widgetorum > I)
     {
         manager->widgets[I].datum = syntaxis_datum;
-        manager->widgets[I].reddere = _schirmata_sputnik_syntaxis_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_sputnik_syntaxis_tractare_eventum;
+        manager->widgets[I].reddere =
+            _schirmata_sputnik_syntaxis_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_sputnik_syntaxis_tractare_eventum;
         manager->focus_index = I;
     }
 
@@ -1957,7 +2033,8 @@ schirmata_commutare_ad_biblia_visus (
     manager = schirma->manager;
 
     /* Creare biblia visus datum */
-    biblia_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataBibliaVisusDatum));
+    biblia_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataBibliaVisusDatum));
     si (!biblia_datum)
     {
         redde;
@@ -1968,9 +2045,10 @@ schirmata_commutare_ad_biblia_visus (
     /* Substituere widget index 1 */
     si (manager->numerus_widgetorum > I)
     {
-        manager->widgets[I].datum = biblia_datum;
-        manager->widgets[I].reddere = _schirmata_biblia_visus_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_biblia_visus_tractare_eventum;
+        manager->widgets[I].datum    = biblia_datum;
+        manager->widgets[I].reddere  = _schirmata_biblia_visus_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_biblia_visus_tractare_eventum;
         manager->focus_index = I;  /* Focus ad biblia_visus */
     }
 
@@ -2012,7 +2090,8 @@ schirmata_commutare_ad_librarium (
         si (quaestio)
         {
             /* Quaerere si quaestio provisa */
-            librarium_visus_quaerere(schirmata->librarium_visus, quaestio);
+            librarium_visus_quaerere(schirmata->librarium_visus,
+                quaestio);
         }
         alioquin
         {
@@ -2026,7 +2105,8 @@ schirmata_commutare_ad_librarium (
     manager = schirma->manager;
 
     /* Creare librarium visus datum */
-    librarium_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataLibrariumVisusDatum));
+    librarium_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataLibrariumVisusDatum));
     si (!librarium_datum)
     {
         redde;
@@ -2038,8 +2118,10 @@ schirmata_commutare_ad_librarium (
     si (manager->numerus_widgetorum > I)
     {
         manager->widgets[I].datum = librarium_datum;
-        manager->widgets[I].reddere = _schirmata_librarium_visus_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_librarium_visus_tractare_eventum;
+        manager->widgets[I].reddere =
+            _schirmata_librarium_visus_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_librarium_visus_tractare_eventum;
         manager->focus_index = I;  /* Focus ad librarium_visus */
     }
 
@@ -2090,7 +2172,8 @@ schirmata_commutare_ad_fons_visus (
     manager = schirma->manager;
 
     /* Creare fons visus datum */
-    fons_datum = piscina_allocare(schirmata->ctx->piscina, magnitudo(SchirmataFonsVisusDatum));
+    fons_datum = piscina_allocare(schirmata->ctx->piscina,
+        magnitudo(SchirmataFonsVisusDatum));
     si (!fons_datum)
     {
         redde;
@@ -2101,9 +2184,10 @@ schirmata_commutare_ad_fons_visus (
     /* Substituere widget index 1 */
     si (manager->numerus_widgetorum > I)
     {
-        manager->widgets[I].datum = fons_datum;
-        manager->widgets[I].reddere = _schirmata_fons_visus_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_fons_visus_tractare_eventum;
+        manager->widgets[I].datum    = fons_datum;
+        manager->widgets[I].reddere  = _schirmata_fons_visus_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_fons_visus_tractare_eventum;
     }
 
     schirma->modus_arx_caeli         = FALSUM;
@@ -2160,8 +2244,10 @@ schirmata_commutare_ad_calendario_visus (
     si (manager->numerus_widgetorum > I)
     {
         manager->widgets[I].datum = calendario_datum;
-        manager->widgets[I].reddere = _schirmata_calendario_visus_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_calendario_visus_tractare_eventum;
+        manager->widgets[I].reddere =
+            _schirmata_calendario_visus_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_calendario_visus_tractare_eventum;
     }
 
     schirma->modus_arx_caeli         = FALSUM;
@@ -2203,7 +2289,8 @@ schirmata_commutare_ad_pinacotheca (
     /* Si titulus datus, navigare ad imaginem */
     si (titulus != NIHIL && titulus[ZEPHYRUM] != '\0')
     {
-        pinacotheca_visus_navigare_ad(schirmata->pinacotheca_visus, titulus);
+        pinacotheca_visus_navigare_ad(schirmata->pinacotheca_visus,
+            titulus);
     }
 
     /* Si iam in modus pinacotheca, solum navigare */
@@ -2226,8 +2313,10 @@ schirmata_commutare_ad_pinacotheca (
     si (manager->numerus_widgetorum > I)
     {
         manager->widgets[I].datum = pinacotheca_datum;
-        manager->widgets[I].reddere = _schirmata_pinacotheca_visus_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_pinacotheca_visus_tractare_eventum;
+        manager->widgets[I].reddere =
+            _schirmata_pinacotheca_visus_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_pinacotheca_visus_tractare_eventum;
         manager->focus_index = I;  /* Focus ad pinacotheca */
     }
 
@@ -2300,7 +2389,8 @@ schirmata_initiare_importationem_ex_clipboard (
     di = dialogus_importatio_creare(schirmata->ctx->piscina, visus);
     si (di == NIHIL)
     {
-        fprintf(stderr, "Errore: non possum creare DialogusImportatio\n");
+        fprintf(stderr,
+            "Errore: non possum creare DialogusImportatio\n");
         schirma->importatio_visus = NIHIL;
         redde FALSUM;
     }
@@ -2322,8 +2412,10 @@ schirmata_initiare_importationem_ex_clipboard (
     si (manager->numerus_widgetorum > I)
     {
         manager->widgets[I].datum = import_datum;
-        manager->widgets[I].reddere = _schirmata_importatio_visus_reddere;
-        manager->widgets[I].tractare_eventum = _schirmata_importatio_visus_tractare_eventum;
+        manager->widgets[I].reddere =
+            _schirmata_importatio_visus_reddere;
+        manager->widgets[I].tractare_eventum =
+            _schirmata_importatio_visus_tractare_eventum;
     }
 
     /* Reset omnes modi, activare importatio */
@@ -2493,11 +2585,13 @@ schirmata_salvare_omnes (
     repo = schirmata->ctx->repo;
 
     /* Salvare status globalis */
-    entitas = repo->entitas_scaffoldare(repo->datum, "SchirmataGlobal", "0");
+    entitas = repo->entitas_scaffoldare(repo->datum, "SchirmataGlobal",
+        "0");
     si (entitas)
     {
         sprintf(valor, "%d", schirmata->index_currens);
-        repo->proprietas_ponere(repo->datum, entitas, "index_currens", valor);
+        repo->proprietas_ponere(repo->datum, entitas, "index_currens",
+            valor);
     }
 
     /* Salvare status per schirma */
@@ -2508,27 +2602,33 @@ schirmata_salvare_omnes (
         schirma = &schirmata->schirmae[i];
         sprintf(entitas_id, "%d", i);
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "SchirmaStatus", entitas_id);
+        entitas = repo->entitas_scaffoldare(repo->datum,
+            "SchirmaStatus", entitas_id);
         si (!entitas)
         {
             perge;
         }
 
         /* Salvare modus */
-        repo->proprietas_ponere(repo->datum, entitas, "modus", _modus_ad_chorda(schirma));
+        repo->proprietas_ponere(repo->datum, entitas, "modus",
+            _modus_ad_chorda(schirma));
 
         /* Salvare libro_status */
         sprintf(valor, "%d", schirma->libro_status.index_paginae);
-        repo->proprietas_ponere(repo->datum, entitas, "libro_index_paginae", valor);
+        repo->proprietas_ponere(repo->datum, entitas,
+            "libro_index_paginae", valor);
 
         sprintf(valor, "%d", schirma->libro_status.cursor_linea);
-        repo->proprietas_ponere(repo->datum, entitas, "libro_cursor_linea", valor);
+        repo->proprietas_ponere(repo->datum, entitas,
+            "libro_cursor_linea", valor);
 
         sprintf(valor, "%d", schirma->libro_status.cursor_columna);
-        repo->proprietas_ponere(repo->datum, entitas, "libro_cursor_columna", valor);
+        repo->proprietas_ponere(repo->datum, entitas,
+            "libro_cursor_columna", valor);
 
         sprintf(valor, "%d", (i32)schirma->libro_status.modo);
-        repo->proprietas_ponere(repo->datum, entitas, "libro_modo", valor);
+        repo->proprietas_ponere(repo->datum, entitas, "libro_modo",
+            valor);
 
         /* Salvare widget status */
         _salvare_widget_status(schirmata, i);
@@ -2555,7 +2655,8 @@ schirmata_carcare_omnes (
     intern  = schirmata->ctx->intern;
 
     /* Carcare status globalis */
-    entitas = repo->entitas_scaffoldare(repo->datum, "SchirmataGlobal", "0");
+    entitas = repo->entitas_scaffoldare(repo->datum, "SchirmataGlobal",
+        "0");
     si (entitas)
     {
         valor = entitas_proprietas_capere(entitas,
@@ -2592,7 +2693,8 @@ schirmata_carcare_omnes (
         schirma = &schirmata->schirmae[i];
         sprintf(entitas_id, "%d", i);
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "SchirmaStatus", entitas_id);
+        entitas = repo->entitas_scaffoldare(repo->datum,
+            "SchirmaStatus", entitas_id);
         si (!entitas)
         {
             perge;
@@ -2642,7 +2744,8 @@ schirmata_carcare_omnes (
         }
 
         valor = entitas_proprietas_capere(entitas,
-            chorda_internare_ex_literis(intern, "libro_cursor_columna"));
+            chorda_internare_ex_literis(intern,
+            "libro_cursor_columna"));
         si (valor && valor->mensura > ZEPHYRUM)
         {
             i32 v;
@@ -2697,11 +2800,13 @@ schirmata_carcare_omnes (
             {
                 schirmata_commutare_ad_arx_caeli(schirmata, NIHIL);
             }
-            alioquin si (chorda_aequalis_literis(*modus_valor, "biblia"))
+            alioquin si (chorda_aequalis_literis(*modus_valor,
+                         "biblia"))
             {
                 schirmata_commutare_ad_biblia_visus(schirmata);
             }
-            alioquin si (chorda_aequalis_literis(*modus_valor, "librarium"))
+            alioquin si (chorda_aequalis_literis(*modus_valor,
+                         "librarium"))
             {
                 schirmata_commutare_ad_librarium(schirmata, NIHIL);
             }
@@ -2709,7 +2814,8 @@ schirmata_carcare_omnes (
             {
                 schirmata_commutare_ad_thema_visus(schirmata);
             }
-            alioquin si (chorda_aequalis_literis(*modus_valor, "sputnik"))
+            alioquin si (chorda_aequalis_literis(*modus_valor,
+                         "sputnik"))
             {
                 schirmata_commutare_ad_sputnik_syntaxis(schirmata);
             }
@@ -2717,7 +2823,8 @@ schirmata_carcare_omnes (
             {
                 schirmata_commutare_ad_fons_visus(schirmata);
             }
-            alioquin si (chorda_aequalis_literis(*modus_valor, "calendario"))
+            alioquin si (chorda_aequalis_literis(*modus_valor,
+                         "calendario"))
             {
                 schirmata_commutare_ad_calendario_visus(schirmata);
             }
@@ -2731,7 +2838,8 @@ schirmata_carcare_omnes (
     }
 
     /* Restituere libro status pro schirma currens */
-    _restituere_status(&schirmata->schirmae[schirmata->index_currens], schirmata->libro);
+    _restituere_status(&schirmata->schirmae[schirmata->index_currens],
+        schirmata->libro);
 
     /* Re-carcare widget status pro schirma currens
      * (necessarium quia loop supra superscribit singleton widgets) */

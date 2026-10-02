@@ -95,9 +95,10 @@ _layout_pagina_tractare_eventum (
 
         /* Convertere pixel ad character coordinates */
         /* Account for widget position et border */
-        click_x = (eventus->datum.mus.x / character_latitudo)
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        click_x = ((i32)eventus->datum.mus.x / character_latitudo)
             - widget->x - I;
-        click_y = (eventus->datum.mus.y / character_altitudo)
+        click_y = ((i32)eventus->datum.mus.y / character_altitudo)
             - widget->y - I;
 
         /* Tentare detegere tag ad click position */
@@ -256,9 +257,10 @@ _layout_libro_tractare_eventum (
 
         /* Convertere pixel ad character coordinates */
         /* Account for widget position et border */
-        click_x = (eventus->datum.mus.x / character_latitudo)
+        /* (i32) exactum: pressio semper intra fenestram (A3c: s32) */
+        click_x = ((i32)eventus->datum.mus.x / character_latitudo)
             - widget->x - I;
-        click_y = (eventus->datum.mus.y / character_altitudo)
+        click_y = ((i32)eventus->datum.mus.y / character_altitudo)
             - widget->y - I;
 
         /* Tentare detegere tag ad click position */

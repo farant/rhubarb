@@ -63,8 +63,10 @@ _elementa_renovare_mus (
             || eventus->genus == EVENTUS_MUS_DEPRESSUS
             || eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
-            _elementa_status.mus_x = eventus->datum.mus.x;
-            _elementa_status.mus_y = eventus->datum.mus.y;
+            /* (i32): extra fenestram negativum -> numerus magnus, qui
+             * nullum rectum tangit (A3c: mus.x s32; generatio vetus i32) */
+            _elementa_status.mus_x = (i32)eventus->datum.mus.x;
+            _elementa_status.mus_y = (i32)eventus->datum.mus.y;
         }
         si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
         {
@@ -145,7 +147,8 @@ elementa_slider (
     {
         ratio = 0.0f;
     }
-    thumb_x = px + (i32)(ratio * (f32)(track_latitudo - thumb_radius * 2)) + thumb_radius;
+    thumb_x = px + (i32)(ratio * (f32)(track_latitudo
+        - thumb_radius * 2)) + thumb_radius;
 
     /* Hit testing area */
     hit_x    = px;
@@ -157,7 +160,8 @@ elementa_slider (
     _elementa_renovare_mus(eventus);
 
     /* Hover sempre ex positione muris currente */
-    fructus.hover = _elementa_punctum_in_recto(_elementa_status.mus_x, _elementa_status.mus_y, hit_x, hit_y, hit_lat, hit_alt);
+    fructus.hover = _elementa_punctum_in_recto(_elementa_status.mus_x,
+        _elementa_status.mus_y, hit_x, hit_y, hit_lat, hit_alt);
 
     /* Tractare eventus */
     si (eventus != NIHIL)
@@ -178,7 +182,9 @@ elementa_slider (
     }
 
     /* Si trahitur hic slider (et mus adhuc depressus) */
-    si (_elementa_status.slider_dragging && _elementa_status.slider_drag_id == id && _elementa_status.mus_depressus)
+    si (   _elementa_status.slider_dragging
+        && _elementa_status.slider_drag_id == id
+        && _elementa_status.mus_depressus)
     {
         s32 valor_novus;
         f32 pos_ratio;
@@ -188,13 +194,15 @@ elementa_slider (
         fructus.dragging = VERUM;
 
         /* Computare novum valorem ex positione muris */
-        numerator = (s32)_elementa_status.mus_x - (s32)px - (s32)thumb_radius;
-        denominator = (s32)track_latitudo - (s32)thumb_radius * 2;
-        pos_ratio = (f32)numerator / (f32)denominator;
+        numerator = (s32)_elementa_status.mus_x - (s32)px
+            - (s32)thumb_radius;
+        denominator  = (s32)track_latitudo - (s32)thumb_radius * 2;
+        pos_ratio    = (f32)numerator / (f32)denominator;
         si (pos_ratio < 0.0f) pos_ratio = 0.0f;
         si (pos_ratio > 1.0f) pos_ratio = 1.0f;
 
-        valor_novus = (s32)valor_min + (s32)(pos_ratio * (f32)((s32)valor_max - (s32)valor_min));
+        valor_novus = (s32)valor_min
+            + (s32)(pos_ratio * (f32)((s32)valor_max - (s32)valor_min));
 
         si (valor_novus != (s32)fructus.valor)
         {
@@ -203,7 +211,8 @@ elementa_slider (
         }
 
         /* Recomputare thumb_x */
-        thumb_x = px + (i32)(pos_ratio * (f32)(track_latitudo - thumb_radius * 2)) + thumb_radius;
+        thumb_x = px + (i32)(pos_ratio * (f32)(track_latitudo
+            - thumb_radius * 2)) + thumb_radius;
     }
 
     /* Obtinere colores */
@@ -211,15 +220,18 @@ elementa_slider (
     color_thumb = thema_color(COLOR_ACCENT_PRIMARY);
 
     /* Delineare track */
-    delineare_lineam_horizontalem(ctx, px, px + track_latitudo, track_y, color_track);
+    delineare_lineam_horizontalem(ctx, px, px + track_latitudo, track_y,
+        color_track);
 
     /* Delineare thumb */
-    delineare_circulum_plenum(ctx, thumb_x, track_y, (s32)thumb_radius, color_thumb);
+    delineare_circulum_plenum(ctx, thumb_x, track_y, (s32)thumb_radius,
+        color_thumb);
 
     /* Si hover vel dragging, delineare circulum extra */
     si (fructus.hover || fructus.dragging)
     {
-        delineare_circulum(ctx, thumb_x, track_y, (s32)(thumb_radius + 2), color_thumb);
+        delineare_circulum(ctx, thumb_x, track_y, (s32)(thumb_radius
+            + 2), color_thumb);
     }
 
     redde fructus;
@@ -275,7 +287,8 @@ elementa_bottone (
     /* Latitudo ex longitudine label + padding */
     si (label != NIHIL)
     {
-        latitudo = (i32)((f32)label->mensura * 6.0f * scala) + padding * 2;
+        latitudo = (i32)((f32)label->mensura * 6.0f * scala)
+            + padding * 2;
     }
     alioquin
     {
@@ -293,13 +306,16 @@ elementa_bottone (
             || eventus->genus == EVENTUS_MUS_DEPRESSUS
             || eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
-            _elementa_status.mus_x = eventus->datum.mus.x;
-            _elementa_status.mus_y = eventus->datum.mus.y;
+            /* (i32): extra fenestram negativum -> numerus magnus, qui
+             * nullum rectum tangit (A3c: mus.x s32; generatio vetus i32) */
+            _elementa_status.mus_x = (i32)eventus->datum.mus.x;
+            _elementa_status.mus_y = (i32)eventus->datum.mus.y;
         }
     }
 
     /* Hover sempre ex positione muris currente */
-    fructus.hover = _elementa_punctum_in_recto(_elementa_status.mus_x, _elementa_status.mus_y, px, py, latitudo, altitudo);
+    fructus.hover = _elementa_punctum_in_recto(_elementa_status.mus_x,
+        _elementa_status.mus_y, px, py, latitudo, altitudo);
 
     si (eventus != NIHIL)
     {
@@ -313,7 +329,8 @@ elementa_bottone (
         /* Mouse up - end press, trigger click if still over button */
         si (eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
-            si (_elementa_status.bottone_pressed && _elementa_status.bottone_pressed_id == id)
+            si (   _elementa_status.bottone_pressed
+                && _elementa_status.bottone_pressed_id == id)
             {
                 /* Hic bottone erat depressus - clariare statum */
                 si (fructus.hover)
@@ -328,7 +345,8 @@ elementa_bottone (
     }
 
     /* Check if this button is currently pressed */
-    si (_elementa_status.bottone_pressed && _elementa_status.bottone_pressed_id == id)
+    si (   _elementa_status.bottone_pressed
+        && _elementa_status.bottone_pressed_id == id)
     {
         pressed = VERUM;
     }
@@ -358,15 +376,18 @@ elementa_bottone (
     }
 
     /* Delineare rectangulum rotundum (offset when pressed) */
-    delineare_rectangulum_rotundum_plenum(ctx, px, py + offset, latitudo, altitudo, (i32)(2.0f * scala), color_bg);
-    delineare_rectangulum_rotundum(ctx, px, py + offset, latitudo, altitudo, (i32)(2.0f * scala), color_border);
+    delineare_rectangulum_rotundum_plenum(ctx, px, py + offset,
+        latitudo, altitudo, (i32)(2.0f * scala), color_bg);
+    delineare_rectangulum_rotundum(ctx, px, py + offset, latitudo,
+        altitudo, (i32)(2.0f * scala), color_border);
 
     /* Delineare label (offset when pressed) */
     si (label != NIHIL)
     {
         text_x = px + padding;
         text_y = py + padding + offset;
-        tabula_pixelorum_pingere_chordam_scalatam(tabula, text_x, text_y, *label, color_ad_pixelum(color_text), (i32)scala);
+        tabula_pixelorum_pingere_chordam_scalatam(tabula, text_x,
+            text_y, *label, color_ad_pixelum(color_text), (i32)scala);
     }
 
     redde fructus;
@@ -417,7 +438,8 @@ elementa_capsa_optandi (
     /* Hit area includit label */
     si (label != NIHIL)
     {
-        hit_latitudo = box_size + (i32)(4.0f * scala) + (i32)((f32)label->mensura * 6.0f * scala);
+        hit_latitudo = box_size + (i32)(4.0f * scala)
+            + (i32)((f32)label->mensura * 6.0f * scala);
     }
     alioquin
     {
@@ -428,7 +450,8 @@ elementa_capsa_optandi (
     _elementa_renovare_mus(eventus);
 
     /* Hover sempre ex positione muris currente */
-    fructus.hover = _elementa_punctum_in_recto(_elementa_status.mus_x, _elementa_status.mus_y, px, py, hit_latitudo, box_size);
+    fructus.hover = _elementa_punctum_in_recto(_elementa_status.mus_x,
+        _elementa_status.mus_y, px, py, hit_latitudo, box_size);
 
     /* Tractare eventus */
     si (eventus != NIHIL)
@@ -441,19 +464,22 @@ elementa_capsa_optandi (
     }
 
     /* Obtinere colores */
-    color_border = fructus.hover ? thema_color(COLOR_BORDER_ACTIVE) : thema_color(COLOR_BORDER);
+    color_border =
+        fructus.hover ? thema_color(COLOR_BORDER_ACTIVE) : thema_color(COLOR_BORDER);
     color_fill = thema_color(COLOR_ACCENT_PRIMARY);
     color_text = thema_color(COLOR_TEXT);
 
     /* Delineare capsam */
-    delineare_rectangulum(ctx, px, py, box_size, box_size, color_border);
+    delineare_rectangulum(ctx, px, py, box_size, box_size,
+        color_border);
 
     /* Si selectum, implere */
     si (fructus.valor)
     {
         i32 margin = (i32)(2.0f * scala);
         delineare_rectangulum_plenum(ctx, px + margin, py + margin,
-                                     box_size - margin * 2, box_size - margin * 2,
+                                     box_size - margin * 2, box_size
+                                         - margin * 2,
                                      color_fill);
     }
 
@@ -462,7 +488,8 @@ elementa_capsa_optandi (
     {
         i32 text_x = px + box_size + (i32)(4.0f * scala);
         i32 text_y = py;
-        tabula_pixelorum_pingere_chordam_scalatam(tabula, text_x, text_y, *label, color_ad_pixelum(color_text), (i32)scala);
+        tabula_pixelorum_pingere_chordam_scalatam(tabula, text_x,
+            text_y, *label, color_ad_pixelum(color_text), (i32)scala);
     }
 
     redde fructus;
@@ -526,7 +553,10 @@ elementa_campus_textus (
         /* Click ad focus et cursor ad finem */
         si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
         {
-            b32 clicked_inside = _elementa_punctum_in_recto(_elementa_status.mus_x, _elementa_status.mus_y, px, py, field_latitudo, field_altitudo);
+            b32 clicked_inside =
+                _elementa_punctum_in_recto(_elementa_status.mus_x,
+                _elementa_status.mus_y, px, py, field_latitudo,
+                field_altitudo);
             si (clicked_inside && !fructus.focused)
             {
                 /* Novum focus - cursor ad finem */
@@ -547,7 +577,8 @@ elementa_campus_textus (
         }
 
         /* Tractare clavis si focused */
-        si (fructus.focused && eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
+        si (   fructus.focused
+            && eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
         {
             character typus   = eventus->datum.clavis.typus;
              clavis_t clavis  = eventus->datum.clavis.clavis;
@@ -558,19 +589,23 @@ elementa_campus_textus (
                 /* Creare novam chordam sine charactere ad cursor-1 */
                 si (textus != NIHIL && textus->mensura > 0)
                 {
-                    ChordaAedificator* aed = chorda_aedificator_creare(piscina, textus->mensura);
-                                  s32  j;
+                    ChordaAedificator* aed =
+                        chorda_aedificator_creare(piscina,
+                        textus->mensura);
+                                  s32 j;
 
                     /* Copiere omnes characteres praeter eum ad cursor-1 */
                     per (j = 0; j < (s32)textus->mensura; j++)
                     {
                         si (j != fructus.cursor - 1)
                         {
-                            chorda_aedificator_appendere_character(aed, (character)textus->datum[j]);
+                            chorda_aedificator_appendere_character(aed,
+                                (character)textus->datum[j]);
                         }
                     }
 
-                    fructus.textus = piscina_allocare(piscina, magnitudo(chorda));
+                    fructus.textus = piscina_allocare(piscina,
+                        magnitudo(chorda));
                     *fructus.textus = chorda_aedificator_finire(aed);
                     fructus.cursor--;
                     fructus.mutatum = VERUM;
@@ -582,16 +617,19 @@ elementa_campus_textus (
                 /* Creare novam chordam cum charactere inserto ad cursor */
                 ChordaAedificator* aed;
                               s32  j;
-                              i32  old_len = (textus != NIHIL) ? textus->mensura : 0;
+                              i32  old_len = (textus
+                                  != NIHIL) ? textus->mensura : 0;
 
                 aed = chorda_aedificator_creare(piscina, old_len + 2);
 
                 /* Copiere characteres ante cursor */
                 si (textus != NIHIL)
                 {
-                    per (j = 0; j < fructus.cursor && j < (s32)old_len; j++)
+                    per (j = 0; j < fructus.cursor
+                        && j < (s32)old_len; j++)
                     {
-                        chorda_aedificator_appendere_character(aed, (character)textus->datum[j]);
+                        chorda_aedificator_appendere_character(aed,
+                            (character)textus->datum[j]);
                     }
                 }
 
@@ -603,22 +641,26 @@ elementa_campus_textus (
                 {
                     per (j = fructus.cursor; j < (s32)old_len; j++)
                     {
-                        chorda_aedificator_appendere_character(aed, (character)textus->datum[j]);
+                        chorda_aedificator_appendere_character(aed,
+                            (character)textus->datum[j]);
                     }
                 }
 
-                fructus.textus = piscina_allocare(piscina, magnitudo(chorda));
+                fructus.textus = piscina_allocare(piscina,
+                    magnitudo(chorda));
                 *fructus.textus = chorda_aedificator_finire(aed);
                 fructus.cursor++;
                 fructus.mutatum = VERUM;
             }
             /* Sagitta sinistra */
-            alioquin si (clavis == CLAVIS_SINISTER && fructus.cursor > 0)
+            alioquin si (   clavis == CLAVIS_SINISTER
+                         && fructus.cursor > 0)
             {
                 fructus.cursor--;
             }
             /* Sagitta dextra */
-            alioquin si (clavis == CLAVIS_DEXTER && textus != NIHIL && (i32)fructus.cursor < textus->mensura)
+            alioquin si (   clavis == CLAVIS_DEXTER && textus != NIHIL
+                         && (i32)fructus.cursor < textus->mensura)
             {
                 fructus.cursor++;
             }
@@ -627,21 +669,25 @@ elementa_campus_textus (
 
     /* Obtinere colores */
     color_bg = thema_color(COLOR_BACKGROUND);
-    color_border = fructus.focused ? thema_color(COLOR_BORDER_ACTIVE) : thema_color(COLOR_BORDER);
-    color_text = thema_color(COLOR_TEXT);
-    color_cursor = thema_color(COLOR_CURSOR);
+    color_border =
+        fructus.focused ? thema_color(COLOR_BORDER_ACTIVE) : thema_color(COLOR_BORDER);
+    color_text    = thema_color(COLOR_TEXT);
+    color_cursor  = thema_color(COLOR_CURSOR);
 
     /* Delineare rectangulum campi */
-    delineare_rectangulum_plenum(ctx, px, py, field_latitudo, field_altitudo, color_bg);
-    delineare_rectangulum(ctx, px, py, field_latitudo, field_altitudo, color_border);
+    delineare_rectangulum_plenum(ctx, px, py, field_latitudo,
+        field_altitudo, color_bg);
+    delineare_rectangulum(ctx, px, py, field_latitudo, field_altitudo,
+        color_border);
 
     /* Computare visibiles characteres et delineare */
     {
-        i32 text_y_centered = py + (field_altitudo - (i32)(8.0f * scala)) / 2;
-        i32 char_latitudo = (i32)(6.0f * scala);
-        i32 visible_latitudo = field_latitudo - padding * 2;
-        i32 max_visible_chars = visible_latitudo / char_latitudo;
-        s32 scroll_chars = 0;  /* Quot characteres scrolled */
+        i32 text_y_centered = py + (field_altitudo
+            - (i32)(8.0f * scala)) / 2;
+        i32 char_latitudo      = (i32)(6.0f * scala);
+        i32 visible_latitudo   = field_latitudo - padding * 2;
+        i32 max_visible_chars  = visible_latitudo / char_latitudo;
+        s32 scroll_chars       = 0;  /* Quot characteres scrolled */
 
         /* Si cursor ultra aream visibilem, scroll */
         si (fructus.cursor > (s32)max_visible_chars - 1)
@@ -665,20 +711,25 @@ elementa_campus_textus (
             per (j = start_char; j < end_char; j++)
             {
                 chorda char_str;
-                   i32 char_x = px + padding + (i32)(j - scroll_chars) * char_latitudo;
+                   i32 char_x = px + padding + (i32)(j
+                       - scroll_chars) * char_latitudo;
 
                 char_str.datum    = &textus->datum[j];
                 char_str.mensura  = 1;
 
-                tabula_pixelorum_pingere_chordam_scalatam(tabula, char_x, text_y_centered, char_str, color_ad_pixelum(color_text), (i32)scala);
+                tabula_pixelorum_pingere_chordam_scalatam(tabula,
+                    char_x, text_y_centered, char_str,
+                    color_ad_pixelum(color_text), (i32)scala);
             }
         }
 
         /* Delineare cursor si focused */
         si (fructus.focused)
         {
-            cursor_x = px + padding + (i32)(fructus.cursor - scroll_chars) * char_latitudo;
-            delineare_lineam_verticalem(ctx, cursor_x, text_y_centered, text_y_centered + (i32)(8.0f * scala), color_cursor);
+            cursor_x = px + padding + (i32)(fructus.cursor
+                - scroll_chars) * char_latitudo;
+            delineare_lineam_verticalem(ctx, cursor_x, text_y_centered,
+                text_y_centered + (i32)(8.0f * scala), color_cursor);
         }
     }
 
@@ -750,7 +801,9 @@ elementa_graticula_colorum (
         /* Tractare click */
         si (eventus != NIHIL && eventus->genus == EVENTUS_MUS_DEPRESSUS)
         {
-            si (_elementa_punctum_in_recto(_elementa_status.mus_x, _elementa_status.mus_y, sx, sy, swatch_size, swatch_size))
+            si (_elementa_punctum_in_recto(_elementa_status.mus_x,
+                _elementa_status.mus_y, sx, sy, swatch_size,
+                swatch_size))
             {
                 fructus.colores[i]     = !fructus.colores[i];
                 fructus.mutatum        = VERUM;
@@ -759,7 +812,8 @@ elementa_graticula_colorum (
         }
 
         /* Delineare swatch */
-        delineare_rectangulum_plenum(ctx, sx, sy, swatch_size, swatch_size, color_swatch);
+        delineare_rectangulum_plenum(ctx, sx, sy, swatch_size,
+            swatch_size, color_swatch);
 
         /* Si color deselectus, delineare lineas diagonales */
         si (!fructus.colores[i])
@@ -774,12 +828,15 @@ elementa_graticula_colorum (
             {
                 color_x = thema_color(COLOR_TEXT_DIM);
             }
-            delineare_lineam(ctx, sx, sy, sx + swatch_size, sy + swatch_size, color_x);
-            delineare_lineam(ctx, sx + swatch_size, sy, sx, sy + swatch_size, color_x);
+            delineare_lineam(ctx, sx, sy, sx + swatch_size, sy
+                + swatch_size, color_x);
+            delineare_lineam(ctx, sx + swatch_size, sy, sx, sy
+                + swatch_size, color_x);
         }
 
         /* Delineare margo */
-        delineare_rectangulum(ctx, sx, sy, swatch_size, swatch_size, thema_color(COLOR_BORDER));
+        delineare_rectangulum(ctx, sx, sy, swatch_size, swatch_size,
+            thema_color(COLOR_BORDER));
     }
 
     redde fructus;
