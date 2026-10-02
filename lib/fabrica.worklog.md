@@ -1073,3 +1073,10 @@ First commit attempt refused by generata stage V: tools/latina_numeri.sh
 links lib/filum.c by PATH - my hand-list search matched bare names only.
 Five path-form lists fixed (latina_numeri.sh, compile_library.sh,
 compile_sputnik.sh, compile_lector.sh, glr_quaestio.sh).
+After the T1 commit, `sanare installata` failed: registrum_md and
+registrum_toml (materia/coquere.sh, whose list ends a line with
+`filum`) did not link. The commit's fabrica gate had judged them RECENS
+by memo: their declared inputs name materia/fontes, coctor.c and the
+script, but not the lib/ sources the script compiles - exactly the
+hand-proved-input hole T2's traces close (a ledger of coquere's build
+would have listed lib/filum.c). Fixed the list; rebake 7 sanata.
