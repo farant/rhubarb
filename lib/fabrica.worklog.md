@@ -1102,3 +1102,69 @@ stores nothing; action without lectiones never asks. Plant (comparison
 always congruent) -> 4 red. Tool: migration III table `lectiones`
 (digests as 32-byte blobs - no hex parser exists), FABRICA_LECTIONES
 set absolute per regeneration (old file removed first), radix = cwd.
+
+## 2026-10-02 - plan 2 T2 (part 2): writes, env, lint, family switch, audit, ordering
+
+**S and E events.** filum hooks S (written) after a successful fopen in
+"w"/"wb"/"a"/"ab", filum_scriptor_aperire and copy destinations, and at
+the attempt for unlink / rename (both paths) / mkdir. The judge drops S
+lines from traces (a program's own writes are outputs, not inputs).
+`lectiones_ambitus(titulus)` = getenv through the channel: one E line
+(no value tab when unset); any E makes the trace unverifiable, so it is
+not stored. T1 bug found on the way: the ledger descriptor stayed open
+when the env var was unset.
+
+**Raw-IO lint** (tools/lectiones_lint.sh). Source = silva nexus index
+(`usus` rows of fopen/freopen/opendir/stat/lstat/access/getenv/open), not
+grep. Pilot path = aedilis closure of tools/aedilis.c; a raw call there
+OBSTATs unless the line before it carries `/* lectiones: notatur */`
+(the call is channelled by hand: via_existit stat, the two aedilis
+opendirs, iter_directoria). lib/filum.c and lib/lectiones.c are the
+channel itself (exempt). First heuristic ("near a hooked call") was too
+lenient - a planted raw stat next to a hooked one passed; per-line marker
+fixed it. A plant that didn't compile (FILE undeclared in via.c) was
+re-planted as `(vacuum)stat(buffer, &info);` and went red. Today: pilot
+18 files, 0 obstantia, 5 notatae; 701 raw calls outside (warnings).
+
+**Family switch.** The 19 snippet generators (fragmentum_* /
+fragmenta_silva in root, officina, silva, tessera aedificatio.stml) went
+from memorabilis + hand-listed `manifesta`/`radices` inputs to
+lectiones="verum"; plagulae/fasciculus/configuratio/manifestum inputs
+stay declared. First -plenus regenerated all 19 and stored 40 traces
+(~60k entries); second -plenus 0 snippet regenerations, 44 s -> 22 s.
+Real plants: tessera_cellula.h comment -> exactly the 4 tessera
+snippets; shadow tessera/fontes/chorda.h (an A path appearing) -> the
+same 4; new gesta/probationes file (D) -> fragmentum_gesta only.
+
+**Multi-output bug.** fragmenta_silva has 22 exitus; the trace key had
+no exitus, so each exitus's store evicted the last and only one
+survived. Key now includes exitus (migration IV `ADD COLUMN exitus`).
+The test's first red was for the wrong reason (exitus scriptura defaulted
+to gen/<exitus>.c, so the fake never wrote it) - fixed, then proved
+with a plant restoring the old eviction.
+
+**Memo audit.** `sutura.auditus`: 0 off, I every action (`-audit`), N =
+1 in N by clavis.octeti[0] % N; default XX under -plenus. An audited
+RECENS (memo or trace) regenerates anyway: congruent -> "auditus:
+regeneratio congruit"; differs -> STALUM "AUDITUM DISCORS" + cursus
+event FABRICA_AUDITUM_DISCORS (a lying memo is a judge bug, it should
+shout). Full `iudicare -audit` on the tree: 56 regenerations, 0 DISCORS.
+
+**Ordering from traces.** Dropping `manifesta` dropped the ordering
+edges: every snippet reads generated files (latina.h, silva amalgam,
+runae tables). `lectiones_ultimae(titulus)` returns the distinct paths
+of the title's latest traces; fabrica_dependentias_computare adds them
+as loci (D -> PLAGULAE, else PLAGULA). Trap: `_ordinare_per_locos` in
+the tool builds its OWN light sutura, so wiring only the judge's
+sutura would have left the edges dead in the real tool while the unit
+test passed. Memoria now opens before ordering in iudicare and sanare.
+Real plant (comment appended to silva/amalgama/silva.c, sanare
+-siccum): amalgama_silva AGENDUM in wave II, all 19 snippets "post
+amalgama_silva" in wave VIII.
+Cold-start caveat: with no trace yet (fresh db), a converted action has
+no trace edges - ordering rests on its declared inputs only. The judge
+writes nothing, so only `sanare` on a fresh db could heal a snippet
+before its generated input (the next judge would catch it).
+Second -plenus after this commit: 24 s, one snippet run = the 1-in-20
+audit ("auditus: regeneratio congruit").
+Open: snippets show "tempus ignotum" in sanare estimates.

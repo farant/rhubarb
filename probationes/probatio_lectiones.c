@@ -81,6 +81,22 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "X\tinclude/latina.h\n", piscina)));
 
+    imprimere("\n--- IIb. scriptura (S) et ambitus (E) ---\n");
+    (vacuum)remove(LIBER);
+    setenv("FABRICA_LECTIONES", LIBER, I);
+    setenv("LECTIONES_PROBATIO", "valor_fictus", I);
+    (vacuum)filum_scribere_literis("build/probatio_lectiones_s.txt",
+        "x\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_literis(
+        lectiones_ambitus("LECTIONES_PROBATIO"), piscina),
+        "valor_fictus");
+    unsetenv("FABRICA_LECTIONES");
+    liber = filum_legere_totum(LIBER, piscina);
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "S\tbuild/probatio_lectiones_s.txt\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "E\tLECTIONES_PROBATIO\tvalor_fictus\n", piscina)));
+
     imprimere("\n--- III. filii duo paralleli: lineae integrae ---\n");
     {
         pid_t filii[II];

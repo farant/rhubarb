@@ -926,6 +926,7 @@ _nexum_purum_currere (
                   *(chorda*)xar_obtinere(configuratio->inclusa,
                   d);
            character* dir_cstr  = chorda_ut_cstr(dir, piscina);
+                 /* lectiones: notatur */
                  DIR* h         = opendir(dir_cstr);
     structura dirent* introitus;
 
@@ -1014,6 +1015,7 @@ _corpus_currere (
     i32               i;
     integer           exitus;
 
+    /* lectiones: notatur */
     d = opendir(directorium);
     si (d != NIHIL)
     {

@@ -54,6 +54,8 @@ nomen structura {
                    i32  acta;          /* vocationes agere */
                    s64  horologium;    /* scripturae numeratae (T4) */
                    Xar* cursus_ficti;  /* CursusFictus (1b T7) */
+    constans character* scriptura_altera; /* exitus secundus (T2) */
+    constans character* generatio_altera;
     constans character* lectiones_ficti; /* liber quem currere scribit
                                           * (plan 2 T2); NIHIL = nullus */
                    Xar* vestigia_lectionum; /* VestigiumLectionumFictum */
@@ -63,6 +65,7 @@ nomen structura {
 /* vestigium lectionum fictum (plan 2 T2): tabula 'lectiones' */
 nomen structura {
       chorda  titulus;
+      chorda  exitus;
     Sigillum  ingressus;
     Sigillum  artificium;
          Xar* lectiones;    /* FabricaLectio */
@@ -352,6 +355,13 @@ _currere (
         sprintf(via, "%s/%s", scriptura_dir, discus->scriptura_rel);
         _ponere(discus, via, discus->generatio);
     }
+    si (discus->generatio_altera != NIHIL)
+    {
+        character via[256];
+
+        sprintf(via, "%s/%s", scriptura_dir, discus->scriptura_altera);
+        _ponere(discus, via, discus->generatio_altera);
+    }
     redde VERUM;
 }
 
@@ -562,6 +572,7 @@ interior b32
 _lectiones_legere (
                 vacuum*  datum,
     constans character*  titulus,
+    constans character*  exitus,
      constans Sigillum*  ingressus,
      constans Sigillum*  artificium,
                Piscina*  piscina,
@@ -579,6 +590,7 @@ _lectiones_legere (
         v = (VestigiumLectionumFictum*)xar_obtinere(
             discus->vestigia_lectionum, i - I);
         si (   chorda_aequalis_literis(v->titulus, titulus)
+            && chorda_aequalis_literis(v->exitus, exitus)
             && memcmp(v->ingressus.octeti, ingressus->octeti,
                    SIGILLUM_OCTETI) == 0
             && memcmp(v->artificium.octeti, artificium->octeti,
@@ -591,10 +603,50 @@ _lectiones_legere (
     redde FALSUM;
 }
 
+/* vestigia ULTIMA tituli (omnes exitus) - ordo ex lectionibus */
+interior b32
+_lectiones_ultimae (
+                vacuum*  datum,
+    constans character*  titulus,
+               Piscina*  piscina,
+                   Xar** lectiones_out)
+{
+    DiscusFictus* discus;
+             Xar* omnes;
+             i32  i;
+             i32  j;
+
+    discus  = (DiscusFictus*)datum;
+    omnes   = xar_creare(piscina, (i32)magnitudo(FabricaLectio));
+    per (i = ZEPHYRUM; i < xar_numerus(discus->vestigia_lectionum); i++)
+    {
+        VestigiumLectionumFictum* v;
+
+        v = (VestigiumLectionumFictum*)xar_obtinere(
+            discus->vestigia_lectionum, i);
+        si (!chorda_aequalis_literis(v->titulus, titulus))
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(v->lectiones); j++)
+        {
+            *(FabricaLectio*)xar_addere(omnes) =
+                *(FabricaLectio*)xar_obtinere(v->lectiones, j);
+        }
+    }
+    si (xar_numerus(omnes) == 0)
+    {
+        redde FALSUM;
+    }
+    *lectiones_out = omnes;
+    redde VERUM;
+}
+
 interior vacuum
 _lectiones_scribere (
                 vacuum* datum,
     constans character* titulus,
+    constans character* exitus,
      constans Sigillum* ingressus,
      constans Sigillum* artificium,
           constans Xar* lectiones)
@@ -605,6 +657,19 @@ _lectiones_scribere (
 
     discus = (DiscusFictus*)datum;
     discus->vestigia_scripta++;
+    /* ut tabula vera: vestigium prius (titulus, exitus) deletum */
+    per (i = ZEPHYRUM; i < xar_numerus(discus->vestigia_lectionum); i++)
+    {
+        VestigiumLectionumFictum* vetus;
+
+        vetus = (VestigiumLectionumFictum*)xar_obtinere(
+            discus->vestigia_lectionum, i);
+        si (   chorda_aequalis_literis(vetus->titulus, titulus)
+            && chorda_aequalis_literis(vetus->exitus, exitus))
+        {
+            vetus->titulus = chorda_ex_literis("", discus->piscina);
+        }
+    }
     v =
         (VestigiumLectionumFictum*)xar_addere(discus->vestigia_lectionum);
     si (v == NIHIL)
@@ -612,6 +677,7 @@ _lectiones_scribere (
         redde;
     }
     v->titulus     = chorda_ex_literis(titulus, discus->piscina);
+    v->exitus      = chorda_ex_literis(exitus, discus->piscina);
     v->ingressus   = *ingressus;
     v->artificium  = *artificium;
     v->lectiones   = xar_creare(discus->piscina,
@@ -649,7 +715,9 @@ _discum_parare (
     discus->horologium  = ZEPHYRUM;
     discus->cursus_ficti = xar_creare(piscina,
         (i32)magnitudo(CursusFictus));
-    discus->lectiones_ficti     = NIHIL;
+    discus->lectiones_ficti   = NIHIL;
+    discus->scriptura_altera  = NIHIL;
+    discus->generatio_altera  = NIHIL;
     discus->vestigia_lectionum  = xar_creare(piscina,
         (i32)magnitudo(VestigiumLectionumFictum));
     discus->vestigia_scripta    = ZEPHYRUM;
@@ -1788,6 +1856,116 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32(discus.vestigia_scripta, ante);
         }
         discus.fractus = FALSUM;
+
+        /* IX. actio exituum DUORUM: vestigium cuiusque exitus manet
+         * (fragmenta_silva XXII exitus: solum ultimus servabatur) */
+        {
+                    FabricaActio* m;
+                   FabricaExitus* e_a;
+                   FabricaExitus* e_b;
+
+            _ponere(&discus, "gen/a.c", "a I\n");
+            _ponere(&discus, "gen/b.c", "b I\n");
+            m = _actio(piscina, "multi", FABRICA_ACTIO_GENERATOR);
+            m->lectiones = VERUM;
+            _ingressum_addere(m, "fasciculus", "data/scriptum.sh",
+                piscina);
+            e_a = _exitum_addere(m, "gen/a.c", "regeneratio", piscina);
+            e_b = _exitum_addere(m, "gen/b.c", "regeneratio", piscina);
+            e_a->scriptura = e_a->via;
+            e_b->scriptura = e_b->via;
+            discus.scriptura_rel = "gen/a.c";
+            discus.generatio = "a I\n";
+            discus.scriptura_altera = "gen/b.c";
+            discus.generatio_altera = "b I\n";
+            discus.lectiones_ficti = "L\tdata/fons.txt\n";
+            (vacuum)fabrica_iudicare(&sutura, m, e_a, VERUM, piscina);
+            (vacuum)fabrica_iudicare(&sutura, m, e_b, VERUM, piscina);
+            discus.cursus = ZEPHYRUM;
+            iudicium = fabrica_iudicare(&sutura, m, e_a, VERUM,
+                piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_RECENS);
+            iudicium = fabrica_iudicare(&sutura, m, e_b, VERUM,
+                piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_RECENS);
+            CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
+            discus.scriptura_rel     = "gen/exitus.c";
+            discus.generatio         = "linea I\n";
+            discus.scriptura_altera  = NIHIL;
+            discus.generatio_altera  = NIHIL;
+        }
+
+        /* X. AUDITUS MEMORIAE (Review Focus 5): vestigium cui lectio
+         * UNA deest (ingressus quem liber non vidit) + plagula illa
+         * mutata -> iudex ordinarius RECENS dicit (foramen); auditus
+         * regenerat et AUDITUM DISCORS nominat */
+        {
+                         FabricaActio* g;
+                        FabricaExitus* e_g;
+             VestigiumLectionumFictum* v;
+                                  i32  k;
+
+            _ponere(&discus, "data/occultum.txt", "occultum I\n");
+            _ponere(&discus, "gen/occ.c", "praefixum: occultum I\n");
+            _scriptum_addere(&discus, "gen_occ", "gen/occ.c",
+                "data/occultum.txt", "praefixum: ", 0, FALSUM);
+            g = _actio_scripta(piscina, "occ", "gen_occ",
+                "data/scriptum.sh", "gen/occ.c", "regeneratio");
+            g->lectiones = VERUM;
+            e_g = (FabricaExitus*)xar_obtinere(g->exitus, ZEPHYRUM);
+            discus.lectiones_ficti =
+                "L\tdata/occultum.txt\nL\tdata/fons.txt\n";
+            iudicium = fabrica_iudicare(&sutura, g, e_g, VERUM,
+                piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_RECENS);
+            /* lectionem 'occultum' ex vestigio manu delere */
+            per (k = ZEPHYRUM; k < xar_numerus(
+                     discus.vestigia_lectionum); k++)
+            {
+                v = (VestigiumLectionumFictum*)xar_obtinere(
+                    discus.vestigia_lectionum, k);
+                si (chorda_aequalis_literis(v->titulus, "occ"))
+                {
+                    Xar* reliquae;
+                    i32  j;
+
+                    reliquae = xar_creare(piscina,
+                        (i32)magnitudo(FabricaLectio));
+                    per (j = ZEPHYRUM; j < xar_numerus(v->lectiones);
+                         j++)
+                    {
+                        FabricaLectio* l;
+
+                        l = (FabricaLectio*)xar_obtinere(v->lectiones,
+                            j);
+                        si (!chorda_aequalis_literis(l->via,
+                                "data/occultum.txt"))
+                        {
+                            *(FabricaLectio*)xar_addere(reliquae) = *l;
+                        }
+                    }
+                    v->lectiones = reliquae;
+                }
+            }
+            _ponere(&discus, "data/occultum.txt", "occultum MUTATUM\n");
+            /* foramen: iudex ordinarius vestigio credit */
+            iudicium = fabrica_iudicare(&sutura, g, e_g, VERUM,
+                piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_RECENS);
+            /* auditus omnium: regeneratio differt -> nominatur */
+            sutura.auditus = I;
+            iudicium = fabrica_iudicare(&sutura, g, e_g, VERUM,
+                piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_STALUM);
+            CREDO_VERUM(_continet(iudicium.causa, "AUDITUM DISCORS",
+                piscina));
+            sutura.auditus = ZEPHYRUM;
+        }
 
         /* VIII. actio sine lectiones: liber numquam petitur nec
          * vestigium scribitur */
@@ -3164,6 +3342,54 @@ s32 principale (vacuum)
             ordo, ZEPHYRUM))->titulus, "G");
         CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
             actiones, I))->dependentiae), ZEPHYRUM);
+
+        /* VI. ORDO EX VESTIGIO (plan 2 T2): S lectiones="verum"
+         * nihil de gen/x.h declarat; vestigium eius id legit, G id
+         * producit -> S post G. Sine vestigio nullus arcus (clonus
+         * recens: ut manifesta absentia olim) */
+        {
+            FabricaActio* s_act;
+
+            _discum_parare(&discus, &sutura, piscina);
+            sutura.lectiones_legere    = _lectiones_legere;
+            sutura.lectiones_scribere  = _lectiones_scribere;
+            sutura.lectiones_ultimae   = _lectiones_ultimae;
+            _ponere(&discus, "a", "a\n");
+            _ponere(&discus, "gen/x.h", "x\n");
+            _ponere(&discus, "gen/s.c", "s\n");
+            s_act = _actio_scripta(piscina, "S", "gen_s", "a",
+                "gen/s.c",
+                "regeneratio");
+            s_act->lectiones = VERUM;
+            g = _actio_scripta(piscina, "G", "gen_g", "a", "gen/x.h",
+                "regeneratio");
+            actiones = xar_creare(piscina,
+                (i32)magnitudo(FabricaActio));
+            *(FabricaActio*)xar_addere(actiones) = *s_act;
+            *(FabricaActio*)xar_addere(actiones) = *g;
+            CREDO_VERUM(fabrica_dependentias_computare(&sutura,
+                actiones, piscina, &causa));
+            CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
+                actiones, ZEPHYRUM))->dependentiae), ZEPHYRUM);
+            {
+                VestigiumLectionumFictum* v;
+                           FabricaLectio* l;
+
+                v = (VestigiumLectionumFictum*)xar_addere(
+                    discus.vestigia_lectionum);
+                v->titulus  = chorda_ex_literis("S", piscina);
+                v->exitus   = chorda_ex_literis("gen/s.c", piscina);
+                v->lectiones  = xar_creare(piscina,
+                    (i32)magnitudo(FabricaLectio));
+                l         = (FabricaLectio*)xar_addere(v->lectiones);
+                l->genus  = LECTIO_LEGIT;
+                l->via    = chorda_ex_literis("gen/x.h", piscina);
+            }
+            CREDO_VERUM(fabrica_dependentias_computare(&sutura,
+                actiones, piscina, &causa));
+            CREDO_AEQUALIS_I32(xar_numerus(((FabricaActio*)xar_obtinere(
+                actiones, ZEPHYRUM))->dependentiae), I);
+        }
 
         /* V. radices nihil enumerant (parcum …AR15): R radices
          * aedilis.stml sigillat (radix 'gen'), P in 'gen' scribit et

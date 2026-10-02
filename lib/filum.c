@@ -481,6 +481,10 @@ filum_scriptor_aperire (
     }
 
     scriptor->descriptum = fopen(via, modus_str);
+    si (scriptor->descriptum)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!scriptor->descriptum)
     {
         _filum_error_ponere("fopen fracta");
@@ -663,6 +667,10 @@ filum_scribere (
     _filum_error_purgare();
 
     f = fopen(via, "wb");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro scribere fracta");
@@ -700,6 +708,10 @@ filum_scribere_literis (
     _filum_error_purgare();
 
     f = fopen(via, "w");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro scribere fracta");
@@ -736,6 +748,10 @@ filum_appendere (
     _filum_error_purgare();
 
     f = fopen(via, "ab");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro appendere fracta");
@@ -773,6 +789,10 @@ filum_appendere_literis (
     _filum_error_purgare();
 
     f = fopen(via, "a");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro appendere fracta");
@@ -850,6 +870,7 @@ filum_arborem_delere (
     si (!S_ISDIR(st.st_mode))
     {
         /* filum aut NEXUS: ipse removetur, numquam destinatio */
+        lectiones_notare(LECTIO_SCRIPSIT, via);
         si (unlink(via) != ZEPHYRUM)
         {
             _filum_error_ponere("unlink fracta");
@@ -934,6 +955,8 @@ filum_movere (
 
     _filum_error_purgare();
 
+    lectiones_notare(LECTIO_SCRIPSIT, via_vetus);
+    lectiones_notare(LECTIO_SCRIPSIT, via_nova);
     si (rename(via_vetus, via_nova) != ZEPHYRUM)
     {
         _filum_error_ponere("rename fracta");
@@ -970,6 +993,10 @@ filum_copiare (
     }
 
     dest = fopen(via_destinatio, "wb");
+    si (dest)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via_destinatio);
+    }
     si (!dest)
     {
         fclose(fons);
@@ -1041,6 +1068,7 @@ filum_directorium_creare (
 
     _filum_error_purgare();
 
+    lectiones_notare(LECTIO_SCRIPSIT, via);
 #ifdef _WIN32
     si (_mkdir(via) != ZEPHYRUM)
 #else
@@ -1119,6 +1147,7 @@ filum_directorium_creare_cum_modo (
         redde VERUM;
     }
 
+    lectiones_notare(LECTIO_SCRIPSIT, via);
 #ifdef _WIN32
     (vacuum)modus;
     si (_mkdir(via) != ZEPHYRUM)

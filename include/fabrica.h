@@ -257,21 +257,36 @@ nomen structura {
                                 constans FabricaSanatio* sanatio);
     b32 (*cursum_legere)(vacuum* datum, constans character* titulus,
                          i32* duratio_ms_out);
-    /* vestigia lectionum (plan 2 T2): clavis = (titulus, sigillum
-     * ingressuum declaratorum, sigillum artificii) ut verificationes;
+    /* vestigia lectionum (plan 2 T2): clavis = (titulus, via exitus,
+     * sigillum ingressuum declaratorum, sigillum artificii) - vestigium
+     * ULTIMUM per (titulus, exitus): actio exituum multorum (fragmenta
+     * silvae, XXII) cuique exitui suum servat;
      * legere FALSUM = nullum. NIHIL licent (sine vestigiis). */
     b32 (*lectiones_legere)(vacuum* datum, constans character* titulus,
+                            constans character* exitus,
                             constans Sigillum* ingressus,
                             constans Sigillum* artificium,
                             Piscina* piscina, Xar** lectiones_out);
     vacuum (*lectiones_scribere)(vacuum* datum,
                                  constans character* titulus,
+                                 constans character* exitus,
                                  constans Sigillum* ingressus,
                                  constans Sigillum* artificium,
                                  constans Xar* lectiones);
+    /* vestigia ULTIMA tituli (omnes exitus, quaevis clavis) - ORDO:
+     * viae lectae (L/X/A) et enumerata (D) actionis lectiones="verum"
+     * arcus ad producentes dant, ut manifesta olim (plan 2 T2). FALSUM
+     * = nullum vestigium (clonus recens: nullus arcus). NIHIL licet. */
+    b32 (*lectiones_ultimae)(vacuum* datum, constans character* titulus,
+                             Piscina* piscina, Xar** lectiones_out);
     /* praefixum absolutum arboris, ex viis libri demendum (instrumenta
      * vias absolutas scribere possunt); vacua = nihil demitur */
     chorda radix;
+    /* AUDITUS MEMORIAE (plan 2 T2, Review Focus 5): ictus vestigii aut
+     * memoriae sub -plenus regeneratur tamen et confertur. 0 = nullus;
+     * I = omnes (iudicare -audit); N = unus ex N (specimen
+     * determinatum: octetus primus clavis ingressuum modulo N) */
+    i32 auditus;
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
@@ -576,6 +591,9 @@ nomen enumeratio {
     FABRICA_OMISSUM,            /* dependentia fracta aut omissa */
     FABRICA_AGENDUM,            /* siccum: stalum/ignotum nunc */
     FABRICA_FORTASSE,           /* siccum: post actionem agendam */
+    FABRICA_AUDITUM_DISCORS,    /* auditus: memoria/vestigium RECENS
+                                 * dicebat, regeneratio differt (plan
+                                 * 2 T2) */
     FABRICA_IUDICIUM            /* regeneratio iudicis (cursus solum,
                                  * numquam sanatio; parcum …AR15) */
 } FabricaEventus;

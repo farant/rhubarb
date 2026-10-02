@@ -87,3 +87,30 @@ lectiones_notare (
     linea[II + mensura_viae] = '\n';
     (vacuum)write(_descriptor, linea, mensura_viae + III);
 }
+
+constans character*
+lectiones_ambitus (
+         constans character* titulus)
+{
+    constans character* valor;
+             character  linea[IV * MXXIV];
+
+    si (titulus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    valor = getenv(titulus);
+    si (strlen(titulus) + (valor != NIHIL ? strlen(valor) : 0) + II
+            >= magnitudo(linea))
+    {
+        redde valor;   /* nimis longum: non notatur, ut via longa */
+    }
+    strcpy(linea, titulus);
+    si (valor != NIHIL)
+    {
+        strcat(linea, "\t");
+        strcat(linea, valor);
+    }
+    lectiones_notare(LECTIO_AMBITUS, linea);
+    redde valor;
+}

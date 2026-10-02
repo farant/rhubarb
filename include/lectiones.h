@@ -32,4 +32,11 @@ lectiones_notare (
                  LectioGenus  genus,
           constans character* via);
 
+/* getenv per librum: valorem reddit (aut NIHIL) et 'E' notat -
+ * linea 'E\t<titulus>\t<valor>' (absens: 'E\t<titulus>' sine
+ * tabulatore secundo) */
+constans character*
+lectiones_ambitus (
+         constans character* titulus);
+
 #endif /* LECTIONES_H */

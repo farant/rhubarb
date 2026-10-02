@@ -502,6 +502,7 @@ via_existit (
     /* Verificare existentiam per stat(); liber lectionum (fabrica
      * plan 2): resolutio inclusionum aedilis hic transit - quaesita
      * absentia = dependentia negativa (obumbratio) */
+    /* lectiones: notatur */
     si (stat(buffer, &info) == ZEPHYRUM)
     {
         lectiones_notare(LECTIO_EXSTAT, buffer);

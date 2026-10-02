@@ -83,6 +83,7 @@ directorium_iterator_aperire (
         redde NIHIL;
     }
 
+    /* lectiones: notatur */
     descriptum = opendir(via);
     si (descriptum == NIHIL)
     {
@@ -349,6 +350,7 @@ directorium_existit (
         redde FALSUM;
     }
 
+    /* lectiones: notatur */
     si (stat(via, &status) != 0)
     {
         lectiones_notare(LECTIO_ABSENS, via);

@@ -93,6 +93,8 @@ fabrica_suturam_parare (
     sutura->lectiones_scribere  = NIHIL;
     sutura->radix.datum         = NIHIL;
     sutura->radix.mensura       = ZEPHYRUM;
+    sutura->auditus             = ZEPHYRUM;
+    sutura->lectiones_ultimae   = NIHIL;
 }
 
 
@@ -1566,6 +1568,25 @@ _lectiones_congruunt (
     redde VERUM;
 }
 
+/* auditus memoriae: ictus hic regenerandus? (sub -plenus solum;
+ * specimen determinatum per clavem - nullus numerator servandus) */
+interior b32
+_auditum_eligere (
+    constans FabricaSutura* sutura,
+                       b32  plenus,
+         constans Sigillum* clavis)
+{
+    si (!plenus || sutura->auditus == 0 || sutura->currere == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (sutura->auditus == I)
+    {
+        redde VERUM;
+    }
+    redde (clavis->octeti[0] % sutura->auditus) == 0;
+}
+
 /* Generatorem actionis currere SEMEL per cursum (exitus multi,
  * generator unus): exitus cursus - felix aut causa fracti - in
  * sutura->regenerationes memoratur; exitus sequentes scripturam
@@ -1673,6 +1694,7 @@ _regeneratione_iudicare (
              character  numerus[32];
                    Xar* vestigium;
     constans character* liber_via;
+                   b32  ex_memoria;
 
     causa.datum    = NIHIL;
     causa.mensura  = ZEPHYRUM;
@@ -1684,7 +1706,8 @@ _regeneratione_iudicare (
     }
     artificium = sigillum_computare(commissum.datum,
         (memoriae_index)commissum.mensura);
-    clavis = _clavem_memoriae(actio, ingressus);
+    clavis      = _clavem_memoriae(actio, ingressus);
+    ex_memoria  = FALSUM;
     /* VESTIGIUM LECTIONUM (plan 2 T2): actio lectiones="verum" quam
      * cursus congruens sub eadem clave ingressuum et eodem artificio
      * legit - si omnis lectio hodie idem sigillum dat, RECENS sine
@@ -1692,24 +1715,35 @@ _regeneratione_iudicare (
     si (   actio->lectiones
         && sutura->lectiones_legere != NIHIL
         && sutura->lectiones_legere(sutura->datum,
-               chorda_ut_cstr(actio->titulus, piscina), &clavis,
+               chorda_ut_cstr(actio->titulus, piscina),
+               chorda_ut_cstr(exitus->via, piscina), &clavis,
                &artificium, piscina, &vestigium)
         && _lectiones_congruunt(sutura, vestigium, piscina))
     {
-        redde _iudicium(exitus->via, FABRICA_RECENS, chorda_ex_literis(
-            "lectiones congruunt (vestigium)", piscina));
+        si (!_auditum_eligere(sutura, plenus, &clavis))
+        {
+            redde _iudicium(exitus->via, FABRICA_RECENS,
+                chorda_ex_literis("lectiones congruunt (vestigium)",
+                    piscina));
+        }
+        ex_memoria = VERUM;   /* auditus: regeneratur tamen */
     }
     /* memoria SOLUM pro actione memorabili: ingressus aliter non
      * probabiliter pleni, et verificatio vetus mutationem ingressus
      * non declarati celaret */
-    si (   actio->memorabilis
+    si (   !ex_memoria
+        && actio->memorabilis
         && sutura->meminisse != NIHIL
         && sutura->meminisse(sutura->datum,
                chorda_ut_cstr(actio->titulus, piscina), &clavis,
                &artificium))
     {
-        redde _iudicium(exitus->via, FABRICA_RECENS,
-            chorda_ex_literis("memoria", piscina));
+        si (!_auditum_eligere(sutura, plenus, &clavis))
+        {
+            redde _iudicium(exitus->via, FABRICA_RECENS,
+                chorda_ex_literis("memoria", piscina));
+        }
+        ex_memoria = VERUM;
     }
     /* celer: regeneratio omissa nisi actio 'celer' (vilis) sit */
     si ((!plenus && !actio->celer) || sutura->currere == NIHIL)
@@ -1754,7 +1788,8 @@ _regeneratione_iudicare (
                    piscina, &vestigium))
         {
             sutura->lectiones_scribere(sutura->datum,
-                chorda_ut_cstr(actio->titulus, piscina), &clavis,
+                chorda_ut_cstr(actio->titulus, piscina),
+                chorda_ut_cstr(exitus->via, piscina), &clavis,
                 &artificium, vestigium);
         }
         si (actio->memorabilis && sutura->inscribere != NIHIL)
@@ -1763,12 +1798,34 @@ _regeneratione_iudicare (
                 chorda_ut_cstr(actio->titulus, piscina), &clavis,
                 &artificium);
         }
-        redde _iudicium(exitus->via, FABRICA_RECENS,
-            chorda_ex_literis("regeneratio congruit", piscina));
+        redde _iudicium(exitus->via, FABRICA_RECENS, chorda_ex_literis(
+            ex_memoria ? "auditus: regeneratio congruit"
+                       : "regeneratio congruit", piscina));
     }
     sprintf(numerus, "%u",
         (insignatus integer)_lineas_differentes_numerare(commissum,
             effusio));
+    si (ex_memoria)
+    {
+        /* memoria aut vestigium RECENS dicebat: foramen ingressus -
+         * nominatur et in cursu notatur */
+        si (sutura->cursum_inscribere != NIHIL)
+        {
+            FabricaSanatio auditum;
+
+            auditum.actio    = actio;
+            auditum.eventus  = FABRICA_AUDITUM_DISCORS;
+            auditum.causa         = chorda_ex_literis(
+                "memoria RECENS, regeneratio differt", piscina);
+            auditum.duratio_ms    = ZEPHYRUM;
+            auditum.tempus_notum  = FALSUM;
+            sutura->cursum_inscribere(sutura->datum, &auditum);
+        }
+        redde _iudicium(exitus->via, FABRICA_STALUM, _iungere(piscina,
+            "AUDITUM DISCORS: memoria/vestigium RECENS dicebat,"
+            " regeneratio differt (lineae differentes: ",
+            chorda_ex_literis(numerus, piscina), ")"));
+    }
     redde _iudicium(exitus->via, FABRICA_STALUM,
         _iungere(piscina, "regeneratio differt (lineae differentes: ",
             chorda_ex_literis(numerus, piscina), ")"));
@@ -2926,6 +2983,32 @@ fabrica_dependentias_computare (
             _ingressus_loci(sutura,
                 (FabricaIngressus*)xar_obtinere(actio->ingressus, j),
                 piscina, loci);
+        }
+        /* ORDO EX VESTIGIO (plan 2 T2): quod actio lectiones="verum"
+         * cursu ultimo legit, quaesivit, enumeravit - arcus ad
+         * producentes, ut manifesta quae vestigium supplet */
+        {
+            Xar* ultimae;
+
+            si (   actio->lectiones
+                && sutura->lectiones_ultimae != NIHIL
+                && sutura->lectiones_ultimae(sutura->datum,
+                       chorda_ut_cstr(actio->titulus, piscina), piscina,
+                       &ultimae))
+            {
+                per (j = ZEPHYRUM; j < xar_numerus(ultimae); j++)
+                {
+                    constans FabricaLectio* l;
+
+                    l = (constans FabricaLectio*)xar_obtinere(ultimae,
+                        j);
+                    _locum_addere(loci,
+                        l->genus == LECTIO_ENUMERAVIT
+                            ? FABRICA_LOCUS_PLAGULAE
+                            : FABRICA_LOCUS_PLAGULA,
+                        l->via, chorda_ex_literis("", piscina));
+                }
+            }
         }
         per (j = ZEPHYRUM; j < xar_numerus(loci); j++)
         {
