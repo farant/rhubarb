@@ -979,3 +979,17 @@ stale from this edit, a hit once healed). Left: lectores_cocti 3-10 s,
 tabulae_silvae 2.3 s. A real heal (`sanare installata`) still spends
 ~2 min of wall time nowhere in cursus - suspect the per-action footprint
 snapshots (park …6X0's ground), unmeasured. Clang stays ambient.
+
+## 2026-10-01 - the unrecorded heal time was the snapshot SORT (…6X0)
+
+Profiled with macOS `sample` (no code change): the ~3 min per rebake
+not in cursus was `_vestigium_capere` sorting the whole-tree snapshot
+with xar_ordinare, then a selection sort - ~8 s per snapshot, two per
+action, preconditions included. Fixed in the library (Fran: option B,
+lib/xar.c, see lib/xar.worklog.md). Full rebake after the change: 433 s
+wall = 145 s actions + 271 s judge regenerations (xar.c is in nearly
+every closure, so nearly every memo missed once) + ~17 s unaccounted,
+down from ~200 s. Also measured and dropped: a digest-only key on
+aedilis's sources for the amalgam chain would miss on exactly the
+edits the binary key misses on (aedilis's closure beyond the chains'
+is ~10 house files), so `instrumentum bin/aedilis` stays.

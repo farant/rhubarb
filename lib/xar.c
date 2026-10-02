@@ -1219,48 +1219,168 @@ xar_invertere (
     }
 }
 
+/* Elementa duo permutare per buffer acervi, frustis CCLVI
+ * octetorum: nulla allocatio, quaevis magnitudo elementi */
+interior vacuum
+_elementa_permutare (
+                i8* a,
+                i8* b,
+    memoriae_index  mensura)
+{
+                i8 temporalis[CCLVI];
+    memoriae_index frustum;
+
+    dum (mensura > ZEPHYRUM)
+    {
+        frustum = (mensura < CCLVI) ? mensura : CCLVI;
+        memcpy(temporalis, a, frustum);
+        memcpy(a, b, frustum);
+        memcpy(b, temporalis, frustum);
+        a        += frustum;
+        b        += frustum;
+        mensura  -= frustum;
+    }
+}
+
+/* Fusio cursuum [initium, medium) et [medium, finis) fontis in
+ * destinationem. STABILIS: dexter praecedit solum si STRICTE minor */
+interior vacuum
+_cursus_fundere (
+     constans i8* fons,
+              i8* destinatio,
+             i32  initium,
+             i32  medium,
+             i32  finis,
+  memoriae_index  mensura,
+   XarComparator  comparator)
+{
+    i32 sinister;
+    i32 dexter;
+    i32 k;
+
+    sinister  = initium;
+    dexter    = medium;
+    per (k = initium; k < finis; k++)
+    {
+        si (   dexter < finis
+            && (   sinister >= medium
+                || comparator(fons + (memoriae_index)dexter * mensura,
+                       fons + (memoriae_index)sinister * mensura)
+                   < ZEPHYRUM))
+        {
+            memcpy(destinatio + (memoriae_index)k * mensura,
+                fons + (memoriae_index)dexter * mensura, mensura);
+            dexter++;
+        }
+        alioquin
+        {
+            memcpy(destinatio + (memoriae_index)k * mensura,
+                fons + (memoriae_index)sinister * mensura, mensura);
+            sinister++;
+        }
+    }
+}
+
+/* Insertio stabilis in loco - via sine scriptura (piscina certae
+ * magnitudinis plena): O(n^2), nulla allocatio */
+interior vacuum
+_ordinare_inserendo (
+              Xar* xar,
+    XarComparator  comparator)
+{
+    i32 i;
+    i32 j;
+
+    per (i = I; i < xar->numerus_elementorum; i++)
+    {
+        per (j = i;
+             j > ZEPHYRUM
+                 && comparator(xar_obtinere(xar, j),
+                        xar_obtinere(xar, j - I)) < ZEPHYRUM;
+             j--)
+        {
+            _elementa_permutare((i8*)xar_obtinere(xar, j),
+                (i8*)xar_obtinere(xar, j - I),
+                (memoriae_index)xar->magnitudo_elementi);
+        }
+    }
+}
+
 /* Xar Ordinare
- * "Ordinare in loco usans selection sort"
+ * "Ordinare in loco: fusio stabilis, O(n log n)"
  *
- * Selection sort: O(n²) sed simplex et stabilis
+ * Olim selectio O(n^2) (et NON stabilis, quamvis ita dicta): fabrica
+ * (parcum …AR15) photographiam arboris (~XX M elementa) ~VIII s per
+ * ordinationem ordinabat. Elementa in scripturam contiguam exscribuntur
+ * (2n elementa ex piscina tabulae, notatione reddita), cursibus I, II,
+ * IV... fusa, deinde in segmenta reddita.
  */
 vacuum
 xar_ordinare (
               Xar* xar,
     XarComparator  comparator)
 {
-       i32  i;
-       i32  j;
-       i32  min_index;
-    vacuum* elem_j;
-    vacuum* elem_min;
+    PiscinaNotatio  notatio;
+    memoriae_index  mensura;
+    memoriae_index  totum;
+                i8* fons;
+                i8* destinatio;
+                i8* commutandum;
+               i32  numerus;
+               i32  latitudo;
+               i32  initium;
+               i32  medium;
+               i32  finis;
+               i32  i;
 
     si (!xar || !comparator || xar->numerus_elementorum <= I)
     {
         redde;
     }
-
-    per (i = ZEPHYRUM; i < xar->numerus_elementorum - I; i++)
+    numerus  = xar->numerus_elementorum;
+    mensura  = (memoriae_index)xar->magnitudo_elementi;
+    totum    = (memoriae_index)numerus * mensura;
+    notatio  = piscina_notare(xar->piscina);
+    fons     = (i8*)piscina_conari_allocare_ordinatum(xar->piscina,
+        totum, XVI);
+    destinatio = (fons != NIHIL)
+        ? (i8*)piscina_conari_allocare_ordinatum(xar->piscina, totum,
+              XVI)
+        : NIHIL;
+    si (destinatio == NIHIL)
     {
-        min_index  = i;
-        elem_min   = xar_obtinere(xar, i);
-
-        per (j = i + I; j < xar->numerus_elementorum; j++)
-        {
-            elem_j = xar_obtinere(xar, j);
-            si (   elem_j && elem_min
-                && comparator(elem_j, elem_min) < ZEPHYRUM)
-            {
-                min_index  = j;
-                elem_min   = elem_j;
-            }
-        }
-
-        si (min_index != i)
-        {
-            xar_mutare(xar, i, min_index);
-        }
+        piscina_reficere(xar->piscina, notatio);
+        _ordinare_inserendo(xar, comparator);
+        redde;
     }
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        memcpy(fons + (memoriae_index)i * mensura, xar_obtinere(xar, i),
+            mensura);
+    }
+    per (latitudo = I; latitudo < numerus; latitudo *= II)
+    {
+        per (initium = ZEPHYRUM; initium < numerus;
+             initium += II * latitudo)
+        {
+            medium = (latitudo < numerus - initium)
+                ? initium + latitudo : numerus;
+            finis  = (II * latitudo < numerus - initium)
+                ? initium + II * latitudo : numerus;
+            _cursus_fundere(fons, destinatio, initium, medium, finis,
+                mensura, comparator);
+        }
+        commutandum  = fons;
+        fons         = destinatio;
+        destinatio   = commutandum;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        memcpy(xar_obtinere(xar, i), fons + (memoriae_index)i * mensura,
+            mensura);
+    }
+    piscina_reficere(xar->piscina, notatio);
 }
 
 /* Xar Continet

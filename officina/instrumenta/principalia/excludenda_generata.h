@@ -113,6 +113,9 @@ interior constans character* constans EXCLUDENDA_TABULAE[] = {
 };
 
 interior constans character* constans EXCLUDENDA_XARIS[] = {
+    "_cursus_fundere",
+    "_elementa_permutare",
+    "_ordinare_inserendo",
     "xar_addere_multos",
     "xar_capacitas",
     "xar_continet",

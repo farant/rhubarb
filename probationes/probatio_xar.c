@@ -17,6 +17,84 @@ comparare_i32 (
     redde (aa < bb) ? -I : (aa > bb) ? I : ZEPHYRUM;
 }
 
+/* Paria pro stabilitate xar_ordinare: clavis comparatur, ordo
+ * (index insertionis) testis est. Gravis: > CCLVI octeti (mutatio
+ * per buffer acervi non capit integra) */
+nomen structura ParClavis {
+    i32 clavis;
+    i32 ordo;
+} ParClavis;
+
+nomen structura ParGravis {
+          i32 clavis;
+          i32 ordo;
+    character pondus[CCXCII];
+} ParGravis;
+
+interior integer
+comparare_clavem (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    i32 aa = ((constans ParClavis*)a)->clavis;
+    i32 bb = ((constans ParClavis*)b)->clavis;
+    redde (aa < bb) ? -I : (aa > bb) ? I : ZEPHYRUM;
+}
+
+interior integer
+comparare_clavem_gravem (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    i32 aa = ((constans ParGravis*)a)->clavis;
+    i32 bb = ((constans ParGravis*)b)->clavis;
+    redde (aa < bb) ? -I : (aa > bb) ? I : ZEPHYRUM;
+}
+
+/* violationes ordinis stabilis: par k ante par k+1 nisi clavis
+ * minor, aut aequalis cum ordine minore. Campi primi duo communes
+ * (ParClavis, ParGravis); 'gravis' magnitudinem elementi eligit. */
+interior i32
+violationes_numerare (
+    Xar* xar,
+    b32  gravis)
+{
+    i32 k;
+    i32 violationes;
+
+    violationes = ZEPHYRUM;
+    per (k = I; k < xar_numerus(xar); k++)
+    {
+        i32 clavis_prior;
+        i32 ordo_prior;
+        i32 clavis;
+        i32 ordo;
+
+        si (gravis)
+        {
+            clavis_prior = ((ParGravis*)xar_obtinere(xar, k
+                - I))->clavis;
+            ordo_prior  = ((ParGravis*)xar_obtinere(xar, k - I))->ordo;
+            clavis      = ((ParGravis*)xar_obtinere(xar, k))->clavis;
+            ordo        = ((ParGravis*)xar_obtinere(xar, k))->ordo;
+        }
+        alioquin
+        {
+            clavis_prior = ((ParClavis*)xar_obtinere(xar, k
+                - I))->clavis;
+            ordo_prior  = ((ParClavis*)xar_obtinere(xar, k - I))->ordo;
+            clavis      = ((ParClavis*)xar_obtinere(xar, k))->clavis;
+            ordo        = ((ParClavis*)xar_obtinere(xar, k))->ordo;
+        }
+        si (   clavis_prior > clavis
+            || (clavis_prior == clavis && ordo_prior > ordo))
+        {
+            violationes++;
+        }
+    }
+    redde violationes;
+}
+
 s32 principale(vacuum)
 {
     Piscina* piscina;
@@ -1090,6 +1168,106 @@ s32 principale(vacuum)
         xar_ordinare(xar, comparare_i32);
         elem = (i32*)xar_obtinere(xar, ZEPHYRUM);
         CREDO_AEQUALIS_I32(*elem, X);
+    }
+
+
+    /* ==================================================
+     * Probare xar_ordinare: STABILITAS et MAGNITUDO (fabrica …AR15:
+     * photographia arboris ~VIII s per ordinationem O(n^2))
+     * ================================================== */
+
+    {
+                   Xar* xar;
+             ParClavis* par;
+                   i32  k;
+                   i32  semen;
+                   i32  summa_ordinum;
+                   i32  summa_clavium;
+                   i32  summa_post;
+                   i32  ordines_post;
+        memoriae_index  usus_ante;
+        memoriae_index  usus_post;
+
+        imprimere("\n--- Probans xar_ordinare stabilitatem ---\n");
+
+        /* MMM paria, XVII claves solae (aequalia multa), ordo
+         * insertionis testis */
+        xar            = xar_creare(piscina, magnitudo(ParClavis));
+        semen          = XLII;
+        summa_ordinum  = ZEPHYRUM;
+        summa_clavium  = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < MMM; k++)
+        {
+            semen          = semen * 1103515245u + 12345u;
+            par            = (ParClavis*)xar_addere(xar);
+            par->clavis    = (semen >> XVI) % XVII;
+            par->ordo      = k;
+            summa_ordinum  += k;
+            summa_clavium  += par->clavis;
+        }
+        /* usus statim post ordinationem: CREDO ipsum in piscina
+         * scribit */
+        usus_ante = piscina_summa_usus(piscina);
+        xar_ordinare(xar, comparare_clavem);
+        usus_post = piscina_summa_usus(piscina);
+
+        CREDO_AEQUALIS_I32(xar_numerus(xar), MMM);
+        CREDO_AEQUALIS_I32(violationes_numerare(xar, FALSUM), ZEPHYRUM);
+        /* nihil amissum, nihil duplicatum */
+        summa_post    = ZEPHYRUM;
+        ordines_post  = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < MMM; k++)
+        {
+            par           = (ParClavis*)xar_obtinere(xar, k);
+            summa_post    += par->clavis;
+            ordines_post  += par->ordo;
+        }
+        CREDO_AEQUALIS_I32(summa_post, summa_clavium);
+        CREDO_AEQUALIS_I32(ordines_post, summa_ordinum);
+        /* scriptura temporaria piscinae reddita (notatio) */
+        CREDO_VERUM(usus_post == usus_ante);
+    }
+
+
+    /* ==================================================
+     * Probare xar_ordinare: PISCINA ANGUSTA (scriptura temporaria non
+     * capit -> insertio stabilis in loco, sine allocatione), elementa
+     * GRAVIA (> CCLVI octeti)
+     * ================================================== */
+
+    {
+          Piscina* angusta;
+              Xar* xar;
+        ParGravis* par;
+              i32  k;
+
+        imprimere("\n--- Probans xar_ordinare in piscina angusta ---\n");
+
+        angusta = piscina_generare_certae_magnitudinis("angusta",
+            XXVI * M);
+        CREDO_NON_NIHIL(angusta);
+        si (angusta != NIHIL)
+        {
+            xar = xar_creare(angusta, magnitudo(ParGravis));
+            per (k = ZEPHYRUM; k < XL; k++)
+            {
+                par                    = (ParGravis*)xar_addere(xar);
+                par->clavis            = (XL - k) % V;
+                par->ordo              = k;
+                par->pondus[ZEPHYRUM]  = (character)'p';
+            }
+            CREDO_AEQUALIS_I32(xar_numerus(xar), XL);
+            /* praemissa probationis: scriptura non capit */
+            CREDO_FALSUM(piscina_potesne_allocare(angusta,
+                (memoriae_index)XL * magnitudo(ParGravis)));
+            xar_ordinare(xar, comparare_clavem_gravem);
+            CREDO_AEQUALIS_I32(violationes_numerare(xar, VERUM),
+                ZEPHYRUM);
+            par = (ParGravis*)xar_obtinere(xar, ZEPHYRUM);
+            CREDO_AEQUALIS_I32(par->clavis, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)par->pondus[ZEPHYRUM], (i32)'p');
+            piscina_destruere(angusta);
+        }
     }
 
 

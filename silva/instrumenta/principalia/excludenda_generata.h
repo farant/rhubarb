@@ -8,13 +8,10 @@
 
 interior constans character* constans EXCLUDENDA_PISCINAE[] = {
     "piscina_conari_allocare",
-    "piscina_conari_allocare_ordinatum",
     "piscina_generare_certae_magnitudinis",
-    "piscina_notare",
     "piscina_numerus_allocationum",
     "piscina_numerus_alveorum",
     "piscina_potesne_allocare",
-    "piscina_reficere",
     "piscina_reliqua_antequam_cresca_alvei",
     "piscina_summa_inutilis_allocatus",
     NIHIL
@@ -105,6 +102,7 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_iterator_finis",
     "xar_iterator_initium",
     "xar_iterator_proximum",
+    "xar_mutare",
     "xar_obtinere_s",
     "xar_obtinere_vel_creare",
     "xar_ponere",

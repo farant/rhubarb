@@ -6716,6 +6716,12 @@ silva_piscina_allocare_ordinatum (
                   memoriae_index  mensura,
                   memoriae_index  ordinatio);
 
+static vacuum*
+silva_piscina_conari_allocare_ordinatum (
+                         SilvaPiscina* piscina,
+                  memoriae_index  mensura,
+                  memoriae_index  ordinatio);
+
 
 /* ===============================================
  * Cyclus Vitae
@@ -6737,6 +6743,32 @@ silva_piscina_summa_usus (
 memoriae_index
 silva_piscina_summa_apex_usus (
         constans SilvaPiscina* piscina);
+
+
+/* ===============================================
+ * Notatio - mark/reset pattern
+ * =============================================== */
+
+/* piscina_notare - Captat statum currentem
+ * "Notare positionem currentem pro refectione postea"
+ *
+ * Usus: PiscinaNotatio nota = piscina_notare(piscina);
+ *       ... allocare temporaria ...
+ *       piscina_reficere(piscina, nota);
+ */
+static SilvaPiscinaNotatio
+silva_piscina_notare (
+        SilvaPiscina* piscina);
+
+/* piscina_reficere - Reficit statum ad notationem
+ * "Reficere piscinam ad statum notatum"
+ *
+ * Omnia allocata post notationem erunt invalida!
+ */
+static vacuum
+silva_piscina_reficere (
+               SilvaPiscina* piscina,
+        SilvaPiscinaNotatio  notatio);
 
 #endif
 
@@ -7333,23 +7365,16 @@ silva_xar_removere_ultimum (
 /* Xar Ordinare - Ordinare in loco
  * "Ordinare tabulam in loco usans comparatorem"
  *
- * Usans selection sort (simplex, O(n²), sed stabilis pro parvis tabulis)
+ * Fusio STABILIS (aequalia ordinem insertionis servant), O(n log n).
+ * Scriptura temporaria 2n elementorum ex piscina tabulae, post
+ * ordinationem reddita (notatio) - ergo comparator ex piscina tabulae
+ * NE allocet. Piscina certae magnitudinis sine spatio: insertio
+ * stabilis in loco (O(n^2), sine allocatione).
  */
 static vacuum
 silva_xar_ordinare (
                   SilvaXar* xar,
         SilvaXarComparator  comparator);
-
-/* Xar Mutare - Mutare duo elementa
- * "Mutare elementa ad indices"
- *
- * Redde: VERUM si successus, FALSUM si indices invalidi
- */
-static b32
-silva_xar_mutare (
-        SilvaXar* xar,
-        i32  index_a,
-        i32  index_b);
 
 #endif /* XAR_H */
 
@@ -14629,6 +14654,15 @@ silva_piscina_allocare_ordinatum (
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
 }
 
+static vacuum*
+silva_piscina_conari_allocare_ordinatum (
+           SilvaPiscina* piscina,
+    memoriae_index  mensura,
+    memoriae_index  ordinatio)
+{
+    redde _allocare_interna(piscina, mensura, ordinatio, FALSUM);
+}
+
 
 /* ===========================================================
  * CYCLUS VITAE
@@ -14673,6 +14707,74 @@ silva_piscina_summa_apex_usus (
         constans SilvaPiscina* piscina)
 {
     redde piscina ? piscina->maximus_usus : ZEPHYRUM;
+}
+
+
+/* ===========================================================
+ * NOTATIO - MARK/RESET PATTERN
+ * =========================================================== */
+
+static SilvaPiscinaNotatio
+silva_piscina_notare (
+        SilvaPiscina* piscina)
+{
+    SilvaPiscinaNotatio notatio;
+
+    si (!piscina)
+    {
+        notatio.alveus_nunc  = NIHIL;
+        notatio.positus      = ZEPHYRUM;
+        redde notatio;
+    }
+
+    notatio.alveus_nunc  = piscina->nunc;
+    notatio.positus      = piscina->nunc->offset;
+
+    _debug_imprimere(
+            piscina->titulus ? piscina->titulus : "nemo",
+            "notare",
+            notatio.positus);
+
+    redde notatio;
+}
+
+static vacuum
+silva_piscina_reficere (
+               SilvaPiscina* piscina,
+        SilvaPiscinaNotatio  notatio)
+{
+    Alveus* alveus_notatus;
+    Alveus* alveus_iter;
+
+    si (!piscina || !notatio.alveus_nunc) redde;
+
+    alveus_notatus = (Alveus*)notatio.alveus_nunc;
+
+    /* Reficere alveum notatum ad positionem notatam */
+    alveus_notatus->offset = notatio.positus;
+
+    /* Vacare omnes alveos post alveum notatum */
+    per (alveus_iter =
+        alveus_notatus->sequens; alveus_iter; alveus_iter =
+        alveus_iter->sequens)
+    {
+        alveus_iter->offset = ZEPHYRUM;
+    }
+
+        /* Reficere piscina->nunc ad alveum notatum; summa offsetuum
+     * recomputata SEMEL (alvei ante notatum offsetus servant) */
+    piscina->nunc          = alveus_notatus;
+    piscina->usus_currens  = ZEPHYRUM;
+    per (alveus_iter = piscina->primus; alveus_iter;
+         alveus_iter = alveus_iter->sequens)
+    {
+        piscina->usus_currens += alveus_iter->offset;
+    }
+
+    _debug_imprimere(
+            piscina->titulus ? piscina->titulus : "nemo",
+            "reficere",
+            notatio.positus);
 }
 
 /* ================= ex lib/chorda.c ================= */
@@ -16386,119 +16488,168 @@ silva_xar_removere_ultimum (
     redde VERUM;
 }
 
-
-/* ========================================================================
- * ORDINATIO ET MANIPULATIO
- * ======================================================================== */
-
-/* Xar Mutare
- * "Mutare duo elementa"
- */
-static b32
-silva_xar_mutare (
-    SilvaXar* xar,
-    i32  index_a,
-    i32  index_b)
+/* Elementa duo permutare per buffer acervi, frustis CCLVI
+ * octetorum: nulla allocatio, quaevis magnitudo elementi */
+interior vacuum
+_elementa_permutare (
+                i8* a,
+                i8* b,
+    memoriae_index  mensura)
 {
-    vacuum* elem_a;
-    vacuum* elem_b;
-        i8  temporalis[CCLVI];  /* Buffer temporalis pro swap */
-        i8* temp_heap;
+                i8  temporalis[CCLVI];
+    memoriae_index  frustum;
 
-    si (!xar)
+    dum (mensura > ZEPHYRUM)
     {
-        redde FALSUM;
+        frustum = (mensura < CCLVI) ? mensura : CCLVI;
+        memcpy(temporalis, a, frustum);
+        memcpy(a, b, frustum);
+        memcpy(b, temporalis, frustum);
+        a        += frustum;
+        b        += frustum;
+        mensura  -= frustum;
     }
+}
 
-    si (   index_a >= xar->numerus_elementorum
+/* Fusio cursuum [initium, medium) et [medium, finis) fontis in
+ * destinationem. STABILIS: dexter praecedit solum si STRICTE minor */
+interior vacuum
+_cursus_fundere (
+     constans i8* fons,
+              i8* destinatio,
+             i32  initium,
+             i32  medium,
+             i32  finis,
+  memoriae_index  mensura,
+   SilvaXarComparator  comparator)
+{
+    i32 sinister;
+    i32 dexter;
+    i32 k;
 
-        || index_b >= xar->numerus_elementorum)
+    sinister  = initium;
+    dexter    = medium;
+    per (k = initium; k < finis; k++)
     {
-        redde FALSUM;
-    }
-
-    /* Si idem index, nihil agendum */
-    si (index_a == index_b)
-    {
-        redde VERUM;
-    }
-
-    elem_a = silva_xar_obtinere(xar, index_a);
-    elem_b = silva_xar_obtinere(xar, index_b);
-
-    si (!elem_a || !elem_b)
-    {
-        redde FALSUM;
-    }
-
-    /* Mutare usans buffer temporalem */
-    si (xar->magnitudo_elementi <= CCLVI)
-    {
-        /* Usare buffer in stack */
-        memcpy(temporalis, elem_a, xar->magnitudo_elementi);
-        memcpy(elem_a, elem_b, xar->magnitudo_elementi);
-        memcpy(elem_b, temporalis, xar->magnitudo_elementi);
-    }
-    alioquin
-    {
-        /* Allocare in heap pro elementis magnis */
-        temp_heap = (i8*)silva_piscina_allocare(xar->piscina,
-            xar->magnitudo_elementi);
-        si (!temp_heap)
+        si (   dexter < finis
+            && (   sinister >= medium
+                || comparator(fons + (memoriae_index)dexter * mensura,
+                       fons + (memoriae_index)sinister * mensura)
+                   < ZEPHYRUM))
         {
-            redde FALSUM;
+            memcpy(destinatio + (memoriae_index)k * mensura,
+                fons + (memoriae_index)dexter * mensura, mensura);
+            dexter++;
         }
-        memcpy(temp_heap, elem_a, xar->magnitudo_elementi);
-        memcpy(elem_a, elem_b, xar->magnitudo_elementi);
-        memcpy(elem_b, temp_heap, xar->magnitudo_elementi);
-        /* Nota: temp_heap liberabitur cum piscina */
+        alioquin
+        {
+            memcpy(destinatio + (memoriae_index)k * mensura,
+                fons + (memoriae_index)sinister * mensura, mensura);
+            sinister++;
+        }
     }
+}
 
-    redde VERUM;
+/* Insertio stabilis in loco - via sine scriptura (piscina certae
+ * magnitudinis plena): O(n^2), nulla allocatio */
+interior vacuum
+_ordinare_inserendo (
+              SilvaXar* xar,
+    SilvaXarComparator  comparator)
+{
+    i32 i;
+    i32 j;
+
+    per (i = I; i < xar->numerus_elementorum; i++)
+    {
+        per (j = i;
+             j > ZEPHYRUM
+                 && comparator(silva_xar_obtinere(xar, j),
+                        silva_xar_obtinere(xar, j - I)) < ZEPHYRUM;
+             j--)
+        {
+            _elementa_permutare((i8*)silva_xar_obtinere(xar, j),
+                (i8*)silva_xar_obtinere(xar, j - I),
+                (memoriae_index)xar->magnitudo_elementi);
+        }
+    }
 }
 
 /* Xar Ordinare
- * "Ordinare in loco usans selection sort"
+ * "Ordinare in loco: fusio stabilis, O(n log n)"
  *
- * Selection sort: O(n²) sed simplex et stabilis
+ * Olim selectio O(n^2) (et NON stabilis, quamvis ita dicta): fabrica
+ * (parcum …AR15) photographiam arboris (~XX M elementa) ~VIII s per
+ * ordinationem ordinabat. Elementa in scripturam contiguam exscribuntur
+ * (2n elementa ex piscina tabulae, notatione reddita), cursibus I, II,
+ * IV... fusa, deinde in segmenta reddita.
  */
 static vacuum
 silva_xar_ordinare (
               SilvaXar* xar,
     SilvaXarComparator  comparator)
 {
-       i32  i;
-       i32  j;
-       i32  min_index;
-    vacuum* elem_j;
-    vacuum* elem_min;
+    SilvaPiscinaNotatio  notatio;
+    memoriae_index  mensura;
+    memoriae_index  totum;
+                i8* fons;
+                i8* destinatio;
+                i8* commutandum;
+               i32  numerus;
+               i32  latitudo;
+               i32  initium;
+               i32  medium;
+               i32  finis;
+               i32  i;
 
     si (!xar || !comparator || xar->numerus_elementorum <= I)
     {
         redde;
     }
-
-    per (i = ZEPHYRUM; i < xar->numerus_elementorum - I; i++)
+    numerus  = xar->numerus_elementorum;
+    mensura  = (memoriae_index)xar->magnitudo_elementi;
+    totum    = (memoriae_index)numerus * mensura;
+    notatio  = silva_piscina_notare(xar->piscina);
+    fons     = (i8*)silva_piscina_conari_allocare_ordinatum(xar->piscina,
+        totum, XVI);
+    destinatio = (fons != NIHIL)
+        ? (i8*)silva_piscina_conari_allocare_ordinatum(xar->piscina, totum,
+              XVI)
+        : NIHIL;
+    si (destinatio == NIHIL)
     {
-        min_index  = i;
-        elem_min   = silva_xar_obtinere(xar, i);
-
-        per (j = i + I; j < xar->numerus_elementorum; j++)
-        {
-            elem_j = silva_xar_obtinere(xar, j);
-            si (   elem_j && elem_min
-                && comparator(elem_j, elem_min) < ZEPHYRUM)
-            {
-                min_index  = j;
-                elem_min   = elem_j;
-            }
-        }
-
-        si (min_index != i)
-        {
-            silva_xar_mutare(xar, i, min_index);
-        }
+        silva_piscina_reficere(xar->piscina, notatio);
+        _ordinare_inserendo(xar, comparator);
+        redde;
     }
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        memcpy(fons + (memoriae_index)i * mensura, silva_xar_obtinere(xar, i),
+            mensura);
+    }
+    per (latitudo = I; latitudo < numerus; latitudo *= II)
+    {
+        per (initium = ZEPHYRUM; initium < numerus;
+             initium += II * latitudo)
+        {
+            medium = (latitudo < numerus - initium)
+                ? initium + latitudo : numerus;
+            finis  = (II * latitudo < numerus - initium)
+                ? initium + II * latitudo : numerus;
+            _cursus_fundere(fons, destinatio, initium, medium, finis,
+                mensura, comparator);
+        }
+        commutandum  = fons;
+        fons         = destinatio;
+        destinatio   = commutandum;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        memcpy(silva_xar_obtinere(xar, i), fons + (memoriae_index)i * mensura,
+            mensura);
+    }
+    silva_piscina_reficere(xar->piscina, notatio);
 }
 
 /* ================= ex lib/internamentum.c ================= */
