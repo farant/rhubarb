@@ -294,7 +294,6 @@ int tessera_magnitudinem_renovare(TesseraOpus* opus);
  * ================================================== */
 
 #define TESSERA_LECTOR_BUFFER 64
-#define TESSERA_RELIQUIAE_CAPACITAS 64    /* <= SERIES_CRUDUM_MAXIMUM */
 #define TESSERA_MORA_FUGAE_MS 25
 #define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
 #define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
@@ -360,24 +359,20 @@ typedef struct TesseraEventum {
 } TesseraEventum;
 
 /* lexemator fluminis terminalis (series_terminalis vendicatus,
- * eventus B1b) - opacus */
+ * eventus B1b) - opacus; typus in tessera.c internus */
 typedef struct TesseraSeriesLector TesseraSeriesLector;
+
+/* pipeline initus (rivus_terminalis vendicatus, eventus B3a): lector
+ * tesserae = proiectio Eventus eius - opacus */
+typedef struct TesseraRivusTerminalis TesseraRivusTerminalis;
 
 typedef struct TesseraLector {
     TesseraPons*  pons;
     unsigned char buffer[TESSERA_LECTOR_BUFFER];
-    unsigned int  mensura;
+    unsigned int  mensura;        /* octeti in rivo nondum consumpti */
     unsigned int  latitudo_nota;
     unsigned int  altitudo_nota;
-    unsigned char* glutinum;      /* collector glutini */
-    TesseraSeriesLector* series;  /* lexemator, modo initus */
-    int           alterum_pendens;
-    int           x10_pendens;
-    int           alienum_pendens;
-    unsigned char reliquiae[TESSERA_RELIQUIAE_CAPACITAS];
-    unsigned int  reliquiae_mensura;
-    unsigned int  reliquiae_genus;
-    int           fuga_reddenda;
+    TesseraRivusTerminalis* rivus;
 } TesseraLector;
 
 TesseraLector* tessera_lector_creare(TesseraPiscina* piscina,
@@ -4652,6 +4647,20 @@ static b32
 tessera_utf8_est_continuatio (
     i8 byte);
 
+/*
+ * utf8_codere - Codere unam runam in sequentiam UTF-8
+ *   (par decodere; buffer IV bytes minimum capere debet)
+ *
+ * @runa: Codepoint (0..0x10FFFF, surrogata D800-DFFF exclusa)
+ * @buffer: Quo bytes scribuntur (1-4)
+ *
+ * Redde: Numerus bytes scriptorum; 0 si runa invalida
+ */
+static s32
+tessera_utf8_codere (
+    s32  runa,
+     i8* buffer);
+
 #endif /* UTF8_H */
 
 /* ================= ex include/postulata_posix.h ================= */
@@ -4961,6 +4970,648 @@ tessera_series_lectorem_evacuare (
 
 #endif /* SERIES_TERMINALIS_H */
 
+/* ================= ex include/eventus.h ================= */
+#ifndef EVENTUS_H
+#define EVENTUS_H
+
+
+/* ==================================================
+ * Constantae - Genera Eventuum
+ * ================================================== */
+
+/* Genera eventuum */
+nomen enumeratio {
+    EVENTUS_NIHIL = ZEPHYRUM,
+    EVENTUS_CLAUDERE,
+    EVENTUS_MUTARE_MAGNITUDINEM,
+    EVENTUS_FOCUS,
+    EVENTUS_DEFOCUS,
+    EVENTUS_EXPONERE,
+    EVENTUS_CLAVIS_DEPRESSUS,
+    EVENTUS_CLAVIS_LIBERATUS,
+    EVENTUS_MUS_DEPRESSUS,
+    EVENTUS_MUS_LIBERATUS,
+    EVENTUS_MUS_MOTUS,
+    EVENTUS_MUS_ROTULA,
+    EVENTUS_MUS_DUPLEX,         /* Double-click (derivatum) */
+    /* Derivata a dispensatore (ludus): numquam a fenestra
+     * emissa. Ordo = tabula titulorum eventus_stml.c. */
+    EVENTUS_MUS_INTRAVIT,
+    EVENTUS_MUS_EXIIT,
+    EVENTUS_FOCUS_CAPTUS,
+    EVENTUS_FOCUS_AMISSUS,
+    EVENTUS_FOCUS_PETITUS,
+    /* res menu applicationis pressa (fenestra_menu_addere) */
+    EVENTUS_MENU,
+    /* Vocabularium sine iactura (eventus A2; spec par. III) - ADDITA
+     * ad finem: tituli in plagulis, ordo tabulae titulorum crescit. */
+    EVENTUS_TEXTUS,          /* textus commissus aut componens */
+    EVENTUS_DEPOSITIO,       /* viae depositae (aut glutinum promotum) */
+    EVENTUS_SUSPENSIO,       /* processus suspensus (terminalis) */
+    EVENTUS_RESUMPTIO,       /* processus resumptus */
+    EVENTUS_FACULTATES,      /* facultates fontis (primus; et mutatae) */
+    /* Tractus DERIVATI (eventus A5; spec D4): a ludo (derivare) solum,
+     * numquam a fonte. INCIPIT: x/y = ORIGO (ubi pressio fuit), tempus
+     * motus qui limen transiit; TRACTUS: positio currens; FINIT:
+     * positio liberationis. botton = botton pressionis. */
+    EVENTUS_TRACTUS_INCIPIT,
+    EVENTUS_TRACTUS,
+    EVENTUS_TRACTUS_FINIT
+} tessera_eventus_genus_t;
+
+
+/* ==================================================
+ * Constantae - Codices Clavium
+ * ================================================== */
+
+/* Codices clavium */
+nomen enumeratio {
+    CLAVIS_IGNOTA = ZEPHYRUM,
+
+    /* Characteres ASCII imprimibiles (32-126) sunt valores ASCII eorum */
+    CLAVIS_SPATIUM = XXXII,
+
+    /* Characteres imperantes */
+    CLAVIS_EFFUGIUM = XXVII,
+    CLAVIS_REDITUS = XIII,
+    CLAVIS_TABULA = IX,
+    CLAVIS_RETRORSUM = VIII,
+    CLAVIS_DELERE = CXXVII,
+
+    /* Claves navigationis (256+) */
+    CLAVIS_SINISTER = CCLVI,
+    CLAVIS_DEXTER,
+    CLAVIS_SURSUM,
+    CLAVIS_DEORSUM,
+    CLAVIS_DOMUS,
+    CLAVIS_FINIS,
+    CLAVIS_PAGINA_SURSUM,
+    CLAVIS_PAGINA_DEORSUM,
+
+    /* Claves functionis */
+    CLAVIS_F1 = CCXC,
+    CLAVIS_F2,
+    CLAVIS_F3,
+    CLAVIS_F4,
+    CLAVIS_F5,
+    CLAVIS_F6,
+    CLAVIS_F7,
+    CLAVIS_F8,
+    CLAVIS_F9,
+    CLAVIS_F10,
+    CLAVIS_F11,
+    CLAVIS_F12,
+
+    /* Claves modificantes */
+    CLAVIS_SINISTER_SHIFT = CCCXL,
+    CLAVIS_DEXTER_SHIFT,
+    CLAVIS_SINISTER_IMPERIUM,
+    CLAVIS_DEXTER_IMPERIUM,
+    CLAVIS_SINISTER_ALT,
+    CLAVIS_DEXTER_ALT,
+    CLAVIS_SINISTER_SUPER,
+    CLAVIS_DEXTER_SUPER,
+    CLAVIS_CAPS_LOCK,
+    CLAVIS_NUM_LOCK
+} clavis_t;
+
+
+/* ==================================================
+ * Constantae - Vexilla Modificantium
+ * ================================================== */
+
+/* Vexilla modificantium pro eventibus clavis/muris */
+nomen enumeratio {
+    MOD_SHIFT     = 0x020000,
+    MOD_IMPERIUM  = 0x040000,
+    MOD_ALT       = 0x080000,
+    MOD_SUPER     = 0x100000,
+    MOD_CAPS_LOCK = 0x010000,
+    MOD_NUM_LOCK  = 0x200000
+} mod_vexilla_t;
+
+
+/* ==================================================
+ * Constantae - Bottones Muris
+ * ================================================== */
+
+/* Bottones muris */
+nomen enumeratio {
+    MUS_SINISTER = I,
+    MUS_DEXTER   = II,
+    MUS_MEDIUS   = III
+} mus_botton_t;
+
+
+/* ==================================================
+ * Modificantes LATERUM (eventus A2)
+ * ==================================================
+ * Valores = larvae macOS 'device-dependent' (NX_DEVICE*): fenestra
+ * modifierFlags crudos iam fert, ergo latera iam in eventibus et
+ * plagulis sunt. Conventio vocabularii: fontes alii (terminalis per
+ * kitty) in has vertunt. Solum si facultas 'latera'. */
+#define MOD_IMPERIUM_SINISTER  0x0001
+#define MOD_SHIFT_SINISTER     0x0002
+#define MOD_SHIFT_DEXTER       0x0004
+#define MOD_SUPER_SINISTER     0x0008
+#define MOD_SUPER_DEXTER       0x0010
+#define MOD_ALT_SINISTER       0x0020
+#define MOD_ALT_DEXTER         0x0040
+#define MOD_IMPERIUM_DEXTER    0x2000
+
+
+/* ==================================================
+ * Codex PHYSICUS clavis (spec D3: subsectio W3C 'code')
+ * ==================================================
+ * Positio clavis, non dispositio (clavis logica in 'clavis' et
+ * 'runa'). Tituli plagularum = nomina W3C ("KeyA", "ArrowLeft") per
+ * eventus_codex_titulus (eventus_stml.h). Litterae et numeri ut
+ * ORDINES: EVENTUS_CODEX_LITTERAE + (c - 'A'), EVENTUS_CODEX_NUMERI
+ * + d, EVENTUS_CODEX_FUNCTIONES + (n - 1) pro F1..F12. */
+
+nomen enumeratio {
+    EVENTUS_CODEX_IGNOTUS = ZEPHYRUM,
+    EVENTUS_CODEX_LITTERAE,                          /* KeyA .. KeyZ */
+    EVENTUS_CODEX_NUMERI = EVENTUS_CODEX_LITTERAE + XXVI, /* Digit0..9 */
+    EVENTUS_CODEX_FUNCTIONES = EVENTUS_CODEX_NUMERI + X,  /* F1..F12 */
+    EVENTUS_CODEX_SPATIUM = EVENTUS_CODEX_FUNCTIONES + XII,
+    EVENTUS_CODEX_REDITUS,
+    EVENTUS_CODEX_TABULA,
+    EVENTUS_CODEX_RETRORSUM,
+    EVENTUS_CODEX_EFFUGIUM,
+    EVENTUS_CODEX_SAGITTA_SINISTRA,
+    EVENTUS_CODEX_SAGITTA_DEXTRA,
+    EVENTUS_CODEX_SAGITTA_SURSUM,
+    EVENTUS_CODEX_SAGITTA_DEORSUM,
+    EVENTUS_CODEX_DOMUS,
+    EVENTUS_CODEX_FINIS,
+    EVENTUS_CODEX_PAGINA_SURSUM,
+    EVENTUS_CODEX_PAGINA_DEORSUM,
+    EVENTUS_CODEX_DELERE,
+    EVENTUS_CODEX_INSERERE,
+    EVENTUS_CODEX_GRAVIS,             /* Backquote */
+    EVENTUS_CODEX_MINUS,
+    EVENTUS_CODEX_AEQUALE,
+    EVENTUS_CODEX_UNCUS_SINISTER,     /* BracketLeft */
+    EVENTUS_CODEX_UNCUS_DEXTER,
+    EVENTUS_CODEX_VIRGULA_INVERSA,    /* Backslash */
+    EVENTUS_CODEX_PUNCTUM_VIRGULA,    /* Semicolon */
+    EVENTUS_CODEX_APOSTROPHUS,        /* Quote */
+    EVENTUS_CODEX_VIRGULA,            /* Comma */
+    EVENTUS_CODEX_PUNCTUM,            /* Period */
+    EVENTUS_CODEX_VIRGULA_OBLIQUA,    /* Slash */
+    EVENTUS_CODEX_MAIUSCULA_SINISTRA, /* ShiftLeft */
+    EVENTUS_CODEX_MAIUSCULA_DEXTRA,
+    EVENTUS_CODEX_IMPERIUM_SINISTRUM, /* ControlLeft */
+    EVENTUS_CODEX_IMPERIUM_DEXTRUM,
+    EVENTUS_CODEX_ALTERUM_SINISTRUM,  /* AltLeft */
+    EVENTUS_CODEX_ALTERUM_DEXTRUM,
+    EVENTUS_CODEX_SUPER_SINISTRUM,    /* MetaLeft */
+    EVENTUS_CODEX_SUPER_DEXTRUM,
+    EVENTUS_CODEX_SERA_MAIUSCULARUM,  /* CapsLock */
+    EVENTUS_CODICES_NUMERUS
+} EventusCodex;
+
+/* Actio clavis: ITERATA = auto-repetitio (genus DEPRESSUS manet);
+ * SOLUTA in LIBERATUS. */
+nomen enumeratio {
+    EVENTUS_ACTIO_PRESSA = ZEPHYRUM,
+    EVENTUS_ACTIO_ITERATA,
+    EVENTUS_ACTIO_SOLUTA
+} EventusActio;
+
+nomen enumeratio {
+    EVENTUS_INDICATOR_MUS = ZEPHYRUM,
+    EVENTUS_INDICATOR_STILUS,
+    EVENTUS_INDICATOR_TACTUS
+} EventusIndicatorGenus;
+
+#define EVENTUS_PRESSIO_IGNOTA (-1)   /* pressio 0..M; mus, terminalis */
+#define EVENTUS_EXEMPLA_MAXIMA LXIV   /* spec D5 */
+
+/* Exemplum motus coaliti (spec Q13): positio + tempus */
+nomen structura {
+    s32 x;
+    s32 y;
+    s64 tempus;
+} EventusExemplum;
+
+nomen enumeratio {
+    EVENTUS_ROTULA_IGNOTA = ZEPHYRUM,  /* plagulae veteres (f32 sola) */
+    EVENTUS_ROTULA_PRAECISA,            /* trackpad: pixela */
+    EVENTUS_ROTULA_GRADATA             /* rota, terminalis: gradus */
+} EventusRotulaGenus;
+
+nomen enumeratio {
+    EVENTUS_TEXTUS_COMMISSUM = ZEPHYRUM,
+    EVENTUS_TEXTUS_COMPONENS           /* praeeditio IME */
+} EventusTextusGenus;
+
+nomen enumeratio {
+    EVENTUS_ORIGO_SCRIPTA = ZEPHYRUM,  /* typed */
+    EVENTUS_ORIGO_GLUTINATA,           /* pasted */
+    EVENTUS_ORIGO_COMPOSITA            /* IME commit, dead keys */
+} EventusOrigo;
+
+/* Facultates trinae */
+#define EVENTUS_FACULTAS_NULLA       ZEPHYRUM
+#define EVENTUS_FACULTAS_FORTASSE    I    /* scriptura copiae: OSC 52 */
+#define EVENTUS_FACULTAS_CERTA       II
+#define EVENTUS_DEPOSITIO_NULLA      ZEPHYRUM
+#define EVENTUS_DEPOSITIO_HEURISTICA I    /* glutinum viarum promotum */
+#define EVENTUS_DEPOSITIO_NATIVA     II
+
+/* Quod fons NARRARE potest (spec Q4, Q17): semel primus, iterum si
+ * discit (per observationem, numquam per quaestionem). */
+nomen structura {
+    b32 liberationes;       /* SOLUTA nuntiatur */
+    b32 codex_physicus;     /* 'codex' verus */
+    b32 tabula_distincta;   /* Tab != Ctrl+I */
+    b32 latera;             /* MOD_*_SINISTER/DEXTER */
+    b32 super;              /* hover (motus sine botone) */
+    b32 praeeditio;         /* TEXTUS COMPONENS */
+    i32 scriptura_copiae;   /* EVENTUS_FACULTAS_* */
+    i32 depositio;          /* EVENTUS_DEPOSITIO_* */
+    s32 gradus_rotulae;     /* pixela nostra per gradum (GRADATA) */
+    b32 pressio;            /* pressio indicatoris vera */
+} EventusFacultates;
+
+
+/* ==================================================
+ * Typi - Eventus
+ * ================================================== */
+
+/* Structura eventi fenestrae */
+nomen structura {
+    tessera_eventus_genus_t genus;
+
+    /* Tempus eventus in MILLISECUNDIS (s64). A fenestra stampatum in
+     * productione, a plagula in replay. TEMPUS EST DATUM IN EVENTU -
+     * nihil infra fenestram horologium vocat. ZEPHYRUM = nondum
+     * stampatum: impellere_eventum id implet. */
+    s64 tempus;
+    unio {
+        structura {
+            i32 latitudo;
+            i32 altitudo;
+        } mutare_magnitudinem;
+        structura {
+             clavis_t clavis;        /* LOGICA (nominata; ASCII ut olim) */
+            character typus;         /* DEPRECATUM (spec D2): textus in
+                                      * EVENTUS_TEXTUS */
+                  i32 modificantes;  /* MOD_* + latera */
+                  s32 runa;          /* runa sine maiuscula (logica) */
+         EventusCodex codex;         /* PHYSICUS; IGNOTUS si nescitur */
+         EventusActio actio;
+        } clavis;
+        structura {
+                     s32 x;          /* pixela NOSTRA; extra fenestram
+                                      * negativa aut >= latitudo (A3c) */
+                     s32 y;
+            mus_botton_t botton;
+                     i32 modificantes;
+                     s32 indicator;           /* 0 = mus */
+    EventusIndicatorGenus indicator_genus;
+                     s32 pressio;             /* 0..M; IGNOTA = -1 */
+    constans EventusExemplum* exempla;        /* VISUS (Q16) */
+                     i32 numerus_exemplorum;
+        } mus;
+        structura {
+            f32 delta_x;             /* DEPRECATUM (spec D2) */
+            f32 delta_y;
+            s32 dx;                  /* pixela nostra, integra */
+            s32 dy;
+            EventusRotulaGenus genus;
+            /* B3a: positio indicatoris (pixela nostra, ut mus) et
+             * modificantes - shift+rota, ctrl+rota (zoom); rotula ad
+             * tabulam sub indicatore destinari potest */
+            s32 x;
+            s32 y;
+            i32 modificantes;
+        } rotula;
+        structura {
+                TesseraChorda contentum;    /* VISUS usque ad lectionem proximam */
+    EventusTextusGenus genus;
+                   s32 cursor;       /* COMPONENS: octetus */
+          EventusOrigo origo;
+                   b32 truncatum;
+        } textus;
+        structura {
+               s32 x;
+               s32 y;
+            TesseraChorda viae;             /* VISUS: viae absolutae, '\n' */
+               i32 numerus;
+               b32 promota;          /* glutinum terminalis promotum */
+        } depositio;
+        EventusFacultates facultates;
+        structura {
+            i32 signum;         /* a fenestra_menu_addere datum */
+        } menu;
+    } datum;
+} Eventus;
+
+/* Eventus NOTATUS (eventus A6; spec D6): eventus crudus + destinatum
+ * eius a dispensatore resolutum - notarius (dispensator_notarium_
+ * ponere) scribit, non fons. scopus = id componentis (vacuus: nullus,
+ * e.g. clavis), scopus_x/y = punctum in spatio eius. Plagula:
+ * eventus_notata_scribere_stml. Eventus ipse scopum non fert: scopus
+ * datum fontis non est. */
+nomen structura {
+    Eventus eventus;
+     TesseraChorda scopus;
+        s32 scopus_x;
+        s32 scopus_y;
+} EventusNotatum;
+
+#endif /* EVENTUS_H */
+
+/* ================= ex include/eventus_cauda.h ================= */
+/* eventus_cauda.h - Cauda eventuum fontis: anulus + onera per lectionem
+ * (eventus A3; spec Q10, Q13, Q16, D5)
+ *
+ * PURA (sine Cocoa, sine tessera): fenestra eam habet, fons
+ * terminalis (phasis B) eadem utetur. Tempus NON hic stampatur (horologium
+ * platformae est): fons tempus implet ante impulsum.
+ *
+ * ONERA (textus, exempla motus) in tabulis INTERNIS caudae copiantur; visus
+ * eventuum (datum.textus.contentum) in eas monstrant. VITA: usque ad
+ * lectionem proximam (eventus_cauda_lectio_incipit) - SED tabulae
+ * vacantur SOLUM si cauda vacua est: eventa nondum extracta visus suos
+ * servant. Tabula plena: textus truncatur (truncatum VERUM).
+ */
+
+#ifndef EVENTUS_CAUDA_H
+#define EVENTUS_CAUDA_H
+
+#define EVENTUS_CAUDA_CAPACITAS  CCLVI       /* eventa */
+#define EVENTUS_CAUDA_TEXTUS     65536       /* octeti oneris textus */
+#define EVENTUS_CAUDA_EXEMPLA    (IV * MXXIV) /* exempla motus coaliti */
+
+nomen structura {
+            Eventus eventus[EVENTUS_CAUDA_CAPACITAS];
+                i32 caput;
+                i32 finis;
+                i32 numerus;
+                i32 amissa;          /* eventa abiecta: cauda plena */
+                 i8 textus[EVENTUS_CAUDA_TEXTUS];
+                i32 textus_mensura;
+    EventusExemplum exempla[EVENTUS_CAUDA_EXEMPLA];
+                i32 exempla_mensura;
+} EventusCauda;
+
+static vacuum
+tessera_eventus_caudam_initiare (
+    EventusCauda* cauda);
+
+/* Initium lectionis fontis (fenestra: perscrutari). Si cauda vacua:
+ * tabulae onerum vacantur (visus priores iam consumpti). */
+static vacuum
+tessera_eventus_cauda_lectio_incipit (
+    EventusCauda* cauda);
+
+/* Eventum (valore) addere; FALSUM si plena (amissa++). */
+static b32
+tessera_eventus_caudae_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus);
+
+/* EVENTUS_TEXTUS COMMISSUM cum octetis COPIATIS addere. Mensura 0 ->
+ * nihil, FALSUM. Tabula plena -> pars quae capit, truncatum VERUM. */
+static b32
+tessera_eventus_caudae_textum_impellere (
+       EventusCauda* cauda,
+                s64  tempus,
+        constans i8* octeti,
+                i32  mensura,
+       EventusOrigo  origo);
+
+/* EVENTUS_MUS_MOTUS cum COALITIONE (spec Q10, Q13, D5): si eventus
+ * ULTIMUS caudae (nondum extractus) MOTUS est cum eisdem bottone,
+ * modificantibus, indicatore - positio eius (x, y, tempus) exemplum
+ * fit et novus eam supplet; alioquin impellitur ut eventus novus.
+ * Exempla eventus unius CONTIGUA sunt (solum ultimus crescit), visus
+ * in tabulam caudae. Plura quam EVENTUS_EXEMPLA_MAXIMA (aut tabula
+ * plena): antiquissima servantur, positio ultima semper vera. */
+static b32
+tessera_eventus_caudae_motum_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus);
+
+/* Eventum antiquissimum extrahere; FALSUM si vacua. */
+static b32
+tessera_eventus_caudae_extrahere (
+    EventusCauda* cauda,
+         Eventus* exitus);
+
+#endif /* EVENTUS_CAUDA_H */
+
+/* ================= ex include/interpres_terminalis.h ================= */
+/* interpres_terminalis.h - Lexemata terminalis -> Eventus (eventus B2)
+ *
+ * Decodificator PURUS: lexema series_terminalis (modo initus) intrat,
+ * Eventus in EventusCaudam exeunt (textus copiatus, motus coalitus -
+ * cauda phasis A). Status solum lexematicus: praefixum alterum (ESC
+ * solus ante clavem proximam), discipulus kitty (B2b).
+ *
+ * NON possidet (fons possidet, B3; hodie lector tesserae): moram ESC,
+ * reliquias post moram, canales crudos (mus X10 octeti, corpus glutini,
+ * caudae alienae). Fons decodificatori tradit lexemata, signum
+ * 'post_moram' pro serie evacuata, et aditus crudos (_x10, _glutinum).
+ *
+ * FIDELITAS HONESTA (Franus 2026-10-02): quod protocollum non dicit
+ * non fingitur. Legacy: nulla solutio (SOLUTA), codex IGNOTUS ubi
+ * series ambigua (Enter = Ctrl+M, Tab = Ctrl+I), nullus bitus
+ * maiusculae (Shift an Caps Lock nescitur - textus casum fert);
+ * '\n' = Ctrl+J, 0x08 = Ctrl+H (proiectio tesserae eas coniungit, B5).
+ * Codex POSITUS ubi series clavem physicam nominat (sagittae,
+ * navigatio, F1-F12, Shift+Tab).
+ *
+ * KITTY (eventus B2b): 'CSI clavis[:maiuscula[:basis]] [;modi[:genus]]
+ * [;textus] u' et formae legacy cum subcampo generis (CSI 1;5:3 A):
+ * PRESSA/ITERATA/SOLUTA, modificatores kitty omnes (Caps, Num quoque),
+ * textus associatus (solum si campus adest), codex ex clavi BASIS
+ * (claves_codex_ex_littera) aut ex numero functionali
+ * (claves_codex_ex_kitty). Series kitty prima: facultates discuntur
+ * (tabula distincta; soluta et codex secundum vexilla impulsa) et
+ * eventus FACULTATES impellitur ANTE clavem.
+ */
+
+#ifndef INTERPRES_TERMINALIS_H
+#define INTERPRES_TERMINALIS_H
+
+/* Vexilla kitty (CSI > f u) quae fons impellit: decodificator scit
+ * quid absentia campi significet (e.g. basis absens + ALTERNAE =
+ * basis eadem ac clavis). */
+#define INTERPRES_KITTY_DISCERNERE  0x01   /* Esc, Ctrl+I != Tab */
+#define INTERPRES_KITTY_GENERA      0x02   /* iterata, soluta */
+#define INTERPRES_KITTY_ALTERNAE    0x04   /* clavis basis (codex) */
+#define INTERPRES_KITTY_OMNES       0x08   /* omnes claves ut CSI u */
+#define INTERPRES_KITTY_TEXTUS      0x10   /* textus associatus */
+
+nomen structura {
+              s32 cellula_latitudo; /* pixela NOSTRA per cellulam */
+              s32 cellula_altitudo; /* et gradus rotulae (linea una) */
+              b32 alterum_pendens;  /* ESC solus abruptus: alterum */
+              i32 kitty_vexilla;    /* a fonte impulsa (B3) */
+              b32 kitty_visus;      /* series kitty iam visa */
+EventusFacultates facultates;       /* legacy ab initio; kitty discitur
+                                     * (eventus FACULTATES) */
+} InterpresTerminalis;
+
+/* Cellula in pixelis nostris: mus ad CENTRUM cellulae ponitur. */
+static vacuum
+tessera_interpres_initiare (
+    InterpresTerminalis* interpres,
+                    s32  cellula_latitudo,
+                    s32  cellula_altitudo);
+
+/* Lexema unum -> eventa (0..n) in caudam, tempore dato. post_moram:
+ * lexema FUGA ex series_lectorem_evacuare (ESC solus = Effugium, ESC
+ * ESC = duo, 'ESC x' = alterum + x, cetera abiciuntur). CSI 200~/201~
+ * (glutinum) nihil reddit: fons corpus colligit (_glutinum). Redde
+ * numerum eventorum impulsorum. */
+static i32
+tessera_interpres_lexema (
+         InterpresTerminalis* interpres,
+       constans SeriesLexema* lexema,
+                         b32  post_moram,
+                         s64  tempus,
+                EventusCauda* cauda);
+
+/* Mus X10: octeti CRUDI post 'ESC [ M' (cb, cx, cy, cum offsetibus
+ * +32/+33 ut in filo). Redde numerum eventorum. */
+static i32
+tessera_interpres_x10 (
+    InterpresTerminalis* interpres,
+                    i32  cb,
+                    i32  cx,
+                    i32  cy,
+                    s64  tempus,
+           EventusCauda* cauda);
+
+/* Corpus glutini (?2004) a fonte collectum -> TEXT origo GLUTINATA
+ * (copiatum; ultra tabulam caudae truncatum). */
+static i32
+tessera_interpres_glutinum (
+    InterpresTerminalis* interpres,
+            constans i8* octeti,
+                    i32  mensura,
+                    s64  tempus,
+           EventusCauda* cauda);
+
+#endif /* INTERPRES_TERMINALIS_H */
+
+/* ================= ex include/rivus_terminalis.h ================= */
+/* rivus_terminalis.h - Fons eventuum terminalis: octeti -> Eventus
+ * (eventus B3)
+ *
+ * Pipeline UNA (ex lectore tesserae B1b translata): octeti ->
+ * series_terminalis (modo initus) -> interpres_terminalis -> Eventus in
+ * caudam. Possidet: buffer crudum, moram ESC et glutini, reliquias post
+ * moram (H7/H8), canales crudos (mus X10, caudae alienae CSI [, corpus
+ * glutini ?2004).
+ *
+ * PURUS: nec legit nec horologium tenet (in lib/, sub tessera - pontem
+ * eius non novit). Vocans octetos tradit (rivus_tradere), rogat quamdiu
+ * exspectet (rivus_mora_ms), silentium nuntiat (rivus_moram), eventa
+ * trahit (rivus_eventum). Decodificatio PIGRA: lexema unum quoad
+ * eventum
+ * adest - motus NON coalescit (proiectio tesserae eventum quemque
+ * videt).
+ *
+ * VISUS (textus eventuum) valent usque ad rivus_eventum proximum.
+ */
+
+#ifndef RIVUS_TERMINALIS_H
+#define RIVUS_TERMINALIS_H
+
+#define RIVUS_BUFFER              CCLVI     /* octeti crudi gestati */
+#define RIVUS_MORA_FUGAE_MS       XXV       /* ESC solus vs series */
+#define RIVUS_MORA_GLUTINI_MS     (III * M) /* silentium: finis */
+#define RIVUS_GLUTINUM_CAPACITAS  65536     /* = EVENTUS_CAUDA_TEXTUS */
+
+/* Cellula in pixelis nostris (interpres: mus ad centrum cellulae). */
+static TesseraRivusTerminalis*
+tessera_rivus_creare (
+    TesseraPiscina* piscina,
+        s32  cellula_latitudo,
+        s32  cellula_altitudo);
+
+/* Octeti quos rivus nunc capere potest; vocans non plus tradat. */
+static i32
+tessera_rivus_spatium (
+    constans TesseraRivusTerminalis* rivus);
+
+/* Octetos a fonte lectos tradere (ordine). Redde quot accepti. */
+static i32
+tessera_rivus_tradere (
+    TesseraRivusTerminalis* rivus,
+        constans i8* octeti,
+                i32  mensura);
+
+/* Eventum proximum. FALSUM: octeti desunt - vocans legat (rivus_mora_ms
+ * dicit quamdiu) aut silentium nuntiet (rivus_moram). */
+static b32
+tessera_rivus_eventum (
+    TesseraRivusTerminalis* rivus,
+                s64  tempus,
+            Eventus* eventus);
+
+/* 0 = nihil pendet (vocans moram suam habet); > 0 = series, runa aut
+ * glutinum pendet: post tot ms silentii rivus_moram vocetur. */
+static s32
+tessera_rivus_mora_ms (
+    constans TesseraRivusTerminalis* rivus);
+
+/* Silentium moram exhausit: series pendens evacuatur (ESC = Effugium,
+ * ESC ESC = duo, 'ESC x' = alterum + x, cetera abiciuntur; mus SGR
+ * dimidia et ESC solus reliquiae fiunt continuationi), glutinum
+ * truncatum finitur, runa dimidia abicitur. */
+static vacuum
+tessera_rivus_moram (
+    TesseraRivusTerminalis* rivus,
+                s64  tempus);
+
+/* Octeti in buffere nondum consumpti (ad finem fluxus probandum). */
+static i32
+tessera_rivus_pendentes (
+    constans TesseraRivusTerminalis* rivus);
+
+#endif /* RIVUS_TERMINALIS_H */
+
+/* ================= ex include/claves_physicae.h ================= */
+/* claves_physicae.h - Codices clavium platformarum -> EventusCodex
+ * (eventus A3; spec D3)
+ *
+ * Tabulae PURAE: codex virtualis platformae (macOS kVK_*; terminalis
+ * kitty in phasi B) -> codex physicus vocabularii (W3C 'code'). Positio
+ * clavis, non dispositio: kVK 0 est "KeyA" in QWERTY, AZERTY, Dvorak
+ * idem. Ignotus -> EVENTUS_CODEX_IGNOTUS. Sine Cocoa: fenestra_macos.m
+ * eam vocat, probationes sine fenestra.
+ */
+
+#ifndef CLAVES_PHYSICAE_H
+#define CLAVES_PHYSICAE_H
+
+/* Character dispositionis US basicae (minusculae, numeri, signa,
+ * spatium) -> codex physicus: clavis BASIS kitty ('base layout key',
+ * vexillum IV) positio est, non dispositio currens (eventus B2b).
+ * Maiusculae et non-ASCII -> IGNOTUS (kitty basem minusculam
+ * mittit). */
+static EventusCodex
+tessera_claves_codex_ex_littera (
+    s32 runa);
+
+/* kitty: numeri clavium functionalium (Escape 27, Enter 13, Tab 9,
+ * Backspace 127, Caps Lock 57358, modificatores laterales 57441..57450)
+ * -> codex physicus. Ceteri (runae, F13+, tabula numerica sine codice
+ * in vocabulario) -> IGNOTUS. */
+static EventusCodex
+tessera_claves_codex_ex_kitty (
+    s32 numerus);
+
+#endif /* CLAVES_PHYSICAE_H */
+
 /* ================= ex tessera/fontes/tessera_cellula.h ================= */
 /* tessera_cellula.h - Cellula, stilus, colores, signa (Phase A)
  *
@@ -5224,7 +5875,6 @@ tessera_pons_posix_creare (
 #define TESSERA_EVENTUM_H
 
 #define TESSERA_LECTOR_BUFFER 64
-#define TESSERA_RELIQUIAE_CAPACITAS 64    /* <= SERIES_CRUDUM_MAXIMUM */
 #define TESSERA_MORA_FUGAE_MS 25
 #define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
 #define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
@@ -6228,6 +6878,42 @@ tessera_utf8_decodere (
     /* Promove indicator */
     (*ptr) += longitudo;
     redde codepoint;
+}
+
+static s32
+tessera_utf8_codere (
+    s32  runa,
+     i8* buffer)
+{
+    si (   buffer == NIHIL || runa < 0
+        || (runa >= 0xD800 && runa <= 0xDFFF)
+        || runa > 0x10FFFF)
+    {
+        redde 0;
+    }
+    si (runa < 0x80)
+    {
+        buffer[0] = (i8)runa;
+        redde 1;
+    }
+    si (runa < 0x800)
+    {
+        buffer[0] = (i8)(0xC0 | (runa >> 6));
+        buffer[1] = (i8)(0x80 | (runa & 0x3F));
+        redde 2;
+    }
+    si (runa < 0x10000)
+    {
+        buffer[0] = (i8)(0xE0 | (runa >> 12));
+        buffer[1] = (i8)(0x80 | ((runa >> 6) & 0x3F));
+        buffer[2] = (i8)(0x80 | (runa & 0x3F));
+        redde 3;
+    }
+    buffer[0] = (i8)(0xF0 | (runa >> 18));
+    buffer[1] = (i8)(0x80 | ((runa >> 12) & 0x3F));
+    buffer[2] = (i8)(0x80 | ((runa >> 6) & 0x3F));
+    buffer[3] = (i8)(0x80 | (runa & 0x3F));
+    redde 4;
 }
 
 /* ================= ex lib/runae.c ================= */
@@ -9635,6 +10321,1608 @@ tessera_series_lectorem_evacuare (
     redde VERUM;
 }
 
+/* ================= ex lib/claves_physicae.c ================= */
+
+static EventusCodex
+tessera_claves_codex_ex_littera (
+    s32 runa)
+{
+    si (runa >= 'a' && runa <= 'z')
+    {
+        redde (EventusCodex)(EVENTUS_CODEX_LITTERAE + (runa - 'a'));
+    }
+    si (runa >= '0' && runa <= '9')
+    {
+        redde (EventusCodex)(EVENTUS_CODEX_NUMERI + (runa - '0'));
+    }
+    commutatio (runa)
+    {
+        casus '`':  redde EVENTUS_CODEX_GRAVIS;
+        casus '-':  redde EVENTUS_CODEX_MINUS;
+        casus '=':  redde EVENTUS_CODEX_AEQUALE;
+        casus '[':  redde EVENTUS_CODEX_UNCUS_SINISTER;
+        casus ']':  redde EVENTUS_CODEX_UNCUS_DEXTER;
+        casus '\\': redde EVENTUS_CODEX_VIRGULA_INVERSA;
+        casus ';':  redde EVENTUS_CODEX_PUNCTUM_VIRGULA;
+        casus '\'': redde EVENTUS_CODEX_APOSTROPHUS;
+        casus ',':  redde EVENTUS_CODEX_VIRGULA;
+        casus '.':  redde EVENTUS_CODEX_PUNCTUM;
+        casus '/':  redde EVENTUS_CODEX_VIRGULA_OBLIQUA;
+        casus ' ':  redde EVENTUS_CODEX_SPATIUM;
+        ordinarius: redde EVENTUS_CODEX_IGNOTUS;
+    }
+}
+
+/* kitty 'functional key definitions' (kitty doc keyboard-protocol;
+ * Ghostty src/input/kitty.zig, MIT, pin 12752b2) */
+static EventusCodex
+tessera_claves_codex_ex_kitty (
+    s32 numerus)
+{
+    commutatio (numerus)
+    {
+        casus XXVII:  redde EVENTUS_CODEX_EFFUGIUM;
+        casus XIII:   redde EVENTUS_CODEX_REDITUS;
+        casus IX:     redde EVENTUS_CODEX_TABULA;
+        casus CXXVII: redde EVENTUS_CODEX_RETRORSUM;
+        casus 57358:  redde EVENTUS_CODEX_SERA_MAIUSCULARUM;
+        casus 57441:  redde EVENTUS_CODEX_MAIUSCULA_SINISTRA;
+        casus 57447:  redde EVENTUS_CODEX_MAIUSCULA_DEXTRA;
+        casus 57442:  redde EVENTUS_CODEX_IMPERIUM_SINISTRUM;
+        casus 57448:  redde EVENTUS_CODEX_IMPERIUM_DEXTRUM;
+        casus 57443:  redde EVENTUS_CODEX_ALTERUM_SINISTRUM;
+        casus 57449:  redde EVENTUS_CODEX_ALTERUM_DEXTRUM;
+        casus 57444:  redde EVENTUS_CODEX_SUPER_SINISTRUM;
+        casus 57450:  redde EVENTUS_CODEX_SUPER_DEXTRUM;
+        ordinarius:   redde EVENTUS_CODEX_IGNOTUS;
+    }
+}
+
+/* ================= ex lib/eventus_cauda.c ================= */
+
+static vacuum
+tessera_eventus_caudam_initiare (
+    EventusCauda* cauda)
+{
+    cauda->caput            = ZEPHYRUM;
+    cauda->finis            = ZEPHYRUM;
+    cauda->numerus          = ZEPHYRUM;
+    cauda->amissa           = ZEPHYRUM;
+    cauda->textus_mensura   = ZEPHYRUM;
+    cauda->exempla_mensura  = ZEPHYRUM;
+}
+
+static vacuum
+tessera_eventus_cauda_lectio_incipit (
+    EventusCauda* cauda)
+{
+    /* visus eventuum nondum extractorum in tabulas monstrant: vacare
+     * solum si nullum restat */
+    si (cauda->numerus == ZEPHYRUM)
+    {
+        cauda->textus_mensura   = ZEPHYRUM;
+        cauda->exempla_mensura  = ZEPHYRUM;
+    }
+}
+
+static b32
+tessera_eventus_caudae_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus)
+{
+    si (cauda->numerus >= EVENTUS_CAUDA_CAPACITAS)
+    {
+        cauda->amissa++;
+        redde FALSUM;
+    }
+    cauda->eventus[cauda->finis] = *eventus;
+    cauda->finis = (cauda->finis + I) % EVENTUS_CAUDA_CAPACITAS;
+    cauda->numerus++;
+    redde VERUM;
+}
+
+static b32
+tessera_eventus_caudae_textum_impellere (
+       EventusCauda* cauda,
+                s64  tempus,
+        constans i8* octeti,
+                i32  mensura,
+       EventusOrigo  origo)
+{
+    Eventus e;
+        i32 locus;
+        i32 capit;
+
+    si (mensura == ZEPHYRUM || octeti == NIHIL)
+    {
+        redde FALSUM;
+    }
+    locus = EVENTUS_CAUDA_TEXTUS - cauda->textus_mensura;
+    capit = (mensura < locus) ? mensura : locus;
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                   = EVENTUS_TEXTUS;
+    e.tempus                  = tempus;
+    e.datum.textus.genus      = EVENTUS_TEXTUS_COMMISSUM;
+    e.datum.textus.origo      = origo;
+    e.datum.textus.truncatum  = (b32)(capit < mensura);
+    e.datum.textus.contentum.datum
+        = cauda->textus + cauda->textus_mensura;
+    e.datum.textus.contentum.mensura = capit;
+    memcpy(cauda->textus + cauda->textus_mensura, octeti,
+        (memoriae_index)capit);
+    cauda->textus_mensura += capit;
+    redde tessera_eventus_caudae_impellere(cauda, &e);
+}
+
+static b32
+tessera_eventus_caudae_motum_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus)
+{
+    Eventus* ultimus;
+
+    si (cauda->numerus == ZEPHYRUM)
+    {
+        redde tessera_eventus_caudae_impellere(cauda, eventus);
+    }
+    ultimus = &cauda->eventus[(cauda->finis + EVENTUS_CAUDA_CAPACITAS
+        - I)
+        % EVENTUS_CAUDA_CAPACITAS];
+    si (   ultimus->genus               != EVENTUS_MUS_MOTUS
+        || ultimus->datum.mus.botton    != eventus->datum.mus.botton
+        || ultimus->datum.mus.modificantes
+               != eventus->datum.mus.modificantes
+        || ultimus->datum.mus.indicator != eventus->datum.mus.indicator
+        || ultimus->datum.mus.indicator_genus
+               != eventus->datum.mus.indicator_genus)
+    {
+        redde tessera_eventus_caudae_impellere(cauda, eventus);
+    }
+
+    /* positio ultimi exemplum fit - si capit (D5: antiquissima
+     * servantur). Exempla ultimi in fine tabulae iacent: nullus
+     * eventus post eum exempla addidit. */
+    si (   ultimus->datum.mus.numerus_exemplorum
+        < EVENTUS_EXEMPLA_MAXIMA
+        && cauda->exempla_mensura < EVENTUS_CAUDA_EXEMPLA)
+    {
+        EventusExemplum* ex = &cauda->exempla[cauda->exempla_mensura];
+
+        si (ultimus->datum.mus.numerus_exemplorum == ZEPHYRUM)
+        {
+            ultimus->datum.mus.exempla = ex;
+        }
+        ex->x       = ultimus->datum.mus.x;
+        ex->y       = ultimus->datum.mus.y;
+        ex->tempus  = ultimus->tempus;
+        cauda->exempla_mensura++;
+        ultimus->datum.mus.numerus_exemplorum++;
+    }
+    ultimus->datum.mus.x        = eventus->datum.mus.x;
+    ultimus->datum.mus.y        = eventus->datum.mus.y;
+    ultimus->datum.mus.pressio  = eventus->datum.mus.pressio;
+    ultimus->tempus             = eventus->tempus;
+    redde VERUM;
+}
+
+static b32
+tessera_eventus_caudae_extrahere (
+    EventusCauda* cauda,
+         Eventus* exitus)
+{
+    si (cauda->numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *exitus       = cauda->eventus[cauda->caput];
+    cauda->caput  = (cauda->caput + I) % EVENTUS_CAUDA_CAPACITAS;
+    cauda->numerus--;
+    redde VERUM;
+}
+
+/* ================= ex lib/interpres_terminalis.c ================= */
+
+#define MODIFICATOR_MAXIMUS CCLVI   /* ultra: invalidum (ingens) */
+
+
+/* ==================================================
+ * Auxilia
+ * ================================================== */
+
+interior i32
+_modificantes_csi (
+    s32 m)
+{
+    i32 fructus = ZEPHYRUM;
+    s32 bits;
+
+    si (m <= I || m > MODIFICATOR_MAXIMUS)
+    {
+        redde ZEPHYRUM;
+    }
+    bits = m - I;
+    si (bits & I)
+    { fructus |= MOD_SHIFT;
+    }
+    si (bits & II)
+    { fructus |= MOD_ALT;
+    }
+    si (bits & IV)
+    { fructus |= MOD_IMPERIUM;
+    }
+    si (bits & VIII)
+    { fructus |= MOD_SUPER;
+    }
+    /* kitty: XVI hyper et XXXII meta sine pari in vocabulario */
+    si (bits & LXIV)
+    { fructus |= MOD_CAPS_LOCK;
+    }
+    si (bits & CXXVIII)
+    { fructus |= MOD_NUM_LOCK;
+    }
+    redde fructus;
+}
+
+/* Clavis cum actione (B2b): SOLUTA -> genus LIBERATUS */
+interior i32
+_clavem_typo (
+    EventusCauda* cauda,
+             s64  tempus,
+        clavis_t  clavis,
+             s32  runa,
+             i32  modificantes,
+    EventusCodex  codex,
+    EventusActio  actio,
+       character  typus)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus = (actio == EVENTUS_ACTIO_SOLUTA)
+        ? EVENTUS_CLAVIS_LIBERATUS : EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus                     = tempus;
+    e.datum.clavis.clavis        = clavis;
+    e.datum.clavis.typus         = typus;
+    e.datum.clavis.modificantes  = modificantes;
+    e.datum.clavis.runa          = runa;
+    e.datum.clavis.codex         = codex;
+    e.datum.clavis.actio         = actio;
+    redde tessera_eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+}
+
+/* typus ex clave (nominatae: regimen eius, e.g. '\r', '\t') */
+interior i32
+_clavem_actio (
+    EventusCauda* cauda,
+             s64  tempus,
+        clavis_t  clavis,
+             s32  runa,
+             i32  modificantes,
+    EventusCodex  codex,
+    EventusActio  actio)
+{
+    redde _clavem_typo(cauda, tempus, clavis, runa, modificantes, codex,
+        actio, ((s32)clavis > ZEPHYRUM && (s32)clavis < CXXVIII)
+                   ? (character)clavis : '\0');
+}
+
+interior i32
+_clavem (
+    EventusCauda* cauda,
+             s64  tempus,
+        clavis_t  clavis,
+             s32  runa,
+             i32  modificantes,
+    EventusCodex  codex)
+{
+    redde _clavem_actio(cauda, tempus, clavis, runa, modificantes,
+        codex,
+        EVENTUS_ACTIO_PRESSA);
+}
+
+/* Runa imprimibilis -> clavis logica (litterae MAIUSCULAE ut fenestra;
+ * runa litterarum minuscula - Shift nescitur, textus casum fert) */
+interior i32
+_runae_clavem (
+    EventusCauda* cauda,
+             s64  tempus,
+             s32  r,
+             i32  modificantes)
+{
+    clavis_t clavis  = CLAVIS_IGNOTA;
+         s32 runa    = r;
+
+    si (r >= 'a' && r <= 'z')
+    {
+        clavis  = (clavis_t)(r - 'a' + 'A');
+    }
+    alioquin si (r >= 'A' && r <= 'Z')
+    {
+        clavis  = (clavis_t)r;
+        runa    = r - 'A' + 'a';
+    }
+    alioquin si (r >= 0x20 && r < 0x7F)
+    {
+        clavis = (clavis_t)r;
+    }
+    /* typus = character VERUS (ut fenestra characters[0]): 'A' ab
+     * 'a' discernit etiam ubi textus deest (alterum) - B3a */
+    redde _clavem_typo(cauda, tempus, clavis, runa, modificantes,
+        EVENTUS_CODEX_IGNOTUS, EVENTUS_ACTIO_PRESSA,
+        (r > ZEPHYRUM && r < CXXVIII) ? (character)r : '\0');
+}
+
+/* Octetus regiminis (C0, DEL) -> clavis. HONESTA: '\n' = Ctrl+J,
+ * 0x08 = Ctrl+H (proiectio tesserae eas coniungit). */
+interior i32
+_regimen (
+    EventusCauda* cauda,
+             s64  tempus,
+             i32  b,
+             i32  modificantes)
+{
+    si (b == 0x0D)
+    {
+        redde _clavem(cauda, tempus, CLAVIS_REDITUS, ZEPHYRUM,
+            modificantes, EVENTUS_CODEX_IGNOTUS);
+    }
+    si (b == 0x09)
+    {
+        redde _clavem(cauda, tempus, CLAVIS_TABULA, ZEPHYRUM,
+            modificantes, EVENTUS_CODEX_IGNOTUS);
+    }
+    si (b == 0x7F)
+    {
+        redde _clavem(cauda, tempus, CLAVIS_RETRORSUM, ZEPHYRUM,
+            modificantes, EVENTUS_CODEX_IGNOTUS);
+    }
+    si (b == ZEPHYRUM)
+    {
+        redde _clavem(cauda, tempus, CLAVIS_SPATIUM, (s32)' ',
+            modificantes | MOD_IMPERIUM, EVENTUS_CODEX_IGNOTUS);
+    }
+    si (b >= I && b <= XXVI)
+    {
+        redde _clavem(cauda, tempus, (clavis_t)('A' + b - I),
+            (s32)('a' + b - I), modificantes | MOD_IMPERIUM,
+            EVENTUS_CODEX_IGNOTUS);
+    }
+    si (b >= 0x1C && b <= 0x1F)
+    {
+        redde _clavem(cauda, tempus, (clavis_t)(b | 0x40),
+            (s32)(b | 0x40), modificantes | MOD_IMPERIUM,
+            EVENTUS_CODEX_IGNOTUS);
+    }
+    redde ZEPHYRUM;
+}
+
+/* Clavis nominata ex finali (CSI aut SS3) */
+interior i32
+_finalem (
+    EventusCauda* cauda,
+             s64  tempus,
+             i32  finale,
+             i32  modificantes,
+    EventusActio  actio)
+{
+    commutatio (finale)
+    {
+        casus 'A': redde _clavem_actio(cauda, tempus, CLAVIS_SURSUM,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_SAGITTA_SURSUM,
+                       actio);
+        casus 'B': redde _clavem_actio(cauda, tempus, CLAVIS_DEORSUM,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_SAGITTA_DEORSUM,
+                       actio);
+        casus 'C': redde _clavem_actio(cauda, tempus, CLAVIS_DEXTER,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_SAGITTA_DEXTRA,
+                       actio);
+        casus 'D': redde _clavem_actio(cauda, tempus, CLAVIS_SINISTER,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_SAGITTA_SINISTRA,
+                       actio);
+        casus 'H': redde _clavem_actio(cauda, tempus, CLAVIS_DOMUS,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_DOMUS, actio);
+        casus 'F': redde _clavem_actio(cauda, tempus, CLAVIS_FINIS,
+                       ZEPHYRUM,
+                       modificantes, EVENTUS_CODEX_FINIS, actio);
+        casus 'Z': redde _clavem_actio(cauda, tempus, CLAVIS_TABULA,
+                       ZEPHYRUM,
+                       modificantes | MOD_SHIFT, EVENTUS_CODEX_TABULA,
+                       actio);
+        ordinarius:
+            frange;
+    }
+    redde ZEPHYRUM;
+}
+
+/* F n (1..12) */
+interior i32
+_functionem (
+    EventusCauda* cauda,
+             s64  tempus,
+             s32  n,
+             i32  modificantes,
+    EventusActio  actio)
+{
+    redde _clavem_actio(cauda, tempus, (clavis_t)((s32)CLAVIS_F1 + n
+        - I),
+        ZEPHYRUM, modificantes,
+        (EventusCodex)((s32)EVENTUS_CODEX_FUNCTIONES + n - I), actio);
+}
+
+/* '~'-codices (xterm/vt220) */
+interior i32
+_clavem_tildae (
+    EventusCauda* cauda,
+             s64  tempus,
+             s32  codex,
+             i32  modificantes,
+    EventusActio  actio)
+{
+    commutatio (codex)
+    {
+        casus I:
+        casus VII:
+            redde _clavem_actio(cauda, tempus, CLAVIS_DOMUS, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_DOMUS, actio);
+        casus IV:
+        casus VIII:
+            redde _clavem_actio(cauda, tempus, CLAVIS_FINIS, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_FINIS, actio);
+        casus II:
+            redde _clavem_actio(cauda, tempus, CLAVIS_IGNOTA, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_INSERERE, actio);
+        casus III:
+            redde _clavem_actio(cauda, tempus, CLAVIS_DELERE, ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_DELERE, actio);
+        casus V:
+            redde _clavem_actio(cauda, tempus, CLAVIS_PAGINA_SURSUM,
+                ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_PAGINA_SURSUM, actio);
+        casus VI:
+            redde _clavem_actio(cauda, tempus, CLAVIS_PAGINA_DEORSUM,
+                ZEPHYRUM,
+                modificantes, EVENTUS_CODEX_PAGINA_DEORSUM, actio);
+        ordinarius:
+            frange;
+    }
+    si (codex >= XI && codex <= XV)
+    {
+        redde _functionem(cauda, tempus, codex - X, modificantes,
+            actio);
+    }
+    si (codex >= XVII && codex <= XXI)
+    {
+        redde _functionem(cauda, tempus, codex - XI, modificantes,
+            actio);
+    }
+    si (codex == XXIII || codex == XXIV)
+    {
+        redde _functionem(cauda, tempus, codex - XII, modificantes,
+            actio);
+    }
+    redde ZEPHYRUM;   /* ignota (200/201 glutinum: fons) */
+}
+
+/* Mus (SGR aut X10): b = codex bottonis (bits 0-1 botton, 4 maiuscula,
+ * 8 alterum, 16 imperium, 32 motus, 64 rota); x, y cellulae 1-basatae
+ * -> CENTRUM cellulae in pixelis nostris. Rota: gradus = cellula
+ * altitudo; 64 sursum = dy +, 65 = dy -, 66 = dx +, 67 = dx -. */
+interior i32
+_murem (
+    InterpresTerminalis* in,
+           EventusCauda* cauda,
+                    s64  tempus,
+                    s32  b,
+                    s32  x,
+                    s32  y,
+                    b32  solutio)
+{
+              Eventus e;
+                  i32 modi   = ZEPHYRUM;
+                  s32 basis  = b & III;
+         mus_botton_t botton;
+
+    si (b & IV)
+    { modi |= MOD_SHIFT;
+    }
+    si (b & VIII)
+    { modi |= MOD_ALT;
+    }
+    si (b & XVI)
+    { modi |= MOD_IMPERIUM;
+    }
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.tempus = tempus;
+    si (b & LXIV)
+    {
+        s32 g = in->cellula_altitudo;
+
+        si (solutio || (b & XXXII))
+        {
+            /* rota solutionem non habet; motus + rota (96/97) tacite,
+             * ut tessera (B3a) */
+            redde ZEPHYRUM;
+        }
+        /* B3a: positio (centrum cellulae) et modificantes */
+        e.datum.rotula.x  = (x - I) * in->cellula_latitudo
+                            + in->cellula_latitudo / II;
+        e.datum.rotula.y  = (y - I) * in->cellula_altitudo
+                            + in->cellula_altitudo / II;
+        e.datum.rotula.modificantes  = modi;
+        e.genus                      = EVENTUS_MUS_ROTULA;
+        e.datum.rotula.genus         = EVENTUS_ROTULA_GRADATA;
+        e.datum.rotula.dy      = (basis == ZEPHYRUM) ? g
+                               : (basis == I) ? -g : ZEPHYRUM;
+        e.datum.rotula.dx      = (basis == II) ? g
+                               : (basis == III) ? -g : ZEPHYRUM;
+        e.datum.rotula.delta_x = (f32)e.datum.rotula.dx;
+        e.datum.rotula.delta_y = (f32)e.datum.rotula.dy;
+        redde tessera_eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+    }
+    botton = (basis == ZEPHYRUM) ? MUS_SINISTER
+           : (basis == I) ? MUS_MEDIUS
+           : (basis == II) ? MUS_DEXTER : (mus_botton_t)ZEPHYRUM;
+    e.datum.mus.x                = (x - I) * in->cellula_latitudo
+                                   + in->cellula_latitudo / II;
+    e.datum.mus.y                = (y - I) * in->cellula_altitudo
+                                   + in->cellula_altitudo / II;
+    e.datum.mus.botton           = botton;
+    e.datum.mus.modificantes     = modi;
+    e.datum.mus.indicator_genus  = EVENTUS_INDICATOR_MUS;
+    e.datum.mus.pressio          = EVENTUS_PRESSIO_IGNOTA;
+    si (b & XXXII)
+    {
+        e.genus = EVENTUS_MUS_MOTUS;
+        redde tessera_eventus_caudae_motum_impellere(cauda, &e) ? I : ZEPHYRUM;
+    }
+    e.genus = (solutio || basis == III) ? EVENTUS_MUS_LIBERATUS
+                                        : EVENTUS_MUS_DEPRESSUS;
+    redde tessera_eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+}
+
+/* Campi CSI (kitty): parametra per ';' in campos, ':' subcampos
+ * dividit (separatores bitus i = ':' post parametrum i). */
+#define CAMPI_MAXIMI III
+
+nomen structura {
+    s32 valor[CAMPI_MAXIMI][SERIES_PARAMETRA_MAXIMA];
+    i32 numerus[CAMPI_MAXIMI];
+} CampiCsi;
+
+interior vacuum
+_campos_legere (
+    constans SeriesLexema* l,
+                 CampiCsi* c)
+{
+    i32 k;
+    i32 f = ZEPHYRUM;
+
+    memset(c, ZEPHYRUM, magnitudo(CampiCsi));
+    per (k = ZEPHYRUM; k < l->numerus_parametrorum; k++)
+    {
+        si (f < CAMPI_MAXIMI)
+        {
+            c->valor[f][c->numerus[f]] = l->parametra[k];
+            c->numerus[f]++;
+        }
+        si (!(l->separatores & ((i32)I << k)))
+        {
+            f++;      /* ';' post parametrum k: campus novus */
+        }
+    }
+}
+
+interior s32
+_campus (
+    constans CampiCsi* c,
+                  i32  campus,
+                  i32  pars,
+                  s32  si_abest)
+{
+    si (campus >= CAMPI_MAXIMI || pars >= c->numerus[campus])
+    {
+        redde si_abest;
+    }
+    /* campus vacuus (';;') = 0 = absens */
+    redde (c->valor[campus][pars] == ZEPHYRUM)
+        ? si_abest : c->valor[campus][pars];
+}
+
+/* genus kitty: 1 pressa, 2 iterata, 3 soluta */
+interior EventusActio
+_actio_kitty (
+    s32 genus)
+{
+    si (genus == II)
+    {
+        redde EVENTUS_ACTIO_ITERATA;
+    }
+    si (genus == III)
+    {
+        redde EVENTUS_ACTIO_SOLUTA;
+    }
+    redde EVENTUS_ACTIO_PRESSA;
+}
+
+/* Series kitty prima: facultates discuntur (per observationem - fons
+ * vexilla impulit, terminalis respondendo ea accepit) et eventus
+ * FACULTATES ANTE clavem impellitur. */
+interior i32
+_kitty_discere (
+    InterpresTerminalis* in,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+    Eventus e;
+
+    si (in->kitty_visus)
+    {
+        redde ZEPHYRUM;
+    }
+    in->kitty_visus                  = VERUM;
+    in->facultates.tabula_distincta  = VERUM;
+    in->facultates.liberationes           =
+        (b32)((in->kitty_vexilla & INTERPRES_KITTY_GENERA) != ZEPHYRUM);
+    in->facultates.codex_physicus         =
+        (b32)((in->kitty_vexilla & INTERPRES_KITTY_ALTERNAE)
+            != ZEPHYRUM);
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_FACULTATES;
+    e.tempus            = tempus;
+    e.datum.facultates  = in->facultates;
+    redde tessera_eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
+}
+
+/* Clavis 'CSI clavis[:maiuscula[:basis]] ;modi[:genus] ;textus u' */
+interior i32
+_kitty_clavem (
+    InterpresTerminalis* in,
+      constans CampiCsi* c,
+                    i32  modi,
+           EventusActio  actio,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+             s32 k       = _campus(c, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+             s32 basis   = _campus(c, ZEPHYRUM, II, ZEPHYRUM);
+    EventusCodex codex   = tessera_claves_codex_ex_kitty(k);
+        clavis_t clavis  = CLAVIS_IGNOTA;
+             s32 runa    = ZEPHYRUM;
+             i32 n;
+             i32 j;
+
+    commutatio (k)
+    {
+        casus XXVII:  clavis = CLAVIS_EFFUGIUM;   frange;
+        casus XIII:   clavis = CLAVIS_REDITUS;    frange;
+        casus IX:     clavis = CLAVIS_TABULA;     frange;
+        casus CXXVII: clavis = CLAVIS_RETRORSUM;  frange;
+        casus 57358:  clavis = CLAVIS_CAPS_LOCK;  frange;
+        casus 57360:  clavis = CLAVIS_NUM_LOCK;   frange;
+        casus 57441:  clavis = CLAVIS_SINISTER_SHIFT;    frange;
+        casus 57447:  clavis = CLAVIS_DEXTER_SHIFT;      frange;
+        casus 57442:  clavis = CLAVIS_SINISTER_IMPERIUM; frange;
+        casus 57448:  clavis = CLAVIS_DEXTER_IMPERIUM;   frange;
+        casus 57443:  clavis = CLAVIS_SINISTER_ALT;      frange;
+        casus 57449:  clavis = CLAVIS_DEXTER_ALT;        frange;
+        casus 57444:  clavis = CLAVIS_SINISTER_SUPER;    frange;
+        casus 57450:  clavis = CLAVIS_DEXTER_SUPER;      frange;
+        casus 57409:  clavis = (clavis_t)'.'; runa = '.'; frange;
+        casus 57410:  clavis = (clavis_t)'/'; runa = '/'; frange;
+        casus 57411:  clavis = (clavis_t)'*'; runa = '*'; frange;
+        casus 57412:  clavis = (clavis_t)'-'; runa = '-'; frange;
+        casus 57413:  clavis = (clavis_t)'+'; runa = '+'; frange;
+        casus 57414:  clavis = CLAVIS_REDITUS;              frange;
+        casus 57415:  clavis = (clavis_t)'='; runa = '='; frange;
+        casus 57416:  clavis = (clavis_t)','; runa = ','; frange;
+        casus 57417:  clavis = CLAVIS_SINISTER;       frange;
+        casus 57418:  clavis = CLAVIS_DEXTER;         frange;
+        casus 57419:  clavis = CLAVIS_SURSUM;         frange;
+        casus 57420:  clavis = CLAVIS_DEORSUM;        frange;
+        casus 57421:  clavis = CLAVIS_PAGINA_SURSUM;  frange;
+        casus 57422:  clavis = CLAVIS_PAGINA_DEORSUM; frange;
+        casus 57423:  clavis = CLAVIS_DOMUS;          frange;
+        casus 57424:  clavis = CLAVIS_FINIS;          frange;
+        casus 57426:  clavis = CLAVIS_DELERE;         frange;
+        ordinarius:
+            si (k >= 57399 && k <= 57408)
+            {
+                /* tabula numerica 0-9 (codex nullus in vocabulario) */
+                clavis  = (clavis_t)('0' + (k - 57399));
+                runa    = (s32)('0' + (k - 57399));
+            }
+            alioquin si (k < 57344 || k > 63743)
+            {
+                /* runa (dispositionis currentis, sine maiuscula) */
+                runa    = k;
+                clavis  = (k >= 'a'
+                    && k <= 'z') ? (clavis_t)(k - 'a' + 'A')
+                        : (k >= 0x20 && k < 0x7F) ? (clavis_t)k
+                        : CLAVIS_IGNOTA;
+                codex   = (basis
+                    != ZEPHYRUM) ? tessera_claves_codex_ex_littera(basis)
+                        : (in->kitty_vexilla & INTERPRES_KITTY_ALTERNAE)
+                            ? tessera_claves_codex_ex_littera(k)
+                            : EVENTUS_CODEX_IGNOTUS;
+            }
+            frange;
+    }
+    /* typus = character verus: clavis maiuscula (campus 0 pars 1) sub
+     * Shift, alioquin clavis ipsa (minuscula) - non clavis_t */
+    {
+        s32 verus = ((modi & MOD_SHIFT)
+            && _campus(c, ZEPHYRUM, I, ZEPHYRUM))
+            ? _campus(c, ZEPHYRUM, I, ZEPHYRUM) : runa;
+
+        n = _clavem_typo(cauda, tempus, clavis, runa, modi, codex,
+            actio,
+            (verus >= 0x20 && verus < 0x7F) ? (character)verus : '\0');
+    }
+    /* textus associatus: solum si campus adest (vexillum TEXTUS) */
+    si (actio != EVENTUS_ACTIO_SOLUTA && c->numerus[II] > ZEPHYRUM)
+    {
+         i8 octeti[SERIES_PARAMETRA_MAXIMA * IV];
+        i32 m = ZEPHYRUM;
+
+        per (j = ZEPHYRUM; j < c->numerus[II]; j++)
+        {
+            m += (i32)tessera_utf8_codere(c->valor[II][j], octeti + m);
+        }
+        si (m > ZEPHYRUM)
+        {
+            n += tessera_eventus_caudae_textum_impellere(cauda, tempus, octeti,
+                m,
+                EVENTUS_ORIGO_SCRIPTA) ? I : ZEPHYRUM;
+        }
+    }
+    redde n;
+}
+
+interior b32
+_sola_fuga (
+    constans SeriesLexema* l)
+{
+    i32 k;
+
+    si (l->crudum.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < l->crudum.mensura; k++)
+    {
+        si (l->crudum.datum[k] != (i8)0x1B)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Alterum pendens consumitur ab eventu proximo (clavis aut textus) */
+interior i32
+_alterum (
+    InterpresTerminalis* in)
+{
+    i32 m = in->alterum_pendens ? MOD_ALT : ZEPHYRUM;
+
+    in->alterum_pendens = FALSUM;
+    redde m;
+}
+
+
+/* ==================================================
+ * Publica
+ * ================================================== */
+
+static vacuum
+tessera_interpres_initiare (
+    InterpresTerminalis* interpres,
+                    s32  cellula_latitudo,
+                    s32  cellula_altitudo)
+{
+    interpres->cellula_latitudo  = cellula_latitudo;
+    interpres->cellula_altitudo  = cellula_altitudo;
+    interpres->alterum_pendens   = FALSUM;
+    interpres->kitty_vexilla     = ZEPHYRUM;
+    interpres->kitty_visus       = FALSUM;
+    /* legacy: quod terminalis sine kitty narrare potest */
+    memset(&interpres->facultates, ZEPHYRUM,
+        magnitudo(EventusFacultates));
+    /* super: ?1003 a fonte petitum */
+    interpres->facultates.super             = VERUM;
+    interpres->facultates.scriptura_copiae  = EVENTUS_FACULTAS_FORTASSE;
+    interpres->facultates.depositio =
+        EVENTUS_DEPOSITIO_HEURISTICA;
+    interpres->facultates.gradus_rotulae = cellula_altitudo;
+}
+
+static i32
+tessera_interpres_lexema (
+         InterpresTerminalis* in,
+       constans SeriesLexema* l,
+                         b32  post_moram,
+                         s64  tempus,
+                EventusCauda* cauda)
+{
+    i32 n = ZEPHYRUM;
+    i32 modi;
+
+    commutatio (l->genus)
+    {
+        casus SERIES_IMPRIMERE:
+        {
+            constans i8* p      = l->textus.datum;
+            constans i8* finis  = p + l->textus.mensura;
+
+            dum (p < finis)
+            {
+                constans i8* initium  = p;
+                        s32  r        = tessera_utf8_decodere(&p, finis);
+
+                si (r < ZEPHYRUM)
+                {
+                    si (p == initium)
+                    {
+                        p++;    /* octetus invalidus abicitur */
+                    }
+                    perge;
+                }
+                modi  = _alterum(in);
+                n     += _runae_clavem(cauda, tempus, r, modi);
+                si (modi == ZEPHYRUM)
+                {
+                    n += tessera_eventus_caudae_textum_impellere(cauda, tempus,
+                        initium, (i32)(p - initium),
+                        EVENTUS_ORIGO_SCRIPTA) ? I : ZEPHYRUM;
+                }
+            }
+            redde n;
+        }
+
+        casus SERIES_EXSEQUI:
+            redde _regimen(cauda, tempus, ((i32)l->finale) & 0xFF,
+                _alterum(in));
+
+        casus SERIES_FUGA:
+            si (!post_moram)
+            {
+                /* abrupta: ESC solus = alterum clavis proximae */
+                si (_sola_fuga(l))
+                {
+                    in->alterum_pendens = VERUM;
+                }
+                redde ZEPHYRUM;
+            }
+            in->alterum_pendens = FALSUM;
+            si (_sola_fuga(l))
+            {
+                i32 k;
+
+                /* ESC (ESC) post moram: Effugium pro quoque */
+                per (k = ZEPHYRUM; k < l->crudum.mensura; k++)
+                {
+                    n += _clavem(cauda, tempus, CLAVIS_EFFUGIUM,
+                        ZEPHYRUM,
+                        ZEPHYRUM, EVENTUS_CODEX_IGNOTUS);
+                }
+                redde n;
+            }
+            si (l->crudum.mensura == II)
+            {
+                /* 'ESC [' / 'ESC O' / 'ESC P' solum = alterum + x */
+                redde _runae_clavem(cauda, tempus,
+                    ((s32)l->crudum.datum[I]) & 0xFF, MOD_ALT);
+            }
+            redde ZEPHYRUM;   /* series dimidia abicitur */
+
+        casus SERIES_ESC:
+            in->alterum_pendens = FALSUM;
+            si (   l->numerus_intermediorum > ZEPHYRUM
+                || l->finale < 0x20 || l->finale > 0x7E)
+            {
+                redde ZEPHYRUM;
+            }
+            redde _runae_clavem(cauda, tempus, (s32)l->finale, MOD_ALT);
+
+        casus SERIES_CSI:
+        {
+                CampiCsi c;
+                     s32 p0;
+            EventusActio actio;
+
+            in->alterum_pendens = FALSUM;
+            /* intermedia, privata praeter '<' (e.g. '?31u' responsum
+             * vexillorum kitty, DA): ignota */
+            si (   l->numerus_intermediorum > ZEPHYRUM
+                || (l->privatum != ZEPHYRUM && l->privatum != '<'))
+            {
+                redde ZEPHYRUM;
+            }
+            p0 = (l->numerus_parametrorum >= I) ? l->parametra[0]
+                                                : ZEPHYRUM;
+            si (l->privatum == '<')
+            {
+                si (   (l->finale == 'M' || l->finale == 'm')
+                    && l->numerus_parametrorum >= III)
+                {
+                    redde _murem(in, cauda, tempus, p0, l->parametra[I],
+                        l->parametra[II], (b32)(l->finale == 'm'));
+                }
+                redde ZEPHYRUM;
+            }
+            si (   l->numerus_parametrorum == ZEPHYRUM
+                && (l->finale == 'I' || l->finale == 'O'))
+            {
+                Eventus e;
+
+                memset(&e, ZEPHYRUM, magnitudo(Eventus));
+                e.genus   = (l->finale == 'I') ? EVENTUS_FOCUS
+                                               : EVENTUS_DEFOCUS;
+                e.tempus  = tempus;
+                redde tessera_eventus_caudae_impellere(cauda,
+                    &e) ? I : ZEPHYRUM;
+            }
+            _campos_legere(l, &c);
+            modi   = _modificantes_csi(_campus(&c, I, ZEPHYRUM, I));
+            actio  = _actio_kitty(_campus(&c, I, I, I));
+            si (l->praefixum)
+            {
+                modi |= MOD_ALT;   /* ESC ESC [ A = alterum + sursum */
+            }
+            /* kitty: 'u', aut pars generis in forma legacy */
+            si (l->finale == 'u' || c.numerus[I] >= II)
+            {
+                n = _kitty_discere(in, tempus, cauda);
+            }
+            si (l->finale == 'u')
+            {
+                redde n + _kitty_clavem(in, &c, modi, actio, tempus,
+                    cauda);
+            }
+            si (l->finale == '~')
+            {
+                redde n + ((c.numerus[ZEPHYRUM] >= I)
+                    ? _clavem_tildae(cauda, tempus, p0, modi, actio)
+                    : ZEPHYRUM);
+            }
+            /* kitty F1 F2 F4: CSI P Q S (F3 = CSI 13~: CSI R = CPR) */
+            si (   l->finale == 'P' || l->finale == 'Q'
+                || l->finale == 'S')
+            {
+                redde n + _functionem(cauda, tempus,
+                    (l->finale == 'S') ? IV : (s32)(l->finale - 'P')
+                        + I,
+                    modi, actio);
+            }
+            redde n + _finalem(cauda, tempus, (i32)l->finale, modi,
+                actio);
+        }
+
+        casus SERIES_SS:
+            in->alterum_pendens = FALSUM;
+            si (l->introductor != 'O')
+            {
+                redde ZEPHYRUM;
+            }
+            modi = (l->numerus_parametrorum >= I)
+                ? _modificantes_csi(l->parametra[0]) : ZEPHYRUM;
+            si (l->praefixum)
+            {
+                modi |= MOD_ALT;
+            }
+            si (l->finale >= 'P' && l->finale <= 'S')
+            {
+                redde _functionem(cauda, tempus,
+                    (s32)(l->finale - 'P') + I, modi,
+                    EVENTUS_ACTIO_PRESSA);
+            }
+            redde _finalem(cauda, tempus, (i32)l->finale, modi,
+                EVENTUS_ACTIO_PRESSA);
+
+        ordinarius:
+            /* OSC, DCS, APC (responsa), NIHIL */
+            redde ZEPHYRUM;
+    }
+}
+
+static i32
+tessera_interpres_x10 (
+    InterpresTerminalis* interpres,
+                    i32  cb,
+                    i32  cx,
+                    i32  cy,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+    s32 b = (s32)cb - XXXII;
+
+    si (b < ZEPHYRUM || cx < XXXIII || cy < XXXIII)
+    {
+        redde ZEPHYRUM;   /* onus malum */
+    }
+    redde _murem(interpres, cauda, tempus, b, (s32)cx - XXXII,
+        (s32)cy - XXXII, FALSUM);
+}
+
+static i32
+tessera_interpres_glutinum (
+    InterpresTerminalis* interpres,
+            constans i8* octeti,
+                    i32  mensura,
+                    s64  tempus,
+           EventusCauda* cauda)
+{
+    (vacuum)interpres;
+    redde tessera_eventus_caudae_textum_impellere(cauda, tempus, octeti,
+        mensura,
+        EVENTUS_ORIGO_GLUTINATA) ? I : ZEPHYRUM;
+}
+
+/* ================= ex lib/rivus_terminalis.c ================= */
+
+#define RELIQUIAE_NULLAE ZEPHYRUM
+#define RELIQUIAE_FUGA   I      /* ESC solus, iam Effugium redditus */
+#define RELIQUIAE_SGR    II     /* CSI < dimidia */
+
+#define CODEX_INITII_GLUTINI CC                 /* CSI 200 ~ */
+#define TERMINUS_GLUTINI     "\033[201~"
+#define TERMINI_LONGITUDO    ((i32)(magnitudo(TERMINUS_GLUTINI) - I))
+
+structura TesseraRivusTerminalis {
+                   i8  buffer[RIVUS_BUFFER];
+                  i32  mensura;
+         TesseraSeriesLector* series;
+  InterpresTerminalis  interpres;
+         EventusCauda* cauda;
+
+    /* canales crudi */
+             b32 x10_pendens;       /* post CSI M: tres octeti */
+             b32 alienum_pendens;   /* post CSI [: usque ad finalem */
+
+    /* reliquiae post moram (H8) */
+              i8 reliquiae[SERIES_CRUDUM_MAXIMUM];
+             i32 reliquiae_mensura;
+             i32 reliquiae_genus;
+
+    /* glutinum (?2004): corpus inter CSI 200~ et CSI 201~ */
+             b32  glutinum_pendens;
+              i8* glutinum;          /* RIVUS_GLUTINUM_CAPACITAS */
+             i32  glutinum_mensura;
+             i32  congruentes;       /* octeti termini congruentes */
+             b32  glutinum_truncatum;
+};
+
+
+/* ==================================================
+ * Auxilia
+ * ================================================== */
+
+interior vacuum
+_consumere (
+    TesseraRivusTerminalis* r,
+                i32  numerus)
+{
+    si (numerus >= r->mensura)
+    {
+        r->mensura = ZEPHYRUM;
+        redde;
+    }
+    memmove(r->buffer, r->buffer + numerus,
+        (memoriae_index)(r->mensura - numerus));
+    r->mensura -= numerus;
+}
+
+interior b32
+_rivi_fuga_sola (
+    constans SeriesLexema* l)
+{
+    i32 k;
+
+    si (l->crudum.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < l->crudum.mensura; k++)
+    {
+        si (l->crudum.datum[k] != (i8)0x1B)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Octetos lexematori tradere (status eius restituitur; reliquiae
+ * praefixum seriei pendentis sunt - nullum lexema completur) */
+interior vacuum
+_octetos_tradere (
+    TesseraRivusTerminalis* r,
+        constans i8* octeti,
+                i32  mensura)
+{
+     constans i8* p = octeti;
+    SeriesLexema  l;
+
+    dum (   p < octeti + mensura
+         && tessera_series_lexema_proximum(r->series, &p, octeti + mensura, &l)
+                != SERIES_NIHIL)
+    {
+    }
+}
+
+/* Reliquiae continuationi redduntur si initus novus eam continuare
+ * videtur; alioquin abiciuntur. FALSUM = nondum decernitur ('[' solum
+ * post ESC: octetus proximus dicet). */
+interior b32
+_reliquias_reddere (
+    TesseraRivusTerminalis* r)
+{
+    b32 congruit  = FALSUM;
+     i8 b         = r->buffer[ZEPHYRUM];
+
+    si (r->reliquiae_genus == RELIQUIAE_FUGA)
+    {
+        si (r->mensura == I && b == '[')
+        {
+            redde FALSUM;
+        }
+        congruit = r->mensura >= II && b == '['
+            && (r->buffer[I] == '<' || r->buffer[I] == 'M');
+    }
+    alioquin si (r->reliquiae_genus == RELIQUIAE_SGR)
+    {
+        congruit = (b >= '0' && b <= '9') || b == ';' || b == 'M'
+            || b == 'm';
+    }
+    si (congruit)
+    {
+        _octetos_tradere(r, r->reliquiae, r->reliquiae_mensura);
+    }
+    r->reliquiae_genus    = RELIQUIAE_NULLAE;
+    r->reliquiae_mensura  = ZEPHYRUM;
+    redde VERUM;
+}
+
+interior vacuum
+_glutino_addere (
+    TesseraRivusTerminalis* r,
+                 i8  octetus)
+{
+    si (r->glutinum_mensura < RIVUS_GLUTINUM_CAPACITAS)
+    {
+        r->glutinum[r->glutinum_mensura] = octetus;
+        r->glutinum_mensura++;
+    }
+    alioquin
+    {
+        r->glutinum_truncatum = VERUM;
+    }
+}
+
+/* Glutinum finitum: TEXT GLUTINATA (copiatum in caudam), truncatum
+ * notatur in eventu ipso */
+interior vacuum
+_glutinum_finire (
+    TesseraRivusTerminalis* r,
+                s64  tempus)
+{
+    si (r->glutinum_mensura == ZEPHYRUM)
+    {
+        /* glutinum VACUUM est eventus (cauda textum vacuum recusat) */
+        Eventus e;
+
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus                   = EVENTUS_TEXTUS;
+        e.tempus                  = tempus;
+        e.datum.textus.origo      = EVENTUS_ORIGO_GLUTINATA;
+        e.datum.textus.truncatum  = r->glutinum_truncatum;
+        (vacuum)tessera_eventus_caudae_impellere(r->cauda, &e);
+    }
+    alioquin si (   tessera_interpres_glutinum(&r->interpres, r->glutinum,
+                 r->glutinum_mensura, tempus, r->cauda) > ZEPHYRUM
+                 && r->glutinum_truncatum)
+    {
+        r->cauda->eventus[(r->cauda->finis + EVENTUS_CAUDA_CAPACITAS
+            - I)
+            % EVENTUS_CAUDA_CAPACITAS].datum.textus.truncatum = VERUM;
+    }
+    r->glutinum_pendens    = FALSUM;
+    r->glutinum_mensura    = ZEPHYRUM;
+    r->congruentes         = ZEPHYRUM;
+    r->glutinum_truncatum  = FALSUM;
+}
+
+/* Corpus glutini ex buffere: VERUM si terminus inventus. Discordia:
+ * praefixum congruens corpus est, octetus ut ESC novum iterum temptatur
+ * (terminus ESC solum in capite habet). */
+interior b32
+_glutinum_colligere (
+    TesseraRivusTerminalis* r,
+               s64  tempus)
+{
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < r->mensura; k++)
+    {
+        i8 b = r->buffer[k];
+
+        si (b == (i8)TERMINUS_GLUTINI[r->congruentes])
+        {
+            r->congruentes++;
+            si (r->congruentes == TERMINI_LONGITUDO)
+            {
+                _consumere(r, k + I);
+                _glutinum_finire(r, tempus);
+                redde VERUM;
+            }
+            perge;
+        }
+        per (j = ZEPHYRUM; j < r->congruentes; j++)
+        {
+            _glutino_addere(r, (i8)TERMINUS_GLUTINI[j]);
+        }
+        si (b == (i8)0x1B)
+        {
+            r->congruentes = I;
+        }
+        alioquin
+        {
+            r->congruentes = ZEPHYRUM;
+            _glutino_addere(r, b);
+        }
+    }
+    r->mensura = ZEPHYRUM;
+    redde FALSUM;
+}
+
+/* Cursus imprimibilis: runae INTEGRAE interpreti traduntur; runa
+ * dimidia
+ * in fine bufferis manet (lexemator in solo - reditus innocuus). Redde
+ * octetos consumendos. */
+interior i32
+_cursum_tradere (
+          TesseraRivusTerminalis* r,
+    constans SeriesLexema* l,
+                      s64  tempus)
+{
+      constans i8* initium  = l->textus.datum;
+      constans i8* finis    = initium + l->textus.mensura;
+      constans i8* p        = initium;
+     SeriesLexema  integrum;
+
+    /* runa dimidia SOLUM si cursus ad finem bufferis pertinet */
+    si (finis == r->buffer + r->mensura)
+    {
+         constans i8* q = finis;
+                 i32  k;
+
+        per (k = ZEPHYRUM; k < III && q > initium; k++)
+        {
+            q--;
+            si (!tessera_utf8_est_continuatio(*q))
+            {
+                s32 longitudo = tessera_utf8_longitudo_byte(*q);
+
+                si (   longitudo > ZEPHYRUM
+                    && (s32)(finis - q) < longitudo)
+                {
+                    finis = q;   /* runa dimidia: exspectatur */
+                }
+                frange;
+            }
+        }
+    }
+    p = finis;
+    si (p > initium)
+    {
+        integrum                 = *l;
+        integrum.textus.mensura  = (i32)(p - initium);
+        (vacuum)tessera_interpres_lexema(&r->interpres, &integrum, FALSUM,
+            tempus,
+            r->cauda);
+    }
+    redde (i32)(p - r->buffer);
+}
+
+/* Passus unus: lexema aut canalis crudus. VERUM si progressus. */
+interior b32
+_passus (
+    TesseraRivusTerminalis* r,
+                s64  tempus)
+{
+      constans i8* ptr;
+     SeriesLexema  l;
+      SeriesGenus  g;
+              i32  consumpti;
+
+    si (   r->mensura > ZEPHYRUM
+        && r->reliquiae_genus != RELIQUIAE_NULLAE
+        && !_reliquias_reddere(r))
+    {
+        redde FALSUM;   /* '[' post ESC: exspecta */
+    }
+    si (r->glutinum_pendens)
+    {
+        redde _glutinum_colligere(r, tempus);
+    }
+    si (r->x10_pendens)
+    {
+        si (r->mensura < III)
+        {
+            redde FALSUM;
+        }
+        r->x10_pendens = FALSUM;
+        (vacuum)tessera_interpres_x10(&r->interpres,
+            (i32)r->buffer[ZEPHYRUM], (i32)r->buffer[I],
+            (i32)r->buffer[II], tempus, r->cauda);
+        _consumere(r, III);
+        redde VERUM;
+    }
+    si (r->alienum_pendens)
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < r->mensura; k++)
+        {
+            si (r->buffer[k] >= 0x40 && r->buffer[k] <= 0x7E)
+            {
+                _consumere(r, k + I);
+                r->alienum_pendens = FALSUM;
+                redde VERUM;
+            }
+        }
+        r->mensura = ZEPHYRUM;
+        redde FALSUM;
+    }
+    si (r->mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    ptr        = r->buffer;
+    g          = tessera_series_lexema_proximum(r->series, &ptr,
+        r->buffer + r->mensura, &l);
+    consumpti  = (i32)(ptr - r->buffer);
+
+    si (g == SERIES_NIHIL)
+    {
+        _consumere(r, consumpti);
+        redde (b32)(consumpti > ZEPHYRUM);
+    }
+    si (g == SERIES_IMPRIMERE)
+    {
+        i32 n = _cursum_tradere(r, &l, tempus);
+
+        _consumere(r, n);
+        redde (b32)(n > ZEPHYRUM);
+    }
+    _consumere(r, consumpti);
+    si (   g == SERIES_CSI && l.privatum == ZEPHYRUM
+        && l.numerus_intermediorum == ZEPHYRUM
+        && l.separatores == ZEPHYRUM)
+    {
+        /* canales crudi: X10 (CSI M), forma aliena (CSI [), glutinum */
+        si (l.numerus_parametrorum == ZEPHYRUM && l.finale == 'M')
+        {
+            r->x10_pendens = VERUM;
+            redde VERUM;
+        }
+        si (l.numerus_parametrorum == ZEPHYRUM && l.finale == '[')
+        {
+            r->alienum_pendens = VERUM;
+            redde VERUM;
+        }
+        si (   l.numerus_parametrorum == I && l.finale == '~'
+            && l.parametra[ZEPHYRUM]  == CODEX_INITII_GLUTINI)
+        {
+            r->glutinum_pendens    = VERUM;
+            r->glutinum_mensura    = ZEPHYRUM;
+            r->congruentes         = ZEPHYRUM;
+            r->glutinum_truncatum  = FALSUM;
+            redde VERUM;
+        }
+    }
+    (vacuum)tessera_interpres_lexema(&r->interpres, &l, FALSUM, tempus,
+        r->cauda);
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Publica
+ * ================================================== */
+
+static TesseraRivusTerminalis*
+tessera_rivus_creare (
+    TesseraPiscina* piscina,
+        s32  cellula_latitudo,
+        s32  cellula_altitudo)
+{
+    TesseraRivusTerminalis* r;
+
+    r = (TesseraRivusTerminalis*)tessera_piscina_allocare_ordinatum(piscina,
+        magnitudo(TesseraRivusTerminalis), VIII);
+    si (r == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(r, ZEPHYRUM, magnitudo(TesseraRivusTerminalis));
+    r->series   = tessera_series_lectorem_creare(piscina);
+    r->cauda    = (EventusCauda*)tessera_piscina_allocare_ordinatum(piscina,
+        magnitudo(EventusCauda), VIII);
+    r->glutinum = (i8*)tessera_piscina_allocare(piscina,
+        (memoriae_index)RIVUS_GLUTINUM_CAPACITAS);
+    si (r->series == NIHIL || r->cauda == NIHIL || r->glutinum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    tessera_series_lectorem_initus_ponere(r->series, VERUM);
+    tessera_interpres_initiare(&r->interpres, cellula_latitudo,
+        cellula_altitudo);
+    tessera_eventus_caudam_initiare(r->cauda);
+    redde r;
+}
+
+static i32
+tessera_rivus_spatium (
+    constans TesseraRivusTerminalis* r)
+{
+    redde RIVUS_BUFFER - r->mensura;
+}
+
+static i32
+tessera_rivus_tradere (
+    TesseraRivusTerminalis* r,
+        constans i8* octeti,
+                i32  mensura)
+{
+    i32 n = (mensura < RIVUS_BUFFER - r->mensura)
+        ? mensura : RIVUS_BUFFER - r->mensura;
+
+    memcpy(r->buffer + r->mensura, octeti, (memoriae_index)n);
+    r->mensura += n;
+    redde n;
+}
+
+static b32
+tessera_rivus_eventum (
+    TesseraRivusTerminalis* r,
+                s64  tempus,
+            Eventus* eventus)
+{
+    si (tessera_eventus_caudae_extrahere(r->cauda, eventus))
+    {
+        redde VERUM;
+    }
+    /* cauda vacua: onera (textus, exempla) vacantur, deinde pigre
+     * decoditur - passus unus quoad eventum adest */
+    tessera_eventus_cauda_lectio_incipit(r->cauda);
+    dum (_passus(r, tempus))
+    {
+        si (tessera_eventus_caudae_extrahere(r->cauda, eventus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+static s32
+tessera_rivus_mora_ms (
+    constans TesseraRivusTerminalis* r)
+{
+    si (r->glutinum_pendens)
+    {
+        redde RIVUS_MORA_GLUTINI_MS;
+    }
+    si (   tessera_series_lector_pendet(r->series) || r->x10_pendens
+        || r->alienum_pendens || r->interpres.alterum_pendens
+        || r->mensura > ZEPHYRUM)
+    {
+        redde RIVUS_MORA_FUGAE_MS;
+    }
+    redde ZEPHYRUM;
+}
+
+static vacuum
+tessera_rivus_moram (
+    TesseraRivusTerminalis* r,
+                s64  tempus)
+{
+    SeriesLexema l;
+
+    si (r->glutinum_pendens)
+    {
+        /* silentium sine termino: praefixum pendens corpus fit */
+        i32 j;
+
+        per (j = ZEPHYRUM; j < r->congruentes; j++)
+        {
+            _glutino_addere(r, (i8)TERMINUS_GLUTINI[j]);
+        }
+        r->glutinum_truncatum = VERUM;
+        _glutinum_finire(r, tempus);
+        redde;
+    }
+    si (r->x10_pendens)
+    {
+        r->x10_pendens  = FALSUM;   /* X10 dimidium abicitur (H7) */
+        r->mensura      = ZEPHYRUM;
+        redde;
+    }
+    si (r->alienum_pendens)
+    {
+        r->alienum_pendens = FALSUM;
+        redde;
+    }
+    si (tessera_series_lector_pendet(r->series))
+    {
+        si (!tessera_series_lectorem_evacuare(r->series, &l))
+        {
+            redde;   /* solum terminator chordae */
+        }
+        si (   l.crudum.mensura   >= III && l.crudum.datum[I] == '['
+            && l.crudum.datum[II] == '<')
+        {
+            /* mus SGR dimidia: servatur pro continuatione (H8) */
+            memcpy(r->reliquiae, l.crudum.datum,
+                (memoriae_index)l.crudum.mensura);
+            r->reliquiae_mensura  = l.crudum.mensura;
+            r->reliquiae_genus    = RELIQUIAE_SGR;
+            redde;
+        }
+        (vacuum)tessera_interpres_lexema(&r->interpres, &l, VERUM, tempus,
+            r->cauda);
+        si (_rivi_fuga_sola(&l) && l.crudum.mensura == I)
+        {
+            /* mus forte sequetur ('[<..', '[M..'): H8 */
+            r->reliquiae[ZEPHYRUM]  = (i8)0x1B;
+            r->reliquiae_mensura    = I;
+            r->reliquiae_genus      = RELIQUIAE_FUGA;
+        }
+        redde;
+    }
+    si (r->reliquiae_genus != RELIQUIAE_NULLAE && r->mensura > ZEPHYRUM)
+    {
+        /* '[' post ESC sine continuatione: reliquiae abiciuntur, '['
+         * ut runa legitur */
+        r->reliquiae_genus    = RELIQUIAE_NULLAE;
+        r->reliquiae_mensura  = ZEPHYRUM;
+        redde;
+    }
+    si (r->interpres.alterum_pendens)
+    {
+        /* 'ESC' + runa dimidia: Effugium (FUGA post moram ficta - eadem
+         * via ac ESC solus); runa dimidia mox abicitur */
+        i8 fuga[I];
+
+        fuga[ZEPHYRUM] = (i8)0x1B;
+        memset(&l, ZEPHYRUM, magnitudo(SeriesLexema));
+        l.genus           = SERIES_FUGA;
+        l.crudum.datum    = fuga;
+        l.crudum.mensura  = I;
+        (vacuum)tessera_interpres_lexema(&r->interpres, &l, VERUM, tempus,
+            r->cauda);
+        redde;
+    }
+    si (r->mensura > ZEPHYRUM)
+    {
+        _consumere(r, I);   /* runa dimidia (aut invalida) abicitur */
+    }
+}
+
+static i32
+tessera_rivus_pendentes (
+    constans TesseraRivusTerminalis* r)
+{
+    redde r->mensura;
+}
+
 /* ================= ex tessera/fontes/tessera_cellula.c ================= */
 
 TesseraStilus
@@ -10254,23 +12542,6 @@ tessera_pons_posix_creare (
 
 /* ================= ex tessera/fontes/tessera_eventum.c ================= */
 
-/* Limes parametri CSI: accumulatio ultra hunc cessat (s32 numquam
- * exundat); valor maior = ingens = invalidus */
-#define PARAMETRUM_MAXIMUM (X * M)
-
-/* Glutinum: CSI 200 ~ incipit, CSI 201 ~ finit */
-#define CODEX_INITII_GLUTINI CC
-#define TERMINUS_GLUTINI "\033[201~"
-#define TERMINI_LONGITUDO ((i32)(magnitudo(TERMINUS_GLUTINI) - I))
-
-nomen enumeratio {
-    PARS_COMPLETUM = 0,
-    PARS_INCOMPLETUM,
-    PARS_VACUUM,
-    PARS_PRAETERITUM,
-    PARS_GLUTINUM      /* CSI 200 ~ consumptum: collector sequitur */
-} ParsFructus;
-
 interior vacuum
 _eventum_vacare (
     TesseraEventum* ev)
@@ -10291,22 +12562,28 @@ _eventum_vacare (
     ev->glutinum_truncatum  = FALSUM;
 }
 
-interior vacuum
-_consumere (
-    TesseraLector* lector,
-              i32  numerus)
+interior i32
+_modificatores (
+    i32 m)
 {
-    si (numerus >= lector->mensura)
+    i32 fructus = ZEPHYRUM;
+
+    si (m & MOD_SHIFT)
     {
-        lector->mensura = ZEPHYRUM;
-        redde;
+        fructus |= TESSERA_MODIFICATOR_MAIUSCULA;
     }
-    memmove(lector->buffer, lector->buffer + numerus,
-        (memoriae_index)(lector->mensura - numerus));
-    lector->mensura -= numerus;
+    si (m & MOD_ALT)
+    {
+        fructus |= TESSERA_MODIFICATOR_ALTERUM;
+    }
+    si (m & MOD_IMPERIUM)
+    {
+        fructus |= TESSERA_MODIFICATOR_IMPERIUM;
+    }
+    redde fructus;
 }
 
-interior vacuum
+interior b32
 _clavem_ponere (
     TesseraEventum* ev,
      TesseraClavis  clavis,
@@ -10315,798 +12592,164 @@ _clavem_ponere (
     ev->genus          = TESSERA_EVENTUM_CLAVIS;
     ev->clavis         = clavis;
     ev->modificatores  = modificatores;
+    redde VERUM;
 }
 
-interior vacuum
-_runam_ponere (
-    TesseraEventum* ev,
-               s32  runa,
-               i32  modificatores)
+/* Clavis: nominatae ad TesseraClavis, ceterae runa (character verus) */
+interior b32
+_clavem_proicere (
+    constans Eventus* e,
+      TesseraEventum* ev)
 {
+    i32 modi  = _modificatores(e->datum.clavis.modificantes);
+    s32 c     = (s32)e->datum.clavis.clavis;
+    s32 typus;
+
+    commutatio (e->datum.clavis.clavis)
+    {
+        casus CLAVIS_REDITUS:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_REDITUS, modi);
+        casus CLAVIS_TABULA:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_TABULA, modi);
+        casus CLAVIS_RETRORSUM:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_RETRORSUM, modi);
+        casus CLAVIS_EFFUGIUM:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, modi);
+        casus CLAVIS_SURSUM:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_SURSUM, modi);
+        casus CLAVIS_DEORSUM:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_DEORSUM, modi);
+        casus CLAVIS_DEXTER:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_DEXTRA, modi);
+        casus CLAVIS_SINISTER:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_SINISTRA, modi);
+        casus CLAVIS_DOMUS:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_DOMUS, modi);
+        casus CLAVIS_FINIS:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_FINIS, modi);
+        casus CLAVIS_PAGINA_SURSUM:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_PAGINA_SURSUM,
+                modi);
+        casus CLAVIS_PAGINA_DEORSUM:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_PAGINA_DEORSUM,
+                modi);
+        casus CLAVIS_DELERE:
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_DELETIO, modi);
+        ordinarius:
+            frange;
+    }
+    si (c >= (s32)CLAVIS_F1 && c <= (s32)CLAVIS_F12)
+    {
+        _clavem_ponere(ev, TESSERA_CLAVIS_FUNCTIO, modi);
+        ev->numerus = (i32)(c - (s32)CLAVIS_F1) + I;
+        redde VERUM;
+    }
+    si (e->datum.clavis.codex == EVENTUS_CODEX_INSERERE)
+    {
+        redde _clavem_ponere(ev, TESSERA_CLAVIS_INSERTIO, modi);
+    }
+    /* coniunctiones deperditae: Ctrl+J = '\n' -> reditus, Ctrl+H =
+     * 0x08 -> retrorsum */
+    si (modi & TESSERA_MODIFICATOR_IMPERIUM)
+    {
+        si (c == 'J')
+        {
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_REDITUS,
+                modi & ~(i32)TESSERA_MODIFICATOR_IMPERIUM);
+        }
+        si (c == 'H')
+        {
+            redde _clavem_ponere(ev, TESSERA_CLAVIS_RETRORSUM,
+                modi & ~(i32)TESSERA_MODIFICATOR_IMPERIUM);
+        }
+    }
+    si (e->datum.clavis.runa == ZEPHYRUM)
+    {
+        redde FALSUM;   /* clavis sine nomine tesserae (F13, ...) */
+    }
+    /* runa: character verus (typus) - sub imperio runa (minuscula,
+     * 'ctrl+a' ut olim) */
+    typus              = ((s32)e->datum.clavis.typus) & 0xFF;
     ev->genus          = TESSERA_EVENTUM_CLAVIS;
-    ev->runa           = runa;
-    ev->modificatores  = modificatores;
+    ev->modificatores  = modi;
+    ev->runa = (   !(modi & TESSERA_MODIFICATOR_IMPERIUM)
+                && typus >= 0x20 && typus < 0x7F)
+        ? typus : e->datum.clavis.runa;
+    redde VERUM;
 }
 
-/* Modificatores CSI (parametrum m): m-1 = bits maiuscula/alterum/
- * imperium */
 interior i32
-_modificatores_csi (
-    s32 m)
+_pulsus (
+    mus_botton_t b)
 {
-    i32 fructus = ZEPHYRUM;
-    s32 bits;
-
-    si (m <= I || m > PARAMETRUM_MAXIMUM)
+    commutatio (b)
     {
-        redde ZEPHYRUM;   /* nullus aut ingens (invalidus) */
+        casus MUS_SINISTER: redde ZEPHYRUM;
+        casus MUS_MEDIUS:   redde I;
+        casus MUS_DEXTER:   redde II;
+        ordinarius:         redde III;   /* ignotus (X10 solutio) */
     }
-    bits = m - I;
-    si (bits & I)
-    {
-        fructus |= TESSERA_MODIFICATOR_MAIUSCULA;
-    }
-    si (bits & II)
-    {
-        fructus |= TESSERA_MODIFICATOR_ALTERUM;
-    }
-    si (bits & IV)
-    {
-        fructus |= TESSERA_MODIFICATOR_IMPERIUM;
-    }
-    redde fructus;
-}
-
-/* ~-codices CSI */
-interior b32
-_clavem_tildae (
-               s32  codex,
-    TesseraEventum* ev,
-               i32  modificatores)
-{
-    commutatio (codex)
-    {
-        casus II:    _clavem_ponere(ev, TESSERA_CLAVIS_INSERTIO,
-                         modificatores); redde VERUM;
-        casus III:   _clavem_ponere(ev, TESSERA_CLAVIS_DELETIO,
-                         modificatores); redde VERUM;
-        casus V:     _clavem_ponere(ev, TESSERA_CLAVIS_PAGINA_SURSUM,
-                         modificatores); redde VERUM;
-        casus VI:    _clavem_ponere(ev, TESSERA_CLAVIS_PAGINA_DEORSUM,
-                         modificatores); redde VERUM;
-        casus I:     _clavem_ponere(ev, TESSERA_CLAVIS_DOMUS,
-                         modificatores); redde VERUM;
-        casus IV:    _clavem_ponere(ev, TESSERA_CLAVIS_FINIS,
-                         modificatores); redde VERUM;
-        ordinarius:  frange;
-    }
-    si (codex >= XI && codex <= XV)
-    {
-        _clavem_ponere(ev, TESSERA_CLAVIS_FUNCTIO, modificatores);
-        ev->numerus = (i32)(codex - X);          /* 11-15 = F1-F5 */
-        redde VERUM;
-    }
-    si (codex >= XVII && codex <= XXI)
-    {
-        _clavem_ponere(ev, TESSERA_CLAVIS_FUNCTIO, modificatores);
-        ev->numerus = (i32)(codex - XI);         /* 17-21 = F6-F10 */
-        redde VERUM;
-    }
-    si (codex == XXIII || codex == XXIV)
-    {
-        _clavem_ponere(ev, TESSERA_CLAVIS_FUNCTIO, modificatores);
-        ev->numerus = (i32)(codex - XII);        /* 23/24 = F11/F12 */
-        redde VERUM;
-    }
-    redde FALSUM;
 }
 
 interior b32
-_clavem_finalem (
-         character  finalis,
-    TesseraEventum* ev,
-               i32  modificatores)
+_proicere (
+    constans Eventus* e,
+      TesseraEventum* ev)
 {
-    commutatio (finalis)
+    commutatio (e->genus)
     {
-        casus 'A': _clavem_ponere(ev, TESSERA_CLAVIS_SURSUM,
-                       modificatores); redde VERUM;
-        casus 'B': _clavem_ponere(ev, TESSERA_CLAVIS_DEORSUM,
-                       modificatores); redde VERUM;
-        casus 'C': _clavem_ponere(ev, TESSERA_CLAVIS_DEXTRA,
-                       modificatores); redde VERUM;
-        casus 'D': _clavem_ponere(ev, TESSERA_CLAVIS_SINISTRA,
-                       modificatores); redde VERUM;
-        casus 'H': _clavem_ponere(ev, TESSERA_CLAVIS_DOMUS,
-                       modificatores); redde VERUM;
-        casus 'F': _clavem_ponere(ev, TESSERA_CLAVIS_FINIS,
-                       modificatores); redde VERUM;
-        casus 'Z': _clavem_ponere(ev, TESSERA_CLAVIS_TABULA,
-                       modificatores | TESSERA_MODIFICATOR_MAIUSCULA);
-                   redde VERUM;
-        ordinarius: redde FALSUM;
-    }
-}
+        casus EVENTUS_CLAVIS_DEPRESSUS:
+            redde _clavem_proicere(e, ev);
 
-/* Mus (SGR aut X10) classificare ex codice bottonis crudo: bits 0-1
- * botton, 4 maiuscula, 8 alterum, 16 imperium, 32 motus, 64 rota.
- * solutio = SGR 'm', aut X10 botton III (solutio sine bottone noto).
- * Motus cum bottone 0-2 = TRACTUS (tessera ?1002 petit: terminal motum
- * SOLUM botton tento refert; finalis M/m in motu neglegitur, sine
- * statu - bits bottonis creduntur). COMPLETUM = eventum positum;
- * PRAETERITUM = tacite consumptum (motus sine bottone 35 = ?1003, non
- * petitus; motus + rota 96/97; rota soluta). Campi eventus SOLUM in
- * COMPLETUM scribuntur (nihil sordidum relinquitur eventui proximo). */
-interior ParsFructus
-_murem_classificare (
-    TesseraEventum* ev,
-               s32  pulsus,
-               s32  x,
-               s32  y,
-               b32  solutio)
-{
-    TesseraMusGenus genus          = TESSERA_MUS_PRESSUS;
-                i32 botton         = (i32)(pulsus & III);
-                i32 modificatores  = ZEPHYRUM;
-
-    si (pulsus & XXXII)
-    {
-        si ((pulsus & LXIV) || botton == III)
-        {
-            redde PARS_PRAETERITUM;   /* motus + rota, aut sine bottone */
-        }
-        genus = TESSERA_MUS_TRACTUS;
-    }
-    alioquin si (pulsus & LXIV)
-    {
-        si (solutio)
-        {
-            redde PARS_PRAETERITUM;   /* rota solutionem non habet */
-        }
-        commutatio (botton)
-        {
-            casus ZEPHYRUM: genus =
-                                TESSERA_MUS_ROTA_SURSUM;       frange;
-            casus I:        genus =
-                                TESSERA_MUS_ROTA_DEORSUM;      frange;
-            casus II:       genus =
-                                TESSERA_MUS_ROTA_SINISTRORSUM; frange;
-            ordinarius:     genus =
-                                TESSERA_MUS_ROTA_DEXTRORSUM;   frange;
-        }
-        botton = ZEPHYRUM;
-    }
-    alioquin
-    {
-        genus = solutio ? TESSERA_MUS_SOLUTUS : TESSERA_MUS_PRESSUS;
-    }
-    si (pulsus & IV)
-    {
-        modificatores |= TESSERA_MODIFICATOR_MAIUSCULA;
-    }
-    si (pulsus & VIII)
-    {
-        modificatores |= TESSERA_MODIFICATOR_ALTERUM;
-    }
-    si (pulsus & XVI)
-    {
-        modificatores |= TESSERA_MODIFICATOR_IMPERIUM;
-    }
-    ev->genus          = TESSERA_EVENTUM_MUS;
-    ev->mus_genus      = genus;
-    ev->mus_x          = x;
-    ev->mus_y          = y;
-    ev->mus_pulsus     = botton;
-    ev->modificatores  = modificatores;
-    redde PARS_COMPLETUM;
-}
-
-/* Reliquiae post moram (H8) */
-#define RELIQUIAE_NULLAE ZEPHYRUM
-#define RELIQUIAE_FUGA   I      /* ESC solus, iam FUGA redditus */
-#define RELIQUIAE_SGR    II     /* CSI < dimidia */
-
-/* CSI completa (lexema): mus SGR, glutinum, claves. Forma ignota nobis
- * (intermedia, ':' separatores, privatum praeter '<') tacite consumitur
- * (strepitus regiminis clavem phantasma fieri non debet). Mus X10
- * (CSI M sine parametris) et forma aliena (CSI [) octetos CRUDOS
- * sequentes poscunt: status ponitur, _parsare eos legit. */
-interior ParsFructus
-_csi_tractare (
-            TesseraLector* lector,
-    constans SeriesLexema* l,
-           TesseraEventum* ev)
-{
-          i32 n        = l->numerus_parametrorum;
-    character finalis  = (character)l->finale;
-          i32 modificatores;
-
-    si (   l->numerus_intermediorum > ZEPHYRUM
-        || l->separatores != ZEPHYRUM
-        || (l->privatum != ZEPHYRUM && l->privatum != '<'))
-    {
-        redde PARS_PRAETERITUM;
-    }
-    si (l->privatum == ZEPHYRUM && n == ZEPHYRUM)
-    {
-        /* Mus X10 (ESC [ M cb cx cy): onus TRES octeti CRUDI (+32,
-         * +33, +33) - terminalia quae 1006 (SGR) ignorant eum mittunt;
-         * sine hoc onus claves phantasma fieret (H3; 0x7F!) */
-        si (finalis == 'M')
-        {
-            lector->x10_pendens = VERUM;
-            redde PARS_PRAETERITUM;
-        }
-        /* Linux console 'CSI [ A', putty 'CSI [ 5 ~': cauda usque ad
-         * finalem tacite consumitur (ALIENA) */
-        si (finalis == '[')
-        {
-            lector->alienum_pendens = VERUM;
-            redde PARS_PRAETERITUM;
-        }
-    }
-    si (   l->privatum == '<' && (finalis == 'M' || finalis == 'm')
-        && n           >= III)
-    {
-        /* coordinatae 1-basatae -> 0 */
-        redde _murem_classificare(ev, l->parametra[ZEPHYRUM],
-            l->parametra[I] - I, l->parametra[II] - I, finalis == 'm');
-    }
-    modificatores = (n >= II) ? _modificatores_csi(l->parametra[I])
-                              : ZEPHYRUM;
-    si (l->praefixum)
-    {
-        /* ESC ESC [ A = alterum + sursum (Franus 2026-09-28) */
-        modificatores |= TESSERA_MODIFICATOR_ALTERUM;
-    }
-    si (   finalis                == '~' && n == I
-        && l->parametra[ZEPHYRUM] == CODEX_INITII_GLUTINI)
-    {
-        redde PARS_GLUTINUM;
-    }
-    si (finalis == '~' && n >= I)
-    {
-        si (_clavem_tildae(l->parametra[ZEPHYRUM], ev, modificatores))
-        {
-            redde PARS_COMPLETUM;
-        }
-        redde PARS_PRAETERITUM;
-    }
-    si (_clavem_finalem(finalis, ev, modificatores))
-    {
-        redde PARS_COMPLETUM;
-    }
-    redde PARS_PRAETERITUM;
-}
-
-/* SS3 (ESC O [parametrum] finalis): frecce + F1-F4 (modus
- * applicationis); 'ESC O 2 P' = maiuscula + F1 (xterm vetus).
- * Minusculae (rxvt) et ceterae tacite. */
-interior ParsFructus
-_ss_tractare (
-    constans SeriesLexema* l,
-           TesseraEventum* ev)
-{
-    character finalis = (character)l->finale;
-          i32 modificatores;
-
-    si (l->introductor != 'O' || l->numerus_intermediorum > ZEPHYRUM)
-    {
-        redde PARS_PRAETERITUM;
-    }
-    modificatores = (l->numerus_parametrorum >= I)
-        ? _modificatores_csi(l->parametra[ZEPHYRUM]) : ZEPHYRUM;
-    si (l->praefixum)
-    {
-        modificatores |= TESSERA_MODIFICATOR_ALTERUM;
-    }
-    si (_clavem_finalem(finalis, ev, modificatores))
-    {
-        redde PARS_COMPLETUM;
-    }
-    si (finalis >= 'P' && finalis <= 'S')
-    {
-        _clavem_ponere(ev, TESSERA_CLAVIS_FUNCTIO, modificatores);
-        ev->numerus = (i32)(finalis - 'P') + I;  /* P-S = F1-F4 */
-        redde PARS_COMPLETUM;
-    }
-    redde PARS_PRAETERITUM;
-}
-
-/* Octetus regiminis solus (non ESC) */
-interior vacuum
-_regimen_parsare (
-                i8  b,
-    TesseraEventum* ev,
-               i32  modificatores)
-{
-    si (b == 0x0D || b == 0x0A)
-    {
-        _clavem_ponere(ev, TESSERA_CLAVIS_REDITUS, modificatores);
-    }
-    alioquin si (b == 0x09)
-    {
-        _clavem_ponere(ev, TESSERA_CLAVIS_TABULA, modificatores);
-    }
-    alioquin si (b == 0x08 || b == 0x7F)
-    {
-        _clavem_ponere(ev, TESSERA_CLAVIS_RETRORSUM, modificatores);
-    }
-    alioquin si (b >= I && b <= XXVI)
-    {
-        _runam_ponere(ev, (s32)('a' + b - I),
-            modificatores | TESSERA_MODIFICATOR_IMPERIUM);
-    }
-    alioquin si (b == ZEPHYRUM)
-    {
-        _runam_ponere(ev, (s32)' ',
-            modificatores | TESSERA_MODIFICATOR_IMPERIUM);
-    }
-    alioquin
-    {
-        /* 0x1C-0x1F: imperium + symbolum */
-        _runam_ponere(ev, (s32)(b | 0x40),
-            modificatores | TESSERA_MODIFICATOR_IMPERIUM);
-    }
-}
-
-/* FUGA lexematoris ex ESC solis constat (ESC, ESC ESC)? */
-interior b32
-_sola_fuga (
-    constans SeriesLexema* l)
-{
-    i32 k;
-
-    si (l->crudum.mensura == ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    per (k = ZEPHYRUM; k < l->crudum.mensura; k++)
-    {
-        si (l->crudum.datum[k] != (i8)0x1B)
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
-
-/* Octetos lexematori tradere (status eius restituitur; nullum lexema
- * completur - reliquiae praefixum seriei pendentis sunt) */
-interior vacuum
-_octetos_tradere (
-    TesseraLector* lector,
-      constans i8* octeti,
-              i32  mensura)
-{
-     constans i8* p = octeti;
-    SeriesLexema  l;
-
-    dum (   p < octeti + mensura
-         && tessera_series_lexema_proximum(lector->series, &p, octeti + mensura,
-                &l) != SERIES_NIHIL)
-    {
-    }
-}
-
-/* Reliquiae post moram (H8) continuationi redduntur si initus novus
- * eam continuare videtur; alioquin abiciuntur. FALSUM = nondum
- * decernitur ('[' solum post ESC: octetus proximus intra moram
- * dicet). */
-interior b32
-_reliquias_reddere (
-    TesseraLector* lector)
-{
-    b32 congruit  = FALSUM;
-     i8 b         = lector->buffer[ZEPHYRUM];
-
-    si (lector->reliquiae_genus == RELIQUIAE_FUGA)
-    {
-        si (lector->mensura == I && b == '[')
-        {
-            redde FALSUM;
-        }
-        congruit = lector->mensura >= II && b == '['
-            && (lector->buffer[I] == '<' || lector->buffer[I] == 'M');
-    }
-    alioquin si (lector->reliquiae_genus == RELIQUIAE_SGR)
-    {
-        congruit = (b >= '0' && b <= '9') || b == ';' || b == 'M'
-            || b == 'm';
-    }
-    si (congruit)
-    {
-        _octetos_tradere(lector, lector->reliquiae,
-            lector->reliquiae_mensura);
-    }
-    lector->reliquiae_genus    = RELIQUIAE_NULLAE;
-    lector->reliquiae_mensura  = ZEPHYRUM;
-    redde VERUM;
-}
-
-/* Mus X10: tres octeti crudi post CSI M */
-interior ParsFructus
-_x10_parsare (
-     TesseraLector* lector,
-    TesseraEventum* ev)
-{
-            s32 cb;
-    ParsFructus fructus;
-
-    si (lector->mensura < III)
-    {
-        redde PARS_INCOMPLETUM;
-    }
-    lector->x10_pendens  = FALSUM;
-    cb                   = (s32)lector->buffer[ZEPHYRUM] - XXXII;
-    si (   cb < ZEPHYRUM || lector->buffer[I] < XXXIII
-        || lector->buffer[II] < XXXIII)
-    {
-        _consumere(lector, III);
-        redde PARS_PRAETERITUM;   /* onus malum: consumptum */
-    }
-    fructus = _murem_classificare(ev, cb,
-        (s32)lector->buffer[I] - XXXIII,
-        (s32)lector->buffer[II] - XXXIII,
-        (cb & III) == III && !(cb & LXIV) && !(cb & XXXII));
-    _consumere(lector, III);
-    redde fructus;
-}
-
-/* Forma aliena: cauda usque ad octetum finalem (0x40-0x7E) */
-interior ParsFructus
-_alienum_consumere (
-    TesseraLector* lector)
-{
-    i32 k;
-
-    per (k = ZEPHYRUM; k < lector->mensura; k++)
-    {
-        si (lector->buffer[k] >= 0x40 && lector->buffer[k] <= 0x7E)
-        {
-            _consumere(lector, k + I);
-            lector->alienum_pendens = FALSUM;
-            redde PARS_PRAETERITUM;
-        }
-    }
-    _consumere(lector, lector->mensura);
-    redde PARS_INCOMPLETUM;
-}
-
-/* Runa prima cursus imprimibilis; ceterae in buffere manent (lexemator
- * in solo est - reditus intra cursum innocuus). */
-interior ParsFructus
-_runam_parsare (
-            TesseraLector* lector,
-    constans SeriesLexema* l,
-           TesseraEventum* ev)
-{
-    constans i8* initium          = l->textus.datum;
-    constans i8* finis            = initium + l->textus.mensura;
-    constans i8* cursor           = initium;
-            s32  longitudo_runae  = tessera_utf8_longitudo_byte(*initium);
-            s32  runa;
-            i32  ante = (i32)(initium - lector->buffer);
-
-    si (   longitudo_runae > ZEPHYRUM
-        && (i32)longitudo_runae > l->textus.mensura
-        && finis == lector->buffer + lector->mensura)
-    {
-        _consumere(lector, ante);
-        redde PARS_INCOMPLETUM;  /* runa dimidia in fine */
-    }
-    runa = tessera_utf8_decodere(&cursor, finis);
-    si (runa < ZEPHYRUM)
-    {
-        _consumere(lector, ante);
-        si (lector->alterum_pendens)
-        {
-            /* invalidum post ESC: FUGA, octetus mox abicitur */
-            lector->alterum_pendens = FALSUM;
-            _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
-            redde PARS_COMPLETUM;
-        }
-        _consumere(lector, I);   /* octetus invalidus abicitur */
-        redde PARS_PRAETERITUM;
-    }
-    _runam_ponere(ev, runa,
-        lector->alterum_pendens ? TESSERA_MODIFICATOR_ALTERUM
-                                : ZEPHYRUM);
-    lector->alterum_pendens = FALSUM;
-    _consumere(lector, (i32)(cursor - lector->buffer));
-    redde PARS_COMPLETUM;
-}
-
-/* Unum eventum a fronte bufferis parsare temptare: lexema unum per
- * series_terminalis, deinde sensus eius. */
-interior ParsFructus
-_parsare (
-     TesseraLector* lector,
-    TesseraEventum* ev)
-{
-      constans i8* ptr;
-     SeriesLexema  l;
-      SeriesGenus  g;
-              i32  consumpti;
-
-    si (   lector->mensura > ZEPHYRUM
-        && lector->reliquiae_genus != RELIQUIAE_NULLAE
-        && !_reliquias_reddere(lector))
-    {
-        redde PARS_INCOMPLETUM;   /* '[' post ESC: exspecta */
-    }
-    si (lector->x10_pendens)
-    {
-        redde _x10_parsare(lector, ev);
-    }
-    si (lector->alienum_pendens)
-    {
-        redde _alienum_consumere(lector);
-    }
-    si (lector->mensura == ZEPHYRUM)
-    {
-        redde (tessera_series_lector_pendet(lector->series)
-               || lector->alterum_pendens)
-            ? PARS_INCOMPLETUM : PARS_VACUUM;
-    }
-    ptr        = lector->buffer;
-    g          = tessera_series_lexema_proximum(lector->series, &ptr,
-        lector->buffer + lector->mensura, &l);
-    consumpti  = (i32)(ptr - lector->buffer);
-
-    commutatio (g)
-    {
-        casus SERIES_IMPRIMERE:
-            redde _runam_parsare(lector, &l, ev);
-
-        casus SERIES_EXSEQUI:
-            _consumere(lector, consumpti);
-            _regimen_parsare(l.finale, ev, lector->alterum_pendens
-                ? TESSERA_MODIFICATOR_ALTERUM : ZEPHYRUM);
-            lector->alterum_pendens = FALSUM;
-            redde PARS_COMPLETUM;
-
-        casus SERIES_FUGA:
-            /* abrupta: ESC solus = alterum clavis proximae
-             * (alt+reditus,
-             * alt+e acutum); series dimidia tacite abicitur */
-            _consumere(lector, consumpti);
-            si (_sola_fuga(&l))
+        casus EVENTUS_TEXTUS:
+            si (e->datum.textus.origo != EVENTUS_ORIGO_GLUTINATA)
             {
-                lector->alterum_pendens = VERUM;
+                redde FALSUM;   /* textus scriptus: clavis eum fert */
             }
-            redde PARS_PRAETERITUM;
+            ev->genus               = TESSERA_EVENTUM_GLUTINUM;
+            ev->glutinum            = e->datum.textus.contentum;
+            ev->glutinum_truncatum  = e->datum.textus.truncatum;
+            redde VERUM;
 
-        casus SERIES_ESC:
-            /* ALTERUM + clavis (modus initus: ESC P a, ESC N) */
-            _consumere(lector, consumpti);
-            si (   l.numerus_intermediorum > ZEPHYRUM
-                || l.finale < 0x20 || l.finale > 0x7E)
+        casus EVENTUS_MUS_DEPRESSUS:
+        casus EVENTUS_MUS_LIBERATUS:
+        casus EVENTUS_MUS_MOTUS:
+            si (   e->genus            == EVENTUS_MUS_MOTUS
+                && e->datum.mus.botton == (mus_botton_t)ZEPHYRUM)
             {
-                redde PARS_PRAETERITUM;
+                redde FALSUM;   /* motus sine bottone (?1003 non petitus) */
             }
-            _runam_ponere(ev, (s32)l.finale,
-                TESSERA_MODIFICATOR_ALTERUM);
-            redde PARS_COMPLETUM;
+            ev->genus          = TESSERA_EVENTUM_MUS;
+            ev->mus_genus      = (e->genus == EVENTUS_MUS_DEPRESSUS)
+                                     ? TESSERA_MUS_PRESSUS
+                               : (e->genus == EVENTUS_MUS_LIBERATUS)
+                                     ? TESSERA_MUS_SOLUTUS
+                                     : TESSERA_MUS_TRACTUS;
+            ev->mus_x          = e->datum.mus.x;
+            ev->mus_y          = e->datum.mus.y;
+            ev->mus_pulsus     = _pulsus(e->datum.mus.botton);
+            ev->modificatores  =
+                _modificatores(e->datum.mus.modificantes);
+            redde VERUM;
 
-        casus SERIES_CSI:
-            _consumere(lector, consumpti);
-            redde _csi_tractare(lector, &l, ev);
-
-        casus SERIES_SS:
-            _consumere(lector, consumpti);
-            redde _ss_tractare(&l, ev);
-
-        casus SERIES_NIHIL:
-            _consumere(lector, consumpti);
-            redde tessera_series_lector_pendet(lector->series)
-                ? PARS_INCOMPLETUM : PARS_PRAETERITUM;
+        casus EVENTUS_MUS_ROTULA:
+            ev->genus          = TESSERA_EVENTUM_MUS;
+            ev->mus_genus      = (e->datum.rotula.dy > ZEPHYRUM)
+                                     ? TESSERA_MUS_ROTA_SURSUM
+                               : (e->datum.rotula.dy < ZEPHYRUM)
+                                     ? TESSERA_MUS_ROTA_DEORSUM
+                               : (e->datum.rotula.dx > ZEPHYRUM)
+                                     ? TESSERA_MUS_ROTA_SINISTRORSUM
+                                     : TESSERA_MUS_ROTA_DEXTRORSUM;
+            ev->mus_x          = e->datum.rotula.x;
+            ev->mus_y          = e->datum.rotula.y;
+            ev->mus_pulsus     = ZEPHYRUM;
+            ev->modificatores  = _modificatores(
+                e->datum.rotula.modificantes);
+            redde VERUM;
 
         ordinarius:
-            /* OSC, DCS, APC: responsa terminalis tacite (H2) */
-            _consumere(lector, consumpti);
-            redde PARS_PRAETERITUM;
-    }
-}
-
-/* Mora exacta cum serie aut runa pendente: quid reddendum. */
-interior TesseraEventumGenus
-_moram_tractare (
-     TesseraLector* lector,
-    TesseraEventum* ev)
-{
-    SeriesLexema l;
-
-    si (lector->x10_pendens)
-    {
-        /* X10 dimidium: onus abicitur (H7) */
-        lector->x10_pendens  = FALSUM;
-        lector->mensura      = ZEPHYRUM;
-        redde TESSERA_EVENTUM_NIHIL;
-    }
-    si (lector->alienum_pendens)
-    {
-        lector->alienum_pendens = FALSUM;
-        redde TESSERA_EVENTUM_NIHIL;
-    }
-    si (tessera_series_lector_pendet(lector->series))
-    {
-        si (!tessera_series_lectorem_evacuare(lector->series, &l))
-        {
-            /* solum terminator chordae */
-            redde TESSERA_EVENTUM_NIHIL;
-        }
-        si (_sola_fuga(&l))
-        {
-            _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
-            /* ESC ESC: ambae moram transierunt - altera STATIM
-             * proxima exspectatione (non iterum morata) */
-            lector->fuga_reddenda = (b32)(l.crudum.mensura >= II);
-            si (!lector->fuga_reddenda)
-            {
-                /* mus forte sequetur ('[<..', '[M..'): H8 */
-                lector->reliquiae[ZEPHYRUM]  = (i8)0x1B;
-                lector->reliquiae_mensura    = I;
-                lector->reliquiae_genus      = RELIQUIAE_FUGA;
-            }
-            redde ev->genus;
-        }
-        si (l.crudum.mensura == II)
-        {
-            /* 'ESC [' / 'ESC O' / 'ESC P' solum = alterum + octetus */
-            _runam_ponere(ev, (s32)l.crudum.datum[I],
-                TESSERA_MODIFICATOR_ALTERUM);
-            redde ev->genus;
-        }
-        si (   l.crudum.mensura   >= III && l.crudum.datum[I] == '['
-            && l.crudum.datum[II] == '<')
-        {
-            /* mus SGR dimidia: servatur pro continuatione (H8) */
-            i32 m = (l.crudum.mensura < TESSERA_RELIQUIAE_CAPACITAS)
-                ? l.crudum.mensura : TESSERA_RELIQUIAE_CAPACITAS;
-
-            memcpy(lector->reliquiae, l.crudum.datum,
-                (memoriae_index)m);
-            lector->reliquiae_mensura  = m;
-            lector->reliquiae_genus    = RELIQUIAE_SGR;
-        }
-        /* series dimidia abicitur (H7) */
-        redde TESSERA_EVENTUM_NIHIL;
-    }
-    si (lector->reliquiae_genus != RELIQUIAE_NULLAE)
-    {
-        /* '[' post ESC sine continuatione: reliquiae abiciuntur, '['
-         * ut runa legitur */
-        lector->reliquiae_genus    = RELIQUIAE_NULLAE;
-        lector->reliquiae_mensura  = ZEPHYRUM;
-        redde TESSERA_EVENTUM_NIHIL;
-    }
-    si (lector->alterum_pendens)
-    {
-        /* 'ESC' + runa dimidia: FUGA; runa dimidia mox abicitur */
-        lector->alterum_pendens = FALSUM;
-        _clavem_ponere(ev, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
-        redde ev->genus;
-    }
-    si (lector->mensura > ZEPHYRUM)
-    {
-        _consumere(lector, I);   /* runa dimidia abicitur */
-    }
-    redde TESSERA_EVENTUM_NIHIL;
-}
-
-/* Octetum corpori glutini addere; ultra capacitatem abicitur et
- * truncatum notatur (hauritur tamen usque ad terminum) */
-interior vacuum
-_glutino_addere (
-     TesseraLector* lector,
-    TesseraEventum* ev,
-                i8  octetus)
-{
-    si (ev->glutinum.mensura < (i32)TESSERA_GLUTINUM_CAPACITAS)
-    {
-        lector->glutinum[ev->glutinum.mensura] = octetus;
-        ev->glutinum.mensura++;
-    }
-    alioquin
-    {
-        ev->glutinum_truncatum = VERUM;
-    }
-}
-
-/* Glutinum colligere post CSI 200 ~ usque ad CSI 201 ~: SEMPER eventum
- * unum GLUTINUM ponit. Buffer lectoris octetum per octetum hauritur;
- * congruentes = octeti termini iam congruentes (trans lectiones
- * servatur). Discordia: praefixum congruens corpus est, octetus ut ESC
- * novum iterum temptatur (terminus ESC solum in capite habet). Post
- * terminum octeti in buffere manent (parsatio ordinaria). Lectiones
- * intra glutinum moram TESSERA_MORA_GLUTINI_MS habent, non vocantis;
- * lectio vacua = silentium (D4) aut terminal abiit: truncatum, et
- * praefixum pendens corpus fit. */
-interior vacuum
-_glutinum_colligere (
-     TesseraLector* lector,
-    TesseraEventum* ev)
-{
-    i32 congruentes = ZEPHYRUM;
-    i32 k;
-    i32 j;
-    s32 n;
-
-    ev->genus               = TESSERA_EVENTUM_GLUTINUM;
-    ev->glutinum.datum      = lector->glutinum;
-    ev->glutinum.mensura    = ZEPHYRUM;
-    ev->glutinum_truncatum  = FALSUM;
-
-    dum (VERUM)
-    {
-        per (k = ZEPHYRUM; k < lector->mensura; k++)
-        {
-            i8 b = lector->buffer[k];
-
-            si (b == (i8)TERMINUS_GLUTINI[congruentes])
-            {
-                congruentes++;
-                si (congruentes == TERMINI_LONGITUDO)
-                {
-                    _consumere(lector, k + I);
-                    redde;
-                }
-                perge;
-            }
-            per (j = ZEPHYRUM; j < congruentes; j++)
-            {
-                _glutino_addere(lector, ev, (i8)TERMINUS_GLUTINI[j]);
-            }
-            si (b == 0x1B)
-            {
-                congruentes = I;
-            }
-            alioquin
-            {
-                congruentes = ZEPHYRUM;
-                _glutino_addere(lector, ev, b);
-            }
-        }
-        lector->mensura = ZEPHYRUM;
-
-        n = lector->pons->legere(lector->pons->datum, lector->buffer,
-            (i32)TESSERA_LECTOR_BUFFER, TESSERA_MORA_GLUTINI_MS);
-        si (n <= ZEPHYRUM)
-        {
-            per (j = ZEPHYRUM; j < congruentes; j++)
-            {
-                _glutino_addere(lector, ev, (i8)TERMINUS_GLUTINI[j]);
-            }
-            ev->glutinum_truncatum = VERUM;
-            redde;
-        }
-        lector->mensura = (i32)n;
-    }
-}
-
-/* Parsare usque ad fructum non-PRAETERITUM (strepitus consumptus
- * iteratur): COMPLETUM, VACUUM aut INCOMPLETUM. Initium glutini
- * collectorem statim currit, qui eventum semper ponit: COMPLETUM. */
-interior ParsFructus
-_parsare_plene (
-     TesseraLector* lector,
-    TesseraEventum* ev)
-{
-    ParsFructus fructus;
-
-    dum (VERUM)
-    {
-        fructus = _parsare(lector, ev);
-        si (fructus == PARS_GLUTINUM)
-        {
-            _glutinum_colligere(lector, ev);
-            redde PARS_COMPLETUM;
-        }
-        si (fructus != PARS_PRAETERITUM)
-        {
-            redde fructus;
-        }
+            redde FALSUM;   /* solutiones, focus, facultates */
     }
 }
 
@@ -11122,31 +12765,19 @@ tessera_lector_creare (
         redde NIHIL;
     }
     lector = (TesseraLector*)tessera_piscina_allocare_ordinatum(piscina,
-        (memoriae_index)magnitudo(TesseraLector), IV);
+        (memoriae_index)magnitudo(TesseraLector), VIII);
     si (lector == NIHIL)
     {
         redde NIHIL;
     }
-    lector->glutinum = (i8*)tessera_piscina_allocare(piscina,
-        (memoriae_index)TESSERA_GLUTINUM_CAPACITAS);
-    si (lector->glutinum == NIHIL)
+    /* cellula I x I: pixela rivi = cellulae tesserae */
+    lector->rivus = tessera_rivus_creare(piscina, I, I);
+    si (lector->rivus == NIHIL)
     {
         redde NIHIL;
     }
-    lector->series = tessera_series_lectorem_creare(piscina);
-    si (lector->series == NIHIL)
-    {
-        redde NIHIL;
-    }
-    tessera_series_lectorem_initus_ponere(lector->series, VERUM);
-    lector->pons               = pons;
-    lector->mensura            = ZEPHYRUM;
-    lector->alterum_pendens    = FALSUM;
-    lector->x10_pendens        = FALSUM;
-    lector->alienum_pendens    = FALSUM;
-    lector->reliquiae_mensura  = ZEPHYRUM;
-    lector->reliquiae_genus    = RELIQUIAE_NULLAE;
-    lector->fuga_reddenda      = FALSUM;
+    lector->pons     = pons;
+    lector->mensura  = ZEPHYRUM;
     si (!pons->amplitudo(pons->datum, &lector->latitudo_nota,
             &lector->altitudo_nota))
     {
@@ -11162,8 +12793,6 @@ tessera_eventum_expectare (
     TesseraEventum* eventum,
                s32  mora_ms)
 {
-    ParsFructus fructus;
-
     si (lector == NIHIL || eventum == NIHIL)
     {
         redde TESSERA_EVENTUM_NIHIL;
@@ -11197,78 +12826,49 @@ tessera_eventum_expectare (
         }
     }
 
-    /* ESC ESC post moram: FUGA altera statim */
-    si (lector->fuga_reddenda)
+    /* Eventa rivi proiciuntur; deficientibus legitur - mora RIVI si
+     * aliquid pendet (series dimidia, runa, glutinum: H6, ESC pendens
+     * moram fugae SOLAM habet), alioquin mora vocantis. Silentium post
+     * moram rivi -> rivus_moram (ESC = fuga, reliquiae ...). */
+    per (;;)
     {
-        lector->fuga_reddenda = FALSUM;
-        _clavem_ponere(eventum, TESSERA_CLAVIS_FUGA, ZEPHYRUM);
-        lector->reliquiae[ZEPHYRUM]  = (i8)0x1B;
-        lector->reliquiae_mensura    = I;
-        lector->reliquiae_genus      = RELIQUIAE_FUGA;
-        redde eventum->genus;
-    }
+        Eventus e;
+            s32 mora;
+            s32 n;
+            i32 capax;
 
-    /* Octeti gestati primum */
-    fructus = _parsare_plene(lector, eventum);
-    si (fructus == PARS_COMPLETUM)
-    {
-        redde eventum->genus;
-    }
-
-    /* Legere (mora vocantis) SOLUM si nihil pendet: octeti pendentes
-     * (INCOMPLETUM, e.g. ESC ultimus lectionis prioris) moram fugae
-     * SOLAM habent - aliter clavis intra mora_ms adveniens cum ESC
-     * pendenti in alt+clavem confunderetur (H6) */
-    si (fructus == PARS_VACUUM)
-    {
-        s32 n = lector->pons->legere(lector->pons->datum,
-            lector->buffer + lector->mensura,
-            (i32)TESSERA_LECTOR_BUFFER - lector->mensura, mora_ms);
-
+        dum (tessera_rivus_eventum(lector->rivus, ZEPHYRUM, &e))
+        {
+            si (_proicere(&e, eventum))
+            {
+                lector->mensura = tessera_rivus_pendentes(lector->rivus);
+                redde eventum->genus;
+            }
+        }
+        mora   = tessera_rivus_mora_ms(lector->rivus);
+        capax  = tessera_rivus_spatium(lector->rivus);
+        si (capax > (i32)TESSERA_LECTOR_BUFFER)
+        {
+            capax = (i32)TESSERA_LECTOR_BUFFER;
+        }
+        n = (capax > ZEPHYRUM)
+            ? lector->pons->legere(lector->pons->datum, lector->buffer,
+                  capax, (mora > ZEPHYRUM) ? mora : mora_ms)
+            : ZEPHYRUM;
         si (n > ZEPHYRUM)
         {
-            lector->mensura += (i32)n;
+            (vacuum)tessera_rivus_tradere(lector->rivus, lector->buffer,
+                (i32)n);
+            perge;
         }
-        fructus = _parsare_plene(lector, eventum);
-        si (fructus == PARS_COMPLETUM)
+        si (mora > ZEPHYRUM || capax == ZEPHYRUM)
         {
-            redde eventum->genus;
+            tessera_rivus_moram(lector->rivus, ZEPHYRUM);
+            perge;
         }
+        lector->mensura = tessera_rivus_pendentes(lector->rivus);
+        redde TESSERA_EVENTUM_NIHIL;
     }
-
-    /* INCOMPLETUM: legere DUM octeti intra moram fugae (~25ms)
-     * adveniunt - series in lectiones quotlibet scissa (ssh, nexus
-     * lenti) integra redit; lectio VACUA sola moram exactam
-     * significat. Finitum: quaeque lectio octetos addit, buffer
-     * finitus est (plenus = mora exacta tractatur). */
-    dum (fructus == PARS_INCOMPLETUM)
-    {
-        s32 n;
-
-        si (lector->mensura >= (i32)TESSERA_LECTOR_BUFFER)
-        {
-            frange;  /* plenus: nihil plus capi potest */
-        }
-        n = lector->pons->legere(lector->pons->datum,
-            lector->buffer + lector->mensura,
-            (i32)TESSERA_LECTOR_BUFFER - lector->mensura,
-            TESSERA_MORA_FUGAE_MS);
-        si (n <= ZEPHYRUM)
-        {
-            frange;  /* mora exacta (aut error) */
-        }
-        lector->mensura  += (i32)n;
-        fructus          = _parsare_plene(lector, eventum);
-        si (fructus == PARS_COMPLETUM)
-        {
-            redde eventum->genus;
-        }
-    }
-    si (fructus == PARS_INCOMPLETUM)
-    {
-        redde _moram_tractare(lector, eventum);
-    }
-    redde TESSERA_EVENTUM_NIHIL;
 }
 
 /* ================= ex tessera/fontes/tessera_opus.c ================= */

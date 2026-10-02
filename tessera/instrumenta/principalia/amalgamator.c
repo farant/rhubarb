@@ -52,7 +52,10 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
         "TesseraEventum", "TesseraLector", "TesseraPolitica",
         "TesseraColores",
     /* eventus B1b: lexemator vendicatus, tessera.h typum possidet */
-    "SeriesLector", NIHIL
+    "SeriesLector",
+    /* eventus B3a: rivus (pipeline) vendicatus, tessera.h typum
+     * possidet */
+    "RivusTerminalis", NIHIL
 };
 
 /* Definitiones tag quas tessera.h PLENE possidet */
@@ -71,6 +74,7 @@ interior constans Renominatio TYPI_EXACTI[] = {
     { "chorda",            "TesseraChorda" },
     { "ChordaAedificator", "TesseraChordaAedificator" },
     { "SeriesLector",      "TesseraSeriesLector" },
+    { "RivusTerminalis",   "TesseraRivusTerminalis" },
     /* DATA vendicata (tabulae runae): praefixa functionum ea non
      * tangunt - sine his symbola globalia cum hospite runae
      * collideret (nm mensuratum, runae U5) */
@@ -85,6 +89,11 @@ interior constans Renominatio PRAEFIXA_FUNCTIONUM[] = {
     { "chorda_",             "tessera_chorda_" },
     { "runae_",              "tessera_runae_" },
     { "series_",             "tessera_series_" },
+    /* eventus B3a: acervus Eventus vendicatus */
+    { "interpres_",          "tessera_interpres_" },
+    { "eventus_",            "tessera_eventus_" },
+    { "claves_",             "tessera_claves_" },
+    { "rivus_",              "tessera_rivus_" },
     { "utf8_",               "tessera_utf8_" }
 };
 

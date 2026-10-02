@@ -58,10 +58,9 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "tessera_pons.h"
-#include "series_terminalis.h"
+#include "rivus_terminalis.h"
 
 #define TESSERA_LECTOR_BUFFER 64
-#define TESSERA_RELIQUIAE_CAPACITAS 64    /* <= SERIES_CRUDUM_MAXIMUM */
 #define TESSERA_MORA_FUGAE_MS 25
 #define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
 #define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
@@ -135,20 +134,12 @@ nomen structura {
 
 nomen structura {
     TesseraPons* pons;
-             i8  buffer[TESSERA_LECTOR_BUFFER];
-            i32  mensura;        /* octeti validi */
+             i8  buffer[TESSERA_LECTOR_BUFFER]; /* lectio una */
+            i32  mensura;        /* octeti in rivo nondum consumpti */
             i32  latitudo_nota;  /* amplitudo novissime visa */
             i32  altitudo_nota;
-             i8* glutinum;       /* collector: TESSERA_GLUTINUM_CAPACITAS,
-                                  * in creatione allocatus */
-   SeriesLector* series;         /* lexemator, modo initus (B1b) */
-             b32 alterum_pendens; /* ESC solus abruptus: alterum */
-             b32 x10_pendens;    /* post CSI M: tres octeti crudi */
-             b32 alienum_pendens; /* post CSI [: usque ad finalem */
-              i8 reliquiae[TESSERA_RELIQUIAE_CAPACITAS]; /* post moram */
-             i32 reliquiae_mensura;
-             i32 reliquiae_genus; /* 0 nullae, 1 ESC, 2 SGR dimidia */
-             b32 fuga_reddenda;  /* ESC ESC post moram: FUGA altera */
+RivusTerminalis* rivus;          /* pipeline (B3a): lexemator, morae,
+                                  * canales crudi, interpres */
 } TesseraLector;
 
 TesseraLector*

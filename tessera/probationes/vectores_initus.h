@@ -446,8 +446,10 @@ hic_manens constans VectorInitus VECTORES_CLAVIUM[] = {
     { "glutinum finis 201~", OCT("\033[201~"), FALSUM, VECTOR_VALET,
         NIHIL,
       { EX_NIHIL } },
+    /* B3a (Franus 2026-10-02): pipeline in rivo decodificat (interpres
+     * kitty/rxvt) - olim tacite consumptum */
     { "kitty 97;5u (ctrl+a)", OCT("\033[97;5u"), FALSUM, VECTOR_VALET,
-      NIHIL, { EX_NIHIL } },
+      NIHIL, { EX_RUNA('a', IMP) } },
     { "modifyOtherKeys 27;2;13~ (shift+reditus)", OCT("\033[27;2;13~"),
       FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
     { "modifyOtherKeys 27;5;127~ (ctrl+retrorsum)",
@@ -749,9 +751,12 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
     { "SS3 E (OpenTUI: clear)", OCT("\033OE"), FALSUM, VECTOR_VALET,
         NIHIL,
       { EX_NIHIL } },
+    /* B3a (Franus 2026-10-02): pipeline in rivo decodificat (interpres
+     * kitty/rxvt) - olim tacite consumptum */
     { "rxvt 7~ 8~ (OpenTUI: domus, finis)", OCT("\033[7~\033[8~"),
         FALSUM,
-      VECTOR_VALET, NIHIL, { EX_NIHIL } },
+      VECTOR_VALET, NIHIL, { EX_CLAVIS(TESSERA_CLAVIS_DOMUS, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_FINIS, ZEPHYRUM) } },
     { "rxvt shift b c d", OCT("\033[b\033[c\033[d"), FALSUM,
         VECTOR_VALET,
       NIHIL, { EX_NIHIL } },
@@ -762,9 +767,14 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
       NIHIL, { EX_NIHIL } },
 
     /* strepitus tacitus */
+    /* B3a (Franus 2026-10-02): pipeline in rivo decodificat (interpres
+     * kitty/rxvt) - olim tacite consumptum */
     { "kitty formae ':' et u",
         OCT("\033[97;1:3u\033[1;1:1A\033[5;1:1~\033[27u"),
-      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_PAGINA_SURSUM, ZEPHYRUM),
+        EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM) } },
     { "modifyOtherKeys 27;3;9 27;2;53",
         OCT("\033[27;3;9~\033[27;2;53~"),
       FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
@@ -864,11 +874,17 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
       NIHIL,
       { EX_MUS(TESSERA_MUS_ROTA_SURSUM, IX, IV, ZEPHYRUM),
         EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
+    /* B3a (Franus 2026-10-02): pipeline in rivo decodificat (interpres
+     * kitty/rxvt) - olim tacite consumptum */
     { "x10 + kitty", OCT("\033[M !!\033[97u"), FALSUM, VECTOR_VALET,
         NIHIL,
-      { EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM) } },
+      { EX_MUS(TESSERA_MUS_PRESSUS, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM),
+        EX_RUNA('a', ZEPHYRUM) } },
+    /* B3a (Franus 2026-10-02): pipeline in rivo decodificat (interpres
+     * kitty/rxvt) - olim tacite consumptum */
     { "kitty + ascii", OCT("\033[97uxy"), FALSUM, VECTOR_VALET, NIHIL,
-      { EX_RUNA('x', ZEPHYRUM), EX_RUNA('y', ZEPHYRUM) } },
+      { EX_RUNA('a', ZEPHYRUM), EX_RUNA('x', ZEPHYRUM),
+        EX_RUNA('y', ZEPHYRUM) } },
     { "arcus + textus + mus", OCT("\033[Ax\033[<0;1;1M"), FALSUM,
       VECTOR_VALET, NIHIL,
       { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM), EX_RUNA('x',

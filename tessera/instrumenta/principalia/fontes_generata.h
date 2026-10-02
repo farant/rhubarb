@@ -14,7 +14,12 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM },
     { "include/runae.h", NIHIL, EXCLUDENDA_RUNAE, FALSUM, VERUM },
     { "include/runae_tabulae.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "include/series_terminalis.h", NIHIL, NIHIL, FALSUM, VERUM }
+    { "include/series_terminalis.h", NIHIL, EXCLUDENDA_SERIEI, FALSUM, VERUM },
+    { "include/eventus.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "include/eventus_cauda.h", NIHIL, EXCLUDENDA_CAUDAE, FALSUM, VERUM },
+    { "include/interpres_terminalis.h", NIHIL, EXCLUDENDA_INTERPRETIS, FALSUM, VERUM },
+    { "include/rivus_terminalis.h", NIHIL, EXCLUDENDA_RIVI, FALSUM, VERUM },
+    { "include/claves_physicae.h", NIHIL, EXCLUDENDA_CLAVIUM, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -23,7 +28,11 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/utf8.c", NIHIL, EXCLUDENDA_UTF8, VERUM, VERUM },
     { "lib/runae.c", NIHIL, EXCLUDENDA_RUNAE, VERUM, VERUM },
     { "lib/runae_tabulae.c", NIHIL, NIHIL, VERUM, VERUM },
-    { "lib/series_terminalis.c", NIHIL, NIHIL, VERUM, VERUM }
+    { "lib/series_terminalis.c", NIHIL, EXCLUDENDA_SERIEI, VERUM, VERUM },
+    { "lib/claves_physicae.c", NIHIL, EXCLUDENDA_CLAVIUM, VERUM, VERUM },
+    { "lib/eventus_cauda.c", NIHIL, EXCLUDENDA_CAUDAE, VERUM, VERUM },
+    { "lib/interpres_terminalis.c", NIHIL, EXCLUDENDA_INTERPRETIS, VERUM, VERUM },
+    { "lib/rivus_terminalis.c", NIHIL, EXCLUDENDA_RIVI, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {

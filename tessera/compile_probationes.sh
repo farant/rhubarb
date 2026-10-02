@@ -57,8 +57,13 @@ declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
     "utf8"
-    # eventus B1b: lector initus super lexematorem
+    # eventus B1b: lector initus super lexematorem; B3a: pipeline in
+    # rivo, lector = proiectio Eventus
     "series_terminalis"
+    "eventus_cauda"
+    "claves_physicae"
+    "interpres_terminalis"
+    "rivus_terminalis"
     "runae"
     "runae_tabulae"
     "quadrans"

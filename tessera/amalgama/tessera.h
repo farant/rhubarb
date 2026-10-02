@@ -272,7 +272,6 @@ int tessera_magnitudinem_renovare(TesseraOpus* opus);
  * ================================================== */
 
 #define TESSERA_LECTOR_BUFFER 64
-#define TESSERA_RELIQUIAE_CAPACITAS 64    /* <= SERIES_CRUDUM_MAXIMUM */
 #define TESSERA_MORA_FUGAE_MS 25
 #define TESSERA_GLUTINUM_CAPACITAS 65536  /* collector, in creatione */
 #define TESSERA_MORA_GLUTINI_MS 3000      /* silentium finit glutinum */
@@ -338,24 +337,20 @@ typedef struct TesseraEventum {
 } TesseraEventum;
 
 /* lexemator fluminis terminalis (series_terminalis vendicatus,
- * eventus B1b) - opacus */
+ * eventus B1b) - opacus; typus in tessera.c internus */
 typedef struct TesseraSeriesLector TesseraSeriesLector;
+
+/* pipeline initus (rivus_terminalis vendicatus, eventus B3a): lector
+ * tesserae = proiectio Eventus eius - opacus */
+typedef struct TesseraRivusTerminalis TesseraRivusTerminalis;
 
 typedef struct TesseraLector {
     TesseraPons*  pons;
     unsigned char buffer[TESSERA_LECTOR_BUFFER];
-    unsigned int  mensura;
+    unsigned int  mensura;        /* octeti in rivo nondum consumpti */
     unsigned int  latitudo_nota;
     unsigned int  altitudo_nota;
-    unsigned char* glutinum;      /* collector glutini */
-    TesseraSeriesLector* series;  /* lexemator, modo initus */
-    int           alterum_pendens;
-    int           x10_pendens;
-    int           alienum_pendens;
-    unsigned char reliquiae[TESSERA_RELIQUIAE_CAPACITAS];
-    unsigned int  reliquiae_mensura;
-    unsigned int  reliquiae_genus;
-    int           fuga_reddenda;
+    TesseraRivusTerminalis* rivus;
 } TesseraLector;
 
 TesseraLector* tessera_lector_creare(TesseraPiscina* piscina,

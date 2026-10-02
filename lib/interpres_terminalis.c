@@ -541,7 +541,17 @@ _kitty_clavem (
             }
             frange;
     }
-    n = _clavem_actio(cauda, tempus, clavis, runa, modi, codex, actio);
+    /* typus = character verus: clavis maiuscula (campus 0 pars 1) sub
+     * Shift, alioquin clavis ipsa (minuscula) - non clavis_t */
+    {
+        s32 verus = ((modi & MOD_SHIFT)
+            && _campus(c, ZEPHYRUM, I, ZEPHYRUM))
+            ? _campus(c, ZEPHYRUM, I, ZEPHYRUM) : runa;
+
+        n = _clavem_typo(cauda, tempus, clavis, runa, modi, codex,
+            actio,
+            (verus >= 0x20 && verus < 0x7F) ? (character)verus : '\0');
+    }
     /* textus associatus: solum si campus adest (vexillum TEXTUS) */
     si (actio != EVENTUS_ACTIO_SOLUTA && c->numerus[II] > ZEPHYRUM)
     {

@@ -1068,3 +1068,67 @@ Red first: 3 in `probatio_eventus_stml` (rotula x/y/mods round trip),
 8 in `probatio_interpres_terminalis` (wheel renders `@x,y` + mods,
 shift+wheel, motion+wheel silent, typus ×4). pictor, villa and forum
 build.
+
+## B3a-ii — the pipeline moves to `rivus_terminalis`; tessera projects (2026-10-02)
+
+The terminal input pipeline left tessera. `lib/rivus_terminalis` is the
+whole bytes → Eventus path, and it is PURE: no fd, no clock, no poll.
+The caller
+
+- pushes bytes (`rivus_tradere`, room from `rivus_spatium`, buffer 256);
+- asks how long it may wait (`rivus_mora_ms`: 3000 inside a paste,
+  25 while anything is undecided, 0 otherwise);
+- reports silence (`rivus_moram`), which settles what was waiting: a
+  lone ESC becomes Escape, a partial SGR mouse report is kept, x10 and
+  alien remnants are dropped, a paste ends truncated, a half rune
+  loses one byte;
+- pulls events (`rivus_eventum`). Decoding is LAZY: tokens are decoded
+  only when the queue is empty, so motion is NOT merged here (the
+  eager, merging read is B3b's consumer API).
+
+The raw channels stay in rivus, not in the decoder: CSI M (x10 mouse,
+three raw bytes), the rxvt-style alien `CSI [`, and bracketed paste
+(`CSI 200~` … `CSI 201~`, terminator matched incrementally across
+feeds, 64 KiB cap, an empty paste is still a TEXT GLUTINATA, truncation
+marked on the last event). Only complete runes reach the decoder; a
+half rune at the end of the buffer waits for the next feed.
+
+**tessera's reader is a projection** of Eventus into the lossy
+`TesseraEventum` (`_proicere`): named keys, F1-F12, Ctrl+J → Enter and
+Ctrl+H → Backspace (ctrl removed), the rune is `typus` when printable
+and not ctrl, else `runa`; keys with no rune are dropped; pasted TEXT
+→ GLUTINUM; hover motion dropped; ROTULA → ROTA_* with cell and
+modifiers. `TesseraLector` shrank to the fd bridge plus a
+`RivusTerminalis*`; its reliquiae buffer and capacity constant are gone.
+
+**Behaviour change, Fran's call:** 5 tessera vectors used to swallow
+kitty and rxvt sequences silently; the pipeline now decodes them (kitty
+`a`/ctrl+a/`:`-forms, x10 + kitty, rxvt `7~ 8~` → Home/End). Updated
+with a comment naming the decision.
+
+**Bugs found on the way:**
+- an empty paste produced no event at all (now an empty GLUTINATA);
+- kitty `typus` under Shift was the base key: it is the shifted key
+  when the sequence carries one, else the rune (`lib/interpres_terminalis.c`);
+- the interpres test helper read the FACULTATES event (pushed before
+  the first kitty key) instead of the key: `_typus` takes the first
+  KEY event.
+
+**Vendoring into the tessera amalgam:** the amalgamator renames
+`interpres_`, `eventus_`, `claves_`, `rivus_` → `tessera_*` and
+`RivusTerminalis` → `TesseraRivusTerminalis`; `fontes_politica.sh`
+names the five new bases for exclusion (without them the excludenda
+harvest could not classify `claves_codex_ex_macos`). Static function
+names must be unique across vendored files: `_sola_fuga` collided and
+became `_rivi_fuga_sola`.
+
+**Tests:** `probatio_rivus_terminalis` is a CHARACTERIZATION test,
+written after the code (wait times, no motion merge, paste split across
+feeds, empty paste, silence truncation, the 256 capacity, an H8 split
+stitched). Two compiling plants bite: eager decoding merges motion (2
+vectors red), the cell off by one (most mouse vectors red). tessera's
+full suite: vectors 1534/1534, eventum 68/68. The four demos link.
+
+**Order lesson, again:** format after the LAST edit, THEN regenerate
+the amalgam; the other way round leaves a stale amalgam for `generata`
+to refuse (B2a paid for that once).

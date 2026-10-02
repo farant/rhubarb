@@ -47,7 +47,6 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
 };
 
 interior constans character* constans EXCLUDENDA_UTF8[] = {
-    "utf8_codere",
     "utf8_numerare_runas",
     "utf8_prior_runa",
     "utf8_proxima_runa",
@@ -59,5 +58,28 @@ interior constans character* constans EXCLUDENDA_RUNAE[] = {
     "runae_graphema_proximum",
     "runae_latitudo_textus",
     "runae_unitas_proxima",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_SERIEI[] = {
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_CAUDAE[] = {
+    "eventus_residuum_integrare",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_CLAVIUM[] = {
+    "claves_codex_ex_macos",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_INTERPRETIS[] = {
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_RIVI[] = {
+    "rivus_interpres",
     NIHIL
 };

@@ -301,13 +301,16 @@ _typus (
         (vacuum)interpres_lexema(&b->interpres, &l, FALSUM, M,
             b->cauda);
     }
+    /* eventus clavis PRIMUS (kitty prima FACULTATES praemittit) */
     t = '\0';
-    si (eventus_caudae_extrahere(b->cauda, &e))
-    {
-        t = e.datum.clavis.typus;
-    }
     dum (eventus_caudae_extrahere(b->cauda, &e))
     {
+        si (   t == '\0'
+            && (e.genus == EVENTUS_CLAVIS_DEPRESSUS
+                || e.genus == EVENTUS_CLAVIS_LIBERATUS))
+        {
+            t = e.datum.clavis.typus;
+        }
     }
     eventus_cauda_lectio_incipit(b->cauda);
     redde t;
@@ -369,6 +372,10 @@ s32 principale (vacuum)
     CREDO_VERUM (_typus(&b, "\x1b" "a") == 'a');
     CREDO_VERUM (_typus(&b, "A") == 'A');
     CREDO_VERUM (_typus(&b, "?") == '?');
+    /* kitty: typus = clavis ipsa (minuscula), sub Shift maiuscula
+     * (B3a) */
+    CREDO_VERUM (_typus(&b, "\x1b[97u") == 'a');
+    CREDO_VERUM (_typus(&b, "\x1b[97:65;2u") == 'A');
 
     imprimere("\n--- II. regimina honesta ---\n");
     CREDO_VERUM (_videre(&b, "\r", FALSUM, "Kret"));
