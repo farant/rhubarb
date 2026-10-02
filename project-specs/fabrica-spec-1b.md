@@ -415,3 +415,21 @@ warm (cold paths measured piecemeal); reads are not checked;
 directory-listing edges cascade OMISSUM widely; serial execution
 (waves only shown). Next: slice 2 (content-addressed objects) and the
 desideratum on granular actions (ledger ...V2H6Q).
+
+**Addendum 2026-10-02 (park …AR15, closed).** The first limit above is
+resolved, and it had two causes, not one. (1) The amalgam chain is now
+memorabilis: fontes_X and excludenda_X write the closure manifests their
+own keys read (`build/fabrica/clausurae/X__amalgama`, `X__mechanismus`),
+amalgama_X reads both; `radices` digest include-root listings but no
+longer make ordering edges (they made fontes_silva wait on
+amalgama_silva). (2) Most of the missing wall time was not the judge at
+all: the footprint snapshot was sorted with `xar_ordinare`, then an
+O(n^2) selection sort - ~8 s per snapshot, two per action; now a stable
+merge sort. No-op `sanare -siccum installata` 41.5 -> 18.5 s; `-plenus`
+74.6 -> 22.3 s; a rebake's unrecorded time ~200 s -> ~17 s. The judge's
+own regenerations are recorded in `cursus` (IUDICIUM), and gate timings
+in `build/portae/tempora.tsv`. Still open: cold footprints (…6X0);
+lectores_cocti and tabulae_silvae not memorabilis; the snippet
+generators run aedilis once per file (fragmentum_compile_tests ~59 s per
+miss) - batching and a content-digest cache of aedilis results belong
+to slice 2.
