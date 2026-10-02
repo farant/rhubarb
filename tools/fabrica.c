@@ -200,7 +200,8 @@ _currere (
           constans Xar* mandatum,
     constans character* scriptura_dir,
                Piscina* piscina,
-                chorda* causa_out)
+                chorda* causa_out,
+                   i32* duratio_ms_out)
 {
        constans character** argumenta;
         ProcessusResultus   resultus;
@@ -261,6 +262,7 @@ _currere (
         (constans character* constans*)argumenta, MORA_GENERATORIS_MS,
         piscina);
     (vacuum)unsetenv("FABRICA_SCRIPTURA");
+    *duratio_ms_out = resultus.mora_ms;
 
     si (!resultus.successus)
     {
@@ -1157,6 +1159,13 @@ _sententiam_imprimere (
         (constans character*)sententia->iudicium.causa.datum);
 }
 
+/* cursus (sectio sanare infra): iudicium quoque regenerationes suas
+ * scribit (parcum …AR15) */
+interior vacuum
+_cursum_inscribere (
+                     vacuum* datum,
+    constans FabricaSanatio* sanatio);
+
 /* ordo per LOCOS (plan 1b T5): dependentiae ex 'enumerare' (clausurae
  * manifestorum quoque), deinde ordo. Sigilla communia cum iudicio quod
  * sequitur (memoria per cursum: nihil bis sigillatur). */
@@ -1343,9 +1352,10 @@ _iudicare (
     sutura.rogare     = _rogare;
     si (_memoriam_aperire(&memoria, piscina))
     {
-        sutura.datum       = &memoria;
-        sutura.meminisse   = _meminisse;
-        sutura.inscribere  = _inscribere;
+        sutura.datum              = &memoria;
+        sutura.meminisse          = _meminisse;
+        sutura.inscribere         = _inscribere;
+        sutura.cursum_inscribere  = _cursum_inscribere;
     }
     /* memoria sigillorum per cursum: communis semel sigillatur (iam
      * impleta per ordinem per locos) */
@@ -1588,6 +1598,8 @@ _eventus_titulus (
             redde "OMISSUM";
         casus FABRICA_AGENDUM:
             redde "AGENDUM";
+        casus FABRICA_IUDICIUM:
+            redde "IUDICIUM";
         ordinarius:
             redde "FORTASSE";
     }

@@ -1333,6 +1333,7 @@ _regenerare (
     vacuum* memoratum;
     chorda* locus;
        b32  felix;
+       i32  duratio;
 
     si (   sutura->regenerationes != NIHIL
         && tabula_dispersa_invenire(sutura->regenerationes,
@@ -1343,8 +1344,10 @@ _regenerare (
     }
     causa_out->datum    = NIHIL;
     causa_out->mensura  = ZEPHYRUM;
+    duratio             = ZEPHYRUM;
     felix = sutura->currere(sutura->datum, actio->mandatum,
-        chorda_ut_cstr(scriptura_dir, piscina), piscina, causa_out);
+        chorda_ut_cstr(scriptura_dir, piscina), piscina, causa_out,
+        &duratio);
     si (felix)
     {
         causa_out->datum    = NIHIL;
@@ -1364,6 +1367,19 @@ _regenerare (
             (vacuum)tabula_dispersa_inserere(sutura->regenerationes,
                 actio->titulus, locus);
         }
+    }
+    /* cursus iudicis (parcum …AR15): omnis regeneratio VERA (non
+     * memorata) metitur - ubi tempus iudicii consumitur */
+    si (sutura->cursum_inscribere != NIHIL)
+    {
+        FabricaSanatio iudicium;
+
+        iudicium.actio         = actio;
+        iudicium.eventus       = FABRICA_IUDICIUM;
+        iudicium.causa         = *causa_out;
+        iudicium.duratio_ms    = duratio;
+        iudicium.tempus_notum  = VERUM;
+        sutura->cursum_inscribere(sutura->datum, &iudicium);
     }
     redde felix;
 }

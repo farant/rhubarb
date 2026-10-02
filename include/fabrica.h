@@ -186,7 +186,9 @@ nomen structura {
      * FALSUM + causa (ultima linea) si fractum. */
     b32 (*currere)(vacuum* datum, constans Xar* mandatum,
                    constans character* scriptura_dir,
-                   Piscina* piscina, chorda* causa_out);
+                   Piscina* piscina, chorda* causa_out,
+                   i32* duratio_ms_out);  /* parcum …AR15: tempus
+                                           * regenerationis (cursus) */
     /* binarium '-provenientia' rogare; FALSUM = nulla relatio */
     b32 (*rogare)(vacuum* datum, constans character* via,
                   Piscina* piscina, chorda* relatio_out);
@@ -542,7 +544,9 @@ nomen enumeratio {
                                  * condicio non RECENS */
     FABRICA_OMISSUM,            /* dependentia fracta aut omissa */
     FABRICA_AGENDUM,            /* siccum: stalum/ignotum nunc */
-    FABRICA_FORTASSE            /* siccum: post actionem agendam */
+    FABRICA_FORTASSE,           /* siccum: post actionem agendam */
+    FABRICA_IUDICIUM            /* regeneratio iudicis (cursus solum,
+                                 * numquam sanatio; parcum …AR15) */
 } FabricaEventus;
 
 structura FabricaSanatio {

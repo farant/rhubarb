@@ -58,8 +58,9 @@ nomen structura {
 
 /* tabula cursus ficta (1b T7) */
 nomen structura {
-    chorda titulus;
-       i32 duratio_ms;
+            chorda titulus;
+               i32 duratio_ms;
+    FabricaEventus eventus;
 } CursusFictus;
 
 /* generator scriptus (plan 1b T3): verbum = mandatum[0] actionis.
@@ -283,7 +284,8 @@ _currere (
           constans Xar* mandatum,
     constans character* scriptura_dir,
                Piscina* piscina,
-                chorda* causa_out)
+                chorda* causa_out,
+                   i32* duratio_ms_out)
 {
     DiscusFictus* discus;
           chorda  praefixum;
@@ -292,6 +294,7 @@ _currere (
 
     discus = (DiscusFictus*)datum;
     discus->cursus++;
+    *duratio_ms_out = VII;   /* tempus fictum regenerationis */
     /* contractus suturae: directorium scripturae VACUUM */
     praefixum  = chorda_ex_literis(scriptura_dir, piscina);
     numerus    = xar_numerus(discus->fasciculi);
@@ -393,10 +396,11 @@ _cursum_inscribere (
     {
         cursus->titulus     = sanatio->actio->titulus;
         cursus->duratio_ms  = sanatio->duratio_ms;
+        cursus->eventus     = sanatio->eventus;
     }
 }
 
-/* duratio cursus ULTIMI tituli */
+/* duratio cursus ULTIMI SANATI aut PRAEPARATI tituli (ut SQL verum) */
 interior b32
 _cursum_legere (
                 vacuum* datum,
@@ -414,7 +418,9 @@ _cursum_legere (
         CursusFictus* cursus;
 
         cursus = (CursusFictus*)xar_obtinere(discus->cursus_ficti, i);
-        si (chorda_aequalis_literis(cursus->titulus, titulus))
+        si (   chorda_aequalis_literis(cursus->titulus, titulus)
+            && (   cursus->eventus == FABRICA_SANATUM
+                || cursus->eventus == FABRICA_PRAEPARATUM))
         {
             *duratio_ms_out  = cursus->duratio_ms;
             inventum         = VERUM;
@@ -3027,24 +3033,95 @@ s32 principale (vacuum)
         sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
             piscina, &causa);
         CREDO_NON_NIHIL(sanationes);
-        CREDO_AEQUALIS_I32(xar_numerus(discus.cursus_ficti), II);
-        CREDO_CHORDA_AEQUALIS_LITERIS(((CursusFictus*)xar_obtinere(
-            discus.cursus_ficti, ZEPHYRUM))->titulus, "A");
-        CREDO_CHORDA_AEQUALIS_LITERIS(((CursusFictus*)xar_obtinere(
-            discus.cursus_ficti, I))->titulus, "D");
+        {
+            i32 k;
+            i32 acta;
 
-        /* siccum: nihil scribitur; A aestimatur ex cursu priore (A
-         * adhuc stalum), C fortasse sine cursu priore -> ignotum */
-        scripti = xar_numerus(discus.cursus_ficti);
+            /* acta (non IUDICIUM): A fractum, D sanatum; C omissum non */
+            acta = ZEPHYRUM;
+            per (k = ZEPHYRUM; k
+                < xar_numerus(discus.cursus_ficti); k++)
+            {
+                CursusFictus* c;
+
+                c = (CursusFictus*)xar_obtinere(discus.cursus_ficti, k);
+                si (c->eventus != FABRICA_IUDICIUM)
+                {
+                    acta++;
+                    CREDO_VERUM(chorda_aequalis_literis(c->titulus, "A")
+                        || chorda_aequalis_literis(c->titulus, "D"));
+                }
+            }
+            CREDO_AEQUALIS_I32(acta, II);
+        }
+
+        /* siccum: nullum ACTUM scribitur (iudicia licent); D iterum
+         * stalum aestimatur ex cursu sanato (I ms), A (fractum solum)
+         * et C (numquam acta) -> tempus ignotum */
+        _ponere(&discus, "Z", "vetus\n");
+        scripti = ZEPHYRUM;
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k
+                < xar_numerus(discus.cursus_ficti); k++)
+            {
+                si (((CursusFictus*)xar_obtinere(discus.cursus_ficti,
+                        k))->eventus != FABRICA_IUDICIUM)
+                {
+                    scripti++;
+                }
+            }
+        }
         _memorias_parare(&sutura, piscina);
         sanationes = fabrica_sanare(&sutura, ordo, NIHIL, VERUM,
             piscina, &causa);
-        CREDO_AEQUALIS_I32(xar_numerus(discus.cursus_ficti), scripti);
-        sanatio = _sanatio_invenire(sanationes, "A");
+        {
+            i32 k;
+            i32 acta;
+
+            acta = ZEPHYRUM;
+            per (k = ZEPHYRUM; k
+                < xar_numerus(discus.cursus_ficti); k++)
+            {
+                si (((CursusFictus*)xar_obtinere(discus.cursus_ficti,
+                        k))->eventus != FABRICA_IUDICIUM)
+                {
+                    acta++;
+                }
+            }
+            CREDO_AEQUALIS_I32(acta, scripti);
+        }
+        sanatio = _sanatio_invenire(sanationes, "D");
         CREDO_VERUM(sanatio != NIHIL && sanatio->tempus_notum
             && sanatio->duratio_ms == I);
+        sanatio = _sanatio_invenire(sanationes, "A");
+        CREDO_VERUM(sanatio != NIHIL && !sanatio->tempus_notum);
         sanatio = _sanatio_invenire(sanationes, "C");
         CREDO_VERUM(sanatio != NIHIL && !sanatio->tempus_notum);
+
+        /* IUDICIUM (parcum …AR15): regeneratio iudicis VERA in cursu
+         * scribitur (VII ms ficti); memorata (eadem actio, idem
+         * cursus) non iterum */
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        _ponere(&discus, "a", "a\n");
+        _ponere(&discus, "X", "novum\n");
+        _scriptum_addere(&discus, "gen_a", "X", NIHIL, "novum\n", 0,
+            FALSUM);
+        actiones[0] = _actio_scripta(piscina, "A", "gen_a", "a", "X",
+            "regeneratio");
+        (vacuum)fabrica_iudicare(&sutura, actiones[0],
+            (FabricaExitus*)xar_obtinere(actiones[0]->exitus, ZEPHYRUM),
+            VERUM, piscina);
+        (vacuum)fabrica_iudicare(&sutura, actiones[0],
+            (FabricaExitus*)xar_obtinere(actiones[0]->exitus, ZEPHYRUM),
+            VERUM, piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(discus.cursus_ficti), I);
+        CREDO_VERUM(((CursusFictus*)xar_obtinere(discus.cursus_ficti,
+            ZEPHYRUM))->eventus == FABRICA_IUDICIUM
+            && ((CursusFictus*)xar_obtinere(discus.cursus_ficti,
+            ZEPHYRUM))->duratio_ms == VII);
     }
 
 

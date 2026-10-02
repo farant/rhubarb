@@ -912,3 +912,21 @@ added (stale build capsule passes with a note). On the way: the
 pythonica suite first failed in an UNRELATED oratio oracle test - its
 objects were stale after today's regenerations (the oracle refused,
 'compile_probationes.sh registrum primum'); rebuilding them fixed it.
+
+## 2026-10-01 - park …AR15 step 1: the judge's runs in cursus
+
+"Are we timing every script now?" - not quite: T7 recorded what sanare
+DID, but the judge's own regenerations (the reproducible actions it
+reruns to compare) were invisible, and they dominate sanare time. Now
+the currere seam returns the run's duration (i32* duratio_ms_out) and
+_regenerare records each REAL run (never a memo hit) through the same
+cursum_inscribere seam, outcome FABRICA_IUDICIUM. Estimates still read
+only SANATUM/PRAEPARATUM rows, so a judge run never poses as a heal.
+
+First measurement (full `-plenus`, warm, after the lib edits): 74.6 s
+wall, 32 regenerations, 71.4 s inside them. The amalgam chain
+(fontes_X, excludenda_X, amalgama_X for silva/officina/tessera) is
+~44 s of it - fontes_silva alone 22.3 s; corpus_silicis 11.9 s;
+lectores_cocti 9.7 s; tabulae_silvae 2.5 s. The cold first run was
+146 s (fragmentum_compile_tests 66 s). Next: prove the chain's inputs
+complete and mark it memorabilis, then measure again.
