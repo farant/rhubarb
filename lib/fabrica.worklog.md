@@ -1445,3 +1445,62 @@ Open for Fran: excubitor deletion via batch job …W0ZBW; the store's
 lint exemption; promotion (…XZQG); clang non-determinism (…ACYVJ).
 Next family candidate: the six non-traced generators that now dominate
 -plenus (…VFF5D).
+
+## 2026-10-03 - excubitor migration, middle path step 1: shared runner pieces
+
+Fran chose the middle path: shared pieces, then three representative
+runners (css, crusta, root compile_tests.sh), then slice 3's interview.
+- tools/cursor_communis.sh (sourced): cursor_instrumenta_parare (aedilis +
+  compilator, ONE store for both via FABRICA_THESAURUS),
+  cursor_clausuras_derivare <dir>, cursor_fontes_compilare (union through
+  bin/compilator; duplicate basenames refused - flat build dir),
+  cursor_probationem_struere <test> <bin> (test through the store, linked
+  against its own closure). Every compile command is recorded in
+  <build>/clausurae/mandata.tsv.
+- tools/cursoris_oraculum.sh <sub>/compile_probationes.sh [-ref|-arbor]
+  replaces tools/toml_oraculum.sh: subsystem from the runner's path,
+  output-capture variable <SUB>_PROBATIONES_EFFUSIO, and the clang
+  non-determinism re-check re-runs the RECORDED command (no per-runner
+  include flags hardcoded). Checked: toml_scalaris.o's recorded command
+  gives 6 distinct objects in 8 plain compiles, chorda.o's gives 1.
+- toml runner rebased onto the helper: generic oracle vs HEAD's T5 runner
+  = consensus (45 objects identical, 370 lines).
+Batch job …W0ZBW rubric v2 points at these.
+
+## 2026-10-03 - excubitor migration step 2: css
+
+css/compile_probationes.sh onto tools/cursor_communis.sh (hand lists,
+newest-header rule and its BLOCKING excubitor call removed). The oracle's
+first run caught a real gap: probatio_css_adaptare failed to link
+(css_ligator_solvere) - aedilis resolves includes through aedilis.stml's
+<inclusa> roots, not the runner's -I flags, and css/fontes was not a
+root, so css_adaptare.c / css_lexicon.c never entered the closure. The
+old runner hid it by linking every css source into every test. Added
+`css/fontes` LAST in aedilis.stml (lowest priority: cannot shadow;
+names css_*.h unique). Every materia client will need its own line
+(toml/fontes was already there). Commit judge: the 43 committed
+generated artifacts touched stay RECENS (no snippet changes).
+Oracle: consensus, 33 objects identical, 299 test lines; hand-list slack
+excerptum, materia_pictor, runae, runae_tabulae, utf8 (never needed).
+
+## 2026-10-03 - excubitor migration step 3: crusta (runner + two launchers)
+
+Runner: same conversion as css; `crusta/fontes` added LAST to
+aedilis.stml (same gap as css). Oracle: consensus, 45 objects identical,
+479 test lines; slack processus_posix.o.
+facies.sh / oraculum.sh were not runners: they linked EVERY object in
+crusta/build (built by the runner) with their main source and refused
+when excubitor called those objects stale - "run the runner first". After
+migration crusta/build holds only the test closures, so they now BUILD
+THEMSELVES: new helper cursor_instrumentum_struere <main.c> <bin> (own
+closure from aedilis, objects through compilator in
+build/instrumenta/<name>/ - their -I lists differ from the runner's -,
+relink only when an object changed). Output vs the old launchers:
+oraculum -probare identical (IDEM on both goldens); facies on 5 scripts
+identical except one finding the change removed (below).
+House lint caught my helper: crusta's nt-aequalitas rule flagged
+`[ "$bin" -nt "$o" ] || recens=0` (blocks at commit). Rewritten in the
+negated form the house uses (`! [ bin -nt o ]` -> stale, so a same-second
+tie relinks). Lint over all 8 scripts this migration touched: clean.
+Helper: the mandata.tsv reset moved from cursor_instrumenta_parare to
+cursor_clausuras_derivare (a tool launch must not wipe a runner's record).

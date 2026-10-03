@@ -44,29 +44,6 @@ declare -a INCLUDE_FLAGS=(
     "-I$CSS_DIR/probationes"
 )
 
-# Fontes radicis quibus materia in evolutione nititur.
-declare -a RADIX_FONTES=(
-    "piscina"
-    "sors"
-    "chorda"
-    "chorda_aedificator"
-    "xar"
-    "friatio"
-    "tabula_dispersa"
-    "internamentum"
-    "css_lexema"
-    "selectio"
-    "stml"
-    "stml_macros"
-    "excerptum"
-    "utf8"
-    "runae"
-    "runae_tabulae"
-    "similitudo"
-    "canon"
-    "credo"
-)
-
 FILTER="${1:-}"
 
 if [ -n "$FILTER" ]; then
@@ -78,126 +55,17 @@ if [ -n "$FILTER" ]; then
     fi
 fi
 
-# ---- custodia vetustatis ----
-# '$src -nt $obj' AEQUALITATEM PERDIT: mtimes secundo mensurantur,
-# ergo fons et obiectum in EODEM secundo scripta 'non novius'
-# dant et recompilatio TACITE OMITTITUR. Id me momordit
-# 2026-08-27: vitium plantatum, restitutum, et probatio adhuc
-# rubra - contra obiectum vitiosum, quia .c et .o ambo 21:27:07
-# ferebant. FALSUM RUBRUM, geminum falsi viridis quod eodem die
-# silvam momordit, et peius: viride falsum te 'peractum' putare
-# facit, rubrum falsum codici RECTO diffidere.
-# Remedium: '! [ $obj -nt $src ]' - in aequalitate RECOMPILA.
-# CAUTIO: silva/compile_probationes.sh idem exemplar '-nt' fert.
-
-# ---- custodia capitum ----
-# Mutatio capitis SOLA nihil recompilat si tantum mtimes .c
-# spectantur - id est ipsum quod falsum viride 2026-08-27 in silva
-# peperit (L/L contra obiecta sex horarum). Ergo caput
-# recentissimum contra omne obiectum retiratur.
-# materia/fontes (et md/fontes ubi md compilatur) additi 2026-09-17:
-# substratum quod cliens compilat, olim ab indice absens.
-CAPUT_RECENS=""
-while IFS= read -r caput_via; do
-    # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
-    if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
-        CAPUT_RECENS="$caput_via"
-    fi
-done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" \
-             "$CSS_DIR/fontes" "$CSS_DIR/probationes" \
-             -name "*.h" 2>/dev/null)
-if [ -z "$CAPUT_RECENS" ]; then
-    echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
-fi
-
-# AEQUALITAS: mtimes secundo mensurantur, ergo fons et obiectum
-# EODEM SECUNDO scripta '-nt' non satisfaciunt et recompilatio
-# TACITE omittitur - suite contra obiectum PRIUS currit. Id
-# 2026-08-27 in materia RUBRUM FALSUM peperit (vitium plantatum,
-# restitutum, probatio adhuc rubra contra .o vetus; .c et .o ambo
-# 21:27:07). Remedium ubique: in aequalitate RECOMPILA.
-newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
-        echo "$CAPUT_RECENS"
-    fi
-}
-
-obj_files=""
-for f in "${RADIX_FONTES[@]}"; do
-    src="$RADIX_DIR/lib/$f.c"
-    obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [dep] $f.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $f.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
+# ---- FONTES ex clausuris (migratio ad compilatorem, cursor communis) ----
+# Olim indices MANU scripti (XIX lib, XIII materia, css/fontes, adiumenta)
+# et regula crassa 'caput recentissimum quodvis omne obiectum stalum facit'
+# (mtime), deinde custodia excubitoris (mtime). Nunc tools/cursor_communis.sh:
+# clausura cuiusque probationis ab aedile, unio per bin/compilator,
+# probatio quaeque cum clausura SUA nexa (exemplar toml, T5).
+source "$RADIX_DIR/tools/cursor_communis.sh"
+cursor_instrumenta_parare || exit 1
+cursor_clausuras_derivare "$CSS_DIR/probationes" || exit 1
+cursor_fontes_compilare || exit 1
 shopt -s nullglob
-# materia sub-fontes: css eam CONSUMIT, non continet
-for m in materia_lexicon materia_token materia_nodus materia_scribere \
-         materia_arbor materia_arbor_aequalitas materia_coctor \
-         materia_sedes materia_diagnostica materia_annotationes \
-         materia_excusatio materia_exemplaria materia_pictor; do
-    src="$MATERIA_DIR/fontes/$m.c"
-    obj="$BUILD_DIR/$m.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [materia] $m.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $m.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
-for src in "$CSS_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
-    obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [css] $base.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $base.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
-# adiumenta probationum (probationes/*.c non probatio_*)
-for src in "$CSS_DIR"/probationes/*.c; do
-    base="$(basename "$src" .c)"
-    case "$base" in probatio_*) continue ;; esac
-    obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [adiumentum] $base.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $base.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
-# ---- custodia post constructionem (2026-09-17) ----
-# Custodia capitum supra per indicem MANU scriptum iudicat; excubitor
-# graphum inclusionum DERIVATUM legit (build/inclusiones.tsv). Obiectum
-# post constructionem stalum = index supra caput ignoravit: olim
-# materia/fontes deerat, et mutatio MateriaArborConsilium (A1 plani
-# materia-sedes, campus ultimus additus) obiecta vetera cum structura
-# minore in acervo reliquit - probationes et instrumenta contra ea
-# currebant. Stala = nihil curritur (exitus II); graphus absens aut
-# excubitor fractus = CAUTIO clamata, numquam tacita.
-excubitor_exitus=0
-excubitor_relatio="$("$RADIX_DIR/excubitor.sh" "${BUILD_DIR#"$RADIX_DIR"/}/" -tacitus 2>&1)" \
-    || excubitor_exitus=$?
-if [ "$excubitor_exitus" -eq 1 ]; then
-    echo "$excubitor_relatio"
-    echo "FRACTA: obiecta stala post constructionem - custodia capitum caput ignoravit; NIHIL CURSUM (exitus II)"
-    exit 2
-elif [ "$excubitor_exitus" -ne 0 ]; then
-    echo "$excubitor_relatio" >&2
-    echo "CAUTIO: excubitor exitus $excubitor_exitus - custodia post constructionem NON iudicavit" >&2
-fi
 
 # metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
 # "css." - silva.mensurae('css.', n) eas legit); numquam suitam frangit
@@ -214,7 +82,7 @@ for test_file in "$CSS_DIR"/probationes/probatio_*.c; do
     echo ""
     echo "=== $name ==="
     t0=$(mensor_suitae_nunc)
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
+    if ! cursor_probationem_struere "$test_file" "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue
