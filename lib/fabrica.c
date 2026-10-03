@@ -87,6 +87,7 @@ fabrica_suturam_parare (
     sutura->regenerationes      = NIHIL;
     sutura->digesta             = NIHIL;
     sutura->agere               = NIHIL;
+    sutura->agere_simul         = NIHIL;
     sutura->vestigium_capere    = NIHIL;
     sutura->cursum_inscribere   = NIHIL;
     sutura->cursum_legere       = NIHIL;
@@ -3639,6 +3640,11 @@ _vestigium_actionis (
         "build/fabrica/provenientia/", actio->titulus, ".o"), vacua);
     _locum_addere(loci, FABRICA_LOCUS_ARBOR, _iungere(piscina,
         "build/fabrica/scriptura/", actio->titulus, ""), vacua);
+    /* libri lectionum actionis (plan 2 T2 iudex, T6 sanare simul) */
+    _locum_addere(loci, FABRICA_LOCUS_PLAGULA, _iungere(piscina,
+        LIBRI_DIRECTORIUM, actio->titulus, ".tsv"), vacua);
+    _locum_addere(loci, FABRICA_LOCUS_PLAGULA, _iungere(piscina,
+        LIBRI_DIRECTORIUM, actio->titulus, ".sanare.tsv"), vacua);
     /* status fabricae ipsius (memoria sqlite cum -wal/-shm, sera):
      * involucrum, non actio - T4: mensor_ui -shm tetigit */
     si (status_fabricae)
@@ -3648,6 +3654,23 @@ _vestigium_actionis (
             "fabrica.db fabrica.db-wal fabrica.db-shm", piscina));
         _locum_addere(loci, FABRICA_LOCUS_PLAGULA, chorda_ex_literis(
             "build/fabrica/sera", piscina), vacua);
+        /* THESAURUS (plan 2 T3): cache communis fabricae, scriptura
+         * atomica - quaevis actio domus (aedilis --thesaurus,
+         * compilator) in eo scribit; involucrum, non vestigium actionis
+         * (radix ipsa, obiecta .o, NON: ea vestigia sua manent) */
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < III; k++)
+            {
+                chorda pars;
+
+                /* sine '/' finali: locus ARBOR 'via/' ipse addit */
+                pars = chorda_ex_literis(_thesauri_partes[k], piscina);
+                pars.mensura--;
+                _locum_addere(loci, FABRICA_LOCUS_ARBOR, pars, vacua);
+            }
+        }
     }
     redde loci;
 }
@@ -4106,6 +4129,773 @@ _sanationem_notare (
     }
 }
 
+/* dependentia fracta aut omissa (ingressus aut praecondicio): VERUM
+ * et titulus eius */
+interior b32
+_dependentia_fracta (
+     constans Xar* ordo,
+              i32  i,
+    StatusSanandi* status,
+           chorda* titulus_out)
+{
+    constans FabricaActio* actio;
+                      i32  j;
+
+    actio = *(FabricaActio**)xar_obtinere(ordo, i);
+    per (j = ZEPHYRUM; j < i; j++)
+    {
+        si (   (   status[j] == SANANDI_FRACTUM
+                || status[j] == SANANDI_OMISSUM)
+            && _pendet(actio, *(FabricaActio**)xar_obtinere(ordo, j)))
+        {
+            *titulus_out = (*(FabricaActio**)xar_obtinere(ordo,
+                j))->titulus;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ANTE AGERE: dependentia fracta, recentia, siccum, praecondiciones
+ * ignotae. VERUM = actio agenda (status SANANDI_NONDUM manet); FALSUM =
+ * iam tractata (OMISSUM, RECENS, FORTASSE, AGENDUM notata). */
+interior b32
+_ante_agere (
+    constans FabricaSutura* sutura,
+              constans Xar* ordo,
+                       i32  i,
+             StatusSanandi* status,
+                       Xar* sanationes,
+                       b32  siccum,
+                   Piscina* piscina)
+{
+    constans FabricaActio* actio;
+                   chorda  causa;
+                   chorda  fracta;
+                      b32  impedita;
+                      i32  duratio;
+                      i32  j;
+
+    actio = *(FabricaActio**)xar_obtinere(ordo, i);
+
+    /* dependentia fracta aut omissa (ingressus aut praecondicio) */
+    impedita  = FALSUM;
+    fracta    = chorda_ex_literis("", piscina);
+    per (j = ZEPHYRUM; j < i; j++)
+    {
+        si (   (   status[j] == SANANDI_FRACTUM
+                || status[j] == SANANDI_OMISSUM)
+            && _pendet(actio, *(FabricaActio**)xar_obtinere(ordo, j)))
+        {
+            impedita  = VERUM;
+            fracta    = (*(FabricaActio**)xar_obtinere(ordo,
+                j))->titulus;
+            frange;
+        }
+    }
+    si (impedita)
+    {
+        status[i] = SANANDI_OMISSUM;
+        _sanationem_notare(sutura, piscina, sanationes, actio,
+            FABRICA_OMISSUM,
+            _iungere(piscina, "dependentia fracta: ", fracta, ""),
+            ZEPHYRUM);
+        redde FALSUM;
+    }
+
+    causa = chorda_ex_literis("", piscina);
+    si (_exitus_recentes(sutura, actio, piscina, &causa))
+    {
+        /* siccum: recens nunc, sed post actionem agendam fortasse
+         * non */
+        si (siccum)
+        {
+            per (j = ZEPHYRUM; j < i; j++)
+            {
+                si (   (   status[j] == SANANDI_AGENDUM
+                        || status[j] == SANANDI_FORTASSE)
+                    && _pendet(actio,
+                           *(FabricaActio**)xar_obtinere(ordo, j)))
+                {
+                    status[i] = SANANDI_FORTASSE;
+                    _sanationem_notare(sutura, piscina, sanationes,
+                        actio,
+                        FABRICA_FORTASSE, _iungere(piscina,
+                            "post ", (*(FabricaActio**)xar_obtinere(
+                            ordo, j))->titulus, ""), ZEPHYRUM);
+                    frange;
+                }
+            }
+        }
+        si (status[i] == SANANDI_NONDUM)
+        {
+            status[i] = SANANDI_RECENS;
+        }
+        redde FALSUM;
+    }
+    si (siccum)
+    {
+        status[i] = SANANDI_AGENDUM;
+        _sanationem_notare(sutura, piscina, sanationes, actio,
+            FABRICA_AGENDUM,
+            causa,
+            ZEPHYRUM);
+        redde FALSUM;
+    }
+
+    /* praecondiciones ignotae: semel per cursum */
+    per (j = ZEPHYRUM;
+         actio->praecondiciones != NIHIL
+         && j < xar_numerus(actio->praecondiciones);
+         j++)
+    {
+        s32 k;
+
+        k = _index_actionis(ordo,
+            *(chorda*)xar_obtinere(actio->praecondiciones, j));
+        si (   k < 0
+            || status[k] != SANANDI_NONDUM
+            || !_actio_ignota(*(FabricaActio**)xar_obtinere(ordo,
+                   (i32)k)))
+        {
+            perge;
+        }
+        duratio = ZEPHYRUM;
+        si (_actionem_agere(sutura, *(FabricaActio**)xar_obtinere(
+                ordo, (i32)k), piscina, &duratio, &causa))
+        {
+            status[k] = SANANDI_PRAEPARATUM;
+            _sanationem_notare(sutura, piscina, sanationes,
+                *(FabricaActio**)xar_obtinere(ordo, (i32)k),
+                FABRICA_PRAEPARATUM, chorda_ex_literis("", piscina),
+                duratio);
+        }
+        alioquin
+        {
+            status[k] = SANANDI_FRACTUM;
+            _sanationem_notare(sutura, piscina, sanationes,
+                *(FabricaActio**)xar_obtinere(ordo, (i32)k),
+                FABRICA_FRACTUM, causa, duratio);
+        }
+    }
+    /* praecondicio modo fracta: omittitur */
+    per (j = ZEPHYRUM;
+         actio->praecondiciones != NIHIL
+         && j < xar_numerus(actio->praecondiciones);
+         j++)
+    {
+        s32 k;
+
+        k = _index_actionis(ordo,
+            *(chorda*)xar_obtinere(actio->praecondiciones, j));
+        si (   k >= 0
+            && (   status[k] == SANANDI_FRACTUM
+                || status[k] == SANANDI_OMISSUM))
+        {
+            status[i] = SANANDI_OMISSUM;
+            _sanationem_notare(sutura, piscina, sanationes, actio,
+                FABRICA_OMISSUM,
+                _iungere(piscina, "praecondicio fracta: ",
+                    *(chorda*)xar_obtinere(actio->praecondiciones, j),
+                    ""), ZEPHYRUM);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* POST AGERE: actum FALSUM -> FRACTUM (causa); aliter post-condicio
+ * (Review Focus 3: exitus 0 non sufficit) -> SANATUM aut FRACTUM */
+interior vacuum
+_post_agere (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                       i32  i,
+             StatusSanandi* status,
+                       Xar* sanationes,
+                       b32  actum,
+                    chorda  causa,
+                       i32  duratio,
+                   Piscina* piscina)
+{
+    si (!actum)
+    {
+        status[i] = SANANDI_FRACTUM;
+        _sanationem_notare(sutura, piscina, sanationes, actio,
+            FABRICA_FRACTUM, causa, duratio);
+        redde;
+    }
+    si (!_exitus_recentes(sutura, actio, piscina, &causa))
+    {
+        status[i] = SANANDI_FRACTUM;
+        _sanationem_notare(sutura, piscina, sanationes, actio,
+            FABRICA_FRACTUM,
+            _iungere(piscina, "exitus 0 sed non RECENS: ", causa, ""),
+            duratio);
+        redde;
+    }
+    status[i] = SANANDI_SANATUM;
+    _sanationem_notare(sutura, piscina, sanationes, actio,
+        FABRICA_SANATUM, chorda_ex_literis("", piscina), duratio);
+}
+
+/* via libri normata: radix et './' demptae; NIHIL-chorda si extra
+ * arborem (absoluta) */
+interior chorda
+_viam_libri_normare (
+    constans FabricaSutura* sutura,
+                    chorda  via)
+{
+    si (   sutura->radix.mensura > 0
+        && via.mensura > sutura->radix.mensura
+        && chorda_incipit(via, sutura->radix)
+        && via.datum[sutura->radix.mensura] == '/')
+    {
+        via = chorda_sectio(via, sutura->radix.mensura + I,
+            via.mensura);
+    }
+    dum (via.mensura > II && via.datum[0] == '.' && via.datum[I] == '/')
+    {
+        via = chorda_sectio(via, II, via.mensura);
+    }
+    si (via.mensura > 0 && via.datum[0] == '/')
+    {
+        via.mensura = ZEPHYRUM;
+    }
+    redde via;
+}
+
+interior s32
+_vestigia_via_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(((constans FabricaVestigium*)a)->via,
+        ((constans FabricaVestigium*)b)->via);
+}
+
+/* SCRIPTURAE NOTATAE (S) libri membri: viae normatae (extra arborem
+ * praetermissae - photographia eas quoque non videt). Xar de chorda;
+ * vacua si liber absens. */
+interior Xar*
+_scripturas_notatas (
+    constans FabricaSutura* sutura,
+        constans character* liber_via,
+                   Piscina* piscina)
+{
+    chorda  liber;
+       Xar* viae;
+       i32  i;
+       i32  initium;
+
+    viae = _xar_chordarum(piscina);
+    si (   viae == NIHIL || sutura->legere == NIHIL
+        || !sutura->legere(sutura->datum, liber_via, piscina, &liber))
+    {
+        redde viae;
+    }
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < liber.mensura; i++)
+    {
+        chorda linea;
+        chorda via;
+
+        si (liber.datum[i] != '\n')
+        {
+            perge;
+        }
+        linea    = chorda_sectio(liber, initium, i);
+        initium  = i + I;
+        si (   linea.mensura < III || linea.datum[0] != 'S'
+            || linea.datum[I] != '\t')
+        {
+            perge;
+        }
+        via = _viam_libri_normare(sutura,
+            chorda_sectio(linea, II, linea.mensura));
+        si (via.mensura > ZEPHYRUM)
+        {
+            _chordam_addere(viae, via);
+        }
+    }
+    redde viae;
+}
+
+/* prima via notata extra vestigium actionis (vacua = nulla) */
+interior chorda
+_scripturam_alienam (
+     constans FabricaActio* actio,
+              constans Xar* notatae,
+                   Piscina* piscina)
+{
+    Xar* ante;
+    Xar* post;
+    Xar* extra;
+    i32  i;
+
+    ante = xar_creare(piscina, (i32)magnitudo(FabricaVestigium));
+    post = xar_creare(piscina, (i32)magnitudo(FabricaVestigium));
+    per (i = ZEPHYRUM; post != NIHIL && i < xar_numerus(notatae); i++)
+    {
+        FabricaVestigium* v;
+
+        v = (FabricaVestigium*)xar_addere(post);
+        si (v == NIHIL)
+        {
+            frange;
+        }
+        v->via        = *(chorda*)xar_obtinere(notatae, i);
+        v->tempus_ns  = ZEPHYRUM;
+        v->mensura    = ZEPHYRUM;
+    }
+    si (post == NIHIL || xar_numerus(post) == 0)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    xar_ordinare(post, _vestigia_via_comparare);
+    extra = fabrica_vestigia_comparare(actio, ante, post, piscina);
+    si (extra != NIHIL && xar_numerus(extra) > 0)
+    {
+        redde *(chorda*)xar_obtinere(extra, ZEPHYRUM);
+    }
+    redde chorda_ex_literis("", piscina);
+}
+
+/* UNDA una simul: membra tuta (indices in ordine, ordine tituli),
+ * photographia una circa undam, liber per membrum. VERUM si quid
+ * fractum. */
+interior b32
+_undam_agere (
+    constans FabricaSutura* sutura,
+              constans Xar* ordo,
+                       Xar* indices,
+             StatusSanandi* status,
+                       Xar* sanationes,
+                   Piscina* piscina)
+{
+    constans FabricaActio** actiones;
+       constans character** acta_viae;
+       constans character** libri;
+             FabricaActum*  acta;
+                      b32*  incepta;
+                      Xar*  ante;
+                      Xar*  post;
+                      Xar*  extra_undae;
+                      Xar** notatae;
+                      i32   n;
+                      i32   k;
+                      i32   m;
+                      b32   fractum;
+
+    n = xar_numerus(indices);
+    /* ordo tituli (cursus et sanationes deterministice) */
+    per (k = I; k < n; k++)
+    {
+        per (m = k; m > ZEPHYRUM; m--)
+        {
+            i32* a;
+            i32* b;
+
+            a = (i32*)xar_obtinere(indices, m - I);
+            b = (i32*)xar_obtinere(indices, m);
+            si (chorda_comparare(
+                    (*(FabricaActio**)xar_obtinere(ordo, *a))->titulus,
+                    (*(FabricaActio**)xar_obtinere(ordo, *b))->titulus)
+                <= 0)
+            {
+                frange;
+            }
+            {
+                i32 t;
+
+                t   = *a;
+                *a  = *b;
+                *b  = t;
+            }
+        }
+    }
+    actiones  = (constans FabricaActio**)piscina_allocare(piscina,
+        magnitudo(FabricaActio*) * (memoriae_index)n);
+    acta_viae = (constans character**)piscina_allocare(piscina,
+        magnitudo(character*) * (memoriae_index)n);
+    libri     = (constans character**)piscina_allocare(piscina,
+        magnitudo(character*) * (memoriae_index)n);
+    acta      = (FabricaActum*)piscina_allocare(piscina,
+        magnitudo(FabricaActum) * (memoriae_index)n);
+    incepta   = (b32*)piscina_allocare(piscina,
+        magnitudo(b32) * (memoriae_index)n);
+    si (   actiones == NIHIL || acta_viae == NIHIL || libri == NIHIL
+        || acta     == NIHIL || incepta == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        actiones[k] = *(FabricaActio**)xar_obtinere(ordo,
+            *(i32*)xar_obtinere(indices, k));
+        acta_viae[k] = chorda_ut_cstr(_iungere(piscina,
+            "build/fabrica/acta/", actiones[k]->titulus, ".log"),
+            piscina);
+        libri[k] = chorda_ut_cstr(_iungere(piscina, LIBRI_DIRECTORIUM,
+            actiones[k]->titulus, ".sanare.tsv"), piscina);
+        incepta[k] = FALSUM;
+    }
+    ante = NIHIL;
+    post = NIHIL;
+    si (sutura->vestigium_capere != NIHIL)
+    {
+        (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
+    }
+    sutura->agere_simul(sutura->datum,
+        (constans FabricaActio* constans*)actiones, n,
+        (constans character* constans*)acta_viae,
+        (constans character* constans*)libri, piscina, acta, incepta);
+    _memorias_vacare(sutura);
+    notatae = (Xar**)piscina_allocare(piscina,
+        magnitudo(Xar*) * (memoriae_index)n);
+    si (notatae == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        notatae[k] = _scripturas_notatas(sutura, libri[k], piscina);
+    }
+    /* scripturae extra UNIONEM vestigiorum: extra cuiusque membri ET a
+     * nullo libro notatae (notata membro suo imputatur, non undae) */
+    extra_undae = NIHIL;
+    si (   ante != NIHIL
+        && sutura->vestigium_capere(sutura->datum, piscina, &post))
+    {
+        extra_undae = fabrica_vestigia_comparare(actiones[0], ante,
+            post,
+            piscina);
+        per (k = I; extra_undae != NIHIL && k < n; k++)
+        {
+            Xar* extra_k;
+            Xar* communia;
+            i32  e;
+
+            extra_k  = fabrica_vestigia_comparare(actiones[k], ante,
+                post,
+                piscina);
+            communia = _xar_chordarum(piscina);
+            per (e = ZEPHYRUM; extra_k != NIHIL && communia != NIHIL
+                 && e < xar_numerus(extra_undae); e++)
+            {
+                chorda via;
+                   i32 f;
+
+                via = *(chorda*)xar_obtinere(extra_undae, e);
+                per (f = ZEPHYRUM; f < xar_numerus(extra_k); f++)
+                {
+                    si (chorda_aequalis(via,
+                            *(chorda*)xar_obtinere(extra_k, f)))
+                    {
+                        _chordam_addere(communia, via);
+                        frange;
+                    }
+                }
+            }
+            extra_undae = communia;
+        }
+    }
+    si (extra_undae != NIHIL)
+    {
+        Xar* ignotae;
+        i32  e;
+
+        ignotae = _xar_chordarum(piscina);
+        per (e = ZEPHYRUM; ignotae != NIHIL
+             && e < xar_numerus(extra_undae); e++)
+        {
+            chorda via;
+               b32 notata;
+               i32 f;
+
+            via     = *(chorda*)xar_obtinere(extra_undae, e);
+            notata  = FALSUM;
+            per (k = ZEPHYRUM; !notata && k < n; k++)
+            {
+                per (f = ZEPHYRUM; f < xar_numerus(notatae[k]); f++)
+                {
+                    si (chorda_aequalis(via,
+                            *(chorda*)xar_obtinere(notatae[k], f)))
+                    {
+                        notata = VERUM;
+                        frange;
+                    }
+                }
+            }
+            si (!notata)
+            {
+                _chordam_addere(ignotae, via);
+            }
+        }
+        extra_undae = ignotae;
+    }
+    fractum = FALSUM;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+           i32 i;
+        chorda aliena;
+        chorda causa;
+
+        i = *(i32*)xar_obtinere(indices, k);
+        si (   !incepta[k] && acta[k].codex == -I
+            && acta[k].duratio_ms    == 0
+            && acta[k].cauda.mensura == 0)
+        {
+            status[i] = SANANDI_OMISSUM;
+            _sanationem_notare(sutura, piscina, sanationes, actiones[k],
+                FABRICA_OMISSUM,
+                chorda_ex_literis("non incepta: fractura in unda (nova "
+                    "non incipiuntur)", piscina), ZEPHYRUM);
+            fractum = VERUM;
+            perge;
+        }
+        si (!incepta[k])
+        {
+            _post_agere(sutura, actiones[k], i, status, sanationes,
+                FALSUM,
+                _iungere(piscina, "non actum: ", acta[k].cauda, ""),
+                acta[k].duratio_ms, piscina);
+            fractum = VERUM;
+            perge;
+        }
+        si (acta[k].codex != 0)
+        {
+            character numerus[XXXII];
+
+            sprintf(numerus, "exitus %d: ", (integer)acta[k].codex);
+            _post_agere(sutura, actiones[k], i, status, sanationes,
+                FALSUM,
+                _iungere(piscina, numerus, acta[k].cauda, ""),
+                acta[k].duratio_ms, piscina);
+            fractum = VERUM;
+            perge;
+        }
+        aliena = _scripturam_alienam(actiones[k], notatae[k], piscina);
+        si (aliena.mensura > 0)
+        {
+            _post_agere(sutura, actiones[k], i, status, sanationes,
+                FALSUM,
+                _iungere(piscina, "scripsit extra vestigium (S): ",
+                aliena,
+                ""), acta[k].duratio_ms, piscina);
+            fractum = VERUM;
+            perge;
+        }
+        si (extra_undae != NIHIL && xar_numerus(extra_undae) > 0)
+        {
+            causa = _iungere(piscina, "unda scripsit extra vestigia "
+                "omnium membrorum: ",
+                *(chorda*)xar_obtinere(extra_undae,
+                ZEPHYRUM), "");
+            si (xar_numerus(extra_undae) > I)
+            {
+                causa = _iungere(piscina, "", causa, " +");
+                causa = chorda_concatenare(causa,
+                    numerus_romanus_exprimere(
+                    (i64)(xar_numerus(extra_undae) - I), NIHIL,
+                    piscina),
+                    piscina);
+            }
+            _post_agere(sutura, actiones[k], i, status, sanationes,
+                FALSUM,
+                _iungere(piscina, "", causa,
+                " (scriptor ignotus - membra "
+                "omnia fracta)"), acta[k].duratio_ms, piscina);
+            fractum = VERUM;
+            perge;
+        }
+        _post_agere(sutura, actiones[k], i, status, sanationes, VERUM,
+            chorda_ex_literis("", piscina), acta[k].duratio_ms,
+            piscina);
+        si (status[i] == SANANDI_FRACTUM)
+        {
+            fractum = VERUM;
+        }
+    }
+    redde fractum;
+}
+
+/* SANARE PER UNDAS (plan 2 T6): undae ex actionibus ambitus; in unda
+ * non tutae SOLAE (photographia sua), tutae (lectiones="verum") simul.
+ * Fractura: nova non incipiuntur (OMISSUM), dependentes OMISSUM. */
+interior b32
+_sanare_per_undas (
+    constans FabricaSutura* sutura,
+              constans Xar* ordo,
+                       b32* ambitus,
+             StatusSanandi* status,
+                       Xar* sanationes,
+                   Piscina* piscina)
+{
+     Xar* membra_ambitus;
+     Xar* undae;
+     i32  i;
+     i32  w;
+     b32  fractum;
+
+    membra_ambitus = xar_creare(piscina, (i32)magnitudo(FabricaActio*));
+    si (membra_ambitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
+    {
+        FabricaActio* actio;
+
+        actio = *(FabricaActio**)xar_obtinere(ordo, i);
+        si (ambitus[i] && !_actio_ignota(actio))
+        {
+            *(FabricaActio**)xar_addere(membra_ambitus) = actio;
+        }
+    }
+    undae = fabrica_undas_formare(membra_ambitus, piscina);
+    si (undae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    fractum = FALSUM;
+    per (w = ZEPHYRUM; w < xar_numerus(undae); w++)
+    {
+        Xar* membra;
+        Xar* tuta;
+        i32  m;
+
+        membra  = *(Xar**)xar_obtinere(undae, w);
+        tuta    = xar_creare(piscina, (i32)magnitudo(i32));
+        si (tuta == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (m = ZEPHYRUM; m < xar_numerus(membra); m++)
+        {
+            FabricaActio* actio;
+                     s32  index;
+
+            actio = *(FabricaActio**)xar_obtinere(membra, m);
+            index = _index_actionis(ordo, actio->titulus);
+            si (index < 0)
+            {
+                perge;
+            }
+            si (fractum)
+            {
+                chorda fracta;
+                chorda causa;
+
+                /* post fracturam nihil novum incipitur - sed iudicatur:
+                 * recens tacet, dependentia fracta nominatur, sola
+                 * agenda OMISSUM 'post fracturam' */
+                causa = chorda_ex_literis("", piscina);
+                si (_dependentia_fracta(ordo, (i32)index, status,
+                    &fracta))
+                {
+                    status[index] = SANANDI_OMISSUM;
+                    _sanationem_notare(sutura, piscina, sanationes,
+                        actio,
+                        FABRICA_OMISSUM, _iungere(piscina,
+                        "dependentia fracta: ", fracta, ""), ZEPHYRUM);
+                }
+                alioquin si (_exitus_recentes(sutura, actio, piscina,
+                             &causa))
+                {
+                    status[index] = SANANDI_RECENS;
+                }
+                alioquin
+                {
+                    status[index] = SANANDI_OMISSUM;
+                    _sanationem_notare(sutura, piscina, sanationes,
+                        actio,
+                        FABRICA_OMISSUM, chorda_ex_literis("post "
+                        "fracturam: nova non incipiuntur", piscina),
+                        ZEPHYRUM);
+                }
+                perge;
+            }
+            si (!_ante_agere(sutura, ordo, (i32)index, status,
+                sanationes,
+                    FALSUM, piscina))
+            {
+                perge;
+            }
+            si (actio->lectiones)
+            {
+                *(i32*)xar_addere(tuta) = (i32)index;
+            }
+            alioquin
+            {
+                /* non tuta: SOLA, photographia sua (via vetus) */
+                   i32 duratio;
+                chorda causa;
+                   b32 actum;
+
+                duratio  = ZEPHYRUM;
+                causa    = chorda_ex_literis("", piscina);
+                actum   = _actionem_agere(sutura, actio, piscina,
+                    &duratio,
+                    &causa);
+                _post_agere(sutura, actio, (i32)index, status,
+                    sanationes,
+                    actum, causa, duratio, piscina);
+                si (status[index] == SANANDI_FRACTUM)
+                {
+                    fractum = VERUM;
+                }
+            }
+        }
+        si (fractum || xar_numerus(tuta) == 0)
+        {
+            per (m = ZEPHYRUM; fractum && m < xar_numerus(tuta); m++)
+            {
+                i32 index;
+
+                index          = *(i32*)xar_obtinere(tuta, m);
+                status[index]  = SANANDI_OMISSUM;
+                _sanationem_notare(sutura, piscina, sanationes,
+                    *(FabricaActio**)xar_obtinere(ordo, index),
+                    FABRICA_OMISSUM,
+                    chorda_ex_literis("post fracturam: "
+                    "nova non incipiuntur", piscina), ZEPHYRUM);
+            }
+            perge;
+        }
+        si (xar_numerus(tuta) == I)
+        {
+            /* tuta sola: nihil simul - via vetus cum photographia */
+               i32 index;
+               i32 duratio;
+            chorda causa;
+               b32 actum;
+
+            index    = *(i32*)xar_obtinere(tuta, ZEPHYRUM);
+            duratio  = ZEPHYRUM;
+            causa    = chorda_ex_literis("", piscina);
+            actum   = _actionem_agere(sutura,
+                *(FabricaActio**)xar_obtinere(ordo, index), piscina,
+                &duratio, &causa);
+            _post_agere(sutura, *(FabricaActio**)xar_obtinere(ordo,
+                index),
+                index, status, sanationes, actum, causa, duratio,
+                piscina);
+            si (status[index] == SANANDI_FRACTUM)
+            {
+                fractum = VERUM;
+            }
+            perge;
+        }
+        si (_undam_agere(sutura, ordo, tuta, status, sanationes,
+            piscina))
+        {
+            fractum = VERUM;
+        }
+    }
+    redde VERUM;
+}
+
 Xar*
 fabrica_sanare (
     constans FabricaSutura* sutura,
@@ -4194,174 +4984,39 @@ fabrica_sanare (
     }
     dum (mutatum);
 
+    si (sutura->agere_simul != NIHIL && !siccum)
+    {
+        si (!_sanare_per_undas(sutura, ordo, ambitus, status,
+            sanationes,
+                piscina))
+        {
+            redde NIHIL;
+        }
+        redde sanationes;
+    }
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         constans FabricaActio* actio;
                        chorda  causa;
-                       chorda  fracta;
-                          b32  impedita;
                           i32  duratio;
+                          b32  actum;
 
         actio = *(FabricaActio**)xar_obtinere(ordo, i);
         si (!ambitus[i] || _actio_ignota(actio))
         {
             perge;   /* ignota: praecondicione sola realizatur */
         }
-
-        /* dependentia fracta aut omissa (ingressus aut praecondicio) */
-        impedita  = FALSUM;
-        fracta    = chorda_ex_literis("", piscina);
-        per (j = ZEPHYRUM; j < i; j++)
-        {
-            si (   (   status[j] == SANANDI_FRACTUM
-                    || status[j] == SANANDI_OMISSUM)
-                && _pendet(actio, *(FabricaActio**)xar_obtinere(ordo,
-                       j)))
-            {
-                impedita  = VERUM;
-                fracta    = (*(FabricaActio**)xar_obtinere(ordo,
-                    j))->titulus;
-                frange;
-            }
-        }
-        si (impedita)
-        {
-            status[i] = SANANDI_OMISSUM;
-            _sanationem_notare(sutura, piscina, sanationes, actio,
-                FABRICA_OMISSUM,
-                _iungere(piscina, "dependentia fracta: ", fracta, ""),
-                ZEPHYRUM);
-            perge;
-        }
-
-        causa = chorda_ex_literis("", piscina);
-        si (_exitus_recentes(sutura, actio, piscina, &causa))
-        {
-            /* siccum: recens nunc, sed post actionem agendam fortasse
-             * non */
-            si (siccum)
-            {
-                per (j = ZEPHYRUM; j < i; j++)
-                {
-                    si (   (   status[j] == SANANDI_AGENDUM
-                            || status[j] == SANANDI_FORTASSE)
-                        && _pendet(actio,
-                               *(FabricaActio**)xar_obtinere(ordo, j)))
-                    {
-                        status[i] = SANANDI_FORTASSE;
-                        _sanationem_notare(sutura, piscina, sanationes,
-                            actio,
-                            FABRICA_FORTASSE, _iungere(piscina,
-                                "post ", (*(FabricaActio**)xar_obtinere(
-                                ordo, j))->titulus, ""), ZEPHYRUM);
-                        frange;
-                    }
-                }
-            }
-            si (status[i] == SANANDI_NONDUM)
-            {
-                status[i] = SANANDI_RECENS;
-            }
-            perge;
-        }
-        si (siccum)
-        {
-            status[i] = SANANDI_AGENDUM;
-            _sanationem_notare(sutura, piscina, sanationes, actio,
-                FABRICA_AGENDUM,
-                causa,
-                ZEPHYRUM);
-            perge;
-        }
-
-        /* praecondiciones ignotae: semel per cursum */
-        per (j = ZEPHYRUM;
-             actio->praecondiciones != NIHIL
-             && j < xar_numerus(actio->praecondiciones);
-             j++)
-        {
-            s32 k;
-
-            k = _index_actionis(ordo,
-                *(chorda*)xar_obtinere(actio->praecondiciones, j));
-            si (   k < 0
-                || status[k] != SANANDI_NONDUM
-                || !_actio_ignota(*(FabricaActio**)xar_obtinere(ordo,
-                       (i32)k)))
-            {
-                perge;
-            }
-            duratio = ZEPHYRUM;
-            si (_actionem_agere(sutura, *(FabricaActio**)xar_obtinere(
-                    ordo, (i32)k), piscina, &duratio, &causa))
-            {
-                status[k] = SANANDI_PRAEPARATUM;
-                _sanationem_notare(sutura, piscina, sanationes,
-                    *(FabricaActio**)xar_obtinere(ordo, (i32)k),
-                    FABRICA_PRAEPARATUM, chorda_ex_literis("", piscina),
-                    duratio);
-            }
-            alioquin
-            {
-                status[k] = SANANDI_FRACTUM;
-                _sanationem_notare(sutura, piscina, sanationes,
-                    *(FabricaActio**)xar_obtinere(ordo, (i32)k),
-                    FABRICA_FRACTUM, causa, duratio);
-            }
-        }
-        /* praecondicio modo fracta: omittitur */
-        per (j = ZEPHYRUM;
-             actio->praecondiciones != NIHIL
-             && j < xar_numerus(actio->praecondiciones);
-             j++)
-        {
-            s32 k;
-
-            k = _index_actionis(ordo,
-                *(chorda*)xar_obtinere(actio->praecondiciones, j));
-            si (   k >= 0
-                && (   status[k] == SANANDI_FRACTUM
-                    || status[k] == SANANDI_OMISSUM))
-            {
-                status[i] = SANANDI_OMISSUM;
-                _sanationem_notare(sutura, piscina, sanationes, actio,
-                    FABRICA_OMISSUM,
-                    _iungere(piscina, "praecondicio fracta: ",
-                        *(chorda*)xar_obtinere(actio->praecondiciones,
-                        j),
-                        ""), ZEPHYRUM);
-                frange;
-            }
-        }
-        si (status[i] == SANANDI_OMISSUM)
+        si (!_ante_agere(sutura, ordo, i, status, sanationes, siccum,
+                piscina))
         {
             perge;
         }
-
-        duratio = ZEPHYRUM;
-        si (!_actionem_agere(sutura, actio, piscina, &duratio, &causa))
-        {
-            status[i] = SANANDI_FRACTUM;
-            _sanationem_notare(sutura, piscina, sanationes, actio,
-                FABRICA_FRACTUM,
-                causa,
-                duratio);
-            perge;
-        }
-        /* post-condicio (Review Focus 3): exitus 0 non sufficit */
-        si (!_exitus_recentes(sutura, actio, piscina, &causa))
-        {
-            status[i] = SANANDI_FRACTUM;
-            _sanationem_notare(sutura, piscina, sanationes, actio,
-                FABRICA_FRACTUM,
-                _iungere(piscina, "exitus 0 sed non RECENS: ", causa,
-                    ""), duratio);
-            perge;
-        }
-        status[i] = SANANDI_SANATUM;
-        _sanationem_notare(sutura, piscina, sanationes, actio,
-            FABRICA_SANATUM,
-            chorda_ex_literis("", piscina), duratio);
+        duratio  = ZEPHYRUM;
+        causa    = chorda_ex_literis("", piscina);
+        actum = _actionem_agere(sutura, actio, piscina, &duratio,
+            &causa);
+        _post_agere(sutura, actio, i, status, sanationes, actum, causa,
+            duratio, piscina);
     }
     redde sanationes;
 }

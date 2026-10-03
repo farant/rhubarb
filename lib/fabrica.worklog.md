@@ -1302,3 +1302,55 @@ Measurements (wall, whole suite; the 13 test executables alone take
 First new-runner measurement was SLOWER (warm 38.6 s): the 13 aedilis
 calls ran without --thesaurus (6.8 s vs 0.26 s warm). One store for
 both tools (FABRICA_THESAURUS) fixed it.
+
+## 2026-10-03 - plan 2 T6: parallel heal
+
+Shape: the core stays pure. New seam member `agere_simul` (NIHIL = the
+old serial path, untouched; FABRICA_FILA=1 gives exactly that). Core
+(`_sanare_undatim`): waves from fabrica_undas_formare (no dependency,
+disjoint envelopes, no shared areas); per wave the existing pre-logic
+(`_ante_agere`, extracted unchanged from the old loop), unsafe actions
+ALONE with their own snapshot, safe ones (lectiones="verum") as one
+batch (`_undam_agere`), results recorded in title order. Tool
+(`_agere_simul`): up to FABRICA_FILA children (default
+hw.perflevel0.physicalcpu = 4 here) via processus_incipere/pulsare/
+metere, each with its own ABSOLUTE FABRICA_LECTIONES set just before
+starting; after a failure running children finish and nothing new
+starts. _agere split into _mandatum_parare + _actum_complere, shared.
+
+Ruling - TWO write checks for a batch (the plan's "S trace" alone would
+have checked LESS than today: bash generators' own `>` writes are never
+in the ledger): (1) per member, recorded S writes vs its envelope -
+attributed failure; (2) one snapshot around the batch - writes outside
+the union of envelopes AND recorded by no member fail every member
+("scriptor ignotus"). A recorded write is excluded from (2) - first
+version blamed the innocent member too (test III).
+Found while testing: each member's own ledger file was flagged by the
+wave snapshot - per-action ledgers are now part of every action's own
+envelope. Found on the REAL tree (not by any test): since T3 every
+in-place snippet heal writes the store (aedilis --thesaurus), which no
+snippet declares - all 19 FRACTUM. T3 only exercised judging (scratch).
+The store's three subdirectories are now involucrum (fabrica-owned,
+atomic) like acta and fabrica.db - the root's .o files stay real
+envelope business. (Trailing-slash trap: an ARBOR locus adds '/' itself;
+the first fix matched nothing and the new test stayed red - good.)
+Policy after a failure in parallel mode: nothing new STARTS, but every
+remaining action is still judged - up to date stays silent, a broken
+dependency is named (fumus XVIII caught the generic cause winning), only
+actions that would have run are OMISSUM "post fracturam".
+
+Evidence: core tests I-IV + IIIb (3 safe + 1 unsafe + dependent; failure
+in a batch; S outside envelope; store write; unrecorded write), plants
+red (all actions "safe", no wave check, no attribution filter, no store
+involucrum). Fumus XXVIII (4 x 2 s -> 2.15 s with FILA=4), XXIX (one of
+four fails: three SANATUM, dependent OMISSUM naming it, exit 1), XXX
+(unsafe action's interval overlaps none); plants: tool never wires
+agere_simul -> 8.2 s red; unsafe treated as safe -> overlap red.
+Real tree, heal of the 19 snippet actions (one output each corrupted):
+serial 199.5 s, parallel 109.5 s. The actions parallelize (batch bound
+by fragmentum_compile_tests ~36 s); what remains is the judge's
+regenerations before and after each action, still serial (~70 s) -
+parallel judging is the next lever, not in T6. Remaining failures in
+those runs were other processes writing in the tree during the heal
+(oratio/build/cursor.sera/, tabularium.db-wal) - reported correctly as
+"aut manu mutata dum currebat".
