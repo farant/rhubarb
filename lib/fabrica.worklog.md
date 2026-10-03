@@ -1434,3 +1434,14 @@ excludenda_silva 17 s, lectores_cocti 4.5, tabulae_silvae 3.3,
 canones_cocti 1.6, numeri_latinae 1.2 (~47 s). Converting them to
 lectiones="verum" (the T2 move) would let traces skip them and make them
 prefetchable - next family candidate.
+
+## 2026-10-03 - plan 2 T8: slice 2 closed
+
+"As built" is spec 2 par. XIII (done-means vs evidence, built beyond the
+plan, found on the way, known limits with ledger ids). Ledger note
+…NKVA closes the slice; the progress ledger
+(.superpowers/sdd/fabrica-plan-2/progress.md) carries every ruling.
+Open for Fran: excubitor deletion via batch job …W0ZBW; the store's
+lint exemption; promotion (…XZQG); clang non-determinism (…ACYVJ).
+Next family candidate: the six non-traced generators that now dominate
+-plenus (…VFF5D).
