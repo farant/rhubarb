@@ -101,6 +101,10 @@ colour form; truncated forms; unknowns counted. The ROUND TRIP
 styles. Plants: `:` treated as `;` (breaks `38:2::r:g:b`); a reset
 (22) clearing only bold, not faint.
 
+T2 as built: 117 asserts; the round trip found that a full style
+exceeds the 24-parameter CSI cap (Ghostty MAX_PARAMS): the encoder
+splits into a second sequence by whole groups.
+
 **T3 — tessera emits through the codec.** `_stilum_emittere` becomes a
 lossless conversion `TesseraStilus` → `StilusTerminalis` +
 `stilus_codificare(aed, NIHIL, …)`; `TesseraColores` maps to the

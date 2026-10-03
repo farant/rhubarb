@@ -10,6 +10,8 @@
  * sublinea (;4 simplex, ;4:n ceterae), ;5 ;7 ;8 ;9 ;53, deinde
  * colores (;38 / ;48 / ;58: 2;r;g;b aut 5;n), deinde 'm'. Subset
  * tesserae (1 2 3 4 7 9, littera, fundus) octetim idem ac olim.
+ * Plus quam XXIV parametra: series altera (sine 0) - terminalis seriem
+ * nimis longam totam abicit (reditus T2 id invenit).
  * Colores tabulae semper 5;n (non 30-37 / 90-97).
  */
 
@@ -21,6 +23,7 @@
 
 #include "latina.h"
 #include "chorda_aedificator.h"
+#include "series_terminalis.h"
 
 nomen enumeratio {
     STILUS_COLOR_NATIVUS = ZEPHYRUM,   /* defalta terminalis */
@@ -60,6 +63,11 @@ nomen structura {
     StilusSublinea sublinea;
 } StilusTerminalis;
 
+/* Parametra per seriem SGR: plura terminalis (Ghostty MAX_PARAMS)
+ * seriem totam abicit - codificatio in series plures dividit (greges
+ * integri) */
+#define STILUS_PARAMETRA_MAXIMA   SERIES_PARAMETRA_MAXIMA
+
 /* Codificatio colorum RGB */
 #define STILUS_CODIFICATIO_PLENA  ZEPHYRUM   /* 38;2;r;g;b */
 #define STILUS_CODIFICATIO_CCLVI  I          /* RGB quantizatum: 5;n */
@@ -83,6 +91,18 @@ stilus_codificare (
     constans StilusTerminalis* prior,
     constans StilusTerminalis* novus,
                           i32  codificatio);
+
+/* Decodificare (T2): lexema CSI 'm' (series_terminalis) in stilum
+ * applicare - separatores ';' et ':' (etiam mixti), 38;5;n,
+ * 38;2;r;g;b, 38:2::r:g:b, 38:2:r:g:b, 30-37/40-47/90-97/100-107,
+ * reseta (22 crassum ET obscurum). Ignota praetereuntur et numerantur
+ * (redde numerum), numquam fatalia; forma coloris truncata reliqua
+ * consumit. Lexema non SGR (privatum, intermedia: '>4;2m' xterm) nihil
+ * mutat. Oraculum: Ghostty sgr.zig. */
+i32
+stilus_applicare (
+    constans SeriesLexema* lexema,
+         StilusTerminalis* st);
 
 /* Tabula CCLVI xterm defalta: index -> 0x00RRGGBB (XVI ANSI xterm,
  * cubus VI x VI x VI gradibus 0/95/135/175/215/255, XXIV grisei

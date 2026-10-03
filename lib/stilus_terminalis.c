@@ -1,6 +1,7 @@
 /* stilus_terminalis.c - Vide stilus_terminalis.h */
 
 #include "stilus_terminalis.h"
+#include <stdio.h>
 #include <string.h>
 
 
@@ -21,38 +22,62 @@ _colores_aequales (
     redde (b32)(a.genus == STILUS_COLOR_NATIVUS || a.valor == b.valor);
 }
 
-/* Color SGR: praefixum (";38;", ";48;", ";58;") + "5;n" aut "2;r;g;b";
+/* Gregem parametrorum scribere (gregis parametra numquam dividuntur).
+ * Plus quam SERIES_PARAMETRA_MAXIMA (XXIV, ut Ghostty) in una serie =
+ * series tota a terminali abicitur: tunc 'm' et series nova (sine
+ * 0). */
+interior vacuum
+_gregem (
+      ChordaAedificator* a,
+                    i32* numerus,
+     constans character* textus,
+                    i32  parametra)
+{
+    si (*numerus + parametra > STILUS_PARAMETRA_MAXIMA)
+    {
+        chorda_aedificator_appendere_literis(a, "m\033[");
+        *numerus = ZEPHYRUM;
+    }
+    si (*numerus > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_character(a, ';');
+    }
+    chorda_aedificator_appendere_literis(a, textus);
+    *numerus += parametra;
+}
+
+/* Color SGR: praefixum (38, 48, 58) + "5;n" aut "2;r;g;b" ut grex;
  * NATIVUS nihil (reditio nuda defaltam dat) */
 interior vacuum
 _colorem (
       ChordaAedificator* a,
-     constans character* praefixum,
+                    i32* numerus,
+                    i32  praefixum,
             StilusColor  c,
                     i32  codificatio)
 {
+    character textus[XXXII];
+
     si (c.genus == STILUS_COLOR_NATIVUS)
     {
         redde;
     }
-    chorda_aedificator_appendere_literis(a, praefixum);
-    si (c.genus == STILUS_COLOR_TABULA)
+    si (   c.genus     == STILUS_COLOR_TABULA
+        || codificatio == STILUS_CODIFICATIO_CCLVI)
     {
-        chorda_aedificator_appendere_literis(a, "5;");
-        chorda_aedificator_appendere_i32(a, c.valor & 0xFF);
+        i32 index = (c.genus == STILUS_COLOR_TABULA)
+            ? (c.valor & 0xFF) : stilus_quantizare(c.valor);
+
+        sprintf(textus, "%u;5;%u", (unsigned)praefixum,
+            (unsigned)index);
+        _gregem(a, numerus, textus, III);
         redde;
     }
-    si (codificatio == STILUS_CODIFICATIO_CCLVI)
-    {
-        chorda_aedificator_appendere_literis(a, "5;");
-        chorda_aedificator_appendere_i32(a, stilus_quantizare(c.valor));
-        redde;
-    }
-    chorda_aedificator_appendere_literis(a, "2;");
-    chorda_aedificator_appendere_i32(a, (c.valor >> XVI) & 0xFF);
-    chorda_aedificator_appendere_character(a, ';');
-    chorda_aedificator_appendere_i32(a, (c.valor >> VIII) & 0xFF);
-    chorda_aedificator_appendere_character(a, ';');
-    chorda_aedificator_appendere_i32(a, c.valor & 0xFF);
+    sprintf(textus, "%u;2;%u;%u;%u", (unsigned)praefixum,
+        (unsigned)((c.valor >> XVI) & 0xFF),
+        (unsigned)((c.valor >> VIII) & 0xFF),
+        (unsigned)(c.valor & 0xFF));
+    _gregem(a, numerus, textus, V);
 }
 
 
@@ -88,49 +113,54 @@ stilus_codificare (
     constans StilusTerminalis* st,
                           i32  codificatio)
 {
-    i32 o = st->ornamenta;
+    i32 o        = st->ornamenta;
+    i32 numerus  = ZEPHYRUM;
 
     si (prior && stilus_aequalis(prior, st))
     {
         redde;      /* v1: differentia nulla = nihil; aliter plena */
     }
-    chorda_aedificator_appendere_literis(a, "\033[0");
+    chorda_aedificator_appendere_literis(a, "\033[");
+    _gregem(a, &numerus, "0", I);
     si (o & STILUS_CRASSUM)
-    { chorda_aedificator_appendere_literis(a, ";1");
+    { _gregem(a, &numerus, "1", I);
     }
     si (o & STILUS_OBSCURUM)
-    { chorda_aedificator_appendere_literis(a, ";2");
+    { _gregem(a, &numerus, "2", I);
     }
     si (o & STILUS_CURSIVUM)
-    { chorda_aedificator_appendere_literis(a, ";3");
+    { _gregem(a, &numerus, "3", I);
     }
     si (st->sublinea == STILUS_SUBLINEA_SIMPLEX)
     {
-        chorda_aedificator_appendere_literis(a, ";4");
+        _gregem(a, &numerus, "4", I);
     }
     alioquin si (st->sublinea != STILUS_SUBLINEA_NULLA)
     {
-        chorda_aedificator_appendere_literis(a, ";4:");
-        chorda_aedificator_appendere_i32(a, (i32)st->sublinea);
+        character textus[VIII];
+
+        sprintf(textus, "4:%u", (unsigned)st->sublinea);
+        /* sub-parametrum ut parametrum numeratur */
+        _gregem(a, &numerus, textus, II);
     }
     si (o & STILUS_NICTANS)
-    { chorda_aedificator_appendere_literis(a, ";5");
+    { _gregem(a, &numerus, "5", I);
     }
     si (o & STILUS_INVERSUM)
-    { chorda_aedificator_appendere_literis(a, ";7");
+    { _gregem(a, &numerus, "7", I);
     }
     si (o & STILUS_INVISIBILE)
-    { chorda_aedificator_appendere_literis(a, ";8");
+    { _gregem(a, &numerus, "8", I);
     }
     si (o & STILUS_TRANSFIXUM)
-    { chorda_aedificator_appendere_literis(a, ";9");
+    { _gregem(a, &numerus, "9", I);
     }
     si (o & STILUS_SUPERLINEA)
-    { chorda_aedificator_appendere_literis(a, ";53");
+    { _gregem(a, &numerus, "53", I);
     }
-    _colorem(a, ";38;", st->color_litterae, codificatio);
-    _colorem(a, ";48;", st->color_fundi, codificatio);
-    _colorem(a, ";58;", st->color_sublineae, codificatio);
+    _colorem(a, &numerus, XXXVIII, st->color_litterae, codificatio);
+    _colorem(a, &numerus, XLVIII, st->color_fundi, codificatio);
+    _colorem(a, &numerus, LVIII, st->color_sublineae, codificatio);
     chorda_aedificator_appendere_character(a, 'm');
 }
 
@@ -224,4 +254,291 @@ stilus_quantizare (
         redde CCXXXII + griseus;
     }
     redde XVI + XXXVI * index[0] + VI * index[1] + index[2];
+}
+
+
+/* ==================================================
+ * Decodificatio (T2): Ghostty sgr.zig Parser.next translatus, attributa
+ * in stilum applicata
+ * ================================================== */
+
+/* ':' POST parametrum i? (series_terminalis: bitus i) */
+interior b32
+_colon (
+    constans SeriesLexema* l,
+                      i32  i)
+{
+    redde (b32)(   i < (i32)(magnitudo(l->separatores) * VIII)
+                && (l->separatores & ((i32)I << i)) != ZEPHYRUM);
+}
+
+/* ':' consecutivi ab i (ultimum parametrum separatorem non habet) */
+interior i32
+_colon_numerare (
+    constans SeriesLexema* l,
+                      i32  i)
+{
+    i32 n = ZEPHYRUM;
+
+    dum (i < l->numerus_parametrorum - I && _colon(l, i))
+    {
+        n++;
+        i++;
+    }
+    redde n;
+}
+
+interior StilusColor
+_color_ponere (
+    StilusColorGenus genus,
+                 i32 valor)
+{
+    StilusColor c;
+
+    c.genus = genus;
+    c.valor = valor;
+    redde c;
+}
+
+/* 38/48/58 (lexema[i] = 38 aut 48 aut 58). Redde parametros consumptos;
+ * 0 = forma mala (vocans ignotum numerat; truncata reliqua consumit) */
+interior i32
+_colorem_legere (
+    constans SeriesLexema* l,
+                      i32  i,
+                      b32  colon,
+              StilusColor* c)
+{
+     constans s32* p        = l->parametra + i;
+              i32  reliqua  = l->numerus_parametrorum - i;
+
+    si (reliqua < II)
+    {
+        redde ZEPHYRUM;
+    }
+    si (p[1] == V)
+    {
+        si (reliqua < III)
+        {
+            redde ZEPHYRUM;
+        }
+        *c = _color_ponere(STILUS_COLOR_TABULA, (i32)p[2] & 0xFF);
+        redde III;
+    }
+    si (p[1] != II || reliqua < V)
+    {
+        redde ZEPHYRUM;
+    }
+    si (!colon)
+    {
+        *c = _color_ponere(STILUS_COLOR_RGB, (((i32)p[2] & 0xFF) << XVI)
+            | (((i32)p[3] & 0xFF) << VIII) | ((i32)p[4] & 0xFF));
+        redde V;
+    }
+    /* ':' : 3 colones = r:g:b; 4 = spatium:r:g:b; aliter mala */
+    commutatio (_colon_numerare(l, i + I))
+    {
+        casus III:
+            *c = _color_ponere(STILUS_COLOR_RGB, (((i32)p[2] & 0xFF)
+                << XVI)
+                | (((i32)p[3] & 0xFF) << VIII) | ((i32)p[4] & 0xFF));
+            redde V;
+        casus IV:
+            si (reliqua < VI)
+            {
+                redde ZEPHYRUM;
+            }
+            *c = _color_ponere(STILUS_COLOR_RGB, (((i32)p[3] & 0xFF)
+                << XVI)
+                | (((i32)p[4] & 0xFF) << VIII) | ((i32)p[5] & 0xFF));
+            redde VI;
+        ordinarius:
+            redde ZEPHYRUM;
+    }
+}
+
+/* Ornamenta per numerum SGR: bits ponendi et tollendi (22 crassum ET
+ * obscurum tollit; 6 = 5, nictans). VERUM si numerus ornamenti. */
+interior b32
+_ornamentum (
+                 s32  numerus,
+    StilusTerminalis* st)
+{
+    hic_manens constans structura {
+        s32 numerus;
+        i32 ponere;
+        i32 tollere;
+    } TABULA[] = {
+        { I,      STILUS_CRASSUM,    ZEPHYRUM },
+        { II,     STILUS_OBSCURUM,   ZEPHYRUM },
+        { III,    STILUS_CURSIVUM,   ZEPHYRUM },
+        { V,      STILUS_NICTANS,    ZEPHYRUM },
+        { VI,     STILUS_NICTANS,    ZEPHYRUM },
+        { VII,    STILUS_INVERSUM,   ZEPHYRUM },
+        { VIII,   STILUS_INVISIBILE, ZEPHYRUM },
+        { IX,     STILUS_TRANSFIXUM, ZEPHYRUM },
+        { XXII,   ZEPHYRUM, STILUS_CRASSUM | STILUS_OBSCURUM },
+        { XXIII,  ZEPHYRUM, STILUS_CURSIVUM },
+        { XXV,    ZEPHYRUM, STILUS_NICTANS },
+        { XXVII,  ZEPHYRUM, STILUS_INVERSUM },
+        { XXVIII, ZEPHYRUM, STILUS_INVISIBILE },
+        { XXIX,   ZEPHYRUM, STILUS_TRANSFIXUM },
+        { LIII,   STILUS_SUPERLINEA, ZEPHYRUM },
+        { LV,     ZEPHYRUM, STILUS_SUPERLINEA }
+    };
+    i32 k;
+
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(TABULA)
+        / magnitudo(TABULA[0]));
+         k++)
+    {
+        si (TABULA[k].numerus == numerus)
+        {
+            st->ornamenta = (st->ornamenta | TABULA[k].ponere)
+                & ~TABULA[k].tollere;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+i32
+stilus_applicare (
+    constans SeriesLexema* l,
+         StilusTerminalis* st)
+{
+    i32 i       = ZEPHYRUM;
+    i32 ignota  = ZEPHYRUM;
+
+    /* SGR solum: CSI 'm' sine privato aut intermediis ('>4;2m' =
+     * modifyOtherKeys xterm, non stilus) */
+    si (   l->genus    != SERIES_CSI || l->finale != 'm'
+        || l->privatum != 0
+        || l->numerus_intermediorum > ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    si (l->numerus_parametrorum == ZEPHYRUM)
+    {
+        stilus_nativus(st);
+        redde ZEPHYRUM;
+    }
+    dum (i < l->numerus_parametrorum)
+    {
+                 s32 p      = l->parametra[i];
+                 b32 colon  = _colon(l, i);
+                 i32 n;
+         StilusColor c;
+
+        /* ':' solum post 4, 38, 48, 58: aliter cursus ignotus */
+        si (   colon && p != IV && p != XXXVIII && p != XLVIII
+            && p != LVIII)
+        {
+            i += _colon_numerare(l, i) + I;
+            ignota++;
+            perge;
+        }
+        si (_ornamentum(p, st))
+        {
+            i++;
+            perge;
+        }
+        commutatio (p)
+        {
+            casus ZEPHYRUM: stilus_nativus(st);                 frange;
+            casus XXI: st->sublinea = STILUS_SUBLINEA_DUPLEX;    frange;
+            casus XXIV: st->sublinea = STILUS_SUBLINEA_NULLA;    frange;
+            casus XXXIX:
+                st->color_litterae = _color_ponere(STILUS_COLOR_NATIVUS,
+                    ZEPHYRUM);
+                frange;
+            casus XLIX:
+                st->color_fundi = _color_ponere(STILUS_COLOR_NATIVUS,
+                    ZEPHYRUM);
+                frange;
+            casus LIX:
+                st->color_sublineae =
+                    _color_ponere(STILUS_COLOR_NATIVUS,
+                    ZEPHYRUM);
+                frange;
+            casus IV:
+                si (!colon)
+                {
+                    st->sublinea = STILUS_SUBLINEA_SIMPLEX;
+                    frange;
+                }
+                /* 4:n - unus sub-parametrus; plures = ignotum */
+                si (   i + I >= l->numerus_parametrorum
+                    || _colon(l, i + I))
+                {
+                    n = _colon_numerare(l, i);
+                    i += n;      /* +I infra */
+                    ignota++;
+                    frange;
+                }
+                i++;
+                st->sublinea = (l->parametra[i] >= ZEPHYRUM
+                                && l->parametra[i] <= V)
+                    ? (StilusSublinea)l->parametra[i]
+                    : STILUS_SUBLINEA_SIMPLEX;
+                frange;
+            casus XXXVIII:
+            casus XLVIII:
+            casus LVIII:
+                n = _colorem_legere(l, i, colon, &c);
+                si (n == ZEPHYRUM)
+                {
+                    /* forma mala: ':' cursus aut reliqua consumuntur
+                     * (Ghostty '5' reliquum ut nictans legeret) */
+                    i = colon ? i + _colon_numerare(l,
+                        i) : l->numerus_parametrorum;
+                    ignota++;
+                    frange;
+                }
+                si (p == XXXVIII)
+                {
+                    st->color_litterae = c;
+                }
+                alioquin si (p == XLVIII)
+                {
+                    st->color_fundi = c;
+                }
+                alioquin
+                {
+                    st->color_sublineae = c;
+                }
+                i += n - I;
+                frange;
+            ordinarius:
+                si (p >= XXX && p <= XXXVII)
+                {
+                    st->color_litterae =
+                        _color_ponere(STILUS_COLOR_TABULA,
+                        (i32)(p - XXX));
+                }
+                alioquin si (p >= XL && p <= XLVII)
+                {
+                    st->color_fundi = _color_ponere(STILUS_COLOR_TABULA,
+                        (i32)(p - XL));
+                }
+                alioquin si (p >= XC && p <= XCVII)
+                {
+                    st->color_litterae =
+                        _color_ponere(STILUS_COLOR_TABULA,
+                        (i32)(p - XC) + VIII);
+                }
+                alioquin si (p >= C && p <= CVII)
+                {
+                    st->color_fundi = _color_ponere(STILUS_COLOR_TABULA,
+                        (i32)(p - C) + VIII);
+                }
+                alioquin
+                {
+                    ignota++;
+                }
+                frange;
+        }
+        i++;
+    }
+    redde ignota;
 }
