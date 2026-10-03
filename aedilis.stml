@@ -29,6 +29,7 @@
     <via (>officina/instrumenta
     <via (>silva/fontes
     <via (>officina/amalgama
+    <via (>css/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

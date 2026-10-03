@@ -1466,3 +1466,19 @@ runners (css, crusta, root compile_tests.sh), then slice 3's interview.
 - toml runner rebased onto the helper: generic oracle vs HEAD's T5 runner
   = consensus (45 objects identical, 370 lines).
 Batch job …W0ZBW rubric v2 points at these.
+
+## 2026-10-03 - excubitor migration step 2: css
+
+css/compile_probationes.sh onto tools/cursor_communis.sh (hand lists,
+newest-header rule and its BLOCKING excubitor call removed). The oracle's
+first run caught a real gap: probatio_css_adaptare failed to link
+(css_ligator_solvere) - aedilis resolves includes through aedilis.stml's
+<inclusa> roots, not the runner's -I flags, and css/fontes was not a
+root, so css_adaptare.c / css_lexicon.c never entered the closure. The
+old runner hid it by linking every css source into every test. Added
+`css/fontes` LAST in aedilis.stml (lowest priority: cannot shadow;
+names css_*.h unique). Every materia client will need its own line
+(toml/fontes was already there). Commit judge: the 43 committed
+generated artifacts touched stay RECENS (no snippet changes).
+Oracle: consensus, 33 objects identical, 299 test lines; hand-list slack
+excerptum, materia_pictor, runae, runae_tabulae, utf8 (never needed).
