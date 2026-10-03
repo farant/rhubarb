@@ -75,6 +75,11 @@ grid size but the layout stays put.
 Red: the empty suite reports exit 2 (nothing ran), then one trivial
 test runs.
 
+A0 as built: runner + gate `ludus_tessera`; tessera ONLY through its
+amalgam (saltuarius's pin - checked livable beside eventus.h); smoke
+test 5 asserts, two plants. Deferred: aedilis root (to A1, first
+fontes file); gate-inventory row (in main - no ledger in secunda).
+
 **A1 — the pons over `terminalis`.** `TesseraPons` whose `scribere` =
 `terminalis_scribere`, `amplitudo` = `terminalis_amplitudo` (columns,
 rows), `resumptum` = `terminalis_resumptum`; `intrare`/`egredi` do NOT
