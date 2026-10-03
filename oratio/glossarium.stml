@@ -1247,4 +1247,26 @@
     <forma textus="sanationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
+  <vocabulum lemma="fonto" lingua="latina" classis="verbum" nota="vox domus (ex fons): scriptum bash FONTARE = 'source' / '.' - plagula in crusta currente legitur, variabiles communicat; 'FONTANDUM, non exsequendum' (tools/cursor_communis.sh); sedes crusta/fontes/crusta_fontationes.c (fabrica spec 3 T2)">
+    <forma textus="fontare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="fontat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="fontatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="fontata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="fontandum" forma-verbi="gerundivum"/>
+  </vocabulum>
+
+  <vocabulum lemma="fontatio" lingua="latina" classis="substantivum" nota="vox domus (fontare): locus ubi scriptum aliud fontatur aut exsequitur, et via eius - quod clavis iudicii portae continet quia liber lectionum lectiones bash non videt; sedes crusta/fontes/crusta_fontationes.c (CrustaFontatio, crusta_fontationes_derivare; fabrica spec 3 par. III.2)">
+    <forma textus="fontatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="fontationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="fontationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="fontationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="fontationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="irresolutus" lingua="latina" classis="adiectivum" nota="Lat. tard. irresolutus (in- + resolutus, non solutus): hic locus fontationis cuius via statice certa non est ($X ignotum, ${X:-y}, plagula non sana) - clavis iudicii IGNOTUM; sedes crusta/fontes/crusta_fontationes.c (CRUSTA_FONTATIO_IRRESOLUTUM)">
+    <forma textus="irresolutus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="irresolutum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="irresoluta" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
 </glossarium>

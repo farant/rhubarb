@@ -1566,3 +1566,16 @@ store, 13/13). Full classification in spec 3 §XI. The non-obvious parts:
   wrong).
 - 4,192 entries outside the store; 3,025 files / 18.1 MB to re-digest,
   0.42 s - the < 2 s RECENS target is fine.
+
+## 2026-10-03 - slice 3 T2: crusta/fontationes.sh
+
+Script-input derivation for verdict keys landed in crusta (library
+crusta_fontationes.{h,c}, tool + launcher, test with 36 assertions,
+plants A/B/C red). On the toml runner it finds exactly the spike's
+expectation (sera, vexilla, cursor_communis, mensor_suitae,
+tomllib_aurum) plus the conditional builder chain; instrumenta
+bin/aedilis, bin/compilator, bin/mensor (+ bin/fabrica via builders);
+productum toml/build/*. Details and design notes:
+crusta/fontes/crusta_fontationes.worklog.md. Name per A2 would have been
+bin/fontationes; it is a self-building launcher like facies.sh instead
+(no installata entry needed until T5 decides how fabrica calls it).
