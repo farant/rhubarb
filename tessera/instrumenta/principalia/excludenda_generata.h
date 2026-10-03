@@ -72,6 +72,7 @@ interior constans character* constans EXCLUDENDA_CAUDAE[] = {
 
 interior constans character* constans EXCLUDENDA_CLAVIUM[] = {
     "claves_codex_ex_macos",
+    "claves_littera_ex_codex",
     NIHIL
 };
 

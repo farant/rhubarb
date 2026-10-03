@@ -134,6 +134,27 @@ claves_codex_ex_littera (
     }
 }
 
+s32
+claves_littera_ex_codex (
+    EventusCodex codex)
+{
+    s32 r;
+
+    /* per tabulam directam: inversum numquam ab ea discedit */
+    si (codex == EVENTUS_CODEX_IGNOTUS)
+    {
+        redde ZEPHYRUM;
+    }
+    per (r = XXXII; r < CXXVII; r++)
+    {
+        si (claves_codex_ex_littera(r) == codex)
+        {
+            redde r;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
 /* kitty 'functional key definitions' (kitty doc keyboard-protocol;
  * Ghostty src/input/kitty.zig, MIT, pin 12752b2) */
 EventusCodex

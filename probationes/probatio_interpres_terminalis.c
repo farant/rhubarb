@@ -463,6 +463,15 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS (_cauda_reddere(&b),
         "DL@25,30 U0@25,30");
 
+    imprimere("\n--- VI-bis. modifyOtherKeys CSI 27;m;c~ (B6a) ---\n");
+    /* codificator legacy Enter/Tab/Escape modificatos sic mittit */
+    CREDO_VERUM (_videre(&b, "\x1b[27;5;13~", FALSUM, "Kret+C"));
+    CREDO_VERUM (_videre(&b, "\x1b[27;2;13~", FALSUM, "Kret+S"));
+    CREDO_VERUM (_videre(&b, "\x1b[27;5;9~", FALSUM, "Ktab+C"));
+    CREDO_VERUM (_videre(&b, "\x1b[27;6;27~", FALSUM, "Kesc+S+C"));
+    CREDO_VERUM (_videre(&b, "\x1b[27;5;127~", FALSUM, "Kbs+C"));
+    CREDO_VERUM (_videre(&b, "\x1b[27;5;97~", FALSUM, "KA:a+C"));
+
     imprimere("\n--- VII. kitty (B2b): vexilla 1|2|4|8|16 ---\n");
     interpres_initiare(&b.interpres, X, XX);
     b.interpres.kitty_vexilla = 0x1F;

@@ -37,6 +37,7 @@ declare -a SOURCE_FILES=(
     "lib/chorda_aedificator.c"
     "lib/claves_physicae.c"
     "lib/cliens_tabularii.c"
+    "lib/codificator_terminalis.c"
     "lib/color.c"
     "lib/coloratio.c"
     "lib/componens.c"

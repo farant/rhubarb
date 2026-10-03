@@ -54,7 +54,7 @@
       <eventus genus="textus" contentum="A"/>
       <eventus genus="clavis_liberatus" codex="KeyA" actio="soluta"/>
     <terminalis profilum="legacy" octeti="A"/>
-    <terminalis profilum="kitty" octeti="\e[97:65;2;65u\e[97:65;2:3u"/>
+    <terminalis profilum="kitty" octeti="\e[97:65;2;65u\e[97;2:3u"/>
   <scaena
     titulus="tabula"
      genera="clavis_depressus clavis_liberatus textus"
@@ -143,7 +143,7 @@
         modificantes="8388608"/>
     </>
     <terminalis profilum="legacy" octeti="\e[1;2D\e[1;3C\e[A\e[B"/>
-    <terminalis profilum="kitty" octeti="\e[1;2D\e[1;2:3D\e[1;3C\e[1;3:3C\e[A\e[1;1:3A\e[B\e[1;1:3B"/>
+    <terminalis profilum="kitty" octeti="\e[1;2:1D\e[1;2:3D\e[1;3:1C\e[1;3:3C\e[1;1:1A\e[1;1:3A\e[1;1:1B\e[1;1:3B"/>
   <scaena titulus="effugium" genera="clavis_depressus textus" excusationes="codex_physicus" ((((>
     <immissio(> <clavis codex="53" modificantes="0" characteres="&#27;" depressa="1"/>
     <expectata(> <eventus genus="clavis_depressus" codex="Escape"/>

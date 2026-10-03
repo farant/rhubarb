@@ -233,9 +233,9 @@ hic_manens constans VectorInitus VECTORES_SEMEN[] = {
  * (exemplar vetus et deperditum, tessera_eventum.h).
  *
  * PRAETERMISSA (causa nominata):
- *   - kitty (u-finalis) et modifyOtherKeys (27;m;c~) ut CLAVES: tessera
- *     ea numquam petit (features/008); hic solum ut strepitus tacitus
- *     probantur (tres vectores infra).
+ *   - kitty (u-finalis) et modifyOtherKeys (27;m;c~): tessera ea numquam
+ *     petit (features/008); olim strepitus tacitus, nunc (B3a, B6a)
+ *     interpres ea decodificat - vectores infra claves exspectant.
  *   - mus SGR/X10 ("filters out ... mouse"): T3.
  *   - series partiales et continuationes sine ESC: T4 (formae morae).
  *   - rxvt "\033[2$": '$' intermedium est (Williams) - finalem
@@ -450,11 +450,14 @@ hic_manens constans VectorInitus VECTORES_CLAVIUM[] = {
      * kitty/rxvt) - olim tacite consumptum */
     { "kitty 97;5u (ctrl+a)", OCT("\033[97;5u"), FALSUM, VECTOR_VALET,
       NIHIL, { EX_RUNA('a', IMP) } },
+    /* B6a (praecedens Frani B3a): interpres modifyOtherKeys decodificat
+     * (codificator legacy Enter/Tab/Escape modificatos sic mittit) */
     { "modifyOtherKeys 27;2;13~ (shift+reditus)", OCT("\033[27;2;13~"),
-      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_REDITUS, MAI) } },
     { "modifyOtherKeys 27;5;127~ (ctrl+retrorsum)",
       OCT("\033[27;5;127~"), FALSUM, VECTOR_VALET, NIHIL,
-          { EX_NIHIL } },
+          { EX_CLAVIS(TESSERA_CLAVIS_RETRORSUM, IMP) } },
 
     /* debita */
     { "x + ESC in fine lectionis, mora, clavis", OCT("x\033"), VERUM,
@@ -775,9 +778,11 @@ hic_manens constans VectorInitus VECTORES_FRUSTORUM[] = {
       { EX_CLAVIS(TESSERA_CLAVIS_SURSUM, ZEPHYRUM),
         EX_CLAVIS(TESSERA_CLAVIS_PAGINA_SURSUM, ZEPHYRUM),
         EX_CLAVIS(TESSERA_CLAVIS_FUGA, ZEPHYRUM) } },
+    /* B6a: modifyOtherKeys decodificatum (alt+tab, shift+'5') */
     { "modifyOtherKeys 27;3;9 27;2;53",
         OCT("\033[27;3;9~\033[27;2;53~"),
-      FALSUM, VECTOR_VALET, NIHIL, { EX_NIHIL } },
+      FALSUM, VECTOR_VALET, NIHIL,
+      { EX_CLAVIS(TESSERA_CLAVIS_TABULA, ALT), EX_RUNA('5', MAI) } },
     { "CSI h ignota", OCT("\033[h"), FALSUM, VECTOR_VALET, NIHIL,
       { EX_NIHIL } },
     { "sgr malformatum <0M", OCT("\033[<0M"), FALSUM, VECTOR_VALET,

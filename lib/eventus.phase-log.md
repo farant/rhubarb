@@ -1386,3 +1386,62 @@ HTML5 remaps C1, so `&#155;` would become U+203A, not the 8-bit CSI
 Red first (a key with `&#27;&#xF702;&amp;` must decode to ESC + EF 9C 82
 + `&`); plant (decoding skipped) caught. fenestra still 8/8 with the
 real characters injected; the terminal runner 16/16.
+
+## B6a-i — the key encoder `codificator_terminalis` (2026-10-02)
+
+Fran split B6: replay INTO the terminal goes through an ENCODER (bytes,
+then rivus), on A6's toy app with per-target geometry; the encoder is
+its own library (`codificator_terminalis`; the house verb is
+`base64_codificare`), with no DECCKM/keypad/X10 until the emulator.
+B6a-i is the keys; B6a-ii the mouse, paste and focus.
+
+**Oracle: Ghostty** (`../ghostty` @ 12752b2, `key_encode.zig`,
+`function_keys.zig`, `kitty.zig`), its logic translated into the
+Eventus vocabulary: key = clavis (or codex where the vocabulary has no
+logical key, Insert), utf8 = the following TEXT (legacy: else `typus`,
+because the decoder emits no TEXT under Ctrl/Alt), unshifted codepoint =
+runa. We have no `consumed_mods`; the one Ghostty test that depends on
+them (shift+a under disambiguate only) was left out.
+
+**API**: `codificator_eventa(modi, eventa, n, aedificator)` encodes the
+first event of a slice and returns how many it consumed: a key plus its
+TEXT is ONE sequence (`A` in legacy, the kitty text field). What a mode
+can't express writes nothing but is consumed (a release in legacy, a
+modifier key without OMNES). `CodificatorModi` already holds the mouse,
+paste, focus and Modulus fields for B6a-ii (API first).
+
+**Canonical forms (Ghostty's)**, which also corrected B4b's table:
+- no text on release, so no shifted alternate: Shift+A release is
+  `\e[97;2:3u`, not `\e[97:65;2:3u`;
+- press `:1` omitted in the `u`/`~` forms but INCLUDED in the special
+  forms: `\e[1;2:1D`.
+The table's kitty bytes were canonicalised; the conformance runner still
+passes 16/16 on them.
+
+**Tests (red first, 225):**
+1. 69 ported vectors (34 kitty: plain text, Enter/Tab/Backspace in each
+   mode, releases with and without OMNES, Shift/Alt+Backspace, modifier
+   keys, alternates, associated text, Delete, F-keys; 35 legacy: C0
+   table, Alt as ESC, xterm modifier params, SS3 F1-F4, modifyOtherKeys
+   for modified Enter/Tab/Escape, Backspace with Ctrl/Alt, fixterms
+   `CSI u` for Ctrl+I, macOS Command eats text, Ctrl+1 = `1`).
+2. Consumption (key + TEXT = 2; key + key = 1).
+3. The ROUND TRIP: every vector's bytes decoded through rivus and
+   re-encoded must be byte-identical.
+4. The TABLE ORACLE: the conformance table's key scenes (5 scenes x
+   legacy/kitty) decoded and re-encoded give back exactly their bytes.
+
+**The round trip found one decoder gap**, as predicted: xterm's
+modifyOtherKeys `CSI 27;m;c~` (legacy Ctrl+Tab, Shift/Ctrl+Enter,
+Ctrl+Escape) decoded to nothing. The decoder now reads it (6 red tests
+first). That made 3 tessera vectors, which expected the form swallowed
+as noise, see keys instead: updated per Fran's B3a precedent
+("decoded now, formerly swallowed"), flagged for Fran.
+
+**Also:** `claves_littera_ex_codex` (the inverse table, for kitty's
+base-layout alternate; built by scanning the forward table so they can
+never disagree; 48 round-trip asserts); `codificator` entered the
+glossary. Plants caught: Shift dropped from the modifier number (29
+asserts); `:1` omitted in special forms; legacy encoding a release; the
+following TEXT not consumed. The functional-key lookup is a table
+inside its function (the formatter mangled dense `casus` lines).

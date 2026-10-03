@@ -173,6 +173,28 @@ s32 principale (vacuum)
     }
 
     imprimere("\n");
+    imprimere("\n--- littera ex codice (B6a): inversum ---\n");
+    {
+        s32 r;
+        i32 inversa = ZEPHYRUM;
+
+        per (r = XXXII; r < CXXVII; r++)
+        {
+            EventusCodex c = claves_codex_ex_littera(r);
+
+            si (c != EVENTUS_CODEX_IGNOTUS)
+            {
+                CREDO_AEQUALIS_S32 (claves_littera_ex_codex(c), r);
+                inversa++;
+            }
+        }
+        /* a-z, 0-9, XI signa, spatium */
+        CREDO_AEQUALIS_I32 (inversa, XLVIII);
+        CREDO_AEQUALIS_S32 (claves_littera_ex_codex(
+            EVENTUS_CODEX_REDITUS), ZEPHYRUM);
+    }
+
+    imprimere("\n");
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

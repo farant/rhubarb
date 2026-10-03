@@ -778,6 +778,36 @@ interpres_lexema (
                 redde n + _kitty_clavem(in, &c, modi, actio, tempus,
                     cauda);
             }
+            si (   l->finale     == '~' && p0 == XXVII
+                && c.numerus[II] >= I)
+            {
+                /* xterm modifyOtherKeys: CSI 27 ; m ; c ~ (codificator
+                 * legacy Enter/Tab/Escape modificatos sic mittit,
+                 * B6a) */
+                s32 k = _campus(&c, II, ZEPHYRUM, ZEPHYRUM);
+
+                commutatio (k)
+                {
+                    casus XIII:
+                        redde n + _clavem(cauda, tempus, CLAVIS_REDITUS,
+                            ZEPHYRUM, modi, EVENTUS_CODEX_IGNOTUS);
+                    casus IX:
+                        redde n + _clavem(cauda, tempus, CLAVIS_TABULA,
+                            ZEPHYRUM, modi, EVENTUS_CODEX_IGNOTUS);
+                    casus XXVII:
+                        redde n + _clavem(cauda, tempus,
+                            CLAVIS_EFFUGIUM,
+                            ZEPHYRUM, modi, EVENTUS_CODEX_IGNOTUS);
+                    casus CXXVII:
+                        redde n + _clavem(cauda, tempus,
+                            CLAVIS_RETRORSUM,
+                            ZEPHYRUM, modi, EVENTUS_CODEX_IGNOTUS);
+                    ordinarius:
+                        redde n + ((k > ZEPHYRUM)
+                            ? _runae_clavem(cauda, tempus, k, modi)
+                            : ZEPHYRUM);
+                }
+            }
             si (l->finale == '~')
             {
                 redde n + ((c.numerus[ZEPHYRUM] >= I)

@@ -214,6 +214,24 @@ feeds bytes through B2/B3 and compares. Capability-keyed `excusationes`
 notarius), replay it SEMANTICALLY in fenestra (and back), divergences
 reported. The Modulus converts cells ↔ pixels.
 
+**B6 split (Fran, 2026-10-02):** replay INTO the terminal goes through
+an ENCODER (bytes, then rivus), and the proof runs on A6's toy app with
+per-target geometry. B6a = the encoder `codificator_terminalis` (its own
+library; module 003's encode side: pure, modes passed in, output
+through ChordaAedificator; normal cursor keys + SGR mouse only, DECCKM
+/keypad/X10 with the emulator). Ghostty (`../ghostty` @ 12752b2) is
+the oracle; canonical forms follow it (press `:1` omitted in `u`/`~`
+forms, INCLUDED in the special forms `CSI 1;m:1 A`; no text, so no
+shifted alternate, on release).
+- **B6a-i — keys**, legacy + kitty, ported Ghostty vectors, the
+  decode→encode round trip on the table's bytes (canonicalised), and
+  whatever the round trip forces on the decoder (xterm's `CSI 27;m;c~`
+  for modified Enter/Tab/Escape in legacy).
+- **B6a-ii — mouse (SGR, cells by the Modulus), paste (bracketed, end
+  marker never inside), focus.**
+- **B6b — the cross-target replay proof** (toy app, per-target
+  geometry, terminal → fenestra and back, divergences reported).
+
 **B7 — RELATIO.** Phase log, module 002/003/005 statuses, merges, briar
 MUTATIONES.
 

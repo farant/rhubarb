@@ -1096,6 +1096,11 @@
     <forma textus="microsecundarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
     <forma textus="microsecundis" casus="ablativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="codificator" lingua="latina" classis="substantivum" nota="vox domus (nomen agentis ex codificare, verbo domus: base64_codificare): qui eventa in octetos terminalis vertit, inversum interpretis; sedes include/codificator_terminalis.h (CodificatorModi, codificator_eventa), eventus B6a">
+    <forma textus="codificator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="codificatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="codificatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="scalaris" lingua="latina" classis="adiectivum" nota="scalaris, -e (classice: scalarum, gradibus pertinens; WORDS caret): sensu mathematico valor SIMPLEX, non compositus (chorda, numerus, boolean, tempus - non tabula, non series); sedes toml/fontes/toml_scalaris.{h,c} (toml_scalaria_iudicare, toml_scalarem_coquere)">
     <forma textus="scalaris" casus="nominativus" numerus="singularis"/>
     <forma textus="scalare" casus="nominativus" numerus="singularis" genus="neutrum"/>
