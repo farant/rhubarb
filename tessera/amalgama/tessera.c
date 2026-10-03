@@ -5284,8 +5284,6 @@ nomen structura {
                      i32 numerus_exemplorum;
         } mus;
         structura {
-            f32 delta_x;             /* DEPRECATUM (spec D2) */
-            f32 delta_y;
             s32 dx;                  /* pixela nostra, integra */
             s32 dy;
             EventusRotulaGenus genus;
@@ -10945,8 +10943,6 @@ _murem (
                                : (basis == I) ? -g : ZEPHYRUM;
         e.datum.rotula.dx      = (basis == II) ? g
                                : (basis == III) ? -g : ZEPHYRUM;
-        e.datum.rotula.delta_x = (f32)e.datum.rotula.dx;
-        e.datum.rotula.delta_y = (f32)e.datum.rotula.dy;
         redde tessera_eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
     }
     botton = (basis == ZEPHYRUM) ? MUS_SINISTER

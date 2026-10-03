@@ -141,3 +141,14 @@ the old widget generation reads `producta` (ASCII semantics kept,
 non-ASCII given as 0 where a `character` is needed); the toy checks
 the logical key (`CLAVIS_EFFUGIUM`), and `toy.eventus.stml` now says
 `clavis="27" producta="27"`.
+
+## 7. S3b DONE (2026-10-03) — D2 step 3 complete
+
+`importatio_visus` zooms from `dy` + `genus`: a wheel notch is
+`dy / gradus_rotulae × 0.5` (the gradus from the source's FACULTATES;
+16 for fenestra, the cell height for the terminal), trackpad and old
+recordings `dy × 0.5` (our pixels ≈ points at scale 1). Both equal the
+old `scrollingDelta × 0.5`. `delta_x` / `delta_y` deleted from
+`Eventus`; fenestra and the decoder no longer fill them; eventus_stml
+no longer writes them and rounds an old recording's `delta_*` into
+`dx`/`dy` when those are absent (present ones win, even 0).

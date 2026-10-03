@@ -353,8 +353,6 @@ _murem (
                                : (basis == I) ? -g : ZEPHYRUM;
         e.datum.rotula.dx      = (basis == II) ? g
                                : (basis == III) ? -g : ZEPHYRUM;
-        e.datum.rotula.delta_x = (f32)e.datum.rotula.dx;
-        e.datum.rotula.delta_y = (f32)e.datum.rotula.dy;
         redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
     }
     botton = (basis == ZEPHYRUM) ? MUS_SINISTER

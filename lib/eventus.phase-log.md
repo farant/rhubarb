@@ -1658,3 +1658,30 @@ Plants caught: the stml reader dropping the `typus` fallback; the
 decoder truncating `producta` to ASCII. fenestra conformance 8/8,
 terminal 16/16, tessera 15/15, pictor/villa/forum, the auscultators and
 the GUI demos (navigator, combinado, pagina, elementa) build.
+
+## S3b — integer scroll in importatio; the f32 deltas deleted (2026-10-03)
+
+D2 step 3, part 2, and the step-2 item phase A missed: `importatio_visus`
+still zoomed from `delta_y * 0.5f`, the f32 copy of the raw
+`scrollingDelta`.
+
+- **The zoom keeps its feel, honouring `genus`.** fenestra's wheel
+  gives `dy = 16 × lines`, so the old `lines × 0.5` is
+  `dy / gradus × 0.5`; the gradus is the source's published
+  `gradus_rotulae` (FACULTATES), recorded in the visus (default 16,
+  fenestra's), so a terminal source (gradus = cell height) zooms the
+  same per notch. Trackpad: `dy` is our pixels, ≈ points at scale 1, so
+  `dy × 0.5`. Old recordings (genus IGNOTA) take the pixel path.
+- **`delta_x` / `delta_y` deleted** from `Eventus`; fenestra and the
+  decoder stop filling them; `eventus_stml` stops writing them (its
+  `attr_f` helper went with them) and, for an old recording without
+  `dx`/`dy`, rounds `delta_*` half away from zero (`_rotundare`; C89 has
+  no `round`).
+
+Red first: the new `probatio_importatio_visus` (zoom per notch at gradus
+16, per trackpad pixel, at a published gradus 20, half a notch) and an
+old-recording case in `probatio_eventus_stml` (`-1.5` → `-2`, `0.4` →
+0, present `dx`/`dy` win). Plants caught: the zoom ignoring the gradus;
+the fallback overwriting present `dx`/`dy`.
+
+**D2 is complete**: no deprecated field remains in `Eventus`.

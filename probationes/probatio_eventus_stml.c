@@ -62,7 +62,7 @@ s32 principale (vacuum)
     e = addere(index, EVENTUS_CLAVIS_DEPRESSUS, M + L);
     e->datum.clavis.producta = 0xE9;   /* S3a: e acutum (non ASCII) */
     e = addere(index, EVENTUS_MUS_ROTULA, M + C);
-    e->datum.rotula.delta_y = -1.5f;
+    e->datum.rotula.dy = -II;       /* S3b: deltae f32 deletae */
     e = addere(index, EVENTUS_MUTARE_MAGNITUDINEM, M + CC);
     e->datum.mutare_magnitudinem.latitudo = CDLXXX;
     e->datum.mutare_magnitudinem.altitudo = CCC;
@@ -83,8 +83,7 @@ s32 principale (vacuum)
     CREDO_VERUM (e->genus == EVENTUS_CLAVIS_DEPRESSUS);
     CREDO_AEQUALIS_S32 (e->datum.clavis.producta, 0xE9);
     e = (Eventus*)xar_obtinere(index2, II);
-    CREDO_VERUM (e->datum.rotula.delta_y < -1.4f);
-    CREDO_VERUM (e->datum.rotula.delta_y > -1.6f);
+    CREDO_AEQUALIS_S32 (e->datum.rotula.dy, -II);
     e = (Eventus*)xar_obtinere(index2, III);
     CREDO_AEQUALIS_I32 (e->datum.mutare_magnitudinem.latitudo, CDLXXX);
     e = (Eventus*)xar_obtinere(index2, IV);
@@ -187,7 +186,6 @@ s32 principale (vacuum)
         e->datum.mus.exempla = exempla;
         e->datum.mus.numerus_exemplorum = III;
         e = addere(index, EVENTUS_MUS_ROTULA, M + III);
-        e->datum.rotula.delta_y = -1.5f;
         e->datum.rotula.dx = -XII;
         e->datum.rotula.dy = XXX;
         e->datum.rotula.genus = EVENTUS_ROTULA_PRAECISA;
@@ -265,7 +263,6 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (e->datum.rotula.x, -VII);
         CREDO_AEQUALIS_S32 (e->datum.rotula.y, CCC);
         CREDO_AEQUALIS_I32 (e->datum.rotula.modificantes, MOD_IMPERIUM);
-        CREDO_VERUM (e->datum.rotula.delta_y < -1.4f);
         e = (Eventus*)xar_obtinere(index2, IV);
         CREDO_AEQUALIS_S32 (e->datum.depositio.x, VII);
         CREDO_VERUM (chorda_aequalis_literis(e->datum.depositio.viae,
@@ -358,6 +355,26 @@ s32 principale (vacuum)
     }
 
     imprimere("\n");
+    imprimere("\n--- S3b: plagula vetus delta_y -> dy ---\n");
+    {
+        Xar* vetus = eventus_legere_stml(
+            "<eventus_index>"
+            "<eventus genus=\"mus_rotula\" tempus=\"5\" "
+            "delta_x=\"0.4\" delta_y=\"-1.5\"/>"
+            "<eventus genus=\"mus_rotula\" tempus=\"6\" dx=\"3\" "
+            "dy=\"0\" delta_y=\"9.0\"/>"
+            "</eventus_index>", piscina, intern);
+
+        CREDO_NON_NIHIL (vetus);
+        CREDO_AEQUALIS_S32 (((Eventus*)xar_obtinere(vetus, ZEPHYRUM))
+            ->datum.rotula.dy, -II);
+        CREDO_AEQUALIS_S32 (((Eventus*)xar_obtinere(vetus, ZEPHYRUM))
+            ->datum.rotula.dx, ZEPHYRUM);
+        /* dx/dy praesentes vincunt (etiam 0) */
+        CREDO_AEQUALIS_S32 (((Eventus*)xar_obtinere(vetus, I))
+            ->datum.rotula.dy, ZEPHYRUM);
+    }
+
     imprimere("\n--- S3a: plagula vetus 'typus' -> producta ---\n");
     {
         Xar* vetus = eventus_legere_stml(

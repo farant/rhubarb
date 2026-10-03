@@ -47,6 +47,12 @@ Leges chartae:
   `manus_ludus_clavem` modificantes ut fenestra eos fert
   (`MOD_SHIFT | MOD_SHIFT_SINISTER`), non iam 'I' pro Shift.
 
+- corpus: `Eventus.datum.rotula.delta_x/delta_y` (f32) DELETA (spec
+  D2 gradus III). FRANGIT: plagula quae eas legit `dx`/`dy` (s32,
+  pixela nostra) cum `genus` (GRADATA: gradus = `gradus_rotulae`
+  FACULTATUM) legat; plagulae STML veteres delta_* in dx/dy rotundant.
+  `ImportatioVisus.gradus_rotulae` novum.
+
 - corpus: `Eventus.datum.clavis.typus` DELETUM -> `s32 producta`
   (character a clave productus sub modificantibus, Unicode plena, 0
   nullus; spec D2 gradus III). FRANGIT: plagula quae `typus` legit

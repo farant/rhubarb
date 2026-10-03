@@ -58,6 +58,9 @@ nomen structura {
      * zoom = 4.0 → 1/4 source width/height visible (4x detail)
      * pan_x, pan_y = center of visible region in source pixels */
     f32 zoom;            /* Zoom factor (1.0 - 8.0) */
+    /* S3b: pixela per gradum rotae, ex FACULTATIBUS fontis (fenestra
+     * XVI, terminalis altitudo cellulae) */
+    s32 gradus_rotulae;
     i32 crop_center_x;   /* Center of crop region in source pixels */
     i32 crop_center_y;
     b32 dragging;        /* Currently dragging to pan */

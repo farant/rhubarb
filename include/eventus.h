@@ -332,8 +332,6 @@ nomen structura {
                      i32 numerus_exemplorum;
         } mus;
         structura {
-            f32 delta_x;             /* DEPRECATUM (spec D2) */
-            f32 delta_y;
             s32 dx;                  /* pixela nostra, integra */
             s32 dy;
             EventusRotulaGenus genus;

@@ -165,18 +165,6 @@ attr_longus (
         chorda_ut_cstr(chorda_ex_f64((f64)v, ZEPHYRUM, p), p));
 }
 
-interior vacuum
-attr_f (
-              StmlNodus* n,
-                Piscina* p,
-    InternamentumChorda* in,
-     constans character* t,
-                    f32  v)
-{
-    stml_attributum_addere(n, p, in, t,
-        chorda_ut_cstr(chorda_ex_f64((f64)v, III, p), p));
-}
-
 /* Textus in attributo: '%', '"' et octeti regiminis (< 0x20, 0x7F)
  * -> %XX (hex maiusculum); ceteri (UTF-8 quoque) verbatim. Exactum
  * (spatia, lineae novae) et legibile; quota in valore STML
@@ -317,10 +305,6 @@ _eventum_nodare (
             }
             frange;
         casus EVENTUS_MUS_ROTULA:
-            attr_f(n, piscina, intern, "delta_x",
-                e->datum.rotula.delta_x);
-            attr_f(n, piscina, intern, "delta_y",
-                e->datum.rotula.delta_y);
             si (   e->datum.rotula.dx    != ZEPHYRUM
                 || e->datum.rotula.dy    != ZEPHYRUM
                 || e->datum.rotula.genus != EVENTUS_ROTULA_IGNOTA)
@@ -508,6 +492,14 @@ capere_f (
     redde (f32)v;
 }
 
+/* f32 -> s32 ad proximum (dimidium a nihilo; C89 round() non habet) */
+interior s32
+_rotundare (
+    f32 v)
+{
+    redde (v < 0.0f) ? (s32)(v - 0.5f) : (s32)(v + 0.5f);
+}
+
 /* Titulum attributi in tabula quaerere; 'si_abest' si abest (NB
  * 'ordinarius' macrum latinae est - default) */
 interior s32
@@ -629,10 +621,18 @@ _eventum_legere (
     }
     alioquin si (e->genus == EVENTUS_MUS_ROTULA)
     {
-        e->datum.rotula.delta_x  = capere_f(n, "delta_x");
-        e->datum.rotula.delta_y  = capere_f(n, "delta_y");
-        e->datum.rotula.dx       = capere_s(n, "dx");
-        e->datum.rotula.dy       = capere_s(n, "dy");
+        e->datum.rotula.dx = capere_s(n, "dx");
+        e->datum.rotula.dy = capere_s(n, "dy");
+        /* S3b: plagulae veteres solum delta_x/y f32 ferunt -> dx/dy
+         * rotundata (genus IGNOTA manet) */
+        si (!stml_attributum_capere(n, "dx"))
+        {
+            e->datum.rotula.dx = _rotundare(capere_f(n, "delta_x"));
+        }
+        si (!stml_attributum_capere(n, "dy"))
+        {
+            e->datum.rotula.dy = _rotundare(capere_f(n, "delta_y"));
+        }
         e->datum.rotula.genus = (EventusRotulaGenus)
             capere_titulum(n, "genus_rotulae", tituli_rotulae,
                 III, (s32)EVENTUS_ROTULA_IGNOTA, piscina);

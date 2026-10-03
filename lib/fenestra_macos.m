@@ -446,8 +446,8 @@ _murem_implere (
 /* Rotula integra (spec Q14): trackpad (hasPreciseScrollingDeltas) ->
  * PRAECISA, puncta in pixela nostra scalata; rota -> GRADATA, lineae
  * x FENESTRA_GRADUS_ROTULAE. Fractiones in residuis fenestrae manent
- * (eventus_residuum_integrare); genere mutato vacantur. delta_x/y f32
- * (DEPRECATA) ut olim crudi. Signum: idem ac scrollingDelta. */
+ * (eventus_residuum_integrare); genere mutato vacantur (S3b: delta_x/y
+ * f32 deleta). Signum: idem ac scrollingDelta. */
 interior vacuum
 _rotulam_implere (
     Fenestra* fenestra,
@@ -471,8 +471,6 @@ _rotulam_implere (
         fenestra->residuum_y       = 0.0;
         fenestra->rotula_praecisa  = praecisa;
     }
-    eventus->datum.rotula.delta_x = (f32)[eventus_ns scrollingDeltaX];
-    eventus->datum.rotula.delta_y = (f32)[eventus_ns scrollingDeltaY];
     si (praecisa)
     {
         _scalam_obtinere(fenestra, &scala_x, &scala_y);
