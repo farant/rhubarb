@@ -1251,3 +1251,54 @@ Plants: prefix filter ignored -> red; fons passed undeclared -> red
 (the title case dies on expansion instead). Fumus XXVII on a real disk
 through bin/fabrica (2 instances RECENS, alia.c not, new file ->
 STALUM); plant (tool passes NIHIL sutura) -> rc 2, red.
+
+## 2026-10-02 - plan 2 T5: the toml pilot (thin runner + oracle)
+
+Scope (Fran): thin runner + oracle only; no toml familia - nothing can
+judge a test binary honestly today (relatio needs -provenientia,
+regeneratio refuses binaries). familia's first real consumer will be
+per-test verdict actions, designed later.
+
+Runner (toml/compile_probationes.sh): the hand lists (24 lib, 13
+materia, toml/fontes, helpers) and the coarse "newest header anywhere
+makes every object stale" block are gone. Per test: closure from
+`bin/aedilis --enumerare --thesaurus`; the union is compiled through
+bin/compilator; each test file is compiled through it too
+(toml/build/probationes/, new - the old runner compiled tests inline at
+link time) and linked against its OWN closure. Lock, tee log, mensor
+metrics and reporting unchanged. Sources are passed by ABSOLUTE path
+from the caller's cwd exactly like the old runner: -g records both, so
+relative paths would have broken byte identity with the old objects.
+The excubitor post-build check was removed: it judges by mtime, and
+compilator deliberately leaves an identical object untouched (older
+mtime than its source) - it would have refused up-to-date objects.
+
+Oracle (tools/toml_oraculum.sh): both runners in the SAME tree, one
+after the other, each cold (the plan's scratch worktree could never
+match bytes: -g embeds the working directory). -arbor REF runs both in
+a worktree at REF (the live runner copied in, live bin/aedilis and
+bin/compilator linked). Objects only in the new runner fail; objects
+only in the old = hand-list slack (iter_directoria.o, via.o: never in a
+closure). A silent oracle is a dead oracle: no runner, 0 common objects
+or 0 test lines -> exit 2 (first version said "consensus" on e1e01751,
+where toml did not exist yet).
+FINDING: Apple clang 16 is non-deterministic on toml/fontes/
+toml_scalaris.c with the house flags (4 distinct objects in 10 plain
+compiles; -fno-vectorize fixes it; only file among the 45). The oracle
+re-compiles a discordant object's source 5x with plain clang and names
+compiler non-determinism instead of failing. Park ...ACYVJ for Fran.
+Results: consensus on HEAD and three tree states (cadca60e toml,
+8d7e6fba materia, 26e34570 include/): 44-45 common objects identical,
+370 test lines identical. Plants: chorda.c at -O1 -> byte DISCORDIA;
+one test skipped -> output DISCORDIA (first plant named a test that
+does not exist - a no-op, caught because it stayed green).
+
+Measurements (wall, whole suite; the 13 test executables alone take
+27.9 s of every run):
+  warm:                         old 31.8 s   new 31.1 s
+  cold build, empty store:      old 39.2 s   new 42.0 s
+  cold build, warm store:       old 39.2 s   new 31.5 s
+  one header comment (7 users): old 38.0 s (all 47 objects) new 31.2 s
+First new-runner measurement was SLOWER (warm 38.6 s): the 13 aedilis
+calls ran without --thesaurus (6.8 s vs 0.26 s warm). One store for
+both tools (FABRICA_THESAURUS) fixed it.
