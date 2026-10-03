@@ -25,7 +25,7 @@
 #include "latina.h"
 #include "terminalis.h"
 #include "rivus_terminalis.h"
-#include "tessera.h"
+#include "tessera_pons.h"
 
 /* Capacitas bufferorum modorum (= terminalis) */
 #define LUDUS_TESSERA_MODI_MAXIMI  TERMINALIS_MODI_MAXIMI

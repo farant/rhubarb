@@ -107,6 +107,13 @@ a box, colours) → expected tessera cells through the memoria pons.
 Plants: continuation cell written as a space over the wide rune's
 right half; fundus and littera colours swapped.
 
+A2 as built: the bridge existed (`musivum_pingere`); A0's amalgam pin
+blocked it, so ludus_tessera now builds against tessera FONTES (Fran;
+saltuarius keeps the amalgam proof). New: `ludus_tessera_demittere`
+(tessellatio with the politica derived from the opus + musivum) - the
+ZWJ family shows why one politica is a correctness rule. 19 asserts,
+three plants.
+
 **A3 — the glue.** `LudusTessera` mirroring `LudusFenestra`:
 `ludus_tessera_creare`, `_tractare(ev, nunc)`, `ludus_tessera_quadrum
 (nunc)` (pulse → pingere → tessellatio → A2 → `tessera_praesentare`),

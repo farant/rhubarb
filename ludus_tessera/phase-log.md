@@ -84,3 +84,41 @@ stub (21 named failures). Plants caught: ?1049l before the rivus exits
 
 aedilis root `ludus_tessera/fontes` added (deferred from A0) and
 `-Iludus_tessera/fontes` in compile_flags.txt.
+
+## A2 — cells into tessera; the boundary reversed (2026-10-03)
+
+**The bridge already existed.** `musivum_pingere`
+(tessera/instrumenta/musivum/musivum_pictura.c, module 012's T5) is
+exactly the plan's A2: continuation cells skipped, text units through
+`tessera_graphema_ponere`, junctions through
+`tessellatio_runa_juncturae`, colours into `tessera_stilus`; tested by
+probatio_tessera_musivum. My plan had missed it.
+
+**A0's amalgam pin blocked reusing it** (its header includes the fontes
+`tessera_opus.h`; the two tessera forms cannot share a TU). Fran chose
+to switch: ludus_tessera builds against tessera FONTES, like musivum,
+folium and effigies. Reason recorded: the amalgam pin is saltuarius's
+job (first host, proving the vendorable form); ludus_tessera is a
+monorepo framework client. Evidence I already had in A1: the amalgam
+path linked TWO rivus copies (lib's, driven by the glue, and the
+amalgam's renamed one). Now: one copy of everything, from lib/. A0's
+"fontes include = compile error" plant is retired; public-API-only is
+a convention here, as for the other instruments.
+
+**What A2 adds: one politica.** tessellatio measures units under a
+`RunaePolitica`, `tessera_graphema_ponere` under the opus's
+`TesseraPolitica`; tessera maps between them only inline
+(tessera_opus.c:653). Disagreement is not cosmetic: a ZWJ family is ONE
+unit of 2 cells under GRAPHEMATUM and THREE emoji of 6 cells under
+SIMPLEX (Terminal.app) - glyphs vanish or columns slide.
+`ludus_tessera_demittere(opus, mandata, modulus, fundus, fons, ctx,
+piscina)` = tessellatio with the politica DERIVED from the opus +
+musivum_pingere; the caller cannot pass a mismatched one.
+`ludus_tessera_politica_runarum(opus)` restates tessera's rule.
+
+Tests: 19 asserts (mapping both ways; the ZWJ family + "x" through
+mandata → lowering → tessera cells under each politica: GRAPHEMA+LATUM,
+continuation, x at col 2 vs three wide emoji, x at col 6; fundus and
+littera colours; NIHIL arguments). Red: a stub. Plants caught: the
+lowering with a fixed GRAPHEMATUM (SIMPLEX columns fail), musivum
+writing the continuation as a space, musivum swapping colours.

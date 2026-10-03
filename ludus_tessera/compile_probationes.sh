@@ -18,11 +18,12 @@ fi
 #   ./compile_probationes.sh            # omnes probationes
 #   ./compile_probationes.sh fumus      # substring filter
 #
-# Exemplar saltuarii. LIMES AMALGAMATIS EST API: tessera hic SOLUM
-# per amalgama/tessera.c et tessera/amalgama intrat - tessera/fontes
-# consulto abest ab INCLUDE_FLAGS (inclusio fontium = error
-# compilationis; hic clavus operatur). ludus (dispensator, figurae,
-# tessellatio, rivus, terminalis) ex lib/ ut civis monorepositorii.
+# Exemplar saltuarii, sed tessera per FONTES (A2, 2026-10-03), ut
+# musivum, folium, effigies: ludus_tessera cliens monorepositorii est,
+# non hospes amalgamatis (saltuarius id probat). Pars pura musivi
+# (musivum_pingere: cellulae tessellationis -> tessera) iterum
+# adhibetur. API publica tesserae = mos, non clavus. ludus
+# (dispensator, figurae, tessellatio, rivus, terminalis) ex lib/.
 # Suita sine capite: pons memoriae; terminalis verus solum aspectu
 # Frani probatur.
 
@@ -43,19 +44,19 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
-    "-I$RADIX_DIR/tessera/amalgama"
+    "-I$RADIX_DIR/tessera/fontes"
+    "-I$RADIX_DIR/tessera/instrumenta/musivum"
     "-I$LT_DIR/fontes"
     "-I$LT_DIR/probationes"
 )
 
-# Bibliothecae radicis quas ludus_tessera consumit (crescunt cum
-# A1-A4; lista manualis ut saltuarius)
+# Bibliothecae radicis (lista manualis ut tessera et saltuarius):
+# clausura tesserae (fontes) + tessellatio + terminalis (pons, A1)
 declare -a RADIX_FONTES=(
     "piscina"
     "chorda"
     "chorda_aedificator"
     "credo"
-    # A1: rivus (modi declarati) et terminalis (pons)
     "xar"
     "utf8"
     "runae"
@@ -65,7 +66,26 @@ declare -a RADIX_FONTES=(
     "claves_physicae"
     "interpres_terminalis"
     "rivus_terminalis"
+    "stilus_terminalis"
     "terminalis_posix"
+    "quadrans"
+    "dithering"
+    "imago"
+    "imago_opus"
+    "color"
+    "delineare"
+    "delineare_mandata"
+    "fenestra_textus"
+    "fons"
+    "friatio"
+    "internamentum"
+    "mandatum"
+    "modulus"
+    "selectio"
+    "stml"
+    "tabula_dispersa"
+    "tessellatio"
+    "thema"
 )
 
 FILTER="${1:-}"
@@ -88,7 +108,7 @@ while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
-done < <(find "$RADIX_DIR/include" "$LT_DIR/fontes" "$RADIX_DIR/tessera/amalgama" -name '*.h' 2>/dev/null)
+done < <(find "$RADIX_DIR/include" "$LT_DIR/fontes" "$RADIX_DIR/tessera/fontes" "$RADIX_DIR/tessera/instrumenta/musivum" -name '*.h' 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
@@ -113,16 +133,19 @@ for f in "${RADIX_FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
-# ---- 2. amalgama tesserae ut obiectum ----
-src="$RADIX_DIR/tessera/amalgama/tessera.c"
-obj="$BUILD_DIR/amalgama_tessera.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
-    echo "  [amalgama] tessera.c"
-    if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
-        echo "FRACTA: amalgama tessera" ; exit 1
+# ---- 2. tessera (fontes) + pars pura musivi ----
+for src in "$RADIX_DIR"/tessera/fontes/*.c \
+           "$RADIX_DIR/tessera/instrumenta/musivum/musivum_pictura.c"; do
+    base="$(basename "$src" .c)"
+    obj="$BUILD_DIR/tessera_$base.o"
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [tessera] $base.c"
+        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+            echo "FRACTA: $base.c" ; exit 1
+        fi
     fi
-fi
-obj_files="$obj_files $obj"
+    obj_files="$obj_files $obj"
+done
 
 # ---- 3. fontes ludus_tessera ----
 shopt -s nullglob
