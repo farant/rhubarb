@@ -5234,6 +5234,10 @@ nomen structura {
     i32 depositio;          /* EVENTUS_DEPOSITIO_* */
     s32 gradus_rotulae;     /* pixela nostra per gradum (GRADATA) */
     b32 pressio;            /* pressio indicatoris vera */
+    /* B4: modificantes clavium imprimibilium narrantur (Shift+A non
+     * solum 'A'). Legacy FALSUM (Shift ut Caps Lock videtur); kitty
+     * cum vexillo OMNES VERUM; fenestra VERUM. Ad finem additum. */
+    b32 modificantes_textus;
 } EventusFacultates;
 
 
@@ -11046,6 +11050,9 @@ _kitty_discere (
     in->facultates.codex_physicus         =
         (b32)((in->kitty_vexilla & INTERPRES_KITTY_ALTERNAE)
             != ZEPHYRUM);
+    /* B4: OMNES = claves imprimibiles ut CSI u, cum modificantibus */
+    in->facultates.modificantes_textus    =
+        (b32)((in->kitty_vexilla & INTERPRES_KITTY_OMNES) != ZEPHYRUM);
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus             = EVENTUS_FACULTATES;
     e.tempus            = tempus;

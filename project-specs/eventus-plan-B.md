@@ -182,7 +182,24 @@ Split by Fran's approval (2026-10-02) into three:
 pty harness (`posix_openpt` & co. are not in the house lexicon yet; a
 lexicon change owes glossary entries + `officina/auspex_posix.sh`
 assertions). The same harness gives `terminalis_posix.c` its first
-headless test (B3b-iii's bar was the look). The
+headless test (B3b-iii's bar was the look).
+
+CORRECTED + split by Fran (2026-10-02). The conformance runner needs NO
+pty: rivus is pure, so the runner pushes each scene's bytes into it,
+reports silence with `rivus_moram`, reads with the coalescing read and
+compares. (The pty harness stays a separate, later item for
+`terminalis_posix.c`.)
+- **B4a — the comparator.** Excuses keyed by capability (scene
+  attribute `excusationes`, capability names; valid ONLY when the
+  stream's last FACULTATES deny the capability; no FACULTATES = nothing
+  excused); a three-state verdict (FRACTA / CONFORMIS / EXCUSATA);
+  modifiers compared on VOCABULARY bits only (Fran: AppKit's Function
+  bit 0x800000 is a platform leak); a new capability
+  `modificantes_textus` (Fran: an honest name over reusing
+  `tabula_distincta`). fenestra stays 8/8.
+- **B4b — the terminal column + runner.** `<terminalis profilum
+  octeti>` per scene (legacy, kitty), cells of 1x1 pixel so the mouse
+  expectations hold, the runner as a suite test. The
 table's terminal column (bytes) filled for the A4 scenarios; a runner
 feeds bytes through B2/B3 and compares. Capability-keyed `excusationes`
 (no releases without kitty, Ctrl+I == Tab in legacy) become real.

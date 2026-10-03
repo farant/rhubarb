@@ -1282,3 +1282,50 @@ answered both B3 AUDIENDA:
 
 The pty-based headless test of `terminalis_posix.c` waits for B4, which
 needs the same harness (and a lexicon change for `posix_openpt`).
+
+## B4a — the comparator learns excuses (2026-10-02)
+
+**A correction first.** I had told Fran B4 needed a pty harness (and so a
+lexicon change for `posix_openpt`). Reading A4's design showed it
+doesn't: rivus is pure, so a terminal runner pushes bytes into it and
+compares; no terminal, no window. The pty harness remains a later item,
+only for `terminalis_posix.c`.
+
+Walking the 8 scenes through the decoder by hand found what the
+comparator must learn, and two differences no capability explained.
+Fran decided both:
+- **Modifiers compare on VOCABULARY bits only** (MOD_* + sides), for
+  every source. fenestra's arrows carry AppKit's Function flag
+  (0x800000), a raw platform bit A4 found and recorded; a terminal never
+  has it. Recordings keep it; conformance ignores it.
+- **A new capability `modificantes_textus`**: "modifiers on printable
+  keys are reported". Legacy terminals send `A` for Shift+A (B2a chose
+  not to guess: Caps Lock looks the same). fenestra TRUE; the decoder
+  FALSE until kitty is seen with OMNES pushed (all keys as `CSI u`).
+  Appended at the end of `EventusFacultates`; written like its siblings
+  (no committed fixture holds a facultates line).
+
+**The excuses (spec D7)**, named by capability in the scene attribute
+`excusationes`, and valid ONLY when the stream's LAST FACULTATES deny
+that capability. No FACULTATES in the stream means nothing is excused,
+so fenestra (its FACULTATES are drained before the scenes) is exactly as
+strict as before: 8/8.
+
+| excuse | when the capability is denied |
+|---|---|
+| liberationes | expected key releases are dropped |
+| codex_physicus | `codex` is not compared |
+| latera | side bits are masked from `modificantes` |
+| tabula_distincta | the whole scene is EXCUSATA (Ctrl+I is Tab) |
+| modificantes_textus | `modificantes` is not compared |
+
+`eventus_conformitas_comparare` now returns a verdict (FRACTA /
+CONFORMIS / EXCUSATA); `tools/conformitas.c` prints EXCUSATA. An
+unknown capability name makes the table bad, like an unknown kind.
+
+Tests (red first): conformitas 39 (reading, the vocabulary mask, each
+excuse with and without its capability, last FACULTATES wins, the
+EXCUSATA verdict); eventus_stml round trip; interpres `Fac:LCTM`.
+Plants caught: an excuse applied without its capability; the raw
+modifier compare; the FIRST FACULTATES used. fenestra conformance 8/8;
+pictor, villa, forum, both auscultators build; tessera 1534/1534.

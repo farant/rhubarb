@@ -354,6 +354,7 @@ _facultates_impellere (
     e.datum.facultates.depositio         = EVENTUS_DEPOSITIO_NULLA;
     e.datum.facultates.gradus_rotulae    = FENESTRA_GRADUS_ROTULAE;
     e.datum.facultates.pressio           = FALSUM;
+    e.datum.facultates.modificantes_textus = VERUM;   /* B4 */
     impellere_eventum(fenestra, &e);
 }
 

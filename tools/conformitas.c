@@ -182,7 +182,8 @@ principale (
                       Xar* actualia;
                    chorda  diagnosis;
                       i32  k;
-                      b32  bene = VERUM;
+                      b32  bene       = VERUM;
+     ConformitasVerdictum  verdictum  = CONFORMITAS_FRACTA;
 
         (vacuum)_colligere(fenestra, piscina);           /* vacuare */
         per (k = ZEPHYRUM; k < xar_numerus(s->immissiones); k++)
@@ -197,15 +198,18 @@ principale (
         actualia = _colligere(fenestra, piscina);
         si (bene)
         {
-            bene = eventus_conformitas_comparare(s, actualia, piscina,
-                intern, &diagnosis);
+            verdictum = eventus_conformitas_comparare(s, actualia,
+                piscina, intern, &diagnosis);
+            /* EXCUSATA = conformis per facultatem declaratam */
+            bene = (b32)(verdictum != CONFORMITAS_FRACTA);
         }
         alioquin
         {
             diagnosis = chorda_ex_literis("immissio recusata\n",
                 piscina);
         }
-        printf("%s %.*s\n", bene ? "CONFORMIS" : "FRACTA   ",
+        printf("%s %.*s\n", (verdictum == CONFORMITAS_EXCUSATA)
+            ? "EXCUSATA " : bene ? "CONFORMIS" : "FRACTA   ",
             (int)s->titulus.mensura,
             (constans character*)s->titulus.datum);
         si (!bene)

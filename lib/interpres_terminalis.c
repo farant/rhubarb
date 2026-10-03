@@ -461,6 +461,9 @@ _kitty_discere (
     in->facultates.codex_physicus         =
         (b32)((in->kitty_vexilla & INTERPRES_KITTY_ALTERNAE)
             != ZEPHYRUM);
+    /* B4: OMNES = claves imprimibiles ut CSI u, cum modificantibus */
+    in->facultates.modificantes_textus    =
+        (b32)((in->kitty_vexilla & INTERPRES_KITTY_OMNES) != ZEPHYRUM);
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus             = EVENTUS_FACULTATES;
     e.tempus            = tempus;

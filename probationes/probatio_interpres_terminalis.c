@@ -214,6 +214,10 @@ _eventum_reddere (
             {
                 chorda_aedificator_appendere_character(a, 'T');
             }
+            si (e->datum.facultates.modificantes_textus)
+            {
+                chorda_aedificator_appendere_character(a, 'M');
+            }
             frange;
         casus EVENTUS_DEFOCUS:
             chorda_aedificator_appendere_literis(a, "F-");
@@ -463,7 +467,7 @@ s32 principale (vacuum)
     interpres_initiare(&b.interpres, X, XX);
     b.interpres.kitty_vexilla = 0x1F;
     /* prima series kitty: facultates discuntur, ante clavem */
-    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "Fac:LCT KA:a#KeyA"));
+    CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "Fac:LCTM KA:a#KeyA"));
     CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "KA:a#KeyA"));
     CREDO_VERUM (_videre(&b, "\x1b[97;;97u", FALSUM, "KA:a#KeyA Ta"));
     CREDO_VERUM (_videre(&b, "\x1b[97:65;2;65u", FALSUM,
@@ -493,7 +497,8 @@ s32 principale (vacuum)
     CREDO_VERUM (_videre(&b, "\x1b[?31u", FALSUM, ""));
     /* legacy post kitty: idem */
     CREDO_VERUM (_videre(&b, "\x1b[1;5A", FALSUM, "Kup+C#ArrowUp"));
-    /* sine ALTERNAE et sine basi: codex nescitur */
+    /* sine ALTERNAE et sine basi: codex nescitur; sine OMNES
+     * modificantes textus non narrantur (B4) */
     interpres_initiare(&b.interpres, X, XX);
     b.interpres.kitty_vexilla = INTERPRES_KITTY_DISCERNERE;
     CREDO_VERUM (_videre(&b, "\x1b[97u", FALSUM, "Fac:T KA:a"));

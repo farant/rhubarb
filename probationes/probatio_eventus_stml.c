@@ -215,6 +215,7 @@ s32 principale (vacuum)
             EVENTUS_DEPOSITIO_HEURISTICA;
         e->datum.facultates.gradus_rotulae = XVI;
         e->datum.facultates.pressio = VERUM;
+        e->datum.facultates.modificantes_textus = VERUM;
         e = addere(index, EVENTUS_SUSPENSIO, M + VI);
         e = addere(index, EVENTUS_RESUMPTIO, M + VII);
 
@@ -277,7 +278,8 @@ s32 principale (vacuum)
             && !e->datum.facultates.tabula_distincta
             && e->datum.facultates.latera && e->datum.facultates.super
             && !e->datum.facultates.praeeditio
-            && e->datum.facultates.pressio);
+            && e->datum.facultates.pressio
+            && e->datum.facultates.modificantes_textus);
         CREDO_AEQUALIS_I32 (e->datum.facultates.scriptura_copiae,
             EVENTUS_FACULTAS_FORTASSE);
         CREDO_AEQUALIS_I32 (e->datum.facultates.depositio,

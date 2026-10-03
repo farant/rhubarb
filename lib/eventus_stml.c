@@ -413,6 +413,8 @@ _eventum_nodare (
                 f->gradus_rotulae);
             attr_s(n, piscina, intern, "pressio",
                 (s32)(f->pressio ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "modificantes_textus",
+                (s32)(f->modificantes_textus ? I : ZEPHYRUM));
             frange;
         }
         ordinarius:
@@ -695,6 +697,8 @@ _eventum_legere (
         f->gradus_rotulae  = capere_s(n, "gradus_rotulae");
         f->pressio           = (b32)(capere_s(n, "pressio")
             != ZEPHYRUM);
+        f->modificantes_textus = (b32)(capere_s(n,
+            "modificantes_textus") != ZEPHYRUM);
     }
     alioquin
     {
