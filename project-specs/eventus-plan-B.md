@@ -199,7 +199,10 @@ compares. (The pty harness stays a separate, later item for
   `tabula_distincta`). fenestra stays 8/8.
 - **B4b — the terminal column + runner.** `<terminalis profilum
   octeti>` per scene (legacy, kitty), cells of 1x1 pixel so the mouse
-  expectations hold, the runner as a suite test. The
+  expectations hold, the runner as a suite test. As built: 16/16 (one named
+  EXCUSATA: ctrl-i under legacy); `octeti` in C escapes (STML attribute
+  values are raw). Follow-up: fenestra's `characteres` entities were
+  never decoded either. The
 table's terminal column (bytes) filled for the A4 scenarios; a runner
 feeds bytes through B2/B3 and compares. Capability-keyed `excusationes`
 (no releases without kitty, Ctrl+I == Tab in legacy) become real.

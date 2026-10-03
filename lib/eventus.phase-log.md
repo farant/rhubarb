@@ -1329,3 +1329,43 @@ EXCUSATA verdict); eventus_stml round trip; interpres `Fac:LCTM`.
 Plants caught: an excuse applied without its capability; the raw
 modifier compare; the FIRST FACULTATES used. fenestra conformance 8/8;
 pictor, villa, forum, both auscultators build; tessera 1534/1534.
+
+## B4b — the terminal column + the terminal runner (2026-10-02)
+
+**The table gained its terminal column**: each scene has
+`<terminalis profilum="legacy|kitty" octeti="..."/>`, and the scenes
+whose terminal stream legitimately differs name their excuses:
+
+| scene | excusationes | legacy bytes | kitty bytes |
+|---|---|---|---|
+| shift-a | liberationes codex_physicus latera modificantes_textus | `A` | `\e[97:65;2;65u` + release |
+| tabula | liberationes codex_physicus | `\t` | `\e[9u` + release |
+| ctrl-i | tabula_distincta latera | `\t` (EXCUSATA) | `\e[105;5u` + release |
+| sagittae | latera | `\e[1;2D\e[1;3C\e[A\e[B` | same + releases |
+| effugium | codex_physicus | `\e` (then silence) | `\e[27u` + release |
+| ictus, ictus-duplex-crudus, tractus | none | SGR at cell+1 | same |
+
+**`octeti` uses C escapes** (`\e`, `\t`, `\r`, `\n`, `\\`, `\xHH`;
+unknown = a bad table), decoded by the table reader: STML attribute
+values are RAW by design (only named entities in TEXT are decoded).
+**Finding in A4's table**: fenestra's `characteres="&#27;"`, `"&#9;"`,
+`"&#xF702;"` were never decoded either, so fenestra has been injecting
+the literal text `&#27;`. The scenes conform only because fenestra
+emits no text for those keys. Noted in the table's comment; a follow-up
+for Fran (decode `characteres` the same way).
+
+**The runner is a suite test, `probatio_conformitas_terminalis`**, on
+the SAME table: per scene and profile, a fresh rivus with 1x1-pixel
+cells (cell c = pixel c-1, so fenestra's pixel expectations hold),
+modes declared (mouse + paste, plus kitty for the kitty profile), bytes
+pushed, the coalescing read, silence (`rivus_moram`), read again,
+compare. The excuses come from the FACULTATES rivus itself publishes.
+It NAMES what is excused: exactly one run, ctrl-i under legacy. A
+silent excuse would be a dead gate.
+
+**Result: 16/16 runs conform** (15 CONFORMIS + 1 EXCUSATA), first run.
+Four compiling plants, each caught where predicted: the lazy read (the
+drag's motions no longer coalesce: tractus x2); 10x20 cells (the three
+mouse scenes x2); no silence (legacy escape); `latera` removed from
+sagittae's excuses (both profiles). fenestra still 8/8 on the edited
+table.

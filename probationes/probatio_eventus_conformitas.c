@@ -31,6 +31,8 @@ interior constans character* TABULA =
     "<eventus genus=\"clavis_liberatus\" codex=\"KeyA\" "
     "actio=\"soluta\"/>"
     "</expectata>"
+    "<terminalis profilum=\"legacy\" octeti=\"A\"/>"
+    "<terminalis profilum=\"kitty\" octeti=\"\\e[97:65;2;65u\\x07\"/>"
     "</scaena>"
     "<scaena titulus=\"ictus\" genera=\"mus_depressus mus_liberatus\">"
     "<immissio>"
@@ -227,6 +229,19 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (im->modificantes, 131074);
     CREDO_VERUM (chorda_aequalis_literis(im->characteres, "A"));
     CREDO_FALSUM (im->depressa);
+    /* B4: immissiones terminales (octeti per entitates) */
+    CREDO_AEQUALIS_I32 (xar_numerus(shift->terminales), II);
+    CREDO_VERUM (chorda_aequalis_literis(((ConformitasTerminalis*)
+        xar_obtinere(shift->terminales, I))->profilum, "kitty"));
+    CREDO_VERUM (chorda_aequalis_literis(((ConformitasTerminalis*)
+        xar_obtinere(shift->terminales, I))->octeti,
+        "\033[97:65;2;65u\007"));
+    CREDO_AEQUALIS_I32 (xar_numerus(ictus->terminales), ZEPHYRUM);
+    /* effugium ignotum in octetis: tabula prava */
+    CREDO_NIHIL (eventus_conformitas_legere(
+        "<conformitas><scaena titulus=\"t\" genera=\"textus\">"
+        "<terminalis profilum=\"legacy\" octeti=\"\\q\"/>"
+        "</scaena></conformitas>", piscina, intern));
     im = (ConformitasImmissio*)xar_obtinere(ictus->immissiones,
         ZEPHYRUM);
     CREDO_VERUM (im->genus == CONFORMITAS_IMMISSIO_MUS);

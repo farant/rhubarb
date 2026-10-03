@@ -148,6 +148,98 @@ _excusationes_legere (
     redde VERUM;
 }
 
+interior s32
+_hexadecimalis (
+    i8 c)
+{
+    si (c >= '0' && c <= '9')
+    {
+        redde (s32)(c - '0');
+    }
+    si (c >= 'a' && c <= 'f')
+    {
+        redde (s32)(c - 'a') + X;
+    }
+    si (c >= 'A' && c <= 'F')
+    {
+        redde (s32)(c - 'A') + X;
+    }
+    redde -I;
+}
+
+/* 'octeti' cum effugiis C (\e \t \r \n \\ \xHH) -> octeti crudi.
+ * Valores attributorum STML crudi sunt: hic soluti. FALSUM si effugium
+ * ignotum aut dimidium. */
+interior b32
+_octetos_solvere (
+     chorda  fons,
+    Piscina* piscina,
+     chorda* exitus)
+{
+    i32 k;
+    i32 n = ZEPHYRUM;
+
+    exitus->mensura  = ZEPHYRUM;
+    exitus->datum    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(fons.mensura + I));
+    si (exitus->datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < fons.mensura; k++)
+    {
+        i8 c = fons.datum[k];
+
+        si (c != '\\')
+        {
+            exitus->datum[n] = c;
+            n++;
+            perge;
+        }
+        si (k + I >= fons.mensura)
+        {
+            redde FALSUM;
+        }
+        k++;
+        c = fons.datum[k];
+        si (c == 'e')
+        {
+            exitus->datum[n] = (i8)0x1B;
+        }
+        alioquin si (c == 't')
+        {
+            exitus->datum[n] = '\t';
+        }
+        alioquin si (c == 'r')
+        {
+            exitus->datum[n] = '\r';
+        }
+        alioquin si (c == 'n')
+        {
+            exitus->datum[n] = '\n';
+        }
+        alioquin si (c == '\\')
+        {
+            exitus->datum[n] = '\\';
+        }
+        alioquin si (   c == 'x' && k + II < fons.mensura
+                     && _hexadecimalis(fons.datum[k + I]) >= ZEPHYRUM
+                     && _hexadecimalis(fons.datum[k + II]) >= ZEPHYRUM)
+        {
+            exitus->datum[n] = (i8)(_hexadecimalis(fons.datum[k + I])
+                * XVI + _hexadecimalis(fons.datum[k + II]));
+            k += II;
+        }
+        alioquin
+        {
+            redde FALSUM;
+        }
+        n++;
+    }
+    exitus->mensura = n;
+    redde VERUM;
+}
+
 Xar*
 eventus_conformitas_legere (
      constans character* cstr,
@@ -181,6 +273,8 @@ eventus_conformitas_legere (
             (i32)magnitudo(ConformitasImmissio));
         s->expectata    = xar_creare(piscina,
             (i32)magnitudo(StmlNodus*));
+        s->terminales   = xar_creare(piscina,
+            (i32)magnitudo(ConformitasTerminalis));
         si (   !_genera_legere(_attributum(n, "genera"), s->genera,
                    piscina)
             || !_excusationes_legere(_attributum(n, "excusationes"),
@@ -222,6 +316,28 @@ eventus_conformitas_legere (
                 {
                     im->genus      = CONFORMITAS_IMMISSIO_MUS;
                     im->mus_genus  = _attributum(m, "genus");
+                }
+            }
+        }
+
+        /* B4: immissiones terminales */
+        {
+            Xar* terminales = stml_invenire_omnes_liberos(n,
+                "terminalis", piscina);
+            i32 j;
+
+            per (j = ZEPHYRUM; j < xar_numerus(terminales); j++)
+            {
+                           StmlNodus* m = *(StmlNodus**)xar_obtinere(
+                               terminales, j);
+                ConformitasTerminalis* t = (ConformitasTerminalis*)
+                    xar_addere(s->terminales);
+
+                t->profilum = _attributum(m, "profilum");
+                si (!_octetos_solvere(_attributum(m, "octeti"), piscina,
+                        &t->octeti))
+                {
+                    redde NIHIL;
                 }
             }
         }

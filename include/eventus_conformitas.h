@@ -12,6 +12,7 @@
  *                 depressa="1"/>
  *         <mus genus="depressio" x="10" y="20"/>
  *       </immissio>
+ *       <terminalis profilum="kitty" octeti="\e[97:65;2;65u"/>
  *       <expectata>
  *         <eventus genus="clavis_depressus" codex="KeyA" runa="97"/>
  *         ...
@@ -93,12 +94,24 @@ nomen structura {
                          s32 y;
 } ConformitasImmissio;
 
+/* Immissio terminalis (eventus B4): octeti quos terminalis sub profilo
+ * mittit - 'legacy' (mus solum declaratus), 'kitty' (vexilla 31
+ * impulsa). Cursor: probatio_conformitas_terminalis (rivus purus).
+ * Valores attributorum STML CRUDI sunt (entitates non solvuntur):
+ * 'octeti' effugia C fert - \e (ESC), \t \r \n \\, \xHH;
+ * effugium ignotum = tabula prava. 'octeti' hic SOLUTI. */
+nomen structura {
+    chorda profilum;
+    chorda octeti;
+} ConformitasTerminalis;
+
 nomen structura {
      chorda  titulus;
         Xar* genera;        /* Xar de s32 (eventus_genus_t) */
         Xar* immissiones;   /* Xar de ConformitasImmissio */
         Xar* expectata;     /* Xar de StmlNodus* (<eventus/>) */
         i32  excusationes;  /* CONFORMITAS_EXCUSATIO_* */
+        Xar* terminales;    /* Xar de ConformitasTerminalis (B4) */
 } ConformitasScaena;
 
 /* Tabulam legere. Redde Xar de ConformitasScaena, aut NIHIL si
