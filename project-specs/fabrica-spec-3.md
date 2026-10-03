@@ -11,8 +11,8 @@ generated files judged by what was actually read - but every GATE is
 still judged by the whole tree, and its pass is thrown away at every
 commit.*
 
-*Status: v1 (2026-10-03). Open points for Fran in §X; nothing in §VII
-starts before they are answered.*
+*Status: v1 (2026-10-03). A1 decided (outside reads digested); A2-A4
+carry recommendations - T1 may start.*
 
 ## 0. What the measurements say (dated 2026-10-03)
 
@@ -195,8 +195,8 @@ probatio_toml_differentia and toml_corpus_ambulare read the
 "silvestria" corpus from `$HOME` (paths in
 `toml/probationes/fixa/silvestria.manifestum`, each pinned there by
 its sigillum; a mismatch is counted as omitted, not failed). Under Q7
-as answered, the toml gate is IGNOTUM on every run. The draft rule
-below is §X A1's recommendation, pending Fran:
+as answered, the toml gate is IGNOTUM on every run. DECIDED
+(Fran, 2026-10-03, §X A1 option (a), decretum …JQ1V0) - Q7 amended:
 - Allowed and not digested: the SDK and system roots (`/usr/include`,
   `/usr/lib`, `/Library/Developer`, `/Applications/Xcode.app`) - pinned
   by `identitas_clang`.
@@ -361,7 +361,7 @@ the slice's commits). Done needs ≥10 reuses audited, 0 discord.
 
 ## X. AUDIENDA — open, for Fran
 
-- **A1. Outside reads (amends Q7).** The toml gate reads
+- **A1. Outside reads (amends Q7) - DECIDED (a), 2026-10-03.** The toml gate reads
   content-pinned files from `$HOME` (silvestria). Options:
   - (a) Recommended: digest any regular file the ledger names, inside
     or outside the repo; IGNOTUM only for what cannot be digested
