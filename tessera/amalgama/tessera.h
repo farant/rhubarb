@@ -336,13 +336,21 @@ typedef struct TesseraEventum {
     int                 glutinum_truncatum;
 } TesseraEventum;
 
+/* lexemator fluminis terminalis (series_terminalis vendicatus,
+ * eventus B1b) - opacus; typus in tessera.c internus */
+typedef struct TesseraSeriesLector TesseraSeriesLector;
+
+/* pipeline initus (rivus_terminalis vendicatus, eventus B3a): lector
+ * tesserae = proiectio Eventus eius - opacus */
+typedef struct TesseraRivusTerminalis TesseraRivusTerminalis;
+
 typedef struct TesseraLector {
     TesseraPons*  pons;
     unsigned char buffer[TESSERA_LECTOR_BUFFER];
-    unsigned int  mensura;
+    unsigned int  mensura;        /* octeti in rivo nondum consumpti */
     unsigned int  latitudo_nota;
     unsigned int  altitudo_nota;
-    unsigned char* glutinum;      /* collector glutini */
+    TesseraRivusTerminalis* rivus;
 } TesseraLector;
 
 TesseraLector* tessera_lector_creare(TesseraPiscina* piscina,

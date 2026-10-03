@@ -354,6 +354,7 @@ _facultates_impellere (
     e.datum.facultates.depositio         = EVENTUS_DEPOSITIO_NULLA;
     e.datum.facultates.gradus_rotulae    = FENESTRA_GRADUS_ROTULAE;
     e.datum.facultates.pressio           = FALSUM;
+    e.datum.facultates.modificantes_textus = VERUM;   /* B4 */
     impellere_eventum(fenestra, &e);
 }
 
@@ -390,10 +391,11 @@ _scalam_obtinere (
  * deorsum. floor, non truncatio: -0.5 extra est (pixelum -1), non 0.
  * Pressio IGNOTA (mus). */
 interior vacuum
-_murem_implere (
+_positionem (
     Fenestra* fenestra,
      NSEvent* eventus_ns,
-     Eventus* eventus)
+         s32* x_ex,
+         s32* y_ex)
 {
     NSPoint  punctum;
      NSRect  rectum;
@@ -418,8 +420,18 @@ _murem_implere (
     _scalam_obtinere(fenestra, &scala_x, &scala_y);
     x = punctum.x * scala_x;
     y = (contentum.size.height - punctum.y) * scala_y;
-    eventus->datum.mus.x             = (s32)floor(x);
-    eventus->datum.mus.y             = (s32)floor(y);
+    *x_ex = (s32)floor(x);
+    *y_ex = (s32)floor(y);
+}
+
+interior vacuum
+_murem_implere (
+    Fenestra* fenestra,
+     NSEvent* eventus_ns,
+     Eventus* eventus)
+{
+    _positionem(fenestra, eventus_ns, &eventus->datum.mus.x,
+        &eventus->datum.mus.y);
     eventus->datum.mus.modificantes  = (i32)[eventus_ns modifierFlags];
     eventus->datum.mus.indicator     = ZEPHYRUM;
     eventus->datum.mus.indicator_genus = EVENTUS_INDICATOR_MUS;
@@ -443,6 +455,10 @@ _rotulam_implere (
     f64  scala_y;
 
     eventus->tempus = _tempus_eventus(eventus_ns);
+    /* B3a: positio indicatoris et modificantes (shift+rota, zoom) */
+    _positionem(fenestra, eventus_ns, &eventus->datum.rotula.x,
+        &eventus->datum.rotula.y);
+    eventus->datum.rotula.modificantes = (i32)[eventus_ns modifierFlags];
     praecisa = [eventus_ns hasPreciseScrollingDeltas] ? VERUM : FALSUM;
     si (praecisa != fenestra->rotula_praecisa)
     {

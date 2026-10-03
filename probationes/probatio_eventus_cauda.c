@@ -1,7 +1,7 @@
 /* probatio_eventus_cauda.c - cauda eventuum fontis (eventus A3a):
  * anulus FIFO, plena -> amissa, textus COPIATUS, vita visuum per
  * lectionem, truncatio; (A3b) motus coalitus cum exemplis, residuum
- * rotulae. */
+ * rotulae; (B3b) viae depositionis COPIATAE. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -257,6 +257,43 @@ s32 principale (vacuum)
         CREDO_VERUM (r < -0.29 && r > -0.31);
         CREDO_AEQUALIS_S32 (eventus_residuum_integrare(&r, 7.0), 6);
         CREDO_VERUM (r > 0.69 && r < 0.71);
+    }
+
+    imprimere("\n--- XI. depositio: viae COPIATAE (eventus B3b) ---\n");
+    {
+        character viae[XVI];
+
+        dum (eventus_caudae_extrahere(c, &e))
+        {
+        }
+        eventus_cauda_lectio_incipit(c);
+        strcpy(viae, "/a\n/b c");
+        e = _eventum(EVENTUS_DEPOSITIO, XL);
+        e.datum.depositio.x = VII;
+        e.datum.depositio.y = IX;
+        e.datum.depositio.viae.datum = (i8*)viae;
+        e.datum.depositio.viae.mensura = (i32)strlen(viae);
+        e.datum.depositio.numerus = II;
+        e.datum.depositio.promota = VERUM;
+        CREDO_VERUM (eventus_caudae_depositionem_impellere(c, &e));
+        memset(viae, 'x', VIII);          /* fons vocantis mutatur */
+        CREDO_VERUM (eventus_caudae_extrahere(c, &e));
+        CREDO_VERUM (e.genus == EVENTUS_DEPOSITIO);
+        CREDO_VERUM (chorda_aequalis_literis(e.datum.depositio.viae,
+            "/a\n/b c"));
+        CREDO_VERUM (e.datum.depositio.viae.datum == c->textus);
+        CREDO_AEQUALIS_I32 (e.datum.depositio.numerus, II);
+        CREDO_VERUM (e.datum.depositio.x == VII && e.datum.depositio.y
+            == IX && e.datum.depositio.promota);
+        /* tabula sine loco: viae truncari nequeunt - recusatur */
+        eventus_cauda_lectio_incipit(c);
+        c->textus_mensura = EVENTUS_CAUDA_TEXTUS - II;
+        strcpy(viae, "/a/b");
+        e.datum.depositio.viae.datum    = (i8*)viae;
+        e.datum.depositio.viae.mensura  = IV;
+        CREDO_FALSUM (eventus_caudae_depositionem_impellere(c, &e));
+        CREDO_AEQUALIS_I32 (c->numerus, ZEPHYRUM);
+        eventus_cauda_lectio_incipit(c);
     }
 
     imprimere("\n");

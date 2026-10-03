@@ -804,3 +804,22 @@ every object -O2 (not worth the scope). Plant (renaming disabled) → the
 three naming assertions red, flag/untouched-source assertions green.
 Canon: aedilis.canon gains `compilatio` (reuses the global `fons`);
 canon_examen checked live against a scratch copy with an unknown child.
+
+## 2026-10-02 - gate: per-run clang -MM memo (274 s -> 203 s)
+
+Measured the aedilis gate (tools/aedilis_porta.sh, 199 tests, serial)
+with an instrumented copy: derivation 67 s, build 10 s (objects cached -
+my "every header per object" guess was wrong), run 51 s, --differentia
+141 s. --differentia re-derives and runs one `clang -MM` per source in
+the closure: 2,729 invocations across the gate for only 201 distinct
+sources. New option `--memoria-oraculi <dir>`: the raw -MM output per
+source is stored under a path-derived key and reused (only successful
+output stored). Within one gate run the tree is frozen and the flags
+fixed, so a source's -MM cannot change; across runs it can - the gate
+makes a FRESH dir per run (mktemp, trap rm). Proof: --differentia
+output of all 199 tests byte-identical with and without the memo (153 s
+-> 74 s); plant - a wrong memo entry for lib/xar.c surfaced as
+"ORACULUM SOLUM: include/caput_fictum.h", so the memo is really read
+and must never outlive a run. Remaining: derivation runs twice per test
+(gate phase 1 and inside --differentia), and the loop is serial -
+parallelism collides with the shared object cache (slice 2).

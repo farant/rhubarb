@@ -3,8 +3,13 @@
 declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
+    "claves_physicae"
+    "eventus_cauda"
+    "interpres_terminalis"
     "piscina"
+    "rivus_terminalis"
     "runae"
     "runae_tabulae"
+    "series_terminalis"
     "utf8"
 )

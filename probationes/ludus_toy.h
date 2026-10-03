@@ -29,6 +29,9 @@ nomen structura {
     i32 compositiones_in_traditione; /* T5: numerus in traditione */
     s32 translatio_y;                  /* A6b: b1 et tabula deorsum
                                       * (iteratio semantica) */
+    /* B6b: dispositio terminalis - fines ad cellulas extensi */
+    s32 modulus_latitudo;
+    s32 modulus_altitudo;
 } ToyStatus;
 
 nomen structura {
@@ -46,6 +49,34 @@ hic_manens character toy_attr_fuga[]          = "fuga";
  * Compositio
  * ================================================== */
 
+/* B6b: dispositio terminalis - fines ad cellulas Moduli EXTENSI
+ * (initium deorsum, finis sursum); modulus 0 = pixela (fenestra) */
+interior Fines
+toy_fines (
+    constans ToyStatus* toy,
+                   s32  x,
+                   s32  y,
+                   s32  latitudo,
+                   s32  altitudo)
+{
+    Fines f;
+      s32 ml = toy->modulus_latitudo;
+      s32 ma = toy->modulus_altitudo;
+
+    f.x         = x;
+    f.y         = y;
+    f.latitudo  = latitudo;
+    f.altitudo  = altitudo;
+    si (ml > ZEPHYRUM && ma > ZEPHYRUM)
+    {
+        f.x         = (x / ml) * ml;
+        f.y         = (y / ma) * ma;
+        f.latitudo  = ((x + latitudo + ml - I) / ml) * ml - f.x;
+        f.altitudo  = ((y + altitudo + ma - I) / ma) * ma - f.y;
+    }
+    redde f;
+}
+
 interior Componens*
 toy_componere (
      InsulaRepositorium* repo,
@@ -62,28 +93,21 @@ toy_componere (
     (vacuum)repo;
     (vacuum)motus;
     ((ToyStatus*)ctx)->compositiones++;
-    radix       = componens_creare(p, in, "radix", PARTES_NULLUM);
-    f.x         = ZEPHYRUM;
-    f.y         = ZEPHYRUM;
-    f.latitudo  = CC;
-    f.altitudo  = C;
+    radix  = componens_creare(p, in, "radix", PARTES_NULLUM);
+    f      = toy_fines((ToyStatus*)ctx, ZEPHYRUM, ZEPHYRUM, CC, C);
     componens_ponere_fines(radix, f);
     componens_ponere_actio(radix, "fugere");
     b1          = componens_creare(p, in, "b1", PARTES_BOTTONE);
-    f.x         = X;
-    f.y         = X + ((ToyStatus*)ctx)->translatio_y;
-    f.latitudo  = L;
-    f.altitudo  = XX;
+    f           = toy_fines((ToyStatus*)ctx, X,
+        X + ((ToyStatus*)ctx)->translatio_y, L, XX);
     componens_ponere_fines(b1, f);
     componens_ponere_actio(b1, "numerare");
     componens_ponere_titulum(b1, "Numerare");
     componens_ponere_focusabilis(b1, VERUM);
     componens_addere_liberum(radix, b1);
     tabula      = componens_creare(p, in, "tabula", PARTES_TABULA);
-    f.x         = LXX;
-    f.y         = X + ((ToyStatus*)ctx)->translatio_y;
-    f.latitudo  = C;
-    f.altitudo  = LXXX;
+    f           = toy_fines((ToyStatus*)ctx, LXX,
+        X + ((ToyStatus*)ctx)->translatio_y, C, LXXX);
     componens_ponere_fines(tabula, f);
     componens_ponere_praedicatum(tabula, PRAEDICATUM_PROPRIUS);
     componens_ponere_actio(tabula, "ictus");

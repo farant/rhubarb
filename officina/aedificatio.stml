@@ -94,7 +94,7 @@
        clave ingressuum ET mandati regenerationem supplet. aedilis per
        FONTES suos (manifestum), non per binarium: relinkatum octetis
        differt (LC_UUID), clavis per cursum mutaretur. -->
-  <actio titulus="fragmentum_officina_colloquium" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_officina_colloquium" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>officina/colloquium_fontes_generata.sh
@@ -108,14 +108,12 @@
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__colloquium_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__colloquium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="officina/colloquium_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_officina_cursor" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_officina_cursor" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>officina/cursor_fontes_generata.sh
@@ -129,14 +127,12 @@
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__cursor_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__cursor_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="officina/cursor_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_officina_fusor" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_officina_fusor" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>officina/fusor_fontes_generata.sh
@@ -150,14 +146,12 @@
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__fusor_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__fusor_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="officina/fusor_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_officina_interpretare" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_officina_interpretare" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>officina/interpretare_fontes_generata.sh
@@ -171,14 +165,12 @@
       <verbum! (>officina/fontes/officina_regio.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__interpretare_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__interpretare_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="officina/interpretare_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_officina_legatus" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_officina_legatus" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>officina/legatus_fontes_generata.sh
@@ -190,14 +182,12 @@
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__legatus_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__legatus_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="officina/legatus_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_officina_sonda" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_officina_sonda" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>officina/sonda_fontes_generata.sh
@@ -209,14 +199,12 @@
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__sonda_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__sonda_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="officina/sonda_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_officina_vindex" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_officina_vindex" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>officina/vindex_fontes_generata.sh
@@ -227,9 +215,7 @@
       <verbum! (>silva/instrumenta/silva_lexicon.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__vindex_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/officina__vindex_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="officina/vindex_fontes_generata.sh" provenientia="regeneratio"/>

@@ -30,6 +30,12 @@ excludenda_pro() {
         chorda_aedificator) echo "EXCLUDENDA_AEDIFICATORIS" ;;
         utf8)               echo "EXCLUDENDA_UTF8" ;;
         runae)              echo "EXCLUDENDA_RUNAE" ;;
+        # eventus B3a: acervus Eventus vendicatus (rivus = pipeline)
+        series_terminalis)    echo "EXCLUDENDA_SERIEI" ;;
+        eventus_cauda)        echo "EXCLUDENDA_CAUDAE" ;;
+        claves_physicae)      echo "EXCLUDENDA_CLAVIUM" ;;
+        interpres_terminalis) echo "EXCLUDENDA_INTERPRETIS" ;;
+        rivus_terminalis)     echo "EXCLUDENDA_RIVI" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -37,5 +43,5 @@ excludenda_pro() {
 # bases quarum excludenda COMPILATORE metuntur (messis: tools/
 # amalgama_excludenda_generare.sh)
 bases_excludendae() {
-    echo "piscina chorda_aedificator utf8 runae"
+    echo "piscina chorda_aedificator utf8 runae series_terminalis eventus_cauda claves_physicae interpres_terminalis rivus_terminalis"
 }

@@ -16,6 +16,22 @@
   <elementum nomen="aedificatio" radix="verum">
     <liberum nomen="actio" minimum="1"/>
     <liberum nomen="compositum"/>
+    <liberum nomen="familia"/>
+  </elementum>
+
+  <elementum nomen="familia"
+    nota="actio una per plagulam directorii 'via' congruentem (praefixum,
+          suffixum; plan 2 T4, Q17): templum STML unum (spatium '@',
+          corpus = actio una sine titulo) per stml_expandere impletur -
+          loculi 'basis' (nomen sine suffixo) et 'fons' (via plagulae)
+          soli. Titulus instantiae 'familia:basis', fons ingressus.
+          Corpus templi a lectore fabricae iudicatur, non a canone
+          (materia citata). Nulla lingua expressionum. Fran
+          2026-10-02">
+    <attributum nomen="titulus" genus="nomen" necessarium="verum"/>
+    <attributum nomen="via" genus="via" necessarium="verum"/>
+    <attributum nomen="praefixum" genus="textus"/>
+    <attributum nomen="suffixum" genus="textus"/>
   </elementum>
 
   <elementum nomen="compositum"
@@ -55,6 +71,12 @@
             aedilis derivatae) - verificatio memorata (build/fabrica.db)
             regenerationem supplet. Absens = falsum: sub -plenus semper
             regeneratur (plan 1a T6, decretum 01M3RDBCB8)"/>
+    <attributum nomen="lectiones" genus="veritas"
+      nota="verum: actio per LIBRUM LECTIONUM suum clavatur (plan 2
+            T2) - quod instrumenta domus vere legerunt, quaesiverunt,
+            enumeraverunt (FABRICA_LECTIONES) sigillatur et ingressus
+            manifestorum supplet; ingressus declarati (scripta, argv)
+            manent. Absens = falsum"/>
     <liberum nomen="mandatum" maximum="1"/>
     <liberum nomen="praecondicio"/>
     <liberum nomen="vestigium"/>

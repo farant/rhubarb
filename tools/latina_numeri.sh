@@ -14,7 +14,7 @@ clang "${VEXILLA_C89[@]}" -I"$RADIX/include" \
     "$RADIX/tools/latina_numeri.c" \
     "$RADIX/lib/numerus_romanus.c" "$RADIX/lib/chorda.c" \
     "$RADIX/lib/chorda_aedificator.c" "$RADIX/lib/piscina.c" \
-    "$RADIX/lib/filum.c" \
+    "$RADIX/lib/filum.c" "$RADIX/lib/lectiones.c" \
     -o "$BIN" || exit 2
 # FABRICA_SCRIPTURA (bin/fabrica -plenus, plan 1a T5): latina.h in
 # scripturam copiatur, sectio numerorum ibi regeneratur (-scribere);

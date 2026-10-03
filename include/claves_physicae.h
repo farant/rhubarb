@@ -23,4 +23,28 @@ EventusCodex
 claves_codex_ex_macos (
     s32 codex_virtualis);
 
+/* Character dispositionis US basicae (minusculae, numeri, signa,
+ * spatium) -> codex physicus: clavis BASIS kitty ('base layout key',
+ * vexillum IV) positio est, non dispositio currens (eventus B2b).
+ * Maiusculae et non-ASCII -> IGNOTUS (kitty basem minusculam
+ * mittit). */
+EventusCodex
+claves_codex_ex_littera (
+    s32 runa);
+
+/* Inversum claves_codex_ex_littera (eventus B6a): codex physicus ->
+ * character dispositionis US basicae (minuscula), 0 si nullus - clavis
+ * BASIS kitty quam codificator refert. */
+s32
+claves_littera_ex_codex (
+    EventusCodex codex);
+
+/* kitty: numeri clavium functionalium (Escape 27, Enter 13, Tab 9,
+ * Backspace 127, Caps Lock 57358, modificatores laterales 57441..57450)
+ * -> codex physicus. Ceteri (runae, F13+, tabula numerica sine codice
+ * in vocabulario) -> IGNOTUS. */
+EventusCodex
+claves_codex_ex_kitty (
+    s32 numerus);
+
 #endif /* CLAVES_PHYSICAE_H */

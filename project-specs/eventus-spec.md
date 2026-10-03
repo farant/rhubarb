@@ -274,6 +274,9 @@ drops. Options:
 **Recommendation: (a)**, scheduled as Phase B after Phase A has proven
 the model on fenestra.
 
+**DECIDED (Fran, 2026-10-02): (a)**, after phase A closed (RELATIO in
+`lib/eventus.phase-log.md`). Plan: `project-specs/eventus-plan-B.md`.
+
 ## 5. Phases and tasks (sketch for the plan)
 
 **Phase A: the vocabulary, fenestra, ludus, recording, conformance.**

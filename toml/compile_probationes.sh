@@ -47,33 +47,6 @@ declare -a INCLUDE_FLAGS=(
     "-I$TOML_DIR/probationes"
 )
 
-# Fontes radicis quibus materia in evolutione nititur.
-declare -a RADIX_FONTES=(
-    "piscina"
-    "sors"
-    "chorda"
-    "chorda_aedificator"
-    "xar"
-    "friatio"
-    "tabula_dispersa"
-    "internamentum"
-    "stml"
-    "stml_macros"
-    "excerptum"
-    "utf8"
-    "runae"
-    "runae_tabulae"
-    "iter_directoria"
-    "via"
-    "filum"
-    "json"
-    "sigillum"
-    "selectio"
-    "similitudo"
-    "canon"
-    "credo"
-)
-
 FILTER="${1:-}"
 
 if [ -n "$FILTER" ]; then
@@ -85,126 +58,50 @@ if [ -n "$FILTER" ]; then
     fi
 fi
 
-# ---- custodia vetustatis ----
-# '$src -nt $obj' AEQUALITATEM PERDIT: mtimes secundo mensurantur,
-# ergo fons et obiectum in EODEM secundo scripta 'non novius'
-# dant et recompilatio TACITE OMITTITUR. Id me momordit
-# 2026-08-27: vitium plantatum, restitutum, et probatio adhuc
-# rubra - contra obiectum vitiosum, quia .c et .o ambo 21:27:07
-# ferebant. FALSUM RUBRUM, geminum falsi viridis quod eodem die
-# silvam momordit, et peius: viride falsum te 'peractum' putare
-# facit, rubrum falsum codici RECTO diffidere.
-# Remedium: '! [ $obj -nt $src ]' - in aequalitate RECOMPILA.
-# CAUTIO: silva/compile_probationes.sh idem exemplar '-nt' fert.
-
-# ---- custodia capitum ----
-# Mutatio capitis SOLA nihil recompilat si tantum mtimes .c
-# spectantur - id est ipsum quod falsum viride 2026-08-27 in silva
-# peperit (L/L contra obiecta sex horarum). Ergo caput
-# recentissimum contra omne obiectum retiratur.
-# materia/fontes (et md/fontes ubi md compilatur) additi 2026-09-17:
-# substratum quod cliens compilat, olim ab indice absens.
-CAPUT_RECENS=""
-while IFS= read -r caput_via; do
-    # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
-    if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
-        CAPUT_RECENS="$caput_via"
-    fi
-done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" \
-             "$TOML_DIR/fontes" "$TOML_DIR/probationes" \
-             -name "*.h" 2>/dev/null)
-if [ -z "$CAPUT_RECENS" ]; then
-    echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
-fi
-
-# AEQUALITAS: mtimes secundo mensurantur, ergo fons et obiectum
-# EODEM SECUNDO scripta '-nt' non satisfaciunt et recompilatio
-# TACITE omittitur - suite contra obiectum PRIUS currit. Id
-# 2026-08-27 in materia RUBRUM FALSUM peperit (vitium plantatum,
-# restitutum, probatio adhuc rubra contra .o vetus; .c et .o ambo
-# 21:27:07). Remedium ubique: in aequalitate RECOMPILA.
-newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
-        echo "$CAPUT_RECENS"
-    fi
-}
-
-obj_files=""
-for f in "${RADIX_FONTES[@]}"; do
-    src="$RADIX_DIR/lib/$f.c"
-    obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [dep] $f.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $f.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
+# ---- FONTES ex clausuris (fabrica plan 2 T5) ----
+# Olim indices MANU scripti (XXIV lib, XIII materia, toml/fontes,
+# adiumenta) et regula crassa 'caput recentissimum quodvis omne obiectum
+# stalum facit' (mtime, aequalitas secundi). Nunc: clausura cuiusque
+# probationis ab aedile (bin/aedilis --enumerare, idem ac ceterae suitae),
+# unio compilatur per bin/compilator ('clang -c' per thesaurum: clavis
+# ex octetis fontis et capitum depfile, radicibus -I, identitate clang -
+# nulla mtime). Obiectum identicum non rescribitur; ideo custodia
+# excubitoris post constructionem (mtime) hic non iam valet et deleta
+# est (plan 2 T7 excubitorem ipsum emeritum facit).
+[ -x "$RADIX_DIR/bin/aedilis" ] || "$RADIX_DIR/tools/aedilis_struere.sh" >&2 \
+    || { echo "FRACTA: bin/aedilis struere nequit"; exit 1; }
+[ -x "$RADIX_DIR/bin/compilator" ] || "$RADIX_DIR/tools/compilator_struere.sh" >&2 \
+    || { echo "FRACTA: bin/compilator struere nequit"; exit 1; }
+COMPILATOR="$RADIX_DIR/bin/compilator"
+# thesaurus unus pro aedile (recorda extractionis) et compilatore
+# (obiecta): FABRICA_THESAURUS, ordinarie build/aedilis/obiecta. Sine eo
+# aedilis XIII clausuras omni cursu de novo parsat (6.8 s contra 0.26 s)
+THESAURUS="${FABRICA_THESAURUS:-$RADIX_DIR/build/aedilis/obiecta}"
+export FABRICA_THESAURUS="$THESAURUS"
+CLAUSURAE_DIR="$BUILD_DIR/clausurae"
+mkdir -p "$CLAUSURAE_DIR" "$BUILD_DIR/probationes"
 shopt -s nullglob
-# materia sub-fontes: toml eam CONSUMIT, non continet
-for m in materia_lexicon materia_token materia_nodus materia_scribere \
-         materia_arbor materia_arbor_aequalitas materia_coctor \
-         materia_sedes materia_diagnostica materia_annotationes \
-         materia_excusatio materia_exemplaria materia_pictor; do
-    src="$MATERIA_DIR/fontes/$m.c"
-    obj="$BUILD_DIR/$m.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [materia] $m.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $m.c" ; exit 1
-        fi
+for test_file in "$TOML_DIR"/probationes/probatio_*.c; do
+    name="$(basename "$test_file" .c)"
+    if ! (cd "$RADIX_DIR" && bin/aedilis "${test_file#"$RADIX_DIR"/}" --enumerare \
+            --thesaurus "$THESAURUS") \
+            > "$CLAUSURAE_DIR/$name.lst"; then
+        echo "FRACTA (clausura): $name"; exit 1
     fi
-    obj_files="$obj_files $obj"
 done
-
-for src in "$TOML_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
-    obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [toml] $base.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $base.c" ; exit 1
-        fi
+shopt -u nullglob
+numerus_fontium=0
+while IFS= read -r fons; do
+    obj="$BUILD_DIR/$(basename "$fons" .c).o"
+    # via ABSOLUTA et cwd vocantis, ut olim: -g utramque infigit -
+    # obiecta cursori veteri octetim aequalia (oraculum)
+    if ! "$COMPILATOR" "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+            -c "$RADIX_DIR/$fons" -o "$obj"; then
+        echo "FRACTA: $fons" ; exit 1
     fi
-    obj_files="$obj_files $obj"
-done
-
-# adiumenta probationum (probationes/*.c non probatio_*)
-for src in "$TOML_DIR"/probationes/*.c; do
-    base="$(basename "$src" .c)"
-    case "$base" in probatio_*) continue ;; esac
-    obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [adiumentum] $base.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $base.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
-done
-
-# ---- custodia post constructionem (2026-09-17) ----
-# Custodia capitum supra per indicem MANU scriptum iudicat; excubitor
-# graphum inclusionum DERIVATUM legit (build/inclusiones.tsv). Obiectum
-# post constructionem stalum = index supra caput ignoravit: olim
-# materia/fontes deerat, et mutatio MateriaArborConsilium (A1 plani
-# materia-sedes, campus ultimus additus) obiecta vetera cum structura
-# minore in acervo reliquit - probationes et instrumenta contra ea
-# currebant. Stala = nihil curritur (exitus II); graphus absens aut
-# excubitor fractus = CAUTIO clamata, numquam tacita.
-excubitor_exitus=0
-excubitor_relatio="$("$RADIX_DIR/excubitor.sh" "${BUILD_DIR#"$RADIX_DIR"/}/" -tacitus 2>&1)" \
-    || excubitor_exitus=$?
-if [ "$excubitor_exitus" -eq 1 ]; then
-    echo "$excubitor_relatio"
-    echo "FRACTA: obiecta stala post constructionem - custodia capitum caput ignoravit; NIHIL CURSUM (exitus II)"
-    exit 2
-elif [ "$excubitor_exitus" -ne 0 ]; then
-    echo "$excubitor_relatio" >&2
-    echo "CAUTIO: excubitor exitus $excubitor_exitus - custodia post constructionem NON iudicavit" >&2
-fi
+    numerus_fontium=$((numerus_fontium + 1))
+done < <(cat "$CLAUSURAE_DIR"/*.lst | sort -u)
+echo "  fontes clausurarum: $numerus_fontium (per bin/compilator)"
 
 # corpus domus: omnis .toml tracta extra fixa clientis (viae relativae
 # radici) pro porta corporis (probatio_toml_corpus legit
@@ -241,7 +138,15 @@ for test_file in "$TOML_DIR"/probationes/probatio_*.c; do
     echo ""
     echo "=== $name ==="
     t0=$(mensor_suitae_nunc)
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
+    # probatio ipsa per compilatorem; nexus cum obiectis clausurae SUAE
+    obj_probationis="$BUILD_DIR/probationes/$name.o"
+    obj_files=""
+    while IFS= read -r fons; do
+        obj_files="$obj_files $BUILD_DIR/$(basename "$fons" .c).o"
+    done < "$CLAUSURAE_DIR/$name.lst"
+    if ! "$COMPILATOR" "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+            -c "$test_file" -o "$obj_probationis" \
+        || ! clang "${GCC_FLAGS[@]}" "$obj_probationis" $obj_files -o "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue

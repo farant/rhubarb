@@ -36,7 +36,7 @@ mkdir -p "$clausurae"
 
 lista="$(
     for scopus in "$@"; do
-        ./bin/aedilis "$scopus" --enumerare \
+        ./bin/aedilis "$scopus" --enumerare --thesaurus build/aedilis/obiecta \
             --manifestum "$clausurae/$(echo "$scopus" | sed 's|/|__|g').stml" \
             || exit 1
     done | awk '/^lib\/.*\.c$/ { sub(/^lib\//,""); sub(/\.c$/,""); print }' \

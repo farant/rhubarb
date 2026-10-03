@@ -282,6 +282,10 @@ nomen structura {
     i32 depositio;          /* EVENTUS_DEPOSITIO_* */
     s32 gradus_rotulae;     /* pixela nostra per gradum (GRADATA) */
     b32 pressio;            /* pressio indicatoris vera */
+    /* B4: modificantes clavium imprimibilium narrantur (Shift+A non
+     * solum 'A'). Legacy FALSUM (Shift ut Caps Lock videtur); kitty
+     * cum vexillo OMNES VERUM; fenestra VERUM. Ad finem additum. */
+    b32 modificantes_textus;
 } EventusFacultates;
 
 
@@ -330,6 +334,12 @@ nomen structura {
             s32 dx;                  /* pixela nostra, integra */
             s32 dy;
             EventusRotulaGenus genus;
+            /* B3a: positio indicatoris (pixela nostra, ut mus) et
+             * modificantes - shift+rota, ctrl+rota (zoom); rotula ad
+             * tabulam sub indicatore destinari potest */
+            s32 x;
+            s32 y;
+            i32 modificantes;
         } rotula;
         structura {
                 chorda contentum;    /* VISUS usque ad lectionem proximam */

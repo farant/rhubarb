@@ -191,6 +191,10 @@ s32 principale (vacuum)
         e->datum.rotula.dx = -XII;
         e->datum.rotula.dy = XXX;
         e->datum.rotula.genus = EVENTUS_ROTULA_PRAECISA;
+        /* B3a: positio et modificantes rotulae (shift/ctrl + rota) */
+        e->datum.rotula.x = -VII;
+        e->datum.rotula.y = CCC;
+        e->datum.rotula.modificantes = MOD_IMPERIUM;
         e = addere(index, EVENTUS_DEPOSITIO, M + IV);
         e->datum.depositio.x = VII;
         e->datum.depositio.y = VIII;
@@ -211,6 +215,7 @@ s32 principale (vacuum)
             EVENTUS_DEPOSITIO_HEURISTICA;
         e->datum.facultates.gradus_rotulae = XVI;
         e->datum.facultates.pressio = VERUM;
+        e->datum.facultates.modificantes_textus = VERUM;
         e = addere(index, EVENTUS_SUSPENSIO, M + VI);
         e = addere(index, EVENTUS_RESUMPTIO, M + VII);
 
@@ -257,6 +262,9 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (e->datum.rotula.dx, -XII);
         CREDO_AEQUALIS_S32 (e->datum.rotula.dy, XXX);
         CREDO_VERUM (e->datum.rotula.genus == EVENTUS_ROTULA_PRAECISA);
+        CREDO_AEQUALIS_S32 (e->datum.rotula.x, -VII);
+        CREDO_AEQUALIS_S32 (e->datum.rotula.y, CCC);
+        CREDO_AEQUALIS_I32 (e->datum.rotula.modificantes, MOD_IMPERIUM);
         CREDO_VERUM (e->datum.rotula.delta_y < -1.4f);
         e = (Eventus*)xar_obtinere(index2, IV);
         CREDO_AEQUALIS_S32 (e->datum.depositio.x, VII);
@@ -270,7 +278,8 @@ s32 principale (vacuum)
             && !e->datum.facultates.tabula_distincta
             && e->datum.facultates.latera && e->datum.facultates.super
             && !e->datum.facultates.praeeditio
-            && e->datum.facultates.pressio);
+            && e->datum.facultates.pressio
+            && e->datum.facultates.modificantes_textus);
         CREDO_AEQUALIS_I32 (e->datum.facultates.scriptura_copiae,
             EVENTUS_FACULTAS_FORTASSE);
         CREDO_AEQUALIS_I32 (e->datum.facultates.depositio,

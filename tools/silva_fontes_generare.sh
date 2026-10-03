@@ -42,7 +42,7 @@ derivare() {
     local clavis
     clavis="$(echo "$1" | sed 's|/|__|g')"
     if [ ! -f "$promptuarium/$clavis" ]; then
-        if ! ./bin/aedilis "$1" --enumerare \
+        if ! ./bin/aedilis "$1" --enumerare --thesaurus build/aedilis/obiecta \
                 --manifestum "$clausurae/$clavis.stml" \
                 > "$promptuarium/$clavis.nov"; then
             return 1

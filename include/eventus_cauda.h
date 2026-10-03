@@ -75,6 +75,14 @@ eventus_caudae_motum_impellere (
           EventusCauda* cauda,
       constans Eventus* eventus);
 
+/* EVENTUS_DEPOSITIO cum viis COPIATIS (datum.depositio.viae visus
+ * vocantis -> tabula caudae). Viae truncari nequeunt: tabula sine loco
+ * -> FALSUM, nihil impulsum (vocans textum reddere potest). */
+b32
+eventus_caudae_depositionem_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus);
+
 /* Pars integra residui (rotula; spec Q14): *residuum += delta, pars
  * integra (versus ZEPHYRUM truncata) redditur et a residuo demitur.
  * Fons residuum per fenestram tenet - fractiones non pereunt. */

@@ -42,6 +42,20 @@
 #        FRACTUM per exitum (plan 1b T5, Q42)
 #   XXV  cursus: actio sanata in build/fabrica.db scribitur; -siccum
 #        postea tempus aestimat, non 'tempus ignotum' (plan 1b T7)
+#   XXVI purgare: thesaurus manu structus (sigilla vera per shasum),
+#        VI generationes - prima sola clavem k1 tenet: index primus,
+#        actio k1, blobus eius deleti (III), cetera servata; -verificare
+#        blobum servatum corruptum delet (plan 2 T3)
+#   XXVII familia in disco vero: II plagulae congruentes -> II actiones
+#        (titulus familia:basis), alia non; plagula nova -> actio nova
+#        STALUM (exitus absens) (plan 2 T4)
+#   XXVIII simul: IV actiones tutae (lectiones), II s singulae,
+#        FABRICA_FILA=IV -> tempus < IV s (plan 2 T6)
+#   XXIX simul fractura: una ex IV fracta -> ceterae SANATUM, dependens
+#        OMISSUM nominans eam, exitus 1
+#   XXX  non tuta numquam simul: intervallum eius nullum alium tangit
+#   XXXI iudicium simul (T6b, praevisio): IV generatores tuti, II s sub
+#        iudice singuli, -plenus FABRICA_FILA=IV -> < IV s, verdicta recta
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -254,6 +268,100 @@ printf 'vetus\n' > "$T/r/b"
 if [ "$rc1" -eq 1 ] && grep -q '^AGENDUM *g (tempus ignotum)' "$T/o" \
    && [ "$rc2" -eq 0 ] && [ "$rc3" -eq 1 ] && grep -q '^AGENDUM *g (~[0-9]*\.[0-9] s)' "$T/o3"; then echo "  XXV  cursus: siccum aestimat         OK"; else echo "  XXV  FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3"; fracta=1; fi
 
+# XXVI (plan 2 T3): purgare - generationes servatae V (A3)
+radix '<fabrica titulus="t"/>'
+O="$T/r/build/aedilis/obiecta"
+pone_blobum () { local h; h=$(printf '%s' "$1" | shasum -a 256 | cut -c1-64); mkdir -p "$O/blobi/${h:0:2}"; printf '%s' "$1" > "$O/blobi/${h:0:2}/${h:2}"; echo "$h"; }
+pone_actionem () { mkdir -p "$O/actiones/${1:0:2}"; printf '%s\n' "$2" > "$O/actiones/${1:0:2}/${1:2}"; }
+b1=$(pone_blobum "unus"); b2=$(pone_blobum "duo")
+k1=$(printf 'k1' | shasum -a 256 | cut -c1-64); k2=$(printf 'k2' | shasum -a 256 | cut -c1-64)
+pone_actionem "$k1" "$b1"; pone_actionem "$k2" "$b2"
+mkdir -p "$O/generationes"
+printf '%s\n' "$k1" > "$O/generationes/20260101T000000-1-0001.lst"
+for g in 2 3 4 5 6; do printf '%s\n' "$k2" > "$O/generationes/2026010${g}T000000-1-0001.lst"; done
+(cd "$T/r" && "$F" purgare) > "$T/o" 2>&1; rc1=$?
+printf 'X' >> "$O/blobi/${b2:0:2}/${b2:2}"
+(cd "$T/r" && "$F" purgare -verificare) > "$T/o2" 2>&1; rc2=$?
+if [ "$rc1" -eq 0 ] && grep -q 'purgare: 3 deleta' "$T/o" \
+   && [ ! -e "$O/blobi/${b1:0:2}/${b1:2}" ] && [ ! -e "$O/actiones/${k1:0:2}/${k1:2}" ] \
+   && [ ! -e "$O/generationes/20260101T000000-1-0001.lst" ] && [ -e "$O/actiones/${k2:0:2}/${k2:2}" ] \
+   && [ "$rc2" -eq 0 ] && grep -q 'purgare: 1 deleta' "$T/o2" && [ ! -e "$O/blobi/${b2:0:2}/${b2:2}" ]; then echo "  XXVI purgare: generationes V servatae OK"; else echo "  XXVI FRACTUM (rc=$rc1 $rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
+# XXVII (plan 2 T4): familia - templum STML, instantia per plagulam
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+mkdir -p "$T/r/t" "$T/r/o"
+printf 'a\n' > "$T/r/t/probatio_a.c"; printf 'b\n' > "$T/r/t/probatio_b.c"; : > "$T/r/t/alia.c"
+printf 'a\n' > "$T/r/o/probatio_a"; printf 'b\n' > "$T/r/o/probatio_b"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; mkdir -p "$D/o"; cp "$1" "$D/o/$(basename "$1" .c)"\n' > "$T/r/gen.sh"
+printf '<aedificatio>\n  <familia titulus="pf" via="t" praefixum="probatio_" suffixum=".c">\n    <#@instantia basis="@basis" fons="@fons">\n      <actio genus="generator">\n        <mandatum>\n          <verbum! (>sh\n          <verbum! (>gen.sh\n          <verbum! (>&@fons;\n        </mandatum>\n        <ingressus genus="fasciculus" via="gen.sh"/>\n        <exitus via="o/&@basis;" provenientia="regeneratio"/>\n      </actio>\n    </#>\n  </familia>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/o" 2>&1; rc1=$?
+printf 'c\n' > "$T/r/t/probatio_c.c"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/o2" 2>&1; rc2=$?
+if [ "$rc1" -eq 0 ] && grep -q '^RECENS o/probatio_a ' "$T/o" && grep -q '^RECENS o/probatio_b ' "$T/o" && ! grep -q 'alia' "$T/o" \
+   && [ "$rc2" -eq 1 ] && grep -q '^STALUM o/probatio_c ' "$T/o2"; then echo "  XXVII familia: instantiae per plagulam OK"; else echo "  XXVII FRACTUM (rc=$rc1 $rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
+# XXVIII-XXX (plan 2 T6): sanare simul. gen.sh dormit SOLUM in loco
+# (sub iudice FABRICA_SCRIPTURA ponitur): tempus = schedula, non iudicium
+nunc () { perl -MTime::HiRes=time -e 'printf "%.3f\n", time'; }
+simul_radix () {   # $1: actiones "titulus:tuta" ..., $2: dependens extra
+    radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+    mkdir -p "$T/r/o"
+    cat > "$T/r/gen.sh" <<'GEN'
+n="$1"; D="${FABRICA_SCRIPTURA:-.}"; mkdir -p "$D/o"
+if [ -z "${FABRICA_SCRIPTURA:-}" ]; then
+    mkdir -p "v/$n"; perl -MTime::HiRes=time -e 'printf "%.3f\n", time' > "v/$n/initium"
+    sleep "${MORA:-2}"
+    perl -MTime::HiRes=time -e 'printf "%.3f\n", time' > "v/$n/finis"
+    [ "$n" = "${FRANGE:-}" ] && exit 3
+fi
+printf '%s\n' "$n" > "$D/o/$n"
+GEN
+    {
+        printf '<aedificatio>\n'
+        for par in $1; do
+            n="${par%%:*}"; tuta="${par##*:}"
+            printf 'vetus\n' > "$T/r/o/$n"
+            if [ "$tuta" = "t" ]; then l=' lectiones="verum"'; else l=''; fi
+            printf '  <actio titulus="%s" genus="generator"%s>\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen.sh\n      <verbum! (>%s\n    </mandatum>\n    <vestigium via="v/%s"/>\n    <ingressus genus="fasciculus" via="gen.sh"/>\n    <exitus via="o/%s" provenientia="regeneratio"/>\n  </actio>\n' "$n" "$l" "$n" "$n" "$n"
+        done
+        printf '%b' "${2:-}"
+        printf '</aedificatio>\n'
+    } > "$T/r/aedificatio.stml"
+}
+simul_radix "a:t b:t c:t d:t"
+t0=$(nunc); (cd "$T/r" && FABRICA_FILA=4 "$F" sanare) > "$T/o" 2>&1; rc=$?; t1=$(nunc)
+dur=$(echo "$t1 - $t0" | bc)
+if [ "$rc" -eq 0 ] && [ "$(grep -c '^SANATUM' "$T/o")" -eq 4 ] && [ "$(echo "$dur < 4" | bc)" -eq 1 ]; then echo "  XXVIII simul: IV x II s in $dur s     OK"; else echo "  XXVIII FRACTUM (rc=$rc, $dur s)"; cat "$T/o"; fracta=1; fi
+
+simul_radix "a:t b:t c:t d:t" '  <actio titulus="e" genus="generator" lectiones="verum">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen.sh\n      <verbum! (>e\n    </mandatum>\n    <vestigium via="v/e"/>\n    <ingressus genus="fasciculus" via="o/b"/>\n    <exitus via="o/e" provenientia="regeneratio"/>\n  </actio>\n'
+printf 'vetus\n' > "$T/r/o/e"
+(cd "$T/r" && FABRICA_FILA=4 FRANGE=b MORA=0 "$F" sanare) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q '^FRACTUM *b ' "$T/o" && [ "$(grep -cE '^SANATUM *(a|c|d) ' "$T/o")" -eq 3 ] \
+   && grep -qE '^OMISSUM *e .*dependentia fracta: b' "$T/o"; then echo "  XXIX simul fractura: ceterae sanatae, dependens omissum OK"; else echo "  XXIX FRACTUM (rc=$rc)"; cat "$T/o"; fracta=1; fi
+
+simul_radix "a:t b:t u:n c:t"
+(cd "$T/r" && FABRICA_FILA=4 MORA=1 "$F" sanare) > "$T/o" 2>&1; rc=$?
+tangit=0
+ui=$(cat "$T/r/v/u/initium" 2>/dev/null || echo 0); uf=$(cat "$T/r/v/u/finis" 2>/dev/null || echo 0)
+for n in a b c; do
+    i=$(cat "$T/r/v/$n/initium" 2>/dev/null || echo 0); f=$(cat "$T/r/v/$n/finis" 2>/dev/null || echo 0)
+    [ "$(echo "$i < $uf && $ui < $f" | bc)" -eq 1 ] && tangit=1
+done
+if [ "$rc" -eq 0 ] && [ "$(grep -c '^SANATUM' "$T/o")" -eq 4 ] && [ "$tangit" -eq 0 ] && [ "$ui" != 0 ]; then echo "  XXX  non tuta numquam simul           OK"; else echo "  XXX  FRACTUM (rc=$rc, tangit=$tangit)"; cat "$T/o"; fracta=1; fi
+
+# XXXI (T6b): iudicium -plenus simul - gen.sh dormit SUB IUDICE solo
+simul_radix "a:t b:t c:t d:t"
+cat > "$T/r/gen.sh" <<'GEN'
+n="$1"; D="${FABRICA_SCRIPTURA:-.}"; mkdir -p "$D/o"
+[ -n "${FABRICA_SCRIPTURA:-}" ] && sleep 2
+printf '%s\n' "$n" > "$D/o/$n"
+GEN
+printf 'a\n' > "$T/r/o/a"; printf 'b\n' > "$T/r/o/b"
+t0=$(nunc); (cd "$T/r" && FABRICA_FILA=4 "$F" iudicare -plenus -omnia) > "$T/o" 2>&1; rc=$?; t1=$(nunc)
+dur=$(echo "$t1 - $t0" | bc)
+if [ "$rc" -eq 1 ] && grep -q '^RECENS o/a ' "$T/o" && grep -q '^RECENS o/b ' "$T/o" \
+   && grep -q '^STALUM o/c ' "$T/o" && grep -q '^STALUM o/d ' "$T/o" && [ "$(echo "$dur < 4" | bc)" -eq 1 ]; then echo "  XXXI iudicium simul: IV x II s in $dur s OK"; else echo "  XXXI FRACTUM (rc=$rc, $dur s)"; cat "$T/o"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXV/XXV)"
+echo "fumus fabricae: sanum (XXXI/XXXI)"
 exit 0

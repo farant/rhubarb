@@ -35,7 +35,7 @@ FONTES=(
     natura canon stml stml_macros similitudo chorda
     chorda_aedificator piscina xar
     internamentum tabula_dispersa friatio selectio
-    filum iter_directoria via provenientia
+    filum iter_directoria via lectiones provenientia
 )
 
 newest_header () {

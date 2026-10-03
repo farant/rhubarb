@@ -25,7 +25,7 @@ mkdir -p "$clausurae"
 
 lista="$(
     for p in gesta/probationes/probatio_*.c; do
-        ./bin/aedilis "$p" --enumerare \
+        ./bin/aedilis "$p" --enumerare --thesaurus build/aedilis/obiecta \
             --manifestum "$clausurae/$(echo "$p" | sed 's|/|__|g').stml" \
             || exit 1
     done | awk '/^lib\/.*\.c$/ { sub(/^lib\//,""); sub(/\.c$/,""); print }' \

@@ -94,7 +94,7 @@
        clave ingressuum ET mandati regenerationem supplet. aedilis per
        FONTES suos (manifestum), non per binarium: relinkatum octetis
        differt (LC_UUID), clavis per cursum mutaretur. -->
-  <actio titulus="fragmentum_tessera_folium" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_tessera_folium" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>tessera/folium_fontes_generata.sh
@@ -107,14 +107,12 @@
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/tessera__folium_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__folium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="tessera/folium_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_tessera_spectaculum" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_tessera_spectaculum" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>tessera/spectaculum_fontes_generata.sh
@@ -126,14 +124,12 @@
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/tessera__spectaculum_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__spectaculum_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="tessera/spectaculum_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_tessera_effigies" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_tessera_effigies" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>tessera/effigies_fontes_generata.sh
@@ -146,14 +142,12 @@
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/tessera__effigies_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__effigies_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="tessera/effigies_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_tessera_musivum" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_tessera_musivum" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>tessera/musivum_fontes_generata.sh
@@ -166,9 +160,7 @@
       <verbum! (>tessera/fontes/tessera_pons_posix.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/tessera__musivum_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/tessera__musivum_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="tessera/musivum_fontes_generata.sh" provenientia="regeneratio"/>

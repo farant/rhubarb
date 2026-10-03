@@ -62,6 +62,7 @@ declare -a RADIX_FONTES=(
     "runae_tabulae"
     "iter_directoria"
     "via"
+    "lectiones"
     "selectio"
     "similitudo"
     "canon"

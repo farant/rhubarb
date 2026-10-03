@@ -338,6 +338,19 @@ _eventum_nodare (
                         tituli_rotulae[e->datum.rotula.genus]);
                 }
             }
+            /* B3a: positio et modificantes, rara (plagulae veteres
+             * octetim eaedem) */
+            si (   e->datum.rotula.x != ZEPHYRUM
+                || e->datum.rotula.y != ZEPHYRUM)
+            {
+                attr_s(n, piscina, intern, "x", e->datum.rotula.x);
+                attr_s(n, piscina, intern, "y", e->datum.rotula.y);
+            }
+            si (e->datum.rotula.modificantes != ZEPHYRUM)
+            {
+                attr_s(n, piscina, intern, "modificantes",
+                    (s32)e->datum.rotula.modificantes);
+            }
             frange;
         casus EVENTUS_MUTARE_MAGNITUDINEM:
             attr_s(n, piscina, intern, "latitudo",
@@ -400,6 +413,8 @@ _eventum_nodare (
                 f->gradus_rotulae);
             attr_s(n, piscina, intern, "pressio",
                 (s32)(f->pressio ? I : ZEPHYRUM));
+            attr_s(n, piscina, intern, "modificantes_textus",
+                (s32)(f->modificantes_textus ? I : ZEPHYRUM));
             frange;
         }
         ordinarius:
@@ -621,6 +636,10 @@ _eventum_legere (
         e->datum.rotula.genus = (EventusRotulaGenus)
             capere_titulum(n, "genus_rotulae", tituli_rotulae,
                 III, (s32)EVENTUS_ROTULA_IGNOTA, piscina);
+        e->datum.rotula.x = capere_s(n, "x");
+        e->datum.rotula.y = capere_s(n, "y");
+        e->datum.rotula.modificantes  = (i32)capere_s(n,
+            "modificantes");
     }
     alioquin si (e->genus == EVENTUS_MUTARE_MAGNITUDINEM)
     {
@@ -678,6 +697,8 @@ _eventum_legere (
         f->gradus_rotulae  = capere_s(n, "gradus_rotulae");
         f->pressio           = (b32)(capere_s(n, "pressio")
             != ZEPHYRUM);
+        f->modificantes_textus = (b32)(capere_s(n,
+            "modificantes_textus") != ZEPHYRUM);
     }
     alioquin
     {

@@ -9,7 +9,20 @@
      expectata: attributa quae scaena nominat (scriptura rara: actio
      'pressa', runa 0 non scribuntur - ergo non nominantur).
      'genera' = genera considerata; aliorum generum eventa omittuntur.
-     terminalis (octeti, phasis B4) nondum.
+     terminalis (eventus B4b): <terminalis profilum octeti> - octeti
+     cum effugiis C (\e ESC, \t, \xHH; valores attributorum STML
+     crudi sunt). Cursor: probatio_conformitas_terminalis (rivus
+     purus, cellula 1x1 pixelum: cellula c = pixelum c-1). legacy =
+     mus solum declaratus; kitty = vexilla 31 impulsa.
+     excusationes (B4a): differentiae per FACULTATEM; valent solum si
+     fons eam facultatem negat (fenestra omnes habet: stricta manet).
+
+     characteres = CHARACTERES: referentiae HTML5 (&#27; &#9; &#xF702;)
+     a lectore tabulae per entitates_html solvuntur (STML valores
+     attributorum crudos servat). Ante B4b-sequelam crudi immittebantur
+     ('&#27;' litteraliter); fenestra eis clavibus textum non emittit,
+     ergo scaenae conformes manserunt. octeti contra: effugia C (bytes,
+     non puncta codicis).
 
      SAGITTAE: AppKit NSEventModifierFlagFunction (0x800000 = 8388608)
      sagittis ipse addit (etiam immissis; hardware idem) - modificantes
@@ -19,7 +32,8 @@
   <scaena
     titulus="shift-a"
      genera="clavis_depressus clavis_liberatus textus"
-         ((>
+     excusationes="liberationes codex_physicus latera modificantes_textus"
+         ((((>
     <immissio((>
       <clavis
                codex="0"
@@ -39,10 +53,13 @@
         modificantes="131074"/>
       <eventus genus="textus" contentum="A"/>
       <eventus genus="clavis_liberatus" codex="KeyA" actio="soluta"/>
+    <terminalis profilum="legacy" octeti="A"/>
+    <terminalis profilum="kitty" octeti="\e[97:65;2;65u\e[97;2:3u"/>
   <scaena
     titulus="tabula"
      genera="clavis_depressus clavis_liberatus textus"
-         ((>
+     excusationes="liberationes codex_physicus"
+         ((((>
     <immissio((>
       <clavis
                codex="48"
@@ -57,10 +74,13 @@
     <expectata((>
       <eventus genus="clavis_depressus" codex="Tab"/>
       <eventus genus="clavis_liberatus" codex="Tab" actio="soluta"/>
+    <terminalis profilum="legacy" octeti="\t"/>
+    <terminalis profilum="kitty" octeti="\e[9u\e[9;1:3u"/>
   <scaena
     titulus="ctrl-i"
      genera="clavis_depressus clavis_liberatus textus"
-         ((>
+     excusationes="tabula_distincta latera"
+         ((((>
     <immissio((>
       <clavis
                codex="34"
@@ -79,7 +99,9 @@
                 runa="105"
         modificantes="262145"/>
       <eventus genus="clavis_liberatus" codex="KeyI" actio="soluta"/>
-  <scaena titulus="sagittae" genera="clavis_depressus textus" ((>
+    <terminalis profilum="legacy" octeti="\t"/>
+    <terminalis profilum="kitty" octeti="\e[105;5u\e[105;5:3u"/>
+  <scaena titulus="sagittae" genera="clavis_depressus textus" excusationes="latera" ((((>
     <immissio>
       <clavis
                codex="123"
@@ -120,23 +142,29 @@
                codex="ArrowDown"
         modificantes="8388608"/>
     </>
-  <scaena titulus="effugium" genera="clavis_depressus textus" ((>
+    <terminalis profilum="legacy" octeti="\e[1;2D\e[1;3C\e[A\e[B"/>
+    <terminalis profilum="kitty" octeti="\e[1;2:1D\e[1;2:3D\e[1;3:1C\e[1;3:3C\e[1;1:1A\e[1;1:3A\e[1;1:1B\e[1;1:3B"/>
+  <scaena titulus="effugium" genera="clavis_depressus textus" excusationes="codex_physicus" ((((>
     <immissio(> <clavis codex="53" modificantes="0" characteres="&#27;" depressa="1"/>
     <expectata(> <eventus genus="clavis_depressus" codex="Escape"/>
+    <terminalis profilum="legacy" octeti="\e"/>
+    <terminalis profilum="kitty" octeti="\e[27u\e[27;1:3u"/>
   <scaena
     titulus="ictus"
      genera="mus_depressus mus_liberatus mus_duplex"
-         ((>
+         ((((>
     <immissio((>
       <mus genus="depressio" x="10" y="20"/>
       <mus genus="liberatio" x="10" y="20"/>
     <expectata((>
       <eventus genus="mus_depressus" x="10" y="20" botton="1"/>
       <eventus genus="mus_liberatus" x="10" y="20" botton="1"/>
+    <terminalis profilum="legacy" octeti="\e[<0;11;21M\e[<0;11;21m"/>
+    <terminalis profilum="kitty" octeti="\e[<0;11;21M\e[<0;11;21m"/>
   <scaena
     titulus="ictus-duplex-crudus"
      genera="mus_depressus mus_liberatus mus_duplex"
-         ((>
+         ((((>
     <immissio>
       <mus genus="depressio" x="40" y="40"/>
       <mus genus="liberatio" x="40" y="40"/>
@@ -149,10 +177,12 @@
       <eventus genus="mus_depressus" x="40" y="40"/>
       <eventus genus="mus_liberatus" x="40" y="40"/>
     </>
+    <terminalis profilum="legacy" octeti="\e[<0;41;41M\e[<0;41;41m\e[<0;41;41M\e[<0;41;41m"/>
+    <terminalis profilum="kitty" octeti="\e[<0;41;41M\e[<0;41;41m\e[<0;41;41M\e[<0;41;41m"/>
   <scaena
     titulus="tractus"
      genera="mus_depressus mus_motus mus_liberatus"
-         ((>
+         ((((>
     <immissio>
       <mus genus="depressio" x="10" y="10"/>
       <mus genus="tractus" x="20" y="20"/>
@@ -163,4 +193,6 @@
       <eventus genus="mus_depressus" x="10" y="10"/>
       <eventus genus="mus_motus" x="30" y="30"/>
       <eventus genus="mus_liberatus" x="30" y="30"/>
+    <terminalis profilum="legacy" octeti="\e[<0;11;11M\e[<32;21;21M\e[<32;31;31M\e[<0;31;31m"/>
+    <terminalis profilum="kitty" octeti="\e[<0;11;11M\e[<32;21;21M\e[<32;31;31M\e[<0;31;31m"/>
 </conformitas>

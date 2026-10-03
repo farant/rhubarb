@@ -24,6 +24,15 @@
  * et mathematicam casus vult; cellula.signum compactus manet -
  * nomina diversa confusionem vetant.
  *
+ * LEXEMATOR (eventus B1b): grammatica octetorum = series_terminalis
+ * (lib/, modo initus): OSC/DCS/APC responsa tacite consumuntur, ESC ESC
+ * seriem = praefixum (ALTERUM), series abrupta abicitur. Lector
+ * SEMANTICAM solum possidet, et casus crudos: mus X10 (tres octeti
+ * post CSI M), formae alienae (CSI [ + cauda: Linux console, putty),
+ * glutinum. MORA (moram vocantis lexemator non videt): series pendens
+ * evacuatur - ESC solus = FUGA, 'ESC x' = alterum + x, cetera
+ * abiciuntur; mus SGR dimidia (CSI <) et ESC solus RELIQUIAE fiunt,
+ * quae continuationi sequenti (';5M', '[<..', '[M..') redduntur (H8).
  * LECTOR: buffer gestationis 64 octetorum (series trans lectiones
  * QUOTLIBET scissae accumulantur - legitur dum octeti intra moram
  * ~25ms adveniunt; sola lectio vacua moram exactam facit); ESC solum
@@ -49,6 +58,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "tessera_pons.h"
+#include "rivus_terminalis.h"
 
 #define TESSERA_LECTOR_BUFFER 64
 #define TESSERA_MORA_FUGAE_MS 25
@@ -124,12 +134,12 @@ nomen structura {
 
 nomen structura {
     TesseraPons* pons;
-             i8  buffer[TESSERA_LECTOR_BUFFER];
-            i32  mensura;        /* octeti validi */
+             i8  buffer[TESSERA_LECTOR_BUFFER]; /* lectio una */
+            i32  mensura;        /* octeti in rivo nondum consumpti */
             i32  latitudo_nota;  /* amplitudo novissime visa */
             i32  altitudo_nota;
-             i8* glutinum;       /* collector: TESSERA_GLUTINUM_CAPACITAS,
-                                  * in creatione allocatus */
+RivusTerminalis* rivus;          /* pipeline (B3a): lexemator, morae,
+                                  * canales crudi, interpres */
 } TesseraLector;
 
 TesseraLector*

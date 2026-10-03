@@ -1026,3 +1026,422 @@ generator must not rewrite unchanged output - mtime is an input to
 everything that still judges by mtime.
 Remaining: the oracle runs generata in full (162 s) even when the
 `generata` gate already ran in the same commit.
+
+## 2026-10-02 - oracle reuses the generata gate's live receipt (Fran: option a)
+
+After the relink fix the `fabrica` gate still ran the whole generata
+(~160 s) although the `generata` gate had just run in the same commit.
+A live receipt already stores the gate's full output
+(build/portae/generata.viva.json.acta) and is valid only while the tree
+signature is unchanged (silva.receptum_vivum). tools/fabrica_oraculum.sh
+now uses that output when the receipt is valid and sane - same tree,
+deterministic generators, same output - and runs generata otherwise;
+FABRICA_ORACULUM_RECENS=1 forces a fresh run. Measured: valid receipt ->
+whole gate 61 s (was 221-272 s), 51 compared, consensus; after one
+tracked file changed the receipt read "rancidum" and generata ran in
+full (174 s), consensus. Retiring generata (Q15) stays open until a
+longer run of agreement.
+
+## 2026-10-02 - plan 2 T1: the read-ledger spike (PASS)
+
+Recorder lib/lectiones.c (`lectiones_notare(genus, via)`): env
+FABRICA_LECTIONES names the file; one write() per line with O_APPEND;
+two forked children x 500 lines -> 1000 whole lines. Hooks: filum reads
+(L on success, A on failure), existence/status (X/A), via_existit (X/A
+- aedilis's include resolution), iter_directoria and aedilis's two raw
+opendir loops (D). The lexicon lacked O_APPEND: added (Darwin 0x0008),
+auspex_posix certifies it against the real header.
+Bug found by the test: a descriptor cached across "variable unset"
+kept writing into a file deleted meanwhile (same path, new inode) -
+"off" now closes the descriptor.
+Blast radius: filum.c and via.c now need lectiones.o in every link. 12
+generated source snippets regenerated; 7 hand lists edited (briar,
+crusta, saltuarius, toml runners; canon_struere, diagnostica,
+natura_struere).
+SPIKE (tools/lectiones_spica.sh) on silva/fontes/silva_token.c,
+lib/xar.c, toml/probationes/probatio_toml_api.c: every manifest entry
+that exists in the tree was CONTENT-read (L); extras are aedilis.stml
+(configuration) and the root itself; system headers (stdio.h,
+sys/wait.h...) are named by the manifest but never read - the compiler
+identity (Q6) covers them. Shadowing data comes from failed lookups
+(A: 511 / 206 / 2058), not listings (aedilis --enumerare records no D).
+Gate lesson: my first criterion accepted X (existence) as coverage; a
+plant removing content reads stayed GREEN because every resolved header
+gets an X. A trace from X alone would miss header edits. Coverage now
+means L only; the same plant is red (latina.h, piscina.h, xar.h named).
+First commit attempt refused by generata stage V: tools/latina_numeri.sh
+links lib/filum.c by PATH - my hand-list search matched bare names only.
+Five path-form lists fixed (latina_numeri.sh, compile_library.sh,
+compile_sputnik.sh, compile_lector.sh, glr_quaestio.sh).
+After the T1 commit, `sanare installata` failed: registrum_md and
+registrum_toml (materia/coquere.sh, whose list ends a line with
+`filum`) did not link. The commit's fabrica gate had judged them RECENS
+by memo: their declared inputs name materia/fontes, coctor.c and the
+script, but not the lib/ sources the script compiles - exactly the
+hand-proved-input hole T2's traces close (a ledger of coquere's build
+would have listed lib/filum.c). Fixed the list; rebake 7 sanata.
+
+## 2026-10-02 - plan 2 T2 (part 1): verifying traces in the judge
+
+`lectiones="verum"` on an action (aedificatio.canon) makes the judge
+key it on its last congruent run's ledger. The core picks the ledger
+path (build/fabrica/lectiones/<titulus>.tsv) and passes it to
+`currere`; after a CONGRUENT regeneration it reads the ledger through
+the seam, drops S lines, the judge's scratch dir, the ledger dir and
+absolute paths outside the tree (after stripping `sutura->radix`),
+dedups (genus, via), and digests each entry's present state: L =
+content, A/X = presence, D = sorted names; an E line makes the trace
+unverifiable (not stored). Stored under (titulus, input key, artifact
+digest) - same key as verificationes (ruling: a trace is only valid
+for the declared inputs and output it was recorded with). Judge: trace
+congruent -> RECENS "lectiones congruunt", even under celer.
+Tests (in-memory disk, born red): first run stores 3 entries (scratch
+and S dropped); unchanged -> no run; L content change, A path created,
+D name added, declared input changed -> regeneration; failed run
+stores nothing; action without lectiones never asks. Plant (comparison
+always congruent) -> 4 red. Tool: migration III table `lectiones`
+(digests as 32-byte blobs - no hex parser exists), FABRICA_LECTIONES
+set absolute per regeneration (old file removed first), radix = cwd.
+
+## 2026-10-02 - plan 2 T2 (part 2): writes, env, lint, family switch, audit, ordering
+
+**S and E events.** filum hooks S (written) after a successful fopen in
+"w"/"wb"/"a"/"ab", filum_scriptor_aperire and copy destinations, and at
+the attempt for unlink / rename (both paths) / mkdir. The judge drops S
+lines from traces (a program's own writes are outputs, not inputs).
+`lectiones_ambitus(titulus)` = getenv through the channel: one E line
+(no value tab when unset); any E makes the trace unverifiable, so it is
+not stored. T1 bug found on the way: the ledger descriptor stayed open
+when the env var was unset.
+
+**Raw-IO lint** (tools/lectiones_lint.sh). Source = silva nexus index
+(`usus` rows of fopen/freopen/opendir/stat/lstat/access/getenv/open), not
+grep. Pilot path = aedilis closure of tools/aedilis.c; a raw call there
+OBSTATs unless the line before it carries `/* lectiones: notatur */`
+(the call is channelled by hand: via_existit stat, the two aedilis
+opendirs, iter_directoria). lib/filum.c and lib/lectiones.c are the
+channel itself (exempt). First heuristic ("near a hooked call") was too
+lenient - a planted raw stat next to a hooked one passed; per-line marker
+fixed it. A plant that didn't compile (FILE undeclared in via.c) was
+re-planted as `(vacuum)stat(buffer, &info);` and went red. Today: pilot
+18 files, 0 obstantia, 5 notatae; 701 raw calls outside (warnings).
+
+**Family switch.** The 19 snippet generators (fragmentum_* /
+fragmenta_silva in root, officina, silva, tessera aedificatio.stml) went
+from memorabilis + hand-listed `manifesta`/`radices` inputs to
+lectiones="verum"; plagulae/fasciculus/configuratio/manifestum inputs
+stay declared. First -plenus regenerated all 19 and stored 40 traces
+(~60k entries); second -plenus 0 snippet regenerations, 44 s -> 22 s.
+Real plants: tessera_cellula.h comment -> exactly the 4 tessera
+snippets; shadow tessera/fontes/chorda.h (an A path appearing) -> the
+same 4; new gesta/probationes file (D) -> fragmentum_gesta only.
+
+**Multi-output bug.** fragmenta_silva has 22 exitus; the trace key had
+no exitus, so each exitus's store evicted the last and only one
+survived. Key now includes exitus (migration IV `ADD COLUMN exitus`).
+The test's first red was for the wrong reason (exitus scriptura defaulted
+to gen/<exitus>.c, so the fake never wrote it) - fixed, then proved
+with a plant restoring the old eviction.
+
+**Memo audit.** `sutura.auditus`: 0 off, I every action (`-audit`), N =
+1 in N by clavis.octeti[0] % N; default XX under -plenus. An audited
+RECENS (memo or trace) regenerates anyway: congruent -> "auditus:
+regeneratio congruit"; differs -> STALUM "AUDITUM DISCORS" + cursus
+event FABRICA_AUDITUM_DISCORS (a lying memo is a judge bug, it should
+shout). Full `iudicare -audit` on the tree: 56 regenerations, 0 DISCORS.
+
+**Ordering from traces.** Dropping `manifesta` dropped the ordering
+edges: every snippet reads generated files (latina.h, silva amalgam,
+runae tables). `lectiones_ultimae(titulus)` returns the distinct paths
+of the title's latest traces; fabrica_dependentias_computare adds them
+as loci (D -> PLAGULAE, else PLAGULA). Trap: `_ordinare_per_locos` in
+the tool builds its OWN light sutura, so wiring only the judge's
+sutura would have left the edges dead in the real tool while the unit
+test passed. Memoria now opens before ordering in iudicare and sanare.
+Real plant (comment appended to silva/amalgama/silva.c, sanare
+-siccum): amalgama_silva AGENDUM in wave II, all 19 snippets "post
+amalgama_silva" in wave VIII.
+Cold-start caveat: with no trace yet (fresh db), a converted action has
+no trace edges - ordering rests on its declared inputs only. The judge
+writes nothing, so only `sanare` on a fresh db could heal a snippet
+before its generated input (the next judge would catch it).
+Second -plenus after this commit: 24 s, one snippet run = the 1-in-20
+audit ("auditus: regeneratio congruit").
+Open: snippets show "tempus ignotum" in sanare estimates.
+
+## 2026-10-02 - plan 2 T3: the store and aedilis records
+
+Store itself: see lib/thesaurus.worklog.md. Here, the fabrica side.
+
+**aedilis --thesaurus <dir>.** The extraction memo looks up key =
+SHA-256(prefix || file bytes), prefix = SHA-256(aedilis binary (argv[0])
+|| aedilis.stml). Why that key is sound: silva's parse does NO file IO
+(expander, context, front end read nothing; latina is compiled in as
+silva_latina_textus), so a file's extraction is a function of its bytes
+and the extractor code. The binary digest is the version (any code
+change, incl. linked lib/, invalidates - a hand-bumped constant would
+silently serve stale records when forgotten). `.m` files go through
+clang -MM (reads headers) and are never stored. Record = binary-safe
+text (D n / mensura angulata / bytes; A n / mensura / bytes); a failed
+extraction is never stored; an unreadable record = miss.
+Equivalence (scratch script, 201 roots): --partes and --differentia
+outputs identical without / cold / warm store (0 differences).
+--partes 59 s -> 16 s (cold) -> 10 s (warm). (--differentia numbers
+were confounded by the shared clang -MM memo - not a store number.)
+
+**Callers.** --thesaurus build/aedilis/obiecta in the four snippet
+generators (tools/fontes_generare.sh, silva_fontes_generare.sh,
+compile_tests_fontes_generare.sh, gesta/fontes_generare.sh) and both
+per-root calls in tools/aedilis_porta.sh. Explicit flag, not an env var:
+an env var read through lectiones_ambitus would make every trace
+unverifiable.
+Snippet regeneration (one miss), before -> cold store -> warm:
+fragmentum_compile_tests ~64 s -> 17.4 s -> 11.4 s; fragmenta_silva ~34 s
+-> 4.9 s -> 3.0 s. Cold already wins: the store shares header parses
+across the ~200 separate aedilis processes (the in-process memo could
+not). Full -audit with the warm store: 0 AUDITUM DISCORS.
+
+**Judge filter.** Drops build/aedilis/obiecta/{blobi,actiones,
+generationes}/ from traces - NOT the root (the shared .o files there are
+real inputs to anything that links them). Test: two store lines dropped,
+a .o in the root kept (III -> IV); plant (whole root) red.
+
+**Lint.** Linking thesaurus put lib/iter_directoria.c on aedilis's pilot
+path and the lint named its per-entry stat (type/size during a listing)
+at once. Marked as covered by the listing's D event, with the known gap
+written at the call: a type/size change under the same name does not
+change D's digest (nothing on the pilot path depends on entry type).
+
+**purgare.** `bin/fabrica purgare [-verificare]`, under the fabrica lock,
+keeps GENERATIONES_SERVANDAE (V, A3). Fumus XXVI (store built by hand
+with shasum digests: 6 lists, the oldest alone holds k1) -> 3 deleted;
+-verificare deletes a corrupted kept blob. Plant (VI kept) red.
+
+## 2026-10-02 - plan 2 T4 part II: familia (per-file actions from a directory)
+
+Design (Fran, two rounds): a `<familia titulus via praefixum? suffixum?>`
+holds ONE STML template (`<#@id basis="@basis" fons="@fons"> actio </#>`,
+house macro syntax). fabrica lists `via` through the seam
+(sutura->enumerare), synthesizes one call per matching file
+(`<<#@id basis="x" fons="via/x.c">>`, stml_transclusionem_creare - public
+API, no hand-set fragment flags) and runs stml_expandere; the expanded
+actio nodes join the ordinary actio loop unchanged. fabrica's own
+bookkeeping on each instance: title `familia:basis` (a title in the
+template is refused - fabrica owns it), the file added as ingressus
+fasciculus. basis = file name minus suffix (prefix kept: probatio_x).
+First proposal was four fixed binding rules inside fabrica; Fran asked
+about STML macros, and reusing the house's one sanctioned template
+mechanism beat inventing a second private one (file/basis can go
+anywhere in the body; refs work in attributes and raw content).
+Only the parameters the template DECLARES are passed (a call with an
+undeclared argument is ARGUMENTUM_SUPERFLUUM); a body referencing
+anything else fails loudly in the expansion. Names with '"' or '&' are
+refused (they would break the synthetic call).
+API: fabrica_declarationes_legere stays pure and REFUSES familia;
+fabrica_declarationes_legere_cum_sutura takes the seam. Tool: the
+declaration collector builds a light sutura (legere, enumerare).
+Canon: `familia` element added to aedificatio.canon. Canon treats the
+template body as quoted material (opaque) - a templated actio without
+titulus passes canon; fabrica's reader judges the expanded instances.
+Tests (in-memory disk): 3 of 5 names match (adiumentum.c, .h excluded)
+-> 3 instances (titles, last word = fons, exitus build/t/basis, fons as
+input, lectiones flag carried); new file -> one more; pure reader
+refuses; directory absent; title in template; undeclared loculus.
+Plants: prefix filter ignored -> red; fons passed undeclared -> red
+(the title case dies on expansion instead). Fumus XXVII on a real disk
+through bin/fabrica (2 instances RECENS, alia.c not, new file ->
+STALUM); plant (tool passes NIHIL sutura) -> rc 2, red.
+
+## 2026-10-02 - plan 2 T5: the toml pilot (thin runner + oracle)
+
+Scope (Fran): thin runner + oracle only; no toml familia - nothing can
+judge a test binary honestly today (relatio needs -provenientia,
+regeneratio refuses binaries). familia's first real consumer will be
+per-test verdict actions, designed later.
+
+Runner (toml/compile_probationes.sh): the hand lists (24 lib, 13
+materia, toml/fontes, helpers) and the coarse "newest header anywhere
+makes every object stale" block are gone. Per test: closure from
+`bin/aedilis --enumerare --thesaurus`; the union is compiled through
+bin/compilator; each test file is compiled through it too
+(toml/build/probationes/, new - the old runner compiled tests inline at
+link time) and linked against its OWN closure. Lock, tee log, mensor
+metrics and reporting unchanged. Sources are passed by ABSOLUTE path
+from the caller's cwd exactly like the old runner: -g records both, so
+relative paths would have broken byte identity with the old objects.
+The excubitor post-build check was removed: it judges by mtime, and
+compilator deliberately leaves an identical object untouched (older
+mtime than its source) - it would have refused up-to-date objects.
+
+Oracle (tools/toml_oraculum.sh): both runners in the SAME tree, one
+after the other, each cold (the plan's scratch worktree could never
+match bytes: -g embeds the working directory). -arbor REF runs both in
+a worktree at REF (the live runner copied in, live bin/aedilis and
+bin/compilator linked). Objects only in the new runner fail; objects
+only in the old = hand-list slack (iter_directoria.o, via.o: never in a
+closure). A silent oracle is a dead oracle: no runner, 0 common objects
+or 0 test lines -> exit 2 (first version said "consensus" on e1e01751,
+where toml did not exist yet).
+FINDING: Apple clang 16 is non-deterministic on toml/fontes/
+toml_scalaris.c with the house flags (4 distinct objects in 10 plain
+compiles; -fno-vectorize fixes it; only file among the 45). The oracle
+re-compiles a discordant object's source 5x with plain clang and names
+compiler non-determinism instead of failing. Park ...ACYVJ for Fran.
+Results: consensus on HEAD and three tree states (cadca60e toml,
+8d7e6fba materia, 26e34570 include/): 44-45 common objects identical,
+370 test lines identical. Plants: chorda.c at -O1 -> byte DISCORDIA;
+one test skipped -> output DISCORDIA (first plant named a test that
+does not exist - a no-op, caught because it stayed green).
+
+Measurements (wall, whole suite; the 13 test executables alone take
+27.9 s of every run):
+  warm:                         old 31.8 s   new 31.1 s
+  cold build, empty store:      old 39.2 s   new 42.0 s
+  cold build, warm store:       old 39.2 s   new 31.5 s
+  one header comment (7 users): old 38.0 s (all 47 objects) new 31.2 s
+First new-runner measurement was SLOWER (warm 38.6 s): the 13 aedilis
+calls ran without --thesaurus (6.8 s vs 0.26 s warm). One store for
+both tools (FABRICA_THESAURUS) fixed it.
+
+## 2026-10-03 - plan 2 T6: parallel heal
+
+Shape: the core stays pure. New seam member `agere_simul` (NIHIL = the
+old serial path, untouched; FABRICA_FILA=1 gives exactly that). Core
+(`_sanare_undatim`): waves from fabrica_undas_formare (no dependency,
+disjoint envelopes, no shared areas); per wave the existing pre-logic
+(`_ante_agere`, extracted unchanged from the old loop), unsafe actions
+ALONE with their own snapshot, safe ones (lectiones="verum") as one
+batch (`_undam_agere`), results recorded in title order. Tool
+(`_agere_simul`): up to FABRICA_FILA children (default
+hw.perflevel0.physicalcpu = 4 here) via processus_incipere/pulsare/
+metere, each with its own ABSOLUTE FABRICA_LECTIONES set just before
+starting; after a failure running children finish and nothing new
+starts. _agere split into _mandatum_parare + _actum_complere, shared.
+
+Ruling - TWO write checks for a batch (the plan's "S trace" alone would
+have checked LESS than today: bash generators' own `>` writes are never
+in the ledger): (1) per member, recorded S writes vs its envelope -
+attributed failure; (2) one snapshot around the batch - writes outside
+the union of envelopes AND recorded by no member fail every member
+("scriptor ignotus"). A recorded write is excluded from (2) - first
+version blamed the innocent member too (test III).
+Found while testing: each member's own ledger file was flagged by the
+wave snapshot - per-action ledgers are now part of every action's own
+envelope. Found on the REAL tree (not by any test): since T3 every
+in-place snippet heal writes the store (aedilis --thesaurus), which no
+snippet declares - all 19 FRACTUM. T3 only exercised judging (scratch).
+The store's three subdirectories are now involucrum (fabrica-owned,
+atomic) like acta and fabrica.db - the root's .o files stay real
+envelope business. (Trailing-slash trap: an ARBOR locus adds '/' itself;
+the first fix matched nothing and the new test stayed red - good.)
+Policy after a failure in parallel mode: nothing new STARTS, but every
+remaining action is still judged - up to date stays silent, a broken
+dependency is named (fumus XVIII caught the generic cause winning), only
+actions that would have run are OMISSUM "post fracturam".
+
+Evidence: core tests I-IV + IIIb (3 safe + 1 unsafe + dependent; failure
+in a batch; S outside envelope; store write; unrecorded write), plants
+red (all actions "safe", no wave check, no attribution filter, no store
+involucrum). Fumus XXVIII (4 x 2 s -> 2.15 s with FILA=4), XXIX (one of
+four fails: three SANATUM, dependent OMISSUM naming it, exit 1), XXX
+(unsafe action's interval overlaps none); plants: tool never wires
+agere_simul -> 8.2 s red; unsafe treated as safe -> overlap red.
+Real tree, heal of the 19 snippet actions (one output each corrupted):
+serial 199.5 s, parallel 109.5 s. The actions parallelize (batch bound
+by fragmentum_compile_tests ~36 s); what remains is the judge's
+regenerations before and after each action, still serial (~70 s) -
+parallel judging is the next lever, not in T6. Remaining failures in
+those runs were other processes writing in the tree during the heal
+(oratio/build/cursor.sera/, tabularium.db-wal) - reported correctly as
+"aut manu mutata dum currebat".
+
+## 2026-10-03 - plan 2 T7 step 1: excubitor vs the store (record)
+
+Method (scratch scripts, not committed): per tree state a worktree with
+the T5 thin runner (live bin/aedilis + bin/compilator linked, own store).
+compilator's misses counted by a `clang` wrapper on PATH that logs only
+real `-c` compiles and passes -print-prog-name through - compilator's
+compiler identity, hence every key, is unchanged. excubitor asked
+BEFORE each compile pass; objects re-touched between scenarios (the old
+runner's mtime baseline). Header: toml/fontes/toml_scalaris.h.
+
+Same result on all four states (HEAD, cadca60e, 8d7e6fba, 26e34570):
+  A nothing changed:           excubitor 0, compilator 0
+  B header touched, same bytes: excubitor 4 (false alarm), compilator 0
+  C header bytes changed:      excubitor 4, compilator 4 (agree)
+  D same-named header earlier on -I (copy of include/chorda.h into
+    toml/fontes): excubitor 0 (MISSES IT), compilator 44-45 (all)
+Also seen live after T5: compilator leaves identical objects untouched,
+so excubitor called 3 up-to-date objects stale (B class).
+First C run reported excubitor 0 - my script edited the header in the
+same second as the last object touch, and excubitor compares with -nt
+at 1 s resolution (the same-second trap the runners document). Re-run
+with the sleep before the edit: 4/4. Real in practice, but not fair to
+count as excubitor's logic.
+
+Finding for Step 2: excubitor is NOT only the report-only call in
+compile_tests.sh. ~18 runners call it (crusta x3, css, html, md, oratio
+x2 and a crusta fixture BLOCK on it with exit 2; gesta, officina x3,
+saltuarius, silva, tessera, diagnostica fumus warn), plus the
+.claude/hooks/excubitor-custos.sh hook. Those runners still build by
+mtime - excubitor is their real guard. Deleting it before they compile
+through the store would remove that guard (a missing script degrades to
+a CAUTIO line).
+Step 2 (Fran 2026-10-03): migrate first, then delete. Inventory
+'consumptores excubitoris' (…MEES9X, 21 rows: usus obstat/monet,
+migratum) and batch job 'migratio ad compilatorem (excubitor emeritus)'
+(…W0ZBW, 20 open rows, recipe = the T5 toml conversion + its oracle).
+Deleting excubitor.sh / fabrica.tsv / compile_tests.sh:1225 / the hook
+is the job's last row, not T7's. Spec 2 IX 'excubitor deleted' moves
+with it.
+
+## 2026-10-03 - T6b (follow-up): parallel judging (prefetch)
+
+Desideratum …83AQ items 1+2 (Fran). The judge stays unchanged: a prefetch
+warms the per-run regeneration memo it already consults.
+- Collect mode: sutura->praevisio (Xar) set -> _regenerare records the
+  action (once per title, lectiones="verum" only) and returns "praevisio"
+  WITHOUT running or memoizing. fabrica_regenerationes_praevidere judges
+  through a COPY of the sutura with the collector set (memo tables are
+  shared pointers - no const cast), sorts the requests by title, runs
+  them through the new seam currere_simul (same scratch dir + ledger
+  paths the judge would use), then fills sutura->regenerationes and
+  writes the IUDICIUM cursus rows exactly as _regenerare would.
+- Tool: _currere_simul = T6 pool (FABRICA_FILA), each child an emptied
+  scratch dir, absolute FABRICA_SCRIPTURA and FABRICA_LECTIONES set just
+  before starting; judging never stops on a failure. iudicare -plenus
+  prefetches the lectiones actions it will judge (same tacta/electa
+  filter); sanare prefetches each wave's pre-checks and each batch's
+  post-checks.
+- sanare wave loop now judges ALL members before any acts (an act clears
+  the regeneration memo, so an unsafe member acting mid-loop would have
+  thrown the prefetch away). Wave members are independent by
+  construction, so the order cannot change a verdict.
+Same safety class as T6: only lectiones actions are prefetched -
+arbitrary generators may share temp paths.
+Evidence: core tests (prefetch batches only lectiones, in title order;
+the judge then finds them memoized - one serial regeneration for the
+non-lectiones action - verdicts as without prefetch; no seam = no-op;
+heal with prefetch: two regeneration batches, 6 runs, none serial),
+plants red (collect everything; memo not filled). Fumus XXXI: 4
+generators sleeping 2 s under the judge -> 2.04 s with FILA=4; plant
+(prefetch unwired) 8.07 s red.
+Real tree: -plenus with all 19 snippet traces deleted: serial 112.6 s,
+parallel 96.2 s, identical verdicts. Heal of the 19 snippets: serial
+93.0 s, parallel 65.7 s, 19 healed. The judge is now dominated by
+NON-traced generators regenerating serially: corpus_silicis 19 s,
+excludenda_silva 17 s, lectores_cocti 4.5, tabulae_silvae 3.3,
+canones_cocti 1.6, numeri_latinae 1.2 (~47 s). Converting them to
+lectiones="verum" (the T2 move) would let traces skip them and make them
+prefetchable - next family candidate.
+
+## 2026-10-03 - plan 2 T8: slice 2 closed
+
+"As built" is spec 2 par. XIII (done-means vs evidence, built beyond the
+plan, found on the way, known limits with ledger ids). Ledger note
+…NKVA closes the slice; the progress ledger
+(.superpowers/sdd/fabrica-plan-2/progress.md) carries every ruling.
+Open for Fran: excubitor deletion via batch job …W0ZBW; the store's
+lint exemption; promotion (…XZQG); clang non-determinism (…ACYVJ).
+Next family candidate: the six non-traced generators that now dominate
+-plenus (…VFF5D).

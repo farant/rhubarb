@@ -12,6 +12,7 @@
  *                 depressa="1"/>
  *         <mus genus="depressio" x="10" y="20"/>
  *       </immissio>
+ *       <terminalis profilum="kitty" octeti="\e[97:65;2;65u"/>
  *       <expectata>
  *         <eventus genus="clavis_depressus" codex="KeyA" runa="97"/>
  *         ...
@@ -29,6 +30,15 @@
  *   (exempla) non comparantur.
  * - actualia per eventus_scribere_stml scribuntur et relecta
  *   comparantur: tituli et formae eaedem ac in plagulis.
+ * - 'modificantes' (clavis, mus, rotula) in bits VOCABULARII solum
+ *   comparantur (MOD_* et latera; eventus B4): bits platformae extra
+ *   vocabularium (AppKit Function 0x800000 in sagittis) neglecti.
+ *
+ * EXCUSATIONES (spec D7; eventus B4): scaena differentias permissas
+ * PER FACULTATEM nominat (attributum 'excusationes', titulis
+ * facultatum). Excusatio valet SOLUM si FACULTATES ultimae fluxus
+ * actualis eam facultatem negant; fluxus sine FACULTATIBUS: nihil
+ * excusatur (fenestra post vacuationem: aeque stricta ac antea).
  */
 
 #ifndef EVENTUS_CONFORMITAS_H
@@ -44,6 +54,24 @@
 #include "internamentum.h"
 #include "stml.h"
 #include "eventus.h"
+
+/* Excusationes: titulus in tabula = facultas quae deesse debet.
+ *   liberationes         clavis_liberatus expectata omittuntur
+ *   codex_physicus       'codex' non comparatur
+ *   latera               bits laterum in modificantibus neglecti
+ *   tabula_distincta     scaena tota EXCUSATA (Ctrl+I = Tab)
+ *   modificantes_textus  'modificantes' non comparantur */
+#define CONFORMITAS_EXCUSATIO_LIBERATIONES         0x01
+#define CONFORMITAS_EXCUSATIO_CODEX_PHYSICUS       0x02
+#define CONFORMITAS_EXCUSATIO_LATERA               0x04
+#define CONFORMITAS_EXCUSATIO_TABULA_DISTINCTA     0x08
+#define CONFORMITAS_EXCUSATIO_MODIFICANTES_TEXTUS  0x10
+
+nomen enumeratio {
+    CONFORMITAS_FRACTA = ZEPHYRUM,
+    CONFORMITAS_CONFORMIS,
+    CONFORMITAS_EXCUSATA        /* scaena excusata per facultatem */
+} ConformitasVerdictum;
 
 nomen enumeratio {
     CONFORMITAS_IMMISSIO_CLAVIS = ZEPHYRUM,
@@ -66,25 +94,39 @@ nomen structura {
                          s32 y;
 } ConformitasImmissio;
 
+/* Immissio terminalis (eventus B4): octeti quos terminalis sub profilo
+ * mittit - 'legacy' (mus solum declaratus), 'kitty' (vexilla 31
+ * impulsa). Cursor: probatio_conformitas_terminalis (rivus purus).
+ * Valores attributorum STML CRUDI sunt (entitates non solvuntur):
+ * 'octeti' effugia C fert - \e (ESC), \t \r \n \\, \xHH;
+ * effugium ignotum = tabula prava. 'octeti' hic SOLUTI. */
 nomen structura {
-    chorda  titulus;
-       Xar* genera;        /* Xar de s32 (eventus_genus_t) */
-       Xar* immissiones;   /* Xar de ConformitasImmissio */
-       Xar* expectata;     /* Xar de StmlNodus* (<eventus/>) */
+    chorda profilum;
+    chorda octeti;
+} ConformitasTerminalis;
+
+nomen structura {
+     chorda  titulus;
+        Xar* genera;        /* Xar de s32 (eventus_genus_t) */
+        Xar* immissiones;   /* Xar de ConformitasImmissio */
+        Xar* expectata;     /* Xar de StmlNodus* (<eventus/>) */
+        i32  excusationes;  /* CONFORMITAS_EXCUSATIO_* */
+        Xar* terminales;    /* Xar de ConformitasTerminalis (B4) */
 } ConformitasScaena;
 
 /* Tabulam legere. Redde Xar de ConformitasScaena, aut NIHIL si
- * STML pravum aut genus ignotum in 'genera'. */
+ * STML pravum, genus ignotum in 'genera' aut facultas ignota in
+ * 'excusationes'. */
 Xar*
 eventus_conformitas_legere (
      constans character* cstr,
                 Piscina* piscina,
     InternamentumChorda* intern);
 
-/* Fluxum actualem (Xar de Eventus) cum scaena comparare. VERUM si
- * conformis. *diagnosis (si non NIHIL): quid differt, cum fluxibus
- * ambobus (vacua si conformis). */
-b32
+/* Fluxum actualem (Xar de Eventus) cum scaena comparare (excusationes
+ * per FACULTATES fluxus). *diagnosis (si non NIHIL): quid differt, cum
+ * fluxibus ambobus (vacua nisi FRACTA). */
+ConformitasVerdictum
 eventus_conformitas_comparare (
     constans ConformitasScaena* scaena,
                   constans Xar* actualia,

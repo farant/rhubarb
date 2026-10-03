@@ -469,11 +469,13 @@ manus_ludus_causa (
  * ================================================== */
 
 i32
-manus_ludus_iterare (
+manus_ludus_iterare_per (
        ManusLudus* m,
      constans Xar* notata,
     ManusIteratio  modus,
-              Xar* divergentiae)
+              Xar* divergentiae,
+    ManusTraditio  traditio,
+           vacuum* ctx)
 {
     i32 i;
     i32 numerus = ZEPHYRUM;
@@ -534,11 +536,29 @@ manus_ludus_iterare (
                 }
             }
         }
-        dispensator_tractare(m->d, &e);
+        si (traditio)
+        {
+            traditio(ctx, m->d, &e);   /* e.g. transitus terminalis */
+        }
+        alioquin
+        {
+            dispensator_tractare(m->d, &e);
+        }
         si (e.tempus > m->tempus)
         {
             m->tempus = e.tempus;
         }
     }
     redde numerus;
+}
+
+i32
+manus_ludus_iterare (
+       ManusLudus* m,
+     constans Xar* notata,
+    ManusIteratio  modus,
+              Xar* divergentiae)
+{
+    redde manus_ludus_iterare_per(m, notata, modus, divergentiae, NIHIL,
+        NIHIL);
 }

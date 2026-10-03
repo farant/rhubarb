@@ -1,7 +1,8 @@
 /* probatio_eventus_conformitas.c - tabula conformitatis (eventus A4):
  * lectio tabulae; comparatio - ordo et numerus exacti, attributa
  * expectata subset, genera non considerata omissa, tempus neglectum.
- * Sine fenestra: fluxus actuales hic fabricantur. */
+ * (B4) modificantes in bits vocabularii; excusationes per FACULTATES
+ * fluxus. Sine fenestra: fluxus actuales hic fabricantur. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -30,6 +31,8 @@ interior constans character* TABULA =
     "<eventus genus=\"clavis_liberatus\" codex=\"KeyA\" "
     "actio=\"soluta\"/>"
     "</expectata>"
+    "<terminalis profilum=\"legacy\" octeti=\"A\"/>"
+    "<terminalis profilum=\"kitty\" octeti=\"\\e[97:65;2;65u\\x07\"/>"
     "</scaena>"
     "<scaena titulus=\"ictus\" genera=\"mus_depressus mus_liberatus\">"
     "<immissio>"
@@ -37,6 +40,45 @@ interior constans character* TABULA =
     "</immissio>"
     "<expectata>"
     "<eventus genus=\"mus_depressus\" x=\"10\" y=\"-20\"/>"
+    "</expectata>"
+    "</scaena>"
+    "</conformitas>";
+
+/* B4: scaenae cum excusationibus */
+interior constans character* TABULA_EXCUSATIONUM =
+    "<conformitas>"
+    "<scaena titulus=\"shift-a\" "
+    "genera=\"clavis_depressus clavis_liberatus textus\" "
+    "excusationes=\"liberationes codex_physicus latera "
+    "modificantes_textus\">"
+    "<expectata>"
+    "<eventus genus=\"clavis_depressus\" codex=\"KeyA\" runa=\"97\" "
+    "modificantes=\"131074\"/>"
+    "<eventus genus=\"textus\" contentum=\"A\"/>"
+    "<eventus genus=\"clavis_liberatus\" codex=\"KeyA\" "
+    "actio=\"soluta\"/>"
+    "</expectata>"
+    "</scaena>"
+    "<scaena titulus=\"latera\" "
+    "genera=\"clavis_depressus clavis_liberatus textus\" "
+    "excusationes=\"latera\">"
+    "<expectata>"
+    "<eventus genus=\"clavis_depressus\" codex=\"KeyA\" "
+    "modificantes=\"131074\"/>"
+    "<eventus genus=\"textus\" contentum=\"A\"/>"
+    "<eventus genus=\"clavis_liberatus\" codex=\"KeyA\"/>"
+    "</expectata>"
+    "</scaena>"
+    "<scaena titulus=\"sagitta\" genera=\"clavis_depressus\">"
+    "<expectata>"
+    "<eventus genus=\"clavis_depressus\" codex=\"ArrowLeft\" "
+    "modificantes=\"8519682\"/>"
+    "</expectata>"
+    "</scaena>"
+    "<scaena titulus=\"ctrl-i\" genera=\"clavis_depressus\" "
+    "excusationes=\"tabula_distincta\">"
+    "<expectata>"
+    "<eventus genus=\"clavis_depressus\" codex=\"KeyI\"/>"
     "</expectata>"
     "</scaena>"
     "</conformitas>";
@@ -86,6 +128,47 @@ _motum_addere (
     e->datum.mus.y  = CCC;
 }
 
+interior vacuum
+_modos_ponere (
+    Xar* x,
+    i32  modificantes)
+{
+    Eventus* e = (Eventus*)xar_obtinere(x, xar_numerus(x) - I);
+
+    e->datum.clavis.modificantes = modificantes;
+}
+
+/* FACULTATES: omnes eaedem (legacy FALSUM, fenestra VERUM) praeter
+ * latera */
+interior vacuum
+_facultates_addere (
+    Xar* x,
+    b32  omnes,
+    b32  latera)
+{
+    Eventus* e = (Eventus*)xar_addere(x);
+
+    memset(e, ZEPHYRUM, magnitudo(Eventus));
+    e->genus                                 = EVENTUS_FACULTATES;
+    e->datum.facultates.liberationes         = omnes;
+    e->datum.facultates.codex_physicus       = omnes;
+    e->datum.facultates.tabula_distincta     = omnes;
+    e->datum.facultates.modificantes_textus  = omnes;
+    e->datum.facultates.latera               = latera;
+}
+
+/* fluxus legacy scaenae shift-a: sine liberatione, codex ignotus,
+ * Shift invisibilis */
+interior vacuum
+_fluxum_vetustum_addere (
+        Xar* x,
+    Piscina* piscina)
+{
+    _clavem_addere(x, EVENTUS_CLAVIS_DEPRESSUS, EVENTUS_CODEX_IGNOTUS,
+        EVENTUS_ACTIO_PRESSA, V);
+    _textum_addere(x, "A", piscina);
+}
+
 /* fluxus conformis scaenae shift-a, cum motu non considerato */
 interior Xar*
 _fluxus_bonus (
@@ -111,6 +194,8 @@ s32 principale (vacuum)
       ConformitasScaena* ictus;
     ConformitasImmissio* im;
                     Xar* x;
+                    Xar* excusationum;
+      ConformitasScaena* sc;
                  chorda  diagnosis;
 
     piscina = piscina_generare_dynamicum("probatio_eventus_conformitas",
@@ -144,6 +229,38 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (im->modificantes, 131074);
     CREDO_VERUM (chorda_aequalis_literis(im->characteres, "A"));
     CREDO_FALSUM (im->depressa);
+    /* B4: immissiones terminales (octeti per entitates) */
+    CREDO_AEQUALIS_I32 (xar_numerus(shift->terminales), II);
+    CREDO_VERUM (chorda_aequalis_literis(((ConformitasTerminalis*)
+        xar_obtinere(shift->terminales, I))->profilum, "kitty"));
+    CREDO_VERUM (chorda_aequalis_literis(((ConformitasTerminalis*)
+        xar_obtinere(shift->terminales, I))->octeti,
+        "\033[97:65;2;65u\007"));
+    CREDO_AEQUALIS_I32 (xar_numerus(ictus->terminales), ZEPHYRUM);
+    /* characteres: referentiae HTML solutae (entitates_html; olim
+     * crudae immittebantur) */
+    {
+                         Xar* t;
+         ConformitasImmissio* c;
+
+        t = eventus_conformitas_legere(
+            "<conformitas><scaena titulus=\"e\" genera=\"textus\">"
+            "<immissio><clavis codex=\"53\" "
+            "characteres=\"&#27;&#xF702;&amp;\" depressa=\"1\"/>"
+            "</immissio></scaena></conformitas>", piscina, intern);
+        CREDO_NON_NIHIL (t);
+        c = (ConformitasImmissio*)xar_obtinere(
+            ((ConformitasScaena*)xar_obtinere(t,
+            ZEPHYRUM))->immissiones,
+            ZEPHYRUM);
+        CREDO_VERUM (chorda_aequalis_literis(c->characteres,
+            "\033\357\234\202&"));
+    }
+    /* effugium ignotum in octetis: tabula prava */
+    CREDO_NIHIL (eventus_conformitas_legere(
+        "<conformitas><scaena titulus=\"t\" genera=\"textus\">"
+        "<terminalis profilum=\"legacy\" octeti=\"\\q\"/>"
+        "</scaena></conformitas>", piscina, intern));
     im = (ConformitasImmissio*)xar_obtinere(ictus->immissiones,
         ZEPHYRUM);
     CREDO_VERUM (im->genus == CONFORMITAS_IMMISSIO_MUS);
@@ -156,7 +273,8 @@ s32 principale (vacuum)
 
     imprimere("\n--- II. conformis: motus omissus, tempus neglectum\n");
     x = _fluxus_bonus(piscina);
-    CREDO_VERUM (eventus_conformitas_comparare(shift, x, piscina,
+    CREDO_VERUM (CONFORMITAS_CONFORMIS
+        == eventus_conformitas_comparare(shift, x, piscina,
         intern,
         &diagnosis));
     CREDO_AEQUALIS_I32 (diagnosis.mensura, ZEPHYRUM);
@@ -168,7 +286,8 @@ s32 principale (vacuum)
         EVENTUS_ACTIO_PRESSA, V);
     _clavem_addere(x, EVENTUS_CLAVIS_LIBERATUS, EVENTUS_CODEX_LITTERAE,
         EVENTUS_ACTIO_SOLUTA, VI);
-    CREDO_FALSUM (eventus_conformitas_comparare(shift, x, piscina,
+    CREDO_VERUM (CONFORMITAS_FRACTA
+        == eventus_conformitas_comparare(shift, x, piscina,
         intern, &diagnosis));
     CREDO_VERUM (diagnosis.mensura > ZEPHYRUM);
 
@@ -178,13 +297,15 @@ s32 principale (vacuum)
         EVENTUS_ACTIO_PRESSA, V);
     _clavem_addere(x, EVENTUS_CLAVIS_LIBERATUS, EVENTUS_CODEX_LITTERAE,
         EVENTUS_ACTIO_SOLUTA, VI);
-    CREDO_FALSUM (eventus_conformitas_comparare(shift, x, piscina,
+    CREDO_VERUM (CONFORMITAS_FRACTA
+        == eventus_conformitas_comparare(shift, x, piscina,
         intern, &diagnosis));
 
     imprimere("\n--- V. eventus consideratus superfluus: vitium ---\n");
     x = _fluxus_bonus(piscina);
     _textum_addere(x, "B", piscina);
-    CREDO_FALSUM (eventus_conformitas_comparare(shift, x, piscina,
+    CREDO_VERUM (CONFORMITAS_FRACTA
+        == eventus_conformitas_comparare(shift, x, piscina,
         intern, &diagnosis));
 
     imprimere("\n--- VI. attributum differt: vitium nominatum ---\n");
@@ -195,7 +316,8 @@ s32 principale (vacuum)
     _textum_addere(x, "A", piscina);
     _clavem_addere(x, EVENTUS_CLAVIS_LIBERATUS, EVENTUS_CODEX_LITTERAE,
         EVENTUS_ACTIO_SOLUTA, VI);
-    CREDO_FALSUM (eventus_conformitas_comparare(shift, x, piscina,
+    CREDO_VERUM (CONFORMITAS_FRACTA
+        == eventus_conformitas_comparare(shift, x, piscina,
         intern, &diagnosis));
     CREDO_VERUM (chorda_continet(diagnosis,
         chorda_ex_literis("codex", piscina)));
@@ -213,9 +335,101 @@ s32 principale (vacuum)
         e->datum.mus.y  = -XX;
     }
     _motum_addere(x);
-    CREDO_VERUM (eventus_conformitas_comparare(ictus, x, piscina,
+    CREDO_VERUM (CONFORMITAS_CONFORMIS
+        == eventus_conformitas_comparare(ictus, x, piscina,
         intern,
         &diagnosis));
+
+    imprimere("\n--- VIII. excusationes legere (B4) ---\n");
+    excusationum = eventus_conformitas_legere(TABULA_EXCUSATIONUM,
+        piscina, intern);
+    CREDO_NON_NIHIL (excusationum);
+    si (excusationum == NIHIL)
+    {
+        credo_imprimere_compendium();
+        redde I;
+    }
+    sc = (ConformitasScaena*)xar_obtinere(excusationum, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (sc->excusationes,
+        CONFORMITAS_EXCUSATIO_LIBERATIONES
+        | CONFORMITAS_EXCUSATIO_CODEX_PHYSICUS
+        | CONFORMITAS_EXCUSATIO_LATERA
+        | CONFORMITAS_EXCUSATIO_MODIFICANTES_TEXTUS);
+    CREDO_AEQUALIS_I32 (((ConformitasScaena*)xar_obtinere(excusationum,
+        II))->excusationes, ZEPHYRUM);
+    /* facultas ignota: tabula prava */
+    CREDO_NIHIL (eventus_conformitas_legere(
+        "<conformitas><scaena titulus=\"t\" genera=\"textus\" "
+        "excusationes=\"nemo\"/></conformitas>", piscina, intern));
+
+    imprimere("\n--- IX. modificantes: bits vocabularii solum ---\n");
+    sc  = (ConformitasScaena*)xar_obtinere(excusationum, II);
+    x   = xar_creare(piscina, (i32)magnitudo(Eventus));
+    _clavem_addere(x, EVENTUS_CLAVIS_DEPRESSUS,
+        EVENTUS_CODEX_SAGITTA_SINISTRA, EVENTUS_ACTIO_PRESSA, V);
+    /* fenestra 0x820002 (Function AppKit), terminalis sine 0x800000 */
+    _modos_ponere(x, MOD_SHIFT | MOD_SHIFT_SINISTER);
+    CREDO_VERUM (CONFORMITAS_CONFORMIS == eventus_conformitas_comparare(
+        sc, x, piscina, intern, &diagnosis));
+    _modos_ponere(x, MOD_SHIFT);       /* latus deest, non excusatum */
+    CREDO_VERUM (CONFORMITAS_FRACTA == eventus_conformitas_comparare(sc,
+        x, piscina, intern, &diagnosis));
+
+    imprimere("\n--- X. excusationes SOLUM facultate negata ---\n");
+    sc  = (ConformitasScaena*)xar_obtinere(excusationum, ZEPHYRUM);
+    x   = xar_creare(piscina, (i32)magnitudo(Eventus));
+    _facultates_addere(x, FALSUM, FALSUM);
+    _fluxum_vetustum_addere(x, piscina);
+    CREDO_VERUM (CONFORMITAS_CONFORMIS == eventus_conformitas_comparare(
+        sc, x, piscina, intern, &diagnosis));
+    /* sine FACULTATIBUS: nihil excusatur */
+    x = xar_creare(piscina, (i32)magnitudo(Eventus));
+    _fluxum_vetustum_addere(x, piscina);
+    CREDO_VERUM (CONFORMITAS_FRACTA == eventus_conformitas_comparare(sc,
+        x, piscina, intern, &diagnosis));
+    /* facultates affirmatae: nihil excusatur */
+    x = xar_creare(piscina, (i32)magnitudo(Eventus));
+    _facultates_addere(x, VERUM, VERUM);
+    _fluxum_vetustum_addere(x, piscina);
+    CREDO_VERUM (CONFORMITAS_FRACTA == eventus_conformitas_comparare(sc,
+        x, piscina, intern, &diagnosis));
+    /* FACULTATES ULTIMAE valent */
+    x = xar_creare(piscina, (i32)magnitudo(Eventus));
+    _facultates_addere(x, FALSUM, FALSUM);
+    _facultates_addere(x, VERUM, VERUM);
+    _fluxum_vetustum_addere(x, piscina);
+    CREDO_VERUM (CONFORMITAS_FRACTA == eventus_conformitas_comparare(sc,
+        x, piscina, intern, &diagnosis));
+
+    imprimere("\n--- XI. latera sola (kitty: Shift sine latere) ---\n");
+    sc  = (ConformitasScaena*)xar_obtinere(excusationum, I);
+    x   = xar_creare(piscina, (i32)magnitudo(Eventus));
+    _facultates_addere(x, VERUM, FALSUM);
+    _clavem_addere(x, EVENTUS_CLAVIS_DEPRESSUS, EVENTUS_CODEX_LITTERAE,
+        EVENTUS_ACTIO_PRESSA, V);
+    _modos_ponere(x, MOD_SHIFT);
+    _textum_addere(x, "A", piscina);
+    _clavem_addere(x, EVENTUS_CLAVIS_LIBERATUS, EVENTUS_CODEX_LITTERAE,
+        EVENTUS_ACTIO_SOLUTA, VI);
+    CREDO_VERUM (CONFORMITAS_CONFORMIS == eventus_conformitas_comparare(
+        sc, x, piscina, intern, &diagnosis));
+    ((Eventus*)xar_obtinere(x, ZEPHYRUM))->datum.facultates.latera =
+        VERUM;
+    CREDO_VERUM (CONFORMITAS_FRACTA == eventus_conformitas_comparare(sc,
+        x, piscina, intern, &diagnosis));
+
+    imprimere("\n--- XII. tabula_distincta: scaena EXCUSATA ---\n");
+    sc  = (ConformitasScaena*)xar_obtinere(excusationum, III);
+    x   = xar_creare(piscina, (i32)magnitudo(Eventus));
+    _facultates_addere(x, FALSUM, FALSUM);
+    _clavem_addere(x, EVENTUS_CLAVIS_DEPRESSUS, EVENTUS_CODEX_TABULA,
+        EVENTUS_ACTIO_PRESSA, V);
+    CREDO_VERUM (CONFORMITAS_EXCUSATA == eventus_conformitas_comparare(
+        sc, x, piscina, intern, &diagnosis));
+    ((Eventus*)xar_obtinere(x, ZEPHYRUM))->datum.facultates
+        .tabula_distincta = VERUM;
+    CREDO_VERUM (CONFORMITAS_FRACTA == eventus_conformitas_comparare(sc,
+        x, piscina, intern, &diagnosis));
 
     imprimere("\n");
     credo_imprimere_compendium();

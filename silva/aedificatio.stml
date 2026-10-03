@@ -164,14 +164,12 @@
        clave ingressuum ET mandati regenerationem supplet. aedilis per
        FONTES suos (manifestum), non per binarium: relinkatum octetis
        differt (LC_UUID), clavis per cursum mutaretur. -->
-  <actio titulus="fragmenta_silva" genus="generator" memorabilis="verum">
+  <actio titulus="fragmenta_silva" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/silva_fontes_generare.sh
     </mandatum>
     <vestigium via="build/fabrica/clausurae/silva"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/silva"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/silva_fontes_generare.sh"/>
     <!-- globus radicum tempore currendi expansus; principalia in linea

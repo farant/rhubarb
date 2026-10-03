@@ -18,6 +18,7 @@
 #include "postulata_posix.h"   /* getpid: plagulae temporariae per processum */
 #include "latina.h"
 #include "provenientia.h"
+#include "lectiones.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
@@ -26,6 +27,8 @@
 #include "xar.h"
 #include "argumenta.h"
 #include "tabula_dispersa.h"
+#include "sigillum.h"
+#include "thesaurus.h"
 #include "aedilis.h"
 
 #include "silva.h"
@@ -40,6 +43,9 @@
 nomen structura {
                   SilvaContextus* contextus;
     constans AedilisConfiguratio* configuratio;
+    /* --memoria-oraculi <dir>: effusio clang -MM per fontem, intra
+     * cursum UNUM portae (arbor gelata, vexilla eadem) - NIHIL = sine */
+              constans character* memoria_oraculi;
 } ExtractorDatum;
 
 /* Chordam ex octetis alienis in piscinam copiare (vistae silvae
@@ -259,6 +265,7 @@ _extractor_oraculi (
                    i32  i;
                    i32  numerus;
     constans character* via_temporaria;
+    constans character* via_memoriae;
 
     mandatum = chorda_aedificator_creare(piscina, 512);
     chorda_aedificator_appendere_literis(mandatum, "clang -MM");
@@ -281,13 +288,57 @@ _extractor_oraculi (
     mandatum_cstr = chorda_ut_cstr(
         chorda_aedificator_finire(mandatum), piscina);
 
-    si (system(mandatum_cstr) != 0)
+    /* MEMORIA ORACULI (2026-10-02): porta aedilis -MM CCCCCCCXXIX
+     * vicibus pro CCI fontibus currebat (~CXLI s, dimidium portae) -
+     * effusio fontis idem in omni clausura eius cursu uno. Clavis = via
+     * fontis ('/' -> '__'); solum effusio SUCCESSA servatur. */
+    via_memoriae = NIHIL;
+    si (extractoris->memoria_oraculi != NIHIL)
     {
-        (vacuum)remove(via_temporaria);
-        redde FALSUM;
+        ChordaAedificator* clavis;
+                      i32  k;
+
+        clavis = chorda_aedificator_creare(piscina, 256);
+        chorda_aedificator_appendere_literis(clavis,
+            extractoris->memoria_oraculi);
+        chorda_aedificator_appendere_literis(clavis, "/");
+        per (k = 0; via[k] != '\0'; k++)
+        {
+            si (via[k] == '/')
+            {
+                chorda_aedificator_appendere_literis(clavis, "__");
+            }
+            alioquin
+            {
+                character unus[II];
+
+                unus[0] = via[k];
+                unus[I] = '\0';
+                chorda_aedificator_appendere_literis(clavis, unus);
+            }
+        }
+        chorda_aedificator_appendere_literis(clavis, ".mm");
+        via_memoriae = chorda_ut_cstr(chorda_aedificator_finire(clavis),
+            piscina);
     }
-    textus = filum_legere_totum(via_temporaria, piscina);
-    (vacuum)remove(via_temporaria);
+    si (via_memoriae != NIHIL && filum_existit(via_memoriae))
+    {
+        textus = filum_legere_totum(via_memoriae, piscina);
+    }
+    alioquin
+    {
+        si (system(mandatum_cstr) != 0)
+        {
+            (vacuum)remove(via_temporaria);
+            redde FALSUM;
+        }
+        textus = filum_legere_totum(via_temporaria, piscina);
+        (vacuum)remove(via_temporaria);
+        si (via_memoriae != NIHIL && textus.mensura > 0)
+        {
+            (vacuum)filum_scribere(via_memoriae, textus);
+        }
+    }
     si (textus.mensura == 0)
     {
         redde FALSUM;
@@ -504,7 +555,303 @@ nomen structura {
     ExtractorDatum* intus;
            Piscina* piscina;   /* longaeva: memoriae et fructus */
     TabulaDispersa* tabula;    /* via -> MemoriaExtractoris* */
+    /* --thesaurus (fabrica plan 2 T3): recorda extractionis trans
+     * cursus. NIHIL = sine. praefixum = sigillum(binarium aedilis ‖
+     * aedilis.stml): extractio silvae PURA est in octetis fontis
+     * (nulla IO in expansione; latina in silva infixa), ergo clavis
+     * = sigillum(praefixum ‖ octeti fontis). */
+          Thesaurus* thesaurus;
+           Sigillum  praefixum;
 } ExtractorMemor;
+
+/* RECORDUM extractionis (octeti tuti, non lineae: annotationes
+ * lineas novas ferunt):
+ *   AEDILIS EXTRACTIO I\n
+ *   D <n>\n   deinde n: <mensura> <0|1 angulata>\n<octeti>\n
+ *   A <n>\n   deinde n: <mensura>\n<octeti>\n
+ * Fructus fractus (FALSUM) numquam conditur. */
+#define RECORDUM_CAPUT "AEDILIS EXTRACTIO I\n"
+
+interior chorda
+_recordum_scribere (
+    constans MemoriaExtractoris* m,
+                        Piscina* piscina)
+{
+    ChordaAedificator* aedificator;
+                  i32  i;
+                  i32  numerus;
+
+    aedificator = chorda_aedificator_creare(piscina, IV * MXXIV);
+    (vacuum)chorda_aedificator_appendere_literis(aedificator,
+        RECORDUM_CAPUT);
+    numerus = (m->directivae != NIHIL) ? xar_numerus(m->directivae)
+        : ZEPHYRUM;
+    (vacuum)chorda_aedificator_appendere_literis(aedificator, "D ");
+    (vacuum)chorda_aedificator_appendere_i32(aedificator, numerus);
+    (vacuum)chorda_aedificator_appendere_character(aedificator, '\n');
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        chorda directiva;
+           b32 angulata;
+
+        directiva = *(chorda*)xar_obtinere(m->directivae, i);
+        angulata  = (   m->angulatae != NIHIL
+                     && i < xar_numerus(m->angulatae))
+            ? *(b32*)xar_obtinere(m->angulatae, i) : FALSUM;
+        (vacuum)chorda_aedificator_appendere_i32(aedificator,
+            directiva.mensura);
+        (vacuum)chorda_aedificator_appendere_literis(aedificator,
+            angulata ? " 1\n" : " 0\n");
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+            directiva);
+        (vacuum)chorda_aedificator_appendere_character(aedificator,
+            '\n');
+    }
+    numerus = (m->annotationes != NIHIL)
+        ? xar_numerus(m->annotationes) : ZEPHYRUM;
+    (vacuum)chorda_aedificator_appendere_literis(aedificator, "A ");
+    (vacuum)chorda_aedificator_appendere_i32(aedificator, numerus);
+    (vacuum)chorda_aedificator_appendere_character(aedificator, '\n');
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        chorda annotatio;
+
+        annotatio = *(chorda*)xar_obtinere(m->annotationes, i);
+        (vacuum)chorda_aedificator_appendere_i32(aedificator,
+            annotatio.mensura);
+        (vacuum)chorda_aedificator_appendere_character(aedificator,
+            '\n');
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+            annotatio);
+        (vacuum)chorda_aedificator_appendere_character(aedificator,
+            '\n');
+    }
+    redde chorda_aedificator_finire(aedificator);
+}
+
+/* numerus decimalis ad 'positio' usque ad 'terminus'; FALSUM si
+ * forma fracta */
+interior b32
+_numerum_legere (
+       chorda  textus,
+          i32* positio,
+    character  terminus,
+          i32* numerus_out)
+{
+    i32 valor;
+    i32 initium;
+
+    valor    = ZEPHYRUM;
+    initium  = *positio;
+    dum (   *positio < textus.mensura
+         && textus.datum[*positio] >= '0'
+         && textus.datum[*positio] <= '9')
+    {
+        valor = valor * X + (i32)(textus.datum[*positio] - '0');
+        (*positio)++;
+    }
+    si (   *positio == initium || *positio >= textus.mensura
+        || textus.datum[*positio] != terminus)
+    {
+        redde FALSUM;
+    }
+    (*positio)++;
+    *numerus_out = valor;
+    redde VERUM;
+}
+
+/* octeti 'mensura' deinde '\n'; chorda copiata in piscinam */
+interior b32
+_octetos_legere (
+      chorda  textus,
+         i32* positio,
+         i32  mensura,
+     Piscina* piscina,
+      chorda* out)
+{
+    si (   *positio + mensura               >= textus.mensura
+        || textus.datum[*positio + mensura] != '\n')
+    {
+        redde FALSUM;
+    }
+    *out = _chordam_copiare(textus.datum + *positio,
+        mensura, piscina);
+    *positio += mensura + I;
+    redde VERUM;
+}
+
+interior b32
+_recordum_legere (
+                chorda  textus,
+               Piscina* piscina,
+    MemoriaExtractoris* m)
+{
+    i32 positio;
+    i32 numerus;
+    i32 i;
+    i32 longitudo_capitis;
+
+    longitudo_capitis = (i32)strlen(RECORDUM_CAPUT);
+    si (   textus.mensura < longitudo_capitis
+        || memcmp(textus.datum, RECORDUM_CAPUT,
+            (memoriae_index)longitudo_capitis) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    positio          = longitudo_capitis;
+    m->directivae    = xar_creare(piscina, (i32)magnitudo(chorda));
+    m->annotationes  = xar_creare(piscina, (i32)magnitudo(chorda));
+    m->angulatae     = xar_creare(piscina, (i32)magnitudo(b32));
+    m->ex_oraculo    = FALSUM;
+    si (   positio + II > textus.mensura
+        || textus.datum[positio]     != 'D'
+        || textus.datum[positio + I] != ' ')
+    {
+        redde FALSUM;
+    }
+    positio += II;
+    si (!_numerum_legere(textus, &positio, '\n', &numerus))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+           i32  mensura;
+        chorda  directiva;
+           b32* angulata;
+
+        si (   !_numerum_legere(textus, &positio, ' ', &mensura)
+            || positio + II > textus.mensura
+            || textus.datum[positio + I] != '\n')
+        {
+            redde FALSUM;
+        }
+        angulata = (b32*)xar_addere(m->angulatae);
+        si (angulata == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *angulata  = (textus.datum[positio] == '1') ? VERUM : FALSUM;
+        positio    += II;
+        si (!_octetos_legere(textus, &positio, mensura, piscina,
+                &directiva))
+        {
+            redde FALSUM;
+        }
+        _chordam_in_xar(m->directivae, directiva);
+    }
+    si (   positio + II > textus.mensura
+        || textus.datum[positio]     != 'A'
+        || textus.datum[positio + I] != ' ')
+    {
+        redde FALSUM;
+    }
+    positio += II;
+    si (!_numerum_legere(textus, &positio, '\n', &numerus))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+           i32 mensura;
+        chorda annotatio;
+
+        si (   !_numerum_legere(textus, &positio, '\n', &mensura)
+            || !_octetos_legere(textus, &positio, mensura, piscina,
+            &annotatio))
+        {
+            redde FALSUM;
+        }
+        _chordam_in_xar(m->annotationes, annotatio);
+    }
+    redde positio == textus.mensura;
+}
+
+/* clavis extractionis: sigillum(praefixum ‖ octeti fontis). FALSUM si
+ * fons legi nequit (extractor ipse tum defectum reddit). */
+interior b32
+_clavem_extractionis (
+          ExtractorMemor* memor,
+      constans character* via,
+                Sigillum* clavis_out)
+{
+                chorda fons;
+     SigillumContextus contextus;
+
+    fons = filum_legere_totum(via, memor->piscina);
+    si (fons.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    sigillum_incipere(&contextus);
+    sigillum_addere(&contextus, memor->praefixum.octeti, XXXII);
+    sigillum_addere(&contextus, fons.datum,
+        (memoriae_index)fons.mensura);
+    *clavis_out = sigillum_finire(&contextus);
+    redde VERUM;
+}
+
+/* THESAURUS: recordum quaerere (inventum -> m impletum, VERUM);
+ * aliter extrahere et condere. Fontes .m (oraculum clang -MM, capita
+ * legit) numquam conduntur. */
+interior b32
+_extractionem_per_thesaurum (
+        ExtractorMemor* memor,
+    constans character* via,
+    MemoriaExtractoris* m)
+{
+    Sigillum  clavis;
+    Sigillum  blobus;
+         Xar* exitus;
+      chorda  via_blobi;
+      chorda  recordum;
+         i32  longitudo;
+
+    longitudo = (i32)strlen(via);
+    si (   longitudo > II && via[longitudo - II] == '.'
+        && via[longitudo - I] == 'm')
+    {
+        redde FALSUM;
+    }
+    si (!_clavem_extractionis(memor, via, &clavis))
+    {
+        redde FALSUM;
+    }
+    si (   thesaurus_actio_capere(memor->thesaurus, &clavis,
+            memor->piscina, &exitus)
+        && xar_numerus(exitus) == I
+        && thesaurus_via(memor->thesaurus,
+            (Sigillum*)xar_obtinere(exitus, ZEPHYRUM), memor->piscina,
+            &via_blobi))
+    {
+        recordum = filum_legere_totum(
+            chorda_ut_cstr(via_blobi, memor->piscina), memor->piscina);
+        si (_recordum_legere(recordum, memor->piscina, m))
+        {
+            m->fructus = VERUM;
+            thesaurus_generationem_notare(memor->thesaurus, &clavis);
+            redde VERUM;
+        }
+    }
+    /* absens aut fractum: extrahere, deinde condere si sanum */
+    m->fructus = _extractor_silvae(memor->intus, via, memor->piscina,
+        &m->directivae, &m->annotationes, &m->ex_oraculo,
+        &m->angulatae);
+    si (m->fructus && !m->ex_oraculo)
+    {
+        recordum = _recordum_scribere(m, memor->piscina);
+        exitus = xar_creare(memor->piscina, (i32)magnitudo(Sigillum));
+        si (   exitus != NIHIL
+            && thesaurus_ponere(memor->thesaurus, recordum, &blobus))
+        {
+            *(Sigillum*)xar_addere(exitus) = blobus;
+            (vacuum)thesaurus_actio_ponere(memor->thesaurus, &clavis,
+                exitus);
+            thesaurus_generationem_notare(memor->thesaurus, &clavis);
+        }
+    }
+    redde VERUM;
+}
 
 interior b32
 _extractor_memor (
@@ -538,10 +885,14 @@ _extractor_memor (
         m->annotationes  = NIHIL;
         m->angulatae     = NIHIL;
         m->ex_oraculo    = FALSUM;
-        m->fructus = _extractor_silvae(memor->intus, via,
-            memor->piscina,
-            &m->directivae, &m->annotationes, &m->ex_oraculo,
-            &m->angulatae);
+        si (   memor->thesaurus == NIHIL
+            || !_extractionem_per_thesaurum(memor, via, m))
+        {
+            m->fructus = _extractor_silvae(memor->intus, via,
+                memor->piscina,
+                &m->directivae, &m->annotationes, &m->ex_oraculo,
+                &m->angulatae);
+        }
         (vacuum)tabula_dispersa_inserere(memor->tabula,
             chorda_ex_literis(via, memor->piscina), m);
     }
@@ -877,13 +1228,18 @@ _nexum_purum_currere (
                   *(chorda*)xar_obtinere(configuratio->inclusa,
                   d);
            character* dir_cstr  = chorda_ut_cstr(dir, piscina);
+                 /* lectiones: notatur */
                  DIR* h         = opendir(dir_cstr);
     structura dirent* introitus;
 
         si (h == NIHIL)
         {
+            lectiones_notare(LECTIO_ABSENS, dir_cstr);
             perge;
         }
+        /* radix inclusionum enumerata: nomina = dependentia
+         * (obumbratio - fabrica plan 2) */
+        lectiones_notare(LECTIO_ENUMERAVIT, dir_cstr);
         dum ((introitus = readdir(h)) != NIHIL)
         {
              memoriae_index  l = strlen(introitus->d_name);
@@ -961,7 +1317,12 @@ _corpus_currere (
     i32               i;
     integer           exitus;
 
+    /* lectiones: notatur */
     d = opendir(directorium);
+    si (d != NIHIL)
+    {
+        lectiones_notare(LECTIO_ENUMERAVIT, directorium);
+    }
     si (d == NIHIL)
     {
         fprintf(stderr,
@@ -1090,6 +1451,9 @@ principale (
         "Scriptum etiam ad viam datam servare");
     argumenta_addere_vexillum(parser, NIHIL, "--differentia",
         "Sextum capitum contra clang -MM comparare (sine emissione)");
+    argumenta_addere_optionem(parser, NIHIL, "--memoria-oraculi",
+        "Cum --differentia: effusiones clang -MM per fontem in "
+        "directorio dato servare/legere (cursus unus portae)");
     argumenta_addere_vexillum(parser, NIHIL, "--enumerare",
         "Obiecta clausurae nuda imprimere (consumptoribus)");
     argumenta_addere_optionem(parser, NIHIL, "--manifestum",
@@ -1102,6 +1466,9 @@ principale (
     argumenta_addere_vexillum(parser, NIHIL, "--nexus-purus",
         "Capita <aedilis nexus=\"purus\"/> radicum inclusarum iudicare "
         "(clausura sine regula nexus; eventus A1b)");
+    argumenta_addere_optionem(parser, NIHIL, "--thesaurus",
+        "Directorium thesauri: recorda extractionis per sigillum "
+        "fontis trans cursus (build/aedilis/obiecta)");
     argumenta_addere_vexillum(parser, NIHIL, "--aristae",
         "Aristas graphi inclusionum imprimere (includens inclusum)");
     argumenta_addere_vexillum(parser, NIHIL, "--ordo",
@@ -1189,11 +1556,57 @@ principale (
         fprintf(stderr, "AEDILIS RECUSAT: contextus deest\n");
         redde 1;
     }
-    extractoris.contextus = contextus;
-    extractoris.configuratio = configuratio;
-    memor.intus = &extractoris;
-    memor.piscina = piscina;
-    memor.tabula = tabula_dispersa_creare_chorda(piscina, 512);
+    extractoris.contextus     = contextus;
+    extractoris.configuratio  = configuratio;
+    {
+        chorda memoria;
+
+        memoria = argumenta_obtinere_optionem(lecta,
+            "--memoria-oraculi", piscina);
+        extractoris.memoria_oraculi = (memoria.mensura > 0)
+            ? chorda_ut_cstr(memoria, piscina) : NIHIL;
+    }
+    memor.intus      = &extractoris;
+    memor.piscina    = piscina;
+    memor.tabula     = tabula_dispersa_creare_chorda(piscina, 512);
+    memor.thesaurus  = NIHIL;
+    {
+        chorda radix_thesauri;
+
+        radix_thesauri = argumenta_obtinere_optionem(lecta,
+            "--thesaurus", piscina);
+        si (radix_thesauri.mensura > 0)
+        {
+            /* versio extractoris = binarium ipsum (argv[0]): quaevis
+             * mutatio codicis aut silvae clavem mutat. Binarium
+             * illegibile (PATH sine '/') = thesaurus RECUSATUR. */
+                       chorda binarium;
+                       chorda configuratio_octeti;
+            SigillumContextus contextus;
+
+            binarium = filum_legere_totum(argumenta_cruda[0], piscina);
+            configuratio_octeti = filum_legere_totum("aedilis.stml",
+                piscina);
+            memor.thesaurus = thesaurus_aperire(
+                chorda_ut_cstr(radix_thesauri, piscina), piscina);
+            si (   binarium.mensura            == ZEPHYRUM
+                || configuratio_octeti.mensura == ZEPHYRUM
+                || memor.thesaurus             == NIHIL)
+            {
+                fprintf(stderr,
+                    "AEDILIS RECUSAT: --thesaurus: binarium "
+                    "(%s), aedilis.stml aut thesaurus legi nequit\n",
+                    argumenta_cruda[0]);
+                redde 1;
+            }
+            sigillum_incipere(&contextus);
+            sigillum_addere(&contextus, binarium.datum,
+                (memoriae_index)binarium.mensura);
+            sigillum_addere(&contextus, configuratio_octeti.datum,
+                (memoriae_index)configuratio_octeti.mensura);
+            memor.praefixum = sigillum_finire(&contextus);
+        }
+    }
     si (memor.tabula == NIHIL)
     {
         fprintf(stderr, "AEDILIS RECUSAT: memoria extractoris deest\n");

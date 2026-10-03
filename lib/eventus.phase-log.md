@@ -744,3 +744,887 @@ moved layout.
 - `typus` deletion (D2 step 3).
 
 Phase B (the terminal source) gets its own plan after this RELATIO.
+
+# Phase B — the terminal source (plan `project-specs/eventus-plan-B.md`)
+
+D8 decided by Fran (2026-10-02): (a), tokenizer first. Sealed: name
+`series_terminalis`; DCS whole and truncated in v1; C1 8-bit controls
+not recognized; a separate library; the table built at creation.
+
+## B1a — `series_terminalis`, the tokenizer (2026-10-02)
+
+**Shape.** Pull API: `series_lexema_proximum(lector, &ptr, finis,
+&lexema)` returns ONE token per call (`SeriesLexema`):
+- IMPRIMERE: a printable run, as a zero-copy view into the input;
+- EXSEQUI: a C0 control or DEL;
+- ESC, CSI, SS (SS2/SS3), OSC, DCS, APC (also PM/SOS, via
+  `introductor`);
+- FUGA: an aborted or flushed sequence, with its raw bytes.
+
+Fields: parameters (24) + a `separatores` bitset (`:` after param i),
+intermediates (4), `privatum` (`? > < =`), `introductor` (the byte after
+ESC), `finale`, `praefixum`, `textus` (a string payload ≤ 2048 bytes,
+copied, `truncatum`), and `crudum` (the sequence's raw bytes, ≤ 64).
+Split sequences stay in the reader's state; `_pendet` / `_evacuare` let
+the CALLER own the ESC timeout. Nothing is allocated after creation.
+
+**The state machine** is Ghostty's `parse_table.zig` (MIT, pin 12752b2)
+as a rules function (`_tabulam_struere`, one `_regula` line per row of
+the vt100.net diagram), built into a [256][15] table at creation. ESC,
+CAN/SUB and string terminators are handled BEFORE the table, because
+the divergences live there.
+
+**Deliberate divergences from Ghostty (all for input):**
+- C1 not recognized (0x80+ prints: UTF-8);
+- DEL in ground is a control (the backspace key);
+- CSI with `:` kept for any final (kitty `CSI 97:65;2u`; Ghostty drops
+  non-`m`);
+- `ESC N|O [params] final` is ONE token (application-mode arrows
+  `ESC O A`, xterm `ESC O 2 P`);
+- `ESC ESC …` sets `praefixum` (Fran's FUGAE_PRAEFIXUM decision);
+- an aborted sequence becomes FUGA with its raw bytes, the aborting
+  byte NOT consumed;
+- `ESC \` after a string is swallowed as its terminator;
+- ESC followed by a high byte = a lone ESC (FUGA) + the UTF-8 run
+  (alt+é).
+
+As in Ghostty: more than 24 params drops the WHOLE sequence (a half SGR
+is worse than none), and `csi_ignore` completes silently.
+
+**Tests (`probatio_series_terminalis`, 167 assertions):**
+- I: Ghostty's 24 Parser.zig tests ported (C1 and the colon rule
+  asserted as OUR behaviour);
+- II: the divergences, one test each;
+- III: pendet/evacuare (lone ESC, `ESC [`, `ESC O`, a half mouse
+  report, `ESC ESC`; after a string closed by ESC, the timeout returns
+  nothing);
+- IV: the SPLIT SWEEP: 37 sequences, each fed whole, at every 2-way
+  split, and byte by byte. The renders (adjacent printable runs merged,
+  raw bytes included) must be identical;
+- V: hostile input (10,000 params, a 1 MB unterminated OSC, 64 KiB of
+  random bytes in random chunks): bounded, and the reader's piscina
+  usage is UNCHANGED after creation.
+
+Red first: 141 failures against a stub. The first implementation
+failed 4:
+- 1 real bug: CAN/SUB in GROUND were swallowed, because the C0 helper
+  excludes them for the in-sequence abort path and ground never got a
+  rule;
+- 1 typo in my expected string.
+
+Four compiling plants caught by name: the param cap off by one; `:`
+read as `;`; state lost between calls (caught by the SWEEP: the
+property test earns its keep); OSC terminated only by BEL.
+
+**Lint:** `esc`, `osc`, `dcs`, `apc` entered the glossary as tolerated
+protocol acronyms (`csi` was already tolerated from older code).
+
+**Not yet:** tessera uses none of this; that's B1b, where the 27
+debt vectors get paid.
+
+## B1b — tessera's reader on the tokenizer (2026-10-02)
+
+**The bar held, and the debts were paid.** `probatio_tessera_eventum`
+68/68 is UNCHANGED. The vector harness went from 1,425 assertions with
+108 debt shapes (27 vectors) to **1,534 with 0 debts**: all 27 were
+promoted by name, and the `CAUSA_*` macros were deleted.
+
+**Shape.** `tessera_eventum.c` keeps all its SEMANTICS (the key tables,
+`_modificatores_csi`, mouse classification, control bytes, the paste
+collector) and the reader loop. The hand-rolled `_csi_parsare` /
+`_ss3_parsare` / `_parsare` over the gestation buffer became one token
+per call from `series_terminalis` (INPUT MODE), plus handlers:
+- `_csi_tractare`: mouse SGR, paste start, keys; unknown forms
+  silently consumed;
+- `_ss_tractare`;
+- `_runam_parsare`: the first rune of a printable run; the rest stays
+  in the buffer, which is safe because the tokenizer is in ground;
+- `_moram_tractare`: the timeout.
+
+Three RAW side channels stay in the reader, because they aren't DEC
+grammar:
+- X10 mouse: 3 raw bytes after `CSI M` (AUDIENDA closed: a reader
+  special case);
+- foreign tails: `CSI [` then bytes up to a final (Linux console
+  `[[A`, putty `[[5~`);
+- the paste body (unchanged).
+
+**Timeout rules (`_moram_tractare`):**
+- the pending sequence is EVACUATED;
+- a lone ESC = Escape;
+- `ESC ESC` = Escape now, and the SECOND Escape at the very next call,
+  without waiting again (both have already outlived the timeout;
+  re-feeding it to the tokenizer made `ESC ESC` + timeout + `a` read
+  alt+a: the first run's one VALET failure);
+- `ESC x` alone = alt+x (`ESC [`, `ESC O`, `ESC P`);
+- anything else is discarded (H7);
+- RELIQUIAE (H8): a half SGR mouse report (`CSI <…`) and a lone ESC
+  already given out as Escape are stashed. They are fed back to the
+  tokenizer only if the next bytes continue them (`;5M`, `[<…`,
+  `[M…`). `[` alone after an ESC waits one more read; the split forms
+  needed this (the first run's 4 remaining debt shapes).
+
+**Tokenizer INPUT MODE** (`series_lectorem_initus_ponere`; output
+stays pure DEC, tested). Input and output share bytes but not meaning:
+- `ESC` + 0x20..0x2F = ESC final (alt+space, alt+!), not an
+  intermediate;
+- `ESC` + C0/DEL = FUGA (lone ESC), the byte not consumed → alt+control;
+- `ESC N/X/^` = ESC final (terminals never send SS2/SOS/PM);
+- `ESC P` + a letter immediately = alt+P + letter. Real DCS replies
+  start with a digit, `>`, `!` or `$`.
+- I first also made `ESC ]` + non-digit and `ESC _` + non-`G` into alt
+  keys, then REMOVED both: no VALET vector types alt+] or alt+_, and
+  the rules broke realistic debts (`ESC _ OK`). Those two stay strings;
+  a typed alt+] still works through the timeout (FUGA introductor →
+  alt+]).
+
+**The one contradiction in the test data** (Fran decided, 2026-10-02):
+VALET `alt+P` SEQUENS (`ESC P a` in one read → alt+P, `a`) vs debt
+"DCS partialis + mora" (`ESC P partial` → nothing). Both start
+`ESC P` + a lowercase letter, so no rule passes both. The debt's bytes
+became a realistic half reply, `ESC P >|kit`; H7's intent is unchanged.
+
+**Amalgam.** tessera vendors `series_terminalis`:
+- `SeriesLector` → `TesseraSeriesLector`, with the typedef dropped
+  (tessera.h owns it);
+- `series_` → `tessera_series_`;
+- the HAND-WRITTEN `tessera.h` mirrors `TesseraLector`'s new fields in
+  source order (the harvest build caught the stale struct). The stash
+  size is the tessera-owned `TESSERA_RELIQUIAE_CAPACITAS 64`, written in
+  digits in BOTH headers, so an identical redefinition is legal and a
+  differing one is a compile error (LXIV vs 64 would not be
+  "identical").
+- Verified: standalone at full severity, host 7/7, nm intersection 0.
+
+The four demo source lists (`*_fontes_generata.sh`) were regenerated;
+spectaculum failed to LINK before that (caught by building it for the
+look, not by any suite).
+
+**Plants (compiling, caught by name):**
+- reliquiae never returned → the three H8 vectors;
+- `praefixum` ignored → both ESC-prefix vectors;
+- input mode off → the alt+control family.
+
+**Lint:** `sgr` added to the glossary (an acronym); a helper renamed to
+`_octetos_tradere` (*lexemator* isn't a house word).
+
+## B2a — `interpres_terminalis`: legacy tokens → Eventus (2026-10-02)
+
+**Sealed by Fran:**
+- the name (*interpres*, the Roman go-between who rendered one tongue
+  into another);
+- the split: B2a legacy, B2b kitty;
+- the legacy text policy: KEY + TEXT, HONEST.
+
+**The boundary.** The decoder is PURE: a `SeriesLexema` in, Eventus
+pushed into phase A's `EventusCauda` (text copied, motion merged). Its
+only state is the alt prefix (a lone ESC before the next token). The
+PIPELINE stays in the source:
+- the ESC timeout (the source hands evacuated sequences in with
+  `post_moram`);
+- the stashed partials;
+- the raw channels, with entry points `interpres_x10` and
+  `interpres_glutinum`.
+
+This is what keeps the alt prefix and the timeout logic from existing
+twice when B3/B5 rebase tessera.
+
+**Decoding (tables translated from tessera's B1b reader into the
+Eventus vocabulary):**
+- **printables:** per rune KEY PRESSA (clavis: letters UPPERCASE as in
+  fenestra; runa: letters lowercase; codex IGNOTUS; NO shift bit) +
+  TEXT SCRIPTA carrying the case. No TEXT under alt or ctrl (the
+  terminal already decided it's a shortcut).
+- **controls, honest:** `\r` Enter, `\t` Tab, DEL Backspace; `\n` =
+  Ctrl+J; 0x08 = Ctrl+H; NUL = Ctrl+Space; 0x01..0x1A Ctrl+letter;
+  0x1C..0x1F Ctrl+symbol. tessera's merges (`\n`→Enter, 0x08→Backspace)
+  will be ITS projection (B5).
+- **alt:** a lone-ESC FUGA arms MOD_ALT for the next key, and ONLY the
+  next. ESC dispatch = alt+char. After a timeout: ESC = Escape (codex
+  IGNOTUS: it could be Ctrl+[), ESC ESC = two, `ESC x` = alt+x, other
+  partials dropped.
+- **named keys** (CSI A-D/H/F/Z, `~` codes 1-8 and F1-F12, SS3 A-D/H/F
+  and P-S): the codex is SET because the sequence names the physical
+  key. xterm modifier param: shift 1, alt 2, ctrl 4, meta 8 → super.
+  `praefixum` adds alt. Insert has no `clavis_t`, so clavis IGNOTA +
+  codex INSERERE.
+- **mouse** (SGR, X10): pointer at the CELL CENTRE in our pixels;
+  press/release/motion (held or hover; motion goes through the queue's
+  merge); wheel = ROTULA GRADATA, one notch = one cell height (64 → dy
+  +, 65 → dy −, 66 → dx +, 67 → dx −; the sign is an assumption, which
+  B4's conformance run checks against fenestra).
+- focus `CSI I` / `CSI O`; paste → TEXT GLUTINATA; OSC/DCS/APC and the
+  paste markers produce nothing.
+
+**Tests (`probatio_interpres_terminalis`, 61 assertions):** red first
+(58 against a stub). Byte vectors go through `series_terminalis` (input
+mode) + the decoder; events are rendered compactly (`KA:a TA`,
+`Kup+C#ArrowUp`, `DL@25,30`, `W0,20g`).
+
+The first green attempt HUNG (exit 137 after 190 s): the test's hex
+renderer counted DOWN with an `i32` (UNSIGNED here), so `k >= 0` was
+never false. clang `-Wextra` doesn't flag it, which is the memory's
+classic trap, hit again; it's now `s32` with a comment. Then one test
+typo (9 for an 8-byte string).
+
+Three compiling plants caught by name: 1-based coordinates not shifted;
+the alt prefix never cleared; text emitted under alt.
+
+**Lint:** reused tessera's names (`_clavem_tildae`, `_modificantes_csi`)
+instead of coining `tildam` / `xterm` words.
+
+**B2a's first commit was REFUSED by `generata`:** the tessera amalgam
+was 3 lines stale against B1b's COMMITTED source. Cause: in B1b I
+edited `tessera_eventum.c` (the `memcpy` line) AFTER formatting it,
+then regenerated the amalgam from the unformatted text. The pre-commit
+hook reformatted the source at commit time, after the gates had
+compared it, and the two drifted by one line wrap. Fix: the regenerated
+amalgam rides with B2a (plus the tessera gate). main already fixed the
+trap in dfd9a2a4 ("commissio: forma ANTE iudicium": formatting before
+the gates). Until secunda merges main: run the formatter after the LAST
+edit, and regenerate derived files after that.
+
+## B2b — kitty keyboard decoding (2026-10-02)
+
+**`claves_physicae` gains two tables:**
+- `claves_codex_ex_littera`: a US base-layout character → physical code
+  (letters, digits, the 12 punctuation keys, space; uppercase and
+  non-ASCII → IGNOTUS). Cross-checked against the macOS kVK table:
+  same position, same code.
+- `claves_codex_ex_kitty`: kitty's functional numbers → codex.
+  - Escape 27, Enter 13, Tab 9, Backspace 127, Caps Lock 57358, and the
+    eight SIDED modifiers 57441..57450 (Ghostty `kitty.zig`, MIT, pin
+    12752b2).
+  - Keypad and F13+ have no code in our vocabulary → IGNOTUS.
+
+**The decoder:**
+- CSI parameters are split into kitty FIELDS (`;`) and parts (`:`) from
+  the tokenizer's `separatores` bitset (`_campos_legere`); an empty field
+  = absent.
+- `CSI key[:shifted[:base]] [;mods[:event]] [;text] u`:
+  - event → PRESSA / ITERATA / SOLUTA (release = genus LIBERATUS);
+  - the kitty modifier set: Caps/Num Lock added, hyper/meta have no
+    counterpart;
+  - associated text ONLY when the field is present;
+  - the codex from the BASE key; if the base is absent and ALTERNAE was
+    pushed, base = key; otherwise IGNOTUS.
+  - Escape/Enter/Tab/Backspace are now unambiguous, so they get a codex;
+    Ctrl+I = `105;5u` ≠ Tab.
+  - Sided modifier keys, the keypad, Caps/Num Lock.
+- Legacy-form keys carry the event part too: `CSI 1;5:3A`, `~` keys,
+  and kitty's F1/F2/F4 as `CSI P/Q/S` (F3 is `CSI 13~`, because `CSI R`
+  is the cursor-position reply and is ignored).
+- The named-key helpers carry `actio` (`_clavem_actio`; `_clavem` =
+  PRESSA).
+- **Learning by observation:** the decoder holds its `EventusFacultates`
+  (legacy defaults from init: clipboard FORTASSE, drop HEURISTICA, notch
+  = cell height). The FIRST kitty sequence (`u`, or an event part) sets
+  `tabula_distincta`, plus `liberationes` / `codex_physicus` from the
+  flags the source PUSHED (`kitty_vexilla`, set by B3), and pushes a
+  FACULTATES event BEFORE the key.
+- `CSI ? flags u` (the flags reply) is ignored, as are DA replies.
+
+**Tests:**
+- red first: 19 kitty assertions in `probatio_interpres_terminalis` (now
+  80) and 64 in `probatio_claves_physicae` (stubs);
+- cases: the AZERTY `q` → KeyA; Cyrillic ф + text; release and repeat
+  of `a` and the arrows; the left Shift alone; caps-lock state; a
+  keypad digit; legacy after kitty unchanged; without ALTERNAE the
+  codex is unknown;
+- three compiling plants caught: release read as press; the base key
+  ignored (AZERTY `q` then reports KeyQ, the exact failure it guards);
+  capabilities never learned.
+
+**Lint:** `kitty` entered the glossary (a protocol name); the field
+part is `pars`.
+
+## B3a-i — scroll position + modifiers; decoder fidelity (2026-10-02)
+
+Fran sealed B3: the name `rivus_terminalis`, and architecture (A), ONE
+pipeline moved out of tessera with tessera's reader becoming a
+projection at once (B5 folded in). Designing that projection exposed
+three gaps, fixed here first, in their own commit, because one is a
+vocabulary change and owes the wide gates.
+
+1. **A vocabulary gap: scroll had no position and no modifiers.**
+   tessera's vectors expect shift+wheel, ctrl+wheel and the cell under
+   the pointer; fenestra had all of it in the NSEvent and DROPPED it.
+   `datum.rotula` gains `x`, `y` (our pixels, like the pointer) and
+   `modificantes`, appended at the end of the struct. The
+   `eventus_stml` writer is sparse, so the old recordings stay
+   byte-identical (toy test green), and the reader reads them. fenestra
+   fills them through a `_positionem` helper shared with the pointer
+   (the same screen→window conversion). The decoder fills them (cell
+   centre, wheel modifier bits). It also lets ludus target a scroll by
+   pointer later (today it goes to focus).
+2. **`typus` = the ACTUAL character** for rune keys (fenestra's meaning:
+   `characters[0]`). Alt has no TEXT, so `typus` is the only record of
+   alt+`A` vs alt+`a`; the projection needs it ("alt+A" vector). The
+   key constructor became `_clavem_typo` (explicit typus);
+   `_clavem_actio` derives it from the clavis as before.
+3. **motion+wheel (SGR 96/97) dropped,** as tessera does.
+
+Red first: 3 in `probatio_eventus_stml` (rotula x/y/mods round trip),
+8 in `probatio_interpres_terminalis` (wheel renders `@x,y` + mods,
+shift+wheel, motion+wheel silent, typus ×4). pictor, villa and forum
+build.
+
+## B3a-ii — the pipeline moves to `rivus_terminalis`; tessera projects (2026-10-02)
+
+The terminal input pipeline left tessera. `lib/rivus_terminalis` is the
+whole bytes → Eventus path, and it is PURE: no fd, no clock, no poll.
+The caller
+
+- pushes bytes (`rivus_tradere`, room from `rivus_spatium`, buffer 256);
+- asks how long it may wait (`rivus_mora_ms`: 3000 inside a paste,
+  25 while anything is undecided, 0 otherwise);
+- reports silence (`rivus_moram`), which settles what was waiting: a
+  lone ESC becomes Escape, a partial SGR mouse report is kept, x10 and
+  alien remnants are dropped, a paste ends truncated, a half rune
+  loses one byte;
+- pulls events (`rivus_eventum`). Decoding is LAZY: tokens are decoded
+  only when the queue is empty, so motion is NOT merged here (the
+  eager, merging read is B3b's consumer API).
+
+The raw channels stay in rivus, not in the decoder: CSI M (x10 mouse,
+three raw bytes), the rxvt-style alien `CSI [`, and bracketed paste
+(`CSI 200~` … `CSI 201~`, terminator matched incrementally across
+feeds, 64 KiB cap, an empty paste is still a TEXT GLUTINATA, truncation
+marked on the last event). Only complete runes reach the decoder; a
+half rune at the end of the buffer waits for the next feed.
+
+**tessera's reader is a projection** of Eventus into the lossy
+`TesseraEventum` (`_proicere`): named keys, F1-F12, Ctrl+J → Enter and
+Ctrl+H → Backspace (ctrl removed), the rune is `typus` when printable
+and not ctrl, else `runa`; keys with no rune are dropped; pasted TEXT
+→ GLUTINUM; hover motion dropped; ROTULA → ROTA_* with cell and
+modifiers. `TesseraLector` shrank to the fd bridge plus a
+`RivusTerminalis*`; its reliquiae buffer and capacity constant are gone.
+
+**Behaviour change, Fran's call:** 5 tessera vectors used to swallow
+kitty and rxvt sequences silently; the pipeline now decodes them (kitty
+`a`/ctrl+a/`:`-forms, x10 + kitty, rxvt `7~ 8~` → Home/End). Updated
+with a comment naming the decision.
+
+**Bugs found on the way:**
+- an empty paste produced no event at all (now an empty GLUTINATA);
+- kitty `typus` under Shift was the base key: it is the shifted key
+  when the sequence carries one, else the rune (`lib/interpres_terminalis.c`);
+- the interpres test helper read the FACULTATES event (pushed before
+  the first kitty key) instead of the key: `_typus` takes the first
+  KEY event.
+
+**Vendoring into the tessera amalgam:** the amalgamator renames
+`interpres_`, `eventus_`, `claves_`, `rivus_` → `tessera_*` and
+`RivusTerminalis` → `TesseraRivusTerminalis`; `fontes_politica.sh`
+names the five new bases for exclusion (without them the excludenda
+harvest could not classify `claves_codex_ex_macos`). Static function
+names must be unique across vendored files: `_sola_fuga` collided and
+became `_rivi_fuga_sola`.
+
+**Tests:** `probatio_rivus_terminalis` is a CHARACTERIZATION test,
+written after the code (wait times, no motion merge, paste split across
+feeds, empty paste, silence truncation, the 256 capacity, an H8 split
+stitched). Two compiling plants bite: eager decoding merges motion (2
+vectors red), the cell off by one (most mouse vectors red). tessera's
+full suite: vectors 1534/1534, eventum 68/68. The four demos link.
+
+**Order lesson, again:** format after the LAST edit, THEN regenerate
+the amalgam; the other way round leaves a stale amalgam for `generata`
+to refuse (B2a paid for that once).
+
+## B3b-i — eager read, declared modes, capabilities first (2026-10-02)
+
+Fran approved B3b split three ways (pure surface / OSC 52 + paste
+promotion / raw-mode layer + auscultator + look) and raw mode as a lib/
+platform layer. This is the pure surface.
+
+- **`rivus_eventum_coalitum`**: when the queue is EMPTY, decode
+  everything present (until half the queue is used), then extract.
+  Decoding only on an empty queue keeps the payload tables (text,
+  samples) clearing, which they do only when the queue is empty; and it
+  gives the spec's "coalesce per read": consecutive motions in one read
+  become one MOTUS with samples. The lazy `rivus_eventum` stays for
+  tessera's projection.
+- **Declared modes**: `rivus_modos_intrare(r, modi, buffer, cap)`
+  returns the bytes (rivus stays pure: it never writes) in the order
+  ?1000 ?1002 ?1003 ?1006 ?2004 ?1004, then `CSI > 31 u`;
+  `rivus_modos_exire` returns the exact reverse of what was entered
+  (kitty popped first) and forgets it, so a second exit writes nothing.
+  `?1003` only when SUPER is declared (spec Q24), and SUPER brings the
+  mouse set with it. Entering sets `kitty_vexilla` (31) and
+  `facultates.super`, and publishes FACULTATES again. Twice without an
+  exit, or a buffer under `RIVUS_MODI_MAXIMUM`: nothing written, state
+  untouched (kitty is a STACK in the terminal; a double push would
+  leave one behind).
+- **Capabilities first**: `rivus_creare` queues FACULTATES before
+  anything else (tessera's projection drops it; its loop skips dropped
+  events). The decoder's default `super` is now FALSE: nothing is
+  hovered until ?1003 is declared (it said VERUM, "requested by the
+  source", which tessera never requested).
+
+**Bug found (latent since B3a-ii):** a printable run went to the
+decoder in ONE step, and each rune makes KEY + TEXT, so 256 typed bytes
+(no bracketed paste, or a fast typist over a slow link) made 512 events
+for a 256-slot queue: half silently lost. Runs are now cut at 64 bytes
+on a rune boundary (`CURSUS_MAXIMUS`), so one step makes at most 128
+events. The capacity test now counts events, red before the fix.
+
+**Amalgam:** tessera doesn't declare modes, so the amalgamator drops
+`rivus_modos_*`; a file-scope static table left behind became an
+unused variable under -Werror. The table now lives INSIDE the one
+helper that uses it (`_modos_scribere`), and goes out with it.
+
+**Tool trap (cost a confusing half hour):** with a broken amalgam,
+`compile_tests.sh` fails at the amalgam step, does NOT rebuild lib
+objects, and still runs the OLD test binary and reports its verdict. A
+plant I had reverted kept "failing" because its build was the one
+being run. Always read the runner's own output, not only the test log.
+
+Tests: `probatio_rivus_terminalis` 69 (red first: capabilities first,
+event count on a long run, coalesced read, mode bytes). Plants caught:
+kitty not popped on exit; capabilities not first. tessera 1534/1534 +
+68/68; the interpres, series, cauda, claves, eventus_stml suites green;
+the four demos link.
+
+## B3b-ii — OSC 52 write; paste → DEPOSITIO promotion (2026-10-02)
+
+**Clipboard write is its own module, `copia_terminalis`.** The plan put
+OSC 52 in rivus. Built there first, it pulled `base64` into tessera's
+amalgam: tessera never writes the clipboard, the amalgamator dropped
+the function, and base64.c's two FILE-SCOPE tables were left orphaned
+(-Werror). Excluding base64 from tessera's policy then broke the demos,
+which link `lib/rivus_terminalis.c` directly and do need it. Moving the
+tables inside base64's functions would have been the general fix, but
+base64.c isn't formatter-clean, so touching it meant a whole-file
+reformat of a foundation library for this. The honest split was
+simpler: rivus is INPUT, the clipboard write is OUTPUT.
+`copia_terminalis_componere(piscina, textus, mensura)` returns
+`ESC ] 52 ; c ; base64 ESC \` (ST, not BEL; empty text = an empty
+payload). tessera never includes it, so base64 never reaches its
+amalgam. The capability stays FORTASSE: a terminal never confirms.
+
+**Paste → DEPOSITIO is DECLARED** (`RIVUS_MODUS_DEPOSITIO`, which brings
+?2004 with it, like SUPER brings the mouse). Undeclared, a paste of
+paths is text: an editor pasting `/usr/bin` wants text. Declared, the
+capability says HEURISTICA (the decoder's default is now NULLA; it
+claimed HEURISTICA unasked). Exit resets super and depositio.
+
+The heuristic (`_vias_legere`, text only, no filesystem): tokens split
+on unescaped whitespace, shell-style `\x`, `'...'`, `"..."` (with
+`\" \\ \$ \``), `file://` and `file://localhost/` URIs with %XX
+decoded; EVERY token must be absolute, with no newline or NUL, or the
+paste stays text. `~/x`, an unterminated quote, prose with one path,
+blank space: text. A truncated paste is never promoted. Output is
+written to a second 64 KiB buffer (it never grows: separators and
+escapes only shrink).
+
+**Position: the last pointer cell the decoder saw** (Fran's call), cell
+centre in our pixels, 0,0 when no pointer has been seen. The decoder
+now remembers `indicator_x/y` in `_murem` (one computation shared by
+press, motion and wheel). `interpres_depositio` pushes the event; the
+queue copies the paths (`eventus_caudae_depositionem_impellere`, a view
+into its text table like TEXT). Paths can't be truncated meaningfully,
+so a full table REFUSES (FALSUM, nothing pushed) and rivus falls back
+to the text event.
+
+Tests (red first): `probatio_eventus_cauda` +9 (copy, view into the
+table, refusal), `probatio_rivus_terminalis` 103, new
+`probatio_copia_terminalis` 3. Plants caught: promotion without the
+declaration; backslash escape ignored; position ignored; BEL instead
+of ST. tessera 1534/1534; the four demos link.
+
+## B3b-iii — raw mode as a platform layer; the terminal auscultator; the look (2026-10-02)
+
+**`terminalis` (`include/terminalis.h`, `lib/terminalis_posix.c`)** -
+the platform layer under rivus, which stays pure. `_posix` is the house
+name for termios code (aedilis finds it through its `macos posix`
+fallback chain; no config). Modelled on tessera's bridge, but the mode
+bytes come from the caller (rivus), not fixed literals:
+`terminalis_intrare(intrandi, n, exeundi, m)` copies both strings so the
+signal handlers (fatal signals, TSTP, CONT) and atexit can restore the
+terminal with `write` + `tcsetattr` only. Raw mode as tessera does it:
+ISIG kept for SUSP alone, so Ctrl-Z really suspends and SIGCONT
+re-enters; Ctrl-C and Ctrl-\ are keys. `terminalis_legere` uses `poll`;
+`terminalis_amplitudo` reports pixels too (0 when unknown); one-shot
+flags for "resumed" and "resized". SIGHUP is not in the house lexicon,
+so the handler set is exactly tessera's.
+
+**`rivus_modos_exeundi`**: the exit bytes WITHOUT leaving, so an app can
+hand them to `terminalis_intrare` at entry; `exire` now reuses it. Red
+first; plant (entry order instead of reverse) caught.
+
+**`tools/auscultator_terminalis.sh`**: declares all six modes, reads
+through `rivus_eventum_coalitum`, prints each Eventus as one STML line
+(the format of fenestra's auscultator, so the two sources compare), adds
+RESUMPTIO after `fg` and MUTARE_MAGNITUDINEM on SIGWINCH; Ctrl-C quits.
+A headless smoke test via macOS `script` (a real pty) passed before the
+look: modes out, capabilities first, a click at cell (5,3)'s centre, a
+pasted path promoted to a drop there, exit bytes in exact reverse.
+
+**The look (Fran, Ghostty + Terminal.app): everything working.** It
+answered both B3 AUDIENDA:
+- a Finder drop is a bracketed paste of the path in both terminals (no
+  drop sequence), and promotion works;
+- the DROP POSITION is stale: during a drag from another app macOS sends
+  mouse events to the drag session, so the terminal reports nothing;
+  the last position seen is where the pointer was BEFORE the drag. Both
+  logs show the post-drop motion starting 200-640 px away in cell
+  steps. Fran's question (Cmd+Tab: maybe the mouse really didn't
+  move?) is answered by that first post-drop report: a still pointer
+  would report one cell away. Decision (a): keep it, documented as the
+  pre-drag pointer in rivus's and the decoder's headers; target a
+  promoted drop by focus. Rejected (b), holding the drop ~50 ms for the
+  next report: Ghostty's came after 12 ms, Terminal.app's after 320.
+  Park 008 has both logs.
+- Terminal.app reports pixel sizes too (13 px cells here), so the 10x20
+  fallback was not needed in either.
+
+The pty-based headless test of `terminalis_posix.c` waits for B4, which
+needs the same harness (and a lexicon change for `posix_openpt`).
+
+## B4a — the comparator learns excuses (2026-10-02)
+
+**A correction first.** I had told Fran B4 needed a pty harness (and so a
+lexicon change for `posix_openpt`). Reading A4's design showed it
+doesn't: rivus is pure, so a terminal runner pushes bytes into it and
+compares; no terminal, no window. The pty harness remains a later item,
+only for `terminalis_posix.c`.
+
+Walking the 8 scenes through the decoder by hand found what the
+comparator must learn, and two differences no capability explained.
+Fran decided both:
+- **Modifiers compare on VOCABULARY bits only** (MOD_* + sides), for
+  every source. fenestra's arrows carry AppKit's Function flag
+  (0x800000), a raw platform bit A4 found and recorded; a terminal never
+  has it. Recordings keep it; conformance ignores it.
+- **A new capability `modificantes_textus`**: "modifiers on printable
+  keys are reported". Legacy terminals send `A` for Shift+A (B2a chose
+  not to guess: Caps Lock looks the same). fenestra TRUE; the decoder
+  FALSE until kitty is seen with OMNES pushed (all keys as `CSI u`).
+  Appended at the end of `EventusFacultates`; written like its siblings
+  (no committed fixture holds a facultates line).
+
+**The excuses (spec D7)**, named by capability in the scene attribute
+`excusationes`, and valid ONLY when the stream's LAST FACULTATES deny
+that capability. No FACULTATES in the stream means nothing is excused,
+so fenestra (its FACULTATES are drained before the scenes) is exactly as
+strict as before: 8/8.
+
+| excuse | when the capability is denied |
+|---|---|
+| liberationes | expected key releases are dropped |
+| codex_physicus | `codex` is not compared |
+| latera | side bits are masked from `modificantes` |
+| tabula_distincta | the whole scene is EXCUSATA (Ctrl+I is Tab) |
+| modificantes_textus | `modificantes` is not compared |
+
+`eventus_conformitas_comparare` now returns a verdict (FRACTA /
+CONFORMIS / EXCUSATA); `tools/conformitas.c` prints EXCUSATA. An
+unknown capability name makes the table bad, like an unknown kind.
+
+Tests (red first): conformitas 39 (reading, the vocabulary mask, each
+excuse with and without its capability, last FACULTATES wins, the
+EXCUSATA verdict); eventus_stml round trip; interpres `Fac:LCTM`.
+Plants caught: an excuse applied without its capability; the raw
+modifier compare; the FIRST FACULTATES used. fenestra conformance 8/8;
+pictor, villa, forum, both auscultators build; tessera 1534/1534.
+
+## B4b — the terminal column + the terminal runner (2026-10-02)
+
+**The table gained its terminal column**: each scene has
+`<terminalis profilum="legacy|kitty" octeti="..."/>`, and the scenes
+whose terminal stream legitimately differs name their excuses:
+
+| scene | excusationes | legacy bytes | kitty bytes |
+|---|---|---|---|
+| shift-a | liberationes codex_physicus latera modificantes_textus | `A` | `\e[97:65;2;65u` + release |
+| tabula | liberationes codex_physicus | `\t` | `\e[9u` + release |
+| ctrl-i | tabula_distincta latera | `\t` (EXCUSATA) | `\e[105;5u` + release |
+| sagittae | latera | `\e[1;2D\e[1;3C\e[A\e[B` | same + releases |
+| effugium | codex_physicus | `\e` (then silence) | `\e[27u` + release |
+| ictus, ictus-duplex-crudus, tractus | none | SGR at cell+1 | same |
+
+**`octeti` uses C escapes** (`\e`, `\t`, `\r`, `\n`, `\\`, `\xHH`;
+unknown = a bad table), decoded by the table reader: STML attribute
+values are RAW by design (only named entities in TEXT are decoded).
+**Finding in A4's table**: fenestra's `characteres="&#27;"`, `"&#9;"`,
+`"&#xF702;"` were never decoded either, so fenestra has been injecting
+the literal text `&#27;`. The scenes conform only because fenestra
+emits no text for those keys. Noted in the table's comment; a follow-up
+for Fran (decode `characteres` the same way).
+
+**The runner is a suite test, `probatio_conformitas_terminalis`**, on
+the SAME table: per scene and profile, a fresh rivus with 1x1-pixel
+cells (cell c = pixel c-1, so fenestra's pixel expectations hold),
+modes declared (mouse + paste, plus kitty for the kitty profile), bytes
+pushed, the coalescing read, silence (`rivus_moram`), read again,
+compare. The excuses come from the FACULTATES rivus itself publishes.
+It NAMES what is excused: exactly one run, ctrl-i under legacy. A
+silent excuse would be a dead gate.
+
+**Result: 16/16 runs conform** (15 CONFORMIS + 1 EXCUSATA), first run.
+Four compiling plants, each caught where predicted: the lazy read (the
+drag's motions no longer coalesce: tractus x2); 10x20 cells (the three
+mouse scenes x2); no silence (legacy escape); `latera` removed from
+sagittae's excuses (both profiles). fenestra still 8/8 on the edited
+table.
+
+## B4b follow-up — `characteres` decoded with `entitates_html` (2026-10-02)
+
+Fran asked whether entity decoding is general enough to live somewhere
+shared. It already does: `lib/entitates_html` (born 09-15 for the
+html/markdown clients) is a full WHATWG HTML5 character-reference
+decoder. stml stays raw by design (byte-exact round trips). The table
+reader now decodes `characteres` with it, so the A4 table needed no
+edit: `&#27;`, `&#9;`, `&#xF702;` finally reach fenestra as ESC, Tab and
+U+F702 instead of literal text. `octeti` keep their C escapes: an
+entity names a CODE POINT, not a byte (`&#200;` is two UTF-8 bytes, and
+HTML5 remaps C1, so `&#155;` would become U+203A, not the 8-bit CSI
+0x9B). Rule for the file: characters as entities, bytes as escapes.
+
+Red first (a key with `&#27;&#xF702;&amp;` must decode to ESC + EF 9C 82
++ `&`); plant (decoding skipped) caught. fenestra still 8/8 with the
+real characters injected; the terminal runner 16/16.
+
+## B6a-i — the key encoder `codificator_terminalis` (2026-10-02)
+
+Fran split B6: replay INTO the terminal goes through an ENCODER (bytes,
+then rivus), on A6's toy app with per-target geometry; the encoder is
+its own library (`codificator_terminalis`; the house verb is
+`base64_codificare`), with no DECCKM/keypad/X10 until the emulator.
+B6a-i is the keys; B6a-ii the mouse, paste and focus.
+
+**Oracle: Ghostty** (`../ghostty` @ 12752b2, `key_encode.zig`,
+`function_keys.zig`, `kitty.zig`), its logic translated into the
+Eventus vocabulary: key = clavis (or codex where the vocabulary has no
+logical key, Insert), utf8 = the following TEXT (legacy: else `typus`,
+because the decoder emits no TEXT under Ctrl/Alt), unshifted codepoint =
+runa. We have no `consumed_mods`; the one Ghostty test that depends on
+them (shift+a under disambiguate only) was left out.
+
+**API**: `codificator_eventa(modi, eventa, n, aedificator)` encodes the
+first event of a slice and returns how many it consumed: a key plus its
+TEXT is ONE sequence (`A` in legacy, the kitty text field). What a mode
+can't express writes nothing but is consumed (a release in legacy, a
+modifier key without OMNES). `CodificatorModi` already holds the mouse,
+paste, focus and Modulus fields for B6a-ii (API first).
+
+**Canonical forms (Ghostty's)**, which also corrected B4b's table:
+- no text on release, so no shifted alternate: Shift+A release is
+  `\e[97;2:3u`, not `\e[97:65;2:3u`;
+- press `:1` omitted in the `u`/`~` forms but INCLUDED in the special
+  forms: `\e[1;2:1D`.
+The table's kitty bytes were canonicalised; the conformance runner still
+passes 16/16 on them.
+
+**Tests (red first, 225):**
+1. 69 ported vectors (34 kitty: plain text, Enter/Tab/Backspace in each
+   mode, releases with and without OMNES, Shift/Alt+Backspace, modifier
+   keys, alternates, associated text, Delete, F-keys; 35 legacy: C0
+   table, Alt as ESC, xterm modifier params, SS3 F1-F4, modifyOtherKeys
+   for modified Enter/Tab/Escape, Backspace with Ctrl/Alt, fixterms
+   `CSI u` for Ctrl+I, macOS Command eats text, Ctrl+1 = `1`).
+2. Consumption (key + TEXT = 2; key + key = 1).
+3. The ROUND TRIP: every vector's bytes decoded through rivus and
+   re-encoded must be byte-identical.
+4. The TABLE ORACLE: the conformance table's key scenes (5 scenes x
+   legacy/kitty) decoded and re-encoded give back exactly their bytes.
+
+**The round trip found one decoder gap**, as predicted: xterm's
+modifyOtherKeys `CSI 27;m;c~` (legacy Ctrl+Tab, Shift/Ctrl+Enter,
+Ctrl+Escape) decoded to nothing. The decoder now reads it (6 red tests
+first). That made 3 tessera vectors, which expected the form swallowed
+as noise, see keys instead: updated per Fran's B3a precedent
+("decoded now, formerly swallowed"), flagged for Fran.
+
+**Also:** `claves_littera_ex_codex` (the inverse table, for kitty's
+base-layout alternate; built by scanning the forward table so they can
+never disagree; 48 round-trip asserts); `codificator` entered the
+glossary. Plants caught: Shift dropped from the modifier number (29
+asserts); `:1` omitted in special forms; legacy encoding a release; the
+following TEXT not consumed. The functional-key lookup is a table
+inside its function (the formatter mangled dense `casus` lines).
+
+## B6a-ii — the encoder learns mouse, paste and focus (2026-10-03)
+
+Oracle again Ghostty (`mouse_encode.zig`, `paste.zig` @ 12752b2).
+
+**Mouse (SGR only; X10/urxvt with the emulator):** reported by mode
+(?1000 no motion, ?1002 motion only with a button, ?1003 everything);
+button codes left 0 / middle 1 / right 2, hover 3; motion +32;
+Shift/Alt/Ctrl +4/+8/+16; SGR keeps the button identity on release
+(`m`). Position: our pixels → cell by the Modulus (floor), 1-based.
+Outside the window (negative) only a release, or a drag in a motion
+mode, is reported, clamped to the edge (we know no upper bound: the
+grid size isn't in the modes). Wheel: 64/65 vertical, 66/67
+horizontal, one report per whole notch (notch = cell height, as the
+decoder decodes it); a sub-notch delta reports nothing.
+**A coalesced motion** carries its earlier positions as samples: the
+encoder emits one report per sample, then the final position, skipping
+reports in the same cell as the previous (Ghostty dedups by last cell;
+we do it within the event, staying pure). This is what lets the table's
+drag scene round-trip byte for byte.
+
+**Paste:** bracketed under ?2004; Ghostty's 16 unsafe bytes (NUL, BS,
+ENQ, EOT, ESC, DEL, and the tty signal characters) become spaces, so
+the end marker `\e[201~` can never occur inside a payload (tested with
+an injected one); unbracketed, `\n` becomes `\r`. A promoted DROP
+encodes back to what a terminal sends for one: the paths shell-escaped
+(backslash before anything outside `[A-Za-z0-9/._+,:@%=-]`, UTF-8 kept)
+and space-joined. Typed text with no key in front (IME) is its raw
+bytes.
+
+**Focus:** `\e[I` / `\e[O` only under ?1004.
+
+**Tests (265):** mouse vectors (press, release identity, right with
+Shift+Ctrl, middle with Alt, hover per mode, drag, coalesced samples,
+four wheel directions, two notches, half a notch, outside the window,
+mouse off), focus, paste (bracketed, unbracketed `\r`, injected end
+marker, unsafe bytes, empty, drop, IME text); round trips of mouse,
+focus and paste bytes; and the TABLE ORACLE now covers all 16 runs, the
+three mouse scenes included. Plants caught: release written `M`; ESC
+not stripped; samples ignored; columns not 1-based.
+
+**Test-helper bug found (not the encoder):** the round-trip helper
+handed `xar_obtinere(eventa, k)` to the encoder as an ARRAY, but Xar is
+segmented (first segment 4): B6a-ii's extra events put a key at index
+3 and its TEXT at 4, across the boundary. B6a-i passed by luck. The
+helper now copies to a contiguous buffer; memory's Xar note widened.
+
+## B6b — cross-target replay: terminal ⇄ fenestra (2026-10-03)
+
+The proof that a recorded session survives a change of SOURCE, not only
+of layout (A6b). Headless, on A6's toy app, with per-target geometry
+(Fran's choice).
+
+**The toy gained a terminal geometry** (`ToyStatus.modulus_*`): its
+rectangles extend OUTWARD to the Modulus grid (6x8, fenestra's font
+cell: start floored, end ceiled), plus a one-cell header
+(`translatio_y` = 8), as a status line would. Every test that zeroes the
+toy (memset) keeps the pixel geometry: the six other users pass
+unchanged.
+
+**`manus_ludus_iterare_per(m, notata, modus, div, traditio, ctx)`**:
+replay through a DELIVERY function (`ManusTraditio`), NIHIL = straight
+to the dispensator; `manus_ludus_iterare` is now that special case. The
+terminal transport is just one such function (in the test): encoder
+(cells by the Modulus) → bytes → rivus (LAZY read: one SGR report, one
+event, because the toy counts a point per motion) → dispensator, with
+silence after a lone ESC.
+
+**`probatio_iteratio_transversa` (14):**
+- A. a TERMINAL session (SGR bytes through rivus, 6x8 cells) recorded
+  by the notarius; its first click is at column 2, x = 9: inside the
+  snapped b1 [6,60), outside fenestra's b1 [10,60).
+- B. SEMANTIC replay into the fenestra geometry: same end state; the 2
+  divergences reported are b1's press and release.
+- C. RAW replay: b1's click lands on radix, `numerus` missing.
+- D. a FENESTRA session (pixels, left button), b1 clicked on its left
+  edge (local x = 0).
+- E. D replayed through the terminal transport into the snapped
+  terminal geometry: same end state.
+- F. the same into an UNSNAPPED terminal geometry: the edge click
+  becomes cell 1, whose centre (x = 9) is outside b1 [10,60): the click
+  is lost. **The finding: in a terminal, layout must sit on cell
+  boundaries**, or clicks near component edges quantize into the
+  neighbour. With cell-aligned rectangles every cell is wholly inside
+  or outside, so a semantic point always lands in its component.
+- G. `traditio` NIHIL equals `manus_ludus_iterare`.
+
+Plants caught: the transport replaying raw positions (manus skipping
+the semantic position under a traditio); the encoder skipping the cell
+snap. pictor, villa and forum build.
+
+The hand-written `toy.eventus.stml` (A3) records presses with
+`botton="0"` (no button in the vocabulary); the encoder rightly refuses
+to send a press without a button, so B6b records fresh sessions.
+
+## B7 — RELATIO: phase B, the terminal source (2026-10-03)
+
+**What was built.** The terminal as a second, lossless source of the
+SAME vocabulary, both directions: bytes → Eventus (tokenizer, decoder,
+pipeline, raw-mode layer) and Eventus → bytes (encoder), proven
+against the same conformance table as fenestra and by replay across
+sources. tessera's reader became a projection of it.
+
+| Task | Commit | What |
+|---|---|---|
+| plan | 2a435868 | plan B; D8 = (a), the tokenizer first (Fran) |
+| B1a | 9f4fed1d | `series_terminalis`: DEC/Williams tokenizer, pull API, split-point sweep |
+| B1b | 79e2f3a0 | tessera's reader on the tokenizer; 27 debts (108 shapes) paid |
+| B2a | 6975780b | `interpres_terminalis`: legacy tokens → Eventus (honest controls, alt, SGR/X10, paste, focus) |
+| B2b | 6312a06a | kitty (event types, base-layout key → codex, capabilities learned) |
+| B3a-i | e9e44579 | scroll gets position + modifiers; `typus` = the actual character |
+| B3a-ii | a4e70b0f | `rivus_terminalis`: the pure pipeline; tessera's reader = a projection |
+| B3b-i | e17543d4 | coalescing read, declared modes, capabilities first; event-loss bug fixed |
+| B3b-ii | 41b41697 | `copia_terminalis` (OSC 52); paste → DEPOSITIO when declared |
+| B3b-iii | e483f8fd | `terminalis_posix` raw-mode layer; terminal auscultator; Fran's look |
+| B4a | e992f4e9 | comparator: capability-keyed excuses, 3-state verdict, `modificantes_textus` |
+| B4b | e695b077 | the table's terminal column + runner: 16/16 (one named EXCUSATA) |
+| B4b+ | ae3455d2 | `characteres` decoded with `entitates_html` |
+| B6a-i | c5469f7c | `codificator_terminalis`: keys, Ghostty as oracle; `CSI 27;m;c~` decoded |
+| B6a-ii | 53f421b0 | encoder: SGR mouse by the Modulus, safe paste, focus |
+| merge | fc909514 | main (fabrica plan 2, gate speedups) into secunda |
+| B6b | 765421b4 | cross-source replay; `manus_ludus_iterare_per` |
+
+B5 (tessera as a projection) was folded into B3a-ii (Fran's
+architecture (A)).
+
+**How it was proven.** Red first throughout; about 40 compiling plants,
+each caught by name. Three independent oracles: Ghostty's Parser.zig
+tests (tokenizer), Ghostty's encoder tests (69 key vectors) and
+OpenTUI's input vectors (tessera's 1,534). Round trips both ways
+(bytes → decode → encode = bytes; the conformance table's bytes
+regenerate exactly). Live: the terminal auscultator in Ghostty and
+Terminal.app (Fran: "everything is working"). Semantic replay
+terminal ⇄ fenestra.
+
+**What we found (the reusable lessons):**
+1. **Terminal facts:**
+   - a Finder drop is just a bracketed paste of the path, in both
+     terminals; during a drag the terminal is BLIND (macOS routes the
+     mouse to the drag session), so the drop's position is the pointer
+     BEFORE the drag (park 008);
+   - kitty's canonical forms (Ghostty): no text and so no shifted
+     alternate on release; `:1` on press omitted in `u`/`~` forms but
+     present in the special forms;
+   - legacy modified Enter/Tab/Escape arrive as xterm's `CSI 27;m;c~`;
+   - Terminal.app reports pixel sizes too (13 px cells).
+2. **Design findings:**
+   - **terminal layout must sit on cell boundaries**: a terminal can
+     only report cell centres, so a click near an edge of a non-aligned
+     component quantizes into its neighbour (B6b case F; for module
+     013);
+   - the terminal source's cell size is the app's MODULUS, not the
+     terminal's physical pixels;
+   - "consumed modifiers" don't exist in Eventus; `typus` (the actual
+     character) stands in where Ghostty uses the consumed set.
+3. **Bugs the work exposed:**
+   - a long typed run (256 bytes) made 512 events for a 256-slot
+     queue: half silently lost (B3b-i);
+   - fenestra's `characteres` entities were never decoded (A4 table);
+   - the decoder dropped the `CSI 27;m;c~` form.
+4. **Tool traps:**
+   - a broken amalgam makes `compile_tests.sh` run the OLD test binary
+     and report its verdict (read the runner's own output);
+   - Xar is segmented: never hand `xar_obtinere(x, k)` to an API that
+     takes an array (B6a-ii round trip);
+   - the tessera amalgam drops unused functions, so a file-scope static
+     only they use becomes an orphan under -Werror: keep tables inside
+     their function (`MODI`, base64).
+5. **Process:** the merged gate speedups cut a full five-gate commit
+   from 13–25 min to about 6.
+
+**AUDIENDA:**
+- CLOSED: what Terminal.app sends for a drop (a bracketed paste of the
+  path); which kitty flags it ignores (it stays legacy; nothing leaks).
+- CLOSED: X10 mouse stays a reader special case (rivus's raw channel).
+- CARRIED: the `typus` deletion inventory (D2 step 3), now that tessera
+  projects from Eventus.
+- CARRIED: a pty harness (`posix_openpt` into the lexicon) for a
+  headless test of `terminalis_posix.c`; DECCKM / keypad application /
+  X10 encoding with the emulator (module 006).
+
+**Parks filed** (terminal-planning): 008, a promoted drop's position is
+the pointer before the drag (decision (a), contract documented).

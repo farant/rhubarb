@@ -78,6 +78,31 @@ eventus_caudae_textum_impellere (
 }
 
 b32
+eventus_caudae_depositionem_impellere (
+          EventusCauda* cauda,
+      constans Eventus* eventus)
+{
+    Eventus e;
+        i32 mensura = eventus->datum.depositio.viae.mensura;
+
+    si (mensura > EVENTUS_CAUDA_TEXTUS - cauda->textus_mensura)
+    {
+        redde FALSUM;
+    }
+    e = *eventus;
+    e.datum.depositio.viae.datum = cauda->textus
+        + cauda->textus_mensura;
+    si (mensura > ZEPHYRUM)
+    {
+        memcpy(cauda->textus + cauda->textus_mensura,
+            eventus->datum.depositio.viae.datum,
+            (memoriae_index)mensura);
+    }
+    cauda->textus_mensura += mensura;
+    redde eventus_caudae_impellere(cauda, &e);
+}
+
+b32
 eventus_caudae_motum_impellere (
           EventusCauda* cauda,
       constans Eventus* eventus)
