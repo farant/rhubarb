@@ -938,7 +938,7 @@ biblia_visus_tractare_eventum (
         alioquin
         {
             /* In reading view - check character keys first */
-            commutatio (eventus->datum.clavis.typus)
+            commutatio (eventus->datum.clavis.producta)
             {
                 casus 'j':
                     _biblia_visus_pagina_proxima(visus);

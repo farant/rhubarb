@@ -35,9 +35,9 @@ clavis (
     Eventus e;
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus               = EVENTUS_CLAVIS_DEPRESSUS;
-    e.tempus              = t;
-    e.datum.clavis.typus  = typus;
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus                 = t;
+    e.datum.clavis.producta  = (s32)(insignatus character)typus;
     /* clavis logica: clavis_t ASCII ipsum fert (Tab IX, Effugium
      * XXVII) - ut fenestra */
     e.datum.clavis.clavis = (clavis_t)typus;

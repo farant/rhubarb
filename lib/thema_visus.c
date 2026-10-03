@@ -111,7 +111,8 @@ thema_visus_creare (
         redde NIHIL;
     }
 
-    visus = (ThemaVisus*)piscina_allocare(piscina, magnitudo(ThemaVisus));
+    visus = (ThemaVisus*)piscina_allocare(piscina,
+        magnitudo(ThemaVisus));
     si (!visus)
     {
         redde NIHIL;
@@ -339,7 +340,8 @@ _thema_visus_reddere_exemplaria (
     linea = y + I;
 
     /* Titulus */
-    text_chorda = _chorda_ex_cstr("=== Pattern Viewer (h/l: page, f/b: mode, j/k: color) ===");
+    text_chorda =
+        _chorda_ex_cstr("=== Pattern Viewer (h/l: page, f/b: mode, j/k: color) ===");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
         text_chorda, pixelum_text, scala);
@@ -348,14 +350,17 @@ _thema_visus_reddere_exemplaria (
     /* Color picker status */
     fg_color = color_ex_palette(visus->exemplar_fg);
     bg_color = color_ex_palette(visus->exemplar_bg);
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* FG display */
-    sprintf(buffer, "FG: [%2d] %-14s", visus->exemplar_fg, nomina_palette[visus->exemplar_fg]);
+    sprintf(buffer, "FG: [%2d] %-14s", visus->exemplar_fg,
+        nomina_palette[visus->exemplar_fg]);
     text_chorda = _chorda_ex_cstr(buffer);
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
-        text_chorda, visus->modus_fg ? pixelum_accent : pixelum_text, scala);
+        text_chorda, visus->modus_fg ? pixelum_accent : pixelum_text,
+        scala);
 
     /* FG swatch */
     delineare_rectangulum_plenum(ctx,
@@ -366,11 +371,13 @@ _thema_visus_reddere_exemplaria (
         IV * char_lat, char_alt, color_border);
 
     /* BG display */
-    sprintf(buffer, "BG: [%2d] %-14s", visus->exemplar_bg, nomina_palette[visus->exemplar_bg]);
+    sprintf(buffer, "BG: [%2d] %-14s", visus->exemplar_bg,
+        nomina_palette[visus->exemplar_bg]);
     text_chorda = _chorda_ex_cstr(buffer);
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING + XXVIII) * char_lat, linea * char_alt,
-        text_chorda, visus->modus_fg ? pixelum_text : pixelum_accent, scala);
+        text_chorda, visus->modus_fg ? pixelum_text : pixelum_accent,
+        scala);
 
     /* BG swatch */
     delineare_rectangulum_plenum(ctx,
@@ -525,13 +532,17 @@ thema_visus_reddere (
     commutatio (visus->pagina)
     {
         casus THEMA_PAGINA_COLORES:
-            _thema_visus_reddere_colores(visus, ctx, tabula, x, y, scala,
-                char_lat, char_alt, pixelum_text, pixelum_text_dim, color_border);
+            _thema_visus_reddere_colores(visus, ctx, tabula, x, y,
+                scala,
+                char_lat, char_alt, pixelum_text, pixelum_text_dim,
+                color_border);
             frange;
 
         casus THEMA_PAGINA_EXEMPLARIA:
-            _thema_visus_reddere_exemplaria(visus, ctx, tabula, x, y, scala,
-                char_lat, char_alt, pixelum_text, pixelum_text_dim, color_border);
+            _thema_visus_reddere_exemplaria(visus, ctx, tabula, x, y,
+                scala,
+                char_lat, char_alt, pixelum_text, pixelum_text_dim,
+                color_border);
             frange;
 
         ordinarius:
@@ -539,7 +550,8 @@ thema_visus_reddere (
     }
 
     /* Page indicator at bottom */
-    _thema_visus_reddere_pagina_indicator(visus, tabula, x, y + altitudo - II,
+    _thema_visus_reddere_pagina_indicator(visus, tabula, x, y + altitudo
+        - II,
         scala, char_lat, char_alt, pixelum_text_dim);
 }
 
@@ -564,7 +576,7 @@ thema_visus_tractare_eventum (
     }
 
     /* Page navigation */
-    si (eventus->datum.clavis.typus == 'h')
+    si (eventus->datum.clavis.producta == 'h')
     {
         si (visus->pagina > ZEPHYRUM)
         {
@@ -573,7 +585,7 @@ thema_visus_tractare_eventum (
         redde VERUM;
     }
 
-    si (eventus->datum.clavis.typus == 'l')
+    si (eventus->datum.clavis.producta == 'l')
     {
         si (visus->pagina < THEMA_PAGINA_MAXIMA)
         {
@@ -583,7 +595,7 @@ thema_visus_tractare_eventum (
     }
 
     /* Mode selection (only on pattern page) */
-    si (eventus->datum.clavis.typus == 'f')
+    si (eventus->datum.clavis.producta == 'f')
     {
         si (visus->pagina == THEMA_PAGINA_EXEMPLARIA)
         {
@@ -592,7 +604,7 @@ thema_visus_tractare_eventum (
         redde VERUM;
     }
 
-    si (eventus->datum.clavis.typus == 'b')
+    si (eventus->datum.clavis.producta == 'b')
     {
         si (visus->pagina == THEMA_PAGINA_EXEMPLARIA)
         {
@@ -602,7 +614,7 @@ thema_visus_tractare_eventum (
     }
 
     /* Color cycling (only on pattern page) */
-    si (eventus->datum.clavis.typus == 'j')
+    si (eventus->datum.clavis.producta == 'j')
     {
         si (visus->pagina == THEMA_PAGINA_EXEMPLARIA)
         {
@@ -618,17 +630,19 @@ thema_visus_tractare_eventum (
         redde VERUM;
     }
 
-    si (eventus->datum.clavis.typus == 'k')
+    si (eventus->datum.clavis.producta == 'k')
     {
         si (visus->pagina == THEMA_PAGINA_EXEMPLARIA)
         {
             si (visus->modus_fg)
             {
-                visus->exemplar_fg = (visus->exemplar_fg - I + XVI) & XV;
+                visus->exemplar_fg = (visus->exemplar_fg - I
+                    + XVI) & XV;
             }
             alioquin
             {
-                visus->exemplar_bg = (visus->exemplar_bg - I + XVI) & XV;
+                visus->exemplar_bg = (visus->exemplar_bg - I
+                    + XVI) & XV;
             }
         }
         redde VERUM;
@@ -690,7 +704,8 @@ thema_visus_salvare_status (
         redde;
     }
 
-    entitas = repo->entitas_scaffoldare(repo->datum, "ThemaVisusStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "ThemaVisusStatus",
+        entitas_id);
     si (!entitas)
     {
         redde;
@@ -727,7 +742,8 @@ thema_visus_carcare_status (
     }
 
     intern = internamentum_globale();
-    entitas = repo->entitas_scaffoldare(repo->datum, "ThemaVisusStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "ThemaVisusStatus",
+        entitas_id);
     si (!entitas)
     {
         redde;

@@ -235,7 +235,6 @@ _eventum_nodare (
     InternamentumChorda* intern)
 {
     StmlNodus* n;
-          s32  codex_typi;
           i32  k;
 
     n = stml_elementum_creare(piscina, intern, "eventus");
@@ -296,9 +295,8 @@ _eventum_nodare (
         casus EVENTUS_CLAVIS_LIBERATUS:
             attr_s(n, piscina, intern, "clavis",
                 (s32)e->datum.clavis.clavis);
-            codex_typi =
-                (s32)(insignatus character)e->datum.clavis.typus;
-            attr_s(n, piscina, intern, "typus", codex_typi);
+            attr_s(n, piscina, intern, "producta",
+                e->datum.clavis.producta);
             attr_s(n, piscina, intern, "modificantes",
                    (s32)e->datum.clavis.modificantes);
             si (e->datum.clavis.runa != ZEPHYRUM)
@@ -613,8 +611,10 @@ _eventum_legere (
 
         e->datum.clavis.clavis = (clavis_t)capere_s(n,
             "clavis");
-        e->datum.clavis.typus = (character)capere_s(n,
-            "typus");
+        /* S3a: plagulae veteres 'typus' ferunt (character ASCII) */
+        e->datum.clavis.producta = stml_attributum_capere(n, "producta")
+            ? capere_s(n, "producta")
+            : capere_s(n, "typus");
         e->datum.clavis.modificantes = (i32)capere_s(n,
             "modificantes");
         e->datum.clavis.runa  = capere_s(n, "runa");

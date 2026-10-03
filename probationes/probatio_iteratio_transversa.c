@@ -256,15 +256,15 @@ s32 principale (vacuum)
         ev[6] = _murem(EVENTUS_MUS_LIBERATUS, M + CCC, CXXXV, LXV,
             MUS_SINISTER);
         memset(&ev[7], ZEPHYRUM, II * magnitudo(Eventus));
-        ev[7].genus                = EVENTUS_CLAVIS_DEPRESSUS;
-        ev[7].tempus               = M + CD;
-        ev[7].datum.clavis.clavis  = CLAVIS_EFFUGIUM;
-        ev[7].datum.clavis.typus   = (character)XXVII;
-        ev[7].datum.clavis.codex   = EVENTUS_CODEX_EFFUGIUM;
-        ev[8]                      = ev[7];
-        ev[8].genus                = EVENTUS_CLAVIS_LIBERATUS;
-        ev[8].tempus               = M + CDXX;
-        ev[8].datum.clavis.actio   = EVENTUS_ACTIO_SOLUTA;
+        ev[7].genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+        ev[7].tempus                 = M + CD;
+        ev[7].datum.clavis.clavis    = CLAVIS_EFFUGIUM;
+        ev[7].datum.clavis.producta  = XXVII;
+        ev[7].datum.clavis.codex     = EVENTUS_CODEX_EFFUGIUM;
+        ev[8]                        = ev[7];
+        ev[8].genus                  = EVENTUS_CLAVIS_LIBERATUS;
+        ev[8].tempus                 = M + CDXX;
+        ev[8].datum.clavis.actio     = EVENTUS_ACTIO_SOLUTA;
         per (i = ZEPHYRUM; i < IX; i++)
         {
             dispensator_tractare(f.d, &ev[i]);

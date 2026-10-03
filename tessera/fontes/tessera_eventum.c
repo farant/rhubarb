@@ -77,7 +77,7 @@ _clavem_proicere (
 {
     i32 modi  = _modificatores(e->datum.clavis.modificantes);
     s32 c     = (s32)e->datum.clavis.clavis;
-    s32 typus;
+    s32 producta;
 
     commutatio (e->datum.clavis.clavis)
     {
@@ -141,14 +141,14 @@ _clavem_proicere (
     {
         redde FALSUM;   /* clavis sine nomine tesserae (F13, ...) */
     }
-    /* runa: character verus (typus) - sub imperio runa (minuscula,
-     * 'ctrl+a' ut olim) */
-    typus              = ((s32)e->datum.clavis.typus) & 0xFF;
+    /* runa: character verus (producta) - sub imperio runa
+     * (minuscula, 'ctrl+a' ut olim) */
+    producta           = e->datum.clavis.producta;
     ev->genus          = TESSERA_EVENTUM_CLAVIS;
     ev->modificatores  = modi;
     ev->runa = (   !(modi & TESSERA_MODIFICATOR_IMPERIUM)
-                && typus >= 0x20 && typus < 0x7F)
-        ? typus : e->datum.clavis.runa;
+                && producta >= 0x20 && producta != 0x7F)
+        ? producta : e->datum.clavis.runa;
     redde VERUM;
 }
 

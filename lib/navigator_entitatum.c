@@ -233,7 +233,8 @@ _sanitizare_contentum (
     mensura_output     = ZEPHYRUM;
     habet_non_spatium  = FALSUM;
 
-    per (i = initium; i < valor->mensura && mensura_output < max_output; i++)
+    per (i = initium; i < valor->mensura
+        && mensura_output < max_output; i++)
     {
         c = valor->datum[i];
 
@@ -241,7 +242,8 @@ _sanitizare_contentum (
         si (c == '\n' || c == '\r' || c == '\t')
         {
             /* Addere spatium solum si non iam spatium */
-            si (mensura_output > ZEPHYRUM && buffer[mensura_output - I] != ' ')
+            si (   mensura_output > ZEPHYRUM
+                && buffer[mensura_output - I] != ' ')
             {
                 buffer[mensura_output++] = ' ';
             }
@@ -320,11 +322,14 @@ _sortare_relationes (
             debet_movere = FALSUM;
 
             /* Obtinere chordas pro comparatione */
-            chorda_i = _obtinere_chorda_sortationis(rel_i, repositorium);
-            chorda_j = _obtinere_chorda_sortationis(rel_j, repositorium);
+            chorda_i = _obtinere_chorda_sortationis(rel_i,
+                repositorium);
+            chorda_j = _obtinere_chorda_sortationis(rel_j,
+                repositorium);
 
             /* Comparare case-insensitive */
-            si (_comparare_case_insensitive(chorda_i, chorda_j) < ZEPHYRUM)
+            si (_comparare_case_insensitive(chorda_i, chorda_j)
+                < ZEPHYRUM)
             {
                 debet_movere = VERUM;
             }
@@ -408,7 +413,8 @@ _sortare_relationes_inversas (
             }
 
             /* Comparare case-insensitive */
-            si (_comparare_case_insensitive(chorda_i, chorda_j) < ZEPHYRUM)
+            si (_comparare_case_insensitive(chorda_i, chorda_j)
+                < ZEPHYRUM)
             {
                 debet_movere = VERUM;
             }
@@ -492,16 +498,18 @@ _sortare_proprietates (
     /* Insertion sort */
     per (i = I; i < numerus_proprietatum; i++)
     {
-        temp = items[i];
-        prop_i = (Proprietas*)temp.datum;
-        prio_i = _prioritas_proprietatis(prop_i ? prop_i->clavis : NIHIL);
+        temp    = items[i];
+        prop_i  = (Proprietas*)temp.datum;
+        prio_i =
+            _prioritas_proprietatis(prop_i ? prop_i->clavis : NIHIL);
 
         /* Invenire positio pro insertione */
         k = i;
         per (j = ZEPHYRUM; j < i; j++)
         {
             prop_j = (Proprietas*)items[j].datum;
-            prio_j = _prioritas_proprietatis(prop_j ? prop_j->clavis : NIHIL);
+            prio_j =
+                _prioritas_proprietatis(prop_j ? prop_j->clavis : NIHIL);
 
             debet_movere = FALSUM;
 
@@ -522,9 +530,11 @@ _sortare_proprietates (
             alioquin si (prio_i == ZEPHYRUM && prio_j == ZEPHYRUM)
             {
                 /* Nullus habet prioritatem - alphabetice */
-                si (prop_i && prop_i->clavis && prop_j && prop_j->clavis)
+                si (   prop_i && prop_i->clavis && prop_j
+                    && prop_j->clavis)
                 {
-                    si (_comparare_case_insensitive(prop_i->clavis, prop_j->clavis) < ZEPHYRUM)
+                    si (_comparare_case_insensitive(prop_i->clavis,
+                        prop_j->clavis) < ZEPHYRUM)
                     {
                         debet_movere = VERUM;
                     }
@@ -584,7 +594,8 @@ _construere_items (
     /* Primo: addere relationes NON-contains */
     initium_non_contains  = nav->numerus_itemorum;
     numerus               = xar_numerus(ent->relationes);
-    per (i = ZEPHYRUM; i < numerus && nav->numerus_itemorum < CXXVIII; i++)
+    per (i = ZEPHYRUM; i < numerus
+        && nav->numerus_itemorum < CXXVIII; i++)
     {
                   b32 est_contains;
         hic_manens i8 contains_lit[] = "contains";
@@ -597,9 +608,11 @@ _construere_items (
 
         /* Verificare si est "contains" relatio */
         est_contains = FALSUM;
-        si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+        si (   rel->genus && rel->genus->datum
+            && rel->genus->mensura == VIII)
         {
-            si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+            si (memcmp(rel->genus->datum, contains_lit, VIII)
+                == ZEPHYRUM)
             {
                 est_contains = VERUM;
             }
@@ -631,7 +644,8 @@ _construere_items (
 
     /* Secundo: addere relationes CONTAINS */
     initium_contains = nav->numerus_itemorum;
-    per (i = ZEPHYRUM; i < numerus && nav->numerus_itemorum < CXXVIII; i++)
+    per (i = ZEPHYRUM; i < numerus
+        && nav->numerus_itemorum < CXXVIII; i++)
     {
                   b32 est_contains;
         hic_manens i8 contains_lit[] = "contains";
@@ -644,9 +658,11 @@ _construere_items (
 
         /* Verificare si est "contains" relatio */
         est_contains = FALSUM;
-        si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+        si (   rel->genus && rel->genus->datum
+            && rel->genus->mensura == VIII)
         {
-            si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+            si (memcmp(rel->genus->datum, contains_lit, VIII)
+                == ZEPHYRUM)
             {
                 est_contains = VERUM;
             }
@@ -677,7 +693,8 @@ _construere_items (
     }
 
     /* Addere genus ut pseudo-proprietas */
-    si (ent->genus && ent->genus->datum && nav->numerus_itemorum < CXXVIII)
+    si (   ent->genus && ent->genus->datum
+        && nav->numerus_itemorum < CXXVIII)
     {
         hic_manens Proprietas prop_genus;
             hic_manens chorda clavis_genus;
@@ -693,7 +710,8 @@ _construere_items (
         item->genus  = ITEM_PROPRIETAS;
 
         /* Calcular altitudo */
-        longitudo_totalis = clavis_genus.mensura + II + ent->genus->mensura;
+        longitudo_totalis = clavis_genus.mensura + II
+            + ent->genus->mensura;
         item->altitudo = _calcular_altitudinem_textus(
             longitudo_totalis,
             latitudo_columnae);
@@ -709,7 +727,8 @@ _construere_items (
 
         initium_proprietatum  = nav->numerus_itemorum;
         numerus               = xar_numerus(ent->proprietates);
-        per (i = ZEPHYRUM; i < numerus && nav->numerus_itemorum < CXXVIII; i++)
+        per (i = ZEPHYRUM; i < numerus
+            && nav->numerus_itemorum < CXXVIII; i++)
         {
             prop = (Proprietas*)xar_obtinere(ent->proprietates, i);
             si (!prop)
@@ -755,7 +774,8 @@ _construere_items (
         }
 
         /* Sortare proprietates: name primo, title secundo, deinde alphabetice */
-        numerus_proprietatum = nav->numerus_itemorum - initium_proprietatum;
+        numerus_proprietatum = nav->numerus_itemorum
+            - initium_proprietatum;
         si (numerus_proprietatum > I)
         {
             _sortare_proprietates(
@@ -781,7 +801,8 @@ _construere_items (
             initium_backlinks  = nav->numerus_itemorum;
             numerus            = xar_numerus(relationes_ad);
 
-            per (i = ZEPHYRUM; i < numerus && nav->numerus_itemorum < CXXVIII; i++)
+            per (i = ZEPHYRUM; i < numerus
+                && nav->numerus_itemorum < CXXVIII; i++)
             {
                 hic_manens i8 contains_lit[] = "contains";
 
@@ -796,7 +817,8 @@ _construere_items (
                 /* Filtrare "contains" relationes - iam monstrantur in columna parente */
                 si (   rel_inv->genus && rel_inv->genus->datum
                     && rel_inv->genus->mensura == VIII
-                    && memcmp(rel_inv->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+                    && memcmp(rel_inv->genus->datum, contains_lit, VIII)
+                        == ZEPHYRUM)
                 {
                     perge;
                 }
@@ -810,7 +832,8 @@ _construere_items (
             }
 
             /* Sortare backlinks alphabetice (per titulum originis) */
-            numerus_backlinks = nav->numerus_itemorum - initium_backlinks;
+            numerus_backlinks = nav->numerus_itemorum
+                - initium_backlinks;
             si (numerus_backlinks > I)
             {
                 _sortare_relationes_inversas(
@@ -969,7 +992,8 @@ navigator_entitatum_retro (
     }
 
     /* Obtinere item historiae */
-    item_historiae = (ItemHistoriae*)xar_obtinere(nav->via, numerus_items - I);
+    item_historiae = (ItemHistoriae*)xar_obtinere(nav->via,
+        numerus_items - I);
     si (!item_historiae)
     {
         redde FALSUM;
@@ -1003,21 +1027,27 @@ navigator_entitatum_retro (
             item = &nav->items[i];
 
             /* Solum quaerere in tipo correcta (relatio vel backlink) */
-            si (!item_historiae->per_backlink && item->genus == ITEM_RELATIO)
+            si (   !item_historiae->per_backlink
+                && item->genus == ITEM_RELATIO)
             {
                 /* Pro relatione normali, destinatio_id est quo navigavimus */
                 rel = (Relatio*)item->datum;
-                si (rel && rel->destinatio_id == item_historiae->entitas_id_destinatio)
+                si (   rel
+                    && rel->destinatio_id
+                        == item_historiae->entitas_id_destinatio)
                 {
                     nav->selectio = i;
                     frange;
                 }
             }
-            alioquin si (item_historiae->per_backlink && item->genus == ITEM_RELATIO_INVERSA)
+            alioquin si (   item_historiae->per_backlink
+                         && item->genus == ITEM_RELATIO_INVERSA)
             {
                 /* Pro backlink, origo_id est quo navigavimus */
                 rel = (Relatio*)item->datum;
-                si (rel && rel->origo_id == item_historiae->entitas_id_destinatio)
+                si (   rel
+                    && rel->origo_id
+                        == item_historiae->entitas_id_destinatio)
                 {
                     nav->selectio = i;
                     frange;
@@ -1059,14 +1089,15 @@ navigator_entitatum_tractare_eventum (
     }
 
     /* j - Movere deorsum */
-    si (eventus->datum.clavis.typus == 'j')
+    si (eventus->datum.clavis.producta == 'j')
     {
         si (nav->selectio < nav->numerus_itemorum - I)
         {
             nav->selectio++;
 
             /* Verificare si necessarium movere ad paginam proximam */
-            ultimo_item_in_pagina = (nav->pagina_currens + I) * nav->items_per_pagina - I;
+            ultimo_item_in_pagina = (nav->pagina_currens
+                + I) * nav->items_per_pagina - I;
             si (nav->selectio > ultimo_item_in_pagina)
             {
                 nav->pagina_currens++;
@@ -1076,14 +1107,15 @@ navigator_entitatum_tractare_eventum (
     }
 
     /* k - Movere sursum */
-    si (eventus->datum.clavis.typus == 'k')
+    si (eventus->datum.clavis.producta == 'k')
     {
         si (nav->selectio > ZEPHYRUM)
         {
             nav->selectio--;
 
             /* Verificare si necessarium movere ad paginam praecendentem */
-            si (nav->selectio < nav->pagina_currens * nav->items_per_pagina)
+            si (nav->selectio
+                < nav->pagina_currens * nav->items_per_pagina)
             {
                 nav->pagina_currens--;
             }
@@ -1092,7 +1124,7 @@ navigator_entitatum_tractare_eventum (
     }
 
     /* h - Retro in via */
-    si (eventus->datum.clavis.typus == 'h')
+    si (eventus->datum.clavis.producta == 'h')
     {
         /* Navigatio normalis retro */
         navigator_entitatum_retro(nav);
@@ -1100,7 +1132,7 @@ navigator_entitatum_tractare_eventum (
     }
 
     /* l - Intrare relationem */
-    si (eventus->datum.clavis.typus == 'l')
+    si (eventus->datum.clavis.producta == 'l')
     {
         si (nav->selectio >= nav->numerus_itemorum)
         {
@@ -1113,7 +1145,8 @@ navigator_entitatum_tractare_eventum (
         {
             /* Navigatio normalis per relationes (ad destinationem) */
             rel = (Relatio*)item->datum;
-            navigator_entitatum_navigare_ad(nav, rel->destinatio_id, FALSUM);
+            navigator_entitatum_navigare_ad(nav, rel->destinatio_id,
+                FALSUM);
         }
         alioquin si (item->genus == ITEM_RELATIO_INVERSA)
         {
@@ -1212,13 +1245,15 @@ _reddere_items_currens (
         /* Determinare colores */
         si (est_selectus)
         {
-            color_textus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+            color_textus =
+                color_ad_pixelum(thema_color(COLOR_BACKGROUND));
             color_fons = color_ad_pixelum(thema_color(COLOR_TEXT));
         }
         alioquin
         {
             color_textus = color_ad_pixelum(thema_color(COLOR_TEXT));
-            color_fons = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+            color_fons =
+                color_ad_pixelum(thema_color(COLOR_BACKGROUND));
         }
 
         /* Reddere fondum si selectus */
@@ -1229,11 +1264,14 @@ _reddere_items_currens (
             pixel_y               = y_currens * character_altitudo;
             altitudo_item_pixels  = item->altitudo * character_altitudo;
 
-            per (py = pixel_y; py < pixel_y + altitudo_item_pixels; py++)
+            per (py = pixel_y; py < pixel_y
+                + altitudo_item_pixels; py++)
             {
-                per (px = pixel_x; px < pixel_x + (latitudo_columnae * character_latitudo); px++)
+                per (px = pixel_x; px < pixel_x
+                    + (latitudo_columnae * character_latitudo); px++)
                 {
-                    tabula_pixelorum_ponere_pixelum(tabula, px, py, color_fons);
+                    tabula_pixelorum_ponere_pixelum(tabula, px, py,
+                        color_fons);
                 }
             }
         }
@@ -1254,10 +1292,12 @@ _reddere_items_currens (
 
             /* Verificare si relatio est "contains" */
             est_contains = FALSUM;
-            si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+            si (   rel->genus && rel->genus->datum
+                && rel->genus->mensura == VIII)
             {
                 hic_manens i8 contains_lit[] = "contains";
-                si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+                si (memcmp(rel->genus->datum, contains_lit, VIII)
+                    == ZEPHYRUM)
                 {
                     est_contains = VERUM;
                 }
@@ -1291,8 +1331,10 @@ _reddere_items_currens (
 
                 /* Format: "name/" (sine "contains") */
                 buffer_mensura = ZEPHYRUM;
-                si (   display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM
-                    && display_chorda->mensura < CCLVI - buffer_mensura - X)
+                si (   display_chorda && display_chorda->datum
+                    && display_chorda->mensura > ZEPHYRUM
+                    && display_chorda->mensura < CCLVI - buffer_mensura
+                        - X)
                 {
                     memcpy(buffer + buffer_mensura,
                            display_chorda->datum,
@@ -1307,7 +1349,8 @@ _reddere_items_currens (
 
                 tabula_pixelorum_pingere_chordam(
                     tabula,
-                    x_columna * character_latitudo + (II * character_latitudo),
+                    x_columna * character_latitudo
+                        + (II * character_latitudo),
                     y_currens * character_altitudo,
                     textus,
                     color_textus);
@@ -1325,7 +1368,8 @@ _reddere_items_currens (
                     : color_ad_pixelum(color_ex_palette(PALETTE_MEDIUM_GOLD));
 
                 buffer_mensura = ZEPHYRUM;
-                si (   rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM
+                si (   rel->genus && rel->genus->datum
+                    && rel->genus->mensura > ZEPHYRUM
                     && rel->genus->mensura < CCLVI - buffer_mensura - X)
                 {
                     memcpy(buffer + buffer_mensura,
@@ -1340,7 +1384,8 @@ _reddere_items_currens (
 
                 tabula_pixelorum_pingere_chordam(
                     tabula,
-                    x_columna * character_latitudo + (II * character_latitudo),
+                    x_columna * character_latitudo
+                        + (II * character_latitudo),
                     y_currens * character_altitudo,
                     textus,
                     color_genus);
@@ -1356,8 +1401,10 @@ _reddere_items_currens (
                 buffer[buffer_mensura++]  = ' ';
                 buffer[buffer_mensura++]  = ' ';
                 buffer[buffer_mensura++]  = ' ';
-                si (   display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM
-                    && display_chorda->mensura < CCLVI - buffer_mensura - X)
+                si (   display_chorda && display_chorda->datum
+                    && display_chorda->mensura > ZEPHYRUM
+                    && display_chorda->mensura < CCLVI - buffer_mensura
+                        - X)
                 {
                     memcpy(buffer + buffer_mensura,
                            display_chorda->datum,
@@ -1400,7 +1447,8 @@ _reddere_items_currens (
             /* Format: "clavis: valor" */
             buffer_mensura = ZEPHYRUM;
 
-            si (   prop->clavis && prop->clavis->datum && prop->clavis->mensura > ZEPHYRUM
+            si (   prop->clavis && prop->clavis->datum
+                && prop->clavis->mensura > ZEPHYRUM
                 && prop->clavis->mensura < CCLVI - X)
             {
                 memcpy(buffer + buffer_mensura,
@@ -1422,9 +1470,11 @@ _reddere_items_currens (
                     CCLVI - buffer_mensura,
                     prop->valor);
             }
-            alioquin si (   prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM
+            alioquin si (   prop->valor && prop->valor->datum
+                         && prop->valor->mensura > ZEPHYRUM
 
-                         && prop->valor->mensura < CCLVI - buffer_mensura)
+                         && prop->valor->mensura < CCLVI
+                             - buffer_mensura)
             {
                 memcpy(buffer + buffer_mensura,
                        prop->valor->datum,
@@ -1442,7 +1492,8 @@ _reddere_items_currens (
             si (!est_selectus && prioritas > ZEPHYRUM)
             {
                 /* name/title valor in dark cyan */
-                color_valor = color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF));
+                color_valor =
+                    color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF));
             }
 
             /* Reddere cum wrapping */
@@ -1455,7 +1506,8 @@ _reddere_items_currens (
 
                 caracteres_in_linea = ZEPHYRUM;
 
-                per (j = ZEPHYRUM; j < latitudo_columnae && offset_textus + j < buffer_mensura; j++)
+                per (j = ZEPHYRUM; j < latitudo_columnae
+                    && offset_textus + j < buffer_mensura; j++)
                 {
                     caracteres_in_linea++;
                 }
@@ -1469,7 +1521,8 @@ _reddere_items_currens (
                     color_hic = color_valor;
                 }
                 /* Si tota portio est in clave, usare color_textus */
-                alioquin si (offset_textus + caracteres_in_linea <= clavis_et_separator_mensura)
+                alioquin si (offset_textus + caracteres_in_linea
+                             <= clavis_et_separator_mensura)
                 {
                     color_hic = color_textus;
                 }
@@ -1481,7 +1534,8 @@ _reddere_items_currens (
                     chorda textus_clavis;
                     chorda textus_valor;
 
-                    clavis_pars = clavis_et_separator_mensura - offset_textus;
+                    clavis_pars = clavis_et_separator_mensura
+                        - offset_textus;
                     valor_pars = caracteres_in_linea - clavis_pars;
 
                     /* Reddere partem clavis */
@@ -1490,17 +1544,21 @@ _reddere_items_currens (
                     tabula_pixelorum_pingere_chordam(
                         tabula,
                         x_columna * character_latitudo,
-                        (y_currens + linea_currens) * character_altitudo,
+                        (y_currens
+                            + linea_currens) * character_altitudo,
                         textus_clavis,
                         color_textus);
 
                     /* Reddere partem valoris */
-                    textus_valor.datum = (i8*)(buffer + offset_textus + clavis_pars);
+                    textus_valor.datum = (i8*)(buffer + offset_textus
+                        + clavis_pars);
                     textus_valor.mensura = valor_pars;
                     tabula_pixelorum_pingere_chordam(
                         tabula,
-                        x_columna * character_latitudo + (clavis_pars * character_latitudo),
-                        (y_currens + linea_currens) * character_altitudo,
+                        x_columna * character_latitudo
+                            + (clavis_pars * character_latitudo),
+                        (y_currens
+                            + linea_currens) * character_altitudo,
                         textus_valor,
                         color_valor);
 
@@ -1557,7 +1615,8 @@ _reddere_items_currens (
                 : color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
 
             buffer_mensura = ZEPHYRUM;
-            si (   rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM
+            si (   rel->genus && rel->genus->datum
+                && rel->genus->mensura > ZEPHYRUM
                 && rel->genus->mensura < CCLVI - X)
             {
                 memcpy(buffer + buffer_mensura,
@@ -1572,7 +1631,8 @@ _reddere_items_currens (
 
             tabula_pixelorum_pingere_chordam(
                 tabula,
-                x_columna * character_latitudo + (II * character_latitudo),
+                x_columna * character_latitudo
+                    + (II * character_latitudo),
                 y_currens * character_altitudo,
                 textus,
                 color_genus);
@@ -1588,7 +1648,8 @@ _reddere_items_currens (
             buffer[buffer_mensura++]  = ' ';
             buffer[buffer_mensura++]  = ' ';
             buffer[buffer_mensura++]  = ' ';
-            si (   display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM
+            si (   display_chorda && display_chorda->datum
+                && display_chorda->mensura > ZEPHYRUM
                 && display_chorda->mensura < CCLVI - buffer_mensura - X)
             {
                 memcpy(buffer + buffer_mensura,
@@ -1682,9 +1743,11 @@ _reddere_columnam_entitatis (
 
             /* Verificare si est "contains" relatio */
             est_contains = FALSUM;
-            si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+            si (   rel->genus && rel->genus->datum
+                && rel->genus->mensura == VIII)
             {
-                si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+                si (memcmp(rel->genus->datum, contains_lit, VIII)
+                    == ZEPHYRUM)
                 {
                     est_contains = VERUM;
                 }
@@ -1734,9 +1797,11 @@ _reddere_columnam_entitatis (
 
             /* Verificare si est "contains" relatio */
             est_contains = FALSUM;
-            si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+            si (   rel->genus && rel->genus->datum
+                && rel->genus->mensura == VIII)
             {
-                si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+                si (memcmp(rel->genus->datum, contains_lit, VIII)
+                    == ZEPHYRUM)
                 {
                     est_contains = VERUM;
                 }
@@ -1844,7 +1909,8 @@ _reddere_columnam_entitatis (
             initium_backlinks  = numerus_items;
             numerus            = xar_numerus(relationes_ad);
 
-            per (i = ZEPHYRUM; i < numerus && numerus_items < CXXVIII; i++)
+            per (i = ZEPHYRUM; i < numerus
+                && numerus_items < CXXVIII; i++)
             {
                 hic_manens i8 contains_lit[] = "contains";
 
@@ -1859,7 +1925,8 @@ _reddere_columnam_entitatis (
                 /* Filtrare "contains" relationes */
                 si (   rel_inv->genus && rel_inv->genus->datum
                     && rel_inv->genus->mensura == VIII
-                    && memcmp(rel_inv->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+                    && memcmp(rel_inv->genus->datum, contains_lit, VIII)
+                        == ZEPHYRUM)
                 {
                     perge;
                 }
@@ -1887,7 +1954,8 @@ _reddere_columnam_entitatis (
     /* Reddere items */
     y_currens = y_initium;
 
-    per (i = ZEPHYRUM; i < numerus_items && y_currens < y_initium + altitudo_maxima; i++)
+    per (i = ZEPHYRUM; i < numerus_items
+        && y_currens < y_initium + altitudo_maxima; i++)
     {
         item = &items_temp[i];
 
@@ -1958,26 +2026,32 @@ _reddere_columnam_entitatis (
             si (dimmed)
             {
                 /* Item selectus in columna dimmed - usare TEXT_DIM pro fondum */
-                color_textus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
-                color_fons = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+                color_textus =
+                    color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+                color_fons =
+                    color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
             }
             alioquin
             {
                 /* Item selectus in columna activa - invertere colores */
-                color_textus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+                color_textus =
+                    color_ad_pixelum(thema_color(COLOR_BACKGROUND));
                 color_fons = color_ad_pixelum(thema_color(COLOR_TEXT));
             }
         }
         alioquin si (dimmed)
         {
             /* Columna non-activa - usare colores obscuriores */
-            color_textus = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-            color_fons = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+            color_textus =
+                color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+            color_fons =
+                color_ad_pixelum(thema_color(COLOR_BACKGROUND));
         }
         alioquin
         {
             color_textus = color_ad_pixelum(thema_color(COLOR_TEXT));
-            color_fons = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+            color_fons =
+                color_ad_pixelum(thema_color(COLOR_BACKGROUND));
         }
 
         /* Reddere fondum si selectus */
@@ -1988,11 +2062,14 @@ _reddere_columnam_entitatis (
             pixel_y               = y_currens * character_altitudo;
             altitudo_item_pixels  = item->altitudo * character_altitudo;
 
-            per (py = pixel_y; py < pixel_y + altitudo_item_pixels; py++)
+            per (py = pixel_y; py < pixel_y
+                + altitudo_item_pixels; py++)
             {
-                per (px = pixel_x; px < pixel_x + (latitudo_columnae * character_latitudo); px++)
+                per (px = pixel_x; px < pixel_x
+                    + (latitudo_columnae * character_latitudo); px++)
                 {
-                    tabula_pixelorum_ponere_pixelum(tabula, px, py, color_fons);
+                    tabula_pixelorum_ponere_pixelum(tabula, px, py,
+                        color_fons);
                 }
             }
         }
@@ -2014,10 +2091,12 @@ _reddere_columnam_entitatis (
 
             /* Verificare si relatio est "contains" */
             est_contains = FALSUM;
-            si (rel->genus && rel->genus->datum && rel->genus->mensura == VIII)
+            si (   rel->genus && rel->genus->datum
+                && rel->genus->mensura == VIII)
             {
                 hic_manens i8 contains_lit[] = "contains";
-                si (memcmp(rel->genus->datum, contains_lit, VIII) == ZEPHYRUM)
+                si (memcmp(rel->genus->datum, contains_lit, VIII)
+                    == ZEPHYRUM)
                 {
                     est_contains = VERUM;
                 }
@@ -2026,15 +2105,18 @@ _reddere_columnam_entitatis (
             /* Reddere prefix - "(" pro contains (dark cyan), ">" pro aliis (bright cyan) */
             si (dimmed)
             {
-                color_arrow = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+                color_arrow =
+                    color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
             }
             alioquin si (est_contains)
             {
-                color_arrow = color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF));
+                color_arrow =
+                    color_ad_pixelum(color_ex_palette(PALETTE_DARK_LEAF));
             }
             alioquin
             {
-                color_arrow = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+                color_arrow =
+                    color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
             }
             arrow_buffer[ZEPHYRUM]  = est_contains ? '(' : '>';
             arrow_buffer[I]         = ' ';
@@ -2060,8 +2142,10 @@ _reddere_columnam_entitatis (
 
                 /* Format: "name/" (sine "contains") */
                 buffer_mensura = ZEPHYRUM;
-                si (   display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM
-                    && display_chorda->mensura < CCLVI - buffer_mensura - X)
+                si (   display_chorda && display_chorda->datum
+                    && display_chorda->mensura > ZEPHYRUM
+                    && display_chorda->mensura < CCLVI - buffer_mensura
+                        - X)
                 {
                     memcpy(buffer + buffer_mensura,
                            display_chorda->datum,
@@ -2082,7 +2166,8 @@ _reddere_columnam_entitatis (
 
                 tabula_pixelorum_pingere_chordam(
                     tabula,
-                    x_columna * character_latitudo + (II * character_latitudo),
+                    x_columna * character_latitudo
+                        + (II * character_latitudo),
                     y_currens * character_altitudo,
                     textus,
                     color_textus);
@@ -2101,15 +2186,18 @@ _reddere_columnam_entitatis (
                 }
                 alioquin si (dimmed)
                 {
-                    color_genus = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+                    color_genus =
+                        color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
                 }
                 alioquin
                 {
-                    color_genus = color_ad_pixelum(color_ex_palette(PALETTE_MEDIUM_GOLD));
+                    color_genus =
+                        color_ad_pixelum(color_ex_palette(PALETTE_MEDIUM_GOLD));
                 }
 
                 buffer_mensura = ZEPHYRUM;
-                si (   rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM
+                si (   rel->genus && rel->genus->datum
+                    && rel->genus->mensura > ZEPHYRUM
                     && rel->genus->mensura < CCLVI - buffer_mensura - X)
                 {
                     memcpy(buffer + buffer_mensura,
@@ -2130,7 +2218,8 @@ _reddere_columnam_entitatis (
 
                 tabula_pixelorum_pingere_chordam(
                     tabula,
-                    x_columna * character_latitudo + (II * character_latitudo),
+                    x_columna * character_latitudo
+                        + (II * character_latitudo),
                     y_currens * character_altitudo,
                     textus,
                     color_genus);
@@ -2139,7 +2228,8 @@ _reddere_columnam_entitatis (
                 si (selectio_repositorium)
                 {
                     dest_ent = selectio_repositorium->capere_entitatem(
-                        selectio_repositorium->datum, rel->destinatio_id);
+                        selectio_repositorium->datum,
+                        rel->destinatio_id);
 
                     display_chorda = entitas_titulum_capere(dest_ent);
 
@@ -2148,8 +2238,10 @@ _reddere_columnam_entitatis (
                     buffer[buffer_mensura++]  = ' ';
                     buffer[buffer_mensura++]  = ' ';
                     buffer[buffer_mensura++]  = ' ';
-                    si (   display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM
-                        && display_chorda->mensura < CCLVI - buffer_mensura - X)
+                    si (   display_chorda && display_chorda->datum
+                        && display_chorda->mensura > ZEPHYRUM
+                        && display_chorda->mensura < CCLVI
+                            - buffer_mensura - X)
                     {
                         memcpy(buffer + buffer_mensura,
                                display_chorda->datum,
@@ -2193,7 +2285,8 @@ _reddere_columnam_entitatis (
             /* Format: "clavis: valor" */
             buffer_mensura = ZEPHYRUM;
 
-            si (   prop->clavis && prop->clavis->datum && prop->clavis->mensura > ZEPHYRUM
+            si (   prop->clavis && prop->clavis->datum
+                && prop->clavis->mensura > ZEPHYRUM
                 && prop->clavis->mensura < CCLVI - X)
             {
                 memcpy(buffer + buffer_mensura,
@@ -2213,9 +2306,11 @@ _reddere_columnam_entitatis (
                     CCLVI - buffer_mensura,
                     prop->valor);
             }
-            alioquin si (   prop->valor && prop->valor->datum && prop->valor->mensura > ZEPHYRUM
+            alioquin si (   prop->valor && prop->valor->datum
+                         && prop->valor->mensura > ZEPHYRUM
 
-                         && prop->valor->mensura < CCLVI - buffer_mensura)
+                         && prop->valor->mensura < CCLVI
+                             - buffer_mensura)
             {
                 memcpy(buffer + buffer_mensura,
                        prop->valor->datum,
@@ -2236,7 +2331,8 @@ _reddere_columnam_entitatis (
             {
                 caracteres_in_linea = ZEPHYRUM;
 
-                per (j = ZEPHYRUM; j < latitudo_columnae && offset_textus + j < buffer_mensura; j++)
+                per (j = ZEPHYRUM; j < latitudo_columnae
+                    && offset_textus + j < buffer_mensura; j++)
                 {
                     caracteres_in_linea++;
                 }
@@ -2292,11 +2388,13 @@ _reddere_columnam_entitatis (
             }
             alioquin
             {
-                color_genus = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+                color_genus =
+                    color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
             }
 
             buffer_mensura = ZEPHYRUM;
-            si (   rel->genus && rel->genus->datum && rel->genus->mensura > ZEPHYRUM
+            si (   rel->genus && rel->genus->datum
+                && rel->genus->mensura > ZEPHYRUM
                 && rel->genus->mensura < CCLVI - X)
             {
                 memcpy(buffer + buffer_mensura,
@@ -2317,7 +2415,8 @@ _reddere_columnam_entitatis (
 
             tabula_pixelorum_pingere_chordam(
                 tabula,
-                x_columna * character_latitudo + (II * character_latitudo),
+                x_columna * character_latitudo
+                    + (II * character_latitudo),
                 y_currens * character_altitudo,
                 textus,
                 color_genus);
@@ -2335,8 +2434,10 @@ _reddere_columnam_entitatis (
                 buffer[buffer_mensura++]  = ' ';
                 buffer[buffer_mensura++]  = ' ';
                 buffer[buffer_mensura++]  = ' ';
-                si (   display_chorda && display_chorda->datum && display_chorda->mensura > ZEPHYRUM
-                    && display_chorda->mensura < CCLVI - buffer_mensura - X)
+                si (   display_chorda && display_chorda->datum
+                    && display_chorda->mensura > ZEPHYRUM
+                    && display_chorda->mensura < CCLVI - buffer_mensura
+                        - X)
                 {
                     memcpy(buffer + buffer_mensura,
                            display_chorda->datum,
@@ -2416,14 +2517,16 @@ navigator_entitatum_reddere (
     box_y1 = (y + altitudo) * character_altitudo - I - II;
 
     color_border = thema_color(COLOR_BORDER);
-    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
+    color_border_inner =
+        focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
 
     /* === REDDERE BORDER === */
     ctx = delineare_creare_contextum(nav->ctx->piscina, tabula);
 
     /* Titulo pro border - usare titulum entitatis (name/title/id) */
     {
-        chorda* titulum_chorda = entitas_titulum_capere(nav->entitas_currens);
+        chorda* titulum_chorda =
+            entitas_titulum_capere(nav->entitas_currens);
         si (titulum_chorda && titulum_chorda->datum)
         {
             titulo = *titulum_chorda;
@@ -2452,31 +2555,43 @@ navigator_entitatum_reddere (
         gap_padding = character_latitudo;
 
         titulo_pixel_width = titulo.mensura * character_latitudo;
-        titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width) / II;
+        titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width)
+            / II;
         titulo_y = box_y0 - (character_altitudo / II) + III;
 
         /* Top line - left segment (double line with gap) */
-        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0, color_border);
-        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0 + II, color_border_inner);
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x
+            - gap_padding, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x
+            - gap_padding, box_y0 + II, color_border_inner);
 
         /* Top line - right segment */
-        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0, color_border);
-        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0 + II, color_border_inner);
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width
+            + gap_padding, box_x1, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width
+            + gap_padding, box_x1, box_y0 + II, color_border_inner);
 
         /* Bottom line (full double line) */
-        delineare_lineam_horizontalem(ctx, box_x0, box_x1, box_y1, color_border);
-        delineare_lineam_horizontalem(ctx, box_x0, box_x1, box_y1 - II, color_border_inner);
+        delineare_lineam_horizontalem(ctx, box_x0, box_x1, box_y1,
+            color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, box_x1, box_y1 - II,
+            color_border_inner);
 
         /* Left line (double with gap) */
-        delineare_lineam_verticalem(ctx, box_x0, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1, color_border_inner);
+        delineare_lineam_verticalem(ctx, box_x0, box_y0, box_y1,
+            color_border);
+        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1,
+            color_border_inner);
 
         /* Right line (double with gap) */
-        delineare_lineam_verticalem(ctx, box_x1, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1, color_border_inner);
+        delineare_lineam_verticalem(ctx, box_x1, box_y0, box_y1,
+            color_border);
+        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1,
+            color_border_inner);
 
         /* Pingere titulo */
-        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y, titulo, color_ad_pixelum(color_border));
+        tabula_pixelorum_pingere_chordam(tabula, titulo_x, titulo_y,
+            titulo, color_ad_pixelum(color_border));
     }
 
     /* Calcular latitudines columnarum - solum duo columnae (30/70 split) */
@@ -2500,7 +2615,8 @@ navigator_entitatum_reddere (
     si (numerus_items_via > ZEPHYRUM)
     {
         /* Capere entitatem parens ex via */
-        item_historiae = (ItemHistoriae*)xar_obtinere(nav->via, numerus_items_via - I);
+        item_historiae = (ItemHistoriae*)xar_obtinere(nav->via,
+            numerus_items_via - I);
         si (item_historiae)
         {
             entitas_parens = nav->ctx->repo->capere_entitatem(
@@ -2553,8 +2669,10 @@ navigator_entitatum_reddere (
         divider_y1  = box_y1 - II;  /* End inside border */
 
         /* Divider inter columnam sinistram et mediam (double line cum gap) */
-        delineare_lineam_verticalem(ctx, divider_x - II, divider_y0, divider_y1, color_border);
-        delineare_lineam_verticalem(ctx, divider_x, divider_y0, divider_y1, color_border);
+        delineare_lineam_verticalem(ctx, divider_x - II, divider_y0,
+            divider_y1, color_border);
+        delineare_lineam_verticalem(ctx, divider_x, divider_y0,
+            divider_y1, color_border);
     }
 }
 
@@ -2623,7 +2741,8 @@ navigator_entitatum_salvare_status (
 
     /* Salvare entitas_currens_id ut C string */
     si (   nav->entitas_currens && nav->entitas_currens->id
-        && nav->entitas_currens->id->datum && nav->entitas_currens->id->mensura > ZEPHYRUM)
+        && nav->entitas_currens->id->datum
+        && nav->entitas_currens->id->mensura > ZEPHYRUM)
     {
         i32 len;
         len = nav->entitas_currens->id->mensura;
@@ -2633,7 +2752,8 @@ navigator_entitatum_salvare_status (
         }
         memcpy(buffer, nav->entitas_currens->id->datum, (size_t)len);
         buffer[len] = '\0';
-        repo->proprietas_ponere(repo->datum, entitas, "entitas_currens_id", buffer);
+        repo->proprietas_ponere(repo->datum, entitas,
+            "entitas_currens_id", buffer);
     }
 
     /* Salvare selectio */
@@ -2642,7 +2762,8 @@ navigator_entitatum_salvare_status (
 
     /* Salvare pagina_currens */
     sprintf(buffer, "%d", nav->pagina_currens);
-    repo->proprietas_ponere(repo->datum, entitas, "pagina_currens", buffer);
+    repo->proprietas_ponere(repo->datum, entitas, "pagina_currens",
+        buffer);
 }
 
 vacuum
@@ -2690,11 +2811,14 @@ navigator_entitatum_carcare_status (
     clavis_pagina.mensura  = XIV;
 
     /* Carcare et navigare ad entitatem */
-    valor_entitas_id = entitas_proprietas_capere(entitas, &clavis_entitas_id);
-    si (valor_entitas_id && valor_entitas_id->datum && valor_entitas_id->mensura > ZEPHYRUM)
+    valor_entitas_id = entitas_proprietas_capere(entitas,
+        &clavis_entitas_id);
+    si (   valor_entitas_id && valor_entitas_id->datum
+        && valor_entitas_id->mensura > ZEPHYRUM)
     {
         /* Capere entitatem per ID */
-        entitas_target = repo->capere_entitatem(repo->datum, valor_entitas_id);
+        entitas_target = repo->capere_entitatem(repo->datum,
+            valor_entitas_id);
         si (entitas_target)
         {
             nav->entitas_currens = entitas_target;
@@ -2703,8 +2827,10 @@ navigator_entitatum_carcare_status (
     }
 
     /* Carcare selectio */
-    valor_selectio = entitas_proprietas_capere(entitas, &clavis_selectio);
-    si (valor_selectio && valor_selectio->datum && valor_selectio->mensura > ZEPHYRUM)
+    valor_selectio = entitas_proprietas_capere(entitas,
+        &clavis_selectio);
+    si (   valor_selectio && valor_selectio->datum
+        && valor_selectio->mensura > ZEPHYRUM)
     {
         i32 len;
         len = valor_selectio->mensura;
@@ -2719,7 +2845,8 @@ navigator_entitatum_carcare_status (
 
     /* Carcare pagina_currens */
     valor_pagina = entitas_proprietas_capere(entitas, &clavis_pagina);
-    si (valor_pagina && valor_pagina->datum && valor_pagina->mensura > ZEPHYRUM)
+    si (   valor_pagina && valor_pagina->datum
+        && valor_pagina->mensura > ZEPHYRUM)
     {
         i32 len;
         len = valor_pagina->mensura;

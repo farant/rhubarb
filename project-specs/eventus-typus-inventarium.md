@@ -127,3 +127,17 @@ then the deltas).
 Tasks: **S3a** `producta` in, every reader and producer switched,
 `typus` deleted, stml reads old `typus` attributes into `producta`;
 **S3b** importatio to integer scroll, f32 deltas deleted.
+
+## 6. S3a DONE (2026-10-03)
+
+`typus` deleted; `s32 producta` in `eventus.h`. fenestra fills it from
+the FIRST Unicode scalar of `characters` (surrogate pairs joined;
+AppKit's private-use function-key characters 0xF700-0xF8FF give 0);
+the decoder fills it with the full rune (Alt+é now survives); manus
+from its synthetic character. eventus_stml writes `producta` and reads
+an old recording's `typus` attribute into it. Readers: the encoder's
+legacy path encodes `producta` as UTF-8; tessera's projection uses it;
+the old widget generation reads `producta` (ASCII semantics kept,
+non-ASCII given as 0 where a `character` is needed); the toy checks
+the logical key (`CLAVIS_EFFUGIUM`), and `toy.eventus.stml` now says
+`clavis="27" producta="27"`.

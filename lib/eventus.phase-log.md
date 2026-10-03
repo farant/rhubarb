@@ -1628,3 +1628,33 @@ terminal ⇄ fenestra.
 
 **Parks filed** (terminal-planning): 008, a promoted drop's position is
 the pointer before the drag (decision (a), contract documented).
+
+## S3a — `typus` → `producta` (spec D2 step 3, part 1) (2026-10-03)
+
+The step-3 inventory (`project-specs/eventus-typus-inventarium.md`, 41
+sites) showed `typus` is NOT redundant: under Alt/Ctrl/Cmd no TEXT is
+emitted, so it is the only record of the character a key produced
+(Alt+A vs Alt+a; Shift+Alt+'.' → `ESC >`). Its fault was its TYPE (one
+signed `character`, ASCII only). Fran: replace it with `s32 producta`;
+switch the old widget generation's reads (the real migration waits for
+park 009); migrate the f32 deltas next (S3b).
+
+- `eventus.h`: `typus` deleted, `producta` (Unicode, 0 = none).
+- fenestra: the first scalar of `characters` (surrogates joined;
+  AppKit's 0xF700-0xF8FF function-key characters → 0, where `typus`
+  used to hold a truncated garbage byte).
+- decoder: the full rune (Alt+é survives; red test first); manus: its
+  synthetic character.
+- eventus_stml: writes `producta`, reads an old recording's `typus`.
+- readers: encoder (UTF-8 of `producta` on the legacy Alt/Ctrl path),
+  tessera's projection, the 8 old-widget files (mechanical; ASCII kept),
+  the toy (Escape by logical key; `toy.eventus.stml` updated, and the
+  notarius' byte-for-byte check still holds).
+- The hook formats every touched file, so the old widget files were
+  reformatted whole (librarium_visus 140 → 20 complaints): a large but
+  mechanical diff.
+
+Plants caught: the stml reader dropping the `typus` fallback; the
+decoder truncating `producta` to ASCII. fenestra conformance 8/8,
+terminal 16/16, tessera 15/15, pictor/villa/forum, the auscultators and
+the GUI demos (navigator, combinado, pagina, elementa) build.

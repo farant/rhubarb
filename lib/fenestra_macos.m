@@ -119,7 +119,9 @@ structura Fenestra {
     CGRect limites;
 
     /* Verificare si habemus imaginem pixelorum pingere */
-    imago_pixelorum = (__bridge CGImageRef)objc_getAssociatedObject(self, "imagoPixelorum");
+    imago_pixelorum =
+        (__bridge CGImageRef)objc_getAssociatedObject(self,
+            "imagoPixelorum");
 
     si (imago_pixelorum)
     {
@@ -127,7 +129,8 @@ structura Fenestra {
         contextus = [[NSGraphicsContext currentContext] CGContext];
 
         /* Ponere interpolationem ad vicinum proximum pro pixelis acutis */
-        CGContextSetInterpolationQuality(contextus, kCGInterpolationNone);
+        CGContextSetInterpolationQuality(contextus,
+            kCGInterpolationNone);
 
         /* Pingere imaginem scalatam ad implendum visum */
         limites = NSRectToCGRect(self.bounds);
@@ -374,7 +377,8 @@ _scalam_obtinere (
         fenestra->visus, "imagoPixelorum");
     *scala_x = 1.0;
     *scala_y = 1.0;
-    si (imago && contentum.size.width > 0.0 && contentum.size.height > 0.0)
+    si (imago && contentum.size.width > 0.0
+        && contentum.size.height > 0.0)
     {
         *scala_x = (f64)CGImageGetWidth(imago) / contentum.size.width;
         *scala_y = (f64)CGImageGetHeight(imago) / contentum.size.height;
@@ -458,7 +462,8 @@ _rotulam_implere (
     /* B3a: positio indicatoris et modificantes (shift+rota, zoom) */
     _positionem(fenestra, eventus_ns, &eventus->datum.rotula.x,
         &eventus->datum.rotula.y);
-    eventus->datum.rotula.modificantes = (i32)[eventus_ns modifierFlags];
+    eventus->datum.rotula.modificantes =
+        (i32)[eventus_ns modifierFlags];
     praecisa = [eventus_ns hasPreciseScrollingDeltas] ? VERUM : FALSUM;
     si (praecisa != fenestra->rotula_praecisa)
     {
@@ -473,9 +478,11 @@ _rotulam_implere (
         _scalam_obtinere(fenestra, &scala_x, &scala_y);
         eventus->datum.rotula.genus = EVENTUS_ROTULA_PRAECISA;
         eventus->datum.rotula.dx = eventus_residuum_integrare(
-            &fenestra->residuum_x, [eventus_ns scrollingDeltaX] * scala_x);
+            &fenestra->residuum_x,
+                [eventus_ns scrollingDeltaX] * scala_x);
         eventus->datum.rotula.dy = eventus_residuum_integrare(
-            &fenestra->residuum_y, [eventus_ns scrollingDeltaY] * scala_y);
+            &fenestra->residuum_y,
+                [eventus_ns scrollingDeltaY] * scala_y);
     }
     alioquin
     {
@@ -512,7 +519,8 @@ fenestra_creare (
             /* Assecurare nos non in modo terminali solum */
             psn.highLongOfPSN = 0;
             psn.lowLongOfPSN = kCurrentProcess;
-            TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+            TransformProcessType(&psn,
+                kProcessTransformToForegroundApplication);
 
             _menu_ordinarium_ponere();
 
@@ -557,8 +565,10 @@ fenestra_creare (
 
         /* Creare fenestram */
         forma = NSMakeRect(configuratio->x, configuratio->y,
-                          configuratio->latitudo, configuratio->altitudo);
-        fenestra->fenestra_ns = [[NSWindow alloc] initWithContentRect:forma
+                          configuratio->latitudo,
+                              configuratio->altitudo);
+        fenestra->fenestra_ns =
+            [[NSWindow alloc] initWithContentRect:forma
                                                             styleMask:mamma_styli
                                                               backing:NSBackingStoreBuffered
                                                                 defer:NO];
@@ -696,6 +706,40 @@ fenestra_debet_claudere (
  * nexus manu scripta - silex, briar spectator inter ea - tangeret).
  * Regimen et zona privata Apple (F700..F8FF: sagittae, functiones) ->
  * 0 (clavis nominata, non runa). */
+/* Character a clave productus (S3a; olim 'typus' = characters[0] in
+ * octetum truncatum): punctum Unicode primum characterum (paria
+ * surrogata iuncta); claves functionis AppKit (0xF700-0xF8FF, usus
+ * privatus) nullum characterem producunt -> 0. */
+interior s32
+_productam (
+    NSString* characteres)
+{
+    unichar u;
+    s32     cp;
+
+    si ([characteres length] == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    u   = [characteres characterAtIndex:ZEPHYRUM];
+    cp  = (s32)u;
+    si (u >= 0xD800 && u <= 0xDBFF && [characteres length] > I)
+    {
+        unichar humilis = [characteres characterAtIndex:I];
+
+        si (humilis >= 0xDC00 && humilis <= 0xDFFF)
+        {
+            cp = 0x10000 + (((s32)u - 0xD800) << X)
+                + ((s32)humilis - 0xDC00);
+        }
+    }
+    si (cp >= 0xF700 && cp <= 0xF8FF)
+    {
+        redde ZEPHYRUM;
+    }
+    redde cp;
+}
+
 interior s32
 _runa_sine_maiuscula (
     NSEvent* eventus_ns)
@@ -722,7 +766,8 @@ _runa_sine_maiuscula (
     }
     p     = (constans i8*)utf8;
     runa  = utf8_decodere(&p, p + strlen(utf8));
-    si (runa < 0x20 || runa == 0x7F || (runa >= 0xF700 && runa <= 0xF8FF))
+    si (runa < 0x20 || runa == 0x7F
+        || (runa >= 0xF700 && runa <= 0xF8FF))
     {
         redde ZEPHYRUM;
     }
@@ -763,8 +808,7 @@ _clavem_impellere (
         : ([eventus_ns isARepeat] ? EVENTUS_ACTIO_ITERATA
                                   : EVENTUS_ACTIO_PRESSA);
     characteres = [eventus_ns characters];
-    eventus.datum.clavis.typus = ([characteres length] > ZEPHYRUM)
-        ? (character)[characteres characterAtIndex:ZEPHYRUM] : '\0';
+    eventus.datum.clavis.producta = _productam(characteres);
     impellere_eventum(fenestra, &eventus);
 
     si (   depressa && [characteres length] > ZEPHYRUM
@@ -845,7 +889,8 @@ fenestra_perscrutari_eventus (
                     eventus.datum.mus.botton =
                         ([eventus_ns type] == NSEventTypeLeftMouseDown)
                             ? MUS_SINISTER
-                        : ([eventus_ns type] == NSEventTypeRightMouseDown)
+                        : ([eventus_ns type]
+                            == NSEventTypeRightMouseDown)
                             ? MUS_DEXTER : MUS_MEDIUS;
                     impellere_eventum(fenestra, &eventus);
                     frange;
@@ -900,8 +945,10 @@ fenestra_perscrutari_eventus (
         {
             Eventus eventus_mutationis = {ZEPHYRUM};
             eventus_mutationis.genus = EVENTUS_MUTARE_MAGNITUDINEM;
-            eventus_mutationis.datum.mutare_magnitudinem.latitudo = (i32)magnitudo_currens.width;
-            eventus_mutationis.datum.mutare_magnitudinem.altitudo = (i32)magnitudo_currens.height;
+            eventus_mutationis.datum.mutare_magnitudinem.latitudo =
+                (i32)magnitudo_currens.width;
+            eventus_mutationis.datum.mutare_magnitudinem.altitudo =
+                (i32)magnitudo_currens.height;
             impellere_eventum(fenestra, &eventus_mutationis);
             magnitudo_ultima = magnitudo_currens;
         }
@@ -976,7 +1023,8 @@ fenestra_obtinere_magnitudinem (
 
     si (!fenestra) redde;
 
-    forma = [fenestra->fenestra_ns contentRectForFrameRect:[fenestra->fenestra_ns frame]];
+    forma =
+        [fenestra->fenestra_ns contentRectForFrameRect:[fenestra->fenestra_ns frame]];
     si (latitudo) *latitudo = (i32)forma.size.width;
     si (altitudo) *altitudo = (i32)forma.size.height;
 }
@@ -991,7 +1039,9 @@ fenestra_ponere_magnitudinem (
 
     @autoreleasepool {
         NSRect forma = [fenestra->fenestra_ns frame];
-        forma.size = [fenestra->fenestra_ns frameRectForContentRect:NSMakeRect(0, 0, latitudo, altitudo)].size;
+        forma.size =
+            [fenestra->fenestra_ns frameRectForContentRect:NSMakeRect(0,
+                0, latitudo, altitudo)].size;
         [fenestra->fenestra_ns setFrame:forma display:YES];
     }
 }
@@ -1447,6 +1497,7 @@ _modificantes_legere (
     redde modi;
 }
 
+
 /* ==================================================
  * Claves NOMINATAE
  * ==================================================
@@ -1477,7 +1528,7 @@ interior constans ClavisNominata CLAVES[] = {
     { "ArrowUp",   126, ""     },
     { "ArrowDown", 125, ""     },
     { "ArrowLeft", 123, ""     },
-    { "ArrowRight",124, ""     },
+    { "ArrowRight", 124, ""     },
     { "Home",      115, ""     },
     { "End",       119, ""     },
     { "PageUp",    116, ""     },
@@ -1735,7 +1786,8 @@ fenestra_creare_tabulam_pixelorum (
     si (!tabula) redde NIHIL;
 
     /* Obtinere dimensiones fenestrae */
-    rectangulum_contenti = [fenestra->fenestra_ns contentRectForFrameRect:[fenestra->fenestra_ns frame]];
+    rectangulum_contenti =
+        [fenestra->fenestra_ns contentRectForFrameRect:[fenestra->fenestra_ns frame]];
     tabula->fenestra_latitudo = (i32)rectangulum_contenti.size.width;
     tabula->fenestra_altitudo = (i32)rectangulum_contenti.size.height;
 
@@ -1745,7 +1797,8 @@ fenestra_creare_tabulam_pixelorum (
     tabula->latitudo = (i32)(tabula->fenestra_latitudo / tabula->scala);
 
     /* Allocare tabulam pixelorum */
-    tabula->pixela = piscina_allocare(piscina, tabula->latitudo * tabula->altitudo * magnitudo(i32));
+    tabula->pixela = piscina_allocare(piscina,
+        tabula->latitudo * tabula->altitudo * magnitudo(i32));
     si (!tabula->pixela)
     {
         /* Piscina possidet memoriam - non liberare */
@@ -1789,7 +1842,8 @@ fenestra_praesentare_pixela (
         [visus setNeedsDisplay:YES];
 
         /* Reponere imaginem in visu pro pingendo */
-        objc_setAssociatedObject(visus, "imagoPixelorum", (__bridge id)imago, OBJC_ASSOCIATION_RETAIN);
+        objc_setAssociatedObject(visus, "imagoPixelorum",
+            (__bridge id)imago, OBJC_ASSOCIATION_RETAIN);
 
         /* Purgare */
         CGImageRelease(imago);

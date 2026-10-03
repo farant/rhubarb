@@ -5261,8 +5261,11 @@ nomen structura {
         } mutare_magnitudinem;
         structura {
              clavis_t clavis;        /* LOGICA (nominata; ASCII ut olim) */
-            character typus;         /* DEPRECATUM (spec D2): textus in
-                                      * EVENTUS_TEXTUS */
+                  s32 producta;      /* character a clave PRODUCTUS sub
+                                      * modificantibus (Unicode, 0 =
+                                      * nullus): solus sub Alt/Ctrl/Cmd,
+                                      * ubi TEXTUS deest (S3a; olim
+                                      * 'typus', character ASCII) */
                   i32 modificantes;  /* MOD_* + latera */
                   s32 runa;          /* runa sine maiuscula (logica) */
          EventusCodex codex;         /* PHYSICUS; IGNOTUS si nescitur */
@@ -10651,7 +10654,7 @@ _clavem_typo (
              i32  modificantes,
     EventusCodex  codex,
     EventusActio  actio,
-       character  typus)
+             s32  producta)
 {
     Eventus e;
 
@@ -10660,7 +10663,7 @@ _clavem_typo (
         ? EVENTUS_CLAVIS_LIBERATUS : EVENTUS_CLAVIS_DEPRESSUS;
     e.tempus                     = tempus;
     e.datum.clavis.clavis        = clavis;
-    e.datum.clavis.typus         = typus;
+    e.datum.clavis.producta      = producta;
     e.datum.clavis.modificantes  = modificantes;
     e.datum.clavis.runa          = runa;
     e.datum.clavis.codex         = codex;
@@ -10668,7 +10671,7 @@ _clavem_typo (
     redde tessera_eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
 }
 
-/* typus ex clave (nominatae: regimen eius, e.g. '\r', '\t') */
+/* producta ex clave (nominatae: regimen eius, e.g. '\r', '\t') */
 interior i32
 _clavem_actio (
     EventusCauda* cauda,
@@ -10681,7 +10684,7 @@ _clavem_actio (
 {
     redde _clavem_typo(cauda, tempus, clavis, runa, modificantes, codex,
         actio, ((s32)clavis > ZEPHYRUM && (s32)clavis < CXXVIII)
-                   ? (character)clavis : '\0');
+                   ? (s32)clavis : ZEPHYRUM);
 }
 
 interior i32
@@ -10723,11 +10726,12 @@ _runae_clavem (
     {
         clavis = (clavis_t)r;
     }
-    /* typus = character VERUS (ut fenestra characters[0]): 'A' ab
-     * 'a' discernit etiam ubi textus deest (alterum) - B3a */
+    /* producta = character VERUS (ut fenestra characters): 'A' ab
+     * 'a' discernit etiam ubi textus deest (alterum) - B3a; Unicode
+     * plena (S3a: alterum + 'e' acutum) */
     redde _clavem_typo(cauda, tempus, clavis, runa, modificantes,
         EVENTUS_CODEX_IGNOTUS, EVENTUS_ACTIO_PRESSA,
-        (r > ZEPHYRUM && r < CXXVIII) ? (character)r : '\0');
+        (r > ZEPHYRUM) ? r : ZEPHYRUM);
 }
 
 /* Octetus regiminis (C0, DEL) -> clavis. HONESTA: '\n' = Ctrl+J,
@@ -11134,8 +11138,8 @@ _kitty_clavem (
             }
             frange;
     }
-    /* typus = character verus: clavis maiuscula (campus 0 pars 1) sub
-     * Shift, alioquin clavis ipsa (minuscula) - non clavis_t */
+    /* producta = character verus: clavis maiuscula (campus 0 pars 1)
+     * sub Shift, alioquin clavis ipsa (minuscula) - non clavis_t */
     {
         s32 verus = ((modi & MOD_SHIFT)
             && _campus(c, ZEPHYRUM, I, ZEPHYRUM))
@@ -11143,7 +11147,7 @@ _kitty_clavem (
 
         n = _clavem_typo(cauda, tempus, clavis, runa, modi, codex,
             actio,
-            (verus >= 0x20 && verus < 0x7F) ? (character)verus : '\0');
+            (verus >= 0x20 && verus != 0x7F) ? verus : ZEPHYRUM);
     }
     /* textus associatus: solum si campus adest (vexillum TEXTUS) */
     si (actio != EVENTUS_ACTIO_SOLUTA && c->numerus[II] > ZEPHYRUM)
@@ -12996,7 +13000,7 @@ _clavem_proicere (
 {
     i32 modi  = _modificatores(e->datum.clavis.modificantes);
     s32 c     = (s32)e->datum.clavis.clavis;
-    s32 typus;
+    s32 producta;
 
     commutatio (e->datum.clavis.clavis)
     {
@@ -13060,14 +13064,14 @@ _clavem_proicere (
     {
         redde FALSUM;   /* clavis sine nomine tesserae (F13, ...) */
     }
-    /* runa: character verus (typus) - sub imperio runa (minuscula,
-     * 'ctrl+a' ut olim) */
-    typus              = ((s32)e->datum.clavis.typus) & 0xFF;
+    /* runa: character verus (producta) - sub imperio runa
+     * (minuscula, 'ctrl+a' ut olim) */
+    producta           = e->datum.clavis.producta;
     ev->genus          = TESSERA_EVENTUM_CLAVIS;
     ev->modificatores  = modi;
     ev->runa = (   !(modi & TESSERA_MODIFICATOR_IMPERIUM)
-                && typus >= 0x20 && typus < 0x7F)
-        ? typus : e->datum.clavis.runa;
+                && producta >= 0x20 && producta != 0x7F)
+        ? producta : e->datum.clavis.runa;
     redde VERUM;
 }
 

@@ -62,7 +62,7 @@ _clavem_typo (
              i32  modificantes,
     EventusCodex  codex,
     EventusActio  actio,
-       character  typus)
+             s32  producta)
 {
     Eventus e;
 
@@ -71,7 +71,7 @@ _clavem_typo (
         ? EVENTUS_CLAVIS_LIBERATUS : EVENTUS_CLAVIS_DEPRESSUS;
     e.tempus                     = tempus;
     e.datum.clavis.clavis        = clavis;
-    e.datum.clavis.typus         = typus;
+    e.datum.clavis.producta      = producta;
     e.datum.clavis.modificantes  = modificantes;
     e.datum.clavis.runa          = runa;
     e.datum.clavis.codex         = codex;
@@ -79,7 +79,7 @@ _clavem_typo (
     redde eventus_caudae_impellere(cauda, &e) ? I : ZEPHYRUM;
 }
 
-/* typus ex clave (nominatae: regimen eius, e.g. '\r', '\t') */
+/* producta ex clave (nominatae: regimen eius, e.g. '\r', '\t') */
 interior i32
 _clavem_actio (
     EventusCauda* cauda,
@@ -92,7 +92,7 @@ _clavem_actio (
 {
     redde _clavem_typo(cauda, tempus, clavis, runa, modificantes, codex,
         actio, ((s32)clavis > ZEPHYRUM && (s32)clavis < CXXVIII)
-                   ? (character)clavis : '\0');
+                   ? (s32)clavis : ZEPHYRUM);
 }
 
 interior i32
@@ -134,11 +134,12 @@ _runae_clavem (
     {
         clavis = (clavis_t)r;
     }
-    /* typus = character VERUS (ut fenestra characters[0]): 'A' ab
-     * 'a' discernit etiam ubi textus deest (alterum) - B3a */
+    /* producta = character VERUS (ut fenestra characters): 'A' ab
+     * 'a' discernit etiam ubi textus deest (alterum) - B3a; Unicode
+     * plena (S3a: alterum + 'e' acutum) */
     redde _clavem_typo(cauda, tempus, clavis, runa, modificantes,
         EVENTUS_CODEX_IGNOTUS, EVENTUS_ACTIO_PRESSA,
-        (r > ZEPHYRUM && r < CXXVIII) ? (character)r : '\0');
+        (r > ZEPHYRUM) ? r : ZEPHYRUM);
 }
 
 /* Octetus regiminis (C0, DEL) -> clavis. HONESTA: '\n' = Ctrl+J,
@@ -545,8 +546,8 @@ _kitty_clavem (
             }
             frange;
     }
-    /* typus = character verus: clavis maiuscula (campus 0 pars 1) sub
-     * Shift, alioquin clavis ipsa (minuscula) - non clavis_t */
+    /* producta = character verus: clavis maiuscula (campus 0 pars 1)
+     * sub Shift, alioquin clavis ipsa (minuscula) - non clavis_t */
     {
         s32 verus = ((modi & MOD_SHIFT)
             && _campus(c, ZEPHYRUM, I, ZEPHYRUM))
@@ -554,7 +555,7 @@ _kitty_clavem (
 
         n = _clavem_typo(cauda, tempus, clavis, runa, modi, codex,
             actio,
-            (verus >= 0x20 && verus < 0x7F) ? (character)verus : '\0');
+            (verus >= 0x20 && verus != 0x7F) ? verus : ZEPHYRUM);
     }
     /* textus associatus: solum si campus adest (vexillum TEXTUS) */
     si (actio != EVENTUS_ACTIO_SOLUTA && c->numerus[II] > ZEPHYRUM)

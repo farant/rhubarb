@@ -204,8 +204,8 @@ main (void)
             alioquin si (eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
             {
                 /* ESC vel q = exire */
-                si (   eventus.datum.clavis.typus == '\x1B'
-                    || eventus.datum.clavis.typus == 'q')
+                si (   eventus.datum.clavis.producta == '\x1B'
+                    || eventus.datum.clavis.producta == 'q')
                 {
                     currens = FALSUM;
                 }

@@ -47,6 +47,12 @@ Leges chartae:
   `manus_ludus_clavem` modificantes ut fenestra eos fert
   (`MOD_SHIFT | MOD_SHIFT_SINISTER`), non iam 'I' pro Shift.
 
+- corpus: `Eventus.datum.clavis.typus` DELETUM -> `s32 producta`
+  (character a clave productus sub modificantibus, Unicode plena, 0
+  nullus; spec D2 gradus III). FRANGIT: plagula quae `typus` legit
+  `producta` legat (comparationes cum literis characterum eaedem);
+  plagulae STML veteres attributum `typus` in `producta` legunt.
+
 - corpus (eventus phasis B): fons terminalis - `series_terminalis`
   nova (lexemator DEC/Williams, API trahens), `interpres_terminalis`
   nova (lexemata -> Eventus: legacy, kitty, xterm `CSI 27;m;c~`),

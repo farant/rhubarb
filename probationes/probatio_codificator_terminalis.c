@@ -244,10 +244,11 @@ _eventa (
     memset(e, ZEPHYRUM, II * magnitudo(Eventus));
     e[0].genus = (v->actio == S) ? EVENTUS_CLAVIS_LIBERATUS
                                  : EVENTUS_CLAVIS_DEPRESSUS;
-    e[0].datum.clavis.clavis        = v->clavis;
-    e[0].datum.clavis.codex         = v->codex;
-    e[0].datum.clavis.runa          = v->runa;
-    e[0].datum.clavis.typus         = v->typus;
+    e[0].datum.clavis.clavis  = v->clavis;
+    e[0].datum.clavis.codex   = v->codex;
+    e[0].datum.clavis.runa    = v->runa;
+    e[0].datum.clavis.producta =
+        (s32)(insignatus character)v->typus;
     e[0].datum.clavis.modificantes  = v->modi;
     e[0].datum.clavis.actio         = v->actio;
     si (v->textus)

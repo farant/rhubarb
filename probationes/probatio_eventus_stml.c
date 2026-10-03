@@ -60,7 +60,7 @@ s32 principale (vacuum)
     e->datum.mus.y = XX;
     e->datum.mus.modificantes = II;
     e = addere(index, EVENTUS_CLAVIS_DEPRESSUS, M + L);
-    e->datum.clavis.typus = 'p';
+    e->datum.clavis.producta = 0xE9;   /* S3a: e acutum (non ASCII) */
     e = addere(index, EVENTUS_MUS_ROTULA, M + C);
     e->datum.rotula.delta_y = -1.5f;
     e = addere(index, EVENTUS_MUTARE_MAGNITUDINEM, M + CC);
@@ -81,7 +81,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (e->datum.mus.modificantes, II);
     e = (Eventus*)xar_obtinere(index2, I);
     CREDO_VERUM (e->genus == EVENTUS_CLAVIS_DEPRESSUS);
-    CREDO_VERUM (e->datum.clavis.typus == 'p');
+    CREDO_AEQUALIS_S32 (e->datum.clavis.producta, 0xE9);
     e = (Eventus*)xar_obtinere(index2, II);
     CREDO_VERUM (e->datum.rotula.delta_y < -1.4f);
     CREDO_VERUM (e->datum.rotula.delta_y > -1.6f);
@@ -309,7 +309,7 @@ s32 principale (vacuum)
             EVENTUS_PRESSIO_IGNOTA);
         e = (Eventus*)xar_obtinere(index, VII);
         CREDO_VERUM (e->datum.clavis.codex == EVENTUS_CODEX_IGNOTUS);
-        CREDO_VERUM (e->datum.clavis.typus == (character)XXVII);
+        CREDO_AEQUALIS_S32 (e->datum.clavis.producta, XXVII);
         /* rescriptura OCTETIM eadem: attributa nova solum si non
          * ordinaria. toy.eventus.stml forma domus est (stml formare -
          * Franus 2026-10-01: forma compacta manu scripta erat; formatum
@@ -355,6 +355,19 @@ s32 principale (vacuum)
             chorda_ex_literis("x=\"-12\"", piscina)));
         CREDO_VERUM (chorda_continet(rescriptum,
             chorda_ex_literis("y=\"-8\"", piscina)));
+    }
+
+    imprimere("\n");
+    imprimere("\n--- S3a: plagula vetus 'typus' -> producta ---\n");
+    {
+        Xar* vetus = eventus_legere_stml(
+            "<eventus_index><eventus genus=\"clavis_depressus\" "
+            "tempus=\"5\" clavis=\"27\" typus=\"27\" "
+            "modificantes=\"0\"/></eventus_index>", piscina, intern);
+
+        CREDO_NON_NIHIL (vetus);
+        CREDO_AEQUALIS_S32 (((Eventus*)xar_obtinere(vetus, ZEPHYRUM))
+            ->datum.clavis.producta, XXVII);
     }
 
     imprimere("\n");

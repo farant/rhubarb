@@ -339,9 +339,9 @@ _clavem_implere (
 {
     s32 c = (s32)(i8)typus;
 
-    e->datum.clavis.typus  = typus;
-    e->datum.clavis.codex  = EVENTUS_CODEX_IGNOTUS;
-    e->datum.clavis.runa   = ZEPHYRUM;
+    e->datum.clavis.producta  = (s32)(insignatus character)typus;
+    e->datum.clavis.codex     = EVENTUS_CODEX_IGNOTUS;
+    e->datum.clavis.runa      = ZEPHYRUM;
     si (c >= 'a' && c <= 'z')
     {
         e->datum.clavis.clavis  = (clavis_t)(c - 'a' + 'A');

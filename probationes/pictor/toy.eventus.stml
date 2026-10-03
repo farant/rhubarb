@@ -51,14 +51,14 @@
   <eventus
            genus="clavis_depressus"
           tempus="1400"
-          clavis="0"
-           typus="27"
+          clavis="27"
+        producta="27"
     modificantes="0"/>
   <eventus
            genus="clavis_liberatus"
           tempus="1420"
-          clavis="0"
-           typus="27"
+          clavis="27"
+        producta="27"
     modificantes="0"/>
   <eventus genus="nihil" tempus="2000"/>
 </eventus_index>

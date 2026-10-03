@@ -39,7 +39,8 @@ pagina_initiare_cum_dimensionibus (
     /* Creare coloratio pro syntax highlighting */
     pagina->coloratio = coloratio_creare(piscina, latitudo, altitudo);
     coloratio_ponere_regulas(pagina->coloratio,
-        COLORATIO_REGULA_COMMANDA | COLORATIO_REGULA_STML | COLORATIO_REGULA_SPUTNIK);
+        COLORATIO_REGULA_COMMANDA | COLORATIO_REGULA_STML
+            | COLORATIO_REGULA_SPUTNIK);
 
     /* Initiare vim status */
     pagina->vim = vim_initiare(&pagina->tabula);
@@ -62,7 +63,8 @@ pagina_vacare (
     /* Vacare cellulae - tabula iam allocata est */
     per (linea = ZEPHYRUM; linea < pagina->tabula.altitudo; linea++)
     {
-        per (columna = ZEPHYRUM; columna < pagina->tabula.latitudo; columna++)
+        per (columna = ZEPHYRUM; columna
+            < pagina->tabula.latitudo; columna++)
         {
             tabula_cellula(&pagina->tabula, linea, columna) = ' ';
         }
@@ -183,7 +185,8 @@ pagina_reddere (
     }
 
     /* Pingere characteres ex tabula */
-    per (linea = ZEPHYRUM; linea < altitudo && linea < pagina->tabula.altitudo; linea++)
+    per (linea = ZEPHYRUM; linea < altitudo
+        && linea < pagina->tabula.altitudo; linea++)
     {
         b32 in_selectio;
         i32 linea_pixel_y;
@@ -203,7 +206,8 @@ pagina_reddere (
             /* Pingere rectangulum background pro tota linea */
             per (py = ZEPHYRUM; py < character_altitudo; py++)
             {
-                per (px = ZEPHYRUM; px < latitudo * character_latitudo; px++)
+                per (px = ZEPHYRUM; px
+                    < latitudo * character_latitudo; px++)
                 {
                     tabula_pixelorum_ponere_pixelum(
                         tabula_pixelorum,
@@ -214,7 +218,8 @@ pagina_reddere (
             }
         }
 
-        per (columna = ZEPHYRUM; columna < latitudo && columna < pagina->tabula.latitudo; columna++)
+        per (columna = ZEPHYRUM; columna < latitudo
+            && columna < pagina->tabula.latitudo; columna++)
         {
             character c;
                    i8 color_index;
@@ -243,7 +248,8 @@ pagina_reddere (
             color_index = pagina->coloratio ?
                 coloratio_obtinere(pagina->coloratio, linea, columna) :
                 COLORATIO_DEFALTA;
-            text_color = thema_color_ex_indice_colorationis(color_index);
+            text_color =
+                thema_color_ex_indice_colorationis(color_index);
 
             /* Si in selectione, usare colorem contrastum (white) */
             si (in_selectio)
@@ -278,8 +284,10 @@ pagina_reddere (
         i32 cursor_pixel_y;
         i32 j;
 
-        cursor_pixel_x = (x + pagina->vim.cursor_columna) * character_latitudo;
-        cursor_pixel_y = (y + pagina->vim.cursor_linea) * character_altitudo;
+        cursor_pixel_x = (x
+            + pagina->vim.cursor_columna) * character_latitudo;
+        cursor_pixel_y = (y
+            + pagina->vim.cursor_linea) * character_altitudo;
 
         /* Pingere lineam verticalem pro cursore */
         per (j = ZEPHYRUM; j < character_altitudo; j++)
@@ -336,15 +344,18 @@ pagina_reddere_cum_margine (
     box_y1 = (y + altitudo) * character_altitudo - I - II;
 
     color_border = thema_color(COLOR_BORDER);
-    color_border_inner = focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
+    color_border_inner =
+        focused ? thema_color(COLOR_BORDER_ACTIVE) : color_border;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula_pixelorum);
 
     /* Computare positiones textus */
-    titulo = pagina->identificator ? *pagina->identificator : chorda_ex_literis("", piscina);
-    modo_str = vim_nomen_modi(pagina->vim.modo);
-    modo_textus = chorda_ex_literis(modo_str, piscina);
+    titulo =
+        pagina->identificator ? *pagina->identificator : chorda_ex_literis("",
+        piscina);
+    modo_str     = vim_nomen_modi(pagina->vim.modo);
+    modo_textus  = chorda_ex_literis(modo_str, piscina);
 
     {
         i32 titulo_pixel_width;
@@ -359,7 +370,8 @@ pagina_reddere_cum_margine (
         modo_pixel_width    = modo_textus.mensura * character_latitudo;
 
         /* Center titulo on top line */
-        titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width) / II;
+        titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width)
+            / II;
         titulo_y = box_y0 - (character_altitudo / II) + III;
 
         /* Center modo on bottom line */
@@ -369,39 +381,55 @@ pagina_reddere_cum_margine (
         /* Pingere Double Border */
 
         /* Top line - left segment */
-        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0, color_border);
-        delineare_lineam_horizontalem(ctx, box_x0, titulo_x - gap_padding, box_y0 + II, color_border_inner);
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x
+            - gap_padding, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, titulo_x
+            - gap_padding, box_y0 + II, color_border_inner);
 
         /* Top line - right segment */
-        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0, color_border);
-        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width + gap_padding, box_x1, box_y0 + II, color_border_inner);
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width
+            + gap_padding, box_x1, box_y0, color_border);
+        delineare_lineam_horizontalem(ctx, titulo_x + titulo_pixel_width
+            + gap_padding, box_x1, box_y0 + II, color_border_inner);
 
         /* Bottom line - left segment */
-        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding, box_y1, color_border);
-        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding, box_y1 - II, color_border_inner);
+        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding,
+            box_y1, color_border);
+        delineare_lineam_horizontalem(ctx, box_x0, modo_x - gap_padding,
+            box_y1 - II, color_border_inner);
 
         /* Bottom line - right segment */
-        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width + gap_padding, box_x1, box_y1, color_border);
-        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width + gap_padding, box_x1, box_y1 - II, color_border_inner);
+        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width
+            + gap_padding, box_x1, box_y1, color_border);
+        delineare_lineam_horizontalem(ctx, modo_x + modo_pixel_width
+            + gap_padding, box_x1, box_y1 - II, color_border_inner);
 
         /* Left line */
-        delineare_lineam_verticalem(ctx, box_x0, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1, color_border_inner);
+        delineare_lineam_verticalem(ctx, box_x0, box_y0, box_y1,
+            color_border);
+        delineare_lineam_verticalem(ctx, box_x0 + II, box_y0, box_y1,
+            color_border_inner);
 
         /* Right line */
-        delineare_lineam_verticalem(ctx, box_x1, box_y0, box_y1, color_border);
-        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1, color_border_inner);
+        delineare_lineam_verticalem(ctx, box_x1, box_y0, box_y1,
+            color_border);
+        delineare_lineam_verticalem(ctx, box_x1 - II, box_y0, box_y1,
+            color_border_inner);
 
         /* Pingere Textum */
-        tabula_pixelorum_pingere_chordam(tabula_pixelorum, titulo_x, titulo_y, titulo, color_ad_pixelum(color_border));
-        tabula_pixelorum_pingere_chordam(tabula_pixelorum, modo_x, modo_y, modo_textus,
-                                          (pagina->vim.modo == MODO_VIM_INSERERE) ?
+        tabula_pixelorum_pingere_chordam(tabula_pixelorum, titulo_x,
+            titulo_y, titulo, color_ad_pixelum(color_border));
+        tabula_pixelorum_pingere_chordam(tabula_pixelorum, modo_x,
+            modo_y, modo_textus,
+                                          (pagina->vim.modo
+                                              == MODO_VIM_INSERERE) ?
                                               color_ad_pixelum(thema_color(COLOR_STATUS_INSERT)) :
                                               color_ad_pixelum(thema_color(COLOR_STATUS_NORMAL)));
     }
 
     /* Reddere Textum Paginae (interior) */
-    pagina_reddere(tabula_pixelorum, pagina, x + I, y + I, textus_latitudo, textus_altitudo, scala);
+    pagina_reddere(tabula_pixelorum, pagina, x + I, y + I,
+        textus_latitudo, textus_altitudo, scala);
 }
 
 
@@ -493,7 +521,8 @@ pagina_tractare_eventum (
     /* Convertere clavem */
     clavis_vim = convertere_clavem(
         eventus->datum.clavis.clavis,
-        eventus->datum.clavis.typus);
+        (eventus->datum.clavis.producta < 0x80)
+            ? (character)eventus->datum.clavis.producta : '\0');
 
     si (clavis_vim == ZEPHYRUM)
     {
@@ -501,14 +530,16 @@ pagina_tractare_eventum (
     }
 
     /* TAB in modo normali - permittere focus switching */
-    si (clavis_vim == VIM_CLAVIS_TAB && pagina->vim.modo == MODO_VIM_NORMALIS)
+    si (   clavis_vim       == VIM_CLAVIS_TAB
+        && pagina->vim.modo == MODO_VIM_NORMALIS)
     {
         redde FALSUM;
     }
 
     /* Tractare clavem cum vim */
     tempus = tempus_nunc();
-    pagina->vim = vim_tractare_clavem_cum_tempore(pagina->vim, clavis_vim, tempus);
+    pagina->vim = vim_tractare_clavem_cum_tempore(pagina->vim,
+        clavis_vim, tempus);
 
     /* Si vim dicit claudere (ESC in normal mode), signalare */
     si (pagina->vim.debet_claudere)
@@ -550,7 +581,8 @@ pagina_inserere_textum (
         si (*p == '\n')
         {
             /* Inserere novam lineam */
-            pagina->vim = vim_tractare_clavem(pagina->vim, VIM_CLAVIS_ENTER);
+            pagina->vim = vim_tractare_clavem(pagina->vim,
+                VIM_CLAVIS_ENTER);
         }
         alioquin
         {
@@ -583,7 +615,8 @@ pagina_inserere_textum_crudus (
         si (*p == '\n')
         {
             /* Inserere novam lineam */
-            pagina->vim = vim_tractare_clavem(pagina->vim, VIM_CLAVIS_ENTER);
+            pagina->vim = vim_tractare_clavem(pagina->vim,
+                VIM_CLAVIS_ENTER);
         }
         alioquin
         {
@@ -683,7 +716,8 @@ pagina_obtinere_regio_ad_punctum (
         si (est_link)
         {
             /* Links permittunt '-' */
-            si (c == ' ' || c == '\t' || c == '\0' || !est_character_link(c))
+            si (   c == ' ' || c == '\t' || c == '\0'
+                || !est_character_link(c))
             {
                 finis_columna = col;
                 frange;
@@ -692,7 +726,8 @@ pagina_obtinere_regio_ad_punctum (
         alioquin
         {
             /* Commands permittunt '-' (e.g., $sputnik-syntax) */
-            si (c == ' ' || c == '\t' || c == '\0' || (!est_character_verbi(c) && c != '-'))
+            si (   c == ' ' || c == '\t' || c == '\0'
+                || (!est_character_verbi(c) && c != '-'))
             {
                 finis_columna = col;
                 frange;
@@ -715,7 +750,8 @@ pagina_obtinere_regio_ad_punctum (
             regio->datum[0] = '#';
             per (col = ZEPHYRUM; col < longitudo; col++)
             {
-                regio->datum[col + I] = tabula_cellula(&pagina->tabula, linea, (i32)((s32)initium_columna + I + col));
+                regio->datum[col + I] = tabula_cellula(&pagina->tabula,
+                    linea, (i32)((s32)initium_columna + I + col));
             }
             regio->datum[longitudo + I] = '\0';
         }
@@ -723,7 +759,8 @@ pagina_obtinere_regio_ad_punctum (
         {
             per (col = ZEPHYRUM; col < longitudo; col++)
             {
-                regio->datum[col] = tabula_cellula(&pagina->tabula, linea, (i32)((s32)initium_columna + I + col));
+                regio->datum[col] = tabula_cellula(&pagina->tabula,
+                    linea, (i32)((s32)initium_columna + I + col));
             }
             regio->datum[longitudo] = '\0';
         }

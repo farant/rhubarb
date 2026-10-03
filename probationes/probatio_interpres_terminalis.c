@@ -287,9 +287,9 @@ _decodere (
     redde _cauda_reddere(b);
 }
 
-/* typus eventus primi (clavis) ex octetis */
-interior character
-_typus (
+/* producta eventus primi (clavis) ex octetis; -1 si nullus (S3a) */
+interior s32
+_productam (
                   Banca* b,
      constans character* fons)
 {
@@ -297,7 +297,7 @@ _typus (
       constans i8* finis  = ptr + strlen(fons);
      SeriesLexema  l;
           Eventus  e;
-        character  t;
+              s32  t;
 
     dum (series_lexema_proximum(b->lector, &ptr, finis, &l)
         != SERIES_NIHIL)
@@ -306,14 +306,14 @@ _typus (
             b->cauda);
     }
     /* eventus clavis PRIMUS (kitty prima FACULTATES praemittit) */
-    t = '\0';
+    t = -I;
     dum (eventus_caudae_extrahere(b->cauda, &e))
     {
-        si (   t == '\0'
+        si (   t == -I
             && (e.genus == EVENTUS_CLAVIS_DEPRESSUS
                 || e.genus == EVENTUS_CLAVIS_LIBERATUS))
         {
-            t = e.datum.clavis.typus;
+            t = e.datum.clavis.producta;
         }
     }
     eventus_cauda_lectio_incipit(b->cauda);
@@ -372,14 +372,16 @@ s32 principale (vacuum)
 
     /* B3a: typus = character VERUS (ut fenestra: characters[0]) -
      * proiectio alt+A ab alt+a discernit */
-    CREDO_VERUM (_typus(&b, "\x1b" "A") == 'A');
-    CREDO_VERUM (_typus(&b, "\x1b" "a") == 'a');
-    CREDO_VERUM (_typus(&b, "A") == 'A');
-    CREDO_VERUM (_typus(&b, "?") == '?');
+    CREDO_VERUM (_productam(&b, "\x1b" "A") == 'A');
+    CREDO_VERUM (_productam(&b, "\x1b" "a") == 'a');
+    CREDO_VERUM (_productam(&b, "A") == 'A');
+    CREDO_VERUM (_productam(&b, "?") == '?');
     /* kitty: typus = clavis ipsa (minuscula), sub Shift maiuscula
      * (B3a) */
-    CREDO_VERUM (_typus(&b, "\x1b[97u") == 'a');
-    CREDO_VERUM (_typus(&b, "\x1b[97:65;2u") == 'A');
+    CREDO_VERUM (_productam(&b, "\x1b[97u") == 'a');
+    CREDO_VERUM (_productam(&b, "\x1b[97:65;2u") == 'A');
+    /* S3a: alterum + e acutum: producta plena (typus ASCII perdebat) */
+    CREDO_VERUM (_productam(&b, "\x1b\303\251") == 0xE9);
 
     imprimere("\n--- II. regimina honesta ---\n");
     CREDO_VERUM (_videre(&b, "\r", FALSUM, "Kret"));
