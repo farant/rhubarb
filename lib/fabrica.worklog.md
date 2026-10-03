@@ -1216,3 +1216,38 @@ change D's digest (nothing on the pilot path depends on entry type).
 keeps GENERATIONES_SERVANDAE (V, A3). Fumus XXVI (store built by hand
 with shasum digests: 6 lists, the oldest alone holds k1) -> 3 deleted;
 -verificare deletes a corrupted kept blob. Plant (VI kept) red.
+
+## 2026-10-02 - plan 2 T4 part II: familia (per-file actions from a directory)
+
+Design (Fran, two rounds): a `<familia titulus via praefixum? suffixum?>`
+holds ONE STML template (`<#@id basis="@basis" fons="@fons"> actio </#>`,
+house macro syntax). fabrica lists `via` through the seam
+(sutura->enumerare), synthesizes one call per matching file
+(`<<#@id basis="x" fons="via/x.c">>`, stml_transclusionem_creare - public
+API, no hand-set fragment flags) and runs stml_expandere; the expanded
+actio nodes join the ordinary actio loop unchanged. fabrica's own
+bookkeeping on each instance: title `familia:basis` (a title in the
+template is refused - fabrica owns it), the file added as ingressus
+fasciculus. basis = file name minus suffix (prefix kept: probatio_x).
+First proposal was four fixed binding rules inside fabrica; Fran asked
+about STML macros, and reusing the house's one sanctioned template
+mechanism beat inventing a second private one (file/basis can go
+anywhere in the body; refs work in attributes and raw content).
+Only the parameters the template DECLARES are passed (a call with an
+undeclared argument is ARGUMENTUM_SUPERFLUUM); a body referencing
+anything else fails loudly in the expansion. Names with '"' or '&' are
+refused (they would break the synthetic call).
+API: fabrica_declarationes_legere stays pure and REFUSES familia;
+fabrica_declarationes_legere_cum_sutura takes the seam. Tool: the
+declaration collector builds a light sutura (legere, enumerare).
+Canon: `familia` element added to aedificatio.canon. Canon treats the
+template body as quoted material (opaque) - a templated actio without
+titulus passes canon; fabrica's reader judges the expanded instances.
+Tests (in-memory disk): 3 of 5 names match (adiumentum.c, .h excluded)
+-> 3 instances (titles, last word = fons, exitus build/t/basis, fons as
+input, lectiones flag carried); new file -> one more; pure reader
+refuses; directory absent; title in template; undeclared loculus.
+Plants: prefix filter ignored -> red; fons passed undeclared -> red
+(the title case dies on expansion instead). Fumus XXVII on a real disk
+through bin/fabrica (2 instances RECENS, alia.c not, new file ->
+STALUM); plant (tool passes NIHIL sutura) -> rc 2, red.

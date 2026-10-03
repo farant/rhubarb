@@ -2521,6 +2521,135 @@ s32 principale (vacuum)
             piscina, intern, &causa));
         CREDO_VERUM(_continet(causa, "exitus esse nequit", piscina));
 
+        /* FAMILIA (plan 2 T4): actio una per plagulam congruentem
+         * directorii (enumerare suturae); templum STML (#@ ... &@x;)
+         * per stml_expandere impletur - basis et fons argumenta
+         * fabricae; titulus 'familia:basis', fons ingressus. */
+        {
+              constans character* familiae_nomina[V];
+              constans character* familia_textus;
+                    FabricaActio* instantia;
+                FabricaIngressus* ultimus;
+
+            familia_textus =
+                "<aedificatio>\n"
+                "  <actio titulus=\"a\" genus=\"generator\">\n"
+                "    <ingressus genus=\"fasciculus\" via=\"x\"/>\n"
+                "    <exitus via=\"y\" provenientia=\"regeneratio\"/>\n"
+                "  </actio>\n"
+                "  <familia titulus=\"pt\" via=\"t\" praefixum=\"probatio_\""
+                " suffixum=\".c\">\n"
+                "    <#@instantia basis=\"@basis\" fons=\"@fons\">\n"
+                "      <actio genus=\"generator\" lectiones=\"verum\">\n"
+                "        <mandatum>\n"
+                "          <verbum! (>./struere.sh\n"
+                "          <verbum! (>&@fons;\n"
+                "        </mandatum>\n"
+                "        <exitus via=\"build/t/&@basis;\""
+                " provenientia=\"regeneratio\"/>\n"
+                "      </actio>\n"
+                "    </#>\n"
+                "  </familia>\n"
+                "</aedificatio>\n";
+            _discum_parare(&discus, &sutura, piscina);
+            familiae_nomina[0] = "adiumentum.c";
+            familiae_nomina[1] = "probatio_a.c";
+            familiae_nomina[2] = "probatio_b.c";
+            familiae_nomina[3] = "probatio_c.c";
+            familiae_nomina[4] = "probatio_d.h";
+            _directorium_ponere(&discus, "t", familiae_nomina, V);
+            contentum = chorda_ex_literis(familia_textus, piscina);
+            actiones =
+                fabrica_declarationes_legere_cum_sutura(contentum,
+                "d.stml", &sutura, piscina, intern, &causa);
+            CREDO_NON_NIHIL(actiones);
+            si (actiones != NIHIL)
+            {
+                /* III congruentes (adiumentum et .h non) + actio a */
+                CREDO_AEQUALIS_I32(xar_numerus(actiones), IV);
+                instantia = (FabricaActio*)xar_obtinere(actiones, I);
+                CREDO_VERUM(chorda_aequalis_literis(instantia->titulus,
+                    "pt:probatio_a"));
+                CREDO_VERUM(instantia->lectiones);
+                CREDO_AEQUALIS_I32(xar_numerus(instantia->mandatum),
+                    II);
+                CREDO_VERUM(chorda_aequalis_literis(*(chorda*)
+                    xar_obtinere(instantia->mandatum, I),
+                    "t/probatio_a.c"));
+                CREDO_VERUM(chorda_aequalis_literis(((FabricaExitus*)
+                    xar_obtinere(instantia->exitus, ZEPHYRUM))->via,
+                    "build/t/probatio_a"));
+                ultimus = (FabricaIngressus*)xar_obtinere(
+                    instantia->ingressus,
+                    xar_numerus(instantia->ingressus) - I);
+                CREDO_VERUM(chorda_aequalis_literis(ultimus->via,
+                    "t/probatio_a.c"));
+                CREDO_VERUM(ultimus->genus == _genus("fasciculus",
+                    piscina));
+                instantia = (FabricaActio*)xar_obtinere(actiones, III);
+                CREDO_VERUM(chorda_aequalis_literis(instantia->titulus,
+                    "pt:probatio_c"));
+            }
+
+            /* plagula nova -> actio nova */
+            _discum_parare(&discus, &sutura, piscina);
+            familiae_nomina[4] = "probatio_e.c";
+            _directorium_ponere(&discus, "t", familiae_nomina, V);
+            actiones =
+                fabrica_declarationes_legere_cum_sutura(contentum,
+                "d.stml", &sutura, piscina, intern, &causa);
+            CREDO_NON_NIHIL(actiones);
+            si (actiones != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(actiones), V);
+            }
+
+            /* sine sutura (lector purus): familia recusatur */
+            CREDO_NIHIL(fabrica_declarationes_legere(contentum,
+                "d.stml",
+                piscina, intern, &causa));
+            CREDO_VERUM(_continet(causa, "familia", piscina));
+
+            /* directorium absens: recusatur, nominatum */
+            _discum_parare(&discus, &sutura, piscina);
+            CREDO_NIHIL(fabrica_declarationes_legere_cum_sutura(contentum,
+                "d.stml", &sutura, piscina, intern, &causa));
+            CREDO_VERUM(_continet(causa, "directorium", piscina));
+
+            /* titulus in templo: recusatur (fabrica titulum ponit) */
+            _directorium_ponere(&discus, "t", familiae_nomina, V);
+            contentum = chorda_ex_literis(
+                "<aedificatio>\n"
+                "  <familia titulus=\"pt\" via=\"t\" suffixum=\".c\">\n"
+                "    <#@instantia basis=\"@basis\">\n"
+                "      <actio titulus=\"x\" genus=\"generator\">\n"
+                "        <exitus via=\"b/&@basis;\""
+                " provenientia=\"regeneratio\"/>\n"
+                "      </actio>\n"
+                "    </#>\n"
+                "  </familia>\n"
+                "</aedificatio>\n", piscina);
+            CREDO_NIHIL(fabrica_declarationes_legere_cum_sutura(contentum,
+                "d.stml", &sutura, piscina, intern, &causa));
+            CREDO_VERUM(_continet(causa, "titulus", piscina));
+
+            /* loculus non declaratus in corpore: vitium expansionis */
+            contentum = chorda_ex_literis(
+                "<aedificatio>\n"
+                "  <familia titulus=\"pt\" via=\"t\" suffixum=\".c\">\n"
+                "    <#@instantia basis=\"@basis\">\n"
+                "      <actio genus=\"generator\">\n"
+                "        <exitus via=\"b/&@nescio;\""
+                " provenientia=\"regeneratio\"/>\n"
+                "      </actio>\n"
+                "    </#>\n"
+                "  </familia>\n"
+                "</aedificatio>\n", piscina);
+            CREDO_NIHIL(fabrica_declarationes_legere_cum_sutura(contentum,
+                "d.stml", &sutura, piscina, intern, &causa));
+            CREDO_VERUM(_continet(causa, "expansio", piscina));
+        }
+
         /* enumerare: plagulae -> locus PLAGULAE cum suffixis, et
          * PLAGULA pro quaque plagula congruente */
         _discum_parare(&discus, &sutura, piscina);

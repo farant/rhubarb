@@ -7,6 +7,7 @@
 #include "chorda_aedificator.h"
 #include "internamentum.h"
 #include "stml.h"
+#include "stml_macros.h"
 #include "numerus_romanus.h"
 #include <stdio.h>
 #include <string.h>
@@ -2045,6 +2046,279 @@ _mandatum_legere (
     redde verba;
 }
 
+/* attributi valor ut litterae C (NIHIL si absens) */
+interior constans character*
+_attributum_cstr (
+             StmlNodus* nodus,
+    constans character* titulus,
+               Piscina* piscina)
+{
+    chorda* valor;
+
+    valor = stml_attributum_capere(nodus, titulus);
+    redde (valor != NIHIL) ? chorda_ut_cstr(*valor, piscina) : NIHIL;
+}
+
+/* declaratne templum loculum 'titulus' (attributum titulus="@titulus")? */
+interior b32
+_loculum_declarat (
+              StmlNodus* templum,
+     constans character* titulus,
+                Piscina* piscina)
+{
+    constans character* valor;
+
+    valor = _attributum_cstr(templum, titulus, piscina);
+    redde valor != NIHIL && valor[0] == '@'
+        && strcmp(valor + I, titulus) == ZEPHYRUM;
+}
+
+/* FAMILIA explicare: nodi actionum instantiarum in 'nodi' appenduntur
+ * (vide fabrica_declarationes_legere_cum_sutura) */
+interior b32
+_familiam_explicare (
+                  StmlNodus* familia,
+         constans character* via,
+     constans FabricaSutura* sutura,
+                    Piscina* piscina,
+        InternamentumChorda* intern,
+                        Xar* nodi,
+                     chorda* causa_out)
+{
+        constans character* titulus;
+        constans character* directorium;
+        constans character* praefixum;
+        constans character* suffixum;
+                    chorda  sedes;
+                    chorda  nihil;
+                 StmlNodus* templum;
+                 StmlNodus* radix;
+                       Xar* nomina;
+                       Xar* fontes;
+      StmlExpansioResultus  expansio;
+                       b32  basis_declarata;
+                       b32  fons_declaratus;
+                       i32  i;
+                       i32  instantiae;
+
+    nihil        = chorda_ex_literis("", piscina);
+    sedes        = _sedes(piscina, via, familia);
+    titulus      = _attributum_cstr(familia, "titulus", piscina);
+    directorium  = _attributum_cstr(familia, "via", piscina);
+    praefixum    = _attributum_cstr(familia, "praefixum", piscina);
+    suffixum     = _attributum_cstr(familia, "suffixum", piscina);
+    praefixum    = (praefixum != NIHIL) ? praefixum : "";
+    suffixum     = (suffixum != NIHIL) ? suffixum : "";
+    si (titulus == NIHIL || directorium == NIHIL)
+    {
+        _recusare(piscina, causa_out, sedes,
+            "familia sine titulo aut via", nihil);
+        redde FALSUM;
+    }
+    si (sutura == NIHIL || sutura->enumerare == NIHIL)
+    {
+        _recusare(piscina, causa_out, sedes,
+            "familia sine enumeratione (lector purus) - "
+            "fabrica_declarationes_legere_cum_sutura",
+            chorda_ex_literis(titulus, piscina));
+        redde FALSUM;
+    }
+    /* templum unum: elementum fragmentum cuius id '@' incipit */
+    templum = NIHIL;
+    per (i = ZEPHYRUM; familia->liberi != NIHIL
+         && i < xar_numerus(familia->liberi); i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = *(StmlNodus**)xar_obtinere(familia->liberi, i);
+        si (liberum->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (   templum != NIHIL || !liberum->fragmentum
+            || liberum->fragmentum_id == NIHIL
+            || liberum->fragmentum_id->mensura < II
+            || liberum->fragmentum_id->datum[ZEPHYRUM] != (i8)'@')
+        {
+            _recusare(piscina, causa_out, sedes,
+                "familia templum UNUM poscit (<#@id ...> corpus </#>)",
+                chorda_ex_literis(titulus, piscina));
+            redde FALSUM;
+        }
+        templum = liberum;
+    }
+    si (templum == NIHIL)
+    {
+        _recusare(piscina, causa_out, sedes,
+            "familia sine templo (<#@id ...> corpus </#>)",
+            chorda_ex_literis(titulus, piscina));
+        redde FALSUM;
+    }
+    si (!sutura->enumerare(sutura->datum, directorium, piscina,
+        &nomina))
+    {
+        _recusare(piscina, causa_out, sedes,
+            "familia: directorium absens",
+            chorda_ex_literis(directorium, piscina));
+        redde FALSUM;
+    }
+    basis_declarata = _loculum_declarat(templum, "basis", piscina);
+    fons_declaratus = _loculum_declarat(templum, "fons", piscina);
+    /* arbor synthetica: templum (copia) deinde vocationes */
+    radix   = stml_elementum_creare(piscina, intern, "aedificatio");
+    fontes  = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (   radix == NIHIL || fontes == NIHIL
+        || !stml_liberum_addere(radix,
+            stml_duplicare(templum, piscina, intern)))
+    {
+        redde FALSUM;
+    }
+    instantiae = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+                          chorda  nomen_plagulae;
+                          chorda  basis;
+                          chorda  fons;
+               ChordaAedificator* vocatio;
+                  memoriae_index  lp;
+                  memoriae_index  ls;
+
+        nomen_plagulae  = *(chorda*)xar_obtinere(nomina, i);
+        lp              = strlen(praefixum);
+        ls              = strlen(suffixum);
+        si (   (memoriae_index)nomen_plagulae.mensura      <= lp + ls
+            || memcmp(nomen_plagulae.datum, praefixum, lp) != ZEPHYRUM
+            || memcmp(nomen_plagulae.datum + nomen_plagulae.mensura
+                - ls,
+                suffixum, ls) != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (   chorda_continet(nomen_plagulae,
+                chorda_ex_literis("\"", piscina))
+            || chorda_continet(nomen_plagulae,
+                chorda_ex_literis("&", piscina)))
+        {
+            _recusare(piscina, causa_out, sedes,
+                "familia: nomen plagulae cum '\"' aut '&'",
+                nomen_plagulae);
+            redde FALSUM;
+        }
+        basis = chorda_sectio(nomen_plagulae, ZEPHYRUM,
+            nomen_plagulae.mensura - (i32)ls);
+        fons  = _iungere(piscina, directorium, chorda_ex_literis("/",
+            piscina), "");
+        fons  = _iungere(piscina, chorda_ut_cstr(fons, piscina),
+            nomen_plagulae, "");
+        vocatio = chorda_aedificator_creare(piscina, CCLVI);
+        (vacuum)chorda_aedificator_appendere_character(vocatio, '#');
+        (vacuum)chorda_aedificator_appendere_chorda(vocatio,
+            *templum->fragmentum_id);
+        si (basis_declarata)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(vocatio,
+                " basis=\"");
+            (vacuum)chorda_aedificator_appendere_chorda(vocatio, basis);
+            (vacuum)chorda_aedificator_appendere_character(vocatio,
+                '"');
+        }
+        si (fons_declaratus)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(vocatio,
+                " fons=\"");
+            (vacuum)chorda_aedificator_appendere_chorda(vocatio, fons);
+            (vacuum)chorda_aedificator_appendere_character(vocatio,
+                '"');
+        }
+        si (!stml_liberum_addere(radix, stml_transclusionem_creare(
+                piscina, intern, chorda_aedificator_finire(vocatio))))
+        {
+            redde FALSUM;
+        }
+        *(chorda*)xar_addere(fontes) = basis;
+        *(chorda*)xar_addere(fontes) = fons;
+        instantiae++;
+    }
+    expansio = stml_expandere(radix, piscina, intern);
+    si (!expansio.successus || expansio.radix_expansa == NIHIL)
+    {
+        _recusare(piscina, causa_out, sedes,
+            "familia: expansio templi fracta (vitium, loculus)",
+            _iungere(piscina, "", expansio.loculus.mensura > ZEPHYRUM
+                ? expansio.loculus : expansio.fragmentum, ""));
+        redde FALSUM;
+    }
+    /* instantiae: actio una per vocationem, ordine */
+    {
+        i32 k;
+
+        k = ZEPHYRUM;
+        per (i = ZEPHYRUM; expansio.radix_expansa->liberi != NIHIL
+             && i < xar_numerus(expansio.radix_expansa->liberi); i++)
+        {
+            StmlNodus* actio;
+            StmlNodus* ingressus;
+               chorda  basis;
+               chorda  fons;
+
+            actio = *(StmlNodus**)xar_obtinere(
+                expansio.radix_expansa->liberi, i);
+            si (actio->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            si (   k >= instantiae || actio->titulus == NIHIL
+                || !chorda_aequalis_literis(*actio->titulus, "actio"))
+            {
+                _recusare(piscina, causa_out, sedes,
+                    "familia: corpus templi actionem UNAM poscit",
+                    chorda_ex_literis(titulus, piscina));
+                redde FALSUM;
+            }
+            si (stml_attributum_capere(actio, "titulus") != NIHIL)
+            {
+                _recusare(piscina, causa_out, sedes,
+                    "familia: titulus in templo (fabrica "
+                    "'familia:basis' ponit)",
+                    chorda_ex_literis(titulus, piscina));
+                redde FALSUM;
+            }
+            basis  = *(chorda*)xar_obtinere(fontes, k * II);
+            fons   = *(chorda*)xar_obtinere(fontes, k * II + I);
+            (vacuum)stml_attributum_addere_chorda(actio, piscina,
+                intern,
+                "titulus", _iungere(piscina, titulus,
+                    chorda_ex_literis(":", piscina),
+                    chorda_ut_cstr(basis, piscina)));
+            ingressus = stml_elementum_creare(piscina, intern,
+                "ingressus");
+            si (ingressus == NIHIL)
+            {
+                redde FALSUM;
+            }
+            (vacuum)stml_attributum_addere(ingressus, piscina, intern,
+                "genus", "fasciculus");
+            (vacuum)stml_attributum_addere_chorda(ingressus, piscina,
+                intern, "via", fons);
+            (vacuum)stml_liberum_addere(actio, ingressus);
+            si (actio->linea == ZEPHYRUM)
+            {
+                actio->linea = familia->linea;
+            }
+            *(StmlNodus**)xar_addere(nodi) = actio;
+            k++;
+        }
+        si (k != instantiae)
+        {
+            _recusare(piscina, causa_out, sedes,
+                "familia: corpus templi actionem UNAM poscit",
+                chorda_ex_literis(titulus, piscina));
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 Xar*
 fabrica_declarationes_legere (
                  chorda  contentum,
@@ -2052,6 +2326,19 @@ fabrica_declarationes_legere (
                 Piscina* piscina,
     InternamentumChorda* intern,
                  chorda* causa_out)
+{
+    redde fabrica_declarationes_legere_cum_sutura(contentum, via, NIHIL,
+        piscina, intern, causa_out);
+}
+
+Xar*
+fabrica_declarationes_legere_cum_sutura (
+                    chorda  contentum,
+        constans character* via,
+    constans FabricaSutura* sutura,
+                   Piscina* piscina,
+       InternamentumChorda* intern,
+                    chorda* causa_out)
 {
     StmlResultus  lectum;
              Xar* actiones;
@@ -2073,6 +2360,29 @@ fabrica_declarationes_legere (
     actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
     nodi = stml_invenire_omnes_liberos(lectum.elementum_radix, "actio",
         piscina);
+    /* FAMILIAE (plan 2 T4): instantiae post actiones scriptas */
+    {
+        Xar* familiae;
+        i32  f;
+
+        familiae = stml_invenire_omnes_liberos(lectum.elementum_radix,
+            "familia", piscina);
+        si (   familiae != NIHIL && xar_numerus(familiae) > ZEPHYRUM
+            && nodi     == NIHIL)
+        {
+            nodi = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+        }
+        per (f = ZEPHYRUM; familiae != NIHIL
+             && f < xar_numerus(familiae); f++)
+        {
+            si (!_familiam_explicare(
+                    *(StmlNodus**)xar_obtinere(familiae, f), via,
+                    sutura, piscina, intern, nodi, causa_out))
+            {
+                redde NIHIL;
+            }
+        }
+    }
     per (i = ZEPHYRUM; nodi != NIHIL && i < xar_numerus(nodi); i++)
     {
            StmlNodus* nodus;

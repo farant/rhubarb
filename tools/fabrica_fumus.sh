@@ -46,6 +46,9 @@
 #        VI generationes - prima sola clavem k1 tenet: index primus,
 #        actio k1, blobus eius deleti (III), cetera servata; -verificare
 #        blobum servatum corruptum delet (plan 2 T3)
+#   XXVII familia in disco vero: II plagulae congruentes -> II actiones
+#        (titulus familia:basis), alia non; plagula nova -> actio nova
+#        STALUM (exitus absens) (plan 2 T4)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -277,6 +280,19 @@ if [ "$rc1" -eq 0 ] && grep -q 'purgare: 3 deleta' "$T/o" \
    && [ ! -e "$O/generationes/20260101T000000-1-0001.lst" ] && [ -e "$O/actiones/${k2:0:2}/${k2:2}" ] \
    && [ "$rc2" -eq 0 ] && grep -q 'purgare: 1 deleta' "$T/o2" && [ ! -e "$O/blobi/${b2:0:2}/${b2:2}" ]; then echo "  XXVI purgare: generationes V servatae OK"; else echo "  XXVI FRACTUM (rc=$rc1 $rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
 
+# XXVII (plan 2 T4): familia - templum STML, instantia per plagulam
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+mkdir -p "$T/r/t" "$T/r/o"
+printf 'a\n' > "$T/r/t/probatio_a.c"; printf 'b\n' > "$T/r/t/probatio_b.c"; : > "$T/r/t/alia.c"
+printf 'a\n' > "$T/r/o/probatio_a"; printf 'b\n' > "$T/r/o/probatio_b"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; mkdir -p "$D/o"; cp "$1" "$D/o/$(basename "$1" .c)"\n' > "$T/r/gen.sh"
+printf '<aedificatio>\n  <familia titulus="pf" via="t" praefixum="probatio_" suffixum=".c">\n    <#@instantia basis="@basis" fons="@fons">\n      <actio genus="generator">\n        <mandatum>\n          <verbum! (>sh\n          <verbum! (>gen.sh\n          <verbum! (>&@fons;\n        </mandatum>\n        <ingressus genus="fasciculus" via="gen.sh"/>\n        <exitus via="o/&@basis;" provenientia="regeneratio"/>\n      </actio>\n    </#>\n  </familia>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/o" 2>&1; rc1=$?
+printf 'c\n' > "$T/r/t/probatio_c.c"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/o2" 2>&1; rc2=$?
+if [ "$rc1" -eq 0 ] && grep -q '^RECENS o/probatio_a ' "$T/o" && grep -q '^RECENS o/probatio_b ' "$T/o" && ! grep -q 'alia' "$T/o" \
+   && [ "$rc2" -eq 1 ] && grep -q '^STALUM o/probatio_c ' "$T/o2"; then echo "  XXVII familia: instantiae per plagulam OK"; else echo "  XXVII FRACTUM (rc=$rc1 $rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXVI/XXVI)"
+echo "fumus fabricae: sanum (XXVII/XXVII)"
 exit 0

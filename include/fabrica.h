@@ -448,6 +448,26 @@ fabrica_declarationes_legere (
     InternamentumChorda* intern,
                  chorda* causa_out);
 
+/* Idem cum FAMILIIS (plan 2 T4): elementum <familia titulus via
+ * praefixum? suffixum?> templum STML unum fert (<#@id basis="@basis"
+ * fons="@fons"> corpus = actio una </#>); per plagulam directorii
+ * 'via' (sutura->enumerare) congruentem vocatio synthetica
+ * <<#@id basis="..." fons="via/plagula">> per stml_expandere impletur
+ * (argumenta sola quae templum declarat; nulla lingua expressionum).
+ * Instantia: titulus 'familia:basis' (templum titulum ferre nequit),
+ * fons ingressus fasciculus. basis = nomen sine suffixo. Recusat:
+ * familia sine titulo/via, templum non unum, directorium absens,
+ * vitium expansionis, corpus non actio una. Sutura NIHIL = lector
+ * purus: familia recusatur (fabrica_declarationes_legere). */
+Xar*
+fabrica_declarationes_legere_cum_sutura (
+                    chorda  contentum,
+        constans character* via,
+    constans FabricaSutura* sutura,
+                   Piscina* piscina,
+       InternamentumChorda* intern,
+                    chorda* causa_out);
+
 /* Radix fabrica.stml (dialectus fabrica v2): viae subsystematum
  * (Xar de chorda), ordine documenti. NIHIL + causa si radix non
  * fabrica est aut subsystema sine via. */

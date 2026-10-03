@@ -1061,10 +1061,15 @@ _declarationes_colligere (
                     Xar* omnes;
                     Xar* composita;
                     i32  i;
+          FabricaSutura  enumerans;
 
-    intern  = internamentum_creare(piscina);
-    causa   = chorda_ex_literis("", piscina);
-    radix   = filum_legere_totum("fabrica.stml", piscina);
+    /* familiae (plan 2 T4) directoria per suturam enumerant */
+    fabrica_suturam_parare(&enumerans);
+    enumerans.legere     = _legere;
+    enumerans.enumerare  = _enumerare;
+    intern               = internamentum_creare(piscina);
+    causa                = chorda_ex_literis("", piscina);
+    radix                = filum_legere_totum("fabrica.stml", piscina);
     subsystemata = fabrica_subsystemata_legere(radix, piscina, intern,
         &causa);
     si (subsystemata == NIHIL)
@@ -1095,8 +1100,9 @@ _declarationes_colligere (
         }
         contentum = filum_legere_totum(chorda_ut_cstr(via, piscina),
             piscina);
-        actiones = fabrica_declarationes_legere(contentum,
-            chorda_ut_cstr(via, piscina), piscina, intern, &causa);
+        actiones = fabrica_declarationes_legere_cum_sutura(contentum,
+            chorda_ut_cstr(via, piscina), &enumerans, piscina, intern,
+            &causa);
         sua = (actiones != NIHIL)
             ? fabrica_composita_legere(contentum,
                   chorda_ut_cstr(via, piscina), piscina, intern, &causa)
