@@ -71,23 +71,27 @@ cursor_clausuras_derivare "$TOML_DIR/probationes" || exit 1
 cursor_fontes_compilare || exit 1
 shopt -s nullglob
 
-# corpus domus: omnis .toml tracta extra fixa clientis (viae relativae
-# radici) pro porta corporis (probatio_toml_corpus legit
-# build/toml_corpus.lst; lista absens = CREDO_CULPA)
-mkdir -p "$RADIX_DIR/build"
-(cd "$RADIX_DIR" && git ls-files '*.toml' | grep -v '^toml/probationes/fixa/') \
-    > "$RADIX_DIR/build/toml_corpus.lst"
-
-# aurum silvestre tomllib (Q9): numquam commissum (contentum alienum);
-# regeneratur si abest aut manifesto vetustius. Python absens = CAUTIO
-# clamata, et porta differentiae tunc rubet (numquam tacite viridis).
-AURUM_SILVESTRE="$BUILD_DIR/aurum_silvestre.txt"
-MANIFESTUM="$TOML_DIR/probationes/fixa/silvestria.manifestum"
-# <tolera codex="lint:nt-aequalitas" (manifestum in aequalitate non mutatum: aurum eodem secundo scriptum recens est)
-if [ ! -f "$AURUM_SILVESTRE" ] || [ "$MANIFESTUM" -nt "$AURUM_SILVESTRE" ]; then
-    echo "  [aurum] tomllib silvestre regeneratur"
-    if ! "$TOML_DIR/tomllib_aurum.sh" -silvestre > /dev/null; then
-        echo "CAUTIO: toml/tomllib_aurum.sh -silvestre fractum - porta differentiae rubebit" >&2
+# PRAECONDICIONES (fabrica spec 3 T4): index corporis domus
+# (build/toml_corpus.lst, porta corporis) et aurum tomllib silvestre
+# (toml/build/aurum_silvestre.txt, Q9) ACTIONES fabricae sunt
+# (toml/aedificatio.stml: toml_corpus, toml_aurum_silvestre) - cursor eas
+# non iam per bash scribit, ne vestigium portae lectionem ingressus sine
+# scriptore declarato ferat. Sub FABRICA_LECTIONES (porta ut actio
+# 'iudicium') fabrica eas iam realizavit: nihil hic (sanare nidificatum
+# seram fabricae ipsius offenderet). Manu: bin/fabrica sanare (vile si
+# recentia: regeneratio in scripturam + comparatio); bin/fabrica absens
+# (clonus umbrae sine bin/) aut sera tenta -> scripta ipsa. Aurum fractum
+# = CAUTIO clamata, et porta differentiae tunc rubet (numquam tacite
+# viridis). Olim aurum per mtime manifesti regenerabatur.
+if [ -z "${FABRICA_LECTIONES:-}" ]; then
+    if ! { [ -x "$RADIX_DIR/bin/fabrica" ] && (cd "$RADIX_DIR" \
+            && bin/fabrica sanare build/toml_corpus.lst \
+               toml/build/aurum_silvestre.txt > /dev/null 2>&1); }; then
+        "$TOML_DIR/corpus_indicem.sh" \
+            || echo "CAUTIO: toml/corpus_indicem.sh fractum - porta corporis rubebit" >&2
+        if ! "$TOML_DIR/tomllib_aurum.sh" -silvestre > /dev/null; then
+            echo "CAUTIO: toml/tomllib_aurum.sh -silvestre fractum - porta differentiae rubebit" >&2
+        fi
     fi
 fi
 

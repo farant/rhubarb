@@ -15,4 +15,5 @@
   <subsystema via="silva"/>
   <subsystema via="tessera"/>
   <subsystema via="officina"/>
+  <subsystema via="toml"/>
 </fabrica>

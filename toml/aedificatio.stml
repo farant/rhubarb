@@ -1,0 +1,34 @@
+<!-- toml/aedificatio.stml - declarationes aedificationis toml (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Fabrica spec 3 T4: ingressus portae toml quos cursor olim per bash
+     scribebat actiones fiunt - vestigium portae (actio 'iudicium', T5)
+     lectionem eorum sine scriptore declarato aliter ferret ('ingressus
+     build/ sine domino' = IGNOTUM). Ambae regeneratione iudicantur
+     (vilis: index ~10 ms, aurum ~1 s), non memoria: aurum ex plagulis
+     VIVIS in $HOME regeneratur, quas manifestum sigillo figit sed non
+     continet. -->
+<aedificatio>
+  <!-- index corporis domus: git ls-files (index git = ingressus non
+       declarabilis; regeneratio omni iudicio eum legit) -->
+  <actio titulus="toml_corpus" genus="generator">
+    <mandatum>
+      <verbum! (>./toml/corpus_indicem.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="toml/corpus_indicem.sh"/>
+    <exitus via="build/toml_corpus.lst" provenientia="regeneratio"/>
+  </actio>
+  <!-- aurum tomllib corporis silvestris (toml-arbor plan Q9): python
+       extra repositorium, per binarium declaratum (exemplar
+       entitates_html in aedificatio.stml radicis) -->
+  <actio titulus="toml_aurum_silvestre" genus="generator">
+    <mandatum>
+      <verbum! (>./toml/tomllib_aurum.sh
+      <verbum! (>-silvestre
+    </mandatum>
+    <ingressus genus="fasciculus" via="toml/tomllib_aurum.sh"/>
+    <ingressus genus="fasciculus" via="toml/instrumenta/tomllib_tagatum.py"/>
+    <ingressus genus="fasciculus" via="toml/probationes/fixa/silvestria.manifestum"/>
+    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
+    <exitus via="toml/build/aurum_silvestre.txt" provenientia="regeneratio"/>
+  </actio>
+</aedificatio>

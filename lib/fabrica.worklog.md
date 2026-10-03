@@ -1630,3 +1630,30 @@ footprint check - only a rebake does (the radix gate runs the runner
 outside fabrica). Lesson for runner migrations: after changing what a
 fabrica-run command writes, run `bin/fabrica sanare installata` before
 committing, not after.
+
+## 2026-10-03 - slice 3 T4: toml's bash-written inputs become actions
+
+New subsystem toml/aedificatio.stml (registered in fabrica.stml):
+- `toml_corpus` -> build/toml_corpus.lst via toml/corpus_indicem.sh
+  (git ls-files; byte-identical to the runner's old output). Regeneratio,
+  not memoria: the git index is not a declarable input.
+- `toml_aurum_silvestre` -> toml/build/aurum_silvestre.txt via
+  `toml/tomllib_aurum.sh -silvestre` (python3 declared as instrumentum,
+  as entitates_html). Found on the way: the header embedded
+  `$(date -u +%Y-%m-%d)`, so the artifact changed EVERY DAY - a verdict
+  keyed on it would have re-run daily. Silvestre header is now date-free
+  (deterministic: scratch regeneration cmp-equal to the tree copy); the
+  committed aurum.txt keeps its date (separate path, untouched).
+  Regeneration costs ~0.9 s per judgement (counts against the < 2 s RECENS
+  target - measure in T9).
+Both honour FABRICA_SCRIPTURA. Plants: appending a line to either
+artifact -> -plenus STALUM; sanare heals; RECENS again.
+Runner: the mtime rule ("manifest newer than gold") and the bash
+`git ls-files` are gone; by hand it calls `bin/fabrica sanare <both>`,
+under FABRICA_LECTIONES it does nothing (nested sanare would meet
+fabrica's own lock), and without bin/fabrica (shadow clone) or on any
+sanare failure it runs the two scripts directly. Fallback tested by
+moving bin/fabrica aside with both artifacts deleted: corpus and
+differentia green. Full toml 13/13, 34.7 s (unchanged).
+Inventory: toml `currit binaria` += tools/fabrica.c, `tegit viae` +=
+toml/aedificatio.stml.
