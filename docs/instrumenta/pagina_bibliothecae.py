@@ -26,6 +26,13 @@ for linea in open(via_tsv):
 ROMANI = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100}
 
 
+# capita quorum facultates folium proprium habent (pagina_fabricae.py ...)
+FOLIA_FACULTATUM = {
+    'fabrica': ('fabrica_facultates.html', 'fabrica: the build layer, with an inventory of its features'),
+    'stml': ('stml_facultates.html', 'STML: a tour of the syntax, with an inventory of its features'),
+}
+
+
 def numerus_romanus(r):
     n = 0
     for i, c in enumerate(r):
@@ -112,7 +119,7 @@ for via in ordines:
 <tbody>
 <tr><td>Header</td><td><a href="../../%(via)s"><code>%(via)s</code></a></td></tr>
 <tr><td>Implementation</td><td>%(plagulae)s</td></tr>
-<tr><td>Last change</td><td>%(mutatum)s</td></tr>%(grex)s
+<tr><td>Last change</td><td>%(mutatum)s</td></tr>%(grex)s%(facultates)s
 </tbody>
 </table>
 <p class="nota">A stub: one paragraph so far. Generated from the ledger
@@ -124,7 +131,8 @@ page.</p>
 ''' % {'nota': NOTA_GENERATUM, 'nomen': html.escape(nomen), 'glossa': html.escape(glossa),
        'descriptio': html.escape(c['descriptio']), 'via': via,
        'plagulae': plagulae_reddere(c.get('plagulae', ''), '../../'), 'mutatum': html.escape(mutatum),
-       'grex': ('\n<tr><td>Group</td><td><a href="greges.html#%s">%s</a></td></tr>' % (c['grex'], html.escape(greges.get(c['grex'], {}).get('titulus', c['grex'])))) if c.get('grex') else ''})
+       'grex': ('\n<tr><td>Group</td><td><a href="greges.html#%s">%s</a></td></tr>' % (c['grex'], html.escape(greges.get(c['grex'], {}).get('titulus', c['grex'])))) if c.get('grex') else '',
+       'facultates': ('\n<tr><td>Features</td><td><a href="%s">%s</a></td></tr>' % FOLIA_FACULTATUM[nomen]) if nomen in FOLIA_FACULTATUM else ''})
     titulus = ('<a href="%s.html">%s</a>' % (nomen, html.escape(nomen))) if habet_folium else html.escape(nomen)
     lineae_indicis.append((nomen, mutatum.split(' ')[0], '<tr%s><td>%s</td><td>%s</td><td class="nota">%s</td><td>%s</td></tr>' % (
         ' class="descripta"' if habet_folium else '', titulus,

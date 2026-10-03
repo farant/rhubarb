@@ -142,3 +142,18 @@ table.codices { display: none; }
 #ordo-numerus:checked ~ table.ordo-numerus,
 #ordo-gradus:checked ~ table.ordo-gradus { display: table; }
 tr.grex-gradus td { padding-top: 1.1em; border-bottom: 2px solid var(--linea); font-weight: 600; }
+
+/* briar: facultates */
+.status-aedificatum, .status-partim, .status-dilatum, .status-refutatum {
+  font-size: 0.85em; padding: 0 0.4em; border-radius: 3px; white-space: nowrap;
+  border: 1px solid var(--linea);
+}
+.status-aedificatum { font-weight: 600; }
+.status-partim { font-style: italic; }
+.status-dilatum { opacity: 0.7; font-style: italic; }
+table.facultates td:first-child, table.facultates td:nth-child(3) { white-space: nowrap; }
+table.facultates { display: none; }
+#ordo-area:checked ~ table.ordo-area,
+#ordo-status:checked ~ table.ordo-status,
+#ordo-versio:checked ~ table.ordo-versio { display: table; }
+.status-refutatum { opacity: 0.7; text-decoration: line-through; }

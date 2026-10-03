@@ -57,3 +57,22 @@ rm -f "$TSV_B" "$TSV_G"
 
 # 4. Examen: codices ex fonte silvae + glossae Anglicae (examen_glossae.tsv)
 python3 "$INSTR/pagina_examinis.py" "$RADIX"
+
+# 5. Briar: facultates ex inventario 'briar facultates' + exempla ex fixis briar
+TSV_F=$(mktemp)
+(cd "$TABULARIUM_RADIX" && ./gesta/frigida.sh -inventarium "briar facultates") > "$TSV_F" 2>/dev/null
+python3 "$INSTR/pagina_briar.py" "$TSV_F" "$RADIX"
+rm -f "$TSV_F"
+
+# 6. Fabrica: facultates ex inventario 'fabrica facultates' + exempla ex aedificatio.stml
+TSV_FA=$(mktemp)
+(cd "$TABULARIUM_RADIX" && ./gesta/frigida.sh -inventarium "fabrica facultates") > "$TSV_FA" 2>/dev/null
+python3 "$INSTR/pagina_fabricae.py" "$TSV_FA" "$RADIX"
+rm -f "$TSV_FA"
+
+# 7. STML: itinerarium syntaxis (exempla per instrumenta vera currunt) + facultates
+#    ex inventario 'stml facultates'. Instrumenta: STML, CANON_EXAMEN (vide pagina_stml.py).
+TSV_S=$(mktemp)
+(cd "$TABULARIUM_RADIX" && ./gesta/frigida.sh -inventarium "stml facultates") > "$TSV_S" 2>/dev/null
+TABULARIUM_RADIX="$TABULARIUM_RADIX" python3 "$INSTR/pagina_stml.py" "$TSV_S" "$RADIX"
+rm -f "$TSV_S"

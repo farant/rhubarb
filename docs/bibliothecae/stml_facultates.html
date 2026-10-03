@@ -1,0 +1,679 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_stml.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STML</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a> · <a href="stml.html">stml.h</a></p>
+<h1>STML</h1>
+<p class="subtitulus">The house's one data syntax: a tour of the syntax, and an inventory of 81 features</p>
+
+<p>STML looks like XML and is the format of almost everything the house
+writes down that is not C: build declarations, schemas, the knowledge
+base's genera, the trees silva and materia project from source code,
+the HTML template behind the Markdown pages, the elements in a briar
+script. It is one syntax carrying three layers, each a pure function from
+a tree to a tree:</p>
+<table>
+<thead><tr><th>Layer</th><th>Does</th><th>Library</th><th>Verb</th></tr></thead>
+<tbody>
+<tr><td>document</td><td>text &#8644; tree, byte-faithful</td><td><code>lib/stml.c</code></td><td><code>stml formare</code></td></tr>
+<tr><td>expansion</td><td>templates filled, questions answered, lists distributed</td><td><code>lib/stml_macros.c</code></td><td><code>stml expandere</code></td></tr>
+<tr><td>emission</td><td>tree &#8594; HTML</td><td><code>lib/stml_html.c</code></td><td><code>stml vertere</code></td></tr>
+</tbody>
+</table>
+<p>Beside them, <strong>canon</strong> judges a document against a schema
+that is itself written in STML, and <strong>selectio</strong> matches
+CSS-style selectors. Five laws shape everything below: files are the truth
+and every other view is a projection; there is no expression language;
+every failed reference is loud; writing without the pretty-printer gives
+back the input byte for byte; and forms that are reserved but unbuilt are
+written down anyway.</p>
+
+<p class="nota">Every example on this page was run through the real
+tools when the page was generated; what you see under each <code>$</code>
+line is their actual output. Longer treatments:
+<code>docs/stml-tutorial.md</code> (teaches, chapter by chapter) and
+<code>docs/stml-reference.md</code> (states every rule and refusal).</p>
+
+<h2>1. A first document</h2>
+<p>Elements open and close like HTML. <code>&lt;/&gt;</code> closes
+whatever is open. Attribute values are double-quoted or, for simple words,
+bare; a name alone is a boolean. In text, <code>&lt;</code> must be
+written <code>&amp;lt;</code>. The formatter rewrites the file into the
+house layout: an element with a single child takes the <em>capture</em>
+form <code>&lt;t(&gt;</code> (section 3), prose is re-wrapped, an empty
+pair becomes <code>&lt;t/&gt;</code>. Both spellings are the same tree.</p>
+<p class="nota">liber.stml</p>
+<pre><code>&lt;liber lingua=la publicus&gt;
+  &lt;titulus&gt;De Agri Cultura&lt;/titulus&gt;
+  &lt;auctor&gt;Cato&lt;/auctor&gt;
+  &lt;pagina numerus="1"&gt;Est interdum praestare mercaturis rem quaerere,
+    &amp;lt;nisi&amp;gt; tam periculosum siet.&lt;/pagina&gt;
+  &lt;nota&gt;brevis&lt;/&gt;
+  &lt;vacuum&gt;&lt;/vacuum&gt;
+&lt;/liber&gt;</code></pre>
+<p class="nota">$ stml formare liber.stml</p>
+<pre class="effusio"><code>&lt;liber lingua="la" publicus&gt;
+  &lt;titulus(&gt; De Agri Cultura
+  &lt;auctor(&gt; Cato
+  &lt;pagina numerus="1" (&gt; Est interdum praestare mercaturis rem quaerere,
+                         &amp;lt;nisi&amp;gt; tam periculosum siet.
+  &lt;nota(&gt; brevis
+  &lt;vacuum/&gt;
+&lt;/&gt;</code></pre>
+
+<h2>2. Four kinds of text</h2>
+<p>Whitespace that contains a newline is <em>layout</em>; whitespace on
+one line is <em>content</em>. So in a plain element, prose can be broken
+across lines freely: it reads as one line. <code>&lt;t\&gt;</code> keeps
+the line breaks and removes the common indentation (poems, code examples).
+<code>&lt;t!&gt;</code> is raw: nothing inside is a tag or an entity, so
+code needs no escaping. A raw element can even contain its own closing
+tag, written <code>&lt;\/t&gt;</code>; the reader removes one backslash,
+the writer adds it back.</p>
+<p class="nota">textus.stml</p>
+<pre><code>&lt;exempla&gt;
+  &lt;prosa&gt;Haec linea
+    et haec una sententia sunt.&lt;/prosa&gt;
+  &lt;versus\&gt;
+    Arma virumque cano,
+      Troiae qui primus ab oris
+  &lt;/versus&gt;
+  &lt;codex!&gt;if (a &lt; b &amp;&amp; c) { x = "&lt;b&gt;"; }&lt;/codex&gt;
+  &lt;scriptum!&gt;raw text may hold &lt;\/scriptum&gt; itself&lt;/scriptum&gt;
+&lt;/exempla&gt;</code></pre>
+<p class="nota">$ stml formare textus.stml</p>
+<pre class="effusio"><code>&lt;exempla&gt;
+  &lt;prosa(&gt; Haec linea et haec una sententia sunt.
+  &lt;versus\&gt;
+    Arma virumque cano,
+      Troiae qui primus ab oris
+  &lt;/&gt;
+  &lt;codex!&gt;if (a &lt; b &amp;&amp; c) { x = "&lt;b&gt;"; }&lt;/codex&gt;
+  &lt;scriptum!&gt;raw text may hold &lt;\/scriptum&gt; itself&lt;/scriptum&gt;
+&lt;/&gt;</code></pre>
+<p class="nota">$ stml vertere textus.stml</p>
+<pre class="effusio"><code>&lt;!DOCTYPE html&gt;
+&lt;exempla&gt;
+  &lt;prosa&gt;Haec linea
+    et haec una sententia sunt.&lt;/prosa&gt;
+  &lt;versus&gt;
+Arma virumque cano,
+  Troiae qui primus ab oris
+  &lt;/versus&gt;
+  &lt;codex&gt;if (a &amp;lt; b &amp;amp;&amp;amp; c) { x = "&amp;lt;b&amp;gt;"; }&lt;/codex&gt;
+  &lt;scriptum&gt;raw text may hold &amp;lt;/scriptum&amp;gt; itself&lt;/scriptum&gt;
+&lt;/exempla&gt;</code></pre>
+
+<h2>3. Captures: nesting without closing tags</h2>
+<p><code>&lt;t (&gt;</code> takes the next sibling as its child;
+<code>(( </code> and <code>(((</code> take two or three.
+<code>&lt;) t&gt;</code> takes the previous sibling, <code>&lt;= t
+=&gt;</code> one on each side, and <code>&lt;t! (&gt;</code> the rest of
+the line as raw text. They are written glued: a same-line space is
+content, and would be the sibling captured. HTML emission shows the
+resulting nesting with real close tags:</p>
+<p class="nota">capturae.stml</p>
+<pre><code>&lt;capturae&gt;
+  &lt;sectio (&gt;
+  &lt;titulus&gt;Prima&lt;/titulus&gt;
+  &lt;i&gt;p&lt;/i&gt;&lt;) nota&gt;
+  &lt;i&gt;a&lt;/i&gt;&lt;= et =&gt;&lt;i&gt;b&lt;/i&gt;
+  &lt;linea! (&gt;  raw to the end of the line, &lt;not&gt; a tag
+&lt;/capturae&gt;</code></pre>
+<p class="nota">$ stml vertere capturae.stml</p>
+<pre class="effusio"><code>&lt;!DOCTYPE html&gt;
+&lt;capturae&gt;
+  &lt;sectio&gt;  &lt;titulus&gt;Prima&lt;/titulus&gt;
+&lt;/sectio&gt;
+&lt;nota&gt;  &lt;i&gt;p&lt;/i&gt;&lt;/nota&gt;
+&lt;et&gt;  &lt;i&gt;a&lt;/i&gt;&lt;i&gt;b&lt;/i&gt;
+&lt;/et&gt;  &lt;linea&gt;  raw to the end of the line, &amp;lt;not&amp;gt; a tag&lt;/linea&gt;
+&lt;/capturae&gt;</code></pre>
+
+<h2>4. Attributes as elements</h2>
+<p>An attribute value cannot contain <code>"</code>, and cannot sensibly
+hold a paragraph. <code>&lt;@name=&gt;…&lt;/&gt;</code> spells an
+attribute as a child element, allowed only as the first children of its
+element (or as a template's argument, section 6). <code>&lt;@name=/&gt;</code>
+is a <em>tombstone</em>: explicitly absent (section 7 uses one).</p>
+<p class="nota">nexus.stml</p>
+<pre><code>&lt;p&gt;
+  &lt;a&gt;&lt;@href=&gt;https://exemplum.org/?q="verbum"&lt;/&gt;nexus&lt;/a&gt;
+&lt;/p&gt;</code></pre>
+<p class="nota">$ stml vertere nexus.stml</p>
+<pre class="effusio"><code>&lt;!DOCTYPE html&gt;
+&lt;p&gt;
+  &lt;a href="https://exemplum.org/?q=&amp;quot;verbum&amp;quot;"&gt;nexus&lt;/a&gt;
+&lt;/p&gt;</code></pre>
+
+<h2>5. Fragments, and five kinds of name</h2>
+<p><code>&lt;#id&gt;…&lt;/#&gt;</code> is a fragment: children grouped with
+no element of their own. <code>&lt;&lt;#id&gt;&gt;</code> is a
+transclusion, a window onto that fragment (aliasing, not copying). The
+library keeps the window and resolves nothing; each consumer decides what
+it means, which is why <code>vertere</code> refuses one by name. Each kind
+of name has its own sigil:</p>
+<table>
+<thead><tr><th>Sigil</th><th>Names</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>#x</code></td><td>something in this document</td><td><code>&lt;#intro&gt;</code>, <code>&lt;&lt;#intro&gt;&gt;</code></td></tr>
+<tr><td><code>&amp;x;</code></td><td>an individual in the world</td><td><code>nomen="&amp;laika;"</code></td></tr>
+<tr><td><code>.x</code></td><td>a kind</td><td><code>genus=".canis"</code>, <code>&lt;.species&gt;</code></td></tr>
+<tr><td><code>&amp;@x;</code></td><td>a template slot</td><td>section 6</td></tr>
+<tr><td><code>$x</code></td><td>a pattern capture</td><td>section 8</td></tr>
+</tbody>
+</table>
+<p class="nota">fragmenta.stml</p>
+<pre><code>&lt;pagina&gt;
+  &lt;#salutatio&gt;
+    &lt;p&gt;Salve, lector.&lt;/p&gt;
+  &lt;/#&gt;
+  &lt;caput&gt;&lt;&lt;#salutatio&gt;&gt;&lt;/caput&gt;
+  &lt;canis nomen="&amp;laika;" genus=".canis"/&gt;
+&lt;/pagina&gt;</code></pre>
+<p class="nota">$ stml formare fragmenta.stml</p>
+<pre class="effusio"><code>&lt;pagina&gt;
+  &lt;#salutatio&gt;&lt;p&gt;Salve, lector.&lt;/p&gt;&lt;/#&gt;
+  &lt;caput&gt;
+    &lt;&lt;#salutatio&gt;&gt;
+  &lt;/&gt;
+  &lt;canis nomen="&amp;laika;" genus=".canis"/&gt;
+&lt;/&gt;</code></pre>
+<p class="nota">$ stml vertere fragmenta.stml <span class="nota">(exit 2)</span></p>
+<pre class="effusio"><code>stml vertere: fragmenta.stml: TRANSCLUSIO ('#salutatio')</code></pre>
+
+<h2>6. Templates</h2>
+<p><code>&lt;#@name slot="@slot"&gt;</code> defines a template; slots are
+declared on the opening tag (<code>@slot?</code> is optional) and used as
+<code>&amp;@slot;</code>. <code>&lt;&lt;#@name a="x"&gt;&gt;</code> calls
+it; block arguments follow the call as attribute-elements and can hold
+whole subtrees. <code>COMMUTATIO</code> chooses between arms; an optional
+slot may only be used inside an arm that proves it present. There is no
+expression language: arms compare literals, presence, tag names or
+patterns, nothing else.</p>
+<p class="nota">chartae.stml</p>
+<pre><code>&lt;#@charta nomen="@nomen" gradus="@gradus?" corpus="@corpus"&gt;
+  &lt;div class="charta"&gt;
+    &lt;h2&gt;&amp;@nomen;&lt;/h2&gt;
+    &lt;COMMUTATIO de="&amp;@gradus;"&gt;
+      &lt;CASUS est="alta"&gt;&lt;p class="monitum"&gt;gradus altus&lt;/p&gt;&lt;/CASUS&gt;
+      &lt;CASUS non-nihil&gt;&lt;p&gt;gradus: &amp;@gradus;&lt;/p&gt;&lt;/CASUS&gt;
+      &lt;CASUS nihil&gt;&lt;p&gt;sine gradu&lt;/p&gt;&lt;/CASUS&gt;
+    &lt;/COMMUTATIO&gt;
+    &amp;@corpus;
+  &lt;/div&gt;
+&lt;/#&gt;
+&lt;paginae&gt;
+  &lt;&lt;#@charta nomen="silva" gradus="alta"&gt;&gt;&lt;@corpus=&gt;&lt;p&gt;Parsator C89.&lt;/p&gt;&lt;/&gt;
+  &lt;&lt;#@charta nomen="materia"&gt;&gt;&lt;@corpus=&gt;&lt;p&gt;Substratum arborum.&lt;/p&gt;&lt;/&gt;
+&lt;/paginae&gt;</code></pre>
+<p class="nota">$ stml vertere chartae.stml</p>
+<pre class="effusio"><code>&lt;!DOCTYPE html&gt;
+&lt;paginae&gt;
+  &lt;div class="charta"&gt;
+    &lt;h2&gt;silva&lt;/h2&gt;
+&lt;p class="monitum"&gt;gradus altus&lt;/p&gt;&lt;p&gt;Parsator C89.&lt;/p&gt;  &lt;/div&gt;
+
+  &lt;div class="charta"&gt;
+    &lt;h2&gt;materia&lt;/h2&gt;
+&lt;p&gt;sine gradu&lt;/p&gt;&lt;p&gt;Substratum arborum.&lt;/p&gt;  &lt;/div&gt;
+&lt;/paginae&gt;</code></pre>
+
+<h2>7. Lists without repeating yourself</h2>
+<p>An element whose children are anonymous fragments
+<code>&lt;&gt;…&lt;/&gt;</code> dissolves into one copy per item, each
+inheriting the wrapper's attributes. An item's own attribute wins; a
+tombstone removes the inherited one.</p>
+<p class="nota">index.stml</p>
+<pre><code>&lt;ul&gt;
+  &lt;li class="provincia"&gt;
+    &lt;&gt;silva&lt;/&gt;
+    &lt;&gt;&lt;@class=&gt;provincia nova&lt;/&gt;briar&lt;/&gt;
+    &lt;&gt;&lt;@class=/&gt;materia&lt;/&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+<p class="nota">$ stml vertere index.stml</p>
+<pre class="effusio"><code>&lt;!DOCTYPE html&gt;
+&lt;ul&gt;
+    &lt;li class="provincia"&gt;silva&lt;/li&gt;
+    &lt;li class="provincia nova"&gt;briar&lt;/li&gt;
+    &lt;li&gt;materia&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+<h2>8. Asking a document questions</h2>
+<p><code>EXEMPLAR</code> is a pattern: an element written as you expect
+to find it, with <code>$x</code> where a value should be captured. Its
+answer is a set of rows. <code>CATENA</code> threads stages,
+<code>SINE</code> keeps the rows inside which something is <em>absent</em>,
+and <code>PER</code> writes its body once per row. Here: the books
+without a review.</p>
+<p><strong>Where the input comes from.</strong> A command names no
+target. An <code>EXEMPLAR</code> (or the first link of a
+<code>CATENA</code>) searches <em>everything above it in the
+document</em>, at every depth, so a <code>&lt;liber&gt;</code> anywhere
+above would match, not only those in the element just before it; anything
+below the command is invisible to it. Each later link of a
+<code>CATENA</code> takes the previous link's rows as its input and
+searches inside them: here <code>SINE</code> looks inside each
+<code>&lt;liber&gt;</code> the first link found. To narrow the scope, add a
+first stage that matches the container (<code>&lt;EXEMPLAR
+ancorata&gt;&lt;bibliotheca/&gt;&lt;/EXEMPLAR&gt;</code>), or start from an
+earlier result with <code>de="$x"</code>. <code>output="$x"</code> names
+the result, and something below (here <code>PER</code>) must consume it.
+Because a command sees only what is above it, a document is processed in
+one pass, top to bottom.</p>
+<p class="nota">bibliotheca.stml</p>
+<pre><code>&lt;bibliotheca&gt;
+  &lt;liber id="cato"&gt;&lt;titulus&gt;De Agri Cultura&lt;/titulus&gt;&lt;recensio&gt;bona&lt;/recensio&gt;&lt;/liber&gt;
+  &lt;liber id="varro"&gt;&lt;titulus&gt;Res Rusticae&lt;/titulus&gt;&lt;/liber&gt;
+  &lt;liber id="plinius"&gt;&lt;titulus&gt;Naturalis Historia&lt;/titulus&gt;&lt;/liber&gt;
+&lt;/bibliotheca&gt;
+&lt;CATENA output="$sine"&gt;
+  &lt;(&gt;&lt;EXEMPLAR&gt;&lt;liber id="$id"&gt;&lt;titulus&gt;$t&lt;/titulus&gt;&lt;/liber&gt;&lt;/EXEMPLAR&gt;
+  &lt;(&gt;&lt;SINE&gt;&lt;recensio/&gt;&lt;/SINE&gt;
+&lt;/CATENA&gt;
+&lt;ul&gt;
+  &lt;PER congruentia="$sine"&gt;&lt;li&gt;&amp;@t; (&amp;@id;)&lt;/li&gt;&lt;/PER&gt;
+&lt;/ul&gt;</code></pre>
+<p class="nota">$ stml vertere bibliotheca.stml</p>
+<pre class="effusio"><code>&lt;!DOCTYPE html&gt;
+&lt;bibliotheca&gt;
+  &lt;liber id="cato"&gt;&lt;titulus&gt;De Agri Cultura&lt;/titulus&gt;&lt;recensio&gt;bona&lt;/recensio&gt;&lt;/liber&gt;
+  &lt;liber id="varro"&gt;&lt;titulus&gt;Res Rusticae&lt;/titulus&gt;&lt;/liber&gt;
+  &lt;liber id="plinius"&gt;&lt;titulus&gt;Naturalis Historia&lt;/titulus&gt;&lt;/liber&gt;
+&lt;/bibliotheca&gt;
+&lt;ul&gt;&lt;li&gt;Res Rusticae (varro)&lt;/li&gt;&lt;li&gt;Naturalis Historia (plinius)&lt;/li&gt;&lt;/ul&gt;</code></pre>
+<p class="nota">Also: <code>modus</code> (how many answers are expected),
+<code>&lt;*/&gt;</code> and <code>&lt;**&gt;</code> wildcards,
+<code>cursus="fratrum"</code> for runs of siblings,
+<code>DIRIBITIO</code> to dispatch by condition, <code>TRANSPARENTIA</code>
+to ignore wrappers, and <code>&lt;INDAGO/&gt;</code> to trace every stage.
+See the inventory below.</p>
+
+<h2>9. Refusals are loud</h2>
+<p>Nothing fails quietly. A template is visible only below its
+definition (so expansion always terminates), and calling one too early is
+an error with a name, a line and the template, never an empty result.
+The expansion layer has 31 named errors.</p>
+<p class="nota">ordo.stml</p>
+<pre><code>&lt;pagina&gt;
+  &lt;&lt;#@charta nomen="silva"&gt;&gt;
+&lt;/pagina&gt;
+&lt;#@charta nomen="@nomen"&gt;&lt;h2&gt;&amp;@nomen;&lt;/h2&gt;&lt;/#&gt;</code></pre>
+<p class="nota">$ stml vertere ordo.stml <span class="nota">(exit 2)</span></p>
+<pre class="effusio"><code>stml vertere: ordo.stml:2: FRAGMENTUM_POSTERIUS (fragmentum '@charta')</code></pre>
+
+<h2>10. Contracts: canon</h2>
+<p>A canon is a schema written in STML: which elements exist, their
+attributes and value kinds, which children and how many, which keys must
+be unique or must refer to something. <code>canones.registrum</code> maps
+the house's dialects to their canons, and <code>canon.canon</code> describes
+the canon language itself. There is deliberately no expression language
+here either; rules that need one live in the reading program and its
+tests.</p>
+<p class="nota">libri.canon</p>
+<pre><code>&lt;canon dialectus="libri" versio="1"&gt;
+  &lt;elementum nomen="libri" radix="verum"&gt;
+    &lt;liberum nomen="liber" minimum="1"/&gt;
+  &lt;/elementum&gt;
+  &lt;elementum nomen="liber"&gt;
+    &lt;attributum nomen="id" genus="nomen" necessarium="verum"/&gt;
+    &lt;attributum nomen="annus" genus="numerus"/&gt;
+    &lt;liberum nomen="titulus" minimum="1" maximum="1"/&gt;
+  &lt;/elementum&gt;
+  &lt;elementum nomen="titulus" textus="verum"/&gt;
+  &lt;unicitas nomen="libri" attributum="id" super="liber"/&gt;
+&lt;/canon&gt;</code></pre>
+<p class="nota">libri.stml</p>
+<pre><code>&lt;libri&gt;
+  &lt;liber id="cato" annus="-160"&gt;&lt;titulus&gt;De Agri Cultura&lt;/titulus&gt;&lt;/liber&gt;
+  &lt;liber id="cato" annus="circa 37"&gt;&lt;titulus&gt;Res Rusticae&lt;/titulus&gt;&lt;auctor&gt;Varro&lt;/auctor&gt;&lt;/liber&gt;
+  &lt;liber&gt;&lt;titulus&gt;Naturalis Historia&lt;/titulus&gt;&lt;titulus&gt;bis&lt;/titulus&gt;&lt;/liber&gt;
+&lt;/libri&gt;</code></pre>
+<p class="nota">$ canon_examen -canon libri.canon libri.stml <span class="nota">(exit 1)</span></p>
+<pre class="effusio"><code>libri.stml:3: &lt;liber&gt; valor generi attributi non congruit: annus [libri.canon]
+libri.stml:3: &lt;liber&gt; liberum hic non licet: auctor [libri.canon]
+libri.stml:3: &lt;auctor&gt; elementum extra canonem: - [libri.canon]
+libri.stml:4: &lt;liber&gt; attributum necessarium deest: id [libri.canon]
+libri.stml:4: &lt;liber&gt; liberi plures quam maximum: titulus (2, limes 1) [libri.canon]
+libri.stml:3: &lt;liber&gt; nomen bis in spatio unico: cato [libri.canon]
+canon_examen: plagulae 1 / VITIA 6</code></pre>
+
+<h2>Tools</h2>
+<table>
+<thead><tr><th>Command</th><th>Does</th></tr></thead>
+<tbody>
+<tr><td><code>stml formare x.stml [-probare]</code></td><td>format into the house layout, no expansion; <code>-probare</code> only checks (exit 1 if it would change)</td></tr>
+<tr><td><code>stml expandere x.stml</code></td><td>expand templates, answer questions, distribute lists; write STML</td></tr>
+<tr><td><code>stml vertere x.stml</code></td><td>the whole chain, then HTML</td></tr>
+<tr><td><code>bin/canon_examen x.stml</code></td><td>judge by the registry (<code>-canon X</code> explicit, <code>-machina</code> TSV)</td></tr>
+<tr><td><code>bin/canon_coquere</code></td><td>generate typed C readers from a canon</td></tr>
+<tr><td><code>silex iudicare x.stml</code></td><td>judge from outside the repository with the bundled canons</td></tr>
+</tbody>
+</table>
+<p class="nota">Exit codes: 0 done or conforming, 1 divergent or faults found,
+2 refused (with <code>file:line</code> on stderr) or nothing judged.</p>
+
+<h2>Feature inventory</h2>
+<p>Each row is one construct or rule, with the month it first appeared in
+the C library (found with <code>git log -S</code> on a token that
+introduced it; STML began as TypeScript before the C library of
+2025-11, so the date is the C port's or later) and the section of
+<code>docs/stml-reference.md</code> that states it.</p>
+<table>
+<thead><tr><th>Status</th><th></th><th>Rows</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><span class="status-aedificatum">aedificatum</span></td><td>built</td><td>72</td><td>Built and gated: a test, a plant or a smoke stage exercises it.</td></tr>
+<tr><td><span class="status-partim">partim</span></td><td>partial</td><td>1</td><td>Built in part; the missing part is a named limit or work in progress.</td></tr>
+<tr><td><span class="status-dilatum">dilatum</span></td><td>deferred</td><td>6</td><td>Named in a spec as deliberately not built yet, with its reason.</td></tr>
+<tr><td><span class="status-refutatum">refutatum</span></td><td>refused</td><td>2</td><td>Decided against by decree: written down so nobody builds it by accident.</td></tr>
+</tbody>
+</table>
+<p class="nota">Areas: The document: elements and attributes <span class="nota">12</span> · Text and whitespace <span class="nota">7</span> · Captures <span class="nota">5</span> · Fragments and names <span class="nota">4</span> · Writing it back <span class="nota">4</span> · Templates <span class="nota">10</span> · Lists (DISTRIBUTIO) <span class="nota">2</span> · Patterns and questions <span class="nota">12</span> · HTML emission <span class="nota">5</span> · Canon (schemas) <span class="nota">8</span> · Selectors <span class="nota">2</span> · Tools and API <span class="nota">4</span> · Reserved and refused forms <span class="nota">6</span></p>
+<p class="nota">Click <em>Feature</em> to group by area, <em>Status</em>
+to see what is built and what is not, <em>Since</em> to read it month by
+month.</p>
+
+<input type="radio" name="ordo-facultatum" id="ordo-area" class="ordo" checked>
+<input type="radio" name="ordo-facultatum" id="ordo-status" class="ordo">
+<input type="radio" name="ordo-facultatum" id="ordo-versio" class="ordo">
+
+<table class="facultates ordo-area">
+<thead><tr><th><label for="ordo-area" class="ordinator">Feature &#9650;</label></th><th><label for="ordo-status" class="ordinator">Status</label></th><th><label for="ordo-versio" class="ordinator">Since</label></th><th>What it does</th></tr></thead>
+<tbody>
+<tr class="grex-gradus"><td colspan="4">The document: elements and attributes <span class="nota">12</span></td></tr>
+<tr><td><code>elementum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t&gt;</code>…<code>&lt;/t&gt;</code> encloses children, <code>&lt;t/&gt;</code> is empty; the writer collapses an empty pair <code>&lt;a&gt;</code><code>&lt;/a&gt;</code> to <code>&lt;a/&gt;</code>. A named close must match its open tag exactly.<br><span class="nota">The document: elements and attributes · reference §4</span></td></tr>
+<tr><td><code>clausura-anonyma</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;/&gt;</code> closes the nearest open element (or fragment); the authored form is kept on write. Raw elements need their named close.<br><span class="nota">The document: elements and attributes · reference §4</span></td></tr>
+<tr><td><code>attributa</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Attribute values are double-quoted (raw bytes, no entities) or bare (a=xy for letters, digits, _ and -). Single quotes are refused; whitespace around = is normalized away.<br><span class="nota">The document: elements and attributes · reference §2.3, §5.1</span></td></tr>
+<tr><td><code>attributum-booleum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>A bare name is a boolean attribute whose value is the interned 'true'; <code>&lt;x a&gt;</code> and <code>&lt;x a="true"&gt;</code> are the same tree.<br><span class="nota">The document: elements and attributes · reference §5.2</span></td></tr>
+<tr><td><code>elementum-attributi</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;@name=&gt;</code>…<code>&lt;/&gt;</code> spells an attribute as a child element, so a value can hold " or span lines. It binds to the parent only as a prefix of its children (or as a template call's argument); anywhere else it is refused.<br><span class="nota">The document: elements and attributes · reference §5.3</span></td></tr>
+<tr><td><code>sepulcrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A tombstone <code>&lt;@a=/&gt;</code> says 'explicitly absent': readers see nothing, canon judges it missing, and it blocks attribute inheritance in lists.<br><span class="nota">The document: elements and attributes · reference §5.4</span></td></tr>
+<tr><td><code>tituli</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>labels="a b c"</code> (or class=) is a space-separated label set with its own <code>API</code> (habet, addere, removere, commutare); selectors' .x match it.<br><span class="nota">The document: elements and attributes · reference §5.5</span></td></tr>
+<tr><td><code>tagum-punctatum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td>A leading dot makes a tag name a kind: <code>&lt;.species&gt;</code>. Dotted elements are not selector-addressable (a selector's leading . is a class).<br><span class="nota">The document: elements and attributes · reference §10.2</span></td></tr>
+<tr><td><code>commenta-pi-doctype</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Comments <code>&lt;!-- --&gt;</code> stay nodes with layout of their own; <code>&lt;?…?&gt;</code> and <code>&lt;!DOCTYPE …&gt;</code> (uppercase D only) are parsed and kept.<br><span class="nota">The document: elements and attributes · reference §11</span></td></tr>
+<tr><td><code>crlf</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>CRLF</code> becomes <code>LF</code> once, before lexing, and the result says so; a lone <code>CR</code> is content.<br><span class="nota">The document: elements and attributes · reference §2.4</span></td></tr>
+<tr><td><code>strictum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>The parser is lenient on purpose; <code>stml_strictum</code> reports the faults a caller may enforce: duplicate attribute, several roots, text outside the root, a nameless element.<br><span class="nota">The document: elements and attributes · reference §12</span></td></tr>
+<tr><td><code>errores-loci</code></td><td><span class="status-partim">partim</span></td><td>2025-11</td><td>A parse refusal carries a status (<code>SYNTAXIS</code>, <code>TAG_NON_CLAUSUM</code>, <code>TAG_IMPROPRIE</code>, <code>ATTRIBUTUM</code>, <code>CAPTIO</code>, <code>MULTILINEA</code>…) with line and column; the first error wins. The stml tool prints file:line:column, but a worded cause only for <code>MULTILINEA</code> and the attribute-element position law - otherwise just 'vitium' (measured 2026-10-03 on a mismatched close tag).<br><span class="nota">The document: elements and attributes · reference §12</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Text and whitespace <span class="nota">7</span></td></tr>
+<tr><td><code>entitates</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Five entities decoded in text only: <code>&amp;lt;</code> <code>&amp;gt;</code> <code>&amp;amp;</code> <code>&amp;quot;</code> <code>&amp;apos;</code>. Anything else (<code>&amp;nbsp;</code>, &amp;#10;) stays literal text; a bare &lt; in text is a syntax error.<br><span class="nota">Text and whitespace · reference §6.1</span></td></tr>
+<tr><td><code>prosa-mollis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>In a plain element a line break inside text is soft: prose reads as one line with single spaces, so it can be re-wrapped freely.<br><span class="nota">Text and whitespace · reference §6.2, §7.3</span></td></tr>
+<tr><td><code>multilinea</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;t\\&gt;</code> keeps line breaks as content and removes the common indentation (stored as indentatio), so a poem or a block of code can be indented with the document.<br><span class="nota">Text and whitespace · reference §6.2</span></td></tr>
+<tr><td><code>crudum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t!&gt;</code> is raw: nothing inside is a tag or an entity until its closing <code>&lt;/t&gt;</code>; <code>&lt;t!\\&gt;</code> is raw and dedented.<br><span class="nota">Text and whitespace · reference §6.2</span></td></tr>
+<tr><td><code>scala-fugae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A raw element can contain its own closing tag: <code>&lt;\\/t&gt;</code> inside means a literal <code>&lt;/t&gt;</code>, <code>&lt;\\\\/t&gt;</code> means <code>&lt;\\/t&gt;</code>, and so on. The reader removes one level, the writer adds one, so values round-trip.<br><span class="nota">Text and whitespace · clausura plan (2026-09-21); 771fa413</span></td></tr>
+<tr><td><code>trivia</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Whitespace containing a newline is layout and belongs to the nodes around it (spatia_ante, spatia_post, spatia_clausurae); whitespace on one line is content. Every layout byte has exactly one owner.<br><span class="nota">Text and whitespace · reference §7; trivia spec</span></td></tr>
+<tr><td><code>accessores-textus</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Four readings of text: valor (the meaning, layout-free), fluxus (prose with soft breaks as spaces), internus (the exact bytes), normalizatus (dedented and trimmed).<br><span class="nota">Text and whitespace · reference §7.3</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Captures <span class="nota">5</span></td></tr>
+<tr><td><code>captura-ante</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t (&gt;</code> takes the next sibling as its child, <code>&lt;t((&gt;</code> the next two, <code>&lt;t(((&gt;</code> three; no closing tag. Chains nest: <code>&lt;a(&gt;</code> <code>&lt;b(&gt;</code> text.<br><span class="nota">Captures · reference §8.1</span></td></tr>
+<tr><td><code>captura-retro</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;) t&gt;</code> takes the previous sibling (<code>&lt;)) t&gt;</code> two). Write it glued to what it captures: a same-line space would be captured as text.<br><span class="nota">Captures · reference §8.1, §8.2</span></td></tr>
+<tr><td><code>captura-farcimen</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;= t =&gt;</code> takes one sibling before and one after: infix notation for trees.<br><span class="nota">Captures · reference §8.1</span></td></tr>
+<tr><td><code>captura-lineae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;t! (&gt;</code> takes the rest of the line, raw, with no closing tag: a one-line literal.<br><span class="nota">Captures · reference §8.3</span></td></tr>
+<tr><td><code>captura-fragmenti</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;#id (&gt;</code>, <code>&lt;# (&gt;</code> and the sugar <code>&lt;(&gt;</code> capture forward like elements; used as list items and chain links.<br><span class="nota">Captures · reference §8.4</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Fragments and names <span class="nota">4</span></td></tr>
+<tr><td><code>fragmentum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;#id&gt;</code>…<code>&lt;/#&gt;</code> groups children with no element of its own; &lt;&gt; is an anonymous fragment. Fragments take attributes (slot declarations).<br><span class="nota">Fragments and names · reference §9.1</span></td></tr>
+<tr><td><code>transclusio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;&lt;#id&gt;&gt;</code> is a window onto a fragment (aliasing, not copying). The library carries it; consumers resolve it: canon judges through it, silva's tree uses it for shared tokens.<br><span class="nota">Fragments and names · reference §9.2</span></td></tr>
+<tr><td><code>spatia-nominum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td>Five sigils, five name spaces: #x this document, <code>&amp;x;</code> an individual in the world, .x a kind, <code>&amp;@x;</code> a template slot, <code>$x</code> a pattern capture. <code>&amp;x;</code> needs its ; so <code>AT</code>&amp;T stays literal.<br><span class="nota">Fragments and names · reference §10.1</span></td></tr>
+<tr><td><code>augmentatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;% &amp;key;&gt;</code> … <code>&lt;/%&gt;</code> appends content to a library individual named by its key; additive only.<br><span class="nota">Fragments and names · reference §10.3</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Writing it back <span class="nota">4</span></td></tr>
+<tr><td><code>fidelitas</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Writing without pretty mode reproduces the input byte for byte (with named exceptions: capture forms re-derived, empty pairs collapsed, bare values quoted).<br><span class="nota">Writing it back · reference §13.1</span></td></tr>
+<tr><td><code>pulchrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>The pretty writer regenerates layout from structure: capture collapse, 72 columns, re-wrapped prose, aligned multiline attributes. Gated by a fixed point and tree equality.<br><span class="nota">Writing it back · reference §13.2</span></td></tr>
+<tr><td><code>sedes</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_scribere_sedibus</code> reports each element's byte extent in the written text (for editors and diagnostics).<br><span class="nota">Writing it back · reference §13.3; 8eb75086</span></td></tr>
+<tr><td><code>lexemata</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_lexemata_colligere</code> returns the total token stream with byte extents and no validation (syntax colouring, tools).<br><span class="nota">Writing it back · reference §29</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Templates <span class="nota">10</span></td></tr>
+<tr><td><code>templum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;#@name slot="@slot"&gt;</code>body<code>&lt;/#&gt;</code> defines a template; slots are declared on the opening tag and used as <code>&amp;@slot;</code> in attributes, text, or as a whole child. Fragments without @ are never touched.<br><span class="nota">Templates · reference §15.1</span></td></tr>
+<tr><td><code>loculus-optionalis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>@slot? declares an optional slot; it may only be used inside a <code>COMMUTATIO</code> arm that proves it present.<br><span class="nota">Templates · reference §15.1, §16</span></td></tr>
+<tr><td><code>vocatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;&lt;#@name a="x"&gt;&gt;</code> calls a template; block arguments follow the call as attribute-elements (<code>&lt;@corpus=&gt;</code>…<code>&lt;/&gt;</code>) and may hold whole subtrees.<br><span class="nota">Templates · reference §15.2, §15.3</span></td></tr>
+<tr><td><code>strata</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A call resolves only to templates defined earlier in the document, so expansion terminates by construction; a forward reference is refused (<code>FRAGMENTUM_POSTERIUS</code>).<br><span class="nota">Templates · reference §15.5</span></td></tr>
+<tr><td><code>commutatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;COMMUTATIO de="&amp;@x;"&gt;</code> chooses an arm: <code>est="literal"</code>, nihil, non-nihil, <code>tag="t"</code>, a pattern <code>&lt;EST&gt;</code><code>&lt;EXEMPLAR&gt;</code>, or <code>ORDINARIUS</code>. First match wins; no match and no <code>ORDINARIUS</code> is an error.<br><span class="nota">Templates · reference §16</span></td></tr>
+<tr><td><code>proiectio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&amp;@n.a.b;</code> reaches into a subtree argument by child element names; <code>&amp;@n.a!;</code> reads the bytes. Missing or ambiguous paths are named errors.<br><span class="nota">Templates · reference §17.1</span></td></tr>
+<tr><td><code>per-silvam</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&lt;PER de="@n.items" ut="i"&gt;</code> or <code>voca="#@item"</code> repeats a body or a template once per element of a projected forest.<br><span class="nota">Templates · reference §17.2</span></td></tr>
+<tr><td><code>recursio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A template may call itself only on strict descendants of its own subtree arguments, so recursion over a tree always terminates.<br><span class="nota">Templates · reference §17.3</span></td></tr>
+<tr><td><code>tabula-expansionum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Expansion returns a new tree (the original stays queryable) plus a side table of every splice: which call, which template, at what depth.<br><span class="nota">Templates · reference §15.7</span></td></tr>
+<tr><td><code>vitia-expansionis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Every failure is loud and named: 31 expansion errors (I-<code>XXXI</code>), each with the template and slot where known. Soft ones let the walk finish and still fail the result.<br><span class="nota">Templates · reference §24</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Lists (DISTRIBUTIO) <span class="nota">2</span></td></tr>
+<tr><td><code>distributio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A named element whose children are anonymous fragments dissolves into one copy per item: <code>&lt;li class="x"&gt;</code><code>&lt;&gt;a&lt;/&gt;</code><code>&lt;&gt;b&lt;/&gt;</code><code>&lt;/li&gt;</code> becomes two <code>&lt;li class="x"&gt;</code>. Item attributes override, a tombstone deletes one.<br><span class="nota">Lists (DISTRIBUTIO) · reference §18</span></td></tr>
+<tr><td><code>distributio-mixta</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Mixing anonymous items with named children or text is refused (distributio <code>MIXTA</code>), never guessed.<br><span class="nota">Lists (DISTRIBUTIO) · reference §18</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Patterns and questions <span class="nota">12</span></td></tr>
+<tr><td><code>exemplar</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;EXEMPLAR output="$x"&gt;</code>pattern<code>&lt;/EXEMPLAR&gt;</code> asks the document above it a question; the answer is a relation (rows of captures). It must be consumed below, or it is a named error.<br><span class="nota">Patterns and questions · reference §19.1</span></td></tr>
+<tr><td><code>modi</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>modus="omnia|unum|primum|optional"</code> states how many answers are expected; unum and optional enforce it. ancorata tries only the scope's root.<br><span class="nota">Patterns and questions · reference §19.1</span></td></tr>
+<tr><td><code>capturae-exemplaris</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>attr="$x"</code> captures a value, <code>&lt;t&gt;</code><code>$x</code><code>&lt;/t&gt;</code> a text, <code>&lt;t $x/&gt;</code> a whole node; a repeated <code>$x</code> is an equality constraint (nodes compared by content, not spelling).<br><span class="nota">Patterns and questions · reference §19.2; 8eb75086</span></td></tr>
+<tr><td><code>stella</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;*/&gt;</code> matches any one element; <code>&lt;**&gt;</code><code>&lt;x/&gt;</code><code>&lt;/**&gt;</code> means 'somewhere below me'.<br><span class="nota">Patterns and questions · reference §19.3</span></td></tr>
+<tr><td><code>cursus-fratrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>cursus="fratrum"</code> matches runs of siblings from every start position, one row each; <code>cursus="strictus"</code> requires them adjacent.<br><span class="nota">Patterns and questions · reference §19.1; 0c7f133f</span></td></tr>
+<tr><td><code>transparentia</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;TRANSPARENTIA tags=… attributa=…/&gt;</code> makes matching blind to wrapper tags and bookkeeping attributes (e.g. silva's linea, columna).<br><span class="nota">Patterns and questions · reference §19.4</span></td></tr>
+<tr><td><code>per-congruentiam</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;PER congruentia="$x"&gt;</code> instantiates its body (or calls a template) once per row, captures filling <code>&amp;@name;</code>.<br><span class="nota">Patterns and questions · reference §19.5</span></td></tr>
+<tr><td><code>catena</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;CATENA&gt;</code> threads stages: each link's scope is the previous link's output; links are <code>EXEMPLAR</code>, <code>SINE</code>, <code>DIRIBITIO</code> or nested chains.<br><span class="nota">Patterns and questions · reference §20</span></td></tr>
+<tr><td><code>sine</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;SINE&gt;</code> in a chain drops the rows inside which a pattern matches: absence questions such as 'books without a review'.<br><span class="nota">Patterns and questions · reference §22</span></td></tr>
+<tr><td><code>diribitio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;DIRIBITIO&gt;</code> dispatches a relation by conditions (<code>CASUS</code> with <code>EST</code>, <code>ORDINARIUS</code> last); angustans passes the condition's narrowed rows.<br><span class="nota">Patterns and questions · reference §21</span></td></tr>
+<tr><td><code>indago</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;INDAGO/&gt;</code> makes every later command leave a trace comment: rows in and out per stage, captures, <code>SINE</code> kills, arms taken.<br><span class="nota">Patterns and questions · reference §23</span></td></tr>
+<tr><td><code>congruere-strictum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_congruere_strictum</code>, the lockstep matcher for C callers: layout included, no <code>&lt;**&gt;</code>.<br><span class="nota">Patterns and questions · reference §19.2, §29</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">HTML emission <span class="nota">5</span></td></tr>
+<tr><td><code>vertere</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>stml vertere</code> runs the chain and emits <code>HTML</code> with its own doctype: the author's tags, real close tags, void elements bare, fragments dissolved, captures leaving no trace. Nothing partial: a refusal emits nothing.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-booleana</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A boolean attribute is written bare only if <code>HTML</code> knows it as boolean (disabled, checked…); any other 'true' is refused. <code>a=""</code> is kept (<code>alt=""</code> matters).<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-crudum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&lt;script!&gt;</code> and <code>&lt;style!&gt;</code> are emitted verbatim (plain <code>&lt;script&gt;</code> is refused); <code>&lt;crudum!&gt;</code>…<code>&lt;/crudum&gt;</code> splices bytes with no tag; other raw elements become escaped text.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-refutationes</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>Refused by name: <code>&amp;nbsp;</code> and other unknown entities in text (type the character), transclusions, augmentation, PIs, dotted tags, loose attribute-elements.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>litteralis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>litteralis mode for trees built by parsers (md): every &amp; escaped, no ambiguity refusal.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Canon (schemas) <span class="nota">8</span></td></tr>
+<tr><td><code>canon</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A canon is a schema written in <code>STML</code> (<code>&lt;canon dialectus versio&gt;</code>) declaring elements, their attributes, children with min/max, and whether they hold text; <code>canon.canon</code> describes and judges the canon language itself.<br><span class="nota">Canon (schemas) · reference §26.1-26.2</span></td></tr>
+<tr><td><code>registrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>canones.registrum</code> maps documents to canons by root element or extension; an inline canon as the root's first child can only add to it.<br><span class="nota">Canon (schemas) · reference §26.1</span></td></tr>
+<tr><td><code>genera-valorum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Value genera: textus, nomen, numerus (with minimum/maximum, fractio), veritas, dies, electio (<code>&lt;optio&gt;</code>), compositum, identitas, referentia, titulus.<br><span class="nota">Canon (schemas) · reference §26.3</span></td></tr>
+<tr><td><code>unicitas-citatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>unicitas makes a key unique over named elements; citatio requires a value to name a declared key (cross-references), with scopes.<br><span class="nota">Canon (schemas) · reference §26.2</span></td></tr>
+<tr><td><code>claves-externae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>claves-externae embed a library's keys (<code>&amp;laika;</code>) so any document can cite them; minting an existing key is refused.<br><span class="nota">Canon (schemas) · reference §26.6</span></td></tr>
+<tr><td><code>iudicium-expansum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Canon can judge the document as written, after expansion, or after distribution - the sense, not only the spelling.<br><span class="nota">Canon (schemas) · reference §26.4</span></td></tr>
+<tr><td><code>canon-coquere</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>bin/canon_coquere</code> generates typed C readers from a canon, so a program reads a dialect through checked accessors.<br><span class="nota">Canon (schemas) · reference §28.2</span></td></tr>
+<tr><td><code>sine-expressionibus</code></td><td><span class="status-refutatum">refutatum</span></td><td>—</td><td>No expression language, ever: no co-occurrence rules, no cross-attribute comparisons, no ordered content models. Those live in the reading program and its tests.<br><span class="nota">Canon (schemas) · reference §26.7; visio §8</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Selectors <span class="nota">2</span></td></tr>
+<tr><td><code>selectio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>CSS</code>-style selectors over a tree: type, #id, .label, [a], [a=v] [a^=v] [a$=v] [a*=v] [a~=v], :first-child :last-child :empty, and the four combinators.<br><span class="nota">Selectors · reference §27</span></td></tr>
+<tr><td><code>selectio-absens</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Not supported: :not(), :nth-child(), :root, label namespaces, ## prefix selectors (all from the earlier TypeScript <code>STML</code>).<br><span class="nota">Selectors · reference §27</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Tools and API <span class="nota">4</span></td></tr>
+<tr><td><code>stml-cli</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>stml formare</code> (format, no expansion; <code>-probare</code> checks a file is already formatted), <code>stml expandere</code>, <code>stml vertere</code>. Exit 0 / 1 divergent / 2 refused with file:line:column.<br><span class="nota">Tools and API · reference §28.1</span></td></tr>
+<tr><td><code>canon-examen</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>bin/canon_examen</code> judges files by the registry or <code>-canon</code> X; <code>-machina</code> gives <code>TSV</code>, <code>-index</code> a canon's inventory. Exit 2 when nothing was judged.<br><span class="nota">Tools and API · reference §28.2</span></td></tr>
+<tr><td><code>api-c</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>The C chain: <code>stml_legere</code> -&gt; <code>stml_expandere</code> -&gt; <code>stml_distribuere</code> -&gt; emit, one internamentum and one piscina for the whole chain; gate on successus, never on the root pointer.<br><span class="nota">Tools and API · reference §14, §29</span></td></tr>
+<tr><td><code>consumptores</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td><code>STML</code> is the house's one data syntax: build declarations (<code>aedilis.stml</code>, <code>aedificatio.stml</code>), canons, natura's genera, silva's and materia's tree projections, md's <code>HTML</code> template, briar's .thistle elements.<br><span class="nota">Tools and API · reference §28.3; house</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">Reserved and refused forms <span class="nota">6</span></td></tr>
+<tr><td><code>pipe-views</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td><code>&lt;&lt;x | transform&gt;</code>&gt; pipe views: reserved, for generated projections only.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>liberi-in-multilinea</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Child elements inside <code>&lt;t\\&gt;</code> text: reserved for v2.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>mutatio-congruentiarum</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Mutation verbs (%) on pattern matches: reserved, blocked on extent provenance (expansion clones carry no byte positions yet).<br><span class="nota">Reserved and refused forms · reference §30, §15.7</span></td></tr>
+<tr><td><code>aggregata</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Aggregates (numerus, summa, minimum, maximum) over relations, a <code>CATENA</code> tee, a user <code>&lt;VITIUM&gt;</code>, occurrence suffixes ? * +: reserved, each written down so nobody reinvents them.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>de-argumento</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td><code>de="@arg"</code> on an <code>EXEMPLAR</code> inside a template body (pattern over an argument): reserved, refused today.<br><span class="nota">Reserved and refused forms · reference §17.1, §30</span></td></tr>
+<tr><td><code>formae-mortuae</code></td><td><span class="status-refutatum">refutatum</span></td><td>—</td><td>Dead forms, refused on purpose: <code>&amp;@...children;</code> spreads, :/:: parameter syntax, <code>&lt;{&gt;</code> <code>&lt;}&gt;</code> infix <code>XML</code>, $: positional arguments, # as the world sigil, <code>&lt;!switch&gt;</code>.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+</tbody>
+</table>
+
+<table class="facultates ordo-status">
+<thead><tr><th><label for="ordo-area" class="ordinator">Feature</label></th><th><label for="ordo-status" class="ordinator">Status &#9650;</label></th><th><label for="ordo-versio" class="ordinator">Since</label></th><th>What it does</th></tr></thead>
+<tbody>
+<tr class="grex-gradus"><td colspan="4"><span class="status-aedificatum">aedificatum</span> built <span class="nota">72</span></td></tr>
+<tr><td><code>elementum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t&gt;</code>…<code>&lt;/t&gt;</code> encloses children, <code>&lt;t/&gt;</code> is empty; the writer collapses an empty pair <code>&lt;a&gt;</code><code>&lt;/a&gt;</code> to <code>&lt;a/&gt;</code>. A named close must match its open tag exactly.<br><span class="nota">The document: elements and attributes · reference §4</span></td></tr>
+<tr><td><code>clausura-anonyma</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;/&gt;</code> closes the nearest open element (or fragment); the authored form is kept on write. Raw elements need their named close.<br><span class="nota">The document: elements and attributes · reference §4</span></td></tr>
+<tr><td><code>attributa</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Attribute values are double-quoted (raw bytes, no entities) or bare (a=xy for letters, digits, _ and -). Single quotes are refused; whitespace around = is normalized away.<br><span class="nota">The document: elements and attributes · reference §2.3, §5.1</span></td></tr>
+<tr><td><code>attributum-booleum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>A bare name is a boolean attribute whose value is the interned 'true'; <code>&lt;x a&gt;</code> and <code>&lt;x a="true"&gt;</code> are the same tree.<br><span class="nota">The document: elements and attributes · reference §5.2</span></td></tr>
+<tr><td><code>elementum-attributi</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;@name=&gt;</code>…<code>&lt;/&gt;</code> spells an attribute as a child element, so a value can hold " or span lines. It binds to the parent only as a prefix of its children (or as a template call's argument); anywhere else it is refused.<br><span class="nota">The document: elements and attributes · reference §5.3</span></td></tr>
+<tr><td><code>sepulcrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A tombstone <code>&lt;@a=/&gt;</code> says 'explicitly absent': readers see nothing, canon judges it missing, and it blocks attribute inheritance in lists.<br><span class="nota">The document: elements and attributes · reference §5.4</span></td></tr>
+<tr><td><code>tituli</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>labels="a b c"</code> (or class=) is a space-separated label set with its own <code>API</code> (habet, addere, removere, commutare); selectors' .x match it.<br><span class="nota">The document: elements and attributes · reference §5.5</span></td></tr>
+<tr><td><code>tagum-punctatum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td>A leading dot makes a tag name a kind: <code>&lt;.species&gt;</code>. Dotted elements are not selector-addressable (a selector's leading . is a class).<br><span class="nota">The document: elements and attributes · reference §10.2</span></td></tr>
+<tr><td><code>commenta-pi-doctype</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Comments <code>&lt;!-- --&gt;</code> stay nodes with layout of their own; <code>&lt;?…?&gt;</code> and <code>&lt;!DOCTYPE …&gt;</code> (uppercase D only) are parsed and kept.<br><span class="nota">The document: elements and attributes · reference §11</span></td></tr>
+<tr><td><code>crlf</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>CRLF</code> becomes <code>LF</code> once, before lexing, and the result says so; a lone <code>CR</code> is content.<br><span class="nota">The document: elements and attributes · reference §2.4</span></td></tr>
+<tr><td><code>strictum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>The parser is lenient on purpose; <code>stml_strictum</code> reports the faults a caller may enforce: duplicate attribute, several roots, text outside the root, a nameless element.<br><span class="nota">The document: elements and attributes · reference §12</span></td></tr>
+<tr><td><code>entitates</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Five entities decoded in text only: <code>&amp;lt;</code> <code>&amp;gt;</code> <code>&amp;amp;</code> <code>&amp;quot;</code> <code>&amp;apos;</code>. Anything else (<code>&amp;nbsp;</code>, &amp;#10;) stays literal text; a bare &lt; in text is a syntax error.<br><span class="nota">Text and whitespace · reference §6.1</span></td></tr>
+<tr><td><code>prosa-mollis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>In a plain element a line break inside text is soft: prose reads as one line with single spaces, so it can be re-wrapped freely.<br><span class="nota">Text and whitespace · reference §6.2, §7.3</span></td></tr>
+<tr><td><code>multilinea</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;t\\&gt;</code> keeps line breaks as content and removes the common indentation (stored as indentatio), so a poem or a block of code can be indented with the document.<br><span class="nota">Text and whitespace · reference §6.2</span></td></tr>
+<tr><td><code>crudum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t!&gt;</code> is raw: nothing inside is a tag or an entity until its closing <code>&lt;/t&gt;</code>; <code>&lt;t!\\&gt;</code> is raw and dedented.<br><span class="nota">Text and whitespace · reference §6.2</span></td></tr>
+<tr><td><code>scala-fugae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A raw element can contain its own closing tag: <code>&lt;\\/t&gt;</code> inside means a literal <code>&lt;/t&gt;</code>, <code>&lt;\\\\/t&gt;</code> means <code>&lt;\\/t&gt;</code>, and so on. The reader removes one level, the writer adds one, so values round-trip.<br><span class="nota">Text and whitespace · clausura plan (2026-09-21); 771fa413</span></td></tr>
+<tr><td><code>trivia</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Whitespace containing a newline is layout and belongs to the nodes around it (spatia_ante, spatia_post, spatia_clausurae); whitespace on one line is content. Every layout byte has exactly one owner.<br><span class="nota">Text and whitespace · reference §7; trivia spec</span></td></tr>
+<tr><td><code>accessores-textus</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Four readings of text: valor (the meaning, layout-free), fluxus (prose with soft breaks as spaces), internus (the exact bytes), normalizatus (dedented and trimmed).<br><span class="nota">Text and whitespace · reference §7.3</span></td></tr>
+<tr><td><code>captura-ante</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t (&gt;</code> takes the next sibling as its child, <code>&lt;t((&gt;</code> the next two, <code>&lt;t(((&gt;</code> three; no closing tag. Chains nest: <code>&lt;a(&gt;</code> <code>&lt;b(&gt;</code> text.<br><span class="nota">Captures · reference §8.1</span></td></tr>
+<tr><td><code>captura-retro</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;) t&gt;</code> takes the previous sibling (<code>&lt;)) t&gt;</code> two). Write it glued to what it captures: a same-line space would be captured as text.<br><span class="nota">Captures · reference §8.1, §8.2</span></td></tr>
+<tr><td><code>captura-farcimen</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;= t =&gt;</code> takes one sibling before and one after: infix notation for trees.<br><span class="nota">Captures · reference §8.1</span></td></tr>
+<tr><td><code>captura-lineae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;t! (&gt;</code> takes the rest of the line, raw, with no closing tag: a one-line literal.<br><span class="nota">Captures · reference §8.3</span></td></tr>
+<tr><td><code>captura-fragmenti</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;#id (&gt;</code>, <code>&lt;# (&gt;</code> and the sugar <code>&lt;(&gt;</code> capture forward like elements; used as list items and chain links.<br><span class="nota">Captures · reference §8.4</span></td></tr>
+<tr><td><code>fragmentum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;#id&gt;</code>…<code>&lt;/#&gt;</code> groups children with no element of its own; &lt;&gt; is an anonymous fragment. Fragments take attributes (slot declarations).<br><span class="nota">Fragments and names · reference §9.1</span></td></tr>
+<tr><td><code>transclusio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;&lt;#id&gt;&gt;</code> is a window onto a fragment (aliasing, not copying). The library carries it; consumers resolve it: canon judges through it, silva's tree uses it for shared tokens.<br><span class="nota">Fragments and names · reference §9.2</span></td></tr>
+<tr><td><code>spatia-nominum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td>Five sigils, five name spaces: #x this document, <code>&amp;x;</code> an individual in the world, .x a kind, <code>&amp;@x;</code> a template slot, <code>$x</code> a pattern capture. <code>&amp;x;</code> needs its ; so <code>AT</code>&amp;T stays literal.<br><span class="nota">Fragments and names · reference §10.1</span></td></tr>
+<tr><td><code>augmentatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;% &amp;key;&gt;</code> … <code>&lt;/%&gt;</code> appends content to a library individual named by its key; additive only.<br><span class="nota">Fragments and names · reference §10.3</span></td></tr>
+<tr><td><code>fidelitas</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Writing without pretty mode reproduces the input byte for byte (with named exceptions: capture forms re-derived, empty pairs collapsed, bare values quoted).<br><span class="nota">Writing it back · reference §13.1</span></td></tr>
+<tr><td><code>pulchrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>The pretty writer regenerates layout from structure: capture collapse, 72 columns, re-wrapped prose, aligned multiline attributes. Gated by a fixed point and tree equality.<br><span class="nota">Writing it back · reference §13.2</span></td></tr>
+<tr><td><code>sedes</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_scribere_sedibus</code> reports each element's byte extent in the written text (for editors and diagnostics).<br><span class="nota">Writing it back · reference §13.3; 8eb75086</span></td></tr>
+<tr><td><code>lexemata</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_lexemata_colligere</code> returns the total token stream with byte extents and no validation (syntax colouring, tools).<br><span class="nota">Writing it back · reference §29</span></td></tr>
+<tr><td><code>templum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;#@name slot="@slot"&gt;</code>body<code>&lt;/#&gt;</code> defines a template; slots are declared on the opening tag and used as <code>&amp;@slot;</code> in attributes, text, or as a whole child. Fragments without @ are never touched.<br><span class="nota">Templates · reference §15.1</span></td></tr>
+<tr><td><code>loculus-optionalis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>@slot? declares an optional slot; it may only be used inside a <code>COMMUTATIO</code> arm that proves it present.<br><span class="nota">Templates · reference §15.1, §16</span></td></tr>
+<tr><td><code>vocatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;&lt;#@name a="x"&gt;&gt;</code> calls a template; block arguments follow the call as attribute-elements (<code>&lt;@corpus=&gt;</code>…<code>&lt;/&gt;</code>) and may hold whole subtrees.<br><span class="nota">Templates · reference §15.2, §15.3</span></td></tr>
+<tr><td><code>strata</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A call resolves only to templates defined earlier in the document, so expansion terminates by construction; a forward reference is refused (<code>FRAGMENTUM_POSTERIUS</code>).<br><span class="nota">Templates · reference §15.5</span></td></tr>
+<tr><td><code>commutatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;COMMUTATIO de="&amp;@x;"&gt;</code> chooses an arm: <code>est="literal"</code>, nihil, non-nihil, <code>tag="t"</code>, a pattern <code>&lt;EST&gt;</code><code>&lt;EXEMPLAR&gt;</code>, or <code>ORDINARIUS</code>. First match wins; no match and no <code>ORDINARIUS</code> is an error.<br><span class="nota">Templates · reference §16</span></td></tr>
+<tr><td><code>proiectio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&amp;@n.a.b;</code> reaches into a subtree argument by child element names; <code>&amp;@n.a!;</code> reads the bytes. Missing or ambiguous paths are named errors.<br><span class="nota">Templates · reference §17.1</span></td></tr>
+<tr><td><code>per-silvam</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&lt;PER de="@n.items" ut="i"&gt;</code> or <code>voca="#@item"</code> repeats a body or a template once per element of a projected forest.<br><span class="nota">Templates · reference §17.2</span></td></tr>
+<tr><td><code>recursio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A template may call itself only on strict descendants of its own subtree arguments, so recursion over a tree always terminates.<br><span class="nota">Templates · reference §17.3</span></td></tr>
+<tr><td><code>tabula-expansionum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Expansion returns a new tree (the original stays queryable) plus a side table of every splice: which call, which template, at what depth.<br><span class="nota">Templates · reference §15.7</span></td></tr>
+<tr><td><code>vitia-expansionis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Every failure is loud and named: 31 expansion errors (I-<code>XXXI</code>), each with the template and slot where known. Soft ones let the walk finish and still fail the result.<br><span class="nota">Templates · reference §24</span></td></tr>
+<tr><td><code>distributio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A named element whose children are anonymous fragments dissolves into one copy per item: <code>&lt;li class="x"&gt;</code><code>&lt;&gt;a&lt;/&gt;</code><code>&lt;&gt;b&lt;/&gt;</code><code>&lt;/li&gt;</code> becomes two <code>&lt;li class="x"&gt;</code>. Item attributes override, a tombstone deletes one.<br><span class="nota">Lists (DISTRIBUTIO) · reference §18</span></td></tr>
+<tr><td><code>distributio-mixta</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Mixing anonymous items with named children or text is refused (distributio <code>MIXTA</code>), never guessed.<br><span class="nota">Lists (DISTRIBUTIO) · reference §18</span></td></tr>
+<tr><td><code>exemplar</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;EXEMPLAR output="$x"&gt;</code>pattern<code>&lt;/EXEMPLAR&gt;</code> asks the document above it a question; the answer is a relation (rows of captures). It must be consumed below, or it is a named error.<br><span class="nota">Patterns and questions · reference §19.1</span></td></tr>
+<tr><td><code>modi</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>modus="omnia|unum|primum|optional"</code> states how many answers are expected; unum and optional enforce it. ancorata tries only the scope's root.<br><span class="nota">Patterns and questions · reference §19.1</span></td></tr>
+<tr><td><code>capturae-exemplaris</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>attr="$x"</code> captures a value, <code>&lt;t&gt;</code><code>$x</code><code>&lt;/t&gt;</code> a text, <code>&lt;t $x/&gt;</code> a whole node; a repeated <code>$x</code> is an equality constraint (nodes compared by content, not spelling).<br><span class="nota">Patterns and questions · reference §19.2; 8eb75086</span></td></tr>
+<tr><td><code>stella</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;*/&gt;</code> matches any one element; <code>&lt;**&gt;</code><code>&lt;x/&gt;</code><code>&lt;/**&gt;</code> means 'somewhere below me'.<br><span class="nota">Patterns and questions · reference §19.3</span></td></tr>
+<tr><td><code>cursus-fratrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>cursus="fratrum"</code> matches runs of siblings from every start position, one row each; <code>cursus="strictus"</code> requires them adjacent.<br><span class="nota">Patterns and questions · reference §19.1; 0c7f133f</span></td></tr>
+<tr><td><code>transparentia</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;TRANSPARENTIA tags=… attributa=…/&gt;</code> makes matching blind to wrapper tags and bookkeeping attributes (e.g. silva's linea, columna).<br><span class="nota">Patterns and questions · reference §19.4</span></td></tr>
+<tr><td><code>per-congruentiam</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;PER congruentia="$x"&gt;</code> instantiates its body (or calls a template) once per row, captures filling <code>&amp;@name;</code>.<br><span class="nota">Patterns and questions · reference §19.5</span></td></tr>
+<tr><td><code>catena</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;CATENA&gt;</code> threads stages: each link's scope is the previous link's output; links are <code>EXEMPLAR</code>, <code>SINE</code>, <code>DIRIBITIO</code> or nested chains.<br><span class="nota">Patterns and questions · reference §20</span></td></tr>
+<tr><td><code>sine</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;SINE&gt;</code> in a chain drops the rows inside which a pattern matches: absence questions such as 'books without a review'.<br><span class="nota">Patterns and questions · reference §22</span></td></tr>
+<tr><td><code>diribitio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;DIRIBITIO&gt;</code> dispatches a relation by conditions (<code>CASUS</code> with <code>EST</code>, <code>ORDINARIUS</code> last); angustans passes the condition's narrowed rows.<br><span class="nota">Patterns and questions · reference §21</span></td></tr>
+<tr><td><code>indago</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;INDAGO/&gt;</code> makes every later command leave a trace comment: rows in and out per stage, captures, <code>SINE</code> kills, arms taken.<br><span class="nota">Patterns and questions · reference §23</span></td></tr>
+<tr><td><code>congruere-strictum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_congruere_strictum</code>, the lockstep matcher for C callers: layout included, no <code>&lt;**&gt;</code>.<br><span class="nota">Patterns and questions · reference §19.2, §29</span></td></tr>
+<tr><td><code>vertere</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>stml vertere</code> runs the chain and emits <code>HTML</code> with its own doctype: the author's tags, real close tags, void elements bare, fragments dissolved, captures leaving no trace. Nothing partial: a refusal emits nothing.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-booleana</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A boolean attribute is written bare only if <code>HTML</code> knows it as boolean (disabled, checked…); any other 'true' is refused. <code>a=""</code> is kept (<code>alt=""</code> matters).<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-crudum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&lt;script!&gt;</code> and <code>&lt;style!&gt;</code> are emitted verbatim (plain <code>&lt;script&gt;</code> is refused); <code>&lt;crudum!&gt;</code>…<code>&lt;/crudum&gt;</code> splices bytes with no tag; other raw elements become escaped text.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-refutationes</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>Refused by name: <code>&amp;nbsp;</code> and other unknown entities in text (type the character), transclusions, augmentation, PIs, dotted tags, loose attribute-elements.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>litteralis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>litteralis mode for trees built by parsers (md): every &amp; escaped, no ambiguity refusal.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>canon</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A canon is a schema written in <code>STML</code> (<code>&lt;canon dialectus versio&gt;</code>) declaring elements, their attributes, children with min/max, and whether they hold text; <code>canon.canon</code> describes and judges the canon language itself.<br><span class="nota">Canon (schemas) · reference §26.1-26.2</span></td></tr>
+<tr><td><code>registrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>canones.registrum</code> maps documents to canons by root element or extension; an inline canon as the root's first child can only add to it.<br><span class="nota">Canon (schemas) · reference §26.1</span></td></tr>
+<tr><td><code>genera-valorum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Value genera: textus, nomen, numerus (with minimum/maximum, fractio), veritas, dies, electio (<code>&lt;optio&gt;</code>), compositum, identitas, referentia, titulus.<br><span class="nota">Canon (schemas) · reference §26.3</span></td></tr>
+<tr><td><code>unicitas-citatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>unicitas makes a key unique over named elements; citatio requires a value to name a declared key (cross-references), with scopes.<br><span class="nota">Canon (schemas) · reference §26.2</span></td></tr>
+<tr><td><code>claves-externae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>claves-externae embed a library's keys (<code>&amp;laika;</code>) so any document can cite them; minting an existing key is refused.<br><span class="nota">Canon (schemas) · reference §26.6</span></td></tr>
+<tr><td><code>iudicium-expansum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Canon can judge the document as written, after expansion, or after distribution - the sense, not only the spelling.<br><span class="nota">Canon (schemas) · reference §26.4</span></td></tr>
+<tr><td><code>canon-coquere</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>bin/canon_coquere</code> generates typed C readers from a canon, so a program reads a dialect through checked accessors.<br><span class="nota">Canon (schemas) · reference §28.2</span></td></tr>
+<tr><td><code>selectio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>CSS</code>-style selectors over a tree: type, #id, .label, [a], [a=v] [a^=v] [a$=v] [a*=v] [a~=v], :first-child :last-child :empty, and the four combinators.<br><span class="nota">Selectors · reference §27</span></td></tr>
+<tr><td><code>stml-cli</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>stml formare</code> (format, no expansion; <code>-probare</code> checks a file is already formatted), <code>stml expandere</code>, <code>stml vertere</code>. Exit 0 / 1 divergent / 2 refused with file:line:column.<br><span class="nota">Tools and API · reference §28.1</span></td></tr>
+<tr><td><code>canon-examen</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>bin/canon_examen</code> judges files by the registry or <code>-canon</code> X; <code>-machina</code> gives <code>TSV</code>, <code>-index</code> a canon's inventory. Exit 2 when nothing was judged.<br><span class="nota">Tools and API · reference §28.2</span></td></tr>
+<tr><td><code>api-c</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>The C chain: <code>stml_legere</code> -&gt; <code>stml_expandere</code> -&gt; <code>stml_distribuere</code> -&gt; emit, one internamentum and one piscina for the whole chain; gate on successus, never on the root pointer.<br><span class="nota">Tools and API · reference §14, §29</span></td></tr>
+<tr><td><code>consumptores</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td><code>STML</code> is the house's one data syntax: build declarations (<code>aedilis.stml</code>, <code>aedificatio.stml</code>), canons, natura's genera, silva's and materia's tree projections, md's <code>HTML</code> template, briar's .thistle elements.<br><span class="nota">Tools and API · reference §28.3; house</span></td></tr>
+<tr class="grex-gradus"><td colspan="4"><span class="status-partim">partim</span> partial <span class="nota">1</span></td></tr>
+<tr><td><code>errores-loci</code></td><td><span class="status-partim">partim</span></td><td>2025-11</td><td>A parse refusal carries a status (<code>SYNTAXIS</code>, <code>TAG_NON_CLAUSUM</code>, <code>TAG_IMPROPRIE</code>, <code>ATTRIBUTUM</code>, <code>CAPTIO</code>, <code>MULTILINEA</code>…) with line and column; the first error wins. The stml tool prints file:line:column, but a worded cause only for <code>MULTILINEA</code> and the attribute-element position law - otherwise just 'vitium' (measured 2026-10-03 on a mismatched close tag).<br><span class="nota">The document: elements and attributes · reference §12</span></td></tr>
+<tr class="grex-gradus"><td colspan="4"><span class="status-dilatum">dilatum</span> deferred <span class="nota">6</span></td></tr>
+<tr><td><code>selectio-absens</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Not supported: :not(), :nth-child(), :root, label namespaces, ## prefix selectors (all from the earlier TypeScript <code>STML</code>).<br><span class="nota">Selectors · reference §27</span></td></tr>
+<tr><td><code>pipe-views</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td><code>&lt;&lt;x | transform&gt;</code>&gt; pipe views: reserved, for generated projections only.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>liberi-in-multilinea</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Child elements inside <code>&lt;t\\&gt;</code> text: reserved for v2.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>mutatio-congruentiarum</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Mutation verbs (%) on pattern matches: reserved, blocked on extent provenance (expansion clones carry no byte positions yet).<br><span class="nota">Reserved and refused forms · reference §30, §15.7</span></td></tr>
+<tr><td><code>aggregata</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Aggregates (numerus, summa, minimum, maximum) over relations, a <code>CATENA</code> tee, a user <code>&lt;VITIUM&gt;</code>, occurrence suffixes ? * +: reserved, each written down so nobody reinvents them.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>de-argumento</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td><code>de="@arg"</code> on an <code>EXEMPLAR</code> inside a template body (pattern over an argument): reserved, refused today.<br><span class="nota">Reserved and refused forms · reference §17.1, §30</span></td></tr>
+<tr class="grex-gradus"><td colspan="4"><span class="status-refutatum">refutatum</span> refused <span class="nota">2</span></td></tr>
+<tr><td><code>sine-expressionibus</code></td><td><span class="status-refutatum">refutatum</span></td><td>—</td><td>No expression language, ever: no co-occurrence rules, no cross-attribute comparisons, no ordered content models. Those live in the reading program and its tests.<br><span class="nota">Canon (schemas) · reference §26.7; visio §8</span></td></tr>
+<tr><td><code>formae-mortuae</code></td><td><span class="status-refutatum">refutatum</span></td><td>—</td><td>Dead forms, refused on purpose: <code>&amp;@...children;</code> spreads, :/:: parameter syntax, <code>&lt;{&gt;</code> <code>&lt;}&gt;</code> infix <code>XML</code>, $: positional arguments, # as the world sigil, <code>&lt;!switch&gt;</code>.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+</tbody>
+</table>
+
+<table class="facultates ordo-versio">
+<thead><tr><th><label for="ordo-area" class="ordinator">Feature</label></th><th><label for="ordo-status" class="ordinator">Status</label></th><th><label for="ordo-versio" class="ordinator">Since &#9650;</label></th><th>What it does</th></tr></thead>
+<tbody>
+<tr class="grex-gradus"><td colspan="4">2025-11 <span class="nota">17</span></td></tr>
+<tr><td><code>elementum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t&gt;</code>…<code>&lt;/t&gt;</code> encloses children, <code>&lt;t/&gt;</code> is empty; the writer collapses an empty pair <code>&lt;a&gt;</code><code>&lt;/a&gt;</code> to <code>&lt;a/&gt;</code>. A named close must match its open tag exactly.<br><span class="nota">The document: elements and attributes · reference §4</span></td></tr>
+<tr><td><code>attributa</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Attribute values are double-quoted (raw bytes, no entities) or bare (a=xy for letters, digits, _ and -). Single quotes are refused; whitespace around = is normalized away.<br><span class="nota">The document: elements and attributes · reference §2.3, §5.1</span></td></tr>
+<tr><td><code>attributum-booleum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>A bare name is a boolean attribute whose value is the interned 'true'; <code>&lt;x a&gt;</code> and <code>&lt;x a="true"&gt;</code> are the same tree.<br><span class="nota">The document: elements and attributes · reference §5.2</span></td></tr>
+<tr><td><code>tituli</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>labels="a b c"</code> (or class=) is a space-separated label set with its own <code>API</code> (habet, addere, removere, commutare); selectors' .x match it.<br><span class="nota">The document: elements and attributes · reference §5.5</span></td></tr>
+<tr><td><code>commenta-pi-doctype</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Comments <code>&lt;!-- --&gt;</code> stay nodes with layout of their own; <code>&lt;?…?&gt;</code> and <code>&lt;!DOCTYPE …&gt;</code> (uppercase D only) are parsed and kept.<br><span class="nota">The document: elements and attributes · reference §11</span></td></tr>
+<tr><td><code>errores-loci</code></td><td><span class="status-partim">partim</span></td><td>2025-11</td><td>A parse refusal carries a status (<code>SYNTAXIS</code>, <code>TAG_NON_CLAUSUM</code>, <code>TAG_IMPROPRIE</code>, <code>ATTRIBUTUM</code>, <code>CAPTIO</code>, <code>MULTILINEA</code>…) with line and column; the first error wins. The stml tool prints file:line:column, but a worded cause only for <code>MULTILINEA</code> and the attribute-element position law - otherwise just 'vitium' (measured 2026-10-03 on a mismatched close tag).<br><span class="nota">The document: elements and attributes · reference §12</span></td></tr>
+<tr><td><code>entitates</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Five entities decoded in text only: <code>&amp;lt;</code> <code>&amp;gt;</code> <code>&amp;amp;</code> <code>&amp;quot;</code> <code>&amp;apos;</code>. Anything else (<code>&amp;nbsp;</code>, &amp;#10;) stays literal text; a bare &lt; in text is a syntax error.<br><span class="nota">Text and whitespace · reference §6.1</span></td></tr>
+<tr><td><code>crudum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t!&gt;</code> is raw: nothing inside is a tag or an entity until its closing <code>&lt;/t&gt;</code>; <code>&lt;t!\\&gt;</code> is raw and dedented.<br><span class="nota">Text and whitespace · reference §6.2</span></td></tr>
+<tr><td><code>captura-ante</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;t (&gt;</code> takes the next sibling as its child, <code>&lt;t((&gt;</code> the next two, <code>&lt;t(((&gt;</code> three; no closing tag. Chains nest: <code>&lt;a(&gt;</code> <code>&lt;b(&gt;</code> text.<br><span class="nota">Captures · reference §8.1</span></td></tr>
+<tr><td><code>captura-retro</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;) t&gt;</code> takes the previous sibling (<code>&lt;)) t&gt;</code> two). Write it glued to what it captures: a same-line space would be captured as text.<br><span class="nota">Captures · reference §8.1, §8.2</span></td></tr>
+<tr><td><code>captura-farcimen</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;= t =&gt;</code> takes one sibling before and one after: infix notation for trees.<br><span class="nota">Captures · reference §8.1</span></td></tr>
+<tr><td><code>fragmentum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;#id&gt;</code>…<code>&lt;/#&gt;</code> groups children with no element of its own; &lt;&gt; is an anonymous fragment. Fragments take attributes (slot declarations).<br><span class="nota">Fragments and names · reference §9.1</span></td></tr>
+<tr><td><code>transclusio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>&lt;&lt;#id&gt;&gt;</code> is a window onto a fragment (aliasing, not copying). The library carries it; consumers resolve it: canon judges through it, silva's tree uses it for shared tokens.<br><span class="nota">Fragments and names · reference §9.2</span></td></tr>
+<tr><td><code>fidelitas</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>Writing without pretty mode reproduces the input byte for byte (with named exceptions: capture forms re-derived, empty pairs collapsed, bare values quoted).<br><span class="nota">Writing it back · reference §13.1</span></td></tr>
+<tr><td><code>pulchrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>The pretty writer regenerates layout from structure: capture collapse, 72 columns, re-wrapped prose, aligned multiline attributes. Gated by a fixed point and tree equality.<br><span class="nota">Writing it back · reference §13.2</span></td></tr>
+<tr><td><code>selectio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td><code>CSS</code>-style selectors over a tree: type, #id, .label, [a], [a=v] [a^=v] [a$=v] [a*=v] [a~=v], :first-child :last-child :empty, and the four combinators.<br><span class="nota">Selectors · reference §27</span></td></tr>
+<tr><td><code>api-c</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2025-11</td><td>The C chain: <code>stml_legere</code> -&gt; <code>stml_expandere</code> -&gt; <code>stml_distribuere</code> -&gt; emit, one internamentum and one piscina for the whole chain; gate on successus, never on the root pointer.<br><span class="nota">Tools and API · reference §14, §29</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">2026-07 <span class="nota">3</span></td></tr>
+<tr><td><code>clausura-anonyma</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;/&gt;</code> closes the nearest open element (or fragment); the authored form is kept on write. Raw elements need their named close.<br><span class="nota">The document: elements and attributes · reference §4</span></td></tr>
+<tr><td><code>captura-lineae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;t! (&gt;</code> takes the rest of the line, raw, with no closing tag: a one-line literal.<br><span class="nota">Captures · reference §8.3</span></td></tr>
+<tr><td><code>captura-fragmenti</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-07</td><td><code>&lt;#id (&gt;</code>, <code>&lt;# (&gt;</code> and the sugar <code>&lt;(&gt;</code> capture forward like elements; used as list items and chain links.<br><span class="nota">Captures · reference §8.4</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">2026-08 <span class="nota">40</span></td></tr>
+<tr><td><code>elementum-attributi</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;@name=&gt;</code>…<code>&lt;/&gt;</code> spells an attribute as a child element, so a value can hold " or span lines. It binds to the parent only as a prefix of its children (or as a template call's argument); anywhere else it is refused.<br><span class="nota">The document: elements and attributes · reference §5.3</span></td></tr>
+<tr><td><code>sepulcrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A tombstone <code>&lt;@a=/&gt;</code> says 'explicitly absent': readers see nothing, canon judges it missing, and it blocks attribute inheritance in lists.<br><span class="nota">The document: elements and attributes · reference §5.4</span></td></tr>
+<tr><td><code>crlf</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>CRLF</code> becomes <code>LF</code> once, before lexing, and the result says so; a lone <code>CR</code> is content.<br><span class="nota">The document: elements and attributes · reference §2.4</span></td></tr>
+<tr><td><code>strictum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>The parser is lenient on purpose; <code>stml_strictum</code> reports the faults a caller may enforce: duplicate attribute, several roots, text outside the root, a nameless element.<br><span class="nota">The document: elements and attributes · reference §12</span></td></tr>
+<tr><td><code>prosa-mollis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>In a plain element a line break inside text is soft: prose reads as one line with single spaces, so it can be re-wrapped freely.<br><span class="nota">Text and whitespace · reference §6.2, §7.3</span></td></tr>
+<tr><td><code>multilinea</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;t\\&gt;</code> keeps line breaks as content and removes the common indentation (stored as indentatio), so a poem or a block of code can be indented with the document.<br><span class="nota">Text and whitespace · reference §6.2</span></td></tr>
+<tr><td><code>trivia</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Whitespace containing a newline is layout and belongs to the nodes around it (spatia_ante, spatia_post, spatia_clausurae); whitespace on one line is content. Every layout byte has exactly one owner.<br><span class="nota">Text and whitespace · reference §7; trivia spec</span></td></tr>
+<tr><td><code>accessores-textus</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Four readings of text: valor (the meaning, layout-free), fluxus (prose with soft breaks as spaces), internus (the exact bytes), normalizatus (dedented and trimmed).<br><span class="nota">Text and whitespace · reference §7.3</span></td></tr>
+<tr><td><code>augmentatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;% &amp;key;&gt;</code> … <code>&lt;/%&gt;</code> appends content to a library individual named by its key; additive only.<br><span class="nota">Fragments and names · reference §10.3</span></td></tr>
+<tr><td><code>sedes</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_scribere_sedibus</code> reports each element's byte extent in the written text (for editors and diagnostics).<br><span class="nota">Writing it back · reference §13.3; 8eb75086</span></td></tr>
+<tr><td><code>lexemata</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_lexemata_colligere</code> returns the total token stream with byte extents and no validation (syntax colouring, tools).<br><span class="nota">Writing it back · reference §29</span></td></tr>
+<tr><td><code>templum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;#@name slot="@slot"&gt;</code>body<code>&lt;/#&gt;</code> defines a template; slots are declared on the opening tag and used as <code>&amp;@slot;</code> in attributes, text, or as a whole child. Fragments without @ are never touched.<br><span class="nota">Templates · reference §15.1</span></td></tr>
+<tr><td><code>loculus-optionalis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>@slot? declares an optional slot; it may only be used inside a <code>COMMUTATIO</code> arm that proves it present.<br><span class="nota">Templates · reference §15.1, §16</span></td></tr>
+<tr><td><code>vocatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;&lt;#@name a="x"&gt;&gt;</code> calls a template; block arguments follow the call as attribute-elements (<code>&lt;@corpus=&gt;</code>…<code>&lt;/&gt;</code>) and may hold whole subtrees.<br><span class="nota">Templates · reference §15.2, §15.3</span></td></tr>
+<tr><td><code>strata</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A call resolves only to templates defined earlier in the document, so expansion terminates by construction; a forward reference is refused (<code>FRAGMENTUM_POSTERIUS</code>).<br><span class="nota">Templates · reference §15.5</span></td></tr>
+<tr><td><code>commutatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;COMMUTATIO de="&amp;@x;"&gt;</code> chooses an arm: <code>est="literal"</code>, nihil, non-nihil, <code>tag="t"</code>, a pattern <code>&lt;EST&gt;</code><code>&lt;EXEMPLAR&gt;</code>, or <code>ORDINARIUS</code>. First match wins; no match and no <code>ORDINARIUS</code> is an error.<br><span class="nota">Templates · reference §16</span></td></tr>
+<tr><td><code>tabula-expansionum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Expansion returns a new tree (the original stays queryable) plus a side table of every splice: which call, which template, at what depth.<br><span class="nota">Templates · reference §15.7</span></td></tr>
+<tr><td><code>vitia-expansionis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Every failure is loud and named: 31 expansion errors (I-<code>XXXI</code>), each with the template and slot where known. Soft ones let the walk finish and still fail the result.<br><span class="nota">Templates · reference §24</span></td></tr>
+<tr><td><code>distributio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A named element whose children are anonymous fragments dissolves into one copy per item: <code>&lt;li class="x"&gt;</code><code>&lt;&gt;a&lt;/&gt;</code><code>&lt;&gt;b&lt;/&gt;</code><code>&lt;/li&gt;</code> becomes two <code>&lt;li class="x"&gt;</code>. Item attributes override, a tombstone deletes one.<br><span class="nota">Lists (DISTRIBUTIO) · reference §18</span></td></tr>
+<tr><td><code>distributio-mixta</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Mixing anonymous items with named children or text is refused (distributio <code>MIXTA</code>), never guessed.<br><span class="nota">Lists (DISTRIBUTIO) · reference §18</span></td></tr>
+<tr><td><code>exemplar</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;EXEMPLAR output="$x"&gt;</code>pattern<code>&lt;/EXEMPLAR&gt;</code> asks the document above it a question; the answer is a relation (rows of captures). It must be consumed below, or it is a named error.<br><span class="nota">Patterns and questions · reference §19.1</span></td></tr>
+<tr><td><code>modi</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>modus="omnia|unum|primum|optional"</code> states how many answers are expected; unum and optional enforce it. ancorata tries only the scope's root.<br><span class="nota">Patterns and questions · reference §19.1</span></td></tr>
+<tr><td><code>capturae-exemplaris</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>attr="$x"</code> captures a value, <code>&lt;t&gt;</code><code>$x</code><code>&lt;/t&gt;</code> a text, <code>&lt;t $x/&gt;</code> a whole node; a repeated <code>$x</code> is an equality constraint (nodes compared by content, not spelling).<br><span class="nota">Patterns and questions · reference §19.2; 8eb75086</span></td></tr>
+<tr><td><code>stella</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;*/&gt;</code> matches any one element; <code>&lt;**&gt;</code><code>&lt;x/&gt;</code><code>&lt;/**&gt;</code> means 'somewhere below me'.<br><span class="nota">Patterns and questions · reference §19.3</span></td></tr>
+<tr><td><code>cursus-fratrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>cursus="fratrum"</code> matches runs of siblings from every start position, one row each; <code>cursus="strictus"</code> requires them adjacent.<br><span class="nota">Patterns and questions · reference §19.1; 0c7f133f</span></td></tr>
+<tr><td><code>transparentia</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;TRANSPARENTIA tags=… attributa=…/&gt;</code> makes matching blind to wrapper tags and bookkeeping attributes (e.g. silva's linea, columna).<br><span class="nota">Patterns and questions · reference §19.4</span></td></tr>
+<tr><td><code>per-congruentiam</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;PER congruentia="$x"&gt;</code> instantiates its body (or calls a template) once per row, captures filling <code>&amp;@name;</code>.<br><span class="nota">Patterns and questions · reference §19.5</span></td></tr>
+<tr><td><code>catena</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;CATENA&gt;</code> threads stages: each link's scope is the previous link's output; links are <code>EXEMPLAR</code>, <code>SINE</code>, <code>DIRIBITIO</code> or nested chains.<br><span class="nota">Patterns and questions · reference §20</span></td></tr>
+<tr><td><code>sine</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;SINE&gt;</code> in a chain drops the rows inside which a pattern matches: absence questions such as 'books without a review'.<br><span class="nota">Patterns and questions · reference §22</span></td></tr>
+<tr><td><code>diribitio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;DIRIBITIO&gt;</code> dispatches a relation by conditions (<code>CASUS</code> with <code>EST</code>, <code>ORDINARIUS</code> last); angustans passes the condition's narrowed rows.<br><span class="nota">Patterns and questions · reference §21</span></td></tr>
+<tr><td><code>indago</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>&lt;INDAGO/&gt;</code> makes every later command leave a trace comment: rows in and out per stage, captures, <code>SINE</code> kills, arms taken.<br><span class="nota">Patterns and questions · reference §23</span></td></tr>
+<tr><td><code>congruere-strictum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>stml_congruere_strictum</code>, the lockstep matcher for C callers: layout included, no <code>&lt;**&gt;</code>.<br><span class="nota">Patterns and questions · reference §19.2, §29</span></td></tr>
+<tr><td><code>canon</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>A canon is a schema written in <code>STML</code> (<code>&lt;canon dialectus versio&gt;</code>) declaring elements, their attributes, children with min/max, and whether they hold text; <code>canon.canon</code> describes and judges the canon language itself.<br><span class="nota">Canon (schemas) · reference §26.1-26.2</span></td></tr>
+<tr><td><code>registrum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>canones.registrum</code> maps documents to canons by root element or extension; an inline canon as the root's first child can only add to it.<br><span class="nota">Canon (schemas) · reference §26.1</span></td></tr>
+<tr><td><code>genera-valorum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Value genera: textus, nomen, numerus (with minimum/maximum, fractio), veritas, dies, electio (<code>&lt;optio&gt;</code>), compositum, identitas, referentia, titulus.<br><span class="nota">Canon (schemas) · reference §26.3</span></td></tr>
+<tr><td><code>unicitas-citatio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>unicitas makes a key unique over named elements; citatio requires a value to name a declared key (cross-references), with scopes.<br><span class="nota">Canon (schemas) · reference §26.2</span></td></tr>
+<tr><td><code>claves-externae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>claves-externae embed a library's keys (<code>&amp;laika;</code>) so any document can cite them; minting an existing key is refused.<br><span class="nota">Canon (schemas) · reference §26.6</span></td></tr>
+<tr><td><code>iudicium-expansum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td>Canon can judge the document as written, after expansion, or after distribution - the sense, not only the spelling.<br><span class="nota">Canon (schemas) · reference §26.4</span></td></tr>
+<tr><td><code>canon-coquere</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>bin/canon_coquere</code> generates typed C readers from a canon, so a program reads a dialect through checked accessors.<br><span class="nota">Canon (schemas) · reference §28.2</span></td></tr>
+<tr><td><code>canon-examen</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-08</td><td><code>bin/canon_examen</code> judges files by the registry or <code>-canon</code> X; <code>-machina</code> gives <code>TSV</code>, <code>-index</code> a canon's inventory. Exit 2 when nothing was judged.<br><span class="nota">Tools and API · reference §28.2</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">2026-09 <span class="nota">10</span></td></tr>
+<tr><td><code>scala-fugae</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A raw element can contain its own closing tag: <code>&lt;\\/t&gt;</code> inside means a literal <code>&lt;/t&gt;</code>, <code>&lt;\\\\/t&gt;</code> means <code>&lt;\\/t&gt;</code>, and so on. The reader removes one level, the writer adds one, so values round-trip.<br><span class="nota">Text and whitespace · clausura plan (2026-09-21); 771fa413</span></td></tr>
+<tr><td><code>proiectio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&amp;@n.a.b;</code> reaches into a subtree argument by child element names; <code>&amp;@n.a!;</code> reads the bytes. Missing or ambiguous paths are named errors.<br><span class="nota">Templates · reference §17.1</span></td></tr>
+<tr><td><code>per-silvam</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&lt;PER de="@n.items" ut="i"&gt;</code> or <code>voca="#@item"</code> repeats a body or a template once per element of a projected forest.<br><span class="nota">Templates · reference §17.2</span></td></tr>
+<tr><td><code>recursio</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A template may call itself only on strict descendants of its own subtree arguments, so recursion over a tree always terminates.<br><span class="nota">Templates · reference §17.3</span></td></tr>
+<tr><td><code>vertere</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>stml vertere</code> runs the chain and emits <code>HTML</code> with its own doctype: the author's tags, real close tags, void elements bare, fragments dissolved, captures leaving no trace. Nothing partial: a refusal emits nothing.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-booleana</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>A boolean attribute is written bare only if <code>HTML</code> knows it as boolean (disabled, checked…); any other 'true' is refused. <code>a=""</code> is kept (<code>alt=""</code> matters).<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-crudum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>&lt;script!&gt;</code> and <code>&lt;style!&gt;</code> are emitted verbatim (plain <code>&lt;script&gt;</code> is refused); <code>&lt;crudum!&gt;</code>…<code>&lt;/crudum&gt;</code> splices bytes with no tag; other raw elements become escaped text.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>html-refutationes</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>Refused by name: <code>&amp;nbsp;</code> and other unknown entities in text (type the character), transclusions, augmentation, PIs, dotted tags, loose attribute-elements.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>litteralis</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td>litteralis mode for trees built by parsers (md): every &amp; escaped, no ambiguity refusal.<br><span class="nota">HTML emission · reference §25</span></td></tr>
+<tr><td><code>stml-cli</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>2026-09</td><td><code>stml formare</code> (format, no expansion; <code>-probare</code> checks a file is already formatted), <code>stml expandere</code>, <code>stml vertere</code>. Exit 0 / 1 divergent / 2 refused with file:line:column.<br><span class="nota">Tools and API · reference §28.1</span></td></tr>
+<tr class="grex-gradus"><td colspan="4">undated (reserved, refused, or no single commit introduced it) <span class="nota">11</span></td></tr>
+<tr><td><code>tagum-punctatum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td>A leading dot makes a tag name a kind: <code>&lt;.species&gt;</code>. Dotted elements are not selector-addressable (a selector's leading . is a class).<br><span class="nota">The document: elements and attributes · reference §10.2</span></td></tr>
+<tr><td><code>spatia-nominum</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td>Five sigils, five name spaces: #x this document, <code>&amp;x;</code> an individual in the world, .x a kind, <code>&amp;@x;</code> a template slot, <code>$x</code> a pattern capture. <code>&amp;x;</code> needs its ; so <code>AT</code>&amp;T stays literal.<br><span class="nota">Fragments and names · reference §10.1</span></td></tr>
+<tr><td><code>sine-expressionibus</code></td><td><span class="status-refutatum">refutatum</span></td><td>—</td><td>No expression language, ever: no co-occurrence rules, no cross-attribute comparisons, no ordered content models. Those live in the reading program and its tests.<br><span class="nota">Canon (schemas) · reference §26.7; visio §8</span></td></tr>
+<tr><td><code>selectio-absens</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Not supported: :not(), :nth-child(), :root, label namespaces, ## prefix selectors (all from the earlier TypeScript <code>STML</code>).<br><span class="nota">Selectors · reference §27</span></td></tr>
+<tr><td><code>consumptores</code></td><td><span class="status-aedificatum">aedificatum</span></td><td>—</td><td><code>STML</code> is the house's one data syntax: build declarations (<code>aedilis.stml</code>, <code>aedificatio.stml</code>), canons, natura's genera, silva's and materia's tree projections, md's <code>HTML</code> template, briar's .thistle elements.<br><span class="nota">Tools and API · reference §28.3; house</span></td></tr>
+<tr><td><code>pipe-views</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td><code>&lt;&lt;x | transform&gt;</code>&gt; pipe views: reserved, for generated projections only.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>liberi-in-multilinea</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Child elements inside <code>&lt;t\\&gt;</code> text: reserved for v2.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>mutatio-congruentiarum</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Mutation verbs (%) on pattern matches: reserved, blocked on extent provenance (expansion clones carry no byte positions yet).<br><span class="nota">Reserved and refused forms · reference §30, §15.7</span></td></tr>
+<tr><td><code>aggregata</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td>Aggregates (numerus, summa, minimum, maximum) over relations, a <code>CATENA</code> tee, a user <code>&lt;VITIUM&gt;</code>, occurrence suffixes ? * +: reserved, each written down so nobody reinvents them.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+<tr><td><code>de-argumento</code></td><td><span class="status-dilatum">dilatum</span></td><td>—</td><td><code>de="@arg"</code> on an <code>EXEMPLAR</code> inside a template body (pattern over an argument): reserved, refused today.<br><span class="nota">Reserved and refused forms · reference §17.1, §30</span></td></tr>
+<tr><td><code>formae-mortuae</code></td><td><span class="status-refutatum">refutatum</span></td><td>—</td><td>Dead forms, refused on purpose: <code>&amp;@...children;</code> spreads, :/:: parameter syntax, <code>&lt;{&gt;</code> <code>&lt;}&gt;</code> infix <code>XML</code>, $: positional arguments, # as the world sigil, <code>&lt;!switch&gt;</code>.<br><span class="nota">Reserved and refused forms · reference §30</span></td></tr>
+</tbody>
+</table>
+
+<p class="nota">Generated from the ledger inventory "stml facultates"
+(written 2026-10-03 from <code>docs/stml-reference.md</code>, the STML
+specs and the code) with examples run through ~/.bin/stml (built from 8a84c35c SORDIDUM); ~/Documents/projects/rhubarb/bin/canon_examen (built from 8a84c35c SORDIDUM); regenerate with
+<code>./docs/instrumenta/regenerare.sh</code>. The authority is the code
+and the reference: when they disagree with a row here, the row is
+wrong.</p>
+
+</body>
+</html>
