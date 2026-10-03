@@ -244,6 +244,22 @@ nomen structura {
     b32 (*agere)(vacuum* datum, constans FabricaActio* actio,
                  constans character* acta_via, Piscina* piscina,
                  FabricaActum* actum_out);
+    /* agere SIMUL (plan 2 T6): 'numerus' actiones TUTAE (lectiones=
+     * "verum") parallele; redit cum omnes finitae. libri[k] = liber
+     * lectionum filii k (FABRICA_LECTIONES ante incipere positus).
+     * Fractura una: currentes finiunt, nova non incipiunt
+     * (incepta_out[k] FALSUM, codex -I, cauda VACUA = consulto non
+     * inceptum; cauda plena = incipi non potuit). NIHIL = seriatim
+     * (FABRICA_FILA=1): via vetus intacta. Nucleus: tutae simul (scrip-
+     * turae S contra vestigium membri; photographia una undae contra
+     * unionem), non tutae SOLAE. */
+    vacuum (*agere_simul)(vacuum* datum,
+                          constans FabricaActio* constans* actiones,
+                          i32 numerus,
+                          constans character* constans* acta_viae,
+                          constans character* constans* libri,
+                          Piscina* piscina, FabricaActum* acta_out,
+                          b32* incepta_out);
     /* photographia: arbor tota (sine .git) et loci declarati extra
      * arborem ('~/'), Xar de FabricaVestigium ORDINATA per viam.
      * NIHIL licet: sanare tum vestigia non probat (plan 1b T4). */
