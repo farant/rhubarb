@@ -1354,3 +1354,43 @@ parallel judging is the next lever, not in T6. Remaining failures in
 those runs were other processes writing in the tree during the heal
 (oratio/build/cursor.sera/, tabularium.db-wal) - reported correctly as
 "aut manu mutata dum currebat".
+
+## 2026-10-03 - plan 2 T7 step 1: excubitor vs the store (record)
+
+Method (scratch scripts, not committed): per tree state a worktree with
+the T5 thin runner (live bin/aedilis + bin/compilator linked, own store).
+compilator's misses counted by a `clang` wrapper on PATH that logs only
+real `-c` compiles and passes -print-prog-name through - compilator's
+compiler identity, hence every key, is unchanged. excubitor asked
+BEFORE each compile pass; objects re-touched between scenarios (the old
+runner's mtime baseline). Header: toml/fontes/toml_scalaris.h.
+
+Same result on all four states (HEAD, cadca60e, 8d7e6fba, 26e34570):
+  A nothing changed:           excubitor 0, compilator 0
+  B header touched, same bytes: excubitor 4 (false alarm), compilator 0
+  C header bytes changed:      excubitor 4, compilator 4 (agree)
+  D same-named header earlier on -I (copy of include/chorda.h into
+    toml/fontes): excubitor 0 (MISSES IT), compilator 44-45 (all)
+Also seen live after T5: compilator leaves identical objects untouched,
+so excubitor called 3 up-to-date objects stale (B class).
+First C run reported excubitor 0 - my script edited the header in the
+same second as the last object touch, and excubitor compares with -nt
+at 1 s resolution (the same-second trap the runners document). Re-run
+with the sleep before the edit: 4/4. Real in practice, but not fair to
+count as excubitor's logic.
+
+Finding for Step 2: excubitor is NOT only the report-only call in
+compile_tests.sh. ~18 runners call it (crusta x3, css, html, md, oratio
+x2 and a crusta fixture BLOCK on it with exit 2; gesta, officina x3,
+saltuarius, silva, tessera, diagnostica fumus warn), plus the
+.claude/hooks/excubitor-custos.sh hook. Those runners still build by
+mtime - excubitor is their real guard. Deleting it before they compile
+through the store would remove that guard (a missing script degrades to
+a CAUTIO line).
+Step 2 (Fran 2026-10-03): migrate first, then delete. Inventory
+'consumptores excubitoris' (…MEES9X, 21 rows: usus obstat/monet,
+migratum) and batch job 'migratio ad compilatorem (excubitor emeritus)'
+(…W0ZBW, 20 open rows, recipe = the T5 toml conversion + its oracle).
+Deleting excubitor.sh / fabrica.tsv / compile_tests.sh:1225 / the hook
+is the job's last row, not T7's. Spec 2 IX 'excubitor deleted' moves
+with it.
