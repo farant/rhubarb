@@ -235,7 +235,9 @@ shifted alternate, on release).
   transport encodes, then decodes through rivus); finding: terminal
   layout must sit on cell boundaries.
 
-**B7 — RELATIO.** Phase log, module 002/003/005 statuses, merges, briar
+**B7 — RELATIO.** DONE 2026-10-03: RELATIO at the end of
+`lib/eventus.phase-log.md`; modules 002 and 003 completed in
+terminal-planning; briar MUTATIONES. Phase log, module 002/003/005 statuses, merges, briar
 MUTATIONES.
 
 ## 2. Gates per task

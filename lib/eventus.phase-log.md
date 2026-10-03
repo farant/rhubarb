@@ -1539,3 +1539,92 @@ snap. pictor, villa and forum build.
 The hand-written `toy.eventus.stml` (A3) records presses with
 `botton="0"` (no button in the vocabulary); the encoder rightly refuses
 to send a press without a button, so B6b records fresh sessions.
+
+## B7 — RELATIO: phase B, the terminal source (2026-10-03)
+
+**What was built.** The terminal as a second, lossless source of the
+SAME vocabulary, both directions: bytes → Eventus (tokenizer, decoder,
+pipeline, raw-mode layer) and Eventus → bytes (encoder), proven
+against the same conformance table as fenestra and by replay across
+sources. tessera's reader became a projection of it.
+
+| Task | Commit | What |
+|---|---|---|
+| plan | 2a435868 | plan B; D8 = (a), the tokenizer first (Fran) |
+| B1a | 9f4fed1d | `series_terminalis`: DEC/Williams tokenizer, pull API, split-point sweep |
+| B1b | 79e2f3a0 | tessera's reader on the tokenizer; 27 debts (108 shapes) paid |
+| B2a | 6975780b | `interpres_terminalis`: legacy tokens → Eventus (honest controls, alt, SGR/X10, paste, focus) |
+| B2b | 6312a06a | kitty (event types, base-layout key → codex, capabilities learned) |
+| B3a-i | e9e44579 | scroll gets position + modifiers; `typus` = the actual character |
+| B3a-ii | a4e70b0f | `rivus_terminalis`: the pure pipeline; tessera's reader = a projection |
+| B3b-i | e17543d4 | coalescing read, declared modes, capabilities first; event-loss bug fixed |
+| B3b-ii | 41b41697 | `copia_terminalis` (OSC 52); paste → DEPOSITIO when declared |
+| B3b-iii | e483f8fd | `terminalis_posix` raw-mode layer; terminal auscultator; Fran's look |
+| B4a | e992f4e9 | comparator: capability-keyed excuses, 3-state verdict, `modificantes_textus` |
+| B4b | e695b077 | the table's terminal column + runner: 16/16 (one named EXCUSATA) |
+| B4b+ | ae3455d2 | `characteres` decoded with `entitates_html` |
+| B6a-i | c5469f7c | `codificator_terminalis`: keys, Ghostty as oracle; `CSI 27;m;c~` decoded |
+| B6a-ii | 53f421b0 | encoder: SGR mouse by the Modulus, safe paste, focus |
+| merge | fc909514 | main (fabrica plan 2, gate speedups) into secunda |
+| B6b | 765421b4 | cross-source replay; `manus_ludus_iterare_per` |
+
+B5 (tessera as a projection) was folded into B3a-ii (Fran's
+architecture (A)).
+
+**How it was proven.** Red first throughout; about 40 compiling plants,
+each caught by name. Three independent oracles: Ghostty's Parser.zig
+tests (tokenizer), Ghostty's encoder tests (69 key vectors) and
+OpenTUI's input vectors (tessera's 1,534). Round trips both ways
+(bytes → decode → encode = bytes; the conformance table's bytes
+regenerate exactly). Live: the terminal auscultator in Ghostty and
+Terminal.app (Fran: "everything is working"). Semantic replay
+terminal ⇄ fenestra.
+
+**What we found (the reusable lessons):**
+1. **Terminal facts:**
+   - a Finder drop is just a bracketed paste of the path, in both
+     terminals; during a drag the terminal is BLIND (macOS routes the
+     mouse to the drag session), so the drop's position is the pointer
+     BEFORE the drag (park 008);
+   - kitty's canonical forms (Ghostty): no text and so no shifted
+     alternate on release; `:1` on press omitted in `u`/`~` forms but
+     present in the special forms;
+   - legacy modified Enter/Tab/Escape arrive as xterm's `CSI 27;m;c~`;
+   - Terminal.app reports pixel sizes too (13 px cells).
+2. **Design findings:**
+   - **terminal layout must sit on cell boundaries**: a terminal can
+     only report cell centres, so a click near an edge of a non-aligned
+     component quantizes into its neighbour (B6b case F; for module
+     013);
+   - the terminal source's cell size is the app's MODULUS, not the
+     terminal's physical pixels;
+   - "consumed modifiers" don't exist in Eventus; `typus` (the actual
+     character) stands in where Ghostty uses the consumed set.
+3. **Bugs the work exposed:**
+   - a long typed run (256 bytes) made 512 events for a 256-slot
+     queue: half silently lost (B3b-i);
+   - fenestra's `characteres` entities were never decoded (A4 table);
+   - the decoder dropped the `CSI 27;m;c~` form.
+4. **Tool traps:**
+   - a broken amalgam makes `compile_tests.sh` run the OLD test binary
+     and report its verdict (read the runner's own output);
+   - Xar is segmented: never hand `xar_obtinere(x, k)` to an API that
+     takes an array (B6a-ii round trip);
+   - the tessera amalgam drops unused functions, so a file-scope static
+     only they use becomes an orphan under -Werror: keep tables inside
+     their function (`MODI`, base64).
+5. **Process:** the merged gate speedups cut a full five-gate commit
+   from 13–25 min to about 6.
+
+**AUDIENDA:**
+- CLOSED: what Terminal.app sends for a drop (a bracketed paste of the
+  path); which kitty flags it ignores (it stays legacy; nothing leaks).
+- CLOSED: X10 mouse stays a reader special case (rivus's raw channel).
+- CARRIED: the `typus` deletion inventory (D2 step 3), now that tessera
+  projects from Eventus.
+- CARRIED: a pty harness (`posix_openpt` into the lexicon) for a
+  headless test of `terminalis_posix.c`; DECCKM / keypad application /
+  X10 encoding with the emulator (module 006).
+
+**Parks filed** (terminal-planning): 008, a promoted drop's position is
+the pointer before the drag (decision (a), contract documented).

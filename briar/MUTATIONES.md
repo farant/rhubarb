@@ -47,6 +47,26 @@ Leges chartae:
   `manus_ludus_clavem` modificantes ut fenestra eos fert
   (`MOD_SHIFT | MOD_SHIFT_SINISTER`), non iam 'I' pro Shift.
 
+- corpus (eventus phasis B): fons terminalis - `series_terminalis`
+  nova (lexemator DEC/Williams, API trahens), `interpres_terminalis`
+  nova (lexemata -> Eventus: legacy, kitty, xterm `CSI 27;m;c~`),
+  `rivus_terminalis` nova (pipeline PURA: tradere / mora_ms / moram /
+  eventum, lectio coalita, modi declarati, glutinum -> DEPOSITIO),
+  `copia_terminalis` nova (OSC 52), `terminalis` (POSIX: modus
+  crudus, lectio cum mora, amplitudo) nova, `codificator_terminalis`
+  nova (Eventus -> octeti: claves legacy/kitty, mus SGR per Modulum,
+  glutinum tutum, focus). `claves_physicae`: `claves_codex_ex_littera`,
+  `_ex_kitty`, `claves_littera_ex_codex`. `eventus_cauda`:
+  `eventus_caudae_depositionem_impellere`. `manus_ludus_iterare_per`
+  (iteratio per traditionem).
+
+- corpus: `eventus.h` - `datum.rotula` x/y/modificantes et
+  `EventusFacultates.modificantes_textus` AD FINEM addita (plagulae
+  veteres eaedem). `eventus_conformitas_comparare` nunc
+  `ConformitasVerdictum` reddit (FRACTA 0, CONFORMIS, EXCUSATA) - olim
+  b32; `si (comparare(...))` idem significat, sed EXCUSATA verum est.
+  Scaena: `excusationes`, `<terminalis profilum octeti>`.
+
 - corpus: `modulus` nova (modulus strati delineandi) - cellula in
   pixelis nostris, extensio, proportio schirmi (rationalis, reservata);
   columna/linea pavimento, margines proximi (divisio negativa manu,
