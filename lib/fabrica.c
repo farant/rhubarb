@@ -88,6 +88,8 @@ fabrica_suturam_parare (
     sutura->digesta             = NIHIL;
     sutura->agere               = NIHIL;
     sutura->agere_simul         = NIHIL;
+    sutura->currere_simul       = NIHIL;
+    sutura->praevisio           = NIHIL;
     sutura->vestigium_capere    = NIHIL;
     sutura->cursum_inscribere   = NIHIL;
     sutura->cursum_legere       = NIHIL;
@@ -1641,6 +1643,31 @@ _regenerare (
         *causa_out = *(chorda*)memoratum;
         redde causa_out->mensura == 0;
     }
+    /* PRAEVISIO (T6b): petitio colligitur (semel per titulum), nihil
+     * curritur, nihil memoratur - iudicium hoc abicitur */
+    si (sutura->praevisio != NIHIL)
+    {
+        i32 k;
+        b32 nota;
+
+        nota = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(sutura->praevisio); k++)
+        {
+            si (chorda_aequalis((*(FabricaActio**)xar_obtinere(
+                    sutura->praevisio, k))->titulus, actio->titulus))
+            {
+                nota = VERUM;
+                frange;
+            }
+        }
+        si (!nota && actio->lectiones)
+        {
+            *(constans FabricaActio**)xar_addere(sutura->praevisio) =
+                actio;
+        }
+        *causa_out = chorda_ex_literis("praevisio", piscina);
+        redde FALSUM;
+    }
     causa_out->datum    = NIHIL;
     causa_out->mensura  = ZEPHYRUM;
     duratio             = ZEPHYRUM;
@@ -1681,6 +1708,153 @@ _regenerare (
         sutura->cursum_inscribere(sutura->datum, &iudicium);
     }
     redde felix;
+}
+
+vacuum
+fabrica_regenerationes_praevidere (
+    constans FabricaSutura* sutura,
+              constans Xar* actiones,
+                       b32  plenus,
+                   Piscina* piscina)
+{
+               FabricaSutura   copia;
+                         Xar*  petitae;
+       constans FabricaActio** membra;
+          constans character** scripturae;
+          constans character** libri;
+                         b32*  felices;
+                      chorda*  causae;
+                         i32*  durationes;
+                         i32   i;
+                         i32   j;
+                         i32   n;
+
+    si (   sutura->currere_simul  == NIHIL
+        || sutura->regenerationes == NIHIL)
+    {
+        redde;
+    }
+    /* I. iudicium in modo colligendi (copia suturae: tabulae communes) */
+    petitae = xar_creare(piscina, (i32)magnitudo(FabricaActio*));
+    si (petitae == NIHIL)
+    {
+        redde;
+    }
+    copia            = *sutura;
+    copia.praevisio  = petitae;
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        FabricaActio* actio;
+
+        actio = *(FabricaActio**)xar_obtinere(actiones, i);
+        si (!actio->lectiones)
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+        {
+            FabricaExitus* exitus;
+
+            exitus = (FabricaExitus*)xar_obtinere(actio->exitus, j);
+            si (exitus->strategia->iudicatur)
+            {
+                (vacuum)fabrica_iudicare(&copia, actio, exitus, plenus,
+                    piscina);
+            }
+        }
+    }
+    n = xar_numerus(petitae);
+    si (n == ZEPHYRUM)
+    {
+        redde;
+    }
+    /* ordo tituli: cursus deterministici */
+    per (i = I; i < n; i++)
+    {
+        per (j = i; j > ZEPHYRUM; j--)
+        {
+            constans FabricaActio** a;
+            constans FabricaActio** b;
+            constans FabricaActio*  t;
+
+            a = (constans FabricaActio**)xar_obtinere(petitae, j - I);
+            b = (constans FabricaActio**)xar_obtinere(petitae, j);
+            si (chorda_comparare((*a)->titulus, (*b)->titulus) <= 0)
+            {
+                frange;
+            }
+            t   = *a;
+            *a  = *b;
+            *b  = t;
+        }
+    }
+    /* II. simul: scriptura et liber ut in iudicio (eaedem viae) */
+    membra     = (constans FabricaActio**)piscina_allocare(piscina,
+        magnitudo(FabricaActio*) * (memoriae_index)n);
+    scripturae = (constans character**)piscina_allocare(piscina,
+        magnitudo(character*) * (memoriae_index)n);
+    libri      = (constans character**)piscina_allocare(piscina,
+        magnitudo(character*) * (memoriae_index)n);
+    felices    = (b32*)piscina_allocare(piscina,
+        magnitudo(b32) * (memoriae_index)n);
+    causae     = (chorda*)piscina_allocare(piscina,
+        magnitudo(chorda) * (memoriae_index)n);
+    durationes = (i32*)piscina_allocare(piscina,
+        magnitudo(i32) * (memoriae_index)n);
+    si (   membra  == NIHIL || scripturae == NIHIL || libri == NIHIL
+        || felices == NIHIL || causae == NIHIL || durationes == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        membra[i] = *(constans FabricaActio**)xar_obtinere(petitae, i);
+        scripturae[i] = chorda_ut_cstr(_iungere(piscina,
+            "build/fabrica/scriptura/", membra[i]->titulus, ""),
+            piscina);
+        libri[i] = chorda_ut_cstr(_iungere(piscina, LIBRI_DIRECTORIUM,
+            membra[i]->titulus, ".tsv"), piscina);
+        felices[i]     = FALSUM;
+        causae[i]      = chorda_ex_literis("", piscina);
+        durationes[i]  = ZEPHYRUM;
+    }
+    sutura->currere_simul(sutura->datum,
+        (constans FabricaActio* constans*)membra, n,
+        (constans character* constans*)scripturae,
+        (constans character* constans*)libri, piscina, felices, causae,
+        durationes);
+    /* III. memoria regenerationum ut _regenerare eam scriberet */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        chorda* locus;
+
+        si (felices[i])
+        {
+            causae[i] = chorda_ex_literis("", piscina);
+        }
+        alioquin si (causae[i].mensura == 0)
+        {
+            causae[i] = chorda_ex_literis("causa ignota", piscina);
+        }
+        locus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+        si (locus != NIHIL)
+        {
+            *locus = causae[i];
+            (vacuum)tabula_dispersa_inserere(sutura->regenerationes,
+                membra[i]->titulus, locus);
+        }
+        si (sutura->cursum_inscribere != NIHIL)
+        {
+            FabricaSanatio iudicium;
+
+            iudicium.actio         = membra[i];
+            iudicium.eventus       = FABRICA_IUDICIUM;
+            iudicium.causa         = causae[i];
+            iudicium.duratio_ms    = durationes[i];
+            iudicium.tempus_notum  = VERUM;
+            sutura->cursum_inscribere(sutura->datum, &iudicium);
+        }
+    }
 }
 
 
@@ -4551,6 +4725,25 @@ _undam_agere (
         (constans character* constans*)acta_viae,
         (constans character* constans*)libri, piscina, acta, incepta);
     _memorias_vacare(sutura);
+    /* PRAEVISIO (T6b): post-condiciones membrorum simul (arbor sanata) */
+    {
+        Xar* sanata;
+
+        sanata = xar_creare(piscina, (i32)magnitudo(FabricaActio*));
+        per (k = ZEPHYRUM; sanata != NIHIL && k < n; k++)
+        {
+            si (incepta[k] && acta[k].codex == ZEPHYRUM)
+            {
+                *(constans FabricaActio**)xar_addere(sanata) =
+                    actiones[k];
+            }
+        }
+        si (sanata != NIHIL)
+        {
+            fabrica_regenerationes_praevidere(sutura, sanata, VERUM,
+                piscina);
+        }
+    }
     notatae = (Xar**)piscina_allocare(piscina,
         magnitudo(Xar*) * (memoriae_index)n);
     si (notatae == NIHIL)
@@ -4763,14 +4956,21 @@ _sanare_per_undas (
     {
         Xar* membra;
         Xar* tuta;
+        Xar* ceteri;
         i32  m;
 
         membra  = *(Xar**)xar_obtinere(undae, w);
         tuta    = xar_creare(piscina, (i32)magnitudo(i32));
-        si (tuta == NIHIL)
+        ceteri  = xar_creare(piscina, (i32)magnitudo(i32));
+        si (tuta == NIHIL || ceteri == NIHIL)
         {
             redde FALSUM;
         }
+        /* PRAEVISIO (T6b): iudicia membrorum tutorum simul; deinde
+         * OMNIA membra iudicantur ANTE quodvis actum (actum memoriam
+         * regenerationum vacat) - membra undae independentia sunt */
+        fabrica_regenerationes_praevidere(sutura, membra, VERUM,
+            piscina);
         per (m = ZEPHYRUM; m < xar_numerus(membra); m++)
         {
             FabricaActio* actio;
@@ -4828,23 +5028,40 @@ _sanare_per_undas (
             }
             alioquin
             {
-                /* non tuta: SOLA, photographia sua (via vetus) */
-                   i32 duratio;
-                chorda causa;
-                   b32 actum;
+                *(i32*)xar_addere(ceteri) = (i32)index;
+            }
+        }
+        /* non tutae: SOLAE, photographia sua (via vetus) */
+        per (m = ZEPHYRUM; m < xar_numerus(ceteri); m++)
+        {
+               i32 index;
+               i32 duratio;
+            chorda causa;
+               b32 actum;
 
-                duratio  = ZEPHYRUM;
-                causa    = chorda_ex_literis("", piscina);
-                actum   = _actionem_agere(sutura, actio, piscina,
-                    &duratio,
-                    &causa);
-                _post_agere(sutura, actio, (i32)index, status,
-                    sanationes,
-                    actum, causa, duratio, piscina);
-                si (status[index] == SANANDI_FRACTUM)
-                {
-                    fractum = VERUM;
-                }
+            index = *(i32*)xar_obtinere(ceteri, m);
+            si (fractum)
+            {
+                status[index] = SANANDI_OMISSUM;
+                _sanationem_notare(sutura, piscina, sanationes,
+                    *(FabricaActio**)xar_obtinere(ordo, index),
+                    FABRICA_OMISSUM,
+                    chorda_ex_literis("post fracturam: "
+                    "nova non incipiuntur", piscina), ZEPHYRUM);
+                perge;
+            }
+            duratio  = ZEPHYRUM;
+            causa    = chorda_ex_literis("", piscina);
+            actum    = _actionem_agere(sutura,
+                *(FabricaActio**)xar_obtinere(ordo, index), piscina,
+                &duratio, &causa);
+            _post_agere(sutura, *(FabricaActio**)xar_obtinere(ordo,
+                index),
+                index, status, sanationes, actum, causa, duratio,
+                piscina);
+            si (status[index] == SANANDI_FRACTUM)
+            {
+                fractum = VERUM;
             }
         }
         si (fractum || xar_numerus(tuta) == 0)
