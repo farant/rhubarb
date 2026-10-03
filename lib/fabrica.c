@@ -2034,6 +2034,84 @@ _regeneratione_iudicare (
             chorda_ex_literis(numerus, piscina), ")"));
 }
 
+/* via lectionis primae vestigii quae hodie aliud sigillum dat (aut
+ * 'ambitus <nomen>'); chorda vacua si omnes congruunt */
+interior chorda
+_lectionem_differentem (
+    constans FabricaSutura* sutura,
+              constans Xar* lectiones,
+                   Piscina* piscina)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(lectiones); i++)
+    {
+        constans FabricaLectio* lectio;
+                      Sigillum  hodie;
+
+        lectio = (constans FabricaLectio*)xar_obtinere(lectiones, i);
+        si (   !_lectionem_sigillare(sutura, lectio->genus, lectio->via,
+                   piscina, &hodie)
+            || memcmp(hodie.octeti, lectio->sigillum.octeti,
+                   SIGILLUM_OCTETI) != 0)
+        {
+            redde lectio->via;
+        }
+    }
+    redde chorda_ex_literis("", piscina);
+}
+
+/* VERDICTUM (spec 3 par. XII): iudicium SOLUM, numquam currit - porta
+ * in iudicio curreret. Plagula verdicti absens = STALUM; vestigium
+ * transitus sub (titulus, exitus, clavis ingressuum, sigillum verdicti)
+ * nullum = IGNOTUM; lectio differens = STALUM nominata; omnes
+ * congruunt = RECENS. Defectus numquam servatur (vestigium solum post
+ * transitum scribitur), ergo 'RECENS' = transitus idem. */
+interior FabricaIudicium
+_verdicto_iudicare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+    constans FabricaExitus* exitus,
+         constans Sigillum* ingressus,
+                       b32  plenus,
+                   Piscina* piscina)
+{
+    Sigillum  clavis;
+    Sigillum  artificium;
+      chorda  verdictum;
+      chorda  differens;
+         Xar* vestigium;
+
+    (vacuum)plenus;
+    si (!sutura->legere(sutura->datum,
+            chorda_ut_cstr(exitus->via, piscina), piscina, &verdictum))
+    {
+        redde _iudicium(exitus->via, FABRICA_STALUM, chorda_ex_literis(
+            "verdictum absens (transitus nullus)", piscina));
+    }
+    artificium  = sigillum_computare(verdictum.datum,
+        (memoriae_index)verdictum.mensura);
+    clavis      = _clavem_memoriae(actio, ingressus);
+    si (   sutura->lectiones_legere == NIHIL
+        || !sutura->lectiones_legere(sutura->datum,
+               chorda_ut_cstr(actio->titulus, piscina),
+               chorda_ut_cstr(exitus->via, piscina), &clavis,
+               &artificium, piscina, &vestigium))
+    {
+        redde _iudicium(exitus->via, FABRICA_IGNOTUM, chorda_ex_literis(
+            "nullum vestigium transitus (ingressus declarati aut"
+            " verdictum mutati, aut numquam servatum)", piscina));
+    }
+    differens = _lectionem_differentem(sutura, vestigium, piscina);
+    si (differens.mensura > ZEPHYRUM)
+    {
+        redde _iudicium(exitus->via, FABRICA_STALUM, _iungere(piscina,
+            "lectio transitus mutata: ", differens, ""));
+    }
+    redde _iudicium(exitus->via, FABRICA_RECENS, chorda_ex_literis(
+        "transitus: lectiones congruunt (vestigium)", piscina));
+}
+
 /* IGNOTA: numquam iudicatur (machina eam non vocat; vocata tamen
  * IGNOTUM honestum reddit) - praecondicio sola (spec 1b par. II.3) */
 interior FabricaIudicium
@@ -2067,10 +2145,17 @@ interior constans FabricaStrategia _strategia_ignota = {
     "ignota", "fasciculus", FALSUM, FALSUM, _ignote_iudicare
 };
 
+/* verdictum: octetis non comparat (regeneratio = porta tota; '-tacta'
+ * eum numquam iudicat), iudicatur (per vestigium solum) */
+interior constans FabricaStrategia _strategia_verdictum = {
+    "verdictum", "fasciculus", FALSUM, VERUM, _verdicto_iudicare
+};
+
 interior constans FabricaStrategia* constans _strategiae[] = {
     &_strategia_regeneratio,
     &_strategia_relatio,
-    &_strategia_ignota
+    &_strategia_ignota,
+    &_strategia_verdictum
 };
 
 constans FabricaStrategia*
@@ -2169,6 +2254,10 @@ _genus_actionis (
     alioquin si (chorda_aequalis_literis(valor, "institutio"))
     {
         *genus = FABRICA_ACTIO_INSTITUTIO;
+    }
+    alioquin si (chorda_aequalis_literis(valor, "iudicium"))
+    {
+        *genus = FABRICA_ACTIO_IUDICIUM;
     }
     alioquin
     {
@@ -2848,6 +2937,29 @@ fabrica_declarationes_legere_cum_sutura (
         {
             redde _recusare(piscina, causa_out, actio.sedes,
                 "actio sine exitu", actio.titulus);
+        }
+        /* IUDICIUM (spec 3 par. XII): vestigium clavis eius est, et
+         * exitus verdictum - neutrum sine altero */
+        si (actio.genus == FABRICA_ACTIO_IUDICIUM && !actio.lectiones)
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "iudicium sine lectiones=\"verum\"", actio.titulus);
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(actio.exitus); j++)
+        {
+            b32 verdictum;
+
+            verdictum = chorda_aequalis_literis(chorda_ex_literis(
+                ((FabricaExitus*)xar_obtinere(actio.exitus,
+                j))->strategia->titulus, piscina), "verdictum");
+            si (verdictum != (actio.genus == FABRICA_ACTIO_IUDICIUM))
+            {
+                redde _recusare(piscina, causa_out, actio.sedes,
+                    verdictum ? "verdictum extra actionem iudicium"
+                              : "iudicium sine exitu verdicti",
+                    ((FabricaExitus*)xar_obtinere(actio.exitus,
+                    j))->via);
+            }
         }
         *(FabricaActio*)xar_addere(actiones) = actio;
     }
@@ -5022,8 +5134,10 @@ _sanare_per_undas (
             {
                 perge;
             }
-            si (actio->lectiones)
+            si (   actio->lectiones
+                && actio->genus != FABRICA_ACTIO_IUDICIUM)
             {
+                /* iudicium numquam simul: scripturae suitae totae */
                 *(i32*)xar_addere(tuta) = (i32)index;
             }
             alioquin
@@ -5146,7 +5260,11 @@ fabrica_sanare (
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         status[i]   = SANANDI_NONDUM;
-        ambitus[i]  = (electa == NIHIL);
+        /* iudicium (porta) solum NOMINATUM sanatur: 'sanare' sine
+         * argumentis suitas probationum non currit */
+        ambitus[i]  = (electa == NIHIL)
+            && (*(FabricaActio**)xar_obtinere(ordo, i))->genus
+                   != FABRICA_ACTIO_IUDICIUM;
     }
     per (j = ZEPHYRUM; electa != NIHIL && j < xar_numerus(electa); j++)
     {

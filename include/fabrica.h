@@ -43,7 +43,13 @@ nomen structura FabricaSanatio   FabricaSanatio;
 nomen enumeratio {
     FABRICA_ACTIO_GENERATOR = ZEPHYRUM,
     FABRICA_ACTIO_FORMATIO,
-    FABRICA_ACTIO_INSTITUTIO
+    FABRICA_ACTIO_INSTITUTIO,
+    /* IUDICIUM (spec 3 par. XII): porta ut actio - exitus = plagula
+     * verdicti (provenientia 'verdictum'), clavis = vestigium libri
+     * lectionum cursus TRANSEUNTIS; lectiones="verum" necessarium.
+     * Iudicium numquam currit; sanare solum, et solum nominatum
+     * (verritiones eam omittunt, numquam in unda simul). */
+    FABRICA_ACTIO_IUDICIUM
 } FabricaGenusActionis;
 
 nomen enumeratio {
@@ -390,8 +396,9 @@ fabrica_genus_invenire (
     chorda titulus);
 
 /* Registra: regeneratio (memoria ante eam, actionibus memorabilibus
- * solis), relatio, ignota (praecondicio: numquam iudicatur). NIHIL si
- * titulus ignotus. */
+ * solis), relatio, ignota (praecondicio: numquam iudicatur), verdictum
+ * (actionis iudicium solius: plagula verdicti + vestigium transitus,
+ * numquam currit). NIHIL si titulus ignotus. */
 constans FabricaStrategia*
 fabrica_strategia_invenire (
     chorda titulus);

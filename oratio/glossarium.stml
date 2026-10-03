@@ -1269,4 +1269,12 @@
     <forma textus="irresoluta" casus="nominativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
 
+  <vocabulum lemma="verdictum" lingua="latina" classis="substantivum" nota="Lat. med. verdictum (vere dictum; unde Angl. verdict): sententia iudicii - examen 'verdictum: ACCIPE'; fabrica: strategia 'verdictum' (actio iudicium, plagula verdicti portae transeuntis; sedes lib/fabrica.c _verdicto_iudicare, fabrica spec 3 T5a)">
+    <forma textus="verdictum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="verdicti" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="verdicto" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="verdicta" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="verdictorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
 </glossarium>

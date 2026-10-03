@@ -1657,3 +1657,25 @@ moving bin/fabrica aside with both artifacts deleted: corpus and
 differentia green. Full toml 13/13, 34.7 s (unchanged).
 Inventory: toml `currit binaria` += tools/fabrica.c, `tegit viae` +=
 toml/aedificatio.stml.
+
+## 2026-10-03 - slice 3 T5a: the iudicium kind
+
+Design written first (spec 3 §XII, three v3 corrections: preconditions are
+ingressus - only strategy-ignota actions are realized as praecondicio;
+E records make _lectiones_colligere return FALSUM today; absolute paths
+are silently skipped today).
+Landed: FABRICA_ACTIO_IUDICIUM (`genus="iudicium"`); parse refusals
+(iudicium without lectiones="verum"; verdictum exitus outside an
+iudicium; iudicium exitus that is not verdictum); strategy `verdictum`
+(judge only - verdict file absent STALUM, no trace IGNOTUM, a differing
+trace entry STALUM naming the path, all congruent RECENS; never calls
+_regenerare, so praevisio can't collect it either); exclusion from
+`sanare` without arguments (lib) and from the no-argument judge sweep +
+praevisio (tool); never in a parallel wave (tuta = lectiones AND not
+iudicium). Tests: 5 new blocks in probatio_fabrica (463/463); plant
+"remove the sanare exclusion" -> 3 red.
+Note for T5b: the named sanare of an iudicium today ends FRACTUM
+("exitus 0 sed non RECENS") because nothing records its trace yet - the
+test asserts only that it ACTED.
+Test gotcha: a declaration with no <ingressus> is refused first
+("actio sine ingressu") and masked my three refusal assertions.

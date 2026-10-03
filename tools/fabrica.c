@@ -1984,9 +1984,10 @@ _iudicare (
                      b32  iudicanda;
 
             actio = *(FabricaActio**)xar_obtinere(ordo, i);
-            si (!actio->lectiones)
+            si (   !actio->lectiones
+                || actio->genus == FABRICA_ACTIO_IUDICIUM)
             {
-                perge;
+                perge;   /* iudicium: verdictum numquam praevidetur */
             }
             iudicanda = FALSUM;
             si (tacta)
@@ -2062,6 +2063,13 @@ _iudicare (
                 }
             }
             alioquin si (!_electum(electa, exitus->via))
+            {
+                perge;
+            }
+            /* iudicium (porta, spec 3 par. XII) solum NOMINATUM
+             * iudicatur: verritio sine argumentis id omittit */
+            si (   electa       == NIHIL
+                && actio->genus == FABRICA_ACTIO_IUDICIUM)
             {
                 perge;
             }

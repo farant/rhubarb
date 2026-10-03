@@ -11,9 +11,9 @@ generated files judged by what was actually read - but every GATE is
 still judged by the whole tree, and its pass is thrown away at every
 commit.*
 
-*Status: v2 (2026-10-03). A1 decided (outside reads digested); A2-A4
-carry recommendations. T1 spike done (§XI): ready, with four
-corrections folded into T3.*
+*Status: v3 (2026-10-03). A1 decided (outside reads digested); A2-A4
+carry recommendations. T1 spike done (§XI). T5 designed against the code
+(§XII, three corrections to §II-§III marked v3).*
 
 ## 0. What the measurements say (dated 2026-10-03)
 
@@ -470,3 +470,90 @@ of them 0.42 s. Plus ~1.2k stat calls (A/X/D). The §VIII target
 Verdict: every entry explained, the gaps are a closed list (3 raw reads
 + 15 env reads + 2 bash-written files), the trace is stable. The design
 is ready, with corrections 1-4 folded into T3.
+
+## XII. T5 design (2026-10-03, from reading lib/fabrica.c) - corrections marked v3
+
+Read before coding: `_regeneratione_iudicare` (judge: trace hit ->
+RECENS, else regenerate into scratch and compare), `_lectiones_colligere`
+(trace -> FabricaLectio list), `_ante_agere` / `_actionem_agere` /
+`_post_agere` (sanare in place, whole-tree snapshot before/after,
+post-check by re-judging), `fabrica_sanare` (named artifacts + closure
+over `_pendet`), the declaration reader, the genus registry.
+
+**v3 corrections to §II-§III:**
+1. **Preconditions are `<ingressus>`, not `<praecondicio>`.** Only
+   strategy-`ignota` actions are realized as preconditions
+   (`_actio_ignota`); `toml_corpus` / `toml_aurum_silvestre` are
+   regeneration generators. Declaring their artifacts as inputs of
+   `porta_toml` gives the ordering (`_pendet` closure in sanare) AND the
+   ownership the build/ rule needs.
+2. **E records are dropped wholesale today.** `_lectiones_colligere`
+   returns FALSUM on any E ("ambitus a nucleo non verificatur") - after
+   T3 the toml trace has five, so without this change it could never be
+   reused.
+3. **Absolute paths are silently skipped today** (`via.datum[0]=='/'`).
+   A1 needs the opposite for verdicts.
+
+**Design:**
+- **Kind.** `FABRICA_ACTIO_IUDICIUM`, attribute `genus="iudicium"`.
+  Refused at parse: without `lectiones="verum"`; with an exitus whose
+  provenientia is not `verdictum`; `verdictum` on any other kind.
+- **Strategy `verdictum`** (judge only, never runs anything): verdict
+  file absent -> STALUM; no trace under (titulus, exitus, ingressus key,
+  verdict-file digest) -> IGNOTUM ("nullum vestigium transitus"); trace
+  present but an entry differs -> STALUM naming the first differing
+  path; all congruent -> RECENS. Not reproducible-by-regeneration, so
+  `-tacta` never sees it.
+- **Sweeps skip it.** `iudicare` without arguments, `-plenus`, `-tacta`,
+  `-omnia`, `sanare` without arguments: iudicium actions are left out
+  unless named. Never in a parallel wave (`tuta` = lectiones AND not
+  iudicium) - a verdict runs alone (its writes are a whole suite's).
+- **Recording (sanare in place).** The tool's sequential `agere` sets
+  `FABRICA_LECTIONES=build/fabrica/lectiones/<titulus>.tsv` (truncated)
+  for iudicium actions. `_post_agere` for iudicium: exit 0 + verdict
+  file present = SANATUM; the trace is collected with the verdict rules
+  below and written under the key; if it cannot be (IGNOTUM conditions),
+  the pass stands but is not reusable, and the reason is in the
+  sanatio's causa ("transitus non servatus: ...").
+- **Verdict trace rules** (`_lectiones_colligere` with an `iudicium`
+  flag; the generator path is unchanged):
+  - **Owned paths leave the trace.** Every path with an S record in the
+    same ledger is an OUTPUT of the run; its L/X/A entries are dropped
+    (compilator reads its destinations; tests read objects the run
+    built).
+  - **build/ ownership.** An L/X under `build/` or `*/build/` with no S
+    must be the exitus of a declared action (sutura member
+    `exitus_noti`, filled by the tool from all declarations), else
+    IGNOTUM "ingressus build/ sine domino: <via>".
+  - **Outside reads (A1).** Absolute paths under the system roots
+    (`/usr/`, `/Library/Developer/`, `/Applications/Xcode.app/`,
+    `/System/`) are dropped (pinned by `identitas_clang`); every other
+    absolute path is digested like a repo path.
+  - **Undigestible.** New sutura member `species` (absent / file /
+    directory / other): an L/X on "other" (FIFO, socket, device) ->
+    IGNOTUM "lectio non sigillabilis: <via>".
+  - **E records.** Kept only when the recorded value equals the value in
+    the environment fabrica gave the gate (sutura member `ambitus`,
+    absent = absent): that variable came from OUTSIDE and is keyed
+    (`ORACULUM_OMNIA=1` later -> STALUM). A value that differs was set
+    INSIDE the gate by a runner (RHUBARB_RADIX="$RADIX_DIR"): it is a
+    function of the scripts, which are in the key, so it is dropped.
+    Limit: a runner that sets a variable from an untracked source
+    (`X="$(date)"`) is not caught - named, not solved.
+- **New input kinds** (genus registry):
+  - `identitas_clang`: digest = the identity compilator uses (real
+    binary path via `clang -print-prog-name=clang`, then path, size,
+    mtime, inode; with `FABRICA_CLANG` set, that file's bytes - IX.7).
+    Sutura member `identitas`.
+  - `fontationes` (`via` = the runner): runs `crusta/fontationes.sh
+    <via>` through sutura member `fontationes`; exit 1 (irresolutum) ->
+    FALSUM with the unresolved line as causa (key IGNOTUM); otherwise
+    every fasciculus / instrumentum / externum listed is digested by
+    content (productum skipped - the trace covers it). No dependency
+    edges (like `instrumentum`).
+
+Sub-steps (one commit each): **T5a** kind + parse + strategy + sweep
+exclusion + unit tests in lib's suite; **T5b** recording in sanare +
+trace rules + the two genera + tool seam; **T5c** `silva.py -iudicium`,
+`porta_toml` in toml/aedificatio.stml, first real `sanare porta_toml`
+and a RECENS re-judge.

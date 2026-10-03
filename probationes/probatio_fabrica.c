@@ -4225,6 +4225,154 @@ s32 principale (vacuum)
     }
 
 
+    /* ==================================================
+     * PROBARE: iudicium (fabrica spec 3 T5a) - porta ut actio:
+     * declaratio iudicium sine lectiones et verdictum extra iudicium
+     * recusat; strategia verdictum NUMQUAM currit (verdictum absens
+     * STALUM, sine vestigio IGNOTUM); sanare sine argumentis iudicium
+     * omittit, nominatum agit
+     * ================================================== */
+
+    {
+                DiscusFictus  discus;
+               FabricaSutura  sutura;
+                FabricaActio* p;
+               FabricaExitus* exitus;
+             FabricaIudicium  iudicium;
+                      chorda  contentum;
+                      chorda  causa;
+                         Xar* lectae;
+                FabricaActio* actiones_iudicii[II];
+                         Xar* ordo;
+                         Xar* sanationes;
+                         Xar* electa;
+         InternamentumChorda* intern_iudicii;
+
+        imprimere("\n--- Probans iudicium (porta ut actio) ---\n");
+        causa.datum     = NIHIL;
+        causa.mensura   = ZEPHYRUM;
+        intern_iudicii  = internamentum_creare(piscina);
+
+        /* I. declaratio bona: genus iudicium */
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"porta_x\" genus=\"iudicium\""
+            " lectiones=\"verum\">\n"
+            "    <mandatum>\n"
+            "      <verbum! (>./porta.sh\n"
+            "    </mandatum>\n"
+            "    <ingressus genus=\"fasciculus\" via=\"porta.sh\"/>\n"
+            "    <exitus via=\"build/fabrica/verdicta/x.txt\""
+            " provenientia=\"verdictum\"/>\n"
+            "  </actio>\n"
+            "</aedificatio>\n", piscina);
+        lectae = fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern_iudicii, &causa);
+        CREDO_NON_NIHIL(lectae);
+        si (lectae != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)((FabricaActio*)xar_obtinere(lectae,
+                ZEPHYRUM))->genus, (i32)FABRICA_ACTIO_IUDICIUM);
+        }
+
+        /* II. recusationes: sine lectiones; verdictum in generatore;
+         * iudicium cum regeneratione */
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"porta_x\" genus=\"iudicium\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"porta.sh\"/>\n"
+            "    <exitus via=\"v.txt\" provenientia=\"verdictum\"/>\n"
+            "  </actio>\n"
+            "</aedificatio>\n", piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern_iudicii, &causa));
+        CREDO_VERUM(_continet(causa, "iudicium sine lectiones",
+            piscina));
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"g\" genus=\"generator\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"porta.sh\"/>\n"
+            "    <exitus via=\"v.txt\" provenientia=\"verdictum\"/>\n"
+            "  </actio>\n"
+            "</aedificatio>\n", piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern_iudicii, &causa));
+        CREDO_VERUM(_continet(causa,
+            "verdictum extra actionem iudicium",
+            piscina));
+        contentum = chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"porta_x\" genus=\"iudicium\""
+            " lectiones=\"verum\">\n"
+            "    <ingressus genus=\"fasciculus\" via=\"porta.sh\"/>\n"
+            "    <exitus via=\"v.txt\" provenientia=\"regeneratio\"/>\n"
+            "  </actio>\n"
+            "</aedificatio>\n", piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(contentum, "d.stml",
+            piscina, intern_iudicii, &causa));
+        CREDO_VERUM(_continet(causa, "iudicium sine exitu verdicti",
+            piscina));
+
+        /* III. strategia verdictum: numquam currit */
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        sutura.lectiones_legere    = _lectiones_legere;
+        sutura.lectiones_scribere  = _lectiones_scribere;
+        _ponere(&discus, "porta.sh", "echo porta\n");
+        p = _actio(piscina, "porta_x",
+            FABRICA_ACTIO_IUDICIUM);
+        p->lectiones = VERUM;
+        _ingressum_addere(p, "fasciculus", "porta.sh", piscina);
+        exitus = _exitum_addere(p, "build/fabrica/verdicta/x.txt",
+            "verdictum", piscina);
+        iudicium = fabrica_iudicare(&sutura, p, exitus, VERUM, piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_STALUM);
+        CREDO_VERUM(_continet(iudicium.causa, "verdictum absens",
+            piscina));
+        _ponere(&discus, "build/fabrica/verdicta/x.txt",
+            "x: transiit\n");
+        iudicium = fabrica_iudicare(&sutura, p, exitus, VERUM, piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        CREDO_VERUM(_continet(iudicium.causa, "nullum vestigium",
+            piscina));
+        CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);  /* numquam currit */
+
+        /* IV. sanare sine argumentis iudicium omittit; nominatum agit */
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        _ponere(&discus, "a", "a\n");
+        _ponere(&discus, "X", "vetus\n");
+        _ponere(&discus, "porta.sh", "echo porta\n");
+        _scriptum_addere(&discus, "gen_a", "X", NIHIL, "novum\n", 0,
+            FALSUM);
+        _scriptum_addere(&discus, "porta_sh",
+            "build/fabrica/verdicta/x.txt",
+            NIHIL, "x: transiit\n", 0, FALSUM);
+        actiones_iudicii[0] = _actio_scripta(piscina, "A", "gen_a", "a",
+            "X", "regeneratio");
+        actiones_iudicii[1] = _actio_scripta(piscina, "porta_x",
+            "porta_sh", "porta.sh", "build/fabrica/verdicta/x.txt",
+            "verdictum");
+        actiones_iudicii[1]->genus = FABRICA_ACTIO_IUDICIUM;
+        actiones_iudicii[1]->lectiones = VERUM;
+        ordo = _ordinare_fictas(piscina, actiones_iudicii, II);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_NIHIL(_sanatio_invenire(sanationes, "porta_x"));
+        CREDO_NON_NIHIL(_sanatio_invenire(sanationes, "A"));
+        CREDO_AEQUALIS_I32(discus.acta, I);
+        electa = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(
+            "build/fabrica/verdicta/x.txt", piscina);
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_NON_NIHIL(_sanatio_invenire(sanationes, "porta_x"));
+        CREDO_AEQUALIS_I32(discus.acta, II);
+    }
+
+
     /* ================================================== */
 
     /* Compendium                                          */
