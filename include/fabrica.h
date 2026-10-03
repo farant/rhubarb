@@ -323,7 +323,49 @@ nomen structura {
      * I = omnes (iudicare -audit); N = unus ex N (specimen
      * determinatum: octetus primus clavis ingressuum modulo N) */
     i32 auditus;
+    /* ==== IUDICIUM (spec 3 par. XII, T5b) - omnia NIHIL licent ==== */
+    /* ambitus quem fabrica PORTAE dat: VERUM + valor si variabilis
+     * adest. Lectio E cuius valor ab eo differt intra portam posita est
+     * (cursor) et ex scriptis clavi inclusis pendet - omittitur;
+     * aequalis = ingressus externus, clavatur. NIHIL: E non
+     * verificabilis (vestigium nullum). */
+    b32 (*ambitus)(vacuum* datum, constans character* titulus,
+                   Piscina* piscina, chorda* valor_out);
+    /* species viae (FabricaSpecies): FIFO, socket, machina = ALIA - in
+     * vestigio portae non sigillabilis (IGNOTUM). NIHIL: non probatur. */
+    i32 (*species)(vacuum* datum, constans character* via);
+    /* exitus omnium actionum declaratarum (via -> NIHIL): lectio sub
+     * build/ sine S in libro eodem DOMINUM declaratum habere debet */
+    TabulaDispersa* exitus_noti;
+    /* identitas compilatoris clang (genus ingressus 'identitas_clang'):
+     * eadem ac bin/compilator (via vera, mensura, mtime, inodus;
+     * FABRICA_CLANG: octeti eius). FALSUM + causa: ignota. */
+    b32 (*identitas)(vacuum* datum, Piscina* piscina,
+                     Sigillum* identitas_out, chorda* causa_out);
+    /* fontationes scripti (genus ingressus 'fontationes'):
+     * crusta/fontationes.sh <via> - effusio et codex exitus (0
+     * resoluta, 1 irresolutum, 2 fractum). FALSUM: currere nequit. */
+    b32 (*fontationes)(vacuum* datum, constans character* via,
+                       Piscina* piscina, chorda* effusio_out,
+                       i32* codex_out);
 } FabricaSutura;
+
+/* species viae (sutura->species) */
+nomen enumeratio {
+    FABRICA_SPECIES_ABSENS = ZEPHYRUM,
+    FABRICA_SPECIES_PLAGULA,
+    FABRICA_SPECIES_DIRECTORIUM,
+    FABRICA_SPECIES_ALIA          /* FIFO, socket, machina */
+} FabricaSpecies;
+
+/* via libri lectionum actionis (arbori relativa):
+ * build/fabrica/lectiones/<titulus>.tsv - nucleus (iudicium,
+ * regeneratio) et instrumentum (agere actionis iudicium) eandem
+ * computant */
+chorda
+fabrica_liber_via (
+     chorda  titulus,
+    Piscina* piscina);
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
  * praebet ponit - membrum novum postea additum sic tutum manet

@@ -115,15 +115,194 @@ _legere (
                Piscina* piscina,
                 chorda* contentum_out)
 {
+    FilumStatus status;
+
     (vacuum)datum;
     via = _domum_expandere(via, piscina);
-    si (!filum_existit(via) || filum_directorium_existit(via))
+    /* plagula REGULARIS sola: FIFO legere pendere faceret (spec 3
+     * par. XII - vestigium portae species per _species iudicat) */
+    si (!filum_status(via, &status) || !status.est_filum)
     {
         redde FALSUM;
     }
     /* plagula vacua = contentum vacuum, non absentia */
     *contentum_out = filum_legere_totum(via, piscina);
     redde VERUM;
+}
+
+/* ==== IUDICIUM (spec 3 par. XII, T5b): sutura portae ==== */
+
+/* ambitus quem fabrica portae dat = ambitus processus huius */
+interior b32
+_ambitus (
+                vacuum* datum,
+    constans character* titulus,
+               Piscina* piscina,
+                chorda* valor_out)
+{
+    constans character* valor;
+
+    (vacuum)datum;
+    valor = getenv(titulus);
+    si (valor == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *valor_out = chorda_ex_literis(valor, piscina);
+    redde VERUM;
+}
+
+interior i32
+_species (
+                vacuum* datum,
+    constans character* via)
+{
+    FilumStatus status;
+
+    (vacuum)datum;
+    si (!filum_status(via, &status))
+    {
+        redde (i32)FABRICA_SPECIES_ABSENS;
+    }
+    si (status.est_directorium)
+    {
+        redde (i32)FABRICA_SPECIES_DIRECTORIUM;
+    }
+    redde status.est_filum ? (i32)FABRICA_SPECIES_PLAGULA
+        : (i32)FABRICA_SPECIES_ALIA;
+}
+
+/* identitas clang ut bin/compilator (tools/compilator.c
+ * _identitas_compilatoris): FABRICA_CLANG = octeti eius; aliter via
+ * vera ('clang -print-prog-name=clang') cum mensura, mtime, inodo */
+interior b32
+_identitas (
+     vacuum* datum,
+    Piscina* piscina,
+   Sigillum* identitas_out,
+     chorda* causa_out)
+{
+       constans character* proprius;
+       constans character* argv[III];
+        ProcessusResultus  resultus;
+                character  via[IV * MXXIV];
+                character  memoria[IV * MXXIV + CXXVIII];
+           memoriae_index  longitudo;
+       structura stat    status;
+
+    (vacuum)datum;
+    proprius = getenv("FABRICA_CLANG");
+    si (proprius != NIHIL && proprius[0] != '\0')
+    {
+        chorda octeti = filum_legere_totum(proprius, piscina);
+
+        si (octeti.datum == NIHIL)
+        {
+            *causa_out = chorda_ex_literis("FABRICA_CLANG illegibile",
+                piscina);
+            redde FALSUM;
+        }
+        *identitas_out = sigillum_computare(octeti.datum,
+            (memoriae_index)octeti.mensura);
+        redde VERUM;
+    }
+    argv[0]   = "clang";
+    argv[I]   = "-print-prog-name=clang";
+    argv[II]  = NIHIL;
+    resultus  = processus_exsequi(argv, XXX * M, piscina);
+    si (   !resultus.successus || resultus.codex_exitus != ZEPHYRUM
+        || resultus.effusio.mensura == ZEPHYRUM
+        || resultus.effusio.mensura >= (i32)magnitudo(via))
+    {
+        *causa_out = chorda_ex_literis("clang -print-prog-name fractum",
+            piscina);
+        redde FALSUM;
+    }
+    longitudo = (memoriae_index)resultus.effusio.mensura;
+    memcpy(via, resultus.effusio.datum, longitudo);
+    dum (   longitudo > ZEPHYRUM
+         && (via[longitudo - I] == '\n' || via[longitudo - I] == '\r'))
+    {
+        longitudo--;
+    }
+    via[longitudo] = '\0';
+    si (stat(via, &status) != ZEPHYRUM)
+    {
+        *causa_out = chorda_concatenare(chorda_ex_literis(
+            "clang verum absens: ", piscina), chorda_ex_literis(via,
+            piscina), piscina);
+        redde FALSUM;
+    }
+    sprintf(memoria, "compilator identitas I\n%s\n%ld %ld %lu", via,
+        (longus)status.st_size, (longus)status.st_mtime,
+        (longus insignatus)status.st_ino);
+    *identitas_out = sigillum_computare(memoria, strlen(memoria));
+    redde VERUM;
+}
+
+/* crusta/fontationes.sh <via> (spec 3 par. III.2) */
+interior b32
+_fontationes (
+                vacuum* datum,
+    constans character* via,
+               Piscina* piscina,
+                chorda* effusio_out,
+                   i32* codex_out)
+{
+     constans character* argv[III];
+      ProcessusResultus  resultus;
+
+    (vacuum)datum;
+    argv[0]   = "./crusta/fontationes.sh";
+    argv[I]   = via;
+    argv[II]  = NIHIL;
+    resultus  = processus_exsequi(argv, CXX * M, piscina);
+    si (!resultus.successus)
+    {
+        redde FALSUM;
+    }
+    *effusio_out  = resultus.effusio;
+    *codex_out    = (i32)resultus.codex_exitus;
+    redde VERUM;
+}
+
+/* exitus omnium actionum: dominus lectionis sub build/ */
+interior TabulaDispersa*
+_exitus_notos_colligere (
+    constans Xar* actiones,
+         Piscina* piscina)
+{
+    TabulaDispersa* noti;
+               i32  i;
+               i32  j;
+
+    noti = tabula_dispersa_creare_chorda(piscina, 512);
+    per (i = ZEPHYRUM; noti != NIHIL && i < xar_numerus(actiones); i++)
+    {
+        constans FabricaActio* actio;
+
+        actio = (constans FabricaActio*)xar_obtinere(actiones, i);
+        per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+        {
+            (vacuum)tabula_dispersa_inserere(noti,
+                ((FabricaExitus*)xar_obtinere(actio->exitus, j))->via,
+                NIHIL);
+        }
+    }
+    redde noti;
+}
+
+interior vacuum
+_suturam_iudicii_parare (
+    FabricaSutura* sutura,
+     constans Xar* actiones,
+          Piscina* piscina)
+{
+    sutura->ambitus      = _ambitus;
+    sutura->species      = _species;
+    sutura->identitas    = _identitas;
+    sutura->fontationes  = _fontationes;
+    sutura->exitus_noti  = _exitus_notos_colligere(actiones, piscina);
 }
 
 interior s32
@@ -452,6 +631,10 @@ _actum_complere (
     redde VERUM;
 }
 
+interior chorda
+_radix_absoluta (
+    Piscina* piscina);
+
 /* agere (plan 1b T3): mandatum IN LOCO - FABRICA_SCRIPTURA expresse
  * deleta, generatores in arbore scribunt. Acta = verba, effusio,
  * erratum (processus ea separatim capit: non intertexta). */
@@ -474,6 +657,27 @@ _agere (
         redde FALSUM;
     }
     (vacuum)unsetenv("FABRICA_SCRIPTURA");
+    /* IUDICIUM (spec 3 par. XII): porta in loco cum libro lectionum
+     * suo - via ABSOLUTA (cursores 'cd' faciunt), liber vacuatus ante
+     * cursum (vestigium cursus HUIUS solius) */
+    si (actio->genus == FABRICA_ACTIO_IUDICIUM)
+    {
+        chorda relativa;
+        chorda absoluta;
+        chorda radix;
+
+        relativa  = fabrica_liber_via(actio->titulus, piscina);
+        radix     = _radix_absoluta(piscina);
+        absoluta = chorda_concatenare(chorda_concatenare(radix,
+            chorda_ex_literis("/", piscina), piscina), relativa,
+            piscina);
+        (vacuum)filum_directorium_creare_cum_parentibus(
+            "build/fabrica/lectiones");
+        (vacuum)filum_scribere(chorda_ut_cstr(relativa, piscina),
+            chorda_ex_literis("", piscina));
+        (vacuum)setenv("FABRICA_LECTIONES",
+            chorda_ut_cstr(absoluta, piscina), 1);
+    }
     /* FABRICA_AGIT (1b T5, D3/D4): sub executore scripta productores
      * NIDIFICATOS omittunt (portae vetustatis, aedilis restructus) -
      * fabrica eos ut actiones suas ordine iam currit; manu vocata
@@ -483,6 +687,7 @@ _agere (
         (constans character* constans*)argumenta, MORA_SANATIONIS_MS,
         piscina);
     (vacuum)unsetenv("FABRICA_AGIT");
+    (vacuum)unsetenv("FABRICA_LECTIONES");
     redde _actum_complere(resultus, acta, acta_via, piscina, actum_out);
 }
 
@@ -1202,6 +1407,7 @@ _lectiones_legere (
             casus 'A': lectio->genus = LECTIO_ABSENS;      frange;
             casus 'X': lectio->genus = LECTIO_EXSTAT;      frange;
             casus 'D': lectio->genus = LECTIO_ENUMERAVIT;  frange;
+            casus 'E': lectio->genus = LECTIO_AMBITUS;     frange;
             ordinarius: lectio->genus = LECTIO_LEGIT;      frange;
         }
         lectio->via = scrinium_columna_textus(enuntiatum, I, piscina);
@@ -1311,6 +1517,7 @@ _lectiones_scribere (
             casus LECTIO_ABSENS:      littera[0] = 'A'; frange;
             casus LECTIO_EXSTAT:      littera[0] = 'X'; frange;
             casus LECTIO_ENUMERAVIT:  littera[0] = 'D'; frange;
+            casus LECTIO_AMBITUS:     littera[0] = 'E'; frange;
             ordinarius:               littera[0] = 'L'; frange;
         }
         littera[I] = '\0';
@@ -1957,6 +2164,7 @@ _iudicare (
         sutura.lectiones_ultimae   = _lectiones_ultimae;
     }
     sutura.radix    = _radix_absoluta(piscina);
+    _suturam_iudicii_parare(&sutura, actiones, piscina);
     sutura.auditus  = auditus;
     /* memoria sigillorum per cursum: communis semel sigillatur (iam
      * impleta per ordinem per locos) */
@@ -2556,6 +2764,7 @@ _sanare (
         sutura.lectiones_ultimae   = _lectiones_ultimae;
     }
     sutura.radix = _radix_absoluta(piscina);
+    _suturam_iudicii_parare(&sutura, actiones, piscina);
 
     printf("fabrica sanare%s: iudicium plenum, ordine dependentiae\n",
         siccum ? " -siccum" : "");

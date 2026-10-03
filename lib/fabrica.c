@@ -99,6 +99,11 @@ fabrica_suturam_parare (
     sutura->radix.mensura       = ZEPHYRUM;
     sutura->auditus             = ZEPHYRUM;
     sutura->lectiones_ultimae   = NIHIL;
+    sutura->ambitus             = NIHIL;
+    sutura->species             = NIHIL;
+    sutura->exitus_noti         = NIHIL;
+    sutura->identitas           = NIHIL;
+    sutura->fontationes         = NIHIL;
 }
 
 
@@ -861,6 +866,143 @@ interior constans FabricaGenus _genus_radices = {
     "radices", _radices_sigillare, _nihil_enumerare, NIHIL, FALSUM
 };
 
+/* IDENTITAS CLANG (spec 3 par. XII, IX.7): identitas compilatoris quam
+ * bin/compilator adhibet - radices systematis (SDK) eam sequuntur */
+interior b32
+_identitatem_sigillare (
+       constans FabricaSutura* sutura,
+    constans FabricaIngressus* ingressus,
+                 constans Xar* exclusa,
+                      Piscina* piscina,
+                          Xar* particulae,
+                       chorda* causa_out)
+{
+    FabricaParticula* particula;
+            Sigillum  identitas;
+
+    (vacuum)ingressus;
+    (vacuum)exclusa;
+    si (sutura->identitas == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("sutura sine identitate clang",
+            piscina);
+        redde FALSUM;
+    }
+    si (!sutura->identitas(sutura->datum, piscina, &identitas,
+        causa_out))
+    {
+        redde FALSUM;
+    }
+    particula = (FabricaParticula*)xar_addere(particulae);
+    si (particula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    particula->via     = chorda_ex_literis("identitas:clang", piscina);
+    particula->octeti  = identitas;
+    redde VERUM;
+}
+
+/* FONTATIONES (spec 3 par. III.2): scripta quae cursor fontat aut
+ * exsequitur (crusta/fontationes.sh), contentis sigillata; irresolutum
+ * = clavis ignota */
+interior b32
+_fontationes_sigillare (
+       constans FabricaSutura* sutura,
+    constans FabricaIngressus* ingressus,
+                 constans Xar* exclusa,
+                      Piscina* piscina,
+                          Xar* particulae,
+                       chorda* causa_out)
+{
+    chorda effusio;
+       i32 codex;
+       i32 i;
+       i32 initium;
+
+    si (sutura->fontationes == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("sutura sine fontationibus",
+            piscina);
+        redde FALSUM;
+    }
+    si (!sutura->fontationes(sutura->datum,
+            chorda_ut_cstr(ingressus->via, piscina), piscina, &effusio,
+            &codex))
+    {
+        *causa_out = _iungere(piscina, "fontationes currere nequit: ",
+            ingressus->via, "");
+        redde FALSUM;
+    }
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < effusio.mensura; i++)
+    {
+        chorda linea;
+        chorda genus;
+        chorda via;
+           s32 t;
+           s32 u;
+
+        si (effusio.datum[i] != '\n')
+        {
+            perge;
+        }
+        linea    = chorda_sectio(effusio, initium, i);
+        initium  = i + I;
+        t = chorda_invenire_index(linea, chorda_ex_literis("\t",
+            piscina));
+        si (t < ZEPHYRUM)
+        {
+            perge;
+        }
+        genus  = chorda_sectio(linea, 0, (i32)t);
+        via    = chorda_sectio(linea, (i32)t + I, linea.mensura);
+        u = chorda_invenire_index(via, chorda_ex_literis("\t",
+            piscina));
+        si (u >= ZEPHYRUM)
+        {
+            via = chorda_sectio(via, 0, (i32)u);
+        }
+        si (chorda_aequalis_literis(genus, "irresolutum"))
+        {
+            *causa_out = _iungere(piscina, "fontatio irresoluta: ",
+                linea,
+                "");
+            redde FALSUM;
+        }
+        si (   chorda_aequalis_literis(genus, "fasciculus")
+            || chorda_aequalis_literis(genus, "instrumentum")
+            || chorda_aequalis_literis(genus, "externum"))
+        {
+            si (!_particulam_legere(sutura, via, exclusa, piscina,
+                    particulae, causa_out))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    si (codex != ZEPHYRUM)
+    {
+        character numerus[32];
+
+        sprintf(numerus, "%d", (integer)codex);
+        *causa_out = _iungere(piscina, "fontationes fractae (exitus ",
+            chorda_ex_literis(numerus, piscina), ")");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior constans FabricaGenus _genus_identitas_clang = {
+    "identitas_clang", _identitatem_sigillare, _nihil_enumerare, NIHIL,
+    FALSUM
+};
+
+interior constans FabricaGenus _genus_fontationes = {
+    "fontationes", _fontationes_sigillare, _nihil_enumerare, NIHIL,
+        FALSUM
+};
+
 interior constans FabricaGenus* constans _genera[] = {
     &_genus_fasciculus,
     &_genus_configuratio,
@@ -870,7 +1012,9 @@ interior constans FabricaGenus* constans _genera[] = {
     &_genus_manifestum,
     &_genus_plagulae,
     &_genus_manifesta,
-    &_genus_radices
+    &_genus_radices,
+    &_genus_identitas_clang,
+    &_genus_fontationes
 };
 
 constans FabricaGenus*
@@ -1347,6 +1491,14 @@ _clavem_memoriae (
  * ================================================== */
 
 #define LIBRI_DIRECTORIUM "build/fabrica/lectiones/"
+
+chorda
+fabrica_liber_via (
+     chorda  titulus,
+    Piscina* piscina)
+{
+    redde _iungere(piscina, LIBRI_DIRECTORIUM, titulus, ".tsv");
+}
 /* THESAURUS (plan 2 T3): blobi, actiones, generationes sunt cache per
  * sigilla ingressuum iam lectorum - non ingressus. Radix ipsa
  * (obiecta .o in build/aedilis/obiecta) ingressus verus manet. */
@@ -1395,6 +1547,24 @@ _lectionem_sigillare (
                     b32  est_directorium;
 
     via_cstr     = chorda_ut_cstr(via, piscina);
+    /* E (spec 3 par. XII): via = titulus variabilis; valor quem fabrica
+     * portae dat. Absens et vacua distinguuntur. */
+    si (genus == LECTIO_AMBITUS)
+    {
+        chorda valor;
+
+        si (sutura->ambitus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *sigillum_out = sutura->ambitus(sutura->datum, via_cstr,
+            piscina,
+                &valor)
+            ? sigillum_computare(valor.datum,
+                  (memoriae_index)valor.mensura)
+            : sigillum_computare(SIGNUM_ABSENS, strlen(SIGNUM_ABSENS));
+        redde VERUM;
+    }
     legibile     = sutura->legere(sutura->datum, via_cstr, piscina,
         &contentum);
     est_directorium  = (sutura->enumerare != NIHIL)
@@ -1445,6 +1615,267 @@ _lectionem_sigillare (
             redde FALSUM;
     }
     redde FALSUM;
+}
+
+interior LectioGenus
+_genus_litterae (
+    character  littera,
+          b32* notum_out);
+
+/* radices systematis: in vestigio portae omittuntur - identitas_clang
+ * eas figit (spec 3 par. XII, A1). Ceterae viae absolutae sigillantur. */
+hic_manens constans character* constans _radices_systematis[] = {
+    "/usr/", "/Library/Developer/", "/Applications/Xcode.app/",
+    "/System/", NIHIL
+};
+
+/* sub build/ : 'build/...' aut '.../build/...' */
+interior b32
+_sub_build (
+    chorda via)
+{
+    i32 k;
+
+    si (via.mensura >= VI && memcmp(via.datum, "build/", VI) == 0)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k + VII <= via.mensura; k++)
+    {
+        si (memcmp(via.datum + k, "/build/", VII) == 0)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* VESTIGIUM TRANSITUS (spec 3 par. XII): liber cursus IN LOCO actionis
+ * iudicium. Leges (generator via _lectiones_colligere manet):
+ *   - via cum S in libro eodem = EXITUS cursus: L/X/A eius omittuntur
+ *   - L/X sub build/ sine S: exitus actionis declaratae (exitus_noti)
+ *     esse debet - aliter IGNOTUM 'ingressus build/ sine domino'
+ *   - absoluta sub radicibus systematis omittitur; cetera sigillatur
+ *   - species ALIA (FIFO, socket, machina) -> IGNOTUM
+ *   - E: servatur solum si valor = ambitus quem fabrica portae dat
+ *     (externus); differens intra portam positus est - omittitur
+ * FALSUM + causa: transitus non reutilis (vestigium nullum). */
+interior b32
+_lectiones_transitus_colligere (
+    constans FabricaSutura*  sutura,
+        constans character*  liber_via,
+                   Piscina*  piscina,
+                       Xar** lectiones_out,
+                    chorda*  causa_out)
+{
+             chorda  liber;
+                Xar* lectiones;
+     TabulaDispersa* visae;
+     TabulaDispersa* scriptae;
+                i32  i;
+                i32  initium;
+                i32  transitus;
+
+    si (!sutura->legere(sutura->datum, liber_via, piscina, &liber))
+    {
+        *causa_out = chorda_ex_literis("liber lectionum absens",
+            piscina);
+        redde FALSUM;
+    }
+    lectiones  = xar_creare(piscina, (i32)magnitudo(FabricaLectio));
+    visae      = tabula_dispersa_creare_chorda(piscina, 1024);
+    scriptae   = tabula_dispersa_creare_chorda(piscina, 256);
+    si (lectiones == NIHIL || visae == NIHIL || scriptae == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("memoria deficit", piscina);
+        redde FALSUM;
+    }
+    /* transitus 0: S colliguntur; transitus I: lectiones */
+    per (transitus = ZEPHYRUM; transitus < II; transitus++)
+    {
+        initium = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < liber.mensura; i++)
+        {
+                   chorda  linea;
+                   chorda  via;
+              LectioGenus  genus;
+                      b32  notum;
+            FabricaLectio* lectio;
+                   chorda  clavis;
+
+            si (liber.datum[i] != '\n')
+            {
+                perge;
+            }
+            linea    = chorda_sectio(liber, initium, i);
+            initium  = i + I;
+            si (linea.mensura < III || linea.datum[I] != '\t')
+            {
+                perge;
+            }
+            genus = _genus_litterae((character)linea.datum[0], &notum);
+            si (!notum)
+            {
+                perge;
+            }
+            via = chorda_sectio(linea, II, linea.mensura);
+            si (genus == LECTIO_AMBITUS)
+            {
+                chorda titulus;
+                chorda valor;
+                chorda hodie;
+                   b32 adest;
+                   b32 hodie_adest;
+                   s32 t;
+
+                si (transitus == ZEPHYRUM)
+                {
+                    perge;
+                }
+                si (sutura->ambitus == NIHIL)
+                {
+                    *causa_out = chorda_ex_literis(
+                        "ambitus non verificabilis (sutura)", piscina);
+                    redde FALSUM;
+                }
+                t = chorda_invenire_index(via, chorda_ex_literis("\t",
+                    piscina));
+                adest    = t >= ZEPHYRUM;
+                titulus  = adest ? chorda_sectio(via, 0, (i32)t) : via;
+                valor    = adest ? chorda_sectio(via, (i32)t + I,
+                    via.mensura) : chorda_ex_literis("", piscina);
+                hodie_adest = sutura->ambitus(sutura->datum,
+                    chorda_ut_cstr(titulus, piscina), piscina, &hodie);
+                si (   adest != hodie_adest
+                    || (adest && !chorda_aequalis(valor, hodie)))
+                {
+                    perge;   /* intra portam positum (cursor) */
+                }
+                clavis = _iungere(piscina, "E", titulus, "");
+                si (tabula_dispersa_continet(visae, clavis))
+                {
+                    perge;
+                }
+                (vacuum)tabula_dispersa_inserere(visae, clavis, NIHIL);
+                lectio = (FabricaLectio*)xar_addere(lectiones);
+                si (lectio == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                lectio->genus  = LECTIO_AMBITUS;
+                lectio->via    = titulus;
+                lectio->sigillum = adest
+                    ? sigillum_computare(valor.datum,
+                          (memoriae_index)valor.mensura)
+                    : sigillum_computare(SIGNUM_ABSENS,
+                          strlen(SIGNUM_ABSENS));
+                perge;
+            }
+            si (   sutura->radix.mensura > 0
+                && via.mensura > sutura->radix.mensura
+                && chorda_incipit(via, sutura->radix)
+                && via.datum[sutura->radix.mensura] == '/')
+            {
+                via = chorda_sectio(via, sutura->radix.mensura + I,
+                    via.mensura);
+            }
+            dum (   via.mensura > II && via.datum[0] == '.'
+                 && via.datum[I] == '/')
+            {
+                via = chorda_sectio(via, II, via.mensura);
+            }
+            si (via.mensura == 0)
+            {
+                perge;
+            }
+            si (genus == LECTIO_SCRIPSIT)
+            {
+                si (transitus == ZEPHYRUM)
+                {
+                    (vacuum)tabula_dispersa_inserere(scriptae, via,
+                        NIHIL);
+                }
+                perge;
+            }
+            si (transitus == ZEPHYRUM)
+            {
+                perge;
+            }
+            /* exitus cursus ipsius: non ingressus */
+            si (   tabula_dispersa_continet(scriptae, via)
+                || chorda_incipit(via,
+                chorda_ex_literis(LIBRI_DIRECTORIUM,
+                       piscina))
+                || _in_thesauro(via, piscina))
+            {
+                perge;
+            }
+            si (via.datum[0] == '/')
+            {
+                i32 k;
+                b32 systematis = FALSUM;
+
+                per (k = ZEPHYRUM; _radices_systematis[k] != NIHIL; k++)
+                {
+                    si (chorda_incipit(via, chorda_ex_literis(
+                            _radices_systematis[k], piscina)))
+                    {
+                        systematis = VERUM;
+                    }
+                }
+                si (systematis)
+                {
+                    perge;
+                }
+            }
+            alioquin si (   (genus == LECTIO_LEGIT
+                         || genus == LECTIO_EXSTAT)
+                         && _sub_build(via)
+                         && (   sutura->exitus_noti == NIHIL
+                             || !tabula_dispersa_continet(
+                                    sutura->exitus_noti, via)))
+            {
+                *causa_out = _iungere(piscina,
+                    "ingressus build/ sine domino: ", via, "");
+                redde FALSUM;
+            }
+            si (   (genus == LECTIO_LEGIT || genus == LECTIO_EXSTAT)
+                && sutura->species != NIHIL
+                && sutura->species(sutura->datum,
+                       chorda_ut_cstr(via, piscina))
+                   == (i32)FABRICA_SPECIES_ALIA)
+            {
+                *causa_out = _iungere(piscina,
+                    "lectio non sigillabilis (FIFO, socket, machina): ",
+                    via, "");
+                redde FALSUM;
+            }
+            clavis = _iungere(piscina, "", chorda_sectio(linea, 0, I),
+                chorda_ut_cstr(via, piscina));
+            si (tabula_dispersa_continet(visae, clavis))
+            {
+                perge;
+            }
+            (vacuum)tabula_dispersa_inserere(visae, clavis, NIHIL);
+            lectio = (FabricaLectio*)xar_addere(lectiones);
+            si (lectio == NIHIL)
+            {
+                redde FALSUM;
+            }
+            lectio->genus  = genus;
+            lectio->via    = via;
+            si (!_lectionem_sigillare(sutura, genus, via, piscina,
+                    &lectio->sigillum))
+            {
+                *causa_out = _iungere(piscina,
+                    "lectio non sigillabilis: ",
+                    via, "");
+                redde FALSUM;
+            }
+        }
+    }
+    *lectiones_out = lectiones;
+    redde VERUM;
 }
 
 interior LectioGenus
@@ -4609,6 +5040,99 @@ _post_agere (
         status[i] = SANANDI_FRACTUM;
         _sanationem_notare(sutura, piscina, sanationes, actio,
             FABRICA_FRACTUM, causa, duratio);
+        redde;
+    }
+    si (actio->genus == FABRICA_ACTIO_IUDICIUM)
+    {
+        /* TRANSITUS (spec 3 par. XII): porta in loco transiit - vestigium
+         * libri sui sub clave (ingressus hodierni, verdictum) servatur;
+         * non reutilis = transitus tamen (SANATUM), causa nominata */
+        constans FabricaExitus* exitus;
+                        chorda  verdictum;
+                        chorda  ratio;
+                      Sigillum  ingressus;
+                      Sigillum  clavis;
+                      Sigillum  artificium;
+                           Xar* vestigium;
+
+        exitus = (constans FabricaExitus*)xar_obtinere(actio->exitus,
+            ZEPHYRUM);
+        si (!sutura->legere(sutura->datum,
+                chorda_ut_cstr(exitus->via, piscina), piscina,
+                &verdictum))
+        {
+            status[i] = SANANDI_FRACTUM;
+            _sanationem_notare(sutura, piscina, sanationes, actio,
+                FABRICA_FRACTUM, _iungere(piscina,
+                    "exitus 0 sed verdictum non scriptum: ",
+                    exitus->via,
+                    ""), duratio);
+            redde;
+        }
+        artificium = sigillum_computare(verdictum.datum,
+            (memoriae_index)verdictum.mensura);
+        ratio = chorda_ex_literis("", piscina);
+        si (!_actionem_sigillare_semel(sutura, actio, piscina,
+            &ingressus,
+                &ratio))
+        {
+            ratio = _iungere(piscina,
+                "transitus non servatus (ingressus): ",
+                ratio, "");
+        }
+        alioquin si (!_lectiones_transitus_colligere(sutura,
+                     chorda_ut_cstr(fabrica_liber_via(actio->titulus,
+                     piscina),
+                     piscina), piscina, &vestigium, &ratio))
+        {
+            ratio = _iungere(piscina, "transitus non servatus: ", ratio,
+                "");
+        }
+        alioquin si (sutura->lectiones_scribere == NIHIL)
+        {
+            ratio = chorda_ex_literis(
+                "transitus non servatus: sine memoria", piscina);
+        }
+        alioquin
+        {
+            clavis = _clavem_memoriae(actio, &ingressus);
+            sutura->lectiones_scribere(sutura->datum,
+                chorda_ut_cstr(actio->titulus, piscina),
+                chorda_ut_cstr(exitus->via, piscina), &clavis,
+                &artificium,
+                vestigium);
+            /* consensus: iudicium idem nunc RECENS dicere debet */
+            si (!_exitus_recentes(sutura, actio, piscina, &ratio))
+            {
+                status[i] = SANANDI_FRACTUM;
+                _sanationem_notare(sutura, piscina, sanationes, actio,
+                    FABRICA_FRACTUM, _iungere(piscina,
+                        "vestigium scriptum sed iudicium non RECENS: ",
+                        ratio, ""), duratio);
+                redde;
+            }
+            ratio = chorda_ex_literis("", piscina);
+        }
+        /* transitus non servatus: vestigium VETUS deletur (scriptura
+         * vacua) - cursus hic legit quod vetus non explicat, ergo
+         * transitus vetus testis non est */
+        si (   ratio.mensura > ZEPHYRUM
+            && sutura->lectiones_scribere != NIHIL)
+        {
+            Xar* vacuum_vestigium;
+
+            vacuum_vestigium = xar_creare(piscina,
+                (i32)magnitudo(FabricaLectio));
+            memset(&clavis, ZEPHYRUM, magnitudo(clavis));
+            sutura->lectiones_scribere(sutura->datum,
+                chorda_ut_cstr(actio->titulus, piscina),
+                chorda_ut_cstr(exitus->via, piscina), &clavis,
+                &artificium,
+                vacuum_vestigium);
+        }
+        status[i] = SANANDI_SANATUM;
+        _sanationem_notare(sutura, piscina, sanationes, actio,
+            FABRICA_SANATUM, ratio, duratio);
         redde;
     }
     si (!_exitus_recentes(sutura, actio, piscina, &causa))

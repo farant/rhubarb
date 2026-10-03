@@ -1679,3 +1679,33 @@ Note for T5b: the named sanare of an iudicium today ends FRACTUM
 test asserts only that it ACTED.
 Test gotcha: a declaration with no <ingressus> is refused first
 ("actio sine ingressu") and masked my three refusal assertions.
+
+## 2026-10-03 - slice 3 T5b: recording a pass, and the verdict trace rules
+
+- `sanare` of an iudicium: the tool's sequential `_agere` sets
+  FABRICA_LECTIONES to the ABSOLUTE ledger path (runners `cd`), truncated
+  first; `fabrica_liber_via()` is the one name both sides use.
+  `_post_agere` (iudicium branch): verdict file present -> key from the
+  inputs as they are AFTER the run (per-run memos are cleared after
+  agere), `_lectiones_transitus_colligere`, write, then re-judge for
+  consensus (must be RECENS, else FRACTUM). Not recordable -> SANATUM
+  with "transitus non servatus: <why>" AND the old trace is deleted (an
+  empty write; the store's DELETE removes it): this run read something
+  the old trace does not explain, so the old pass is no witness. Plant
+  (skip the deletion) -> red.
+- Collector rules: S paths are outputs (dropped), build/ reads need an
+  owner from `exitus_noti` (all declared exitus), system roots dropped,
+  other absolute paths digested (A1), species ALIA -> IGNOTUM, E kept only
+  when equal to the env fabrica gave the gate (plant "keep all E" -> 8
+  red: a runner-set RHUBARB_RADIX would key on itself).
+- Genera `identitas_clang` (same identity as compilator incl.
+  FABRICA_CLANG) and `fontationes` (crusta/fontationes.sh; irresolutum ->
+  key IGNOTUM with the line).
+- Tool: `_legere` now refuses non-regular files (a FIFO would hang the
+  judge); trace store maps 'E' <-> LECTIO_AMBITUS (it mapped unknown
+  letters to L).
+- Test fake parity: the fake store returned an EMPTY trace as found; the
+  real one returns nothing for zero rows. Fixed in the fake.
+- Test gotcha: per-run memos (sutura->digesta) keep the input key inside
+  one process - the block runs without memos so judgements follow edits.
+488/488.
