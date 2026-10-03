@@ -244,3 +244,31 @@ The aedilis.stml plant (materia root deleted) is invisible to the
 aedilis gate (187 green) and to III (snippets list lib/*.c only); IV
 catches it (silva manifest loses every materia header). Three plants at
 once → three named STALA; ~2m20s. macOS bash 3.2 has no mapfile.
+
+## 2026-10-03 — the excludenda harvest could converge FALSELY
+
+Vendoring `stilus_terminalis` into tessera (module 004 T3) needed a rename
+prefix that is NOT `tessera_` + old name: the codec's `stilus_nativus` /
+`stilus_aequalis` would become `tessera_stilus_nativus` / `_aequalis`,
+which tessera already defines (same TU → redefinition). Chosen:
+`stilus_` → `tessera_stilus_terminalis_`.
+
+The harvester reversed warning names by stripping `<proiectum>_` only, so
+`tessera_stilus_terminalis_applicare` → `stilus_terminalis_applicare`, a
+name that exists nowhere. It was still CLASSIFIED (longest base-prefix
+match `stilus_terminalis_`), listed, never dropped by the amalgamator —
+and on gyrus 2 the same warning returned as "already listed, not new",
+so NOVAE=0 read as a fixed point. Exit 0, a list of fictional names; the
+only witness was amalgamare.sh's -Werror standalone build two steps later
+(2 unused-function errors).
+
+Fixes: (1) tessera's amalgamator `--enumerare` also prints its rename
+tables (`TE` exact, `PF` prefixes); the harvester reverses through THAT
+table (longest novum prefix), falling back to stripping `<proiectum>_`
+for amalgamators that print none (silva, officina — their renames are
+all of that form). (2) Invariant: a name already listed cannot come back
+as unused (the amalgamator would have dropped it) — returning = fracture,
+named. Plant (empty table = old reversal): "nomen exclusum rediit:
+stilus_terminalis_applicare (… gyrus 2)". Lesson in the house shape: "no
+new names" was a proxy for "no warnings"; the proxy forgave a name that
+never matched.

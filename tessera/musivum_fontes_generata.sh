@@ -28,6 +28,7 @@ declare -a RADIX_FONTES=(
     "runae_tabulae"
     "selectio"
     "series_terminalis"
+    "stilus_terminalis"
     "stml"
     "tabula_dispersa"
     "tessellatio"

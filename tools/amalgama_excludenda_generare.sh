@@ -245,6 +245,28 @@ _caput_emittere() {
 for b in $BASES; do : > "$STATIO/lista_$b.txt"; done
 _caput_emittere
 
+# ------------------------------------------------------------------
+# RENOMINATIONES REVERSAE (stilus_terminalis, modulus 004, 2026-10-03):
+# nomen admonitionis -> nomen originale per tabulam amalgamatoris
+# IPSIUS (--enumerare: TE exacta, PF praefixa, praefixum longissimum).
+# Reservum: "<proiectum>_" demptum. Ante: solum demptio - praefixum
+# "tessera_stilus_terminalis_" nomen falsum dabat
+# ("stilus_terminalis_applicare"), quod per praefixum basi tamen
+# classificabatur, amalgamator numquam demittebat, et ansa FALSO
+# convergebat (nomen rediens "non novum" erat). Custodia infra.
+# ------------------------------------------------------------------
+_nomen_originale() {
+    local r="$1" o
+    o="$(awk -F'\t' -v r="$r" '
+        $1=="TE" && $3==r { print $2; inventum=1; exit }
+        $1=="PF" && index(r, $3)==1 && length($3) > m {
+            m=length($3); v=$2 }
+        END { if (!inventum && m) print v substr(r, m+1) }
+    ' "$STATIO/renominationes.tsv")"
+    if [ -n "$o" ]; then echo "$o"; else echo "${r#"$PRAEFIXUM"}"; fi
+}
+: > "$STATIO/renominationes.tsv"
+
 GYRUS=0
 dum_finis=0
 while [ $dum_finis -eq 0 ]; do
@@ -257,6 +279,10 @@ while [ $dum_finis -eq 0 ]; do
     [ $GYRUS -le 30 ] || si_fracta "punctum fixum non attactum (gyri XXX)"
 
     _amalgamatorem_struere || si_fracta "constructio amalgamatoris (gyrus $GYRUS)"
+    # tabula renominationum (amalgamatores sine TE/PF: tabula vacua,
+    # reservum valet)
+    "$STATIO/amalgamator" --enumerare 2>/dev/null \
+        | awk -F'\t' '$1=="TE" || $1=="PF"' > "$STATIO/renominationes.tsv"
     "$STATIO/amalgamator" "$PWD" "$STATIO/amalgama_messis.c" \
         > /dev/null || si_fracta "cursus amalgamatoris (gyrus $GYRUS)"
     COMPILATIO_BONA=1
@@ -296,7 +322,7 @@ while [ $dum_finis -eq 0 ]; do
     NOVAE=0
     while IFS= read -r renominata; do
         [ -n "$renominata" ] || continue
-        nomen="${renominata#"$PRAEFIXUM"}"
+        nomen="$(_nomen_originale "$renominata")"
         case " $(echo $PROTECTA) " in
             *" $nomen "*)
                 si_fracta "signum functionem PROTECTAM demittere vult: $nomen (gyrus $GYRUS) - catena viva callee amisit; vide $STATIO/admonitiones.txt"
@@ -307,6 +333,11 @@ while [ $dum_finis -eq 0 ]; do
         if ! grep -Fxq "$nomen" "$STATIO/lista_$basis.txt"; then
             echo "$nomen" >> "$STATIO/lista_$basis.txt"
             NOVAE=$((NOVAE + 1))
+        else
+            # nomen iam exclusum non redire potest: amalgamator id
+            # demisisset - rediens = nomen falsum (renominatio non
+            # reversa), et "nihil novi" convergentia FALSA esset
+            si_fracta "nomen exclusum rediit: $nomen (renominata: $renominata, gyrus $GYRUS) - amalgamator id non demisit; renominatio reversa falsa?"
         fi
     done < "$STATIO/inusitatae.txt"
 

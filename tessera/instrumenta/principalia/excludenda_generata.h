@@ -89,3 +89,14 @@ interior constans character* constans EXCLUDENDA_RIVI[] = {
     "rivus_modos_intrare",
     NIHIL
 };
+
+interior constans character* constans EXCLUDENDA_STILI[] = {
+    "_colon",
+    "_colon_numerare",
+    "_color_ponere",
+    "_colorem_legere",
+    "_ornamentum",
+    "stilus_applicare",
+    "stilus_tabulae_color",
+    NIHIL
+};

@@ -85,3 +85,39 @@ the colours were reset (bold was still set from an earlier line). Fixed.
 Tests: 117. Plants caught: `:` read as `;` (18 failures); 22 clearing
 only bold (re-run after the table refactor); the encoder never
 splitting.
+
+## T3 — tessera emits through the codec (2026-10-03)
+
+tessera's `_stilum_emittere` is now a lossless conversion plus
+`stilus_codificare(aed, NIHIL, &stilus, PLENA|CCLVI)`; its private
+quantizer `_cclvi` (the original of `stilus_quantizare`) and colour
+writer are gone. The bar held: tessera 15/15, hospes 7/7 faithful, no
+golden changed.
+
+**The bar was weaker than the plan assumed.** The planned plant (the
+conversion drops one ornament — strikethrough) passed 15/15: tessera's
+goldens pin colour bytes but no test had ever pinned an ornament's bytes.
+New section IV in `probatio_tessera_colores.c` pins each of the six and
+all six with both colours (17 params, tessera's maximum) in both depths.
+Run against HEAD's pre-codec `tessera_opus.c` too: green, so the pins
+record the OLD behaviour. Plant re-run: 3 named failures.
+
+**Vendoring exposed a tool bug.** The usual rename (`stilus_` →
+`tessera_stilus_`) collides with tessera's own `tessera_stilus_nativus` /
+`_aequalis`, so the prefix is `tessera_stilus_terminalis_`. The
+excludenda harvester reversed names by stripping `tessera_` only and
+CONVERGED FALSELY on fictional names (`stilus_terminalis_applicare`);
+only the amalgam's -Werror build noticed. Fran chose fixing the tool:
+the amalgamator prints its rename table, the harvester reverses through
+it, and a listed name that returns is a named fracture. Detail in
+tools/amalgamatio.worklog.md.
+
+Also: tessera's test runner lists its lib sources by hand —
+`stilus_terminalis` added (link failure until then).
+
+The first commit attempt was stopped by `generata`: tessera's four tools
+(effigies, folium, musivum, spectaculum) have generated source lists
+from their include closures, now owing `stilus_terminalis`; regenerated
+by each snippet's own `# regeneratio:` line, all four built (TUIs built
+with `exec` shadowed, musivum with AEDIFICARE_SOLUM). The tessera gate
+does not build those tools - generata was the only witness.

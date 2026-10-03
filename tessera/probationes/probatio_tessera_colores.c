@@ -9,6 +9,10 @@
  * III. Ambitus: COLORTERM et TERM_PROGRAM (profunditas) et
  *      TERM_PROGRAM (politica latitudinis, runae U5c - antea non
  *      probata).
+ * IV.  Ornamenta (modulus 004, emissio per stilus_terminalis): octeti
+ *      singulorum sex et omnium cum coloribus (XVII parametra, maxima
+ *      tesserae) - ANTE codicem nulla probatio ornamenta emissa
+ *      figebat (planta "transfixum omissum" 15/15 transibat).
  */
 #include "postulata_posix.h"
 #include "latina.h"
@@ -44,14 +48,15 @@ _continet (
     redde FALSUM;
 }
 
-/* Cellulam unam cum coloribus datis sub profunditate data emittere;
- * reddit captum */
+/* Cellulam unam cum coloribus et ornamentis datis sub profunditate
+ * data emittere; reddit captum */
 interior chorda
-_emittere (
+_emittere_ornatam (
            Piscina* piscina,
     TesseraColores  colores,
                i32  litterae,
-               i32  fundi)
+               i32  fundi,
+               i32  ornamenta)
 {
     TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(piscina, IV,
         I);
@@ -59,9 +64,41 @@ _emittere (
 
     tessera_colores_ponere(opus, colores);
     tessera_cellulam_ponere(opus, ZEPHYRUM, ZEPHYRUM, (i32)'a',
-        tessera_stilus(litterae, fundi, ZEPHYRUM));
+        tessera_stilus(litterae, fundi, ornamenta));
     (vacuum)tessera_praesentare(opus);
     redde tessera_pons_memoriae_captum(pm);
+}
+
+interior chorda
+_emittere (
+           Piscina* piscina,
+    TesseraColores  colores,
+               i32  litterae,
+               i32  fundi)
+{
+    redde _emittere_ornatam(piscina, colores, litterae, fundi,
+        ZEPHYRUM);
+}
+
+interior vacuum
+_ornatam_probare (
+          Piscina* piscina,
+    TesseraColores  colores,
+              i32  litterae,
+              i32  fundi,
+              i32  ornamenta,
+    constans character* exspectatum)
+{
+    chorda captum  = _emittere_ornatam(piscina, colores, litterae,
+        fundi, ornamenta);
+       b32 bona    = _continet(captum, exspectatum);
+
+    si (!bona)
+    {
+        imprimere("  FRACTA: ornamenta 0x%x: '%s' non emissum\n",
+            (insignatus integer)ornamenta, exspectatum + I);
+    }
+    CREDO_VERUM (bona);
 }
 
 interior vacuum
@@ -162,6 +199,35 @@ principale (vacuum)
     unsetenv("COLORTERM");
     CREDO_AEQUALIS_I32 ((i32)tessera_colores_ambitus(),
         (i32)TESSERA_COLORES_PLENI);
+
+    imprimere("\n--- IV. Ornamenta ---\n");
+    {
+        constans i32 nativus = (i32)TESSERA_COLOR_NATIVUS;
+        constans i32 omnia = TESSERA_ORNAMENTUM_CRASSUM
+            | TESSERA_ORNAMENTUM_OBSCURUM | TESSERA_ORNAMENTUM_CURSIVUM
+            | TESSERA_ORNAMENTUM_SUBLINEATUM
+            | TESSERA_ORNAMENTUM_INVERSUM
+            | TESSERA_ORNAMENTUM_TRANSFIXUM;
+
+        _ornatam_probare(piscina, TESSERA_COLORES_PLENI, nativus,
+            nativus, TESSERA_ORNAMENTUM_CRASSUM, "\033[0;1m");
+        _ornatam_probare(piscina, TESSERA_COLORES_PLENI, nativus,
+            nativus, TESSERA_ORNAMENTUM_OBSCURUM, "\033[0;2m");
+        _ornatam_probare(piscina, TESSERA_COLORES_PLENI, nativus,
+            nativus, TESSERA_ORNAMENTUM_CURSIVUM, "\033[0;3m");
+        _ornatam_probare(piscina, TESSERA_COLORES_PLENI, nativus,
+            nativus, TESSERA_ORNAMENTUM_SUBLINEATUM, "\033[0;4m");
+        _ornatam_probare(piscina, TESSERA_COLORES_PLENI, nativus,
+            nativus, TESSERA_ORNAMENTUM_INVERSUM, "\033[0;7m");
+        _ornatam_probare(piscina, TESSERA_COLORES_PLENI, nativus,
+            nativus, TESSERA_ORNAMENTUM_TRANSFIXUM, "\033[0;9m");
+        /* omnia + colores: XVII parametra (maxima tesserae < XXIV) */
+        _ornatam_probare(piscina, TESSERA_COLORES_PLENI, 0xFF0000,
+            0x336699, omnia,
+            "\033[0;1;2;3;4;7;9;38;2;255;0;0;48;2;51;102;153m");
+        _ornatam_probare(piscina, TESSERA_COLORES_CCLVI, 0xFF0000,
+            0x808080, omnia, "\033[0;1;2;3;4;7;9;38;5;196;48;5;244m");
+    }
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

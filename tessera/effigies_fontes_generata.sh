@@ -15,5 +15,6 @@ declare -a RADIX_FONTES=(
     "runae"
     "runae_tabulae"
     "series_terminalis"
+    "stilus_terminalis"
     "utf8"
 )

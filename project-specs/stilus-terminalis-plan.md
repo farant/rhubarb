@@ -112,6 +112,10 @@ encode option; `_cclvi` deleted (now `stilus_quantizare`). The bar:
 tessera's byte goldens and vectors UNCHANGED; the amalgam vendors
 `stilus_terminalis`. Plant: the conversion dropping one ornament.
 
+T3 as built: bytes identical; the ornament plant first passed (no
+tessera test pinned ornament bytes) - pins added; vendoring found a
+false-convergence bug in the excludenda harvester (fixed, Fran's call).
+
 **T4 — RELATIO.** Phase log; terminal-planning: 004 → completed_, 005
 → completed_ (its last row, SGR emit, lands in T3); briar MUTATIONES.
 

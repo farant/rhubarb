@@ -36,6 +36,8 @@ excludenda_pro() {
         claves_physicae)      echo "EXCLUDENDA_CLAVIUM" ;;
         interpres_terminalis) echo "EXCLUDENDA_INTERPRETIS" ;;
         rivus_terminalis)     echo "EXCLUDENDA_RIVI" ;;
+        # modulus 004: codex stili SGR (emissio per stilus_codificare)
+        stilus_terminalis)    echo "EXCLUDENDA_STILI" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -43,5 +45,5 @@ excludenda_pro() {
 # bases quarum excludenda COMPILATORE metuntur (messis: tools/
 # amalgama_excludenda_generare.sh)
 bases_excludendae() {
-    echo "piscina chorda_aedificator utf8 runae series_terminalis eventus_cauda claves_physicae interpres_terminalis rivus_terminalis"
+    echo "piscina chorda_aedificator utf8 runae series_terminalis eventus_cauda claves_physicae interpres_terminalis rivus_terminalis stilus_terminalis"
 }

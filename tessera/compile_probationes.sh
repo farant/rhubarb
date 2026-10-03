@@ -64,6 +64,8 @@ declare -a RADIX_FONTES=(
     "claves_physicae"
     "interpres_terminalis"
     "rivus_terminalis"
+    # modulus 004: emissio SGR per codicem stili
+    "stilus_terminalis"
     "runae"
     "runae_tabulae"
     "quadrans"
