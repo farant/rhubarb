@@ -1343,6 +1343,32 @@ _clavem_memoriae (
  * ================================================== */
 
 #define LIBRI_DIRECTORIUM "build/fabrica/lectiones/"
+/* THESAURUS (plan 2 T3): blobi, actiones, generationes sunt cache per
+ * sigilla ingressuum iam lectorum - non ingressus. Radix ipsa
+ * (obiecta .o in build/aedilis/obiecta) ingressus verus manet. */
+hic_manens constans character* constans _thesauri_partes[III] = {
+    "build/aedilis/obiecta/blobi/",
+    "build/aedilis/obiecta/actiones/",
+    "build/aedilis/obiecta/generationes/"
+};
+
+interior b32
+_in_thesauro (
+      chorda  via,
+     Piscina* piscina)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        si (chorda_incipit(via, chorda_ex_literis(_thesauri_partes[k],
+                piscina)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
 
 hic_manens constans character* constans SIGNUM_ABSENS   = "\001absens";
 hic_manens constans character* constans SIGNUM_PRAESENS =
@@ -1510,7 +1536,8 @@ _lectiones_colligere (
         si (   via.mensura == 0 || via.datum[0] == '/'
             || chorda_incipit(via, scriptura_dir)
             || chorda_incipit(via, chorda_ex_literis(LIBRI_DIRECTORIUM,
-                   piscina)))
+                   piscina))
+            || _in_thesauro(via, piscina))
         {
             perge;
         }

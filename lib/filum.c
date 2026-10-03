@@ -1108,8 +1108,19 @@ filum_directorium_creare_si_necesse (
         redde FALSUM;
     }
 
-    /* Non existit - creare */
-    redde filum_directorium_creare(via);
+    /* Non existit - creare. CONCURSUS: alter processus inter stat()
+     * et mkdir() creare potest (EEXIST) - directorium tum 'iam
+     * existit', ergo successus (thesaurus, II scriptores, plan 2 T3) */
+    si (filum_directorium_creare(via))
+    {
+        redde VERUM;
+    }
+    si (stat(via, &st) == ZEPHYRUM && S_ISDIR(st.st_mode))
+    {
+        _filum_error_purgare();
+        redde VERUM;
+    }
+    redde FALSUM;
 }
 
 b32

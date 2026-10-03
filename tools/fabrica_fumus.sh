@@ -42,6 +42,10 @@
 #        FRACTUM per exitum (plan 1b T5, Q42)
 #   XXV  cursus: actio sanata in build/fabrica.db scribitur; -siccum
 #        postea tempus aestimat, non 'tempus ignotum' (plan 1b T7)
+#   XXVI purgare: thesaurus manu structus (sigilla vera per shasum),
+#        VI generationes - prima sola clavem k1 tenet: index primus,
+#        actio k1, blobus eius deleti (III), cetera servata; -verificare
+#        blobum servatum corruptum delet (plan 2 T3)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -254,6 +258,25 @@ printf 'vetus\n' > "$T/r/b"
 if [ "$rc1" -eq 1 ] && grep -q '^AGENDUM *g (tempus ignotum)' "$T/o" \
    && [ "$rc2" -eq 0 ] && [ "$rc3" -eq 1 ] && grep -q '^AGENDUM *g (~[0-9]*\.[0-9] s)' "$T/o3"; then echo "  XXV  cursus: siccum aestimat         OK"; else echo "  XXV  FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3"; fracta=1; fi
 
+# XXVI (plan 2 T3): purgare - generationes servatae V (A3)
+radix '<fabrica titulus="t"/>'
+O="$T/r/build/aedilis/obiecta"
+pone_blobum () { local h; h=$(printf '%s' "$1" | shasum -a 256 | cut -c1-64); mkdir -p "$O/blobi/${h:0:2}"; printf '%s' "$1" > "$O/blobi/${h:0:2}/${h:2}"; echo "$h"; }
+pone_actionem () { mkdir -p "$O/actiones/${1:0:2}"; printf '%s\n' "$2" > "$O/actiones/${1:0:2}/${1:2}"; }
+b1=$(pone_blobum "unus"); b2=$(pone_blobum "duo")
+k1=$(printf 'k1' | shasum -a 256 | cut -c1-64); k2=$(printf 'k2' | shasum -a 256 | cut -c1-64)
+pone_actionem "$k1" "$b1"; pone_actionem "$k2" "$b2"
+mkdir -p "$O/generationes"
+printf '%s\n' "$k1" > "$O/generationes/20260101T000000-1-0001.lst"
+for g in 2 3 4 5 6; do printf '%s\n' "$k2" > "$O/generationes/2026010${g}T000000-1-0001.lst"; done
+(cd "$T/r" && "$F" purgare) > "$T/o" 2>&1; rc1=$?
+printf 'X' >> "$O/blobi/${b2:0:2}/${b2:2}"
+(cd "$T/r" && "$F" purgare -verificare) > "$T/o2" 2>&1; rc2=$?
+if [ "$rc1" -eq 0 ] && grep -q 'purgare: 3 deleta' "$T/o" \
+   && [ ! -e "$O/blobi/${b1:0:2}/${b1:2}" ] && [ ! -e "$O/actiones/${k1:0:2}/${k1:2}" ] \
+   && [ ! -e "$O/generationes/20260101T000000-1-0001.lst" ] && [ -e "$O/actiones/${k2:0:2}/${k2:2}" ] \
+   && [ "$rc2" -eq 0 ] && grep -q 'purgare: 1 deleta' "$T/o2" && [ ! -e "$O/blobi/${b2:0:2}/${b2:2}" ]; then echo "  XXVI purgare: generationes V servatae OK"; else echo "  XXVI FRACTUM (rc=$rc1 $rc2)"; cat "$T/o" "$T/o2"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXV/XXV)"
+echo "fumus fabricae: sanum (XXVI/XXVI)"
 exit 0

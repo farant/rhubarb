@@ -1225,6 +1225,61 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * Probare cum_parentibus sub CONCURSU (fabrica plan 2 T3)
+     * ================================================== */
+
+    {
+        constans character* radix = "/tmp/test_rhubarb_concursus";
+                     pid_t  filii[II];
+                       i32  f;
+                       s32  status;
+                       s32  fracta;
+
+        imprimere("\n--- Probans cum_parentibus sub concursu ---\n");
+
+        /* CAUSA: creare_si_necesse stat() deinde mkdir() - alter
+         * processus inter ea creare potest; mkdir EEXIST tum
+         * 'iam existit' est, non defectus (contractus: 'vel iam
+         * existit'). Inventum per thesaurum (II scriptores, eadem
+         * directoria blobi). Filii II semitas CCC novas eodem
+         * ordine creant; omnis vocatio VERUM. */
+        (vacuum)filum_arborem_delere(radix);
+        fflush(stdout);
+        per (f = ZEPHYRUM; f < II; f++)
+        {
+            filii[f] = fork();
+            si (filii[f] == ZEPHYRUM)
+            {
+                character semita[CCLVI];
+                      i32 k;
+                      s32 defectus;
+
+                defectus = ZEPHYRUM;
+                per (k = ZEPHYRUM; k < CCC; k++)
+                {
+                    sprintf(semita, "%s/%u/medium/nidus", radix,
+                        (insignatus integer)k);
+                    si (!filum_directorium_creare_cum_parentibus(semita))
+                    {
+                        defectus++;
+                    }
+                }
+                _exit((integer)(defectus > CC ? CC : defectus));
+            }
+        }
+        fracta = ZEPHYRUM;
+        per (f = ZEPHYRUM; f < II; f++)
+        {
+            status = ZEPHYRUM;
+            (vacuum)waitpid(filii[f], &status, ZEPHYRUM);
+            fracta += WIFEXITED(status) ? WEXITSTATUS(status) : CC;
+        }
+        CREDO_AEQUALIS_S32(fracta, ZEPHYRUM);
+        (vacuum)filum_arborem_delere(radix);
+    }
+
+
+    /* ==================================================
 	 * Compendium
 	 * ================================================== */
 

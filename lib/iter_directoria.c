@@ -179,7 +179,11 @@ directorium_iterator_proximum (
         (size_t)longitudo_nominis);
     via_plena[longitudo_basis + I + longitudo_nominis] = '\0';
 
-    /* Obtinere statum fili */
+    /* Obtinere statum fili. Liber: eventus D directorii (nomina) hanc
+     * lectionem tegit - introitus novus/ablatus nomina mutat. LACUNA
+     * nota (plan 2 T3): genus/mensura sub nomine eodem mutata (filum
+     * -> directorium) sigillum D non mutant. */
+    /* lectiones: notatur */
     si (stat(via_plena, &status) == 0)
     {
         iterator->introitus_nunc.genus =

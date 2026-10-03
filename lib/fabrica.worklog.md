@@ -1168,3 +1168,51 @@ before its generated input (the next judge would catch it).
 Second -plenus after this commit: 24 s, one snippet run = the 1-in-20
 audit ("auditus: regeneratio congruit").
 Open: snippets show "tempus ignotum" in sanare estimates.
+
+## 2026-10-02 - plan 2 T3: the store and aedilis records
+
+Store itself: see lib/thesaurus.worklog.md. Here, the fabrica side.
+
+**aedilis --thesaurus <dir>.** The extraction memo looks up key =
+SHA-256(prefix || file bytes), prefix = SHA-256(aedilis binary (argv[0])
+|| aedilis.stml). Why that key is sound: silva's parse does NO file IO
+(expander, context, front end read nothing; latina is compiled in as
+silva_latina_textus), so a file's extraction is a function of its bytes
+and the extractor code. The binary digest is the version (any code
+change, incl. linked lib/, invalidates - a hand-bumped constant would
+silently serve stale records when forgotten). `.m` files go through
+clang -MM (reads headers) and are never stored. Record = binary-safe
+text (D n / mensura angulata / bytes; A n / mensura / bytes); a failed
+extraction is never stored; an unreadable record = miss.
+Equivalence (scratch script, 201 roots): --partes and --differentia
+outputs identical without / cold / warm store (0 differences).
+--partes 59 s -> 16 s (cold) -> 10 s (warm). (--differentia numbers
+were confounded by the shared clang -MM memo - not a store number.)
+
+**Callers.** --thesaurus build/aedilis/obiecta in the four snippet
+generators (tools/fontes_generare.sh, silva_fontes_generare.sh,
+compile_tests_fontes_generare.sh, gesta/fontes_generare.sh) and both
+per-root calls in tools/aedilis_porta.sh. Explicit flag, not an env var:
+an env var read through lectiones_ambitus would make every trace
+unverifiable.
+Snippet regeneration (one miss), before -> cold store -> warm:
+fragmentum_compile_tests ~64 s -> 17.4 s -> 11.4 s; fragmenta_silva ~34 s
+-> 4.9 s -> 3.0 s. Cold already wins: the store shares header parses
+across the ~200 separate aedilis processes (the in-process memo could
+not). Full -audit with the warm store: 0 AUDITUM DISCORS.
+
+**Judge filter.** Drops build/aedilis/obiecta/{blobi,actiones,
+generationes}/ from traces - NOT the root (the shared .o files there are
+real inputs to anything that links them). Test: two store lines dropped,
+a .o in the root kept (III -> IV); plant (whole root) red.
+
+**Lint.** Linking thesaurus put lib/iter_directoria.c on aedilis's pilot
+path and the lint named its per-entry stat (type/size during a listing)
+at once. Marked as covered by the listing's D event, with the known gap
+written at the call: a type/size change under the same name does not
+change D's digest (nothing on the pilot path depends on entry type).
+
+**purgare.** `bin/fabrica purgare [-verificare]`, under the fabrica lock,
+keeps GENERATIONES_SERVANDAE (V, A3). Fumus XXVI (store built by hand
+with shasum digests: 6 lists, the oldest alone holds k1) -> 3 deleted;
+-verificare deletes a corrupted kept blob. Plant (VI kept) red.

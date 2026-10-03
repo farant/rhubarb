@@ -42,6 +42,9 @@ initium=$(date +%s)
 # gelata est, inter cursus non - memoria vetus capita falsa daret
 # (planta: introitus fictus -> 'ORACULUM SOLUM' fictum).
 MEMORIA_ORACULI="$(mktemp -d)"
+# THESAURUS (fabrica plan 2 T3): cursus portae = generatio una
+# (purgatio generationes ultimas servat, non processus aedilis)
+export THESAURUS_GENERATIO="${THESAURUS_GENERATIO:-$(date -u +%Y%m%dT%H%M%S)-porta-aedilis-$$}"
 trap 'rm -rf "$MEMORIA_ORACULI"' EXIT
 
 for f in probationes/probatio_*.c; do
@@ -51,7 +54,7 @@ for f in probationes/probatio_*.c; do
     esac
     numerus=$((numerus + 1))
 
-    if ! ./bin/aedilis "$f" > /dev/null 2>"build/aedilis/porta_$basis.err"; then
+    if ! ./bin/aedilis "$f" --thesaurus build/aedilis/obiecta > /dev/null 2>"build/aedilis/porta_$basis.err"; then
         echo "FRACTA (derivatio): $basis"
         head -3 "build/aedilis/porta_$basis.err"
         fracta="$fracta $basis(derivatio)"
@@ -72,6 +75,7 @@ for f in probationes/probatio_*.c; do
         fi
     fi
     if ! ./bin/aedilis "$f" --differentia --memoria-oraculi "$MEMORIA_ORACULI" \
+            --thesaurus build/aedilis/obiecta \
             > "build/aedilis/porta_$basis.diff" 2>&1; then
         echo "DIFFERENTIA: $basis"
         grep -E "NOS SOLI|ORACULUM SOLUM|RECUSAT" \

@@ -1775,6 +1775,8 @@ s32 principale (vacuum)
         _ponere(&discus, "data/scriptum.sh", "echo\n");
         _ponere(&discus, "data/fons.txt", "datum\n");
         _ponere(&discus, "gen/exitus.c", "linea I\n");
+        _ponere(&discus, "build/aedilis/obiecta/lib__x.o",
+            "obiectum\n");
         radix_nomina[0] = "a.h";
         _directorium_ponere(&discus, "radix", radix_nomina, I);
         a             = _actio(piscina, "gen", FABRICA_ACTIO_GENERATOR);
@@ -1789,17 +1791,22 @@ s32 principale (vacuum)
             "A\tradix/umbra.h\n"
             "D\tradix\n"
             "L\tbuild/fabrica/scriptura/gen/temporaria.txt\n"
+            "L\tbuild/aedilis/obiecta/actiones/ab/cdef\n"
+            "L\tbuild/aedilis/obiecta/blobi/12/3456\n"
+            "L\tbuild/aedilis/obiecta/lib__x.o\n"
             "S\tgen/exitus.c\n";
 
         /* I. sine vestigio: regeneratio, RECENS -> vestigium scriptum,
-         * tres lectiones (scriptura et S non) */
+         * quattuor lectiones: scriptura, S et THESAURUS (blobi,
+         * actiones - cache per sigilla ingressuum iam lectorum) non;
+         * obiectum .o in radice eadem SIC (ingressus verus nexus) */
         iudicium = fabrica_iudicare(&sutura, a, exitus, VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
         CREDO_AEQUALIS_I32(discus.cursus, I);
         CREDO_AEQUALIS_I32(discus.vestigia_scripta, I);
         vestigium = ((VestigiumLectionumFictum*)xar_obtinere(
             discus.vestigia_lectionum, ZEPHYRUM))->lectiones;
-        CREDO_AEQUALIS_I32(xar_numerus(vestigium), III);
+        CREDO_AEQUALIS_I32(xar_numerus(vestigium), IV);
 
         /* II. nihil mutatum: RECENS per vestigium, sine currere -
          * etiam celer */

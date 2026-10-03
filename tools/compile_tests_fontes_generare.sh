@@ -61,7 +61,7 @@ for f in probationes/probatio_*.c \
          tools/generare.c tools/capsula_generare.c \
          instrumenta/nuntium_schema_generare.c; do
     case "$f" in *_benchmark.c) continue ;; esac
-    if ! ./bin/aedilis "$f" --enumerare \
+    if ! ./bin/aedilis "$f" --enumerare --thesaurus build/aedilis/obiecta \
             --manifestum "$CLAUSURAE/$(echo "$f" | sed 's|/|__|g').stml" \
             >> "$TEMPORARIUM"; then
         echo "compile_tests_fontes_generare: derivatio fracta: $f" >&2

@@ -22,8 +22,10 @@ OMNES=0
 [ -x bin/aedilis ] || { echo "lectiones_lint: bin/aedilis deest" >&2; exit 2; }
 ./silva/nexus.sh -renovare > /dev/null 2>&1 || { echo "lectiones_lint: nexus renovari nequit" >&2; exit 2; }
 
-# canalis ipse: hae plagulae IO crudam iure faciunt
-EXEMPTAE="lib/filum.c lib/lectiones.c"
+# canalis ipse: hae plagulae IO crudam iure faciunt. thesaurus: cache
+# per sigilla ingressuum iam lectorum, non ingressus (iudex radicem eius
+# e vestigiis eicit, plan 2 T3) - getenv THESAURUS_GENERATIO crudum
+EXEMPTAE="lib/filum.c lib/lectiones.c lib/thesaurus.c"
 # instrumenta quorum vestigia fabrica credit (lectiones="verum")
 VIA_PILOTA_RADICES="tools/aedilis.c"
 

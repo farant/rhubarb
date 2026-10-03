@@ -180,6 +180,7 @@ declare -a SOURCE_FILES=(
     "lib/tessellatio.c"
     "lib/thema.c"
     "lib/thema_visus.c"
+    "lib/thesaurus.c"
     "lib/tractator.c"
     "lib/uri.c"
     "lib/url.c"

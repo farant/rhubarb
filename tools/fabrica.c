@@ -48,6 +48,7 @@
 #include "provenientia.h"
 #include "scrinium.h"
 #include "numerus_romanus.h"
+#include "thesaurus.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -2359,6 +2360,72 @@ _digestum (
 
 externus constans ProvenientiaRelatio provenientia_fabrica;
 
+/* PURGARE (plan 2 T3): thesaurus build/aedilis/obiecta - generationes
+ * ultimae GENERATIONES_SERVANDAE (A3) servantur, cetera deleta;
+ * -verificare blobos servatos verificat. Sub sera fabricae (nec iudex
+ * plenus nec sanatio simul). Scriptor alienus simul (porta, aedilis)
+ * cache solum amittere potest - numquam fructum falsum (blobi per
+ * sigilla, actio sine blobo = defectus memoriae). */
+#define GENERATIONES_SERVANDAE V
+#define THESAURI_RADIX "build/aedilis/obiecta"
+
+interior s32
+_purgare (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina)
+{
+     Thesaurus* thesaurus;
+     FilumSera* sera;
+           b32  verificare;
+           i32  deleta;
+           s32  a;
+
+    verificare = FALSUM;
+    per (a = II; a < argc; a++)
+    {
+        si (strcmp(argv[a], "-verificare") == 0)
+        {
+            verificare = VERUM;
+        }
+        alioquin
+        {
+            fprintf(stderr, "fabrica: vexillum ignotum %s\n", argv[a]);
+            redde II;
+        }
+    }
+    si (!filum_directorium_existit(THESAURI_RADIX))
+    {
+        printf("fabrica purgare: thesaurus nullus (%s)\n",
+            THESAURI_RADIX);
+        redde ZEPHYRUM;
+    }
+    (vacuum)filum_directorium_creare_cum_parentibus("build/fabrica");
+    sera = filum_seram_capere("build/fabrica/sera", ZEPHYRUM, piscina);
+    si (sera == NIHIL)
+    {
+        fprintf(stderr, "fabrica: iudex plenus aut sanatio alia currit "
+            "(build/fabrica/sera tenetur) - exspecta eam aut siste\n");
+        redde II;
+    }
+    thesaurus  = thesaurus_aperire(THESAURI_RADIX, piscina);
+    deleta     = ZEPHYRUM;
+    si (   thesaurus == NIHIL
+        || !thesaurus_purgare(thesaurus, GENERATIONES_SERVANDAE,
+        verificare, &deleta))
+    {
+        fprintf(stderr, "fabrica purgare: thesaurus purgari nequit "
+            "(%s)\n", THESAURI_RADIX);
+        filum_seram_liberare(sera);
+        redde II;
+    }
+    printf("fabrica purgare: %u deleta (generationes servatae %u%s)\n",
+        (insignatus integer)deleta,
+        (insignatus integer)GENERATIONES_SERVANDAE,
+        verificare ? ", blobi verificati" : "");
+    filum_seram_liberare(sera);
+    redde ZEPHYRUM;
+}
 
 interior vacuum
 _usus (vacuum)
@@ -2370,6 +2437,7 @@ _usus (vacuum)
         "      bin/fabrica sanare [-siccum] "
         "[artificium|compositum...]\n"
         "      bin/fabrica digestum TITULUS\n"
+        "      bin/fabrica purgare [-verificare]\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "
         "2 nihil iudicatum)\n");
 }
@@ -2404,6 +2472,21 @@ principale (
     {
         redde II;
     }
+    /* THESAURUS (plan 2 T3): cursus hic = generatio una pro omnibus
+     * actionibus eius (aedilis in generatoribus); cursus exterior
+     * (porta) suam servat */
+    si (getenv("THESAURUS_GENERATIO") == NIHIL)
+    {
+           character generatio[LXIV];
+              time_t nunc;
+
+        nunc = time(NIHIL);
+        (vacuum)strftime(generatio, magnitudo(generatio),
+            "%Y%m%dT%H%M%S", gmtime(&nunc));
+        sprintf(generatio + strlen(generatio), "-fabrica-%ld",
+            (longus)getpid());
+        (vacuum)setenv("THESAURUS_GENERATIO", generatio, I);
+    }
     si (strcmp(argv[1], "iudicare") == 0)
     {
         exitus = _iudicare(argc, argv, piscina);
@@ -2415,6 +2498,10 @@ principale (
     alioquin si (strcmp(argv[1], "digestum") == 0 && argc == III)
     {
         exitus = _digestum(argv[2], piscina);
+    }
+    alioquin si (strcmp(argv[1], "purgare") == 0)
+    {
+        exitus = _purgare(argc, argv, piscina);
     }
     alioquin
     {
