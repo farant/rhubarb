@@ -18,6 +18,7 @@
 -Itessera/fontes
 -Itessera/amalgama
 -Isaltuarius/fontes
+-Iludus_tessera/fontes
 -Iofficina/fontes
 -Iofficina/amalgama
 -Iofficina/instrumenta

@@ -93,6 +93,11 @@ fd-bound, so the pons is tested by WHAT IT WRITES via an injected
 writer, or the glue is tested with the memoria pons and this pons only
 by Fran's look (decide in A1; record why).
 
+A1 as built: `ludus_tessera_modos_componere` (pure; screen bytes join
+rivus's modes in the ONE terminalis_intrare - crash-safe) + a thin pons
+(intrare/egredi write nothing, legere -1, resumptum NIHIL); fd-1
+redirect test; 29 asserts, three plants.
+
 **A2 — cells into tessera.** Pure bridge: a `TessellatioCellula` grid
 (tessellatio_computare's output) → `tessera_graphema_ponere` /
 `tessera_cellulam_ponere`: text units (UTF-8, width 1/2, continuation

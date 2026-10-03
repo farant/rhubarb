@@ -55,6 +55,17 @@ declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
     "credo"
+    # A1: rivus (modi declarati) et terminalis (pons)
+    "xar"
+    "utf8"
+    "runae"
+    "runae_tabulae"
+    "series_terminalis"
+    "eventus_cauda"
+    "claves_physicae"
+    "interpres_terminalis"
+    "rivus_terminalis"
+    "terminalis_posix"
 )
 
 FILTER="${1:-}"
