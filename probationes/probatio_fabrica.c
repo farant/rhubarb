@@ -62,8 +62,9 @@ nomen structura {
                    i32  vestigia_scripta;   /* vocationes scribere */
                    Xar* undae_actae;  /* chorda: tituli undae simul
                                        * actae, spatiis (plan 2 T6) */
-                   i32 acta_simul;   /* actiones per agere_simul */
-                   i32 fila_ficta;   /* post fracturam: membra ultra
+                   i32  acta_simul;   /* actiones per agere_simul */
+                   Xar* undae_currendi; /* chorda: praevisiones (T6b) */
+                   i32  fila_ficta;   /* post fracturam: membra ultra
                                        * hunc indicem non incipiunt */
 } DiscusFictus;
 
@@ -474,6 +475,40 @@ _vestigia_comparare_via (
 }
 
 /* photographia ficta: plagulae non deletae, tempus = horologium */
+/* currere SIMUL fictum (T6b, praevisio): _currere fictum per membrum,
+ * unda nominata (tituli spatiis) in undae_actae */
+interior vacuum
+_currere_simul (
+                            vacuum*  datum,
+    constans FabricaActio* constans* actiones,
+                               i32  numerus,
+       constans character* constans* scripturae,
+       constans character* constans* libri,
+                           Piscina*  piscina,
+                               b32*  felices_out,
+                            chorda*  causae_out,
+                               i32*  durationes_out)
+{
+     DiscusFictus* discus;
+           chorda  unda;
+              i32  k;
+
+    discus  = (DiscusFictus*)datum;
+    unda    = chorda_ex_literis("", piscina);
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        causae_out[k] = chorda_ex_literis("", piscina);
+        felices_out[k] = _currere(datum, actiones[k]->mandatum,
+            scripturae[k], libri[k], piscina, &causae_out[k],
+            &durationes_out[k]);
+        unda = chorda_concatenare(unda, (k > ZEPHYRUM)
+            ? chorda_ex_literis(" ", piscina)
+            : chorda_ex_literis("", piscina), piscina);
+        unda = chorda_concatenare(unda, actiones[k]->titulus, piscina);
+    }
+    *(chorda*)xar_addere(discus->undae_currendi) = unda;
+}
+
 /* agere SIMUL fictum (plan 2 T6): membra ordine dato 'incipiunt';
  * post fracturam membra ab indice fila_ficta non incipiunt. Unda
  * acta notatur (tituli spatiis). scriptum_s: plagula scripta et 'S' in
@@ -785,9 +820,11 @@ _discum_parare (
     discus->lectiones_ficti = NIHIL;
     discus->undae_actae = xar_creare(piscina, (i32)magnitudo(chorda));
     discus->acta_simul = ZEPHYRUM;
-    discus->fila_ficta = C;
-    discus->scriptura_altera = NIHIL;
-    discus->generatio_altera = NIHIL;
+    discus->undae_currendi = xar_creare(piscina,
+        (i32)magnitudo(chorda));
+    discus->fila_ficta        = C;
+    discus->scriptura_altera  = NIHIL;
+    discus->generatio_altera  = NIHIL;
     discus->vestigia_lectionum  = xar_creare(piscina,
         (i32)magnitudo(VestigiumLectionumFictum));
     discus->vestigia_scripta    = ZEPHYRUM;
@@ -3471,6 +3508,48 @@ s32 principale (vacuum)
                 "P2")->eventus, (i32)FABRICA_SANATUM);
         }
 
+        /* V. sanare cum praevisione (T6b): iudicia ante et post undam
+         * simul - regenerationes tutae in undis currendi, nulla
+         * seriatim (cursus = II undae x III) */
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        sutura.agere_simul    = _agere_simul;
+        sutura.currere_simul  = _currere_simul;
+        _ponere(&discus, "a1", "a1\n");
+        _ponere(&discus, "a2", "a2\n");
+        _ponere(&discus, "a3", "a3\n");
+        _ponere(&discus, "X1", "vetus\n");
+        _ponere(&discus, "X2", "vetus\n");
+        _ponere(&discus, "X3", "vetus\n");
+        _scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        _scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+            FALSUM);
+        _scriptum_addere(&discus, "gen_3", "X3", NIHIL, "n3\n", 0,
+            FALSUM);
+        actiones[0] = _actio_scripta(piscina, "P1", "gen_1", "a1", "X1",
+            "regeneratio");
+        actiones[1] = _actio_scripta(piscina, "P2", "gen_2", "a2", "X2",
+            "regeneratio");
+        actiones[2] = _actio_scripta(piscina, "P3", "gen_3", "a3", "X3",
+            "regeneratio");
+        per (i = ZEPHYRUM; i < III; i++)
+        {
+            actiones[i]->lectiones = VERUM;
+        }
+        ordo = _ordinare_fictas(piscina, actiones, III);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_AEQUALIS_I32(xar_numerus(discus.undae_currendi), II);
+        CREDO_AEQUALIS_I32(discus.cursus, VI);
+        per (i = ZEPHYRUM; sanationes != NIHIL
+             && i < xar_numerus(sanationes); i++)
+        {
+            CREDO_AEQUALIS_I32((i32)((FabricaSanatio*)xar_obtinere(
+                sanationes, i))->eventus, (i32)FABRICA_SANATUM);
+        }
+
         /* IV. scriptura NON notata extra omnia vestigia undae
          * (photographia undae): membra omnia FRACTUM, unda nominata */
         _discum_parare(&discus, &sutura, piscina);
@@ -3507,6 +3586,96 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32((i32)_sanatio_invenire(sanationes,
                 "P2")->eventus, (i32)FABRICA_FRACTUM);
         }
+    }
+
+
+    /* ==================================================
+     * PROBARE: PRAEVISIO regenerationum (T6b): iudicium simul
+     * ================================================== */
+
+    {
+          DiscusFictus  discus;
+         FabricaSutura  sutura;
+          FabricaActio* actiones[III];
+                   Xar* ordo;
+       FabricaIudicium  iudicium;
+                   i32  i;
+                   i32  stala;
+
+        imprimere("\n--- Probans praevisionem regenerationum ---\n");
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        sutura.currere_simul = _currere_simul;
+        _ponere(&discus, "a1", "a1\n");
+        _ponere(&discus, "a2", "a2\n");
+        _ponere(&discus, "an", "an\n");
+        _ponere(&discus, "X1", "vetus\n");
+        _ponere(&discus, "X2", "vetus\n");
+        _ponere(&discus, "XN", "vetus\n");
+        _scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        _scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+            FALSUM);
+        _scriptum_addere(&discus, "gen_n", "XN", NIHIL, "nn\n", 0,
+            FALSUM);
+        actiones[0] = _actio_scripta(piscina, "L2", "gen_2", "a2", "X2",
+            "regeneratio");
+        actiones[1] = _actio_scripta(piscina, "N", "gen_n", "an", "XN",
+            "regeneratio");
+        actiones[2] = _actio_scripta(piscina, "L1", "gen_1", "a1", "X1",
+            "regeneratio");
+        actiones[0]->lectiones = VERUM;
+        actiones[2]->lectiones = VERUM;
+        ordo = _ordinare_fictas(piscina, actiones, III);
+
+        /* I. praevisio: tutae (lectiones) simul, ordine tituli; N non */
+        fabrica_regenerationes_praevidere(&sutura, ordo, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32(xar_numerus(discus.undae_currendi), I);
+        si (xar_numerus(discus.undae_currendi) == I)
+        {
+            CREDO_VERUM(chorda_aequalis_literis(*(chorda*)xar_obtinere(
+                discus.undae_currendi, ZEPHYRUM), "L1 L2"));
+        }
+        CREDO_AEQUALIS_I32(discus.cursus, II);
+
+        /* II. iudicium sequens memoriam invenit: N SOLA regeneratur,
+         * verdicta ut sine praevisione (omnia STALUM, octeti differunt) */
+        stala = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
+        {
+            FabricaActio* actio;
+
+            actio = *(FabricaActio**)xar_obtinere(ordo, i);
+            iudicium = fabrica_iudicare(&sutura, actio,
+                (FabricaExitus*)xar_obtinere(actio->exitus, ZEPHYRUM),
+                VERUM, piscina);
+            si (iudicium.status == FABRICA_STALUM)
+            {
+                stala++;
+            }
+            CREDO_FALSUM(_continet(iudicium.causa, "praevisio",
+                piscina));
+        }
+        CREDO_AEQUALIS_I32(stala, III);
+        CREDO_AEQUALIS_I32(discus.cursus, III);
+
+        /* III. sine currere_simul: praevisio nihil agit (via vetus) */
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        _ponere(&discus, "a1", "a1\n");
+        _ponere(&discus, "X1", "vetus\n");
+        _scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        actiones[0] = _actio_scripta(piscina, "L1", "gen_1", "a1", "X1",
+            "regeneratio");
+        actiones[0]->lectiones = VERUM;
+        ordo = _ordinare_fictas(piscina, actiones, I);
+        fabrica_regenerationes_praevidere(&sutura, ordo, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(xar_numerus(discus.undae_currendi),
+            ZEPHYRUM);
     }
 
 

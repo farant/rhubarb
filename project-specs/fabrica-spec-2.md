@@ -296,3 +296,63 @@ never fails. It reads `fabrica.tsv` (84 lines, hand-written; its header
 says it was meant to be absorbed by aedilis manifests). The oracle
 period (step 7) compares its verdicts with the store's for the toml
 objects.
+
+## XIII. As built (2026-10-03)
+
+Plan `fabrica-plan-2.md`, executed inline on main over two days; commits
+cadca60e + b9d03e84 (T1), 76708a1b / 26e34570 (T2), d664f6ad (T3),
+6b357b86 / 1db36de7 (T4), 215f88cc (T5), b391f68b (T6), 0877b6b7 (T7),
+6bbc48cd (T6b, parallel judging - Fran's follow-up, not in the plan).
+Side fix in between: 7ed77ac6 (commissio refuses when its own format
+step stales a just-built binary, park …ET4262).
+
+| §IX done means | after slice 2 |
+|---|---|
+| toml runner on fabrica; oracle agrees across real commits | runner compiles through bin/compilator from aedilis closures (hand lists, the "newest header anywhere" rule and its excubitor call gone); `tools/toml_oraculum.sh` (old and new runner in the SAME tree; `-arbor REF`) agrees on HEAD and cadca60e / 8d7e6fba / 26e34570: 44-45 objects byte-identical, 370 test lines identical. NOT a fabrica-declared familia of test binaries (Fran, T5: nothing can judge a test binary yet - per-test verdict actions are slice 3) |
+| the ledger keys a real action family, with shadowing and new-file plants | the 19 snippet generators are `lectiones="verum"`: keyed by their last congruent run's read ledger (L content, A absence, D listing); real plants: header comment -> exactly the 4 tessera snippets; shadow header -> the same 4; new gesta test -> fragmentum_gesta only. Ordering edges from traces (silva.c plant -> all 19 after amalgama_silva) |
+| measured speedups (toml cold/warm, aedilis gate, snippet generators) | aedilis gate 208-262 -> 90.5 s; fragmentum_compile_tests per miss ~64 -> 11 s warm (17 s cold store), fragmenta_silva ~34 -> 3 s; second -plenus 44 -> 24 s; toml suite warm 31.8 -> 31.1 s, header edit 38.0 -> 31.2 s, wiped build + warm store 39.2 -> 31.5 s (tests themselves = 27.9 s of every run); 19-snippet heal serial 93.0 -> parallel 65.7 s; -plenus with all snippet traces cold 112.6 -> 96.2 s |
+| excubitor deleted | NOT YET, by decision (Fran, T7): the record (4 trees x 4 scenarios) shows false alarms on touched headers and blindness to -I shadowing, but ~18 mtime runners still use it as their guard. Deletion is the last row of batch job …W0ZBW ('migratio ad compilatorem', 20 rows, inventory …MEES9X) |
+
+Built beyond the plan or differently (rulings in the progress ledger):
+the trace key carries the exitus (multi-output actions kept only their
+last trace); a memo audit (1 in 20 under -plenus, every hit under
+`-audit`; AUDITUM DISCORS) - 0 discords over a full audit; the store
+(`lib/thesaurus.c`, filum + sigillum, atomic writes, sampled read
+verification) with a GENERATION = an orchestrating run named by
+THESAURUS_GENERATIO, not a process (~200 aedilis processes per -plenus);
+`bin/fabrica purgare`; the store is cache, not input - the judge drops
+its blobi/actiones/generationes from traces and lib/thesaurus.c is exempt
+in the raw-IO lint (Fran may overrule); aedilis records keyed on its own
+binary + aedilis.stml + file bytes (silva's parse does no IO);
+bin/compilator keys include cwd (-g), sorted .h listings of every -I
+root and the source dir (shadowing), and the REAL clang binary's digest
+memoized by file identity (/usr/bin/clang is a 119 KB trampoline);
+hits copy, never hard-link; `familia` = a directory listing + one STML
+template (`&@basis;`, `&@fons;`, house macro syntax) instead of four
+fixed binding rules; parallel heal checks writes twice (per member S,
+per wave snapshot - S alone would have left bash generators' own writes
+unchecked) and stops starting work after a failure while still judging;
+the store and per-action ledgers are part of every envelope.
+
+Found on the way: filum's mkdir -p returned failure when another
+process created the same directory at the same moment (fixed, pinned by
+a race test); Apple clang 16 compiles toml/fontes/toml_scalaris.c
+non-deterministically (loop vectorizer; park …ACYVJ for Fran); the
+oracle's first version reported "consensus" on a commit without toml
+(silent gate - now exit 2); the commit's format step staled freshly
+built binaries twice (…ET4262, fixed); the first real-tree parallel heal
+failed all 19 snippets because the store was outside their envelopes
+(T3 had only exercised scratch judging).
+Core assertions 344 -> 443; fabrica fumus 25 -> 31 stages; new gate
+`compilator` (fumus VIII); new tools `tools/lectiones_lint.sh`,
+`tools/toml_oraculum.sh`, `tools/compilator_struere.sh`.
+
+Known limits / deferred: excubitor deletion (…W0ZBW); the judge is now
+dominated by six NON-traced generators regenerating serially
+(corpus_silicis, excludenda_silva, cocti, tabulae, numeri - ~47 s;
+desideratum …VFF5D); heal by promoting the judge's scratch output (one
+run instead of three, design question …XZQG); a directory listing's
+digest covers names, not entry types (gap noted at the call); a header
+edited DURING a compile could be stored under the wrong key; on a fresh
+database converted actions have no trace edges for their first run;
+per-test verdict actions and a store shared across worktrees (slice 3+).

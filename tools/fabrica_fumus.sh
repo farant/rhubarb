@@ -54,6 +54,8 @@
 #   XXIX simul fractura: una ex IV fracta -> ceterae SANATUM, dependens
 #        OMISSUM nominans eam, exitus 1
 #   XXX  non tuta numquam simul: intervallum eius nullum alium tangit
+#   XXXI iudicium simul (T6b, praevisio): IV generatores tuti, II s sub
+#        iudice singuli, -plenus FABRICA_FILA=IV -> < IV s, verdicta recta
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -347,6 +349,19 @@ for n in a b c; do
 done
 if [ "$rc" -eq 0 ] && [ "$(grep -c '^SANATUM' "$T/o")" -eq 4 ] && [ "$tangit" -eq 0 ] && [ "$ui" != 0 ]; then echo "  XXX  non tuta numquam simul           OK"; else echo "  XXX  FRACTUM (rc=$rc, tangit=$tangit)"; cat "$T/o"; fracta=1; fi
 
+# XXXI (T6b): iudicium -plenus simul - gen.sh dormit SUB IUDICE solo
+simul_radix "a:t b:t c:t d:t"
+cat > "$T/r/gen.sh" <<'GEN'
+n="$1"; D="${FABRICA_SCRIPTURA:-.}"; mkdir -p "$D/o"
+[ -n "${FABRICA_SCRIPTURA:-}" ] && sleep 2
+printf '%s\n' "$n" > "$D/o/$n"
+GEN
+printf 'a\n' > "$T/r/o/a"; printf 'b\n' > "$T/r/o/b"
+t0=$(nunc); (cd "$T/r" && FABRICA_FILA=4 "$F" iudicare -plenus -omnia) > "$T/o" 2>&1; rc=$?; t1=$(nunc)
+dur=$(echo "$t1 - $t0" | bc)
+if [ "$rc" -eq 1 ] && grep -q '^RECENS o/a ' "$T/o" && grep -q '^RECENS o/b ' "$T/o" \
+   && grep -q '^STALUM o/c ' "$T/o" && grep -q '^STALUM o/d ' "$T/o" && [ "$(echo "$dur < 4" | bc)" -eq 1 ]; then echo "  XXXI iudicium simul: IV x II s in $dur s OK"; else echo "  XXXI FRACTUM (rc=$rc, $dur s)"; cat "$T/o"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXX/XXX)"
+echo "fumus fabricae: sanum (XXXI/XXXI)"
 exit 0

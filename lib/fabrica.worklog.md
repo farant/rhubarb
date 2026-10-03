@@ -1354,3 +1354,94 @@ parallel judging is the next lever, not in T6. Remaining failures in
 those runs were other processes writing in the tree during the heal
 (oratio/build/cursor.sera/, tabularium.db-wal) - reported correctly as
 "aut manu mutata dum currebat".
+
+## 2026-10-03 - plan 2 T7 step 1: excubitor vs the store (record)
+
+Method (scratch scripts, not committed): per tree state a worktree with
+the T5 thin runner (live bin/aedilis + bin/compilator linked, own store).
+compilator's misses counted by a `clang` wrapper on PATH that logs only
+real `-c` compiles and passes -print-prog-name through - compilator's
+compiler identity, hence every key, is unchanged. excubitor asked
+BEFORE each compile pass; objects re-touched between scenarios (the old
+runner's mtime baseline). Header: toml/fontes/toml_scalaris.h.
+
+Same result on all four states (HEAD, cadca60e, 8d7e6fba, 26e34570):
+  A nothing changed:           excubitor 0, compilator 0
+  B header touched, same bytes: excubitor 4 (false alarm), compilator 0
+  C header bytes changed:      excubitor 4, compilator 4 (agree)
+  D same-named header earlier on -I (copy of include/chorda.h into
+    toml/fontes): excubitor 0 (MISSES IT), compilator 44-45 (all)
+Also seen live after T5: compilator leaves identical objects untouched,
+so excubitor called 3 up-to-date objects stale (B class).
+First C run reported excubitor 0 - my script edited the header in the
+same second as the last object touch, and excubitor compares with -nt
+at 1 s resolution (the same-second trap the runners document). Re-run
+with the sleep before the edit: 4/4. Real in practice, but not fair to
+count as excubitor's logic.
+
+Finding for Step 2: excubitor is NOT only the report-only call in
+compile_tests.sh. ~18 runners call it (crusta x3, css, html, md, oratio
+x2 and a crusta fixture BLOCK on it with exit 2; gesta, officina x3,
+saltuarius, silva, tessera, diagnostica fumus warn), plus the
+.claude/hooks/excubitor-custos.sh hook. Those runners still build by
+mtime - excubitor is their real guard. Deleting it before they compile
+through the store would remove that guard (a missing script degrades to
+a CAUTIO line).
+Step 2 (Fran 2026-10-03): migrate first, then delete. Inventory
+'consumptores excubitoris' (…MEES9X, 21 rows: usus obstat/monet,
+migratum) and batch job 'migratio ad compilatorem (excubitor emeritus)'
+(…W0ZBW, 20 open rows, recipe = the T5 toml conversion + its oracle).
+Deleting excubitor.sh / fabrica.tsv / compile_tests.sh:1225 / the hook
+is the job's last row, not T7's. Spec 2 IX 'excubitor deleted' moves
+with it.
+
+## 2026-10-03 - T6b (follow-up): parallel judging (prefetch)
+
+Desideratum …83AQ items 1+2 (Fran). The judge stays unchanged: a prefetch
+warms the per-run regeneration memo it already consults.
+- Collect mode: sutura->praevisio (Xar) set -> _regenerare records the
+  action (once per title, lectiones="verum" only) and returns "praevisio"
+  WITHOUT running or memoizing. fabrica_regenerationes_praevidere judges
+  through a COPY of the sutura with the collector set (memo tables are
+  shared pointers - no const cast), sorts the requests by title, runs
+  them through the new seam currere_simul (same scratch dir + ledger
+  paths the judge would use), then fills sutura->regenerationes and
+  writes the IUDICIUM cursus rows exactly as _regenerare would.
+- Tool: _currere_simul = T6 pool (FABRICA_FILA), each child an emptied
+  scratch dir, absolute FABRICA_SCRIPTURA and FABRICA_LECTIONES set just
+  before starting; judging never stops on a failure. iudicare -plenus
+  prefetches the lectiones actions it will judge (same tacta/electa
+  filter); sanare prefetches each wave's pre-checks and each batch's
+  post-checks.
+- sanare wave loop now judges ALL members before any acts (an act clears
+  the regeneration memo, so an unsafe member acting mid-loop would have
+  thrown the prefetch away). Wave members are independent by
+  construction, so the order cannot change a verdict.
+Same safety class as T6: only lectiones actions are prefetched -
+arbitrary generators may share temp paths.
+Evidence: core tests (prefetch batches only lectiones, in title order;
+the judge then finds them memoized - one serial regeneration for the
+non-lectiones action - verdicts as without prefetch; no seam = no-op;
+heal with prefetch: two regeneration batches, 6 runs, none serial),
+plants red (collect everything; memo not filled). Fumus XXXI: 4
+generators sleeping 2 s under the judge -> 2.04 s with FILA=4; plant
+(prefetch unwired) 8.07 s red.
+Real tree: -plenus with all 19 snippet traces deleted: serial 112.6 s,
+parallel 96.2 s, identical verdicts. Heal of the 19 snippets: serial
+93.0 s, parallel 65.7 s, 19 healed. The judge is now dominated by
+NON-traced generators regenerating serially: corpus_silicis 19 s,
+excludenda_silva 17 s, lectores_cocti 4.5, tabulae_silvae 3.3,
+canones_cocti 1.6, numeri_latinae 1.2 (~47 s). Converting them to
+lectiones="verum" (the T2 move) would let traces skip them and make them
+prefetchable - next family candidate.
+
+## 2026-10-03 - plan 2 T8: slice 2 closed
+
+"As built" is spec 2 par. XIII (done-means vs evidence, built beyond the
+plan, found on the way, known limits with ledger ids). Ledger note
+…NKVA closes the slice; the progress ledger
+(.superpowers/sdd/fabrica-plan-2/progress.md) carries every ruling.
+Open for Fran: excubitor deletion via batch job …W0ZBW; the store's
+lint exemption; promotion (…XZQG); clang non-determinism (…ACYVJ).
+Next family candidate: the six non-traced generators that now dominate
+-plenus (…VFF5D).

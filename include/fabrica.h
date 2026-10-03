@@ -253,6 +253,20 @@ nomen structura {
      * (FABRICA_FILA=1): via vetus intacta. Nucleus: tutae simul (scrip-
      * turae S contra vestigium membri; photographia una undae contra
      * unionem), non tutae SOLAE. */
+    /* currere SIMUL (T6b, praevisio iudicii): regenerationes
+     * 'numerus' actionum (lectiones="verum") parallele, quaeque in
+     * scripturam suam VACUAM (FABRICA_SCRIPTURA) cum libro suo; redit
+     * cum omnes finitae. NIHIL = praevisio nihil agit. */
+    vacuum (*currere_simul)(vacuum* datum,
+                            constans FabricaActio* constans* actiones,
+                            i32 numerus,
+                            constans character* constans* scripturae,
+                            constans character* constans* libri,
+                            Piscina* piscina, b32* felices_out,
+                            chorda* causae_out, i32* durationes_out);
+    /* praevisio (T6b, internum): non NIHIL = _regenerare petitiones
+     * COLLIGIT, non currit (fabrica_regenerationes_praevidere solum) */
+    Xar* praevisio;
     vacuum (*agere_simul)(vacuum* datum,
                           constans FabricaActio* constans* actiones,
                           i32 numerus,
@@ -483,6 +497,19 @@ fabrica_declarationes_legere_cum_sutura (
                    Piscina* piscina,
        InternamentumChorda* intern,
                     chorda* causa_out);
+
+/* PRAEVISIO (T6b): regenerationes quas iudicium (plenus) actionum
+ * 'actiones' (FabricaActio*) posceret - SOLAE actiones lectiones="verum"
+ * (scripturae notae, ut sanare simul) - per currere_simul SIMUL currit
+ * et in sutura->regenerationes memorat; iudicium sequens (ordine suo,
+ * immutatum) eas memoratas invenit. Iudicia praevisionis abiciuntur.
+ * Nihil agit si currere_simul aut regenerationes NIHIL. */
+vacuum
+fabrica_regenerationes_praevidere (
+    constans FabricaSutura* sutura,
+              constans Xar* actiones,
+                       b32  plenus,
+                   Piscina* piscina);
 
 /* Radix fabrica.stml (dialectus fabrica v2): viae subsystematum
  * (Xar de chorda), ordine documenti. NIHIL + causa si radix non
