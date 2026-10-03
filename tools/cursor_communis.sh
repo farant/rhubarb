@@ -15,6 +15,11 @@
 #   cursor_probationem_struere F B  probatio F per compilatorem
 #                                 ($BUILD_DIR/probationes/) et nexus cum
 #                                 clausura SUA -> binarium B
+#   cursor_instrumentum_struere M B  instrumentum (principale M) ex
+#                                 clausura SUA, obiecta in
+#                                 $BUILD_DIR/instrumenta/<nomen>/, nexus
+#                                 solum si obiectum mutatum (cursorem non
+#                                 poscit; exemplar crusta/facies.sh)
 # Viae fontium ABSOLUTAE, cwd vocantis: -g utramque infigit - obiecta
 # cursori veteri (clang directo) octetim aequalia (oraculum
 # tools/cursoris_oraculum.sh). Mandata compilationis in
@@ -38,12 +43,13 @@ cursor_instrumenta_parare () {
     export FABRICA_THESAURUS="$THESAURUS"
     CLAUSURAE_DIR="$BUILD_DIR/clausurae"
     mkdir -p "$CLAUSURAE_DIR" "$BUILD_DIR/probationes"
-    : > "$CLAUSURAE_DIR/mandata.tsv"
     return 0
 }
 
 cursor_clausuras_derivare () {
     local dir="$1" test_file name
+    # mandata cursus HUIUS solum (instrumenta ea non vacuant)
+    : > "$CLAUSURAE_DIR/mandata.tsv"
     shopt -s nullglob
     for test_file in "$dir"/probatio_*.c; do
         name="$(basename "$test_file" .c)"
@@ -97,4 +103,43 @@ cursor_probationem_struere () {
     _cursor_compilare "$test_file" "$obj" || return 1
     # shellcheck disable=SC2086 (objs: verba consulto scissa)
     clang "${GCC_FLAGS[@]}" "$obj" $objs -o "$bin"
+}
+
+cursor_instrumentum_struere () {
+    local main="$1" bin="$2" nomen dir lista fons obj objs gemina o recens
+    nomen="$(basename "$main" .c)"
+    dir="$BUILD_DIR/instrumenta/$nomen"
+    lista="$dir/clausura.lst"
+    mkdir -p "$dir"
+    if ! (cd "$RADIX_DIR" && bin/aedilis "${main#"$RADIX_DIR"/}" --enumerare \
+            --thesaurus "$THESAURUS") > "$lista"; then
+        echo "$nomen: clausura fracta (bin/aedilis)" >&2
+        return 1
+    fi
+    gemina="$(sed 's|.*/||' "$lista" | sort | uniq -d | head -3)"
+    if [ -n "$gemina" ]; then
+        echo "$nomen: bases geminae in clausura: $(echo $gemina)" >&2
+        return 1
+    fi
+    obj="$dir/$nomen.o"
+    _cursor_compilare "$main" "$obj" || return 1
+    objs="$obj"
+    while IFS= read -r fons; do
+        obj="$dir/$(basename "$fons" .c).o"
+        _cursor_compilare "$RADIX_DIR/$fons" "$obj" || return 1
+        objs="$objs $obj"
+    done < "$lista"
+    # compilator obiectum identicum non rescribit: binarium recentius
+    # omni obiecto = nihil mutatum
+    recens=1
+    [ -f "$bin" ] || recens=0
+    for o in $objs; do
+        if ! [ "$bin" -nt "$o" ]; then
+            recens=0   # aequalitas secundi = stalum (religatur)
+        fi
+    done
+    [ "$recens" = 1 ] && return 0
+    rm -f "$bin"
+    # shellcheck disable=SC2086 (objs: verba consulto scissa)
+    clang "${GCC_FLAGS[@]}" $objs -o "$bin"
 }

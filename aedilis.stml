@@ -30,6 +30,7 @@
     <via (>silva/fontes
     <via (>officina/amalgama
     <via (>css/fontes
+    <via (>crusta/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

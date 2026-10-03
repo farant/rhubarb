@@ -1482,3 +1482,25 @@ names css_*.h unique). Every materia client will need its own line
 generated artifacts touched stay RECENS (no snippet changes).
 Oracle: consensus, 33 objects identical, 299 test lines; hand-list slack
 excerptum, materia_pictor, runae, runae_tabulae, utf8 (never needed).
+
+## 2026-10-03 - excubitor migration step 3: crusta (runner + two launchers)
+
+Runner: same conversion as css; `crusta/fontes` added LAST to
+aedilis.stml (same gap as css). Oracle: consensus, 45 objects identical,
+479 test lines; slack processus_posix.o.
+facies.sh / oraculum.sh were not runners: they linked EVERY object in
+crusta/build (built by the runner) with their main source and refused
+when excubitor called those objects stale - "run the runner first". After
+migration crusta/build holds only the test closures, so they now BUILD
+THEMSELVES: new helper cursor_instrumentum_struere <main.c> <bin> (own
+closure from aedilis, objects through compilator in
+build/instrumenta/<name>/ - their -I lists differ from the runner's -,
+relink only when an object changed). Output vs the old launchers:
+oraculum -probare identical (IDEM on both goldens); facies on 5 scripts
+identical except one finding the change removed (below).
+House lint caught my helper: crusta's nt-aequalitas rule flagged
+`[ "$bin" -nt "$o" ] || recens=0` (blocks at commit). Rewritten in the
+negated form the house uses (`! [ bin -nt o ]` -> stale, so a same-second
+tie relinks). Lint over all 8 scripts this migration touched: clean.
+Helper: the mandata.tsv reset moved from cursor_instrumenta_parare to
+cursor_clausuras_derivare (a tool launch must not wipe a runner's record).
