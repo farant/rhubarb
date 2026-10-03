@@ -169,6 +169,13 @@ s32 principale (vacuum)
     CREDO_VERUM (rivus_eventum(r, M, &e));      /* facultates iterum */
     CREDO_VERUM (e.genus == EVENTUS_FACULTATES);
     CREDO_FALSUM (e.datum.facultates.super);
+    /* exeundi SINE exitu (B3b-iii: pro tractatoribus signorum): eadem
+     * ac exire, status intactus */
+    numerus = rivus_modos_exeundi(r, modi, RIVUS_MODI_MAXIMUM);
+    CREDO_VERUM (_octeti_aequales(modi, numerus,
+        "\033[<u\033[?1004l\033[?2004l\033[?1006l\033[?1002l"
+        "\033[?1000l"));
+    CREDO_AEQUALIS_I32 (rivus_interpres(r)->kitty_vexilla, 0x1F);
     /* iterum intrare sine exitu: nihil (kitty bis impulsum non) */
     CREDO_AEQUALIS_I32 (rivus_modos_intrare(r, RIVUS_MODUS_MUS, modi,
         RIVUS_MODI_MAXIMUM), ZEPHYRUM);

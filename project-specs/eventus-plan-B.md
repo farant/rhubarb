@@ -178,7 +178,11 @@ Split by Fran's approval (2026-10-02) into three:
   over tessera's bridge) + the terminal auscultator + **Look** in
   Terminal.app and Ghostty (answers the two B3 AUDIENDA).
 
-**B4 — the terminal runner of the SAME conformance table.** The
+**B4 — the terminal runner of the SAME conformance table.** Needs a
+pty harness (`posix_openpt` & co. are not in the house lexicon yet; a
+lexicon change owes glossary entries + `officina/auspex_posix.sh`
+assertions). The same harness gives `terminalis_posix.c` its first
+headless test (B3b-iii's bar was the look). The
 table's terminal column (bytes) filled for the A4 scenarios; a runner
 feeds bytes through B2/B3 and compares. Capability-keyed `excusationes`
 (no releases without kitty, Ctrl+I == Tab in legacy) become real.
@@ -220,7 +224,14 @@ MUTATIONES.
 ## 4. AUDIENDA (carried, with the task that measures each)
 
 - What Terminal.app sends for a file drop beyond pasted path text (B3).
+  ANSWERED B3b-iii (Fran's look): nothing beyond it - Ghostty and
+  Terminal.app both send a bracketed paste of the path; promotion
+  works. The position is the pointer BEFORE the drag (the terminal is
+  blind during it): park 008, contract documented, decision (a).
 - Which kitty flags Terminal.app ignores silently vs echoes (B3).
+  ANSWERED B3b-iii: the auscultator pushes `CSI > 31 u` in both
+  terminals; Fran's look found everything working (Terminal.app stays
+  legacy, nothing leaks to the shell after exit).
 - Whether X10 mouse (still in tessera's VALET set) needs a token path
   or stays a reader special case (B1b).
 - The `typus` deletion inventory (D2 step 3): after B5, outside plan B.

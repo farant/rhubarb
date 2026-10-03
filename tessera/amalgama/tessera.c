@@ -5511,9 +5511,9 @@ tessera_interpres_glutinum (
            EventusCauda* cauda);
 
 /* Glutinum promotum (eventus B3b): viae absolutae '\n' iunctae ->
- * EVENTUS_DEPOSITIO (promota) ad indicatorem ultimum (terminal locum
- * depositionis non narrat). Redde 0 si tabula caudae sine loco (vocans
- * textum reddat). */
+ * EVENTUS_DEPOSITIO (promota) ad indicatorem ultimum - ANTE tractum
+ * visum, non locum depositionis (terminal per tractum caecus est; park
+ * 008). Redde 0 si tabula caudae sine loco (vocans textum reddat). */
 static i32
 tessera_interpres_depositio (
     InterpresTerminalis* interpres,
@@ -5566,8 +5566,10 @@ tessera_interpres_depositio (
  *   FOCUS     ?1004: focus I / O
  *   KITTY     CSI > 31 u impellitur, CSI < u extrahitur
  *   DEPOSITIO glutinum VIARUM absolutarum -> EVENTUS_DEPOSITIO
- *             (promota; positio = indicator ultimus visus, 0,0 si
- *             nullus - terminal locum non narrat); GLUTINUM includit
+ *             (promota); GLUTINUM includit. POSITIO = indicator
+ *             ultimus visus ANTE tractum (0,0 si nullus): per tractum
+ *             ex alia applicatione terminalis caecus est - destinatio
+ *             per focum, non per positionem (park 008)
  * RIVUS_MODI_MAXIMUM = octeti quos buffer modorum capere debet. */
 #define RIVUS_MODUS_MUS       0x01
 #define RIVUS_MODUS_SUPER     0x02

@@ -823,20 +823,30 @@ rivus_modos_exire (
                  i8* buffer,
                 i32  capacitas)
 {
-    i32 n;
+    i32 n = rivus_modos_exeundi(r, buffer, capacitas);
 
-    si (r->modi_intrati == ZEPHYRUM || capacitas < RIVUS_MODI_MAXIMUM)
+    si (n == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
-    n                           = _modos_scribere(r->modi_intrati,
-        VERUM,
-        buffer);
     r->modi_intrati                    = ZEPHYRUM;
     r->interpres.kitty_vexilla         = ZEPHYRUM;
     r->interpres.facultates.super      = FALSUM;
     r->interpres.facultates.depositio  = EVENTUS_DEPOSITIO_NULLA;
     redde n;
+}
+
+i32
+rivus_modos_exeundi (
+    constans RivusTerminalis* r,
+                          i8* buffer,
+                         i32  capacitas)
+{
+    si (r->modi_intrati == ZEPHYRUM || capacitas < RIVUS_MODI_MAXIMUM)
+    {
+        redde ZEPHYRUM;
+    }
+    redde _modos_scribere(r->modi_intrati, VERUM, buffer);
 }
 
 s32

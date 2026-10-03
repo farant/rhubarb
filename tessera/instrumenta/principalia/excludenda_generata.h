@@ -83,6 +83,7 @@ interior constans character* constans EXCLUDENDA_RIVI[] = {
     "_modos_scribere",
     "rivus_eventum_coalitum",
     "rivus_interpres",
+    "rivus_modos_exeundi",
     "rivus_modos_exire",
     "rivus_modos_intrare",
     NIHIL

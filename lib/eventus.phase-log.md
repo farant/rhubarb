@@ -1233,3 +1233,52 @@ table, refusal), `probatio_rivus_terminalis` 103, new
 `probatio_copia_terminalis` 3. Plants caught: promotion without the
 declaration; backslash escape ignored; position ignored; BEL instead
 of ST. tessera 1534/1534; the four demos link.
+
+## B3b-iii — raw mode as a platform layer; the terminal auscultator; the look (2026-10-02)
+
+**`terminalis` (`include/terminalis.h`, `lib/terminalis_posix.c`)** -
+the platform layer under rivus, which stays pure. `_posix` is the house
+name for termios code (aedilis finds it through its `macos posix`
+fallback chain; no config). Modelled on tessera's bridge, but the mode
+bytes come from the caller (rivus), not fixed literals:
+`terminalis_intrare(intrandi, n, exeundi, m)` copies both strings so the
+signal handlers (fatal signals, TSTP, CONT) and atexit can restore the
+terminal with `write` + `tcsetattr` only. Raw mode as tessera does it:
+ISIG kept for SUSP alone, so Ctrl-Z really suspends and SIGCONT
+re-enters; Ctrl-C and Ctrl-\ are keys. `terminalis_legere` uses `poll`;
+`terminalis_amplitudo` reports pixels too (0 when unknown); one-shot
+flags for "resumed" and "resized". SIGHUP is not in the house lexicon,
+so the handler set is exactly tessera's.
+
+**`rivus_modos_exeundi`**: the exit bytes WITHOUT leaving, so an app can
+hand them to `terminalis_intrare` at entry; `exire` now reuses it. Red
+first; plant (entry order instead of reverse) caught.
+
+**`tools/auscultator_terminalis.sh`**: declares all six modes, reads
+through `rivus_eventum_coalitum`, prints each Eventus as one STML line
+(the format of fenestra's auscultator, so the two sources compare), adds
+RESUMPTIO after `fg` and MUTARE_MAGNITUDINEM on SIGWINCH; Ctrl-C quits.
+A headless smoke test via macOS `script` (a real pty) passed before the
+look: modes out, capabilities first, a click at cell (5,3)'s centre, a
+pasted path promoted to a drop there, exit bytes in exact reverse.
+
+**The look (Fran, Ghostty + Terminal.app): everything working.** It
+answered both B3 AUDIENDA:
+- a Finder drop is a bracketed paste of the path in both terminals (no
+  drop sequence), and promotion works;
+- the DROP POSITION is stale: during a drag from another app macOS sends
+  mouse events to the drag session, so the terminal reports nothing;
+  the last position seen is where the pointer was BEFORE the drag. Both
+  logs show the post-drop motion starting 200-640 px away in cell
+  steps. Fran's question (Cmd+Tab: maybe the mouse really didn't
+  move?) is answered by that first post-drop report: a still pointer
+  would report one cell away. Decision (a): keep it, documented as the
+  pre-drag pointer in rivus's and the decoder's headers; target a
+  promoted drop by focus. Rejected (b), holding the drop ~50 ms for the
+  next report: Ghostty's came after 12 ms, Terminal.app's after 320.
+  Park 008 has both logs.
+- Terminal.app reports pixel sizes too (13 px cells here), so the 10x20
+  fallback was not needed in either.
+
+The pty-based headless test of `terminalis_posix.c` waits for B4, which
+needs the same harness (and a lexicon change for `posix_openpt`).

@@ -47,8 +47,10 @@
  *   FOCUS     ?1004: focus I / O
  *   KITTY     CSI > 31 u impellitur, CSI < u extrahitur
  *   DEPOSITIO glutinum VIARUM absolutarum -> EVENTUS_DEPOSITIO
- *             (promota; positio = indicator ultimus visus, 0,0 si
- *             nullus - terminal locum non narrat); GLUTINUM includit
+ *             (promota); GLUTINUM includit. POSITIO = indicator
+ *             ultimus visus ANTE tractum (0,0 si nullus): per tractum
+ *             ex alia applicatione terminalis caecus est - destinatio
+ *             per focum, non per positionem (park 008)
  * RIVUS_MODI_MAXIMUM = octeti quos buffer modorum capere debet. */
 #define RIVUS_MODUS_MUS       0x01
 #define RIVUS_MODUS_SUPER     0x02
@@ -136,6 +138,16 @@ rivus_modos_exire (
     RivusTerminalis* rivus,
                  i8* buffer,
                 i32  capacitas);
+
+/* Octeti exeundi modorum intratorum SINE exitu (status intactus):
+ * vocans eos ad intrandum servat pro tractatoribus signorum
+ * (terminalis_intrare, eventus B3b-iii). 0 si nihil intratum aut
+ * capacitas < RIVUS_MODI_MAXIMUM. */
+i32
+rivus_modos_exeundi (
+    constans RivusTerminalis* rivus,
+                          i8* buffer,
+                         i32  capacitas);
 
 /* Octeti in buffere nondum consumpti (ad finem fluxus probandum). */
 i32

@@ -103,9 +103,9 @@ interpres_glutinum (
            EventusCauda* cauda);
 
 /* Glutinum promotum (eventus B3b): viae absolutae '\n' iunctae ->
- * EVENTUS_DEPOSITIO (promota) ad indicatorem ultimum (terminal locum
- * depositionis non narrat). Redde 0 si tabula caudae sine loco (vocans
- * textum reddat). */
+ * EVENTUS_DEPOSITIO (promota) ad indicatorem ultimum - ANTE tractum
+ * visum, non locum depositionis (terminal per tractum caecus est; park
+ * 008). Redde 0 si tabula caudae sine loco (vocans textum reddat). */
 i32
 interpres_depositio (
     InterpresTerminalis* interpres,
