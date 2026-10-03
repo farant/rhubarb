@@ -1369,3 +1369,20 @@ drag's motions no longer coalesce: tractus x2); 10x20 cells (the three
 mouse scenes x2); no silence (legacy escape); `latera` removed from
 sagittae's excuses (both profiles). fenestra still 8/8 on the edited
 table.
+
+## B4b follow-up — `characteres` decoded with `entitates_html` (2026-10-02)
+
+Fran asked whether entity decoding is general enough to live somewhere
+shared. It already does: `lib/entitates_html` (born 09-15 for the
+html/markdown clients) is a full WHATWG HTML5 character-reference
+decoder. stml stays raw by design (byte-exact round trips). The table
+reader now decodes `characteres` with it, so the A4 table needed no
+edit: `&#27;`, `&#9;`, `&#xF702;` finally reach fenestra as ESC, Tab and
+U+F702 instead of literal text. `octeti` keep their C escapes: an
+entity names a CODE POINT, not a byte (`&#200;` is two UTF-8 bytes, and
+HTML5 remaps C1, so `&#155;` would become U+203A, not the 8-bit CSI
+0x9B). Rule for the file: characters as entities, bytes as escapes.
+
+Red first (a key with `&#27;&#xF702;&amp;` must decode to ESC + EF 9C 82
++ `&`); plant (decoding skipped) caught. fenestra still 8/8 with the
+real characters injected; the terminal runner 16/16.

@@ -237,6 +237,25 @@ s32 principale (vacuum)
         xar_obtinere(shift->terminales, I))->octeti,
         "\033[97:65;2;65u\007"));
     CREDO_AEQUALIS_I32 (xar_numerus(ictus->terminales), ZEPHYRUM);
+    /* characteres: referentiae HTML solutae (entitates_html; olim
+     * crudae immittebantur) */
+    {
+                         Xar* t;
+         ConformitasImmissio* c;
+
+        t = eventus_conformitas_legere(
+            "<conformitas><scaena titulus=\"e\" genera=\"textus\">"
+            "<immissio><clavis codex=\"53\" "
+            "characteres=\"&#27;&#xF702;&amp;\" depressa=\"1\"/>"
+            "</immissio></scaena></conformitas>", piscina, intern);
+        CREDO_NON_NIHIL (t);
+        c = (ConformitasImmissio*)xar_obtinere(
+            ((ConformitasScaena*)xar_obtinere(t,
+            ZEPHYRUM))->immissiones,
+            ZEPHYRUM);
+        CREDO_VERUM (chorda_aequalis_literis(c->characteres,
+            "\033\357\234\202&"));
+    }
     /* effugium ignotum in octetis: tabula prava */
     CREDO_NIHIL (eventus_conformitas_legere(
         "<conformitas><scaena titulus=\"t\" genera=\"textus\">"

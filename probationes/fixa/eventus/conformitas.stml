@@ -17,9 +17,12 @@
      excusationes (B4a): differentiae per FACULTATEM; valent solum si
      fons eam facultatem negat (fenestra omnes habet: stricta manet).
 
-     NOTA (B4b): 'characteres' fenestrae (&#27; &#9; &#xF702;) CRUDI
-     immittuntur (STML entitates in attributis non solvit) - scaenae
-     conformes manent quia fenestra his clavibus textum non emittit.
+     characteres = CHARACTERES: referentiae HTML5 (&#27; &#9; &#xF702;)
+     a lectore tabulae per entitates_html solvuntur (STML valores
+     attributorum crudos servat). Ante B4b-sequelam crudi immittebantur
+     ('&#27;' litteraliter); fenestra eis clavibus textum non emittit,
+     ergo scaenae conformes manserunt. octeti contra: effugia C (bytes,
+     non puncta codicis).
 
      SAGITTAE: AppKit NSEventModifierFlagFunction (0x800000 = 8388608)
      sagittis ipse addit (etiam immissis; hardware idem) - modificantes

@@ -3,6 +3,7 @@
 #include "eventus_conformitas.h"
 #include "eventus_stml.h"
 #include "chorda_aedificator.h"
+#include "entitates_html.h"
 #include <string.h>
 
 
@@ -240,6 +241,49 @@ _octetos_solvere (
     redde VERUM;
 }
 
+/* 'characteres' = CHARACTERES: referentiae HTML5 (&#27; &#xF702;
+ * &amp;) per entitates_html solvuntur - valores attributorum STML
+ * crudi sunt. (Octeti contra effugia C ferunt: referentia punctum
+ * codicis nominat, non octetum.) */
+interior chorda
+_characteres_solvere (
+     chorda  fons,
+    Piscina* piscina)
+{
+     constans character* c = (constans character*)fons.datum;
+                 chorda  exitus;
+                    s32  k = ZEPHYRUM;
+
+    exitus.mensura  = ZEPHYRUM;
+    exitus.datum    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(fons.mensura * II + VIII));
+    si (exitus.datum == NIHIL)
+    {
+        redde exitus;
+    }
+    dum (k < (s32)fons.mensura)
+    {
+        character unum[VIII];
+              i32 longitudo;
+              s32 post;
+
+        si (   c[k] == '&'
+            && entitates_html_decoquere(c, k, (s32)fons.mensura, VERUM,
+                   unum, &longitudo, &post))
+        {
+            memcpy(exitus.datum + exitus.mensura, unum,
+                (memoriae_index)longitudo);
+            exitus.mensura  += longitudo;
+            k               = post;
+            perge;
+        }
+        exitus.datum[exitus.mensura] = (i8)c[k];
+        exitus.mensura++;
+        k++;
+    }
+    redde exitus;
+}
+
 Xar*
 eventus_conformitas_legere (
      constans character* cstr,
@@ -306,9 +350,11 @@ eventus_conformitas_legere (
                 im->y             = _numerus(m, "y");
                 si (chorda_aequalis_literis(*m->titulus, "clavis"))
                 {
-                    im->genus        = CONFORMITAS_IMMISSIO_CLAVIS;
-                    im->codex        = _numerus(m, "codex");
-                    im->characteres  = _attributum(m, "characteres");
+                    im->genus = CONFORMITAS_IMMISSIO_CLAVIS;
+                    im->codex = _numerus(m, "codex");
+                    im->characteres  =
+                        _characteres_solvere(_attributum(m,
+                        "characteres"), piscina);
                     im->depressa     = (b32)(_numerus(m, "depressa")
                         != ZEPHYRUM);
                 }
