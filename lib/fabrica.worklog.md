@@ -1445,3 +1445,24 @@ Open for Fran: excubitor deletion via batch job …W0ZBW; the store's
 lint exemption; promotion (…XZQG); clang non-determinism (…ACYVJ).
 Next family candidate: the six non-traced generators that now dominate
 -plenus (…VFF5D).
+
+## 2026-10-03 - excubitor migration, middle path step 1: shared runner pieces
+
+Fran chose the middle path: shared pieces, then three representative
+runners (css, crusta, root compile_tests.sh), then slice 3's interview.
+- tools/cursor_communis.sh (sourced): cursor_instrumenta_parare (aedilis +
+  compilator, ONE store for both via FABRICA_THESAURUS),
+  cursor_clausuras_derivare <dir>, cursor_fontes_compilare (union through
+  bin/compilator; duplicate basenames refused - flat build dir),
+  cursor_probationem_struere <test> <bin> (test through the store, linked
+  against its own closure). Every compile command is recorded in
+  <build>/clausurae/mandata.tsv.
+- tools/cursoris_oraculum.sh <sub>/compile_probationes.sh [-ref|-arbor]
+  replaces tools/toml_oraculum.sh: subsystem from the runner's path,
+  output-capture variable <SUB>_PROBATIONES_EFFUSIO, and the clang
+  non-determinism re-check re-runs the RECORDED command (no per-runner
+  include flags hardcoded). Checked: toml_scalaris.o's recorded command
+  gives 6 distinct objects in 8 plain compiles, chorda.o's gives 1.
+- toml runner rebased onto the helper: generic oracle vs HEAD's T5 runner
+  = consensus (45 objects identical, 370 lines).
+Batch job …W0ZBW rubric v2 points at these.

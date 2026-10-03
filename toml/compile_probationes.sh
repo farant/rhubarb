@@ -58,50 +58,18 @@ if [ -n "$FILTER" ]; then
     fi
 fi
 
-# ---- FONTES ex clausuris (fabrica plan 2 T5) ----
-# Olim indices MANU scripti (XXIV lib, XIII materia, toml/fontes,
-# adiumenta) et regula crassa 'caput recentissimum quodvis omne obiectum
-# stalum facit' (mtime, aequalitas secundi). Nunc: clausura cuiusque
-# probationis ab aedile (bin/aedilis --enumerare, idem ac ceterae suitae),
-# unio compilatur per bin/compilator ('clang -c' per thesaurum: clavis
-# ex octetis fontis et capitum depfile, radicibus -I, identitate clang -
-# nulla mtime). Obiectum identicum non rescribitur; ideo custodia
-# excubitoris post constructionem (mtime) hic non iam valet et deleta
-# est (plan 2 T7 excubitorem ipsum emeritum facit).
-[ -x "$RADIX_DIR/bin/aedilis" ] || "$RADIX_DIR/tools/aedilis_struere.sh" >&2 \
-    || { echo "FRACTA: bin/aedilis struere nequit"; exit 1; }
-[ -x "$RADIX_DIR/bin/compilator" ] || "$RADIX_DIR/tools/compilator_struere.sh" >&2 \
-    || { echo "FRACTA: bin/compilator struere nequit"; exit 1; }
-COMPILATOR="$RADIX_DIR/bin/compilator"
-# thesaurus unus pro aedile (recorda extractionis) et compilatore
-# (obiecta): FABRICA_THESAURUS, ordinarie build/aedilis/obiecta. Sine eo
-# aedilis XIII clausuras omni cursu de novo parsat (6.8 s contra 0.26 s)
-THESAURUS="${FABRICA_THESAURUS:-$RADIX_DIR/build/aedilis/obiecta}"
-export FABRICA_THESAURUS="$THESAURUS"
-CLAUSURAE_DIR="$BUILD_DIR/clausurae"
-mkdir -p "$CLAUSURAE_DIR" "$BUILD_DIR/probationes"
+# ---- FONTES ex clausuris (fabrica plan 2 T5; cursor communis) ----
+# Olim indices MANU scripti et regula crassa 'caput recentissimum quodvis
+# omne obiectum stalum facit' (mtime). Nunc tools/cursor_communis.sh:
+# clausura cuiusque probationis ab aedile, unio per bin/compilator
+# (clavis ex octetis fontis et capitum, radicibus -I, identitate clang),
+# probatio quaeque cum clausura SUA nexa. Custodia excubitoris (mtime)
+# hic non valet: obiectum identicum non rescribitur.
+source "$RADIX_DIR/tools/cursor_communis.sh"
+cursor_instrumenta_parare || exit 1
+cursor_clausuras_derivare "$TOML_DIR/probationes" || exit 1
+cursor_fontes_compilare || exit 1
 shopt -s nullglob
-for test_file in "$TOML_DIR"/probationes/probatio_*.c; do
-    name="$(basename "$test_file" .c)"
-    if ! (cd "$RADIX_DIR" && bin/aedilis "${test_file#"$RADIX_DIR"/}" --enumerare \
-            --thesaurus "$THESAURUS") \
-            > "$CLAUSURAE_DIR/$name.lst"; then
-        echo "FRACTA (clausura): $name"; exit 1
-    fi
-done
-shopt -u nullglob
-numerus_fontium=0
-while IFS= read -r fons; do
-    obj="$BUILD_DIR/$(basename "$fons" .c).o"
-    # via ABSOLUTA et cwd vocantis, ut olim: -g utramque infigit -
-    # obiecta cursori veteri octetim aequalia (oraculum)
-    if ! "$COMPILATOR" "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-            -c "$RADIX_DIR/$fons" -o "$obj"; then
-        echo "FRACTA: $fons" ; exit 1
-    fi
-    numerus_fontium=$((numerus_fontium + 1))
-done < <(cat "$CLAUSURAE_DIR"/*.lst | sort -u)
-echo "  fontes clausurarum: $numerus_fontium (per bin/compilator)"
 
 # corpus domus: omnis .toml tracta extra fixa clientis (viae relativae
 # radici) pro porta corporis (probatio_toml_corpus legit
@@ -138,15 +106,7 @@ for test_file in "$TOML_DIR"/probationes/probatio_*.c; do
     echo ""
     echo "=== $name ==="
     t0=$(mensor_suitae_nunc)
-    # probatio ipsa per compilatorem; nexus cum obiectis clausurae SUAE
-    obj_probationis="$BUILD_DIR/probationes/$name.o"
-    obj_files=""
-    while IFS= read -r fons; do
-        obj_files="$obj_files $BUILD_DIR/$(basename "$fons" .c).o"
-    done < "$CLAUSURAE_DIR/$name.lst"
-    if ! "$COMPILATOR" "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-            -c "$test_file" -o "$obj_probationis" \
-        || ! clang "${GCC_FLAGS[@]}" "$obj_probationis" $obj_files -o "$bin"; then
+    if ! cursor_probationem_struere "$test_file" "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue
