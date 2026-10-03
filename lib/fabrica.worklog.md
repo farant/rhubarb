@@ -1616,3 +1616,17 @@ Left for T4: build/toml_corpus.lst and aurum_silvestre.txt (bash-written).
 Left for T5 (spec 3 IX.7): compilator's own env (FABRICA_CLANG) is not
 in the trace; compilator is not in the lint pilot because its
 THESAURUS_GENERATIO read varies per run (store bookkeeping).
+
+## 2026-10-03 - rebake after T3 found a step-4 regression
+
+`bin/fabrica sanare installata` failed: obiecta_radicis FRACTUM, "scripsit
+extra vestigium: build/clausurae/bibliothecae.vocationes,
+build/clausurae/mandata.tsv". Since 35a1589d (root runner on the shared
+cursor) `compile_tests.sh --obiecta` writes its compile records there,
+and the action's declared footprint did not include them. Fixed by
+`<vestigium via="build/clausurae"/>` on obiecta_radicis. Nothing caught it
+for two commits because NO gate realizes obiecta_radicis under its
+footprint check - only a rebake does (the radix gate runs the runner
+outside fabrica). Lesson for runner migrations: after changing what a
+fabrica-run command writes, run `bin/fabrica sanare installata` before
+committing, not after.
