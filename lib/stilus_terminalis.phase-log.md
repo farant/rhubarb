@@ -121,3 +121,47 @@ from their include closures, now owing `stilus_terminalis`; regenerated
 by each snippet's own `# regeneratio:` line, all four built (TUIs built
 with `exec` shadowed, musivum with AEDIFICARE_SOLUM). The tessera gate
 does not build those tools - generata was the only witness.
+
+## T4 — RELATIO (2026-10-03)
+
+**Module 004 is done; module 005 (tessera reshaped) is complete with it**
+(its last row, SGR emit). terminal-planning ae7392c: both `completed_`
+with Outcome sections, README rows and every link updated.
+
+**What exists:** `include/stilus_terminalis.h` + `lib/stilus_terminalis.c`
+— one style model (three colours of three kinds, eight flags, six
+underline kinds), encode (full reset, PLENA or CCLVI, split past 24
+params), decode (Ghostty `sgr.zig`, unknowns counted, non-SGR CSIs
+ignored), the xterm 256 palette, and the quantizer tessera used to own.
+tessera emits through it; the amalgam vendors it.
+
+**Proof:** 117 codec assertions (31 ported Ghostty vectors, the round
+trip over 9,216 styles, split and quantizer pins); tessera 15/15 with
+bytes unchanged plus new ornament pins (green on the pre-codec code
+too); hospes 7/7; saltuarius 13/13 against the new amalgam (the
+first-host proof module 005 promised). Plants caught by name in every
+task: ':' read as ';', 22 clearing bold only, no split, conversion
+dropping strikethrough (after the pins), empty rename table in the
+harvester.
+
+**What the work found, in order of weight:**
+1. A full style cannot be ONE SGR sequence in a real terminal (26 > 24
+   params). Nobody had sent one; the round trip did.
+2. tessera's "goldens unchanged" bar never covered ornaments. A bar is
+   only as good as what it pins; the plant showed it before anything
+   could slip through.
+3. The excludenda harvester could converge on names that do not exist
+   ("no new names" stood in for "no warnings"). Fixed in the tool, not
+   worked around, by Fran's choice.
+4. Generated tool source lists (four tessera instruments) owe
+   regeneration when a library's closure grows; only `generata`
+   witnesses them.
+
+**Compared with the plan:** tasks as planned; T3 grew by the harvester
+fix (asked), the ornament pins and the four tool lists. Divergences
+from Ghostty are counting-only and documented in T2.
+
+**Deferred:** a minimal-diff encoder (`prior` given emits a full reset
+when different; measure against tessera's `fructus` first); tessera
+gaining curly/coloured underline (tessera's decision); the emulator
+(module 006) is decode's first real consumer.

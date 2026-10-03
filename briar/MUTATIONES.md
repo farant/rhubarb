@@ -140,6 +140,13 @@ Leges chartae:
   mutabatur). Identitas aedificationis: linea `aedificatum:` et
   `-provenientia` (fabrica 1b T6).
 
+- corpus: `stilus_terminalis` nova (modulus 004) - stilus terminalis
+  (colores nativus/tabula/RGB litterae, fundi, sublineae; VIII
+  ornamenta; sublinea VI generum) <-> SGR: `stilus_codificare`
+  (PLENA aut CCLVI; ultra XXIV parametra in series plures divisa),
+  `stilus_applicare` (Ghostty sgr.zig; ignota numerata), tabula CCLVI,
+  `stilus_quantizare`. tessera per eam emittit - octeti idem.
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

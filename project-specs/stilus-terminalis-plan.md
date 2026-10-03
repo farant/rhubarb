@@ -1,6 +1,8 @@
 # stilus_terminalis — plan (module 004: the style codec)
 
-Written 2026-10-03, after eventus phase B and D2 step 3. Sketch:
+**DONE 2026-10-03** (T1 f0ea4826, T2 1bd75a15, T3 1d743562, T4 RELATIO in
+`lib/stilus_terminalis.phase-log.md`). Written 2026-10-03, after eventus
+phase B and D2 step 3. Sketch:
 `../terminal-planning/modules/004-style-codec.md`. Oracle: Ghostty
 (`../ghostty` @ 12752b2, `src/terminal/sgr.zig`: 31 tests;
 `style.zig`).
