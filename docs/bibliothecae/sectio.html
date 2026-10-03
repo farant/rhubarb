@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sectio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>sectio</h1>
+<p class="subtitulus"></p>
+
+<p>Not text: sections of Mach-O binaries (macOS executables and object files). Iterate every section of every segment (LC_SEGMENT_64 and LC_SEGMENT) or find one by segment and section name (__TEXT, __text), then read its name, data (zero-copy, pointing into the loaded binary), size, address, alignment and flags, with the section type and attribute constants from mach-o/loader.h. Built on macho.h, from the early binary-inspection work (Nov 2025); today only its tests use it, alongside macho&#x27;s users (symbola).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/sectio.h"><code>include/sectio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/sectio.c"><code>lib/sectio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#aedificatio">Build, binaries and tooling</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

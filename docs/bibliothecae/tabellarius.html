@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tabellarius</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>tabellarius</h1>
+<p class="subtitulus">Cursor JSON-RPC (LEGATUS chunk A)</p>
+
+<p>The JSON-RPC 2.0 carrier, knowing nothing of LSP or MCP above it. It has two layers that are kept apart on purpose. Framing: Content-Length headers (the LSP transport) or one JSON message per line (MCP over stdio), both reading from a FILE*, with a cap on body size against corrupt or hostile lengths, and refusing to write a line that contains a raw newline. Envelope: classifying a message as request, notification or response, keeping the id exactly as sent (integer or string), plus builders for responses, errors and notifications. The language server (legatus) and every MCP resident of the ledger (tabularium, fori) run on it.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/tabellarius.h"><code>include/tabellarius.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/tabellarius.c"><code>lib/tabellarius.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#acta">Records and storage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

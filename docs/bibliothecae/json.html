@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>json</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · Bibliothecae</p>
+<h1>json</h1>
+<p class="subtitulus">Parser et aedificator JSON: reading, building and writing JSON, in an arena</p>
+
+<p>The house's JSON library: a strict reader, a mutable tree, and a
+writer, all allocating in a <code>Piscina</code> (arena) so a whole
+document is freed by emptying one arena. It is one of the most used
+libraries in the tree: <code>json_legere</code> has 114 uses in 17 files
+(<code>./silva/nexus.sh json_legere</code>, 2026-10-02), above all the
+ledger and its MCP residents (<code>gesta/</code>), the HTTP layer
+(<code>manus</code>), silex, the webview bridge (<code>internuntius</code>)
+and the message carrier (<code>tabellarius</code>). So most of what
+arrives from a client passes through it.</p>
+
+<p class="nota">Files: <code>include/json.h</code> (397 lines),
+<code>lib/json.c</code> (2,490), <code>lib/json.worklog.md</code>,
+tests in <code>probationes/probatio_json.c</code>. Depends on piscina,
+chorda, xar, internamentum, chorda_aedificator, utf8.</p>
+
+<h2>Capabilities</h2>
+
+<h3>Reading</h3>
+<ul>
+<li><strong>Strict RFC 8259 by default</strong>, with no lenient mode:
+the whole input is one value (anything after the root is refused, so
+<code>1 2</code> or a lost newline gluing two log lines together is an
+error); no trailing commas, comments or leading zeros; only the legal
+escapes; raw control characters refused.</li>
+<li><strong>Numbers that refuse instead of lying</strong>: integers are
+exact <code>s64</code>, and anything outside −2⁶³…2⁶³−1 is an error,
+never silently wrapped or rounded; floats are <code>f64</code>, with
+<code>1e400</code> refused and underflow accepted.</li>
+<li><strong>Strings are valid UTF-8</strong>: surrogate pairs combine
+into four-byte UTF-8, lone surrogates are refused, and raw bytes are
+checked (overlong forms, encoded surrogates and truncated sequences are
+refused).</li>
+<li><strong>Duplicate keys are refused</strong> ("Clavis duplicata"), so
+an event with two values for one field cannot pass as valid.</li>
+<li><strong>Errors you can act on</strong>: line and column (counted in
+characters, not bytes), and the true cause when a lexer error sits
+inside a container ("Clavis chorda expectata: Chorda non terminata").</li>
+<li><strong>A depth limit</strong> of 256 nested containers, so hostile
+input cannot exhaust the stack.</li>
+</ul>
+
+<h3>Access</h3>
+<ul>
+<li>Type checks and extraction with zero defaults
+(<code>json_ad_integer</code> returns 0 for a missing or wrong-typed
+value).</li>
+<li>Access with an explicit default: <code>json_capere_chorda / _integer
+/ _boolean (objectum, clavis, ordinarium)</code>, which never fail.</li>
+<li>A dotted path, <code>json_via(radix, "a.b.0.c")</code>: a numeric
+segment indexes an array, any other names a key.</li>
+<li>Iteration over objects in insertion order.</li>
+</ul>
+
+<h3>Building and writing</h3>
+<ul>
+<li>A mutable tree: create values, add to arrays, put keys into objects
+(putting an existing key overwrites it in place).</li>
+<li>Compact and pretty output, into a new string or into an existing
+<code>ChordaAedificator</code>.</li>
+<li>Floats written in the <strong>shortest form that reads back
+exactly</strong> (<code>0.1</code>, not
+<code>0.10000000000000001</code>), with <code>.0</code> added when the
+text would otherwise read back as an integer; NaN and infinities are
+written as <code>null</code>.</li>
+</ul>
+
+<h3>What it deliberately does not do</h3>
+<ul>
+<li>No streaming or event (SAX) interface: the whole document is built
+as a tree.</li>
+<li>No lenient modes (comments, JSON5, trailing commas, NaN in input).</li>
+<li>No JSON Pointer (RFC 6901): the dotted path cannot reach a key that
+contains a dot; use <code>json_objectum_capere</code> for those.</li>
+<li>No unsigned 64-bit integers above 2⁶³−1.</li>
+<li>The builder does not detect cycles, and the writer does not validate
+UTF-8 in strings it was given (both documented in <code>json.h</code>).</li>
+</ul>
+
+<h2>Compared with familiar libraries</h2>
+<p class="nota">The other libraries' columns are from their documentation
+as I recall it, not checked against their sources: treat them as a guide
+to the shape of each library, not as a specification.</p>
+<table>
+<thead>
+<tr><th></th><th>rhubarb json</th><th>cJSON</th><th>jansson</th><th>yyjson</th><th>parson</th><th>jsmn</th></tr>
+</thead>
+<tbody>
+<tr><td>Shape</td><td>tree, mutable</td><td>tree, mutable</td><td>tree, reference-counted</td><td>immutable tree, plus a mutable one</td><td>tree, mutable</td><td>tokens only, no tree</td></tr>
+<tr><td>Language</td><td>C89</td><td>C89</td><td>C</td><td>C89-compatible C</td><td>C89</td><td>C89</td></tr>
+<tr><td>Memory</td><td>one arena per document</td><td>malloc per node (hooks)</td><td>malloc, refcounts</td><td>a few large blocks</td><td>malloc per node</td><td>caller's token array, no allocation</td></tr>
+<tr><td>Strict by default</td><td>yes, no lenient mode</td><td>mostly; trailing text allowed unless asked</td><td>yes</td><td>yes, with opt-in leniency (comments, trailing commas, NaN)</td><td>mostly; comments optional</td><td>minimal validation</td></tr>
+<tr><td>Duplicate keys</td><td>refused</td><td>kept; lookup finds the first</td><td>kept, or refused by flag</td><td>kept</td><td>refused</td><td>not its concern</td></tr>
+<tr><td>Integers</td><td>exact s64, overflow refused</td><td>stored as double</td><td>64-bit</td><td>exact 64-bit signed and unsigned</td><td>stored as double</td><td>text only</td></tr>
+<tr><td>Errors</td><td>line, column (characters), cause</td><td>a pointer into the text</td><td>line, column, position</td><td>byte position and code</td><td>none detailed</td><td>error code</td></tr>
+<tr><td>Path access</td><td>dotted path; defaults</td><td>no</td><td>pack/unpack format strings</td><td>JSON Pointer, JSON Patch</td><td>dotted path</td><td>no</td></tr>
+<tr><td>Object lookup</td><td>linear scan, interned keys</td><td>linear scan</td><td>hash table</td><td>linear scan</td><td>linear, hashed in later versions</td><td>—</td></tr>
+</tbody>
+</table>
+<p>The nearest relatives in spirit are <strong>parson</strong> (C89, a
+mutable tree, a dotted path, duplicates refused) and
+<strong>jansson</strong> (strict, good errors). What sets this one apart
+is the combination of <strong>arena allocation</strong>, which fits the
+house's piscina discipline and makes freeing a document one call, and a
+<strong>strictness chosen for logs that are the record of truth</strong>:
+exact integers, refused duplicates, one value per input. For raw speed
+the C++ <strong>simdjson</strong> and the C <strong>yyjson</strong> are
+in another class, reported in gigabytes per second; nothing in the house
+needs that today.</p>
+
+<h2>Performance</h2>
+<p>Measured 2026-10-02 on the ledger's own journal
+(<code>gesta/annales/tabularium.jsonl</code>: 4,318 lines, 3.5 MB, one
+JSON object per line, all of which parse), five passes, one arena emptied
+after each line, <code>-O2</code>, Apple silicon. Python's C-accelerated
+<code>json</code> module on the same lines and machine, as a familiar
+yardstick:</p>
+<table>
+<thead><tr><th></th><th>parse</th><th>write (compact)</th></tr></thead>
+<tbody>
+<tr><td><strong>rhubarb json</strong></td><td>354 MB/s</td><td>379 MB/s</td></tr>
+<tr><td>Python <code>json</code></td><td>219 MB/s</td><td>198 MB/s</td></tr>
+</tbody>
+</table>
+<p>Two costs that grow faster than the input, both in the audit below:
+the duplicate-key check during parsing, and key lookup, are linear per
+key, so <strong>quadratic per object</strong>. Ordinary house objects
+have a handful of keys and never notice.</p>
+
+<h2>Audit, 2026-10-02</h2>
+<p class="nota">Filed in the ledger as park …XW32T. This audit looked where the September audit (below, in
+the timeline) did not: memory over time, cost on large inputs, the newer
+<code>json_via</code>, failure paths. Each finding marked
+<em>confirmed</em> was reproduced by a probe compiled outside the
+library (nothing in <code>lib/</code> was changed); <em>by reading</em>
+means found in the source, not reproduced. None is fixed yet.</p>
+<table>
+<thead><tr><th>Finding</th><th>Severity</th><th>Evidence</th><th>Possible fix</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>Keys are interned globally and never freed.</strong> Every
+key of every parsed object goes into the process-wide intern table, which
+outlives the arena; and a <em>lookup</em> of an absent key interns it
+too.</td>
+<td>medium for the residents, which parse client input for days</td>
+<td><em>confirmed</em>: 10,000 parses of one-key objects with unique
+keys, arena emptied after each, left 10,000 entries in the table; 1,000
+failed lookups added 1,000 more.</td>
+<td>Lookups: check <code>chorda_est_internata</code> first; a key never
+interned cannot be in any object, so answer "absent" without inserting.
+Parsing: a table per document (in its arena), or accept the cost and
+document it.</td>
+</tr>
+<tr>
+<td><strong>Quadratic cost per object.</strong> The duplicate-key check
+during parsing scans all earlier keys; lookup and
+<code>json_objectum_ponere</code> scan linearly.</td>
+<td><strong>high</strong>: seen in practice (below), and a hostile client can send one large object</td>
+<td><em>confirmed</em>: one object with 5,000 keys parses in 0.036 s,
+10,000 in 0.143 s, 20,000 in 0.565 s (each doubling costs four times
+more; 200,000 keys would take about a minute).
+<br><strong>Seen in practice</strong> the same day: Lapide's feature
+request 025 (<code>../lapide-v2/docs/briar-feedback/</code>). Indexing
+14,628 OCR word ids as one object's keys took 3.1 s against 1.2 s with
+<code>tabula_dispersa</code>; the profile was dominated by
+<code>json_objectum_capere_chorda</code> → <code>xar_obtinere</code>.</td>
+<td>Keys are already interned pointers, so an index only hashes a pointer: past a small number of keys (8–16), build a pointer → slot table in the arena, keeping the <code>xar</code> for insertion order. That fixes lookup, insertion and the duplicate check at once. Meanwhile, say in <code>json.h</code> that objects are for small records and <code>tabula_dispersa</code> for maps. A cap on keys per object, like the depth cap, would also bound a hostile
+input. If <code>tabula_dispersa</code> is used instead of a pointer
+table, mind that it silently refuses an empty key (ledger note …6KEQPR).</td>
+</tr>
+<tr>
+<td><strong><code>json_via</code> can wrap an array index.</strong> The
+bounds check computes <code>numerus − digit</code>, which underflows in
+the house's unsigned <code>i32</code> when the digit exceeds the element
+count; the index then wraps past 2³².</td>
+<td>low: needs an absurd path, but paths can come from input</td>
+<td><em>confirmed</em>: on <code>{"a":["zero"]}</code>,
+<code>json_via(radix, "a.4294967296")</code> returns
+<code>"zero"</code>.</td>
+<td>Accumulate the index in a 64-bit unsigned and compare with the count
+once, or refuse more digits than the count has.</td>
+</tr>
+<tr>
+<td><strong>Every string is copied twice.</strong> The token is copied
+out of the input, then unescaped into a second copy, even when it has no
+escapes; numbers are copied twice too (token, then a NUL-terminated copy
+for <code>strtod</code>).</td>
+<td>low: performance only</td>
+<td><em>by reading</em> (<code>_parser_token_valor</code> then
+<code>_unescape_chorda</code>).</td>
+<td>Unescape straight from the input slice; when a string has no
+backslash, one copy suffices.</td>
+</tr>
+<tr>
+<td><strong>Allocation failure can lose data silently.</strong> If
+<code>xar_addere</code> fails while parsing, the key/value pair is
+dropped and the parse still reports success; a failed string allocation
+returns failure with an empty message.</td>
+<td>low: only under memory exhaustion</td>
+<td><em>by reading</em> (<code>_parse_objectum</code>,
+<code>json_tabulatum_addere</code>).</td>
+<td>Treat a failed <code>xar_addere</code> as "Allocatio fallita".</td>
+</tr>
+</tbody>
+</table>
+<p class="nota">Already known and accepted (json.worklog.md, September):
+<code>strtod</code> depends on the C locale, which the house never sets;
+the builder does not detect cycles; the writer does not validate UTF-8.
+The September <code>iscntrl</code> issue in the string escaper has since
+been fixed.</p>
+
+<h2>Timeline</h2>
+<ul class="tempus">
+<li><span class="dies">2025-12-26</span> First version (d488a1a8), and a round of improvements the same day (3a57a3a0).</li>
+<li><span class="dies">2026-08-18/19</span> Reformatted by the house formator, among the first files it was run on (9f0ca142, f683e78a): layout only.</li>
+<li><span class="dies">2026-09-22</span> A six-step audit at Fran's request, every fix shown failing first (ledger park 01M35TSSMM):
+  <ul>
+  <li><strong>I</strong> two crashes: the empty key <code>{"":1}</code> and unbounded nesting (f719d4da);</li>
+  <li><strong>II</strong> the whole input must be one value (e063f77c);</li>
+  <li><strong>III</strong> numbers refuse instead of lying: s64/f64 overflow, NaN → null, shortest exact floats (00515d24);</li>
+  <li><strong>IV</strong> strict strings, true error causes, duplicate keys refused (b8833db3);</li>
+  <li><strong>V</strong> the old tests made to assert something, proved by planted faults (74139b59);</li>
+  <li><strong>VI</strong> string bytes must be valid UTF-8; error columns count characters (1461b6bd).</li>
+  </ul></li>
+<li><span class="dies">2026-09-28</span> Access with defaults and the dotted path <code>json_via</code>, requested by the Lapide project (feature request 019; 205e8de7).</li>
+<li><span class="dies">2026-10-02</span> Second audit (this page): global interning, quadratic objects, an index wrap in <code>json_via</code>; throughput measured.</li>
+</ul>
+
+</body>
+</html>

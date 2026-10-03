@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arbor2_expandere</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>arbor2_expandere</h1>
+<p class="subtitulus"></p>
+
+<p>arbor2&#x27;s macro expansion engine: expansion in LAYERS (layer 0 the source tokens, layer N after N expansion passes) over SEGMENTS (ranges where the set of macros does not change, cut at #define and #undef), with full provenance. It also records the typedefs it discovers, because the GLR parser needs to know which names are probably types. The design answers the arbor-v2 brainstorm&#x27;s question of how to parse C whose macros and typedefs may come from files the parser cannot see. January 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/arbor2_expandere.h"><code>include/arbor2_expandere.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/arbor2_expandere.c"><code>lib/arbor2_expandere.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 e1e01751</td></tr>
+<tr><td>Group</td><td><a href="greges.html#parsatores">Parsers: the C89 lineage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

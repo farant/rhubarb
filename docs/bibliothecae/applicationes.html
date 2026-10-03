@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applicationes</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>Applicationes</h1>
+<p class="subtitulus">The four applications in apps/</p>
+
+<p>The libraries are the house's parts; these are where the parts meet
+a person. Three of the four are <a href="greges.html#vitrea">vitrea</a>
+apps (a web page as the face, C89 as the body) and one is built on
+<a href="greges.html#ludus">ludus</a>, the native second-generation UI.
+All four share two habits. Each binary carries a headless smoke mode
+(<code>-fumus</code>) that runs the real thing without anyone watching and
+exits with numbers, so an app can be gated like a library. And each app
+file mostly <em>wires</em> rather than <em>does</em>: the real work lives
+in <code>lib/</code>, where the root test suite can reach it.</p>
+
+<table>
+<thead><tr><th>App</th><th>What it is</th><th>Built on</th><th>Since</th></tr></thead>
+<tbody>
+<tr><td><a href="#forum">forum</a></td><td>the writing place, over the ledger</td><td>vitrea, ledger daemon</td><td>2026-07-22</td></tr>
+<tr><td><a href="#villa">villa</a></td><td>looking after remote servers over ssh</td><td>vitrea, processus</td><td>2026-07-24</td></tr>
+<tr><td><a href="#mensor">mensor</a></td><td>an explorer for build and test measurements</td><td>atrium, mensura</td><td>2026-08-13</td></tr>
+<tr><td><a href="#pictor">pictor</a></td><td>a raster editor</td><td>ludus, volumen</td><td>2026-09-05</td></tr>
+</tbody>
+</table>
+
+
+<h2 id="forum">forum</h2>
+<p class="subtitulus">The writing place: a window onto the world of writings</p>
+
+<p>forum is where Fran writes: articles, short posts (<em>pipata</em>),
+threads and replies, with statuses and revisions, all stored in the
+ledger itself. The app is a <a href="vitrea.html">vitrea</a> window that
+talks to the ledger's resident daemon (<code>tabulariumd</code>) over a
+TCP connection per request, starting the daemon if it is absent; its C
+side exposes a set of RPC methods (read, send, save an article, set a
+status, edit, delete) and every write is recorded with the actor
+<em>fran</em>, while Claude writes to the same world through the MCP
+tools, with a signature. Interview, spec and the first four phases were
+done in one day (2026-07-22), and it was lived in from that day.</p>
+
+<p>It has grown into the house's reading-and-writing desk. It reads
+books of numbered claims (<a href="sententiae.html">sententiae</a>) and
+tables of contents (<a href="capitula.html">capitula</a>), draws the
+census of the house's semantic library as a graph (<em>charta</em>), and
+can serve itself to a phone: a second process runs the same methods over
+HTTP (<a href="vitrea_servus.html">vitrea_servus</a>), and a
+<a href="qr.html">QR code</a> carries the address
+(<a href="rete.html">rete</a> finds the candidates). It wears
+<a href="speculum.html">speculum</a> (Cmd+Shift+D shows its own source).
+Source: <code>apps/forum/forum.c</code> (about 2,400 lines), with
+<code>forum.worklog.md</code>.</p>
+
+
+<h2 id="villa">villa</h2>
+<p class="subtitulus">A property administered from a distance</p>
+
+<p>A Roman villa is an estate you own and run from afar, with a staff
+working in your absence. villa looks after remote servers over plain
+ssh, and it is brownfield by design: the server it was built against
+already runs other services, so villa observes, nudges and remembers,
+and never takes the machine over. It checks services and units, nginx
+sites, disk, memory and uptime, runs actions with a hard timeout, and
+records what it saw as events.</p>
+
+<p>The app file only wires; all the real work lives in
+<a href="villa_agens.html">villa_agens</a> (the cycle, the remote check
+script, the events) and <a href="villa_lectores.html">villa_lectores</a>
+(pure parsers whose specification is real captured output), so the root
+test suite covers it. Nothing blocks: every check runs through
+<a href="processus.html">processus</a>'s incremental path, one step per
+tick, because the house has no threads. And it is careful exactly where
+care is needed: locally no shell is ever used; remotely ssh always runs
+one, so unit names from the user's own records are validated before they
+enter the script, and ssh's failures are told apart by cause. Specs:
+<code>project-specs/villa-spec-v2.md</code> (the build blueprint) and
+its interview. Source: <code>apps/villa/villa.c</code>.</p>
+
+
+<h2 id="mensor">mensor</h2>
+<p class="subtitulus">Reading the house's measurements</p>
+
+<p>mensor is two programs on purpose. The command-line
+<code>mensor</code> is called on the hot path of every build, once per
+file, to record timings with <a href="mensura.html">mensura</a> (nested,
+tied to a run, a machine and a commit). <code>mensor -ui</code> starts a
+separate binary, <code>mensor_ui</code>, a read-only explorer of those
+measurements in a vitrea window. They are separate because linking the
+window into the recorder would load AppKit and WebKit into every call
+during a build: in the header's words (translated), "the very flaw of
+the observer that the journal was meant to avoid, brought back through
+the back door".</p>
+
+<p>It is small (about 450 lines). Moving it onto
+<a href="atrium.html">atrium</a> gave it remote control
+(<a href="imperium.html">imperium</a>) for free, and it became the first
+feature built under Fran's "drive the app you're building" loop, where
+<a href="manus.html">manus</a> let Claude add a session picker and
+verify it without a round trip. Its worklog records that building for
+drivability and for accessibility turned out to be the same work: real
+buttons with labels serve both the test hand and a screen reader.
+Source: <code>apps/mensor/mensor_ui.c</code>.</p>
+
+
+<h2 id="pictor">pictor</h2>
+<p class="subtitulus">A painter: the first application built on ludus</p>
+
+<p>pictor is a raster editor: a window, a sheet in a viewport, a brush,
+tools. It is the first consumer of the <a href="greges.html#ludus">ludus</a>
+stack and was built to prove it: the document is a
+<a href="pictor_documentum.html">stroke log</a> in a
+<a href="volumen.html">volumen</a>, state lives in
+<a href="insula.html">islands</a> checked by canons with an owner table
+(<code>apps/pictor/canones/</code>), the view is a pure
+<a href="pictor_componentia.html">componere</a> function, drawing goes
+through <a href="pictor_figurae.html">figures</a> into
+<a href="mandatum.html">commands</a>, and the whole loop runs in a
+<a href="dispensator.html">dispensator</a> that can be tested and
+replayed without a window. The app file itself is about 230 lines that
+connect these parts.</p>
+
+<p>Its first build (2026-09-05) recorded the numbers: a closure of 41
+house objects and 45 headers (about 2.2 MB of house source, plus SQLite
+through volumen), a warm build in 0.11 s, a 1.8 MB binary, and thirty
+frames with the worst at 2 ms. It also recorded a finding about the
+single-file build: the amalgamator would not carry a vendored unit, and
+SQLite is in pictor's closure through volumen, so a one-file pictor needs
+either an amalgamator that ships SQLite alongside or a document store
+without it. Development continues in its own worktree
+(<code>../rhubarb-pictor</code>). Source: <code>apps/pictor/pictor.c</code>
+and <code>pictor.worklog.md</code>; specs <code>pictor-spec.md</code> and
+the plans beside it.</p>
+
+
+<p class="nota">Written by hand (2026-10-03), from the apps' sources,
+worklogs and specs; not generated. The four apps are the subject of
+their own design records in project-specs/ and of the ledger's regions;
+this page is only the front door.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>insula</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>insula</h1>
+<p class="subtitulus">Insulae: status in tribus generibus, porta una per genus</p>
+
+<p>Where a ludus program&#x27;s state lives: &#x27;islands&#x27;, STML trees reached only through this repository, in two kinds with their own write discipline. DURABILIS is what a database would hold; EPHEMERA is what survives a restore (focus, the current tool, pan and zoom). Each kind has one gate (mutare_durabile, mutare_ephemera): the mutator runs on a DUPLICATE made by writing the live tree to text and reading it back in a second arena, a canon judges the result, and only then are the two swapped, so a write is all or nothing and a tree that cannot round-trip through text cannot be written. The rehydration law: after every gated write the last honest text is kept, and insula_restituere compares the tree in memory with it; a difference is a lie (someone wrote around the gate), recorded as mendacium and repaired from the honest text. Reads are global, writes are owned: an attribute can belong to one writer (pictor&#x27;s domini.stml gives zoom and pan to motus, focus to the dispensator), and a write by anyone else is refused, with the attribute, owner and offender named. An actarius hook sees every successful write. The doctrine was worked out in 32 web-component experiments in silicetum&#x27;s laboratorium (Aug 2026) before this C89 port (Sept 2026).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/insula.h"><code>include/insula.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/insula.c"><code>lib/insula.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-05 92b4e430</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

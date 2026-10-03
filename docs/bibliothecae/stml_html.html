@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>stml_html</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>stml_html</h1>
+<p class="subtitulus"></p>
+
+<p>Turns an STML document (after expansion and distribution) into HTML. There is no tag vocabulary and no translation table: tags belong to the author, and the emitter only handles syntax, adding the doctype, writing void elements bare and every other element as an open and close pair, escaping text but leaving written attributes raw, and passing &lt;crudum!&gt; bytes through as they are. It never judges whether the HTML is valid. What it cannot express (processing instructions, unresolved transclusions, dotted names, script or style without the raw marker, ambiguous entities) it refuses by name, with nothing partial. A second entry point renders a fragment without the doctype. The stml tool is its user.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/stml_html.h"><code>include/stml_html.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/stml_html.c"><code>lib/stml_html.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-03 cef53339</td></tr>
+<tr><td>Group</td><td><a href="greges.html#stml">STML and data formats</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

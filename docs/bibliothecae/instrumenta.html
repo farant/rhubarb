@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instrumenta</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>Instrumenta</h1>
+<p class="subtitulus">The tools in tools/, grouped by what they are for</p>
+
+<p>About 150 files: C programs that put a command line on a library,
+the scripts that build and install them, the machinery of amalgams and
+capsules, the gates a change must pass, the generators of committed
+tables, oracles and probes, and a few tools for content. They are how the
+house is <em>operated</em>, as the libraries are how it is built. Each
+tool appears once, in the group of its main job; a linked name in the
+last column leads to the library it serves.</p>
+
+<p class="nota">Not here: the provinces keep their own tools beside them
+(silva's <code>nexus.sh</code>, <code>selecta.sh</code>,
+<code>renominare.sh</code>, <code>formator.sh</code>,
+<code>examen.sh</code>, <code>scribe</code>; gesta's
+<code>frigida.sh</code>; oratio's <code>vocabula.sh</code>, the Latin
+lint; materia's <code>oraculum_probare.sh</code>; officina's
+<code>legatus.sh</code>), and the root holds <code>compile_tests.sh</code>
+and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
+
+<ul class="greges">
+<li><a href="#facies">Command-line faces of libraries</a> <span class="nota">(20)</span></li>
+<li><a href="#struere">Building and installing the tools</a> <span class="nota">(24)</span></li>
+<li><a href="#amalgamata">Amalgams, capsules and bundles</a> <span class="nota">(20)</span></li>
+<li><a href="#portae">Gates, checks and smoke tests</a> <span class="nota">(35)</span></li>
+<li><a href="#generata">Generators</a> <span class="nota">(14)</span></li>
+<li><a href="#oracula">Oracles and probes</a> <span class="nota">(8)</span></li>
+<li><a href="#inspicere">Inspecting and driving</a> <span class="nota">(12)</span></li>
+<li><a href="#contenta">Content and corpora</a> <span class="nota">(6)</span></li>
+</ul>
+
+<h2 id="facies">Command-line faces of libraries</h2>
+<p>Most libraries in lib/ that are worth calling by hand have a small C program here that puts a command line on them; the binary is usually built by a matching *_struere.sh script (next group) and installed in ~/.bin. The library does the work; the tool only parses arguments and prints.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>aedilis.c</code></td><td>bin/aedilis: what a program links, computed from its includes (the build closure); also amalgam lists and per-file parts</td><td><a href="aedilis.html">aedilis</a></td></tr>
+<tr><td><code>fabrica.c</code></td><td>bin/fabrica: the build judge; is every artefact fresh by content hash, and heal what is stale (iudicare, sanare, purgare)</td><td><a href="fabrica.html">fabrica</a></td></tr>
+<tr><td><code>silex.c</code></td><td>bin/silex: scaffold a new project from the libraries (silex v0); also hosts the mensa desk UI</td><td><a href="silex.html">silex</a></td></tr>
+<tr><td><code>briar.c</code></td><td>bin/briar: run a .thistle literate C89 script (build once, then run)</td><td></td></tr>
+<tr><td><code>stml.c</code></td><td>bin/stml: verbs over STML files from the shell</td><td><a href="stml.html">stml</a></td></tr>
+<tr><td><code>sputnik.c</code></td><td>the sputnik scripting language&#x27;s command-line interpreter</td><td><a href="sputnik_interpres.html">sputnik_interpres</a></td></tr>
+<tr><td><code>mensor.c</code></td><td>bin/mensor: start a measurement session, time a command, add a value, commit the journal to a volume</td><td><a href="mensura.html">mensura</a></td></tr>
+<tr><td><code>manus_instrumentum.c</code></td><td>bin/manus: drive a live vitrea app from the shell (press, type, read, assert)</td><td><a href="manus.html">manus</a></td></tr>
+<tr><td><code>fasciculum_instrumentum.c</code></td><td>build and re-read macOS .app bundles</td><td><a href="fasciculum.html">fasciculum</a></td></tr>
+<tr><td><code>icones_instrumentum.c</code></td><td>make .iconset and .icns icons from one image (decodes with stb_image so the library need not)</td><td><a href="icones.html">icones</a></td></tr>
+<tr><td><code>canon_examen.c</code></td><td>judge STML files against a canon</td><td><a href="canon.html">canon</a></td></tr>
+<tr><td><code>canon_coquere.c</code></td><td>generate typed C readers from a canon (planta_lectio, quaestiones_lectio)</td><td><a href="planta_lectio.html">planta_lectio</a></td></tr>
+<tr><td><code>natura_examen.c</code></td><td>judge the semantic library (natura) and print its census</td><td><a href="natura.html">natura</a></td></tr>
+<tr><td><code>natura_quaesitor.c</code></td><td>query the semantic library by kind and relation</td><td><a href="natura.html">natura</a></td></tr>
+<tr><td><code>natura_glossae.c</code></td><td>documentation coverage across the library&#x27;s kinds, per language</td><td><a href="natura.html">natura</a></td></tr>
+<tr><td><code>natura_canones.c</code></td><td>project each natura kind into a canon element</td><td></td></tr>
+<tr><td><code>natura_canones_emissio.c</code></td><td>the two emitters that share natura_canones&#x27;s model</td><td></td></tr>
+<tr><td><code>natura_canones.h</code></td><td>shared declarations for the two natura_canones programs</td><td></td></tr>
+<tr><td><code>diagnostica.c</code></td><td>diagnostics for files through the materia clients (C89, CSS, HTML, Markdown...), one front for every language</td><td></td></tr>
+<tr><td><code>briar_spectator.c</code></td><td>briar&#x27;s spectator: a window over the page of a thistle&#x27;s face</td><td></td></tr>
+</tbody>
+</table>
+
+<h2 id="struere">Building and installing the tools</h2>
+<p>The house builds each binary from the closure aedilis computes, not from a hand-kept list; these scripts are the per-binary recipes and their shared machinery. Two rules recur: a binary is installed into ~/.bin by copy (removing first, since macOS kills an overwritten signed binary), and the compiler flags live in exactly one place.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>aedilis_struere.sh</code></td><td>build bin/aedilis</td><td></td></tr>
+<tr><td><code>fabrica_struere.sh</code></td><td>build bin/fabrica (bootstrap)</td><td></td></tr>
+<tr><td><code>silex_struere.sh</code></td><td>build bin/silex</td><td></td></tr>
+<tr><td><code>briar_struere.sh</code></td><td>build bin/briar and install it in ~/.bin</td><td></td></tr>
+<tr><td><code>briar_spectator_struere.sh</code></td><td>build bin/briar-spectator</td><td></td></tr>
+<tr><td><code>stml_struere.sh</code></td><td>build bin/stml and install it</td><td></td></tr>
+<tr><td><code>manus_struere.sh</code></td><td>build bin/manus</td><td></td></tr>
+<tr><td><code>mensor_struere.sh</code></td><td>build bin/mensor</td><td></td></tr>
+<tr><td><code>mensor_ui_struere.sh</code></td><td>build bin/mensor_ui, mensor&#x27;s separate window</td><td></td></tr>
+<tr><td><code>natura_struere.sh</code></td><td>build natura_examen</td><td></td></tr>
+<tr><td><code>canon_struere.sh</code></td><td>build canon_examen</td><td></td></tr>
+<tr><td><code>instituere.sh</code></td><td>install a binary into ~/.bin (on PATH)</td><td></td></tr>
+<tr><td><code>vexilla.sh</code></td><td>THE house compiler flags (-std=c89 -pedantic -Werror and the rest), sourced by every build</td><td></td></tr>
+<tr><td><code>vexilla_fumus.sh</code></td><td>birth gate for vexilla.sh</td><td></td></tr>
+<tr><td><code>fontes_generare.sh</code></td><td>write a binary&#x27;s source list (RADIX_FONTES) from aedilis&#x27;s closure</td><td></td></tr>
+<tr><td><code>aedilis_fontes_generata.sh</code></td><td>the generated source list for aedilis itself</td><td></td></tr>
+<tr><td><code>silva_fontes_generare.sh</code></td><td>source lists for silva&#x27;s launchers</td><td></td></tr>
+<tr><td><code>compile_tests_fontes_generare.sh</code></td><td>the root test suite&#x27;s source lists, from aedilis</td><td></td></tr>
+<tr><td><code>generare.c</code></td><td>scan C files for generation directives and run the generators before compiling</td><td></td></tr>
+<tr><td><code>nexus_recens.sh</code></td><td>rebuild the nexus binaries only if stale, atomically</td><td></td></tr>
+<tr><td><code>sera.sh</code></td><td>a lock so two runs of one suite never write the same build directory at once</td><td></td></tr>
+<tr><td><code>sera_fumus.sh</code></td><td>birth gate for sera.sh</td><td></td></tr>
+<tr><td><code>provenientia_obiectum.sh</code></td><td>compile the provenance object a binary carries</td><td><a href="provenientia.html">provenientia</a></td></tr>
+<tr><td><code>provenientia_scribere.sh</code></td><td>write the provenance file (-provenientia answers from it)</td><td><a href="provenientia.html">provenientia</a></td></tr>
+</tbody>
+</table>
+
+<h2 id="amalgamata">Amalgams, capsules and bundles</h2>
+<p>How the house ships: libraries flattened into one .c and one .h in the manner of SQLite (silva, tessera, officina), files embedded into binaries (capsula), front ends bundled for vitrea apps, and macOS bundles and icons.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>amalgama_ligator.c</code></td><td>the generic amalgamator: join a manifest of sources into one translation unit</td><td></td></tr>
+<tr><td><code>amalgama_ligare.sh</code></td><td>amalgamate a house bundle</td><td></td></tr>
+<tr><td><code>amalgama_fontes_generare.sh</code></td><td>amalgam lists from aedilis</td><td></td></tr>
+<tr><td><code>amalgama_excludenda_generare.sh</code></td><td>harvest what an amalgam must exclude</td><td></td></tr>
+<tr><td><code>amalgama_auditor.sh</code></td><td>audit the amalgam lists</td><td></td></tr>
+<tr><td><code>amalgama_caput.sh</code></td><td>extract the header verbatim from an amalgam, or compare it (-comparare)</td><td></td></tr>
+<tr><td><code>amalgamata_probare.sh</code></td><td>compile the COMMITTED amalgams, to prove they build as shipped</td><td></td></tr>
+<tr><td><code>mechanismus_fontes.sh</code></td><td>the amalgamation mechanism&#x27;s own sources, shared by silva, tessera and officina</td><td></td></tr>
+<tr><td><code>porta_vetustatis.sh</code></td><td>staleness gate for amalgam manifests</td><td></td></tr>
+<tr><td><code>capsula_generare.c</code></td><td>build tool for capsula: read a config, compress files, emit C data</td><td><a href="capsula.html">capsula</a></td></tr>
+<tr><td><code>capsula_caudae_adiungere.c</code></td><td>append a capsule to the end of a compiled binary</td><td><a href="capsula_caudae.html">capsula_caudae</a></td></tr>
+<tr><td><code>capsula_regenerare.sh</code></td><td>regenerate a capsule from its TOML config</td><td></td></tr>
+<tr><td><code>capsula_radicis.sh</code></td><td>helper for capsules whose file globs start at the repository root</td><td></td></tr>
+<tr><td><code>corpus_infixum.sh</code></td><td>the embedded library corpus (all sources in a capsule) shared by silex and briar</td><td></td></tr>
+<tr><td><code>speculum_generare.sh</code></td><td>generate the self-source capsule a vitrea app carries for speculum</td><td><a href="speculum.html">speculum</a></td></tr>
+<tr><td><code>glomerare.sh</code></td><td>bundle JavaScript sources into one file for a vitrea front end</td><td></td></tr>
+<tr><td><code>silex_assets/</code></td><td>silex&#x27;s front end (page, scripts, capsule config and its generated C)</td><td></td></tr>
+<tr><td><code>briar_facies_capsula.sh</code></td><td>briar&#x27;s face (UI) into an embedded capsule</td><td></td></tr>
+<tr><td><code>briar_icon_capsula.sh</code></td><td>briar&#x27;s default -app icon into an embedded capsule</td><td></td></tr>
+<tr><td><code>briar_mutationes_capsula.sh</code></td><td>briar&#x27;s change log into an embedded capsule</td><td></td></tr>
+</tbody>
+</table>
+
+<h2 id="portae">Gates, checks and smoke tests</h2>
+<p>What stands between a change and a commit. portae_debitae.sh answers &#x27;which gates does this change owe, and why&#x27;; the git hooks run examen and the Latin lint; the *_fumus.sh scripts are birth gates, each first run against a planted fault (see Rubra nata in Formae). The Linux folder ports the house to two C libraries in Docker and lists the failures it expects.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>portae_debitae.sh</code></td><td>which gates a change owes, and why (commissio now adds and runs them itself)</td><td></td></tr>
+<tr><td><code>generata_probare.sh</code></td><td>the generata gate: every derived artefact must equal its regeneration</td><td></td></tr>
+<tr><td><code>frigida_probare.sh</code></td><td>all suites in a COLD tree: a fresh worktree from a commit, about twelve minutes</td><td></td></tr>
+<tr><td><code>unci-git/pre-commit</code></td><td>git hook: examen (C89 judgement, see the Examen page for its 92 codes) on the .c files being committed</td><td></td></tr>
+<tr><td><code>unci-git/lint_latinus.sh</code></td><td>the Latin identifier lint, at commit</td><td></td></tr>
+<tr><td><code>unci-git/pre-merge-commit</code></td><td>git hook: the Latin lint at merge</td><td></td></tr>
+<tr><td><code>unci-git/post-commit</code></td><td>git hook: keep the symbol index (nexus.tsv) following commits</td><td></td></tr>
+<tr><td><code>unci-git/fumus.sh</code></td><td>birth gate for the pre-commit hook: plants a rejected file</td><td></td></tr>
+<tr><td><code>unci-git/fumus_formae.c</code></td><td>a fixture for the hook&#x27;s formatter check</td><td></td></tr>
+<tr><td><code>latina_custos.sh</code></td><td>declared identifiers checked against latina.h&#x27;s macros</td><td><a href="latina.html">latina</a></td></tr>
+<tr><td><code>forma_evolutio.sh</code></td><td>how the house style has evolved, directory by directory</td><td></td></tr>
+<tr><td><code>formare_viae.sh</code></td><td>format C files automatically by path</td><td></td></tr>
+<tr><td><code>census_recensere.sh</code></td><td>check the census&#x27;s signatures against their paths</td><td></td></tr>
+<tr><td><code>census_recensere.c</code></td><td>the C half of census_recensere: extract signatures</td><td></td></tr>
+<tr><td><code>census_orbi.sh</code></td><td>find orphans in the census</td><td></td></tr>
+<tr><td><code>diagnostica.sh</code></td><td>run diagnostica over files</td><td></td></tr>
+<tr><td><code>diagnostica_fumus.sh</code></td><td>birth gate for diagnostica</td><td></td></tr>
+<tr><td><code>fabrica_fumus.sh</code></td><td>birth gate for bin/fabrica</td><td></td></tr>
+<tr><td><code>fabrica_oraculum.sh</code></td><td>oracle gate over bin/fabrica&#x27;s full judgement (iudicare -plenus)</td><td></td></tr>
+<tr><td><code>briar_fumus.sh</code></td><td>gate: the INSTALLED briar really runs thistle files</td><td></td></tr>
+<tr><td><code>fasciculum_fumus.sh</code></td><td>smoke: an .app bundle built by the library</td><td></td></tr>
+<tr><td><code>icones_fumus.sh</code></td><td>smoke: does Finder actually draw our icon?</td><td></td></tr>
+<tr><td><code>silex_semen_fumus.sh</code></td><td>gate: silex&#x27;s vitrea seed really runs</td><td></td></tr>
+<tr><td><code>aedilis_porta.sh</code></td><td>aedilis&#x27;s body gate</td><td></td></tr>
+<tr><td><code>mensor_suitae.sh</code></td><td>suite measurements, sourced by the test runners</td><td></td></tr>
+<tr><td><code>mensor_suitae_fumus.sh</code></td><td>birth gate for mensor_suitae.sh</td><td></td></tr>
+<tr><td><code>inventarium_suitarum.py</code></td><td>derive the ledger inventory &#x27;suitae probationum&#x27; from the runners in the tree</td><td></td></tr>
+<tr><td><code>claves_codices_probare.sh</code></td><td>check the key code tables against the platform</td><td><a href="claves_physicae.html">claves_physicae</a></td></tr>
+<tr><td><code>linux/Dockerfile.glibc</code></td><td>Linux port image: Ubuntu LTS and gcc</td><td></td></tr>
+<tr><td><code>linux/Dockerfile.musl</code></td><td>Linux port image: Alpine and gcc (musl)</td><td></td></tr>
+<tr><td><code>linux/percursus.sh</code></td><td>a compile run inside the container</td><td></td></tr>
+<tr><td><code>linux/probatio.sh</code></td><td>the test run inside the container, logged to build/test_logs/linux.log</td><td></td></tr>
+<tr><td><code>linux/fumus_tabulariumd.sh</code></td><td>smoke of the ledger daemon inside the glibc container</td><td></td></tr>
+<tr><td><code>linux/exspectata_glibc.txt</code></td><td>failures EXPECTED on glibc, each with its cause</td><td></td></tr>
+<tr><td><code>linux/exspectata_musl.txt</code></td><td>failures EXPECTED on musl, each with its cause</td><td></td></tr>
+</tbody>
+</table>
+
+<h2 id="generata">Generators</h2>
+<p>Files the house does not write by hand. Each generator&#x27;s output is committed with a GENERATUM marker on its first line, and the generata gate regenerates and compares byte for byte, so a stale table blocks the commit.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>latina_numeri.c</code></td><td>generate latina.h&#x27;s block of Roman numerals (I to MMMCMXCIX)</td><td><a href="numerus_romanus.html">numerus_romanus</a></td></tr>
+<tr><td><code>latina_numeri.sh</code></td><td>run it, or check it (-probare)</td><td></td></tr>
+<tr><td><code>runae_generare.c</code></td><td>generate runae&#x27;s Unicode tables from the pinned Unicode data</td><td><a href="runae_tabulae.html">runae_tabulae</a></td></tr>
+<tr><td><code>runae_generare.sh</code></td><td>run it</td><td></td></tr>
+<tr><td><code>entitates_html_generare.sh</code></td><td>generate the HTML5 named-entity table</td><td><a href="entitates_html.html">entitates_html</a></td></tr>
+<tr><td><code>canon_coquere.sh</code></td><td>run canon_coquere for the canon-derived readers (-probare checks)</td><td></td></tr>
+<tr><td><code>silva_canon.sh</code></td><td>silva&#x27;s canons (-probare checks)</td><td></td></tr>
+<tr><td><code>natura_canones.sh</code></td><td>natura&#x27;s canons (-probare checks)</td><td></td></tr>
+<tr><td><code>natura_metamodulus_generare.sh</code></td><td>natura&#x27;s metamodule (-probare checks)</td><td></td></tr>
+<tr><td><code>natura_apparatus_umbra.sh</code></td><td>every kind&#x27;s full apparatus from the shell projection, to diff against the C reader</td><td></td></tr>
+<tr><td><code>stml_aurea_generare.sh</code></td><td>golden output for stml&#x27;s internal-text bridge</td><td></td></tr>
+<tr><td><code>genera_biblia.c</code></td><td>generate biblia_dr.c, the compiled Douay-Rheims text, from a SQLite database</td><td><a href="biblia.html">biblia</a></td></tr>
+<tr><td><code>bitsyfont_ad_fons.c</code></td><td>convert a Bitsy font into fons_6x8.h&#x27;s format</td><td><a href="fons_6x8.html">fons_6x8</a></td></tr>
+<tr><td><code>fons_merge.c</code></td><td>merge Alcuin&#x27;s glyphs into fons_6x8&#x27;s empty slots</td><td><a href="fons_6x8.html">fons_6x8</a></td></tr>
+</tbody>
+</table>
+
+<h2 id="oracula">Oracles and probes</h2>
+<p>Independent sources of answers (see Oraculum alienum in Formae), and spikes that pin down how a platform really behaves before a library depends on it.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>runae_oraculum.c</code></td><td>ICU4C, opened by dlopen, as an oracle for runae&#x27;s width tables</td><td><a href="runae.html">runae</a></td></tr>
+<tr><td><code>runae_oraculum.sh</code></td><td>run it, or write the committed aurum (-aurum)</td><td></td></tr>
+<tr><td><code>runae_corpus.c</code></td><td>a text sample from a Lapide page for runae</td><td></td></tr>
+<tr><td><code>runae_corpus.sh</code></td><td>run it</td><td></td></tr>
+<tr><td><code>js_syntaxis.sh</code></td><td>check JavaScript files&#x27; syntax</td><td></td></tr>
+<tr><td><code>js_syntaxis.js</code></td><td>the syntax oracle itself, run with macOS&#x27;s JavaScript for Automation</td><td></td></tr>
+<tr><td><code>vitrea_spica.m</code></td><td>a WebKit calibration spike, deliberately not house style (Objective-C with ARC and blocks)</td><td></td></tr>
+<tr><td><code>vitrea_spica.sh</code></td><td>compile and run it</td><td></td></tr>
+</tbody>
+</table>
+
+<h2 id="inspicere">Inspecting and driving</h2>
+<p>Tools for looking inside a running or recorded program: event streams as STML, conformance tables run against a real window, logs, and parse tables of the older parsers.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>auscultator.c</code></td><td>print a window&#x27;s events as STML in the terminal</td><td><a href="eventus_stml.html">eventus_stml</a></td></tr>
+<tr><td><code>auscultator.sh</code></td><td>run it</td><td></td></tr>
+<tr><td><code>conformitas.c</code></td><td>run a conformance table against a real window</td><td><a href="eventus_conformitas.html">eventus_conformitas</a></td></tr>
+<tr><td><code>conformitas.sh</code></td><td>run it</td><td></td></tr>
+<tr><td><code>eventus_inspector.c</code></td><td>inspect the events in a log file (first generation)</td><td></td></tr>
+<tr><td><code>lector_eventuum.c</code></td><td>command-line introspection of log files</td><td></td></tr>
+<tr><td><code>hospitium_demo.c</code></td><td>a manual demo of the HTTP server, friendly to curl</td><td><a href="hospitium.html">hospitium</a></td></tr>
+<tr><td><code>glr_debug.c</code></td><td>a quick debug tool for arbor2&#x27;s GLR parser (no longer built)</td><td></td></tr>
+<tr><td><code>glr_quaestio.c</code></td><td>query arbor2&#x27;s GLR tables (no longer built)</td><td></td></tr>
+<tr><td><code>natura_visus.sh</code></td><td>a visual projection of the semantic library</td><td></td></tr>
+<tr><td><code>natura_glossae.sh</code></td><td>the census of glosses across natura&#x27;s kinds</td><td></td></tr>
+<tr><td><code>natura_quaere.sh</code></td><td>the old surface for natura queries, now forwarding to bin/natura</td><td></td></tr>
+</tbody>
+</table>
+
+<h2 id="contenta">Content and corpora</h2>
+<p>The Gutenberg mirror, the library catalogue, and two TypeScript tools that are the visible exceptions to the house&#x27;s all-C89 rule.</p>
+<table>
+<thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
+<tbody>
+<tr><td><code>gutenberg_census.c</code></td><td>count the books in the Gutenberg mirror</td><td></td></tr>
+<tr><td><code>gutenberg_index.c</code></td><td>build the STML index of Gutenberg books (gutenberg_index.stml)</td><td></td></tr>
+<tr><td><code>librarium_collector.c</code></td><td>collect books listed in librarium.stml</td><td></td></tr>
+<tr><td><code>librarium_merge.c</code></td><td>merge LLM-written metadata into librarium.stml</td><td></td></tr>
+<tr><td><code>tts.ts</code></td><td>text to speech through OpenAI&#x27;s API, chunked and concatenated (Bun, TypeScript)</td><td></td></tr>
+<tr><td><code>vox/</code></td><td>Vox: an audio production tool for the episodes (voices, generation, stitching, a small web UI), Bun and TypeScript with OpenAI providers</td><td></td></tr>
+</tbody>
+</table>
+
+<p class="nota">Written by hand (2026-10-03) from each tool's opening
+comment; 139 entries. The tools' own headers and worklogs
+(<code>tools/*.worklog.md</code>) are the authority.</p>
+
+</body>
+</html>

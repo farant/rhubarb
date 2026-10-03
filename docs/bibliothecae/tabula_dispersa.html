@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tabula_dispersa</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>tabula_dispersa</h1>
+<p class="subtitulus">tabula friationis (hash table, map)</p>
+
+<p>The house hash map: open addressing over a flat array of slots, keyed by chorda, with void* values, allocated in a piscina. Insert (overwriting an existing key), find, contains, delete with tombstones, clear without freeing (arena-friendly), iterate, plus load-factor and collision statistics for diagnosis; it hashes with friatio&#x27;s FNV-1a by default and compares keys by content. One caveat: it silently refuses zero-length keys (ledger note …6KEQPR), which is why internamentum, and json above it, treat the empty string specially. This is the library to use when a JSON object is being used as a map (lapide feature request 025).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/tabula_dispersa.h"><code>include/tabula_dispersa.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/tabula_dispersa.c"><code>lib/tabula_dispersa.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

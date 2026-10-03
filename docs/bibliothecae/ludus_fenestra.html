@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ludus_fenestra</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>ludus_fenestra</h1>
+<p class="subtitulus">glutinum fenestrae: eventus -&gt; dispensator,</p>
+
+<p>The glue between a ludus program and a real window, and on purpose the only place ludus touches the clock (fenestra_tempus_ms) or sees a window. Events go into the dispensator; each frame is a pulse, then pingere of the last tree into a per-frame arena, then delineare_mandata into the window&#x27;s pixel table, then present. It measures each frame (composition, painting, rasterizing, worst frame) and prints the measurements, because the brainstorm left one optimisation conditional on them: if rasterizing dominates, rasterize frame N while frame N+1 is dispatched. ludus_fenestra_currere is the whole run loop, ending on close or after a frame count (for smoke tests). Used by pictor. Small by design: everything that can be pure lives below it.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/ludus_fenestra.h"><code>include/ludus_fenestra.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/ludus_fenestra.c"><code>lib/ludus_fenestra.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-05 2cea97b6</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

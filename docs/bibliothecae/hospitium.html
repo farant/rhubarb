@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hospitium</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>hospitium</h1>
+<p class="subtitulus">Servus HTTP domesticus (domus hospitalis)</p>
+
+<p>The house&#x27;s HTTP server (&#x27;the hospitable house&#x27;), assembled from four halves already on the shelf: tcp&#x27;s server socket, http&#x27;s parser and serializer, router and reactor. One thread, non-blocking, keep-alive without pipelining (leftover bytes close the connection honestly). Register handlers by method and path, serve a directory (index.html, a generated listing, traversal refused after decoding), run the loop yourself one step at a time or let it run. Each connection owns an arena that is reset after every response, so everything a handler allocates lives exactly one request. Limits are configuration (connections, request and URI size, idle and header timeouts) and a full house answers 503 at once, a visible refusal instead of a silent backlog; counters for every outcome. Built 2026-07-20 after an audit, an interview and a spec; its 95 assertions passed on the first run. Used by vitrea&#x27;s servant, imperium and a demo tool.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/hospitium.h"><code>include/hospitium.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/hospitium.c"><code>lib/hospitium.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 e1e01751</td></tr>
+<tr><td>Group</td><td><a href="greges.html#rete">Network</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>similitudo</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>similitudo</h1>
+<p class="subtitulus">congruentia nebulosa, genus fzf (fuzzy matching)</p>
+
+<p>Fuzzy matching like fzf, for identifiers: the &#x27;net to throw&#x27; when the exact name is not known. A query matches if it is a case-insensitive subsequence of the candidate; the score rewards word boundaries (start, after _ - . / : or space, a lowercase-to-uppercase change), continuous runs and exact case, and penalizes gaps. similitudo_optima_decurtata also tries the query&#x27;s prefixes (at least three characters), because a name that is right at the start and wrong at the end matches nothing as a whole, which is what a person in fzf fixes by deleting; a shorter clean prefix can beat a longer dirty one. Pure: no arena, no allocation, no state. Greedy left-to-right; an optimal (dynamic programming) alignment is a named deferral under the same API. Born 2026-07-10; used for &#x27;did you mean&#x27; in canon, legatus, silva&#x27;s emitte and nexus, and briar.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/similitudo.h"><code>include/similitudo.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/similitudo.c"><code>lib/similitudo.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#textus">Text</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>persistentia</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>persistentia</h1>
+<p class="subtitulus">repositorium eventuum (event sourcing storage)</p>
+
+<p>Storage for event sourcing: an interface of four function pointers (write an event, read every event back for replay, sync, close) with two implementations in two files, one in memory over a xar (persistentia_memoria.c, fast, for tests) and one an append-only log file serialized with nuntium (persistentia_nuntium.c, for real use). Events concern entities: create and delete, set and remove properties, add and remove relations and notes, each with a helper constructor. entitas_repositorium replays them into current state, and concha and sputnik use the file form. It is the in-house precedent the tabularium vision cites (T9).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/persistentia.h"><code>include/persistentia.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/persistentia_memoria.c"><code>lib/persistentia_memoria.c</code></a> <span class="nota">(9 functions)</span>, <a href="../../lib/persistentia_nuntium.c"><code>lib/persistentia_nuntium.c</code></a> <span class="nota">(2 functions)</span></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#acta">Records and storage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

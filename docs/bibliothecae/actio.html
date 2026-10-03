@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>actio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>actio</h1>
+<p class="subtitulus">Registrum actionum NOMINATARUM</p>
+
+<p>The registry of named actions. Markup NAMES its actions (actio=&quot;salvare&quot; on a component), it never computes them, and the program registers one handler per intention; the phase comes from the event&#x27;s kind. A handler gets the state repository, the motus, the target with its ascent, the matching node (possibly an ancestor of the target), the event and its context, and returns whether it consumed the event, which stops the ascent. Handlers perform no I/O: effects are returned as data. Resolution runs both ways: a name used in the tree with no handler is an error (actio_non_registratae), a handler no component names is a warning (actio_non_relatae). Duplicate and empty names are refused. Used by pictor_actiones and the test toy; marked nexus purus.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/actio.h"><code>include/actio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/actio.c"><code>lib/actio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-01 4941f626</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taxonomiae</title>
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="index.html">Rhubarb</a></p>
+<h1>Taxonomiae</h1>
+<p class="subtitulus">The taxonomies the book sorts things into</p>
+
+<p>A taxonomy here is only useful if it is not nominal: every tier must
+be told apart by a real trait it shares, a test you can apply to an item,
+and not by how its name sounds. An item that passes no tier's test is a
+signal: either it is two things fused, or the tiers are wrong.</p>
+
+<h2>Lex</h2>
+<p class="nota">Adopted 2026-10-02. Rare.</p>
+<p>A <strong>law</strong> is held, in our humble judgement (Fran's), with
+more confidence than a theory warrants, though it is not generally
+accepted and we may never convince anyone else of it. It is not vision:
+vision is what we intend, and a law is how things are, whatever we
+intend. The vision stands on the laws.</p>
+<table>
+<tbody>
+<tr>
+<td><strong>Lex</strong></td>
+<td>holds of the world, not of a project; held beyond the confidence of theory; Fran's judgement alone puts it here; very few</td>
+<td>always</td>
+<td>the instances are listed on <a href="officia.html#leges">Officia</a></td>
+</tr>
+</tbody>
+</table>
+
+<h2>Visio</h2>
+<p class="nota">Adopted 2026-10-02. Tiers of vision, from the widest to
+the narrowest. Each tier answers "why?" for the one below it.</p>
+
+<table>
+<thead>
+<tr><th>Tier</th><th>Test</th><th>Horizon</th><th>Examples</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Telos</strong><br><span class="nota">finis</span></td>
+<td>answers "why?" for everything else; never revised, only understood better</td>
+<td>lifetimes</td>
+<td>rebuilding Catholic civilization</td>
+</tr>
+<tr>
+<td><strong>Principium</strong><br><span class="nota">prime condition</span></td>
+<td>a statement of what <em>is</em>, on the problem side only: it names a condition and <strong>contains no intervention</strong>. <strong>Distilled</strong>: it generalizes over several independent instances you can name. <strong>Prime condition</strong>: other things you can name are a function of it, which puts it in the elite set worth considering. Tested by intervening (see below)</td>
+<td>decades</td>
+<td>dependencies are entropy deliberately admitted; annotations anchored to positions rot when the text moves</td>
+</tr>
+<tr>
+<td><strong>Regula</strong><br><span class="nota">commitment</span></td>
+<td>a standard we keep, across <em>all</em> projects: kept or broken, not true or false. Can be enforced by a tool. Justified by a principium. Changes only when Fran decides</td>
+<td>decades</td>
+<td>C89; Latin identifiers; unit tests; pull, don't plan ahead (the Eskil rule)</td>
+</tr>
+<tr>
+<td><strong>Project vision</strong></td>
+<td>one thing that should exist; it has a finished shape</td>
+<td>years</td>
+<td>Brighton; tabularium; silva</td>
+</tr>
+<tr>
+<td><strong>Load-bearing decision</strong></td>
+<td>within one project; expensive to reverse, because much rests on it</td>
+<td>months to years</td>
+<td>sentence addresses hashed from the printed Latin; text-canonical storage</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Load-bearing decision: where prior art is read</h3>
+<p>Load-bearing decisions are where we look for prior art, in two
+directions:</p>
+<ul>
+<li><strong>Novel properties to adopt.</strong> Prior art that did
+something no one else did, worth taking: Fossil keeping a whole
+repository in one SQLite file; Unison storing definitions by content
+hash.</li>
+<li><strong>Mistakes to learn from.</strong> The inverse: where most of
+the prior art went wrong, the outlier is the one that didn't make the
+mistake. Make trusted modification times, and Bazel, Nix and ccache each
+moved to content hashes; darcs and pijul made semantic patches
+load-bearing, and the patch algebra ate the project; v1 of Lapide
+anchored its index to character offsets, and every edit broke it.</li>
+</ul>
+<p class="nota">So the precedents a source cites (tagged "fits no tier:
+precedent") mostly belong to its load-bearing decisions: they are the
+evidence a decision was made against.</p>
+
+<h3>Not vision</h3>
+<table>
+<tbody>
+<tr>
+<td><strong>Furniture</strong><br><span class="nota">supellex</span></td>
+<td>cheap to change; added when a consumer needs it</td>
+<td>weeks</td>
+<td>pagination modes; the length of a hash</td>
+</tr>
+</tbody>
+</table>
+<p class="nota">Furniture can be worth keeping, and worth recording. It
+is just not where the book looks for vision.</p>
+
+<h3>Principium: the problem side</h3>
+<p>The tiers have two sides. The <strong>telos</strong> is the end. A
+<strong>principium</strong> is a condition: what is so, that other things
+are a function of. <strong>Regula</strong>, <strong>project vision</strong>
+and <strong>load-bearing decision</strong> are interventions: what we keep,
+build and choose in answer to it. A statement that carries both ("anchor
+rot is the disease, identity is the cure") is two items fused, and should
+be split: the condition is a principium, the cure is an intervention.</p>
+
+<p><strong>How a principium is tested.</strong> Mostly not by new
+evidence, but by intervening. Build something that addresses it. Either
+what depends on it resolves, or the attempt reveals a deeper condition:
+"I wish I had something that let me manage my files this way"; it gets
+built; it does not fix your relationship to files; it shows the problem
+underneath. The first principium is then not refuted but
+<strong>superseded</strong> by the deeper one, and the lineage is worth
+keeping. Example from the day this was written: "document each library"
+produced markdown files that did not resolve anything, and showed a
+deeper condition: no one can read 47 hours of per-library prose, and the
+reader needs the vision, not the functions.</p>
+
+<p class="nota">History: principium and regula were one tier
+("principle") until 2026-10-02, when Fran split them (a condition is
+true or false; a commitment is kept or broken), then sharpened principium
+the same day: "prime condition" rather than "load-bearing", no solution
+inside it, and tested by intervention. An observation that is general but
+is not a prime condition is a reason, not a principium. Precedents (from
+recall, unchecked): Aristotle, <em>Posterior Analytics</em> II.19,
+principles reached by induction; Aquinas, <em>Summa Theologiae</em> I-II
+q.94 a.2, speculative and practical first principles; Rittel and Webber
+(1973), wicked problems are understood only through attempted solutions;
+Schön, <em>The Reflective Practitioner</em> (1983), the situation "talks
+back".</p>
+
+<h3>Occasio: the opening</h3>
+<p>Added 2026-10-02 (Fran). An <strong>occasio</strong> (opportunity) is
+also on the condition side, but it is not a principium. The test that
+separates them: <strong>what happens if you ignore it?</strong> Ignore a
+principium and things fail. Ignore an occasio and you only miss a
+gain.</p>
+<table>
+<tbody>
+<tr>
+<td><strong>Occasio</strong><br><span class="nota">opportunity</span></td>
+<td><strong>situational</strong>: it exists now and may close; it
+<strong>points at a specific intervention</strong> it makes cheap or
+possible; ignoring it costs a gain, not a failure</td>
+<td>a window</td>
+<td>FreeType and HarfBuzz already parse the same tables, so one parser
+serves both; the conformance corpora already exist; AI changes what one
+person can carry</td>
+</tr>
+</tbody>
+</table>
+<p class="nota">Conditions that <em>enable</em> rather than constrain
+("the oracles already exist", "PDF is the display list") were first
+filed as principia; they are occasiones. Occasio, like the Greek Kairos,
+was pictured with a forelock and a bald back of the head: seize it as it
+comes (from recall).</p>
+
+<h3>Indicium: the clue</h3>
+<p>Added 2026-10-02 (Fran). An <strong>indicium</strong> (clue) is a
+trend or a sign that is <em>suggestive</em>: it does not establish
+anything, it points in a direction. Others moving the same way is the
+typical clue.</p>
+<table>
+<tbody>
+<tr>
+<td><strong>Indicium</strong><br><span class="nota">clue</span></td>
+<td><strong>suggestive</strong>, not conclusive; <strong>directional</strong>:
+it points at a hypothesis; <strong>dated</strong>: it is an event or a
+trend, and trends reverse; if ignored, nothing fails now, but you may be
+late or wrong</td>
+<td>while the trend holds</td>
+<td>the HarfBuzz maintainers moved HarfBuzz onto a shared font parser;
+Chrome dropped FreeType; ICU's own consortium rebuilt it as modules</td>
+</tr>
+</tbody>
+</table>
+<p class="nota">Not a principium: enough independent clues can be
+<em>distilled into</em> one, so clues are its raw material. Not a
+precedent: a precedent is read for what it did (a property to adopt, a
+mistake to avoid), a clue for where things are going. Not an occasio: an
+occasio is an opening to take, a clue a sign to read. Prior art (from
+recall): Ginzburg's "evidential paradigm" (<em>paradigma indiziario</em>,
+1979), reasoning from small traces as Morelli, Holmes and Freud did;
+Peirce's abduction, from a clue to a hypothesis.</p>
+
+<p class="nota">Not to be confused with a <a href="formae.html">design
+pattern</a>: a regula binds everywhere, kept or broken; a pattern
+describes a context, a recurring solution and when it does not fit, and is
+used where its context holds (Fran, 2026-10-02: rules risk being followed
+"in every circumstance").</p>
+
+<h3>The traits behind the tiers</h3>
+<ul>
+<li><strong>What it serves</strong>: asking "why?" of an item should land exactly one tier up.</li>
+<li><strong>Horizon</strong>: how long until it is realised, or how long it stays true.</li>
+<li><strong>Rate of revision</strong>: how often it would change.</li>
+<li><strong>Scope</strong>: all projects, or one.</li>
+<li><strong>Cost of reversal</strong>: what breaks if it changes (the "load-bearing walls vs furniture" line in tabularium-visio).</li>
+<li><strong>Side</strong>: condition (problem or opening) or intervention (solution).</li>
+<li><strong>If ignored</strong>: things fail (principium) or a gain is missed (occasio).</li>
+</ul>
+<p class="nota">Open idea: record these traits for each item and derive
+the tier from them, so that nothing is filed as a principle because it
+sounds grand.</p>
+
+<h3>Prior art</h3>
+<p class="nota">From recall, not yet checked against the sources:
+Aristotle's ordering of ends (<em>Nicomachean Ethics</em> I.1–2);
+Rasmussen's abstraction hierarchy (up answers why, down answers how);
+Jaques' time span of discretion (<em>Requisite Organization</em>);
+Brand's pace layering (<em>The Clock of the Long Now</em>); Cockburn's
+use-case goal levels (the coffee-break test). The nominal
+counter-example: business vision / mission / strategy statements.</p>
+
+</body>
+</html>

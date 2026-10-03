@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>piscina</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>piscina</h1>
+<p class="subtitulus">arena memoriae: liberatio tota semel (arena, pool)</p>
+
+<p>The house&#x27;s arena allocator, and the memory discipline nearly every library is built on. Instead of malloc and free per object, everything belonging to one job (a document, a request, a frame) is allocated from a piscina and freed all at once by emptying it (piscina_vacare) or destroying it. Pools are dynamic (growing by adding blocks) or of fixed size; allocation either aborts on failure or, with the conari_ variants, returns NIHIL. A mark and reset (piscina_notare / piscina_reficere) gives cheap scratch space, and query functions report usage, peak, number of blocks and number of allocations, which is what actually costs. The full guide is docs/piscina.md.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/piscina.h"><code>include/piscina.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/piscina.c"><code>lib/piscina.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

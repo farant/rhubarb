@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>runae</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>runae</h1>
+<p class="subtitulus">Nucleus Unicode (acervus textus, stratum primum)</p>
+
+<p>The Unicode core, first layer of the text stack: properties of codepoints (runae) from tables generated out of pinned Unicode data (15.1, RUNAE_VERSIO, a contract and not an ornament). It gives the width of a rune in terminal cells (0, 1 or 2, by Ghostty&#x27;s rule, read from Ghostty&#x27;s source), grapheme cluster boundaries (UAX #29 with the caller owning the break state, no allocation), the first grapheme or &#x27;drawable unit&#x27; of a UTF-8 span with its width, the column width of a text, and which unit covers a given column. Two width policies: GRAPHEMATUM (Ghostty, the default) and SIMPLEX (as Terminal.app measured on 2026-09-28: emoji joined by ZWJ are not fused). Pure and total: invalid input gets a defined answer, never a crash. Units are named in every function (bytes, rune, grapheme, width), never a bare &#x27;n&#x27;. Locale things (collation, formats) never belong here. Checked against oracles it did not write: ICU4C via dlopen agrees on all 1,114,112 codepoints (kept as a committed &#x27;aurum&#x27; file so tests need no ICU), and GraphemeBreakTest passes 1,187 of 1,187. Used by tessera, modulus, excerptum, saltuarius. Narrative in lib/runae.phase-log.md.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/runae.h"><code>include/runae.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/runae.c"><code>lib/runae.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-29 48a553ed</td></tr>
+<tr><td>Group</td><td><a href="greges.html#textus">Text</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bibliothecae per greges</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>Bibliothecae per greges</h1>
+<p class="subtitulus">The 197 libraries in include/, in 13 groups</p>
+
+<p>The same libraries as the <a href="index.html">table</a>, clustered by
+area, each group with a paragraph on what it is and how its libraries
+relate. The grouping is a first cut (Claude, 2026-10-03), meant to be
+revised; it lives in the ledger (the lens <em>grex</em> on
+<em>bibliothecae (include)</em>, and the inventory <em>greges
+bibliothecarum</em>), not in this page.</p>
+
+<ul class="greges">
+<li><a href="#fundamenta">Foundation</a> <span class="nota">(25)</span></li>
+<li><a href="#textus">Text</a> <span class="nota">(15)</span></li>
+<li><a href="#stml">STML and data formats</a> <span class="nota">(15)</span></li>
+<li><a href="#parsatores">Parsers: the C89 lineage</a> <span class="nota">(25)</span></li>
+<li><a href="#aedificatio">Build, binaries and tooling</a> <span class="nota">(14)</span></li>
+<li><a href="#acta">Records and storage</a> <span class="nota">(6)</span></li>
+<li><a href="#rete">Network</a> <span class="nota">(11)</span></li>
+<li><a href="#imago">Images</a> <span class="nota">(10)</span></li>
+<li><a href="#fenestra">Window, input and drawing</a> <span class="nota">(16)</span></li>
+<li><a href="#ludus">Ludus: the second-generation UI</a> <span class="nota">(15)</span></li>
+<li><a href="#vitrea">Vitrea apps</a> <span class="nota">(8)</span></li>
+<li><a href="#prima">The first generation</a> <span class="nota">(34)</span></li>
+<li><a href="#res">Calendar and scripture</a> <span class="nota">(3)</span></li>
+</ul>
+
+<h2 id="fundamenta">I. Foundation</h2>
+<p class="nota">25 libraries, 25 described</p>
+<p>What every other library stands on. latina is the dialect itself; piscina (arenas), chorda (strings with a length, never NUL-terminated), xar (growable arrays), tabula_dispersa (hash tables) and internamentum (interned strings) are the data structures nearly every function takes or returns; credo is the test framework every probatio uses. Around them, the plain services a C89 program has to write for itself: files, paths and directory walks, child processes without a shell, hashing (friatio to disperse, sigillum&#x27;s SHA-256 to identify), identifiers (moneta, uuid), seedable random numbers (sors), DEFLATE (flatura), Roman numerals for latina&#x27;s own number block. Most were written in the first weeks (October-November 2025) and have been hardened since; their headers are where the &#x27;why it exists&#x27; paragraphs are densest.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="argumenta.html">argumenta</a></td><td>A command-line parser in the builder style: declare flags (-v / --verbose), options with values (--output=x, --output x, -o x) and positionals (required before …</td></tr>
+<tr class="descripta"><td><a href="base64.html">base64</a></td><td>Base64 encoding and decoding per RFC 4648, for binary inside JSON, data URIs and API authentication: encode bytes into a chorda, decode a chorda into bytes with a …</td></tr>
+<tr class="descripta"><td><a href="chorda.html">chorda</a></td><td>The house string: a length and a pointer, with no NUL terminator.</td></tr>
+<tr class="descripta"><td><a href="chorda_aedificator.html">chorda_aedificator</a></td><td>The string builder, for text whose final size isn&#x27;t known: append characters, chordae, C strings, integers, floats, hex and runs of a repeated character to a buffer that …</td></tr>
+<tr class="descripta"><td><a href="credo.html">credo</a></td><td>The test framework: CREDO_* assertions (credo, &#x27;I believe&#x27;) that record each check with its expression, both values, file and line, then report a summary.</td></tr>
+<tr class="descripta"><td><a href="exemplar.html">exemplar</a></td><td>A small regular-expression engine: any character, *, + and ?, character classes with ranges and negation, ^ and $ anchors, and escapes, compiled once and matched to give …</td></tr>
+<tr class="descripta"><td><a href="filum.html">filum</a></td><td>Files: read a whole file into a chorda, line readers, writers (create or append), copy, move, delete, directories (create, create if needed, create with parents like …</td></tr>
+<tr class="descripta"><td><a href="flatura.html">flatura</a></td><td>DEFLATE (RFC 1951) and gzip (RFC 1952), both directions, from scratch (the name from flare, to blow: inflate and deflate).</td></tr>
+<tr class="descripta"><td><a href="friatio.html">friatio</a></td><td>Hash functions in one place: fast non-cryptographic hashes for tables (FNV-1a, DJB2), cryptographic digests (SHA-1, kept for UUIDv5 and old checksums and marked obsolete …</td></tr>
+<tr class="descripta"><td><a href="internamentum.html">internamentum</a></td><td>String interning: one canonical copy of each distinct string, so equal strings become equal pointers and comparing them is a pointer comparison.</td></tr>
+<tr class="descripta"><td><a href="iter_directoria.html">iter_directoria</a></td><td>Walking directories: an iterator over one directory (name, kind: file, directory, other, unknown; size), and a recursive walker with a filter (kinds accepted, a * and ? …</td></tr>
+<tr class="descripta"><td><a href="latina.html">latina</a></td><td>The house&#x27;s dialect: C89 keywords in Latin (si/alioquin, per, dum, redde, structura, nomen = typedef, magnitudo = sizeof...), the fixed-width types (i8..i64 UNSIGNED, …</td></tr>
+<tr class="descripta"><td><a href="machina.html">machina</a></td><td>The identity of THIS machine, because measurements that do not name their machine cannot be compared: test times, screenshots and build timings all depend on it, and two …</td></tr>
+<tr class="descripta"><td><a href="moneta.html">moneta</a></td><td>The mint for identities, one for the whole repository so that the ledger and code annotations draw ids from the same space.</td></tr>
+<tr class="descripta"><td><a href="numerus_romanus.html">numerus_romanus</a></td><td>Roman numerals, read and written.</td></tr>
+<tr class="descripta"><td><a href="piscina.html">piscina</a></td><td>The house&#x27;s arena allocator, and the memory discipline nearly every library is built on.</td></tr>
+<tr class="descripta"><td><a href="postulata_posix.html">postulata_posix</a></td><td>A preprocessor seam for POSIX: glibc under -std=c89 hides POSIX declarations unless a feature-test macro is defined before the first system header, while Darwin and musl …</td></tr>
+<tr class="descripta"><td><a href="processus.html">processus</a></td><td>Running child processes: argv as a vector (execvp), NEVER a shell string, so quoting bugs cannot exist; stdout and stderr captured separately; a hard timeout that kills; …</td></tr>
+<tr class="descripta"><td><a href="sigillum.html">sigillum</a></td><td>SHA-256 as a content seal: the hash used where a hash IS an identity, so collision resistance matters (friatio&#x27;s hashes only spread keys across a table).</td></tr>
+<tr class="descripta"><td><a href="sors.html">sors</a></td><td>Seedable, deterministic random numbers: the same seed gives the same sequence on every machine, compiler and version, because the generators are integer-only (PCG32 for …</td></tr>
+<tr class="descripta"><td><a href="tabula_dispersa.html">tabula_dispersa</a></td><td>The house hash map: open addressing over a flat array of slots, keyed by chorda, with void* values, allocated in a piscina.</td></tr>
+<tr class="descripta"><td><a href="tempus.html">tempus</a></td><td>Time for interactive programs: a global frame clock (delta and total time, a target frame rate with waiting, frame statistics) and independent timers, plus the small …</td></tr>
+<tr class="descripta"><td><a href="uuid.html">uuid</a></td><td>UUIDs: version 7 (48 bits of Unix milliseconds, then random bits, so they sort by creation time) and version 5 (a SHA-1 of a namespace and a name, so the same name …</td></tr>
+<tr class="descripta"><td><a href="via.html">via</a></td><td>File paths as chordae: join, normalize (resolve . and .., collapse //), make absolute against the working directory, and take apart (directory, name, stem, extension), …</td></tr>
+<tr class="descripta"><td><a href="xar.html">xar</a></td><td>The house growable array: segments that double in size, so elements never move.</td></tr>
+</tbody>
+</table>
+
+<h2 id="textus">II. Text</h2>
+<p class="nota">15 libraries, 15 described</p>
+<p>Text from bytes up. utf8 decodes and encodes; runae is the Unicode core (cell widths, grapheme boundaries) checked against ICU and the Unicode consortium&#x27;s own test file. Above it sit two generations: the first, written for the Gutenberg reader in December 2025 (paginarium, sententia_fissio, sententia_paginarium: verse or prose per paragraph, sentences that survive &#x27;Mr.&#x27; and &#x27;$3.50&#x27;), and the newer, pure and oracle-checked tools of 2026: excerptum (compiler-style source excerpts), differentia (diff), similitudo and quaerere (fuzzy matching), sententiae (books of numbered claims with anchors that never lie). paginatio and capitula read page numbers and chapter indexes; partitio groups rows for oratio.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="capitula.html">capitula</a></td><td>Reads a book&#x27;s table of contents written once by the note-taker, the way it is printed in the book itself (&#x27;I - De methodo&#x27;, &#x27;1.</td></tr>
+<tr class="descripta"><td><a href="differentia.html">differentia</a></td><td>Diff.</td></tr>
+<tr class="descripta"><td><a href="excerptum.html">excerptum</a></td><td>Draws a source excerpt the way compilers show diagnostics: a line-number margin, the source line (CR removed, control characters as spaces), then &#x27;^&#x27; under the first …</td></tr>
+<tr class="descripta"><td><a href="paginarium.html">paginarium</a></td><td>Pagination for plain-text books, especially Project Gutenberg&#x27;s, whose lines are hard-wrapped at about 70-80 characters: prose must be rewrapped to the widget&#x27;s width, …</td></tr>
+<tr class="descripta"><td><a href="paginatio.html">paginatio</a></td><td>Page designations in a real book, which carries TWO series of pages: roman numerals for the front matter (i to xlii) and arabic for the body (1 to 380), so &#x27;xii&#x27; and …</td></tr>
+<tr class="descripta"><td><a href="partitio.html">partitio</a></td><td>Partitions of rows into groups, for oratio&#x27;s evaluation: groups are numbered in order of first appearance (the canonical numbering), so equal partitions have identical …</td></tr>
+<tr class="descripta"><td><a href="partitio_aestimatio.html">partitio_aestimatio</a></td><td>Held-out scoring of a partition for oratio (decisions 49-53 of its spec): three partitions of the same rows, the candidate, the gold answers and the lots (corpora).</td></tr>
+<tr class="descripta"><td><a href="quaerere.html">quaerere</a></td><td>Fuzzy string matching in the style of fzf: the query&#x27;s characters must appear in the target in order but not necessarily together, and a match is scored with bonuses for …</td></tr>
+<tr class="descripta"><td><a href="runae.html">runae</a></td><td>The Unicode core, first layer of the text stack: properties of codepoints (runae) from tables generated out of pinned Unicode data (15.1, RUNAE_VERSIO, a contract and …</td></tr>
+<tr class="descripta"><td><a href="runae_tabulae.html">runae_tabulae</a></td><td>The layout of runae&#x27;s generated tables, shared by the generator (tools/runae_generare.sh) and the library: a two-stage table, where the first stage maps each block of …</td></tr>
+<tr class="descripta"><td><a href="sententia_fissio.html">sententia_fissio</a></td><td>Splits prose into sentences, the hard way: abbreviations (Mr., Dr.), straight and curly quotes, decimals ($3.50), ellipses, dialogue attribution (&#x27;&quot;Hello!&quot; she said.&#x27; is …</td></tr>
+<tr class="descripta"><td><a href="sententia_paginarium.html">sententia_paginarium</a></td><td>Pages a text by sentence rather than by screen: in prose the unit is a sentence, in verse a line (because of enjambment), and a paragraph break is an empty unit; each …</td></tr>
+<tr class="descripta"><td><a href="sententiae.html">sententiae</a></td><td>A reader for &#x27;sentence documents&#x27;: books of numbered claims where all nesting is written in the address, never in indentation (1.1.1, 4.obj.1.1), as in de-imagine.md …</td></tr>
+<tr class="descripta"><td><a href="similitudo.html">similitudo</a></td><td>Fuzzy matching like fzf, for identifiers: the &#x27;net to throw&#x27; when the exact name is not known.</td></tr>
+<tr class="descripta"><td><a href="utf8.html">utf8</a></td><td>UTF-8 decoding and encoding as pure functions, with no allocation and no dependency beyond latina.h: decode one code point and advance, strictly (overlong forms, encoded …</td></tr>
+</tbody>
+</table>
+
+<h2 id="stml">III. STML and data formats</h2>
+<p class="nota">15 libraries, 15 described</p>
+<p>STML is the house&#x27;s own XML, and the format most of the house&#x27;s records are written in: configuration, build rules, schemas, transcripts of events and drawings. stml reads and writes it losslessly, byte for byte; stml_macros expands templates as pure projections; canon checks a document against a schema itself written in STML; selectio queries it with CSS selectors; stml_html renders it. Beside it, the formats the house exchanges with others: json, a plain xml, Apple&#x27;s plists, HTML&#x27;s named entities, and nuntium, a binary encoding in the style of protocol buffers with its own schema language. natura loads the house&#x27;s semantic library (taxonomies, dictionaries) from STML; the two *_lectio headers are generated readers for canon-described files.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="canon.html">canon</a></td><td>Schema checking for STML, itself written in STML: a .canon file describes a dialect, and canones.registrum maps file extensions or root elements to canons.</td></tr>
+<tr class="descripta"><td><a href="entitates_html.html">entitates_html</a></td><td>HTML5&#x27;s named character references: a generated table of 2,231 names (from WHATWG&#x27;s entities.json, through Python&#x27;s html.entities), including the 106 legacy forms …</td></tr>
+<tr class="descripta"><td><a href="entitates_html_tabula.html">entitates_html_tabula</a></td><td>Only the declaration of entitates_html&#x27;s generated table (lib/entitates_html_tabula.c, written by tools/entitates_html_generare.sh), kept as its own header so that the …</td></tr>
+<tr class="descripta"><td><a href="json.html">json</a></td><td>The house JSON library: a strict reader (RFC 8259: one value per input, exact 64-bit integers, valid UTF-8, duplicate keys refused, errors with line and column), a …</td></tr>
+<tr class="descripta"><td><a href="natura.html">natura</a></td><td>The loader for the house&#x27;s semantic library: taxonomies and dictionaries written as STML files under natura/ (kinds, individual things, and relationships with a name and …</td></tr>
+<tr class="descripta"><td><a href="nuntium.html">nuntium</a></td><td>The house&#x27;s binary serialization in the style of protobuf: fields as a tag and a wire type (varint, fixed 32 and 64 bits, length-delimited), varints of seven bits per …</td></tr>
+<tr class="descripta"><td><a href="nuntium_schema.html">nuntium_schema</a></td><td>The schema language for nuntium, the house&#x27;s protobuf-like message format.</td></tr>
+<tr class="descripta"><td><a href="planta_lectio.html">planta_lectio</a></td><td>A typed reader GENERATED by canon_coquere from the canon natura/cocta/planta.canon: structs and accessors for files the canon describes, so code reads fields by name …</td></tr>
+<tr class="descripta"><td><a href="plist.html">plist</a></td><td>Apple&#x27;s XML property lists: build values of each kind (dictionaries keep their key order, so a round trip is stable and diffs are readable), set a key in place without …</td></tr>
+<tr class="descripta"><td><a href="quaestiones_lectio.html">quaestiones_lectio</a></td><td>A typed reader GENERATED by canon_coquere from silva/quaestiones.canon, the canon of silva&#x27;s library of named queries: structs and accessors so the query library can be …</td></tr>
+<tr class="descripta"><td><a href="selectio.html">selectio</a></td><td>CSS selectors over STML trees: type, #id, .class (matched against the labels attribute), attributes with all six operators ([a], =, ^=, $=, *=, ~=), the four combinators …</td></tr>
+<tr class="descripta"><td><a href="stml.html">stml</a></td><td>STML, the house&#x27;s markup language: a superset of XML with boolean attributes, raw-content tags (&lt;code!&gt;literal &lt;&gt;&amp;&lt;/code&gt;), capture operators that make a tag swallow its …</td></tr>
+<tr class="descripta"><td><a href="stml_html.html">stml_html</a></td><td>Turns an STML document (after expansion and distribution) into HTML.</td></tr>
+<tr class="descripta"><td><a href="stml_macros.html">stml_macros</a></td><td>STML&#x27;s macro and template layer, as pure tree-to-tree projections at load time: read, then expand, then distribute, then use.</td></tr>
+<tr class="descripta"><td><a href="xml.html">xml</a></td><td>A plain XML reader and writer: a DOM-style tree of elements, text and comments, every string interned, everything in a piscina, with error line and column.</td></tr>
+</tbody>
+</table>
+
+<h2 id="parsatores">IV. Parsers: the C89 lineage</h2>
+<p class="nota">25 libraries, 25 described</p>
+<p>The house parses its own C, and these headers are the generations of that effort: arbor v1 (recursive descent, January 2026), arbor2 (hand-written GLR, to follow several readings where macros and typedefs make C ambiguous), lapifex (a generator of LALR and GLR parsers from grammars), and then silva, the current parser, which lives in its own folder on the materia substrate and is not listed here. silva&#x27;s orientation note says why the lineage is kept in view: &#x27;smoothed-over assumptions quietly shave the maximalist scope. That shaving is how the three previous parsers died.&#x27; The house archives rather than deletes, and one generation turned out not to be retired at all: lapifex is still the engine under nuntium&#x27;s schema compiler, superseded as a C parser while load-bearing as a parser generator. The group also holds sputnik, the first generation&#x27;s small scripting language (lexer, Pratt parser, tree-walking interpreter), and the lexers for CSS, HTML and JavaScript.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="arbor.html">arbor</a></td><td>The convenience front of arbor v1, the house&#x27;s first C parser: one call to read a file (or a buffer) and run the whole pipeline, lex, preprocess, parse, with default …</td></tr>
+<tr class="descripta"><td><a href="arbor2_conditio_evaluare.html">arbor2_conditio_evaluare</a></td><td>Evaluates the constant expressions of #if and #elif: integers, arithmetic, comparison, logical and bitwise operators, the ternary, parentheses, defined(X) and defined X, …</td></tr>
+<tr class="descripta"><td><a href="arbor2_expandere.html">arbor2_expandere</a></td><td>arbor2&#x27;s macro expansion engine: expansion in LAYERS (layer 0 the source tokens, layer N after N expansion passes) over SEGMENTS (ranges where the set of macros does not …</td></tr>
+<tr class="descripta"><td><a href="arbor2_glr.html">arbor2_glr</a></td><td>The core of an earlier generation of the house C89 parser: a generalized LR (GLR) parser that meets C&#x27;s ambiguities (is foo * bar a declaration or a multiplication? a …</td></tr>
+<tr class="descripta"><td><a href="arbor2_lapifex_adaptator.html">arbor2_lapifex_adaptator</a></td><td>The bridge between arbor2&#x27;s lexer and lapifex&#x27;s generated parsers: converts a stream of arbor2 tokens into lapifex symbols, mapping each token kind to the terminal of a …</td></tr>
+<tr class="descripta"><td><a href="arbor2_lexema.html">arbor2_lexema</a></td><td>arbor2&#x27;s C89 lexer, forked from arbor v1&#x27;s: newlines become explicit tokens instead of trivia (the preprocessor is line-oriented, so the parser needs to see them), line …</td></tr>
+<tr class="descripta"><td><a href="arbor2_scribere.html">arbor2_scribere</a></td><td>Writes an arbor2 tree back to source by walking it and emitting every token with its trivia, so parse-then-write reproduces the file exactly; also a single-token emitter …</td></tr>
+<tr class="descripta"><td><a href="arbor2_token.html">arbor2_token</a></td><td>arbor2&#x27;s token, the unit the second-generation parser was built around: every token carries a provenance chain back through macro expansion to the source, always …</td></tr>
+<tr class="descripta"><td><a href="arbor_formator.html">arbor_formator</a></td><td>arbor v1&#x27;s formatter, with two modes: faithful (an exact byte-for-byte round trip, trivia preserved) and formatted (the house style, taken from lib/piscina.c: Allman …</td></tr>
+<tr class="descripta"><td><a href="arbor_index.html">arbor_index</a></td><td>arbor v1&#x27;s project-wide symbol index: add files or folders, build, then find a symbol, its definition and its references across files, with linkage tracked (external, …</td></tr>
+<tr class="descripta"><td><a href="arbor_lexema.html">arbor_lexema</a></td><td>arbor v1&#x27;s C89 lexer: turns source into tokens and keeps the trivia (spaces and comments) before and after each one, so the file can be written back byte for byte, an …</td></tr>
+<tr class="descripta"><td><a href="arbor_praeparator.html">arbor_praeparator</a></td><td>arbor v1&#x27;s C preprocessor: #include, #define, #if and the rest, with full #if expression evaluation, run as a separate pass before parsing.</td></tr>
+<tr class="descripta"><td><a href="arbor_syntaxis.html">arbor_syntaxis</a></td><td>arbor v1&#x27;s parser: a Pratt parser for expressions and recursive descent for statements, building a uniform node (53 kinds, a union for kind-specific data, children in a …</td></tr>
+<tr class="descripta"><td><a href="arbor_typus.html">arbor_typus</a></td><td>arbor v1&#x27;s type resolution, a separate pass after parsing: primitive, composite (pointer, array, function) and aggregate (struct, union, enum) types, typedef resolution, …</td></tr>
+<tr class="descripta"><td><a href="css_lexema.html">css_lexema</a></td><td>A total lexer for CSS (the vocabulary of CSS Syntax Module Level 3), the first of three web-format lexers written under silva&#x27;s contract: TOTAL (any byte sequence lexes; …</td></tr>
+<tr class="descripta"><td><a href="html_lexema.html">html_lexema</a></td><td>A total lexer for HTML, the tractable half of an HTML5 tokenizer, under the same contract as css_lexema (total, byte-faithful, byte positions, trivia as tokens; …</td></tr>
+<tr class="descripta"><td><a href="js_lexema.html">js_lexema</a></td><td>A total lexer for JavaScript under silva&#x27;s contract (total, byte-faithful, byte positions, trivia as tokens, unknown bytes as an IGNOTUM kind).</td></tr>
+<tr class="descripta"><td><a href="lapifex_c89.html">lapifex_c89</a></td><td>C89 as a lapifex grammar: parse an expression, a declaration, a statement or a whole translation unit with the GLR engine, producing arbor2&#x27;s tree nodes.</td></tr>
+<tr class="descripta"><td><a href="lapifex_generare.html">lapifex_generare</a></td><td>lapifex&#x27;s parser generator: reads a grammar written in STML, computes FIRST and FOLLOW sets, and builds the parse table.</td></tr>
+<tr class="descripta"><td><a href="lapifex_glr.html">lapifex_glr</a></td><td>lapifex&#x27;s GLR engine: consumes the same ACTION/GOTO tables but tolerates conflicts, forking at each one and merging in a graph-structured stack (GSS), with bounds on …</td></tr>
+<tr class="descripta"><td><a href="lapifex_lexere.html">lapifex_lexere</a></td><td>The lexer that comes with a lapifex grammar: terminals in the STML grammar carry an &#x27;exemplum&#x27;, either a literal (&#x27;+&#x27;) or one of two scanners ($numerus for [0-9]+, …</td></tr>
+<tr class="descripta"><td><a href="lapifex_parsere.html">lapifex_parsere</a></td><td>lapifex&#x27;s LR(1) parse engine: drives a token stream through the ACTION/GOTO table and builds a semantic value bottom-up through a reduction callback (production index, …</td></tr>
+<tr class="descripta"><td><a href="sputnik_interpres.html">sputnik_interpres</a></td><td>sputnik&#x27;s tree-walking interpreter: values as a tagged union, scopes as a chain of hash tables, a fresh arena per execution, and errors that halt at once.</td></tr>
+<tr class="descripta"><td><a href="sputnik_lexema.html">sputnik_lexema</a></td><td>The lexer of sputnik, the house&#x27;s small scripting language from the first generation (November 2025).</td></tr>
+<tr class="descripta"><td><a href="sputnik_parser.html">sputnik_parser</a></td><td>sputnik&#x27;s parser: a Pratt parser for operator precedence and recursive descent for statements (the same pairing arbor v1 used for C two months later), producing a …</td></tr>
+</tbody>
+</table>
+
+<h2 id="aedificatio">V. Build, binaries and tooling</h2>
+<p class="nota">14 libraries, 14 described</p>
+<p>How the house builds, checks and ships itself. aedilis computes what a program links from its includes; fabrica judges whether every artefact is fresh by content hash and heals what is stale; provenientia lets an installed binary say where it came from; specimen does visual regression tests; mensura keeps nested measurements per run. capsula and capsula_caudae embed files into binaries, fasciculum builds macOS .app bundles, silex packages distributions, vigilia watches a resident process for a newer binary. git reads repositories without the git program; macho, sectio and symbola read Mach-O binaries (load commands, sections, symbol tables).</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="aedilis.html">aedilis</a></td><td>The build&#x27;s dependency engine, named after the Roman magistrate in charge of public works.</td></tr>
+<tr class="descripta"><td><a href="capsula.html">capsula</a></td><td>Embedding files in a binary, in the manner of Go&#x27;s embed: a build tool (capsula_generare) reads a configuration, compresses the files and generates C data; at run time …</td></tr>
+<tr class="descripta"><td><a href="capsula_caudae.html">capsula_caudae</a></td><td>The same capsule format appended to the END of an already compiled binary instead of compiled into it, so there is no compiler limit on size (gigabytes are possible): …</td></tr>
+<tr class="descripta"><td><a href="fabrica.html">fabrica</a></td><td>The house build judge.</td></tr>
+<tr class="descripta"><td><a href="fasciculum.html">fasciculum</a></td><td>macOS application bundles (.app) as values: describe one (Info.plist as a plist value, the executable, optional resources), turn the description PURELY into a plan of …</td></tr>
+<tr class="descripta"><td><a href="git.html">git</a></td><td>Reading git repositories without the git program, read-only by design: the object format has been frozen since 2005, &#x27;among the most stable formats in computing&#x27;, so a …</td></tr>
+<tr class="descripta"><td><a href="macho.html">macho</a></td><td>Parsing Mach-O, the macOS executable format: single-architecture images and fat binaries, little-endian only (big-endian detected and refused), load commands walked with …</td></tr>
+<tr class="descripta"><td><a href="mensura.html">mensura</a></td><td>Nested measurements tied to a run, answering Fran&#x27;s question of 2026-08-13: timings of tests, compilation and single modules, with the machine and commit attached, so …</td></tr>
+<tr class="descripta"><td><a href="provenientia.html">provenientia</a></td><td>How an installed house binary says where it came from.</td></tr>
+<tr class="descripta"><td><a href="sectio.html">sectio</a></td><td>Not text: sections of Mach-O binaries (macOS executables and object files).</td></tr>
+<tr class="descripta"><td><a href="silex.html">silex</a></td><td>silex (&#x27;flint&#x27;), the distribution tool, version 0: one binary that carries the sources of all the libraries, scaffolds new projects from them, and, in the vision, offers …</td></tr>
+<tr class="descripta"><td><a href="specimen.html">specimen</a></td><td>Visual regression testing: compare a capture (one element, by selector, or a whole window, through manus) with a stored reference image.</td></tr>
+<tr class="descripta"><td><a href="symbola.html">symbola</a></td><td>Reads the symbol table (LC_SYMTAB) of a Mach-O binary: every local, global, external and debug symbol with its address, type, section and flags, zero-copy (names point …</td></tr>
+<tr class="descripta"><td><a href="vigilia.html">vigilia</a></td><td>Watching whether a resident process is still running what it should: two watches with one contract.</td></tr>
+</tbody>
+</table>
+
+<h2 id="acta">VI. Records and storage</h2>
+<p class="nota">6 libraries, 6 described</p>
+<p>Where things are kept. persistentia stores events (event sourcing: append, then replay) behind a small interface with memory and file implementations; scrinium is the Latin wrapper over SQLite, the one vendored database, with append-only migrations; volumen builds on it to keep a whole document in one file whose truth is an event log, with content-addressed blobs; mensa stores a vitrea app&#x27;s desk of cards that way. cliens_tabularii and tabellarius are how programs talk to the ledger&#x27;s resident daemon (JSON-RPC over a socket). The common thread is the projection rule: the log is the truth, everything else can be rebuilt from it.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="cliens_tabularii.html">cliens_tabularii</a></td><td>The client that applications use to talk to the ledger daemon (tabulariumd): the MCP dialect over TCP, one connection per request (connect, send one line, read the reply …</td></tr>
+<tr class="descripta"><td><a href="mensa.html">mensa</a></td><td>The C half of a &#x27;table of thoughts&#x27; for vitrea apps: nested desks, draggable cards and notes whose positions persist between sessions.</td></tr>
+<tr class="descripta"><td><a href="persistentia.html">persistentia</a></td><td>Storage for event sourcing: an interface of four function pointers (write an event, read every event back for replay, sync, close) with two implementations in two files, …</td></tr>
+<tr class="descripta"><td><a href="scrinium.html">scrinium</a></td><td>The house&#x27;s Latin wrapper over the one vendored database, SQLite (vendor/sqlite3.c, compiled loosely in its own object, treated like libc): open (or &#x27;:memoria:&#x27;), …</td></tr>
+<tr class="descripta"><td><a href="tabellarius.html">tabellarius</a></td><td>The JSON-RPC 2.0 carrier, knowing nothing of LSP or MCP above it.</td></tr>
+<tr class="descripta"><td><a href="volumen.html">volumen</a></td><td>A whole document in one SQLite file, so copying the file copies the document.</td></tr>
+</tbody>
+</table>
+
+<h2 id="rete">VII. Network</h2>
+<p class="nota">11 libraries, 11 described</p>
+<p>The network stack, written in the summer of 2026. tcp and tls (Security.framework today, BearSSL named for elsewhere) share one exact receive contract, where 0 means closed and nothing else; http speaks HTTP/1.1 both ways; uri and url parse and encode; reactor is a single-threaded poll loop and router a pure matcher. hospitium assembles them into the house&#x27;s HTTP server: one thread, an arena per request, visible refusals. The stack&#x27;s worklogs hold its best lessons, chiefly the TLS truncation of September 2026 that a test asserting only &#x27;something arrived&#x27; could not see.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="hospitium.html">hospitium</a></td><td>The house&#x27;s HTTP server (&#x27;the hospitable house&#x27;), assembled from four halves already on the shelf: tcp&#x27;s server socket, http&#x27;s parser and serializer, router and reactor.</td></tr>
+<tr class="descripta"><td><a href="http.html">http</a></td><td>HTTP/1.1 in both directions.</td></tr>
+<tr class="descripta"><td><a href="mimen.html">mimen</a></td><td>The shared MIME table: a file path&#x27;s extension (after the last &#x27;.&#x27; after the last &#x27;/&#x27;) to a content type, application/octet-stream when unknown; one version for C …</td></tr>
+<tr class="descripta"><td><a href="multipart.html">multipart</a></td><td>Builds multipart/form-data request bodies: text fields and file parts (name, filename, content type, bytes), a generated boundary, and the matching Content-Type header, …</td></tr>
+<tr class="descripta"><td><a href="reactor.html">reactor</a></td><td>A single-threaded event loop over poll(): register file descriptors with callbacks for readable, writable, error or closed, add one-shot or repeating timers, then poll …</td></tr>
+<tr class="descripta"><td><a href="rete.html">rete</a></td><td>Which local addresses this machine has, to answer &#x27;at what address can my phone find me?&#x27;: a vitrea server can bind 0.0.0.0, but the URL put in a QR code needs a …</td></tr>
+<tr class="descripta"><td><a href="router.html">router</a></td><td>Pure route matching for HTTP: register a path per method (&#x27;/users&#x27; exactly, or &#x27;/users/:id&#x27; with up to 16 parameters), then match a method and path into the registered …</td></tr>
+<tr class="descripta"><td><a href="tcp.html">tcp</a></td><td>TCP connections behind a platform-neutral header (implementation lib/tcp_posix.c): connect by name or address with timeout, Nagle and keepalive options; send, send-all, …</td></tr>
+<tr class="descripta"><td><a href="tls.html">tls</a></td><td>Encrypted connections behind a platform-neutral header; today the implementation is macOS&#x27;s Security.framework (lib/tls_macos.m), with BearSSL named as the candidate for …</td></tr>
+<tr class="descripta"><td><a href="uri.html">uri</a></td><td>URIs per RFC 3986: parse into scheme, userinfo, host (including bracketed IPv6), port, path, query and fragment; build one back; normalize the path (dot segments, …</td></tr>
+<tr class="descripta"><td><a href="url.html">url</a></td><td>Percent-encoding per RFC 3986: unreserved characters (letters, digits, - _ . ~) stay, everything else becomes %XX; decoding reverses it.</td></tr>
+</tbody>
+</table>
+
+<h2 id="imago">VIII. Images</h2>
+<p class="nota">10 libraries, 10 described</p>
+<p>Images as RGBA in an arena. imago decodes through the vendored stb_image, the one remaining image dependency, kept behind its header; imago_typus holds the type alone so that writing or comparing images never pulls the decoder in. Everything else is the house&#x27;s own: imago_png encodes deterministically on flatura, imago_opus scales and crops, imago_collatio compares screenshots and names where they differ, dithering reduces to the 16-colour palette by Atkinson&#x27;s method, quadrans draws images in terminal cells, qr generates codes that a foreign decoder reads back, icones makes macOS icons.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="clipboard_platform.html">clipboard_platform</a></td><td>The system clipboard, images only: ask whether it holds an image, and take it as RGBA in an arena.</td></tr>
+<tr class="descripta"><td><a href="dithering.html">dithering</a></td><td>Reduces a colour image to the 16-colour Aquinas palette with Atkinson error diffusion, the algorithm Bill Atkinson wrote for the original Macintosh: in colour mode by …</td></tr>
+<tr class="descripta"><td><a href="icones.html">icones</a></td><td>Makes macOS app icons from one image: every required size, written as an .iconset directory of PNGs and as a single .icns file. fasciculum (app bundles) could name an …</td></tr>
+<tr class="descripta"><td><a href="imago.html">imago</a></td><td>Loading images: decode a file or a memory buffer (PNG, JPEG, BMP, TGA and the rest) into an Imago, RGBA in an arena, with a named error on failure; and read just the …</td></tr>
+<tr class="descripta"><td><a href="imago_collatio.html">imago_collatio</a></td><td>Comparing two images and returning a verdict, a count and optionally a picture of the difference, touching no file (&#x27;a test that does not touch the environment cannot …</td></tr>
+<tr class="descripta"><td><a href="imago_opus.html">imago_opus</a></td><td>Operations on images: scale to exact dimensions or within bounds keeping the aspect ratio, crop then scale, with nearest-neighbour, bilinear, or AREA averaging …</td></tr>
+<tr class="descripta"><td><a href="imago_png.html">imago_png</a></td><td>A PNG encoder of the house&#x27;s own, portable and dependency-free: it stands on flatura (DEFLATE) and flatura&#x27;s CRC-32 alone.</td></tr>
+<tr class="descripta"><td><a href="imago_typus.html">imago_typus</a></td><td>Just the Imago type (RGBA pixels, width, height; not premultiplied; memory in an arena) and nothing else.</td></tr>
+<tr class="descripta"><td><a href="qr.html">qr</a></td><td>QR code generation (ISO/IEC 18004), versions 1 to 10, byte mode, four error-correction levels, returning a grid of modules.</td></tr>
+<tr class="descripta"><td><a href="quadrans.html">quadrans</a></td><td>Images into terminal cells with quadrant block characters: each cell covers 2x2 pixels, split into a dark and a light group, drawn as one of 16 glyphs with a foreground …</td></tr>
+</tbody>
+</table>
+
+<h2 id="fenestra">IX. Window, input and drawing</h2>
+<p class="nota">16 libraries, 16 described</p>
+<p>The layer between the operating system and anything visual. fenestra opens native windows and injects real input for tests; eventus is the vocabulary of input with time inside each event, split from the window so that pure code links no Cocoa, with its queue, its conformance tables and its STML transcripts. tabula_pixelorum is a bare pixel buffer; delineare draws on it QuickDraw-style; delineare_mandata rasterizes a command list; thema holds the 16-colour palette; fons and fons_6x8 the bitmap font. modulus and tessellatio carry the same drawing into terminal cells. manus is the out-of-process test hand for live applications.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="claves_physicae.html">claves_physicae</a></td><td>Pure tables from a platform&#x27;s virtual key codes to the vocabulary&#x27;s physical key codes (W3C &#x27;code&#x27; values): today macOS&#x27;s kVK codes, the kitty terminal protocol in …</td></tr>
+<tr class="descripta"><td><a href="delineare.html">delineare</a></td><td>Classic 2D drawing on a TabulaPixelorum, in the spirit of QuickDraw: a context with a clip rectangle and a mode (solid, 8x8 pattern, or XOR), the 38 classic Mac …</td></tr>
+<tr class="descripta"><td><a href="delineare_mandata.html">delineare_mandata</a></td><td>The CPU rasterizer for Mandata, the house&#x27;s drawing command list: walks the commands and paints them into a TabulaPixelorum, applying group transforms and clips, …</td></tr>
+<tr class="descripta"><td><a href="eventus.html">eventus</a></td><td>The vocabulary of input, with no window behind it: event kinds, logical keys and W3C physical key codes, modifiers by side, text and IME composition, drops, capability …</td></tr>
+<tr class="descripta"><td><a href="eventus_cauda.html">eventus_cauda</a></td><td>The event queue every input source fills: a ring of 256 events plus side tables for their payloads (committed text, coalesced mouse samples), so an Eventus stays a small …</td></tr>
+<tr class="descripta"><td><a href="eventus_conformitas.html">eventus_conformitas</a></td><td>A conformance table for event sources, in STML: each scene says what is injected (keys by platform virtual code with modifiers and characters, mouse actions in …</td></tr>
+<tr class="descripta"><td><a href="eventus_stml.html">eventus_stml</a></td><td>Events to and from STML: the replay file format.</td></tr>
+<tr class="descripta"><td><a href="fenestra.html">fenestra</a></td><td>The window.</td></tr>
+<tr class="descripta"><td><a href="fenestra_tempus.html">fenestra_tempus</a></td><td>The platform clock, split out of fenestra.h on 2026-10-01: ticks, tick frequency, milliseconds, sleep, implemented with mach and POSIX calls and no Cocoa.</td></tr>
+<tr class="descripta"><td><a href="fons.html">fons</a></td><td>Maps Unicode codepoints to the 256 glyphs of the 6x8 bitmap font: ASCII and Latin-1 directly, curly quotes to straight ones, en and em dashes to a hyphen, the ellipsis …</td></tr>
+<tr class="descripta"><td><a href="fons_6x8.html">fons_6x8</a></td><td>The house&#x27;s bitmap font: 256 characters of 6x8 pixels, one byte per row with the left pixel in the high bit, merged from the HP 100LX palmtop&#x27;s font and one called …</td></tr>
+<tr class="descripta"><td><a href="manus.html">manus</a></td><td>The test hand for live vitrea apps, built on imperium&#x27;s channel: press, type, scroll, move, keys, screenshots, read text, count, focus, resize, all by CSS selector, and …</td></tr>
+<tr class="descripta"><td><a href="modulus.html">modulus</a></td><td>The unit of the drawing layer&#x27;s geometry (Vitruvius&#x27;s modulus: the unit every measure derives from): the size of a cell in &#x27;our pixels&#x27;, the size of the surface, and a …</td></tr>
+<tr class="descripta"><td><a href="tabula_pixelorum.html">tabula_pixelorum</a></td><td>A pixel buffer and nothing else: width, height, RGBA8888 pixels, RGB/RGBA packing macros, and text drawn and measured in the built-in 6x8 bitmap font.</td></tr>
+<tr class="descripta"><td><a href="tessellatio.html">tessellatio</a></td><td>Mandata into terminal cells: the second backend for the drawing list, so the same ludus UI can render in a terminal (tessera).</td></tr>
+<tr class="descripta"><td><a href="thema.html">thema</a></td><td>The colours.</td></tr>
+</tbody>
+</table>
+
+<h2 id="ludus">X. Ludus: the second-generation UI</h2>
+<p class="nota">15 libraries, 15 described</p>
+<p>The UI architecture of September 2026, worked out first in 32 web experiments and then ported to C89. Two trees never fused: componens says what each thing is, figura says how it is drawn, and drawing produces mandata, a plain command list, never pixels. One loop (dispensator: derive, target, act, recompose) runs and is tested with no window; ludus_fenestra is the thin shell that has one. State lives in insula&#x27;s islands behind one gate per kind, with motion (motus) written only in quiet; manus_ludus drives and replays it all in-process. pictor, the raster editor, is the first application built on it, and its four libraries are here.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="actio.html">actio</a></td><td>The registry of named actions.</td></tr>
+<tr class="descripta"><td><a href="componens.html">componens</a></td><td>The logical tree of a ludus UI: each node says what something IS and how it behaves (id, action name, accessible title, kind (partes: button, field, option, list, item, …</td></tr>
+<tr class="descripta"><td><a href="derivare.html">derivare</a></td><td>Turns the raw input stream into the derived one, purely: double clicks from the events&#x27; own times (never the clock), and drags, once a press moves beyond a distance …</td></tr>
+<tr class="descripta"><td><a href="destinatio.html">destinatio</a></td><td>Decides which component an event goes to, as one swappable strategy that components never see.</td></tr>
+<tr class="descripta"><td><a href="dispensator.html">dispensator</a></td><td>The loop of a ludus program: derive (derivare), target (destinatio), act (actio), recompose.</td></tr>
+<tr class="descripta"><td><a href="figura.html">figura</a></td><td>The other tree&#x27;s other half: a registry from (partes, thema) to a drawing function, and pingere, which walks a componens tree and emits Mandata, opening one group per …</td></tr>
+<tr class="descripta"><td><a href="insula.html">insula</a></td><td>Where a ludus program&#x27;s state lives: &#x27;islands&#x27;, STML trees reached only through this repository, in two kinds with their own write discipline.</td></tr>
+<tr class="descripta"><td><a href="ludus_fenestra.html">ludus_fenestra</a></td><td>The glue between a ludus program and a real window, and on purpose the only place ludus touches the clock (fenestra_tempus_ms) or sees a window.</td></tr>
+<tr class="descripta"><td><a href="mandatum.html">mandatum</a></td><td>Drawing as data: a list of six primitives (group, rectangle, line, polygon, image, text) that a program emits instead of touching pixels.</td></tr>
+<tr class="descripta"><td><a href="manus_ludus.html">manus_ludus</a></td><td>A test hand that drives a ludus program in-process: the same verbs as the out-of-process manus (press, key, exists, focus) but synchronous, so there is no waiting and no …</td></tr>
+<tr class="descripta"><td><a href="motus.html">motus</a></td><td>The third kind of state, kept out of the islands on purpose: motion.</td></tr>
+<tr class="descripta"><td><a href="pictor_actiones.html">pictor_actiones</a></td><td>pictor&#x27;s action handlers, registered by name into an actio registry: penicillus.ictus (a brush stroke, through its phases from the event kind) and instrumentum.eligere …</td></tr>
+<tr class="descripta"><td><a href="pictor_componentia.html">pictor_componentia</a></td><td>pictor&#x27;s view, as a Componere function for the dispensator: reads the islands and motus and returns the component tree (toolbar, canvas, status line) into the arena it …</td></tr>
+<tr class="descripta"><td><a href="pictor_documentum.html">pictor_documentum</a></td><td>pictor&#x27;s document is its stroke log.</td></tr>
+<tr class="descripta"><td><a href="pictor_figurae.html">pictor_figurae</a></td><td>pictor&#x27;s figures: how its canvas and title are drawn, registered per theme with figura.</td></tr>
+</tbody>
+</table>
+
+<h2 id="vitrea">XI. Vitrea apps</h2>
+<p class="nota">8 libraries, 8 described</p>
+<p>Applications that put a web view inside a native window: vitrea wraps WKWebView, with internuntius as the pure RPC across the seam, vitrea_servus as the second transport, imperium to drive an app from outside in development, speculum as a debug mode. atrium packages the scaffolding forum, villa and mensor&#x27;s UI kept writing by hand. villa_agens and villa_lectores belong to villa, the servers app (ssh commands built safely, checks and actions).</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="atrium.html">atrium</a></td><td>A complete vitrea application with the batteries included: window, capsule, web view, RPC bridge, debug mirror (speculum), remote control (imperium&#x27;s vivarium) and the …</td></tr>
+<tr class="descripta"><td><a href="imperium.html">imperium</a></td><td>Driving a live vitrea app from outside, in development only: JS sent into the page could act but not answer, and &#x27;a test that cannot ask is not a test&#x27;.</td></tr>
+<tr class="descripta"><td><a href="internuntius.html">internuntius</a></td><td>Pure RPC over a send-function seam: a JSON envelope ({id, methodus, argumenta} in, {id, fructus} or {id, culpa} out, {eventus, datum} for pushes), a registry of methods, …</td></tr>
+<tr class="descripta"><td><a href="speculum.html">speculum</a></td><td>A self-source debug mode for vitrea apps: the binary carries its own source (a capsule generated at build time), and pressing Cmd+Shift+D injects an overlay that shows …</td></tr>
+<tr class="descripta"><td><a href="villa_agens.html">villa_agens</a></td><td>The part of villa (the servers app) that has no face: configuration, the remote check script, the check cycle, the seeds of its record kinds, writing events.</td></tr>
+<tr class="descripta"><td><a href="villa_lectores.html">villa_lectores</a></td><td>Pure readers for villa: an ssh command builder and parsers for what remote servers print (systemctl states, unit lists, nginx server blocks, sectioned output, disk, …</td></tr>
+<tr class="descripta"><td><a href="vitrea.html">vitrea</a></td><td>Apps whose face is a web page and whose body is C89: vitrea puts the system&#x27;s WKWebView inside a window fenestra already made, serves the front end out of the binary …</td></tr>
+<tr class="descripta"><td><a href="vitrea_servus.html">vitrea_servus</a></td><td>The second transport of a vitrea app: the same capsule and the same registered methods, served over HTTP by hospitium instead of WebKit, so one application can be a …</td></tr>
+</tbody>
+</table>
+
+<h2 id="prima">XII. The first generation</h2>
+<p class="nota">34 libraries, 34 described</p>
+<p>The house&#x27;s first application layer (November 2025 to January 2026), most of it still running through concha in the Combinado demo. Its model is an entity graph (entitas, an event-sourced repository) with an actor layer on top (messages, a bus, handlers by kind, services, timers); its interface is character-cell widgets with a manager that reads the clock, screens switched like tmux, a paper-like text editor with vim keys and syntax colouring, and a panel of viewers for cards, themes, fonts, the Bible, the library, the calendar and images. Much of what came later answers something learned here: ludus replaces the widget manager (its brainstorm says so by name), and the actor vision of October 2026 restates the actors with a supervision tree.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="actor.html">actor</a></td><td>Messages and mailboxes for the idea that &#x27;every entity is an actor&#x27;: a Nuntius has a sender, a kind (&#x27;tick&#x27;, &#x27;click&#x27;) and a payload as a hash table of strings, with …</td></tr>
+<tr class="descripta"><td><a href="arx_caeli.html">arx_caeli</a></td><td>The &#x27;castle in the clouds&#x27;: a spatial editor of cards.</td></tr>
+<tr class="descripta"><td><a href="biblia_visus.html">biblia_visus</a></td><td>A reader for the Douay-Rheims Bible inside the first-generation app: a table of contents by testament, then chapters shown page by page with verses never split across …</td></tr>
+<tr class="descripta"><td><a href="calendario_visus.html">calendario_visus</a></td><td>The liturgical calendar as a month view: the selected day&#x27;s details in the top third (date, feast, liturgical season and cycle, from calendarium_liturgicum) and the …</td></tr>
+<tr class="descripta"><td><a href="color.html">color</a></td><td>The first generation&#x27;s colour value: an RGBA struct with constructors from components, from a palette index (the Aquinas palette) or from a packed pixel, conversion to …</td></tr>
+<tr class="descripta"><td><a href="coloratio.html">coloratio</a></td><td>Despite the name, syntax colouring, not colour science: computes a colour index for every cell of a character grid (normal text, $commands, &lt;tags&gt;, keywords, strings, …</td></tr>
+<tr class="descripta"><td><a href="concha.html">concha</a></td><td>The shell that owns everything a first-generation app needs: arena, interning, persistence (a log file, or memory), the entity repository, the widget context, the …</td></tr>
+<tr class="descripta"><td><a href="cursor.html">cursor</a></td><td>Draws the mouse pointer itself, a simple black arrow with a grey edge, hotspot at the top left, for full-screen mode where the system cursor is hidden.</td></tr>
+<tr class="descripta"><td><a href="cursus.html">cursus</a></td><td>The message bus of the first generation: send a message to an entity id and it is queued, not handled at once; cursus_processare then delivers up to a given number of …</td></tr>
+<tr class="descripta"><td><a href="dialogus.html">dialogus</a></td><td>Modal dialogs over the first-generation widgets: a generic dialog interface that captures every event while open, plus drawing helpers (a frame with background, border …</td></tr>
+<tr class="descripta"><td><a href="dialogus_importatio.html">dialogus_importatio</a></td><td>The dialog for importing an image with Atkinson dithering: only the controls (palette presets, colours on and off, breakpoints, mode), built from elementa, while the …</td></tr>
+<tr class="descripta"><td><a href="elementa.html">elementa</a></td><td>Immediate-mode controls for the first generation&#x27;s dialogs: a slider, a button, a checkbox, a text field and a 2x8 grid for picking one of the 16 Aquinas colours.</td></tr>
+<tr class="descripta"><td><a href="entitas.html">entitas</a></td><td>The first generation&#x27;s data model: an entity is an id (UUIDv7), a genus (its kind, e.g. &#x27;Page&#x27;), typed properties, directed relations to other entities (each relation …</td></tr>
+<tr class="descripta"><td><a href="entitas_repositorium.html">entitas_repositorium</a></td><td>The repository interface over entities: a struct of function pointers (read by id, related entities, query by tag or tag prefix, by genus or genus prefix, by text; …</td></tr>
+<tr class="descripta"><td><a href="fons_visus.html">fons_visus</a></td><td>A read-only view of all 256 glyphs of the 6x8 bitmap font in a 16 x 16 grid, with each one&#x27;s hexadecimal code; for inspecting and debugging the font.</td></tr>
+<tr class="descripta"><td><a href="importatio_visus.html">importatio_visus</a></td><td>The preview half of image import: holds the import session (the source image, the palette colours enabled, the breakpoints, colour or grey mode), runs the Atkinson …</td></tr>
+<tr class="descripta"><td><a href="layout.html">layout</a></td><td>Builds a screen from an STML description: a layout document names its widgets, their kinds and their places, and layout creates them, registers them with a ManagerWidget …</td></tr>
+<tr class="descripta"><td><a href="librarium_lector.html">librarium_lector</a></td><td>Loads and reads one book&#x27;s text for the library viewer: loading from a file, pagination by page (paginarium) or by sentence (sententia_paginarium), cached until the size …</td></tr>
+<tr class="descripta"><td><a href="librarium_visus.html">librarium_visus</a></td><td>A library browser for the books listed in librarium.stml: a main menu (all, by title, by tag), a list of tags, a catalogue in compact or full form, one book&#x27;s metadata, …</td></tr>
+<tr class="descripta"><td><a href="libro_paginarum.html">libro_paginarum</a></td><td>A book of pages: up to 100 editor pages with navigation (next, previous, last, by number or by name), a history of 32 steps for going back, a clipboard shared between …</td></tr>
+<tr class="descripta"><td><a href="navigator_entitatum.html">navigator_entitatum</a></td><td>Browses the entity graph from the keyboard in two columns, the parent dimmed on the left (30%) and the current entity with a selection on the right (70%): j and k move, …</td></tr>
+<tr class="descripta"><td><a href="pagina.html">pagina</a></td><td>One page of the first-generation text editor: a fixed character grid (tabula_characterum, 68 x 56 by default) edited with vim keys (vim), coloured by coloratio, with a …</td></tr>
+<tr class="descripta"><td><a href="pinacotheca_visus.html">pinacotheca_visus</a></td><td>A gallery of the dithered images stored as entities of genus &#x27;Vultus::Imago&#x27;: a browser (a list with a preview) and a full view, with delete (after confirmation) and …</td></tr>
+<tr class="descripta"><td><a href="registrum_commandi.html">registrum_commandi</a></td><td>The first editor&#x27;s command registry: commands such as $date are typed into the text and executed by name, each with a context giving the page, the grid position where …</td></tr>
+<tr class="descripta"><td><a href="registrum_widget.html">registrum_widget</a></td><td>Widget factories by STML tag name (&#x27;pagina&#x27;, &#x27;navigator&#x27;, &#x27;libro&#x27;), so layout can build a screen from a description without knowing every widget type (up to 32 kinds).</td></tr>
+<tr class="descripta"><td><a href="schirmata.html">schirmata</a></td><td>Ten screens switched like tmux (ctrl-a then n, p or a digit), with a tab bar at the bottom: each screen has its own widgets and remembers its open page, cursor and vim …</td></tr>
+<tr class="descripta"><td><a href="servitium.html">servitium</a></td><td>A registry of services, singleton actors found by name (&#x27;clock&#x27;, &#x27;logger&#x27;): a service is an entity tagged &#x27;#service::name&#x27;, and servitium_discoperire finds them all by …</td></tr>
+<tr class="descripta"><td><a href="sputnik_syntaxis.html">sputnik_syntaxis</a></td><td>A read-only reference card for the sputnik scripting language, shown in the app&#x27;s side panel: its keywords, special literals, the REPO object and the methods entities …</td></tr>
+<tr class="descripta"><td><a href="tabula_characterum.html">tabula_characterum</a></td><td>A 2D character grid for a text editor that behaves like paper: a fixed size (68 x 56 by default), typing paints into cells, and inserting before content pushes it right …</td></tr>
+<tr class="descripta"><td><a href="tempestivum.html">tempestivum</a></td><td>Timers as entities: a timer is an entity of genus &#x27;System::Tempestivum&#x27; with properties for its target, the message kind to send, the interval, whether it repeats, the …</td></tr>
+<tr class="descripta"><td><a href="thema_visus.html">thema_visus</a></td><td>A paged viewer for the theme: page one shows the palette, a contrast grid and the semantic colour mappings; page two shows the classic patterns with a foreground and …</td></tr>
+<tr class="descripta"><td><a href="tractator.html">tractator</a></td><td>The handler registry for actor messages: (entity genus, message kind) to a function, with a fallback per genus for kinds it does not know.</td></tr>
+<tr class="descripta"><td><a href="vim.html">vim</a></td><td>A vim command interpreter as a pure function: give it the editor state and a key, get the new state back, with no window and no drawing, so it can be tested on a grid …</td></tr>
+<tr class="descripta"><td><a href="widget.html">widget</a></td><td>The first generation&#x27;s widget model.</td></tr>
+</tbody>
+</table>
+
+<h2 id="res">XIII. Calendar and scripture</h2>
+<p class="nota">3 libraries, 3 described</p>
+<p>Libraries about the house&#x27;s subject matter rather than its machinery. calendarium_liturgicum computes the Roman liturgical calendar (the General Roman Calendar of 1969 with its ranks, seasons and moveable feasts); biblia holds the Douay-Rheims text in memory; fasti handles calendars and dates in general. Small in number, and the clearest sign of what the rest of the house is for.</p>
+<table class="bibliothecae">
+<thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
+<tbody>
+<tr class="descripta"><td><a href="biblia.html">biblia</a></td><td>Sacred Scripture compiled into the program: the Douay-Rheims text (lib/biblia_dr.c), with book indices in Douay-Rheims order and metadata for books, chapters and verses; …</td></tr>
+<tr class="descripta"><td><a href="calendarium_liturgicum.html">calendarium_liturgicum</a></td><td>The Roman liturgical calendar (the General Roman Calendar of 1969, ordinary form).</td></tr>
+<tr class="descripta"><td><a href="fasti.html">fasti</a></td><td>Calendar and time, named for the ancient Roman calendar: dates and times with validity checks, today and now, leap years, days in a month, day of the week (Sunday = 0, …</td></tr>
+</tbody>
+</table>
+
+</body>
+</html>

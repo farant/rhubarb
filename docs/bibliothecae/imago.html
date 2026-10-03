@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>imago</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>imago</h1>
+<p class="subtitulus">imagines e filis legere (image loading, decoding)</p>
+
+<p>Loading images: decode a file or a memory buffer (PNG, JPEG, BMP, TGA and the rest) into an Imago, RGBA in an arena, with a named error on failure; and read just the width and height from the header without decoding a pixel. The decoder behind it is the vendored stb_image (lib/stb_image.h), hidden behind this header and the house&#x27;s one remaining image dependency: the no-dependencies page lists it as to be retired, not urgently. Decoding is the hard direction (every bit depth, palette, interlacing and filter), which is why the house wrote an encoder first. Used by specimen (screenshots), tessera&#x27;s image tools, saltuarius and briar.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/imago.h"><code>include/imago.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/imago.c"><code>lib/imago.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#imago">Images</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

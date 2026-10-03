@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nuntium_schema</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>nuntium_schema</h1>
+<p class="subtitulus">Lingua Schematis Nuntii</p>
+
+<p>The schema language for nuntium, the house&#x27;s protobuf-like message format. It parses declarations such as nuntium Persona { textus identificator = 1; varint aetas = 2; }, typed fields with tag numbers, into a small AST, and generates C from them, a header and a body (in a second file, nuntium_schema_generare.c). Field types: text, varint, svarint, fixed 32 and 64, bytes, f32, f64. The command-line generator instrumenta/nuntium_schema_generare.c is its user.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/nuntium_schema.h"><code>include/nuntium_schema.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/nuntium_schema_generare.c"><code>lib/nuntium_schema_generare.c</code></a> <span class="nota">(2 functions)</span>, <a href="../../lib/nuntium_schema.c"><code>lib/nuntium_schema.c</code></a> <span class="nota">(1 functions)</span></td></tr>
+<tr><td>Last change</td><td>2026-09-28 e1e01751</td></tr>
+<tr><td>Group</td><td><a href="greges.html#stml">STML and data formats</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

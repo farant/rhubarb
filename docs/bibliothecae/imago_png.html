@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>imago_png</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>imago_png</h1>
+<p class="subtitulus">imaginem in PNG codificare (PNG encoder)</p>
+
+<p>A PNG encoder of the house&#x27;s own, portable and dependency-free: it stands on flatura (DEFLATE) and flatura&#x27;s CRC-32 alone. Before it, AppKit encoded PNGs in two places (vitrea and a tool), because there was no portable home for &#x27;RGBA to PNG&#x27;; the header&#x27;s point is that the platform boundary belongs to capturing pixels, not to the file format. Output is fixed: 8-bit RGBA, no filters, no interlacing, one IDAT, and DETERMINISTIC (the same image always gives the same bytes), which tests need. Filters would shrink files and can be added later without changing the interface (Eskil&#x27;s rule, cited). Encoding only; decoding stays with imago and stb_image, a deliberate asymmetry since a decoder must read every variant. Errors are named, never silent. Used by icones, specimen and vitrea&#x27;s screenshots.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/imago_png.h"><code>include/imago_png.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/imago_png.c"><code>lib/imago_png.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#imago">Images</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

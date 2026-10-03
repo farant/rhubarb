@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sine dependentiis</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · Regulae · R3</p>
+<h1>Sine dependentiis</h1>
+<p class="subtitulus">Write our own libraries instead of using 3rd party dependencies</p>
+
+<p>A project-wide <a href="../taxonomiae.html">regula</a>: a commitment,
+kept or broken, across every project. Like every regula it answers
+conditions, and has exceptions where it was weighed against something
+else.</p>
+
+<h2>What it answers</h2>
+<ul>
+<li><span class="id">principium</span>Dependencies are entropy
+deliberately admitted. Programs are machines that do not wear out, unless
+you opt in to entropy through dependencies (Fran, CLAUDE.md; also the
+ledger's house principle, "dependentiae sunt entropia consulto
+admissa").</li>
+<li><span class="id">principium</span>"Nobody vendors these libraries to
+swap them later; they vendor them because rewriting looked impossible."
+<span class="pater">text stack X10</span></li>
+<li><span class="id">occasio</span>AI-assisted volume changes what one
+person can carry: the difficulty of much library work "is care, not
+invention". So rewriting no longer looks impossible.
+<span class="pater">text stack X9</span></li>
+<li><span class="id">regula</span>It leans on <strong>R1, 1.0 and
+done</strong>: "when the release is final and the code owned, the option
+value of a swappable upstream is worth nothing, and the cost of every seam
+is paid forever." <span class="pater">text stack X10.1</span></li>
+</ul>
+<p class="nota">The first is a fused statement in its ledger form
+(condition and commitment in one sentence); split, the condition is the
+principium and this page is its commitment.</p>
+
+<h2>What it costs</h2>
+<p>Owning a library means no swapping a half for its upstream later, and
+a great deal of exacting code; for the text stack alone, roughly 60–100k
+lines, plus a quality tier no test suite can judge
+<span class="pater">text stack X6</span>.</p>
+
+<h2>Exceptions</h2>
+<p>The libraries we have vendored, or are open to vendoring. Status
+checked against the tree on 2026-10-02.</p>
+<table>
+<thead>
+<tr><th>Library</th><th>Status</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>SQLite</strong></td><td>vendored<br><code>vendor/sqlite3.c</code></td>
+<td>used by <code>lib/scrinium.c</code> and <code>tools/genera_biblia.c</code>. Defence (tabularium-visio T10): public domain, conservative C, no deps of its own, support pledged to 2050; durability is "the one domain where failure silently destroys the entire project state".</td></tr>
+<tr><td><strong>BearSSL</strong></td><td>open, not vendored</td>
+<td>TLS today goes through macOS's Security.framework behind <code>include/tls.h</code> (<code>lib/tls_macos.m</code>); BearSSL is the candidate for other platforms.</td></tr>
+<tr><td><strong>Monocypher</strong></td><td>open, not vendored</td><td>no notes yet.</td></tr>
+<tr><td><strong>Opus</strong></td><td>open, not vendored</td><td>no notes yet.</td></tr>
+</tbody>
+</table>
+
+<h2>To be replaced</h2>
+<p>Libraries we use or once expected to use, which our own will
+replace.</p>
+<table>
+<thead>
+<tr><th>Library</th><th>Status</th><th>Replacement</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>FreeType</strong><br><strong>HarfBuzz</strong><br><strong>ICU</strong></td><td>not vendored</td>
+<td>The in-house text stack (<a href="../visiones/textus.html">Text stack</a>):
+one C89 tree for Unicode, font parsing, shaping, rasterization, layout and
+PDF, checked against the incumbents' own test corpora. Its Unicode core
+has begun: <code>runae</code> generates its tables from Unicode data
+(2026-09-28). The three sources are cloned beside the repo
+(<code>../freetype</code>, <code>../harfbuzz</code>, <code>../icu</code>)
+to be read, not linked.</td></tr>
+<tr><td><strong>stb_image</strong></td><td>vendored<br><code>vendor/stb_image.h</code></td>
+<td>For now we have it: <code>lib/imago.c</code> decodes images with it,
+as an implementation detail kept out of imago's API. We have already
+written part of our own (<code>lib/imago_png.c</code>), and will have full
+support for PNG, JPEG and the rest at some point; then stb_image can be
+sunset. Not a short-term priority.</td></tr>
+</tbody>
+</table>
+<p class="nota">History: the original list is Fran's record
+<em>vendored-library</em> in the forum ledger (2026-07-30), "libraries
+that we have vendored or are open to vendoring in the future". Cut down
+and split 2026-10-02 (Fran). Notes from 07-30 called HarfBuzz "the one
+thing in the whole stack we cannot write ourselves" and ICU "open to
+vendoring, but after the UCD generator has been tried"; the text-stack
+brief (09-21) and <code>runae</code> overtook both. Not on either list:
+what the operating system provides behind a platform layer
+(Security.framework through <code>tls.h</code>, CoreText, WebKit through
+vitrea), which is borrowed rather than vendored.</p>
+
+<h2>In the visions</h2>
+<p class="nota">Items from the extracted visions that bear on R3 (each
+also has its tier); the full list is in each page's "By regula" view.</p>
+<ul>
+<li><a href="../visiones/textus.html">Text stack</a>: X6 (what owning costs), X9 (AI changes what one person can carry), X10 (why people vendor), X36 (an in-house parser reaches PDF fonts directly), X64 (rhubarb already holds much of the substrate)</li>
+<li><a href="../visiones/tabularium.html">Tabularium</a>: T10 (SQLite as an exception), T46 ("not a package manager; zero-dep philosophy unchanged")</li>
+</ul>
+
+</body>
+</html>

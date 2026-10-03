@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mandatum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>mandatum</h1>
+<p class="subtitulus">Mandata delineandi: sex primitiva et index eorum</p>
+
+<p>Drawing as data: a list of six primitives (group, rectangle, line, polygon, image, text) that a program emits instead of touching pixels. Only groups nest, and clip, translation and integer scale are properties of the group, not push/pop commands, so an unbalanced stack is impossible by construction. Colours stay symbolic (a thema role, a palette index, or literal RGBA) and images stay names; only a rasterizer resolves them. A group can carry the id of the component that drew it, for inspectors. The list lives in memory as typed structs in a Xar; STML is its serialization, used for snapshots, inspection and replay expectations, and mandata_aequalia lets a test compare what was drawn rather than pixels. The ludus brainstorm calls this list the GPU-later seam: today it has two consumers, delineare_mandata (pixels) and tessellatio (terminal cells). Born 2026-09-04, with componens and derivare among the first ludus modules.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/mandatum.h"><code>include/mandatum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/mandatum.c"><code>lib/mandatum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-05 87fc5b5e</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

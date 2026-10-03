@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>widget</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>widget</h1>
+<p class="subtitulus"></p>
+
+<p>The first generation&#x27;s widget model. A widget is a small vtable (reddere to draw, tractare_eventum to handle an event) placed in character-cell coordinates; a ContextusWidget carries the services they share (the arena, interned strings, the entity repository, the command registry) and a callback for switching modes. ManagerWidget holds up to 16 widgets in a fixed array, cycles focus, focuses on click and detects double clicks itself, reading the clock during dispatch. That last detail is what the ludus design retires: in the newer stack time comes inside the event (eventus.h) and gestures such as double clicks are derived from the event stream (derivare), so dispatch can be replayed. About fourteen views and apps still build on it (concha, arx_caeli, schirmata, the *_visus views, navigator_entitatum, libro_paginarum, sputnik_syntaxis).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/widget.h"><code>include/widget.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/widget.c"><code>lib/widget.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-01 09d67e5f</td></tr>
+<tr><td>Group</td><td><a href="greges.html#prima">The first generation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>delineare_mandata</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>delineare_mandata</h1>
+<p class="subtitulus">Mandata -&gt; TabulaPixelorum (rasterizator CPU)</p>
+
+<p>The CPU rasterizer for Mandata, the house&#x27;s drawing command list: walks the commands and paints them into a TabulaPixelorum, applying group transforms and clips, resolving colour names through thema and images by name through an ImagoFons (so the list stays plain data, with no pixel pointers in it). A variant takes a filter, a bare-tabula entry point serves tests, and a Modulus/mensor hook lets tessellatio measure before it draws. The split it embodies is retained mode over immediate mode: a program builds a list of what to draw, and this one function turns the list into pixels, so the same list could later go to another backend (the GPU, PDF, a test that compares lists rather than pixels). Used today by ludus_fenestra, which is the glue between a ludus program and a real window.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/delineare_mandata.h"><code>include/delineare_mandata.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/delineare_mandata.c"><code>lib/delineare_mandata.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-01 4941f626</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

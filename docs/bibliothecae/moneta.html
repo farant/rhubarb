@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>moneta</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>moneta</h1>
+<p class="subtitulus">Cusio identitatum (ULID, nanoid)</p>
+
+<p>The mint for identities, one for the whole repository so that the ledger and code annotations draw ids from the same space. ULIDs (time first, so they sort by creation; monotonic within a millisecond), a non-monotonic variant whose short prefixes still differ, nanoids (21 characters of a 64-sign alphabet), nanoids for file names (12 upper-case characters, since macOS file names ignore case), and nanoids of any alphabet, drawn uniformly by masking and rejection rather than by modulo. Its rule about randomness: a ULID may fall back to time mixing, because it needs uniqueness; secrets and nanoids never fall back, because a predictable fallback would look like success. The ledger mints its ids here.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/moneta.h"><code>include/moneta.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/moneta.c"><code>lib/moneta.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-10 62dd6a1f</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rete</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>rete</h1>
+<p class="subtitulus">inspectio interfacierum reticuli localis</p>
+
+<p>Which local addresses this machine has, to answer &#x27;at what address can my phone find me?&#x27;: a vitrea server can bind 0.0.0.0, but the URL put in a QR code needs a concrete address. There is no single local address (home wifi and a phone hotspot on en0, VPN tunnels, bridges, loopback, and 169.254 addresses that exist but reach nothing when DHCP failed), so the library does not guess: it returns every live, non-loopback, non-link-local IPv4 address with its interface name, in the system&#x27;s order, and the caller or the person chooses. Implementation lib/rete_posix.c (getifaddrs); used by forum for phone pairing (August 2026).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/rete.h"><code>include/rete.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/rete_posix.c"><code>lib/rete_posix.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#rete">Network</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

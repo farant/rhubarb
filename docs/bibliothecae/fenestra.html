@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fenestra</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>fenestra</h1>
+<p class="subtitulus"></p>
+
+<p>The window. Opens native macOS windows (fenestra_macos.m, Cocoa) and hands the program a TabulaPixelorum to draw into in software, RGBA8888, which it blits to the screen. Input arrives as a queue of Eventus: fenestra_perscrutari polls, and fenestra_expectare_eventus blocks until something happens, so an idle app sits near 0% CPU. Each event carries its time: the OS event&#x27;s own timestamp, or a stamp taken once at the single enqueue path; a time the caller already set (replay, injection) is kept. It also injects input natively: fenestra_clavem_immittere / fenestra_claviarius and fenestra_murem_immittere / fenestra_musarius push real OS-level key and mouse events. A JavaScript dispatchEvent is untrusted (isTrusted=false) and does not even trigger :hover, so a test driven that way checks less than it seems to. The same honesty runs through the rest: fenestra_magnitudinator reports the size the window actually got, not the size asked for, and FENESTRA_RETRO opens a window without stealing focus from the user. Menus via fenestra_menu_addere. Since 2026-10-01 it is only the platform half: the input vocabulary moved to eventus.h and the pixel buffer to tabula_pixelorum.h, so code that needs neither a window nor Cocoa does not link it. Used by the apps (pictor, villa, forum, silex), atrium, concha and the auscultator/conformitas tools.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/fenestra.h"><code>include/fenestra.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/fenestra_macos.m"><code>lib/fenestra_macos.m</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-01 09d67e5f</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

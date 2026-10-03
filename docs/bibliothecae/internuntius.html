@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>internuntius</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>internuntius</h1>
+<p class="subtitulus">RPC purum trans suturam missoris (vitrea Phasis A)</p>
+
+<p>Pure RPC over a send-function seam: a JSON envelope ({id, methodus, argumenta} in, {id, fructus} or {id, culpa} out, {eventus, datum} for pushes), a registry of methods, dispatch, and events from C to JS. It knows nothing of WebKit: all output goes through one sender callback, which is &#x27;escape and evaluate JavaScript&#x27; in vitrea, an HTTP response in vitrea_servus, and &#x27;append to a captured list&#x27; in tests. Replies are routed by id, so slow or out-of-order replies are allowed even though v1 handlers are synchronous. Malformed JSON, unknown methods and handler failures all become error replies and are counted, never crashes. Exposure is a parameter, not a setting: an app registers its methods per transport mode, LOCALIS (its own window, full trust, test harness included) or PUBLICUS (a socket, harness methods excluded), because &#x27;a gate in plain sight is better than a gate you must remember&#x27;. Phase A of vitrea (July 2026).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/internuntius.h"><code>include/internuntius.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/internuntius.c"><code>lib/internuntius.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vitrea">Vitrea apps</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

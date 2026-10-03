@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formae</title>
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="index.html">Rhubarb</a></p>
+<h1>Formae</h1>
+<p class="subtitulus">Design patterns found in the house's libraries</p>
+
+<p>A pattern is a description, not a rule. Each one records a context,
+the problem it meets, the solution that keeps recurring, what it looks
+like in the house's code, where else it has been found and under what
+names, and when it does not fit. That last part matters: a
+<a href="taxonomiae.html">regula</a> binds everywhere, while a pattern is
+used where its context holds. Patterns are collected as the libraries are
+read, so each cites the libraries it was found in. The form follows
+Christopher Alexander's <em>A Pattern Language</em> (1977): context,
+problem, solution, known uses.</p>
+
+<p class="nota">Prior art is given from recall (names, titles, years) and
+has not been checked against the sources; treat it as pointers.</p>
+
+
+<h2 id="machina-pura">Machina pura cum sutura</h2>
+<p class="subtitulus">A pure engine, with the world passed in</p>
+
+<h3>Context</h3>
+<p>A library whose logic is the valuable part, but which needs files,
+processes, a clock, a screen or a parser to do its work.</p>
+
+<h3>Problem</h3>
+<p>If the library reaches for the disk or a process itself, it can only
+be tested against a real tree and real processes: slow, fragile, and
+unable to stage the cases that matter (a file vanishing mid-run, a
+generator that writes nothing).</p>
+
+<h3>Solution</h3>
+<p>The engine does no input or output of its own. Everything outside
+comes in through a seam: a structure of function pointers, or a value
+passed as an argument. The binary supplies the real seam; tests supply
+fakes. The engine stays deterministic and can be tested in memory.</p>
+
+<h3>In the code</h3>
+<p>The seam, from <code>include/fabrica.h</code> (abridged): the engine
+touches the disk and processes only through these members, with a
+<code>datum</code> pointer for whatever the caller needs.</p>
+<pre><code>nomen structura {
+    vacuum* datum;
+    /* FALSUM = plagula absens */
+    b32 (*legere)(vacuum* datum, constans character* via,
+                  Piscina* piscina, chorda* contentum_out);
+    b32 (*enumerare)(vacuum* datum, constans character* via,
+                     Piscina* piscina, Xar** nomina_out);
+    b32 (*currere)(vacuum* datum, constans Xar* mandatum,
+                   constans character* scriptura_dir,
+                   Piscina* piscina, chorda* causa_out,
+                   i32* duratio_ms_out);
+    /* ... */
+} FabricaSutura;</code></pre>
+<p>And a test wiring in a fake disk that lives in memory, from
+<code>probationes/probatio_fabrica.c</code>. Clearing the seam first
+means a member added to the structure later is NIHIL, not garbage:</p>
+<pre><code>fabrica_suturam_parare(sutura);
+
+sutura-&gt;datum      = discus;        /* the fake disk */
+sutura-&gt;legere     = _legere;
+sutura-&gt;enumerare  = _enumerare;
+sutura-&gt;currere    = _currere;
+sutura-&gt;meminisse  = NIHIL;         /* optional: no memory */</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/aedilis.html">aedilis</a>: files are read only through an <code>AedilisExtractor</code>; silva in <code>bin/aedilis</code>, fixture tables in tests.</li>
+<li><a href="bibliothecae/fabrica.html">fabrica</a>: disk, processes and memory only through a <code>FabricaSutura</code>.</li>
+<li><a href="bibliothecae/specimen.html">specimen</a>: <code>specimen_iudicare</code> takes an image and returns a verdict without opening a window, so it can be tested with made-up images; <code>specimen_manus</code> is the thin layer that captures.</li>
+<li><a href="bibliothecae/natura.html">natura</a>: the caller reads the files; the library only parses and links what it is given.</li>
+<li><a href="bibliothecae/persistentia.html">persistentia</a>: storage behind an interface of four function pointers, with an in-memory implementation for tests.</li>
+<li><a href="bibliothecae/provenientia.html">provenientia</a>: the provenance report is passed in as an argument, not looked up by the library.</li>
+<li><a href="bibliothecae/eventus.html">eventus</a> and <a href="bibliothecae/tabula_pixelorum.html">tabula_pixelorum</a>: the same pattern at the level of headers. Both were cut out of <a href="bibliothecae/fenestra.html">fenestra</a> on 2026-10-01: the vocabulary (events, pixels) in pure headers, the window and Cocoa behind them. The interaction core and the rasterizers now build and test with no window at all. Here the split is <em>checked by a tool</em>: a header marked <code>&lt;aedilis nexus="purus"/&gt;</code> makes aedilis refuse any link closure that pulls in a framework, so the purity cannot quietly erode.</li>
+<li><a href="bibliothecae/dispensator.html">dispensator</a>: the whole event loop of a ludus program (derive, target, act, recompose) runs with no window; the program's view arrives as a <code>Componere</code> function pointer, the targeting as a swappable <code>DestinatioStrategia</code>. <a href="bibliothecae/ludus_fenestra.html">ludus_fenestra</a> is the thin shell, and the only part that sees a window or a clock.</li>
+<li><a href="bibliothecae/http.html">http</a>'s server-side parser takes bytes and returns a request (or "need more"), never touching a socket, the sans-I/O form below; <a href="bibliothecae/router.html">router</a> is a pure matcher from method and path to an opaque datum. <a href="bibliothecae/hospitium.html">hospitium</a> is the only part that owns sockets.</li>
+<li><a href="bibliothecae/imago_collatio.html">imago_collatio</a>: takes two images, returns a verdict; it reads and writes no file, because "a test that does not touch the environment cannot lie about it". <a href="bibliothecae/imago_png.html">imago_png</a> likewise splits a pure <code>codificare</code> from the convenience that writes.</li>
+<li><a href="bibliothecae/internuntius.html">internuntius</a>: RPC whose only output is one sender callback; WebKit (vitrea), HTTP (<a href="bibliothecae/vitrea_servus.html">vitrea_servus</a>) and a test's captured list are three implementations of the same seam, so one app is a window or a server unchanged. <a href="bibliothecae/villa_lectores.html">villa_lectores</a>: "nothing here touches the network: a string goes in, a struct comes out".</li>
+<li><a href="bibliothecae/vim.html">vim</a>, from the first generation: "state in, state out (a pure function), no dependency on windowing or drawing, easy to test without a GUI"; the editor's key handling is tested on grids built from strings.</li>
+<li><a href="bibliothecae/tessellatio.html">tessellatio</a>: the caller supplies the output grid; no state, no dependency on the terminal library that displays it.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>SQLite's VFS.</strong> All of SQLite's contact with the operating system goes through a structure of function pointers (<code>sqlite3_vfs</code>: open, read, write, lock, sleep, time). Ports supply one, and SQLite's own tests use VFS layers that inject faults, which is how a database engine gets tested against crashes and full disks. The closest relative in C, and SQLite is already the house's one vendored library.</li>
+<li><strong>Lua's embedding API.</strong> The interpreter does no I/O and no allocation of its own choosing: <code>lua_newstate</code> takes an allocator function, and <code>lua_load</code> takes a reader function that hands it chunks of source. The host decides where memory and code come from.</li>
+<li><strong>Allocator hooks in C libraries</strong> (cJSON's <code>cJSON_InitHooks</code>, the stb libraries' <code>STBI_MALLOC</code> macros): the narrowest form of the pattern, a seam for memory only.</li>
+<li><strong>Ports and adapters</strong> ("hexagonal architecture", Alistair Cockburn, mid-2000s): the application core talks to the world only through ports, and adapters plug real or test implementations into them.</li>
+<li><strong>Functional core, imperative shell</strong> (Gary Bernhardt's "Boundaries" talk, around 2012): decisions in pure functions, effects in a thin shell around them. specimen's split of <code>iudicare</code> and <code>manus</code> is exactly this.</li>
+<li><strong>Sans-I/O protocol libraries</strong> (in Python, h11 and h2): a protocol as a state machine that consumes bytes and emits events and bytes, never touching a socket; any I/O framework can drive it.</li>
+<li><strong>Elm's update function and its commands</strong>: state' = update(message, state), with effects returned as data for the runtime to perform. The house's actor vision (<a href="visiones/exemplar.html">Exemplar programmandi</a>, A3: effects only through servants) is this pattern at the scale of a whole program.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When the input or output is the whole job: a library such as
+<a href="bibliothecae/via.html">via</a>, whose <code>via_existit</code>
+asks the file system a question, gains nothing from a seam. And a seam
+has a cost: one more structure to keep in step with the engine, as
+fabrica's note about a member added later and left unset (a bus error)
+shows. A seam with one implementation and no test that uses a fake is
+indirection without its benefit.</p>
+
+
+<h2>Recusare clamose</h2>
+<p class="subtitulus">Refuse loudly, and name the cause</p>
+
+<h3>Context</h3>
+<p>A library that produces something others will trust: a parsed
+value, an identity, a verdict, a message on a channel.</p>
+
+<h3>Problem</h3>
+<p>A quiet fallback looks like success. A wrapped integer, a guessed
+dependency, a key made from a predictable fallback, a test that created
+its own reference: each is wrong in a way no one sees until much
+later, and a check that never fails is trusted while it tests nothing.</p>
+
+<h3>Solution</h3>
+<p>When the honest answer is "I cannot", say so: no partial result, and
+a cause that names what went wrong and where. Prefer an error to a
+plausible guess.</p>
+
+<h3>In the code</h3>
+<p>From <code>lib/json.c</code>, reading an integer. Before September's
+audit, an integer past 64 bits silently wrapped (9223372036854775808
+became −2⁶³); now the digits are accumulated with an overflow guard, and
+the caller is told:</p>
+<pre><code>cifra = (i64)(c - '0');
+si (quantitas &gt; (limes - cifra) / X)
+{
+    redde FALSUM;      /* extra s64: vocans refutat */
+}
+quantitas = quantitas * X + cifra;</code></pre>
+<pre><code>si (!_parse_integer(num_str, &amp;n))
+{
+    _parser_error(parser,
+        "Integer extra s64 (-2^63 .. 2^63-1)");
+    redde NIHIL;
+}</code></pre>
+<p>And from <code>include/moneta.h</code>, the same idea as a written
+reason, deciding where a fallback is allowed and where it is not:</p>
+<pre><code>/* Cur sine reservo, cum moneta_ulid reservum habeat: ULID
+ * UNICITATEM poscit, quam miscela temporis praestare potest;
+ * SECRETUM impraevisibilitatem poscit, quam praestare NON potest.
+ * Reservum tacitum hic clavem divinabilem pareret - defectus
+ * qui ut successus spectat. */</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/json.html">json</a>: integers outside 64 bits, <code>1e400</code>, duplicate keys and text after the root value are refused, with line and column, rather than wrapped, rounded or ignored.</li>
+<li><a href="bibliothecae/moneta.html">moneta</a>: secrets and nanoids never fall back to time mixing; ULIDs may, because they need only uniqueness.</li>
+<li><a href="bibliothecae/aedilis.html">aedilis</a>: "precision or silence": no partial closure, the cause named.</li>
+<li><a href="bibliothecae/fabrica.html">fabrica</a>: never judged by modification time or by existence; an input it cannot read makes the verdict UNKNOWN, not fresh.</li>
+<li><a href="bibliothecae/specimen.html">specimen</a>: a missing reference fails, and a missing reference folder is not created.</li>
+<li><a href="bibliothecae/xar.html">xar</a>: an append past capacity is refused by name, never truncated.</li>
+<li><a href="bibliothecae/tabellarius.html">tabellarius</a>: refuses to write a line containing a raw newline, which would split one message into two.</li>
+<li><a href="bibliothecae/stml_macros.html">stml_macros</a>: some thirty named expansion errors, the first found wins; an unmatched case is an error, "never a silent empty".</li>
+<li><a href="bibliothecae/stml_html.html">stml_html</a>: what HTML cannot express is refused by name, with no partial output.</li>
+<li><a href="bibliothecae/canon.html">canon</a>: a document's embedded canon may add rules but never weaken the registry's, so a file cannot lie about its own contract (the failure of XSD's <code>schemaLocation</code>); a broken embedded canon shouts instead of silently doing nothing.</li>
+<li><a href="bibliothecae/fenestra.html">fenestra</a>: <code>fenestra_magnitudinator</code> reports the size the window actually got, not the size asked for. Test input is injected natively, as real OS events, because a JavaScript <code>dispatchEvent</code> is untrusted and does not even trigger <code>:hover</code>: a test driven that way passes while checking less than it seems to.</li>
+<li><a href="bibliothecae/insula.html">insula</a>: a write by someone who does not own the attribute is refused with the attribute, its owner and the offender named; a write that fails its canon is refused with the canon's first complaint.</li>
+<li><a href="bibliothecae/sententiae.html">sententiae</a>: an anchor whose text moved is reported as moved, never silently followed, because "an anchor that lies is worse than one that breaks"; every anomaly carries a cause that is "never empty".</li>
+<li><a href="bibliothecae/excerptum.html">excerptum</a>: spans given out of order are refused by name, not sorted quietly: "output silently permuted is worse than a named refusal".</li>
+<li><a href="bibliothecae/numerus_romanus.html">numerus_romanus</a>: "strictness is not fastidiousness": only the subtractive form is a number, because a loose reader takes DID, MILD, CIVIC and LIVID for numerals in a chapter index.</li>
+<li><a href="bibliothecae/processus.html">processus</a>: "it could not run" (a named error) is never confused with "it ran and said no" (an exit code), and a missing binary is told apart from a real exit 127.</li>
+<li><a href="bibliothecae/http.html">http</a>: since September a body shorter than its Content-Length is an error, never a short success: "a lying body is worse than an honest error". It reversed a July decision that had treated a clean EOF mid-body as the end.</li>
+<li><a href="bibliothecae/hospitium.html">hospitium</a>: a full server answers 503 at once, "a visible refusal, not a silent SYN backlog"; <a href="bibliothecae/router.html">router</a> tells "no such path" (404) from "path exists, wrong method" (405 with the allowed methods).</li>
+<li><a href="bibliothecae/vitrea_servus.html">vitrea_servus</a>: pushes cannot cross request-response HTTP, so the page's <code>audire</code> throws instead of silently never firing. <a href="bibliothecae/imperium.html">imperium</a>: an unknown key name gets a 400, "not a lying 202". <a href="bibliothecae/villa_lectores.html">villa_lectores</a>: a socket path too long for macOS is refused, because ssh would otherwise fall back to slow full handshakes without saying so.</li>
+<li><a href="bibliothecae/machina.html">machina</a>: when the machine's identity cannot be found the answer is empty, never a constant such as "unknown", which would pour every machine's measurements into one bucket while appearing to work. <a href="bibliothecae/paginatio.html">paginatio</a>: "12a" and "p. 12" are refused, because a loose reading would file a page in the wrong order and tie a note to the wrong place.</li>
+<li><a href="bibliothecae/actio.html">actio</a>: names resolve both ways. An action named in the tree with no handler is an error, and a handler no one names is a warning, so a typo in markup cannot become a button that silently does nothing.</li>
+<li><a href="bibliothecae/manus_ludus.html">manus_ludus</a>: a malformed selector names its cause, and a press on a selector that matched nothing keeps the stage that failed, so a test failure says <em>why</em>.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>The Unix Rule of Repair</strong> (Eric Raymond, <em>The Art of Unix Programming</em>, 2003): "when you must fail, fail noisily and as soon as possible."</li>
+<li><strong>The Zen of Python</strong> (PEP 20): "Errors should never pass silently. Unless explicitly silenced." The second line is the useful half: silence is allowed, but only on purpose.</li>
+<li><strong>Fail fast</strong> (Jim Shore, <em>IEEE Software</em>, 2004): a failure close to its cause is cheap to diagnose; one that surfaces later, far away, is not.</li>
+<li><strong>Design by contract</strong> (Bertrand Meyer, Eiffel): preconditions a caller must meet, checked and refused at the boundary rather than silently accommodated.</li>
+<li><strong>Erlang's "let it crash"</strong>: a process that meets a state it does not understand dies loudly, and a supervisor restarts it, rather than limping on with corrupt state.</li>
+<li><strong>Checked arithmetic</strong>, as in Rust's <code>checked_add</code>, which returns "none" on overflow instead of wrapping: json's integer guard is the same decision made by hand in C89.</li>
+<li><strong>"Parsing JSON is a Minefield"</strong> (Nicolas Seriot, 2016): a test suite showing how lenient JSON parsers silently disagree on the same input, which is the strongest case for a strict reader whose refusals are part of its contract.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>On the reading side of a protocol, leniency can serve better.
+<a href="bibliothecae/tabellarius.html">tabellarius</a> refuses what it
+<em>writes</em> but reads liberally: it skips blank lines the spec
+forbids and does not insist on the <code>"jsonrpc"</code> field. The
+line between them is whether the input is noise to tolerate or a claim
+to trust. That is <strong>Postel's principle</strong>, "be conservative in
+what you send, liberal in what you accept" (RFC 760, 1980), and its
+limits are now argued over too: <strong>RFC 9413</strong>, "Maintaining
+Robust Protocols" (2023), argues that tolerance lets peers depend on
+mistakes until the mistakes become the protocol. Read together, the two
+draw the line the house draws: tolerate noise, refuse false claims.</p>
+<p>And where nothing can be false, there is nothing to refuse.
+<a href="bibliothecae/capitula.html">capitula</a>, which reads a book's
+table of contents, never refuses, and its header says why that differs
+from sententiae: every non-empty line is a chapter, so no arrangement of
+lines contradicts itself, while two sentences claiming one address would
+make a false projection. Refusal belongs where an invariant can be
+broken.</p>
+<p>And in geometry, degrading beats refusing.
+<a href="bibliothecae/modulus.html">modulus</a> turns a cell size of zero
+into one and a negative extent into zero ("degrade, never break"),
+because those values arise naturally from clipping and transforms in the
+middle of a frame, where a refusal would only blank the screen. The
+question is the same as Postel's: is this input a false claim someone
+will trust, or a shape the world normally takes?</p>
+
+<h2>Arbor sine iactura</h2>
+<p class="subtitulus">A lossless tree: values and trivia side by side</p>
+
+<h3>Context</h3>
+<p>A parser for text that people write and tools rewrite: source code,
+configuration, documents.</p>
+
+<h3>Problem</h3>
+<p>A tree that keeps only meaning throws away the author's layout:
+spacing, comments, line breaks, the way a closing tag was written. Any
+tool that reads, edits and writes back then reformats the whole file, and
+a one-line change becomes a diff of hundreds.</p>
+
+<h3>Solution</h3>
+<p>Keep the layout in the tree as <em>trivia</em> attached to the
+values, with a rule for which node owns each run of whitespace. The
+value accessors ignore trivia; the writer stitches it back. Reading then
+writing gives the same bytes, and an edit changes only what it
+touches.</p>
+
+<h3>In the code</h3>
+<p>The ownership rule, from <code>include/stml.h</code>: whitespace
+between nodes up to and including the first newline belongs to the
+earlier node, the rest to the next one.</p>
+<pre><code>/* LEX POSSESSORIS (§1.2, e silva transcripta): cursus
+ * spatii inter nodos ad primam '\n' INCLUSIVE prioris est
+ * (spatia_post), residuum sequentis (spatia_ante) */
+chorda* spatia_ante;
+chorda* spatia_post;
+chorda* spatia_clausurae;</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/stml.html">stml</a>: <code>scribere(legere(x)) == x</code> byte for byte (after one CRLF-to-LF normalization); three text readings, from exact bytes to formatting-stable value.</li>
+<li>silva, the C89 parser: comments and whitespace are part of the tree, so any C file parses and is written back identical; the ownership rule above was taken from it.</li>
+<li><a href="bibliothecae/arbor2_glr.html">arbor2_glr</a>, silva's predecessor: every node keeps its tokens for the same round trip.</li>
+<li><a href="bibliothecae/css_lexema.html">css_lexema</a>, <a href="bibliothecae/html_lexema.html">html_lexema</a> and <a href="bibliothecae/js_lexema.html">js_lexema</a>: the strongest form of the promise, "emit(lex(x)) == x for ANY x", total over every byte sequence, with malformed input given a named kind (INCOMPLETE, PRAVUM, IGNOTUM) rather than dropped. <a href="bibliothecae/arbor2_scribere.html">arbor2_scribere</a> made the same promise for the GLR generation's trees, tested on whole files.</li>
+<li><a href="bibliothecae/arbor_lexema.html">arbor_lexema</a>, the first C lexer of all (January 2026): trivia before and after every token, "for roundtrip". Every parser generation since has kept that aim, and <a href="bibliothecae/arbor_formator.html">arbor_formator</a> already had a "faithful" mode that wrote files back byte for byte.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Roslyn</strong>, the C# compiler platform: syntax trees whose tokens carry leading and trailing trivia, so the tree is a full-fidelity image of the source; the term "trivia" comes from there.</li>
+<li><strong>rust-analyzer's rowan</strong> and <strong>Swift's libSyntax</strong>: lossless syntax trees built for IDEs and refactoring tools on the same idea.</li>
+<li><strong>Concrete syntax trees</strong> in formatting tools (Python's lib2to3 and its successors) as against abstract syntax trees, which drop layout by design.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>Machine-written data no one edits by hand: <a href="bibliothecae/json.html">json</a>
+and <a href="bibliothecae/xml.html">xml</a> keep values only, and are
+right to. Trivia costs memory and complexity in every node; it pays only
+when people's layout must survive tools.</p>
+
+
+<h2 id="proiectio-pura">Proiectio pura</h2>
+<p class="subtitulus">The source stays the truth; everything derived is a disposable projection</p>
+
+<h3>Context</h3>
+<p>Data that is written once in one form and consumed in another:
+templates and their expansions, files and their indexes, a log and its
+current state.</p>
+
+<h3>Problem</h3>
+<p>If the derived form is written back over the source, or edited in
+place, the two drift: no one knows which is right, and the derived form
+cannot be rebuilt.</p>
+
+<h3>Solution</h3>
+<p>Keep the source as the only truth. Derive everything else by a pure
+function, into a new structure, leaving the source untouched; when in
+doubt, throw the projection away and derive it again. Being able to
+rebuild it, and to check a stored copy against a fresh rebuild, is the
+whole point.</p>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/stml_macros.html">stml_macros</a>: expansion and distribution build a new tree; the file keeps its macro form and the original tree stays queryable.</li>
+<li><a href="bibliothecae/natura.html">natura</a>: the STML files are the truth, the loaded graph a projection; the loader "reads and indexes, never rewrites".</li>
+<li>The ledger: the committed JSONL journal is the truth, the <code>.db</code> a rebuildable projection.</li>
+<li><a href="bibliothecae/fabrica.html">fabrica</a> and the <code>generata</code> gate: a committed generated file is checked against a fresh regeneration, byte for byte.</li>
+<li><a href="bibliothecae/persistentia.html">persistentia</a>: events are written; current state is whatever replaying them gives.</li>
+<li><a href="bibliothecae/sententiae.html">sententiae</a>: "the book is the truth, the tree a projection"; the reader never writes, so it can be improved forever without migrating anyone's data, and anchors attach to what the author wrote, not to anything the reader generates.</li>
+<li><a href="bibliothecae/volumen.html">volumen</a>: inside one SQLite file, the event log is the truth and the manifest of files a projection rebuildable from it, "so corrupting it never loses data"; <a href="bibliothecae/mensa.html">mensa</a>'s desk state is a fold of its events.</li>
+<li><a href="bibliothecae/pictor_documentum.html">pictor_documentum</a>: a painting is its stroke log; the bitmap is a checkpoint plus the strokes after it, undo moves a cursor, and <code>pictor_documentum_verificare</code> reprojects from nothing and compares hashes.</li>
+<li><a href="bibliothecae/pictor_componentia.html">pictor_componentia</a>: the screen as a projection of state: the component tree is rebuilt from the islands after every event and never written to.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Event sourcing</strong>, and its old original, the accountant's journal: entries are never changed, balances are derived. The house's many uses have a pattern of their own: <a href="#acta-veritas">Acta veritas</a>.</li>
+<li><strong>Database views and materialized views</strong>: derived tables that can always be refreshed from base tables.</li>
+<li><strong>Build systems</strong> generally (make onward): sources in, artefacts out, artefacts disposable. Bazel's insistence on hermetic, reproducible outputs is the strict form fabrica aims at.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When deriving is expensive and rarely needed, a cache is fine, as long
+as it is treated as a cache and can still be rebuilt. And when the
+derived form is where people work (a document someone edits after
+generation), a one-way projection loses their edits; that is the
+two-way problem silva-instrumenta's vision (S17) sets out to solve.</p>
+
+
+<h2 id="tempus-in-evento">Tempus in evento</h2>
+<p class="subtitulus">Time is data in the input, never a clock call</p>
+
+<h3>Context</h3>
+<p>Logic that reacts to a stream of inputs and depends on time: double
+clicks, drags, timeouts, animation, anything that asks "how long
+since?".</p>
+
+<h3>Problem</h3>
+<p>If the logic reads the clock itself, its behaviour depends on when it
+happens to run. The same input stream gives different results on a slow
+machine, under a debugger, or in a test. A recorded session cannot be
+replayed faithfully, and a test of a double click needs real waiting or
+a mocked clock.</p>
+
+<h3>Solution</h3>
+<p>Take the time once, at the edge where the input arrives, and carry it
+inside the input as an ordinary field. Everything downstream computes
+from the times in the stream and never asks the clock. The logic becomes
+a function of its input stream, so a recorded stream replays exactly, and
+a test writes the times it wants as data.</p>
+
+<h3>In the code</h3>
+<p>The edge, from <code>lib/fenestra_macos.m</code>: every event, from
+the OS or injected, passes through one function, and a time the caller
+already set is kept:</p>
+<pre><code>/* Stampa UNICA: eventa omnia (NSEvent, immittere) hic transeunt.
+ * Tempus a vocatore datum (replay, immittere) servatur. */
+e = *eventus;
+si (e.tempus == ZEPHYRUM) { e.tempus = fenestra_tempus_ms(); }</code></pre>
+<p>Downstream, from <code>include/derivare.h</code>: double clicks and
+drags are derived from the stream, by the events' own times:</p>
+<pre><code>/* derivare.h - Derivatio eventuum PURA ex fluxu crudo
+ *
+ * Duplex ictus ex TEMPORE eventuum (numquam ex horologio) ... */</code></pre>
+<p>And the older form this replaces, from <code>lib/widget.c</code>: the
+widget manager reads the clock while dispatching, so the same clicks can
+count as a double click or not depending on when they are processed:</p>
+<pre><code>/* Detectio duplex click */
+nunc   = tempus_nunc();
+delta  = nunc - manager-&gt;tempus_ultimus_click;</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/eventus.html">eventus</a>: every <code>Eventus</code> carries <code>tempus</code> in milliseconds; on macOS it is the OS event's own timestamp, so an event read late still has the time it happened.</li>
+<li><a href="bibliothecae/fenestra.html">fenestra</a>: one stamping point for every source; replayed and injected events keep their own time.</li>
+<li><a href="bibliothecae/derivare.html">derivare</a>: double clicks and drags derived purely from the stream.</li>
+<li><a href="bibliothecae/manus_ludus.html">manus_ludus</a>: in a test, time moves only when the test says <code>manus_ludus_exspectare(m, ms)</code>, so a double click and a pause that is "just too long" are both written down, not waited for.</li>
+<li><a href="bibliothecae/sors.html">sors</a>: the same idea for randomness. A generator is a 16-byte value, seeded and derived by key, so it can travel inside an event or a test case, and a replay draws the same numbers.</li>
+<li><a href="bibliothecae/ludus_fenestra.html">ludus_fenestra</a>: the one file in the ludus stack that reads the clock, by design; everything below it is given time.</li>
+<li><a href="bibliothecae/widget.html">widget</a>, as the counter-example: the first GUI generation reads the clock in dispatch; the ludus design retires exactly that (ludus brainstorm §XIV).</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Demo recording in id Software's games</strong> (Doom, 1993): a demo is only the player's inputs, tic by tic; the game is deterministic in them, so replaying the inputs replays the game. The same property underlies <strong>lockstep networking</strong> in RTS games (Age of Empires), where peers exchange only inputs.</li>
+<li><strong>Elm and Redux time-travel debugging</strong>: when state is a fold over messages and time arrives as a message (<code>Time.every</code>), the debugger can step backwards and forwards through a session.</li>
+<li><strong>Deterministic simulation testing</strong> (FoundationDB, around 2010s): the whole database runs in a simulator where time, network and disk are inputs, so a failure found once can be replayed exactly by its seed.</li>
+<li><strong>Record and replay debuggers</strong> (Mozilla's rr): record the nondeterministic inputs of a run, system call results and timing included, and every replay is identical.</li>
+<li><strong>The clock as a dependency</strong> in testing practice (an injected <code>Clock</code> in Java's <code>java.time</code>): the same idea at its weakest, a seam for time; carrying the time in the data goes one step further, since there is then nothing to inject.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>Where the point is the current time and not the time of an input: a
+timeout that must fire when nothing arrives needs someone to look at a
+clock. The house's answer keeps even that inside the stream: the
+window loop sends the dispatcher a <em>pulse</em>, an empty event carrying
+only a time (<code>dispensator_pulsare</code>), and pulses are recorded with
+the other raw events, so quiet periods replay too. And where nothing will ever be replayed or tested by time, carrying
+a timestamp in every message is a field nobody reads. A relative of
+<a href="#machina-pura">Machina pura cum sutura</a>: the clock is part of
+the world, and this keeps it out of the engine without even a seam.</p>
+
+
+<h2 id="pictura-ut-data">Pictura ut data</h2>
+<p class="subtitulus">Drawing as data: emit a list of commands, let a backend turn it into pixels</p>
+
+<h3>Context</h3>
+<p>A program that draws: a user interface, an editor, a game. It will
+want more than one place to draw to (a window, a terminal, a test, later
+a GPU or a printed page), and its drawing code is the part most often
+changed.</p>
+
+<h3>Problem</h3>
+<p>If the drawing code writes pixels directly, it is tied to one
+surface, and the only way to test it is to compare pixels: brittle
+(antialiasing, fonts, one-pixel shifts) and silent about <em>why</em> two
+images differ. Adding a second surface means writing the drawing code
+twice.</p>
+
+<h3>Solution</h3>
+<p>Drawing code emits a list of commands (rectangle, line, text, image,
+group) and touches nothing else. Keep the list plain data: colours as
+names or roles, images as names, transforms and clips as properties of
+groups. Then one function per backend turns the list into output. The
+list can be printed, compared and stored, so a test asserts on what was
+drawn, and a new backend leaves the drawing code untouched.</p>
+
+<h3>In the code</h3>
+<p>One frame in a window, from <code>lib/ludus_fenestra.c</code>: the
+tree is painted into a command list, and the list is rasterized:</p>
+<pre><code>lf-&gt;mandata = mandata_creare(lf-&gt;piscina_quadri, lf-&gt;d-&gt;intern);
+pingere(dispensator_arbor(lf-&gt;d), lf-&gt;figurae, lf-&gt;thema,
+    lf-&gt;mandata);
+/* ... */
+delineare_mandata(lf-&gt;mandata, lf-&gt;tabula, lf-&gt;fons, lf-&gt;fons_ctx);</code></pre>
+<p>The same tree in a terminal, from tessera's
+<code>instrumenta/principalia/musivum.c</code>: the same
+<code>pingere</code>, a different backend:</p>
+<pre><code>m = mandata_creare(piscina, intern);
+pingere(radix, reg, ZEPHYRUM, m);
+/* ... */
+tessellatio_computare(scaena-&gt;mandata, &amp;modulus,
+    RUNAE_POLITICA_GRAPHEMATUM, FUNDUS, _fons, (vacuum*)imago,
+    arena,
+    cellulae);</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/mandatum.html">mandatum</a>: the list: six primitives; only groups nest, so clip and transform cannot be pushed without being popped; STML serialization and <code>mandata_aequalia</code> for tests.</li>
+<li><a href="bibliothecae/figura.html">figura</a>: <code>pingere</code> and every figure are pure: they write commands and nothing else.</li>
+<li><a href="bibliothecae/delineare_mandata.html">delineare_mandata</a>: backend one, pixels on the CPU.</li>
+<li><a href="bibliothecae/tessellatio.html">tessellatio</a>: backend two, terminal cells; what cells cannot express falls back to backend one and is turned into block characters.</li>
+<li>The ludus brainstorm names a GPU batcher as the third consumer: "the GPU-later seam is the command list, not the pixel table". The house's first GUI generation, <a href="bibliothecae/delineare.html">delineare</a> called directly by each view, is the immediate-mode form this replaces.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>QuickDraw pictures</strong> (Apple, 1984): a PICT was a recorded sequence of QuickDraw calls, replayed to draw it anywhere, the screen or a LaserWriter. delineare is QuickDraw-shaped and Mandata stand to it as PICT did.</li>
+<li><strong>PostScript and PDF</strong>: a page is a program or stream of drawing operators, and the device decides how to render it. Brighton's "PDF is the display list" is the same idea named from the document side.</li>
+<li><strong>Display lists</strong> in graphics hardware and APIs, from vector displays and the Atari's ANTIC to OpenGL's <code>glNewList</code>: record the drawing once, execute it many times.</li>
+<li><strong>Skia's SkPicture</strong> and <strong>Chrome's paint ops</strong>: the browser records paint commands, then rasterizes them on another thread or another process, which is the "rasterize frame N while N+1 is dispatched" option ludus_fenestra keeps open.</li>
+<li><strong>Dear ImGui's ImDrawList</strong>: an immediate-mode UI whose output is nonetheless a command list (vertices, clip rectangles, textures) that any renderer backend consumes. Immediate in the API, retained in the output.</li>
+<li><strong>Flash's display list</strong> and <strong>Processing's <code>draw()</code></strong>: the brainstorm's own references, one a retained tree, one an immediate stream, both feeding one rasterizer.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When there is only one surface, nothing to test, and drawing is the
+hot loop: the list costs memory and a second pass, and a direct
+<code>delineare</code> call is simpler. Heavy pixel work (painting,
+filters, an image editor's canvas) is pixels by nature; the list can
+carry it as an image, but should not try to describe it stroke by stroke.
+And a list is only portable if it stays plain: once commands carry pixel
+pointers or backend handles, the second backend is lost.</p>
+
+
+<h2 id="porta-unica">Porta unica</h2>
+<p class="subtitulus">One gate per kind of state, and a way to catch whoever went around it</p>
+
+<h3>Context</h3>
+<p>State that several parts of a program change: a document, a
+selection, a tool, a scroll position. Some of it must survive a restart,
+some must survive a rebuild of the screen, some only has to last for a
+drag.</p>
+
+<h3>Problem</h3>
+<p>If anyone can change state anywhere, nobody can say what the state
+is or how it got that way. A half-applied change leaves it inconsistent.
+And a write that skips the official path still <em>works</em>: the screen
+shows it, the tests pass, and it is lost the first time the state is
+rebuilt from storage.</p>
+
+<h3>Solution</h3>
+<p>Give each kind of state exactly one gate. A writer hands the gate a
+function; the gate runs it on a copy, judges the copy (schema, ownership),
+and swaps it in only if it passes, so a write is all or nothing. Keep
+what the gate last accepted, so that a later check can compare and catch
+a write that went around the gate. Separate the kinds by how often they
+change, and give each kind its own rhythm of writing.</p>
+
+<h3>In the code</h3>
+<p>The gate, from <code>lib/insula.c</code> (abridged): the duplicate
+is made by writing the live tree to text and reading it back, so a tree
+that cannot round-trip cannot be written at all:</p>
+<pre><code>textus      = stml_scribere(repo-&gt;radices[genus], p, FALSUM);
+duplicatum  = legere_in(repo, p, chorda_ut_cstr(textus, p));
+/* ... */
+fn(duplicatum, p, repo-&gt;intern, ctx);
+/* domini, then the canon: either may refuse, naming why */
+/* ... */
+repo-&gt;radices[genus]         = duplicatum;
+repo-&gt;textus_ultimus[genus]  = stml_scribere(duplicatum, p, FALSUM);
+repo-&gt;versio[genus]++;</code></pre>
+<p>And the check, from <code>insula_restituere</code>: the tree in memory
+is compared with the last text the gate accepted, then rebuilt from that
+text alone:</p>
+<pre><code>nunc = stml_scribere(repo-&gt;radices[g], p, FALSUM);
+si (!chorda_aequalis(nunc, repo-&gt;textus_ultimus[g]))
+{
+    honestum = FALSUM;
+}
+/* refacere EX TEXTU HONESTO solo */</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/insula.html">insula</a>: two kinds (durable, ephemeral), one gate each, copy-judge-swap, ownership per attribute, and the rehydration law: a difference at restore is recorded as a lie and repaired.</li>
+<li><a href="bibliothecae/motus.html">motus</a>: the third kind, motion, behind its own gate (<code>mutare_motum</code>), written to the islands only in quiet: many cheap writes per drag, one durable write when it ends. One stroke is one undo step for that reason.</li>
+<li><a href="bibliothecae/pictor_documentum.html">pictor_documentum</a>: the document's gate is <code>pictor_documentum_actum</code>; <a href="bibliothecae/pictor_actiones.html">pictor's handlers</a> write only through the three gates.</li>
+<li>The ledger: <code>tabularium.jsonl</code> is written only through the tabularii tools (or <code>frigida.sh</code> when the server is down), never by hand; the <code>.db</code> is rebuilt from it.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Shadow paging and copy-on-write storage</strong> (System R, 1970s; LMDB today): write a new copy, then swap one pointer, so a crash leaves either the old state or the new, never half.</li>
+<li><strong>Redux reducers and Elm's update</strong>: the only way to change state is to send a message to one function; a write elsewhere is a bug that the tooling (Redux's development checks for mutation) is built to catch.</li>
+<li><strong>Clojure's atoms</strong>: <code>swap!</code> applies a function to the current value and installs the result atomically, with optional validators that can refuse it: the closest relative of <code>mutare_*</code>.</li>
+<li><strong>Database transactions with constraints</strong>: a write either satisfies the schema and commits, or is rolled back with the violated constraint named. The canon plays the part of the constraints.</li>
+<li><strong>The single writer principle</strong> (Martin Thompson, the LMAX Disruptor): one owner per piece of data removes contention; insula's owner table is that rule applied per attribute, checked at the gate.</li>
+<li><strong>Debouncing and autosave on idle</strong>, for the motion kind: editors write when typing pauses, not per keystroke.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>Local, short-lived values inside one function need no gate. Copying
+the whole state per write is fine for small trees (pictor's islands) and
+wrong for large ones: a large document needs a gate that applies a
+change to a log (as pictor_documentum does) rather than a gate that copies
+a tree. And the lie check only catches lies about state the gate keeps;
+the house's answer for code that writes outside the gate is a lint (the
+ludus brainstorm's L1), not this pattern.</p>
+
+
+<h2 id="oraculum-alienum">Oraculum alienum</h2>
+<p class="subtitulus">Check the implementation against an oracle you did not write</p>
+
+<h3>Context</h3>
+<p>A library that implements a standard or reproduces an existing
+program's behaviour: Unicode properties, a configuration format, a shell
+grammar, a C parser. The house writes its own, so there is always an
+older implementation somewhere that already gives the answers.</p>
+
+<h3>Problem</h3>
+<p>Tests written by the same mind that wrote the code share its
+misreadings. If the specification was misunderstood, the code and its
+tests agree with each other and both are wrong, and every check stays
+green.</p>
+
+<h3>Solution</h3>
+<p>Find an independent source of answers (another implementation, the
+standard's own conformance file) and compare against it over the whole
+input space if it is finite, or over a large corpus if not. Freeze the
+oracle's answers into a committed file (an <em>aurum</em>), so the
+permanent test needs no oracle installed; rerun the oracle only when the
+pinned version changes. Pin the oracle's version, and refuse to run
+against a different one.</p>
+
+<h3>In the code</h3>
+<p>From <code>probationes/probatio_runae.c</code>: two derivations
+that share nothing (our tables from the Unicode data files, the aurum
+from ICU's properties) must agree on every codepoint:</p>
+<pre><code>/* AURUM ORACULI (U3): probationes/fixa/runae/aurum_icu.txt, latitudo
+ * cuiusque codicis per ICU4C (tools/runae_oraculum.sh -aurum) ...
+ * derivationes independentes, in omni codice aequales esse debent. */
+/* ... */
+si ((s32)runae_latitudo(runa) != latitudo)
+{
+    imprimere("  FRACTA: U+%04X runae %u, aurum %u "
+        "(intervallum U+%04X..U+%04X)\n", /* ... */</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/runae.html">runae</a>: ICU4C 74.2, opened with <code>dlopen</code> by symbol name (its headers fail the house's C89 flags), agrees on all 1,114,112 codepoints; the Unicode consortium's own <code>GraphemeBreakTest.txt</code> passes 1,187 of 1,187. A third source, OpenTUI's width map, is compared too, and its differences are recorded as named policies rather than errors.</li>
+<li>crusta, the bash parser: checked against bash 5.2 itself.</li>
+<li>materia and silva: <code>materia/oraculum_probare.sh</code> compares against the parser as it was at a pinned commit (7a4847b0), so a change in behaviour has to be explained.</li>
+<li>The TOML client: its aurum came from Python's <code>tomllib</code>.</li>
+<li><a href="bibliothecae/qr.html">qr</a>: macOS's CoreImage, a decoder the house did not write, reads back every generated code. Before that round trip existed, 66 structural tests passed on codes that no phone could read.</li>
+<li><a href="bibliothecae/villa_lectores.html">villa_lectores</a>: "the fixtures are the specification": real output captured twice from a Debian server and compared byte for byte, rather than the format as the authors imagined it.</li>
+<li><a href="bibliothecae/quadrans.html">quadrans</a>: the algorithm was read from OpenTUI's source, and every deliberate difference from it is listed; the error of the house's colour choice against OpenTUI's is a committed aurum.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Differential testing</strong> (William McKeeman, "Differential Testing for Software", 1998): run several implementations on the same input and treat any disagreement as a bug in at least one of them. Csmith (2011) found hundreds of bugs in GCC and LLVM this way.</li>
+<li><strong>SQLite's sqllogictest</strong>: millions of queries whose expected results came from other database engines, frozen into files that SQLite is checked against: an aurum on a large scale.</li>
+<li><strong>Conformance suites</strong>: Unicode's test files, the W3C's web platform tests, toml-test. The standard's authors write the oracle so that implementers do not grade their own work.</li>
+<li><strong>Golden files</strong> (snapshot testing): freeze a trusted output and compare against it. The house's version adds the requirement that the trusted output came from somewhere else.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When there is no independent oracle: a new design (ludus, insula)
+has no older implementation to agree with, and its tests have to be
+designed some other way, with plants and invariants. And an oracle is not
+the truth: where it differs on purpose, as Terminal.app does from Ghostty
+on joined emoji, the difference becomes a named policy, not a bug to fix
+in either. Ask what the oracle forgives, too: a check that never fails
+may be comparing only what both sides happen to agree on.</p>
+
+
+<h2 id="dilatio-nominata">Dilatio nominata</h2>
+<p class="subtitulus">Freeze the interface, ship the simple body, name the better one</p>
+
+<h3>Context</h3>
+<p>A library where a better algorithm is known but not needed yet: a
+smarter diff, an optimal alignment, more of a standard.</p>
+
+<h3>Problem</h3>
+<p>Doing the best version first costs time that may never pay back.
+Doing the simple version silently leaves the next reader unsure whether
+it was a choice or an oversight, and tempts a later change to alter the
+interface when the better algorithm arrives.</p>
+
+<h3>Solution</h3>
+<p>Get the interface right first, since it is what is expensive to
+change, and make it wide enough for the better body. Ship the simple
+body. Write the better one down by name, in the header, as a deferral:
+"under the same API". Where the simple body has a limit, cap it openly
+and keep the invariants, giving up only the optimality.</p>
+
+<h3>In the code</h3>
+<p>From <code>include/differentia.h</code>:</p>
+<pre><code>/* ALGORITHMUS: Myers O(ND) - scriptum editionis MINIMUM. Consilium
+ * Eskilianum: API congelata, corpus mutabile - patience/histogram
+ * (saepe legibilior in codice) postea sub eadem API poni possunt.
+ * Tectum pragmaticum: differentia media maior MMXLVIII gradibus
+ * scriptum TRIVIALE accipit (DELETA omnia + ADDITA omnia) -
+ * invarians servatur, minimalitas non ... */</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/differentia.html">differentia</a>: Myers now; patience or histogram later under the same API; past 2048 steps, a trivial script that keeps the invariant.</li>
+<li><a href="bibliothecae/similitudo.html">similitudo</a>: greedy left-to-right matching now; optimal alignment by dynamic programming "a named deferral, the API would stay unchanged".</li>
+<li><a href="bibliothecae/runae.html">runae</a>: width first; grapheme breaks, normalization, case, line breaking and bidi are listed in the header as what comes here "when pulled", and locale is named as what never will.</li>
+<li><a href="bibliothecae/imago_png.html">imago_png</a>: no PNG filters yet (bigger files, much smaller code); adding them "is a change of implementation only", with Eskil's rule cited by name. <a href="bibliothecae/icones.html">icones</a> makes its one cropping mode an enumeration of one value, so the parked modes arrive without a new signature.</li>
+<li><a href="bibliothecae/manus_ludus.html">manus_ludus</a>: unifying it with the out-of-process manus as a second transport is "a named deferral".</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Eskil Steenberg</strong>'s advice, which the house follows by name: get the API right early; the implementation can always be improved later, the interface is what hurts to change.</li>
+<li><strong>"Make it work, make it right, make it fast"</strong> (attributed to Kent Beck) and Ken Thompson's "when in doubt, use brute force".</li>
+<li><strong>Gall's law</strong> (John Gall, <em>Systemantics</em>, 1975): a complex system that works evolved from a simple system that worked.</li>
+<li><strong>TODO comments</strong>, as the anti-pattern this improves on: a deferral that names the algorithm, the reason and the interface it will live under is a decision; a bare TODO is not.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When the simple body is wrong rather than slow or approximate: a
+deferral is for optimality and scope, never for correctness. And when the
+interface itself is not yet understood, freezing it early fixes the
+mistake in place; then the honest move is a smaller interface, not a
+deferral.</p>
+
+
+<h2 id="rubra-nata">Rubra nata</h2>
+<p class="subtitulus">A check is not trusted until it has been seen to fail</p>
+
+<h3>Context</h3>
+<p>Any test, gate or verifier: a probatio, a commit gate, an oracle
+comparison, a lint.</p>
+
+<h3>Problem</h3>
+<p>A check that cannot fail looks exactly like a check that passes. A
+test whose input file moved asserts nothing and reports green; a gate
+whose pattern no longer matches anything stays silent; a comparison
+against an empty reference agrees with everything. Each is trusted while
+it tests nothing.</p>
+
+<h3>Solution</h3>
+<p>Make every check prove it can fail. When it is written, plant the
+fault it exists to catch, a fault that still <em>compiles</em>, watch it
+go red, then revert and watch it go green; record both. And make
+"nothing was checked" a failure in its own right, not a pass.</p>
+
+<h3>In the code</h3>
+<p>From <code>lib/credo.c</code>: a test that made no assertion does
+not pass:</p>
+<pre><code>/* Nihil probatum = NON praeteritum. Probatio quae nullam
+ * assertionem fecit (corpus absens, plica mota, gyrus qui nihil
+ * invenit) viridis erat quia fractae nullae - lumen viride,
+ * nihil visum (2026-09-02). */
+si (_credo_numerus == ZEPHYRUM)
+{
+    redde FALSUM;
+}</code></pre>
+<p>And the record a plant leaves, from <code>lib/insula.worklog.md</code>:</p>
+<pre><code>Gate: `probatio_insula` (49). Planted fault: mendacium detection
+inverted → red at the `CREDO_FALSUM(insula_restituere)` of the lying
+writer, green on revert.</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/credo.html">credo</a>: "NIHIL PROBATUM" is a failure; <code>CREDO_CULPA</code> counts an early exit as a failure, so the summary and the exit code always agree.</li>
+<li>The worklogs and phase-logs: planted faults are recorded in dozens of them (insula, actio, manus_ludus, runae, eventus…), each with the line that went red and the revert that went green.</li>
+<li><a href="bibliothecae/runae.html">runae</a>: the oracle check was first run against an <em>empty</em> aurum file, which had to fail for lack of coverage, before the real one was committed.</li>
+<li>The commit gates: the house's tool doctrine says a gate is born red by a plant, and a silent gate is a dead gate.</li>
+<li><a href="bibliothecae/qr.html">qr</a>, another counter-example: 66 tests checked the structure of the codes and all passed while every version from 4 up was unreadable (block interleaving was missing). A check that only looks at the shape of the output cannot see that the output is useless.</li>
+<li>The counter-example that taught it again, from <a href="bibliothecae/tls.html">tls</a>: HTTPS bodies came back truncated, as success, for weeks; "the live gate only asserted <code>totalis &gt; 0</code>, so it could not see it". The fixed gate pulls 64 KB and asserts the body equals its Content-Length and the loop ends on a clean EOF; the plant (the old behaviour) went red three runs out of three.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Red, green, refactor</strong> (test-driven development, Kent Beck): a test is written to fail first, so its passing means something.</li>
+<li><strong>Mutation testing</strong> (DeMillo, Lipton and Sayward, "Hints on Test Data Selection", 1978; tools such as PIT and mutmut): change the program in small ways and see whether any test notices. A plant is a hand-chosen mutant.</li>
+<li><strong>Fault injection</strong> (SQLite's malloc and I/O failure tests, Netflix's Chaos Monkey): cause the failure on purpose to show that the handling exists.</li>
+<li><strong>"Who watches the watchmen"</strong>: the old question, answered here by making each watcher demonstrate once that it can see.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>A plant has to be a fault that compiles and runs; one that breaks the
+build proves only that the compiler works. Some checks cannot be made to
+fail cheaply (a property that holds on all inputs by construction); then
+say so in the record rather than skipping the plant silently. And a plant
+proves the check can fail <em>once</em>, on that fault: it is evidence,
+not a guarantee for every fault.</p>
+
+
+<h2 id="cur-exsistit">Cur exsistit</h2>
+<p class="subtitulus">Write down why it exists, next to the thing itself</p>
+
+<h3>Context</h3>
+<p>A function, option or rule that looks unnecessary, overcautious or
+oddly specific, and that a later reader, human or model, will be tempted
+to simplify away.</p>
+
+<h3>Problem</h3>
+<p>The reason something exists is usually an incident: a bundle that
+would not launch, a deletion that followed a symlink out of the tree, a
+test that went green on nothing. The incident lives in a commit message
+or a conversation nobody will read. Without it, the careful version looks
+like the clumsy one, and the next cleanup reintroduces the bug.</p>
+
+<h3>Solution</h3>
+<p>Put the reason in the header, next to the declaration: a short
+<em>CUR EXSISTIT</em> ("why it exists") or <em>CUR NON</em> ("why not the
+obvious way") paragraph naming the failure it prevents, specifically
+enough that the reader can see it would happen again.</p>
+
+<h3>In the code</h3>
+<p>From <code>include/filum.h</code>:</p>
+<pre><code>/* Ponere modum fili (chmod)
+ *
+ * CUR EXSISTIT: filum_copiare ansa octetorum nuda est, ergo modum NON
+ * servat - binarium in fasciculum .app copiatum non exsecutabile
+ * caderet, et fasciculus sine bite +x duplici ictu sine ulla diagnosi
+ * deficit (fasciculum-spec par. VII.1). */</code></pre>
+<pre><code>/* Delere ARBOREM directorii (rm -r) SINE nexibus symbolicis sequendis.
+ *
+ * CUR NON directorium_ambulare: id stat() vocat, ergo nexum ad
+ * directorium ut directorium tractat et IN EUM descendit - arbor aliena
+ * extra viam datam deleretur. Hic lstat() ... */</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/filum.html">filum</a>: chmod, mkdir -p, a mode-enforcing mkdir and the symlink-safe tree delete each carry their incident.</li>
+<li><a href="bibliothecae/processus.html">processus</a>: the incremental path exists because the house has no threads and a five-second ssh would freeze a window.</li>
+<li><a href="bibliothecae/credo.html">credo</a>: why the process assertions are statement macros, and why SIGSEGV is never caught in-process.</li>
+<li><a href="bibliothecae/sententiae.html">sententiae</a>: six measured traps a naive reader would fall into, each pinned by a test.</li>
+<li><a href="bibliothecae/moneta.html">moneta</a>: why secrets have no fallback while ULIDs do.</li>
+<li><a href="bibliothecae/volumen.html">volumen</a>: the scratch volume exists because a smoke test once left 42 greetings and 21 experiments in Fran's real volume. <a href="bibliothecae/postulata_posix.html">postulata_posix</a> records the Docker probe of two C libraries that chose its one macro, and why the stricter-looking alternatives are worse.</li>
+<li><a href="bibliothecae/atrium.html">atrium</a>: opens with the measured problem: three apps hand-copying the same 65 lines, each with a different subset of the debugging tools "by accident, not by decision".</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Chesterton's fence</strong> (G. K. Chesterton, <em>The Thing</em>, 1929): do not take down a fence until you know why it was put up. The house writes the reason on the fence.</li>
+<li><strong>Architecture decision records</strong> (Michael Nygard, 2011): context, decision and consequences, kept with the code. Cur exsistit is the same at the size of one function.</li>
+<li><strong>"Code says how, comments say why"</strong>: the common rule of thumb, here made a habit with a fixed heading.</li>
+<li><strong>Postmortems</strong>: the blameless incident write-up; the house compresses one into the paragraph that prevents a repeat.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>Ordinary code needs no defence; a header where every function has a
+paragraph of history is as hard to read as one with none. Use it where
+the obvious simplification is wrong. And a reason that is no longer true
+should be removed with the code it explains, or it becomes its own
+kind of lie.</p>
+
+
+<h2 id="vita-per-piscinam">Vita per piscinam</h2>
+<p class="subtitulus">Give memory the lifetime of a unit of work, and free it all at once</p>
+
+<h3>Context</h3>
+<p>Work that comes in units with a clear end: a request, a frame, a
+parse, a test. Inside a unit, many small allocations whose lifetimes are
+tangled but all end when the unit does.</p>
+
+<h3>Problem</h3>
+<p>Freeing each allocation separately means tracking each one: leaks
+when one is missed, crashes when one is freed twice or used after. In
+C89, with no garbage collector, that bookkeeping is most of the bugs.</p>
+
+<h3>Solution</h3>
+<p>Allocate everything for the unit from one arena (a
+<code>piscina</code>), and end the unit by resetting the arena to a mark
+taken at its start. Choose what lives <em>before</em> the mark (the
+connection itself, the document) and what lives after it (the request,
+the frame's commands). When two units overlap, as when the previous
+tree must stay valid while the next one is built, use two arenas and
+swap them.</p>
+
+<h3>In the code</h3>
+<p>From <code>lib/hospitium.c</code>: the connection is allocated
+first, then the mark; everything a request allocates comes after it.</p>
+<pre><code>conn-&gt;piscina_connexionis = p;
+conn-&gt;basis = piscina_notare(p);   /* TcpConnexio ANTE basim */
+conn-&gt;parser = http_parser_creare_cum_limitibus(
+    p, h-&gt;petitio_maxima, h-&gt;uri_maxima);</code></pre>
+<p>And at the end of each request, only after the response has been
+written, since the response lives in the same arena:</p>
+<pre><code>piscina_reficere(conn-&gt;piscina_connexionis, conn-&gt;basis);
+conn-&gt;parser = http_parser_creare_cum_limitibus(
+    conn-&gt;piscina_connexionis, h-&gt;petitio_maxima, h-&gt;uri_maxima);</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/piscina.html">piscina</a>: the arena itself, with marks to reset to; nearly every house function takes one.</li>
+<li><a href="bibliothecae/hospitium.html">hospitium</a>: one arena per connection, reset per request; the parser is re-created rather than reset, because a reset parser would point into memory just reclaimed.</li>
+<li><a href="bibliothecae/ludus_fenestra.html">ludus_fenestra</a>: one arena per frame for the painted command list, emptied at the start of the next frame.</li>
+<li><a href="bibliothecae/dispensator.html">dispensator</a> and <a href="bibliothecae/insula.html">insula</a>: two arenas in ping-pong, so the previous tree stays readable while the next is built.</li>
+<li><a href="bibliothecae/sententiae.html">sententiae</a>: every string returned is copied into the caller's arena, so nothing points into a source buffer that may live in a shorter-lived arena.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Apache's memory pools</strong> (APR, late 1990s): a pool per request and per connection, destroyed when it ends: the same design as hospitium's.</li>
+<li><strong>Region-based memory management</strong> (Tofte and Talpin, 1994; the ML Kit): regions inferred by the compiler, with the same insight that lifetimes come in nested groups.</li>
+<li><strong>Per-frame allocators in game engines</strong>, and the Handmade community's arenas (Casey Muratori; Ryan Fleury's "Untangling Lifetimes: The Arena Allocator", 2022), the direct influence on piscina.</li>
+<li><strong>Double buffering</strong>, in graphics and elsewhere: one buffer is read while the other is written, then they swap.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>Data that outlives every unit and changes in place (a cache, a
+long-lived index) needs another strategy; resetting under it is a
+use-after-free with extra steps. Order matters: whatever must survive
+the reset has to be allocated before the mark, and anything that points
+into the arena (a parser's buffer, a response not yet written) must be
+finished or re-created before the reset. hospitium's worklog records both
+orders as the load-bearing part of its design.</p>
+
+
+<h2 id="caput-solius-typi">Caput solius typi</h2>
+<p class="subtitulus">Put a shared type in a header of its own, so including it pulls nothing in</p>
+
+<h3>Context</h3>
+<p>A type that many libraries need (an image, an event, a pixel buffer)
+whose header also declares functions with a heavy implementation behind
+them: a decoder, a windowing framework.</p>
+
+<h3>Problem</h3>
+<p>In C, including a header is a promise to link what it declares. A
+library that only <em>names</em> the type, to write it or compare it,
+ends up depending on everything the header's functions need. The cost is
+invisible at the include line and shows up far away, as a vendored
+decoder or a framework inside the build of every application.</p>
+
+<h3>Solution</h3>
+<p>Move the type into a header that declares the type and nothing that
+needs an implementation. Libraries that only need the type include that
+header. Then check the result with the build tool rather than by reading
+includes: compute the closure and look at what is in it.</p>
+
+<h3>In the code</h3>
+<p>From <code>include/imago_typus.h</code>:</p>
+<pre><code>/* CUR SEPARATIM: typus decodificatorem trahere non debet. Qui
+ * imaginem SCRIBIT (imago_png) aut CONFERT (imago_collatio) typo
+ * eget, stb_image non eget.
+ *
+ * MENSURATUM 2026-08-13: cum hic typus in imago.h solo habitaret,
+ * vitrea (quae imago_png includit) lib/imago.c ET vendor/stb_image.h
+ * in clausuram OMNIS applicationis trahebat ...
+ *
+ * Caput sine plagula implementi nihil trahit - id est totum consilium. */
+nomen structura {
+     i8* pixela;       /* RGBA datum (IV bytes per pixelum) */
+    i32  latitudo;
+    i32  altitudo;
+} Imago;</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/imago_typus.html">imago_typus</a>: split from imago.h; measured with <code>bin/aedilis --partes</code> on forum, whose vendored code went from one to none.</li>
+<li><a href="bibliothecae/fenestra_tempus.html">fenestra_tempus</a>: the clock, split from fenestra.h on the same day; before, reading the time linked the whole Cocoa window into lib/tempus.c.</li>
+<li><a href="bibliothecae/eventus.html">eventus</a> and <a href="bibliothecae/tabula_pixelorum.html">tabula_pixelorum</a>: split from fenestra.h so that pure code links no Cocoa, and marked <code>&lt;aedilis nexus="purus"/&gt;</code> so the build tool refuses any regression.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>John Lakos, <em>Large-Scale C++ Software Design</em></strong> (1996): physical design, levelization, and the observation that an include is a dependency whether or not anything is called.</li>
+<li><strong>Forward-declaration headers</strong>, such as C++'s <code>&lt;iosfwd&gt;</code>: the types of the streams library without the streams library.</li>
+<li><strong>The interface segregation principle</strong> (Robert C. Martin): no client should be forced to depend on what it does not use.</li>
+<li><strong>Plan 9's include discipline</strong> (Rob Pike's "Notes on Programming in C", 1989): headers should not include other headers, so dependencies stay visible at the use site.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When every user of the type also uses its functions, a separate
+header is one more file for nothing. And the split only helps if it is
+checked: an include added later to the type-only header quietly
+restores the old closure, which is why the house measures closures with
+aedilis and marks the pure headers so that the check is automatic. A
+relative of <a href="#machina-pura">Machina pura cum sutura</a> at the
+level of files.</p>
+
+
+<h2 id="exspectatio-non-somnus">Exspectatio, non somnus</h2>
+<p class="subtitulus">Wait for a condition, never for a length of time</p>
+
+<h3>Context</h3>
+<p>A test, or any caller, that acts on something asynchronous: a user
+interface that updates later, a server that comes up, a file another
+process writes.</p>
+
+<h3>Problem</h3>
+<p>The easy fix is a sleep: wait 200 ms, then check. It passes today,
+on this machine, and fails tomorrow on a loaded one, for code that did
+not change. A suite that does this teaches everyone to distrust it.
+Checking from outside in a loop has its own flaw: a state that appears
+and vanishes between two polls is never seen.</p>
+
+<h3>Solution</h3>
+<p>Do not offer a sleep at all. Express every wait as a condition and a
+deadline, and evaluate the condition where the change happens, so
+nothing slips between looks. Make assertions themselves wait until true
+or the deadline passes, so there is never a reason to write a sleep. And
+keep a second, slightly longer deadline outside, in case the thing being
+waited on is itself stuck.</p>
+
+<h3>In the code</h3>
+<p>From <code>include/manus.h</code>:</p>
+<pre><code>/* ERGO: nulla functio huius bibliothecae somnum praebet. Non quia
+ * oblitus sum: quia si somnus commode scribi potest, aliquis eo
+ * utetur. Consilium est, non omissio.
+ * ...
+ * CREDO_MANUS_* non semel interrogant: exspectant donec verum sit
+ * aut terminus transeat. Hoc est quod somnum SUPERVACUUM facit -
+ * non solum vetitum. */
+CREDO_MANUS_TEXTUS(m, "#titulus", "Laboratorium 0001");</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/manus.html">manus</a>: no sleep function; waiting happens in the page as a promise that resolves on the condition or the deadline; assertions wait; an outer deadline guards against a hung page.</li>
+<li><a href="bibliothecae/imperium.html">imperium</a>: promises returned by the page are awaited, because returning <code>null</code> for every asynchronous operation would make tests "green and lying".</li>
+<li><a href="bibliothecae/manus_ludus.html">manus_ludus</a>: the in-process form needs no waiting at all, because time advances only when the test says so; see <a href="#tempus-in-evento">Tempus in evento</a>.</li>
+<li><a href="bibliothecae/credo.html">credo</a>: <code>CREDO_NON_PENDET</code> turns "this does not hang" into an assertion with a deadline.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>Martin Fowler, "Eradicating Non-Determinism in Tests"</strong> (2011): asynchronous behaviour is the commonest source of flaky tests, and fixed sleeps are the commonest wrong cure; wait for a signal or poll a condition with a timeout.</li>
+<li><strong>Auto-waiting in browser test tools</strong> (Capybara's matchers, Playwright's locators and web-first assertions): actions and assertions retry until the element is ready or a timeout passes, so sleeps are rarely needed.</li>
+<li><strong>Condition variables</strong> in concurrent programming: wait on a predicate, re-check it on wake, never assume that time passing means the state changed.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When the thing under test is time itself (a timeout, a debounce),
+the right tool is control over the clock, not waiting:
+<a href="#tempus-in-evento">Tempus in evento</a>. And a condition with
+no deadline is a hang waiting to happen; every wait needs both.</p>
+
+
+<h2 id="acta-veritas">Acta veritas</h2>
+<p class="subtitulus">Event sourcing: the log of what happened is the truth; current state is a fold of it</p>
+
+<h3>Context</h3>
+<p>Data that changes over time and whose history matters: a document
+being edited, a ledger of decisions, a desk of cards, a build's
+measurements. Someone will want to undo, audit, replay, or ask "how did
+it get like this?".</p>
+
+<h3>Problem</h3>
+<p>If each change overwrites the stored state, the history is gone the
+moment it happens. Undo needs a separate mechanism that can drift from
+the real one; a bug that corrupted the state cannot be traced or
+repaired, and two copies of the state cannot be reconciled because
+neither knows how it was reached.</p>
+
+<h3>Solution</h3>
+<p>Store the events, append-only, and never change them. Compute the
+current state by folding the events in order; keep that state as a
+cache that can be thrown away. Undo becomes a cursor into the log, not a
+second system. To keep replay cheap, store checkpoints (a snapshot at an
+event number) and replay only the events after the nearest one. To keep
+the log honest, never truncate it: a new branch after an undo is itself
+an event.</p>
+
+<h3>In the code</h3>
+<p>From <code>include/pictor_documentum.h</code>, the whole pattern in
+one comment: the log is the truth, the bitmap a projection, undo a cursor,
+a branch an event, checkpoints by content hash, and verification by
+replaying from nothing:</p>
+<pre><code>/* Veritas est ACTA (volumen: solum-appende); proiectio (bitmap) est
+ * derivata: checkpoint proximus + acta post eum. Undo/redo = cursor
+ * in memoria; ictus novus post revocationem RAMUM appendit
+ * (&lt;ramus ab="seq"/&gt;): acta inter ab et ramum mortua sunt - cauda
+ * numquam truncatur, historia numquam mentitur. Checkpoint omni
+ * intervallo: massa (pixela RGBA) sigillo addressata + plagula
+ * 'checkpoint/&lt;seq&gt;' -&gt; sigillum hex. Gradus VIII: verificare =
+ * reproicere ex nihilo et sigilla conferre. */</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><a href="bibliothecae/persistentia.html">persistentia</a>: the store of events behind a small interface (append, read all for replay), with memory and file implementations; <a href="bibliothecae/entitas_repositorium.html">entitas_repositorium</a>'s one implementation rebuilds the first generation's entity graph from it.</li>
+<li><a href="bibliothecae/volumen.html">volumen</a>: a document as one SQLite file whose truth is an append-only table of events, with content-addressed blobs and a manifest that is only a projection.</li>
+<li><a href="bibliothecae/pictor_documentum.html">pictor_documentum</a>: a painting as its strokes, as quoted above.</li>
+<li><a href="bibliothecae/mensa.html">mensa</a>: a desk of cards whose state is a fold of its events by id, a delete being one more event; "event-sourced, so history and undo come for free later".</li>
+<li>The ledger itself: <code>gesta/annales/tabularium.jsonl</code> is the committed log, the <code>.db</code> a projection rebuilt from it, and every write goes through the tools that append.</li>
+<li><a href="bibliothecae/mensura.html">mensura</a>: measurements appended to a plain journal while a build runs, folded into a volume when it ends.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>The accountant's journal</strong> (double-entry bookkeeping, set down by Luca Pacioli in 1494): entries are never erased; a mistake is corrected by a further entry, and balances are derived from the journal.</li>
+<li><strong>Write-ahead logs</strong> in databases (and SQLite's own WAL, under volumen): the log is written first and the tables are, in a sense, a cache of it; recovery replays the log.</li>
+<li><strong>Event Sourcing</strong> as named by Martin Fowler (2005) and developed by Greg Young with CQRS; <strong>Apache Kafka</strong>'s log as a system's backbone; <strong>Datomic</strong>, a database of immutable facts with time as a first-class dimension.</li>
+<li><strong>git</strong>: a repository is its commits; the working tree is a checkout, and a reset moves a pointer while the old commits remain.</li>
+<li><strong>Redux and Elm</strong> on the client: state as a reduction over actions, which is what makes their time-travel debuggers possible.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>When the history is a liability rather than an asset: data that must
+be truly erased (personal data, secrets) cannot simply be appended over,
+and needs a deliberate exception. When events must change shape later,
+every old event still has to be read, so the event format becomes an API
+with all of an API's cost (pictor's acta v1 reads the kinds it knows and
+skips the rest, so older readers survive newer logs). And a log
+without checkpoints makes opening a document slower every day; the
+checkpoint is part of the pattern, not an optimisation added later.
+Related: <a href="#proiectio-pura">Proiectio pura</a> (the general
+rule: derived forms are disposable) and <a href="#porta-unica">Porta
+unica</a> (writes go through one gate, which is where events are
+appended).</p>
+
+
+<h2 id="archivum-non-deletio">Archivum, non deletio</h2>
+<p class="subtitulus">Archive what is superseded; never delete it; and measure what still leans on it first</p>
+
+<h3>Context</h3>
+<p>Code that a newer generation has replaced: an earlier parser, an
+abandoned engine, tests for a role that has been retired. It still costs
+something to keep in place (suite time, confused readers, things that
+look alive and are not).</p>
+
+<h3>Problem</h3>
+<p>Deleting it loses things that are hard to see at the moment of
+deletion: the design record, tests that still describe targets the new
+generation has not reached, and the reason the new design is shaped as it
+is. Leaving it where it is has the opposite cost: it runs, it is read as
+current, and it slows everything down. And the file tree does not show
+roles, so the thing that looks retired may be quietly carrying something
+alive.</p>
+
+<h3>Solution</h3>
+<p>Before moving anything, measure who still uses it, by tool, not by
+memory. Move what is truly retired into an archive folder where it stays
+readable but is not built, formatted or swept; keep the design documents
+where they are. Leave a loud note in whatever must stay, naming the live
+consumer, so the next cleanup does not finish the job. Move code and its
+tests together, so the pair could be restored as a unit.</p>
+
+<h3>In the code</h3>
+<p>The note left in place, at the top of
+<code>include/lapifex_generare.h</code>:</p>
+<pre><code> * ┌──────────────────────────────────────────────────────────────┐
+ * │ CONSUMPTOR VIVUS: lib/nuntium_schema.c                        │
+ * │                                                               │
+ * │ Lapifex silvae ANTECESSOR est (arbor v1 -&gt; arbor2 -&gt; lapifex  │
+ * │ -&gt; silva) et ut parsator C89 RETIRATUS. Sed nuntium - quod    │
+ * │ vivit - schema suum HAC machina compilat. Munera DUO,         │
+ * │ quorum arbor plagularum unum solum ostendit.                  │
+ * │                                                               │
+ * │ ERGO: lapifex_*.{c,h} archivari aut deleri NON possunt dum    │
+ * │ nuntium ea petit ...                                          │
+ * └──────────────────────────────────────────────────────────────┘</code></pre>
+
+<h3>Known uses in the house</h3>
+<ul>
+<li><code>archivum/</code>, born 2026-09-02 with the lapifex C89 test suites: they were the five slowest tests in the root suite, each rebuilding the same table, and they test a retired role. The formatter, the examen sweep and the evolution tool skip the folder.</li>
+<li><a href="bibliothecae/lapifex_generare.html">lapifex</a>: measured before moving, and found to be alive (the engine under nuntium's schema compiler); the engine stays, its retired role's tests moved, and the header now says so.</li>
+<li><a href="bibliothecae/lapifex_c89.html">lapifex_c89</a>'s grammar stayed in lib/ for a subtler reason: it carries one of eight sites a ledger decree keeps visible as named residue, and moving it would have made the count drop silently, "which reads as an improvement and is actually the loss of a deliberate choice".</li>
+<li><a href="bibliothecae/arbor.html">arbor v1</a> and arbor2: parked for archiving, with the analysis recording that two of their test suites still "hold bars for milestones that have not happened". The 29 design documents of the parser generations stay in project-specs/, and silva's orientation tells future sessions to reread them when its scope starts to feel negotiable.</li>
+</ul>
+
+<h3>Prior art</h3>
+<ul>
+<li><strong>The Apache Attic</strong>: retired Apache projects are moved to an attic, read-only and still downloadable, rather than deleted.</li>
+<li><strong>Fred Brooks, "plan to throw one away; you will, anyhow"</strong> (<em>The Mythical Man-Month</em>, 1975): the first system teaches what the second needs; the house keeps the teacher.</li>
+<li><strong>Chesterton's fence</strong>, again: here the fence is lapifex, which looked like a ruin and turned out to be holding up nuntium.</li>
+<li><strong>Software Heritage</strong> (since 2016): an archive of all public source code, on the view that source is part of humanity's heritage and should not be lost when a project is abandoned.</li>
+<li><strong>Version control</strong> alone is not the same thing: deleted code survives in git history, but it drops out of search, reading and memory. An archive folder keeps it in view.</li>
+</ul>
+
+<h3>When it does not fit</h3>
+<p>Generated files are not archived; they are regenerated or removed with
+their generator. Secrets and code under licences the house cannot keep
+are deleted, deliberately. And an archive is not a place to avoid
+deciding: something that is still needed belongs in the live tree with
+its note, and something with no design value at all can simply go.
+Related: <a href="#cur-exsistit">Cur exsistit</a>, which is how the
+note in the live file is written.</p>
+
+
+<p class="nota">Begun 2026-10-02, from batch IV of the library
+descriptions (the build layer); code excerpts and prior art added the
+same day; lossless tree and pure projection added from batch V (the STML
+family); time in the event added from batch VI (the GUI stack); drawing
+as data from batch VII (the ludus stack); one gate per kind of state
+from batch VIII (the ludus state side); the foreign oracle and the named
+deferral from batch IX (the text stack); born red and why-it-exists from
+batch X (the foundation leftovers); lifetime by arena from batch XI (the
+network stack); the type-only header from batch XII (the image stack); waiting, not sleeping,
+from batch XVI (the vitrea apps); event sourcing as its own pattern at
+Fran's suggestion (2026-10-03); archive, not delete, from batch XXII
+(lapifex), which completed the descriptions of all 197 libraries.
+Patterns are added as more libraries are read.</p>
+
+</body>
+</html>

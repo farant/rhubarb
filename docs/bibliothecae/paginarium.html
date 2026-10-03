@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>paginarium</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>paginarium</h1>
+<p class="subtitulus">&quot;Codex Paginationis Textuum&quot;</p>
+
+<p>Pagination for plain-text books, especially Project Gutenberg&#x27;s, whose lines are hard-wrapped at about 70-80 characters: prose must be rewrapped to the widget&#x27;s width, while verse, lists and tables must keep their lines. The decision is made per paragraph, not per page, by a heuristic: if 80% of a paragraph&#x27;s first five lines are shorter than 80% of the width, it is verse. Paragraph breaks are two or more newlines. Pages and lines are byte offsets into the source, and a line is rendered on demand (single newlines become spaces in prose). Used by librarium_lector; part of the first-generation reader (Dec 2025).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/paginarium.h"><code>include/paginarium.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/paginarium.c"><code>lib/paginarium.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#textus">Text</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

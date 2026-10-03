@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>componens</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>componens</h1>
+<p class="subtitulus">Arbor componentium: nodus LOGICUS (mores, non formae)</p>
+
+<p>The logical tree of a ludus UI: each node says what something IS and how it behaves (id, action name, accessible title, kind (partes: button, field, option, list, item, dialog, title, image, table), bounds in its parent&#x27;s space, focusable, clip, translation and scale, children) and nothing about how it looks. The hit predicate escalates from rectangle to polygon to mask to the component&#x27;s own test. One of two trees that are never fused: componens says WHAT, figura says HOW IT IS DRAWN, and targeting, focus and capture walk only this tree. Strings are interned, so callers pass any literal. Serializes to and from STML and compares structurally, which is how tests pin a tree. Built each frame by a Componere function from the program&#x27;s state (see dispensator); used by pictor (pictor_componentia) and the test toy.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/componens.h"><code>include/componens.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/componens.c"><code>lib/componens.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-05 87fc5b5e</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

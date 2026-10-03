@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>quadrans</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>quadrans</h1>
+<p class="subtitulus">Imago in cellulas terminalis (quadrantes; project-specs/</p>
+
+<p>Images into terminal cells with quadrant block characters: each cell covers 2x2 pixels, split into a dark and a light group, drawn as one of 16 glyphs with a foreground and background colour (or 1x2 with the half block, exact colours at half the horizontal resolution). The algorithm was read from OpenTUI&#x27;s source (its renderQuadrantBlock shader) and its deliberate differences are listed: alpha composited first, uniform blocks drawn as a space so no glyph seams show, integer arithmetic so every machine gives the same output. The default colours are each group&#x27;s mean, not the extreme pair, measured at 46% of the extreme pair&#x27;s error on photographs and kept as a committed aurum. Pure: no allocation, no state, returns runes and RGB rather than terminal cells, so tessera, an emulator and a window can share it. Built 2026-09-30; used by tessellatio&#x27;s pixel path, tessera&#x27;s effigies and saltuarius.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/quadrans.h"><code>include/quadrans.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/quadrans.c"><code>lib/quadrans.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-30 4c174620</td></tr>
+<tr><td>Group</td><td><a href="greges.html#imago">Images</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

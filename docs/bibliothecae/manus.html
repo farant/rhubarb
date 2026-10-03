@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>manus</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>manus</h1>
+<p class="subtitulus"></p>
+
+<p>The test hand for live vitrea apps, built on imperium&#x27;s channel: press, type, scroll, move, keys, screenshots, read text, count, focus, resize, all by CSS selector, and CREDO_MANUS_* assertions. Its central decision: NO sleep function, on purpose (&#x27;if a sleep can be written conveniently, someone will use it&#x27;), because timing is what kills UI test suites. Waiting happens inside the page, as a promise that resolves when the condition holds or a deadline passes, so a transient state cannot slip between two polls, and the hand keeps a slightly longer outer deadline in case the page itself is hung. Assertions wait until true. Selectors see only VISIBLE elements, because a hidden element is still in the DOM: laboratorium experiment 0001&#x27;s test asserted that a form had gone while it was only hidden. After the first failure the hand goes quiet, so one real cause shows instead of ten consequences. Used by tools/manus_instrumentum (August 2026).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/manus.h"><code>include/manus.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/manus.c"><code>lib/manus.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-29 cdc309cc</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

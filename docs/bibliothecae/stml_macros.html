@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>stml_macros</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>stml_macros</h1>
+<p class="subtitulus"></p>
+
+<p>STML&#x27;s macro and template layer, as pure tree-to-tree projections at load time: read, then expand, then distribute, then use. The file keeps its macro form and the original tree stays untouched and queryable. Expansion fills parametrized fragments (&lt;#f p=&quot;@p&quot;&gt;...&lt;/#&gt; called as &lt;&lt;#f p=&quot;123&quot;&gt;&gt;), resolving calls only to earlier definitions so that it always terminates; distribution dissolves wrapper elements into typed items; strict matching compares a template against a candidate and captures what it binds. Every failure is one of some thirty named errors, the first found wins, and none is ever papered over. canon, the markdown-to-HTML path, oratio, silva and the stml tool run it.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/stml_macros.h"><code>include/stml_macros.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/stml_macros.c"><code>lib/stml_macros.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-17 8eb75086</td></tr>
+<tr><td>Group</td><td><a href="greges.html#stml">STML and data formats</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

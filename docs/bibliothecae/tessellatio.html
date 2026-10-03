@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tessellatio</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>tessellatio</h1>
+<p class="subtitulus">Mandata in cellulas terminalis: via cellularum</p>
+
+<p>Mandata into terminal cells: the second backend for the drawing list, so the same ludus UI can render in a terminal (tessera). Pure: the caller supplies the output grid, there is no state and no dependency on tessera. A cell holds a text unit (a whole grapheme, wide units taking two cells), box-drawing junction bits, or nothing. The rules follow the pixel rasterizer exactly (origin + local × scale, clip intersected with the parent&#x27;s), then decide per primitive: lines floor into their cell, filled rectangles and text snap to the nearest cell edge, axis-aligned lines OR their junctions into ┼ ├ ┬, outlined rectangles become box borders. What cells cannot express (images, polygons, diagonal lines) takes a pixel path: rasterized by delineare_mandata, scaled, and turned into quadrant block characters underneath the cell layer. Cell geometry comes from a Modulus (lib/modulus.c). Built 2026-10-01 (plan project-specs/tessellatio-plan.md, narrative lib/tessellatio.phase-log.md); used by tessera&#x27;s musivum tool.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/tessellatio.h"><code>include/tessellatio.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/tessellatio.c"><code>lib/tessellatio.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-01 4941f626</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

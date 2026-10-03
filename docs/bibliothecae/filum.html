@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>filum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>filum</h1>
+<p class="subtitulus">fila legere et scribere (file I/O)</p>
+
+<p>Files: read a whole file into a chorda, line readers, writers (create or append), copy, move, delete, directories (create, create if needed, create with parents like mkdir -p, create with a mode and enforce it), chmod, status. Each newer function says WHY it exists: copy does not keep the mode, so an executable copied into a .app bundle silently stopped being executable (hence filum_modum_ponere); a private directory must be 0700 even if something else created it 0755 first; filum_arborem_delere uses lstat so a symlink to a directory is removed as a link instead of walked into, and refuses the system root by identity, not by spelling (&#x27;//&#x27; and &#x27;/tmp/..&#x27; too). An exclusive lock (flock) for read-check-append sequences, held by the kernel and released when the process dies, so there are no stale locks (lapide FR-020). The most used I/O library in the house (filum_legere_totum: 229 calls in 92 files).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/filum.h"><code>include/filum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/filum.c"><code>lib/filum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-29 88b535fe</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

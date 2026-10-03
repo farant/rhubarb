@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>motus</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>motus</h1>
+<p class="subtitulus">Genus MOBILE: structura in memoria, effusa in quiete</p>
+
+<p>The third kind of state, kept out of the islands on purpose: motion. Pointer capture, the pending brush stroke, pan, zoom, time of the last change, a dirty flag, in a plain struct with its own one gate (mutare_motum). The rule is &#x27;paint per event, write in quiet&#x27;: continuous input updates this struct cheaply, the screen redraws from it every frame, and the islands are touched only when motion stops (motus_quies: dirty and quies_ms elapsed since the last change), in one write by motus_effundere, which the dispensator calls at its quiet point. A stroke in progress never touches the ephemeral island at all: it leaves as one durable write on release. That is also the undo granularity: one stroke, one entry. Used by pictor and the ludus test toy.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/motus.h"><code>include/motus.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/motus.c"><code>lib/motus.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-05 92b4e430</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

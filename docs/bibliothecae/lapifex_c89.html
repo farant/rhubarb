@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lapifex_c89</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>lapifex_c89</h1>
+<p class="subtitulus">Grammatica C89 pro Lapifex GLR</p>
+
+<p>C89 as a lapifex grammar: parse an expression, a declaration, a statement or a whole translation unit with the GLR engine, producing arbor2&#x27;s tree nodes. The grammar (lib/lapifex_c89_grammatica.c) grew to about 207 productions in February 2026; typedef names are told apart before parsing, by remapping identifiers the preprocessor knows as types to a NOMEN_TYPUS token, and with the full pipeline (lapifex_c89_fontem_parsare) the source goes through arbor2&#x27;s expander first. Retired as the house&#x27;s C parser when silva arrived. Its tests rebuilt the C table in every process (6.5 s each, the five slowest in the root suite) and were moved to archivum/ on 2026-09-02; the grammar file itself stayed in lib/ because it carries one of eight sites pinned by a ledger decree, and moving it would silently drop the pin.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/lapifex_c89.h"><code>include/lapifex_c89.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/lapifex_c89_grammatica.c"><code>lib/lapifex_c89_grammatica.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 e1e01751</td></tr>
+<tr><td>Group</td><td><a href="greges.html#parsatores">Parsers: the C89 lineage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

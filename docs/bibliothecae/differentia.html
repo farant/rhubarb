@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>differentia</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>differentia</h1>
+<p class="subtitulus">differentia serierum et linearum (diff)</p>
+
+<p>Diff. The core compares two sequences of POINTERS, by identity: the caller interns its elements, so one core serves lines, silva tokens, words or STML nodes alike. The result is runs (same, deleted, added), with an invariant tests check: same+deleted partition A, same+added partition B, nothing hidden, nothing counted twice; deletions come before additions within a change (the GNU convention). Myers&#x27; O(ND) algorithm gives a minimal edit script. Per Eskil&#x27;s advice the API is frozen and the body replaceable: patience or histogram diff could go in later under the same API. A pragmatic cap: past 2048 steps the script becomes &#x27;delete all, add all&#x27;, keeping the invariant but not minimality, since memory grows quadratically and such a diff is unreadable anyway. differentia_linearum is the wrapper for text; the unified ---/+++/@@ output is a presentation, kept apart from the core. Used by silex and silva&#x27;s differre tools.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/differentia.h"><code>include/differentia.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/differentia.c"><code>lib/differentia.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#textus">Text</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fasciculum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>fasciculum</h1>
+<p class="subtitulus">Fasciculi macOS (.app): struere, legere, conferre.</p>
+
+<p>macOS application bundles (.app) as values: describe one (Info.plist as a plist value, the executable, optional resources), turn the description PURELY into a plan of files (nothing read from disk except checking that sources exist), write the plan (directories, generated files, copies, the executable bit), read an existing bundle back (refusing at the first fault, keeping unknown keys), and compare two, so a correct bundle is not rewritten. Bundle identifiers are checked against Apple&#x27;s characters in one place that briar also uses. Not handled: signing, notarization, frameworks; icons belong to icones. Spec project-specs/fasciculum-spec.md (September 2026); used by briar and a tool.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/fasciculum.h"><code>include/fasciculum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/fasciculum.c"><code>lib/fasciculum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-14 d84399c5</td></tr>
+<tr><td>Group</td><td><a href="greges.html#aedificatio">Build, binaries and tooling</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>
