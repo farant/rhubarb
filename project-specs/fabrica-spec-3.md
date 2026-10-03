@@ -11,8 +11,9 @@ generated files judged by what was actually read - but every GATE is
 still judged by the whole tree, and its pass is thrown away at every
 commit.*
 
-*Status: v1 (2026-10-03). A1 decided (outside reads digested); A2-A4
-carry recommendations - T1 may start.*
+*Status: v2 (2026-10-03). A1 decided (outside reads digested); A2-A4
+carry recommendations. T1 spike done (§XI): ready, with four
+corrections folded into T3.*
 
 ## 0. What the measurements say (dated 2026-10-03)
 
@@ -266,6 +267,9 @@ Changes inside toml (each is a step of §VII):
    stops writing those files itself.
 5. `porta_toml` declared in a new `toml/aedificatio.stml` (beside
    officina/, silva/, tessera/ - T5 confirms fabrica picks it up).
+6. v2 (§XI): `materia/fontes/materia_coctor.c:1230` reads the registrum
+   grammar raw; it notes the read itself via `lectiones_notare`
+   (materia stays filum-free), and the lint accepts that form.
 
 ## VI. Oracle (Q9)
 
@@ -304,7 +308,9 @@ the slice's commits). Done needs ≥10 reuses audited, 0 discord.
   isn't ready.
 - **T2** `bin/fontationes` (III.2) + its tests (idioms, conditional,
   UNRESOLVED).
-- **T3** toml filum/env migration + lint pilot (V.1–3).
+- **T3** toml filum/env migration + lint pilot (V.1–3, V.6), plus the
+  §XI corrections: compilator records its destination as S;
+  mensor_suitae.sh runs bin/mensor without the ledger.
 - **T4** `toml_corpus` / `toml_aurum_silvestre` actions + runner rule
   (III.4).
 - **T5** iudicium kind in lib/fabrica.c and bin/fabrica:
@@ -380,3 +386,81 @@ the slice's commits). Done needs ≥10 reuses audited, 0 discord.
 - **A4. Shadow runs.** IV.3 needs the clone to write the live database
   and relative E values. Recommended: keep it as T8, but the slice is
   done without it if T8 turns out larger than a step.
+
+## XI. T1 spike (2026-10-03) - corrections marked v2
+
+Method: the toml gate (`toml/compile_probationes.sh`, warm store, 13/13
+pass, 34 s) run twice by hand with `FABRICA_LECTIONES`; paths normalized
+(tree root -> relative, `$HOME` -> `~`), unique entries classified. No
+code kept.
+
+**Size.** 5,280 unique entries; 4,192 outside the store (A 833, D 5,
+L 3,025, X 329). E: **0** - every environment read in the closure is
+raw `getenv`.
+
+**Stable.** Second warm run: 424 differences, ALL under
+`build/aedilis/obiecta/` (first run missed in aedilis's store, second
+hit). Outside the store the two traces are identical. The store is
+already ejected by the judge (slice 2 T3), so the key is stable.
+
+**Judge cost.** The 3,025 L files = 18.1 MB; `shasum -a 256` over all
+of them 0.42 s. Plus ~1.2k stat calls (A/X/D). The §VIII target
+(< 2 s when RECENS) holds with room.
+
+**Every entry accounted for:**
+| Group | Count | What |
+|---|---|---|
+| L `~/.cargo/registry`, `~/Documents/projects`, `/opt/homebrew` | 1,674 + 120 | silvestria corpus, pinned by `silvestria.manifestum` (A1: digested) |
+| L/X `/Applications/Xcode.app` | 162 + 162 | SDK headers hashed by compilator from depfiles (allowlisted, `identitas_clang`) |
+| L `toml/probationes/fixa/**` | 884 | toml-test fixtures (filum) |
+| L `toml/fontes`, `include`, `lib`, `materia/fontes` + X same | ~93 + ~115 | compilator's header hashes and include lookups |
+| L `toml/build/*.o`, `toml/build/probationes/*.o` + X | 58 + 58 | **compilator's destination check** (v2 correction 1) |
+| A (outside store) | 833 | include-root misses (aedilis + compilator) - negative dependencies, the shadowing guard |
+| D | 5 | compilator's -I roots (`toml/fontes`, `include`, `materia/fontes`, `toml/probationes`) + source dir `lib` |
+| L `build/toml_corpus.lst`, `toml/build/aurum_silvestre.txt` | 2 | bash/python-written inputs with no S - confirms III.4 |
+| L `*.toml` across the tree (apps/, book_assets/, probationes/, tools/, briar/) | 13 | the house corpus listed in toml_corpus.lst |
+| L `aedilis.stml`, `bin/aedilis`, `toml/grammatica/toml.canon` | 3 | aedilis config + its own bytes (store key); a grammar fixture |
+| X `~/.rhubarb/mensurae.volumen` | 1 | **mensor side channel** (v2 correction 3) |
+
+**Absent but read (the gaps):**
+- `toml/probationes/fixa/computus/basis.tsv` - computus gold, raw `fopen`
+  (read at :211, written at :182 under COMPUTUS_SCRIBERE). Its three
+  corpus files appear only because OTHER tests read them through filum.
+- `toml/grammatica/toml.registrum.stml` - read raw by
+  `materia/fontes/materia_coctor.c:1230` (`_plagulam_legere`, the
+  "porta rancoris" that probatio_toml_registrum calls). materia keeps
+  filum out of client chains on purpose (comment at :1222).
+- 15 raw `getenv` sites (RHUBARB_RADIX x10, HOME x2, COMPUTUS_SCRIBERE,
+  ORACULUM_OMNIA, ORACULUM_EXEMPLUM) - `lectiones_lint -omnes`
+  intersected with the toml closures (58 files) gives exactly these
+  plus the two fopen sites above and totalitas:233 (a write on
+  failure only).
+- Not readable by design: the bash scripts (III.2), bin/compilator's
+  bytes (III.3), clang/ld (identitas_clang), git and python (III.4).
+
+**v2 corrections:**
+1. **compilator's destination check (III.4, IX.5).** On a hit,
+   compilator reads the existing object to avoid rewriting identical
+   bytes; that read is logged L with no S, so a warm run has 58
+   "unowned build inputs" and III.4 would make EVERY warm run IGNOTUM.
+   The read is output-side: compilator records the destination as
+   **S** (this run owns the path) whether it rewrites or not. Change in
+   `tools/compilator.c`, step T3.
+2. **materia_coctor (V).** New V.6: `_plagulam_legere` stays raw (no
+   filum in client chains) and calls `lectiones_notare(LECTIO_LEGIT,
+   via)` / `LECTIO_ABSENS` itself - lectiones.c has no dependencies.
+   `tools/lectiones_lint.sh` must accept a raw read whose function also
+   calls `lectiones_notare` (nexus: same function, both callees);
+   otherwise the pilot rule blocks it. Step T3.
+3. **Side channels (III.7).** Only mensor shows up (one X, stable, on
+   `~/.rhubarb/mensurae.volumen`); sera and the tee log are bash, not
+   traced. `tools/mensor_suitae.sh` runs bin/mensor with
+   `FABRICA_LECTIONES` unset anyway - the volume is output, never an
+   input. Step T3.
+4. **Executed binaries (III.3).** bin/aedilis reads its own bytes into
+   the trace (store key), so it is covered twice; bin/compilator is not
+   - the declared `instrumentum` stands.
+
+Verdict: every entry explained, the gaps are a closed list (3 raw reads
++ 15 env reads + 2 bash-written files), the trace is stable. The design
+is ready, with corrections 1-4 folded into T3.

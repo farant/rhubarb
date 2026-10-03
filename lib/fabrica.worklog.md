@@ -1545,3 +1545,24 @@ Library compile failure exits 2 ("nothing ran"), same as the old runner.
 Inventory: tools/cursor_communis.sh was owed by NO suite (only vexilla);
 added to tegit viae of radix, toml, css, crusta; radix currit binaria
 += tools/compilator.c.
+
+## 2026-10-03 - slice 3 T1 spike: the toml gate's trace
+
+Ran toml/compile_probationes.sh twice with FABRICA_LECTIONES (warm
+store, 13/13). Full classification in spec 3 §XI. The non-obvious parts:
+- compilator's "don't rewrite identical object" check READS the
+  destination through filum -> 58 L entries on toml/build/*.o with no S.
+  Harmless today, fatal under spec 3's "unowned build input" rule
+  (every warm run IGNOTUM). Fix: record the destination as S.
+- Raw IO hides exactly where you'd expect it to hurt: computus's GOLD
+  file (basis.tsv) and the registrum grammar read by materia_coctor's
+  staleness check. Both would let a gold/grammar edit reuse a stale pass.
+  materia can't take filum (client chains), so it notes the read itself.
+- The trace is stable across warm runs once the store is ejected: 424
+  differences, all store paths (miss then hit).
+- Normalizing paths: the ledger writes absolute paths for some tools
+  (repo root and $HOME prefixes); classify with awk index(), not sed
+  with a literal tab (zsh ate it the first time and the groups were
+  wrong).
+- 4,192 entries outside the store; 3,025 files / 18.1 MB to re-digest,
+  0.42 s - the < 2 s RECENS target is fine.
