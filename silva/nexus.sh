@@ -41,48 +41,85 @@ declare -a INCLUDE_FLAGS=(
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$SILVA_DIR/nexus_fontes_generata.sh"
 
+# COMPILATIO PER THESAURUM (fabrica plan 2, migratio nexus 2026-10-03):
+# olim mtime + 'caput recentissimum in include/ OMNIA recompilat' ->
+# relinkatio -> 'instrumentum novum -> plenus' = percursus PLENUS
+# (~190 s, 1685 plagulae) post QUAMVIS mutationem capitis, etiam non
+# inclusi (include/fabrica.h). Nunc bin/compilator: obiectum rescribitur
+# SOLUM si octeti mutantur, ergo 'binarium recentius omni obiecto' =
+# nihil mutatum. Sine compilatore (clonus recens, aedificari nequit):
+# clang cum regulis veteribus (mtime + caput recentissimum).
+COMPILATOR="$RADIX_DIR/bin/compilator"
+if [ ! -x "$COMPILATOR" ]; then
+    "$RADIX_DIR/tools/compilator_struere.sh" > /dev/null 2>&1 || COMPILATOR=""
+fi
 newest_header () {
     find "$RADIX_DIR/include" -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+# compilare <fons> <obiectum> <capita_extra...> -- <vexilla...>
+#   per compilatorem: semper vocatur (ipse iudicat, identicum non
+#   rescribit). Sine eo: mos vetus (mtime fontis/capitum + caput
+#   recentissimum). Nuntius '[nota] fons' SOLUM si obiectum mutatum.
+compilare () {
+    local nota="$1" src="$2" obj="$3" ante=""
+    shift 3
+    local capita=()
+    while [ "$#" -gt 0 ] && [ "$1" != "--" ]; do capita+=("$1"); shift; done
+    shift
+    [ -f "$obj" ] && ante="$(stat -f '%m%i' "$obj")"
+    if [ -n "$COMPILATOR" ]; then
+        "$COMPILATOR" "$@" -c "$src" -o "$obj" || return 1
+    else
+        local c stalum=0
+        { [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; } && stalum=1
+        for c in "${capita[@]+"${capita[@]}"}"; do ! [ "$obj" -nt "$c" ] && stalum=1; done
+        [ "$stalum" = "1" ] && { clang "$@" -c "$src" -o "$obj" || return 1; }
+    fi
+    [ "$(stat -f '%m%i' "$obj" 2>/dev/null)" != "$ante" ] && echo "  [$nota] $(basename "$src")" >&2
+    return 0
+}
+# recentius <binarium> <obiecta...>: 0 si binarium exstat et STRICTE
+# recentius omni obiecto (cum compilatore: obiectum mutatum = octeti
+# mutati). Sine FABRICA_AGIT (nexus instrumentum quaestionis est, non
+# installator: sub executore idem iudicium).
+recentius () {
+    local binarium="$1" f
+    shift
+    [ -f "$binarium" ] || return 1
+    for f in "$@"; do
+        ! [ "$binarium" -nt "$f" ] && return 1
+    done
+    return 0
 }
 
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
-    src="$RADIX_DIR/lib/$f.c"
-    obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [dep] $f.c" >&2
-        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
-    fi
-    obj_files="$obj_files $obj"
+    compilare dep "$RADIX_DIR/lib/$f.c" "$BUILD_DIR/$f.o" -- \
+        "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" || exit 1
+    obj_files="$obj_files $BUILD_DIR/$f.o"
 done
 
 # silva.h mutatio formae sine recompilo = corruptio ABI (inventum
 # v0.2 in officina; TERTIUM exemplar manu volutum - excubitor chunk 1)
 SILVA_H="$SILVA_DIR/amalgama/silva.h"
 
-src="$SILVA_DIR/amalgama/silva.c"
-obj="$BUILD_DIR/nexus_amalgama_silva.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$SILVA_H" ]; then
-    echo "  [amalgama] silva.c" >&2
-    clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
-fi
-
-src="$SILVA_DIR/instrumenta/nexus_ordines.c"
-obj="$BUILD_DIR/nexus_ordines.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$SILVA_DIR/instrumenta/nexus_ordines.h" ] \
-    || ! [ "$obj" -nt "$SILVA_H" ]; then
-    echo "  [ordines] nexus_ordines.c" >&2
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
-fi
+compilare amalgama "$SILVA_DIR/amalgama/silva.c" \
+    "$BUILD_DIR/nexus_amalgama_silva.o" "$SILVA_H" -- "${GCC_FLAGS[@]}" || exit 1
+compilare ordines "$SILVA_DIR/instrumenta/nexus_ordines.c" \
+    "$BUILD_DIR/nexus_ordines.o" "$SILVA_DIR/instrumenta/nexus_ordines.h" \
+    "$SILVA_H" -- "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" || exit 1
 sweep_objs="$obj_files $BUILD_DIR/nexus_amalgama_silva.o $BUILD_DIR/nexus_ordines.o"
 
-# CLI (tabulam legit - silva non tangit; obiecta bibliothecae sola)
+# CLI (tabulam legit - silva non tangit; obiecta bibliothecae sola).
+# Olim omni quaestione relinkabatur; nunc solum si obiectum mutatum.
 CLI_SRC="$SILVA_DIR/instrumenta/principalia/nexus.c"
+CLI_OBJ="$BUILD_DIR/nexus_cli.o"
 CLI_BIN="$BUILD_DIR/nexus"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$CLI_SRC" $obj_files \
-    -o "$CLI_BIN" || exit 1
+compilare cli "$CLI_SRC" "$CLI_OBJ" -- "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" || exit 1
+if ! recentius "$CLI_BIN" "$CLI_OBJ" $obj_files; then
+    source "$RADIX_DIR/tools/nexus_recens.sh"
+    nectere_atomice "$CLI_BIN" "${GCC_FLAGS[@]}" "$CLI_OBJ" $obj_files || exit 1
+fi
 
 cd "$RADIX_DIR"
 
@@ -101,51 +138,29 @@ renovatio () {
     mkdir -p "$CELER_DIR"
     CELER_FLAGS=("${GCC_FLAGS[@]}" "-O2" "-flto")
     celer_objs=""
-    celer_novum=0   # obiectum quodvis recompilatum -> religa
     for f in "${RADIX_FONTES[@]}"; do
-        src="$RADIX_DIR/lib/$f.c"
-        obj="$CELER_DIR/$f.o"
-        if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-            || [ -n "$(newest_header "$obj")" ]; then
-            echo "  [celer dep] $f.c" >&2
-            clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-                -c "$src" -o "$obj" || return 1
-            celer_novum=1
-        fi
-        celer_objs="$celer_objs $obj"
+        compilare "celer dep" "$RADIX_DIR/lib/$f.c" "$CELER_DIR/$f.o" -- \
+            "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" || return 1
+        celer_objs="$celer_objs $CELER_DIR/$f.o"
     done
-    src="$SILVA_DIR/amalgama/silva.c"
-    obj="$CELER_DIR/amalgama_silva.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-        || ! [ "$obj" -nt "$SILVA_H" ]; then
-        echo "  [celer amalgama] silva.c" >&2
-        clang "${CELER_FLAGS[@]}" -c "$src" -o "$obj" || return 1
-        celer_novum=1
-    fi
-    celer_objs="$celer_objs $obj"
-    src="$SILVA_DIR/instrumenta/nexus_ordines.c"
-    obj="$CELER_DIR/nexus_ordines.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-        || ! [ "$obj" -nt "$SILVA_DIR/instrumenta/nexus_ordines.h" ] \
-        || ! [ "$obj" -nt "$SILVA_H" ]; then
-        echo "  [celer ordines] nexus_ordines.c" >&2
-        clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-            -c "$src" -o "$obj" || return 1
-        celer_novum=1
-    fi
-    celer_objs="$celer_objs $obj"
+    compilare "celer amalgama" "$SILVA_DIR/amalgama/silva.c" \
+        "$CELER_DIR/amalgama_silva.o" "$SILVA_H" -- "${CELER_FLAGS[@]}" || return 1
+    compilare "celer ordines" "$SILVA_DIR/instrumenta/nexus_ordines.c" \
+        "$CELER_DIR/nexus_ordines.o" "$SILVA_DIR/instrumenta/nexus_ordines.h" \
+        "$SILVA_H" -- "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" || return 1
+    celer_objs="$celer_objs $CELER_DIR/amalgama_silva.o $CELER_DIR/nexus_ordines.o"
     SWEEP_SRC="$SILVA_DIR/instrumenta/principalia/nexus_percursus.c"
+    SWEEP_OBJ="$CELER_DIR/nexus_percursus.o"
     SWEEP_BIN="$CELER_DIR/nexus_percursus"
+    compilare "celer percursus" "$SWEEP_SRC" "$SWEEP_OBJ" "$SILVA_H" -- \
+        "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" || return 1
     plenus_vis=""
-    if [ "$celer_novum" = "1" ] || [ ! -f "$SWEEP_BIN" ] \
-        || ! [ "$SWEEP_BIN" -nt "$SWEEP_SRC" ] \
-        || [ -n "$(newest_header "$SWEEP_BIN")" ] \
-        || ! [ "$SWEEP_BIN" -nt "$SILVA_H" ]; then
-        echo "  [celer percursus] nexus_percursus.c" >&2
-        clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SWEEP_SRC" \
-            $celer_objs -o "$SWEEP_BIN" || return 1
-        # instrumentum novum: iudicia mutari potuerunt -> plenus
-        # (numquam tacite: nota infra)
+    if ! recentius "$SWEEP_BIN" "$SWEEP_OBJ" $celer_objs; then
+        source "$RADIX_DIR/tools/nexus_recens.sh"
+        nectere_atomice "$SWEEP_BIN" "${CELER_FLAGS[@]}" "$SWEEP_OBJ" \
+            $celer_objs || return 1
+        # instrumentum novum (obiectum quodvis OCTETIS mutatum):
+        # iudicia mutari potuerunt -> plenus (numquam tacite)
         plenus_vis="-plenus"
         echo "  [instrumentum novum -> plenus]" >&2
     fi
