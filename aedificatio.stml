@@ -60,6 +60,20 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
+  <!-- compilator (plan 2 T4): 'clang -c' per thesaurum contentorum -->
+  <actio titulus="compilator" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/compilator_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/compilator"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/compilator/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/compilator_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/compilator" provenientia="relatio"/>
+  </actio>
   <!-- T7 pars II: binaria installata. Ingressus = clausura aedilis
        (manifestum, plenum post P1) etiam ubi installator indice manu
        struit; installator ipse et scriptor provenientiae. -->

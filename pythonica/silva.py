@@ -1572,6 +1572,10 @@ PORTAE = {
                 r'oraculum fabricae: (consensus|DISCORDIA)'),
     'fabrica-fumus': (['./tools/fabrica_fumus.sh'],
                       r'fumus fabricae: (sanum|FRACTUM)'),
+    # compilator (fabrica plan 2 T4): 'clang -c' per thesaurum - octeti
+    # idem ac clang, hit sine clang, obumbratio, compilator alius
+    'compilator': (['./tools/compilator_fumus.sh'],
+                   r'fumus compilatoris: (sanum|FRACTUM)'),
     'diagnostica': (['./tools/diagnostica_fumus.sh'],
                     r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],
