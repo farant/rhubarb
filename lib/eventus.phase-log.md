@@ -1445,3 +1445,49 @@ glossary. Plants caught: Shift dropped from the modifier number (29
 asserts); `:1` omitted in special forms; legacy encoding a release; the
 following TEXT not consumed. The functional-key lookup is a table
 inside its function (the formatter mangled dense `casus` lines).
+
+## B6a-ii — the encoder learns mouse, paste and focus (2026-10-03)
+
+Oracle again Ghostty (`mouse_encode.zig`, `paste.zig` @ 12752b2).
+
+**Mouse (SGR only; X10/urxvt with the emulator):** reported by mode
+(?1000 no motion, ?1002 motion only with a button, ?1003 everything);
+button codes left 0 / middle 1 / right 2, hover 3; motion +32;
+Shift/Alt/Ctrl +4/+8/+16; SGR keeps the button identity on release
+(`m`). Position: our pixels → cell by the Modulus (floor), 1-based.
+Outside the window (negative) only a release, or a drag in a motion
+mode, is reported, clamped to the edge (we know no upper bound: the
+grid size isn't in the modes). Wheel: 64/65 vertical, 66/67
+horizontal, one report per whole notch (notch = cell height, as the
+decoder decodes it); a sub-notch delta reports nothing.
+**A coalesced motion** carries its earlier positions as samples: the
+encoder emits one report per sample, then the final position, skipping
+reports in the same cell as the previous (Ghostty dedups by last cell;
+we do it within the event, staying pure). This is what lets the table's
+drag scene round-trip byte for byte.
+
+**Paste:** bracketed under ?2004; Ghostty's 16 unsafe bytes (NUL, BS,
+ENQ, EOT, ESC, DEL, and the tty signal characters) become spaces, so
+the end marker `\e[201~` can never occur inside a payload (tested with
+an injected one); unbracketed, `\n` becomes `\r`. A promoted DROP
+encodes back to what a terminal sends for one: the paths shell-escaped
+(backslash before anything outside `[A-Za-z0-9/._+,:@%=-]`, UTF-8 kept)
+and space-joined. Typed text with no key in front (IME) is its raw
+bytes.
+
+**Focus:** `\e[I` / `\e[O` only under ?1004.
+
+**Tests (265):** mouse vectors (press, release identity, right with
+Shift+Ctrl, middle with Alt, hover per mode, drag, coalesced samples,
+four wheel directions, two notches, half a notch, outside the window,
+mouse off), focus, paste (bracketed, unbracketed `\r`, injected end
+marker, unsafe bytes, empty, drop, IME text); round trips of mouse,
+focus and paste bytes; and the TABLE ORACLE now covers all 16 runs, the
+three mouse scenes included. Plants caught: release written `M`; ESC
+not stripped; samples ignored; columns not 1-based.
+
+**Test-helper bug found (not the encoder):** the round-trip helper
+handed `xar_obtinere(eventa, k)` to the encoder as an ARRAY, but Xar is
+segmented (first segment 4): B6a-ii's extra events put a key at index
+3 and its TEXT at 4, across the boundary. B6a-i passed by luck. The
+helper now copies to a contiguous buffer; memory's Xar note widened.

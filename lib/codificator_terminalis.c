@@ -707,6 +707,303 @@ _vetustum (
 
 
 /* ==================================================
+ * Mus SGR (mouse_encode.zig), focus, glutinum (paste.zig)
+ * ================================================== */
+
+/* Pixelum nostrum -> cellula 0-basata (PAVIMENTUM: Modulus) */
+interior s32
+_cellula (
+    s32 pixelum,
+    s32 magnitudo_cellulae)
+{
+    s32 m = (magnitudo_cellulae > ZEPHYRUM) ? magnitudo_cellulae : I;
+
+    si (pixelum >= ZEPHYRUM)
+    {
+        redde pixelum / m;
+    }
+    redde -((-pixelum + m - I) / m);
+}
+
+/* Relatio SGR una: CSI < codex ; columna ; linea M|m */
+interior vacuum
+_relatio (
+    ChordaAedificator* a,
+                  s32  codex,
+                  s32  columna,
+                  s32  linea,
+                  b32  solutio)
+{
+    _literas(a, "\033[<");
+    _numerum(a, codex);
+    _octetum(a, ';');
+    _numerum(a, columna + I);
+    _octetum(a, ';');
+    _numerum(a, linea + I);
+    _octetum(a, solutio ? 'm' : 'M');
+}
+
+interior s32
+_modi_muris (
+    i32 modi)
+{
+    s32 n = ZEPHYRUM;
+
+    si (modi & MOD_SHIFT)
+    { n += IV;
+    }
+    si (modi & MOD_ALT)
+    { n += VIII;
+    }
+    si (modi & MOD_IMPERIUM)
+    { n += XVI;
+    }
+    redde n;
+}
+
+/* Positio una: extra fenestram (negativa) solum solutio aut tractus in
+ * modo motus refertur, ad marginem; cellula priori aequalis
+ * omittitur */
+interior vacuum
+_positionem (
+    constans CodificatorModi* modi,
+                         s32  x,
+                         s32  y,
+                         s32  codex,
+                         b32  solutio,
+                         b32  tractus,
+                         s32* prior_c,
+                         s32* prior_l,
+           ChordaAedificator* a)
+{
+    s32 c = _cellula(x, modi->cellula_latitudo);
+    s32 l = _cellula(y, modi->cellula_altitudo);
+
+    si ((c < ZEPHYRUM || l < ZEPHYRUM) && !solutio && !tractus)
+    {
+        redde;
+    }
+    si (c < ZEPHYRUM)
+    { c = ZEPHYRUM;
+    }
+    si (l < ZEPHYRUM)
+    { l = ZEPHYRUM;
+    }
+    si (c == *prior_c && l == *prior_l)
+    {
+        redde;
+    }
+    *prior_c = c;
+    *prior_l = l;
+    _relatio(a, codex, c, l, solutio);
+}
+
+interior vacuum
+_murem (
+    constans CodificatorModi* modi,
+            constans Eventus* e,
+           ChordaAedificator* a)
+{
+    b32 motus    = (b32)(e->genus == EVENTUS_MUS_MOTUS);
+    b32 solutio  = (b32)(e->genus == EVENTUS_MUS_LIBERATUS);
+    s32 codex;
+    s32 prior_c = -I;
+    s32 prior_l = -I;
+    i32 k;
+
+    si (modi->mus == CODIFICATOR_MUS_NULLUS)
+    {
+        redde;
+    }
+    commutatio (e->datum.mus.botton)
+    {
+        casus MUS_SINISTER: codex = ZEPHYRUM;  frange;
+        casus MUS_MEDIUS:   codex = I;         frange;
+        casus MUS_DEXTER:   codex = II;        frange;
+        ordinarius:
+            si (!motus)
+            {
+                redde;      /* botton ignotus */
+            }
+            codex = III;    /* motus sine bottone */
+            frange;
+    }
+    si (motus)
+    {
+        si (modi->mus == CODIFICATOR_MUS_PRESSIO)
+        {
+            redde;
+        }
+        si (modi->mus == CODIFICATOR_MUS_TRACTUS && codex == III)
+        {
+            redde;
+        }
+        codex += XXXII;
+    }
+    codex += _modi_muris(e->datum.mus.modificantes);
+    si (motus)
+    {
+        /* motus coalitus: exempla, deinde positio ultima */
+        per (k = ZEPHYRUM; k < e->datum.mus.numerus_exemplorum; k++)
+        {
+            _positionem(modi, e->datum.mus.exempla[k].x,
+                e->datum.mus.exempla[k].y, codex, FALSUM,
+                (b32)((codex & III) != III), &prior_c, &prior_l, a);
+        }
+    }
+    _positionem(modi, e->datum.mus.x, e->datum.mus.y, codex, solutio,
+        (b32)(motus && (codex & III) != III), &prior_c, &prior_l, a);
+}
+
+interior vacuum
+_rotulam (
+    constans CodificatorModi* modi,
+            constans Eventus* e,
+           ChordaAedificator* a)
+{
+    s32 gradus = (modi->cellula_altitudo > ZEPHYRUM)
+        ? modi->cellula_altitudo : I;
+    s32 modi_m = _modi_muris(e->datum.rotula.modificantes);
+    s32 n;
+    s32 k;
+    s32 prior_c;
+    s32 prior_l;
+
+    si (modi->mus == CODIFICATOR_MUS_NULLUS)
+    {
+        redde;
+    }
+    /* gradus integri (versus nihil); fractio non refertur */
+    n = e->datum.rotula.dy / gradus;
+    per (k = ZEPHYRUM; k < ((n < ZEPHYRUM) ? -n : n); k++)
+    {
+        prior_c = -I;
+        prior_l = -I;
+        _positionem(modi, e->datum.rotula.x, e->datum.rotula.y,
+            ((n > ZEPHYRUM) ? LXIV : LXV) + modi_m, FALSUM, FALSUM,
+            &prior_c, &prior_l, a);
+    }
+    n = e->datum.rotula.dx / gradus;
+    per (k = ZEPHYRUM; k < ((n < ZEPHYRUM) ? -n : n); k++)
+    {
+        prior_c = -I;
+        prior_l = -I;
+        _positionem(modi, e->datum.rotula.x, e->datum.rotula.y,
+            ((n > ZEPHYRUM) ? LXVI : LXVII) + modi_m, FALSUM, FALSUM,
+            &prior_c, &prior_l, a);
+    }
+}
+
+/* Octetus quem glutinum non fert (paste.zig: NUL BS ENQ EOT ESC DEL et
+ * signa conchae) - in spatium; ergo terminus 201~ intra onus numquam */
+interior b32
+_infidus (
+    i8 b)
+{
+    commutatio (((s32)b) & 0xFF)
+    {
+        casus 0x00: casus 0x08: casus 0x05: casus 0x04: casus 0x1B:
+        casus 0x7F: casus 0x03: casus 0x1C: casus 0x15: casus 0x1A:
+        casus 0x11: casus 0x13: casus 0x17: casus 0x16: casus 0x12:
+        casus 0x0F:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* Octetus oneris glutini: infidus -> spatium; sine ?2004 '\n' fit
+ * '\r' */
+interior vacuum
+_glutini_octetum (
+    constans CodificatorModi* modi,
+                          i8  b,
+           ChordaAedificator* a)
+{
+    si (_infidus(b))
+    {
+        b = ' ';
+    }
+    alioquin si (b == '\n' && !modi->glutinum)
+    {
+        b = '\r';
+    }
+    _octetum(a, b);
+}
+
+interior vacuum
+_glutinare (
+     constans CodificatorModi* modi,
+                       Textus  t,
+            ChordaAedificator* a)
+{
+    i32 k;
+
+    si (modi->glutinum)
+    {
+        _literas(a, "\033[200~");
+    }
+    per (k = ZEPHYRUM; k < t.mensura; k++)
+    {
+        _glutini_octetum(modi, t.datum[k], a);
+    }
+    si (modi->glutinum)
+    {
+        _literas(a, "\033[201~");
+    }
+}
+
+/* Character conchae tutus sine effugio */
+interior b32
+_tutus_conchae (
+    i8 b)
+{
+    s32 c = ((s32)b) & 0xFF;
+
+    redde (b32)(   (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+                || (c >= '0' && c <= '9') || c >= 0x80 || c == '/'
+                || c == '.' || c == '_' || c == '-' || c == '+'
+                || c == ',' || c == ':' || c == '@' || c == '%'
+                || c == '=');
+}
+
+/* Depositio promota: viae more conchae effugitae, spatiis iunctae (ut
+ * terminalis viam depositam glutinat) */
+interior vacuum
+_depositionem (
+    constans CodificatorModi* modi,
+            constans Eventus* e,
+           ChordaAedificator* a)
+{
+    i32 k;
+
+    si (modi->glutinum)
+    {
+        _literas(a, "\033[200~");
+    }
+    per (k = ZEPHYRUM; k < e->datum.depositio.viae.mensura; k++)
+    {
+        i8 b = e->datum.depositio.viae.datum[k];
+
+        si (b == '\n')
+        {
+            _octetum(a, ' ');     /* viae spatiis iunctae */
+            perge;
+        }
+        si (!_tutus_conchae(b))
+        {
+            _octetum(a, '\\');
+        }
+        _glutini_octetum(modi, b, a);
+    }
+    si (modi->glutinum)
+    {
+        _literas(a, "\033[201~");
+    }
+}
+
+
+/* ==================================================
  * Publica
  * ================================================== */
 
@@ -726,10 +1023,48 @@ codificator_eventa (
         redde ZEPHYRUM;
     }
     e = &eventa[ZEPHYRUM];
-    si (   e->genus != EVENTUS_CLAVIS_DEPRESSUS
-        && e->genus != EVENTUS_CLAVIS_LIBERATUS)
+    commutatio (e->genus)
     {
-        redde I;    /* mus, glutinum, focus: B6a-ii */
+        casus EVENTUS_CLAVIS_DEPRESSUS:
+        casus EVENTUS_CLAVIS_LIBERATUS:
+            frange;
+        casus EVENTUS_MUS_DEPRESSUS:
+        casus EVENTUS_MUS_LIBERATUS:
+        casus EVENTUS_MUS_MOTUS:
+            _murem(modi, e, aedificator);
+            redde I;
+        casus EVENTUS_MUS_ROTULA:
+            _rotulam(modi, e, aedificator);
+            redde I;
+        casus EVENTUS_FOCUS:
+        casus EVENTUS_DEFOCUS:
+            si (modi->focus)
+            {
+                _literas(aedificator, (e->genus == EVENTUS_FOCUS)
+                    ? "\033[I" : "\033[O");
+            }
+            redde I;
+        casus EVENTUS_TEXTUS:
+            textus.datum    = e->datum.textus.contentum.datum;
+            textus.mensura  = e->datum.textus.contentum.mensura;
+            si (e->datum.textus.origo == EVENTUS_ORIGO_GLUTINATA)
+            {
+                _glutinare(modi, textus, aedificator);
+            }
+            alioquin si (e->datum.textus.genus
+                         == EVENTUS_TEXTUS_COMMISSUM)
+            {
+                _textum(aedificator, textus);   /* IME, sine clave */
+            }
+            redde I;
+        casus EVENTUS_DEPOSITIO:
+            si (e->datum.depositio.promota)
+            {
+                _depositionem(modi, e, aedificator);
+            }
+            redde I;
+        ordinarius:
+            redde I;    /* facultates, magnitudo, ...: non octeti */
     }
     textus.datum    = NIHIL;
     textus.mensura  = ZEPHYRUM;
