@@ -1101,6 +1101,19 @@
     <forma textus="codificatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
     <forma textus="codificatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="sublinea" lingua="latina" classis="substantivum" nota="vox domus (sub + linea): linea sub textu (underline, SGR 4); genera simplex, duplex, undulata, punctata, lineolata; sedes include/stilus_terminalis.h (StilusSublinea), modulus 004">
+    <forma textus="sublinea" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sublineae" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="superlinea" lingua="latina" classis="substantivum" nota="vox domus (super + linea): linea supra textum (overline, SGR 53); sedes include/stilus_terminalis.h (STILUS_SUPERLINEA)">
+    <forma textus="superlinea" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="undulatus" lingua="latina" classis="adiectivum" nota="undulatus, -a, -um (Varro, Plinius: undis distinctus): sublinea undulata (curly underline, SGR 4:3); sedes include/stilus_terminalis.h">
+    <forma textus="undulata" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="lineolatus" lingua="latina" classis="adiectivum" nota="lineolatus, -a, -um (ex lineola, linea parva): lineolis constans (dashed underline, SGR 4:5); sedes include/stilus_terminalis.h">
+    <forma textus="lineolata" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="scalaris" lingua="latina" classis="adiectivum" nota="scalaris, -e (classice: scalarum, gradibus pertinens; WORDS caret): sensu mathematico valor SIMPLEX, non compositus (chorda, numerus, boolean, tempus - non tabula, non series); sedes toml/fontes/toml_scalaris.{h,c} (toml_scalaria_iudicare, toml_scalarem_coquere)">
     <forma textus="scalaris" casus="nominativus" numerus="singularis"/>
     <forma textus="scalare" casus="nominativus" numerus="singularis" genus="neutrum"/>
