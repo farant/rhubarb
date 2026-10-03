@@ -1,6 +1,7 @@
 #include "postulata_posix.h"
 #include "iter_directoria.h"
 #include "via.h"
+#include "lectiones.h"
 #include "chorda_aedificator.h"
 
 #include <dirent.h>
@@ -82,11 +83,14 @@ directorium_iterator_aperire (
         redde NIHIL;
     }
 
+    /* lectiones: notatur */
     descriptum = opendir(via);
     si (descriptum == NIHIL)
     {
+        lectiones_notare(LECTIO_ABSENS, via);
         redde NIHIL;
     }
+    lectiones_notare(LECTIO_ENUMERAVIT, via);
 
     iterator = (DirectoriumIterator*)piscina_allocare(
         piscina,
@@ -148,7 +152,8 @@ directorium_iterator_proximum (
     {
         longitudo_nominis = CCLV;
     }
-    memcpy(iterator->buffer_nominis, introitus->d_name, (size_t)longitudo_nominis);
+    memcpy(iterator->buffer_nominis, introitus->d_name,
+        (size_t)longitudo_nominis);
     iterator->buffer_nominis[longitudo_nominis] = '\0';
 
     /* Creare chorda ex buffer */
@@ -167,16 +172,24 @@ directorium_iterator_proximum (
         redde &(iterator->introitus_nunc);
     }
 
-    memcpy(via_plena, iterator->via_basis.datum, (size_t)longitudo_basis);
+    memcpy(via_plena, iterator->via_basis.datum,
+        (size_t)longitudo_basis);
     via_plena[longitudo_basis] = '/';
-    memcpy(via_plena + longitudo_basis + I, iterator->buffer_nominis, (size_t)longitudo_nominis);
+    memcpy(via_plena + longitudo_basis + I, iterator->buffer_nominis,
+        (size_t)longitudo_nominis);
     via_plena[longitudo_basis + I + longitudo_nominis] = '\0';
 
-    /* Obtinere statum fili */
+    /* Obtinere statum fili. Liber: eventus D directorii (nomina) hanc
+     * lectionem tegit - introitus novus/ablatus nomina mutat. LACUNA
+     * nota (plan 2 T3): genus/mensura sub nomine eodem mutata (filum
+     * -> directorium) sigillum D non mutant. */
+    /* lectiones: notatur */
     si (stat(via_plena, &status) == 0)
     {
-        iterator->introitus_nunc.genus = _determinare_genus(status.st_mode);
-        iterator->introitus_nunc.mensura = (memoriae_index)status.st_size;
+        iterator->introitus_nunc.genus =
+            _determinare_genus(status.st_mode);
+        iterator->introitus_nunc.mensura =
+            (memoriae_index)status.st_size;
     } alioquin
     {
         iterator->introitus_nunc.genus    = INTROITUS_IGNOTUS;
@@ -254,16 +267,20 @@ _congruit_recursivum (
     {
         /* * congruit cum zero vel plus characteribus */
         /* Probare: * congruit nihil */
-        si (_congruit_recursivum(titulus_data, titulus_index, titulus_longitudo,
-                                  exemplar_data, exemplar_index + I, exemplar_longitudo))
+        si (_congruit_recursivum(titulus_data, titulus_index,
+            titulus_longitudo,
+                                  exemplar_data, exemplar_index + I,
+                                  exemplar_longitudo))
         {
             redde VERUM;
         }
         /* Probare: * congruit cum uno charactere, tunc continuare */
         si (titulus_index < titulus_longitudo)
         {
-            redde _congruit_recursivum(titulus_data, titulus_index + I, titulus_longitudo,
-                                        exemplar_data, exemplar_index, exemplar_longitudo);
+            redde _congruit_recursivum(titulus_data, titulus_index + I,
+                titulus_longitudo,
+                                        exemplar_data, exemplar_index,
+                                        exemplar_longitudo);
         }
         redde FALSUM;
     }
@@ -273,17 +290,22 @@ _congruit_recursivum (
         /* ? congruit cum exacte uno charactere */
         si (titulus_index < titulus_longitudo)
         {
-            redde _congruit_recursivum(titulus_data, titulus_index + I, titulus_longitudo,
-                                        exemplar_data, exemplar_index + I, exemplar_longitudo);
+            redde _congruit_recursivum(titulus_data, titulus_index + I,
+                titulus_longitudo,
+                                        exemplar_data, exemplar_index
+                                            + I, exemplar_longitudo);
         }
         redde FALSUM;
     }
 
     /* Character literalis */
-    si (titulus_index < titulus_longitudo && (character)titulus_data[titulus_index] == c)
+    si (   titulus_index < titulus_longitudo
+        && (character)titulus_data[titulus_index] == c)
     {
-        redde _congruit_recursivum(titulus_data, titulus_index + I, titulus_longitudo,
-                                    exemplar_data, exemplar_index + I, exemplar_longitudo);
+        redde _congruit_recursivum(titulus_data, titulus_index + I,
+            titulus_longitudo,
+                                    exemplar_data, exemplar_index + I,
+                                    exemplar_longitudo);
     }
 
     redde FALSUM;
@@ -332,10 +354,13 @@ directorium_existit (
         redde FALSUM;
     }
 
+    /* lectiones: notatur */
     si (stat(via, &status) != 0)
     {
+        lectiones_notare(LECTIO_ABSENS, via);
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_EXSTAT, via);
 
     redde S_ISDIR(status.st_mode) ? VERUM : FALSUM;
 }
@@ -352,7 +377,8 @@ _filtrum_acceptat_genus (
 {
     i32 i;
 
-    si (filtrum == NIHIL || filtrum->genera_accepta == NIHIL || filtrum->genera_numerus == 0)
+    si (   filtrum == NIHIL || filtrum->genera_accepta == NIHIL
+        || filtrum->genera_numerus == 0)
     {
         redde VERUM; /* Nullum filtrum = omnia accepta */
     }
@@ -376,7 +402,8 @@ _filtrum_acceptat_introitum (
     /* Verificare occultum */
     si (filtrum != NIHIL && !filtrum->includere_occultos)
     {
-        si (introitus->titulus.mensura > 0 && introitus->titulus.datum[0] == '.')
+        si (   introitus->titulus.mensura > 0
+            && introitus->titulus.datum[0] == '.')
         {
             redde FALSUM;
         }
@@ -394,7 +421,8 @@ _filtrum_acceptat_introitum (
         && filtrum->exemplar.mensura > 0
         && introitus->genus        == INTROITUS_FILUM)
     {
-        si (!directorium_titulus_congruit(introitus->titulus, filtrum->exemplar))
+        si (!directorium_titulus_congruit(introitus->titulus,
+            filtrum->exemplar))
         {
             redde FALSUM;
         }

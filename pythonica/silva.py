@@ -1572,6 +1572,10 @@ PORTAE = {
                 r'oraculum fabricae: (consensus|DISCORDIA)'),
     'fabrica-fumus': (['./tools/fabrica_fumus.sh'],
                       r'fumus fabricae: (sanum|FRACTUM)'),
+    # compilator (fabrica plan 2 T4): 'clang -c' per thesaurum - octeti
+    # idem ac clang, hit sine clang, obumbratio, compilator alius
+    'compilator': (['./tools/compilator_fumus.sh'],
+                   r'fumus compilatoris: (sanum|FRACTUM)'),
     'diagnostica': (['./tools/diagnostica_fumus.sh'],
                     r'fumus diagnostica: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],
@@ -2233,7 +2237,71 @@ def lint_latinus_praevium(viae):
 # artificia GENERATA quae viae eius tangunt iudicat (-plenus -tacta);
 # STALUM/IGNOTUM obstat cum sanatione. Probationes FABRICA_BIN fingunt.
 FABRICA_BIN = os.path.join(RADIX, 'bin', 'fabrica')
+# forma ANTE iudicium (parcum …QGT1): sutura (probationes fictum ponunt)
+FORMA_BIN = os.path.join(RADIX, 'tools', 'formare_viae.sh')
 
+
+def _formam_praeparare(viae):
+    """plagulas .c/.h viarum in arbore operis FORMARE ante lint,
+    fabricam et portas (tools/formare_viae.sh - regulae eaedem ac uncus,
+    sedes una). Olim uncus formabat POST iudicium: artificium generatum
+    ex plagula reformata (amalgama silvae ex lib/xar.c, e5112e37) stalum
+    committebatur. Nunc octeti iudicati = octeti commissi. Forma monet,
+    numquam obstat; lineae scripti (FORMATA, monita) impressae."""
+    formandae = [v for v in viae if v.endswith(('.c', '.h'))]
+    if not formandae:
+        return
+    r = _curre([FORMA_BIN] + formandae)
+    for linea in (r.stdout + r.stderr).splitlines():
+        if linea.strip():
+            print(linea)
+
+
+
+def _stala_celeria():
+    """bin/fabrica iudicare (celer, ~1.4 s): viae STALUM et lineae
+    effusionis - status installatorum ante et post formam"""
+    r = subprocess.run([FABRICA_BIN, 'iudicare'], cwd=RADIX,
+                       capture_output=True, text=True)
+    lineae = (r.stdout + r.stderr).splitlines()
+    stala = set(l.split(' ', 2)[1] for l in lineae
+                if l.startswith('STALUM ') and len(l.split(' ', 2)) > 1)
+    return stala, lineae
+
+
+def _formam_custodire(viae, sine_fabrica=None):
+    """forma (…QGT1) cum CUSTODIA INSTALLATORUM (parcum …ET4262):
+    artificium RECENS ante formam, STALUM post eam = forma fontes eius
+    post aedificationem rescripsit. Bis 2026-10-02 bin/fabrica: porta
+    fabrica-fumus (casus VI) post ~2 min fracta, causa in actis sepulta.
+    Nunc obstat STATIM cum sanatione - nihil cursum. Iudicium celer ante
+    formam (solum si .c/.h in viis) et post (solum si forma aliquid
+    mutavit). Stalum iam ante formam non a forma factum: non obstat hic.
+    sine_fabrica et bin/fabrica absens custodiam omittunt."""
+    formandae = [v for v in viae if v.endswith(('.c', '.h'))]
+    custodia = (bool(formandae) and sine_fabrica is None
+                and os.path.exists(FABRICA_BIN))
+    if custodia:
+        ante_stala, _ = _stala_celeria()
+        ante_sigilla = _sigilla_viarum(formandae)
+    _formam_praeparare(viae)
+    if not custodia or _sigilla_viarum(formandae) == ante_sigilla:
+        return
+    post_stala, lineae = _stala_celeria()
+    novae = sorted(post_stala - ante_stala)
+    if not novae:
+        return
+    sanatio = []
+    if 'SANATIO:' in lineae:
+        sanatio = [l for l in lineae[lineae.index('SANATIO:') + 1:]
+                   if l.startswith('  ')]
+    raise SilvaError(
+        'FORMA artificia installata stala fecit (%s): forma fontes eorum'
+        ' post aedificationem rescripsit - portae binarium vetus'
+        ' iudicarent. Nihil cursum, nihil commissum. Aedifica iterum'
+        ' (fontes iam formati) et committe iterum:\n%s'
+        % (', '.join(novae), '\n'.join(sanatio)
+           or '  bin/fabrica sanare installata'))
 
 def _viae_commissae(viae):
     """viae (ex 'viae') quas git sequitur (ls-files) - fabricae ante
@@ -2355,6 +2423,9 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             ' commissum:\n  %s' % (len(causae), '\n  '.join(
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     if verificare:
+        initium = time.time()
+        _formam_custodire(viae, sine_fabrica)
+        _tempus_notare('phasis', 'forma', initium)
         initium = time.time()
         _lint_praevium_exigere(viae)
         _tempus_notare('phasis', 'lint', initium)
@@ -3028,8 +3099,9 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     totum_secunda)]). Portae DEBITAE (vide commissio) hic ante umbras
     adduntur, ut in umbra quoque currant; sine_debitis ut in commissio.
     Lint latinus praevius et iudicium fabricae ANTE umbras (ut in
-    commissio; sine_fabrica idem)."""
+    commissio; sine_fabrica idem). Forma ANTE omnia (…QGT1)."""
     if verificare:
+        _formam_praeparare(viae)
         _lint_praevium_exigere(viae)
     _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:

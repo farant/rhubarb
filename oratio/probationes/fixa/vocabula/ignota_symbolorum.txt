@@ -195,7 +195,6 @@ blink
 blkcnt
 blksize
 blob
-blobum
 bloc
 blocans
 blocantem

@@ -218,3 +218,16 @@ leftover link touches gives 4 in ANY `readdir` order, because the
 delete fails at the link whether it is visited first or last. The
 witness line is the one that matters: it separates "a delete that
 failed" from "a delete that reached outside its path".
+
+## 2026-10-02 - mkdir -p race (found by the thesaurus concurrency test)
+
+`filum_directorium_creare_si_necesse` did stat() then mkdir(). Two
+processes creating the same fresh directory: both see "absent", one
+mkdir wins, the other gets EEXIST and the function returned FALSUM -
+although its contract says "VERUM ... vel iam existit". Found by
+fabrica plan 2 T3's two-writer store test ("mkdir fracta" on the
+blobi/<xx>/ prefix dirs, ~9 failures in 400 puts). Fix: after a failed
+mkdir, stat again; a directory there now = success (error cleared).
+Pinned by a probatio_filum section: two forked children create the
+same 300 fresh nested paths in the same order (red 3/3 before, green
+3/3 after). Matters for T6 (parallel executor) too.

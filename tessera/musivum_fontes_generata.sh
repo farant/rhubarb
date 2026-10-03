@@ -18,6 +18,7 @@ declare -a RADIX_FONTES=(
     "imago_opus"
     "internamentum"
     "interpres_terminalis"
+    "lectiones"
     "mandatum"
     "modulus"
     "piscina"

@@ -89,6 +89,7 @@ declare -a RADIX_FONTES=(
     # nexus regiones C per silvam parsat capitibus e FONTE silicis
     "filum"
     "via"
+    "lectiones"
     "processus_posix"
     "iter_directoria"
     "sigillum"

@@ -8,6 +8,7 @@ declare -a RADIX_FONTES=(
     "imago"
     "imago_opus"
     "iter_directoria"
+    "lectiones"
     "piscina"
     "quadrans"
     "runae"

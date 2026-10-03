@@ -121,40 +121,12 @@ fi
 # post evolutionem totam scriptura tota). Modus UNCUS_VIAE (probatio
 # viarum explicitarum) non format.
 if [ -z "${UNCUS_VIAE:-}" ]; then
-    for via in $(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/'); do
-        [ -f "$via" ] || continue
-        # plagula GENERATA (verbum GENERATUM in linea prima): veritas
-        # eius generator est - commissa = effusio generatoris octetim,
-        # ne generatio proxima arborem sordidet et portae generatorum
-        # spatia ignoscere cogantur (fabrica P2, via B, 2026-09-29)
-        if git show ":$via" 2>/dev/null | head -n 1 | grep -qw 'GENERATUM'; then
-            echo "formator (pre-commit): $via GENERATUM - non formata (octeti generatoris)" >&2
-            continue
-        fi
-        if [ -n "$(git diff --name-only -- "$via" 2>/dev/null)" ]; then
-            echo "formator (pre-commit): $via NON formata - arbor operis ab indice differt (commissio partialis)" >&2
-            continue
-        fi
-        case "$via" in
-            knotapel/*|vendor/*)
-                # terra non evoluta: scriptura intra functiones mutatas solas
-                rangae=$(git diff --cached -U0 -- "$via" 2>/dev/null | awk '/^@@/ {
-                    split($3, p, /[+,]/); a = p[2]; n = (p[3] == "" ? 1 : p[3]);
-                    if (n > 0) printf "-lineae %d-%d ", a, a + n - 1 }')
-                [ -z "$rangae" ] && continue
-                fout=$(./silva/formator.sh "$via" -scribere $rangae 2>&1 >/dev/null); modus="intra functiones mutatas" ;;
-            *)
-                # evolutio 2026-09-01 completa: baseline zephyrum ubique -
-                # scriptura TOTA (structurae, tabulae inclusae)
-                fout=$(./silva/formator.sh "$via" -scribere 2>&1 >/dev/null); modus="tota" ;;
-        esac
-        if printf '%s\n' "$fout" | grep -q 'formator: scriptum'; then
-            git add -- "$via"
-            echo "formator (pre-commit): $via FORMATA ($modus), index repositus" >&2
-        fi
-        printf '%s\n' "$fout" | grep -E 'extra extenta|recusat|ignota|maxime|malformata|fracta' | sed 's/^/  /' >&2 || true
-    done
+    # regulae in UNA sede: tools/formare_viae.sh (parcum …QGT1) - eadem
+    # silva.commissio ANTE iudicium fabricae vocat, ergo hic plerumque
+    # nihil mutatur (plagulae iam formatae)
+    # shellcheck disable=SC2046
+    ./tools/formare_viae.sh -index $(git diff --cached --name-only \
+        --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null)
 fi
 
 EXCL="silva/probationes/fixa/examinis/exclusiones.txt"

@@ -27,6 +27,7 @@ SOURCES=(
     "lib/arbor_praeparator.c"
     "lib/arbor_syntaxis.c"
     "lib/filum.c"
+    "lib/lectiones.c"
     "lib/via.c"
     "tools/glr_quaestio.c"
 )

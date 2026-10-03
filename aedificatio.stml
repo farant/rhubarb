@@ -60,6 +60,20 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
+  <!-- compilator (plan 2 T4): 'clang -c' per thesaurum contentorum -->
+  <actio titulus="compilator" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/compilator_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/compilator"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/compilator/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/compilator_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/compilator" provenientia="relatio"/>
+  </actio>
   <!-- T7 pars II: binaria installata. Ingressus = clausura aedilis
        (manifestum, plenum post P1) etiam ubi installator indice manu
        struit; installator ipse et scriptor provenientiae. -->
@@ -452,21 +466,19 @@
        clave ingressuum ET mandati regenerationem supplet. aedilis per
        FONTES suos (manifestum), non per binarium: relinkatum octetis
        differt (LC_UUID), clavis per cursum mutaretur. -->
-  <actio titulus="fragmentum_gesta_fori" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_gesta_fori" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>gesta/fori_fontes_generata.sh
       <verbum! (>gesta/instrumenta/fori_principale.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/gesta__fori_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__fori_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="gesta/fori_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_gesta_tabularium" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_gesta_tabularium" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>gesta/tabularium_fontes_generata.sh
@@ -475,14 +487,12 @@
       <verbum! (>gesta/fontes/tabularium.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/gesta__tabularium_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabularium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="gesta/tabularium_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_gesta_tabulariumd" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_gesta_tabulariumd" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>gesta/tabulariumd_fontes_generata.sh
@@ -491,14 +501,12 @@
       <verbum! (>gesta/fontes/tabularium.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/gesta__tabulariumd_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabulariumd_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="gesta/tabulariumd_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_saltuarius" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_saltuarius" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>saltuarius/saltuarius_fontes_generata.sh
@@ -518,48 +526,40 @@
       <verbum! (>saltuarius/fontes/saltuarius_visum.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/saltuarius__saltuarius_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/saltuarius__saltuarius_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="saltuarius/saltuarius_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_aedilis" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_aedilis" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/fontes_generare.sh
       <verbum! (>tools/aedilis_fontes_generata.sh
       <verbum! (>tools/aedilis.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/tools__aedilis_fontes_generata"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/tools__aedilis_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/fontes_generare.sh"/>
     <exitus via="tools/aedilis_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_gesta" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_gesta" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./gesta/fontes_generare.sh
     </mandatum>
     <vestigium via="build/fabrica/clausurae/gesta"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="gesta/fontes_generare.sh"/>
     <ingressus genus="plagulae" via="gesta/probationes" suffixa=".c"/>
     <exitus via="gesta/fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
-  <actio titulus="fragmentum_compile_tests" genus="generator" memorabilis="verum">
+  <actio titulus="fragmentum_compile_tests" genus="generator" lectiones="verum">
     <mandatum>
       <verbum! (>./tools/compile_tests_fontes_generare.sh
     </mandatum>
     <vestigium via="build/fabrica/clausurae/compile_tests"/>
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/compile_tests"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
-    <ingressus genus="radices" via="aedilis.stml"/>
     <ingressus genus="manifestum" via="build/aedilis/aedilis/manifestum.stml"/>
     <ingressus genus="fasciculus" via="tools/compile_tests_fontes_generare.sh"/>
     <!-- globus probationes/probatio_*.c: superset .c (conservativum) -->

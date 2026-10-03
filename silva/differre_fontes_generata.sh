@@ -12,6 +12,7 @@ declare -a RADIX_FONTES=(
     "git"
     "internamentum"
     "iter_directoria"
+    "lectiones"
     "piscina"
     "runae"
     "runae_tabulae"

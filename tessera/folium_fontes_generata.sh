@@ -7,6 +7,7 @@ declare -a RADIX_FONTES=(
     "eventus_cauda"
     "filum"
     "interpres_terminalis"
+    "lectiones"
     "piscina"
     "rivus_terminalis"
     "runae"

@@ -8,6 +8,7 @@
 #include "sigillum.h"
 #include "internamentum.h"
 #include "tabula_dispersa.h"
+#include "lectiones.h"
 
 
 /* ==================================================
@@ -114,6 +115,10 @@ nomen structura {
                                         * regenerationem supplet (T6).
                                         * Absens = FALSUM: regeneratur
                                         * semper sub -plenus. */
+                     b32 lectiones;   /* lectiones="verum" (plan 2 T2):
+                                       * clavis = vestigium libri
+                                       * lectionum (L A X D) ultimi
+                                       * cursus congruentis */
                      Xar* praecondiciones; /* chorda: tituli actionum
                                             * REALIZANDARUM ante hanc -
                                             * ordo sine sigillo (plan 1b
@@ -172,6 +177,15 @@ nomen structura {
 } FabricaActum;
 
 /* Sutura: machina discum et processus per eam SOLAM tangit. */
+/* lectio una vestigii (plan 2 T2): genus, via (arbori relativa),
+ * sigillum status eius tempore cursus (L: contenta; A/X: praesentia;
+ * D: nomina ordinata) */
+nomen structura {
+    LectioGenus genus;
+         chorda via;
+       Sigillum sigillum;
+} FabricaLectio;
+
 nomen structura {
     vacuum* datum;
     /* FALSUM = plagula absens */
@@ -186,6 +200,8 @@ nomen structura {
      * FALSUM + causa (ultima linea) si fractum. */
     b32 (*currere)(vacuum* datum, constans Xar* mandatum,
                    constans character* scriptura_dir,
+                   constans character* liber_via,  /* plan 2 T2:
+                                     * FABRICA_LECTIONES; NIHIL = nullus */
                    Piscina* piscina, chorda* causa_out,
                    i32* duratio_ms_out);  /* parcum …AR15: tempus
                                            * regenerationis (cursus) */
@@ -241,6 +257,36 @@ nomen structura {
                                 constans FabricaSanatio* sanatio);
     b32 (*cursum_legere)(vacuum* datum, constans character* titulus,
                          i32* duratio_ms_out);
+    /* vestigia lectionum (plan 2 T2): clavis = (titulus, via exitus,
+     * sigillum ingressuum declaratorum, sigillum artificii) - vestigium
+     * ULTIMUM per (titulus, exitus): actio exituum multorum (fragmenta
+     * silvae, XXII) cuique exitui suum servat;
+     * legere FALSUM = nullum. NIHIL licent (sine vestigiis). */
+    b32 (*lectiones_legere)(vacuum* datum, constans character* titulus,
+                            constans character* exitus,
+                            constans Sigillum* ingressus,
+                            constans Sigillum* artificium,
+                            Piscina* piscina, Xar** lectiones_out);
+    vacuum (*lectiones_scribere)(vacuum* datum,
+                                 constans character* titulus,
+                                 constans character* exitus,
+                                 constans Sigillum* ingressus,
+                                 constans Sigillum* artificium,
+                                 constans Xar* lectiones);
+    /* vestigia ULTIMA tituli (omnes exitus, quaevis clavis) - ORDO:
+     * viae lectae (L/X/A) et enumerata (D) actionis lectiones="verum"
+     * arcus ad producentes dant, ut manifesta olim (plan 2 T2). FALSUM
+     * = nullum vestigium (clonus recens: nullus arcus). NIHIL licet. */
+    b32 (*lectiones_ultimae)(vacuum* datum, constans character* titulus,
+                             Piscina* piscina, Xar** lectiones_out);
+    /* praefixum absolutum arboris, ex viis libri demendum (instrumenta
+     * vias absolutas scribere possunt); vacua = nihil demitur */
+    chorda radix;
+    /* AUDITUS MEMORIAE (plan 2 T2, Review Focus 5): ictus vestigii aut
+     * memoriae sub -plenus regeneratur tamen et confertur. 0 = nullus;
+     * I = omnes (iudicare -audit); N = unus ex N (specimen
+     * determinatum: octetus primus clavis ingressuum modulo N) */
+    i32 auditus;
 } FabricaSutura;
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
@@ -402,6 +448,26 @@ fabrica_declarationes_legere (
     InternamentumChorda* intern,
                  chorda* causa_out);
 
+/* Idem cum FAMILIIS (plan 2 T4): elementum <familia titulus via
+ * praefixum? suffixum?> templum STML unum fert (<#@id basis="@basis"
+ * fons="@fons"> corpus = actio una </#>); per plagulam directorii
+ * 'via' (sutura->enumerare) congruentem vocatio synthetica
+ * <<#@id basis="..." fons="via/plagula">> per stml_expandere impletur
+ * (argumenta sola quae templum declarat; nulla lingua expressionum).
+ * Instantia: titulus 'familia:basis' (templum titulum ferre nequit),
+ * fons ingressus fasciculus. basis = nomen sine suffixo. Recusat:
+ * familia sine titulo/via, templum non unum, directorium absens,
+ * vitium expansionis, corpus non actio una. Sutura NIHIL = lector
+ * purus: familia recusatur (fabrica_declarationes_legere). */
+Xar*
+fabrica_declarationes_legere_cum_sutura (
+                    chorda  contentum,
+        constans character* via,
+    constans FabricaSutura* sutura,
+                   Piscina* piscina,
+       InternamentumChorda* intern,
+                    chorda* causa_out);
+
 /* Radix fabrica.stml (dialectus fabrica v2): viae subsystematum
  * (Xar de chorda), ordine documenti. NIHIL + causa si radix non
  * fabrica est aut subsystema sine via. */
@@ -545,6 +611,9 @@ nomen enumeratio {
     FABRICA_OMISSUM,            /* dependentia fracta aut omissa */
     FABRICA_AGENDUM,            /* siccum: stalum/ignotum nunc */
     FABRICA_FORTASSE,           /* siccum: post actionem agendam */
+    FABRICA_AUDITUM_DISCORS,    /* auditus: memoria/vestigium RECENS
+                                 * dicebat, regeneratio differt (plan
+                                 * 2 T2) */
     FABRICA_IUDICIUM            /* regeneratio iudicis (cursus solum,
                                  * numquam sanatio; parcum …AR15) */
 } FabricaEventus;

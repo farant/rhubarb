@@ -35,7 +35,7 @@ FONTES=(
     natura canon stml stml_macros similitudo chorda
     chorda_aedificator piscina xar
     internamentum tabula_dispersa friatio selectio
-    filum iter_directoria via provenientia
+    filum iter_directoria via lectiones provenientia
 )
 
 newest_header () {
@@ -54,48 +54,27 @@ for f in "${FONTES[@]}"; do
 done
 
 # nectere <titulus> <binarium relativum> <fons provenientiae> <argumenta
-# clang...>: binarium per nomen temporarium + mv (renominatio atomica -
-# processus binarium VETUS currens non turbatur; scriptura in loco
-# eum necaret, macOS). Sine FABRICA_AGIT nectit solum si binarium
-# absens aut vetustius obiectis, fontibus, PLAGULA provenientiae (.c -
-# scribitur solum si mutata; obiectum eius SEMPER recompilatur, ergo
-# mtime eius nihil dicit), vexillis, hoc scripto; sub executore
-# fabricae SEMPER (fabrica stalitatem iudicat)
-_recens () {   # <binarium> <ingressus...> -> 0 si binarium STRICTE recentius
-    local binarium="$1" f
-    shift
-    [ -f "$binarium" ] || return 1
-    for f in "$@"; do
-        [ -e "$f" ] || continue          # vexilla (-I...) non plagulae
-        # aequalitas (idem secundum) = stalum: '! bin -nt f', non
-        # 'f -nt bin' (lint:nt-aequalitas - opus tacite omissum)
-        ! [ "$binarium" -nt "$f" ] && return 1
-    done
-    return 0
-}
+# clang...>: SOLUM si stalum, ATOMICE (tools/nexus_recens.sh - sedes una
+# cum aedilis_struere.sh). Ingressus: obiecta, fontes, PLAGULA
+# provenientiae (.c - obiectum eius SEMPER recompilatur, ergo mtime eius
+# nihil dicit), vexilla, haec scripta.
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/nexus_recens.sh"
 nectere () {
     local titulus="$1" binarium="$2" fons_prov="$3" prov exitus
     shift 3
     prov="$("$SCRIPT_DIR/provenientia_obiectum.sh" "$titulus" "$binarium" "$fons_prov" natura)" || exit 1
     exitus="$RADIX_DIR/$binarium"
     # shellcheck disable=SC2086
-    if [ -z "${FABRICA_AGIT:-}" ] && _recens "$exitus" $obj_files \
-            "$RADIX_DIR/${prov%.o}.c" "$@" "$RADIX_DIR/tools/vexilla.sh" \
-            "$SCRIPT_DIR/natura_struere.sh"; then
+    if binarium_recens "$exitus" $obj_files "$RADIX_DIR/${prov%.o}.c" \
+            "$@" "$RADIX_DIR/tools/vexilla.sh" \
+            "$SCRIPT_DIR/natura_struere.sh" "$SCRIPT_DIR/nexus_recens.sh"; then
         echo "$binarium recens" >&2
         return 0
     fi
     # shellcheck disable=SC2086
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$@" $obj_files \
-        "$RADIX_DIR/$prov" -o "$exitus.novum.$$" \
-        || { rm -f "$exitus.novum.$$"; rm -rf "$exitus.novum.$$.dSYM"; exit 1; }
-    mv -f "$exitus.novum.$$" "$exitus" || exit 1
-    # vexilla -g: dsymutil fasciculum <exitus>.dSYM iuxta nomen
-    # temporarium ponit - cum binario transfertur (aliter reliquiae)
-    if [ -d "$exitus.novum.$$.dSYM" ]; then
-        rm -rf "$exitus.dSYM"
-        mv "$exitus.novum.$$.dSYM" "$exitus.dSYM" || exit 1
-    fi
+    nectere_atomice "$exitus" "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        "$@" $obj_files "$RADIX_DIR/$prov" || exit 1
     echo "$binarium paratum" >&2
 }
 

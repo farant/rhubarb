@@ -1,6 +1,7 @@
 #include "postulata_posix.h"
 #include "filum.h"
 #include "chorda_aedificator.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -92,6 +93,7 @@ filum_legere_totum (
     /* Invenire mensuram per stat() - velocius quam fseek/ftell */
     si (stat(via, &st) != ZEPHYRUM)
     {
+        lectiones_notare(LECTIO_ABSENS, via);
         _filum_error_ponere("stat fracta");
         fructus.mensura  = ZEPHYRUM;
         fructus.datum    = NIHIL;
@@ -133,6 +135,7 @@ filum_legere_totum (
         redde fructus;
     }
 
+    lectiones_notare(LECTIO_LEGIT, via);
     fructus.mensura  = (i32)mensura;
     fructus.datum    = buffer;
     redde fructus;
@@ -147,9 +150,14 @@ filum_existit (
     si (!via) redde FALSUM;
 
     f = fopen(via, "r");
-    si (!f) redde FALSUM;
+    si (!f)
+    {
+        lectiones_notare(LECTIO_ABSENS, via);
+        redde FALSUM;
+    }
 
     fclose(f);
+    lectiones_notare(LECTIO_EXSTAT, via);
     redde VERUM;
 }
 
@@ -163,7 +171,13 @@ filum_mensura (
     si (!via) redde ZEPHYRUM;
 
     f = fopen(via, "rb");
-    si (!f) redde ZEPHYRUM;
+    si (!f)
+    {
+        lectiones_notare(LECTIO_ABSENS, via);
+        redde ZEPHYRUM;
+    }
+    /* mensura ex contentis pendet: lectio (L), non solum exstantia */
+    lectiones_notare(LECTIO_LEGIT, via);
 
     si (fseek(f, ZEPHYRUM, SEEK_END) != ZEPHYRUM)
     {
@@ -210,9 +224,11 @@ filum_lector_aperire (
     lector->descriptum = fopen(via, "r");
     si (!lector->descriptum)
     {
+        lectiones_notare(LECTIO_ABSENS, via);
         _filum_error_ponere("fopen fracta");
         redde NIHIL;
     }
+    lectiones_notare(LECTIO_LEGIT, via);
 
     lector->numerus_versus  = ZEPHYRUM;
     lector->est_finis       = FALSUM;
@@ -465,6 +481,10 @@ filum_scriptor_aperire (
     }
 
     scriptor->descriptum = fopen(via, modus_str);
+    si (scriptor->descriptum)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!scriptor->descriptum)
     {
         _filum_error_ponere("fopen fracta");
@@ -647,6 +667,10 @@ filum_scribere (
     _filum_error_purgare();
 
     f = fopen(via, "wb");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro scribere fracta");
@@ -684,6 +708,10 @@ filum_scribere_literis (
     _filum_error_purgare();
 
     f = fopen(via, "w");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro scribere fracta");
@@ -720,6 +748,10 @@ filum_appendere (
     _filum_error_purgare();
 
     f = fopen(via, "ab");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro appendere fracta");
@@ -757,6 +789,10 @@ filum_appendere_literis (
     _filum_error_purgare();
 
     f = fopen(via, "a");
+    si (f)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
     si (!f)
     {
         _filum_error_ponere("fopen pro appendere fracta");
@@ -834,6 +870,7 @@ filum_arborem_delere (
     si (!S_ISDIR(st.st_mode))
     {
         /* filum aut NEXUS: ipse removetur, numquam destinatio */
+        lectiones_notare(LECTIO_SCRIPSIT, via);
         si (unlink(via) != ZEPHYRUM)
         {
             _filum_error_ponere("unlink fracta");
@@ -918,6 +955,8 @@ filum_movere (
 
     _filum_error_purgare();
 
+    lectiones_notare(LECTIO_SCRIPSIT, via_vetus);
+    lectiones_notare(LECTIO_SCRIPSIT, via_nova);
     si (rename(via_vetus, via_nova) != ZEPHYRUM)
     {
         _filum_error_ponere("rename fracta");
@@ -954,6 +993,10 @@ filum_copiare (
     }
 
     dest = fopen(via_destinatio, "wb");
+    si (dest)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via_destinatio);
+    }
     si (!dest)
     {
         fclose(fons);
@@ -1025,6 +1068,7 @@ filum_directorium_creare (
 
     _filum_error_purgare();
 
+    lectiones_notare(LECTIO_SCRIPSIT, via);
 #ifdef _WIN32
     si (_mkdir(via) != ZEPHYRUM)
 #else
@@ -1064,8 +1108,19 @@ filum_directorium_creare_si_necesse (
         redde FALSUM;
     }
 
-    /* Non existit - creare */
-    redde filum_directorium_creare(via);
+    /* Non existit - creare. CONCURSUS: alter processus inter stat()
+     * et mkdir() creare potest (EEXIST) - directorium tum 'iam
+     * existit', ergo successus (thesaurus, II scriptores, plan 2 T3) */
+    si (filum_directorium_creare(via))
+    {
+        redde VERUM;
+    }
+    si (stat(via, &st) == ZEPHYRUM && S_ISDIR(st.st_mode))
+    {
+        _filum_error_purgare();
+        redde VERUM;
+    }
+    redde FALSUM;
 }
 
 b32
@@ -1103,6 +1158,7 @@ filum_directorium_creare_cum_modo (
         redde VERUM;
     }
 
+    lectiones_notare(LECTIO_SCRIPSIT, via);
 #ifdef _WIN32
     (vacuum)modus;
     si (_mkdir(via) != ZEPHYRUM)
@@ -1194,7 +1250,12 @@ filum_directorium_existit (
 
     si (!via) redde FALSUM;
 
-    si (stat(via, &st) != ZEPHYRUM) redde FALSUM;
+    si (stat(via, &st) != ZEPHYRUM)
+    {
+        lectiones_notare(LECTIO_ABSENS, via);
+        redde FALSUM;
+    }
+    lectiones_notare(LECTIO_EXSTAT, via);
 
     redde S_ISDIR(st.st_mode);
 }
@@ -1221,9 +1282,11 @@ filum_status (
 
     si (stat(via, &st) != ZEPHYRUM)
     {
+        lectiones_notare(LECTIO_ABSENS, via);
         _filum_error_ponere("stat fracta");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_EXSTAT, via);
 
     status_out->mensura = (memoriae_index)st.st_size;
 

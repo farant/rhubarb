@@ -52,7 +52,12 @@ awk -v S="$SIGNUM" -v F="$FINIS" '
 
 if [ "$EXITUS" != "-comparare" ]; then
     mkdir -p "$EXITUS"
-    cp "$extractum" "$EXITUS/$BASIS"
+    # scriptura SOLUM si contentum mutatum (2026-10-02): copia omni
+    # vocatione mtime capitis renovabat, et vocantes qui per mtime
+    # iudicant (aedilis_struere.sh) semper stalum videbant
+    if ! cmp -s "$extractum" "$EXITUS/$BASIS"; then
+        cp "$extractum" "$EXITUS/$BASIS"
+    fi
 fi
 if cmp -s "$extractum" "$CAPUT"; then
     exit 0
