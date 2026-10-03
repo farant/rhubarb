@@ -2140,7 +2140,7 @@ _acta_ordinis = os.path.join(T, 'ordo_formae.txt')
 _forma_ficta = os.path.join(T, 'forma_ficta.sh')
 _fabrica_ordinis = os.path.join(T, 'fabrica_ordinis.sh')
 open(_forma_ficta, 'w').write('#!/bin/bash\necho "forma $*" >> %s\n' % _acta_ordinis)
-open(_fabrica_ordinis, 'w').write('#!/bin/bash\necho fabrica >> %s\n'
+open(_fabrica_ordinis, 'w').write('#!/bin/bash\necho "fabrica $*" >> %s\n'
                                   'printf "STALUM g/x.c - regeneratio differt\\n"\nexit 1\n'
                                   % _acta_ordinis)
 os.chmod(_forma_ficta, 0o755)
@@ -2163,14 +2163,92 @@ try:
                 pass
         _ordo = open(_acta_ordinis).read().splitlines() if os.path.exists(_acta_ordinis) else []
         if _verificare:
-            credo(_ordo == ['forma pythonica/via_absens_formae.c', 'fabrica'],
+            # 'fabrica iudicare' primum = custodia installatorum (…ET4262)
+            credo(_ordo == ['fabrica iudicare',
+                            'forma pythonica/via_absens_formae.c',
+                            'fabrica iudicare -plenus -tacta pythonica/via_absens_formae.c'
+                            ' pythonica/via_absens_formae.txt'],
                   'commissio: forma (solae .c/.h) ANTE iudicium fabricae', causa=repr(_ordo))
         else:
-            credo(_ordo == ['fabrica'],
+            credo(_ordo == ['fabrica iudicare -plenus -tacta pythonica/via_absens_formae.c'
+                            ' pythonica/via_absens_formae.txt'],
                   'commissio verificare=False: nulla forma (ut uncus --no-verify)', causa=repr(_ordo))
 finally:
     silva.FORMA_BIN, silva.FABRICA_BIN = _forma_vera, _fabrica_vera_ordinis
     silva.VIAE_COMMISSAE = _commissae_verae_ordinis
+
+# CUSTODIA INSTALLATORUM (parcum …ET4262): installatum RECENS ante
+# formam, STALUM post eam = forma fontes eius post aedificationem
+# rescripsit (bis 2026-10-02: fabrica-fumus casus VI post ~2 min
+# fractus). Commissio statim obstat, sanationem nominans. Fabrica ficta:
+# iudicium celer primum = status 'ante', secundum = 'post'; -plenus
+# (iudicium tactorum) exitu 1 commissionem sistit - numquam committitur.
+_custos_dir = os.path.join(T, 'custodia')
+os.makedirs(_custos_dir, exist_ok=True)
+_custos_c = 'build/pythonica/custodia/planta.c'
+_custos_numerus = os.path.join(_custos_dir, 'numerus')
+_custos_forma = os.path.join(_custos_dir, 'forma.sh')
+_custos_forma_inertis = os.path.join(_custos_dir, 'forma_iners.sh')
+_custos_fabrica = os.path.join(_custos_dir, 'fabrica.sh')
+open(_custos_forma, 'w').write('#!/bin/bash\nfor v in "$@"; do printf " " >> "%s/$v"; done\n' % RADIX)
+open(_custos_forma_inertis, 'w').write('#!/bin/bash\nexit 0\n')
+
+
+def _custos_fabricam_scribere(ante, post):
+    """celer: primum 'ante' (STALUM lineae), deinde 'post'; -plenus: 1"""
+    open(_custos_fabrica, 'w').write(
+        '#!/bin/bash\n'
+        'if [ "$2" = "-plenus" ]; then echo "STALUM g/x.c - regeneratio differt"; exit 1; fi\n'
+        'if [ ! -e %s ]; then touch %s; printf "%%b" %s; exit 0; fi\n'
+        'printf "%%b" %s\nexit 1\n'
+        % (_custos_numerus, _custos_numerus, repr(ante), repr(post)))
+    os.chmod(_custos_fabrica, 0o755)
+
+
+os.chmod(_custos_forma, 0o755)
+os.chmod(_custos_forma_inertis, 0o755)
+_custos_verae = (silva.FORMA_BIN, silva.FABRICA_BIN, silva.VIAE_COMMISSAE)
+_STALUM_FICTUM = ('STALUM bin/fictum - ingressus mutati post institutionem\n'
+                  'SANATIO:\n  ./struere_fictum.sh   # fictum (./a.stml:1)\n')
+
+
+def _custos_commissio(forma, ante, post):
+    if os.path.exists(_custos_numerus):
+        os.unlink(_custos_numerus)
+    open(os.path.join(RADIX, _custos_c), 'w').write('int x;\n')
+    silva.FORMA_BIN = forma
+    _custos_fabricam_scribere(ante, post)
+    silva.FABRICA_BIN = _custos_fabrica
+    err = None
+    with contextlib.redirect_stdout(io.StringIO()):
+        try:
+            silva.commissio('nihil', [_custos_c], portae=[], recepta=False,
+                            sine_debitis='probatio custodiae')
+        except Exception as ex:
+            err = str(ex)
+    return err or ''
+
+
+try:
+    silva.VIAE_COMMISSAE = lambda viae: set(viae)
+    # A. recens ante, stalum post forma mutante: obstat statim, nominat
+    err = _custos_commissio(_custos_forma, 'fabrica: 1 recentia\n', _STALUM_FICTUM)
+    credo('bin/fictum' in err and './struere_fictum.sh' in err
+          and 'FABRICA (ante portas)' not in err,
+          'custodia: forma installatum stalum facit -> obstat ante iudicium, sanatio nominata',
+          causa=err[:300])
+    # B. forma nihil mutat: iudicium secundum non currit, nihil obstat
+    err = _custos_commissio(_custos_forma_inertis, 'fabrica: 1 recentia\n', _STALUM_FICTUM)
+    credo('FABRICA (ante portas)' in err and 'bin/fictum' not in err,
+          'custodia: forma iners -> nulla obstantia (iudicium tactorum sequitur)',
+          causa=err[:300])
+    # C. iam stalum ANTE formam: non a forma factum -> non obstat hic
+    err = _custos_commissio(_custos_forma, _STALUM_FICTUM, _STALUM_FICTUM)
+    credo('FABRICA (ante portas)' in err and './struere_fictum.sh' not in err,
+          'custodia: stalum iam ante formam -> non obstat (forma non culpa)',
+          causa=err[:300])
+finally:
+    silva.FORMA_BIN, silva.FABRICA_BIN, silva.VIAE_COMMISSAE = _custos_verae
 
 # _clausurae (parcum fabricae …AR15): --corpus pro directorio dimidia
 # parte petito, singuli ceteri; clausura ignota (None = porta debetur)

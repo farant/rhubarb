@@ -2253,6 +2253,52 @@ def _formam_praeparare(viae):
             print(linea)
 
 
+
+def _stala_celeria():
+    """bin/fabrica iudicare (celer, ~1.4 s): viae STALUM et lineae
+    effusionis - status installatorum ante et post formam"""
+    r = subprocess.run([FABRICA_BIN, 'iudicare'], cwd=RADIX,
+                       capture_output=True, text=True)
+    lineae = (r.stdout + r.stderr).splitlines()
+    stala = set(l.split(' ', 2)[1] for l in lineae
+                if l.startswith('STALUM ') and len(l.split(' ', 2)) > 1)
+    return stala, lineae
+
+
+def _formam_custodire(viae, sine_fabrica=None):
+    """forma (…QGT1) cum CUSTODIA INSTALLATORUM (parcum …ET4262):
+    artificium RECENS ante formam, STALUM post eam = forma fontes eius
+    post aedificationem rescripsit. Bis 2026-10-02 bin/fabrica: porta
+    fabrica-fumus (casus VI) post ~2 min fracta, causa in actis sepulta.
+    Nunc obstat STATIM cum sanatione - nihil cursum. Iudicium celer ante
+    formam (solum si .c/.h in viis) et post (solum si forma aliquid
+    mutavit). Stalum iam ante formam non a forma factum: non obstat hic.
+    sine_fabrica et bin/fabrica absens custodiam omittunt."""
+    formandae = [v for v in viae if v.endswith(('.c', '.h'))]
+    custodia = (bool(formandae) and sine_fabrica is None
+                and os.path.exists(FABRICA_BIN))
+    if custodia:
+        ante_stala, _ = _stala_celeria()
+        ante_sigilla = _sigilla_viarum(formandae)
+    _formam_praeparare(viae)
+    if not custodia or _sigilla_viarum(formandae) == ante_sigilla:
+        return
+    post_stala, lineae = _stala_celeria()
+    novae = sorted(post_stala - ante_stala)
+    if not novae:
+        return
+    sanatio = []
+    if 'SANATIO:' in lineae:
+        sanatio = [l for l in lineae[lineae.index('SANATIO:') + 1:]
+                   if l.startswith('  ')]
+    raise SilvaError(
+        'FORMA artificia installata stala fecit (%s): forma fontes eorum'
+        ' post aedificationem rescripsit - portae binarium vetus'
+        ' iudicarent. Nihil cursum, nihil commissum. Aedifica iterum'
+        ' (fontes iam formati) et committe iterum:\n%s'
+        % (', '.join(novae), '\n'.join(sanatio)
+           or '  bin/fabrica sanare installata'))
+
 def _viae_commissae(viae):
     """viae (ex 'viae') quas git sequitur (ls-files) - fabricae ante
     portas: artificium stalum NON commissum (build/, ~/.bin) commissionem
@@ -2374,7 +2420,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                 '%d. %s' % (k + 1, c) for k, c in enumerate(causae))))
     if verificare:
         initium = time.time()
-        _formam_praeparare(viae)
+        _formam_custodire(viae, sine_fabrica)
         _tempus_notare('phasis', 'forma', initium)
         initium = time.time()
         _lint_praevium_exigere(viae)

@@ -936,3 +936,28 @@ before the hook.
 - Side lesson: the plant/restore touched xar.c's mtime, the oratio
   objects went stale, and the suite's new causa= output named it at once
   ("STALUM oratio/build/xar.o POST lib/xar.c").
+
+## 2026-10-02 - commissio: custodia installatorum (park …ET4262)
+
+Failure (twice today): build bin/fabrica, launch commissio; its format
+step (QGT1) rewrote tools/fabrica.c ("FORMATA (tota)"), so bin/fabrica's
+install digest no longer matched its sources. The pre-gate judge didn't
+see it - `-tacta` judges GENERATED artifacts only, and stale non-committed
+artifacts are named-not-blocking by design (1b T7). fabrica-fumus case VI
+(bin/fabrica STALUM) went red ~2 min later, cause buried in gate acta.
+Fix (`_formam_custodire`): fast judge (`bin/fabrica iudicare`, ~1.4 s)
+before the format step (only if .c/.h in viae), and again after it only
+if the format changed a digest; artifacts RECENS before and STALUM after
+= made stale by the format -> SilvaError at once, naming the SANATIO
+lines. Already-stale-before is not the format's fault and does not block
+here (the old policy stands). sine_fabrica / missing bin/fabrica skip it.
+Tests: A forma stales -> blocks with sanatio; B inert forma -> no second
+judge, no block; C stale before -> no block. The existing ordering test
+now logs fabrica argv (the guard's first call is `iudicare`). Fake-script
+trap: `printf "%s" '...\n...'` prints a literal \n - use %b. Plant (no
+raise) -> A red. Live: deviation in tools/fabrica.c, built, guard ->
+"FORMA artificia installata stala fecit (bin/fabrica) ...
+./tools/fabrica_struere.sh".
+Rejected for now: commissio re-heals installata itself (policy: commit
+would write bin/ - Fran's call); fumus builds its own binary (fixes one
+gate only).
