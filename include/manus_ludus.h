@@ -135,6 +135,26 @@ manus_ludus_iterare (
     ManusIteratio  modus,
               Xar* divergentiae);
 
+/* Traditio eventus iterati (eventus B6b): via per quam quisque eventus
+ * ad dispensatorem it. NIHIL = directe (dispensator_tractare);
+ * transitus terminalis eum in octetos codificat et per rivum
+ * decodificat. */
+nomen vacuum (*ManusTraditio)(
+               vacuum* ctx,
+          Dispensator* d,
+    constans Eventus* e);
+
+/* Ut manus_ludus_iterare, sed per traditionem datam (NIHIL:
+ * directe). */
+i32
+manus_ludus_iterare_per (
+       ManusLudus* m,
+     constans Xar* notata,
+    ManusIteratio  modus,
+              Xar* divergentiae,
+    ManusTraditio  traditio,
+           vacuum* ctx);
+
 /* Tempus procedit; pulsus dispensatori (sedes quietis). */
 vacuum
 manus_ludus_exspectare (

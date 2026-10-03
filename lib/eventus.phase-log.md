@@ -1491,3 +1491,51 @@ handed `xar_obtinere(eventa, k)` to the encoder as an ARRAY, but Xar is
 segmented (first segment 4): B6a-ii's extra events put a key at index
 3 and its TEXT at 4, across the boundary. B6a-i passed by luck. The
 helper now copies to a contiguous buffer; memory's Xar note widened.
+
+## B6b — cross-target replay: terminal ⇄ fenestra (2026-10-03)
+
+The proof that a recorded session survives a change of SOURCE, not only
+of layout (A6b). Headless, on A6's toy app, with per-target geometry
+(Fran's choice).
+
+**The toy gained a terminal geometry** (`ToyStatus.modulus_*`): its
+rectangles extend OUTWARD to the Modulus grid (6x8, fenestra's font
+cell: start floored, end ceiled), plus a one-cell header
+(`translatio_y` = 8), as a status line would. Every test that zeroes the
+toy (memset) keeps the pixel geometry: the six other users pass
+unchanged.
+
+**`manus_ludus_iterare_per(m, notata, modus, div, traditio, ctx)`**:
+replay through a DELIVERY function (`ManusTraditio`), NIHIL = straight
+to the dispensator; `manus_ludus_iterare` is now that special case. The
+terminal transport is just one such function (in the test): encoder
+(cells by the Modulus) → bytes → rivus (LAZY read: one SGR report, one
+event, because the toy counts a point per motion) → dispensator, with
+silence after a lone ESC.
+
+**`probatio_iteratio_transversa` (14):**
+- A. a TERMINAL session (SGR bytes through rivus, 6x8 cells) recorded
+  by the notarius; its first click is at column 2, x = 9: inside the
+  snapped b1 [6,60), outside fenestra's b1 [10,60).
+- B. SEMANTIC replay into the fenestra geometry: same end state; the 2
+  divergences reported are b1's press and release.
+- C. RAW replay: b1's click lands on radix, `numerus` missing.
+- D. a FENESTRA session (pixels, left button), b1 clicked on its left
+  edge (local x = 0).
+- E. D replayed through the terminal transport into the snapped
+  terminal geometry: same end state.
+- F. the same into an UNSNAPPED terminal geometry: the edge click
+  becomes cell 1, whose centre (x = 9) is outside b1 [10,60): the click
+  is lost. **The finding: in a terminal, layout must sit on cell
+  boundaries**, or clicks near component edges quantize into the
+  neighbour. With cell-aligned rectangles every cell is wholly inside
+  or outside, so a semantic point always lands in its component.
+- G. `traditio` NIHIL equals `manus_ludus_iterare`.
+
+Plants caught: the transport replaying raw positions (manus skipping
+the semantic position under a traditio); the encoder skipping the cell
+snap. pictor, villa and forum build.
+
+The hand-written `toy.eventus.stml` (A3) records presses with
+`botton="0"` (no button in the vocabulary); the encoder rightly refuses
+to send a press without a button, so B6b records fresh sessions.

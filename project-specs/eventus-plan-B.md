@@ -230,7 +230,10 @@ shifted alternate, on release).
 - **B6a-ii — mouse (SGR, cells by the Modulus), paste (bracketed, end
   marker never inside), focus.**
 - **B6b — the cross-target replay proof** (toy app, per-target
-  geometry, terminal → fenestra and back, divergences reported).
+  geometry, terminal → fenestra and back, divergences reported). As built:
+  `manus_ludus_iterare_per` (a delivery function; the terminal
+  transport encodes, then decodes through rivus); finding: terminal
+  layout must sit on cell boundaries.
 
 **B7 — RELATIO.** Phase log, module 002/003/005 statuses, merges, briar
 MUTATIONES.
