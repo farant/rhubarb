@@ -44,7 +44,10 @@ mensor_suitae_incipere () {
     MSU_COMPILATIO=$(mktemp)
     MSU_MENSOR=""
     if [ -z "${MENSOR_TACET:-}" ] && [ -x "$MSU_RADIX/bin/mensor" ]; then
-        if eval "$("$MSU_RADIX/bin/mensor" sessio 2>/dev/null)" 2>/dev/null; then
+        # FABRICA_LECTIONES= (vacuum = liber clausus): volumen mensoris
+        # EXITUS est, numquam ingressus - in vestigio portae (actio
+        # 'iudicium') clavem omni cursu mutaret (fabrica spec 3 T3)
+        if eval "$(FABRICA_LECTIONES= "$MSU_RADIX/bin/mensor" sessio 2>/dev/null)" 2>/dev/null; then
             MSU_MENSOR="$MSU_RADIX/bin/mensor"
         fi
     fi
@@ -98,10 +101,10 @@ mensor_suitae_tardissimae () {
 _msu_addere () {
     [ -n "$MSU_MENSOR" ] || return 0
     if [ -n "${4:-}" ]; then
-        "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
+        FABRICA_LECTIONES= "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
             -unitas "$3" -parens "$4" >/dev/null 2>&1 || true
     else
-        "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
+        FABRICA_LECTIONES= "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
             -unitas "$3" >/dev/null 2>&1 || true
     fi
 }
@@ -110,10 +113,10 @@ _msu_addere () {
 _msu_nodus () {
     [ -n "$MSU_MENSOR" ] || { echo ""; return 0; }
     if [ -n "${4:-}" ]; then
-        "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
+        FABRICA_LECTIONES= "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
             -unitas "$3" -parens "$4" -id 2>/dev/null || echo ""
     else
-        "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
+        FABRICA_LECTIONES= "$MSU_MENSOR" addere -titulus "$MSU_PRAEFIXUM$1" -valor "$2" \
             -unitas "$3" -id 2>/dev/null || echo ""
     fi
 }
@@ -161,13 +164,13 @@ mensor_suitae_finire () {
         _msu_addere "suita.bibliothecae.recompilatae" "$recompilatae" \
             veritas "$radix"
         _msu_addere "suita.fila" "$fila" numerus "$radix"
-        "$MSU_MENSOR" addere -tabula "$MSU_CURSUS" \
+        FABRICA_LECTIONES= "$MSU_MENSOR" addere -tabula "$MSU_CURSUS" \
             -praefixum "${MSU_PRAEFIXUM}probatio.cursus." -unitas secunda \
             -parens "$nodus_cursus" >/dev/null 2>&1 || true
-        "$MSU_MENSOR" addere -tabula "$MSU_COMPILATIO" \
+        FABRICA_LECTIONES= "$MSU_MENSOR" addere -tabula "$MSU_COMPILATIO" \
             -praefixum "${MSU_PRAEFIXUM}probatio.compilatio." -unitas secunda \
             -parens "$nodus_compilationis" >/dev/null 2>&1 || true
-        "$MSU_MENSOR" condere >/dev/null 2>&1 || true
+        FABRICA_LECTIONES= "$MSU_MENSOR" condere >/dev/null 2>&1 || true
     fi
     rm -f "$MSU_CURSUS" "$MSU_COMPILATIO"
     MSU_CURSUS=""; MSU_COMPILATIO=""

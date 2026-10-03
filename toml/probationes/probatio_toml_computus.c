@@ -12,11 +12,17 @@
  *
  * COMPUTUS_SCRIBERE=1 aurum rescribit - AUDI: regeneratio sine causa
  * nominata portam in numerum vacuum vertit. Causa in commissione.
+ *
+ * IO per filum et lectiones_ambitus (fabrica spec 3 T3): porta toml
+ * per id quod legit iudicatur - aurum per fopen lectum libro deerat,
+ * ergo aurum mutatum transitum veterem servasset.
  */
 #include "latina.h"
 #include "credo.h"
 #include "piscina.h"
 #include "toml_computus.h"
+#include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,40 +50,41 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura_exitus)
 {
-    FILE* pl;
-    longus mensura;
-      i8* buffer;
+    chorda contentum = filum_legere_totum(via, piscina);
 
-    pl = fopen(via, "rb");
-    si (pl == NIHIL)
+    si (contentum.datum == NIHIL)
     {
         redde NIHIL;
     }
-    fseek(pl, 0L, SEEK_END);
-    mensura = ftell(pl);
-    si (mensura < 0L)
+    *mensura_exitus = contentum.mensura;
+    redde contentum.datum;
+}
+
+/* lineam proximam (cum '\n', ut fgets) ex textu; FALSUM in fine */
+interior b32
+_lineam_legere (
+     constans character** cursor,
+              character*  linea,
+                    i32   mensura)
+{
+    i32 n = ZEPHYRUM;
+
+    si (**cursor == '\0')
     {
-        fclose(pl);
-        redde NIHIL;
+        redde FALSUM;
     }
-    rewind(pl);
-    buffer = (i8*)piscina_allocare(piscina, (memoriae_index)(mensura
-        + 1L));
-    si (buffer == NIHIL)
+    dum (**cursor != '\0' && n + I < mensura)
     {
-        fclose(pl);
-        redde NIHIL;
+        linea[n] = **cursor;
+        n++;
+        (*cursor)++;
+        si (linea[n - I] == '\n')
+        {
+            frange;
+        }
     }
-    si (   mensura > 0L
-        && fread(buffer, I, (memoriae_index)mensura, pl)
-               != (memoriae_index)mensura)
-    {
-        fclose(pl);
-        redde NIHIL;
-    }
-    fclose(pl);
-    *mensura_exitus = (i32)mensura;
-    redde buffer;
+    linea[n] = '\0';
+    redde VERUM;
 }
 
 /* columnae pinnatae, ordine auri */
@@ -109,7 +116,7 @@ principale (vacuum)
                    b32  scribere;
              character  via_auri[VIA_MAXIMA];
              character  via[VIA_MAXIMA];
-                  FILE* aurum;
+                chorda  aurum;
                    i32  i;
                    i32  k;
      insignatus longus  facta[NUMERUS_CORPORIS][COLUMNAE];
@@ -123,12 +130,12 @@ principale (vacuum)
         redde I;
     }
     credo_aperire(piscina);
-    radix = getenv("RHUBARB_RADIX");
+    radix = lectiones_ambitus("RHUBARB_RADIX");
     si (radix == NIHIL)
     {
         radix = ".";
     }
-    scribere = getenv("COMPUTUS_SCRIBERE") != NIHIL;
+    scribere = lectiones_ambitus("COMPUTUS_SCRIBERE") != NIHIL;
     sprintf(via_auri, "%s/toml/probationes/fixa/computus/basis.tsv",
         radix);
 
@@ -179,47 +186,49 @@ principale (vacuum)
     si (scribere)
     {
         imprimere("\n--- AURUM SCRIBITUR - AUDI causam ---\n");
-        aurum = fopen(via_auri, "w");
-        CREDO_NON_NIHIL (aurum);
-        si (aurum != NIHIL)
         {
-            fprintf(aurum, "# via");
+            character textus[IV * MXXIV];
+
+            textus[ZEPHYRUM] = '\0';
+            sprintf(textus + strlen(textus), "# via");
             per (k = ZEPHYRUM; k < COLUMNAE; k++)
             {
-                fprintf(aurum, "\t%s", TITULI[k]);
+                sprintf(textus + strlen(textus), "\t%s", TITULI[k]);
             }
-            fprintf(aurum, "\n");
+            sprintf(textus + strlen(textus), "\n");
             per (i = ZEPHYRUM; i < NUMERUS_CORPORIS; i++)
             {
                 si (!metita[i])
                 {
                     perge;
                 }
-                fprintf(aurum, "%s", CORPUS[i]);
+                sprintf(textus + strlen(textus), "%s", CORPUS[i]);
                 per (k = ZEPHYRUM; k < COLUMNAE; k++)
                 {
-                    fprintf(aurum, "\t%lu", facta[i][k]);
+                    sprintf(textus + strlen(textus), "\t%lu",
+                        facta[i][k]);
                 }
-                fprintf(aurum, "\n");
+                sprintf(textus + strlen(textus), "\n");
             }
-            fclose(aurum);
+            CREDO_VERUM (filum_scribere_literis(via_auri, textus));
             imprimere("  scriptum: %s\n", via_auri);
         }
     }
 
     imprimere("\n--- II. collatio cum auro (%s) ---\n", via_auri);
-    aurum = fopen(via_auri, "r");
-    si (aurum == NIHIL)
+    aurum = filum_legere_totum(via_auri, piscina);
+    si (aurum.datum == NIHIL)
     {
         imprimere("  FRACTA: aurum absens - COMPUTUS_SCRIBERE=1\n");
-        CREDO_NON_NIHIL (aurum);
+        CREDO_NON_NIHIL (aurum.datum);
     }
     alioquin
     {
-        character linea[MMXLVIII];
-              i32 lectae = ZEPHYRUM;
+                  character  linea[MMXLVIII];
+                        i32  lectae = ZEPHYRUM;
+         constans character* cursor = chorda_ut_cstr(aurum, piscina);
 
-        dum (fgets(linea, (integer)magnitudo(linea), aurum) != NIHIL)
+        dum (_lineam_legere(&cursor, linea, (i32)magnitudo(linea)))
         {
                     character* campus;
             insignatus longus  exspectata[COLUMNAE];
@@ -271,7 +280,6 @@ principale (vacuum)
                 CREDO_VERUM (facta[idx][k] == exspectata[k]);
             }
         }
-        fclose(aurum);
         /* aurum plagulas OMNES corporis ferat */
         CREDO_AEQUALIS_I32 ((i32)lectae, (i32)NUMERUS_CORPORIS);
     }

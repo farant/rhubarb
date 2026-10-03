@@ -15,6 +15,7 @@
 #include "toml_corpus_ambulare.h"
 #include "materia_scribere.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -146,7 +147,7 @@ principale (vacuum)
                     b32  praeteritus;
                 Piscina* piscina;
                 Piscina* opus;
-     constans character* radix = getenv("RHUBARB_RADIX");
+     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
 
     piscina = piscina_generare_dynamicum("probatio_toml_corpus",
         262144);

@@ -24,6 +24,7 @@
 #include "stml.h"
 #include "internamentum.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -298,7 +299,7 @@ principale (vacuum)
                     b32  praeteritus;
                 Piscina* piscina;
                 Piscina* opus;
-     constans character* radix = getenv("RHUBARB_RADIX");
+     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
                  chorda  fons_canonis;
                  chorda  causa;
     MateriaLexiconRatum  ratum;

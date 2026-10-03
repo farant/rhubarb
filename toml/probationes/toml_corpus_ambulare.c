@@ -3,6 +3,7 @@
 #include "toml_corpus_ambulare.h"
 #include "filum.h"
 #include "sigillum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -104,7 +105,7 @@ toml_corpus_ambulare (
     dum (_linea(index, &k, linea, VIA_MAXIMA))
     {
                   character* tab        = strchr(linea, '\t');
-         constans character* domus_via  = getenv("HOME");
+         constans character* domus_via  = lectiones_ambitus("HOME");
                      chorda  textus;
                    Sigillum  s;
                   character  hex[SIGILLUM_HEX_MENSURA];

@@ -38,6 +38,8 @@
 #include "toml_scalaris.h"
 #include "toml_lexicon.h"
 #include "toml_registrum.h"
+#include "filum.h"
+#include "lectiones.h"
 #include "toml_corpus_ambulare.h"
 #include "materia_arbor.h"
 #include "materia_diagnostica.h"
@@ -227,16 +229,20 @@ _fractum_scribere (
                    i32  mensura)
 {
     character via[DXII];
-        FILE* f;
+       chorda contentum;
+    unio { constans character* l; i8* m; } u;   /* mos domus: constantiam
+                                                  * lavat (filum non
+                                                  * scribit in datum) */
 
+    /* per filum (fabrica spec 3 T3): scriptura in libro 'S' notatur */
     sprintf(via, "%s/toml/build/totalitas_fractum.toml", RADIX_VIAE);
-    f = fopen(via, "wb");
-    si (f == NIHIL)
+    u.l                = fons;
+    contentum.datum    = u.m;
+    contentum.mensura  = mensura;
+    si (!filum_scribere(via, contentum))
     {
         redde;
     }
-    fwrite(fons, I, (size_t)mensura, f);
-    fclose(f);
     imprimere("    fons peccans scriptus: %s\n", via);
 }
 
@@ -454,7 +460,7 @@ principale (vacuum)
                Vexatio  vexatio;
       TomlCorpusNumeri  nn;
                    i32  i;
-    constans character* radix_viae = getenv("RHUBARB_RADIX");
+    constans character* radix_viae = lectiones_ambitus("RHUBARB_RADIX");
 
     piscina = piscina_generare_dynamicum("probatio_toml_totalitas",
         4194304);

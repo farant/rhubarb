@@ -1579,3 +1579,40 @@ productum toml/build/*. Details and design notes:
 crusta/fontes/crusta_fontationes.worklog.md. Name per A2 would have been
 bin/fontationes; it is a self-building launcher like facies.sh instead
 (no installata entry needed until T5 decides how fabrica calls it).
+
+## 2026-10-03 - slice 3 T3: toml's reads made visible
+
+Spike gaps closed, verified by a re-trace of the toml gate:
+- E records 0 -> 5 (RHUBARB_RADIX, HOME, COMPUTUS_SCRIBERE,
+  ORACULUM_OMNIA, ORACULUM_EXEMPLUM): 13 getenv -> lectiones_ambitus in 9
+  toml test files.
+- computus gold (basis.tsv) now L: corpus + gold through filum (read via a
+  small fgets-like line walker over the filum buffer; the COMPUTUS_SCRIBERE
+  write builds the text and filum_scribere_literis). Gold numbers
+  unchanged (13/13).
+- totalitas failure-file write through filum (S), const dropped with the
+  house union idiom (lib/vitrea_servus.c:123), not a pointer->int cast.
+- materia_coctor's raw read notes itself (L / A) and carries the
+  existing `/* lectiones: notatur */` marker the lint already honours -
+  no lint rule change needed (the spec's "same function" idea was
+  unnecessary). That pulls lectiones.c into every chain linking
+  materia_coctor: html, md, oratio hand lists gained "lectiones" (the
+  diagnostica lesson from T2 again - hand lists are where new deps bite).
+  The first T3 commit attempt found a FOURTH: materia/compile_probationes.sh
+  globs materia/fontes/*.c against its own lib hand list (14 link
+  failures). Audit of every build compiling materia sources by glob/list:
+  that was the last one (silva's substrate excludes the coctor by design).
+  The frozen computus fixture html_cursor_2026-09-23.sh is NOT edited.
+- compilator: identical-destination hit now records S (miss path was
+  already S via filum_movere). Re-trace: 58 objects, 0 L-without-S.
+- mensor_suitae.sh: every bin/mensor call runs with `FABRICA_LECTIONES=`
+  (empty = ledger closed). Re-trace: no mensurae.volumen entry. My first
+  sed also rewrote the three `[ -n "$MSU_MENSOR" ]` guards into
+  `[ -n FABRICA_LECTIONES= "$MSU_MENSOR" ]` - a syntax error the `||`
+  would have swallowed silently; caught in the diff, restored.
+- lectiones_lint pilot = tools/aedilis.c + every toml test main (67
+  files); plant (raw getenv in probatio_toml_api.c) -> OBSTAT.
+Left for T4: build/toml_corpus.lst and aurum_silvestre.txt (bash-written).
+Left for T5 (spec 3 IX.7): compilator's own env (FABRICA_CLANG) is not
+in the trace; compilator is not in the lint pilot because its
+THESAURUS_GENERATIO read varies per run (store bookkeeping).

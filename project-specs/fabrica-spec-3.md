@@ -364,6 +364,12 @@ the slice's commits). Done needs ≥10 reuses audited, 0 discord.
 6. **python's own reads** (silva.py imports, PORTAE) are covered by the
    declared `pythonica/silva.py` ingressus only. Other imported modules
    would be invisible; T1 lists them.
+7. **compilator's environment** (T3 finding). `FABRICA_CLANG` changes
+   which compiler builds the objects, but compilator reads it raw, and
+   compilator is outside the lint pilot (its `THESAURUS_GENERATIO` read
+   varies every run - store bookkeeping, not an input). T5:
+   `identitas_clang` must honour `FABRICA_CLANG` exactly as compilator
+   does, or the gate's env must be part of the key.
 
 ## X. AUDIENDA — open, for Fran
 
