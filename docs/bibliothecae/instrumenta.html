@@ -30,13 +30,13 @@ lint; materia's <code>oraculum_probare.sh</code>; officina's
 and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 
 <ul class="greges">
-<li><a href="#facies">Command-line faces of libraries</a> <span class="nota">(20)</span></li>
-<li><a href="#struere">Building and installing the tools</a> <span class="nota">(24)</span></li>
+<li><a href="#facies">Command-line faces of libraries</a> <span class="nota">(21)</span></li>
+<li><a href="#struere">Building and installing the tools</a> <span class="nota">(25)</span></li>
 <li><a href="#amalgamata">Amalgams, capsules and bundles</a> <span class="nota">(20)</span></li>
-<li><a href="#portae">Gates, checks and smoke tests</a> <span class="nota">(35)</span></li>
+<li><a href="#portae">Gates, checks and smoke tests</a> <span class="nota">(39)</span></li>
 <li><a href="#generata">Generators</a> <span class="nota">(14)</span></li>
 <li><a href="#oracula">Oracles and probes</a> <span class="nota">(8)</span></li>
-<li><a href="#inspicere">Inspecting and driving</a> <span class="nota">(12)</span></li>
+<li><a href="#inspicere">Inspecting and driving</a> <span class="nota">(14)</span></li>
 <li><a href="#contenta">Content and corpora</a> <span class="nota">(6)</span></li>
 </ul>
 
@@ -63,6 +63,7 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 <tr><td><code>natura_canones.c</code></td><td>project each natura kind into a canon element</td><td></td></tr>
 <tr><td><code>natura_canones_emissio.c</code></td><td>the two emitters that share natura_canones&#x27;s model</td><td></td></tr>
 <tr><td><code>natura_canones.h</code></td><td>shared declarations for the two natura_canones programs</td><td></td></tr>
+<tr><td><code>compilator.c</code></td><td>bin/compilator: &#x27;clang -c&#x27; through the content cache; same arguments as clang, keyed by the headers actually included and their bytes; a hit copies, never hard-links</td><td><a href="thesaurus.html">thesaurus</a></td></tr>
 <tr><td><code>diagnostica.c</code></td><td>diagnostics for files through the materia clients (C89, CSS, HTML, Markdown...), one front for every language</td><td></td></tr>
 <tr><td><code>briar_spectator.c</code></td><td>briar&#x27;s spectator: a window over the page of a thistle&#x27;s face</td><td></td></tr>
 </tbody>
@@ -80,6 +81,7 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 <tr><td><code>briar_spectator_struere.sh</code></td><td>build bin/briar-spectator</td><td></td></tr>
 <tr><td><code>stml_struere.sh</code></td><td>build bin/stml and install it</td><td></td></tr>
 <tr><td><code>manus_struere.sh</code></td><td>build bin/manus</td><td></td></tr>
+<tr><td><code>compilator_struere.sh</code></td><td>build bin/compilator</td><td></td></tr>
 <tr><td><code>mensor_struere.sh</code></td><td>build bin/mensor</td><td></td></tr>
 <tr><td><code>mensor_ui_struere.sh</code></td><td>build bin/mensor_ui, mensor&#x27;s separate window</td><td></td></tr>
 <tr><td><code>natura_struere.sh</code></td><td>build natura_examen</td><td></td></tr>
@@ -151,6 +153,10 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 <tr><td><code>diagnostica.sh</code></td><td>run diagnostica over files</td><td></td></tr>
 <tr><td><code>diagnostica_fumus.sh</code></td><td>birth gate for diagnostica</td><td></td></tr>
 <tr><td><code>fabrica_fumus.sh</code></td><td>birth gate for bin/fabrica</td><td></td></tr>
+<tr><td><code>compilator_fumus.sh</code></td><td>birth gate for bin/compilator: a counting clang wrapper proves a hit compiles nothing</td><td></td></tr>
+<tr><td><code>lectiones_lint.sh</code></td><td>lint: raw I/O calls that bypass the read log (filum, lectiones), so fabrica&#x27;s footprints stay complete</td><td><a href="lectiones.html">lectiones</a></td></tr>
+<tr><td><code>lectiones_spica.sh</code></td><td>spike: does the read log see everything a run&#x27;s manifest names?</td><td><a href="lectiones.html">lectiones</a></td></tr>
+<tr><td><code>toml_oraculum.sh</code></td><td>oracle for the toml test runner: the old runner at a ref against the new one in the same tree, objects byte for byte and test output line by line</td><td></td></tr>
 <tr><td><code>fabrica_oraculum.sh</code></td><td>oracle gate over bin/fabrica&#x27;s full judgement (iudicare -plenus)</td><td></td></tr>
 <tr><td><code>briar_fumus.sh</code></td><td>gate: the INSTALLED briar really runs thistle files</td><td></td></tr>
 <tr><td><code>fasciculum_fumus.sh</code></td><td>smoke: an .app bundle built by the library</td><td></td></tr>
@@ -214,9 +220,11 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 <table>
 <thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
 <tbody>
-<tr><td><code>auscultator.c</code></td><td>print a window&#x27;s events as STML in the terminal</td><td><a href="eventus_stml.html">eventus_stml</a></td></tr>
+<tr><td><code>auscultator.c</code></td><td>print a window&#x27;s events as STML</td><td><a href="eventus_stml.html">eventus_stml</a></td></tr>
 <tr><td><code>auscultator.sh</code></td><td>run it</td><td></td></tr>
 <tr><td><code>conformitas.c</code></td><td>run a conformance table against a real window</td><td><a href="eventus_conformitas.html">eventus_conformitas</a></td></tr>
+<tr><td><code>auscultator_terminalis.c</code></td><td>the terminal twin of auscultator: declares every mode and prints the terminal&#x27;s events as STML</td><td><a href="rivus_terminalis.html">rivus_terminalis</a></td></tr>
+<tr><td><code>auscultator_terminalis.sh</code></td><td>build and run it</td><td></td></tr>
 <tr><td><code>conformitas.sh</code></td><td>run it</td><td></td></tr>
 <tr><td><code>eventus_inspector.c</code></td><td>inspect the events in a log file (first generation)</td><td></td></tr>
 <tr><td><code>lector_eventuum.c</code></td><td>command-line introspection of log files</td><td></td></tr>
@@ -244,7 +252,7 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 </table>
 
 <p class="nota">Written by hand (2026-10-03) from each tool's opening
-comment; 139 entries. The tools' own headers and worklogs
+comment; 147 entries. The tools' own headers and worklogs
 (<code>tools/*.worklog.md</code>) are the authority.</p>
 
 </body>

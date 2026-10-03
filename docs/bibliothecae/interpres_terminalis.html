@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>interpres_terminalis</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>interpres_terminalis</h1>
+<p class="subtitulus">Lexemata terminalis -&gt; Eventus (eventus B2)</p>
+
+<p>Turns terminal tokens into Eventus, purely: the decoder between series_terminalis and the event queue. Its rule is honest fidelity (Fran, 2026-10-02): what the protocol does not say is not invented. In the legacy protocol there are no key releases, no physical code where a sequence is ambiguous (Enter is Ctrl+M), and no Shift bit, since Shift cannot be told from Caps Lock; physical codes are set only where the sequence names a key (arrows, F1-F12). With the kitty keyboard protocol it reads press, repeat and release, every modifier, associated text and the physical key from the base layout, and the first kitty sequence teaches it the terminal&#x27;s capabilities, announced as an event before the key. Timing (the ESC delay) belongs to the source, not here. Eventus B2, October 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/interpres_terminalis.h"><code>include/interpres_terminalis.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/interpres_terminalis.c"><code>lib/interpres_terminalis.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-03 c5469f7c</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

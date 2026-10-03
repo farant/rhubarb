@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>terminalis</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>terminalis</h1>
+<p class="subtitulus">Terminalis POSIX: modus crudus, lectio cum mora,</p>
+
+<p>The POSIX terminal itself, beneath the pure terminal event source: raw mode (like tessera&#x27;s bridge, keeping only the suspend signal, so Ctrl-Z really suspends and restores the terminal while Ctrl-C and Ctrl-\\ arrive as ordinary keys), reads with a timeout, writes that retry, and the size in cells and pixels (zero pixels when the terminal does not say, as Terminal.app does not; 80x24 if the query fails). The mode bytes to enter and leave come from the caller and are COPIED, so signal handlers and atexit can restore the terminal with async-signal-safe calls only. One terminal per process. Eventus phase B, October 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/terminalis.h"><code>include/terminalis.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/terminalis_posix.c"><code>lib/terminalis_posix.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-02 e483f8fd</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

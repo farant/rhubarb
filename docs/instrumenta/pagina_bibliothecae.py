@@ -175,8 +175,8 @@ here). The gloss is the header's own first line, and %(sine)d headers
 have none, opening straight into their include guard; a linked name has a
 page. Last change and implementation files are derived (git, and the
 symbol index: a file is listed when it defines a function the header
-declares). Every header has a one-paragraph description, written in 22
-batches on 2026-10-02 and 03. Source: the ledger
+declares). Every header has a one-paragraph description, written in
+batches from 2026-10-02 and kept current after each merge of main. Source: the ledger
 inventory <em>bibliothecae (include)</em>.</p>
 
 <p class="nota">Click <em>Library</em> or <em>Last change</em> to sort; click again to reverse. %(ad_greges)s</p>

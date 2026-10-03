@@ -13,13 +13,13 @@
 <h1>claves_physicae</h1>
 <p class="subtitulus">Codices clavium platformarum -&gt; EventusCodex</p>
 
-<p>Pure tables from a platform&#x27;s virtual key codes to the vocabulary&#x27;s physical key codes (W3C &#x27;code&#x27; values): today macOS&#x27;s kVK codes, the kitty terminal protocol in eventus phase B. Position, not layout: macOS key 0 is &#x27;KeyA&#x27; whether the keyboard is QWERTY, AZERTY or Dvorak. Unknown codes map to EVENTUS_CODEX_IGNOTUS. No Cocoa: fenestra_macos.m calls it, and tests use it without a window. 2026-10-01.</p>
+<p>Pure tables from a platform&#x27;s virtual key codes to the vocabulary&#x27;s physical key codes (W3C &#x27;code&#x27; values). Position, not layout: macOS key 0 is &#x27;KeyA&#x27; whether the keyboard is QWERTY, AZERTY or Dvorak. Unknown codes map to EVENTUS_CODEX_IGNOTUS. No Cocoa: fenestra_macos.m calls it, and tests use it without a window. macOS&#x27;s kVK codes came first (2026-10-01); eventus phase B added the terminal tables, where the kitty protocol&#x27;s base-layout key and functional key numbers map to the same physical codes, and an inverse (code to US base character) serves the encoder.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/claves_physicae.h"><code>include/claves_physicae.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/claves_physicae.c"><code>lib/claves_physicae.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-10-01 35382b69</td></tr>
+<tr><td>Last change</td><td>2026-10-03 c5469f7c</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>

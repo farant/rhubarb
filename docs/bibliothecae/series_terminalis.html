@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>series_terminalis</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>series_terminalis</h1>
+<p class="subtitulus">Lexemator fluminis terminalis (DEC/Williams)</p>
+
+<p>The lexer for the byte stream of a terminal, in both directions (what a program writes for an emulator, and what the terminal sends back: keys, mouse, paste, replies). Bytes in, tokens out (print, execute, ESC, CSI, SS, OSC, DCS, APC, abandoned sequences), and no meaning: what CSI &#x27;A&#x27; means is for the layers above. No time, no UTF-8, no allocation after creation. The state machine is Paul Williams&#x27;s DEC parser as Ghostty implements it (pinned commit, MIT), with each deliberate divergence listed: C1 bytes are not recognized (they are UTF-8 continuations), kitty&#x27;s &#x27;:&#x27; separators are kept, an interrupted sequence becomes a named FUGA token with its raw bytes rather than vanishing, and a sequence with too many parameters is dropped whole (&#x27;half an SGR is worse than none&#x27;). Eventus B1a, October 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/series_terminalis.h"><code>include/series_terminalis.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/series_terminalis.c"><code>lib/series_terminalis.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-02 79e2f3a0</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>Bibliothecae per greges</h1>
-<p class="subtitulus">The 197 libraries in include/, in 13 groups</p>
+<p class="subtitulus">The 205 libraries in include/, in 13 groups</p>
 
 <p>The same libraries as the <a href="index.html">table</a>, clustered by
 area, each group with a paragraph on what it is and how its libraries
@@ -25,11 +25,11 @@ bibliothecarum</em>), not in this page.</p>
 <li><a href="#textus">Text</a> <span class="nota">(15)</span></li>
 <li><a href="#stml">STML and data formats</a> <span class="nota">(15)</span></li>
 <li><a href="#parsatores">Parsers: the C89 lineage</a> <span class="nota">(25)</span></li>
-<li><a href="#aedificatio">Build, binaries and tooling</a> <span class="nota">(14)</span></li>
+<li><a href="#aedificatio">Build, binaries and tooling</a> <span class="nota">(16)</span></li>
 <li><a href="#acta">Records and storage</a> <span class="nota">(6)</span></li>
 <li><a href="#rete">Network</a> <span class="nota">(11)</span></li>
 <li><a href="#imago">Images</a> <span class="nota">(10)</span></li>
-<li><a href="#fenestra">Window, input and drawing</a> <span class="nota">(16)</span></li>
+<li><a href="#fenestra">Window, input and drawing</a> <span class="nota">(22)</span></li>
 <li><a href="#ludus">Ludus: the second-generation UI</a> <span class="nota">(15)</span></li>
 <li><a href="#vitrea">Vitrea apps</a> <span class="nota">(8)</span></li>
 <li><a href="#prima">The first generation</a> <span class="nota">(34)</span></li>
@@ -153,8 +153,8 @@ bibliothecarum</em>), not in this page.</p>
 </table>
 
 <h2 id="aedificatio">V. Build, binaries and tooling</h2>
-<p class="nota">14 libraries, 14 described</p>
-<p>How the house builds, checks and ships itself. aedilis computes what a program links from its includes; fabrica judges whether every artefact is fresh by content hash and heals what is stale; provenientia lets an installed binary say where it came from; specimen does visual regression tests; mensura keeps nested measurements per run. capsula and capsula_caudae embed files into binaries, fasciculum builds macOS .app bundles, silex packages distributions, vigilia watches a resident process for a newer binary. git reads repositories without the git program; macho, sectio and symbola read Mach-O binaries (load commands, sections, symbol tables).</p>
+<p class="nota">16 libraries, 16 described</p>
+<p>How the house builds, checks and ships itself. aedilis computes what a program links from its includes; fabrica judges whether every artefact is fresh by content hash and heals what is stale, since plan 2 (October 2026) with a read log (lectiones) that turns what an action really read into a verified footprint, a content cache (thesaurus) behind bin/compilator, and parallel healing; provenientia lets an installed binary say where it came from; specimen does visual regression tests; mensura keeps nested measurements per run. capsula and capsula_caudae embed files into binaries, fasciculum builds macOS .app bundles, silex packages distributions, vigilia watches a resident process for a newer binary. git reads repositories without the git program; macho, sectio and symbola read Mach-O binaries (load commands, sections, symbol tables).</p>
 <table class="bibliothecae">
 <thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
 <tbody>
@@ -164,6 +164,7 @@ bibliothecarum</em>), not in this page.</p>
 <tr class="descripta"><td><a href="fabrica.html">fabrica</a></td><td>The house build judge.</td></tr>
 <tr class="descripta"><td><a href="fasciculum.html">fasciculum</a></td><td>macOS application bundles (.app) as values: describe one (Info.plist as a plist value, the executable, optional resources), turn the description PURELY into a plan of …</td></tr>
 <tr class="descripta"><td><a href="git.html">git</a></td><td>Reading git repositories without the git program, read-only by design: the object format has been frozen since 2005, &#x27;among the most stable formats in computing&#x27;, so a …</td></tr>
+<tr class="descripta"><td><a href="lectiones.html">lectiones</a></td><td>The read log: when FABRICA_LECTIONES names a file, every read, existence check, directory listing, write and environment lookup the house&#x27;s own file functions perform is …</td></tr>
 <tr class="descripta"><td><a href="macho.html">macho</a></td><td>Parsing Mach-O, the macOS executable format: single-architecture images and fat binaries, little-endian only (big-endian detected and refused), load commands walked with …</td></tr>
 <tr class="descripta"><td><a href="mensura.html">mensura</a></td><td>Nested measurements tied to a run, answering Fran&#x27;s question of 2026-08-13: timings of tests, compilation and single modules, with the machine and commit attached, so …</td></tr>
 <tr class="descripta"><td><a href="provenientia.html">provenientia</a></td><td>How an installed house binary says where it came from.</td></tr>
@@ -171,6 +172,7 @@ bibliothecarum</em>), not in this page.</p>
 <tr class="descripta"><td><a href="silex.html">silex</a></td><td>silex (&#x27;flint&#x27;), the distribution tool, version 0: one binary that carries the sources of all the libraries, scaffolds new projects from them, and, in the vision, offers …</td></tr>
 <tr class="descripta"><td><a href="specimen.html">specimen</a></td><td>Visual regression testing: compare a capture (one element, by selector, or a whole window, through manus) with a stored reference image.</td></tr>
 <tr class="descripta"><td><a href="symbola.html">symbola</a></td><td>Reads the symbol table (LC_SYMTAB) of a Mach-O binary: every local, global, external and debug symbol with its address, type, section and flags, zero-copy (names point …</td></tr>
+<tr class="descripta"><td><a href="thesaurus.html">thesaurus</a></td><td>A content store for the build (fabrica plan 2): blobs by SHA-256 of their contents, actions mapping a key to the seals of their outputs, and generations recording which …</td></tr>
 <tr class="descripta"><td><a href="vigilia.html">vigilia</a></td><td>Watching whether a resident process is still running what it should: two watches with one contract.</td></tr>
 </tbody>
 </table>
@@ -230,12 +232,14 @@ bibliothecarum</em>), not in this page.</p>
 </table>
 
 <h2 id="fenestra">IX. Window, input and drawing</h2>
-<p class="nota">16 libraries, 16 described</p>
-<p>The layer between the operating system and anything visual. fenestra opens native windows and injects real input for tests; eventus is the vocabulary of input with time inside each event, split from the window so that pure code links no Cocoa, with its queue, its conformance tables and its STML transcripts. tabula_pixelorum is a bare pixel buffer; delineare draws on it QuickDraw-style; delineare_mandata rasterizes a command list; thema holds the 16-colour palette; fons and fons_6x8 the bitmap font. modulus and tessellatio carry the same drawing into terminal cells. manus is the out-of-process test hand for live applications.</p>
+<p class="nota">22 libraries, 22 described</p>
+<p>The layer between the operating system and anything visual or interactive. fenestra opens native windows and injects real input for tests; eventus is the vocabulary of input with time inside each event, split from the window so that pure code links no Cocoa, with its queue, its conformance tables and its STML transcripts. Since October 2026 the terminal is a second source of the same vocabulary: terminalis (raw mode), series_terminalis (the byte-stream lexer, after Williams and Ghostty), interpres_terminalis (honest decoding, legacy and kitty), rivus_terminalis (the pure source) and codificator_terminalis (the inverse, so sessions replay through a terminal too). tabula_pixelorum is a bare pixel buffer; delineare draws on it QuickDraw-style; delineare_mandata rasterizes a command list; thema holds the 16-colour palette; fons and fons_6x8 the bitmap font. modulus and tessellatio carry the same drawing into terminal cells. manus is the out-of-process test hand for live applications.</p>
 <table class="bibliothecae">
 <thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
 <tbody>
-<tr class="descripta"><td><a href="claves_physicae.html">claves_physicae</a></td><td>Pure tables from a platform&#x27;s virtual key codes to the vocabulary&#x27;s physical key codes (W3C &#x27;code&#x27; values): today macOS&#x27;s kVK codes, the kitty terminal protocol in …</td></tr>
+<tr class="descripta"><td><a href="claves_physicae.html">claves_physicae</a></td><td>Pure tables from a platform&#x27;s virtual key codes to the vocabulary&#x27;s physical key codes (W3C &#x27;code&#x27; values).</td></tr>
+<tr class="descripta"><td><a href="codificator_terminalis.html">codificator_terminalis</a></td><td>The inverse of the decoder: given an Eventus and the modes the program asked for, the bytes a terminal would send it (legacy with xterm modifiers, SS3, modifyOtherKeys …</td></tr>
+<tr class="descripta"><td><a href="copia_terminalis.html">copia_terminalis</a></td><td>Writing to the clipboard from a terminal program: the OSC 52 sequence (ESC ] 52 ; c ; base64 ESC \\).</td></tr>
 <tr class="descripta"><td><a href="delineare.html">delineare</a></td><td>Classic 2D drawing on a TabulaPixelorum, in the spirit of QuickDraw: a context with a clip rectangle and a mode (solid, 8x8 pattern, or XOR), the 38 classic Mac …</td></tr>
 <tr class="descripta"><td><a href="delineare_mandata.html">delineare_mandata</a></td><td>The CPU rasterizer for Mandata, the house&#x27;s drawing command list: walks the commands and paints them into a TabulaPixelorum, applying group transforms and clips, …</td></tr>
 <tr class="descripta"><td><a href="eventus.html">eventus</a></td><td>The vocabulary of input, with no window behind it: event kinds, logical keys and W3C physical key codes, modifiers by side, text and IME composition, drops, capability …</td></tr>
@@ -246,9 +250,13 @@ bibliothecarum</em>), not in this page.</p>
 <tr class="descripta"><td><a href="fenestra_tempus.html">fenestra_tempus</a></td><td>The platform clock, split out of fenestra.h on 2026-10-01: ticks, tick frequency, milliseconds, sleep, implemented with mach and POSIX calls and no Cocoa.</td></tr>
 <tr class="descripta"><td><a href="fons.html">fons</a></td><td>Maps Unicode codepoints to the 256 glyphs of the 6x8 bitmap font: ASCII and Latin-1 directly, curly quotes to straight ones, en and em dashes to a hyphen, the ellipsis …</td></tr>
 <tr class="descripta"><td><a href="fons_6x8.html">fons_6x8</a></td><td>The house&#x27;s bitmap font: 256 characters of 6x8 pixels, one byte per row with the left pixel in the high bit, merged from the HP 100LX palmtop&#x27;s font and one called …</td></tr>
+<tr class="descripta"><td><a href="interpres_terminalis.html">interpres_terminalis</a></td><td>Turns terminal tokens into Eventus, purely: the decoder between series_terminalis and the event queue.</td></tr>
 <tr class="descripta"><td><a href="manus.html">manus</a></td><td>The test hand for live vitrea apps, built on imperium&#x27;s channel: press, type, scroll, move, keys, screenshots, read text, count, focus, resize, all by CSS selector, and …</td></tr>
 <tr class="descripta"><td><a href="modulus.html">modulus</a></td><td>The unit of the drawing layer&#x27;s geometry (Vitruvius&#x27;s modulus: the unit every measure derives from): the size of a cell in &#x27;our pixels&#x27;, the size of the surface, and a …</td></tr>
+<tr class="descripta"><td><a href="rivus_terminalis.html">rivus_terminalis</a></td><td>The terminal as an event source, the counterpart of the window: bytes in, Eventus out, through series_terminalis and interpres_terminalis.</td></tr>
+<tr class="descripta"><td><a href="series_terminalis.html">series_terminalis</a></td><td>The lexer for the byte stream of a terminal, in both directions (what a program writes for an emulator, and what the terminal sends back: keys, mouse, paste, replies).</td></tr>
 <tr class="descripta"><td><a href="tabula_pixelorum.html">tabula_pixelorum</a></td><td>A pixel buffer and nothing else: width, height, RGBA8888 pixels, RGB/RGBA packing macros, and text drawn and measured in the built-in 6x8 bitmap font.</td></tr>
+<tr class="descripta"><td><a href="terminalis.html">terminalis</a></td><td>The POSIX terminal itself, beneath the pure terminal event source: raw mode (like tessera&#x27;s bridge, keeping only the suspend signal, so Ctrl-Z really suspends and …</td></tr>
 <tr class="descripta"><td><a href="tessellatio.html">tessellatio</a></td><td>Mandata into terminal cells: the second backend for the drawing list, so the same ludus UI can render in a terminal (tessera).</td></tr>
 <tr class="descripta"><td><a href="thema.html">thema</a></td><td>The colours.</td></tr>
 </tbody>

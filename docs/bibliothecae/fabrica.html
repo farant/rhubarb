@@ -13,13 +13,13 @@
 <h1>fabrica</h1>
 <p class="subtitulus"></p>
 
-<p>The house build judge. For each artefact (a file in build/, a committed generated file, an installed binary) it says whether it was made from today&#x27;s inputs, why not, and in what order to heal it. It never decides by modification time or by mere existence, only by SHA-256 seals of the inputs compared with seals recorded or obtained by regenerating. Actions are declared in aedificatio.stml files (inputs, outputs, command); a kind of artefact says how to observe it, a strategy says how freshness is known (regeneration, the binary&#x27;s own provenance report, or never judged). It computes dependencies between actions from the places they read and write, orders them, groups those that could run together, heals with fabrica_sanare (judge, run, judge again), and checks that an action wrote only inside its declared footprint. It is pure, touching disk and processes only through a FabricaSutura; bin/fabrica supplies the real one, and commissio refuses a commit whose generated files are stale.</p>
+<p>The house build judge. For each artefact (a file in build/, a committed generated file, an installed binary) it says whether it was made from today&#x27;s inputs, why not, and in what order to heal it. It never decides by modification time or by mere existence, only by SHA-256 seals of the inputs compared with seals recorded or obtained by regenerating. Actions are declared in aedificatio.stml files (inputs, outputs, command); a kind of artefact says how to observe it, a strategy says how freshness is known (regeneration, the binary&#x27;s own provenance report, or never judged). It computes dependencies between actions from the places they read and write, orders them, groups those that could run together, heals with fabrica_sanare (judge, run, judge again), and checks that an action wrote only inside its declared footprint. It is pure, touching disk and processes only through a FabricaSutura; bin/fabrica supplies the real one, and commissio refuses a commit whose generated files are stale. Plan 2 (October 2026) adds: actions declared lectiones=&quot;verum&quot; are keyed by the verified read log of their last run (lectiones), so the judge sees what an action really read; safe actions heal in parallel (agere_simul, a whole wave checked against the union of footprints) and the judge can foresee regenerations in parallel too; &#x27;families&#x27; of actions are written once as an STML template per matching file; and results are cached by content in thesaurus, with bin/compilator caching &#x27;clang -c&#x27; per object. Full judgement fell from about 113 s to 96 s and healing nineteen fragments from 93 s to 66 s.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/fabrica.h"><code>include/fabrica.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/fabrica.c"><code>lib/fabrica.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-10-01 7d503807</td></tr>
+<tr><td>Last change</td><td>2026-10-03 6bbc48cd</td></tr>
 <tr><td>Group</td><td><a href="greges.html#aedificatio">Build, binaries and tooling</a></td></tr>
 </tbody>
 </table>

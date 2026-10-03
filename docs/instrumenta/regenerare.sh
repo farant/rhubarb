@@ -42,6 +42,11 @@ trap 'rm -f "$TSV"' EXIT
 python3 "$INSTR/status_visionum.py" "$TSV" "$VISIONES/opera.html"
 
 # 3. Bibliothecae: index et folia brevia ex inventario 'bibliothecae (include)'
+#    POST FUSIONEM main: lentes DERIVATAE (plagulae, mutatum) renovandae -
+#      python3 docs/instrumenta/derivare_bibliothecas.py . > cellae.json
+#    (capita nova in stderr; ordines adde, deinde cellae fons 'derivatum'
+#    per instrumentum tabularii 'inventarium'); descriptiones capitum
+#    novorum et mutatorum manu.
 #    et greges.html ex inventario 'greges bibliothecarum'
 TSV_B=$(mktemp)
 TSV_G=$(mktemp)

@@ -13,13 +13,13 @@
 <h1>eventus_cauda</h1>
 <p class="subtitulus">Cauda eventuum fontis: anulus + onera per lectionem</p>
 
-<p>The event queue every input source fills: a ring of 256 events plus side tables for their payloads (committed text, coalesced mouse samples), so an Eventus stays a small value whose text points into the queue. Payload tables are cleared only when a read starts on an empty queue, so events not yet taken keep their payloads. Mouse moves coalesce: a move that matches the last unread one (same button, modifiers, pointer) turns that one&#x27;s position into a sample and replaces it, so a burst becomes one event with its path. A full queue drops and counts (amissa); full text is truncated and flagged. eventus_residuum_integrare keeps the fractional part of scroll deltas so slow scrolling is not lost. The queue never stamps time; the source does. Pure, shared by the window today and the terminal source in eventus phase B.</p>
+<p>The event queue every input source fills: a ring of 256 events plus side tables for their payloads (committed text, coalesced mouse samples), so an Eventus stays a small value whose text points into the queue. Payload tables are cleared only when a read starts on an empty queue, so events not yet taken keep their payloads. Mouse moves coalesce: a move that matches the last unread one (same button, modifiers, pointer) turns that one&#x27;s position into a sample and replaces it, so a burst becomes one event with its path. A full queue drops and counts (amissa); full text is truncated and flagged. eventus_residuum_integrare keeps the fractional part of scroll deltas so slow scrolling is not lost. The queue never stamps time; the source does. Pure, shared by the window and, since phase B, the terminal source. Path drops are queued with their paths copied into the queue&#x27;s tables; a drop that does not fit is refused whole rather than truncated.</p>
 
 <table>
 <tbody>
 <tr><td>Header</td><td><a href="../../include/eventus_cauda.h"><code>include/eventus_cauda.h</code></a></td></tr>
 <tr><td>Implementation</td><td><a href="../../lib/eventus_cauda.c"><code>lib/eventus_cauda.c</code></a></td></tr>
-<tr><td>Last change</td><td>2026-10-01 09d67e5f</td></tr>
+<tr><td>Last change</td><td>2026-10-02 41b41697</td></tr>
 <tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
 </tbody>
 </table>
