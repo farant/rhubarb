@@ -26,8 +26,19 @@
 # = REF ipsius, novus = cursor ARBORIS VIVAE illuc copiatus; bin/aedilis
 # et bin/compilator vivi nectuntur. Ambo in eadem arbore (via eadem).
 #
+# MODUS RADICIS (cursor = compile_tests.sh, migratio W0ZBW gradus IV):
+# build/ radicis acta, seras, binaria aliorum tenet - ergo NON vacuatur;
+# deletur SOLUM quod cursor ipse struit (build/*.o, build/probationes/
+# *.o), utrumque comparatur. Effusio ab 'Testing:' usque ad 'Slowest
+# tests:' (colores dempti), sed VERDICTA sola comparantur (probationes
+# radicis portus, tempora, inscriptiones imprimunt); involucrum tee per
+# COMPILE_TESTS_EFFUSIO
+# omittitur. -filtrum X probationes cursas angustat (cursor X accipit);
+# bibliothecae tamen omnes compilantur, ergo obiecta tota comparantur.
+#
 # Usus: ./tools/cursoris_oraculum.sh <sub>/compile_probationes.sh
 #         [-ref REF | -arbor REF]   (ordinarium HEAD)
+#       ./tools/cursoris_oraculum.sh compile_tests.sh [-ref REF] [-filtrum X]
 # Cursor novus mandata compilationis in <sub>/build/clausurae/mandata.tsv
 # scribit (tools/cursor_communis.sh) - inde determinismus clang
 # iudicatur; effusio per <SUB>_PROBATIONES_EFFUSIO (sine tee).
@@ -40,12 +51,28 @@ shift
 SUB="$(dirname "$CURSOR")"
 [ -f "$CURSOR" ] || { echo "oraculum: cursor $CURSOR deest"; exit 2; }
 EFFUSIO_VAR="$(echo "$SUB" | tr '[:lower:]/' '[:upper:]_')_PROBATIONES_EFFUSIO"
+RADIX=0
+if [ "$CURSOR" = "compile_tests.sh" ]; then
+    RADIX=1
+    EFFUSIO_VAR=COMPILE_TESTS_EFFUSIO
+fi
 REF=HEAD
 ARBOR=""
-case "${1:-}" in
-    -ref)   REF="${2:?usus: -ref REF}" ;;
-    -arbor) REF="${2:?usus: -arbor REF}"; ARBOR="$(mktemp -d)/arbor" ;;
-esac
+FILTRUM=""
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -ref)     REF="${2:?usus: -ref REF}"; shift 2 ;;
+        -arbor)   REF="${2:?usus: -arbor REF}"; ARBOR="$(mktemp -d)/arbor"; shift 2 ;;
+        -filtrum) FILTRUM="${2:?usus: -filtrum X}"; shift 2 ;;
+        *) echo "oraculum: argumentum ignotum $1"; exit 2 ;;
+    esac
+done
+if [ -n "$FILTRUM" ] && [ "$RADIX" -eq 0 ]; then
+    echo "oraculum: -filtrum solum cum compile_tests.sh"; exit 2
+fi
+if [ -n "$ARBOR" ] && [ "$RADIX" -eq 1 ]; then
+    echo "oraculum: -arbor non cum compile_tests.sh (build/ radicis ignota)"; exit 2
+fi
 T="$(mktemp -d)"
 VETUS="$SUB/.oraculum_vetus.sh"
 NOVUS="$CURSOR"
@@ -74,18 +101,41 @@ if cmp -s "$VETUS" "$NOVUS"; then
 fi
 
 currere () {   # $1 cursor, $2 sedes collectionis
-    rm -rf "$SUB/build"
+    if [ "$RADIX" -eq 1 ]; then
+        rm -f build/*.o build/probationes/*.o
+    else
+        rm -rf "$SUB/build"
+    fi
     mkdir -p "$T/$2/o"
-    env "$EFFUSIO_VAR=1" "$1" > "$T/$2/effusio" 2>&1
+    # shellcheck disable=SC2086 (FILTRUM vacuum = nullum argumentum)
+    env "$EFFUSIO_VAR=1" "$1" $FILTRUM > "$T/$2/effusio" 2>&1
     echo $? > "$T/$2/rc"
     cp "$SUB"/build/*.o "$T/$2/o/" 2>/dev/null
-    awk '/^=== probatio/ { on = 1 }
+    [ "$RADIX" -eq 1 ] && cp build/probationes/*.o "$T/$2/o/" 2>/dev/null
+    # LC_ALL=C: octeti non UTF-8 in effusione awk multibyte necabant
+    # (towc, cursus radicis)
+    LC_ALL=C awk -v radix="$RADIX" '
+         { gsub(/\033\[[0-9;]*m/, "") }
+         radix == 0 && /^=== probatio/ { on = 1 }
+         radix == 1 && /Testing: / { on = 1 }
+         radix == 1 && /^Slowest tests:/ { on = 0 }
+         /^Total Time:/ { next }
          /^Tardissimae:/ { tard = 1; next }
          tard && /^=+$/ { tard = 0 }
          tard { next }
          on { gsub(/ \([0-9.]+s(, exitus [0-9]+)?\)/, "");
               sub(/ +pars [0-9.]+ ms.*$/, ""); print }' \
-        "$T/$2/effusio" > "$T/$2/probationes"
+        "$T/$2/effusio" > "$T/$2/plena"
+    # RADIX: probationes ipsae signa cursus-propria imprimunt (inscriptiones
+    # ASLR, portus, pid, UUID, tempora, numeri callback - inventum
+    # 2026-10-03, tres cursus) - ergo VERDICTA comparantur (linea per
+    # probationem + summa), effusio plena solum numeratur (nota)
+    if [ "$RADIX" -eq 1 ]; then
+        grep -E 'TEST PASSED|TEST FAILED|COMPILATION FAILED|SINE VERDICTO|RETICULARIS EXCLUSUM|^Tests (Total|Passed|Failed):|^Failed:' \
+            "$T/$2/plena" > "$T/$2/probationes"
+    else
+        cp "$T/$2/plena" "$T/$2/probationes"
+    fi
 }
 
 currere "./$VETUS" vetus
@@ -137,6 +187,10 @@ if ! diff -q "$T/vetus/probationes" "$T/novus/probationes" > /dev/null; then
     discordia=1
 fi
 lineae=$(wc -l < "$T/novus/probationes" | tr -d ' ')
+if [ "$RADIX" -eq 1 ]; then
+    plenae=$(diff "$T/vetus/plena" "$T/novus/plena" | grep -c '^>')
+    echo "nota: effusio plena $(wc -l < "$T/novus/plena" | tr -d ' ') lineae, $plenae differunt (signa cursus-propria; verdicta comparata)"
+fi
 # porta tacita = porta mortua: nihil collatum numquam 'consensus'
 if [ "$communes" -eq 0 ] || [ "$lineae" -eq 0 ]; then
     echo "oraculum $SUB ($REF): nihil comparabile (obiecta communia $communes, lineae $lineae)"

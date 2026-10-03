@@ -1504,3 +1504,44 @@ negated form the house uses (`! [ bin -nt o ]` -> stale, so a same-second
 tie relinks). Lint over all 8 scripts this migration touched: clean.
 Helper: the mandata.tsv reset moved from cursor_instrumenta_parare to
 cursor_clausuras_derivare (a tool launch must not wipe a runner's record).
+
+## 2026-10-03 - excubitor migration step 4: root compile_tests.sh
+
+Scope (Fran): compile through the store only. Kept: the generated source
+list (compile_tests_fontes_generata.sh) and link-everything-into-every-
+test; GUI apps, tools, speculum untouched. Gone: needs_compile /
+newest-header mtime rules, the "Libraries up to date" short-circuit, the
+report-only excubitor call at exit. compile_libraries now writes one
+command line per object (C, .m, vendor sqlite with VENDOR_FLAGS) and runs
+them with `xargs -P $FILA -L 1 bin/compilator`; per-test objects (serial
+and probatio_una) go through compilator too (COMPILATOR, CLAUSURAE_DIR
+exported to xargs children). Paths stay RELATIVE (cwd = root) so -g
+embeds the same strings as the old runner. LIBS_COMPILED (mensor metric
+"recompiled this run") = inode listing of build/*.o before vs after -
+compilator never rewrites an identical object.
+
+Timing, warm, filter piscina: old 7.4 s; new serial 14.1 s (225 hits x
+~29 ms); new parallel 8.5 s. Half of each hit is compilator spawning
+`clang -print-prog-name=clang` every call (desideratum ...HHD43). First
+cold-store run: 225 objects, only 1 came out with different bytes from
+the old runner's existing objects.
+
+Oracle root mode (tools/cursoris_oraculum.sh compile_tests.sh [-filtrum
+X]): deletes only build/*.o + build/probationes/*.o (never build/ - it
+holds logs, locks, other tools' binaries), compares both sets. Three
+oracle bugs found on the way to consensus:
+1. awk died with "towc: multibyte conversion failure" on non-UTF-8 test
+   output (~700 lines unfiltered at the tail) -> LC_ALL=C.
+2. root tests print run-specific data: ASLR addresses, ports, pids,
+   UUIDs, multipart boundaries, ms timings, callback counts. Regexing
+   them is whack-a-mole (three runs, new class each time), so root mode
+   compares VERDICT lines (one per test + summary counts) and only
+   counts full-output differences as a note (243 of 107946 lines).
+3. sub-runner filter unchanged except colour stripping + LC_ALL=C.
+Result: consensus, 431 objects identical (toml_scalaris = known clang
+nondeterminism), 196 verdict lines. Plant: new runner with sqlite -O1
+-> "DISCORDIA octeti: sqlite3.o", rc 1 (also exercised -filtrum).
+Library compile failure exits 2 ("nothing ran"), same as the old runner.
+Inventory: tools/cursor_communis.sh was owed by NO suite (only vexilla);
+added to tegit viae of radix, toml, css, crusta; radix currit binaria
++= tools/compilator.c.
