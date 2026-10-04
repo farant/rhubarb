@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 60 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 65 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -60,7 +60,9 @@ it: the radical of the Temperley–Lieb algebra at δ = 0 and at other roots of
 unity, then the bracket at δ = 1 and δ = √2 as a source of weights. Demos
 56 to 60 follow both threads: the bracket as a Potts partition function, the
 Boolean search at δ = √2, φ and √3 under two encodings, and the radical at
-ℓ = 7, the first cubic number field.</p>
+ℓ = 7, the first cubic number field. Demos 61 to 65 prove the
+eleven-of-thirteen result for half-planes, dissect parity by octant and
+sector up to six inputs, and try the next cyclotomic ring.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1071,6 +1073,117 @@ result I have not checked. Two of the fifteen checks cannot fail. The log's
 remark that the "Catalan difference formula" of the plan was wrong is fair,
 but that formula is δ = 0's (demo 51), applied where it did not belong.</p>
 
+<h2>Demo 61 · Eleven of thirteen, by search</h2>
+<p class="nota"><code>knotapel/demo_61_angular_proof/main.c</code> · 661 lines · 14/14 tests · no <code>findings.md</code></p>
+<p>Demos 55 to 59 found that a half-plane activation on the multiplicative
+encoding reaches 11 of the 13 classes at every root of unity. Demo 61 drops
+the catalog altogether. A half-plane sees only angles, and the angle of
+w<sub>1</sub><sup>a</sup>w<sub>2</sub><sup>b</sup>w<sub>3</sub><sup>c</sup> is
+aφ<sub>1</sub> + bφ<sub>2</sub> + cφ<sub>3</sub>, so it writes the three
+angles as integers mod N and, for each of the N³ configurations, tests the
+eight semicircles that begin just after one of the eight points (the rest
+give complements, the same classes). In integer arithmetic, at N = 120 and
+N = 360 (46.7 million configurations): twelve classes, the eleven and the
+constant, and never 0x06 ((x<sub>0</sub> XOR x<sub>1</sub>) AND NOT
+x<sub>2</sub>) or 0x1B. It then shows that every proper subset of the eight
+constraints of either class is satisfiable: the obstruction needs all
+eight.</p>
+<p>The theorem is true, and it is about the neuron, not about knots. Its
+completeness, though, rests on a sentence the demo does not prove ("every
+chamber contains ~10<sup>4</sup> grid points"); thin cells exist, and nothing
+shows N = 360 is fine enough. The gap closes cleanly (<a
+href="#nota-semicirculus">note 30</a>): every cell vertex lies on a multiple
+of π/12, so a grid of N = 96 or any multiple of it meets every cell, and the
+same search at N = 96, 192 and 384 finds the same twelve classes. Twenty
+million random real configurations agree.</p>
+
+<h2>Demo 62 · Eleven of thirteen, by hand</h2>
+<p class="nota"><code>knotapel/demo_62_analytical_proof/main.c</code> · 599 lines · 7/7 tests · no <code>findings.md</code></p>
+<p>Two deductive arguments. For 0x06: its two TRUE points φ<sub>2</sub> and
+φ<sub>3</sub> lie in the semicircle and their sum does not, which forces
+φ<sub>2</sub> + φ<sub>3</sub> &gt; π; the four FALSE constraints that
+involve φ<sub>1</sub> then confine φ<sub>1</sub> to four semicircles whose
+starting points form a "parallelogram" with gaps α, β − α, α and
+2π − α − β, all shorter than π, so the four have no common point. For 0x1B:
+a three-step squeeze ending in φ<sub>3</sub> &gt; π. A symmetry argument
+extends each to its 24-member class: input permutation relabels the angles,
+input negation reflects one angle and rotates the semicircle, output negation
+swaps the semicircle with its complement.</p>
+<p>Proof B is correct, with one case left out: when α + β &gt; 2π the gaps
+are α + β − 2π, 2π − β, β − α and 2π − β, also all shorter than π. Proof A
+begins "Set θ = 0 (WLOG, since 0 is in TRUE set)", and that is not without
+loss of generality: z(000) = 1 is pinned, and a semicircle containing 1 can
+begin anywhere in the half-turn before it, so the argument covers one
+semicircle per configuration (note 30). Nothing hangs on it: with note 30's
+lattice argument, demo 61's search is a complete proof by itself.</p>
+
+<h2>Demo 63 · Octants and sectors</h2>
+<p class="nota"><code>knotapel/demo_63_angular_anatomy/main.c</code> · 1,957 lines · 29/29 tests · <code>findings.md</code></p>
+<p>Back to δ = 0, the additive encoding and the 100-value catalog, which
+lies on eight rays. The demo tabulates which rays fall in odd sectors for
+each k and reproduces demo 50's tiers from that table; dissects the 906
+parity solutions at k = 6 (one weight per odd sector, the "triskelion",
+from octant sets {2, 5, 7} or {2, 4, 7}); classifies weight triples by
+oriented-matroid type (parity needs the alternating chirality, three weights
+that interleave around the circle); and extends to more inputs: XOR4 only
+at k = 8 (96 solutions), XOR5 first at k = 15 (3,020), and XOR6 and XOR7
+never at k = 15. Its conclusions: "the parity ceiling for Z[ζ<sub>8</sub>] is
+n = 5", and k = 2M − 1 puts every nonzero ray of an M-ray lattice in an odd
+sector.</p>
+<p>Three corrections. The reason three-input parity needs six sectors is
+not the octant table: two weights in the same sector add into that sector,
+so XOR<sub>n</sub> needs n different odd sectors and k ≥ 2n, for any weights
+whatever (<a href="#nota-sextans">note 31</a>); that is why note 20's
+knot-free catalogs all begin at six too. Several results are decided by the
+boundary convention: at k = 8 every lattice direction lies exactly on a
+sector boundary, and at k = 6 the 180° direction does; turning the sectors by
+10<sup>−9</sup> radian one way changes 906 to 1,002 and 96 to 180, and fails
+six of the 29 checks (<a href="#nota-limites">note 32</a>), while the k = 15
+results do not move. And counts at k = 15 depend on the order of summation:
+3,020 ordered XOR5 solutions form 27 sets, which should give 27 · 5! = 3,240
+(<a href="#nota-ordo">note 33</a>). The ceiling of five is shown for this
+100-value catalog with XOR6 and XOR7 searched at k = 15 only: a property of
+the catalog, not of Z[ζ<sub>8</sub>].</p>
+
+<h2>Demo 64 · Parity as a matroid</h2>
+<p class="nota"><code>knotapel/demo_64_parity_matroid_recursion/main.c</code> · 1,745 lines · 22/22 tests · <code>findings.md</code></p>
+<p>Demo 64 takes all XOR2 to XOR5 solutions at k = 15 and asks how they
+nest. Deleting a weight from an XOR<sub>n</sub> solution always gives
+XOR<sub>n−1</sub>; fixing an input to 1 always gives XNOR<sub>n−1</sub>
+(100% at every level). Going up, coverage funnels: 99.3% of XOR2 sets extend
+to XOR3, 39.2% of XOR3 to XOR4, 19.2% of XOR4 to XOR5, none of XOR5 to XOR6
+(1,469, 3,834, 673 and 27 distinct sets). The nearest misses to XOR6 get at
+least 4 of 64 outputs wrong, and repeating a weight never works, since 2w
+points where w does.</p>
+<p>The closure is guaranteed in advance: a sub-sum of a parity solution
+computes the restriction of parity, so "100% at every level" is a property
+of parity, and these tests can fail only by numerical error. The demo's
+remark that floating point produced 420 spurious contraction failures is that
+error showing (note 33). The funnel and the near-miss census are real
+information about this catalog. The T-gate reading (ζ<sub>8</sub> as the
+T-gate phase, the ceiling as one level of the Clifford hierarchy) is an
+analogy the demo does not test.</p>
+
+<h2>Demo 65 · The next cyclotomic ring</h2>
+<p class="nota"><code>knotapel/demo_65_clifford_staircase/main.c</code> · 2,014 lines · 38/38 tests · <code>findings.md</code></p>
+<p>Does XOR6 become reachable in Z[ζ<sub>16</sub>]? The demo builds a catalog
+with A = −ζ<sub>16</sub>, δ = −√2 (36 values from two and three strands, 56
+with four), finds XOR3, XOR4 and XOR5 first at k = 6, 8 and 14, and XOR6 at no
+k from 2 to 31. It then allows any labeling of the k sectors, not just odd
+and even: extending the 27 XOR5 sets by one weight finds XOR6 at k = 24 (3 of
+2,700 tuples, each three antipodal pairs), at even k near 24 but not odd,
+and XOR7 at k = 127.</p>
+<p>This root is δ = ±√2, demo 54's classical point: a patched copy finds
+magnitudes 1, √2 and 2 only. So "the ceiling is independent of the evaluation
+point" rests on two easy points of note 28, and the hard one, ℓ = 5, is not
+tested. The comparison table gives Z[ζ<sub>8</sub>] its XOR5 at k = 14; demo
+63 found none there and its first at 15, and demo 65 does not recompute it.
+Any labeling of k sectors makes the neuron a lookup table of k entries indexed
+by angle, so its reach grows with k as a table's does (note 6). Its first
+XOR6 solutions have zero margin and appear at even k, where the 180° direction
+is a sector boundary, which the demo itself calls concerning (note 32). Its
+own XOR5 enumeration sums exactly and gets 3,240, the order-free count.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -1509,20 +1622,76 @@ by different paths (exact ring products, then doubles; or products of
 doubles). The 12 of 13 at ℓ = 4 and 5 and 13 of 13 at ℓ = 6 mix both effects.
 The sign of Im z is decidable exactly in the ring; doing so would say which
 counts are real.</p></li>
+<li id="nota-semicirculus"><p><strong>The eleven-of-thirteen theorem is true;
+here is a complete argument.</strong> Which truth tables a half-plane gives
+depends only on the cyclic order of the eight angles and their antipodes,
+which changes only on the hyperplanes d·φ ∈ πZ with d ∈ {−1, 0, 1}³ (a
+difference of two input vectors). A vertex of this arrangement solves
+Mφ = πn with M a 3 × 3 matrix of entries −1, 0, 1, whose determinant is at
+most 4 in absolute value (checked over all 19,683), so every vertex lies on
+(π/12)Z³. The cells are bounded (the hyperplanes φ<sub>i</sub> ∈ πZ are among
+them), hence polytopes, and each contains the barycenter of four affinely
+independent vertices, a point of (π/48)Z³. At such a point every event lies
+on the π/48 grid, so demo 61's procedure at N = 192 (with "just after a
+point" one step past an even position) sees every cell and every semicircle.
+Run at N = 96, 192 and 384: twelve classes, no 0x06, no 0x1B. Twenty million
+random real configurations reach exactly 208 truth tables in the same twelve
+classes. Demo 62's proof B is right (the case α + β &gt; 2π, left out, also
+has all gaps below π); its proof A assumes the semicircle starts at the
+pinned point 1, one case among many. Whether the result is known (a cosine
+neuron of a linear form, in effect) I have not checked.</p></li>
+<li id="nota-sextans"><p><strong>Parity needs 2n sectors, for any
+weights.</strong> In the additive encoding without a bias, with k sectors
+read mod 2, z(0…0) = 0 is class 0, so XOR<sub>n</sub> needs every single
+weight in an odd sector and every pair sum in an even one. A sector of
+angular width at most π is a convex cone, so two weights in one sector add
+into that sector: the n weights must occupy n different odd sectors, and
+there are ⌊k/2⌋ of those. Hence k ≥ 2n: six sectors for three inputs, eight
+for four, ten for five, for every catalog, which is why demo 50 and every
+null catalog of note 20 first reached parity at k = 6. That settles the
+"small theorem" asked for below. Demo 63's k = 8 for XOR4 meets the bound;
+its k = 15 for XOR5, above the bound of 10, and its ceiling of five belong to
+the eight-ray, bounded-magnitude catalog.</p></li>
+<li id="nota-limites"><p><strong>Results on sector boundaries follow the
+convention.</strong> The sectors are half-open, [lo, hi), in floating point.
+At k = 8 all eight directions of the δ = 0 catalog lie exactly on sector
+boundaries, at k = 4 the axes do, and at every even k the 180° direction
+does. A scratch copy of demo 63 rotated the sectors by ±10<sup>−9</sup>
+radian. +10<sup>−9</sup> changes nothing (points at a boundary stay at the
+start of their sector). −10<sup>−9</sup> moves them back one sector: parity
+at k = 6 goes from 906 to 1,002, at k = 8 from 96 to 180, XOR4 at k = 8 from
+96 to 144, and six checks fail, including "all parity solutions are
+triskelions" (636 of 1,002) and the two octant sets. At k = 15 nothing
+changes: no lattice direction lies on a boundary there. The k = 6 count of
+demo 50 and note 20 shares the convention; the threshold of six does not
+(note 31). Demo 65's generalized XOR6, which appears at even k with zero
+margin, belongs to the same family.</p></li>
+<li id="nota-ordo"><p><strong>Order of summation changes the counts.</strong>
+Whether a set of weights computes XOR5 cannot depend on the order in which
+its weights are listed, so ordered solutions must come in multiples of 5!
+per set. Demo 63 and demo 64 count 3,020 ordered XOR5 solutions in 27 sets
+(27 · 120 = 3,240) and 16,108 ordered XOR4 solutions in 673 sets
+(673 · 24 = 16,152); XOR3, 23,004 in 3,834 sets, is exact. Their sums are
+built in doubles, so a sum that is exactly zero in the ring can come out
+around 10<sup>−14</sup>, above the 10<sup>−15</sup> zero test, with an
+arbitrary angle. Demo 65, summing exactly in the ring before converting,
+gets 3,240. The 27 sets themselves are found either way. Demo 64's 420
+spurious contraction failures in floating point are the same thing.
+Permutation invariance is a free check any such search can assert.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 61 and 62 prove the eleven-of-thirteen half-plane result, demo 63
-dissects the angles of DKC solutions, and demos 64 to 69 move to parity
-matroids, the Clifford hierarchy, quaternions and the sphere, before the
-multi-strand work of demos 99 to 109. The controls this reading found
+<p>Demos 66 to 69 leave the plane: quaternionic DKC, a zoo of coordinate
+systems for SU(2), stereographic projection, and the Clifford staircase on
+the sphere, before the multi-strand work of demos 99 to 109. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
 21), the classical invariant at that root of unity (notes 23, 24 and 28),
 the same search with only δ changed (note 25), the bracket's own Potts
-formula (note 26), and the perceptron as the baseline for additive searches
-(note 27).</p>
+formula (note 26), the perceptron as the baseline for additive searches
+(note 27), and, for anything decided by angles, the boundary convention and
+the order of summation (notes 32 and 33).</p>
 
 <h2 id="demo113">Demo 113 · Rosetta (new, from this reading)</h2>
 <p class="nota"><code>knotapel/demo_113_rosetta/main.c</code> · 33/33 tests · <code>findings.md</code> · written 2026-10-03</p>
@@ -1597,7 +1766,7 @@ distinct catalog values in place of 64 (demo 113).</p></li>
 (bracket or null, 13 runs) computes three-input parity with fewer than six
 sectors and no bias. Prove it: which sector counts admit an alternating
 class pattern over the seven nonzero input sums for some three complex
-weights?</p></li>
+weights? <strong>Done: note 31 proves k ≥ 2n for n inputs.</strong></p></li>
 <li><p><strong>A matched null for reverse decomposition.</strong> For demos
 45 to 47: random weights with each trained network's own magnitudes, put
 through the same gauge sweep, as the baseline every RMS is compared
@@ -1628,7 +1797,8 @@ With z = Π w<sub>i</sub><sup>x<sub>i</sub></sup>, an angular activation sees
 only Σ x<sub>i</sub>θ<sub>i</sub>. Work out which three-input classes a given
 set of angles reaches (it should explain the two classes missing at both δ in
 note 25), and test the axis guess for the split-sigmoid gap by giving the
-δ = √2 catalog phases on the π/4 grid.</p></li>
+δ = √2 catalog phases on the π/4 grid. <strong>The half-plane part is done:
+demos 61 and 62 (with note 30). The split-sigmoid guess is open.</strong></p></li>
 <li><p><strong>Rosetta at every easy point.</strong> One demo that
 checks each bracket at δ = 1, √2 and √3 against its classical invariant on
 every braid: the crossing parity, the Arf invariant and linking numbers, and
@@ -1647,6 +1817,20 @@ first catalog that is not a classical invariant (note 28) deserves a search
 whose answer depends on more than angles: magnitude-aware or additive
 activations with a bias, compared against a null catalog of random
 Z[ζ<sub>5</sub>] values with the same coefficient bounds.</p></li>
+<li><p><strong>Exact sectors, and the order check.</strong> Classify
+sector membership exactly (in Z[ζ<sub>lcm(8, 2k)</sub>], or with interval
+arithmetic and a certified margin), report boundary cases separately, and
+assert that ordered counts are multiples of n! (note 33). Then redo demos
+50 and 63 to 65.</p></li>
+<li><p><strong>Is 2n sectors enough?</strong> Note 31 proves k ≥ 2n for
+XOR<sub>n</sub> with any weights. Construct, or rule out, real weights
+reaching XOR<sub>n</sub> at exactly k = 2n for every n; if they exist, the
+ceiling of five is wholly a property of the eight-ray catalog, and the
+question becomes which catalogs reach which n.</p></li>
+<li><p><strong>The ceiling at the hard point.</strong> Demos 63 and 65 test
+the parity ceiling at δ = 0 and δ = √2, both classical points (note 28). Rerun
+it with demo 58's ℓ = 5 catalog, the first one that is not a classical
+invariant.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -1662,15 +1846,19 @@ already had classical names (cellular theory, Jones at e<sup>2πi/3</sup>,
 Murasugi at i), and one comparison in which the encoding changed along with
 the algebra. Demos 56 to 60 continue it, and end with demo 60, which states its
 predictions first and checks them at two primes: the way the earlier
-claims could have been made.</p>
+claims could have been made. Demos 61 and 62 then do something new for the
+project, a proof, and the result survives; the gaps were in the proofs'
+bookkeeping, and the argument that closes them is short.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
 textbook check of note 21, the control of note 25, the coupling check of
-note 26 and demo 59's catalog magnitudes (note 28) ran on scratch copies.
-Written by hand on 2026-10-03 from reading the forty-eight
-<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to 60, with their
-findings, debriefs and, for 51 to 60, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+note 26, demo 59's catalog magnitudes (note 28), the lattice search and
+random check of note 30, the rotated sectors of note 32 and demo 65's
+magnitudes ran on scratch copies. Written by hand on 2026-10-03 from reading
+the fifty-three <code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to
+65, with their findings, debriefs and, for 51 to 65,
+<code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
