@@ -969,7 +969,11 @@ it is full; the progress lines show the count frozen at 65,536 from the 40th
 of 64 first-weight values on. Each entry is a (triple, phase) pair, and the
 phase sweep is 72 angles in 5° steps, not the 360 printed. Counted without
 the cap (a patched copy, the demo itself untouched): 200,933 (triple, phase)
-pairs and 28,644 distinct triples, 10.9% of all 262,144. The demo's
+pairs and 28,644 distinct triples, 10.9% of all 262,144. The catalog
+itself is capped too: <code>MAX_CATALOG</code> = 8,192 braids, and "8,192
+braids with |bracket| &gt; 0.5" is that cap; enumerated completely (demo
+113), the same catalog definition has 100 distinct values, not 64, so the
+triple counts above are for demo 29's truncated 64. The demo's
 "10,357 unique triples" was computed from the capped prefix; the project's
 summaries quote "65,536 valid triples" and "~35% of triples". For the
 control: the neuron reads out p = h<sub>re</sub>(1 − h<sub>im</sub>) +
@@ -1015,6 +1019,30 @@ correction (46), a parity investigation with Aizenberg's multi-valued neuron
 reachable with a six-sector activation (50). Notes 16 and 17 suggest two
 controls to carry into them: random phases with the same magnitudes, and
 linear separability as a baseline explanation.</p>
+<h2 id="demo113">Demo 113 · Rosetta (new, from this reading)</h2>
+<p class="nota"><code>knotapel/demo_113_rosetta/main.c</code> · 33/33 tests · <code>findings.md</code> · written 2026-10-03</p>
+<p>The first experiment below, built. Classically, ⟨L⟩ = (−A<sup>3</sup>)<sup>w</sup>V<sub>L</sub>(t)
+with t = A<sup>−4</sup>; at A = e<sup>i5π/4</sup> that is t = −1, where
+|V<sub>L</sub>(−1)| is the determinant and V<sub>L</sub>(−1) is real or
+imaginary as the number of components is odd or even. The demo states six
+predictions in its header before running, then tests them on every braid
+word on 2 strands up to length 12, 3 strands up to 8 and 4 strands up to 6
+(151,559 braids, no caps), in exact arithmetic, against a determinant
+computed independently from the reduced Burau representation.</p>
+<p>Every prediction holds for every braid. Each bracket value is one integer
+times one 8th root of unity; the integer is the determinant; the bracket is
+zero exactly when the determinant is; and the phase obeys
+bracket = ζ<sub>8</sub><sup>−3w</sup>·u·det with u = ±1 for an odd number of
+components and ±i for an even number. The writhe exponent comes out as −3w,
+not the textbook +3w, which is the mirrored crossing convention of note 2
+showing up where it should; the textbook convention fails on 17,618 braids,
+and |Δ(+1)| in place of |Δ(−1)| fails on about half, so the tests can fail.
+So the DKC weight set is a determinant and one of eight phases, an
+eight-pointed star of integer multiples rather than a lattice, and "δ = 0
+detects entanglement" is "split links have determinant zero". Enumerated
+completely, demo 29's catalog definition has 100 distinct values over 30
+determinants, not the 64 its capped catalog found.</p>
+
 <h2 id="experimenta">Future experiments</h2>
 <p>Proposed by this reading, roughly in order of cost. None changes an
 existing demo; each would be a new one.</p>
@@ -1030,7 +1058,8 @@ for an odd number of components and imaginary for an even number. Test it
 on every braid of the catalogs against a determinant computed
 independently (Burau). If it holds, the DKC weight set is "a determinant
 and one of eight phases", and much of the later structure may be read from
-that. Being built as demo 113.</p></li>
+that. <strong>Done: <a href="#demo113">demo 113</a>, confirmed for all
+151,559 braids.</strong></p></li>
 <li><p><strong>A null model for the parity result (demo 50).</strong> Rerun
 its search with the bracket catalog replaced by (a) the same eight-direction
 star of integer multiples with magnitudes drawn independently of any knot,
@@ -1057,7 +1086,8 @@ Demos 10 to 17 with T(2,n) = σ<sub>1</sub><sup>n</sup>σ<sub>2</sub>, the trefo
 to see which of their results (zero patterns, waveform separations,
 factorization) survive (notes 3 to 8).</p></li>
 <li><p><strong>Uncapped counts for demo 29</strong> in the atlas: 28,644
-triples (10.9%) in place of 65,536, 10,357 and "~35%" (note 16).</p></li>
+triples (10.9%) in place of 65,536, 10,357 and "~35%" (note 16), and 100
+distinct catalog values in place of 64 (demo 113).</p></li>
 </ol>
 
 <p>Looking back over the first thirty: the polynomial and matrix machinery of
@@ -1069,7 +1099,8 @@ are where the idea is tested directly. The arithmetic was right everywhere
 it was checked. What went wrong was the labels, the interpretation, and the
 checks written after the results were known.</p>
 
-<p class="nota">Written by hand on 2026-10-03 from reading the thirty-three
+<p class="nota">Demo 113 was written for this page and is the only change made
+inside <code>knotapel/</code>. Written by hand on 2026-10-03 from reading the thirty-three
 <code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45, with demo 45's
 findings and debrief) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
