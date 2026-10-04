@@ -107,7 +107,9 @@ s32 principale (vacuum)
     pictor_actiones_registrare(reg, &actiones);
     cfg.fenestra_latitudo  = CCCXX;
     cfg.fenestra_altitudo  = CCXII;
-    cfg.status_altitudo    = XII;
+    cfg.cellula_latitudo   = VI;
+    cfg.cellula_altitudo   = VIII;
+    cfg.status_lineae      = I;
     d = dispensator_creare(piscina, intern, repo, reg, pictor_componere,
                            &cfg, CCC);
     CREDO_NON_NIHIL(d);

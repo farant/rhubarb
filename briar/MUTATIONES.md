@@ -169,6 +169,10 @@ Leges chartae:
   textus per mensorem (liber primus virtualis, linea una; minimum =
   verbum latissimum).
 
+- corpus (FRANGIT): `PictorCompositio.status_altitudo` (pixela) deletum
+  -> `cellula_latitudo/_altitudo` + `status_lineae` (013 B3); pictor
+  componit ex `superficies_*` per dispositio in cellulis.
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

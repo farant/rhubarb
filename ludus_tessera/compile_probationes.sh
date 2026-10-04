@@ -108,6 +108,8 @@ declare -a RADIX_FONTES=(
     "pictor_componentia"
     "pictor_documentum"
     "pictor_figurae"
+    # B3: pictor_componere disponit per dispositio
+    "dispositio"
     "volumen"
     "filum"
     "sigillum"

@@ -99,7 +99,9 @@ s32 principale (vacuum)
     mutare_motum(&motus, punctum_addere, &p, M);
     cfg.fenestra_latitudo = LXIV;
     cfg.fenestra_altitudo = XLVIII;
-    cfg.status_altitudo = XII;
+    cfg.cellula_latitudo = VI;
+    cfg.cellula_altitudo = VIII;
+    cfg.status_lineae = I;
     arbor = pictor_componere(repo, &motus, piscina, intern, &cfg);
     CREDO_NON_NIHIL(arbor);
 

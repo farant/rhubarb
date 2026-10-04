@@ -298,3 +298,42 @@ never-true condition.
 Not proven here: that the composition after a resize SEES the new size
 (the order is by construction - written before recompose - but no app
 reads it yet). B3 (pictor responsive) is that proof.
+
+## B3 — pictor responsive (2026-10-03; headless part)
+
+`pictor_componere` now reads `superficies_latitudo/_altitudo` (B1;
+the configured window size is only the fallback before the glue's first
+size event) and lays out with **dispositio in cells**: a column - the
+canvas viewport (GROW, clipped) over the status row (FIXED, **one row**,
+Fran's call). `PictorCompositio` lost `status_altitudo` (pixels) for
+`cellula_latitudo/_altitudo` (6×8) + `status_lineae` (1).
+
+**Edges touching the surface snap to the surface**, not to a cell: the
+first run gave widths of 318 for a 320-px window (53 whole cells) - a
+sliver at the window's right/bottom edge. In the terminal nothing
+changes (its surface is always whole cells); in the window the last
+row/column absorbs the remainder (163 px high → status row 152..163,
+11 px). Reported to Fran as a veto-able refinement.
+
+**A clipped title found by the image specimen.** figura_tituli drew the
+text at a fixed (2, 2) - fine in the old 12-px row, the glyph's bottom
+2 px clipped in an 8-px row. Only the window's pixel specimen showed it
+(the terminal floors y=2 into the same cell). Now vertically centred
+against the 8-px glyph, floored at 0. Both goldens moved as intended
+and were inspected before promotion: pictor.arbor.stml (status 12 → 8,
+viewport 228 → 232; widths unchanged at 320 after the surface snap)
+and pictor_prima.png (title fully visible in the bottom row).
+
+**Proofs:** composition test - a surface of 480×163 puts the status at
+y = 152 (row 19) and gives it the 11-px remainder; the terminal replay
+- the title is on the LAST row at 80×30 (row 29) and, after a resize
+event through the glue to 80×20, on row 19. Plants, all caught (exit
+codes read, clean compiles): composition ignoring superficies
+(composition + terminal), status GROW instead of FIXED (all three), no
+surface snap (the tree golden - the terminal cannot see it, correctly),
+title at fixed y=2 (the image specimen only).
+
+The ludus_tessera runner needed `dispositio` in its hand list (every
+suite failed to link until then - one missing lib, not five failures).
+
+Pending: Fran's look - resize a terminal and the window.

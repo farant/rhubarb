@@ -49,3 +49,13 @@ RHUBARB_RADIX). Find: `pictor_documentum.h` included `fenestra.h` only
 for the `TabulaPixelorum` type, which dragged fenestra_macos.m and
 Cocoa into EVERY pictor build - now `tabula_pixelorum.h`; the terminal
 binary links no Cocoa (otool), root pictor tests unchanged.
+
+## 2026-10-03 — responsive layout (module 013 B3)
+
+`pictor_componere` lays out with `dispositio` in cells from the
+`superficies_*` attributes (written by the dispensator on resize):
+viewport GROW over a ONE-row status (Fran). Surface-touching edges snap
+to the surface (no sliver in a window that is not a cell multiple).
+figura_tituli's text is now vertically centred against the 8-px glyph
+(it was clipped at y = 2 in the 8-px row - the image specimen caught
+it). `PictorCompositio.status_altitudo` → `cellula_*` + `status_lineae`.

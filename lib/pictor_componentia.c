@@ -2,6 +2,7 @@
 
 #include "pictor_componentia.h"
 #include "xar.h"
+#include "dispositio.h"
 
 #include <string.h>
 
@@ -70,6 +71,31 @@ nodus (
     redde c;
 }
 
+/* Fines cellularum -> pixela nostra: orae ad cellulas, PRAETER oram
+ * quae superficiem tangit - ea ad superficiem ipsam (fenestra:
+ * superficies non semper cellularum multiplex - nulla fascia vacua ad
+ * marginem; terminalis: idem, superficies semper multiplex). */
+interior Fines
+_ad_pixela (
+    Fines f,
+      s32 columnae,
+      s32 lineae,
+      s32 latitudo,
+      s32 altitudo,
+      s32 cw,
+      s32 ch)
+{
+    Fines p;
+
+    p.x = f.x * cw;
+    p.y = f.y * ch;
+    p.latitudo  = (f.x + f.latitudo >= columnae) ? latitudo - p.x
+                                                  : f.latitudo * cw;
+    p.altitudo  = (f.y + f.altitudo >= lineae) ? altitudo - p.y
+                                                : f.altitudo * ch;
+    redde p;
+}
+
 constans character*
 pictor_actio_instrumenti (
     chorda instrumentum)
@@ -95,25 +121,77 @@ pictor_componere (
     InternamentumChorda* intern,
                  vacuum* ctx)
 {
-    PictorCompositio* cfg;
-           Componens* radix;
-           Componens* prospectus;
-           Componens* tabula;
-           Componens* status;
-              chorda  instrumentum;
-                 s32  doc_latitudo;
-                 s32  doc_altitudo;
-                 s32  zoom;
-                 s32  status_altitudo;
-                 i32  n;
-                 i32  i;
+     PictorCompositio* cfg;
+            Componens* radix;
+            Componens* prospectus;
+            Componens* tabula;
+            Componens* status;
+               chorda  instrumentum;
+                  s32  doc_latitudo;
+                  s32  doc_altitudo;
+                  s32  zoom;
+                  s32  latitudo;
+                  s32  altitudo;
+                  s32  cw;
+                  s32  ch;
+           Dispositio* dispositio;
+      DispositioForma  forma;
+                  s32  d_radix;
+                  s32  d_prospectus;
+                  s32  d_status;
+                Fines  fp;
+                Fines  fs;
+                  i32  n;
+                  i32  i;
 
     si (!repo || !piscina || !intern || !ctx)
     {
         redde NIHIL;
     }
-    cfg              = (PictorCompositio*)ctx;
-    status_altitudo  = (s32)cfg->status_altitudo;
+    cfg = (PictorCompositio*)ctx;
+    /* 013 B3: superficies STATUS est (dispensator scribit); ante
+     * nuntium primum magnitudo configurata */
+    latitudo = attributum_s32(repo, INSULA_EPHEMERA,
+        "superficies_latitudo",
+        (s32)cfg->fenestra_latitudo);
+    altitudo = attributum_s32(repo, INSULA_EPHEMERA,
+        "superficies_altitudo",
+        (s32)cfg->fenestra_altitudo);
+    cw = (cfg->cellula_latitudo > ZEPHYRUM) ? (s32)cfg->cellula_latitudo
+                                            : I;
+    ch = (cfg->cellula_altitudo > ZEPHYRUM) ? (s32)cfg->cellula_altitudo
+                                            : I;
+
+    /* dispositio in cellulis: columna = prospectus (crescens,
+     * praecisus) super lineam status (fixa) - orae ad cellulas */
+    dispositio = dispositio_creare(piscina);
+    dispositio_formam_initiare(&forma);
+    forma.directio        = DISPOSITIO_COLUMNA;
+    forma.latitudo.genus  = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus  = DISPOSITIO_CRESCENS;
+    d_radix               = dispositio_addere(dispositio, -I, &forma);
+    dispositio_formam_initiare(&forma);
+    forma.latitudo.genus  = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus  = DISPOSITIO_CRESCENS;
+    forma.praecidere_x    = VERUM;
+    forma.praecidere_y    = VERUM;
+    d_prospectus = dispositio_addere(dispositio, d_radix,
+        &forma);
+    dispositio_formam_initiare(&forma);
+    forma.latitudo.genus = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus = DISPOSITIO_FIXA;
+    forma.altitudo.valor = (s32)cfg->status_lineae;
+    d_status = dispositio_addere(dispositio, d_radix,
+        &forma);
+    dispositio_computare(dispositio, latitudo / cw, altitudo / ch,
+        NIHIL,
+        NIHIL);
+    fp = _ad_pixela(dispositio_fines(dispositio, d_prospectus), latitudo
+        / cw,
+        altitudo / ch, latitudo, altitudo, cw, ch);
+    fs = _ad_pixela(dispositio_fines(dispositio, d_status), latitudo
+        / cw,
+        altitudo / ch, latitudo, altitudo, cw, ch);
     instrumentum = attributum_chorda(repo, INSULA_EPHEMERA,
         "instrumentum");
     doc_latitudo = attributum_s32(repo, INSULA_DURABILIS, "latitudo",
@@ -127,13 +205,11 @@ pictor_componere (
     }
 
     radix = nodus(piscina, intern, "radix", PARTES_NULLUM, ZEPHYRUM,
-                  ZEPHYRUM, (s32)cfg->fenestra_latitudo,
-                  (s32)cfg->fenestra_altitudo);
+                  ZEPHYRUM, latitudo, altitudo);
     componens_ponere_actio(radix, "instrumentum.eligere");
 
     prospectus = nodus(piscina, intern, "prospectus", PARTES_NULLUM,
-                       ZEPHYRUM, ZEPHYRUM, (s32)cfg->fenestra_latitudo,
-                       (s32)cfg->fenestra_altitudo - status_altitudo);
+                       fp.x, fp.y, fp.latitudo, fp.altitudo);
     componens_ponere_sectio(prospectus, VERUM);
     componens_ponere_transformatio(prospectus,
         motus ? motus->pan.x : ZEPHYRUM,
@@ -162,9 +238,9 @@ pictor_componere (
         tabula->numerus_punctorum = n;
     }
 
-    status = nodus(piscina, intern, "status", PARTES_TITULUS, ZEPHYRUM,
-                   (s32)cfg->fenestra_altitudo - status_altitudo,
-                   (s32)cfg->fenestra_latitudo, status_altitudo);
+    status = nodus(piscina, intern, "status", PARTES_TITULUS, fs.x,
+        fs.y,
+                   fs.latitudo, fs.altitudo);
     componens_ponere_titulum(status,
         chorda_vacua(instrumentum) ? "nihil"
                                    : chorda_ut_cstr(instrumentum,

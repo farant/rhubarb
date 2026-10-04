@@ -70,8 +70,12 @@ figura_tituli (
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
     mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
-    mandata_textus(m, II, II, c->titulus, ZEPHYRUM,
-                   color_thematis(COLOR_TEXT));
+    /* 013 B3: linea status una cellula (VIII) - textus (fons 6x8)
+     * verticaliter centratus, numquam infra fines (olim II fixum in
+     * linea XII: in VIII pars inferior praecidebatur) */
+    mandata_textus(m, II, (f.altitudo > VIII) ? (f.altitudo - VIII) / II
+                                              : ZEPHYRUM,
+                   c->titulus, ZEPHYRUM, color_thematis(COLOR_TEXT));
 }
 
 constans Imago*

@@ -24,9 +24,12 @@
 #include "motus.h"
 
 nomen structura {
-    i32 fenestra_latitudo;
+    i32 fenestra_latitudo;   /* superficies si superficies_* absunt
+                              * (ante nuntium glutini primum) */
     i32 fenestra_altitudo;
-    i32 status_altitudo;
+    i32 cellula_latitudo;    /* Modulus (013 B3): dispositio in */
+    i32 cellula_altitudo;    /* cellulis, pixela = cellulae x cellula */
+    i32 status_lineae;       /* linea status in cellulis (Franus: I) */
 } PictorCompositio;
 
 /* "penicillus" -> "penicillus.ictus"; ignotum -> "" */

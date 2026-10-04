@@ -232,6 +232,27 @@ principale (vacuum)
     CREDO_VERUM (tessera_praesentare(opus));
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
         "penicillus"));
+    /* 013 B3: linea status in linea ULTIMA superficiei */
+    CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
+        LINEAE - I).signum, (i32)'p');
+
+    imprimere("\n--- IV. amplitudo mutata: linea status sequitur"
+              " ---\n");
+    {
+        Eventus e;
+
+        pm->altitudo = XX;
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus = EVENTUS_MUTARE_MAGNITUDINEM;
+        e.datum.mutare_magnitudinem.latitudo = COLUMNAE * VI;
+        e.datum.mutare_magnitudinem.altitudo = XX * VIII;
+        ludus_tessera_tractare(lt, &e, M + CC);
+        ludus_tessera_quadrum(lt, M + CC);
+        CREDO_VERUM (tessera_praesentare(opus));
+        CREDO_AEQUALIS_I32 ((i32)tessera_altitudo(opus), XX);
+        CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
+            XIX).signum, (i32)'p');
+    }
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

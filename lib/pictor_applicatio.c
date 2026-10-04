@@ -9,7 +9,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define STATUS_ALTITUDO   XII
+/* Modulus: glyphus fons_6x8 = cellula */
+#define CELLULA_LATITUDO  VI
+#define CELLULA_ALTITUDO  VIII
+#define STATUS_LINEAE     I      /* Franus 2026-10-03: linea una */
 #define DOC_LATITUDO      CCCXX
 #define DOC_ALTITUDO      CC
 
@@ -176,7 +179,9 @@ pictor_applicatio_aedificare (
         &app->figurae_ctx);
     app->compositio.fenestra_latitudo  = latitudo;
     app->compositio.fenestra_altitudo  = altitudo;
-    app->compositio.status_altitudo    = STATUS_ALTITUDO;
+    app->compositio.cellula_latitudo   = CELLULA_LATITUDO;
+    app->compositio.cellula_altitudo   = CELLULA_ALTITUDO;
+    app->compositio.status_lineae      = STATUS_LINEAE;
     app->d = dispensator_creare(piscina, intern, app->repo,
         app->actiones, pictor_componere, &app->compositio, CCC);
     redde app->d ? VERUM : FALSUM;

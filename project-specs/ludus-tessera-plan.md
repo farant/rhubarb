@@ -187,6 +187,11 @@ replay proof still equal, Fran's look (resize a terminal; resize the
 window - AUDIENDA: the window's TabulaPixelorum is created once at
 start, so a window resize may need its own work).
 
+B3 as built (headless): pictor composes from `superficies_*` with
+dispositio in cells, one-row status (Fran); surface-touching edges snap
+to the surface (window remainder); title vertically centred (the image
+specimen caught a clipped title). Pending Fran's look.
+
 **B4 — RELATIO.**
 
 ## V. Track (c) — insula-native widgets (outline; interview first)
