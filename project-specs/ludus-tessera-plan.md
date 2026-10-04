@@ -149,6 +149,9 @@ and `pictor_terminalis.c` (terminal, no Cocoa); headless replay proof
 
 **A5 — RELATIO.** Phase log; terminal-planning 013 status.
 
+**Track (a) DONE 2026-10-03** (A0 4f9670c4 … A4 24d9b93f; RELATIO in
+`ludus_tessera/phase-log.md`).
+
 ## IV. Track (b) — responsive (outline; tasks written when (a) closes)
 
 - **B1 surface size as state.** Leaning: the resize event writes

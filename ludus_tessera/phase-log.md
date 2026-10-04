@@ -209,3 +209,54 @@ slowest frame 3 ms, 79,860 bytes emitted. The `-fumus` run (30 frames
 then exit) was a poor look: frames are per EVENT, so a drag spends the
 budget in a second - a frame count is a smoke bound, not a viewing
 window.
+
+## A5 — RELATIO: track (a) done (2026-10-03)
+
+**Track (a), ludus apps rendering in a terminal, is done.** A ludus
+app's `componere`, figurae and actiones run unchanged in a tty; only
+`principale` picks the glue. pictor is the proof: one assembly
+(`lib/pictor_applicatio`), two mains, Fran's look "everything seems to
+be working perfectly".
+
+**What exists** (`ludus_tessera/`, gate `ludus_tessera`, 5 suites, 89
+asserts at A4):
+- `ludus_tessera_pons` (A1): the bytes that enter and leave the
+  terminal composed in ONE place (`?1049h` + rivus's declared modes;
+  `?2026l` first … `?1049l 0m ?25h`) and handed to the ONE
+  `terminalis_intrare` - crash-safe; a thin TesseraPons over
+  terminalis.
+- `ludus_tessera_demissio` (A2): mandata → tessellatio → musivum_pingere
+  with the width politica derived from the opus.
+- `ludus_tessera` (A3): the glue - clock here only, Ctrl-C ends like a
+  window close, resize/resume through tessera's own API, the real loop.
+- `apps/pictor/pictor_terminalis` (A4).
+
+**What the work found, by weight:**
+1. **Width politica is a correctness rule, not a preference** (A2): a
+   ZWJ family is one 2-cell unit under GRAPHEMATUM and three 2-cell
+   emoji under SIMPLEX (Terminal.app). Layout and writing must share
+   one politica; the lowering derives it, callers cannot pass it.
+2. **Crash safety decides where bytes live** (A1): terminalis's signal
+   handlers only know the exit bytes given at entry, so the alternate
+   screen cannot be the pons's business.
+3. **The bridge already existed** (A2: `musivum_pingere`) and my A0
+   boundary (tessera only through its amalgam, copied from saltuarius)
+   blocked it. Reversed with Fran: ludus_tessera is a monorepo client
+   like musivum, not the amalgam's proof host; the amalgam path had
+   linked rivus twice.
+4. **A header leaked Cocoa into every pictor build** (A4:
+   `pictor_documentum.h` → `fenestra.h` for one type).
+5. **The raster hash, not the act count, catches a lost drag** (A4).
+6. Process: a plant that does not compile prints nothing and proves
+   nothing (A3); the test closure comes from `aedilis --enumerare`,
+   not from chasing link errors; and a corpus library added in A4
+   owed a briar MUTATIONES line in THAT commit - added here, late.
+
+**v1 limits, named:** an idle app wakes every `quies_ms` (300 ms) and
+re-renders (tessera emits nothing when unchanged: quiet, not free);
+the layout is fixed at the start size (track b); `-fumus`'s frame
+count is a smoke bound, not a viewing window; `_currere` is covered
+by its no-terminal guard and Fran's look, not by a headless test.
+
+**Next: track (b), responsive** - surface size as state (B1), cell-
+aligned layout (B2), pictor responsive (B3); tasks written now.

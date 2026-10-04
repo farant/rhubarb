@@ -147,6 +147,13 @@ Leges chartae:
   `stilus_applicare` (Ghostty sgr.zig; ignota numerata), tabula CCLVI,
   `stilus_quantizare`. tessera per eam emittit - octeti idem.
 
+- corpus: `pictor_applicatio` nova (modulus 013 A4) - compositio
+  pictoris communis (volumen, documentum, canones, insulae, registra,
+  dispensator) quam principalia fenestrae et terminalis vocant.
+  FRANGIT: `pictor_documentum.h` iam non includit `fenestra.h` (solum
+  `tabula_pixelorum.h`) - plagula quae fenestram per id accipiebat
+  `fenestra.h` ipsa includat.
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut
