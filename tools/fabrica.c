@@ -1100,6 +1100,24 @@ _arborem_photographare (
                   chorda_ex_literis("/", piscina), piscina),
                   introitus->titulus, piscina)
             : chorda_transcribere(introitus->titulus, piscina);
+        /* LOCI RESIDENTIUM: gesta/annales (entia .md, acta .jsonl) et in
+         * radice tabularium.db* / forum.db* (proiectiones sqlite, -wal,
+         * -shm) - residentes tabularii et fori eas QUOVIS tempore
+         * scribunt, numquam artificium aedificationis
+         * (nulla actio ibi exitum declarat). Photographiae eas
+         * praetermittunt: alias nota in tabulario dum porta XXXV-L s
+         * currit actionem FRACTAM faceret ('scripsit extra vestigium',
+         * fabrica spec 3 T9, mensuratum). Limes: actio quae ibi errans
+         * scriberet non capitur. */
+        si (   chorda_aequalis_literis(via, "gesta/annales")
+            || (   directorium.mensura == 0
+                && (   chorda_incipit(via, chorda_ex_literis(
+                           "tabularium.db", piscina))
+                    || chorda_incipit(via, chorda_ex_literis("forum.db",
+                           piscina)))))
+        {
+            perge;   /* et proiectiones residentium (sqlite, -wal, -shm) */
+        }
         /* lstat: nexus symbolicus ad directorium NON sequitur (iterator
          * eum ut directorium refert) - radices umbrae scripturae (1b
          * T6) arborem veram per nexus ostendunt; secuta, scriptura vera

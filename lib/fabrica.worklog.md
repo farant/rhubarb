@@ -1854,3 +1854,18 @@ Plants: the first (an early `redde VERUM;` in _fontationes_sigillare) did
 not COMPILE under -Werror, so the old bin/fabrica ran and the gate said
 "sanum" - a no-op plant; the compiling version (conditional return) -> P2,
 P7 red.
+
+## 2026-10-03 - slice 3 T9: measured, closed
+
+Ten rounds of "unrelated edit -> porta('toml') -> FABRICA_AUDITUS=1
+porta('toml')": rounds 2-10 reused (3.5-3.9 s) and the audit agreed (42.5-
+46.8 s); with the T7a audit, 10 audited reuses, 0 discord. Round 1 was
+FRACTUM "scripsit extra vestigium: gesta/annales/entities/..." - I had
+filed two ledger entries while its gate ran. The tree snapshot now skips
+the records office's places: gesta/annales/ and, at the root,
+tabularium.db* / forum.db* (the first fix covered only gesta/annales and
+the next live run failed on tabularium.db-wal - list the resident's
+files, don't guess). Verified: porta('toml', vis=True) with a ledger note
+written mid-run -> SANATUM. `iudicare -plenus` 15.0 s (165 RECENS, verdict
+never in the sweep). T8 parked (…2VP7), after the gate-migration
+desideratum (…J6HF). Spec 3 §XIV As built.

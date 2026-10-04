@@ -11,9 +11,7 @@ generated files judged by what was actually read - but every GATE is
 still judged by the whole tree, and its pass is thrown away at every
 commit.*
 
-*Status: v3 (2026-10-03). A1 decided (outside reads digested); A2-A4
-carry recommendations. T1 spike done (§XI). T5 designed against the code
-(§XII, three corrections to §II-§III marked v3).*
+*Status: AS BUILT (2026-10-03) - §XIV. Corrections v2-v5 marked in §XI-§XIII; T8 deferred (park ...2VP7).*
 
 ## 0. What the measurements say (dated 2026-10-03)
 
@@ -612,3 +610,67 @@ blocks VIII, III, instrumentum_domus).
 Tool seam: `FABRICA_FONTATIONES` overrides the path of
 crusta/fontationes.sh (temporary roots), and the call passes
 `-radix <cwd>` so scripts resolve in the root being judged.
+
+## XIV. As built (2026-10-03)
+
+**Done means (§VIII), measured:**
+- Doc-only edit -> `porta('toml')` returns the recorded pass without
+  running: yes (README, every audit round; real tree). A later commit not
+  touching toml's inputs reuses it: yes - 2974ca87 printed `porta toml:
+  ... - non iterum cursa (digestum idem)`, the pass recorded 8 min earlier
+  in the previous commit's own gate run.
+- P1-P10 green: `iudicium-fumus` (in PORTAE, inventoried, ~26 s) runs P1,
+  P2, P3, P6, P7, P8 and the audit in a temporary root; P4 is the
+  lectiones_lint gate (plant in T3); P5 FIFO, P9 environment, P10 relink
+  are probatio_fabrica blocks (T5b VIII, III; instrumentum_domus).
+- >= 10 audited reuses, 0 discord: 10 (9 rounds "unrelated edit -> reuse
+  -> FABRICA_AUDITUS=1 run" + the T7a real audit), 0 discord. Round 1 of
+  the loop proves nothing: a ledger note written during it made the run
+  FRACTUM (see "found by T9").
+- `iudicare -plenus` unchanged: 15.0 s, 165 RECENS, the verdict never
+  judged in a sweep (slice 2 measured 24 s warm).
+- RECENS cost < 2 s: `bin/fabrica iudicare <verdict>` 1.9 s; `porta('toml')`
+  3.5-3.9 s, because it first realizes the verdict's build/ inputs (v5:
+  the 0.9 s tomllib gold regeneration dominates). Target missed on the
+  porta() path, by design; a reuse still saves ~40 s (gate 42-50 s).
+
+**As built vs the plan.** Kind `iudicium` + strategy `verdictum` +
+`silva.py -iudicium` + `porta_toml` (toml/aedificatio.stml); trace rules
+(owned paths dropped, build/ owner rule, system roots dropped, other
+absolute paths digested, FIFO -> IGNOTUM, E only when external, declared
+inputs dropped); input kinds `fontationes`, `identitas_clang`,
+`instrumentum_domus`; porta()/commissio integration; audit in sanare.
+Corrections found while building, each in its section: v2 (§XI, T1 spike),
+v3 (§XII, preconditions are ingressus; E and absolute paths were dropped
+wholesale), v4 (house binaries keyed by provenance - gates relink them
+every commit), v5 (§XIII, porta() realizes build/ inputs before judging).
+T8 (shadow recording) deferred: park ...2VP7, after desideratum ...J6HF
+(the remaining gates as verdicts).
+
+**Found by building it (each with a worklog entry):**
+- compilator's identical-destination check reads the object (L, no S):
+  every warm run would have been IGNOTUM (T1).
+- Raw IO exactly where it hurts: computus gold, the registrum grammar read
+  by materia_coctor (T1/T3); four hand-listed runners then lacked
+  `lectiones` (html, md, oratio, materia - the fourth found by a red
+  gate).
+- tomllib gold header embedded the date: the verdict would have re-run
+  daily (T4).
+- A pass recorded in T5c was voided by its own commit: a gate relinked
+  bin/aedilis (v4).
+- The verdict ledger was never truncated (an empty chorda has datum NIHIL;
+  65 MB, every trace the union of all past runs), and filum_delere
+  recorded no S (compilator's temp object = an unowned build/ read) (T6).
+- `sanare -audit` with a discord aborted: `numeri[VI]` and
+  AUDITUM_DISCORS = index VI - only the new gate, not the unit tests,
+  could see it (T7).
+- The tree snapshot treated the records office's own writes
+  (gesta/annales/*, tabularium.db-wal, forum.db*) as an action writing
+  outside its footprint (T9) - now skipped, limit named.
+- Two stale tests from the excubitor migration: pythonica's 'tegit fontes'
+  premise (crusta/fontes became an aedilis root in 8a84c35c).
+
+**Coarseness left on purpose:** `pythonica/silva.py` is a declared input
+(porta() lives there) - any edit resets the toml pass; the conditional
+builder chain is in the fontationes key; the trace store keeps only the
+latest pass per gate (A3).
