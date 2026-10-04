@@ -18,10 +18,11 @@
 #
 # Regulae (olim in tools/unci-git/pre-commit solo):
 #   - solae *.c et *.h; directoria scratchpad build fixa amalgama
-#     archivum numquam
+#     archivum knotapel numquam (knotapel/ exclusa tota, decisio Frani
+#     2026-10-03: suae regulae ibi, knotapel/CLAUDE.md)
 #   - plagula GENERATA (GENERATUM in linea prima) numquam: veritas eius
 #     generator est (fabrica P2, via B, 2026-09-29)
-#   - knotapel/ vendor/: terra non evoluta - intra lineas mutatas solas
+#   - vendor/: terra non evoluta - intra lineas mutatas solas
 #     (formator -lineae); ceterae: scriptura TOTA (evolutio 2026-09-01)
 # Exitus semper 0: forma monet, non obstat (examen et lint obstant).
 set -u
@@ -39,7 +40,7 @@ for via in "$@"; do
         *) continue ;;
     esac
     if printf '%s\n' "$via" \
-            | grep -qE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/'; then
+            | grep -qE '(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel)/'; then
         continue
     fi
     [ -f "$via" ] || continue
@@ -57,7 +58,7 @@ for via in "$@"; do
         continue
     fi
     case "$via" in
-        knotapel/*|vendor/*)
+        vendor/*)
             # lineae mutatae: contra indicem (uncus) aut contra HEAD
             # (arbor); plagula nova non tracta = tota
             if [ "$INDEX" -eq 1 ]; then

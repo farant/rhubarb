@@ -26,6 +26,8 @@
 #       nova tota formata (fixum tractum fumus_formae.c, checkout)
 #   XIX plagula GENERATA (GENERATUM in linea prima) NON formatur -
 #       octeti generatoris commissi (fabrica P2, via B, 2026-09-29)
+#   XX  knotapel/ EXCLUSA TOTA (2026-10-03): planta C99 male formata et
+#       .sh malformata ibi -> nec obstat nec formatur
 # Planta = declaratio in 'per' (C99): examen 'nodi erroris' REICE
 # (mensuratum 2026-09-01; '//' et declaratio post sententiam ACCIPE -
 # lacunae examinis, non plantae).
@@ -190,8 +192,41 @@ if [ "$rc" -eq 1 ] && grep -q 'xyzzyquux' "$T/lint_nontr.out"; then echo "  XVII
 UNCUS_LINT_VIAE="lib/piscina.c" bash -c '. tools/unci-git/lint_latinus.sh && lint_latinus' > "$T/lint_aliena.out" 2>&1; rc=$?
 if [ "$rc" -eq 0 ] && grep -q 'nihil novi' "$T/lint_aliena.out"; then echo "  XVIII lint: non tracta NON nominata -> 0  OK"; else echo "  XVIII FRACTUM (rc=$rc)"; tail -12 "$T/lint_aliena.out"; fracta=1; fi
 rm -f "$NONTR"
+
+# XX - knotapel/ EXCLUSA TOTA (decisio Frani 2026-10-03): nec examen,
+# nec diagnostica materiae, nec formator. Planta in knotapel/: C99
+# (declaratio in 'per' = REICE extra) male formata + .sh malformata.
+# Plagula domestica sana (vacuum f) simul tradita, ne uncus ante
+# formatorem exeat ('nihil iudicatum' si VIAE vacuae) - aliter
+# exclusio formatoris non probaretur. Planta formae SEORSUM et C89
+# valida (KF): formator plagulam C99 non parsat et tacite praeterit -
+# planta una (KC) formatoris exclusionem remotam VIRIDEM relinquebat
+# (mensuratum 2026-10-03). Exspectatur: exitus 0, nec REICE nec
+# DIAGNOSTICA nec FORMATA pro knotapel, octeti indicis intacti.
+KC="knotapel/.fumus_knotapel.c"
+KF="knotapel/.fumus_knotapel_forma.c"
+KS="knotapel/.fumus_knotapel.sh"
+KD="tools/unci-git/.fumus_domestica.c"
+printf 'int\nf(void)\n{\n    for (int i = 0; i < 1; i++) { }\n    return 0;\n}\n' > "$KC"
+printf '#!/bin/bash\n{ echo a\n' > "$KS"
+printf 'static int\ng(void)\n{\n    return 0;\n}\n' > "$KF"
+cp "$KF" "$T/knotapel_forma_ante.c"
+printf '#include "latina.h"\n\ninterior vacuum\nf (vacuum)\n{\n    redde;\n}\n' > "$KD"
+cp "$KC" "$T/knotapel_ante.c"
+export GIT_INDEX_FILE="$T/index_knotapel"
+rm -f "$GIT_INDEX_FILE"
+git read-tree HEAD
+git add -f -- "$KC" "$KS" "$KF" "$KD"
+"$UNCUS" > "$T/knotapel.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && ! grep -q 'knotapel.*REICE\|REICE.*knotapel' "$T/knotapel.out" \
+   && ! grep -q 'DIAGNOSTICA MATERIAE' "$T/knotapel.out" \
+   && ! grep -q 'fumus_knotapel.c.*FORMATA\|fumus_knotapel.c.*divergentiae' "$T/knotapel.out" \
+   && git show ":$KC" | cmp -s - "$T/knotapel_ante.c" \
+   && git show ":$KF" | cmp -s - "$T/knotapel_forma_ante.c" && cmp -s "$KF" "$T/knotapel_forma_ante.c"; then echo "  XX  knotapel/ exclusa (examen, diagnostica, forma) OK"; else echo "  XX  FRACTUM (rc=$rc)"; cat "$T/knotapel.out"; fracta=1; fi
+unset GIT_INDEX_FILE
+rm -f "$KC" "$KS" "$KF" "$KD" "$T/index_knotapel"
 ./silva/nexus.sh -renovare > /dev/null 2>&1
 
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (XIX/XIX)"
+echo "fumus unci: sanum (XX/XX)"
 exit 0
