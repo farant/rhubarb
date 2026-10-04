@@ -249,14 +249,30 @@ _fontationes (
                 chorda* effusio_out,
                    i32* codex_out)
 {
-     constans character* argv[III];
+     constans character* argv[V];
+     constans character* instrumentum;
       ProcessusResultus  resultus;
+              character  radix[IV * MXXIV];
 
     (vacuum)datum;
-    argv[0]   = "./crusta/fontationes.sh";
-    argv[I]   = via;
-    argv[II]  = NIHIL;
-    resultus  = processus_exsequi(argv, CXX * M, piscina);
+    /* FABRICA_FONTATIONES: via instrumenti (radices temporariae,
+     * iudicium-fumus); '-radix' = directorium operis - scripta in arbore
+     * IUDICATA resolvuntur, non in arbore instrumenti */
+    instrumentum = getenv("FABRICA_FONTATIONES");
+    si (instrumentum == NIHIL || instrumentum[0] == '\0')
+    {
+        instrumentum = "./crusta/fontationes.sh";
+    }
+    si (getcwd(radix, magnitudo(radix)) == NIHIL)
+    {
+        redde FALSUM;
+    }
+    argv[0]    = instrumentum;
+    argv[I]    = via;
+    argv[II]   = "-radix";
+    argv[III]  = radix;
+    argv[IV]   = NIHIL;
+    resultus   = processus_exsequi(argv, CXX * M, piscina);
     si (!resultus.successus)
     {
         redde FALSUM;
@@ -2595,6 +2611,9 @@ _cursum_legere (
     redde inventum;
 }
 
+/* auditus sub sanare: -audit (I) aut FABRICA_AUDITUS=N */
+hic_manens i32 auditus_sanandi = ZEPHYRUM;
+
 interior s32
 _sanare (
           s32   argc,
@@ -2628,6 +2647,12 @@ _sanare (
         si (strcmp(argv[a], "-siccum") == 0)
         {
             siccum = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-audit") == 0)
+        {
+            /* AUDITUS TRANSITUS (spec 3 par. XIII): actio iudicium RECENS
+             * tamen currit; defectus = AUDITUM DISCORS */
+            auditus_sanandi = I;
         }
         alioquin si (argv[a][0] == '-')
         {
@@ -2768,6 +2793,16 @@ _sanare (
     }
     sutura.radix = _radix_absoluta(piscina);
     _suturam_iudicii_parare(&sutura, actiones, piscina);
+    {
+        constans character* n = getenv("FABRICA_AUDITUS");
+
+        si (auditus_sanandi == ZEPHYRUM && n != NIHIL && n[0] != '\0')
+        {
+            auditus_sanandi = (i32)strtoul(n, NIHIL, X);
+        }
+        sutura.auditus  = auditus_sanandi;
+        sutura.audita   = tabula_dispersa_creare_chorda(piscina, 16);
+    }
 
     printf("fabrica sanare%s: iudicium plenum, ordine dependentiae\n",
         siccum ? " -siccum" : "");

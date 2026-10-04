@@ -572,3 +572,43 @@ way. And the trace drops any path that is a DECLARED input of the action
 binary's bytes into the trace (§XI), which would otherwise undo the
 change. P10 inverts: relinking bin/compilator or bin/aedilis without a
 source change -> RECENS (measured on the real tree).
+
+## XIII. T7 design (2026-10-03)
+
+**v5: porta() realizes the verdict's build/ inputs before judging.** A
+named `iudicare` judges ONLY the verdict; its uncommitted build/ inputs
+(`build/toml_corpus.lst`, `toml/build/aurum_silvestre.txt`) are not
+re-realized, so a new tracked `.toml` would leave the corpus list stale
+and the trace would still match (P8 would pass wrongly). First version:
+porta() always `sanare <verdict>` - correct, but reuse cost 13.2 s because
+sanare judges the verdict's whole closure, including generators of
+COMMITTED files reached through trace edges (regenerated in scratch).
+Committed generated files are already held current at commit time
+(`_fabricam_exigere`), so only build/ inputs need realizing. As built:
+(1) `sanare <declared build/ ingressus>` (read from the declaration text,
+`_portae_verdictorum`), (2) `iudicare <verdict>` - RECENS = reuse, (3)
+otherwise `sanare [-audit] <verdict>`. Reuse 3.6 s.
+
+**Audit (Q9).** In `sanare`, not `iudicare` (a judge never runs a gate):
+`bin/fabrica sanare -audit` / `FABRICA_AUDITUS=N` (1 = every reuse, N = one
+in N by key byte, as `_auditum_eligere`) makes a RECENS verdict run
+anyway. Pass -> trace re-recorded, sanatio causa "auditus: congruit".
+Fail -> FABRICA_AUDITUM_DISCORS in `cursus`, loud; causa names the paths
+the failing run read that the stored trace lacks (the probable missed
+input). porta() passes `-audit` when `FABRICA_AUDITUS` is set.
+
+**iudicium-fumus** (tools/iudicium_fumus.sh, in PORTAE): a temporary root
+(fabrica.stml + aedilis.stml + aedificatio.stml, bin/ linked from the
+repo) with a miniature verdict whose gate compiles and runs a tiny C file
+through bin/compilator (a real filum reader) and a generator producing a
+header it includes. Plants: P1 header edit -> STALUM naming it; P2 sourced
+script edit -> IGNOTUM; P3 doc edit -> RECENS; P6 failing gate -> no
+verdict, never cached; P7 `source "$X"` -> IGNOTUM naming the line; P8
+generator input change -> sanare regenerates, verdict STALUM, re-runs;
+audit plant (an input the gate reads but the trace cannot see, changed
+under a RECENS verdict) -> DISCORDIA. Covered elsewhere and named: P4
+(lectiones_lint gate), P5 FIFO / P9 env / P10 relink (probatio_fabrica
+blocks VIII, III, instrumentum_domus).
+Tool seam: `FABRICA_FONTATIONES` overrides the path of
+crusta/fontationes.sh (temporary roots), and the call passes
+`-radix <cwd>` so scripts resolve in the root being judged.

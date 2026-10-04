@@ -895,8 +895,9 @@ print('--- porta per fabricam: actio iudicium (fabrica spec 3 T6) ---')
 
 
 def _fabrica_iudicii(modus):
-    """bin/fabrica fictus pro porta 'ficta-v': iudicare -> modus[0]
-    (RECENS|STALUM); sanare -> modus[1] (transit|frangitur|sera)"""
+    """bin/fabrica fictus pro porta 'ficta-v' (porta() SEMPER sanare
+    vocat, spec 3 XIII v5): modus[1] = recens (exitus 0, nulla linea
+    SANATUM, verdictum manet) | transit | frangitur | sera"""
     via = os.path.join(T, 'fabrica_iudicii_%s_%s' % modus)
     verdictum = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
     acta = os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')
@@ -905,7 +906,9 @@ def _fabrica_iudicii(modus):
                 'if [ "$1" = iudicare ]; then\n'
                 '  echo "%s build/fabrica/verdicta/ficta-v.txt - fictum"; exit 0\n'
                 'fi\n' % modus[0])
-        if modus[1] == 'transit':
+        if modus[1] == 'recens':
+            f.write('echo "fabrica sanare: 0 sanata"; exit 0\n')
+        elif modus[1] == 'transit':
             f.write('mkdir -p "$(dirname %s)" "$(dirname %s)"\n'
                     'echo "ficta-v: fictum: sanum" > %s\n'
                     'echo "fictum: sanum" > %s\n'
@@ -924,7 +927,7 @@ def _fabrica_iudicii(modus):
 
 _fb_porta_vera = silva.FABRICA_BIN
 _verdicta_vera = silva._VERDICTA_MEMORATA
-silva._VERDICTA_MEMORATA = {'ficta-v'}
+silva._VERDICTA_MEMORATA = {'ficta-v': []}
 silva.PORTAE['ficta-v'] = (['echo', 'fictum: sanum'], r'fictum: (sanum|FRACTUM)')
 _vv = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
 try:
@@ -935,7 +938,7 @@ try:
     pv = silva.porta('ficta-v')
     credo(pv.sana and '[transitus servatus' in pv.compendium
           and pv.compendium.startswith('fictum: sanum'),
-          'porta per fabricam: RECENS -> transitus servatus, sanare non vocatum')
+          'porta per fabricam: iudicare RECENS -> transitus servatus, nihil cursum')
     # STALUM -> sanare transit: compendium ex actis (signum)
     silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'transit'))
     pv = silva.porta('ficta-v')

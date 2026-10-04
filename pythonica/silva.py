@@ -1778,7 +1778,7 @@ def _portae_verdictorum():
     global _VERDICTA_MEMORATA
     if _VERDICTA_MEMORATA is not None:
         return _VERDICTA_MEMORATA
-    nomina = set()
+    nomina = {}
     try:
         radix_stml = open(os.path.join(RADIX, 'fabrica.stml')).read()
     except (IOError, OSError):
@@ -1788,8 +1788,14 @@ def _portae_verdictorum():
             t = open(os.path.join(RADIX, sub, 'aedificatio.stml')).read()
         except (IOError, OSError):
             continue
-        nomina.update(re.findall(
-            r'<actio titulus="porta_([^"]+)" genus="iudicium"', t))
+        for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
+                             r'(.*?)</actio>', t, re.S):
+            # ingressus sub build/: artificia actionum NON commissa, in
+            # porta() ante iudicium realizanda (spec 3 XIII v5)
+            nomina[m.group(1)] = [
+                v for v in re.findall(r'<ingressus [^>]*via="([^"]+)"',
+                                      m.group(2))
+                if v.startswith('build/') or '/build/' in v]
     _VERDICTA_MEMORATA = nomina
     return nomina
 
@@ -1802,7 +1808,14 @@ def _verdicti_via(nomen):
 
 
 def _porta_per_fabricam(nomen, vis=False):
-    """porta per actionem 'iudicium' fabricae; None = via cruda"""
+    """porta per actionem 'iudicium' fabricae; None = via cruda. SEMPER
+    'bin/fabrica sanare <verdictum>' (spec 3 par. XIII v5): sanare
+    dependentias (toml_corpus, aurum) ordine realizat, DEINDE verdictum
+    iudicat - 'iudicare' solum verdictum iudicaret et indicem stalum
+    crederet. Nulla linea 'SANATUM porta_<nomen>' + exitus 0 + verdictum
+    praesens = transitus servatus (nihil cursum). FABRICA_AUDITUS=N:
+    '-audit' - transitus RECENS tamen currit; defectus = AUDITUM DISCORS
+    (fracta, lectiones novae nominatae)."""
     if nomen not in PORTAE:
         raise SilvaError('porta ignota: %s (nota: %s)'
                          % (nomen, ', '.join(sorted(PORTAE))))
@@ -1810,11 +1823,26 @@ def _porta_per_fabricam(nomen, vis=False):
         return None
     via = _verdicti_via(nomen)
     initium = time.time()
-    if not vis:
-        r = _curre([FABRICA_BIN, 'iudicare', '-omnia', via])
-        linea = next((l for l in r.stdout.splitlines()
-                      if l.startswith(('RECENS ', 'STALUM ', 'IGNOTUM '))), '')
-        if linea.startswith('RECENS '):
+    if vis:
+        # verdictum deletum = STALUM: sanare portam currit etsi RECENS erat
+        try:
+            os.unlink(os.path.join(RADIX, via))
+        except OSError:
+            pass
+    auditus = bool(os.environ.get('FABRICA_AUDITUS'))
+    # I. ingressus build/ (artificia non commissa: index corporis, aurum)
+    # realizantur - aliter iudicium contra artificium stalum (v5)
+    praevia = _portae_verdictorum()[nomen]
+    if praevia:
+        rp = _curre([FABRICA_BIN, 'sanare'] + praevia)
+        if rp.returncode == 2:
+            print('porta %s: fabrica sanare nequit (exitus 2) - via cruda'
+                  % nomen)
+            return None
+    # II. iudicium solum (vile): RECENS = transitus servatus
+    if not vis and not auditus:
+        rj = _curre([FABRICA_BIN, 'iudicare', '-omnia', via])
+        if re.search(r'^RECENS ', rj.stdout, re.M):
             try:
                 textus = open(os.path.join(RADIX, via)).read().strip()
                 aetas = time.time() - os.path.getmtime(os.path.join(RADIX, via))
@@ -1824,31 +1852,41 @@ def _porta_per_fabricam(nomen, vis=False):
             _tempus_notare('porta', nomen + ' (transitus)', initium, True, 0)
             return Porta(nomen, True, True, '%s [transitus servatus, ante %s]'
                          % (compendium, _aetas(aetas)), 0, '', [], False)
-    if vis:
-        # verdictum deletum = STALUM: sanare portam currit etsi RECENS erat
-        try:
-            os.unlink(os.path.join(RADIX, via))
-        except OSError:
-            pass
-    r = _curre([FABRICA_BIN, 'sanare', via])
+    # III. sanare: porta currit (auditus: etiam RECENS) et servatur
+    argv = [FABRICA_BIN, 'sanare'] + (['-audit'] if auditus else []) + [via]
+    r = _curre(argv)
     if r.returncode == 2:
         # sera tenta aut declaratio fracta: via cruda (nihil servatum)
         print('porta %s: fabrica sanare nequit (exitus 2) - via cruda'
               % nomen)
         return None
+    cucurrit = re.search(r'^(SANATUM|FRACTUM|AUDITUM)\S*\s+porta_%s\b'
+                         % re.escape(nomen), r.stdout, re.M) is not None
+    adest = os.path.exists(os.path.join(RADIX, via))
+    if not cucurrit and r.returncode == 0 and adest:
+        try:
+            textus = open(os.path.join(RADIX, via)).read().strip()
+            aetas = time.time() - os.path.getmtime(os.path.join(RADIX, via))
+        except (IOError, OSError):
+            textus, aetas = '', 0
+        compendium = textus.split(': ', 1)[-1] or '(verdictum)'
+        _tempus_notare('porta', nomen + ' (transitus)', initium, True, 0)
+        return Porta(nomen, True, True, '%s [transitus servatus, ante %s]'
+                     % (compendium, _aetas(aetas)), 0, '', [], False)
     try:
         acta = _ANSI.sub('', open(os.path.join(
             RADIX, 'build', 'fabrica', 'acta', 'porta_%s.log' % nomen),
             errors='replace').read())
     except (IOError, OSError):
         acta = r.stdout + r.stderr
-    sana = r.returncode == 0 and os.path.exists(os.path.join(RADIX, via))
+    sana = r.returncode == 0 and adest
     imperium, signum = PORTAE[nomen]
     m = re.search(signum, acta)
     compendium = m.group(0) if m else '(signum absens)'
-    nota = re.search(r'transitus non servatus[^\n]*', r.stdout)
+    nota = re.search(r'(transitus non servatus[^\n]*|auditus: [^\n]*'
+                     r'|AUDITUM DISCORS[^\n]*)', r.stdout)
     if nota:
-        compendium += ' [%s]' % nota.group(0)
+        compendium += ' [%s]' % nota.group(0)[:300]
     fr = [] if sana else fracturae(acta, nomen)
     _tempus_notare('porta', nomen, initium, sana, r.returncode)
     return Porta(nomen, m is not None, sana, compendium, r.returncode, acta,

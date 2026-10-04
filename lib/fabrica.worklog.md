@@ -1802,3 +1802,29 @@ Verified: forced a compile miss (comment in a toml test) -> pass recorded,
 the temp object shows L + S. Also: the inner raw run inside -iudicium no
 longer writes its own tempora row (the outer porta() does) - the T6
 commit had logged toml twice (34.9 s inner, 47.9 s outer).
+
+## 2026-10-03 - slice 3 T7a: audit, dependency realization, fontationes seam
+
+- Audit: `sanare -audit` / FABRICA_AUDITUS=N (1 = all, N = one in N by key
+  byte). A RECENS iudicium is marked SANANDI_AUDITUM and runs anyway; its
+  old trace is kept in sutura->audita first (the failing run deletes the
+  verdict, so it could not be looked up afterwards). Pass -> re-recorded,
+  causa "auditus: transitus iterum congruit". Fail ->
+  FABRICA_AUDITUM_DISCORS with the reads the failing run had that the
+  stored trace lacks. Caught on the way: the stale-trace deletion keyed on
+  "ratio non-empty", and the new audit note is non-empty on SUCCESS - it
+  would have deleted the trace it had just written; now an explicit
+  `servatum` flag. Plant (audit never selected) -> 3 red. Real: porta('toml')
+  under FABRICA_AUDITUS=1 ran 45 s and agreed.
+- porta() and dependencies (spec v5): named `iudicare` doesn't realize the
+  verdict's build/ inputs (stale corpus list would still match). Always
+  calling `sanare <verdict>` fixed it but cost 13.2 s per reuse (whole
+  closure incl. committed-file generators). Now: sanare the declared build/
+  inputs, then iudicare, then sanare only if not RECENS - 3.6 s reuse.
+- `FABRICA_FONTATIONES` overrides the fontationes tool path, and the call
+  passes `-radix <cwd>` (the launcher's own -radix comes first; the tool
+  keeps the last) - so temporary roots resolve their own scripts.
+- Plant gotcha (again): a python anchor or a sed address that matches
+  nothing is a silent no-op plant - the first audit plant "passed" with 0
+  red because nothing was replaced. Check the replacement count before
+  reading the result.

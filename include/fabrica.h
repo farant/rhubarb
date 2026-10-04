@@ -348,6 +348,11 @@ nomen structura {
     b32 (*fontationes)(vacuum* datum, constans character* via,
                        Piscina* piscina, chorda* effusio_out,
                        i32* codex_out);
+    /* AUDITUS TRANSITUS (spec 3 par. XIII): sub sanare, actio iudicium
+     * RECENS electa (auditus I = omnes, N = unus ex N) tamen currit;
+     * vestigium VETUS hic servatur (titulus -> Xar de FabricaLectio) ut
+     * defectus lectiones novas nominet. NIHIL: auditus sine nominibus. */
+    TabulaDispersa* audita;
 } FabricaSutura;
 
 /* species viae (sutura->species) */

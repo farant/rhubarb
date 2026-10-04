@@ -4692,7 +4692,56 @@ s32 principale (vacuum)
             exitus,
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
-        _ambitus_ficti[0] = NIHIL;
+
+        /* X. AUDITUS (spec 3 XIII): RECENS tamen currit; transit */
+        sutura.auditus  = I;
+        sutura.audita   = tabula_dispersa_creare_chorda(piscina, 8);
+        discus.acta     = ZEPHYRUM;
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "porta_x");
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_SANATUM);
+            CREDO_VERUM(_continet(sanatio->causa, "auditus", piscina));
+        }
+        CREDO_AEQUALIS_I32(discus.acta, I);
+
+        /* XI. AUDITUM DISCORS: porta nunc fracta, liber lectionem novam
+         * fert quam vestigium servatum non habet - nominatur */
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < xar_numerus(discus.scripta); k++)
+            {
+                ScriptumFictum* sf = (ScriptumFictum*)xar_obtinere(
+                    discus.scripta, k);
+
+                si (strcmp(sf->verbum, "porta_sh") == ZEPHYRUM)
+                {
+                    sf->codex = I;
+                }
+            }
+        }
+        _ponere(&discus, "data/novum.txt", "novum\n");
+        _ponere(&discus, LIBER,
+            "L\tdata/fons.txt\nL\tdata/novum.txt\n");
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "porta_x");
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_AUDITUM_DISCORS);
+            CREDO_VERUM(_continet(sanatio->causa, "data/novum.txt",
+                piscina));
+        }
+        sutura.auditus     = ZEPHYRUM;
+        sutura.audita      = NIHIL;
+        _ambitus_ficti[0]  = NIHIL;
     }
 
 
