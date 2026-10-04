@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 75 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 80 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -68,7 +68,8 @@ quaternions, its rotation axes on the sphere, the plane again by
 stereographic projection, finer angles, and the braids as music. Demos
 71 to 75 analyse the thirteen-axis partition: its spherical harmonics,
 whether its points form a spherical design, an automaton, an "invariant", and
-a second readout.</p>
+a second readout. Demos 76 to 80 push the quaternion searches to eight, ten
+and twelve inputs and ask which generator angles give finite groups.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1392,6 +1393,82 @@ the neuron can compute (note 35). That addition, unlike multiplication,
 leaves the group is what makes new angles appear; the parity information
 comes from the sums.</p>
 
+<h2>Demo 76 · Eight inputs</h2>
+<p class="nota"><code>knotapel/demo_76_scaling_8input/main.c</code> · 959 lines · 10/10 tests · <code>findings.md</code></p>
+<p>XOR8 with four antipodal pairs from the 24 quaternions and the
+thirteen-axis partition: none of the 10,626 quadruples works, and the best
+reach 50% (the best quadruple sends 81% of its sums into one cell). The demo
+explains it by 256 masks against 14 cells, notes that sums of four
+quaternions take 86 rotation angles and 28 lengths where three took 7 and 6,
+and concludes that ζ<sub>8</sub> is "a six-input structure".</p>
+<p>A clean negative result. Its arithmetic of "masks per cell" counts the
+256 inputs, but with four antipodal pairs they make at most 81 distinct
+sums (note 35), which is the number a partition has to separate. Demo 77
+corrects the conclusion itself.</p>
+
+<h2>Demo 77 · Eight inputs, more cells</h2>
+<p class="nota"><code>knotapel/demo_77_activation_zoo/main.c</code> · 1,012 lines · 14/14 tests · <code>findings.md</code></p>
+<p>Fourteen partitions for the same search: angle sectors, axis × length,
+the true 24-cell on S³ (here correctly the 24 axis and half-integer
+quaternions), and angle × axis. Only the last, 8 angle sectors times 14 axis
+cells = 112 cells, finds XOR8: 6 of the 10,626 quadruples. Accuracy rises with
+the number of cells (14: 90.6%, 16: 96.9%, 84: 99.2%, 112: 100%). Each winner
+contains two quaternions with the same axis, and dropping either leaves an
+XOR6 solution.</p>
+<p>Since the sector boundaries fall every 45° and the canonical rotation
+angles lie on them, I reran it with the sectors turned by ±10<sup>−9</sup>
+degree: the 6 winners stay (unlike note 32's cases). The headline holds. Its
+reading, "this proves demo 74's incomparable invariants are computationally
+necessary", would need a partition of the same size that is not built from
+angle and axis to fail too; the demo tries none (note 35's null).</p>
+
+<h2>Demo 78 · Ten inputs</h2>
+<p class="nota"><code>knotapel/demo_78_recursive_scaling/main.c</code> · 1,052 lines · 9/9 tests · <code>findings.md</code></p>
+<p>Can the six XOR8 solutions be extended to XOR10 by one more quaternion?
+No, and neither can any of the 42,504 quintuples, with 8, 10, 12 or 16 angle
+sectors times 14 cells (best 98.4%). Every XOR8 solution has exactly two XOR6
+parents, its "shadow" partners sharing a cell. The demo closes with a
+conjecture, max inputs = 2ℓ.</p>
+<p>The search is exhaustive over its catalog and the negative result
+stands for it. The conjecture is refuted by the next demo, which says so.</p>
+
+<h2>Demo 79 · Another angle, ζ<sub>12</sub></h2>
+<p class="nota"><code>knotapel/demo_79_zeta12_capacity/main.c</code> · 877 lines · 14/14 tests (about 4½ minutes, 69,000 lines of output) · <code>findings.md</code>; also <code>xor12_fast.c</code>, <code>xor12_retest.c</code>, <code>catalog_test.c</code></p>
+<p>The same construction with generator half-angle π/6: a catalog capped at
+256 quaternions with 64 axes and 12 angles, XOR6, XOR8 and XOR10 all found
+(124 XOR10 solutions at 8 sectors × 65 cells), XOR12 none. A follow-up
+program then grew the catalog to 4,096 elements and found XOR12 after all; the
+group keeps doubling, apparently infinite, and the log draws the moral:
+"finite group = hard capacity ceiling, infinite group = no ceiling".</p>
+<p>The demo caught its own truncated catalog, which is to its credit; the
+<code>main.c</code> on disk still prints "XOR12: 0 winners … WALL" as a pass,
+and the retraction lives in a side file and the log. More basic: with the
+axes perpendicular, these π/6 generators do not satisfy the braid relation,
+so this group is not an image of the braid group at all (<a
+href="#nota-braidae">note 41</a>). The capacity ladder is a dense set of
+quaternions read through ever larger tables (<a
+href="#nota-capacitas">note 42</a>).</p>
+
+<h2>Demo 80 · Which angles close</h2>
+<p class="nota"><code>knotapel/demo_80_group_finiteness/main.c</code> · 467 lines · 11/11 tests · <code>findings.md</code></p>
+<p>For generator half-angles 2π/N, N = 4, 6, 8, 10, 12, 16, 20, the demo
+closes the group generated by rotations about the x- and z-axes and names
+it: N = 4 gives 4 elements up to sign, N = 8 the binary octahedral group,
+everything else passes 4,096 and keeps growing. Its conclusions: only ζ<sub>4</sub>
+and ζ<sub>8</sub> are finite, the boundary "alternates", ζ<sub>10</sub> "is NOT binary
+icosahedral", and perhaps only angles π/2<sup>k</sup> close.</p>
+<p>The counts are right for those generators, and they follow from the
+classification of finite rotation groups (two rotations about perpendicular
+axes lie in a finite group only if they are half-turns or quarter-turns).
+But only at ζ<sub>8</sub> do perpendicular axes satisfy the braid relation.
+Imposing it, each angle has its own axis angle, and the images are the
+classical ones: binary dihedral at ζ<sub>4</sub>, binary tetrahedral at
+ζ<sub>6</sub>, binary octahedral at ζ<sub>8</sub>, binary icosahedral at
+ζ<sub>10</sub>, which the demo's own header had hypothesised, and only a
+commuting pair at ζ<sub>12</sub> (note 41). The π/2<sup>k</sup> conjecture fails
+on the demo's own table (π/8 is infinite there). The per-root checks pass
+whatever the result.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -1986,12 +2063,42 @@ comparison of demo 74 sets an invariant of braid words (as represented) beside
 an invariant of links, and finds them incomparable, as they must be. The same
 applies to the XOR6 weights of demos 66 to 75: they are particular group
 elements, and their knots do not determine them.</p></li>
+<li id="nota-braidae"><p><strong>Which generators represent the braid group,
+and what they give.</strong> Two unit quaternions a = cos θ + sin θ·u and
+b = cos θ + sin θ·v satisfy aba = bab exactly when the axes make the angle φ
+with cos φ = cos 2θ / (1 − cos 2θ) (checked numerically for every angle in
+the survey). With θ = 2π/N: φ = 120° at N = 4, 109.47° at N = 6 (the
+tetrahedral angle), 90° at N = 8, 63.43° at N = 10 (the angle between an
+icosahedron's fivefold axes), 0° at N = 12, and no solution beyond, since the
+right side then exceeds 1. So the perpendicular axes of demos 69, 79 and 80
+give a braid group representation only at N = 8. With the right axes,
+closure gives 6, 12, 24 and 60 elements up to sign: the binary dihedral,
+tetrahedral, octahedral and icosahedral groups; at N = 12 the generators
+commute. This is Klein's picture: B<sub>3</sub> modulo its center is
+PSL<sub>2</sub>(Z), generated by images of orders 2 and 3, and a generator of
+order n makes the image a quotient of the (2, 3, n) triangle group, finite
+exactly for n ≤ 5. Demo 80's infinite groups at ζ<sub>6</sub>, ζ<sub>10</sub>,
+ζ<sub>12</sub>, ζ<sub>16</sub> and ζ<sub>20</sub> (and demo 69's at π/8 and π/16,
+and demo 79's at ζ<sub>12</sub>) are groups generated by two rotations, not
+images of braids. The π/2<sup>k</sup> conjecture is false in either reading;
+ζ<sub>32</sub> with perpendicular axes keeps growing too (13,000 elements and
+counting).</p></li>
+<li id="nota-capacitas"><p><strong>Capacity is table size against distinct
+sums.</strong> With m antipodal pairs, 2m inputs give at most 3<sup>m</sup>
+distinct sums (each pair contributes −q, 0 or q, with 0 reached two ways of
+the same parity), labelled by how many pairs contribute: 27 for XOR6, 81 for
+XOR8, 243 for XOR10, 729 for XOR12. A partition with a free labeling computes
+the function exactly when no cell receives sums of both labels. So a finite
+catalog, whose sums are few and highly coincident, runs out at some size;
+a dense one, read through 4,104 cells for 729 points, does not. The finite
+and infinite cases of demos 76 to 80 differ as a small table of special points
+differs from a large table of generic ones, which is what "hard ceiling" and
+"no ceiling" measure here.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 76 to 89 scale the inputs to eight, return to activations,
-recursion and capacity at other roots, test group finiteness (demo 80),
-crossing depth, framing and null states, before the multi-strand work of
+<p>Demos 81 to 89 fit a capacity scaling law, then study crossing depth,
+framing, null states and indecomposability, before the multi-strand work of
 demos 99 to 109. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
@@ -2162,6 +2269,11 @@ truncation" with the exact question of note 38 for each solution: the least
 degree at which some polynomial has the right signs on the cells (a small
 linear program), with the relation of note 38 as its certificate at degree
 4.</p></li>
+<li><p><strong>The braid-relation survey, redone.</strong> Rerun demo
+80 with the axis angle that the braid relation requires (note 41), and repeat
+the capacity searches of demos 76 to 79 on the binary tetrahedral and
+icosahedral images, which are braid group representations, in place of the
+infinite groups.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -2186,7 +2298,10 @@ classical names: the cube's rotation group, the dual pair of 24-cells,
 lookup tables. Demos 71 to 75 ask sharper questions of one object, the
 thirteen-axis partition, and get sharper answers; the corrections are a
 factor of two, a relation among thirteen vectors, and the difference between
-a braid and its closure.</p>
+a braid and its closure. Demos 76 to 80 are careful searches (demo 77's
+winners survive a boundary test, demo 79 catches its own capped catalog), and
+then one large slip: from demo 79 on, the generators are no longer a braid
+group representation.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
@@ -2194,10 +2309,11 @@ textbook check of note 21, the control of note 25, the coupling check of
 note 26, demo 59's catalog magnitudes (note 28), the lattice search and
 random check of note 30, the rotated sectors of note 32, demo 65's
 magnitudes, the group check of note 34, the rank computation and labelings of
-note 38 and the design recomputation of note 39 ran on scratch copies.
-Written by hand on 2026-10-03 from reading the sixty-three <code>main.c</code>
-files (demos 1 to 29, 35, 38, 39 and 45 to 75, with their findings, debriefs
-and, for 51 to 75, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+note 38, the design recomputation of note 39, demo 77's rotated sectors and
+the group computations of note 41 ran on scratch copies. Written by hand on
+2026-10-03 from reading the sixty-eight <code>main.c</code> files (demos 1 to
+29, 35, 38, 39 and 45 to 80, with their findings, debriefs and, for 51 to 80,
+<code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
