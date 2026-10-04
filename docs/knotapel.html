@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 50 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 55 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -55,7 +55,9 @@ numbering is not chronological from here: demo 38 says its code comes
 calls landmark, taking reverse DKC from XOR to all thirteen classes of
 three-input functions, and demos 46 to 50 follow it to its headline: three-input
 parity, unreachable for every bracket weight under one activation, reachable
-under another with six sectors.</p>
+under another with six sectors. Demos 51 to 55 turn to the algebra behind
+it: the radical of the Temperley–Lieb algebra at δ = 0 and at other roots of
+unity, then the bracket at δ = 1 and δ = √2 as a source of weights.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -855,6 +857,110 @@ and the bracket count of 906 sits inside the knot-free range (714 to
 1,368). Bracket values compute parity at six sectors; they are not special
 in doing so.</p>
 
+<h2>Demo 51 · The radical at δ = 0</h2>
+<p class="nota"><code>knotapel/demo_51_radical_anatomy/main.c</code> · 1,165 lines · 57/57 tests · no <code>findings.md</code>; the record is in <code>explorers-log.md</code></p>
+<p>Demo 51 builds TL<sub>n</sub>(0) for n = 2 to 8 as a multiplication
+table on the C<sub>n</sub> planar matchings (a product that closes a loop
+is zero) and finds its Jacobson radical as the null space of the trace form
+τ(a, b) = tr(L<sub>ab</sub>), which in characteristic 0 is exactly the
+radical. It then multiplies out rad², rad³, … until they vanish, looks for
+idempotents among products of two generators, and measures Peirce blocks.
+The results: odd n is semisimple; even n has a radical of dimension
+C<sub>n</sub> − C<sub>n−1</sub> (9, 90 and 1,001 for n = 4, 6, 8); rad³ is
+always 0 while rad² has dimension C<sub>n−1</sub>; and every nonzero trace
+of a basis element is a Catalan number. n = 8, with 1,430 basis elements,
+takes about fourteen seconds.</p>
+<p>The numbers are right: the standard theory of cellular algebras
+reproduces every one of them (<a href="#nota-textus">note 21</a>). What
+needs adjusting is how they were read. The log's "sandwich theorem",
+rad²(TL<sub>2k</sub>(0)) ≅ TL<sub>2k−1</sub>(0), holds for bimodules and
+fails for algebras (<a href="#nota-sandvicum">note 22</a>). The radical
+dimensions follow from known formulas, and the module-level picture is in
+Belletête, Ridout and Saint-Aubin (2016), which the log's own literature
+search found. The checks test the Temperley–Lieb relations and the
+bookkeeping; none asserts a radical dimension. Ranks are taken by Gaussian
+elimination in doubles with a pivot threshold of 0.5, which is fragile at
+this size; the agreement with theory says it did not go wrong here.</p>
+
+<h2>Demo 52 · Other roots of unity</h2>
+<p class="nota"><code>knotapel/demo_52_chebyshev/main.c</code> · 1,953 lines · 82/82 tests · no <code>findings.md</code></p>
+<p>The same machinery with loop counts kept, so that δ can take any value:
+δ = 1 in integers, then δ = √2, φ and √3 (ℓ = 4, 5, 6 in δ = 2cos(π/ℓ))
+by working modulo a large prime in which the square root exists, found by
+Tonelli–Shanks, with ranks mod p standing in for ranks over Q(δ). It
+tabulates n up to 8 at δ = 1 and up to 7 elsewhere. Every non-semisimple
+case again has rad³ = 0; TL<sub>n</sub> is semisimple exactly when
+n &lt; ℓ; at n = ℓ the radical has dimension 2ℓ − 3, at n = ℓ + 1 it has
+ℓ² − ℓ − 3, and rad² is one-dimensional at both.</p>
+<p>The demo was built to find longer radical series (5 layers at ℓ = 3, 7
+at ℓ = 4), and there were none. The log's explanation for that does not
+hold, and the formulas it records as new are textbook consequences (note
+21); the project's own <code>proofs/radical-dimension-formula.md</code>
+proves 2ℓ − 3 by exactly that route. Each δ uses one prime in the code (the
+log mentions a second for φ; the code uses p = 29 only as a fallback), and a
+rank mod p can only fall short of the true rank, so agreement between primes
+is evidence rather than proof; here the theory settles it. Thirty-two of the
+82 checks record a computed value as a pass and cannot fail. The log's
+"Fibonacci rank theorem" is not computed by this file (note 22).</p>
+
+<h2>Demo 53 · δ = 1</h2>
+<p class="nota"><code>knotapel/demo_53_dkc_d1/main.c</code> · 1,473 lines · 59/59 tests · no <code>findings.md</code></p>
+<p>The bracket at ℓ = 3: A = ω = e<sup>2πi/3</sup>, δ = 1, values in the
+Eisenstein integers Z[ω]. The demo checks its Temperley–Lieb matrices
+against the state sum on named knots, then catalogs every braid on three
+strands up to length 8 and on four strands up to length 5, tests axiality,
+counts zeros among the braids that use only σ<sub>1</sub> and
+σ<sub>3</sub>, and measures how many braids share a matrix.</p>
+<p>Its own output answers the question in one line: the catalog has two
+values, −1 and +1, and a braid of length k gives (−1)<sup>k</sup>. At
+δ = 1 every state contributes, so the state sum factors as
+(A + A<sup>−1</sup>)<sup>k</sup> = (−1)<sup>k</sup>, the bracket form of
+Jones's V<sub>L</sub>(e<sup>2πi/3</sup>) = 1 (<a href="#nota-unum">note
+23</a>). The log records six values, {±1, ±ζ<sub>6</sub>,
+±ζ<sub>6</sub><sup>2</sup>}, and reasons from those. Its verdict, dead for
+DKC, is right, for a stronger reason than it gives.</p>
+
+<h2>Demo 54 · δ = √2</h2>
+<p class="nota"><code>knotapel/demo_54_dkc_l4/main.c</code> · 1,856 lines · 53/53 tests · no <code>findings.md</code></p>
+<p>The same survey at ℓ = 4: A = ζ<sub>16</sub><sup>5</sup> in
+Z[ζ<sub>16</sub>] (eight integer coordinates) and δ =
+ζ<sup>2</sup> − ζ<sup>6</sup> = √2. Every value is "Z[i]-axial", a Gaussian
+integer times a power of ζ<sub>16</sub>: 25 values (zero included) on three
+strands, 28 on four, with 8, 12 and 15 distinct Gaussian parts on two, three
+and four strands. Among the σ<sub>1</sub>/σ<sub>3</sub> braids, 43.7% have
+bracket zero, between δ = 0's 100% and δ = 1's none.</p>
+<p>This catalog has a classical name too. Here t = A<sup>−4</sup> = −i,
+and Murasugi and Lickorish–Millett (1986) showed that V<sub>L</sub>(±i) is
+±(√2)<sup>c−1</sup>, its sign the Arf invariant, when every component has
+even linking number with the rest, and 0 otherwise. The run agrees exactly:
+the magnitudes are 0, 1, √2, 2 and 2√2, the Gaussian parts have norm 1, 2, 4
+or 8, and the 43.7% is predicted to the braid by linking numbers
+(<a href="#nota-i">note 24</a>). So at δ = √2 a bracket value carries the
+number of components, one Arf bit and a phase.</p>
+
+<h2>Demo 55 · Boolean functions at δ = √2</h2>
+<p class="nota"><code>knotapel/demo_55_dkc_boolean/main.c</code> · 1,061 lines · 7/7 tests · no <code>findings.md</code></p>
+<p>Demo 55 builds the δ = √2 catalog (56 nonzero values) and searches
+every pair and triple of weights for the functions a single neuron
+computes, with a <em>multiplicative</em> encoding, z =
+w<sub>1</sub><sup>x<sub>1</sub></sup>w<sub>2</sub><sup>x<sub>2</sub></sup>w<sub>3</sub><sup>x<sub>3</sub></sup>,
+under Re z &gt; 0, Im z &gt; 0, the split sigmoid, k sectors and a
+magnitude threshold. Re z &gt; 0 gives 9,334 parity triples and reaches 11
+of the 13 classes; the split sigmoid reaches all 13, parity included (481).
+The log's headline: the root of unity "removes the activation wall",
+algebraic dimension substitutes for activation complexity, and δ = √2
+strictly dominates δ = 0.</p>
+<p>The demo prints the caveat itself: δ = 0 was searched with the additive
+encoding, this with the multiplicative one, "not directly comparable". The
+comparison is the encoding. Under multiplication a weight on the negative
+real axis flips the sign of z, so three of them make Re z &gt; 0 compute
+XNOR3: parity is the easiest function there is. Run with the same code and
+the δ = 0 catalog (two lines changed), Re z &gt; 0 gives 5,433 parity
+triples and the same 11 classes, and four sectors give 23,600 against
+δ = √2's 6,712 (<a href="#nota-multiplicatio">note 25</a>). One difference
+does survive the control: the split sigmoid reaches 13 classes at δ = √2 and
+7, without parity, at δ = 0.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -1151,16 +1257,102 @@ after k = 6 belongs to the eight directions (it appears for star and
 shuffle, not for generic or randphase), which demo 113 traces to the writhe
 phase. The bracket catalog behaves like a typical eight-direction star of
 integers.</p></li>
+<li id="nota-textus"><p><strong>Demos 51 and 52's tables follow from
+textbook theory.</strong> For a cellular algebra the radical has dimension
+Σ dim W<sub>t</sub><sup>2</sup> − Σ dim L<sub>t</sub><sup>2</sup>, over the
+standard modules W<sub>t</sub> (t through-strands, dimension
+C(n, k) − C(n, k − 1) with k = (n − t)/2) and their simple heads
+L<sub>t</sub>. For Temperley–Lieb at δ = 2cos(π/ℓ) the heads follow from a
+reflection rule. W<sub>t</sub> is simple when ℓ divides t + 1. Otherwise
+reflect t + 1 in the next multiple of ℓ above it to get t′ + 1: then
+dim L<sub>t</sub> = dim W<sub>t</sub> − dim L<sub>t′</sub>, or dim
+W<sub>t</sub> when t′ &gt; n. rad² is the sum of dim
+L<sub>t</sub><sup>2</sup> over the t whose reflection in the multiple of ℓ
+below t + 1 is still a valid t″ ≥ 0. A
+thirty-line script with this rule reproduced 27 of the 28 rows of the two
+demos' tables: every radical dimension, and every rad² except TL<sub>2</sub>(0),
+where the rule gives 1 and the truth is 0 (the dual numbers; the rule's
+middle layer is empty there). So 2ℓ − 3, ℓ² − ℓ − 3, "rad² = 1" and
+C<sub>2k</sub> − C<sub>2k−1</sub> are instances of known theory, as
+<code>proofs/radical-dimension-formula.md</code> shows for the first. Three
+layers are standard too: the indecomposable projective modules of
+Temperley–Lieb in characteristic 0 have at most three, and the algebra, being
+their direct sum, cannot have more. The predicted 5 and 7 layers came from a
+misreading, and the log's resolution ("the algebra filtration is shorter
+than the module filtration") does not hold. The same rule predicts ℓ = 7,
+demo 60's cubic wall: radical 11, 39, 463, 1,448 and rad² 1, 1, 65, 82 for
+n = 7 to 10. Neither demo asserts a radical dimension; 7 of demo 51's 57
+checks and 32 of demo 52's 82 pass unconditionally.</p></li>
+<li id="nota-sandvicum"><p><strong>The sandwich holds for bimodules, and the
+three idempotents come from the search.</strong> rad³ = 0 means
+rad² · rad² = 0, so rad² cannot be isomorphic to TL<sub>2k−1</sub>(0) as
+an algebra, which the log's literature section claims as its first novel
+result. What holds is rad² ≅ A/rad as A-bimodules (summing the projective
+modules, each of which has the same simple at top and bottom), and
+A/rad ≅ TL<sub>2k−1</sub>(0) as algebras. "Every TL<sub>n</sub>(0) admits
+exactly three orthogonal idempotents" describes the search: the demo picks
+greedily among products of two generators, finds two orthogonal ones every
+time, and adds their complement. A complete set of primitive orthogonal
+idempotents of TL<sub>7</sub>(0) ≅ M<sub>14</sub> ⊕ M<sub>14</sub> ⊕
+M<sub>6</sub> ⊕ k has 35, and the Peirce tables are relative to the three
+chosen. The "Fibonacci rank theorem" (sector ranks of the rad² generator
+summing to F(ℓ − 1)) is not computed in demo 52's file and cannot be
+reproduced from it; its four values 1, 2, 3, 5 are also the partition
+numbers p(1) to p(4), and ℓ = 7 would separate the two (F(6) = 8,
+p(5) = 7).</p></li>
+<li id="nota-unum"><p><strong>At δ = 1 the bracket is
+(−1)<sup>crossings</sup>.</strong> With δ = 1 every state has weight 1, so
+the state sum Σ A<sup>a−b</sup> factors crossing by crossing into
+(A + A<sup>−1</sup>)<sup>k</sup> = (ω + ω<sup>2</sup>)<sup>k</sup> =
+(−1)<sup>k</sup>, whatever the braid. The run shows it: the catalog on three
+and four strands is {−1, +1} at every length. The log's six values
+{±1, ±ζ<sub>6</sub>, ±ζ<sub>6</sub><sup>2</sup>} do not appear. This is
+Jones's V<sub>L</sub>(e<sup>2πi/3</sup>) = 1: the writhe factor
+(−A<sup>3</sup>)<sup>−w</sup> = (−1)<sup>w</sup> cancels the sign, since
+w and k have the same parity. The "two-source hypothesis" built on this demo
+says δ = 1 has deeper nilpotency than δ = 0, but demo 52 found rad³ = 0 at
+both; and a radical cannot help a bracket that carries no information about
+the braid. Experiments 2 and 3 count a pass whichever way they come
+out.</p></li>
+<li id="nota-i"><p><strong>At δ = √2 the bracket is the Arf invariant and
+the component count.</strong> V<sub>L</sub>(i) = (−√2)<sup>c−1</sup>(−1)<sup>Arf(L)</sup>
+when every component has even linking number with the rest, and 0 otherwise
+(Murasugi; Lickorish and Millett, 1986). Demo 54's run has magnitudes
+exactly 0, 1, √2, 2 and 2√2, and Gaussian parts of norm 1, 2, 4 and 8, a
+unit times a power of 1 + i, which is its Z[i]-axiality. A word in
+σ<sub>1</sub> and σ<sub>3</sub> closes to two separate two-strand torus
+links, and the bracket vanishes when either has exponent sum ≡ 2 (mod 4),
+two components with odd linking number. Counting words of length 1 to 5:
+596 of 1,364, the run's 43.7% exactly. At δ = 0 the same family vanishes
+entirely because a split diagram carries a factor δ (and a split link has
+determinant 0, demo 113).</p></li>
+<li id="nota-multiplicatio"><p><strong>Demo 55's parity comes from the
+encoding.</strong> A scratch copy of demo 55, with two lines changed
+(A = ζ<sub>16</sub><sup>10</sup> = e<sup>i5π/4</sup>, and δ<sup>k</sup> = 0
+for k &gt; 0), runs the identical search on the δ = 0 catalog. δ = √2
+against δ = 0: catalog 56 / 62 values; Re z &gt; 0, parity 9,334 / 5,433,
+classes 11 / 11, the same two missing (~A(B⊕C) and 0x1B); Im z &gt; 0,
+3,114 / 512, classes 12 / 12; four sectors 6,712 / 23,600; eight sectors
+8,000 / 9,419; split sigmoid 481 / 0, classes 13 / 7. So "the root of unity
+removes the activation wall" and "δ = √2 strictly dominates δ = 0" (13 of 13
+against demo 48's 12 of 13) compare the multiplicative encoding with the
+additive one. The split-sigmoid gap does survive. A guess, untested: the
+split sigmoid outputs 0 on the axes, and products of the δ = 0 catalog's
+eight directions land on the axes much more often than products of
+sixteen.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 51 onward turn to the algebra behind the activation results (the
-radical's anatomy, Chebyshev structure, other roots of unity, Potts and
-Fibonacci variants), then to the "cubic wall", angular proofs, and the
-multi-strand work of demos 99 to 109. The controls this reading found useful
-carry over: a knot-free catalog with the same directions (note 20), a matched
-baseline (note 18), linear separability (note 17), and the readout's own
-expressive power (note 19).</p>
+<p>Demos 56 to 59 carry the bracket into statistical mechanics (the Potts
+model, of which δ<sup>2</sup> = Q makes the bracket a partition function)
+and to further roots of unity, demo 57 returns to the additive encoding at
+δ = √2, and demo 60 is the "cubic wall" at ℓ = 7, followed by angular proofs
+and the multi-strand work of demos 99 to 109. The controls this reading found
+useful carry over: a knot-free catalog with the same directions (note 20), a
+matched baseline (note 18), linear separability (note 17), the readout's own
+expressive power (note 19), the textbook rule as the expected value (note
+21), the classical invariant at that root of unity (notes 23 and 24), and the
+same search with only δ changed (note 25).</p>
 
 <h2 id="demo113">Demo 113 · Rosetta (new, from this reading)</h2>
 <p class="nota"><code>knotapel/demo_113_rosetta/main.c</code> · 33/33 tests · <code>findings.md</code> · written 2026-10-03</p>
@@ -1248,6 +1440,24 @@ that a random star's triples do not?</p></li>
 values all lie on the eight directions too. Test, as demo 113 did, whether
 they are a known invariant: the first-order term in δ is a derivative of the
 Jones polynomial at t = −1.</p></li>
+<li><p><strong>The textbook tables as tests.</strong> Put the
+reflection rule of note 21 into demos 51 and 52's successors as the expected
+radical and rad² dimensions, so the tables can fail; the rule also gives n = 9
+and 10 for every ℓ, cheap to check mod p.</p></li>
+<li><p><strong>Fibonacci or partitions.</strong> Recompute the sector ranks
+of the rad² generator, with the code in the demo, at ℓ = 7: 8 supports
+F(ℓ − 1), 7 supports the partition numbers, anything else neither.</p></li>
+<li><p><strong>Rosetta at i.</strong> What demo 113 did for t = −1, for
+δ = √2: test bracket = phase × (√2)<sup>c−1</sup> × (−1)<sup>Arf</sup>, or 0
+exactly when some component has odd linking number with the rest, on every
+braid of demo 54, with linking numbers read from the braid word and the Arf
+invariant computed independently (for knots, from Δ(−1) mod 8).</p></li>
+<li><p><strong>An angle-only theory of the multiplicative neuron.</strong>
+With z = Π w<sub>i</sub><sup>x<sub>i</sub></sup>, an angular activation sees
+only Σ x<sub>i</sub>θ<sub>i</sub>. Work out which three-input classes a given
+set of angles reaches (it should explain the two classes missing at both δ in
+note 25), and test the axis guess for the split-sigmoid gap by giving the
+δ = √2 catalog phases on the π/4 grid.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -1257,13 +1467,18 @@ a weight first appears, and where δ = 0 was found three times over (as a
 zero pattern, as the gate angle, as an operating band); and demos 26 to 29
 are where the idea is tested directly. The arithmetic was right everywhere
 it was checked. What went wrong was the labels, the interpretation, and the
-checks written after the results were known.</p>
+checks written after the results were known. Demos 51 to 55 repeat the
+pattern in a new key: exact computations, correct again, of things that
+already had classical names (cellular theory, Jones at e<sup>2πi/3</sup>,
+Murasugi at i), and one comparison in which the encoding changed along with
+the algebra.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
-inside <code>knotapel/</code>; the null models of notes 16 and 20 ran on scratch
-copies. Written by hand on 2026-10-03 from reading the thirty-eight
-<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to 50, with their
-findings and debriefs) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+inside <code>knotapel/</code>; the null models of notes 16 and 20, the
+textbook check of note 21 and the control of note 25 ran on scratch copies.
+Written by hand on 2026-10-03 from reading the forty-three
+<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to 55, with their
+findings, debriefs and, for 51 to 55, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
