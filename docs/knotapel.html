@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: the first twenty-five demos</p>
+<p class="subtitulus">Knots as computation: demos 1 to 29, and 35</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -43,7 +43,12 @@ takes centre stage. Demos 21 to 25 survey what braids at δ = 0 can compute:
 reversible gates, the shortest braid for every Boolean function, the zoo of
 functions topology prefers, the arithmetic of rational tangles, and the
 four closures of a braid read as four measurements. Three-input parity
-first shows up here, as the function no braid produces.</p>
+first shows up here, as the function no braid produces. Demos 26 to 29 are
+the turn: bracket values as the weights of a neuron, first by matching
+trained weights to them (26 to 28), then by using them directly with no
+training at all (29). Numbers 30 to 34 were planned but never built as code
+(their plans are in <code>knotapel/future-demos/</code>); demo 35, the next one
+built, lays the exact Temperley–Lieb machinery for everything after.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -588,6 +593,102 @@ seen. What the demo establishes is the shape of the space, a small,
 structured set of joint behaviours, which is the right question to carry
 into the next phase.</p>
 
+<h2>Demo 26 · Do trained weights look like brackets?</h2>
+<p class="nota"><code>knotapel/demo_26_reverse_dkc/main.c</code> · 1,310 lines · 11/11 tests</p>
+<p>Demo 26 runs the experiment the project calls reverse DKC. It trains the
+classic two-hidden-unit network on XOR (4 of 10 seeds converge), builds the
+catalog of bracket magnitudes at A = e<sup>i5π/4</sup> from every 2- and
+3-strand braid up to 8 and 6 crossings, and matches each trained weight to
+the nearest catalog value. At δ = 0 the catalog turns out to be the
+integers: magnitudes 0 to 16, missing only 10, 14 and 15. The trained
+weights land between 0.26 and 0.32 from the nearest one (RMS), and a random
+baseline lands at 0.37, so the demo reports the trained weights as 1.39×
+closer than chance. It also shows a braid XOR circuit and the network
+agreeing on all four inputs, and trains a larger network on an adder's
+carry bit.</p>
+<p>The integer catalog is a real and pretty fact, but it makes the matching
+test unable to tell anything apart (<a href="#nota-reverse">note 15</a>):
+matching to the nearest integer leaves an RMS error of 1/√12 ≈ 0.289 for any
+numbers whatever, and the four trained networks average 0.289. The 1.39×
+compares the best trained network with the average random one. The
+project's own summaries quote "weights approximate bracket values, RMS
+≈ 0.26" as a result; it is the expected rounding error.</p>
+
+<h2>Demo 27 · The same, with phases</h2>
+<p class="nota"><code>knotapel/demo_27_complex_reverse_dkc/main.c</code> · 1,048 lines · 5/9 tests (four fail as shipped)</p>
+<p>A bracket value at this root is a complex number, a cyclotomic integer in
+Z[ζ<sub>8</sub>], and taking its magnitude throws the phase away. Demo 27
+therefore trains a single complex-valued neuron, after Nitta (2003), who
+showed one complex neuron can learn XOR where one real neuron cannot; all 20
+trials converge. The full complex catalog has 64 distinct values (against 18
+magnitudes), every one on the Z[ζ<sub>8</sub>] lattice, and the demo matches
+the complex weights to it, sweeping a global phase ("gauge") to align
+them. A literature survey sits beside the code.</p>
+<p>The predictions failed, and the demo says so: four tests fail as
+shipped. Complex matching is worse than magnitude matching (0.349 against
+0.294), and a real network, retrained here, scores 0.188, better than either
+and better than demo 26's 0.264, which shows how much this measure moves
+between runs. One passing check is soft: complex matching is said to cut
+"degeneracy" 5×, but two of the three weights have zero complex matches, and
+finding no match is counted as a 99.9× reduction (<a href="#nota-reverse">note 15</a>).</p>
+
+<h2>Demo 28 · Phase-preserving activations</h2>
+<p class="nota"><code>knotapel/demo_28_unitary_activation/main.c</code> · 957 lines · 6/14 tests (eight fail as shipped)</p>
+<p>Demo 27's diagnosis was that the split sigmoid scrambles phase, so demo 28
+tries activations that respect it: modReLU (scales the magnitude, keeps the
+phase), a cardioid, and phase-only normalization. Again most predictions
+fail and are recorded as failures: modReLU matches no better (0.369), the
+gauge angles do not cluster at 7π/4, phase-only never converges. The one
+striking success is "lattice projection": snap every trained weight to its
+nearest bracket value and the network still computes XOR, 100% of the time,
+for every activation.</p>
+<p>That last test has no control. The trained weights are large (around 7)
+against a lattice spacing near 1, so snapping to any lattice that fine would
+probably survive too; the result shows XOR's margins are wide, and points
+toward the question demo 29 asks directly. The honest reporting of eight
+failed predictions is worth noticing: the earlier demos tended to rewrite
+the checks instead.</p>
+
+<h2>Demo 29 · Bracket values as weights, no training</h2>
+<p class="nota"><code>knotapel/demo_29_cyclotomic_arithmetic/main.c</code> · 903 lines · 24/24 tests</p>
+<p>Demo 29 is the one the project marks as its landmark: forward DKC. It
+implements exact arithmetic in Z[ζ<sub>8</sub>] (a value is four integers;
+a product is sixteen integer multiplications; no floating point), recomputes
+the bracket of all 8,192 braids on two and three strands up to eight
+crossings exactly (every value agrees with the floating-point version), and
+finds 64 distinct values. Then it takes every triple of them as the two
+weights and bias of a complex neuron, tries global phases, and asks which
+triples compute XOR. Thousands do, with no training: bracket values,
+untouched, are weights of working XOR neurons. It also shows the bracket
+of a product of braids is not the product of brackets (it is a trace, not
+a homomorphism).</p>
+<p>The existence result is solid, and exact. The size of the result needs
+correcting (<a href="#nota-forward">note 16</a>): the reported 65,536
+"valid triples" is the size of the array that stores them, which fills
+partway through the search; uncapped, 28,644 of the 262,144 triples
+(10.9%) work at some phase. And a control changes the interpretation: the
+neuron's readout is itself a soft XOR of its real and imaginary parts, and
+64 values with the same magnitudes but random phases work <em>more</em> often
+(13.4% to 14.5%). So bracket values are good weights for this neuron, but
+not better than generic complex numbers of the same sizes; what is special
+here is the neuron, not yet the lattice.</p>
+
+<h2>Demo 35 · Exact Temperley–Lieb matrices for any n</h2>
+<p class="nota"><code>knotapel/demo_35_tl_matrices/main.c</code> · 1,725 lines · 52/52 tests</p>
+<p>Demo 35 turns demo 22's hand-built TL<sub>3</sub> into machinery: the
+Temperley–Lieb algebra TL<sub>n</sub> for any n, over exact
+Z[ζ<sub>8</sub>] arithmetic, on the basis of non-crossing matchings (2, 5,
+14 and 42 of them for n = 2 to 5, the Catalan numbers, all enumerated and
+checked). Generators are built by composing diagrams, braid generators as
+A·I + A<sup>−1</sup>e<sub>i</sub>, braid words as matrix products, and the
+trace and plat closures as functionals; the results agree exactly with the
+state sum of demo 1. It is the exact, general, floating-point-free version
+of what demos 2 to 6 built by hand, and the base of the later work.</p>
+<p>Its outputs also confirm, from the matrix side, the fact behind notes 9
+and 12: at δ = 0 the bracket's magnitude is the knot's determinant. The Hopf
+link gives 2, the trefoil 3 and the figure-eight 5, which are exactly their
+determinants.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -778,21 +879,64 @@ demo 22's braid weight counts the gate braid but not the input crossings
 or the threshold, against a NAND expression's full crossing count. The
 figures show that short braids can encode functions; they are not
 measurements of relative efficiency.</p></li>
+<li id="nota-reverse"><p><strong>Matching weights to an integer catalog
+measures rounding.</strong> At δ = 0 every bracket magnitude is an integer
+(demo 26's catalog: 0 to 16 without 10, 14, 15). The distance from any real
+number to the nearest integer is spread evenly over [0, ½], so the RMS
+error of rounding is 1/√12 ≈ 0.2887 whatever the numbers are; the four
+converged networks of demo 26 average 0.2890 (0.316, 0.264, 0.307, 0.269).
+The random baseline is higher (0.368) because random weights drawn from
+[3, 12] fall into the catalog's gap around 10 while the trained ones happen
+not to, and the "1.39× better" compares the best trained network with the
+average random one. The "syndrome" label is guaranteed: it calls residuals
+"STRUCTURED" when their standard deviation is under 0.5, and rounding
+residuals always lie in [−½, ½]. The braid circuit and the network agreeing
+on XOR is true of any two correct XOR implementations. Demo 27's
+degeneracy check counts a weight with no complex match at all as a
+"99.9× reduction". Demos 27 and 28 deserve credit for shipping their failed
+predictions as failing tests.</p></li>
+<li id="nota-forward"><p><strong>Demo 29: the count is capped, and a control
+is needed.</strong> Solutions are stored in an array of
+<code>MAX_VALID</code> = 65,536 entries, and the search stops recording when
+it is full; the progress lines show the count frozen at 65,536 from the 40th
+of 64 first-weight values on. Each entry is a (triple, phase) pair, and the
+phase sweep is 72 angles in 5° steps, not the 360 printed. Counted without
+the cap (a patched copy, the demo itself untouched): 200,933 (triple, phase)
+pairs and 28,644 distinct triples, 10.9% of all 262,144. The demo's
+"10,357 unique triples" was computed from the capped prefix; the project's
+summaries quote "65,536 valid triples" and "~35% of triples". For the
+control: the neuron reads out p = h<sub>re</sub>(1 − h<sub>im</sub>) +
+(1 − h<sub>re</sub>)h<sub>im</sub>, a soft XOR of two half-plane decisions,
+so it computes XOR whenever the real and imaginary parts realize two
+different threshold functions (for example OR and AND), which is Nitta's
+mechanism. Replacing the 64 bracket values by 64 points with the same
+magnitudes and random phases (three seeds) gives 35,248 to 37,889 working
+triples, 13.4% to 14.5%. Bracket values compute XOR without training, which
+is the demo's claim and is true; that they are unusually good at it is not
+supported. Later demos change the neuron (multi-valued activations, sector
+counts) and may well find structure this test cannot see; this reading
+covers only demo 29.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>The decisive turn comes with demos 26 to 29, still at
-A = e<sup>i5π/4</sup> where δ = 0, when bracket values stop being gate
-outputs read through a threshold and become the weights of a neuron. Every
-diagram with more than one loop then vanishes, the values become exact
-integers in Z[ζ<sub>8</sub>], and those values are what demo 29 found
-computing XOR. The polynomial and matrix machinery of demos 1 to 9 is
-what makes "exact" possible there, and the numerical detour of demos 10 to
-15, whatever its labels, is where the idea of a bracket value as a weight
-first appears.</p>
+<p>From demo 35 the project works in exact arithmetic throughout: dimension
+reduction and symmetry decomposition at δ = 0 (demos 38 and 39), then the
+arc the atlas calls landmark, demos 45 to 50, which extends forward DKC from
+XOR to all thirteen classes of three-input functions and finds that
+three-input parity, the wall of demos 22 to 25, becomes reachable with a
+six-sector activation. Those are for the next readings, with the control of
+note 16 in mind.</p>
+<p>Looking back over these thirty: the polynomial and matrix machinery of
+demos 1 to 9 is what makes "exact" possible later; the numerical detour of
+demos 10 to 25, whatever its labels, is where the idea of a bracket value as
+a weight first appears, and where δ = 0 was found three times over (as a
+zero pattern, as the gate angle, as an operating band); and demos 26 to 29
+are where the idea is tested directly. The arithmetic was right everywhere
+it was checked. What went wrong was the labels, the interpretation, and the
+checks written after the results were known.</p>
 
-<p class="nota">Written by hand on 2026-10-03 from reading the twenty-five
-<code>main.c</code> files (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+<p class="nota">Written by hand on 2026-10-03 from reading the thirty
+<code>main.c</code> files (demos 1 to 29 and 35) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
