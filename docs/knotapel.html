@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 29, and 35</p>
+<p class="subtitulus">Knots as computation: demos 1 to 29, 35, 38, 39 and 45</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -48,7 +48,12 @@ the turn: bracket values as the weights of a neuron, first by matching
 trained weights to them (26 to 28), then by using them directly with no
 training at all (29). Numbers 30 to 34 were planned but never built as code
 (their plans are in <code>knotapel/future-demos/</code>); demo 35, the next one
-built, lays the exact Temperley–Lieb machinery for everything after.</p>
+built, lays the exact Temperley–Lieb machinery for everything after. The
+numbering is not chronological from here: demo 38 says its code comes
+"from Demo 60", so later work filled earlier planned numbers. Demos 38 and
+39 study the algebra's structure at δ = 0; demo 45 opens the arc the atlas
+calls landmark, taking reverse DKC from XOR to all thirteen classes of
+three-input functions.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -689,6 +694,68 @@ and 12: at δ = 0 the bracket's magnitude is the knot's determinant. The Hopf
 link gives 2, the trefoil 3 and the figure-eight 5, which are exactly their
 determinants.</p>
 
+<h2>Demo 38 · How much of the algebra the bracket uses</h2>
+<p class="nota"><code>knotapel/demo_38_dimension_reduction/main.c</code> · 781 lines · 13/13 tests</p>
+<p>At δ = 0 the Temperley–Lieb algebra is not semisimple for even n: part of
+it, the radical, is invisible to every trace, so the bracket never sees it.
+Demo 38 measures how much. It builds TL<sub>n</sub> for n = 2 to 8 (up to
+1,430 dimensions) on the planar-matching basis, computes the rank of the
+trace form exactly (modulo a large prime), and finds the pattern its header
+states: for odd n the form has full rank C<sub>n</sub> (semisimple), for
+even n its rank drops to C<sub>n−1</sub> (5 of 14 at n = 4, 42 of 132 at
+n = 6, 429 of 1,430 at n = 8). So bracket computation at even n needs only
+a C<sub>n−1</sub>-dimensional quotient, about a quarter of the size; the
+demo builds reduced generators on it and checks they satisfy the TL
+relations. It also sorts the basis by the number of strands that pass
+straight through, and finds the 0-through sector entirely dead at even n.</p>
+<p>Two of its outputs are left hanging. The quotient is compared with
+TL<sub>n−1</sub> only by counting nonzero products in their multiplication
+tables (17 and 17 at n = 4), which agrees with an isomorphism but does not
+establish one. And at n = 6 and 8 the per-sector ranks add up to more than
+the total (46 against 42, 533 against 429), printed without comment. Demo
+39 takes that one up.</p>
+
+<h2>Demo 39 · The algebra's sectors</h2>
+<p class="nota"><code>knotapel/demo_39_symmetry_decomposition/main.c</code> · 1,720 lines · 31/31 tests</p>
+<p>Demo 39 is the careful follow-up. It checks that each through-strand
+sector has size d(n,j)<sup>2</sup>, the square of a cell module's dimension
+(the cellular structure of Graham and Lehrer); measures the cross-sector
+coupling that demo 38 left unexplained (none at n = 4, positive at n = 6,
+where the sector ranks overcount the total); verifies the cell filtration
+(the number of through-strands never increases under multiplication);
+compares δ = 0 with δ = 1 and δ = φ (TL<sub>4</sub> is non-semisimple at 1,
+semisimple at the golden ratio, as theory predicts); shows the generators
+are block lower-triangular, not block-diagonal, even where the algebra is
+semisimple; and compares three different Gram forms at n = ℓ, where the
+cell modules detect non-semisimplicity as Graham–Lehrer say they should.</p>
+<p>This is the algebra being learned properly: each claim is one the
+literature makes, checked exactly, at several sizes. Nothing in it needed a
+note.</p>
+
+<h2>Demo 45 · Thirteen functions, one ranking</h2>
+<p class="nota"><code>knotapel/demo_45_complex_function_zoo/main.c</code> · 1,387 lines · 9/11 tests (two fail as shipped) · <code>findings.md</code>, <code>informal-debrief.md</code></p>
+<p>Demo 45 extends reverse DKC from XOR to every class of three-input
+Boolean function. For each of the 13 non-constant NPN classes it trains a
+small complex network (three complex hidden neurons, 31 real parameters),
+matches its 12 complex weights to the 64 bracket values with a global
+phase sweep, and ranks the classes by how closely they match. All 13
+converge; 11 beat a random baseline. The headline: across the classes, the
+match quality correlates with how often demo 23's braid census produced the
+function (Spearman ρ = −0.82). Functions topology "prefers" decompose
+well; three-input parity decomposes worst of all, worse than random. The
+findings call this "the strongest single piece of evidence for the realist
+thesis": two independent measurements, from opposite ends, agreeing.</p>
+<p>The ranking is real, but it has a simpler explanation
+(<a href="#nota-limen">note 17</a>). The five classes that are linearly
+separable, computable by a single threshold, are exactly ranks 1 to 5; the
+eight that are not are ranks 6 to 13, with parity, the least separable,
+last. Demo 23's braid functions come from thresholding a bracket magnitude,
+so they favour threshold functions too. Both measurements track the same
+property of the <em>functions</em>, which is why they agree. The demo also
+starts from a misreading of demo 27, which it says reached an RMS below 0.1
+(it reached 0.349 and failed that prediction), and turns its own failed
+prediction P5 into "arguably the deepest insight" after the fact.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -916,17 +983,84 @@ is the demo's claim and is true; that they are unusually good at it is not
 supported. Later demos change the neuron (multi-valued activations, sector
 counts) and may well find structure this test cannot see; this reading
 covers only demo 29.</p></li>
+<li id="nota-limen"><p><strong>Demo 45's correlation has a common cause:
+linear separability.</strong> Testing each class for a single-threshold
+realization (integer weights −4 to 4, every threshold) separates the
+ranking cleanly: BUF, AND2, AND3, A∨(B∧C) and MAJ, the five linearly
+separable classes, are ranks 1 to 5 (RMS 0.53 to 0.66); classes 0x19, 0x18,
+0x1B, 0x06, XOR2, A⊕(B∨C), EXACT1 and parity, none separable, are ranks 6
+to 13 (0.68 to 1.00). Demo 23's census assigns each braid the truth table
+of a threshold on |bracket|, so threshold functions dominate it as well. The
+two measurements use different code and methods, but not an independent
+subject: both measure how far a function is from a threshold function, so
+"completely independent measurements … no reason to agree" does not hold,
+and the correlation is not evidence about bracket values. Three further
+points. Both <code>findings.md</code> and the debrief rest on demo 27 having
+reached "RMS &lt; 0.1 with gauge correction"; it reached 0.349, and its test
+for &lt; 0.1 fails. The reversal of P5 (predicted r &lt; 0, measured +0.87) is
+reinterpreted as "the deepest insight from the whole experiment", the
+post-hoc rationalization the project's own <code>CLAUDE.md</code> warns
+against. And P7, "gauge angles cluster at π/4 multiples", counts angles
+within ±15% of the π/4 spacing, which a random angle hits 30% of the time;
+5 of 9 has a chance probability near 0.10. Each class is also represented by
+one trained network (the fastest of ten), and demos 26 and 27 showed this
+RMS moving from 0.19 to 0.32 between runs.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>From demo 35 the project works in exact arithmetic throughout: dimension
-reduction and symmetry decomposition at δ = 0 (demos 38 and 39), then the
-arc the atlas calls landmark, demos 45 to 50, which extends forward DKC from
-XOR to all thirteen classes of three-input functions and finds that
-three-input parity, the wall of demos 22 to 25, becomes reachable with a
-six-sector activation. Those are for the next readings, with the control of
-note 16 in mind.</p>
-<p>Looking back over these thirty: the polynomial and matrix machinery of
+<p>Demos 46 to 50 continue the arc demo 45 opened: per-neuron phase
+correction (46), a parity investigation with Aizenberg's multi-valued neuron
+(47), forward DKC across the whole function zoo (48), "neglecton" weights
+(49), and the result the atlas marks as a landmark, three-input parity
+reachable with a six-sector activation (50). Notes 16 and 17 suggest two
+controls to carry into them: random phases with the same magnitudes, and
+linear separability as a baseline explanation.</p>
+<h2 id="experimenta">Future experiments</h2>
+<p>Proposed by this reading, roughly in order of cost. None changes an
+existing demo; each would be a new one.</p>
+<ol>
+<li><p><strong>The Rosetta test: is the δ = 0 bracket the determinant times a
+writhe phase?</strong> All 64 distinct bracket values of demo 29 are a
+single integer times a single eighth root of unity (checked: 64 of 64), and
+demo 35's magnitudes are knot determinants. The classical relation
+⟨L⟩ = (−A<sup>3</sup>)<sup>w</sup>V<sub>L</sub>(t), with t = A<sup>−4</sup> = −1
+here and |V<sub>L</sub>(−1)| = det(L), predicts exactly that: magnitude =
+determinant, phase = writhe phase times a fourth root of unity that is real
+for an odd number of components and imaginary for an even number. Test it
+on every braid of the catalogs against a determinant computed
+independently (Burau). If it holds, the DKC weight set is "a determinant
+and one of eight phases", and much of the later structure may be read from
+that. Being built as demo 113.</p></li>
+<li><p><strong>A null model for the parity result (demo 50).</strong> Rerun
+its search with the bracket catalog replaced by (a) the same eight-direction
+star of integer multiples with magnitudes drawn independently of any knot,
+(b) generic elements of Z[ζ<sub>8</sub>], (c) the same magnitudes with
+random phases. If parity at six sectors survives (a), the result is about
+eight directions and small integers, a more general statement; if it fails
+there, knots matter, and the claim is earned.</p></li>
+<li><p><strong>Linear separability as a baseline.</strong> Any ranking of
+function classes (demos 45, 48 and onward) should be reported beside the
+ranking that separability alone predicts (note 17).</p></li>
+<li><p><strong>Controls inside every demo that claims something is
+special.</strong> A null model in the same file, predictions stated in the
+header before the run, and failing predictions kept as failing tests, as
+demos 27 and 28 did.</p></li>
+<li><p><strong>A classical-names table for the atlas.</strong> δ = 0 ↔ the
+Jones polynomial at t = −1 and the determinant; the eight zeros at odd
+multiples of π/8 ↔ t = ±i and the Arf invariant (Murasugi); "δ = 0 detects
+entanglement" ↔ split links have determinant 0; demo 24's closure ratio ↔
+the fraction of a rational tangle (Kauffman–Lambropoulou). Named results
+come with their literature and their proofs.</p></li>
+<li><p><strong>Rerun the catalog-dependent demos with real knots.</strong>
+Demos 10 to 17 with T(2,n) = σ<sub>1</sub><sup>n</sup>σ<sub>2</sub>, the trefoil
+(σ<sub>1</sub>σ<sub>2</sub>)<sup>2</sup> and a true unknot (one strand, not the three-circle unlink),
+to see which of their results (zero patterns, waveform separations,
+factorization) survive (notes 3 to 8).</p></li>
+<li><p><strong>Uncapped counts for demo 29</strong> in the atlas: 28,644
+triples (10.9%) in place of 65,536, 10,357 and "~35%" (note 16).</p></li>
+</ol>
+
+<p>Looking back over the first thirty: the polynomial and matrix machinery of
 demos 1 to 9 is what makes "exact" possible later; the numerical detour of
 demos 10 to 25, whatever its labels, is where the idea of a bracket value as
 a weight first appears, and where δ = 0 was found three times over (as a
@@ -935,8 +1069,9 @@ are where the idea is tested directly. The arithmetic was right everywhere
 it was checked. What went wrong was the labels, the interpretation, and the
 checks written after the results were known.</p>
 
-<p class="nota">Written by hand on 2026-10-03 from reading the thirty
-<code>main.c</code> files (demos 1 to 29 and 35) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+<p class="nota">Written by hand on 2026-10-03 from reading the thirty-three
+<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45, with demo 45's
+findings and debrief) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
