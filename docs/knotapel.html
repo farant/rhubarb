@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 70 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 75 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -65,7 +65,10 @@ eleven-of-thirteen result for half-planes, dissect parity by octant and
 sector up to six inputs, and try the next cyclotomic ring. Demos 66 to 70
 leave the plane: a representation of the braid group in the unit
 quaternions, its rotation axes on the sphere, the plane again by
-stereographic projection, finer angles, and the braids as music.</p>
+stereographic projection, finer angles, and the braids as music. Demos
+71 to 75 analyse the thirteen-axis partition: its spherical harmonics,
+whether its points form a spherical design, an automaton, an "invariant", and
+a second readout.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1295,6 +1298,100 @@ fibration. And "trefoil" (σ<sub>1</sub><sup>3</sup>) and "torus(2,5)"
 (σ<sub>1</sub><sup>5</sup>) on three strands close to those knots plus a
 separate unknot.</p>
 
+<h2>Demo 71 · Spherical harmonics</h2>
+<p class="nota"><code>knotapel/demo_71_spectral_dkc/main.c</code> · 1,151 lines · 10/10 tests · <code>findings.md</code></p>
+<p>Each of the 36 XOR6 solutions of demo 67 labels the thirteen axes, and so
+defines a ±1 function on the sphere through the Voronoi cells. Demo 71 expands
+these functions in spherical harmonics (its own Y<sub>lm</sub>, checked for
+orthonormality to 10<sup>−13</sup>): odd modes vanish, about 80% of the power
+is in l = 6, and truncating to modes l ≤ L and reading the signs at the axes
+recovers no solution for L ≤ 5 and all 36 for L = 6. The explanation offered
+is "the 13 = 13 theorem": mode 6 has 2·6 + 1 = 13 components, one per
+axis.</p>
+<p>The numbers are right; the explanation is not, and only part of the
+threshold is forced (<a href="#nota-gradus">note 38</a>). Truncating at L keeps
+every mode up to L, so even functions up to L = 4 already have 1 + 5 + 9 = 15
+components. Restricted to the thirteen axes they span only 12 dimensions,
+because the cube's symmetry imposes one linear relation, and that relation
+rules out exactly one sign pattern, the six twofold axes against the other
+seven. Twenty-seven of the 36 solutions are that pattern and do need degree 6;
+the other nine can be realised with degree 4, which truncation does not
+find.</p>
+
+<h2>Demo 72 · Spherical designs</h2>
+<p class="nota"><code>knotapel/demo_72_spherical_design/main.c</code> · 971 lines · 8/8 tests · <code>findings.md</code></p>
+<p>Are the thirteen axes a spherical t-design, a set over which averages of
+low-degree polynomials are exact? Demo 72 finds t = 0 as directed vectors (the
+first moments do not vanish), t = 3 for the 26 points ±axes, and t = 1 for the
+48 quaternions on S³; it notes that 13 points could in principle reach t = 7,
+that thirteen points optimised to be a better design give 4 XOR6 solutions
+instead of 36, and that moving the axes by 5° keeps about 36 while 10° to 20°
+destroys them. The conclusion: the directions are chosen by the algebra for
+computing, not for integrating.</p>
+<p>The perturbation and the optimised-points comparisons are useful controls
+of the kind note 35 asked for. Three of the design results need correcting
+(<a href="#nota-designa">note 39</a>). The t = 1 on S³ is a factor of two in
+the code's moment formula; with the right constant the 48 quaternions form a
+7-design, as the group's representation theory predicts. The directed t = 0
+depends on which of ±v the code stored for each axis, so only the undirected
+t = 3 means anything. And thirteen points cannot form a 7-design on S² (that
+needs at least 20); the bound allows at most t = 5.</p>
+
+<h2>Demo 73 · An automaton</h2>
+<p class="nota"><code>knotapel/demo_73_eigenvector_automaton/main.c</code> · 1,042 lines · 7/7 tests · <code>findings.md</code></p>
+<p>Read the six inputs one at a time, keeping the Voronoi cell of the
+partial sum as the state: is the next state a function of the current state
+and the next bit? In 48 of 58 transitions (82.8%), for every one of the 36
+solutions; every failure is a bit-1 step splitting one state in two. With 27
+signed cells it rises to 87.1%. The diagnosis: the cell is "a compass without
+an odometer", knowing the direction of the partial sum but not its length.
+The demo also finds that the multiplicative product of the generators cannot
+compute XOR6 at all (every final cell receives eight inputs of each
+parity).</p>
+<p>A tidy question with a tidy answer. The diagnosis is right: a cell
+forgets magnitude, and two partial sums in one direction at different
+lengths part ways when the same weight is added. "Universal" here means the
+same for all 36 solutions, which the group's symmetry makes plausible, though
+the demo does not derive it.</p>
+
+<h2>Demo 74 · A "computational invariant"</h2>
+<p class="nota"><code>knotapel/demo_74_computational_invariant/main.c</code> · 1,623 lines · 20/20 tests · <code>findings.md</code></p>
+<p>Demo 74 compares the Voronoi cell of a braid's quaternion with its
+bracket as invariants. Of 58,078 pairs of braids with equal brackets and
+different quaternions, 97.8% fall in different cells; some pairs share a cell
+and differ in bracket; the pair (bracket, cell) has 119 classes against the
+bracket's 100. Across the 36 solutions the thirteen cells play only six
+roles (each fourfold axis its own, the four threefold axes one, the six
+twofold axes one, and the zero cell). The demo writes the result as a
+hierarchy, type (6) &lt; cell (14) &lt; quaternion (24) &lt; bracket (100)
+&lt; (bracket, cell) (119).</p>
+<p>The six roles are the cube's symmetry seen in the solutions, and they fit
+note 38's split. The invariants need care (<a href="#nota-invarians">note
+40</a>). The cell is an invariant of braid group elements, not of knots:
+conjugating a braid, which leaves its closure unchanged, turns the rotation
+axis, so σ<sub>1</sub> and σ<sub>2</sub>, whose closures are the same link,
+land in different cells. The bracket is an invariant of the closure. And the
+chain orders invariants by their number of classes; the bracket is not a
+function of the quaternion (the demo itself shows this), so it is not a chain
+of refinements.</p>
+
+<h2>Demo 75 · Two readouts</h2>
+<p class="nota"><code>knotapel/demo_75_binocular_dkc/main.c</code> · 1,495 lines · 23/23 tests · <code>findings.md</code></p>
+<p>Besides the cell, read the rotation angle of the sum. Sums of three
+antipodal pairs take seven angles (0°, 45°, 60° and 90°, and three new ones,
+30°, 35.26° and 65.91°), their lengths take six values √0, √1, √2, √3, √4 and
+√6, and for all 36 solutions the angle alone already determines the parity:
+it "subsumes" the cell, at 2.28 bits per evaluation against 1. The product of
+the weights stays in the group, reaches only the four canonical angles, and
+computes XOR6 for none of the 36.</p>
+<p>The observations hold, and they extend demo 73 sensibly: the angle is the
+odometer, since for a quaternion sum it depends on the real part and the
+length together. "Bits per evaluation" is the entropy of a seven-level
+readout, a measure of how finely the output is quantised rather than of what
+the neuron can compute (note 35). That addition, unlike multiplication,
+leaves the group is what makes new angles appear; the parity information
+comes from the sums.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -1848,14 +1945,54 @@ by the braid relation), and so are σ<sub>1</sub>σ<sub>2</sub> and
 Equal braids written differently (σ<sub>2</sub> and σ<sub>1</sub>σ<sub>1</sub><sup>−1</sup>σ<sub>2</sub>)
 play different melodies, so the melody is an invariant of the word, not of
 the braid or the knot.</p></li>
+<li id="nota-gradus"><p><strong>What degree the thirteen axes need.</strong>
+Even polynomials of degree at most L, restricted to the sphere, are the
+homogeneous polynomials of degree L, so evaluating the monomials of degree L
+at the thirteen axis vectors gives the space of value patterns they can
+produce: rank 1, 6, 12 and 13 for L = 0, 2, 4 and 6 (exact rational
+arithmetic). The one relation at L = 4 is
+4·Σ<sub>fourfold</sub> − 8·Σ<sub>twofold</sub> + 9·Σ<sub>threefold</sub> = 0
+on unit vectors. By Farkas's lemma, a sign pattern s on the axes is out of
+reach of degree 4 exactly when s<sub>j</sub>r<sub>j</sub> has one sign for all
+j, r being the relation: that is, +1 on the three fourfold and four threefold
+axes and −1 on the six twofold ones, or the reverse. A patched copy of demo 71
+printed the 36 labelings: 27 are exactly that pattern, and so need degree 6,
+where rank 13 makes every pattern reachable; the other 9 (one fourfold axis
+with the twofold ones) are reachable at degree 4 and not at degree 2 (two
+fourfold axes positive force some twofold value positive). Demo 71's
+truncation, which evaluates the L<sup>2</sup> projection of the step function
+at the axes, recovers none of them below 6.</p></li>
+<li id="nota-designa"><p><strong>The design numbers.</strong> The average of
+x<sub>1</sub><sup>2a<sub>1</sub></sup>⋯x<sub>4</sub><sup>2a<sub>4</sub></sup>
+over S³ is Π(2a<sub>i</sub> − 1)!! / (4·6⋯(2k + 2)), k = Σa<sub>i</sub>;
+demo 72's code divides by (2k + 2)!!, twice as large, so every even
+moment is expected at half its value and the test fails at degree 2.
+Recomputed with the right denominator, the 48 elements of the binary
+octahedral group pass every degree from 1 to 7 and fail at 8: a 7-design,
+which is what representation theory predicts (the octahedral group has no
+invariant harmonics on S² below degree 4, which is degree 8 on S³). On S², the
+directed test depends on the sign the code chose for each axis vector (it
+stores (0, 0, −1), for instance), so it measures that choice; the undirected
+26 points, t = 3, is the real result. And the lower bound for a t-design on S²
+with t = 2e + 1 is (e + 1)(e + 2) points, 20 for t = 7, so thirteen points
+allow at most t = 5.</p></li>
+<li id="nota-invarians"><p><strong>The cell is an invariant of braids, not
+of knots.</strong> Conjugating a braid does not change its closure, but it
+changes the rotation axis of its quaternion by the corresponding rotation; only
+the rotation angle (the trace) is unchanged. σ<sub>1</sub> and σ<sub>2</sub>
+are conjugate in B<sub>3</sub> and their closures are the same two-component
+unlink, yet their axes are the x- and z-axes, two different cells. So the
+comparison of demo 74 sets an invariant of braid words (as represented) beside
+an invariant of links, and finds them incomparable, as they must be. The same
+applies to the XOR6 weights of demos 66 to 75: they are particular group
+elements, and their knots do not determine them.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 71 to 75 analyse the thirteen-direction partition (spherical
-harmonics, spherical designs, an eigenvector automaton, a "computational
-invariant", two eyes), demos 76 to 89 scale the inputs and examine capacity,
-crossing depth, framing and null states (demo 80 tests group finiteness),
-before the multi-strand work of demos 99 to 109. The controls this reading found
+<p>Demos 76 to 89 scale the inputs to eight, return to activations,
+recursion and capacity at other roots, test group finiteness (demo 80),
+crossing depth, framing and null states, before the multi-strand work of
+demos 99 to 109. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -2014,6 +2151,17 @@ thirteen-axis Voronoi partition with Voronoi partitions around thirteen
 random directions (many draws, same cell count), so that "only the data's
 own geometry computes" is measured against chance rather than against the
 Platonic solids alone.</p></li>
+<li><p><strong>Knots or representatives?</strong> Replace each of an XOR6
+solution's three weights q<sub>i</sub> by a random conjugate
+g<sub>i</sub>q<sub>i</sub>g<sub>i</sub><sup>−1</sup> (same closure, same
+trace, different axis) and count how many solutions survive. If few do, the
+computation of demos 66 to 75 belongs to braid representatives, not to
+knots.</p></li>
+<li><p><strong>Degree by realisability.</strong> Replace "minimum bandwidth by
+truncation" with the exact question of note 38 for each solution: the least
+degree at which some polynomial has the right signs on the cells (a small
+linear program), with the relation of note 38 as its certificate at degree
+4.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -2035,17 +2183,21 @@ bookkeeping, and the argument that closes them is short. Demos 66 to 70 are
 the most exploratory stretch, with the most pleasure in them (the melodies of
 demo 70 are a real thing to have made), and their claims mostly need
 classical names: the cube's rotation group, the dual pair of 24-cells,
-lookup tables.</p>
+lookup tables. Demos 71 to 75 ask sharper questions of one object, the
+thirteen-axis partition, and get sharper answers; the corrections are a
+factor of two, a relation among thirteen vectors, and the difference between
+a braid and its closure.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
 textbook check of note 21, the control of note 25, the coupling check of
 note 26, demo 59's catalog magnitudes (note 28), the lattice search and
 random check of note 30, the rotated sectors of note 32, demo 65's
-magnitudes and the group check of note 34 ran on scratch copies. Written by
-hand on 2026-10-03 from reading the fifty-eight <code>main.c</code> files
-(demos 1 to 29, 35, 38, 39 and 45 to 70, with their findings, debriefs and,
-for 51 to 70, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+magnitudes, the group check of note 34, the rank computation and labelings of
+note 38 and the design recomputation of note 39 ran on scratch copies.
+Written by hand on 2026-10-03 from reading the sixty-three <code>main.c</code>
+files (demos 1 to 29, 35, 38, 39 and 45 to 75, with their findings, debriefs
+and, for 51 to 75, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
