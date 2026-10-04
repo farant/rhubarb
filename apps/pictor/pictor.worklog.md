@@ -35,3 +35,17 @@ Names introduced by Plan 2, to seal or rename (spec §10 bullet):
 `ludus_fenestra`, `ludus_quadrum`, `tabula_pixelorum_creare_nuda`,
 `ramus` (the undo branch actum), `domini`/`dominus`/`scriptor`
 (ownership), `limen` (the delivery boundary), `numerus_vivorum`.
+
+## 2026-10-03 — one assembly, two mains (module 013 A4)
+
+pictor's assembly (volume, document, canons + owners from disk,
+insulae, actions, figurae, dispensator) moved out of `principale` into
+`include/pictor_applicatio.h` + `lib/pictor_applicatio.c` (beside the
+other pictor_* libs - in apps/pictor aedilis could not resolve it from
+a test elsewhere). `pictor.c` = assembly + ludus_fenestra;
+`pictor_terminalis.c` (+ `pictor_terminalis.sh`, AEDIFICARE_SOLUM) =
+assembly + ludus_tessera. Canon paths take a `radix` prefix (tests pass
+RHUBARB_RADIX). Find: `pictor_documentum.h` included `fenestra.h` only
+for the `TabulaPixelorum` type, which dragged fenestra_macos.m and
+Cocoa into EVERY pictor build - now `tabula_pixelorum.h`; the terminal
+binary links no Cocoa (otool), root pictor tests unchanged.

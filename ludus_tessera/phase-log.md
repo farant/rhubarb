@@ -169,3 +169,34 @@ The test closure was built from aedilis's enumeration
 
 `_currere` itself is covered only by its no-terminal guard; Fran's look
 in A4 is its real test.
+
+## A4 — pictor in a terminal (2026-10-03; headless part)
+
+**One assembly, two mains (Fran).** pictor's assembly left its window
+`principale` for `lib/pictor_applicatio.c` (beside the other pictor
+libs; apps/pictor is not an aedilis root, so a test elsewhere could
+not resolve it). `apps/pictor/pictor.c` = assembly + ludus_fenestra;
+`apps/pictor/pictor_terminalis.c` = assembly + ludus_tessera (opus on
+the A1 pons; colour depth and width politica from the environment;
+surface = terminal size at start × 6×8 - responsive is track b). Find
+on the way: `pictor_documentum.h` pulled `fenestra.h` (Cocoa) for one
+type; narrowed to `tabula_pixelorum.h` - the terminal binary links no
+Cocoa.
+
+**The proof (probatio_ludus_tessera_pictor, 9 asserts):** the REAL
+assembly twice, temporary volumes, canons from RHUBARB_RADIX. A window
+session: a pen stroke (press, three drags, release) at cell centres,
+recorded by the notarius. The same recording replayed through the
+terminal path: codificator (6×8) → bytes → rivus (modes as `_currere`
+declares) → `ludus_tessera_tractare`. Equal: act cursor, both insulae,
+and the document's sigillum. A frame then paints "penicillus" (status
+title) into cells. Plants caught: the glue dropping MUS_MOTUS (sigillum
+differs - the act COUNT did not: one stroke either way; that is why
+the raster hash is compared); the stroke recorded off cell centres
+(x = 6k+5 - the terminal reports centres only: B6b's finding, live).
+
+The runner grew pictor's closure (from `aedilis --enumerare`) and the
+vendored sqlite (volumen → scrinium), compiled relaxed with the root's
+flags.
+
+Pending: Fran's look in Ghostty and Terminal.app.

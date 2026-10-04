@@ -101,6 +101,23 @@ declare -a RADIX_FONTES=(
     "canon"
     "stml_macros"
     "similitudo"
+    # A4: pictor (compositio communis + documentum in volumine) et
+    # iteratio per terminalem (codificator, manus)
+    "pictor_applicatio"
+    "pictor_actiones"
+    "pictor_componentia"
+    "pictor_documentum"
+    "pictor_figurae"
+    "volumen"
+    "filum"
+    "sigillum"
+    "lectiones"
+    "json"
+    "fasti"
+    "moneta"
+    "scrinium"
+    "codificator_terminalis"
+    "manus_ludus"
 )
 
 FILTER="${1:-}"
@@ -161,6 +178,21 @@ for src in "$RADIX_DIR"/tessera/fontes/*.c \
     fi
     obj_files="$obj_files $obj"
 done
+
+# ---- 2b. vendicata (A4: volumen -> scrinium -> sqlite): obiectum
+#          RELAXATUM, vexilla eadem ac compile_tests.sh radicis ----
+src="$RADIX_DIR/vendor/sqlite3.c"
+obj="$BUILD_DIR/vendor_sqlite3.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+    echo "  [vendicatum] sqlite3.c"
+    if ! clang -O2 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0 \
+            -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 \
+            -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_OMIT_DEPRECATED \
+            -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -c "$src" -o "$obj"; then
+        echo "FRACTA: sqlite3.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
 
 # ---- 3. fontes ludus_tessera ----
 shopt -s nullglob

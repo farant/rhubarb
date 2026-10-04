@@ -24,7 +24,8 @@
 #include "internamentum.h"
 #include "volumen.h"
 #include "sigillum.h"
-#include "fenestra.h"
+#include "tabula_pixelorum.h"   /* typus solus: fenestra.h Cocoa
+                                  * in terminalem trahebat (013 A4) */
 #include "imago_typus.h"
 
 nomen structura {
