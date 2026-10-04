@@ -129,6 +129,11 @@ dispatch (an event reaches the dispensator with tempus 0).
 OPEN at A3: the quit chord (013 open question 3: a tty has no window
 close).
 
+A3 as built: `LudusTessera` mirrors `LudusFenestra`; Ctrl-C ends the
+loop (Fran); resize/resume via `tessera_magnitudinem_renovare` /
+`tessera_resumere`; idle wakes every quies_ms (v1). 28 asserts on
+ludus_toy, five plants; `_currere` awaits the A4 look.
+
 **A4 — pictor in a terminal.** Runner (`ludus_tessera/pictor.sh`,
 `AEDIFICARE_SOLUM=1` builds only). Headless proof: a recorded pictor
 `.eventus.stml` (stroke: press, drag, release) replayed through

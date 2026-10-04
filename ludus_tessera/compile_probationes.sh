@@ -48,6 +48,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/tessera/instrumenta/musivum"
     "-I$LT_DIR/fontes"
     "-I$LT_DIR/probationes"
+    # A3: ludus_toy.h (applicatio ludicra probationum radicis)
+    "-I$RADIX_DIR/probationes"
 )
 
 # Bibliothecae radicis (lista manualis ut tessera et saltuarius):
@@ -86,6 +88,19 @@ declare -a RADIX_FONTES=(
     "tabula_dispersa"
     "tessellatio"
     "thema"
+    # A3: ludus (dispensator et clausura eius) + horologium
+    "actio"
+    "componens"
+    "dispensator"
+    "figura"
+    "insula"
+    "motus"
+    "derivare"
+    "destinatio"
+    "fenestra_tempus_macos"
+    "canon"
+    "stml_macros"
+    "similitudo"
 )
 
 FILTER="${1:-}"

@@ -122,3 +122,50 @@ continuation, x at col 2 vs three wide emoji, x at col 6; fundus and
 littera colours; NIHIL arguments). Red: a stub. Plants caught: the
 lowering with a fixed GRAPHEMATUM (SIMPLEX columns fail), musivum
 writing the continuation as a space, musivum swapping colours.
+
+## A3 — the glue (2026-10-03)
+
+`LudusTessera` (fontes/ludus_tessera.{h,c}), the twin of
+`LudusFenestra`: `_creare(piscina, d, figurae, thema, fons, ctx, opus,
+cell_w, cell_h)`, `_tractare(ev, nunc)`, `_quadrum(nunc)` (pulse →
+pingere → `ludus_tessera_demittere`; not presenting), `_currere(n)`.
+The Modulus is cell × the opus size and is renewed with it. The clock
+(`fenestra_tempus_ms`, plain C) is read only here.
+
+**Quit (Fran): Ctrl-C ends the loop** like the window's close - the
+app never sees it (fenestra handles EVENTUS_CLAUDERE before dispatch;
+auscultator_terminalis already quit on Ctrl-C; raw mode keeps ISIG
+only for Ctrl-Z). The chord is two fields (`claudendi_runa`,
+`claudendi_modificantes`) so an app that needs Ctrl-C picks another.
+
+**Resize and resume ride the existing tessera API:**
+`tessera_magnitudinem_renovare` (re-reads the pons, forces a full
+repaint) and `tessera_resumere`; both events are ALSO dispatched (track
+b will read the size).
+
+**The loop (`_currere`):** refuses with 1 and touches nothing when
+`terminalis_adest` is false; rivus with the Modulus cell; modes MUS +
+GLUTINUM composed (A1) into ONE `terminalis_intrare`; per turn: drain
+`rivus_eventum_coalitum` (Ctrl-C stops), resumption and SIGWINCH as
+events, frame + `tessera_praesentare`, then wait = rivus's pending mora
+or else the dispensator's `quies_ms`. v1 honesty: an idle app wakes
+every quies_ms (300) and re-renders; tessera's diff emits nothing when
+unchanged, so it is quiet but not free - frame-on-demand is a later
+refinement. Exit: `tessera_claudere` then `terminalis_exire`; measures
+to stdout after the alternate screen is left.
+
+Tests (headless, ludus_toy - the same target-free app the fenestra
+test uses; pictor is A4): 28 asserts. Red: a stub (named failures; the
+run also died indexing the empty notarius Xar - the stub never
+dispatched). Plants caught: tempus stamped after dispatch (notarius
+sees 0), resize ignored (2), resume ignored (no 2J), the frame never
+lowered (no box-drawing cells), the chord ignoring modifiers. One of
+my plants first failed to COMPILE (a malformed ternary) and printed
+nothing - redone as `si (FALSUM)`; a silent plant is not a caught one.
+
+The test closure was built from aedilis's enumeration
+(`bin/aedilis <test> --enumerare`), not by chasing link errors -
+`stml_macros` and `similitudo` came from there.
+
+`_currere` itself is covered only by its no-terminal guard; Fran's look
+in A4 is its real test.
