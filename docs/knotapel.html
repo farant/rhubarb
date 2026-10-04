@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 29, 35, 38, 39 and 45</p>
+<p class="subtitulus">Knots as computation: demos 1 to 50 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -53,7 +53,9 @@ numbering is not chronological from here: demo 38 says its code comes
 "from Demo 60", so later work filled earlier planned numbers. Demos 38 and
 39 study the algebra's structure at δ = 0; demo 45 opens the arc the atlas
 calls landmark, taking reverse DKC from XOR to all thirteen classes of
-three-input functions.</p>
+three-input functions, and demos 46 to 50 follow it to its headline: three-input
+parity, unreachable for every bracket weight under one activation, reachable
+under another with six sectors.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -756,6 +758,103 @@ starts from a misreading of demo 27, which it says reached an RMS below 0.1
 (it reached 0.349 and failed that prediction), and turns its own failed
 prediction P5 into "arguably the deepest insight" after the fact.</p>
 
+<h2>Demo 46 · A phase for each neuron</h2>
+<p class="nota"><code>knotapel/demo_46_per_neuron_gauge/main.c</code> · 1,471 lines · 6/10 tests (four fail as shipped) · <code>findings.md</code></p>
+<p>Demo 45 aligned all twelve complex weights with one global phase. Demo 46
+gives each hidden neuron its own (a three-dimensional sweep at 10°, refined
+at 1°) and asks how much of the mismatch was phase. Matching improves by 20%
+on average and every class now beats the random baseline, but four of five
+predictions fail and are shipped as failures: the improvement is largest at
+the bottom of the ranking, not the middle; the neuron angles do not cluster;
+the correlation with topology frequency weakens. The main conclusion:
+matching magnitudes alone (RMS 0.33) beats any phase alignment (0.57), so
+"weight magnitudes align well with bracket magnitudes" while phases are
+noise.</p>
+<p>Demo 113 changes how to read that: the bracket magnitudes are the
+integers, so magnitude matching is rounding, and random numbers round with
+RMS 0.289. 0.33 is chance (<a href="#nota-ambitus">note 18</a>).</p>
+
+<h2>Demo 47 · Is parity's resistance in the activation?</h2>
+<p class="nota"><code>knotapel/demo_47_parity_investigation/main.c</code> · 1,640 lines · 11/14 tests (three fail as shipped) · <code>findings.md</code>, literature search</p>
+<p>Demo 47 swaps the activation: besides the split sigmoid it trains with
+the multi-valued neuron (MVN) of Aizenberg, continuous (z/|z|) and discrete
+(snap to the nearest 8th root of unity), and studies parity with three to six
+hidden neurons. MVN networks converge 5 to 10 times faster, and their weights
+match the catalog better (0.46 against 0.57 on average, 0.41 against 0.77 for
+parity). But the phases are no closer to multiples of π/4, more neurons do
+help parity, the discrete MVN does worse, and the correlation with topology
+frequency swings from −0.78 to +0.55 to −0.10 across the three activations.
+The findings read the swing as access to "a different sector of the bracket
+algebra".</p>
+<p>The phase error measured for all three activations (0.189, 0.197, 0.207
+radians) is what uniformly random phases give, π/16 = 0.196; and the random
+baseline every class is said to beat is drawn at a fixed scale and gets no
+phase fitting, while the trained weights get a sweep (<a href="#nota-ambitus">note 18</a>).
+A correlation over nine classes that changes sign with the activation is
+more likely noise than a sector.</p>
+
+<h2>Demo 48 · Every function, forward, from a hundred million weight sets</h2>
+<p class="nota"><code>knotapel/demo_48_forward_dkc_zoo/main.c</code> · 1,077 lines · 14/14 tests · <code>findings.md</code></p>
+<p>Demo 48 is forward DKC across the whole zoo: every quartet of three
+weights and a bias drawn from the 100 exact bracket values (10<sup>8</sup>
+quartets), one complex neuron, which truth table does it compute? Every class
+appears, from 25 million quartets (a two-input AND) down to 127 thousand
+(EXACT1), except one: three-input parity, with exactly zero. The findings
+call it "a wall… The bracket algebra categorically cannot express three-input
+parity", relate the ranking to demos 23 and 45 by rank correlation, and
+propose that parity lives in the radical, the dead blocks of demo 39. The
+100-value catalog is complete here (it matches demo 113's count).</p>
+<p>The zero is real, and it is decided before the search. This neuron
+outputs 1 exactly when Re z and Im z have opposite signs, so it computes the
+XOR of two threshold functions of the inputs, for any weights at all. Of the
+104 threshold functions of three inputs, no two XOR to parity, while every
+other function (254 of 256) is such an XOR (<a href="#nota-murus">note 19</a>).
+So parity's zero, and the reachability of everything else, are properties of
+the neuron; no weight set, bracket or not, could do otherwise.</p>
+
+<h2>Demo 49 · Weights from the radical</h2>
+<p class="nota"><code>knotapel/demo_49_neglecton_weights/main.c</code> · 1,135 lines · 10/12 tests (two fail as shipped) · <code>findings.md</code></p>
+<p>If parity needs something the δ = 0 bracket discards, perhaps the
+discarded part supplies it. Demo 49 takes the first-order term in δ (the
+two-loop states, the "neglecton" contribution, exactly 4 times their signed
+sum), finds 148 new values from 15,242 braids whose ordinary bracket is zero,
+and searches all 2.18 billion quartets of the combined 216-value catalog.
+Parity still has zero solutions, which note 19 now explains. Every new value
+lies on one of the same eight directions as the old ones.</p>
+<p>The findings then reach the right conclusion: Aizenberg's published
+parity construction uses weights that are in Z[ζ<sub>8</sub>] (ζ<sub>8</sub>,
+i, −1), so "the obstruction is in the activation function, not the weight
+space". One argument along the way does not hold: that no order of
+perturbation can add new angles because "real scaling does not change
+angles". A sum of different powers of ζ<sub>8</sub> (1 + ζ<sub>8</sub>, say)
+has a new angle; that none appears is an observation, and demo 113's
+determinant-times-phase form is the likely reason.</p>
+
+<h2>Demo 50 · Parity, with six sectors</h2>
+<p class="nota"><code>knotapel/demo_50_activation_zoo/main.c</code> · 1,093 lines · 4/6 tests (two fail as shipped) · <code>findings.md</code></p>
+<p>Demo 50 changes the decision geometry. Instead of the split sigmoid it
+uses a k-sector MVN: cut the plane into k equal angular sectors and output
+the sector number mod 2, with z = w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub>
++ w<sub>3</sub>x<sub>3</sub> and no bias. Searching all triples of the 100
+bracket values for k = 2 to 8, parity appears for the first time at k = 6,
+with 906 solutions, then 756 at k = 7 and 96 at k = 8. The other classes fall
+into tiers by the sectors they need: the five linearly separable classes at
+k = 2, one more at 3, six more at 4, parity alone at 6. The findings explain
+the decline after k = 6 by incommensurability between 60° sectors and the
+45° directions of the catalog, and analyse which directions the 906
+solutions use. Two tests fail honestly: Aizenberg's own construction did not
+reproduce here.</p>
+<p>The result stands; its interpretation needs the control
+(<a href="#nota-sectores">note 20</a>). With catalogs that carry no knot
+information at all (the same magnitudes re-paired with the directions, the
+same directions with random integer magnitudes, generic elements of
+Z[ζ<sub>8</sub>], random phases; three seeds each), parity also first
+appears at k = 6 in every run and never below. The decline toward k = 8
+appears in every eight-direction catalog and in none of the generic ones,
+and the bracket count of 906 sits inside the knot-free range (714 to
+1,368). Bracket values compute parity at six sectors; they are not special
+in doing so.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -986,7 +1085,7 @@ triples, 13.4% to 14.5%. Bracket values compute XOR without training, which
 is the demo's claim and is true; that they are unusually good at it is not
 supported. Later demos change the neuron (multi-valued activations, sector
 counts) and may well find structure this test cannot see; this reading
-covers only demo 29.</p></li>
+covers only demo 29; note 20 extends the control to demo 50.</p></li>
 <li id="nota-limen"><p><strong>Demo 45's correlation has a common cause:
 linear separability.</strong> Testing each class for a single-threshold
 realization (integer weights −4 to 4, every threshold) separates the
@@ -1009,16 +1108,60 @@ within ±15% of the π/4 spacing, which a random angle hits 30% of the time;
 5 of 9 has a chance probability near 0.10. Each class is also represented by
 one trained network (the fastest of ten), and demos 26 and 27 showed this
 RMS moving from 0.19 to 0.32 between runs.</p></li>
+<li id="nota-ambitus"><p><strong>Demos 46 and 47 measure chance in two
+places, and the baseline is not matched.</strong> Magnitude-only matching
+rounds each weight's size to the integer catalog (demo 113); random numbers
+give RMS 1/√12 ≈ 0.289, and demo 46's average is 0.33 (demo 47: 0.36, 0.40).
+The phase error (distance to the nearest multiple of π/4) of uniformly random
+phases averages π/16 ≈ 0.196 rad; demo 47 measures 0.189, 0.197 and 0.207 for
+its three activations. The random baseline (RMS 0.8086) is computed from 1,000
+points with magnitudes |N(0,1)|·2 + 0.5, whatever the trained networks'
+magnitudes, and without the phase sweep the trained weights get; "13 of 13
+beat random" therefore compares a fitted match with an unfitted one at a
+different scale. The rank correlations (n = 9) move from −0.78 to +0.55 to
+−0.10 with the activation, which is what an unstable statistic does. The
+"bits per symbol" figures in the findings' lens sections are not
+measured.</p></li>
+<li id="nota-murus"><p><strong>Demo 48's parity wall is the neuron's.</strong>
+The readout p = σ(Re z)(1 − σ(Im z)) + (1 − σ(Re z))σ(Im z) satisfies
+p − ½ = −2(σ(Re z) − ½)(σ(Im z) − ½), so p &gt; ½ exactly when Re z and
+Im z have opposite signs: the output is [Re z &gt; 0] XOR [Im z &gt; 0], the XOR
+of two threshold functions of the inputs (Re z and Im z are real linear
+functions of them). Enumerating the 104 threshold functions of three inputs
+(the known count): no pair XORs to parity, and the XORs of pairs cover all
+254 other functions. So with this neuron parity is unreachable for every
+weight set and every other class is reachable for generic weights, before
+any bracket is computed; the radical is not needed to explain it. Demo 49
+then reaches the correct diagnosis (the activation), and demo 50 acts on
+it.</p></li>
+<li id="nota-sectores"><p><strong>Demo 50 against null catalogs.</strong> A
+scratch copy of demo 50 (the demo untouched) replaced its 100 bracket values
+after building the catalog, three seeds each: <em>shuffle</em>, the same
+magnitudes re-paired at random with the same directions (breaking each
+knot's determinant–phase pairing); <em>star</em>, the same directions with
+random integer magnitudes 1 to 45; <em>generic</em>, random elements of
+Z[ζ<sub>8</sub>] with coefficients −3 to 3; <em>randphase</em>, the same
+magnitudes with continuous random phases. Parity solutions for k = 2 … 8:
+bracket 0 0 0 0 906 756 96; shuffle 0 0 0 0 762–1,242, 348–576, 6–34; star
+0 0 0 0 714–1,368, 90–186, 6–12; generic 0 0 0 0 1,682–2,918, 2,082–2,820,
+2,642–10,138; randphase 0 0 0 0 678–1,218, 1,452–2,322, 1,692–4,302. Every
+catalog first reaches parity at k = 6 and none below, so the six-sector
+threshold belongs to the activation and three-input parity; the decline
+after k = 6 belongs to the eight directions (it appears for star and
+shuffle, not for generic or randphase), which demo 113 traces to the writhe
+phase. The bracket catalog behaves like a typical eight-direction star of
+integers.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 46 to 50 continue the arc demo 45 opened: per-neuron phase
-correction (46), a parity investigation with Aizenberg's multi-valued neuron
-(47), forward DKC across the whole function zoo (48), "neglecton" weights
-(49), and the result the atlas marks as a landmark, three-input parity
-reachable with a six-sector activation (50). Notes 16 and 17 suggest two
-controls to carry into them: random phases with the same magnitudes, and
-linear separability as a baseline explanation.</p>
+<p>Demos 51 onward turn to the algebra behind the activation results (the
+radical's anatomy, Chebyshev structure, other roots of unity, Potts and
+Fibonacci variants), then to the "cubic wall", angular proofs, and the
+multi-strand work of demos 99 to 109. The controls this reading found useful
+carry over: a knot-free catalog with the same directions (note 20), a matched
+baseline (note 18), linear separability (note 17), and the readout's own
+expressive power (note 19).</p>
+
 <h2 id="demo113">Demo 113 · Rosetta (new, from this reading)</h2>
 <p class="nota"><code>knotapel/demo_113_rosetta/main.c</code> · 33/33 tests · <code>findings.md</code> · written 2026-10-03</p>
 <p>The first experiment below, built. Classically, ⟨L⟩ = (−A<sup>3</sup>)<sup>w</sup>V<sub>L</sub>(t)
@@ -1088,9 +1231,26 @@ factorization) survive (notes 3 to 8).</p></li>
 <li><p><strong>Uncapped counts for demo 29</strong> in the atlas: 28,644
 triples (10.9%) in place of 65,536, 10,357 and "~35%" (note 16), and 100
 distinct catalog values in place of 64 (demo 113).</p></li>
+<li><p><strong>A small theorem for demo 50.</strong> No catalog tried
+(bracket or null, 13 runs) computes three-input parity with fewer than six
+sectors and no bias. Prove it: which sector counts admit an alternating
+class pattern over the seven nonzero input sums for some three complex
+weights?</p></li>
+<li><p><strong>A matched null for reverse decomposition.</strong> For demos
+45 to 47: random weights with each trained network's own magnitudes, put
+through the same gauge sweep, as the baseline every RMS is compared
+with.</p></li>
+<li><p><strong>Read DKC solutions in classical terms.</strong> With demo
+113's form (determinant × writhe phase), describe demo 50's 906 parity triples
+by their braids' determinants and writhes: is there a rule the knots satisfy
+that a random star's triples do not?</p></li>
+<li><p><strong>The neglecton term, classically.</strong> Demo 49's two-loop
+values all lie on the eight directions too. Test, as demo 113 did, whether
+they are a known invariant: the first-order term in δ is a derivative of the
+Jones polynomial at t = −1.</p></li>
 </ol>
 
-<p>Looking back over the first thirty: the polynomial and matrix machinery of
+<p>Looking back over these demos: the polynomial and matrix machinery of
 demos 1 to 9 is what makes "exact" possible later; the numerical detour of
 demos 10 to 25, whatever its labels, is where the idea of a bracket value as
 a weight first appears, and where δ = 0 was found three times over (as a
@@ -1100,9 +1260,10 @@ it was checked. What went wrong was the labels, the interpretation, and the
 checks written after the results were known.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
-inside <code>knotapel/</code>. Written by hand on 2026-10-03 from reading the thirty-three
-<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45, with demo 45's
-findings and debrief) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+inside <code>knotapel/</code>; the null models of notes 16 and 20 ran on scratch
+copies. Written by hand on 2026-10-03 from reading the thirty-eight
+<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to 50, with their
+findings and debriefs) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
