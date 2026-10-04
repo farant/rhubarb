@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 55 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 60 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -57,7 +57,10 @@ three-input functions, and demos 46 to 50 follow it to its headline: three-input
 parity, unreachable for every bracket weight under one activation, reachable
 under another with six sectors. Demos 51 to 55 turn to the algebra behind
 it: the radical of the Temperley–Lieb algebra at δ = 0 and at other roots of
-unity, then the bracket at δ = 1 and δ = √2 as a source of weights.</p>
+unity, then the bracket at δ = 1 and δ = √2 as a source of weights. Demos
+56 to 60 follow both threads: the bracket as a Potts partition function, the
+Boolean search at δ = √2, φ and √3 under two encodings, and the radical at
+ℓ = 7, the first cubic number field.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -961,6 +964,113 @@ triples and the same 11 classes, and four sectors give 23,600 against
 does survive the control: the split sigmoid reaches 13 classes at δ = √2 and
 7, without parity, at δ = 0.</p>
 
+<h2>Demo 56 · The Potts dictionary</h2>
+<p class="nota"><code>knotapel/demo_56_potts_tl/main.c</code> · 1,136 lines · 17/17 tests · no <code>findings.md</code></p>
+<p>The idea is classical: with Q = δ², the bracket is a partition function
+of the Q-state Potts model, and at δ = √2, Q = 2, that is the Ising model.
+The demo computes the Fortuin–Kasteleyn sum Z = Σ<sub>A⊆E</sub>
+v<sup>|A|</sup>Q<sup>k(A)</sup> on rectangular grid graphs by brute force
+over edge subsets (up to 24 edges), checks it against a direct Ising spin
+sum at integer couplings, confirms that Q = 1 gives (1 + v)<sup>|E|</sup>,
+evaluates Q = 2 at a "bracket coupling" v = −ζ<sub>16</sub><sup>6</sup> =
+−A<sup>−2</sup> and at the critical coupling v = √2, and runs demo 55's
+Boolean search on the nine values it gets. The headline: "the Ising
+partition function computes 12 of 13 classes, including parity, with a
+2-sector activation".</p>
+<p>The dictionary is real, but it goes through a graph made from a knot
+diagram (the checkerboard or Tait graph): ⟨D⟩ =
+A<sup>−E</sup>δ<sup>−V−1</sup>Z(G; Q = δ², v = −1 − A<sup>4</sup>). The demo
+never builds such a graph, and its coupling is not that one: with
+v = −1 − A<sup>4</sup> the formula reproduces the brackets of the Hopf link
+and the trefoil at a generic A, and with v = −A<sup>−2</sup> it reproduces
+neither (<a href="#nota-tait">note 26</a>). So the nine weights are partition
+functions of grid graphs at an unrelated complex coupling, not bracket
+values. That they lie in Z[ζ<sub>8</sub>] and that the critical ones are real
+follows from where Q and v were chosen. The cross-check against the spin sum
+is correct, and the dictionary used correctly answers a question the log
+leaves open: why every bracket value at δ = √2 is Z[i]-axial.</p>
+
+<h2>Demo 57 · The additive encoding at δ = √2</h2>
+<p class="nota"><code>knotapel/demo_57_additive_dkc/main.c</code> · 1,139 lines · 13/13 tests · no <code>findings.md</code></p>
+<p>Demo 56's analysis predicted that the additive encoding z =
+x<sub>1</sub>w<sub>1</sub> + x<sub>2</sub>w<sub>2</sub> + x<sub>3</sub>w<sub>3</sub>
+would reach the two classes the multiplicative one misses under Re z &gt; 0.
+Demo 57 runs both encodings over the same 56 values under eight activations,
+and the header records the result honestly: refuted. Additive Re z &gt; 0
+reaches five classes; nothing is reachable additively that is not reachable
+multiplicatively, except under a magnitude threshold; the additive split
+sigmoid reaches 12 of 13, all but parity; six and eight sectors reach all 13.
+The log names the cause a "convexity principle": sums of points in a
+half-plane stay in it.</p>
+<p>Two readings sharpen it (<a href="#nota-perceptron">note 27</a>). Re z &gt; 0
+on an additive encoding without a bias is a perceptron with threshold zero,
+so it computes exactly the linearly separable functions, the five classes of
+note 17, for any catalog; convexity is that fact seen from one side. And
+this is the first comparison with δ = 0 in the same encoding: demo 48's
+additive split sigmoid at δ = 0 reached 12 of 13 without parity, and demo 57's
+at δ = √2 reaches 12 of 13 without parity, both forced by note 19. Compared
+like with like, the two roots of unity do the same.</p>
+
+<h2>Demo 58 · δ = φ, the Fibonacci level</h2>
+<p class="nota"><code>knotapel/demo_58_fibonacci_dkc/main.c</code> · 1,283 lines · 16/16 tests · no <code>findings.md</code></p>
+<p>ℓ = 5: A = −ζ<sub>5</sub><sup>4</sup> (order 10), δ = φ, values in
+Z[ζ<sub>5</sub>] with the powers of φ written through Fibonacci numbers.
+The same braid sets give 116 values, and the same searches give the same
+answers as at ℓ = 4: multiplicative Re z &gt; 0 reaches 11 of 13 with the same
+two classes missing, additive Re z &gt; 0 reaches 5. The log concludes that
+the wall is "algebra-independent", "a theorem, not an observation", and that
+the universality of Fibonacci anyons for quantum computation does not help
+DKC.</p>
+<p>The conclusion is right, and the reason is simple: under the
+multiplicative encoding a half-plane sees only the angles of the weights
+(note 25; demos 61 and 62 prove the eleven), and additive Re z &gt; 0 is the
+perceptron (note 27), so neither search can see what is special about ℓ = 5.
+And something is: this is the first root of unity in the sequence where the
+bracket is not a classical invariant in disguise (<a href="#nota-faciles">note
+28</a>). Evaluating the Jones polynomial at a primitive fifth root of unity is
+#P-hard, and approximating it there is as hard as quantum computation. The 116 values are
+the first catalog that carries information beyond a determinant, an Arf bit
+or a component count; the activations tested here do not look at it.</p>
+
+<h2>Demo 59 · δ = √3, Q = 3</h2>
+<p class="nota"><code>knotapel/demo_59_q3_potts_dkc/main.c</code> · 1,495 lines · 18/18 tests · no <code>findings.md</code></p>
+<p>ℓ = 6: A = ζ<sub>24</sub><sup>7</sup> in Z[ζ<sub>24</sub>] (eight
+coordinates), δ = √3. Despite the larger ring the catalog has only 29
+values, each with one or two nonzero coordinates. The searches repeat, and a
+new part sweeps the half-plane through 24 orientations,
+[Re(e<sup>iθ</sup>z) &gt; 0] every 15°: each gives 11 of 13 with the same two
+classes missing. Plain Im z &gt; 0 had given 13 of 13, which the log puts
+down to floating point.</p>
+<p>The small catalog is classical again. Here t = e<sup>−iπ/3</sup>, where
+Lickorish and Millett showed |V<sub>L</sub>| = √3<sup>d</sup>, with d the
+rank mod 3 of the double branched cover's first homology, and never zero. A
+patched copy that prints the whole catalog finds magnitudes 1, √3, 3 and
+3√3 and nothing else, and none of the 63,492 brackets it enumerates is zero
+(note 28). The two-coordinate entries are Eisenstein integers times a
+power of ζ<sub>24</sub>, as note 26's formula says they must be. The sweep is
+a good experiment; the Im z &gt; 0 story mixes a genuine boundary effect with
+float noise (<a href="#nota-limes">note 29</a>).</p>
+
+<h2>Demo 60 · The cubic wall, ℓ = 7</h2>
+<p class="nota"><code>knotapel/demo_60_cubic_wall/main.c</code> · 1,012 lines · 15/15 tests · no <code>findings.md</code></p>
+<p>δ = 2cos(π/7) is a root of x<sup>3</sup> − x<sup>2</sup> − 2x + 1, the
+first cubic case. The demo finds primes in which the cubic splits (by
+polynomial gcd and Cantor–Zassenhaus splitting; 10<sup>9</sup> + 7 and
+10<sup>9</sup> + 9), repeats demo 52's radical computation for n = 2 to 8 at
+both, and decomposes the rad² generator at n = 7 by through-strand sector.
+TL<sub>n</sub> is semisimple below n = 7; the radical has dimension 11 at
+n = 7 and 39 at n = 8; rad² is one-dimensional at both and rad³ is zero; and
+the sector ranks are 3, 4 and 1, total 8 = F(6).</p>
+<p>This is the best-designed demo of the stretch: the predictions were
+written down beforehand in demo 52's log, two primes cross-check every rank,
+and the tests compare with expected values. The numbers agree with note
+21's textbook rule, and the sector ranks answer the question note 22 raised:
+8, as Fibonacci predicts, not 7 as the partition numbers would. The rank sum
+is now F(ℓ − 1) at five levels, without a proof; whether it is a known
+result I have not checked. Two of the fifteen checks cannot fail. The log's
+remark that the "Catalan difference formula" of the plan was wrong is fair,
+but that formula is δ = 0's (demo 51), applied where it did not belong.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -1298,8 +1408,8 @@ M<sub>6</sub> ⊕ k has 35, and the Peirce tables are relative to the three
 chosen. The "Fibonacci rank theorem" (sector ranks of the rad² generator
 summing to F(ℓ − 1)) is not computed in demo 52's file and cannot be
 reproduced from it; its four values 1, 2, 3, 5 are also the partition
-numbers p(1) to p(4), and ℓ = 7 would separate the two (F(6) = 8,
-p(5) = 7).</p></li>
+numbers p(1) to p(4), and ℓ = 7 separates the two (F(6) = 8,
+p(5) = 7). Demo 60, read afterwards, computes it: 8, Fibonacci.</p></li>
 <li id="nota-unum"><p><strong>At δ = 1 the bracket is
 (−1)<sup>crossings</sup>.</strong> With δ = 1 every state has weight 1, so
 the state sum Σ A<sup>a−b</sup> factors crossing by crossing into
@@ -1340,19 +1450,79 @@ additive one. The split-sigmoid gap does survive. A guess, untested: the
 split sigmoid outputs 0 on the axes, and products of the δ = 0 catalog's
 eight directions land on the axes much more often than products of
 sixteen.</p></li>
+<li id="nota-tait"><p><strong>The Potts coupling is −1 − A<sup>4</sup>, and
+it explains the axialities.</strong> In the bracket's state sum on a
+diagram's Tait graph G, a state is a spanning subgraph S, and it has
+2k(S) + |S| − V loops, so ⟨D⟩ =
+A<sup>−E</sup>δ<sup>−V−1</sup>Σ<sub>S</sub>(A<sup>2</sup>δ)<sup>|S|</sup>(δ<sup>2</sup>)<sup>k(S)</sup>:
+a Potts sum with Q = δ² and v = A²δ = −1 − A<sup>4</sup>. Checked at a
+generic complex A: this reproduces ⟨Hopf⟩ and ⟨trefoil⟩, and demo 56's
+v = −A<sup>−2</sup> reproduces neither. With the right coupling the
+axialities follow in one line. At ℓ = 4, Q = 2 and v = −1 − i, so the Potts
+sum is a Gaussian integer, A<sup>−E</sup> is a power of ζ<sub>16</sub>, and
+δ = √2 = ζ<sub>8</sub>(1 − i): every bracket value is a power of
+ζ<sub>16</sub> times an element of Q(i), hence of Z[i]; that is demo 54's
+Z[i]-axiality, which the log lists as an open question. At ℓ = 6, Q = 3 and
+v = −1 − ζ<sub>6</sub>, and the same argument gives Eisenstein integers times
+powers of ζ<sub>24</sub> and of √3, demo 59's one- and two-coordinate
+catalog. Demo 56's "FK lives in Z[ζ<sub>8</sub>], richer than the bracket"
+follows from putting Q and v in Z[ζ<sub>8</sub>], and "the critical values are
+real" from Q and v being real.</p></li>
+<li id="nota-perceptron"><p><strong>Demo 57's additive results are the
+perceptron's.</strong> With z = Σ x<sub>i</sub>w<sub>i</sub> and no bias,
+[Re z &gt; 0] = [Σ x<sub>i</sub> Re w<sub>i</sub> &gt; 0], a linear threshold
+unit with threshold zero; its NPN classes are the linearly separable ones,
+5 of 13, for any weights with real parts of both signs. The additive split
+sigmoid is note 19's XOR of two such units, so parity is out of reach and
+the other 12 are in, at δ = 0 (demo 48) and at δ = √2 (demo 57) alike. The
+"strict dominance" of δ = √2 over δ = 0 claimed after demo 55 (13 of 13 against
+12 of 13) compared demo 55's multiplicative search with demo 48's additive
+one; within each encoding the two roots of unity agree (note 25 for the
+multiplicative, this note for the additive).</p></li>
+<li id="nota-faciles"><p><strong>Four of the five roots of unity are the
+classical easy points.</strong> Jaeger, Vertigan and Welsh (1990) showed the
+Jones polynomial is #P-hard to evaluate except at t = ±1, ±i,
+±e<sup>2πi/3</sup> and ±e<sup>4πi/3</sup>, where it reduces to a classical
+invariant. With t = A<sup>−4</sup>: δ = 0 is t = −1 (the determinant, demo
+113); δ = 1 is t = e<sup>4πi/3</sup> (V = 1, note 23); δ = √2 is
+t = −i (the Arf invariant and the component count, note 24); δ = √3 is
+t = e<sup>−iπ/3</sup> (|V| = √3<sup>d</sup>, d the mod-3 rank of the double
+branched cover's homology; demo 59's 29 values all have such magnitudes, d
+from 0 to 3, and none of its 63,492 brackets is zero). δ = φ, demo 58's
+t = e<sup>−2πi/5</sup>, is the first hard point: exact evaluation is #P-hard,
+and approximating it there is as hard as simulating a quantum computer
+(Freedman, Larsen and Wang; Aharonov, Jones and Landau). So until demo 58 every catalog in this project
+was a classical invariant times a phase, and the Boolean searches, which see
+only angles (note 25) or linear thresholds (note 27), could not have told the
+easy points from the hard one.</p></li>
+<li id="nota-limes"><p><strong>The Im z &gt; 0 results sit on a
+boundary.</strong> Under the multiplicative encoding z(000) = 1 always, and
+1 lies exactly on the line Im z = 0, as do the other real products (±1, ±√3,
+…). Plain Im z &gt; 0 puts z = 1 outside; the sweep's "90°" computes
+Re(z)·cos 90° − Im(z), and cos 90° in floating point is 6·10<sup>−17</sup>, which
+puts z = 1 inside: it is a slightly rotated half-plane, so it gives the
+generic 11 of 13. That part is a real difference of activations, not noise.
+What is noise is the rest: values real in the ring come out of the
+conversion to doubles with imaginary parts like ±10<sup>−16</sup> (2·sin 30°
+− sin 90° is −1.1·10<sup>−16</sup>), and Part C and the sweep compute products
+by different paths (exact ring products, then doubles; or products of
+doubles). The 12 of 13 at ℓ = 4 and 5 and 13 of 13 at ℓ = 6 mix both effects.
+The sign of Im z is decidable exactly in the ring; doing so would say which
+counts are real.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 56 to 59 carry the bracket into statistical mechanics (the Potts
-model, of which δ<sup>2</sup> = Q makes the bracket a partition function)
-and to further roots of unity, demo 57 returns to the additive encoding at
-δ = √2, and demo 60 is the "cubic wall" at ℓ = 7, followed by angular proofs
-and the multi-strand work of demos 99 to 109. The controls this reading found
+<p>Demos 61 and 62 prove the eleven-of-thirteen half-plane result, demo 63
+dissects the angles of DKC solutions, and demos 64 to 69 move to parity
+matroids, the Clifford hierarchy, quaternions and the sphere, before the
+multi-strand work of demos 99 to 109. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
-21), the classical invariant at that root of unity (notes 23 and 24), and the
-same search with only δ changed (note 25).</p>
+21), the classical invariant at that root of unity (notes 23, 24 and 28),
+the same search with only δ changed (note 25), the bracket's own Potts
+formula (note 26), and the perceptron as the baseline for additive searches
+(note 27).</p>
 
 <h2 id="demo113">Demo 113 · Rosetta (new, from this reading)</h2>
 <p class="nota"><code>knotapel/demo_113_rosetta/main.c</code> · 33/33 tests · <code>findings.md</code> · written 2026-10-03</p>
@@ -1446,7 +1616,8 @@ radical and rad² dimensions, so the tables can fail; the rule also gives n = 9
 and 10 for every ℓ, cheap to check mod p.</p></li>
 <li><p><strong>Fibonacci or partitions.</strong> Recompute the sector ranks
 of the rad² generator, with the code in the demo, at ℓ = 7: 8 supports
-F(ℓ − 1), 7 supports the partition numbers, anything else neither.</p></li>
+F(ℓ − 1), 7 supports the partition numbers, anything else neither.
+<strong>Already done: demo 60 found 8.</strong></p></li>
 <li><p><strong>Rosetta at i.</strong> What demo 113 did for t = −1, for
 δ = √2: test bracket = phase × (√2)<sup>c−1</sup> × (−1)<sup>Arf</sup>, or 0
 exactly when some component has odd linking number with the rest, on every
@@ -1458,6 +1629,24 @@ only Σ x<sub>i</sub>θ<sub>i</sub>. Work out which three-input classes a given
 set of angles reaches (it should explain the two classes missing at both δ in
 note 25), and test the axis guess for the split-sigmoid gap by giving the
 δ = √2 catalog phases on the π/4 grid.</p></li>
+<li><p><strong>Rosetta at every easy point.</strong> One demo that
+checks each bracket at δ = 1, √2 and √3 against its classical invariant on
+every braid: the crossing parity, the Arf invariant and linking numbers, and
+the mod-3 rank of a Goeritz matrix (which gives the double branched cover's
+homology), each computed independently from the braid word.</p></li>
+<li><p><strong>The Potts dictionary, built.</strong> Make the Tait graph of
+each braid closure, evaluate the Potts sum at Q = δ² and v = −1 − A<sup>4</sup>,
+and assert that it equals the bracket: the dictionary of demo 56, tested
+rather than asserted, and a third independent bracket algorithm.</p></li>
+<li><p><strong>Exact boundaries.</strong> Decide the signs of Re z and
+Im z exactly in Z[ζ<sub>N</sub>] (for instance by working in the real
+subfield) and redo the half-plane tables of demos 55 to 59, so that the
+boundary cases of note 29 are counted, not sampled.</p></li>
+<li><p><strong>Look at ℓ = 5 with something that can see it.</strong> The
+first catalog that is not a classical invariant (note 28) deserves a search
+whose answer depends on more than angles: magnitude-aware or additive
+activations with a bias, compared against a null catalog of random
+Z[ζ<sub>5</sub>] values with the same coefficient bounds.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -1471,14 +1660,17 @@ checks written after the results were known. Demos 51 to 55 repeat the
 pattern in a new key: exact computations, correct again, of things that
 already had classical names (cellular theory, Jones at e<sup>2πi/3</sup>,
 Murasugi at i), and one comparison in which the encoding changed along with
-the algebra.</p>
+the algebra. Demos 56 to 60 continue it, and end with demo 60, which states its
+predictions first and checks them at two primes: the way the earlier
+claims could have been made.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
-textbook check of note 21 and the control of note 25 ran on scratch copies.
-Written by hand on 2026-10-03 from reading the forty-three
-<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to 55, with their
-findings, debriefs and, for 51 to 55, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+textbook check of note 21, the control of note 25, the coupling check of
+note 26 and demo 59's catalog magnitudes (note 28) ran on scratch copies.
+Written by hand on 2026-10-03 from reading the forty-eight
+<code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to 60, with their
+findings, debriefs and, for 51 to 60, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
