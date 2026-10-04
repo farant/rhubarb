@@ -184,3 +184,52 @@ Plants, all caught by name with clean compiles: bytes instead of the
 measurer (d3_textus), the minimum = whole text (d3_contractio), no gap
 after the text (d3_textus children), text not counted as a child in
 the fit pass (d3_textus).
+
+## D4 — RELATIO (2026-10-03)
+
+**`dispositio` v1 is done:** a pure layout library in CELLS - Clay's
+model (direction; per axis FIT / GROW / FIXED / PERCENT with min/max;
+padding; gap; alignment; clip) and Clay's three passes, translated to
+integers; text through a caller's measurer. 32 asserts over 16
+fixtures; the oracle re-checks every committed answer against live
+Clay (`tools/dispositio_oraculum.sh -probare`: 16/16, Clay e6cc369).
+
+**Named differences from Clay** (all in include/dispositio.h):
+1. Integers in cells - cell alignment by construction (track b's
+   reason for the library).
+2. Centre = floor of the half, a true floor for negatives (−3/2 → −2).
+3. PERCENT = floor(avail × centesimae / 100).
+4. Grow/shrink split: EVERY EDGE IS THE FLOOR OF THE EXACT EDGE - the
+   plan's "remainder to the earliest" drifted edges up to ~k/4 cells
+   and became a plant.
+One comparison rule covers all of them: every edge == floor(Clay edge
++ 0.02).
+
+**Kept from Clay on purpose:** an empty node gets no padding across
+its axis (d1_vacuum); the text minimum is the longest word (d3).
+
+**What the work found, by weight:**
+1. **The oracle needed its own house category** (`oracula/`, Fran):
+   C99 glue with foreign identifiers cannot live under the house's C89
+   judge or Latin lint. Excluding it by name took SEVEN places, and the
+   deepest one (the vocabulary counts words of every TRACKED file) was
+   only found when a gate ran with the files staged - a check run
+   before the state change verifies the wrong world.
+2. **Clay's equalising converges, it does not divide** (the divisor is
+   every resizable child), so its values stop at ±0.01 of the exact
+   answer - the reason for 0.02, and the reason ours (exact integers)
+   is the cleaner reading of the same rule.
+3. **Read before deciding.** The remainder rule, the text model
+   (a child with a longest-word minimum) and the empty-node quirk all
+   came from reading Clay line by line; each would have been guessed
+   wrong.
+4. **Process:** two plants looked uncaught (an anchored grep missed
+   lines starting with credo's dots) and one plant did not compile
+   (B1) - reading each plant's EXIT CODE is now the rule.
+
+**Not in v1:** multi-line text and wrapping; floating/absolute
+positioning; aspect ratio; scroll offsets. Each waits for a screen that
+needs it.
+
+**Next:** track (b) B3 - pictor laid out with dispositio, responsive in
+both targets.

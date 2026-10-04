@@ -174,7 +174,9 @@ B1 as built: dispensator writes `superficies_*` (writer "dispensator")
 on the raw event before recomposition; both glues announce the size
 once; pictor's canon declares it (canons refuse silently - asserted).
 
-**B2 — `dispositio`** (plan D0-D4).
+**B2 — `dispositio`** (plan D0-D4). **DONE 2026-10-03** - pure layout
+in cells, Clay's model and passes in integers, text via a measurer;
+RELATIO in `lib/dispositio.phase-log.md`.
 
 **B3 — pictor responsive.** `pictor_componere` reads `superficies_*`
 and lays out with dispositio in cells: a column - canvas viewport

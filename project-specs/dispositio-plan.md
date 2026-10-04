@@ -1,6 +1,7 @@
 # dispositio — plan (pure layout in cells; track (b) B2 of ludus_tessera)
 
-Written 2026-10-03. Prompted by Fran: "should we write some kind of
+**DONE 2026-10-03** (D0 89e558d2, D1 3061d02c, D2 c04c441a, D3 9d26517d;
+RELATIO in `lib/dispositio.phase-log.md`). Written 2026-10-03. Prompted by Fran: "should we write some kind of
 yoga type (or other) layout constraint solver … as a pure utility
 library?" Answer recorded: yes, a pure library, shaped like **Clay**
 (Nic Barker, single-header C; a deliberate subset of flexbox), not
