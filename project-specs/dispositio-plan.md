@@ -117,6 +117,10 @@ alignment centre/end) AND the same trees through the oracle. Plants:
 gap counted n instead of n−1 times; padding added once instead of
 both sides.
 
+D1 as built: three passes translated from Clay; 7 fixtures + Clay's
+answers committed; ours == floor(Clay + 0.001); Clay's empty-node
+quirk mirrored; 20 asserts, five plants.
+
 **D2 — grow and shrink.** Clay's equalising, integer remainder rule
 (II). Vectors: equal split, uneven start sizes, max caps, min floors,
 clip axis untouched; oracle within the named tolerance. Plants: grow

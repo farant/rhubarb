@@ -1,0 +1,10 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus directio="columna" spatium="1 2 1 0" intervallum="1">
+    <nodus directio="linea" intervallum="1">
+      <nodus latitudo="fixa:5" altitudo="fixa:2"/>
+      <nodus latitudo="fixa:3" altitudo="fixa:4"/>
+    </nodus>
+    <nodus latitudo="fixa:12" altitudo="fixa:1"/>
+    <nodus/>
+  </nodus>
+</dispositio>

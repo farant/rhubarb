@@ -161,6 +161,12 @@ Leges chartae:
   ephemerarum clauso ea declaret (et dominos) - aliter insula tacite
   recusat.
 
+- corpus: `dispositio` nova - dispositio pura in CELLULIS, exemplar
+  Clay (apta/crescens/fixa/pars per axem, min/max, spatium,
+  intervallum, allineatio, praecisio); radix implicita linea
+  superficiei; `dispositio_computare` + `dispositio_fines`. D1: crescens
+  secundum axem et textus nondum (D2, D3).
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

@@ -1,0 +1,7 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus directio="columna" latitudo="fixa:10" altitudo="fixa:6"
+         praecidere_x="verum" praecidere_y="verum"
+         allineatio_x="medium" allineatio_y="medium">
+    <nodus latitudo="fixa:13" altitudo="fixa:2"/>
+  </nodus>
+</dispositio>

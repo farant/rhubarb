@@ -1260,4 +1260,11 @@
     <forma textus="sanationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
+  <vocabulum lemma="allineatio" lingua="latina" classis="substantivum" nota="Lat. rec. ad + linea (allineare; cf. Ital. allineamento): hic positio liberorum intra spatium parentis secundum axem - initium, medium, finis; sedes include/dispositio.h (DispositioAllineatio, allineatio_x/_y), lib/dispositio.c (dispositio D1, 2026-10-03)">
+    <forma textus="allineatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="allineationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="allineationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="allineationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="allineationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
 </glossarium>

@@ -1,0 +1,601 @@
+/* dispositio.c - dispositio pura in cellulis (D1). Ratio et
+ * divergentiae a Clay in capite; algorithmus Clay @ e6cc369
+ * translatus: (1) apta a foliis sursum (Clay__CloseElement), (2)
+ * mensurae per axem a radice deorsum (Clay__SizeContainersAlongAxis;
+ * crescens secundum axem et contractio D2), (3) positiones
+ * (Clay__CalculateFinalLayout). */
+
+#include "dispositio.h"
+#include "xar.h"
+#include <string.h>
+
+#define SINE_FINE  0x3FFFFFFF
+
+nomen structura {
+    DispositioForma forma;
+                s32 parens;
+                s32 primus;      /* liber primus; -1 nullus */
+                s32 ultimus;
+                s32 proximus;    /* frater sequens; -1 nullus */
+                s32 mensura[II]; /* latitudo, altitudo */
+                s32 minima[II];  /* minimum contenti per axem */
+                s32 positio[II]; /* x, y */
+} Nodus;
+
+structura Dispositio {
+    Piscina* piscina;
+        Xar* nodi;               /* Xar de Nodus */
+        s32  radix_primus;       /* liberi radicis implicitae */
+        s32  radix_ultimus;
+        s32  superficies[II];
+};
+
+/* Divisio cum pavimento (b > 0): C89 directionem negativae
+ * implementationi relinquit */
+interior s32
+_pavimentum (
+    s32 a,
+    s32 b)
+{
+    redde (a >= ZEPHYRUM) ? a / b : -((-a + b - I) / b);
+}
+
+interior s32
+_maximum (
+    s32 a,
+    s32 b)
+{
+    redde (a > b) ? a : b;
+}
+
+interior s32
+_minimum (
+    s32 a,
+    s32 b)
+{
+    redde (a < b) ? a : b;
+}
+
+interior Nodus*
+_nodus (
+    constans Dispositio* d,
+                    s32  index)
+{
+    redde (Nodus*)xar_obtinere(d->nodi, (i32)index);
+}
+
+/* Accessus per axem (0 = x, 1 = y): mensura formae */
+interior constans DispositioMensura*
+_mensura_formae (
+    constans Nodus* n,
+               s32  axis)
+{
+    redde (axis == ZEPHYRUM) ? &n->forma.latitudo : &n->forma.altitudo;
+}
+
+interior s32
+_spatium (
+    constans Nodus* n,
+               s32  axis)
+{
+    redde (axis == ZEPHYRUM)
+        ? n->forma.spatium_sinistrum + n->forma.spatium_dextrum
+        : n->forma.spatium_superum + n->forma.spatium_inferum;
+}
+
+interior s32
+_spatium_initii (
+    constans Nodus* n,
+               s32  axis)
+{
+    redde (axis == ZEPHYRUM) ? n->forma.spatium_sinistrum
+                             : n->forma.spatium_superum;
+}
+
+interior b32
+_praecidit (
+    constans Nodus* n,
+               s32  axis)
+{
+    redde (axis == ZEPHYRUM) ? n->forma.praecidere_x
+                             : n->forma.praecidere_y;
+}
+
+interior DispositioAllineatio
+_allineatio (
+    constans Nodus* n,
+               s32  axis)
+{
+    redde (axis == ZEPHYRUM) ? n->forma.allineatio_x
+                             : n->forma.allineatio_y;
+}
+
+/* axis directionis: linea -> x, columna -> y */
+interior s32
+_axis_directionis (
+    constans Nodus* n)
+{
+    redde (n->forma.directio == DISPOSITIO_COLUMNA) ? I : ZEPHYRUM;
+}
+
+/* minimum et maximum formae (FIXA: valor utrumque) */
+interior vacuum
+_limites (
+    constans DispositioMensura* m,
+                           s32* minimum,
+                           s32* maximum)
+{
+    si (m->genus == DISPOSITIO_FIXA)
+    {
+        *minimum = m->valor;
+        *maximum = m->valor;
+        redde;
+    }
+    *minimum = m->minimum;
+    *maximum = (m->maximum <= ZEPHYRUM) ? SINE_FINE : m->maximum;
+}
+
+Dispositio*
+dispositio_creare (
+    Piscina* piscina)
+{
+    Dispositio* d;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+    d = (Dispositio*)piscina_allocare(piscina, magnitudo(Dispositio));
+    si (!d)
+    {
+        redde NIHIL;
+    }
+    memset(d, ZEPHYRUM, magnitudo(Dispositio));
+    d->piscina        = piscina;
+    d->nodi           = xar_creare(piscina, (i32)magnitudo(Nodus));
+    d->radix_primus   = -I;
+    d->radix_ultimus  = -I;
+    redde d->nodi ? d : NIHIL;
+}
+
+vacuum
+dispositio_vacare (
+    Dispositio* d)
+{
+    si (!d)
+    {
+        redde;
+    }
+    xar_vacare(d->nodi);
+    d->radix_primus   = -I;
+    d->radix_ultimus  = -I;
+}
+
+vacuum
+dispositio_formam_initiare (
+    DispositioForma* forma)
+{
+    si (!forma)
+    {
+        redde;
+    }
+    memset(forma, ZEPHYRUM, magnitudo(DispositioForma));
+    forma->latitudo.genus  = DISPOSITIO_APTA;
+    forma->altitudo.genus  = DISPOSITIO_APTA;
+    forma->directio        = DISPOSITIO_LINEA;
+    forma->allineatio_x    = DISPOSITIO_INITIUM;
+    forma->allineatio_y    = DISPOSITIO_INITIUM;
+}
+
+s32
+dispositio_addere (
+                  Dispositio* d,
+                         s32  parens,
+    constans DispositioForma* forma)
+{
+    Nodus* n;
+      s32  index;
+
+    si (   !d || !forma || parens < -I
+        || parens >= (s32)xar_numerus(d->nodi))
+    {
+        redde -I;
+    }
+    n = (Nodus*)xar_addere(d->nodi);
+    si (!n)
+    {
+        redde -I;
+    }
+    memset(n, ZEPHYRUM, magnitudo(Nodus));
+    n->forma     = *forma;
+    n->parens    = parens;
+    n->primus    = -I;
+    n->ultimus   = -I;
+    n->proximus  = -I;
+    index        = (s32)xar_numerus(d->nodi) - I;
+    si (parens < ZEPHYRUM)
+    {
+        si (d->radix_ultimus >= ZEPHYRUM)
+        {
+            _nodus(d, d->radix_ultimus)->proximus = index;
+        }
+        alioquin
+        {
+            d->radix_primus = index;
+        }
+        d->radix_ultimus = index;
+    }
+    alioquin
+    {
+        Nodus* p = _nodus(d, parens);
+
+        si (p->ultimus >= ZEPHYRUM)
+        {
+            _nodus(d, p->ultimus)->proximus = index;
+        }
+        alioquin
+        {
+            p->primus = index;
+        }
+        p->ultimus = index;
+    }
+    redde index;
+}
+
+
+/* ==================================================
+ * (1) Apta: a foliis sursum
+ * ================================================== */
+
+interior vacuum
+_aptare (
+    Dispositio* d,
+           s32  index)
+{
+    Nodus* n       = _nodus(d, index);
+      s32  a       = _axis_directionis(n);   /* secundum axem */
+      s32  t       = I - a;                  /* transversus */
+      s32  liberi  = ZEPHYRUM;
+      s32  c;
+      s32  axis;
+
+    n->mensura[a]  = _spatium(n, a);
+    n->minima[a]   = _spatium(n, a);
+    n->mensura[t]  = ZEPHYRUM;
+    n->minima[t]   = ZEPHYRUM;
+    per (c = n->primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
+    {
+        Nodus* l = _nodus(d, c);
+
+        n->mensura[a] += l->mensura[a];
+        n->mensura[t]  = _maximum(n->mensura[t],
+            l->mensura[t] + _spatium(n, t));
+        si (!_praecidit(n, a))
+        {
+            n->minima[a] += l->minima[a];
+        }
+        si (!_praecidit(n, t))
+        {
+            n->minima[t] = _maximum(n->minima[t],
+                l->minima[t] + _spatium(n, t));
+        }
+        liberi++;
+    }
+    si (liberi > I)
+    {
+        n->mensura[a] += (liberi - I) * n->forma.intervallum;
+        si (!_praecidit(n, a))
+        {
+            n->minima[a] += (liberi - I) * n->forma.intervallum;
+        }
+    }
+    per (axis = ZEPHYRUM; axis < II; axis++)
+    {
+        constans DispositioMensura* m = _mensura_formae(n, axis);
+                               s32  mi;
+                               s32  ma;
+
+        si (m->genus == DISPOSITIO_PARS)
+        {
+            n->mensura[axis] = ZEPHYRUM;
+            perge;
+        }
+        _limites(m, &mi, &ma);
+        n->mensura[axis] = _minimum(_maximum(n->mensura[axis], mi), ma);
+        n->minima[axis] = _minimum(_maximum(n->minima[axis], mi), ma);
+    }
+}
+
+
+/* ==================================================
+ * (2) Mensurae per axem: liberi parentis unius
+ * ================================================== */
+
+/* parens: nodus aut NIHIL (radix implicita: linea, mensura
+ * superficiei, sine spatio) */
+interior vacuum
+_liberos_metiri (
+    Dispositio* d,
+         Nodus* parens,
+           s32  primus,
+           s32  axis)
+{
+    s32 magnitudo_parentis;
+    s32 spatium_parentis;
+    s32 contentum = ZEPHYRUM;
+    s32 spatia_et_intervalla;
+    b32 secundum;
+    b32 praecidit;
+    s32 intervallum;
+    b32 primus_liber = VERUM;
+    s32 c;
+
+    si (parens)
+    {
+        magnitudo_parentis  = parens->mensura[axis];
+        spatium_parentis    = _spatium(parens, axis);
+        secundum            = (_axis_directionis(parens) == axis);
+        praecidit           = _praecidit(parens, axis);
+        intervallum         = parens->forma.intervallum;
+    }
+    alioquin
+    {
+        magnitudo_parentis  = d->superficies[axis];
+        spatium_parentis    = ZEPHYRUM;
+        secundum            = (axis == ZEPHYRUM);
+        praecidit           = FALSUM;
+        intervallum         = ZEPHYRUM;
+    }
+    spatia_et_intervalla = spatium_parentis;
+
+    per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
+    {
+                  Nodus* l = _nodus(d, c);
+        DispositioGenus  g = _mensura_formae(l, axis)->genus;
+
+        si (secundum)
+        {
+            contentum += (g == DISPOSITIO_PARS) ? ZEPHYRUM
+                                                : l->mensura[axis];
+            si (!primus_liber)
+            {
+                contentum             += intervallum;
+                spatia_et_intervalla  += intervallum;
+            }
+        }
+        alioquin
+        {
+            contentum = _maximum(l->mensura[axis], contentum);
+        }
+        primus_liber = FALSUM;
+    }
+
+    /* PARS: spatium parentis (minus spatiis et intervallis) */
+    per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
+    {
+                             Nodus* l = _nodus(d,
+                                 c);
+        constans DispositioMensura* m = _mensura_formae(l, axis);
+
+        si (m->genus == DISPOSITIO_PARS)
+        {
+            l->mensura[axis] = _pavimentum((magnitudo_parentis
+                - spatia_et_intervalla) * m->valor, C);
+            si (secundum)
+            {
+                contentum += l->mensura[axis];
+            }
+        }
+    }
+
+    si (secundum)
+    {
+        /* crescens et contractio secundum axem: D2 */
+        redde;
+    }
+
+    /* transversus: APTA et CRESCENS intra spatium parentis */
+    per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
+    {
+                             Nodus* l;
+        constans DispositioMensura* m;
+                               s32  maximum;
+                               s32  mi;
+                               s32  ma;
+
+        l        = _nodus(d, c);
+        m        = _mensura_formae(l, axis);
+        maximum  = magnitudo_parentis - spatium_parentis;
+        si (m->genus == DISPOSITIO_PARS || m->genus == DISPOSITIO_FIXA)
+        {
+            perge;
+        }
+        si (praecidit)
+        {
+            maximum = _maximum(maximum, contentum);
+        }
+        si (m->genus == DISPOSITIO_CRESCENS)
+        {
+            _limites(m, &mi, &ma);
+            l->mensura[axis] = _minimum(maximum, ma);
+        }
+        l->mensura[axis] = _maximum(l->minima[axis],
+            _minimum(l->mensura[axis], maximum));
+    }
+}
+
+
+/* ==================================================
+ * (3) Positiones liberorum parentis unius
+ * ================================================== */
+
+interior vacuum
+_liberos_ponere (
+    Dispositio* d,
+         Nodus* parens,
+           s32  primus)
+{
+                     s32 a;
+                     s32 t;
+                     s32 origo[II];
+                     s32 interior_[II];
+                     s32 initium[II];
+                     s32 intervallum;
+                     s32 contentum  = ZEPHYRUM;
+                     s32 liberi     = ZEPHYRUM;
+                     s32 reliquum;
+                     s32 cursor;
+    DispositioAllineatio allin_a;
+    DispositioAllineatio allin_t;
+                     s32 c;
+
+    si (parens)
+    {
+        a         = _axis_directionis(parens);
+        origo[0]  = parens->positio[0];
+        origo[1]  = parens->positio[1];
+        interior_[0]  = parens->mensura[0] - _spatium(parens,
+            ZEPHYRUM);
+        interior_[1]  = parens->mensura[1] - _spatium(parens, I);
+        initium[0]    = _spatium_initii(parens, ZEPHYRUM);
+        initium[1]    = _spatium_initii(parens, I);
+        intervallum   = parens->forma.intervallum;
+        allin_a       = _allineatio(parens, a);
+        allin_t       = _allineatio(parens, I - a);
+    }
+    alioquin
+    {
+        a             = ZEPHYRUM;
+        origo[0]      = ZEPHYRUM;
+        origo[1]      = ZEPHYRUM;
+        interior_[0]  = d->superficies[0];
+        interior_[1]  = d->superficies[1];
+        initium[0]    = ZEPHYRUM;
+        initium[1]    = ZEPHYRUM;
+        intervallum   = ZEPHYRUM;
+        allin_a       = DISPOSITIO_INITIUM;
+        allin_t       = DISPOSITIO_INITIUM;
+    }
+    t = I - a;
+
+    per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
+    {
+        contentum += _nodus(d, c)->mensura[a];
+        liberi++;
+    }
+    si (liberi > I)
+    {
+        contentum += (liberi - I) * intervallum;
+    }
+    reliquum = interior_[a] - contentum;
+    si (allin_a == DISPOSITIO_INITIUM)
+    {
+        reliquum = ZEPHYRUM;
+    }
+    alioquin si (allin_a == DISPOSITIO_MEDIUM)
+    {
+        reliquum = _pavimentum(reliquum, II);
+    }
+    reliquum  = _maximum(ZEPHYRUM, reliquum);
+    cursor    = initium[a] + reliquum;
+
+    per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
+    {
+        Nodus* l            = _nodus(d, c);
+          s32  album        = interior_[t] - l->mensura[t];
+          s32  transversus  = initium[t];
+
+        si (allin_t == DISPOSITIO_MEDIUM)
+        {
+            transversus += _pavimentum(album, II);
+        }
+        alioquin si (allin_t == DISPOSITIO_FINIS)
+        {
+            transversus += album;
+        }
+        l->positio[a]  = origo[a] + cursor;
+        l->positio[t]  = origo[t] + transversus;
+        cursor         += l->mensura[a] + intervallum;
+    }
+}
+
+vacuum
+dispositio_computare (
+          Dispositio* d,
+                 s32  latitudo,
+                 s32  altitudo,
+    DispositioMensor  mensor,
+              vacuum* ctx)
+{
+    s32 n;
+    s32 i;
+    s32 axis;
+
+    (vacuum)mensor;   /* D3 */
+    (vacuum)ctx;
+    si (!d)
+    {
+        redde;
+    }
+    d->superficies[0]  = latitudo;
+    d->superficies[1]  = altitudo;
+    n                  = (s32)xar_numerus(d->nodi);
+
+    /* (1) apta: parens semper ante liberos additus - ordine inverso */
+    per (i = n - I; i >= ZEPHYRUM; i--)
+    {
+        _aptare(d, i);
+    }
+    /* (2) per axem, x deinde y: radix, deinde parentes ordine */
+    per (axis = ZEPHYRUM; axis < II; axis++)
+    {
+        _liberos_metiri(d, NIHIL, d->radix_primus, axis);
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            Nodus* p = _nodus(d, i);
+
+            si (p->primus >= ZEPHYRUM)
+            {
+                _liberos_metiri(d, p, p->primus, axis);
+            }
+        }
+    }
+    /* (3) positiones */
+    _liberos_ponere(d, NIHIL, d->radix_primus);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        Nodus* p = _nodus(d, i);
+
+        si (p->primus >= ZEPHYRUM)
+        {
+            _liberos_ponere(d, p, p->primus);
+        }
+    }
+}
+
+Fines
+dispositio_fines (
+    constans Dispositio* d,
+                    s32  index)
+{
+    Fines f;
+
+    memset(&f, ZEPHYRUM, magnitudo(Fines));
+    si (d && index >= ZEPHYRUM && index < (s32)xar_numerus(d->nodi))
+    {
+        Nodus* n = _nodus(d, index);
+
+        f.x         = n->positio[0];
+        f.y         = n->positio[1];
+        f.latitudo  = n->mensura[0];
+        f.altitudo  = n->mensura[1];
+    }
+    redde f;
+}
+
+s32
+dispositio_numerus (
+    constans Dispositio* d)
+{
+    redde d ? (s32)xar_numerus(d->nodi) : ZEPHYRUM;
+}

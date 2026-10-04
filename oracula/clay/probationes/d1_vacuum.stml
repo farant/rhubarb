@@ -1,0 +1,4 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus directio="linea" spatium="1 2 3 4"/>
+  <nodus directio="columna" spatium="1 2 3 4"/>
+</dispositio>
