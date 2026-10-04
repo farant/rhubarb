@@ -127,6 +127,12 @@ clip axis untouched; oracle within the named tolerance. Plants: grow
 by weight-of-current-size (not equalising); remainder to the LAST
 child.
 
+D2 as built: Clay's equalising grow/shrink; the remainder rule REFINED
+- every edge is the floor of the exact edge (the plan's "remainder to
+the earliest" drifts edges up to k/4 cells - it is now a plant); one
+comparison rule for all fixtures: edges == floor(Clay + 0.02). 27
+asserts, 14 fixtures, five plants.
+
 **D3 — text.** FIT width from the measurer, height one line; a wide
 rune measured 2 by a terminal measurer. Plant: byte length instead of
 the measurer.

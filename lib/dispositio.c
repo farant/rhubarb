@@ -25,9 +25,11 @@ nomen structura {
 structura Dispositio {
     Piscina* piscina;
         Xar* nodi;               /* Xar de Nodus */
-        s32  radix_primus;       /* liberi radicis implicitae */
-        s32  radix_ultimus;
-        s32  superficies[II];
+        Xar* membra;             /* s32: liberi mutabiles (D2); -1 =
+                                  * exemptus, ordo arboris servatur */
+        s32 radix_primus;       /* liberi radicis implicitae */
+        s32 radix_ultimus;
+        s32 superficies[II];
 };
 
 /* Divisio cum pavimento (b > 0): C89 directionem negativae
@@ -153,9 +155,10 @@ dispositio_creare (
     memset(d, ZEPHYRUM, magnitudo(Dispositio));
     d->piscina        = piscina;
     d->nodi           = xar_creare(piscina, (i32)magnitudo(Nodus));
+    d->membra         = xar_creare(piscina, (i32)magnitudo(s32));
     d->radix_primus   = -I;
     d->radix_ultimus  = -I;
-    redde d->nodi ? d : NIHIL;
+    redde (d->nodi && d->membra) ? d : NIHIL;
 }
 
 vacuum
@@ -308,6 +311,251 @@ _aptare (
 
 
 /* ==================================================
+ * (2a) Crescens et contractio secundum axem (D2)
+ *
+ * Aequatio Clay: crescentes MINIMI primum ad minimum proximum, deinde
+ * aequaliter, quisque maximo suo tectus; contractio (APTA et CRESCENS)
+ * MAXIMI primum, minimo contenti pavimentata. Divisio ultima integra:
+ * ORA QUAEQUE pavimentum orae exactae - membrum j (ordine arboris)
+ * accipit floor((j+1)S/k) - floor(jS/k), amittit ceil((j+1)D/k) -
+ * ceil(jD/k). Residuum ita aequaliter sparsum (non primis datum: ea
+ * regula oras usque ad k/4 cellulas promoveret).
+ * ================================================== */
+
+interior s32
+_lacunar (
+    s32 a,
+    s32 b)
+{
+    /* ceil(a / b), a >= 0, b > 0 */
+    redde (a + b - I) / b;
+}
+
+/* membra: liberi generis dati (aut omnes mutabiles) ordine arboris */
+interior s32
+_membra_colligere (
+    Dispositio* d,
+           s32  primus,
+           s32  axis,
+           b32  solum_crescentes)
+{
+    s32 c;
+    s32 n = ZEPHYRUM;
+
+    xar_vacare(d->membra);
+    per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
+    {
+        DispositioGenus g = _mensura_formae(_nodus(d, c), axis)->genus;
+
+        si (g == DISPOSITIO_PARS || g == DISPOSITIO_FIXA)
+        {
+            perge;
+        }
+        si (solum_crescentes && g != DISPOSITIO_CRESCENS)
+        {
+            perge;
+        }
+        *(s32*)xar_addere(d->membra) = c;
+        n++;
+    }
+    redde n;
+}
+
+interior s32
+_membrum (
+    Dispositio* d,
+           s32  i)
+{
+    redde *(s32*)xar_obtinere(d->membra, (i32)i);
+}
+
+interior vacuum
+_eximere (
+    Dispositio* d,
+           s32  i)
+{
+    *(s32*)xar_obtinere(d->membra, (i32)i) = -I;
+}
+
+interior vacuum
+_crescere (
+    Dispositio* d,
+           s32  primus,
+           s32  axis,
+           s32  reliquum)
+{
+    s32 n = _membra_colligere(d, primus, axis, VERUM);
+
+    dum (reliquum > ZEPHYRUM && n > ZEPHYRUM)
+    {
+        s32 minimum   = SINE_FINE;
+        s32 secundum  = SINE_FINE;
+        s32 k         = ZEPHYRUM;
+        s32 j         = ZEPHYRUM;
+        s32 datum     = ZEPHYRUM;
+        b32 ultima;
+        s32 i;
+
+        per (i = ZEPHYRUM; i < (s32)xar_numerus(d->membra); i++)
+        {
+            s32 c = _membrum(d, i);
+
+            si (c >= ZEPHYRUM)
+            {
+                minimum = _minimum(minimum, _nodus(d,
+                    c)->mensura[axis]);
+            }
+        }
+        per (i = ZEPHYRUM; i < (s32)xar_numerus(d->membra); i++)
+        {
+            s32 c = _membrum(d, i);
+            s32 m;
+
+            si (c < ZEPHYRUM)
+            {
+                perge;
+            }
+            m = _nodus(d, c)->mensura[axis];
+            si (m == minimum)
+            {
+                k++;
+            }
+            alioquin si (m < secundum)
+            {
+                secundum = m;
+            }
+        }
+        /* gradus integer ad secundum, aut divisio ultima */
+        ultima = (secundum == SINE_FINE
+            || (secundum - minimum) * k > reliquum) ? VERUM : FALSUM;
+        per (i = ZEPHYRUM; i < (s32)xar_numerus(d->membra); i++)
+        {
+              s32  c = _membrum(d, i);
+            Nodus* l;
+              s32  additum;
+              s32  mi;
+              s32  ma;
+              s32  vetus;
+
+            si (c < ZEPHYRUM)
+            {
+                perge;
+            }
+            l = _nodus(d, c);
+            si (l->mensura[axis] != minimum)
+            {
+                perge;
+            }
+            additum = ultima ? (((j + I) * reliquum) / k
+                - (j * reliquum) / k) : secundum - minimum;
+            j++;
+            _limites(_mensura_formae(l, axis), &mi, &ma);
+            vetus             = l->mensura[axis];
+            l->mensura[axis]  = _minimum(vetus + additum, ma);
+            si (l->mensura[axis] >= ma)
+            {
+                _eximere(d, i);
+                n--;
+            }
+            datum += l->mensura[axis] - vetus;
+        }
+        reliquum -= datum;
+        si (datum == ZEPHYRUM)
+        {
+            frange;   /* custodia: nihil datum (omnes tecti) */
+        }
+    }
+}
+
+interior vacuum
+_contrahere (
+    Dispositio* d,
+           s32  primus,
+           s32  axis,
+           s32  defectus)
+{
+    s32 n = _membra_colligere(d, primus, axis, FALSUM);
+
+    dum (defectus > ZEPHYRUM && n > ZEPHYRUM)
+    {
+        s32 maximum   = -I;
+        s32 secundum  = -I;
+        s32 k         = ZEPHYRUM;
+        s32 j         = ZEPHYRUM;
+        s32 ablatum   = ZEPHYRUM;
+        b32 ultima;
+        s32 i;
+
+        per (i = ZEPHYRUM; i < (s32)xar_numerus(d->membra); i++)
+        {
+            s32 c = _membrum(d, i);
+
+            si (c >= ZEPHYRUM)
+            {
+                maximum = _maximum(maximum, _nodus(d,
+                    c)->mensura[axis]);
+            }
+        }
+        per (i = ZEPHYRUM; i < (s32)xar_numerus(d->membra); i++)
+        {
+            s32 c = _membrum(d, i);
+            s32 m;
+
+            si (c < ZEPHYRUM)
+            {
+                perge;
+            }
+            m = _nodus(d, c)->mensura[axis];
+            si (m == maximum)
+            {
+                k++;
+            }
+            alioquin si (m > secundum)
+            {
+                secundum = m;
+            }
+        }
+        ultima = (secundum < ZEPHYRUM
+            || (maximum - secundum) * k > defectus) ? VERUM : FALSUM;
+        per (i = ZEPHYRUM; i < (s32)xar_numerus(d->membra); i++)
+        {
+              s32  c = _membrum(d, i);
+            Nodus* l;
+              s32  amissum;
+              s32  vetus;
+
+            si (c < ZEPHYRUM)
+            {
+                perge;
+            }
+            l = _nodus(d, c);
+            si (l->mensura[axis] != maximum)
+            {
+                perge;
+            }
+            amissum = ultima ? (_lacunar((j + I) * defectus, k)
+                - _lacunar(j * defectus, k)) : maximum - secundum;
+            j++;
+            vetus = l->mensura[axis];
+            l->mensura[axis] = _maximum(vetus - amissum,
+                l->minima[axis]);
+            si (l->mensura[axis] <= l->minima[axis])
+            {
+                _eximere(d, i);
+                n--;
+            }
+            ablatum += vetus - l->mensura[axis];
+        }
+        defectus -= ablatum;
+        si (ablatum == ZEPHYRUM)
+        {
+            frange;
+        }
+    }
+}
+
+
+/* ==================================================
  * (2) Mensurae per axem: liberi parentis unius
  * ================================================== */
 
@@ -327,7 +575,8 @@ _liberos_metiri (
     b32 secundum;
     b32 praecidit;
     s32 intervallum;
-    b32 primus_liber = VERUM;
+    b32 primus_liber  = VERUM;
+    s32 crescentes    = ZEPHYRUM;
     s32 c;
 
     si (parens)
@@ -357,6 +606,10 @@ _liberos_metiri (
         {
             contentum += (g == DISPOSITIO_PARS) ? ZEPHYRUM
                                                 : l->mensura[axis];
+            si (g == DISPOSITIO_CRESCENS)
+            {
+                crescentes++;
+            }
             si (!primus_liber)
             {
                 contentum             += intervallum;
@@ -390,7 +643,17 @@ _liberos_metiri (
 
     si (secundum)
     {
-        /* crescens et contractio secundum axem: D2 */
+        s32 reliquum = magnitudo_parentis - spatium_parentis
+            - contentum;
+
+        si (reliquum < ZEPHYRUM && !praecidit)
+        {
+            _contrahere(d, primus, axis, -reliquum);
+        }
+        alioquin si (reliquum > ZEPHYRUM && crescentes > ZEPHYRUM)
+        {
+            _crescere(d, primus, axis, reliquum);
+        }
         redde;
     }
 

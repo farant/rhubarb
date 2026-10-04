@@ -107,3 +107,49 @@ exit-code rule from B1 is what kept that from being a false report.
 
 `allineatio` got a glossary entry (Fran: glossary entries are always
 fine when needed).
+
+## D2 — grow and shrink (2026-10-03)
+
+Along the axis, after percent: room > 0 with GROW children → Clay's
+equalising (the smallest grow child first, up to the next smallest,
+then evenly, each capped at its max); room < 0 → FIT and GROW children
+shrink largest first, floored at their content minimum - unless the
+parent clips that axis (then nothing is compressed). Members are kept
+in tree order in a scratch Xar on the Dispositio; a capped or floored
+member is marked -1, not removed, so the order survives.
+
+**The remainder rule changed from the plan, for a reason.** The plan
+said "leftover cells to the earliest children". Worked through, that
+drifts edges: with k equal children and r leftover cells, every edge
+after the first r children sits up to ~k/4 cells right of the exact
+split - visible misalignment in a wide equal split. The rule now is
+**every edge is the floor of the exact edge**: in an even split member
+j gains floor((j+1)S/k) − floor(jS/k), and in a shrink loses
+ceil((j+1)D/k) − ceil(jD/k) (so its edges still floor). Sizes differ by
+at most a cell, leftovers spread evenly. And it gave ONE comparison
+rule for everything: every edge (x, x+w, y, y+h) == floor(Clay edge +
+0.02). The D1 fixtures (centre 12.5, percent 10.5 and 5.28, a −1.5
+cross offset) all satisfy it unchanged.
+
+**Why 0.02 now, not 0.001:** Clay's grow/shrink loop divides each step
+by the number of ALL resizable children, not by the size of the
+smallest/largest group, so it approaches the equal split geometrically
+and stops at an epsilon of 0.01 - a value can read 5.99 where the exact
+answer is 6. Its limit is the proper equalisation, which is what we
+compute exactly in integers.
+
+**Fixtures** (Clay's answers, every one also worked by hand):
+`columna` and `tres_crescentes` from D0; `d2_inaequales` (0 and 20 grow
+in 60 beside a fixed 10: the smaller catches up, then 5 each → 25/25);
+`d2_maximum` (four grows, two capped: 10, 26.5, 25, 26.5 → ours 10,
+26, 25, 27 - every edge the floor of Clay's); `d2_contractio` (clipping
+FIT children 15 and 10 into 17 with a fixed 2: 15→10, then 7.5/7.5 →
+ours 7/8); `d2_praecidere` (a clipping parent: no compression);
+`d2_minimum` (min 7 stops the shrink, the rest goes to the other: 7,
+5). 27 asserts; oracle 14/14.
+
+**Plants, all caught by name (exit codes read):** grow ignoring the
+equalisation (d2_inaequales), the plan's remainder-to-earliest rule
+(d2_maximum, tres_crescentes), shrink inside a clipping parent
+(d2_praecidere), shrink ignoring the minimum (d2_minimum), grow
+ignoring max (d2_maximum).

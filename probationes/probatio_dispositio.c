@@ -3,9 +3,13 @@
  * Fixa oracula/clay/probationes/d1_*.stml (arbores) et .exspectata
  * (fines a Clay @ e6cc369 dati, commissi - probatio clonum non
  * requirit; tools/dispositio_oraculum.sh -probare ea contra Clay vivum
- * iterum confert). Regula D1: noster == pavimentum(Clay + 0.001) pro
- * omni valore (medium: dimidium pavimentatum; pars: strepitus fluitans
- * 0.7f absorbetur). Omnia fixa D1 etiam manu verificata (phase log).
+ * iterum confert). REGULA (D2, una pro omnibus): omnis ORA (x, x+w,
+ * y, y+h) nostra == pavimentum(ora Clay + 0.02) - medium et pars (D1)
+ * et divisio crescentium/contractionis (D2: ora pavimentum orae
+ * exactae)
+ * eadem regula tenentur; 0.02 strepitum fluitantem absorbet (0.7f, et
+ * aequatio Clay quae ad epsilon 0.01 convergit, 5.99 pro 6). Omnia fixa
+ * etiam manu verificata (phase log).
  * Praeterea: forma ordinaria, parens ignotus, vacare, computare bis.
  */
 #include "latina.h"
@@ -240,7 +244,6 @@ _fixum (
         double v[IV];
            s32 e[IV];
          Fines f;
-           s32 j;
 
         si (sscanf(linea, "nodus %d %lf %lf %lf %lf", &k, &v[0], &v[1],
                 &v[2], &v[3]) != V)
@@ -248,18 +251,19 @@ _fixum (
             perge;
         }
         lineae++;
-        per (j = ZEPHYRUM; j < IV; j++)
+        /* orae: sinistra, superior, dextra, inferior */
+        e[0]  = (s32)floor(v[0] + 0.02);
+        e[1]  = (s32)floor(v[1] + 0.02);
+        e[2]  = (s32)floor(v[0] + v[2] + 0.02);
+        e[3]  = (s32)floor(v[1] + v[3] + 0.02);
+        f     = dispositio_fines(d, (s32)k);
+        si (   f.x != e[0] || f.y != e[1] || f.x + f.latitudo != e[2]
+            || f.y + f.altitudo != e[3])
         {
-            e[j] = (s32)floor(v[j] + 0.001);
-        }
-        f = dispositio_fines(d, (s32)k);
-        si (   f.x        != e[0] || f.y != e[1] || f.latitudo != e[2]
-            || f.altitudo != e[3])
-        {
-            imprimere("  FRACTA: %s nodus %d: noster %d %d %d %d, Clay"
-                " %d %d %d %d\n", titulus, k, (int)f.x, (int)f.y,
-                (int)f.latitudo, (int)f.altitudo, (int)e[0], (int)e[1],
-                (int)e[2], (int)e[3]);
+            imprimere("  FRACTA: %s nodus %d: orae nostrae %d %d %d %d,"
+                " Clay %d %d %d %d\n", titulus, k, (int)f.x, (int)f.y,
+                (int)(f.x + f.latitudo), (int)(f.y + f.altitudo),
+                (int)e[0], (int)e[1], (int)e[2], (int)e[3]);
             bona = FALSUM;
         }
     }
@@ -299,7 +303,17 @@ principale (vacuum)
     CREDO_VERUM (_fixum(piscina, intern, "d1_praecidere"));
     CREDO_VERUM (_fixum(piscina, intern, "d1_vacuum"));
 
-    imprimere("\n--- II. forma, addere, vacare, computare bis ---\n");
+    imprimere("\n--- II. fixa D2 (crescens, contractio) contra Clay"
+              " ---\n");
+    CREDO_VERUM (_fixum(piscina, intern, "columna"));
+    CREDO_VERUM (_fixum(piscina, intern, "tres_crescentes"));
+    CREDO_VERUM (_fixum(piscina, intern, "d2_inaequales"));
+    CREDO_VERUM (_fixum(piscina, intern, "d2_maximum"));
+    CREDO_VERUM (_fixum(piscina, intern, "d2_contractio"));
+    CREDO_VERUM (_fixum(piscina, intern, "d2_praecidere"));
+    CREDO_VERUM (_fixum(piscina, intern, "d2_minimum"));
+
+    imprimere("\n--- III. forma, addere, vacare, computare bis ---\n");
     {
         DispositioForma  f;
              Dispositio* d = dispositio_creare(piscina);

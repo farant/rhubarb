@@ -1,7 +1,8 @@
 /* dispositio.h - Dispositio pura in CELLULIS (modulus 013, semita b;
  * project-specs/dispositio-plan.md)
  *
- * Exemplar Clay (../clay @ e6cc369; oraculum tools/dispositio_oraculum.sh):
+ * Exemplar Clay (../clay @ e6cc369; oraculum
+ * tools/dispositio_oraculum.sh):
  * nodus directionem habet (linea | columna); per axem mensuram (APTA
  * contento, CRESCENS spatio reliquo, FIXA, PARS centesimis parentis)
  * cum minimo et maximo; spatium interius; intervallum inter liberos;
@@ -17,13 +18,16 @@
  *
  * DIVERGENTIAE A CLAY NOMINATAE (numeri integri): medium = pavimentum
  * dimidii (etiam negativi: -3/2 -> -2); PARS = pavimentum
- * (spatium * centesimae / 100); divisio crescentium (D2): residuum
- * cellularum primis liberis. Proprietas Clay SERVATA: nodus vacuus
+ * (spatium * centesimae / 100); divisio crescentium et contractio
+ * (D2): ORA QUAEQUE pavimentum orae exactae (residuum aequaliter
+ * sparsum, non primis datum - ea regula oras usque ad k/4 cellulas
+ * promoveret). Proprietas Clay SERVATA: nodus vacuus
  * spatium transversum non habet (linea vacua "1 2 3 4" -> 3 x 0).
  *
- * Gradus: D1 apta, fixa, pars, positiones, allineatio, praecisio;
- * CRESCENS secundum axem (et contractio) D2; textus (mensor) D3 - ante
- * D2/D3 crescens secundum axem ut apta, textus neglegitur.
+ * Gradus: D1 apta, fixa, pars, positiones, allineatio, praecisio; D2
+ * crescens et contractio secundum axem (aequatio Clay: minimi primum
+ * crescunt, maximi primum contrahuntur; parens praecidens non
+ * comprimit); textus (mensor) D3 - ante D3 textus neglegitur.
  *
  * PURUS: nulla allocatio praeter piscinam datam; idem ingressus, idem
  * exitus.

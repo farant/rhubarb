@@ -164,8 +164,9 @@ Leges chartae:
 - corpus: `dispositio` nova - dispositio pura in CELLULIS, exemplar
   Clay (apta/crescens/fixa/pars per axem, min/max, spatium,
   intervallum, allineatio, praecisio); radix implicita linea
-  superficiei; `dispositio_computare` + `dispositio_fines`. D1: crescens
-  secundum axem et textus nondum (D2, D3).
+  superficiei; `dispositio_computare` + `dispositio_fines`; crescens et
+  contractio (aequatio Clay; ora quaeque pavimentum orae exactae).
+  Textus nondum (D3).
 
 ## v4 — 2026-09-29
 

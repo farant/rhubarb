@@ -1,0 +1,11 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus latitudo="fixa:21" altitudo="fixa:2" intervallum="2">
+    <nodus praecidere_x="verum">
+      <nodus latitudo="fixa:15" altitudo="fixa:1"/>
+    </nodus>
+    <nodus latitudo="fixa:2" altitudo="fixa:1"/>
+    <nodus praecidere_x="verum">
+      <nodus latitudo="fixa:10" altitudo="fixa:1"/>
+    </nodus>
+  </nodus>
+</dispositio>
