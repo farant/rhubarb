@@ -51,8 +51,8 @@
     <vestigium via="build/portae/tempora.tsv" forma="plagula" communis="verum"/>
     <ingressus genus="fasciculus" via="pythonica/silva.py"/>
     <ingressus genus="fontationes" via="toml/compile_probationes.sh"/>
-    <ingressus genus="instrumentum" via="bin/aedilis"/>
-    <ingressus genus="instrumentum" via="bin/compilator"/>
+    <ingressus genus="instrumentum_domus" via="bin/aedilis"/>
+    <ingressus genus="instrumentum_domus" via="bin/compilator"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <ingressus genus="identitas_clang" via="clang"/>
     <ingressus genus="fasciculus" via="build/toml_corpus.lst"/>

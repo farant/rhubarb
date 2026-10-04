@@ -1737,3 +1737,17 @@ an aedilis root, so crusta is owed through a closure; pythonica had not run
 since. The lens assertion now uses html/fontes (not a root; html rows
 added to the test's fixture inventory) and a second assertion pins the new
 crusta cause ('in clausura').
+
+## 2026-10-03 - slice 3 v4: house binaries keyed by provenance
+
+The pass recorded in T5c went IGNOTUM right after its own commit: one of
+the commit's gates relinked bin/aedilis (same sources, new bytes). Fix:
+genus `instrumentum_domus` (digest of the `ingressus` line of
+`-provenientia`, never the `commissum` line; bytes if no report),
+fontationes' instrumentum lines likewise, and the verdict trace drops
+paths that are declared inputs (aedilis L-reads its own binary - the
+first fix alone still went STALUM "lectio transitus mutata: bin/aedilis").
+Measured: record, `rm bin/aedilis && tools/aedilis_struere.sh` (new
+sha), judge RECENS; same with bin/compilator. Test: 496/496 incl. a
+block proving commissum-line and relink invariance, ingressus-line
+sensitivity, bytes fallback.

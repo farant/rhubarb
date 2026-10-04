@@ -557,3 +557,18 @@ exclusion + unit tests in lib's suite; **T5b** recording in sanare +
 trace rules + the two genera + tool seam; **T5c** `silva.py -iudicium`,
 `porta_toml` in toml/aedificatio.stml, first real `sanare porta_toml`
 and a RECENS re-judge.
+
+**v4 (T5c finding, 2026-10-03): house binaries are keyed by provenance,
+not bytes.** After the first real reuse, the T5c commit's own gates
+rebuilt `bin/aedilis` (same sources, new bytes - LC_UUID) and the pass
+went IGNOTUM. Since gates relink house binaries routinely, a byte key
+would void the pass after nearly every commit. New input kind
+`instrumentum_domus`: digest = the `ingressus <hash>` line of
+`<bin> -provenientia` (the sources it was built from; the `commissum`
+line changes every commit and is NOT digested); no report -> bytes
+(conservative). `fontationes` treats its `instrumentum` lines the same
+way. And the trace drops any path that is a DECLARED input of the action
+(the key already covers it by its kind's rule) - aedilis reads its own
+binary's bytes into the trace (§XI), which would otherwise undo the
+change. P10 inverts: relinking bin/compilator or bin/aedilis without a
+source change -> RECENS (measured on the real tree).

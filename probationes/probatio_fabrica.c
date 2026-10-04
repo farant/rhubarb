@@ -4696,6 +4696,48 @@ s32 principale (vacuum)
     }
 
 
+    /* ==================================================
+     * PROBARE: instrumentum_domus (fabrica spec 3 v4) - binarium domus
+     * per lineam 'ingressus' relationis sigillatum: relinkatio (octeti
+     * alii) et linea 'commissum' clavem non mutant; fontes alii (linea
+     * ingressus alia) mutant; sine relatione: octeti
+     * ================================================== */
+
+    {
+         DiscusFictus  discus;
+        FabricaSutura  sutura;
+         FabricaActio* a;
+             Sigillum  s1;
+             Sigillum  s2;
+
+        imprimere("\n--- Probans instrumentum domus (provenientia) ---\n");
+        _discum_parare(&discus, &sutura, piscina);
+        _ponere(&discus, "bin/inst", "octeti I\n");
+        a = _actio(piscina, "usor", FABRICA_ACTIO_GENERATOR);
+        _ingressum_addere(a, "instrumentum_domus", "bin/inst", piscina);
+        discus.relatio = "provenientia 1\nartificium bin/inst\n"
+            "ingressus aaaa\ncommissum 1111 SORDIDUM\n";
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s1));
+        _ponere(&discus, "bin/inst", "octeti II (relinkatum)\n");
+        discus.relatio = "provenientia 1\nartificium bin/inst\n"
+            "ingressus aaaa\ncommissum 2222\n";
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
+        CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
+        discus.relatio = "provenientia 1\nartificium bin/inst\n"
+            "ingressus bbbb\ncommissum 2222\n";
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
+        CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
+            == 0);
+        /* sine relatione: octeti (cautum) */
+        discus.relatio = NIHIL;
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s1));
+        _ponere(&discus, "bin/inst", "octeti III\n");
+        CREDO_VERUM(_sigillum(&sutura, a, piscina, &s2));
+        CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
+            == 0);
+    }
+
+
     /* ================================================== */
 
     /* Compendium                                          */

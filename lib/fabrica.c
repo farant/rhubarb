@@ -866,6 +866,76 @@ interior constans FabricaGenus _genus_radices = {
     "radices", _radices_sigillare, _nihil_enumerare, NIHIL, FALSUM
 };
 
+/* INSTRUMENTUM DOMUS (spec 3 par. XII v4): binarium domus per lineam
+ * 'ingressus <sigillum>' relationis '-provenientia' sigillatur -
+ * sigillum FONTIUM ex quibus structum est. Octeti eius relinkatione
+ * mutantur (LC_UUID) etsi nihil mutatum: portae binaria domus omni
+ * commissione restruunt, ergo octeti transitum post omnem commissionem
+ * delerent (inventum T5c: bin/aedilis a porta restructum). Linea
+ * 'commissum' (omni commissione mutata) NON sigillatur. Sine relatione:
+ * octeti (cautum). */
+interior b32
+_provenientia_legere (
+     constans FabricaSutura* sutura,
+                     chorda  via,
+               constans Xar* exclusa,
+                    Piscina* piscina,
+                        Xar* particulae,
+                     chorda* causa_out)
+{
+              chorda  relatio;
+              chorda  linea;
+                 s32  inventum;
+                 i32  finis;
+    FabricaParticula* particula;
+
+    si (   sutura->rogare == NIHIL
+        || !sutura->rogare(sutura->datum, chorda_ut_cstr(via, piscina),
+               piscina, &relatio))
+    {
+        redde _particulam_legere(sutura, via, exclusa, piscina,
+            particulae,
+            causa_out);
+    }
+    inventum = chorda_invenire_index(relatio, chorda_ex_literis(
+        "ingressus ", piscina));
+    si (inventum < ZEPHYRUM)
+    {
+        redde _particulam_legere(sutura, via, exclusa, piscina,
+            particulae,
+            causa_out);
+    }
+    finis = (i32)inventum;
+    dum (finis < relatio.mensura && relatio.datum[finis] != '\n')
+    {
+        finis++;
+    }
+    linea      = chorda_sectio(relatio, (i32)inventum, finis);
+    particula  = (FabricaParticula*)xar_addere(particulae);
+    si (particula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    particula->via     = via;
+    particula->octeti  = sigillum_computare(linea.datum,
+        (memoriae_index)linea.mensura);
+    redde VERUM;
+}
+
+interior b32
+_instrumentum_domus_sigillare (
+       constans FabricaSutura* sutura,
+    constans FabricaIngressus* ingressus,
+                 constans Xar* exclusa,
+                      Piscina* piscina,
+                          Xar* particulae,
+                       chorda* causa_out)
+{
+    redde _provenientia_legere(sutura, ingressus->via, exclusa,
+        piscina,
+        particulae, causa_out);
+}
+
 /* IDENTITAS CLANG (spec 3 par. XII, IX.7): identitas compilatoris quam
  * bin/compilator adhibet - radices systematis (SDK) eam sequuntur */
 interior b32
@@ -971,10 +1041,17 @@ _fontationes_sigillare (
             redde FALSUM;
         }
         si (   chorda_aequalis_literis(genus, "fasciculus")
-            || chorda_aequalis_literis(genus, "instrumentum")
             || chorda_aequalis_literis(genus, "externum"))
         {
             si (!_particulam_legere(sutura, via, exclusa, piscina,
+                    particulae, causa_out))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(genus, "instrumentum"))
+        {
+            si (!_provenientia_legere(sutura, via, exclusa, piscina,
                     particulae, causa_out))
             {
                 redde FALSUM;
@@ -998,6 +1075,12 @@ interior constans FabricaGenus _genus_identitas_clang = {
     FALSUM
 };
 
+interior constans FabricaGenus _genus_instrumentum_domus = {
+    "instrumentum_domus", _instrumentum_domus_sigillare,
+        _nihil_enumerare,
+    NIHIL, FALSUM
+};
+
 interior constans FabricaGenus _genus_fontationes = {
     "fontationes", _fontationes_sigillare, _nihil_enumerare, NIHIL,
         FALSUM
@@ -1014,7 +1097,8 @@ interior constans FabricaGenus* constans _genera[] = {
     &_genus_manifesta,
     &_genus_radices,
     &_genus_identitas_clang,
-    &_genus_fontationes
+    &_genus_fontationes,
+    &_genus_instrumentum_domus
 };
 
 constans FabricaGenus*
@@ -1659,10 +1743,15 @@ _sub_build (
  *   - species ALIA (FIFO, socket, machina) -> IGNOTUM
  *   - E: servatur solum si valor = ambitus quem fabrica portae dat
  *     (externus); differens intra portam positus est - omittitur
+ *   - via INGRESSUS DECLARATI actionis omittitur: clavis eam iam tegit,
+ *     lege generis sui (v4: instrumentum_domus per provenientiam -
+ *     aedilis octetos binarii sui legit, relinkatio vestigium aliter
+ *     moveret)
  * FALSUM + causa: transitus non reutilis (vestigium nullum). */
 interior b32
 _lectiones_transitus_colligere (
     constans FabricaSutura*  sutura,
+     constans FabricaActio*  actio,
         constans character*  liber_via,
                    Piscina*  piscina,
                        Xar** lectiones_out,
@@ -1689,6 +1778,13 @@ _lectiones_transitus_colligere (
     {
         *causa_out = chorda_ex_literis("memoria deficit", piscina);
         redde FALSUM;
+    }
+    /* ingressus declarati: clavis eos tegit */
+    per (i = ZEPHYRUM; i < xar_numerus(actio->ingressus); i++)
+    {
+        (vacuum)tabula_dispersa_inserere(scriptae,
+            ((FabricaIngressus*)xar_obtinere(actio->ingressus, i))->via,
+            NIHIL);
     }
     /* transitus 0: S colliguntur; transitus I: lectiones */
     per (transitus = ZEPHYRUM; transitus < II; transitus++)
@@ -5080,7 +5176,7 @@ _post_agere (
                 "transitus non servatus (ingressus): ",
                 ratio, "");
         }
-        alioquin si (!_lectiones_transitus_colligere(sutura,
+        alioquin si (!_lectiones_transitus_colligere(sutura, actio,
                      chorda_ut_cstr(fabrica_liber_via(actio->titulus,
                      piscina),
                      piscina), piscina, &vestigium, &ratio))
