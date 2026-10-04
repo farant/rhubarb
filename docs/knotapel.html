@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: the first twenty demos</p>
+<p class="subtitulus">Knots as computation: the first twenty-five demos</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -39,7 +39,11 @@ to 20 refine that signal and then turn it to logic: braids whose bracket,
 thresholded, acts as a NOT or a NAND gate, a small compiler of Boolean
 circuits from those gates, and a map of where the gates stop working. Demo
 19 is where A = e<sup>i5π/4</sup>, the root of unity at which δ = 0, first
-takes centre stage.</p>
+takes centre stage. Demos 21 to 25 survey what braids at δ = 0 can compute:
+reversible gates, the shortest braid for every Boolean function, the zoo of
+functions topology prefers, the arithmetic of rational tangles, and the
+four closures of a braid read as four measurements. Three-input parity
+first shows up here, as the function no braid produces.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -493,6 +497,97 @@ full adder fails later than the NAND gate alone. The adder passes at exactly
 the angles where NOT fails and NAND still works, and the reason is in the
 circuit, not the braids (<a href="#nota-cascade">note 11</a>).</p>
 
+<h2>Demo 21 · Reversible gates</h2>
+<p class="nota"><code>knotapel/demo_21_reversible_gates/main.c</code> · 857 lines · 6/6 tests</p>
+<p>Demo 21 builds the two classic reversible gates, Toffoli (flip C when A
+and B) and Fredkin (swap B and C when A), from demo 19's compiler, and gets
+both truth tables right. Applying either twice gives the identity, as
+reversible gates must. It then asks a new question: one braid can be closed
+in four ways (the trace closure, or "plat" closures that cap off different
+strands), so does one braid compute several functions at once? Yes: every
+one of 1,554 four-strand braids up to four crossings gives more than one
+truth table across its closures, up to four distinct ones. None of them
+directly computes a Toffoli or Fredkin output.</p>
+<p>Two of its comparisons are softer than they look. "Double Toffoli =
+identity" is a property of the Toffoli function, so it follows from the
+correct truth table rather than adding evidence about braids. And the
+crossing count, 58 against about 132 for a quantum Toffoli braided from
+coloured anyons, compares eleven separate classical evaluations with one
+quantum braid; the demo says so itself ("not apples-to-apples").</p>
+
+<h2>Demo 22 · The shortest braid for each function</h2>
+<p class="nota"><code>knotapel/demo_22_braid_optimizer/main.c</code> · 975 lines · 6/6 tests</p>
+<p>For every Boolean function of three inputs, what is the shortest braid
+that computes it? Demo 22 searches all four-strand braids up to five
+crossings (9,330 words, four closures each, inputs as σ<sub>1</sub>,
+σ<sub>2</sub>, σ<sub>3</sub>) and finds 112 of the 254 non-constant
+functions, then 158 after a length-6 search with one closure; AND appears at
+length 1, MAJ at 2, two-input XOR at 5. It also builds the
+Temperley–Lieb algebra TL<sub>3</sub> as 5×5 matrices at δ = 0, where the
+generators become nilpotent (e<sub>i</sub><sup>2</sup> = 0), checks the
+relations, and counts how many braid words collapse to the same algebra
+element: by length 6 there are 10 times fewer distinct elements than
+words, growing about 2.2× per crossing instead of 4×. Cross-checked against
+the bracket, equal matrices always give equal brackets.</p>
+<p>Two threads matter for later. Three-input parity never appears, nor two
+of the two-input XORs up to length 5 ("partial parity barrier"); parity
+becomes the central wall of the DKC program from demo 45 on. And the
+comparison "braid weight vs NAND cost" counts only the gate braid's
+crossings (not the inputs, not the chosen threshold) against a NAND
+expression's crossings, so its "11× fewer" figures are a rough
+indication, not a like-for-like cost (<a href="#nota-mensurae22">note 14</a>).</p>
+
+<h2>Demo 23 · Which functions does topology prefer?</h2>
+<p class="nota"><code>knotapel/demo_23_function_zoo/main.c</code> · 770 lines · 4/4 tests</p>
+<p>Demo 23 is the census behind demo 22: every braid up to four crossings
+under every closure, each reduced to the truth table its best threshold
+gives. 87 of the 254 non-constant functions appear, very unevenly (the
+most common, A∧¬B∧C, 860 times; others a handful). Grouping functions into
+NPN classes (equal up to negating inputs, permuting them, and negating the
+output) shows topology reaching 11 classes. The four closures behave very
+differently: the trace closure produces 64 distinct functions, one plat
+closure only 6. A length-5 search adds 25 new functions but no new
+class.</p>
+<p>The count is "11 of 14", but the 14 includes the class of the constant
+functions, which the thresholding rules out by construction; of the 13
+non-constant classes, 11 are reached. The two missing are three-input
+parity and the class whose function is true when B = C ≠ A. The "13 NPN
+classes" the later demos speak of are these thirteen.</p>
+
+<h2>Demo 24 · Rational tangles</h2>
+<p class="nota"><code>knotapel/demo_24_rational_tangles/main.c</code> · 889 lines · 6/7 tests (one fails as shipped)</p>
+<p>A tangle with two strands in and two out can be twisted (add a crossing)
+or rotated a quarter turn; Conway showed these two moves build exactly the
+rational tangles, one for each fraction p/q, assembled like a continued
+fraction. Demo 24 represents a tangle's bracket in TL<sub>2</sub> as two
+coefficients, writes twisting and rotation as operations on them, and
+evaluates at δ = 0. There the result is striking: an n-twist tangle's
+denominator closure has bracket magnitude exactly n, and ratios of closure
+magnitudes track the fraction of the tangle.</p>
+<p>The demo undersells itself twice (<a href="#nota-conway">note 12</a>). It
+reports that the fraction is tracked for only 8 of 14 rationals; in fact
+all 14 match, once the expected value is computed for what twist-and-rotate
+builds (a continued fraction with minus signs). And its one failing test,
+"state-sum matches TL2 algebra", fails because the state-sum oracle uses the
+mirror-image crossing convention; the magnitudes agree everywhere.</p>
+
+<h2>Demo 25 · Closures as measurements</h2>
+<p class="nota"><code>knotapel/demo_25_closure_measurement/main.c</code> · 907 lines · 9/9 tests</p>
+<p>Demo 21 found that one braid's four closures compute different functions;
+demo 25 asks whether "closure = choice of measurement" can be made precise.
+For every braid up to four crossings it builds a 4×8 matrix (four closures
+by eight inputs) of bracket magnitudes, and studies the matrices: all 1,554
+have full rank 4; only 143 distinct quadruples of truth tables occur; the
+closures carry between 0.44 and 1.94 bits of mutual information about each
+other; the trace closure's outputs span all 8 dimensions while one plat
+closure's span only 3. Parity appears zero times, as predicted.</p>
+<p>The statistics are suggestive rather than decisive: full rank is what a
+generic 4×8 matrix has, and two of the checks were set loosely
+(<a href="#nota-mensurae">note 13</a>), one of them after the result was
+seen. What the demo establishes is the shape of the space, a small,
+structured set of joint behaviours, which is the right question to carry
+into the next phase.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -647,14 +742,48 @@ shows exactly this: the adder gets all eight cases right at θ = 0.800π,
 0.951π, 1.051π and 1.202π, all points where NOT fails and NAND holds, and
 fails wherever NAND fails. So "cascade does NOT amplify" is a property of
 this circuit's double negations, not evidence of robustness.</p></li>
+<li id="nota-conway"><p><strong>Demo 24 tracks all fourteen fractions, and
+its failing test is a mirror convention.</strong> Twisting adds one
+(x → x + 1) and rotating gives x → −1/x, so assembling [a<sub>0</sub>; a<sub>1</sub>, …, a<sub>n</sub>]
+with those moves builds a<sub>0</sub> − 1/(a<sub>1</sub> − 1/(… − 1/a<sub>n</sub>)),
+a continued fraction with minus signs, not the ordinary one the demo
+expects. Recomputed that way, the six "failures" all match: [0,1,2] gives
+−2 (the demo measures 2), [0,1,1,2] gives 1 (1), [0,1,1,1,2] gives −1/2
+(0.5), [0,2,3] gives −3/5 (0.6), and likewise [0,1,1,1,1,2] (2) and
+[0,1,1,1,3] (1/3). So the bracket at δ = 0 reads off the tangle's fraction
+in every case, up to sign, in line with the theorem of Kauffman and
+Lambropoulou that the bracket at this root computes a rational tangle's
+fraction. The failing test P1b compares the TL<sub>2</sub> coefficients
+with a state-sum oracle. Its errors follow the mirror image exactly: with
+A ↔ A<sup>−1</sup>, α<sub>n</sub> = A<sup>n</sup> differs from A<sup>−n</sup>
+by 0 when n ≡ 0 (mod 4), 2 when n ≡ 2, and √2 when n is odd, and
+β<sub>n</sub> = nA<sup>n−2</sup> matches its mirror exactly when n ≡ 2 (mod 4),
+which is the printed pattern (N errors 1.41, 2.00, 1.41, 0 …; D errors 0 at
+n = 2, 6, 10). It is the same chirality mismatch as notes 2 and 7: no
+magnitude differs.</p></li>
+<li id="nota-mensurae"><p><strong>Demo 25's thresholds were set after the
+result.</strong> Its check P8 says "HW explains variance" with an F-ratio of
+0.69, but the demo's own printout explains that F much greater than 1 would
+mean Hamming weight organizes the outputs; 0.69 is below 1, the opposite.
+The code's comment records the change: "F-ratio &gt; 0.5 shows HW has
+explanatory power … Original threshold too aggressive." (The ratio is also
+a plain ratio of summed variances, without the degrees-of-freedom
+normalization of an F statistic.) P2 calls the closures "complementary"
+because the <em>smallest</em> mutual information is under 0.5 bits; five of
+the six pairs are above it.</p></li>
+<li id="nota-mensurae22"><p><strong>Cost comparisons in demos 21 and 22 compare
+unlike things.</strong> Demo 21's 58 crossings for a Toffoli are eleven
+separate classical evaluations, against a single quantum braid of about 132;
+demo 22's braid weight counts the gate braid but not the input crossings
+or the threshold, against a NAND expression's full crossing count. The
+figures show that short braids can encode functions; they are not
+measurements of relative efficiency.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 21 to 25 continue with braids as logic (reversible gates, an
-optimizer, a zoo of Boolean functions, rational tangles, closure
-measurements). The decisive turn comes with demos 26 to 29, still at
+<p>The decisive turn comes with demos 26 to 29, still at
 A = e<sup>i5π/4</sup> where δ = 0, when bracket values stop being gate
-outputs and become the weights of a neuron. Every
+outputs read through a threshold and become the weights of a neuron. Every
 diagram with more than one loop then vanishes, the values become exact
 integers in Z[ζ<sub>8</sub>], and those values are what demo 29 found
 computing XOR. The polynomial and matrix machinery of demos 1 to 9 is
@@ -662,7 +791,7 @@ what makes "exact" possible there, and the numerical detour of demos 10 to
 15, whatever its labels, is where the idea of a bracket value as a weight
 first appears.</p>
 
-<p class="nota">Written by hand on 2026-10-03 from reading the twenty
+<p class="nota">Written by hand on 2026-10-03 from reading the twenty-five
 <code>main.c</code> files (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
