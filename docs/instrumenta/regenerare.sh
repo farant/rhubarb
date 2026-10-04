@@ -34,7 +34,10 @@ python3 "$INSTR/pagina_visionis.py" "$SCHEDAE/exemplar-programmandi.md" 'Exempla
     'the ledger vision record 01M3XQVDSY87M80CKNDTFA71YH' \
     'The source is a ledger vision record of Fran’s ideas (2026-10-02, eight notes), written in Latin by Claude; the English is Claude’s translation. (c) is the core text, (n1)–(n8) the notes.' \
     > "$VISIONES/exemplar.html"
-echo "folia visionum: tabularium, textus, instrumenta, exemplar"
+python3 "$INSTR/pagina_visionis.py" "$SCHEDAE/stml-visio.md" 'STML' stml-visio.md \
+    'The source is a consolidation by Claude (2026-08-10, sections added to 2026-09-03) of Fran’s pre-STML notes (G1, G2) and design conversations; claims it attributes to Fran are marked (Fran), and its last section is recorded verbatim in substance from Fran.' \
+    > "$VISIONES/stml.html"
+echo "folia visionum: tabularium, textus, instrumenta, exemplar, stml"
 
 TSV=$(mktemp)
 trap 'rm -f "$TSV"' EXIT

@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knotapel</title>
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="index.html">Rhubarb</a></p>
+<h1>Knotapel</h1>
+<p class="subtitulus">Knots as computation: the first ten demos</p>
+
+<p>Knotapel is a research project in <code>knotapel/</code>: a little over
+a hundred numbered demos, each a single C89 file with its own tests, no
+dependencies and, as far as possible, no floating point. Its main line is
+<em>Discrete Knotted Computation</em> (DKC): evaluated at a particular root
+of unity, the Kauffman bracket of a knot is an exact cyclotomic integer, and
+those values turn out to work as the weights of a neural network that
+computes Boolean functions, with no training (demo 29 showed it for XOR;
+later demos map out all thirteen classes of three-input functions, and
+where parity hits a wall). The project keeps its own atlas
+(<code>knotapel/atlas/</code>, with a web version) and a long explorer's
+log; it was worked by a small team of Claude sessions with Fran, and it
+keeps its English rather than the house's Latin.</p>
+
+<p>The first ten demos are the foundation under all of that. Demos 1 to 5
+compute the same thing, the Kauffman bracket, in a new way each time and
+check each new way against the old one; by demo 5 the bracket of a braid
+on any number of strands is the trace of a product of matrices, computed
+exactly. Demos 6 to 10 explain the formula's weights, connect the two
+ways of writing a knot in both directions, prove the bracket behaves
+correctly under the moves that don't change a knot, and finally trade
+exact polynomials for numbers, the step that leads to the computing
+experiments.</p>
+<p class="nota">Where reading the code turned up a mistake or a weak check,
+it is described in <a href="#notae">Notes from this reading</a> at the end,
+and marked in the demo's section with a pointer.</p>
+
+<h2>Words you need</h2>
+<table>
+<tbody>
+<tr><td>Kauffman bracket ⟨K⟩</td><td>a polynomial computed from a knot diagram by
+"smoothing" each crossing one of two ways (an A-smoothing or a B-smoothing),
+counting the loops that result, and summing over every choice. Each
+smoothing contributes A or A<sup>−1</sup>; each loop beyond the first
+contributes δ = −A<sup>2</sup> − A<sup>−2</sup>.</td></tr>
+<tr><td>Laurent polynomial</td><td>a polynomial in A that may have negative powers, here
+with integer coefficients, so all arithmetic is exact.</td></tr>
+<tr><td>writhe w, f-polynomial</td><td>the bracket changes when a diagram gains a kink;
+multiplying by (−A<sup>3</sup>)<sup>∓w</sup> (w = the sum of crossing signs)
+removes that, giving the Jones polynomial up to a change of variable.</td></tr>
+<tr><td>braid word</td><td>strands side by side; σ<sub>i</sub> crosses strand i over
+i+1, σ<sub>i</sub><sup>−1</sup> under. Joining the tops to the bottoms (the
+<em>closure</em>) gives a knot or link, and every knot arises this way.</td></tr>
+<tr><td>Temperley–Lieb U<sub>i</sub></td><td>the "cup-cap": strands i and i+1 turned back
+on themselves. U<sub>i</sub><sup>2</sup> = δ·U<sub>i</sub>, because doing it
+twice leaves a closed loop.</td></tr>
+</tbody>
+</table>
+
+<h2>Demo 01 · The bracket by brute force</h2>
+<p class="nota"><code>knotapel/demo_01_kauffman_bracket/main.c</code> · 611 lines · 9/9 tests</p>
+<p>The question was the smallest one the project could ask: can exact knot
+invariants be computed from a diagram with nothing but integer arithmetic?
+The demo builds a Laurent polynomial type (an array of integer coefficients
+plus the lowest exponent), reads knots in PD notation (each crossing lists
+the four arcs that meet there, counter-clockwise), and computes the bracket
+as a state sum: for each of the 2<sup>n</sup> ways to smooth n crossings it
+counts the resulting loops by walking from arc to partner arc around each
+cycle, then adds A<sup>#A−#B</sup>·δ<sup>loops−1</sup>.</p>
+<p>It reproduces the known brackets of the trefoil, the figure-eight
+(palindromic, as it must be for a knot that equals its mirror image) and
+the Hopf link, and it tells the trefoil from the figure-eight. Two lessons
+are written down in its README: the counter-clockwise PD convention silently
+decides chirality (the "right-handed" trefoil came out left-handed, which is
+the same bracket with A and A<sup>−1</sup> exchanged), and loop counting was
+the hard part; the first attempt was wrong. The result is about 500 lines
+of C89, exponential in the number of crossings, and from here on it is the
+<em>oracle</em> that every faster method is checked against. (Its bracket
+values are right; the f-polynomial it prints for the trefoil is not, see
+<a href="#nota-f">note 2</a>.)</p>
+<pre><code>⟨trefoil⟩     = −A^-5 − A^3 + A^7
+⟨figure-8⟩    = A^-8 − A^-4 + 1 − A^4 + A^8
+⟨Hopf link⟩   = −A^-4 − A^4</code></pre>
+
+<h2>Demo 02 · From diagrams to braid words</h2>
+<p class="nota"><code>knotapel/demo_02_braid_words/main.c</code> · 1,007 lines · 9/9 tests</p>
+<p>The plan was the jump from the state sum to matrices: represent each
+crossing as A·I + A<sup>−1</sup>·U<sub>i</sub>, multiply along a braid word,
+and take a trace. The source keeps the attempt in a long comment, and it is
+worth reading as a record of working something out: tensor-product
+matrices, then path bases, then "U_1 acts as: [[delta, 1], [1, 0]] ...
+no.", then "OK, I'm going in circles", and finally a decision to do the
+honest thing first. What the demo actually builds is braid-word input to the
+same state sum: the closure is modelled as a grid of (crossings+1) × strands
+points, each smoothing either joins strands i and i+1 (a cup) or lets them
+pass, the tops are joined to the bottoms, and a union-find counts the loops.
+The one subtlety it records is that a positive and a negative crossing
+exchange which smoothing is the cup.</p>
+<p>Unknot, trefoil (σ<sub>1</sub><sup>3</sup>), its mirror
+(σ<sub>1</sub><sup>−3</sup>, the reversed polynomial), figure-eight and
+Hopf link all match demo 1. In the 2-strand case the matrix idea does work:
+the representation is one-dimensional and gives ρ(σ<sub>1</sub>) =
+−A<sup>−3</sup> and ρ(σ<sub>1</sub><sup>−1</sup>) = −A<sup>3</sup>, chirality
+as the exchange A ↔ A<sup>−1</sup>. The full Markov trace is deferred to
+demo 3. One test is left as an open note: σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>
+on three strands, labelled as the trefoil, gives an f-polynomial different
+from σ<sub>1</sub><sup>3</sup>'s, which the demo attributes to a missing
+Markov correction (see <a href="#nota-hopf">note 1</a>).</p>
+
+<h2>Demo 03 · The Temperley–Lieb module</h2>
+<p class="nota"><code>knotapel/demo_03/main.c</code> · 671 lines (v3) · 13/13 tests</p>
+<p>Demo 3 finds the matrices demo 2 was looking for. For three strands it
+derives, from the diagrams, the two-dimensional standard module
+W<sub>1</sub> of the Temperley–Lieb algebra TL<sub>3</sub> (basis: strands
+1–2 capped with 3 free, or 2–3 capped with 1 free), where
+U<sub>1</sub> = [[δ, 1], [0, 0]] and U<sub>2</sub> = [[0, 0], [1, δ]], and
+it checks the algebra's relations exactly: U<sub>i</sub><sup>2</sup> =
+δU<sub>i</sub> and U<sub>1</sub>U<sub>2</sub>U<sub>1</sub> = U<sub>1</sub>.
+The header comment again shows the work: it expects a Hecke-algebra
+relation, computes that it fails ("AARGH. Let me look at this from first
+principles"), and then finds the simple truth that the inverse crossing is
+just the other smoothing, so (A·I + A<sup>−1</sup>U)(A<sup>−1</sup>·I + A·U)
+= I because A<sup>2</sup> + A<sup>−2</sup> + δ = 0.</p>
+<p>With crossings as invertible 2×2 matrices of polynomials it verifies the
+braid relation g<sub>1</sub>g<sub>2</sub>g<sub>1</sub> =
+g<sub>2</sub>g<sub>1</sub>g<sub>2</sub>, and then the payoff: the bracket of
+any 3-strand braid is a weighted sum of two traces,
+⟨β⟩ = tr<sub>W1</sub>(ρ(β)) + (A<sup>4</sup> + A<sup>−4</sup>)·tr<sub>W3</sub>(ρ(β)),
+where W<sub>3</sub> is the one-dimensional module in which every U acts as 0.
+For the figure-eight, the 3-strand braid of demo 2, the mirror, a single
+crossing and the identity, this equals the state-sum oracle exactly. The
+exponential sum over smoothings has become a product of small matrices.</p>
+<pre><code>U_1 = [[δ, 1],      U_2 = [[0, 0],      g_i = A^-1·I + A·U_i
+       [0, 0]]             [1, δ]]      g_i^-1 = A·I + A^-1·U_i</code></pre>
+
+<h2>Demo 04 · One trace instead of two</h2>
+<p class="nota"><code>knotapel/demo_04_spin_chain/main.c</code> · 717 lines · 12/12 tests</p>
+<p>Demo 3 needed two modules and a hand-chosen weight. Demo 4 asks whether
+a single space contains both: give each strand a two-dimensional space V,
+so three strands live in V⊗V⊗V (eight dimensions, a "spin chain"). The
+cup-cap becomes a 4×4 matrix on V⊗V built from the quantum singlet
+|01⟩ − A<sup>2</sup>|10⟩, whose self-pairing is exactly δ; the crossing is
+R = A·U + A<sup>−1</sup>·I, placed on strands 1–2 or 2–3 as R⊗I or I⊗R.
+The demo verifies U<sup>2</sup> = δU, the inverse, and the Yang–Baxter
+equation R<sub>1</sub>R<sub>2</sub>R<sub>1</sub> = R<sub>2</sub>R<sub>1</sub>R<sub>2</sub>
+on the 8×8 matrices.</p>
+<p>The open question was which trace gives the bracket, and the demo
+records the answer it found: a <em>quantum</em> trace, weighting each basis
+state by K = diag(A<sup>2</sup>, A<sup>−2</sup>) on every strand, divided by
+A<sup>2</sup> + A<sup>−2</sup>. Why it works is the representation theory
+underneath (Schur–Weyl duality): V⊗V⊗V splits as
+V<sub>3/2</sub>⊗W<sub>3</sub> (4 × 1 dimensions) plus
+V<sub>1/2</sub>⊗W<sub>1</sub> (2 × 2), and the quantum trace weights each
+part by the quantum dimension of its V, which after the division is exactly demo 3's
+formula, weight A<sup>4</sup> + A<sup>−4</sup> included. Demo 3's
+hand-assembled sum turns out to be one trace in a bigger space.</p>
+
+<h2>Demo 05 · Any number of strands</h2>
+<p class="nota"><code>knotapel/demo_05_scaling/main.c</code> · 766 lines · 39/39 tests</p>
+<p>Demo 5 asks whether the formula is a fact about three strands or about
+braids. It builds the generators R<sub>i</sub> = I<sup>⊗(i−1)</sup> ⊗ R ⊗ I<sup>⊗(n−i−1)</sup>
+for n = 2, 3, 4 and 5 strands (matrices up to 32×32 whose entries are
+polynomials, now allocated on the heap), and checks for each n the braid
+relations: Yang–Baxter for neighbouring generators, and far commutativity
+(σ<sub>1</sub>σ<sub>3</sub> = σ<sub>3</sub>σ<sub>1</sub>, which first exists
+at four strands). It also checks the quantum integers that the quantum
+dimensions are made of, both by their recurrence
+[n+1]<sub>q</sub> = [2]<sub>q</sub>[n]<sub>q</sub> − [n−1]<sub>q</sub> and
+by the closed form [n]<sub>q</sub>(A<sup>2</sup> − A<sup>−2</sup>) =
+A<sup>2n</sup> − A<sup>−2n</sup>.</p>
+<p>The quantum trace works at every n, with one correction found on the
+way: a sign that alternates with the number of strands, tr<sub>q</sub> =
+(−1)<sup>n</sup>·δ·⟨β⟩. Demo 4 had only seen n = 3, where the sign is −1.
+The demo explains it from the identity braid: the quantum trace of the
+identity is (−δ)<sup>n</sup>, while the bracket of n unlinked circles is
+δ<sup>n−1</sup>, so the ratio carries (−1)<sup>n</sup>. With that, the
+bracket of a braid on any number of strands is a matrix product and one
+weighted trace, exact over the integers, and every value agrees with the
+demo-1 oracle.</p>
+
+<h2>Demo 06 · Where the weights come from</h2>
+<p class="nota"><code>knotapel/demo_06_jones_wenzl/main.c</code> · 799 lines · 27/27 tests</p>
+<p>Demos 3 and 4 found the bracket as a weighted sum of traces, with weights
+that "looked like magic numbers" (the file's own words). Demo 6 shows where
+they come from: the Jones–Wenzl idempotents p<sub>n</sub>, the projectors
+onto the highest-spin part of V<sup>⊗n</sup>. A projector is idempotent
+(p<sup>2</sup> = p), every cup-cap kills it (U<sub>i</sub>p<sub>n</sub> = 0),
+and its quantum trace is a quantum integer. Written directly, p<sub>n</sub>
+has fractions of polynomials in it, so the demo keeps everything polynomial
+with a scaling trick: it builds Q<sub>n</sub> = D<sub>n</sub>·p<sub>n</sub>,
+starting from Q<sub>2</sub> = δ·I − U and growing Q<sub>3</sub> from
+Q<sub>2</sub> by the standard recursion, and checks Q<sub>n</sub><sup>2</sup> =
+D<sub>n</sub>Q<sub>n</sub>, the annihilation, and
+tr<sub>q</sub>(Q<sub>n</sub>) = D<sub>n</sub>[n+1]<sub>q</sub>, exactly.</p>
+<p>With Q<sub>3</sub> in hand the quantum trace of any 3-strand braid splits
+in two: the part through the projector is exactly
+[4]<sub>q</sub>·tr<sub>W3</sub>, the one-dimensional module's trace times its
+quantum dimension, checked for four braids. So demo 3's weight
+A<sup>4</sup> + A<sup>−4</sup> is [4]<sub>q</sub>/[2]<sub>q</sub>: a ratio of
+quantum dimensions, not a magic number. The other part, which should be
+[2]<sub>q</sub>·tr<sub>W1</sub>, is checked more weakly, only for exact
+divisibility; the code says plainly that the sum of the two parts is
+tautological and that the W<sub>3</sub> part carries the real content.</p>
+
+<h2>Demo 07 · From braids back to diagrams</h2>
+<p class="nota"><code>knotapel/demo_07_braid_closure/main.c</code> · 790 lines · 25/25 tests</p>
+<p>Until here there were two worlds: diagrams in PD notation (demo 1's
+oracle) and braid words (everything since). Demo 7 builds the bridge,
+<code>braid_to_pd</code>: it follows each strand position through the
+crossings that touch it, numbers the arcs between them, and writes each
+crossing as its four arcs in PD order. The bracket of the generated diagram
+equals the braid's bracket for every test braid, including the chiral
+trefoil. The demo also counts <em>Seifert circles</em> (smooth every crossing
+the way that respects orientation) and finds, as theory says, one per strand
+of the braid; and it counts link components, which follow the braid's
+permutation.</p>
+<p>Two of its findings matter for the earlier demos. The "obvious"
+counter-clockwise PD labelling produces the mirror image, which is why demo
+1's trefoil came out left-handed; the fix is to swap two positions. And
+σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> on three strands has two components,
+"not a trefoil", which answers demo 2's open note (see
+<a href="#nota-hopf">note 1</a>). One limit is visible in the code: a strand
+that no crossing touches gets no arcs, so its circle would be missing from
+the diagram; no test braid has such a strand.</p>
+
+<h2>Demo 08 · From diagrams to braids</h2>
+<p class="nota"><code>knotapel/demo_08_vogel/main.c</code> · 886 lines · 47/47 tests</p>
+<p>The other direction, which its README calls the compiler: given a PD
+diagram, produce a braid whose closure is the same knot. The demo finds the
+Seifert circles with a union-find, builds the graph of which circles each
+crossing joins, and when that graph is a simple chain, the circles become
+the braid's strands in chain order and each crossing becomes a generator
+between two neighbouring strands. The hard part is the order of the
+crossings. Each circle visits its crossings in a cyclic order; the demo
+tries every choice of where to cut each cycle, turns the result into a
+precedence graph, and accepts the first choice that sorts topologically.
+The insight it records: crossings between the same pair of circles commute,
+so no order is imposed between them. Without that, the trefoil, whose three
+crossings all join the same two circles, looks contradictory.</p>
+<p>The trefoil, figure-eight and Hopf link compile to σ<sub>1</sub><sup>3</sup>,
+σ<sub>1</sub>σ<sub>2</sub><sup>−1</sup>σ<sub>1</sub>σ<sub>2</sub><sup>−1</sup>
+and σ<sub>1</sub><sup>2</sup>, and round trips (diagram to braid to diagram,
+twice) preserve the bracket. The name promises a little more than the code
+does: Vogel's algorithm is the set of <em>moves</em> that turn any diagram's
+Seifert circles into a chain; this demo handles the case where they already
+form one and refuses the rest (the README says so), and the search over cut
+points grows exponentially with the size of the diagram.</p>
+
+<h2>Demo 09 · The moves that don't change a knot</h2>
+<p class="nota"><code>knotapel/demo_09_reidemeister/main.c</code> · 716 lines · 28/28 tests</p>
+<p>Two diagrams show the same knot exactly when they are connected by
+Reidemeister moves: R1 adds or removes a kink, R2 slides one strand over
+another (two crossings), R3 moves a strand across a crossing. Demo 9 writes
+R1 and R2 as operations on PD codes (split an arc, add the new arcs and
+crossings) and checks what the theory says: R1 multiplies the bracket by
+−A<sup>3</sup> or −A<sup>−3</sup> and changes the writhe by one, so the
+writhe-normalized f-polynomial is unchanged; R2 changes nothing. R3 is
+tested through the braid relation σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> =
+σ<sub>2</sub>σ<sub>1</sub>σ<sub>2</sub>, including inside a longer
+4-strand braid, and combinations of moves leave f unchanged. This is the
+demo that says the bracket, once normalized, is a knot invariant and not
+just a property of a drawing.</p>
+<p>One caution in the code: the R2 helper accepts any two arcs and does not
+check that they border the same region of the diagram, so the result may
+not be drawable in the plane. The bracket identity it checks holds either
+way (the R2 cancellation is local to the two new crossings), so the tests
+prove the algebra, not that each poked diagram is a real one.</p>
+
+<h2>Demo 10 · From polynomials to numbers</h2>
+<p class="nota"><code>knotapel/demo_10_numerical/main.c</code> · 955 lines · 108/108 tests</p>
+<p>Exact polynomials don't scale: a 32×32 matrix of them was about 800 KB.
+Demo 10 fixes A = e<sup>iθ</sup> and turns every polynomial into one complex
+number, so the same R-matrices and quantum trace become ordinary complex
+linear algebra. It checks the complex arithmetic, the inverses and the
+Yang–Baxter equation numerically, matches the state-sum oracle (itself
+evaluated at the same A) for every test braid at several angles, and scales to eight
+strands (256×256 matrices), where far commutativity and the braid relations
+still hold to 10<sup>−9</sup>. It is the one step in these ten demos that
+uses floating point; the project later made "avoid floating point" a rule,
+and the computing results moved to exact arithmetic in Z[ζ<sub>8</sub>].</p>
+<p>It ends with the experiment that points toward computation: how many
+sample angles are needed to tell a table of knots apart? At θ = π/5 a single
+angle separates all six. The result is true of the six braids, but the
+table's names are mostly wrong: only the figure-eight is the knot named,
+and the others are links (see <a href="#nota-tabula">note 3</a>).</p>
+
+<h2 id="notae">Notes from this reading (2026-10-03)</h2>
+<p class="nota">Each was checked by hand algebra or by running the code;
+none changes a test result, since every test compares like with like.
+I have not edited anything in <code>knotapel/</code>; recording these in
+the project's own log or atlas is the project's call.</p>
+<ol>
+<li id="nota-hopf"><p><strong>σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> is a Hopf link,
+not a trefoil.</strong> Demo 2 leaves it as an open note that
+σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> on three strands, labelled the
+trefoil, disagrees with σ<sub>1</sub><sup>3</sup>. Its permutation swaps
+strands 1 and 3 and fixes strand 2, so the closure has two components, which
+demo 7 itself discovered ("a 2-component link (not a trefoil)"). It is the
+Hopf link with one extra stabilizing crossing: its bracket is A + A<sup>−7</sup>
+= (−A<sup>−3</sup>)(−A<sup>4</sup> − A<sup>−4</sup>), and with the writhe
+factor whose sign matches these demos' crossing convention
+((−A<sup>3</sup>)<sup>+w</sup>), σ<sub>1</sub><sup>2</sup> and
+σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> both give −A<sup>2</sup> −
+A<sup>10</sup>: Markov invariance held. The label survives in demos 3 and 6
+("Trefoil (3-strand)", "trefoil") and in demo 10's table; demos 3 and 6
+compare against the state sum of the same braid, so their tests stand. The
+trefoil as a 3-strand braid is (σ<sub>1</sub>σ<sub>2</sub>)<sup>2</sup>.</p></li>
+<li id="nota-f"><p><strong>Demo 1's printed f-polynomial is mis-normalized.</strong>
+The trefoil's PD code labels all three crossings positive (writhe +3), but
+under the demo's smoothing convention the diagram is left-handed (demo 7
+explains the labelling cause). Normalizing a left-handed bracket with
+w = +3 gives A<sup>−14</sup> + A<sup>−6</sup> − A<sup>−2</sup>, which the
+test accepts as "the left-handed f" because its expected value was derived
+the same way. With the writhe that matches the bracket (−3) the value is
+A<sup>4</sup> + A<sup>12</sup> − A<sup>16</sup>. That is exactly what the
+atlas's demo index lists for demo 1, labelled there as the bracket: the
+atlas has the right f-polynomial under the wrong name, and the demo the
+wrong one under the right name. Demo 2's f-values share the convention
+mismatch.</p></li>
+<li id="nota-tabula"><p><strong>Demo 10's knot table is mostly links.</strong>
+Counting the components of each braid's closure: "unknot" (the identity on
+three strands) is the 3-component unlink, whose bracket is δ<sup>2</sup>
+(0.381966 at θ = π/5, as printed); "trefoil" and "mirror trefoil"
+(σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> and its inverse) are Hopf links;
+"torus(2,5)" (σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>)
+has two components; "granny" ((σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>)<sup>2</sup>,
+the full twist) is the 3-component (3,3) torus link. Only the figure-eight
+is a knot. The real ones on three strands would be the trefoil
+(σ<sub>1</sub>σ<sub>2</sub>)<sup>2</sup>, T(2,5) σ<sub>1</sub><sup>5</sup>σ<sub>2</sub>
+and the granny σ<sub>1</sub><sup>3</sup>σ<sub>2</sub><sup>3</sup>. Also, the
+experiment compares raw brackets, which depend on the diagram's framing, so
+it separates braid diagrams rather than knot types. "One angle suffices for
+six" stands as a statement about these six braids. Demos 11 to 13 build their
+knot tables on this one; whether the labels carry over is a question for the
+next reading.</p></li>
+</ol>
+
+<h2>Where it goes next</h2>
+<p>Demos 11 to 13 continue from demo 10's numbers: the bracket as a waveform
+over the whole circle, how few bits per knot survive quantization, and a
+first test of whether such "compiled" weights generalize. The decisive turn
+comes when the bracket is evaluated at A = e<sup>i5π/4</sup>, where δ = 0. Every
+diagram with more than one loop then vanishes, the values become exact
+integers in Z[ζ<sub>8</sub>], and those values are what demo 29 found
+computing XOR. The polynomial and matrix machinery of these ten demos is
+what makes "exact" possible there.</p>
+
+<p class="nota">Written by hand on 2026-10-03 from reading the ten
+<code>main.c</code> files (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+<code>cc -std=c89</code> and run that day; the test counts are from those
+runs. The polynomials above are copied from their output. The project's own
+summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
+<code>knotapel/atlas/inventory/</code>.</p>
+
+</body>
+</html>
