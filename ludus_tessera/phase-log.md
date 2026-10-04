@@ -199,4 +199,13 @@ The runner grew pictor's closure (from `aedilis --enumerare`) and the
 vendored sqlite (volumen → scrinium), compiled relaxed with the root's
 flags.
 
-Pending: Fran's look in Ghostty and Terminal.app.
+**Fran's look (2026-10-03): "everything seems to be working perfectly"**
+- canvas and status row, strokes under the pointer, Ctrl-Z / fg with a
+full repaint, resize repaint (layout fixed until track b), Ctrl-C
+leaving the terminal clean. Session numbers (no -fumus, scratch
+volume): 779 frames, compositio 4 ms, pingere 12 ms, demittere 1879 ms
+(~2.4 ms/frame - the canvas through the quadrant path dominates),
+slowest frame 3 ms, 79,860 bytes emitted. The `-fumus` run (30 frames
+then exit) was a poor look: frames are per EVENT, so a drag spends the
+budget in a second - a frame count is a smoke bound, not a viewing
+window.

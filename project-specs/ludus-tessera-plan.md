@@ -143,6 +143,10 @@ cells equal to tessellatio's lowering of the same mandata
 look: Ghostty and Terminal.app (Terminal.app reports no pixel size;
 256 colours via TesseraColores).
 
+A4 as built: `lib/pictor_applicatio` shared by `pictor.c` (window)
+and `pictor_terminalis.c` (terminal, no Cocoa); headless replay proof
+(document sigillum, insulae, cursor equal); Fran's look: all working.
+
 **A5 — RELATIO.** Phase log; terminal-planning 013 status.
 
 ## IV. Track (b) — responsive (outline; tasks written when (a) closes)
