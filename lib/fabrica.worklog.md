@@ -1778,3 +1778,27 @@ sana False, rc 1, 12/13, the fracture listed with file:line, verdict
 removed. Hermetic tests: 6 cases (RECENS, STALUM->sanare, broken, lock,
 filter, real-declaration lookup); BSD printf exits 1 on an extra argument
 with no format directive - the fake gate uses echo.
+
+## 2026-10-03 - slice 3 T6 follow-up: two ledger bugs the first commit exposed
+
+After the T6 commit, `porta('toml')` ran but reported "transitus non
+servatus: ingressus build/ sine domino:
+toml/build/probationes/probatio_toml_api.o.compilator.47033.o" - three runs
+in a row, same pid. Two bugs:
+1. **The verdict ledger was never truncated.** `_agere` "truncated" it with
+   `filum_scribere(path, chorda_ex_literis(""))` - an empty chorda has datum
+   NIHIL and filum_scribere refuses it before opening the file. The ledger
+   had grown to 65 MB / 1,010,944 lines over the session; every recorded
+   trace was the UNION of all past runs (stricter, but carrying stale
+   entries like a dead temp file). Now deleted before the run, as the
+   generator paths already did. One run = 84,200 lines.
+2. **filum_delere recorded nothing**, though lectiones.h documents S as
+   "scripta, deleta, mota" (filum_arborem_delere and filum_movere did).
+   compilator's miss path writes a temp object with clang (invisible),
+   reads it through filum (L) and deletes it - an L with no S. Fixed in
+   lib/filum.c; probatio_lectiones pins it (file created with the ledger
+   off, deleted with it on); plant (remove the record) -> red.
+Verified: forced a compile miss (comment in a toml test) -> pass recorded,
+the temp object shows L + S. Also: the inner raw run inside -iudicium no
+longer writes its own tempora row (the outer porta() does) - the T6
+commit had logged toml twice (34.9 s inner, 47.9 s outer).

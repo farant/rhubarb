@@ -673,8 +673,11 @@ _agere (
             piscina);
         (vacuum)filum_directorium_creare_cum_parentibus(
             "build/fabrica/lectiones");
-        (vacuum)filum_scribere(chorda_ut_cstr(relativa, piscina),
-            chorda_ex_literis("", piscina));
+        /* liber vetus DELETUR (ut generatores): filum_scribere chordae
+         * vacuae (datum NIHIL) nihil agit - liber per cursus crescebat
+         * (LXV MB, inventum T6) et vestigium unionem cursorum omnium
+         * ferebat, lectiones stalas comprehendens */
+        (vacuum)filum_delere(chorda_ut_cstr(relativa, piscina));
         (vacuum)setenv("FABRICA_LECTIONES",
             chorda_ut_cstr(absoluta, piscina), 1);
     }

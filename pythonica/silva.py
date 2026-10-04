@@ -1855,7 +1855,8 @@ def _porta_per_fabricam(nomen, vis=False):
                  fr, False)
 
 
-def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True):
+def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True,
+                 notare=True):
     """portam currere: Porta(nomen, cucurrit, sana, compendium, rc,
     acta, fracturae, rancida, receptum). sana SOLUM si cucurrit ET
     rc == 0 ET signum non fractum. radix: directorium operis alterum
@@ -1887,9 +1888,10 @@ def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True):
     rancida = sig is not None and sig != sigillum_arboris()
     p = Porta(nomen, cucurrit, sana, compendium, r.returncode, acta, fr,
               rancida)
-    _tempus_notare('porta', nomen + ('.' + filtrum if filtrum else '')
-                   + (' (umbra)' if radix is not None else ''),
-                   initium, sana, r.returncode)
+    if notare:
+        _tempus_notare('porta', nomen + ('.' + filtrum if filtrum else '')
+                       + (' (umbra)' if radix is not None else ''),
+                       initium, sana, r.returncode)
     if sig is not None:
         p = p._replace(receptum=_receptum_vivum_scribere(p, filtrum, sig))
     return p
@@ -4863,7 +4865,8 @@ def iudicium_currere(nomen):
         os.unlink(via)
     except OSError:
         pass
-    p = _porta_cruda(nomen, receptum=False)   # via cruda: numquam fabrica
+    # via cruda: numquam fabrica; tempus a porta() exteriore notatur
+    p = _porta_cruda(nomen, receptum=False, notare=False)
     # acta portae in effusione: fabrica eas in build/fabrica/acta/
     # porta_<nomen>.log servat (porta() inde fracturas legit)
     sys.stdout.write(p.acta or '')
