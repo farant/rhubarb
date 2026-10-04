@@ -197,7 +197,11 @@ renaming privates and they collide (`Gradus`, found in Q13).
 | `totalitas` | never crash, emission == source, depth 100 000 in time |
 | `computus` | twin columns against `basis.tsv` |
 
-13 suites, 14,267 assertions (2026-09-28). The root `silex` and briar
+13 suites, 14,267 assertions (2026-09-28). **The gate is a fabrica
+verdict** (fabrica spec 3, 2026-10-03): `porta_toml` in
+`toml/aedificatio.stml`; `bin/fabrica sanare build/fabrica/verdicta/toml.txt`
+runs it and records its read trace, `bin/fabrica iudicare <same>` says
+RECENS (~2 s, nothing run) while nothing it read changed. The root `silex` and briar
 gates (`briar`, `briar-fumus`) also cover the client since Q12/Q13;
 `portae_debitae` owes `toml` for any `toml/fontes` change.
 

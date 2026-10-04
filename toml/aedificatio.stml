@@ -31,4 +31,32 @@
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <exitus via="toml/build/aurum_silvestre.txt" provenientia="regeneratio"/>
   </actio>
+  <!-- PORTA toml ut actio (fabrica spec 3 T5c): transitus sub vestigio
+       libri lectionum servatur - nihil eorum quae porta legit mutatum =
+       transitus idem, sine cursu. Ingressus declarati sunt quae liber
+       non videt: scripta (fontationes cursoris, crusta), silva.py,
+       binaria quae currit, identitas clang, et artificia duarum actionum
+       supra (ordo + domini lectionum build/). Vestigia: quae porta ipsa
+       scribit. -->
+  <actio titulus="porta_toml" genus="iudicium" lectiones="verum">
+    <mandatum>
+      <verbum! (>python3
+      <verbum! (>-B
+      <verbum! (>pythonica/silva.py
+      <verbum! (>-iudicium
+      <verbum! (>toml
+    </mandatum>
+    <vestigium via="toml/build"/>
+    <vestigium via="build/test_logs/toml.log" forma="plagula"/>
+    <vestigium via="build/portae/tempora.tsv" forma="plagula" communis="verum"/>
+    <ingressus genus="fasciculus" via="pythonica/silva.py"/>
+    <ingressus genus="fontationes" via="toml/compile_probationes.sh"/>
+    <ingressus genus="instrumentum" via="bin/aedilis"/>
+    <ingressus genus="instrumentum" via="bin/compilator"/>
+    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
+    <ingressus genus="identitas_clang" via="clang"/>
+    <ingressus genus="fasciculus" via="build/toml_corpus.lst"/>
+    <ingressus genus="fasciculus" via="toml/build/aurum_silvestre.txt"/>
+    <exitus via="build/fabrica/verdicta/toml.txt" provenientia="verdictum"/>
+  </actio>
 </aedificatio>

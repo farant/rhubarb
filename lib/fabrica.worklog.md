@@ -1709,3 +1709,31 @@ Test gotcha: a declaration with no <ingressus> is refused first
 - Test gotcha: per-run memos (sutura->digesta) keep the input key inside
   one process - the block runs without memos so judgements follow edits.
 488/488.
+
+## 2026-10-03 - slice 3 T5c: porta_toml, first real reuse
+
+`python3 -B pythonica/silva.py -iudicium toml` (verdict written only on a
+pass, deleted first; -B so importing silva.py never writes __pycache__,
+which the whole-tree snapshot would call "outside the footprint");
+`porta_toml` in toml/aedificatio.stml (footprint toml/build,
+build/test_logs/toml.log, build/portae/tempora.tsv - porta() records its
+timing; inputs silva.py, fontationes of the runner, bin/aedilis,
+bin/compilator, python3, identitas_clang, the two T4 artifacts).
+First `bin/fabrica sanare build/fabrica/verdicta/toml.txt`: SANATUM 33 s,
+verdict "toml: TOML PROBATIONES: 13/13". Then `iudicare` RECENS from the
+trace in 1.9 s (no test run). Stored trace: L 2807 / X 108 / A 835 / D 5
+/ E 4 - exactly T1's accounting (3025 L - 58 owned objects - 162 SDK + 2
+newly visible: computus gold, registrum grammar; E = HOME + three absent
+switches, RHUBARB_RADIX dropped as runner-set).
+Live plants (each reverted): README edit -> RECENS; comment in
+toml/fontes/toml_lector.c -> STALUM "lectio transitus mutata:
+toml/fontes/toml_lector.c"; comment in tools/cursor_communis.sh ->
+IGNOTUM (key changed, via fontationes); ORACULUM_OMNIA=1 in the judge's
+env -> STALUM naming it. Sweep without arguments never lists it.
+First T5c commit attempt: the pythonica gate went red on a test that
+predates T5c - 'tegit fontes: crusta/fontes/*.c -> crusta (aedilis closure
+does not see it)'. Since the crusta migration (8a84c35c) crusta/fontes IS
+an aedilis root, so crusta is owed through a closure; pythonica had not run
+since. The lens assertion now uses html/fontes (not a root; html rows
+added to the test's fixture inventory) and a second assertion pins the new
+crusta cause ('in clausura').

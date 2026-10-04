@@ -4737,7 +4737,43 @@ def differre(vetus, novus, gradus='cosmetica'):
     return Differentia(paria, verd, r.returncode == 0, r.returncode)
 
 
+# ---------------------------------------------------------------- iudicium
+
+# VERDICTA (fabrica spec 3 par. II.1, T5c): porta ut actio fabricae
+# 'iudicium' - mandatum eius 'python3 -B pythonica/silva.py -iudicium
+# <porta>'. Signum portae in PORTAE manet (sedes una, nulla copia in
+# STML). -B: importatio silva.py __pycache__ in arbore non scribit
+# (photographia sanationis id 'extra vestigium' iudicaret).
+VERDICTA_DIR = os.path.join(RADIX, 'build', 'fabrica', 'verdicta')
+
+
+def iudicium_currere(nomen):
+    """portam currere ut porta() (signum, sine filtro, receptum=False) et
+    verdictum scribere SOLUM si sana: build/fabrica/verdicta/<nomen>.txt
+    = '<nomen>: <compendium>' (octeti deterministici - signum, nulla
+    tempora). Verdictum prius ANTE cursum deletur: porta fracta nihil
+    relinquit. Reddit codicem exitus (0 sana, 1 fracta)."""
+    via = os.path.join(VERDICTA_DIR, nomen + '.txt')
+    try:
+        os.unlink(via)
+    except OSError:
+        pass
+    p = porta(nomen, receptum=False)
+    if not p.sana:
+        sys.stderr.write('iudicium %s: FRACTA (%s, rc=%d)\n'
+                         % (nomen, p.compendium, p.rc))
+        return 1
+    os.makedirs(VERDICTA_DIR, exist_ok=True)
+    with open(via + '.tmp', 'w') as f:
+        f.write('%s: %s\n' % (nomen, p.compendium))
+    os.rename(via + '.tmp', via)
+    print('iudicium %s: %s' % (nomen, p.compendium))
+    return 0
+
+
 if __name__ == '__main__':
+    if len(sys.argv) == 3 and sys.argv[1] == '-iudicium':
+        sys.exit(iudicium_currere(sys.argv[2]))
     if len(sys.argv) >= 5 and sys.argv[1] == '-umbra':
         if len(sys.argv) >= 8:
             _umbra_currere(sys.argv[2], sys.argv[3], sys.argv[4],

@@ -1851,6 +1851,8 @@ def _inv_scribere(currit_radix):
         'tools/claves_codices_probare.sh\tcur extra PORTAE\ttextus\tuna\\tduae\\\\tres\\nquattuor',
         'crusta/compile_probationes.sh\tporta\ttextus\tcrusta',
         'crusta/compile_probationes.sh\ttegit fontes\ttextus\tcrusta/fontes/*, materia/fontes/*',
+        'html/compile_probationes.sh\tporta\ttextus\thtml',
+        'html/compile_probationes.sh\ttegit fontes\ttextus\thtml/fontes/*',
     ]
     if currit_radix:
         lineae.append('compile_tests.sh\tcurrit binaria\ttextus\t'
@@ -1917,11 +1919,17 @@ try:
     credo(rel.startswith('PORTAE DEBITAE (1 via):\n  (nulla)\n'), 'relatio: nulla porta debita dicitur, non tacetur')
 
     # TEGIT FONTES (lens derivata ex scripto cursoris): capita subsystematis
-    # aedili ignota ('S') - clausura fontes suos non videt; lens eos tegit
+    # aedili ignota ('S') - clausura fontes suos non videt; lens eos tegit.
+    # html/fontes radix aedilis NON est (crusta/fontes est ex migratione
+    # ad compilatorem 8a84c35c: crusta nunc per clausuram debetur)
+    debita, intecta = silva.portae_debitae(['html/fontes/html_arbor.c'])
+    c = [d for d in debita if d.porta == 'html']
+    credo(len(c) == 1 and 'tegit fontes' in c[0].causa,
+          'tegit fontes: html/fontes/*.c -> html (clausura aedilis eum non videt)')
     debita, intecta = silva.portae_debitae(['crusta/fontes/crusta_arbor.c'])
     c = [d for d in debita if d.porta == 'crusta']
-    credo(len(c) == 1 and 'tegit fontes' in c[0].causa,
-          'tegit fontes: crusta/fontes/*.c -> crusta (clausura aedilis eum non videt)')
+    credo(len(c) == 1 and 'in clausura' in c[0].causa,
+          'crusta/fontes radix aedilis: crusta per clausuram debetur')
     debita, intecta = silva.portae_debitae(['materia/fontes/materia_nodus.h'])
     credo('crusta' in [d.porta for d in debita], 'tegit fontes: caput materiae -> cliens crusta')
 
