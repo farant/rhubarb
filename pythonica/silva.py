@@ -2216,8 +2216,11 @@ def _portae_debitas_addere(viae, portae):
 # ('summare', 'mappatio'), dum lint ipse ~I s currit. Nunc ANTE portas,
 # eadem functio quam uncus currit (tools/unci-git/lint_latinus.sh,
 # UNCUS_LINT_VIAE = viae commissionis) - sedes veritatis una.
+# oracula/: glutinum circa implementationes alienas ut oracula (lingua
+# aliena necessitate, ut vendor; dispositio D0, 2026-10-03)
 _EXCLUSA_LINTRI = re.compile(
-    r'(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor)/')
+    r'(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor'
+    r'|oracula)/')
 
 
 def lint_latinus_praevium(viae):

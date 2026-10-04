@@ -18,7 +18,8 @@
 #
 # Regulae (olim in tools/unci-git/pre-commit solo):
 #   - solae *.c et *.h; directoria scratchpad build fixa amalgama
-#     archivum numquam
+#     archivum oracula numquam (oracula/: glutinum C99 circa oracula
+#     aliena - formator C89 id non legit; dispositio D0)
 #   - plagula GENERATA (GENERATUM in linea prima) numquam: veritas eius
 #     generator est (fabrica P2, via B, 2026-09-29)
 #   - knotapel/ vendor/: terra non evoluta - intra lineas mutatas solas
@@ -39,7 +40,7 @@ for via in "$@"; do
         *) continue ;;
     esac
     if printf '%s\n' "$via" \
-            | grep -qE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/'; then
+            | grep -qE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula)/'; then
         continue
     fi
     [ -f "$via" ] || continue

@@ -105,6 +105,12 @@ vendor objects) + script: reads a tree in a small STML form, lays it
 out with Clay @ e6cc369, prints one rectangle per node. Red: the
 script refuses without `../clay` at the pinned commit (exit 2, named).
 
+D0 as built: `tools/dispositio_oraculum.sh` (+ `oracula/clay/`: C99
+glue, Latin driver, fixtures); `oracula/` excluded by name from
+examen, lint, formatter (Fran); pinned commit enforced (exit 2);
+integer inputs integral unless a grow split divides unevenly (80/3).
+Finding for D1: `allineatio` is not a known word.
+
 **D1 — fit + fixed + percent + positions.** No grow/shrink yet. Hand
 tables (a status bar row, a sidebar column, nested padding/gap,
 alignment centre/end) AND the same trees through the oracle. Plants:

@@ -120,7 +120,9 @@ oratio_vocabula_identificatorem_addere (
 
 /* Viae EXCLUSAE lintus Latini (decisio Frani 2026-09-04): knotapel/
  * (Anglicum consulto, laboratorium mathematicum), vendor/ (alienum),
- * archivum/ (generationes praecedentes). Series praefixorum NIHIL
+ * archivum/ (generationes praecedentes), oracula/ (glutinum circa
+ * implementationes alienas ut oracula - identificatores alieni
+ * necessitate; dispositio D0, 2026-10-03). Series praefixorum NIHIL
  * terminata; instrumentum -omnes-viae eam praeterit. */
 externus constans character* constans ORATIO_VOCABULA_EXCLUSA[];
 
