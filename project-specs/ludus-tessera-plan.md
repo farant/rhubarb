@@ -152,19 +152,36 @@ and `pictor_terminalis.c` (terminal, no Cocoa); headless replay proof
 **Track (a) DONE 2026-10-03** (A0 4f9670c4 … A4 24d9b93f; RELATIO in
 `ludus_tessera/phase-log.md`).
 
-## IV. Track (b) — responsive (outline; tasks written when (a) closes)
+## IV. Track (b) — responsive (tasks, 2026-10-03)
 
-- **B1 surface size as state.** Leaning: the resize event writes
-  `superficies.latitudo/altitudo` into INSULA_EPHEMERA and componere
-  reads it like zoom (replayable, target-free). Alternatives kept: the
-  glue updates the app's ctx; a new `Componere` argument. Decide at B1
-  with (c)'s insula shape in view.
-- **B2 cell-aligned layout.** A helper so rectangles fall on Modulus
-  boundaries (B6b: a terminal reports cell centres only).
-- **B3 pictor responsive** as the proof (status bar on the last row at
-  any size).
-- The page cut-off mark (decision 5) is specified here, built with
-  pagina in (c).
+Decisions (Fran, 2026-10-03): **the surface size is state** - the
+dispensator writes it into the ephemeral insula, a framework attribute
+like `focus`/`focus_acervus` (which it already owns and every app canon
+declares); **layout is a pure library, `dispositio`**, Clay-shaped,
+integer, in cells (its own plan: `project-specs/dispositio-plan.md`).
+
+**B1 — surface size as state.** On `EVENTUS_MUTARE_MAGNITUDINEM` the
+dispensator writes `superficies_latitudo` / `superficies_altitudo`
+(our pixels) into INSULA_EPHEMERA before composing; pictor's (and the
+test apps') canons declare them. Both glues dispatch ONE initial size
+event before the first frame (fenestra: the window size; tessera:
+cells × Modulus). Recorded by the notarius, replayed like any event.
+Red: dispensator unit (event → attributes), glue initial event
+(ludus_tessera headless; ludus_fenestra via its test). Plants: the
+dispensator ignoring the event; the glue forgetting the initial event.
+
+**B2 — `dispositio`** (plan D0-D4).
+
+**B3 — pictor responsive.** `pictor_componere` reads `superficies_*`
+and lays out with dispositio in cells: a column - canvas viewport
+(GROW) over a status row (FIXED). OPEN for B3: the status row is 12 px
+today = 1.5 cells; whole cells force 1 or 2. Proofs: headless (a resize
+event moves the status row to the last row in both targets), the
+replay proof still equal, Fran's look (resize a terminal; resize the
+window - AUDIENDA: the window's TabulaPixelorum is created once at
+start, so a window resize may need its own work).
+
+**B4 — RELATIO.**
 
 ## V. Track (c) — insula-native widgets (outline; interview first)
 
