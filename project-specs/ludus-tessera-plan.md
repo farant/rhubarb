@@ -170,6 +170,10 @@ Red: dispensator unit (event → attributes), glue initial event
 (ludus_tessera headless; ludus_fenestra via its test). Plants: the
 dispensator ignoring the event; the glue forgetting the initial event.
 
+B1 as built: dispensator writes `superficies_*` (writer "dispensator")
+on the raw event before recomposition; both glues announce the size
+once; pictor's canon declares it (canons refuse silently - asserted).
+
 **B2 — `dispositio`** (plan D0-D4).
 
 **B3 — pictor responsive.** `pictor_componere` reads `superficies_*`

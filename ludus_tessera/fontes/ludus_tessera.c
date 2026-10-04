@@ -27,6 +27,31 @@ _modulum_renovare (
         (s32)tessera_altitudo(lt->opus) * ch);
 }
 
+/* Magnitudo initialis semel (013 B1): superficies status est,
+ * dispensator eam in ephemera scribit. Vexillum ANTE traditionem
+ * ponitur - tractare hanc functionem iterum vocat. */
+interior vacuum
+_magnitudinem_nuntiare (
+    LudusTessera* lt,
+             s64  nunc)
+{
+    Eventus e;
+
+    si (lt->magnitudo_nuntiata)
+    {
+        redde;
+    }
+    lt->magnitudo_nuntiata = VERUM;
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus   = EVENTUS_MUTARE_MAGNITUDINEM;
+    e.tempus  = nunc;
+    e.datum.mutare_magnitudinem.latitudo =
+        (i32)lt->modulus.extensio_latitudo;
+    e.datum.mutare_magnitudinem.altitudo =
+        (i32)lt->modulus.extensio_altitudo;
+    ludus_tessera_tractare(lt, &e, nunc);
+}
+
 LudusTessera*
 ludus_tessera_creare (
             Piscina* piscina,
@@ -99,6 +124,7 @@ ludus_tessera_tractare (
     {
         redde;
     }
+    _magnitudinem_nuntiare(lt, nunc);
     e = *ev;
     si (e.tempus == ZEPHYRUM)
     {
@@ -134,6 +160,7 @@ ludus_tessera_quadrum (
     {
         redde;
     }
+    _magnitudinem_nuntiare(lt, nunc);
     t0 = fenestra_tempus_ms();
     dispensator_pulsare(lt->d, nunc);
     t1 = fenestra_tempus_ms();

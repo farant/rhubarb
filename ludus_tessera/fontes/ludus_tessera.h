@@ -52,6 +52,7 @@ nomen structura {
                  Mandata* mandata;            /* quadri ultimi */
                      s32  claudendi_runa;     /* ordinarie 'c' */
                      i32  claudendi_modificantes;
+                     b32  magnitudo_nuntiata;  /* B1: initialis missa */
     LudusTesseraMensurae  mensurae;
 } LudusTessera;
 
@@ -77,9 +78,12 @@ ludus_tessera_claudendum_est (
          constans Eventus* ev);
 
 /* Eventus in dispensatorem; tempus ZEPHYRUM stampatur 'nunc' ANTE
- * traditionem. MUTARE_MAGNITUDINEM: opus amplitudinem a ponte relegit,
- * extensio moduli renovatur (pictura plena sequitur). RESUMPTIO:
- * pictura plena sequitur. Uterque etiam dispensatori traditur. */
+ * traditionem. Ante eventum primum (aut quadrum primum) magnitudo
+ * initialis semel nuntiatur (MUTARE_MAGNITUDINEM: cellulae x modulus)
+ * - superficies status est (013 B1). MUTARE_MAGNITUDINEM: opus
+ * amplitudinem a ponte relegit, extensio moduli renovatur (pictura
+ * plena sequitur). RESUMPTIO: pictura plena sequitur. Uterque etiam
+ * dispensatori traditur. */
 vacuum
 ludus_tessera_tractare (
         LudusTessera* lt,

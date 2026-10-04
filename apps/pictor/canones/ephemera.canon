@@ -10,6 +10,10 @@
     <attributum nomen="pan_y"           genus="numerus"/>
     <attributum nomen="focus"           genus="textus"/>
     <attributum nomen="focus_acervus"   genus="textus"/>
+    <attributum nomen="superficies_latitudo" genus="numerus"
+      nota="dispensator scribit (013 B1): pixela nostra"/>
+    <attributum nomen="superficies_altitudo" genus="numerus"
+      nota="dispensator scribit (013 B1): pixela nostra"/>
     <attributum nomen="selectio_x"      genus="numerus"/>
     <attributum nomen="selectio_y"      genus="numerus"/>
     <attributum nomen="selectio_latitudo" genus="numerus"/>

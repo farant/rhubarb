@@ -96,6 +96,48 @@ attr_scribere (
     insula_scriptorem_ponere(d->repo, chorda_nulla());
 }
 
+/* Superficies (modulus 013 B1): magnitudo superficiei STATUS est -
+ * attributa ephemera a dispensatore scripta (ut focus), mutatione una
+ * (ambo simul, canone semel iudicata). Canon applicationis ea declaret
+ * (superficies_latitudo/_altitudo, numerus; dominus "dispensator") -
+ * alioquin insula scripturam recusat. Pixela nostra. */
+nomen structura {
+    s32 latitudo;
+    s32 altitudo;
+} SuperficiesCtx;
+
+interior vacuum
+superficiem_ponere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    SuperficiesCtx* s;
+
+    s = (SuperficiesCtx*)ctx;
+    insula_attributum_ponere(radix, p, in, "superficies_latitudo",
+        chorda_ut_cstr(chorda_ex_s32(s->latitudo, p), p));
+    insula_attributum_ponere(radix, p, in, "superficies_altitudo",
+        chorda_ut_cstr(chorda_ex_s32(s->altitudo, p), p));
+}
+
+interior vacuum
+superficiem_scribere (
+          Dispensator* d,
+     constans Eventus* e)
+{
+    SuperficiesCtx s;
+
+    s.latitudo = (s32)e->datum.mutare_magnitudinem.latitudo;
+    s.altitudo = (s32)e->datum.mutare_magnitudinem.altitudo;
+    insula_scriptorem_ponere(d->repo,
+                             chorda_ex_literis("dispensator",
+                             d->piscina));
+    mutare_ephemera(d->repo, superficiem_ponere, &s);
+    insula_scriptorem_ponere(d->repo, chorda_nulla());
+}
+
 chorda
 dispensator_focus (
     Dispensator* d)
@@ -453,6 +495,12 @@ tractare_unum (
                b32  consumptus;
 
     nota = piscina_notare(d->scratch);
+    /* superficies ante destinationem et compositionem: arbor nova
+     * magnitudinem novam videt */
+    si (crudus && e->genus == EVENTUS_MUTARE_MAGNITUDINEM)
+    {
+        superficiem_scribere(d, e);
+    }
     focus = dispensator_focus(d);
     des = d->strategia(d->arbor, &d->motus, focus, e, d->scratch);
     destinatum = destinatio_componens(&des);

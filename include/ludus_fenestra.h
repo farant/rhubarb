@@ -44,6 +44,7 @@ nomen structura {
             Piscina* piscina_quadri;
             Mandata* mandata;        /* quadri ultimi */
       LudusMensurae  mensurae;
+                b32  magnitudo_nuntiata;  /* 013 B1: initialis missa */
 } LudusFenestra;
 
 LudusFenestra*
@@ -56,7 +57,9 @@ ludus_fenestra_creare (
              vacuum* fons_ctx,
     TabulaPixelorum* tabula);
 
-/* eventus in dispensatorem; tempus ZEPHYRUM stampatur 'nunc' */
+/* eventus in dispensatorem; tempus ZEPHYRUM stampatur 'nunc'. Ante
+ * eventum primum (aut quadrum primum) magnitudo tabulae semel
+ * nuntiatur (MUTARE_MAGNITUDINEM) - superficies status est (013 B1). */
 vacuum
 ludus_fenestra_tractare (
        LudusFenestra* lf,

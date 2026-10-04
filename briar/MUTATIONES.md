@@ -154,6 +154,13 @@ Leges chartae:
   `tabula_pixelorum.h`) - plagula quae fenestram per id accipiebat
   `fenestra.h` ipsa includat.
 
+- corpus (mores): dispensator in MUTARE_MAGNITUDINEM attributa ephemera
+  `superficies_latitudo`/`_altitudo` (pixela nostra, scriptor
+  "dispensator", ut focus) scribit; ludus_fenestra magnitudinem tabulae
+  semel ante eventum aut quadrum primum nuntiat. Applicatio cum canone
+  ephemerarum clauso ea declaret (et dominos) - aliter insula tacite
+  recusat.
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

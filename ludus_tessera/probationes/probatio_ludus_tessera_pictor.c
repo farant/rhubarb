@@ -163,6 +163,17 @@ principale (vacuum)
     dispensator_notarium_ponere(f.d, notata);
     {
         Eventus ev[V];
+        Eventus mutatio_magnitudinis;
+
+        /* B1: magnitudo initialis, ut glutinum fenestrae eam mittit */
+        memset(&mutatio_magnitudinis, ZEPHYRUM, magnitudo(Eventus));
+        mutatio_magnitudinis.genus   = EVENTUS_MUTARE_MAGNITUDINEM;
+        mutatio_magnitudinis.tempus  = M - I;
+        mutatio_magnitudinis.datum.mutare_magnitudinem.latitudo =
+            COLUMNAE * VI;
+        mutatio_magnitudinis.datum.mutare_magnitudinem.altitudo =
+            LINEAE * VIII;
+        dispensator_tractare(f.d, &mutatio_magnitudinis);
 
         ev[0] = _murem(EVENTUS_MUS_DEPRESSUS, M, V, V, MUS_SINISTER);
         ev[1] = _murem(EVENTUS_MUS_MOTUS, M + XX, VI, V, MUS_SINISTER);
@@ -206,6 +217,15 @@ principale (vacuum)
         == pictor_documentum_cursor(f.doc));
     CREDO_VERUM (chorda_aequalis(_status(&t, piscina),
         _status(&f, piscina)));
+    /* B1: canon pictoris superficiem accipit (aliter tacite recusat) */
+    CREDO_NON_NIHIL (insula_attributum(t.repo, INSULA_EPHEMERA,
+        "superficies_latitudo"));
+    si (insula_attributum(t.repo, INSULA_EPHEMERA,
+        "superficies_latitudo"))
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS (*insula_attributum(t.repo,
+            INSULA_EPHEMERA, "superficies_latitudo"), "480");
+    }
 
     imprimere("\n--- III. quadrum in cellulas ---\n");
     ludus_tessera_quadrum(lt, M + C);

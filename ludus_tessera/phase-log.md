@@ -260,3 +260,41 @@ by its no-terminal guard and Fran's look, not by a headless test.
 
 **Next: track (b), responsive** - surface size as state (B1), cell-
 aligned layout (B2), pictor responsive (B3); tasks written now.
+
+## B1 — the surface size is state (2026-10-03)
+
+**The dispensator writes it** (Fran): on a RAW `EVENTUS_MUTARE_MAGNITUDINEM`,
+before destination and recomposition, one ephemeral mutation sets
+`superficies_latitudo` / `superficies_altitudo` (our pixels) with the
+writer "dispensator" - exactly how it already owns `focus` /
+`focus_acervus`. **Both glues announce the size once**, lazily, at the
+first `tractare` or first frame (whichever comes first; the flag is set
+before dispatch because `tractare` re-enters): ludus_tessera = cells ×
+Modulus, ludus_fenestra = the TabulaPixelorum's drawing size. The
+window already emitted live resizes (fenestra_macos.m:945).
+
+**Canons refuse silently.** An undeclared attribute makes `mutare`
+return FALSUM, and `attr_scribere` ignores that (for focus too) - so an
+app canon that forgets the declaration loses the size without a word.
+pictor's ephemera.canon and domini.stml declare both (owner
+"dispensator"); the pictor replay test asserts the canon accepted it,
+and a plant removing the declaration is caught there.
+
+Tests: dispensator (two resizes → attributes; honest restore after),
+ludus_fenestra (initial 200×100), ludus_tessera glue (initial 240×104),
+pictor replay (480; its window session now sends the initial size as a
+window glue would, so both insulae carry it). The full root suite
+found one more consumer: `probatio_pictor_canones` pins the ephemeral
+owner count (XI → XIII, the reason in a comment).
+
+Plants caught: the dispensator ignoring the event (4); each glue
+without its initial event; the canon without the declaration. **My
+first dispensator plant did not compile** (removing the only call made
+the helper an unused static → -Werror → exit 2, nothing ran) and my
+grep for failures printed "0" - the A3 lesson again, worse: read the
+EXIT CODE of every plant run, not only its FRACTA lines. Redone as a
+never-true condition.
+
+Not proven here: that the composition after a resize SEES the new size
+(the order is by construction - written before recompose - but no app
+reads it yet). B3 (pictor responsive) is that proof.

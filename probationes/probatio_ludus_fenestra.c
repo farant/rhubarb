@@ -61,6 +61,17 @@ s32 principale (vacuum)
     n0 = toy.compositiones;
     ludus_quadrum(lf, M);
     CREDO_AEQUALIS_I32(lf->mensurae.quadra, I);
+    /* 013 B1: magnitudo initialis nuntiata (tabula CC x C) */
+    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo"));
+    si (insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo"))
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(repo,
+            INSULA_EPHEMERA, "superficies_latitudo"), "200");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(repo,
+            INSULA_EPHEMERA, "superficies_altitudo"), "100");
+    }
     /* pulsus recomposuit */
     CREDO_VERUM(toy.compositiones > n0);
     /* coetus x3 + rect */

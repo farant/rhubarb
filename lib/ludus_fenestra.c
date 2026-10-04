@@ -45,6 +45,28 @@ ludus_fenestra_creare (
     redde lf;
 }
 
+/* Magnitudo initialis semel (013 B1); vexillum ANTE traditionem -
+ * tractare hanc functionem iterum vocat. */
+interior vacuum
+_magnitudinem_nuntiare (
+    LudusFenestra* lf,
+              s64  nunc)
+{
+    Eventus e;
+
+    si (lf->magnitudo_nuntiata)
+    {
+        redde;
+    }
+    lf->magnitudo_nuntiata = VERUM;
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                               = EVENTUS_MUTARE_MAGNITUDINEM;
+    e.tempus                              = nunc;
+    e.datum.mutare_magnitudinem.latitudo  = lf->tabula->latitudo;
+    e.datum.mutare_magnitudinem.altitudo  = lf->tabula->altitudo;
+    ludus_fenestra_tractare(lf, &e, nunc);
+}
+
 vacuum
 ludus_fenestra_tractare (
        LudusFenestra* lf,
@@ -57,6 +79,7 @@ ludus_fenestra_tractare (
     {
         redde;
     }
+    _magnitudinem_nuntiare(lf, nunc);
     e = *ev;
     si (e.tempus == ZEPHYRUM)
     {
@@ -79,6 +102,7 @@ ludus_quadrum (
     {
         redde;
     }
+    _magnitudinem_nuntiare(lf, nunc);
     t0 = fenestra_tempus_ms();
     dispensator_pulsare(lf->d, nunc);
     t1 = fenestra_tempus_ms();

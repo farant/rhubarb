@@ -196,6 +196,17 @@ TesseraPonsMemoriae* pm;
 
         ludus_tessera_quadrum(lt, M + CC);
         CREDO_AEQUALIS_I32 (lt->mensurae.quadra, I);
+        /* B1: magnitudo initialis nuntiata (cellulae x modulus) */
+        CREDO_NON_NIHIL (insula_attributum(repo, INSULA_EPHEMERA,
+            "superficies_latitudo"));
+        si (insula_attributum(repo, INSULA_EPHEMERA,
+                "superficies_latitudo"))
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (*insula_attributum(repo,
+                INSULA_EPHEMERA, "superficies_latitudo"), "240");
+            CREDO_CHORDA_AEQUALIS_LITERIS (*insula_attributum(repo,
+                INSULA_EPHEMERA, "superficies_altitudo"), "104");
+        }
         CREDO_VERUM (toy.compositiones > n0);
         CREDO_VERUM (mandata_numerus(lt->mandata) >= III);
         CREDO_VERUM (_cellulae_delineandi(opus) > ZEPHYRUM);

@@ -217,6 +217,50 @@ s32 principale (vacuum)
     CREDO_FALSUM(insula_mendacium(repo));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
 
+    imprimere("\n--- Superficies (013 B1): magnitudo in ephemera,"
+              " a dispensatore scripta ---\n");
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                               = EVENTUS_MUTARE_MAGNITUDINEM;
+    e.tempus                              = IV * M;
+    e.datum.mutare_magnitudinem.latitudo  = CCXL;
+    e.datum.mutare_magnitudinem.altitudo  = CIV;
+    dispensator_tractare(d, &e);
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "240");
+    }
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_altitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "104");
+    }
+    e.tempus                              = IV * M + C;
+    e.datum.mutare_magnitudinem.latitudo  = CCC;
+    e.datum.mutare_magnitudinem.altitudo  = LXXX;
+    dispensator_tractare(d, &e);
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "300");
+    }
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_altitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "80");
+    }
+    /* restitutio honesta etiam post superficiem */
+    CREDO_VERUM(insula_restituere(repo));
+    CREDO_FALSUM(insula_mendacium(repo));
+
     imprimere("\n");
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
