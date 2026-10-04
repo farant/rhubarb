@@ -1572,6 +1572,11 @@ PORTAE = {
                 r'oraculum fabricae: (consensus|DISCORDIA)'),
     'fabrica-fumus': (['./tools/fabrica_fumus.sh'],
                       r'fumus fabricae: (sanum|FRACTUM)'),
+    # iudicium (fabrica spec 3 T7): porta ut actio - plantae P1-P8 et
+    # auditus in radice temporaria (bin/fabrica, bin/compilator,
+    # crusta/fontationes.sh veri); ~XXV s
+    'iudicium-fumus': (['./tools/iudicium_fumus.sh'],
+                       r'fumus iudicii: (sanum|FRACTUM)'),
     # compilator (fabrica plan 2 T4): 'clang -c' per thesaurum - octeti
     # idem ac clang, hit sine clang, obumbratio, compilator alius
     'compilator': (['./tools/compilator_fumus.sh'],

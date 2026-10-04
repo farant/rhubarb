@@ -1828,3 +1828,29 @@ commit had logged toml twice (34.9 s inner, 47.9 s outer).
   nothing is a silent no-op plant - the first audit plant "passed" with 0
   red because nothing was replaced. Check the replacement count before
   reading the result.
+
+## 2026-10-03 - slice 3 T7b: iudicium-fumus
+
+tools/iudicium_fumus.sh (in PORTAE, ~26 s): a temporary root with one
+generator (gen -> build/gen.h from gen/fons.txt) and one verdict porta_x
+whose gate sources lib.sh, compiles src/a.c through the REAL
+bin/compilator (a filum reader: a real trace), runs it, and reads
+flag.txt with bash (outside the ledger, for the audit). 14 checks: I
+recorded + RECENS, P3 README -> RECENS, P1 header -> STALUM naming it, P2
+sourced script -> IGNOTUM, P7 `source "$NESCIO"` -> IGNOTUM naming the
+fontatio, P8 generator input -> build/gen.h regenerated + pass not reusable
+(IGNOTUM: gen.h is a DECLARED input, so the key moves - my first assertion
+expected STALUM), P6 failing gate never cached, AUD blind RECENS ->
+`sanare -audit` AUDITUM_DISCORS (rc 1) -> restored "auditus congruit".
+P4/P5/P9/P10 are named as covered elsewhere (lint gate, probatio_fabrica).
+**The gate found a crash the unit tests could not:** `sanare -audit` with a
+discord aborted (SIGABRT, stack protector) - the tool counts sanatio
+events in `numeri[VI]`, and FABRICA_AUDITUM_DISCORS is index VI (until T7 it
+was only ever a cursus event, never a sanatio). Array now sized from the
+enum; a discord counts as a failure in the exit code and is named in the
+summary line. probatio_fabrica XI passed throughout because it calls the
+library, not the tool's summary.
+Plants: the first (an early `redde VERUM;` in _fontationes_sigillare) did
+not COMPILE under -Werror, so the old bin/fabrica ran and the gate said
+"sanum" - a no-op plant; the compiling version (conditional return) -> P2,
+P7 red.

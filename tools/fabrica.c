@@ -2636,10 +2636,12 @@ _sanare (
                 s32  a;
                 i32  i;
                 i32  j;
-                i32  numeri[VI];
-                i32  duratio;
-                i32  aestimatio;
-                i32  sine_tempore;
+                i32  numeri[FABRICA_IUDICIUM + I];   /* omnes eventus:
+                                     * VI erat - AUDITUM_DISCORS (index VI)
+                                     * ultra finem scribebat (T7) */
+                i32 duratio;
+                i32 aestimatio;
+                i32 sine_tempore;
 
     siccum = FALSUM;
     per (a = II; a < argc; a++)
@@ -2821,7 +2823,7 @@ _sanare (
         redde II;
     }
 
-    per (i = ZEPHYRUM; i < VI; i++)
+    per (i = ZEPHYRUM; i <= (i32)FABRICA_IUDICIUM; i++)
     {
         numeri[i] = ZEPHYRUM;
     }
@@ -2934,11 +2936,13 @@ _sanare (
     alioquin
     {
         printf("fabrica sanare: %u sanata, %u praeparata, %u fracta, "
-            "%u omissa (%u s)\n",
+            "%u omissa%s (%u s)\n",
             (insignatus integer)numeri[FABRICA_SANATUM],
             (insignatus integer)numeri[FABRICA_PRAEPARATUM],
             (insignatus integer)numeri[FABRICA_FRACTUM],
             (insignatus integer)numeri[FABRICA_OMISSUM],
+            numeri[FABRICA_AUDITUM_DISCORS]
+                > 0 ? ", AUDITUM DISCORS" : "",
             (insignatus integer)(duratio / M));
         si (commissa)
         {
@@ -2956,8 +2960,8 @@ _sanare (
     {
         redde (numeri[FABRICA_AGENDUM] > 0) ? I : ZEPHYRUM;
     }
-    redde (numeri[FABRICA_FRACTUM] + numeri[FABRICA_OMISSUM] > 0)
-        ? I : ZEPHYRUM;
+    redde (numeri[FABRICA_FRACTUM] + numeri[FABRICA_OMISSUM]
+           + numeri[FABRICA_AUDITUM_DISCORS] > 0) ? I : ZEPHYRUM;
 }
 
 
