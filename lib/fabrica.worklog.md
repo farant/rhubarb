@@ -1751,3 +1751,30 @@ Measured: record, `rm bin/aedilis && tools/aedilis_struere.sh` (new
 sha), judge RECENS; same with bin/compilator. Test: 496/496 incl. a
 block proving commissum-line and relink invariance, ingressus-line
 sensitivity, bytes fallback.
+
+## 2026-10-03 - slice 3 T6: porta() and commissio ask fabrica first
+
+`porta(nomen)` (no filter, live tree, gate has a declared `porta_<nomen>`
+iudicium action, bin/fabrica present) goes through fabrica:
+`iudicare -omnia <verdict>` RECENS -> returns the recorded pass (compendium
+"... [transitus servatus, ante N]"), nothing run, a tempora row
+"<nomen> (transitus)"; otherwise `sanare <verdict>` runs the gate under the
+ledger and records it, and porta() rebuilds its Porta from
+build/fabrica/acta/porta_<nomen>.log (the -iudicium mode now prints the
+gate's full output so failures keep their fractures). `vis=True` deletes
+the verdict first (otherwise sanare sees RECENS and runs nothing - my first
+version reported that as a failure). sanare exit 2 (lock held) -> the old
+path. Filtered calls, shadows and gates without an action -> the old path
+(`_porta_cruda`, also what -iudicium calls: no recursion).
+Which gates are verdicts: `_portae_verdictorum()` reads the declaration
+TEXT of fabrica.stml's subsystems (regex on
+`<actio titulus="porta_X" genus="iudicium"`), memoized per process - so
+non-verdict gates never pay a bin/fabrica call (and the pythonica tests,
+which fake FABRICA_BIN globally, stay hermetic).
+commissio prints "porta X: ... - non iterum cursa (digestum idem)".
+Real: porta('toml') first 56.9 s (records), second 2.3 s RECENS; vis=True
+41.6 s then 1.8 s; filtered = old path. Plant (a failing toml assertion):
+sana False, rc 1, 12/13, the fracture listed with file:line, verdict
+removed. Hermetic tests: 6 cases (RECENS, STALUM->sanare, broken, lock,
+filter, real-declaration lookup); BSD printf exits 1 on an extra argument
+with no format directive - the fake gate uses echo.

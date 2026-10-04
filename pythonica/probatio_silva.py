@@ -891,6 +891,84 @@ finally:
     del os.environ['PYTHONICA_PORTAE_FICTAE']
     os.unlink(scriptum)
 
+print('--- porta per fabricam: actio iudicium (fabrica spec 3 T6) ---')
+
+
+def _fabrica_iudicii(modus):
+    """bin/fabrica fictus pro porta 'ficta-v': iudicare -> modus[0]
+    (RECENS|STALUM); sanare -> modus[1] (transit|frangitur|sera)"""
+    via = os.path.join(T, 'fabrica_iudicii_%s_%s' % modus)
+    verdictum = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
+    acta = os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')
+    with open(via, 'w') as f:
+        f.write('#!/bin/bash\n'
+                'if [ "$1" = iudicare ]; then\n'
+                '  echo "%s build/fabrica/verdicta/ficta-v.txt - fictum"; exit 0\n'
+                'fi\n' % modus[0])
+        if modus[1] == 'transit':
+            f.write('mkdir -p "$(dirname %s)" "$(dirname %s)"\n'
+                    'echo "ficta-v: fictum: sanum" > %s\n'
+                    'echo "fictum: sanum" > %s\n'
+                    'echo "SANATUM     porta_ficta-v (0.1 s)"; exit 0\n'
+                    % (verdictum, acta, verdictum, acta))
+        elif modus[1] == 'frangitur':
+            f.write('rm -f %s; mkdir -p "$(dirname %s)"\n'
+                    'printf "%%s\\n" "=== probatio_ficta ===" "fictum: FRACTUM" > %s\n'
+                    'echo "FRACTUM     porta_ficta-v (0.1 s) - exitus 1"; exit 1\n'
+                    % (verdictum, acta, acta))
+        else:
+            f.write('echo "fabrica: iudex plenus alius currit" >&2; exit 2\n')
+    os.chmod(via, 0o755)
+    return via
+
+
+_fb_porta_vera = silva.FABRICA_BIN
+_verdicta_vera = silva._VERDICTA_MEMORATA
+silva._VERDICTA_MEMORATA = {'ficta-v'}
+silva.PORTAE['ficta-v'] = (['echo', 'fictum: sanum'], r'fictum: (sanum|FRACTUM)')
+_vv = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
+try:
+    # RECENS: transitus servatus, nihil cursum
+    os.makedirs(os.path.dirname(_vv), exist_ok=True)
+    open(_vv, 'w').write('ficta-v: fictum: sanum\n')
+    silva.FABRICA_BIN = _fabrica_iudicii(('RECENS', 'frangitur'))
+    pv = silva.porta('ficta-v')
+    credo(pv.sana and '[transitus servatus' in pv.compendium
+          and pv.compendium.startswith('fictum: sanum'),
+          'porta per fabricam: RECENS -> transitus servatus, sanare non vocatum')
+    # STALUM -> sanare transit: compendium ex actis (signum)
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'transit'))
+    pv = silva.porta('ficta-v')
+    credo(pv.sana and pv.compendium == 'fictum: sanum',
+          'porta per fabricam: STALUM -> sanare currit, signum ex actis')
+    # sanare frangitur: sana falsum, fracturae ex actis
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'frangitur'))
+    pv = silva.porta('ficta-v')
+    credo(not pv.sana and pv.rc == 1 and 'FRACTUM' in pv.compendium,
+          'porta per fabricam: sanare fractum -> FRACTA, rc fabricae')
+    # sera tenta (exitus 2): via cruda
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'sera'))
+    pv = silva.porta('ficta-v')
+    credo(pv.sana and pv.cucurrit and 'transitus' not in pv.compendium,
+          'porta per fabricam: sanare exitus 2 -> via cruda')
+    # filtrum: via cruda semper (fabrica non vocatur - frangeretur)
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'frangitur'))
+    pv = silva.porta('ficta-v', 'aliquid')
+    credo(pv.sana, 'porta per fabricam: filtrum -> via cruda')
+    # portae verdictorum ex declarationibus veris: toml
+    silva._VERDICTA_MEMORATA = None
+    credo('toml' in silva._portae_verdictorum(),
+          'portae verdictorum: porta_toml in toml/aedificatio.stml inventa')
+finally:
+    silva.FABRICA_BIN = _fb_porta_vera
+    silva._VERDICTA_MEMORATA = _verdicta_vera
+    silva.PORTAE.pop('ficta-v', None)
+    for _v in (_vv, os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')):
+        try:
+            os.unlink(_v)
+        except OSError:
+            pass
+
 print('--- receptum vivum: porta() sigillo ligata, commissio non iterum currit ---')
 import contextlib
 import io

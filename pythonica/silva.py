@@ -1754,7 +1754,108 @@ def _tempus_notare(genus, titulus, initium, sana=None, rc=None):
         sys.stderr.write('tempora non notata (%s): %s' % (ex, linea))
 
 
-def porta(nomen, filtrum=None, radix=None, receptum=True):
+def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False):
+    """portam currere. VERDICTUM (fabrica spec 3 T6): porta sine filtro in
+    arbore viva cuius actio 'iudicium' declarata est (porta_<nomen>,
+    _portae_verdictorum) per fabricam it - 'bin/fabrica iudicare' RECENS
+    = transitus servatus redditur, NIHIL cursum (compendium '[transitus
+    servatus, ante N]'); aliter 'bin/fabrica sanare' portam currit et
+    vestigium servat. vis=True: currit semper (et servat). Ceterae
+    (filtrum, umbra, portae sine actione, bin/fabrica absens aut sera
+    tenta) via cruda: _porta_cruda."""
+    if filtrum is None and radix is None and receptum:
+        p = _porta_per_fabricam(nomen, vis)
+        if p is not None:
+            return p
+    return _porta_cruda(nomen, filtrum, radix, receptum)
+
+
+def _portae_verdictorum():
+    """nomina portarum quarum actio 'iudicium' declarata est: tituli
+    'porta_<nomen>' genere iudicium in aedificatio.stml subsystematum
+    (fabrica.stml). Lectio textus, non iudicium - iudex verus bin/fabrica
+    manet; memoratur per processum."""
+    global _VERDICTA_MEMORATA
+    if _VERDICTA_MEMORATA is not None:
+        return _VERDICTA_MEMORATA
+    nomina = set()
+    try:
+        radix_stml = open(os.path.join(RADIX, 'fabrica.stml')).read()
+    except (IOError, OSError):
+        radix_stml = ''
+    for sub in re.findall(r'<subsystema via="([^"]+)"', radix_stml):
+        try:
+            t = open(os.path.join(RADIX, sub, 'aedificatio.stml')).read()
+        except (IOError, OSError):
+            continue
+        nomina.update(re.findall(
+            r'<actio titulus="porta_([^"]+)" genus="iudicium"', t))
+    _VERDICTA_MEMORATA = nomina
+    return nomina
+
+
+_VERDICTA_MEMORATA = None
+
+
+def _verdicti_via(nomen):
+    return os.path.join('build', 'fabrica', 'verdicta', nomen + '.txt')
+
+
+def _porta_per_fabricam(nomen, vis=False):
+    """porta per actionem 'iudicium' fabricae; None = via cruda"""
+    if nomen not in PORTAE:
+        raise SilvaError('porta ignota: %s (nota: %s)'
+                         % (nomen, ', '.join(sorted(PORTAE))))
+    if nomen not in _portae_verdictorum() or not os.path.exists(FABRICA_BIN):
+        return None
+    via = _verdicti_via(nomen)
+    initium = time.time()
+    if not vis:
+        r = _curre([FABRICA_BIN, 'iudicare', '-omnia', via])
+        linea = next((l for l in r.stdout.splitlines()
+                      if l.startswith(('RECENS ', 'STALUM ', 'IGNOTUM '))), '')
+        if linea.startswith('RECENS '):
+            try:
+                textus = open(os.path.join(RADIX, via)).read().strip()
+                aetas = time.time() - os.path.getmtime(os.path.join(RADIX, via))
+            except (IOError, OSError):
+                textus, aetas = '', 0
+            compendium = textus.split(': ', 1)[-1] or '(verdictum)'
+            _tempus_notare('porta', nomen + ' (transitus)', initium, True, 0)
+            return Porta(nomen, True, True, '%s [transitus servatus, ante %s]'
+                         % (compendium, _aetas(aetas)), 0, '', [], False)
+    if vis:
+        # verdictum deletum = STALUM: sanare portam currit etsi RECENS erat
+        try:
+            os.unlink(os.path.join(RADIX, via))
+        except OSError:
+            pass
+    r = _curre([FABRICA_BIN, 'sanare', via])
+    if r.returncode == 2:
+        # sera tenta aut declaratio fracta: via cruda (nihil servatum)
+        print('porta %s: fabrica sanare nequit (exitus 2) - via cruda'
+              % nomen)
+        return None
+    try:
+        acta = _ANSI.sub('', open(os.path.join(
+            RADIX, 'build', 'fabrica', 'acta', 'porta_%s.log' % nomen),
+            errors='replace').read())
+    except (IOError, OSError):
+        acta = r.stdout + r.stderr
+    sana = r.returncode == 0 and os.path.exists(os.path.join(RADIX, via))
+    imperium, signum = PORTAE[nomen]
+    m = re.search(signum, acta)
+    compendium = m.group(0) if m else '(signum absens)'
+    nota = re.search(r'transitus non servatus[^\n]*', r.stdout)
+    if nota:
+        compendium += ' [%s]' % nota.group(0)
+    fr = [] if sana else fracturae(acta, nomen)
+    _tempus_notare('porta', nomen, initium, sana, r.returncode)
+    return Porta(nomen, m is not None, sana, compendium, r.returncode, acta,
+                 fr, False)
+
+
+def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True):
     """portam currere: Porta(nomen, cucurrit, sana, compendium, rc,
     acta, fracturae, rancida, receptum). sana SOLUM si cucurrit ET
     rc == 0 ET signum non fractum. radix: directorium operis alterum
@@ -2451,6 +2552,10 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                 print('porta %s: %s - non iterum cursa' % (nomen, f.compendium))
             else:
                 f = porta(nomen, filtrum)
+                if f.sana and '[transitus servatus' in f.compendium:
+                    # actio iudicium (fabrica spec 3 T6): vestigium idem
+                    print('porta %s: %s - non iterum cursa (digestum idem)'
+                          % (nomen, f.compendium))
                 if f.rancida:
                     post = _sigilla_viarum(viae)
                     mutatae = [v for v in viae if post[v] != ante[v]]
@@ -4758,7 +4863,10 @@ def iudicium_currere(nomen):
         os.unlink(via)
     except OSError:
         pass
-    p = porta(nomen, receptum=False)
+    p = _porta_cruda(nomen, receptum=False)   # via cruda: numquam fabrica
+    # acta portae in effusione: fabrica eas in build/fabrica/acta/
+    # porta_<nomen>.log servat (porta() inde fracturas legit)
+    sys.stdout.write(p.acta or '')
     if not p.sana:
         sys.stderr.write('iudicium %s: FRACTA (%s, rc=%d)\n'
                          % (nomen, p.compendium, p.rc))
