@@ -27,7 +27,10 @@
  * Gradus: D1 apta, fixa, pars, positiones, allineatio, praecisio; D2
  * crescens et contractio secundum axem (aequatio Clay: minimi primum
  * crescunt, maximi primum contrahuntur; parens praecidens non
- * comprimit); textus (mensor) D3 - ante D3 textus neglegitur.
+ * comprimit); D3 textus: liber primus VIRTUALIS (latitudo mensa x I,
+ * ante liberos veros, intervallum post eum), minimum = verbum
+ * latissimum (ut Clay; contractio infra textum totum licet); sine
+ * mensore textus neglegitur. Lineae multae ('\n') et involutio nondum.
  *
  * PURUS: nulla allocatio praeter piscinam datam; idem ingressus, idem
  * exitus.
@@ -117,8 +120,8 @@ dispositio_addere (
                          s32  parens,
     constans DispositioForma* forma);
 
-/* Disponere in superficie latitudo x altitudo (cellulae). mensor NIHIL
- * licet ante D3. */
+/* Disponere in superficie latitudo x altitudo (cellulae). mensor:
+ * latitudo textus in cellulis (NIHIL: textus neglegitur). */
 vacuum
 dispositio_computare (
           Dispositio* d,

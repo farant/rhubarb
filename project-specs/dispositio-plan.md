@@ -137,6 +137,11 @@ asserts, 14 fixtures, five plants.
 rune measured 2 by a terminal measurer. Plant: byte length instead of
 the measurer.
 
+D3 as built: text = a virtual first child (measured width × 1),
+minimum = the widest word (Clay's model); the oracle measures through a
+hook calling the same runae function; 32 asserts, 16 fixtures, four
+plants.
+
 **D4 — RELATIO** (phase log; the ludus_tessera plan's B2 closed).
 
 ## V. Gates

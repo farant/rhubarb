@@ -165,8 +165,9 @@ Leges chartae:
   Clay (apta/crescens/fixa/pars per axem, min/max, spatium,
   intervallum, allineatio, praecisio); radix implicita linea
   superficiei; `dispositio_computare` + `dispositio_fines`; crescens et
-  contractio (aequatio Clay; ora quaeque pavimentum orae exactae).
-  Textus nondum (D3).
+  contractio (aequatio Clay; ora quaeque pavimentum orae exactae);
+  textus per mensorem (liber primus virtualis, linea una; minimum =
+  verbum latissimum).
 
 ## v4 — 2026-09-29
 

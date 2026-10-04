@@ -38,6 +38,13 @@ typedef struct {
 /* Clay initiare cum superficie (radix implicita: linea, ea magnitudine) */
 int  vinculum_initiare (float latitudo, float altitudo);
 void vinculum_incipere (void);
+/* mensor textus (D3): latitudo octetorum UTF-8 in cellulis; a ductore
+ * datur ut Clay et dispositio eadem mensura utantur (runae) */
+void vinculum_mensorem_ponere (int (*mensor)(const char* octeti,
+                                             int mensura));
+/* textum in nodo aperto ponere (primus liber Clay; sine involutione,
+ * altitudo I) - post vinculum_aperire, ante liberos */
+void vinculum_textum (const char* octeti, int mensura);
 /* nodum ordine praeordinis aperire (index = id) */
 void vinculum_aperire (int index, const VinculumForma* forma);
 void vinculum_claudere (void);

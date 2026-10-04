@@ -153,3 +153,34 @@ equalisation (d2_inaequales), the plan's remainder-to-earliest rule
 (d2_maximum, tres_crescentes), shrink inside a clipping parent
 (d2_praecidere), shrink ignoring the minimum (d2_minimum), grow
 ignoring max (d2_maximum).
+
+## D3 — text (2026-10-03)
+
+**Clay's model, read before writing:** text is not a node property in
+Clay but a TEXT CHILD sized {unwrapped width, line height} whose
+minimum width is the LONGEST WORD - Clay prepares for word wrapping
+even when a text does not wrap, so a parent may shrink below the full
+text. dispositio mirrors that: a node with `textus` gets a VIRTUAL
+first child, fixed (measured width × 1), placed before the real
+children with the gap after it; its minimum is the widest
+space-separated word; with no measurer (`mensor` NIHIL) text is
+ignored. Multiple lines ('\n') and wrapping are not in v1.
+
+**One measurer on both sides.** The oracle glue gained a measure hook
+(`vinculum_mensorem_ponere`): the Latin driver hands Clay a C function
+that measures with `runae_latitudo_textus` under GRAPHEMATUM - the same
+function the test's `DispositioMensor` calls. So "中文 ok" is 7 cells
+for both (each CJK rune 2), not 9 (bytes).
+
+**Fixtures** (predicted by hand, Clay agreed on every value):
+`d3_textus` - "salve" with side padding (7 × 1); a column holding
+"中文 ok" and a 3×2 child with gap 1 (7 × 4, child at y+2); a row
+holding "ab" and a 4×3 child with gap 2 (8 × 3, child at x+4).
+`d3_contractio` - "aa bbbb" (7 wide, minimum 4) beside a fixed 6 in a
+12-wide row shrinks to 6: possible only because of the longest-word
+minimum. 32 asserts (incl. "no measurer → ignored"); oracle 16/16.
+
+Plants, all caught by name with clean compiles: bytes instead of the
+measurer (d3_textus), the minimum = whole text (d3_contractio), no gap
+after the text (d3_textus children), text not counted as a child in
+the fit pass (d3_textus).

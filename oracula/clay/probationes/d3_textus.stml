@@ -1,0 +1,9 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus spatium="1 1 0 0" textus="salve"/>
+  <nodus directio="columna" intervallum="1" textus="中文 ok">
+    <nodus latitudo="fixa:3" altitudo="fixa:2"/>
+  </nodus>
+  <nodus directio="linea" intervallum="2" textus="ab">
+    <nodus latitudo="fixa:4" altitudo="fixa:3"/>
+  </nodus>
+</dispositio>

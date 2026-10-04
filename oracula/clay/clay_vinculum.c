@@ -9,6 +9,38 @@
 #include <string.h>
 
 static int errores = 0;
+static int (*mensor_ductoris)(const char*, int) = NULL;
+
+static Clay_Dimensions textum_metiri(Clay_StringSlice textus,
+                                     Clay_TextElementConfig* forma,
+                                     void* usus)
+{
+    Clay_Dimensions m;
+    (void)forma;
+    (void)usus;
+    m.width = mensor_ductoris
+        ? (float)mensor_ductoris(textus.chars, (int)textus.length)
+        : (float)textus.length;
+    m.height = 1.0f;
+    return m;
+}
+
+void vinculum_mensorem_ponere(int (*mensor)(const char*, int))
+{
+    mensor_ductoris = mensor;
+}
+
+void vinculum_textum(const char* octeti, int mensura)
+{
+    Clay_String s;
+    Clay_TextElementConfig forma;
+    memset(&forma, 0, sizeof forma);
+    forma.wrapMode = CLAY_TEXT_WRAP_NONE;
+    s.isStaticallyAllocated = false;
+    s.length = mensura;
+    s.chars = octeti;
+    Clay__OpenTextElement(s, forma);
+}
 
 static void errorem_tractare(Clay_ErrorData e)
 {
@@ -69,6 +101,7 @@ int vinculum_initiare(float latitudo, float altitudo)
     tractator.errorHandlerFunction = errorem_tractare;
     tractator.userData = NULL;
     Clay_Initialize(arena, dimensiones, tractator);
+    Clay_SetMeasureTextFunction(textum_metiri, NULL);
     return 1;
 }
 

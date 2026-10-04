@@ -12,6 +12,8 @@
  *          spatium="s d sup inf"  intervallum="n"
  *          allineatio_x, allineatio_y = initium|medium|finis
  *          praecidere_x, praecidere_y = "verum"
+ *          textus="..." (D3: textus Clay primus liber, sine involutione;
+ *          mensura runae GRAPHEMATUM - eadem quam probationes adhibent)
  * Radix implicita (Clay): linea, magnitudine superficiei.
  * Usus: dispositio_oraculum <via.stml>   Exitus: 0; 1 forma mala aut
  * error Clay; 2 usus malus.
@@ -22,12 +24,23 @@
 #include "internamentum.h"
 #include "filum.h"
 #include "stml.h"
+#include "runae.h"
 #include "clay_vinculum.h"
 #include <stdio.h>
 #include <string.h>
 
 hic_manens Piscina* piscina_ductoris;
 hic_manens     s32  numerus_nodorum;
+
+/* Mensor communis (D3): runae sub politica GRAPHEMATUM */
+interior int
+_mensor (
+    constans char* octeti,
+               int  mensura)
+{
+    redde (int)runae_latitudo_textus((constans i8*)octeti,
+        (constans i8*)octeti + mensura, RUNAE_POLITICA_GRAPHEMATUM);
+}
 
 interior chorda*
 _attributum (
@@ -203,6 +216,15 @@ _ponere (
 
     index = numerus_nodorum++;
     vinculum_aperire((int)index, &f);
+    {
+        chorda* textus = _attributum(nodus, "textus");
+
+        si (textus && textus->mensura > ZEPHYRUM)
+        {
+            vinculum_textum((constans char*)textus->datum,
+                (int)textus->mensura);
+        }
+    }
     per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
     {
         StmlNodus* l = stml_liberum_ad_indicem(nodus, i);
@@ -258,6 +280,7 @@ principale (
     {
         redde I;
     }
+    vinculum_mensorem_ponere(_mensor);
     vinculum_incipere();
     numerus_nodorum = ZEPHYRUM;
     per (i = ZEPHYRUM; i < stml_numerus_liberorum(radix); i++)

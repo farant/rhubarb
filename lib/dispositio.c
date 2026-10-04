@@ -20,6 +20,9 @@ nomen structura {
                 s32 mensura[II]; /* latitudo, altitudo */
                 s32 minima[II];  /* minimum contenti per axem */
                 s32 positio[II]; /* x, y */
+                b32 habet_textum; /* D3: liber primus virtualis */
+                s32 textus[II];   /* latitudo mensa x I */
+                s32 textus_minimum[II];  /* verbum latissimum x I */
 } Nodus;
 
 structura Dispositio {
@@ -30,6 +33,9 @@ structura Dispositio {
         s32 radix_primus;       /* liberi radicis implicitae */
         s32 radix_ultimus;
         s32 superficies[II];
+    /* mensor textus (D3): intra computare tantum */
+    DispositioMensor  mensor;
+              vacuum* mensor_ctx;
 };
 
 /* Divisio cum pavimento (b > 0): C89 directionem negativae
@@ -247,6 +253,56 @@ dispositio_addere (
 
 
 /* ==================================================
+ * (0) Textus (D3): liber primus VIRTUALIS mensurae fixae (latitudo
+ *     mensa x I), ut Clay textum liberum primum aperit (sine
+ *     involutione). Minimum = verbum latissimum (spatiis divisum) - ut
+ *     Clay, contractio parentis infra textum totum licet.
+ * ================================================== */
+
+interior vacuum
+_textum_metiri (
+    Dispositio* d,
+         Nodus* n)
+{
+    chorda t = n->forma.textus;
+       s32 i;
+       s32 initium     = ZEPHYRUM;
+       s32 latissimum  = ZEPHYRUM;
+
+    n->habet_textum = (t.mensura > ZEPHYRUM && d->mensor) ? VERUM
+                                                          : FALSUM;
+    n->textus[0]          = ZEPHYRUM;
+    n->textus[1]          = ZEPHYRUM;
+    n->textus_minimum[0]  = ZEPHYRUM;
+    n->textus_minimum[1]  = ZEPHYRUM;
+    si (!n->habet_textum)
+    {
+        redde;
+    }
+    n->textus[0] = d->mensor(t, d->mensor_ctx);
+    n->textus[1] = I;
+    per (i = ZEPHYRUM; i <= (s32)t.mensura; i++)
+    {
+        si (i == (s32)t.mensura || t.datum[i] == ' ')
+        {
+            si (i > initium)
+            {
+                chorda verbum;
+
+                verbum.datum    = t.datum + initium;
+                verbum.mensura  = (i32)(i - initium);
+                latissimum = _maximum(latissimum,
+                    d->mensor(verbum, d->mensor_ctx));
+            }
+            initium = i + I;
+        }
+    }
+    n->textus_minimum[0] = latissimum;
+    n->textus_minimum[1] = I;
+}
+
+
+/* ==================================================
  * (1) Apta: a foliis sursum
  * ================================================== */
 
@@ -266,6 +322,20 @@ _aptare (
     n->minima[a]   = _spatium(n, a);
     n->mensura[t]  = ZEPHYRUM;
     n->minima[t]   = ZEPHYRUM;
+    si (n->habet_textum)
+    {
+        n->mensura[a] += n->textus[a];
+        n->mensura[t] = n->textus[t] + _spatium(n, t);
+        si (!_praecidit(n, a))
+        {
+            n->minima[a] += n->textus_minimum[a];
+        }
+        si (!_praecidit(n, t))
+        {
+            n->minima[t] = n->textus_minimum[t] + _spatium(n, t);
+        }
+        liberi++;
+    }
     per (c = n->primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
     {
         Nodus* l = _nodus(d, c);
@@ -596,6 +666,19 @@ _liberos_metiri (
         intervallum         = ZEPHYRUM;
     }
     spatia_et_intervalla = spatium_parentis;
+    si (parens && parens->habet_textum)
+    {
+        /* textus: liber primus, mensura fixa */
+        si (secundum)
+        {
+            contentum += parens->textus[axis];
+        }
+        alioquin
+        {
+            contentum = parens->textus[axis];
+        }
+        primus_liber = FALSUM;
+    }
 
     per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
     {
@@ -741,6 +824,11 @@ _liberos_ponere (
     }
     t = I - a;
 
+    si (parens && parens->habet_textum)
+    {
+        contentum += parens->textus[a];
+        liberi++;
+    }
     per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
     {
         contentum += _nodus(d, c)->mensura[a];
@@ -761,6 +849,10 @@ _liberos_ponere (
     }
     reliquum  = _maximum(ZEPHYRUM, reliquum);
     cursor    = initium[a] + reliquum;
+    si (parens && parens->habet_textum)
+    {
+        cursor += parens->textus[a] + intervallum;
+    }
 
     per (c = primus; c >= ZEPHYRUM; c = _nodus(d, c)->proximus)
     {
@@ -794,17 +886,22 @@ dispositio_computare (
     s32 i;
     s32 axis;
 
-    (vacuum)mensor;   /* D3 */
-    (vacuum)ctx;
     si (!d)
     {
         redde;
     }
+    d->mensor          = mensor;
+    d->mensor_ctx      = ctx;
     d->superficies[0]  = latitudo;
     d->superficies[1]  = altitudo;
     n                  = (s32)xar_numerus(d->nodi);
 
-    /* (1) apta: parens semper ante liberos additus - ordine inverso */
+    /* (0) textus; (1) apta: parens semper ante liberos additus -
+     * ordine inverso */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        _textum_metiri(d, _nodus(d, i));
+    }
     per (i = n - I; i >= ZEPHYRUM; i--)
     {
         _aptare(d, i);

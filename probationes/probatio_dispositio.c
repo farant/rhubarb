@@ -18,6 +18,7 @@
 #include "internamentum.h"
 #include "filum.h"
 #include "stml.h"
+#include "runae.h"
 #include "dispositio.h"
 #include "credo.h"
 #include <stdio.h>
@@ -25,8 +26,18 @@
 #include <string.h>
 #include <math.h>
 
-/* ---- forma arboris (eadem ac ductor oraculi) ---- */
+/* Mensor (D3): runae sub GRAPHEMATUM - idem ac ductor oraculi */
+interior s32
+_mensor (
+     chorda  textus,
+     vacuum* ctx)
+{
+    (vacuum)ctx;
+    redde (s32)runae_latitudo_textus(textus.datum,
+        textus.datum + textus.mensura, RUNAE_POLITICA_GRAPHEMATUM);
+}
 
+/* Forma arboris (eadem ac ductor oraculi): attributum aequat? */
 interior b32
 _aequat (
                  chorda* c,
@@ -158,6 +169,11 @@ _ponere (
         "praecidere_x"), "verum");
     f.praecidere_y  = _aequat(stml_attributum_capere(nodus,
         "praecidere_y"), "verum");
+    a = stml_attributum_capere(nodus, "textus");
+    si (a)
+    {
+        f.textus = *a;
+    }
     index = dispositio_addere(d, parens, &f);
     si (index < ZEPHYRUM)
     {
@@ -229,7 +245,7 @@ _fixum (
             redde FALSUM;
         }
     }
-    dispositio_computare(d, latitudo, altitudo, NIHIL, NIHIL);
+    dispositio_computare(d, latitudo, altitudo, _mensor, NIHIL);
 
     sprintf(via, "oracula/clay/probationes/%s.exspectata", titulus);
     exs = fopen(via, "r");
@@ -313,7 +329,11 @@ principale (vacuum)
     CREDO_VERUM (_fixum(piscina, intern, "d2_praecidere"));
     CREDO_VERUM (_fixum(piscina, intern, "d2_minimum"));
 
-    imprimere("\n--- III. forma, addere, vacare, computare bis ---\n");
+    imprimere("\n--- III. fixa D3 (textus) contra Clay ---\n");
+    CREDO_VERUM (_fixum(piscina, intern, "d3_textus"));
+    CREDO_VERUM (_fixum(piscina, intern, "d3_contractio"));
+
+    imprimere("\n--- IV. forma, addere, vacare, computare bis ---\n");
     {
         DispositioForma  f;
              Dispositio* d = dispositio_creare(piscina);
@@ -348,6 +368,16 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (f2.latitudo, X);
         f1 = dispositio_fines(d, VII);
         CREDO_AEQUALIS_S32 (f1.latitudo, ZEPHYRUM);
+        /* D3: sine mensore textus neglegitur */
+        dispositio_vacare(d);
+        dispositio_formam_initiare(&f);
+        f.textus  = chorda_ex_literis("salve", piscina);
+        a         = dispositio_addere(d, -I, &f);
+        dispositio_computare(d, XL, X, NIHIL, NIHIL);
+        CREDO_AEQUALIS_S32 (dispositio_fines(d, a).latitudo, ZEPHYRUM);
+        dispositio_computare(d, XL, X, _mensor, NIHIL);
+        CREDO_AEQUALIS_S32 (dispositio_fines(d, a).latitudo, V);
+        CREDO_AEQUALIS_S32 (dispositio_fines(d, a).altitudo, I);
         dispositio_vacare(d);
         CREDO_AEQUALIS_S32 (dispositio_numerus(d), ZEPHYRUM);
         CREDO_AEQUALIS_S32 (dispositio_addere(d, -I, &f), ZEPHYRUM);
