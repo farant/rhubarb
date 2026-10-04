@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: the first ten demos</p>
+<p class="subtitulus">Knots as computation: the first twenty demos</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -32,8 +32,14 @@ on any number of strands is the trace of a product of matrices, computed
 exactly. Demos 6 to 10 explain the formula's weights, connect the two
 ways of writing a knot in both directions, prove the bracket behaves
 correctly under the moves that don't change a knot, and finally trade
-exact polynomials for numbers, the step that leads to the computing
-experiments.</p>
+exact polynomials for numbers. Demos 11 to 15 use those numbers for a first
+attempt at "compiling" knots into weights: the bracket as a signal over the
+circle, how few bits identify a knot, and which angles to sample. Demos 16
+to 20 refine that signal and then turn it to logic: braids whose bracket,
+thresholded, acts as a NOT or a NAND gate, a small compiler of Boolean
+circuits from those gates, and a map of where the gates stop working. Demo
+19 is where A = e<sup>i5π/4</sup>, the root of unity at which δ = 0, first
+takes centre stage.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -287,6 +293,206 @@ angle separates all six. The result is true of the six braids, but the
 table's names are mostly wrong: only the figure-eight is the knot named,
 and the others are links (see <a href="#nota-tabula">note 3</a>).</p>
 
+<h2>Demo 11 · The bracket as a waveform</h2>
+<p class="nota"><code>knotapel/demo_11_waveform/main.c</code> · 648 lines · 16/16 tests</p>
+<p>Demo 10 sampled the bracket at single points; demo 11 sweeps A around the
+whole unit circle (256 samples) and treats each braid's bracket as a complex
+waveform, with an amplitude and a phase. The prediction it tests is
+elegant: on the unit circle A<sup>−1</sup> is the complex conjugate of A, and
+mirroring a knot replaces A by A<sup>−1</sup>, so a knot and its mirror image
+must have identical amplitude and differ only in phase; an amphichiral knot
+like the figure-eight must be symmetric. Both hold to machine precision.
+The demo then searches for the angle that best separates its ten
+entries, finding θ ≈ 1.805π, where one angle alone separates every pair with
+a margin of 0.907, and draws the amplitude waveforms as ASCII bands.</p>
+<p>The table grows to ten entries and fixes one of demo 10's names: the
+granny is now σ<sub>1</sub><sup>3</sup>σ<sub>2</sub><sup>3</sup>, a real
+connected sum, joined by the square knot
+σ<sub>1</sub><sup>3</sup>σ<sub>2</sub><sup>−3</sup>. The "trefoil",
+"torus(2,5)", "torus(2,7)" and "cinquefoil mirror" entries are still the
+alternating words that close to two-component links (<a href="#nota-katalogus">note 4</a>).
+The mirror-symmetry results stand regardless, since every mirror pair is a
+word and its inverse.</p>
+
+<h2>Demo 12 · How many bits is a knot?</h2>
+<p class="nota"><code>knotapel/demo_12_quantization/main.c</code> · 779 lines · 7/7 tests</p>
+<p>If a knot is one complex number at a well-chosen angle, how coarsely can
+that number be stored and still tell the table apart? Demo 12 quantizes the
+real and imaginary parts to 16, 12, 8, 6, 4, 3, 2 and 1 bits, with an eye on
+1.58-bit "BitNet" language models. At one angle, 4 bits per component
+(8 bits per knot) keeps all 45 pairs apart, and 3 bits loses one. It also
+splits the signal: amplitude alone fails, as demo 11 predicted, because
+mirror pairs, and the granny and square knot, share their amplitude; phase
+alone also fails; sign-only and ternary codes separate 33 and 42 of 45. A
+precision-by-width table finds the cheapest combination, 2 bits at 2
+angles, again 8 bits per knot, and a nearest-neighbour classifier
+recognizes every entry and two re-spelled braids.</p>
+<p>The question is a good one and the framing (a compiled weight table) is
+where the project is heading. What this demo measures is how well quantized
+values keep <em>these</em> ten braids apart; the "re-spelled" test braids are
+the same braid group elements written differently (σ<sub>2</sub>σ<sub>1</sub>σ<sub>2</sub>
+for σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>, and a cyclic rotation), so
+recognizing them shows the pipeline is consistent rather than that it
+generalizes.</p>
+
+<h2>Demo 13 · Does it generalize?</h2>
+<p class="nota"><code>knotapel/demo_13_dkc_test/main.c</code> · 948 lines · 7/7 tests</p>
+<p>Demo 13 is the first one to carry the name DKC, here expanded as
+"Deterministic Knowledge Compilation", and it asks the critical question:
+do weights compiled from the bracket generalize, the way trained weights
+are supposed to? It builds a catalog of 28 three-strand braids (six torus
+families with their mirrors, eight connected sums, six other braids),
+merges entries whose brackets agree at two angles (28 become 23), and then
+measures separation, the bits-versus-angles frontier (now 16 bits per knot
+for 23 entries, up from 8 for 10), a train/test split, a random baseline,
+and how the closest pair's distance shrinks as the table grows.</p>
+<p>Read closely, the demo does not yet answer its question. The catalog's
+torus "knots" are built by a formula that produces links (<a href="#nota-katalogus">note 4</a>);
+merging by agreement at two angles is not a test of knot type; and the
+train/test and random-baseline parts contain checks that cannot fail, so
+"generalization" and "beats random" are not actually measured
+(<a href="#nota-probationes">note 7</a>). What it does show is that 23
+different bracket signatures stay apart at one angle and how the margin
+decays. The real generalization result came later and differently: demo 29
+computes XOR from exact bracket values with no training at all.</p>
+
+<h2>Demo 14 · Where the bracket vanishes</h2>
+<p class="nota"><code>knotapel/demo_14_zero_structure/main.c</code> · 830 lines · 7/7 tests</p>
+<p>Demo 11's waveforms had zeros, and demo 14 asks whether the zeros are an
+invariant: it locates them at 1,024 samples with a refining search, counts
+them, maps their positions, and asks how much of the table they classify.
+The zeros fall into a few exact patterns, four at the odd multiples of
+π/4 or eight at the odd multiples of π/8, mirror pairs share them in
+reflected positions, and there is a clean gap (a ratio of about 10<sup>12</sup>)
+between entries whose bracket truly vanishes and entries that never come
+near zero. Zero counts alone separate 128 of 210 pairs.</p>
+<p>Two of its conclusions do not survive a check. The "torus knot zero
+progression" (8, 0, 0, 8, 4, 4) is a pattern in the links of note 4. And its
+connected-sum test compares the granny with the square of its "trefoil",
+finds a large mismatch, and concludes "braid connected sum ≠ diagram
+connected sum (expected)". With the real trefoil the bracket is exactly
+multiplicative: the demo's own granny values equal the trefoil's bracket
+squared at every angle it prints (<a href="#nota-summa">note 5</a>). The
+claim that every zero is a zero of δ is also not right for the eight-zero
+pattern (<a href="#nota-delta">note 6</a>).</p>
+
+<h2>Demo 15 · Looking for the special angles</h2>
+<p class="nota"><code>knotapel/demo_15_angle_optimization/main.c</code> · 883 lines · 8/8 tests</p>
+<p>Demo 15 starts from a striking coincidence: the angle the greedy search
+picked, 1.805π, is within 1.5% of 11π/6 = 1.833π, the point where the bracket
+meets the Witten–Reshetikhin–Turaev invariant at level r = 3 (through the
+Jones variable t = A<sup>−4</sup>). If an optimizer had rediscovered a point
+that Chern–Simons theory singles out, that would say the algebraically
+special angles are the informative ones. The demo states five predictions,
+computes the WRT angles for six levels between r = 3 and r = 12, divides out the factor of δ it
+believes demo 14 found to get a "reduced bracket" g, and compares
+separation at every candidate angle.</p>
+<p>The numbers come out against the hypothesis, and the demo reports them:
+the r = 3 angle separates only 164 of 210 pairs, with some pairs at
+distance zero, while the greedy angle separates all of them; the best WRT
+angle (r = 12) reaches a hardest-pair distance of 0.196 against the greedy
+angle's 0.443. The code's comment draws the sober conclusion, that WRT
+points are algebraically special, not separation-optimal. The checks were
+written to assert the observed outcome rather than the stated predictions
+(<a href="#nota-probationes">note 7</a>), and the reduced bracket rests on a
+δ-factor that is only partly there (<a href="#nota-delta">note 6</a>). This
+is the end of the numerical-classification line; from demo 16 the project
+moves toward computing with brackets rather than classifying with them.</p>
+
+<h2>Demo 16 · What is the reduced bracket?</h2>
+<p class="nota"><code>knotapel/demo_16_reduced_bracket/main.c</code> · 974 lines · 9/9 tests</p>
+<p>Demo 15 had divided each bracket by its power of δ to get a "reduced
+bracket" g. Demo 16 characterizes g: its waveform at 256 samples (no more
+zeros than the raw bracket), the shape of its best angle near 1.266π (a
+plateau about 0.09π wide, not a spike, so the angle is robust), its bit
+frontier (6 bits per component against the raw bracket's 7), whether it
+factorizes under connected sum, and the smallest set of angles a greedy
+search needs. At one angle g's hardest pair is twice as far apart as the
+raw bracket's (1.90 against 0.94).</p>
+<p>The factorization part concludes that g does not factorize, "seven of
+seven" composites off by large factors, and the code's comment calls this
+structural, confirming demo 14. It is demo 14's mistake again, comparing
+against the Hopf-link "trefoil", and the check records it with a constant
+pass (<a href="#nota-summa16">note 8</a>). The angle-set part needs a
+caution too: its greedy search may pick the same angle again, and does,
+so its "20 angles" for g are three distinct angles.</p>
+
+<h2>Demo 17 · Does a hierarchy beat a flat table?</h2>
+<p class="nota"><code>knotapel/demo_17_multilayer_dkc/main.c</code> · 1,467 lines · 6/6 tests</p>
+<p>Demo 17 asks an architecture question: instead of one flat lookup at one
+angle, would a decision tree do better, first splitting the table by a cheap
+feature and then using a different angle for each group? It builds a flat
+baseline, a two-group split by the δ-exponent k (which it calls the Arf
+invariant, noting that neural networks reportedly cannot learn Arf, so here
+it would come "for free"), a greedy binary tree of angle splits, and a
+gradient-descent search for the per-group angles to compare with the
+analytic choice. The analytic angles match gradient descent (2.000 against
+1.99997), and the tree classifies the table at 3 bits per value against
+the flat table's 6.</p>
+<p>Two corrections. The split bit is not the Arf invariant: k records
+whether the bracket vanishes where δ does, and for a knot it never can, so
+every genuine knot in the table has k = 0 and the "free" bit only sets five
+links apart (<a href="#nota-arf">note 9</a>). And the bit comparison counts
+bits per stored value only: the split costs an extra bit and the tree eleven
+decision bits plus an angle per leaf, so the stated prediction that
+hierarchy saves bits is not tested in total bits; the arf split ties the
+flat table (6 against 6) and the check passes on the tie.</p>
+
+<h2>Demo 18 · Logic gates from braids</h2>
+<p class="nota"><code>knotapel/demo_18_braid_logic/main.c</code> · 1,037 lines · 7/7 tests</p>
+<p>Can braids compute classical logic? Demo 18 encodes a bit as "no
+crossing" (0) or "one crossing" σ<sub>i</sub> (1), prepends the inputs to a
+fixed gate braid, takes the magnitude of the bracket at some angle, and
+thresholds it. It searches every gate braid up to six crossings on two
+strands for a NOT and up to five on three strands for a NAND, and finds
+both: NOT = σ<sub>1</sub><sup>−6</sup> at 1.25π (outputs 6 and 5), NAND =
+σ<sub>1</sub><sup>−3</sup>σ<sub>2</sub><sup>2</sup> at 1.75π (outputs 6, 9, 4
+and 0), and an XOR as well. Both work over a good fraction of all angles
+(37% and 44%).</p>
+<p>What a "gate" means here matters. Its output is a real number compared
+with a threshold outside the braid; its inputs are crossings. The demo's own
+composition test shows the consequence: feeding NAND into NOT does not give
+AND at NAND's angle, and the AND it then reports is found by sweeping for a
+different angle. So the summary line "UNIVERSAL: YES — NOT + NAND = Turing
+complete" claims more than the demo shows (<a href="#nota-portae">note 10</a>).
+The finding that survives is real and interesting: simple braids have
+brackets whose magnitudes separate a truth table cleanly.</p>
+
+<h2>Demo 19 · A compiler, and the special root</h2>
+<p class="nota"><code>knotapel/demo_19_braid_compiler/main.c</code> · 1,016 lines · 13/13 tests</p>
+<p>Demo 19 tries demo 18's gates at the roots of unity of order 4, 6, 8, 10
+and 12. NOT works at many of them; NAND only at four of the 8th roots and
+four of the 10th, and only at the 8th roots do both work at the same angle:
+the odd ones, θ = π/4, 3π/4, 5π/4, 7π/4, exactly where δ = 0. There the
+gates work with integer outputs and the reduced bracket equals the raw
+one. It fixes A = e<sup>i5π/4</sup> and builds a small Boolean
+expression compiler on top: expressions are trees of NOT and NAND, AND, OR
+and XOR are derived, and a full adder (sum and carry, all eight input
+combinations) comes out right, at about 2 ms per evaluation and a crossing
+count that grows linearly with depth.</p>
+<p>The compiler is honest about how it composes: each gate's output is
+thresholded to an ordinary bit in C, and that bit selects the next gate's
+input braid. The circuit's wiring therefore lives outside the braids; each
+braid acts as a lookup table for one gate. The lasting result is the root:
+A = e<sup>i5π/4</sup>, where every diagram with more than one loop
+contributes nothing and the bracket takes exact integer-like values, is the
+point the whole later DKC program is built on.</p>
+
+<h2>Demo 20 · Where the gates stop working</h2>
+<p class="nota"><code>knotapel/demo_20_braid_error/main.c</code> · 1,016 lines · 7/7 tests</p>
+<p>At δ = 0 the gates are exact; demo 20 asks what happens as A moves away.
+It verifies |δ| = 2|cos 2θ| across 360 angles (zero exactly at the four
+odd 8th roots), sweeps NOT and NAND around 5π/4 to find where each fails
+(NOT at |δ| ≈ 0.59, NAND at ≈ 1.05), runs the full adder across the sweep,
+tabulates gate success by |δ| alone (NAND works throughout |δ| &lt; 1 and
+nowhere in 1 ≤ |δ| &lt; 1.75), and finds the transition gradual rather than
+sharp. That is a useful map: the computing works in a band around δ = 0,
+not only at a point.</p>
+<p>One conclusion does not follow: "cascade does NOT amplify", because the
+full adder fails later than the NAND gate alone. The adder passes at exactly
+the angles where NOT fails and NAND still works, and the reason is in the
+circuit, not the braids (<a href="#nota-cascade">note 11</a>).</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -334,21 +540,129 @@ and the granny σ<sub>1</sub><sup>3</sup>σ<sub>2</sub><sup>3</sup>. Also, the
 experiment compares raw brackets, which depend on the diagram's framing, so
 it separates braid diagrams rather than knot types. "One angle suffices for
 six" stands as a statement about these six braids. Demos 11 to 13 build their
-knot tables on this one; whether the labels carry over is a question for the
-next reading.</p></li>
+knot tables on this one; the labels did carry over (note 4).</p></li>
+<li id="nota-katalogus"><p><strong>The catalogs of demos 11 to 15 build
+links where they name torus knots.</strong> Demo 13's helper
+<code>add_torus_2n</code> builds T(2,n) on three strands as the alternating
+word (σ<sub>1</sub>σ<sub>2</sub>)<sup>(n−1)/2</sup>σ<sub>1</sub> (its comment
+gives that formula), and demos 11 and 12 use the same words. Every one of
+them closes to a two-component link: counting each braid's permutation
+cycles, all twelve "T(2,n)" entries of demo 13 (n = 3 to 13, with mirrors)
+have two components, as do "T23#fig8" and the unnamed σ<sub>1</sub><sup>2</sup>σ<sub>2</sub>
+and σ<sub>1</sub><sup>2</sup>σ<sub>2</sub><sup>−1</sup> (σ<sub>1</sub><sup>2</sup>σ<sub>2</sub><sup>±2</sup>σ<sub>1</sub><sup>2</sup>
+have three), and the "unknot" is
+again the three-component unlink. The torus knot T(2,n) on three strands is
+σ<sub>1</sub><sup>n</sup>σ<sub>2</sub>. The connected sums built from
+σ<sub>1</sub><sup>a</sup>σ<sub>2</sub><sup>b</sup> (granny, square, T23#T25 …)
+and the figure-eight are knots, as named; "T23#fig8" is not a connected sum,
+because a figure-eight needs both generators. Results that only compare
+entries with each other (separations, symmetries, bit depths) remain true
+of these braids; results stated about torus knots are about these links.
+The same catalog continues into demos 16 and 17.</p></li>
+<li id="nota-summa"><p><strong>The bracket is multiplicative under connected
+sum; demo 14's opposite conclusion comes from the labels.</strong> Demo 14
+tests ⟨granny⟩ against ⟨"trefoil"⟩<sup>2</sup>/δ and finds a mismatch. Its
+"trefoil" is the Hopf link σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>, and in
+this normalization (one circle = 1) the rule has no δ. Against the real
+trefoil (σ<sub>1</sub><sup>3</sup>, bracket −A<sup>−5</sup> − A<sup>3</sup> +
+A<sup>7</sup>), the granny's values printed by the demo, (2.6180, −3.8042)
+at 0.3π, (2.6180, 3.8042) at 0.7π, (0.3820, −2.3511) at 1.1π and (−1, 0) at
+1.5π, are exactly ⟨trefoil⟩<sup>2</sup> at the same angles. The check
+"braid connected sum ≠ diagram connected sum (expected)" passes on a false
+premise.</p></li>
+<li id="nota-delta"><p><strong>Not every zero is a zero of δ.</strong> δ =
+−2cos 2θ vanishes at the odd multiples of π/4, which is where the
+four-zero entries vanish (the three-circle unlink is δ<sup>2</sup>). The
+eight-zero entries vanish at the odd multiples of π/8 instead: the
+"trefoil" (the stabilized Hopf link) has bracket A<sup>−7</sup>(A<sup>8</sup> + 1),
+zero exactly where A<sup>8</sup> = −1. So demo 14's "all zero positions are at
+universal angles (delta zeros)" and demo 15's premise that "g never
+vanishes" do not hold for those entries; demo 15's own δ-exponent finds
+k = 0 for them, leaving their eight zeros in g. Its δ-exponent also
+assigns k = 1 to the unlink, whose bracket is δ<sup>2</sup>: the
+second-order test divides the amplitude near π/4 by δ there, gets about
+0.004 (which is just δ again), and compares it with a threshold of 0.001.</p></li>
+<li id="nota-probationes"><p><strong>Some checks in demos 13 to 15 cannot
+fail.</strong> In demo 13, a test item counts as correctly classified if it
+is <em>not</em> identical to a training item, which deduplication already
+guaranteed, and that count is printed but not asserted; the asserted checks
+are self-classification of the training set and a re-spelled σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>.
+Its random baseline separates 100% of pairs, and "DKC beats random baseline
+(100.0% vs 100%)" passes because the check ignores the baseline. In demo 14,
+"count+positions improves over count alone (128 > 128)" passes with no
+improvement (the check is ≥). Demo 15 states as predictions that the WRT
+angles match or beat the greedy angle; the measurements show the opposite,
+and the checks assert the opposite ("greedy outperforms best WRT"), so the
+predictions are refuted by the numbers while the run reports 8/8. The
+1.5% coincidence that motivated it is one of several WRT angles (r = 3 to
+12 lie between 1.83π and 1.96π) near a greedy optimum, which is weak
+evidence on its own.</p></li>
+<li id="nota-summa16"><p><strong>Demo 16 repeats demo 14's connected-sum
+mistake.</strong> Its factorization test pairs each composite with its
+"factors" from the same catalog, so the granny is compared with the square
+of the Hopf-link "trefoil". The check is <code>check(msg, 1)</code>, a
+constant pass that records the result, and the comment concludes "the issue
+is structural". With the real trefoil the bracket factorizes exactly
+(note 5); for these knots k = 0, so g is the bracket and factorizes too. Two
+smaller points: the greedy angle search adds an angle's squared distances
+again if it picks the same angle twice, which raises its score, so it does:
+the g search chooses 0.25π fifteen times and 1.25π four times out of
+twenty, and the raw search 0.25π seven times. And at the exact zeros of δ,
+where g is undefined, the code returns the raw bracket instead, so g is
+discontinuous at the very angles the greedy search keeps choosing.</p></li>
+<li id="nota-arf"><p><strong>The δ-exponent is not the Arf invariant.</strong>
+k counts whether the bracket vanishes at the zeros of δ, which is the Jones
+variable t = A<sup>−4</sup> = −1. There |V<sub>K</sub>(−1)| is the
+determinant of the knot, and a knot's determinant is always odd, so for a
+knot the bracket never vanishes there: k = 0 for every knot, which is what
+the output shows (the figure-eight, granny, square and all the composites).
+The five entries with k &gt; 0 are links: the three-circle unlink and four
+of the mislabelled "torus knots". The Arf invariant belongs to the
+evaluation at t = i instead (V<sub>K</sub>(i) = (−1)<sup>Arf(K)</sup>), and
+by a theorem of Murasugi a link's V(i) vanishes exactly when the link is not
+"proper". That is the 8-zero pattern of note 6: the Hopf links vanish at the
+odd multiples of π/8, which is where t = ±i. So the project had the Arf
+evaluation in front of it, in demo 14's zero table, under another name.</p></li>
+<li id="nota-portae"><p><strong>A thresholded bracket is a lookup table, not
+yet a gate.</strong> In demos 18 and 19 a gate's inputs are crossings and
+its output is a real number compared with a threshold chosen afterwards.
+Nothing inside the braid passes a bit on; demo 18's composition test shows
+this (NAND then NOT does not give AND at NAND's angle), and demo 19 composes
+by thresholding each gate's output in C and choosing the next braid from the
+resulting bit. So each braid is a precomputed truth table and the circuit is
+ordinary code. "NOT + NAND = Turing complete" also overstates: that pair is
+functionally complete for Boolean circuits, which is a different and weaker
+property. The Freedman–Kitaev–Wang universality the demo cites concerns
+quantum computation with unitary braid representations, not thresholded
+bracket magnitudes. The later DKC demos took a different and stronger route:
+bracket values used as neuron weights.</p></li>
+<li id="nota-cascade"><p><strong>Demo 20's full adder survives because its
+NOTs cancel.</strong> The circuit builds AND as NOT(NAND) and OR as
+NAND(NOT, NOT), so the carry, OR(AND(a,b), AND(c, XOR)), becomes
+NAND(NOT(NOT(NAND(a,b))), NOT(NOT(NAND(c, XOR)))): every NOT sits in a
+cancelling pair, and the sum uses NANDs only. When the NOT gate degrades,
+its outputs at the midpoint threshold invert, so the "NOT" becomes a plain
+buffer, the pairs still cancel, and the adder stays correct. The table
+shows exactly this: the adder gets all eight cases right at θ = 0.800π,
+0.951π, 1.051π and 1.202π, all points where NOT fails and NAND holds, and
+fails wherever NAND fails. So "cascade does NOT amplify" is a property of
+this circuit's double negations, not evidence of robustness.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 11 to 13 continue from demo 10's numbers: the bracket as a waveform
-over the whole circle, how few bits per knot survive quantization, and a
-first test of whether such "compiled" weights generalize. The decisive turn
-comes when the bracket is evaluated at A = e<sup>i5π/4</sup>, where δ = 0. Every
+<p>Demos 21 to 25 continue with braids as logic (reversible gates, an
+optimizer, a zoo of Boolean functions, rational tangles, closure
+measurements). The decisive turn comes with demos 26 to 29, still at
+A = e<sup>i5π/4</sup> where δ = 0, when bracket values stop being gate
+outputs and become the weights of a neuron. Every
 diagram with more than one loop then vanishes, the values become exact
 integers in Z[ζ<sub>8</sub>], and those values are what demo 29 found
-computing XOR. The polynomial and matrix machinery of these ten demos is
-what makes "exact" possible there.</p>
+computing XOR. The polynomial and matrix machinery of demos 1 to 9 is
+what makes "exact" possible there, and the numerical detour of demos 10 to
+15, whatever its labels, is where the idea of a bracket value as a weight
+first appears.</p>
 
-<p class="nota">Written by hand on 2026-10-03 from reading the ten
+<p class="nota">Written by hand on 2026-10-03 from reading the twenty
 <code>main.c</code> files (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
