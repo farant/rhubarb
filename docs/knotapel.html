@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 65 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 70 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -62,7 +62,10 @@ unity, then the bracket at δ = 1 and δ = √2 as a source of weights. Demos
 Boolean search at δ = √2, φ and √3 under two encodings, and the radical at
 ℓ = 7, the first cubic number field. Demos 61 to 65 prove the
 eleven-of-thirteen result for half-planes, dissect parity by octant and
-sector up to six inputs, and try the next cyclotomic ring.</p>
+sector up to six inputs, and try the next cyclotomic ring. Demos 66 to 70
+leave the plane: a representation of the braid group in the unit
+quaternions, its rotation axes on the sphere, the plane again by
+stereographic projection, finer angles, and the braids as music.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1184,6 +1187,114 @@ XOR6 solutions have zero margin and appear at even k, where the 180° direction
 is a sector boundary, which the demo itself calls concerning (note 32). Its
 own XOR5 enumeration sums exactly and gets 3,240, the order-free count.</p>
 
+<h2>Demo 66 · Quaternions</h2>
+<p class="nota"><code>knotapel/demo_66_quaternionic_dkc/main.c</code> · 2,004 lines · 30/30 tests · <code>findings.md</code></p>
+<p>Instead of a scalar bracket, demo 66 sends each braid to a unit
+quaternion: σ<sub>1</sub> ↦ (1 + i)/√2, σ<sub>2</sub> ↦ (1 − k)/√2. Over 87,890
+braid words this gives 24 quaternions up to sign: 4 on the axes, 12 with two
+components ±1/√2 ("edge"), 8 with all four ±½ ("body"). The demo calls
+them the vertices of the 24-cell. It compares them with the bracket (the
+bracket is not proportional to the trace 2 Re q; the two separate different
+pairs of braids), searches six-weight XOR with sums of quaternions read
+through a grid or a Voronoi partition on S³ with any labeling of the cells,
+finds solutions only when the six weights are three pairs (q, −q), and
+reports 35 solutions with 25 Voronoi cells, falling into 6 orbits under a
+576-element symmetry group.</p>
+<p>The generators do satisfy the braid relation, and they generate the
+48-element binary octahedral group (both checked; <a
+href="#nota-gruppus">note 34</a>). Its 24 classes up to sign are not the
+24-cell: the 24-cell is the binary tetrahedral group (the axis and body
+elements), and the 24 edge elements form the dual 24-cell; together they are
+the 48 roots of F<sub>4</sub>. The representation is chosen by hand rather
+than derived from A, so there was no standard prediction that the bracket
+equals its trace (the bracket is a weighted sum of traces over several
+Temperley–Lieb representations, times a writhe phase). The XOR search uses a
+lookup table on the cells, and with antipodal pairs its six weights act as
+three (<a href="#nota-tabula">note 35</a>); "24 sectors on the circle is a
+projection of the 24-cell" is a coincidence of numbers that the demo does
+not derive.</p>
+
+<h2>Demo 67 · Coordinates on SU(2)</h2>
+<p class="nota"><code>knotapel/demo_67_coordinate_zoo/main.c</code> · 1,776 lines · 18/18 tests · <code>findings.md</code></p>
+<p>Demo 67 writes each quaternion in several coordinate systems and runs
+the same lookup-table XOR6 search in each. The 24 quaternions have four
+eigenvalue angles (0°, 45°, 60°, 90°) and thirteen rotation axes on the
+sphere. A Voronoi partition of S² around those thirteen axes, plus a cell for
+zero, gives 36 solutions with 14 cells, the most per cell of any partition
+tried; partitions by "Hopf phase" alone give none at any resolution, and
+"Hopf base" grids give many. The conclusions: "the computation lives on
+S²", and "the Hopf fiber is computationally dead".</p>
+<p>The thirteen axes are the rotation axes of the cube (three fourfold, four
+threefold, six twofold), and the four angles are half the rotation angles of
+the identity and of rotations of order 4, 3 and 2 (note 34). The Hopf
+coordinates are mislabelled (<a href="#nota-hopf">note 36</a>): the "phase"
+is ξ<sub>1</sub> = arg(a + bi) and the "base" grid uses η and ξ<sub>1</sub>,
+but the Hopf map depends on η and ξ<sub>1</sub> − ξ<sub>2</sub>, and moving
+along a fibre changes ξ<sub>1</sub> and ξ<sub>2</sub> together. Neither
+activation sees the fibre or the base, so the "dead fibre" is not tested.
+Solutions per cell compares lookup tables of different sizes, and the
+best partition is centred on the axes of the same group the weights come
+from (note 35).</p>
+
+<h2>Demo 68 · The plane, by stereographic projection</h2>
+<p class="nota"><code>knotapel/demo_68_stereographic_dkc/main.c</code> · 1,171 lines · 9/9 tests · <code>findings.md</code></p>
+<p>Demo 68 projects the thirteen axes stereographically onto the plane
+(from the north pole, since the south pole is one of them), draws the cells
+and the XOR6 decision boundary as ASCII art, and writes the neuron as two
+real outputs fed to a cell lookup. Assigning points to cells by distance on
+the sphere and then projecting gives the same 36 solutions; assigning by
+Euclidean distance to the projected centres in the plane gives none. The
+conclusion: "the computation is intrinsically curved"; "visualize on the
+plane, compute on the sphere".</p>
+<p>The pictures are good and the first result is right. The second
+compares two different partitions: stereographic projection carries the
+spherical Voronoi cells to planar regions bounded by circular arcs, and
+classifying in the plane by those regions gives the same 36, which is what
+the demo did. The Euclidean Voronoi diagram of the projected centres is a
+different partition of the plane, and its failure shows that the partition
+matters, not that the computation cannot be flattened (note 36).</p>
+
+<h2>Demo 69 · Finer angles</h2>
+<p class="nota"><code>knotapel/demo_69_clifford_staircase/main.c</code> · 787 lines · 9/9 tests (about 4½ minutes) · <code>findings.md</code></p>
+<p>The same construction with generator angles π/8 and π/16 in place of
+π/4. The catalogs grow (7,952 quaternions and 3,457 axes at π/8; the caps
+of 32,768 and 4,096 at π/16), the thirteen axes of the π/4 case reappear
+exactly at π/8 and partly at π/16, and with thousands of Voronoi cells about
+90% of weight triples solve XOR6. The conclusions: the thirteen directions
+nest "rigidly", and π/4 is the computational sweet spot because finer roots
+"trivialize" XOR6.</p>
+<p>Two readings. Rotations by 45° about two perpendicular axes generate an
+infinite group (a finite rotation group with an element of order 8 is cyclic
+or dihedral), so at π/8 the catalog is as large as the enumeration is deep,
+not a group being completed; the nesting is the remark that squares of the
+π/8 generators are the π/4 generators. And a lookup table with thousands of
+cells separates almost anything, so 90% is the table's capacity (note 35).
+Demo 80, "group finiteness", returns to the first point.</p>
+
+<h2>Demo 70 · Musica nodorum</h2>
+<p class="nota"><code>knotapel/demo_70_musica_nodorum/main.c</code> · 812 lines · 8/8 tests · <code>findings.md</code></p>
+<p>The four eigenvalue angles become four notes, C, E♭, E and F♯ (0, 300, 400
+and 600 cents: unison, minor third, major third, tritone), and a braid word
+becomes a melody by taking the angle of each running product: the Garside
+element (σ<sub>1</sub>σ<sub>2</sub>)<sup>3</sup> plays E♭ E F♯ E E♭ C. The
+thirteen axes become positions in a stereo field. σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub>
+and σ<sub>2</sub>σ<sub>1</sub>σ<sub>2</sub> play the same melody; pitch and
+position are uncorrelated (r = −0.06); icosahedral and dodecahedral
+partitions compute no XOR6, which the findings read against Fran's
+observation linking the twelve keys of the circle of fifths to the
+dodecahedron's twelve faces.</p>
+<p>It is a pleasing piece of work, and the melodies are real. Three of its
+explanations need adjusting (<a href="#nota-melos">note 37</a>). The melody
+depends on the word, not on the length of the product (σ<sub>1</sub><sup>3</sup>
+plays F♯ at its second step, σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> plays
+E), and not on the braid either, so it is not a topological invariant; the
+Yang–Baxter pair agrees because σ<sub>1</sub> and σ<sub>2</sub> are
+conjugate, and so are σ<sub>1</sub>σ<sub>2</sub> and σ<sub>2</sub>σ<sub>1</sub>.
+Pitch and position are the angle and the axis of a rotation, not the Hopf
+fibration. And "trefoil" (σ<sub>1</sub><sup>3</sup>) and "torus(2,5)"
+(σ<sub>1</sub><sup>5</sup>) on three strands close to those knots plus a
+separate unknot.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -1678,12 +1789,73 @@ arbitrary angle. Demo 65, summing exactly in the ring before converting,
 gets 3,240. The 27 sets themselves are found either way. Demo 64's 420
 spurious contraction failures in floating point are the same thing.
 Permutation invariance is a free check any such search can assert.</p></li>
+<li id="nota-gruppus"><p><strong>The group is the binary octahedral group,
+and its finiteness is classical.</strong> Checked: (1 + i)/√2 and
+(1 − k)/√2 satisfy aba = bab, and closing under products and inverses gives
+48 unit quaternions, the binary octahedral group (the rotations of the cube,
+doubled). The 24-cell is its 24-element subgroup, the binary tetrahedral
+group (±1, ±i, ±j, ±k and the sixteen (±1 ± i ± j ± k)/2); the other 24
+elements, (±1 ± i)/√2 and the like, are the dual 24-cell, and all 48 are the
+roots of F<sub>4</sub>. Its rotation axes are the cube's thirteen (three
+fourfold, four threefold, six twofold), and the four "eigenvalue angles" are
+half of 0°, 90°, 120° and 180°. That a braid group representation has a finite
+image here is the classical picture: Jones's representations have finite
+image exactly at the low-order roots of unity (the easy points of note 28),
+and dense image from ℓ = 5 on (Freedman, Larsen and Wang), so demo 66's open
+question of a binary icosahedral group at ℓ = 5 expects a finite group where
+the image is dense. Whether demo 66's hand-chosen representation is
+projectively the Temperley–Lieb one at A = e<sup>i5π/4</sup> is not
+established in the demo.</p></li>
+<li id="nota-tabula"><p><strong>From demo 65 on, the activations are lookup
+tables.</strong> A search that accepts any labeling of the cells asks only
+whether the 64 subset sums put both parities in some cell; the neuron is a
+table indexed by cell, so its reach grows with the number of cells (note 6).
+With three antipodal pairs (q<sub>1</sub>, −q<sub>1</sub>, …), which demo 66
+finds necessary and which all of demo 65's first solutions are, the 64 sums collapse to the 27 points
+ε<sub>1</sub>q<sub>1</sub> + ε<sub>2</sub>q<sub>2</sub> + ε<sub>3</sub>q<sub>3</sub>,
+ε<sub>i</sub> ∈ {−1, 0, 1}, labelled by the number of nonzero ε<sub>i</sub>
+mod 2 (a pair's two elements cancel, both or neither giving 0): six weights
+acting as three. Counts of solutions therefore measure how well a given
+partition separates those points, solutions per cell compares tables of
+different sizes, and a partition centred on the axes of the weights' own
+group is tuned to them; the Platonic partitions of demo 70 and the thousands
+of cells of demo 69 behave as tables would.</p></li>
+<li id="nota-hopf"><p><strong>The Hopf coordinates, and the plane.</strong>
+Write q = z<sub>1</sub> + z<sub>2</sub>j with z<sub>1</sub> = cos η
+e<sup>iξ<sub>1</sub></sup> and z<sub>2</sub> = sin η e<sup>iξ<sub>2</sub></sup>.
+The Hopf map to S² depends on η and ξ<sub>1</sub> − ξ<sub>2</sub>; the fibre
+through q changes ξ<sub>1</sub> and ξ<sub>2</sub> by the same amount. Demo
+67's "phase" activation uses ξ<sub>1</sub> alone and its "base" grid uses η
+and ξ<sub>1</sub> (its code says "use xi1 as longitude on S^2 base"), so the
+dead-fibre result concerns a different coordinate. Its eigenvector
+coordinates (axis and angle) are the decomposition demo 70 calls Hopf, which
+is a different thing again. For demo 68: a homeomorphism carries a partition
+to a partition, so a computation defined by cells on the sphere is equally
+a computation by their images in the plane, and stereographic projection
+sends the spherical cells' boundaries, arcs of great circles, to arcs of
+circles and lines. Nearest-centre cells in the Euclidean plane are another
+partition.</p></li>
+<li id="nota-melos"><p><strong>The melodies follow the word.</strong> The
+pitch at each step is the angle of the running product. σ<sub>1</sub><sup>3</sup>
+plays E♭ F♯ E♭ (σ<sub>1</sub><sup>2</sup> = i is a half-turn) while
+σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> plays E♭ E F♯ (σ<sub>1</sub>σ<sub>2</sub>
+has real part ½, a third of a turn), so the melody does not depend only on
+length. σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> and σ<sub>2</sub>σ<sub>1</sub>σ<sub>2</sub>
+agree step by step because σ<sub>1</sub> and σ<sub>2</sub> are conjugate
+(σ<sub>2</sub> = (σ<sub>1</sub>σ<sub>2</sub>)σ<sub>1</sub>(σ<sub>1</sub>σ<sub>2</sub>)<sup>−1</sup>,
+by the braid relation), and so are σ<sub>1</sub>σ<sub>2</sub> and
+σ<sub>2</sub>σ<sub>1</sub> = σ<sub>1</sub><sup>−1</sup>(σ<sub>1</sub>σ<sub>2</sub>)σ<sub>1</sub>.
+Equal braids written differently (σ<sub>2</sub> and σ<sub>1</sub>σ<sub>1</sub><sup>−1</sup>σ<sub>2</sub>)
+play different melodies, so the melody is an invariant of the word, not of
+the braid or the knot.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 66 to 69 leave the plane: quaternionic DKC, a zoo of coordinate
-systems for SU(2), stereographic projection, and the Clifford staircase on
-the sphere, before the multi-strand work of demos 99 to 109. The controls this reading found
+<p>Demos 71 to 75 analyse the thirteen-direction partition (spherical
+harmonics, spherical designs, an eigenvector automaton, a "computational
+invariant", two eyes), demos 76 to 89 scale the inputs and examine capacity,
+crossing depth, framing and null states (demo 80 tests group finiteness),
+before the multi-strand work of demos 99 to 109. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -1691,7 +1863,8 @@ expressive power (note 19), the textbook rule as the expected value (note
 the same search with only δ changed (note 25), the bracket's own Potts
 formula (note 26), the perceptron as the baseline for additive searches
 (note 27), and, for anything decided by angles, the boundary convention and
-the order of summation (notes 32 and 33).</p>
+the order of summation (notes 32 and 33), and, once the activation is a
+table, a random partition of the same size (note 35).</p>
 
 <h2 id="demo113">Demo 113 · Rosetta (new, from this reading)</h2>
 <p class="nota"><code>knotapel/demo_113_rosetta/main.c</code> · 33/33 tests · <code>findings.md</code> · written 2026-10-03</p>
@@ -1831,6 +2004,16 @@ question becomes which catalogs reach which n.</p></li>
 the parity ceiling at δ = 0 and δ = √2, both classical points (note 28). Rerun
 it with demo 58's ℓ = 5 catalog, the first one that is not a classical
 invariant.</p></li>
+<li><p><strong>Which representation is demo 66's?</strong> Compute the
+two-dimensional Temperley–Lieb representation of B<sub>3</sub> at
+A = e<sup>i5π/4</sup> and compare its image, up to scalars, with the binary
+octahedral group; then write the bracket of a three-strand closure as the
+weighted sum of traces it is, and check it on every braid.</p></li>
+<li><p><strong>A null partition.</strong> For demos 67 to 70, compare the
+thirteen-axis Voronoi partition with Voronoi partitions around thirteen
+random directions (many draws, same cell count), so that "only the data's
+own geometry computes" is measured against chance rather than against the
+Platonic solids alone.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -1848,17 +2031,21 @@ the algebra. Demos 56 to 60 continue it, and end with demo 60, which states its
 predictions first and checks them at two primes: the way the earlier
 claims could have been made. Demos 61 and 62 then do something new for the
 project, a proof, and the result survives; the gaps were in the proofs'
-bookkeeping, and the argument that closes them is short.</p>
+bookkeeping, and the argument that closes them is short. Demos 66 to 70 are
+the most exploratory stretch, with the most pleasure in them (the melodies of
+demo 70 are a real thing to have made), and their claims mostly need
+classical names: the cube's rotation group, the dual pair of 24-cells,
+lookup tables.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
 textbook check of note 21, the control of note 25, the coupling check of
 note 26, demo 59's catalog magnitudes (note 28), the lattice search and
-random check of note 30, the rotated sectors of note 32 and demo 65's
-magnitudes ran on scratch copies. Written by hand on 2026-10-03 from reading
-the fifty-three <code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to
-65, with their findings, debriefs and, for 51 to 65,
-<code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+random check of note 30, the rotated sectors of note 32, demo 65's
+magnitudes and the group check of note 34 ran on scratch copies. Written by
+hand on 2026-10-03 from reading the fifty-eight <code>main.c</code> files
+(demos 1 to 29, 35, 38, 39 and 45 to 70, with their findings, debriefs and,
+for 51 to 70, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
