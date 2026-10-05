@@ -218,6 +218,12 @@ text in an act log (pictor's engine, extracted); plan
 `project-specs/scriba-plan.md` (tracks H and S). The outline below is
 the pre-interview sketch, superseded where the plan differs.
 
+**pagina DONE 2026-10-05 as the app `scriba`** (RELATIO C1 in
+`ludus_tessera/phase-log.md`): text in an act log (`historia`), undo
+by the log (vim's stack unused), clipboard in the ephemeral insula,
+`fd` on event time, a fixed 68×56 sheet (vim's 68-column clipboard
+fits). schirmata next - interview first.
+
 - **pagina:** the page text = durable insula; cursor, mode, visual
   selection, pending key (`d…`) = ephemeral insula. Reuses `vim.c` and
   `TabulaCharacterum` unchanged; a new figura (grid → mandata, with the

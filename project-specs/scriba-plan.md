@@ -1,5 +1,9 @@
 # scriba — plan (track (c) of ludus_tessera: the first insula-native widget)
 
+**DONE 2026-10-05** (H0 50ad4081, H1 b3344d03, H2 e9cc5dff; S0
+f438a352, S1a cec87a74, S1b 395ba8fe, S1c 03814c3a, S2 2c9b816b, S3
+ca35098a + 63de72ec; RELATIO in `ludus_tessera/phase-log.md` C1).
+
 *Written 2026-10-05, from Fran's interview at the start of track (c)
 (`project-specs/ludus-tessera-plan.md` §V). The question: how does a
 vim text page live on the ludus model - durable document, ephemeral

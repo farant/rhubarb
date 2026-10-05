@@ -483,3 +483,83 @@ surface grows, and never stretches. Fran's looks: terminal (B3), window
 **Next: track (c), insula-native widgets** (plan V: pagina,
 schirmata) - an interview with Fran first.
 
+## C1 — RELATIO: scriba, the first insula-native widget (2026-10-05)
+
+**Track (c), first widget, is done: `scriba`, a vim page on the ludus
+model, in both targets.** Plan `project-specs/scriba-plan.md` (tracks
+H and S), from Fran's interview the same day. Fran's look: "it looks
+good! no lag or anything. it seems like everything works properly" -
+one finding (the frame on editable cells), fixed.
+
+**What exists:**
+- **`historia`** (H0-H2): pictor's act-log engine, extracted - acts in a
+  volumen, branches, LIVE checkpoints, cursor, undo/redo, verify; the
+  client supplies a fixed-size projection + `vacare` + `applicare`.
+  pictor is a client, byte-identical against a golden written before
+  the cut (50ad4081, b3344d03, e9cc5dff). Joined acts (S1b, 395ba8fe):
+  one undo step over a group.
+- **`scriba_documentum`** (S0, f438a352): the sheet's truth is acts;
+  an act is a generic line splice (`<mutatio linea deletae>` + lines)
+  computed from before/after sheets - exact for ANY pair, so vim's
+  behaviour never needs replaying. Lines in attributes with a small
+  escape codec.
+- **The gesture slot** (S1a, cec87a74): `MotusGestus` in Motus - app
+  state of a gesture in progress, its own quiet interval and flush;
+  `dispensator_finire` flushes everything pending, called by both
+  glues at exit.
+- **`pagina.clavis`** (S1c, 03814c3a): printables from committed text,
+  named keys from key-downs; vim on the working sheet; saving at once in
+  normal mode, after ~1 s of quiet in insert (Fran), Esc closes the
+  insert; insert chunks joined so `u` takes back the whole insert.
+- **`scriba_componentia` + `scriba_figurae`** (S2, 2c9b816b): page on
+  the desk, frame, steady block cursor in its mode's status colour,
+  whole-line selection, status `MODUS l:c`, stateless centre-on-cursor
+  scrolling.
+- **The app** (S3, ca35098a + frame 63de72ec): `scriba_applicatio`,
+  `apps/scriba/scriba{,_terminalis}.sh` (build-only switch that works);
+  a window session replays through the terminal path to the same
+  document, acts and insulae.
+
+**What the work found, by weight:**
+1. **Framework gaps a second app exposes.** Committed text went to the
+   ROOT, not the focus (no component had consumed text before);
+   nothing flushed pending state at EXIT; the gesture flush left the
+   writer anonymous (fatal inside an action - owned writes refused
+   silently); the test hand could not type like a real keyboard. Each
+   fixed red-first where it lives (destinatio, dispensator, motus,
+   manus_ludus).
+2. **A rule that was never tested:** "a checkpoint inside a span a
+   branch abandoned is never a base" - pictor's existing suite passed
+   with it broken; only the golden written BEFORE the extraction caught
+   it (H0). Write the oracle before the cut.
+3. **Plants that survived taught the most:** a joined-flag plant
+   survived until the test made the SECOND act after a branch (S1b);
+   an empty-value plant survived `insula_attributum` (empty and absent
+   look alike; the pretty writer turns `a=""` into "true") until the
+   test read the written insula (S1c); a mode-colour plant survived
+   because COLOR_CURSOR and COLOR_STATUS_INSERT are the same gold (S2).
+4. **The code under the widget is not what its headers say:**
+   `tabula_initiare` fills SPACES (header: '\0'); pull-left writes an
+   invisible '\0' (scriba whitens after every key); the house vim has
+   no `y`, `g` alone is top, Esc does not step back; entering insert
+   sets sticky indentation (a real act).
+5. **Rounding decides where 1-px features land in cells** (Fran's
+   look): tessellatio rounds a rectangle's edges to the NEAREST cell
+   and outlines its inner ring, so a frame 1 px outside the page drew
+   on the page's cells. Frames now sit a whole cell out (scriba and
+   pictor).
+6. **Side fixes:** the window loop no longer spins at 100% CPU while
+   idle (4e92e0da); the replay transport must pair a key with its text
+   and time out a lone ESC.
+
+**v1 limits, named:** ASCII only (bytes >= 0x80 ignored); whole-line
+selection only; steady cursor (no blink under one clock); no mouse;
+the house vim's command set (no yank); scrolling recentres on every
+move when the sheet overflows; per-key strings allocate from the
+document arena (as pictor); the R10 formatter false positive after a
+function-like macro (formator worklog).
+
+**Next: schirmata** (track c's second widget) - which screen as state
+plus a tab bar; now there are two apps worth switching between. A
+short interview first.
+
