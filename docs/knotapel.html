@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 100 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 105 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -78,7 +78,9 @@ behind the depth law. Demos 91 to 95 ask whether the activation limits the
 law, which Boolean functions the encodings allow, and whether a non-solvable
 group computes better. Demos 96 to 100 dissect the octahedral catalog cell by
 cell, then go to three and four strands with matrix representations of the
-Temperley–Lieb algebra at δ = 0.</p>
+Temperley–Lieb algebra at δ = 0. Demos 101 to 105 carry that to five, six
+and eight strands and study the sign-hash activation that reads the
+matrices.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1804,6 +1806,77 @@ strands there is no radical and the table's prediction fails at its first
 test. The hub-pair reading (three pairs, three positive roots) is a count
 that matches, not yet a derivation.</p>
 
+<h2>Demo 101 · Five strands</h2>
+<p class="nota"><code>knotapel/demo_101_5strand_dkc/main.c</code> · 1,569 lines · 44/44 tests (about 15 minutes) · no <code>findings.md</code></p>
+<p>Demo 100's scaling table, tested at five strands on W<sub>5,3</sub>
+(dimension 4) with the predictions in the header: growth near 4 per round, 12
+super-hubs in 6 pairs (the positive roots of sl<sub>4</sub>), and no radical.
+The growth ratios fall 8, 5.5, 4.7, 4.3, 4.1, 3.9 towards 4; the module has no
+radical; XOR runs to XOR12 (27 solutions from deep elements) and XOR14 to none
+at any table size; and the super-hubs number 3, not 12.</p>
+<p>A good test: predictions stated first and checked. The radical prediction
+is right and agrees with note 50 (W<sub>5,3</sub> is simple, TL<sub>5</sub>(0)
+being semisimple), so the experiment this page proposed after demo 100 had
+already been run. The hub prediction fails, and with it the reading of hubs as
+positive roots that the table extrapolated from demo 100's single case.</p>
+
+<h2>Demo 102 · Six strands, with and without a radical</h2>
+<p class="nota"><code>knotapel/demo_102_6strand_ab/main.c</code> · 1,870 lines · 84/86 tests (two "super-hub" predictions fail as shipped, by design) · no <code>findings.md</code></p>
+<p>W<sub>6,0</sub> (dimension 5, simple) against W<sub>6,4</sub> (dimension 5,
+with a one-dimensional radical), the same 32,768 braids: on the radical every
+braid acts by A<sup>w</sup>, checked for all of them; the simple module computes
+slightly more XOR at every level. The log names a "Barrington-Radical
+Principle": the radical carries an abelian character, abelian groups cannot
+compute parity, so the radical is useless for XOR.</p>
+<p>The A/B comparison is the right design and its result is clear. The
+character is note 50's one-dimensional representation. The principle is
+backwards (<a href="#nota-abelianus">note 53</a>): parity is exactly what an
+abelian group can compute.</p>
+
+<h2>Demo 103 · Dimension 9 against dimension 5</h2>
+<p class="nota"><code>knotapel/demo_103_dimension_scaling/main.c</code> · 1,663 lines · 76/78 tests (two predictions fail as shipped; about 6 minutes) · no <code>findings.md</code></p>
+<p>W<sub>6,2</sub> (dimension 9) against W<sub>6,0</sub> (dimension 5), "both
+simple": the breadth-first growth is identical for every module on six
+strands (it belongs to the braid group, not the module), the coefficients grow
+1, 1, 2, 3, 5, 8, and the larger module computes less XOR with the full sign
+hash, though a hash restricted to certain rows and columns does better.</p>
+<p>The growth law is a good finding, cleanly separated. "Both simple" is not
+so (<a href="#nota-simplex">note 52</a>): the demo tests simplicity by the
+vectors every e<sub>i</sub> kills, which finds only copies of the
+one-dimensional representation; W<sub>6,2</sub>'s form has rank 5 of 9, so it
+has a 4-dimensional submodule. The comparison is a simple module against a
+non-simple one.</p>
+
+<h2>Demo 104 · How coarse a readout</h2>
+<p class="nota"><code>knotapel/demo_104_coarseness_sweep/main.c</code> · 1,798 lines · 35/35 tests (about 2 minutes) · no <code>findings.md</code></p>
+<p>Vary how many matrix entries the sign hash reads: W<sub>6,2</sub> peaks at
+120 of its 324 and then beats W<sub>6,0</sub>; reading only the blocks that
+link the two halves of W<sub>6,2</sub> under TL<sub>5</sub> does best at 128
+cells; sign patterns have more independent directions than the matrices do
+(292 against 244). Then a sweep of the number of cells, 128 to 4,096,
+reverses the block result: with enough cells W<sub>6,0</sub> wins at every
+size, and "k is the real lever".</p>
+<p>The demo corrects itself, which is the best thing in it: the block
+advantage was an artifact of a small table, and the number of cells, the size
+of the lookup table, is what governs capacity (note 42). The dithering,
+one-bit compressed-sensing and renormalisation-group readings are analogies
+the sweep does not need.</p>
+
+<h2>Demo 105 · Eight strands</h2>
+<p class="nota"><code>knotapel/demo_105_8strand_k_regime/main.c</code> · 1,045 lines · 49/49 tests (about 5 minutes); also <code>phase_b.c</code> and three rank programs · no <code>findings.md</code></p>
+<p>W<sub>8,0</sub> (dimension 14) on eight strands: XOR8 at every table size
+from 128 cells (5,824 solutions) to 4,096 (22,266), more than six strands
+gives, so demo 93's "XOR dies at N ≥ 7" was a matter of table size. Phase B
+takes W<sub>8,2</sub> (dimension 28, "simple"), where reading within the
+blocks now beats reading across them. Rank fractions first reported as
+collapsing (34.9%, 6.9%) turned out to be undersampled; with the whole catalog
+they rise to 90.6% and still climb.</p>
+<p>Two corrections made by the demo itself (table size, undersampling) and
+both right. W<sub>8,2</sub> is not simple (note 52): its form has rank 14 of
+28. The log's surrounding notes (macramé, Kirby calculus as "Fran's
+dimensional formula", topological entropy) are directions rather than
+results.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -2538,7 +2611,7 @@ as n − 1 is odd or even: a radical for n = 4, 6, 8, 10, none for n = 3, 5, 7, 
 (computed). On that line the e<sub>i</sub> act as zero and σ<sub>i</sub> as A,
 the one-dimensional representation. So demo 100's "universal for
 W<sub>n,n−2</sub> at all n ≥ 4" holds for even n only, and five strands will
-show no frozen radical.</p></li>
+show no frozen radical. (Demo 101, read afterwards, had already checked: none.)</p></li>
 <li id="nota-cellaB"><p><strong>Why cell B computes parity.</strong> The
 neuron forms S = Σ ±w<sub>i</sub>, the sign set by each bit. If every weight
 has the same real part c (the same rotation angle), then Re S = c(2k − N),
@@ -2555,12 +2628,36 @@ two bits agree and along its own axis when they differ, so the axis of the sum
 (coordinate, edge or body) also counts the pairs of odd parity. Demo 97's
 plateau from 25° to 75° is the range of angles at which the real part and the
 vector part both stay large enough to read.</p></li>
+<li id="nota-simplex"><p><strong>"Simple" was tested the wrong way.</strong>
+Demos 101, 103 and 105 compute a module's "radical" as the vectors killed by
+every e<sub>i</sub>, which detects only copies of the one-dimensional
+representation (σ<sub>i</sub> ↦ A); a proper submodule need not be killed. The
+radical of the Gram form is a submodule, and its rank at δ = 0 is easy to
+compute from link states (a scratch script): W<sub>4,2</sub> 2 of 3,
+W<sub>5,3</sub> 4 of 4, W<sub>6,0</sub> 0 of 5, W<sub>6,2</sub> 5 of 9,
+W<sub>6,4</sub> 4 of 5, W<sub>8,0</sub> 0 of 14, W<sub>8,2</sub> 14 of 28. So
+W<sub>6,2</sub> has a 4-dimensional and W<sub>8,2</sub> a 14-dimensional
+proper submodule: neither is simple. W<sub>5,3</sub> is simple (TL<sub>5</sub>(0)
+is semisimple), and W<sub>6,0</sub> and W<sub>8,0</sub>, whose forms vanish, are
+simple too, each a copy of the head of W<sub>n,2</sub> (note 46). For
+W<sub>n,n−2</sub> the two notions agree, which is why demos 100 to 102 were
+right about their modules.</p></li>
+<li id="nota-abelianus"><p><strong>Abelian groups compute parity.</strong>
+Parity is the sum of the bits mod 2, so a program over the group Z/2
+(multiply the images of the inputs) computes it; what programs over abelian,
+and more generally solvable, groups cannot do in bounded width is AND or
+majority, which is the content of Barrington's theorem. The
+"Barrington-Radical Principle" of demo 102 therefore has the implication
+reversed, and in any case these neurons add their weights rather than
+multiply them (note 47). Why the radical adds little here is simpler: on it
+every braid of writhe w acts by the same scalar A<sup>w</sup>, so it carries one
+number, the writhe mod 8.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 101 to 109 continue on more strands: dimension-matched activations,
-the activation coarseness sweep, topological entropy of XOR-computing braids
-(demo 106) and algebraic graph density (demo 107). The controls this reading found
+<p>Demo 106 computes the topological entropy of XOR-computing braids, demo
+107 the algebraic graph density of the catalogs, and demos 108 and 109 follow
+the quotient graphs and a "major index" invariant. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -2751,11 +2848,16 @@ report catalogs by geometric statistics (axes, angles, pairwise spread) beside
 their group-theoretic names.</p></li>
 <li><p><strong>Five strands, as a prediction.</strong> Demo 100's
 table predicts a frozen radical, 12 hubs and sl<sub>4</sub> at five strands;
-note 50 predicts no radical on W<sub>5,3</sub>. Run it.</p></li>
+note 50 predicts no radical on W<sub>5,3</sub>. <strong>Done before this page
+asked: demo 101 (see its section).</strong></p></li>
 <li><p><strong>Three strands in SL<sub>2</sub>(Z) terms.</strong> Rewrite
 demo 99b's elements as phase × integer matrix (note 49) and describe its XOR
 winners there: traces, continued fractions, the classical invariants of the
 closed braids they come from.</p></li>
+<li><p><strong>Module structure from the form.</strong> For every module
+a demo uses, report the Gram rank at δ = 0 (the dimension of the head) beside
+its dimension, and call it simple only when the composition factors say so
+(note 52).</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -2792,7 +2894,9 @@ prove two clean small theorems about what the encodings allow, and then reach
 for complexity theory (AC⁰, Barrington) where a table and a point set suffice. Demos 96 to 100 find
 real structure in the octahedral catalog and the strand representations; the
 names it already had (conjugacy classes, SL<sub>2</sub>(Z), the one-dimensional
-representation) say most of what the new vocabulary does.</p>
+representation) say most of what the new vocabulary does. Demos 101 to 105
+are careful in method (predictions registered, regimes swept, undersampling
+caught) and weakest at naming the modules they use.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
@@ -2803,10 +2907,10 @@ magnitudes, the group check of note 34, the rank computation and labelings of
 note 38, the design recomputation of note 39, demo 77's rotated sectors and
 the group computations of note 41 ran on scratch copies. The spectra of note 46 were computed by a scratch script, and note 47's
 random catalog ran in a scratch copy of demo 94; the checks of notes 49 and 50
-were scratch scripts. Written by hand on 2026-10-03 and 2026-10-05 from reading
-the eighty-eight <code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to
-100, with their findings, debriefs and, for 51 to 100,
-<code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+were scratch scripts, as were the Gram ranks of note 52. Written by hand on
+2026-10-03 and 2026-10-05 from reading the ninety-three <code>main.c</code> files
+(demos 1 to 29, 35, 38, 39 and 45 to 105, with their findings, debriefs and,
+for 51 to 105, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
