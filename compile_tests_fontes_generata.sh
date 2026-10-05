@@ -76,6 +76,7 @@ declare -a SOURCE_FILES=(
     "lib/flatura.c"
     "lib/fons.c"
     "lib/fons_visus.c"
+    "lib/fractio.c"
     "lib/friatio.c"
     "lib/git.c"
     "lib/hospitium.c"
