@@ -99,6 +99,12 @@ after a branch refused, verify catches a corrupted massa. Plants: no
 `<ramus>` after undo; a checkpoint inside a dead span used; replay
 from the checkpoint AND its acts (double-applied).
 
+H1 as built: `include/historia.h`, `lib/historia.c` (pictor's engine,
+line for line); the projection is `{memoria, mensura, vacare,
+applicare, ctx}` - callbacks get the context only, the client owns its
+memory. `verificare`'s meaning sharpened (signed divergence, not later
+scribbles; worklog). 12 sections with a call-counting toy; four plants.
+
 **H2 — pictor_documentum as a client.** API unchanged
 (`include/pictor_documentum.h`); H0's fixture byte-identical; pictor's
 suites green (documentum, actiones, figurae, replay). briar MUTATIONES

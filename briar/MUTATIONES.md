@@ -183,6 +183,12 @@ Leges chartae:
   pendebant - API delineare i32 insignatum); primitiva in spatio
   positivo octetis eisdem.
 
+- corpus: `historia` nova - cauda actorum cum proiectione (ex
+  pictor_documentum extracta, scriba-plan H1): acta in volumine, rami
+  post revocationem, checkpoints viva sola, cursor, revocare/reficere,
+  verificare; proiectio clientis per `HistoriaProiectio` (memoria
+  fixae mensurae + vacare + applicare).
+
 - corpus (mores): tessellatio ORDINEM PICTORIS servat - rectangulum,
   textus, linea ANTE imaginem posita sub ea manet (tabula `operta`: per
   cellulam index imaginis ultimae tegentis). Olim stratum pixelorum
