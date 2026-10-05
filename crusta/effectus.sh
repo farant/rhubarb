@@ -3,6 +3,9 @@
 # (effectus-spec par. IV; planum T3)
 #
 # Usage:  ./crusta/effectus.sh <scriptum>
+#         ./crusta/effectus.sh -lintrum <plagula>...  (regulae effectus)
+#         ./crusta/effectus.sh -catenae               (radices catenarum)
+#         ./crusta/effectus.sh -census                (build/effectus/census.tsv)
 # Exit:   0 sanum | 2 usus / scriptum absens / tabula illegibilis
 #
 # Effusio: summarium STML in stdout; viae radici relativae; scriptum
@@ -24,4 +27,11 @@ source "$RADIX_DIR/tools/cursor_communis.sh"
 cursor_instrumenta_parare >&2 || exit 2
 cursor_instrumentum_struere "$SRC" "$BIN" >&2 || {
     echo "effectus: aedificatio fracta" >&2; exit 2; }
+if [ "${1:-}" = -census ]; then
+    # census omnium scriptorum arboris (oracula/ excluditur: glutinum
+    # dialecti alienae) -> build/effectus/census.tsv
+    (cd "$RADIX_DIR" && git ls-files '*.sh' | grep -v '^oracula/') \
+        | "$BIN" -radix "$RADIX_DIR" -census
+    exit $?
+fi
 exec "$BIN" -radix "$RADIX_DIR" "$@"

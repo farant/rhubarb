@@ -1,0 +1,37 @@
+<!--
+  effectus-irresolutum - via lectionis, fontationis, exsecutionis aut
+  probationis quam analysis resolvere non potuit (effectus-spec par.
+  V.1; planum T6).
+
+  DOCTRINA: clavis fabricae situm irresolutum ut IGNOTUM tractat
+  (interview Q7) - porta verdicti numquam reutilis fit donec via aut
+  resolvitur aut EXCUSATUR in loco, causa nominata (<tolera
+  codex="lint:effectus-irresolutum">). Excusatio ipsa est ordo
+  inventarii: 'haec lectio clavem non tangit, quia ...'.
+
+  Gravitas: erratum in catenis verdicti (scripta quae ingressus
+  'fontationes'/'effectus' actionis iudicii attingunt), monitum alibi
+  (crusta_effectus_diagnostica, spec A4).
+
+  Scriptura irresoluta CONSULTO abest: scriptura clavem non intrat
+  (vestigium est, non ingressus).
+-->
+<EXEMPLAR output="$l">
+  <lectio resolutio="nulla" $a/>
+</EXEMPLAR>
+<EXEMPLAR output="$f">
+  <fontatio resolutio="nulla" $b/>
+</EXEMPLAR>
+<EXEMPLAR output="$x">
+  <exsecutio resolutio="nulla" $c/>
+</EXEMPLAR>
+<EXEMPLAR output="$p">
+  <probatio resolutio="nulla" $d/>
+</EXEMPLAR>
+
+<relatum lint="effectus-irresolutum" gravitas="erratum"
+         causa="via non resoluta: clavis verdicti IGNOTUM nisi excusata">
+  <PER congruentia="$l"><situs>&@a;</situs></PER>
+  <PER congruentia="$f"><situs>&@b;</situs></PER>
+  <PER congruentia="$x"><situs>&@c;</situs></PER>
+  <PER congruentia="$p"><situs>&@d;</situs></PER></relatum>

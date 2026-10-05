@@ -536,6 +536,12 @@ explicata 0), goldens deterministic. Toml chain live
 toml/compile_probationes.sh registrum`): non tecta 0, ignota explicata
 9, ante scripta 0 (the vexilla stamp was not rewritten that run).
 
+**T6 census (2026-10-05, `./crusta/effectus.sh -census`).** 306
+scripts, 7,477 sites: plena 3,375, partialis 472, nulla 3,264 (44%:
+function arguments, loop variables). Findings: irresolutum 2,442,
+build-sine-domino 54, mandatum-ignotum 242; excused 19. Toml's verdict
+chain: 0 errata (6 free scripts; 9 custodial builders, monitum only).
+
 ## XIII. Plan-time corrections (v2, 2026-10-05)
 
 Found while writing `effectus-plan.md`, from reading
@@ -595,3 +601,15 @@ Found while writing `effectus-plan.md`, from reading
    sees nine calls by plain name; command internals that use mkdir(),
    *at variants or Darwin `$NOCANCEL` symbols stay invisible - table
    rows for those commands are unverified (worklog lists them).
+7. **T6 as built.** (i) Chain roots are read by crusta
+   (`crusta_effectus_catenae`, exposed as `./crusta/effectus.sh
+   -catenae`) from the same declarations fabrica reads - not `bin/fabrica
+   catenae`, which the commit lint would have had to link or spawn.
+   (ii) Guarded builders (Fran, 2026-10-05): `[ -x P ] || S` with P a
+   house binary marks S `custodia="P"`; a processus is custodial iff
+   every path from the root crosses a guard; custodial processes are
+   outside verdict chains, and T7's key digests P instead of descending.
+   (iii) Effectus rules live in `crusta/lintrum/effectus/` (own
+   directory) and the effectus pass judges only `lint:effectus-*`
+   excuses. (iv) Outside chains the rules warn: 2,442 `irresolutum`
+   monita over the house - see the open question in the T6 report.

@@ -33,10 +33,12 @@ MSU_CURSUS=""
 MSU_COMPILATIO=""
 MSU_ULTIMA=""
 
+# <tolera codex="lint:effectus-mandatum-ignotum" (>tempus horologii (mensura, canalis lateralis), non plagula
 mensor_suitae_nunc () {
     perl -MTime::HiRes -e 'print Time::HiRes::time'
 }
 
+# <tolera codex="lint:effectus-mandatum-ignotum" (>eval sessionis mensoris: ambitus mensurae (canalis lateralis, spec 3 par. III.7)
 mensor_suitae_incipere () {
     MSU_PRAEFIXUM="${1:-}"
     MSU_INITIUM=$(mensor_suitae_nunc)
@@ -86,6 +88,7 @@ mensor_suitae_cursus_secunda () {       # <nomen> <secunda>
     return 0
 }
 
+# <tolera codex="lint:effectus-irresolutum" (>liber cursuum mensoris: mensura, non ingressus portae
 mensor_suitae_tardissimae () {
     local n="${1:-5}"
     if [ -n "$MSU_CURSUS" ] && [ -s "$MSU_CURSUS" ]; then

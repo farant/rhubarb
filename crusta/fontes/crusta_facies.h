@@ -150,4 +150,24 @@ crusta_regulae_legere (
     InternamentumChorda*  intern,
      constans character** causa);
 
+/* EFFECTUS (effectus-plan T6; spec par. V): regulae dialecti
+ * 'effectus' (optiones->regulae, ex crusta/lintrum/effectus/ - lintrum
+ * proprium, ne excusationes eius in cursu crustae mortuae videantur)
+ * super situs plagulae 'via' (arbori relativae) in summariis datis
+ * (Xar de StmlNodus* <effectus>). in_catena FALSUM: erratum in monitum
+ * (gravitas extra catenas verdicti). Excusationes ex commentariis
+ * 'fons' ipsius, lex eadem ac gradus II crustae. optiones->intern
+ * IDEM esse debet quo regulae et summaria facta sunt (LEX
+ * INTERNAMENTI). Xar de MateriaDiagnosticum; NIHIL = refutatio. */
+Xar*
+crusta_effectus_diagnostica (
+                Piscina*  piscina,
+     constans character*  via,
+     constans character*  fons,
+                    i32   mensura,
+                    Xar*  summaria,
+                    b32   in_catena,
+constans CrustaOptiones*  optiones,
+     constans character** causa);
+
 #endif /* CRUSTA_FACIES_H */

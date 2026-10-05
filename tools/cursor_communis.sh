@@ -93,6 +93,7 @@ cursor_fontes_compilare () {
     return 0
 }
 
+# <tolera codex="lint:effectus-irresolutum" (>nexus binarii ex obiectis per bin/compilator structis (liber lectionum ea vestigat) et recentia producti sui
 cursor_probationem_struere () {
     local test_file="$1" bin="$2" name obj objs="" fons
     name="$(basename "$test_file" .c)"
@@ -105,6 +106,7 @@ cursor_probationem_struere () {
     clang "${GCC_FLAGS[@]}" "$obj" $objs -o "$bin"
 }
 
+# <tolera codex="lint:effectus-irresolutum" (>nexus instrumenti ex obiectis per bin/compilator structis (liber lectionum ea vestigat) et recentia producti sui
 cursor_instrumentum_struere () {
     local main="$1" bin="$2" nomen dir lista fons obj objs gemina o recens
     nomen="$(basename "$main" .c)"

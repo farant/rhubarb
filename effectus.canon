@@ -41,6 +41,11 @@
           incipit. Facta intra processum sine ordine (flow-insensitiva,
           interview Q4; ordo = slice 2)">
     <attributum nomen="radix" genus="textus" necessarium="verum"/>
+    <attributum nomen="custodia" genus="textus"
+      nota="processus SOLUM per aedificatorem custoditum attingitur
+            ('[ -x P ] || S', P binarium domus): S currit solum si P
+            abest, P provenientia clavem tenet - extra catenam verdicti
+            (Fran 2026-10-05, effectus T6)"/>
     <liberum nomen="lectio"/>
     <liberum nomen="scriptura"/>
     <liberum nomen="exsecutio"/>
@@ -167,6 +172,8 @@
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
+    <attributum nomen="custodia" genus="textus"
+      nota="'[ -x P ] || S': P (binarium domus) custodit"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
     <attributum nomen="octeti" genus="textus" necessarium="verum"/>

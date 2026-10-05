@@ -136,6 +136,30 @@ _situs_colligere (
     }
 }
 
+/* processus 'radix' fert custodiam datam (NIHIL = sine custodia)? */
+interior b32
+_processus_custodia (
+              StmlNodus* summarium,
+     constans character* radix_processus,
+     constans character* custodia)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; summarium->liberi
+                       && i < xar_numerus(summarium->liberi); i++)
+    {
+        StmlNodus* p = *(StmlNodus**)xar_obtinere(summarium->liberi, i);
+
+        si (   p->genus == STML_NODUS_ELEMENTUM
+            && _attributum(p, "radix", radix_processus))
+        {
+            redde _attributum(p, "custodia", custodia);
+        }
+    }
+    imprimere("    processus absens: %s\n", radix_processus);
+    redde FALSUM;
+}
+
 /* situs primus generis, viae et lineae (NIHIL / 0 = quaevis) */
 interior StmlNodus*
 _situs (
@@ -250,13 +274,32 @@ hic_manens constans character* RADIX_SCRIPTI =
     "echo x > \"build/clausurae/$n.lst\"\n" /* 27 */
     "while read -r l; do :; done < <(cat data/p.txt)\n"  /* 28 */
     "cd lib\n"                                            /* 29 */
-    "cat q.txt\n";                                        /* 30 */
+    "cat q.txt\n"                                         /* 30 */
+    "cd ..\n"                                             /* 31 */
+    "[ -x bin/inst ] || ./a/struere.sh\n"                 /* 32 */
+    "./a/communis.sh\n";                                  /* 33 */
 
 hic_manens constans character* LIB =
     "lib_functio () {\n"
     "    local v=\"$1\"\n"
     "    cat \"$D/data/lib.txt\"\n"
     "}\n";
+
+/* aedificator custoditus: currit solum si bin/inst abest */
+hic_manens constans character* STRUERE =
+    "#!/bin/bash\n"
+    "for o in $OBJS; do cat \"$o\"; done\n"
+    "./a/nepos.sh\n";
+
+/* nepos: per aedificatorem custoditum SOLUM attingitur */
+hic_manens constans character* NEPOS =
+    "#!/bin/bash\n"
+    "cat data/nepos.txt\n";
+
+/* communis: et custodite (ab struere? non) et libere attingitur */
+hic_manens constans character* COMMUNIS =
+    "#!/bin/bash\n"
+    "cat data/communis.txt\n";
 
 hic_manens constans character* PUER =
     "#!/bin/bash\n"
@@ -295,6 +338,9 @@ s32 principale (vacuum)
     _scribere("a/r.sh", RADIX_SCRIPTI);
     _scribere("a/lib.sh", LIB);
     _scribere("a/puer.sh", PUER);
+    _scribere("a/struere.sh", STRUERE);
+    _scribere("a/nepos.sh", NEPOS);
+    _scribere("a/communis.sh", COMMUNIS);
     _scribere("data/f.txt", "f\n");
     _scribere("src/a.c", "int a;\n");
     /* tabula mandatorum vera (arbor ficta eam non habet) */
@@ -440,6 +486,25 @@ s32 principale (vacuum)
     s = _situs(situs, "probatio", "lib", XXIX);
     CREDO_VERUM (_attributum(s, "operator", "cd"));
     CREDO_NON_NIHIL (_situs(situs, "lectio", "lib/q.txt", XXX));
+
+    imprimere("\n--- IX d. aedificator custoditus ---\n");
+    /* '[ -x bin/inst ] || ./a/struere.sh': exsecutio custodita;
+     * processus struere et nepos (solum per eum) custoditi; communis
+     * (libere) non; plagulam_tenet processus custoditos praeterit */
+    s = _situs(situs, "exsecutio", "a/struere.sh", XXXII);
+    CREDO_VERUM (_attributum(s, "custodia", "bin/inst"));
+    s = _situs(situs, "exsecutio", "a/communis.sh", XXXIII);
+    CREDO_VERUM (_attributum(s, "custodia", NIHIL));
+    CREDO_VERUM (_processus_custodia(summarium, "a/struere.sh",
+        "bin/inst"));
+    CREDO_VERUM (_processus_custodia(summarium, "a/nepos.sh",
+        "bin/inst"));
+    CREDO_VERUM (_processus_custodia(summarium, "a/communis.sh",
+        NIHIL));
+    CREDO_FALSUM (crusta_effectus_plagulam_tenet(summarium,
+        "a/nepos.sh"));
+    CREDO_VERUM (crusta_effectus_plagulam_tenet(summarium,
+        "a/communis.sh"));
 
     imprimere("\n--- X. canon super summarium ---\n");
     {

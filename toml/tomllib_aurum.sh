@@ -33,6 +33,7 @@ if [ "${1:-}" != "-silvestre" ]; then
         grep '\.toml$' "$FIXA/toml-test/tests/files-toml-1.0.0" \
             | python3 "$HARNESS" -aurum "$FIXA/toml-test/tests"
     } > "$EXITUS" || exit 1
+    # <tolera codex="lint:effectus-irresolutum" (>exitum suum modo scriptum numerat (nuntius solus)
     echo "aurum toml-test: $(grep -c '^####' "$EXITUS") clausulae -> $EXITUS"
 fi
 # aurum silvestre = actio fabricae 'toml_aurum_silvestre' (fabrica spec 3
@@ -52,4 +53,5 @@ mkdir -p "$(dirname "$EXITUS")"
     grep -v '^#' "$FIXA/silvestria.manifestum" | cut -f2 \
         | python3 "$HARNESS" -aurum "$RADIX"
 } > "$EXITUS" || exit 1
+# <tolera codex="lint:effectus-irresolutum" (>exitum suum modo scriptum numerat (nuntius solus)
 echo "aurum silvestre: $(grep -c '^####' "$EXITUS") clausulae -> $EXITUS"

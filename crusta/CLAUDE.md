@@ -162,6 +162,16 @@ violation OBSTAT; the same line annotated passes.
 | `nt-aequalitas` | `-nt` where equality matters (a same-second tie skips work) | 292 sites / 278 negated / 14 declared |
 | `vexilla-domus` | flags `tools/vexilla.sh` owns, written literally | 2 files fixed, 8 annotated |
 
+**Effectus rules (2026-10-05, effectus-plan T6)** live in their OWN
+directory `crusta/lintrum/effectus/` and run over the EFFECT SUMMARY,
+not the crusta projection (`crusta_effectus_diagnostica`, also at
+commit through `tools/diagnostica`): `effectus-irresolutum`,
+`effectus-build-sine-domino`, `effectus-mandatum-ignotum` - erratum
+inside verdict chains (`./crusta/effectus.sh -catenae`), monitum
+elsewhere. `./crusta/effectus.sh -lintrum <f.sh>` runs them alone;
+`-census` writes build/effectus/census.tsv. Guarded builders
+(`[ -x bin/X ] || tools/X_struere.sh`) are outside chains.
+
 **Reflexes.** `<tolera codex="lint:X" (>causa` in a comment exempts —
 one annotation covers a whole INVOCATION (exemption filters by the
 owning node's range), and inside `declare -a X=( … )` it must go above

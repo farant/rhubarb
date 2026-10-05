@@ -91,4 +91,25 @@ crusta_effectus_non_tecta (
      StmlNodus* observatum,
            Xar* explicata);
 
+/* CATENAE VERDICTI (planum T6; spec A4 - ex declarationibus fabricae
+ * derivatae): viae scriptorum quae ingressus 'fontationes' aut
+ * 'effectus' alicuius actionis sunt, per fabrica.stml et
+ * aedificatio.stml subsystematum. Xar de character*; vacuum = arbor
+ * sine fabrica aut sine catenis; NIHIL = fabrica.stml fracta. */
+Xar*
+crusta_effectus_catenae (
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+     constans character*  radix,
+     constans character** causa_out);
+
+/* Summarium plagulam 'via' (arbori relativam) tenet - ut radix
+ * processus aut ut plagula situs alicuius? Processus custoditi
+ * (aedificatores '[ -x P ] || S', attributum custodia) praetereuntur:
+ * extra catenam verdicti sunt (P provenientia clavem tenet). */
+b32
+crusta_effectus_plagulam_tenet (
+             StmlNodus* summarium,
+    constans character* via);
+
 #endif /* CRUSTA_EFFECTUS_H */

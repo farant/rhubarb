@@ -18,6 +18,7 @@ else
     EXITUS="$RADIX/$EXITUS"
 fi
 mkdir -p "$(dirname "$EXITUS")" || exit 1
+# <tolera codex="lint:effectus-mandatum-ignotum" (>index git: hoc scriptum generator actionis toml_corpus est - exitus omni iudicio regeneratur (fabrica spec 3 par. III.4)
 TRACTAE="$(git -C "$RADIX" ls-files '*.toml')" || exit 1
 # grep sine paribus exitum 1 reddit: index vacuus licet, non fractum
 printf '%s\n' "$TRACTAE" | grep -v '^toml/probationes/fixa/' > "$EXITUS" || :

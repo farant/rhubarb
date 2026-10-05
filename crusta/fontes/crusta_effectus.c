@@ -64,6 +64,7 @@ nomen structura {
                character* exemplar;
                character* titulus;    /* ambitus_lectio */
                character* textus;     /* verbum fontis, ubi partialis */
+               character* custodia;   /* '[ -x P ] || S': P */
       constans character* forma;
       constans character* resolutio;
       constans character* classis;
@@ -84,7 +85,16 @@ nomen structura {
           Xar* functiones;  /* character*: nomina functionum ambitus */
           Xar* assignata;   /* character*: nomina quae ambitus ponit */
           Xar* situs;       /* Situs - iterationis currentis */
+    character* custodia;    /* aedificator custoditus: P */
+          b32  liber;       /* attingitur via sine custodia */
 } Ambitus;
+
+/* arcus exsecutionis: processus pater -> scriptum exsecutum */
+nomen structura {
+      Ambitus* pater;
+    character* filius;     /* radix absoluta ambitus filii */
+    character* custodia;   /* NIHIL = sine custodia */
+} Arcus;
 
 /* ordo mandati in tabula */
 nomen structura {
@@ -100,6 +110,7 @@ nomen structura {
                     Xar* visi;       /* character*: radices ambituum */
                     Xar* ambitus;    /* Ambitus*, ordine inventionis */
                     Xar* tabula;     /* Mandatum */
+                    Xar* arcus;      /* Arcus */
 } Derivatio;
 
 
@@ -1662,13 +1673,15 @@ _situm_creare (
     redde s;
 }
 
-/* cd W -> directorium absolutum; NIHIL = W ignotum */
+/* cd W -> directorium absolutum, W relativa ad 'basis' (cwd ante cd;
+ * NIHIL = ignotum: W absoluta tamen valet). NIHIL = W ignotum. */
 interior character*
 _cd_aestimare (
                 Derivatio* d,
                   Ambitus* a,
                   Plagula* p,
     constans MateriaNodus* imperium,
+       constans character* basis,
                       b32* est_cd)
 {
     character* t;
@@ -1688,19 +1701,23 @@ _cd_aestimare (
     }
     *est_cd          = VERUM;
     valor[ZEPHYRUM]  = '\0';
-    si (   _verbum_aestimare(d, a, p,
+    si (   !_verbum_aestimare(d, a, p,
                *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM),
                valor, &longitudo, ZEPHYRUM)
-        && _absolutam_facere(valor, d->radix, absoluta))
+        || (valor[ZEPHYRUM] != '/' && basis == NIHIL)
+        || !_absolutam_facere(valor, basis != NIHIL ? basis : d->radix,
+               absoluta))
     {
-        redde _duplicare(d->piscina, absoluta);
+        redde NIHIL;
     }
-    redde NIHIL;
+    redde _duplicare(d->piscina, absoluta);
 }
 
-/* cwd situs (spec par. IV.3): 'cd W' ultimum in catena eadem; aliter
- * 'cd W' ultimum in summo gradu plagulae ante situm; aliter radix.
- * NIHIL = cwd ignotum. */
+/* cwd situs (spec par. IV.3), ordine fontis non fluxus: primum 'cd W'
+ * summi gradus plagulae quae ANTE situm FINIUNT, quisque relativus ad
+ * cwd ante se ('cd lib' deinde 'cd ..' = radix; 'cd lib' argumentum
+ * suum non mutat - oraculum T5 'lib/lib' invenit); deinde 'cd W' in
+ * catena eadem ante situm, super cwd illud. NIHIL = cwd ignotum. */
 interior constans character*
 _directorium_loci (
                 Derivatio* d,
@@ -1708,12 +1725,36 @@ _directorium_loci (
                   Plagula* p,
     constans MateriaNodus* nodus)
 {
-     constans MateriaNodus* m       = nodus;
-        constans character* exitus  = NIHIL;
+     constans MateriaNodus* m    = nodus;
+        constans character* cwd  = d->radix;
             MateriaTractus  situs_tractus;
                        b32  est_cd;
                        i32  k;
 
+    /* summus gradus, ordine fontis */
+    si (materia_tractus_nodi(NIHIL, nodus, &situs_tractus))
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(p->imperia); k++)
+        {
+            constans MateriaNodus* c = *(constans MateriaNodus**)
+                xar_obtinere(p->imperia, k);
+                    MateriaTractus  t;
+                         character* dir;
+
+            si (   c->pater        == NIHIL
+                || c->pater->genus != (s32)CRUSTA_GENUS_PROGRAMMA
+                || !materia_tractus_nodi(NIHIL, c, &t)
+                || t.finis > situs_tractus.initium)
+            {
+                perge;
+            }
+            dir = _cd_aestimare(d, a, p, c, cwd, &est_cd);
+            si (est_cd)
+            {
+                cwd = dir;   /* NIHIL = ignotum donec cd absolutum */
+            }
+        }
+    }
     /* membrum catenae: ascende donec pater catena sit */
     dum (   m               != NIHIL && m->pater != NIHIL
          && m->pater->genus != (s32)CRUSTA_GENUS_CATENA)
@@ -1745,53 +1786,14 @@ _directorium_loci (
             {
                 perge;
             }
-            dir = _cd_aestimare(d, a, p, c, &est_cd);
+            dir = _cd_aestimare(d, a, p, c, cwd, &est_cd);
             si (est_cd)
             {
-                si (dir == NIHIL)
-                {
-                    redde NIHIL;
-                }
-                exitus = dir;
+                cwd = dir;
             }
         }
-        si (exitus != NIHIL)
-        {
-            redde exitus;
-        }
     }
-    /* summus gradus, ordine fontis: cd quod ANTE situm FINITUR ('cd
-     * lib' argumentum suum non mutat - oraculum T5 'lib/lib'
-     * invenit) */
-    si (!materia_tractus_nodi(NIHIL, nodus, &situs_tractus))
-    {
-        redde d->radix;
-    }
-    per (k = ZEPHYRUM; k < xar_numerus(p->imperia); k++)
-    {
-        constans MateriaNodus* c = *(constans MateriaNodus**)
-            xar_obtinere(p->imperia, k);
-                MateriaTractus  t;
-                     character* dir;
-
-        si (   c->pater        == NIHIL
-            || c->pater->genus != (s32)CRUSTA_GENUS_PROGRAMMA
-            || !materia_tractus_nodi(NIHIL, c, &t)
-            || t.finis > situs_tractus.initium)
-        {
-            perge;
-        }
-        dir = _cd_aestimare(d, a, p, c, &est_cd);
-        si (est_cd)
-        {
-            exitus = dir != NIHIL ? dir : "";
-        }
-    }
-    si (exitus == NIHIL)
-    {
-        redde d->radix;
-    }
-    redde exitus[ZEPHYRUM] == '\0' ? NIHIL : exitus;
+    redde cwd;
 }
 
 interior constans character*
@@ -2611,6 +2613,83 @@ _ambitum_derivare (
              Derivatio* d,
     constans character* radix);
 
+/* AEDIFICATOR CUSTODITUS (Fran 2026-10-05, T6 (a)): '[ -x P ] || S'
+ * (aut -f, -e; test) ubi P binarium domus (classis instrumentum_domus)
+ * - S solum currit si P abest, et P provenientia sua clavem tenet.
+ * Reddit P (arbori relativum) aut NIHIL. */
+interior character*
+_custodiam_quaerere (
+                Derivatio* d,
+                  Ambitus* a,
+                  Plagula* p,
+    constans MateriaNodus* imperium)
+{
+     constans MateriaNodus* catena = imperium->pater;
+                       Xar* membra;
+     constans MateriaNodus* operator;
+     constans MateriaNodus* probatio;
+     constans MateriaToken* tok;
+                 character* t;
+                       Xar* argumenta;
+                 character* o;
+                     Situs  tmp;
+                       i32  k;
+                       i32  n;
+
+    si (catena == NIHIL || catena->genus != (s32)CRUSTA_GENUS_CATENA)
+    {
+        redde NIHIL;
+    }
+    membra = _nodi_listae(d->piscina, catena,
+        (i32)CRUSTA_CATENA_LIBERI);
+    n = xar_numerus(membra);
+    per (k = II; k < n; k++)
+    {
+        si (*(MateriaNodus**)xar_obtinere(membra, k) == imperium)
+        {
+            frange;
+        }
+    }
+    si (k >= n)
+    {
+        redde NIHIL;
+    }
+    operator  = *(MateriaNodus**)xar_obtinere(membra, k - I);
+    probatio  = *(MateriaNodus**)xar_obtinere(membra, k - II);
+    tok       = _token(operator, (i32)CRUSTA_OPERATOR_TOK);
+    si (   tok             == NIHIL || !_aequalis(tok->valor, "||")
+        || probatio->genus != (s32)CRUSTA_GENUS_IMPERIUM)
+    {
+        redde NIHIL;
+    }
+    t = _titulus_staticus(d->piscina,
+        crusta_imperium_titulus(probatio));
+    argumenta = crusta_imperium_argumenta(d->piscina, probatio);
+    si (   t == NIHIL || argumenta == NIHIL
+        || !(strcmp(t, "[") == ZEPHYRUM
+        || strcmp(t, "test") == ZEPHYRUM)
+        || xar_numerus(argumenta) < II)
+    {
+        redde NIHIL;
+    }
+    o = _titulus_staticus(d->piscina,
+        *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM));
+    si (!_in_indice("-x -f -e", o))
+    {
+        redde NIHIL;
+    }
+    memset(&tmp, ZEPHYRUM, magnitudo(tmp));
+    si (   !_viam_classificare(d, a, p,
+               *(MateriaNodus**)xar_obtinere(argumenta, I), probatio,
+               &tmp, NIHIL)
+        || tmp.classis                               == NIHIL
+        || strcmp(tmp.classis, "instrumentum_domus") != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde tmp.via;
+}
+
 /* verbum in sede fontationis/exsecutionis */
 interior b32
 _locum_tractare (
@@ -2618,7 +2697,8 @@ _locum_tractare (
                 Ambitus* a,
                 Plagula* p,
     constans MateriaNodus* verbum,
-                    b32  fontatum)
+                    b32  fontatum,
+              character* custodia)
 {
                  Situs* x;
              character  absoluta[VIA_MAXIMA];
@@ -2630,7 +2710,8 @@ _locum_tractare (
     {
         redde FALSUM;
     }
-    x->medium = "aedificium";
+    x->medium    = "aedificium";
+    x->custodia  = custodia;
     si (!_viam_classificare(d, a, p, verbum, verbum, x, absoluta))
     {
         redde VERUM;
@@ -2668,6 +2749,13 @@ _locum_tractare (
     {
         redde VERUM;
     }
+    {
+        Arcus* arc = (Arcus*)xar_addere(d->arcus);
+
+        arc->pater     = a;
+        arc->filius    = _duplicare(d->piscina, absoluta);
+        arc->custodia  = custodia;
+    }
     redde _ambitum_derivare(d, absoluta);   /* processus novus */
 }
 
@@ -2694,14 +2782,17 @@ _imperium_tractare (
     t        = _titulus_staticus(d->piscina, titulus);
     si (t == NIHIL || strchr(t, '/') != NIHIL)
     {
-        redde _locum_tractare(d, a, p, titulus, FALSUM);
+        redde _locum_tractare(d, a, p, titulus, FALSUM,
+            ab == ZEPHYRUM ? _custodiam_quaerere(d, a, p, imperium)
+                           : NIHIL);
     }
     si (strcmp(t, "source") == ZEPHYRUM || strcmp(t, ".") == ZEPHYRUM)
     {
         si (ab + I < xar_numerus(verba))
         {
             redde _locum_tractare(d, a, p,
-                *(MateriaNodus**)xar_obtinere(verba, ab + I), VERUM);
+                *(MateriaNodus**)xar_obtinere(verba, ab + I), VERUM,
+                NIHIL);
         }
         redde VERUM;
     }
@@ -2722,7 +2813,7 @@ _imperium_tractare (
                 }
                 perge;
             }
-            redde _locum_tractare(d, a, p, v, FALSUM);
+            redde _locum_tractare(d, a, p, v, FALSUM, NIHIL);
         }
         redde VERUM;
     }
@@ -3159,6 +3250,7 @@ _situm_emittere (
         && _attributum(d, e, "mandatum", s->mandatum)
         && _attributum(d, e, "operator", s->operator)
         && _attributum(d, e, "causa", s->causa)
+        && _attributum(d, e, "custodia", s->custodia)
         && _attributum(d, e, "plagula",
                _via_relativa(d, s->plagula->via))
         && _attributum(d, e, "sedes", sedes)
@@ -3210,7 +3302,8 @@ _emittere (
 
         si (   pr == NIHIL
             || !_attributum(d, pr, "radix", _via_relativa(d,
-                   a->radix_via))
+            a->radix_via))
+            || !_attributum(d, pr, "custodia", a->custodia)
             || !stml_liberum_addere(radix_summarii, pr))
         {
             redde NIHIL;
@@ -3300,6 +3393,86 @@ _tabulam_onerare (
     redde xar_numerus(d->tabula) > ZEPHYRUM;
 }
 
+interior Ambitus*
+_ambitum_invenire (
+             Derivatio* d,
+    constans character* radix)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(d->ambitus); k++)
+    {
+        Ambitus* a = *(Ambitus**)xar_obtinere(d->ambitus, k);
+
+        si (strcmp(a->radix_via, radix) == ZEPHYRUM)
+        {
+            redde a;
+        }
+    }
+    redde NIHIL;
+}
+
+/* CUSTODIA PROCESSUUM (post punctum fixum; graphus, non vocatio): liber
+ * = attingitur ab radice via arcuum SINE custodia; ceteri custoditi,
+ * P ex arcu custodito in eos aut ex patre custodito. Scriptum et
+ * custodite et libere attingibile LIBERUM manet (vexilla.sh). */
+interior vacuum
+_custodias_computare (
+    Derivatio* d)
+{
+    b32 mutatum;
+    i32 k;
+
+    si (xar_numerus(d->ambitus) == ZEPHYRUM)
+    {
+        redde;
+    }
+    (*(Ambitus**)xar_obtinere(d->ambitus, ZEPHYRUM))->liber = VERUM;
+    fac
+    {
+        mutatum = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d->arcus); k++)
+        {
+            Arcus* arc     = (Arcus*)xar_obtinere(d->arcus, k);
+          Ambitus* filius  = _ambitum_invenire(d, arc->filius);
+
+            si (   filius        != NIHIL && !filius->liber
+                && arc->pater->liber
+                && arc->custodia == NIHIL)
+            {
+                filius->liber  = VERUM;
+                mutatum        = VERUM;
+            }
+        }
+    }
+    dum (mutatum);
+    fac
+    {
+        mutatum = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d->arcus); k++)
+        {
+            Arcus* arc     = (Arcus*)xar_obtinere(d->arcus, k);
+          Ambitus* filius  = _ambitum_invenire(d, arc->filius);
+
+            si (filius == NIHIL || filius->liber || filius->custodia)
+            {
+                perge;
+            }
+            si (arc->custodia != NIHIL)
+            {
+                filius->custodia  = arc->custodia;
+                mutatum           = VERUM;
+            }
+            alioquin si (arc->pater->custodia != NIHIL)
+            {
+                filius->custodia  = arc->pater->custodia;
+                mutatum           = VERUM;
+            }
+        }
+    }
+    dum (mutatum);
+}
+
 StmlNodus*
 crusta_effectus_derivare (
                Piscina*  piscina,
@@ -3323,6 +3496,7 @@ crusta_effectus_derivare (
     d.visi           = xar_creare(piscina, (i32)magnitudo(character*));
     d.ambitus        = xar_creare(piscina, (i32)magnitudo(Ambitus*));
     d.tabula         = xar_creare(piscina, (i32)magnitudo(Mandatum));
+    d.arcus          = xar_creare(piscina, (i32)magnitudo(Arcus));
     si (   d.visi == NIHIL || d.ambitus == NIHIL || d.tabula == NIHIL
         || !_absolutam_facere(scriptum, radix, absoluta))
     {
@@ -3352,6 +3526,7 @@ crusta_effectus_derivare (
         }
         redde NIHIL;
     }
+    _custodias_computare(&d);
     redde _emittere(&d, absoluta);
 }
 
@@ -3672,6 +3847,7 @@ crusta_effectus_observata (
     d.visi           = xar_creare(piscina, (i32)magnitudo(character*));
     d.ambitus        = xar_creare(piscina, (i32)magnitudo(Ambitus*));
     d.tabula         = xar_creare(piscina, (i32)magnitudo(Mandatum));
+    d.arcus          = xar_creare(piscina, (i32)magnitudo(Arcus));
     a = (Ambitus*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(Ambitus));
     p = (Plagula*)piscina_allocare(piscina,
@@ -4099,4 +4275,167 @@ crusta_effectus_non_tecta (
         }
     }
     redde exitus;
+}
+
+
+/* ==================================================
+ * Catenae verdicti (planum T6, A4): radices ex declarationibus fabricae
+ * ================================================== */
+
+/* 'ingressus' genere fontationes|effectus in arbore (recursive) */
+interior vacuum
+_ingressus_colligere (
+              Piscina* piscina,
+            StmlNodus* nodus,
+                  Xar* exitus)
+{
+    i32 k;
+
+    si (nodus == NIHIL)
+    {
+        redde;
+    }
+    si (   nodus->genus   == STML_NODUS_ELEMENTUM
+        && nodus->titulus != NIHIL
+        && chorda_aequalis_literis(*nodus->titulus, "ingressus"))
+    {
+        chorda* g = stml_attributum_capere(nodus, "genus");
+        chorda* v = stml_attributum_capere(nodus, "via");
+
+        si (   g != NIHIL && v != NIHIL
+            && (chorda_aequalis_literis(*g, "fontationes")
+                || chorda_aequalis_literis(*g, "effectus")))
+        {
+            _nomen_addere(piscina, exitus, chorda_ut_cstr(*v, piscina));
+        }
+    }
+    per (k = ZEPHYRUM; nodus->liberi && k < xar_numerus(nodus->liberi);
+         k++)
+    {
+        _ingressus_colligere(piscina,
+            *(StmlNodus**)xar_obtinere(nodus->liberi, k), exitus);
+    }
+}
+
+Xar*
+crusta_effectus_catenae (
+               Piscina*  piscina,
+    InternamentumChorda* intern,
+    constans character*  radix,
+    constans character** causa_out)
+{
+       character  via[VIA_MAXIMA];
+          chorda  fons;
+    StmlResultus  r;
+             Xar* exitus = xar_creare(piscina,
+                 (i32)magnitudo(character*));
+             i32 k;
+
+    si (causa_out != NIHIL)
+    {
+        *causa_out = NIHIL;
+    }
+    si (   exitus               == NIHIL
+        || strlen(radix) + LXIV >= (memoriae_index)VIA_MAXIMA)
+    {
+        redde NIHIL;
+    }
+    sprintf(via, "%s/fabrica.stml", radix);
+    fons = filum_legere_totum(via, piscina);
+    si (fons.datum == NIHIL)
+    {
+        redde exitus;   /* arbor sine fabrica: catenae nullae */
+    }
+    r = stml_legere(fons, piscina, intern);
+    si (!r.successus || r.elementum_radix == NIHIL)
+    {
+        si (causa_out != NIHIL)
+        {
+            *causa_out = "fabrica.stml legi non potest";
+        }
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; r.elementum_radix->liberi != NIHIL
+                       && k < xar_numerus(r.elementum_radix->liberi);
+         k++)
+    {
+        StmlNodus* s = *(StmlNodus**)xar_obtinere(
+            r.elementum_radix->liberi, k);
+            chorda* v;
+      StmlResultus  d;
+
+        si (   s->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*s->titulus, "subsystema"))
+        {
+            perge;
+        }
+        v = stml_attributum_capere(s, "via");
+        si (   v == NIHIL
+            || (memoriae_index)v->mensura + strlen(radix) + XL
+                              >= (memoriae_index)VIA_MAXIMA)
+        {
+            perge;
+        }
+        sprintf(via, "%s/%.*s/aedificatio.stml", radix,
+            (integer)v->mensura, (constans character*)v->datum);
+        fons = filum_legere_totum(via, piscina);
+        si (fons.datum == NIHIL)
+        {
+            perge;
+        }
+        d = stml_legere(fons, piscina, intern);
+        si (d.successus)
+        {
+            _ingressus_colligere(piscina, d.radix, exitus);
+        }
+    }
+    redde exitus;
+}
+
+b32
+crusta_effectus_plagulam_tenet (
+             StmlNodus* summarium,
+    constans character* via)
+{
+    i32 i;
+    i32 j;
+
+    per (i = ZEPHYRUM; summarium != NIHIL && summarium->liberi
+                       && i < xar_numerus(summarium->liberi); i++)
+    {
+        StmlNodus* pr = *(StmlNodus**)xar_obtinere(summarium->liberi,
+            i);
+           chorda* r;
+
+        si (pr->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (stml_attributum_capere(pr, "custodia") != NIHIL)
+        {
+            perge;   /* aedificator custoditus: extra catenam */
+        }
+        r = stml_attributum_capere(pr, "radix");
+        si (r != NIHIL && chorda_aequalis_literis(*r, via))
+        {
+            redde VERUM;
+        }
+        per (j = ZEPHYRUM; pr->liberi && j < xar_numerus(pr->liberi);
+             j++)
+        {
+            StmlNodus* s = *(StmlNodus**)xar_obtinere(pr->liberi, j);
+               chorda* p;
+
+            si (s->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            p = stml_attributum_capere(s, "plagula");
+            si (p != NIHIL && chorda_aequalis_literis(*p, via))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
 }

@@ -225,3 +225,53 @@ source order).
 - Coverage: `crusta/instrumenta/interpositio_macos.c` is INTECTA by
   design (a by-hand oracle; C14: gates never spawn it) - its goldens are
   what the gate checks. `effectus.c` gains coverage in T7.
+
+## 2026-10-05 - T6: lint, chains, guarded builders, excuses, census
+
+- Reading crusta_facies.c: gradus II = projection -> per rule (compose,
+  expand, extract, subtract) -> annotations ONCE from the source ->
+  excuses for rules that ran. The effectus route reuses every step
+  except the projection: `crusta_effectus_diagnostica` builds ONE
+  document per file from the summaries' sites with that `plagula`
+  (exemplaria key by offset), runs `crusta/lintrum/effectus/*.stml`
+  (own directory - in crusta's dir they would run against the crusta
+  projection and their excuses would read dead), downgrades erratum to
+  monitum outside verdict chains, and filters annotations to
+  `codex="lint:effectus-*"` (otherwise crusta's own excuses are judged
+  dead or causa-less a second time - the diagnostica gate caught both).
+- Chains (A4): roots = `ingressus genus fontationes|effectus` in the
+  aedificatio.stml files fabrica.stml lists, read as plain STML by
+  `crusta_effectus_catenae` (spec §XIII.7: not `bin/fabrica catenae` -
+  the lint would have had to link or spawn fabrica).
+- **Guarded builders (Fran, option (a)).** 45 errata on toml's chain,
+  ~30 inside `[ -x bin/X ] || tools/X_struere.sh` builders. The
+  analyzer marks the exsecutio `custodia="bin/X"` and a post-pass marks
+  a processus custodial iff EVERY path from the root crosses a guard
+  (vexilla.sh, reached both ways, stays free). Chain membership skips
+  custodial processes; the fontationes projection is untouched.
+- Found by the guard test: top-level `cd ..` after `cd lib` was
+  evaluated against the ROOT (each cd resolved relative to radix, not
+  to the cwd before it). `_directorium_loci` now walks top-level cds
+  sequentially (unknown until an absolute cd), then catena cds on top.
+- Excuses (19, all with reasons): sera.sh x3 functions + `ps`, mensor
+  timing (perl, eval, metrics file), cursor_communis link steps x2,
+  tomllib_aurum counting its own output x2, corpus_indicem's git (its
+  output is a declared action, regenerated at every judgment). Toml
+  chain: 0 errata. Plant: one sera excuse removed -> diagnostica exit 1
+  with erratum in the chain; the same function copied outside the chain
+  -> monitum, exit 0.
+- Gate `probatio_crusta_effectus_lintrum` (42): positive + negative per
+  rule, gravitas by chain, function-level excuse covers its three
+  sites, misplaced excuse -> `materia:excusatio-mortua`, chain roots
+  from fake declarations (plant: fasciculus counted as root -> red).
+- Census (`./crusta/effectus.sh -census` -> build/effectus/census.tsv):
+  306 scripts, 7,477 sites; resolution plena 3,375 / partialis 472 /
+  nulla 3,264 (44%: function arguments and loop variables - slice 2);
+  findings irresolutum 2,442, build-sine-domino 54, mandatum-ignotum
+  242; excused 19.
+- Cost: the effectus test went 2.2 s -> 5 s (whole house): the
+  sequential top-level cd walk is O(sites x commands) per file
+  (compile_tests.sh 42 ms). Toml's derivation is 10 ms - inside budget.
+- diagnostica_fumus XIII's fixture changed from `[ $a -nt $b ]` to
+  `[ a -nt b ]`: it tests that a crusta excuse leaves NOTHING printed,
+  and the effectus pass rightly warns about unresolvable `$a`.
