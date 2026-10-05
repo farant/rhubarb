@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agenda</title>
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="index.html">Rhubarb</a></p>
+<h1>Agenda</h1>
+<p class="subtitulus">Quae agenda sunt: things to do, decide or record</p>
+
+<p>A running list of open items that came up in the work and have not been
+acted on. Each says what it is, why it matters, what it would cost, and where
+it came from. Fran decides; Claude keeps the list current. Begun 2026-10-05
+in the tertia worktree, where the tabularium (the ledger) is not reachable,
+so the list lives here for now.</p>
+
+<p class="nota">Not yet in the tabularium. When work moves back to the main
+tree, each item can be filed there (a decision or a note) and its line here
+pointed at the record. Until then this page is the only copy.</p>
+
+<h2>Open</h2>
+
+<h3><span class="id">A1</span>Turn off floating-point contraction in the house flags</h3>
+<p><span class="status">decision</span> <span class="nota">from the
+<a href="visiones/mathematica.html">Math library map</a> review, 2026-10-05</span></p>
+<p><strong>What.</strong> Add <code>-ffp-contract=off</code> to the shared
+compiler flags in <code>tools/vexilla.sh</code>.</p>
+<p><strong>Why.</strong> The library map's float rules require it. Clang,
+our compiler, fuses a multiply and an add into one instruction within an
+expression by default on ARM64, which rounds once instead of twice. So the
+house's floating-point code can produce different bits from the same source
+built with other settings or on other machines. The flag is not set today
+(checked 2026-10-05).</p>
+<p><strong>Cost.</strong> One line, but it changes how every file is
+compiled, so every test suite has to be re-run before the commit. Float
+results could move in the last bit, which a golden test somewhere might
+notice.</p>
+
+<h3><span class="id">A2</span>Make 64-bit <code>long long</code> an explicit platform requirement</h3>
+<p><span class="status">decision</span> <span class="nota">from the
+<a href="visiones/mathematica.html">Math library map</a> review, 2026-10-05</span></p>
+<p><strong>What.</strong> State that the house requires a 64-bit
+<code>long long</code>, and check it at build time with the C89
+negative-array-size trick (a declaration that fails to compile if the size
+is wrong).</p>
+<p><strong>Why.</strong> The map lists "no guaranteed 64-bit integer" as a
+C89 hazard (<code>long long</code> is C99). The house has in effect already
+chosen: it compiles with <code>-Wno-long-long</code>, <code>latina.h</code>
+defines <code>i64</code> and <code>s64</code> as <code>long long</code>, and
+<code>magnus</code> relies on exact 64-bit intermediates. Writing the
+choice down and checking it turns an unstated assumption into a rule that
+fails loudly on a platform where it doesn't hold.</p>
+<p><strong>Cost.</strong> Small: a few lines in a widely included header
+(probably <code>latina.h</code>), which means most suites are owed again.
+The alternative, rebuilding the wide arithmetic on 16-bit pieces, would
+cost about four times the speed and is not recommended.</p>
+
+<h2>Done</h2>
+<p class="nota">Nothing yet. Finished items move here with the commit that
+closed them.</p>
+
+</body>
+</html>
