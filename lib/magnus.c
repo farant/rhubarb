@@ -56,8 +56,8 @@ _membra_nova (
     i32* membra;
     i32  k;
 
-    membra = (i32*)piscina_allocare(piscina,
-        (memoriae_index)numerus * magnitudo(i32));
+    membra = (i32*)piscina_allocare_ordinatum(piscina,
+        (memoriae_index)numerus * magnitudo(i32), magnitudo(i32));
     per (k = ZEPHYRUM; k < numerus; k++)
     {
         membra[k] = ZEPHYRUM;

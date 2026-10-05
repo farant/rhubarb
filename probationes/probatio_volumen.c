@@ -483,24 +483,32 @@ s32 principale (vacuum)
 
         (vacuum)filum_delere(via_ord);
 
+        /* NULLA notatio credo inter notare et reficere: credo
+         * notationes in EADEM piscina allocat, ergo notatio ibi facta
+         * a reficere liberatur dum in indice credo manet, et structura
+         * sequens eam obruit. Sub ordinatione I fortuito non
+         * attingebatur; ordinatio VIII (2026-10-05) indicem corrupit
+         * (compendium ruit, SIGSEGV). */
         nota     = piscina_notare(piscina);
         venenum  = (i8*)piscina_allocare(piscina, (memoriae_index)512);
-        CREDO_NON_NIHIL (venenum);
         si (venenum != NIHIL)
         {
             memset(venenum, 0xFF, (memoriae_index)512);
-            piscina_reficere(piscina, nota);
+        }
+        piscina_reficere(piscina, nota);
 
-            /* Structura Voluminis hic in octetos venenatos cadit. */
-            ordinarium = volumen_creare(piscina, via_ord);
-            CREDO_NON_NIHIL (ordinarium);
-            si (ordinarium != NIHIL)
-            {
-                volumen_claudere(ordinarium);
-                /* SI 'temporarium' non initializatur, hic PERIIT. */
-                CREDO_VERUM (filum_existit(via_ord));
-                (vacuum)filum_delere(via_ord);
-            }
+        /* Structura Voluminis PRIMA post reficere: in octetos venenatos
+         * cadit (notationes credo post eam veniunt). */
+        ordinarium = (venenum != NIHIL) ?
+            volumen_creare(piscina, via_ord) : NIHIL;
+        CREDO_NON_NIHIL (venenum);
+        CREDO_NON_NIHIL (ordinarium);
+        si (ordinarium != NIHIL)
+        {
+            volumen_claudere(ordinarium);
+            /* SI 'temporarium' non initializatur, hic PERIIT. */
+            CREDO_VERUM (filum_existit(via_ord));
+            (vacuum)filum_delere(via_ord);
         }
     }
 
