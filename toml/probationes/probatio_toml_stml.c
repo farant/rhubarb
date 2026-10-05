@@ -27,6 +27,7 @@
 #include "materia_nodus.h"
 #include "materia_scribere.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -234,7 +235,7 @@ principale (vacuum)
                 Piscina* opus;
     MateriaLexiconRatum  ratum;
      MateriaLexIudicium  iudicium;
-     constans character* radix = getenv("RHUBARB_RADIX");
+     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
 
     piscina = piscina_generare_dynamicum("probatio_toml_stml", 262144);
     opus = piscina_generare_dynamicum("probatio_toml_stml_opus",

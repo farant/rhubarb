@@ -19,6 +19,9 @@
     <vestigium via="build/amalgamata.txt" forma="plagula"/>
     <vestigium via="build/amalgamata_probatio"/>
     <vestigium via="build/test_logs/radix.log" forma="plagula"/>
+    <!-- cursor communis (migratio ad compilatorem, gradus IV): mandata
+         compilationis et vocationes bibliothecarum -->
+    <vestigium via="build/clausurae"/>
     <ingressus genus="fasciculus" via="compile_tests.sh"/>
     <exitus via="build" provenientia="ignota"/>
   </actio>
@@ -798,6 +801,7 @@
   <compositum titulus="installata">
     <pars actio="fabrica"/>
     <pars actio="manus"/>
+    <pars actio="compilator"/>
     <pars actio="aedilis"/>
     <pars actio="canon"/>
     <pars actio="natura"/>

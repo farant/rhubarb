@@ -69,6 +69,12 @@ declare -a SPECULUM_APPS=(
 
 # Build directory for object files
 BUILD_DIR="build"
+# CURSOR COMMUNIS (tools/cursor_communis.sh): bin/compilator, thesaurus,
+# mandata compilationis in build/clausurae/mandata.tsv (oraculum
+# tools/cursoris_oraculum.sh compile_tests.sh). Viae RELATIVAE manent
+# (cwd = radix): -g eas infigit, obiecta cursori veteri octetim aequalia.
+RADIX_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$RADIX_DIR/tools/cursor_communis.sh"
 # SERA cursoris (tools/sera.sh, 2026-09-07): vide sub-cursores; via
 # absoluta ut involucra et pythonica (SERA_TENTA) eandem videant.
 mkdir -p "$BUILD_DIR"
@@ -141,12 +147,12 @@ GUI_APPS_BUILT=0
 GUI_APPS_FAILED=0
 FAILED_GUI_APPS=""
 
-# Track if libraries need recompilation
+# obiecta bibliothecarum hoc cursu mutata? (compile_libraries)
 LIBS_COMPILED=0
 
 # Compile all library source files to object files
 compile_libraries() {
-    local needs_compile=0
+    local mutata
     local src_file
     local obj_file
     local obj_name
@@ -169,121 +175,53 @@ compile_libraries() {
         fi
     fi
 
-    # capita mutata sine recompilo = corruptio ABI (excubitor:
-    # antea vexillum globale needs_compile solum accendebatur sed
-    # condiciones per-plagulam capita ignorabant - vexillum
-    # decorativum, nihil recompilabatur)
+    # PER THESAURUM (migratio ad compilatorem W0ZBW, gradus IV): omne
+    # obiectum per bin/compilator - clavis = argumenta + octeti fontis
+    # et capitum quae depfile nominat, ergo regulae mtime (fons
+    # recentior, caput recentissimum) et canalis excubitoris superflua
+    # fiunt. Olim caput tactum sine mutatione omnia recompilabat, et
+    # caput mutatum quod regula non videbat obiectum stalum relinquebat.
+    # Obiectum identicum NON rescribitur: inodi ante et post comparati
+    # = obiecta hoc cursu mutata (LIBS_COMPILED, metrum frigidi).
     #
-    # CAPUT RECENTISSIMUM SEMEL (mensura 2026-08-25): ansa
-    # nidificata prior (150 capita x 130 fontes cum $(basename)
-    # FURCA per iterationem = ~20k furcae) ~30s cursu QUOVIS
-    # solvebat, etiam calido. Aequivalentia: aliquod caput
-    # recentius obiecto <=> caput RECENTISSIMUM recentius obiecto.
-    CAPUT_RECENS=""
-    for header in include/*.h; do
-        # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
-        if [ -z "$CAPUT_RECENS" ] || [ "$header" -nt "$CAPUT_RECENS" ]; then
-            CAPUT_RECENS="$header"
-        fi
-    done
+    # PARALLELE per FILA fila (xargs -L 1): CCXXV hits seriatim ~VII s
+    # (compilator ~XXX ms per vocationem, dimidium in 'clang
+    # -print-prog-name'); mandata una tabula, linea quaeque vocatio
+    # integra (viae et vexilla sine spatiis). Fractum: clang ipse fontem
+    # nominat.
+    cursor_instrumenta_parare || return 1
+    : > "$CLAUSURAE_DIR/mandata.tsv"
+    local ante post numerus vocationes
+    vocationes="$CLAUSURAE_DIR/bibliothecae.vocationes"
+    : > "$vocationes"
+    ante="$(stat -f '%i %N' "$BUILD_DIR"/*.o 2>/dev/null)"
 
-    newest_header () {
-        if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
-            echo "$CAPUT_RECENS"
-        fi
-    }
-
-    # Check if any source file is newer than its object file
-    # (expansio parametrorum, non $(basename) - furca per fontem)
-    for src_file in "${SOURCE_FILES[@]}"; do
+    for src_file in "${SOURCE_FILES[@]}" "${OBJC_SOURCES[@]}"; do
         obj_name="${src_file##*/}"
-        obj_file="$BUILD_DIR/${obj_name%.c}.o"
-
-        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$src_file" ]; then
-            needs_compile=1
-            break
-        fi
+        obj_file="$BUILD_DIR/${obj_name%.*}.o"
+        printf '%s\t%s\n' "$obj_file" "${GCC_FLAGS[*]} ${INCLUDE_FLAGS[*]} -c $src_file" \
+            >> "$CLAUSURAE_DIR/mandata.tsv"
+        echo "${GCC_FLAGS[*]} ${INCLUDE_FLAGS[*]} -c $src_file -o $obj_file" >> "$vocationes"
     done
-
-    # Also check Objective-C files
-    for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name="${objc_file##*/}"
-        obj_file="$BUILD_DIR/${obj_name%.m}.o"
-        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$objc_file" ]; then
-            needs_compile=1
-            break
-        fi
-    done
-
-    # Check if any header changed (una transitio contra caput
-    # recentissimum - ansa nidificata retirata)
-    if [ $needs_compile -eq 0 ] && [ -n "$CAPUT_RECENS" ]; then
-        for src_file in "${SOURCE_FILES[@]}"; do
-            obj_name="${src_file##*/}"
-            obj_file="$BUILD_DIR/${obj_name%.c}.o"
-            if [ -f "$obj_file" ] && ! [ "$obj_file" -nt "$CAPUT_RECENS" ]; then
-                needs_compile=1
-                break
-            fi
-        done
-    fi
-
-    if [ $needs_compile -eq 0 ] && [ $LIBS_COMPILED -eq 0 ]; then
-        echo -e "${BLUE}Libraries up to date${RESET}"
-        return 0
-    fi
-
-    echo -e "${BLUE}═══════════════════════════════════════${RESET}"
-    echo -e "${BLUE}COMPILING LIBRARIES${RESET}"
-    echo -e "${BLUE}═══════════════════════════════════════${RESET}"
-
-    # Compile C source files
-    for src_file in "${SOURCE_FILES[@]}"; do
-        obj_name="${src_file##*/}"
-        obj_file="$BUILD_DIR/${obj_name%.c}.o"
-
-        # Recompile if source OR any header is newer than object
-        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$src_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
-            echo -e "  Compiling: $src_file"
-            if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$src_file" -o "$obj_file" 2>&1; then
-                echo -e "${RED}✗ FAILED: $src_file${RESET}"
-                return 1
-            fi
-        fi
-    done
-
-    # Compile Objective-C files
-    for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name="${objc_file##*/}"
-        obj_file="$BUILD_DIR/${obj_name%.m}.o"
-
-        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$objc_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
-            echo -e "  Compiling: $objc_file"
-            if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$objc_file" -o "$obj_file" 2>&1; then
-                echo -e "${RED}✗ FAILED: $objc_file${RESET}"
-                return 1
-            fi
-        fi
-    done
-
-    # Compile vendored files (relaxed flags, own objects; headers
-    # in include/ do not affect them - source-newer check only)
+    # vendored: vexilla laxa (VENDOR_FLAGS), sine GCC_FLAGS et -I
     for vend_file in "${VENDOR_SOURCES[@]}"; do
         obj_name="${vend_file##*/}"
         obj_file="$BUILD_DIR/${obj_name%.c}.o"
-
-        if [ ! -f "$obj_file" ] || ! [ "$obj_file" -nt "$vend_file" ]; then
-            echo -e "  Compiling (vendor): $vend_file"
-            if ! clang -c ${VENDOR_FLAGS[@]} "$vend_file" -o "$obj_file" 2>&1; then
-                echo -e "${RED}✗ FAILED: $vend_file${RESET}"
-                return 1
-            fi
-        fi
+        printf '%s\t%s\n' "$obj_file" "${VENDOR_FLAGS[*]} -c $vend_file" \
+            >> "$CLAUSURAE_DIR/mandata.tsv"
+        echo "${VENDOR_FLAGS[*]} -c $vend_file -o $obj_file" >> "$vocationes"
     done
+    numerus=$(grep -c . "$vocationes")
 
-    echo -e "${GREEN}Libraries compiled${RESET}"
-    echo ""
-    LIBS_COMPILED=1
+    if ! xargs -P "$FILA" -L 1 "$COMPILATOR" < "$vocationes" 2>&1; then
+        echo -e "${RED}✗ FAILED: bibliothecae (fons a clang supra nominatus)${RESET}"
+        return 1
+    fi
+
+    post="$(stat -f '%i %N' "$BUILD_DIR"/*.o 2>/dev/null)"
+    mutata=$(comm -13 <(echo "$ante" | sort) <(echo "$post" | sort) | grep -c .)
+    [ "$mutata" -gt 0 ] && LIBS_COMPILED=1
+    echo -e "${BLUE}Bibliothecae: $numerus obiecta per bin/compilator, $mutata mutata${RESET}"
     return 0
 }
 
@@ -434,7 +372,7 @@ compile_and_run_test() {
     # vocamine cum -g = clang dsymutil post nexum currit (~0.2 s per
     # probationem, CXLI probationes = XXV s); ex obiecto nexus eum
     # omittit, et lldb per tabulam depurationis obiecta tamen legit.
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} -c "$test_file" -o "$output_binary.o" 2>&1 \
+    if ! _cursor_compilare "$test_file" "$output_binary.o" 2>&1 \
        || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
@@ -661,8 +599,8 @@ run_speculum() {
 }
 
 # Operarius probationis unius (in bash filio per xargs; ambitus:
-# SINGULAE, OBIECTA exportata). Vexilla ex tools/vexilla.sh iterum
-# fontata (tabulae bash non exportantur).
+# SINGULAE, OBIECTA, COMPILATOR, CLAUSURAE_DIR exportata). Vexilla ex
+# tools/vexilla.sh iterum fontata (tabulae bash non exportantur).
 probatio_una() {
     local test_file="$1"
     local name; name=$(basename "$test_file" .c)
@@ -678,7 +616,10 @@ probatio_una() {
     esac
     mkdir -p build/probationes
     t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
-    if ! clang "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$output_binary.o" > "$SINGULAE/$name.log" 2>&1 \
+    # per thesaurum (COMPILATOR, CLAUSURAE_DIR exportata a parente)
+    printf '%s\t%s\n' "$output_binary.o" "${VEXILLA_C89[*]} ${INC[*]} -c $test_file" \
+        >> "$CLAUSURAE_DIR/mandata.tsv"
+    if ! "$COMPILATOR" "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$output_binary.o" > "$SINGULAE/$name.log" 2>&1 \
        || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
         echo "2 0 0" > "$SINGULAE/$name.res"
         return 0
@@ -799,7 +740,7 @@ run_all_tests() {
             rm -rf "$SINGULAE"; mkdir -p "$SINGULAE"
             OBIECTA="build/test_logs/obiecta_probationum.txt"
             get_object_files > "$OBIECTA"
-            export SINGULAE OBIECTA
+            export SINGULAE OBIECTA COMPILATOR CLAUSURAE_DIR
             echo -e "${BLUE}probationes parallelae: $(echo "$test_files" | grep -c .) per $FILA fila${RESET}"
             murus_t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
             echo "$test_files" | grep . | xargs -P "$FILA" -n 1 -I{} bash -c 'probatio_una "$1"' _ {}
@@ -1220,9 +1161,8 @@ else
     if [ $TESTS_TOTAL -eq 0 ]; then
         exit 2
     elif [ $TESTS_FAILED -eq 0 ]; then
-        # canalis excubitoris: verdictum post-constructionem
-        # (tacet nisi stala)
-        ./excubitor.sh -tacitus "build/" >&2 || true
+        # (canalis excubitoris hic olim: obiecta nunc per thesaurum,
+        # stalum mtime non iam possibile)
         exit 0
     else
         exit 1

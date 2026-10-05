@@ -26,8 +26,10 @@ OMNES=0
 # per sigilla ingressuum iam lectorum, non ingressus (iudex radicem eius
 # e vestigiis eicit, plan 2 T3) - getenv THESAURUS_GENERATIO crudum
 EXEMPTAE="lib/filum.c lib/lectiones.c lib/thesaurus.c"
-# instrumenta quorum vestigia fabrica credit (lectiones="verum")
-VIA_PILOTA_RADICES="tools/aedilis.c"
+# instrumenta quorum vestigia fabrica credit (lectiones="verum"), et
+# probationes portae quae per vestigium iudicatur (actio 'iudicium',
+# fabrica spec 3 T3: porta_toml) - IO cruda in clausura earum OBSTAT
+VIA_PILOTA_RADICES="tools/aedilis.c $(ls toml/probationes/probatio_toml_*.c | tr '\n' ' ')"
 
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT

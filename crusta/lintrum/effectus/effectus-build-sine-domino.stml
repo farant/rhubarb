@@ -1,0 +1,22 @@
+<!--
+  effectus-build-sine-domino - plagula sub build/ lecta quam idem
+  processus NON scribit (effectus-spec par. V.1; planum T6).
+
+  DOCTRINA (fabrica spec 3 par. III.4): lectio build/ aut scribitur ab
+  eadem cursione aut exitus actionis declaratae est - aliter verdictum
+  plagulae credit quam nihil iudicavit. Lintrum dominum declaratum
+  videre non potest (fabrica.stml ultra summarium est): MONET, et
+  clavis fabricae (genus effectus, T7) decernit.
+
+  scripta_in_ambitu SINE ORDINE est ('etiam scribitur'): lintrum
+  quietat, clavem NUMQUAM minuit (regula soliditatis, spec par. I).
+  Exemplum: listae clausurarum cursoris (cursor_communis.sh) - scriptae
+  et lectae in eodem processu, ergo hic tacent.
+-->
+<EXEMPLAR output="$l">
+  <lectio classis="build" scripta_in_ambitu="falsum" $a/>
+</EXEMPLAR>
+
+<relatum lint="effectus-build-sine-domino" gravitas="monitum"
+         causa="lectio sub build/ quam processus non scribit: dominum declaratum (actio fabricae) habere debet">
+  <PER congruentia="$l"><situs>&@a;</situs></PER></relatum>

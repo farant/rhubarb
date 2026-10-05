@@ -70,6 +70,7 @@
 #include "materia_pictor.h"
 #include "crusta_arbor.h"
 #include "crusta_facies.h"
+#include "crusta_effectus.h"
 #include "internamentum.h"
 #include "crusta_diagnostica.h"
 #include "crusta_lexicon.h"
@@ -951,6 +952,176 @@ _optiones_crustae (
     redde sana ? &optiones : NIHIL;
 }
 
+/* EFFECTUS (effectus-plan T6; spec par. V): regulae dialecti effectus
+ * (crusta/lintrum/effectus/) super summarium plagulae - catenae
+ * verdicti
+ * (crusta_effectus_catenae, ex declarationibus fabricae) et summaria
+ * earum SEMEL per cursum, internamento regularum (LEX INTERNAMENTI).
+ * Plagula in summario catenae (non custodito) = erratum; aliter
+ * summarium sibi radicatum et monitum. Radix: $RHUBARB_RADIX
+ * (involucrum
+ * ponit) aut directorium operis. NIHIL = refutatio (causa). */
+nomen structura {
+        CrustaOptiones  optiones;
+                   Xar* summaria;
+    constans character* radix;
+} ContextusEffectuum;
+
+interior ContextusEffectuum*
+_contextus_effectuum (
+    constans character** causa)
+{
+    hic_manens ContextusEffectuum  c;
+    hic_manens                b32  temptata     = FALSUM;
+    hic_manens                b32  sana         = FALSUM;
+    hic_manens constans character* causa_prior  = NIHIL;
+    hic_manens          character  radix[IV * MXXIV];
+                          Piscina* piscina;
+              InternamentumChorda* intern;
+                        character  directorium[IV * MXXIV];
+                              Xar* catenae;
+                              i32  k;
+
+    si (temptata)
+    {
+        si (!sana && causa != NIHIL)
+        {
+            *causa = causa_prior;
+        }
+        redde sana ? &c : NIHIL;
+    }
+    temptata = VERUM;
+    memset(&c, ZEPHYRUM, magnitudo(c));
+    si (   getenv("RHUBARB_RADIX") != NIHIL
+        && strlen(getenv("RHUBARB_RADIX")) < magnitudo(radix))
+    {
+        strcpy(radix, getenv("RHUBARB_RADIX"));
+    }
+    alioquin
+    {
+        strcpy(radix, ".");   /* involucrum RHUBARB_RADIX ponit */
+    }
+    piscina = piscina_generare_dynamicum("diagnostica_effectus",
+        (memoriae_index)XVI * M * M);
+    intern = piscina != NIHIL ? internamentum_creare(piscina) : NIHIL;
+    si (causa_prior == NIHIL && intern == NIHIL)
+    {
+        causa_prior = "piscina effectuum deficit";
+    }
+    si (causa_prior == NIHIL)
+    {
+        c.radix            = radix;
+        c.optiones.intern  = intern;
+        sprintf(directorium, "%s/%s/effectus", radix, CRUSTA_LINTRUM);
+        c.optiones.regulae = crusta_regulae_legere(piscina, directorium,
+            intern, &causa_prior);
+        catenae = c.optiones.regulae != NIHIL
+            ? crusta_effectus_catenae(piscina, intern, radix,
+            &causa_prior)
+            : NIHIL;
+        c.summaria = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+        per (k = ZEPHYRUM; catenae != NIHIL && k < xar_numerus(catenae);
+             k++)
+        {
+            StmlNodus* sm = crusta_effectus_derivare(piscina, intern,
+                radix, *(character**)xar_obtinere(catenae, k), NIHIL,
+                &causa_prior);
+
+            si (sm != NIHIL)
+            {
+                *(StmlNodus**)xar_addere(c.summaria) = sm;
+            }
+        }
+        sana = c.optiones.regulae != NIHIL && catenae != NIHIL
+            && xar_numerus(c.optiones.regulae) > ZEPHYRUM;
+        si (!sana && causa_prior == NIHIL)
+        {
+            causa_prior = "regula effectus nulla";
+        }
+    }
+    si (!sana && causa != NIHIL)
+    {
+        *causa = causa_prior;
+    }
+    redde sana ? &c : NIHIL;
+}
+
+interior b32
+_plagulam_effectuum_iudicare (
+             Piscina* piscina,
+  constans character* via,
+  constans character* fons,
+                 i32  mensura,
+                 b32  machina,
+                 b32  excerptum,
+               Summa* summa)
+{
+     ContextusEffectuum* c;
+     constans character* causa     = NIHIL;
+     constans character* relativa  = via;
+                    Xar* summaria;
+                    Xar* d;
+                    b32  in_catena = FALSUM;
+                    i32  k;
+         memoriae_index  n;
+
+    c = _contextus_effectuum(&causa);
+    si (c == NIHIL)
+    {
+        fprintf(stderr, "diagnostica: %s: effectus: %s\n", via,
+            causa != NIHIL ? causa : "?");
+        redde FALSUM;
+    }
+    n = strlen(c->radix);
+    si (strncmp(via, c->radix, n) == ZEPHYRUM && via[n] == '/')
+    {
+        relativa = via + n + I;
+    }
+    alioquin si (strncmp(via, "./", II) == ZEPHYRUM)
+    {
+        relativa = via + II;
+    }
+    summaria = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    per (k = ZEPHYRUM; k < xar_numerus(c->summaria); k++)
+    {
+        StmlNodus* sm = *(StmlNodus**)xar_obtinere(c->summaria, k);
+
+        si (crusta_effectus_plagulam_tenet(sm, relativa))
+        {
+            *(StmlNodus**)xar_addere(summaria)  = sm;
+            in_catena                           = VERUM;
+        }
+    }
+    si (!in_catena)
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina,
+            c->optiones.intern, c->radix, relativa, NIHIL, &causa);
+
+        si (sm == NIHIL)
+        {
+            /* plagula extra arborem aut scriptum absens: effectus
+             * summari nequit - nihil iudicat, non refutat */
+            redde VERUM;
+        }
+        *(StmlNodus**)xar_addere(summaria) = sm;
+    }
+    d = crusta_effectus_diagnostica(piscina, relativa, fons, mensura,
+        summaria, in_catena, &c->optiones, &causa);
+    si (d == NIHIL)
+    {
+        fprintf(stderr, "diagnostica: %s: effectus: %s\n", via,
+            causa != NIHIL ? causa : "derivari non possunt");
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(d); k++)
+    {
+        _diagnosticum_imprimere(piscina, via, "crusta", fons, mensura,
+            (constans MateriaDiagnosticum*)xar_obtinere(d, k), machina,
+            excerptum, summa);
+    }
+    redde VERUM;
+}
+
 interior b32
 _plagulam_crustae_iudicare (
              Piscina* piscina,
@@ -989,7 +1160,8 @@ _plagulam_crustae_iudicare (
             excerptum, summa);
     }
     summa->plagulae++;
-    redde VERUM;
+    redde _plagulam_effectuum_iudicare(piscina, via, fons, mensura,
+        machina, excerptum, summa);
 }
 
 interior b32

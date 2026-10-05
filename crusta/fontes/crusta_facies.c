@@ -9,6 +9,11 @@
 #include "iter_directoria.h"
 #include "stml.h"
 #include "chorda_aedificator.h"
+#include "crusta_effectus.h"
+#include "materia_annotationes.h"
+#include "materia_exemplaria.h"
+#include "materia_excusatio.h"
+#include "stml_macros.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -375,4 +380,235 @@ constans CrustaOptiones*  optiones,
         }
     }
     redde chorda_aedificator_finire(a);
+}
+
+
+/* ==================================================
+ * Effectus: regulae super summarium plagulae (effectus-plan T6)
+ * ================================================== */
+
+/* situs (elementum summarii) in documentum novum copiare: titulus et
+ * attributa; summarium ipsum immotum manet */
+interior StmlNodus*
+_situm_copiare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+              StmlNodus* situs)
+{
+     StmlNodus* novus;
+           i32  k;
+
+    novus = stml_elementum_creare(piscina, intern,
+        chorda_ut_cstr(*situs->titulus, piscina));
+    si (novus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; situs->attributa
+                       && k < xar_numerus(situs->attributa); k++)
+    {
+        StmlAttributum* a = (StmlAttributum*)xar_obtinere(
+            situs->attributa, k);
+
+        si (!stml_attributum_addere_chorda(novus, piscina, intern,
+                chorda_ut_cstr(*a->titulus, piscina), *a->valor))
+        {
+            redde NIHIL;
+        }
+    }
+    redde novus;
+}
+
+Xar*
+crusta_effectus_diagnostica (
+                Piscina*  piscina,
+     constans character*  via,
+     constans character*  fons,
+                    i32   mensura,
+                    Xar*  summaria,
+                    b32   in_catena,
+constans CrustaOptiones*  optiones,
+     constans character** causa)
+{
+        MateriaLexiconRatum ratum;
+         MateriaLexIudicium iudicium;
+              CrustaParsura relatio;
+               MateriaNodus* radix;
+        InternamentumChorda* intern;
+                 StmlNodus* documentum;
+                 StmlNodus* processus;
+                        Xar* exitus;
+                        Xar* annotationes = NIHIL;
+                        i32  i;
+                        i32  j;
+                        i32  k;
+
+    si (causa != NIHIL)
+    {
+        *causa = NIHIL;
+    }
+    si (   piscina           == NIHIL || via == NIHIL || fons == NIHIL
+        || summaria          == NIHIL || optiones == NIHIL
+        || optiones->regulae == NIHIL || optiones->intern == NIHIL)
+    {
+        redde NIHIL;
+    }
+    intern = optiones->intern;
+    si (!materia_lexicon_ratum_facere(&ratum, &CRUSTA_LEXICON,
+            &iudicium))
+    {
+        redde NIHIL;
+    }
+    /* documentum UNUM per plagulam (exemplaria: sedes clavis est):
+     * situs huius plagulae ex summariis omnibus */
+    documentum  = stml_elementum_creare(piscina, intern, "effectus");
+    processus   = stml_elementum_creare(piscina, intern, "processus");
+    si (   documentum == NIHIL || processus == NIHIL
+        || !stml_attributum_addere(documentum, piscina, intern,
+        "lingua",
+               "bash")
+        || !stml_attributum_addere(documentum, piscina, intern, "radix",
+               via)
+        || !stml_attributum_addere(processus, piscina, intern, "radix",
+               via)
+        || !stml_liberum_addere(documentum, processus))
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(summaria); i++)
+    {
+        StmlNodus* sm = *(StmlNodus**)xar_obtinere(summaria, i);
+
+        per (j = ZEPHYRUM; sm != NIHIL && sm->liberi
+                           && j < xar_numerus(sm->liberi); j++)
+        {
+            StmlNodus* pr = *(StmlNodus**)xar_obtinere(sm->liberi, j);
+
+            per (k = ZEPHYRUM; pr->liberi
+                && k < xar_numerus(pr->liberi);
+                 k++)
+            {
+                StmlNodus* s = *(StmlNodus**)xar_obtinere(pr->liberi,
+                    k);
+                    chorda* p;
+                 StmlNodus* copia;
+
+                si (s->genus != STML_NODUS_ELEMENTUM)
+                {
+                    perge;
+                }
+                p = stml_attributum_capere(s, "plagula");
+                si (p == NIHIL || !chorda_aequalis_literis(*p, via))
+                {
+                    perge;
+                }
+                /* parsura plagulae IPSIUS fracta: gradus I crustae
+                 * eam iam nuntiat - non iteratur */
+                si (   chorda_aequalis_literis(*s->titulus, "ignotum")
+                    && stml_attributum_capere(s, "mandatum") == NIHIL
+                    && stml_attributum_capere(s, "causa")    != NIHIL
+                    && (chorda_aequalis_literis(
+                            *stml_attributum_capere(s, "causa"),
+                            "parsura non sana")
+                        || chorda_aequalis_literis(
+                            *stml_attributum_capere(s, "causa"),
+                            "illegibilis")))
+                {
+                    perge;
+                }
+                copia = _situm_copiare(piscina, intern, s);
+                si (   copia == NIHIL
+                    || !stml_liberum_addere(processus, copia))
+                {
+                    redde NIHIL;
+                }
+            }
+        }
+    }
+    exitus = xar_creare(piscina, (i32)magnitudo(MateriaDiagnosticum));
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(optiones->regulae); i++)
+    {
+        StmlNodus* regula =
+            *(StmlNodus**)xar_obtinere(optiones->regulae,
+            i);
+           StmlNodus* compositum;
+StmlExpansioResultus  expansio;
+                 Xar* ordines;
+
+        compositum = materia_exemplaria_componere(piscina, documentum,
+            regula, intern);
+        si (compositum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        expansio = stml_expandere(compositum, piscina, intern);
+        si (!expansio.successus || expansio.radix_expansa == NIHIL)
+        {
+            si (causa != NIHIL)
+            {
+                *causa = "regula effectus expandi non potest";
+            }
+            redde NIHIL;
+        }
+        ordines = materia_exemplaria_extrahere(piscina,
+            expansio.radix_expansa);
+        si (ordines != NIHIL && !optiones->crudum)
+        {
+            ordines = materia_exemplaria_minuere(piscina,
+                expansio.radix_expansa, ordines, causa);
+        }
+        si (ordines == NIHIL)
+        {
+            redde NIHIL;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(ordines); j++)
+        {
+            MateriaDiagnosticum* d = (MateriaDiagnosticum*)xar_addere(
+                exitus);
+
+            *d = *(MateriaDiagnosticum*)xar_obtinere(ordines, j);
+            /* extra catenas verdicti: monitum (spec par. V.3, A4) */
+            si (   !in_catena
+                && d->gravitas == (s32)MATERIA_GRAVITAS_ERRATUM)
+            {
+                d->gravitas = (s32)MATERIA_GRAVITAS_MONITUM;
+            }
+        }
+    }
+    /* excusationes ex commentariis plagulae ipsius ('#'), lex eadem */
+    si (!optiones->sine_excusatione)
+    {
+        radix = crusta_arbor_parsare(piscina, fons, mensura,
+            &CRUSTA_BASH, &relatio);
+        si (radix != NIHIL)
+        {
+            Xar* omnes = materia_annotationes_colligere(piscina, radix,
+                &ratum, "#", NIHIL, intern);
+
+            /* SOLAE excusationes effectuum: ceterae (gradus I crustae,
+             * lintra crustae) in cursu crustae iudicantur - hic mortuae
+             * aut sine causa BIS nominarentur */
+            annotationes = xar_creare(piscina,
+                (i32)magnitudo(MateriaAnnotatio));
+            per (k = ZEPHYRUM; omnes != NIHIL && annotationes != NIHIL
+                               && k < xar_numerus(omnes); k++)
+            {
+                MateriaAnnotatio* a = (MateriaAnnotatio*)xar_obtinere(
+                    omnes, k);
+
+                si (chorda_invenire_index(a->textus, chorda_ex_literis(
+                        "codex=\"lint:effectus-", piscina)) >= ZEPHYRUM)
+                {
+                    *(MateriaAnnotatio*)xar_addere(annotationes) = *a;
+                }
+            }
+        }
+    }
+    redde materia_excusatio_applicare(piscina, exitus, annotationes,
+        &CRUSTA_DIAGNOSTICA, "crusta",
+        materia_exemplaria_lintres(piscina, optiones->regulae));
 }

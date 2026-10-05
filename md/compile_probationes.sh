@@ -64,6 +64,7 @@ declare -a RADIX_FONTES=(
     "similitudo"
     "canon"
     "credo"
+    "lectiones"   # materia_coctor lectiones crudas notat (fabrica spec 3 T3)
 )
 
 FILTER="${1:-}"

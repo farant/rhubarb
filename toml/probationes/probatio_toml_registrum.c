@@ -26,6 +26,7 @@
 #include "materia_token.h"
 #include "materia_coctor.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -298,7 +299,7 @@ MateriaLexiconRatum  ratum;
      * ================================================== */
 
     {
-        constans character* radix = getenv("RHUBARB_RADIX");
+        constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
              MateriaRancor  rancor;
 
         imprimere("\n--- Probans rancorem tabularum coctarum ---\n");

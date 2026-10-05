@@ -126,6 +126,8 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(O_WRONLY == 0x0001 && O_CREAT == 0x0200 && O_TRUNC == 0x0400);"
     echo "IUNGO_ASSERTA(O_APPEND == 0x0008);"
     echo "IUNGO_ASSERTA(O_RDONLY == 0x0000 && O_RDWR == 0x0002);"
+    # *at (oraculum effectuum, effectus T5, 2026-10-05)
+    echo "IUNGO_ASSERTA(AT_FDCWD == -2);"
     # flock (filum_seram_capere, 2026-09-29)
     echo "IUNGO_ASSERTA(LOCK_SH == 0x01 && LOCK_EX == 0x02);"
     echo "IUNGO_ASSERTA(LOCK_NB == 0x04 && LOCK_UN == 0x08);"

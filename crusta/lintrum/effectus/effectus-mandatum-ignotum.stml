@@ -1,0 +1,19 @@
+<!--
+  effectus-mandatum-ignotum - locus effectus cuius effectus ignotus
+  est: mandatum extra tabulam (crusta/effectus_mandata.stml), mandatum
+  quod tabula ignotum nominat (git, xargs), eval, optio quae effectum
+  celat (find -exec, bash -c, perl -e) (effectus-spec par. V.1;
+  planum T6).
+
+  DOCTRINA: tabula ex exemplis crescit (desideratum ...Q4C7D) -
+  ordo novus in tabula aut excusatio in loco (<tolera
+  codex="lint:effectus-mandatum-ignotum">) cum causa. Clavis fabricae
+  ignotum non excusatum ut IGNOTUM tractat (interview Q7).
+-->
+<EXEMPLAR output="$i">
+  <ignotum $a/>
+</EXEMPLAR>
+
+<relatum lint="effectus-mandatum-ignotum" gravitas="erratum"
+         causa="effectus ignotus: tabula mandatorum augenda aut excusatio in loco">
+  <PER congruentia="$i"><situs>&@a;</situs></PER></relatum>

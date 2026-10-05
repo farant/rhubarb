@@ -90,7 +90,11 @@ out=$( (sera_capere "$T/nonsera" 1) 2>&1 ); rc=$?
 
 echo "--- VIII. cursores omnes fontant ---"
 sine=""
-for s in compile_tests.sh $(git ls-files '*/compile_probationes.sh' 'oratio/*.sh' 'silva/nexus.sh'); do
+# ':(glob)' - sine eo '*' pathspec git '/' transit et adiutores
+# oratio/census/*.sh (oraculum.sh vocant, quod seram ipsum capit)
+# falso numerabat: porta rubra ab 2026-09-10, nemini debita usque ad
+# effectus T6 (2026-10-05).
+for s in compile_tests.sh $(git ls-files '*/compile_probationes.sh' ':(glob)oratio/*.sh' 'silva/nexus.sh'); do
     if ! grep -q 'tools/sera.sh' "$s" || ! grep -q 'sera_capere' "$s"; then sine="$sine $s"; fi
 done
 [ -z "$sine" ]; credo $? "cursores et involucra sera.sh fontant et sera_capere vocant"

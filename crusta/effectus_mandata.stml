@@ -1,0 +1,179 @@
+<!--
+  effectus_mandata.stml - tabula mandatorum externorum (bash, macOS):
+  quae verba imperii plagulas legunt, scribunt, enumerant
+  (effectus-spec par. III; planum T2). DATA, non codex: analysis
+  (crusta_effectus) et oraculum (argv mandatorum SIP) eandem legunt.
+
+  SEMEN: ./crusta/mandata_census.sh, 2026-10-05 - 290 plagulae, 334
+  tituli; omnia externa cum situs >= V (LI) hic stant. Externum extra
+  tabulam = situs <ignotum causa="mandatum ignotum">, unde tabula
+  crescit (desideratum ...Q4C7D). Semantica optionum contra paginas
+  man macOS verificata (BSD: sed -i extensionem CAPIT, date -r
+  secundas non plagulam), non ex memoria.
+
+  GRAMMATICA (verba 'positionalia' = non-optiones, post valores
+  optionum consumptos; '-' solum = stdin, nullum):
+    argumenta              munus positionalium omnium (absens = nullum)
+    primum / ultimum       munus primi / ultimi (ultimum solum si >= II)
+    exemplar_optiones      si optio harum adest, primum NON exemplar
+                           est (grep -e, sed -e, awk -f)
+    optiones_cum_valore    optiones quae verbum sequens edunt
+    optiones_binis_valoribus  quae DUO verba edunt (jq --arg n v)
+    optio_lectio / optio_scriptura  optiones quarum valor legitur /
+                           scribitur (grep -f, sort -o, clang -o)
+    in_loco                optiones quae argumenta etiam SCRIBUNT
+                           (sed -i: lectio et scriptura)
+    recursio               optiones quae directoria argumentorum
+                           recursive tractant (forma praefixum)
+    optiones_ignotae       optiones quae situm ignotum faciunt
+                           (find -exec, bash -c, python3 -c)
+    purum="verum"          nullus effectus plagulae
+    ignotum="verum"        effectus non modellatus: situs ignotum cum
+                           causa (excusandus aut manu declarandus)
+  Munera: lectio scriptura exsecutio enumeratio probatio exemplar
+  nullum.
+-->
+<mandata lingua="bash">
+
+  <!-- lectores simplices: argumenta leguntur -->
+  <mandatum titulus="cat" argumenta="lectio"/>
+  <mandatum titulus="head" argumenta="lectio"
+            optiones_cum_valore="-n -c"/>
+  <mandatum titulus="tail" argumenta="lectio"
+            optiones_cum_valore="-n -c -b"/>
+  <mandatum titulus="wc" argumenta="lectio"/>
+  <mandatum titulus="cut" argumenta="lectio"
+            optiones_cum_valore="-b -c -d -f"/>
+  <mandatum titulus="paste" argumenta="lectio"
+            optiones_cum_valore="-d"/>
+  <mandatum titulus="cmp" argumenta="lectio"
+            optiones_cum_valore="-i -n"/>
+  <mandatum titulus="comm" argumenta="lectio"/>
+  <mandatum titulus="shasum" argumenta="lectio"
+            optiones_cum_valore="-a"/>
+  <mandatum titulus="cksum" argumenta="lectio"
+            optiones_cum_valore="-a"/>
+  <mandatum titulus="nm" argumenta="lectio"/>
+  <mandatum titulus="bc" argumenta="lectio"/>
+  <mandatum titulus="uniq" argumenta="lectio"
+            optiones_cum_valore="-f -s"
+            nota="uniq [in [out]]: secundum plagula exitus est - domus
+                  numquam ita utitur (census 2026-10-05: VI situs)"/>
+  <mandatum titulus="sort" argumenta="lectio"
+            optiones_cum_valore="-k -t -S -T -o"
+            optio_scriptura="-o"/>
+  <mandatum titulus="diff" argumenta="lectio" recursio="-r"
+            optiones_cum_valore="-x -X -I -L -U -C"
+            optio_lectio="-X"/>
+
+  <!-- programma in argumento primo -->
+  <mandatum titulus="grep" primum="exemplar" argumenta="lectio"
+            exemplar_optiones="-e -f" recursio="-r -R"
+            optiones_cum_valore="-e -f -m -A -B -C"
+            optio_lectio="-f"/>
+  <mandatum titulus="sed" primum="exemplar" argumenta="lectio"
+            exemplar_optiones="-e -f" in_loco="-i -I"
+            optiones_cum_valore="-e -f -i -I"
+            optio_lectio="-f"
+            nota="BSD: -i/-I extensionem ut verbum sequens capiunt
+                  (sed -i '' ...)"/>
+  <mandatum titulus="awk" primum="exemplar" argumenta="lectio"
+            exemplar_optiones="-f"
+            optiones_cum_valore="-F -v -f" optio_lectio="-f"
+            nota="argumentum 'var=valor' assignatio est, non plagula"/>
+  <mandatum titulus="jq" primum="exemplar" argumenta="lectio"
+            exemplar_optiones="-f --from-file"
+            optiones_cum_valore="-f --from-file --indent"
+            optiones_binis_valoribus="--arg --argjson --slurpfile
+                                      --rawfile"
+            optio_lectio="-f --from-file"/>
+
+  <!-- scriptores -->
+  <mandatum titulus="mkdir" argumenta="scriptura"
+            optiones_cum_valore="-m"/>
+  <mandatum titulus="rm" argumenta="scriptura" recursio="-r -R -rf
+            -fr"/>
+  <mandatum titulus="touch" argumenta="scriptura"
+            optiones_cum_valore="-r -t -d -A" optio_lectio="-r"/>
+  <mandatum titulus="tee" argumenta="scriptura"/>
+  <mandatum titulus="chmod" primum="nullum" argumenta="scriptura"
+            recursio="-R"
+            nota="primum = modus; tempus mutationis plagulae mutatur"/>
+  <mandatum titulus="cp" argumenta="lectio" ultimum="scriptura"
+            recursio="-r -R -a"/>
+  <mandatum titulus="mv" argumenta="scriptura" ultimum="scriptura"
+            nota="fons removetur (scriptura) et destinatio scribitur"/>
+  <mandatum titulus="ln" argumenta="nullum" ultimum="scriptura"
+            nota="fons nexus non legitur (nexus symbolicus)"/>
+
+  <!-- enumeratores et probatores -->
+  <mandatum titulus="ls" argumenta="enumeratio"/>
+  <mandatum titulus="find" primum="enumeratio" argumenta="nullum"
+            optiones_ignotae="-exec -execdir -ok -okdir -delete
+                              -fprint"
+            nota="viae ante expressionem; verba expressionis nullum;
+                  primum solum enumeratur (domus: radix una)"/>
+  <mandatum titulus="readlink" argumenta="probatio"/>
+  <mandatum titulus="stat" argumenta="probatio"
+            optiones_cum_valore="-f -t"/>
+
+  <!-- programmata alia: scriptum exsequuntur -->
+  <mandatum titulus="bash" primum="exsecutio" argumenta="nullum"
+            optiones_ignotae="-c"/>
+  <mandatum titulus="sh" primum="exsecutio" argumenta="nullum"
+            optiones_ignotae="-c"/>
+  <mandatum titulus="python3" primum="exsecutio" argumenta="nullum"
+            optiones_ignotae="-c -m"
+            optiones_cum_valore="-W -X"
+            nota="lectiones scripti python in argumentis eius non
+                  apparent - per ingressum declaratum tegendae"/>
+  <mandatum titulus="perl" primum="exsecutio" argumenta="lectio"
+            optiones_ignotae="-e -pe -ne -E" in_loco="-i -pi"
+            nota="perl -e/-pe programma litterale = ignotum (VII situs
+                  in domo, 2026-10-05); -i et -pi ut verba integra
+                  solum"/>
+
+  <!-- compilatores: argumenta leguntur, -o scribitur -->
+  <mandatum titulus="clang" argumenta="lectio"
+            optiones_cum_valore="-o -I -L -l -D -U -include -isystem
+                                 -MF -MT -x -arch -framework -target
+                                 -Xlinker"
+            optio_scriptura="-o"
+            nota="capita per -I lecta HIC NON apparent: in portis per
+                  bin/compilator (liber lectionum) et identitas_clang
+                  teguntur (fabrica spec 3 par. III.3)"/>
+  <mandatum titulus="gcc" argumenta="lectio"
+            optiones_cum_valore="-o -I -L -l -D -U -include -isystem
+                                 -MF -MT -x"
+            optio_scriptura="-o"/>
+
+  <!-- pura: nullus effectus plagulae -->
+  <mandatum titulus="dirname" purum="verum"/>
+  <mandatum titulus="basename" purum="verum"/>
+  <mandatum titulus="tr" purum="verum" nota="stdin solum"/>
+  <mandatum titulus="sleep" purum="verum"/>
+  <mandatum titulus="date" purum="verum"
+            nota="macOS: -r SECUNDAS capit, non plagulam"/>
+  <mandatum titulus="mktemp" purum="verum"
+            nota="plagulam NOVAM extra arborem creat (TMPDIR); nihil
+                  arboris legit"/>
+  <mandatum titulus="sysctl" purum="verum"/>
+
+  <!-- ignota: effectus non modellatus -->
+  <mandatum titulus="git" ignotum="verum"
+            causa="index et obiecta .git (corpus per actionem
+                   declarandum, ut toml_corpus)"/>
+  <mandatum titulus="xargs" ignotum="verum"
+            causa="mandatum ex stdin construitur"/>
+  <mandatum titulus="plutil" ignotum="verum"
+            causa="modi multi (-lint legit, -replace in loco scribit)"/>
+  <mandatum titulus="iconutil" ignotum="verum"
+            causa="directorium .iconset legit, -o scribit"/>
+  <mandatum titulus="sips" ignotum="verum"
+            causa="imagines legit et scribit per optiones"/>
+  <mandatum titulus="osascript" ignotum="verum"
+            causa="programma AppleScript"/>
+  <mandatum titulus="docker" ignotum="verum"
+            causa="machina externa"/>
+
+</mandata>

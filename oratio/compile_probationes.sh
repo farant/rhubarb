@@ -70,6 +70,7 @@ declare -a RADIX_FONTES=(
     "utf8"
     "canon"
     "credo"
+    "lectiones"   # materia_coctor lectiones crudas notat (fabrica spec 3 T3)
     "partitio"
     "partitio_aestimatio"
 )

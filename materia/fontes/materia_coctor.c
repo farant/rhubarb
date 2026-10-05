@@ -12,6 +12,7 @@
 #include "chorda_aedificator.h"
 #include "internamentum.h"
 #include "xar.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -1220,13 +1221,19 @@ materia_registrum_coquere (
  * ================================================== */
 
 /* plagulam totam legere (stdio solum: bibliotheca filum in catenis
- * clientium abest); FALSUM = absens aut illegibilis */
+ * clientium abest); FALSUM = absens aut illegibilis. LIBER LECTIONUM
+ * (fabrica spec 3 par. XI corr. 2): lectio cruda se ipsa notat - L aut
+ * A - ne grammatica a porta rancoris lecta (probatio_toml_registrum)
+ * vestigio portae desit. lectiones.c sine dependentiis est; catenae
+ * clientium eam iam nectunt aut nectere debent (html, md, oratio:
+ * indices manu scripti). */
 interior b32
 _plagulam_legere (
                Piscina* piscina,
     constans character* via,
                 chorda* exitus)
 {
+    /* lectiones: notatur */
       FILE* f = fopen(via, "rb");
     longus  longitudo;
         i8* memoria;
@@ -1235,8 +1242,10 @@ _plagulam_legere (
     exitus->mensura  = ZEPHYRUM;
     si (f == NIHIL)
     {
+        lectiones_notare(LECTIO_ABSENS, via);
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_LEGIT, via);
     fseek(f, 0L, SEEK_END);
     longitudo = ftell(f);
     rewind(f);

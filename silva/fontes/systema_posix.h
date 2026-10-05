@@ -121,6 +121,10 @@ int chmod(const char* via, mode_t modus);
 /* lstat: nexum IPSUM describit, non destinationem
  * (filum_arborem_delere, 2026-09-14) */
 int lstat(const char* via, struct stat* sedes);
+/* fstatat: via ad fossam directorii relativa (AT_FDCWD = cwd) -
+ * oraculum effectuum eam interponit (effectus T5, 2026-10-05) */
+int fstatat(int fossa, const char* via, struct stat* sedes,
+    int vexilla);
 
 
 /* ==================================================
@@ -168,6 +172,13 @@ int     execv(const char* plagula, char* const argumenta[]);
 /* setsid: sessio nova - proles ab horto terminali SOLVITUR, ergo
  * instrumentum exire potest dum applicatio vivit. */
 pid_t   setsid(void);
+/* execve, access, faccessat: oraculum effectuum (effectus T5,
+ * 2026-10-05) eas interponit - execve cum ambitu explicito; access
+ * et faccessat (sys/unistd.h, per unistd.h) exsistentiam probant */
+int     execve(const char* plagula, char* const argumenta[],
+               char* const ambitus[]);
+int     access(const char* via, int modus);
+int     faccessat(int fossa, const char* via, int modus, int vexilla);
 unsigned int alarm(unsigned int secunda);
 
 /* <sectio caput="stdlib.h"/> stdlib.h POSIX (getenv in systema_c89.h
@@ -219,6 +230,10 @@ int WTERMSIG(int status);
 
 int fcntl(int fossa, int mandatum, ...);
 int open(const char* via, int vexilla, ...);
+/* openat + AT_FDCWD (Darwin -2): oraculum effectuum (effectus T5,
+ * 2026-10-05); valor per auspex_posix certificatur */
+#define AT_FDCWD   -2
+int openat(int fossa, const char* via, int vexilla, ...);
 
 /* flock(2) - BSD, non POSIX (filum_seram_capere, 2026-09-29) */
 #define LOCK_SH    0x01

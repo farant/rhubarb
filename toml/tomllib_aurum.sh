@@ -18,7 +18,11 @@ FIXA="$RADIX/toml/probationes/fixa"
 HARNESS="$RADIX/toml/instrumenta/tomllib_tagatum.py"
 _caput () {
     echo "# $1 - GENERATUM a toml/tomllib_aurum.sh - NE MANU EDITES"
-    echo "# $(python3 --version 2>&1) tomllib; $(date -u +%Y-%m-%d)"
+    if [ "${2:-}" = "-sine-die" ]; then
+        echo "# $(python3 --version 2>&1) tomllib"
+    else
+        echo "# $(python3 --version 2>&1) tomllib; $(date -u +%Y-%m-%d)"
+    fi
 }
 if [ "${1:-}" != "-silvestre" ]; then
     mkdir -p "$FIXA/tomllib"
@@ -29,14 +33,25 @@ if [ "${1:-}" != "-silvestre" ]; then
         grep '\.toml$' "$FIXA/toml-test/tests/files-toml-1.0.0" \
             | python3 "$HARNESS" -aurum "$FIXA/toml-test/tests"
     } > "$EXITUS" || exit 1
+    # <tolera codex="lint:effectus-irresolutum" (>exitum suum modo scriptum numerat (nuntius solus)
     echo "aurum toml-test: $(grep -c '^####' "$EXITUS") clausulae -> $EXITUS"
 fi
-mkdir -p "$RADIX/toml/build"
-EXITUS="$RADIX/toml/build/aurum_silvestre.txt"
+# aurum silvestre = actio fabricae 'toml_aurum_silvestre' (fabrica spec 3
+# T4): octeti DETERMINISTICI (sine die - aliter regeneratio cotidie
+# 'mutatum' iudicaret et vestigium portae toml cotidie moveret); sub
+# FABRICA_SCRIPTURA (iudicium -plenus) in scripturam scribit
+EXITUS="toml/build/aurum_silvestre.txt"
+if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
+    EXITUS="$FABRICA_SCRIPTURA/$EXITUS"
+else
+    EXITUS="$RADIX/$EXITUS"
+fi
+mkdir -p "$(dirname "$EXITUS")"
 {
-    _caput aurum_silvestre.txt
+    _caput aurum_silvestre.txt -sine-die
     echo "# silvestria.manifestum (plagulae vivae; sigillum in porta iudicatur)"
     grep -v '^#' "$FIXA/silvestria.manifestum" | cut -f2 \
         | python3 "$HARNESS" -aurum "$RADIX"
 } > "$EXITUS" || exit 1
+# <tolera codex="lint:effectus-irresolutum" (>exitum suum modo scriptum numerat (nuntius solus)
 echo "aurum silvestre: $(grep -c '^####' "$EXITUS") clausulae -> $EXITUS"

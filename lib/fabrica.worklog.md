@@ -1445,3 +1445,444 @@ Open for Fran: excubitor deletion via batch job …W0ZBW; the store's
 lint exemption; promotion (…XZQG); clang non-determinism (…ACYVJ).
 Next family candidate: the six non-traced generators that now dominate
 -plenus (…VFF5D).
+
+## 2026-10-03 - excubitor migration, middle path step 1: shared runner pieces
+
+Fran chose the middle path: shared pieces, then three representative
+runners (css, crusta, root compile_tests.sh), then slice 3's interview.
+- tools/cursor_communis.sh (sourced): cursor_instrumenta_parare (aedilis +
+  compilator, ONE store for both via FABRICA_THESAURUS),
+  cursor_clausuras_derivare <dir>, cursor_fontes_compilare (union through
+  bin/compilator; duplicate basenames refused - flat build dir),
+  cursor_probationem_struere <test> <bin> (test through the store, linked
+  against its own closure). Every compile command is recorded in
+  <build>/clausurae/mandata.tsv.
+- tools/cursoris_oraculum.sh <sub>/compile_probationes.sh [-ref|-arbor]
+  replaces tools/toml_oraculum.sh: subsystem from the runner's path,
+  output-capture variable <SUB>_PROBATIONES_EFFUSIO, and the clang
+  non-determinism re-check re-runs the RECORDED command (no per-runner
+  include flags hardcoded). Checked: toml_scalaris.o's recorded command
+  gives 6 distinct objects in 8 plain compiles, chorda.o's gives 1.
+- toml runner rebased onto the helper: generic oracle vs HEAD's T5 runner
+  = consensus (45 objects identical, 370 lines).
+Batch job …W0ZBW rubric v2 points at these.
+
+## 2026-10-03 - excubitor migration step 2: css
+
+css/compile_probationes.sh onto tools/cursor_communis.sh (hand lists,
+newest-header rule and its BLOCKING excubitor call removed). The oracle's
+first run caught a real gap: probatio_css_adaptare failed to link
+(css_ligator_solvere) - aedilis resolves includes through aedilis.stml's
+<inclusa> roots, not the runner's -I flags, and css/fontes was not a
+root, so css_adaptare.c / css_lexicon.c never entered the closure. The
+old runner hid it by linking every css source into every test. Added
+`css/fontes` LAST in aedilis.stml (lowest priority: cannot shadow;
+names css_*.h unique). Every materia client will need its own line
+(toml/fontes was already there). Commit judge: the 43 committed
+generated artifacts touched stay RECENS (no snippet changes).
+Oracle: consensus, 33 objects identical, 299 test lines; hand-list slack
+excerptum, materia_pictor, runae, runae_tabulae, utf8 (never needed).
+
+## 2026-10-03 - excubitor migration step 3: crusta (runner + two launchers)
+
+Runner: same conversion as css; `crusta/fontes` added LAST to
+aedilis.stml (same gap as css). Oracle: consensus, 45 objects identical,
+479 test lines; slack processus_posix.o.
+facies.sh / oraculum.sh were not runners: they linked EVERY object in
+crusta/build (built by the runner) with their main source and refused
+when excubitor called those objects stale - "run the runner first". After
+migration crusta/build holds only the test closures, so they now BUILD
+THEMSELVES: new helper cursor_instrumentum_struere <main.c> <bin> (own
+closure from aedilis, objects through compilator in
+build/instrumenta/<name>/ - their -I lists differ from the runner's -,
+relink only when an object changed). Output vs the old launchers:
+oraculum -probare identical (IDEM on both goldens); facies on 5 scripts
+identical except one finding the change removed (below).
+House lint caught my helper: crusta's nt-aequalitas rule flagged
+`[ "$bin" -nt "$o" ] || recens=0` (blocks at commit). Rewritten in the
+negated form the house uses (`! [ bin -nt o ]` -> stale, so a same-second
+tie relinks). Lint over all 8 scripts this migration touched: clean.
+Helper: the mandata.tsv reset moved from cursor_instrumenta_parare to
+cursor_clausuras_derivare (a tool launch must not wipe a runner's record).
+
+## 2026-10-03 - excubitor migration step 4: root compile_tests.sh
+
+Scope (Fran): compile through the store only. Kept: the generated source
+list (compile_tests_fontes_generata.sh) and link-everything-into-every-
+test; GUI apps, tools, speculum untouched. Gone: needs_compile /
+newest-header mtime rules, the "Libraries up to date" short-circuit, the
+report-only excubitor call at exit. compile_libraries now writes one
+command line per object (C, .m, vendor sqlite with VENDOR_FLAGS) and runs
+them with `xargs -P $FILA -L 1 bin/compilator`; per-test objects (serial
+and probatio_una) go through compilator too (COMPILATOR, CLAUSURAE_DIR
+exported to xargs children). Paths stay RELATIVE (cwd = root) so -g
+embeds the same strings as the old runner. LIBS_COMPILED (mensor metric
+"recompiled this run") = inode listing of build/*.o before vs after -
+compilator never rewrites an identical object.
+
+Timing, warm, filter piscina: old 7.4 s; new serial 14.1 s (225 hits x
+~29 ms); new parallel 8.5 s. Half of each hit is compilator spawning
+`clang -print-prog-name=clang` every call (desideratum ...HHD43). First
+cold-store run: 225 objects, only 1 came out with different bytes from
+the old runner's existing objects.
+
+Oracle root mode (tools/cursoris_oraculum.sh compile_tests.sh [-filtrum
+X]): deletes only build/*.o + build/probationes/*.o (never build/ - it
+holds logs, locks, other tools' binaries), compares both sets. Three
+oracle bugs found on the way to consensus:
+1. awk died with "towc: multibyte conversion failure" on non-UTF-8 test
+   output (~700 lines unfiltered at the tail) -> LC_ALL=C.
+2. root tests print run-specific data: ASLR addresses, ports, pids,
+   UUIDs, multipart boundaries, ms timings, callback counts. Regexing
+   them is whack-a-mole (three runs, new class each time), so root mode
+   compares VERDICT lines (one per test + summary counts) and only
+   counts full-output differences as a note (243 of 107946 lines).
+3. sub-runner filter unchanged except colour stripping + LC_ALL=C.
+Result: consensus, 431 objects identical (toml_scalaris = known clang
+nondeterminism), 196 verdict lines. Plant: new runner with sqlite -O1
+-> "DISCORDIA octeti: sqlite3.o", rc 1 (also exercised -filtrum).
+Library compile failure exits 2 ("nothing ran"), same as the old runner.
+Inventory: tools/cursor_communis.sh was owed by NO suite (only vexilla);
+added to tegit viae of radix, toml, css, crusta; radix currit binaria
++= tools/compilator.c.
+
+## 2026-10-03 - slice 3 T1 spike: the toml gate's trace
+
+Ran toml/compile_probationes.sh twice with FABRICA_LECTIONES (warm
+store, 13/13). Full classification in spec 3 §XI. The non-obvious parts:
+- compilator's "don't rewrite identical object" check READS the
+  destination through filum -> 58 L entries on toml/build/*.o with no S.
+  Harmless today, fatal under spec 3's "unowned build input" rule
+  (every warm run IGNOTUM). Fix: record the destination as S.
+- Raw IO hides exactly where you'd expect it to hurt: computus's GOLD
+  file (basis.tsv) and the registrum grammar read by materia_coctor's
+  staleness check. Both would let a gold/grammar edit reuse a stale pass.
+  materia can't take filum (client chains), so it notes the read itself.
+- The trace is stable across warm runs once the store is ejected: 424
+  differences, all store paths (miss then hit).
+- Normalizing paths: the ledger writes absolute paths for some tools
+  (repo root and $HOME prefixes); classify with awk index(), not sed
+  with a literal tab (zsh ate it the first time and the groups were
+  wrong).
+- 4,192 entries outside the store; 3,025 files / 18.1 MB to re-digest,
+  0.42 s - the < 2 s RECENS target is fine.
+
+## 2026-10-03 - slice 3 T2: crusta/fontationes.sh
+
+Script-input derivation for verdict keys landed in crusta (library
+crusta_fontationes.{h,c}, tool + launcher, test with 36 assertions,
+plants A/B/C red). On the toml runner it finds exactly the spike's
+expectation (sera, vexilla, cursor_communis, mensor_suitae,
+tomllib_aurum) plus the conditional builder chain; instrumenta
+bin/aedilis, bin/compilator, bin/mensor (+ bin/fabrica via builders);
+productum toml/build/*. Details and design notes:
+crusta/fontes/crusta_fontationes.worklog.md. Name per A2 would have been
+bin/fontationes; it is a self-building launcher like facies.sh instead
+(no installata entry needed until T5 decides how fabrica calls it).
+
+## 2026-10-03 - slice 3 T3: toml's reads made visible
+
+Spike gaps closed, verified by a re-trace of the toml gate:
+- E records 0 -> 5 (RHUBARB_RADIX, HOME, COMPUTUS_SCRIBERE,
+  ORACULUM_OMNIA, ORACULUM_EXEMPLUM): 13 getenv -> lectiones_ambitus in 9
+  toml test files.
+- computus gold (basis.tsv) now L: corpus + gold through filum (read via a
+  small fgets-like line walker over the filum buffer; the COMPUTUS_SCRIBERE
+  write builds the text and filum_scribere_literis). Gold numbers
+  unchanged (13/13).
+- totalitas failure-file write through filum (S), const dropped with the
+  house union idiom (lib/vitrea_servus.c:123), not a pointer->int cast.
+- materia_coctor's raw read notes itself (L / A) and carries the
+  existing `/* lectiones: notatur */` marker the lint already honours -
+  no lint rule change needed (the spec's "same function" idea was
+  unnecessary). That pulls lectiones.c into every chain linking
+  materia_coctor: html, md, oratio hand lists gained "lectiones" (the
+  diagnostica lesson from T2 again - hand lists are where new deps bite).
+  The first T3 commit attempt found a FOURTH: materia/compile_probationes.sh
+  globs materia/fontes/*.c against its own lib hand list (14 link
+  failures). Audit of every build compiling materia sources by glob/list:
+  that was the last one (silva's substrate excludes the coctor by design).
+  The frozen computus fixture html_cursor_2026-09-23.sh is NOT edited.
+- compilator: identical-destination hit now records S (miss path was
+  already S via filum_movere). Re-trace: 58 objects, 0 L-without-S.
+- mensor_suitae.sh: every bin/mensor call runs with `FABRICA_LECTIONES=`
+  (empty = ledger closed). Re-trace: no mensurae.volumen entry. My first
+  sed also rewrote the three `[ -n "$MSU_MENSOR" ]` guards into
+  `[ -n FABRICA_LECTIONES= "$MSU_MENSOR" ]` - a syntax error the `||`
+  would have swallowed silently; caught in the diff, restored.
+- lectiones_lint pilot = tools/aedilis.c + every toml test main (67
+  files); plant (raw getenv in probatio_toml_api.c) -> OBSTAT.
+Left for T4: build/toml_corpus.lst and aurum_silvestre.txt (bash-written).
+Left for T5 (spec 3 IX.7): compilator's own env (FABRICA_CLANG) is not
+in the trace; compilator is not in the lint pilot because its
+THESAURUS_GENERATIO read varies per run (store bookkeeping).
+
+## 2026-10-03 - rebake after T3 found a step-4 regression
+
+`bin/fabrica sanare installata` failed: obiecta_radicis FRACTUM, "scripsit
+extra vestigium: build/clausurae/bibliothecae.vocationes,
+build/clausurae/mandata.tsv". Since 35a1589d (root runner on the shared
+cursor) `compile_tests.sh --obiecta` writes its compile records there,
+and the action's declared footprint did not include them. Fixed by
+`<vestigium via="build/clausurae"/>` on obiecta_radicis. Nothing caught it
+for two commits because NO gate realizes obiecta_radicis under its
+footprint check - only a rebake does (the radix gate runs the runner
+outside fabrica). Lesson for runner migrations: after changing what a
+fabrica-run command writes, run `bin/fabrica sanare installata` before
+committing, not after.
+
+## 2026-10-03 - slice 3 T4: toml's bash-written inputs become actions
+
+New subsystem toml/aedificatio.stml (registered in fabrica.stml):
+- `toml_corpus` -> build/toml_corpus.lst via toml/corpus_indicem.sh
+  (git ls-files; byte-identical to the runner's old output). Regeneratio,
+  not memoria: the git index is not a declarable input.
+- `toml_aurum_silvestre` -> toml/build/aurum_silvestre.txt via
+  `toml/tomllib_aurum.sh -silvestre` (python3 declared as instrumentum,
+  as entitates_html). Found on the way: the header embedded
+  `$(date -u +%Y-%m-%d)`, so the artifact changed EVERY DAY - a verdict
+  keyed on it would have re-run daily. Silvestre header is now date-free
+  (deterministic: scratch regeneration cmp-equal to the tree copy); the
+  committed aurum.txt keeps its date (separate path, untouched).
+  Regeneration costs ~0.9 s per judgement (counts against the < 2 s RECENS
+  target - measure in T9).
+Both honour FABRICA_SCRIPTURA. Plants: appending a line to either
+artifact -> -plenus STALUM; sanare heals; RECENS again.
+Runner: the mtime rule ("manifest newer than gold") and the bash
+`git ls-files` are gone; by hand it calls `bin/fabrica sanare <both>`,
+under FABRICA_LECTIONES it does nothing (nested sanare would meet
+fabrica's own lock), and without bin/fabrica (shadow clone) or on any
+sanare failure it runs the two scripts directly. Fallback tested by
+moving bin/fabrica aside with both artifacts deleted: corpus and
+differentia green. Full toml 13/13, 34.7 s (unchanged).
+Inventory: toml `currit binaria` += tools/fabrica.c, `tegit viae` +=
+toml/aedificatio.stml.
+
+## 2026-10-03 - slice 3 T5a: the iudicium kind
+
+Design written first (spec 3 §XII, three v3 corrections: preconditions are
+ingressus - only strategy-ignota actions are realized as praecondicio;
+E records make _lectiones_colligere return FALSUM today; absolute paths
+are silently skipped today).
+Landed: FABRICA_ACTIO_IUDICIUM (`genus="iudicium"`); parse refusals
+(iudicium without lectiones="verum"; verdictum exitus outside an
+iudicium; iudicium exitus that is not verdictum); strategy `verdictum`
+(judge only - verdict file absent STALUM, no trace IGNOTUM, a differing
+trace entry STALUM naming the path, all congruent RECENS; never calls
+_regenerare, so praevisio can't collect it either); exclusion from
+`sanare` without arguments (lib) and from the no-argument judge sweep +
+praevisio (tool); never in a parallel wave (tuta = lectiones AND not
+iudicium). Tests: 5 new blocks in probatio_fabrica (463/463); plant
+"remove the sanare exclusion" -> 3 red.
+Note for T5b: the named sanare of an iudicium today ends FRACTUM
+("exitus 0 sed non RECENS") because nothing records its trace yet - the
+test asserts only that it ACTED.
+Test gotcha: a declaration with no <ingressus> is refused first
+("actio sine ingressu") and masked my three refusal assertions.
+
+## 2026-10-03 - slice 3 T5b: recording a pass, and the verdict trace rules
+
+- `sanare` of an iudicium: the tool's sequential `_agere` sets
+  FABRICA_LECTIONES to the ABSOLUTE ledger path (runners `cd`), truncated
+  first; `fabrica_liber_via()` is the one name both sides use.
+  `_post_agere` (iudicium branch): verdict file present -> key from the
+  inputs as they are AFTER the run (per-run memos are cleared after
+  agere), `_lectiones_transitus_colligere`, write, then re-judge for
+  consensus (must be RECENS, else FRACTUM). Not recordable -> SANATUM
+  with "transitus non servatus: <why>" AND the old trace is deleted (an
+  empty write; the store's DELETE removes it): this run read something
+  the old trace does not explain, so the old pass is no witness. Plant
+  (skip the deletion) -> red.
+- Collector rules: S paths are outputs (dropped), build/ reads need an
+  owner from `exitus_noti` (all declared exitus), system roots dropped,
+  other absolute paths digested (A1), species ALIA -> IGNOTUM, E kept only
+  when equal to the env fabrica gave the gate (plant "keep all E" -> 8
+  red: a runner-set RHUBARB_RADIX would key on itself).
+- Genera `identitas_clang` (same identity as compilator incl.
+  FABRICA_CLANG) and `fontationes` (crusta/fontationes.sh; irresolutum ->
+  key IGNOTUM with the line).
+- Tool: `_legere` now refuses non-regular files (a FIFO would hang the
+  judge); trace store maps 'E' <-> LECTIO_AMBITUS (it mapped unknown
+  letters to L).
+- Test fake parity: the fake store returned an EMPTY trace as found; the
+  real one returns nothing for zero rows. Fixed in the fake.
+- Test gotcha: per-run memos (sutura->digesta) keep the input key inside
+  one process - the block runs without memos so judgements follow edits.
+488/488.
+
+## 2026-10-03 - slice 3 T5c: porta_toml, first real reuse
+
+`python3 -B pythonica/silva.py -iudicium toml` (verdict written only on a
+pass, deleted first; -B so importing silva.py never writes __pycache__,
+which the whole-tree snapshot would call "outside the footprint");
+`porta_toml` in toml/aedificatio.stml (footprint toml/build,
+build/test_logs/toml.log, build/portae/tempora.tsv - porta() records its
+timing; inputs silva.py, fontationes of the runner, bin/aedilis,
+bin/compilator, python3, identitas_clang, the two T4 artifacts).
+First `bin/fabrica sanare build/fabrica/verdicta/toml.txt`: SANATUM 33 s,
+verdict "toml: TOML PROBATIONES: 13/13". Then `iudicare` RECENS from the
+trace in 1.9 s (no test run). Stored trace: L 2807 / X 108 / A 835 / D 5
+/ E 4 - exactly T1's accounting (3025 L - 58 owned objects - 162 SDK + 2
+newly visible: computus gold, registrum grammar; E = HOME + three absent
+switches, RHUBARB_RADIX dropped as runner-set).
+Live plants (each reverted): README edit -> RECENS; comment in
+toml/fontes/toml_lector.c -> STALUM "lectio transitus mutata:
+toml/fontes/toml_lector.c"; comment in tools/cursor_communis.sh ->
+IGNOTUM (key changed, via fontationes); ORACULUM_OMNIA=1 in the judge's
+env -> STALUM naming it. Sweep without arguments never lists it.
+First T5c commit attempt: the pythonica gate went red on a test that
+predates T5c - 'tegit fontes: crusta/fontes/*.c -> crusta (aedilis closure
+does not see it)'. Since the crusta migration (8a84c35c) crusta/fontes IS
+an aedilis root, so crusta is owed through a closure; pythonica had not run
+since. The lens assertion now uses html/fontes (not a root; html rows
+added to the test's fixture inventory) and a second assertion pins the new
+crusta cause ('in clausura').
+
+## 2026-10-03 - slice 3 v4: house binaries keyed by provenance
+
+The pass recorded in T5c went IGNOTUM right after its own commit: one of
+the commit's gates relinked bin/aedilis (same sources, new bytes). Fix:
+genus `instrumentum_domus` (digest of the `ingressus` line of
+`-provenientia`, never the `commissum` line; bytes if no report),
+fontationes' instrumentum lines likewise, and the verdict trace drops
+paths that are declared inputs (aedilis L-reads its own binary - the
+first fix alone still went STALUM "lectio transitus mutata: bin/aedilis").
+Measured: record, `rm bin/aedilis && tools/aedilis_struere.sh` (new
+sha), judge RECENS; same with bin/compilator. Test: 496/496 incl. a
+block proving commissum-line and relink invariance, ingressus-line
+sensitivity, bytes fallback.
+
+## 2026-10-03 - slice 3 T6: porta() and commissio ask fabrica first
+
+`porta(nomen)` (no filter, live tree, gate has a declared `porta_<nomen>`
+iudicium action, bin/fabrica present) goes through fabrica:
+`iudicare -omnia <verdict>` RECENS -> returns the recorded pass (compendium
+"... [transitus servatus, ante N]"), nothing run, a tempora row
+"<nomen> (transitus)"; otherwise `sanare <verdict>` runs the gate under the
+ledger and records it, and porta() rebuilds its Porta from
+build/fabrica/acta/porta_<nomen>.log (the -iudicium mode now prints the
+gate's full output so failures keep their fractures). `vis=True` deletes
+the verdict first (otherwise sanare sees RECENS and runs nothing - my first
+version reported that as a failure). sanare exit 2 (lock held) -> the old
+path. Filtered calls, shadows and gates without an action -> the old path
+(`_porta_cruda`, also what -iudicium calls: no recursion).
+Which gates are verdicts: `_portae_verdictorum()` reads the declaration
+TEXT of fabrica.stml's subsystems (regex on
+`<actio titulus="porta_X" genus="iudicium"`), memoized per process - so
+non-verdict gates never pay a bin/fabrica call (and the pythonica tests,
+which fake FABRICA_BIN globally, stay hermetic).
+commissio prints "porta X: ... - non iterum cursa (digestum idem)".
+Real: porta('toml') first 56.9 s (records), second 2.3 s RECENS; vis=True
+41.6 s then 1.8 s; filtered = old path. Plant (a failing toml assertion):
+sana False, rc 1, 12/13, the fracture listed with file:line, verdict
+removed. Hermetic tests: 6 cases (RECENS, STALUM->sanare, broken, lock,
+filter, real-declaration lookup); BSD printf exits 1 on an extra argument
+with no format directive - the fake gate uses echo.
+
+## 2026-10-03 - slice 3 T6 follow-up: two ledger bugs the first commit exposed
+
+After the T6 commit, `porta('toml')` ran but reported "transitus non
+servatus: ingressus build/ sine domino:
+toml/build/probationes/probatio_toml_api.o.compilator.47033.o" - three runs
+in a row, same pid. Two bugs:
+1. **The verdict ledger was never truncated.** `_agere` "truncated" it with
+   `filum_scribere(path, chorda_ex_literis(""))` - an empty chorda has datum
+   NIHIL and filum_scribere refuses it before opening the file. The ledger
+   had grown to 65 MB / 1,010,944 lines over the session; every recorded
+   trace was the UNION of all past runs (stricter, but carrying stale
+   entries like a dead temp file). Now deleted before the run, as the
+   generator paths already did. One run = 84,200 lines.
+2. **filum_delere recorded nothing**, though lectiones.h documents S as
+   "scripta, deleta, mota" (filum_arborem_delere and filum_movere did).
+   compilator's miss path writes a temp object with clang (invisible),
+   reads it through filum (L) and deletes it - an L with no S. Fixed in
+   lib/filum.c; probatio_lectiones pins it (file created with the ledger
+   off, deleted with it on); plant (remove the record) -> red.
+Verified: forced a compile miss (comment in a toml test) -> pass recorded,
+the temp object shows L + S. Also: the inner raw run inside -iudicium no
+longer writes its own tempora row (the outer porta() does) - the T6
+commit had logged toml twice (34.9 s inner, 47.9 s outer).
+
+## 2026-10-03 - slice 3 T7a: audit, dependency realization, fontationes seam
+
+- Audit: `sanare -audit` / FABRICA_AUDITUS=N (1 = all, N = one in N by key
+  byte). A RECENS iudicium is marked SANANDI_AUDITUM and runs anyway; its
+  old trace is kept in sutura->audita first (the failing run deletes the
+  verdict, so it could not be looked up afterwards). Pass -> re-recorded,
+  causa "auditus: transitus iterum congruit". Fail ->
+  FABRICA_AUDITUM_DISCORS with the reads the failing run had that the
+  stored trace lacks. Caught on the way: the stale-trace deletion keyed on
+  "ratio non-empty", and the new audit note is non-empty on SUCCESS - it
+  would have deleted the trace it had just written; now an explicit
+  `servatum` flag. Plant (audit never selected) -> 3 red. Real: porta('toml')
+  under FABRICA_AUDITUS=1 ran 45 s and agreed.
+- porta() and dependencies (spec v5): named `iudicare` doesn't realize the
+  verdict's build/ inputs (stale corpus list would still match). Always
+  calling `sanare <verdict>` fixed it but cost 13.2 s per reuse (whole
+  closure incl. committed-file generators). Now: sanare the declared build/
+  inputs, then iudicare, then sanare only if not RECENS - 3.6 s reuse.
+- `FABRICA_FONTATIONES` overrides the fontationes tool path, and the call
+  passes `-radix <cwd>` (the launcher's own -radix comes first; the tool
+  keeps the last) - so temporary roots resolve their own scripts.
+- Plant gotcha (again): a python anchor or a sed address that matches
+  nothing is a silent no-op plant - the first audit plant "passed" with 0
+  red because nothing was replaced. Check the replacement count before
+  reading the result.
+
+## 2026-10-03 - slice 3 T7b: iudicium-fumus
+
+tools/iudicium_fumus.sh (in PORTAE, ~26 s): a temporary root with one
+generator (gen -> build/gen.h from gen/fons.txt) and one verdict porta_x
+whose gate sources lib.sh, compiles src/a.c through the REAL
+bin/compilator (a filum reader: a real trace), runs it, and reads
+flag.txt with bash (outside the ledger, for the audit). 14 checks: I
+recorded + RECENS, P3 README -> RECENS, P1 header -> STALUM naming it, P2
+sourced script -> IGNOTUM, P7 `source "$NESCIO"` -> IGNOTUM naming the
+fontatio, P8 generator input -> build/gen.h regenerated + pass not reusable
+(IGNOTUM: gen.h is a DECLARED input, so the key moves - my first assertion
+expected STALUM), P6 failing gate never cached, AUD blind RECENS ->
+`sanare -audit` AUDITUM_DISCORS (rc 1) -> restored "auditus congruit".
+P4/P5/P9/P10 are named as covered elsewhere (lint gate, probatio_fabrica).
+**The gate found a crash the unit tests could not:** `sanare -audit` with a
+discord aborted (SIGABRT, stack protector) - the tool counts sanatio
+events in `numeri[VI]`, and FABRICA_AUDITUM_DISCORS is index VI (until T7 it
+was only ever a cursus event, never a sanatio). Array now sized from the
+enum; a discord counts as a failure in the exit code and is named in the
+summary line. probatio_fabrica XI passed throughout because it calls the
+library, not the tool's summary.
+Plants: the first (an early `redde VERUM;` in _fontationes_sigillare) did
+not COMPILE under -Werror, so the old bin/fabrica ran and the gate said
+"sanum" - a no-op plant; the compiling version (conditional return) -> P2,
+P7 red.
+
+## 2026-10-03 - slice 3 T9: measured, closed
+
+Ten rounds of "unrelated edit -> porta('toml') -> FABRICA_AUDITUS=1
+porta('toml')": rounds 2-10 reused (3.5-3.9 s) and the audit agreed (42.5-
+46.8 s); with the T7a audit, 10 audited reuses, 0 discord. Round 1 was
+FRACTUM "scripsit extra vestigium: gesta/annales/entities/..." - I had
+filed two ledger entries while its gate ran. The tree snapshot now skips
+the records office's places: gesta/annales/ and, at the root,
+tabularium.db* / forum.db* (the first fix covered only gesta/annales and
+the next live run failed on tabularium.db-wal - list the resident's
+files, don't guess). Verified: porta('toml', vis=True) with a ledger note
+written mid-run -> SANATUM. `iudicare -plenus` 15.0 s (165 RECENS, verdict
+never in the sweep). T8 parked (…2VP7), after the gate-migration
+desideratum (…J6HF). Spec 3 §XIV As built.
+
+## 2026-10-05 - sampled audit at commit time
+
+commissio now audits a reused verdict pass one time in N (default X,
+`FABRICA_AUDITUS_COMMISSIONIS=N`, 0 = off): `_auditum_commissionis(nomen)`
+rolls per CALL and `porta(nomen, auditus=True)` then runs `sanare -audit`
+(iudicare skipped); commissio prints "porta X: ... - auditus (I ex N)".
+Why not fabrica's own `FABRICA_AUDITUS=N`: that samples by key byte - a
+pass whose inputs stay put for many commits would be audited always or
+never, and the long-lived pass is the one most worth spot-checking.
+`silva._alea` is injectable; 5 hermetic tests (dice below/above 1/N, N=0,
+non-verdict gate never, auditus=True -> `sanare -audit` and no iudicare,
+via a fake bin/fabrica logging argv). Plant (never audit) -> red.
+Session note: a crash left a second copy of this conversation running in
+tmux; both ran pythonica against the same build/ (spurious
+'recepta sua deleta' and a clone `cp` failure) and shared one scratchpad.
+Nothing committed or doubled; one copy kept, clean rerun green.
