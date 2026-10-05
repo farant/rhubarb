@@ -17,6 +17,7 @@
 #include "chorda.h"
 #include "xar.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define VIA_MAXIMA          (IV * MXXIV)
@@ -1759,7 +1760,9 @@ _directorium_loci (
             redde exitus;
         }
     }
-    /* summus gradus, ordine fontis */
+    /* summus gradus, ordine fontis: cd quod ANTE situm FINITUR ('cd
+     * lib' argumentum suum non mutat - oraculum T5 'lib/lib'
+     * invenit) */
     si (!materia_tractus_nodi(NIHIL, nodus, &situs_tractus))
     {
         redde d->radix;
@@ -1774,7 +1777,7 @@ _directorium_loci (
         si (   c->pater        == NIHIL
             || c->pater->genus != (s32)CRUSTA_GENUS_PROGRAMMA
             || !materia_tractus_nodi(NIHIL, c, &t)
-            || t.initium       >= situs_tractus.initium)
+            || t.finis > situs_tractus.initium)
         {
             perge;
         }
@@ -2763,6 +2766,22 @@ _imperium_tractare (
         _probationes_imperii(d, a, p, verba, ab);
         redde VERUM;
     }
+    si (   (strcmp(t, "cd") == ZEPHYRUM
+        || strcmp(t, "pushd") == ZEPHYRUM)
+        && ab + I < xar_numerus(verba))
+    {
+        character* s = _titulus_staticus(d->piscina,
+            *(MateriaNodus**)xar_obtinere(verba, ab + I));
+
+        /* 'cd W': bash W probat (cd deficit si abest) - oraculum
+         * stat eius videt (T5) */
+        si (s == NIHIL || s[ZEPHYRUM] != '-')
+        {
+            _probationem_addere(d, a, p,
+                *(MateriaNodus**)xar_obtinere(verba, ab + I), t);
+        }
+        redde VERUM;
+    }
     si (strcmp(t, "eval") == ZEPHYRUM)
     {
         _ignotum_addere(d, a, p, imperium, t, "eval opacum");
@@ -3334,4 +3353,750 @@ crusta_effectus_derivare (
         redde NIHIL;
     }
     redde _emittere(&d, absoluta);
+}
+
+
+/* ==================================================
+ * Oraculum: liber interpositionis -> summarium observatum
+ * (effectus-spec par. VI.2; planum T5)
+ * ================================================== */
+
+nomen structura {
+          i32  pid;
+    character* programma;   /* progname imaginis praesentis */
+          Xar* viae_path;   /* character*: directoria PATH sua */
+          Xar* lecta;       /* character*: viae lectae (ante_scripta) */
+} Processus;
+
+nomen structura {
+          i32  pid;
+    character* vocans;      /* programma quod exsequebatur */
+    character* cwd;
+          Xar* argumenta;   /* character* */
+} Exsecutio;
+
+interior Processus*
+_processum_quaerere (
+     Derivatio* d,
+           Xar* processus,
+           i32  pid)
+{
+    Processus* p;
+          i32  k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(processus); k++)
+    {
+        p = (Processus*)xar_obtinere(processus, k);
+        si (p->pid == pid)
+        {
+            redde p;
+        }
+    }
+    p             = (Processus*)xar_addere(processus);
+    p->pid        = pid;
+    p->programma  = _duplicare(d->piscina, "?");
+    p->viae_path  = xar_creare(d->piscina, (i32)magnitudo(character*));
+    p->lecta      = xar_creare(d->piscina, (i32)magnitudo(character*));
+    redde p;
+}
+
+/* campos lineae tabulis divisos in seriem (NIHIL terminatam) */
+interior i32
+_campi (
+               Piscina*  piscina,
+                chorda   linea,
+             character** campi,
+                   i32   maximum)
+{
+    i32 n   = ZEPHYRUM;
+    i32 ab  = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k <= linea.mensura && n < maximum; k++)
+    {
+        si (k == linea.mensura || linea.datum[k] == '\t')
+        {
+            campi[n++] = chorda_ut_cstr(chorda_sectio(linea, ab, k),
+                piscina);
+            ab = k + I;
+        }
+    }
+    redde n;
+}
+
+/* 'a:b:c' -> Xar de character* */
+interior vacuum
+_path_dividere (
+                Derivatio* d,
+       constans character* path,
+                      Xar* exitus)
+{
+    constans character* c = path;
+
+    dum (c != NIHIL && *c != '\0')
+    {
+        constans character* f = strchr(c, ':');
+            memoriae_index  n = f != NIHIL ? (memoriae_index)(f - c)
+                                           : strlen(c);
+                 character* t = (character*)piscina_allocare(d->piscina,
+                                    n + I);
+
+        memcpy(t, c, n);
+        t[n]                              = '\0';
+        *(character**)xar_addere(exitus)  = t;
+        c                                 = f != NIHIL ? f + I : NIHIL;
+    }
+}
+
+/* via absoluta normata arbori relativa; NIHIL extra arborem aut ipsa
+ * radix */
+interior constans character*
+_observatam_relativam (
+             Derivatio* d,
+    constans character* via,
+    constans character* cwd)
+{
+    character absoluta[VIA_MAXIMA];
+
+    si (!_absolutam_facere(via, cwd != NIHIL ? cwd : d->radix,
+            absoluta))
+    {
+        redde NIHIL;
+    }
+    redde _relativa(d, absoluta) != NIHIL
+        ? _duplicare(d->piscina, _relativa(d, absoluta)) : NIHIL;
+}
+
+interior vacuum
+_observatum_addere (
+             Derivatio* d,
+               Ambitus* a,
+               Plagula* p,
+    constans character* elementum,
+    constans character* relativa,
+    constans character* forma,
+             character* mandatum)
+{
+    Situs* x;
+      i32  k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(a->situs); k++)
+    {
+        Situs* s = (Situs*)xar_obtinere(a->situs, k);
+
+        si (   _aequat(s->elementum, elementum)
+            && _aequat(s->via, relativa))
+        {
+            redde;   /* unicum per (elementum, via) */
+        }
+    }
+    x = _situm_creare(d, a, p, elementum, NIHIL);
+    si (x == NIHIL)
+    {
+        redde;
+    }
+    x->via        = _duplicare(d->piscina, relativa);
+    x->forma      = forma;
+    x->resolutio  = "plena";
+    x->classis    = _classis_arboris(relativa);
+    x->medium     = "observatum";
+    x->mandatum   = mandatum;
+}
+
+/* argv mandati per ordinem tabulae (logica _tabulam_applicare, super
+ * chordas: bash globos iam expandit, viae relativae ad cwd) */
+interior vacuum
+_argv_interpretari (
+             Derivatio* d,
+               Ambitus* a,
+               Plagula* p,
+             StmlNodus* m,
+             character* titulus,
+                   Xar* argumenta,
+    constans character* cwd)
+{
+    character* munus_omnium  = _ordinis(d, m, "argumenta");
+    character* primum        = _ordinis(d, m, "primum");
+    character* ultimum       = _ordinis(d, m, "ultimum");
+    character* cum_valore    = _ordinis(d, m, "optiones_cum_valore");
+    character* binis = _ordinis(d, m,
+        "optiones_binis_valoribus");
+    character* o_lectio     = _ordinis(d, m, "optio_lectio");
+    character* o_scriptura  = _ordinis(d, m, "optio_scriptura");
+    character* exemplaria   = _ordinis(d, m, "exemplar_optiones");
+    character* recursiones  = _ordinis(d, m, "recursio");
+    character* in_loco_opt  = _ordinis(d, m, "in_loco");
+    character* ignotae      = _ordinis(d, m, "optiones_ignotae");
+    character* purum        = _ordinis(d, m, "purum");
+    character* ignotum      = _ordinis(d, m, "ignotum");
+          Xar* positionalia;
+          b32  sine_exemplari  = FALSUM;
+          b32  recursio        = FALSUM;
+          b32  in_loco         = FALSUM;
+          b32  finis           = FALSUM;
+          i32  n               = xar_numerus(argumenta);
+          i32  k;
+
+    si (_aequat(purum, "verum") || _aequat(ignotum, "verum"))
+    {
+        redde;
+    }
+    positionalia = xar_creare(d->piscina, (i32)magnitudo(character*));
+    per (k = I; k < n; k++)
+    {
+        character* s = *(character**)xar_obtinere(argumenta, k);
+
+        si (!finis && s[ZEPHYRUM] == '-' && s[I] != '\0')
+        {
+            si (strcmp(s, "--") == ZEPHYRUM)
+            {
+                finis = VERUM;
+                perge;
+            }
+            si (_in_indice(ignotae, s))
+            {
+                redde;   /* ignotus utrimque (staticum: ignotum) */
+            }
+            si (_in_indice(exemplaria, s))
+            {
+                sine_exemplari = VERUM;
+            }
+            si (_in_indice(recursiones, s))
+            {
+                recursio = VERUM;
+            }
+            si (_in_indice(in_loco_opt, s))
+            {
+                in_loco = VERUM;
+            }
+            si (_in_indice(binis, s))
+            {
+                k += II;
+            }
+            alioquin si (_in_indice(cum_valore, s) && k + I < n)
+            {
+                character* v = *(character**)xar_obtinere(argumenta,
+                    ++k);
+                constans character* rel = _observatam_relativam(d, v,
+                    cwd);
+
+                si (rel != NIHIL && _in_indice(o_lectio, s))
+                {
+                    _observatum_addere(d, a, p, "lectio", rel, "via",
+                        titulus);
+                }
+                alioquin si (rel != NIHIL && _in_indice(o_scriptura, s))
+                {
+                    _observatum_addere(d, a, p, "scriptura", rel, "via",
+                        titulus);
+                }
+            }
+            perge;
+        }
+        si (   strcmp(s, "-") == ZEPHYRUM
+            || (strchr(s, '=') != NIHIL && strchr(s, '/') == NIHIL))
+        {
+            perge;
+        }
+        *(character**)xar_addere(positionalia) = s;
+    }
+    n = xar_numerus(positionalia);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans character* munus = munus_omnium;
+        constans character* rel;
+        constans character* elementum;
+
+        si (   k == ZEPHYRUM && primum != NIHIL
+            && !(sine_exemplari && _aequat(primum, "exemplar")))
+        {
+            munus = primum;
+        }
+        si (k == n - I && n >= II && ultimum != NIHIL)
+        {
+            munus = ultimum;
+        }
+        si (   munus == NIHIL || _aequat(munus, "nullum")
+            || _aequat(munus, "exemplar"))
+        {
+            perge;
+        }
+        rel = _observatam_relativam(d,
+            *(character**)xar_obtinere(positionalia, k), cwd);
+        si (rel == NIHIL)
+        {
+            perge;
+        }
+        elementum = _aequat(munus, "lectio") ? "lectio"
+            : _aequat(munus, "scriptura") ? "scriptura"
+            : _aequat(munus, "exsecutio") ? "exsecutio"
+            : _aequat(munus, "enumeratio") ? "enumeratio" : "probatio";
+        _observatum_addere(d, a, p, elementum, rel,
+            recursio ? "praefixum" : "via", titulus);
+        si (in_loco && _aequat(elementum, "lectio"))
+        {
+            _observatum_addere(d, a, p, "scriptura", rel, "via",
+                titulus);
+        }
+    }
+}
+
+StmlNodus*
+crusta_effectus_observata (
+               Piscina*  piscina,
+    InternamentumChorda* intern,
+    constans character*  radix,
+    constans character*  scriptum,
+                 chorda  liber,
+             StmlNodus*  mandata,
+                   Xar*  ante_scripta,
+    constans character** causa_out)
+{
+    Derivatio  d;
+      Ambitus* a;
+      Plagula* p;
+          Xar* processus;
+          Xar* exsecutiones;
+    character  absoluta[VIA_MAXIMA];
+          i32  ab = ZEPHYRUM;
+          i32  k;
+
+    si (causa_out != NIHIL)
+    {
+        *causa_out = NIHIL;
+    }
+    d.piscina        = piscina;
+    d.intern         = intern;
+    d.radix          = radix;
+    d.radix_mensura  = (i32)strlen(radix);
+    d.visi           = xar_creare(piscina, (i32)magnitudo(character*));
+    d.ambitus        = xar_creare(piscina, (i32)magnitudo(Ambitus*));
+    d.tabula         = xar_creare(piscina, (i32)magnitudo(Mandatum));
+    a = (Ambitus*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(Ambitus));
+    p = (Plagula*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(Plagula));
+    si (   a == NIHIL || p == NIHIL || d.ambitus == NIHIL
+        || !_absolutam_facere(scriptum, radix, absoluta)
+        || !_tabulam_onerare(&d, mandata))
+    {
+        si (causa_out != NIHIL)
+        {
+            *causa_out = "tabula mandatorum illegibilis aut memoria";
+        }
+        redde NIHIL;
+    }
+    memset(a, ZEPHYRUM, magnitudo(Ambitus));
+    memset(p, ZEPHYRUM, magnitudo(Plagula));
+    p->via = _duplicare(piscina, absoluta);
+    a->radix_via = p->via;
+    a->situs = xar_creare(piscina, (i32)magnitudo(Situs));
+    a->plagulae = xar_creare(piscina, (i32)magnitudo(Plagula*));
+    *(Plagula**)xar_addere(a->plagulae) = p;
+    *(Ambitus**)xar_addere(d.ambitus) = a;
+    processus = xar_creare(piscina, (i32)magnitudo(Processus));
+    exsecutiones = xar_creare(piscina, (i32)magnitudo(Exsecutio));
+
+    per (k = ZEPHYRUM; k <= liber.mensura; k++)
+    {
+            character* campi[V];
+                  i32  n;
+            Processus* pr;
+               chorda  linea;
+
+        si (k < liber.mensura && liber.datum[k] != '\n')
+        {
+            perge;
+        }
+        linea  = chorda_sectio(liber, ab, k);
+        ab     = k + I;
+        n      = _campi(piscina, linea, campi, V);
+        si (n < III)
+        {
+            perge;
+        }
+        pr = _processum_quaerere(&d, processus,
+            (i32)strtol(campi[I], NIHIL, X));
+        si (_aequat(campi[ZEPHYRUM], "P"))
+        {
+            pr->programma = campi[II];
+            pr->viae_path = xar_creare(piscina,
+                (i32)magnitudo(character*));
+            si (n >= IV)
+            {
+                _path_dividere(&d, campi[III], pr->viae_path);
+            }
+        }
+        alioquin si (_aequat(campi[ZEPHYRUM], "D"))
+        {
+            Exsecutio* e = (Exsecutio*)xar_addere(exsecutiones);
+
+            e->pid     = pr->pid;
+            e->vocans  = pr->programma;
+            e->cwd     = campi[II];
+            e->argumenta  = xar_creare(piscina,
+                (i32)magnitudo(character*));
+        }
+        alioquin si (   _aequat(campi[ZEPHYRUM], "A") && n >= IV
+                     && xar_numerus(exsecutiones) > ZEPHYRUM)
+        {
+             Exsecutio* ultima = NIHIL;
+                   i32  j;
+
+            /* ultima exsecutio EIUSDEM pid */
+            per (j = ZEPHYRUM; j < xar_numerus(exsecutiones); j++)
+            {
+                Exsecutio* e = (Exsecutio*)xar_obtinere(exsecutiones,
+                    j);
+
+                si (e->pid == pr->pid)
+                {
+                    ultima = e;
+                }
+            }
+            si (ultima != NIHIL)
+            {
+                *(character**)xar_addere(ultima->argumenta) =
+                    campi[III];
+            }
+        }
+        alioquin si (   _aequat(campi[ZEPHYRUM], "E") && n >= V
+                     && _aequat(pr->programma, "bash"))
+        {
+            constans character* genus = campi[II];
+                     character  normata[VIA_MAXIMA];
+            constans character* rel;
+                     character  directorium[VIA_MAXIMA];
+                           s32  rc = (s32)strtol(campi[IV], NIHIL, X);
+                           i32  j;
+                           b32  per_path = FALSUM;
+
+            si (   campi[III][ZEPHYRUM] != '/'
+                || strlen(campi[III])   >= (memoriae_index)VIA_MAXIMA)
+            {
+                perge;   /* dirfd alius aut via nimis longa */
+            }
+            strcpy(normata, campi[III]);
+            _viam_normare(normata);
+            strcpy(directorium, normata);
+            _directorium_viae(directorium);
+            per (j = ZEPHYRUM; j < xar_numerus(pr->viae_path); j++)
+            {
+                si (strcmp(*(character**)xar_obtinere(pr->viae_path, j),
+                        directorium) == ZEPHYRUM)
+                {
+                    per_path = VERUM;
+                }
+            }
+            rel = _relativa(&d, normata);
+            si (   rel == NIHIL || per_path
+                || _aequat(genus, "SHEBANG")
+                || (rc < ZEPHYRUM && _aequat(genus, "EXECVE")))
+            {
+                perge;
+            }
+            si (_aequat(genus, "LEGERE"))
+            {
+                _observatum_addere(&d, a, p, "lectio", rel, "via",
+                    pr->programma);
+                _nomen_addere(piscina, pr->lecta, rel);
+            }
+            alioquin si (_aequat(genus, "SCRIBERE"))
+            {
+                _observatum_addere(&d, a, p, "scriptura", rel, "via",
+                    pr->programma);
+                si (   ante_scripta != NIHIL
+                    && _in_nominibus(pr->lecta, rel))
+                {
+                    _nomen_addere(piscina, ante_scripta, rel);
+                }
+            }
+            alioquin si (_aequat(genus, "EXECVE"))
+            {
+                _observatum_addere(&d, a, p, "exsecutio", rel, "via",
+                    pr->programma);
+            }
+            alioquin si (_aequat(genus, "OPENDIR"))
+            {
+                _observatum_addere(&d, a, p, "enumeratio", rel, "via",
+                    pr->programma);
+            }
+            alioquin
+            {
+                _observatum_addere(&d, a, p, "probatio", rel, "via",
+                    pr->programma);
+            }
+        }
+    }
+    /* argv mandatorum quos bash exsecutus est (SIP: per tabulam) */
+    per (k = ZEPHYRUM; k < xar_numerus(exsecutiones); k++)
+    {
+        Exsecutio* e = (Exsecutio*)xar_obtinere(exsecutiones, k);
+        character* titulus;
+        StmlNodus* m;
+
+        si (   !_aequat(e->vocans, "bash")
+            || xar_numerus(e->argumenta) == ZEPHYRUM)
+        {
+            perge;
+        }
+        titulus = *(character**)xar_obtinere(e->argumenta, ZEPHYRUM);
+        si (strrchr(titulus, '/') != NIHIL)
+        {
+            titulus = strrchr(titulus, '/') + I;
+        }
+        m = _mandatum_invenire(&d, titulus);
+        si (m != NIHIL)
+        {
+            _argv_interpretari(&d, a, p, m, titulus, e->argumenta,
+                e->cwd);
+        }
+    }
+    redde _emittere(&d, absoluta);
+}
+
+
+/* ==================================================
+ * Comparatio: observata quae summarium staticum non tegit
+ * ================================================== */
+
+interior constans character*
+_attributi (
+             StmlNodus* n,
+    constans character* titulus,
+               Piscina* piscina)
+{
+    chorda* v = stml_attributum_capere(n, titulus);
+
+    redde v == NIHIL ? NIHIL : chorda_ut_cstr(*v, piscina);
+}
+
+/* situs staticus s viam observatam tegit? */
+interior b32
+_staticus_tegit (
+              Piscina* piscina,
+           StmlNodus* s,
+    constans character* elementum_observati,
+    constans character* via_observata)
+{
+      constans character* el;
+      constans character* via;
+      constans character* forma;
+      constans character* resolutio;
+      constans character* exemplar;
+          memoriae_index  n;
+
+    el         = chorda_ut_cstr(*s->titulus, piscina);
+    via        = _attributi(s, "via", piscina);
+    forma      = _attributi(s, "forma", piscina);
+    resolutio  = _attributi(s, "resolutio", piscina);
+    exemplar   = _attributi(s, "exemplar", piscina);
+    si (via == NIHIL || _aequat(resolutio, "nulla"))
+    {
+        redde FALSUM;
+    }
+    /* genera compatibilia */
+    si (   _aequat(elementum_observati, "lectio")
+        && !(_aequat(el, "lectio") || _aequat(el, "fontatio")
+             || _aequat(el, "exsecutio")))
+    {
+        redde FALSUM;
+    }
+    si (   _aequat(elementum_observati, "scriptura")
+        && !_aequat(el, "scriptura"))
+    {
+        redde FALSUM;
+    }
+    si (   _aequat(elementum_observati, "exsecutio")
+        && !(_aequat(el, "exsecutio") || _aequat(el, "fontatio")))
+    {
+        redde FALSUM;
+    }
+    si (   _aequat(elementum_observati, "enumeratio")
+        && !_aequat(el, "enumeratio"))
+    {
+        redde FALSUM;
+    }
+    n = strlen(via);
+    si (_aequat(el, "enumeratio") && exemplar != NIHIL)
+    {
+        character exemplum[VIA_MAXIMA];
+
+        /* directorium ipsum (opendir) aut res globo congruens (stat) */
+        si (   strncmp(via, via_observata, n > ZEPHYRUM ? n - I : n)
+                   == ZEPHYRUM
+            && strlen(via_observata) + I == n)
+        {
+            redde VERUM;
+        }
+        si (n + strlen(exemplar) + I >= (memoriae_index)VIA_MAXIMA)
+        {
+            redde FALSUM;
+        }
+        strcpy(exemplum, strcmp(via, "./") == ZEPHYRUM ? "" : via);
+        strcat(exemplum, exemplar);
+        redde _globus_congruit(exemplum, via_observata);
+    }
+    si (_aequat(forma, "globus"))
+    {
+        redde _globus_congruit(via, via_observata);
+    }
+    si (_aequat(forma, "praefixum"))
+    {
+        redde strncmp(via_observata, via, n) == ZEPHYRUM
+            || (n > ZEPHYRUM && via[n - I] == '/'
+                && strncmp(via_observata, via, n - I) == ZEPHYRUM
+                && via_observata[n - I] == '\0');
+    }
+    redde strcmp(via, via_observata) == ZEPHYRUM
+        || (n > ZEPHYRUM && via[n - I] == '/'
+            && strncmp(via, via_observata, n - I) == ZEPHYRUM
+            && via_observata[n - I] == '\0');
+}
+
+/* situs staticus IRRESOLUTUS generis compatibilis et mandati eiusdem
+ * observatum explicat (clavis ibi iam IGNOTUM est): mandatum
+ * observatum 'bash' = syscallum ipsius bash (redirectio, aedificium);
+ * aliter titulus mandati (argv) */
+interior b32
+_irresolutus_explicat (
+               Piscina* piscina,
+             StmlNodus* s,
+    constans character* elementum_observati,
+    constans character* mandatum_observati)
+{
+    constans character* el = chorda_ut_cstr(*s->titulus, piscina);
+    constans character* resolutio = _attributi(s, "resolutio", piscina);
+    constans character* medium = _attributi(s, "per", piscina);
+    constans character* mandatum = _attributi(s, "mandatum", piscina);
+
+    si (_aequat(resolutio, "plena") || resolutio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!(_aequat(el, elementum_observati)
+          || (_aequat(elementum_observati, "lectio")
+              && (_aequat(el, "fontatio") || _aequat(el, "exsecutio")))
+          || _aequat(elementum_observati, "probatio")))
+    {
+        redde FALSUM;
+    }
+    si (_aequat(mandatum_observati, "bash"))
+    {
+        redde _aequat(medium, "redirectio")
+            || _aequat(medium, "aedificium");
+    }
+    redde _aequat(mandatum, mandatum_observati);
+}
+
+Xar*
+crusta_effectus_non_tecta (
+       Piscina* piscina,
+     StmlNodus* staticum,
+     StmlNodus* observatum,
+           Xar* explicata)
+{
+    Xar* exitus   = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    Xar* statici  = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    Xar* radices  = xar_creare(piscina, (i32)magnitudo(character*));
+    i32  i;
+    i32  j;
+
+    si (exitus == NIHIL || staticum == NIHIL || observatum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; staticum->liberi
+                       && i < xar_numerus(staticum->liberi); i++)
+    {
+                 StmlNodus* pr;
+        constans character* r;
+
+        pr = *(StmlNodus**)xar_obtinere(staticum->liberi, i);
+
+        si (pr->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        r = _attributi(pr, "radix", piscina);
+        si (r != NIHIL)
+        {
+            *(constans character**)xar_addere(radices) = r;
+        }
+        per (j = ZEPHYRUM; pr->liberi && j < xar_numerus(pr->liberi);
+             j++)
+        {
+            StmlNodus* s = *(StmlNodus**)xar_obtinere(pr->liberi, j);
+
+            si (s->genus == STML_NODUS_ELEMENTUM)
+            {
+                *(StmlNodus**)xar_addere(statici) = s;
+            }
+        }
+    }
+    per (i = ZEPHYRUM; observatum->liberi
+                       && i < xar_numerus(observatum->liberi); i++)
+    {
+        StmlNodus* pr = *(StmlNodus**)xar_obtinere(observatum->liberi,
+            i);
+
+        per (j = ZEPHYRUM; pr->liberi && j < xar_numerus(pr->liberi);
+             j++)
+        {
+                     StmlNodus* o = *(StmlNodus**)xar_obtinere(
+                                        pr->liberi, j);
+            constans character* el;
+            constans character* via;
+                           b32  tectum = FALSUM;
+                           i32  k;
+
+            si (o->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            el   = chorda_ut_cstr(*o->titulus, piscina);
+            via  = _attributi(o, "via", piscina);
+            si (via == NIHIL)
+            {
+                perge;
+            }
+            /* scripta ipsa (radices processuum) bash legit */
+            per (k = ZEPHYRUM; k < xar_numerus(radices); k++)
+            {
+                si (strcmp(*(constans character**)xar_obtinere(radices,
+                        k), via) == ZEPHYRUM
+                    && !_aequat(el, "scriptura"))
+                {
+                    tectum = VERUM;
+                }
+            }
+            per (k = ZEPHYRUM; !tectum && k < xar_numerus(statici); k++)
+            {
+                tectum = _staticus_tegit(piscina,
+                    *(StmlNodus**)xar_obtinere(statici, k), el, via);
+            }
+            si (!tectum && explicata != NIHIL)
+            {
+                constans character* md = _attributi(o, "mandatum",
+                    piscina);
+
+                per (k = ZEPHYRUM; k < xar_numerus(statici); k++)
+                {
+                    si (_irresolutus_explicat(piscina,
+                            *(StmlNodus**)xar_obtinere(statici, k), el,
+                            md))
+                    {
+                        *(StmlNodus**)xar_addere(explicata)  = o;
+                        tectum                               = VERUM;
+                        frange;
+                    }
+                }
+            }
+            si (!tectum)
+            {
+                *(StmlNodus**)xar_addere(exitus) = o;
+            }
+        }
+    }
+    redde exitus;
 }

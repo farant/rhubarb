@@ -35,6 +35,8 @@
 #include "piscina.h"
 #include "internamentum.h"
 #include "stml.h"
+#include "chorda.h"
+#include "xar.h"
 
 /* Summarium derivare. radix: via ABSOLUTA arboris (sine '/' finali);
  * scriptum: arbori relativa aut absoluta; mandata: radix tabulae IAM
@@ -51,5 +53,42 @@ crusta_effectus_derivare (
      constans character*  scriptum,
               StmlNodus*  mandata,
      constans character** causa_out);
+
+/* ORACULUM (planum T5): liber interpositionis (interpositio_macos.c)
+ * -> summarium observatum eiusdem dialecti (per="observatum").
+ * Processus soli bash; viae extra radicem et quaesitiones PATH
+ * processus SUI omittuntur; argv mandatorum quos bash exsequitur per
+ * tabulam eandem interpretatur (SIP: lectio intra /bin/cat aliter
+ * invisibilis). ante_scripta (NIHIL licet): Xar de character* - viae
+ * lectae ANTE scripturam in eodem processu (ordo quem analysis
+ * statica non habet; semen slice 2). */
+StmlNodus*
+crusta_effectus_observata (
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+     constans character*  radix,
+     constans character*  scriptum,
+                 chorda   liber,
+              StmlNodus*  mandata,
+                    Xar*  ante_scripta,
+     constans character** causa_out);
+
+/* Situs observati quos summarium staticum NON tegit (Xar de
+ * StmlNodus*; vacuum = omnia tecta; NIHIL = argumentum absens).
+ * Tegit: genus compatibile (lectio <- lectio/fontatio/exsecutio,
+ * exsecutio <- exsecutio/fontatio, probatio <- quodvis) et via
+ * aequalis,
+ * globo congruens, aut praefixo contenta; radices processuum
+ * statici (scripta ipsa) lectiones et probationes tegunt.
+ * explicata (NIHIL licet): observata quae situs staticus IRRESOLUTUS
+ * generis et mandati eiusdem explicat - clavis ibi iam IGNOTUM est,
+ * ergo non errores analysis sed ignota nominata (classes T5: viae ex
+ * ambitu '${X:-d}', ex argumentis functionum). */
+Xar*
+crusta_effectus_non_tecta (
+       Piscina* piscina,
+     StmlNodus* staticum,
+     StmlNodus* observatum,
+           Xar* explicata);
 
 #endif /* CRUSTA_EFFECTUS_H */

@@ -248,7 +248,9 @@ hic_manens constans character* RADIX_SCRIPTI =
     "(cd build && cat rel.txt)\n" /* 25 */
     "cat build/clausurae/*.lst\n" /* 26 */
     "echo x > \"build/clausurae/$n.lst\"\n" /* 27 */
-    "while read -r l; do :; done < <(cat data/p.txt)\n"; /* 28 */
+    "while read -r l; do :; done < <(cat data/p.txt)\n"  /* 28 */
+    "cd lib\n"                                            /* 29 */
+    "cat q.txt\n";                                        /* 30 */
 
 hic_manens constans character* LIB =
     "lib_functio () {\n"
@@ -414,6 +416,10 @@ s32 principale (vacuum)
     CREDO_VERUM (_attributum(s, "causa", "cwd ignotum"));
     s = _situs(situs, "lectio", "build/rel.txt", XXV);
     CREDO_VERUM (_attributum(s, "scripta_in_ambitu", "falsum"));
+    /* 'cd build' (linea 25, in catena) probat 'build' - non
+     * 'build/build': cd argumento suo cwd non mutat */
+    s = _situs(situs, "probatio", "build", XXV);
+    CREDO_VERUM (_attributum(s, "operator", "cd"));
 
     imprimere("\n--- IX. scripta_in_ambitu ---\n");
     s = _situs(situs, "scriptura", "build/clausurae/", XXVII);
@@ -427,6 +433,13 @@ s32 principale (vacuum)
     /* '< <(cat x)': redirectio ipsa nihil legit; cat intus legit */
     CREDO_NON_NIHIL (_situs(situs, "lectio", "data/p.txt", XXVIII));
     CREDO_AEQUALIS_I32 (_numerare(situs, "lectio", XXVIII), I);
+
+    imprimere("\n--- IX c. cd in summo gradu ---\n");
+    /* 'cd lib' summi gradus: probatio 'lib' (non 'lib/lib'); situs
+     * sequens in lib/ */
+    s = _situs(situs, "probatio", "lib", XXIX);
+    CREDO_VERUM (_attributum(s, "operator", "cd"));
+    CREDO_NON_NIHIL (_situs(situs, "lectio", "lib/q.txt", XXX));
 
     imprimere("\n--- X. canon super summarium ---\n");
     {
@@ -504,6 +517,100 @@ s32 principale (vacuum)
             CREDO_MAIOR_I32 (summata, CC);
             CREDO_AEQUALIS_I32 (fracta, ZEPHYRUM);
             CREDO_AEQUALIS_I32 (vitiosa, ZEPHYRUM);
+        }
+    }
+
+    /* XII. oraculum: summaria statica fixorum contra AURAS observatas
+     * (crusta/effectus_oraculum.sh -scribere; lex C14: nihil hic
+     * spawnatur). Observatum omne tegi debet; pinna situs certos
+     * fert, ne aura vacua 'omnia tecta' mentiatur. */
+    imprimere("\n--- XII. oraculum: fixa contra auras ---\n");
+    {
+        constans character* fixa[] = {
+            "ante", "cd", "fontatio", "globus", "mandatum", "probatio",
+            "puer", "redirectio", NIHIL
+        };
+        /* elementum, via quae in aura observata esse debent */
+        constans character* pinnae[] = {
+            "redirectio", "lectio", "data/a.txt",
+            "redirectio", "scriptura", "build/o.txt",
+            "mandatum", "lectio", "data/b.txt",     /* head: argv SIP */
+            "mandatum", "scriptura", "build/s.txt", /* sort -o */
+            "probatio", "probatio", "data/absens.txt",
+            "globus", "enumeratio", "data",
+            "fontatio", "lectio", "lib/m.sh",
+            "puer", "lectio", "data/p.txt",   /* filius: shebang */
+            "cd", "probatio", "lib",
+            NIHIL
+        };
+           character via_fixorum[DXII];
+           character via_tabulae[DXII];
+        StmlResultus tabula;
+                 i32 i;
+
+        sprintf(via_fixorum, "%s/crusta/probationes/fixa/effectus/"
+            "oraculum", r);
+        sprintf(via_tabulae, "%s/crusta/effectus_mandata.stml", r);
+        tabula = stml_legere(filum_legere_totum(via_tabulae, piscina),
+            piscina, intern);
+        CREDO_VERUM (tabula.successus);
+        per (i = ZEPHYRUM; fixa[i] != NIHIL; i++)
+        {
+               character  scriptum[LXIV];
+               character  via_aurae[DXII];
+            StmlResultus  aura;
+               StmlNodus* staticum;
+                     Xar* non_tecta;
+                     Xar* explicata;
+                     Xar* observati;
+                     i32  k;
+
+            sprintf(scriptum, "%s.sh", fixa[i]);
+            sprintf(via_aurae, "%s/crusta/probationes/fixa/effectus/"
+                "oraculum_aura/%s.stml", r, fixa[i]);
+            aura = stml_legere(filum_legere_totum(via_aurae, piscina),
+                piscina, intern);
+            CREDO_VERUM (aura.successus);
+            staticum = crusta_effectus_derivare(piscina, intern,
+                via_fixorum, scriptum, tabula.elementum_radix, &causa);
+            CREDO_NON_NIHIL (staticum);
+            si (!aura.successus || staticum == NIHIL)
+            {
+                perge;
+            }
+            explicata = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+            non_tecta = crusta_effectus_non_tecta(piscina, staticum,
+                aura.elementum_radix, explicata);
+            /* fixa omnia resolvuntur: nec explicata per ignota */
+            CREDO_AEQUALIS_I32 (xar_numerus(explicata), ZEPHYRUM);
+            observati = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+            _situs_colligere(aura.elementum_radix, observati, NIHIL);
+            imprimere("  %s: observata %u, non tecta %u\n", fixa[i],
+                (insignatus integer)xar_numerus(observati),
+                non_tecta ? (insignatus integer)xar_numerus(non_tecta)
+                          : 0U);
+            si (non_tecta != NIHIL)
+            {
+                _imprimere_situs(non_tecta);
+            }
+            CREDO_NON_NIHIL (non_tecta);
+            CREDO_AEQUALIS_I32 (non_tecta ? xar_numerus(non_tecta) : I,
+                ZEPHYRUM);
+            per (k = ZEPHYRUM; pinnae[k] != NIHIL; k += III)
+            {
+                si (strcmp(pinnae[k], fixa[i]) == ZEPHYRUM)
+                {
+                    StmlNodus* x = _situs(observati, pinnae[k + I],
+                        pinnae[k + II], ZEPHYRUM);
+
+                    si (x == NIHIL)
+                    {
+                        imprimere("    pinna absens: %s %s\n",
+                            pinnae[k + I], pinnae[k + II]);
+                    }
+                    CREDO_NON_NIHIL (x);
+                }
+            }
         }
     }
 

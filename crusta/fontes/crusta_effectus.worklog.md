@@ -168,3 +168,60 @@ source order).
   commits), checked by judging with the old code first.
 - `textus` attribute added to the dialect (canon, omnia.stml) for
   partial sites.
+
+## 2026-10-05 - T5: the oracle
+
+- Fence (A2 decided; Fran chose (a) when examen refused): the
+  interposer is house C89 in Latin, `crusta/instrumenta/
+  interpositio_macos.c` (house `_macos` suffix). examen's POSIX lexicon
+  learned execve, access, faccessat, fstatat, openat, AT_FDCWD (own
+  commit ef274065, nine gates; auspex certifies AT_FDCWD == -2 against
+  the SDK). The `__attribute__((used, section("__DATA,__interpose")))`
+  table is excused in place (`tolera EXTENSIO_COMPILATORIS`).
+- Interposer log lines: P (pid, progname, PATH), E (event, absolute
+  path at call time), D (cwd at exec), A (argv), plus SHEBANG events.
+  Two mistakes found on first runs: I wrote it in plain C keywords
+  (converted to latina.h), and my sanitizing appender turned the TAB/NL
+  separators into spaces - the whole log was one line (`wc -l` 0).
+- Library: `crusta_effectus_observata` (log -> same dialect,
+  `per="observatum"`; bash pids only; PATH lookups by the process's OWN
+  PATH; argv of commands bash ran interpreted by the SAME table;
+  read-before-write per pid -> ante_scripta) and
+  `crusta_effectus_non_tecta` (coverage by kind + path/glob/prefix;
+  process roots cover reads of the scripts themselves).
+- **Two categories, on purpose.** On toml's live chain 9 effects had no
+  resolved static site, but every one had an UNRESOLVED static site of
+  the same kind and command (`${FABRICA_SCRIPTURA:-.}` dirs in
+  corpus_indicem.sh / tomllib_aurum.sh; sera.sh's `$1`; cursor_communis
+  `clang -o "$2"`). The key is already IGNOTUM there, so these are
+  "ignota explicata" (named, counted), not analyzer misses. Exit 1 only
+  for "non tecta". Toml chain: non tecta 0, explicata 9.
+- Found by the oracle: (1) top-level `cd lib` resolved its own argument
+  against itself (`lib/lib`) - a cd applies only if it ENDS before the
+  site; case first (lines 29-30), then fixed. (2) the argv interpreter
+  ignored the table's `optiones_ignotae` (`perl -e 'print'` became an
+  exsecutio of "print ..."); fixture line first, then fixed. (3) `cd W`
+  is now a `probatio` (operator `cd`): bash stats W.
+- Gate (C14, nothing spawned): probatio_crusta_effectus XII - 8
+  fixtures (`crusta/probationes/fixa/effectus/oraculum/`) static vs
+  committed goldens (`oraculum_aura/`), non tecta 0 AND explicata 0, plus
+  pins (data/p.txt proves the shebang redirect; data/b.txt via `head`
+  argv proves the SIP path). Regeneration is deterministic (goldens
+  byte-identical after a re-run). Plants: shebang redirect disabled ->
+  puer golden 3 sites, pin red; static `<` read never matched (a plant
+  that COMPILES - `FALSUM &&` did not) -> XII names data/a.txt and
+  data/b.txt.
+- Table check against Homebrew GNU coreutils (Review Focus 3): rows
+  VERIFIED by the commands' own observed effects: cat, head, tail, wc,
+  sort (-o), touch, ls, cp (read side). UNVERIFIED (their effects go
+  through calls the interposer does not see: mkdir(), unlinkat,
+  renameat, symlinkat, and Darwin symbol variants such as
+  open$NOCANCEL used by stdio): cut, paste, comm, cmp, uniq, tee, mv,
+  ln, mkdir, rm, readlink, stat, tr. The interposer sees nine calls by
+  their plain names - enough for bash itself (the fixtures prove it),
+  not a full syscall trace.
+- `-tabula` option: fixture trees have no command table; the driver
+  passes the repo's.
+- Coverage: `crusta/instrumenta/interpositio_macos.c` is INTECTA by
+  design (a by-hand oracle; C14: gates never spawn it) - its goldens are
+  what the gate checks. `effectus.c` gains coverage in T7.

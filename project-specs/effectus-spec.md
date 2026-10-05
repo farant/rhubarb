@@ -530,6 +530,12 @@ The table `crusta/effectus_mandata.stml` holds all 51 externals with
 ≥ 5 sites; option semantics checked against the macOS man pages (BSD
 `sed -i` takes an extension word; `date -r` takes seconds).
 
+**T5 oracle (2026-10-05).** Fixtures 8/8 covered (non tecta 0,
+explicata 0), goldens deterministic. Toml chain live
+(`TOML_PROBATIONES_EFFUSIO=1 ./crusta/effectus_oraculum.sh -domus
+toml/compile_probationes.sh registrum`): non tecta 0, ignota explicata
+9, ante scripta 0 (the vexilla stamp was not rewritten that run).
+
 ## XIII. Plan-time corrections (v2, 2026-10-05)
 
 Found while writing `effectus-plan.md`, from reading
@@ -577,3 +583,15 @@ Found while writing `effectus-plan.md`, from reading
    the old cwd rule looked only at the command's direct parent (the
    pipe) and resolved against the root ("absens: x"); the summary
    climbs to the `&&` chain and says cwd unknown. Both IRRESOLUTUM.
+6. **The oracle as built** (T5). File `crusta/instrumenta/
+   interpositio_macos.c` (house platform suffix), not `interpositio.c`.
+   Comparison has TWO outcomes, not one: "non tecta" (no static site
+   accounts for it - an analyzer defect, exit 1) and "ignota explicata"
+   (an unresolved static site of the same kind and command exists - the
+   key is IGNOTUM there already; named and counted). §X's "every
+   observed effect covered" reads: non tecta = 0 on toml's chain
+   (explicata 9: env-default dirs and function arguments - T6 excuses
+   or slice 2). `cd W` is a `probatio` (operator `cd`). The interposer
+   sees nine calls by plain name; command internals that use mkdir(),
+   *at variants or Darwin `$NOCANCEL` symbols stay invisible - table
+   rows for those commands are unverified (worklog lists them).

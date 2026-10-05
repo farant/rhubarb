@@ -801,6 +801,7 @@
   <vocabulum lemma="faccessat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/unistd.h: access relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
   <vocabulum lemma="fstatat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/stat.h: stat relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
   <vocabulum lemma="openat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX fcntl.h: open relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="getprogname" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BSD/macOS stdlib: nomen programmatis praesentis; crusta/instrumenta/interpositio_macos.c (oraculum effectuum, 2026-10-05)"/>
   <vocabulum lemma="fdcwd" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AT_FDCWD fcntl.h (Darwin -2): fossa directorii operis praesentis; systema_posix.h 2026-10-05, auspex_posix certificat"/>
   <vocabulum lemma="dlclose" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam claudere"/>
   <vocabulum lemma="dlerror" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: nuntius erroris ultimi"/>
