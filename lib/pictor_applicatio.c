@@ -173,8 +173,10 @@ pictor_applicatio_aedificare (
     app->actiones          = actio_registrum_creare(piscina, intern);
     app->actiones_ctx.doc  = app->doc;
     pictor_actiones_registrare(app->actiones, &app->actiones_ctx);
-    app->figurae          = figura_registrum_creare(piscina);
-    app->figurae_ctx.doc  = app->doc;
+    app->figurae = figura_registrum_creare(piscina);
+    app->figurae_ctx.doc = app->doc;
+    app->figurae_ctx.cellula_latitudo = CELLULA_LATITUDO;
+    app->figurae_ctx.cellula_altitudo = CELLULA_ALTITUDO;
     pictor_figurae_registrare(app->figurae, ZEPHYRUM,
         &app->figurae_ctx);
     app->compositio.fenestra_latitudo  = latitudo;

@@ -299,6 +299,15 @@ principale (vacuum)
         "salve munde"));
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
         "NORMALIS"));
+    /* margo in cellulis marginis, folium liberum (Franus: margo in
+     * columna prima folii scribendo delebatur) */
+    CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, I, II).signum,
+        (i32)' ');
+    CREDO_VERUM (tessera_cellulam_legere(opus, ZEPHYRUM, II).signum
+        != (i32)' ');
+    CREDO_VERUM (tessera_cellulam_legere(opus, ZEPHYRUM,
+        ZEPHYRUM).signum
+        != (i32)' ');
     /* linea status in linea ULTIMA superficiei */
     CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
         LINEAE - I).signum, (i32)'N');

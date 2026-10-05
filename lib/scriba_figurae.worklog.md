@@ -40,3 +40,28 @@ mode, inverse character, selection, status colours), scrolling
 including both clamps. Plants: page not offset; cursor colour
 ignoring mode (after the fix); no inverse character; no selection; no
 upper clamp; status colour fixed - all caught.
+
+## 2026-10-05 — the frame belongs in the margin cells (Fran's S3 look)
+
+Fran: "the border is also part of the editable buffer so in the
+terminal you can type over the border and it disappears". Cell dump of
+the terminal frame: row 0 (margin) plain desk; the box-drawing frame in
+the sheet's FIRST column and row, under the text. Cause: tessellatio
+maps a rectangle to cells by rounding each edge to the NEAREST cell
+boundary and draws an unfilled rectangle on the inner ring of that box;
+a frame 1 px outside the paper rounds onto the paper's own edge cells.
+
+Fran chose the frame in the margin cells (not insetting the editable
+area, which would change the document to 66×54): the frame rectangle is
+now one full cell out, `(-cw, -ch, w + 2cw, h + 2ch)`. Window: the 1-px
+line sits ~5 px out from the paper (a mat of desk between). pictor had
+the same cause (its frame covered the drawing's edge cells in the
+terminal): `PictorFigurae` gained the cell size (0 = the old 1 px),
+set by `pictor_applicatio`; its golden `pictor_prima.png` regenerated -
+the difference image showed only the old frame lines gone and the new
+right line one cell out - inspected, promoted.
+
+Pinned in the terminal replay (probatio_ludus_tessera_scriba): the
+sheet's first column is a space, the margin cells hold frame
+characters; the old placement fails exactly there. The S2 pixel test
+moved the frame check to x = 0 and asserts desk at the old x = 5.

@@ -177,8 +177,12 @@ s32 principale (vacuum)
                        color(COLOR_SUPERFICIES));
     CREDO_AEQUALIS_I32(in_cellula(t, FOLIUM_X(XII), FOLIUM_Y(IV),
         color(COLOR_BACKGROUND)), XLVIII);                 /* charta */
+    /* margo in cellula marginis (x = 0), non in charta */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, ZEPHYRUM,
+        XX),
+                       color(COLOR_BORDER));
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, V, XX),
-                       color(COLOR_BORDER));          /* margo */
+                       color(COLOR_SUPERFICIES));          /* margo */
     CREDO_VERUM(in_cellula(t, FOLIUM_X(ZEPHYRUM), FOLIUM_Y(ZEPHYRUM),
         color(COLOR_TEXT)) > ZEPHYRUM);                   /* 's' */
     /* cursor in cellula vacua: plena colore cursoris */

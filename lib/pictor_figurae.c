@@ -58,15 +58,24 @@ figura_tabulae (
     f.altitudo  = c->fines.altitudo;
     mandata_imago(m, pictor_documentum_sigillum_hex(pf->doc,
         m->piscina), f);
-    /* margo paginae (013): linea I pixeli EXTRA documentum - pagina in
-     * mensa (prospectus) videtur; in terminali runae delineandi */
+    /* margo paginae (013): in cellulis MARGINIS (cellula tota extra
+     * documentum) - tessellatio rectangulum ad oras cellularum
+     * proximas rotundat et marginem in anulo interiore pingit: margo I
+     * pixeli extra documentum in cellulas documenti cadebat (scriba,
+     * Franus 2026-10-05). Sine cellula (0): I pixelum, ut olim. */
     {
         Fines margo;
+          s32 mx;
+          s32 my;
 
-        margo.x         = -I;
-        margo.y         = -I;
-        margo.latitudo  = f.latitudo + II;
-        margo.altitudo  = f.altitudo + II;
+        mx = pf->cellula_latitudo > ZEPHYRUM ? (s32)pf->cellula_latitudo
+                                             : I;
+        my = pf->cellula_altitudo > ZEPHYRUM ? (s32)pf->cellula_altitudo
+                                             : I;
+        margo.x         = -mx;
+        margo.y         = -my;
+        margo.latitudo  = f.latitudo + II * mx;
+        margo.altitudo  = f.altitudo + II * my;
         mandata_rectangulum(m, margo, color_thematis(COLOR_BORDER),
                             FALSUM);
     }

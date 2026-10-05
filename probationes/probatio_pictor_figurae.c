@@ -106,8 +106,10 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(arbor);
 
     imprimere("\n--- Gradus VI: figurae -> mandata ---\n");
-    pf.doc  = doc;
-    reg     = figura_registrum_creare(piscina);
+    pf.doc               = doc;
+    pf.cellula_latitudo  = VI;
+    pf.cellula_altitudo  = VIII;
+    reg                  = figura_registrum_creare(piscina);
     pictor_figurae_registrare(reg, ZEPHYRUM, &pf);
     m = mandata_creare(piscina, intern);
     pingere(arbor, reg, ZEPHYRUM, m);
@@ -163,14 +165,16 @@ s32 principale (vacuum)
                        albus);
     /* extra documentum (x=40): MENSA prospectus (013: superficies
      * circa paginam - prospectus figuram suam habet) */
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XL, X),
-        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
-    /* margo paginae: linea I pixeli EXTRA documentum (schirmo
-     * x -6..35, y 2..33): dextra x=35, superior y=2 */
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XXXV, X),
+        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
+    /* margo paginae: cellula TOTA extra documentum (VI x VIII; schirmo
+     * documentum x -5..34, y 3..32 -> margo x -11..40, y -5..40):
+     * dextra x=40 videtur; ceterae extra prospectum (XL alto). Ubi
+     * margo vetus erat (y=33, I pixelum infra) nunc mensa */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XL, X),
         color_ad_pixelum(thema_color(COLOR_BORDER)));
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, II),
-        color_ad_pixelum(thema_color(COLOR_BORDER)));
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XXXIII),
+        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
     captura = imago_ex_tabula(t);
     sf = specimen_iudicare(&captura, "pictor_prima",
         specimen_regula_solita("probationes/pictor/specimina"),

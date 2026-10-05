@@ -104,8 +104,14 @@ scriba_figura_folii (
     ch = c->fines.altitudo / (s32)t->altitudo;
     mandata_rectangulum(m, fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
         c->fines.altitudo), color_thematis(COLOR_BACKGROUND), VERUM);
-    mandata_rectangulum(m, fines(-I, -I, c->fines.latitudo + II,
-        c->fines.altitudo + II), color_thematis(COLOR_BORDER), FALSUM);
+    /* margo in cellulis MARGINIS (cellula tota extra folium):
+     * tessellatio rectangulum ad oras cellularum PROXIMAS rotundat et
+     * marginem in anulo interiore pingit - margo I pixeli extra
+     * chartam in cellulas folii cadebat (Franus: scribendo
+     * delebatur) */
+    mandata_rectangulum(m, fines(-cw, -ch,
+        c->fines.latitudo + II * cw, c->fines.altitudo + II * ch),
+        color_thematis(COLOR_BORDER), FALSUM);
 
     /* selectio (visualis): lineae inter ancoram et cursorem */
     sel_a = -I;

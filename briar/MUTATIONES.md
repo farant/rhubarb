@@ -195,6 +195,11 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus (mores): margo paginae (scriba, pictor) in cellulis
+  MARGINIS - cellula tota extra paginam, non I pixelum (tessellatio
+  margo I pixeli in cellulas paginae rotundabat). `PictorFigurae`
+  `cellula_latitudo/_altitudo` (nova; 0 = I pixelum ut olim).
+
 - corpus: `scriba_applicatio` nova (scriba-plan S3) - compositio
   scribae communis (volumen, documentum, canones, insulae, registra,
   dispensator, gestus) quam principalia fenestrae et terminalis vocant

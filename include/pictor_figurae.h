@@ -19,6 +19,9 @@
 
 nomen structura {
     PictorDocumentum* doc;
+                 i32  cellula_latitudo;  /* margo cellula extra paginam;
+                                          * 0 = I pixelum (olim) */
+                 i32 cellula_altitudo;
 } PictorFigurae;
 
 vacuum
