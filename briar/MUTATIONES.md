@@ -195,6 +195,12 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: `scriba_documentum` nova - folium textus (TabulaCharacterum)
+  per historia: actum `<mutatio linea deletae><linea indentatio
+  textus/>...</mutatio>` = lineae substitutae (effectus, non claves);
+  `scriba_mutatio_computare/_applicare` purae; `_committere` folium
+  laboris in caudam; revocare/reficere/verificare.
+
 - corpus (mores): `ludus_fenestra_currere` otiosa EXSPECTAT
   (`fenestra_expectare_eventus`, mora `ludus_fenestra_mora` nova: 0
   ante quadrum primum, deinde quies dispensatoris) - olim perscrutabatur

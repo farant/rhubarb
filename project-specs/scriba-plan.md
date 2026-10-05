@@ -137,6 +137,13 @@ apply round-trips on hand vectors (one char, a line insert, a line
 delete, the last line, an empty diff = no act); undo/redo through the
 engine. Plants: off-by-one range end; indentation not carried.
 
+S0 as built: `include/scriba_documentum.h`, `lib/scriba_documentum.c`.
+The diff is generic (trim trailing BLANK lines, common prefix/suffix,
+splice + pad), so vim's full-sheet behaviour does not matter to it.
+BLANK = all ' ' + indentation -1 (`tabula_initiare` fills spaces - its
+header says '\0'); '\0' is content. Lines live in an attribute
+(`textus`, escapes `\\ \0 \t \1 \q \xHH`). 77 asserts; four plants.
+
 **S1 — state and actions.** The ephemeral canon: cursor line/column,
 mode, visual selection, pending key, the `fd` flag, the clipboard
 (yanked lines). The key action rebuilds `VimStatus` from state, runs

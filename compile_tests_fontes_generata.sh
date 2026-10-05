@@ -156,6 +156,7 @@ declare -a SOURCE_FILES=(
     "lib/runae_tabulae.c"
     "lib/sanctorale.c"
     "lib/schirmata.c"
+    "lib/scriba_documentum.c"
     "lib/scrinium.c"
     "lib/sectio.c"
     "lib/selectio.c"

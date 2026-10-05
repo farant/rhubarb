@@ -1066,3 +1066,18 @@ compiling, so plant at the first statement.
 Found: a lone assignment `x  = I;` (cluster of one) is governed by no
 rule — R9 is silent below two members and R10 excludes `=`. Minor,
 noted.
+
+## 2026-10-05 — R10 false positive after a function-like macro call
+
+Found writing scriba_documentum.c: a SOURCE-level binary operator right
+after a function-like macro invocation is reported with a huge gap -
+`si (tabula_cellula(t, l, ZEPHYRUM) != 'a')` → "spatium unicum ante
+operatorem binarium (17 pro 1)", while `si (x != ' ')` is clean.
+Minimal repro: any lib/*.c with that line (tabula_cellula is
+`((tabula)->cellulae[(linea) * (tabula)->latitudo + (columna)])`). The
+same family as "macro-expanded extents lie" (2. above): the operator
+is source-level (3.'s fix lets it be judged), but the gap is measured
+from the LHS's EXPANDED extent. `-scribere` leaves the line alone
+(tolerant), so it is a standing false divergence, not damage. Not
+fixed (found mid-task); the fix is to measure the gap from the
+invocation's closing paren when the LHS radix is a macro site.
