@@ -195,6 +195,11 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus (mores): `ludus_fenestra_currere` otiosa EXSPECTAT
+  (`fenestra_expectare_eventus`, mora `ludus_fenestra_mora` nova: 0
+  ante quadrum primum, deinde quies dispensatoris) - olim perscrutabatur
+  sine mora (CPU C%); eventus statim excitat.
+
 - corpus (mores): tessellatio ORDINEM PICTORIS servat - rectangulum,
   textus, linea ANTE imaginem posita sub ea manet (tabula `operta`: per
   cellulam index imaginis ultimae tegentis). Olim stratum pixelorum

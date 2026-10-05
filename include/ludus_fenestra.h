@@ -76,8 +76,17 @@ ludus_quadrum (
     LudusFenestra* lf,
               s64  nunc);
 
-/* ansa vera: perscrutari, tractare, quadrum, praesentare; finis in
- * EVENTUS_CLAUDERE aut post quadra_maxima (> 0). Mensurae ad stdout. */
+/* mora ante quadrum proximum: ZEPHYRUM ante primum (quadrum
+ * statim), deinde quies dispensatoris. fenestra_expectare_eventus
+ * eventu adveniente excitatur, ergo tractus non tardatur; fenestra
+ * otiosa ~0% CPU (olim perscrutari sine mora: C%). */
+Mora
+ludus_fenestra_mora (
+    constans LudusFenestra* lf);
+
+/* ansa vera: exspectare (ludus_fenestra_mora), tractare, quadrum,
+ * praesentare; finis in EVENTUS_CLAUDERE aut post quadra_maxima
+ * (> 0). Mensurae ad stdout. */
 s32
 ludus_fenestra_currere (
     LudusFenestra* lf,

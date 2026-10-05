@@ -147,6 +147,17 @@ ludus_quadrum (
     }
 }
 
+Mora
+ludus_fenestra_mora (
+    constans LudusFenestra* lf)
+{
+    si (!lf || lf->mensurae.quadra == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    redde (Mora)lf->d->quies_ms;
+}
+
 s32
 ludus_fenestra_currere (
     LudusFenestra* lf,
@@ -164,7 +175,7 @@ ludus_fenestra_currere (
     claudendum = FALSUM;
     dum (!claudendum && !fenestra_debet_claudere(fenestra))
     {
-        fenestra_perscrutari_eventus(fenestra);
+        fenestra_expectare_eventus(fenestra, ludus_fenestra_mora(lf));
         nunc = fenestra_tempus_ms();
         dum (fenestra_obtinere_eventus(fenestra, &e))
         {

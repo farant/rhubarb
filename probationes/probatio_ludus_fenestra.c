@@ -57,10 +57,16 @@ s32 principale (vacuum)
                                t);
     CREDO_NON_NIHIL(lf);
 
+    imprimere("\n--- Mora: nulla ante quadrum primum ---\n");
+    CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), ZEPHYRUM);
+
     imprimere("\n--- Quadrum: pulsus, pingere, delineare ---\n");
     n0 = toy.compositiones;
     ludus_quadrum(lf, M);
     CREDO_AEQUALIS_I32(lf->mensurae.quadra, I);
+    /* post quadrum primum: quies dispensatoris (CCC) - fenestra
+     * otiosa exspectat, non perscrutatur in ansa */
+    CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), CCC);
     /* 013 B1: magnitudo initialis nuntiata (tabula CC x C) */
     CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
         "superficies_latitudo"));
