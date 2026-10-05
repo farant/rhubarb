@@ -72,7 +72,8 @@ status_effundere (
     chorda_aedificator_appendere_character(a, '\n');
     linea_numeri(a, "  cursor", pictor_documentum_cursor(doc));
     linea_numeri(a, "  finis", pictor_documentum_finis(doc));
-    linea_numeri(a, "  vivi", (s64)doc->numerus_vivorum);
+    linea_numeri(a, "  vivi",
+        (s64)pictor_documentum_numerus_vivorum(doc));
     chorda_aedificator_appendere_literis(a, "  sigillum ");
     chorda_aedificator_appendere_chorda(a,
         pictor_documentum_sigillum_hex(doc, p));

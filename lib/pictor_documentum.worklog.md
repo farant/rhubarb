@@ -89,3 +89,30 @@ only the golden caught them (line 40: the tag; line 25: the sigillum
 after undo-past-a-branch, rebuilt from dead checkpoint/7). The second
 is the subtle rule H1 must keep: a checkpoint inside a span a branch
 abandoned is never a base.
+
+## 2026-10-05 — onto historia (scriba-plan H2)
+
+pictor_documentum is now a client of `historia`: it keeps the pixel
+half (the RGBA buffer, white `vacare`, `ictum_applicare`, the
+`documentum` manifest) and gives historia a `HistoriaProiectio` whose
+memory is `tabula->pixela`, genus "ictus", origin "pictor:checkpoint".
+The API is unchanged except that `cursor`, `finis`, `numerus_vivorum`
+and `sigillum` left the struct (they live in `doc->historia`); the one
+field tests read directly gained an accessor,
+`pictor_documentum_numerus_vivorum` (seven test sites). 662 → 388
+lines.
+
+**The H0 golden came out byte-identical** on the first run, and the two
+H0 plants, re-aimed at their new homes (the tag string in this file;
+dead-checkpoint admission in historia.c), are caught at the same golden
+lines (40 and 25). The ludus_tessera runner's hand list needed
+`historia` (0/5 → 5/5: one missing lib, as B3 with dispositio).
+
+**Side finding (pre-existing, not H2):** `AEDIFICARE_SOLUM=1
+./apps/pictor/pictor.sh` does NOT build-only - unlike
+`pictor_terminalis.sh`, pictor.sh has no such switch and exec'd the
+window app (my mistake to assume; it opened the gitignored
+`pictor.volumen` read-only in effect - 29 acts written by the OLD code
+opened and rendered by the new one; WAL empty; killed). Its 100% CPU
+while idle is `ludus_fenestra_currere`: poll → frame → present with no
+wait (since ludus P3), unlike the terminal glue's `quies_ms`.

@@ -110,6 +110,12 @@ scribbles; worklog). 12 sections with a call-counting toy; four plants.
 suites green (documentum, actiones, figurae, replay). briar MUTATIONES
 (new corpus library) in THIS commit.
 
+H2 as built: pictor_documentum keeps the pixel half (662 → 388
+lines); the struct lost cursor/finis/numerus_vivorum/sigillum
+(accessor `pictor_documentum_numerus_vivorum`); H0 golden byte-identical
+first run; H0's plants re-aimed and caught at the same lines; the
+ludus_tessera hand list gained `historia`. **Track H done.**
+
 ## IV. Track S — scriba
 
 **S0 — the text document.** `scriba_documentum` over the engine: the

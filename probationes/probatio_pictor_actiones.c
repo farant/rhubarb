@@ -152,7 +152,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(ictus, I);
     }
         CREDO_VERUM(pictor_documentum_cursor(doc) > ZEPHYRUM);
-    CREDO_AEQUALIS_I32(doc->numerus_vivorum, I);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), I);
     /* motus purgatus, captura soluta, nihil sordidum */
     CREDO_AEQUALIS_I32(xar_numerus(dispensator_motus(d)->ictus_pendens),
                        ZEPHYRUM);
@@ -181,7 +181,7 @@ s32 principale (vacuum)
     imprimere("\n--- Escape medio ictu: nihil paritur ---\n");
     /* premere in tabula = ictus puncti unius */
     manus_ludus_premere_ad(m, XL, XL);
-        CREDO_AEQUALIS_I32(doc->numerus_vivorum, II);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
     {
         Eventus e;
         memset(&e, ZEPHYRUM, magnitudo(Eventus));
@@ -203,7 +203,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(xar_numerus(dispensator_motus(d)->ictus_pendens),
                        ZEPHYRUM);
     /* cursor immotus */
-        CREDO_AEQUALIS_I32(doc->numerus_vivorum, II);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
 
     imprimere("\n--- 'p' instrumentum eligit (dominus = actio) ---\n");
     /* instrumentum aliud sub domino suo, deinde 'p' per manum */

@@ -189,6 +189,12 @@ Leges chartae:
   verificare; proiectio clientis per `HistoriaProiectio` (memoria
   fixae mensurae + vacare + applicare).
 
+- corpus (FRANGIT): `PictorDocumentum` per `historia` (scriba-plan
+  H2): campi `cursor`, `finis`, `numerus_vivorum`, `sigillum` deleti
+  (in `doc->historia` vivunt) - per `pictor_documentum_cursor/_finis`
+  et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
+  octetis eisdem leguntur et scribuntur.
+
 - corpus (mores): tessellatio ORDINEM PICTORIS servat - rectangulum,
   textus, linea ANTE imaginem posita sub ea manet (tabula `operta`: per
   cellulam index imaginis ultimae tegentis). Olim stratum pixelorum

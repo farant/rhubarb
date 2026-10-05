@@ -107,6 +107,8 @@ declare -a RADIX_FONTES=(
     "pictor_actiones"
     "pictor_componentia"
     "pictor_documentum"
+    # scriba H2: cauda documenti per historia
+    "historia"
     "pictor_figurae"
     # B3: pictor_componere disponit per dispositio
     "dispositio"

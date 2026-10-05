@@ -1,4 +1,5 @@
-/* pictor_documentum.c - acta -> proiectio */
+/* pictor_documentum.c - pars pictoris documenti (pixela, ictus);
+ * cauda per historia */
 
 #include "pictor_documentum.h"
 #include "delineare_mandata.h"
@@ -21,24 +22,6 @@ mensura_pixelorum (
 {
     redde (memoriae_index)doc->latitudo * (memoriae_index)doc->altitudo
          * magnitudo(i32);
-}
-
-/* nullum chorda_ex_s64 in domo: per f64 sine decimalibus (exactum
- * infra 2^53), ut eventus_stml tempus scribit */
-interior chorda
-seq_chorda (
-        s64  seq,
-    Piscina* piscina)
-{
-    redde chorda_ex_f64((f64)seq, ZEPHYRUM, piscina);
-}
-
-interior vacuum
-sigillum_renovare (
-    PictorDocumentum* doc)
-{
-    doc->sigillum = sigillum_computare(doc->tabula->pixela,
-                                       mensura_pixelorum(doc));
 }
 
 interior s32
@@ -148,216 +131,34 @@ actum_applicare (
     /* ramus: nihil pingit; cetera v1 ignorata (worklog) */
 }
 
-/* acta viva usque ad 'ad' (inclusive), rami honorati: reddit Xar de
- * VolumenActum ordine seq, mortuis exclusis */
-/* acta viva usque ad 'ad' (inclusive): ICTUS soli (volumen sua acta
- * interserit - volumen-creatum, plagula-condita - quae hic nihil
- * sunt), rami honorati: reddit Xar de VolumenActum ordine seq */
-interior Xar*
-acta_viva (
-    PictorDocumentum* doc,
-                 s64  post,
-                 s64  ad)
-{
-             Xar* omnia;
-             Xar* viva;
-    VolumenActum* a;
-    VolumenActum* sedes;
-             i32  i;
-             i32  n;
-             i32  k;
-             s64  ab;
-    StmlResultus  res;
-
-    omnia  = volumen_acta_legere(doc->volumen, post, doc->piscina);
-    viva   = xar_creare(doc->piscina, (i32)magnitudo(VolumenActum));
-    n      = xar_numerus(omnia);
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        a = (VolumenActum*)xar_obtinere(omnia, i);
-        si (a->seq > ad)
-        {
-            frange;
-        }
-        si (chorda_aequalis_literis(a->genus, "ramus"))
-        {
-            res = stml_legere_ex_literis(chorda_ut_cstr(a->datum,
-                doc->piscina), doc->piscina, doc->intern);
-            ab = res.successus
-                ? (s64)attributum_s32(res.elementum_radix, "ab",
-                ZEPHYRUM)
-                : ZEPHYRUM;
-            /* tollere viva cum seq > ab */
-            k = xar_numerus(viva);
-            dum (   k > ZEPHYRUM
-                 && ((VolumenActum*)xar_obtinere(viva, k - I))->seq
-                      > ab)
-            {
-                k--;
-            }
-            xar_truncare(viva, k);
-            perge;
-        }
-        si (!chorda_aequalis_literis(a->genus, "ictus"))
-        {
-            perge;
-        }
-        sedes   = (VolumenActum*)xar_addere(viva);
-        *sedes  = *a;
-    }
-    redde viva;
-}
-
-/* proiectio ad seq 'ad': checkpoint proximus <= ad, deinde acta viva
- * post eum; sine checkpoint ex alba */
-/* seq in actis vivis usque ad 'ad'? */
-interior b32
-seq_vivum (
-    constans Xar* viva,
-             s64  seq)
-{
-    i32 i;
-    i32 n;
-
-    n = xar_numerus(viva);
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        si (((VolumenActum*)xar_obtinere(viva, i))->seq == seq)
-        {
-            redde VERUM;
-        }
-    }
-    redde FALSUM;
-}
-
-/* checkpoint proximus: plagula 'checkpoint/<seq>' cum seq maximo
- * <= ad ET vivo; redde seq (0 = nullus). Plagulae enumerantur -
- * seqs multipla intervalli non sunt (volumen acta sua interserit). */
-interior s64
-checkpoint_proximus (
-    PictorDocumentum* doc,
-                 s64  ad,
-        constans Xar* viva)
-{
-               Xar* plagulae;
-    VolumenPlagula* pl;
-            chorda  praefixum;
-            chorda  cauda;
-               s32  s;
-               s64  optimum;
-               i32  i;
-               i32  n;
-
-    praefixum  = chorda_ex_literis("checkpoint/", doc->piscina);
-    plagulae   = volumen_plagulas_enumerare(doc->volumen, doc->piscina);
-    optimum    = ZEPHYRUM;
-    n          = xar_numerus(plagulae);
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        pl = (VolumenPlagula*)xar_obtinere(plagulae, i);
-        si (!chorda_incipit(pl->via, praefixum))
-        {
-            perge;
-        }
-        cauda.datum    = pl->via.datum + praefixum.mensura;
-        cauda.mensura  = pl->via.mensura - praefixum.mensura;
-        si (!chorda_ut_s32(cauda, &s))
-        {
-            perge;
-        }
-        si ((s64)s <= ad && (s64)s > optimum && seq_vivum(viva, (s64)s))
-        {
-            optimum = (s64)s;
-        }
-    }
-    redde optimum;
-}
-
-/* proiectio ad seq 'ad': checkpoint proximus vivus <= ad, deinde
- * acta viva post eum; sine checkpoint ex alba */
+/* proiectio pro historia: memoria = pixela tabulae */
 interior vacuum
-proicere_ad (
-    PictorDocumentum* doc,
-                 s64  ad,
-                 b32  sine_checkpoint)
+proiectio_vacare (
+    vacuum* ctx)
 {
-             Xar* viva;
-    VolumenActum* a;
-             i32  i;
-             i32  n;
-             s64  basis;
-          chorda  hex;
-          chorda  massa;
-             b32  inventum;
-          chorda  clavis;
-
-    viva   = acta_viva(doc, ZEPHYRUM, ad);
-    basis  = ZEPHYRUM;
-    si (!sine_checkpoint)
-    {
-        basis = checkpoint_proximus(doc, ad, viva);
-        si (basis > ZEPHYRUM)
-        {
-            clavis = chorda_concatenare(
-                chorda_ex_literis("checkpoint/", doc->piscina),
-                seq_chorda(basis, doc->piscina), doc->piscina);
-            hex = volumen_plagulam_promere(doc->volumen, clavis,
-                                           doc->piscina, &inventum);
-            massa = inventum
-                  ? volumen_massam_promere(doc->volumen, hex,
-                  doc->piscina,
-                                           &inventum)
-                  : hex;
-            si (   inventum
-                && massa.mensura == (i32)mensura_pixelorum(doc))
-            {
-                memcpy(doc->tabula->pixela, massa.datum,
-                       mensura_pixelorum(doc));
-            }
-            alioquin
-            {
-                basis = ZEPHYRUM;
-            }
-        }
-    }
-    si (basis == ZEPHYRUM)
-    {
-        vacare_albam(doc);
-    }
-    n = xar_numerus(viva);
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        a = (VolumenActum*)xar_obtinere(viva, i);
-        si (a->seq > basis)
-        {
-            actum_applicare(doc, a->datum);
-        }
-    }
-    sigillum_renovare(doc);
+    vacare_albam((PictorDocumentum*)ctx);
 }
 
 interior vacuum
-checkpoint_condere (
-    PictorDocumentum* doc,
-                 s64  seq)
+proiectio_applicare (
+    vacuum* ctx,
+    chorda  actum)
 {
-    character hex[SIGILLUM_HEX_MENSURA];
-       chorda contentum;
-       chorda clavis;
+    actum_applicare((PictorDocumentum*)ctx, actum);
+}
 
-    contentum.datum    = (i8*)doc->tabula->pixela;
-    contentum.mensura  = (i32)mensura_pixelorum(doc);
-    si (!volumen_massam_condere(doc->volumen, contentum, hex))
-    {
-        redde;
-    }
-    clavis = chorda_concatenare(chorda_ex_literis("checkpoint/",
-        doc->piscina),
-                                seq_chorda(seq, doc->piscina),
-                                doc->piscina);
-    volumen_plagulam_condere(doc->volumen, clavis,
-                             chorda_ex_literis(hex, doc->piscina),
-                             "pictor:checkpoint");
+interior HistoriaProiectio
+proiectio_facere (
+    PictorDocumentum* doc)
+{
+    HistoriaProiectio p;
+
+    p.memoria    = (i8*)doc->tabula->pixela;
+    p.mensura    = mensura_pixelorum(doc);
+    p.vacare     = proiectio_vacare;
+    p.applicare  = proiectio_applicare;
+    p.ctx        = doc;
+    redde p;
 }
 
 
@@ -439,8 +240,14 @@ pictor_documentum_creare (
     volumen_plagulam_condere(volumen, chorda_ex_literis("documentum",
         piscina),
                              manifestum, "pictor:documentum");
-    vacare_albam(doc);
-    sigillum_renovare(doc);
+    doc->historia = historia_creare(piscina, intern, volumen, "ictus",
+                                    "pictor:checkpoint",
+                                    doc->intervallum,
+                                    proiectio_facere(doc));
+    si (!doc->historia)
+    {
+        redde NIHIL;
+    }
     redde doc;
 }
 
@@ -457,8 +264,6 @@ pictor_documentum_aperire (
                  s32  latitudo;
                  s32  altitudo;
                  s32  intervallum;
-                 Xar* viva;
-                 i32  n;
 
     si (!piscina || !intern || !volumen)
     {
@@ -488,21 +293,20 @@ pictor_documentum_aperire (
     {
         redde NIHIL;
     }
-    /* finis = seq ultimum vivum; cursor = finis */
-    viva  = acta_viva(doc, ZEPHYRUM, volumen_summa_actorum(volumen));
-    n     = xar_numerus(viva);
-        doc->finis  = n > ZEPHYRUM
-                ? ((VolumenActum*)xar_obtinere(viva, n - I))->seq
-                : ZEPHYRUM;
-    doc->cursor           = doc->finis;
-    doc->numerus_vivorum  = n;
-    proicere_ad(doc, doc->cursor, FALSUM);
+    doc->historia = historia_aperire(piscina, intern, volumen, "ictus",
+                                     "pictor:checkpoint",
+                                     doc->intervallum,
+                                     proiectio_facere(doc));
+    si (!doc->historia)
+    {
+        redde NIHIL;
+    }
     redde doc;
 }
 
 
 /* ==================================================
- * Acta, revocare, reficere
+ * Acta, revocare, reficere (historia)
  * ================================================== */
 
 s64
@@ -510,96 +314,21 @@ pictor_documentum_actum (
     PictorDocumentum* doc,
               chorda  actum_stml)
 {
-       s64 seq;
-    chorda ramus;
-
-    si (!doc || chorda_vacua(actum_stml))
-    {
-        redde ZEPHYRUM;
-    }
-        si (doc->cursor < doc->finis)
-        {
-        doc->numerus_vivorum =
-            xar_numerus(acta_viva(doc, ZEPHYRUM, doc->cursor));
-        ramus = chorda_ex_literis("<ramus ab=\"", doc->piscina);
-        ramus = chorda_concatenare(ramus,
-                                   seq_chorda(doc->cursor,
-                                   doc->piscina),
-                                   doc->piscina);
-        ramus = chorda_concatenare(ramus,
-                                   chorda_ex_literis("\"/>",
-                                   doc->piscina),
-                                   doc->piscina);
-        volumen_actum_appendere(doc->volumen, "ramus", ramus);
-        }
-    seq = volumen_actum_appendere(doc->volumen, "ictus", actum_stml);
-    si (seq <= ZEPHYRUM)
-    {
-        redde ZEPHYRUM;
-    }
-        actum_applicare(doc, actum_stml);
-    doc->cursor  = seq;
-    doc->finis   = seq;
-    doc->numerus_vivorum++;
-    sigillum_renovare(doc);
-    si (doc->numerus_vivorum % doc->intervallum == ZEPHYRUM)
-    {
-        checkpoint_condere(doc, seq);
-    }
-    redde seq;
+    redde doc ? historia_actum(doc->historia, actum_stml) : ZEPHYRUM;
 }
 
 b32
 pictor_documentum_revocare (
     PictorDocumentum* doc)
 {
-    Xar* viva;
-    i32  n;
-    s64  ad;
-
-    si (!doc || doc->cursor <= ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    /* actum vivum proximum infra cursor */
-    viva  = acta_viva(doc, ZEPHYRUM, doc->cursor - I);
-    n     = xar_numerus(viva);
-    ad = n > ZEPHYRUM ? ((VolumenActum*)xar_obtinere(viva, n - I))->seq
-                      : ZEPHYRUM;
-        doc->cursor = ad;
-    doc->numerus_vivorum--;
-    proicere_ad(doc, ad, FALSUM);
-    redde VERUM;
+    redde doc ? historia_revocare(doc->historia) : FALSUM;
 }
 
 b32
 pictor_documentum_reficere (
     PictorDocumentum* doc)
 {
-             Xar* viva;
-    VolumenActum* a;
-             i32  i;
-             i32  n;
-
-    si (!doc || doc->cursor >= doc->finis)
-    {
-        redde FALSUM;
-    }
-    viva  = acta_viva(doc, doc->cursor, doc->finis);
-    n     = xar_numerus(viva);
-    per (i = ZEPHYRUM; i < n; i++)
-    {
-        a = (VolumenActum*)xar_obtinere(viva, i);
-        si (a->seq > doc->cursor)
-        {
-                        actum_applicare(doc, a->datum);
-            doc->cursor = a->seq;
-            doc->numerus_vivorum++;
-            sigillum_renovare(doc);
-            redde VERUM;
-        }
-    }
-    redde FALSUM;
+    redde doc ? historia_reficere(doc->historia) : FALSUM;
 }
 
 
@@ -619,8 +348,7 @@ pictor_documentum_sigillum_hex (
     constans PictorDocumentum* doc,
                       Piscina* piscina)
 {
-    character hex[SIGILLUM_HEX_MENSURA];
-       chorda vacua;
+    chorda vacua;
 
     si (!doc)
     {
@@ -628,35 +356,33 @@ pictor_documentum_sigillum_hex (
         vacua.datum    = NIHIL;
         redde vacua;
     }
-    sigillum_hex(&doc->sigillum, hex);
-    redde chorda_ex_literis(hex, piscina);
+    redde historia_sigillum_hex(doc->historia, piscina);
 }
 
 b32
 pictor_documentum_verificare (
     PictorDocumentum* doc)
 {
-    Sigillum ante;
-
-    si (!doc)
-    {
-        redde FALSUM;
-    }
-    ante = doc->sigillum;
-    proicere_ad(doc, doc->cursor, VERUM);
-    redde sigillum_aequale(&ante, &doc->sigillum);
+    redde doc ? historia_verificare(doc->historia) : FALSUM;
 }
 
 s64
 pictor_documentum_cursor (
     constans PictorDocumentum* doc)
 {
-    redde doc ? doc->cursor : ZEPHYRUM;
+    redde doc ? historia_cursor(doc->historia) : ZEPHYRUM;
 }
 
 s64
 pictor_documentum_finis (
     constans PictorDocumentum* doc)
 {
-    redde doc ? doc->finis : ZEPHYRUM;
+    redde doc ? historia_finis(doc->historia) : ZEPHYRUM;
+}
+
+i32
+pictor_documentum_numerus_vivorum (
+    constans PictorDocumentum* doc)
+{
+    redde doc ? historia_numerus_vivorum(doc->historia) : ZEPHYRUM;
 }
