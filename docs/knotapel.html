@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 90 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 95 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -74,7 +74,9 @@ Demos 81 to 84 measure capacity against catalog size, crossing depth, writhe
 and "null" entries, and demo 85 returns to the Temperley–Lieb algebra itself
 for a parameter of logarithmic conformal field theory. Demos 86 to 90 test
 that parameter on a single projective module, then look for the mechanism
-behind the depth law.</p>
+behind the depth law. Demos 91 to 95 ask whether the activation limits the
+law, which Boolean functions the encodings allow, and whether a non-solvable
+group computes better.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1636,6 +1638,87 @@ The uniformity is expected: the elements of a dense subgroup of SU(2),
 reached by growing words, spread out evenly. The balanced-exponential
 argument is offered as preliminary, and that is what it is.</p>
 
+<h2>Demo 91 · Is the activation the bottleneck?</h2>
+<p class="nota"><code>knotapel/demo_91_activation_bottleneck/main.c</code> · 768 lines · 6/7 tests (one prediction fails as shipped, by design; about 3½ minutes) · no <code>findings.md</code></p>
+<p>Sweep the angle sectors from 2 to 48 and the axis cells from 2 to 114:
+the largest XOR stays at 8 for the depth-4 catalog throughout, even with four
+cells in all, while the number of solutions grows thirteenfold. Finer
+activations find more solutions, not larger ones. The log takes this to
+confirm the "balanced exponentials" account of the depth law.</p>
+<p>The sweep is clean and its negative answer is kept as a failing test. That
+the arity does not move within this range shows the activation is not the
+limit here; it does not by itself confirm the balanced-exponential story, and
+demo 92 soon shows why parity is the only function this encoding can compute
+at all.</p>
+
+<h2>Demo 92 · The parity lock</h2>
+<p class="nota"><code>knotapel/demo_92_function_scaling/main.c</code> · 1,399 lines · 13/16 tests (three fail as shipped, by design) · no <code>findings.md</code>; <code>proofs/parity-lock-theorem.md</code></p>
+<p>Can the same machinery compute AND, OR or majority? Not with the paired
+encoding: each weight q enters as +q for one input bit and −q for the other,
+so inputs (0,0) and (1,1) both give 0, the all-zeros and all-ones inputs
+collide, and any function that tells them apart is impossible under any
+activation. The sums fall into 3<sup>k</sup> classes, parity is constant on each,
+and XOR and XNOR are the only standard functions that are. Searches confirm
+zero solutions for AND, OR, majority and threshold-2 at every depth.</p>
+<p>A correct theorem with a short proof, and the project found it itself: it
+is the count of note 42 (three states per pair, labelled by how many pairs
+contribute) turned into a statement about which functions exist. It also
+settles what the whole arc from demo 65 on was measuring: the only function
+these searches could ever find.</p>
+
+<h2>Demo 93 · One weight per input</h2>
+<p class="nota"><code>knotapel/demo_93_function_scaling_1wpi/main.c</code> · 1,636 lines · 37/37 tests (about 6 minutes) · no <code>findings.md</code></p>
+<p>With one weight per input, entered as +w or −w by the bit, complementing
+every bit negates the sum, and the angle-and-axis cell (which identifies q
+with −q) cannot tell them apart: "complement blindness", so only functions
+with f(m) = f(m̄) survive, none of them standard at odd N. Keeping the sign
+of the real part restores all 13 classes at N = 3. Then, with 84 cells, hit
+rates fall with N far faster for XOR than for AND (at N = 7, 0.02% against
+57%; at N = 8, 0% against 42%), and the log reads this as the circuit
+complexity hierarchy (AND in AC⁰, majority in TC⁰, parity outside AC⁰, with
+Håstad and Linial–Mansour–Nisan).</p>
+<p>The complement theorem is right and neatly parallel to demo 92's. The
+hierarchy is a counting fact about tables: AND needs one cell holding only the
+all-ones input, XOR needs every cell to be pure in a balanced bisection of
+2<sup>N</sup> inputs, and with 84 cells for 128 or 256 inputs the second fails
+first (note 42). A lookup on one linear sum is not a bounded-depth circuit, so
+the AC⁰ theorems are analogies here, not explanations.</p>
+
+<h2>Demo 94 · The binary icosahedral group</h2>
+<p class="nota"><code>knotapel/demo_94_binary_icosahedral/main.c</code> · 1,282 lines · 20/20 tests (about 3 minutes) · no <code>findings.md</code></p>
+<p>The 120-element binary icosahedral group 2I (the only finite subgroup of
+SU(2) that is not solvable) in exact Z[√5] arithmetic, generated from an
+element of order 6 and one of order 10: 60 elements up to sign, nine rotation
+angles, about 31 axes. At equal size (24 elements) random subsets of 2I beat
+the binary octahedral catalog for XOR at N = 6 by 78% and at N = 7 by a factor
+of 3.4; the full 2I does better still. The conclusion: "solvability IS the
+capacity bottleneck", by Barrington's theorem that programs over non-solvable
+groups compute NC¹.</p>
+<p>The arithmetic is exact and the comparisons are fair as far as they go,
+but the explanation fails its control (<a href="#nota-solubilitas">note
+47</a>). Barrington's theorem is about multiplying group elements; these
+neurons add them, so they see only where the points lie. Twenty-four
+uniformly random unit quaternions, which form no group at all, beat both:
+38,939 XOR solutions at N = 6 and 3,449 at N = 7, against 2I's 23,137 and
+672 and the octahedral catalog's 12,983 and 197.</p>
+
+<h2>Demo 95 · Commutators</h2>
+<p class="nota"><code>knotapel/demo_95_commutator_depth/main.c</code> · 1,242 lines · 19/19 tests · no <code>findings.md</code></p>
+<p>The derived series, computed exactly: the binary octahedral group goes
+2O &gt; 2T &gt; Q<sub>8</sub> &gt; {±1} (24 &gt; 12 &gt; 4 &gt; 1 up to sign), and
+every element of 2I is a commutator. Splitting the octahedral catalog into the
+commutator subgroup and the rest, each half computes about equally and the
+whole far better; the nine half-turns, split into the three of Q<sub>8</sub> and
+the six outside it, compute nothing apart and 26% together at N = 4. The
+log's reading: the power is in crossing algebraic strata, "algebra wins over
+geometry", and 2I wins by having no strata.</p>
+<p>The derived series is right, and so is the perfectness of 2I. The splits
+are geometric as well as algebraic (<a href="#nota-strata">note 48</a>): the
+commutator subgroup 2T is the 24-cell and the rest is the dual 24-cell, and the
+two groups of half-turns lie on different axes (the three coordinate axes and
+the six edge axes), so the "same half-angle" test does not hold geometry fixed.
+Note 47 applies to the reading that 2I wins by its algebra.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -2316,11 +2399,39 @@ roots of the demo's characteristic polynomials, Jordan blocks included; the
 simple roots (0 for TL<sub>4</sub>; ±1 and ±√3 for TL<sub>6</sub>) belong to
 L<sub>4</sub>. Nothing in the spectrum is exclusive to the projective module
 except the Jordan coupling itself.</p></li>
+<li id="nota-solubilitas"><p><strong>The neurons add, so they see
+geometry.</strong> Barrington's theorem concerns branching programs that
+multiply group elements; whether a group is solvable shows in what its
+products can do. A DKC neuron forms Σ ±q<sub>i</sub> and reads its cell, which
+depends only on the points q<sub>i</sub> in R<sup>4</sup>, not on the group they
+generate. A scratch copy of demo 94 replaced its random 24-element subsets of
+2I by 24 Haar-random unit quaternions (ten draws, the same counting code).
+XOR solutions, octahedral / 2I subsets / random: N = 3: 1,480 / 1,514 / 2,011;
+N = 4: 8,010 / 9,475 / 10,108; N = 5: 17,201 / 21,990 / 33,256; N = 6: 12,983
+/ 23,137 / 38,939; N = 7: 197 / 672 / 3,449. The order is the order of
+genericity: the cube group's points are the most special (24-cell and dual,
+13 axes, 4 angles), 2I's less so (the 600-cell), random points not at all.
+Two side remarks: the log's "the finite/infinite boundary IS the
+solvable/non-solvable boundary" is contradicted by 2I itself, finite and
+non-solvable; and demo 94's generators (orders 6 and 10) are not conjugate, so
+they do not represent the braid group, though note 41's braid-correct ζ<sub>10</sub>
+representation does have 2I as its image.</p></li>
+<li id="nota-strata"><p><strong>Demo 95's splits are geometric.</strong>
+In the binary octahedral group the commutator subgroup 2T is the axis and
+half-integer elements (±1, ±i, ±j, ±k, (±1 ± i ± j ± k)/2), the vertices of a
+24-cell, and the other coset is the 24 elements (±1 ± i)/√2 and the like, the
+dual 24-cell; so COMM against NON-COMM is a 24-cell against its dual. The
+half-turns of Q<sub>8</sub> are i, j and k, on the coordinate axes; the six
+other half-turns are on the edge axes (1, ±1, 0)/√2 and the like. Same rotation
+angle, different directions, so "algebra wins over geometry" compares two
+geometries; and the Q<sub>8</sub> set has three elements, a single triple, for
+the three-weight search.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 91 to 98 test the activation as the bottleneck and continue the
-capacity questions, before the multi-strand work of demos 99 to 109. The controls this reading found
+<p>Demo 96 cross-classifies the Temperley–Lieb and group structures, and
+demos 97 and 98 continue the capacity questions, before the multi-strand work
+of demos 99 to 109. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -2504,6 +2615,11 @@ lattice literature does, before comparing with any continuum value.</p></li>
 add a baseline of Haar-random unit quaternions at matched sizes, beside the
 deep, shallow, strided and catalog-random samples: if deep elements win only
 because they are spread evenly, the uniform sample should win too.</p></li>
+<li><p><strong>Geometry baselines for every catalog.</strong> Note 47
+did it once: for each catalog comparison (octahedral, icosahedral,
+ζ<sub>12</sub>, by depth), add Haar-random points of the same size, and
+report catalogs by geometric statistics (axes, angles, pairwise spread) beside
+their group-theoretic names.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -2535,7 +2651,9 @@ group representation. Demos 81 to 85 build on that slip and on analogies with
 logarithmic CFT, and demo 85, the one exact computation, shows its own
 gauge dependence in its output. Demos 86 to 90 change the tone: a negative
 result reported as one, a capped catalog caught and fixed, a tautology named,
-and failed predictions left failing in the test counts.</p>
+and failed predictions left failing in the test counts. Demos 91 to 95
+prove two clean small theorems about what the encodings allow, and then reach
+for complexity theory (AC⁰, Barrington) where a table and a point set suffice.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
@@ -2544,10 +2662,11 @@ note 26, demo 59's catalog magnitudes (note 28), the lattice search and
 random check of note 30, the rotated sectors of note 32, demo 65's
 magnitudes, the group check of note 34, the rank computation and labelings of
 note 38, the design recomputation of note 39, demo 77's rotated sectors and
-the group computations of note 41 ran on scratch copies. The spectra of note 46 were computed by a scratch script. Written by hand on
-2026-10-03 and 2026-10-05 from reading the seventy-eight <code>main.c</code>
-files (demos 1 to 29, 35, 38, 39 and 45 to 90, with their findings, debriefs
-and, for 51 to 90, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+the group computations of note 41 ran on scratch copies. The spectra of note 46 were computed by a scratch script, and note 47's
+random catalog ran in a scratch copy of demo 94. Written by hand on 2026-10-03
+and 2026-10-05 from reading the eighty-three <code>main.c</code> files (demos 1
+to 29, 35, 38, 39 and 45 to 95, with their findings, debriefs and, for 51 to
+95, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
