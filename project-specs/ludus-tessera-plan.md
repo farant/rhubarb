@@ -213,6 +213,11 @@ RELATIO in `ludus_tessera/phase-log.md`).
 
 ## V. Track (c) — insula-native widgets (outline; interview first)
 
+**Interviewed 2026-10-05** - pagina first, as a new app `scriba`; the
+text in an act log (pictor's engine, extracted); plan
+`project-specs/scriba-plan.md` (tracks H and S). The outline below is
+the pre-interview sketch, superseded where the plan differs.
+
 - **pagina:** the page text = durable insula; cursor, mode, visual
   selection, pending key (`d…`) = ephemeral insula. Reuses `vim.c` and
   `TabulaCharacterum` unchanged; a new figura (grid → mandata, with the
