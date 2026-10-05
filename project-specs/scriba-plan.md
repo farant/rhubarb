@@ -242,6 +242,11 @@ pictor's `pictor_volumen_aperire`). Headless proof: a key session
 recorded in the window replays through codificator → rivus → glue to
 the same sigillum (as pictor's A4 proof). Fran's look in both targets.
 
+S3 as built (headless): `scriba_applicatio` + `apps/scriba/` (two
+mains, two scripts with a working build-only switch); replay proof in
+ludus_tessera (6/6) - the transport pairs key + text and times out a
+lone ESC. Pending Fran's look in both targets.
+
 **S4 — RELATIO** (phase log; the ludus-tessera plan's §V updated;
 schirmata's tasks written then).
 

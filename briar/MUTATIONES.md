@@ -195,6 +195,12 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: `scriba_applicatio` nova (scriba-plan S3) - compositio
+  scribae communis (volumen, documentum, canones, insulae, registra,
+  dispensator, gestus) quam principalia fenestrae et terminalis vocant
+  (`apps/scriba/scriba{,_terminalis}.sh`, AEDIFICARE_SOLUM=1 struit
+  solum).
+
 - corpus: `scriba_componentia` et `scriba_figurae` novae - arbor
   scribae (prospectus/pagina/status in cellulis; cursor et ancora in
   puncta, modus in titulo; volutio sine statu cursorem centrans) et

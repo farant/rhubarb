@@ -112,6 +112,14 @@ declare -a RADIX_FONTES=(
     "pictor_figurae"
     # B3: pictor_componere disponit per dispositio
     "dispositio"
+    # scriba S3: applicatio scribae (pagina vim, documentum textus)
+    "scriba_applicatio"
+    "scriba_actiones"
+    "scriba_componentia"
+    "scriba_documentum"
+    "scriba_figurae"
+    "vim"
+    "tabula_characterum"
     "volumen"
     "filum"
     "sigillum"
