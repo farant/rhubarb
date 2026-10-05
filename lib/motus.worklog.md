@@ -53,3 +53,11 @@ the dispatcher's 300 ms; a refusal marked clean; a gesture change
 dirtying pan/zoom - plus the dispatcher's two (below, dispensator
 worklog). pictor does not use the slot (its stroke still lives in
 `ictus_pendens`); moving it is possible later, not needed.
+
+## 2026-10-05 — the gesture flush restores the writer (scriba S1c)
+
+`motus_gestum_effundere` set the writer to "gestus" and then to
+ANONYMOUS. From the dispatcher that is fine; from INSIDE an action
+(scriba's Esc and `dd` flush at once) every later state write would be
+anonymous and owned attributes would refuse it silently. It now
+restores the previous writer. Red first (probatio_motus).

@@ -23,8 +23,10 @@ interior b32
 est_focalis (
     eventus_genus_t g)
 {
+    /* textus commissus (scriba S1c) ad focum ut claves: consumptor
+     * textus primus pagina est; olim ad radicem ibat */
     redde g == EVENTUS_CLAVIS_DEPRESSUS || g == EVENTUS_CLAVIS_LIBERATUS
-        || g == EVENTUS_MUS_ROTULA;
+        || g == EVENTUS_MUS_ROTULA || g == EVENTUS_TEXTUS;
 }
 
 interior chorda

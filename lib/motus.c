@@ -182,7 +182,7 @@ motus_gestum_effundere (
     InsulaRepositorium* repo)
 {
        b32 ok;
-    chorda nulla;
+    chorda prior;
 
     si (   !motus || !repo || !motus->gestus.status
         || !motus->gestus.effusor
@@ -190,13 +190,14 @@ motus_gestum_effundere (
     {
         redde FALSUM;
     }
-    nulla.mensura  = ZEPHYRUM;
-    nulla.datum    = NIHIL;
+    /* scriptor prior restituitur: effusio etiam intra actionem
+     * vocatur (scriba: Esc, dd), quae deinde sub nomine suo scribit */
+    prior = repo->scriptor;
     insula_scriptorem_ponere(repo, chorda_ex_literis("gestus",
         motus->piscina));
     ok = motus->gestus.effusor(motus->gestus.status, repo,
                                motus->gestus.ctx);
-    insula_scriptorem_ponere(repo, nulla);
+    insula_scriptorem_ponere(repo, prior);
     si (ok)
     {
         motus->gestus.sordidus = FALSUM;

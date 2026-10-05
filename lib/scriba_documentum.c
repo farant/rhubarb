@@ -185,13 +185,11 @@ hex_valor (
     redde -I;
 }
 
-/* textus effugitus -> cellulae[latitudo] (' ' impletae); FALSUM si
- * effugium malum aut textus latior folio */
-interior b32
-textum_solvere (
-         chorda  textus,
-      character* cellulae,
-            i32  latitudo)
+s32
+scriba_solvere (
+       chorda  textus,
+    character* exitus,
+          i32  capacitas)
 {
     i32 i;
     i32 c;
@@ -199,7 +197,6 @@ textum_solvere (
     s32 h1;
     s32 h2;
 
-    memset(cellulae, ' ', (size_t)latitudo);
     c = ZEPHYRUM;
     per (i = ZEPHYRUM; i < textus.mensura; i++)
     {
@@ -208,7 +205,7 @@ textum_solvere (
         {
             si (i + I >= textus.mensura)
             {
-                redde FALSUM;
+                redde -I;
             }
             i++;
             commutatio (textus.datum[i])
@@ -221,29 +218,59 @@ textum_solvere (
                 casus 'x':
                     si (i + II >= textus.mensura)
                     {
-                        redde FALSUM;
+                        redde -I;
                     }
                     h1 = hex_valor(textus.datum[i + I]);
                     h2 = hex_valor(textus.datum[i + II]);
                     si (h1 < ZEPHYRUM || h2 < ZEPHYRUM)
                     {
-                        redde FALSUM;
+                        redde -I;
                     }
                     o = (i8)(h1 * XVI + h2);
                     i += II;
                     frange;
                 ordinarius:
-                    redde FALSUM;
+                    redde -I;
             }
         }
-        si (c >= latitudo)
+        si (c >= capacitas)
         {
-            redde FALSUM;
+            redde -I;
         }
-        cellulae[c] = (character)o;
+        exitus[c] = (character)o;
         c++;
     }
-    redde VERUM;
+    redde (s32)c;
+}
+
+chorda
+scriba_effugere (
+    constans character* octeti,
+                   i32  longitudo,
+               Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  i32  i;
+
+    a = chorda_aedificator_creare(piscina,
+        (memoriae_index)(longitudo + XVI));
+    per (i = ZEPHYRUM; i < longitudo; i++)
+    {
+        octetum_effugere(a, (i8)octeti[i]);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+/* textus effugitus -> cellulae[latitudo] (' ' impletae); FALSUM si
+ * effugium malum aut textus latior folio */
+interior b32
+textum_solvere (
+         chorda  textus,
+      character* cellulae,
+            i32  latitudo)
+{
+    memset(cellulae, ' ', (size_t)latitudo);
+    redde scriba_solvere(textus, cellulae, latitudo) >= ZEPHYRUM;
 }
 
 
@@ -616,10 +643,11 @@ scriba_documentum_aperire (
  * Acta
  * ================================================== */
 
-s64
-scriba_documentum_committere (
+interior s64
+committere (
                ScribaDocumentum* doc,
-     constans TabulaCharacterum* post)
+     constans TabulaCharacterum* post,
+                            b32  coniunctum)
 {
     chorda mutatio;
 
@@ -633,7 +661,24 @@ scriba_documentum_committere (
     {
         redde ZEPHYRUM;
     }
-    redde historia_actum(doc->historia, mutatio);
+    redde coniunctum ? historia_actum_coniunctum(doc->historia, mutatio)
+                     : historia_actum(doc->historia, mutatio);
+}
+
+s64
+scriba_documentum_committere (
+               ScribaDocumentum* doc,
+     constans TabulaCharacterum* post)
+{
+    redde committere(doc, post, FALSUM);
+}
+
+s64
+scriba_documentum_committere_coniunctum (
+               ScribaDocumentum* doc,
+     constans TabulaCharacterum* post)
+{
+    redde committere(doc, post, VERUM);
 }
 
 b32

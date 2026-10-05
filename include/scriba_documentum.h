@@ -67,6 +67,23 @@ scriba_mutatio_computare (
     constans TabulaCharacterum* post,
                        Piscina* piscina);
 
+/* codex textus (idem ac mutationis): octeti -> textus effugitus,
+ * numquam '"' nec octetus < 0x20 aut >= 0x7F crudus - valor
+ * attributi STML inline tutus */
+chorda
+scriba_effugere (
+    constans character* octeti,
+                   i32  longitudo,
+               Piscina* piscina);
+
+/* textus effugitus -> octeti in exitus[capacitas]; redde longitudinem,
+ * -1 si effugium malum aut capacitas excessa */
+s32
+scriba_solvere (
+       chorda  textus,
+    character* exitus,
+          i32  capacitas);
+
 /* mutationem in folium applicare; FALSUM (folio intacto) si mutatio
  * mala aut folium excederet */
 b32
@@ -103,6 +120,13 @@ scriba_documentum_aperire (
  * aut recusatum. Post: proiectio == post. */
 s64
 scriba_documentum_committere (
+               ScribaDocumentum* doc,
+     constans TabulaCharacterum* post);
+
+/* ut committere, sed actum priori CONIUNCTUM (historia S1b):
+ * insertio in frustis servata = gradus unus revocandi */
+s64
+scriba_documentum_committere_coniunctum (
                ScribaDocumentum* doc,
      constans TabulaCharacterum* post);
 

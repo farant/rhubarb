@@ -139,6 +139,32 @@ s32 principale (vacuum)
         MOD_SHIFT | MOD_SHIFT_SINISTER));
     CREDO_MANUS_LUDUS_FOCUS(m, "tabula");
 
+    imprimere("\n--- scribere: clavis + textus eodem tempore ---\n");
+    {
+                     Xar* notata;
+        constans Eventus* e0;
+        constans Eventus* e1;
+
+        notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
+        dispensator_notarium_ponere(d, notata);
+        CREDO_VERUM(manus_ludus_scribere(m, "a\r"));
+        dispensator_notarium_ponere(d, NIHIL);
+        /* 'a': DEPRESSUS, TEXTUS, LIBERATUS;
+         * '\r': DEPRESSUS, LIBERATUS (regimen textum non fert) */
+        CREDO_AEQUALIS_I32(xar_numerus(notata), V);
+        e0 = &((EventusNotatum*)xar_obtinere(notata,
+            ZEPHYRUM))->eventus;
+        e1 = &((EventusNotatum*)xar_obtinere(notata, I))->eventus;
+        CREDO_AEQUALIS_I32((i32)e0->genus,
+            (i32)EVENTUS_CLAVIS_DEPRESSUS);
+        CREDO_AEQUALIS_I32((i32)e1->genus, (i32)EVENTUS_TEXTUS);
+        CREDO_AEQUALIS_S64(e1->tempus, e0->tempus);
+        CREDO_AEQUALIS_I32(e1->datum.textus.contentum.mensura, I);
+        CREDO_VERUM(e1->datum.textus.contentum.datum[ZEPHYRUM] == 'a');
+        CREDO_AEQUALIS_I32((i32)((EventusNotatum*)xar_obtinere(notata,
+            III))->eventus.genus, (i32)EVENTUS_CLAVIS_DEPRESSUS);
+    }
+
     imprimere("\n--- exspectare movet tempus (quies) ---\n");
     dispensator_motus(d)->pan.x                      = III;
     dispensator_motus(d)->sordida                    = VERUM;

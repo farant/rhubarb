@@ -256,6 +256,13 @@ s32 principale (vacuum)
     CREDO_VERUM(destinatio_componens(&d) == b2);
     CREDO_VERUM(chorda_vacua(d.id_geometricum));
 
+    imprimere("\n--- Textus commissus it ad focum (scriba S1c) ---\n");
+    e = eventus_nudus(EVENTUS_TEXTUS);
+    d = destinatio_geometrica(radix, &motus, focus, &e, piscina);
+    CREDO_VERUM(destinatio_componens(&d) == b2);
+    d = destinatio_geometrica(radix, &motus, vacua, &e, piscina);
+    CREDO_VERUM(destinatio_componens(&d) == radix);
+
     imprimere("\n--- Ordo foci ---\n");
     focus = destinatio_focus_proximum(radix, vacua, piscina);
     CREDO_CHORDA_AEQUALIS_LITERIS(focus, "b1");

@@ -415,6 +415,58 @@ manus_ludus_clavem (
     redde VERUM;
 }
 
+b32
+manus_ludus_scribere (
+             ManusLudus* m,
+     constans character* textus)
+{
+      Eventus  e;
+    character* littera;
+          s32  c;
+
+    si (!m || !textus)
+    {
+        redde FALSUM;
+    }
+    dum (*textus)
+    {
+        c = (s32)(i8)*textus;
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus   = EVENTUS_CLAVIS_DEPRESSUS;
+        e.tempus  = m->tempus;
+        _clavem_implere(&e, *textus);
+        e.datum.clavis.actio = EVENTUS_ACTIO_PRESSA;
+        dispensator_tractare(m->d, &e);
+        si (c >= XXXII && c != CXXVII)
+        {
+            littera = (character*)piscina_allocare(m->piscina, I);
+            si (!littera)
+            {
+                redde FALSUM;
+            }
+            *littera = *textus;
+            memset(&e, ZEPHYRUM, magnitudo(Eventus));
+            e.genus = EVENTUS_TEXTUS;
+            e.tempus = m->tempus;
+            e.datum.textus.contentum.datum = (i8*)littera;
+            e.datum.textus.contentum.mensura = I;
+            e.datum.textus.genus = EVENTUS_TEXTUS_COMMISSUM;
+            e.datum.textus.origo = EVENTUS_ORIGO_SCRIPTA;
+            dispensator_tractare(m->d, &e);
+        }
+        m->tempus += m->gradus_ms;
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus   = EVENTUS_CLAVIS_LIBERATUS;
+        e.tempus  = m->tempus;
+        _clavem_implere(&e, *textus);
+        e.datum.clavis.actio = EVENTUS_ACTIO_SOLUTA;
+        dispensator_tractare(m->d, &e);
+        m->tempus += m->gradus_ms;
+        textus++;
+    }
+    redde VERUM;
+}
+
 vacuum
 manus_ludus_exspectare (
      ManusLudus* m,

@@ -181,6 +181,33 @@ header says '\0'); '\0' is content. Lines live in an attribute
   sheet lives in the gesture slot; first chunk of an insert = an act,
   later chunks joined; Esc flushes at once.
 
+**S1c design (agreed with Fran, 2026-10-05):** durable insula
+`latitudo altitudo sigillum` (writer "gestus"); ephemeral `cursor_linea
+cursor_columna modus visualis_genus selectio_linea selectio_columna
+clavis_praecedens fd_exspectans fd_tempus capsa capsa_lineae` (writer
+"pagina.clavis"); gesture slot `ScribaGestus` = working sheet + "insert
+open". Input: printables ONLY from committed `EVENTUS_TEXTUS` (both
+targets also send a key-down for them - ignored), named keys and Ctrl
+from key-downs. `u`/Ctrl-R in normal mode -> historia, working sheet
+resynced. Normal/visual changes flush at once; insert waits for the
+~1 s quiet; Esc flushes and closes the insert; first chunk plain, later
+chunks joined. **Values:** inline attributes with the act codec (never
+`"`, never control bytes; `<@a=>` attribute-elements exist - STML ref
+§5.3 - but the insula writes inline). **Never an EMPTY value**: the
+pretty writer prints `a=""` as bare `a`, re-read as "true" (ref §5.4);
+absent = empty (`insula_attributum_tollere`).
+
+S1c as built: `include/scriba_actiones.h`, `lib/scriba_actiones.c`,
+`apps/scriba/canones/` (durable latitudo/altitudo only - pictor's
+durable `sigillum` is declared and never written, so scriba has none;
+ephemeral as designed, `electio` for modus/visualis_genus; owners).
+Framework fixes on the way: committed text routed to the FOCUS
+(destinatio); `manus_ludus_scribere`; the gesture flush restores the
+writer. Findings: the house vim has no `y`; insert sets sticky
+indentation; pull-left writes '\0' (whitened after every key); empty
+values invisible to `insula_attributum` (checked in the written text).
+Root 199/199; six plants + three framework plants.
+
 **S1 — state and actions.** The ephemeral canon: cursor line/column,
 mode, visual selection, pending key, the `fd` flag, the clipboard
 (yanked lines). The key action rebuilds `VimStatus` from state, runs

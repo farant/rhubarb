@@ -214,6 +214,14 @@ s32 principale (vacuum)
     g.recusare = FALSUM;
     CREDO_VERUM(motus_gestum_effundere(&motus, repo));
     CREDO_AEQUALIS_I32(g.effusiones, II);
+    /* intra actionem vocata: scriptor prior RESTITUITUR (actio post
+     * effusionem scribere pergit sub nomine suo) */
+    insula_scriptorem_ponere(repo, chorda_ex_literis("pagina.clavis",
+        piscina));
+    mutare_gestum(&motus, littera_addere, NIHIL, L * M);
+    CREDO_VERUM(motus_gestum_effundere(&motus, repo));
+    CREDO_CHORDA_AEQUALIS_LITERIS(g.scriptor, "gestus");
+    CREDO_CHORDA_AEQUALIS_LITERIS(repo->scriptor, "pagina.clavis");
 
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;

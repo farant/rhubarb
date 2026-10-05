@@ -44,3 +44,11 @@ so that plant would have stayed green; a `b3` overlapping `b1` was
 added first, then the plant went red at the z-order assertion and
 green on revert. Examen ACCIPE; formator one 73-column comment on
 birth, split through `Editio`.
+
+## 2026-10-05 — committed text goes to the focus (scriba S1c)
+
+`est_focalis` listed key-down/up and the wheel, not `EVENTUS_TEXTUS`,
+so committed text went to the ROOT. Nothing had consumed text before
+(grep: no ludus component); scriba's page is the first. Text now goes
+to the focused component like keys. Red first in probatio_destinatio
+(text with focus -> b2; without -> root).

@@ -36,3 +36,12 @@ scala ignored — red at the nested-transform assertion; `premere`
 aiming at the corner instead of the centre — red at the `numerus`
 read. Both green on revert. Examen ACCIPE; one 74-column line on
 birth, fixed by rewriting `quaerere` by name.
+
+## 2026-10-05 — `manus_ludus_scribere` (scriba S1c)
+
+`manus_ludus_clavem` sends key-down + key-up only; the real sources
+also send a committed `EVENTUS_TEXTUS` at the key-down's timestamp for
+printables. `manus_ludus_scribere(m, "text")` does the same per
+character (control characters: key only); the character lives in the
+hand's arena (the notarius may keep the event). Test via the notarius:
+"a\r" -> 5 events, text at the key's time. Plant (no text event) caught.

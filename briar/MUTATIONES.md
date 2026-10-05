@@ -195,6 +195,17 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: `scriba_actiones` nova - actio `pagina.clavis` (vim super
+  folium laboris in gestu; status vim in insula ephemerarum; servatio
+  statim in modo normali, post quietem in inserendo, Esc claudit;
+  frusta insertionis coniuncta). `scriba_effugere`/`scriba_solvere` et
+  `scriba_documentum_committere_coniunctum` (nova).
+
+- corpus (mores): destinatio TEXTUM commissum ad FOCUM mittit (olim ad
+  radicem); `manus_ludus_scribere` (nova) - clavis + textus ut fons
+  verus; `motus_gestum_effundere` scriptorem priorem restituit (olim
+  anonymum).
+
 - corpus: `historia_actum_coniunctum` (nova) - actum priori
   coniunctum (nota historiae `<coniunctio/>` ante id); revocare et
   reficere gregem coniunctum gradu uno transeunt. Clientes sine
