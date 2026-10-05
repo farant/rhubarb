@@ -362,6 +362,29 @@ dur=$(echo "$t1 - $t0" | bc)
 if [ "$rc" -eq 1 ] && grep -q '^RECENS o/a ' "$T/o" && grep -q '^RECENS o/b ' "$T/o" \
    && grep -q '^STALUM o/c ' "$T/o" && grep -q '^STALUM o/d ' "$T/o" && [ "$(echo "$dur < 4" | bc)" -eq 1 ]; then echo "  XXXI iudicium simul: IV x II s in $dur s OK"; else echo "  XXXI FRACTUM (rc=$rc, $dur s)"; cat "$T/o"; fracta=1; fi
 
+# XXXII (parcum ...9XNXY, 2026-10-05): DECLARATIONES CONTRA CANONEM.
+# aedificatio.canon post fabrica slice 3 stalus erat (VI vitia in
+# toml/aedificatio.stml: iudicium, fontationes, instrumentum_domus,
+# identitas_clang, verdictum) et nulla porta id videbat - inventarium
+# hanc portam 'tegit viae aedificatio.canon' nominabat, sed iudicium
+# nullum currebat. Nunc: omnis aedificatio.stml quam fabrica.stml
+# nominat per bin/canon_examen (registrum: radix <aedificatio>).
+[ -x "$RADIX/bin/canon_examen" ] || "$RADIX/tools/canon_struere.sh" >/dev/null 2>&1
+vitia_canonis=0
+for sub in $(sed -n 's/.*<subsystema via="\([^"]*\)".*/\1/p' "$RADIX/fabrica.stml"); do
+    d="$RADIX/$sub/aedificatio.stml"
+    [ -f "$d" ] || continue
+    if ! (cd "$RADIX" && bin/canon_examen "$sub/aedificatio.stml") > "$T/canon.o" 2>&1; then
+        vitia_canonis=1; sed 's/^/      /' "$T/canon.o" | head -8
+    fi
+done
+# et canon ipse contra canon.canon (familia via genus="via" sex
+# hebdomades latuit - eadem classis)
+if ! (cd "$RADIX" && bin/canon_examen aedificatio.canon) > "$T/canon.o" 2>&1; then
+    vitia_canonis=1; sed 's/^/      /' "$T/canon.o" | head -4
+fi
+if [ -x "$RADIX/bin/canon_examen" ] && [ "$vitia_canonis" -eq 0 ]; then echo "  XXXII declarationes contra aedificatio.canon OK"; else echo "  XXXII FRACTUM (declarationes contra canonem)"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXXI/XXXI)"
+echo "fumus fabricae: sanum (XXXII/XXXII)"
 exit 0

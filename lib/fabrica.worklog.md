@@ -1886,3 +1886,24 @@ Session note: a crash left a second copy of this conversation running in
 tmux; both ran pythonica against the same build/ (spurious
 'recepta sua deleta' and a clone `cp` failure) and shared one scratchpad.
 Nothing committed or doubled; one copy kept, clean rerun green.
+
+## 2026-10-05 - aedificatio.canon caught up with slice 3 (park …9XNXY)
+
+Found while reading the house canons for effectus T1: slice 3 added
+action kind `iudicium`, ingressus genera `fontationes`,
+`instrumentum_domus`, `identitas_clang` and provenance `verdictum`
+to the READER (lib/fabrica.c) but never to `aedificatio.canon` -
+`toml/aedificatio.stml` carried 6 canon vitia. The inventory said
+fabrica-fumus and the fabrica oracle "cover" aedificatio.canon, yet
+neither judged any declaration against it: an owed gate that could
+not fail. Also pre-existing since plan 2 T4: `familia via genus="via"`
+(not a canon value type) - the canon itself failed canon.canon.
+
+Now `tools/fabrica_fumus.sh` XXXII runs `bin/canon_examen` over every
+`<sub>/aedificatio.stml` fabrica.stml lists AND over aedificatio.canon
+itself. Born red on the 6 real vitia (then on the familia attribute);
+plant: an attribute the reader silently ACCEPTS (`nescio="x"` on an
+ingressus) turns XXXII alone red - the reader tolerating it is the
+point of having the canon. Lesson: when the reader learns a value,
+the canon must learn it in the same commit; XXXII now enforces that
+(T7 adds genus `effectus` to both).
