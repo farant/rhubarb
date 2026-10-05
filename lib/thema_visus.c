@@ -69,7 +69,8 @@ hic_manens constans character* nomina_semantica[COLOR_COUNT] = {
     "Accent Secondary",
     "Error",
     "Warning",
-    "Success"
+    "Success",
+    "Superficies"
 };
 
 

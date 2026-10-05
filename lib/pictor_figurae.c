@@ -14,6 +14,26 @@ color_thematis (
     redde cm;
 }
 
+/* <purus/> Prospectus (013): mensa - fines toti colore
+ * COLOR_SUPERFICIES; pagina (liber) supra pingitur */
+vacuum
+figura_prospectus (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    Fines f;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    f.x         = ZEPHYRUM;
+    f.y         = ZEPHYRUM;
+    f.latitudo  = c->fines.latitudo;
+    f.altitudo  = c->fines.altitudo;
+    mandata_rectangulum(m, f, color_thematis(COLOR_SUPERFICIES), VERUM);
+}
+
 /* <purus/> */
 vacuum
 figura_tabulae (
@@ -38,6 +58,18 @@ figura_tabulae (
     f.altitudo  = c->fines.altitudo;
     mandata_imago(m, pictor_documentum_sigillum_hex(pf->doc,
         m->piscina), f);
+    /* margo paginae (013): linea I pixeli EXTRA documentum - pagina in
+     * mensa (prospectus) videtur; in terminali runae delineandi */
+    {
+        Fines margo;
+
+        margo.x         = -I;
+        margo.y         = -I;
+        margo.latitudo  = f.latitudo + II;
+        margo.altitudo  = f.altitudo + II;
+        mandata_rectangulum(m, margo, color_thematis(COLOR_BORDER),
+                            FALSUM);
+    }
     per (i = I; i < c->numerus_punctorum; i++)
     {
         mandata_linea(m, c->puncta[i - I], c->puncta[i], I,
@@ -110,4 +142,6 @@ pictor_figurae_registrare (
     }
     figura_registrare(reg, PARTES_TABULA, thema, figura_tabulae, ctx);
     figura_registrare(reg, PARTES_TITULUS, thema, figura_tituli, ctx);
+    figura_registrare(reg, PARTES_PROSPECTUS, thema, figura_prospectus,
+                      ctx);
 }

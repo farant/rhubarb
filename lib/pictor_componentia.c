@@ -208,7 +208,7 @@ pictor_componere (
                   ZEPHYRUM, latitudo, altitudo);
     componens_ponere_actio(radix, "instrumentum.eligere");
 
-    prospectus = nodus(piscina, intern, "prospectus", PARTES_NULLUM,
+    prospectus = nodus(piscina, intern, "prospectus", PARTES_PROSPECTUS,
                        fp.x, fp.y, fp.latitudo, fp.altitudo);
     componens_ponere_sectio(prospectus, VERUM);
     componens_ponere_transformatio(prospectus,

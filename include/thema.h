@@ -76,6 +76,9 @@ nomen enumeratio {
     COLOR_WARNING,                   /* Warnings */
     COLOR_SUCCESS,                   /* Success messages */
 
+    /* Desk: area around a page inside a viewport (013) */
+    COLOR_SUPERFICIES,
+
     COLOR_COUNT                      /* Total number of semantic colors */
 } ColorThema;
 

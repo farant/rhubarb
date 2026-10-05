@@ -35,6 +35,13 @@ pictor_imago_fons (
 
 /* <purus/> */
 vacuum
+figura_prospectus (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx);
+
+vacuum
 figura_tabulae (
     constans Componens* c,
                Mandata* m,

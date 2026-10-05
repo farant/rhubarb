@@ -375,5 +375,30 @@ the glue a 500×300-point event with scale 2 → buffer 250×150 and
 in points, no reallocation, the scale recomputed (= today's stretch).
 Full root suite 195/195 (TabulaPixelorum gained a field).
 
-Pending: Fran's look in the window (resize; the status row should hold
-the bottom; no distortion).
+**Fran's look (2026-10-05): "yes, that looks correct now"** - the window
+resizes without distortion and the status row holds the bottom.
+
+## B3c — the desk and the page frame (2026-10-05)
+
+Fran could not see the viewport resize: the canvas IS pictor's fixed
+320×200 document, and the viewport around it had no figura, so its
+extent was invisible against the background. Fran chose a desk colour
++ a page frame: new theme colour `COLOR_SUPERFICIES` (PALETTE_MEDIUM_GRAY;
+the theme had no colour for a background area), new component kind
+`PARTES_PROSPECTUS` (a viewport is a general idea; a figura for
+PARTES_NULLUM would also paint the root), `figura_prospectus` (fill with
+the desk), and figura_tabulae draws a 1-px COLOR_BORDER outline just
+OUTSIDE the page.
+
+**It found a real bug first:** the desk drew nothing because pictor's
+viewport is panned left and delineare_mandata cast signed origins to the
+unsigned delineare API - rectangles vanished, lines and polygons hung.
+Fixed in its own commit (52bee5bf; lib/delineare_mandata.worklog.md).
+
+Tests (probatio_pictor_figurae): the desk colour outside the page, the
+frame's right and top lines at the exact pixels. Goldens inspected and
+promoted: pictor.arbor.stml (only `partes` nullum → prospectus) and
+pictor_prima.png. Root 195/195, ludus_tessera 5/5.
+
+Pending: Fran's look (terminal: box-drawing frame; window: thin frame,
+grey desk).

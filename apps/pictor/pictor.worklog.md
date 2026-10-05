@@ -59,3 +59,11 @@ to the surface (no sliver in a window that is not a cell multiple).
 figura_tituli's text is now vertically centred against the 8-px glyph
 (it was clipped at y = 2 in the 8-px row - the image specimen caught
 it). `PictorCompositio.status_altitudo` → `cellula_*` + `status_lineae`.
+
+## 2026-10-05 — desk and page frame (module 013 B3c)
+
+The viewport (`prospectus`) is now `PARTES_PROSPECTUS` with its own
+figura filling `COLOR_SUPERFICIES` (the desk); the page gets a 1-px
+`COLOR_BORDER` frame just outside it, so a resize is visible as the desk
+growing and shrinking around a fixed page. Building it exposed the
+negative-origin bug in delineare_mandata (fixed separately, 52bee5bf).

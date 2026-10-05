@@ -161,9 +161,16 @@ s32 principale (vacuum)
                        niger);
         CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, VI),
                        albus);
-    /* extra documentum (x=40): fundus thematis */
+    /* extra documentum (x=40): MENSA prospectus (013: superficies
+     * circa paginam - prospectus figuram suam habet) */
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XL, X),
-        color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
+        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
+    /* margo paginae: linea I pixeli EXTRA documentum (schirmo
+     * x -6..35, y 2..33): dextra x=35, superior y=2 */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XXXV, X),
+        color_ad_pixelum(thema_color(COLOR_BORDER)));
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, II),
+        color_ad_pixelum(thema_color(COLOR_BORDER)));
     captura = imago_ex_tabula(t);
     sf = specimen_iudicare(&captura, "pictor_prima",
         specimen_regula_solita("probationes/pictor/specimina"),

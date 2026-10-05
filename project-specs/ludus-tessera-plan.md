@@ -197,6 +197,10 @@ B3b as built: the window buffer refits at the kept scale
 content size, and the window glue rewrites it into our pixels - the
 window had been stretching a fixed buffer. Pending Fran's look.
 
+B3b: Fran's look - correct. B3c (Fran): desk colour + page frame
+(`COLOR_SUPERFICIES`, `PARTES_PROSPECTUS`); found and fixed the
+negative-origin bug in delineare_mandata (52bee5bf).
+
 **B4 — RELATIO.**
 
 ## V. Track (c) — insula-native widgets (outline; interview first)

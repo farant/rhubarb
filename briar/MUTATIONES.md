@@ -183,6 +183,11 @@ Leges chartae:
   pendebant - API delineare i32 insignatum); primitiva in spatio
   positivo octetis eisdem.
 
+- corpus: `COLOR_SUPERFICIES` nova (thema: mensa circa paginam in
+  prospectu) et `PARTES_PROSPECTUS` nova (componens: fenestra in
+  contentum; titulus STML "prospectus"); pictor prospectum mensa implet
+  et paginam margine cingit.
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut
