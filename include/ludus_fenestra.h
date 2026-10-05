@@ -41,6 +41,7 @@ nomen structura {
           ImagoFons  fons;
              vacuum* fons_ctx;
     TabulaPixelorum* tabula;
+            Piscina* piscina;        /* 013 B3b: tabula renovanda */
             Piscina* piscina_quadri;
             Mandata* mandata;        /* quadri ultimi */
       LudusMensurae  mensurae;
@@ -57,7 +58,10 @@ ludus_fenestra_creare (
              vacuum* fons_ctx,
     TabulaPixelorum* tabula);
 
-/* eventus in dispensatorem; tempus ZEPHYRUM stampatur 'nunc'. Ante
+/* eventus in dispensatorem; tempus ZEPHYRUM stampatur 'nunc'.
+ * MUTARE_MAGNITUDINEM (puncta contenti fenestrae): tabula ad fenestram
+ * aptatur SCALA SERVATA (013 B3b) et eventus in PIXELA NOSTRA
+ * (tabulae) rescribitur ante traditionem. Ante
  * eventum primum (aut quadrum primum) magnitudo tabulae semel
  * nuntiatur (MUTARE_MAGNITUDINEM) - superficies status est (013 B1). */
 vacuum

@@ -390,3 +390,48 @@ tabula_pixelorum_obtinere_pixelum (
 
     redde tabula->pixela[y * tabula->latitudo + x];
 }
+
+b32
+tabula_pixelorum_ad_fenestram (
+    TabulaPixelorum* tabula,
+            Piscina* piscina,
+                i32  fenestra_latitudo,
+                i32  fenestra_altitudo)
+{
+    i32  latitudo;
+    i32  altitudo;
+    i32  opus;
+    i32* nova;
+
+    si (!tabula || !piscina || tabula->scala <= 0.0f)
+    {
+        redde FALSUM;
+    }
+    latitudo = (i32)((f32)fenestra_latitudo / tabula->scala);
+    altitudo = (i32)((f32)fenestra_altitudo / tabula->scala);
+    si (latitudo < I)
+    {
+        latitudo = I;
+    }
+    si (altitudo < I)
+    {
+        altitudo = I;
+    }
+    opus = latitudo * altitudo;
+    si (opus > tabula->capacitas)
+    {
+        nova = (i32*)piscina_allocare(piscina,
+            (memoriae_index)opus * magnitudo(i32));
+        si (!nova)
+        {
+            redde FALSUM;
+        }
+        tabula->pixela     = nova;
+        tabula->capacitas  = opus;
+    }
+    tabula->latitudo           = latitudo;
+    tabula->altitudo           = altitudo;
+    tabula->fenestra_latitudo  = fenestra_latitudo;
+    tabula->fenestra_altitudo  = fenestra_altitudo;
+    redde VERUM;
+}

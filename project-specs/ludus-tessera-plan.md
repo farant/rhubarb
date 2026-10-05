@@ -192,6 +192,11 @@ dispositio in cells, one-row status (Fran); surface-touching edges snap
 to the surface (window remainder); title vertically centred (the image
 specimen caught a clipped title). Pending Fran's look.
 
+B3b as built: the window buffer refits at the kept scale
+(`tabula_pixelorum_ad_fenestram`), the resize event reports the
+content size, and the window glue rewrites it into our pixels - the
+window had been stretching a fixed buffer. Pending Fran's look.
+
 **B4 — RELATIO.**
 
 ## V. Track (c) — insula-native widgets (outline; interview first)

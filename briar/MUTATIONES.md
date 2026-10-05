@@ -173,6 +173,11 @@ Leges chartae:
   -> `cellula_latitudo/_altitudo` + `status_lineae` (013 B3); pictor
   componit ex `superficies_*` per dispositio in cellulis.
 
+- corpus (mores): fenestra MUTARE_MAGNITUDINEM magnitudinem CONTENTI
+  narrat (olim quadri cum titulo); `TabulaPixelorum.capacitas` nova et
+  `tabula_pixelorum_ad_fenestram` (scala servata); ludus_fenestra
+  tabulam aptat et eventum in pixela nostra rescribit (013 B3b).
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

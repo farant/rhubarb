@@ -36,6 +36,7 @@ ludus_fenestra_creare (
     lf->fons      = fons;
     lf->fons_ctx  = fons_ctx;
     lf->tabula    = tabula;
+    lf->piscina   = piscina;
     lf->piscina_quadri = piscina_generare_dynamicum("ludus_quadrum",
                                                     LXIV * M);
     si (!lf->piscina_quadri)
@@ -45,8 +46,22 @@ ludus_fenestra_creare (
     redde lf;
 }
 
-/* Magnitudo initialis semel (013 B1); vexillum ANTE traditionem -
- * tractare hanc functionem iterum vocat. */
+/* Tempus stampare et tradere (sine conversione) */
+interior vacuum
+_tradere (
+    LudusFenestra* lf,
+          Eventus* e,
+              s64  nunc)
+{
+    si (e->tempus == ZEPHYRUM)
+    {
+        e->tempus = nunc;
+    }
+    dispensator_tractare(lf->d, e);
+}
+
+/* Magnitudo initialis semel (013 B1), IAM in pixelis nostris
+ * (tabulae) - directe traditur, sine conversione B3b. */
 interior vacuum
 _magnitudinem_nuntiare (
     LudusFenestra* lf,
@@ -64,7 +79,7 @@ _magnitudinem_nuntiare (
     e.tempus                              = nunc;
     e.datum.mutare_magnitudinem.latitudo  = lf->tabula->latitudo;
     e.datum.mutare_magnitudinem.altitudo  = lf->tabula->altitudo;
-    ludus_fenestra_tractare(lf, &e, nunc);
+    _tradere(lf, &e, nunc);
 }
 
 vacuum
@@ -81,11 +96,18 @@ ludus_fenestra_tractare (
     }
     _magnitudinem_nuntiare(lf, nunc);
     e = *ev;
-    si (e.tempus == ZEPHYRUM)
+    si (e.genus == EVENTUS_MUTARE_MAGNITUDINEM && lf->piscina)
     {
-        e.tempus = nunc;
+        /* 013 B3b: puncta fenestrae -> tabula aptata (scala servata)
+         * -> eventus in pixela nostra: superficies idem significat in
+         * fenestra ac in terminali */
+        (vacuum)tabula_pixelorum_ad_fenestram(lf->tabula, lf->piscina,
+            e.datum.mutare_magnitudinem.latitudo,
+            e.datum.mutare_magnitudinem.altitudo);
+        e.datum.mutare_magnitudinem.latitudo = lf->tabula->latitudo;
+        e.datum.mutare_magnitudinem.altitudo = lf->tabula->altitudo;
     }
-    dispensator_tractare(lf->d, &e);
+    _tradere(lf, &e, nunc);
 }
 
 vacuum

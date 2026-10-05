@@ -937,7 +937,10 @@ fenestra_perscrutari_eventus (
         }
 
         /* Verificare pro mutatione magnitudinis */
-        magnitudo_currens = [fenestra->fenestra_ns frame].size;
+        /* 013 B3b: magnitudo CONTENTI (sine titulo), non quadri
+         * fenestrae - tabula ex contento creata est */
+        magnitudo_currens = [fenestra->fenestra_ns contentRectForFrameRect:
+            [fenestra->fenestra_ns frame]].size;
         si (magnitudo_currens.width != magnitudo_ultima.width ||
             magnitudo_currens.height != magnitudo_ultima.height)
         {
@@ -1793,6 +1796,7 @@ fenestra_creare_tabulam_pixelorum (
     tabula->altitudo = altitudo_fixa;
     tabula->scala = (f32)tabula->fenestra_altitudo / (f32)altitudo_fixa;
     tabula->latitudo = (i32)(tabula->fenestra_latitudo / tabula->scala);
+    tabula->capacitas = tabula->latitudo * tabula->altitudo;
 
     /* Allocare tabulam pixelorum */
     tabula->pixela = piscina_allocare(piscina,

@@ -37,6 +37,7 @@ tabula_pixelorum_creare_nuda (
     t->fenestra_latitudo  = latitudo;
     t->fenestra_altitudo  = altitudo;
     t->scala              = 1.0f;
+    t->capacitas          = latitudo * altitudo;
     t->pixela = (i32*)piscina_allocare(piscina,
         (memoriae_index)latitudo * (memoriae_index)altitudo
             * magnitudo(i32));

@@ -337,3 +337,43 @@ The ludus_tessera runner needed `dispositio` in its hand list (every
 suite failed to link until then - one missing lib, not five failures).
 
 Pending: Fran's look - resize a terminal and the window.
+
+## B3b — the window resizes for real (2026-10-05; headless part)
+
+**Fran's look at B3 (terminal) and the first window look:** the status
+row held the bottom in the terminal, the canvas never grew (correct -
+the canvas IS the 320×200 document; the viewport around it resizes,
+invisible because it has no figura); the window "resizes" by
+SQUISHING, distorted aspect, and the status row often vanished.
+
+**Diagnosis from the code (two causes, one symptom set):**
+1. The drawing buffer was created ONCE (`fenestra_creare_tabulam_pixelorum`:
+   480 high, scale = window height / 480) and never resized; the view
+   draws the image scaled to its bounds - a fixed buffer stretched.
+2. The resize event reported the window FRAME (title bar included) in
+   screen points (`fenestra_macos.m`: `[fenestra_ns frame].size`), and
+   B1 wrote that into `superficies_*` - pictor placed the status row in
+   a coordinate space larger than the buffer, past its last row.
+(The terminal had neither problem: its grid is reallocated and its
+sizes are cells.)
+
+**Fix:** the event reports the CONTENT size; new pure
+`tabula_pixelorum_ad_fenestram(t, piscina, w, h)` (fenestra_textus.c,
+no Cocoa) refits the buffer at the KEPT scale - a larger window shows
+more canvas, never a stretched one - and allocates only when the size
+exceeds `capacitas` (new field; shrinking reuses memory, so dragging a
+window does not grow the arena per event); `ludus_fenestra_tractare`
+refits on MUTARE and rewrites the event into OUR pixels before
+dispatch, so `superficies_*` means the same in both targets. The
+initial announcement (already in our pixels) goes through a new
+internal `_tradere` that does not convert.
+
+Tests (probatio_ludus_fenestra): shrink keeps memory, grow reallocates
+(capacity checked, the last pixel writable), the scale is kept; through
+the glue a 500×300-point event with scale 2 → buffer 250×150 and
+`superficies_*` 250/150. Plants caught, clean compiles: the event left
+in points, no reallocation, the scale recomputed (= today's stretch).
+Full root suite 195/195 (TabulaPixelorum gained a field).
+
+Pending: Fran's look in the window (resize; the status row should hold
+the bottom; no distortion).
