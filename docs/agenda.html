@@ -59,6 +59,39 @@ fails loudly on a platform where it doesn't hold.</p>
 The alternative, rebuilding the wide arithmetic on 16-bit pieces, would
 cost about four times the speed and is not recommended.</p>
 
+<h3><span class="id">A3</span>Performance tracking for the math libraries, then faster algorithms when measured</h3>
+<p><span class="status">plan</span> <span class="nota">agreed 2026-10-05, after
+<code>magnus</code> and <code>fractio</code> landed</span></p>
+<p><strong>What, in order.</strong></p>
+<ol>
+<li>Fix what the reviewer of <code>magnus</code> and <code>fractio</code>
+finds (a review agent was started 2026-10-05).</li>
+<li><strong>Deterministic cost counters</strong> inside the math libraries
+(limb multiplications, allocations) behind a test-only switch. Counts are
+identical on every machine, so tests can assert them: "two 1000-limb
+numbers multiply in at most N limb products" catches an accidental
+quadratic path as a plain test failure, without timing noise.</li>
+<li><strong>Wall-clock benchmarks</strong> recorded through
+<code>mensura</code>/<code>mensor</code> (machine id + commit, graphable),
+one <code>probatio_&lt;x&gt;_benchmark.c</code> per library on the pattern
+of <code>probatio_flatura_benchmark.c</code>: a fixed seeded workload at
+sizes 1, 2, 4 … 4096 limbs for multiply, divide, decimal conversion and
+gcd. Recorded, not gated. This is today's baseline.</li>
+<li><strong>Faster algorithms only when a consumer needs big numbers</strong>,
+with thresholds read off the baseline curves, never copied from elsewhere:
+Karatsuba first (about 100 lines; crossover expected around 20–40 limbs);
+divide-and-conquer decimal conversion and Newton or Burnikel–Ziegler
+division, since Knuth D and the current conversion stay quadratic even
+after a faster multiply; NTT (exact, modulo primes with Chinese
+remaindering, never a floating-point FFT) for thousands of limbs, shared
+with fast polynomial multiplication (map #17). Toom–Cook only if a
+benchmark shows the middle band matters.</li>
+</ol>
+<p><strong>Why.</strong> The API does not change; only the inside does.
+Measuring first keeps us from optimizing multiplication while division,
+conversion and gcd (which <code>fractio</code> calls constantly) are the
+real costs.</p>
+
 <h2>Done</h2>
 <p class="nota">Nothing yet. Finished items move here with the commit that
 closed them.</p>
