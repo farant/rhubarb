@@ -37,7 +37,13 @@ python3 "$INSTR/pagina_visionis.py" "$SCHEDAE/exemplar-programmandi.md" 'Exempla
 python3 "$INSTR/pagina_visionis.py" "$SCHEDAE/stml-visio.md" 'STML' stml-visio.md \
     'The source is a consolidation by Claude (2026-08-10, sections added to 2026-09-03) of Fran’s pre-STML notes (G1, G2) and design conversations; claims it attributes to Fran are marked (Fran), and its last section is recorded verbatim in substance from Fran.' \
     > "$VISIONES/stml.html"
-echo "folia visionum: tabularium, textus, instrumenta, exemplar, stml"
+python3 "$INSTR/pagina_visionis.py" "$SCHEDAE/knotapel-plexitas-visio.md" 'Knotapel: threads and plexity' knotapel-plexitas-visio.md \
+    'The source is Fran’s own document (2026-10-05), a synthesis of Fran + Claude conversations from July 2025 to June 2026 that itself marks the earliest ones as ideas to test; the last section is Claude’s review, kept apart.' \
+    > "$VISIONES/plexitas.html"
+python3 "$INSTR/pagina_visionis.py" "$SCHEDAE/mathematica-bibliothecae-visio.md" 'Math library map' mathematica-bibliothecae-visio.md \
+    'The source is Fran’s own document (2026-10-05); the last section is Claude’s review, kept apart.' \
+    > "$VISIONES/mathematica.html"
+echo "folia visionum: tabularium, textus, instrumenta, exemplar, stml, plexitas, mathematica"
 
 TSV=$(mktemp)
 trap 'rm -f "$TSV"' EXIT
