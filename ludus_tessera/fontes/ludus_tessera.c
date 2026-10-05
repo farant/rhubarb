@@ -296,6 +296,8 @@ ludus_tessera_currere (
         }
     }
 
+    /* S1a: pendentia (gestus, pan/zoom) ante exitum effunduntur */
+    dispensator_finire(lt->d);
     tessera_claudere(lt->opus);
     (vacuum)terminalis_exire();
     imprimere("ludus_tessera: quadra=%d compositio=%ldms pingere=%ldms"

@@ -86,7 +86,8 @@ ludus_fenestra_mora (
 
 /* ansa vera: exspectare (ludus_fenestra_mora), tractare, quadrum,
  * praesentare; finis in EVENTUS_CLAUDERE aut post quadra_maxima
- * (> 0). Mensurae ad stdout. */
+ * (> 0), deinde dispensator_finire (pendentia effunduntur).
+ * Mensurae ad stdout. */
 s32
 ludus_fenestra_currere (
     LudusFenestra* lf,

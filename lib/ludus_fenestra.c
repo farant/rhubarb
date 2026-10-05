@@ -194,6 +194,8 @@ ludus_fenestra_currere (
             claudendum = VERUM;
         }
     }
+    /* S1a: pendentia (gestus, pan/zoom) ante exitum effunduntur */
+    dispensator_finire(lf->d);
     imprimere("ludus: quadra=%d compositio=%ldms pingere=%ldms"
               " delineare=%ldms maximum=%ldms\n",
               (int)lf->mensurae.quadra,

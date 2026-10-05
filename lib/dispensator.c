@@ -586,10 +586,16 @@ dispensator_tractare (
     {
         redde;
     }
-    /* sedes quietis */
+    /* sedes quietis: pan/zoom (quies dispensatoris) et gestus
+     * applicationis (quies sua, S1a) - tempore eventus, ergo
+     * replicatio eadem */
     si (motus_quies(&d->motus, ev->tempus, d->quies_ms))
     {
         motus_effundere(&d->motus, d->repo);
+    }
+    si (motus_gestus_quies(&d->motus, ev->tempus))
+    {
+        (vacuum)motus_gestum_effundere(&d->motus, d->repo);
     }
     xar_vacare(d->effusio);
     derivare(&d->derivator, ev, d->effusio);
@@ -612,6 +618,21 @@ dispensator_notarium_ponere (
     {
         d->notata = notata;
     }
+}
+
+vacuum
+dispensator_finire (
+    Dispensator* d)
+{
+    si (!d)
+    {
+        redde;
+    }
+    si (d->motus.sordida)
+    {
+        (vacuum)motus_effundere(&d->motus, d->repo);
+    }
+    (vacuum)motus_gestum_effundere(&d->motus, d->repo);
 }
 
 vacuum

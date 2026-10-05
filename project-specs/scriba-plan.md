@@ -34,6 +34,17 @@ cursor, actions, figura - in both targets?*
    generic; only the projection is pixels (below). scriba is the second
    client.
 
+9. **An insert in progress is saved DEBOUNCED** (Fran, 2026-10-05,
+   before S1): typing changes only the working sheet (gesture tier);
+   after ~1 s without a key (its own setting, not the 300 ms
+   `quies_ms`) the working sheet is committed as an act - a long insert
+   is saved in chunks, a crash loses at most the last pause; Esc
+   commits at once; quit commits what is pending before exiting.
+10. **One `u` undoes the WHOLE insert** (vim's meaning), however many
+    chunks were saved: chunks after the first are marked as joined to
+    the previous act, and historia's undo/redo step over a joined
+    group (a small, general historia addition).
+
 ## II. What exists (read 2026-10-05)
 
 - **pictor_documentum** (`lib/pictor_documentum.c`, 662 lines). The
@@ -143,6 +154,28 @@ splice + pad), so vim's full-sheet behaviour does not matter to it.
 BLANK = all ' ' + indentation -1 (`tabula_initiare` fills spaces - its
 header says '\0'); '\0' is content. Lines live in an attribute
 (`textus`, escapes `\\ \0 \t \1 \q \xHH`). 77 asserts; four plants.
+
+**S1 split (Fran, 2026-10-05)** after decisions 9-10:
+
+- **S1a - a generic gesture slot in Motus (framework).** Motus gains
+  `gestus` (opaque app state of a gesture in progress), its own
+  last-change time and quiet interval, and a flush callback;
+  `dispensator_tractare` flushes it when quiet (beside the pan/zoom
+  flush, on event time - replay-deterministic); new
+  `dispensator_finire` flushes everything pending and both glues call
+  it before exiting (today nothing flushes at exit). Toy-app tests.
+  S1a as built: `MotusGestus gestus` in Motus (status, effusor, ctx,
+  quies_ms, tempus, sordidus); `mutare_gestum`, `motus_gestus_quies`,
+  `motus_gestum_effundere` (writer "gestus"); `dispensator_finire`;
+  both glues call it after their loop. Root 198/198; five plants. The
+  glues' call is not headless-testable (S3 shows it).
+- **S1b - joined acts in historia.** `historia_actum_coniunctum`: an
+  act marked as joined to the previous one (a historia-owned marker,
+  like `<ramus>`); undo/redo step over a joined group. H0 golden must
+  stay byte-identical.
+- **S1c - scriba state and keys** (the original S1 below): the working
+  sheet lives in the gesture slot; first chunk of an insert = an act,
+  later chunks joined; Esc flushes at once.
 
 **S1 — state and actions.** The ephemeral canon: cursor line/column,
 mode, visual selection, pending key, the `fd` flag, the clipboard

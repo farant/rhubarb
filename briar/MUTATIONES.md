@@ -195,6 +195,13 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: Motus GESTUM applicationis habet (`MotusGestus gestus`:
+  status opacus, effusor, quies propria) - `motus_gestum_ponere`,
+  `mutare_gestum`, `motus_gestus_quies`, `motus_gestum_effundere`;
+  dispensator gestum in quiete sua effundit; `dispensator_finire`
+  (nova) pendentia ante exitum effundit - glutina fenestrae et
+  terminalis eam vocant. Structura Motus crevit (rebake).
+
 - corpus: `scriba_documentum` nova - folium textus (TabulaCharacterum)
   per historia: actum `<mutatio linea deletae><linea indentatio
   textus/>...</mutatio>` = lineae substitutae (effectus, non claves);
