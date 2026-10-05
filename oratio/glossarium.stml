@@ -796,6 +796,12 @@
        partes RTLD_LAZY/RTLD_NOW tolerantur -->
   <vocabulum lemma="dlopen" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam dynamicam aperire"/>
   <vocabulum lemma="dlsym" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: symbolum titulo quaerere"/>
+  <vocabulum lemma="execve" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: programma cum ambitu explicito exsequi; systema_posix.h 2026-10-05 pro oraculo effectuum (interpositio_macos.c)"/>
+  <vocabulum lemma="access" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: accessum plagulae probare; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="faccessat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/unistd.h: access relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="fstatat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/stat.h: stat relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="openat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX fcntl.h: open relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="fdcwd" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AT_FDCWD fcntl.h (Darwin -2): fossa directorii operis praesentis; systema_posix.h 2026-10-05, auspex_posix certificat"/>
   <vocabulum lemma="dlclose" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam claudere"/>
   <vocabulum lemma="dlerror" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: nuntius erroris ultimi"/>
   <vocabulum lemma="rtld" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: praefixum modorum RTLD_* (run-time link editor)"/>
