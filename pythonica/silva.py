@@ -40,6 +40,7 @@ import difflib
 import fnmatch
 import os
 import glob
+import random
 import re
 import subprocess
 import sys
@@ -1759,7 +1760,8 @@ def _tempus_notare(genus, titulus, initium, sana=None, rc=None):
         sys.stderr.write('tempora non notata (%s): %s' % (ex, linea))
 
 
-def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False):
+def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
+          auditus=None):
     """portam currere. VERDICTUM (fabrica spec 3 T6): porta sine filtro in
     arbore viva cuius actio 'iudicium' declarata est (porta_<nomen>,
     _portae_verdictorum) per fabricam it - 'bin/fabrica iudicare' RECENS
@@ -1767,9 +1769,10 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False):
     servatus, ante N]'); aliter 'bin/fabrica sanare' portam currit et
     vestigium servat. vis=True: currit semper (et servat). Ceterae
     (filtrum, umbra, portae sine actione, bin/fabrica absens aut sera
-    tenta) via cruda: _porta_cruda."""
+    tenta) via cruda: _porta_cruda. auditus: None = FABRICA_AUDITUS
+    ambitus; VERUM/FALSUM expresse (commissio: _auditum_commissionis)."""
     if filtrum is None and radix is None and receptum:
-        p = _porta_per_fabricam(nomen, vis)
+        p = _porta_per_fabricam(nomen, vis, auditus)
         if p is not None:
             return p
     return _porta_cruda(nomen, filtrum, radix, receptum)
@@ -1812,7 +1815,30 @@ def _verdicti_via(nomen):
     return os.path.join('build', 'fabrica', 'verdicta', nomen + '.txt')
 
 
-def _porta_per_fabricam(nomen, vis=False):
+# AUDITUS COMMISSIONIS (fabrica spec 3, post T9): commissio transitum
+# reutilem unum ex N tamen currit (sanare -audit) - fiducia vestigii
+# continue mensurata, non solum cum quis meminit. Sortitio PER VOCATIONEM
+# (non per clavem ut FABRICA_AUDITUS=N in fabrica: transitus cuius
+# ingressus diu immoti sunt aut semper aut numquam auditur).
+# FABRICA_AUDITUS_COMMISSIONIS=N (ordinarie X; 0 = nullus). _alea
+# substituibilis in probationibus.
+AUDITUS_COMMISSIONIS = 10
+_alea = random.random
+
+
+def _auditum_commissionis(nomen):
+    """sortitio auditus pro porta verdicti in commissione"""
+    try:
+        n = int(os.environ.get('FABRICA_AUDITUS_COMMISSIONIS',
+                               AUDITUS_COMMISSIONIS))
+    except ValueError:
+        n = AUDITUS_COMMISSIONIS
+    if n <= 0 or nomen not in _portae_verdictorum():
+        return False
+    return _alea() < 1.0 / n
+
+
+def _porta_per_fabricam(nomen, vis=False, auditus=None):
     """porta per actionem 'iudicium' fabricae; None = via cruda. SEMPER
     'bin/fabrica sanare <verdictum>' (spec 3 par. XIII v5): sanare
     dependentias (toml_corpus, aurum) ordine realizat, DEINDE verdictum
@@ -1834,7 +1860,8 @@ def _porta_per_fabricam(nomen, vis=False):
             os.unlink(os.path.join(RADIX, via))
         except OSError:
             pass
-    auditus = bool(os.environ.get('FABRICA_AUDITUS'))
+    if auditus is None:
+        auditus = bool(os.environ.get('FABRICA_AUDITUS'))
     # I. ingressus build/ (artificia non commissa: index corporis, aurum)
     # realizantur - aliter iudicium contra artificium stalum (v5)
     praevia = _portae_verdictorum()[nomen]
@@ -2596,7 +2623,13 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
             if f is not None and f.sana:
                 print('porta %s: %s - non iterum cursa' % (nomen, f.compendium))
             else:
-                f = porta(nomen, filtrum)
+                audita = filtrum is None and _auditum_commissionis(nomen)
+                f = porta(nomen, filtrum, auditus=True if audita else None)
+                if audita and f.sana:
+                    print('porta %s: %s - auditus (I ex %s)'
+                          % (nomen, f.compendium, os.environ.get(
+                              'FABRICA_AUDITUS_COMMISSIONIS',
+                              AUDITUS_COMMISSIONIS)))
                 if f.sana and '[transitus servatus' in f.compendium:
                     # actio iudicium (fabrica spec 3 T6): vestigium idem
                     print('porta %s: %s - non iterum cursa (digestum idem)'

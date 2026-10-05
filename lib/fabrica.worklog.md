@@ -1869,3 +1869,20 @@ files, don't guess). Verified: porta('toml', vis=True) with a ledger note
 written mid-run -> SANATUM. `iudicare -plenus` 15.0 s (165 RECENS, verdict
 never in the sweep). T8 parked (…2VP7), after the gate-migration
 desideratum (…J6HF). Spec 3 §XIV As built.
+
+## 2026-10-05 - sampled audit at commit time
+
+commissio now audits a reused verdict pass one time in N (default X,
+`FABRICA_AUDITUS_COMMISSIONIS=N`, 0 = off): `_auditum_commissionis(nomen)`
+rolls per CALL and `porta(nomen, auditus=True)` then runs `sanare -audit`
+(iudicare skipped); commissio prints "porta X: ... - auditus (I ex N)".
+Why not fabrica's own `FABRICA_AUDITUS=N`: that samples by key byte - a
+pass whose inputs stay put for many commits would be audited always or
+never, and the long-lived pass is the one most worth spot-checking.
+`silva._alea` is injectable; 5 hermetic tests (dice below/above 1/N, N=0,
+non-verdict gate never, auditus=True -> `sanare -audit` and no iudicare,
+via a fake bin/fabrica logging argv). Plant (never audit) -> red.
+Session note: a crash left a second copy of this conversation running in
+tmux; both ran pythonica against the same build/ (spurious
+'recepta sua deleta' and a clone `cp` failure) and shared one scratchpad.
+Nothing committed or doubled; one copy kept, clean rerun green.

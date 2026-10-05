@@ -958,6 +958,47 @@ try:
     silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'frangitur'))
     pv = silva.porta('ficta-v', 'aliquid')
     credo(pv.sana, 'porta per fabricam: filtrum -> via cruda')
+    # AUDITUS COMMISSIONIS: sortitio per vocationem (spec 3 post T9)
+    _alea_vera = silva._alea
+    try:
+        silva._alea = lambda: 0.0
+        credo(silva._auditum_commissionis('ficta-v'),
+              'auditus commissionis: alea sub I/N -> auditur')
+        silva._alea = lambda: 0.99
+        credo(not silva._auditum_commissionis('ficta-v'),
+              'auditus commissionis: alea supra I/N -> non auditur')
+        os.environ['FABRICA_AUDITUS_COMMISSIONIS'] = '0'
+        silva._alea = lambda: 0.0
+        credo(not silva._auditum_commissionis('ficta-v'),
+              'auditus commissionis: N = 0 -> nullus')
+        del os.environ['FABRICA_AUDITUS_COMMISSIONIS']
+        credo(not silva._auditum_commissionis('ficta-octeti'),
+              'auditus commissionis: porta sine verdicto numquam')
+        # porta(auditus=True): 'sanare -audit', iudicare numquam vocatum
+        _log = os.path.join(T, 'fabrica_argv.log')
+        _fa = os.path.join(T, 'fabrica_auditus')
+        _acta = os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')
+        if os.path.exists(_log):
+            os.unlink(_log)
+        with open(_fa, 'w') as f:
+            f.write('#!/bin/bash\n'
+                    'echo "$*" >> %s\n'
+                    'mkdir -p "$(dirname %s)" "$(dirname %s)"\n'
+                    'echo "ficta-v: fictum: sanum" > %s\n'
+                    'echo "fictum: sanum" > %s\n'
+                    'echo "SANATUM     porta_ficta-v (0.1 s) - auditus: transitus iterum congruit"\n'
+                    'exit 0\n' % (_log, _vv, _acta, _vv, _acta))
+        os.chmod(_fa, 0o755)
+        silva.FABRICA_BIN = _fa
+        pv = silva.porta('ficta-v', auditus=True)
+        _argv = open(_log).read().splitlines()
+        credo(pv.sana and 'auditus: transitus iterum congruit' in pv.compendium
+              and any(l.startswith('sanare -audit') for l in _argv)
+              and not any(l.startswith('iudicare') for l in _argv),
+              'porta(auditus=True): sanare -audit, iudicare omissum')
+    finally:
+        silva._alea = _alea_vera
+        os.environ.pop('FABRICA_AUDITUS_COMMISSIONIS', None)
     # portae verdictorum ex declarationibus veris: toml
     silva._VERDICTA_MEMORATA = None
     credo('toml' in silva._portae_verdictorum(),
