@@ -107,6 +107,7 @@ declare -a SOURCE_FILES=(
     "lib/ludus_fenestra.c"
     "lib/machina_posix.c"
     "lib/macho.c"
+    "lib/magnus.c"
     "lib/mandatum.c"
     "lib/manus.c"
     "lib/manus_ludus.c"
