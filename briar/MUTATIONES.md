@@ -195,6 +195,12 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: `scriba_componentia` et `scriba_figurae` novae - arbor
+  scribae (prospectus/pagina/status in cellulis; cursor et ancora in
+  puncta, modus in titulo; volutio sine statu cursorem centrans) et
+  figurae (mensa, charta cum margine, selectio linearum, cursor colore
+  status modi, linea status).
+
 - corpus: `scriba_actiones` nova - actio `pagina.clavis` (vim super
   folium laboris in gestu; status vim in insula ephemerarum; servatio
   statim in modo normali, post quietem in inserendo, Esc claudit;

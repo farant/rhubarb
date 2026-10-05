@@ -228,6 +228,14 @@ page); `componere` with dispositio: viewport (GROW, clipped, the
 sheet inside on the desk, `PARTES_PROSPECTUS`) over a status row
 (mode, line:column). Tests: figurae on hand states; the tree golden.
 
+S2 as built: `scriba_componentia` (tree; figure data in `puncta` and
+`titulus` as pictor; stateless centre-on-cursor scrolling when the
+sheet overflows - veto-able) and `scriba_figurae` (desk, paper +
+frame, whole-line selection, steady block cursor in its MODE's status
+colour - COLOR_CURSOR and COLOR_STATUS_INSERT are the same gold, found
+by a surviving plant). No "cut-off mark" in the legacy page - the plan
+misremembered it (double border with title/mode). Root 200/200.
+
 **S3 — the app.** `lib/scriba_applicatio` + `apps/scriba/scriba.c`
 (window) + `scriba_terminalis.c` (+ `.sh`), a volumen by path (as
 pictor's `pictor_volumen_aperire`). Headless proof: a key session
