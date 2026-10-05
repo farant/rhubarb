@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 85 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 90 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -72,7 +72,9 @@ a second readout. Demos 76 to 80 push the quaternion searches to eight, ten
 and twelve inputs and ask which generator angles give finite groups.
 Demos 81 to 84 measure capacity against catalog size, crossing depth, writhe
 and "null" entries, and demo 85 returns to the Temperley–Lieb algebra itself
-for a parameter of logarithmic conformal field theory.</p>
+for a parameter of logarithmic conformal field theory. Demos 86 to 90 test
+that parameter on a single projective module, then look for the mechanism
+behind the depth law.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1556,6 +1558,84 @@ coordinates the elimination produced. The division by 4 is not derived, and
 −5/8 is the value the log itself quotes for percolation (δ = 1, c = 0); δ = 0
 is dense polymers, c = −2.</p>
 
+<h2>Demo 86 · b on one projective module</h2>
+<p class="nota"><code>knotapel/demo_86_b_direct/main.c</code> · 1,786 lines · 15/15 tests · no <code>findings.md</code></p>
+<p>If the regular representation's multiplicity caused demo 85's factor of
+4, computing on a single projective module should give b directly. It does
+not: the extraction diverges on the 5-dimensional module of TL<sub>4</sub>,
+the 14-dimensional one of TL<sub>6</sub> and every eigenvalue tried, and the
+full regular representation of TL<sub>6</sub> diverges by the same power. The
+demo concludes, honestly, that demo 85's TL<sub>4</sub> success "may be
+coincidental". It also records exact spectra: x(x<sup>2</sup> − 2)<sup>2</sup>
+for TL<sub>4</sub>, and x<sup>2</sup>(u − 1)(u − 3)(u<sup>2</sup> − 8u + 4)<sup>2</sup>
+with u = x<sup>2</sup> for TL<sub>6</sub>, with Jordan blocks at the doubled
+roots.</p>
+<p>A clean negative result that agrees with note 45, and the spectra are
+right and informative. One reading in it is not (<a
+href="#nota-projectivum">note 46</a>): the eigenvalues ±(√3 ± 1), called
+"projective-cover-exclusive, not present on W<sub>0</sub>", are exactly the
+spectrum of the standard module W<sub>6,0</sub>, and the doubled roots are its
+two copies inside the projective module. So the verdict that another model
+"confused" the two modules does not stand.</p>
+
+<h2>Demo 87 · Nulls at ζ<sub>12</sub></h2>
+<p class="nota"><code>knotapel/demo_87_null_indispensability/main.c</code> · 907 lines · 14/14 tests · no <code>findings.md</code></p>
+<p>Demo 84's half-turns, in the 4,096-element ζ<sub>12</sub> catalog: 121
+elements (3%), on 67 axes of their own among 2,043. Removing them costs
+nothing at XOR6 to XOR12; at ζ<sub>8</sub> it cost most of XOR8. "Null
+indispensability is a finite-group phenomenon."</p>
+<p>Two good habits show here: a first run's drop at XOR12 was traced to a cap
+on directions (600 of 2,043) and corrected, and the log calls its own "all
+nulls have half-angle 90°" a tautology, which it is. The setting is still the
+ζ<sub>12</sub> group of note 41, and with thousands of axes a table hardly
+misses a few (note 42).</p>
+
+<h2>Demo 88 · Why design and computation pull apart</h2>
+<p class="nota"><code>knotapel/demo_88_anti_correlation/main.c</code> · 1,174 lines · 8/8 tests · no <code>findings.md</code></p>
+<p>Demo 72 found that moving the thirteen axes towards a better spherical
+design destroys XOR6. Demo 88 asks why, with the angle-and-axis activation
+over a ladder of sector counts: moving the six edge axes by 10° slightly
+helps, moving the four body diagonals hurts most, and optimising towards a
+design while holding the body and face axes within 2° keeps 97% of the
+solutions. Its conclusion: the edge ("null") axes are flexible scaffolding,
+the others computational anchors; and with the ladder of sector counts the
+optimisation costs 6%, not demo 72's 89%.</p>
+<p>The perturbation and constrained-optimisation runs are the right
+experiments, and the ladder's robustness is worth knowing. Two descriptions
+need care: the thirteen axes are not a cuboctahedron (only the six edge axes,
+twelve points with their negatives, are its vertices; all 26 points are the
+vertices of the disdyakis dodecahedron), and "worst possible design for 13
+points" is asserted, not shown, while the undirected set is a 3-design
+(note 39).</p>
+
+<h2>Demo 89 · Looking for the depth law's mechanism</h2>
+<p class="nota"><code>knotapel/demo_89_depth_law_mechanism/main.c</code> · 1,964 lines · 13/16 tests (three fail as shipped, by design; about 3 minutes) · no <code>findings.md</code></p>
+<p>Eleven phases test eight explanations for "max XOR ≈ depth + 6" at
+ζ<sub>12</sub>: pairwise coherence, direction coverage, cell diversity, sector
+diversity, Cayley-graph density, multi-sum sectors, angle coherence and
+paired extension. Seven are ruled out and one survives as a minority
+pathway; the surviving facts are a few quantities that grow linearly with
+depth. The status is written as "PRELIMINARY".</p>
+<p>This is the method the earlier notes asked for, and the demo deserves
+credit for it: predictions stated, three of them kept as failing tests when
+they failed, and a log that lists what the law is not. Its random baseline
+draws from the catalog; a baseline of uniformly random rotations would also
+say whether depth matters beyond spreading the catalog evenly (below).</p>
+
+<h2>Demo 90 · Sum angles</h2>
+<p class="nota"><code>knotapel/demo_90_sum_angle_structure/main.c</code> · 1,713 lines · 10/12 tests (two fail as shipped, by design) · no <code>findings.md</code></p>
+<p>What do winning tuples do? They pick rotation axes that nearly cancel
+(mean minimum axis dot product −0.75 against −0.65), so their sums have small
+rotation angles; sums of a generator and a deep element take only 73 angles
+in 50,000 pairs, against 1,313 for two deep elements; and the axes become
+uniform on the sphere as depth grows (spherical-harmonic bandwidth falls).
+The log's account: the mechanism is relational, how elements combine, not
+where they sit, and the linear law is two exponentials balancing.</p>
+<p>The observations are concrete and the failed predictions stay failed.
+The uniformity is expected: the elements of a dense subgroup of SU(2),
+reached by growing words, spread out evenly. The balanced-exponential
+argument is offered as preliminary, and that is what it is.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -2222,12 +2302,25 @@ dense polymers at c = −2, where the stress tensor is not null
 (⟨T|T⟩ = c/2 = −1), and a b-parameter is a limit over growing lattices, not a
 single n = 4 value. Agreement from two other language models is
 agreement, not verification.</p></li>
+<li id="nota-projectivum"><p><strong>Demo 86's spectra are standard-module
+spectra, doubled.</strong> At δ = 0 the standard module W<sub>n,0</sub> has
+no head (its form vanishes), so it is isomorphic to the simple L<sub>2</sub>,
+and the projective module with head L<sub>2</sub> is [L<sub>2</sub>;
+L<sub>4</sub>; L<sub>2</sub>]: dimensions 2 + 1 + 2 = 5 for TL<sub>4</sub> and
+5 + 4 + 5 = 14 for TL<sub>6</sub>, the demo's two modules. Its Hamiltonian
+spectrum is therefore L<sub>2</sub>'s twice, the two copies coupled into Jordan
+blocks, plus L<sub>4</sub>'s once. Computed directly on the link states (a
+scratch script): Σe<sub>i</sub> on W<sub>4,0</sub> has eigenvalues ±√2, and on
+W<sub>6,0</sub> the eigenvalues 0, ±(√3 − 1) and ±(√3 + 1). These are the doubled
+roots of the demo's characteristic polynomials, Jordan blocks included; the
+simple roots (0 for TL<sub>4</sub>; ±1 and ±√3 for TL<sub>6</sub>) belong to
+L<sub>4</sub>. Nothing in the spectrum is exclusive to the projective module
+except the Jordan coupling itself.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demos 86 to 89 continue the indecomposability work (demo 86 reports a
-negative result for b on a single projective cover) and study null states and
-depth, before the multi-strand work of demos 99 to 109. The controls this reading found
+<p>Demos 91 to 98 test the activation as the bottleneck and continue the
+capacity questions, before the multi-strand work of demos 99 to 109. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -2407,6 +2500,10 @@ partner by a stated condition (orthogonality to the kernel under a
 nondegenerate form, or the standard module rather than the regular
 representation), compute b for n = 4, 6, 8, … and extrapolate, as the
 lattice literature does, before comparing with any continuum value.</p></li>
+<li><p><strong>Depth against uniform.</strong> For demos 82, 89 and 90,
+add a baseline of Haar-random unit quaternions at matched sizes, beside the
+deep, shallow, strided and catalog-random samples: if deep elements win only
+because they are spread evenly, the uniform sample should win too.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -2436,7 +2533,9 @@ winners survive a boundary test, demo 79 catches its own capped catalog), and
 then one large slip: from demo 79 on, the generators are no longer a braid
 group representation. Demos 81 to 85 build on that slip and on analogies with
 logarithmic CFT, and demo 85, the one exact computation, shows its own
-gauge dependence in its output.</p>
+gauge dependence in its output. Demos 86 to 90 change the tone: a negative
+result reported as one, a capped catalog caught and fixed, a tautology named,
+and failed predictions left failing in the test counts.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
@@ -2445,10 +2544,10 @@ note 26, demo 59's catalog magnitudes (note 28), the lattice search and
 random check of note 30, the rotated sectors of note 32, demo 65's
 magnitudes, the group check of note 34, the rank computation and labelings of
 note 38, the design recomputation of note 39, demo 77's rotated sectors and
-the group computations of note 41 ran on scratch copies. Written by hand on
-2026-10-03 from reading the seventy-three <code>main.c</code> files (demos 1
-to 29, 35, 38, 39 and 45 to 85, with their findings, debriefs and, for 51 to
-85, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+the group computations of note 41 ran on scratch copies. The spectra of note 46 were computed by a scratch script. Written by hand on
+2026-10-03 and 2026-10-05 from reading the seventy-eight <code>main.c</code>
+files (demos 1 to 29, 35, 38, 39 and 45 to 90, with their findings, debriefs
+and, for 51 to 90, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
