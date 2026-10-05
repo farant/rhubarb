@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 110 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 112 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -82,7 +82,9 @@ Temperley–Lieb algebra at δ = 0. Demos 101 to 105 carry that to five, six
 and eight strands and study the sign-hash activation that reads the
 matrices. Demos 106 to 109 test topological entropy as a predictor and build
 a graph library for the catalog's values; demo 110 starts a new line, knots
-encoded as binary construction decisions.</p>
+encoded as binary construction decisions, and demos 111 and 112, the last in
+the folder, build those words from braids and read them with the Alexander
+polynomial.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1993,6 +1995,55 @@ results, and the specificity theorem, cannot be read yet. Determinant 5 also
 does not separate the figure-eight from the cinquefoil, nor determinant 3 the
 trefoil from 8<sub>19</sub>.</p>
 
+<h2>Demo 111 · From braids to construction words</h2>
+<p class="nota"><code>knotapel/demo_111_braid_to_construction/main.c</code> · 2,876 lines · 29/29 tests (about 6 seconds) · <code>findings.md</code> (marked "in progress")</p>
+<p>A pipeline: lay out a braid word as a stick polygon on an integer grid
+(over and under strands lifted to ±1), close it, and simplify by removing
+any vertex whose removal leaves the determinant unchanged; then run every
+construction word as in demo 110. Six knots, 3<sub>1</sub> to 8<sub>18</sub>,
+come out with the right determinant at 7 to 12 vertices. Results: torus knots
+have flatter bit influence than the others; 6<sub>3</sub> is a "knot factory"
+with 22 distinct determinants up to 161; complement closure is a "surprise",
+present for the chiral 5<sub>2</sub> and absent for the amphichiral 4<sub>1</sub>
+and 8<sub>18</sub>; changing the base triangle takes 8<sub>18</sub> from 10
+to 28 determinants; and randomizing the simplification changes everything,
+so the analysis is "geometry-dependent, not a knot invariant".</p>
+<p>The pipeline is a good idea, and two of its observations are right and
+useful: three-sphere intersection with a fixed base is reflection in the base
+plane, and a vertex in that plane is a free bit. The numbers are not (<a
+href="#nota-polygona">note 59</a>). The rationals are 64-bit and overflow;
+rerun with 128-bit integers, 6<sub>3</sub> has 5 determinants, not 22,
+8<sub>18</sub> 10, not 28, and complement closure holds wherever the polygon
+is a genuine knot (4<sub>1</sub> 4 of 4, 5<sub>2</sub> 4 of 4,
+6<sub>3</sub> 8 of 8), as the mirror requires (note 58). Simplifying by the
+determinant in one projection does not preserve the knot either.</p>
+
+<h2>Demo 112 · Alexander polynomials of construction words</h2>
+<p class="nota"><code>knotapel/demo_112_alexander_polynomial/main.c</code> · 3,008 lines · 37/37 tests (about 24 seconds) · <code>findings.md</code></p>
+<p>The determinant is replaced by the whole Alexander polynomial, computed
+two ways: from the braid word by Fox calculus, and from the polygon's
+projection. The Fox calculus gives the textbook polynomial for all twelve
+knots, 3<sub>1</sub> to 8<sub>18</sub>. Then the demo finds, by itself, that
+some construction words give polygons whose edges meet in space, and filters
+them out (after trying eight projection directions); with that filter every
+remaining polynomial is palindromic. The headline is 6<sub>3</sub>: all 256
+words valid, 37 distinct polynomials over 22 determinants, including
+ten-crossing and non-alternating knots and connected sums, and a twelve-knot
+"reachability graph" in which 6<sub>3</sub> and 7<sub>2</sub> are hubs and
+seven knots are islands.</p>
+<p>Finding the self-intersections and filtering them was the right move, and
+the Fox calculus is correct. The rest does not survive checking (<a
+href="#nota-polygona">note 59</a>). Ten of the twelve simplified polygons
+already pass through themselves before any bit is flipped, and six of them
+have the wrong polynomial; the demo never computes the polygon's own
+polynomial, because the all-zero word is given the braid's. With 128-bit
+arithmetic, 6<sub>3</sub>'s 256 words give six polynomials, not 37 (those
+of the unknot, 3<sub>1</sub>, 4<sub>1</sub>, 5<sub>1</sub>, 5<sub>2</sub> and
+6<sub>3</sub>),
+and every word agrees with its complement, where the 64-bit run disagreed on
+200 of 256. The identifications are also inconsistent with the demo's own
+table (<a href="#nota-nomina">note 60</a>).</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -2846,13 +2897,61 @@ be excluded. The cinquefoil overflows 128 bits at most rotations, so it still
 needs exact big integers before its results mean anything. Two things stand:
 the figure-eight classifier at its four rotations is a correct computation
 of determinant and writhe, though the writhe of one projection is not a knot
-invariant; and demos 111 and 112 use the same 64-bit rationals.</p></li>
+invariant; and demos 111 and 112 use the same 64-bit rationals (note
+59).</p></li>
+<li id="nota-polygona"><p><strong>Demos 111 and 112: the polygons and the
+arithmetic.</strong> Three checks on scratch copies. (1) The base polygons.
+Simplification removes a vertex whenever the determinant in the (2, 3, 5)
+projection is unchanged, which lets strands pass through each other (a
+crossing of sign 0 counts as negative) and cannot tell knots with the same
+determinant apart. Of demo 112's twelve simplified polygons, ten meet
+themselves in space before any bit is flipped (only 4<sub>1</sub> and
+6<sub>3</sub> do not), and six compute a polynomial other than their braid's:
+5<sub>2</sub>'s gives 3t<sup>2</sup> − 3t + 1, 8<sub>18</sub>'s one of degree 5.
+"Verified against known values" checks the Fox calculus on the braid word,
+and the all-zero word is assigned that polynomial instead of its own, so
+"the source knot is in every trial's core" holds by insertion; the four
+knots with a single valid word (6<sub>1</sub>, 7<sub>3</sub>, 7<sub>4</sub>,
+8<sub>18</sub>) have no valid computed word at all. The safe simplification is
+the classical one: remove a vertex only when no other edge pierces the
+triangle it spans with its neighbours. (2) Self-intersection is mostly a
+property of single bits: flipping certain vertices always makes the polygon
+meet itself, so the valid words are nearly a subcube, plus the inserted base
+word. That is the 2<sup>k</sup> + 1 in the census (5, 17, 33, 65, 129, 1025),
+and the claim that the counts are "always a power of two minus one" is
+contradicted by the demo's own 64, 351, 703 and 2,303. (3) Overflow. The
+rationals are 64-bit (<code>long</code>); 6<sub>3</sub>'s spectrum overflows
+thousands of times. Rerun with 128-bit integers (no overflow), every word of
+4<sub>1</sub> and 6<sub>3</sub> has the polynomial of its complement, as the
+mirror requires, against 24 of 32 and 56 of 256 in the shipped arithmetic;
+by polynomial, 4<sub>1</sub>'s words give the unknot 24 times, 3<sub>1</sub> 4 and
+4<sub>1</sub> 4, and 6<sub>3</sub>'s give the unknot 144 times, 3<sub>1</sub>
+72, 5<sub>2</sub> 16, and 4<sub>1</sub>, 5<sub>1</sub> and 6<sub>3</sub> 8
+each. Demo 111 under 128-bit integers: 6<sub>3</sub> 5 determinants (not 22),
+8<sub>18</sub> 10 (not 28), and most of its randomized trials turn
+palindromic. The
+"knot factory", the ten-crossing and non-alternating knots, the reachability
+hubs and the "geometry dependence" of demo 111 were overflow on singular
+polygons. What a construction word reaches from a correct 6<sub>3</sub> is a
+small family of small knots.</p></li>
+<li id="nota-nomina"><p><strong>Demo 112's knot names.</strong> Even on
+their own terms, several identifications contradict the demo's verified
+table. t<sup>4</sup> − 2t<sup>3</sup> + 3t<sup>2</sup> − 2t + 1 is
+(t<sup>2</sup> − t + 1)<sup>2</sup>, the granny or square knot, not "6<sub>2</sub>
+or 7<sub>4</sub>"; t<sup>6</sup> − t<sup>5</sup> + t<sup>3</sup> − t + 1 is
+8<sub>19</sub> = T(3, 4), not 3<sub>1</sub>#3<sub>1</sub>;
+2t<sup>4</sup> − 3t<sup>3</sup> + 3t<sup>2</sup> − 3t + 2 is the demo's own
+7<sub>3</sub>, not 8<sub>19</sub>; and t<sup>4</sup> − 3t<sup>3</sup> +
+3t<sup>2</sup> − 3t + 1 is its own 6<sub>2</sub>, not "7<sub>3</sub> or
+8<sub>1</sub>". An Alexander polynomial also does not name a knot (many
+share one), so every such table needs "a knot with this polynomial".</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demo 111 turns braids into construction words, and demo 112 computes
-Alexander polynomials from them; both use demo 110's 64-bit rationals, so
-note 58's mirror test is the first check to run. The controls this reading found
+<p>Demo 112 is the last in the folder. The construction-word line now needs
+its foundations before more results: big-integer rationals, a simplification
+that is an isotopy, a self-intersection check on the base polygon, and the
+mirror test as an assertion (notes 58 and 59). The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -3060,7 +3159,10 @@ whose polygon meets itself; and make "every word and its complement have
 the same determinant" a test that runs on every rotation. Then redo the
 cinquefoil and 6<sub>3</sub> and see what survives. Classify knots by more
 than the determinant (the Alexander polynomial, or several projections) so
-that 4<sub>1</sub> and 5<sub>1</sub> come apart (note 58).</p></li>
+that 4<sub>1</sub> and 5<sub>1</sub> come apart (note 58). For demos 111 and
+112, simplify only by triangle moves that no edge pierces, check the base
+polygon's own polynomial against the braid's, and only then compute spectra
+and reachability (note 59).</p></li>
 <li><p><strong>Entropy through a readout that sees magnitudes.</strong>
 Demo 106's matrices already carry the spectral radius (note 54). Choose a
 readout that keeps magnitudes (trace size, the largest entry, a norm) and a
@@ -3113,7 +3215,11 @@ their predictions and report their failures, which is the right habit; their
 explanations need the classical identifications (Burau is the bracket's
 representation, the two vocabularies are negatives of each other) and, for
 demo 110, an arithmetic that cannot overflow, after which its most striking
-result turns out sturdier than the demo believed.</p>
+result turns out sturdier than the demo believed. Demos 111 and 112 extend
+the construction words honestly (the self-intersections were found and
+named) on foundations that do not hold: singular polygons and overflowing
+rationals. Corrected, the spectacular results shrink to a small family of
+small knots, which is a cleaner question to start from.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
@@ -3127,10 +3233,11 @@ random catalog ran in a scratch copy of demo 94; the checks of notes 49 and 50
 were scratch scripts, as were the Gram ranks of note 52, the Burau comparison
 of note 54 and the matching counts of note 55; note 57's negation check and
 note 58's mirror, overflow and 128-bit runs were scratch copies of demos 109
-and 110. Written by hand on
-2026-10-03 and 2026-10-05 from reading the ninety-eight <code>main.c</code> files
-(demos 1 to 29, 35, 38, 39 and 45 to 110, with their findings, debriefs and,
-for 51 to 110, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+and 110, as were note 59's polygon, bit and 128-bit checks of demos 111 and
+112. Written by hand on
+2026-10-03 and 2026-10-05 from reading the hundred <code>main.c</code> files
+(demos 1 to 29, 35, 38, 39 and 45 to 112, with their findings, debriefs and,
+for 51 to 112, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
