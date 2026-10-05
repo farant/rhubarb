@@ -109,12 +109,23 @@ historia_actum (
     Historia* h,
       chorda  actum);
 
-/* cursor ad actum vivum priorem; FALSUM ad initium */
+/* ut historia_actum, sed actum PRIORI coniunctum (S1b): revocare et
+ * reficere gregem coniunctum gradu uno transeunt. Nota historiae
+ * (<coniunctio/>, genus "coniunctio") ante actum appenditur; sine
+ * actu priore vivo actum simplex est. */
+s64
+historia_actum_coniunctum (
+    Historia* h,
+      chorda  actum);
+
+/* cursor ad actum vivum ante gregem currentem (actum unum si non
+ * coniunctum); FALSUM ad initium */
 b32
 historia_revocare (
     Historia* h);
 
-/* cursor ad actum vivum proximum; FALSUM ad finem (et post ramum) */
+/* cursor ad actum vivum proximum et coniuncta ei; FALSUM ad finem
+ * (et post ramum) */
 b32
 historia_reficere (
     Historia* h);

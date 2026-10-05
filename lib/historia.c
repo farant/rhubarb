@@ -69,12 +69,15 @@ applicare (
 /* acta viva post 'post' usque ad 'ad' (inclusive): generis clientis
  * soli (volumen sua acta interserit - volumen-creatum,
  * plagula-condita - quae hic nihil sunt), rami honorati: reddit Xar
- * de VolumenActum ordine seq */
+ * de VolumenActum ordine seq. Si 'coniuncta' non NIHIL: Xar de b32
+ * PAR - actum i priori coniunctum (<coniunctio/> ante id, S1b);
+ * ramus utrumque truncat. */
 interior Xar*
 acta_viva (
-    Historia* h,
-         s64  post,
-         s64  ad)
+    Historia*  h,
+         s64   post,
+         s64   ad,
+         Xar** coniuncta)
 {
              Xar* omnia;
              Xar* viva;
@@ -85,10 +88,15 @@ acta_viva (
              i32  k;
              s64  ab;
     StmlResultus  res;
+             Xar* notae;
+             b32  pendens;
+             b32* nota;
 
-    omnia  = volumen_acta_legere(h->volumen, post, h->piscina);
-    viva   = xar_creare(h->piscina, (i32)magnitudo(VolumenActum));
-    n      = xar_numerus(omnia);
+    omnia    = volumen_acta_legere(h->volumen, post, h->piscina);
+    viva     = xar_creare(h->piscina, (i32)magnitudo(VolumenActum));
+    notae    = xar_creare(h->piscina, (i32)magnitudo(b32));
+    pendens  = FALSUM;
+    n        = xar_numerus(omnia);
     per (i = ZEPHYRUM; i < n; i++)
     {
         a = (VolumenActum*)xar_obtinere(omnia, i);
@@ -113,14 +121,28 @@ acta_viva (
                 k--;
             }
             xar_truncare(viva, k);
+            xar_truncare(notae, k);
+            pendens = FALSUM;
+            perge;
+        }
+        si (chorda_aequalis_literis(a->genus, "coniunctio"))
+        {
+            pendens = VERUM;
             perge;
         }
         si (!chorda_aequalis_literis(a->genus, h->genus))
         {
             perge;
         }
-        sedes   = (VolumenActum*)xar_addere(viva);
-        *sedes  = *a;
+        sedes    = (VolumenActum*)xar_addere(viva);
+        *sedes   = *a;
+        nota     = (b32*)xar_addere(notae);
+        *nota    = pendens;
+        pendens  = FALSUM;
+    }
+    si (coniuncta)
+    {
+        *coniuncta = notae;
     }
     redde viva;
 }
@@ -206,7 +228,7 @@ proicere_ad (
              b32  inventum;
           chorda  clavis;
 
-    viva   = acta_viva(h, ZEPHYRUM, ad);
+    viva   = acta_viva(h, ZEPHYRUM, ad, NIHIL);
     basis  = ZEPHYRUM;
     si (!sine_checkpoint)
     {
@@ -358,8 +380,9 @@ historia_aperire (
         redde NIHIL;
     }
     /* finis = seq ultimum vivum; cursor = finis */
-    viva  = acta_viva(h, ZEPHYRUM, volumen_summa_actorum(volumen));
-    n     = xar_numerus(viva);
+    viva = acta_viva(h, ZEPHYRUM, volumen_summa_actorum(volumen),
+        NIHIL);
+    n = xar_numerus(viva);
     h->finis = n > ZEPHYRUM
              ? ((VolumenActum*)xar_obtinere(viva, n - I))->seq
              : ZEPHYRUM;
@@ -374,10 +397,13 @@ historia_aperire (
  * Acta, revocare, reficere
  * ================================================== */
 
-s64
-historia_actum (
+/* appendere: ramus si cursor < finis, nota coniunctionis si petita
+ * et actum prius vivum exstat, deinde actum */
+interior s64
+actum_appendere (
     Historia* h,
-      chorda  actum)
+      chorda  actum,
+         b32  coniunctum)
 {
        s64 seq;
     chorda ramus;
@@ -389,7 +415,7 @@ historia_actum (
     si (h->cursor < h->finis)
     {
         h->numerus_vivorum =
-            xar_numerus(acta_viva(h, ZEPHYRUM, h->cursor));
+            xar_numerus(acta_viva(h, ZEPHYRUM, h->cursor, NIHIL));
         ramus = chorda_ex_literis("<ramus ab=\"", h->piscina);
         ramus = chorda_concatenare(ramus,
                                    seq_chorda(h->cursor, h->piscina),
@@ -399,6 +425,11 @@ historia_actum (
                                    h->piscina),
                                    h->piscina);
         volumen_actum_appendere(h->volumen, "ramus", ramus);
+    }
+    si (coniunctum && h->numerus_vivorum > ZEPHYRUM)
+    {
+        volumen_actum_appendere(h->volumen, "coniunctio",
+            chorda_ex_literis("<coniunctio/>", h->piscina));
     }
     seq = volumen_actum_appendere(h->volumen, h->genus, actum);
     si (seq <= ZEPHYRUM)
@@ -417,25 +448,52 @@ historia_actum (
     redde seq;
 }
 
+s64
+historia_actum (
+    Historia* h,
+      chorda  actum)
+{
+    redde actum_appendere(h, actum, FALSUM);
+}
+
+s64
+historia_actum_coniunctum (
+    Historia* h,
+      chorda  actum)
+{
+    redde actum_appendere(h, actum, VERUM);
+}
+
 b32
 historia_revocare (
     Historia* h)
 {
     Xar* viva;
-    i32  n;
+    Xar* coniuncta;
+    i32  k;
     s64  ad;
 
     si (!h || h->cursor <= ZEPHYRUM)
     {
         redde FALSUM;
     }
-    /* actum vivum proximum infra cursor */
-    viva  = acta_viva(h, ZEPHYRUM, h->cursor - I);
-    n     = xar_numerus(viva);
-    ad = n > ZEPHYRUM ? ((VolumenActum*)xar_obtinere(viva, n - I))->seq
-                      : ZEPHYRUM;
-    h->cursor = ad;
-    h->numerus_vivorum--;
+    /* actum ad cursor = ultimum vivum; retro ad initium gregis eius
+     * (S1b), deinde ad actum vivum ante gregem */
+    viva  = acta_viva(h, ZEPHYRUM, h->cursor, &coniuncta);
+    k     = xar_numerus(viva);
+    si (k > ZEPHYRUM)
+    {
+        k--;
+    }
+    dum (k > ZEPHYRUM && *(b32*)xar_obtinere(coniuncta, k))
+    {
+        k--;
+    }
+    ad = k > ZEPHYRUM
+        ? ((VolumenActum*)xar_obtinere(viva, k - I))->seq
+        : ZEPHYRUM;
+    h->cursor           = ad;
+    h->numerus_vivorum  = k;
     proicere_ad(h, ad, FALSUM);
     redde VERUM;
 }
@@ -445,29 +503,41 @@ historia_reficere (
     Historia* h)
 {
              Xar* viva;
+             Xar* coniuncta;
     VolumenActum* a;
              i32  i;
              i32  n;
+             b32  applicatum;
 
     si (!h || h->cursor >= h->finis)
     {
         redde FALSUM;
     }
-    viva  = acta_viva(h, h->cursor, h->finis);
-    n     = xar_numerus(viva);
+    /* actum vivum proximum, deinde coniuncta ei (S1b) */
+    viva        = acta_viva(h, h->cursor, h->finis, &coniuncta);
+    n           = xar_numerus(viva);
+    applicatum  = FALSUM;
     per (i = ZEPHYRUM; i < n; i++)
     {
         a = (VolumenActum*)xar_obtinere(viva, i);
-        si (a->seq > h->cursor)
+        si (a->seq <= h->cursor)
         {
-            applicare(h, a->datum);
-            h->cursor = a->seq;
-            h->numerus_vivorum++;
-            sigillum_renovare(h);
-            redde VERUM;
+            perge;
         }
+        si (applicatum && !*(b32*)xar_obtinere(coniuncta, i))
+        {
+            frange;
+        }
+        applicare(h, a->datum);
+        h->cursor = a->seq;
+        h->numerus_vivorum++;
+        applicatum = VERUM;
     }
-    redde FALSUM;
+    si (applicatum)
+    {
+        sigillum_renovare(h);
+    }
+    redde applicatum;
 }
 
 

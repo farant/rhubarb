@@ -39,3 +39,29 @@ just the FRACTA lines.
 
 Link closure: a new lib needs `./tools/compile_tests_fontes_generare.sh`
 (generated list; the `generata` gate judges it).
+
+## 2026-10-05 — joined acts (scriba-plan S1b)
+
+For scriba's debounced insert (Fran: one `u` undoes the WHOLE insert,
+however many ~1 s chunks it was saved in). `historia_actum_coniunctum`
+appends a historia-owned marker (`<coniunctio/>`, genus "coniunctio")
+right before the act - after any `<ramus>` - so the reader carries
+"the next act of my genus is joined" without knowing its seq; volume
+bookkeeping acts in between are skipped as before. No marker when
+there is no live act to join to.
+
+`acta_viva` returns a parallel Xar of b32 flags (optional out
+parameter); a `<ramus>` truncates acts AND flags. `revocare` walks back
+from the cursor's act to the start of its group and lands on the act
+before it (`numerus_vivorum` = that index - recounted, not
+decremented); `reficere` applies the next act and keeps going while the
+following one is joined. Checkpoints and branches are unchanged.
+H0 golden byte-identical (pictor never joins).
+
+**A plant survived the first test** - truncating acts but not flags.
+After a branch at depth k the FIRST new act lands at index k, whose
+stale flag belongs to an act that STARTS an old group (a cursor can
+never rest mid-group), so it is always false: harmless. The SECOND new
+act inherits the old group's "joined" flag. The test now builds exactly
+that (group undone, two plain acts on the branch, undo the second must
+stop at the first) and the plant is caught.

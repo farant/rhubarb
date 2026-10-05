@@ -245,7 +245,112 @@ s32 principale (vacuum)
         volumen_claudere(vol_discors);
     }
 
-    imprimere("\n--- XII: argumenta mala ---\n");
+    imprimere("\n--- XII: acta coniuncta - grex unus gradus ---\n");
+    {
+          Volumen* vol_grex;
+          Ludicra  ludicra_grex;
+          Ludicra  ludicra_aperta;
+         Historia* historia_grex;
+         Historia* historia_aperta;
+              s64  a1;
+              s64  a4;
+              s64  a5;
+              s64  a6;
+              s64  a7;
+
+        memset(&ludicra_grex, ZEPHYRUM, magnitudo(ludicra_grex));
+        memset(&ludicra_aperta, ZEPHYRUM, magnitudo(ludicra_aperta));
+        vol_grex = volumen_temporarium(piscina,
+            "probatio_historia_grex");
+        historia_grex = historia_creare(piscina, intern, vol_grex,
+            "numerus",
+                             "probatio:checkpoint", II,
+                             proiectio(&ludicra_grex));
+        CREDO_NON_NIHIL(historia_grex);
+        a1 = actum(historia_grex, piscina, ZEPHYRUM);
+        (vacuum)actum(historia_grex, piscina, I);
+        CREDO_VERUM(historia_actum_coniunctum(historia_grex,
+            chorda_ex_s32(II,
+            piscina)) > ZEPHYRUM);
+        a4 = historia_actum_coniunctum(historia_grex, chorda_ex_s32(III,
+            piscina));
+        CREDO_VERUM(numeratores_sunt(&ludicra_grex, "11110000"));
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_grex), IV);
+        /* revocare: grex totus (I, II, III) gradu uno */
+        CREDO_VERUM(historia_revocare(historia_grex));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_grex), a1);
+        CREDO_VERUM(numeratores_sunt(&ludicra_grex, "10000000"));
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_grex), I);
+        /* reficere: grex totus */
+        CREDO_VERUM(historia_reficere(historia_grex));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_grex), a4);
+        CREDO_VERUM(numeratores_sunt(&ludicra_grex, "11110000"));
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_grex), IV);
+        CREDO_FALSUM(historia_reficere(historia_grex));
+        CREDO_VERUM(historia_verificare(historia_grex));
+        /* actum simplex post gregem: unus, deinde grex */
+        a5 = actum(historia_grex, piscina, IV);
+        CREDO_VERUM(a5 > a4);
+        CREDO_VERUM(historia_revocare(historia_grex));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_grex), a4);
+        CREDO_VERUM(historia_revocare(historia_grex));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_grex), a1);
+        /* ramus post gregem revocatum: notae cum actis truncantur */
+        a6 = actum(historia_grex, piscina, V);
+        CREDO_VERUM(numeratores_sunt(&ludicra_grex, "10000100"));
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_grex), II);
+        CREDO_VERUM(historia_revocare(historia_grex));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_grex), a1);
+        CREDO_VERUM(historia_reficere(historia_grex));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_grex), a6);
+        /* aperire: greges ex volumine soli */
+        a7 = historia_actum_coniunctum(historia_grex, chorda_ex_s32(VI,
+            piscina));
+        historia_aperta = historia_aperire(piscina, intern, vol_grex,
+            "numerus",
+                               "probatio:checkpoint", II,
+                               proiectio(&ludicra_aperta));
+        CREDO_NON_NIHIL(historia_aperta);
+        CREDO_AEQUALIS_S64(historia_cursor(historia_aperta), a7);
+        CREDO_VERUM(numeratores_sunt(&ludicra_aperta, "10000110"));
+        CREDO_VERUM(historia_revocare(historia_aperta));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_aperta), a1);
+        CREDO_VERUM(numeratores_sunt(&ludicra_aperta, "10000000"));
+        CREDO_VERUM(historia_verificare(historia_aperta));
+        volumen_claudere(vol_grex);
+    }
+    {
+        /* ramus post gregem: actum SECUNDUM post ramum notam veterem
+         * (gregis mortui) heredare non debet */
+          Volumen* vol_ramus;
+          Ludicra  ludicra_rami;
+         Historia* historia_rami;
+              s64  c1;
+              s64  d1;
+
+        memset(&ludicra_rami, ZEPHYRUM, magnitudo(ludicra_rami));
+        vol_ramus = volumen_temporarium(piscina,
+            "probatio_historia_ramus");
+        historia_rami = historia_creare(piscina, intern, vol_ramus,
+            "numerus",
+                             "probatio:checkpoint", C,
+                             proiectio(&ludicra_rami));
+        c1 = actum(historia_rami, piscina, ZEPHYRUM);
+        (vacuum)actum(historia_rami, piscina, I);
+        (vacuum)historia_actum_coniunctum(historia_rami,
+            chorda_ex_s32(II,
+            piscina));
+        CREDO_VERUM(historia_revocare(historia_rami));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_rami), c1);
+        d1 = actum(historia_rami, piscina, III);
+        (vacuum)actum(historia_rami, piscina, IV);
+        CREDO_VERUM(historia_revocare(historia_rami));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_rami), d1);
+        CREDO_VERUM(numeratores_sunt(&ludicra_rami, "10010000"));
+        volumen_claudere(vol_ramus);
+    }
+
+    imprimere("\n--- XIII: argumenta mala ---\n");
     mala            = proiectio(&l);
     mala.applicare  = NIHIL;
     CREDO_NIHIL(historia_creare(piscina, intern, vol, "numerus",

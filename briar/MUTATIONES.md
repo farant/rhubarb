@@ -195,6 +195,11 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: `historia_actum_coniunctum` (nova) - actum priori
+  coniunctum (nota historiae `<coniunctio/>` ante id); revocare et
+  reficere gregem coniunctum gradu uno transeunt. Clientes sine
+  coniunctione octetis eisdem.
+
 - corpus: Motus GESTUM applicationis habet (`MotusGestus gestus`:
   status opacus, effusor, quies propria) - `motus_gestum_ponere`,
   `mutare_gestum`, `motus_gestus_quies`, `motus_gestum_effundere`;

@@ -173,6 +173,10 @@ header says '\0'); '\0' is content. Lines live in an attribute
   act marked as joined to the previous one (a historia-owned marker,
   like `<ramus>`); undo/redo step over a joined group. H0 golden must
   stay byte-identical.
+  S1b as built: `historia_actum_coniunctum` (marker `<coniunctio/>`
+  before the act); flags parallel to live acts, cut with them by a
+  `<ramus>`; undo/redo over a group. H0 golden byte-identical; four
+  plants (one needed a second act after a branch to be seen).
 - **S1c - scriba state and keys** (the original S1 below): the working
   sheet lives in the gesture slot; first chunk of an insert = an act,
   later chunks joined; Esc flushes at once.
