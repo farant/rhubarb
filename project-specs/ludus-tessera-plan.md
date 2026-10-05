@@ -201,7 +201,15 @@ B3b: Fran's look - correct. B3c (Fran): desk colour + page frame
 (`COLOR_SUPERFICIES`, `PARTES_PROSPECTUS`); found and fixed the
 negative-origin bug in delineare_mandata (52bee5bf).
 
+B3d (Fran's terminal look: strokes vanished on mouse-up): tessellatio
+kept every image under every cell primitive - the desk hid the page;
+fixed with a per-cell cover map (5e5fccaf). Fran's look: correct.
+
 **B4 — RELATIO.**
+
+**Track (b) DONE 2026-10-05** (B1 ad48e196, B2 = dispositio D0-D4,
+B3 a79e2de2, B3b dca73717, B3c fd11af94 + 52bee5bf, B3d 5e5fccaf;
+RELATIO in `ludus_tessera/phase-log.md`).
 
 ## V. Track (c) — insula-native widgets (outline; interview first)
 

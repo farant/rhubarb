@@ -415,6 +415,71 @@ a per-cell cover map keeps painter's order between images and the cell
 pass (lib/tessellatio.worklog.md). Test here: a page cell is not the
 desk colour. Root, tessera, ludus_tessera green.
 
-Pending: Fran's look (terminal: strokes persist, page visible over the
-desk).
+**Fran's look (2026-10-05): "the lines are there now and the yellow
+background of the drawing area is there now as well which was missing
+before"** - the page itself had been hidden under the desk all along,
+not only the strokes.
+
+## B4 — RELATIO: track (b) done (2026-10-05)
+
+**Track (b), responsive, is done.** A ludus app learns its surface size
+as state and lays itself out in cells; pictor holds its status row at
+the bottom of any terminal or window, shows more canvas when the
+surface grows, and never stretches. Fran's looks: terminal (B3), window
+(B3b "yes, that looks correct now"), desk + frame + strokes (B3c/B3d).
+
+**What exists:**
+- **Surface size as state** (B1): the dispensator writes
+  `superficies_latitudo/_altitudo` (our pixels, writer "dispensator")
+  on a raw resize, before recomposition; both glues announce the size
+  once. Recorded and replayed like any event.
+- **`dispositio`** (B2, own plan and RELATIO `lib/dispositio.phase-log.md`):
+  Clay's model in integer cells - fit/grow/fixed/percent, min/max,
+  padding, gap, alignment, clip, text through a measurer; every edge is
+  the floor of the exact edge; Clay @ e6cc369 is the oracle, and
+  `oracula/` is now a house category for foreign-dialect glue.
+- **pictor responsive** (B3): a column - viewport (GROW, clipped) over
+  a one-row status (FIXED); surface-touching edges snap to the surface.
+- **The window resizes for real** (B3b): content size, not frame;
+  `tabula_pixelorum_ad_fenestram` refits at the kept scale; the glue
+  rewrites the event into our pixels so `superficies_*` means one thing.
+- **Desk + page frame** (B3c): `COLOR_SUPERFICIES`, `PARTES_PROSPECTUS`.
+
+**What the work found, by weight:**
+1. **Two lower layers were wrong, and only a visible app showed it.**
+   delineare_mandata cast signed origins into the unsigned delineare
+   API - rects vanished, lines and polygons hung forever (52bee5bf);
+   tessellatio put every image under every cell primitive regardless of
+   order - the desk hid the page (5e5fccaf). Neither had a test that
+   could see it: both needed a second primitive in a relation (panned
+   off-origin; drawn before an image). Each is now pinned.
+2. **"Responsive" had a hidden second half in the window** (B3b): the
+   terminal reallocates its grid for free; the window stretched a
+   buffer made once and reported the frame in screen points. The plan
+   named it as AUDIENDA; it was real.
+3. **Invisible correctness is unverifiable by eye** (B3c): the viewport
+   resized correctly from B3 on, but nothing painted it - Fran could not
+   tell. A figura for the empty area was a feature, and it is what
+   exposed (1).
+4. **dispositio's remainder rule** (D2): the plan's "leftover to the
+   earliest" drifted edges; floor-of-exact-edge matches Clay and keeps
+   neighbours consistent. The old rule lives on as a plant.
+5. Process: canons refuse undeclared attributes SILENTLY (B1 - now
+   asserted in pictor's replay); a plant that does not compile proves
+   nothing - read the EXIT CODE (B1, again); a plant can pass a test
+   that only checks "under" (B3d: index stuck at 0 caught only once
+   "over" was asserted too).
+
+**v1 limits, named:**
+- text ignores a group's clip (sectio) in delineare_mandata (its
+  worklog);
+- tessellatio's cover map knows images only: a cell primitive drawn
+  before a polygon or oblique line still shows over it;
+- pictor's canvas is the fixed 320×200 document - responsive means the
+  viewport and status, not a resizable document;
+- the window's last row/column absorb the sub-cell remainder (the
+  terminal has none).
+
+**Next: track (c), insula-native widgets** (plan V: pagina,
+schirmata) - an interview with Fran first.
 
