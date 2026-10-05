@@ -1277,4 +1277,24 @@
     <forma textus="verdictorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
 
+  <vocabulum lemma="summarium" lingua="latina" classis="substantivum" nota="summarium (Sen., Ep. 39): breviarium, compendium - crusta_effectus: summarium effectuum scripti (radix_summarii; effectus-plan T3)">
+    <forma textus="summarium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="summarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="summaria" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="summatus" lingua="latina" classis="adiectivum" nota="participium a summare (in summam redigere) - probatio_crusta_effectus: scripta domus summata (effectus-plan T3)">
+    <forma textus="summata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="positionalis" lingua="latina" classis="adiectivum" nota="Lat. nov. positionalis (a positio): quod ex positione valet - verba positionalia mandati, non optiones (crusta_effectus, tabula mandatorum; effectus-plan T3)">
+    <forma textus="positionalis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="positionalia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="recursio" lingua="latina" classis="substantivum" nota="recursio (Plin.): reditus, recursus - optio mandati quae directoria recursive tractat (grep -r, rm -rf; tabula mandatorum effectus, optiones 'recursio' = recursiones)">
+    <forma textus="recursio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="recursiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
 </glossarium>

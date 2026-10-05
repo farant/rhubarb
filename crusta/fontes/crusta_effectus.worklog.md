@@ -65,3 +65,84 @@ log starts at T1 because the dialect is its contract.
   file is output) unused in the house.
 - `crusta/instrumenta/mandata_census.c` has NO gate (INTECTA): it is a
   seed instrument; T6's `bin/effectus -census` supersedes its counts.
+
+## 2026-10-05 - T3 opening reading: crusta_fontationes.c (1,910 lines)
+
+MOVE unchanged into crusta_effectus.c (T4 then deletes them from
+fontationes, which becomes a projection):
+- path helpers `_duplicare _appendere _viam_normare _absolutam_facere
+  _directorium_viae _caudam_viae _relativa _sub_build`;
+- node helpers `_token _nodus _locus_vacuus _nodi_listae
+  _functio_circumdans _textum_colligere _titulus_staticus`;
+- the evaluator `_verbum_aestimare _partes_aestimare
+  _variabilem_aestimare _substitutionem_aestimare _variabilis_sola`
+  (idioms: cd&&pwd, dirname, basename, readlink -f; `$0`,
+  `BASH_SOURCE`; `local` scoping; empty definitions dropped only for a
+  whole-word `$X`);
+- scope machinery `_plagulam_parare _nodos_colligere _locales_colligere
+  _definitiones_colligere _ambitum_derivare` (fixpoint: re-collect until
+  no plagula joins; only the LAST iteration's sites count);
+- `_directorium_loci` (catena cd).
+
+GENERALIZE:
+- `_nodos_colligere` also collects redirectio, iudicium-praeposita /
+  -binaria, verbum (for globs), parametrum / expansio (env reads),
+  functio (scope function names).
+- `_locum_tractare` (one site kind with five genera) becomes
+  `_viam_classificare` (word + cwd -> via, forma, resolutio, classis)
+  shared by every site kind; fontatio/exsecutio keep their extra duty
+  (join the plagula to the scope / open a new scope).
+- `_imperium_tractare`: static titles that are neither source nor
+  bash/sh nor wrappers now go to (a) builtins with effects (`[`/`test`
+  -> probatio, eval -> ignotum, cd/read/... nothing), (b) scope
+  functions (nothing: their bodies are walked anyway, flow-insensitive),
+  (c) the command table, (d) otherwise ignotum "mandatum ignotum".
+- `_directorium_loci`: + the last TOP-LEVEL `cd W` before the site in
+  source order (spec §IV.3).
+
+NEW: redirections, `[[ ]]` tests, glob enumeratio (one source: the word
+scan; table reads only emit the lectio), env reads, the table reader,
+`scripta_in_ambitu` (after the fixpoint, per processus: equal path,
+glob match, or prefix), positions via `materia_tractus_nodi` (materia's
+own computation), STML emission (`processus` per scope, sites in
+source order).
+
+## 2026-10-05 - T3: the analyzer (crusta_effectus) + bin/effectus
+
+- `crusta_effectus_derivare` (3,300 lines; ~1,100 moved verbatim from
+  fontationes - T4 removes the duplicate) emits dialect `effectus`;
+  `./crusta/effectus.sh <script>` prints it. Gate
+  `probatio_crusta_effectus` (67): one fake runner, one line per site
+  class, each with its contrary; then EVERY tracked .sh (294) is
+  summarized - zero NIHIL, zero canon vitia (the drift guard).
+- Positions are `materia_tractus_nodi(NIHIL, nodus, ...)` - materia's
+  own computation, so `sedes`/`octeti` equal what `arbor.sh -sedes`
+  prints (asserted on one site: `3:8-3:21`, `72-85`).
+- **A plant stayed green and exposed a missing contrary.** Plant (a)
+  made every `>` also a read; the suite only asserted that expected
+  sites EXIST, so an extra lectio passed. Added: no lectio of
+  build/out.txt, exactly two sites on line 6. Then red. (b) fixpoint cut
+  to one pass -> lib.sh's read vanishes (I, V red); (c) `sedes` dropped
+  on probatio -> I-III red and 219 house summaries fail the canon.
+- Found on the toml runner (Step 5): `done < <(cat ...)` became a lectio
+  whose path was literally `<(cat`. A redirection whose target is a
+  process substitution reads nothing itself; the inner commands are
+  sites already. Case first (line 28), then `_processum_habet`.
+- `per` is a latina macro (for) - used as a struct field for the
+  attribute it raised 111 examen violations at once. Field renamed
+  `medium`; the attribute name stays `"per"` in string literals. The
+  plan's global constraints had named exactly this trap.
+- Toml runner summary: 9 processus (root + 8 executed scripts), 41
+  lectio, 67 scriptura, 34 exsecutio, 29 probatio, 9 fontatio, 8
+  enumeratio, 9 ambitus_lectio, 6 ignotum. Against the spike's 62
+  observed effects: tools sourced, closure-list `cat`s (glob, written in
+  scope), vexilla stamp (`-f` + `cat`, and its write), `<` of a closure
+  list (covered by prefix `toml/build/clausurae/`), mandata.tsv and .lst
+  writes all present. Expected gaps for T5 to name: sera.sh's paths
+  come from `$1` of its functions (`valor ignotus`; interprocedural =
+  slice 2 territory, or excuse in T6); `cd` targets are STAT-ed by bash
+  but `cd` is not modelled as a probatio (decide in T5); clang's
+  `$objs` is unquoted and unknown.
+- `crusta/instrumenta/effectus.c` (the CLI) is INTECTA until T7's
+  fabrica genus calls it (iudicium-fumus then covers it). diagnostica
+  gate run before commit (globs crusta/fontes/*.c): sanum.
