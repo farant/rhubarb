@@ -178,6 +178,11 @@ Leges chartae:
   `tabula_pixelorum_ad_fenestram` (scala servata); ludus_fenestra
   tabulam aptat et eventum in pixela nostra rescribit (013 B3b).
 
+- corpus (mores): delineare_mandata primitiva ORIGINE NEGATIVA praecidit
+  (olim rectangulum evanescebat, linea et polygonum in aeternum
+  pendebant - API delineare i32 insignatum); primitiva in spatio
+  positivo octetis eisdem.
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

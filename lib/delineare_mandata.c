@@ -229,6 +229,141 @@ imaginem_pingere (
     }
 }
 
+/* ORIGO NEGATIVA (013, 2026-10-05): API delineare coordinatas i32
+ * (INSIGNATAS) accipit; coordinata negativa ut numerus ingens legitur -
+ * rectangulum totum evanescebat (x + latitudo involvitur), linea et
+ * polygonum directionem comparatione insignata errabant et IN
+ * AETERNUM ibant. Primitiva tota in spatio positivo vias veteres
+ * sequuntur (octeti eadem); cetera hic in spatio SIGNATO praeciduntur
+ * ante delineare. Textus iam rectus est (pixela per additionem cum
+ * involutione et finium probationem).
+ *
+ * Rectangulum plenum praecisum ad tabulam (s32). */
+interior vacuum
+_plenum_secare (
+    ContextusDelineandi* ctx,
+        TabulaPixelorum* t,
+                    s32  x,
+                    s32  y,
+                    s32  latitudo,
+                    s32  altitudo,
+                  Color  color)
+{
+    s32 x0 = x;
+    s32 y0 = y;
+    s32 x1 = x + latitudo;
+    s32 y1 = y + altitudo;
+
+    si (x0 < ZEPHYRUM)
+    {
+        x0 = ZEPHYRUM;
+    }
+    si (y0 < ZEPHYRUM)
+    {
+        y0 = ZEPHYRUM;
+    }
+    si (x1 > (s32)t->latitudo)
+    {
+        x1 = (s32)t->latitudo;
+    }
+    si (y1 > (s32)t->altitudo)
+    {
+        y1 = (s32)t->altitudo;
+    }
+    si (x1 <= x0 || y1 <= y0)
+    {
+        redde;
+    }
+    delineare_rectangulum_plenum(ctx, (i32)x0, (i32)y0, (i32)(x1 - x0),
+                                 (i32)(y1 - y0), color);
+}
+
+/* Linea in spatio signato: Bresenham IDEM ac delineare_lineam,
+ * pixela solum in quadrante positivo (fines superiores et praecisio
+ * per delineare_pixelum) */
+interior vacuum
+_lineam_signatam (
+    ContextusDelineandi* ctx,
+                    s32  x0,
+                    s32  y0,
+                    s32  x1,
+                    s32  y1,
+                  Color  color)
+{
+    s32 dx     = (x1 > x0) ? x1 - x0 : x0 - x1;
+    s32 dy     = (y1 > y0) ? y1 - y0 : y0 - y1;
+    s32 sx     = (x0 < x1) ? I : -I;
+    s32 sy     = (y0 < y1) ? I : -I;
+    s32 error  = dx - dy;
+    s32 e2;
+
+    dum (VERUM)
+    {
+        si (x0 >= ZEPHYRUM && y0 >= ZEPHYRUM)
+        {
+            delineare_pixelum(ctx, (i32)x0, (i32)y0, color);
+        }
+        si (x0 == x1 && y0 == y1)
+        {
+            frange;
+        }
+        e2 = II * error;
+        si (e2 > -dy)
+        {
+            error  -= dy;
+            x0     += sx;
+        }
+        si (e2 < dx)
+        {
+            error  += dx;
+            y0     += sy;
+        }
+    }
+}
+
+/* Polygonum (n puncta s32, x y alternata) ad semiplanum axis >= 0
+ * praecidere (Sutherland-Hodgman); exitus capacitatis n + I. Redde
+ * numerum punctorum exitus. */
+interior i32
+_polygonum_secare (
+    constans s32* in,
+             i32  n,
+             i32  axis,
+             s32* ex)
+{
+    i32 i;
+    i32 m = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans s32* a = in + i * II;
+        constans s32* b = in + ((i + I) % n) * II;
+                 b32  a_intus  = (a[axis]
+                     >= ZEPHYRUM) ? VERUM : FALSUM;
+                 b32 b_intus  = (b[axis]
+                     >= ZEPHYRUM) ? VERUM : FALSUM;
+
+        si (a_intus)
+        {
+            ex[m * II]      = a[0];
+            ex[m * II + I]  = a[1];
+            m++;
+        }
+        si (a_intus != b_intus)
+        {
+            /* sectio cum axe = 0 */
+            i32 alter  = I - axis;
+            s32 d      = b[axis] - a[axis];
+
+            ex[m * II + axis]   = ZEPHYRUM;
+            ex[m * II + alter]  = a[alter]
+                + (b[alter] - a[alter]) * (ZEPHYRUM - a[axis]) / d;
+            m++;
+        }
+    }
+    redde m;
+}
+
 interior vacuum
 primitivum_pingere (
     ContextusDelineandi* ctx,
@@ -257,53 +392,112 @@ primitivum_pingere (
         casus MANDATUM_RECTANGULUM:
             si (x->impletum)
             {
-                delineare_rectangulum_plenum(ctx, (i32)sx, (i32)sy,
-                                             (i32)lat, (i32)alt, color);
+                _plenum_secare(ctx, t, sx, sy, lat, alt, color);
             }
-            alioquin
+            alioquin si (sx >= ZEPHYRUM && sy >= ZEPHYRUM)
             {
                 delineare_rectangulum(ctx, (i32)sx, (i32)sy,
                                       (i32)lat, (i32)alt, color);
+            }
+            alioquin si (lat > ZEPHYRUM && alt > ZEPHYRUM)
+            {
+                /* geometria delineare_rectangulum: margines quattuor */
+                _plenum_secare(ctx, t, sx, sy, lat, I, color);
+                _plenum_secare(ctx, t, sx, sy + alt - I, lat, I, color);
+                _plenum_secare(ctx, t, sx, sy + I, I, alt - II, color);
+                _plenum_secare(ctx, t, sx + lat - I, sy + I, I, alt
+                    - II,
+                               color);
             }
             frange;
         casus MANDATUM_LINEA:
             si (x->numerus_punctorum >= II)
             {
-                delineare_lineam(ctx,
-                    (i32)(s->origo_x
-                        + x->puncta[ZEPHYRUM].x * s->scala),
-                    (i32)(s->origo_y
-                        + x->puncta[ZEPHYRUM].y * s->scala),
-                    (i32)(s->origo_x + x->puncta[I].x * s->scala),
-                    (i32)(s->origo_y + x->puncta[I].y * s->scala),
-                    color);
+                s32 lx0 = s->origo_x + x->puncta[ZEPHYRUM].x * s->scala;
+                s32 ly0 = s->origo_y + x->puncta[ZEPHYRUM].y * s->scala;
+                s32 lx1 = s->origo_x + x->puncta[I].x * s->scala;
+                s32 ly1 = s->origo_y + x->puncta[I].y * s->scala;
+
+                si (   lx0 >= ZEPHYRUM && ly0 >= ZEPHYRUM
+                    && lx1 >= ZEPHYRUM
+                    && ly1 >= ZEPHYRUM)
+                {
+                    delineare_lineam(ctx, (i32)lx0, (i32)ly0, (i32)lx1,
+                                     (i32)ly1, color);
+                }
+                alioquin
+                {
+                    _lineam_signatam(ctx, lx0, ly0, lx1, ly1, color);
+                }
             }
             frange;
         casus MANDATUM_POLYGONUM:
             si (x->numerus_punctorum >= III)
             {
+                 s32* signata;
+                 s32* medium;
+                 b32  negativum  = FALSUM;
+                 i32  n          = x->numerus_punctorum;
+                 i32  m;
+
+                /* capacitas: quaeque praecisio puncta n + I addere
+                 * potest - II * (n + II) satis */
+                signata = (s32*)piscina_allocare(ctx->piscina,
+                    (memoriae_index)(II * (n + II)) * magnitudo(s32));
+                medium = (s32*)piscina_allocare(ctx->piscina,
+                    (memoriae_index)(II * (n + II)) * magnitudo(s32));
                 puncta = (i32*)piscina_allocare(ctx->piscina,
-                    (memoriae_index)x->numerus_punctorum * II
-                        * magnitudo(i32));
-                per (i = ZEPHYRUM; i < x->numerus_punctorum; i++)
+                    (memoriae_index)(II * (n + II)) * magnitudo(i32));
+                per (i = ZEPHYRUM; i < n; i++)
                 {
-                                        sx = s->origo_x
-                                            + x->puncta[i].x * s->scala;
-                    sy = s->origo_y + x->puncta[i].y * s->scala;
-                    puncta[i * II] = (i32)sx;
-                    puncta[i * II + I] = (i32)sy;
+                    signata[i * II]      = s->origo_x
+                        + x->puncta[i].x * s->scala;
+                    signata[i * II + I]  = s->origo_y
+                        + x->puncta[i].y * s->scala;
+                    si (   signata[i * II] < ZEPHYRUM
+                        || signata[i * II + I] < ZEPHYRUM)
+                    {
+                        negativum = VERUM;
+                    }
+                }
+                si (negativum && !x->impletum)
+                {
+                    /* margo: lineae signatae, polygonum clausum */
+                    per (i = ZEPHYRUM; i < n; i++)
+                    {
+                        i32 k = (i + I) % n;
+
+                        _lineam_signatam(ctx, signata[i * II],
+                            signata[i * II + I], signata[k * II],
+                            signata[k * II + I], color);
+                    }
+                    frange;
+                }
+                m = n;
+                si (negativum)
+                {
+                    /* plenum: ad x >= 0 deinde y >= 0 praecidere */
+                    m = _polygonum_secare(signata, n, ZEPHYRUM, medium);
+                    m = (m >= III) ? _polygonum_secare(medium, m, I,
+                                                       signata)
+                                   : ZEPHYRUM;
+                }
+                si (m < III)
+                {
+                    frange;
+                }
+                per (i = ZEPHYRUM; i < m; i++)
+                {
+                    puncta[i * II]      = (i32)signata[i * II];
+                    puncta[i * II + I]  = (i32)signata[i * II + I];
                 }
                 si (x->impletum)
                 {
-                    delineare_polygonum_plenum(ctx, puncta,
-                                               x->numerus_punctorum,
-                                               color);
+                    delineare_polygonum_plenum(ctx, puncta, m, color);
                 }
                 alioquin
                 {
-                    delineare_polygonum(ctx, puncta,
-                        x->numerus_punctorum,
-                                        color);
+                    delineare_polygonum(ctx, puncta, m, color);
                 }
             }
             frange;

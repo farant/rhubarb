@@ -330,6 +330,135 @@ s32 principale (vacuum)
     }
     CREDO_VERUM(sf.sententia == SPECIMEN_CONGRUIT);
 
+    imprimere("\n--- 013: origo NEGATIVA - primitiva praeciduntur, non"
+              " evanescunt ---\n");
+    {
+        TabulaPixelorum* tn = tabula_pixelorum_creare_nuda(piscina, XX,
+            XX);
+                 Mandata* mn;
+                   Fines  fn;
+                 Punctum  pa;
+                 Punctum  pb;
+                 Punctum  pp[IV];
+                     i32  fundus;
+                     i32  rubeus;
+                     i32  albus;
+          memoriae_index  fracti_ante;
+                     s32  x;
+                     s32  y;
+                     b32  lucet;
+
+        fundus = color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM,
+            (i8)ZEPHYRUM,
+            (i8)ZEPHYRUM));
+        rubeus  = rgba((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM).valor;
+        albus   = rgba((i8)CCLV, (i8)CCLV, (i8)CCLV).valor;
+
+        /* I rectangulum plenum (-5,-5,10,10): pars (0..4, 0..4) */
+        tabula_pixelorum_vacare(tn, fundus);
+        mn    = mandata_creare(piscina, intern);
+        fn.x  = -V; fn.y = -V; fn.latitudo = X; fn.altitudo = X;
+        mandata_rectangulum(mn, fn, rgba((i8)CCLV, (i8)ZEPHYRUM,
+            (i8)ZEPHYRUM), VERUM);
+        delineare_mandata(mn, tn, NIHIL, NIHIL);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn,
+            ZEPHYRUM,
+            ZEPHYRUM), rubeus);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, IV,
+            IV),
+            rubeus);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, V, V),
+            fundus);
+
+        /* II margo (-5,2,10,5): superior y=2 et inferior y=6 (x 0..4),
+         * dextra x=4 (y 3..5); intus fundus */
+        tabula_pixelorum_vacare(tn, fundus);
+        mn    = mandata_creare(piscina, intern);
+        fn.x  = -V; fn.y = II; fn.latitudo = X; fn.altitudo = V;
+        mandata_rectangulum(mn, fn, rgba((i8)CCLV, (i8)ZEPHYRUM,
+            (i8)ZEPHYRUM), FALSUM);
+        delineare_mandata(mn, tn, NIHIL, NIHIL);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn,
+            ZEPHYRUM,
+            II), rubeus);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, II,
+            VI),
+            rubeus);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, IV,
+            IV),
+            rubeus);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, II,
+            IV),
+            fundus);
+
+        /* III linea (-5,10)->(10,10): NON PENDET, deinde pixela
+         * 0..10 */
+        tabula_pixelorum_vacare(tn, fundus);
+        mn    = mandata_creare(piscina, intern);
+        pa.x  = -V; pa.y = X; pb.x = X; pb.y = X;
+        mandata_linea(mn, pa, pb, I, rgba((i8)CCLV, (i8)ZEPHYRUM,
+            (i8)ZEPHYRUM));
+        fracti_ante = credo_numerus_fracti();
+        CREDO_NON_PENDET(delineare_mandata(mn, tn, NIHIL, NIHIL), MM);
+        si (credo_numerus_fracti() == fracti_ante)
+        {
+            delineare_mandata(mn, tn, NIHIL, NIHIL);
+            CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn,
+                ZEPHYRUM, X), rubeus);
+            CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, X,
+                X), rubeus);
+            CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, XI,
+                X), fundus);
+        }
+
+        /* IV polygonum plenum cum verticibus negativis */
+        tabula_pixelorum_vacare(tn, fundus);
+        mn       = mandata_creare(piscina, intern);
+        pp[0].x  = -V; pp[0].y = -V;
+        pp[1].x = X;  pp[1].y = -V;
+        pp[2].x = X;  pp[2].y = X;
+        pp[3].x = -V; pp[3].y = X;
+        mandata_polygonum(mn, pp, IV, rgba((i8)CCLV, (i8)ZEPHYRUM,
+            (i8)ZEPHYRUM), VERUM);
+        fracti_ante = credo_numerus_fracti();
+        CREDO_NON_PENDET(delineare_mandata(mn, tn, NIHIL, NIHIL), MM);
+        si (credo_numerus_fracti() == fracti_ante)
+        {
+            delineare_mandata(mn, tn, NIHIL, NIHIL);
+            CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn,
+                ZEPHYRUM, ZEPHYRUM), rubeus);
+            CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, V,
+                V),
+                rubeus);
+            CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tn, XV,
+                XV), fundus);
+        }
+
+        /* V textus "M" ad x = -3: columnae visibiles pinguntur (pixela
+         * per additionem cum involutione et finium probationem - hodie
+         * iam rectum; hic FIXUM, non rubrum) */
+        tabula_pixelorum_vacare(tn, fundus);
+        mn = mandata_creare(piscina, intern);
+        mandata_textus(mn, -III, ZEPHYRUM, chorda_ex_literis("M",
+            piscina),
+            ZEPHYRUM, rgba((i8)CCLV, (i8)CCLV, (i8)CCLV));
+        delineare_mandata(mn, tn, NIHIL, NIHIL);
+        lucet = FALSUM;
+        per (y = ZEPHYRUM; y < VIII; y++)
+        {
+            per (x = ZEPHYRUM; x < III; x++)
+            {
+                si (tabula_pixelorum_obtinere_pixelum(tn, (i32)x,
+                    (i32)y)
+                    == albus)
+                {
+                    lucet = VERUM;
+                }
+            }
+        }
+        CREDO_VERUM(lucet);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
