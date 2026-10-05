@@ -502,6 +502,36 @@ s32 principale (vacuum)
         && cellulae[ZEPHYRUM].color_fundi == NIGER);
     CREDO_VERUM(cellulae[V + III].unitas == NIHIL
         && cellulae[V + III].color_fundi == NIGER);
+    /* 013 B3c: ORDO PICTORIS - rectangulum plenum ANTE imaginem sub
+     * ea manet (olim cellulae stratum pixelorum tegebant: mensa
+     * pictoris paginam in terminali celabat); rectangulum POST
+     * imaginem super eam (supra, C). */
+    m = mandata_creare(piscina, intern);
+    mandata_rectangulum(m, _fines(ZEPHYRUM, ZEPHYRUM, XXX, XXIV),
+        _rgba(CAERULEUS), VERUM);
+    mandata_imago(m, chorda_ex_literis("rubrum", piscina),
+        _fines(VI, VIII, XII, XVI));
+    mandata_rectangulum(m, _fines(XVIII, XVI, VI, VIII), _rgba(FLAVUS),
+        VERUM);
+    /* textus POST imaginem (index > imaginis, imago non prima) intra
+     * eam: super eam - regula indicem currentem legit, non 0 */
+    mandata_textus(m, XII, VIII, chorda_ex_literis("x", piscina),
+        ZEPHYRUM, _rgba(ALBUS));
+    tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+        NIGER, _fons, &imagines, pixela, cellulae);
+    /* (2,1) */
+    CREDO_VERUM(cellulae[V + II].unitas != NIHIL
+        && cellulae[V + II].unitas[0] == 'x');
+    /* cellulae imaginis (1,1) (2,1) (1,2) (2,2): imago, non mensa */
+    CREDO_AEQUALIS_I32(cellulae[V + I].color_fundi, 0xFF0000);
+    CREDO_AEQUALIS_I32(cellulae[V + II].color_fundi, 0xFF0000);
+    CREDO_AEQUALIS_I32(cellulae[X + I].color_fundi, 0xFF0000);
+    CREDO_AEQUALIS_I32(cellulae[X + II].color_fundi, 0xFF0000);
+    CREDO_AEQUALIS_I32(cellulae[ZEPHYRUM].color_fundi, CAERULEUS);
+    CREDO_AEQUALIS_I32(cellulae[V + IV].color_fundi, CAERULEUS);
+    /* rectangulum post imaginem (3,2) - extra imaginem: flavum */
+    CREDO_AEQUALIS_I32(cellulae[X + III].color_fundi, FLAVUS);
+
     /* E: linea axialis sola - via pixelorum eam NON pingit (filtrum) */
     m = mandata_creare(piscina, intern);
     mandata_imago(m, chorda_ex_literis("dimidium", piscina),

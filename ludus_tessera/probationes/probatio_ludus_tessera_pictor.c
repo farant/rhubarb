@@ -232,6 +232,16 @@ principale (vacuum)
     CREDO_VERUM (tessera_praesentare(opus));
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
         "penicillus"));
+    /* 013 B3c: pagina (imago) SUPRA mensam - ordo pictoris in
+     * tessellatione (olim mensa paginam et ictus celabat) */
+    {
+        Color mensa = thema_color(COLOR_SUPERFICIES);
+          i32 color_mensae = ((i32)mensa.r << XVI)
+              | ((i32)mensa.g << VIII) | (i32)mensa.b;
+
+        CREDO_VERUM (tessera_cellulam_legere(opus, VI, V).color_fundi
+            != color_mensae);
+    }
     /* 013 B3: linea status in linea ULTIMA superficiei */
     CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
         LINEAE - I).signum, (i32)'p');

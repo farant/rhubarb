@@ -28,6 +28,10 @@ nomen structura {
                    s32  lineae;
       constans Modulus* modulus;
          RunaePolitica  politica;
+                   s32* operta;   /* 013 B3c: per cellulam index
+                                  * imaginis ultimae tegentis (-1
+                                  * nulla); NIHIL sine strato */
+                   s32 index;   /* mandatum currens (via cellularum) */
 } Contextus;
 
 /* Codepoints delineandi per bita (SURSUM I, DEXTRA II, DEORSUM IV,
@@ -102,7 +106,10 @@ _color (
     redde ((i32)c.r << XVI) | ((i32)c.g << VIII) | (i32)c.b;
 }
 
-/* Cellula (columna, linea) si intra sectionem scaenae; aliter NIHIL. */
+/* Cellula (columna, linea) si intra sectionem scaenae; aliter NIHIL.
+ * ORDO PICTORIS (013 B3c): cellula quam imago POSTERIOR (index maior)
+ * tegit via cellularum non scribitur - stratum pixelorum sub cellulis
+ * est, ergo sine hac regula primitivum prius imaginem tegeret. */
 interior TessellatioCellula*
 _cellula (
     constans Contextus* ctx,
@@ -110,12 +117,19 @@ _cellula (
                    s32  columna,
                    s32  linea)
 {
+    s32 k;
+
     si (   columna < s->c0 || columna >= s->c1
         || linea < s->l0 || linea >= s->l1)
     {
         redde NIHIL;
     }
-    redde &ctx->cellulae[linea * ctx->columnae + columna];
+    k = linea * ctx->columnae + columna;
+    si (ctx->operta && ctx->operta[k] > ctx->index)
+    {
+        redde NIHIL;
+    }
+    redde &ctx->cellulae[k];
 }
 
 interior vacuum
@@ -506,6 +520,93 @@ _stratum_pixelorum (
     }
 }
 
+/* Tabula tegendi (013 B3c): pro quaque cellula index IMAGINIS ultimae
+ * quae eam tegit (fines imaginis per scaenam, ad cellulas, intra
+ * sectionem). Solum imagines - fines earum exacti; polygonum et
+ * linea obliqua nihil tegunt (capsula eorum textum innocentem
+ * celaret). Ambulatio scaenarum eadem ac via cellularum. */
+interior vacuum
+_operta_computare (
+           Contextus* ctx,
+    constans Mandata* m,
+             Piscina* piscina)
+{
+               Scaena  scaenae[SCAENAE_MAXIMAE];
+                  i32  altitudo = ZEPHYRUM;
+                  i32  n;
+                  i32  i;
+                  i32  k;
+    constans Mandatum* x;
+
+    ctx->operta = (s32*)piscina_allocare(piscina,
+        (memoriae_index)(ctx->columnae * ctx->lineae) * magnitudo(s32));
+    si (!ctx->operta)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < (i32)(ctx->columnae * ctx->lineae); k++)
+    {
+        ctx->operta[k] = -I;
+    }
+    scaenae[ZEPHYRUM].origo_x  = ZEPHYRUM;
+    scaenae[ZEPHYRUM].origo_y  = ZEPHYRUM;
+    scaenae[ZEPHYRUM].scala    = I;
+    scaenae[ZEPHYRUM].reliqua  = -I;
+    scaenae[ZEPHYRUM].c0       = ZEPHYRUM;
+    scaenae[ZEPHYRUM].c1       = ctx->columnae;
+    scaenae[ZEPHYRUM].l0       = ZEPHYRUM;
+    scaenae[ZEPHYRUM].l1       = ctx->lineae;
+    n                          = mandata_numerus(m);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        x = mandata_obtinere(m, i);
+        per (k = I; k <= altitudo; k++)
+        {
+            scaenae[k].reliqua--;
+        }
+        si (x->genus == MANDATUM_COETUS)
+        {
+            si (altitudo + I < SCAENAE_MAXIMAE)
+            {
+                scaenae[altitudo + I] = _scaenam_impellere(ctx,
+                    &scaenae[altitudo], x);
+                altitudo++;
+            }
+        }
+        alioquin si (x->genus == MANDATUM_IMAGO)
+        {
+            Scaena* s   = &scaenae[altitudo];
+               s32  px  = s->origo_x + x->fines.x * s->scala;
+               s32  py  = s->origo_y + x->fines.y * s->scala;
+               s32  c0  = modulus_columna(ctx->modulus, px);
+               s32  l0  = modulus_linea(ctx->modulus, py);
+               s32  c1 = modulus_columna(ctx->modulus,
+                   px + x->fines.latitudo * s->scala - I) + I;
+               s32 l1 = modulus_linea(ctx->modulus,
+                   py + x->fines.altitudo * s->scala - I) + I;
+               s32 c;
+               s32 l;
+
+            c0 = (c0 > s->c0) ? c0 : s->c0;
+            l0 = (l0 > s->l0) ? l0 : s->l0;
+            c1 = (c1 < s->c1) ? c1 : s->c1;
+            l1 = (l1 < s->l1) ? l1 : s->l1;
+            per (l = l0; l < l1; l++)
+            {
+                per (c = c0; c < c1; c++)
+                {
+                    ctx->operta[l * ctx->columnae + c] = (s32)i;
+                }
+            }
+        }
+        dum (   altitudo > ZEPHYRUM
+             && scaenae[altitudo].reliqua <= ZEPHYRUM)
+        {
+            altitudo--;
+        }
+    }
+}
+
 vacuum
 tessellatio_computare (
         constans Mandata* m,
@@ -542,9 +643,12 @@ tessellatio_computare (
     {
         redde;
     }
+    ctx.operta  = NIHIL;
+    ctx.index   = ZEPHYRUM;
     si (piscina != NIHIL)
     {
         _stratum_pixelorum(&ctx, m, fundus, fons, fons_ctx, piscina);
+        _operta_computare(&ctx, m, piscina);
     }
     scaenae[ZEPHYRUM].origo_x  = ZEPHYRUM;
     scaenae[ZEPHYRUM].origo_y  = ZEPHYRUM;
@@ -558,7 +662,8 @@ tessellatio_computare (
     n                          = mandata_numerus(m);
     per (i = ZEPHYRUM; i < n; i++)
     {
-        x = mandata_obtinere(m, i);
+        x          = mandata_obtinere(m, i);
+        ctx.index  = (s32)i;
         /* ambulatio = rasterizatoris nativi (magnitudo_arboris) */
         per (k = I; k <= altitudo; k++)
         {

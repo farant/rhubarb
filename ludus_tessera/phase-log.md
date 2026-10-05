@@ -402,3 +402,19 @@ pictor_prima.png. Root 195/195, ludus_tessera 5/5.
 
 Pending: Fran's look (terminal: box-drawing frame; window: thin frame,
 grey desk).
+
+## B3d — painter's order in tessellatio (2026-10-05)
+
+Fran: in the terminal, strokes showed while drawing and vanished on
+mouse-up (the window was fine). Headless confirmation: cell (6,5),
+inside the page, was a plain space in the desk colour. tessellatio
+drew images (the page) in a pixel stratum UNDER every cell-path
+primitive, so the desk rect, painted first, covered the page. Fran
+chose to fix the order in tessellatio (not to special-case pictor):
+a per-cell cover map keeps painter's order between images and the cell
+pass (lib/tessellatio.worklog.md). Test here: a page cell is not the
+desk colour. Root, tessera, ludus_tessera green.
+
+Pending: Fran's look (terminal: strokes persist, page visible over the
+desk).
+

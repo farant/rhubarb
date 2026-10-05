@@ -183,6 +183,12 @@ Leges chartae:
   pendebant - API delineare i32 insignatum); primitiva in spatio
   positivo octetis eisdem.
 
+- corpus (mores): tessellatio ORDINEM PICTORIS servat - rectangulum,
+  textus, linea ANTE imaginem posita sub ea manet (tabula `operta`: per
+  cellulam index imaginis ultimae tegentis). Olim stratum pixelorum
+  semper sub transitu cellularum iacebat: mensa ante paginam picta
+  paginam totam celabat.
+
 - corpus: `COLOR_SUPERFICIES` nova (thema: mensa circa paginam in
   prospectu) et `PARTES_PROSPECTUS` nova (componens: fenestra in
   contentum; titulus STML "prospectus"); pictor prospectum mensa implet
