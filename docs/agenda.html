@@ -93,8 +93,21 @@ conversion and gcd (which <code>fractio</code> calls constantly) are the
 real costs.</p>
 
 <h2>Done</h2>
-<p class="nota">Nothing yet. Finished items move here with the commit that
-closed them.</p>
+<p class="nota">Finished items, with the commit that closed them.</p>
+
+<h3><span class="id">D1</span>Arena allocations aligned by default</h3>
+<p><span class="status">done</span> <span class="nota">dfa6a05a, 2026-10-05;
+decided by Fran the same day</span></p>
+<p><code>piscina_allocare</code> now aligns to 8 bytes, like malloc
+(<code>PISCINA_ORDINATIO_ORDINARIA</code>); tight byte packing stays
+available as <code>piscina_allocare_ordinatum(p, n, I)</code>. Found by the
+first math-library review agent: <code>magnus</code> limbs, and
+<code>credo</code>'s own records, sat at misaligned addresses (undefined
+behaviour; 95 sanitizer reports, now 0). All 14 suites were run: exact
+byte-usage expectations moved by their padding (about 0.02% more memory at
+most), and the change exposed a latent use-after-rollback bug in
+<code>probatio_volumen</code>, fixed. Details in
+<code>lib/piscina.worklog.md</code>.</p>
 
 </body>
 </html>
