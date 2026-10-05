@@ -62,3 +62,30 @@ is the tier earning its keep; the checkpoint plagula never written
 deleted the only call to `checkpoint_condere` was refused before
 running: `-Wunused-function`. Examen ACCIPE; the latina guard caught `ordinarius` used as
 a parameter name (it is `default`) before clang did.
+
+## 2026-10-05 — the golden before the cut (scriba-plan H0)
+
+Before extracting the log engine into `historia`, today's behaviour is
+frozen as bytes: `probationes/probatio_pictor_documentum_aurum.c`
+scripts a 32×16 document at interval 2 (five strokes = checkpoints at
+seq 4 and 7; three undos; two strokes on a branch = `<ramus ab="4"/>`
+and a checkpoint at 12; redo refused; undo + redo; reopen) and dumps
+the states (cursor, end, live count, sigillum), every act without its
+timestamp, every plagula with origin, hash and content, and the three
+totals into `probationes/fixa/pictor_documentum/aurum.txt` (59 lines,
+identical over three runs). `PICTOR_DOCUMENTUM_AURUM_SCRIBERE=1`
+rewrites it.
+
+Read off the golden: checkpoint keys use the STROKE's seq, and the
+volume interleaves its own `plagula-condita` acts in the same seq
+space (hence "seqs are not multiples of the interval"); a checkpoint's
+content (the massa's hash) equals the document sigillum at that act;
+the dead `checkpoint/7` stays in the manifest after the branch.
+
+**The existing suite missed both plants.** A renamed checkpoint tag
+(`pictor:checkpoint` → another) and `checkpoint_proximus` admitting a
+DEAD checkpoint both compiled and passed `probatio_pictor_documentum`;
+only the golden caught them (line 40: the tag; line 25: the sigillum
+after undo-past-a-branch, rebuilt from dead checkpoint/7). The second
+is the subtle rule H1 must keep: a checkpoint inside a span a branch
+abandoned is never a base.

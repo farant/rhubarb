@@ -76,7 +76,12 @@ sigillum, committed as a fixture. After H2 the same script must produce
 byte-identical output. Red first: the fixture check runs (and passes)
 on today's code; a plant changing the checkpoint tag must fail it.
 
-**H1 — the engine library.** Name OPEN (proposed: `historia`). The log,
+H0 as built: `probatio_pictor_documentum_aurum` + `fixa/pictor_documentum/
+aurum.txt` (59 lines, deterministic). Two plants - the checkpoint tag
+renamed; a dead checkpoint admitted as base - compile, pass the old
+suite, and are caught only by the golden (worklog).
+
+**H1 — the engine library, `historia`** (name: Fran, 2026-10-05). The log,
 branches, checkpoints, cursor, undo/redo, verification; the projection
 through a small vtable:
 
