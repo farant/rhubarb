@@ -1,0 +1,76 @@
+<!-- omnia.stml - elementum omne dialecti 'effectus' et valor omnis
+     electionis saltem semel (effectus T1, manu scriptum; contractus
+     ANTE emissorem). Plagula ficta omnia.sh; sedes formae verae. -->
+<effectus lingua="bash" radix="omnia.sh">
+  <processus radix="omnia.sh">
+    <lectio via="data/a.txt" forma="via" resolutio="plena"
+            classis="arbor" scripta_in_ambitu="falsum"
+            per="redirectio" operator="&lt;" plagula="omnia.sh"
+            sedes="1:1-1:13" octeti="0-12"/>
+    <lectio via="build/" forma="praefixum" resolutio="partialis"
+            classis="build" scripta_in_ambitu="falsum"
+            per="mandatum" mandatum="head" plagula="omnia.sh"
+            sedes="2:9-2:28" octeti="21-40"/>
+    <lectio via="$1" forma="via" resolutio="nulla"
+            causa="parametrum positionale" per="mandatum"
+            mandatum="cat" plagula="omnia.sh" sedes="3:5-3:9"
+            octeti="45-49"/>
+    <lectio via="/etc/hosts" forma="via" resolutio="plena"
+            classis="externa" scripta_in_ambitu="falsum"
+            per="observatum" plagula="omnia.sh" sedes="4:5-4:15"
+            octeti="54-64"/>
+    <lectio via="/usr/include/stdio.h" forma="via" resolutio="plena"
+            classis="systema" scripta_in_ambitu="falsum"
+            per="mandatum" mandatum="grep" plagula="omnia.sh"
+            sedes="5:13-5:33" octeti="77-97"/>
+    <scriptura via="build/out.txt" forma="via" resolutio="plena"
+               classis="build" per="redirectio" operator="&gt;&gt;"
+               plagula="omnia.sh" sedes="6:6-6:24" octeti="103-121"/>
+    <scriptura via="build/tmp" forma="via" resolutio="plena"
+               classis="build" per="mandatum" mandatum="rm"
+               plagula="omnia.sh" sedes="7:8-7:17" octeti="129-138"/>
+    <exsecutio via="tools/alterum.sh" forma="via" resolutio="plena"
+               classis="arbor" scripta_in_ambitu="falsum"
+               per="aedificium" plagula="omnia.sh" sedes="8:1-8:17"
+               octeti="139-155"/>
+    <exsecutio via="build/x/" forma="praefixum" resolutio="partialis"
+               classis="build" scripta_in_ambitu="verum"
+               per="aedificium" plagula="omnia.sh" sedes="9:1-9:14"
+               octeti="156-169"/>
+    <exsecutio via="bin/aedilis" forma="via" resolutio="plena"
+               classis="instrumentum_domus" scripta_in_ambitu="falsum"
+               per="aedificium" plagula="omnia.sh" sedes="9:16-9:27"
+               octeti="171-182"/>
+    <fontatio via="lib.sh" forma="via" resolutio="plena"
+              classis="arbor" scripta_in_ambitu="falsum"
+              per="aedificium" plagula="omnia.sh" sedes="10:8-10:14"
+              octeti="177-183"/>
+    <enumeratio via="src/" forma="globus" exemplar="*.c"
+                resolutio="plena" classis="arbor"
+                scripta_in_ambitu="falsum" per="aedificium"
+                plagula="omnia.sh" sedes="11:10-11:18"
+                octeti="193-201"/>
+    <enumeratio via="probationes" forma="via" resolutio="plena"
+                classis="arbor" scripta_in_ambitu="falsum"
+                per="mandatum" mandatum="find" plagula="omnia.sh"
+                sedes="12:6-12:17" octeti="208-219"/>
+    <probatio via="build/gen.h" forma="via" resolutio="plena"
+              classis="build" scripta_in_ambitu="falsum"
+              per="aedificium" operator="-f" plagula="omnia.sh"
+              sedes="13:6-13:17" octeti="225-236"/>
+    <probatio via="build/a.o" forma="via" resolutio="plena"
+              classis="build" scripta_in_ambitu="verum"
+              per="aedificium" operator="-nt" plagula="omnia.sh"
+              sedes="14:4-14:13" octeti="241-250"/>
+    <ambitus_lectio titulus="HOME" assignatum="falsum"
+                    plagula="omnia.sh" sedes="15:9-15:14"
+                    octeti="259-264"/>
+    <ambitus_lectio titulus="RADIX_DIR" assignatum="verum"
+                    plagula="omnia.sh" sedes="16:9-16:19"
+                    octeti="273-283"/>
+    <ignotum causa="eval opacum" mandatum="eval" plagula="omnia.sh"
+             sedes="17:1-17:12" octeti="284-295"/>
+    <ignotum causa="cwd ignotum: cd $D" via="x.txt"
+             plagula="omnia.sh" sedes="18:12-18:17" octeti="308-313"/>
+  </processus>
+</effectus>

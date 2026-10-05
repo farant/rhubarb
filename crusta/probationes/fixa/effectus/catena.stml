@@ -1,0 +1,16 @@
+<!-- catena.stml - summarium minimum verum (effectus T1, manu scriptum):
+     plagula catena.sh = 'cat a.txt | sort > b.txt'. Lectio per
+     mandatum (tabula: cat legit argumenta), sort purum (nullus situs),
+     scriptura per redirectionem. Sedes = verbum quod viam nominat aut
+     redirectio tota (materia: linea:columna I-basata, finis exclusus;
+     octeti 0-basati, semi-aperti). -->
+<effectus lingua="bash" radix="catena.sh">
+  <processus radix="catena.sh">
+    <lectio via="a.txt" forma="via" resolutio="plena" classis="arbor"
+            scripta_in_ambitu="falsum" per="mandatum" mandatum="cat"
+            plagula="catena.sh" sedes="1:5-1:10" octeti="4-9"/>
+    <scriptura via="b.txt" forma="via" resolutio="plena"
+               classis="arbor" per="redirectio" operator="&gt;"
+               plagula="catena.sh" sedes="1:18-1:25" octeti="17-24"/>
+  </processus>
+</effectus>
