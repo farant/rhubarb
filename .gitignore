@@ -50,6 +50,11 @@ probationes/pictor/*.novum
 probationes/pictor/specimina/*.novum.png
 probationes/pictor/specimina/*.differentia.png
 /pictor.volumen
+/pictor.volumen-shm
+/pictor.volumen-wal
+/scriba.volumen
+/scriba.volumen-shm
+/scriba.volumen-wal
 
 # Python dev-time (pythonica)
 __pycache__/
