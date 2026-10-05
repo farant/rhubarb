@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 95 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 100 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -76,7 +76,9 @@ for a parameter of logarithmic conformal field theory. Demos 86 to 90 test
 that parameter on a single projective module, then look for the mechanism
 behind the depth law. Demos 91 to 95 ask whether the activation limits the
 law, which Boolean functions the encodings allow, and whether a non-solvable
-group computes better.</p>
+group computes better. Demos 96 to 100 dissect the octahedral catalog cell by
+cell, then go to three and four strands with matrix representations of the
+Temperley–Lieb algebra at δ = 0.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1719,6 +1721,89 @@ two groups of half-turns lie on different axes (the three coordinate axes and
 the six edge axes), so the "same half-angle" test does not hold geometry fixed.
 Note 47 applies to the reading that 2I wins by its algebra.</p>
 
+<h2>Demo 96 · Two classifications crossed</h2>
+<p class="nota"><code>knotapel/demo_96_tl_group_cross/main.c</code> · 1,021 lines · 14/14 tests · no <code>findings.md</code></p>
+<p>Cross demo 84's null/non-null split with demo 95's derived series and the
+24 elements fall into five cells: A, six outer half-turns; B, six
+quarter-turns; C, eight third-turns in 2T; D, the three half-turns of
+Q<sub>8</sub>; E, the identity. Alone, B computes XOR for every subset at
+every size, C nearly so, A and D nothing; B with C is the best pair; and
+leaving out D (21 elements) beats the whole catalog. "Non-null + cross-derived
+= capacity. Depth hurts."</p>
+<p>The cells are the cube group's conjugacy classes again (note 44), and the
+measurements are worth having, especially that pruning helps. Why B is perfect
+is demo 97's question; the answer is a construction (<a
+href="#nota-cellaB">note 51</a>).</p>
+
+<h2>Demo 97 · Why cell B is perfect</h2>
+<p class="nota"><code>knotapel/demo_97_cell_b_perfect/main.c</code> · 815 lines · 8/8 tests · no <code>findings.md</code></p>
+<p>Cell B is (1 ± i)/√2, (1 ± j)/√2, (1 ± k)/√2: three perpendicular axes, a
+rotation and its inverse on each. Every one of its 20 triples computes XOR6
+with margins of 4 to 8; and sweeping the common half-angle from 10° to 90°
+on the same three axes gives a plateau from 25° to 75° where every size up to
+six works, failure at the ends, and total collapse at 90°. "Perfection is
+geometric."</p>
+<p>The sweep is exactly the right experiment, and its conclusion is right.
+The mechanism can be stated exactly (note 51): all six weights share one
+real part, cos 45°, so the real part of the sum is cos 45° times
+(2k − N), k the number of 1-bits, and records the Hamming weight, hence the
+parity; at 90° that real part is zero, which is the collapse.</p>
+
+<h2>Demo 98 · Three strands</h2>
+<p class="nota"><code>knotapel/demo_98_3strand_dkc/main.c</code> · 1,417 lines · 11/11 tests · no <code>findings.md</code></p>
+<p>The braid group on three strands acting on TL<sub>3</sub> at δ = 0 by
+5 × 5 matrices over Z[ζ<sub>8</sub>]: the group is infinite, and the
+σ<sub>1</sub>/σ<sub>3</sub>-free closures all have bracket zero. Read through
+the trace (105 values from 2,048 matrices) it computes no XOR6 at all; one
+column of the matrix keeps all 2,048 apart. "The readout is the research
+frontier."</p>
+<p>All correct, and the infinite group needs no surprise: at δ = 0,
+e<sub>i</sub><sup>2</sup> = 0, so σ<sub>i</sub> = A(1 + A<sup>−2</sup>e<sub>i</sub>)
+is unipotent up to a scalar and has infinite order. The trace's 105 values
+are demo 113's determinant-and-phase, which is why so few survive.</p>
+
+<h2>Demo 99 · The 2 × 2 standard module</h2>
+<p class="nota"><code>knotapel/demo_99_column_readout/main.c</code> (demo 99b) · 2,678 lines · 26/26 tests (about 3 minutes); <code>demo_99c.c</code> · 7/7 tests · no <code>findings.md</code>; demo 99's own column-readout source was not kept</p>
+<p>Working on the irreducible 2-dimensional module Δ<sub>1</sub> directly,
+σ<sub>1</sub> = [[A, 0], [A<sup>−1</sup>, A]] and σ<sub>2</sub> = [[A,
+A<sup>−1</sup>], [0, A]], with a hash of the signs of all 16 integer
+coordinates: 500,261 XOR6 solutions, then XOR8, XOR10, XOR12, and from the
+deepest elements XOR14 (60 at a search width of 30, 4,016 at 40). The largest
+entries grow as 1, 2, 3, 5, 8, …, 89; every determinant is a unit of
+Z[i]; demo 99c sorts the catalog by algebraic type and finds a curated
+24-element "cell B" for high XOR. The log's account: an "Ext¹ thesis", the
+computation lives on a non-split extension of simple modules of the
+restricted quantum group.</p>
+<p>The representation has a classical name (<a href="#nota-sl2z">note
+49</a>): conjugated by diag(1, i), σ<sub>1</sub>/A and σ<sub>2</sub>/A become
+the integer matrices [[1, 0], [1, 1]] and [[1, −1], [0, 1]], which generate
+SL<sub>2</sub>(Z). This is the classical map from B<sub>3</sub> onto
+SL<sub>2</sub>(Z) (the reduced Burau representation at t = −1, which demo 113
+used for determinants), with phases A<sup>w</sup>; the Fibonacci numbers and
+the unit determinants follow, and plain SL<sub>2</sub>(Z) reproduces the
+sequence exactly. The Ext¹ thesis does not hold: TL<sub>3</sub>(0) is
+semisimple (demo 51) and Δ<sub>1</sub> simple, and σ<sub>1</sub>'s Jordan block
+is a non-diagonalizable element, not a non-split extension, as the log itself
+concedes at demo 100 ("a low-dimensional artifact").</p>
+
+<h2>Demo 100 · Four strands</h2>
+<p class="nota"><code>knotapel/demo_100_4strand_dkc/main.c</code> · 1,749 lines · 36/36 tests (about 1½ minutes) · no <code>findings.md</code></p>
+<p>The 3-dimensional standard module W<sub>4,2</sub> of TL<sub>4</sub> at
+δ = 0, with a 3 × 3 sign hash: XOR6 to XOR14 from elements of depth 4 and
+more. The vector r = (1, 0, −1) is killed by every e<sub>i</sub>, so every
+braid acts on it by A<sup>w</sup>: a "frozen radical", declared universal for
+W<sub>n,n−2</sub> at all n ≥ 4. Six "super-hub" elements in three pairs are
+read as the positive roots of sl<sub>3</sub>, with a table of scaling laws
+predicting 12 hubs and sl<sub>4</sub> at five strands.</p>
+<p>The frozen line is the one-dimensional representation σ<sub>i</sub> ↦ A
+inside W<sub>4,2</sub> (the module has the trivial simple as a submodule), so
+β·r = A<sup>w</sup>r is classical. It is not universal (<a
+href="#nota-radicale">note 50</a>): the form on W<sub>n,n−2</sub> is
+tridiagonal with zero diagonal, singular exactly when n is even, so at five
+strands there is no radical and the table's prediction fails at its first
+test. The hub-pair reading (three pairs, three positive roots) is a count
+that matches, not yet a derivation.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -2227,7 +2312,10 @@ image here is the classical picture: Jones's representations have finite
 image exactly at the low-order roots of unity (the easy points of note 28),
 and dense image from ℓ = 5 on (Freedman, Larsen and Wang), so demo 66's open
 question of a binary icosahedral group at ℓ = 5 expects a finite group where
-the image is dense. Whether demo 66's hand-chosen representation is
+the image is dense. (The finiteness concerns the semisimple quotient Jones
+works in. On the Temperley–Lieb modules themselves at δ = 0,
+e<sub>i</sub><sup>2</sup> = 0 makes σ<sub>i</sub> = A(1 + A<sup>−2</sup>e<sub>i</sub>)
+of infinite order, as demo 98 finds; see note 49. Corrected 2026-10-05.) Whether demo 66's hand-chosen representation is
 projectively the Temperley–Lieb one at A = e<sup>i5π/4</sup> is not
 established in the demo.</p></li>
 <li id="nota-tabula"><p><strong>From demo 65 on, the activations are lookup
@@ -2426,12 +2514,53 @@ other half-turns are on the edge axes (1, ±1, 0)/√2 and the like. Same rotati
 angle, different directions, so "algebra wins over geometry" compares two
 geometries; and the Q<sub>8</sub> set has three elements, a single triple, for
 the three-weight search.</p></li>
+<li id="nota-sl2z"><p><strong>The three-strand representation is
+SL<sub>2</sub>(Z).</strong> On Δ<sub>1</sub>, σ<sub>1</sub> = A·[[1, 0],
+[A<sup>−2</sup>, 1]] and σ<sub>2</sub> = A·[[1, A<sup>−2</sup>], [0, 1]] with
+A<sup>−2</sup> = −i. Conjugating by D = diag(1, i) gives A·[[1, 0], [1, 1]] and
+A·[[1, −1], [0, 1]] (checked numerically), and these two integer matrices
+generate SL<sub>2</sub>(Z). So the image of B<sub>3</sub> is SL<sub>2</sub>(Z)
+times the phases A<sup>w</sup>: the classical surjection of B<sub>3</sub> onto
+SL<sub>2</sub>(Z) (B<sub>3</sub> modulo its center is PSL<sub>2</sub>(Z)),
+here the reduced Burau representation at t = −1. Its consequences are the
+demo's findings: the group is infinite; determinants are A<sup>2w</sup>, the
+units ±1, ±i; and a breadth-first search in SL<sub>2</sub>(Z) on these two
+generators and their inverses has largest entries 1, 2, 3, 5, 8, 13, 21, 34,
+55, 89 by round, the demo's "Fibonacci" exactly. The XOR searches are
+searches over SL<sub>2</sub>(Z) words, read through a hash of signs.</p></li>
+<li id="nota-radicale"><p><strong>The frozen radical exists only for even
+n.</strong> W<sub>n,n−2</sub> has the n − 1 half-diagrams with one cup as
+basis, and e<sub>i</sub> sends every vector to a multiple of the i-th, with
+coefficient the i-th entry of Gr, G the Gram matrix; so the vectors killed by
+every e<sub>i</sub> are exactly the radical of G. At δ = 0, G is tridiagonal
+with zeros on the diagonal and ones beside it, and its determinant is 0, ±1
+as n − 1 is odd or even: a radical for n = 4, 6, 8, 10, none for n = 3, 5, 7, 9
+(computed). On that line the e<sub>i</sub> act as zero and σ<sub>i</sub> as A,
+the one-dimensional representation. So demo 100's "universal for
+W<sub>n,n−2</sub> at all n ≥ 4" holds for even n only, and five strands will
+show no frozen radical.</p></li>
+<li id="nota-cellaB"><p><strong>Why cell B computes parity.</strong> The
+neuron forms S = Σ ±w<sub>i</sub>, the sign set by each bit. If every weight
+has the same real part c (the same rotation angle), then Re S = c(2k − N),
+with k the number of bits that are 1: the real part of the sum records the
+Hamming weight exactly, so parity, like every symmetric function, is a
+function of Re S, and the activation has only to keep the values c(2k − N)
+apart. Cell B's six weights all have c = cos 45°, cell C's eight have
+cos 60°, which is why both do so well alone; the half-turns have c = 0, so
+their sums carry no Hamming weight at all, which is why cells A and D compute
+nothing. The rest is how well the angle-and-axis cells resolve the levels:
+for all six weights of cell B, a rotation and its inverse on each of three
+perpendicular axes, each pair puts its contribution in the real part when its
+two bits agree and along its own axis when they differ, so the axis of the sum
+(coordinate, edge or body) also counts the pairs of odd parity. Demo 97's
+plateau from 25° to 75° is the range of angles at which the real part and the
+vector part both stay large enough to read.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demo 96 cross-classifies the Temperley–Lieb and group structures, and
-demos 97 and 98 continue the capacity questions, before the multi-strand work
-of demos 99 to 109. The controls this reading found
+<p>Demos 101 to 109 continue on more strands: dimension-matched activations,
+the activation coarseness sweep, topological entropy of XOR-computing braids
+(demo 106) and algebraic graph density (demo 107). The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -2620,6 +2749,13 @@ did it once: for each catalog comparison (octahedral, icosahedral,
 ζ<sub>12</sub>, by depth), add Haar-random points of the same size, and
 report catalogs by geometric statistics (axes, angles, pairwise spread) beside
 their group-theoretic names.</p></li>
+<li><p><strong>Five strands, as a prediction.</strong> Demo 100's
+table predicts a frozen radical, 12 hubs and sl<sub>4</sub> at five strands;
+note 50 predicts no radical on W<sub>5,3</sub>. Run it.</p></li>
+<li><p><strong>Three strands in SL<sub>2</sub>(Z) terms.</strong> Rewrite
+demo 99b's elements as phase × integer matrix (note 49) and describe its XOR
+winners there: traces, continued fractions, the classical invariants of the
+closed braids they come from.</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -2653,7 +2789,10 @@ gauge dependence in its output. Demos 86 to 90 change the tone: a negative
 result reported as one, a capped catalog caught and fixed, a tautology named,
 and failed predictions left failing in the test counts. Demos 91 to 95
 prove two clean small theorems about what the encodings allow, and then reach
-for complexity theory (AC⁰, Barrington) where a table and a point set suffice.</p>
+for complexity theory (AC⁰, Barrington) where a table and a point set suffice. Demos 96 to 100 find
+real structure in the octahedral catalog and the strand representations; the
+names it already had (conjugacy classes, SL<sub>2</sub>(Z), the one-dimensional
+representation) say most of what the new vocabulary does.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
@@ -2663,10 +2802,11 @@ random check of note 30, the rotated sectors of note 32, demo 65's
 magnitudes, the group check of note 34, the rank computation and labelings of
 note 38, the design recomputation of note 39, demo 77's rotated sectors and
 the group computations of note 41 ran on scratch copies. The spectra of note 46 were computed by a scratch script, and note 47's
-random catalog ran in a scratch copy of demo 94. Written by hand on 2026-10-03
-and 2026-10-05 from reading the eighty-three <code>main.c</code> files (demos 1
-to 29, 35, 38, 39 and 45 to 95, with their findings, debriefs and, for 51 to
-95, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+random catalog ran in a scratch copy of demo 94; the checks of notes 49 and 50
+were scratch scripts. Written by hand on 2026-10-03 and 2026-10-05 from reading
+the eighty-eight <code>main.c</code> files (demos 1 to 29, 35, 38, 39 and 45 to
+100, with their findings, debriefs and, for 51 to 100,
+<code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
