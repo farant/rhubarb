@@ -10,7 +10,7 @@
 
 <p class="nota"><a href="index.html">Rhubarb</a></p>
 <h1>Knotapel</h1>
-<p class="subtitulus">Knots as computation: demos 1 to 105 as built, and a new demo 113</p>
+<p class="subtitulus">Knots as computation: demos 1 to 110 as built, and a new demo 113</p>
 
 <p>Knotapel is a research project in <code>knotapel/</code>: a little over
 a hundred numbered demos, each a single C89 file with its own tests, no
@@ -80,7 +80,9 @@ group computes better. Demos 96 to 100 dissect the octahedral catalog cell by
 cell, then go to three and four strands with matrix representations of the
 Temperley–Lieb algebra at δ = 0. Demos 101 to 105 carry that to five, six
 and eight strands and study the sign-hash activation that reads the
-matrices.</p>
+matrices. Demos 106 to 109 test topological entropy as a predictor and build
+a graph library for the catalog's values; demo 110 starts a new line, knots
+encoded as binary construction decisions.</p>
 <p class="nota">Where reading the code turned up a mistake or a weak check,
 it is described in <a href="#notae">Notes from this reading</a> at the end,
 and marked in the demo's section with a pointer.</p>
@@ -1877,6 +1879,120 @@ both right. W<sub>8,2</sub> is not simple (note 52): its form has rank 14 of
 dimensional formula", topological entropy) are directions rather than
 results.</p>
 
+<h2>Demo 106 · Topological entropy</h2>
+<p class="nota"><code>knotapel/demo_106_topological_entropy/main.c</code> · 1,408 lines · 20/20 tests (about 17 seconds) · <code>findings.md</code></p>
+<p>The prediction, registered first: braids that compute XOR are
+pseudo-Anosov. Beside the W<sub>4,2</sub> matrices the demo carries the
+reduced Burau representation at t = −1 (3 × 3, in SL<sub>3</sub>(Z)) and
+classifies each braid as periodic or pseudo-Anosov from its characteristic
+polynomial. Falsified: in the first 128 entries both classes compute XOR at
+100%, with mean scores 3,969 and 3,857, and eight Boolean functions show no
+gap above 3.7 points. The depth-2 pseudo-Anosov braids all have spectral
+radius φ<sup>2</sup>, and the pseudo-Anosov share rises with depth (31% to
+77%). The explanation offered is that the Temperley–Lieb quotient at δ = 0
+erases the dynamics, which Burau keeps.</p>
+<p>The negative result stands and was registered properly, though a class
+that computes XOR 100% of the time leaves nothing to predict. The explanation
+does not (<a href="#nota-burau">note 54</a>): at t = −1 the reduced Burau
+matrices are the same W<sub>4,2</sub> matrices, inverted, transposed and
+rescaled by A<sup>w</sup>, so the bracket side sees exactly the spectral
+radius Burau does; what ignores it is the sign-hash readout. The two classes
+are also "Burau spectral radius above 1" and "equal to 1", which is not the
+Thurston classification, and the faithfulness claim in the header is
+wrong.</p>
+
+<h2>Demo 107 · Algebraic graphs on the values</h2>
+<p class="nota"><code>knotapel/demo_107_algebraic_graph/main.c</code> · 2,075 lines, with the new library <code>knotapel/raqiya/raqiya.h</code> · 42/42 tests (about 1 second; three printed "FAIL" lines are rejected candidate colorings, not tests) · <code>findings.md</code></p>
+<p>The library raqiya puts nine relations on Z[ζ<sub>8</sub>] values (shared
+root-of-unity orbit, sums, products, Galois orbits, divisibility, 2-adic
+valuation, …) and draws them as graphs. On the 32,768 W<sub>4,2</sub>
+matrices: 186 distinct entries, still growing at depth 8, and every one is
+an integer times a single power of ζ<sub>8</sub>, "axis-aligned". The phase
+at a position is not fixed: all four powers occur at every position. The
+explanation found is a grading: the link-state graph is bipartite, colored by
+nesting count mod 2 for full matchings and by the sum of right endpoints
+("major index") mod 2 in general, and the phase is ζ<sub>8</sub><sup>w</sup>
+shifted by the two colors. The demo also states a q-Catalan identity,
+C<sub>2m+1</sub>(−1) = (−1)<sup>m</sup>C<sub>m</sub>.</p>
+<p>The axis alignment is a theorem, and the proof is short: σ<sub>i</sub> =
+A(1 − i e<sub>i</sub>), so the phase is A<sup>w</sup> times
+(−i)<sup>k</sup> with k the number of e-steps, which the bipartite coloring
+fixes mod 2. It is demo 113's eight-phase star one level down. The coloring
+holds for every standard module, with a few lines of proof (<a
+href="#nota-maior">note 55</a>), where the demo had 3 of 3 and 9 of 9 cases.
+The q-Catalan identity is true for the q-Catalan that counts nestings (area),
+not the Gaussian-binomial one the findings name, and is very probably
+classical. "ζ<sub>4</sub>: δ = 0" repeats an old slip: at A = i, δ = 2. The
+writhe-parity mechanism was caught as a depth-8 truncation artifact by the
+demo itself.</p>
+
+<h2>Demo 108 · The parity vocabulary as graphs</h2>
+<p class="nota"><code>knotapel/demo_108_parity_vocabulary/main.c</code> · 549 lines · 3/3 tests (about 7 seconds) · <code>findings.md</code></p>
+<p>The 100 bracket values of the three-strand catalog are split into 41
+"parity" values (used by some k = 6 XOR3 solution, demo 50), 17 "poison"
+values (demo 64's orphans, less the 14 that are also parity) and 42 neutral,
+and raqiya compares them. Parity values multiply within their set 17 times,
+poison values never; parity reaches four of five 2-adic classes by addition,
+poison two. The "dual-channel theorem": parity needs both multiplicative
+coherence and additive magnitude diversity, matching T and Hadamard gates in
+circuit synthesis, and Clifford-only values computing parity is called a
+paradox.</p>
+<p>The comparisons are exact and the octant table is useful. As evidence they
+are weak (<a href="#nota-electio">note 56</a>): the sets were chosen by their
+outcomes, so the demo describes rather than predicts; edge counts grow with
+the square of a set's size, so 17 values against 41 needs a size-matched
+random control before 0 means anything; the parity octants are the ones note
+31's sectors force; and parity is linear, computable by CNOT gates alone, so
+there is no Clifford paradox.</p>
+
+<h2>Demo 109 · The same analysis at δ = √2</h2>
+<p class="nota"><code>knotapel/demo_109_d55_graph_analysis/main.c</code> · 1,207 lines · 5/5 tests (about 3 seconds) · <code>findings.md</code></p>
+<p>Demo 55's 56 values at δ = √2 (each a Gaussian integer times a power of
+ζ<sub>16</sub>), split by the Re &gt; 0 XNOR3 search into 28 parity and 28
+non-parity. The two halves agree on seven of eight relations and every
+classification (axes, norms, valuations, Galois orbits); only product closure
+differs, 56 edges against 176, the opposite of demo 108. The reading is an
+"encoding-dependent dual-channel theorem": multiplicative encodings want
+products to leave the vocabulary.</p>
+<p>The symmetry has a one-line explanation (<a
+href="#nota-negatio">note 57</a>): the catalog is closed under z ↦ −z, and
+negation sends every parity value to a non-parity one (checked: all 56). Every
+relation that negation preserves must agree; products do not, since
+(−a)(−b) = ab, so the 176 edges count products of parity values that land
+outside the set. Where demo 108 found differences, demo 109 found a
+symmetry, and neither is yet evidence about computation.</p>
+
+<h2>Demo 110 · Construction words</h2>
+<p class="nota"><code>knotapel/demo_110_construction_words/main.c</code> · 4,563 lines · 66/69 tests (three hypotheses fail as shipped, by design; about 2 minutes) · <code>findings.md</code></p>
+<p>A new encoding: build a stick knot vertex by vertex from three earlier
+vertices, so each step is a binary choice (a point or its mirror image in a
+plane), and a knot becomes a word of bits. In exact rational arithmetic the
+demo evaluates all 2<sup>n</sup> alternative words of a 12-stick
+figure-eight, classifying each by its determinant (Alexander matrix at
+t = −1) and its writhe in one projection. On the figure-eight with every step
+reflected in the base triangle the result is striking: 64 figure-eights, 32
+left and 32 right trefoils, and a four-check rule (two bits must agree, a
+third must equal the majority of three others) that classifies all 512
+exactly. Later results find the rule fragile: it holds at 8 of 196 integer
+scales of the same curve, which the demo connects to continued fractions of
+1/√3 and to 5-smooth coordinates; fails for the cinquefoil at every rotation,
+whence an "amphichiral specificity theorem"; and fails for 6<sub>3</sub>.</p>
+<p>The construction is a real idea and the demo is honest about what failed,
+but much of the failure is in the arithmetic (<a
+href="#nota-speculum">note 58</a>). With every step reflected in the same
+plane, flipping all the bits reflects the whole polygon, so the complement of
+a word is the mirror knot and must have the same determinant: the
+"complement chirality theorem" holds for every knot. The demo's own output
+breaks this (24 left trefoils against 72 right at rotation 2, where some
+words give polygons that pass through themselves), and at most scales its
+64-bit rationals overflow silently. Rerun with 128-bit integers, the
+classifier appears at 111 of the 196 scales, 106 of them with the same four
+perfect rotations, not 8: the scale sensitivity, the continued fractions and
+the smoothness were overflow. The cinquefoil overflows even 128 bits, so its
+results, and the specificity theorem, cannot be read yet. Determinant 5 also
+does not separate the figure-eight from the cinquefoil, nor determinant 3 the
+trefoil from 8<sub>19</sub>.</p>
+
 <h2 id="notae">Notes from this reading (2026-10-03)</h2>
 <p class="nota">Each was checked by hand algebra or by running the code;
 none changes a test result, since every test compares like with like.
@@ -2652,12 +2768,91 @@ reversed, and in any case these neurons add their weights rather than
 multiply them (note 47). Why the radical adds little here is simpler: on it
 every braid of writhe w acts by the same scalar A<sup>w</sup>, so it carries one
 number, the writhe mod 8.</p></li>
+<li id="nota-burau"><p><strong>Burau at t = −1 is the bracket's own
+representation.</strong> The reduced Burau representation of B<sub>4</sub> at
+t = −1 and the W<sub>4,2</sub> matrices of demo 106 satisfy, exactly,
+Burau(β) = D (A<sup>w</sup> TL(β)<sup>−1</sup>)<sup>T</sup> D<sup>−1</sup>
+with D = diag(1, −i, −1) and w the writhe (a scratch script, 500 random
+braids, every one equal). This is the classical fact that Burau at
+t = A<sup>−4</sup> is a Temperley–Lieb standard module. So the eigenvalues of
+the bracket's matrices have the same moduli as Burau's, inverted, and β and
+β<sup>−1</sup> have the same entropy: nothing about the δ = 0 quotient hides
+the dynamics. The null result is a property of the readout, which keeps signs
+and discards magnitudes. Two more corrections. A spectral radius above 1 at
+t = −1 is a lower bound on entropy, so those braids are not periodic (they
+may be reducible); a radius of 1 does not make a braid periodic. And Burau is
+not faithful on four strands as far as anyone knows (Bigelow proved it
+unfaithful for n ≥ 5; n = 4 is open), and at t = −1 it is certainly not
+faithful; Krammer's theorem is about the Lawrence–Krammer
+representation.</p></li>
+<li id="nota-maior"><p><strong>Why the link-state graph is
+bipartite.</strong> Color a link state by the sum of its arcs' right
+endpoints, mod 2. If e<sub>i</sub> sends one state to another, it joins the
+strands at i and i + 1 into a new cup (i, i + 1) and reconnects their old
+partners; in each case the sum changes by an odd number, because an arc
+encloses an even number of points (planarity puts no through-line inside an
+arc). For example arcs (a, i) and (i + 1, b) become (i, i + 1) and (a, b),
+changing the sum by 1; nested arcs (b, i + 1) and (a, i) become (i, i + 1)
+and (b, a), changing it by a − i, which is odd. So every edge joins the two
+colors, in every standard module and at every n: demo 107's "major index"
+coloring, with nesting parity its special case for full matchings. The
+q-Catalan identity is about the nesting (area) statistic: summing
+(−1)<sup>nestings</sup> over the noncrossing matchings of 2n points gives 1,
+0, −1, 0, 2, 0, −5 for n = 1 to 7 (counted), so C<sub>2m+1</sub>(−1) =
+(−1)<sup>m</sup>C<sub>m</sub> and C<sub>2m</sub>(−1) = 0. With the
+Gaussian-binomial q-Catalan the values are 1, 1, 2, 3, 6, 10, … and the
+identity fails. The two classes then have sizes (C<sub>n</sub> ± d)/2 with
+d the signed sum, not C<sub>m</sub> and C<sub>2m+1</sub> − C<sub>m</sub>
+(n = 3: sizes 2 and 3).</p></li>
+<li id="nota-electio"><p><strong>Vocabularies chosen by outcome.</strong> Demo
+108's parity set is "values used by some solution", and its poison set
+"values in no extensible solution", so any statistic that differs between
+them was selected for; a prediction needs the sets defined before the search
+and tested on values held out. Graph counts also scale with size: at the
+parity set's density, 17 values would have about 17 × (17/41)<sup>2</sup> ≈ 3
+product edges, so 0 against 17 is weak until compared with random 17-value
+subsets. The octants {2, 4, 5, 7} are those that note 31's six sectors give
+the right parity, octant 4 by the boundary convention (note 32). And the
+Clifford comparison inverts: parity is the easiest function for Clifford
+circuits (CNOT gates alone compute it); what needs a T gate is AND.</p></li>
+<li id="nota-negatio"><p><strong>Demo 109's symmetry is negation.</strong> A
+scratch copy of demo 109 checks every value: −z is in the catalog, and z and
+−z always fall on opposite sides of the parity split (56 of 56). Negation
+preserves axes, norms, valuations, Galois orbits, sums,
+differences and divisibility, so seven of the eight relations must agree
+between the halves. Products are the exception, (−a)(−b) = ab, and the
+non-parity set's 176 product edges are products of parity values landing
+outside the parity set. Why negation flips membership (under Re &gt; 0 it
+flips the sign of every product with that factor) is the real question, and
+it is a question about the activation.</p></li>
+<li id="nota-speculum"><p><strong>Demo 110's mirror test, and its
+arithmetic.</strong> When every step reflects in the base plane, the word with
+every bit flipped is the reflection of the whole polygon, so its knot is the
+mirror image and its determinant must be the same. A scratch copy checks this
+for every word. In the shipped arithmetic (64-bit numerators and
+denominators, multiplied without checks) it fails widely: for the
+figure-eight at scale 10, eight rotations pass and rotations 2 and 8 (72
+mismatched pairs of 256) and 5 and 11 (100) fail; for the cinquefoil, only 82
+to 140 of the 256 pairs agree at any rotation, so its chirality counts (53
+left to 3 right at one rotation, 24 to 0 at another) are noise. Overflow-checked arithmetic finds two causes. (1) Overflow: at
+non-working scales almost every mismatching rotation overflows, and nearly
+all the working rotations at working scales do not. With 128-bit integers the
+figure-eight at scales 5, 7, 9, 11, 13, 50 and 100 looks exactly like scale
+10, and demo 110's own survey finds the majority classifier at 111 of 196
+scales, 106 with four perfect rotations. (2) Singular polygons: at rotations
+2, 5, 8 and 11, with no overflow, some flips make two edges meet in space, which the crossing
+finder records as a crossing of sign 0. Those words are not knots and should
+be excluded. The cinquefoil overflows 128 bits at most rotations, so it still
+needs exact big integers before its results mean anything. Two things stand:
+the figure-eight classifier at its four rotations is a correct computation
+of determinant and writhe, though the writhe of one projection is not a knot
+invariant; and demos 111 and 112 use the same 64-bit rationals.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>
-<p>Demo 106 computes the topological entropy of XOR-computing braids, demo
-107 the algebraic graph density of the catalogs, and demos 108 and 109 follow
-the quotient graphs and a "major index" invariant. The controls this reading found
+<p>Demo 111 turns braids into construction words, and demo 112 computes
+Alexander polynomials from them; both use demo 110's 64-bit rationals, so
+note 58's mirror test is the first check to run. The controls this reading found
 useful carry over: a knot-free catalog with the same directions (note 20), a
 matched baseline (note 18), linear separability (note 17), the readout's own
 expressive power (note 19), the textbook rule as the expected value (note
@@ -2858,6 +3053,23 @@ closed braids they come from.</p></li>
 a demo uses, report the Gram rank at δ = 0 (the dimension of the head) beside
 its dimension, and call it simple only when the composition factors say so
 (note 52).</p></li>
+<li><p><strong>Construction words with arithmetic that cannot
+overflow.</strong> Rerun demo 110 (and 111, 112) with big-integer rationals,
+or at least checked multiplication that aborts on overflow; exclude words
+whose polygon meets itself; and make "every word and its complement have
+the same determinant" a test that runs on every rotation. Then redo the
+cinquefoil and 6<sub>3</sub> and see what survives. Classify knots by more
+than the determinant (the Alexander polynomial, or several projections) so
+that 4<sub>1</sub> and 5<sub>1</sub> come apart (note 58).</p></li>
+<li><p><strong>Entropy through a readout that sees magnitudes.</strong>
+Demo 106's matrices already carry the spectral radius (note 54). Choose a
+readout that keeps magnitudes (trace size, the largest entry, a norm) and a
+catalog in which XOR is not computed 100% of the time, then ask again whether
+pseudo-Anosov braids compute differently.</p></li>
+<li><p><strong>Vocabularies with a held-out half.</strong> Define demo
+108's parity and poison sets on half the catalog, fit the graph statistics
+there, and predict membership in the other half; compare every statistic with
+random subsets of the same size (note 56).</p></li>
 </ol>
 
 <p>Looking back over these demos: the polynomial and matrix machinery of
@@ -2896,7 +3108,12 @@ real structure in the octahedral catalog and the strand representations; the
 names it already had (conjugacy classes, SL<sub>2</sub>(Z), the one-dimensional
 representation) say most of what the new vocabulary does. Demos 101 to 105
 are careful in method (predictions registered, regimes swept, undersampling
-caught) and weakest at naming the modules they use.</p>
+caught) and weakest at naming the modules they use. Demos 106 to 110 register
+their predictions and report their failures, which is the right habit; their
+explanations need the classical identifications (Burau is the bracket's
+representation, the two vocabularies are negatives of each other) and, for
+demo 110, an arithmetic that cannot overflow, after which its most striking
+result turns out sturdier than the demo believed.</p>
 
 <p class="nota">Demo 113 was written for this page and is the only change made
 inside <code>knotapel/</code>; the null models of notes 16 and 20, the
@@ -2907,10 +3124,13 @@ magnitudes, the group check of note 34, the rank computation and labelings of
 note 38, the design recomputation of note 39, demo 77's rotated sectors and
 the group computations of note 41 ran on scratch copies. The spectra of note 46 were computed by a scratch script, and note 47's
 random catalog ran in a scratch copy of demo 94; the checks of notes 49 and 50
-were scratch scripts, as were the Gram ranks of note 52. Written by hand on
-2026-10-03 and 2026-10-05 from reading the ninety-three <code>main.c</code> files
-(demos 1 to 29, 35, 38, 39 and 45 to 105, with their findings, debriefs and,
-for 51 to 105, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
+were scratch scripts, as were the Gram ranks of note 52, the Burau comparison
+of note 54 and the matching counts of note 55; note 57's negation check and
+note 58's mirror, overflow and 128-bit runs were scratch copies of demos 109
+and 110. Written by hand on
+2026-10-03 and 2026-10-05 from reading the ninety-eight <code>main.c</code> files
+(demos 1 to 29, 35, 38, 39 and 45 to 110, with their findings, debriefs and,
+for 51 to 110, <code>explorers-log.md</code>) (and the READMEs of demos 1, 7 and 8). Each demo was compiled with
 <code>cc -std=c89</code> and run that day; the test counts are from those
 runs. The polynomials above are copied from their output. The project's own
 summary of every demo is in <code>knotapel/atlas/briefing.md</code> and
