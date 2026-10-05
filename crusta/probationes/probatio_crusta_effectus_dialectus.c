@@ -195,6 +195,109 @@ hic_manens constans character* SINE_SEDIBUS =
     "  </processus>\n"
     "</effectus>\n";
 
+hic_manens constans character* TABULA_ALIENA =
+    "<mandata lingua=\"bash\">\n"
+    "  <mandatum titulus=\"cat\" argumenta=\"legere\"/>\n"
+    "</mandata>\n";
+
+/* duo vitia exacte: 'cat' bis, 'wc' sine munere ullo */
+hic_manens constans character* TABULA_PRAVA =
+    "<mandata lingua=\"bash\">\n"
+    "  <mandatum titulus=\"cat\" argumenta=\"lectio\"/>\n"
+    "  <mandatum titulus=\"cat\" purum=\"verum\"/>\n"
+    "  <mandatum titulus=\"wc\"/>\n"
+    "</mandata>\n";
+
+hic_manens constans character* MUNERA[] = {
+    "argumenta", "primum", "ultimum", "optio_lectio", "optio_scriptura",
+    NIHIL
+};
+
+/* Quae canon dicere nequit: titulus unicus; ordo quisque aut purus,
+ * aut ignotus (cum causa), aut munus unum saltem fert - nec purus et
+ * munera simul. Vitia imprimuntur et numerantur. */
+interior i32
+_tabulae_vitia (
+      Piscina* piscina,
+    StmlNodus* radix)
+{
+    Xar* visa   = xar_creare(piscina, (i32)magnitudo(chorda*));
+    i32  vitia  = ZEPHYRUM;
+    i32  i;
+    i32  j;
+    i32  k;
+
+    per (i = ZEPHYRUM; radix && radix->liberi
+                       && i < xar_numerus(radix->liberi); i++)
+    {
+        StmlNodus* m = *(StmlNodus**)xar_obtinere(radix->liberi, i);
+
+        si (   m->genus == STML_NODUS_ELEMENTUM && m->titulus != NIHIL
+            && chorda_aequalis_literis(*m->titulus, "mandata"))
+        {
+            per (j = ZEPHYRUM; m->liberi && j < xar_numerus(m->liberi);
+                 j++)
+            {
+                StmlNodus* o = *(StmlNodus**)xar_obtinere(m->liberi, j);
+                   chorda* t;
+                   chorda* purum;
+                   chorda* ignotum;
+                       b32 munus = FALSUM;
+
+                si (o->genus != STML_NODUS_ELEMENTUM)
+                {
+                    perge;
+                }
+                t        = stml_attributum_capere(o, "titulus");
+                purum    = stml_attributum_capere(o, "purum");
+                ignotum  = stml_attributum_capere(o, "ignotum");
+                per (k = ZEPHYRUM; t && k < xar_numerus(visa); k++)
+                {
+                    si (chorda_aequalis(*t,
+                            **(chorda**)xar_obtinere(visa, k)))
+                    {
+                        imprimere("    titulus bis: %.*s\n",
+                            (integer)t->mensura,
+                            (constans character*)t->datum);
+                        vitia++;
+                    }
+                }
+                si (t)
+                {
+                    *(chorda**)xar_addere(visa) = t;
+                }
+                per (k = ZEPHYRUM; MUNERA[k] != NIHIL; k++)
+                {
+                    si (stml_attributum_capere(o, MUNERA[k]) != NIHIL)
+                    {
+                        munus = VERUM;
+                    }
+                }
+                si (purum && (munus || ignotum))
+                {
+                    imprimere("    purum cum munere aut ignoto\n");
+                    vitia++;
+                }
+                alioquin si (   ignotum
+                             && stml_attributum_capere(o, "causa")
+                                 == NIHIL)
+                {
+                    imprimere("    ignotum sine causa\n");
+                    vitia++;
+                }
+                alioquin si (!purum && !ignotum && !munus)
+                {
+                    imprimere("    ordo sine munere: %.*s\n",
+                        t ? (integer)t->mensura : 0,
+                        t ? (constans character*)t->datum : "");
+                    vitia++;
+                }
+            }
+        }
+    }
+    redde vitia;
+}
+
 s32 principale (vacuum)
 {
                  Piscina* piscina;
@@ -322,6 +425,57 @@ s32 principale (vacuum)
                               : "");
         CREDO_VERUM (chorda_aequalis_literis(via_canonis,
             "effectus.canon"));
+    }
+
+    /* VI. tabula mandatorum (planum T2): canon suus, registrum per
+     * radicem <mandata>, deinde quae canon dicere nequit - titulus
+     * unicus, ordo omnis significans, purum et ignotum exclusiva */
+    imprimere("\n--- VI. tabula mandatorum ---\n");
+    {
+                  Canon* canon_tabulae;
+                 chorda  catalogus;
+                 chorda  titulus;
+                 chorda  via_canonis;
+           StmlResultus  res;
+                    Xar* vitia;
+                    i32  ordines;
+
+        catalogus  = _legere(piscina, "canones.registrum");
+        titulus    = chorda_ex_literis("mandata", piscina);
+        via_canonis = canon_registrum_quaerere_radice(catalogus,
+            &titulus, piscina);
+        CREDO_VERUM (chorda_aequalis_literis(via_canonis,
+            "crusta/effectus_mandata.canon"));
+        canon_tabulae = canon_legere(_legere(piscina,
+            "crusta/effectus_mandata.canon"), piscina, intern, &causa);
+        CREDO_NON_NIHIL (canon_tabulae);
+        si (canon_tabulae != NIHIL)
+        {
+            fons = _legere(piscina, "crusta/effectus_mandata.stml");
+            CREDO_MAIOR_I32 (fons.mensura, ZEPHYRUM);
+            vitia = _iudicare(canon_tabulae, fons, piscina, intern);
+            CREDO_AEQUALIS_S32 (vitia ? (s32)xar_numerus(vitia) : -I,
+                ZEPHYRUM);
+
+            res      = stml_legere(fons, piscina, intern);
+            ordines  = _elementa_numerare(res.radix, "mandatum");
+            imprimere("  ordines: %u\n", (insignatus integer)ordines);
+            CREDO_MAIOR_I32 (ordines, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (_tabulae_vitia(piscina, res.radix),
+                ZEPHYRUM);
+
+            imprimere("  contrarium: munus alienum\n");
+            vitia = _iudicare(canon_tabulae,
+                chorda_ex_literis(TABULA_ALIENA, piscina), piscina,
+                intern);
+            CREDO_VERUM (_vitium_unum(vitia, CANON_VALOR_MALUS));
+
+            imprimere("  contrarium: titulus bis, ordo vacuus\n");
+            res = stml_legere(chorda_ex_literis(TABULA_PRAVA, piscina),
+                piscina, intern);
+            CREDO_VERUM (res.successus);
+            CREDO_AEQUALIS_I32 (_tabulae_vitia(piscina, res.radix), II);
+        }
     }
 
     credo_imprimere_compendium();

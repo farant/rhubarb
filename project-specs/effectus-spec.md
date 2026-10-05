@@ -502,7 +502,33 @@ path are removed (T8).
 
 ## XII. As built
 
-(empty until T8)
+**T2 census (2026-10-05, `./crusta/mandata_census.sh`, crusta parse,
+exact).** 290 tracked `.sh` outside `oracula/` (2 crusta adversarial
+fixtures not sane, skipped), 146 house functions, 334 distinct command
+titles. Sites by class: aedificium 9,092 · externum 3,732 · functio
+1,191 · dynamicum 427 · via 267. §0's heuristic top 20 agreed within
+~5% (its "~1,027 distinct" was noise: fragments after parameters).
+Externals, sites (files):
+
+grep 501 (95), clang 332 (123), mkdir 295 (174), dirname 284 (224), awk
+189 (65), tr 171 (66), basename 155 (100), head 150 (94), cat 149 (53),
+sort 135 (46), wc 135 (52), rm 132 (87), sed 126 (42), find 108 (87),
+git 86 (30), cp 67 (37), ls 60 (48), cut 58 (28), tail 51 (23), cmp 45
+(27), mktemp 40 (35), diff 32 (18), perl 31 (7), bc 29 (7), comm 29
+(14), readlink 27 (26), sleep 25 (14), jq 23 (8), date 22 (12), tee 18
+(18), mv 15 (11), shasum 15 (8), bash 14 (9), python3 13 (9), xargs 11
+(7), nm 10 (5), stat 10 (5), paste 9 (6), plutil 9 (3), gcc 8 (3),
+iconutil 8 (3), chmod 6 (5), osascript 6 (3), sh 6 (6), sysctl 6 (3),
+uniq 6 (4), cksum 5 (3), docker 5 (2), ln 5 (4), sips 5 (3), touch 5
+(5), briar-spectator 4 (1), clear 4 (2), fswatch 4 (2), inotifywait 4
+(2), seq 4 (4), sqlite3 4 (1), open 3 (3), pandoc 3 (1), ssh 3 (2), cc 2
+(1), claude 2 (2), gzip 2 (1), pkill 2 (2), curl 1 (1), env 1 (1), join
+1 (1), lldb 1 (1), nvim 1 (1), ps 1 (1), sample 1 (1), tar 1 (1), vim 1
+(1)
+
+The table `crusta/effectus_mandata.stml` holds all 51 externals with
+≥ 5 sites; option semantics checked against the macOS man pages (BSD
+`sed -i` takes an extension word; `date -r` takes seconds).
 
 ## XIII. Plan-time corrections (v2, 2026-10-05)
 
@@ -527,3 +553,12 @@ Found while writing `effectus-plan.md`, from reading
 3. **Registry by root element.** `canones.registrum` gains
    `<effectus>\teffectus.canon`; the dialect is found by its root,
    like `<aedificatio>`.
+4. **The table has its own canon** (T2, measured). A canon has ONE root
+   element, so `<mandata>` cannot be a section of `effectus.canon`
+   (the second `radix` displaced the first and `omnia.stml` failed).
+   `crusta/effectus_mandata.canon`, registry `<mandata>`; fitting
+   anyway - the table is bash data owned by crusta, the dialect is
+   language-neutral. §III's grammar grew three attributes the census
+   asked for: `optiones_binis_valoribus` (jq `--arg n v`), `in_loco`
+   (sed `-i`: arguments read AND written), `optiones_ignotae`
+   (`find -exec`, `bash -c`), plus `recursio` (`grep -r`, `rm -rf`).
