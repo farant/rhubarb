@@ -562,3 +562,18 @@ Found while writing `effectus-plan.md`, from reading
    asked for: `optiones_binis_valoribus` (jq `--arg n v`), `in_loco`
    (sed `-i`: arguments read AND written), `optiones_ignotae`
    (`find -exec`, `bash -c`), plus `recursio` (`grep -r`, `rm -rf`).
+5. **`textus` on partial sites; "byte-identical" meant "same key"**
+   (T4, measured). fontationes reported a partially resolved,
+   non-build path by its source text; the summary kept only the prefix.
+   Sites with `resolutio="partialis"` now carry `textus` (the word as
+   written) - the projection needs it, lint messages want it. And T4's
+   "byte-identical" check failed only in the `plagula:linea` column
+   (which duplicate is reported first: the old evaluator appended child
+   scopes before parents, the summary lists the root first). fabrica
+   digests genus + path only, sorted; proven by a pass recorded under
+   the new projection judging RECENS under the old code. Over all 286
+   house scripts the (genus, path, fontatum) SETS are equal except one
+   correction: `cd "$AREA" && ./x | tail -1` (tools/briar_fumus.sh) -
+   the old cwd rule looked only at the command's direct parent (the
+   pipe) and resolved against the root ("absens: x"); the summary
+   climbs to the `&&` chain and says cwd unknown. Both IRRESOLUTUM.

@@ -91,6 +91,10 @@
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"
       nota="cur resolutio non plena"/>
+    <attributum nomen="textus" genus="textus"
+      nota="verbum fontis litteraliter, ubi resolutio partialis (via
+            tum praefixum solum fert): nuntiis lintri et proiectioni
+            fontationum (T4)"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
     <attributum nomen="octeti" genus="textus" necessarium="verum"/>
@@ -126,6 +130,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
     <attributum nomen="octeti" genus="textus" necessarium="verum"/>
@@ -161,6 +166,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
     <attributum nomen="octeti" genus="textus" necessarium="verum"/>
@@ -197,6 +203,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
     <attributum nomen="octeti" genus="textus" necessarium="verum"/>
@@ -235,6 +242,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
     <attributum nomen="octeti" genus="textus" necessarium="verum"/>
@@ -272,6 +280,7 @@
     <attributum nomen="operator" genus="textus"
       nota="operator litteralis: -f -d -e -s -nt -ot ..."/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
     <attributum nomen="octeti" genus="textus" necessarium="verum"/>

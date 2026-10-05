@@ -8,7 +8,7 @@
             per="redirectio" operator="&lt;" plagula="omnia.sh"
             sedes="1:1-1:13" octeti="0-12"/>
     <lectio via="build/" forma="praefixum" resolutio="partialis"
-            classis="build" scripta_in_ambitu="falsum"
+            textus="build/$x.txt" classis="build" scripta_in_ambitu="falsum"
             per="mandatum" mandatum="head" plagula="omnia.sh"
             sedes="2:9-2:28" octeti="21-40"/>
     <lectio via="$1" forma="via" resolutio="nulla"

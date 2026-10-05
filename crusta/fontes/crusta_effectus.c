@@ -62,6 +62,7 @@ nomen structura {
                character* via;
                character* exemplar;
                character* titulus;    /* ambitus_lectio */
+               character* textus;     /* verbum fontis, ubi partialis */
       constans character* forma;
       constans character* resolutio;
       constans character* classis;
@@ -1874,6 +1875,14 @@ _viam_classificare (
             rel           = _relativa(d, absoluta);
             s->forma      = "praefixum";
             s->resolutio  = "partialis";
+            {
+                character textus[VIA_MAXIMA];
+                      i32 n = ZEPHYRUM;
+
+                textus[ZEPHYRUM] = '\0';
+                _textum_colligere(verbum, textus, &n);
+                s->textus = _duplicare(d->piscina, textus);
+            }
             si (rel != NIHIL)
             {
                 s->via      = _iungere(d->piscina, rel, "/");
@@ -3114,6 +3123,7 @@ _situm_emittere (
     bonum = _attributum(d, e, "via", s->via)
         && _attributum(d, e, "titulus", s->titulus)
         && _attributum(d, e, "exemplar", s->exemplar)
+        && _attributum(d, e, "textus", s->textus)
         && _attributum(d, e, "forma", s->forma)
         && _attributum(d, e, "resolutio", s->resolutio)
         && _attributum(d, e, "classis",

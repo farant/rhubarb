@@ -146,3 +146,25 @@ source order).
 - `crusta/instrumenta/effectus.c` (the CLI) is INTECTA until T7's
   fabrica genus calls it (iudicium-fumus then covers it). diagnostica
   gate run before commit (globs crusta/fontes/*.c): sanum.
+
+## 2026-10-05 - T4: fontationes as a projection
+
+- `crusta_fontationes.c` 1,910 -> 334 lines: derive the summary with an
+  EMPTY command table (externals cannot be fontationes; fake test trees
+  have no table), keep `fontatio` + syntax-level `exsecutio`
+  (`per="aedificium"` - table exsecutio like `python3 x.py` were never
+  fontationes), map classis/resolutio to the five genera (header
+  comment holds the table), re-add every processus root. Its gate
+  UNCHANGED and green (36); plant (PRODUCTUM/INSTRUMENTUM swapped) -> 4
+  red at exactly those genera.
+- An empty table needs ONE row: `titulus=""` reads back as absent, the
+  loader saw zero rows and refused ("tabula mandatorum illegibilis") -
+  every house output differed until the placeholder became `titulus="-"`.
+- Byte comparison over 286 house scripts: 89 differed, all in the
+  first-site column except tools/briar_fumus.sh (a correction - spec
+  §XIII.5). Key equality proven through fabrica itself: toml pass
+  recorded with the new code (33 s) -> RECENS under the old code too.
+  The toml verdict had been IGNOTUM before T4 (stale since earlier
+  commits), checked by judging with the old code first.
+- `textus` attribute added to the dialect (canon, omnia.stml) for
+  partial sites.

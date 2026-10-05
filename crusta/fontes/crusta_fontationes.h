@@ -6,6 +6,10 @@
  * ex arbore crustae - clavis iudicii portae (actio 'iudicium') ea
  * continet, ergo indicem manu scriptum qui putrescat non eget.
  *
+ * PROIECTIO summarii effectuum (crusta_effectus.h, effectus-plan T4):
+ * situs fontatio et exsecutio (per syntaxim) in genera infra;
+ * aestimator ipse in crusta_effectus.c vivit. Regulae eius:
+ *
  * AESTIMATOR SYMBOLICUS verborum, non executio. Resolvit:
  *   - partes litterales, apices, effugia simplicia;
  *   - $X / ${X}: definitiones (assignationes) in AMBITU - scriptum
