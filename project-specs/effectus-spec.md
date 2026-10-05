@@ -11,7 +11,7 @@ AUD). Fran's framing: build it as a pilot for effect analysis in C
 (silva) and other execution languages; vocabulary language-neutral,
 bash first.*
 
-*Status: APPROVED (2026-10-05) - §XI A1-A5 decided by Fran (all recommendations); plan next.*
+*Status: APPROVED (2026-10-05) - §XI A1-A5 decided by Fran (all recommendations); plan `effectus-plan.md`; corrections v2 in §XIII.*
 
 ## 0. What the measurements say (dated 2026-10-05)
 
@@ -503,3 +503,27 @@ path are removed (T8).
 ## XII. As built
 
 (empty until T8)
+
+## XIII. Plan-time corrections (v2, 2026-10-05)
+
+Found while writing `effectus-plan.md`, from reading
+`materia/fontes/materia_exemplaria.h` and `canones.registrum`:
+
+1. **Positions are materia's, not ours.** The exemplar extractor reads
+   `sedes="L:C-L:C"` and `octeti="B-B"` - the uniform position view
+   materia's writer emits on every node - and excuses and declared
+   subtractions key on them (`materia_exemplaria_minuere`: "SEDES
+   clavis est"). So every site element carries `sedes` and `octeti`
+   of its owning crusta node instead of `linea`/`initium`/`finis`
+   (§II.1, §II.3 are read with this substitution). The canon makes
+   both necessarium on every site.
+2. **One document = one plagula.** exemplaria keys findings by byte
+   offset alone ("Documentum unum plagula una est"). A summary spans
+   many plagulae (everything a scope sources), so the lint runs per
+   FILE: the sites of that file, taken from the chain root's summary
+   when the file is in a verdict chain (it needs the caller's
+   variables - cursor_communis uses `$RADIX_DIR`), else from a summary
+   rooted at the file itself (§V.3).
+3. **Registry by root element.** `canones.registrum` gains
+   `<effectus>\teffectus.canon`; the dialect is found by its root,
+   like `<aedificatio>`.
