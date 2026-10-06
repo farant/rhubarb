@@ -432,3 +432,25 @@ source order).
   at the asserted place, not anywhere.
 - Unquoted scalars with spaces (`$CFLAGS`) are the next shape of the
   same problem (several words from one value) - left for T5's sets.
+
+## 2026-10-06 - slice 2 T5: sets
+
+- The design question was where one value becomes N sites. Callers of
+  `_viam_classificare` pre-create the site and post-process it; member
+  copies are appended right after it (`_situs_ultimus` guards the one
+  caller with a stack Situs - `_custodiam_quaerere`), and the two
+  callers whose post-processing matters loop over the index range.
+- Flow-insensitive union met the house's habit of reusing loop names
+  (`f`) on its first fixture: six loops' lists unioned past the cap.
+  `_ansa_ligans` (innermost enclosing `for X` whose LIST does not
+  contain the use; reassignment inside the body -> no binding) fixed it
+  lexically. The same wall stands for sequential reassignment
+  (`src=` x6): `discordia` 515 is the ordering slice's work list.
+- An oracle "explained" count that RISES is not automatically loss:
+  T4's prefix `toml/build/` covered reads it had nothing to do with.
+  Diffing static summaries old vs new on the same liber (old binary
+  built in a scratch worktree of HEAD) found it in minutes.
+- `/*` inside a C comment again (the `'#*/'` notation): describe
+  patterns in words in comments.
+- Plants a and c first did not compile (unused variable / function);
+  rewritten so the code still references what it declares.

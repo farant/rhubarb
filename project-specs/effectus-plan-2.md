@@ -228,27 +228,27 @@ fixtures + goldens.
 
 ### Task T5: loops, patterns, operators, containment
 
-- [ ] **Step 1: Failing section** `XVI. ansae et exemplaria`: `for f in
+- [x] **Step 1: Failing section** `XVI. ansae et exemplaria`: `for f in
   toml css; do cat "$f/x"; done` -> two lectiones, same sedes; `for f
   in lib/*.c; do cat "$f"; done` -> one lectio `forma="globus"`
   `via="lib/*.c"`; `obj="$B/$(basename "$f" .c).o"` -> `build/x/*.o`;
   `${f%.c}`, `${f##*/}`.
-- [ ] **Step 2: CONTRARY (RF 1):** `X="lib/*.c"; cat "$X"` -> `certus`
+- [x] **Step 2: CONTRARY (RF 1):** `X="lib/*.c"; cat "$X"` -> `certus`
   `lib/*.c` (`forma="via"`); `cat $X` (unquoted) -> globus.
-- [ ] **Step 3: Cap (RF 3, A2):** a XVII-word list -> `praefixum` of the
+- [x] **Step 3: Cap (RF 3, A2):** a XVII-word list -> `praefixum` of the
   common prefix; `$a/$b` with XVI x XVI -> cap, no overflow; causa
   `discordia` when no prefix.
-- [ ] **Step 4: Lint (RF 2, Q8):** a two-member read of an unowned
+- [x] **Step 4: Lint (RF 2, Q8):** a two-member read of an unowned
   build path -> two build-sine-domino findings (per path) but an
   irresolutum word -> one finding; `_tegit` glob-in-glob containment:
   writer `build/x/*.o` covers reader `build/x/a*.o`; reader `build/*`
   vs writer `build/x/*` -> still monitum (lintrum gate).
-- [ ] **Step 5: Implement** (`for` definitions = join of the list's
+- [x] **Step 5: Implement** (`for` definitions = join of the list's
   values; `exemplar` only from bash expansion; one site per member;
   operators of spec §IV; `_tegit` containment).
-- [ ] **Step 6: Plants:** (a) quoted `"$X"` treated as a pattern ->
+- [x] **Step 6: Plants:** (a) quoted `"$X"` treated as a pattern ->
   Step 2 red; (b) containment reversed -> Step 4 red. Restore.
-- [ ] **Step 7: Census delta; toml key diff; Commit** (gates `crusta`,
+- [x] **Step 7: Census delta; toml key diff; Commit** (gates `crusta`,
   owed).
 
 ### Task T6: `${X:-d}` and prefixes in the key (A3, A4)

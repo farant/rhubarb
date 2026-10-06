@@ -411,3 +411,42 @@ Census rows deduplicate by (element, octeti, via): array elements share
 one sedes. Toml's key: 31 lines, unchanged (its flags go through
 `bin/compilator`, whose row ignores positionals but `-o`); no dead
 excuse house-wide; live oracle non tecta 0; judge 2.14-2.39 s.
+
+**T5 (2026-10-06): loops, patterns, operators, containment.** Values
+are sets: CERTUS holds 1..XVI members, EXEMPLAR members are patterns
+bash already expanded; joins are UNIONS, concatenation a cross product,
+over the cap -> the common prefix (`discordia`, A2). `for X in L`: the
+join of L's values (unquoted glob -> EXEMPLAR, `"${A[@]}"` elements,
+bare `$V` word-split; no `in` -> `argumentum`). `${X%s}`/`%%`/`#`/`##`
+per member (literal s, or the path patterns `*/`, `/*`, `.*`, `*.`);
+`basename W [suf]`, `dirname W` per member. One site per member, same
+sedes (`_viam_classificare` -> `_situm_ex_textu`); the callers that
+post-process (`_munus_applicare`: cp -r, sed -i; `_locum_tractare`:
+source/exec followed per member) loop over the member sites. Bare
+`$CF` whose words are all options = options. `_tegit`: glob-in-glob
+containment by segment (Q8).
+
+Two rules the data forced, both lexical, neither flow:
+- **Loop binding.** A use inside the BODY of `for X in L` takes L
+  alone - the house reuses `f` across loops, and the union of every
+  `for f` list hit the cap (the first fixture failed exactly so).
+  Falls back to the union if the body reassigns X.
+- **Empty join.** `X=""` joined with `X=path` stays `discordia` (slice
+  1's idiom: `"$P/tools/p.sh"` with P empty would be the root path
+  `/tools/p.sh`; union would make that a read).
+
+Census (vs T4): sites 7,064 -> 10,586 (members); unresolved 1,623 ->
+1,187; `ansa_read` 962 -> 75; but `discordia` 46 -> 515: variables
+REASSIGNED in sequence (`src=...; obj=...` blocks, six times in
+briar/compile_probationes.sh) - the loop parts now resolve, the union
+of the reassignments exceeds the cap. That is the first measured case
+for ordering: ~500 sites wait on "which definition reaches this use".
+`argumentum` 150 -> 196 nulla + 295 partialis (bodies of loops over
+`"$@"`); `valor ignotus` 0. Toml's key: 31 lines, unchanged; no dead
+excuse. Live oracle: non tecta 0, explicata 52 -> 73 - the 21 new are
+T4's ACCIDENTAL coverage: `"$bin"` was the prefix `toml/build/` and
+covered clang's link reads of `toml/build/*.o`; it is now
+`toml/build/probatio_*`, and the `.o` reads are explained by the link's
+`$objs` (a `recursio` accumulation) - precision, not loss. Judge 2.66-
+2.91 s (T4 2.14-2.39). A `source` of a glob (`for s in lib/*.sh`) is
+not followed and no longer marked `absens`.

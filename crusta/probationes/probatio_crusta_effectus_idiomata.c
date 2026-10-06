@@ -349,9 +349,13 @@ s32 principale (vacuum)
     CREDO_VERUM (_attributum(s, "classis", "instrumentum_domus"));
     CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
         "bin/inst2"));
-    s = _situs(summarium, NIHIL, "exsecutio", "a/build/");
-    CREDO_VERUM (_attributum(s, "resolutio", "partialis"));
+    /* ansa 'for nomen in a b' (effectus-plan-2 T5): membra duo
+     * resoluta, non praefixum a/build/ */
+    s = _situs(summarium, NIHIL, "exsecutio", "a/build/a");
+    CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     CREDO_VERUM (_attributum(s, "classis", "build"));
+    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
+        "a/build/b"));
 
     imprimere("\n--- III. irresoluta (et quod NON irresolutum) ---\n");
     s = _situs(summarium, NIHIL, "fontatio", "\"$NESCIO\"");

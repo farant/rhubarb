@@ -318,7 +318,7 @@ hic_manens constans character* CAUSAE =
     "cat \"$NESCIO/y\"\n"                                 /* 7 */
     "cat \"${X/a/b}\"\n"                                  /* 8 */
     "Y=a\n"                                               /* 9 */
-    "Y=b\n"                                               /* 10 */
+    "Y=\"$(mktemp)\"\n"                                    /* 10 */
     "cat \"$Y\"\n"                                        /* 11 */
     "A=(x y)\n"                                           /* 12 */
     "cat \"$A\"\n"                                        /* 13 */
@@ -379,6 +379,34 @@ hic_manens constans character* VEXILLA_FICTA =
     "    \"-pedantic\"\n"
     "    \"-Wall\"\n"
     ")\n";
+
+/* ansae et exemplaria (effectus-plan-2 T5; spec-2 par. II, IV, V.1) */
+hic_manens constans character* ANSAE =
+    "#!/bin/bash\n"                                          /* 1 */
+    "for f in toml css; do cat \"$f/x\"; done\n"              /* 2 */
+    "for f in lib/*.c; do cat \"$f\"; done\n"                 /* 3 */
+    "B=build/q\n"                                            /* 4 */
+    "for f in lib/*.c; do o=\"$B/$(basename \"$f\" .c).o\"; "
+        "cat \"$o\"; done\n"                                  /* 5 */
+    "for f in lib/*.c; do cat \"${f%.c}.h\"; done\n"          /* 6 */
+    "for f in lib/*.c; do cat \"${f##*/}\"; done\n"           /* 7 */
+    "X=\"lib/*.c\"\n"                                        /* 8 */
+    "cat \"$X\"\n"                                           /* 9 */
+    "cat $X\n"                                               /* 10 */
+    "for f in a b c d e f g h i j k l m n o p q; do "
+        "cat \"d/$f\"; done\n"                                /* 11 */
+    "for a in a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 "
+        "a16; "
+        "do for b in b1 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 b13 b14 "
+        "b15 b16; do "
+        "cat \"e/$a/$b\"; done; done\n"                       /* 12 */
+    "CF=\"-O2 -Wall\"\n"                                     /* 13 */
+    "clang $CF src/m.c\n"                                    /* 14 */
+    "for s in a/m1.sh a/m2.sh; do source \"$s\"; done\n"     /* 15 */
+    "for c in u v; do cp -r \"src/$c\" build/; done\n";       /* 16 */
+
+hic_manens constans character* M1 = "cat data/m1.txt\n";
+hic_manens constans character* M2 = "cat data/m2.txt\n";
 
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
@@ -829,7 +857,10 @@ s32 principale (vacuum)
             CREDO_VERUM (_causa_lineae(cs, VIII, "operator"));
             CREDO_VERUM (_causa_lineae(cs, XI, "discordia"));
             CREDO_VERUM (_causa_lineae(cs, XIII, "tabulatum"));
-            CREDO_VERUM (_causa_lineae(cs, XIV, "ansa_read"));
+            /* T5: 'for g in p q' membra duo resoluta (non ansa_read);
+             * Y=a cum Y=$(mktemp): discordia vera (temporaria mixta) */
+            CREDO_NON_NIHIL (_situs(cs, "lectio", "p", XIV));
+            CREDO_NON_NIHIL (_situs(cs, "lectio", "q", XIV));
             CREDO_VERUM (_causa_lineae(cs, XV, "operator"));
             /* accumulatio in ansa: cyclus, non profunditas */
             CREDO_VERUM (_causa_lineae(cs, XIX, "recursio"));
@@ -947,6 +978,69 @@ s32 principale (vacuum)
              * optio est, non plagula '-I...' (vitium ante T4) */
             CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XI), I);
             CREDO_NON_NIHIL (_situs(ts, "lectio", "src/d.c", XI));
+        }
+    }
+
+    /* XVI. ansae, exemplaria, operatores (effectus-plan-2 T5) */
+    imprimere("\n--- XVI. ansae et exemplaria ---\n");
+    _scribere("a/ansae.sh", ANSAE);
+    _scribere("a/m1.sh", M1);
+    _scribere("a/m2.sh", M2);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/ansae.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/ansae.sh");
+            _imprimere_situs(ts);
+            /* lista litteralis: membrum quodque situs suus, sedes
+             * una */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "toml/x", II));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "css/x", II));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", II), II);
+            /* globus in lista: exemplar, etiam citatum in usu */
+            s = _situs(ts, "lectio", "lib/*.c", III);
+            CREDO_VERUM (_attributum(s, "forma", "globus"));
+            s = _situs(ts, "lectio", "build/q/*.o", V);
+            CREDO_VERUM (_attributum(s, "forma", "globus"));
+            s = _situs(ts, "lectio", "lib/*.h", VI);
+            CREDO_VERUM (_attributum(s, "forma", "globus"));
+            s = _situs(ts, "lectio", "*.c", VII);
+            CREDO_VERUM (_attributum(s, "forma", "globus"));
+            /* RF 1 CONTRARIUM: "$X" cum X globum litteralem tenente
+             * plagula litteralis est; $X nudus a bash expanditur */
+            s = _situs(ts, "lectio", "lib/*.c", IX);
+            CREDO_VERUM (_attributum(s, "forma", "via"));
+            s = _situs(ts, "lectio", "lib/*.c", X);
+            CREDO_VERUM (_attributum(s, "forma", "globus"));
+            /* terminus XVI (A2): XVII membra -> praefixum, discordia */
+            s = _situs(ts, "lectio", "d/", XI);
+            CREDO_VERUM (_attributum(s, "resolutio", "partialis"));
+            CREDO_VERUM (_attributum(s, "causa", "discordia"));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XI), I);
+            /* RF 3: XVI x XVI productum -> terminus, non area fracta */
+            s = _situs(ts, "lectio", NIHIL, XII);
+            CREDO_VERUM (_attributum(s, "resolutio", "partialis"));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XII), I);
+            /* scalaris nudus cum spatiis: verba (optiones), non
+             * plagula */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XIV), I);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "src/m.c", XIV));
+            /* fontatio per membra: ambo processus sequuntur */
+            CREDO_NON_NIHIL (_situs(ts, "fontatio", "a/m1.sh", XV));
+            CREDO_NON_NIHIL (_situs(ts, "fontatio", "a/m2.sh", XV));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "data/m1.txt",
+                ZEPHYRUM));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "data/m2.txt",
+                ZEPHYRUM));
+            /* recursio (cp -r) per membra: praefixa ambo */
+            s = _situs(ts, "lectio", "src/u/", XVI);
+            CREDO_VERUM (_attributum(s, "forma", "praefixum"));
+            s = _situs(ts, "lectio", "src/v/", XVI);
+            CREDO_VERUM (_attributum(s, "forma", "praefixum"));
         }
     }
 

@@ -250,6 +250,33 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32 (_numerare(d, IRRESOLUTUM, -I), ZEPHYRUM);
     CREDO_MAIOR_I32 (_numerare(d, NIHIL, -I), ZEPHYRUM);
 
+    imprimere("\n--- IV b. membra et exemplaria (plan-2 T5) ---\n");
+    /* RF 2: build-sine-domino per viam (membra duo -> monita duo) */
+    d = _scriptum_iudicare("k.sh",
+        "for f in x1 x2; do cat \"build/n/$f\"; done\n", VERUM);
+    _imprimere(d);
+    CREDO_AEQUALIS_I32 (_numerare(d, SINE_DOMINO, MONITUM), II);
+    /* irresolutum per verbum: unum */
+    d = _scriptum_iudicare("l.sh",
+        "for f in $(ls); do cat \"$f\"; done\n", VERUM);
+    CREDO_AEQUALIS_I32 (_numerare(d, IRRESOLUTUM, -I), I);
+    /* Q8 continentia: scriptor build/w/ *.o lectorem build/w/a*.o
+     * tegit; lector latior (build/ *) non tegitur */
+    d = _scriptum_iudicare("m.sh",
+        "for f in src/*.c; do\n"
+        "    clang -c \"$f\" -o \"build/w/$(basename \"$f\" .c).o\"\n"
+        "done\n"
+        "cat build/w/a*.o\n", VERUM);
+    _imprimere(d);
+    CREDO_AEQUALIS_I32 (_numerare(d, SINE_DOMINO, -I), ZEPHYRUM);
+    d = _scriptum_iudicare("n.sh",
+        "for f in src/*.c; do\n"
+        "    clang -c \"$f\" -o \"build/w/$(basename \"$f\" .c).o\"\n"
+        "done\n"
+        "cat build/*\n", VERUM);
+    _imprimere(d);
+    CREDO_AEQUALIS_I32 (_numerare(d, SINE_DOMINO, MONITUM), I);
+
     imprimere("\n--- V. catenae ex declarationibus fabricae ---\n");
     {
         Xar* catenae;
@@ -267,7 +294,8 @@ s32 principale (vacuum)
         catenae = crusta_effectus_catenae(piscina, intern, radix,
             &causa);
         CREDO_NON_NIHIL (catenae);
-        /* 'fontationes' (retiratum T8) et 'fasciculus' radices non sunt */
+        /* 'fontationes' (retiratum T8) et 'fasciculus' radices non
+         * sunt */
         CREDO_AEQUALIS_I32 (catenae ? xar_numerus(catenae) : ZEPHYRUM,
             I);
         si (catenae != NIHIL && xar_numerus(catenae) == I)
