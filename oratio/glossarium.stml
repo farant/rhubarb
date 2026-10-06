@@ -257,6 +257,12 @@
     <forma textus="ordinationem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="ordinationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="orientatio" lingua="latina" classis="substantivum" nota="Neolatina: orientatio (situs orientationis, praedicata geometrica); WORDS caret">
+    <forma textus="orientatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="orientationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="orientationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="orientatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="syntaxis" lingua="latina" classis="substantivum" nota="Gk. syntaxis f.">
     <forma textus="syntaxis" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="syntaxeos" casus="genitivus" numerus="singularis" genus="femininum"/>

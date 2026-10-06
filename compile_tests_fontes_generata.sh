@@ -167,6 +167,7 @@ declare -a SOURCE_FILES=(
     "lib/sigillum.c"
     "lib/silex.c"
     "lib/similitudo.c"
+    "lib/situs.c"
     "lib/sors.c"
     "lib/specimen.c"
     "lib/speculum.c"
