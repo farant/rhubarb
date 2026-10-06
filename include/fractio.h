@@ -31,7 +31,12 @@
 
 /* Membra PRIVATA - per functiones legenda.
  * Invarians: denominator > 0; divisor communis numeratoris et
- * denominatoris 1; nihil = 0/1. Forma canonica et unica. */
+ * denominatoris 1; nihil = 0/1. Forma canonica et unica.
+ *
+ * SEMPER per fractio_ex_* (aut operationem) creanda. Fractio octetis
+ * nullis impleta (memset, calloc, structura statica) NON est nihil sed
+ * 0/0, quod tacite propagatur (0/0 + 1/2 = 0/0) - dissimile Magno,
+ * cuius octeti nulli nihil validum sunt. Nihil: fractio_ex_s64(0). */
 nomen structura {
     Magnus numerator;
     Magnus denominator;

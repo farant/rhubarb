@@ -67,3 +67,19 @@ Verification:
 
 Note: in zsh `$F` holding several paths is ONE word (formator said
 "plagula illegibilis"); use `${=F}`.
+
+## 2026-10-05 — first review agent: findings and fixes
+
+No wrong results in 20k differential cases. Acted on:
+
+- **`fractio_aequalis` comparing numerators only passed the suite.** Added
+  falsifiability checks (1/2 vs 1/3, 1/2 vs 2/3, −1/2 vs 1/2) and two
+  properties: a ≠ a + 1, and a ≠ a/2 for a ≠ 0 (an odd numerator stays the
+  same, so only the denominator differs). The first version of the fix was
+  caught by ONE check only; with the a/2 property the mutant fails from
+  random case 0.
+- **Zero-filled Fractio is 0/0, not 0** and propagates silently (0/0 + 1/2 =
+  0/0). Fran's decision: document, don't change the representation — the
+  header now says always construct with `fractio_ex_*`.
+- Null-data chorda test added. gcd memory fix in magnus benefits every
+  fractio operation (they all call gcd). 972 checks.

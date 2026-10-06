@@ -388,6 +388,13 @@ _casum_probare (
     Magnus w;
     Magnus g;
 
+    /* aequalitas falsificabilis: a != a + 1 (sine hoc proprietates
+     * omnes vacuae essent si aequalis semper VERUM redderet) */
+    si (magnus_aequalis(a, magnus_adde(a, magnus_ex_s64(I), piscina)))
+    {
+        redde FALSUM;
+    }
+
     /* textus et reditus */
     t = magnus_ex_s64(ZEPHYRUM);
     si (!magnus_ex_chorda(magnus_ad_chordam(a, piscina), piscina, &t))
@@ -681,6 +688,123 @@ s32 principale (vacuum)
             "93326215443944152681699238856266700490715968264381621468"
             "59296389521759999322991560894146397615651828625369792082"
             "7223758251185210916864000000000000000000000000"));
+    }
+
+
+    /* ==================================================
+     * RECENSIO 2026-10-05: lacunae a recensore inventae
+     * ================================================== */
+
+    {
+        Magnus m = magnus_ex_s64(VII);
+        Magnus q;
+        Magnus t;
+        chorda nulla;
+           s64 x;
+        chorda textus;
+           i32 k;
+           b32 bene = VERUM;
+
+        imprimere("\n--- Probans lacunas recensionis ---\n");
+
+        /* aequalitas falsificabilis: parvi, magni, mixti */
+        CREDO_FALSUM (magnus_aequalis(magnus_ex_s64(III),
+            magnus_ex_s64(IV)));
+        CREDO_FALSUM (magnus_aequalis(_ex("99999999999999999999"),
+            _ex("99999999999999999998")));
+        CREDO_FALSUM (magnus_aequalis(_ex("-99999999999999999999"),
+            _ex("99999999999999999999")));
+        CREDO_FALSUM (magnus_aequalis(magnus_ex_s64(V),
+            _ex("18446744073709551621")));
+
+        /* chorda sine datis: FALSUM, exitus non tactus */
+        nulla.mensura  = III;
+        nulla.datum    = NIHIL;
+        CREDO_FALSUM (magnus_ex_chorda(nulla, piscina, &m));
+        CREDO_VERUM (magnus_ad_s64(m, &x) && x == VII);
+
+        /* exitus NIHIL: divisio (via celeris) et ad_s64 */
+        CREDO_VERUM (magnus_divide(magnus_ex_s64(XVII),
+            magnus_ex_s64(V),
+            piscina, &q, NIHIL));
+        CREDO_VERUM (_textus_est(q, "3"));
+        CREDO_VERUM (magnus_divide(_ex("100000000000000000000"),
+            magnus_ex_s64(-VII), piscina, NIHIL, &t));
+        CREDO_VERUM (_textus_est(t, "2"));   /* 10^20 mod 7 */
+        CREDO_VERUM (magnus_ad_s64(magnus_ex_s64(-I), NIHIL));
+        CREDO_FALSUM (magnus_ad_s64(_ex("99999999999999999999"),
+            NIHIL));
+
+        /* 10^10000: "1" et X milia nullarum, et reditus */
+        m       = magnus_potentia(magnus_ex_s64(X), X * M, piscina);
+        textus  = magnus_ad_chordam(m, piscina);
+        CREDO_AEQUALIS_I32 (textus.mensura, X * M + I);
+        si (textus.mensura > ZEPHYRUM && textus.datum[ZEPHYRUM] != '1')
+        {
+            bene = FALSUM;
+        }
+        per (k = I; k < textus.mensura; k++)
+        {
+            si (textus.datum[k] != '0')
+            {
+                bene = FALSUM;
+            }
+        }
+        CREDO_VERUM (bene);
+        CREDO_VERUM (magnus_ex_chorda(textus, piscina, &t));
+        CREDO_VERUM (magnus_aequalis(t, m));
+    }
+
+
+    /* ==================================================
+     * EUCLIDES: Fibonacci (casus pessimus) et memoria vocantis
+     *
+     * mdc(F_m, F_n) = F_mdc(m,n). Gradus Euclidis = index: olim omnes
+     * in piscina vocantis (XIII MB pro F_10000); nunc piscinae alternae
+     * internae, vocans solum effectum accipit.
+     * ================================================== */
+
+    {
+        Piscina* arca = piscina_generare_dynamicum("probatio_fibonacci",
+            (memoriae_index)1048576);
+        Piscina* vocans;
+         Magnus  f[X * M + I];
+         Magnus  g;
+         Magnus  u;
+         Magnus  w;
+            i32  k;
+
+        imprimere("\n--- Probans Euclidem super Fibonacci ---\n");
+        f[ZEPHYRUM]  = magnus_ex_s64(ZEPHYRUM);
+        f[I]         = magnus_ex_s64(I);
+        per (k = II; k <= X * M; k++)
+        {
+            f[k] = magnus_adde(f[k - I], f[k - II], arca);
+        }
+        CREDO_VERUM (magnus_aequalis(magnus_divisor_communis(f[M],
+            f[DCCC], piscina), f[CC]));
+        CREDO_VERUM (magnus_aequalis(magnus_divisor_communis(f[CMXCIX],
+            f[DCCCLXXXVIII], piscina), f[CXI]));
+
+        vocans = piscina_generare_dynamicum("probatio_vocans",
+            (memoriae_index)4096);
+        g = magnus_divisor_communis(f[X * M], f[X * M - I], vocans);
+        CREDO_VERUM (_textus_est(g, "1"));
+        CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), CDXCVI);
+        piscina_destruere(vocans);
+
+        vocans = piscina_generare_dynamicum("probatio_vocans",
+            (memoriae_index)4096);
+        g = magnus_divisor_communis_testatus(f[X * M], f[X * M - I],
+            vocans, &u, &w);
+        CREDO_VERUM (_textus_est(g, "1"));
+        CREDO_VERUM (magnus_aequalis(g, magnus_adde(
+            magnus_multiplica(u, f[X * M], arca),
+            magnus_multiplica(w, f[X * M - I], arca), arca)));
+        /* testes ~ F_9999: duo numeri MMDCCCC digitorum circiter */
+        CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), XVI * M);
+        piscina_destruere(vocans);
+        piscina_destruere(arca);
     }
 
 

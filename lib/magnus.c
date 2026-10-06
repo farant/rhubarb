@@ -388,7 +388,8 @@ _moduli_divide (
                 un[k + jj]  = (i32)t;
                 portans     = t >> XXXII;
             }
-            un[jj + lv] = (i32)((i64)un[jj + lv] + portans);
+            /* portatio ultima neglegitur (Knuth D6): un[jj + lv]
+             * post hunc gradum non legitur */
         }
         quotiens[jj] = (i32)aestimatio;
     }
@@ -546,7 +547,7 @@ magnus_ad_chordam (
         longitudo = _longitudo_vera(opus, longitudo);
     }
 
-    /* 2^32 < 10^10: X digiti per membrum sufficiunt */
+    /* IX digiti per frustum 10^9; signum unum */
     litterae = (i8*)piscina_allocare(piscina,
         (memoriae_index)numerus_frustorum * IX + II);
     si (signum < ZEPHYRUM)
@@ -914,23 +915,125 @@ magnus_potentia (
     redde fructus;
 }
 
+/* Euclides in piscinis ALTERNIS. Gradus quisque in piscinam
+ * alteram computat, valores qui supersunt eo transcribit, priorem
+ * vacat: memoria ergo proportionalis magnitudini operandorum, non
+ * gradibus (recensio 2026-10-05: olim CXX MB pro mdc X milium
+ * digitorum, omnia in piscina vocantis). Effectus solus in piscinam
+ * vocantis transcribitur. */
+nomen structura {
+     Piscina* piscinae[II];
+         i32  hic;
+} MagnusAlternae;
+
+interior b32
+_alternae_aperire (
+    MagnusAlternae* al)
+{
+    al->piscinae[ZEPHYRUM]  =
+        piscina_generare_dynamicum("magnus_alterna",
+        (memoriae_index)4096);
+    al->piscinae[I]         =
+        piscina_generare_dynamicum("magnus_alterna",
+        (memoriae_index)4096);
+    al->hic                 = ZEPHYRUM;
+    si (al->piscinae[ZEPHYRUM] == NIHIL || al->piscinae[I] == NIHIL)
+    {
+        si (al->piscinae[ZEPHYRUM])
+        {
+            piscina_destruere(al->piscinae[ZEPHYRUM]);
+        }
+        si (al->piscinae[I])
+        {
+            piscina_destruere(al->piscinae[I]);
+        }
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior Piscina*
+_alternae_illic (
+    constans MagnusAlternae* al)
+{
+    redde al->piscinae[I - al->hic];
+}
+
+/* piscina currens vacatur; altera fit currens */
+interior vacuum
+_alternae_vertere (
+    MagnusAlternae* al)
+{
+    piscina_vacare(al->piscinae[al->hic]);
+    al->hic = I - al->hic;
+}
+
+interior vacuum
+_alternae_claudere (
+    MagnusAlternae* al)
+{
+    piscina_destruere(al->piscinae[ZEPHYRUM]);
+    piscina_destruere(al->piscinae[I]);
+}
+
+/* copia valoris in piscinam datam (parvi sine allocatione) */
+interior Magnus
+_transcribere (
+      Magnus  a,
+     Piscina* piscina)
+{
+    Magnus copia = a;
+       i32 k;
+
+    si (a.membra == NIHIL)
+    {
+        redde a;
+    }
+    copia.membra = _membra_nova(piscina, a.longitudo);
+    per (k = ZEPHYRUM; k < a.longitudo; k++)
+    {
+        copia.membra[k] = a.membra[k];
+    }
+    redde copia;
+}
+
 Magnus
 magnus_divisor_communis (
       Magnus  a,
       Magnus  b,
      Piscina* piscina)
 {
-    Magnus x = magnus_absolutum(a, piscina);
-    Magnus y = magnus_absolutum(b, piscina);
+    MagnusAlternae al;
+            Magnus x = magnus_absolutum(a, piscina);
+            Magnus y = magnus_absolutum(b, piscina);
 
+    /* parvi: omnes gradus parvi, nulla allocatio (praeter
+     * |S64_IMUS|) */
+    si (   (a.membra == NIHIL && b.membra == NIHIL)
+        || !_alternae_aperire(&al))
+    {
+        dum (magnus_signum(y) != ZEPHYRUM)
+        {
+            Magnus r;
+
+            (vacuum)magnus_divide(x, y, piscina, NIHIL, &r);
+            x = y;
+            y = r;
+        }
+        redde x;
+    }
     dum (magnus_signum(y) != ZEPHYRUM)
     {
-        Magnus r;
+        Piscina* illic = _alternae_illic(&al);
+         Magnus  r;
 
-        (vacuum)magnus_divide(x, y, piscina, NIHIL, &r);
-        x = y;
+        (vacuum)magnus_divide(x, y, illic, NIHIL, &r);
+        x = _transcribere(y, illic);
         y = r;
+        _alternae_vertere(&al);
     }
+    x = _transcribere(x, piscina);
+    _alternae_claudere(&al);
     redde x;
 }
 
@@ -942,28 +1045,58 @@ magnus_divisor_communis_testatus (
       Magnus* u,
       Magnus* v)
 {
-    Magnus r0 = magnus_absolutum(a, piscina);
-    Magnus r1 = magnus_absolutum(b, piscina);
-    Magnus s0 = _parvus(I);
-    Magnus s1 = _parvus(ZEPHYRUM);
-    Magnus t0 = _parvus(ZEPHYRUM);
-    Magnus t1 = _parvus(I);
+    MagnusAlternae al;
+               b32 alternae;
+            Magnus r0 = magnus_absolutum(a, piscina);
+            Magnus r1 = magnus_absolutum(b, piscina);
+            Magnus s0 = _parvus(I);
+            Magnus s1 = _parvus(ZEPHYRUM);
+            Magnus t0 = _parvus(ZEPHYRUM);
+            Magnus t1 = _parvus(I);
+
+    /* parvi: testes |s| <= |b|, |t| <= |a|, omnia parva manent */
+    alternae = !(a.membra == NIHIL && b.membra == NIHIL)
+        && _alternae_aperire(&al);
 
     dum (magnus_signum(r1) != ZEPHYRUM)
     {
-        Magnus q;
-        Magnus r2;
-        Magnus s2;
-        Magnus t2;
+        Piscina* illic = alternae ? _alternae_illic(&al) : piscina;
+         Magnus  q;
+         Magnus  r2;
+         Magnus  s2;
+         Magnus  t2;
 
-        (vacuum)magnus_divide(r0, r1, piscina, &q, &r2);
-        s2 = magnus_subtrahe(s0, magnus_multiplica(q, s1, piscina),
-            piscina);
-        t2 = magnus_subtrahe(t0, magnus_multiplica(q, t1, piscina),
-            piscina);
-        r0 = r1;  r1 = r2;
-        s0 = s1;  s1 = s2;
-        t0 = t1;  t1 = t2;
+        (vacuum)magnus_divide(r0, r1, illic, &q, &r2);
+        s2 = magnus_subtrahe(s0, magnus_multiplica(q, s1, illic),
+            illic);
+        t2 = magnus_subtrahe(t0, magnus_multiplica(q, t1, illic),
+            illic);
+        si (alternae)
+        {
+            r0 = _transcribere(r1, illic);
+            s0 = _transcribere(s1, illic);
+            t0 = _transcribere(t1, illic);
+        }
+        alioquin
+        {
+            r0 = r1;
+            s0 = s1;
+            t0 = t1;
+        }
+        r1 = r2;
+        s1 = s2;
+        t1 = t2;
+        si (alternae)
+        {
+            _alternae_vertere(&al);
+        }
+    }
+    si (alternae)
+    {
+        r0 = _transcribere(r0, piscina);
+        s0 = _transcribere(s0, piscina);
+        t0 = _transcribere(t0, piscina);
+        _alternae_claudere(&al);
     }
     /* g = s0|a| + t0|b|: signa argumentorum in testes transfer */
     si (u)

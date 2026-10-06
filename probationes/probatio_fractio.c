@@ -465,6 +465,19 @@ _casum_probare (
     Fractio unum = fractio_ex_s64(I);
      Magnus m;
 
+    /* aequalitas falsificabilis: a != a + 1; et a != a/2 (a non
+     * nullo) - numerator idem si impar, denominator solus differt */
+    si (fractio_aequalis(a, fractio_adde(a, unum, piscina)))
+    {
+        redde FALSUM;
+    }
+    (vacuum)fractio_ex_s64_s64(I, II, piscina, &x);
+    si (   fractio_signum(a) != ZEPHYRUM
+        && fractio_aequalis(a, fractio_multiplica(a, x, piscina)))
+    {
+        redde FALSUM;
+    }
+
     /* textus et reditus */
     si (!fractio_ex_chorda(fractio_ad_chordam(a, piscina), piscina, &t))
     {
@@ -606,6 +619,23 @@ s32 principale (vacuum)
         CREDO_FALSUM (fractio_ex_chorda(chorda_ex_literis("",
             piscina), piscina, &f));
         CREDO_VERUM (fractio_aequalis(f, g));
+
+        /* chorda sine datis: FALSUM, exitus non tactus */
+        {
+            chorda nulla;
+
+            nulla.mensura  = III;
+            nulla.datum    = NIHIL;
+            CREDO_FALSUM (fractio_ex_chorda(nulla, piscina, &f));
+            CREDO_VERUM (fractio_aequalis(f, g));
+        }
+
+        /* aequalitas falsificabilis (recensio 2026-10-05: mutans qui
+         * numeratores solos comparabat suitam transibat) */
+        CREDO_FALSUM (fractio_aequalis(_ex("1/2"), _ex("1/3")));
+        CREDO_FALSUM (fractio_aequalis(_ex("1/2"), _ex("2/3")));
+        CREDO_FALSUM (fractio_aequalis(_ex("-1/2"), _ex("1/2")));
+        CREDO_VERUM (fractio_aequalis(_ex("2/4"), _ex("1/2")));
     }
 
 

@@ -77,3 +77,36 @@ Tooling notes from this birth:
 Deferred (each addable without changing the API): shifts and bit
 operations, square root, modular exponentiation, Karatsuba, an in-place
 API, and a small-value path for parsing (parsing always allocates today).
+
+## 2026-10-05 — first review agent: findings and fixes
+
+A read-only review agent (differential fuzzing against Python under
+UBSan/ASan, 80k cases, operands to 45k digits, ~40 mutants) found no wrong
+arithmetic. Verified and acted on:
+
+- **Misaligned limbs** (UB; `piscina_allocare` aligned to 1). Fixed house-wide
+  by Fran's decision: piscina default alignment 8 (dfa6a05a); magnus also
+  allocates limbs explicitly aligned.
+- **gcd memory grew with the number of Euclid steps**: every step allocated
+  fresh limbs in the CALLER's piscina. Now Euclid runs in two internal
+  scratch piscinae used alternately (each step computes into the other,
+  copies the survivors there, empties the old one) and only the result is
+  copied to the caller. Small inputs keep the old allocation-free loop.
+  Measured on F(10000), F(9999) (Euclid's worst case, ~2090 digits): caller
+  usage 13.2 MB → 0 B (gcd), 30.8 MB → 1.7 KB (with witnesses); peak RSS
+  38 MB → 5.6 MB; time unchanged.
+- **Vacuous oracle**: with `magnus_aequalis` replaced by `redde VERUM` the
+  whole suite passed — every property used it as the judge. Added
+  falsifiability checks (small, big, mixed pairs) and the property
+  a ≠ a + 1; that mutant now fails 5 checks and the properties at case 0.
+- Tests added: null-data chorda (FALSUM, output untouched); NIHIL
+  out-parameters (divide fast and slow path, `ad_s64`); 10^10000 printed
+  (10001 chars) and parsed back; Fibonacci gcd identity
+  gcd(F_m, F_n) = F_gcd(m,n) and Bézout on F(10000); caller-memory bounds
+  (< 496 B, < 16 KB) — the old gcd fails them with 13.2 MB / 30.8 MB.
+- Dead store after Knuth D6 removed (final carry ignored, as Knuth says);
+  stale digits comment fixed.
+
+Lesson for the process: my planted faults all targeted the arithmetic,
+never the oracle; an independent reviewer found the oracle hole at once.
+1234 checks.
