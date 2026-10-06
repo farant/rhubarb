@@ -16,6 +16,7 @@
 #include "materia_token.h"
 #include "filum.h"
 #include "chorda.h"
+#include "chorda_aedificator.h"
 #include "xar.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -5035,6 +5036,40 @@ _attributum (
     {
         redde VERUM;
     }
+    /* attributa inscripta CRUDA servantur et emittuntur (STML par.
+     * 5.4): valor cum '"' aut '&' (textus fontis situs irresoluti,
+     * '"$X"') effugiendus est, aliter summarium in disco illegibile
+     * (inventum effectus-plan-3 T1) */
+    si (strpbrk(valor, "\"&") != NIHIL)
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(d->piscina,
+            (memoriae_index)strlen(valor) + XVI);
+        constans character* c;
+
+        si (a == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (c = valor; *c != '\0'; c++)
+        {
+            si (*c == '"')
+            {
+                (vacuum)chorda_aedificator_appendere_literis(a,
+                    "&quot;");
+            }
+            alioquin si (*c == '&')
+            {
+                (vacuum)chorda_aedificator_appendere_literis(a,
+                    "&amp;");
+            }
+            alioquin
+            {
+                (vacuum)chorda_aedificator_appendere_character(a, *c);
+            }
+        }
+        valor = chorda_ut_cstr(chorda_aedificator_finire(a),
+            d->piscina);
+    }
     redde stml_attributum_addere(e, d->piscina, d->intern, titulus,
         valor);
 }
@@ -6376,4 +6411,154 @@ crusta_effectus_plagulam_tenet (
         }
     }
     redde FALSUM;
+}
+
+
+/* ==================================================
+ * Subsumptio (effectus-plan-3 T1)
+ * ================================================== */
+
+/* situs omnes summarii (sub processibus) in Xar */
+interior vacuum
+_situs_summarii (
+    StmlNodus* summarium,
+          Xar* exitus)
+{
+    i32 i;
+    i32 j;
+
+    per (i = ZEPHYRUM; summarium->liberi
+                       && i < xar_numerus(summarium->liberi); i++)
+    {
+        StmlNodus* pr = *(StmlNodus**)xar_obtinere(summarium->liberi,
+            i);
+
+        si (pr->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; pr->liberi
+            && j < xar_numerus(pr->liberi); j++)
+        {
+            StmlNodus* x = *(StmlNodus**)xar_obtinere(pr->liberi, j);
+
+            si (x->genus == STML_NODUS_ELEMENTUM)
+            {
+                *(StmlNodus**)xar_addere(exitus) = x;
+            }
+        }
+    }
+}
+
+/* situs vetus o novum n tegit? (eadem plagula, sedes, elementum iam
+ * probata) */
+interior b32
+_situs_subsumit (
+      Piscina* piscina,
+    StmlNodus* o,
+    StmlNodus* n)
+{
+    constans character* resolutio_vetus = _attributi(o, "resolutio",
+        piscina);
+    constans character* resolutio_nova = _attributi(n, "resolutio",
+        piscina);
+    constans character* via_vetus    = _attributi(o, "via", piscina);
+    constans character* via_nova     = _attributi(n, "via", piscina);
+    constans character* forma_vetus  = _attributi(o, "forma", piscina);
+    constans character* forma_nova   = _attributi(n, "forma", piscina);
+    constans character* temporaria_vetus = _attributi(o, "temporaria",
+        piscina);
+    constans character* temporaria_nova = _attributi(n, "temporaria",
+        piscina);
+    constans character* elementum_vetus = chorda_ut_cstr(*o->titulus,
+        piscina);
+
+    si (_aequat(elementum_vetus, "ignotum"))
+    {
+        redde VERUM;    /* ignotum vetus: quodvis */
+    }
+    si (_aequat(resolutio_vetus, "nulla"))
+    {
+        redde VERUM;    /* irresolutus vetus: quaevis via */
+    }
+    si (_aequat(elementum_vetus, "ambitus_lectio"))
+    {
+        redde _aequat(_attributi(o, "titulus", piscina),
+            _attributi(n, "titulus", piscina));
+    }
+    si (   via_vetus == NIHIL || via_nova == NIHIL
+        || _aequat(resolutio_nova, "nulla"))
+    {
+        redde FALSUM;   /* novus irresolutus ubi vetus resolutus */
+    }
+    si (   (temporaria_vetus != NIHIL || temporaria_nova != NIHIL)
+        && !_aequat(temporaria_vetus, temporaria_nova))
+    {
+        redde FALSUM;   /* objectum temporarium aliud */
+    }
+    si (_aequat(forma_vetus, "praefixum"))
+    {
+        redde _incipit(via_nova, via_vetus);
+    }
+    si (_aequat(forma_vetus, "globus"))
+    {
+        redde _aequat(forma_nova,
+            "globus") ? _exemplar_continet(via_vetus, via_nova)
+            : _aequat(forma_nova, "praefixum") ? FALSUM
+            : _globus_congruit(via_vetus, via_nova);
+    }
+    redde !_aequat(forma_nova, "praefixum")
+        && !_aequat(forma_nova, "globus")
+        && strcmp(via_vetus, via_nova) == ZEPHYRUM;
+}
+
+Xar*
+crusta_effectus_subsumptio (
+       Piscina* piscina,
+     StmlNodus* vetus,
+     StmlNodus* novum)
+{
+    Xar* exitus;
+    Xar* veteres;
+    Xar* novi;
+    i32  i;
+    i32  j;
+
+    si (piscina == NIHIL || vetus == NIHIL || novum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    exitus   = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    veteres  = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    novi     = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    si (exitus == NIHIL || veteres == NIHIL || novi == NIHIL)
+    {
+        redde NIHIL;
+    }
+    _situs_summarii(vetus, veteres);
+    _situs_summarii(novum, novi);
+    per (i = ZEPHYRUM; i < xar_numerus(novi); i++)
+    {
+         StmlNodus* n       = *(StmlNodus**)xar_obtinere(novi, i);
+               b32  tectum  = FALSUM;
+
+        per (j = ZEPHYRUM; !tectum && j < xar_numerus(veteres); j++)
+        {
+            StmlNodus* o = *(StmlNodus**)xar_obtinere(veteres, j);
+
+            si (   chorda_aequalis(*o->titulus, *n->titulus)
+                && _aequat(_attributi(o, "plagula", piscina),
+                       _attributi(n, "plagula", piscina))
+                && _aequat(_attributi(o, "sedes", piscina),
+                       _attributi(n, "sedes", piscina)))
+            {
+                tectum = _situs_subsumit(piscina, o, n);
+            }
+        }
+        si (!tectum)
+        {
+            *(StmlNodus**)xar_addere(exitus) = n;
+        }
+    }
+    redde exitus;
 }

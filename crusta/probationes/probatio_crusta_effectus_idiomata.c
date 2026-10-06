@@ -334,7 +334,7 @@ s32 principale (vacuum)
     /* e.sh ambitum NOVUM habet: RADIX_DIR vocantis non videt */
     CREDO_NIHIL (_situs(summarium, NIHIL, "fontatio", "tools/z.sh"));
     s = _situs(summarium, "tools/e.sh", "fontatio",
-        "\"$RADIX_DIR/tools/z.sh\"");
+        "&quot;$RADIX_DIR/tools/z.sh&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     CREDO_VERUM (_attributum(s, "plagula", "tools/e.sh"));
     CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
@@ -358,14 +358,15 @@ s32 principale (vacuum)
         "a/build/b"));
 
     imprimere("\n--- III. irresoluta (et quod NON irresolutum) ---\n");
-    s = _situs(summarium, NIHIL, "fontatio", "\"$NESCIO\"");
+    s = _situs(summarium, NIHIL, "fontatio", "&quot;$NESCIO&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     /* local q="$1" in g: definitio globalis non valet */
-    s = _situs(summarium, NIHIL, "fontatio", "\"$q\"");
+    s = _situs(summarium, NIHIL, "fontatio", "&quot;$q&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
-    /* '"$P/..."': P="" viam mutaret -> irresolutum */
+    /* '"$P/..."': P="" viam mutaret -> irresolutum (textus fontis in
+     * attributo effugitur: &quot; - effectus-plan-3 T1) */
     CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
-        "\"$P/tools/p.sh\""));
+        "&quot;$P/tools/p.sh&quot;"));
     CREDO_NIHIL (_situs(summarium, NIHIL, "fontatio", "tools/p.sh"));
     /* ${NESCIO:-...} (effectus-plan-2 T6, A4): NESCIO in ambitu non
      * definita -> valor praedefinitus resolutus; clavis lineam

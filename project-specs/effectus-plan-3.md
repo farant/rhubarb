@@ -40,9 +40,11 @@ done, §XII decided).
 - **Soundness (spec §I.1):** after every task, `-subsumere` over all
   tracked `.sh` against the FROZEN slice-2 binary passes. A failure is
   a defect, whatever the fixtures say.
-- **Frozen reference:** before T2's first edit, copy the slice-2 build
-  of `crusta/build/effectus` (ccc2f3a3) to the scratchpad as
-  `effectus.slice2`; never rebuild it.
+- **Frozen reference:** `effectus.slice2` in the scratchpad = slice-2
+  analysis + T1's attribute escaping (md5 617cd37e; re-frozen in T1
+  because the ccc2f3a3 build wrote unreadable summaries); never
+  rebuild it. If the scratchpad is lost: build from 520f3641's
+  crusta sources + T1's `_attributum` change.
 
 ## Review Focus (spec §IX -> where tested)
 
@@ -72,20 +74,20 @@ done, §XII decided).
 **Opens with:** copy `crusta/build/effectus` (built at ccc2f3a3) to the
 scratchpad as `effectus.slice2`; record its md5 in the worklog.
 
-- [ ] **Step 1: Failing section** `XVIII. subsumptio` in
+- [x] **Step 1: Failing section** `XVIII. subsumptio` in
   `probatio_crusta_effectus`: two in-memory summaries - NOVUM site
   covered (equal / glob / prefix / old `nulla`) passes; NOVUM site with
   a member outside the old value fails, named.
-- [ ] **Step 2: Implement** `crusta_effectus_subsumpta` (or a CLI-only
+- [x] **Step 2: Implement** `crusta_effectus_subsumpta` (or a CLI-only
   function in `effectus.c`): per site of NOVUM, the VETUS site at the
   same (plagula, sedes, elementum) covers it. CLI: `effectus
   -subsumere VETUS NOVUM` (exit 1 + the uncovered sites).
-- [ ] **Step 3: Tool** `crusta/effectus_subsumptio.sh <binarium_vetus>`:
+- [x] **Step 3: Tool** `crusta/effectus_subsumptio.sh <binarium_vetus>`:
   every tracked `.sh` summarized by both binaries, `-subsumere` each;
   prints `N/M subsumpta`. Born green: old binary vs itself -> M/M.
-- [ ] **Step 4: Plant:** NOVUM summary with one path changed -> named
+- [x] **Step 4: Plant:** NOVUM summary with one path changed -> named
   red (section and tool). Restore.
-- [ ] **Step 5: Commit** (gates `crusta`, owed).
+- [x] **Step 5: Commit** (gates `crusta`, owed).
 
 ### Task T2: the walk - sequence, branches, loops, fallback
 

@@ -419,6 +419,50 @@ hic_manens constans character* PRAEDEFINITUM =
     "E=\"\"\n"                                            /* 7 */
     "cat \"${E:-data/e}/v\"\n";                            /* 8 */
 
+/* subsumptio (effectus-plan-3 T1): summarium VETUS et NOVUM ficta */
+hic_manens constans character* SUMMARIUM_VETUS =
+    "<effectus lingua=\"bash\" radix=\"r.sh\">"
+    "<processus radix=\"r.sh\">"
+    "<lectio via=\"a/x\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "<lectio via=\"lib/*.c\" forma=\"globus\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"2:1-2:5\" octeti=\"6-10\"/>"
+    "<lectio via=\"d/\" forma=\"praefixum\" resolutio=\"partialis\" "
+        "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
+    "<lectio via=\"$X\" forma=\"via\" resolutio=\"nulla\" "
+        "plagula=\"r.sh\" sedes=\"4:1-4:5\" octeti=\"18-22\"/>"
+    "</processus></effectus>";
+
+/* NOVUM: membra quae VETUS tegit (aequalis, globus, praefixum,
+ * irresolutum) */
+hic_manens constans character* SUMMARIUM_BONUM =
+    "<effectus lingua=\"bash\" radix=\"r.sh\">"
+    "<processus radix=\"r.sh\">"
+    "<lectio via=\"a/x\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "<lectio via=\"lib/a.c\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"2:1-2:5\" octeti=\"6-10\"/>"
+    "<lectio via=\"d/q.txt\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
+    "<lectio via=\"z\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"4:1-4:5\" octeti=\"18-22\"/>"
+    "</processus></effectus>";
+
+/* NOVUM: membrum extra valorem veterem (a/y), et regressio (praefixum
+ * ubi vetus via exacta erat) - ambo nominantur */
+hic_manens constans character* SUMMARIUM_MALUM =
+    "<effectus lingua=\"bash\" radix=\"r.sh\">"
+    "<processus radix=\"r.sh\">"
+    "<lectio via=\"a/y\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "<lectio via=\"src/a.c\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"2:1-2:5\" octeti=\"6-10\"/>"
+    "<lectio via=\"d/q.txt\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
+    "<lectio via=\"a/\" forma=\"praefixum\" resolutio=\"partialis\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "</processus></effectus>";
+
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
 _causa_lineae (
@@ -1085,6 +1129,46 @@ s32 principale (vacuum)
             /* ':-' vacuum ut absens: E="" -> data/e solum */
             CREDO_NON_NIHIL (_situs(ts, "lectio", "data/e/v", VIII));
             CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VIII), I);
+        }
+    }
+
+    /* XVIII. subsumptio (effectus-plan-3 T1; spec-3 par. VIII): omnis
+     * situs NOVI a situ VETERIS eiusdem plagulae, sedis, elementi
+     * tegitur - aliter defectus (membrum novum aut regressio) */
+    imprimere("\n--- XVIII. subsumptio ---\n");
+    {
+        StmlResultus v = stml_legere(chorda_ex_literis(SUMMARIUM_VETUS,
+            piscina), piscina, intern);
+        StmlResultus b = stml_legere(chorda_ex_literis(SUMMARIUM_BONUM,
+            piscina), piscina, intern);
+        StmlResultus m = stml_legere(chorda_ex_literis(SUMMARIUM_MALUM,
+            piscina), piscina, intern);
+                 Xar* r;
+
+        CREDO_VERUM (v.successus && b.successus && m.successus);
+        si (v.successus && b.successus && m.successus)
+        {
+            r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
+                b.elementum_radix);
+            CREDO_NON_NIHIL (r);
+            CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : I, ZEPHYRUM);
+            r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
+                m.elementum_radix);
+            CREDO_NON_NIHIL (r);
+            si (r != NIHIL)
+            {
+                _imprimere_situs(r);
+            }
+            /* a/y (extra), src/a.c (extra globum), a/ (regressio) */
+            CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : ZEPHYRUM, III);
+            CREDO_NON_NIHIL (r ? _situs(r, "lectio", "a/y", ZEPHYRUM)
+                               : NIHIL);
+            CREDO_NON_NIHIL (r ? _situs(r, "lectio", "a/", ZEPHYRUM)
+                               : NIHIL);
+            /* idem contra se: omnia subsumpta */
+            r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
+                v.elementum_radix);
+            CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : I, ZEPHYRUM);
         }
     }
 

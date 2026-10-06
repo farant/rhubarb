@@ -487,3 +487,18 @@ source order).
 - Toml's key stayed 31 lines through all of slice 2: its effects were
   already resolved or excused; slice 2's value is house-wide (lint,
   census) and in the chains to come (…J6HF: more gates as verdicts).
+
+## 2026-10-06 - slice 3 T1: subset check, and summaries were unreadable
+
+- The first `-subsumere` of a real summary against itself failed
+  "plagula illegibilis": `via=""$X""`. STML keeps inline attributes RAW
+  (spec §5.4) - escaping is the caller's job; effectus never did it.
+  Since slice 1, every summary with an unresolved quoted word was
+  invalid on disk, and nothing read one back. Same family as the T6
+  key holes: an output nobody consumed in its real form.
+- The frozen reference had the bug too, so it was re-frozen after the
+  fix (analysis unchanged; additions-only diff). The plan's Global
+  constraints record how to rebuild it.
+- The subset check is deliberately strict: a less precise new site is
+  a defect too (regression, not unsoundness) - slice 3 must only
+  sharpen.

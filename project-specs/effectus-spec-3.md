@@ -182,7 +182,27 @@ scratchpad before the first edit. Plus: per-pattern fixtures (sequence,
 
 ## XI. As built
 
-(filled per task)
+**T1 (2026-10-06): the subset check.** `crusta_effectus_subsumptio`
+(header): every site of NOVUM must be covered by a VETUS site at the
+same (plagula, sedes, elementum) - equal path, glob match or
+containment, prefix containment, or an old `nulla`/`ignotum`; a NEW
+site less precise than the old one (prefix where the old was exact,
+unresolved where it was resolved) or at a new sedes is a defect - so
+the check catches regressions as well as unsound members. CLI
+`effectus -subsumere V N`; tool `crusta/effectus_subsumptio.sh
+<binarium_vetus>` over every tracked `.sh`. Born green 315/315;
+plants: every resolved path + "~" -> 60/315; predicate always true ->
+section XVIII red.
+
+Found: effectus summaries were INVALID STML on disk wherever a site's
+text held `"` (`via=""$X""`) - STML stores inline attributes raw
+(stml-instrumentum-spec §5.4), so the writer must escape; nobody had
+read a summary back from disk (census, key and tests use the tree in
+memory). `_attributum` now escapes `"` -> `&quot;`, `&` -> `&amp;`
+(vitium filed, closed). Consequence: the reference binary had the same
+bug, so it was RE-FROZEN after the fix - slice-2 analysis plus escape
+(scratchpad `effectus.slice2`, md5 617cd37e); the analyzer diff against
+ccc2f3a3 is additions only.
 
 ## XII. AUDIENDA — DECIDED (Fran, 2026-10-06: every recommendation (a))
 

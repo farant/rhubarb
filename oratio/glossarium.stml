@@ -1347,6 +1347,18 @@
     <forma textus="fontandum" forma-verbi="gerundivum"/>
   </vocabulum>
 
+  <vocabulum lemma="subsumo" lingua="latina" classis="verbum" nota="Lat. scholastica (sub + sumo): sub alio comprehendere - summarium VETUS situm NOVUM subsumit si eum tegit (effectus-plan-3 T1: crusta_effectus_subsumptio, effectus -subsumere)">
+    <forma textus="subsumere" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="subsumit" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="subsumpta" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="subsumptum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
+
+  <vocabulum lemma="subsumptio" lingua="latina" classis="substantivum" nota="Lat. scholastica: actio subsumendi - probatio slice 3 effectus: valor novus omnis situs subcopia valoris veteris (crusta/effectus_subsumptio.sh)">
+    <forma textus="subsumptio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="subsumptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+
   <vocabulum lemma="fontatio" lingua="latina" classis="substantivum" nota="vox domus (fontare): locus ubi scriptum aliud fontatur aut exsequitur, et via eius - quod clavis iudicii portae continet quia liber lectionum lectiones bash non videt; sedes olim crusta_fontationes.c (fabrica spec 3 par. III.2), nunc elementum 'fontatio' dialecti effectus (crusta/fontes/crusta_effectus.c; T8)">
     <forma textus="fontatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="fontationis" casus="genitivus" numerus="singularis" genus="femininum"/>

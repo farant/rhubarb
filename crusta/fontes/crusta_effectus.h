@@ -92,6 +92,20 @@ crusta_effectus_non_tecta (
      StmlNodus* observatum,
            Xar* explicata);
 
+/* SUBSUMPTIO (effectus-plan-3 T1; spec-3 par. VIII): situs NOVI quos
+ * summarium VETUS non subsumit (Xar de StmlNodus*; vacuum = omnia
+ * subsumpta; NIHIL = argumentum absens). Situs veteris eiusdem
+ * plagulae, sedis et elementi novum tegit: via aequalis, globus
+ * congruens aut continens, praefixum continens, aut vetus irresolutus
+ * (resolutio nulla) - ignotum ab ignoto solo. Situs novus minus certus
+ * quam vetus (praefixum ubi via erat) aut sedes nova = defectus:
+ * probatio 'valor novus subcopia veteris' slice 3. */
+Xar*
+crusta_effectus_subsumptio (
+       Piscina* piscina,
+     StmlNodus* vetus,
+     StmlNodus* novum);
+
 /* CATENAE VERDICTI (planum T6; spec A4 - ex declarationibus fabricae
  * derivatae): viae scriptorum quae ingressus 'effectus' alicuius
  * actionis sunt, per fabrica.stml et
