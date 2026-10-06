@@ -502,3 +502,19 @@ source order).
 - The subset check is deliberately strict: a less precise new site is
   a defect too (regression, not unsoundness) - slice 3 must only
   sharpen.
+
+## 2026-10-06 - slice 3 T2: the walk
+
+- `a->assignata` holds EVERY assigned name, not just read-assigned
+  ones - the first build fell back on every use for that reason (a
+  debug print of the preconditions found it in one run). Read-set
+  names now come from their commands (`_a_lectione_positum`, cached).
+- Fixture expectations had to be corrected to ordering semantics four
+  times (eval AFTER the last assignment does not matter; `Y=a;
+  Y=$(mktemp)` is no longer discordia; an elif with nothing before the
+  `if` falls back; `P=""; P=x` now resolves). Writing them, I reasoned
+  in the old union semantics - the walk was right.
+- Cost lesson (again "measure, don't guess"): 2.3x slower, `sample`'s
+  top-of-stack named the two rescans in minutes.
+- The subset check's only failure was its own predicate (`./`), not
+  the walk - checks need plants AND real data.

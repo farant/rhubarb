@@ -318,7 +318,7 @@ hic_manens constans character* CAUSAE =
     "cat \"$NESCIO/y\"\n"                                 /* 7 */
     "cat \"${X/a/b}\"\n"                                  /* 8 */
     "Y=a\n"                                               /* 9 */
-    "Y=\"$(mktemp)\"\n"                                    /* 10 */
+    "if c; then Y=\"$(mktemp)\"; fi\n"                     /* 10 */
     "cat \"$Y\"\n"                                        /* 11 */
     "A=(x y)\n"                                           /* 12 */
     "cat \"$A\"\n"                                        /* 13 */
@@ -431,6 +431,8 @@ hic_manens constans character* SUMMARIUM_VETUS =
         "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
     "<lectio via=\"$X\" forma=\"via\" resolutio=\"nulla\" "
         "plagula=\"r.sh\" sedes=\"4:1-4:5\" octeti=\"18-22\"/>"
+    "<lectio via=\"./\" forma=\"praefixum\" resolutio=\"partialis\" "
+        "plagula=\"r.sh\" sedes=\"5:1-5:5\" octeti=\"24-28\"/>"
     "</processus></effectus>";
 
 /* NOVUM: membra quae VETUS tegit (aequalis, globus, praefixum,
@@ -446,6 +448,8 @@ hic_manens constans character* SUMMARIUM_BONUM =
         "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
     "<lectio via=\"z\" forma=\"via\" resolutio=\"plena\" "
         "plagula=\"r.sh\" sedes=\"4:1-4:5\" octeti=\"18-22\"/>"
+    "<lectio via=\"lib/q.c\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"5:1-5:5\" octeti=\"24-28\"/>"
     "</processus></effectus>";
 
 /* NOVUM: membrum extra valorem veterem (a/y), et regressio (praefixum
@@ -462,6 +466,36 @@ hic_manens constans character* SUMMARIUM_MALUM =
     "<lectio via=\"a/\" forma=\"praefixum\" resolutio=\"partialis\" "
         "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
     "</processus></effectus>";
+
+/* ordo (effectus-plan-3 T2; spec-3 par. II): definitiones
+ * attingentes */
+hic_manens constans character* ORDO =
+    "#!/bin/bash\n"                                          /* 1 */
+    "A=a1\n"                                                 /* 2 */
+    "A=a2\n"                                                 /* 3 */
+    "cat \"$A\"\n"                                            /* 4 */
+    "B=b1\n"                                                 /* 5 */
+    "if c; then B=b2; fi\n"                                  /* 6 */
+    "cat \"$B\"\n"                                            /* 7 */
+    "C=c1\n"                                                 /* 8 */
+    "case $Z in x) C=c2;; y) C=c3;; esac\n"                   /* 9 */
+    "cat \"$C\"\n"                                            /* 10 */
+    "for f in f1 f2; do cat \"$f\"; f=f3; done\n"              /* 11 */
+    "cat \"$f\"\n"                                            /* 12 */
+    "D=d1\n"                                                 /* 13 */
+    "while c; do cat \"$D\"; D=d2; done\n"                    /* 14 */
+    "E=e1\n"                                                 /* 15 */
+    "[ -n \"$Y\" ] || E=e2\n"                                 /* 16 */
+    "cat \"$E\"\n"                                            /* 17 */
+    "G=g1\n"                                                 /* 18 */
+    "G=g2\n"                                                 /* 19 */
+    "eval \"$CMD\"\n"                                         /* 20 */
+    "cat \"$G\"\n"                                            /* 21 */
+    "H=h\n"                                                  /* 22 */
+    "H=\"$H/x\"\n"                                            /* 23 */
+    "cat \"$H\"\n"                                            /* 24 */
+    "K=k0; if c; then K=k1; elif d; then cat \"$K\"; K=k2; "
+        "else K=k3; fi\n";                                   /* 25 */
 
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
@@ -1169,6 +1203,54 @@ s32 principale (vacuum)
             r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
                 v.elementum_radix);
             CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : I, ZEPHYRUM);
+        }
+    }
+
+    /* XIX. ordo (effectus-plan-3 T2; spec-3 par. II, A2, A3) */
+    imprimere("\n--- XIX. ordo ---\n");
+    _scribere("a/ordo.sh", ORDO);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/ordo.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/ordo.sh");
+            _imprimere_situs(ts);
+            /* series: assignatio ultima vincit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a2", IV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", IV), I);
+            /* ramus: unio cum priore */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b1", VII));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b2", VII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VII), II);
+            /* case: optiones et prior */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", X), III);
+            /* for: intra corpus ligatio ansae (f3 non); post ansam
+             * omnes */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f1", XI));
+            CREDO_NIHIL (_situs(ts, "lectio", "f3", XI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f3", XII));
+            /* while: arcus retro (d2) et prior (d1) */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d1", XIV));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d2", XIV));
+            /* A2 CONTRARIUM: membrum catenae non occidit - e1 manet */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e1", XVII));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e2", XVII));
+            /* A3: eval inter assignationem ultimam et usum -> unio
+             * slice 2 (g1 et g2); assignatio POST eval eum vinceret */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g1", XXI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g2", XXI));
+            /* H="$H/x" post H=h: h/x, non recursio */
+            s = _situs(ts, "lectio", "h/x", XXIV);
+            CREDO_VERUM (_attributum(s, "resolutio", "plena"));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XXIV), I);
+            /* elif: ramus prior (k1) alternativa est, non prior; k0
+             * ante 'if' attingit */
+            CREDO_NIHIL (_situs(ts, "lectio", "k1", XXV));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "k0", XXV));
         }
     }
 

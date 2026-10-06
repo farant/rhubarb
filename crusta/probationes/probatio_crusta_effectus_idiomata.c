@@ -363,11 +363,11 @@ s32 principale (vacuum)
     /* local q="$1" in g: definitio globalis non valet */
     s = _situs(summarium, NIHIL, "fontatio", "&quot;$q&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
-    /* '"$P/..."': P="" viam mutaret -> irresolutum (textus fontis in
-     * attributo effugitur: &quot; - effectus-plan-3 T1) */
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
-        "&quot;$P/tools/p.sh&quot;"));
-    CREDO_NIHIL (_situs(summarium, NIHIL, "fontatio", "tools/p.sh"));
+    /* P="" deinde P="$RADIX_DIR": ordo (effectus-plan-3 T2)
+     * assignationem posteriorem solam attingere scit - resolutum (ante
+     * slice 3 unio cum "" irresolutum dabat) */
+    s = _situs(summarium, NIHIL, "fontatio", "tools/p.sh");
+    CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     /* ${NESCIO:-...} (effectus-plan-2 T6, A4): NESCIO in ambitu non
      * definita -> valor praedefinitus resolutus; clavis lineam
      * 'ambitus NESCIO' per ambitus_lectio tenet */
@@ -379,7 +379,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_attributum(s, "classis", "externa"));
     /* 'RADIX_DIR=/alibi true' non est definitio: aliter omnia supra
      * irresoluta essent - numerus irresolutorum exactus */
-    CREDO_AEQUALIS_I32 (_irresoluta_numerare(summarium), V);
+    CREDO_AEQUALIS_I32 (_irresoluta_numerare(summarium), IV);
 
     (vacuum)filum_arborem_delere(basis);
     credo_imprimere_compendium();

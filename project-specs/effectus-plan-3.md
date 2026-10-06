@@ -91,22 +91,22 @@ scratchpad as `effectus.slice2`; record its md5 in the worklog.
 
 ### Task T2: the walk - sequence, branches, loops, fallback
 
-- [ ] **Step 1: Failing section** `XIX. ordo`: `X=a; X=b; cat "$X"` ->
+- [x] **Step 1: Failing section** `XIX. ordo`: `X=a; X=b; cat "$X"` ->
   `b` only; `if c; then X=b; fi; cat "$X"` (with `X=a` before) ->
   {a, b}; `case` with two branches; `for f in a b; do cat "$f"; f=z;
   done` -> inside {a, b}, after {a, b, z}; back-edge: `X=a; while c; do
   cat "$X"; X=b; done` -> {a, b}; A2 CONTRARY `X=a; [ -n "$Y" ] ||
   X=b; cat "$X"` -> {a, b} (never b alone); A3: `X=a; eval "$E"; cat
   "$X"` -> FALLBACK (slice-2 answer).
-- [ ] **Step 2: Implement** `_definitiones_attingentes` (spec §II.1-2,
+- [x] **Step 2: Implement** `_definitiones_attingentes` (spec §II.1-2,
   4) and route `_variabilem_intus` through it; FALLBACK = today's
   loop. `_ansa_ligans` becomes the for-binding case (keep the function
   only if still called).
-- [ ] **Step 3: House:** `-subsumere` over all `.sh` vs
+- [x] **Step 3: House:** `-subsumere` over all `.sh` vs
   `effectus.slice2` passes; census by causa delta (worklog); judge time.
-- [ ] **Step 4: Plant:** the kill rule applied to a CATENA member
+- [x] **Step 4: Plant:** the kill rule applied to a CATENA member
   (A2 contrary red). Restore.
-- [ ] **Step 5: Commit** (gates `crusta`, `iudicium-fumus`, owed).
+- [x] **Step 5: Commit** (gates `crusta`, `iudicium-fumus`, owed).
 
 ### Task T3: process boundaries (Q7)
 

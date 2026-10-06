@@ -228,3 +228,39 @@ ccc2f3a3 is additions only.
 - **A5. `recursio` accumulations** (`X="$X y"` in a loop, 118 sites).
   (a) Recommended: leave named (a finite set needs a fixpoint over
   sets - another slice); (b) attempt a bounded fixpoint now.
+
+**T2 (2026-10-06): the walk.** `_attingentes` (backward walk) +
+`_sententiae_effectus` (per statement: none / may / KILL - a plain
+assignment statement at the top of the list, A2 / -1 on `eval`, A3).
+Sequence lists kill; `elif`/`else` branches and `case` items are
+ALTERNATIVES (skipped); `&&`/`||` members and pipeline segments are
+may-only; `for X` binds (kills, also for the back-edge); loop bodies
+see their own definitions (back-edge); `if` conditions are may.
+FALLBACK (slice-2 code path, loop binding and title-level recursion
+guard included): use in a function or in a non-root plagula, any
+definition outside the use's plagula or inside a function, X set by
+`read`/`mapfile`/`getopts`/`printf -v`, `eval` between, or nothing
+reaching (unset - kept as slice 2 rather than a regression). The
+recursion guard is now per DEFINITION (`definitiones_aestimandae`):
+`H=h; H="$H/x"` resolves to `h/x` (was `recursio`); loop accumulations
+still reach themselves and stay `recursio`.
+
+House: subset check 316/316 vs the frozen reference. Census:
+unresolved 1,210 -> 763; `discordia` 472 -> 75; plena 8,691 -> 8,854,
+partialis 495 -> 569 (caps turned into prefixes). Toml's key 31 -> 32:
+`octeti toml/probationes/fixa/tomllib/aurum.txt` (the generator's
+`grep -c "$EXITUS"` after writing it - resolved now; sound, slightly
+more than needed, Q5) - and its excuse at tomllib_aurum.sh:36 died
+(removed). Oracle: non tecta 0, explicata 75.
+
+Cost: the first build made the census 2.3x slower (4.57 s vs 1.95 s):
+`sample` showed the time in the walk's per-use rescans - an `eval`
+subtree scan per preceding statement, and `_a_lectione_positum`
+rescanning every command of every plagula per evaluation. Per-plagula
+`eval_status` and a per-ambitus cache of read-assigned names: census
+1.83 s (faster than slice 2), judge 2.19-2.22 s warm (+7%).
+
+Found on the way: the T1 subset predicate (and the oracle's
+`_staticus_tegit`) did not treat the root prefix `./` as covering
+every relative path - the one non-subsumed script was exactly that.
+Fixed in both.
