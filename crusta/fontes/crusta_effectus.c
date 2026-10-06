@@ -1319,12 +1319,75 @@ _eval_continet (
     redde FALSUM;
 }
 
+/* m finis processus? (spec-3 Q7: crustula, $( ) et `...`, <( ),
+ * coproc, membrum pipae cum '|' - lastpipe abest). Pipa sine '|'
+ * ('! cmd', 'time cmd') in processu ipso currit: non finis. */
+interior b32
+_finis_processus (
+    constans MateriaNodus* m)
+{
+    constans MateriaNodus* pa = m->pater;
+                      i32  k;
+                      i32  numerus;
+
+    si (   m->genus == (s32)CRUSTA_GENUS_CRUSTULA
+        || m->genus == (s32)CRUSTA_GENUS_PARS_SUBSTITUTIO
+        || m->genus == (s32)CRUSTA_GENUS_PARS_PROCESSUS
+        || m->genus == (s32)CRUSTA_GENUS_SOCIUS)
+    {
+        redde VERUM;
+    }
+    si (   pa == NIHIL || pa->genus != (s32)CRUSTA_GENUS_PIPA
+        || pa->loci[(i32)CRUSTA_PIPA_LIBERI].genus
+            != MATERIA_VALOR_LISTA)
+    {
+        redde FALSUM;
+    }
+    numerus = materia_valor_lista_numerus(
+        pa->loci[(i32)CRUSTA_PIPA_LIBERI]);
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        MateriaValor* e = materia_valor_lista_obtinere(
+            pa->loci[(i32)CRUSTA_PIPA_LIBERI], k);
+
+        si (   e->genus              == MATERIA_VALOR_NODUS
+            && e->datum.nodus->genus == (s32)CRUSTA_GENUS_OPERATOR)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* definitio in locus processum usus attingit? Omnis finis processus
+ * supra locum usum quoque continere debet: intro (definitio exterior,
+ * usus in crustula) attingit, foras non. */
+interior b32
+_processum_attingit (
+    constans MateriaNodus* locus,
+    constans MateriaNodus* usus)
+{
+    constans MateriaNodus* m = locus;
+
+    dum (m != NIHIL)
+    {
+        si (_finis_processus(m) && !_nodus_intra(usus, m))
+        {
+            redde FALSUM;
+        }
+        m = m->pater;
+    }
+    redde VERUM;
+}
+
 /* EFFECTUS SENTENTIAE e in X: definitiones X intra e in R addit.
  * Reddit -I (eval: incertum), 0 nihil, I forte, II certe (assignatio
- * simplex ipsius sententiae, occidere licet - A2). */
+ * simplex ipsius sententiae, occidere licet - A2). Definitiones trans
+ * finem processus ab usu non attingunt (T3). */
 interior s32
 _sententiae_effectus (
                 Derivatio* d,
+    constans MateriaNodus* usus,
     constans MateriaNodus* e,
                       Xar* omnes,
                       Xar* R,
@@ -1342,7 +1405,8 @@ _sententiae_effectus (
     {
         Definitio* def = *(Definitio**)xar_obtinere(omnes, k);
 
-        si (def->locus == NIHIL || !_nodus_intra(def->locus, e))
+        si (   def->locus == NIHIL || !_nodus_intra(def->locus, e)
+            || !_processum_attingit(def->locus, usus))
         {
             perge;
         }
@@ -1546,7 +1610,8 @@ _attingentes (
                 {
                     perge;
                 }
-                st = _sententiae_effectus(d, e->datum.nodus, omnes, R,
+                st = _sententiae_effectus(d, usus, e->datum.nodus,
+                    omnes, R,
                     !forte_solum);
                 si (st < ZEPHYRUM)
                 {
@@ -1573,14 +1638,15 @@ _attingentes (
                         Definitio* def = *(Definitio**)xar_obtinere(
                             omnes, k);
 
-                        si (def->iteratio == pa)
+                        si (   def->iteratio == pa
+                            && _processum_attingit(def->locus, usus))
                         {
                             *(Definitio**)xar_addere(R) = def;
                         }
                     }
                     redde xar_numerus(R) > ZEPHYRUM;
                 }
-                si (_sententiae_effectus(d, pa, omnes, R, FALSUM)
+                si (_sententiae_effectus(d, usus, pa, omnes, R, FALSUM)
                     < ZEPHYRUM)
                 {
                     redde FALSUM;   /* arcus retro */
@@ -1590,7 +1656,7 @@ _attingentes (
         alioquin si (   pa->genus == (s32)CRUSTA_GENUS_REPETITIO
                      || pa->genus == (s32)CRUSTA_GENUS_CYCLUS)
         {
-            si (_sententiae_effectus(d, pa, omnes, R, FALSUM)
+            si (_sententiae_effectus(d, usus, pa, omnes, R, FALSUM)
                 < ZEPHYRUM)
             {
                 redde FALSUM;       /* arcus retro */
@@ -1610,7 +1676,7 @@ _attingentes (
                 && q < xar_numerus(probationes);
                  q++)
             {
-                si (_sententiae_effectus(d,
+                si (_sententiae_effectus(d, usus,
                         *(MateriaNodus**)xar_obtinere(probationes, q),
                         omnes, R, FALSUM) < ZEPHYRUM)
                 {
@@ -1626,7 +1692,7 @@ _attingentes (
 
                 per (w = ZEPHYRUM; pr && w < xar_numerus(pr); w++)
                 {
-                    si (_sententiae_effectus(d,
+                    si (_sententiae_effectus(d, usus,
                             *(MateriaNodus**)xar_obtinere(pr, w), omnes,
                             R, FALSUM) < ZEPHYRUM)
                     {

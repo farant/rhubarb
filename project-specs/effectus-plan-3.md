@@ -110,15 +110,16 @@ scratchpad as `effectus.slice2`; record its md5 in the worklog.
 
 ### Task T3: process boundaries (Q7)
 
-- [ ] **Step 1: Failing section** `XX. subprocessus`: `( X=b ); cat
+- [x] **Step 1: Failing section** `XX. subprocessus`: `( X=b ); cat
   "$X"` (X=a before) -> a only (RF 1); `ls | while read x; do Y=b;
   done; cat "$Y"` (Y=a before) -> a only (RF 2); `X="$(Y=c; echo
   "$Y")"`: Y=c does not reach after; inside `( )`, outer definitions DO
   reach.
-- [ ] **Step 2: Implement** the boundary rule (§II.2, CRUSTULA, PIPA
+- [x] **Step 2: Implement** the boundary rule (§II.2, CRUSTULA, PIPA
   segment, SUBSTITUTIO).
-- [ ] **Step 3: House** subset check; census delta. **Plant:** boundary
-  ignored -> RF 1 red. **Commit.**
+- [x] **Step 3: House** subset check; census delta. **Plant:** boundary
+  ignored -> RF 1 red. **Commit.** (Delta 0 - measured dormant in the
+  house; spec §XI T3.)
 
 ### Task T4: functions (call sites, arguments)
 

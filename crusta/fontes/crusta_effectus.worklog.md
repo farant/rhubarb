@@ -518,3 +518,25 @@ source order).
   top-of-stack named the two rescans in minutes.
 - The subset check's only failure was its own predicate (`./`), not
   the walk - checks need plants AND real data.
+
+## 2026-10-06 - slice 3 T3: process boundaries, and a zero delta
+
+- One predicate, not per-construct code: a definition reaches a use
+  only if every process boundary above it also contains the use
+  (`_processum_attingit`). Inward is free; `{ }` is not a boundary.
+- `PIPA` is NOT always a pipeline: C8 also builds it for `! cmd` and
+  `time cmd` (one segment, current shell). The boundary test is "the
+  PIPA holds an OPERATOR" (only `|`/`|&` appear there), not "count the
+  members" - heredoc nodes can sit in list slots and would inflate a
+  count. Over-exclusion is the dangerous direction: the subset check
+  sees values grow, never shrink wrongly - hence the `! H=h2` contrary
+  fixture with its own plant.
+- Census delta was zero. Before believing it: a probe at the
+  exclusion (stderr print), checked first on a fixture (the binary had
+  the probe), then per file over the house: hits only in
+  tools/corpus_infixum.sh (`for f` inside `( )` in a function), whose
+  uses are in functions or in sourcing scripts - FALLBACK before the
+  rule. My first reading (parent chain cut at `$( )`) was wrong: the
+  ancestor dump showed PARS_SUBSTITUTIO in the chain; the "top-level"
+  hits were OTHER scripts' uses of `f`. Census mode does not show
+  stderr per file - probe through the per-file CLI.

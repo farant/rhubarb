@@ -497,6 +497,32 @@ hic_manens constans character* ORDO =
     "K=k0; if c; then K=k1; elif d; then cat \"$K\"; K=k2; "
         "else K=k3; fi\n";                                   /* 25 */
 
+/* subprocessus (effectus-plan-3 T3; spec-3 Q7): fines processuum */
+hic_manens constans character* SUBPROCESSUS =
+    "#!/bin/bash\n"                                          /* 1 */
+    "A=a1\n"                                                 /* 2 */
+    "( A=a2 )\n"                                             /* 3 */
+    "cat \"$A\"\n"                                            /* 4 */
+    "B=b1\n"                                                 /* 5 */
+    "ls | while read x; do B=b2; done\n"                     /* 6 */
+    "cat \"$B\"\n"                                            /* 7 */
+    "C=c1\n"                                                 /* 8 */
+    "X=\"$(C=c2; echo \"$C\")\"\n"                           /* 9 */
+    "cat \"$C\"\n"                                            /* 10 */
+    "D=d1\n"                                                 /* 11 */
+    "( cat \"$D\" )\n"                                        /* 12 */
+    "E=e1\n"                                                 /* 13 */
+    "( E=e2; cat \"$E\" )\n"                                  /* 14 */
+    "F=f1\n"                                                 /* 15 */
+    "{ F=f2; }\n"                                            /* 16 */
+    "cat \"$F\"\n"                                            /* 17 */
+    "G=g1\n"                                                 /* 18 */
+    "ls | G=g2\n"                                            /* 19 */
+    "cat \"$G\"\n"                                            /* 20 */
+    "H=h1\n"                                                 /* 21 */
+    "! H=h2\n"                                               /* 22 */
+    "cat \"$H\"\n";                                           /* 23 */
+
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
 _causa_lineae (
@@ -1251,6 +1277,44 @@ s32 principale (vacuum)
              * ante 'if' attingit */
             CREDO_NIHIL (_situs(ts, "lectio", "k1", XXV));
             CREDO_NON_NIHIL (_situs(ts, "lectio", "k0", XXV));
+        }
+    }
+
+    /* XX. subprocessus (effectus-plan-3 T3; RF 1, RF 2) */
+    imprimere("\n--- XX. subprocessus ---\n");
+    _scribere("a/subprocessus.sh", SUBPROCESSUS);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/subprocessus.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/subprocessus.sh");
+            _imprimere_situs(ts);
+            /* RF 1: ( A=a2 ) foras non attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a1", IV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", IV), I);
+            /* RF 2: 'while read' in pipa = subprocessus */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b1", VII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VII), I);
+            /* $( ... ) foras non attingit */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", X), I);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "c1", X));
+            /* intro: definitiones exteriores attingunt */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d1", XII));
+            /* in eodem subprocessu: occidit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e2", XIV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XIV), I);
+            /* { } non subprocessus: f2 attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f2", XVII));
+            /* segmentum pipae assignans */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g1", XX));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XX), I);
+            /* CONTRARIUM: pipa sine '|' ('!') in processu ipso: h2
+             * attingit (exclusio falsa subsumptionem non frangit) */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "h2", XXIII));
         }
     }
 

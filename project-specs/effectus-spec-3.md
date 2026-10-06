@@ -264,3 +264,25 @@ Found on the way: the T1 subset predicate (and the oracle's
 `_staticus_tegit`) did not treat the root prefix `./` as covering
 every relative path - the one non-subsumed script was exactly that.
 Fixed in both.
+
+**T3 (2026-10-06): process boundaries (Q7).** `_finis_processus`: a
+subshell `( )`, `$( )` / backticks (`PARS_SUBSTITUTIO`), `<( )`
+(`PARS_PROCESSUS`), `coproc` (`SOCIUS`), and a member of a `PIPA` that
+holds a `|` operator (lastpipe off). A `PIPA` without `|` (`! cmd`,
+`time cmd`) runs in the current shell - not a boundary.
+`_processum_attingit(locus, usus)`: every boundary above the
+definition must also contain the use - inward reaches (`X=a; ( cat
+"$X" )`), outward does not. Applied in `_sententiae_effectus` and the
+`for X` back-edge; `{ }` is not a boundary. FALLBACK unchanged (a use
+whose only definitions are excluded falls back to slice 2, Q3).
+
+House: subset check 316/316; census delta ZERO (10,563 sites; the only
+changed rows are tomllib_aurum.sh line shifts from T2's comment edit).
+Measured, not assumed: a probe at the exclusion found no house use the
+walk places where a boundary definition would reach; the only boundary
+definitions with a named use (`for f` inside `( )` in
+tools/corpus_infixum.sh) meet uses in functions or in sourcing
+plagulae, which fall back before the rule applies (T4/T5 territory).
+The rule is a soundness guard today, not a lever. Plants: boundaries
+ignored -> section XX red at RF 1, RF 2, `$( )`, pipe segment; every
+`PIPA` a boundary -> the `! H=h2` contrary red.
