@@ -1,0 +1,55 @@
+<!-- cursor.stml - fragmentum cursoris toml (effectus-spec par. II.1,
+     manu scriptum; sedes ficta sed formae verae). Processus duo:
+     radix cum omnibus quae fontat (variabiles communes), et scriptum
+     EXSECUTUM (ambitus novus) per fabricam. Lectiones clausurarum
+     (cursor_communis.sh) scripta_in_ambitu="verum": eadem cursio eas
+     scripsit - lintrum tacet, clavis tamen eas digerit (regula
+     soliditatis, spec par. I). -->
+<effectus lingua="bash" radix="toml/compile_probationes.sh">
+  <processus radix="toml/compile_probationes.sh">
+    <fontatio via="tools/cursor_communis.sh" forma="via"
+              resolutio="plena" classis="arbor"
+              scripta_in_ambitu="falsum" per="aedificium"
+              plagula="toml/compile_probationes.sh"
+              sedes="31:8-31:45" octeti="1104-1141"/>
+    <fontatio via="tools/sera.sh" forma="via" resolutio="plena"
+              classis="arbor" scripta_in_ambitu="falsum"
+              per="aedificium" plagula="toml/compile_probationes.sh"
+              sedes="29:8-29:32" octeti="1040-1064"/>
+    <scriptura via="toml/build/clausurae/*.lst" forma="globus"
+               resolutio="plena" classis="build" per="redirectio"
+               operator="&gt;" plagula="tools/cursor_communis.sh"
+               sedes="58:17-58:48" octeti="2210-2241"/>
+    <lectio via="toml/build/clausurae/*.lst" forma="globus"
+            resolutio="plena" classis="build" scripta_in_ambitu="verum"
+            per="mandatum" mandatum="cat"
+            plagula="tools/cursor_communis.sh"
+            sedes="78:18-78:43" octeti="3002-3027"/>
+    <probatio via="build/vexilla.sigillum" forma="via"
+              resolutio="plena" classis="build"
+              scripta_in_ambitu="verum" per="aedificium" operator="-f"
+              plagula="tools/vexilla.sh" sedes="54:10-54:30"
+              octeti="2101-2121"/>
+    <enumeratio via="toml/probationes/" forma="globus" exemplar="*.c"
+                resolutio="plena" classis="arbor"
+                scripta_in_ambitu="falsum" per="aedificium"
+                plagula="tools/cursor_communis.sh" sedes="40:14-40:40"
+                octeti="1500-1526"/>
+    <exsecutio via="bin/aedilis" forma="via" resolutio="plena"
+               classis="instrumentum_domus" scripta_in_ambitu="falsum"
+               per="aedificium" plagula="tools/cursor_communis.sh"
+               sedes="56:32-56:43" octeti="2120-2131"/>
+    <ambitus_lectio titulus="FABRICA_LECTIONES" assignatum="falsum"
+                    plagula="toml/compile_probationes.sh"
+                    sedes="60:9-60:30" octeti="2300-2321"/>
+  </processus>
+  <processus radix="toml/corpus_indicem.sh">
+    <ignotum causa="mandatum ignotum: index git (.git/index)"
+             mandatum="git" plagula="toml/corpus_indicem.sh"
+             sedes="12:1-12:30" octeti="400-429"/>
+    <scriptura via="build/toml_corpus.lst" forma="via"
+               resolutio="plena" classis="build" per="redirectio"
+               operator="&gt;" plagula="toml/corpus_indicem.sh"
+               sedes="12:31-12:58" octeti="430-457"/>
+  </processus>
+</effectus>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tcp</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>tcp</h1>
+<p class="subtitulus">Bibliotheca TCP (Connexiones Rete)</p>
+
+<p>TCP connections behind a platform-neutral header (implementation lib/tcp_posix.c): connect by name or address with timeout, Nagle and keepalive options; send, send-all, receive; and the server side (bind, listen, accept, the bound port when port 0 asked the system to choose). The receive contract is exact and documented: &gt;0 bytes, 0 means the peer CLOSED and only that, TCP_ITERUM (-2) means non-blocking and nothing ready, -1 an error; send keeps 0 as &#x27;try again&#x27;, a deliberate asymmetry since 0 cannot mean EOF there. Results are structs with a named error (DNS, connect, timeout, closed, I/O, again) and a description. The worklog records the POSIX hygiene learned the hard way: SIGPIPE suppressed portably, EINTR retried, accepted sockets given the right options, and a first Linux (glibc) probe whose two findings were deliberately recorded rather than fixed. Used by hospitium, the ledger client (cliens_tabularii) and the fori tools.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/tcp.h"><code>include/tcp.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/tcp_posix.c"><code>lib/tcp_posix.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#rete">Network</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

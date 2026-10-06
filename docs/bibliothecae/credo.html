@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>credo</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>credo</h1>
+<p class="subtitulus">probationes: assertiones CREDO_* (unit tests)</p>
+
+<p>The test framework: CREDO_* assertions (credo, &#x27;I believe&#x27;) that record each check with its expression, both values, file and line, then report a summary. Typed comparisons for pointers, signed and unsigned integers of each width, floats within a tolerance, chorda (equal, contains, starts, ends, empty) and literals. Two details carry history: a test that asserted NOTHING does not pass (&#x27;NIHIL PROBATUM&#x27;, 2026-09-02), and CREDO_CULPA records a declared failure for an early exit, so the summary and the exit code always agree. Process assertions (CREDO_NON_RUIT &#x27;does not crash&#x27;, CREDO_NON_PENDET &#x27;does not hang&#x27;, CREDO_RUIT_CUM &#x27;dies with this signal&#x27;) run the expression in a FORKED child; they are statement macros so the expression is evaluated only in the child, and they never catch SIGSEGV in-process, since returning from a fault handler is undefined. Used by every probatio in the house (over 400 files); probationes/probatio_piscina.c is the reference usage.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/credo.h"><code>include/credo.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/credo.c"><code>lib/credo.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

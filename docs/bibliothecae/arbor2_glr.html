@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arbor2_glr</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>arbor2_glr</h1>
+<p class="subtitulus"></p>
+
+<p>The core of an earlier generation of the house C89 parser: a generalized LR (GLR) parser that meets C&#x27;s ambiguities (is foo * bar a declaration or a multiplication? a cast or a parenthesized expression?) by forking the parse and merging the branches, with piscina checkpoints to roll back. It defines that parser&#x27;s AST, in which every node keeps its tokens so a file can be written back byte for byte, the LR tables (in a second file, arbor2_glr_tabula.c, which the header names for the build with an aedilis annotation), and validators for the tables. Today only its own tests and tools/glr_debug use it: silva, built on materia, is the current C parser, and this is its predecessor, kept with its tests.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/arbor2_glr.h"><code>include/arbor2_glr.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/arbor2_glr_tabula.c"><code>lib/arbor2_glr_tabula.c</code></a> <span class="nota">(15 functions)</span>, <a href="../../lib/arbor2_glr.c"><code>lib/arbor2_glr.c</code></a> <span class="nota">(8 functions)</span></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#parsatores">Parsers: the C89 lineage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

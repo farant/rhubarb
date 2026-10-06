@@ -43,7 +43,13 @@ nomen structura FabricaSanatio   FabricaSanatio;
 nomen enumeratio {
     FABRICA_ACTIO_GENERATOR = ZEPHYRUM,
     FABRICA_ACTIO_FORMATIO,
-    FABRICA_ACTIO_INSTITUTIO
+    FABRICA_ACTIO_INSTITUTIO,
+    /* IUDICIUM (spec 3 par. XII): porta ut actio - exitus = plagula
+     * verdicti (provenientia 'verdictum'), clavis = vestigium libri
+     * lectionum cursus TRANSEUNTIS; lectiones="verum" necessarium.
+     * Iudicium numquam currit; sanare solum, et solum nominatum
+     * (verritiones eam omittunt, numquam in unda simul). */
+    FABRICA_ACTIO_IUDICIUM
 } FabricaGenusActionis;
 
 nomen enumeratio {
@@ -317,7 +323,55 @@ nomen structura {
      * I = omnes (iudicare -audit); N = unus ex N (specimen
      * determinatum: octetus primus clavis ingressuum modulo N) */
     i32 auditus;
+    /* ==== IUDICIUM (spec 3 par. XII, T5b) - omnia NIHIL licent ==== */
+    /* ambitus quem fabrica PORTAE dat: VERUM + valor si variabilis
+     * adest. Lectio E cuius valor ab eo differt intra portam posita est
+     * (cursor) et ex scriptis clavi inclusis pendet - omittitur;
+     * aequalis = ingressus externus, clavatur. NIHIL: E non
+     * verificabilis (vestigium nullum). */
+    b32 (*ambitus)(vacuum* datum, constans character* titulus,
+                   Piscina* piscina, chorda* valor_out);
+    /* species viae (FabricaSpecies): FIFO, socket, machina = ALIA - in
+     * vestigio portae non sigillabilis (IGNOTUM). NIHIL: non probatur. */
+    i32 (*species)(vacuum* datum, constans character* via);
+    /* exitus omnium actionum declaratarum (via -> NIHIL): lectio sub
+     * build/ sine S in libro eodem DOMINUM declaratum habere debet */
+    TabulaDispersa* exitus_noti;
+    /* identitas compilatoris clang (genus ingressus 'identitas_clang'):
+     * eadem ac bin/compilator (via vera, mensura, mtime, inodus;
+     * FABRICA_CLANG: octeti eius). FALSUM + causa: ignota. */
+    b32 (*identitas)(vacuum* datum, Piscina* piscina,
+                     Sigillum* identitas_out, chorda* causa_out);
+    /* effectus scripti (genus ingressus 'effectus', effectus-plan T7):
+     * crusta/effectus.sh -clavis <via> - lineae clavis (genus, via,
+     * extra; crusta/instrumenta/effectus.c) et codex exitus (0 sanum).
+     * FALSUM: currere nequit. */
+    b32 (*effectus)(vacuum* datum, constans character* via,
+                    Piscina* piscina, chorda* effusio_out,
+                    i32* codex_out);
+    /* AUDITUS TRANSITUS (spec 3 par. XIII): sub sanare, actio iudicium
+     * RECENS electa (auditus I = omnes, N = unus ex N) tamen currit;
+     * vestigium VETUS hic servatur (titulus -> Xar de FabricaLectio) ut
+     * defectus lectiones novas nominet. NIHIL: auditus sine nominibus. */
+    TabulaDispersa* audita;
 } FabricaSutura;
+
+/* species viae (sutura->species) */
+nomen enumeratio {
+    FABRICA_SPECIES_ABSENS = ZEPHYRUM,
+    FABRICA_SPECIES_PLAGULA,
+    FABRICA_SPECIES_DIRECTORIUM,
+    FABRICA_SPECIES_ALIA          /* FIFO, socket, machina */
+} FabricaSpecies;
+
+/* via libri lectionum actionis (arbori relativa):
+ * build/fabrica/lectiones/<titulus>.tsv - nucleus (iudicium,
+ * regeneratio) et instrumentum (agere actionis iudicium) eandem
+ * computant */
+chorda
+fabrica_liber_via (
+     chorda  titulus,
+    Piscina* piscina);
 
 /* Suturam vacuam parare: OMNIA membra NIHIL. Vocans deinde quae
  * praebet ponit - membrum novum postea additum sic tutum manet
@@ -390,8 +444,9 @@ fabrica_genus_invenire (
     chorda titulus);
 
 /* Registra: regeneratio (memoria ante eam, actionibus memorabilibus
- * solis), relatio, ignota (praecondicio: numquam iudicatur). NIHIL si
- * titulus ignotus. */
+ * solis), relatio, ignota (praecondicio: numquam iudicatur), verdictum
+ * (actionis iudicium solius: plagula verdicti + vestigium transitus,
+ * numquam currit). NIHIL si titulus ignotus. */
 constans FabricaStrategia*
 fabrica_strategia_invenire (
     chorda titulus);

@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>stml</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>stml</h1>
+<p class="subtitulus">STML, XML domus: legere et scribere (markup parser)</p>
+
+<p>STML, the house&#x27;s markup language: a superset of XML with boolean attributes, raw-content tags (&lt;code!&gt;literal &lt;&gt;&amp;&lt;/code&gt;), capture operators that make a tag swallow its following or preceding siblings (&lt;tag (&gt;, &lt;) tag&gt;, &lt;= tag =&gt;), fragments, transclusion (&lt;&lt;selector&gt;&gt;), dotted kind names (&lt;.species&gt;) and anonymous closing (&lt;/&gt;). The parser builds a DOM-style tree in a piscina with every string interned, and keeps whitespace as trivia beside the values, so writing back what was read gives the same bytes. Each node knows its source line and byte span. It offers navigation, building, mutation, cloning, labels, three readings of text (exact inner bytes, value, prose flow), a token stream for syntax colouring that tolerates half-written text, and a strict check for things that parse but leave a document silently ambiguous, such as a duplicated attribute. The single most used library after the foundations: stml_legere has 181 uses in 59 files.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/stml.h"><code>include/stml.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/stml.c"><code>lib/stml.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#stml">STML and data formats</a></td></tr>
+<tr><td>Features</td><td><a href="stml_facultates.html">STML: a tour of the syntax, with an inventory of its features</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

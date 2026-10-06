@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>excerptum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>excerptum</h1>
+<p class="subtitulus">Excerptum fontis cum signo sub tractu (forma</p>
+
+<p>Draws a source excerpt the way compilers show diagnostics: a line-number margin, the source line (CR removed, control characters as spaces), then &#x27;^&#x27; under the first grapheme of the span and &#x27;~&#x27; to its end. Columns are grapheme widths from runae (&#x27;広&#x27; is two, &#x27;e&#x27; plus a combining accent is one), and tabs in the source are copied into the marker line so the marker stays in the right column. Several spans can share one block: each source line printed once with its markers below, every line numbered, so gaps are never ambiguous. Spans out of order are refused by name rather than silently sorted. It only draws: the location comes from the caller (materia&#x27;s MateriaTractus), so it knows nothing about trees and serves any source. Used by materia&#x27;s diagnostics and silva&#x27;s front end.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/excerptum.h"><code>include/excerptum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/excerptum.c"><code>lib/excerptum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-29 8d7e6fba</td></tr>
+<tr><td>Group</td><td><a href="greges.html#textus">Text</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

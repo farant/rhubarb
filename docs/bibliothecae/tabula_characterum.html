@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tabula_characterum</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>tabula_characterum</h1>
+<p class="subtitulus">craticula characterum 2D (text grid)</p>
+
+<p>A 2D character grid for a text editor that behaves like paper: a fixed size (68 x 56 by default), typing paints into cells, and inserting before content pushes it right up to a &#x27;barrier&#x27; (the last whitespace before content), wrapping with indentation kept when a line overflows. Tabs take two cells (a tab plus a continuation marker) so one backspace deletes them. No cursor and no UI state: pure grid operations (push right, pull left, insert and delete lines and characters, find connected content), with helpers to build a grid from a string and assert on it in tests. The model under pagina and vim in the first-generation editor (Nov 2025).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/tabula_characterum.h"><code>include/tabula_characterum.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/tabula_characterum.c"><code>lib/tabula_characterum.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-28 a3632f55</td></tr>
+<tr><td>Group</td><td><a href="greges.html#prima">The first generation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

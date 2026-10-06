@@ -834,6 +834,11 @@ filum_delere (
         _filum_error_ponere("remove fracta");
         redde FALSUM;
     }
+    /* deletio = scriptura in libro (lectiones.h: 'S' scripta, deleta,
+     * mota) - olim deerat: compilator obiectum temporarium legit et
+     * delet, vestigium portae id 'ingressum build/ sine domino'
+     * ferebat (fabrica spec 3 T6) */
+    lectiones_notare(LECTIO_SCRIPSIT, via);
 
     redde VERUM;
 }

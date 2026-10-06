@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>postulata_posix</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>postulata_posix</h1>
+<p class="subtitulus">postulata platformae pro superficie POSIX</p>
+
+<p>A preprocessor seam for POSIX: glibc under -std=c89 hides POSIX declarations unless a feature-test macro is defined before the first system header, while Darwin and musl are permissive, so without this header POSIX-using files fail on Linux (tcp_posix.c: 20 errors from 4 hidden roots, measured). A Docker probe on 2026-08-03 (glibc 2.35 and musl 1.2.5, six files in five variants) settled on _DEFAULT_SOURCE, which fixes everything fixable in both libraries and does nothing on Darwin; the stricter variants are worse (_XOPEN_SOURCE 700 and _POSIX_C_SOURCE hide usleep again). The rule, enforced by examen (code 85): it is the FIRST include of any POSIX-using file, before its own header and before latina.h, because glibc fixes its feature set on the first system header touched.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/postulata_posix.h"><code>include/postulata_posix.h</code></a></td></tr>
+<tr><td>Implementation</td><td><span class="nota">(header only)</span></td></tr>
+<tr><td>Last change</td><td>2026-08-03 7ba8d84d</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

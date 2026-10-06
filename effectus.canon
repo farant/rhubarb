@@ -1,0 +1,344 @@
+<!--
+  effectus.canon
+  Canon dialecti EFFECTUS - summarium effectuum scripti: ubi legit,
+  scribit, exsequitur, fontat, enumerat, probat plagulas, et quas
+  variabiles ambitus legit, via cuiusque aestimata
+  (project-specs/effectus-spec.md par. II, par. XIII; planum
+  effectus-plan.md T1). Emissor primus crusta (bash,
+  crusta_effectus); vocabularium LINGUA NEUTRA consulto, ut silva
+  (C) idem olim emittat: fopen(p, "r") lectio est, getenv
+  ambitus_lectio, opendir enumeratio.
+
+  Quaestiones VALORIS ('sub build/?', 'idem ambitus eam scribit?',
+  'resoluta?') ab analysi ut ATTRIBUTA respondentur, ut regulae
+  lintri aequalitate solae maneant - nulla lingua expressionum
+  (decretum Canonis).
+
+  Sedes et octeti = visio sedium materiae (linea:columna I-basata,
+  finis exclusus; octeti 0-basati, semi-aperti) nodi qui viam
+  NOMINAT - verbum argumenti aut redirectio tota. Exemplaria et
+  excusationes ('tolera') per eas clavem habent (spec par. XIII.1).
+  Nomina a Frano approbata 2026-10-05 (spec par. XI A1).
+-->
+<canon dialectus="effectus" versio="1">
+
+  <elementum nomen="effectus" radix="verum">
+    <attributum nomen="lingua" genus="electio" necessarium="verum"
+      nota="lingua scripti analysati - emissor quisque suam addit">
+      <optio>bash</optio>
+    </attributum>
+    <attributum nomen="radix" genus="textus" necessarium="verum"
+      nota="scriptum unde analysis incipit, arbori relativum"/>
+    <attributum nomen="registrum-sigillum" genus="nomen"
+      nota="sigillum grammaticae emissoris (crusta: registrum),
+            ut summarium cum parsatore suo comparetur"/>
+    <liberum nomen="processus" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="processus"
+    nota="ambitus processus unus: scriptum radix et omnia quae fontat
+          (variabiles communes). Scriptum EXSECUTUM processum novum
+          incipit. Facta intra processum sine ordine (flow-insensitiva,
+          interview Q4; ordo = slice 2)">
+    <attributum nomen="radix" genus="textus" necessarium="verum"/>
+    <attributum nomen="custodia" genus="textus"
+      nota="processus SOLUM per aedificatorem custoditum attingitur
+            ('[ -x P ] || S', P binarium domus): S currit solum si P
+            abest, P provenientia clavem tenet - extra catenam verdicti
+            (Fran 2026-10-05, effectus T6)"/>
+    <liberum nomen="lectio"/>
+    <liberum nomen="scriptura"/>
+    <liberum nomen="exsecutio"/>
+    <liberum nomen="fontatio"/>
+    <liberum nomen="enumeratio"/>
+    <liberum nomen="probatio"/>
+    <liberum nomen="ambitus_lectio"/>
+    <liberum nomen="ignotum"/>
+  </elementum>
+
+  <elementum nomen="lectio"
+    nota="contentum plagulae lectum: redirectio '&lt;', aut argumentum
+          mandati quod tabula lectum dicit">
+    <attributum nomen="via" genus="textus" necessarium="verum"
+      nota="arbori relativa; extra arborem absoluta; resolutio nulla =
+            textus verbi ipsius"/>
+    <attributum nomen="forma" genus="electio" necessarium="verum">
+      <optio>via</optio>
+      <optio>globus</optio>
+      <optio>praefixum</optio>
+    </attributum>
+    <attributum nomen="resolutio" genus="electio" necessarium="verum">
+      <optio>plena</optio>
+      <optio>partialis</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="classis" genus="electio"
+      nota="ubi via iacet; absens solum ubi resolutio nulla">
+      <optio>arbor</optio>
+      <optio>build</optio>
+      <optio>instrumentum_domus</optio>
+      <optio>externa</optio>
+      <optio>systema</optio>
+      <optio>temporaria</optio>
+    </attributum>
+    <attributum nomen="scripta_in_ambitu" genus="veritas"
+      nota="verum: scriptura aliqua eiusdem processus viam tegit (aequalis,
+            globus, praefixum). SINE ORDINE: 'etiam scribitur', non
+            'ante scripta'. Lintrum quietat, clavem fabricae NUMQUAM
+            minuit (regula soliditatis, spec par. I)"/>
+    <attributum nomen="per" genus="electio" necessarium="verum">
+      <optio>redirectio</optio>
+      <optio>aedificium</optio>
+      <optio>mandatum</optio>
+      <optio>observatum</optio>
+    </attributum>
+    <attributum nomen="mandatum" genus="textus"
+      nota="titulus mandati externi, ubi per=mandatum"/>
+    <attributum nomen="operator" genus="textus"/>
+    <attributum nomen="causa" genus="textus"
+      nota="cur resolutio non plena (vocabularium idem in omni situ;
+            effectus-plan-2 T1): argumentum ($1 $@, aut nomen ex eis),
+            ansa_read (variabilis ansae 'for' aut a read/mapfile posita),
+            substitutio ($(...) praeter idiomata), ambitus (nulla
+            definitio in ambitu; ~), operator (${X/a/b} ${X:-d} ${#X},
+            arithmetica, X+=verbum), discordia (definitiones aequales
+            non sunt), tabulatum (valor tabulati aut subscriptum),
+            recursio (definitio se ipsam nominat:
+            X ex X ipso in ansa accumulatum), profunditas (catena definitionum nimis
+            longa), cwd ignotum
+            (cd W ignotum), valor ignotus (residuum: nulla causa
+            nominata - numerandum, non tolerandum)"/>
+    <attributum nomen="temporaria" genus="textus"
+      nota="ubi classis temporaria (effectus-plan-2 T3, A1): objectum
+            mktemp creans, plagula:linea:columna substitutionis; via tum
+            cauda sub objecto est ('.' = objectum ipsum)"/>
+    <attributum nomen="textus" genus="textus"
+      nota="verbum fontis litteraliter, ubi resolutio partialis (via
+            tum praefixum solum fert): nuntiis lintri et proiectioni
+            fontationum (T4)"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="scriptura"
+    nota="plagula scripta, creata aut deleta: '&gt;', '&gt;&gt;', rm,
+          mkdir, cp (ultimum), touch">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="forma" genus="electio" necessarium="verum">
+      <optio>via</optio>
+      <optio>globus</optio>
+      <optio>praefixum</optio>
+    </attributum>
+    <attributum nomen="resolutio" genus="electio" necessarium="verum">
+      <optio>plena</optio>
+      <optio>partialis</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="classis" genus="electio">
+      <optio>arbor</optio>
+      <optio>build</optio>
+      <optio>instrumentum_domus</optio>
+      <optio>externa</optio>
+      <optio>systema</optio>
+      <optio>temporaria</optio>
+    </attributum>
+    <attributum nomen="per" genus="electio" necessarium="verum">
+      <optio>redirectio</optio>
+      <optio>aedificium</optio>
+      <optio>mandatum</optio>
+      <optio>observatum</optio>
+    </attributum>
+    <attributum nomen="mandatum" genus="textus"/>
+    <attributum nomen="operator" genus="textus"/>
+    <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="exsecutio"
+    nota="plagula ut programma currit (via, aut binarium domus)">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="forma" genus="electio" necessarium="verum">
+      <optio>via</optio>
+      <optio>globus</optio>
+      <optio>praefixum</optio>
+    </attributum>
+    <attributum nomen="resolutio" genus="electio" necessarium="verum">
+      <optio>plena</optio>
+      <optio>partialis</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="classis" genus="electio">
+      <optio>arbor</optio>
+      <optio>build</optio>
+      <optio>instrumentum_domus</optio>
+      <optio>externa</optio>
+      <optio>systema</optio>
+      <optio>temporaria</optio>
+    </attributum>
+    <attributum nomen="scripta_in_ambitu" genus="veritas"/>
+    <attributum nomen="per" genus="electio" necessarium="verum">
+      <optio>redirectio</optio>
+      <optio>aedificium</optio>
+      <optio>mandatum</optio>
+      <optio>observatum</optio>
+    </attributum>
+    <attributum nomen="mandatum" genus="textus"/>
+    <attributum nomen="operator" genus="textus"/>
+    <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
+    <attributum nomen="custodia" genus="textus"
+      nota="'[ -x P ] || S': P (binarium domus) custodit"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="fontatio"
+    nota="plagula ut codex in HUNC processum legitur (source, '.';
+          C: nihil simile - #include alius dialectus est)">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="forma" genus="electio" necessarium="verum">
+      <optio>via</optio>
+      <optio>globus</optio>
+      <optio>praefixum</optio>
+    </attributum>
+    <attributum nomen="resolutio" genus="electio" necessarium="verum">
+      <optio>plena</optio>
+      <optio>partialis</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="classis" genus="electio">
+      <optio>arbor</optio>
+      <optio>build</optio>
+      <optio>instrumentum_domus</optio>
+      <optio>externa</optio>
+      <optio>systema</optio>
+      <optio>temporaria</optio>
+    </attributum>
+    <attributum nomen="scripta_in_ambitu" genus="veritas"/>
+    <attributum nomen="per" genus="electio" necessarium="verum">
+      <optio>redirectio</optio>
+      <optio>aedificium</optio>
+      <optio>mandatum</optio>
+      <optio>observatum</optio>
+    </attributum>
+    <attributum nomen="mandatum" genus="textus"/>
+    <attributum nomen="operator" genus="textus"/>
+    <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="enumeratio"
+    nota="directorium enumeratum: globus, ls, radix find">
+    <attributum nomen="via" genus="textus" necessarium="verum"
+      nota="directorium (cum '/' finali ubi forma globus)"/>
+    <attributum nomen="exemplar" genus="textus"
+      nota="pars globi post directorium ('*.c')"/>
+    <attributum nomen="forma" genus="electio" necessarium="verum">
+      <optio>via</optio>
+      <optio>globus</optio>
+      <optio>praefixum</optio>
+    </attributum>
+    <attributum nomen="resolutio" genus="electio" necessarium="verum">
+      <optio>plena</optio>
+      <optio>partialis</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="classis" genus="electio">
+      <optio>arbor</optio>
+      <optio>build</optio>
+      <optio>instrumentum_domus</optio>
+      <optio>externa</optio>
+      <optio>systema</optio>
+      <optio>temporaria</optio>
+    </attributum>
+    <attributum nomen="scripta_in_ambitu" genus="veritas"/>
+    <attributum nomen="per" genus="electio" necessarium="verum">
+      <optio>redirectio</optio>
+      <optio>aedificium</optio>
+      <optio>mandatum</optio>
+      <optio>observatum</optio>
+    </attributum>
+    <attributum nomen="mandatum" genus="textus"/>
+    <attributum nomen="operator" genus="textus"/>
+    <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="probatio"
+    nota="exsistentia, genus aut tempus plagulae probatum ('[ -f ]',
+          '[[ -d ]]', '-nt', test) - ABSENTIA quoque factum est">
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="forma" genus="electio" necessarium="verum">
+      <optio>via</optio>
+      <optio>globus</optio>
+      <optio>praefixum</optio>
+    </attributum>
+    <attributum nomen="resolutio" genus="electio" necessarium="verum">
+      <optio>plena</optio>
+      <optio>partialis</optio>
+      <optio>nulla</optio>
+    </attributum>
+    <attributum nomen="classis" genus="electio">
+      <optio>arbor</optio>
+      <optio>build</optio>
+      <optio>instrumentum_domus</optio>
+      <optio>externa</optio>
+      <optio>systema</optio>
+      <optio>temporaria</optio>
+    </attributum>
+    <attributum nomen="scripta_in_ambitu" genus="veritas"/>
+    <attributum nomen="per" genus="electio" necessarium="verum">
+      <optio>redirectio</optio>
+      <optio>aedificium</optio>
+      <optio>mandatum</optio>
+      <optio>observatum</optio>
+    </attributum>
+    <attributum nomen="mandatum" genus="textus"/>
+    <attributum nomen="operator" genus="textus"
+      nota="operator litteralis: -f -d -e -s -nt -ot ..."/>
+    <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
+    <attributum nomen="textus" genus="textus"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="ambitus_lectio"
+    nota="variabilis ambitus lecta (C: getenv)">
+    <attributum nomen="titulus" genus="nomen" necessarium="verum"/>
+    <attributum nomen="assignatum" genus="veritas" necessarium="verum"
+      nota="verum: idem processus eam assignat - ingressus non est"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="ignotum"
+    nota="locus effectus cuius effectus ignotus est: mandatum extra
+          tabulam, eval, cwd ignotum. Clavis fabricae: IGNOTUM nisi
+          excusatum (interview Q7)">
+    <attributum nomen="causa" genus="textus" necessarium="verum"/>
+    <attributum nomen="mandatum" genus="textus"/>
+    <attributum nomen="via" genus="textus"/>
+    <attributum nomen="plagula" genus="textus" necessarium="verum"/>
+    <attributum nomen="sedes" genus="textus" necessarium="verum"/>
+    <attributum nomen="octeti" genus="textus" necessarium="verum"/>
+  </elementum>
+
+</canon>

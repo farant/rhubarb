@@ -120,8 +120,12 @@ valid/…toml` one case with its diagnostics.
 tomllib goldens — toml-test 679/679 (pinned exactly), wild corpus zero
 disagreements (1,793 agree + 1 named divergence). Divergences are named
 by CAUSE: "microsecunda" (tomllib truncates fractions to 6 digits, we
-to 9; both follow TOML 1.0). The runner regenerates
-`build/aurum_silvestre.txt` when absent or older than the manifest.
+to 9; both follow TOML 1.0). `build/aurum_silvestre.txt` (date-free
+header, deterministic) and the house corpus index `build/toml_corpus.lst`
+are fabrica actions in `toml/aedificatio.stml` (`toml_aurum_silvestre`,
+`toml_corpus`; fabrica spec 3 T4): the runner asks `bin/fabrica sanare`
+for them when run by hand (falls back to the scripts without bin/fabrica),
+and does nothing under `FABRICA_LECTIONES` (fabrica realized them).
 
 ## The public API (Q10)
 
@@ -193,7 +197,11 @@ renaming privates and they collide (`Gradus`, found in Q13).
 | `totalitas` | never crash, emission == source, depth 100 000 in time |
 | `computus` | twin columns against `basis.tsv` |
 
-13 suites, 14,267 assertions (2026-09-28). The root `silex` and briar
+13 suites, 14,267 assertions (2026-09-28). **The gate is a fabrica
+verdict** (fabrica spec 3, 2026-10-03): `porta_toml` in
+`toml/aedificatio.stml`; `bin/fabrica sanare build/fabrica/verdicta/toml.txt`
+runs it and records its read trace, `bin/fabrica iudicare <same>` says
+RECENS (~2 s, nothing run) while nothing it read changed. The root `silex` and briar
 gates (`briar`, `briar-fumus`) also cover the client since Q12/Q13;
 `portae_debitae` owes `toml` for any `toml/fontes` change.
 

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agenda</title>
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="index.html">Rhubarb</a></p>
+<h1>Agenda</h1>
+<p class="subtitulus">Quae agenda sunt: things to do, decide or record</p>
+
+<p>A running list of open items that came up in the work and have not been
+acted on. Each says what it is, why it matters, what it would cost, and where
+it came from. Fran decides; Claude keeps the list current. Begun 2026-10-05
+in the tertia worktree, where the tabularium (the ledger) is not reachable,
+so the list lives here for now.</p>
+
+<p class="nota">Not yet in the tabularium. When work moves back to the main
+tree, each item can be filed there (a decision or a note) and its line here
+pointed at the record. Until then this page is the only copy.</p>
+
+<h2>Open</h2>
+
+<h3><span class="id">A1</span>Turn off floating-point contraction in the house flags</h3>
+<p><span class="status">decision</span> <span class="nota">from the
+<a href="visiones/mathematica.html">Math library map</a> review, 2026-10-05</span></p>
+<p><strong>What.</strong> Add <code>-ffp-contract=off</code> to the shared
+compiler flags in <code>tools/vexilla.sh</code>.</p>
+<p><strong>Why.</strong> The library map's float rules require it. Clang,
+our compiler, fuses a multiply and an add into one instruction within an
+expression by default on ARM64, which rounds once instead of twice. So the
+house's floating-point code can produce different bits from the same source
+built with other settings or on other machines. The flag is not set today
+(checked 2026-10-05).</p>
+<p><strong>Cost.</strong> One line, but it changes how every file is
+compiled, so every test suite has to be re-run before the commit. Float
+results could move in the last bit, which a golden test somewhere might
+notice.</p>
+
+<h3><span class="id">A2</span>Make 64-bit <code>long long</code> an explicit platform requirement</h3>
+<p><span class="status">decision</span> <span class="nota">from the
+<a href="visiones/mathematica.html">Math library map</a> review, 2026-10-05</span></p>
+<p><strong>What.</strong> State that the house requires a 64-bit
+<code>long long</code>, and check it at build time with the C89
+negative-array-size trick (a declaration that fails to compile if the size
+is wrong).</p>
+<p><strong>Why.</strong> The map lists "no guaranteed 64-bit integer" as a
+C89 hazard (<code>long long</code> is C99). The house has in effect already
+chosen: it compiles with <code>-Wno-long-long</code>, <code>latina.h</code>
+defines <code>i64</code> and <code>s64</code> as <code>long long</code>, and
+<code>magnus</code> relies on exact 64-bit intermediates. Writing the
+choice down and checking it turns an unstated assumption into a rule that
+fails loudly on a platform where it doesn't hold.</p>
+<p><strong>Cost.</strong> Small: a few lines in a widely included header
+(probably <code>latina.h</code>), which means most suites are owed again.
+The alternative, rebuilding the wide arithmetic on 16-bit pieces, would
+cost about four times the speed and is not recommended.</p>
+
+<h3><span class="id">A3</span>Performance tracking for the math libraries, then faster algorithms when measured</h3>
+<p><span class="status">plan</span> <span class="nota">agreed 2026-10-05, after
+<code>magnus</code> and <code>fractio</code> landed</span></p>
+<p><strong>What, in order.</strong></p>
+<ol>
+<li>Fix what the reviewer of <code>magnus</code> and <code>fractio</code>
+finds (a review agent was started 2026-10-05).</li>
+<li><strong>Deterministic cost counters</strong> inside the math libraries
+(limb multiplications, allocations) behind a test-only switch. Counts are
+identical on every machine, so tests can assert them: "two 1000-limb
+numbers multiply in at most N limb products" catches an accidental
+quadratic path as a plain test failure, without timing noise.</li>
+<li><strong>Wall-clock benchmarks</strong> recorded through
+<code>mensura</code>/<code>mensor</code> (machine id + commit, graphable),
+one <code>probatio_&lt;x&gt;_benchmark.c</code> per library on the pattern
+of <code>probatio_flatura_benchmark.c</code>: a fixed seeded workload at
+sizes 1, 2, 4 … 4096 limbs for multiply, divide, decimal conversion and
+gcd. Recorded, not gated. This is today's baseline.</li>
+<li><strong>Faster algorithms only when a consumer needs big numbers</strong>,
+with thresholds read off the baseline curves, never copied from elsewhere:
+Karatsuba first (about 100 lines; crossover expected around 20–40 limbs);
+divide-and-conquer decimal conversion and Newton or Burnikel–Ziegler
+division, since Knuth D and the current conversion stay quadratic even
+after a faster multiply; NTT (exact, modulo primes with Chinese
+remaindering, never a floating-point FFT) for thousands of limbs, shared
+with fast polynomial multiplication (map #17). Toom–Cook only if a
+benchmark shows the middle band matters.</li>
+</ol>
+<p><strong>Why.</strong> The API does not change; only the inside does.
+Measuring first keeps us from optimizing multiplication while division,
+conversion and gcd (which <code>fractio</code> calls constantly) are the
+real costs.</p>
+
+<h3><span class="id">A4</span><code>piscina_vacare</code> costs time proportional to capacity</h3>
+<p><span class="status">note</span> <span class="nota">found by the second
+math-library review, 2026-10-05</span></p>
+<p><strong>What.</strong> <code>piscina_vacare</code> zeroes every byte of
+every block (<code>memset</code> over the full capacity) on each call. In a
+hot loop that is the dominant cost: <code>magnus</code>'s gcd briefly called
+it once per Euclid step and became 2–5× slower on medium numbers. It now
+rolls back to a mark with <code>piscina_reficere</code> instead (no clearing).</p>
+<p><strong>Why it matters elsewhere.</strong> Any loop that empties an arena
+per iteration pays for the whole capacity each time. Options if it shows up
+again: a <code>piscina_vacare</code> without the clearing (callers that
+need zeroed memory zero what they allocate), or the mark-and-rollback
+pattern. Not changed house-wide; noted so the next hot loop knows.</p>
+
+<h3><span class="id">A5</span>The natura tests fail on a fresh checkout</h3>
+<p><span class="status">bug</span> <span class="nota">found 2026-10-05 by
+<code>tools/frigida_probare.sh</code> before merging tertia into main</span></p>
+<p><strong>What.</strong> In a fresh worktree, <code>probatio_natura_canones</code>,
+<code>_glossae</code> and <code>_quaesitor</code> fail: they build
+<code>bin/natura*</code> through <code>tools/natura_struere.sh</code>, whose
+provenance step for the FIRST binary needs the aedilis manifests of all
+four (<code>build/aedilis/natura_*/manifestum.stml</code>), which a fresh
+tree does not have. Main at 13064eed fails identically, so it predates the
+tertia merge; the other 13 suites are green fresh.</p>
+<p><strong>Workaround</strong> (used in tertia): run <code>bin/aedilis
+tools/&lt;x&gt;.c</code> for the four natura tools first, then
+<code>./tools/natura_struere.sh</code>. <strong>Fix:</strong> have the build
+script (or the fabrica action) produce the manifests before the provenance
+step, so "green on a fresh clone" holds again.</p>
+
+<h2>Done</h2>
+<p class="nota">Finished items, with the commit that closed them.</p>
+
+<h3><span class="id">D1</span>Arena allocations aligned by default</h3>
+<p><span class="status">done</span> <span class="nota">dfa6a05a, 2026-10-05;
+decided by Fran the same day</span></p>
+<p><code>piscina_allocare</code> now aligns to 8 bytes, like malloc
+(<code>PISCINA_ORDINATIO_ORDINARIA</code>); tight byte packing stays
+available as <code>piscina_allocare_ordinatum(p, n, I)</code>. Found by the
+first math-library review agent: <code>magnus</code> limbs, and
+<code>credo</code>'s own records, sat at misaligned addresses (undefined
+behaviour; 95 sanitizer reports, now 0). All 14 suites were run: exact
+byte-usage expectations moved by their padding (about 0.02% more memory at
+most), and the change exposed a latent use-after-rollback bug in
+<code>probatio_volumen</code>, fixed. Details in
+<code>lib/piscina.worklog.md</code>.</p>
+
+</body>
+</html>

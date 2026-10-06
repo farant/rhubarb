@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tls</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>tls</h1>
+<p class="subtitulus">Bibliotheca TLS (Transport Layer Security)</p>
+
+<p>Encrypted connections behind a platform-neutral header; today the implementation is macOS&#x27;s Security.framework (lib/tls_macos.m), with BearSSL named as the candidate for other platforms (see the no-dependencies page). Connect with SNI and certificate verification, send, receive with the same contract as tcp (0 = closed, ONLY then; TCP_ITERUM = timeout), and read the peer&#x27;s leaf certificate (validity dates as Unix epoch, subject), &#x27;the world&#x27;s view&#x27;: what the host actually presents, not what is on its disk; added in July for villa&#x27;s certificate-expiry check. The worklog holds the house&#x27;s sharpest network bug: HTTPS bodies over about 4 KB came back as success with a fraction of the bytes, differently each run, because a TLS record straddling two TCP reads made SecureTransport report would-block with 0 bytes, and 0 was passed up as &#x27;closed&#x27;. Found by instrumenting every read (lapide bugs 015/016, 2026-09-26); the old live test only asserted that something arrived.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/tls.h"><code>include/tls.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/tls_macos.m"><code>lib/tls_macos.m</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-26 efe5ddb4</td></tr>
+<tr><td>Group</td><td><a href="greges.html#rete">Network</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

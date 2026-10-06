@@ -199,7 +199,11 @@ credo $? "XII. codex lintris in forma humana"
 [ "$(grep -c 'lint:nt-aequalitas' "$T/lint.out")" = "1" ]
 credo $? "XII. subtractio declarata: negatum TACET ($(grep -c 'lint:nt-aequalitas' "$T/lint.out") inventum)"
 
-printf '#!/bin/bash\n# <tolera codex="lint:nt-aequalitas" (>consulto\n[ $a -nt $b ]\n' \
+# viae RESOLUBILES ('a', non '$a'): ab effectus T6 (2026-10-05)
+# diagnostica etiam regulas effectuum currit, et '$a' irresolutum
+# monitum effectus-irresolutum gigneret - hic de excusatione crustae
+# agitur, quae nihil pictum relinquere debet.
+printf '#!/bin/bash\n# <tolera codex="lint:nt-aequalitas" (>consulto\n[ a -nt b ]\n' \
     > "$T/lint_excusatus.sh"
 ./tools/diagnostica.sh "$T/lint_excusatus.sh" > "$T/lint_exc.out" 2>/dev/null
 rc=$?

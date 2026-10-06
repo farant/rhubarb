@@ -362,7 +362,8 @@ piscina_allocare (
            Piscina* piscina,
     memoriae_index  mensura)
 {
-    redde _allocare_interna(piscina, mensura, I, VERUM);
+    redde _allocare_interna(piscina, mensura,
+        PISCINA_ORDINATIO_ORDINARIA, VERUM);
 }
 
 vacuum*
@@ -384,7 +385,8 @@ piscina_conari_allocare (
            Piscina* piscina,
     memoriae_index  mensura)
 {
-    redde _allocare_interna(piscina, mensura, I, FALSUM);
+    redde _allocare_interna(piscina, mensura,
+        PISCINA_ORDINATIO_ORDINARIA, FALSUM);
 }
 
 vacuum*

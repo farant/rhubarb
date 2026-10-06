@@ -1,0 +1,159 @@
+/* stilus communis documentorum - nulla dependentia, nullae litterae externae */
+
+:root
+{
+    --fundus: #fbf9f4;
+    --textus: #22201c;
+    --lenis: #77716a;
+    --linea: #ddd7cc;
+    --nexus: #7a2e1f;
+    --electum: #f1e9d6;
+}
+
+@media (prefers-color-scheme: dark)
+{
+    :root
+    {
+        --fundus: #1b1a18;
+        --textus: #e6e1d8;
+        --lenis: #948d83;
+        --linea: #3a3732;
+        --nexus: #e09a7f;
+        --electum: #2c2820;
+    }
+}
+
+body
+{
+    background: var(--fundus);
+    color: var(--textus);
+    font-family: "Iowan Old Style", "Palatino", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.55;
+    max-width: 40em;
+    margin: 0 auto;
+    padding: 3em 16px 6em;
+}
+
+h1 { font-size: 2em; font-weight: normal; margin-bottom: 0.1em; }
+h2 { font-size: 1.25em; font-weight: normal; font-variant: small-caps; letter-spacing: 0.04em; margin-top: 2.2em; border-bottom: 1px solid var(--linea); }
+h3 { font-size: 1em; font-style: italic; font-weight: normal; margin-top: 1.6em; }
+
+a { color: var(--nexus); }
+code { font-family: "SF Mono", Menlo, monospace; font-size: 0.85em; }
+
+.subtitulus { color: var(--lenis); font-style: italic; margin-top: 0; }
+.nota { color: var(--lenis); font-size: 0.9em; }
+
+ul { padding-left: 1.3em; }
+li { margin: 0.3em 0; }
+
+/* sententiae: id et fons in margine lenes */
+.id { color: var(--lenis); font-size: 0.75em; font-family: "SF Mono", Menlo, monospace; margin-right: 0.4em; }
+.fons { color: var(--lenis); font-size: 0.8em; white-space: nowrap; }
+li.electum { background: var(--electum); }
+
+details { margin-top: 2.5em; border-top: 1px solid var(--linea); padding-top: 0.8em; }
+summary { cursor: pointer; color: var(--lenis); font-variant: small-caps; letter-spacing: 0.04em; }
+
+ol.index { list-style: upper-roman; }
+
+/* notae ad sententias et quaestiones in prosa */
+sup.ref { color: var(--lenis); font-size: 0.6em; font-family: "SF Mono", Menlo, monospace; margin-left: 0.15em; }
+span.ref { color: var(--lenis); font-size: 0.75em; font-family: "SF Mono", Menlo, monospace; margin-right: 0.4em; }
+ol.quaestiones { list-style: none; padding-left: 0; }
+ol.quaestiones li { margin: 0.7em 0; }
+
+/* responsa sub quaestionibus */
+.responsum { margin: 0.4em 0 0.2em 1.2em; padding-left: 0.8em; border-left: 2px solid var(--nexus); font-size: 0.92em; }
+.responsum.partim { border-left-style: dashed; }
+.responsum.apertum { border-left-color: var(--linea); color: var(--lenis); }
+.status { font-variant: small-caps; letter-spacing: 0.04em; color: var(--lenis); margin-right: 0.4em; }
+
+/* tabulae */
+table { border-collapse: collapse; width: 100%; font-size: 0.92em; margin: 1em 0; }
+th, td { text-align: left; vertical-align: top; padding: 0.45em 0.6em; border-bottom: 1px solid var(--linea); }
+th { font-weight: normal; font-variant: small-caps; letter-spacing: 0.04em; color: var(--lenis); }
+
+/* visus duo (sine JavaScript): radio + :checked */
+input.visus { position: absolute; opacity: 0; pointer-events: none; }
+label.visus { display: inline-block; cursor: pointer; padding: 0.25em 0.8em; margin: 1.2em 0.3em 0.5em 0; border: 1px solid var(--linea); border-radius: 3px; font-variant: small-caps; letter-spacing: 0.04em; color: var(--lenis); }
+#visus-arbor:checked + label.visus, #visus-genera:checked + label.visus { color: var(--textus); border-color: var(--nexus); }
+#visus-arbor:checked ~ .genera, #visus-genera:checked ~ .arbor { display: none; }
+
+/* genera sententiarum */
+.genus { font-size: 0.68em; font-variant: small-caps; letter-spacing: 0.05em; color: var(--lenis); border: 1px solid var(--linea); border-radius: 3px; padding: 0 0.35em; margin-left: 0.4em; white-space: nowrap; }
+.genus.g-principium { color: var(--nexus); border-color: var(--nexus); }
+.genus.g-principiuminterventionsplit { color: var(--nexus); border-style: dashed; }
+.genus.g-regula { color: var(--textus); border-color: var(--textus); }
+.pater { color: var(--lenis); font-size: 0.75em; font-style: italic; }
+.numerus { color: var(--lenis); font-size: 0.8em; font-style: normal; margin-left: 0.3em; }
+.genera h3 + p.nota { margin-top: -0.6em; }
+.genus.g-occasio { color: var(--nexus); border-color: var(--nexus); border-style: dotted; }
+.genus.g-indicium { color: var(--textus); border-style: dotted; }
+
+/* visus tertius: per regulas */
+#visus-regulae:checked + label.visus { color: var(--textus); border-color: var(--nexus); }
+#visus-arbor:checked ~ .regulae, #visus-genera:checked ~ .regulae,
+#visus-regulae:checked ~ .arbor, #visus-regulae:checked ~ .genera { display: none; }
+a.id { text-decoration: none; }
+a.id:hover { text-decoration: underline; }
+
+/* status visionum (ex inventario) */
+.status-mark { font-size: 0.66em; font-variant: small-caps; letter-spacing: 0.05em; padding: 0 0.4em; border-radius: 3px; margin-left: 0.3em; white-space: nowrap; border: 1px solid var(--linea); color: var(--lenis); }
+.status-mark.s-aedificatum { color: var(--fundus); background: var(--nexus); border-color: var(--nexus); }
+.status-mark.s-partim { color: var(--nexus); border-color: var(--nexus); }
+.status-mark.s-ignotum { border-style: dashed; }
+.nota-visio { display: block; font-size: 0.8em; color: var(--lenis); margin: 0.1em 0 0.3em; }
+
+/* linea temporis */
+ul.tempus { list-style: none; padding-left: 0; }
+ul.tempus > li { margin: 0.6em 0; padding-left: 7.5em; text-indent: -7.5em; }
+ul.tempus ul { text-indent: 0; margin: 0.2em 0; }
+.dies { display: inline-block; width: 7em; margin-right: 0.5em; text-indent: 0; font-family: "SF Mono", Menlo, monospace; font-size: 0.8em; color: var(--lenis); }
+
+/* index bibliothecarum */
+table.bibliothecae td:first-child { white-space: nowrap; }
+table.bibliothecae tr.descripta td:first-child a { font-weight: bold; }
+
+/* ordinatio tabulae sine JavaScript: quattuor tabulae, una visibilis */
+input.ordo { position: absolute; opacity: 0; pointer-events: none; }
+table.bibliothecae { display: none; }
+#ordo-nomen-asc:checked ~ table.ordo-nomen-asc,
+#ordo-nomen-desc:checked ~ table.ordo-nomen-desc,
+#ordo-mutatum-desc:checked ~ table.ordo-mutatum-desc,
+#ordo-mutatum-asc:checked ~ table.ordo-mutatum-asc { display: table; }
+label.ordinator { cursor: pointer; color: var(--nexus); }
+label.ordinator:hover { text-decoration: underline; }
+
+/* codex in paginis */
+pre { background: var(--electum); padding: 0.7em 0.9em; overflow-x: auto; border-radius: 3px; font-size: 0.85em; line-height: 1.4; }
+pre code { font-size: 1em; }
+
+/* examen: severitates */
+.gradus-violatio, .gradus-suspectum, .gradus-domesticum, .gradus-infra {
+  font-size: 0.85em; padding: 0 0.4em; border-radius: 3px; white-space: nowrap;
+  border: 1px solid var(--linea);
+}
+.gradus-violatio { font-weight: 600; }
+.gradus-infra { opacity: 0.7; font-style: italic; }
+table.codices td:first-child { text-align: right; color: var(--lenis); }
+table.codices { display: none; }
+#ordo-numerus:checked ~ table.ordo-numerus,
+#ordo-gradus:checked ~ table.ordo-gradus { display: table; }
+tr.grex-gradus td { padding-top: 1.1em; border-bottom: 2px solid var(--linea); font-weight: 600; }
+
+/* briar: facultates */
+.status-aedificatum, .status-partim, .status-dilatum, .status-refutatum {
+  font-size: 0.85em; padding: 0 0.4em; border-radius: 3px; white-space: nowrap;
+  border: 1px solid var(--linea);
+}
+.status-aedificatum { font-weight: 600; }
+.status-partim { font-style: italic; }
+.status-dilatum { opacity: 0.7; font-style: italic; }
+table.facultates td:first-child, table.facultates td:nth-child(3) { white-space: nowrap; }
+table.facultates { display: none; }
+#ordo-area:checked ~ table.ordo-area,
+#ordo-status:checked ~ table.ordo-status,
+#ordo-versio:checked ~ table.ordo-versio { display: table; }
+.status-refutatum { opacity: 0.7; text-decoration: line-through; }

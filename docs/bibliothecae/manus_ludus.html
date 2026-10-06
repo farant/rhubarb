@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>manus_ludus</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>manus_ludus</h1>
+<p class="subtitulus">manus IN PROCESSU super dispensatorem</p>
+
+<p>A test hand that drives a ludus program in-process: the same verbs as the out-of-process manus (press, key, exists, focus) but synchronous, so there is no waiting and no flakiness. It finds components by selectors over the LOGICAL tree (&#x27;#id&#x27;, &#x27;[partes=x]&#x27;, &#x27;[actio=x]&#x27;, &#x27;[titulus=x]&#x27;), maps a component&#x27;s local point to the screen by exactly inverting the targeting transform, and presses, moves, drags and types through the real dispensator. Time advances only when the test says so (manus_ludus_exspectare) or by a fixed step per event; there is no clock. It also replays a recorded session: CRUDA sends events as recorded, SEMANTICA re-aims each pointer event at the component it originally reached in today&#x27;s tree, and both report divergences (a recorded position that would now hit something else), which is how a layout change shows up in an old recording. A malformed selector names its cause. CREDO_MANUS_LUDUS_* assertions for tests. Since eventus B6b a recording can be replayed through a chosen transit (manus_ludus_iterare_per): directly, or through the terminal, each event encoded to bytes and decoded again, which showed that a terminal layout must align to cells to keep a session&#x27;s meaning.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/manus_ludus.h"><code>include/manus_ludus.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/manus_ludus.c"><code>lib/manus_ludus.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-03 765421b4</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

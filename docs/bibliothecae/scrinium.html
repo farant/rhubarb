@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scrinium</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>scrinium</h1>
+<p class="subtitulus">scrinium (arca documentorum): involucrum Latinum</p>
+
+<p>The house&#x27;s Latin wrapper over the one vendored database, SQLite (vendor/sqlite3.c, compiled loosely in its own object, treated like libc): open (or &#x27;:memoria:&#x27;), execute, prepared statements with typed binding and columns copied into the caller&#x27;s arena, transactions, migrations that are append-only and numbered with no way down (history immutable), and ULIDs for row identity, kept distinct from content identity, which is sigillum&#x27;s job. Build flags were decided when SQLite was vendored: FTS5 in, no threads (one writer, the house rule), WAL with a busy timeout so readers can run alongside. Used by the ledger&#x27;s journal (gesta), volumen and fabrica (July 2026).</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/scrinium.h"><code>include/scrinium.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/scrinium.c"><code>lib/scrinium.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#acta">Records and storage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

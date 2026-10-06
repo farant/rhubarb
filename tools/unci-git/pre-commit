@@ -76,7 +76,7 @@ if [ -n "${UNCUS_VIAE:-}" ]; then
     DVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(sh|css)$' || true)"
 else
     DVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.sh' '*.css' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|amalgama|archivum)/' \
+        | grep -vE '(^|/)(scratchpad|build|amalgama|archivum|knotapel)/' \
         | grep -v '^probationes/fixa/' || true)"
 fi
 if [ -n "$DVIAE" ]; then
@@ -102,7 +102,7 @@ if [ -n "${UNCUS_VIAE:-}" ]; then
     VIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|m)$' || true)"
 else
     VIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.m' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula)/')"
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula|knotapel)/')"
 fi
 if [ -z "$VIAE" ]; then
     echo "examen (pre-commit): nulla plagula .c/.m in commissione - nihil iudicatum" >&2
@@ -114,7 +114,10 @@ fi
 # --cached -U0) -> functiones radicis (formator -lineae) -> scriptura
 # intra eas solas (baseline plagulae communis intacta), index repositus.
 # Post evolutionem totam (2026-09-01) scriptura TOTA ubique praeter
-# knotapel/ vendor/ (terra non evoluta: intra functiones mutatas).
+# vendor/ (terra non evoluta: intra functiones mutatas). knotapel/
+# EXCLUSA TOTA (decisio Frani 2026-10-03): nec examen, nec diagnostica
+# materiae, nec formator - suae regulae ibi (knotapel/CLAUDE.md); lint
+# Latinus eam iam praeteribat. Porta natalis: fumus.sh gradus XX.
 # Arbor operis ab indice differens (commissio partialis) NON formatur
 # - monetur (scriptura arboris alia in indicem traheret). Lineae extra
 # functiones (structurae, tabulae) monentur, non formantur (porta:
@@ -186,7 +189,7 @@ echo "examen (pre-commit): $iudicatae plagulae ACCIPE" >&2
 # hominis manet (plagula nova = omnia nova, -scribere eam).
 if [ -z "${UNCUS_VIAE:-}" ]; then
     FVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula)/')"
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula|knotapel)/')"
 else
     FVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|h)$')"
 fi

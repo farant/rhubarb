@@ -83,7 +83,11 @@ s32 principale (vacuum)
 
     imprimere("\n--- IIb. scriptura (S) et ambitus (E) ---\n");
     (vacuum)remove(LIBER);
+    /* plagula delenda SINE libro creata: S eius solum ex deletione */
+    (vacuum)filum_scribere_literis("build/probatio_lectiones_d.txt",
+        "d\n");
     setenv("FABRICA_LECTIONES", LIBER, I);
+    (vacuum)filum_delere("build/probatio_lectiones_d.txt");
     setenv("LECTIONES_PROBATIO", "valor_fictus", I);
     (vacuum)filum_scribere_literis("build/probatio_lectiones_s.txt",
         "x\n");
@@ -94,6 +98,9 @@ s32 principale (vacuum)
     liber = filum_legere_totum(LIBER, piscina);
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "S\tbuild/probatio_lectiones_s.txt\n", piscina)));
+    /* deletio = S (fabrica spec 3 T6: compilator temporarium delet) */
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "S\tbuild/probatio_lectiones_d.txt\n", piscina)));
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "E\tLECTIONES_PROBATIO\tvalor_fictus\n", piscina)));
 

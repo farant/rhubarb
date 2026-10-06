@@ -35,6 +35,7 @@
 #include "iter_directoria.h"
 #include "processus.h"
 #include "provenientia.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -398,7 +399,10 @@ _clavem_plenam (
 }
 
 /* destinationem implere ex octetis: identica non tangitur;
- * aliter temporarium + rename */
+ * aliter temporarium + rename. Identica: lectio comparationis in
+ * libro L fit (filum), sed destinatio EXITUS est, non ingressus -
+ * 'S' eam cursui huic possidendam notat (spec 3 par. XI corr. 1: sine
+ * eo omnis cursus calidus 'ingressum build/ sine domino' haberet) */
 interior b32
 _collocare (
     Compilatio* c,
@@ -413,6 +417,7 @@ _collocare (
     si (   _plagulam_sigillare(c->exitus, c->piscina, &praesens)
         && sigillum_aequale(&novum, &praesens))
     {
+        lectiones_notare(LECTIO_SCRIPSIT, c->exitus);
         redde VERUM;
     }
     sprintf(temporarium, "%s.compilator.%ld", c->exitus,

@@ -245,3 +245,35 @@ Tests `probatio_utf8`: five valid forms (2/3/4 bytes, U+10FFFF, U+FFFD
 + U+0080), eight invalid kinds located at the lead byte, one invalid
 KEY, and character columns on the same line and on line 2. Born red:
 every invalid case failed on all four assertions before the fix.
+
+## 2026-10-02 — audit II (findings only; nothing fixed)
+
+Written from ../rhubarb-tertia while making the library's docs page
+(`docs/bibliothecae/json.html`); ledger park …XW32T. Probes compiled in
+the session scratchpad against lib/ sources, never committed. Looked
+where the September audit did not: memory over time, cost on big inputs,
+`json_via`, failure paths.
+
+- **Keys interned globally, forever.** Every parsed key goes into
+  `internamentum_globale()`, which outlives the arena: 10,000 parses of
+  unique one-key objects (arena emptied after each) left 10,000 entries.
+  `json_objectum_capere` of an ABSENT key interns it too (1,000 failed
+  lookups = 1,000 entries). Residents parse client JSON for days. Cheap
+  half of a fix: look up via `chorda_est_internata` first — a key never
+  interned cannot be in any object.
+- **Quadratic per object.** The duplicate-key scan (step IV), `capere`
+  and `ponere` are linear per key: 5k keys 0.036 s, 10k 0.143 s, 20k
+  0.565 s. Fix candidates: a hash set in the arena above a small key
+  count (mind: `tabula_dispersa` refuses "" silently, note …6KEQPR), or
+  a cap on keys per object like JSON_PROFUNDITAS_MAXIMA.
+- **`json_via` index wrap.** `(numerus - cifra) / X` underflows in
+  unsigned i32 when the digit exceeds the count, so the guard is vacuous
+  and the index wraps past 2^32: on `{"a":["zero"]}`, path
+  `"a.4294967296"` returns "zero". Accumulate in i64 and compare once.
+- By reading, not reproduced: strings and numbers are copied twice
+  (token copy, then unescape / strtod copy); a failed `xar_addere`
+  drops a pair while the parse still reports success.
+
+Throughput on gesta/annales/tabularium.jsonl (4,318 lines, 3.5 MB,
+-O2): parse 354 MB/s, write 379 MB/s; Python's C json on the same lines
+219 / 198 MB/s. Any fix touches json.h's closure (~29 owed gates).

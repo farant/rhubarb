@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>runae_tabulae</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>runae_tabulae</h1>
+<p class="subtitulus">Tabulae GENERATAE runarum (runae)</p>
+
+<p>The layout of runae&#x27;s generated tables, shared by the generator (tools/runae_generare.sh) and the library: a two-stage table, where the first stage maps each block of 256 codepoints to a block in the second, and identical blocks are stored once. Each byte packs a width (2 bits), a grapheme break class (5 bits) and whether the rune is an emoji variation base (1 bit). The break classes fold Grapheme_Cluster_Break, Indic conjunct breaks, Emoji_Modifier and Extended_Pictographic into one alphabet, which the generator asserts is safe for Unicode 15.1. The header is hand-written and stable; lib/runae_tabulae.c is generated. A standard technique (ICU and most Unicode libraries use a multi-stage table) made explicit enough that a reader can check the bits by hand.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/runae_tabulae.h"><code>include/runae_tabulae.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/runae_tabulae.c"><code>lib/runae_tabulae.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-29 c918661e</td></tr>
+<tr><td>Group</td><td><a href="greges.html#textus">Text</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

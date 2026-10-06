@@ -36,12 +36,15 @@
 SERA_VIA=""
 SERA_RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# <tolera codex="lint:effectus-irresolutum" (>sera bookkeeping (fabrica spec 3 par. III.7: canalis lateralis, non ingressus portae) - via ex $1
 sera_tenens () {   # <via> -> pid tenentis (aut '?')
     local pid
     pid=$(cat "$1/pid" 2>/dev/null)
     echo "${pid:-?}"
 }
 
+# <tolera codex="lint:effectus-irresolutum" (>sera bookkeeping (canalis lateralis, spec 3 par. III.7) - via ex $1
+# <tolera codex="lint:effectus-mandatum-ignotum" (>ps: vita processus tenentis, non plagula
 sera_vetus () {   # <via> -> 0 si derelinquenda
     local pid radix
     pid=$(cat "$1/pid" 2>/dev/null)
@@ -94,6 +97,7 @@ sera_capere () {   # <via> [tectum_s] -> 0 capta | 1 non capta
     return 0
 }
 
+# <tolera codex="lint:effectus-irresolutum" (>sera bookkeeping (canalis lateralis, spec 3 par. III.7)
 sera_dimittere () {
     [ -n "$SERA_VIA" ] || return 0
     if [ "$(cat "$SERA_VIA/pid" 2>/dev/null)" = "$$" ]; then

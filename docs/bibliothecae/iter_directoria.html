@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iter_directoria</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>iter_directoria</h1>
+<p class="subtitulus">directoria ambulare (directory walk)</p>
+
+<p>Walking directories: an iterator over one directory (name, kind: file, directory, other, unknown; size), and a recursive walker with a filter (kinds accepted, a * and ? name pattern, maximum depth, hidden files or not) that calls a function per entry. Everything from an arena. Used widely (crusta, the ledger, silex, hospitium, saltuarius, silva&#x27;s tools, the Gutenberg tools). One caution is recorded elsewhere: the walker uses stat, so it follows a symlink to a directory into it, which is why filum_arborem_delere does its own walk with lstat.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/iter_directoria.h"><code>include/iter_directoria.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/iter_directoria.c"><code>lib/iter_directoria.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-02 d664f6ad</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

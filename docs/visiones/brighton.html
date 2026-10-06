@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brighton - Visiones</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · Visiones</p>
+<h1>Brighton</h1>
+<p class="subtitulus">Visiones electae ex <a href="../../project-specs/brighton-visio.md">brighton-visio.md</a> (Fran, 2026-09-23)</p>
+
+<p>Brighton is a system for shared scholarship over texts. Fran calls it
+an evolution of the internet: what you might build for scholarship if
+you could design the web again with thirty years of hindsight.<sup class="ref">B1 Q1</sup>
+It begins with Catholic texts and is meant to grow into every scholarly
+domain,<sup class="ref">B3 Q2</sup> and along the way it should prove much of
+the "private internet" technology that rhubarb is building, the house's
+own web-server libraries among them.<sup class="ref">B2.1 B2.2</sup> The work
+already begun on Lapide shows what one of those intentions looks like in
+practice: every piece of text can be traced back to the ink it came
+from, and every change along the way is recorded.<sup class="ref">Q1 Q12 Q14</sup></p>
+
+<p>Under every translated sentence runs a chain. The English rests on a
+normalized Latin sentence, which rests on the Latin as the page prints
+it, which rests on the words an OCR engine read and their boxes on the
+scan; select a sentence in one and it lights up in the
+others.<sup class="ref">Q4</sup> The handle for all of it is an address for
+every sentence. A reference such as <code>c1.s4.pxyz7.abcd8.2</code> names
+a chapter, a section, a paragraph and a sentence. The sentence id is a
+hash of the Latin as printed, so the same address finds the same sentence
+in English, French or Polish, and rewording a translation never changes
+it; when a correction changes the Latin, the old address leads to the new
+one, and no address ever stops resolving.<sup class="ref">B4 Q3</sup>
+Translations, corrections and notes anchor to addresses, never to
+character offsets.<sup class="ref">Q4</sup></p>
+
+<p>So issues are filed against the structure of the text itself, and
+every passage carries a visible history.<sup class="ref">B8.1 Q13</sup> Beside
+each translation stands the rubric it was made under: the conventions
+and glossary that bound the translator (how to render <em>dulia</em> and
+<em>hyperdulia</em>, for instance) as they stood when that sentence was
+translated, and the model that did the work.<sup class="ref">B8.3 Q5 Q17</sup>
+Encyclopedia entries for saints, places, events and works, written by AI
+or by people, gather what the texts say about them.<sup class="ref">B12.1</sup></p>
+
+<p>A book lives in a single file: its text, the metadata of every
+sentence and its page images together, in sqlite to begin
+with.<sup class="ref">B9.2 Q6</sup> There is no centre to the network. It is
+federated: servers that others run hold their own texts, and links reach
+across them.<sup class="ref">B5 Q7</sup> A standalone desktop application lets
+anyone run a translation project of their own.<sup class="ref">B14</sup> Around
+the texts gather their readers, in something like a social network for
+scholastic reading that avoids the pitfalls of social
+networks,<sup class="ref">B7.5 Q8</sup> and tools for learning the languages the
+texts are written in.<sup class="ref">B13 Q9</sup></p>
+
+<p>Beyond texts, the same structure is meant to hold mathematics,
+medicine and the sciences, built from published books and
+papers,<sup class="ref">B15</sup> and there the base computational artifact of
+any domain is a single compilable C89 file.<sup class="ref">B15.2 Q10</sup> At
+the far end stands a claim graph, in which claims are linked to the claims
+they rest on: a disagreement shows the point where it departs, and a claim
+verified, disproven or qualified shows how far its effects
+ripple.<sup class="ref">B16 Q11</sup></p>
+
+<p>It starts with Lapide, whose translation is complete but is a first
+draft: every chapter reviewed so far has turned up issues, often
+significant ones.<sup class="ref">B17</sup> The first version taught the hard
+lesson. Its model repaired errors silently, fixing them in the English
+while the Latin stayed wrong, and left no record of either. The rebuild
+takes the opposite stance. Agents do the work and people are optional,
+because no person will ever read every volume, so nothing may depend on
+a human check. In return every change is attributed to the exact model
+that made it, corrections against the scan are never mixed with spelling
+policy or with interpretation, and anything one model did can be found
+and redone.<sup class="ref">Q12 Q13 Q14</sup></p>
+
+<h2>Quaestiones</h2>
+<p class="nota">Questions that came up while writing the prose above:
+mostly "why", where the source states <em>what</em> but not
+<em>why</em>, plus the places where the prose leans on my reading.
+Answers will go back into the paragraphs. On 2026-10-02 the design
+and process docs of <code>../lapide-v2</code> were read for answers; where
+they gave one it is written under the question, with its source. Those
+docs record decisions as Fran's, but they were made for Lapide: whether
+each answer holds for all of Brighton is itself worth a look.</p>
+<ol class="quaestiones">
+<li><span class="id">Q1</span><span class="ref">B1</span> What would be done "more intentionally" than the web as it is: addressing, federation, the issue history, something else? Which one most?
+<div class="responsum apertum"><span class="status">apertum</span> Not answered in lapide-v2. A lead only: its design goal, "every piece of text on the site can be traced back to the ink it came from, and every change along the way is recorded" (<a href="../../../lapide-v2/docs/design/strata-textus.md">strata-textus.md</a> §Goal), is the kind of intention the web never had.</div></li>
+<li><span class="id">Q2</span><span class="ref">B3</span> Why Catholic texts first, beyond your own interest? Is there something structural about them, like dense citation of Scripture and the Fathers, that makes them the hardest or the best first test?
+<div class="responsum apertum"><span class="status">apertum</span> Not answered. Indirect evidence for the "hardest test" reading: the translation package carries every cited Scripture chapter (Douay-Rheims beside the Vulgate), the work's own sources on a local shelf (Augustine for Bede), and a glossary of theological terms (<a href="../../../lapide-v2/docs/process/translating.md">translating.md</a>, "The package").</div></li>
+<li><span class="id">Q3</span><span class="ref">B4</span> Why hashes of the text rather than plain sequence numbers (<code>c1.s4.p7.3</code>)? A hash means ids change on every edit and need redirects. What does content identity buy that is worth that? (My guess: a mirror can compute and verify ids on its own, without a central authority.)
+<div class="responsum"><span class="status">responsum ex lapide-v2</span> <strong>Identity comes from the source, so it is the same in every language.</strong> The hash is taken over the <em>diplomatic</em> Latin (what the page prints): switching <code>~en</code> to <code>~fr</code> keeps your place, even where one language renders a sentence as two. Translations are never hashed, because they are revised far more often than the Latin is corrected; rewording one never changes an address. Hashing the diplomatic rather than the normalized text means a change of spelling policy does not re-mint thousands of addresses, and only a real correction against the scan does. Old addresses never 404: every retirement records its successors. (<a href="../../../lapide-v2/docs/design/strata-textus.md">strata-textus.md</a> §3.0, §3.5, §3.6, §3.4; decided by Fran 2026-09-26.)
+<br><strong>My guess was wrong.</strong> An address is not a pure function of the text: the <code>.N</code> is minting order, kept in a per-chapter mint ledger, so a mirror cannot compute ids on its own; it needs the ledger (§3.2). See Q15.</div></li>
+<li><span class="id">Q4</span>"Much of the rest hangs from this" is my reading, not your text. Is the address really the foundation, or is it one piece among equals?
+<div class="responsum"><span class="status">responsum ex lapide-v2</span> <strong>Yes, with one layer beneath it.</strong> "Annotations anchor to addresses, never character offsets", a lesson from v1, whose offset-anchored index broke on every edit. Translations, corrections, checks, findings, requests and crops are all keyed by address. But the address is minted from the diplomatic layer, which sits on a stack: page image → OCR words and boxes → diplomatic → normalized → translation. The deepest foundation is traceability to the ink; the address is its handle. (<a href="../../../lapide-v2/docs/design/strata-textus.md">strata-textus.md</a> §Goal, §1, §3.)</div></li>
+<li><span class="id">Q5</span><span class="ref">B8.3</span> Why should a reader see the rubric? Is it about trust in AI translation, accountability, teaching how a translation is made?
+<div class="responsum"><span class="status">responsum ex lapide-v2 (pro recensoribus)</span> <strong>Accountability, and redoability.</strong> In lapide-v2 the rubric is the <em>conventions</em> and the <em>glossary</em>. They bind translators and reviewers alike ("Judge what is written, not what you would have written"); a glossary term rendered differently needs a note saying why. Everything is in the event log, "so <code>@seq</code> shows the checklist, glossary and policy that were in force at any point, not just the text"; the exact model behind every check is recorded, so everything one model did can be redone or distrusted by policy. (<a href="../../../lapide-v2/docs/process/translating.md">translating.md</a>; slice 2 design, "Principles".) Lapide-v2 shows the rubric to <em>reviewers</em>; showing it to <em>readers</em> is Brighton's step. See Q17.</div></li>
+<li><span class="id">Q6</span><span class="ref">B9.2</span> Why one file per book? Portability, archiving (one file outlives a folder), mirroring, or something else?
+<div class="responsum partim"><span class="status">partim</span> Lapide-v2 keeps <strong>one append-only event log per work</strong> (<code>textus/eventa.jsonl</code>): "a work is self-contained", the current text files are projections rebuilt from the log, and git is only transport and backup (<a href="../../../lapide-v2/docs/design/strata-textus.md">strata-textus.md</a> §3.7). That is the same shape as rhubarb's own ledger (truth in <code>tabularium.jsonl</code>, the <code>.db</code> a rebuildable projection). See Q16.</div></li>
+<li><span class="id">Q7</span><span class="ref">B5</span> Why federated: hosting cost, independence from any one owner, surviving over a long time? Is it closer to email, to Usenet, or to something older, like copies of manuscripts held in many monasteries?</li>
+<li><span class="id">Q8</span><span class="ref">B7.5</span> Which pitfalls of social networks, specifically? What should the reading community never become?</li>
+<li><span class="id">Q9</span><span class="ref">B13</span> You called language learning "not strictly necessary" but kept it. Why does it belong inside Brighton rather than beside it?</li>
+<li><span class="id">Q10</span><span class="ref">B15.2</span> Why a C89 file as the computational artifact of every domain, where others would use notebook languages? Longevity, auditability, one toolchain for everything?</li>
+<li><span class="id">Q11</span><span class="ref">B16</span> Does the claim graph belong inside Brighton, or is it a separate project (the proof checker) that Brighton links into?</li>
+<li><span class="id">Q12</span><span class="ref">B17</span> "That is the work Brighton has to make tractable first" is my inference. Is trustworthy AI translation the central problem Brighton solves, with the rubrics, the issue history and the page images all serving it? If so, it should lead the first paragraph.
+<div class="responsum"><span class="status">responsum ex lapide-v2</span> <strong>For Lapide, clearly yes.</strong> The first principle of the review design: "Agents do the work; people are optional. Lapide v1 was translated in 2–3 months. No person reads every volume, so nothing here may <em>require</em> a human check." The failure it answers is v1's <em>silent repair</em>: the model "fixed errors in the English (<code>transcunt</code> → 'pass on') and left the Latin wrong, with no record". Hence the three kinds of change that never mix (evidence-based corrections, normalization policy, interpretation), every change attributed to its exact model, and old addresses that always resolve. (Slice 2 design, "Principles"; <a href="../../../lapide-v2/docs/design/strata-textus.md">strata-textus.md</a> §Goal, §1; <a href="../../../lapide-v2/docs/research/surya-2.md">surya-2.md</a>.) Whether it is the centre of <em>all</em> of Brighton, or of its publishing side only, is Q13 and Q14.</div></li>
+</ol>
+
+<h3>Quaestiones novae (from reading lapide-v2)</h3>
+<ol class="quaestiones">
+<li><span class="id">Q13</span><span class="ref">B8.1 Q12</span> Lapide-v2 is built so that no human check is ever required. Brighton opens issues to the public. Are readers the human check the pipeline deliberately does not depend on: optional, but welcome, and recorded when they happen?</li>
+<li><span class="id">Q14</span><span class="ref">Q12</span> "The three kinds of change never mix" (evidence, policy, interpretation): is that a principle of all of Brighton, holding for the encyclopedia and the claim graph too, or a rule of the translation pipeline only?</li>
+<li><span class="id">Q15</span><span class="ref">B5 Q3</span> An address needs the per-chapter mint ledger to resolve. Does that make federation the replication of event logs: a mirror holds a work's log (and its images), not just its text?</li>
+<li><span class="id">Q16</span><span class="ref">B9.2 Q6</span> Is the <code>.brighton</code> file the event log plus the page images, with sqlite as a projection rebuilt from it (as tabularium does with its journal), or is the sqlite file itself the truth?</li>
+<li><span class="id">Q17</span><span class="ref">B8.3 Q5</span> What would a <em>reader</em> see of the rubric: the conventions and glossary in force when that sentence was translated, read at its <code>@seq</code>? Does a reader need the rubric to trust a sentence, or is it there for the reader who wants to dig?</li>
+</ol>
+
+<h2>Sententiae electae</h2>
+
+<h3>What Brighton is and why</h3>
+<ul>
+<li><span class="id">B1</span>Brighton is "an evolution of the internet", what you would design for shared scholarship with 30 years of hindsight <span class="fons">L78</span></li>
+<li><span class="id">B2.1</span>It can prove much of the "private internet" technology <span class="fons">L66</span></li>
+<li><span class="id">B2.2</span>It dogfoods rhubarb for web servers <span class="fons">L28</span></li>
+<li><span class="id">B3</span>Prove it on Catholic texts, then expand to all scholarly domains <span class="fons">L68</span></li>
+</ul>
+
+<h3>The pieces</h3>
+<ul>
+<li><span class="id">B4</span>A stable text-addressing scheme: <code>c1.s4.pxyz7.abcd8.2</code> <span class="fons">L36-42</span></li>
+<li><span class="id">B5</span>Federated by design <span class="fons">L32, L46</span></li>
+<li><span class="id">B7.5</span>Something like a social network for readers of scholastic texts, avoiding the pitfalls of social networks <span class="fons">L28</span></li>
+<li><span class="id">B8.1</span>Issues specific to the text's structure, with a visible history per passage <span class="fons">L34</span></li>
+<li><span class="id">B8.3</span>The translation rubric given to the AI is visible, per language and per term (dulia, hyperdulia) <span class="fons">L52</span></li>
+<li><span class="id">B9.2</span>A whole book (sentence metadata, page images…) in one file: sqlite to start, maybe <code>.brighton</code> <span class="fons">L54</span></li>
+<li><span class="id">B12.1</span>Encyclopedia entries for saints, places, events, works: AI-generated and/or human-edited <span class="fons">L60</span></li>
+<li><span class="id">B13</span>Language learning <span class="fons">L62-64</span></li>
+<li><span class="id">B14</span>A standalone desktop app for running such translation projects yourself <span class="fons">L28</span></li>
+</ul>
+
+<h3>Beyond texts</h3>
+<ul>
+<li><span class="id">B15</span>All scholarly domains: math, medicine, sciences, from published books and papers <span class="fons">L68</span>
+  <ul>
+  <li><span class="id">B15.2</span>"The base computational artifact for any domain would be a single compileable c89 file" <span class="fons">L68</span></li>
+  </ul></li>
+<li><span class="id">B16</span>A claim graph or syllogism graph: claims linked to the claims they rest on <span class="fons">L74</span>
+  <ul>
+  <li><span class="id">B16.1</span>Shows the point of departure of a disagreement <span class="fons">L74</span></li>
+  <li><span class="id">B16.2</span>Shows the ripple effect when a claim is verified, disproven or qualified <span class="fons">L74</span></li>
+  </ul></li>
+</ul>
+
+<h3>Lapide: the proving ground</h3>
+<ul>
+<li><span class="id">B17</span>Lapide's translation is complete but a first draft; every reviewed chapter has had issues, often significant <span class="fons">L14</span></li>
+</ul>
+
+<details>
+<summary>Inventarium plenum: 73 claims extracted, 19 selected (highlighted)</summary>
+<p class="nota">Extracted 2026-10-02 by Claude, one claim per bullet,
+worded as close to the source as possible; selected by Fran the same
+day. Claims marked <em>illatum</em> are inferred, not stated.</p>
+<h3>I. What Brighton is and why</h3>
+<ul>
+<li class="electum"><span class="id">B1</span>Brighton is "an evolution of the internet", what you would design for shared scholarship with 30 years of hindsight <span class="fons">L78</span>
+<ul>
+<li><span class="id">B1.1</span>the current internet works well considering how unplanned it is, but would be done "more intentionally in certain areas" <span class="fons">L78</span>
+</li>
+<li><span class="id">B1.2</span>it is "something that rationally should exist" <span class="fons">L76</span>
+</li>
+<li><span class="id">B1.3</span>it must be made "as an integrated whole covering all these domains" to function as it should <span class="fons">L76</span>
+</li>
+<li><span class="id">B1.4</span>its parts benefit from being implemented in tandem <span class="fons">L30</span>
+</li>
+</ul></li>
+<li><span class="id">B2</span>It could be Fran's product focus for the next year or so <span class="fons">L66</span>
+<ul>
+<li class="electum"><span class="id">B2.1</span>it can prove much of the "private internet" technology <span class="fons">L66</span>
+</li>
+<li class="electum"><span class="id">B2.2</span>it dogfoods rhubarb for web servers <span class="fons">L28</span>
+</li>
+<li><span class="id">B2.3</span>personal motive: interest in Catholic texts <span class="fons">L66</span>
+</li>
+</ul></li>
+<li class="electum"><span class="id">B3</span>Prove it on Catholic texts, then expand to all scholarly domains <span class="fons">L68</span>
+</li></ul>
+<h3>II. The pieces</h3>
+<ul>
+<li class="electum"><span class="id">B4</span>A stable text-addressing scheme: <code>c1.s4.pxyz7.abcd8.2</code> <span class="fons">L36-42</span>
+<ul>
+<li><span class="id">B4.1</span>sentence id = hash of sentence text (Crockford-alphabet, uuid5-like nanoid), unique within the chapter <span class="fons">L40</span>
+</li>
+<li><span class="id">B4.2</span><code>.N</code> disambiguates identical sentences; minted in order, unique across history <span class="fons">L40</span>
+</li>
+<li><span class="id">B4.3</span>paragraph id = merkle hash of its sentences, so it changes when any sentence changes <span class="fons">L40</span>
+</li>
+<li><span class="id">B4.4</span>old ids redirect to the latest version <span class="fons">L40</span>
+</li>
+<li><span class="id">B4.5</span>section and paragraph are optional in an address, but addressable for deep links <span class="fons">L42</span>
+</li>
+</ul></li>
+<li class="electum"><span class="id">B5</span>Federated by design <span class="fons">L32, L46</span>
+<ul>
+<li><span class="id">B5.1</span>not running GitHub; not hosting gigabytes of other people's PDFs <span class="fons">L32</span>
+</li>
+<li><span class="id">B5.2</span>own projects first; later a server binary others run on their own VPS, viewed together through a list of servers <span class="fons">L32</span>
+</li>
+<li><span class="id">B5.3</span>links work across mirrors, giving "a distributed network of texts with links between each other" <span class="fons">L46</span>
+</li>
+<li><span class="id">B5.4</span>fits the "1.0 and done" product philosophy <span class="fons">L32</span>
+</li>
+</ul></li>
+<li><span class="id">B6</span>A web app first; desktop via vitrea <span class="fons">L44</span>
+</li>
+<li><span class="id">B7</span>Reader <span class="fons">L50</span>
+<ul>
+<li><span class="id">B7.1</span>highlights/favourites; ebook pagination; sentence-by-sentence pagination <span class="fons">L50</span>
+</li>
+<li><span class="id">B7.2</span>reading groups sharing highlights and notes; multi-tenancy and accounts <span class="fons">L50</span>
+</li>
+<li><span class="id">B7.3</span>marginalia and glosses; extracts gathered into an "essay" or anthology <span class="fons">L50</span>
+</li>
+<li><span class="id">B7.4</span>commentary viewable by Bible verse, saint, etc. <span class="fons">L50</span>
+</li>
+<li class="electum"><span class="id">B7.5</span>something like a social network for readers of scholastic texts, avoiding the pitfalls of social networks <span class="fons">L28</span>
+</li>
+</ul></li>
+<li><span class="id">B8</span>Issues anchored to the text, the "GitHub" element <span class="fons">L34, L52</span>
+<ul>
+<li class="electum"><span class="id">B8.1</span>issues specific to the text's structure, with a visible history per passage <span class="fons">L34</span>
+</li>
+<li><span class="id">B8.2</span>see the transcribed Latin or the original PDF page behind any passage <span class="fons">L52</span>
+</li>
+<li class="electum"><span class="id">B8.3</span>the translation rubric given to the AI is visible, per language and per term (dulia, hyperdulia) <span class="fons">L52</span>
+</li>
+<li><span class="id">B8.4</span>issues public; a text-administrator side to manage and resolve them <span class="fons">L52</span>
+</li>
+</ul></li>
+<li><span class="id">B9</span>Publishing: AI-first translation <span class="fons">L54</span>
+<ul>
+<li><span class="id">B9.1</span>tasks for the LLM, tracked to completion; manual translation still allowed <span class="fons">L54</span>
+</li>
+<li class="electum"><span class="id">B9.2</span>a whole book (sentence metadata, page images…) in one file: sqlite to start, maybe <code>.brighton</code> <span class="fons">L54</span>
+</li>
+<li><span class="id">B9.3</span>"mount" the file as a git repo of many files for LLM editing ergonomics, synced back <span class="fons">L54</span>
+</li>
+<li><span class="id">B9.4</span>publish as a git repo too, for mirroring and history <span class="fons">L54</span>
+</li>
+</ul></li>
+<li><span class="id">B10</span>Multilingual throughout <span class="fons">L56</span>
+<ul>
+<li><span class="id">B10.1</span>every translated sentence records the rubric version it was translated under, so outdated translations are searchable <span class="fons">L56</span>
+</li>
+<li><span class="id">B10.2</span>rubrics cover terms, Bible quotations, saint names, register… <span class="fons">L56</span>
+</li>
+</ul></li>
+<li><span class="id">B11</span>Indexing: coverage, entries for people and places, entities deduplicated across works <span class="fons">L58</span>
+</li>
+<li><span class="id">B12</span>Encyclopedia <span class="fons">L60, L72</span>
+<ul>
+<li class="electum"><span class="id">B12.1</span>entries for saints, places, events, works: AI-generated and/or human-edited <span class="fons">L60</span>
+</li>
+<li><span class="id">B12.2</span>citations deep-link into translated sources (Lapide → St. Basil's 10th sermon), in the reader's language with fallback <span class="fons">L60</span>
+</li>
+<li><span class="id">B12.3</span>entries carry their own translations and provenance (rubric, date, model) <span class="fons">L60</span>
+</li>
+<li><span class="id">B12.4</span>with expansion it becomes "a proper encyclopedia" anchored in sources also readable in the system <span class="fons">L72</span>
+</li>
+</ul></li>
+<li class="electum"><span class="id">B13</span>Language learning <span class="fons">L62-64</span>
+<ul>
+<li><span class="id">B13.1</span>not strictly necessary, but Fran is personally interested <span class="fons">L62</span>
+</li>
+<li><span class="id">B13.2</span>flash cards, games, quizzes, translation exercises graded by the user's own AI subscription <span class="fons">L62</span>
+</li>
+<li><span class="id">B13.3</span>users share authored materials; "courses" emerge <span class="fons">L64</span>
+</li>
+</ul></li>
+<li class="electum"><span class="id">B14</span>A standalone desktop app for running such translation projects yourself <span class="fons">L28</span>
+</li></ul>
+<h3>III. Beyond texts</h3>
+<ul>
+<li class="electum"><span class="id">B15</span>All scholarly domains: math, medicine, sciences, from published books and papers <span class="fons">L68</span>
+<ul>
+<li><span class="id">B15.1</span>notebook-like interactive simulations embedded <span class="fons">L68</span>
+</li>
+<li class="electum"><span class="id">B15.2</span>"the base computational artifact for any domain would be a single compileable c89 file" <span class="fons">L68</span>
+</li>
+<li><span class="id">B15.3</span>courses that walk through primary sources and papers on a subject <span class="fons">L70</span>
+</li>
+</ul></li>
+<li class="electum"><span class="id">B16</span>A claim graph or syllogism graph: claims linked to the claims they rest on <span class="fons">L74</span>
+<ul>
+<li class="electum"><span class="id">B16.1</span>shows the point of departure of a disagreement <span class="fons">L74</span>
+</li>
+<li class="electum"><span class="id">B16.2</span>shows the ripple effect when a claim is verified, disproven or qualified <span class="fons">L74</span>
+</li></ul>
+</li></ul>
+<h3>IV. Lapide: the proving ground and its next pass</h3>
+<ul>
+<li class="electum"><span class="id">B17</span>Lapide's translation is complete but a first draft; every reviewed chapter has had issues, often significant <span class="fons">L14</span>
+<ul>
+<li><span class="id">B17.1</span>most issues come from agents taking licence and cutting corners <span class="fons">L16</span>
+</li>
+<li><span class="id">B17.2</span>the work stalled partly because Lapide's scope needs to expand and the approach is unclear <span class="fons">L18</span>
+</li>
+</ul></li>
+<li><span class="id">B18</span>Floor of quality: compare the original PDF page image with the Latin and the English <span class="fons">L20</span>
+<ul>
+<li><span class="id">B18.1</span>page images (~20 PDFs × ~800 pages) outgrow GitHub hosting; needs a deployment held to gitops standards <span class="fons">L22</span>
+</li>
+<li><span class="id">B18.2</span>keep the minimal UI as default; add a paginated split-view mode <span class="fons">L24</span>
+</li>
+</ul></li>
+<li><span class="id">B19</span>An annotation-heavy pass <span class="fons">L26</span>
+<ul>
+<li><span class="id">B19.1</span>minimum: map Latin and English text to PDF pages <span class="fons">L26</span>
+</li>
+<li><span class="id">B19.2</span>open: spatial mapping to page regions; sentence/paragraph alignment Latin ↔ English <span class="fons">L26</span>
+</li>
+<li><span class="id">B19.3</span>tension: batch changes into one pass (each full pass is costly) vs overloading the agent and hurting quality <span class="fons">L26</span>
+</li>
+</ul></li>
+<li><span class="id">B20</span>The same quality standard for many texts, not only Lapide <span class="fons">L28</span>
+</li></ul>
+<h3>V. What the text leaves open (illatum: questions the text raises, not states)</h3>
+<ul>
+<li><span class="id">B21</span>order of building: which piece first (reader, issues, publishing, addressing)? (illatum)
+</li>
+<li><span class="id">B22</span>how heavy the annotation pass should be (L26 states it as open)
+</li>
+<li><span class="id">B23</span>the design of the paginated mode (L24 states it as open)
+</li></ul>
+</details>
+
+<details>
+<summary>Notae: connections to the repo (Claude's commentary, not in the source)</summary>
+<ul>
+<li><span class="id">B4</span>the parked text-addressing work; ledger region "stable textual deep-linking library"</li>
+<li><span class="id">B5.4</span>the "1.0 and done" philosophy (where else is it stated?)</li>
+<li><span class="id">B6</span>vitrea · <span class="id">B2.2</span>the web-server libraries</li>
+<li><span class="id">B15.2</span>the C89 stack itself: Brighton is where rhubarb's own premise reaches people</li>
+<li><span class="id">B16</span><a href="../../project-specs/proof-checker-research.md">proof-checker-research.md</a> and the sententiae claim-tree format</li>
+</ul>
+</details>
+
+</body>
+</html>

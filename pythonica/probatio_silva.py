@@ -891,6 +891,128 @@ finally:
     del os.environ['PYTHONICA_PORTAE_FICTAE']
     os.unlink(scriptum)
 
+print('--- porta per fabricam: actio iudicium (fabrica spec 3 T6) ---')
+
+
+def _fabrica_iudicii(modus):
+    """bin/fabrica fictus pro porta 'ficta-v' (porta() SEMPER sanare
+    vocat, spec 3 XIII v5): modus[1] = recens (exitus 0, nulla linea
+    SANATUM, verdictum manet) | transit | frangitur | sera"""
+    via = os.path.join(T, 'fabrica_iudicii_%s_%s' % modus)
+    verdictum = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
+    acta = os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')
+    with open(via, 'w') as f:
+        f.write('#!/bin/bash\n'
+                'if [ "$1" = iudicare ]; then\n'
+                '  echo "%s build/fabrica/verdicta/ficta-v.txt - fictum"; exit 0\n'
+                'fi\n' % modus[0])
+        if modus[1] == 'recens':
+            f.write('echo "fabrica sanare: 0 sanata"; exit 0\n')
+        elif modus[1] == 'transit':
+            f.write('mkdir -p "$(dirname %s)" "$(dirname %s)"\n'
+                    'echo "ficta-v: fictum: sanum" > %s\n'
+                    'echo "fictum: sanum" > %s\n'
+                    'echo "SANATUM     porta_ficta-v (0.1 s)"; exit 0\n'
+                    % (verdictum, acta, verdictum, acta))
+        elif modus[1] == 'frangitur':
+            f.write('rm -f %s; mkdir -p "$(dirname %s)"\n'
+                    'printf "%%s\\n" "=== probatio_ficta ===" "fictum: FRACTUM" > %s\n'
+                    'echo "FRACTUM     porta_ficta-v (0.1 s) - exitus 1"; exit 1\n'
+                    % (verdictum, acta, acta))
+        else:
+            f.write('echo "fabrica: iudex plenus alius currit" >&2; exit 2\n')
+    os.chmod(via, 0o755)
+    return via
+
+
+_fb_porta_vera = silva.FABRICA_BIN
+_verdicta_vera = silva._VERDICTA_MEMORATA
+silva._VERDICTA_MEMORATA = {'ficta-v': []}
+silva.PORTAE['ficta-v'] = (['echo', 'fictum: sanum'], r'fictum: (sanum|FRACTUM)')
+_vv = os.path.join(RADIX, 'build', 'fabrica', 'verdicta', 'ficta-v.txt')
+try:
+    # RECENS: transitus servatus, nihil cursum
+    os.makedirs(os.path.dirname(_vv), exist_ok=True)
+    open(_vv, 'w').write('ficta-v: fictum: sanum\n')
+    silva.FABRICA_BIN = _fabrica_iudicii(('RECENS', 'frangitur'))
+    pv = silva.porta('ficta-v')
+    credo(pv.sana and '[transitus servatus' in pv.compendium
+          and pv.compendium.startswith('fictum: sanum'),
+          'porta per fabricam: iudicare RECENS -> transitus servatus, nihil cursum')
+    # STALUM -> sanare transit: compendium ex actis (signum)
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'transit'))
+    pv = silva.porta('ficta-v')
+    credo(pv.sana and pv.compendium == 'fictum: sanum',
+          'porta per fabricam: STALUM -> sanare currit, signum ex actis')
+    # sanare frangitur: sana falsum, fracturae ex actis
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'frangitur'))
+    pv = silva.porta('ficta-v')
+    credo(not pv.sana and pv.rc == 1 and 'FRACTUM' in pv.compendium,
+          'porta per fabricam: sanare fractum -> FRACTA, rc fabricae')
+    # sera tenta (exitus 2): via cruda
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'sera'))
+    pv = silva.porta('ficta-v')
+    credo(pv.sana and pv.cucurrit and 'transitus' not in pv.compendium,
+          'porta per fabricam: sanare exitus 2 -> via cruda')
+    # filtrum: via cruda semper (fabrica non vocatur - frangeretur)
+    silva.FABRICA_BIN = _fabrica_iudicii(('STALUM', 'frangitur'))
+    pv = silva.porta('ficta-v', 'aliquid')
+    credo(pv.sana, 'porta per fabricam: filtrum -> via cruda')
+    # AUDITUS COMMISSIONIS: sortitio per vocationem (spec 3 post T9)
+    _alea_vera = silva._alea
+    try:
+        silva._alea = lambda: 0.0
+        credo(silva._auditum_commissionis('ficta-v'),
+              'auditus commissionis: alea sub I/N -> auditur')
+        silva._alea = lambda: 0.99
+        credo(not silva._auditum_commissionis('ficta-v'),
+              'auditus commissionis: alea supra I/N -> non auditur')
+        os.environ['FABRICA_AUDITUS_COMMISSIONIS'] = '0'
+        silva._alea = lambda: 0.0
+        credo(not silva._auditum_commissionis('ficta-v'),
+              'auditus commissionis: N = 0 -> nullus')
+        del os.environ['FABRICA_AUDITUS_COMMISSIONIS']
+        credo(not silva._auditum_commissionis('ficta-octeti'),
+              'auditus commissionis: porta sine verdicto numquam')
+        # porta(auditus=True): 'sanare -audit', iudicare numquam vocatum
+        _log = os.path.join(T, 'fabrica_argv.log')
+        _fa = os.path.join(T, 'fabrica_auditus')
+        _acta = os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')
+        if os.path.exists(_log):
+            os.unlink(_log)
+        with open(_fa, 'w') as f:
+            f.write('#!/bin/bash\n'
+                    'echo "$*" >> %s\n'
+                    'mkdir -p "$(dirname %s)" "$(dirname %s)"\n'
+                    'echo "ficta-v: fictum: sanum" > %s\n'
+                    'echo "fictum: sanum" > %s\n'
+                    'echo "SANATUM     porta_ficta-v (0.1 s) - auditus: transitus iterum congruit"\n'
+                    'exit 0\n' % (_log, _vv, _acta, _vv, _acta))
+        os.chmod(_fa, 0o755)
+        silva.FABRICA_BIN = _fa
+        pv = silva.porta('ficta-v', auditus=True)
+        _argv = open(_log).read().splitlines()
+        credo(pv.sana and 'auditus: transitus iterum congruit' in pv.compendium
+              and any(l.startswith('sanare -audit') for l in _argv)
+              and not any(l.startswith('iudicare') for l in _argv),
+              'porta(auditus=True): sanare -audit, iudicare omissum')
+    finally:
+        silva._alea = _alea_vera
+        os.environ.pop('FABRICA_AUDITUS_COMMISSIONIS', None)
+    # portae verdictorum ex declarationibus veris: toml
+    silva._VERDICTA_MEMORATA = None
+    credo('toml' in silva._portae_verdictorum(),
+          'portae verdictorum: porta_toml in toml/aedificatio.stml inventa')
+finally:
+    silva.FABRICA_BIN = _fb_porta_vera
+    silva._VERDICTA_MEMORATA = _verdicta_vera
+    silva.PORTAE.pop('ficta-v', None)
+    for _v in (_vv, os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')):
+        try:
+            os.unlink(_v)
+        except OSError:
+            pass
+
 print('--- receptum vivum: porta() sigillo ligata, commissio non iterum currit ---')
 import contextlib
 import io
@@ -1851,6 +1973,8 @@ def _inv_scribere(currit_radix):
         'tools/claves_codices_probare.sh\tcur extra PORTAE\ttextus\tuna\\tduae\\\\tres\\nquattuor',
         'crusta/compile_probationes.sh\tporta\ttextus\tcrusta',
         'crusta/compile_probationes.sh\ttegit fontes\ttextus\tcrusta/fontes/*, materia/fontes/*',
+        'html/compile_probationes.sh\tporta\ttextus\thtml',
+        'html/compile_probationes.sh\ttegit fontes\ttextus\thtml/fontes/*',
     ]
     if currit_radix:
         lineae.append('compile_tests.sh\tcurrit binaria\ttextus\t'
@@ -1917,11 +2041,17 @@ try:
     credo(rel.startswith('PORTAE DEBITAE (1 via):\n  (nulla)\n'), 'relatio: nulla porta debita dicitur, non tacetur')
 
     # TEGIT FONTES (lens derivata ex scripto cursoris): capita subsystematis
-    # aedili ignota ('S') - clausura fontes suos non videt; lens eos tegit
+    # aedili ignota ('S') - clausura fontes suos non videt; lens eos tegit.
+    # html/fontes radix aedilis NON est (crusta/fontes est ex migratione
+    # ad compilatorem 8a84c35c: crusta nunc per clausuram debetur)
+    debita, intecta = silva.portae_debitae(['html/fontes/html_arbor.c'])
+    c = [d for d in debita if d.porta == 'html']
+    credo(len(c) == 1 and 'tegit fontes' in c[0].causa,
+          'tegit fontes: html/fontes/*.c -> html (clausura aedilis eum non videt)')
     debita, intecta = silva.portae_debitae(['crusta/fontes/crusta_arbor.c'])
     c = [d for d in debita if d.porta == 'crusta']
-    credo(len(c) == 1 and 'tegit fontes' in c[0].causa,
-          'tegit fontes: crusta/fontes/*.c -> crusta (clausura aedilis eum non videt)')
+    credo(len(c) == 1 and 'in clausura' in c[0].causa,
+          'crusta/fontes radix aedilis: crusta per clausuram debetur')
     debita, intecta = silva.portae_debitae(['materia/fontes/materia_nodus.h'])
     credo('crusta' in [d.porta for d in debita], 'tegit fontes: caput materiae -> cliens crusta')
 

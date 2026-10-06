@@ -796,6 +796,13 @@
        partes RTLD_LAZY/RTLD_NOW tolerantur -->
   <vocabulum lemma="dlopen" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam dynamicam aperire"/>
   <vocabulum lemma="dlsym" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: symbolum titulo quaerere"/>
+  <vocabulum lemma="execve" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: programma cum ambitu explicito exsequi; systema_posix.h 2026-10-05 pro oraculo effectuum (interpositio_macos.c)"/>
+  <vocabulum lemma="access" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: accessum plagulae probare; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="faccessat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/unistd.h: access relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="fstatat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/stat.h: stat relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="openat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX fcntl.h: open relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+  <vocabulum lemma="getprogname" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BSD/macOS stdlib: nomen programmatis praesentis; crusta/instrumenta/interpositio_macos.c (oraculum effectuum, 2026-10-05)"/>
+  <vocabulum lemma="fdcwd" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="AT_FDCWD fcntl.h (Darwin -2): fossa directorii operis praesentis; systema_posix.h 2026-10-05, auspex_posix certificat"/>
   <vocabulum lemma="dlclose" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: bibliothecam claudere"/>
   <vocabulum lemma="dlerror" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: nuntius erroris ultimi"/>
   <vocabulum lemma="rtld" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: praefixum modorum RTLD_* (run-time link editor)"/>
@@ -1300,4 +1307,54 @@
     <forma textus="montatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
     <forma textus="montatores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="fonto" lingua="latina" classis="verbum" nota="vox domus (ex fons): scriptum bash FONTARE = 'source' / '.' - plagula in crusta currente legitur, variabiles communicat; 'FONTANDUM, non exsequendum' (tools/cursor_communis.sh); sedes olim crusta_fontationes.c (fabrica spec 3 T2), nunc crusta/fontes/crusta_effectus.c (situs fontatio; effectus T8)">
+    <forma textus="fontare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="fontat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="fontatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="fontata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="fontandum" forma-verbi="gerundivum"/>
+  </vocabulum>
+
+  <vocabulum lemma="fontatio" lingua="latina" classis="substantivum" nota="vox domus (fontare): locus ubi scriptum aliud fontatur aut exsequitur, et via eius - quod clavis iudicii portae continet quia liber lectionum lectiones bash non videt; sedes olim crusta_fontationes.c (fabrica spec 3 par. III.2), nunc elementum 'fontatio' dialecti effectus (crusta/fontes/crusta_effectus.c; T8)">
+    <forma textus="fontatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="fontationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="fontationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="fontationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="fontationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="irresolutus" lingua="latina" classis="adiectivum" nota="Lat. tard. irresolutus (in- + resolutus, non solutus): hic locus fontationis cuius via statice certa non est ($X ignotum, ${X:-y}, plagula non sana) - clavis iudicii IGNOTUM; sedes olim crusta_fontationes.c, nunc resolutio='nulla' situs effectus (crusta/fontes/crusta_effectus.c; T8)">
+    <forma textus="irresolutus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="irresolutum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="irresoluta" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="verdictum" lingua="latina" classis="substantivum" nota="Lat. med. verdictum (vere dictum; unde Angl. verdict): sententia iudicii - examen 'verdictum: ACCIPE'; fabrica: strategia 'verdictum' (actio iudicium, plagula verdicti portae transeuntis; sedes lib/fabrica.c _verdicto_iudicare, fabrica spec 3 T5a)">
+    <forma textus="verdictum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="verdicti" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="verdicto" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="verdicta" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="verdictorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="summarium" lingua="latina" classis="substantivum" nota="summarium (Sen., Ep. 39): breviarium, compendium - crusta_effectus: summarium effectuum scripti (radix_summarii; effectus-plan T3)">
+    <forma textus="summarium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="summarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="summaria" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="summatus" lingua="latina" classis="adiectivum" nota="participium a summare (in summam redigere) - probatio_crusta_effectus: scripta domus summata (effectus-plan T3)">
+    <forma textus="summata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="positionalis" lingua="latina" classis="adiectivum" nota="Lat. nov. positionalis (a positio): quod ex positione valet - verba positionalia mandati, non optiones (crusta_effectus, tabula mandatorum; effectus-plan T3)">
+    <forma textus="positionalis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="positionalia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="recursio" lingua="latina" classis="substantivum" nota="recursio (Plin.): reditus, recursus - optio mandati quae directoria recursive tractat (grep -r, rm -rf; tabula mandatorum effectus, optiones 'recursio' = recursiones)">
+    <forma textus="recursio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="recursiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
 </glossarium>

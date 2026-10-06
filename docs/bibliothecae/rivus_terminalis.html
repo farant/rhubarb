@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rivus_terminalis</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>rivus_terminalis</h1>
+<p class="subtitulus">Fons eventuum terminalis: octeti -&gt; Eventus</p>
+
+<p>The terminal as an event source, the counterpart of the window: bytes in, Eventus out, through series_terminalis and interpres_terminalis. It owns what the decoder must not: the raw buffer, the ESC and paste timeouts, the leftovers after a timeout, and the raw channels (X10 mouse, foreign CSI, bracketed paste). Pure: it neither reads nor keeps a clock; the caller hands it bytes, asks how long to wait, reports silence and pulls events, so it can be tested and replayed byte for byte. Modes are DECLARED by the application (mouse, hover, paste, focus, kitty, and path drops promoted from paste) and the source returns the bytes to write rather than writing them. Capabilities are the first event of the stream. Eventus B3, October 2026; the window and the terminal now feed the same vocabulary.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/rivus_terminalis.h"><code>include/rivus_terminalis.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/rivus_terminalis.c"><code>lib/rivus_terminalis.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-02 e483f8fd</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

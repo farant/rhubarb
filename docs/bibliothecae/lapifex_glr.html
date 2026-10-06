@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lapifex_glr</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>lapifex_glr</h1>
+<p class="subtitulus">Motor Parsationis GLR (Generalized LR)</p>
+
+<p>lapifex&#x27;s GLR engine: consumes the same ACTION/GOTO tables but tolerates conflicts, forking at each one and merging in a graph-structured stack (GSS), with bounds on simultaneous paths and on the number of ambiguous results returned. The generated successor to arbor2&#x27;s hand-written GLR, built so that C&#x27;s ambiguities could be described in a grammar rather than coded by hand. Its worklog keeps the lesson of &#x27;phantom forks&#x27;, invalid reductions from other forks that read the wrong union member and crashed, which is why the C grammar parses a translation unit with a loop instead of a top-level rule. February 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/lapifex_glr.h"><code>include/lapifex_glr.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/lapifex_glr.c"><code>lib/lapifex_glr.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#parsatores">Parsers: the C89 lineage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

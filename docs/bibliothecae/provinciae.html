@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provinciae</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>Provinciae</h1>
+<p class="subtitulus">The sub-projects that govern folders of their own</p>
+
+<p>Beside <code>include/</code> and <code>lib/</code> the house has
+fifteen folders that are projects in their own right. Each keeps its own
+sources, its own tests (usually a <code>compile_probationes.sh</code>),
+and most keep an orientation file (<code>CLAUDE.md</code>) that a new
+session reads first, and a phase-log of how they were built. They are
+listed here by layer: the parsing substrate and its clients, then the
+toolchain, the terminal pair, the records and the knowledge, and last the
+program that runs literate C. Each will deserve its own page; this one is
+the overview.</p>
+
+<table>
+<thead><tr><th>Province</th><th>In a line</th><th>Since</th></tr></thead>
+<tbody>
+<tr><td><a href="#silva">silva</a></td><td>the C89 parser and the tools built on it</td><td>2026-07</td></tr>
+<tr><td><a href="#materia">materia</a></td><td>the general syntax-tree substrate</td><td>2026-08</td></tr>
+<tr><td><a href="#css">css</a></td><td>CSS parser, a materia client</td><td>2026-08</td></tr>
+<tr><td><a href="#md">md</a></td><td>Markdown parser, a materia client</td><td>2026-09</td></tr>
+<tr><td><a href="#oratio">oratio</a></td><td>prose parser with word classification</td><td>2026-09</td></tr>
+<tr><td><a href="#html">html</a></td><td>HTML parser, a materia client</td><td>2026-09</td></tr>
+<tr><td><a href="#crusta">crusta</a></td><td>shell (bash) parser, a materia client</td><td>2026-09</td></tr>
+<tr><td><a href="#toml">toml</a></td><td>TOML parser, a materia client</td><td>2026-09</td></tr>
+<tr><td><a href="#officina">officina</a></td><td>compiler IR, VM and debugger</td><td>2026-07</td></tr>
+<tr><td><a href="#pythonica">pythonica</a></td><td>Python face of silva's tools, for editing by name</td><td>2026-09</td></tr>
+<tr><td><a href="#tessera">tessera</a></td><td>the terminal library</td><td>2026-07</td></tr>
+<tr><td><a href="#saltuarius">saltuarius</a></td><td>a terminal code explorer</td><td>2026-07</td></tr>
+<tr><td><a href="#gesta">gesta</a></td><td>the event kernel and the ledger</td><td>2026-07</td></tr>
+<tr><td><a href="#natura">natura</a></td><td>the semantic library</td><td>2026-08</td></tr>
+<tr><td><a href="#briar">briar</a></td><td>runs literate C89 scripts (.thistle)</td><td>2026-09</td></tr>
+</tbody>
+</table>
+
+
+<h2>The parsing substrate and its clients</h2>
+
+<h3 id="silva">silva</h3>
+<p>The house's C89 parser, the fourth generation after
+<a href="arbor.html">arbor v1</a>, <a href="arbor2_glr.html">arbor2</a>
+and <a href="lapifex_generare.html">lapifex</a>, and the largest province.
+It parses any C file losslessly (comments, whitespace and preprocessor
+included, so a file is written back byte for byte), and it is the base
+of the house's tooling: the language server and the post-edit
+diagnostics, <code>examen</code> (judging C89 and the house's own rules: see <a href="../examen.html">all 92 codes</a>),
+the formatter, renaming by meaning rather than text, <code>nexus</code>
+(who calls what), and named queries over the tree.
+It ships as a single amalgamated <code>silva.c</code> with a plain C89
+<code>silva.h</code>, in the manner of SQLite. Since 2026-09-26 it runs
+on <a href="#materia">materia</a>. Its orientation note opens with the
+reason it is so careful: "smoothed-over assumptions quietly shave the
+maximalist scope. That shaving is how the three previous parsers
+died."</p>
+
+<h3 id="materia">materia</h3>
+<p>The general syntax-tree substrate, forked out of silva in August 2026
+so that every language the house parses shares one engine: tokens,
+nodes, writing back, comparison, and the rules that keep a tree
+lossless. The name is scholastic: materia is what receives a
+<em>forma</em>, and a grammar is the form a general substrate receives.
+Each language is a "client" that declares its grammar and builds on it:
+the C89 front end (silva), then css, md, oratio, html, crusta and toml,
+in that order. The fork was sealed on 2026-09-25; generic work now lands
+here and owes every client's suite.</p>
+
+<h3 id="css">css</h3>
+<p>The first materia client after C: a CSS parser built on the total,
+byte-faithful <a href="css_lexema.html">css_lexema</a>, with a registry
+of node kinds, an STML projection judged by a canon, selector parsing and
+diagnostics. Its plan B (B1 to B10), rebuilt natively on materia,
+closed on 2026-09-02.</p>
+
+<h3 id="md">md</h3>
+<p>A Markdown parser on materia (the third client), rendering HTML by
+composing STML rather than by printing strings. Two consumers shape it:
+pythonica's <code>Prosa</code>, for editing Markdown by structure, and
+<code>citata</code>, which checks documentation for rot. Its worklog
+keeps a numbered list of what STML "wanted" along the way.</p>
+
+<h3 id="oratio">oratio</h3>
+<p>A parser for natural-language prose (the fourth client), with
+classification of words across languages, Latin first, measured against
+treebanks. Its stance is written down as moderate realism: classes are
+earned by function, edge cases are handled by analogy, ambiguity is kept
+as lists at every layer, and an unknown word is a finding rather than an
+error. Paused since 2026-09-15. The house's Latin identifier lint
+(<code>oratio/vocabula.sh</code>), which blocks commits, lives here;
+<a href="partitio.html">partitio</a>
+and <a href="partitio_aestimatio.html">partitio_aestimatio</a> in
+<code>lib/</code> are its scoring tools.</p>
+
+<h3 id="html">html</h3>
+<p>An HTML parser on materia (the fifth client), on the stateful
+<a href="html_lexema.html">html_lexema</a>, with HTML5's character
+references from <a href="entitates_html.html">entitates_html</a> and the
+html5lib project's expected trees as
+its oracle. Planned and built H1 to H11 in one plan,
+closed on 2026-09-15.</p>
+
+<h3 id="crusta">crusta</h3>
+<p>A shell parser (the sixth client; <em>crusta</em> is Latin for
+shell): POSIX sh plus the whole of bash 5.2's default syntax, total and
+byte-exact, projected to STML and judged by a canon, and proven against
+bash itself (its own deparse and <code>bash -n</code>) as a foreign
+oracle. Closed on 2026-09-16; it is how the house can reason about its
+own shell scripts.</p>
+
+<h3 id="toml">toml</h3>
+<p>TOML 1.0 as the seventh client: a total, byte-exact tree, a cooked
+view of typed values, every error located, proven by three oracles.
+Planned and built in one day (2026-09-28), with no change to the
+substrate, which is the best evidence that materia had become general;
+it replaced an older <code>lib/toml.c</code>.</p>
+
+
+<h2>The toolchain</h2>
+
+<h3 id="officina">officina</h3>
+<p>The house's toolchain beyond parsing: a C89 compiler with its own
+intermediate representation (<em>medulla</em>, register-linear, in
+basic blocks), an interpreter and virtual machine (<em>machinula</em>), a
+debugger (<em>vindex</em>) and a flat debug format. silva is its front
+end, consumed only through the amalgam. It is deliberately not an LLVM
+competitor: it aims at REPLs, scripting and live tooling. Its IR
+vocabulary is sealed, and the orientation warns against coining new
+names casually. The <code>legatus</code> language-server binary is built
+here too.</p>
+
+<h3 id="pythonica">pythonica</h3>
+<p>Not C at all: a small Python face over silva's command-line tools,
+so the edit scripts Claude writes touch code by NAME rather than by
+text. <code>silva.Editio</code> replaces, substitutes and inserts
+around named functions and types, and applies everything or nothing,
+with the commit gates sitting at that single write point. Standard
+library only, and nothing shipped depends on it: the truth stays in C.</p>
+
+
+<h2>The terminal pair</h2>
+
+<h3 id="tessera">tessera</h3>
+<p>The house's terminal library, the anti-ncurses: xterm only, no
+terminfo, no capability queries, a cell grid with input and drawing
+primitives, shaped like termbox. Shipped as an amalgamated
+<code>tessera.c</code> and <code>tessera.h</code>. Its cells are filled
+by <a href="runae.html">runae</a>'s widths, and through
+<a href="tessellatio.html">tessellatio</a> and
+<a href="quadrans.html">quadrans</a> it can show ludus interfaces and
+images. A <em>tessera</em> is a mosaic tile.</p>
+
+<h3 id="saltuarius">saltuarius</h3>
+<p>The forest warden: a terminal code explorer with ranger-style
+columns outside and a silva-powered source view inside (token colouring,
+preprocessor layers, origin chains, conditional regions). Its showpiece is
+go-to-definition for the preprocessor: put the cursor on a token, see the
+chain from macro definition through include path to layer, and jump. The
+first true application in the monorepo, built in July 2026 as the
+real-world proof of both amalgams, silva's and tessera's.</p>
+
+
+<h2>Records and knowledge</h2>
+
+<h3 id="gesta">gesta</h3>
+<p>The event kernel and what is built on it: the ledger
+(<em>tabularium</em>), its resident daemon (<code>tabulariumd</code>),
+the MCP servers through which Claude reads and writes it (tabularii, and
+fori for the forum), and <code>frigida.sh</code>, the cold path that
+writes when the daemon is down. Its truth is a committed, append-only
+journal (<code>gesta/annales/tabularium.jsonl</code>); the SQLite
+database is a projection rebuilt from it. Record kinds are declared as
+genera and judged on the way in (a page designation, for instance, is a
+type checked here). This is where the house keeps its open questions,
+parks, decisions, inventories and this book's own data.</p>
+
+<h3 id="natura">natura</h3>
+<p>The semantic library: hand-made models that know about kinds of
+things (their properties, states, relations and events), written in STML
+as taxonomies and dictionaries (<code>*.genera</code> files and
+individuals), with species and cultivars as kinds in a Porphyrian tree.
+Its own description of the aim is "OOP done right": the taxonomy was
+what object orientation really offered, not its implementation layer. A
+reader in <code>lib/</code> (<a href="natura.html">natura</a>) loads it,
+and the forum draws its census as a graph.</p>
+
+
+<h2>Running literate C</h2>
+
+<h3 id="briar">briar</h3>
+<p>Runs <code>.thistle</code> files, literate C89 programs: Markdown
+prose, STML configuration tags, raw C regions and a <code>#!</code>
+line. <code>./x.thistle</code> builds once, into a cache keyed by its
+content, and then simply runs, so a C89 program can be written and
+shared like a script. Its parser is a materia client, its build writes
+a silex project directory and compiles that, and it can make a macOS app bundle with an
+icon. It has outside testers (the lapide project), whose feedback has
+shaped its later releases. Fran's idea of 2026-09-04; version 4 released
+on 2026-09-29. <a href="briar.html">Its own page</a> shows a thistle and
+inventories every feature, built or deferred.</p>
+
+
+<p class="nota">Written by hand (2026-10-03) from each province's
+orientation file, specs and the session's memory notes; dates are the
+first commit touching the folder. Each province's own
+<code>CLAUDE.md</code> or <code>README.md</code> is the authority and
+should be read before working there.</p>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cliens_tabularii</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>cliens_tabularii</h1>
+<p class="subtitulus">Cliens daemonis tabulariumd pro apps</p>
+
+<p>The client that applications use to talk to the ledger daemon (tabulariumd): the MCP dialect over TCP, one connection per request (connect, send one line, read the reply up to a newline, close). If the daemon is absent it starts it once through the launcher, then fails fast rather than freezing the app. Calls take a tool name and JSON arguments, with helpers for reading and for pulling the new record&#x27;s id out of a reply. Its webview handler exposes a fixed allowlist (addere, gerere, legere, quaerere): that is the whole of what an app may write to the ledger, and the client fills in the actor. Extracted from the forum app so villa could share it; forum and villa_agens are its users.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/cliens_tabularii.h"><code>include/cliens_tabularii.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/cliens_tabularii.c"><code>lib/cliens_tabularii.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-23 e0988825</td></tr>
+<tr><td>Group</td><td><a href="greges.html#acta">Records and storage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

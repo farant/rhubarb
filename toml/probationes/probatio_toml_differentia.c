@@ -30,6 +30,7 @@
 #include "filum.h"
 #include "json.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -326,8 +327,9 @@ principale (vacuum)
         TomlCorpusNumeri  nn;
                character  via[MXXIV];
                      i32  k;
-      constans character* radix     = getenv("RHUBARB_RADIX");
-      constans character* TITULI[]  = { "toml-test", "silvestria" };
+      constans character* radix =
+          lectiones_ambitus("RHUBARB_RADIX");
+      constans character* TITULI[] = { "toml-test", "silvestria" };
                      i32  clausulae[II];
 
     piscina = piscina_generare_dynamicum("probatio_toml_differentia",
@@ -346,7 +348,7 @@ principale (vacuum)
         radix = ".";
     }
     memset(&st, ZEPHYRUM, magnitudo(st));
-    st.domus = getenv("HOME");
+    st.domus = lectiones_ambitus("HOME");
 
     imprimere("\n--- Legens aurea tomllib ---\n");
     sprintf(via, "%s/toml/probationes/fixa/tomllib/aurum.txt", radix);

@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pictor_figurae</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>pictor_figurae</h1>
+<p class="subtitulus">figurae pictoris (P3: tabula, titulus)</p>
+
+<p>pictor&#x27;s figures: how its canvas and title are drawn, registered per theme with figura. The canvas is ONE image whose identity is the content hash of the current projection, plus the pending stroke drawn as lines between the component&#x27;s points, plus the cursor; pictor_imago_fons resolves that hash back to the document&#x27;s bitmap when the rasterizer asks for the image by name. So the command list stays plain data (no pixel pointers), and two frames with the same document produce the same commands. Pure, like every figure.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/pictor_figurae.h"><code>include/pictor_figurae.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/pictor_figurae.c"><code>lib/pictor_figurae.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-05 38a7b841</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

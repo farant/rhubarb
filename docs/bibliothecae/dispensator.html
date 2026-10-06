@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dispensator</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>dispensator</h1>
+<p class="subtitulus">Ansa: derivare -&gt; destinatio -&gt; actio -&gt; componere</p>
+
+<p>The loop of a ludus program: derive (derivare), target (destinatio), act (actio), recompose. After EVERY dispatched event it rebuilds the component tree by calling the program&#x27;s Componere function over the state (insulae and motus), into one of two ping-pong arenas so the previous tree stays valid while the next is built; painting and rasterizing happen once per frame, outside it. It owns hover (which component is under the pointer, deriving entered/left), focus and the focus stack (kept in the ephemeral island, so a restore restores them), and the quiet point: when motion settles it flushes kinetic writes to state. dispensator_pulsare feeds it time with no input, so quiet and recomposition happen when nothing arrives. A notary option records every raw event it receives, with the component it reached and the point in that component&#x27;s space, for replay (eventus_notata_scribere_stml). Pure (nexus purus): the whole loop runs and is tested with no window. Used by pictor and seven probationes.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/dispensator.h"><code>include/dispensator.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/dispensator.c"><code>lib/dispensator.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-02 e92824a2</td></tr>
+<tr><td>Group</td><td><a href="greges.html#ludus">Ludus: the second-generation UI</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

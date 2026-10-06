@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>villa_lectores</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>villa_lectores</h1>
+<p class="subtitulus">Lectores villae: aedificator mandati ssh +</p>
+
+<p>Pure readers for villa: an ssh command builder and parsers for what remote servers print (systemctl states, unit lists, nginx server blocks, sectioned output, disk, memory, uptime). Nothing here touches the network: a string goes in, a struct comes out. The fixtures are the specification: real captures from a Debian droplet, taken twice and compared byte for byte, are what each parser must handle, and the remote flags each parser depends on are named beside it. Exit codes are told apart, because ssh uses 255 for its own failures: unknown host key, refused connection, denied permission and a missing remote command each get a named cause instead of &#x27;ssh failed&#x27;. A control-socket path longer than macOS allows is refused, since ssh would otherwise silently fall back to full handshakes. Every returned string is copied into the caller&#x27;s arena.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/villa_lectores.h"><code>include/villa_lectores.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/villa_lectores.c"><code>lib/villa_lectores.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#vitrea">Vitrea apps</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

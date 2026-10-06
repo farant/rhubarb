@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>canon</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>canon</h1>
+<p class="subtitulus"></p>
+
+<p>Schema checking for STML, itself written in STML: a .canon file describes a dialect, and canones.registrum maps file extensions or root elements to canons. It enforces a closed vocabulary, the number of children per element, typed attribute values (name, number, true/false, date, choice, kebab name, identity and reference), required attributes, where text may appear, unique names, keys and citations within a document, and value bounds, and it can judge a document as written, expanded, or fully distributed. Deliberately not: resolving references across files, validating against a computed model, or any expression language, since that road turns a schema into a programming language (XSD is the witness). A document may carry its own canon as its first child, but it can only add to the registry&#x27;s canon, never weaken it. Used in 25 files, from silex and insula to the canon and natura checkers.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/canon.h"><code>include/canon.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/canon.c"><code>lib/canon.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-09 25a37fda</td></tr>
+<tr><td>Group</td><td><a href="greges.html#stml">STML and data formats</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

@@ -18,6 +18,7 @@
 #include "json.h"
 #include "filum.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -253,7 +254,7 @@ principale (vacuum)
                     b32  praeteritus;
                 Piscina* piscina;
                 Piscina* opus;
-     constans character* radix = getenv("RHUBARB_RADIX");
+     constans character* radix = lectiones_ambitus("RHUBARB_RADIX");
 
     piscina = piscina_generare_dynamicum("probatio_toml_oraculum",
         262144);
@@ -312,8 +313,8 @@ principale (vacuum)
         imprimere("\n--- Probans corpus toml-test ---\n");
         memset(&st, ZEPHYRUM, magnitudo(st));
         st.radix     = radix != NIHIL ? radix : ".";
-        st.omnia     = getenv("ORACULUM_OMNIA") != NIHIL;
-        st.exemplum  = getenv("ORACULUM_EXEMPLUM");
+        st.omnia     = lectiones_ambitus("ORACULUM_OMNIA") != NIHIL;
+        st.exemplum  = lectiones_ambitus("ORACULUM_EXEMPLUM");
         toml_corpus_ambulare(piscina, opus, st.radix, _visor, &st, &nn);
         imprimere("  valida paria %u/%u; invalida reiecta %u/%u "
             "(pinnae %d, %d)\n", st.paria, st.valida, st.reiecta,

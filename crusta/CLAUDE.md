@@ -162,6 +162,22 @@ violation OBSTAT; the same line annotated passes.
 | `nt-aequalitas` | `-nt` where equality matters (a same-second tie skips work) | 292 sites / 278 negated / 14 declared |
 | `vexilla-domus` | flags `tools/vexilla.sh` owns, written literally | 2 files fixed, 8 annotated |
 
+**Effectus rules (2026-10-05, effectus-plan T6)** live in their OWN
+directory `crusta/lintrum/effectus/` and run over the EFFECT SUMMARY,
+not the crusta projection (`crusta_effectus_diagnostica`, also at
+commit through `tools/diagnostica`): `effectus-irresolutum`,
+`effectus-build-sine-domino`, `effectus-mandatum-ignotum` - erratum
+inside verdict chains (`./crusta/effectus.sh -catenae`), monitum
+elsewhere - except `irresolutum`, SILENT outside chains (Fran
+2026-10-05: it only matters for a verdict key; the census keeps every
+site). The verdict key itself is `./crusta/effectus.sh -clavis`
+(fabrica genus `effectus`, effectus-plan T7). `./crusta/effectus.sh -lintrum <f.sh>` runs them alone;
+`-census` writes build/effectus/census.tsv. Guarded builders
+(`[ -x bin/X ] || tools/X_struere.sh`) are outside chains. The old genus
+`fontationes` (crusta_fontationes, bin/fontationes) was RETIRED in
+effectus T8: `effectus` subsumes it; its idiom test lives on as
+`probatio_crusta_effectus_idiomata`.
+
 **Reflexes.** `<tolera codex="lint:X" (>causa` in a comment exempts —
 one annotation covers a whole INVOCATION (exemption filters by the
 owning node's range), and inside `declare -a X=( … )` it must go above

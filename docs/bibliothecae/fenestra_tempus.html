@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fenestra_tempus</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>fenestra_tempus</h1>
+<p class="subtitulus"></p>
+
+<p>The platform clock, split out of fenestra.h on 2026-10-01: ticks, tick frequency, milliseconds, sleep, implemented with mach and POSIX calls and no Cocoa. Before the split, lib/tempus.c pulled all of fenestra_macos.m into its link just to read the clock, through an object annotation that the build did not follow, so the window&#x27;s newer dependencies were missing there. fenestra_tempus_ms is the one place event time is read (ludus: time is data in the event). fenestra.h includes it, so callers see no change.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/fenestra_tempus.h"><code>include/fenestra_tempus.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/fenestra_tempus_macos.c"><code>lib/fenestra_tempus_macos.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-01 35382b69</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fenestra">Window, input and drawing</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

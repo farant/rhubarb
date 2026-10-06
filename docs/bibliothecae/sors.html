@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sors</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>sors</h1>
+<p class="subtitulus">Numeri pseudo-fortuiti SEMINABILES et deterministici</p>
+
+<p>Seedable, deterministic random numbers: the same seed gives the same sequence on every machine, compiler and version, because the generators are integer-only (PCG32 for the stream, SplitMix64 to expand the seed). That makes replays, procedural artefacts and fuzzing reproducible. A Sors is a 16-byte value, with no arena and no global state, so it can be copied and stored inside an event. sors_derivare makes a child stream from a parent and a key WITHOUT changing the parent, so child k is the same however many others were derived before it. Unbiased ranges (Lemire), floats from 53 or 24 bits, a probability check, Fisher-Yates shuffle. Deliberately distinct from moneta, which reads /dev/urandom for identities: secure, but not seedable. Born 2026-09-23; the house migrated to it the next day (knotapel keeps its own generators by design). Keeps the classic ANSI LCG under a &#x27;legacy&#x27; name so old generated test cases stay the same.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/sors.h"><code>include/sors.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/sors.c"><code>lib/sors.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-23 33fc86d7</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

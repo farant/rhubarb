@@ -379,7 +379,8 @@ s32 principale (vacuum)
         /* Allocare plus post notationem */
         a2 = piscina_allocare(p, C);
         CREDO_NON_NIHIL (a2);
-        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), CL);
+        /* L, deinde ordinatio ad VIII (LVI), deinde C: CLVI */
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), CLVI);
 
         /* Reficere ad notationem */
         piscina_reficere(p, nota);
@@ -430,15 +431,48 @@ s32 principale (vacuum)
         /* Allocare tertium */
         a3 = piscina_allocare(p, L);
         CREDO_NON_NIHIL (a3);
-        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), CL);
+        /* L | LVI+L = CVI | CXII+L = CLXII (ordinatio ad VIII) */
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), CLXII);
 
         /* Reficere ad interiorem - liberare a3 */
         piscina_reficere(p, nota_interior);
-        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), C);
+        CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), CVI);
 
         /* Reficere ad exteriorem - liberare a2 et a3 */
         piscina_reficere(p, nota_exterior);
         CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p), L);
+
+        piscina_destruere(p);
+    }
+
+
+    /* ========================================================
+     * PROBARE: ordinatio ordinaria (2026-10-05)
+     *
+     * piscina_allocare ad PISCINA_ORDINATIO_ORDINARIA ordinat, etiam
+     * post allocationem octeti unius; _ordinatum(..., I) arte stipat.
+     * ======================================================== */
+
+    {
+        Piscina* p;
+             i8* unus;
+             i8* alter;
+         vacuum* ordinatum;
+
+        imprimere("\n--- Probans ordinationem ordinariam ---\n");
+
+        p = piscina_generare_dynamicum("probatio_ordinatio", CCLVI);
+        CREDO_NON_NIHIL (p);
+        unus       = (i8*)piscina_allocare(p, I);
+        ordinatum  = piscina_allocare(p, VIII);
+        CREDO_AEQUALIS_I32 ((i32)((memoriae_index)ordinatum
+            % PISCINA_ORDINATIO_ORDINARIA), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)((i8*)ordinatum - unus), VIII);
+
+        /* stipatio arta explicita: octeti contigui */
+        unus   = (i8*)piscina_allocare_ordinatum(p, I, I);
+        alter  = (i8*)piscina_allocare_ordinatum(p, I, I);
+        CREDO_AEQUALIS_I32 ((i32)(alter - unus), I);
 
         piscina_destruere(p);
     }

@@ -1,0 +1,73 @@
+<!--
+  effectus_mandata.canon
+  Canon tabulae mandatorum externorum bash (crusta/effectus_mandata.stml;
+  effectus-spec par. III, planum T2). Analysis crusta_effectus et
+  oraculum (argv mandatorum SIP) eandem tabulam legunt.
+-->
+<canon dialectus="mandata" versio="1">
+
+  <!-- ==================================================
+       TABULA MANDATORUM (crusta/effectus_mandata.stml, planum T2):
+       quid verbum imperii externum plagulis faciat. Data emissoris
+       bash (crustae propria), non summarium - ideo canon suus, non
+       radix altera effectus.canon (canon radicem unam habet,
+       mensuratum 2026-10-05); grammatica munerum in commentario
+       tabulae ipsius.
+       ================================================== -->
+
+  <elementum nomen="mandata" radix="verum">
+    <attributum nomen="lingua" genus="electio" necessarium="verum">
+      <optio>bash</optio>
+    </attributum>
+    <liberum nomen="mandatum" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="mandatum"
+    nota="verbum imperii externum unum; titulus unicus per tabulam
+          (porta T1 id asserit - canon non dicit)">
+    <attributum nomen="titulus" genus="textus" necessarium="verum"/>
+    <attributum nomen="argumenta" genus="electio"
+      nota="munus positionalium omnium; absens = nullum">
+      <optio>lectio</optio>
+      <optio>scriptura</optio>
+      <optio>exsecutio</optio>
+      <optio>enumeratio</optio>
+      <optio>probatio</optio>
+      <optio>exemplar</optio>
+      <optio>nullum</optio>
+    </attributum>
+    <attributum nomen="primum" genus="electio">
+      <optio>lectio</optio>
+      <optio>scriptura</optio>
+      <optio>exsecutio</optio>
+      <optio>enumeratio</optio>
+      <optio>probatio</optio>
+      <optio>exemplar</optio>
+      <optio>nullum</optio>
+    </attributum>
+    <attributum nomen="ultimum" genus="electio"
+      nota="solum si positionalia >= II">
+      <optio>lectio</optio>
+      <optio>scriptura</optio>
+      <optio>exsecutio</optio>
+      <optio>enumeratio</optio>
+      <optio>probatio</optio>
+      <optio>exemplar</optio>
+      <optio>nullum</optio>
+    </attributum>
+    <attributum nomen="exemplar_optiones" genus="textus"/>
+    <attributum nomen="optiones_cum_valore" genus="textus"/>
+    <attributum nomen="optiones_binis_valoribus" genus="textus"/>
+    <attributum nomen="optio_lectio" genus="textus"/>
+    <attributum nomen="optio_scriptura" genus="textus"/>
+    <attributum nomen="in_loco" genus="textus"/>
+    <attributum nomen="recursio" genus="textus"/>
+    <attributum nomen="optiones_ignotae" genus="textus"/>
+    <attributum nomen="purum" genus="veritas"/>
+    <attributum nomen="ignotum" genus="veritas"/>
+    <attributum nomen="causa" genus="textus"
+      nota="cur ignotum - fit causa situs ignoti"/>
+    <attributum nomen="nota" genus="textus"/>
+  </elementum>
+
+</canon>

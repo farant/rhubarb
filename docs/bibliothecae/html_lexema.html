@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>html_lexema</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>html_lexema</h1>
+<p class="subtitulus"></p>
+
+<p>A total lexer for HTML, the tractable half of an HTML5 tokenizer, under the same contract as css_lexema (total, byte-faithful, byte positions, trivia as tokens; anomalies get a PRAVUM kind rather than an error). Unlike CSS it carries state across tokens: after &#x27;&lt;div&#x27; it is inside a tag (attributes), after &#x27;&lt;script&gt;&#x27; it is in raw mode until &#x27;&lt;/script&#x27;. Tag case is noted, not normalized, and character references are not decoded here (that is entitates_html&#x27;s job, in the tree). Used by the html client on materia (html_arbor), md&#x27;s oracle tests and briar. August 2026.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/html_lexema.h"><code>include/html_lexema.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/html_lexema.c"><code>lib/html_lexema.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-09-15 f0a4d0d1</td></tr>
+<tr><td>Group</td><td><a href="greges.html#parsatores">Parsers: the C89 lineage</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

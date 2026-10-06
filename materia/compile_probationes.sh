@@ -63,6 +63,7 @@ declare -a RADIX_FONTES=(
     "runae"
     "runae_tabulae"
     "credo"
+    "lectiones"   # materia_coctor lectiones crudas notat (fabrica spec 3 T3)
 )
 
 FILTER="${1:-}"

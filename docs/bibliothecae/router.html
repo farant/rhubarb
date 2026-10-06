@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>router</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>router</h1>
+<p class="subtitulus">Bibliotheca Router (HTTP Route Matching)</p>
+
+<p>Pure route matching for HTTP: register a path per method (&#x27;/users&#x27; exactly, or &#x27;/users/:id&#x27; with up to 16 parameters), then match a method and path into the registered datum plus extracted parameters. When the path matches but the method does not, the result says so and gives the allowed methods as a bit mask, so the server can answer 405 with an Allow header instead of a wrong 404. The datum is an opaque pointer; because ISO C under -pedantic forbids putting a function pointer in a void*, the consumer registers a small &#x27;capsule&#x27; struct holding its handler (the pattern hospitium uses). Rewritten as a pure matcher in July 2026 for hospitium.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/router.h"><code>include/router.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/router.c"><code>lib/router.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-08-19 f683e78a</td></tr>
+<tr><td>Group</td><td><a href="greges.html#rete">Network</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

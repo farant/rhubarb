@@ -1,0 +1,95 @@
+# examen_glossae.tsv - English glosses for examen's codes, by code NAME (stable).
+# Hand-written; pagina_examinis.py joins them with silva's own table.
+# name<TAB>gloss
+REDECLARATIO_GENERIS	A name redeclared as a different kind of thing in the same scope.
+TAG_SINE_CORPORE	A struct or union with neither a tag nor a body.
+ENUMERATIO_SINE_CORPORE	An enum with neither a tag nor a body.
+ENUMERATOR_NON_CONSTANS	An enumerator's value is not a constant expression.
+TYPUS_NOMINATUS_IGNOTUS	A type name examen cannot resolve (usually a system header it has no lexicon for): a gap in the tools, never a verdict.
+ERROR_IN_SPECIFICATORIBUS	Unparseable declaration specifiers.
+SPECIFICATORES_MIXTI	Primitive and named types mixed in one declaration (e.g. 'int my_type x').
+MULTISET_PRIMITIVORUM	An invalid combination of primitive specifiers (e.g. 'short long', 'signed float').
+MENSURA_ACIEI	An array size that is not a positive constant.
+ERROR_IN_DECLARATORE	An unparseable declarator.
+GENUS_DECLARATORIS	A declarator of a kind examen does not expect: a gap in the tools.
+SPECIES_TYPI_EXSPECTATA	A type was expected here and something else was found.
+DECLARATIONES_KR	Old-style (K&R) parameter declarations: not yet analysed, a named deferral.
+CYCLUS_FORMAE	A struct that contains itself (directly or through members), so it has no finite size.
+FORMA_ACIEI_INCOMPLETAE	The size of an array of incomplete type is needed.
+FORMA_FUNCTIONIS	The size of a function type is asked for.
+CAMPI_PARCATI	Bit-fields: their layout is a parked feature, not yet analysed.
+CHORDA_LATA	Wide string literals (L"..."): parked, not yet analysed.
+FUGA_INVALIDA	An invalid escape sequence in a string or character literal.
+LITTERALE_INVALIDUM	An invalid integer literal.
+IDENTIFICATOR_IGNOTUS	An undeclared identifier used in an expression.
+TYPEDEF_IN_EXPRESSIONE	A typedef name used where a value is required.
+TYPEDEF_VOCATUM	A typedef name called as if it were a function.
+OPERANDUM_UNARII	Unary + or - applied to something that is not arithmetic.
+OPERANDUM_TILDE	~ applied to something that is not an integer.
+DEIECTIO_NON_MONSTRATORIS	* (dereference) applied to something that is not a pointer.
+CREMENTUM_NON_SCALARE	++ or -- on something that is not scalar.
+MULTIPLICATIVA	* / or % on operands that are not arithmetic.
+OPERANDA_NON_INTEGRALIA	Bitwise or modulo operands that are not integers.
+ADDITIVA_INCOMPATIBILIA	Addition of incompatible operands (e.g. two pointers).
+SUBTRACTIONIS_INCOMPATIBILIA	Subtraction of incompatible operands.
+MOTUS_NON_INTEGRALIA	Shift operands that are not integers.
+COMPARATIO_INCOMPATIBILIUM	Comparison of incompatible types.
+BRACCHIA_TERNARII	The two branches of ?: have incompatible types.
+SUBSCRIPTIO_NON_MONSTRATORIS	Subscript [] on something that is neither array nor pointer.
+VOCATUS_NON_FUNCTIO	A call of something that is not a function.
+SAGITTA_NON_MONSTRATORIS	-> on something that is not a pointer to a struct or union.
+ACCESSUS_NON_STRUCTURAE	. on something that is not a struct or union.
+ACCESSUS_INCOMPLETAE	Member access into an incomplete struct.
+MEMBRUM_IGNOTUM	No such member.
+ELISIO_UNCORUM	Brace elision in an aggregate initializer: parked, not yet analysed.
+ASSIGNATIO_INCOMPATIBILIS	Assignment between incompatible type classes.
+MONSTRATORES_INCOMPATIBILES	Assignment or comparison between incompatible pointer types.
+QUALES_ABIECTI	const or volatile discarded from a pointer target.
+MONSTRATOR_INTEGER	A pointer and an integer mixed without a cast.
+ASSIGNATIO_NON_LOCUS	Assignment to something that is not an lvalue.
+LOCUS_IMMUTABILIS	Assignment to a const lvalue.
+NUMERUS_ARGUMENTORUM	Wrong number of arguments in a call.
+REDDE_CUM_VALORE_IN_VACUO	return with a value in a void function.
+REDDE_SINE_VALORE	return without a value in a function that returns one.
+CONDICIO_NON_SCALARIS	An if, while or for condition that is not scalar.
+VOCATIO_IMPLICITA	A call to an undeclared function (C89 would silently assume 'extern int').
+REDECLARATIO_INCOMPATIBILIS	A redeclaration with an incompatible type.
+MACRO_DOMESTICUM_IN_ALIENO	A house macro (from latina.h) expanded inside a foreign header, such as a system header included after latina.h.
+CONVERSIO_SIGNI	An implicit integer conversion that changes sign and loses values: legal C89, but the house flags (-Wsign-conversion -Werror) reject it, so examen names it before the compiler does.
+CONVERSIO_SIGNI_SEVERA	The strict form of the same: sound analysis cannot prove the conversion safe where clang's heuristic stays quiet (v1: a subtraction never shown non-negative).
+TOLERA_IRRITUM	A TOLERA suppression that absorbs nothing, has no reason, or names an unknown code: suppressions rot, and one that absorbs nothing is a signal.
+COMPARATIO_SIGNORUM	A comparison between signed and unsigned (the house's -Wsign-compare).
+COMPARATIO_VANA	A comparison that is always true or always false (e.g. an unsigned value against zero); compilers stay silent on these inside macros, which is how dead code survived in delineare.
+CHORDA_NUDA	A chorda's bytes used as if NUL-terminated (chorda is never NUL-terminated).
+SIGNUM_FORMATI	A printf format whose signedness does not match its argument: %u with a signed value prints -1 as 4294967295. clang checks the size but not the sign; '%.*s' with a length is the house idiom and exempt.
+SENTINELLA_INSIGNATA	A negative sentinel (even through a cast, such as (i32)-1) returned from a function whose return type is unsigned: the fault tcp, tls and biblia were born with.
+COMPARATIO_DEGRADATA	'unsigned <= 0', which can only mean '== 0'. Dormant: the house idiom for emptiness made it noisy, so it waits for flow analysis to re-arm it; SUBTRACTIO_COMPARATA covers the dangerous case.
+SEMITA_SINE_REDDITU	A path that falls off the end of a function that should return a value.
+CASUS_LAPSUS	Fall-through between switch cases (an open end of a case group).
+SENTENTIA_INATTINGIBILIS	An unreachable statement.
+FRANGE_EXTRA_CONTEXTUM	break or continue outside a loop or switch (closes a gap where clang refused what examen had accepted).
+SALTA_AD_TITULUM_IGNOTUM	goto to a label that does not exist (closes the same kind of gap).
+ANGUSTATIO	An implicit narrowing conversion of the same signedness that loses width (one code for three clang sub-warnings).
+VARIABILIS_INUTILIS	A variable written but never read.
+PARAMETRUM_INUTILE	A parameter never used.
+LECTIO_ININITIATA	A variable read before it is ever written.
+ININITIATA_QUANDOCUMQUE	A variable read uninitialized on a particular branch.
+ININITIATA_FORSITAN	A variable possibly read uninitialized (the residual class the analysis cannot settle). Dormant: counted, not reported.
+ANNOTATIO_MALFORMATA	An STML annotation in a comment that is anchored but does not parse.
+NID_DUPLICATUM	The same annotation identity (nid) used twice in one file.
+IDENTITAS_INVALIDA	An invalid identity in an annotation (a nid must be a 26-character ULID; a ledger reference a prefix of at least 6).
+CONTRACTUS_VIOLATUS	A contract broken: the address of an uninitialized local passed to a parameter declared to accumulate (<contractus modus="accumulat"/> on the prototype), which needs the caller to initialize it.
+CONTRACTUS_STALUS	A stale contract: the function body contradicts its declared contract, or names an unknown parameter or mode.
+CONTRACTUS_ABSENS	A missing contract: an in-out parameter with no contract declared.
+SUBTRACTIO_COMPARATA	An unsigned subtraction compared with zero by order: it wraps instead of going negative, so a branch is silently dead or always taken (a real villa bug: a timeout that never fired).
+CONTRACTUS_INTERVALLI_VIOLATUS	A range contract broken: a value proved to lie outside its declared bounds.
+SIGNATUM_COMMIXTUM	Nominal typed quantities mixed: typedefs marked with <contractus signatum=... differentia=.../> are checked, so two points in time (Momentum) cannot be added, only a duration (Mora) to a point, and kinds cannot cross at a call, a definition or a return.
+IDENTIFICATOR_RESERVATUS	An identifier of the dangerous reserved classes (__x or _X) coined in house code (C89 7.1.3); referring to system ones is allowed, and file-scope _lowercase is tolerated by decree.
+IDENTIFICATOR_ALIENUS	An identifier that is a keyword in a later C standard (C99, C23), so the amalgams would not compile under it; C++ words are deliberately excluded (operator is good Latin).
+POSTULATA_DESUNT	POSIX symbols used without including postulata_posix.h first.
+VERNACULUM_ADHIBITUM	A Darwin-only symbol used.
+OBSOLETUM_ADHIBITUM	An obsolete symbol used.
+PORTABILE_VIOLATUM	A file meant to be portable includes a platform-specific header.
+STANDARDUM_ALIENUM	A construct from another standard (C99 or GNU): C89 only.
+DECLARATIO_POST_SENTENTIAM	A declaration after a statement in a block (C99); declarations go at the start.
+EXTENSIO_COMPILATORIS	A compiler extension (__attribute__): not C89; tolerate it with a reason if deliberate.

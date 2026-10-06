@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>xar</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>xar</h1>
+<p class="subtitulus">tabula crescens segmentata (growable array, vector)</p>
+
+<p>The house growable array: segments that double in size, so elements never move. A pointer or index to an element stays valid as the array grows, and nothing is ever reallocated or copied. It lives in a piscina (destroying it is a no-op) and gives constant-time indexing, append, swap-remove and pop, a stable merge sort, linear and binary search, and an iterator. The catch is stated in its first line: segments are not contiguous, so never read xar_obtinere(x, 0) as a flat C array; iterate, or copy out with xar_copiare_ad_tabulam. The ordinary table holds about 33 million elements, xar_creare_magnum more, and an append past the limit is refused by name rather than truncated.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/xar.h"><code>include/xar.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/xar.c"><code>lib/xar.c</code></a></td></tr>
+<tr><td>Last change</td><td>2026-10-02 e5112e37</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

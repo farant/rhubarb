@@ -4797,7 +4797,16 @@ officina_piscina_destruere (
 
 /* ===============================================
  * Allocatio - fatalis si fallit
+ *
+ * piscina_allocare ordinat ad PISCINA_ORDINATIO_ORDINARIA (VIII):
+ * satis pro omni typo domus (indices, i64/s64, f64), sicut malloc.
+ * Octeti soli (textus) arte stipari possunt per
+ * piscina_allocare_ordinatum(piscina, mensura, I). Ante 2026-10-05
+ * ordinatio ordinaria erat I: membra latiora non ordinata - mores
+ * indefiniti in C, quos sanitas 'alignment' capit.
  * =============================================== */
+
+#define PISCINA_ORDINATIO_ORDINARIA VIII
 
 static vacuum*
 officina_piscina_allocare (
@@ -6389,7 +6398,8 @@ officina_piscina_allocare (
            OfficinaPiscina* piscina,
     memoriae_index  mensura)
 {
-    redde _allocare_interna(piscina, mensura, I, VERUM);
+    redde _allocare_interna(piscina, mensura,
+        PISCINA_ORDINATIO_ORDINARIA, VERUM);
 }
 
 static vacuum*

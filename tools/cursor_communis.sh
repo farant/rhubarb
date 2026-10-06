@@ -51,6 +51,12 @@ cursor_clausuras_derivare () {
     # mandata cursus HUIUS solum (instrumenta ea non vacuant)
     : > "$CLAUSURAE_DIR/mandata.tsv"
     shopt -s nullglob
+    # clausurae probationum DELETARUM vacuandae: cursor_fontes_compilare
+    # omnes *.lst unit, ergo .lst probationis remotae fontes suos
+    # (fortasse ipsos deletos) in compilationem trahebat (effectus T8,
+    # 2026-10-05: probatio_crusta_fontationes.lst -> crusta_fontationes.c
+    # absens, FRACTA). Clausurae instrumentorum alibi habitant.
+    rm -f "$CLAUSURAE_DIR"/probatio_*.lst
     for test_file in "$dir"/probatio_*.c; do
         name="$(basename "$test_file" .c)"
         if ! (cd "$RADIX_DIR" && bin/aedilis "${test_file#"$RADIX_DIR"/}" \
@@ -93,6 +99,7 @@ cursor_fontes_compilare () {
     return 0
 }
 
+# <tolera codex="lint:effectus-irresolutum" (>nexus binarii ex obiectis per bin/compilator structis (liber lectionum ea vestigat) et recentia producti sui
 cursor_probationem_struere () {
     local test_file="$1" bin="$2" name obj objs="" fons
     name="$(basename "$test_file" .c)"
@@ -105,6 +112,7 @@ cursor_probationem_struere () {
     clang "${GCC_FLAGS[@]}" "$obj" $objs -o "$bin"
 }
 
+# <tolera codex="lint:effectus-irresolutum" (>nexus instrumenti ex obiectis per bin/compilator structis (liber lectionum ea vestigat) et recentia producti sui
 cursor_instrumentum_struere () {
     local main="$1" bin="$2" nomen dir lista fons obj objs gemina o recens
     nomen="$(basename "$main" .c)"
