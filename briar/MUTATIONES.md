@@ -195,6 +195,13 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: insula RAMOS habet (insula-rami-plan R1) - `InsulaRamus`
+  (repositorium + liberum radicis per elementum et id), `insula_ramus`,
+  `insula_ramus_radix`, `_nodus`, `_attributum`, `mutare_ramum`,
+  `insula_ramus_dominum_ponere`, `_dominos_legere`, `_canonem_ponere`.
+  `InsulaDominus` et `InsulaRepositorium` creverunt (rebake). Canon
+  radicis ramos canonem proprium habentes non videt.
+
 - corpus (mores): margo paginae (scriba, pictor) in cellulis
   MARGINIS - cellula tota extra paginam, non I pixelum (tessellatio
   margo I pixeli in cellulas paginae rotundabat). `PictorFigurae`

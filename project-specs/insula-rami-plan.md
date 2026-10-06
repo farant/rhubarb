@@ -93,6 +93,12 @@ two branches of one kind isolated; owners and canons per branch
 branch == today. Plants: owner judged on the root only; canon of one
 branch applied to the other; mutator handed the root.
 
+R1 as built: `InsulaRamus` in insula (`insula_ramus`, `_radix`,
+`_nodus`, `_attributum`, `mutare_ramum`, owners and canons per branch);
+the root canon judges a view without delegated branches. Convention
+found: a mountable app's canon names its root element after the app
+kind (`canon_iudicare` checks the element name). Five plants.
+
 **R2 - historia namespace.** `historia_creare/_aperire` take a
 namespace (empty = today); pictor_documentum and scriba_documentum pass
 theirs through (and prefix their manifest). Two documents in one
