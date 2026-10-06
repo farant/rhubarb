@@ -170,6 +170,18 @@ T1 split (2026-10-05, after reading both app assemblies):
   host library knows no app; open = read the tab list, mount each tab;
   fresh volume = a default list.
 
+  T1b name (Fran, 2026-10-05): the host library is **`vicus`** (a
+  Roman street of insulae) - `schirmata` is the legacy concha screen
+  system and stays. Tab list manifest `vicus/tabulae`
+  (`<tabulae activa><tabula id genus titulus/>…</tabulae>`; the active
+  tab persists - decision 8); app kinds register mount size + mount
+  function; host canons in `apps/vicus/canones/`.
+
+  T1b as built: `include/vicus.h`, `lib/vicus.c` (kinds by size +
+  mount function; tab list + active tab in `vicus/tabulae`; unknown
+  kinds kept unmounted), `probatio_vicus`. Four plants (one needed a
+  reopen right after adding).
+
 **T2 - composition and registries.** The tree = tab bar (a component
 per tab) + the ACTIVE mount's subtree; action and figura lookup through
 the active mount's registries (read first how the dispatcher and

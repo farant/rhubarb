@@ -201,6 +201,7 @@ declare -a SOURCE_FILES=(
     "lib/utf8.c"
     "lib/uuid.c"
     "lib/via.c"
+    "lib/vicus.c"
     "lib/vigilia.c"
     "lib/villa_agens.c"
     "lib/villa_lectores.c"

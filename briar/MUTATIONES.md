@@ -195,6 +195,12 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: `vicus` nova (insula-rami-plan T1b) - hospes applicationum:
+  repositorium unum (radices `<vicus>`), volumen unum, index tabularum
+  et activa in plagula `vicus/tabulae`; genera a principali registrata
+  (`vicus_genus_addere`: mensura montationis + functio montandi);
+  `vicus_aperire`, `vicus_tabulam_addere`, `vicus_activam_ponere`.
+
 - corpus (FRANGIT): MONTATIO (insula-rami-plan T1a) - `pictor_montare`,
   `scriba_montare`, `PictorMontatio`, `ScribaMontatio` (nova);
   `insula_ramum_initiare` (nova). `PictorApplicatio` /

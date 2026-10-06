@@ -1293,4 +1293,11 @@
     <forma textus="initiatione" casus="ablativus" numerus="singularis" genus="femininum"/>
     <forma textus="initiationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+
+  <vocabulum lemma="montator" lingua="latina" classis="substantivum" nota="Lat. rec. ex montare (nomen agentis, ut mutator, effusor): functio quae applicationem in ramo montat; sedes include/vicus.h (VicusMontator; insula-rami-plan T1b, 2026-10-05)">
+    <forma textus="montator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="montatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="montatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="montatores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
 </glossarium>

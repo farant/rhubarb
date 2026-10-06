@@ -1,0 +1,11 @@
+<canon dialectus="vicus-ephemera" versio="1">
+  <elementum nomen="vicus" radix="verum"
+    nota="radix hospitis; liberi = montationes (canonibus suis)">
+    <attributum nomen="activa"          genus="nomen"
+      nota="id tabulae activae"/>
+    <attributum nomen="focus"           genus="textus"/>
+    <attributum nomen="focus_acervus"   genus="textus"/>
+    <attributum nomen="superficies_latitudo" genus="numerus"/>
+    <attributum nomen="superficies_altitudo" genus="numerus"/>
+  </elementum>
+</canon>
