@@ -21,6 +21,7 @@
 #include "pictor_figurae.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 interior vacuum
 punctum_addere (
@@ -88,8 +89,8 @@ s32 principale (vacuum)
         "<punctum x=\"39\" y=\"2\"/></ictus>",
         piscina));
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"40\" altitudo=\"30\"/>",
-        "<ephemera instrumentum=\"penicillus\" zoom=\"1\"/>");
+        "<pictor latitudo=\"40\" altitudo=\"30\"/>",
+        "<pictor instrumentum=\"penicillus\" zoom=\"1\"/>");
     motus_initiare(&motus, piscina);
     mutare_motum(&motus, pan_ponere, NIHIL, M);
     p.x = X;
@@ -98,6 +99,7 @@ s32 principale (vacuum)
     p.x = XX;
     p.y = XV;
     mutare_motum(&motus, punctum_addere, &p, M);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.fenestra_latitudo = LXIV;
     cfg.fenestra_altitudo = XLVIII;
     cfg.cellula_latitudo = VI;

@@ -1,5 +1,8 @@
 <canon dialectus="pictor-ephemera" versio="1">
-  <elementum nomen="ephemera" radix="verum">
+  <elementum nomen="pictor" radix="verum"
+    nota="radix = genus applicationis: radix sola aut ramus montatus
+          (insula rami R3); id montationis">
+    <attributum nomen="id" genus="nomen"/>
     <attributum nomen="instrumentum"    genus="nomen"/>
     <attributum nomen="color_primus"    genus="numerus"/>
     <attributum nomen="color_secundus"  genus="numerus"/>

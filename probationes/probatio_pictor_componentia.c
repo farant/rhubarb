@@ -11,6 +11,7 @@
 #include "pictor_commune.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 interior vacuum
 punctum_addere (
@@ -66,8 +67,8 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"320\" altitudo=\"200\"/>",
-        "<ephemera instrumentum=\"penicillus\" zoom=\"2\""
+        "<pictor latitudo=\"320\" altitudo=\"200\"/>",
+        "<pictor instrumentum=\"penicillus\" zoom=\"2\""
         " focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
     motus_initiare(&motus, piscina);
@@ -78,6 +79,7 @@ s32 principale (vacuum)
     p.x = XII;
     p.y = XXII;
     mutare_motum(&motus, punctum_addere, &p, M + XX);
+    memset(&ctx, ZEPHYRUM, magnitudo(ctx));
     ctx.fenestra_latitudo  = CCCXX;
     ctx.fenestra_altitudo  = CCXL;
     ctx.cellula_latitudo   = VI;
@@ -144,8 +146,8 @@ s32 principale (vacuum)
     {
         InsulaRepositorium* repo2;
         repo2 = insula_repositorium_creare(piscina, intern,
-            "<documentum latitudo=\"16\" altitudo=\"8\"/>",
-            "<ephemera/>");
+            "<pictor latitudo=\"16\" altitudo=\"8\"/>",
+            "<pictor/>");
         arbor2 = pictor_componere(repo2, &motus, piscina, intern, &ctx);
         c = componens_invenire_per_id(arbor2,
                 chorda_ex_literis("prospectus", piscina));
@@ -160,8 +162,8 @@ s32 principale (vacuum)
     {
         InsulaRepositorium* repo_superficiei;
         repo_superficiei = insula_repositorium_creare(piscina, intern,
-            "<documentum latitudo=\"320\" altitudo=\"200\"/>",
-            "<ephemera instrumentum=\"penicillus\""
+            "<pictor latitudo=\"320\" altitudo=\"200\"/>",
+            "<pictor instrumentum=\"penicillus\""
             " superficies_latitudo=\"480\""
             " superficies_altitudo=\"163\"/>");
         arbor2 = pictor_componere(repo_superficiei, &motus, piscina,

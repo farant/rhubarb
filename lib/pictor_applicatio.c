@@ -131,7 +131,7 @@ pictor_applicatio_aedificare (
     }
 
     /* insulae + canones + domini */
-    durabilis_initialis = chorda_ex_literis("<documentum latitudo=\"",
+    durabilis_initialis = chorda_ex_literis("<pictor latitudo=\"",
         piscina);
     durabilis_initialis = chorda_concatenare(durabilis_initialis,
         chorda_ex_s32((s32)app->doc->latitudo, piscina), piscina);
@@ -142,7 +142,7 @@ pictor_applicatio_aedificare (
     durabilis_initialis = chorda_concatenare(durabilis_initialis,
         chorda_ex_literis("\"/>", piscina), piscina);
     ephemera_initialis = chorda_ex_literis(
-        "<ephemera instrumentum=\"penicillus\" color_primus=\"0\""
+        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
         " color_secundus=\"5\" magnitudo=\"1\" zoom=\"1\""
         " focus=\"tabula\"/>", piscina);
     app->repo = insula_repositorium_creare(piscina, intern,

@@ -85,10 +85,10 @@ s32 principale (vacuum)
 
     imprimere("\n--- Insulae pictoris iudicantur ---\n");
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"320\" altitudo=\"200\" paletta=\"\">"
+        "<pictor latitudo=\"320\" altitudo=\"200\" paletta=\"\">"
         "<stratum titulus=\"fundus\" visibilis=\"verum\" ordo=\"0\"/>"
-        "</documentum>",
-        "<ephemera instrumentum=\"penicillus\" color_primus=\"0\""
+        "</pictor>",
+        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
         " color_secundus=\"5\" magnitudo=\"1\" stratum_activum=\"0\""
         " zoom=\"1\" focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);

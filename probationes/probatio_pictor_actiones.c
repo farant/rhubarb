@@ -83,8 +83,8 @@ s32 principale (vacuum)
     doc = pictor_documentum_creare(piscina, intern, vol, "", CCCXX, CC,
         LXIV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"320\" altitudo=\"200\"/>",
-        "<ephemera instrumentum=\"penicillus\" color_primus=\"0\""
+        "<pictor latitudo=\"320\" altitudo=\"200\"/>",
+        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
         " magnitudo=\"1\" zoom=\"1\"/>");
     fons = filum_legere_totum("apps/pictor/canones/ephemera.canon",
         piscina);
@@ -103,8 +103,10 @@ s32 principale (vacuum)
             res.elementum_radix);
     }
     reg           = actio_registrum_creare(piscina, intern);
+    memset(&actiones, ZEPHYRUM, magnitudo(actiones));
     actiones.doc  = doc;
     pictor_actiones_registrare(reg, &actiones);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.fenestra_latitudo  = CCCXX;
     cfg.fenestra_altitudo  = CCXII;
     cfg.cellula_latitudo   = VI;

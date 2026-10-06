@@ -116,6 +116,11 @@ write through an `InsulaRamus` in their contexts; canons and owners
 attached to the branch; `pictor_applicatio` hands the root branch.
 All pictor suites, the H0 golden and the terminal replay unchanged.
 
+R3 as built: `InsulaRamus` in `PictorActiones` / `PictorCompositio`
+(unset = the given repo's root); canon roots renamed `pictor` (+ `id`);
+`probatio_pictor_ramus` (two mounts, real canons/owners on p1). Three
+plants.
+
 **R4 - scriba on a branch.** Likewise, including the gesture flush;
 all scriba suites and its replay unchanged.
 
@@ -152,3 +157,6 @@ Fran's look.
   per mount.
 - Every write copies the whole store through text: cost with N tabs
   (measure at T4).
+- Framework writes still go to the ROOT: Motus's pan/zoom flush
+  (`motus_effundere`), the dispatcher's `focus` and `superficies_*`.
+  In a host they must reach the active mount's branch (T2/T3).

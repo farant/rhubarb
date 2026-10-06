@@ -13,15 +13,15 @@
 
 interior s32
 attributum_s32 (
-    InsulaRepositorium* repo,
-           InsulaGenus  genus,
-    constans character* titulus,
-                   s32  praestitutum)
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* titulus,
+                     s32  praestitutum)
 {
     chorda* a;
        s32  v;
 
-    a = insula_attributum(repo, genus, titulus);
+    a = insula_ramus_attributum(ramus, genus, titulus);
     si (a && chorda_ut_s32(*a, &v))
     {
         redde v;
@@ -31,14 +31,14 @@ attributum_s32 (
 
 interior chorda
 attributum_chorda (
-    InsulaRepositorium* repo,
-           InsulaGenus  genus,
-    constans character* titulus)
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* titulus)
 {
     chorda* a;
     chorda  vacua;
 
-    a = insula_attributum(repo, genus, titulus);
+    a = insula_ramus_attributum(ramus, genus, titulus);
     si (a)
     {
         redde *a;
@@ -121,40 +121,43 @@ pictor_componere (
     InternamentumChorda* intern,
                  vacuum* ctx)
 {
-     PictorCompositio* cfg;
-            Componens* radix;
-            Componens* prospectus;
-            Componens* tabula;
-            Componens* status;
-               chorda  instrumentum;
-                  s32  doc_latitudo;
-                  s32  doc_altitudo;
-                  s32  zoom;
-                  s32  latitudo;
-                  s32  altitudo;
-                  s32  cw;
-                  s32  ch;
-           Dispositio* dispositio;
-      DispositioForma  forma;
-                  s32  d_radix;
-                  s32  d_prospectus;
-                  s32  d_status;
-                Fines  fp;
-                Fines  fs;
-                  i32  n;
-                  i32  i;
+           InsulaRamus  ramus;
+      PictorCompositio* cfg;
+             Componens* radix;
+             Componens* prospectus;
+             Componens* tabula;
+             Componens* status;
+                chorda  instrumentum;
+                   s32  doc_latitudo;
+                   s32  doc_altitudo;
+                   s32  zoom;
+                   s32  latitudo;
+                   s32  altitudo;
+                   s32  cw;
+                   s32  ch;
+            Dispositio* dispositio;
+       DispositioForma  forma;
+                   s32  d_radix;
+                   s32  d_prospectus;
+                   s32  d_status;
+                 Fines  fp;
+                 Fines  fs;
+                   i32  n;
+                   i32  i;
 
     si (!repo || !piscina || !intern || !ctx)
     {
         redde NIHIL;
     }
     cfg = (PictorCompositio*)ctx;
+    /* R3: status pictoris per ramum (sine eo radix repositorii) */
+    ramus = cfg->ramus.repo ? cfg->ramus : insula_ramus_radix(repo);
     /* 013 B3: superficies STATUS est (dispensator scribit); ante
      * nuntium primum magnitudo configurata */
-    latitudo = attributum_s32(repo, INSULA_EPHEMERA,
+    latitudo = attributum_s32(&ramus, INSULA_EPHEMERA,
         "superficies_latitudo",
         (s32)cfg->fenestra_latitudo);
-    altitudo = attributum_s32(repo, INSULA_EPHEMERA,
+    altitudo = attributum_s32(&ramus, INSULA_EPHEMERA,
         "superficies_altitudo",
         (s32)cfg->fenestra_altitudo);
     cw = (cfg->cellula_latitudo > ZEPHYRUM) ? (s32)cfg->cellula_latitudo
@@ -192,13 +195,13 @@ pictor_componere (
     fs = _ad_pixela(dispositio_fines(dispositio, d_status), latitudo
         / cw,
         altitudo / ch, latitudo, altitudo, cw, ch);
-    instrumentum = attributum_chorda(repo, INSULA_EPHEMERA,
+    instrumentum = attributum_chorda(&ramus, INSULA_EPHEMERA,
         "instrumentum");
-    doc_latitudo = attributum_s32(repo, INSULA_DURABILIS, "latitudo",
+    doc_latitudo = attributum_s32(&ramus, INSULA_DURABILIS, "latitudo",
         I);
-    doc_altitudo = attributum_s32(repo, INSULA_DURABILIS, "altitudo",
+    doc_altitudo = attributum_s32(&ramus, INSULA_DURABILIS, "altitudo",
         I);
-    zoom = attributum_s32(repo, INSULA_EPHEMERA, "zoom", I);
+    zoom = attributum_s32(&ramus, INSULA_EPHEMERA, "zoom", I);
     si (zoom < I)
     {
         zoom = I;

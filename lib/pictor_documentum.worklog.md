@@ -116,3 +116,37 @@ window app (my mistake to assume; it opened the gitignored
 opened and rendered by the new one; WAL empty; killed). Its 100% CPU
 while idle is `ludus_fenestra_currere`: poll → frame → present with no
 wait (since ludus P3), unlike the terminal glue's `quies_ms`.
+
+## 2026-10-05 — pictor on a branch (insula-rami-plan R3)
+
+pictor's state now goes through an `InsulaRamus`: `PictorActiones` and
+`PictorCompositio` carry one (an unset branch - repo NIHIL - means the
+root of the repo the handler/componere was given, so every existing
+construction still works and standalone pictor is unchanged: root
+201/201, ludus_tessera 6/6, H0 golden identical). Its canons' root
+element is now `pictor` (+ an `id` attribute): `canon_iudicare` checks
+the judged element's NAME against the canon root, so the same canon
+judges a standalone root and a `<pictor id="p1">` mount - the app's
+initial insulae and four tests build `<pictor …>` roots now.
+
+Proof (probatio_pictor_ramus): a host store with two pictor mounts;
+pictor's real canons and owners on p1; a real dispatcher. The page
+size comes from p1, `p` writes `instrumentum` into p1 only (not the
+root, not p2; owner check passes), a stroke's act carries p1's colour.
+Plants: actions ignoring the branch; componere ignoring it; the canon
+root renamed back to `ephemera` (the branch canon then refuses pictor's
+own writes) - all caught.
+
+Not yet on the branch (framework, T2/T3): Motus's pan/zoom flush
+(`motus_effundere`) writes to the ROOT ephemeral insula; the dispatcher
+writes `focus` and `superficies_*` to the root.
+
+**Gate find (same day): an unset branch must be a ZEROED struct.** The
+commit's aedilis gate segfaulted `probatio_pictor_actiones` while
+`compile_tests` passed it: the test built `PictorActiones actiones;
+actiones.doc = doc;` without zeroing, so the new `ramus` held stack
+garbage - "repo NIHIL = root" only holds for a zeroed struct. In one
+build the garbage was 0, in aedilis's it was not. Four constructions
+now `memset` first (actiones ×2, componentia, figurae, plus my own new
+test); both headers say "zero the whole struct". The second build
+(aedilis's own closure and flags) is what caught it.

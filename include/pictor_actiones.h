@@ -17,6 +17,9 @@
 
 nomen structura {
     PictorDocumentum* doc;
+         InsulaRamus  ramus;   /* R3: status pictoris; repo NIHIL =
+                                * radix repositorii tractatori dati -
+                                * structuram TOTAM nulla (memset) */
 } PictorActiones;
 
 vacuum
