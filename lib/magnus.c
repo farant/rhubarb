@@ -1052,6 +1052,14 @@ _transcribere (
 }
 
 Magnus
+magnus_transcribe (
+      Magnus  a,
+     Piscina* piscina)
+{
+    redde _transcribere(a, piscina);
+}
+
+Magnus
 magnus_divisor_communis (
       Magnus  a,
       Magnus  b,

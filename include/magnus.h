@@ -69,6 +69,14 @@ magnus_ad_chordam (
       Magnus  a,
      Piscina* piscina);
 
+/* copia in piscinam datam: membra NOVA (valores in s64 sine
+ * allocatione). Ad effectum ex piscina temporaria servandum, cum
+ * piscina illa reficienda aut destruenda est. */
+Magnus
+magnus_transcribe (
+      Magnus  a,
+     Piscina* piscina);
+
 
 /* ==================================================
  * Inspectio

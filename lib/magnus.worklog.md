@@ -178,3 +178,13 @@ back to both-big) → the new bound and apex checks red. 1252 checks.
 Lesson: I tested the claim with −7 — two or three Euclid steps — so the
 per-step growth never showed. A memory claim about "the steps after"
 needs an input with MANY steps after.
+
+## 2026-10-06 — `magnus_transcribe` made public
+
+Polynomium's scratch piscinae need to copy a final value out to the
+caller (review polynomium-I, A3). The internal `_transcribere` (used by
+gcd) is now also public as `magnus_transcribe(a, piscina)`: fresh limbs,
+values in s64 without allocation. Test: the copy equals the original, its
+limbs are NOT the original's (checked directly — reading after
+destroying the source piscina would pass without a sanitizer), and it
+survives the source piscina's destruction. 1256 checks.

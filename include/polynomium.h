@@ -19,6 +19,9 @@
  *
  * MEMORIA densa: summus - imus + 1 coefficientes. t^1000000 unum
  * coefficientem habet, sed t^1000000 + 1 decies centena milia.
+ * Amplitudo est sumptus: lectio ideo amplitudinem maiorem quam
+ * POLYNOMIUM_AMPLITUDO_LECTIONIS refutat (textus XXX octetorum aliter
+ * gigaoctetos posceret). Operationes ipsae nullum talem finem habent.
  *
  * USUS:
  *   Polynomium p;
@@ -39,7 +42,8 @@
 #include "magnus.h"
 #include "fractio.h"
 
-#define POLYNOMIUM_EXPONENS_MAXIMUS  ((s32)0x3FFFFFFFL)
+#define POLYNOMIUM_EXPONENS_MAXIMUS    ((s32)0x3FFFFFFFL)
+#define POLYNOMIUM_AMPLITUDO_LECTIONIS  ((i32)0x100000L)   /* 2^20 */
 
 /* Membra PRIVATA - per functiones legenda. coefficientes[i] pertinet
  * ad t^(imus + i). */
@@ -82,9 +86,10 @@ polynomium_ex_coefficientibus (
           Polynomium* exitus);
 
 /* "3t^2 - t + 1 - 2t^-1": termini ordine quolibet, exponentes iterati
- * coniuncti, spatia libera; "0" = nullum. Littera variabilis data
- * (nec digitus nec signum nec '^' nec spatium). FALSUM si
- * malformatum aut exponens extra fines (exitus non tangitur). */
+ * coniuncti, spatia et tabulae liberae; "0" = nullum. Littera
+ * variabilis ASCII (a-z, A-Z). FALSUM si littera alia, textus
+ * malformatus, exponens extra fines, aut summus - imus + 1 >
+ * POLYNOMIUM_AMPLITUDO_LECTIONIS (exitus non tangitur). */
 b32
 polynomium_ex_chorda (
         chorda  textus,
@@ -93,7 +98,8 @@ polynomium_ex_chorda (
     Polynomium* exitus);
 
 /* forma canonica: gradu summo primo, " + " / " - " inter terminos,
- * nec "1t" nec "t^1"; nullum = "0" */
+ * nec "1t" nec "t^1"; nullum = "0". Littera ASCII ut supra (aliter
+ * textus non relegibilis). */
 chorda
 polynomium_ad_chordam (
     Polynomium  p,
@@ -244,5 +250,18 @@ polynomium_valor (
        Fractio  x,
        Piscina* piscina,
        Fractio* exitus);
+
+
+/* ==================================================
+ * Diagnosis
+ * ================================================== */
+
+/* maximus usus (octeti) officinae internae in ultima multiplicatione
+ * aut divisione exacta per officinas computata; 0 si operatio parva in
+ * piscina vocantis facta est. Computator sumptus deterministicus,
+ * probationibus asseribilis (sicut magnus_apex_alternarum). */
+memoriae_index
+polynomium_apex_officinarum (
+    vacuum);
 
 #endif /* POLYNOMIUM_H */

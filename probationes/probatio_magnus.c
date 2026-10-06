@@ -757,6 +757,32 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * TRANSCRIPTIO: copia superstat piscinae originis destructae
+     * ================================================== */
+
+    {
+        Piscina* origo = piscina_generare_dynamicum("probatio_origo",
+            (memoriae_index)4096);
+          Magnus magnum;
+          Magnus copia;
+          Magnus parvum;
+
+        imprimere("\n--- Probans transcriptionem ---\n");
+        magnum  = magnus_potentia(magnus_ex_s64(-VII), C, origo);
+        copia   = magnus_transcribe(magnum, piscina);
+        parvum  = magnus_transcribe(magnus_ex_s64(-XLII), piscina);
+        CREDO_VERUM (magnus_aequalis(copia, magnum));
+        /* membra NOVA, non partita (lectio post destructionem sola
+         * sine sanitatore nihil probaret) */
+        CREDO_VERUM (copia.membra != magnum.membra);
+        piscina_destruere(origo);
+        CREDO_VERUM (magnus_aequalis(copia, magnus_potentia(
+            magnus_ex_s64(-VII), C, piscina)));
+        CREDO_VERUM (_textus_est(parvum, "-42"));
+    }
+
+
+    /* ==================================================
      * EUCLIDES: Fibonacci (casus pessimus) et memoria vocantis
      *
      * mdc(F_m, F_n) = F_mdc(m,n). Gradus Euclidis = index: olim omnes

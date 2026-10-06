@@ -91,3 +91,52 @@ remainder, derivative, Karatsuba/NTT multiplication (benchmarks decide),
 scratch-piscina accumulation in multiply and divide (today each partial
 sum of big coefficients allocates in the caller's piscina — the same
 lesson as magnus gcd; matters once Bareiss calls divide_exacte in a loop).
+
+## 2026-10-06 — review I: findings and fixes (Fran approved all four)
+
+Reviewer: independent oracle by Kronecker substitution (pack into one big
+integer), 37k differential cases, 40k parser strings, sanitizers — no wrong
+result. Acted on:
+
+- **A1, letter ≥ 0x80 never matched** (i8 data byte vs signed char; print
+  then parse refused, platform-dependent). Fix: the letter must be ASCII
+  a–z / A–Z (a lone byte ≥ 0x80 is not UTF-8 anyway); the parser refuses
+  others; comparison cast to i8.
+- **A2, a 30-byte string could ask for 51 GB** (dense span from text).
+  Fix: `POLYNOMIUM_AMPLITUDO_LECTIONIS` = 2^20: the parser refuses
+  summus − imus + 1 above it; the header says span is the cost. Operations
+  themselves keep no such limit (adde etc. stay infallible).
+  `potentia((1+t), 2^29)` is in range but infeasible (coefficient growth)
+  — same class as magnus_potentia, documented, not guarded.
+- **A3, multiply/divide left every partial sum in the caller's piscina**
+  (200×200 terms × 1000 digits: 64 MB for a 334 KB result). Fix:
+  "officinae", two internal scratch piscinae (operations with
+  na·nb ≥ 64 only). Multiply: each output coefficient computed whole in a
+  scratch piscina, final value copied with the new `magnus_transcribe`,
+  scratch rolled back. Divide: the modified residue window [k, k+nb−1] is
+  rewritten every step, so it lives in ALTERNATING scratch piscinae (as in
+  magnus gcd); quotient digits copied out. Re-measured with the reviewer's
+  probe: caller memory ≈ result size (64 MB → 0.3 MB; 6.6 MB → 0.04 MB),
+  time unchanged.
+  Hazard found while writing it: an interior ZERO coefficient of b makes
+  x − 0 — that IS x, possibly still in the scratch piscina about to be
+  rolled back. Guarded (copied into the live scratch). Today's magnus
+  always allocates a fresh copy for x − 0, so the guard's plant survives
+  (equivalent mutant); kept because magnus's contract allows sharing.
+- New diagnostic `polynomium_apex_officinarum()` (like
+  magnus_apex_alternarum): without it, a missing rollback was invisible
+  to the suite (caller memory looks fine; only the scratch grows).
+  50×50 terms × 100 digits: ~7.3 KB.
+- Coverage the reviewer showed: every boundary test was a monomial
+  (imus = summus), so either of a pair of range checks alone passed —
+  two-term boundary tests for translata, multiplica, divide_exacte;
+  ex_coefficientibus low check; coefficiens one past the end; tabs.
+- Tests added: letters, span boundary (2^20 accepted, 2^20 + 1 refused),
+  caller-memory and apex bounds for multiply and divide (divisor with
+  interior zeros), 30 large random cases (8–40 terms, up to 60 digits,
+  interior zeros) checked against a product built term by term
+  (multiplica_scalari + translata + adde — a path without scratch) and
+  divided back.
+- Plants, all red: copy-out skipped in multiply; quotient digit not copied
+  out; no rollback in multiply / divide (red only via the new apex);
+  span off-by-one; non-ASCII letter accepted. 155 checks; sanitizers clean.
