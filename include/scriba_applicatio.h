@@ -26,19 +26,47 @@
 #include "scriba_componentia.h"
 #include "scriba_figurae.h"
 
+/* MONTATIO (insula-rami-plan T1a): scriba in repositorio dato, ramo
+ * <scriba id> (aut radice): documentum in spatio id, canones et
+ * domini in ramo, contextus (ramus intus), registra propria. Contextus
+ * HIC habitant - registra in eos monstrant: structuram ne copia. */
 nomen structura {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                Volumen* volumen;
        ScribaDocumentum* doc;
-     InsulaRepositorium* repo;
+            InsulaRamus  ramus;
          ActioRegistrum* actiones;
          ScribaActiones  actiones_ctx;
         FiguraRegistrum* figurae;
           ScribaFigurae  figurae_ctx;
        ScribaCompositio  compositio;
+} ScribaMontatio;
+
+nomen structura {
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* volumen;
+     InsulaRepositorium* repo;
+         ScribaMontatio  montatio;
+       ScribaDocumentum* doc;        /* = montatio.doc */
+         ActioRegistrum* actiones;   /* = montatio.actiones */
+        FiguraRegistrum* figurae;    /* = montatio.figurae */
             Dispensator* d;
 } ScribaApplicatio;
+
+/* scribam montare: id NIHIL = radix repositorii (elementum radicis
+ * 'scriba' iam exstat); aliter liberum <scriba id> creatur si abest.
+ * Ordo: canones, elementum initiale, domini (scriptura initialis
+ * anonyma ne recusetur). radix = praefixum viarum canonum. */
+b32
+scriba_montare (
+         ScribaMontatio* m,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* radix,
+                    i32  latitudo,
+                    i32  altitudo);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "scriba.volumen"). Reddit volumen apertum aut NIHIL. */

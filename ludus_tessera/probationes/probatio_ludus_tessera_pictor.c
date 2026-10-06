@@ -199,7 +199,7 @@ principale (vacuum)
     pm    = tessera_pons_memoriae_creare(piscina, COLUMNAE, LINEAE);
     opus  = tessera_aperire(piscina, &pm->pons);
     lt   = ludus_tessera_creare(piscina, t.d, t.figurae, ZEPHYRUM,
-        pictor_imago_fons, &t.figurae_ctx, opus, VI, VIII);
+        pictor_imago_fons, &t.montatio.figurae_ctx, opus, VI, VIII);
     CREDO_NON_NIHIL (lt);
     memset(&tr, ZEPHYRUM, magnitudo(Transitus));
     tr.piscina                = piscina;

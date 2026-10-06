@@ -77,7 +77,8 @@ principale (
         redde I;
     }
     lt = ludus_tessera_creare(piscina, app.d, app.figurae, ZEPHYRUM,
-        pictor_imago_fons, &app.figurae_ctx, opus, CELLULA_LATITUDO,
+        pictor_imago_fons, &app.montatio.figurae_ctx, opus,
+        CELLULA_LATITUDO,
         CELLULA_ALTITUDO);
     si (!lt)
     {

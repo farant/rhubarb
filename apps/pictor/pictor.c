@@ -75,7 +75,8 @@ principale (
     tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
                                                PICTOR_ALTITUDO);
     lf = ludus_fenestra_creare(piscina, app.d, app.figurae, ZEPHYRUM,
-                               pictor_imago_fons, &app.figurae_ctx,
+                               pictor_imago_fons,
+                               &app.montatio.figurae_ctx,
                                tabula);
     si (!tabula || !lf)
     {

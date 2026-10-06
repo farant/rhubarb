@@ -211,6 +211,47 @@ s32 principale (vacuum)
             INSULA_EPHEMERA, res.elementum_radix), I);
     }
 
+    imprimere("\n--- VII: ramum initiare (T1a) ---\n");
+    {
+        InsulaRamus d;
+                i32 liberi;
+
+        d = insula_ramus(repo, "libellus", "d");
+        insula_ramus_canonem_ponere(&d, INSULA_DURABILIS,
+            canon_ex(canon_libelli));
+        CREDO_NIHIL(insula_ramus_nodus(&d, INSULA_DURABILIS));
+        liberi = stml_numerus_liberorum(insula_radix(repo,
+            INSULA_DURABILIS));
+        /* liberum novum, canone suo iudicatum (hospes eum non videt) */
+        CREDO_VERUM(insula_ramum_initiare(&d, INSULA_DURABILIS,
+            "<libellus id=\"d\" n=\"7\"/>"));
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&d,
+            INSULA_DURABILIS, "n"), "7"));
+        /* iterum: nihil mutat (exstat) */
+        CREDO_VERUM(insula_ramum_initiare(&d, INSULA_DURABILIS,
+            "<libellus id=\"d\" n=\"8\"/>"));
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&d,
+            INSULA_DURABILIS, "n"), "7"));
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
+            INSULA_DURABILIS)), liberi + I);
+        /* canon rami elementum malum recusat */
+        {
+            InsulaRamus e;
+
+            e = insula_ramus(repo, "libellus", "e");
+            insula_ramus_canonem_ponere(&e, INSULA_DURABILIS,
+                canon_ex(canon_libelli));
+            CREDO_FALSUM(insula_ramum_initiare(&e, INSULA_DURABILIS,
+                "<libellus id=\"e\" n=\"abc\"/>"));
+            CREDO_NIHIL(insula_ramus_nodus(&e, INSULA_DURABILIS));
+        }
+        /* ramus radicis: attributa absentia SOLA radici adduntur */
+        CREDO_VERUM(insula_ramum_initiare(&radix, INSULA_EPHEMERA,
+            "<hospes activa=\"zz\" nova=\"1\"/>"));
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&radix,
+            INSULA_EPHEMERA, "nova"), "1"));
+    }
+
     imprimere("\n--- VII: restitutio honesta ---\n");
     CREDO_VERUM(insula_restituere(repo));
     CREDO_FALSUM(insula_mendacium(repo));

@@ -183,6 +183,17 @@ insula_ramus_dominos_legere (
              InsulaGenus  genus,
                StmlNodus* domini);
 
+/* ramum initiare (T1a): ramus liberi - elementum (STML) radici
+ * additur si abest (exstans intactum); ramus radicis - attributa
+ * elementi quae radici absunt adduntur. Per portam: canones et domini
+ * iudicant (canonem rami ANTE initiationem ponere; dominos POST, ne
+ * scriptura initialis anonyma recusetur). */
+b32
+insula_ramum_initiare (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* elementum_stml);
+
 /* canon nodum rami iudicat (radix eius = elementum rami); canon
  * radicis eum non videt */
 vacuum

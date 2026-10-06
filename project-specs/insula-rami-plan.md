@@ -149,6 +149,27 @@ Track T - schirmata (the host):
 list in the durable root, `activa` in the ephemeral); mounts created
 from the durable tab list on open; one volume, a namespace per mount.
 
+T1 split (2026-10-05, after reading both app assemblies):
+- **T1a - mounting per app.** `pictor_montare` / `scriba_montare`
+  (repo + id + namespace): open/create the document in the namespace,
+  register the app's canons and owners on its branch FIRST (so the host
+  canon never sees an undelegated mount), create the mount element
+  with the app's initial attributes if absent, build the contexts
+  (branch inside) and the app's own registries (actions, figurae).
+  Standalone = a store whose root IS the app element + one mount on the
+  root branch + a dispatcher (no behaviour change). Test: both apps
+  mounted into one store.
+  T1a as built: `insula_ramum_initiare`; `pictor_montare`,
+  `scriba_montare` (+ `…Montatio`); standalone rebuilt on them;
+  `probatio_montatio`. Plants: owners before initiation; namespace
+  ignored; initiation appending a duplicate - caught.
+- **T1b - the host store.** Host canon; the durable tab list as a
+  MANIFEST entry in the volume (`schirmata/tabulae`, overwritten on
+  change - configuration, not history; decided here, veto-able); app
+  kinds registered by the host's main (kind -> mount function), so the
+  host library knows no app; open = read the tab list, mount each tab;
+  fresh volume = a default list.
+
 **T2 - composition and registries.** The tree = tab bar (a component
 per tab) + the ACTIVE mount's subtree; action and figura lookup through
 the active mount's registries (read first how the dispatcher and

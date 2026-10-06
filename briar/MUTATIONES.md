@@ -195,6 +195,12 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus (FRANGIT): MONTATIO (insula-rami-plan T1a) - `pictor_montare`,
+  `scriba_montare`, `PictorMontatio`, `ScribaMontatio` (nova);
+  `insula_ramum_initiare` (nova). `PictorApplicatio` /
+  `ScribaApplicatio`: contextus in `montatio` (olim `actiones_ctx`,
+  `figurae_ctx`, `compositio` directe) - `&app.montatio.figurae_ctx`.
+
 - corpus (mores): historia LOCUM REVOCANDI servat (insula-rami-plan
   R5) - revocare/reficere notam `<cursor ad="seq"/>` appendunt;
   aperire ad notam ultimam non obsoletam redit (olim semper ad finem).

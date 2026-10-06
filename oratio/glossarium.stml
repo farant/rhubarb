@@ -1267,4 +1267,30 @@
     <forma textus="allineationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
     <forma textus="allineationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+
+  <vocabulum lemma="monto" lingua="latina" classis="verbum" nota="Lat. rec. (cf. Ital. montare, Fr. monter): hic applicationem in ramo repositorii hospitis collocare - documentum, canones, domini, contextus; sedes include/pictor_applicatio.h, include/scriba_applicatio.h (pictor_montare, scriba_montare; insula-rami-plan T1a, 2026-10-05)">
+    <forma textus="montare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="montat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="montatur" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="passiva"/>
+    <forma textus="montatus" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="montata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="montatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
+
+  <vocabulum lemma="montatio" lingua="latina" classis="substantivum" nota="Lat. rec. ex montare: applicatio in ramo collocata (documentum, ramus, contextus, registra propria); sedes include/pictor_applicatio.h (PictorMontatio), include/scriba_applicatio.h (ScribaMontatio), insula-rami-plan T1a, 2026-10-05">
+    <forma textus="montatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="montationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="montationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="montatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="montationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="montationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="initiatio" lingua="latina" classis="substantivum" nota="Lat. class. initiatio (initium facere): hic ramus primum constitutus - elementum radici additum aut attributa absentia radici addita; sedes lib/insula.c (InitiatioRami, insula_ramum_initiare; insula-rami-plan T1a, 2026-10-05)">
+    <forma textus="initiatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
 </glossarium>

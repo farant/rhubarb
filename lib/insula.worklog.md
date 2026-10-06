@@ -115,3 +115,16 @@ Plants, all compiling (one first did not - an unused static; redone):
 owners on the root only; mutator handed the root; branch canons
 skipped; root canon seeing delegated branches; the view dropping every
 child. All caught.
+
+## 2026-10-05 — `insula_ramum_initiare` (insula-rami-plan T1a)
+
+Mounting an app needs "make sure my branch exists with my initial
+attributes": for a child branch, append the element (parsed in the
+gate's own arena) if absent - an existing one is left untouched; for
+the ROOT branch, add the element's attributes the root lacks (how a
+standalone app now starts: a bare `<scriba/>` root, then a root-branch
+mount). Through the gate, so canons and owners judge it. Order that
+matters, now in the header: register the branch canon BEFORE (the host
+canon never sees an undelegated mount), owners AFTER (scriba's `modus`
+is owned by `pagina.clavis`; an anonymous initial write would be
+refused - a plant moving owners first makes `scriba_montare` fail).

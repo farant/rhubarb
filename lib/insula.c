@@ -893,6 +893,84 @@ insula_ramus_dominos_legere (
                          domini);
 }
 
+/* initiatio rami (T1a): elementum STML in piscina portae legitur */
+nomen structura {
+    constans InsulaRamus* ramus;
+      constans character* stml;
+                     b32  bene;
+} InitiatioRami;
+
+interior vacuum
+initiatio_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+      InitiatioRami* x;
+       StmlResultus  res;
+          StmlNodus* e;
+     StmlAttributum* attr;
+                i32  i;
+
+    x    = (InitiatioRami*)ctx;
+    res  = stml_legere_ex_literis(x->stml, p, in);
+    si (!res.successus || !res.elementum_radix)
+    {
+        x->bene = FALSUM;
+        redde;
+    }
+    e = res.elementum_radix;
+    si (chorda_vacua(x->ramus->elementum))
+    {
+        /* radix: attributa absentia sola */
+        per (i = ZEPHYRUM; e->attributa
+            && i < xar_numerus(e->attributa);
+             i++)
+        {
+            attr = (StmlAttributum*)xar_obtinere(e->attributa, i);
+            si (   attr->titulus
+                && !valor_attributi(radix, *attr->titulus))
+            {
+                insula_attributum_ponere(radix, p, in,
+                    chorda_ut_cstr(*attr->titulus, p),
+                    attr->valor ? chorda_ut_cstr(*attr->valor, p) : "");
+            }
+        }
+        redde;
+    }
+    si (!ramum_invenire(radix, x->ramus->elementum, x->ramus->id))
+    {
+        stml_liberum_addere(radix, e);
+    }
+}
+
+b32
+insula_ramum_initiare (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* elementum_stml)
+{
+    InitiatioRami x;
+
+    si (   !ramus || !ramus->repo || !genus_sanum(genus)
+        || !elementum_stml)
+    {
+        redde FALSUM;
+    }
+    si (   !chorda_vacua(ramus->elementum)
+        && insula_ramus_nodus(ramus, genus))
+    {
+        redde VERUM;   /* exstat: nihil mutatur */
+    }
+    x.ramus  = ramus;
+    x.stml   = elementum_stml;
+    x.bene   = VERUM;
+    redde mutare(ramus->repo, genus, chorda_nulla_insulae(),
+                 chorda_nulla_insulae(), initiatio_mutator, &x)
+        && x.bene;
+}
+
 vacuum
 insula_ramus_canonem_ponere (
     constans InsulaRamus* ramus,

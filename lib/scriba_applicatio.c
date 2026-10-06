@@ -93,6 +93,133 @@ scriba_volumen_aperire (
         via_voluminis ? via_voluminis : "scriba.volumen");
 }
 
+/* elementum initiale: <scriba [id="…"] attributa/> */
+interior constans character*
+elementum (
+                Piscina* piscina,
+     constans character* id,
+                 chorda  attributa)
+{
+    chorda c;
+
+    c = chorda_ex_literis("<scriba", piscina);
+    si (id)
+    {
+        c = chorda_concatenare(c, chorda_ex_literis(" id=\"", piscina),
+                               piscina);
+        c = chorda_concatenare(c, chorda_ex_literis(id, piscina),
+            piscina);
+        c = chorda_concatenare(c, chorda_ex_literis("\"", piscina),
+                               piscina);
+    }
+    c = chorda_concatenare(c, attributa, piscina);
+    c = chorda_concatenare(c, chorda_ex_literis("/>", piscina),
+        piscina);
+    redde chorda_ut_cstr(c, piscina);
+}
+
+b32
+scriba_montare (
+         ScribaMontatio* m,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* radix,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+                        chorda  domini;
+                  StmlResultus  res;
+                        chorda  attributa;
+    constans TabulaCharacterum* folium;
+            constans character* spatium;
+
+    si (!m || !piscina || !intern || !volumen || !repo)
+    {
+        redde FALSUM;
+    }
+    memset(m, ZEPHYRUM, magnitudo(ScribaMontatio));
+    spatium = id ? id : "";
+
+    /* documentum: exsistens aut novum, in spatio montationis */
+    m->doc = scriba_documentum_aperire(piscina, intern, volumen,
+        spatium);
+    si (!m->doc)
+    {
+        m->doc = scriba_documentum_creare(piscina, intern, volumen,
+            spatium, FOLIUM_LATITUDO, FOLIUM_ALTITUDO, INTERVALLUM);
+    }
+    si (!m->doc)
+    {
+        fprintf(stderr, "scriba: documentum\n");
+        redde FALSUM;
+    }
+    folium   = scriba_documentum_tabula(m->doc);
+    m->ramus = id ? insula_ramus(repo, "scriba", id)
+                  : insula_ramus_radix(repo);
+
+    /* canones PRIMUM: hospes elementum montatum numquam videt */
+    insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS,
+        canonem_legere(piscina, intern, _via(piscina, radix,
+        "apps/scriba/canones/durabilis.canon")));
+    insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA,
+        canonem_legere(piscina, intern, _via(piscina, radix,
+        "apps/scriba/canones/ephemera.canon")));
+
+    /* elementum initiale */
+    attributa = chorda_ex_literis(" latitudo=\"", piscina);
+    attributa = chorda_concatenare(attributa,
+        chorda_ex_s32((s32)folium->latitudo, piscina), piscina);
+    attributa = chorda_concatenare(attributa,
+        chorda_ex_literis("\" altitudo=\"", piscina), piscina);
+    attributa = chorda_concatenare(attributa,
+        chorda_ex_s32((s32)folium->altitudo, piscina), piscina);
+    attributa = chorda_concatenare(attributa,
+        chorda_ex_literis("\"", piscina), piscina);
+    si (   !insula_ramum_initiare(&m->ramus, INSULA_DURABILIS,
+               elementum(piscina, id, attributa))
+        || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
+               elementum(piscina, id, chorda_ex_literis(
+                   " modus=\"normalis\"", piscina))))
+    {
+        fprintf(stderr, "scriba: elementum initiale: %.*s\n",
+                (int)insula_causa(repo).mensura,
+                insula_causa(repo).datum);
+        redde FALSUM;
+    }
+
+    /* domini POST initiationem */
+    domini = filum_legere_totum(_via(piscina, radix,
+        "apps/scriba/canones/domini.stml"), piscina);
+    res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
+        piscina, intern);
+    si (res.successus)
+    {
+        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_EPHEMERA,
+            res.elementum_radix);
+        (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_DURABILIS,
+            res.elementum_radix);
+    }
+
+    /* contextus et registra propria */
+    m->actiones = actio_registrum_creare(piscina, intern);
+    scriba_actiones_initiare(&m->actiones_ctx, m->doc, piscina);
+    m->actiones_ctx.ramus = m->ramus;
+    scriba_actiones_registrare(m->actiones, &m->actiones_ctx);
+    m->figurae         = figura_registrum_creare(piscina);
+    m->figurae_ctx.sa  = &m->actiones_ctx;
+    scriba_figurae_registrare(m->figurae, ZEPHYRUM, &m->figurae_ctx);
+    m->compositio.fenestra_latitudo  = latitudo;
+    m->compositio.fenestra_altitudo  = altitudo;
+    m->compositio.cellula_latitudo   = CELLULA_LATITUDO;
+    m->compositio.cellula_altitudo   = CELLULA_ALTITUDO;
+    m->compositio.status_lineae      = STATUS_LINEAE;
+    m->compositio.ramus              = m->ramus;
+    redde VERUM;
+}
+
 b32
 scriba_applicatio_aedificare (
        ScribaApplicatio* app,
@@ -103,11 +230,6 @@ scriba_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo)
 {
-                        chorda  domini;
-                  StmlResultus  res;
-                        chorda  durabilis_initialis;
-    constans TabulaCharacterum* folium;
-
     si (!app || !piscina || !intern || !volumen)
     {
         redde FALSUM;
@@ -117,76 +239,26 @@ scriba_applicatio_aedificare (
     app->intern   = intern;
     app->volumen  = volumen;
 
-    /* documentum: exsistens aut novum */
-    app->doc = scriba_documentum_aperire(piscina, intern, volumen, "");
-    si (!app->doc)
-    {
-        app->doc = scriba_documentum_creare(piscina, intern, volumen,
-            "",
-            FOLIUM_LATITUDO, FOLIUM_ALTITUDO, INTERVALLUM);
-    }
-    si (!app->doc)
-    {
-        fprintf(stderr, "scriba: documentum\n");
-        redde FALSUM;
-    }
-    folium = scriba_documentum_tabula(app->doc);
-
-    /* insulae + canones + domini */
-    durabilis_initialis = chorda_ex_literis("<scriba latitudo=\"",
-        piscina);
-    durabilis_initialis = chorda_concatenare(durabilis_initialis,
-        chorda_ex_s32((s32)folium->latitudo, piscina), piscina);
-    durabilis_initialis = chorda_concatenare(durabilis_initialis,
-        chorda_ex_literis("\" altitudo=\"", piscina), piscina);
-    durabilis_initialis = chorda_concatenare(durabilis_initialis,
-        chorda_ex_s32((s32)folium->altitudo, piscina), piscina);
-    durabilis_initialis = chorda_concatenare(durabilis_initialis,
-        chorda_ex_literis("\"/>", piscina), piscina);
-    app->repo = insula_repositorium_creare(piscina, intern,
-        chorda_ut_cstr(durabilis_initialis, piscina),
-        "<scriba focus=\"pagina\" modus=\"normalis\"/>");
-    si (!app->repo)
+    /* repositorium cuius radix IPSA scriba est; montatio in radice */
+    app->repo = insula_repositorium_creare(piscina, intern, "<scriba/>",
+        "<scriba focus=\"pagina\"/>");
+    si (   !app->repo
+        || !scriba_montare(&app->montatio, piscina, intern, volumen,
+               app->repo, NIHIL, radix, latitudo, altitudo))
     {
         redde FALSUM;
     }
-    insula_ponere_canonem(app->repo, INSULA_DURABILIS,
-        canonem_legere(piscina, intern, _via(piscina, radix,
-        "apps/scriba/canones/durabilis.canon")));
-    insula_ponere_canonem(app->repo, INSULA_EPHEMERA,
-        canonem_legere(piscina, intern, _via(piscina, radix,
-        "apps/scriba/canones/ephemera.canon")));
-    domini = filum_legere_totum(_via(piscina, radix,
-        "apps/scriba/canones/domini.stml"), piscina);
-    res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-        piscina, intern);
-    si (res.successus)
-    {
-        insula_dominos_legere(app->repo, INSULA_EPHEMERA,
-            res.elementum_radix);
-        insula_dominos_legere(app->repo, INSULA_DURABILIS,
-            res.elementum_radix);
-    }
-
-    /* registra, dispensator, gestus */
-    app->actiones = actio_registrum_creare(piscina, intern);
-    scriba_actiones_initiare(&app->actiones_ctx, app->doc, piscina);
-    scriba_actiones_registrare(app->actiones, &app->actiones_ctx);
-    app->figurae         = figura_registrum_creare(piscina);
-    app->figurae_ctx.sa  = &app->actiones_ctx;
-    scriba_figurae_registrare(app->figurae, ZEPHYRUM,
-        &app->figurae_ctx);
-    app->compositio.fenestra_latitudo  = latitudo;
-    app->compositio.fenestra_altitudo  = altitudo;
-    app->compositio.cellula_latitudo   = CELLULA_LATITUDO;
-    app->compositio.cellula_altitudo   = CELLULA_ALTITUDO;
-    app->compositio.status_lineae      = STATUS_LINEAE;
+    app->doc       = app->montatio.doc;
+    app->actiones  = app->montatio.actiones;
+    app->figurae   = app->montatio.figurae;
     app->d = dispensator_creare(piscina, intern, app->repo,
-        app->actiones, scriba_componere, &app->compositio, CCC);
+        app->montatio.actiones, scriba_componere,
+        &app->montatio.compositio, CCC);
     si (!app->d)
     {
         redde FALSUM;
     }
-    scriba_gestum_ponere(dispensator_motus(app->d), &app->actiones_ctx);
+    scriba_gestum_ponere(dispensator_motus(app->d),
+                         &app->montatio.actiones_ctx);
     redde VERUM;
 }

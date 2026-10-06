@@ -30,3 +30,20 @@ the glue directly, so the debounce replays.
 
 Not headless: the glues' `dispensator_finire` at exit (needs a real
 window / tty) - Fran's look.
+
+## 2026-10-05 — mounting split from the standalone app (insula-rami-plan T1a)
+
+`scriba_montare(m, …, repo, id, …)` (and `pictor_montare`): document
+opened/created in namespace `id` ("" for the root), canons on the
+branch, initial element (`insula_ramum_initiare`), owners, contexts
+with the branch inside, the app's OWN action and figura registries. The
+`…Montatio` struct owns the contexts (registries point into them -
+never copy it). Standalone = a repo whose roots are bare `<scriba/>` /
+`<scriba focus="pagina"/>` + a root-branch mount + dispatcher + gesture
+slot; `ScribaApplicatio` keeps `doc`/`actiones`/`figurae` as aliases,
+pictor's mains take `&app.montatio.figurae_ctx`. No behaviour change
+(root 203/203 before the new test, ludus_tessera 6/6, all four apps
+build). Proof (probatio_montatio): pictor + two scribae in one store and
+one volume - elements, namespaced documents, branch canons and owners,
+componere from a branch, a remount on the same volume reopens the tab's
+own document. Glossary: montare, montatio, initiatio.

@@ -27,19 +27,47 @@
 #include "pictor_actiones.h"
 #include "pictor_figurae.h"
 
+/* MONTATIO (insula-rami-plan T1a): pictor in repositorio dato, ramo
+ * <pictor id> (aut radice): documentum in spatio id, canones et
+ * domini in ramo, contextus (ramus intus), registra propria. Contextus
+ * HIC habitant - registra in eos monstrant: structuram ne copia. */
 nomen structura {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                Volumen* volumen;
        PictorDocumentum* doc;
-     InsulaRepositorium* repo;
+            InsulaRamus  ramus;
          ActioRegistrum* actiones;
          PictorActiones  actiones_ctx;
         FiguraRegistrum* figurae;
           PictorFigurae  figurae_ctx;
        PictorCompositio  compositio;
+} PictorMontatio;
+
+nomen structura {
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* volumen;
+     InsulaRepositorium* repo;
+         PictorMontatio  montatio;
+       PictorDocumentum* doc;        /* = montatio.doc */
+         ActioRegistrum* actiones;   /* = montatio.actiones */
+        FiguraRegistrum* figurae;    /* = montatio.figurae */
             Dispensator* d;
 } PictorApplicatio;
+
+/* pictorem montare: id NIHIL = radix repositorii (elementum radicis
+ * 'pictor' iam exstat); aliter liberum <pictor id> creatur si abest.
+ * Ordo: canones, elementum initiale, domini. radix = praefixum viarum
+ * canonum. */
+b32
+pictor_montare (
+         PictorMontatio* m,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* radix,
+                    i32  latitudo,
+                    i32  altitudo);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "pictor.volumen"). Reddit volumen apertum aut NIHIL. */
