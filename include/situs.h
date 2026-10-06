@@ -180,6 +180,24 @@ situs_transitus (
          s32* signum);
 
 
+/* idem, et si SECANT positiones transitus in segmentis: P = a + s (b -
+ * a) = c + t (d - c) in proiectione, 0 < s, t < 1 (ordo transituum in
+ * eodem segmento; codex Gauss). Hic piscina RETINETUR: parametri in ea
+ * vivunt. Exitus (etiam parametri) solum si SECANT scribuntur. */
+SitusContactus
+situs_transitus_parametri (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Punctum  d,
+     Punctum  v,
+     Piscina* piscina,
+         s32* superius,
+         s32* signum,
+     Fractio* parametrum_ab,
+     Fractio* parametrum_cd);
+
+
 /* ==================================================
  * Vicini: vertice communi
  * ================================================== */

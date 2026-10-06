@@ -59,7 +59,9 @@ for suita in "piscina:" "magnus:lib/magnus.c" \
     "situs:lib/magnus.c lib/fractio.c lib/situs.c" \
     "polynomium:lib/magnus.c lib/fractio.c lib/polynomium.c" \
     "matrix:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c"; do
+lib/anulus.c lib/matrix.c" \
+    "laqueus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
+lib/anulus.c lib/matrix.c lib/situs.c lib/laqueus.c"; do
     titulus="${suita%%:*}"
     read -r -a fontes <<< "${suita#*:}"
     if ! clang "${VEXILLA_C89[@]}" -Wno-overlength-strings -Iinclude \

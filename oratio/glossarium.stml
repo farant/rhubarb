@@ -284,6 +284,49 @@
     <forma textus="symmetrica" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="symmetricum" casus="nominativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="trifolium" lingua="latina" classis="substantivum" nota="Plinius: trifolium (planta); nodus trifolium (laqueus, nodus toroidalis T(2,3))">
+    <forma textus="trifolium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="trifolii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="trifolio" casus="dativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="trifolia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="trifoliorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="trifoliis" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="quinquefolium" lingua="latina" classis="substantivum" nota="Plinius: quinquefolium (potentilla); nodus quinquefolium (T(2,5))">
+    <forma textus="quinquefolium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="quinquefolii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="quinquefolio" casus="dativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="quinquefolia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="quinquefoliorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="quinquefoliis" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="genericus" lingua="latina" classis="adiectivum" nota="Neolatina (genus): genericus, proiectio generica (laqueus); WORDS caret">
+    <forma textus="genericus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="generica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="genericum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="genericae" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="collinearis" lingua="latina" classis="adiectivum" nota="Neolatina (cum + linea): collinearis, puncta in recta una (situs, laqueus); WORDS caret">
+    <forma textus="collinearis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="collineare" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="collineares" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="collinearia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="hopf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Heinz Hopf (catena Hopf, laqueus)"/>
+  <vocabulum lemma="septifolium" lingua="latina" classis="substantivum" nota="cf. trifolium, quinquefolium: nodus septifolium (T(2,7), laqueus)">
+    <forma textus="septifolium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="septifolii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="septifolio" casus="dativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="septifolia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="septifoliorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="invarians" lingua="latina" classis="adiectivum" nota="Neolatina (in + variare): invarians, quantitas non mutata (laqueus: invariantes nodorum); WORDS caret">
+    <forma textus="invarians" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="invariantis" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="invariantes" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="invariantium" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="invariantibus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="unimodularis" lingua="latina" classis="adiectivum" nota="Neolatina: unimodularis, matrix determinantis +-1 (matrix: certificata Hermite et Smith); WORDS caret">
     <forma textus="unimodularis" casus="nominativus" numerus="singularis"/>
     <forma textus="unimodulares" casus="nominativus" numerus="pluralis"/>

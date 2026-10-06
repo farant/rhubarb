@@ -133,3 +133,15 @@ checked). The w/1000 shrink is sound on this grid with ≥ 3× margin
 case — too large an ε fails red, too small could only hide an overlap
 shorter than ε. 13 of 18 mutants killed, the 5 survivors equivalent.
 Header now says the reverse move (AC + CB → AB) uses the same calls.
+
+## 2026-10-06 — situs_transitus_parametri (for laqueus)
+
+`laqueus` needs, for each crossing, WHERE on each segment it lies (to
+order crossings along a segment: Gauss code, PD code, triple-point
+test). Added `situs_transitus_parametri(a, b, c, d, v, piscina,
+&superius, &signum, &s, &t)`: same verdict as `situs_transitus`, plus
+the two exact parameters as Fractio. The internal `_transitus` gained
+two `Fractio*` outputs, written only when the verdict is SECANT;
+`situs_transitus` passes NIHIL and is unchanged (16528 checks green).
+No rollback inside: the parameters live in the caller's piscina, so the
+caller owns their lifetime (laqueus keeps them in the Diagramma).

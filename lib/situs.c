@@ -526,7 +526,9 @@ _transitus (
      Punctum  v,
      Piscina* piscina,
          s32* superius,
-         s32* signum)
+         s32* signum,
+     Fractio* parametrum_ab,
+     Fractio* parametrum_cd)
 {
     Punctum u = _minus(b, a, piscina);
     Punctum w = _minus(d, c, piscina);
@@ -590,6 +592,14 @@ _transitus (
 
             *signum = (ordo > ZEPHYRUM) ? signum_determinantis
                 : -signum_determinantis;
+        }
+        si (parametrum_ab)
+        {
+            *parametrum_ab = s;
+        }
+        si (parametrum_cd)
+        {
+            *parametrum_cd = t;
         }
         redde SITUS_SECANT;
     }
@@ -779,10 +789,29 @@ situs_transitus (
 {
     PiscinaNotatio nota = piscina_notare(piscina);
     SitusContactus r    = _transitus(a, b, c, d, v, piscina, superius,
-        signum);
+        signum, NIHIL, NIHIL);
 
     piscina_reficere(piscina, nota);
     redde r;
+}
+
+SitusContactus
+situs_transitus_parametri (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Punctum  d,
+     Punctum  v,
+     Piscina* piscina,
+         s32* superius,
+         s32* signum,
+     Fractio* parametrum_ab,
+     Fractio* parametrum_cd)
+{
+    /* sine refectione: parametri in piscina vivunt (sicut
+     * volumen_sexies) */
+    redde _transitus(a, b, c, d, v, piscina, superius, signum,
+        parametrum_ab, parametrum_cd);
 }
 
 SitusContactus

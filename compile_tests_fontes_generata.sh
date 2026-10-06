@@ -104,6 +104,7 @@ declare -a SOURCE_FILES=(
     "lib/lapifex_glr.c"
     "lib/lapifex_lexere.c"
     "lib/lapifex_parsere.c"
+    "lib/laqueus.c"
     "lib/layout.c"
     "lib/lectiones.c"
     "lib/librarium_lector.c"
