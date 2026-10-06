@@ -19,6 +19,11 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `aemulator_hospes` nova (hospes emulatoris, aemulator-plan
+  B4): nucleus + pseudoterminale + pulsus - effusio infantis in
+  nucleum, responsa et initus per caudam (pars responsis reservata),
+  magnitudo ad ambos, campana/titulus ad vocantem. Purus.
+
 - corpus: `pseudoterminale` nova (infans in pseudo-terminali,
   aemulator-plan B3): tabula functionum `Pseudoterminale` (legere,
   scribere numquam obstans, amplitudo, finitus, fossa, claudere),

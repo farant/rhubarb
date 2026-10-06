@@ -89,6 +89,16 @@ background - read them before a task.*
 16. **`scribere` never blocks:** it returns the bytes accepted (0..n,
     -1 error); the host keeps the remainder. A large paste into a
     child that is not reading cannot freeze the window.
+17. **The host is its own library, `aemulator_hospes`** (Fran, B4
+    header review 2026-10-06): the one place where core and child
+    meet. Pulse model (the front end owns its loop); the host OWNS a
+    `Pseudoterminale` passed in (posix or memoriae - the test seam);
+    `AemulatorConfiguratio` embedded (the host takes the reply effect,
+    bell/title pass through); an outgoing queue whose last sixteenth
+    is reserved for replies (a paste never starves a query); a read
+    cap per pulse. It touches the child only through the vtable, so
+    it is as pure as the core. Key encoding joins in phase D,
+    additively.
 
 ## II. What exists (to read before tasks)
 
@@ -325,6 +335,21 @@ Later phases (re-planned after A's RELATIO):
   - **B4 - a headless host and esctest:** core + PTY + a loop; fetch
     esctest (network: say when, pin the commit) and run its subset
     for B's surface with our core answering its queries.
+    B4a as built (decision 17): `aemulator_hospes` - pulse = send
+    queue, read (wait only before the first byte; cap per pulse),
+    core, send replies, check exit; `finitus` = EOF AND reaped (a dead
+    child's buffered output is still drained). Ring queue: user input
+    up to capacity - 1/16, replies up to the whole; a reply that does
+    not fit even the reserve is dropped and counted. Bell/title
+    forwarded with the CALLER's datum. Pure (string.h only). Tests:
+    memoriae child, a test-made "obstinate" child (write quota, endless
+    output, EOF/death flags, chunking, wait counting) and real
+    /bin/sh (output, a CPR round trip read back by the child, resize,
+    exit code). 16 plants: 15 caught, the loop-condition cap survives
+    by construction (each read also asks for at most the remainder).
+    Found by examen: `limes - mensura` underflowed (i32 is UNSIGNED)
+    when replies had filled the reserve.
+    - **B4b - esctest**: next.
   - **B5 - RELATIO.**
 - **C - scrollback.** The fixed page pool (Decision 4), viewport
   scrolling, byte limit, eviction; reflow stays deferred (Decision 7).

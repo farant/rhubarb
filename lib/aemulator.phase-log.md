@@ -181,3 +181,21 @@ free fd" cannot see leaks (now: count all descriptors). The examen
 lexicon learned the PTY calls (auspex-certified); glossary entries
 moved no oratio pins. Details: `lib/pseudoterminale.worklog.md`.
 
+## B4a — the host (2026-10-06)
+
+**INTENTIO.** The one place where the core and the child meet, as its
+own library (decision 17, Fran: "could help the other parts have
+better structure"), so every front end - the headless tests now,
+fenestra in E, vitrea later - only reads the screen and sends keys.
+
+Built: `aemulator_hospes` - pulse model, owns a `Pseudoterminale`
+passed in, a ring queue with a reply reserve, a read cap per pulse,
+bell/title forwarded to the caller. It touches the child only through
+the vtable, so it is pure like the core. Tests drive it with the
+memoriae child, a test-made child whose every behaviour the test sets
+(the vtable as seam paid off: wrap-around, reserve, chunking, "dead
+but not drained" are all exact), and a real shell (a CPR query
+answered by our core and read back by the shell). examen found an
+unsigned underflow in the queue clip before any test did; a test now
+pins it. 16 plants, 15 caught, one redundant-by-design guard named.
+
