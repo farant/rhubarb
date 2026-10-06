@@ -130,3 +130,47 @@ Plant P8 ("harness skips the style comparison") survived by
 construction - removing a check can only show when the compared
 things differ; P2 (SGR ignored) is the plant that proves the check
 works.
+
+## 2026-10-06 — B1: the shell surface
+
+80 Ghostty tests converted for regions, IND/RI/NEL/SU/SD, IL/DL,
+ICH/DCH/ECH, tabs and LNM (conversion rules added to the vector file's
+header), plus 4 house cases (NEL, TBC/HTS, CHT/CBT). Read Ghostty's
+implementations FIRST (Terminal.zig setTopAndBottomMargin, index,
+reverseIndex, cursorUp/Down, scrollUp/Down, insertLines, deleteLines,
+insertBlanks, deleteChars, eraseChars, horizontalTab(Back),
+tabClear/Set) - the edge rules are in the code, not the test names:
+- index outside the region moves down unless on the screen's last row;
+  at the region's bottom it scrolls ONLY the region;
+- cursorUp/Down stop at the margins only when starting inside them;
+- IL/DL do nothing with the cursor outside the region, clear the moved
+  rows' soft-wrap, and put the cursor in column 0;
+- ICH clears a wide char that would be split: under the cursor (tail),
+  at the right edge, and at the end of the shifted run;
+- DCH/ECH "split cell boundaries" first (a tail at the boundary clears
+  its whole wide char).
+- Ghostty `printString` maps '\n' to CR+LF.
+
+**A redundant line found by a plant:** ECH's "extend by one if the last
+erased cell is a wide head" survived its plant - the boundary split at
+x+n clears exactly the same cells. Removed, with the reason in the
+comment. (Ghostty has both.)
+
+**An invisible rule:** the soft-wrap resets in DCH/ECH/IL/DL cannot be
+observed through the API until reflow or an unwrapped dump exists;
+their plant survives by construction. Name it when reflow lands.
+
+Resize now scrolls the shrinking screen with an explicit full-screen
+`regionem_sursum` (the region-aware index would have obeyed a stale
+region).
+
+**A glossary entry is not free (B1 commit, oratio gate red):** adding
+`imus` (forms ima/imae/imam/imum) to `oratio/glossarium.stml` for the
+identifier `regio_ima` dropped oratio's parsing accuracy below its
+pins in `probatio_oratio_oraculum` (overall attachment and subject
+relations). The glossary is oratio's LEXICON, not just the lint's word
+list - a partial entry shadowed a richer dictionary analysis of corpus
+sentences. Verified both ways (without the entry: green; with: red).
+Fix: no entry; the identifier became `regio_ultima` (a word the lint
+already knows). Rule: after any glossary edit, run the oratio suite
+(or owe the oratio gate) - a new word can change parses.

@@ -126,3 +126,24 @@ sequences counted, never interpreted.
 after this RELATIO). It needs a short interview first: the PTY seam
 has real choices (openpty vs posix_openpt, sharing with `processus`,
 child reaping).
+
+## B0 — the PTY interview (2026-10-06, ee80c89f)
+
+Fran: `openpty`; independent of `processus`; reaping by
+`waitpid(WNOHANG)` + EOF; the window wakes on the master fd (exposed
+by the pons; fenestra wake source in phase E). Decisions 11-14 in the
+plan.
+
+## B1 — the shell surface (2026-10-06)
+
+**INTENTIO.** Everything a shell and line-oriented tools need beyond
+tessera's output: scroll regions and what scrolls inside them,
+insert/delete lines and characters, erase characters, tab stops, LNM.
+
+Built: terminal-wide DECSTBM region (reset on resize); region-aware
+IND/LF/wrap, RI, NEL, SU/SD; margin-aware CUU/CUD/CNL/CPL; IL/DL;
+ICH/DCH/ECH with Ghostty's wide-character boundary rules; tab stops
+(HTS, TBC, CHT, CBT, default every 8); LNM. Vectors 127 (115 Ghostty,
+80 new); the loopback unchanged and green; region scrolling allocates
+nothing. 16 plants: 14 caught, one exposed redundant code (removed),
+one rule invisible until reflow (named).

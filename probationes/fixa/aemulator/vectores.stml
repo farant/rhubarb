@@ -210,6 +210,400 @@
     </gradus>
   </casus>
 
+  <!-- phasis B1 (superficies conchae): regiones volutionis, IND RI NEL SU SD,
+       IL DL ICH DCH ECH, tabulationes, LNM. Conversiones additae:
+       setTopAndBottomMargin(t,b) -> CSI t;b r; index -> ESC D;
+       reverseIndex -> ESC M; scrollUp/Down(n) -> CSI n S/T;
+       insertLines/deleteLines(n) -> CSI n L/M; insertBlanks(n) -> CSI n @;
+       deleteChars(n) -> CSI n P; eraseChars(n) -> CSI n X;
+       horizontalTabBack -> CSI Z; printString \n -> \r\n;
+       modes.set(.linefeed) -> CSI 20 h. -->
+  <casus titulus="horizontal tabs" fons="Terminal.zig:7663" latitudo="20" altitudo="5">
+    <gradus initus="1\t" cursor_x="8"/>
+    <gradus initus="\t" cursor_x="16"/>
+    <gradus initus="\t" cursor_x="19"/>
+    <gradus initus="\t" cursor_x="19"/>
+  </casus>
+
+  <casus titulus="horizontal tabs starting on tabstop" fons="Terminal.zig:7685" latitudo="20" altitudo="5">
+    <gradus initus="\x1B[1;9HX\x1B[1;9H\tA" textus="        X       A"/>
+  </casus>
+
+  <casus titulus="horizontal tabs back" fons="Terminal.zig:7724" latitudo="20" altitudo="5">
+    <gradus initus="\x1B[1;20H\x1B[Z" cursor_x="16"/>
+    <gradus initus="\x1B[Z" cursor_x="8"/>
+    <gradus initus="\x1B[Z" cursor_x="0"/>
+    <gradus initus="\x1B[Z" cursor_x="0"/>
+  </casus>
+
+  <casus titulus="horizontal tabs back starting on tabstop" fons="Terminal.zig:7748" latitudo="20" altitudo="5">
+    <gradus initus="\x1B[1;9HX\x1B[1;9H\x1B[ZA" textus="A       X"/>
+  </casus>
+
+  <casus titulus="linefeed mode automatic carriage return" fons="Terminal.zig:7588" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[20h123456\nX" textus="123456\nX"/>
+  </casus>
+
+  <casus titulus="setTopAndBottomMargin simple" fons="Terminal.zig:7958" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[0;0r\x1B[1T" textus="\nABC\nDEF\nGHI"/>
+  </casus>
+
+  <casus titulus="setTopAndBottomMargin top only" fons="Terminal.zig:7989" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;0r\x1B[1T" textus="ABC\n\nDEF\nGHI"/>
+  </casus>
+
+  <casus titulus="setTopAndBottomMargin top and bottom" fons="Terminal.zig:8020" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[1;2r\x1B[1T" textus="\nABC\nGHI"/>
+  </casus>
+
+  <casus titulus="setTopAndBottomMargin top equal to bottom" fons="Terminal.zig:8049" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2r\x1B[1T" textus="\nABC\nDEF\nGHI"/>
+  </casus>
+
+  <casus titulus="insertLines simple" fons="Terminal.zig:8238" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[1L" textus="ABC\n\nDEF\nGHI"/>
+  </casus>
+
+  <casus titulus="insertLines colors with bg color" fons="Terminal.zig:8271" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[48;2;255;0;0m\x1B[1L" textus="ABC\n\nDEF\nGHI">
+      <cellula x="0" y="1" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+      <cellula x="4" y="1" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="insertLines outside of scroll region" fons="Terminal.zig:8348" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[3;4r\x1B[2;2H\x1B[1L" textus="ABC\nDEF\nGHI"/>
+  </casus>
+
+  <casus titulus="insertLines top/bottom scroll region" fons="Terminal.zig:8378" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\r\n123\x1B[1;3r\x1B[2;2H\x1B[1L" textus="ABC\n\nDEF\n123"/>
+  </casus>
+
+  <casus titulus="insertLines with scroll region" fons="Terminal.zig:8594" latitudo="2" altitudo="6">
+    <gradus initus="A\r\nB\r\nC\r\nD\r\nE\x1B[1;2r\x1B[1;1H\x1B[1LX" textus="X\nA\nC\nD\nE"/>
+  </casus>
+
+  <casus titulus="insertLines more than remaining" fons="Terminal.zig:8634" latitudo="2" altitudo="5">
+    <gradus initus="A\r\nB\r\nC\r\nD\r\nE\x1B[2;1H\x1B[20L" textus="A"/>
+  </casus>
+
+  <casus titulus="insertLines resets pending wrap" fons="Terminal.zig:8673" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE" pendens="verum"/>
+    <gradus initus="\x1B[1L" pendens="falsum"/>
+    <gradus initus="B" textus="B\nABCDE"/>
+  </casus>
+
+  <casus titulus="insertLines resets wrap" fons="Terminal.zig:8692" latitudo="3" altitudo="3">
+    <gradus initus="1\r\nABCDEF\x1B[1;1H\x1B[1LX" textus="X\n1\nABC"/>
+  </casus>
+
+  <casus titulus="scrollUp simple" fons="Terminal.zig:8784" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[1S" cursor_x="1" cursor_y="1" textus="DEF\nGHI"/>
+  </casus>
+
+  <casus titulus="scrollUp top/bottom scroll region" fons="Terminal.zig:8908" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;3r\x1B[1;1H\x1B[1S" textus="ABC\nGHI"/>
+  </casus>
+
+  <casus titulus="scrollUp preserves pending wrap" fons="Terminal.zig:9080" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;5HA\x1B[2;5HB\x1B[3;5HC\x1B[1SX" textus="    B\n    C\n\nX"/>
+  </casus>
+
+  <casus titulus="scrollUp full top/bottom region" fons="Terminal.zig:9102" latitudo="5" altitudo="5">
+    <gradus initus="top\x1B[5;1HABCDE\x1B[2;5r\x1B[4S" textus="top"/>
+  </casus>
+
+  <casus titulus="scrollDown simple" fons="Terminal.zig:9298" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[1T" cursor_x="1" cursor_y="1" textus="\nABC\nDEF\nGHI"/>
+  </casus>
+
+  <casus titulus="scrollDown outside of scroll region" fons="Terminal.zig:9383" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[3;4r\x1B[2;2H\x1B[1T" cursor_x="1" cursor_y="1" textus="ABC\nDEF\n\nGHI"/>
+  </casus>
+
+  <casus titulus="scrollDown preserves pending wrap" fons="Terminal.zig:9596" latitudo="5" altitudo="10">
+    <gradus initus="\x1B[1;5HA\x1B[2;5HB\x1B[3;5HC\x1B[1TX" textus="\n    A\n    B\nX   C"/>
+  </casus>
+
+  <casus titulus="eraseChars simple operation" fons="Terminal.zig:9618" latitudo="5" altitudo="5">
+    <gradus initus="ABC\x1B[1;1H\x1B[2XX" textus="X C"/>
+  </casus>
+
+  <casus titulus="eraseChars minimum one" fons="Terminal.zig:9640" latitudo="5" altitudo="5">
+    <gradus initus="ABC\x1B[1;1H\x1B[0XX" textus="XBC"/>
+  </casus>
+
+  <casus titulus="eraseChars beyond screen edge" fons="Terminal.zig:9660" latitudo="5" altitudo="5">
+    <gradus initus="  ABC\x1B[1;4H\x1B[10X" textus="  A"/>
+  </casus>
+
+  <casus titulus="eraseChars wide character" fons="Terminal.zig:9677" latitudo="5" altitudo="5">
+    <gradus initus="\xE6\xA9\x8BBC\x1B[1;1H\x1B[1XX" textus="X BC"/>
+  </casus>
+
+  <casus titulus="eraseChars resets pending wrap" fons="Terminal.zig:9696" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE" pendens="verum"/>
+    <gradus initus="\x1B[1X" pendens="falsum"/>
+    <gradus initus="X" textus="ABCDX"/>
+  </casus>
+
+  <casus titulus="eraseChars resets wrap" fons="Terminal.zig:9715" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE123\x1B[1;1H\x1B[1XX" textus="XBCDE\n123"/>
+  </casus>
+
+  <casus titulus="eraseChars preserves background sgr" fons="Terminal.zig:9746" latitudo="10" altitudo="10">
+    <gradus initus="ABC\x1B[1;1H\x1B[48;2;255;0;0m\x1B[2X" textus="  C">
+      <cellula x="0" y="0" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+      <cellula x="1" y="0" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="eraseChars wide char boundary conditions" fons="Terminal.zig:9865" latitudo="8" altitudo="1">
+    <gradus initus="\xF0\x9F\x98\x80a\xF0\x9F\x98\x80b\xF0\x9F\x98\x80" textus="\xF0\x9F\x98\x80a\xF0\x9F\x98\x80b\xF0\x9F\x98\x80"/>
+    <gradus initus="\x1B[1;2H\x1B[3X" textus="     b\xF0\x9F\x98\x80"/>
+  </casus>
+
+  <casus titulus="eraseChars wide char splits proper cell boundaries" fons="Terminal.zig:9889" latitudo="30" altitudo="1">
+    <gradus initus="x\xE9\xA3\x9F\xE3\x81\xB9\xE3\x81\xA6\xE4\xB8\x8B\xE3\x81\x95\xE3\x81\x84" textus="x\xE9\xA3\x9F\xE3\x81\xB9\xE3\x81\xA6\xE4\xB8\x8B\xE3\x81\x95\xE3\x81\x84"/>
+    <gradus initus="\x1B[1;6H\x1B[4X" textus="x\xE9\xA3\x9F\xE3\x81\xB9    \xE3\x81\x95\xE3\x81\x84"/>
+  </casus>
+
+  <casus titulus="reverseIndex" fons="Terminal.zig:9984" latitudo="2" altitudo="5">
+    <gradus initus="A\r\nB\r\nC\x1BMD\r\n\r\n" textus="A\nBD\nC"/>
+  </casus>
+
+  <casus titulus="reverseIndex from the top" fons="Terminal.zig:10012" latitudo="2" altitudo="5">
+    <gradus initus="A\r\nB\r\n\r\n\x1B[1;1H\x1BMD\r\n\x1B[1;1H\x1BME\r\n" textus="E\nD\nA\nB"/>
+  </casus>
+
+  <casus titulus="reverseIndex top of scrolling region" fons="Terminal.zig:10046" latitudo="2" altitudo="10">
+    <gradus initus="\x1B[2;1HA\r\nB\r\nC\r\nD\r\n\x1B[2;5r\x1B[2;1H\x1BMX" textus="\nX\nA\nB\nC"/>
+  </casus>
+
+  <casus titulus="reverseIndex top of screen" fons="Terminal.zig:10080" latitudo="5" altitudo="5">
+    <gradus initus="A\x1B[2;1HB\x1B[3;1HC\x1B[1;1H\x1BMX" textus="X\nA\nB\nC"/>
+  </casus>
+
+  <casus titulus="reverseIndex not top of screen" fons="Terminal.zig:10102" latitudo="5" altitudo="5">
+    <gradus initus="A\x1B[2;1HB\x1B[3;1HC\x1B[2;1H\x1BMX" textus="X\nB\nC"/>
+  </casus>
+
+  <casus titulus="reverseIndex top/bottom margins" fons="Terminal.zig:10124" latitudo="5" altitudo="5">
+    <gradus initus="A\x1B[2;1HB\x1B[3;1HC\x1B[2;3r\x1B[2;1H\x1BM" textus="A\n\nB"/>
+  </casus>
+
+  <casus titulus="reverseIndex outside top/bottom margins" fons="Terminal.zig:10146" latitudo="5" altitudo="5">
+    <gradus initus="A\x1B[2;1HB\x1B[3;1HC\x1B[2;3r\x1B[1;1H\x1BM" textus="A\nB\nC"/>
+  </casus>
+
+  <casus titulus="index" fons="Terminal.zig:10214" latitudo="2" altitudo="5">
+    <gradus initus="\x1BDA" textus="\nA"/>
+  </casus>
+
+  <casus titulus="index from the bottom" fons="Terminal.zig:10233" latitudo="2" altitudo="5">
+    <gradus initus="\x1B[5;1HA\x1B[1D\x1BDB" textus="\n\n\nA\nB"/>
+  </casus>
+
+  <casus titulus="index outside of scrolling region" fons="Terminal.zig:10303" latitudo="2" altitudo="5">
+    <gradus initus="\x1B[2;5r\x1BD" cursor_y="1"/>
+  </casus>
+
+  <casus titulus="index from the bottom outside of scroll region" fons="Terminal.zig:10315" latitudo="2" altitudo="5">
+    <gradus initus="\x1B[1;2r\x1B[5;1HA\x1BDB" textus="\n\n\n\nAB"/>
+  </casus>
+
+  <casus titulus="index no scroll region, top of screen" fons="Terminal.zig:10336" latitudo="5" altitudo="5">
+    <gradus initus="A\x1BDX" textus="A\n X"/>
+  </casus>
+
+  <casus titulus="index bottom of primary screen" fons="Terminal.zig:10357" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[5;1HA\x1BDX" textus="\n\n\nA\n X"/>
+  </casus>
+
+  <casus titulus="index inside scroll region" fons="Terminal.zig:10413" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;3rA\x1BDX" textus="A\n X"/>
+  </casus>
+
+  <casus titulus="index bottom of scroll region with background SGR" fons="Terminal.zig:10524" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;3r\x1B[4;1HB\x1B[3;1HA\x1B[48;2;255;0;0m\x1BD" textus="\nA\n\nB">
+      <cellula x="0" y="2" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+      <cellula x="4" y="2" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="index bottom of primary screen with scroll region" fons="Terminal.zig:10562" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;3r\x1B[3;1HA\x1B[5;1H\x1BD\x1BD\x1BDX" textus="\n\nA\n\nX"/>
+  </casus>
+
+  <casus titulus="index bottom of scroll region blank line preserves SGR" fons="Terminal.zig:10699" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;3r1\r\n2\r\n3\x1B[4;1HX\x1B[3;1H\x1B[48;2;255;0;0m\x1BD" textus="2\n3\n\nX">
+      <cellula x="0" y="2" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+      <cellula x="4" y="2" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="cursorUp below top scroll margin" fons="Terminal.zig:10885" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[2;4r\x1B[3;1HA\x1B[5AX" textus="\n X\nA"/>
+  </casus>
+
+  <casus titulus="cursorUp above top scroll margin" fons="Terminal.zig:10904" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[3;5r\x1B[3;1HA\x1B[2;1H\x1B[10AX" textus="X\n\nA"/>
+  </casus>
+
+  <casus titulus="cursorDown above bottom scroll margin" fons="Terminal.zig:11260" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;3rA\x1B[10BX" textus="A\n\n X"/>
+  </casus>
+
+  <casus titulus="cursorDown below bottom scroll margin" fons="Terminal.zig:11278" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;3rA\x1B[4;1H\x1B[10BX" textus="A\n\n\n\nX"/>
+  </casus>
+
+  <casus titulus="deleteLines simple" fons="Terminal.zig:11386" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[1M" textus="ABC\nGHI"/>
+  </casus>
+
+  <casus titulus="deleteLines colors with bg color" fons="Terminal.zig:11419" latitudo="5" altitudo="5">
+    <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[48;2;255;0;0m\x1B[1M" textus="ABC\nGHI">
+      <cellula x="0" y="4" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+      <cellula x="4" y="4" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="deleteLines with scroll region" fons="Terminal.zig:11639" latitudo="80" altitudo="80">
+    <gradus initus="A\r\nB\r\nC\r\nD\x1B[1;3r\x1B[1;1H\x1B[1ME\r\n" textus="E\nC\n\nD"/>
+  </casus>
+
+  <casus titulus="deleteLines with scroll region, large count" fons="Terminal.zig:11683" latitudo="80" altitudo="80">
+    <gradus initus="A\r\nB\r\nC\r\nD\x1B[1;3r\x1B[1;1H\x1B[5ME\r\n" textus="E\n\n\nD"/>
+  </casus>
+
+  <casus titulus="deleteLines with scroll region, cursor outside of region" fons="Terminal.zig:11727" latitudo="80" altitudo="80">
+    <gradus initus="A\r\nB\r\nC\r\nD\x1B[1;3r\x1B[4;1H\x1B[1M" textus="A\nB\nC\nD"/>
+  </casus>
+
+  <casus titulus="deleteLines resets pending wrap" fons="Terminal.zig:11763" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE" pendens="verum"/>
+    <gradus initus="\x1B[1M" pendens="falsum"/>
+    <gradus initus="B" textus="B"/>
+  </casus>
+
+  <casus titulus="deleteLines resets wrap" fons="Terminal.zig:11782" latitudo="3" altitudo="3">
+    <gradus initus="1\r\nABCDEF\x1B[1;2r\x1B[1;1H\x1B[1MX" textus="XBC\n\nDEF"/>
+  </casus>
+
+  <casus titulus="deleteLines wide character spacer head" fons="Terminal.zig:11912" latitudo="5" altitudo="3">
+    <gradus initus="AAAAABBBB\xF0\x9F\x98\x80CCC\x1B[1;1H\x1B[1M" textus="BBBB\n\xF0\x9F\x98\x80CCC"/>
+  </casus>
+
+  <casus titulus="insertBlanks" fons="Terminal.zig:12399" latitudo="5" altitudo="2">
+    <gradus initus="ABC\x1B[1;1H\x1B[2@" textus="  ABC"/>
+  </casus>
+
+  <casus titulus="insertBlanks pushes off end" fons="Terminal.zig:12424" latitudo="3" altitudo="2">
+    <gradus initus="ABC\x1B[1;1H\x1B[2@" textus="  A"/>
+  </casus>
+
+  <casus titulus="insertBlanks more than size" fons="Terminal.zig:12448" latitudo="3" altitudo="2">
+    <gradus initus="ABC\x1B[1;1H\x1B[5@">
+      <cellula x="0" y="0" vacua="verum"/>
+      <cellula x="2" y="0" vacua="verum"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="insertBlanks no scroll region, fits" fons="Terminal.zig:12472" latitudo="10" altitudo="10">
+    <gradus initus="ABC\x1B[1;1H\x1B[2@" textus="  ABC"/>
+  </casus>
+
+  <casus titulus="insertBlanks preserves background sgr" fons="Terminal.zig:12492" latitudo="10" altitudo="10">
+    <gradus initus="ABC\x1B[1;1H\x1B[48;2;255;0;0m\x1B[2@" textus="  ABC">
+      <cellula x="0" y="0" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="insertBlanks shift off screen" fons="Terminal.zig:12523" latitudo="5" altitudo="10">
+    <gradus initus="  ABC\x1B[1;3H\x1B[2@X" textus="  X A"/>
+  </casus>
+
+  <casus titulus="insertBlanks split multi-cell character" fons="Terminal.zig:12543" latitudo="5" altitudo="10">
+    <gradus initus="123\xE6\xA9\x8B\x1B[1;1H\x1B[1@" textus=" 123"/>
+  </casus>
+
+  <casus titulus="insertBlanks split multi-cell character from tail" fons="Terminal.zig:12707" latitudo="5" altitudo="10">
+    <gradus initus="\xE6\xA9\x8B123\x1B[1;2H\x1B[1@" textus="   12"/>
+  </casus>
+
+  <casus titulus="deleteChars" fons="Terminal.zig:12985" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE\x1B[1;2H\x1B[2P" textus="ADE"/>
+  </casus>
+
+  <casus titulus="deleteChars more than half" fons="Terminal.zig:13025" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE\x1B[1;2H\x1B[3P" textus="AE"/>
+  </casus>
+
+  <casus titulus="deleteChars more than line width" fons="Terminal.zig:13045" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE\x1B[1;2H\x1B[10P" textus="A"/>
+  </casus>
+
+  <casus titulus="deleteChars resets pending wrap" fons="Terminal.zig:13085" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE" pendens="verum"/>
+    <gradus initus="\x1B[1P" pendens="falsum"/>
+    <gradus initus="X" textus="ABCDX"/>
+  </casus>
+
+  <casus titulus="deleteChars resets wrap" fons="Terminal.zig:13104" latitudo="5" altitudo="5">
+    <gradus initus="ABCDE123\x1B[1;1H\x1B[1PX" textus="XCDE\n123"/>
+  </casus>
+
+  <casus titulus="deleteChars simple operation" fons="Terminal.zig:13134" latitudo="10" altitudo="10">
+    <gradus initus="ABC123\x1B[1;3H\x1B[2P" textus="AB23"/>
+  </casus>
+
+  <casus titulus="deleteChars preserves background sgr" fons="Terminal.zig:13154" latitudo="10" altitudo="10">
+    <gradus initus="ABC123\x1B[1;3H\x1B[48;2;255;0;0m\x1B[2P" textus="AB23">
+      <cellula x="8" y="0" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+      <cellula x="9" y="0" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="deleteChars split wide character from spacer tail" fons="Terminal.zig:13232" latitudo="6" altitudo="10">
+    <gradus initus="A\xE6\xA9\x8B123\x1B[1;3H\x1B[1P" textus="A 123"/>
+  </casus>
+
+  <casus titulus="deleteChars split wide character from wide" fons="Terminal.zig:13249" latitudo="6" altitudo="10">
+    <gradus initus="\xE6\xA9\x8B123\x1B[1;1H\x1B[1P">
+      <cellula x="0" y="0" vacua="verum" latitudo="angusta"/>
+      <cellula x="1" y="0" textus="1" latitudo="angusta"/>
+    </gradus>
+  </casus>
+
+  <casus titulus="deleteChars split wide character from end" fons="Terminal.zig:13273" latitudo="6" altitudo="10">
+    <gradus initus="A\xE6\xA9\x8B123\x1B[1;1H\x1B[1P">
+      <cellula x="0" y="0" textus="\xE6\xA9\x8B" latitudo="lata"/>
+      <cellula x="1" y="0" latitudo="cauda"/>
+    </gradus>
+  </casus>
+
+  <!-- NEL (ESC E) = CR + index (Ghostty nextLine) -->
+  <casus titulus="nel is carriage return plus index" fons="domus" latitudo="10" altitudo="3">
+    <gradus initus="AB\x1BEC" textus="AB\nC"/>
+  </casus>
+
+  <!-- TBC 3 tollit omnes; HT ad marginem dextram -->
+  <casus titulus="tab clear all then tab goes to the right edge" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[3g\tX" cursor_x="9" textus="         X"/>
+  </casus>
+
+  <!-- HTS (ESC H) in columna cursoris -->
+  <casus titulus="tab set at cursor" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[3g\x1B[1;4H\x1BH\x1B[1;1H\tY" textus="   Y"/>
+  </casus>
+
+  <!-- CHT n / CBT n = n tabulationes -->
+  <casus titulus="cht and cbt with counts" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B[2I" cursor_x="16"/>
+    <gradus initus="\x1B[2Z" cursor_x="0"/>
+  </casus>
+
   <!-- vectores domus: superficies phasis A quam probationes Ghostty
        per octetos non tegunt -->
 

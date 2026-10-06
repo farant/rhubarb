@@ -377,6 +377,40 @@ s32 principale (vacuum)
             0x010203);
     }
 
+    imprimere("\n--- XIV: regio et sistae (B1) ---\n");
+    /* mutatio magnitudinis regionem et sistas ad ordinem reddit */
+    a = creare(X, V);
+    scribere(a, "\x1B[2;3r\x1B[3g\x1B[1;5H\x1BH");
+    CREDO_VERUM(aemulator_amplitudo(a, X, V));
+    scribere(a, "\x1B[5;1HA\nB");
+    CREDO_VERUM(textus_est(a, "\n\n\nA\n B"));
+    scribere(a, "\x1B[1;1H\tT");
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, IX);
+    /* TBC 0: sista una tollitur */
+    a = creare(XX, II);
+    scribere(a, "\x1B[1;9H\x1B[0g\x1B[1;1H\t");
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, XVI);
+    /* SD cum pluribus parametris: non SD (xterm), ignotum */
+    a = creare(X, III);
+    scribere(a, "A\x1B[1;2;3;4;5T");
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), I);
+    CREDO_VERUM(textus_est(a, "A"));
+    /* LNM legitur */
+    CREDO_FALSUM(aemulator_modus(a, XX, FALSUM));
+    scribere(a, "\x1B[20h");
+    CREDO_VERUM(aemulator_modus(a, XX, FALSUM));
+    CREDO_FALSUM(aemulator_modus(a, XX, VERUM));
+    /* volutio regionis status constans: nihil allocat */
+    a = creare(XX, X);
+    scribere(a, "\x1B[3;7r\x1B[7;1H\x1B[44m");
+    usus = piscina_summa_usus(piscina);
+    per (i = ZEPHYRUM; i < M; i++)
+    {
+        scribere(a, "linea\r\n\x1BM\x1B[2L\x1B[2M\x1B[S\x1B[T");
+    }
+    post = piscina_summa_usus(piscina);
+    CREDO_VERUM(post == usus);
+
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     a = creare(XX, V);
     scribere(a, "calefactio\r\n");

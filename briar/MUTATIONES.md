@@ -25,8 +25,10 @@ Leges chartae:
   pendente, impressio per runae, CR LF BS HT BEL, mutatio magnitudinis
   (capacitas geometrica), effusio plana ut Ghostty plainString; A2:
   CUP et motus relativi, ED/EL (fundus calami servatur), SGR cum stilis
-  internatis (collectio), DECTCEM, 1049, 2026, DECSC/DECRC. Series
-  ceterae consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
+  internatis (collectio), DECTCEM, 1049, 2026, DECSC/DECRC; B1: regio
+  volutionis (DECSTBM) et IND RI NEL SU SD in ea, IL DL ICH DCH ECH,
+  sistae tabulationis (HT HTS TBC CHT CBT), LNM. Series ceterae
+  consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex
   fenestra.h divisum (fenestra.h id includit), sine iactura auctum:

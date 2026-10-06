@@ -6,8 +6,10 @@
  * A2: CUP et motus relativi, ED/EL (cellulae deletae fundum calami
  * servant), SGR per stilus_applicare cum stilis internatis (tabula
  * fixa; plena -> collectio et compactio), DECTCEM, 1049 (schirmum
- * alterum, cursor servatus), 2026, DECSC/DECRC. Series ceterae
- * consumuntur et numerantur.
+ * alterum, cursor servatus), 2026, DECSC/DECRC.
+ * B1: regio volutionis (DECSTBM) et quae in ea volvunt (IND RI NEL
+ * SU SD, LF et involutio), IL DL ICH DCH ECH, tabulationes (HT HTS
+ * TBC CHT CBT), LNM. Series ceterae consumuntur et numerantur.
  *
  * PURUS: solae series_terminalis, runae, utf8, stilus_terminalis,
  * piscina; <string.h> solum. Effusio sine chorda_aedificator. */
@@ -73,6 +75,10 @@ structura Aemulator {
                   b32  involutio;         /* DEC VII */
                   b32  visibilis;         /* DEC XXV */
                   b32  synchronia;        /* DEC MMXXVI */
+                  b32  lnm;               /* ANSI XX: LF et CR */
+                  i32  regio_summa;       /* DECSTBM (0-based) */
+                  i32  regio_ultima;
+                   i8* tabulae;           /* sistae per columnam */
      StilusTerminalis* stili;             /* [0] = nativus */
                   i32  numerus_stilorum;
                   i32* transitus;         /* collectio: vetus->novus */
@@ -258,32 +264,98 @@ stilus_vacuus (
  * Cursor et lineae
  * ================================================== */
 
-/* linea deorsum; in ima linea schirmum sursum volvitur (linea summa
- * abit - scrollback: phasis C) */
+/* lineas [summa, ultima] n sursum volvere: summae abeunt (scrollback:
+ * phasis C), imae novae vacuae (BCE) */
+interior vacuum
+regionem_sursum (
+    Aemulator* a,
+          i32  summa,
+          i32  ultima,
+          i32  n)
+{
+    Schirmum* s;
+       Linea* l;
+         i32  y;
+         i32  k;
+         i32  stilus;
+
+    s       = a->activum;
+    stilus  = stilus_vacuus(a);
+    si (n > ultima - summa + I)
+    {
+        n = ultima - summa + I;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        l = s->lineae[summa];
+        per (y = summa; y < ultima; y++)
+        {
+            s->lineae[y] = s->lineae[y + I];
+        }
+        s->lineae[ultima] = l;
+        lineam_vacare(l, ZEPHYRUM, a->capacitas_latitudinis, stilus);
+        l->involuta = FALSUM;
+    }
+}
+
+/* lineas [summa, ultima] n deorsum volvere: imae abeunt, summae novae
+ * vacuae (BCE) */
+interior vacuum
+regionem_deorsum (
+    Aemulator* a,
+          i32  summa,
+          i32  ultima,
+          i32  n)
+{
+    Schirmum* s;
+       Linea* l;
+         i32  y;
+         i32  k;
+         i32  stilus;
+
+    s       = a->activum;
+    stilus  = stilus_vacuus(a);
+    si (n > ultima - summa + I)
+    {
+        n = ultima - summa + I;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        l = s->lineae[ultima];
+        per (y = ultima; y > summa; y--)
+        {
+            s->lineae[y] = s->lineae[y - I];
+        }
+        s->lineae[summa] = l;
+        lineam_vacare(l, ZEPHYRUM, a->capacitas_latitudinis, stilus);
+        l->involuta = FALSUM;
+    }
+}
+
+/* IND (Ghostty index): extra regionem deorsum nisi in ultima linea
+ * schirmi; in ultima regionis regio volvitur; aliter deorsum */
 interior vacuum
 indicem_movere (
     Aemulator* a)
 {
-     Schirmum* s;
-        Linea* summa;
-          i32  y;
+    Schirmum* s;
 
     s                  = a->activum;
     s->cursor.pendens  = FALSUM;
-    si (s->cursor.y + I < a->altitudo)
+    si (s->cursor.y < a->regio_summa || s->cursor.y > a->regio_ultima)
     {
-        s->cursor.y++;
+        si (s->cursor.y + I < a->altitudo)
+        {
+            s->cursor.y++;
+        }
         redde;
     }
-    summa = s->lineae[ZEPHYRUM];
-    per (y = ZEPHYRUM; y + I < a->altitudo; y++)
+    si (s->cursor.y == a->regio_ultima)
     {
-        s->lineae[y] = s->lineae[y + I];
+        regionem_sursum(a, a->regio_summa, a->regio_ultima, I);
+        redde;
     }
-    s->lineae[a->altitudo - I] = summa;
-    lineam_vacare(summa, ZEPHYRUM, a->capacitas_latitudinis,
-                  stilus_vacuus(a));
-    summa->involuta = FALSUM;
+    s->cursor.y++;
 }
 
 /* involutio: linea currens in proximam continuat */
@@ -466,6 +538,59 @@ cursum_imprimere (
     }
 }
 
+/* HT (Ghostty horizontalTab): dextrorsum usque ad sistam aut
+ * marginem dextram */
+interior vacuum
+tabulam_procedere (
+    Aemulator* a)
+{
+    Schirmum* s;
+
+    s = a->activum;
+    dum (s->cursor.x + I < a->latitudo)
+    {
+        s->cursor.x++;
+        si (a->tabulae[s->cursor.x])
+        {
+            redde;
+        }
+    }
+}
+
+/* CBT (Ghostty horizontalTabBack): sinistrorsum usque ad sistam aut
+ * columnam primam */
+interior vacuum
+tabulam_recedere (
+    Aemulator* a)
+{
+    Schirmum* s;
+
+    s = a->activum;
+    dum (s->cursor.x > ZEPHYRUM)
+    {
+        s->cursor.x--;
+        si (a->tabulae[s->cursor.x])
+        {
+            redde;
+        }
+    }
+}
+
+/* sistae ordinariae (Ghostty: omnis VIII) - creatio, mutatio
+ * magnitudinis */
+interior vacuum
+tabulas_ordinare (
+    Aemulator* a)
+{
+    i32 x;
+
+    per (x = ZEPHYRUM; x < a->capacitas_latitudinis; x++)
+    {
+        a->tabulae[x] = (i8)((x % TABULATIO)
+            == ZEPHYRUM ? I : ZEPHYRUM);
+    }
+}
+
 /* C0 (Ghostty stream: execute) */
 interior vacuum
 regimen_exsequi (
@@ -491,16 +616,16 @@ regimen_exsequi (
             }
             frange;
         casus 0x09:
-            s->cursor.x = (s->cursor.x / TABULATIO + I) * TABULATIO;
-            si (s->cursor.x >= a->latitudo)
-            {
-                s->cursor.x = a->latitudo - I;
-            }
+            tabulam_procedere(a);
             frange;
         casus 0x0A:
         casus 0x0B:
         casus 0x0C:
             indicem_movere(a);
+            si (a->lnm)
+            {
+                s->cursor.x = ZEPHYRUM;
+            }
             frange;
         casus 0x0D:
             s->cursor.x        = ZEPHYRUM;
@@ -734,6 +859,221 @@ modum_privatum_ponere (
     }
 }
 
+/* Ghostty splitCellBoundary: si (x) cauda est, lata eius tota
+ * vacatur (BCE) */
+interior vacuum
+limitem_findere (
+    Aemulator* a,
+        Linea* l,
+          i32  x)
+{
+    si (   x > ZEPHYRUM && x < a->latitudo
+        && l->cellulae[x].latitudo == AEMULATOR_CAUDA)
+    {
+        lineam_vacare(l, x - I, x + I, stilus_vacuus(a));
+    }
+}
+
+/* CUU / CUD (Ghostty cursorUp/Down): intra regionem margines sistunt,
+ * extra eam schirmi; pendens tollitur */
+interior vacuum
+cursorem_sursum (
+    Aemulator* a,
+          i32  n)
+{
+    Schirmum* s;
+         i32  maximum;
+
+    s        = a->activum;
+    maximum  = s->cursor.y >= a->regio_summa
+        ? s->cursor.y - a->regio_summa : s->cursor.y;
+    s->cursor.y        -= n < maximum ? n : maximum;
+    s->cursor.pendens  = FALSUM;
+}
+
+interior vacuum
+cursorem_deorsum (
+    Aemulator* a,
+          i32  n)
+{
+    Schirmum* s;
+         i32  maximum;
+
+    s        = a->activum;
+    maximum  = s->cursor.y <= a->regio_ultima
+        ? a->regio_ultima - s->cursor.y : a->altitudo - I - s->cursor.y;
+    s->cursor.y        += n < maximum ? n : maximum;
+    s->cursor.pendens  = FALSUM;
+}
+
+/* IL / DL (Ghostty insertLines/deleteLines): extra regionem nihil;
+ * lineae motae involutionem amittunt; cursor ad columnam primam */
+interior vacuum
+lineas_inserere (
+    Aemulator* a,
+          i32  n,
+          b32  delere)
+{
+    Schirmum* s;
+         i32  y;
+
+    s = a->activum;
+    si (s->cursor.y < a->regio_summa || s->cursor.y > a->regio_ultima)
+    {
+        redde;
+    }
+    si (delere)
+    {
+        regionem_sursum(a, s->cursor.y, a->regio_ultima, n);
+    }
+    alioquin
+    {
+        regionem_deorsum(a, s->cursor.y, a->regio_ultima, n);
+    }
+    per (y = s->cursor.y; y <= a->regio_ultima; y++)
+    {
+        s->lineae[y]->involuta = FALSUM;
+    }
+    s->cursor.x        = ZEPHYRUM;
+    s->cursor.pendens  = FALSUM;
+}
+
+/* ICH (Ghostty insertBlanks): lata quae scinderetur tota vacatur (sub
+ * cursore cauda, in margine dextra, in fine translationis) */
+interior vacuum
+cellulas_inserere (
+    Aemulator* a,
+          i32  n)
+{
+    Schirmum* s;
+       Linea* l;
+         i32  x;
+         i32  reliquae;
+         i32  movendae;
+         i32  k;
+         i32  stilus;
+
+    s                  = a->activum;
+    l                  = s->lineae[s->cursor.y];
+    x                  = s->cursor.x;
+    stilus             = stilus_vacuus(a);
+    s->cursor.pendens  = FALSUM;
+    si (x > ZEPHYRUM && l->cellulae[x].latitudo == AEMULATOR_CAUDA)
+    {
+        lineam_vacare(l, x - I, x + I, stilus);
+    }
+    reliquae = a->latitudo - x;
+    si (l->cellulae[a->latitudo - I].latitudo == AEMULATOR_LATA)
+    {
+        lineam_vacare(l, a->latitudo - I, a->latitudo, stilus);
+    }
+    si (n > reliquae)
+    {
+        n = reliquae;
+    }
+    movendae = reliquae - n;
+    si (movendae > ZEPHYRUM)
+    {
+        si (l->cellulae[x + movendae - I].latitudo == AEMULATOR_LATA)
+        {
+            lineam_vacare(l, x + movendae - I, x + movendae + I,
+                stilus);
+        }
+        per (k = movendae; k > ZEPHYRUM; k--)
+        {
+            l->cellulae[x + k - I + n] = l->cellulae[x + k - I];
+        }
+    }
+    lineam_vacare(l, x, x + n, stilus);
+}
+
+/* DCH (Ghostty deleteChars): limites latarum finduntur, sinistrorsum
+ * movetur, finis vacuus (BCE); involutio et pendens tolluntur */
+interior vacuum
+cellulas_delere (
+    Aemulator* a,
+          i32  n)
+{
+    Schirmum* s;
+       Linea* l;
+         i32  x;
+         i32  reliquae;
+         i32  movendae;
+         i32  k;
+
+    s         = a->activum;
+    l         = s->lineae[s->cursor.y];
+    x         = s->cursor.x;
+    reliquae  = a->latitudo - x;
+    si (n > reliquae)
+    {
+        n = reliquae;
+    }
+    limitem_findere(a, l, x);
+    limitem_findere(a, l, x + n);
+    movendae = reliquae - n;
+    per (k = ZEPHYRUM; k < movendae; k++)
+    {
+        l->cellulae[x + k] = l->cellulae[x + k + n];
+    }
+    lineam_vacare(l, x + movendae, a->latitudo, stilus_vacuus(a));
+    l->involuta        = FALSUM;
+    s->cursor.pendens  = FALSUM;
+}
+
+/* ECH (Ghostty eraseChars): limites finduntur (lata in fine tota per
+ * fissionem ad x + n - Ghostty praeterea n auget, quod hic idem facit
+ * et nullo initu discernitur; planta B1 P7); involutio et pendens
+ * tolluntur */
+interior vacuum
+cellulas_eradere (
+    Aemulator* a,
+          i32  n)
+{
+    Schirmum* s;
+       Linea* l;
+         i32  x;
+         i32  reliquae;
+
+    s         = a->activum;
+    l         = s->lineae[s->cursor.y];
+    x         = s->cursor.x;
+    reliquae  = a->latitudo - x;
+    si (n > reliquae)
+    {
+        n = reliquae;
+    }
+    limitem_findere(a, l, x);
+    limitem_findere(a, l, x + n);
+    lineam_vacare(l, x, x + n, stilus_vacuus(a));
+    l->involuta        = FALSUM;
+    s->cursor.pendens  = FALSUM;
+}
+
+/* DECSTBM: summa >= ultima ignoratur; cursor ad initium */
+interior vacuum
+regionem_ponere (
+                 Aemulator* a,
+     constans SeriesLexema* lx)
+{
+    i32 summa;
+    i32 ultima;
+
+    summa   = parametrum(lx, ZEPHYRUM, I);
+    ultima  = parametrum(lx, I, a->altitudo);
+    si (ultima > a->altitudo)
+    {
+        ultima = a->altitudo;
+    }
+    si (summa >= ultima)
+    {
+        redde;
+    }
+    a->regio_summa   = summa - I;
+    a->regio_ultima  = ultima - I;
+    cursorem_ponere(a, ZEPHYRUM, ZEPHYRUM);
+}
+
 interior vacuum
 seriem_csi (
                  Aemulator* a,
@@ -779,11 +1119,10 @@ seriem_csi (
             cursorem_ponere(a, parametrum(lx, I, I) - I, n - I);
             frange;
         casus 'A':
-            cursorem_ponere(a, s->cursor.x,
-                s->cursor.y > n ? s->cursor.y - n : ZEPHYRUM);
+            cursorem_sursum(a, n);
             frange;
         casus 'B':
-            cursorem_ponere(a, s->cursor.x, s->cursor.y + n);
+            cursorem_deorsum(a, n);
             frange;
         casus 'C':
             cursorem_ponere(a, s->cursor.x + n, s->cursor.y);
@@ -794,11 +1133,12 @@ seriem_csi (
                 s->cursor.y);
             frange;
         casus 'E':
-            cursorem_ponere(a, ZEPHYRUM, s->cursor.y + n);
+            cursorem_deorsum(a, n);
+            s->cursor.x = ZEPHYRUM;
             frange;
         casus 'F':
-            cursorem_ponere(a, ZEPHYRUM,
-                s->cursor.y > n ? s->cursor.y - n : ZEPHYRUM);
+            cursorem_sursum(a, n);
+            s->cursor.x = ZEPHYRUM;
             frange;
         casus 'G':
         casus '`':
@@ -812,6 +1152,77 @@ seriem_csi (
             frange;
         casus 'K':
             lineam_delere(a, parametrum(lx, ZEPHYRUM, ZEPHYRUM));
+            frange;
+        casus 'r':
+            regionem_ponere(a, lx);
+            frange;
+        casus 'S':
+            regionem_sursum(a, a->regio_summa, a->regio_ultima, n);
+            frange;
+        casus 'T':
+            /* plura parametra: xterm 'mouse highlight', non SD */
+            si (lx->numerus_parametrorum > I)
+            {
+                a->ignota++;
+                frange;
+            }
+            regionem_deorsum(a, a->regio_summa, a->regio_ultima, n);
+            frange;
+        casus 'L':
+            lineas_inserere(a, n, FALSUM);
+            frange;
+        casus 'M':
+            lineas_inserere(a, n, VERUM);
+            frange;
+        casus '@':
+            cellulas_inserere(a, n);
+            frange;
+        casus 'P':
+            cellulas_delere(a, n);
+            frange;
+        casus 'X':
+            cellulas_eradere(a, n);
+            frange;
+        casus 'I':
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                tabulam_procedere(a);
+            }
+            frange;
+        casus 'Z':
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                tabulam_recedere(a);
+            }
+            frange;
+        casus 'g':
+            commutatio (parametrum(lx, ZEPHYRUM, ZEPHYRUM))
+            {
+                casus ZEPHYRUM:
+                    a->tabulae[s->cursor.x] = ZEPHYRUM;
+                    frange;
+                casus III:
+                    memset(a->tabulae, ZEPHYRUM,
+                        (memoriae_index)a->capacitas_latitudinis);
+                    frange;
+                ordinarius:
+                    a->ignota++;
+                    frange;
+            }
+            frange;
+        casus 'h':
+        casus 'l':
+            per (i = ZEPHYRUM; i < lx->numerus_parametrorum; i++)
+            {
+                si (lx->parametra[i] == XX)
+                {
+                    a->lnm = lx->finale == 'h';
+                }
+                alioquin
+                {
+                    a->ignota++;
+                }
+            }
             frange;
         casus 'm':
             st = a->stili[s->calamus];
@@ -829,7 +1240,42 @@ seriem_esc (
                  Aemulator* a,
      constans SeriesLexema* lx)
 {
-    si (lx->numerus_intermediorum == ZEPHYRUM && lx->finale == '7')
+    Schirmum* s;
+
+    s = a->activum;
+    si (lx->numerus_intermediorum != ZEPHYRUM)
+    {
+        a->ignota++;
+        redde;
+    }
+    commutatio (lx->finale)
+    {
+        casus 'D':
+            indicem_movere(a);
+            redde;
+        casus 'E':
+            s->cursor.x = ZEPHYRUM;
+            indicem_movere(a);
+            redde;
+        casus 'M':
+            /* RI (Ghostty reverseIndex): in summa regionis regio
+             * deorsum volvitur, aliter cursor sursum */
+            si (s->cursor.y == a->regio_summa)
+            {
+                regionem_deorsum(a, a->regio_summa, a->regio_ultima, I);
+            }
+            alioquin
+            {
+                cursorem_sursum(a, I);
+            }
+            redde;
+        casus 'H':
+            a->tabulae[s->cursor.x] = (i8)I;
+            redde;
+        ordinarius:
+            frange;
+    }
+    si (lx->finale == '7')
     {
         cursorem_servare(a);
     }
@@ -899,12 +1345,17 @@ aemulator_creare (
         STILI_MAXIMI * magnitudo(StilusTerminalis));
     a->transitus = (i32*)piscina_conari_allocare(piscina,
         STILI_MAXIMI * magnitudo(i32));
+    a->tabulae = (i8*)piscina_conari_allocare(piscina,
+        (memoriae_index)cfg->latitudo);
     a->lector = series_lectorem_creare(piscina);
     si (   !a->primarium.lineae || !a->alterum.lineae || !a->stili
-        || !a->transitus || !a->lector)
+        || !a->transitus || !a->tabulae || !a->lector)
     {
         redde NIHIL;
     }
+    a->regio_summa   = ZEPHYRUM;
+    a->regio_ultima  = cfg->altitudo - I;
+    tabulas_ordinare(a);
     stilus_nativus(&a->stili[ZEPHYRUM]);
     a->numerus_stilorum = I;
     redde a;
@@ -979,11 +1430,7 @@ schirmum_aptare (
         activum     = a->activum;
         a->activum  = s;
         translatio  = s->cursor.y - altitudo + I;
-        per (y = ZEPHYRUM; y < translatio; y++)
-        {
-            s->cursor.y = a->altitudo - I;
-            indicem_movere(a);
-        }
+        regionem_sursum(a, ZEPHYRUM, a->altitudo - I, translatio);
         s->cursor.y  = altitudo - I;
         a->activum   = activum;
     }
@@ -1014,11 +1461,12 @@ aemulator_amplitudo (
           i32  latitudo,
           i32  altitudo)
 {
-       Linea** primae;
-       Linea** alterae;
-         i32   cap_lat;
-         i32   cap_alt;
-         i32   y;
+         Linea** primae;
+         Linea** alterae;
+            i8*  tabulae;
+           i32   cap_lat;
+           i32   cap_alt;
+           i32   y;
 
     si (   !a || latitudo < I || latitudo > LATUS_MAXIMUM
         || altitudo < I || altitudo > LATUS_MAXIMUM)
@@ -1057,10 +1505,13 @@ aemulator_amplitudo (
         }
         primae   = lineas_struere(a->piscina, cap_lat, cap_alt);
         alterae  = lineas_struere(a->piscina, cap_lat, cap_alt);
-        si (!primae || !alterae)
+        tabulae  = (i8*)piscina_conari_allocare(a->piscina,
+            (memoriae_index)cap_lat);
+        si (!primae || !alterae || !tabulae)
         {
             redde FALSUM;
         }
+        a->tabulae = tabulae;
         per (y = ZEPHYRUM; y < a->altitudo; y++)
         {
             memcpy(primae[y]->cellulae,
@@ -1080,6 +1531,10 @@ aemulator_amplitudo (
     schirmum_aptare(a, &a->alterum, latitudo, altitudo);
     a->latitudo = latitudo;
     a->altitudo = altitudo;
+    /* Ghostty resize: regio et sistae ad ordinem redeunt */
+    a->regio_summa   = ZEPHYRUM;
+    a->regio_ultima  = altitudo - I;
+    tabulas_ordinare(a);
     redde VERUM;
 }
 
@@ -1152,9 +1607,13 @@ aemulator_modus (
                    i32  numerus,
                    b32  privatus)
 {
-    si (!a || !privatus)
+    si (!a)
     {
         redde FALSUM;
+    }
+    si (!privatus)
+    {
+        redde numerus == XX ? a->lnm : FALSUM;
     }
     commutatio (numerus)
     {

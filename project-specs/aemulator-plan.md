@@ -265,6 +265,18 @@ Later phases (re-planned after A's RELATIO):
     scrolls inside them (LF/IND at the region bottom, RI at the top,
     NEL, SU/SD), IL/DL, ICH/DCH/ECH, tab stops (HTS, TBC, CHT, CBT),
     LNM. ESC 7/8 already exist (A2).
+    B1 as built: region (terminal-wide, reset on resize) with
+    region-aware index/wrap/LF, RI, NEL, SU/SD (multi-parameter SD =
+    xterm mouse highlight -> unknown), margin-aware CUU/CUD/CNL/CPL,
+    IL/DL (outside the region: nothing; moved rows lose soft-wrap;
+    cursor to column 0), ICH/DCH/ECH with Ghostty's wide-character
+    boundary rules (BCE everywhere), tab stops (default every 8,
+    reset on resize; HTS, TBC 0/3, CHT, CBT), LNM (mode 20, read
+    through `aemulator_modus`). 127 vectors green (115 Ghostty: 80
+    new for B1). 16 plants: 14 caught; ECH's extra extension was
+    REDUNDANT (the boundary split already clears the same cells) and
+    was removed; DCH/IL/DL soft-wrap resets are invisible until
+    reflow exists (named).
   - **B2 - answers and effects:** DA1/DA2, DSR 5 and CPR (6),
     XTVERSION, OSC 0/2 title through the `titulus` effect, replies
     through `responsum`. Identity strings join
