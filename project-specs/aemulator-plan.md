@@ -65,6 +65,24 @@ background - read them before a task.*
       clang exists (Apple clang has no wasm backend; Homebrew LLVM 17
       is installed but broken - missing libz3 - 2026-10-06).
 
+### Phase B decisions (Fran, B0 interview 2026-10-06)
+
+11. **`openpty`** (BSD `<util.h>`; one call, Ghostty's choice; Linux
+    links `-lutil`) - system headers only in the platform file.
+12. **Independent of `processus`:** the fork/exec/CLOEXEC-error-pipe
+    pattern (~30 lines) is written again in the PTY library; the two
+    contracts (separate pipes + deadline vs one merged PTY +
+    long-lived child) must not drift together.
+13. **Reaping by `waitpid(WNOHANG)`** when asked (as processus), with
+    EOF on the master fd as the usual "shell exited" signal - no
+    signal handlers, no global state.
+14. **Wake on the fd:** the pons exposes its master descriptor; in
+    phase E fenestra's wait gains a file-descriptor wake source
+    (CFFileDescriptor) so an idle shell costs zero CPU. The fd is
+    therefore part of the pons API from B3. The examen lexicon
+    (`silva/fontes/systema_posix.h`) learns the PTY calls (glossary +
+    auspex assertions) in B3.
+
 ## II. What exists (to read before tasks)
 
 - `include/series_terminalis.h`: the DEC/Williams lexer from Ghostty's
@@ -235,7 +253,8 @@ and fixed on the way.
 Later phases (re-planned after A's RELATIO):
 
 - **B - shell-sufficient + PTY** (re-planned after A4):
-  - **B0 - interview** (the PTY seam): `openpty` (BSD, `<util.h>`) vs
+  - **B0 - interview** - done 2026-10-06 (decisions 11-14). Was (the
+    PTY seam): `openpty` (BSD, `<util.h>`) vs
     `posix_openpt`/`grantpt`/`unlockpt` (POSIX, the Linux door);
     share an argv/exec/error-pipe helper with `processus` or stay
     independent; child reaping (`waitpid(WNOHANG)` polling as
