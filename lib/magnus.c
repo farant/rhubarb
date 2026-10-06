@@ -916,15 +916,47 @@ magnus_potentia (
 }
 
 /* Euclides in piscinis ALTERNIS. Gradus quisque in piscinam
- * alteram computat, valores qui supersunt eo transcribit, priorem
- * vacat: memoria ergo proportionalis magnitudini operandorum, non
- * gradibus (recensio 2026-10-05: olim CXX MB pro mdc X milium
- * digitorum, omnia in piscina vocantis). Effectus solus in piscinam
- * vocantis transcribitur. */
+ * alteram computat, valores qui supersunt eo transcribit, priorem ad
+ * notam initialem reficit: memoria ergo proportionalis magnitudini
+ * operandorum, non gradibus (recensio I, 2026-10-05: olim CXX MB pro
+ * mdc X milium digitorum, omnia in piscina vocantis). Effectus solus
+ * in piscinam vocantis transcribitur. */
 nomen structura {
-     Piscina* piscinae[II];
-         i32  hic;
+           Piscina* piscinae[II];
+    PiscinaNotatio  notae[II];
+               i32  hic;
 } MagnusAlternae;
+
+/* Operandi usque ad IV membra (~XXXVIII digiti): Euclides in piscina
+ * vocantis, ut olim - piscinae alternae pro numeris parvis plus
+ * constant quam servant (recensio II: mdc XX digitorum 0.46 -> 2.35
+ * us); iactura vocantis paucis milibus octetorum finitur. */
+#define MAGNUS_LIMES_ALTERNARUM IV
+
+/* DIAGNOSIS (agenda A3): maximus usus piscinae alternae in ultimo
+ * divisore communi per alternas computato */
+interior memoriae_index _apex_alternarum = ZEPHYRUM;
+
+interior b32
+_per_alternas (
+    Magnus a,
+    Magnus b)
+{
+    redde (a.membra != NIHIL && a.longitudo > MAGNUS_LIMES_ALTERNARUM)
+        || (b.membra != NIHIL && b.longitudo > MAGNUS_LIMES_ALTERNARUM);
+}
+
+interior vacuum
+_apex_notare (
+    Piscina* piscina)
+{
+    memoriae_index usus = piscina_summa_usus(piscina);
+
+    si (usus > _apex_alternarum)
+    {
+        _apex_alternarum = usus;
+    }
+}
 
 interior b32
 _alternae_aperire (
@@ -936,7 +968,8 @@ _alternae_aperire (
     al->piscinae[I]         =
         piscina_generare_dynamicum("magnus_alterna",
         (memoriae_index)4096);
-    al->hic                 = ZEPHYRUM;
+    al->hic           = ZEPHYRUM;
+    _apex_alternarum  = ZEPHYRUM;
     si (al->piscinae[ZEPHYRUM] == NIHIL || al->piscinae[I] == NIHIL)
     {
         si (al->piscinae[ZEPHYRUM])
@@ -949,6 +982,8 @@ _alternae_aperire (
         }
         redde FALSUM;
     }
+    al->notae[ZEPHYRUM]  = piscina_notare(al->piscinae[ZEPHYRUM]);
+    al->notae[I]         = piscina_notare(al->piscinae[I]);
     redde VERUM;
 }
 
@@ -959,12 +994,16 @@ _alternae_illic (
     redde al->piscinae[I - al->hic];
 }
 
-/* piscina currens vacatur; altera fit currens */
+/* Piscina currens ad notam initialem reficitur, NON vacatur:
+ * piscina_vacare totam capacitatem memset implet, et id gradu quoque
+ * erat sumptus a recensione II inventus (membra nova a _membra_nova
+ * iam nullantur). Altera fit currens. */
 interior vacuum
 _alternae_vertere (
     MagnusAlternae* al)
 {
-    piscina_vacare(al->piscinae[al->hic]);
+    _apex_notare(al->piscinae[al->hic]);
+    piscina_reficere(al->piscinae[al->hic], al->notae[al->hic]);
     al->hic = I - al->hic;
 }
 
@@ -972,6 +1011,8 @@ interior vacuum
 _alternae_claudere (
     MagnusAlternae* al)
 {
+    _apex_notare(al->piscinae[ZEPHYRUM]);
+    _apex_notare(al->piscinae[I]);
     piscina_destruere(al->piscinae[ZEPHYRUM]);
     piscina_destruere(al->piscinae[I]);
 }
@@ -1007,10 +1048,10 @@ magnus_divisor_communis (
             Magnus x = magnus_absolutum(a, piscina);
             Magnus y = magnus_absolutum(b, piscina);
 
-    /* parvi: omnes gradus parvi, nulla allocatio (praeter
-     * |S64_IMUS|) */
-    si (   (a.membra == NIHIL && b.membra == NIHIL)
-        || !_alternae_aperire(&al))
+    _apex_alternarum = ZEPHYRUM;
+    /* operandi pauci membrorum: in piscina vocantis (vide
+     * MAGNUS_LIMES_ALTERNARUM) */
+    si (!_per_alternas(a, b) || !_alternae_aperire(&al))
     {
         dum (magnus_signum(y) != ZEPHYRUM)
         {
@@ -1054,9 +1095,10 @@ magnus_divisor_communis_testatus (
             Magnus t0 = _parvus(ZEPHYRUM);
             Magnus t1 = _parvus(I);
 
-    /* parvi: testes |s| <= |b|, |t| <= |a|, omnia parva manent */
-    alternae = !(a.membra == NIHIL && b.membra == NIHIL)
-        && _alternae_aperire(&al);
+    /* operandi pauci membrorum: testes |s| <= |b|, |t| <= |a| parvi
+     * manent, ergo in piscina vocantis */
+    _apex_alternarum  = ZEPHYRUM;
+    alternae          = _per_alternas(a, b) && _alternae_aperire(&al);
 
     dum (magnus_signum(r1) != ZEPHYRUM)
     {
@@ -1110,4 +1152,11 @@ magnus_divisor_communis_testatus (
             piscina) : t0;
     }
     redde r0;
+}
+
+memoriae_index
+magnus_apex_alternarum (
+    vacuum)
+{
+    redde _apex_alternarum;
 }

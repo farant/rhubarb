@@ -110,3 +110,34 @@ arithmetic. Verified and acted on:
 Lesson for the process: my planted faults all targeted the arithmetic,
 never the oracle; an independent reviewer found the oracle hole at once.
 1234 checks.
+
+## 2026-10-05 — second review pass: the gcd fix had cost speed
+
+The reviewer (same agent, second pass) verified every first-pass fix
+(random 30k-digit gcd: caller memory 1.1 GB → 0) and found no lifetime bug
+in the alternating-arena code — but medium gcds, and so every fractio
+operation, had become 2–5× slower. My "time unchanged" came from ONE large
+measurement; true there, false at 20–300 digits. Cause: `piscina_vacare`
+memsets the whole capacity, and I called it every Euclid step.
+
+Fixes (reviewer's variants A + B, re-measured here):
+- Each scratch piscina is marked right after creation and rolled back with
+  `piscina_reficere` (offsets only, no clearing; `_membra_nova` zeroes new
+  limbs anyway).
+- Operands of at most `MAGNUS_LIMES_ALTERNARUM` = 4 limbs (~38 digits) keep
+  the old loop in the caller's piscina (bounded waste of a few KB).
+- µs/op, old (pre-arena) vs now: gcd 20 digits 0.57 / 0.60; 40: 2.84 /
+  3.53; 100: 10.6 / 12.0; 300: 58.7 / 59.4. fractio_adde follows gcd.
+  Memory fix intact.
+- New diagnostic `magnus_apex_alternarum()`: the largest scratch-piscina
+  usage in the most recent large gcd (deterministic — the first of the
+  agenda A3 cost counters). F(10000)/F(9999): 3488 B (gcd), 5240 B
+  (witnesses); 0 on the small path.
+
+Coverage gaps the reviewer showed (mutants that survived): result left in
+the destroyed scratch piscina (A02) — now a test computes a second large gcd
+and re-checks the first result (fails without any sanitizer); scratch never
+emptied (A10, RSS 1.3 → 168 MB unnoticed) — now bounded through the apex
+(< 16 KB; the mutant reads 8.8 MB / 21.9 MB). Not covered by the suite: the
+fallback when a scratch piscina cannot be created (reviewer verified it by
+fault injection). 1240 checks.

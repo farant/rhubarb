@@ -92,6 +92,20 @@ Measuring first keeps us from optimizing multiplication while division,
 conversion and gcd (which <code>fractio</code> calls constantly) are the
 real costs.</p>
 
+<h3><span class="id">A4</span><code>piscina_vacare</code> costs time proportional to capacity</h3>
+<p><span class="status">note</span> <span class="nota">found by the second
+math-library review, 2026-10-05</span></p>
+<p><strong>What.</strong> <code>piscina_vacare</code> zeroes every byte of
+every block (<code>memset</code> over the full capacity) on each call. In a
+hot loop that is the dominant cost: <code>magnus</code>'s gcd briefly called
+it once per Euclid step and became 2–5× slower on medium numbers. It now
+rolls back to a mark with <code>piscina_reficere</code> instead (no clearing).</p>
+<p><strong>Why it matters elsewhere.</strong> Any loop that empties an arena
+per iteration pays for the whole capacity each time. Options if it shows up
+again: a <code>piscina_vacare</code> without the clearing (callers that
+need zeroed memory zero what they allocate), or the mark-and-rollback
+pattern. Not changed house-wide; noted so the next hot loop knows.</p>
+
 <h2>Done</h2>
 <p class="nota">Finished items, with the commit that closed them.</p>
 

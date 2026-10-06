@@ -791,6 +791,10 @@ s32 principale (vacuum)
         g = magnus_divisor_communis(f[X * M], f[X * M - I], vocans);
         CREDO_VERUM (_textus_est(g, "1"));
         CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), CDXCVI);
+        /* piscinae alternae vere reficiuntur: apex internus parvus
+         * (mensum MMMCDLXXXVIII; si numquam vacarentur, MB XIII) */
+        CREDO_MAIOR_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
+        CREDO_MINOR_I32 ((i32)magnus_apex_alternarum(), XVI * M);
         piscina_destruere(vocans);
 
         vocans = piscina_generare_dynamicum("probatio_vocans",
@@ -803,6 +807,18 @@ s32 principale (vacuum)
             magnus_multiplica(w, f[X * M - I], arca), arca)));
         /* testes ~ F_9999: duo numeri MMDCCCC digitorum circiter */
         CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), XVI * M);
+        CREDO_MAIOR_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
+        CREDO_MINOR_I32 ((i32)magnus_apex_alternarum(), XVI * M);
+
+        /* effectus vivit post mdc alterum: transcriptus in piscinam
+         * vocantis, non in piscinam alternam (iam destructam) */
+        g = magnus_divisor_communis(f[M], f[DCCC], piscina);
+        (vacuum)magnus_divisor_communis(f[MCC], f[CM], piscina);
+        CREDO_VERUM (magnus_aequalis(g, f[CC]));
+
+        /* operandi pauci membrorum: via vocantis, apex nullus */
+        (vacuum)magnus_divisor_communis(f[LX], f[LIX], piscina);
+        CREDO_AEQUALIS_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
         piscina_destruere(vocans);
         piscina_destruere(arca);
     }
