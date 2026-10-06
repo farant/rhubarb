@@ -497,7 +497,10 @@ _modus_census (
                         }
                         el = chorda_ut_cstr(*s->titulus, c->piscina);
                         octeti = _cella(c->piscina, s, "octeti");
-                        sprintf(clavis, "%s %s", el, octeti);
+                        /* unum per (elementum, octeti, via): elementa
+                         * tabulati sedem verbi eiusdem ferunt (T4) */
+                        sprintf(clavis, "%s %s %.200s", el, octeti,
+                            _cella(c->piscina, s, "via"));
                         per (w = ZEPHYRUM; w < xar_numerus(visa); w++)
                         {
                             si (strcmp(*(character**)xar_obtinere(visa,

@@ -210,20 +210,20 @@ fixtures + goldens.
 `tools/cursor_communis.sh`); list the expansion forms used
 (`"${X[@]}"`, `${X[*]}`, `${X[n]}`, `${#X[@]}`).
 
-- [ ] **Step 1: Failing section** `XV. tabulata`: `declare -a
+- [x] **Step 1: Failing section** `XV. tabulata`: `declare -a
   F=("-std=c89" "-I$R/include"); clang "${F[@]}" -c a.c -o b.o` ->
   exactly one lectio (`a.c`) and one scriptura (`b.o`), no site for
   the flags; the same with `F` defined in a SOURCED file; `F+=(-O2)`.
-- [ ] **Step 2: CONTRARY (RF 6):** `S=(lib/a.c lib/b.c); clang
+- [x] **Step 2: CONTRARY (RF 6):** `S=(lib/a.c lib/b.c); clang
   "${S[@]}" -o x` -> two lectiones.
-- [ ] **Step 3: RF 5:** `F+=(-o "$OUT")` in one place, `clang "${F[@]}"
+- [x] **Step 3: RF 5:** `F+=(-o "$OUT")` in one place, `clang "${F[@]}"
   a.c` elsewhere -> `$OUT` is a scriptura, never a lectio.
-- [ ] **Step 4: Implement:** `TABULATUM` definitions (element words),
+- [x] **Step 4: Implement:** `TABULATUM` definitions (element words),
   `+=` as order-free append, argument lists expanded BEFORE
   `_tabulam_applicare` (spec §V.2), `for x in "${A[@]}"`, `${A[n]}`.
-- [ ] **Step 5: Plant:** expansion skipped in the argument list ->
+- [x] **Step 5: Plant:** expansion skipped in the argument list ->
   flags become lectiones again (red). Restore.
-- [ ] **Step 6: Census delta; toml key diff** (new lines = newly
+- [x] **Step 6: Census delta; toml key diff** (new lines = newly
   resolved reads, explained). **Commit** (gates `crusta`, owed).
 
 ### Task T5: loops, patterns, operators, containment

@@ -53,6 +53,9 @@ nomen structura {
     constans MateriaNodus* functio;    /* NIHIL = globalis */
                   Plagula* plagula;
        constans character* causa;
+    /* X=(..) aut X+=(..): nodus tabulati (T4); additio = '+=' */
+    constans MateriaNodus* tabulatum;
+                      b32  additio;
 } Definitio;
 
 nomen structura {
@@ -125,6 +128,13 @@ nomen structura {
      StmlNodus* nodus;
 } Mandatum;
 
+/* elementum tabulati in imperio expansum (T4): situs eius sedem verbi
+ * expansionis ('"${S[@]}"') fert, non definitionis */
+nomen structura {
+    constans MateriaNodus* elementum;
+    constans MateriaNodus* locus;
+} Expansio;
+
 nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -137,6 +147,8 @@ nomen structura {
     /* causa defectus aestimationis; tituli in aestimatione (cyclus) */
      constans character* causa;
                     Xar* acervus;
+    /* Expansio: imperii currentis solum (T4) */
+                    Xar* expansiones;
 } Derivatio;
 
 
@@ -1502,7 +1514,7 @@ _locales_colligere (
     }
 }
 
-interior vacuum
+interior Definitio*
 _definitionem_addere (
                   Ambitus* a,
                 Derivatio* d,
@@ -1519,20 +1531,23 @@ _definitionem_addere (
 
     si (titulus == NIHIL)
     {
-        redde;
+        redde NIHIL;
     }
     si (   functio != NIHIL && !declaratio_localis
         && !_localis_est(a, functio, titulus))
     {
         functio = NIHIL;   /* assignatio in functione sine 'local' */
     }
-    def           = (Definitio*)xar_addere(a->definitiones);
-    def->titulus  = _duplicare(d->piscina, titulus);
-    def->verbum   = verbum;
-    def->inanis   = inanis;
-    def->functio  = functio;
-    def->plagula  = p;
-    def->causa    = causa;
+    def             = (Definitio*)xar_addere(a->definitiones);
+    def->titulus    = _duplicare(d->piscina, titulus);
+    def->verbum     = verbum;
+    def->inanis     = inanis;
+    def->functio    = functio;
+    def->plagula    = p;
+    def->causa      = causa;
+    def->tabulatum  = NIHIL;
+    def->additio    = FALSUM;
+    redde def;
 }
 
 interior vacuum
@@ -1555,6 +1570,7 @@ _definitiones_colligere (
                     character* t = NIHIL;
                           b32  ignotum;
                           b32  tabulatum;
+                    Definitio* def;
 
         tt     = _token(as, (i32)CRUSTA_ASSIGNATIO_TOK_TITULUS);
         op     = _token(as, (i32)CRUSTA_ASSIGNATIO_TOK_OPERATOR);
@@ -1584,10 +1600,23 @@ _definitiones_colligere (
             || (op != NIHIL && !_aequalis(op->valor, "="))
             || (valor != NIHIL
                 && valor->genus != (s32)CRUSTA_GENUS_VERBUM);
-        _definitionem_addere(a, d, p, chorda_ut_cstr(tt->valor,
+        def = _definitionem_addere(a, d, p, chorda_ut_cstr(tt->valor,
             d->piscina),
             ignotum ? NIHIL : valor, !ignotum && valor == NIHIL, as,
             _localis_verbum(t), tabulatum ? "tabulatum" : "operator");
+        /* TABULATUM (T4): X=(..) / X+=(..) sine subscripto - elementa
+         * in "${X[@]}" expanduntur; usus scalaris ('$X') ignotus
+         * manet */
+        si (   def          != NIHIL && valor != NIHIL
+            && valor->genus == (s32)CRUSTA_GENUS_TABULATUM
+            && _locus_vacuus(as, (i32)CRUSTA_ASSIGNATIO_TOK_SUBSCRIPTUM)
+            && op           != NIHIL
+            && (_aequalis(op->valor, "=")
+            || _aequalis(op->valor, "+=")))
+        {
+            def->tabulatum  = valor;
+            def->additio    = _aequalis(op->valor, "+=");
+        }
     }
     per (k = ZEPHYRUM; k < xar_numerus(p->iterationes); k++)
     {
@@ -1600,7 +1629,7 @@ _definitiones_colligere (
 
         si (tt != NIHIL)
         {
-            _definitionem_addere(a, d, p,
+            (vacuum)_definitionem_addere(a, d, p,
                 chorda_ut_cstr(tt->valor, d->piscina), NIHIL, FALSUM,
                 it,
                 FALSUM, "ansa_read");
@@ -1991,6 +2020,230 @@ _globus_congruit (
 
 
 /* ==================================================
+ * Tabulata (effectus-plan-2 T4)
+ * ================================================== */
+
+/* sedes nodi: elementum tabulati expansum -> verbum expansionis in
+ * imperio; aliter nodus ipse */
+interior constans MateriaNodus*
+_locus_verbi (
+                Derivatio* d,
+    constans MateriaNodus* nodus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(d->expansiones); k++)
+    {
+        Expansio* e = (Expansio*)xar_obtinere(d->expansiones, k);
+
+        si (e->elementum == nodus)
+        {
+            redde e->locus;
+        }
+    }
+    redde nodus;
+}
+
+/* verbum TOTUM '"${A[@]}"' / '${A[@]}' / '[*]'? titulus A (NIHIL
+ * aliter) */
+interior character*
+_tabulatum_expansum (
+                Derivatio* d,
+    constans MateriaNodus* verbum)
+{
+    constans MateriaNodus* n      = verbum;
+                      i32  locus  = (i32)CRUSTA_VERBUM_PARTES;
+
+    dum (n != NIHIL)
+    {
+        constans MateriaNodus* pars = NIHIL;
+        constans MateriaValor* l;
+        constans MateriaToken* sub;
+        constans MateriaToken* t;
+                          i32  numerus = ZEPHYRUM;
+                          i32  k;
+
+        si (   locus                >= n->numerus_locorum
+            || n->loci[locus].genus != MATERIA_VALOR_LISTA)
+        {
+            redde NIHIL;
+        }
+        l = &n->loci[locus];
+        per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*l); k++)
+        {
+            MateriaValor* e = materia_valor_lista_obtinere(*l, k);
+
+            si (e->genus == MATERIA_VALOR_NODUS)
+            {
+                pars = e->datum.nodus;
+                numerus++;
+            }
+        }
+        si (numerus != I)
+        {
+            redde NIHIL;
+        }
+        si (pars->genus == (s32)CRUSTA_GENUS_PARS_GEMINA)
+        {
+            n      = pars;
+            locus  = (i32)CRUSTA_GEMINA_PARTES;
+            perge;
+        }
+        si (pars->genus != (s32)CRUSTA_GENUS_PARS_EXPANSIO)
+        {
+            redde NIHIL;
+        }
+        sub  = _token(pars, (i32)CRUSTA_EXPANSIO_TOK_SUBSCRIPTUM);
+        t    = _token(pars, (i32)CRUSTA_EXPANSIO_TOK_TITULUS);
+        si (   t == NIHIL || sub == NIHIL
+            || !(_aequalis(sub->valor, "[@]")
+                 || _aequalis(sub->valor, "[*]"))
+            || !_locus_vacuus(pars, (i32)CRUSTA_EXPANSIO_TOK_PRAEFIXUM)
+            || !_locus_vacuus(pars, (i32)CRUSTA_EXPANSIO_TOK_OPERATOR)
+            || !_locus_vacuus(pars, (i32)CRUSTA_EXPANSIO_ARGUMENTA))
+        {
+            redde NIHIL;
+        }
+        redde chorda_ut_cstr(t->valor, d->piscina);
+    }
+    redde NIHIL;
+}
+
+/* elementa tabulati 'titulus' ad locum 'usus' in exitus (verba;
+ * tabulata intus expansa, recursive). Definitiones sine ordine:
+ * primum '=' omnes, deinde '+=' (spec-2 par. III). FALSUM = definitio
+ * aliqua non tabulatum, nulla definitio, aut profunditas: expansio
+ * ignota manet (verbum ipsum). */
+interior b32
+_elementa_colligere (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* usus,
+       constans character* titulus,
+                      Xar* exitus,
+                      i32  profunditas)
+{
+    constans MateriaNodus* functio = _functio_circumdans(usus);
+                      b32  localis;
+                      i32  numerus = ZEPHYRUM;
+                      i32  gradus;
+                      i32  k;
+
+    si (profunditas > PROFUNDITAS_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    localis = functio != NIHIL && _localis_est(a, functio, titulus);
+    per (gradus = ZEPHYRUM; gradus < II; gradus++)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(a->definitiones); k++)
+        {
+            Definitio* def = (Definitio*)xar_obtinere(a->definitiones,
+                k);
+                  Xar* elementa;
+                  i32  j;
+
+            si (   strcmp(def->titulus, titulus) != ZEPHYRUM
+                || (localis ? def->functio != functio
+                            : def->functio != NIHIL))
+            {
+                perge;
+            }
+            si (def->tabulatum == NIHIL)
+            {
+                redde FALSUM;
+            }
+            si ((gradus == I) != def->additio)
+            {
+                perge;
+            }
+            numerus++;
+            elementa = _nodi_listae(d->piscina, def->tabulatum,
+                (i32)CRUSTA_TABULATUM_LIBERI);
+            per (j = ZEPHYRUM; elementa && j < xar_numerus(elementa);
+                 j++)
+            {
+                constans MateriaNodus* e = *(MateriaNodus**)
+                    xar_obtinere(elementa, j);
+                           character* intus;
+
+                si (e->genus != (s32)CRUSTA_GENUS_VERBUM)
+                {
+                    perge;
+                }
+                intus = _tabulatum_expansum(d, e);
+                si (intus != NIHIL)
+                {
+                    si (!_elementa_colligere(d, a, e, intus, exitus,
+                            profunditas + I))
+                    {
+                        redde FALSUM;
+                    }
+                    perge;
+                }
+                *(constans MateriaNodus**)xar_addere(exitus) = e;
+            }
+        }
+    }
+    redde numerus > ZEPHYRUM;
+}
+
+/* verbum cuius pars prima litteralis '-x...' est sed non totum
+ * litterale ('-I"$R/include"', "-I$R/include"): optio cum valore
+ * adnexo, ut '-flista' litteralis - non plagula (T4) */
+interior b32
+_optio_dynamica (
+    constans MateriaNodus* verbum)
+{
+    constans MateriaNodus* n      = verbum;
+                      i32  locus  = (i32)CRUSTA_VERBUM_PARTES;
+
+    dum (n != NIHIL)
+    {
+        constans MateriaValor* l;
+                          i32  k;
+
+        si (   locus                >= n->numerus_locorum
+            || n->loci[locus].genus != MATERIA_VALOR_LISTA)
+        {
+            redde FALSUM;
+        }
+        l = &n->loci[locus];
+        per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*l); k++)
+        {
+                     MateriaValor* e;
+            constans MateriaToken* t;
+
+            e = materia_valor_lista_obtinere(*l, k);
+            si (e->genus != MATERIA_VALOR_NODUS)
+            {
+                perge;
+            }
+            si (e->datum.nodus->genus == (s32)CRUSTA_GENUS_PARS_GEMINA)
+            {
+                n      = e->datum.nodus;
+                locus  = (i32)CRUSTA_GEMINA_PARTES;
+                frange;
+            }
+            si (e->datum.nodus->genus
+                != (s32)CRUSTA_GENUS_PARS_LITTERALIS)
+            {
+                redde FALSUM;
+            }
+            t = _token(e->datum.nodus, (i32)CRUSTA_PARS_TOK);
+            redde t != NIHIL && t->valor.mensura >= II
+                && t->valor.datum[ZEPHYRUM] == '-';
+        }
+        si (k >= materia_valor_lista_numerus(*l))
+        {
+            redde FALSUM;
+        }
+    }
+    redde FALSUM;
+}
+
+
+/* ==================================================
  * Situs: creatio, cwd, classis viae
  * ================================================== */
 
@@ -2004,7 +2257,7 @@ _situm_creare (
 {
     Situs* s = (Situs*)xar_addere(a->situs);
 
-    (vacuum)d;
+    nodus = _locus_verbi(d, nodus);
     si (s == NIHIL)
     {
         redde NIHIL;
@@ -2259,6 +2512,7 @@ _viam_classificare (
 
     valor[ZEPHYRUM]  = '\0';
     d->causa         = NIHIL;
+    locus            = _locus_verbi(d, locus);   /* cwd: imperii (T4) */
     {
         constans MateriaNodus* sola = _variabilis_sola(verbum);
         constans MateriaToken* t = sola == NIHIL ? NIHIL : _token(sola,
@@ -2951,6 +3205,10 @@ _tabulam_applicare (
             k);
                     character* s = _titulus_staticus(d->piscina, v);
 
+        si (!finis && s == NIHIL && _optio_dynamica(v))
+        {
+            perge;   /* '-I"$R/x"': optio cum valore adnexo (T4) */
+        }
         si (   !finis && s != NIHIL && s[ZEPHYRUM] == '-'
             && s[I] != '\0')
         {
@@ -3372,13 +3630,38 @@ _loca_tractare (
         *(constans MateriaNodus**)xar_addere(verba) = titulus;
         per (j = ZEPHYRUM; j < xar_numerus(argumenta); j++)
         {
-            *(MateriaNodus**)xar_addere(verba) =
-                *(MateriaNodus**)xar_obtinere(argumenta, j);
+            constans MateriaNodus* v = *(MateriaNodus**)xar_obtinere(
+                                           argumenta, j);
+                       character* t = _tabulatum_expansum(d, v);
+                             Xar* elementa = xar_creare(d->piscina,
+                                 (i32)magnitudo(MateriaNodus*));
+                             i32 e;
+
+            /* "${A[@]}": elementa ANTE tabulam (spec-2 par. V.2) -
+             * optiones optiones fiunt, viae viae */
+            si (   t == NIHIL || elementa == NIHIL
+                || !_elementa_colligere(d, a, v, t, elementa, ZEPHYRUM))
+            {
+                *(constans MateriaNodus**)xar_addere(verba) = v;
+                perge;
+            }
+            per (e = ZEPHYRUM; e < xar_numerus(elementa); e++)
+            {
+                Expansio* x = (Expansio*)xar_addere(d->expansiones);
+
+                x->elementum = *(MateriaNodus**)xar_obtinere(elementa,
+                    e);
+                x->locus = v;
+                *(constans MateriaNodus**)xar_addere(verba) =
+                    x->elementum;
+            }
         }
         si (!_imperium_tractare(d, a, p, im, verba, ZEPHYRUM))
         {
+            xar_truncare(d->expansiones, ZEPHYRUM);
             redde FALSUM;
         }
+        xar_truncare(d->expansiones, ZEPHYRUM);
     }
     redde VERUM;
 }
@@ -3956,6 +4239,7 @@ crusta_effectus_derivare (
     d.causa          = NIHIL;
     d.acervus        = xar_creare(piscina,
         (i32)magnitudo(constans character*));
+    d.expansiones    = xar_creare(piscina, (i32)magnitudo(Expansio));
     si (   d.visi == NIHIL || d.ambitus == NIHIL || d.tabula == NIHIL
         || !_absolutam_facere(scriptum, radix, absoluta))
     {
@@ -4362,6 +4646,7 @@ crusta_effectus_observata (
     d.causa          = NIHIL;
     d.acervus        = xar_creare(piscina,
         (i32)magnitudo(constans character*));
+    d.expansiones    = xar_creare(piscina, (i32)magnitudo(Expansio));
     a = (Ambitus*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(Ambitus));
     p = (Plagula*)piscina_allocare(piscina,

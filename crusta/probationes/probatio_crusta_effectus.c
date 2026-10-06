@@ -359,6 +359,27 @@ hic_manens constans character* FILIUS_T =
     "#!/bin/bash\n"
     "cat \"$T/z\"\n";
 
+/* tabulata (effectus-plan-2 T4): optiones per tabulatum non leguntur;
+ * elementa quae viae sunt leguntur */
+hic_manens constans character* TABULATA =
+    "#!/bin/bash\n"                                       /* 1 */
+    "source a/vexilla_ficta.sh\n"                         /* 2 */
+    "declare -a F=(\"-std=c89\" \"-I$R/include\")\n"       /* 3 */
+    "F+=(-O2)\n"                                          /* 4 */
+    "clang \"${F[@]}\" -c src/a.c -o build/b.o\n"          /* 5 */
+    "S=(lib/a.c lib/b.c)\n"                               /* 6 */
+    "clang \"${S[@]}\" -o build/x\n"                       /* 7 */
+    "G=(\"${VEXILLA_FICTA[@]}\")\n"                        /* 8 */
+    "G+=(-o \"$OUT\")\n"                                   /* 9 */
+    "clang \"${G[@]}\" src/c.c\n"                          /* 10 */
+    "clang -I\"$R/inc\" src/d.c\n";                         /* 11 */
+
+hic_manens constans character* VEXILLA_FICTA =
+    "declare -a VEXILLA_FICTA=(\n"
+    "    \"-pedantic\"\n"
+    "    \"-Wall\"\n"
+    ")\n";
+
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
 _causa_lineae (
@@ -886,6 +907,46 @@ s32 principale (vacuum)
             tt = s != NIHIL ? stml_attributum_capere(s, "temporaria")
                             : NIHIL;
             CREDO_NIHIL (tt);
+        }
+    }
+
+    /* XV. tabulata (effectus-plan-2 T4; spec-2 par. III, V.2) */
+    imprimere("\n--- XV. tabulata ---\n");
+    _scribere("a/tabulata.sh", TABULATA);
+    _scribere("a/vexilla_ficta.sh", VEXILLA_FICTA);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/tabulata.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/tabulata.sh");
+            _imprimere_situs(ts);
+            /* optiones per tabulatum (et tabulatum fontatum, et +=):
+             * lectio sola fons, scriptura sola -o */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", V), I);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "src/a.c", V));
+            CREDO_NON_NIHIL (_situs(ts, "scriptura", "build/b.o", V));
+            CREDO_AEQUALIS_I32 (_numerare(ts, NIHIL, V), II);
+            /* RF 6: elementa viae lectiones fiunt; sedes = verbum
+             * expansionis in imperio, non definitio */
+            s = _situs(ts, "lectio", "lib/a.c", VII);
+            CREDO_NON_NIHIL (s);
+            CREDO_VERUM (_attributum(s, "sedes", "7:7-7:16"));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "lib/b.c", VII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VII), II);
+            /* RF 5: '-o "$OUT"' in additione: scriptura (irresoluta),
+             * numquam lectio; tabulatum ex tabulato fontato */
+            s = _situs(ts, "scriptura", NIHIL, X);
+            CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "src/c.c", X));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", X), I);
+            /* optio cum valore adnexo non litterali ('-I"$R/inc"')
+             * optio est, non plagula '-I...' (vitium ante T4) */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XI), I);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "src/d.c", XI));
         }
     }
 

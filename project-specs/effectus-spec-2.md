@@ -380,3 +380,34 @@ stayed put and later reads became tree paths (`cwd ignotum` 88 -> 8,
 now require CERTUS; counts back to 88 and 10. Also: a bare `"$F"` with
 `F=$(mktemp)` went through `inanes_omittere`, which skipped the temp
 definition as "empty" (its text is the tail) - the skip is CERTUS-only.
+
+**T4 (2026-10-06): arrays.** `X=(..)` / `declare -a X=(..)` /
+`X+=(..)` (no subscript) record the `TABULATUM` node on the definition;
+a whole-word `"${X[@]}"` / `${X[*]}` in a command's arguments is
+replaced by the element words BEFORE the command table (`_loca_tractare`
+-> `_elementa_colligere`: definitions scoped as for variables, `=`
+first then `+=`, nested arrays expanded - `"${VEXILLA_C89[@]}"` from
+sourced `tools/vexilla.sh`; any non-array definition = no expansion).
+Element sites take the position of the expansion word (`Expansio`,
+per command), not of the definition. Scalar use (`"$A"`) stays
+`tabulatum`.
+
+Found on the way, older than T4: an argument whose first literal is
+`-x` but which is not wholly literal (`-I"$RADIX_DIR/include"`,
+`"-I$R/include"`) was a positional operand - a "read" of a file named
+`-I/Users/.../include` (resolved, classis arbor: a key line for a
+nonexistent file). Now an option, like a literal `-flista` already was;
+attached option values stay uninterpreted for both (a named gap: an
+attached READ, `grep -f"$x"`, is missed - none in the table's current
+rows was found by the census).
+
+Census (vs T3): sites 7,584 -> 7,064 (520 flag "reads" gone);
+unresolved 2,182 -> 1,623; `tabulatum` 578 -> 19 (frozen fixture
+runners whose arrays live in files they do not source here; silva
+scripts with mixed definitions). Remaining dash-paths: 8, all scalar
+flag strings used UNQUOTED (`$CFLAGS`) - bash word-splits them; the
+evaluator does not model splitting yet (T5: one value, several words).
+Census rows deduplicate by (element, octeti, via): array elements share
+one sedes. Toml's key: 31 lines, unchanged (its flags go through
+`bin/compilator`, whose row ignores positionals but `-o`); no dead
+excuse house-wide; live oracle non tecta 0; judge 2.14-2.39 s.

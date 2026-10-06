@@ -412,3 +412,23 @@ source order).
 - A dead excuse is an ERRATUM at commit: resolving what an excuse
   covered means deleting the excuse in the same commit
   (tools/mensor_suitae.sh:91).
+
+## 2026-10-06 - slice 2 T4: arrays
+
+- Expansion lives in ONE place (`_loca_tractare`), before
+  `_imperium_tractare` dispatches: every branch (table, source, bash,
+  exec/command/env) then sees elements as ordinary words. Positions go
+  through `_locus_verbi` (a per-command `Expansio` map, cleared after
+  each command) in `_situm_creare` and for the cwd in
+  `_viam_classificare`; evaluation uses the element node itself.
+- The dash bug (`-I"$X"` as a file) predates T4 and would have been
+  multiplied by it: every `"-I$R/include"` element. Lesson: before
+  widening an input stream, grep the census for the shape the widening
+  will produce (here: paths starting with '-').
+- Plants: the first (recognizer returns NIHIL) did not compile (`d`
+  unused); the second (inverted condition) CRASHED - NIHIL into strcmp
+  - which is not a prediction coming true. Third, clean: collector
+  always FALSE -> exactly the array assertions red. A plant must fail
+  at the asserted place, not anywhere.
+- Unquoted scalars with spaces (`$CFLAGS`) are the next shape of the
+  same problem (several words from one value) - left for T5's sets.
