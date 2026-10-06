@@ -258,6 +258,24 @@ T3 design (agreed with Fran, 2026-10-05), two commits:
   components = invisible hit zones `vicus.tabula.<id>` with a click
   action.
 
+  T3b as built: `vicus_dispensatorem_ligare(v, d)` replaces
+  `vicus_motum_ligare` (binding Motus and installing the host
+  strategy are one act - a main could otherwise do one and forget
+  the other). Root action renamed `vicus.radix` (resize + keys). Host
+  ephemeral `praefixum` ("1"/"0") and `prior` (written with `activa`
+  on every real switch). The strategy routes to the root: any Ctrl-A
+  key event (down AND up), and while the tree's root carries titulus
+  "praefixum" every key and text event - so the app never sees the
+  prefix, the letter, or a cancelling Esc. Printable key-down pending
+  = swallowed (the letter acts on its TEXTUS: both real sources send
+  key + text; with a modifier the terminal sends no text, so Ctrl/
+  Alt/Cmd keys cancel instead); TEXTUS n / p (cyclic, mounted tabs
+  only) / 1-9 (mounted only) acts, anything else cancels. Tabs =
+  `PARTES_NULLUM` hit zones `vicus.tabula.<id>` (titulus = id, action
+  `vicus.tabula`), painted by the bar figura; tint =
+  `COLOR_ACCENT_PRIMARY`. Thirteen plants. Not done: a prefix timeout
+  (the legacy schirmata had one) - the tint makes the mode visible.
+
 **T4 - the app.** `apps/schirmata/` in both targets, mounting pictor
 and scriba; replay proof (a session that types, switches, draws,
 switches back - the same store and volume through the terminal path);

@@ -125,3 +125,50 @@ not installed; capture kept; branch not set; bind without apply;
 `motus_initiare` not zeroing the branch - that last one is caught by
 the EXISTING probatio_motus (its stack Motus holds garbage), the same
 class the aedilis gate caught in R3.
+
+## 2026-10-06 — T3b: Ctrl-A prefix, tab clicks, tint
+
+Routing is the crux. Keys go to the focus (`pagina`), and scriba's
+`pagina.clavis` would eat Ctrl-A and the following letter. So vicus
+installs its own `DestinatioStrategia` (now inside
+`vicus_dispensatorem_ligare`, which replaced `vicus_motum_ligare` -
+binding Motus and installing the strategy must not be separable). A
+strategy has no ctx, so pending state is read from the TREE:
+`vicus_componere` gives the root (and the bar) titulus "praefixum"
+when the host ephemeral `praefixum` is "1". Pure: the tree reflects
+the store; the strategy reads the tree. The root is recomposed after
+every event, so the next event sees the new mark.
+
+Key + text pairing: both real sources send a printable as key-down
+then TEXTUS (terminal: `_runae_clavem` then `textum_impellere` when
+no modifier; window: COMMISSUM at the same time; manus_ludus_scribere
+mimics it). So a pending printable key-down is swallowed and the
+switch happens on the TEXTUS. A key-down with Ctrl/Alt/Cmd, or a
+non-printable (Esc), cancels - the terminal sends no TEXTUS for those,
+so waiting would leave the prefix stuck. Key-ups while pending are
+swallowed; the letter's key-up after the TEXTUS cleared the prefix
+reaches the app, which ignores key-ups.
+
+Ctrl-A Ctrl-A = previous tab (`prior`, written alongside `activa` on
+every real switch; never written empty). n / p cycle over mounted
+tabs; 1-9 index (unmounted or absent = no-op, prefix still cleared).
+
+Tabs are `PARTES_NULLUM` hit zones (no figura; the bar figura already
+paints titles) with `titulus` = tab id; the click action reads the
+titulus, not the component id ("vicus.tabula.<id>"). One shared
+`latitudo_tabulae` for painting and zones, so they cannot drift.
+
+Tests end-to-end through manus: insert "ab", Ctrl-A n, back with
+Ctrl-A p, type "c": the line is "abc" - neither the prefix letter
+leaks nor does the insert session break across the switch.
+
+Plants (13, all caught): strategy not installed; pending not routed;
+printable key-down cancelling; TEXTUS not clearing; p as n; no
+wrap-around; Ctrl-A Ctrl-A not going back; prior not recorded; no
+tint; no tab zones; click using the id instead of the titulus; digits
+off by one; key-downs bypassing the pending route (Esc reaches scriba,
+which leaves insert mode - caught by the "zy" line).
+
+Lint: `ctrl` is not a word here - `est_imperium_a` / `imperium_a`
+(MOD_IMPERIUM). `renominare.sh` refuses a dirty file (git is its
+undo) - fine for a rename inside the change being made.

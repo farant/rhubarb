@@ -193,15 +193,19 @@ vicus_componere (
     InternamentumChorda* intern,
                  vacuum* ctx);
 
-/* Motum dispensatoris ligare (T3a): ramus eius = ramus activae (focus,
- * effusio pan/zoom), gestus = gestus activae. In commutatione postea:
- * gestus relinquentis et pan/zoom in ramum RELINQUENTIS effunduntur
- * (gestus non effusus commutationem recusat), captura et ictus
- * pendens abiciuntur, deinde ramus et gestus advenientis ponuntur. */
+/* Dispensatorem ligare (T3a, T3b) - post vicus_aperire, semel:
+ * - Motus eius: ramus = ramus activae (focus, effusio pan/zoom),
+ *   gestus = gestus activae. In commutatione: gestus relinquentis et
+ *   pan/zoom in ramum RELINQUENTIS effunduntur (gestus non effusus
+ *   commutationem recusat), captura et ictus pendens abiciuntur,
+ *   deinde ramus et gestus advenientis ponuntur.
+ * - destinatio hospitis: Ctrl-A et, dum praefixum pendet, claves et
+ *   textus ad radicem (applicatio ea numquam videt); cetera
+ *   geometrica. */
 vacuum
-vicus_motum_ligare (
-    Vicus* v,
-    Motus* motus);
+vicus_dispensatorem_ligare (
+          Vicus* v,
+    Dispensator* d);
 
 chorda
 vicus_causa (

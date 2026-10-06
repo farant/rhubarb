@@ -195,6 +195,13 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus (FRANGIT): insula-rami T3b - `vicus_motum_ligare(v, motus)`
+  -> `vicus_dispensatorem_ligare(v, d)` (Motum ligat ET destinationem
+  hospitis ponit). Actio radicis `vicus.magnitudo` -> `vicus.radix`;
+  `vicus.tabula` (nova, ictus in tabulam). Ctrl-A praefixum: n / p /
+  1-9, Ctrl-A iterum = tabula prior; canon ephemera vici: `praefixum`,
+  `prior`.
+
 - corpus: insula-rami T3a - `Motus.ramus` (novum; nullatum = radix,
   mores applicationum solarum idem): focus dispensatoris et
   `motus_effundere` per ramum activum. `pictor_montare` /

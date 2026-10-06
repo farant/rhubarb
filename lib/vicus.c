@@ -237,10 +237,236 @@ superficies_scribere (
     insula_scriptorem_ponere(v->repo, prior);
 }
 
-/* <tractator/> radicis: mutatio magnitudinis -> superficies
- * montationum */
+
+/* ==================================================
+ * Praefixum (T3b): Ctrl-A, deinde n / p / 1-9 / Ctrl-A
+ * ================================================== */
+
 interior b32
-magnitudinem_tractare (
+est_imperium_a (
+    constans Eventus* ev)
+{
+    redde ev
+        && (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+            || ev->genus == EVENTUS_CLAVIS_LIBERATUS)
+        && (ev->datum.clavis.modificantes & MOD_IMPERIUM)
+        && ev->datum.clavis.runa == 'a';
+}
+
+/* arbor praefixum pendens notat (vicus_componere: titulus radicis) */
+interior b32
+arbor_pendet (
+    constans Componens* arbor)
+{
+    redde arbor && chorda_aequalis_literis(arbor->titulus, "praefixum");
+}
+
+/* DestinatioStrategia hospitis: Ctrl-A et, dum pendet, claves et
+ * textus ad radicem; cetera geometrica */
+interior Destinatio
+destinare (
+           Componens* arbor,
+      constans Motus* motus,
+              chorda  focus,
+    constans Eventus* ev,
+             Piscina* piscina)
+{
+    si (   arbor && ev
+        && (est_imperium_a(ev)
+            || (   arbor_pendet(arbor)
+                && (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+                    || ev->genus == EVENTUS_CLAVIS_LIBERATUS
+                    || ev->genus == EVENTUS_TEXTUS))))
+    {
+        redde destinatio_ex_componente(arbor, piscina);
+    }
+    redde destinatio_geometrica(arbor, motus, focus, ev, piscina);
+}
+
+interior vacuum
+praefixum_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "praefixum",
+        *(constans b32*)ctx ? "1" : "0");
+}
+
+interior b32
+praefixum_pendet (
+    Vicus* v)
+{
+    chorda* a;
+
+    a = insula_attributum(v->repo, INSULA_EPHEMERA, "praefixum");
+    redde a && chorda_aequalis_literis(*a, "1");
+}
+
+interior vacuum
+praefixum_ponere (
+    Vicus* v,
+      b32  pendens)
+{
+    InsulaRamus radix;
+
+    radix = insula_ramus_radix(v->repo);
+    (vacuum)mutare_ramum(&radix, INSULA_EPHEMERA, praefixum_mutator,
+        &pendens);
+}
+
+/* tabula montata gradu dato ab activa (circulus); VERUM si mutata */
+interior b32
+vicinam_ponere (
+    Vicus* v,
+      s32  gradus)
+{
+     VicusTabula* t;
+             s32  n;
+             s32  i;
+             s32  k;
+             s32  j;
+
+    n = (s32)xar_numerus(v->tabulae);
+    i = -I;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, (i32)k);
+        si (chorda_aequalis(t->id, v->activa))
+        {
+            i = k;
+        }
+    }
+    si (i < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = I; k < n; k++)
+    {
+        j = ((i + gradus * k) % n + n) % n;
+        t = (VicusTabula*)xar_obtinere(v->tabulae, (i32)j);
+        si (t->montata)
+        {
+            redde vicus_activam_ponere(v,
+                chorda_ut_cstr(t->id, v->piscina));
+        }
+    }
+    redde FALSUM;
+}
+
+/* praefixum perficitur littera textus */
+interior vacuum
+praefixum_perficere (
+    Vicus* v,
+      s32  littera)
+{
+     VicusTabula* t;
+
+    si (littera == 'n')
+    {
+        (vacuum)vicinam_ponere(v, I);
+    }
+    alioquin si (littera == 'p')
+    {
+        (vacuum)vicinam_ponere(v, -I);
+    }
+    alioquin si (   littera >= '1' && littera <= '9'
+                 && littera - '1' < (s32)xar_numerus(v->tabulae))
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae,
+            (i32)(littera - '1'));
+        si (t->montata)
+        {
+            (vacuum)vicus_activam_ponere(v,
+                chorda_ut_cstr(t->id, v->piscina));
+        }
+    }
+}
+
+/* <tractator/> radicis (T2b, T3b): mutatio magnitudinis ->
+ * superficies montationum; Ctrl-A et praefixum pendens. Clavis
+ * imprimibilis pendens devoratur - littera in TEXTU agitur (fontes
+ * veri clavem et textum mittunt); Esc et cetera abolent. */
+interior b32
+radicem_tractare (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+     Vicus* v;
+    chorda* prior;
+       s32  r;
+       b32  pendens;
+
+    (vacuum)repo;
+    (vacuum)motus;
+    (vacuum)destinatio;
+    (vacuum)nodus;
+    v = (Vicus*)ctx;
+    si (!ev || !v)
+    {
+        redde FALSUM;
+    }
+    si (ev->genus == EVENTUS_MUTARE_MAGNITUDINEM)
+    {
+        superficies_scribere(v,
+            (s32)ev->datum.mutare_magnitudinem.latitudo,
+            (s32)ev->datum.mutare_magnitudinem.altitudo);
+        redde FALSUM;
+    }
+    pendens = praefixum_pendet(v);
+    si (est_imperium_a(ev))
+    {
+        si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
+        {
+            praefixum_ponere(v, !pendens);
+            prior = insula_attributum(v->repo, INSULA_EPHEMERA,
+                "prior");
+            si (pendens && prior)
+            {
+                (vacuum)vicus_activam_ponere(v,
+                    chorda_ut_cstr(*prior, v->piscina));
+            }
+        }
+        redde VERUM;
+    }
+    si (!pendens)
+    {
+        redde FALSUM;
+    }
+    commutatio (ev->genus)
+    {
+        casus EVENTUS_CLAVIS_LIBERATUS:
+            redde VERUM;
+        casus EVENTUS_CLAVIS_DEPRESSUS:
+            r = ev->datum.clavis.runa;
+            si (   r < XXXII || r >= CXXVII
+                || (ev->datum.clavis.modificantes
+                    & (MOD_IMPERIUM | MOD_ALT | MOD_SUPER)))
+            {
+                praefixum_ponere(v, FALSUM);
+            }
+            redde VERUM;
+        casus EVENTUS_TEXTUS:
+            praefixum_ponere(v, FALSUM);
+            si (ev->datum.textus.contentum.mensura > ZEPHYRUM)
+            {
+                praefixum_perficere(v,
+                    (s32)ev->datum.textus.contentum.datum[ZEPHYRUM]);
+            }
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* <tractator/> tabulae (T3b): ictus = activa (titulus = id) */
+interior b32
+tabulam_tractare (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,
@@ -251,15 +477,21 @@ magnitudinem_tractare (
     (vacuum)repo;
     (vacuum)motus;
     (vacuum)destinatio;
-    (vacuum)nodus;
-    si (!ev || ev->genus != EVENTUS_MUTARE_MAGNITUDINEM || !ctx)
+    si (!ev || !ctx || !nodus || ev->genus != EVENTUS_MUS_DEPRESSUS)
     {
         redde FALSUM;
     }
-    superficies_scribere((Vicus*)ctx,
-        (s32)ev->datum.mutare_magnitudinem.latitudo,
-        (s32)ev->datum.mutare_magnitudinem.altitudo);
-    redde FALSUM;
+    (vacuum)vicus_activam_ponere((Vicus*)ctx,
+        chorda_ut_cstr(nodus->titulus, ((Vicus*)ctx)->piscina));
+    redde VERUM;
+}
+
+/* latitudo tabulae in pixelis: titulus + cellula utrimque */
+interior s32
+latitudo_tabulae (
+    constans VicusTabula* t)
+{
+    redde ((s32)t->titulus.mensura + II) * VICUS_CELLULA_LATITUDO;
 }
 
 interior ColorMandati
@@ -295,14 +527,16 @@ figura_tabularum (
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
-    mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
+    /* praefixum pendens: linea tincta (titulus lineae notat) */
+    mandata_rectangulum(m, f, color_thematis(
+        chorda_aequalis_literis(c->titulus, "praefixum")
+            ? COLOR_ACCENT_PRIMARY : COLOR_BACKGROUND), VERUM);
     x = ZEPHYRUM;
     per (i = ZEPHYRUM; v && i < xar_numerus(v->tabulae); i++)
     {
-        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
-        lat = ((s32)t->titulus.mensura
-            + II) * VICUS_CELLULA_LATITUDO;
-        activa = chorda_aequalis(t->id, v->activa);
+        t       = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        lat     = latitudo_tabulae(t);
+        activa  = chorda_aequalis(t->id, v->activa);
         si (activa)
         {
             f.x         = x;
@@ -388,8 +622,10 @@ registra_reficere (
     actio_registrum_vacare(v->actiones);
     figura_registrum_vacare(v->figurae);
     /* hospitis primum (T2b), deinde activae */
-    (vacuum)actio_registrare(v->actiones, "vicus.magnitudo",
-                             magnitudinem_tractare, v);
+    (vacuum)actio_registrare(v->actiones, "vicus.radix",
+                             radicem_tractare, v);
+    (vacuum)actio_registrare(v->actiones, "vicus.tabula",
+                             tabulam_tractare, v);
     (vacuum)figura_registrare(v->figurae, PARTES_INDEX, ZEPHYRUM,
                               figura_tabularum, v);
     t = tabula_invenire(v, v->activa);
@@ -408,6 +644,13 @@ registra_reficere (
     }
 }
 
+/* activa et prior (T3b; prior vacua = non scribitur - valor vacuus
+ * numquam scribitur) */
+nomen structura {
+    chorda activa;
+    chorda prior;
+} Activa;
+
 interior vacuum
 activam_mutator (
               StmlNodus* radix,
@@ -415,8 +658,16 @@ activam_mutator (
     InternamentumChorda* in,
                  vacuum* ctx)
 {
+    constans Activa* a;
+
+    a = (constans Activa*)ctx;
     insula_attributum_ponere(radix, p, in, "activa",
-        chorda_ut_cstr(*(chorda*)ctx, p));
+        chorda_ut_cstr(a->activa, p));
+    si (a->prior.mensura > ZEPHYRUM)
+    {
+        insula_attributum_ponere(radix, p, in, "prior",
+            chorda_ut_cstr(a->prior, p));
+    }
 }
 
 
@@ -565,8 +816,13 @@ vicus_aperire (
     radix = insula_ramus_radix(v->repo);
     si (!chorda_vacua(v->activa))
     {
+        Activa a;
+
+        a.activa         = v->activa;
+        a.prior.mensura  = ZEPHYRUM;
+        a.prior.datum    = NIHIL;
         (vacuum)mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
-                             &v->activa);
+                             &a);
     }
     si (!inventum)
     {
@@ -650,6 +906,7 @@ vicus_activam_ponere (
 {
     VicusTabula* t;
     InsulaRamus  radix;
+         Activa  a;
 
     si (!v || !v->repo || !id)
     {
@@ -660,14 +917,20 @@ vicus_activam_ponere (
     {
         redde FALSUM;
     }
-    si (!chorda_aequalis(t->id, v->activa) && !motum_relinquere(v))
+    a.activa         = t->id;
+    a.prior.mensura  = ZEPHYRUM;
+    a.prior.datum    = NIHIL;
+    si (!chorda_aequalis(t->id, v->activa))
     {
-        redde FALSUM;
+        si (!motum_relinquere(v))
+        {
+            redde FALSUM;
+        }
+        a.prior = v->activa;
     }
     v->activa  = t->id;
     radix      = insula_ramus_radix(v->repo);
-    si (!mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
-                      &v->activa))
+    si (!mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator, &a))
     {
         redde FALSUM;
     }
@@ -703,6 +966,37 @@ vicus_imago_fons (
         redde NIHIL;
     }
     redde t->facies.fons(provenientia, t->facies.fons_ctx);
+}
+
+/* tabulae ut zonae ictus (PARTES_NULLUM: linea eas pingit) */
+interior vacuum
+tabulas_componere (
+                  Vicus* v,
+              Componens* linea,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+      VicusTabula* t;
+        Componens* c;
+            Fines  f;
+              i32  i;
+
+    f.x         = ZEPHYRUM;
+    f.y         = ZEPHYRUM;
+    f.altitudo  = VICUS_ALTITUDO_TABULARUM;
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        c = componens_creare(piscina, intern, chorda_ut_cstr(
+            chorda_concatenare(chorda_ex_literis("vicus.tabula.",
+            piscina), t->id, piscina), piscina), PARTES_NULLUM);
+        f.latitudo = latitudo_tabulae(t);
+        componens_ponere_fines(c, f);
+        componens_ponere_actio(c, "vicus.tabula");
+        componens_ponere_titulum(c, chorda_ut_cstr(t->id, piscina));
+        componens_addere_liberum(linea, c);
+        f.x += f.latitudo;
+    }
 }
 
 interior s32
@@ -755,12 +1049,19 @@ vicus_componere (
     f.latitudo = latitudo;
     f.altitudo = altitudo;
     componens_ponere_fines(radix, f);
-    componens_ponere_actio(radix, "vicus.magnitudo");
+    componens_ponere_actio(radix, "vicus.radix");
     linea = componens_creare(piscina, intern, "vicus.tabulae",
                              PARTES_INDEX);
     f.altitudo = VICUS_ALTITUDO_TABULARUM;
     componens_ponere_fines(linea, f);
     componens_addere_liberum(radix, linea);
+    /* T3b: praefixum pendens in arbore notatur (destinatio, figura) */
+    si (praefixum_pendet(v))
+    {
+        componens_ponere_titulum(radix, "praefixum");
+        componens_ponere_titulum(linea, "praefixum");
+    }
+    tabulas_componere(v, linea, piscina, intern);
     t = vicus_activa(v);
     si (t && t->montata && t->facies.componere)
     {
@@ -779,16 +1080,17 @@ vicus_componere (
 }
 
 vacuum
-vicus_motum_ligare (
-    Vicus* v,
-    Motus* motus)
+vicus_dispensatorem_ligare (
+          Vicus* v,
+    Dispensator* d)
 {
-    si (!v)
+    si (!v || !d)
     {
         redde;
     }
-    v->motus = motus;
+    v->motus = dispensator_motus(d);
     motum_aptare(v);
+    dispensator_ponere_strategiam(d, destinare);
 }
 
 chorda

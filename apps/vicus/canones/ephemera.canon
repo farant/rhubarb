@@ -7,5 +7,9 @@
     <attributum nomen="focus_acervus"   genus="textus"/>
     <attributum nomen="superficies_latitudo" genus="numerus"/>
     <attributum nomen="superficies_altitudo" genus="numerus"/>
+    <attributum nomen="praefixum"       genus="numerus"
+      nota="1 = Ctrl-A pendens, 0 = nullum (T3b)"/>
+    <attributum nomen="prior"           genus="nomen"
+      nota="id tabulae ante activam (Ctrl-A Ctrl-A)"/>
   </elementum>
 </canon>

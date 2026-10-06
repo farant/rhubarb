@@ -222,7 +222,7 @@ s32 principale (vacuum)
         vicus_componere, v, CCC);
     m      = manus_ludus_creare(piscina, d);
     motus  = dispensator_motus(d);
-    vicus_motum_ligare(v, motus);
+    vicus_dispensatorem_ligare(v, d);
 
     imprimere("\n--- I: ligatio - focus ex ramo activo ---\n");
     CREDO_VERUM(focus_est(d, "pagina"));
