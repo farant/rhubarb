@@ -885,7 +885,7 @@ matrix_determinans (
                  s32  signum;
                   i8* valor;
 
-    si (m.lineae != m.columnae)
+    si (m.lineae != m.columnae || !anulus->integrum)
     {
         redde FALSUM;
     }
@@ -947,6 +947,11 @@ matrix_gradus (
           s32  signum;
           b32  bene;
 
+    si (!m.anulus->integrum)
+    {
+        /* gradus super anulum non integrum non definitus */
+        redde FALSUM;
+    }
     _officinae_aperire(&officinae, piscina, _officinis_utendum(m,
         (memoriae_index)MATRIX_LIMES_ELEMENTORUM));
     cardines =
@@ -989,6 +994,11 @@ matrix_nucleus (
                  i32  q = ZEPHYRUM;
              Piscina* stabilis;
 
+    si (!anulus->integrum)
+    {
+        /* nucleus super corpus fractionum: integrum requiritur */
+        redde FALSUM;
+    }
     _officinae_aperire(&officinae, piscina, _officinis_utendum(m,
         (memoriae_index)MATRIX_LIMES_ELEMENTORUM));
     stabilis   = officinae.piscinae[OFFICINA_STABILIS];

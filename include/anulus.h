@@ -128,6 +128,12 @@ structura Anulus {
 
     /* parametra anuli (Z/n: modulus); NIHIL pro Z, Q, Z[t] */
     constans vacuum* contextus;
+    /* anulus integer (sine divisoribus nullius): Z, Q, Z[t] VERUM; Z/n
+     * sse n primus. Eliminatio (Bareiss: determinans, gradus, nucleus)
+     * solum super anulum integrum valet - Z/6 [0,3,3; 4,4,5; 5,5,5]
+     * cardine 4 (divisore nullius) columnam totam necabat, det 0 pro 3
+     * (recensio anulus-I). */
+    b32 integrum;
 };
 
 /* Z: elementa Magnus */
@@ -140,8 +146,10 @@ extern constans Anulus ANULUS_RATIONALIUM;
 extern constans Anulus ANULUS_POLYNOMIORUM;
 
 /* Z/n (2 <= n < 2^32): elementa i32 (residua 0 <= x < n, congruentia),
- * corpus sse n primus; divide_exacte per inversam (FALSUM si divisor
- * non invertibilis). Descriptio in piscina vivit; NIHIL si n < 2. */
+ * corpus et integrum sse n primus; divide_exacte per inversam (FALSUM
+ * si divisor non invertibilis). Descriptio in piscina vivit; NIHIL si
+ * n < 2. Matrices comparantur per INDICEM descriptionis: una descriptio
+ * pro quoque modulo (duae Z/7 anuli diversi sunt). */
 constans Anulus*
 anulus_residuorum (
          i32  n,

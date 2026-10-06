@@ -3369,8 +3369,38 @@ s32 principale (vacuum)
         CREDO_VERUM (matrix_gradus(_m(tres, "[1, 2; 3, 4]"), piscina,
             &gradus));
         CREDO_AEQUALIS_I32 (gradus, II);
-        /* Z/6: divisio solum per unitates - Bareiss per cardinem 2
-         * refutat (non effectum falsum reddit) */
+        /* RECENSIO anulus-I: Z/6 non integrum - eliminatio refutat.
+         * Olim cardo 4 (divisor nullius) columnam necabat: det 0 pro
+         * 3 */
+        CREDO_VERUM (z->integrum && q->integrum && p->integrum);
+        CREDO_VERUM (septem->integrum);
+        CREDO_FALSUM (sex->integrum);
+        CREDO_FALSUM (matrix_determinans(_m(sex,
+            "[0, 3, 3; 4, 4, 5; 5, 5, 5]"), piscina, &d));
+        CREDO_AEQUALIS_I32 (d, XLII);
+        CREDO_FALSUM (matrix_gradus(_m(sex, "[2]"), piscina, &gradus));
+        CREDO_FALSUM (matrix_nucleus(_m(sex, "[2]"), piscina, &k));
+        /* arithmetica super Z/6 manet */
+        CREDO_VERUM (matrix_multiplica(_m(sex, "[2, 3]"), _m(sex,
+            "[3; 2]"),
+            piscina, &k));
+        CREDO_VERUM (_textus_est(k, "[0]"));
+        /* aequalitas Z/n falsificabilis (olim mutans 'semper VERUM'
+         * superstes) */
+        {
+            i32 tres_r    = III;
+            i32 quattuor  = IV;
+
+            CREDO_FALSUM (septem->aequalis(septem, &tres_r, &quattuor));
+            CREDO_VERUM (septem->aequalis(septem, &tres_r, &tres_r));
+        }
+        CREDO_FALSUM (matrix_aequalis(_m(septem, "[1, 2]"),
+            _m(septem, "[1, 3]")));
+        CREDO_VERUM (matrix_nucleus(_m(septem, "[1, 2, 3]"), piscina,
+            &k));
+        CREDO_VERUM (_textus_est(k, "[5, 4; 1, 0; 0, 1]"));
+        /* Z/6: divisio solum per unitates (etiam ante custodiam
+         * integri) */
         CREDO_FALSUM (matrix_determinans(_m(sex,
             "[2, 1, 0; 1, 1, 1; 0, 1, 2]"), piscina, &d));
         CREDO_AEQUALIS_I32 (d, XLII);

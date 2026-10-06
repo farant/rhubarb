@@ -83,3 +83,34 @@ only consumer; #3 on the map (Q(√d), Z[ζ_n]) needs the same.
 - tools/venenum_probare.sh: the matrix suite now also links
   lib/congruentia.c (the gate went red on a link error first — its
   source lists are by hand).
+
+## 2026-10-06 — review anulus-I: WRONG determinants over composite Z/n (fixed)
+
+My claim above — "over composite n, Bareiss can return FALSUM, never a
+wrong value" — was FALSE. Reviewer's minimal case: [0,3,3; 4,4,5; 5,5,5]
+over Z/6. The first pivot is 4, a zero divisor; prior = 1, so nothing is
+divided and nothing refuses; multiplying by 4 kills column 1 (≡ 0 mod 6),
+`_scala` skips it as pivot-less, rank < n, det 0 — the truth is 15 ≡ 3.
+140 wrong of 60k random 3..5×5 over composite moduli (2×2 never). The
+pivot-less-column skip (Sylvester's identity) is only sound when the ring
+has no zero divisors. I had reasoned only about the DIVISION refusing
+and never about multiplication by a zero divisor.
+
+- New descriptor field `integrum` (integral domain): Z, Q, Z[t] VERUM;
+  Z/n iff n prime (= corpus). `matrix_determinans`, `matrix_gradus`,
+  `matrix_nucleus` refuse when it is FALSUM — rank and kernel are not
+  even defined over Z/n composite (no fraction field; the reviewer's
+  kernel of [2] over Z/6 had 0 columns although 2·3 ≡ 0). Arithmetic
+  (add, multiply, transpose) stays available.
+- Documented: matrices compare descriptors by POINTER — one descriptor
+  per modulus (two `anulus_residuorum(7)` are different rings).
+- Tests: the repro refuses with exitus untouched; rank/kernel over Z/6
+  refuse; `integrum` per ring; Z/6 multiplication still works; the Z/n
+  equality was VACUOUS in the suite (mutant "always VERUM" survived —
+  the kernel check compared through it): now 3 ≠ 4 in Z/7, two different
+  Z/7 matrices, and a Z/7 kernel compared as text ("[5, 4; 1, 0; 0, 1]").
+  Plants red: determinant without the domain check, Z/n equality always
+  true, Z/n always integrum. 226 checks; venenum sana.
+- Lesson: "refuses rather than lies" needs an argument about EVERY
+  operation the algorithm performs on the ring, not just the one that
+  can refuse.
