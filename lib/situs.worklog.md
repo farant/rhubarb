@@ -121,3 +121,15 @@ Coverage gaps the reviewer listed, now asserted: the sign of
 differing only in z, `situs_segmenta(P,P,P,P)` → TANGUNT, and
 `situs_segmenta(P,P,Q,Q)` → DISIUNCTA. 16528 checks. Lint: test locals
 `ax/ay/az` became `axis_x/…`, `_coefficiens` became `_factor_fortuitus`.
+
+## 2026-10-05 — review IV: neighbor predicates confirmed
+
+Independent oracle (parametric intersection + Fourier–Motzkin, no ε): 0
+mismatches over 44k constructed cases and 649,539 exhaustive {−1,0,1}
+grid cases. The triangle-move recipe is complete for simple polygons
+n ≥ 3 (n = 3 with Z = W, n = 4, C = Z or W, C on line AB, fold-back at A
+checked). The w/1000 shrink is sound on this grid with ≥ 3× margin
+(worst cases 1/21, ~300, 1/111); if generator ranges widen, derive ε per
+case — too large an ε fails red, too small could only hide an overlap
+shorter than ε. 13 of 18 mutants killed, the 5 survivors equivalent.
+Header now says the reverse move (AC + CB → AB) uses the same calls.

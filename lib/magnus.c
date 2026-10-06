@@ -937,17 +937,26 @@ nomen structura {
  * divisore communi per alternas computato */
 interior memoriae_index _apex_alternarum = ZEPHYRUM;
 
+/* Divisor communis SINE testibus: AMBO magni requiruntur - si unus
+ * parvus est, gradus primus omnia parva facit, ergo Euclides in
+ * piscina vocantis finitus manet (recensio III: mdc(magnus, 1) in
+ * fractione piscinas alternas sine causa aperiebat - saltus temporis
+ * ad XL digitos). CUM testibus: UNUS magnus sufficit - post gradum
+ * primum testis operandi parvi ~ |a|/g magnus est et in omni gradu
+ * sequente novus fit (recensio IV: K F184 + F183 et F184, X M
+ * digitorum: MB 1.5 in piscina vocantis pro KB IV effectus). */
 interior b32
 _per_alternas (
     Magnus a,
-    Magnus b)
+    Magnus b,
+       b32 ambo)
 {
-    /* AMBO magni: si unus parvus est, gradus primus (aut secundus)
-     * omnia parva facit, ergo Euclides in piscina vocantis finitus
-     * manet (recensio III: mdc(magnus, 1) in fractione piscinas
-     * alternas sine causa aperiebat - saltus temporis ad XL digitos) */
-    redde (a.membra != NIHIL && a.longitudo > MAGNUS_LIMES_ALTERNARUM)
-        && (b.membra != NIHIL && b.longitudo > MAGNUS_LIMES_ALTERNARUM);
+    b32 a_magnus = a.membra != NIHIL
+        && a.longitudo > MAGNUS_LIMES_ALTERNARUM;
+    b32 b_magnus = b.membra != NIHIL
+        && b.longitudo > MAGNUS_LIMES_ALTERNARUM;
+
+    redde ambo ? (a_magnus && b_magnus) : (a_magnus || b_magnus);
 }
 
 interior vacuum
@@ -1055,7 +1064,7 @@ magnus_divisor_communis (
     _apex_alternarum = ZEPHYRUM;
     /* operandus pauci membrorum: in piscina vocantis (vide
      * _per_alternas) */
-    si (!_per_alternas(a, b) || !_alternae_aperire(&al))
+    si (!_per_alternas(a, b, VERUM) || !_alternae_aperire(&al))
     {
         dum (magnus_signum(y) != ZEPHYRUM)
         {
@@ -1099,10 +1108,11 @@ magnus_divisor_communis_testatus (
             Magnus t0 = _parvus(ZEPHYRUM);
             Magnus t1 = _parvus(I);
 
-    /* operandus pauci membrorum: post gradum primum omnia parva,
-     * testes |s| <= |b|, |t| <= |a|, ergo in piscina vocantis */
+    /* ambo operandi pauci membrorum: testes |s| <= |b|, |t| <= |a|
+     * parvi manent, ergo in piscina vocantis (vide _per_alternas) */
     _apex_alternarum  = ZEPHYRUM;
-    alternae          = _per_alternas(a, b) && _alternae_aperire(&al);
+    alternae          = _per_alternas(a, b, FALSUM)
+        && _alternae_aperire(&al);
 
     dum (magnus_signum(r1) != ZEPHYRUM)
     {

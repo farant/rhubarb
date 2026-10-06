@@ -155,3 +155,26 @@ can be big, but it is one value, not a growth per step). Test: gcd(big,
 1001) and the Bézout gcd(−7, big) give correct results with
 `magnus_apex_alternarum() == 0`; with the old `||` both apex checks are
 red. 1245 checks.
+
+## 2026-10-05 — review IV: the both-big rule was wrong for the witness variant
+
+My review-III claim ("after the first step everything is small; the
+witness variant's first quotient can be big, but it is one value") was
+false. With Bézout witnesses, the witness of the small operand becomes
+~|a|/g after step 1 and EVERY later step builds a new one of that size, so
+~180 small Euclid steps (a = K·F184 + F183, b = F184) each left O(n) limbs
+in the caller's piscina: 167 KB at 1k digits, 1.54 MB at 10k, for a 4 KB
+result (reviewer's repro, reproduced here before fixing).
+
+Fix: `_per_alternas(a, b, ambo)` — the plain gcd keeps "both big" (the
+fractio timing fix: fractio only calls the plain gcd), the witness variant
+goes back to "either big". Repro after the fix: caller usage == result
+size (448 B, 4184 B). Test: testatus(F10000·F184 + F183, F184) with a
+caller bound < 16 KB and apex > 0, plus the plain gcd on the same pair
+(apex 0, bounded); the review-III assertion apex == 0 for testatus(−7,
+F1000) encoded the wrong rule and now expects > 0. Plant (witness variant
+back to both-big) → the new bound and apex checks red. 1252 checks.
+
+Lesson: I tested the claim with −7 — two or three Euclid steps — so the
+per-step growth never showed. A memory claim about "the steps after"
+needs an input with MANY steps after.

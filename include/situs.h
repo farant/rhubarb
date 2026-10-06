@@ -28,6 +28,8 @@
  *             != SITUS_DISIUNCTA
  *         || situs_triangulum_vicinum(b, c, a, w, piscina)
  *             != SITUS_DISIUNCTA) refutare motum;
+ *   motus inversus (AC + CB -> AB): idem triangulum, eaedem
+ *   vocationes.
  *
  * Vide lib/situs.worklog.md.
  */
