@@ -75,7 +75,8 @@ nomen structura {
              ValorForma  forma;
                     Xar* membra;      /* character*: CERTUS */
               character* textus;      /* PRAEFIXUM, EXEMPLAR */
-     constans character* temporaria;  /* sedes mktemp (T3) */
+     constans character* temporaria;  /* plagula:L:C mktemp (T3) */
+                    b32  fractus;     /* aestimatio defecit */
 } Valor;
 
 /* situs effectus unus - attributa dialecti (NIHIL = absens) */
@@ -86,6 +87,7 @@ nomen structura {
                character* titulus;    /* ambitus_lectio */
                character* textus;     /* verbum fontis, ubi partialis */
                character* custodia;   /* '[ -x P ] || S': P */
+      constans character* temporaria;  /* plagula:L:C mktemp (T3) */
       constans character* forma;
       constans character* resolutio;
       constans character* classis;
@@ -531,6 +533,11 @@ _in_nominibus (
                    Xar* nomina,
     constans character* verbum);
 
+interior constans character*
+_via_relativa (
+             Derivatio* d,
+    constans character* via);
+
 
 /* ==================================================
  * Valores (effectus-plan-2 T2)
@@ -546,6 +553,7 @@ _valorem_parare (
     v->membra      = xar_creare(d->piscina, (i32)magnitudo(character*));
     v->textus      = NIHIL;
     v->temporaria  = NIHIL;
+    v->fractus     = FALSUM;
     si (v->membra != NIHIL)
     {
         *(character**)xar_addere(v->membra) = _duplicare(d->piscina,
@@ -554,14 +562,16 @@ _valorem_parare (
 }
 
 /* aestimatio defecit: quod iam collectum est PRAEFIXUM fit (vacuum:
- * IGNOTUS) - idem quod area vetus post defectum tenebat. Semper
- * FALSUM. */
+ * IGNOTUS) - idem quod area vetus post defectum tenebat. TEMPORARIA
+ * manet (sub objecto recenti quidquid sequitur recens est), cauda
+ * incognita. Semper FALSUM. */
 interior b32
 _valorem_frangere (
     Valor* v)
 {
     character* t;
 
+    v->fractus = VERUM;
     si (v->forma != VALOR_CERTUS)
     {
         redde FALSUM;
@@ -588,6 +598,27 @@ _valoris_textus (
     redde v->textus != NIHIL ? v->textus : "";
 }
 
+/* objectum temporarium novum ('T=$(mktemp)'): v vacuus esse debet -
+ * 'x$(mktemp)' via temporaria non est */
+interior b32
+_temporariam_ponere (
+              Derivatio* d,
+                  Valor* v,
+     constans character* sedes)
+{
+    si (   v->forma               != VALOR_CERTUS || v->membra == NIHIL
+        || xar_numerus(v->membra) != I
+        || (*(character**)xar_obtinere(v->membra, ZEPHYRUM))[ZEPHYRUM]
+           != '\0')
+    {
+        redde FALSUM;
+    }
+    v->forma       = VALOR_TEMPORARIA;
+    v->temporaria  = sedes;
+    v->textus      = _duplicare(d->piscina, "");
+    redde VERUM;
+}
+
 /* CONCATENATIO: litterae n ad omne membrum. Limes areae veteris
  * (VIA_MAXIMA) servatur: longius = valor fractus, membra intacta. */
 interior b32
@@ -599,6 +630,26 @@ _valorem_appendere (
 {
     i32 k;
 
+    si (v->forma == VALOR_TEMPORARIA && !v->fractus)
+    {
+        character* novum;
+
+        si ((i32)strlen(v->textus) + n + I > (i32)VIA_MAXIMA)
+        {
+            redde _valorem_frangere(v);
+        }
+        novum = (character*)piscina_allocare(d->piscina,
+            (memoriae_index)strlen(v->textus) + (memoriae_index)n + I);
+        si (novum == NIHIL)
+        {
+            redde _valorem_frangere(v);
+        }
+        strcpy(novum, v->textus);
+        memcpy(novum + strlen(v->textus), s, (size_t)n);
+        novum[strlen(v->textus) + (memoriae_index)n]  = '\0';
+        v->textus                                     = novum;
+        redde VERUM;
+    }
     si (v->forma != VALOR_CERTUS || v->membra == NIHIL)
     {
         redde FALSUM;
@@ -641,11 +692,17 @@ _valorem_continuare (
 {
     constans character* t = _valoris_textus(fons);
 
+    si (   fons->forma == VALOR_TEMPORARIA
+        && !_temporariam_ponere(d, v, fons->temporaria))
+    {
+        /* '$T' initio verbi solum: objectum idem, cauda eius (A1) */
+        redde _valorem_frangere(v);
+    }
     si (!_valorem_appendere(d, v, t, (i32)strlen(t)))
     {
         redde FALSUM;
     }
-    si (fons->forma != VALOR_CERTUS)
+    si (fons->fractus)
     {
         redde _valorem_frangere(v);
     }
@@ -653,9 +710,9 @@ _valorem_continuare (
 }
 
 /* IUNCTIO definitionum (sine ordine, spec-2 par. I.2). numerus = quot
- * definitiones iam iunctae. T2: regula vetus - omnes CERTAE et
- * aequales, aliter FALSUM (discordia); prima sola fracta servatur
- * (praefixum definitionis unicae). */
+ * definitiones iam iunctae. Omnes integrae, eiusdem formae et aequales
+ * (temporariae: objectum idem), aliter FALSUM (discordia); prima sola
+ * fracta servatur (praefixum definitionis unicae). */
 interior b32
 _valores_iungere (
              Valor* summa,
@@ -667,9 +724,20 @@ _valores_iungere (
         *summa = *novus;
         redde VERUM;
     }
-    redde summa->forma == VALOR_CERTUS && novus->forma == VALOR_CERTUS
-        && strcmp(_valoris_textus(summa), _valoris_textus(novus))
-           == ZEPHYRUM;
+    si (   summa->fractus || novus->fractus
+        || summa->forma != novus->forma
+        || (summa->forma != VALOR_CERTUS
+            && summa->forma != VALOR_TEMPORARIA))
+    {
+        redde FALSUM;
+    }
+    si (   summa->forma == VALOR_TEMPORARIA
+        && strcmp(summa->temporaria, novus->temporaria) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde strcmp(_valoris_textus(summa), _valoris_textus(novus))
+        == ZEPHYRUM;
 }
 
 
@@ -797,7 +865,7 @@ _variabilem_intus (
         {
             (vacuum)_valorem_frangere(&valor);
         }
-        si (   inanes_omittere && bonus
+        si (   inanes_omittere && bonus && valor.forma == VALOR_CERTUS
             && _valoris_textus(&valor)[ZEPHYRUM] == '\0')
         {
             perge;
@@ -861,7 +929,8 @@ _variabilem_aestimare (
     redde bonus;
 }
 
-/* argumentum verbi in aream (VIA_MAXIMA) aestimare - CERTUS solum;
+/* argumentum verbi in aream (VIA_MAXIMA) aestimare - CERTUS solum
+ * (non TEMPORARIA: cauda eius via non est);
  * area = scrinium operandi idiomatum (dirname, cd && pwd), non valor */
 interior b32
 _argumentum_in_aream (
@@ -875,8 +944,11 @@ _argumentum_in_aream (
     Valor valor;
 
     _valorem_parare(d, &valor);
-    si (!_verbum_aestimare(d, a, p, verbum, &valor, profunditas))
+    si (   !_verbum_aestimare(d, a, p, verbum, &valor, profunditas)
+        || valor.forma != VALOR_CERTUS)
     {
+        /* TEMPORARIA via absoluta non est: 'cd "$T"', dirname "$T"
+         * ignota manent (textus eius cauda sola est) */
         redde FALSUM;
     }
     strcpy(area, _valoris_textus(&valor));
@@ -971,6 +1043,25 @@ _substitutionem_aestimare (
         redde FALSUM;
     }
     t = _titulus_staticus(d->piscina, crusta_imperium_titulus(s));
+    si (t != NIHIL && strcmp(t, "mktemp") == ZEPHYRUM)
+    {
+        /* OBJECTUM RECENS (spec-2 par. III, A1): quaelibet optio,
+         * exemplar quodvis - nomen novum est; identitas = sedes
+         * substitutionis creantis */
+             MateriaTractus  tr;
+         constans character* plagula = _via_relativa(d, p->via);
+                  character  sedes[VIA_MAXIMA];
+
+        si (   !materia_tractus_nodi(NIHIL, pars, &tr)
+            || strlen(plagula) + XL >= (memoriae_index)VIA_MAXIMA)
+        {
+            redde FALSUM;
+        }
+        sprintf(sedes, "%s:%u:%u", plagula,
+            (insignatus integer)tr.linea,
+            (insignatus integer)tr.columna);
+        redde _temporariam_ponere(d, v, _duplicare(d->piscina, sedes));
+    }
     argumenta = crusta_imperium_argumenta(d->piscina, s);
     si (t == NIHIL || argumenta == NIHIL)
     {
@@ -2087,6 +2178,65 @@ _classis_externa (
     redde "externa";
 }
 
+/* situs sub objecto mktemp (spec-2 par. V.5, A1): classis
+ * temporaria, via = cauda sub objecto ('.' = ipsum), temporaria =
+ * sedes creantis; cauda ignota = praefixum partialis. FALSUM semper:
+ * via absoluta non est, vocantes eam non sequuntur. */
+interior b32
+_temporariam_classificare (
+                Derivatio* d,
+                    Situs* s,
+           constans Valor* v,
+    constans MateriaNodus* verbum,
+       constans character* causa)
+{
+     constans character* t = v->textus != NIHIL ? v->textus : "";
+              character  via[VIA_MAXIMA];
+         memoriae_index  n;
+
+    dum (*t == '/')
+    {
+        t++;
+    }
+    strcpy(via, t);
+    s->classis     = "temporaria";
+    s->temporaria  = v->temporaria;
+    si (v->fractus)
+    {
+        character* ultimum = strrchr(via, '/');
+        character  textus[VIA_MAXIMA];
+              i32  m = ZEPHYRUM;
+
+        si (ultimum != NIHIL)
+        {
+            ultimum[I] = '\0';
+        }
+        alioquin
+        {
+            via[ZEPHYRUM] = '\0';
+        }
+        textus[ZEPHYRUM] = '\0';
+        _textum_colligere(verbum, textus, &m);
+        s->forma      = "praefixum";
+        s->resolutio  = "partialis";
+        s->causa      = causa;
+        s->textus     = _duplicare(d->piscina, textus);
+        s->via        = _duplicare(d->piscina,
+            via[ZEPHYRUM] != '\0' ? via : "./");
+        redde FALSUM;
+    }
+    n = strlen(via);
+    dum (n > ZEPHYRUM && via[n - I] == '/')
+    {
+        via[--n] = '\0';
+    }
+    s->forma      = _globus_habet(verbum) ? "globus" : "via";
+    s->resolutio  = "plena";
+    s->via        = _duplicare(d->piscina,
+        via[ZEPHYRUM] != '\0' ? via : ".");
+    redde FALSUM;
+}
+
 /* verbum -> via, forma, resolutio, classis situs. absoluta_out
  * (NIHIL licet) = via absoluta ubi plena. VERUM = plena. */
 interior b32
@@ -2132,6 +2282,11 @@ _viam_classificare (
         /* area: textus valoris (CERTUS) aut praefixum eius */
         strcpy(valor, _valoris_textus(&v));
         longitudo = (i32)strlen(valor);
+        si (v.forma == VALOR_TEMPORARIA)
+        {
+            redde _temporariam_classificare(d, s, &v, verbum,
+                d->causa != NIHIL ? d->causa : "valor ignotus");
+        }
     }
     /* causa verbi ANTE cwd (cd W aestimatio causam suam poneret) */
     causa_verbi  = d->causa != NIHIL ? d->causa : "valor ignotus";
@@ -3255,6 +3410,12 @@ _tegit (
     constans Situs* w,
     constans Situs* s)
 {
+    /* objecta temporaria: idem objectum solum (T3, A1) */
+    si (   (w->temporaria != NIHIL || s->temporaria != NIHIL)
+        && !_aequat(w->temporaria, s->temporaria))
+    {
+        redde FALSUM;
+    }
     si (_aequat(s->elementum, "enumeratio"))
     {
         redde _incipit(w->via, s->via);
@@ -3545,6 +3706,7 @@ _situm_emittere (
         && _attributum(d, e, "operator", s->operator)
         && _attributum(d, e, "causa", s->causa)
         && _attributum(d, e, "custodia", s->custodia)
+        && _attributum(d, e, "temporaria", s->temporaria)
         && _attributum(d, e, "plagula",
                _via_relativa(d, s->plagula->via))
         && _attributum(d, e, "sedes", sedes)
@@ -3922,6 +4084,11 @@ _path_dividere (
 
 /* via absoluta normata arbori relativa; NIHIL extra arborem aut ipsa
  * radix */
+interior b32
+_temporaria_observata (
+             Derivatio* d,
+    constans character* absoluta);
+
 interior constans character*
 _observatam_relativam (
              Derivatio* d,
@@ -3935,8 +4102,51 @@ _observatam_relativam (
     {
         redde NIHIL;
     }
-    redde _relativa(d, absoluta) != NIHIL
-        ? _duplicare(d->piscina, _relativa(d, absoluta)) : NIHIL;
+    si (_relativa(d, absoluta) != NIHIL)
+    {
+        redde _duplicare(d->piscina, _relativa(d, absoluta));
+    }
+    /* sub radice temporaria: via absoluta (T3) */
+    redde _temporaria_observata(d, absoluta)
+        ? _duplicare(d->piscina, absoluta) : NIHIL;
+}
+
+/* radix temporaria macOS ($TMPDIR sub /var/folders, /tmp, et formae
+ * /private): oraculum viae ibi servat (spec-2 par. IX) */
+interior b32
+_radix_temporaria (
+    constans character* via)
+{
+    redde strncmp(via, "/var/folders/", XIII) == ZEPHYRUM
+        || strncmp(via, "/private/var/folders/", XXI) == ZEPHYRUM
+        || strncmp(via, "/tmp/", V) == ZEPHYRUM
+        || strncmp(via, "/private/tmp/", XIII) == ZEPHYRUM;
+}
+
+/* via absoluta extra arborem quam oraculum servat: sub radice
+ * temporaria, nec radix ipsa nec maiores eius (fixa sub copia
+ * temporaria currunt: bash cwd suum percurrit, effectus non est) */
+interior b32
+_temporaria_observata (
+             Derivatio* d,
+    constans character* absoluta)
+{
+    memoriae_index n = strlen(absoluta);
+
+    redde _radix_temporaria(absoluta)
+        && !(strncmp(d->radix, absoluta, n) == ZEPHYRUM
+             && (d->radix[n] == '/' || d->radix[n] == '\0'));
+}
+
+/* genus libri interpositionis -> elementum observatum */
+interior constans character*
+_elementum_generis (
+    constans character* genus)
+{
+    redde _aequat(genus, "LEGERE") ? "lectio"
+        : _aequat(genus, "SCRIBERE") ? "scriptura"
+        : _aequat(genus, "EXECVE") ? "exsecutio"
+        : _aequat(genus, "OPENDIR") ? "enumeratio" : "probatio";
 }
 
 interior vacuum
@@ -3973,6 +4183,10 @@ _observatum_addere (
     x->classis    = _classis_arboris(relativa);
     x->medium     = "observatum";
     x->mandatum   = mandatum;
+    si (_radix_temporaria(relativa))
+    {
+        x->classis = "temporaria";
+    }
 }
 
 /* argv mandati per ordinem tabulae (logica _tabulam_applicare, super
@@ -4265,10 +4479,21 @@ crusta_effectus_observata (
                 }
             }
             rel = _relativa(&d, normata);
-            si (   rel == NIHIL || per_path
-                || _aequat(genus, "SHEBANG")
+            si (   per_path || _aequat(genus, "SHEBANG")
                 || (rc < ZEPHYRUM && _aequat(genus, "EXECVE")))
             {
+                perge;
+            }
+            si (rel == NIHIL)
+            {
+                /* extra arborem: radices temporariae solae servantur
+                 * (via absoluta; classis temporaria) */
+                si (_temporaria_observata(&d, normata))
+                {
+                    _observatum_addere(&d, a, p,
+                        _elementum_generis(genus), normata, "via",
+                        pr->programma);
+                }
                 perge;
             }
             si (_aequat(genus, "LEGERE"))
@@ -4394,6 +4619,24 @@ _staticus_tegit (
         redde FALSUM;
     }
     n = strlen(via);
+    si (_aequat(_attributi(s, "classis", piscina), "temporaria"))
+    {
+        /* objectum mktemp: nomen fortuitum, ergo cauda sola congruit;
+         * '.' (objectum ipsum) et cauda ignota quodvis sub radice
+         * temporaria tegunt (spec-2 par. IX) */
+        memoriae_index m = strlen(via_observata);
+
+        si (!_radix_temporaria(via_observata))
+        {
+            redde FALSUM;
+        }
+        si (_aequat(forma, "praefixum") || strcmp(via, ".") == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        redde m > n + I && via_observata[m - n - I] == '/'
+            && strcmp(via_observata + m - n, via) == ZEPHYRUM;
+    }
     si (_aequat(el, "enumeratio") && exemplar != NIHIL)
     {
         character exemplum[VIA_MAXIMA];

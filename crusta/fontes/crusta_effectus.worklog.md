@@ -384,3 +384,31 @@ source order).
   single pointers.
 - Identity: index-numbered summaries (path flattening collided 8 names
   in T1's check) - 306/306 identical.
+
+## 2026-10-05 - slice 2 T3: temporaria
+
+- A temp value's TEXT is its tail under the object. Two places that
+  read a value's text as a path broke on that, both silently: the
+  empty-definition skip (`inanes_omittere`: `F=$(mktemp)` looked like
+  `F=""`) and `_argumentum_in_aream` (`cd "$T"` = stay put). The second
+  was caught only because the census by causa moved in two classes that
+  T3 should not touch (cwd ignotum -88, absens +27). Lesson: when a
+  value gains a new form, grep every `_valoris_textus` reader.
+- `Valor.fractus`: a temp path with an unknown tail is still a temp path
+  (under a fresh object, everything is fresh), so failure cannot turn it
+  into PRAEFIXUM; the flag carries "incomplete" through joins and
+  continuations. CERTUS is never fractus; PRAEFIXUM/IGNOTUS always are,
+  so the join rule is unchanged for them.
+- Oracle fixtures run inside a `mktemp -d` copy: once temp roots were
+  kept, every aura gained bash's stats of its own cwd's ancestors
+  (/private/var/folders/l0, .../T, the copy). `_temporaria_observata`
+  drops the root and its ancestors; the eight old auras are byte-equal
+  again. The temp fixture's aura holds random names (tmp.XXXXXXXXXX) -
+  regenerating it changes the file; the gate checks coverage, and pins
+  the CLASS count (V), not paths.
+- Observed SIP commands (cat, rm) reach the oracle through argv;
+  `_observatam_relativam` dropped out-of-tree operands, so it needed the
+  same temp rule as the syscall path.
+- A dead excuse is an ERRATUM at commit: resolving what an excuse
+  covered means deleting the excuse in the same commit
+  (tools/mensor_suitae.sh:91).

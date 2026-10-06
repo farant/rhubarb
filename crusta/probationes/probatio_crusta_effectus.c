@@ -329,6 +329,36 @@ hic_manens constans character* CAUSAE =
     "for o in a b; do O=\"$O $o\"; done\n"                 /* 18 */
     "cat $O\n";                                          /* 19 */
 
+/* temporaria (effectus-plan-2 T3): viae sub directorio mktemp */
+hic_manens constans character* TEMPORARIA =
+    "#!/bin/bash\n"                                       /* 1 */
+    "T=\"$(mktemp -d)\"\n"                                /* 2 */
+    "echo x > \"$T/a\"\n"                                 /* 3 */
+    "cat \"$T/a\"\n"                                      /* 4 */
+    "R=\"$T/r\"\n"                                        /* 5 */
+    "cat \"$R\"\n"                                        /* 6 */
+    "F=$(mktemp)\n"                                       /* 7 */
+    "echo y > \"$F\"\n"                                   /* 8 */
+    "G=\"$(mktemp /tmp/probatio.XXXXXX)\"\n"              /* 9 */
+    "cat \"$G\"\n"                                        /* 10 */
+    "f () {\n"                                            /* 11 */
+    "    local L\n"                                       /* 12 */
+    "    L=\"$(mktemp -d)\"\n"                            /* 13 */
+    "    cat \"$L/q\"\n"                                  /* 14 */
+    "}\n"                                                 /* 15 */
+    "X=/tmp/x\n"                                          /* 16 */
+    "cat \"$X\"\n"                                        /* 17 */
+    "Y=\"$(date)\"\n"                                     /* 18 */
+    "cat \"$Y\"\n"                                        /* 19 */
+    "cat \"$T/$NESCIO\"\n"                                /* 20 */
+    "export T\n"                                          /* 21 */
+    "./a/filius_t.sh\n";                                  /* 22 */
+
+/* filius variabiles vocantis non videt: T ambitus, non temporaria */
+hic_manens constans character* FILIUS_T =
+    "#!/bin/bash\n"
+    "cat \"$T/z\"\n";
+
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
 _causa_lineae (
@@ -654,7 +684,7 @@ s32 principale (vacuum)
     {
         constans character* fixa[] = {
             "ante", "cd", "fontatio", "globus", "mandatum", "probatio",
-            "puer", "redirectio", NIHIL
+            "puer", "redirectio", "temporaria", NIHIL
         };
         /* elementum, via quae in aura observata esse debent */
         constans character* pinnae[] = {
@@ -722,6 +752,23 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (non_tecta);
             CREDO_AEQUALIS_I32 (non_tecta ? xar_numerus(non_tecta) : I,
                 ZEPHYRUM);
+            /* temporaria (T3): nomina fortuita, ergo pinna per classem
+             * - scriptura bash, lectio cat (argv), probatio [ -s ],
+             * rm */
+            si (strcmp(fixa[i], "temporaria") == ZEPHYRUM)
+            {
+                i32 temporariae = ZEPHYRUM;
+
+                per (k = ZEPHYRUM; k < xar_numerus(observati); k++)
+                {
+                    si (_attributum(*(StmlNodus**)xar_obtinere(
+                            observati, k), "classis", "temporaria"))
+                    {
+                        temporariae++;
+                    }
+                }
+                CREDO_AEQUALIS_I32 (temporariae, V);
+            }
             per (k = ZEPHYRUM; pinnae[k] != NIHIL; k += III)
             {
                 si (strcmp(pinnae[k], fixa[i]) == ZEPHYRUM)
@@ -773,6 +820,72 @@ s32 principale (vacuum)
             s = _situs(cs, "lectio", "data/r.txt", V);
             CREDO_VERUM (_attributum(s, "resolutio", "plena"));
             CREDO_VERUM (_attributum(s, "causa", NIHIL));
+        }
+    }
+
+    /* XIV. temporaria (effectus-plan-2 T3; spec-2 par. V.5, A1): via =
+     * cauda sub objecto mktemp ('.' = ipsum), attributum temporaria =
+     * plagula:linea:columna substitutionis creantis */
+    imprimere("\n--- XIV. temporaria ---\n");
+    _scribere("a/temporaria.sh", TEMPORARIA);
+    _scribere("a/filius_t.sh", FILIUS_T);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/temporaria.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+              Xar* fs = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+           chorda* tt;
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/temporaria.sh");
+            _situs_colligere(sm, fs, "a/filius_t.sh");
+            _imprimere_situs(ts);
+            s = _situs(ts, "scriptura", "a", III);
+            CREDO_VERUM (_attributum(s, "classis", "temporaria"));
+            CREDO_VERUM (_attributum(s, "resolutio", "plena"));
+            CREDO_VERUM (_attributum(s, "temporaria",
+                "a/temporaria.sh:2:4"));
+            s = _situs(ts, "lectio", "a", IV);
+            CREDO_VERUM (_attributum(s, "classis", "temporaria"));
+            CREDO_VERUM (_attributum(s, "temporaria",
+                "a/temporaria.sh:2:4"));
+            /* scriptura in eodem objecto temporario: scripta */
+            CREDO_VERUM (_attributum(s, "scripta_in_ambitu", "verum"));
+            /* R="$T/r": objectum idem (A1) */
+            s = _situs(ts, "lectio", "r", VI);
+            CREDO_VERUM (_attributum(s, "temporaria",
+                "a/temporaria.sh:2:4"));
+            /* mktemp sine -d, cum exemplari: objectum ipsum '.' */
+            s = _situs(ts, "scriptura", ".", VIII);
+            CREDO_VERUM (_attributum(s, "temporaria",
+                "a/temporaria.sh:7:3"));
+            s = _situs(ts, "lectio", ".", X);
+            CREDO_VERUM (_attributum(s, "temporaria",
+                "a/temporaria.sh:9:4"));
+            /* in functione, 'local' */
+            s = _situs(ts, "lectio", "q", XIV);
+            CREDO_VERUM (_attributum(s, "classis", "temporaria"));
+            /* CONTRARIA: nomen fixum non temporaria; $(date) ignotum */
+            s = _situs(ts, "lectio", "/tmp/x", XVII);
+            CREDO_VERUM (_attributum(s, "classis", "externa"));
+            CREDO_VERUM (_attributum(s, "temporaria", NIHIL));
+            s = _situs(ts, "lectio", NIHIL, XIX);
+            CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
+            CREDO_VERUM (_attributum(s, "causa", "substitutio"));
+            /* cauda ignota: temporaria tamen, partialis */
+            s = _situs(ts, "lectio", NIHIL, XX);
+            CREDO_VERUM (_attributum(s, "classis", "temporaria"));
+            CREDO_VERUM (_attributum(s, "resolutio", "partialis"));
+            CREDO_VERUM (_attributum(s, "via", "./"));
+            /* filius: T ex ambitu, irresolutum */
+            s = _situs(fs, "lectio", NIHIL, II);
+            CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
+            CREDO_VERUM (_attributum(s, "classis", NIHIL));
+            tt = s != NIHIL ? stml_attributum_capere(s, "temporaria")
+                            : NIHIL;
+            CREDO_NIHIL (tt);
         }
     }
 

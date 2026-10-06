@@ -574,6 +574,7 @@ _modus_census (
  *   dominus <via>        lectio build/ non scripta in ambitu: exitus
  *                        actionis declaratae esse debet
  *   ignotum <sedes> <causa>  situs irresolutus NON excusatus
+ * Classis temporaria (effectus-plan-2 T3) lineam nullam dat.
  * Excusatio per lintrum ipsum (in_catena VERUM): situs irresolutus
  * cuius inventum excusatio absorbuit clavem non intrat. Scripturae
  * clavem non intrant (vestigium). Processus custoditi: provenientia
@@ -738,6 +739,13 @@ _modus_clavis (
             pl     = _cella(c->piscina, s, "plagula");
             sprintf(clavis, "%s@%ld", pl, strtol(_cella(c->piscina, s,
                 "octeti"), NIHIL, X));
+            si (strcmp(cl, "temporaria") == ZEPHYRUM)
+            {
+                /* objectum mktemp recens: quidquid sub eo legitur hic
+                 * cursus scripsit (spec-2 par. VII) - nulla linea,
+                 * etiam cauda ignota (non ignotum) */
+                perge;
+            }
             si (   strcmp(el, "ignotum") == ZEPHYRUM
                 || strcmp(res, "nulla")  == ZEPHYRUM
                 || (strcmp(res, "partialis") == ZEPHYRUM

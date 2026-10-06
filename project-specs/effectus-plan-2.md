@@ -179,28 +179,28 @@ NIHIL`); record the count in the worklog.
 (`-clavis`), `effectus.canon`, `probatio_crusta_effectus.c`, oracle
 fixtures + goldens.
 
-- [ ] **Step 1: Failing section** `XIV. temporaria`: `T="$(mktemp -d)"`
+- [x] **Step 1: Failing section** `XIV. temporaria`: `T="$(mktemp -d)"`
   then `echo x > "$T/a"; cat "$T/a"` -> lectio `classis="temporaria"`,
   `via="a"`, `temporaria=<sedes of mktemp>`, `scripta_in_ambitu
   ="verum"`; `R="$T/r"; cat "$R"` names the same dir (A1); `mktemp`
   without `-d`, with a template, inside a function.
-- [ ] **Step 2: CONTRARIES:** `T=/tmp/x` (fixed name) -> not
+- [x] **Step 2: CONTRARIES:** `T=/tmp/x` (fixed name) -> not
   temporaria; `T="$(mktemp -d)"` exported and read in a child script
   (`ambitus`) -> unresolved in the child; `T="$(other)"` -> substitutio.
-- [ ] **Step 3: Implement** (substitution of `mktemp`; concatenation
+- [x] **Step 3: Implement** (substitution of `mktemp`; concatenation
   keeps the creation sedes; site emission; canon `classis` value +
   attribute `temporaria` with nota).
-- [ ] **Step 4: Key.** `-clavis` emits no line for `temporaria`;
+- [x] **Step 4: Key.** `-clavis` emits no line for `temporaria`;
   probatio_fabrica / iudicium-fumus green; toml chain key diffed
   against the T2 key - every removed line is an `ignotum` that became
   `temporaria` (listed in the commit), no other line moves.
-- [ ] **Step 5: Oracle.** Observed paths under temp roots kept and
+- [x] **Step 5: Oracle.** Observed paths under temp roots kept and
   tagged; `crusta_effectus_non_tecta` covers them by `temporaria`
   suffix; new fixture `temporaria.sh` + golden; PLANT: a fixture whose
   `$T` comes from a non-mktemp `$(...)` -> reported uncovered (red as
   predicted). Toml chain live: non tecta 0.
-- [ ] **Step 6: Census delta** by causa (worklog); judge time measured.
-- [ ] **Step 7: Commit** (gates `crusta`, `iudicium-fumus`, owed).
+- [x] **Step 6: Census delta** by causa (worklog); judge time measured.
+- [x] **Step 7: Commit** (gates `crusta`, `iudicium-fumus`, owed).
 
 ### Task T4: arrays
 

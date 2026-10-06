@@ -88,7 +88,8 @@ mensor_suitae_cursus_secunda () {       # <nomen> <secunda>
     return 0
 }
 
-# <tolera codex="lint:effectus-irresolutum" (>liber cursuum mensoris: mensura, non ingressus portae
+# liber cursuum mensoris: MSU_CURSUS ex $(mktemp), ergo classis
+# temporaria (effectus-plan-2 T3) - excusatio olim hic, non iam opus
 mensor_suitae_tardissimae () {
     local n="${1:-5}"
     if [ -n "$MSU_CURSUS" ] && [ -s "$MSU_CURSUS" ]; then

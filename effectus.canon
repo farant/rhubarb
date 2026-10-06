@@ -79,6 +79,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"
       nota="verum: scriptura aliqua eiusdem processus viam tegit (aequalis,
@@ -107,6 +108,10 @@
             longa), cwd ignotum
             (cd W ignotum), valor ignotus (residuum: nulla causa
             nominata - numerandum, non tolerandum)"/>
+    <attributum nomen="temporaria" genus="textus"
+      nota="ubi classis temporaria (effectus-plan-2 T3, A1): objectum
+            mktemp creans, plagula:linea:columna substitutionis; via tum
+            cauda sub objecto est ('.' = objectum ipsum)"/>
     <attributum nomen="textus" genus="textus"
       nota="verbum fontis litteraliter, ubi resolutio partialis (via
             tum praefixum solum fert): nuntiis lintri et proiectioni
@@ -136,6 +141,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="per" genus="electio" necessarium="verum">
       <optio>redirectio</optio>
@@ -146,6 +152,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
@@ -171,6 +178,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -182,6 +190,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="custodia" genus="textus"
       nota="'[ -x P ] || S': P (binarium domus) custodit"/>
@@ -210,6 +219,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -221,6 +231,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
@@ -249,6 +260,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -260,6 +272,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
@@ -286,6 +299,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -298,6 +312,7 @@
     <attributum nomen="operator" genus="textus"
       nota="operator litteralis: -f -d -e -s -nt -ot ..."/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>

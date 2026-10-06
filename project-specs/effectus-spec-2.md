@@ -347,3 +347,36 @@ first definition on disagreement) -> 87 summaries differ. Census run
 1.8 s both; peak RSS 4.64 GB before, 4.89 GB after (+5%, piscina
 strings) - the 4.6 GB itself predates T2 (one piscina for the whole
 census; vitium …7RD).
+
+**T3 (2026-10-05): `temporaria`.** Opening measurement: toml's chain
+touches its temp root 3 times (2 writes, 1 stat), all through
+`tools/mensor_suitae.sh`'s two `$(mktemp)` files - the oracle dropped
+all three. Now a `$(mktemp ...)` (any options, any template) is a
+TEMPORARIA value identified by `plagula:linea:columna` of the creating
+substitution (A1); sites under it carry `classis="temporaria"`, `via` =
+tail under the object (`.` = the object), attribute `temporaria`;
+`scripta_in_ambitu` pairs only within one object (`_tegit`); an unknown
+tail (`"$T/$x"`) stays temporaria, `partialis`. The key emits no line
+for them; the oracle keeps observed paths under `/var/folders`, `/tmp`
+(and `/private` forms) - minus the tree root and its ancestors, which
+bash stats when fixtures run in a temp copy - and covers them by tail.
+
+Census (vs T1): unresolved 3,304 -> 2,182; `substitutio` 1,274 -> 147;
+1,122 sites `temporaria`; plena 3,436 -> 4,477, partialis 474 -> 555;
+`discordia` 41 -> 46 (`tools/cursoris_oraculum.sh`: `ARBOR=""` vs
+`ARBOR="$(mktemp -d)/arbor"` - an honest mixed join; before, the
+failing temp definition's `substitutio` won). Toml's key: 31 lines,
+unchanged - the mensor's temp reads were EXCUSED
+(`mensor_suitae.sh:91`, "measurement, not a gate input"); the analyzer
+now proves the excuse, which the lint then reported dead (erratum) -
+removed. Live oracle on the chain: non tecta 0 with temp paths kept
+(explicata 52, unchanged: the chain moved to bin/compilator since
+slice-1 T5's 9). Judge time 2.25-2.55 s.
+
+Found by the census-by-cause: `cd "$T"` evaluated a TEMPORARIA through
+`_argumentum_in_aream`, whose text is the TAIL ("") - the cwd silently
+stayed put and later reads became tree paths (`cwd ignotum` 88 -> 8,
+`absens` 10 -> 37). The path idioms (`cd`, `dirname`, `readlink -f`)
+now require CERTUS; counts back to 88 and 10. Also: a bare `"$F"` with
+`F=$(mktemp)` went through `inanes_omittere`, which skipped the temp
+definition as "empty" (its text is the tail) - the skip is CERTUS-only.
