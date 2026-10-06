@@ -29,17 +29,21 @@
     <gradus initus="Hello" cursor_x="5" cursor_y="0" textus="Hello"/>
   </casus>
 
-  <casus titulus="cursor movement" fons="stream_terminal.zig:2370" latitudo="10" altitudo="10">
+  <casus titulus="cursor movement" debitum="A2: CUP" fons="stream_terminal.zig:2370" latitudo="10" altitudo="10">
     <gradus initus="Hello\x1B[1;1H" cursor_x="0" cursor_y="0"/>
     <gradus initus="\x1B[2;3H" cursor_x="2" cursor_y="1"/>
   </casus>
 
-  <casus titulus="erase operations" fons="stream_terminal.zig:2388" latitudo="20" altitudo="10">
+  <casus titulus="erase operations" debitum="A2: CUP, EL" fons="stream_terminal.zig:2388" latitudo="20" altitudo="10">
     <gradus initus="Hello World" cursor_x="11" cursor_y="0"/>
     <gradus initus="\x1B[1;6H\x1B[K" textus="Hello"/>
   </casus>
 
-  <casus titulus="alt screen" fons="stream_terminal.zig:2470" latitudo="10" altitudo="5">
+  <casus titulus="tabs" fons="stream_terminal.zig:2409" latitudo="80" altitudo="10">
+    <gradus initus="A\tB" cursor_x="9" textus="A       B"/>
+  </casus>
+
+  <casus titulus="alt screen" debitum="A2: 1049" fons="stream_terminal.zig:2470" latitudo="10" altitudo="5">
     <gradus initus="Primary" altera="falsum"/>
     <gradus initus="\x1B[?1049h" altera="verum"/>
     <gradus initus="Alt"/>
@@ -73,7 +77,7 @@
     </gradus>
   </casus>
 
-  <casus titulus="print wide char at edge creates spacer head" fons="Terminal.zig:5209" latitudo="10" altitudo="10">
+  <casus titulus="print wide char at edge creates spacer head" debitum="A2: CUP" fons="Terminal.zig:5209" latitudo="10" altitudo="10">
     <gradus initus="\x1B[1;10H\xF0\x9F\x98\x80" cursor_x="2" cursor_y="1">
       <cellula x="9" y="0" latitudo="caput"/>
       <cellula x="0" y="1" textus="\xF0\x9F\x98\x80" latitudo="lata"/>
@@ -81,14 +85,14 @@
     </gradus>
   </casus>
 
-  <casus titulus="print over wide char at 0,0" fons="Terminal.zig:5274" latitudo="80" altitudo="80">
+  <casus titulus="print over wide char at 0,0" debitum="A2: CUP" fons="Terminal.zig:5274" latitudo="80" altitudo="80">
     <gradus initus="\xF0\x9F\x98\x80\x1B[0;0HA" cursor_x="1" cursor_y="0">
       <cellula x="0" y="0" textus="A" latitudo="angusta"/>
       <cellula x="1" y="0" vacua="verum" latitudo="angusta"/>
     </gradus>
   </casus>
 
-  <casus titulus="print over wide spacer tail" fons="Terminal.zig:5341" latitudo="5" altitudo="5">
+  <casus titulus="print over wide spacer tail" debitum="A2: CUP" fons="Terminal.zig:5341" latitudo="5" altitudo="5">
     <gradus initus="\xE6\xA9\x8B\x1B[1;2HX" textus=" X">
       <cellula x="0" y="0" vacua="verum" latitudo="angusta"/>
       <cellula x="1" y="0" textus="X" latitudo="angusta"/>
@@ -117,14 +121,14 @@
     <gradus initus="hello\x08y" cursor_x="5" cursor_y="0" textus="helly"/>
   </casus>
 
-  <casus titulus="cursorPos resets wrap" fons="Terminal.zig:7809" latitudo="5" altitudo="5">
+  <casus titulus="cursorPos resets wrap" debitum="A2: CUP" fons="Terminal.zig:7809" latitudo="5" altitudo="5">
     <gradus initus="ABCDE" pendens="verum"/>
     <gradus initus="\x1B[1;1H" pendens="falsum"/>
     <gradus initus="X" textus="XBCDE"/>
   </casus>
 
   <!-- pars sine modo originis (origo, regio volutionis: phasis B/D) -->
-  <casus titulus="setCursorPos (original test), prior part" fons="Terminal.zig:7906" latitudo="80" altitudo="80">
+  <casus titulus="setCursorPos (original test), prior part" debitum="A2: CUP" fons="Terminal.zig:7906" latitudo="80" altitudo="80">
     <gradus cursor_x="0" cursor_y="0"/>
     <gradus initus="\x1B[0;0H" cursor_x="0" cursor_y="0"/>
     <gradus initus="\x1B[81;81H" cursor_x="79" cursor_y="79"/>
@@ -132,11 +136,11 @@
     <gradus initus="\x1B[0;80H" pendens="falsum"/>
   </casus>
 
-  <casus titulus="cursorUp basic" fons="Terminal.zig:10867" latitudo="5" altitudo="5">
+  <casus titulus="cursorUp basic" debitum="A2: CUP, CUU" fons="Terminal.zig:10867" latitudo="5" altitudo="5">
     <gradus initus="\x1B[3;1HA\x1B[10AX" textus=" X\n\nA"/>
   </casus>
 
-  <casus titulus="cursorUp resets wrap" fons="Terminal.zig:10924" latitudo="5" altitudo="5">
+  <casus titulus="cursorUp resets wrap" debitum="A2: CUU" fons="Terminal.zig:10924" latitudo="5" altitudo="5">
     <gradus initus="ABCDE" pendens="verum"/>
     <gradus initus="\x1B[1A" pendens="falsum"/>
     <gradus initus="X" textus="ABCDX"/>
@@ -146,42 +150,42 @@
     <gradus initus="A\r\nB\x1B[10D" textus="A\nB"/>
   </casus>
 
-  <casus titulus="cursorLeft unsets pending wrap state" fons="Terminal.zig:10962" latitudo="5" altitudo="5">
+  <casus titulus="cursorLeft unsets pending wrap state" debitum="A2: CUB" fons="Terminal.zig:10962" latitudo="5" altitudo="5">
     <gradus initus="ABCDE" pendens="verum"/>
     <gradus initus="\x1B[1D" pendens="falsum"/>
     <gradus initus="X" textus="ABCXE"/>
   </casus>
 
-  <casus titulus="cursorDown basic" fons="Terminal.zig:11243" latitudo="5" altitudo="5">
+  <casus titulus="cursorDown basic" debitum="A2: CUD" fons="Terminal.zig:11243" latitudo="5" altitudo="5">
     <gradus initus="A\x1B[10BX" textus="A\n\n\n\n X"/>
   </casus>
 
-  <casus titulus="cursorRight resets wrap" fons="Terminal.zig:11316" latitudo="5" altitudo="5">
+  <casus titulus="cursorRight resets wrap" debitum="A2: CUF" fons="Terminal.zig:11316" latitudo="5" altitudo="5">
     <gradus initus="ABCDE" pendens="verum"/>
     <gradus initus="\x1B[1C" pendens="falsum"/>
     <gradus initus="X" textus="ABCDX"/>
   </casus>
 
-  <casus titulus="eraseLine simple erase right" fons="Terminal.zig:13721" latitudo="5" altitudo="5">
+  <casus titulus="eraseLine simple erase right" debitum="A2: CUP, EL" fons="Terminal.zig:13721" latitudo="5" altitudo="5">
     <gradus initus="ABCDE\x1B[1;3H\x1B[K" textus="AB"/>
   </casus>
 
-  <casus titulus="eraseLine right preserves background sgr" fons="Terminal.zig:13787" latitudo="5" altitudo="5">
+  <casus titulus="eraseLine right preserves background sgr" debitum="A2: CUP, SGR, EL" fons="Terminal.zig:13787" latitudo="5" altitudo="5">
     <gradus initus="ABCDE\x1B[1;2H\x1B[48;2;255;0;0m\x1B[K" textus="A">
       <cellula x="1" y="0" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
       <cellula x="4" y="0" vacua="verum" stilus="\x1B[0;48;2;255;0;0m"/>
     </gradus>
   </casus>
 
-  <casus titulus="eraseLine simple erase left" fons="Terminal.zig:13926" latitudo="5" altitudo="5">
+  <casus titulus="eraseLine simple erase left" debitum="A2: CUP, EL" fons="Terminal.zig:13926" latitudo="5" altitudo="5">
     <gradus initus="ABCDE\x1B[1;3H\x1B[1K" textus="   DE"/>
   </casus>
 
-  <casus titulus="eraseDisplay simple erase below" fons="Terminal.zig:14718" latitudo="5" altitudo="5">
+  <casus titulus="eraseDisplay simple erase below" debitum="A2: CUP, ED" fons="Terminal.zig:14718" latitudo="5" altitudo="5">
     <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[J" textus="ABC\nD"/>
   </casus>
 
-  <casus titulus="eraseDisplay simple erase above" fons="Terminal.zig:14909" latitudo="5" altitudo="5">
+  <casus titulus="eraseDisplay simple erase above" debitum="A2: CUP, ED" fons="Terminal.zig:14909" latitudo="5" altitudo="5">
     <gradus initus="ABC\r\nDEF\r\nGHI\x1B[2;2H\x1B[1J" textus="\n  F\nGHI"/>
   </casus>
 
@@ -190,7 +194,7 @@
 
   <!-- ED 2: totum vacuum, cursor manet (xterm; Ghostty eraseDisplay
        .complete cursorem non movet) -->
-  <casus titulus="erase display complete keeps cursor" fons="domus" latitudo="5" altitudo="5">
+  <casus titulus="erase display complete keeps cursor" debitum="A2: ED" fons="domus" latitudo="5" altitudo="5">
     <gradus initus="ABC\r\nDEF\x1B[2J" cursor_x="3" cursor_y="1">
       <cellula x="0" y="0" vacua="verum"/>
       <cellula x="2" y="1" vacua="verum"/>
@@ -199,20 +203,20 @@
 
   <!-- SGR per stilus_applicare; forma canonica stilus_codificare
        (colores tabulae semper 5;n) -->
-  <casus titulus="sgr bold then reset" fons="domus" latitudo="10" altitudo="2">
+  <casus titulus="sgr bold then reset" debitum="A2: SGR" fons="domus" latitudo="10" altitudo="2">
     <gradus initus="\x1B[1mA\x1B[0mB" textus="AB">
       <cellula x="0" y="0" textus="A" stilus="\x1B[0;1m"/>
       <cellula x="1" y="0" textus="B" stilus="\x1B[0m"/>
     </gradus>
   </casus>
 
-  <casus titulus="sgr palette colours" fons="domus" latitudo="10" altitudo="2">
+  <casus titulus="sgr palette colours" debitum="A2: SGR" fons="domus" latitudo="10" altitudo="2">
     <gradus initus="\x1B[31;44mX" textus="X">
       <cellula x="0" y="0" textus="X" stilus="\x1B[0;38;5;1;48;5;4m"/>
     </gradus>
   </casus>
 
-  <casus titulus="dectcem hides and shows the cursor" fons="domus" latitudo="10" altitudo="2">
+  <casus titulus="dectcem hides and shows the cursor" debitum="A2: DECTCEM" fons="domus" latitudo="10" altitudo="2">
     <gradus visibilis="verum"/>
     <gradus initus="\x1B[?25l" visibilis="falsum"/>
     <gradus initus="\x1B[?25h" visibilis="verum"/>
@@ -220,7 +224,7 @@
 
   <!-- 1049: cursor servatus in ingressu, restitutus in exitu (xterm
        DECSET 1049 = 1048 + 1047); alterum schirmum purgatur -->
-  <casus titulus="alt screen 1049 saves and restores the cursor" fons="domus" latitudo="10" altitudo="5">
+  <casus titulus="alt screen 1049 saves and restores the cursor" debitum="A2: CUP, 1049" fons="domus" latitudo="10" altitudo="5">
     <gradus initus="\x1B[3;3H\x1B[?1049h" cursor_x="2" cursor_y="2" altera="verum"/>
     <gradus initus="\x1B[1;1HAlt" cursor_x="3" cursor_y="0" textus="Alt"/>
     <gradus initus="\x1B[?1049l" cursor_x="2" cursor_y="2" altera="falsum"/>
@@ -235,7 +239,7 @@
   </casus>
 
   <!-- 2026: modus servatur (nucleus sine tempore: nihil aliud) -->
-  <casus titulus="synchronized output mode is tracked" fons="domus" latitudo="10" altitudo="2">
+  <casus titulus="synchronized output mode is tracked" debitum="A2: 2026" fons="domus" latitudo="10" altitudo="2">
     <gradus initus="\x1B[?2026h">
       <modus privatus="2026" status="verum"/>
     </gradus>

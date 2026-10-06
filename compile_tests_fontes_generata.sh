@@ -6,6 +6,7 @@ declare -a SOURCE_FILES=(
     "lib/actio.c"
     "lib/actor.c"
     "lib/aedilis.c"
+    "lib/aemulator.c"
     "lib/arbor.c"
     "lib/arbor2_conditio_evaluare.c"
     "lib/arbor2_expandere.c"

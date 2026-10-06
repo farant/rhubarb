@@ -19,6 +19,14 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `aemulator` nova (nucleus emulatoris terminalis, aemulator-plan
+  A1) - octeti programmatis intrant, schirmum exit: cellulae (UTF-8,
+  latitudo angusta/lata/cauda/caput, stilus), cursor cum involutione
+  pendente, impressio per runae, CR LF BS HT BEL, mutatio magnitudinis
+  (capacitas geometrica), effusio plana ut Ghostty plainString. Series
+  ceterae consumuntur et numerantur (A2). PURUS: nulla I/O, nullum
+  tempus.
+
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex
   fenestra.h divisum (fenestra.h id includit), sine iactura auctum:
   codex physicus W3C (`EventusCodex`), runa logica, actio

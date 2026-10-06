@@ -155,6 +155,26 @@ FIRST (Eskil: the API is what is hard to change), then: creation with
 fixed memory, the cell and row model, print through `runae` (narrow,
 wide, spacer cells, autowrap with pending-wrap at the last column),
 CR/LF/BS, the text dump for tests. Glossary: aemulator.
+A1 as built (API approved by Fran unchanged): opaque `Aemulator`; cell
+= inline UTF-8 (4 bytes) + length (0 = never written) + width kind +
+style index; rows through a pointer array (scroll rotates pointers,
+clears the recycled row) with the soft-wrap flag; print per Ghostty
+(pending wrap at the last column, wide at the last column leaves a
+spacer-head and wraps, overwriting half of a wide char clears the
+other half); UTF-8 split across writes carried, invalid bytes ->
+U+FFFD, a split rune interrupted by a sequence -> U+FFFD; BEL effect;
+default tab stops every 8; resize truncates/pads, keeps the cursor on
+screen by dropping top rows, capacity grows by half and never shrinks
+(within capacity: zero allocation - measured); the dump writes into a
+piscina buffer (no chorda_aedificator). Zero-width codepoints are
+DROPPED (graphemes = v2, named). Vectors: 15 green, 24 named debts
+(each `A2: CUP/EL/ED/SGR/...`). probatio_aemulator: limits, UTF-8,
+unknown counting, BEL, tabs, spacer head, overwrite, scroll clearing,
+resize, steady state allocates nothing. Fourteen plants (incl. debt
+promotion). PURITY CHECKED: aemulator.c includes only house headers +
+`<string.h>`; its LINK closure is not pure - piscina.c (stdlib, stdio)
+and stilus_terminalis.c (+ chorda_aedificator: stdio) - the exact list
+for the wasm door (decision 10).
 
 **A2 - the loopback surface.** CUP and relative moves, ED/EL, SGR via
 `stilus_applicare` with interned styles, DECTCEM, 1049 alt screen +

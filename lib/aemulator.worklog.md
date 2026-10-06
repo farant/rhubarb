@@ -37,3 +37,35 @@ decodes it; `<`, `&`, `"` are kept out of vectors anyway.
 
 Measured: 172 of Terminal.zig's 428 tests check only externally
 visible state (keyword heuristic; plan AUDIENDA).
+
+## 2026-10-06 — A1: the skeleton (API approved unchanged)
+
+**A test-harness false alarm worth remembering:** "resize within
+capacity allocates nothing" failed at first - the CREDO assertions
+interleaved between the measurement and the check write their records
+into the SAME piscina (`credo_aperire(piscina)`). Measure, do the work
+into plain variables, read the usage again, THEN assert. (Section IX's
+steady-state loop had no CREDO inside and was green all along - I
+first misread the failing line as IX.)
+
+**Ghostty print rules reproduced** (Terminal.print, no 2027, no
+margins): pending wrap is set whenever the write reaches the last
+column (even with DECAWM off - the mode is consulted when the NEXT
+print wraps); a wide char at the last column writes a spacer-head
+there, marks the row soft-wrapped and continues at x=0 of the next
+row; writing over a wide head clears its tail, writing over a tail
+clears its head.
+
+**UTF-8 across `aemulator_scribere` calls:** the tokenizer returns an
+IMPRIMERE run up to the end of the buffer, so a rune can be split; up
+to 3 trailing bytes are carried. A sequence (ESC...) arriving while a
+rune is pending turns it into U+FFFD, like a terminal that sees a
+broken byte stream.
+
+**Accidental pass:** "cursorLeft no wrap" (CSI 10 D at column 1) is
+green in A1 because ignoring the CSI and clamping at 0 both leave the
+text "A\nB". A2 must keep it green for the right reason.
+
+**Purity:** aemulator.c is pure (house headers + <string.h>); the link
+closure is not - piscina.c and stilus_terminalis.c (via
+chorda_aedificator) pull stdio/stdlib. Exact list for the wasm door.

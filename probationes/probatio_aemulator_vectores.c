@@ -23,6 +23,8 @@
 #include "filum.h"
 #include "xar.h"
 #include "stml.h"
+#include "stilus_terminalis.h"
+#include "aemulator.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -735,17 +737,105 @@ fictus_modus (
     redde FALSUM;
 }
 
-/* nucleus verus: A1 aemulatorem hic ligat; donec NIHIL */
+/* nucleus verus: aemulator (A1) */
 interior vacuum*
-nullus_creare (
+verus_creare (
     Piscina* p,
         i32  latitudo,
         i32  altitudo)
 {
-    (vacuum)p;
-    (vacuum)latitudo;
-    (vacuum)altitudo;
-    redde NIHIL;
+    AemulatorConfiguratio cfg;
+
+    aemulator_configuratio_initiare(&cfg);
+    cfg.latitudo = latitudo;
+    cfg.altitudo = altitudo;
+    redde aemulator_creare(p, &cfg);
+}
+
+interior vacuum
+verus_scribere (
+             vacuum* t,
+        constans i8* octeti,
+                i32  n)
+{
+    aemulator_scribere((Aemulator*)t, octeti, n);
+}
+
+interior chorda
+verus_textus (
+     vacuum* t,
+    Piscina* p)
+{
+    redde aemulator_textum_effundere((Aemulator*)t, p);
+}
+
+interior vacuum
+verus_cursor (
+    vacuum* t,
+       s32* x,
+       s32* y,
+       b32* pendens,
+       b32* visibilis)
+{
+    AemulatorCursor c;
+
+    c           = aemulator_cursor((Aemulator*)t);
+    *x          = (s32)c.x;
+    *y          = (s32)c.y;
+    *pendens    = c.pendens;
+    *visibilis  = c.visibilis;
+}
+
+interior b32
+verus_cellula (
+                 vacuum*  t,
+                    s32   x,
+                    s32   y,
+                Piscina*  p,
+                 chorda*  graphema,
+     constans character** latitudo,
+                 chorda*  stilus)
+{
+    hic_manens constans character* tituli[] = {
+        "angusta", "lata", "cauda", "caput"
+    };
+     AemulatorCellula  c;
+    ChordaAedificator* a;
+
+    si (   x < ZEPHYRUM || y < ZEPHYRUM
+        || !aemulator_cellula((Aemulator*)t, (i32)x, (i32)y, &c))
+    {
+        redde FALSUM;
+    }
+    *graphema  = c.graphema;
+    *latitudo  = tituli[c.latitudo];
+    a          = chorda_aedificator_creare(p, LXIV);
+    stilus_codificare(a, NIHIL, &c.stilus, STILUS_CODIFICATIO_PLENA);
+    *stilus    = chorda_aedificator_finire(a);
+    redde VERUM;
+}
+
+interior b32
+verus_altera (
+    vacuum* t)
+{
+    redde aemulator_alterum((Aemulator*)t);
+}
+
+interior i32
+verus_ignota (
+    vacuum* t)
+{
+    redde aemulator_ignota((Aemulator*)t);
+}
+
+interior b32
+verus_modus (
+    vacuum* t,
+       i32  numerus,
+       b32  privatus)
+{
+    redde aemulator_modus((Aemulator*)t, numerus, privatus);
 }
 
 interior StmlNodus*
@@ -876,11 +966,17 @@ s32 principale (vacuum)
     }
 
     imprimere("\n--- II: vectores contra nucleum ---\n");
-    verus         = fictus;
-    verus.creare  = nullus_creare;
-    viridia       = ZEPHYRUM;
-    debita        = ZEPHYRUM;
-    absentia      = ZEPHYRUM;
+    verus.creare    = verus_creare;
+    verus.scribere  = verus_scribere;
+    verus.textus    = verus_textus;
+    verus.cursor    = verus_cursor;
+    verus.cellula   = verus_cellula;
+    verus.altera    = verus_altera;
+    verus.ignota    = verus_ignota;
+    verus.modus     = verus_modus;
+    viridia         = ZEPHYRUM;
+    debita          = ZEPHYRUM;
+    absentia        = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(exempla); i++)
     {
         e         = *(StmlNodus**)xar_obtinere(exempla, i);
@@ -913,8 +1009,8 @@ s32 principale (vacuum)
             }
         }
     }
-    imprimere("vectores: %d viridia, %d debita, %d sine nucleo"
-        " (debitum: nucleus absens - A1)\n", (integer)viridia,
+    imprimere("vectores: %d viridia, %d debita, %d sine nucleo\n",
+        (integer)viridia,
         (integer)debita, (integer)absentia);
 
     imprimere("\n");
