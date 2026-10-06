@@ -99,6 +99,11 @@ background - read them before a task.*
     cap per pulse. It touches the child only through the vtable, so
     it is as pure as the core. Key encoding joins in phase D,
     additively.
+18. **DECRQCRA behind a flag, off by default** (Fran, B4b
+    2026-10-06): `AemulatorConfiguratio.lectio_schirmi` (default
+    FALSUM - Ghostty has no DECRQCRA, iTerm2 ships it disabled; a
+    program could read the screen back). The esctest runner turns it
+    on; it is esctest's only way to read cells.
 
 ## II. What exists (to read before tasks)
 
@@ -349,7 +354,27 @@ Later phases (re-planned after A's RELATIO):
     by construction (each read also asks for at most the remainder).
     Found by examen: `limes - mensura` underflowed (i32 is UNSIGNED)
     when replies had filled the reserve.
-    - **B4b - esctest**: next.
+    - **B4b - esctest** as built: `../esctest2` @ 2798f12 (Thomas
+      Dickey's maintained fork; GPL-2.0 - run as a child, never
+      vendored). Core: DECSTR (xterm: cursor visible, region full,
+      pen and DECSC reset; cursor stays; DECAWM stays ON), DECRQCRA
+      (decision 18; 16-bit codepoint sum, empty = space as xterm >=
+      334, wide tail = 0), `CSI 18 t` (Ghostty csi_18_t; esctest's
+      reset needs the size). Runner: `tools/aemulator_esctest.c` +
+      `tools/aemulator_esctest.sh [-include RE] [-probare]`
+      (--expected-terminal=xterm --xterm-checksum=334
+      --max-vt-level=4), ~80 s, deterministic (two full runs equal).
+      Result 567: 216 pass, 306 fail, 17 skip (VT5), 28 esctest-known;
+      every failure carries a cause in
+      `probationes/fixa/aemulator/esctest.tsv`, attributed from the
+      test's own bytes (`--test-case-dir`): left/right margins 82,
+      colour OSC 47, DECRQM 32, window ops 29, protection 24, VT420
+      rectangles 14 / columns 11, reverse wrap 10, DECDSR 10, alt
+      screens 47/1047/1048 9, DECRQSS 9, HPR/VPR 6, DA identity 4
+      (Ghostty's, decision 5 - esctest expects xterm's), SCOSC 4,
+      DECCOLM 3, REP 3, DECALN 2, RIS 2, XTSAVE 2, DECID, MoreFix,
+      IRM. None unexplained. `-probare` fails on ANY change (new
+      pass = promote). A tool, not a gate (like frigida_probare).
   - **B5 - RELATIO.**
 - **C - scrollback.** The fixed page pool (Decision 4), viewport
   scrolling, byte limit, eviction; reflow stays deferred (Decision 7).

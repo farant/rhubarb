@@ -83,6 +83,7 @@ structura Aemulator {
                   i32  regio_ultima;
                    i8* tabulae;           /* sistae per columnam */
                chorda  identitas;         /* XTVERSION */
+                  b32  lectio_schirmi;    /* DECRQCRA permissa */
      StilusTerminalis* stili;             /* [0] = nativus */
                   i32  numerus_stilorum;
                   i32* transitus;         /* collectio: vetus->novus */
@@ -927,6 +928,26 @@ positum_nuntiare (
     respondere(a, b, n);
 }
 
+/* XTWINOPS 18: ESC [ 8 ; altitudo ; latitudo t */
+interior vacuum
+magnitudinem_nuntiare (
+    Aemulator* a)
+{
+     i8 b[XXXII];
+    i32 n;
+
+    n       = ZEPHYRUM;
+    b[n++]  = (i8)0x1B;
+    b[n++]  = '[';
+    b[n++]  = '8';
+    b[n++]  = ';';
+    numerum_appendere(b, &n, a->altitudo);
+    b[n++]  = ';';
+    numerum_appendere(b, &n, a->latitudo);
+    b[n++]  = 't';
+    respondere(a, b, n);
+}
+
 /* XTVERSION: DCS > | titulus versio ST */
 interior vacuum
 versionem_nuntiare (
@@ -1180,6 +1201,126 @@ cellulas_eradere (
     s->cursor.pendens  = FALSUM;
 }
 
+/* DECSTR (xterm, esctest2 decstr.py): cursor visibilis, regio tota,
+ * calamus nativus, DECSC ad initium (servatio oblita - restitutio
+ * initium et calamum nativum dat). Cursor manet; DECAWM VERUM manet
+ * (xterm consulto, contra DEC). IRM, DECOM: phasis D. */
+interior vacuum
+mollem_restituere (
+    Aemulator* a)
+{
+    a->visibilis                = VERUM;
+    a->involutio                = VERUM;
+    a->regio_summa              = ZEPHYRUM;
+    a->regio_ultima             = a->altitudo - I;
+    a->activum->calamus         = ZEPHYRUM;
+    a->activum->servatus.adest  = FALSUM;
+}
+
+/* punctum codicis cellulae pro DECRQCRA: vacua = spatium (xterm >=
+ * 334), cauda = 0, ceterae ex UTF-8 */
+interior i32
+cellulae_punctum (
+    constans Cellula* c)
+{
+    i32 b0;
+    i32 p;
+    i32 k;
+    i32 n;
+
+    si (c->latitudo == AEMULATOR_CAUDA)
+    {
+        redde ZEPHYRUM;
+    }
+    si (c->mensura == ZEPHYRUM)
+    {
+        redde (i32)' ';
+    }
+    b0 = (i32)c->octeti[ZEPHYRUM] & 0xFF;
+    si (b0 < 0x80)
+    {
+        redde b0;
+    }
+    si (b0 >= 0xF0)
+    {
+        p = b0 & 0x07;
+        n = III;
+    }
+    alioquin si (b0 >= 0xE0)
+    {
+        p = b0 & 0x0F;
+        n = II;
+    }
+    alioquin
+    {
+        p = b0 & 0x1F;
+        n = I;
+    }
+    per (k = I; k <= n && k < (i32)c->mensura; k++)
+    {
+        p = (p << VI) | ((i32)c->octeti[k] & 0x3F);
+    }
+    redde p;
+}
+
+/* DECRQCRA: CSI Pid ; Pp ; Pt ; Pl ; Pb ; Pr * y -> DCS Pid ! ~ XXXX
+ * ST. Summa XVI bitorum punctorum codicis; limites 1-based,
+ * ordinarii schirmus totus, ad schirmum praecisi; inversum = 0. */
+interior vacuum
+summam_nuntiare (
+                 Aemulator* a,
+     constans SeriesLexema* lx)
+{
+     constans character* hex = "0123456789ABCDEF";
+                     i8  b[XXXII];
+                    i32  n;
+                    i32  summa;
+                    i32  summa_y;
+                    i32  summa_x;
+                    i32  ultima_y;
+                    i32  ultima_x;
+                    i32  x;
+                    i32  y;
+
+    summa_y   = parametrum(lx, II, I) - I;
+    summa_x   = parametrum(lx, III, I) - I;
+    ultima_y  = parametrum(lx, IV, a->altitudo) - I;
+    ultima_x  = parametrum(lx, V, a->latitudo) - I;
+    si (ultima_y >= a->altitudo)
+    {
+        ultima_y = a->altitudo - I;
+    }
+    si (ultima_x >= a->latitudo)
+    {
+        ultima_x = a->latitudo - I;
+    }
+    summa = ZEPHYRUM;
+    per (y = summa_y; y <= ultima_y && summa_y < a->altitudo; y++)
+    {
+        per (x = summa_x; x <= ultima_x && summa_x < a->latitudo; x++)
+        {
+            summa += cellulae_punctum(
+                &a->activum->lineae[y]->cellulae[x]);
+        }
+    }
+    summa   &= 0xFFFF;
+    n       = ZEPHYRUM;
+    b[n++]  = (i8)0x1B;
+    b[n++]  = 'P';
+    numerum_appendere(b, &n, lx->numerus_parametrorum > ZEPHYRUM
+                                 ? (i32)lx->parametra[ZEPHYRUM]
+                                 : ZEPHYRUM);
+    b[n++] = '!';
+    b[n++] = '~';
+    b[n++] = (i8)hex[(summa >> XII) & 0xF];
+    b[n++] = (i8)hex[(summa >> VIII) & 0xF];
+    b[n++] = (i8)hex[(summa >> IV) & 0xF];
+    b[n++] = (i8)hex[summa & 0xF];
+    b[n++] = (i8)0x1B;
+    b[n++] = '\\';
+    respondere(a, b, n);
+}
+
 /* DECSTBM: summa >= ultima ignoratur; cursor ad initium */
 interior vacuum
 regionem_ponere (
@@ -1215,6 +1356,22 @@ seriem_csi (
                  i32  i;
 
     s = a->activum;
+    /* DECSTR (CSI ! p) et DECRQCRA (CSI ... * y, sub vexillo) */
+    si (   lx->numerus_intermediorum == I && lx->privatum == ZEPHYRUM
+        && lx->separatores           == ZEPHYRUM)
+    {
+        si (lx->intermedia[ZEPHYRUM] == '!' && lx->finale == 'p')
+        {
+            mollem_restituere(a);
+            redde;
+        }
+        si (   lx->intermedia[ZEPHYRUM] == '*' && lx->finale == 'y'
+            && a->lectio_schirmi)
+        {
+            summam_nuntiare(a, lx);
+            redde;
+        }
+    }
     /* intermedia aut ':' extra SGR: non nostra (DECRQM, DECSCUSR...) */
     si (   lx->numerus_intermediorum > ZEPHYRUM
         || (lx->separatores != ZEPHYRUM && lx->finale != 'm'))
@@ -1328,6 +1485,17 @@ seriem_csi (
             frange;
         casus 'S':
             regionem_sursum(a, a->regio_summa, a->regio_ultima, n);
+            frange;
+        casus 't':
+            /* XTWINOPS 18 solum (Ghostty csi_18_t): magnitudo textus
+             * in cellulis; parametra plura aut alia = ignota */
+            si (   lx->numerus_parametrorum           != I
+                || parametrum(lx, ZEPHYRUM, ZEPHYRUM) != XVIII)
+            {
+                a->ignota++;
+                frange;
+            }
+            magnitudinem_nuntiare(a);
             frange;
         casus 'T':
             /* plura parametra: xterm 'mouse highlight', non SD */
@@ -1526,8 +1694,9 @@ aemulator_creare (
         redde NIHIL;
     }
     memset(a, ZEPHYRUM, magnitudo(Aemulator));
-    a->piscina   = piscina;
-    a->effectus  = cfg->effectus;
+    a->piscina         = piscina;
+    a->effectus        = cfg->effectus;
+    a->lectio_schirmi  = cfg->lectio_schirmi;
     a->identitas = identitatem_struere(piscina,
         cfg->titulus ? cfg->titulus : "aemulator",
         cfg->versio ? cfg->versio : AEMULATOR_VERSIO);

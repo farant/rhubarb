@@ -734,4 +734,47 @@
     <gradus initus="\x1B[1;10HA\x1B[6n" pendens="verum" responsum="\x1B[1;10R"/>
   </casus>
 
+  <!-- ==== B4b: DECSTR (esctest2 @ 2798f12 tests/decstr.py; Ghostty
+       DECSTR non habet) et DECRQCRA ordinarie clausum ==== -->
+
+  <!-- decstr.py:37 - DECSC post DECSTR = initium -->
+  <casus titulus="decstr resets the saved cursor to home" fons="domus" latitudo="20" altitudo="10">
+    <gradus initus="\x1B[6;5H\x1B7\x1B[!p\x1B[3;3H\x1B8" cursor_x="0" cursor_y="0"/>
+  </casus>
+
+  <!-- decstr.py:214 - cursor manet -->
+  <casus titulus="decstr leaves the cursor in place" fons="domus" latitudo="20" altitudo="10">
+    <gradus initus="\x1B[6;5H\x1B[!p" cursor_x="4" cursor_y="5"/>
+  </casus>
+
+  <!-- decstr.py:106 - xterm DECAWM post DECSTR servat (deviatio
+       consulta xterm, esctest eam exspectat) -->
+  <casus titulus="decstr keeps autowrap on" fons="domus" latitudo="10" altitudo="3">
+    <gradus initus="\x1B[?7h\x1B[!p\x1B[1;9Hxxx" cursor_x="1" cursor_y="1"/>
+  </casus>
+
+  <!-- decstr.py:135 - regio volutionis tota -->
+  <casus titulus="decstr resets the scroll region" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[3;4r\x1B[!p\x1B[4;1H\r\n" cursor_y="4"/>
+  </casus>
+
+  <!-- DECTCEM: cursor visibilis -->
+  <casus titulus="decstr shows the cursor" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[?25l\x1B[!p" visibilis="verum" ignota="0"/>
+  </casus>
+
+  <!-- DECRQCRA sine 'lectio_schirmi' (ordinarium, decisio IX):
+       ignotum, nullum responsum (DSR in eodem gradu solum respondet) -->
+  <casus titulus="decrqcra is off by default" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="A\x1B[1;0;1;1;1;1*y\x1B[5n" responsum="\x1B[0n" ignota="1"/>
+  </casus>
+
+  <!-- XTWINOPS 18 (Ghostty size_report.zig:73 csi_18_t; stream.zig:2419
+       parametra plura ignorat): magnitudo textus in cellulis.
+       esctest reset() eam ante omnem probationem poscit. -->
+  <casus titulus="csi 18 t reports the size in cells" fons="domus" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[18t" responsum="\x1B[8;24;80t"/>
+    <gradus initus="\x1B[18;1t\x1B[5n" responsum="\x1B[0n" ignota="1"/>
+  </casus>
+
 </vectores>

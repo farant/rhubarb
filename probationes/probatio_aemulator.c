@@ -223,6 +223,73 @@ responsa_probare (vacuum)
     CREDO_AEQUALIS_I32(c.tituli, M);
 }
 
+/* XVI: DECRQCRA (sub vexillo lectio_schirmi) et DECSTR (B4b) */
+interior vacuum
+lectionem_probare (vacuum)
+{
+                Aemulator* a;
+                    Capta  c;
+    AemulatorConfiguratio  cfg;
+         AemulatorCellula  prima;
+         AemulatorCellula  secunda;
+                      i32  i;
+
+    imprimere("\n--- XVI: DECRQCRA et DECSTR (B4b) ---\n");
+    aemulator_configuratio_initiare(&cfg);
+    CREDO_FALSUM(cfg.lectio_schirmi);
+    memset(&c, ZEPHYRUM, magnitudo(Capta));
+    cfg.latitudo            = X;
+    cfg.altitudo            = II;
+    cfg.effectus.datum      = &c;
+    cfg.effectus.responsum  = responsum_capere;
+    cfg.lectio_schirmi      = VERUM;
+    a                       = aemulator_creare(piscina, &cfg);
+    scribere(a, "AB");
+    /* cellula una; rectangulum; vacua = spatium (xterm >= 334) */
+    scribere(a, "\x1B[7;0;1;1;1;1*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP7!~0041\x1B\\"));
+    scribere(a, "\x1B[8;0;1;1;1;2*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP8!~0083\x1B\\"));
+    scribere(a, "\x1B[8;0;1;5;1;5*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP8!~0020\x1B\\"));
+    /* ordinaria: schirmum totum (0x83 + XVIII spatia) */
+    scribere(a, "\x1B[9*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP9!~02C3\x1B\\"));
+    /* rectangulum inversum: 0; limites praecisi ad schirmum */
+    scribere(a, "\x1B[3;0;2;1;1;1*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP3!~0000\x1B\\"));
+    scribere(a, "\x1B[4;0;1;1;9;999*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP4!~02C3\x1B\\"));
+    /* lata: caput = punctum codicis, cauda = 0; summa XVI bitorum */
+    scribere(a, "\x1B[H\x1B[2J\xE4\xB8\xAD");
+    scribere(a, "\x1B[5;0;1;1;1;1*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP5!~4E2D\x1B\\"));
+    scribere(a, "\x1B[5;0;1;2;1;2*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP5!~0000\x1B\\"));
+    scribere(a, "\x1B[H");
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        scribere(a, "\xE4\xB8\xAD");
+    }
+    scribere(a, "\x1B[6*y");
+    CREDO_VERUM(responsum_est(&c, "\x1BP6!~0DC2\x1B\\"));
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+
+    /* DECSTR: calamus nativus (SGR normalis) */
+    a = creare(X, II);
+    scribere(a, "b\x1B[1;31m\x1B[!pa");
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &prima));
+    CREDO_VERUM(aemulator_cellula(a, I, ZEPHYRUM, &secunda));
+    CREDO_VERUM(stilus_aequalis(&prima.stilus, &secunda.stilus));
+    /* DECSTR in schirmo altero: servatus eius ad initium */
+    a = creare(X, V);
+    /* "\x1B" "7": effugium hex omnes digitos sequentes caperet */
+    scribere(a, "\x1B[?1049h\x1B[3;3H\x1B" "7\x1B[!p\x1B[4;4H\x1B" "8");
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).y, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+}
+
 s32 principale (vacuum)
 {
                 Aemulator* a;
@@ -564,6 +631,7 @@ s32 principale (vacuum)
     CREDO_VERUM(post == usus);
 
     responsa_probare();
+    lectionem_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     a = creare(XX, V);

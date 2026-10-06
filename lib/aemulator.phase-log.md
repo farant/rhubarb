@@ -199,3 +199,21 @@ answered by our core and read back by the shell). examen found an
 unsigned underflow in the queue clip before any test did; a test now
 pins it. 16 plants, 15 caught, one redundant-by-design guard named.
 
+## B4b — esctest (2026-10-06)
+
+**INTENTIO.** An outside oracle that drives a real program through the
+whole stack - esctest2 runs as the child of `aemulator_hospes`, asks
+the terminal questions, and checks the answers.
+
+Built: DECSTR, DECRQCRA behind `lectio_schirmi` (decision 18: off by
+default - Ghostty lacks it, iTerm2 disables it), `CSI 18 t`; the runner
+(`tools/aemulator_esctest.sh`, ~80 s, deterministic). 567 tests: 216
+pass, 306 fail, 17 skip, 28 known. Every failure has a cause taken from
+the test's own bytes, and none is unexplained: they are the features
+we have not built (left/right margins, colour queries, DECRQM, window
+ops, protection, VT420 rectangles...) plus our deliberate Ghostty
+identity in DA. The pinned table now plays the role debts played for
+the vectors: any change - a new failure or a new pass - stops it. A
+DECSTR plant showed why soft reset mattered: without it one test's
+scroll region broke the tests after it.
+

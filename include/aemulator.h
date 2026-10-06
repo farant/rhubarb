@@ -59,10 +59,16 @@ nomen structura {
      * copiantur. */
   constans character* titulus;
   constans character* versio;
+    /* DECRQCRA (B4b, decisio XVIII): programma summam cellularum
+     * rectanguli legere potest. Ordinarie FALSUM (decisio IX: Ghostty
+     * eam non habet, iTerm2 clausam praebet); probationes (esctest)
+     * aperiunt. Clausa: series ignota, nullum responsum. */
+                  b32 lectio_schirmi;
 } AemulatorConfiguratio;
 
 /* Configuratio ordinaria: LXXX x XXIV, effectus nulli, titulus
- * "aemulator", versio AEMULATOR_VERSIO. Campi postea addendi hic
+ * "aemulator", versio AEMULATOR_VERSIO, lectio_schirmi FALSUM.
+ * Campi postea addendi hic
  * defaltas accipiunt - vocantes semper ab hac incipiant. */
 vacuum
 aemulator_configuratio_initiare (

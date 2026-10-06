@@ -43,7 +43,8 @@ Leges chartae:
   DA2, DA3, DSR 5, CPR, XTVERSION) per effectum `responsum`, tituli
   OSC 0/2 per effectum `titulus`; `AemulatorConfiguratio` campos
   `titulus` et `versio` accipit (identitas XTVERSION;
-  `AEMULATOR_VERSIO`). Series ceterae
+  `AEMULATOR_VERSIO`); B4b: DECSTR, `CSI 18 t`, DECRQCRA sub campo
+  novo `lectio_schirmi` (ordinarie FALSUM). Series ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex

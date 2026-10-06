@@ -208,3 +208,37 @@ bytes) through the effects; `responsa` drains. Two harness plants
 "unknown"; DSR 5 and DA2 are now real answers, so the probes became
 `ESC[99n` (DSR other) and `ESC[>5c` (DA2 with a parameter).
 
+## 2026-10-06 — B4b: esctest
+
+**esctest reads cells only through DECRQCRA.** 322 of its assertions
+are AssertScreenCharsInRectEqual -> DECRQCRA one cell at a time (VT
+level 4). Under `--expected-terminal=xterm`, `--xterm-checksum=334`
+makes empty() a space and leaves the raw 16-bit sum un-negated, which
+matches our core (no "never written" vs "erased" distinction, as
+Ghostty). Reply `DCS Pid ! ~ XXXX ST`; Pid read raw (0 is legal -
+`parametrum` maps 0 to the default).
+
+**esctest's reset() needs `CSI 18 t`** (GetScreenSize) before every
+test - without it all 6 CUP tests failed inside reset. And DECSTR:
+without it a test's scroll region leaks into the next (the plant
+proved it: CPL/CUD tests broke).
+
+**DECSTR is xterm's, not DEC's.** DEC STD 070 turns autowrap off; xterm
+keeps it on and esctest marks that an intentional deviation. Ghostty
+has no DECSTR (only RIS), so esctest's decstr.py is the reference.
+
+**Attributing 306 failures.** `--test-case-dir` writes each test's
+bytes (body only - reset and query reads are not in it). A feature
+pattern list (first match wins) named 288; class names covered the
+XTWINOPS tests whose bytes go through another path; DA/DA2 are our
+identity (esctest's xterm profile wants DA1 64;1;2;6;9;... and DA2
+41). A failure attributed to a missing feature may hide a second
+cause - when that feature lands, the pinned table forces a look.
+
+**C hex escapes are greedy.** "\x1B7" is 0x1B7 - split the literal
+("\x1B" "7"). The STML vector escapes are fixed two-digit, so only C
+tests bite.
+
+**P4 (no 16-bit mask) survives by construction:** the reply prints
+only four hex digits. Mask kept for intent.
+
