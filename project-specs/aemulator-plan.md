@@ -134,6 +134,21 @@ a replayer test, and a first set of vectors hand-converted from
 Ghostty's tests for phase A's surface (print and wide chars, CR/LF/BS,
 cursor moves, ED/EL, SGR, alt screen), each citing `file:line @
 12752b2`. The replayer fails red (no core yet).
+A0 as built: `probationes/fixa/aemulator/vectores.stml` - 38 cases
+(31 from Ghostty, 7 house cases marked `fons="domus"` with a reason),
+steps of bytes in (escapes `\xHH \n \r \t \\`) then assertions:
+`textus` (Ghostty `plainString` exactly - see the worklog), cursor x/y,
+`pendens`, `visibilis`, `altera`, `ignota`, per-cell `textus`/`vacua`/
+`latitudo`/`stilus` (canonical SGR of `stilus_codificare`), `modus`.
+`probationes/probatio_aemulator_vectores.c`: 0 - static validation of
+every vector (runs with no core); I - the replayer judged against a
+fake core (one case must pass; four must fail, each on ONE field);
+II - the vectors against the core through a `Probandum` vtable (A1
+binds aemulator). "Red" became DEBTS BY NAME (tessera's vectores_initus
+pattern): no core = every case a debt, counted; later a case may carry
+`debitum="cause"`, and a debt that passes FAILS (promote it) - so the
+root suite stays green between commits without hiding anything. Seven
+plants caught; the debt-promotion path is planted at A1 (needs a core).
 
 **A1 - API and skeleton.** `include/aemulator.h` for Fran's approval
 FIRST (Eskil: the API is what is hard to change), then: creation with
@@ -183,7 +198,11 @@ Later phases (re-planned after A's RELATIO):
   integration suite (features/009 Q2). Decide in A3.
 - Ghostty's tests are mostly API calls (`t.printString`,
   `t.setCursorPos`), not byte streams; how many convert to byte vectors
-  cleanly is unmeasured - A0 reports the ratio.
+  cleanly is unmeasured - A0 reports the ratio. **Measured (A0, keyword
+  heuristic):** Terminal.zig 428 tests, 361 assert observable state,
+  172 ONLY externally observable (text, cursor, cells) - those convert
+  mechanically; stream_terminal.zig 134, 117 byte-fed but mostly
+  effects/queries (phase B), 26 observe the screen.
 - `series_terminalis` treats C1 bytes (0x80-0x9F) as UTF-8
   continuations (Fran's choice for input); confirm that is right for
   program OUTPUT too (xterm with UTF-8 does the same) before A2.
