@@ -529,6 +529,27 @@ polynomium_ex_chorda (
     redde VERUM;
 }
 
+Polynomium
+polynomium_transcribe (
+    Polynomium  p,
+       Piscina* piscina)
+{
+     Magnus* alveus;
+        i32  k;
+
+    si (p.numerus == ZEPHYRUM)
+    {
+        redde p;
+    }
+    alveus = _alveus(piscina, p.numerus);
+    per (k = ZEPHYRUM; k < p.numerus; k++)
+    {
+        alveus[k] = magnus_transcribe(p.coefficientes[k], piscina);
+    }
+    p.coefficientes = alveus;
+    redde p;
+}
+
 chorda
 polynomium_ad_chordam (
     Polynomium  p,

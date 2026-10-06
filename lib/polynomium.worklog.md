@@ -178,3 +178,11 @@ officina-creation failures; magnus_transcribe correct. Acted on:
   a poisoned build, since reficere does not free memory.
 - 170 checks; ASan/UBSan clean; also clean on the reviewer's poisoned
   piscina.
+
+## 2026-10-06 — `polynomium_transcribe`
+
+Deep copy (new coefficient array, every coefficient through
+`magnus_transcribe`) for `anulus`'s scratch hook; `translata` and friends
+share arrays, so a shallow copy would not survive a rollback. Tested in
+probatio_matrix's ring block (array and limbs differ; text survives
+destroying the source piscina).

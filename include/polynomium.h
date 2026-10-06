@@ -97,6 +97,13 @@ polynomium_ex_chorda (
        Piscina* piscina,
     Polynomium* exitus);
 
+/* copia profunda in piscinam datam: alveus et coefficientes novi (vide
+ * magnus_transcribe) */
+Polynomium
+polynomium_transcribe (
+    Polynomium  p,
+       Piscina* piscina);
+
 /* forma canonica: gradu summo primo, " + " / " - " inter terminos,
  * nec "1t" nec "t^1"; nullum = "0". Littera ASCII ut supra (aliter
  * textus non relegibilis). */

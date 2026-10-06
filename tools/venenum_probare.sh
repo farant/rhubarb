@@ -14,7 +14,8 @@
 #     (porta muta hic caperetur);
 # II. suitae quae piscinas notant et reficiunt in ansis calidis:
 #     piscina, magnus (Euclides alternus), fractio, situs, polynomium
-#     (officinae), sub veneno et sanitatoribus.
+#     (officinae), matrix (Bareiss in officinis alternis), sub veneno et
+#     sanitatoribus.
 # Exitus 0 sana | 1 FRACTA | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -56,7 +57,9 @@ clang "${VEXILLA_C89[@]}" -Iinclude "${SANITAS[@]}" \
 for suita in "piscina:" "magnus:lib/magnus.c" \
     "fractio:lib/magnus.c lib/fractio.c" \
     "situs:lib/magnus.c lib/fractio.c lib/situs.c" \
-    "polynomium:lib/magnus.c lib/fractio.c lib/polynomium.c"; do
+    "polynomium:lib/magnus.c lib/fractio.c lib/polynomium.c" \
+    "matrix:lib/magnus.c lib/fractio.c lib/polynomium.c lib/anulus.c \
+lib/matrix.c"; do
     titulus="${suita%%:*}"
     read -r -a fontes <<< "${suita#*:}"
     if ! clang "${VEXILLA_C89[@]}" -Wno-overlength-strings -Iinclude \
