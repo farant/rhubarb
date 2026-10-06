@@ -10,7 +10,7 @@ plan was flow analysis - the data says the unresolved mass is a VALUE
 problem, so this slice widens what the evaluator can say about a
 variable and leaves ordering for the next one.*
 
-*Status: APPROVED (2026-10-05) - §XIV A1–A5 decided by Fran (all recommendations: "those recommendations all make sense to me"); plan `effectus-plan-2.md`.*
+*Status: DONE (2026-10-06, T1–T7) - §XIV A1–A5 decided by Fran (all recommendations); plan `effectus-plan-2.md`; as built §XV.*
 
 ## 0. What the measurements say (dated 2026-10-05)
 
@@ -480,3 +480,34 @@ not followed and no longer marked `absens`.
   dropped -> P15 red. Census: unresolved 1,187 -> 1,183 (`operator`
   63 -> 38); toml key 31 lines unchanged; no dead excuse; judge
   2.15-2.44 s.
+
+**T7 (2026-10-06): close.** Census after the tertia/secunda merges
+(315 scripts; T1 baseline was 306):
+
+| | T1 (before) | T7 (after) |
+|---|---|---|
+| sites | 7,584 | 10,759 (set members are sites) |
+| plena | 3,436 | 8,680 |
+| partialis | 474 | 495 |
+| nulla (unresolved) | 3,304 (43.6%) | 1,208 (11.2%) |
+| temporaria | - | 1,147 |
+
+Unresolved by causa, T1 -> T7: substitutio 1,274 -> 125 (A: mktemp
+-> temporaria); tabulatum 578 -> 19 (B: arrays); ansa_read 960 -> 61
+(C: loops); discordia 41 -> 472 (sequential reassignment, the ordering
+slice's work list); argumentum 150 -> 209 (+298 partialis: bodies of
+loops over `"$@"` - function and script arguments, next slice);
+recursio 87 -> 118; cwd ignotum 88 -> 94; ambitus 51 -> 59; operator
+65 -> 39; absens 10 -> 12; valor ignotus 0.
+
+§XIII done means: classes A, B, C resolved or named - yes;
+`temporaria` proven by the oracle (toml chain: non tecta 0 with temp
+paths kept, explicata 75) and by a plant - yes; 315 summaries
+canon-clean, 0 NIHIL, refactor proven by identity - yes; toml chain 0
+errata, key changes explained (none: 31 lines throughout), judge time
+2.03-2.07 s (better than T1's 2.2-3.0 s) - yes.
+
+Census memory, like-for-like (same index on stdin, lint rules loaded,
+two runs each): pre-slice-2 binary 4.19-4.59 GB, final 4.65-4.88 GB -
+run-to-run variance ~0.4 GB, slice 2 adds <= ~10%. T5's 2.27 GB reading
+did not reproduce (not like-for-like). vitium …7RD stands.

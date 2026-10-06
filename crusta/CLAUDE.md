@@ -178,6 +178,25 @@ site). The verdict key itself is `./crusta/effectus.sh -clavis`
 effectus T8: `effectus` subsumes it; its idiom test lives on as
 `probatio_crusta_effectus_idiomata`.
 
+**Effectus values (slice 2, 2026-10-06, `project-specs/effectus-spec-2.md`).**
+The evaluator passes a `Valor`, not a string: CERTUS (1..16 exact
+members), EXEMPLAR (patterns bash already expanded: `for f in lib/*.c`),
+PRAEFIXUM, TEMPORARIA (under a `$(mktemp)` object, id `plagula:L:C`;
+key ignores it), IGNOTUS. Joins are unions, concatenation a cross
+product, over 16 members -> common prefix. One SITE per member (same
+sedes). Arrays expand before the command table; `${X%s}`/`##`,
+basename/dirname per member; `${X:-d}` resolves to d when nothing in
+scope assigns X (the `ambitus X` key line guards it). Two lexical
+rules: a use inside `for X in L`'s body takes L alone (unless the body
+reassigns X); `X=""` joined with a path stays `discordia`. Every
+unresolved site names its `causa` (argumentum, ansa_read, substitutio,
+ambitus, operator, discordia, tabulatum, recursio, cwd ignotum, absens;
+`valor ignotus` = residual, counted, should be 0). Key: partial in-tree
+reads -> `arbor <dir>` (names AND contents, recursive; lib/fabrica.c);
+`directorium` seals NAMES only - never emit it for content reads.
+Still open: ordering (~470 `discordia` from sequentially reassigned
+variables) and function arguments - next slice, ledger …SZVT.
+
 **Reflexes.** `<tolera codex="lint:X" (>causa` in a comment exempts —
 one annotation covers a whole INVOCATION (exemption filters by the
 owning node's range), and inside `declare -a X=( … )` it must go above

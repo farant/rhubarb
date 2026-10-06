@@ -472,3 +472,18 @@ source order).
   summary; digesting its directory would not cover them).
 - crusta drops the colon-less `${H-d}` operator into the argument text;
   handled in `_praedefinitum_aestimare` (op NIHIL branch), filed.
+
+## 2026-10-06 - slice 2 closed (T7)
+
+- Unresolved 43.6% -> 11.2% of sites; every unresolved site names its
+  cause. What is left is mostly ORDER (discordia 472: `src=` blocks)
+  and ARGUMENTS (argumentum 209 + 298 partial) - both need the next
+  slice (flow, call-site binding), measured, not guessed.
+- The slice's most valuable output may be the two key holes T6 found
+  (partial sites outside the key; `directorium` = names only). Both
+  were invisible to every gate because every gate tested the shapes the
+  key HAD, not the shapes the summary EMITTED. A plant per emitted
+  site class -> key line would have caught them in slice 1.
+- Toml's key stayed 31 lines through all of slice 2: its effects were
+  already resolved or excused; slice 2's value is house-wide (lint,
+  census) and in the chains to come (…J6HF: more gates as verdicts).
