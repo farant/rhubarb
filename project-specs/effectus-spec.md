@@ -542,6 +542,11 @@ function arguments, loop variables). Findings: irresolutum 2,442,
 build-sine-domino 54, mandatum-ignotum 242; excused 19. Toml's verdict
 chain: 0 errata (6 free scripts; 9 custodial builders, monitum only).
 
+**T7 (2026-10-05).** porta_toml keyed on genus `effectus` (29 key lines,
+zero ignotum); recorded pass judged RECENS. iudicium-fumus: P11 (bash
+read edited), P12 (tested-absent file created), P13 (state file
+edited) all invalidate the pass; audit catches the excused blind read.
+
 ## XIII. Plan-time corrections (v2, 2026-10-05)
 
 Found while writing `effectus-plan.md`, from reading
@@ -613,3 +618,11 @@ Found while writing `effectus-plan.md`, from reading
    directory) and the effectus pass judges only `lint:effectus-*`
    excuses. (iv) Outside chains the rules warn: 2,442 `irresolutum`
    monita over the house - see the open question in the T6 report.
+8. **T7 as built.** Q8 amended (Fran): outside chains `irresolutum` is
+   silent. The key is `./crusta/effectus.sh -clavis` lines, excusation
+   decided by the lint itself. House binaries called by path also get
+   their table row (`compilator`: `-o` only). A changed input makes a
+   verdict IGNOTUM (key changed), as fontationes did - "STALUM directly"
+   in §VIII/§X reads "not reused, runs again". Judge time when RECENS
+   2.2-3.0 s, ~1 s of it the wrapper's build check (target 2 s missed by
+   the wrapper; analyzer 20 ms).

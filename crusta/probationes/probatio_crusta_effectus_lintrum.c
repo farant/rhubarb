@@ -193,10 +193,11 @@ s32 principale (vacuum)
         VERUM);
     _imprimere(d);
     CREDO_AEQUALIS_I32 (_numerare(d, IRRESOLUTUM, ERRATUM), I);
+    /* extra catenam irresolutum TACET (Fran 2026-10-05, Q8 emendata:
+     * clavem solam tangit; census situm servat) */
     d = _scriptum_iudicare("a.sh", "f () {\n    cat \"$1/x\"\n}\n",
         FALSUM);
-    CREDO_AEQUALIS_I32 (_numerare(d, IRRESOLUTUM, MONITUM), I);
-    CREDO_AEQUALIS_I32 (_numerare(d, IRRESOLUTUM, ERRATUM), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_numerare(d, IRRESOLUTUM, -I), ZEPHYRUM);
     d = _scriptum_iudicare("b.sh", "cat data/x\n", VERUM);
     CREDO_AEQUALIS_I32 (_numerare(d, NIHIL, -I), ZEPHYRUM);
     /* scriptura irresoluta consulto non flagratur */
@@ -206,6 +207,9 @@ s32 principale (vacuum)
     imprimere("\n--- II. effectus-build-sine-domino ---\n");
     d = _scriptum_iudicare("d.sh", "cat build/x\n", VERUM);
     _imprimere(d);
+    CREDO_AEQUALIS_I32 (_numerare(d, SINE_DOMINO, MONITUM), I);
+    /* extra catenam regulae ceterae monent (non tacent) */
+    d = _scriptum_iudicare("d.sh", "cat build/x\n", FALSUM);
     CREDO_AEQUALIS_I32 (_numerare(d, SINE_DOMINO, MONITUM), I);
     d = _scriptum_iudicare("e.sh", "mkdir -p build\necho y > build/x\n"
         "cat build/x\n", VERUM);

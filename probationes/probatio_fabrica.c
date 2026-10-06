@@ -1071,6 +1071,8 @@ hic_manens constans character* _via_alia_ficta       = NIHIL;
 hic_manens constans character* _identitas_ficta      = "clang I";
 hic_manens constans character* _fontationes_effusio  = "";
 hic_manens               i32   _fontationes_codex    = ZEPHYRUM;
+hic_manens constans character* _effectus_effusio     = "";
+hic_manens constans character* _via_absens_ficta     = NIHIL;
 
 interior b32
 _ambitus_fictum (
@@ -1106,6 +1108,11 @@ _species_ficta (
     {
         redde (i32)FABRICA_SPECIES_ALIA;
     }
+    si (   _via_absens_ficta              != NIHIL
+        && strcmp(via, _via_absens_ficta) == ZEPHYRUM)
+    {
+        redde (i32)FABRICA_SPECIES_ABSENS;
+    }
     redde (i32)FABRICA_SPECIES_PLAGULA;
 }
 
@@ -1136,6 +1143,22 @@ _fontationes_fictae (
     (vacuum)via;
     *effusio_out  = chorda_ex_literis(_fontationes_effusio, piscina);
     *codex_out    = _fontationes_codex;
+    redde VERUM;
+}
+
+/* effectus scripti ficti (effectus-plan T7): lineae '-clavis' */
+interior b32
+_effectus_ficti (
+                vacuum* datum,
+    constans character* via,
+               Piscina* piscina,
+                chorda* effusio_out,
+                   i32* codex_out)
+{
+    (vacuum)datum;
+    (vacuum)via;
+    *effusio_out  = chorda_ex_literis(_effectus_effusio, piscina);
+    *codex_out    = ZEPHYRUM;
     redde VERUM;
 }
 
@@ -4795,6 +4818,140 @@ s32 principale (vacuum)
     /* ================================================== */
 
     imprimere("\n");
+
+
+    /* ==================================================
+     * PROBARE: genus ingressus 'effectus' (effectus-plan T7, spec par.
+     * VII) - regula digestionis quaeque: ingressus mutatus clavem mutat
+     * (IGNOTUM, cursus novus); idem -> RECENS
+     * ================================================== */
+
+    {
+                DiscusFictus  discus;
+               FabricaSutura  sutura;
+                FabricaActio* actiones[I];
+               FabricaExitus* exitus;
+             FabricaIudicium  iudicium;
+                         Xar* ordo;
+                         Xar* electa;
+                      chorda  causa;
+          constans character* VERDICTUM;
+          constans character* nomina_fontium[] = { "a.c", "b.h" };
+          constans character* nomina_aucta[] = { "a.c", "b.h", "c.c" };
+          constans character* nomina_aliena[] = { "a.c", "b.h", "d.h" };
+
+        imprimere("\n--- Probans genus effectus ---\n");
+        VERDICTUM      = "build/fabrica/verdicta/e.txt";
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        _discum_parare(&discus, &sutura, piscina);
+        sutura.lectiones_legere = _lectiones_legere;
+        sutura.lectiones_scribere = _lectiones_scribere;
+        sutura.ambitus = _ambitus_fictum;
+        sutura.species = _species_ficta;
+        sutura.effectus = _effectus_ficti;
+        sutura.exitus_noti = tabula_dispersa_creare_chorda(piscina, 16);
+        (vacuum)tabula_dispersa_inserere(sutura.exitus_noti,
+            chorda_ex_literis("build/corpus.lst", piscina), NIHIL);
+        _ambitus_ficti[0] = "HOME";
+        _ambitus_ficti[1] = "/home/u";
+        _ambitus_ficti[2] = NIHIL;
+        _via_absens_ficta = "build/gen.h";
+        _ponere(&discus, "porta.sh", "echo porta\n");
+        _ponere(&discus, "flag.txt", "ok\n");
+        _ponere(&discus, "build/corpus.lst", "a.toml\n");
+        _directorium_ponere(&discus, "src/", nomina_fontium, II);
+        _effectus_effusio =
+            "octeti\tporta.sh\n"
+            "octeti\tflag.txt\n"
+            "probatio\tbuild/gen.h\n"
+            "ambitus\tHOME\n"
+            "ambitus\tFABRICA_LECTIONES\n"
+            "nomina\tsrc/\t*.c\n"
+            "dominus\tbuild/corpus.lst\n";
+        _scriptum_addere(&discus, "porta_sh", VERDICTUM, NIHIL,
+            "e: transiit\n", 0, FALSUM);
+        actiones[0] = _actio_scripta(piscina, "porta_e", "porta_sh",
+            "porta.sh", VERDICTUM, "verdictum");
+        actiones[0]->genus      = FABRICA_ACTIO_IUDICIUM;
+        actiones[0]->lectiones  = VERUM;
+        _ingressum_addere(actiones[0], "effectus", "porta.sh", piscina);
+        exitus = (FabricaExitus*)xar_obtinere(actiones[0]->exitus,
+            ZEPHYRUM);
+        ordo    = _ordinare_fictas(piscina, actiones, I);
+        electa  = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(VERDICTUM,
+            piscina);
+        _ponere(&discus, "build/fabrica/lectiones/porta_e.tsv",
+            "L\tflag.txt\n");
+        (vacuum)fabrica_sanare(&sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+
+        /* octeti: lectio bash (flag.txt) mutata */
+        _ponere(&discus, "flag.txt", "non\n");
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_FALSUM(iudicium.status == FABRICA_RECENS);
+        _ponere(&discus, "flag.txt", "ok\n");
+        /* probatio: absens -> praesens */
+        _via_absens_ficta = NIHIL;
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_FALSUM(iudicium.status == FABRICA_RECENS);
+        _via_absens_ficta = "build/gen.h";
+        /* ambitus: HOME mutata; FABRICA_* protocollum, non ingressus */
+        _ambitus_ficti[1] = "/home/v";
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_FALSUM(iudicium.status == FABRICA_RECENS);
+        _ambitus_ficti[1] = "/home/u";
+        _ambitus_ficti[2] = "FABRICA_LECTIONES";
+        _ambitus_ficti[3] = "build/x.tsv";
+        _ambitus_ficti[4] = NIHIL;
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        _ambitus_ficti[2] = NIHIL;
+        /* nomina: plagula congruens addita; non congruens nihil */
+        discus.directoria = xar_creare(piscina,
+            (i32)magnitudo(DirectoriumFictum));
+        _directorium_ponere(&discus, "src/", nomina_aliena, III);
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        discus.directoria = xar_creare(piscina,
+            (i32)magnitudo(DirectoriumFictum));
+        _directorium_ponere(&discus, "src/", nomina_aucta, III);
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_FALSUM(iudicium.status == FABRICA_RECENS);
+        discus.directoria = xar_creare(piscina,
+            (i32)magnitudo(DirectoriumFictum));
+        _directorium_ponere(&discus, "src/", nomina_fontium, II);
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        /* ignotum: IGNOTUM sedes nominata */
+        _effectus_effusio =
+            "octeti\tporta.sh\n"
+            "ignotum\tporta.sh:9:1-9:5\tvalor ignotus\n";
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        CREDO_VERUM(_continet(iudicium.causa, "porta.sh:9", piscina));
+        /* dominus absens: IGNOTUM nominatum */
+        _effectus_effusio = "dominus\tbuild/sine_domino.txt\n";
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        CREDO_VERUM(_continet(iudicium.causa, "sine domino", piscina));
+        _effectus_effusio = "";
+        _via_absens_ficta = NIHIL;
+    }
+
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();

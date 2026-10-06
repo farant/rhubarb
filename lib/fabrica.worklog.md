@@ -1907,3 +1907,18 @@ ingressus) turns XXXII alone red - the reader tolerating it is the
 point of having the canon. Lesson: when the reader learns a value,
 the canon must learn it in the same commit; XXXII now enforces that
 (T7 adds genus `effectus` to both).
+
+## 2026-10-05 - genus `effectus` (effectus-plan T7)
+
+`_effectus_sigillare` turns `crusta/effectus.sh -clavis` lines into
+particles: octeti (absent files are an "absens:" particle, not a
+failure - a read of a not-yet-existing file must not make the key
+IGNOTUM), provenientia, probatio (species), nomina (listing filtered by
+the glob - unfiltered, an unrelated new file in src/ would move the key;
+plant proved it), globus (listing + bytes of each match), directorium,
+ambitus (FABRICA_* skipped: fabrica's own protocol, set for the run it
+starts - digesting them would differ between record and judge time;
+plant proved it), dominus (declared exitus, else IGNOTUM "sine domino"),
+ignotum. Seam slot `sutura->effectus`; `FABRICA_EFFECTUS` overrides the
+tool like FABRICA_FONTATIONES. Canon value added in the same commit
+(fabrica_fumus XXXII enforces).

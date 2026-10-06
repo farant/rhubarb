@@ -275,3 +275,35 @@ source order).
 - diagnostica_fumus XIII's fixture changed from `[ $a -nt $b ]` to
   `[ a -nt b ]`: it tests that a crusta excuse leaves NOTHING printed,
   and the effectus pass rightly warns about unresolvable `$a`.
+
+## 2026-10-05 - T7: fabrica genus `effectus`
+
+- Q8 amended (Fran, decretum …39JMC): outside verdict chains
+  `effectus-irresolutum` is SILENT (filtered after excusation, so its
+  excuses never read dead); the other two rules still warn. House
+  monita 2,736 -> 294; the census still records every site.
+- `./crusta/effectus.sh -clavis <script>`: one line per key item
+  (octeti, provenientia, probatio, nomina, globus, directorium,
+  ambitus, dominus, ignotum). "Excused" is computed by the lint itself:
+  an unresolved site becomes `ignotum` only if a finding survives
+  excusation with in_catena VERUM. Custodial processes contribute their
+  guard's provenance only. Toml: 29 lines, zero ignotum.
+- The wrapper passes the TOOL tree's table and rules (`-tabula`,
+  `CRUSTA_LINTRUM`): judged trees (iudicium-fumus radices) have neither;
+  the caller's `-radix` comes last and wins.
+- House binaries called by path get their table row too (new row
+  `compilator`: only `-o` is written - its reads are in the read
+  ledger). Without it fumus's `clang build/x/a.o` link read had no
+  writer in scope and the key would say "build/ sine domino".
+- iudicium-fumus: P11 `$(cat flag.txt)` edited -> not RECENS DIRECTLY
+  (before T7 only the audit caught it); P12 `[ -f optio.txt ]` created;
+  P13 read-and-rewritten build state file edited (soundness rule). The
+  audit case moved to `caeca.txt`, read through an EXCUSED unresolved
+  site - the class the key deliberately ignores and only the audit
+  catches. Plant: key skips scripta-in-scope build reads -> P13 red.
+- A changed input yields IGNOTUM ("key changed"), not STALUM - the same
+  as fontationes' P2. The plan's "STALUM directly" means "not reused".
+- Cost: judging toml RECENS 2.2-3.0 s; ~1.0 s is the effectus.sh
+  wrapper's build check (cursor_instrumentum_struere), the analyzer is
+  20 ms. fontationes' wrapper cost the same; target 2 s missed by the
+  wrapper, named (spec §XII).

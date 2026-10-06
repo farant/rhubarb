@@ -139,6 +139,7 @@
       <optio>fontationes</optio>
       <optio>instrumentum_domus</optio>
       <optio>identitas_clang</optio>
+      <optio>effectus</optio>
     </attributum>
     <attributum nomen="via" genus="textus" necessarium="verum"
       nota="manifesta: directorium manifestorum aedilis (--manifestum),
@@ -147,7 +148,9 @@
             fontationes: scriptum cuius fontationes (crusta) clavem
             intrant (spec 3 par. III.2); instrumentum_domus: binarium
             domus per provenientiam sigillatum; identitas_clang: clang
-            per identitatem compilatoris (spec 3 par. III.3)"/>
+            per identitatem compilatoris (spec 3 par. III.3); effectus:
+            scriptum cuius summarium effectuum (crusta/effectus.sh
+            -clavis) clavem intrat (effectus-plan T7)"/>
     <attributum nomen="suffixa" genus="textus"
       nota="plagulae solum: suffixa spatio separata ('.c .h'); absens =
             omnes plagulae directorii (profunditate 0)"/>

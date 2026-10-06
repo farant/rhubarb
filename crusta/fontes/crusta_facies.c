@@ -608,7 +608,32 @@ StmlExpansioResultus  expansio;
             }
         }
     }
-    redde materia_excusatio_applicare(piscina, exitus, annotationes,
+    exitus = materia_excusatio_applicare(piscina, exitus, annotationes,
         &CRUSTA_DIAGNOSTICA, "crusta",
         materia_exemplaria_lintres(piscina, optiones->regulae));
+    /* EXTRA CATENAS irresolutum TACET (Fran 2026-10-05, Q8 emendata):
+     * clavem verdicti solam tangit; census situm servat. Post
+     * excusationem cribratur - excusatio eius ne mortua videatur. */
+    si (exitus != NIHIL && !in_catena)
+    {
+        Xar* cribrata = xar_creare(piscina,
+            (i32)magnitudo(MateriaDiagnosticum));
+
+        per (i = ZEPHYRUM; cribrata != NIHIL
+                           && i < xar_numerus(exitus); i++)
+        {
+            MateriaDiagnosticum* x = (MateriaDiagnosticum*)
+                xar_obtinere(exitus, i);
+
+            si (   x->codex != NIHIL
+                && strcmp(x->codex, "lint:effectus-irresolutum")
+                   == ZEPHYRUM)
+            {
+                perge;
+            }
+            *(MateriaDiagnosticum*)xar_addere(cribrata) = *x;
+        }
+        exitus = cribrata;
+    }
+    redde exitus;
 }

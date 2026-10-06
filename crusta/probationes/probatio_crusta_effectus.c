@@ -277,7 +277,8 @@ hic_manens constans character* RADIX_SCRIPTI =
     "cat q.txt\n"                                         /* 30 */
     "cd ..\n"                                             /* 31 */
     "[ -x bin/inst ] || ./a/struere.sh\n"                 /* 32 */
-    "./a/communis.sh\n";                                  /* 33 */
+    "./a/communis.sh\n"                                   /* 33 */
+    "bin/compilator -c src/a.c -o build/x.o\n";           /* 34 */
 
 hic_manens constans character* LIB =
     "lib_functio () {\n"
@@ -505,6 +506,16 @@ s32 principale (vacuum)
         "a/nepos.sh"));
     CREDO_VERUM (crusta_effectus_plagulam_tenet(summarium,
         "a/communis.sh"));
+
+    imprimere("\n--- IX e. binarium domus cum ordine tabulae ---\n");
+    /* bin/compilator: exsecutio (provenientia) ET ordo 'compilator'
+     * tabulae - '-o' scribitur; lectiones per librum lectionum
+     * vestigantur, ergo hic nullae */
+    CREDO_NON_NIHIL (_situs(situs, "exsecutio", "bin/compilator",
+        XXXIV));
+    s = _situs(situs, "scriptura", "build/x.o", XXXIV);
+    CREDO_VERUM (_attributum(s, "mandatum", "compilator"));
+    CREDO_AEQUALIS_I32 (_numerare(situs, "lectio", XXXIV), ZEPHYRUM);
 
     imprimere("\n--- X. canon super summarium ---\n");
     {
