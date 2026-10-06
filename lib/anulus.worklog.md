@@ -36,3 +36,11 @@ its scratch-free small path (count alone wasted 204 KB on a 5×5 of
 1000-digit entries). Placed after `est_nullum`; the three positional
 initializers updated. Tested per ring, including 1/10^30 (small
 numerator, big denominator).
+
+## 2026-10-06 — Euclidean hooks (matrix v2)
+
+`divisor_communis(a, b, piscina, g, u, v)` (g = u a + v b, normalized; Z:
+magnus_divisor_communis_testatus, g ≥ 0) and `divide_cum_residuo(a, b,
+piscina, q, r)` (Z: magnus_divide, Euclidean remainder). Appended at the
+END of the struct; NIHIL for Q and Z[t,t^-1] — algorithms needing them
+return FALSUM. Q[t] (when it exists) is the next ring to fill them.

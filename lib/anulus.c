@@ -135,12 +135,39 @@ _z_ex_chorda (
     redde magnus_ex_chorda(textus, piscina, (Magnus*)exitus);
 }
 
+interior b32
+_z_divisor_communis (
+    constans vacuum* a,
+    constans vacuum* b,
+            Piscina* piscina,
+             vacuum* g,
+             vacuum* u,
+             vacuum* v)
+{
+    *(Magnus*)g = magnus_divisor_communis_testatus(VALOR_Z(a),
+        VALOR_Z(b),
+        piscina, (Magnus*)u, (Magnus*)v);
+    redde VERUM;
+}
+
+interior b32
+_z_divide_cum_residuo (
+    constans vacuum* a,
+    constans vacuum* b,
+            Piscina* piscina,
+             vacuum* q,
+             vacuum* r)
+{
+    redde magnus_divide(VALOR_Z(a), VALOR_Z(b), piscina, (Magnus*)q,
+        (Magnus*)r);
+}
+
 constans Anulus ANULUS_INTEGRORUM = {
     "Z", (memoriae_index)magnitudo(Magnus), FALSUM,
     _z_nullum, _z_unum, _z_est_nullum, _z_parvum, _z_aequalis, _z_adde,
         _z_subtrahe,
     _z_multiplica, _z_divide_exacte, _z_transcribe, _z_ad_chordam,
-    _z_ex_chorda
+    _z_ex_chorda, _z_divisor_communis, _z_divide_cum_residuo
 };
 
 
@@ -268,7 +295,7 @@ constans Anulus ANULUS_RATIONALIUM = {
     _q_nullum, _q_unum, _q_est_nullum, _q_parvum, _q_aequalis, _q_adde,
         _q_subtrahe,
     _q_multiplica, _q_divide_exacte, _q_transcribe, _q_ad_chordam,
-    _q_ex_chorda
+    _q_ex_chorda, NIHIL, NIHIL
 };
 
 
@@ -394,5 +421,5 @@ constans Anulus ANULUS_POLYNOMIORUM = {
     _p_nullum, _p_unum, _p_est_nullum, _p_parvum, _p_aequalis, _p_adde,
         _p_subtrahe,
     _p_multiplica, _p_divide_exacte, _p_transcribe, _p_ad_chordam,
-    _p_ex_chorda
+    _p_ex_chorda, NIHIL, NIHIL
 };

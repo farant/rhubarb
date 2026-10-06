@@ -279,6 +279,12 @@
     <forma textus="monomiorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
     <forma textus="monomiis" casus="ablativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="unimodularis" lingua="latina" classis="adiectivum" nota="Neolatina: unimodularis, matrix determinantis +-1 (matrix: certificata Hermite et Smith); WORDS caret">
+    <forma textus="unimodularis" casus="nominativus" numerus="singularis"/>
+    <forma textus="unimodulares" casus="nominativus" numerus="pluralis"/>
+    <forma textus="unimodularem" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+  <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
   <vocabulum lemma="coefficiens" lingua="latina" classis="substantivum" nota="Neolatina (Vieta): coefficiens, quantitas cum potentia coniuncta (polynomium); WORDS caret">
     <forma textus="coefficiens" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="coefficientis" casus="genitivus" numerus="singularis" genus="masculinum"/>

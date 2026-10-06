@@ -82,6 +82,23 @@ nomen structura {
           chorda  textus,
         Piscina*  piscina,
          vacuum*  exitus);
+
+    /* Anuli Euclidei solum (NIHIL aliter: Q, Z[t, t^-1]) */
+    /* g = u a + v b, g normalis (Z: g >= 0; (0, 0) -> 0) */
+    b32 (*divisor_communis) (
+        constans vacuum* a,
+        constans vacuum* b,
+                Piscina* piscina,
+                 vacuum* g,
+                 vacuum* u,
+                 vacuum* v);
+    /* a = q b + r, r reductus (Z: 0 <= r < |b|); FALSUM si b nullus */
+    b32 (*divide_cum_residuo) (
+        constans vacuum* a,
+        constans vacuum* b,
+                Piscina* piscina,
+                 vacuum* q,
+                 vacuum* r);
 } Anulus;
 
 /* Z: elementa Magnus */

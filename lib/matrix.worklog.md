@@ -160,3 +160,71 @@ equivalent); kernel entries now within ~2 bits of the primitive basis
 - Plants, all red: results copied shallow (crash); parvae always true;
   multiply ignoring entry size; Z parvum always true; Q parvum without
   the denominator. 163 checks; venenum sana.
+
+## 2026-10-06 — v2: Hermite, Smith, lattice kernel over Euclidean rings
+
+API approved by Fran: Z only for now (hooks ready for Q[t]); Hermite with
+ROW operations, H = U·A; certificates optional (NIHIL skips U/V);
+`matrix_reticulum_nuclei` included (v1's kernel is not a lattice basis).
+
+- Ring hooks (anulus): `divisor_communis(a, b → g, u, v)` with g
+  normalized (Z: ≥ 0) and `divide_cum_residuo` (Z: 0 ≤ r < |b|); NIHIL for
+  Q (trivially Euclidean, no value) and Z[t,t^-1] (not a PID) → FALSUM.
+  Pivot normalization needs no extra hook: gcd(p, 0) = |p| with u = ±1.
+- **Operarius**: work tables A (copy), U, V (identity) in the stable
+  scratch; all row/column operations hit A and the certificate in
+  parallel (rows → U, columns → V, so D = U·A·V). After every pivot step
+  `_compacta` deep-copies every live entry into the other alternating
+  scratch and rolls back the old — memory ∝ tables, not operations.
+- **Coefficients** `_coefficientes(p, q)`: (a, b, c, d) with ad − bc = 1,
+  a p + b q = g, c p + d q = 0. If p divides q: (1, 0, −q/p, 1) — the
+  pivot does not change and nothing refills (this is what makes Smith's
+  row/column alternation terminate: refills only happen when |pivot|
+  strictly decreases); otherwise Bézout (u, v, −q/g, p/g).
+- **Hermite**: per column, Bézout-combine the pivot row with each row
+  below, normalize the pivot sign, reduce rows above with Euclidean
+  remainders (0 ≤ x < pivot). Zero rows end at the bottom.
+- **Smith**: move a non-zero entry to (t, t); alternate clearing column t
+  (rows) and row t (columns) until the column stays clear; if the pivot
+  fails to divide some remaining entry, row_t += row_i and repeat (the
+  pivot drops to the gcd); normalize; compact.
+- **Lattice kernel**: U·Aᵀ = H (Hermite with certificate); the rows of U
+  facing the zero rows of H are a Z-basis of ker A (U unimodular).
+  Computed in a private piscina; only the basis is deep-copied out.
+
+Verification:
+- **Oracle with different algorithms** (scratchpad matrix/formae.py):
+  Smith invariants from DETERMINANTAL divisors (d_k = gcd of all k×k
+  minors, invariants d_k/d_{k−1}); Hermite by "smallest entry up, reduce
+  the rest by floor division" Euclid (not Bézout) — Hermite is unique
+  under the conventions, so equality is exact. 120 vectors (1–5 × 1–5,
+  deficient by construction, some entries ~10^12). Classic example
+  [2,4,4; −6,6,12; 10,−4,−16] → Smith diag(2, 6, 12); [2,0; 0,3] →
+  diag(1, 6) (Z/2 × Z/3 ≅ Z/6).
+- **Oracle-free judges**: `_hermite_canonica` (echelon, pivots > 0,
+  0 ≤ above < pivot, zero rows last) + certificate U·A = H and |det U| = 1
+  ⇒ THE Hermite form (uniqueness); `_smith_canonica` (diagonal, ≥ 0,
+  divisibility chain, zeros last) + U·A·V = D, |det U| = |det V| = 1.
+  Lattice kernel: A·K = 0, columns = m − rank, SATURATED (Smith of K all
+  ones). Run on every vector and 60 random matrices up to 7×7.
+- Hand cases: [2, 4] → lattice kernel ±(−2, 1) where v1 gives (−4, 2);
+  Q and Z[t] refused, exitus untouched; zero matrices and 1×3, 3×1.
+- Memory: Smith with U, V on 8×8 (~9-digit entries): caller 8.7 KB, apex
+  25 KB (71 KB if compaction never rolls back — the first bound, 128 KB,
+  let that plant survive; now 48 KB).
+- **Plants, all red**: wrong sign in the divisible-shortcut coefficient
+  (HUNG — Smith's loop no longer terminates; killed after 10 min, and a
+  watchdog killed the venenum copy: a wrong coefficient can mean
+  non-termination, not a wrong answer); Hermite without reduction above;
+  Smith without the divisibility step; no sign normalization; U not
+  updated by row operations; V not permuted; lattice kernel from the
+  first rows of U; compaction without deep copy; Smith row swap without
+  U; Bézout d = q/g instead of p/g; compaction without rollback.
+- 186 checks; venenum sana; lint: `unimodularis` (neo-Latin) and
+  `hermite` (proper name, tolerated) added to the glossary.
+
+Measured (classical algorithms, known coefficient growth): Smith with U, V
+12×12 of 9-digit entries 5.9 ms, caller 102 KB; Hermite with U 12×12 24 ms,
+scratch peak 1.36 MB. Modular methods (Domich–Kannan–Trotter for Hermite,
+determinant-modulus Smith) would replace the internals without changing
+the API — agenda A8.

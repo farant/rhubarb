@@ -158,6 +158,21 @@ value that outlives it still reads correctly: two planted lifetime bugs
 passed the normal suite and were caught only by the poisoned build. A gate
 that is never owed is a dead gate.</p>
 
+<h3><span class="id">A8</span>Modular Hermite and Smith when matrix sizes grow</h3>
+<p><span class="status">idea</span> <span class="nota">2026-10-06, measured
+when <code>matrix</code> v2 landed</span></p>
+<p><strong>What.</strong> <code>matrix_forma_hermite</code> and
+<code>matrix_forma_smith</code> use the classical Bézout row/column
+algorithms, whose intermediate entries grow fast: Hermite with U on a 12×12
+matrix of 9-digit integers takes 24 ms with a 1.36 MB scratch peak; Smith's
+U and V get large. Modular methods (Domich–Kannan–Trotter Hermite modulo
+the determinant; Smith via the determinant modulus) keep entries bounded
+and can replace the internals without changing the API or the
+certificates.</p>
+<p><strong>Why later.</strong> No consumer needs big matrices yet (knot
+Seifert matrices and small homology computations are tiny); the agenda A3
+benchmarks should decide when.</p>
+
 <h2>Done</h2>
 <p class="nota">Finished items, with the commit that closed them.</p>
 

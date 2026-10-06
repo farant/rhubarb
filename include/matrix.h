@@ -191,6 +191,40 @@ matrix_nucleus (
 
 
 /* ==================================================
+ * Formae normales (anulus Euclideus: divisor_communis et
+ * divide_cum_residuo; aliter FALSUM - Z solus hodie)
+ * ================================================== */
+
+/* Hermite (lineae): H = U A, U unimodularis; cardines normales (Z: >
+ * 0), elementa supra cardinem reducta (Z: 0 <= x < cardo), lineae
+ * nullae in fundo. u NIHIL si certificatum non quaeritur. */
+b32
+matrix_forma_hermite (
+     Matrix  a,
+    Piscina* piscina,
+     Matrix* h,
+     Matrix* u);
+
+/* Smith: D = U A V, D diagonalis, d_i normales (Z: >= 0), d_i |
+ * d_(i+1), nulli ultimi; U, V unimodulares (NIHIL si non quaeruntur) */
+b32
+matrix_forma_smith (
+     Matrix  a,
+    Piscina* piscina,
+     Matrix* d,
+     Matrix* u,
+     Matrix* v);
+
+/* basis RETICULI nuclei (columnae): omnis vector integer x cum A x = 0
+ * combinatio integra columnarum est (contra matrix_nucleus) */
+b32
+matrix_reticulum_nuclei (
+     Matrix  a,
+    Piscina* piscina,
+     Matrix* exitus);
+
+
+/* ==================================================
  * Diagnosis
  * ================================================== */
 

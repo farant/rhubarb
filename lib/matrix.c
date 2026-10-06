@@ -1050,6 +1050,752 @@ matrix_nucleus (
 
 
 /* ==================================================
+ * Formae normales super anulum Euclideum (Hermite, Smith)
+ * ================================================== */
+
+#define TABULA_A  ZEPHYRUM
+#define TABULA_U  I
+#define TABULA_V  II
+
+/* Operarius: tabulae laboris (A, et U, V si certificata quaeruntur) in
+ * officina stabili; valores vivi in officina alterna currente (hic).
+ * Post
+ * quemque gradum cardinis _compacta omnes valores vivos in alteram
+ * transcribit et priorem reficit: memoria proportionalis tabulis, non
+ * operationibus. Alvei elementorum (coefficientes, temporaria) in
+ * stabili. */
+nomen structura {
+    constans Anulus* anulus;
+          Officinae  officinae;
+                i32  hic;
+                 i8* tabulae[III];
+                i32  lineae[III];
+                i32  columnae[III];
+                 i8* alvei[XII];
+} Operarius;
+
+#define ALVEUS_A    ZEPHYRUM
+#define ALVEUS_B    I
+#define ALVEUS_C    II
+#define ALVEUS_D    III
+#define ALVEUS_G    IV
+#define ALVEUS_P    V
+#define ALVEUS_Q    VI
+#define ALVEUS_X    VII
+#define ALVEUS_Y    VIII
+#define ALVEUS_T    IX
+#define ALVEUS_NX   X
+#define ALVEUS_NY   XI
+
+interior i8*
+_operis (
+     Operarius* o,
+           i32  tabula,
+           i32  linea,
+           i32  columna)
+{
+    redde _locus(o->tabulae[tabula], o->anulus, o->columnae[tabula],
+        linea,
+        columna);
+}
+
+/* tabula identitatis n x n in officina stabili */
+interior i8*
+_identitas_operis (
+            Operarius* o,
+                  i32  n)
+{
+     Piscina* stabilis  = o->officinae.piscinae[OFFICINA_STABILIS];
+          i8* tabula    = NIHIL;
+         i32  i;
+         i32  j;
+
+    si (n == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    tabula = (i8*)piscina_allocare(stabilis, (memoriae_index)n
+        * (memoriae_index)n * _passus(o->anulus));
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            i8* x = _locus(tabula, o->anulus, n, i, j);
+
+            si (i == j)
+            {
+                o->anulus->unum(stabilis, x);
+            }
+            alioquin
+            {
+                o->anulus->nullum(x);
+            }
+        }
+    }
+    redde tabula;
+}
+
+interior vacuum
+_operarius_aperire (
+      Operarius* o,
+         Matrix  m,
+        Piscina* piscina,
+            b32  cum_u,
+            b32  cum_v)
+{
+     Piscina* stabilis;
+         i32  k;
+
+    o->anulus = m.anulus;
+    _officinae_aperire(&o->officinae, piscina, VERUM);
+    o->hic    = ZEPHYRUM;
+    stabilis  = o->officinae.piscinae[OFFICINA_STABILIS];
+    per (k = ZEPHYRUM; k < XII; k++)
+    {
+        o->alvei[k] = (i8*)piscina_allocare(stabilis,
+            _passus(m.anulus));
+    }
+    o->lineae[TABULA_A]    = m.lineae;
+    o->columnae[TABULA_A]  = m.columnae;
+    o->tabulae[TABULA_A]   = NIHIL;
+    si (m.lineae > ZEPHYRUM && m.columnae > ZEPHYRUM)
+    {
+        o->tabulae[TABULA_A] = (i8*)piscina_allocare(stabilis,
+            (memoriae_index)m.lineae * (memoriae_index)m.columnae
+            * _passus(m.anulus));
+        memcpy(o->tabulae[TABULA_A], m.elementa,
+            (memoriae_index)m.lineae
+            * (memoriae_index)m.columnae * _passus(m.anulus));
+    }
+    o->lineae[TABULA_U]    = cum_u ? m.lineae : ZEPHYRUM;
+    o->columnae[TABULA_U]  = o->lineae[TABULA_U];
+    o->tabulae[TABULA_U]   = _identitas_operis(o, o->lineae[TABULA_U]);
+    o->lineae[TABULA_V]    = cum_v ? m.columnae : ZEPHYRUM;
+    o->columnae[TABULA_V]  = o->lineae[TABULA_V];
+    o->tabulae[TABULA_V]   = _identitas_operis(o, o->lineae[TABULA_V]);
+}
+
+interior Piscina*
+_operis_piscina (
+    Operarius* o)
+{
+    redde o->officinae.piscinae[o->hic];
+}
+
+/* omnes valores vivi in officinam alteram; prior reficitur */
+interior vacuum
+_compacta (
+    Operarius* o)
+{
+     Piscina* illic = o->officinae.piscinae[I - o->hic];
+         i32  t;
+         i32  i;
+         i32  j;
+
+    per (t = ZEPHYRUM; t < III; t++)
+    {
+        per (i = ZEPHYRUM; i < o->lineae[t]; i++)
+        {
+            per (j = ZEPHYRUM; j < o->columnae[t]; j++)
+            {
+                i8* x = _operis(o, t, i, j);
+
+                _servare(&o->officinae, o->anulus, x, illic, x);
+            }
+        }
+    }
+    _officina_reficere(&o->officinae, o->hic);
+    o->hic = I - o->hic;
+}
+
+/* lineae i, k tabulae t: L_i <- a L_i + b L_k, L_k <- c L_i + d L_k */
+interior b32
+_lineae_transforma (
+     Operarius* o,
+           i32  t,
+           i32  i,
+           i32  k)
+{
+     constans Anulus* anulus  = o->anulus;
+             Piscina* hic     = _operis_piscina(o);
+                 i32  j;
+
+    per (j = ZEPHYRUM; j < o->columnae[t]; j++)
+    {
+        i8* x = _operis(o, t, i, j);
+        i8* y = _operis(o, t, k, j);
+
+        si (   !anulus->multiplica(o->alvei[ALVEUS_A], x, hic,
+                o->alvei[ALVEUS_NX])
+            || !anulus->multiplica(o->alvei[ALVEUS_B], y, hic,
+                o->alvei[ALVEUS_T])
+            || !anulus->adde(o->alvei[ALVEUS_NX], o->alvei[ALVEUS_T],
+            hic,
+                o->alvei[ALVEUS_NX])
+            || !anulus->multiplica(o->alvei[ALVEUS_C], x, hic,
+                o->alvei[ALVEUS_NY])
+            || !anulus->multiplica(o->alvei[ALVEUS_D], y, hic,
+                o->alvei[ALVEUS_T])
+            || !anulus->adde(o->alvei[ALVEUS_NY], o->alvei[ALVEUS_T],
+            hic,
+                o->alvei[ALVEUS_NY]))
+        {
+            redde FALSUM;
+        }
+        memcpy(x, o->alvei[ALVEUS_NX], anulus->mensura);
+        memcpy(y, o->alvei[ALVEUS_NY], anulus->mensura);
+    }
+    redde VERUM;
+}
+
+/* columnae j, k tabulae t: C_j <- a C_j + b C_k, C_k <- c C_j +
+ * d C_k */
+interior b32
+_columnae_transforma (
+     Operarius* o,
+           i32  t,
+           i32  j,
+           i32  k)
+{
+     constans Anulus* anulus  = o->anulus;
+             Piscina* hic     = _operis_piscina(o);
+                 i32  i;
+
+    per (i = ZEPHYRUM; i < o->lineae[t]; i++)
+    {
+        i8* x = _operis(o, t, i, j);
+        i8* y = _operis(o, t, i, k);
+
+        si (   !anulus->multiplica(o->alvei[ALVEUS_A], x, hic,
+                o->alvei[ALVEUS_NX])
+            || !anulus->multiplica(o->alvei[ALVEUS_B], y, hic,
+                o->alvei[ALVEUS_T])
+            || !anulus->adde(o->alvei[ALVEUS_NX], o->alvei[ALVEUS_T],
+            hic,
+                o->alvei[ALVEUS_NX])
+            || !anulus->multiplica(o->alvei[ALVEUS_C], x, hic,
+                o->alvei[ALVEUS_NY])
+            || !anulus->multiplica(o->alvei[ALVEUS_D], y, hic,
+                o->alvei[ALVEUS_T])
+            || !anulus->adde(o->alvei[ALVEUS_NY], o->alvei[ALVEUS_T],
+            hic,
+                o->alvei[ALVEUS_NY]))
+        {
+            redde FALSUM;
+        }
+        memcpy(x, o->alvei[ALVEUS_NX], anulus->mensura);
+        memcpy(y, o->alvei[ALVEUS_NY], anulus->mensura);
+    }
+    redde VERUM;
+}
+
+/* Coefficientes (a, b, c, d) ut a p + b q = g et c p + d q = 0, ad - bc
+ * = 1: si p q dividit, (1, 0, -q/p, 1) - cardo non mutatur, nihil
+ * replet (terminatio Smith); aliter Bezout (u, v, -q/g, p/g). */
+interior b32
+_coefficientes (
+             Operarius* o,
+       constans vacuum* p,
+       constans vacuum* q)
+{
+     constans Anulus* anulus  = o->anulus;
+             Piscina* hic     = _operis_piscina(o);
+                  i8* nullum  = o->alvei[ALVEUS_T];
+
+    memcpy(o->alvei[ALVEUS_P], p, anulus->mensura);
+    memcpy(o->alvei[ALVEUS_Q], q, anulus->mensura);
+    anulus->nullum(nullum);
+    si (   !anulus->est_nullum(o->alvei[ALVEUS_P])
+        && anulus->divide_exacte(o->alvei[ALVEUS_Q], o->alvei[ALVEUS_P],
+            hic, o->alvei[ALVEUS_G]))
+    {
+        anulus->unum(hic, o->alvei[ALVEUS_A]);
+        anulus->nullum(o->alvei[ALVEUS_B]);
+        anulus->unum(hic, o->alvei[ALVEUS_D]);
+        redde anulus->subtrahe(nullum, o->alvei[ALVEUS_G], hic,
+            o->alvei[ALVEUS_C]);
+    }
+    si (   !anulus->divisor_communis(o->alvei[ALVEUS_P],
+        o->alvei[ALVEUS_Q],
+            hic, o->alvei[ALVEUS_G], o->alvei[ALVEUS_A],
+            o->alvei[ALVEUS_B])
+        || !anulus->divide_exacte(o->alvei[ALVEUS_Q],
+        o->alvei[ALVEUS_G],
+            hic, o->alvei[ALVEUS_X])
+        || !anulus->divide_exacte(o->alvei[ALVEUS_P],
+        o->alvei[ALVEUS_G],
+            hic, o->alvei[ALVEUS_D]))
+    {
+        redde FALSUM;
+    }
+    anulus->nullum(nullum);
+    redde anulus->subtrahe(nullum, o->alvei[ALVEUS_X], hic,
+        o->alvei[ALVEUS_C]);
+}
+
+/* operatio linearum in A et U */
+interior b32
+_lineae (
+     Operarius* o,
+           i32  i,
+           i32  k)
+{
+    redde _lineae_transforma(o, TABULA_A, i, k)
+        && (o->lineae[TABULA_U] == ZEPHYRUM
+            || _lineae_transforma(o, TABULA_U, i, k));
+}
+
+/* operatio columnarum in A et V */
+interior b32
+_columnae (
+     Operarius* o,
+           i32  j,
+           i32  k)
+{
+    redde _columnae_transforma(o, TABULA_A, j, k)
+        && (o->lineae[TABULA_V] == ZEPHYRUM
+            || _columnae_transforma(o, TABULA_V, j, k));
+}
+
+interior vacuum
+_permuta (
+    Operarius* o,
+           i8* x,
+           i8* y)
+{
+    memcpy(o->alvei[ALVEUS_T], x, o->anulus->mensura);
+    memcpy(x, y, o->anulus->mensura);
+    memcpy(y, o->alvei[ALVEUS_T], o->anulus->mensura);
+}
+
+interior vacuum
+_lineas_permuta (
+     Operarius* o,
+           i32  i,
+           i32  k)
+{
+    i32 t;
+    i32 j;
+
+    per (t = TABULA_A; t <= TABULA_U; t++)
+    {
+        per (j = ZEPHYRUM; j < o->columnae[t] && i != k; j++)
+        {
+            _permuta(o, _operis(o, t, i, j), _operis(o, t, k, j));
+        }
+    }
+}
+
+interior vacuum
+_columnas_permuta (
+     Operarius* o,
+           i32  j,
+           i32  k)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < o->lineae[TABULA_A] && j != k; i++)
+    {
+        _permuta(o, _operis(o, TABULA_A, i, j), _operis(o, TABULA_A, i,
+            k));
+    }
+    per (i = ZEPHYRUM; i < o->lineae[TABULA_V] && j != k; i++)
+    {
+        _permuta(o, _operis(o, TABULA_V, i, j), _operis(o, TABULA_V, i,
+            k));
+    }
+}
+
+/* cardo lineae i normalis: linea per unitatem u multiplicatur ubi u p =
+ * g = mdc(p, 0) (Z: signum) */
+interior b32
+_linea_normalis (
+     Operarius* o,
+           i32  i,
+           i32  c)
+{
+     constans Anulus* anulus  = o->anulus;
+             Piscina* hic     = _operis_piscina(o);
+                 i32  t;
+                 i32  j;
+
+    anulus->nullum(o->alvei[ALVEUS_T]);
+    si (!anulus->divisor_communis(_operis(o, TABULA_A, i, c),
+        o->alvei[ALVEUS_T], hic, o->alvei[ALVEUS_G], o->alvei[ALVEUS_A],
+        o->alvei[ALVEUS_B]))
+    {
+        redde FALSUM;
+    }
+    per (t = TABULA_A; t <= TABULA_U; t++)
+    {
+        per (j = ZEPHYRUM; j < o->columnae[t]; j++)
+        {
+            i8* x = _operis(o, t, i, j);
+
+            si (!anulus->multiplica(o->alvei[ALVEUS_A], x, hic, x))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* tabula operis in matricem vocantis (copia profunda) */
+interior b32
+_tabula_reddere (
+      Operarius* o,
+            i32  t,
+        Piscina* piscina,
+         Matrix* exitus)
+{
+    Matrix m;
+       i32 i;
+       i32 j;
+
+    si (!_nova(o->anulus, o->lineae[t], o->columnae[t], piscina, &m))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < o->lineae[t]; i++)
+    {
+        per (j = ZEPHYRUM; j < o->columnae[t]; j++)
+        {
+            _effectus(o->anulus, _operis(o, t, i, j), piscina, _locus(
+                m.elementa, o->anulus, m.columnae, i, j));
+        }
+    }
+    *exitus = m;
+    redde VERUM;
+}
+
+/* Hermite in operario; *gradus = lineae non nullae */
+interior b32
+_hermite (
+    Operarius* o,
+          i32* gradus)
+{
+     constans Anulus* anulus    = o->anulus;
+                 i32  lineae    = o->lineae[TABULA_A];
+                 i32  columnae  = o->columnae[TABULA_A];
+                 i32  r         = ZEPHYRUM;
+                 i32  c;
+                 i32  i;
+                 i32  k;
+
+    per (c = ZEPHYRUM; c < columnae && r < lineae; c++)
+    {
+        per (i = r + I; i < lineae; i++)
+        {
+            si (anulus->est_nullum(_operis(o, TABULA_A, i, c)))
+            {
+                perge;
+            }
+            si (   !_coefficientes(o, _operis(o, TABULA_A, r, c),
+                    _operis(o, TABULA_A, i, c))
+                || !_lineae(o, r, i))
+            {
+                redde FALSUM;
+            }
+        }
+        si (anulus->est_nullum(_operis(o, TABULA_A, r, c)))
+        {
+            _compacta(o);
+            perge;
+        }
+        si (!_linea_normalis(o, r, c))
+        {
+            redde FALSUM;
+        }
+        /* supra cardinem: residua 0 <= x < cardo */
+        per (k = ZEPHYRUM; k < r; k++)
+        {
+            Piscina* hic = _operis_piscina(o);
+
+            si (!anulus->divide_cum_residuo(_operis(o, TABULA_A, k, c),
+                _operis(o, TABULA_A, r, c), hic, o->alvei[ALVEUS_X],
+                o->alvei[ALVEUS_Y]))
+            {
+                redde FALSUM;
+            }
+            anulus->unum(hic, o->alvei[ALVEUS_A]);
+            anulus->nullum(o->alvei[ALVEUS_T]);
+            si (!anulus->subtrahe(o->alvei[ALVEUS_T],
+                o->alvei[ALVEUS_X],
+                hic, o->alvei[ALVEUS_B]))
+            {
+                redde FALSUM;
+            }
+            anulus->nullum(o->alvei[ALVEUS_C]);
+            anulus->unum(hic, o->alvei[ALVEUS_D]);
+            si (!_lineae(o, k, r))
+            {
+                redde FALSUM;
+            }
+        }
+        _compacta(o);
+        r++;
+    }
+    *gradus = r;
+    redde VERUM;
+}
+
+b32
+matrix_forma_hermite (
+     Matrix  a,
+    Piscina* piscina,
+     Matrix* h,
+     Matrix* u)
+{
+    Operarius o;
+          i32 gradus;
+       Matrix forma;
+       Matrix transformatio;
+
+    si (   a.anulus->divisor_communis   == NIHIL
+        || a.anulus->divide_cum_residuo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _operarius_aperire(&o, a, piscina, u != NIHIL, FALSUM);
+    si (   !_hermite(&o, &gradus)
+        || !_tabula_reddere(&o, TABULA_A, piscina, &forma)
+        || (u != NIHIL && !_tabula_reddere(&o, TABULA_U, piscina,
+            &transformatio)))
+    {
+        _officinae_claudere(&o.officinae);
+        redde FALSUM;
+    }
+    _officinae_claudere(&o.officinae);
+    *h = forma;
+    si (u != NIHIL)
+    {
+        *u = transformatio;
+    }
+    redde VERUM;
+}
+
+/* E[t][t] dividit omnia E[i][j] (i, j > t)? Si non, *linea = i. */
+interior b32
+_dividit_reliqua (
+     Operarius* o,
+           i32  t,
+           i32* linea)
+{
+     constans Anulus* anulus = o->anulus;
+                 i32  i;
+                 i32  j;
+
+    per (i = t + I; i < o->lineae[TABULA_A]; i++)
+    {
+        per (j = t + I; j < o->columnae[TABULA_A]; j++)
+        {
+            si (!anulus->divide_exacte(_operis(o, TABULA_A, i, j),
+                _operis(o, TABULA_A, t, t), _operis_piscina(o),
+                o->alvei[ALVEUS_X]))
+            {
+                *linea = i;
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+b32
+matrix_forma_smith (
+     Matrix  a,
+    Piscina* piscina,
+     Matrix* d,
+     Matrix* u,
+     Matrix* v)
+{
+     constans Anulus* anulus = a.anulus;
+           Operarius  o;
+                 i32  t;
+                 i32  n = a.lineae < a.columnae ? a.lineae : a.columnae;
+              Matrix  forma;
+              Matrix  sinistra;
+              Matrix  dextra;
+
+    si (   anulus->divisor_communis   == NIHIL
+        || anulus->divide_cum_residuo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _operarius_aperire(&o, a, piscina, u != NIHIL, v != NIHIL);
+    per (t = ZEPHYRUM; t < n; t++)
+    {
+        i32 i;
+        i32 j;
+        b32 inventum = FALSUM;
+
+        /* elementum non nullum in submatrice ad (t, t) */
+        per (i = t; i < a.lineae && !inventum; i++)
+        {
+            per (j = t; j < a.columnae && !inventum; j++)
+            {
+                si (!anulus->est_nullum(_operis(&o, TABULA_A, i, j)))
+                {
+                    _lineas_permuta(&o, t, i);
+                    _columnas_permuta(&o, t, j);
+                    inventum = VERUM;
+                }
+            }
+        }
+        si (!inventum)
+        {
+            frange;
+        }
+        dum (VERUM)
+        {
+            b32 plena = FALSUM;
+            i32 linea;
+
+            per (i = t + I; i < a.lineae; i++)
+            {
+                si (   !anulus->est_nullum(_operis(&o, TABULA_A, i, t))
+                    && (   !_coefficientes(&o, _operis(&o, TABULA_A, t,
+                    t),
+                            _operis(&o, TABULA_A, i, t))
+                        || !_lineae(&o, t, i)))
+                {
+                    _officinae_claudere(&o.officinae);
+                    redde FALSUM;
+                }
+            }
+            per (j = t + I; j < a.columnae; j++)
+            {
+                si (   !anulus->est_nullum(_operis(&o, TABULA_A, t, j))
+                    && (   !_coefficientes(&o, _operis(&o, TABULA_A, t,
+                    t),
+                            _operis(&o, TABULA_A, t, j))
+                        || !_columnae(&o, t, j)))
+                {
+                    _officinae_claudere(&o.officinae);
+                    redde FALSUM;
+                }
+            }
+            /* columna t repleta (cardo mutatus)? iterum */
+            per (i = t + I; i < a.lineae; i++)
+            {
+                si (!anulus->est_nullum(_operis(&o, TABULA_A, i, t)))
+                {
+                    plena = VERUM;
+                }
+            }
+            si (plena)
+            {
+                perge;
+            }
+            /* divisibilitas: si cardo elementum reliquum non dividit,
+             * L_t += L_i et iterum (cardo ad mdc decrescit) */
+            si (!_dividit_reliqua(&o, t, &linea))
+            {
+                anulus->unum(_operis_piscina(&o), o.alvei[ALVEUS_A]);
+                anulus->unum(_operis_piscina(&o), o.alvei[ALVEUS_B]);
+                anulus->nullum(o.alvei[ALVEUS_C]);
+                anulus->unum(_operis_piscina(&o), o.alvei[ALVEUS_D]);
+                si (!_lineae(&o, t, linea))
+                {
+                    _officinae_claudere(&o.officinae);
+                    redde FALSUM;
+                }
+                perge;
+            }
+            frange;
+        }
+        si (!_linea_normalis(&o, t, t))
+        {
+            _officinae_claudere(&o.officinae);
+            redde FALSUM;
+        }
+        _compacta(&o);
+    }
+    si (   !_tabula_reddere(&o, TABULA_A, piscina, &forma)
+        || (u != NIHIL && !_tabula_reddere(&o, TABULA_U, piscina,
+            &sinistra))
+        || (v != NIHIL
+            && !_tabula_reddere(&o, TABULA_V, piscina, &dextra)))
+    {
+        _officinae_claudere(&o.officinae);
+        redde FALSUM;
+    }
+    _officinae_claudere(&o.officinae);
+    *d = forma;
+    si (u != NIHIL)
+    {
+        *u = sinistra;
+    }
+    si (v != NIHIL)
+    {
+        *v = dextra;
+    }
+    redde VERUM;
+}
+
+/* Basis reticuli nuclei: U A^T = H (Hermite); lineae U quibus lineae H
+ * nullae respondent nucleum A generant super Z (U unimodularis: basis
+ * totius reticuli, non sub-reticuli). */
+b32
+matrix_reticulum_nuclei (
+     Matrix  a,
+    Piscina* piscina,
+     Matrix* exitus)
+{
+     constans Anulus* anulus = a.anulus;
+             Piscina* privata;
+              Matrix  transposita;
+              Matrix  nucleus;
+           Operarius  o;
+                 i32  gradus;
+                 i32  i;
+                 i32  q;
+                 b32  bene;
+
+    si (   anulus->divisor_communis   == NIHIL
+        || anulus->divide_cum_residuo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    privata = piscina_generare_dynamicum("matrix_reticulum",
+        (memoriae_index)4096);
+    si (privata == NIHIL)
+    {
+        privata = piscina;
+    }
+    bene = matrix_transposita(a, privata, &transposita);
+    si (bene)
+    {
+        _operarius_aperire(&o, transposita, privata, VERUM, FALSUM);
+        bene = _hermite(&o, &gradus)
+            && _nova(anulus, a.columnae, a.columnae - gradus, piscina,
+                &nucleus);
+        per (q = ZEPHYRUM; bene && q < a.columnae - gradus; q++)
+        {
+            per (i = ZEPHYRUM; i < a.columnae; i++)
+            {
+                _effectus(anulus, _operis(&o, TABULA_U, gradus + q, i),
+                    piscina, _locus(nucleus.elementa, anulus,
+                    nucleus.columnae, i, q));
+            }
+        }
+        _officinae_claudere(&o.officinae);
+    }
+    si (privata != piscina)
+    {
+        piscina_destruere(privata);
+    }
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    *exitus = nucleus;
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Diagnosis
  * ================================================== */
 
