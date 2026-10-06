@@ -32,6 +32,11 @@
 #include "dispensator.h"
 #include "delineare_mandata.h"
 
+/* linea tabularum (T2b): una, cellula domus VI x VIII */
+#define VICUS_CELLULA_LATITUDO  VI
+#define VICUS_CELLULA_ALTITUDO  VIII
+#define VICUS_ALTITUDO_TABULARUM VICUS_CELLULA_ALTITUDO
+
 /* montatio applicationis in sedem (magnitudinis registratae) */
 nomen b32 (*VicusMontator)(
                  vacuum* sedes,
@@ -164,6 +169,19 @@ constans Imago*
 vicus_imago_fons (
      chorda  provenientia,
      vacuum* ctx);
+
+/* Componere-formata (dispensator.h), ctx = Vicus*: radix (actio
+ * 'vicus.magnitudo'), linea tabularum (PARTES_INDEX, figura hospitis
+ * ex Vicus legit), arbor applicationis ACTIVAE (componere eius)
+ * infra lineam tabularum translata. Applicatio superficiem suam ex
+ * ramo legit - hospes eam scribit (aperire, mutatio magnitudinis). */
+Componens*
+vicus_componere (
+     InsulaRepositorium* repo,
+         constans Motus* motus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 vacuum* ctx);
 
 chorda
 vicus_causa (

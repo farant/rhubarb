@@ -195,6 +195,13 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: vicus T2b - `vicus_componere` (nova; Componere-formata, ctx =
+  Vicus*): radix `vicus` cum actione `vicus.magnitudo`, linea tabularum
+  (`PARTES_INDEX`, VIII pixela), arbor activae infra eam translata.
+  Superficies ramorum (fenestra minus linea) ab hospite scribuntur in
+  aperire et mutatione magnitudinis. `VICUS_CELLULA_LATITUDO/_ALTITUDO`,
+  `VICUS_ALTITUDO_TABULARUM` (nova).
+
 - corpus (FRANGIT): vicus T2a - `vicus_genus_addere` functionem
   `describere` (VicusFacies) accipit; `vicus_actiones`, `vicus_figurae`,
   `vicus_imago_fons` (nova). `actio_registrum_vacare/_miscere`,

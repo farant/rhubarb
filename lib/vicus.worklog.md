@@ -48,3 +48,37 @@ each other. `vicus_imago_fons` delegates to the active tab's source.
 
 Plants: switching without refilling; refilling without emptying; the
 composite image source ignoring the active tab - all caught.
+
+## 2026-10-05 — T2b: host composition and mount surfaces
+
+`vicus_componere` is a plain `Componere`: root `vicus` carrying the
+action `vicus.magnitudo`, one tab-bar component (`vicus.tabulae`,
+`PARTES_INDEX`, 8 px tall), then the active app's own tree with
+`fines.y += 8` on its root. `fines` are parent-relative (componens.h,
+destinatio subtracts each ancestor's origin), so shifting one root
+moves both painting and hit-testing for the whole subtree - the test
+clicks at raw screen coordinates (`manus_ludus_premere_ad`) rather than
+`#pagina`, because the selector form inverts whatever transform exists
+and would pass with a wrong offset too.
+
+Surfaces: each app reads `superficies_*` from its OWN branch, so the
+host writes (W, H - 8) into every mounted branch: once in `aperire`,
+and on resize. Resize is not focal or positional, so `destinatio`
+sends it to the root, after the dispatcher has written the ROOT's
+surface (the host reads that for its own size, falling back to the
+creation size). The apps' `domini.stml` give `superficies_*` to writer
+`"dispensator"`; the host saves `repo->scriptor`, writes as
+`"dispensator"`, restores. Plant P4 (writer "hospes") proved this is
+load-bearing: the canon/owner check silently refuses and the branch
+keeps no surface.
+
+Bar figura: background rect, the active tab's cell span in
+`COLOR_SELECTION`, titles at one cell in; the active title in
+`COLOR_BACKGROUND` (inverse). Tab width = (title length + 2) cells.
+
+Plants (8, all caught by name): no offset; bar not subtracted; resize
+ignored; wrong writer; active not highlighted; no initial write; first
+tab composed instead of the active; title not inverted. The last one
+SURVIVED my first assertion ("some background pixels in the active
+title" - trivially true, the bar's background supplies them); now it
+also asserts ZERO text-coloured pixels there.

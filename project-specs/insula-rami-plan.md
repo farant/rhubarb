@@ -207,6 +207,20 @@ T2 design (agreed with Fran, 2026-10-05), two commits:
   app keeps reading `superficies_*` from its branch; a host action on
   resize (and on open) writes each mount's area (window minus tab bar)
   into its branch - recorded, replayable, componere pure.
+  T2b as built: `vicus_componere` (ctx = Vicus*): root `vicus`
+  (action `vicus.magnitudo`), ONE bar component `vicus.tabulae`
+  (`PARTES_INDEX`, full width x 8 px) whose host figura draws every
+  title and inverts the active one, then the active app's tree with
+  its root's `fines.y` += 8 (children are parent-relative, so the
+  whole subtree - painting and hit-testing - moves). Host entries are
+  registered BEFORE the active mount's are merged. Surfaces: window
+  minus the bar, written into every MOUNTED branch on open and on
+  `EVENTUS_MUTARE_MAGNITUDINEM` (the dispatcher routes it to the root,
+  after writing the root's own surface), as writer `"dispensator"` -
+  the apps' `domini` give `superficies_*` to that writer, so the host
+  writes under that name (saved and restored). Deviation from the
+  design: tab components and the click action move to T3 (switching),
+  where the click has something to do. Eight plants.
 
 **T3 - switching.** Ctrl-A then n / p / 1-9 (the pending prefix is host
 ephemeral state), clicking a tab; leaving flushes the app's gesture and
