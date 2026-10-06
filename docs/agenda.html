@@ -122,6 +122,24 @@ tools/&lt;x&gt;.c</code> for the four natura tools first, then
 script (or the fabrica action) produce the manifests before the provenance
 step, so "green on a fresh clone" holds again.</p>
 
+<h3><span class="id">A6</span>Future library: roaring bitmaps (compressed integer sets)</h3>
+<p><span class="status">idea</span> <span class="nota">agreed as a someday
+library, 2026-10-06, while discussing <code>polynomium</code>'s dense
+memory</span></p>
+<p><strong>What.</strong> Sets of 32-bit integers, compressed by splitting
+the space into chunks of 2<sup>16</sup> and choosing the representation per
+chunk: a sorted array of 16-bit values when sparse, a raw 8 KB bitmap when
+dense, runs when clustered. Fast union, intersection, difference,
+membership, rank and iteration; a stable serialized form.</p>
+<p><strong>Why.</strong> The standard structure for inverted indexes and
+posting lists ("which documents contain this word", set intersections in
+queries). Consumers would be the future database and search work, and
+possibly the house's own indexes (silva's symbol index, census and ledger
+queries). Clearly bounded, independent of everything else, and a good
+benchmark subject. Not related to the math stack except in idea: the same
+dense-or-sparse-per-region choice could later give a sparse polynomial
+type for multivariate work (HOMFLY), where dense storage is hopeless.</p>
+
 <h2>Done</h2>
 <p class="nota">Finished items, with the commit that closed them.</p>
 
