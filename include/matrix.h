@@ -14,7 +14,14 @@
  *
  * MEMORIA: eliminatio in officinis internis (piscinae temporariae,
  * alternae); solus effectus in piscina vocantis. Matrices parvae (<=
- * XXV elementa) in piscina vocantis directe.
+ * XXV elementa) elementis parvis (anulus->parvum) in piscina vocantis
+ * directe.
+ *
+ * VITA: effectus determinantis, nuclei, multiplicationis semper copia
+ * profunda in piscina vocantis - memoriam argumentorum non partiuntur.
+ * transposita, adde, subtrahe, pone autem structuras elementorum
+ * copiant: effectus elementa argumentorum PARTIRI potest (sicut
+ * magnus) et valet dum piscinae argumentorum vivunt.
  *
  * Z[t, t^-1]: eliminatio exponentes intermedios crescere facit, ergo
  * determinans, gradus, nucleus FALSUM reddere possunt etiam ubi

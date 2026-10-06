@@ -41,6 +41,12 @@ nomen structura {
          vacuum* exitus);
     b32 (*est_nullum) (
         constans vacuum* a);
+    /* elementum sine memoria externa (totum in structura): Z in s64, Q
+     * numerator et denominator in s64, Z[t] nullum solum. Algorithmi
+     * hoc ad viam parvam (sine piscinis temporariis) eligendam
+     * utuntur. */
+    b32 (*parvum) (
+        constans vacuum* a);
     b32 (*aequalis) (
         constans vacuum* a,
         constans vacuum* b);

@@ -119,3 +119,44 @@ failing). Fran approved all fixes.
 - Plants, all red: kernel without Gauss–Jordan; rows above updated only
   right of the pivot; officinae always; `_servare` not copying (crash);
   D = 1. 142 checks; venenum sana.
+
+## 2026-10-06 — review II: results never share the input's memory; size-aware small path
+
+Reviewer: Gauss–Jordan exact and correct (8.5k cases, mostly poisoned;
+"all pivots = D" confirmed — the mutant reading D from the FIRST pivot is
+equivalent); kernel entries now within ~2 bits of the primitive basis
+(25×30: 1207 → 106 vs 104 bits). Two problems with my small-matrix path
+(Fran approved both fixes):
+
+- **A1, a regression of mine**: below the threshold `_servare` was a
+  struct copy, so a result could point into the INPUT's piscina —
+  [7^200] built in P1, det into P2, P1 destroyed → use-after-free (ASan).
+  Fix: `_effectus` — determinant, kernel and product entries are ALWAYS
+  deep-copied into the caller's piscina, at every size; `_servare` (struct
+  copy on the small path) stays for internal values only. Header VITA
+  paragraph now states the real contract: elimination and multiplication
+  results own their memory; transpose/add/subtract/pone copy element
+  structs and may share (as before, now written down).
+- **A2, the threshold counted elements only** (5×5 with 1000-digit
+  entries: 204 KB in the caller for a 2 KB determinant, 475 KB for an
+  EMPTY kernel; polynomium's lesson again). Fix: new ring predicate
+  `anulus->parvum` (element stored inline — Z fits s64, Q numerator and
+  denominator fit, Z[t] only zero); the small path needs ≤ 25 elements
+  (multiply ≤ 125 operations) AND all entries parvum. With the predicate
+  the A1 sharing can no longer arise on the small path either (inline
+  values own no storage) — `_effectus` keeps the contract explicit.
+- Measured whether to raise the 25 limit for inline entries (forced small
+  path vs officinae, det): 1-digit 6×6 1.71 vs 2.31 µs, 12×12 15.6 vs
+  18.3 µs — but with inline entries near 2^62 the caller waste is 10 KB
+  at 6×6, 31 KB at 8×8, 157 KB at 12×12 ("inline" bounds the entries, not
+  the minors). Kept 25.
+- Tests: the reviewer's sharing case (result limbs differ from the
+  input's; value survives destroying the input piscina); 5×5 with
+  1000-digit entries — det caller < 16 KB, empty kernel < 4 KB, square
+  < 48 KB, apex > 0; parvum per ring incl. a fraction with a small
+  numerator and a BIG denominator (the plant dropping the denominator
+  check first survived). The previous matrix.c fails the sharing test and
+  all three waste bounds.
+- Plants, all red: results copied shallow (crash); parvae always true;
+  multiply ignoring entry size; Z parvum always true; Q parvum without
+  the denominator. 163 checks; venenum sana.

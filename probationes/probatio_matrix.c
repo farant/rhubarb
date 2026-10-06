@@ -1771,6 +1771,34 @@ s32 principale (vacuum)
             't', piscina, &pb);
         CREDO_FALSUM (p->divide_exacte(&pa, &pb, piscina, &pr));
         CREDO_VERUM (polynomium_est_nullum(pr));
+        /* parvum: sine memoria externa */
+        {
+            Magnus parvum_z = magnus_ex_s64(-V);
+            Magnus magnum_z = magnus_potentia(magnus_ex_s64(X), XXX,
+                piscina);
+               Fractio parvum_q  = fractio_ex_s64(ZEPHYRUM);
+               Fractio magnum_q  = fractio_ex_s64(ZEPHYRUM);
+            Polynomium nullum_p  = polynomium_nullum();
+            Polynomium t_p       = polynomium_nullum();
+
+            (vacuum)fractio_ex_s64_s64(I, II, piscina, &parvum_q);
+            (vacuum)fractio_ex_magnis(magnum_z, magnus_ex_s64(VII),
+                piscina,
+                &magnum_q);
+            (vacuum)polynomium_monomium(magnus_ex_s64(I), I, piscina,
+                &t_p);
+            CREDO_VERUM (z->parvum(&parvum_z));
+            CREDO_FALSUM (z->parvum(&magnum_z));
+            CREDO_VERUM (q->parvum(&parvum_q));
+            CREDO_FALSUM (q->parvum(&magnum_q));
+            /* numerator parvus, denominator magnus */
+            (vacuum)fractio_ex_magnis(magnus_ex_s64(I), magnum_z,
+                piscina,
+                &magnum_q);
+            CREDO_FALSUM (q->parvum(&magnum_q));
+            CREDO_VERUM (p->parvum(&nullum_p));
+            CREDO_FALSUM (p->parvum(&t_p));
+        }
         CREDO_FALSUM (z->corpus);
         CREDO_VERUM (q->corpus);
         CREDO_FALSUM (p->corpus);
@@ -2327,6 +2355,89 @@ s32 principale (vacuum)
                 "0, 0, 0, 0, 2, 0; 0, 0, 0, 0, 0, 2]"), piscina, &d));
             CREDO_VERUM (magnus_aequalis(d, magnus_ex_s64(LXIV)));
             CREDO_MAIOR_I32 ((i32)matrix_apex_officinarum(), ZEPHYRUM);
+        }
+
+        /* RECENSIO matrix-II: effectus numquam memoriam argumentorum
+         * partiuntur (olim via parva structuram copiabat: [7^200] in
+         * piscina altera, destructa, lectio post liberationem) */
+        {
+            Piscina* origo =
+                piscina_generare_dynamicum("probatio_origo",
+                (memoriae_index)4096);
+            Magnus septem = magnus_potentia(magnus_ex_s64(VII), CC,
+                origo);
+            Magnus d = magnus_ex_s64(ZEPHYRUM);
+            Matrix una;
+            Matrix productum;
+
+            (vacuum)matrix_nulla(z, I, I, origo, &una);
+            matrix_pone(&una, ZEPHYRUM, ZEPHYRUM, &septem);
+            CREDO_VERUM (matrix_determinans(una, piscina, &d));
+            CREDO_VERUM (d.membra != septem.membra);
+            CREDO_VERUM (matrix_multiplica(una, _m(z, "[1]"), piscina,
+                &productum));
+            CREDO_VERUM (((constans Magnus*)matrix_elementum(productum,
+                ZEPHYRUM, ZEPHYRUM))->membra != septem.membra);
+            piscina_destruere(origo);
+            CREDO_VERUM (magnus_aequalis(d,
+                magnus_potentia(magnus_ex_s64(
+                VII), CC, piscina)));
+            CREDO_VERUM (magnus_aequalis(*(constans Magnus*)
+                matrix_elementum(productum, ZEPHYRUM, ZEPHYRUM), d));
+        }
+
+        /* numerus solus non sufficit: 5 x 5 elementis M digitorum per
+         * officinas (olim via parva: determinans 204 KB, nucleus
+         * vacuus 475 KB in piscina vocantis) */
+        {
+            Matrix magna;
+            Matrix nucleus_vacuus;
+            Magnus d;
+            Magnus basis = magnus_potentia(magnus_ex_s64(X), CMXCIX,
+                piscina);
+            Piscina* vocans;
+               Sors  s_magna;
+
+            sors_seminare(&s_magna, 2026ULL, XI);
+            (vacuum)matrix_nulla(z, V, V, piscina, &magna);
+            per (i = ZEPHYRUM; i < V; i++)
+            {
+                per (j = ZEPHYRUM; j < V; j++)
+                {
+                    Magnus x = magnus_adde(magnus_multiplica(basis,
+                        magnus_ex_s64(sors_inter(&s_magna, I, IX)),
+                        piscina), magnus_ex_s64(sors_inter(&s_magna,
+                        -(s32)M, (s32)M)), piscina);
+
+                    matrix_pone(&magna, i, j, &x);
+                }
+            }
+            vocans = piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            CREDO_VERUM (matrix_determinans(magna, vocans, &d));
+            CREDO_MAIOR_I32 ((i32)matrix_apex_officinarum(), ZEPHYRUM);
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), XVI * M);
+            piscina_destruere(vocans);
+            vocans = piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            CREDO_VERUM (matrix_nucleus(magna, vocans,
+                &nucleus_vacuus));
+            CREDO_AEQUALIS_I32 (matrix_columnae(nucleus_vacuus),
+                ZEPHYRUM);
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), IV * M);
+            piscina_destruere(vocans);
+            /* multiplicatio: effectus ~21 KB (olim via parva 209 KB) */
+            {
+                Matrix quadratum;
+
+                vocans = piscina_generare_dynamicum("probatio_vocans",
+                    (memoriae_index)4096);
+                CREDO_VERUM (matrix_multiplica(magna, magna, vocans,
+                    &quadratum));
+                CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans),
+                    XLVIII * M);
+                piscina_destruere(vocans);
+            }
         }
 
         /* Z[t, t^-1]: exponens intermedius extra fines - refutatio

@@ -39,6 +39,15 @@ _z_est_nullum (
 }
 
 interior b32
+_z_parvum (
+    constans vacuum* a)
+{
+    s64 valor;
+
+    redde magnus_ad_s64(VALOR_Z(a), &valor);
+}
+
+interior b32
 _z_aequalis (
     constans vacuum* a,
     constans vacuum* b)
@@ -128,7 +137,7 @@ _z_ex_chorda (
 
 constans Anulus ANULUS_INTEGRORUM = {
     "Z", (memoriae_index)magnitudo(Magnus), FALSUM,
-    _z_nullum, _z_unum, _z_est_nullum, _z_aequalis, _z_adde,
+    _z_nullum, _z_unum, _z_est_nullum, _z_parvum, _z_aequalis, _z_adde,
         _z_subtrahe,
     _z_multiplica, _z_divide_exacte, _z_transcribe, _z_ad_chordam,
     _z_ex_chorda
@@ -162,6 +171,16 @@ _q_est_nullum (
     constans vacuum* a)
 {
     redde fractio_signum(VALOR_Q(a)) == ZEPHYRUM;
+}
+
+interior b32
+_q_parvum (
+    constans vacuum* a)
+{
+    s64 valor;
+
+    redde magnus_ad_s64(fractio_numerator(VALOR_Q(a)), &valor)
+        && magnus_ad_s64(fractio_denominator(VALOR_Q(a)), &valor);
 }
 
 interior b32
@@ -246,7 +265,7 @@ _q_ex_chorda (
 
 constans Anulus ANULUS_RATIONALIUM = {
     "Q", (memoriae_index)magnitudo(Fractio), VERUM,
-    _q_nullum, _q_unum, _q_est_nullum, _q_aequalis, _q_adde,
+    _q_nullum, _q_unum, _q_est_nullum, _q_parvum, _q_aequalis, _q_adde,
         _q_subtrahe,
     _q_multiplica, _q_divide_exacte, _q_transcribe, _q_ad_chordam,
     _q_ex_chorda
@@ -277,6 +296,13 @@ _p_unum (
 
 interior b32
 _p_est_nullum (
+    constans vacuum* a)
+{
+    redde polynomium_est_nullum(VALOR_P(a));
+}
+
+interior b32
+_p_parvum (
     constans vacuum* a)
 {
     redde polynomium_est_nullum(VALOR_P(a));
@@ -365,7 +391,7 @@ _p_ex_chorda (
 
 constans Anulus ANULUS_POLYNOMIORUM = {
     "Z[t,t^-1]", (memoriae_index)magnitudo(Polynomium), FALSUM,
-    _p_nullum, _p_unum, _p_est_nullum, _p_aequalis, _p_adde,
+    _p_nullum, _p_unum, _p_est_nullum, _p_parvum, _p_aequalis, _p_adde,
         _p_subtrahe,
     _p_multiplica, _p_divide_exacte, _p_transcribe, _p_ad_chordam,
     _p_ex_chorda

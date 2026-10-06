@@ -26,3 +26,13 @@ integral domain with exact division.
   (Z remainder, Z by 0, Q by 0, Z[t] non-divisor), corpus flags, unit,
   text; transcribe is deep (limbs/arrays differ from the source, values
   survive destroying the source piscina).
+
+## 2026-10-06 — `parvum` (review matrix-II)
+
+New entry `parvum(a)`: the element lives entirely inside its struct (no
+external memory) — Z: fits s64 (`magnus_ad_s64`); Q: numerator AND
+denominator fit; Z[t]: only the zero polynomial. matrix uses it to choose
+its scratch-free small path (count alone wasted 204 KB on a 5×5 of
+1000-digit entries). Placed after `est_nullum`; the three positional
+initializers updated. Tested per ring, including 1/10^30 (small
+numerator, big denominator).

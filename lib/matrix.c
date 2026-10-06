@@ -107,12 +107,56 @@ _apex_notare (
     }
 }
 
-/* Matrices parvae (elementa <= XXV; multiplicatio opera <= CXXV) in
- * piscina vocantis: creatio quattuor piscinarum plus constat quam
- * servat (recensio matrix-I: 2 x 2 0.5 us contra 0.007 us ad - bc;
- * iactura vocantis paucorum elementorum finita). */
+/* Via parva (sine officinis, in piscina vocantis) solum si matrix
+ * parva ET omnia elementa parva (anulus->parvum: sine memoria externa):
+ * creatio quattuor piscinarum plus constat quam servat (recensio
+ * matrix-I: 2 x 2 0.5 us contra 0.007 us ad - bc), et iactura vocantis
+ * minoribus elementorum parvorum finita. Numerus solus non sufficit
+ * (recensio matrix-II: 5 x 5 elementis M digitorum 204 KB pro
+ * determinante 2 KB). */
 #define MATRIX_LIMES_ELEMENTORUM  XXV
 #define MATRIX_LIMES_OPERUM       CXXV
+
+interior b32
+_parvae (
+    Matrix m)
+{
+    memoriae_index numerus = (memoriae_index)m.lineae
+        * (memoriae_index)m.columnae;
+    memoriae_index k;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (!m.anulus->parvum(m.elementa + k * _passus(m.anulus)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* via officinarum nisi matrix parva et elementis parvis */
+interior b32
+_officinis_utendum (
+            Matrix m,
+    memoriae_index limes)
+{
+    redde (memoriae_index)m.lineae * (memoriae_index)m.columnae > limes
+        || !_parvae(m);
+}
+
+/* effectus vocanti redditus: semper copia profunda in piscinam eius,
+ * etiam via parva - effectus eliminationis et multiplicationis numquam
+ * memoriam argumentorum partiuntur (recensio matrix-II) */
+interior vacuum
+_effectus (
+    constans Anulus* anulus,
+                 i8* fons,
+            Piscina* piscina,
+                 i8* destinatio)
+{
+    anulus->transcribe(fons, piscina, destinatio);
+}
 
 /* Si non utendae aut creatio deficit, omnes = piscina vocantis et
  * refectio nihil agit: effectus idem, memoria sine refectione. */
@@ -597,7 +641,8 @@ matrix_multiplica (
      * finalis transcriptus */
     _officinae_aperire(&officinae, piscina, (memoriae_index)a.lineae
         * (memoriae_index)b.columnae * (memoriae_index)a.columnae
-        > (memoriae_index)MATRIX_LIMES_OPERUM);
+        > (memoriae_index)MATRIX_LIMES_OPERUM || !_parvae(a)
+        || !_parvae(b));
     productum  = (i8*)piscina_allocare(officinae.piscinae[
         OFFICINA_STABILIS], _passus(anulus));
     summa      = (i8*)piscina_allocare(officinae.piscinae[
@@ -621,7 +666,7 @@ matrix_multiplica (
             }
             si (bene)
             {
-                _servare(&officinae, anulus, summa, piscina,
+                _effectus(anulus, summa, piscina,
                     _locus(m.elementa, anulus, m.columnae, linea,
                     columna));
             }
@@ -839,9 +884,8 @@ matrix_determinans (
         anulus->unum(piscina, exitus);
         redde VERUM;
     }
-    _officinae_aperire(&officinae, piscina, (memoriae_index)m.lineae
-        * (memoriae_index)m.columnae
-        > (memoriae_index)MATRIX_LIMES_ELEMENTORUM);
+    _officinae_aperire(&officinae, piscina, _officinis_utendum(m,
+        (memoriae_index)MATRIX_LIMES_ELEMENTORUM));
     cardines =
         (i32*)piscina_allocare(officinae.piscinae[OFFICINA_STABILIS],
         (memoriae_index)m.lineae * magnitudo(i32));
@@ -875,7 +919,7 @@ matrix_determinans (
             redde FALSUM;
         }
     }
-    _servare(&officinae, anulus, valor, piscina, (i8*)exitus);
+    _effectus(anulus, valor, piscina, (i8*)exitus);
     _officinae_claudere(&officinae);
     redde VERUM;
 }
@@ -893,9 +937,8 @@ matrix_gradus (
           s32  signum;
           b32  bene;
 
-    _officinae_aperire(&officinae, piscina, (memoriae_index)m.lineae
-        * (memoriae_index)m.columnae
-        > (memoriae_index)MATRIX_LIMES_ELEMENTORUM);
+    _officinae_aperire(&officinae, piscina, _officinis_utendum(m,
+        (memoriae_index)MATRIX_LIMES_ELEMENTORUM));
     cardines =
         (i32*)piscina_allocare(officinae.piscinae[OFFICINA_STABILIS],
         (memoriae_index)(m.lineae + I) * magnitudo(i32));
@@ -936,9 +979,8 @@ matrix_nucleus (
                  i32  q = ZEPHYRUM;
              Piscina* stabilis;
 
-    _officinae_aperire(&officinae, piscina, (memoriae_index)m.lineae
-        * (memoriae_index)m.columnae
-        > (memoriae_index)MATRIX_LIMES_ELEMENTORUM);
+    _officinae_aperire(&officinae, piscina, _officinis_utendum(m,
+        (memoriae_index)MATRIX_LIMES_ELEMENTORUM));
     stabilis   = officinae.piscinae[OFFICINA_STABILIS];
     cardines   = (i32*)piscina_allocare(stabilis, (memoriae_index)(
         m.lineae + I) * magnitudo(i32));
@@ -981,7 +1023,7 @@ matrix_nucleus (
         {
             perge;
         }
-        _servare(&officinae, anulus, d, piscina,
+        _effectus(anulus, d, piscina,
             _locus(nucleus.elementa,
             anulus, nucleus.columnae, j, q));
         per (i = ZEPHYRUM; i < gradus; i++)
@@ -994,7 +1036,7 @@ matrix_nucleus (
                 _officinae_claudere(&officinae);
                 redde FALSUM;
             }
-            _servare(&officinae, anulus, valor, piscina, _locus(
+            _effectus(anulus, valor, piscina, _locus(
                 nucleus.elementa, anulus, nucleus.columnae, cardines[i],
                 q));
             _officina_reficere(&officinae, OFFICINA_TEMPORARIA);
