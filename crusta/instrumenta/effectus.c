@@ -572,7 +572,9 @@ _modus_census (
  *   probatio <via>       exsistentia et species (absentia quoque)
  *   nomina <dir> <ex>    nomina directorii exemplari congruentia
  *   globus <exemplar>    octeti omnium plagularum congruentium
- *   directorium <dir>    arbor tota (recursio: grep -r)
+ *   arbor <dir>          subarbor tota: nomina et contenta, recursive
+ *                        (recursio grep -r, cp -r; praefixum A3 - T6;
+ *                        ante T6 'directorium', nomina sola)
  *   ambitus <titulus>    valor variabilis ambitus
  *   dominus <via>        lectio build/ non scripta in ambitu: exitus
  *                        actionis declaratae esse debet
@@ -749,6 +751,34 @@ _modus_clavis (
                  * etiam cauda ignota (non ignotum) */
                 perge;
             }
+            si (   strcmp(res, "partialis") == ZEPHYRUM
+                && strcmp(cl, "arbor")      == ZEPHYRUM)
+            {
+                /* PRAEFIXUM IN ARBORE (effectus-plan-2 T6, A3): lectio,
+                 * probatio, enumeratio -> 'arbor' (digestum
+                 * subarboris, grossum sed solidum); fontatio, exsecutio
+                 * -> ignotum (effectus filii ignoti); praefixum radicis
+                 * -> ignotum. Ante T6 situs partialis lineam NULLAM
+                 * dabat (irresolutum 'nulla' solum iudicat): foramen
+                 * soliditatis, iudicium-fumus P14. */
+                si (   (   strcmp(el, "lectio") == ZEPHYRUM
+                        || strcmp(el, "probatio") == ZEPHYRUM
+                        || strcmp(el, "enumeratio") == ZEPHYRUM)
+                    && v[ZEPHYRUM]     != '\0'
+                    && strcmp(v, "./") != ZEPHYRUM)
+                {
+                    _lineam_addere(c, lineae, "arbor", v, NIHIL);
+                }
+                alioquin
+                {
+                    character sedes[IV * MXXIV];
+
+                    sprintf(sedes, "%s:%s", pl,
+                        _cella(c->piscina, s, "sedes"));
+                    _lineam_addere(c, lineae, "ignotum", sedes, v);
+                }
+                perge;
+            }
             si (   strcmp(el, "ignotum") == ZEPHYRUM
                 || strcmp(res, "nulla")  == ZEPHYRUM
                 || (strcmp(res, "partialis") == ZEPHYRUM
@@ -824,7 +854,7 @@ _modus_clavis (
             }
             alioquin si (strcmp(forma, "praefixum") == ZEPHYRUM)
             {
-                _lineam_addere(c, lineae, "directorium", v, NIHIL);
+                _lineam_addere(c, lineae, "arbor", v, NIHIL);
             }
             alioquin si (   strcmp(cl, "build") == ZEPHYRUM
                          && strcmp(_cella(c->piscina, s,

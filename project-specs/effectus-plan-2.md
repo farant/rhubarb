@@ -253,19 +253,19 @@ fixtures + goldens.
 
 ### Task T6: `${X:-d}` and prefixes in the key (A3, A4)
 
-- [ ] **Step 1: Failing section** `XVII. praedefinita`: `cat
+- [x] **Step 1: Failing section** `XVII. praedefinita`: `cat
   "${FS:-build/fs}/x"` with no `FS=` in scope -> lectio
   `build/fs/x` + `ambitus_lectio FS`; with `FS=a` in scope -> two
   lectiones (join).
-- [ ] **Step 2: Key (`-clavis`):** in-tree `partialis` read with ≥ 1
+- [x] **Step 2: Key (`-clavis`):** in-tree `partialis` read with ≥ 1
   segment, not build/ -> `directorium <prefix>`; root-level prefix ->
   `ignotum` (unchanged).
-- [ ] **Step 3: iudicium-fumus plants:** P14 a file under a
+- [x] **Step 3: iudicium-fumus plants:** P14 a file under a
   `directorium` prefix edited -> not reused; P15 the env default's
   variable set by the caller -> key changes (IGNOTUM, not reused).
-- [ ] **Step 4: Implement; census delta; toml key diff** (new
+- [x] **Step 4: Implement; census delta; toml key diff** (new
   `directorium` / `ambitus` lines explained); judge time measured.
-- [ ] **Step 5: Commit** (gates `crusta`, `iudicium-fumus`, owed).
+- [x] **Step 5: Commit** (gates `crusta`, `iudicium-fumus`, owed).
 
 ### Task T7: close
 

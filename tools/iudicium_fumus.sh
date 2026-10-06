@@ -24,6 +24,12 @@
 #   P12  '[ -f optio.txt ]' (absens) creatum -> non RECENS (absentia clavis)
 #   P13  build/x/status (lectum ET rescriptum in porta) inter cursus
 #        mutatum -> non RECENS (regula soliditatis, effectus-spec par. I)
+#   P14  lectio praefixo solo nota ('cat "data/$(echo q).txt"') -
+#        data/q.txt mutatum -> non RECENS (clavis 'arbor data/',
+#        effectus-plan-2 T6, A3; ante T6 situs partialis clavem
+#        tacite non intrabat)
+#   P15  '${FUMUS_DIR:-data}/w.txt' - FUMUS_DIR a vocante positum ->
+#        non RECENS (clavis 'ambitus FUMUS_DIR', A4)
 #   AUD  caeca.txt (lectio EXCUSATA, clavis eam ignorat) mutatum sub
 #        transitu RECENS: iudicare caecum RECENS; sanare -audit ->
 #        AUDITUM_DISCORS; restitutum -> 'auditus: transitus iterum congruit'
@@ -95,6 +101,8 @@ clang build/x/a.o -o build/x/a || exit 1
 ./build/x/a || exit 1
 [ "$(cat flag.txt)" = ok ] || exit 1
 [ -f optio.txt ] && echo "optio adest"
+cat "data/$(echo q).txt" > /dev/null
+cat "${FUMUS_DIR:-data}/w.txt" > /dev/null
 s="$(cat build/x/status 2>/dev/null)"
 echo "status${s:+ }$s" > build/x/status
 # <tolera codex="lint:effectus-irresolutum" (>fumus: lectio caeca CONSULTO - auditus solus eam capit
@@ -108,6 +116,9 @@ printf '3\n' > "$R/gen/fons.txt"
 printf 'ok\n' > "$R/flag.txt"
 printf 'ok\n' > "$R/caeca.txt"
 printf 'fumus\n' > "$R/README"
+mkdir -p "$R/data"
+printf 'q\n' > "$R/data/q.txt"
+printf 'w\n' > "$R/data/w.txt"
 V="build/fabrica/verdicta/x.txt"
 
 fab () { (cd "$R" && "$F" "$@") > "$T/o" 2>&1; }
@@ -181,6 +192,17 @@ printf 'alienum\n' > "$R/build/x/status"
 if ! status | grep -q '^RECENS'; then ok "P13  build/x/status mutatum -> non RECENS (soliditas)"; else non "P13 "; fi
 cp "$T/status.bonum" "$R/build/x/status"
 if status | grep -q '^RECENS'; then ok "     restitutum -> RECENS"; else non "     P13 restitutum"; fi
+
+# P14: lectio praefixo solo nota (A3)
+printf 'q2\n' > "$R/data/q.txt"
+if ! status | grep -q '^RECENS'; then ok "P14  data/q.txt sub praefixo mutatum -> non RECENS (arbor)"; else non "P14 "; fi
+printf 'q\n' > "$R/data/q.txt"
+if status | grep -q '^RECENS'; then ok "     restitutum -> RECENS"; else non "     P14 restitutum"; fi
+
+# P15: valor praedefinitus ex ambitu (A4)
+s="$(FUMUS_DIR=alibi status)"
+if ! echo "$s" | grep -q '^RECENS'; then ok "P15  FUMUS_DIR a vocante positum -> non RECENS (ambitus)"; else non "P15 "; fi
+if status | grep -q '^RECENS'; then ok "     sine FUMUS_DIR -> RECENS"; else non "     P15 sine"; fi
 
 # AUD
 printf 'non\n' > "$R/caeca.txt"

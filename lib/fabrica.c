@@ -1069,6 +1069,86 @@ _particulam_valoris (
     redde VERUM;
 }
 
+/* ARBOR (effectus-plan-2 T6): subarbor tota - nomina cuiusque
+ * directorii (additio, remotio) et octeti cuiusque plagulae (mutatio
+ * contenti), recursive. 'directorium' nomina SOLA sigillat (radices
+ * inclusionum); lectio per praefixum ('grep -r', 'cat "dir/$x"')
+ * contenta legit - ante T6 clavis eam per 'directorium' tegebat et
+ * mutationem contenti non videbat. Absens: particula 'absens' (creatio
+ * clavem mutat). Directorium = via quam enumerare accipit. */
+interior b32
+_arborem_explicare (
+     constans FabricaSutura* sutura,
+                     chorda  via,
+               constans Xar* exclusa,
+                    Piscina* piscina,
+                        Xar* particulae,
+                     chorda* causa_out,
+                        i32  profunditas)
+{
+                  Xar* nomina;
+               chorda  basis;
+    ChordaAedificator* aedificator;
+                  i32  i;
+
+    si (profunditas > XVI)
+    {
+        _causam_ponere(causa_out, piscina, "arbor nimis profunda: ",
+            via,
+            "");
+        redde FALSUM;
+    }
+    basis = via.mensura > ZEPHYRUM && via.datum[via.mensura - I] == '/'
+        ? via : _iungere(piscina, "", via, "/");
+    si (   sutura->enumerare == NIHIL
+        || !sutura->enumerare(sutura->datum, chorda_ut_cstr(via,
+               piscina), piscina, &nomina))
+    {
+        redde _particulam_valoris(piscina, particulae, "arbor:", basis,
+            chorda_ex_literis("absens", piscina));
+    }
+    aedificator = chorda_aedificator_creare(piscina, 256);
+    si (aedificator == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        (vacuum)chorda_aedificator_appendere_chorda(aedificator,
+            *(chorda*)xar_obtinere(nomina, i));
+        (vacuum)chorda_aedificator_appendere_character(aedificator,
+            '\n');
+    }
+    si (!_particulam_valoris(piscina, particulae, "arbor:", basis,
+            chorda_aedificator_finire(aedificator)))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
+    {
+        chorda plena = _iungere(piscina, chorda_ut_cstr(basis,
+            piscina),
+                     *(chorda*)xar_obtinere(nomina, i), "");
+           Xar* sub;
+
+        si (sutura->enumerare(sutura->datum, chorda_ut_cstr(plena,
+                piscina), piscina, &sub))
+        {
+            si (!_arborem_explicare(sutura, plena, exclusa, piscina,
+                    particulae, causa_out, profunditas + I))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (!_particulam_legere(sutura, plena, exclusa,
+                         piscina, particulae, causa_out))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* nomina directorii 'dir' exemplari congruentia, ordinata, iuncta */
 interior b32
 _nomina_colligere (
@@ -1308,6 +1388,14 @@ _effectus_sigillare (
             si (!_directorium_explicare(sutura, via, piscina,
                 particulae,
                     causa_out))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(genus, "arbor"))
+        {
+            si (!_arborem_explicare(sutura, via, exclusa, piscina,
+                    particulae, causa_out, ZEPHYRUM))
             {
                 redde FALSUM;
             }

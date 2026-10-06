@@ -578,6 +578,10 @@ _aequat (
     constans character* a,
     constans character* b);
 
+interior b32
+_specialis (
+    constans character* titulus);
+
 
 /* ==================================================
  * Valores (effectus-plan-2 T2)
@@ -1547,6 +1551,147 @@ _argumentum_expansionis (
         *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM));
 }
 
+/* titulus in ambitu ad locum 'usus' definitionem habet (assignatio,
+ * ansa, tabulatum - scopus ut in _variabilem_intus)? (T6, A4) */
+interior b32
+_variabilis_definita (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* usus,
+       constans character* titulus)
+{
+    constans MateriaNodus* functio = _functio_circumdans(usus);
+                      b32  localis;
+                      i32  k;
+
+    si (_ansa_ligans(d, a, usus, titulus) != NIHIL)
+    {
+        redde VERUM;
+    }
+    localis = functio != NIHIL && _localis_est(a, functio, titulus);
+    per (k = ZEPHYRUM; k < xar_numerus(a->definitiones); k++)
+    {
+        Definitio* def = (Definitio*)xar_obtinere(a->definitiones, k);
+
+        si (   strcmp(def->titulus, titulus) == ZEPHYRUM
+            && (localis ? def->functio == functio : def->functio
+                == NIHIL))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* membra vacua ("") removere (':-' vacuum ut absens tractat) */
+interior vacuum
+_membra_vacua_removere (
+    Derivatio* d,
+        Valor* v)
+{
+    Xar* nova;
+    i32  k;
+
+    si (_membra_numerus(v) == ZEPHYRUM)
+    {
+        redde;
+    }
+    nova = xar_creare(d->piscina, (i32)magnitudo(character*));
+    per (k = ZEPHYRUM; k < _membra_numerus(v); k++)
+    {
+        si (_membrum(v, k)[ZEPHYRUM] != '\0')
+        {
+            *(constans character**)xar_addere(nova) = _membrum(v, k);
+        }
+    }
+    v->membra = nova;
+}
+
+/* ${X:-d} ${X-d} ${X:=d} ${X=d} (T6, A4): X in ambitu non definita ->
+ * valor d (clavis lineam 'ambitus X' tenet: vocans X ponens clavem
+ * mutat); definita -> unio valorum X et d (':' : vacua X omissa).
+ * Argumenta ($1), nomina a read posita: ignota manent. */
+interior b32
+_praedefinitum_aestimare (
+                Derivatio* d,
+                  Ambitus* a,
+                  Plagula* p,
+    constans MateriaNodus* pars,
+       constans character* titulus,
+       constans character* op,
+                    Valor* v,
+                      i32  profunditas)
+{
+      Xar* argumenta = _nodi_listae(d->piscina, pars,
+          (i32)CRUSTA_EXPANSIO_ARGUMENTA);
+    Valor dv;
+    Valor xv;
+    Valor summa;
+
+    _valorem_parare(d, &dv);
+    si (   argumenta != NIHIL && xar_numerus(argumenta) > ZEPHYRUM
+        && !_verbum_aestimare(d, a, p,
+               *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM), &dv,
+               profunditas + I))
+    {
+        redde _valorem_frangere(v);
+    }
+    si (op == NIHIL)
+    {
+        /* '${H-d}' / '${H=d}': crusta operatorem in argumento relinquit
+         * (vitium crustae nominatum) - character primus membrorum '-'
+         * aut '=' esse debet; aliter ('+', '?') operator ignotus */
+        i32 k;
+
+        si (_membra_numerus(&dv) == ZEPHYRUM)
+        {
+            (vacuum)_valorem_frangere(v);
+            redde _deficere(d, "operator");
+        }
+        per (k = ZEPHYRUM; k < _membra_numerus(&dv); k++)
+        {
+            constans character* m = _membrum(&dv, k);
+
+            si (m[ZEPHYRUM] != '-' && m[ZEPHYRUM] != '=')
+            {
+                (vacuum)_valorem_frangere(v);
+                redde _deficere(d, "operator");
+            }
+            *(character**)xar_obtinere(dv.membra, k) =
+                _duplicare(d->piscina, m + I);
+        }
+        op = "-";
+    }
+    si (   !_variabilis_definita(d, a, pars, titulus)
+        && !_specialis(titulus)
+        && !_in_nominibus(a->assignata, titulus))
+    {
+        redde _valorem_continuare(d, v, &dv);
+    }
+    _valorem_parare(d, &xv);
+    si (!_variabilem_aestimare(d, a, p, pars, titulus, &xv, profunditas,
+            FALSUM))
+    {
+        redde _valorem_frangere(v);
+    }
+    si (op[ZEPHYRUM] == ':')
+    {
+        _membra_vacua_removere(d, &xv);
+        si (   _membra_numerus(&xv) == ZEPHYRUM
+            && xv.forma             != VALOR_TEMPORARIA)
+        {
+            redde _valorem_continuare(d, v, &dv);
+        }
+    }
+    summa = xv;
+    si (!_valores_iungere(d, &summa, &dv, I))
+    {
+        (vacuum)_valorem_frangere(v);
+        redde _deficere(d, "discordia");
+    }
+    redde _valorem_continuare(d, v, &summa);
+}
+
 /* argumentum verbi in aream (VIA_MAXIMA) aestimare - CERTUS solum
  * (non TEMPORARIA: cauda eius via non est);
  * area = scrinium operandi idiomatum (dirname, cd && pwd), non valor */
@@ -1872,6 +2017,32 @@ _partes_aestimare (
                 op  = _token(pars, (i32)CRUSTA_EXPANSIO_TOK_OPERATOR);
                 arg = op != NIHIL ? _argumentum_expansionis(d, pars)
                                   : NIHIL;
+                si (   t != NIHIL && sub == NIHIL
+                    && _locus_vacuus(pars,
+                       (i32)CRUSTA_EXPANSIO_TOK_PRAEFIXUM)
+                    && (op == NIHIL
+                        ? !_locus_vacuus(pars,
+                              (i32)CRUSTA_EXPANSIO_ARGUMENTA)
+                        : (   _aequalis(op->valor, ":-")
+                           || _aequalis(op->valor, "-")
+                           || _aequalis(op->valor, ":=")
+                           || _aequalis(op->valor, "="))))
+                {
+                    /* op NIHIL: crusta '${H-d}' sine ':' non tokenizat
+                     * - operator in argumento iacet ('-d'); vide
+                     * _praedefinitum_aestimare */
+                    titulus = chorda_ut_cstr(t->valor, d->piscina);
+                    si (   titulus == NIHIL
+                        || !_praedefinitum_aestimare(d, a, p, pars,
+                               titulus, op != NIHIL
+                                   ? chorda_ut_cstr(op->valor,
+                                   d->piscina)
+                                   : NIHIL, v, profunditas))
+                    {
+                        redde _valorem_frangere(v);
+                    }
+                    frange;
+                }
                 si (   t != NIHIL && sub == NIHIL && arg != NIHIL
                     && _locus_vacuus(pars,
                        (i32)CRUSTA_EXPANSIO_TOK_PRAEFIXUM)

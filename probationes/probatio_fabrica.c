@@ -4912,6 +4912,27 @@ s32 principale (vacuum)
         iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
             piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        /* arbor (effectus-plan-2 T6): contenta subarboris - mutatio
+         * plagulae intra (nomina eadem) clavem mutat; 'directorium'
+         * (nomina sola) eam non videbat */
+        _ponere(&discus, "src/a.c", "int a;\n");
+        _ponere(&discus, "src/b.h", "/* b */\n");
+        _effectus_effusio =
+            "octeti\tporta.sh\n"
+            "arbor\tsrc/\n";
+        (vacuum)fabrica_sanare(&sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+        _ponere(&discus, "src/a.c", "int b;\n");
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_FALSUM(iudicium.status == FABRICA_RECENS);
+        _ponere(&discus, "src/a.c", "int a;\n");
+        iudicium = fabrica_iudicare(&sutura, actiones[0], exitus, VERUM,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
         /* ignotum: IGNOTUM sedes nominata */
         _effectus_effusio =
             "octeti\tporta.sh\n"
