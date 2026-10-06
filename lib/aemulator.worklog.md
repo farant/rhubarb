@@ -99,3 +99,34 @@ the core was right, the test was wrong.
 **ESC 7/8 came with 1049:** the saved-cursor machinery 1049 needs IS
 DECSC/DECRC, so they were implemented in A2 (planned for B) with
 Ghostty's "cursor save and restore" vector.
+
+## 2026-10-06 — A3: the loopback
+
+The first run failed everywhere - in the HARNESS: tessera's front
+buffer is indexed with a fixed stride (`TESSERA_LATITUDO_MAXIMA`, 512),
+not the current width (tessera_opus.c `_index`). Reading
+`frons[y * latitudo + x]` compared the wrong cells.
+
+With that fixed, hand frames, 60 random frames and the whole vicus
+session matched; the only remaining mismatch was a REAL tessera bug:
+a full repaint (resize) cleared with `ESC[2J` under the previous
+frame's pen - BCE painted every cell with the old background while
+tessera skipped blank cells. Fixed in tessera (pen reset before the
+clear) with its own regression test; see tessera/phase-log.md. This
+is what features/009 promised: tessera's byte goldens could never see
+it, a semantic comparison saw it at once.
+
+Comparison rules: blank = no bytes or one space on both sides (tessera
+writes spaces, never-written emulator cells are empty); colours PLENI
+(CCLVI would quantize RGB in the bytes but not in tessera's buffer);
+multi-codepoint graphemes excluded (emulator v2). Every session must
+leave `aemulator_ignota` at 0 - tessera emits nothing the emulator
+does not understand.
+
+C1 question closed: same behaviour as Ghostty (raw C1 byte -> U+FFFD,
+UTF-8-encoded C1 -> ignored).
+
+Plant P8 ("harness skips the style comparison") survived by
+construction - removing a check can only show when the compared
+things differ; P2 (SGR ignored) is the plant that proves the check
+works.

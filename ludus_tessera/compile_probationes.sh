@@ -133,6 +133,9 @@ declare -a RADIX_FONTES=(
     # insula-rami T4: hospes (vicus) et compositio eius
     "vicus"
     "vicus_applicatio"
+    # aemulator A3: reditus (tessera -> octeti -> aemulator)
+    "aemulator"
+    "sors"
 )
 
 FILTER="${1:-}"

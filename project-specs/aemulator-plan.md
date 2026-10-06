@@ -209,6 +209,25 @@ randomized property test (random cell writes, K frames, compare after
 each), and the ludus_tessera replay sessions (pictor, scriba, vicus):
 the emulator screen equals what tessera drew.
 
+A3 as built: `ludus_tessera/probationes/probatio_ludus_tessera_
+reditus.c` in the ludus_tessera suite (it builds tessera from source
+and holds the replay sessions; the tessera amalgam stays free of the
+emulator - Fran agreed). Each frame: praesentare -> captured bytes ->
+aemulator -> purge; every cell of tessera's FRONT buffer (stride =
+TESSERA_LATITUDO_MAXIMA, not the width - the harness's own first bug)
+against the emulator: UTF-8 bytes (blank = empty or one space on both
+sides), width kind, full style (colours PLENI, so RGB is exact), and
+the applied cursor. Sessions: hand-drawn frames + diff + no-change; two
+resizes; 60 random frames (sors, seed 0x5EED: ASCII, box drawing,
+blocks, CJK, emoji, random RGB/default, attributes, fills, cursor); the
+vicus app (scriba typing, Ctrl-A n, pictor's block-character image, a
+stroke). After every session the emulator saw ZERO unknown sequences.
+FOUND: a tessera bug - a full repaint cleared with the previous frame's
+pen (BCE) and skipped blank cells; fixed in tessera (pen reset before
+`2J`, own regression, goldens, amalgam) - tessera/phase-log.md. Eight
+plants: seven caught; "harness skips the style check" survives by
+construction (P2 shows that check is what catches SGR bugs).
+
 **A4 - RELATIO phase A.**
 
 Later phases (re-planned after A's RELATIO):
@@ -246,6 +265,12 @@ Later phases (re-planned after A's RELATIO):
 - `series_terminalis` treats C1 bytes (0x80-0x9F) as UTF-8
   continuations (Fran's choice for input); confirm that is right for
   program OUTPUT too (xterm with UTF-8 does the same) before A2.
+  **Confirmed (A3):** Ghostty decodes UTF-8 first - a raw 0x80-0x9F
+  byte is invalid UTF-8 (replacement), UTF-8-ENCODED C1 controls are
+  ignored (stream.zig:744); ours prints U+FFFD for the raw byte and
+  drops U+0080-U+009F as width-0 controls. Same behaviour.
+- Where the loopback harness lives: **decided (A3, Fran):** the
+  ludus_tessera suite.
 - Whether `fons_6x8` (ASCII + Latin-1, tofu otherwise) is enough for
   the E bar; box drawing as sprites is module 010's plan.
 - Recorded-session replay (vim, htop, zsh through the PTY) was not

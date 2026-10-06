@@ -254,6 +254,12 @@
     </gradus>
   </casus>
 
+  <!-- C1 (Ghostty stream.zig:744): C1 in UTF-8 codificatum
+       ignoratur; octetus C1 crudus UTF-8 invalidus est -> U+FFFD -->
+  <casus titulus="encoded c1 ignored, raw c1 replaced" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="A\xC2\x85B\x85C" textus="AB\xEF\xBF\xBDC" cursor_x="4"/>
+  </casus>
+
   <!-- series ignota consumitur et numeratur, numquam fatalis -->
   <casus titulus="unknown csi is consumed and counted" fons="domus" latitudo="10" altitudo="2">
     <gradus initus="A\x1B[999zB" textus="AB" ignota="1"/>
