@@ -107,17 +107,34 @@ _apex_notare (
     }
 }
 
-/* Si creatio deficit, omnes = piscina vocantis et refectio nihil agit:
- * effectus idem, memoria sine refectione. */
+/* Matrices parvae (elementa <= XXV; multiplicatio opera <= CXXV) in
+ * piscina vocantis: creatio quattuor piscinarum plus constat quam
+ * servat (recensio matrix-I: 2 x 2 0.5 us contra 0.007 us ad - bc;
+ * iactura vocantis paucorum elementorum finita). */
+#define MATRIX_LIMES_ELEMENTORUM  XXV
+#define MATRIX_LIMES_OPERUM       CXXV
+
+/* Si non utendae aut creatio deficit, omnes = piscina vocantis et
+ * refectio nihil agit: effectus idem, memoria sine refectione. */
 interior vacuum
 _officinae_aperire (
-    Officinae* o,
-      Piscina* vocantis)
+     Officinae* o,
+       Piscina* vocantis,
+           b32  utendae)
 {
     i32 k;
     b32 bene = VERUM;
 
     _apex_officinarum = ZEPHYRUM;
+    si (!utendae)
+    {
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+            o->piscinae[k] = vocantis;
+        }
+        o->propriae = FALSUM;
+        redde;
+    }
     per (k = ZEPHYRUM; k < IV; k++)
     {
         o->piscinae[k] = piscina_generare_dynamicum("matrix_officina",
@@ -156,6 +173,27 @@ _officina_reficere (
     {
         _apex_notare(o->piscinae[index]);
         piscina_reficere(o->piscinae[index], o->notae[index]);
+    }
+}
+
+/* valor in piscinam destinationis: copia profunda si officinae
+ * propriae (fons refici potest), aliter copia structurae (omnia in
+ * piscina vocantis manent) */
+interior vacuum
+_servare (
+    constans Officinae* o,
+       constans Anulus* anulus,
+                    i8* fons,
+               Piscina* piscina,
+                    i8* destinatio)
+{
+    si (o->propriae)
+    {
+        anulus->transcribe(fons, piscina, destinatio);
+    }
+    alioquin si (fons != destinatio)
+    {
+        memcpy(destinatio, fons, anulus->mensura);
     }
 }
 
@@ -557,7 +595,9 @@ matrix_multiplica (
     }
     /* elementum quodque totum in officina temporaria, solus valor
      * finalis transcriptus */
-    _officinae_aperire(&officinae, piscina);
+    _officinae_aperire(&officinae, piscina, (memoriae_index)a.lineae
+        * (memoriae_index)b.columnae * (memoriae_index)a.columnae
+        > (memoriae_index)MATRIX_LIMES_OPERUM);
     productum  = (i8*)piscina_allocare(officinae.piscinae[
         OFFICINA_STABILIS], _passus(anulus));
     summa      = (i8*)piscina_allocare(officinae.piscinae[
@@ -581,8 +621,9 @@ matrix_multiplica (
             }
             si (bene)
             {
-                anulus->transcribe(summa, piscina, _locus(m.elementa,
-                    anulus, m.columnae, linea, columna));
+                _servare(&officinae, anulus, summa, piscina,
+                    _locus(m.elementa, anulus, m.columnae, linea,
+                    columna));
             }
             _officina_reficere(&officinae, OFFICINA_TEMPORARIA);
         }
@@ -630,13 +671,21 @@ matrix_transposita (
 
 /* Forma scalaris sine fractionibus in tabula laboris (officina
  * stabilis). cardines[r] = columna cardinis lineae r (vocans praebet
- * lineae elementa); *gradus, *signum (permutationes linearum). Lineae
- * cardinum perfectae et cardo prior in officina stabili; submatrix
- * reliqua in officina alterna currente. FALSUM si operatio elementi
- * refutat. */
+ * lineae elementa); *gradus, *signum (permutationes linearum). FALSUM
+ * si operatio elementi refutat.
+ *
+ * plena FALSUM (determinans, gradus): lineae infra cardinem solae;
+ * lineae cardinum perfectae in officina stabili.
+ * plena VERUM (Gauss-Jordan sine fractionibus, nucleus): lineae SUPRA
+ * cardinem quoque - post gradum k omnes cardines priores = cardo k
+ * (minor), omnia elementa minores, ergo divisio exacta et magnitudo
+ * minoribus finita (recensio matrix-I: substitutio retrograda sine
+ * divisione 1207 bitorum pro 104 in 25 x 30). Lineae omnes mutantur,
+ * ergo omnes in officina alterna vivunt. */
 interior b32
 _scala (
          Matrix   m,
+            b32   plena,
       Officinae*  officinae,
              i8** tabula_exitus,
             i32*  cardines,
@@ -704,15 +753,25 @@ _scala (
             *signum = -*signum;
         }
 
-        /* E[i][j] = (E[r][c] E[i][j] - E[i][c] E[r][j]) / prior */
-        per (i = r + I; i < m.lineae; i++)
+        /* E[i][j] = (E[r][c] E[i][j] - E[i][c] E[r][j]) / prior; supra
+         * cardinem (plena) etiam j < c: E[r][j] ibi nullum, ergo
+         * scalatio per E[r][c] / prior */
+        per (i = plena ? ZEPHYRUM : r + I; i < m.lineae; i++)
         {
-            per (j = c + I; j < m.columnae; j++)
+            si (i == r)
+            {
+                perge;
+            }
+            per (j = (i < r) ? ZEPHYRUM : c + I; j < m.columnae; j++)
             {
                 Piscina* temporaria = officinae->piscinae[
                     OFFICINA_TEMPORARIA];
                      b32 bene;
 
+                si (j == c)
+                {
+                    perge;
+                }
                 bene = anulus->multiplica(_locus(tabula, anulus,
                     m.columnae, r, c), _locus(tabula, anulus,
                     m.columnae, i,
@@ -728,21 +787,22 @@ _scala (
                 {
                     redde FALSUM;
                 }
-                anulus->transcribe(secundum, illic, _locus(tabula,
-                    anulus,
-                    m.columnae, i, j));
+                _servare(officinae, anulus, secundum, illic,
+                    _locus(tabula, anulus, m.columnae, i, j));
                 _officina_reficere(officinae, OFFICINA_TEMPORARIA);
             }
             anulus->nullum(_locus(tabula, anulus, m.columnae, i, c));
         }
 
-        /* linea r perfecta: in officinam stabilem; cardo fit prior */
-        per (j = c; j < m.columnae; j++)
+        /* linea r: perfecta in officinam stabilem (plena: in alternam,
+         * quia gradibus sequentibus mutatur); cardo fit prior */
+        per (j = plena ? ZEPHYRUM : c; j < m.columnae; j++)
         {
             i8* x = _locus(tabula, anulus, m.columnae, r, j);
 
             memcpy(permutatio, x, anulus->mensura);
-            anulus->transcribe(permutatio, stabilis, x);
+            _servare(officinae, anulus, permutatio, plena ? illic
+                : stabilis, x);
         }
         memcpy(prior, _locus(tabula, anulus, m.columnae, r, c),
             anulus->mensura);
@@ -779,13 +839,16 @@ matrix_determinans (
         anulus->unum(piscina, exitus);
         redde VERUM;
     }
-    _officinae_aperire(&officinae, piscina);
+    _officinae_aperire(&officinae, piscina, (memoriae_index)m.lineae
+        * (memoriae_index)m.columnae
+        > (memoriae_index)MATRIX_LIMES_ELEMENTORUM);
     cardines =
         (i32*)piscina_allocare(officinae.piscinae[OFFICINA_STABILIS],
         (memoriae_index)m.lineae * magnitudo(i32));
     valor = (i8*)piscina_allocare(officinae.piscinae[OFFICINA_STABILIS],
         _passus(anulus));
-    si (!_scala(m, &officinae, &tabula, cardines, &gradus, &signum))
+    si (!_scala(m, FALSUM, &officinae, &tabula, cardines, &gradus,
+        &signum))
     {
         _officinae_claudere(&officinae);
         redde FALSUM;
@@ -812,7 +875,7 @@ matrix_determinans (
             redde FALSUM;
         }
     }
-    anulus->transcribe(valor, piscina, exitus);
+    _servare(&officinae, anulus, valor, piscina, (i8*)exitus);
     _officinae_claudere(&officinae);
     redde VERUM;
 }
@@ -830,11 +893,14 @@ matrix_gradus (
           s32  signum;
           b32  bene;
 
-    _officinae_aperire(&officinae, piscina);
+    _officinae_aperire(&officinae, piscina, (memoriae_index)m.lineae
+        * (memoriae_index)m.columnae
+        > (memoriae_index)MATRIX_LIMES_ELEMENTORUM);
     cardines =
         (i32*)piscina_allocare(officinae.piscinae[OFFICINA_STABILIS],
         (memoriae_index)(m.lineae + I) * magnitudo(i32));
-    bene = _scala(m, &officinae, &tabula, cardines, &gradus, &signum);
+    bene = _scala(m, FALSUM, &officinae, &tabula, cardines, &gradus,
+        &signum);
     _officinae_claudere(&officinae);
     si (!bene)
     {
@@ -844,81 +910,11 @@ matrix_gradus (
     redde VERUM;
 }
 
-/* Vector nuclei pro columna libera 'libera' ex forma scalari: z_libera
- * = 1, ceteri liberi 0; pro linea cardinis i (retrorsum, cardo p):
- * aequatio E[i][p] z_p + summa_{j > p} E[i][j] z_j = 0. Sine divisione:
- * z_p = -summa, et omnes iam positi per E[i][p] multiplicantur
- * (aequationes priores homogeneae manent). Valores in officina
- * temporaria; vocans transcribit et reficit. */
-interior b32
-_nucleus_vector (
-                    i8* tabula,
-       constans Anulus* anulus,
-                   i32  columnae,
-          constans i32* cardines,
-                   i32  gradus,
-                   i32  libera,
-               Piscina* temporaria,
-                    i8* vector,
-                   b32* positi,
-                    i8* summa,
-                    i8* productum)
-{
-    memoriae_index passus = _passus(anulus);
-               i32 i;
-               i32 j;
-
-    per (j = ZEPHYRUM; j < columnae; j++)
-    {
-        anulus->nullum(vector + (memoriae_index)j * passus);
-        positi[j] = FALSUM;
-    }
-    anulus->unum(temporaria, vector + (memoriae_index)libera * passus);
-    positi[libera] = VERUM;
-
-    per (i = gradus; i-- > ZEPHYRUM;)
-    {
-        i32  p      = cardines[i];
-         i8* cardo  = _locus(tabula, anulus, columnae, i, p);
-
-        anulus->nullum(summa);
-        per (j = p + I; j < columnae; j++)
-        {
-            si (!positi[j])
-            {
-                perge;
-            }
-            si (   !anulus->multiplica(_locus(tabula, anulus, columnae,
-                i,
-                    j), vector + (memoriae_index)j * passus, temporaria,
-                    productum)
-                || !anulus->adde(summa, productum, temporaria, summa))
-            {
-                redde FALSUM;
-            }
-        }
-        per (j = p + I; j < columnae; j++)
-        {
-            si (   positi[j]
-                && !anulus->multiplica(vector
-                    + (memoriae_index)j * passus,
-                    cardo, temporaria, vector + (memoriae_index)j
-                    * passus))
-            {
-                redde FALSUM;
-            }
-        }
-        anulus->nullum(productum);
-        si (!anulus->subtrahe(productum, summa, temporaria, vector
-            + (memoriae_index)p * passus))
-        {
-            redde FALSUM;
-        }
-        positi[p] = VERUM;
-    }
-    redde VERUM;
-}
-
+/* Nucleus ex forma Gauss-Jordan sine fractionibus: cardines omnes = D
+ * (cardo ultimus), ergo linea i: D z_p(i) + summa_{f libera} E[i][f]
+ * z_f = 0. Pro columna libera f: z_f = D, z_p(i) = -E[i][f], ceteri 0
+ * - elementa minores (magnitudo Hadamard finita). Sine cardine: D = 1,
+ * nucleus = identitas. */
 b32
 matrix_nucleus (
      Matrix  m,
@@ -931,34 +927,43 @@ matrix_nucleus (
                   i8* tabula;
                  i32* cardines;
                  b32* est_cardo;
-                 b32* positi;
-                  i8* vector;
-                  i8* summa;
-                  i8* productum;
+                  i8* d;
+                  i8* nullum;
+                  i8* valor;
                  i32  gradus;
                  s32  signum;
                  i32  j;
                  i32  q = ZEPHYRUM;
              Piscina* stabilis;
 
-    _officinae_aperire(&officinae, piscina);
+    _officinae_aperire(&officinae, piscina, (memoriae_index)m.lineae
+        * (memoriae_index)m.columnae
+        > (memoriae_index)MATRIX_LIMES_ELEMENTORUM);
     stabilis   = officinae.piscinae[OFFICINA_STABILIS];
-    cardines    = (i32*)piscina_allocare(stabilis, (memoriae_index)(
+    cardines   = (i32*)piscina_allocare(stabilis, (memoriae_index)(
         m.lineae + I) * magnitudo(i32));
     est_cardo  = (b32*)piscina_allocare(stabilis, (memoriae_index)(
         m.columnae + I) * magnitudo(b32));
-    positi     = (b32*)piscina_allocare(stabilis, (memoriae_index)(
-        m.columnae + I) * magnitudo(b32));
-    vector     = (i8*)piscina_allocare(stabilis, (memoriae_index)(
-        m.columnae + I) * _passus(anulus));
-    summa      = (i8*)piscina_allocare(stabilis, _passus(anulus));
-    productum  = (i8*)piscina_allocare(stabilis, _passus(anulus));
-    si (   !_scala(m, &officinae, &tabula, cardines, &gradus, &signum)
+    d       = (i8*)piscina_allocare(stabilis, _passus(anulus));
+    nullum  = (i8*)piscina_allocare(stabilis, _passus(anulus));
+    valor   = (i8*)piscina_allocare(stabilis, _passus(anulus));
+    si (   !_scala(m, VERUM, &officinae, &tabula, cardines, &gradus,
+            &signum)
         || !_nova(anulus, m.columnae, m.columnae - gradus, piscina,
             &nucleus))
     {
         _officinae_claudere(&officinae);
         redde FALSUM;
+    }
+    anulus->nullum(nullum);
+    si (gradus == ZEPHYRUM)
+    {
+        anulus->unum(stabilis, d);
+    }
+    alioquin
+    {
+        memcpy(d, _locus(tabula, anulus, m.columnae, gradus - I,
+            cardines[gradus - I]), anulus->mensura);
     }
     per (j = ZEPHYRUM; j < m.columnae; j++)
     {
@@ -970,29 +975,30 @@ matrix_nucleus (
     }
     per (j = ZEPHYRUM; j < m.columnae; j++)
     {
-        i32 k;
+        i32 i;
 
         si (est_cardo[j])
         {
             perge;
         }
-        si (!_nucleus_vector(tabula, anulus, m.columnae, cardines,
-            gradus,
-            j, officinae.piscinae[OFFICINA_TEMPORARIA], vector, positi,
-            summa, productum))
+        _servare(&officinae, anulus, d, piscina,
+            _locus(nucleus.elementa,
+            anulus, nucleus.columnae, j, q));
+        per (i = ZEPHYRUM; i < gradus; i++)
         {
-            _officinae_claudere(&officinae);
-            redde FALSUM;
+            si (!anulus->subtrahe(nullum, _locus(tabula, anulus,
+                m.columnae, i, j),
+                officinae.piscinae[OFFICINA_TEMPORARIA],
+                valor))
+            {
+                _officinae_claudere(&officinae);
+                redde FALSUM;
+            }
+            _servare(&officinae, anulus, valor, piscina, _locus(
+                nucleus.elementa, anulus, nucleus.columnae, cardines[i],
+                q));
+            _officina_reficere(&officinae, OFFICINA_TEMPORARIA);
         }
-        per (k = ZEPHYRUM; k < m.columnae; k++)
-        {
-            anulus->transcribe(vector
-                + (memoriae_index)k * _passus(anulus),
-                piscina, _locus(nucleus.elementa, anulus,
-                nucleus.columnae,
-                k, q));
-        }
-        _officina_reficere(&officinae, OFFICINA_TEMPORARIA);
         q++;
     }
     _officinae_claudere(&officinae);

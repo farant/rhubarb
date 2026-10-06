@@ -2186,6 +2186,160 @@ s32 principale (vacuum)
         piscina_destruere(vocans);
     }
 
+
+    /* ==================================================
+     * RECENSIO matrix-I: magnitudo nuclei, matrices parvae, Z[t]
+     * ================================================== */
+
+    {
+           Sors  s;
+         Matrix  m;
+         Matrix  k;
+        Piscina* vocans;
+            i32  i;
+            i32  j;
+            i32  exemplum;
+            i32  digiti_maximi = ZEPHYRUM;
+         Magnus  limes = magnus_potentia(magnus_ex_s64(X), VI,
+             piscina);
+            b32 intra_limitem = VERUM;
+
+        imprimere("\n--- Probans recensionem matrix-I ---\n");
+        /* nucleus Gauss-Jordan: elementa minores, ergo |z| <= limes
+         * Hadamard (3 sqrt 6)^6 = 157464 < 10^6 pro 6 x 10 in -3..3
+         * (olim substitutio sine divisione: ~67 bitorum) */
+        sors_seminare(&s, 2026ULL, IX);
+        per (exemplum = ZEPHYRUM; exemplum < X; exemplum++)
+        {
+            (vacuum)matrix_nulla(z, VI, X, piscina, &m);
+            per (i = ZEPHYRUM; i < VI; i++)
+            {
+                per (j = ZEPHYRUM; j < X; j++)
+                {
+                    Magnus x = magnus_ex_s64(sors_inter(&s, -III, III));
+
+                    matrix_pone(&m, i, j, &x);
+                }
+            }
+            CREDO_VERUM (matrix_nucleus(m, piscina, &k));
+            per (i = ZEPHYRUM; i < matrix_lineae(k); i++)
+            {
+                per (j = ZEPHYRUM; j < matrix_columnae(k); j++)
+                {
+                    constans Magnus* z_ij = (constans Magnus*)
+                        matrix_elementum(k, i, j);
+
+                    si (magnus_compara(magnus_absolutum(*z_ij, piscina),
+                        limes) > ZEPHYRUM)
+                    {
+                        intra_limitem = FALSUM;
+                    }
+                }
+            }
+        }
+        CREDO_VERUM (intra_limitem);
+
+        /* 20 x 25 elementis ~30 digitorum: digiti maximi nuclei,
+         * memoria vocantis et apex (olim 6326 digiti, 279 KB,
+         * 1.4 MB) */
+        sors_seminare(&s, 2026ULL, VIII);
+        (vacuum)matrix_nulla(z, XX, XXV, piscina, &m);
+        per (i = ZEPHYRUM; i < XX; i++)
+        {
+            per (j = ZEPHYRUM; j < XXV; j++)
+            {
+                Magnus x = magnus_adde(magnus_multiplica(magnus_ex_s64(
+                    sors_inter(&s, -(s32)CMXCIX * (s32)M, (s32)CMXCIX
+                    * (s32)M)), magnus_potentia(magnus_ex_s64(X), XXIV,
+                    piscina), piscina), magnus_ex_s64(sors_inter(&s,
+                    -III,
+                    III)), piscina);
+
+                matrix_pone(&m, i, j, &x);
+            }
+        }
+        vocans = piscina_generare_dynamicum("probatio_vocans",
+            (memoriae_index)4096);
+        CREDO_VERUM (matrix_nucleus(m, vocans, &k));
+        CREDO_AEQUALIS_I32 (matrix_columnae(k), V);
+        imprimere("  nucleus 20 x 25: usus vocantis %lu, apex %lu\n",
+            (unsigned long)piscina_summa_usus(vocans),
+            (unsigned long)matrix_apex_officinarum());
+        CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), LXIV * M);
+        CREDO_MINOR_I32 ((i32)matrix_apex_officinarum(), CXXVIII * M);
+        per (i = ZEPHYRUM; i < matrix_lineae(k); i++)
+        {
+            per (j = ZEPHYRUM; j < matrix_columnae(k); j++)
+            {
+                chorda t = magnus_ad_chordam(*(constans Magnus*)
+                    matrix_elementum(k, i, j), piscina);
+
+                si (t.mensura > digiti_maximi)
+                {
+                    digiti_maximi = t.mensura;
+                }
+            }
+        }
+        CREDO_MINOR_I32 (digiti_maximi, DCC);
+        {
+            Matrix productum_nuclei;
+            Matrix nulla;
+
+            CREDO_VERUM (matrix_multiplica(m, k, piscina,
+                &productum_nuclei));
+            CREDO_VERUM (matrix_nulla(z, XX, V, piscina, &nulla));
+            CREDO_VERUM (matrix_aequalis(productum_nuclei, nulla));
+        }
+        piscina_destruere(vocans);
+
+        /* matrices parvae (<= XXV elementa; multiplicatio <= CXXV
+         * opera) sine officinis: apex nullus */
+        {
+            Magnus d;
+               i32 gradus;
+            Matrix r;
+
+            CREDO_VERUM (matrix_determinans(_m(z, "[1, 2; 3, 4]"),
+                piscina,
+                &d));
+            CREDO_AEQUALIS_I32 ((i32)matrix_apex_officinarum(),
+                ZEPHYRUM);
+            CREDO_VERUM (matrix_gradus(_m(z,
+                "[1, 2, 3, 4, 5; 2, 4, 6, 8, "
+                "10; 0, 1, 0, 1, 0; 1, 1, 1, 1, 1; 5, 4, 3, 2, 1]"),
+                piscina, &gradus));
+            /* lineae 1 + 5 = 6 x linea 4, linea 2 = 2 x linea 1 */
+            CREDO_AEQUALIS_I32 (gradus, III);
+            CREDO_AEQUALIS_I32 ((i32)matrix_apex_officinarum(),
+                ZEPHYRUM);
+            CREDO_VERUM (matrix_nucleus(_m(z, "[1, 2, 3; 2, 4, 6]"),
+                piscina, &r));
+            CREDO_AEQUALIS_I32 ((i32)matrix_apex_officinarum(),
+                ZEPHYRUM);
+            CREDO_VERUM (matrix_multiplica(_m(z, "[1, 2; 3, 4]"), _m(z,
+                "[5, 6; 7, 8]"), piscina, &r));
+            CREDO_VERUM (_textus_est(r, "[19, 22; 43, 50]"));
+            CREDO_AEQUALIS_I32 ((i32)matrix_apex_officinarum(),
+                ZEPHYRUM);
+            /* 6 x 6 = XXXVI elementa: officinae */
+            CREDO_VERUM (matrix_determinans(_m(z, "[2, 0, 0, 0, 0, 0; "
+                "0, 2, 0, 0, 0, 0; 0, 0, 2, 0, 0, 0; 0, 0, 0, 2, 0, 0; "
+                "0, 0, 0, 0, 2, 0; 0, 0, 0, 0, 0, 2]"), piscina, &d));
+            CREDO_VERUM (magnus_aequalis(d, magnus_ex_s64(LXIV)));
+            CREDO_MAIOR_I32 ((i32)matrix_apex_officinarum(), ZEPHYRUM);
+        }
+
+        /* Z[t, t^-1]: exponens intermedius extra fines - refutatio
+         * documentata, etiam si gradus vere 2 est */
+        {
+            i32 gradus = XCIX;
+
+            CREDO_FALSUM (matrix_gradus(_m(p,
+                "[t^536870912, 1; 1, t^536870912]"), piscina, &gradus));
+            CREDO_AEQUALIS_I32 (gradus, XCIX);
+        }
+    }
+
     CREDO_VERUM (lectio_integra);
     credo_imprimere_compendium();
     {

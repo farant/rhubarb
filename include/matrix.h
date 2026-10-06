@@ -13,7 +13,14 @@
  * extra fines). Exitus tunc non tangitur.
  *
  * MEMORIA: eliminatio in officinis internis (piscinae temporariae,
- * alternae); solus effectus in piscina vocantis.
+ * alternae); solus effectus in piscina vocantis. Matrices parvae (<=
+ * XXV elementa) in piscina vocantis directe.
+ *
+ * Z[t, t^-1]: eliminatio exponentes intermedios crescere facit, ergo
+ * determinans, gradus, nucleus FALSUM reddere possunt etiam ubi
+ * effectus bene definitus est (e.g. gradus [t^(2^29), 1; 1, t^(2^29)]
+ * - t^(2^30) extra fines), et exponentes magni rari memoriam densam
+ * polynomii poscunt (vide polynomium.h).
  *
  * USUS:
  *   Matrix v;
@@ -165,8 +172,10 @@ matrix_gradus (
         i32* exitus);
 
 /* nucleus: columnae = basis nuclei super corpus fractionum anuli,
- * elementis IN anulo (super Z: vectores integri, non basis reticuli;
- * non reducti). columnae - gradus columnae; 0 si nucleus nullus. */
+ * elementis IN anulo, per formam Gauss-Jordan sine fractionibus:
+ * elementa minores matricis (magnitudo Hadamard finita), sed non
+ * reducti (super Z: non primitivi, non basis reticuli). columnae -
+ * gradus columnae; 0 si nucleus nullus. */
 b32
 matrix_nucleus (
      Matrix  m,
