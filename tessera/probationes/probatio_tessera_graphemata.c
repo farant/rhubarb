@@ -90,7 +90,7 @@ principale (vacuum)
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
-            "\033[?2026h" "\033[?25l\033[2J\033[1;1H\033[0m" E_ACUTUM
+            "\033[?2026h" "\033[?25l\033[0m\033[2J\033[1;1H\033[0m" E_ACUTUM
             "\033[1;2Hx" "\033[?2026l");
     }
 

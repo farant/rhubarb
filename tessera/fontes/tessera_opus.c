@@ -917,8 +917,11 @@ tessera_praesentare (
 
     si (opus->primum)
     {
+        /* calamus nativus ANTE 2J: ED fundum calami pingit (BCE) et
+         * cellulae vacuae postea praetereuntur - calamus quadri
+         * prioris maneret (reditus aemulatoris A3) */
         chorda_aedificator_appendere_literis(opus->aed,
-            "\033[?25l\033[2J");
+            "\033[?25l\033[0m\033[2J");
         opus->cursor_visibilis_actus  = FALSUM;
         opus->cursor_x_actus          = -I;
         opus->cursor_y_actus          = -I;
