@@ -70,6 +70,22 @@ nomen structura {
                 character* titulus;
 } Localis;
 
+/* FUNCTIO NOTA (slice 3 T4): vocationes staticae ambitus, et quae
+ * ambulationem per vocationes vetant */
+nomen structura {
+                character* titulus;
+    constans MateriaNodus* nodus;        /* FUNCTIO */
+                      Xar* vocationes;   /* MateriaNodus*: imperia */
+    /* nomen in verbo statico non titulo ('trap f EXIT'): tradita */
+                      b32 tradita;
+                      b32 geminata;     /* nomen bis definitum */
+                      b32 eval_intus;   /* eval in corpore ipso */
+    /* ab ipsa aut functione quae eam vocat tradita: vocationes
+     * ignotae - FALLBACK */
+                      b32 incerta;
+                      b32 eval_transitiva;
+} FunctioNota;
+
 /* VALOR (effectus-plan-2 T2; spec-2 par. II): quod verbum aut
  * variabilis tenet. CERTUS = membra (chordae exactae); EXEMPLAR =
  * globus (T5); PRAEFIXUM = textus notus, reliquum ignotum; TEMPORARIA =
@@ -124,6 +140,15 @@ nomen structura {
     /* nomina a read/mapfile posita (T2), pro numero plagularum */
           Xar* nomina_lectionis;
           i32  plagulae_lectionis;
+    /* functiones notae (T4): FunctioNota; vocat[h * n + g] = h g
+     * (transitive, reflexive) vocat */
+          Xar* notae;
+          b32* vocat;
+    /* titulus dynamicus functionem quamvis vocare potest */
+          b32 vocatio_ignota;
+    /* functio tradita eval (transitive) continet */
+          b32 eval_traditum;
+          b32 notae_in_constructione;
 } Ambitus;
 
 /* arcus exsecutionis: processus pater -> scriptum exsecutum */
@@ -165,6 +190,10 @@ nomen structura {
     /* definitiones in aestimatione (slice 3 T2: recursio per
      * definitionem, non per titulum) */
                     Xar* definitiones_aestimandae;
+    /* functiones quarum $N aestimatur (T4: recursio vocationum) */
+                    Xar* functiones_argumentorum;
+    /* passus ambulationis currentis (T4: terminus) */
+                    i32 passus;
 } Derivatio;
 
 
@@ -1263,28 +1292,38 @@ _nodus_intra (
     redde FALSUM;
 }
 
-/* nodus antecessorem generis g habet? */
-interior b32
-_antecessor_generis (
-    constans MateriaNodus* m,
-                      s32  g)
+/* functio nota nominis 'titulus' (-I nulla; geminata: prima) */
+interior s32
+_nota_tituli (
+                Ambitus* a,
+     constans character* titulus)
 {
-    dum (m != NIHIL)
+    i32 k;
+
+    per (k = ZEPHYRUM; a->notae != NIHIL && k < xar_numerus(a->notae);
+         k++)
     {
-        si (m->genus == g)
+        si (strcmp(((FunctioNota*)xar_obtinere(a->notae, k))->titulus,
+                titulus) == ZEPHYRUM)
         {
-            redde VERUM;
+            redde (s32)k;
         }
-        m = m->pater;
     }
-    redde FALSUM;
+    redde -I;
 }
 
+interior b32
+_localis_verbum (
+    constans character* t);
+
 /* subarbor e imperium 'eval' continet? (A3: quodvis assignare
- * potest) */
+ * potest). T4: corpus functionis DEFINITAE non exsequitur (nisi
+ * functio tradita eval continet); vocatio functionis cuius corpus
+ * (transitive) eval continet = eval. */
 interior b32
 _eval_continet (
                 Derivatio* d,
+                  Ambitus* a,
     constans MateriaNodus* e)
 {
     Xar* acervus = xar_creare(d->piscina,
@@ -1308,6 +1347,17 @@ _eval_continet (
             {
                 redde VERUM;
             }
+            si (   t != NIHIL && _nota_tituli(a, t) >= ZEPHYRUM
+                && ((FunctioNota*)xar_obtinere(a->notae,
+                       (i32)_nota_tituli(a, t)))->eval_transitiva)
+            {
+                redde VERUM;
+            }
+        }
+        si (   n->genus == (s32)CRUSTA_GENUS_FUNCTIO && n != e
+            && !a->eval_traditum)
+        {
+            perge;
         }
         liberi = materia_nodus_liberi(d->piscina, n);
         per (k = ZEPHYRUM; liberi && k < xar_numerus(liberi); k++)
@@ -1380,14 +1430,146 @@ _processum_attingit (
     redde VERUM;
 }
 
+/* functio nota nodi FUNCTIO (-I nulla) */
+interior s32
+_nota_functionis (
+                  Ambitus* a,
+    constans MateriaNodus* functio)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM;
+         functio != NIHIL && a->notae != NIHIL
+         && k < xar_numerus(a->notae); k++)
+    {
+        si (((FunctioNota*)xar_obtinere(a->notae, k))->nodus == functio)
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+/* inter m et e (inclusum) FUNCTIO est? definitio aut vocatio in
+ * functione intra e DEFINITA: sententia e eam non exsequitur (T4) */
+interior b32
+_functio_inter (
+    constans MateriaNodus* m,
+    constans MateriaNodus* e)
+{
+    constans MateriaNodus* n = m;
+
+    dum (n != NIHIL)
+    {
+        si (n->genus == (s32)CRUSTA_GENUS_FUNCTIO)
+        {
+            redde VERUM;
+        }
+        si (n == e)
+        {
+            frange;
+        }
+        n = n->pater;
+    }
+    redde FALSUM;
+}
+
+/* sententia e functionem notam g (forte per alias) vocat, vocatione
+ * quae usum attingit et e qua definitio 'locus' corporis attingit? */
+interior b32
+_vocatio_attingens (
+                  Ambitus* a,
+    constans MateriaNodus* usus,
+    constans MateriaNodus* e,
+                      s32  g,
+    constans MateriaNodus* locus)
+{
+    i32 n = xar_numerus(a->notae);
+    i32 h;
+    i32 k;
+
+    per (h = ZEPHYRUM; h < n; h++)
+    {
+        FunctioNota* fn = (FunctioNota*)xar_obtinere(a->notae, h);
+
+        si (!a->vocat[h * n + (i32)g])
+        {
+            perge;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(fn->vocationes); k++)
+        {
+            constans MateriaNodus* c = *(constans MateriaNodus**)
+                xar_obtinere(fn->vocationes, k);
+
+            si (   _nodus_intra(c, e) && !_functio_inter(c, e)
+                && _processum_attingit(c, usus)
+                && _processum_attingit(locus, c))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+/* 'local X' (aut declare/typeset in functione, sine -g): X novum et
+ * vacuum - vocantis valor non attingit (T4) */
+interior b32
+_declaratio_localis (
+                Derivatio* d,
+    constans MateriaNodus* e,
+       constans character* titulus)
+{
+    character* t;
+          Xar* argumenta;
+          b32  nominat = FALSUM;
+          i32  k;
+
+    si (e->genus != (s32)CRUSTA_GENUS_IMPERIUM)
+    {
+        redde FALSUM;
+    }
+    t = _titulus_staticus(d->piscina, crusta_imperium_titulus(e));
+    si (   t == NIHIL || !_localis_verbum(t)
+        || (strcmp(t, "local") != ZEPHYRUM
+            && _functio_circumdans(e) == NIHIL))
+    {
+        redde FALSUM;
+    }
+    argumenta = crusta_imperium_argumenta(d->piscina, e);
+    per (k = ZEPHYRUM; argumenta && k < xar_numerus(argumenta); k++)
+    {
+        character* w = _titulus_staticus(d->piscina,
+            *(MateriaNodus**)xar_obtinere(argumenta, k));
+
+        si (w == NIHIL)
+        {
+            redde FALSUM;   /* verbum dynamicum: declaratio ignota */
+        }
+        si (w[ZEPHYRUM] == '-' && strchr(w, 'g') != NIHIL)
+        {
+            redde FALSUM;   /* -g: globalis */
+        }
+        si (strcmp(w, titulus) == ZEPHYRUM)
+        {
+            nominat = VERUM;
+        }
+    }
+    redde nominat;
+}
+
 /* EFFECTUS SENTENTIAE e in X: definitiones X intra e in R addit.
  * Reddit -I (eval: incertum), 0 nihil, I forte, II certe (assignatio
  * simplex ipsius sententiae, occidere licet - A2). Definitiones trans
- * finem processus ab usu non attingunt (T3). */
+ * finem processus ab usu non attingunt (T3). T4: definitio in
+ * functione intra e DEFINITA solum per vocationem attingit (forte,
+ * numquam occidit); 'local X' occidit. */
 interior s32
 _sententiae_effectus (
                 Derivatio* d,
+                  Ambitus* a,
     constans MateriaNodus* usus,
+       constans character* titulus,
     constans MateriaNodus* e,
                       Xar* omnes,
                       Xar* R,
@@ -1397,16 +1579,35 @@ _sententiae_effectus (
           s32  status    = ZEPHYRUM;
     Definitio* occidens  = NIHIL;
 
-    si (d->eval_quaerere && _eval_continet(d, e))
+    si (d->eval_quaerere && _eval_continet(d, a, e))
     {
         redde -I;
     }
     per (k = ZEPHYRUM; k < xar_numerus(omnes); k++)
     {
-        Definitio* def = *(Definitio**)xar_obtinere(omnes, k);
+         Definitio* def = *(Definitio**)xar_obtinere(omnes, k);
+               s32  g;
 
-        si (   def->locus == NIHIL || !_nodus_intra(def->locus, e)
-            || !_processum_attingit(def->locus, usus))
+        si (def->locus == NIHIL)
+        {
+            perge;
+        }
+        si (   !_nodus_intra(def->locus, e)
+            || _functio_inter(def->locus, e))
+        {
+            /* per vocationem: definitio globalis corporis functionis
+             * quam e vocat */
+            g = def->functio != NIHIL ? -I
+                : _nota_functionis(a, _functio_circumdans(def->locus));
+            si (   g >= ZEPHYRUM
+                && _vocatio_attingens(a, usus, e, g, def->locus))
+            {
+                *(Definitio**)xar_addere(R)  = def;
+                status                       = I;
+            }
+            perge;
+        }
+        si (!_processum_attingit(def->locus, usus))
         {
             perge;
         }
@@ -1424,6 +1625,10 @@ _sententiae_effectus (
         /* sententia ipsa X assignat: priores non attingunt; R solam
          * hanc retinet ex hac sententia (assignationes in eodem
          * imperio ante eam ultimae cedunt) */
+        redde II;
+    }
+    si (occidere_licet && _declaratio_localis(d, e, titulus))
+    {
         redde II;
     }
     redde status;
@@ -1523,35 +1728,41 @@ _a_lectione_positum (
     redde _in_nominibus(a->nomina_lectionis, titulus);
 }
 
-/* DEFINITIONES ATTINGENTES (spec-3 par. II): ambulatio retro ab usu per
- * arborem crustae. VERUM = posita (R definitiones quae attingere
- * possunt); FALSUM = FALLBACK (unio slice 2): usus in functione aut in
- * plagula non radice, definitio extra plagulam usus aut in functione,
- * X a read positum, eval antecedens, R vacua. */
-interior b32
-_attingentes (
-                Derivatio* d,
+/* plagula ambitus cuius arbor nodum continet (NIHIL nulla) */
+interior Plagula*
+_plagula_nodi (
                   Ambitus* a,
-                  Plagula* p,
-    constans MateriaNodus* usus,
-       constans character* titulus,
-                      Xar* R)
+    constans MateriaNodus* nodus)
 {
-                      Xar* omnes = xar_creare(d->piscina,
-                          (i32)magnitudo(Definitio*));
-    constans MateriaNodus* n = usus;
+    constans MateriaNodus* n = nodus;
                       i32  k;
 
-    si (   omnes == NIHIL || xar_numerus(a->plagulae) == ZEPHYRUM
-        || *(Plagula**)xar_obtinere(a->plagulae, ZEPHYRUM) != p
-        || _antecessor_generis(usus, (s32)CRUSTA_GENUS_FUNCTIO)
-        || _a_lectione_positum(d, a, titulus))
+    dum (n != NIHIL && n->pater != NIHIL)
     {
-        redde FALSUM;
+        n = n->pater;
     }
+    per (k = ZEPHYRUM; n != NIHIL && k < xar_numerus(a->plagulae); k++)
+    {
+        Plagula* p = *(Plagula**)xar_obtinere(a->plagulae, k);
+
+        si (p->radix == n)
+        {
+            redde p;
+        }
+    }
+    redde NIHIL;
+}
+
+/* eval in plagula? semel per plagulam (plerumque nullum) */
+interior b32
+_plagula_eval (
+    Derivatio* d,
+      Plagula* p)
+{
+    i32 k;
+
     si (p->eval_status == ZEPHYRUM)
     {
-        /* semel per plagulam: eval ullum? (plerumque nullum) */
         p->eval_status = I;
         per (k = ZEPHYRUM; p->imperia
             && k < xar_numerus(p->imperia); k++)
@@ -1566,22 +1777,90 @@ _attingentes (
             }
         }
     }
-    d->eval_quaerere = p->eval_status == II;
-    per (k = ZEPHYRUM; k < xar_numerus(a->definitiones); k++)
-    {
-        Definitio* def = (Definitio*)xar_obtinere(a->definitiones, k);
+    redde p->eval_status == II;
+}
 
-        si (strcmp(def->titulus, titulus) != ZEPHYRUM)
+interior b32
+_ambulare (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* usus,
+       constans character* titulus,
+                      Xar* omnes,
+                      Xar* R,
+                      Xar* acervus);
+
+/* SUPRA CORPUS FUNCTIONIS (T4; spec-3 par. II.2): unio eorum quae
+ * vocationes singulas attingunt, quaeque ut usus ambulata. Functio in
+ * acervo (recursio) nihil novi addit - punctum fixum minimum: pars
+ * eius localis iam ambulatur. Incerta aut sine vocatione: FALLBACK. */
+interior b32
+_vocationes_ambulare (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* functio,
+       constans character* titulus,
+                      Xar* omnes,
+                      Xar* R,
+                      Xar* acervus)
+{
+             s32  g = _nota_functionis(a, functio);
+     FunctioNota* fn;
+             i32  k;
+             b32  bonus = VERUM;
+
+    si (g < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    fn = (FunctioNota*)xar_obtinere(a->notae, (i32)g);
+    si (fn->incerta || xar_numerus(fn->vocationes) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(acervus); k++)
+    {
+        si (*(constans MateriaNodus**)xar_obtinere(acervus, k)
+            == functio)
         {
-            perge;
+            redde VERUM;
         }
-        si (   def->plagula != p || def->locus == NIHIL
-            || _antecessor_generis(def->locus,
-                   (s32)CRUSTA_GENUS_FUNCTIO))
-        {
-            redde FALSUM;
-        }
-        *(Definitio**)xar_addere(omnes) = def;
+    }
+    si (xar_numerus(acervus) >= (i32)PROFUNDITAS_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    *(constans MateriaNodus**)xar_addere(acervus) = functio;
+    per (k = ZEPHYRUM; bonus && k < xar_numerus(fn->vocationes); k++)
+    {
+        bonus = _ambulare(d, a, *(constans MateriaNodus**)xar_obtinere(
+            fn->vocationes, k), titulus, omnes, R, acervus);
+    }
+    xar_truncare(acervus, xar_numerus(acervus) - I);
+    redde bonus;
+}
+
+/* AMBULATIO RETRO ab usu (spec-3 par. II): R accipit definitiones quae
+ * attingere possunt. VERUM = via omnis clausa (occisio, radix
+ * processus); FALSUM = FALLBACK (eval, caput plagulae non radicis -
+ * T5, functio incerta, terminus passuum). */
+interior b32
+_ambulare (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* usus,
+       constans character* titulus,
+                      Xar* omnes,
+                      Xar* R,
+                      Xar* acervus)
+{
+    constans MateriaNodus* n = usus;
+                      i32  k;
+
+    d->passus++;
+    si (d->passus > (i32)M)
+    {
+        redde FALSUM;
     }
     dum (n != NIHIL && n->pater != NIHIL)
     {
@@ -1610,16 +1889,15 @@ _attingentes (
                 {
                     perge;
                 }
-                st = _sententiae_effectus(d, usus, e->datum.nodus,
-                    omnes, R,
-                    !forte_solum);
+                st = _sententiae_effectus(d, a, usus, titulus,
+                    e->datum.nodus, omnes, R, !forte_solum);
                 si (st < ZEPHYRUM)
                 {
                     redde FALSUM;
                 }
                 si (st == II)
                 {
-                    redde xar_numerus(R) > ZEPHYRUM;
+                    redde VERUM;
                 }
             }
         }
@@ -1644,10 +1922,10 @@ _attingentes (
                             *(Definitio**)xar_addere(R) = def;
                         }
                     }
-                    redde xar_numerus(R) > ZEPHYRUM;
+                    redde VERUM;
                 }
-                si (_sententiae_effectus(d, usus, pa, omnes, R, FALSUM)
-                    < ZEPHYRUM)
+                si (_sententiae_effectus(d, a, usus, titulus, pa, omnes,
+                        R, FALSUM) < ZEPHYRUM)
                 {
                     redde FALSUM;   /* arcus retro */
                 }
@@ -1656,8 +1934,8 @@ _attingentes (
         alioquin si (   pa->genus == (s32)CRUSTA_GENUS_REPETITIO
                      || pa->genus == (s32)CRUSTA_GENUS_CYCLUS)
         {
-            si (_sententiae_effectus(d, usus, pa, omnes, R, FALSUM)
-                < ZEPHYRUM)
+            si (_sententiae_effectus(d, a, usus, titulus, pa, omnes, R,
+                    FALSUM) < ZEPHYRUM)
             {
                 redde FALSUM;       /* arcus retro */
             }
@@ -1676,7 +1954,7 @@ _attingentes (
                 && q < xar_numerus(probationes);
                  q++)
             {
-                si (_sententiae_effectus(d, usus,
+                si (_sententiae_effectus(d, a, usus, titulus,
                         *(MateriaNodus**)xar_obtinere(probationes, q),
                         omnes, R, FALSUM) < ZEPHYRUM)
                 {
@@ -1692,7 +1970,7 @@ _attingentes (
 
                 per (w = ZEPHYRUM; pr && w < xar_numerus(pr); w++)
                 {
-                    si (_sententiae_effectus(d, usus,
+                    si (_sententiae_effectus(d, a, usus, titulus,
                             *(MateriaNodus**)xar_obtinere(pr, w), omnes,
                             R, FALSUM) < ZEPHYRUM)
                     {
@@ -1701,9 +1979,84 @@ _attingentes (
                 }
             }
         }
+        alioquin si (pa->genus == (s32)CRUSTA_GENUS_FUNCTIO)
+        {
+            /* caput corporis: per vocationes (T4) */
+            redde _vocationes_ambulare(d, a, pa, titulus, omnes, R,
+                acervus);
+        }
         n = pa;
     }
-    redde xar_numerus(R) > ZEPHYRUM;
+    /* radix processus: ambitus externus (X absens); caput plagulae
+     * fontatae: ad situm fontationis (T5) - FALLBACK */
+    redde n == (*(Plagula**)xar_obtinere(a->plagulae, ZEPHYRUM))->radix;
+}
+
+/* DEFINITIONES ATTINGENTES (spec-3 par. II): ambulatio retro ab usu per
+ * arborem crustae. VERUM = posita (R definitiones quae attingere
+ * possunt); FALSUM = FALLBACK (unio slice 2): functiones nondum notae,
+ * X a read positum, definitio in capite plagulae non radicis (T5) aut
+ * in functione incerta, ambulatio non clausa, R vacua. */
+interior b32
+_attingentes (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* usus,
+       constans character* titulus,
+                      Xar* R)
+{
+         Xar* omnes = xar_creare(d->piscina,
+             (i32)magnitudo(Definitio*));
+         Xar* acervus = xar_creare(d->piscina,
+             (i32)magnitudo(MateriaNodus*));
+     Plagula* prima;
+         i32  k;
+
+    si (   omnes == NIHIL || acervus == NIHIL || a->notae == NIHIL
+        || a->notae_in_constructione
+        || xar_numerus(a->plagulae) == ZEPHYRUM
+        || _a_lectione_positum(d, a, titulus))
+    {
+        redde FALSUM;
+    }
+    prima             = *(Plagula**)xar_obtinere(a->plagulae, ZEPHYRUM);
+    d->eval_quaerere  = FALSUM;
+    per (k = ZEPHYRUM; k < xar_numerus(a->plagulae); k++)
+    {
+        Plagula* pl = *(Plagula**)xar_obtinere(a->plagulae, k);
+
+        si (pl->radix != NIHIL && _plagula_eval(d, pl))
+        {
+            d->eval_quaerere = VERUM;
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(a->definitiones); k++)
+    {
+                    Definitio* def = (Definitio*)xar_obtinere(
+                        a->definitiones, k);
+        constans MateriaNodus* functio;
+
+        si (strcmp(def->titulus, titulus) != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (def->locus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        functio = _functio_circumdans(def->locus);
+        si (functio == NIHIL ? def->plagula != prima
+            : (   _nota_functionis(a, functio) < ZEPHYRUM
+               || ((FunctioNota*)xar_obtinere(a->notae,
+                      (i32)_nota_functionis(a, functio)))->incerta))
+        {
+            redde FALSUM;
+        }
+        *(Definitio**)xar_addere(omnes) = def;
+    }
+    d->passus = ZEPHYRUM;
+    redde _ambulare(d, a, usus, titulus, omnes, R, acervus)
+        && xar_numerus(R) > ZEPHYRUM;
 }
 
 /* LIGATIO ANSAE (T5): usus intra CORPUS 'for X in L' (non in L)
@@ -1806,6 +2159,210 @@ _localis_est (
         }
     }
     redde FALSUM;
+}
+
+/* verbum in campum UNUM expanditur? (T4: argumenta usque ad $N) -
+ * nulla pars nuda, nullus globus aut '{' litteralis, nullum "$@" aut
+ * "${A[@]}" */
+interior b32
+_verbum_singulare (
+    constans MateriaNodus* verbum)
+{
+    constans MateriaValor* partes;
+                      i32  k;
+
+    si (   verbum == NIHIL || verbum->genus != (s32)CRUSTA_GENUS_VERBUM
+        || _verbum_nudum(verbum)
+        || verbum->numerus_locorum <= (i32)CRUSTA_VERBUM_PARTES)
+    {
+        redde FALSUM;
+    }
+    partes = &verbum->loci[CRUSTA_VERBUM_PARTES];
+    si (partes->genus != MATERIA_VALOR_LISTA)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < materia_valor_lista_numerus(*partes); k++)
+    {
+        MateriaValor* e = materia_valor_lista_obtinere(*partes, k);
+           character  area[VIA_MAXIMA];
+                 i32  longitudo = ZEPHYRUM;
+
+        si (e->genus != MATERIA_VALOR_NODUS)
+        {
+            perge;
+        }
+        area[ZEPHYRUM] = '\0';
+        _textum_colligere(e->datum.nodus, area, &longitudo);
+        si (e->datum.nodus->genus == (s32)CRUSTA_GENUS_PARS_ARITHMETICA)
+        {
+            redde FALSUM;
+        }
+        si (   e->datum.nodus->genus
+            == (s32)CRUSTA_GENUS_PARS_LITTERALIS
+            && strpbrk(area, "*?[{") != NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (   e->datum.nodus->genus == (s32)CRUSTA_GENUS_PARS_GEMINA
+            && (   strstr(area, "$@") != NIHIL
+                || strstr(area, "[@]") != NIHIL
+                || strstr(area, "$*") != NIHIL
+                || strstr(area, "[*]") != NIHIL))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* corpus functionis positiones mutat? 'shift', 'set --' aut 'set'
+ * cum verbo non optionis (spec-3 par. III.3: non modellatum) */
+interior b32
+_positiones_mutat (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* functio)
+{
+     Plagula* p = _plagula_nodi(a, functio);
+         i32  k;
+
+    per (k = ZEPHYRUM; p != NIHIL && k < xar_numerus(p->imperia); k++)
+    {
+        constans MateriaNodus* im = *(constans MateriaNodus**)
+            xar_obtinere(p->imperia, k);
+                    character* t;
+                          Xar* argumenta;
+
+        si (_functio_circumdans(im) != functio)
+        {
+            perge;
+        }
+        t = _titulus_staticus(d->piscina, crusta_imperium_titulus(im));
+        si (t != NIHIL && strcmp(t, "shift") == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        si (t == NIHIL || strcmp(t, "set") != ZEPHYRUM)
+        {
+            perge;
+        }
+        argumenta = crusta_imperium_argumenta(d->piscina, im);
+        si (argumenta != NIHIL && xar_numerus(argumenta) > ZEPHYRUM)
+        {
+            character* w = _titulus_staticus(d->piscina,
+                *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM));
+
+            si (   w == NIHIL || strcmp(w, "--") == ZEPHYRUM
+                || (w[ZEPHYRUM] != '-' && w[ZEPHYRUM] != '+'))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+/* $N IN CORPORE FUNCTIONIS (T4; spec-3 par. III.2, A4): unio verbi N
+ * per vocationes notas, quodque ad vocationem suam aestimatum.
+ * 'argumentum' manet: functio incerta aut sine vocatione, positiones
+ * mutatae, vocatio brevior, verbum usque ad N forte in campos plures
+ * expansum. Recursio vocationum: 'recursio'. */
+interior b32
+_argumentum_functionis (
+                Derivatio* d,
+                  Ambitus* a,
+    constans MateriaNodus* usus,
+       constans character* titulus,
+                    Valor* v,
+                      i32  profunditas)
+{
+    constans MateriaNodus* functio  = _functio_circumdans(usus);
+                      s32  g        = _nota_functionis(a, functio);
+                      i32  index    = ZEPHYRUM;
+                      i32  numerus  = ZEPHYRUM;
+                      i32  k;
+                      i32  j;
+                      b32  bonus = VERUM;
+              FunctioNota* fn;
+                    Valor  summa;
+
+    per (k = ZEPHYRUM; titulus[k] != '\0'; k++)
+    {
+        si (titulus[k] < '0' || titulus[k] > '9')
+        {
+            (vacuum)_valorem_frangere(v);
+            redde _deficere(d, "argumentum");
+        }
+        index = index * X + (i32)(titulus[k] - '0');
+    }
+    fn = g >= ZEPHYRUM ? (FunctioNota*)xar_obtinere(a->notae, (i32)g)
+                       : NIHIL;
+    si (   fn == NIHIL || a->notae_in_constructione || fn->incerta
+        || xar_numerus(fn->vocationes) == ZEPHYRUM
+        || _positiones_mutat(d, a, functio))
+    {
+        (vacuum)_valorem_frangere(v);
+        redde _deficere(d, "argumentum");
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(d->functiones_argumentorum); k++)
+    {
+        si (*(constans MateriaNodus**)xar_obtinere(
+                d->functiones_argumentorum, k) == functio)
+        {
+            (vacuum)_valorem_frangere(v);
+            redde _deficere(d, "recursio");
+        }
+    }
+    *(constans MateriaNodus**)xar_addere(d->functiones_argumentorum) =
+        functio;
+    _valorem_parare(d, &summa);
+    per (k = ZEPHYRUM; bonus && k < xar_numerus(fn->vocationes); k++)
+    {
+        constans MateriaNodus* c = *(constans MateriaNodus**)
+            xar_obtinere(fn->vocationes, k);
+                          Xar* argumenta = crusta_imperium_argumenta(
+                              d->piscina, c);
+                        Valor valor;
+
+        si (argumenta == NIHIL || xar_numerus(argumenta) < index)
+        {
+            bonus = _deficere(d, "argumentum");
+            frange;
+        }
+        per (j = ZEPHYRUM; bonus && j < index; j++)
+        {
+            si (!_verbum_singulare(*(MateriaNodus**)xar_obtinere(
+                    argumenta, j)))
+            {
+                bonus = _deficere(d, "argumentum");
+            }
+        }
+        si (!bonus)
+        {
+            frange;
+        }
+        _valorem_parare(d, &valor);
+        si (!_verbum_aestimare(d, a, _plagula_nodi(a, c),
+                *(MateriaNodus**)xar_obtinere(argumenta, index - I),
+                &valor, profunditas + I))
+        {
+            bonus = FALSUM;
+        }
+        alioquin si (!_valores_iungere(d, &summa, &valor, numerus))
+        {
+            bonus = _deficere(d, "discordia");
+        }
+        numerus++;
+    }
+    xar_truncare(d->functiones_argumentorum,
+        xar_numerus(d->functiones_argumentorum) - I);
+    si (!bonus)
+    {
+        (vacuum)_valorem_frangere(v);
+        redde FALSUM;
+    }
+    redde _valorem_continuare(d, v, &summa);
 }
 
 /* $titulus ad locum 'usus': definitiones ambitus (locales functionis
@@ -1925,6 +2482,14 @@ _variabilem_intus (
         }
         numerus++;
     }
+    si (   numerus == ZEPHYRUM && titulus[ZEPHYRUM] >= '1'
+        && titulus[ZEPHYRUM] <= '9'
+        && _functio_circumdans(usus) != NIHIL)
+    {
+        /* $N in corpore functionis: per vocationes (T4) */
+        redde _argumentum_functionis(d, a, usus, titulus, v,
+            profunditas);
+    }
     si (numerus == ZEPHYRUM)
     {
         /* argumentum ($1 $@ ...), nomen a read/mapfile positum, aut
@@ -1962,16 +2527,20 @@ _variabilem_aestimare (
          (i32)magnitudo(Definitio*));
 
     si (   attingentes != NIHIL
-        && _attingentes(d, a, p, usus, titulus, attingentes))
+        && _attingentes(d, a, usus, titulus, attingentes))
     {
         /* posita (slice 3 T2): custodia per definitionem sola */
         redde _variabilem_intus(d, a, p, usus, titulus, v, profunditas,
             inanes_omittere, attingentes);
     }
-    /* FALLBACK: via slice 2 ipsa (custodia per titulum) */
+    /* FALLBACK: via slice 2 ipsa (custodia per titulum). $N non: idem
+     * titulus in functione et in vocatione alius est (T4) - recursio
+     * per vocationes a functiones_argumentorum custoditur */
     per (k = ZEPHYRUM; k < xar_numerus(d->acervus); k++)
     {
-        si (strcmp(*(constans character**)xar_obtinere(d->acervus, k),
+        si (   (titulus[ZEPHYRUM] < '1' || titulus[ZEPHYRUM] > '9')
+            && strcmp(*(constans character**)xar_obtinere(d->acervus,
+            k),
                 titulus) == ZEPHYRUM)
         {
             (vacuum)_valorem_frangere(v);
@@ -5402,6 +5971,301 @@ _scripta_computare (
 
 
 /* ==================================================
+ * Functiones notae (effectus-plan-3 T4)
+ * ================================================== */
+
+/* character nominis (litterae, digiti, '_') */
+interior b32
+_nominis_character (
+    character c)
+{
+    redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9') || c == '_';
+}
+
+/* nomen 'titulus' in textu ut verbum integrum? */
+interior b32
+_nomen_in_textu (
+    constans character* textus,
+    constans character* titulus)
+{
+         memoriae_index  n = strlen(titulus);
+     constans character* x;
+
+    per (x = strstr(textus, titulus); x != NIHIL;
+         x = strstr(x + I, titulus))
+    {
+        si (   (x == textus || !_nominis_character(x[-I]))
+            && !_nominis_character(x[n]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* TITULUS DYNAMICUS ('"$BIN" x'): functionem vocare potest? Valor
+ * (unio slice 2, dum notae construuntur): via (membra omnia '/'
+ * tenent) aut temporaria = non; membrum nomen functionis = ea
+ * tradita; ignotum aut praefixum sine '/' = VERUM (quaevis). */
+interior b32
+_titulus_functionem_vocat (
+                Derivatio* d,
+                  Ambitus* a,
+                  Plagula* p,
+    constans MateriaNodus* titulus)
+{
+     constans character* causa = d->causa;
+                  Valor  v;
+                    b32  bonus;
+                    i32  k;
+                    s32  g;
+
+    _valorem_parare(d, &v);
+    bonus     = _verbum_aestimare(d, a, p, titulus, &v, ZEPHYRUM);
+    d->causa  = causa;   /* aestimatio probatoria: causa non manet */
+    si (!bonus || v.fractus || v.forma == VALOR_IGNOTUS)
+    {
+        redde VERUM;
+    }
+    si (v.forma == VALOR_TEMPORARIA)
+    {
+        redde FALSUM;
+    }
+    si (v.forma != VALOR_CERTUS)
+    {
+        redde v.textus == NIHIL || strchr(v.textus, '/') == NIHIL;
+    }
+    per (k = ZEPHYRUM; k < _membra_numerus(&v); k++)
+    {
+        constans character* m = _membrum(&v, k);
+
+        si (strchr(m, '/') != NIHIL)
+        {
+            perge;
+        }
+        g = _nota_tituli(a, m);
+        si (g >= ZEPHYRUM)
+        {
+            ((FunctioNota*)xar_obtinere(a->notae, (i32)g))->tradita =
+                VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* FUNCTIONES NOTAE ambitus (T4): vocationes staticae (omnium
+ * plagularum), tradita, geminata, eval; clausura 'vocat'; incerta.
+ * Dum construitur, aestimationes FALLBACK sumunt (notae_in_
+ * constructione). */
+interior vacuum
+_functiones_parare (
+    Derivatio* d,
+      Ambitus* a)
+{
+    i32 q;
+    i32 k;
+    i32 i;
+    i32 j;
+    i32 n;
+
+    a->notae = xar_creare(d->piscina, (i32)magnitudo(FunctioNota));
+    a->vocat = NIHIL;
+    a->vocatio_ignota = FALSUM;
+    a->eval_traditum = FALSUM;
+    a->notae_in_constructione = VERUM;
+    si (a->notae == NIHIL)
+    {
+        redde;
+    }
+    per (q = ZEPHYRUM; q < xar_numerus(a->plagulae); q++)
+    {
+        Plagula* p = *(Plagula**)xar_obtinere(a->plagulae, q);
+
+        per (k = ZEPHYRUM; p->radix != NIHIL
+            && k < xar_numerus(p->functiones); k++)
+        {
+            constans MateriaNodus* f = *(constans MateriaNodus**)
+                xar_obtinere(p->functiones, k);
+            constans MateriaToken* t = _token(f,
+                (i32)CRUSTA_FUNCTIO_TOK_TITULUS);
+                     FunctioNota* fn;
+
+            si (t == NIHIL)
+            {
+                perge;
+            }
+            fn = (FunctioNota*)xar_addere(a->notae);
+            memset(fn, ZEPHYRUM, magnitudo(FunctioNota));
+            fn->titulus  = chorda_ut_cstr(t->valor, d->piscina);
+            fn->nodus    = f;
+            fn->vocationes = xar_creare(d->piscina,
+                (i32)magnitudo(MateriaNodus*));
+        }
+    }
+    n = xar_numerus(a->notae);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            si (   i != j && strcmp(
+                    ((FunctioNota*)xar_obtinere(a->notae, i))->titulus,
+                    ((FunctioNota*)xar_obtinere(a->notae, j))->titulus)
+                    == ZEPHYRUM)
+            {
+                ((FunctioNota*)xar_obtinere(a->notae, i))->geminata =
+                    VERUM;
+            }
+        }
+    }
+    per (q = ZEPHYRUM; q < xar_numerus(a->plagulae); q++)
+    {
+        Plagula* p = *(Plagula**)xar_obtinere(a->plagulae, q);
+
+        si (p->radix == NIHIL)
+        {
+            perge;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(p->imperia); k++)
+        {
+            constans MateriaNodus* im = *(constans MateriaNodus**)
+                xar_obtinere(p->imperia, k);
+            constans MateriaNodus* t = crusta_imperium_titulus(im);
+                        character* ts;
+
+            ts = _titulus_staticus(d->piscina, t);
+            si (t != NIHIL && ts == NIHIL)
+            {
+                si (_titulus_functionem_vocat(d, a, p, t))
+                {
+                    a->vocatio_ignota = VERUM;
+                }
+                perge;
+            }
+            si (ts == NIHIL)
+            {
+                perge;
+            }
+            si (strcmp(ts, "eval") == ZEPHYRUM)
+            {
+                s32 g = _nota_functionis(a, _functio_circumdans(im));
+
+                si (g >= ZEPHYRUM)
+                {
+                    ((FunctioNota*)xar_obtinere(a->notae, (i32)g))
+                        ->eval_intus = VERUM;
+                }
+                perge;
+            }
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                FunctioNota* fn = (FunctioNota*)xar_obtinere(a->notae,
+                    i);
+
+                si (strcmp(fn->titulus, ts) == ZEPHYRUM)
+                {
+                    *(constans MateriaNodus**)xar_addere(fn->vocationes)
+                        = im;
+                }
+            }
+        }
+        /* tradita: nomen in verbo statico quod titulus non est */
+        per (k = ZEPHYRUM; k < xar_numerus(p->verba); k++)
+        {
+            constans MateriaNodus* w = *(constans MateriaNodus**)
+                xar_obtinere(p->verba, k);
+                       character* verbum;
+
+            si (   w->pater != NIHIL
+                && w->pater->genus == (s32)CRUSTA_GENUS_IMPERIUM
+                && crusta_imperium_titulus(w->pater) == w)
+            {
+                perge;
+            }
+            verbum = _titulus_staticus(d->piscina, w);
+            per (i = ZEPHYRUM; verbum != NIHIL && i < n; i++)
+            {
+                FunctioNota* fn = (FunctioNota*)xar_obtinere(a->notae,
+                    i);
+
+                si (_nomen_in_textu(verbum, fn->titulus))
+                {
+                    fn->tradita = VERUM;
+                }
+            }
+        }
+    }
+    a->vocat = (b32*)piscina_allocare(d->piscina,
+        (memoriae_index)(magnitudo(b32) * (memoriae_index)(n * n + I)));
+    si (a->vocat == NIHIL)
+    {
+        redde;
+    }
+    memset(a->vocat, ZEPHYRUM, magnitudo(b32) * (size_t)(n * n + I));
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        FunctioNota* fn = (FunctioNota*)xar_obtinere(a->notae, i);
+
+        a->vocat[i * n + i] = VERUM;
+        per (k = ZEPHYRUM; k < xar_numerus(fn->vocationes); k++)
+        {
+            s32 h = _nota_functionis(a, _functio_circumdans(
+                *(constans MateriaNodus**)xar_obtinere(fn->vocationes,
+                    k)));
+
+            si (h >= ZEPHYRUM)
+            {
+                a->vocat[(i32)h * n + i] = VERUM;
+            }
+        }
+    }
+    /* clausura transitiva (Warshall) */
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            per (j = ZEPHYRUM; a->vocat[i * n + k] && j < n; j++)
+            {
+                si (a->vocat[k * n + j])
+                {
+                    a->vocat[i * n + j] = VERUM;
+                }
+            }
+        }
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        FunctioNota* g = (FunctioNota*)xar_obtinere(a->notae, i);
+
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            FunctioNota* h = (FunctioNota*)xar_obtinere(a->notae, j);
+
+            si (   a->vocat[j * n + i]
+                && (a->vocatio_ignota || h->tradita || h->geminata))
+            {
+                g->incerta = VERUM;
+            }
+            si (a->vocat[i * n + j] && h->eval_intus)
+            {
+                g->eval_transitiva = VERUM;
+            }
+        }
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        FunctioNota* fn = (FunctioNota*)xar_obtinere(a->notae, i);
+
+        si ((fn->tradita || fn->incerta) && fn->eval_transitiva)
+        {
+            a->eval_traditum = VERUM;
+        }
+    }
+    a->notae_in_constructione = FALSUM;
+}
+
+
+/* ==================================================
  * Ambitus: punctum fixum
  * ================================================== */
 
@@ -5501,6 +6365,7 @@ _ambitum_derivare (
             _nomen_addere(d->piscina, a->assignata,
                 ((Localis*)xar_obtinere(a->locales, k))->titulus);
         }
+        _functiones_parare(d, a);
         per (k = ZEPHYRUM; k < numerus; k++)
         {
             Plagula* p = *(Plagula**)xar_obtinere(a->plagulae, k);
@@ -5924,6 +6789,9 @@ crusta_effectus_derivare (
     d.expansiones    = xar_creare(piscina, (i32)magnitudo(Expansio));
     d.definitiones_aestimandae = xar_creare(piscina,
         (i32)magnitudo(Definitio*));
+    d.functiones_argumentorum = xar_creare(piscina,
+        (i32)magnitudo(MateriaNodus*));
+    d.passus = ZEPHYRUM;
     si (   d.visi == NIHIL || d.ambitus == NIHIL || d.tabula == NIHIL
         || !_absolutam_facere(scriptum, radix, absoluta))
     {
@@ -6333,6 +7201,9 @@ crusta_effectus_observata (
     d.expansiones    = xar_creare(piscina, (i32)magnitudo(Expansio));
     d.definitiones_aestimandae = xar_creare(piscina,
         (i32)magnitudo(Definitio*));
+    d.functiones_argumentorum = xar_creare(piscina,
+        (i32)magnitudo(MateriaNodus*));
+    d.passus = ZEPHYRUM;
     a = (Ambitus*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(Ambitus));
     p = (Plagula*)piscina_allocare(piscina,

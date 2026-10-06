@@ -127,16 +127,17 @@ scratchpad as `effectus.slice2`; record its md5 in the worklog.
 plagula other than their own (cursor_communis, mensor_suitae), and how
 `_ambitum_derivare` orders plagulae - recorded in the worklog.
 
-- [ ] **Step 1: Failing section** `XXI. functiones`: body reads a global
+- [x] **Step 1: Failing section** `XXI. functiones`: body reads a global
   assigned differently before each of two calls -> union of the two;
   `f a.txt; f b.txt` with `cat "$1"` -> {a.txt, b.txt} (A4); function
   defined in a SOURCED plagula, called in the sourcing one (RF 3);
   uncalled function -> FALLBACK; mutual recursion `f(){ g; }; g(){ f;
   }` -> bounded, `CREDO_NON_PENDET` (RF 5); `shift` in body -> `$N`
   stays `argumentum`.
-- [ ] **Step 2: Implement** the FUNCTIO rule and positional binding.
-- [ ] **Step 3: House** subset check; census delta; judge time.
+- [x] **Step 2: Implement** the FUNCTIO rule and positional binding.
+- [x] **Step 3: House** subset check; census delta; judge time.
   **Plant:** call sites ignored -> union again (red). **Commit.**
+  (Spec §XI T4: opening reading, as built, numbers.)
 
 ### Task T5: sourced plagulae, script arguments (Arcus, A1)
 

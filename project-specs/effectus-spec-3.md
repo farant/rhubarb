@@ -286,3 +286,56 @@ plagulae, which fall back before the rule applies (T4/T5 territory).
 The rule is a soundness guard today, not a lever. Plants: boundaries
 ignored -> section XX red at RF 1, RF 2, `$( )`, pipe segment; every
 `PIPA` a boundary -> the `! H=h2` contrary red.
+
+**T4 (2026-10-06): functions.** Opening reading (probe over the house,
+1,086 ambitus): plagulae ordered root first, then sourced plagulae in
+discovery order (`_ambitum_derivare`, fixpoint; 466 ambitus have more
+than one). 245 functions: 190 called only from their own plagula, 22
+only from other plagulae (the sourced libraries sera, mensor_suitae,
+nexus_recens, cursor_communis, capsula_radicis), 9 both, 24 with no
+static call; 0 duplicate names; 17 PASSED (name in a static non-title
+word: `trap sera_dimittere EXIT`, fumus `actio`/`ok`/`non`). 190
+dynamic command titles: paths (`"$RADIX_DIR/x.sh"`, `"$0"`), binaries
+in variables (`"$BIN"`), oracle arrays, `"$@"` (2).
+
+As built: `FunctioNota` per ambitus (`_functiones_parare`, each
+fixpoint pass after the definitions): static call sites in every
+plagula, `tradita`, `geminata`, `eval` in the body, transitive `vocat`
+matrix (Warshall). A function is `incerta` (FALLBACK) if it or any
+function that (transitively) calls it is passed or duplicated, or if a
+dynamic title may call a function: a title is evaluated (slice-2 union,
+the table being built) and calls none when every member contains `/`
+or is a temporary; a CERTUS member naming a function makes that one
+passed; anything else (`"$@"`, IGNOTUS, a prefix without `/`) makes the
+whole ambitus `vocatio_ignota`. The walk (`_ambulare`) leaves a
+function body through `_vocationes_ambulare`: every call site walked as
+a use; a function already on the stack adds nothing (least fixpoint);
+depth XVI and M steps bound it. The top of a non-root plagula falls
+back (T5). Statement effects: a definition inside a function DEFINED
+in the statement reaches only if the statement calls it (or a caller
+of it) by a call that reaches the use and from which the definition
+reaches (`_vocatio_attingens`; may, never a kill; local definitions
+never leave their function); `local X` (or `declare`/`typeset` inside
+a function, without `-g`) kills; `eval` in a defined function counts
+only when called (unless a passed function holds one). `$N` in a body
+(`_argumentum_functionis`): union of the N-th argument word over the
+call sites, each evaluated at its call site; `argumentum` if the
+function is uncertain or uncalled, `shift`/`set --` in the body, a call
+has fewer words, or a word up to N may expand to several
+(`_verbum_singulare`); call recursion guarded (`recursio`). Found on
+the way: the slice-2 title guard confused a function's `$1` with the
+script's `$1` at `f "$1"` (`recursio` instead of `argumentum`) -
+positional titles now skip it (fixture line 21).
+
+House: subset 316/316; census 10,563 -> 10,081 sites (members removed
+where ordering now applies: T2 used to fall back for ANY definition in
+a function, e.g. `local obj` in `silva/materia_substratum.sh` blocked
+the walk in every silva runner), unresolved 1,332 -> 1,268 (nulla 763
+-> 696); `argumentum` 508 -> 439, `discordia` 198 -> 192; `$N` resolved
+e.g. porta_linux.sh (glibc/musl). Census 3.2-3.3 s; judge 2.05-2.07 s
+warm. Toml key 32 unchanged; oracle non tecta 0, explicata 125 - the
+SAME with the T3 analyzer (the toml chain itself changed since T2's
+75). Plants: call sites ignored -> body union, recursion and RF 3 red;
+`$N` binding off -> A4 red; `tradita` ignored -> trap contrary red
+(over-exclusion, invisible to the subset check); definition-is-not-a-
+call off -> f2 red.

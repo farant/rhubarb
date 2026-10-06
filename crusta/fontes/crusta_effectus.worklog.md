@@ -540,3 +540,32 @@ source order).
   ancestor dump showed PARS_SUBSTITUTIO in the chain; the "top-level"
   hits were OTHER scripts' uses of `f`. Census mode does not show
   stderr per file - probe through the per-file CLI.
+
+## 2026-10-06 - slice 3 T4: functions
+
+- Opening reading by a temporary probe at the end of `_ambitum_derivare`
+  (per-file CLI, stderr): numbers in spec-3 §XI T4. Two first-pass
+  metrics were noisy and had to be refined before designing: "passed"
+  counted calls written inside `$( )` (the word's text includes the
+  substitution) - static words only; dynamic titles needed their raw
+  text to see they are paths and binaries, not dispatch.
+- Design consequence: a dynamic title cannot name a function whose
+  name appears nowhere as text, so "passed" (static non-title word) +
+  title evaluation gives a sound call graph without giving up on the
+  357 ambitus that run binaries through variables.
+- T2's walk refused ANY definition inside a function - including
+  `local` ones, which never leave their function. That alone blocked
+  ordering in every silva runner (`local obj` in
+  materia_substratum.sh): most of the census gain is T2's walk finally
+  applying, not call sites.
+- Bug found by reading the census diff (not by a fixture): the
+  slice-2 FALLBACK guard is per TITLE, and `$1` inside `f` bound at
+  `f "$1"` evaluates the script's `$1` while "1" is on the stack ->
+  `recursio`. Positionals skip the title guard; call recursion has its
+  own stack (`functiones_argumentorum`).
+- Oracle explicata 75 -> 125 looked like a T4 regression; running the
+  oracle with the HEAD (T3) analyzer gave 125 too. Compare against the
+  previous analyzer on the SAME tree before attributing a number.
+- Unsound corners left named, not modelled: `X=v f` prefix assignment
+  into a function (never collected, as in slice 2); `trap 'X=1' EXIT`
+  code strings (not eval).

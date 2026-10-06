@@ -523,6 +523,33 @@ hic_manens constans character* SUBPROCESSUS =
     "! H=h2\n"                                               /* 22 */
     "cat \"$H\"\n";                                           /* 23 */
 
+/* functiones (effectus-plan-3 T4; spec-3 par. II.2, III.2) */
+hic_manens constans character* FUNCTIONES =
+    "#!/bin/bash\n"                                          /* 1 */
+    "g1() { cat \"$A\"; }\n"                                  /* 2 */
+    "A=a1; g1\n"                                             /* 3 */
+    "A=a2; g1\n"                                             /* 4 */
+    "A=a3\n"                                                 /* 5 */
+    "fa() { cat \"$1\"; }\n"                                  /* 6 */
+    "fa a.txt; fa b.txt\n"                                   /* 7 */
+    "P=p1; fa \"$P/x\"; P=p2\n"                               /* 8 */
+    "setze() { E=e2; }\n"                                    /* 9 */
+    "E=e1; setze; cat \"$E\"; E=e3\n"                         /* 10 */
+    "F=f1; ff() { F=f2; }; cat \"$F\"\n"                       /* 11 */
+    "u() { cat \"$C\"; }\n"                                   /* 12 */
+    "C=c1; C=c2\n"                                           /* 13 */
+    "m1() { cat \"$D\"; m2; }; m2() { m1; }\n"                 /* 14 */
+    "D=d1; m1; D=d2\n"                                       /* 15 */
+    "s() { shift; cat \"$1\"; }; s x y\n"                     /* 16 */
+    "sc() { Q=q2; }; Q=q1; ( sc ); cat \"$Q\"\n"               /* 17 */
+    "trap pp EXIT; pp() { cat \"$G\"; }; G=g1; pp; G=g2\n"     /* 18 */
+    "source a/functio_lib.sh\n"                              /* 19 */
+    "B=b1; h; B=b9\n"                                        /* 20 */
+    "ct() { cat \"$1\"; }; ct \"$1\"\n";                        /* 21 */
+
+hic_manens constans character* FUNCTIO_LIB =
+    "h() { cat \"$B\"; }\n";                                  /* 1 */
+
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
 _causa_lineae (
@@ -1315,6 +1342,61 @@ s32 principale (vacuum)
             /* CONTRARIUM: pipa sine '|' ('!') in processu ipso: h2
              * attingit (exclusio falsa subsumptionem non frangit) */
             CREDO_NON_NIHIL (_situs(ts, "lectio", "h2", XXIII));
+        }
+    }
+
+    /* XXI. functiones (effectus-plan-3 T4; RF 3, RF 5) */
+    imprimere("\n--- XXI. functiones ---\n");
+    _scribere("a/functiones.sh", FUNCTIONES);
+    _scribere("a/functio_lib.sh", FUNCTIO_LIB);
+    /* RF 5: recursio mutua (m1 <-> m2) finita */
+    CREDO_NON_PENDET ((vacuum)crusta_effectus_derivare(piscina, intern,
+        radix, "a/functiones.sh", NIHIL, &causa), (i32)MM);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/functiones.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/functiones.sh");
+            _imprimere_situs(ts);
+            /* corpus: unio eorum quae singulas vocationes attingunt */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a1", II));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a2", II));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", II), II);
+            /* A4: $1 = unio argumenti primi, ad vocationem aestimati */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a.txt", VI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b.txt", VI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "p1/x", VI));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VI), III);
+            /* vocatio inter definitionem et usum: forte assignat */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e1", X));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e2", X));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", X), II);
+            /* definitio functionis non vocatio: f2 non attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f1", XI));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XI), I);
+            /* functio numquam vocata: FALLBACK (unio slice 2) */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XII), II);
+            /* recursio mutua: d1 solum */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d1", XIV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XIV), I);
+            /* shift in corpore: $1 argumentum manet */
+            CREDO_VERUM (_causa_lineae(ts, XVI, "argumentum"));
+            /* vocatio in ( ): q2 foras non attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "q1", XVII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XVII), I);
+            /* functio tradita (trap): FALLBACK - g2 ad EXIT attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g2", XVIII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XVIII), II);
+            /* RF 3: functio plagulae fontatae, vocata in fontante */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b1", I));
+            CREDO_NIHIL (_situs(ts, "lectio", "b9", ZEPHYRUM));
+            /* $1 functionis = $1 scripti: argumentum, non recursio
+             * (custodia tituli $N non tangit) */
+            CREDO_VERUM (_causa_lineae(ts, XXI, "argumentum"));
         }
     }
 
