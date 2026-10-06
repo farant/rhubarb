@@ -444,7 +444,84 @@ s32 principale (vacuum)
         volumen_claudere(vol_duplex);
     }
 
-    imprimere("\n--- XIV: argumenta mala ---\n");
+    imprimere("\n--- XIV: locus revocandi servatur (R5) ---\n");
+    {
+          Volumen* vol_locus;
+          Ludicra  ludicra_loci;
+         Historia* historia_loci;
+              s64  q_unum;
+
+        memset(&ludicra_loci, ZEPHYRUM, magnitudo(ludicra_loci));
+        vol_locus = volumen_temporarium(piscina,
+            "probatio_historia_locus");
+        historia_loci = historia_creare(piscina, intern, vol_locus, "",
+            "numerus",
+                             "probatio:checkpoint", II,
+                             proiectio(&ludicra_loci));
+        (vacuum)actum(historia_loci, piscina, ZEPHYRUM);
+        q_unum = actum(historia_loci, piscina, I);
+        (vacuum)actum(historia_loci, piscina, II);
+        CREDO_VERUM(historia_revocare(historia_loci));
+        /* reapertio ad locum revocatum, non ad finem */
+        memset(&ludicra_loci, ZEPHYRUM, magnitudo(ludicra_loci));
+        historia_loci = historia_aperire(piscina, intern, vol_locus, "",
+            "numerus",
+                              "probatio:checkpoint", II,
+                              proiectio(&ludicra_loci));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_loci), q_unum);
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_loci), II);
+        CREDO_VERUM(numeratores_sunt(&ludicra_loci, "11000000"));
+        /* reficere post reapertionem */
+        CREDO_VERUM(historia_reficere(historia_loci));
+        CREDO_VERUM(numeratores_sunt(&ludicra_loci, "11100000"));
+        CREDO_VERUM(historia_verificare(historia_loci));
+        /* reapertio post reficere: ad finem */
+        memset(&ludicra_loci, ZEPHYRUM, magnitudo(ludicra_loci));
+        historia_loci = historia_aperire(piscina, intern, vol_locus, "",
+            "numerus",
+                              "probatio:checkpoint", II,
+                              proiectio(&ludicra_loci));
+        CREDO_VERUM(numeratores_sunt(&ludicra_loci, "11100000"));
+        /* revocare ad initium, reaperire: vacuum */
+        per (i = ZEPHYRUM; i < III; i++)
+        {
+            CREDO_VERUM(historia_revocare(historia_loci));
+        }
+        memset(&ludicra_loci, ZEPHYRUM, magnitudo(ludicra_loci));
+        historia_loci = historia_aperire(piscina, intern, vol_locus, "",
+            "numerus",
+                              "probatio:checkpoint", II,
+                              proiectio(&ludicra_loci));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_loci), ZEPHYRUM);
+        CREDO_VERUM(numeratores_sunt(&ludicra_loci, "00000000"));
+        /* actum novum post revocationem: nota obsoleta, finis */
+        (vacuum)actum(historia_loci, piscina, V);
+        memset(&ludicra_loci, ZEPHYRUM, magnitudo(ludicra_loci));
+        historia_loci = historia_aperire(piscina, intern, vol_locus, "",
+            "numerus",
+                              "probatio:checkpoint", II,
+                              proiectio(&ludicra_loci));
+        CREDO_VERUM(numeratores_sunt(&ludicra_loci, "00000100"));
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_loci), I);
+        /* grex coniunctus revocatus et reapertus */
+        CREDO_VERUM(historia_actum_coniunctum(historia_loci,
+            chorda_ex_s32(VI,
+            piscina)) > ZEPHYRUM);
+        CREDO_VERUM(historia_revocare(historia_loci));
+        memset(&ludicra_loci, ZEPHYRUM, magnitudo(ludicra_loci));
+        historia_loci = historia_aperire(piscina, intern, vol_locus, "",
+            "numerus",
+                              "probatio:checkpoint", II,
+                              proiectio(&ludicra_loci));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_loci), ZEPHYRUM);
+        CREDO_VERUM(numeratores_sunt(&ludicra_loci, "00000000"));
+        CREDO_VERUM(historia_reficere(historia_loci));
+        CREDO_VERUM(numeratores_sunt(&ludicra_loci, "00000110"));
+        CREDO_VERUM(historia_verificare(historia_loci));
+        volumen_claudere(vol_locus);
+    }
+
+    imprimere("\n--- XV: argumenta mala ---\n");
     mala            = proiectio(&l);
     mala.applicare  = NIHIL;
     CREDO_NIHIL(historia_creare(piscina, intern, vol, "", "numerus",

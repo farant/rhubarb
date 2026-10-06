@@ -356,8 +356,9 @@ historia_struere (
      * vacuum = nomina nuda (volumina vetera) */
     h->spatium              = (spatium && spatium[ZEPHYRUM]) ? spatium
                                                              : "";
-    h->genus       = praefixum(piscina, h->spatium, genus);
-    h->genus_rami  = praefixum(piscina, h->spatium, "ramus");
+    h->genus           = praefixum(piscina, h->spatium, genus);
+    h->genus_rami      = praefixum(piscina, h->spatium, "ramus");
+    h->genus_cursoris  = praefixum(piscina, h->spatium, "cursor");
     h->genus_coniunctionis  = praefixum(piscina, h->spatium,
                                         "coniunctio");
     h->praefixum_checkpoint = praefixum(piscina, h->spatium,
@@ -421,6 +422,55 @@ historia_aperire (
              : ZEPHYRUM;
     h->cursor           = h->finis;
     h->numerus_vivorum  = n;
+    /* R5: nota cursoris ultima, nisi actum, ramus aut coniunctio eam
+     * secutum est (tum ad finem, ut olim) */
+    {
+                  Xar* omnia;
+         VolumenActum* a;
+                  s64  notatus;
+                  i32  i;
+                  i32  k;
+         StmlResultus  res;
+
+        omnia    = volumen_acta_legere(volumen, ZEPHYRUM, piscina);
+        notatus  = -I;
+        per (i = ZEPHYRUM; i < xar_numerus(omnia); i++)
+        {
+            a = (VolumenActum*)xar_obtinere(omnia, i);
+            si (chorda_aequalis_literis(a->genus, h->genus_cursoris))
+            {
+                res = stml_legere_ex_literis(chorda_ut_cstr(a->datum,
+                    piscina), piscina, intern);
+                notatus = res.successus
+                        ? (s64)attributum_s32(res.elementum_radix, "ad",
+                                              -I)
+                        : -I;
+            }
+            alioquin si (   chorda_aequalis_literis(a->genus, h->genus)
+                         || chorda_aequalis_literis(a->genus,
+                                h->genus_rami)
+                         || chorda_aequalis_literis(a->genus,
+                                h->genus_coniunctionis))
+            {
+                notatus = -I;
+            }
+        }
+        si (   notatus == ZEPHYRUM || (notatus > ZEPHYRUM
+                                    && seq_vivum(viva, notatus)))
+        {
+            k = ZEPHYRUM;
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                si (((VolumenActum*)xar_obtinere(viva, i))->seq
+                    <= notatus)
+                {
+                    k++;
+                }
+            }
+            h->cursor           = notatus;
+            h->numerus_vivorum  = k;
+        }
+    }
     proicere_ad(h, h->cursor, FALSUM);
     redde h;
 }
@@ -497,6 +547,23 @@ historia_actum_coniunctum (
     redde actum_appendere(h, actum, VERUM);
 }
 
+/* locus revocandi servatur (R5, Franus): nota <cursor ad="seq"/> */
+interior vacuum
+cursorem_notare (
+    Historia* h)
+{
+    chorda nota;
+
+    nota = chorda_ex_literis("<cursor ad=\"", h->piscina);
+    nota = chorda_concatenare(nota, seq_chorda(h->cursor, h->piscina),
+                              h->piscina);
+    nota = chorda_concatenare(nota, chorda_ex_literis("\"/>",
+        h->piscina),
+                              h->piscina);
+    (vacuum)volumen_actum_appendere(h->volumen, h->genus_cursoris,
+        nota);
+}
+
 b32
 historia_revocare (
     Historia* h)
@@ -528,6 +595,7 @@ historia_revocare (
     h->cursor           = ad;
     h->numerus_vivorum  = k;
     proicere_ad(h, ad, FALSUM);
+    cursorem_notare(h);
     redde VERUM;
 }
 
@@ -569,6 +637,7 @@ historia_reficere (
     si (applicatum)
     {
         sigillum_renovare(h);
+        cursorem_notare(h);
     }
     redde applicatum;
 }

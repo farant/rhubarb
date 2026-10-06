@@ -130,6 +130,19 @@ take the branch; canon roots `scriba` (+ `id`); `probatio_scriba_ramus`
 persisted (historia reopens at the end of the log) - open question.
 **Track R done.**
 
+**R5 - persist the undo position (Fran, 2026-10-05: "persist as an
+act").** `historia_revocare/_reficere` append a historia marker
+`<cursor ad="seq"/>` (genus `cursor`, namespaced); `historia_aperire`
+reopens at the last marker unless a client act or `<ramus>` followed
+it (then at the end, as today). Append-only; redo works after
+reopening. The H0 golden CHANGES on purpose (its session undoes):
+inspect the diff (only cursor markers added, sigilla per state
+unchanged) and re-pin.
+
+R5 as built: `cursorem_notare` in revocare/reficere; `aperire` honours
+the last non-stale marker. H0 golden re-pinned after inspection (only
+markers added, seqs shifted, sigilla unchanged). Three plants.
+
 Track T - schirmata (the host):
 
 **T1 - the host store.** Host canon (roots + mount elements + the tab
@@ -163,9 +176,7 @@ Fran's look.
   per mount.
 - Every write copies the whole store through text: cost with N tabs
   (measure at T4).
-- **Open (Fran):** persist the undo position? historia reopens at the
-  log's end; undo-then-quit brings undone text back (pictor and scriba
-  alike).
+- **Decided (Fran):** persist the undo position as an act (R5).
 - Framework writes still go to the ROOT: Motus's pan/zoom flush
   (`motus_effundere`), the dispatcher's `focus` and `superficies_*`.
   In a host they must reach the active mount's branch (T2/T3).

@@ -23,6 +23,9 @@
  *   memoria extra machinam POST signationem mutata non videtur
  *   (reproiectio eam tacite reficit).
  *
+ * - LOCUS REVOCANDI SERVATUR (R5, Franus): revocare et reficere notam
+ *   <cursor ad="seq"/> appendunt; aperire ad notam ultimam redit nisi
+ *   actum, ramus aut coniunctio eam secutum est (tum ad finem).
  * - SPATIUM NOMINUM (insula-rami-plan R2): documenta plura in volumine
  *   uno - genus actorum, notae (ramus, coniunctio) et claves
  *   checkpointorum praefixum 'spatium/' ferunt; historia sua sola
@@ -68,6 +71,7 @@ nomen structura {
      constans character* genus;            /* actorum (cum spatio) */
      constans character* genus_rami;
      constans character* genus_coniunctionis;
+     constans character* genus_cursoris;   /* R5 */
      constans character* praefixum_checkpoint;
      constans character* origo_checkpoint; /* "pictor:checkpoint" */
                     i32  intervallum;      /* acta viva inter cp. */

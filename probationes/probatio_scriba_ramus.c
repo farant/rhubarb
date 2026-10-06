@@ -231,10 +231,9 @@ s32 principale (vacuum)
         r2 = scriba_documentum_aperire(piscina, intern, vol, "s2");
         CREDO_NON_NIHIL(r1);
         CREDO_NON_NIHIL(r2);
-        /* cursor revocandi in memoria solo (historia): reapertio ad
-         * finem caudae - 'salve' redit (quaestio Franco posita) */
+        /* locus revocandi servatur (R5): textus revocatus manet */
         CREDO_VERUM(linea_est(scriba_documentum_tabula(r1), ZEPHYRUM,
-            "salve"));
+            ""));
         CREDO_VERUM(linea_est(scriba_documentum_tabula(r2), ZEPHYRUM,
             "munde"));
     }

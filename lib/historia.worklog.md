@@ -90,3 +90,29 @@ genus.
 
 Slip on the way: my helper's parameter was named `nomen` - the latina
 macro for `typedef` (compile error, renamed `titulus`).
+
+## 2026-10-05 — the undo position is persisted (insula-rami-plan R5)
+
+Found in R4: undo moved an in-memory cursor only; reopening went to the
+log's end, so undo-then-quit brought undone text back (pictor and
+scriba). Fran: persist it as an act. `historia_revocare/_reficere` now
+append `<cursor ad="seq"/>` (genus `cursor`, namespaced); `aperire`
+scans the log and reopens at the LAST marker unless a client act, a
+`<ramus>` or a `<coniunctio>` followed it (then the end, as before);
+the marker must name a live act (or 0). Redo works after reopening -
+the acts after the cursor are still live.
+
+**The H0 golden changed on purpose** (its session undoes three times,
+then once more after the branch, then redoes). Diff inspected: five
+`cursor` markers added, every later seq shifted by 3 (cursor/finis
+12 -> 15, `checkpoint/12` -> `checkpoint/15`), NO sigillum changed, the
+checkpoint's content hash identical, the reopened state the same.
+Re-pinned.
+
+Tests (XIV): undo + reopen lands on the undone position; redo after
+reopening; reopen after redo = end; undo to 0 + reopen = empty; a new
+act after undo makes the marker stale; a joined group undone + reopened.
+scriba's two-mount test now asserts the undone text STAYS undone after
+reopening. Plants: no marker on undo; stale marker honoured; no marker
+on redo - all caught (the stale one first written as `FALSUM && …` in
+an `||` chain: -Wlogical-op-parentheses, redone).

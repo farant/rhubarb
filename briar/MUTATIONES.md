@@ -195,6 +195,11 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus (mores): historia LOCUM REVOCANDI servat (insula-rami-plan
+  R5) - revocare/reficere notam `<cursor ad="seq"/>` appendunt;
+  aperire ad notam ultimam non obsoletam redit (olim semper ad finem).
+  Volumina nova acta plura ferunt (seq posteriores moventur).
+
 - corpus (FRANGIT): scriba in RAMO (insula-rami-plan R4) - canones
   scribae radicem `scriba` (cum `id`) nominant (olim `documentum` /
   `ephemera`). `ScribaActiones.ramus`, `ScribaCompositio.ramus` (nova;
