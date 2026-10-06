@@ -172,3 +172,29 @@ which leaves insert mode - caught by the "zy" line).
 Lint: `ctrl` is not a word here - `est_imperium_a` / `imperium_a`
 (MOD_IMPERIUM). `renominare.sh` refuses a dirty file (git is its
 undo) - fine for a rename inside the change being made.
+
+## 2026-10-06 — T4: the app, and a replay proof across both targets
+
+`lib/vicus_applicatio` is the shared composition (the pattern of
+scriba/pictor_applicatio): kinds registered with their wrappers (which
+lived in each test until now), default index, dispatcher over the
+host store, `vicus_dispensatorem_ligare`. The glues get the HOST's
+figura registry and `vicus_imago_fons` with ctx = the Vicus - pointers
+handed once; switching refills the registry behind them.
+
+Window is 480 x 488 so each app keeps its standalone 480 x 480 below
+the 8 px bar. Terminal: the bar is the first row.
+
+The replay proof records a window-path session through manus and
+replays it through the real terminal encoder. It found the manus
+button bug (lib/manus_ludus.worklog.md): every synthetic press was
+dropped by the encoder. Debugging recipe that worked: print what the
+transit RECEIVES, then hang a notary on the TERMINAL dispatcher to see
+what ARRIVES - the press was present in one list and absent in the
+other, so the loss was in the encoder; then print the encoder's bytes
+(empty for the press, botton=0).
+
+Plant lesson: "no tab hit zones" survived the first proof - nothing in
+the session clicked a tab, and the bar is painted by its figura
+either way. The session now ends with a click on the scriba tab at a
+cell centre on row 0, through the encoder.

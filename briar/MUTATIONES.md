@@ -195,6 +195,14 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: insula-rami T4 - `vicus_applicatio` (nova: compositio
+  communis hospitis - genera scriba et pictor, index ordinarius s1/p1,
+  dispensator ligatus; `vicus_volumen_aperire`, `vicus_applicatio_
+  aedificare`); applicationes `apps/vicus/vicus.sh` (fenestra) et
+  `vicus_terminalis.sh`. `manus_ludus`: ictus et tractus bottonem
+  sinistrum ferunt (olim nullum - codificator terminalis pressionem
+  sine bottone abiciebat), motus nudus nullum.
+
 - corpus (FRANGIT): insula-rami T3b - `vicus_motum_ligare(v, motus)`
   -> `vicus_dispensatorem_ligare(v, d)` (Motum ligat ET destinationem
   hospitis ponit). Actio radicis `vicus.magnitudo` -> `vicus.radix`;

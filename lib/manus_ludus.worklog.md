@@ -45,3 +45,27 @@ printables. `manus_ludus_scribere(m, "text")` does the same per
 character (control characters: key only); the character lives in the
 hand's arena (the notarius may keep the event). Test via the notarius:
 "a\r" -> 5 events, text at the key's time. Plant (no text event) caught.
+
+## 2026-10-06 — synthetic mouse events carry a button (insula-rami T4)
+
+`mus()` built presses, releases and drag motions with `botton` 0 -
+which is not a button (`MUS_SINISTER` = 1). In-process consumers never
+looked (pictor's stroke keys on capture, not on the button), so it was
+invisible until the vicus replay proof sent a manus-recorded session
+through the terminal encoder: `codificator_terminalis` (correctly)
+emits NOTHING for a press or release with an unknown button, so the
+stroke vanished on the terminal path while its motions (code 35,
+"motion, no button") still arrived. Symptom one hop away: the scriba
+document cursor differed by one - both apps share ONE volume, the
+act sequence is global, and the lost pictor act shifted scriba's
+later sequence numbers.
+
+pictor's own replay proof (probatio_ludus_tessera_pictor) never caught
+it because it builds its mouse events by hand with `MUS_SINISTER`.
+
+Now: press/release (`premere_ad`, `premere`) and every event of
+`trahere` carry `MUS_SINISTER`; `movere` (hover) carries none - what a
+real window and the terminal decoder produce. probatio_manus_ludus
+asserts the button of all seven events of a click + move + drag.
+Old recorded fixtures (probationes/pictor/toy.eventus.stml,
+botton="0") are INPUTS and unaffected.

@@ -281,6 +281,24 @@ and scriba; replay proof (a session that types, switches, draws,
 switches back - the same store and volume through the terminal path);
 Fran's look.
 
+T4 as built (app + proof; Fran's look pending): `lib/vicus_
+applicatio` (kinds scriba/pictor with their describe wrappers - out of
+the tests and into the library -, default index s1 scriba / p1
+pictor, dispatcher created over the host store and bound); mains
+`apps/vicus/vicus.c` (window 480 x 488: each app keeps the 480 x 480
+it has standalone, the bar on top) and `vicus_terminalis.c`, scripts
+with `AEDIFICARE_SOLUM=1`. Replay proof
+`ludus_tessera/probationes/probatio_ludus_tessera_vicus.c`: type in
+scriba, Ctrl-A n, stroke in pictor at cell centres, Ctrl-A p, type,
+Esc, Ctrl-A Ctrl-A, click the scriba tab - recorded in the window
+path, replayed through codificator -> rivus -> glue; both stores,
+both document seals, act counts and the active tab equal. Found and
+fixed on the way: manus mouse events carried NO button (`botton` 0),
+so the terminal encoder dropped every synthetic press - see
+lib/manus_ludus.worklog.md. Four plants (one, "no tab zones",
+SURVIVED the first proof - the session clicked no tab; the proof now
+does).
+
 **T5 - RELATIO.**
 
 ## AUDIENDA

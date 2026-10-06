@@ -130,6 +130,9 @@ declare -a RADIX_FONTES=(
     "scrinium"
     "codificator_terminalis"
     "manus_ludus"
+    # insula-rami T4: hospes (vicus) et compositio eius
+    "vicus"
+    "vicus_applicatio"
 )
 
 FILTER="${1:-}"

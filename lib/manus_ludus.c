@@ -225,20 +225,25 @@ manus_ludus_ad_schirmum (
  * Actus
  * ================================================== */
 
+/* botton ut fons verus (insula-rami T4): ictus et tractus sinistrum,
+ * motus nudus nullum - codificator terminalis pressionem sine bottone
+ * abicit (iteratio per terminalem ictum perdebat) */
 interior vacuum
 mus (
          ManusLudus* m,
     eventus_genus_t  genus,
                 s32  x,
-                s32  y)
+                s32  y,
+       mus_botton_t  botton)
 {
     Eventus e;
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus        = genus;
-    e.tempus       = m->tempus;
-    e.datum.mus.x  = x;
-    e.datum.mus.y  = y;
+    e.genus             = genus;
+    e.tempus            = m->tempus;
+    e.datum.mus.x       = x;
+    e.datum.mus.y       = y;
+    e.datum.mus.botton  = botton;
     dispensator_tractare(m->d, &e);
     m->tempus += m->gradus_ms;
 }
@@ -253,8 +258,8 @@ manus_ludus_premere_ad (
     {
         redde FALSUM;
     }
-    mus(m, EVENTUS_MUS_DEPRESSUS, x, y);
-    mus(m, EVENTUS_MUS_LIBERATUS, x, y);
+    mus(m, EVENTUS_MUS_DEPRESSUS, x, y, MUS_SINISTER);
+    mus(m, EVENTUS_MUS_LIBERATUS, x, y, MUS_SINISTER);
     redde VERUM;
 }
 
@@ -291,7 +296,7 @@ manus_ludus_movere (
     {
         redde FALSUM;
     }
-    mus(m, EVENTUS_MUS_MOTUS, x, y);
+    mus(m, EVENTUS_MUS_MOTUS, x, y, (mus_botton_t)ZEPHYRUM);
     redde VERUM;
 }
 
@@ -316,13 +321,13 @@ manus_ludus_trahere (
         redde FALSUM;
     }
     p = manus_ludus_ad_schirmum(m, c, puncta[ZEPHYRUM]);
-    mus(m, EVENTUS_MUS_DEPRESSUS, p.x, p.y);
+    mus(m, EVENTUS_MUS_DEPRESSUS, p.x, p.y, MUS_SINISTER);
     per (i = I; i < n; i++)
     {
         p = manus_ludus_ad_schirmum(m, c, puncta[i]);
-        mus(m, EVENTUS_MUS_MOTUS, p.x, p.y);
+        mus(m, EVENTUS_MUS_MOTUS, p.x, p.y, MUS_SINISTER);
     }
-    mus(m, EVENTUS_MUS_LIBERATUS, p.x, p.y);
+    mus(m, EVENTUS_MUS_LIBERATUS, p.x, p.y, MUS_SINISTER);
     redde VERUM;
 }
 
