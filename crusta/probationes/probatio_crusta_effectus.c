@@ -408,6 +408,17 @@ hic_manens constans character* ANSAE =
 hic_manens constans character* M1 = "cat data/m1.txt\n";
 hic_manens constans character* M2 = "cat data/m2.txt\n";
 
+/* valores praedefiniti (effectus-plan-2 T6, A4) */
+hic_manens constans character* PRAEDEFINITUM =
+    "#!/bin/bash\n"                                       /* 1 */
+    "cat \"${FS:-build/fs}/x\"\n"                          /* 2 */
+    "G=a\n"                                               /* 3 */
+    "cat \"${G:-build/g}/y\"\n"                            /* 4 */
+    "cat \"${H-data/h}/z\"\n"                              /* 5 */
+    "cat \"${1:-data/u}/w\"\n"                             /* 6 */
+    "E=\"\"\n"                                            /* 7 */
+    "cat \"${E:-data/e}/v\"\n";                            /* 8 */
+
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
 _causa_lineae (
@@ -1041,6 +1052,39 @@ s32 principale (vacuum)
             CREDO_VERUM (_attributum(s, "forma", "praefixum"));
             s = _situs(ts, "lectio", "src/v/", XVI);
             CREDO_VERUM (_attributum(s, "forma", "praefixum"));
+        }
+    }
+
+    /* XVII. praedefinita (effectus-plan-2 T6; spec-2 A4) */
+    imprimere("\n--- XVII. praedefinita ---\n");
+    _scribere("a/praedefinita.sh", PRAEDEFINITUM);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/praedefinita.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/praedefinita.sh");
+            _imprimere_situs(ts);
+            /* FS nusquam definita: valor praedefinitus + ambitus FS */
+            s = _situs(ts, "lectio", "build/fs/x", II);
+            CREDO_VERUM (_attributum(s, "resolutio", "plena"));
+            CREDO_NON_NIHIL (_situs(ts, "ambitus_lectio", "FS", II));
+            /* G definita: unio (a, build/g) */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a/y", IV));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "build/g/y", IV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", IV), II);
+            /* ${H-d} idem */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "data/h/z", V));
+            /* CONTRARIUM: argumentum ignotum manet */
+            s = _situs(ts, "lectio", NIHIL, VI);
+            CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
+            CREDO_VERUM (_attributum(s, "causa", "argumentum"));
+            /* ':-' vacuum ut absens: E="" -> data/e solum */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "data/e/v", VIII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VIII), I);
         }
     }
 

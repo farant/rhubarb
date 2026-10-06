@@ -454,3 +454,21 @@ source order).
   patterns in words in comments.
 - Plants a and c first did not compile (unused variable / function);
   rewritten so the code still references what it declares.
+
+## 2026-10-06 - slice 2 T6: the key had two holes
+
+- Writing P14 first exposed it: the plan assumed "partial read in the
+  tree = ignotum", but the -clavis code only emits ignotum for sites
+  in `impedita` (unexcused lint findings), and irresolutum is
+  nulla-only. Partial reads were silently OUT of the key since T7.
+  Isolating P14 (scratch copy of the fumus without P15) showed RECENS
+  after the edit - the hole, measured, before any fix.
+- Then the fix still failed: `directorium` is fabrica's include-root
+  genus - it seals the LISTING. Every `grep -r` key line since T7 had
+  the same blindness. New kind `arbor`. Lesson: when emitting a key
+  line kind, read how the CONSUMER digests it; the name is not the
+  contract.
+- Partial exec/source stays ignotum (the child's reads are not in this
+  summary; digesting its directory would not cover them).
+- crusta drops the colon-less `${H-d}` operator into the argument text;
+  handled in `_praedefinitum_aestimare` (op NIHIL branch), filed.

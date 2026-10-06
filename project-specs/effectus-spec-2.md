@@ -280,7 +280,9 @@ with causa `operator`.
   No cap (literal lists in the house are short) - but cross products
   are not.
 - **A3. Prefixes inside the tree in the key.** Today a `partialis` read
-  outside build/ is `ignotum` (never reused). (a) Recommended: a
+  outside build/ is `ignotum` (never reused). [CORRECTED in T6: it was
+  not - a partial site gave NO key line at all, a soundness hole; see
+  §XV T6.] (a) Recommended: a
   `directorium <prefix>` line (digest of that subtree) when the prefix
   is at least one segment below the root and not under build/ - sound,
   coarse, strictly better for reuse than `ignotum`; a root-level prefix
@@ -450,3 +452,31 @@ covered clang's link reads of `toml/build/*.o`; it is now
 `$objs` (a `recursio` accumulation) - precision, not loss. Judge 2.66-
 2.91 s (T4 2.14-2.39). A `source` of a glob (`for s in lib/*.sh`) is
 not followed and no longer marked `absens`.
+
+**T6 (2026-10-06): defaults and prefixes in the key (A3, A4).**
+- A4: `${X:-d}`, `${X-d}`, `${X:=d}`, `${X=d}` - X with no definition
+  in scope (and not `$1`/`read`) -> d's value; the existing
+  `ambitus_lectio X` site already gives the key its `ambitus X` line;
+  X defined -> union with d (`:`-forms drop X's empty members). crusta
+  does not tokenize the colon-less operators (`${H-d}` keeps `-d` as
+  the argument): handled locally, vitium …ZV7M filed in crusta.
+- A3's premise was WRONG. A partial in-tree site produced an `ignotum`
+  key line only if it carried an unexcused lint finding, and
+  `effectus-irresolutum` judges `nulla` only - so partial reads entered
+  the key NOT AT ALL (iudicium-fumus P14 without T6: `data/q.txt`
+  edited, verdict still RECENS). Second, older hole: the `directorium`
+  key line - emitted since slice-1 T7 for recursive commands (`grep
+  -r`, `cp -r`) - digests directory NAMES only (it is fabrica's
+  include-root genus), so content edits under it were invisible.
+  Fix: new key line `arbor <dir>` (lib/fabrica.c `_arborem_explicare`:
+  names and contents, recursive, minus the action's own outputs);
+  partial in-tree lectio/probatio/enumeratio -> `arbor`, partial
+  fontatio/exsecutio and root-level prefixes -> `ignotum`; recursion
+  emits `arbor` instead of `directorium`. Toml's chain was NOT affected
+  (no `directorium` line, no partial in-tree site). vitium …MDVZ.
+- iudicium-fumus P14 (edit under a prefix -> not reused) and P15
+  (caller sets the default's variable -> not reused); plants: `arbor`
+  without contents -> P14 and probatio_fabrica red; `ambitus` lines
+  dropped -> P15 red. Census: unresolved 1,187 -> 1,183 (`operator`
+  63 -> 38); toml key 31 lines unchanged; no dead excuse; judge
+  2.15-2.44 s.
