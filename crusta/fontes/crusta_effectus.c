@@ -4,8 +4,9 @@
  * Aestimator verborum, ambitus et definitiones ex crusta_fontationes.c
  * TRANSLATI sunt (effectus-plan T3, sectiones notatae); fontationes
  * T4 proiectio huius summarii factae, T8 retiratae (genus fabricae
- * 'effectus' eas subsumit). Nova: situs omnium generum, tabula mandatorum,
- * scripta_in_ambitu, emissio STML. */
+ * 'effectus' eas subsumit). Nova: situs omnium generum, tabula
+ * mandatorum, scripta_in_ambitu, emissio STML; causae irresolutorum
+ * nominatae (effectus-plan-2 T1). */
 
 #include "latina.h"
 #include "crusta_effectus.h"
@@ -46,10 +47,12 @@ nomen structura {
 
 nomen structura {
                 character* titulus;
-    constans MateriaNodus* verbum;   /* NIHIL et !vacuum = ignotum */
+    /* NIHIL et !inanis = ignotum (causa dicit cur) */
+    constans MateriaNodus* verbum;
                       b32  inanis;     /* 'X=' : chorda vacua */
-    constans MateriaNodus* functio;  /* NIHIL = globalis */
+    constans MateriaNodus* functio;    /* NIHIL = globalis */
                   Plagula* plagula;
+       constans character* causa;
 } Definitio;
 
 nomen structura {
@@ -111,6 +114,9 @@ nomen structura {
                     Xar* ambitus;    /* Ambitus*, ordine inventionis */
                     Xar* tabula;     /* Mandatum */
                     Xar* arcus;      /* Arcus */
+    /* causa defectus aestimationis; tituli in aestimatione (cyclus) */
+     constans character* causa;
+                    Xar* acervus;
 } Derivatio;
 
 
@@ -492,6 +498,27 @@ _titulus_staticus (
  * Aestimatio verborum
  * ================================================== */
 
+/* CAUSA (effectus-plan-2 T1): defectus PRIMUS vincit - intimus ante
+ * exteriorem advenit, ergo '"$v"' cum v="$1" 'argumentum' dicit, non
+ * causam exteriorem. Vocabularium in effectus.canon (causa). */
+interior b32
+_deficere (
+             Derivatio* d,
+    constans character* causa)
+{
+        si (d->causa == NIHIL)
+        {
+        d->causa = causa;
+        }
+    redde FALSUM;
+}
+
+interior b32
+_in_nominibus (
+                   Xar* nomina,
+    constans character* verbum);
+
+
 interior b32
 _partes_aestimare (
                 Derivatio* d,
@@ -549,7 +576,7 @@ _localis_est (
  * ('X=""' ante 'X=via') plagulam nullam nominat, ergo omittitur (intra
  * verbum longius '"$P/x.sh"' viam mutaret: numquam omittitur) */
 interior b32
-_variabilem_aestimare (
+_variabilem_intus (
               Derivatio* d,
                 Ambitus* a,
                 Plagula* p,
@@ -577,10 +604,10 @@ _variabilem_aestimare (
     {
         redde _appendere(area, longitudo, p->via, (i32)strlen(p->via));
     }
-    si (profunditas > PROFUNDITAS_MAXIMA)
-    {
-        redde FALSUM;
-    }
+        si (profunditas > PROFUNDITAS_MAXIMA)
+        {
+        redde _deficere(d, "profunditas");
+        }
     functio = _functio_circumdans(usus);
     localis = functio != NIHIL && _localis_est(a, functio, titulus);
     primus[ZEPHYRUM] = '\0';
@@ -604,9 +631,9 @@ _variabilem_aestimare (
         {
             bonus = VERUM;
         }
-        alioquin si (def->verbum == NIHIL)
+                alioquin si (def->verbum == NIHIL)
         {
-            bonus = FALSUM;
+            bonus = _deficere(d, def->causa);
         }
         alioquin
         {
@@ -623,22 +650,66 @@ _variabilem_aestimare (
             primus_longitudo  = valor_longitudo;
             plenus            = bonus;
         }
-        alioquin si (   !bonus || !plenus
-                     || strcmp(primus, valor) != ZEPHYRUM)
+                alioquin si (   !bonus || !plenus
+                             || strcmp(primus, valor) != ZEPHYRUM)
         {
-            redde FALSUM;   /* definitiones discordes aut ignotae */
+            /* definitiones discordes aut ignotae (ignotae causam suam
+             * iam posuerunt) */
+            redde _deficere(d, "discordia");
         }
         numerus++;
     }
-    si (numerus == ZEPHYRUM)
-    {
-        redde FALSUM;       /* ambitus externus: ignotum */
-    }
+        si (numerus == ZEPHYRUM)
+        {
+        /* argumentum ($1 $@ ...), nomen a read/mapfile positum, aut
+         * ambitus externus */
+        redde _deficere(d,
+              (titulus[ZEPHYRUM] >= '0' && titulus[ZEPHYRUM] <= '9')
+            || strcmp(titulus, "@") == ZEPHYRUM
+            || strcmp(titulus, "*") == ZEPHYRUM
+            || strcmp(titulus, "#") == ZEPHYRUM ? "argumentum"
+            : _in_nominibus(a->assignata, titulus) ? "ansa_read"
+            : "ambitus");
+        }
     si (!_appendere(area, longitudo, primus, primus_longitudo))
     {
         redde FALSUM;
     }
     redde plenus;
+}
+
+/* RECURSIO (plan-2 T1): definitio quae se ipsam nominat
+ * (obj_files="$obj_files $obj" in ansa) valorem finitum non habet;
+ * acervus titulorum in aestimatione cyclum nominat antequam
+ * profunditas eum celet */
+interior b32
+_variabilem_aestimare (
+                Derivatio* d,
+                  Ambitus* a,
+                  Plagula* p,
+    constans MateriaNodus* usus,
+       constans character* titulus,
+                character* area,
+                      i32* longitudo,
+                      i32  profunditas,
+                      b32  inanes_omittere)
+{
+    b32 bonus;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(d->acervus); k++)
+    {
+        si (strcmp(*(constans character**)xar_obtinere(d->acervus, k),
+                titulus) == ZEPHYRUM)
+        {
+            redde _deficere(d, "recursio");
+        }
+    }
+    *(constans character**)xar_addere(d->acervus) = titulus;
+    bonus = _variabilem_intus(d, a, p, usus, titulus, area, longitudo,
+        profunditas, inanes_omittere);
+    xar_truncare(d->acervus, xar_numerus(d->acervus) - I);
+    redde bonus;
 }
 
 /* $( ... ): idiomata sola (vide caput) */
@@ -900,7 +971,8 @@ _partes_aestimare (
                     || !_locus_vacuus(pars,
                     (i32)CRUSTA_EXPANSIO_ARGUMENTA))
                 {
-                    redde FALSUM;   /* ${X:-y}, ${#X}, ${!X} ... */
+                    /* ${X:-y}, ${#X}, ${!X} ... */
+                    redde _deficere(d, "operator");
                 }
                 titulus = chorda_ut_cstr(t->valor, d->piscina);
                 si (titulus == NIHIL)
@@ -911,7 +983,7 @@ _partes_aestimare (
                     && !(strcmp(titulus, "BASH_SOURCE") == ZEPHYRUM
                         && _aequalis(sub->valor, "[0]")))
                 {
-                    redde FALSUM;   /* subscripta alia */
+                    redde _deficere(d, "tabulatum");   /* subscripta */
                 }
                 si (!_variabilem_aestimare(d, a, p, pars, titulus, area,
                         longitudo, profunditas, FALSUM))
@@ -921,14 +993,18 @@ _partes_aestimare (
                 frange;
             }
             casus CRUSTA_GENUS_PARS_SUBSTITUTIO:
-                si (!_substitutionem_aestimare(d, a, p, pars, area,
-                        longitudo, profunditas))
-                {
-                    redde FALSUM;
-                }
+                                si (!_substitutionem_aestimare(d, a, p,
+                                    pars, area,
+                                    longitudo, profunditas))
+                                {
+                    redde _deficere(d, "substitutio");
+                                }
                 frange;
+                        casus CRUSTA_GENUS_PARS_DOMUS:
+                redde _deficere(d, "ambitus");     /* ~ : HOME */
             ordinarius:
-                redde FALSUM;   /* domus, effugia, arithmetica, ... */
+                /* effugia $'..', arithmetica, ... */
+                redde _deficere(d, "operator");
         }
     }
     redde VERUM;
@@ -1164,14 +1240,15 @@ _locales_colligere (
 
 interior vacuum
 _definitionem_addere (
-                  Ambitus* a,
-                Derivatio* d,
-                  Plagula* p,
-       constans character* titulus,
-    constans MateriaNodus* verbum,
-                      b32  inanis,
-    constans MateriaNodus* locus,
-                      b32  declaratio_localis)
+                      Ambitus* a,
+                    Derivatio* d,
+                      Plagula* p,
+           constans character* titulus,
+        constans MateriaNodus* verbum,
+                          b32  inanis,
+        constans MateriaNodus* locus,
+                          b32  declaratio_localis,
+           constans character* causa)
 {
     constans MateriaNodus* functio = _functio_circumdans(locus);
                 Definitio* def;
@@ -1185,12 +1262,13 @@ _definitionem_addere (
     {
         functio = NIHIL;   /* assignatio in functione sine 'local' */
     }
-    def           = (Definitio*)xar_addere(a->definitiones);
-    def->titulus  = _duplicare(d->piscina, titulus);
-    def->verbum   = verbum;
-    def->inanis   = inanis;
-    def->functio  = functio;
-    def->plagula  = p;
+    def               = (Definitio*)xar_addere(a->definitiones);
+    def->titulus      = _duplicare(d->piscina, titulus);
+    def->verbum       = verbum;
+    def->inanis       = inanis;
+        def->functio  = functio;
+    def->plagula      = p;
+    def->causa        = causa;
 }
 
 interior vacuum
@@ -1231,15 +1309,22 @@ _definitiones_colligere (
                 perge;   /* 'X=1 cmd': ambitus imperii solius */
             }
         }
-        ignotum = !_locus_vacuus(as,
-            (i32)CRUSTA_ASSIGNATIO_TOK_SUBSCRIPTUM)
-            || (op != NIHIL && !_aequalis(op->valor, "="))
-            || (valor != NIHIL
-                && valor->genus != (s32)CRUSTA_GENUS_VERBUM);
+                ignotum = !_locus_vacuus(as,
+                    (i32)CRUSTA_ASSIGNATIO_TOK_SUBSCRIPTUM)
+                    || (op != NIHIL && !_aequalis(op->valor, "="))
+                    || (valor != NIHIL
+                    && valor->genus != (s32)CRUSTA_GENUS_VERBUM);
+        /* causa ignoti (T1): tabulatum (X=(..), X[i]=, X+=(..)), aliter
+         * operator (X+=verbum) */
         _definitionem_addere(a, d, p, chorda_ut_cstr(tt->valor,
             d->piscina),
             ignotum ? NIHIL : valor, !ignotum && valor == NIHIL, as,
-            _localis_verbum(t));
+            _localis_verbum(t),
+            (   !_locus_vacuus(as,
+            (i32)CRUSTA_ASSIGNATIO_TOK_SUBSCRIPTUM)
+             || (valor != NIHIL
+                 && valor->genus == (s32)CRUSTA_GENUS_TABULATUM))
+                ? "tabulatum" : "operator");
     }
     per (k = ZEPHYRUM; k < xar_numerus(p->iterationes); k++)
     {
@@ -1252,10 +1337,11 @@ _definitiones_colligere (
 
         si (tt != NIHIL)
         {
-            _definitionem_addere(a, d, p,
-                chorda_ut_cstr(tt->valor, d->piscina), NIHIL, FALSUM,
-                it,
-                FALSUM);
+                        _definitionem_addere(a, d, p,
+                            chorda_ut_cstr(tt->valor, d->piscina),
+                            NIHIL, FALSUM,
+                            it,
+                            FALSUM, "ansa_read");
         }
     }
 }
@@ -1843,14 +1929,16 @@ _viam_classificare (
                     Situs* s,
                 character* absoluta_out)
 {
-             character  valor[VIA_MAXIMA];
-                   i32  longitudo = ZEPHYRUM;
-             character  absoluta[VIA_MAXIMA];
-                   b32  plenus;
-    constans character* cwd;
-    constans character* rel;
+                 character  valor[VIA_MAXIMA];
+                       i32  longitudo = ZEPHYRUM;
+                 character  absoluta[VIA_MAXIMA];
+                       b32  plenus;
+        constans character* cwd;
+        constans character* rel;
+        constans character* causa_verbi;
 
-    valor[ZEPHYRUM] = '\0';
+    valor[ZEPHYRUM]  = '\0';
+    d->causa         = NIHIL;
     {
         constans MateriaNodus* sola = _variabilis_sola(verbum);
         constans MateriaToken* t = sola == NIHIL ? NIHIL : _token(sola,
@@ -1865,9 +1953,11 @@ _viam_classificare (
                   &longitudo, ZEPHYRUM, VERUM)
             : _verbum_aestimare(d, a, p, verbum, valor, &longitudo,
                   ZEPHYRUM);
-    }
-    cwd       = _directorium_loci(d, a, p, locus);
-    s->forma  = "via";
+        }
+    /* causa verbi ANTE cwd (cd W aestimatio causam suam poneret) */
+    causa_verbi  = d->causa != NIHIL ? d->causa : "valor ignotus";
+    cwd          = _directorium_loci(d, a, p, locus);
+    s->forma     = "via";
     si (!plenus)
     {
         si (   longitudo > ZEPHYRUM && strchr(valor, '/') != NIHIL
@@ -1877,9 +1967,10 @@ _viam_classificare (
             {
                 _directorium_viae(absoluta);
             }
-            rel           = _relativa(d, absoluta);
-            s->forma      = "praefixum";
-            s->resolutio  = "partialis";
+            rel                   = _relativa(d, absoluta);
+                        s->forma  = "praefixum";
+            s->resolutio          = "partialis";
+            s->causa              = causa_verbi;
             {
                 character textus[VIA_MAXIMA];
                       i32 n = ZEPHYRUM;
@@ -1910,9 +2001,9 @@ _viam_classificare (
         longitudo        = ZEPHYRUM;
         valor[ZEPHYRUM]  = '\0';
         _textum_colligere(verbum, valor, &longitudo);
-        s->via        = _duplicare(d->piscina, valor);
-        s->resolutio  = "nulla";
-        s->causa      = "valor ignotus";
+        s->via                = _duplicare(d->piscina, valor);
+                s->resolutio  = "nulla";
+        s->causa              = causa_verbi;
         redde FALSUM;
     }
     si (cwd == NIHIL || !_absolutam_facere(valor, cwd, absoluta))
@@ -3521,6 +3612,9 @@ crusta_effectus_derivare (
     d.ambitus        = xar_creare(piscina, (i32)magnitudo(Ambitus*));
     d.tabula         = xar_creare(piscina, (i32)magnitudo(Mandatum));
     d.arcus          = xar_creare(piscina, (i32)magnitudo(Arcus));
+    d.causa          = NIHIL;
+    d.acervus        = xar_creare(piscina,
+        (i32)magnitudo(constans character*));
     si (   d.visi == NIHIL || d.ambitus == NIHIL || d.tabula == NIHIL
         || !_absolutam_facere(scriptum, radix, absoluta))
     {
@@ -3872,6 +3966,9 @@ crusta_effectus_observata (
     d.ambitus        = xar_creare(piscina, (i32)magnitudo(Ambitus*));
     d.tabula         = xar_creare(piscina, (i32)magnitudo(Mandatum));
     d.arcus          = xar_creare(piscina, (i32)magnitudo(Arcus));
+    d.causa          = NIHIL;
+    d.acervus        = xar_creare(piscina,
+        (i32)magnitudo(constans character*));
     a = (Ambitus*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(Ambitus));
     p = (Plagula*)piscina_allocare(piscina,

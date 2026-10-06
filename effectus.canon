@@ -95,7 +95,18 @@
       nota="titulus mandati externi, ubi per=mandatum"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"
-      nota="cur resolutio non plena"/>
+      nota="cur resolutio non plena (vocabularium idem in omni situ;
+            effectus-plan-2 T1): argumentum ($1 $@, aut nomen ex eis),
+            ansa_read (variabilis ansae 'for' aut a read/mapfile posita),
+            substitutio ($(...) praeter idiomata), ambitus (nulla
+            definitio in ambitu; ~), operator (${X/a/b} ${X:-d} ${#X},
+            arithmetica, X+=verbum), discordia (definitiones aequales
+            non sunt), tabulatum (valor tabulati aut subscriptum),
+            recursio (definitio se ipsam nominat:
+            X ex X ipso in ansa accumulatum), profunditas (catena definitionum nimis
+            longa), cwd ignotum
+            (cd W ignotum), valor ignotus (residuum: nulla causa
+            nominata - numerandum, non tolerandum)"/>
     <attributum nomen="textus" genus="textus"
       nota="verbum fontis litteraliter, ubi resolutio partialis (via
             tum praefixum solum fert): nuntiis lintri et proiectioni

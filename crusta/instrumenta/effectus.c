@@ -304,11 +304,70 @@ _numerare (
     *(i32*)xar_addere(numeri) = I;
 }
 
+/* via in cellam TSV: tabulae et lineae novae spatia fiunt, longitudo
+ * CCLVI (C89 snprintf non habet; verbum multilineum fieri potest) */
+interior vacuum
+_cellam_purgare (
+     constans character* fons,
+              character* area)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; fons[k] != '\0' && k < CCLV; k++)
+    {
+        area[k] = (fons[k] == '\t' || fons[k] == '\n'
+                   || fons[k] == '\r') ? ' ' : fons[k];
+    }
+    area[k] = '\0';
+}
+
+/* linea census una (situs s, codices inventi) et numeri eius: genus,
+ * resolutio, causa (effectus-plan-2 T1) */
+interior vacuum
+_censum_lineam_scribere (
+              Contextus* c,
+       ChordaAedificator* tsv,
+                     Xar* claves,
+                     Xar* numeri,
+     constans character* linea,
+              StmlNodus* s,
+     constans character* el,
+     constans character* inventa)
+{
+    character clavis[VIA_MAXIMA];
+    character via[CCLVI];
+    character causa[CCLVI];
+
+    _cellam_purgare(_cella(c->piscina, s, "via"), via);
+    _cellam_purgare(_cella(c->piscina, s, "causa"), causa);
+    _numerare(c->piscina, claves, numeri, el);
+    _numerare(c->piscina, claves, numeri,
+        _cella(c->piscina, s, "resolutio"));
+    si (stml_attributum_capere(s, "causa") != NIHIL)
+    {
+        character k_causa[CCLVI];
+
+        sprintf(k_causa, "causa: %.200s", causa);
+        _numerare(c->piscina, claves, numeri, k_causa);
+    }
+    sprintf(clavis, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+        linea, _cella(c->piscina, s, "sedes"), el,
+        _cella(c->piscina, s, "per"),
+        _cella(c->piscina, s, "mandatum"),
+        _cella(c->piscina, s, "resolutio"),
+        _cella(c->piscina, s, "classis"),
+        _cella(c->piscina, s, "scripta_in_ambitu"), via,
+        inventa[ZEPHYRUM] != '\0' ? inventa : "-", causa);
+    chorda_aedificator_appendere_literis(tsv, clavis);
+}
+
 /* CENSUS (planum T6, spec par. VI.1): situs omnis omnium scriptorum
  * (index ex stdin) in build/effectus/census.tsv - plagula linea
- * elementum per mandatum resolutio classis scripta via lintrum (codices
- * post excusationes). Summa per genus, resolutionem, regulam; et quot
- * excusationes absorbuerunt (cursus sine excusatione comparatus). */
+ * elementum per mandatum resolutio classis scripta via lintrum causa
+ * (codices post excusationes; via = textus fontis ubi irresolutus;
+ * causa ubi resolutio non plena - effectus-plan-2 T1). Summa per
+ * genus, resolutionem, regulam, causam; et quot excusationes
+ * absorbuerunt (cursus sine excusatione comparatus). */
 interior integer
 _modus_census (
     Contextus* c)
@@ -329,7 +388,7 @@ _modus_census (
     chorda_aedificator_appendere_literis(tsv, "# effectus census "
         "(GENERATUM: ./crusta/effectus.sh -census) - plagula linea "
         "elementum per mandatum resolutio classis scripta via "
-        "lintrum\n");
+        "lintrum causa\n");
     dum (fgets(linea, (integer)magnitudo(linea), stdin) != NIHIL)
     {
         memoriae_index  n = strlen(linea);
@@ -479,20 +538,8 @@ _modus_census (
                                     x->codex);
                             }
                         }
-                        _numerare(c->piscina, claves, numeri, el);
-                        _numerare(c->piscina, claves, numeri,
-                            _cella(c->piscina, s, "resolutio"));
-                        sprintf(clavis,
-                            "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
-                            linea, _cella(c->piscina, s, "sedes"), el,
-                            _cella(c->piscina, s, "per"),
-                            _cella(c->piscina, s, "mandatum"),
-                            _cella(c->piscina, s, "resolutio"),
-                            _cella(c->piscina, s, "classis"),
-                            _cella(c->piscina, s, "scripta_in_ambitu"),
-                            inventa[ZEPHYRUM] != '\0' ? inventa : "-");
-                        chorda_aedificator_appendere_literis(tsv,
-                            clavis);
+                        _censum_lineam_scribere(c, tsv, claves, numeri,
+                            linea, s, el, inventa);
                         (vacuum)j;
                     }
                 }

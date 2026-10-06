@@ -1,14 +1,14 @@
 /* probatio_crusta_effectus.c - summarium effectuum (effectus-plan.md
  * T3; spec par. IV)
  *
- * Arbor ficta sub crusta/build/ (idioma probatio_crusta_effectus_idiomata):
- * scriptum unum (a/r.sh) classem omnem situum spec par. IV.2 tangit,
- * linea per classem. Quaeque assertio CONTRARIUM quoque fert ubi
- * analysis errare potest: globus citatus non enumeratur; /dev/null et
- * '2>&1' non scribuntur; '<<<' non legitur; exemplar grep/sed situs non
- * est; functio domus mandatum ignotum non est; '$?' '$1' et variabiles
- * a 'read' assignatae ambitus non leguntur; scriptum EXSECUTUM
- * variabiles vocantis non videt.
+ * Arbor ficta sub crusta/build/ (idioma
+ * probatio_crusta_effectus_idiomata): scriptum unum (a/r.sh) classem
+ * omnem situum spec par. IV.2 tangit, linea per classem. Quaeque
+ * assertio CONTRARIUM quoque fert ubi analysis errare potest: globus
+ * citatus non enumeratur; /dev/null et '2>&1' non scribuntur; '<<<' non
+ * legitur; exemplar grep/sed situs non est; functio domus mandatum
+ * ignotum non est; '$?' '$1' et variabiles a 'read' assignatae ambitus
+ * non leguntur; scriptum EXSECUTUM variabiles vocantis non videt.
  *
  * Deinde domus tota: omne .sh arboris summatur (nullum NIHIL) et
  * summarium omne contra effectus.canon sanum est - custos derivae:
@@ -305,6 +305,56 @@ hic_manens constans character* COMMUNIS =
 hic_manens constans character* PUER =
     "#!/bin/bash\n"
     "cat \"$D/data/puer.txt\"\n";
+
+/* causae (effectus-plan-2 T1): situs irresolutus unus per causam,
+ * linea per causam; numeri linearum in commentariis */
+hic_manens constans character* CAUSAE =
+    "#!/bin/bash\n"                                       /* 1 */
+    "f () {\n"                                            /* 2 */
+    "    cat \"$1/x\"\n"                                  /* 3 */
+    "}\n"                                                 /* 4 */
+    "while read -r l; do cat \"$l\"; done < data/r.txt\n" /* 5 */
+    "cat \"$(git rev-parse x)\"\n"                        /* 6 */
+    "cat \"$NESCIO/y\"\n"                                 /* 7 */
+    "cat \"${X/a/b}\"\n"                                  /* 8 */
+    "Y=a\n"                                               /* 9 */
+    "Y=b\n"                                               /* 10 */
+    "cat \"$Y\"\n"                                        /* 11 */
+    "A=(x y)\n"                                           /* 12 */
+    "cat \"$A\"\n"                                        /* 13 */
+    "for g in p q; do cat \"$g\"; done\n"                 /* 14 */
+    "cat \"$((I + II))\"\n"                               /* 15 */
+        "cat \"$NESCIO/data/z\"\n"                            /* 16 */
+    "O=\"\"\n"                                             /* 17 */
+    "for o in a b; do O=\"$O $o\"; done\n"                  /* 18 */
+    "cat $O\n";                                          /* 19 */
+
+/* causa situs lectionis in linea (NIHIL = situs absens) */
+interior b32
+_causa_lineae (
+                   Xar* situs,
+                   i32  linea,
+    constans character* causa)
+{
+    StmlNodus* s = _situs(situs, "lectio", NIHIL, linea);
+
+    si (s == NIHIL)
+    {
+        imprimere("    linea %u: lectio absens\n",
+            (insignatus integer)linea);
+        redde FALSUM;
+    }
+    si (!_attributum(s, "causa", causa))
+    {
+        chorda* c = stml_attributum_capere(s, "causa");
+
+        imprimere("    linea %u: causa '%.*s', exspectata '%s'\n",
+            (insignatus integer)linea, c ? (integer)c->mensura : 0,
+            c ? (constans character*)c->datum : "", causa);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
 
 s32 principale (vacuum)
 {
@@ -687,6 +737,42 @@ s32 principale (vacuum)
                     CREDO_NON_NIHIL (x);
                 }
             }
+        }
+    }
+
+    /* XIII. causae (effectus-plan-2 T1): omnis situs irresolutus
+     * causam suam NOMINAT, numquam 'valor ignotus' */
+    imprimere("\n--- XIII. causae ---\n");
+    _scribere("a/causae.sh", CAUSAE);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/causae.sh", NIHIL, &causa);
+              Xar* cs = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, cs, "a/causae.sh");
+            _imprimere_situs(cs);
+            CREDO_VERUM (_causa_lineae(cs, III, "argumentum"));
+            CREDO_VERUM (_causa_lineae(cs, V, "ansa_read"));
+            CREDO_VERUM (_causa_lineae(cs, VI, "substitutio"));
+            CREDO_VERUM (_causa_lineae(cs, VII, "ambitus"));
+            CREDO_VERUM (_causa_lineae(cs, VIII, "operator"));
+            CREDO_VERUM (_causa_lineae(cs, XI, "discordia"));
+            CREDO_VERUM (_causa_lineae(cs, XIII, "tabulatum"));
+            CREDO_VERUM (_causa_lineae(cs, XIV, "ansa_read"));
+                        CREDO_VERUM (_causa_lineae(cs, XV, "operator"));
+            /* accumulatio in ansa: cyclus, non profunditas */
+            CREDO_VERUM (_causa_lineae(cs, XIX, "recursio"));
+            /* praefixum partiale quoque causam fert (resolutio non
+             * plena); textus manet */
+            s = _situs(cs, "lectio", NIHIL, XVI);
+            CREDO_VERUM (_attributum(s, "causa", "ambitus"));
+            /* contrarium: situs plenus causam non fert */
+            s = _situs(cs, "lectio", "data/r.txt", V);
+            CREDO_VERUM (_attributum(s, "resolutio", "plena"));
+            CREDO_VERUM (_attributum(s, "causa", NIHIL));
         }
     }
 

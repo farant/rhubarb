@@ -330,3 +330,29 @@ source order).
   input".
 - Done-means check (spec §X): all met except toml judge time (2.2-3.0 s,
   wrapper's build check ~1 s, named in §XIII).
+
+## 2026-10-05 - slice 2 T1: causes named
+
+- One choke point: every unresolved site was born at
+  `_viam_classificare`'s "valor ignotus". The evaluator now records WHY
+  it failed in `d->causa` through `_deficere` (first failure wins = the
+  innermost, so `"$v"` with `v="$1"` says argumentum). Definitions carry
+  their own causa for `verbum NIHIL` (for -> ansa_read; arrays,
+  subscripts -> tabulatum; `X+=word` -> operator).
+- The word's cause must be captured BEFORE `_directorium_loci`: a
+  `cd "$NESCIO"` evaluated for the cwd would otherwise set its own
+  cause first (section VIII asserts `cwd ignotum` stays).
+- `profunditas` was a disguise: all 87 were `X="$X y"` accumulations
+  recursing to depth XVI. A title stack (`d->acervus`, wrapper around
+  `_variabilem_intus`) names them `recursio`. These are the T5 loop
+  class in another costume (an accumulation over a loop = a set).
+- Census: the header has said `via` since T6 but rows never wrote it;
+  table causae contain NEWLINES (the .git row), which split census
+  rows until sanitized. The census also dedupes sites by (element,
+  octeti) - T5's one-site-per-member will need (element, octeti, via).
+- Formator: the census loop was nested so deep that `-scribere` output
+  failed `-vitia` (declarations pushed past col 72). Extracting
+  `_censum_lineam_scribere` fixed it; struct members with trailing
+  comments that cannot align inside 72 get the comment above instead.
+- `effectus -radix .` (relative) says "scriptum absens" for everything
+  - use an absolute radix when calling the binary directly.

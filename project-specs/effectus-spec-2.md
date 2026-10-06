@@ -294,3 +294,41 @@ with causa `operator`.
 - **A5. Causa vocabulary** (§VI): the names `argumentum`, `ansa_read`,
   `substitutio`, `ambitus`, `operator`, `discordia` - (a) as listed;
   (b) Fran renames.
+
+## XV. As built
+
+**T1 (2026-10-05): causes named, census text.** Every unresolved site
+now names its cause; the fallback "valor ignotus" occurs 0 times in the
+house. Resolution counts identical to before (3,436 plena, 474
+partialis, 3,304 nulla, 370 ignotum elements); summaries of all 298
+compared scripts differ only in `causa`. The tool's breakdown
+(`./crusta/effectus.sh -census`, column 11):
+
+| causa | nulla | partialis |
+|---|---|---|
+| substitutio (mktemp among them) | 1,274 | 114 |
+| ansa_read | 960 | 182 |
+| tabulatum | 578 | - |
+| argumentum | 150 | 123 |
+| cwd ignotum | 88 | - |
+| recursio | 87 | - |
+| operator | 65 | 13 |
+| ambitus | 51 | 42 |
+| discordia | 41 | - |
+| absens | 10 | - |
+
+The three target classes (substitutio + ansa_read + tabulatum) are
+2,812 of 3,304 (85%) against the §0 heuristic's 83%: within the plan's
+10-point branch, T2 proceeds in order.
+
+Two names beyond §VI's list, both forced by the data: `tabulatum`
+(array values and subscripts, until T4) and `recursio` - the 87 sites
+first measured as `profunditas` were all self-referential accumulations
+(`obj_files="$obj_files $obj"` in a loop), which the depth limit only
+hid; a stack of titles under evaluation now names the cycle.
+`profunditas` occurs 0 times.
+
+The census header named a `via` column the rows never wrote (9 values
+under 10 names, since T6); rows now carry `via` (source text where
+unresolved, sanitized: tabs and newlines become spaces - table causae
+contain newlines) and `causa` as column 11.

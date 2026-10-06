@@ -99,13 +99,13 @@ FALSUM` in the evaluator with the causa it will carry.
 **Files:** `crusta_effectus.c`, `crusta/instrumenta/effectus.c`,
 `effectus.canon`, `probatio_crusta_effectus.c`.
 
-- [ ] **Step 1: The failing section.** `XIII. causae`: one fixture
+- [x] **Step 1: The failing section.** `XIII. causae`: one fixture
   script with one unresolved site per cause - `"$1/x"` (argumentum),
   `while read f; do cat "$f"; done` (ansa_read), `cat "$(git x)"`
   (substitutio), `cat "$NESCIO/y"` (ambitus), `cat "${X/a/b}"`
   (operator), `X=a; X=b; cat "$X"` (discordia), `A=(x y); cat "$A"`
   (tabulatum) - each asserted by `causa`. Red (all "valor ignotus").
-- [ ] **Step 2: Carry the cause.** A `causa` field in `Derivatio` set
+- [x] **Step 2: Carry the cause.** A `causa` field in `Derivatio` set
   at the failing return (innermost wins), cleared before each word;
   `_viam_classificare` copies it instead of "valor ignotus". `read` /
   `mapfile` names (in `a->assignata`, no definition) -> `ansa_read`;
@@ -113,20 +113,20 @@ FALSUM` in the evaluator with the causa it will carry.
   titles -> `argumentum`. NOTE: `tabulatum` is a name beyond spec
   §VI's list (arrays are a cause until T4 resolves them) - shown to
   Fran with the T1 result.
-- [ ] **Step 3: Canon + census.** `effectus.canon` `causa` nota lists the
+- [x] **Step 3: Canon + census.** `effectus.canon` `causa` nota lists the
   vocabulary. Census rows carry `via` = source text for unresolved
   sites and a new last column `causa`; `-census` prints per-causa
   counts.
-- [ ] **Step 4: Identity of resolution.** Census `plena` / `partialis` /
+- [x] **Step 4: Identity of resolution.** Census `plena` / `partialis` /
   `nulla` counts identical to before (only text and causa added);
   summaries differ only in `causa` values (diff filtered by attribute).
-- [ ] **Step 5: Measurement.** Census by causa recorded in spec §XII
+- [x] **Step 5: Measurement.** Census by causa recorded in spec §XII
   (dated) next to the §0 heuristic. Branch: classes A+B+C within ~10
   points of the heuristic -> proceed; otherwise show Fran the table
   before T2 (the order of T3–T5 may change).
-- [ ] **Step 6: Plant** (compiles, red predicted): digit titles fall
+- [x] **Step 6: Plant** (compiles, red predicted): digit titles fall
   through to `ambitus` -> `argumentum` assertion red. Restore.
-- [ ] **Step 7: Commit** (gate `crusta`; owed gates by commissio).
+- [x] **Step 7: Commit** (gate `crusta`; owed gates by commissio).
 
 ### Task T2: the `Valor` refactor (same answers)
 
