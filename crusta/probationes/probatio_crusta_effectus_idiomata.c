@@ -349,9 +349,13 @@ s32 principale (vacuum)
     CREDO_VERUM (_attributum(s, "classis", "instrumentum_domus"));
     CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
         "bin/inst2"));
-    s = _situs(summarium, NIHIL, "exsecutio", "a/build/");
-    CREDO_VERUM (_attributum(s, "resolutio", "partialis"));
+    /* ansa 'for nomen in a b' (effectus-plan-2 T5): membra duo
+     * resoluta, non praefixum a/build/ */
+    s = _situs(summarium, NIHIL, "exsecutio", "a/build/a");
+    CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     CREDO_VERUM (_attributum(s, "classis", "build"));
+    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
+        "a/build/b"));
 
     imprimere("\n--- III. irresoluta (et quod NON irresolutum) ---\n");
     s = _situs(summarium, NIHIL, "fontatio", "\"$NESCIO\"");
@@ -363,15 +367,18 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
         "\"$P/tools/p.sh\""));
     CREDO_NIHIL (_situs(summarium, NIHIL, "fontatio", "tools/p.sh"));
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
-        "\"${NESCIO:-$RADIX_DIR/tools/v.sh}\""));
+    /* ${NESCIO:-...} (effectus-plan-2 T6, A4): NESCIO in ambitu non
+     * definita -> valor praedefinitus resolutus; clavis lineam
+     * 'ambitus NESCIO' per ambitus_lectio tenet */
+    s = _situs(summarium, NIHIL, "fontatio", "tools/v.sh");
+    CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     s = _ignotum_causae(summarium, "parsura non sana");
     CREDO_VERUM (_attributum(s, "plagula", "tools/fracta.sh"));
     s = _situs(summarium, NIHIL, "fontatio", externum);
     CREDO_VERUM (_attributum(s, "classis", "externa"));
     /* 'RADIX_DIR=/alibi true' non est definitio: aliter omnia supra
      * irresoluta essent - numerus irresolutorum exactus */
-    CREDO_AEQUALIS_I32 (_irresoluta_numerare(summarium), VI);
+    CREDO_AEQUALIS_I32 (_irresoluta_numerare(summarium), V);
 
     (vacuum)filum_arborem_delere(basis);
     credo_imprimere_compendium();

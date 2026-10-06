@@ -24,9 +24,19 @@
 #include "motus.h"
 
 nomen structura {
-    i32 fenestra_latitudo;
-    i32 fenestra_altitudo;
-    i32 status_altitudo;
+    /* superficies si superficies_* absunt (ante nuntium glutini
+     * primum) */
+            i32 fenestra_latitudo;
+            i32 fenestra_altitudo;
+    /* Modulus (013 B3): dispositio in cellulis, pixela = cellulae x
+     * cellula */
+            i32 cellula_latitudo;
+            i32 cellula_altitudo;
+    /* linea status in cellulis (Franus: I) */
+            i32 status_lineae;
+    /* R3: status pictoris; repo NIHIL = radix repositorii componenti
+     * dati - structuram TOTAM nulla (memset) ante campos */
+    InsulaRamus ramus;
 } PictorCompositio;
 
 /* "penicillus" -> "penicillus.ictus"; ignotum -> "" */

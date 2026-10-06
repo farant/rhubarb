@@ -290,7 +290,7 @@ toy_fugere (
             toy->compositiones_in_traditione = toy->compositiones;
             redde VERUM;
         casus EVENTUS_CLAVIS_DEPRESSUS:
-            si (e->datum.clavis.typus == (character)XXVII)
+            si (e->datum.clavis.clavis == CLAVIS_EFFUGIUM)
             {
                 mutare_ephemera(r, toy_ponere_verum, toy_attr_fuga);
                 redde VERUM;

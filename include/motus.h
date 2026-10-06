@@ -8,6 +8,13 @@
  * scripturam durabilem exit.
  *
  * Lint L4: scripturae insulae camporum mobilium solum ex <quies/>.
+ *
+ * GESTUS (scriba-plan S1a): status gestus applicationis in cursu
+ * (opacus - e.g. folium laboris scribae dum inseritur). Porta propria
+ * (mutare_gestum), quies PROPRIA (gestus.quies_ms, non quies
+ * dispensatoris), effusor applicationis - in quiete et in fine
+ * (dispensator_finire) vocatur, scriptore insulae "gestus". Gestus
+ * insulam numquam per eventum tangit; effusor exitus eius est.
  */
 
 #ifndef MOTUS_H
@@ -27,14 +34,34 @@
  * Typi
  * ================================================== */
 
+/* effusor gestus: VERUM = effusum (gestus mundus), FALSUM = manet
+ * sordidus et iterum temptatur */
+nomen b32 (*MotusGestusEffusor)(
+                vacuum* gestus,
+    InsulaRepositorium* repo,
+                vacuum* ctx);
+
+/* gestus applicationis (S1a): status opacus et effusor eius */
 nomen structura {
-      chorda  captura;         /* id componentis; vacua = nulla */
-         Xar* ictus_pendens;   /* Xar de Punctum */
-     Punctum  pan;
-         i32  zoom;
-         s64  tempus_ultimae_mutationis;
-         b32  sordida;
-     Piscina* piscina;
+                 vacuum* status;     /* NIHIL = nullus gestus */
+     MotusGestusEffusor  effusor;
+                 vacuum* ctx;
+                    s64  quies_ms;   /* quies PROPRIA */
+                    s64  tempus;     /* mutatio ultima */
+                    b32  sordidus;
+} MotusGestus;
+
+nomen structura {
+       chorda  captura;         /* id componentis; vacua = nulla */
+          Xar* ictus_pendens;   /* Xar de Punctum */
+      Punctum  pan;
+          i32  zoom;
+          s64  tempus_ultimae_mutationis;
+          b32  sordida;
+      Piscina* piscina;
+  MotusGestus  gestus;          /* S1a */
+  InsulaRamus  ramus;           /* T3a: ramus activus - focus et
+                                 * effusio pan/zoom; nullus = radix */
 } Motus;
 
 nomen vacuum (*MotusMutator)(
@@ -73,6 +100,42 @@ motus_quies (
  * porta accepit. */
 b32
 motus_effundere (
+                 Motus* motus,
+    InsulaRepositorium* repo);
+
+
+/* ==================================================
+ * Gestus (scriba-plan S1a)
+ * ================================================== */
+
+/* gestum applicationis addicere (semel, in aedificatione) */
+vacuum
+motus_gestum_ponere (
+                 Motus* motus,
+                vacuum* gestus,
+    MotusGestusEffusor  effusor,
+                vacuum* ctx,
+                   s64  quies_ms);
+
+/* PORTA gestus: mutator currit, tempus notatur, gestus sordidus.
+ * Insulam non tangit; sordiditatem pan/zoom non tangit. */
+vacuum
+mutare_gestum (
+           Motus* motus,
+    MotusMutator  fn,
+          vacuum* ctx,
+             s64  tempus);
+
+/* gestus sordidus ET gestus.quies_ms elapsa */
+b32
+motus_gestus_quies (
+    constans Motus* motus,
+               s64  nunc);
+
+/* effusor vocatur si gestus sordidus (scriptor "gestus"); VERUM ->
+ * mundus. FALSUM si nihil effusum aut effusor recusavit. */
+b32
+motus_gestum_effundere (
                  Motus* motus,
     InsulaRepositorium* repo);
 

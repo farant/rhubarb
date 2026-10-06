@@ -11,6 +11,7 @@
 #include "pictor_commune.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 interior vacuum
 punctum_addere (
@@ -66,8 +67,8 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"320\" altitudo=\"200\"/>",
-        "<ephemera instrumentum=\"penicillus\" zoom=\"2\""
+        "<pictor latitudo=\"320\" altitudo=\"200\"/>",
+        "<pictor instrumentum=\"penicillus\" zoom=\"2\""
         " focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
     motus_initiare(&motus, piscina);
@@ -78,9 +79,12 @@ s32 principale (vacuum)
     p.x = XII;
     p.y = XXII;
     mutare_motum(&motus, punctum_addere, &p, M + XX);
+    memset(&ctx, ZEPHYRUM, magnitudo(ctx));
     ctx.fenestra_latitudo  = CCCXX;
     ctx.fenestra_altitudo  = CCXL;
-    ctx.status_altitudo    = XII;
+    ctx.cellula_latitudo   = VI;
+    ctx.cellula_altitudo   = VIII;
+    ctx.status_lineae      = I;
 
     imprimere("\n--- Actio ex instrumento ---\n");
     CREDO_VERUM(chorda_aequalis_literis(
@@ -101,7 +105,8 @@ s32 principale (vacuum)
                                                            piscina));
     CREDO_NON_NIHIL(c);
     CREDO_VERUM(c->sectio);
-    CREDO_AEQUALIS_S32(c->fines.altitudo, CCXL - XII);
+    /* 013 B3: XXX lineae; linea status una (VIII) - prospectus XXIX */
+    CREDO_AEQUALIS_S32(c->fines.altitudo, CCXL - VIII);
     CREDO_AEQUALIS_S32(c->translatio.x, -V);
     CREDO_AEQUALIS_S32(c->translatio.y, III);
     CREDO_AEQUALIS_I32(c->scala, II);
@@ -123,7 +128,8 @@ s32 principale (vacuum)
                                                            piscina));
     CREDO_NON_NIHIL(c);
     CREDO_VERUM(c->partes == PARTES_TITULUS);
-    CREDO_AEQUALIS_S32(c->fines.y, CCXL - XII);
+    CREDO_AEQUALIS_S32(c->fines.y, CCXL - VIII);
+    CREDO_AEQUALIS_S32(c->fines.altitudo, VIII);
     CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "penicillus");
     CREDO_FALSUM(c->focusabilis);
 
@@ -140,8 +146,8 @@ s32 principale (vacuum)
     {
         InsulaRepositorium* repo2;
         repo2 = insula_repositorium_creare(piscina, intern,
-            "<documentum latitudo=\"16\" altitudo=\"8\"/>",
-            "<ephemera/>");
+            "<pictor latitudo=\"16\" altitudo=\"8\"/>",
+            "<pictor/>");
         arbor2 = pictor_componere(repo2, &motus, piscina, intern, &ctx);
         c = componens_invenire_per_id(arbor2,
                 chorda_ex_literis("prospectus", piscina));
@@ -149,6 +155,33 @@ s32 principale (vacuum)
         c = componens_invenire_per_id(arbor2,
                 chorda_ex_literis("status", piscina));
         CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "nihil");
+    }
+
+    imprimere("\n--- 013 B3: superficies status est - dispositio in"
+              " cellulis ---\n");
+    {
+        InsulaRepositorium* repo_superficiei;
+        repo_superficiei = insula_repositorium_creare(piscina, intern,
+            "<pictor latitudo=\"320\" altitudo=\"200\"/>",
+            "<pictor instrumentum=\"penicillus\""
+            " superficies_latitudo=\"480\""
+            " superficies_altitudo=\"163\"/>");
+        arbor2 = pictor_componere(repo_superficiei, &motus, piscina,
+            intern, &ctx);
+        /* radix = superficies tota; liberi ad cellulas: CLXIII / VIII
+         * = XX lineae (pixela III residua: ora inferior ad superficiem,
+         * linea status XI alta), LXXX columnae */
+        CREDO_AEQUALIS_S32(arbor2->fines.latitudo, CDLXXX);
+        CREDO_AEQUALIS_S32(arbor2->fines.altitudo, CLXIII);
+        c = componens_invenire_per_id(arbor2,
+                chorda_ex_literis("status", piscina));
+        CREDO_AEQUALIS_S32(c->fines.y, XIX * VIII);
+        CREDO_AEQUALIS_S32(c->fines.altitudo, CLXIII - XIX * VIII);
+        CREDO_AEQUALIS_S32(c->fines.latitudo, CDLXXX);
+        c = componens_invenire_per_id(arbor2,
+                chorda_ex_literis("prospectus", piscina));
+        CREDO_AEQUALIS_S32(c->fines.altitudo, XIX * VIII);
+        CREDO_AEQUALIS_S32(c->fines.latitudo, CDLXXX);
     }
 
     imprimere("\n--- Puritas et exemplar (gradus III) ---\n");

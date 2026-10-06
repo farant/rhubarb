@@ -137,7 +137,7 @@ CENSUS_INDEX="$BUILD_DIR/census.plagulae"
 find "$CRADIX" \
     \( -type d ! -path "$CRADIX" \( -name '.?*' -o -name build \
         -o -name results -o -name node_modules \
-        -o -name vendor \) \) -prune \
+        -o -name vendor -o -name oracula \) \) -prune \
     -o -type f -name '*.c' ! -name '.*' -print \
     | sed 's|^\./||' | LC_ALL=C sort > "$CENSUS_INDEX"
 

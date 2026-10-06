@@ -2,6 +2,8 @@
 
 #include "motus.h"
 
+#include <string.h>
+
 
 /* ==================================================
  * Vita et porta
@@ -26,6 +28,13 @@ motus_initiare (
     motus->tempus_ultimae_mutationis  = ZEPHYRUM;
     motus->sordida                    = FALSUM;
     motus->piscina                    = piscina;
+    memset(&motus->ramus, ZEPHYRUM, magnitudo(InsulaRamus));
+    motus->gestus.status    = NIHIL;
+    motus->gestus.effusor   = NIHIL;
+    motus->gestus.ctx       = NIHIL;
+    motus->gestus.quies_ms  = ZEPHYRUM;
+    motus->gestus.tempus    = ZEPHYRUM;
+    motus->gestus.sordidus  = FALSUM;
 }
 
 vacuum
@@ -97,22 +106,107 @@ motus_effundere (
                  Motus* motus,
     InsulaRepositorium* repo)
 {
-        b32 ok;
-     chorda nulla;
+            b32 ok;
+         chorda nulla;
+    InsulaRamus ramus;
 
     si (!motus || !repo)
     {
         redde FALSUM;
     }
-        nulla.mensura  = ZEPHYRUM;
-    nulla.datum        = NIHIL;
+    /* T3a: in ramum activum (nullus = radix) */
+    ramus = motus->ramus.repo ? motus->ramus : insula_ramus_radix(repo);
+        nulla.mensura = ZEPHYRUM;
+    nulla.datum = NIHIL;
     insula_scriptorem_ponere(repo, chorda_ex_literis("motus",
         motus->piscina));
-    ok = mutare_ephemera(repo, effusio_mutator, motus);
+    ok = mutare_ramum(&ramus, INSULA_EPHEMERA, effusio_mutator, motus);
     insula_scriptorem_ponere(repo, nulla);
     si (ok)
     {
         motus->sordida = FALSUM;
+    }
+    redde ok;
+}
+
+
+/* ==================================================
+ * Gestus (scriba-plan S1a)
+ * ================================================== */
+
+vacuum
+motus_gestum_ponere (
+                 Motus* motus,
+                vacuum* gestus,
+    MotusGestusEffusor  effusor,
+                vacuum* ctx,
+                   s64  quies_ms)
+{
+    si (!motus)
+    {
+        redde;
+    }
+    motus->gestus.status    = gestus;
+    motus->gestus.effusor   = effusor;
+    motus->gestus.ctx       = ctx;
+    motus->gestus.quies_ms  = quies_ms;
+    motus->gestus.sordidus  = FALSUM;
+}
+
+vacuum
+mutare_gestum (
+           Motus* motus,
+    MotusMutator  fn,
+          vacuum* ctx,
+             s64  tempus)
+{
+    si (!motus || !fn || !motus->gestus.status)
+    {
+        redde;
+    }
+    fn(motus, ctx);
+    motus->gestus.tempus    = tempus;
+    motus->gestus.sordidus  = VERUM;
+}
+
+b32
+motus_gestus_quies (
+    constans Motus* motus,
+               s64  nunc)
+{
+    si (!motus || !motus->gestus.status || !motus->gestus.sordidus)
+    {
+        redde FALSUM;
+    }
+    redde (nunc - motus->gestus.tempus) >= motus->gestus.quies_ms
+        ? VERUM : FALSUM;
+}
+
+b32
+motus_gestum_effundere (
+                 Motus* motus,
+    InsulaRepositorium* repo)
+{
+       b32 ok;
+    chorda prior;
+
+    si (   !motus || !repo || !motus->gestus.status
+        || !motus->gestus.effusor
+        || !motus->gestus.sordidus)
+    {
+        redde FALSUM;
+    }
+    /* scriptor prior restituitur: effusio etiam intra actionem
+     * vocatur (scriba: Esc, dd), quae deinde sub nomine suo scribit */
+    prior = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("gestus",
+        motus->piscina));
+    ok = motus->gestus.effusor(motus->gestus.status, repo,
+                               motus->gestus.ctx);
+    insula_scriptorem_ponere(repo, prior);
+    si (ok)
+    {
+        motus->gestus.sordidus = FALSUM;
     }
     redde ok;
 }

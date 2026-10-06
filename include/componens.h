@@ -45,6 +45,8 @@ nomen enumeratio {
     PARTES_TITULUS,
     PARTES_IMAGO,
     PARTES_TABULA,
+    PARTES_PROSPECTUS,   /* 013: fenestra in contentum (pagina,
+                          * tabula) - mensa circa illud */
     PARTES_NUMERUS
 } Partes;
 

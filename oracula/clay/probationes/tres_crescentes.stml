@@ -1,0 +1,7 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus latitudo="crescens" altitudo="crescens">
+    <nodus latitudo="crescens" altitudo="crescens"/>
+    <nodus latitudo="crescens" altitudo="crescens"/>
+    <nodus latitudo="crescens" altitudo="crescens"/>
+  </nodus>
+</dispositio>

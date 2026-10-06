@@ -10,7 +10,9 @@
 # Commissio est sedes quam nulla via editionis praeterit (ut examen).
 #
 # QUID: plagulae .c/.h/.m in indice (ACMR, exclusis scratchpad/build/
-# fixa/amalgama/archivum/knotapel/vendor) -> index symbolorum sanatus
+# fixa/amalgama/archivum/knotapel/vendor/oracula) -> index symbolorum sanatus
+# (oracula/: glutinum circa implementationes alienas ut oracula - lingua
+# aliena necessitate, ut vendor; dispositio D0, 2026-10-03)
 # (./silva/nexus.sh -renovare: incrementalis ~I s; PLENUS ~LXX s si
 # instrumentum novum aut tabula absens - nuntiatur) -> ./oratio/
 # vocabula.sh -nova (relatio: verbum, identificator, sedes, EXITUS
@@ -36,7 +38,7 @@ lint_latinus () {
         viae="$UNCUS_LINT_VIAE"
     else
         viae="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' '*.m' 2>/dev/null \
-            | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor)/')"
+            | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor|oracula)/')"
     fi
     if [ -z "$viae" ]; then
         echo "lint latinus (uncus): nulla plagula .c/.h in commissione - nihil iudicatum" >&2

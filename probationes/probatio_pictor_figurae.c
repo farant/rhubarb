@@ -21,6 +21,7 @@
 #include "pictor_figurae.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 interior vacuum
 punctum_addere (
@@ -79,7 +80,8 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_figurae");
-    doc = pictor_documentum_creare(piscina, intern, vol, XL, XXX, LXIV);
+    doc = pictor_documentum_creare(piscina, intern, vol, "", XL, XXX,
+        LXIV);
     /* actum: linea nigra horizontalis y=2, x 0..39 */
     pictor_documentum_actum(doc, chorda_ex_literis(
                 "<ictus instrumentum=\"penicillus\" color=\"0\""
@@ -87,8 +89,8 @@ s32 principale (vacuum)
         "<punctum x=\"39\" y=\"2\"/></ictus>",
         piscina));
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"40\" altitudo=\"30\"/>",
-        "<ephemera instrumentum=\"penicillus\" zoom=\"1\"/>");
+        "<pictor latitudo=\"40\" altitudo=\"30\"/>",
+        "<pictor instrumentum=\"penicillus\" zoom=\"1\"/>");
     motus_initiare(&motus, piscina);
     mutare_motum(&motus, pan_ponere, NIHIL, M);
     p.x = X;
@@ -97,15 +99,20 @@ s32 principale (vacuum)
     p.x = XX;
     p.y = XV;
     mutare_motum(&motus, punctum_addere, &p, M);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.fenestra_latitudo = LXIV;
     cfg.fenestra_altitudo = XLVIII;
-    cfg.status_altitudo = XII;
+    cfg.cellula_latitudo = VI;
+    cfg.cellula_altitudo = VIII;
+    cfg.status_lineae = I;
     arbor = pictor_componere(repo, &motus, piscina, intern, &cfg);
     CREDO_NON_NIHIL(arbor);
 
     imprimere("\n--- Gradus VI: figurae -> mandata ---\n");
-    pf.doc  = doc;
-    reg     = figura_registrum_creare(piscina);
+    pf.doc               = doc;
+    pf.cellula_latitudo  = VI;
+    pf.cellula_altitudo  = VIII;
+    reg                  = figura_registrum_creare(piscina);
     pictor_figurae_registrare(reg, ZEPHYRUM, &pf);
     m = mandata_creare(piscina, intern);
     pingere(arbor, reg, ZEPHYRUM, m);
@@ -159,9 +166,18 @@ s32 principale (vacuum)
                        niger);
         CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, VI),
                        albus);
-    /* extra documentum (x=40): fundus thematis */
+    /* extra documentum (x=40): MENSA prospectus (013: superficies
+     * circa paginam - prospectus figuram suam habet) */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XXXV, X),
+        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
+    /* margo paginae: cellula TOTA extra documentum (VI x VIII; schirmo
+     * documentum x -5..34, y 3..32 -> margo x -11..40, y -5..40):
+     * dextra x=40 videtur; ceterae extra prospectum (XL alto). Ubi
+     * margo vetus erat (y=33, I pixelum infra) nunc mensa */
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XL, X),
-        color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
+        color_ad_pixelum(thema_color(COLOR_BORDER)));
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XXXIII),
+        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
     captura = imago_ex_tabula(t);
     sf = specimen_iudicare(&captura, "pictor_prima",
         specimen_regula_solita("probationes/pictor/specimina"),

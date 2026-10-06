@@ -2479,9 +2479,9 @@ arx_caeli_tractare_eventum (
                 redde VERUM;
             }
 
-            /* Printable characters - usare typus (respectat shift/caps) */
-            si (   eventus->datum.clavis.typus >= XXXII
-                && eventus->datum.clavis.typus < CXXVII)
+            /* Printable characters - producta (respectat shift/caps) */
+            si (   eventus->datum.clavis.producta >= XXXII
+                && eventus->datum.clavis.producta < CXXVII)
             {
                 si (arc->edit_longitudo < DXII - I)
                 {
@@ -2493,7 +2493,7 @@ arx_caeli_tractare_eventum (
                         arc->edit_buffer[i] = arc->edit_buffer[i - I];
                     }
                     arc->edit_buffer[index] =
-                        eventus->datum.clavis.typus;
+                        (character)eventus->datum.clavis.producta;
                     arc->edit_longitudo++;
 
                     arc->cursor_columna++;

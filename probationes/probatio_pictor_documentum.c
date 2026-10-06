@@ -94,7 +94,7 @@ s32 principale (vacuum)
     imprimere("\n--- Creatio: proiectio alba, cursor 0 ---\n");
     vol = volumen_temporarium(piscina, "probatio_pictor_documentum");
     CREDO_NON_NIHIL(vol);
-    doc = pictor_documentum_creare(piscina, intern, vol, XXXII, XVI,
+    doc = pictor_documentum_creare(piscina, intern, vol, "", XXXII, XVI,
         II);
     CREDO_NON_NIHIL(doc);
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc), ZEPHYRUM);
@@ -114,7 +114,7 @@ s32 principale (vacuum)
     CREDO_VERUM(q1 > ZEPHYRUM && q2 > q1 && q3 > q2);
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc), q3);
     CREDO_AEQUALIS_S64(pictor_documentum_finis(doc), q3);
-    CREDO_AEQUALIS_I32(doc->numerus_vivorum, III);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), III);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X, II),
                        niger);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
@@ -169,7 +169,7 @@ s32 principale (vacuum)
         ictus(piscina, ZEPHYRUM, XXXI, XII, PALETTE_BLACK));
     CREDO_VERUM(q4 > q3);
     CREDO_FALSUM(pictor_documentum_reficere(doc));
-    CREDO_AEQUALIS_I32(doc->numerus_vivorum, III);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), III);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         VIII),
                        albus);   /* mortuus */
@@ -179,11 +179,11 @@ s32 principale (vacuum)
     CREDO_VERUM(pictor_documentum_verificare(doc));
 
     imprimere("\n--- Aperire idem volumen: proiectio eadem ---\n");
-    doc2 = pictor_documentum_aperire(piscina, intern, vol);
+    doc2 = pictor_documentum_aperire(piscina, intern, vol, "");
     CREDO_NON_NIHIL(doc2);
     CREDO_AEQUALIS_I32(doc2->latitudo, XXXII);
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc2), q4);
-    CREDO_AEQUALIS_I32(doc2->numerus_vivorum, III);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc2), III);
     s1 = pictor_documentum_sigillum_hex(doc, piscina);
     s2 = pictor_documentum_sigillum_hex(doc2, piscina);
     CREDO_VERUM(chorda_aequalis(s1, s2));

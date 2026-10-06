@@ -225,6 +225,7 @@ importatio_visus_creare (
 
     /* Initiare view state */
     visus->zoom               = 1.0f;
+    visus->gradus_rotulae     = XVI;   /* fenestra; FACULTATES mutant */
     visus->crop_center_x      = 0;
     visus->crop_center_y      = 0;
     visus->dragging           = FALSUM;
@@ -618,6 +619,15 @@ importatio_visus_tractare_eventum (
         redde FALSUM;
     }
 
+    /* S3b: gradus rotae quem fons publicat (etiam ante sessionem) */
+    si (   eventus->genus == EVENTUS_FACULTATES
+        && eventus->datum.facultates.gradus_rotulae > ZEPHYRUM)
+    {
+        visus->gradus_rotulae =
+            eventus->datum.facultates.gradus_rotulae;
+        redde FALSUM;
+    }
+
     si (!visus->activus)
     {
         redde FALSUM;
@@ -692,7 +702,20 @@ importatio_visus_tractare_eventum (
     si (eventus->genus == EVENTUS_MUS_ROTULA)
     {
         f32 zoom_delta;
-        zoom_delta = eventus->datum.rotula.delta_y * 0.5f;
+
+        /* S3b: dy integrum + genus (olim delta_y f32 =
+         * scrollingDelta crudum x 0.5): rota per gradus (dy / gradus =
+         * lineae), trackpad et plagulae veteres per pixela (ad scalam
+         * I = puncta) */
+        si (eventus->datum.rotula.genus == EVENTUS_ROTULA_GRADATA)
+        {
+            zoom_delta = (f32)eventus->datum.rotula.dy
+                / (f32)visus->gradus_rotulae * 0.5f;
+        }
+        alioquin
+        {
+            zoom_delta = (f32)eventus->datum.rotula.dy * 0.5f;
+        }
         importatio_visus_ponere_zoom(visus, visus->zoom + zoom_delta);
         redde VERUM;
     }

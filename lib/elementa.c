@@ -580,7 +580,9 @@ elementa_campus_textus (
         si (   fructus.focused
             && eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
         {
-            character typus   = eventus->datum.clavis.typus;
+            /* S3a: producta (ASCII ut olim typus; generatio vetus) */
+            character typus   = (eventus->datum.clavis.producta < 0x80)
+                ? (character)eventus->datum.clavis.producta : '\0';
              clavis_t clavis  = eventus->datum.clavis.clavis;
 
             /* Backspace */

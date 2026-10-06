@@ -66,6 +66,18 @@ figura_registrare (
            FiguraFn  fn,
              vacuum* ctx);
 
+/* vicus (T2a): registrum vacuum reddere (memoria servatur) */
+vacuum
+figura_registrum_vacare (
+    FiguraRegistrum* reg);
+
+/* introitus fontis in reg addere; collisio ulla (partes + thema) =
+ * FALSUM et nihil additur */
+b32
+figura_registrum_miscere (
+             FiguraRegistrum* reg,
+    constans FiguraRegistrum* fons);
+
 b32
 figura_invenire (
     constans FiguraRegistrum*  reg,

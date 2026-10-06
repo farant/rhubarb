@@ -565,20 +565,22 @@ _vetustum (
            s32 m         = _modi_numerus(ligantes, FALSUM);
            b32 alterum   = (b32)((ligantes & MOD_ALT) != ZEPHYRUM);
            s32 octetus;
-            i8 typus[I];
+            i8 producta[IV];
 
     si (   e->genus              == EVENTUS_CLAVIS_LIBERATUS
         || e->datum.clavis.actio == EVENTUS_ACTIO_SOLUTA)
     {
         redde;      /* legacy solutiones non narrat */
     }
-    /* textus: TEXTUS sequens, aut typus (sub Ctrl/Alt textus deest) */
-    si (   textus.mensura == ZEPHYRUM && e->datum.clavis.typus >= 0x20
-        && e->datum.clavis.typus < 0x7F)
+    /* textus: TEXTUS sequens, aut producta (sub Ctrl/Alt textus deest;
+     * S3a: Unicode plena, olim typus ASCII) */
+    si (   textus.mensura           == ZEPHYRUM
+        && e->datum.clavis.producta >= 0x20
+        && e->datum.clavis.producta != 0x7F)
     {
-        typus[ZEPHYRUM]  = (i8)e->datum.clavis.typus;
-        textus.datum     = typus;
-        textus.mensura   = I;
+        textus.datum    = producta;
+        textus.mensura  = (i32)utf8_codere(e->datum.clavis.producta,
+            producta);
     }
     si (_pc(e, m, a))
     {

@@ -1,0 +1,7 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus latitudo="fixa:60" altitudo="fixa:10" spatium="2 3 1 1" intervallum="2">
+    <nodus latitudo="fixa:10" altitudo="fixa:3"/>
+    <nodus latitudo="fixa:7" altitudo="fixa:5"/>
+    <nodus latitudo="fixa:4" altitudo="fixa:8"/>
+  </nodus>
+</dispositio>

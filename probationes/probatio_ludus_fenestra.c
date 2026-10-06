@@ -57,10 +57,27 @@ s32 principale (vacuum)
                                t);
     CREDO_NON_NIHIL(lf);
 
+    imprimere("\n--- Mora: nulla ante quadrum primum ---\n");
+    CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), ZEPHYRUM);
+
     imprimere("\n--- Quadrum: pulsus, pingere, delineare ---\n");
     n0 = toy.compositiones;
     ludus_quadrum(lf, M);
     CREDO_AEQUALIS_I32(lf->mensurae.quadra, I);
+    /* post quadrum primum: quies dispensatoris (CCC) - fenestra
+     * otiosa exspectat, non perscrutatur in ansa */
+    CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), CCC);
+    /* 013 B1: magnitudo initialis nuntiata (tabula CC x C) */
+    CREDO_NON_NIHIL(insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo"));
+    si (insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo"))
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(repo,
+            INSULA_EPHEMERA, "superficies_latitudo"), "200");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*insula_attributum(repo,
+            INSULA_EPHEMERA, "superficies_altitudo"), "100");
+    }
     /* pulsus recomposuit */
     CREDO_VERUM(toy.compositiones > n0);
     /* coetus x3 + rect */
@@ -84,6 +101,74 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(lf->mensurae.quadra, II);
     /* piscina quadri vacatur: mandata nova, non accumulata */
     CREDO_AEQUALIS_I32(mandata_numerus(lf->mandata), n1);
+
+    imprimere("\n--- 013 B3b: tabula ad fenestram (scala servata)"
+              " ---\n");
+    {
+        TabulaPixelorum* t2 = tabula_pixelorum_creare_nuda(piscina, CC,
+            C);
+                    i32* prima;
+
+        t2->scala  = 2.0f;   /* fenestra CD x CC punctorum */
+        prima      = t2->pixela;
+        CREDO_VERUM(tabula_pixelorum_ad_fenestram(t2, piscina, CCC,
+            CLX));
+        CREDO_AEQUALIS_I32(t2->latitudo, CL);
+        CREDO_AEQUALIS_I32(t2->altitudo, LXXX);
+        CREDO_VERUM(t2->scala == 2.0f);
+        CREDO_AEQUALIS_I32(t2->fenestra_latitudo, CCC);
+        /* minor: memoria eadem */
+        CREDO_VERUM(t2->pixela == prima);
+        CREDO_VERUM(tabula_pixelorum_ad_fenestram(t2, piscina, DC, CD));
+        CREDO_AEQUALIS_I32(t2->latitudo, CCC);
+        CREDO_AEQUALIS_I32(t2->altitudo, CC);
+        /* maior: memoria nova */
+        CREDO_VERUM(t2->pixela != prima);
+        CREDO_VERUM(t2->capacitas >= CCC * CC);
+        /* pixelum ultimum scribibile (memoria vera) */
+        tabula_pixelorum_ponere_pixelum(t2, CCC - I, CC - I, VII);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t2,
+            CCC - I, CC - I), VII);
+    }
+
+    imprimere("\n--- 013 B3b: glutinum - eventus in pixela nostra"
+              " ---\n");
+    {
+        TabulaPixelorum* t3 = tabula_pixelorum_creare_nuda(piscina, CC,
+            C);
+          LudusFenestra* lf_aptata;
+                 chorda* a;
+
+        t3->scala = 2.0f;
+        lf_aptata = ludus_fenestra_creare(piscina, d, figurae, ZEPHYRUM,
+            NIHIL,
+            NIHIL, t3);
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus = EVENTUS_MUTARE_MAGNITUDINEM;
+        /* puncta fenestrae */
+        e.datum.mutare_magnitudinem.latitudo = D;
+        e.datum.mutare_magnitudinem.altitudo = CCC;
+        ludus_fenestra_tractare(lf_aptata, &e, M + CC);
+        CREDO_AEQUALIS_I32(t3->latitudo, CCL);
+        CREDO_AEQUALIS_I32(t3->altitudo, CL);
+        a = insula_attributum(repo, INSULA_EPHEMERA,
+            "superficies_latitudo");
+        CREDO_NON_NIHIL(a);
+        si (a)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(*a, "250");
+        }
+        a = insula_attributum(repo, INSULA_EPHEMERA,
+            "superficies_altitudo");
+        CREDO_NON_NIHIL(a);
+        si (a)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(*a, "150");
+        }
+        /* quadrum post mutationem: tabula nova tota pingitur */
+        ludus_quadrum(lf_aptata, M + CCC);
+        CREDO_VERUM(lf_aptata->mensurae.quadra >= I);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

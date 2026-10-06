@@ -79,6 +79,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"
       nota="verum: scriptura aliqua eiusdem processus viam tegit (aequalis,
@@ -95,7 +96,22 @@
       nota="titulus mandati externi, ubi per=mandatum"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"
-      nota="cur resolutio non plena"/>
+      nota="cur resolutio non plena (vocabularium idem in omni situ;
+            effectus-plan-2 T1): argumentum ($1 $@, aut nomen ex eis),
+            ansa_read (variabilis ansae 'for' aut a read/mapfile posita),
+            substitutio ($(...) praeter idiomata), ambitus (nulla
+            definitio in ambitu; ~), operator (${X/a/b} ${X:-d} ${#X},
+            arithmetica, X+=verbum), discordia (definitiones aequales
+            non sunt), tabulatum (valor tabulati aut subscriptum),
+            recursio (definitio se ipsam nominat:
+            X ex X ipso in ansa accumulatum), profunditas (catena definitionum nimis
+            longa), cwd ignotum
+            (cd W ignotum), valor ignotus (residuum: nulla causa
+            nominata - numerandum, non tolerandum)"/>
+    <attributum nomen="temporaria" genus="textus"
+      nota="ubi classis temporaria (effectus-plan-2 T3, A1): objectum
+            mktemp creans, plagula:linea:columna substitutionis; via tum
+            cauda sub objecto est ('.' = objectum ipsum)"/>
     <attributum nomen="textus" genus="textus"
       nota="verbum fontis litteraliter, ubi resolutio partialis (via
             tum praefixum solum fert): nuntiis lintri et proiectioni
@@ -125,6 +141,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="per" genus="electio" necessarium="verum">
       <optio>redirectio</optio>
@@ -135,6 +152,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
@@ -160,6 +178,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -171,6 +190,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="custodia" genus="textus"
       nota="'[ -x P ] || S': P (binarium domus) custodit"/>
@@ -199,6 +219,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -210,6 +231,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
@@ -238,6 +260,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -249,6 +272,7 @@
     <attributum nomen="mandatum" genus="textus"/>
     <attributum nomen="operator" genus="textus"/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>
@@ -275,6 +299,7 @@
       <optio>instrumentum_domus</optio>
       <optio>externa</optio>
       <optio>systema</optio>
+      <optio>temporaria</optio>
     </attributum>
     <attributum nomen="scripta_in_ambitu" genus="veritas"/>
     <attributum nomen="per" genus="electio" necessarium="verum">
@@ -287,6 +312,7 @@
     <attributum nomen="operator" genus="textus"
       nota="operator litteralis: -f -d -e -s -nt -ot ..."/>
     <attributum nomen="causa" genus="textus"/>
+    <attributum nomen="temporaria" genus="textus"/>
     <attributum nomen="textus" genus="textus"/>
     <attributum nomen="plagula" genus="textus" necessarium="verum"/>
     <attributum nomen="sedes" genus="textus" necessarium="verum"/>

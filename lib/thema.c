@@ -81,6 +81,9 @@ thema_initiare (vacuum)
     mappa_semantica[COLOR_ERROR]    = PALETTE_BRIGHT_PINK;
     mappa_semantica[COLOR_WARNING]  = PALETTE_MEDIUM_GOLD;
     mappa_semantica[COLOR_SUCCESS]  = PALETTE_BRIGHT_LEAF;
+
+    /* mensa circa paginam (013, Franus 2026-10-05) */
+    mappa_semantica[COLOR_SUPERFICIES] = PALETTE_MEDIUM_GRAY;
 }
 
 

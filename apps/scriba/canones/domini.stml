@@ -1,0 +1,17 @@
+<domini>
+  <dominus genus="ephemera" attributum="cursor_linea"      scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="cursor_columna"    scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="modus"             scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="visualis_genus"    scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="selectio_linea"    scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="selectio_columna"  scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="clavis_praecedens" scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="fd_exspectans"     scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="fd_tempus"         scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="capsa"             scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="capsa_lineae"      scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="focus"             scriptor="dispensator"/>
+  <dominus genus="ephemera" attributum="focus_acervus"     scriptor="dispensator"/>
+  <dominus genus="ephemera" attributum="superficies_latitudo" scriptor="dispensator"/>
+  <dominus genus="ephemera" attributum="superficies_altitudo" scriptor="dispensator"/>
+</domini>

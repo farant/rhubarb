@@ -19,7 +19,8 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/eventus_cauda.h", NIHIL, EXCLUDENDA_CAUDAE, FALSUM, VERUM },
     { "include/interpres_terminalis.h", NIHIL, EXCLUDENDA_INTERPRETIS, FALSUM, VERUM },
     { "include/rivus_terminalis.h", NIHIL, EXCLUDENDA_RIVI, FALSUM, VERUM },
-    { "include/claves_physicae.h", NIHIL, EXCLUDENDA_CLAVIUM, FALSUM, VERUM }
+    { "include/claves_physicae.h", NIHIL, EXCLUDENDA_CLAVIUM, FALSUM, VERUM },
+    { "include/stilus_terminalis.h", NIHIL, EXCLUDENDA_STILI, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -32,7 +33,8 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/claves_physicae.c", NIHIL, EXCLUDENDA_CLAVIUM, VERUM, VERUM },
     { "lib/eventus_cauda.c", NIHIL, EXCLUDENDA_CAUDAE, VERUM, VERUM },
     { "lib/interpres_terminalis.c", NIHIL, EXCLUDENDA_INTERPRETIS, VERUM, VERUM },
-    { "lib/rivus_terminalis.c", NIHIL, EXCLUDENDA_RIVI, VERUM, VERUM }
+    { "lib/rivus_terminalis.c", NIHIL, EXCLUDENDA_RIVI, VERUM, VERUM },
+    { "lib/stilus_terminalis.c", NIHIL, EXCLUDENDA_STILI, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {

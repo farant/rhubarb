@@ -99,6 +99,13 @@ dispensator_tractare (
          Dispensator* d,
     constans Eventus* ev);
 
+/* finis applicationis (S1a): quidquid pendet effunditur sine
+ * quiete - pan/zoom sordida et gestus sordidus. Glutina (fenestra,
+ * terminalis) ante exitum vocant; aliter pendentia perduntur. */
+vacuum
+dispensator_finire (
+    Dispensator* d);
+
 /* EVENTUS_NIHIL cum tempore: sedes quietis + recompositio */
 vacuum
 dispensator_pulsare (

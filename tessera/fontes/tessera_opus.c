@@ -4,6 +4,7 @@
 #include "tessera_modi.h"
 #include "utf8.h"
 #include "runae.h"
+#include "stilus_terminalis.h"
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -59,130 +60,65 @@ _positum_emittere (
     chorda_aedificator_appendere_character(aed, 'H');
 }
 
-/* Index xterm CCLVI proximus (XVI-CCLV) per distantiam RGB quadratam:
- * cubus (gradus 0/95/135/175/215/255 per canalem; in aequalitate
- * gradus inferior) aut griseus (8 + 10k, k 0-23; proximus mediae RGB,
- * quia distantia ad griseum in gradu convexa est). Aequalitas:
- * cubus. */
-interior i32
-_cclvi (
-    i32 color)
-{
-    hic_manens constans i32 GRADUS[VI] = { 0, 95, 135, 175, 215, 255 };
-                        i32 index[III];
-                        i32 d_cubi    = ZEPHYRUM;
-                        i32 d_grisei  = ZEPHYRUM;
-                        i32 summa     = ZEPHYRUM;
-                        i32 griseus;
-                        i32 k;
-
-    per (k = ZEPHYRUM; k < III; k++)
-    {
-        s32 c = (s32)((color >> (XVI - VIII * k)) & 0xFF);
-        s32 d;
-        i32 j;
-
-        index[k] = ZEPHYRUM;
-        per (j = I; j < VI; j++)
-        {
-            s32 prior  = c - (s32)GRADUS[index[k]];
-            s32 hic    = c - (s32)GRADUS[j];
-
-            si (hic * hic < prior * prior)
-            {
-                index[k] = j;
-            }
-        }
-        d       = c - (s32)GRADUS[index[k]];
-        d_cubi  += (i32)(d * d);
-        summa   += (i32)c;
-    }
-    griseus = (summa / III < VIII) ? ZEPHYRUM
-                                   : (summa / III - VIII + V) / X;
-    si (griseus > XXIII)
-    {
-        griseus = XXIII;
-    }
-    per (k = ZEPHYRUM; k < III; k++)
-    {
-        s32 d = (s32)((color >> (XVI - VIII * k)) & 0xFF)
-            - (s32)(VIII + X * griseus);
-
-        d_grisei += (i32)(d * d);
-    }
-    si (d_grisei < d_cubi)
-    {
-        redde CCXXXII + griseus;
-    }
-    redde XVI + XXXVI * index[0] + VI * index[1] + index[2];
-}
-
-/* Colorem SGR emittere: praefixum ";38;" aut ";48;", deinde "2;R;G;B"
- * (PLENI) aut "5;n" (CCLVI) */
+/* Color tesserae (0x00RRGGBB aut NATIVUS) in colorem codicis */
 interior vacuum
-_colorem_emittere (
-      ChordaAedificator* aed,
-     constans character* praefixum,
-                    i32  color,
-         TesseraColores  colores)
+_colorem_vertere (
+    StilusColor* exitus,
+            i32  color)
 {
-    chorda_aedificator_appendere_literis(aed, praefixum);
-    si (colores == TESSERA_COLORES_CCLVI)
+    si (color == TESSERA_COLOR_NATIVUS)
     {
-        chorda_aedificator_appendere_literis(aed, "5;");
-        chorda_aedificator_appendere_i32(aed, _cclvi(color));
+        exitus->genus = STILUS_COLOR_NATIVUS;
+        exitus->valor = ZEPHYRUM;
         redde;
     }
-    chorda_aedificator_appendere_literis(aed, "2;");
-    chorda_aedificator_appendere_i32(aed, (color >> XVI) & 0xFF);
-    chorda_aedificator_appendere_character(aed, ';');
-    chorda_aedificator_appendere_i32(aed, (color >> VIII) & 0xFF);
-    chorda_aedificator_appendere_character(aed, ';');
-    chorda_aedificator_appendere_i32(aed, color & 0xFF);
+    exitus->genus = STILUS_COLOR_RGB;
+    exitus->valor = color & 0xFFFFFF;
 }
 
-/* SGR: reditio plena + ornamenta + colores (nativus = nihil -
- * reditio nuda defaltas terminalis dat) */
+/* SGR per codicem stilus_terminalis (modulus 004): stilus tesserae
+ * SINE DAMNO in StilusTerminalis vertitur (sex ornamenta tuta;
+ * sublineatum = sublinea simplex), deinde reditio plena (prior
+ * NIHIL). Colores nativi nihil addunt - reditio nuda defaltas
+ * terminalis dat. CCLVI: quantizatio in codice (stilus_quantizare). */
 interior vacuum
 _stilum_emittere (
           ChordaAedificator* aed,
      constans TesseraStilus* st,
              TesseraColores  colores)
 {
-    chorda_aedificator_appendere_literis(aed, "\033[0");
+    StilusTerminalis stilus;
+
+    stilus_nativus(&stilus);
+    _colorem_vertere(&stilus.color_litterae, st->color_litterae);
+    _colorem_vertere(&stilus.color_fundi, st->color_fundi);
     si (st->ornamenta & TESSERA_ORNAMENTUM_CRASSUM)
     {
-        chorda_aedificator_appendere_literis(aed, ";1");
+        stilus.ornamenta |= STILUS_CRASSUM;
     }
     si (st->ornamenta & TESSERA_ORNAMENTUM_OBSCURUM)
     {
-        chorda_aedificator_appendere_literis(aed, ";2");
+        stilus.ornamenta |= STILUS_OBSCURUM;
     }
     si (st->ornamenta & TESSERA_ORNAMENTUM_CURSIVUM)
     {
-        chorda_aedificator_appendere_literis(aed, ";3");
+        stilus.ornamenta |= STILUS_CURSIVUM;
     }
     si (st->ornamenta & TESSERA_ORNAMENTUM_SUBLINEATUM)
     {
-        chorda_aedificator_appendere_literis(aed, ";4");
+        stilus.sublinea = STILUS_SUBLINEA_SIMPLEX;
     }
     si (st->ornamenta & TESSERA_ORNAMENTUM_INVERSUM)
     {
-        chorda_aedificator_appendere_literis(aed, ";7");
+        stilus.ornamenta |= STILUS_INVERSUM;
     }
     si (st->ornamenta & TESSERA_ORNAMENTUM_TRANSFIXUM)
     {
-        chorda_aedificator_appendere_literis(aed, ";9");
+        stilus.ornamenta |= STILUS_TRANSFIXUM;
     }
-    si (st->color_litterae != TESSERA_COLOR_NATIVUS)
-    {
-        _colorem_emittere(aed, ";38;", st->color_litterae, colores);
-    }
-    si (st->color_fundi != TESSERA_COLOR_NATIVUS)
-    {
-        _colorem_emittere(aed, ";48;", st->color_fundi, colores);
-    }
-    chorda_aedificator_appendere_character(aed, 'm');
+    stilus_codificare(aed, NIHIL, &stilus,
+        (colores == TESSERA_COLORES_CCLVI) ? STILUS_CODIFICATIO_CCLVI
+                                           : STILUS_CODIFICATIO_PLENA);
 }
 
 TesseraOpus*

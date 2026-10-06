@@ -61,7 +61,8 @@ _chorda_incipit_insensitive (
         character a = (character)textus.datum[i];
         character b = (character)praefixum.datum[i];
 
-        si (tolower((insignatus character)a) != tolower((insignatus character)b))
+        si (tolower((insignatus character)a)
+            != tolower((insignatus character)b))
         {
             redde FALSUM;
         }
@@ -140,8 +141,10 @@ _comparare_titulum (
 
     per (i = 0; i < len; i++)
     {
-        character ca = (character)tolower((insignatus character)a.datum[i]);
-        character cb = (character)tolower((insignatus character)b.datum[i]);
+        character ca =
+            (character)tolower((insignatus character)a.datum[i]);
+        character cb =
+            (character)tolower((insignatus character)b.datum[i]);
 
         si (ca != cb)
         {
@@ -177,14 +180,16 @@ _librarium_visus_carcare_catalogum (
     }
 
     /* Parse STML */
-    resultus = stml_legere(contentum, visus->piscina, visus->ctx->intern);
+    resultus = stml_legere(contentum, visus->piscina,
+        visus->ctx->intern);
     si (!resultus.successus || !resultus.elementum_radix)
     {
         redde;
     }
 
     /* Invenire omnes <liber> elementa */
-    libri_stml = stml_invenire_omnes_liberos(resultus.elementum_radix, "liber", visus->piscina);
+    libri_stml = stml_invenire_omnes_liberos(resultus.elementum_radix,
+        "liber", visus->piscina);
     si (!libri_stml)
     {
         redde;
@@ -218,7 +223,8 @@ _librarium_visus_carcare_catalogum (
         }
 
         /* Allocare LibrumInfo */
-        liber = (LibrumInfo*)piscina_allocare(visus->piscina, magnitudo(LibrumInfo));
+        liber = (LibrumInfo*)piscina_allocare(visus->piscina,
+            magnitudo(LibrumInfo));
         si (!liber)
         {
             perge;
@@ -227,7 +233,8 @@ _librarium_visus_carcare_catalogum (
         /* Capere numerus */
         {
             chorda* attr_numerus;
-            attr_numerus = stml_attributum_capere(nodus_liber, "numerus");
+            attr_numerus = stml_attributum_capere(nodus_liber,
+                "numerus");
             si (attr_numerus)
             {
                 liber->numerus = *attr_numerus;
@@ -242,7 +249,8 @@ _librarium_visus_carcare_catalogum (
         nodus_temp = stml_invenire_liberum(nodus_liber, "titulus");
         si (nodus_temp)
         {
-            liber->titulus = stml_textus_normalizatus(nodus_temp, visus->piscina);
+            liber->titulus = stml_textus_normalizatus(nodus_temp,
+                visus->piscina);
         }
         alioquin
         {
@@ -253,7 +261,8 @@ _librarium_visus_carcare_catalogum (
         nodus_temp = stml_invenire_liberum(nodus_liber, "auctor");
         si (nodus_temp)
         {
-            liber->auctor = stml_textus_normalizatus(nodus_temp, visus->piscina);
+            liber->auctor = stml_textus_normalizatus(nodus_temp,
+                visus->piscina);
         }
         alioquin
         {
@@ -264,7 +273,8 @@ _librarium_visus_carcare_catalogum (
         nodus_temp = stml_invenire_liberum(nodus_liber, "annus");
         si (nodus_temp)
         {
-            liber->annus = stml_textus_normalizatus(nodus_temp, visus->piscina);
+            liber->annus = stml_textus_normalizatus(nodus_temp,
+                visus->piscina);
         }
         alioquin
         {
@@ -275,7 +285,8 @@ _librarium_visus_carcare_catalogum (
         nodus_temp = stml_invenire_liberum(nodus_liber, "summarium");
         si (nodus_temp)
         {
-            liber->summarium = stml_textus_normalizatus(nodus_temp, visus->piscina);
+            liber->summarium = stml_textus_normalizatus(nodus_temp,
+                visus->piscina);
         }
         alioquin
         {
@@ -286,7 +297,8 @@ _librarium_visus_carcare_catalogum (
         nodus_temp = stml_invenire_liberum(nodus_liber, "notae");
         si (nodus_temp)
         {
-            liber->notae = stml_textus_normalizatus(nodus_temp, visus->piscina);
+            liber->notae = stml_textus_normalizatus(nodus_temp,
+                visus->piscina);
         }
         alioquin
         {
@@ -297,7 +309,8 @@ _librarium_visus_carcare_catalogum (
         nodus_temp = stml_invenire_liberum(nodus_liber, "via");
         si (nodus_temp)
         {
-            liber->via = stml_textus_normalizatus(nodus_temp, visus->piscina);
+            liber->via = stml_textus_normalizatus(nodus_temp,
+                visus->piscina);
         }
         alioquin
         {
@@ -309,7 +322,8 @@ _librarium_visus_carcare_catalogum (
         nodus_temp   = stml_invenire_liberum(nodus_liber, "tags");
         si (nodus_temp)
         {
-            tags_stml = stml_invenire_omnes_liberos(nodus_temp, "tag", visus->piscina);
+            tags_stml = stml_invenire_omnes_liberos(nodus_temp, "tag",
+                visus->piscina);
             si (tags_stml)
             {
                 s32 j;
@@ -320,25 +334,33 @@ _librarium_visus_carcare_catalogum (
                     StmlNodus* nodus_tag;
                        chorda  tag_textus;
 
-                    nodus_tag = *(StmlNodus**)xar_obtinere(tags_stml, (i32)j);
+                    nodus_tag = *(StmlNodus**)xar_obtinere(tags_stml,
+                        (i32)j);
                     si (nodus_tag)
                     {
-                        tag_textus = stml_textus_normalizatus(nodus_tag, visus->piscina);
+                        tag_textus = stml_textus_normalizatus(nodus_tag,
+                            visus->piscina);
                         si (tag_textus.mensura > 0)
                         {
-                            *(chorda*)xar_addere(liber->tags) = tag_textus;
+                            *(chorda*)xar_addere(liber->tags) =
+                                tag_textus;
 
                             /* Addere ad tags_unici si non existit */
                             {
                                 b32 inventum = FALSUM;
                                 s32 k;
-                                s32 num_unici = (s32)xar_numerus(visus->tags_unici);
+                                s32 num_unici =
+                                    (s32)xar_numerus(visus->tags_unici);
 
                                 per (k = 0; k < num_unici; k++)
                                 {
                                     chorda* existens;
-                                    existens = (chorda*)xar_obtinere(visus->tags_unici, (i32)k);
-                                    si (existens && chorda_aequalis(*existens, tag_textus))
+                                    existens =
+                                        (chorda*)xar_obtinere(visus->tags_unici,
+                                        (i32)k);
+                                    si (   existens
+                                        && chorda_aequalis(*existens,
+                                        tag_textus))
                                     {
                                         inventum = VERUM;
                                         frange;
@@ -347,7 +369,8 @@ _librarium_visus_carcare_catalogum (
 
                                 si (!inventum)
                                 {
-                                    *(chorda*)xar_addere(visus->tags_unici) = tag_textus;
+                                    *(chorda*)xar_addere(visus->tags_unici) =
+                                        tag_textus;
                                 }
                             }
                         }
@@ -368,12 +391,14 @@ _librarium_visus_carcare_catalogum (
 
         per (i = 1; i < num_tags; i++)
         {
-            chorda tag_i = *(chorda*)xar_obtinere(visus->tags_unici, (i32)i);
+            chorda tag_i = *(chorda*)xar_obtinere(visus->tags_unici,
+                (i32)i);
             j = i - 1;
 
             dum (j >= 0)
             {
-                chorda* tag_j = (chorda*)xar_obtinere(visus->tags_unici, (i32)j);
+                chorda* tag_j = (chorda*)xar_obtinere(visus->tags_unici,
+                    (i32)j);
 
                 si (_comparare_titulum(*tag_j, tag_i) <= 0)
                 {
@@ -381,12 +406,14 @@ _librarium_visus_carcare_catalogum (
                 }
 
                 /* Movere tag_j ad j+1 */
-                *(chorda*)xar_obtinere(visus->tags_unici, (i32)(j + 1)) = *tag_j;
+                *(chorda*)xar_obtinere(visus->tags_unici, (i32)(j
+                    + 1)) = *tag_j;
                 j--;
             }
 
             /* Inserere tag_i ad j+1 */
-            *(chorda*)xar_obtinere(visus->tags_unici, (i32)(j + 1)) = tag_i;
+            *(chorda*)xar_obtinere(visus->tags_unici, (i32)(j + 1)) =
+                tag_i;
         }
     }
 }
@@ -411,7 +438,8 @@ _librarium_visus_filtrare (
     }
 
     /* Recreare array filtrati */
-    visus->libri_filtrati = xar_creare(visus->piscina, magnitudo(LibrumInfo*));
+    visus->libri_filtrati = xar_creare(visus->piscina,
+        magnitudo(LibrumInfo*));
     num_libri = (s32)xar_numerus(visus->libri);
 
     /* Applicare filtrum */
@@ -453,7 +481,8 @@ _librarium_visus_filtrare (
         /* Filtrum per quaestio (titulus) */
         si (includere && visus->filtrum_quaestio.mensura > 0)
         {
-            si (!_chorda_incipit_insensitive(liber->titulus, visus->filtrum_quaestio))
+            si (!_chorda_incipit_insensitive(liber->titulus,
+                visus->filtrum_quaestio))
             {
                 includere = FALSUM;
             }
@@ -479,8 +508,10 @@ _librarium_visus_filtrare (
             LibrumInfo*  b;
                    s32   cmp;
 
-            ptr_a = (LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)j);
-            ptr_b = (LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)(j + 1));
+            ptr_a = (LibrumInfo**)xar_obtinere(visus->libri_filtrati,
+                (i32)j);
+            ptr_b = (LibrumInfo**)xar_obtinere(visus->libri_filtrati,
+                (i32)(j + 1));
 
             si (!ptr_a || !ptr_b)
             {
@@ -526,7 +557,8 @@ librarium_visus_creare (
         redde NIHIL;
     }
 
-    visus = (LibrariumVisus*)piscina_allocare(piscina, magnitudo(LibrariumVisus));
+    visus = (LibrariumVisus*)piscina_allocare(piscina,
+        magnitudo(LibrariumVisus));
     si (!visus)
     {
         redde NIHIL;
@@ -597,10 +629,11 @@ _reddere_categoriae (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -664,7 +697,8 @@ _reddere_categoriae (
 
     /* Instructiones */
     linea = y + altitudo - II;
-    titulus = _chorda_ex_cstr("j/k: selectare   Enter: aperire   Esc: exire");
+    titulus =
+        _chorda_ex_cstr("j/k: selectare   Enter: aperire   Esc: exire");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
         titulus, pixelum_text_dim, scala);
@@ -709,10 +743,11 @@ _reddere_tags (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -731,10 +766,11 @@ _reddere_tags (
     linea += III;
 
     /* Lista tags */
-    num_tags = visus->tags_unici ? (i32)xar_numerus(visus->tags_unici) : 0;
-    tags_per_pagina = altitudo - VIII;
-    init_tag = (i32)visus->index_paginae * tags_per_pagina;
-    finis_tag = init_tag + tags_per_pagina;
+    num_tags =
+        visus->tags_unici ? (i32)xar_numerus(visus->tags_unici) : 0;
+    tags_per_pagina  = altitudo - VIII;
+    init_tag         = (i32)visus->index_paginae * tags_per_pagina;
+    finis_tag        = init_tag + tags_per_pagina;
     si (finis_tag > num_tags)
     {
         finis_tag = num_tags;
@@ -774,7 +810,8 @@ _reddere_tags (
 
     /* Pagina indicator */
     {
-        i32 num_paginae = (num_tags + tags_per_pagina - 1) / tags_per_pagina;
+        i32 num_paginae = (num_tags + tags_per_pagina - 1)
+            / tags_per_pagina;
         si (num_paginae < 1)
         {
             num_paginae = 1;
@@ -782,17 +819,20 @@ _reddere_tags (
         si (num_paginae > 1)
         {
             character pagina_buf[XXXII];
-            sprintf(pagina_buf, "Pagina %d/%d", (i32)visus->index_paginae + 1, num_paginae);
+            sprintf(pagina_buf, "Pagina %d/%d",
+                (i32)visus->index_paginae + 1, num_paginae);
             titulus = _chorda_ex_cstr(pagina_buf);
             tabula_pixelorum_pingere_chordam_scalatam(tabula,
-                (x + latitudo - PADDING - XVI) * char_lat, (y + II) * char_alt,
+                (x + latitudo - PADDING - XVI) * char_lat, (y
+                    + II) * char_alt,
                 titulus, pixelum_text_dim, scala);
         }
     }
 
     /* Instructiones */
     linea = y + altitudo - II;
-    titulus = _chorda_ex_cstr("j/k: selectare   h/l: pagina   Enter: filtrare   Esc: retro");
+    titulus =
+        _chorda_ex_cstr("j/k: selectare   h/l: pagina   Enter: filtrare   Esc: retro");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
         titulus, pixelum_text_dim, scala);
@@ -838,10 +878,11 @@ _reddere_catalogo_compacto (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -879,10 +920,11 @@ _reddere_catalogo_compacto (
     linea += II;
 
     /* Lista librorum */
-    num_libri = visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
-    libri_per_pagina = altitudo - VI;
-    init_liber = (i32)visus->index_paginae * libri_per_pagina;
-    finis_liber = init_liber + libri_per_pagina;
+    num_libri =
+        visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
+    libri_per_pagina  = altitudo - VI;
+    init_liber        = (i32)visus->index_paginae * libri_per_pagina;
+    finis_liber       = init_liber + libri_per_pagina;
     si (finis_liber > num_libri)
     {
         finis_liber = num_libri;
@@ -915,7 +957,8 @@ _reddere_catalogo_compacto (
 
         /* Parse annus */
         k = 0;
-        si (liber->annus.mensura > 0 && (character)liber->annus.datum[0] == '-')
+        si (   liber->annus.mensura > 0
+            && (character)liber->annus.datum[0] == '-')
         {
             neg  = VERUM;
             k    = 1;
@@ -957,7 +1000,8 @@ _reddere_catalogo_compacto (
             {
                 tit_len = XC;
             }
-            memcpy(titulus_trunc, liber->titulus.datum, (size_t)tit_len);
+            memcpy(titulus_trunc, liber->titulus.datum,
+                (size_t)tit_len);
             titulus_trunc[tit_len] = '\0';
 
             /* Truncare auctor */
@@ -969,7 +1013,8 @@ _reddere_catalogo_compacto (
             memcpy(auctor_trunc, liber->auctor.datum, (size_t)auc_len);
             auctor_trunc[auc_len] = '\0';
 
-            sprintf(buffer, "%8s  %s - %s", annus_str, titulus_trunc, auctor_trunc);
+            sprintf(buffer, "%8s  %s - %s", annus_str, titulus_trunc,
+                auctor_trunc);
         }
 
         /* Praefixum si selectum */
@@ -999,7 +1044,8 @@ _reddere_catalogo_compacto (
     {
         character buffer[CXXVIII];  /* %d bini usque XI signa - LXIV
                                      * angustum (gcc 13, porta musl) */
-        sprintf(buffer, "Pagina %d/%d   h/l: paginae   j/k: selectare   Enter: aperire",
+        sprintf(buffer,
+            "Pagina %d/%d   h/l: paginae   j/k: selectare   Enter: aperire",
             visus->index_paginae + 1, num_paginae);
         titulus = _chorda_ex_cstr(buffer);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
@@ -1045,10 +1091,11 @@ _reddere_catalogo_plenus (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -1059,7 +1106,8 @@ _reddere_catalogo_plenus (
     linea               = y + I;
     chars_disponibiles  = latitudo - (PADDING * II);
 
-    num_libri = visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
+    num_libri =
+        visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
 
     si (num_libri == 0)
     {
@@ -1079,7 +1127,8 @@ _reddere_catalogo_plenus (
         visus->index_paginae = 0;
     }
 
-    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)visus->index_paginae);
+    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati,
+        (i32)visus->index_paginae);
     si (!liber)
     {
         redde;
@@ -1098,7 +1147,8 @@ _reddere_catalogo_plenus (
               i32 k          = 0;
               b32 neg        = FALSUM;
 
-        si (liber->annus.mensura > 0 && (character)liber->annus.datum[0] == '-')
+        si (   liber->annus.mensura > 0
+            && (character)liber->annus.datum[0] == '-')
         {
             neg  = VERUM;
             k    = 1;
@@ -1120,13 +1170,15 @@ _reddere_catalogo_plenus (
         si (annus_val < 0)
         {
             sprintf(buffer, "%.*s (%d BC)",
-                (int)liber->auctor.mensura, (constans character*)liber->auctor.datum,
+                (int)liber->auctor.mensura,
+                (constans character*)liber->auctor.datum,
                 -annus_val);
         }
         alioquin
         {
             sprintf(buffer, "%.*s (%d)",
-                (int)liber->auctor.mensura, (constans character*)liber->auctor.datum,
+                (int)liber->auctor.mensura,
+                (constans character*)liber->auctor.datum,
                 annus_val);
         }
         titulus = _chorda_ex_cstr(buffer);
@@ -1141,7 +1193,8 @@ _reddere_catalogo_plenus (
     {
         character buffer[LXIV];
         sprintf(buffer, "Gutenberg #%.*s",
-            (int)liber->numerus.mensura, (constans character*)liber->numerus.datum);
+            (int)liber->numerus.mensura,
+            (constans character*)liber->numerus.datum);
         titulus = _chorda_ex_cstr(buffer);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
             (x + PADDING) * char_lat, linea * char_alt,
@@ -1233,7 +1286,8 @@ _reddere_catalogo_plenus (
                 i32 i;
                 per (i = chars_in_line - 1; i > 0; i--)
                 {
-                    si ((character)liber->summarium.datum[pos + i] == ' ')
+                    si ((character)liber->summarium.datum[pos + i]
+                        == ' ')
                     {
                         break_pos = i + 1;
                         frange;
@@ -1241,7 +1295,8 @@ _reddere_catalogo_plenus (
                 }
             }
 
-            memcpy(line_buffer, liber->summarium.datum + pos, (size_t)break_pos);
+            memcpy(line_buffer, liber->summarium.datum + pos,
+                (size_t)break_pos);
             line_buffer[break_pos]  = '\0';
             line_chorda             = _chorda_ex_cstr(line_buffer);
 
@@ -1250,7 +1305,8 @@ _reddere_catalogo_plenus (
                 line_chorda, pixelum_text, scala);
 
             pos += break_pos;
-            dum (pos < liber->summarium.mensura && (character)liber->summarium.datum[pos] == ' ')
+            dum (   pos < liber->summarium.mensura
+                 && (character)liber->summarium.datum[pos] == ' ')
             {
                 pos++;
             }
@@ -1273,7 +1329,8 @@ _reddere_catalogo_plenus (
     {
         character buffer[CXXVIII];  /* ut supra - %d bini, LXIV
                                      * angustum */
-        sprintf(buffer, "Liber %d/%d   h/l: navigare   Enter: legere   Esc: retro",
+        sprintf(buffer,
+            "Liber %d/%d   h/l: navigare   Enter: legere   Esc: retro",
             visus->index_paginae + 1, num_libri);
         titulus = _chorda_ex_cstr(buffer);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
@@ -1319,10 +1376,11 @@ _reddere_libro (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -1333,9 +1391,11 @@ _reddere_libro (
     linea               = y + I;
     chars_disponibiles  = latitudo - (PADDING * II);
 
-    num_libri = visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
+    num_libri =
+        visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
 
-    si (visus->liber_currens < 0 || (i32)visus->liber_currens >= num_libri)
+    si (   visus->liber_currens < 0
+        || (i32)visus->liber_currens >= num_libri)
     {
         titulus = _chorda_ex_cstr("Liber non selectus");
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
@@ -1344,7 +1404,8 @@ _reddere_libro (
         redde;
     }
 
-    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)visus->liber_currens);
+    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati,
+        (i32)visus->liber_currens);
     si (!liber)
     {
         redde;
@@ -1363,7 +1424,8 @@ _reddere_libro (
               i32 k          = 0;
               b32 neg        = FALSUM;
 
-        si (liber->annus.mensura > 0 && (character)liber->annus.datum[0] == '-')
+        si (   liber->annus.mensura > 0
+            && (character)liber->annus.datum[0] == '-')
         {
             neg  = VERUM;
             k    = 1;
@@ -1385,13 +1447,15 @@ _reddere_libro (
         si (annus_val < 0)
         {
             sprintf(buffer, "%.*s (%d BC)",
-                (int)liber->auctor.mensura, (constans character*)liber->auctor.datum,
+                (int)liber->auctor.mensura,
+                (constans character*)liber->auctor.datum,
                 -annus_val);
         }
         alioquin
         {
             sprintf(buffer, "%.*s (%d)",
-                (int)liber->auctor.mensura, (constans character*)liber->auctor.datum,
+                (int)liber->auctor.mensura,
+                (constans character*)liber->auctor.datum,
                 annus_val);
         }
         titulus = _chorda_ex_cstr(buffer);
@@ -1406,7 +1470,8 @@ _reddere_libro (
     {
         character buffer[LXIV];
         sprintf(buffer, "Gutenberg #%.*s",
-            (int)liber->numerus.mensura, (constans character*)liber->numerus.datum);
+            (int)liber->numerus.mensura,
+            (constans character*)liber->numerus.datum);
         titulus = _chorda_ex_cstr(buffer);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
             (x + PADDING) * char_lat, linea * char_alt,
@@ -1496,7 +1561,8 @@ _reddere_libro (
                 i32 i;
                 per (i = chars_in_line - 1; i > 0; i--)
                 {
-                    si ((character)liber->summarium.datum[pos + i] == ' ')
+                    si ((character)liber->summarium.datum[pos + i]
+                        == ' ')
                     {
                         break_pos = i + 1;
                         frange;
@@ -1504,7 +1570,8 @@ _reddere_libro (
                 }
             }
 
-            memcpy(line_buffer, liber->summarium.datum + pos, (size_t)break_pos);
+            memcpy(line_buffer, liber->summarium.datum + pos,
+                (size_t)break_pos);
             line_buffer[break_pos]  = '\0';
             line_chorda             = _chorda_ex_cstr(line_buffer);
 
@@ -1513,7 +1580,8 @@ _reddere_libro (
                 line_chorda, pixelum_text, scala);
 
             pos += break_pos;
-            dum (pos < liber->summarium.mensura && (character)liber->summarium.datum[pos] == ' ')
+            dum (   pos < liber->summarium.mensura
+                 && (character)liber->summarium.datum[pos] == ' ')
             {
                 pos++;
             }
@@ -1531,7 +1599,8 @@ _reddere_libro (
 
     /* Footer */
     linea = y + altitudo - II;
-    titulus = _chorda_ex_cstr("Enter: legere   Esc: retro ad catalogum");
+    titulus =
+        _chorda_ex_cstr("Enter: legere   Esc: retro ad catalogum");
     tabula_pixelorum_pingere_chordam_scalatam(tabula,
         (x + PADDING) * char_lat, linea * char_alt,
         titulus, pixelum_text_dim, scala);
@@ -1572,10 +1641,11 @@ _reddere_lectio (
     char_lat = CHAR_LATITUDO * scala;
     char_alt = CHAR_ALTITUDO * scala;
 
-    color_background = thema_color(COLOR_BACKGROUND);
-    pixelum_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    pixelum_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    pixelum_accent = color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
+    color_background  = thema_color(COLOR_BACKGROUND);
+    pixelum_text      = color_ad_pixelum(thema_color(COLOR_TEXT));
+    pixelum_text_dim  = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    pixelum_accent =
+        color_ad_pixelum(thema_color(COLOR_ACCENT_PRIMARY));
 
     /* Pingere fondum */
     delineare_rectangulum_plenum(ctx,
@@ -1586,21 +1656,25 @@ _reddere_lectio (
     linea = y + I;
 
     /* Calculare paginationem via lector */
-    librarium_lector_paginare(visus->lector, (s32)latitudo, (s32)altitudo);
+    librarium_lector_paginare(visus->lector, (s32)latitudo,
+        (s32)altitudo);
 
     /* Si in modo sententiae, paginare sententias quoque */
     si (librarium_lector_in_modo_sententiae(visus->lector))
     {
-        librarium_lector_sententia_paginare(visus->lector, (s32)latitudo, (s32)altitudo);
+        librarium_lector_sententia_paginare(visus->lector,
+            (s32)latitudo, (s32)altitudo);
     }
 
     /* Header: titulus libri */
     si (visus->liber_currens >= 0)
     {
-        i32 num_libri = visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
+        i32 num_libri =
+            visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
         si ((i32)visus->liber_currens < num_libri)
         {
-            liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)visus->liber_currens);
+            liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati,
+                (i32)visus->liber_currens);
             si (liber)
             {
                 character buffer[CXXVIII];
@@ -1633,13 +1707,16 @@ _reddere_lectio (
     {
         /* Modus sententiae - reddere sententiam currentem */
         SententiaPagina* sent_pagina;
-                 chorda  textus_libri = librarium_lector_textus(visus->lector);
+                 chorda  textus_libri =
+                     librarium_lector_textus(visus->lector);
 
-        sent_pagina = librarium_lector_sententia_pagina_obtinere(visus->lector);
+        sent_pagina =
+            librarium_lector_sententia_pagina_obtinere(visus->lector);
 
         si (sent_pagina && sent_pagina->lineae)
         {
-            i32 numerus_linearum = (i32)xar_numerus(sent_pagina->lineae);
+            i32 numerus_linearum =
+                (i32)xar_numerus(sent_pagina->lineae);
             i32 i;
 
             per (i = 0; i < numerus_linearum; i++)
@@ -1687,14 +1764,18 @@ _reddere_lectio (
         PaginariumPagina* pagina;
                      i32  numerus_linearum;
                      i32  i;
-                     s32  pagina_currens = librarium_lector_pagina_currens(visus->lector);
-                  chorda  textus_libri = librarium_lector_textus(visus->lector);
+                     s32  pagina_currens =
+                         librarium_lector_pagina_currens(visus->lector);
+                  chorda textus_libri =
+                      librarium_lector_textus(visus->lector);
 
-        pagina = librarium_lector_pagina_obtinere(visus->lector, pagina_currens);
+        pagina = librarium_lector_pagina_obtinere(visus->lector,
+            pagina_currens);
 
         si (pagina)
         {
-            numerus_linearum = paginarium_pagina_numerus_linearum(pagina);
+            numerus_linearum =
+                paginarium_pagina_numerus_linearum(pagina);
 
             per (i = 0; i < numerus_linearum; i++)
             {
@@ -1737,17 +1818,23 @@ _reddere_lectio (
 
         si (librarium_lector_in_modo_sententiae(visus->lector))
         {
-            s32 sent_curr = librarium_lector_sententia_currens(visus->lector);
-            s32 sent_tot = librarium_lector_sententiae_totales(visus->lector);
-            sprintf(buffer, "Sententia %d/%d   Tab: paginae   j/k: sententiae   Esc: retro",
+            s32 sent_curr =
+                librarium_lector_sententia_currens(visus->lector);
+            s32 sent_tot =
+                librarium_lector_sententiae_totales(visus->lector);
+            sprintf(buffer,
+                "Sententia %d/%d   Tab: paginae   j/k: sententiae   Esc: retro",
                 sent_curr + 1,
                 sent_tot > 0 ? sent_tot : 1);
         }
         alioquin
         {
-            s32 pag_curr = librarium_lector_pagina_currens(visus->lector);
-            s32 pag_tot = librarium_lector_paginae_totales(visus->lector);
-            sprintf(buffer, "Pagina %d/%d   Tab: sententiae   j/k: paginae   Esc: retro",
+            s32 pag_curr =
+                librarium_lector_pagina_currens(visus->lector);
+            s32 pag_tot =
+                librarium_lector_paginae_totales(visus->lector);
+            sprintf(buffer,
+                "Pagina %d/%d   Tab: sententiae   j/k: paginae   Esc: retro",
                 pag_curr + 1,
                 pag_tot > 0 ? pag_tot : 1);
         }
@@ -1792,30 +1879,36 @@ librarium_visus_reddere (
     commutatio (visus->modus)
     {
         casus LIBRARIUM_MODUS_CATEGORIAE:
-            _reddere_categoriae(visus, tabula, (i32)x, (i32)y, (i32)latitudo, (i32)altitudo, (i32)scala);
+            _reddere_categoriae(visus, tabula, (i32)x, (i32)y,
+                (i32)latitudo, (i32)altitudo, (i32)scala);
             frange;
 
         casus LIBRARIUM_MODUS_TAGS:
-            _reddere_tags(visus, tabula, (i32)x, (i32)y, (i32)latitudo, (i32)altitudo, (i32)scala);
+            _reddere_tags(visus, tabula, (i32)x, (i32)y, (i32)latitudo,
+                (i32)altitudo, (i32)scala);
             frange;
 
         casus LIBRARIUM_MODUS_CATALOGO:
             si (visus->categoria == LIBRARIUM_CAT_PER_TITULUM)
             {
-                _reddere_catalogo_compacto(visus, tabula, (i32)x, (i32)y, (i32)latitudo, (i32)altitudo, (i32)scala);
+                _reddere_catalogo_compacto(visus, tabula, (i32)x,
+                    (i32)y, (i32)latitudo, (i32)altitudo, (i32)scala);
             }
             alioquin
             {
-                _reddere_catalogo_plenus(visus, tabula, (i32)x, (i32)y, (i32)latitudo, (i32)altitudo, (i32)scala);
+                _reddere_catalogo_plenus(visus, tabula, (i32)x, (i32)y,
+                    (i32)latitudo, (i32)altitudo, (i32)scala);
             }
             frange;
 
         casus LIBRARIUM_MODUS_LIBRO:
-            _reddere_libro(visus, tabula, (i32)x, (i32)y, (i32)latitudo, (i32)altitudo, (i32)scala);
+            _reddere_libro(visus, tabula, (i32)x, (i32)y, (i32)latitudo,
+                (i32)altitudo, (i32)scala);
             frange;
 
         casus LIBRARIUM_MODUS_LECTIO:
-            _reddere_lectio(visus, tabula, (i32)x, (i32)y, (i32)latitudo, (i32)altitudo, (i32)scala);
+            _reddere_lectio(visus, tabula, (i32)x, (i32)y,
+                (i32)latitudo, (i32)altitudo, (i32)scala);
             frange;
 
         ordinarius:
@@ -1837,14 +1930,16 @@ _librarium_visus_carcare_textum (
      character  via_buffer[DXII];
      character  numerus_buffer[XXXII];
 
-    num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
+    num_libri =
+        visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
 
     si (visus->liber_currens < 0 || visus->liber_currens >= num_libri)
     {
         redde;
     }
 
-    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)visus->liber_currens);
+    liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati,
+        (i32)visus->liber_currens);
     si (!liber || liber->via.mensura == 0)
     {
         redde;
@@ -1876,7 +1971,8 @@ _librarium_visus_carcare_textum (
     librarium_lector_carcare(visus->lector, via_buffer, numerus_buffer);
 
     /* Carcare progressum salvatum */
-    librarium_lector_carcare_progressum(visus->lector, visus->ctx->repo, visus->ctx->intern);
+    librarium_lector_carcare_progressum(visus->lector, visus->ctx->repo,
+        visus->ctx->intern);
 }
 
 
@@ -1903,7 +1999,7 @@ librarium_visus_tractare_eventum (
     {
         casus LIBRARIUM_MODUS_CATEGORIAE:
         {
-            commutatio (eventus->datum.clavis.typus)
+            commutatio (eventus->datum.clavis.producta)
             {
                 casus 'j':
                     visus->index_selecta++;
@@ -1970,7 +2066,8 @@ librarium_visus_tractare_eventum (
 
         casus LIBRARIUM_MODUS_TAGS:
         {
-            s32 num_tags = visus->tags_unici ? (s32)xar_numerus(visus->tags_unici) : 0;
+            s32 num_tags =
+                visus->tags_unici ? (s32)xar_numerus(visus->tags_unici) : 0;
             s32 tags_per_pagina = visus->altitudo_linearum - VIII;
             s32 num_paginae;
             s32 tags_in_pagina;
@@ -1980,13 +2077,15 @@ librarium_visus_tractare_eventum (
                 tags_per_pagina = 1;
             }
 
-            num_paginae = (num_tags + tags_per_pagina - 1) / tags_per_pagina;
+            num_paginae = (num_tags + tags_per_pagina - 1)
+                / tags_per_pagina;
             si (num_paginae < 1)
             {
                 num_paginae = 1;
             }
 
-            tags_in_pagina = num_tags - (visus->index_paginae * tags_per_pagina);
+            tags_in_pagina = num_tags
+                - (visus->index_paginae * tags_per_pagina);
             si (tags_in_pagina > tags_per_pagina)
             {
                 tags_in_pagina = tags_per_pagina;
@@ -1996,7 +2095,7 @@ librarium_visus_tractare_eventum (
                 tags_in_pagina = 0;
             }
 
-            commutatio (eventus->datum.clavis.typus)
+            commutatio (eventus->datum.clavis.producta)
             {
                 casus 'j':
                     visus->index_selecta++;
@@ -2041,10 +2140,13 @@ librarium_visus_tractare_eventum (
             si (eventus->datum.clavis.clavis == CLAVIS_REDITUS)
             {
                 /* Selectare tag */
-                s32 tag_idx = visus->index_paginae * tags_per_pagina + visus->index_selecta;
+                s32 tag_idx = visus->index_paginae * tags_per_pagina
+                    + visus->index_selecta;
                 si (tag_idx < num_tags)
                 {
-                    chorda* tag = (chorda*)xar_obtinere(visus->tags_unici, (i32)tag_idx);
+                    chorda* tag =
+                        (chorda*)xar_obtinere(visus->tags_unici,
+                        (i32)tag_idx);
                     si (tag)
                     {
                         visus->filtrum_tag = *tag;
@@ -2069,7 +2171,8 @@ librarium_visus_tractare_eventum (
 
         casus LIBRARIUM_MODUS_CATALOGO:
         {
-            s32 num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
+            s32 num_libri =
+                visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
 
             si (visus->categoria == LIBRARIUM_CAT_PER_TITULUM)
             {
@@ -2083,13 +2186,15 @@ librarium_visus_tractare_eventum (
                     libri_per_pagina = 1;
                 }
 
-                num_paginae = (num_libri + libri_per_pagina - 1) / libri_per_pagina;
+                num_paginae = (num_libri + libri_per_pagina - 1)
+                    / libri_per_pagina;
                 si (num_paginae < 1)
                 {
                     num_paginae = 1;
                 }
 
-                libri_in_pagina = num_libri - (visus->index_paginae * libri_per_pagina);
+                libri_in_pagina = num_libri
+                    - (visus->index_paginae * libri_per_pagina);
                 si (libri_in_pagina > libri_per_pagina)
                 {
                     libri_in_pagina = libri_per_pagina;
@@ -2099,7 +2204,7 @@ librarium_visus_tractare_eventum (
                     libri_in_pagina = 0;
                 }
 
-                commutatio (eventus->datum.clavis.typus)
+                commutatio (eventus->datum.clavis.producta)
                 {
                     casus 'j':
                         visus->index_selecta++;
@@ -2144,7 +2249,9 @@ librarium_visus_tractare_eventum (
                 si (eventus->datum.clavis.clavis == CLAVIS_REDITUS)
                 {
                     /* Aperire libro */
-                    s32 liber_idx = visus->index_paginae * libri_per_pagina + visus->index_selecta;
+                    s32 liber_idx =
+                        visus->index_paginae * libri_per_pagina
+                            + visus->index_selecta;
                     si (liber_idx >= 0 && liber_idx < num_libri)
                     {
                         visus->liber_currens  = liber_idx;
@@ -2156,7 +2263,7 @@ librarium_visus_tractare_eventum (
             alioquin
             {
                 /* Modo plenus (uno per pagina) */
-                commutatio (eventus->datum.clavis.typus)
+                commutatio (eventus->datum.clavis.producta)
                 {
                     casus 'l':
                     casus 'j':
@@ -2181,7 +2288,8 @@ librarium_visus_tractare_eventum (
                 si (eventus->datum.clavis.clavis == CLAVIS_REDITUS)
                 {
                     /* Aperire libro directe ad lectio */
-                    si (visus->index_paginae >= 0 && visus->index_paginae < num_libri)
+                    si (   visus->index_paginae >= 0
+                        && visus->index_paginae < num_libri)
                     {
                         visus->liber_currens = visus->index_paginae;
                         _librarium_visus_carcare_textum(visus);
@@ -2228,11 +2336,12 @@ librarium_visus_tractare_eventum (
             si (eventus->datum.clavis.clavis == CLAVIS_TABULA)
             {
                 librarium_lector_toggle_modus_sententiae(visus->lector);
-                librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
+                librarium_lector_salvare_progressum(visus->lector,
+                    visus->ctx->repo);
                 redde VERUM;
             }
 
-            commutatio (eventus->datum.clavis.typus)
+            commutatio (eventus->datum.clavis.producta)
             {
                 casus 'j':
                     si (librarium_lector_in_modo_sententiae(visus->lector))
@@ -2243,7 +2352,8 @@ librarium_visus_tractare_eventum (
                     {
                         librarium_lector_pagina_proxima(visus->lector);
                     }
-                    librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
+                    librarium_lector_salvare_progressum(visus->lector,
+                        visus->ctx->repo);
                     redde VERUM;
 
                 casus 'k':
@@ -2255,7 +2365,8 @@ librarium_visus_tractare_eventum (
                     {
                         librarium_lector_pagina_prior(visus->lector);
                     }
-                    librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
+                    librarium_lector_salvare_progressum(visus->lector,
+                        visus->ctx->repo);
                     redde VERUM;
 
                 ordinarius:
@@ -2265,7 +2376,8 @@ librarium_visus_tractare_eventum (
             si (eventus->datum.clavis.clavis == CLAVIS_EFFUGIUM)
             {
                 /* Salvare progressum ante exire */
-                librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
+                librarium_lector_salvare_progressum(visus->lector,
+                    visus->ctx->repo);
 
                 /* Retro ad catalogo */
                 visus->index_paginae  = visus->liber_currens;
@@ -2300,14 +2412,16 @@ librarium_visus_quaerere (
     }
 
     /* Ponere filtrum - internare quaestio pro stabilitate memoriae */
-    visus->filtrum_quaestio = *chorda_internare_ex_literis(visus->ctx->intern, quaestio);
-    visus->filtrum_tag.mensura = 0;
-    visus->ordo = LIBRARIUM_ORDO_ALPHABETICUS;
+    visus->filtrum_quaestio =
+        *chorda_internare_ex_literis(visus->ctx->intern, quaestio);
+    visus->filtrum_tag.mensura  = 0;
+    visus->ordo                 = LIBRARIUM_ORDO_ALPHABETICUS;
 
     /* Filtrare */
     _librarium_visus_filtrare(visus);
 
-    num_inventum = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
+    num_inventum =
+        visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
 
     si (num_inventum == 1)
     {
@@ -2378,7 +2492,8 @@ _librarium_command_handler (
 
     /* Legere argumentum post commandum (skip leading space) */
     idx = ZEPHYRUM;
-    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo && idx < LX; col++)
+    per (col = ctx->columna; col < ctx->pagina->tabula.latitudo
+        && idx < LX; col++)
     {
         c = tabula_cellula(&ctx->pagina->tabula, ctx->linea, col);
 
@@ -2438,7 +2553,8 @@ librarium_visus_salvare_status (
     }
 
     /* Scaffoldare entitas (creat si non existit) */
-    entitas = repo->entitas_scaffoldare(repo->datum, "LibrariumStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "LibrariumStatus",
+        entitas_id);
     si (!entitas)
     {
         redde;
@@ -2454,19 +2570,24 @@ librarium_visus_salvare_status (
 
     /* Salvare index_paginae */
     sprintf(valor, "%d", visus->index_paginae);
-    repo->proprietas_ponere(repo->datum, entitas, "index_paginae", valor);
+    repo->proprietas_ponere(repo->datum, entitas, "index_paginae",
+        valor);
 
     /* Salvare index_selecta */
     sprintf(valor, "%d", visus->index_selecta);
-    repo->proprietas_ponere(repo->datum, entitas, "index_selecta", valor);
+    repo->proprietas_ponere(repo->datum, entitas, "index_selecta",
+        valor);
 
     /* Salvare liber_currens */
     sprintf(valor, "%d", visus->liber_currens);
-    repo->proprietas_ponere(repo->datum, entitas, "liber_currens", valor);
+    repo->proprietas_ponere(repo->datum, entitas, "liber_currens",
+        valor);
 
     /* Salvare pagina_lectio (ex lector) */
-    sprintf(valor, "%d", librarium_lector_pagina_currens(visus->lector));
-    repo->proprietas_ponere(repo->datum, entitas, "pagina_lectio", valor);
+    sprintf(valor, "%d",
+        librarium_lector_pagina_currens(visus->lector));
+    repo->proprietas_ponere(repo->datum, entitas, "pagina_lectio",
+        valor);
 
     /* Salvare filtrum_tag */
     si (visus->filtrum_tag.mensura > 0)
@@ -2479,11 +2600,13 @@ librarium_visus_salvare_status (
         }
         memcpy(tag_buf, visus->filtrum_tag.datum, (size_t)len);
         tag_buf[len] = '\0';
-        repo->proprietas_ponere(repo->datum, entitas, "filtrum_tag", tag_buf);
+        repo->proprietas_ponere(repo->datum, entitas, "filtrum_tag",
+            tag_buf);
     }
     alioquin
     {
-        repo->proprietas_ponere(repo->datum, entitas, "filtrum_tag", "");
+        repo->proprietas_ponere(repo->datum, entitas, "filtrum_tag",
+            "");
     }
 
     /* Salvare filtrum_quaestio */
@@ -2495,13 +2618,16 @@ librarium_visus_salvare_status (
         {
             len = CXXVII;
         }
-        memcpy(quaestio_buf, visus->filtrum_quaestio.datum, (size_t)len);
+        memcpy(quaestio_buf, visus->filtrum_quaestio.datum,
+            (size_t)len);
         quaestio_buf[len] = '\0';
-        repo->proprietas_ponere(repo->datum, entitas, "filtrum_quaestio", quaestio_buf);
+        repo->proprietas_ponere(repo->datum, entitas,
+            "filtrum_quaestio", quaestio_buf);
     }
     alioquin
     {
-        repo->proprietas_ponere(repo->datum, entitas, "filtrum_quaestio", "");
+        repo->proprietas_ponere(repo->datum, entitas,
+            "filtrum_quaestio", "");
     }
 
     /* Salvare ordo */
@@ -2525,7 +2651,8 @@ librarium_visus_carcare_status (
     }
 
     /* Scaffoldare entitas */
-    entitas = repo->entitas_scaffoldare(repo->datum, "LibrariumStatus", entitas_id);
+    entitas = repo->entitas_scaffoldare(repo->datum, "LibrariumStatus",
+        entitas_id);
     si (!entitas)
     {
         redde;
@@ -2544,7 +2671,8 @@ librarium_visus_carcare_status (
     }
 
     /* Carcare categoria */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "categoria");
+    clavis = chorda_internare_ex_literis(visus->ctx->intern,
+        "categoria");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor)
     {
@@ -2556,7 +2684,8 @@ librarium_visus_carcare_status (
     }
 
     /* Carcare index_paginae */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "index_paginae");
+    clavis = chorda_internare_ex_literis(visus->ctx->intern,
+        "index_paginae");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor)
     {
@@ -2568,7 +2697,8 @@ librarium_visus_carcare_status (
     }
 
     /* Carcare index_selecta */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "index_selecta");
+    clavis = chorda_internare_ex_literis(visus->ctx->intern,
+        "index_selecta");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor)
     {
@@ -2580,7 +2710,8 @@ librarium_visus_carcare_status (
     }
 
     /* Carcare liber_currens */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "liber_currens");
+    clavis = chorda_internare_ex_literis(visus->ctx->intern,
+        "liber_currens");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor)
     {
@@ -2592,12 +2723,14 @@ librarium_visus_carcare_status (
     }
 
     /* Carcare filtrum_tag */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "filtrum_tag");
+    clavis = chorda_internare_ex_literis(visus->ctx->intern,
+        "filtrum_tag");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
         /* Internare filtrum_tag pro stabilitate memoriae */
-        visus->filtrum_tag = *chorda_internare(visus->ctx->intern, *valor);
+        visus->filtrum_tag = *chorda_internare(visus->ctx->intern,
+            *valor);
     }
     alioquin
     {
@@ -2605,12 +2738,14 @@ librarium_visus_carcare_status (
     }
 
     /* Carcare filtrum_quaestio */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "filtrum_quaestio");
+    clavis = chorda_internare_ex_literis(visus->ctx->intern,
+        "filtrum_quaestio");
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
         /* Internare filtrum_quaestio pro stabilitate memoriae */
-        visus->filtrum_quaestio = *chorda_internare(visus->ctx->intern, *valor);
+        visus->filtrum_quaestio = *chorda_internare(visus->ctx->intern,
+            *valor);
     }
     alioquin
     {
@@ -2632,7 +2767,8 @@ librarium_visus_carcare_status (
     /* Carcare pagina_lectio (temporarius) */
     {
         s32 pagina_lectio_salvata = 0;
-        clavis = chorda_internare_ex_literis(visus->ctx->intern, "pagina_lectio");
+        clavis = chorda_internare_ex_literis(visus->ctx->intern,
+            "pagina_lectio");
         valor = entitas_proprietas_capere(entitas, clavis);
         si (valor)
         {
@@ -2647,13 +2783,16 @@ librarium_visus_carcare_status (
         {
             s32 num_libri;
 
-            num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
+            num_libri =
+                visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
 
-            si (visus->liber_currens >= 0 && visus->liber_currens < num_libri)
+            si (   visus->liber_currens >= 0
+                && visus->liber_currens < num_libri)
             {
                 _librarium_visus_carcare_textum(visus);
                 /* Ponere pagina ex status salvata */
-                librarium_lector_pagina_saltare(visus->lector, pagina_lectio_salvata);
+                librarium_lector_pagina_saltare(visus->lector,
+                    pagina_lectio_salvata);
             }
             alioquin
             {

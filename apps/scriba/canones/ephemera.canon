@@ -1,0 +1,37 @@
+<canon dialectus="scriba-ephemera" versio="1">
+  <elementum nomen="scriba" radix="verum"
+    nota="status vim inter claves; valor VACUUS numquam scribitur -
+          absentia = vacuum (scriptor pulcher a=&quot;&quot; ut a
+          nudum scribit, relectum 'true')">
+    <attributum nomen="id" genus="nomen"
+      nota="montatio (insula rami R4): radix sola aut ramus"/>
+    <attributum nomen="focus"           genus="textus"/>
+    <attributum nomen="focus_acervus"   genus="textus"/>
+    <attributum nomen="superficies_latitudo" genus="numerus"
+      nota="dispensator scribit (013 B1): pixela nostra"/>
+    <attributum nomen="superficies_altitudo" genus="numerus"
+      nota="dispensator scribit (013 B1): pixela nostra"/>
+    <attributum nomen="cursor_linea"    genus="numerus"/>
+    <attributum nomen="cursor_columna"  genus="numerus"/>
+    <attributum nomen="modus" genus="electio">
+      <optio>normalis</optio>
+      <optio>inserere</optio>
+      <optio>visualis</optio>
+    </attributum>
+    <attributum nomen="visualis_genus" genus="electio">
+      <optio>linea</optio>
+      <optio>character</optio>
+    </attributum>
+    <attributum nomen="selectio_linea"   genus="numerus"
+      nota="-1 = nulla"/>
+    <attributum nomen="selectio_columna" genus="numerus"/>
+    <attributum nomen="clavis_praecedens" genus="textus"
+      nota="effugitus (codex mutationis); absens = nulla"/>
+    <attributum nomen="fd_exspectans"   genus="veritas"/>
+    <attributum nomen="fd_tempus"       genus="numerus"
+      nota="ms, tempore eventus (horologium unum)"/>
+    <attributum nomen="capsa"           genus="textus"
+      nota="lineae iunctae per '\n', effugitae; absens = vacua"/>
+    <attributum nomen="capsa_lineae"    genus="numerus"/>
+  </elementum>
+</canon>

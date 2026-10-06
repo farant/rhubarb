@@ -42,6 +42,63 @@ causam_ponere (
 }
 
 
+/* canon rami (R1): nodus <elementum id> suo canone iudicatur */
+nomen structura {
+    chorda  elementum;
+    chorda  id;
+     Canon* canon;
+} CanonRami;
+
+interior chorda
+chorda_nulla_insulae (vacuum)
+{
+    chorda c;
+
+    c.mensura  = ZEPHYRUM;
+    c.datum    = NIHIL;
+    redde c;
+}
+
+/* nodus rami in radice data: elementum vacuum = radix; aliter liberum
+ * radicis titulo elementi et attributo id; NIHIL si abest */
+interior StmlNodus*
+ramum_invenire (
+     StmlNodus* radix,
+        chorda  elementum,
+        chorda  id)
+{
+    StmlNodus* n;
+       chorda* v;
+          i32  i;
+          i32  k;
+
+    si (!radix)
+    {
+        redde NIHIL;
+    }
+    si (chorda_vacua(elementum))
+    {
+        redde radix;
+    }
+    k = stml_numerus_liberorum(radix);
+    per (i = ZEPHYRUM; i < k; i++)
+    {
+        n = stml_liberum_ad_indicem(radix, i);
+        si (   n->genus != STML_NODUS_ELEMENTUM || !n->titulus
+            || !chorda_aequalis(*n->titulus, elementum))
+        {
+            perge;
+        }
+        v = stml_attributum_capere(n, "id");
+        si (v && chorda_aequalis(*v, id))
+        {
+            redde n;
+        }
+    }
+    redde NIHIL;
+}
+
+
 /* ==================================================
  * Creatio et lectio
  * ================================================== */
@@ -88,6 +145,8 @@ insula_repositorium_creare (
         repo->activa[g]  = ZEPHYRUM;
         repo->domini[g] = xar_creare(piscina,
                                      (i32)magnitudo(InsulaDominus));
+        repo->canones_ramorum[g] = xar_creare(piscina,
+                                     (i32)magnitudo(CanonRami));
         repo->radices[g]  = legere_in(repo, p, fontes[g]);
         si (!repo->radices[g])
         {
@@ -159,17 +218,7 @@ insula_scribere (
  * Domini (brainstorm XVI §2)
  * ================================================== */
 
-interior chorda
-chorda_nulla_insulae (vacuum)
-{
-    chorda c;
-
-    c.mensura  = ZEPHYRUM;
-    c.datum    = NIHIL;
-    redde c;
-}
-
-/* valor attributi tituli dati aut NIHIL */
+/* valor attributi tituli dati aut NIHIL (nodus NIHIL: NIHIL) */
 interior chorda*
 valor_attributi (
      StmlNodus* n,
@@ -179,7 +228,7 @@ valor_attributi (
                i32  i;
                i32  k;
 
-    si (!n->attributa)
+    si (!n || !n->attributa)
     {
         redde NIHIL;
     }
@@ -235,7 +284,12 @@ dominos_iudicare (
     per (i = ZEPHYRUM; i < n; i++)
     {
         d = (InsulaDominus*)xar_obtinere(repo->domini[genus], i);
-        si (!attributum_mutatum(ante, post, d->attributum))
+        /* R1: attributum in nodo RAMI domini, ante et post */
+        si (!attributum_mutatum(ramum_invenire(ante, d->elementum,
+            d->id),
+                                ramum_invenire(post, d->elementum,
+                                d->id),
+                                d->attributum))
         {
             perge;
         }
@@ -270,13 +324,67 @@ dominos_iudicare (
  * per textum - ipsa disciplina rehydrationis), mutare, canone
  * iudicare, permutare. Recusatio relinquit duplicatum in piscina
  * altera, quae proxima scriptura vacatur. */
+/* visio canonis radicis: copia superficialis radicis sine ramis qui
+ * canonem proprium habent (R1) - arbor vera intacta */
+interior StmlNodus*
+visio_radicis (
+    InsulaRepositorium* repo,
+           InsulaGenus  genus,
+             StmlNodus* radix,
+               Piscina* p)
+{
+    StmlNodus* visio;
+    StmlNodus* n;
+    CanonRami* cr;
+          i32  i;
+          i32  j;
+          i32  k;
+          b32  delegatus;
+
+    si (xar_numerus(repo->canones_ramorum[genus]) == ZEPHYRUM)
+    {
+        redde radix;
+    }
+    visio = (StmlNodus*)piscina_allocare(p, magnitudo(StmlNodus));
+    *visio = *radix;
+    visio->liberi = xar_creare(p, (i32)magnitudo(StmlNodus*));
+    k = stml_numerus_liberorum(radix);
+    per (i = ZEPHYRUM; i < k; i++)
+    {
+        n          = stml_liberum_ad_indicem(radix, i);
+        delegatus  = FALSUM;
+        per (j = ZEPHYRUM; j
+            < xar_numerus(repo->canones_ramorum[genus]);
+             j++)
+        {
+            cr = (CanonRami*)xar_obtinere(repo->canones_ramorum[genus],
+                j);
+            si (ramum_invenire(radix, cr->elementum, cr->id) == n)
+            {
+                delegatus = VERUM;
+            }
+        }
+        si (!delegatus)
+        {
+            *(StmlNodus**)xar_addere(visio->liberi) = n;
+        }
+    }
+    redde visio;
+}
+
 interior b32
 mutare (
      InsulaRepositorium* repo,
             InsulaGenus  genus,
+                 chorda  elementum,
+                 chorda  id,
           InsulaMutator  fn,
                  vacuum* ctx)
 {
+      StmlNodus* scopus;
+      CanonRami* cr;
+      StmlNodus* nodus_rami;
+            i32  j;
             i32  alia;
         Piscina* p;
       StmlNodus* duplicatum;
@@ -300,7 +408,14 @@ mutare (
         redde FALSUM;
     }
 
-    fn(duplicatum, p, repo->intern, ctx);
+    scopus = ramum_invenire(duplicatum, elementum, id);
+    si (!scopus)
+    {
+        causam_ponere(repo, "ramus abest: nullum liberum radicis"
+                            " elemento et id datis");
+        redde FALSUM;
+    }
+    fn(scopus, p, repo->intern, ctx);
 
     /* domini: attributa radicis mutata contra tabulam dominorum */
     causa_dominorum = dominos_iudicare(repo, genus,
@@ -314,12 +429,36 @@ mutare (
 
     si (repo->canones[genus])
     {
-        vitia = canon_iudicare(repo->canones[genus], duplicatum, p);
+        vitia = canon_iudicare(repo->canones[genus],
+            visio_radicis(repo, genus, duplicatum, p), p);
         si (vitia && xar_numerus(vitia) > ZEPHYRUM)
         {
             v = (CanonVitium*)xar_obtinere(vitia, ZEPHYRUM);
             repo->causa = chorda_concatenare(
                 chorda_ex_literis("canon recusat scripturam: ",
+                                  repo->piscina),
+                chorda_ex_literis(canon_nuntius(v->genus),
+                                  repo->piscina),
+                repo->piscina);
+            redde FALSUM;
+        }
+    }
+    /* canones ramorum (R1): quisque nodum suum iudicat */
+    per (j = ZEPHYRUM; j
+        < xar_numerus(repo->canones_ramorum[genus]); j++)
+    {
+        cr = (CanonRami*)xar_obtinere(repo->canones_ramorum[genus], j);
+        nodus_rami = ramum_invenire(duplicatum, cr->elementum, cr->id);
+        si (!nodus_rami || !cr->canon)
+        {
+            perge;
+        }
+        vitia = canon_iudicare(cr->canon, nodus_rami, p);
+        si (vitia && xar_numerus(vitia) > ZEPHYRUM)
+        {
+            v = (CanonVitium*)xar_obtinere(vitia, ZEPHYRUM);
+            repo->causa = chorda_concatenare(
+                chorda_ex_literis("canon rami recusat scripturam: ",
                                   repo->piscina),
                 chorda_ex_literis(canon_nuntius(v->genus),
                                   repo->piscina),
@@ -345,7 +484,8 @@ mutare_durabile (
          InsulaMutator  fn,
                 vacuum* ctx)
 {
-    redde mutare(repo, INSULA_DURABILIS, fn, ctx);
+    redde mutare(repo, INSULA_DURABILIS, chorda_nulla_insulae(),
+                 chorda_nulla_insulae(), fn, ctx);
 }
 
 b32
@@ -354,7 +494,8 @@ mutare_ephemera (
          InsulaMutator  fn,
                 vacuum* ctx)
 {
-    redde mutare(repo, INSULA_EPHEMERA, fn, ctx);
+    redde mutare(repo, INSULA_EPHEMERA, chorda_nulla_insulae(),
+                 chorda_nulla_insulae(), fn, ctx);
 }
 
 b32
@@ -509,10 +650,12 @@ insula_scriptorem_ponere (
     repo->scriptor = scriptor;
 }
 
-b32
-insula_dominum_ponere (
+interior b32
+dominum_addere (
     InsulaRepositorium* repo,
            InsulaGenus  genus,
+                chorda  elementum,
+                chorda  id,
     constans character* attributum,
     constans character* dominus)
 {
@@ -534,13 +677,28 @@ insula_dominum_ponere (
     d              = (InsulaDominus*)xar_addere(repo->domini[genus]);
     d->attributum  = *a;
     d->dominus     = *s;
+    d->elementum   = elementum;
+    d->id          = id;
     redde VERUM;
 }
 
-i32
-insula_dominos_legere (
+b32
+insula_dominum_ponere (
     InsulaRepositorium* repo,
            InsulaGenus  genus,
+    constans character* attributum,
+    constans character* dominus)
+{
+    redde dominum_addere(repo, genus, chorda_nulla_insulae(),
+                         chorda_nulla_insulae(), attributum, dominus);
+}
+
+interior i32
+dominos_legere (
+    InsulaRepositorium* repo,
+           InsulaGenus  genus,
+                chorda  elementum,
+                chorda  id,
              StmlNodus* domini)
 {
     constans character* titulus_generis;
@@ -575,7 +733,7 @@ insula_dominos_legere (
         {
             perge;
         }
-        si (insula_dominum_ponere(repo, genus,
+        si (dominum_addere(repo, genus, elementum, id,
                 chorda_ut_cstr(*a, repo->piscina),
                 chorda_ut_cstr(*s, repo->piscina)))
         {
@@ -583,6 +741,16 @@ insula_dominos_legere (
         }
     }
     redde lecti;
+}
+
+i32
+insula_dominos_legere (
+    InsulaRepositorium* repo,
+           InsulaGenus  genus,
+             StmlNodus* domini)
+{
+    redde dominos_legere(repo, genus, chorda_nulla_insulae(),
+                         chorda_nulla_insulae(), domini);
 }
 
 b32
@@ -610,4 +778,214 @@ insula_attributum_tollere (
         }
     }
     redde FALSUM;
+}
+
+
+/* ==================================================
+ * Rami (R1)
+ * ================================================== */
+
+InsulaRamus
+insula_ramus_radix (
+    InsulaRepositorium* repo)
+{
+    InsulaRamus r;
+
+    r.repo       = repo;
+    r.elementum  = chorda_nulla_insulae();
+    r.id         = chorda_nulla_insulae();
+    redde r;
+}
+
+InsulaRamus
+insula_ramus (
+    InsulaRepositorium* repo,
+    constans character* elementum,
+    constans character* id)
+{
+    InsulaRamus  r;
+         chorda* e;
+         chorda* i;
+
+    r = insula_ramus_radix(repo);
+    si (!repo || !elementum || !id)
+    {
+        redde r;
+    }
+    e = chorda_internare_ex_literis(repo->intern, elementum);
+    i = chorda_internare_ex_literis(repo->intern, id);
+    si (e && i)
+    {
+        r.elementum  = *e;
+        r.id         = *i;
+    }
+    redde r;
+}
+
+StmlNodus*
+insula_ramus_nodus (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus)
+{
+    si (!ramus || !ramus->repo || !genus_sanum(genus))
+    {
+        redde NIHIL;
+    }
+    redde ramum_invenire(ramus->repo->radices[genus], ramus->elementum,
+                         ramus->id);
+}
+
+chorda*
+insula_ramus_attributum (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* titulus)
+{
+    StmlNodus* n;
+
+    n = insula_ramus_nodus(ramus, genus);
+    redde n ? stml_attributum_capere(n, titulus) : NIHIL;
+}
+
+b32
+mutare_ramum (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+           InsulaMutator  fn,
+                  vacuum* ctx)
+{
+    si (!ramus)
+    {
+        redde FALSUM;
+    }
+    redde mutare(ramus->repo, genus, ramus->elementum, ramus->id, fn,
+                 ctx);
+}
+
+b32
+insula_ramus_dominum_ponere (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* attributum,
+      constans character* dominus)
+{
+    si (!ramus)
+    {
+        redde FALSUM;
+    }
+    redde dominum_addere(ramus->repo, genus, ramus->elementum,
+        ramus->id,
+                         attributum, dominus);
+}
+
+i32
+insula_ramus_dominos_legere (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+               StmlNodus* domini)
+{
+    si (!ramus)
+    {
+        redde ZEPHYRUM;
+    }
+    redde dominos_legere(ramus->repo, genus, ramus->elementum,
+        ramus->id,
+                         domini);
+}
+
+/* initiatio rami (T1a): elementum STML in piscina portae legitur */
+nomen structura {
+    constans InsulaRamus* ramus;
+      constans character* stml;
+                     b32  bene;
+} InitiatioRami;
+
+interior vacuum
+initiatio_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+      InitiatioRami* x;
+       StmlResultus  res;
+          StmlNodus* e;
+     StmlAttributum* attr;
+                i32  i;
+
+    x    = (InitiatioRami*)ctx;
+    res  = stml_legere_ex_literis(x->stml, p, in);
+    si (!res.successus || !res.elementum_radix)
+    {
+        x->bene = FALSUM;
+        redde;
+    }
+    e = res.elementum_radix;
+    si (chorda_vacua(x->ramus->elementum))
+    {
+        /* radix: attributa absentia sola */
+        per (i = ZEPHYRUM; e->attributa
+            && i < xar_numerus(e->attributa);
+             i++)
+        {
+            attr = (StmlAttributum*)xar_obtinere(e->attributa, i);
+            si (   attr->titulus
+                && !valor_attributi(radix, *attr->titulus))
+            {
+                insula_attributum_ponere(radix, p, in,
+                    chorda_ut_cstr(*attr->titulus, p),
+                    attr->valor ? chorda_ut_cstr(*attr->valor, p) : "");
+            }
+        }
+        redde;
+    }
+    si (!ramum_invenire(radix, x->ramus->elementum, x->ramus->id))
+    {
+        stml_liberum_addere(radix, e);
+    }
+}
+
+b32
+insula_ramum_initiare (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* elementum_stml)
+{
+    InitiatioRami x;
+
+    si (   !ramus || !ramus->repo || !genus_sanum(genus)
+        || !elementum_stml)
+    {
+        redde FALSUM;
+    }
+    si (   !chorda_vacua(ramus->elementum)
+        && insula_ramus_nodus(ramus, genus))
+    {
+        redde VERUM;   /* exstat: nihil mutatur */
+    }
+    x.ramus  = ramus;
+    x.stml   = elementum_stml;
+    x.bene   = VERUM;
+    redde mutare(ramus->repo, genus, chorda_nulla_insulae(),
+                 chorda_nulla_insulae(), initiatio_mutator, &x)
+        && x.bene;
+}
+
+vacuum
+insula_ramus_canonem_ponere (
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+                   Canon* canon)
+{
+    CanonRami* cr;
+
+    si (!ramus || !ramus->repo || !genus_sanum(genus) || !canon)
+    {
+        redde;
+    }
+    cr             = (CanonRami*)xar_addere(
+        ramus->repo->canones_ramorum[genus]);
+    cr->elementum  = ramus->elementum;
+    cr->id         = ramus->id;
+    cr->canon      = canon;
 }

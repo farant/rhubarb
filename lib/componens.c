@@ -9,7 +9,7 @@
 hic_manens constans character*
     tituli_partium[PARTES_NUMERUS] = {
     "nullum", "bottone", "campus", "optio", "index", "item",
-    "dialogus", "titulus", "imago", "tabula"
+    "dialogus", "titulus", "imago", "tabula", "prospectus"
 };
 
 hic_manens constans character*

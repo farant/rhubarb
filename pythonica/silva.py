@@ -1538,6 +1538,10 @@ PORTAE = {
                 r'TESSERA PROBATIONES: \d+/\d+'),
     'saltuarius': (['./saltuarius/compile_probationes.sh'],
                    r'SALTUARIUS PROBATIONES: \d+/\d+'),
+    # modulus 013 (project-specs/ludus-tessera-plan.md A0): glutinum
+    # ludus -> tessera
+    'ludus_tessera': (['./ludus_tessera/compile_probationes.sh'],
+                      r'LUDUS_TESSERA PROBATIONES: \d+/\d+'),
     'pythonica': (['./pythonica/probare.sh'], r'PYTHONICA: (sana|FRACTA)'),
     'formator-intra': (['./silva/formator_intra_fumus.sh'],
                        r'fumus intra: (sanum|FRACTUM)'),
@@ -1634,7 +1638,8 @@ FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
           'html': 'suita', 'crusta': 'suita', 'toml': 'suita',
           'briar': 'suita',
           'officina': 'suita', 'gesta': 'suita',
-          'tessera': 'suita', 'saltuarius': 'suita', 'aedilis': 'suita'}
+          'tessera': 'suita', 'saltuarius': 'suita',
+          'ludus_tessera': 'suita', 'aedilis': 'suita'}
 _RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
                          r'Praeteriti|Fracti|Conditio|error:|Segmentation|'
                          r'Abort|exitus|FAILED|SINE VERDICTO')
@@ -2390,8 +2395,11 @@ def _portae_debitas_addere(viae, portae):
 # ('summare', 'mappatio'), dum lint ipse ~I s currit. Nunc ANTE portas,
 # eadem functio quam uncus currit (tools/unci-git/lint_latinus.sh,
 # UNCUS_LINT_VIAE = viae commissionis) - sedes veritatis una.
+# oracula/: glutinum circa implementationes alienas ut oracula (lingua
+# aliena necessitate, ut vendor; dispositio D0, 2026-10-03)
 _EXCLUSA_LINTRI = re.compile(
-    r'(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor)/')
+    r'(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel|vendor'
+    r'|oracula)/')
 
 
 def lint_latinus_praevium(viae):
@@ -3545,6 +3553,8 @@ SUITAE = {
     'gesta': ('gesta/probationes', 'gesta/build/%s'),
     'tessera': ('tessera/probationes', 'tessera/build/%s'),
     'saltuarius': ('saltuarius/probationes', 'saltuarius/build/%s'),
+    'ludus_tessera': ('ludus_tessera/probationes',
+                      'ludus_tessera/build/%s'),
 }
 Cursus = namedtuple('Cursus', 'nomen suita rc secunda acta fracturae partitio'
                     ' via_partitionis', defaults=(None,))

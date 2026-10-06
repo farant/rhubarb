@@ -47,6 +47,18 @@ Leges chartae:
   `manus_ludus_clavem` modificantes ut fenestra eos fert
   (`MOD_SHIFT | MOD_SHIFT_SINISTER`), non iam 'I' pro Shift.
 
+- corpus: `Eventus.datum.rotula.delta_x/delta_y` (f32) DELETA (spec
+  D2 gradus III). FRANGIT: plagula quae eas legit `dx`/`dy` (s32,
+  pixela nostra) cum `genus` (GRADATA: gradus = `gradus_rotulae`
+  FACULTATUM) legat; plagulae STML veteres delta_* in dx/dy rotundant.
+  `ImportatioVisus.gradus_rotulae` novum.
+
+- corpus: `Eventus.datum.clavis.typus` DELETUM -> `s32 producta`
+  (character a clave productus sub modificantibus, Unicode plena, 0
+  nullus; spec D2 gradus III). FRANGIT: plagula quae `typus` legit
+  `producta` legat (comparationes cum literis characterum eaedem);
+  plagulae STML veteres attributum `typus` in `producta` legunt.
+
 - corpus (eventus phasis B): fons terminalis - `series_terminalis`
   nova (lexemator DEC/Williams, API trahens), `interpres_terminalis`
   nova (lexemata -> Eventus: legacy, kitty, xterm `CSI 27;m;c~`),
@@ -127,6 +139,199 @@ Leges chartae:
   orbantur post aedificationem novam (clavis olim omni aedificatione
   mutabatur). Identitas aedificationis: linea `aedificatum:` et
   `-provenientia` (fabrica 1b T6).
+
+- corpus: `stilus_terminalis` nova (modulus 004) - stilus terminalis
+  (colores nativus/tabula/RGB litterae, fundi, sublineae; VIII
+  ornamenta; sublinea VI generum) <-> SGR: `stilus_codificare`
+  (PLENA aut CCLVI; ultra XXIV parametra in series plures divisa),
+  `stilus_applicare` (Ghostty sgr.zig; ignota numerata), tabula CCLVI,
+  `stilus_quantizare`. tessera per eam emittit - octeti idem.
+
+- corpus: `pictor_applicatio` nova (modulus 013 A4) - compositio
+  pictoris communis (volumen, documentum, canones, insulae, registra,
+  dispensator) quam principalia fenestrae et terminalis vocant.
+  FRANGIT: `pictor_documentum.h` iam non includit `fenestra.h` (solum
+  `tabula_pixelorum.h`) - plagula quae fenestram per id accipiebat
+  `fenestra.h` ipsa includat.
+
+- corpus (mores): dispensator in MUTARE_MAGNITUDINEM attributa ephemera
+  `superficies_latitudo`/`_altitudo` (pixela nostra, scriptor
+  "dispensator", ut focus) scribit; ludus_fenestra magnitudinem tabulae
+  semel ante eventum aut quadrum primum nuntiat. Applicatio cum canone
+  ephemerarum clauso ea declaret (et dominos) - aliter insula tacite
+  recusat.
+
+- corpus: `dispositio` nova - dispositio pura in CELLULIS, exemplar
+  Clay (apta/crescens/fixa/pars per axem, min/max, spatium,
+  intervallum, allineatio, praecisio); radix implicita linea
+  superficiei; `dispositio_computare` + `dispositio_fines`; crescens et
+  contractio (aequatio Clay; ora quaeque pavimentum orae exactae);
+  textus per mensorem (liber primus virtualis, linea una; minimum =
+  verbum latissimum).
+
+- corpus (FRANGIT): `PictorCompositio.status_altitudo` (pixela) deletum
+  -> `cellula_latitudo/_altitudo` + `status_lineae` (013 B3); pictor
+  componit ex `superficies_*` per dispositio in cellulis.
+
+- corpus (mores): fenestra MUTARE_MAGNITUDINEM magnitudinem CONTENTI
+  narrat (olim quadri cum titulo); `TabulaPixelorum.capacitas` nova et
+  `tabula_pixelorum_ad_fenestram` (scala servata); ludus_fenestra
+  tabulam aptat et eventum in pixela nostra rescribit (013 B3b).
+
+- corpus (mores): delineare_mandata primitiva ORIGINE NEGATIVA praecidit
+  (olim rectangulum evanescebat, linea et polygonum in aeternum
+  pendebant - API delineare i32 insignatum); primitiva in spatio
+  positivo octetis eisdem.
+
+- corpus: `historia` nova - cauda actorum cum proiectione (ex
+  pictor_documentum extracta, scriba-plan H1): acta in volumine, rami
+  post revocationem, checkpoints viva sola, cursor, revocare/reficere,
+  verificare; proiectio clientis per `HistoriaProiectio` (memoria
+  fixae mensurae + vacare + applicare).
+
+- corpus (FRANGIT): `PictorDocumentum` per `historia` (scriba-plan
+  H2): campi `cursor`, `finis`, `numerus_vivorum`, `sigillum` deleti
+  (in `doc->historia` vivunt) - per `pictor_documentum_cursor/_finis`
+  et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
+  octetis eisdem leguntur et scribuntur.
+
+- corpus: insula-rami T4 - `vicus_applicatio` (nova: compositio
+  communis hospitis - genera scriba et pictor, index ordinarius s1/p1,
+  dispensator ligatus; `vicus_volumen_aperire`, `vicus_applicatio_
+  aedificare`); applicationes `apps/vicus/vicus.sh` (fenestra) et
+  `vicus_terminalis.sh`. `manus_ludus`: ictus et tractus bottonem
+  sinistrum ferunt (olim nullum - codificator terminalis pressionem
+  sine bottone abiciebat), motus nudus nullum.
+
+- corpus (FRANGIT): insula-rami T3b - `vicus_motum_ligare(v, motus)`
+  -> `vicus_dispensatorem_ligare(v, d)` (Motum ligat ET destinationem
+  hospitis ponit). Actio radicis `vicus.magnitudo` -> `vicus.radix`;
+  `vicus.tabula` (nova, ictus in tabulam). Ctrl-A praefixum: n / p /
+  1-9, Ctrl-A iterum = tabula prior; canon ephemera vici: `praefixum`,
+  `prior`.
+
+- corpus: insula-rami T3a - `Motus.ramus` (novum; nullatum = radix,
+  mores applicationum solarum idem): focus dispensatoris et
+  `motus_effundere` per ramum activum. `pictor_montare` /
+  `scriba_montare` focum ordinarium in ramo scribunt. `vicus_motum_
+  ligare` (nova); `VicusFacies.gestum_ponere/_ctx` (nova; facies ante
+  describere nullatur).
+
+- corpus: vicus T2b - `vicus_componere` (nova; Componere-formata, ctx =
+  Vicus*): radix `vicus` cum actione `vicus.magnitudo`, linea tabularum
+  (`PARTES_INDEX`, VIII pixela), arbor activae infra eam translata.
+  Superficies ramorum (fenestra minus linea) ab hospite scribuntur in
+  aperire et mutatione magnitudinis. `VICUS_CELLULA_LATITUDO/_ALTITUDO`,
+  `VICUS_ALTITUDO_TABULARUM` (nova).
+
+- corpus (FRANGIT): vicus T2a - `vicus_genus_addere` functionem
+  `describere` (VicusFacies) accipit; `vicus_actiones`, `vicus_figurae`,
+  `vicus_imago_fons` (nova). `actio_registrum_vacare/_miscere`,
+  `figura_registrum_vacare/_miscere` (nova; collisio = nihil additur).
+
+- corpus: `vicus` nova (insula-rami-plan T1b) - hospes applicationum:
+  repositorium unum (radices `<vicus>`), volumen unum, index tabularum
+  et activa in plagula `vicus/tabulae`; genera a principali registrata
+  (`vicus_genus_addere`: mensura montationis + functio montandi);
+  `vicus_aperire`, `vicus_tabulam_addere`, `vicus_activam_ponere`.
+
+- corpus (FRANGIT): MONTATIO (insula-rami-plan T1a) - `pictor_montare`,
+  `scriba_montare`, `PictorMontatio`, `ScribaMontatio` (nova);
+  `insula_ramum_initiare` (nova). `PictorApplicatio` /
+  `ScribaApplicatio`: contextus in `montatio` (olim `actiones_ctx`,
+  `figurae_ctx`, `compositio` directe) - `&app.montatio.figurae_ctx`.
+
+- corpus (mores): historia LOCUM REVOCANDI servat (insula-rami-plan
+  R5) - revocare/reficere notam `<cursor ad="seq"/>` appendunt;
+  aperire ad notam ultimam non obsoletam redit (olim semper ad finem).
+  Volumina nova acta plura ferunt (seq posteriores moventur).
+
+- corpus (FRANGIT): scriba in RAMO (insula-rami-plan R4) - canones
+  scribae radicem `scriba` (cum `id`) nominant (olim `documentum` /
+  `ephemera`). `ScribaActiones.ramus`, `ScribaCompositio.ramus` (nova;
+  repo NIHIL = radix repositorii dati).
+
+- corpus (FRANGIT): pictor in RAMO (insula-rami-plan R3) - canones
+  pictoris radicem `pictor` (cum `id`) nominant (olim `documentum` /
+  `ephemera`): insulae pictoris `<pictor …>` radicem habeant.
+  `PictorActiones.ramus`, `PictorCompositio.ramus` (nova; repo NIHIL =
+  radix repositorii dati).
+
+- corpus (FRANGIT): SPATIUM NOMINUM (insula-rami-plan R2) -
+  `historia_creare/_aperire`, `pictor_documentum_creare/_aperire`,
+  `scriba_documentum_creare/_aperire` parametrum `spatium` post volumen
+  accipiunt ("" = nomina nuda, octeti veteres). Documenta plura in
+  volumine uno: genus, notae, checkpoints et manifestum praefixum
+  'spatium/' ferunt.
+
+- corpus: insula RAMOS habet (insula-rami-plan R1) - `InsulaRamus`
+  (repositorium + liberum radicis per elementum et id), `insula_ramus`,
+  `insula_ramus_radix`, `_nodus`, `_attributum`, `mutare_ramum`,
+  `insula_ramus_dominum_ponere`, `_dominos_legere`, `_canonem_ponere`.
+  `InsulaDominus` et `InsulaRepositorium` creverunt (rebake). Canon
+  radicis ramos canonem proprium habentes non videt.
+
+- corpus (mores): margo paginae (scriba, pictor) in cellulis
+  MARGINIS - cellula tota extra paginam, non I pixelum (tessellatio
+  margo I pixeli in cellulas paginae rotundabat). `PictorFigurae`
+  `cellula_latitudo/_altitudo` (nova; 0 = I pixelum ut olim).
+
+- corpus: `scriba_applicatio` nova (scriba-plan S3) - compositio
+  scribae communis (volumen, documentum, canones, insulae, registra,
+  dispensator, gestus) quam principalia fenestrae et terminalis vocant
+  (`apps/scriba/scriba{,_terminalis}.sh`, AEDIFICARE_SOLUM=1 struit
+  solum).
+
+- corpus: `scriba_componentia` et `scriba_figurae` novae - arbor
+  scribae (prospectus/pagina/status in cellulis; cursor et ancora in
+  puncta, modus in titulo; volutio sine statu cursorem centrans) et
+  figurae (mensa, charta cum margine, selectio linearum, cursor colore
+  status modi, linea status).
+
+- corpus: `scriba_actiones` nova - actio `pagina.clavis` (vim super
+  folium laboris in gestu; status vim in insula ephemerarum; servatio
+  statim in modo normali, post quietem in inserendo, Esc claudit;
+  frusta insertionis coniuncta). `scriba_effugere`/`scriba_solvere` et
+  `scriba_documentum_committere_coniunctum` (nova).
+
+- corpus (mores): destinatio TEXTUM commissum ad FOCUM mittit (olim ad
+  radicem); `manus_ludus_scribere` (nova) - clavis + textus ut fons
+  verus; `motus_gestum_effundere` scriptorem priorem restituit (olim
+  anonymum).
+
+- corpus: `historia_actum_coniunctum` (nova) - actum priori
+  coniunctum (nota historiae `<coniunctio/>` ante id); revocare et
+  reficere gregem coniunctum gradu uno transeunt. Clientes sine
+  coniunctione octetis eisdem.
+
+- corpus: Motus GESTUM applicationis habet (`MotusGestus gestus`:
+  status opacus, effusor, quies propria) - `motus_gestum_ponere`,
+  `mutare_gestum`, `motus_gestus_quies`, `motus_gestum_effundere`;
+  dispensator gestum in quiete sua effundit; `dispensator_finire`
+  (nova) pendentia ante exitum effundit - glutina fenestrae et
+  terminalis eam vocant. Structura Motus crevit (rebake).
+
+- corpus: `scriba_documentum` nova - folium textus (TabulaCharacterum)
+  per historia: actum `<mutatio linea deletae><linea indentatio
+  textus/>...</mutatio>` = lineae substitutae (effectus, non claves);
+  `scriba_mutatio_computare/_applicare` purae; `_committere` folium
+  laboris in caudam; revocare/reficere/verificare.
+
+- corpus (mores): `ludus_fenestra_currere` otiosa EXSPECTAT
+  (`fenestra_expectare_eventus`, mora `ludus_fenestra_mora` nova: 0
+  ante quadrum primum, deinde quies dispensatoris) - olim perscrutabatur
+  sine mora (CPU C%); eventus statim excitat.
+
+- corpus (mores): tessellatio ORDINEM PICTORIS servat - rectangulum,
+  textus, linea ANTE imaginem posita sub ea manet (tabula `operta`: per
+  cellulam index imaginis ultimae tegentis). Olim stratum pixelorum
+  semper sub transitu cellularum iacebat: mensa ante paginam picta
+  paginam totam celabat.
+
+- corpus: `COLOR_SUPERFICIES` nova (thema: mensa circa paginam in
+  prospectu) et `PARTES_PROSPECTUS` nova (componens: fenestra in
+  contentum; titulus STML "prospectus"); pictor prospectum mensa implet
+  et paginam margine cingit.
 
 ## v4 — 2026-09-29
 

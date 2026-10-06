@@ -51,16 +51,32 @@ instrumentum_ponere (
  * Actum ictus
  * ================================================== */
 
+/* ramus status pictoris (R3): contextus eum fert; sine eo radix */
+interior InsulaRamus
+ramus_pictoris (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+
+    pa = (PictorActiones*)ctx;
+    si (pa && pa->ramus.repo)
+    {
+        redde pa->ramus;
+    }
+    redde insula_ramus_radix(repo);
+}
+
 interior s32
 attributum_s32 (
-    InsulaRepositorium* repo,
-    constans character* titulus,
-                   s32  praestitutum)
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+                     s32  praestitutum)
 {
     chorda* a;
        s32  v;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
     si (a && chorda_ut_s32(*a, &v))
     {
         redde v;
@@ -70,9 +86,9 @@ attributum_s32 (
 
 interior chorda
 ictum_scribere (
-    InsulaRepositorium* repo,
-        constans Motus* motus,
-               Piscina* p)
+    constans InsulaRamus* ramus,
+          constans Motus* motus,
+                 Piscina* p)
 {
      chorda  s;
     Punctum* q;
@@ -82,12 +98,12 @@ ictum_scribere (
     s = chorda_ex_literis("<ictus instrumentum=\"penicillus\" color=\"",
         p);
     s = chorda_concatenare(s,
-        chorda_ex_s32(attributum_s32(repo, "color_primus", ZEPHYRUM),
+        chorda_ex_s32(attributum_s32(ramus, "color_primus", ZEPHYRUM),
         p), p);
     s = chorda_concatenare(s, chorda_ex_literis("\" magnitudo=\"", p),
         p);
     s = chorda_concatenare(s,
-        chorda_ex_s32(attributum_s32(repo, "magnitudo", I), p), p);
+        chorda_ex_s32(attributum_s32(ramus, "magnitudo", I), p), p);
     s = chorda_concatenare(s, chorda_ex_literis("\">", p), p);
     n = xar_numerus(motus->ictus_pendens);
     per (i = ZEPHYRUM; i < n; i++)
@@ -119,6 +135,7 @@ pictor_penicillus_ictus (
       constans Eventus* ev,
                 vacuum* ctx)
 {
+       InsulaRamus  ramus;
     PictorActiones* pa;
            Punctum  p;
 
@@ -147,8 +164,9 @@ pictor_penicillus_ictus (
             {
                 redde FALSUM;
             }
+            ramus = ramus_pictoris(repo, ctx);
             pictor_documentum_actum(pa->doc,
-                ictum_scribere(repo, motus, pa->doc->piscina));
+                ictum_scribere(&ramus, motus, pa->doc->piscina));
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             /* ictus finitus ephemera non tangit */
             motus->sordida = FALSUM;
@@ -179,10 +197,10 @@ pictor_instrumentum_eligere (
       constans Eventus* ev,
                 vacuum* ctx)
 {
+    InsulaRamus ramus;
     (vacuum)motus;
     (vacuum)destinatio;
     (vacuum)nodus;
-    (vacuum)ctx;
     si (!repo || !ev || ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
         redde FALSUM;
@@ -193,7 +211,8 @@ pictor_instrumentum_eligere (
         && (ev->datum.clavis.modificantes & (MOD_SUPER | MOD_IMPERIUM))
                == ZEPHYRUM)
     {
-        redde mutare_ephemera(repo, instrumentum_ponere,
+        ramus = ramus_pictoris(repo, ctx);
+        redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
             litterae_penicillus);
     }
     redde FALSUM;

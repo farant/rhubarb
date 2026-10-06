@@ -41,9 +41,11 @@ nomen structura {
           ImagoFons  fons;
              vacuum* fons_ctx;
     TabulaPixelorum* tabula;
+            Piscina* piscina;        /* 013 B3b: tabula renovanda */
             Piscina* piscina_quadri;
             Mandata* mandata;        /* quadri ultimi */
       LudusMensurae  mensurae;
+                b32  magnitudo_nuntiata;  /* 013 B1: initialis missa */
 } LudusFenestra;
 
 LudusFenestra*
@@ -56,7 +58,12 @@ ludus_fenestra_creare (
              vacuum* fons_ctx,
     TabulaPixelorum* tabula);
 
-/* eventus in dispensatorem; tempus ZEPHYRUM stampatur 'nunc' */
+/* eventus in dispensatorem; tempus ZEPHYRUM stampatur 'nunc'.
+ * MUTARE_MAGNITUDINEM (puncta contenti fenestrae): tabula ad fenestram
+ * aptatur SCALA SERVATA (013 B3b) et eventus in PIXELA NOSTRA
+ * (tabulae) rescribitur ante traditionem. Ante
+ * eventum primum (aut quadrum primum) magnitudo tabulae semel
+ * nuntiatur (MUTARE_MAGNITUDINEM) - superficies status est (013 B1). */
 vacuum
 ludus_fenestra_tractare (
        LudusFenestra* lf,
@@ -69,8 +76,18 @@ ludus_quadrum (
     LudusFenestra* lf,
               s64  nunc);
 
-/* ansa vera: perscrutari, tractare, quadrum, praesentare; finis in
- * EVENTUS_CLAUDERE aut post quadra_maxima (> 0). Mensurae ad stdout. */
+/* mora ante quadrum proximum: ZEPHYRUM ante primum (quadrum
+ * statim), deinde quies dispensatoris. fenestra_expectare_eventus
+ * eventu adveniente excitatur, ergo tractus non tardatur; fenestra
+ * otiosa ~0% CPU (olim perscrutari sine mora: C%). */
+Mora
+ludus_fenestra_mora (
+    constans LudusFenestra* lf);
+
+/* ansa vera: exspectare (ludus_fenestra_mora), tractare, quadrum,
+ * praesentare; finis in EVENTUS_CLAUDERE aut post quadra_maxima
+ * (> 0), deinde dispensator_finire (pendentia effunduntur).
+ * Mensurae ad stdout. */
 s32
 ludus_fenestra_currere (
     LudusFenestra* lf,

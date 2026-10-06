@@ -304,11 +304,70 @@ _numerare (
     *(i32*)xar_addere(numeri) = I;
 }
 
+/* via in cellam TSV: tabulae et lineae novae spatia fiunt, longitudo
+ * CCLVI (C89 snprintf non habet; verbum multilineum fieri potest) */
+interior vacuum
+_cellam_purgare (
+     constans character* fons,
+              character* area)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; fons[k] != '\0' && k < CCLV; k++)
+    {
+        area[k] = (fons[k] == '\t' || fons[k] == '\n'
+                   || fons[k] == '\r') ? ' ' : fons[k];
+    }
+    area[k] = '\0';
+}
+
+/* linea census una (situs s, codices inventi) et numeri eius: genus,
+ * resolutio, causa (effectus-plan-2 T1) */
+interior vacuum
+_censum_lineam_scribere (
+              Contextus* c,
+       ChordaAedificator* tsv,
+                     Xar* claves,
+                     Xar* numeri,
+     constans character* linea,
+              StmlNodus* s,
+     constans character* el,
+     constans character* inventa)
+{
+    character clavis[VIA_MAXIMA];
+    character via[CCLVI];
+    character causa[CCLVI];
+
+    _cellam_purgare(_cella(c->piscina, s, "via"), via);
+    _cellam_purgare(_cella(c->piscina, s, "causa"), causa);
+    _numerare(c->piscina, claves, numeri, el);
+    _numerare(c->piscina, claves, numeri,
+        _cella(c->piscina, s, "resolutio"));
+    si (stml_attributum_capere(s, "causa") != NIHIL)
+    {
+        character k_causa[CCLVI];
+
+        sprintf(k_causa, "causa: %.200s", causa);
+        _numerare(c->piscina, claves, numeri, k_causa);
+    }
+    sprintf(clavis, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+        linea, _cella(c->piscina, s, "sedes"), el,
+        _cella(c->piscina, s, "per"),
+        _cella(c->piscina, s, "mandatum"),
+        _cella(c->piscina, s, "resolutio"),
+        _cella(c->piscina, s, "classis"),
+        _cella(c->piscina, s, "scripta_in_ambitu"), via,
+        inventa[ZEPHYRUM] != '\0' ? inventa : "-", causa);
+    chorda_aedificator_appendere_literis(tsv, clavis);
+}
+
 /* CENSUS (planum T6, spec par. VI.1): situs omnis omnium scriptorum
  * (index ex stdin) in build/effectus/census.tsv - plagula linea
- * elementum per mandatum resolutio classis scripta via lintrum (codices
- * post excusationes). Summa per genus, resolutionem, regulam; et quot
- * excusationes absorbuerunt (cursus sine excusatione comparatus). */
+ * elementum per mandatum resolutio classis scripta via lintrum causa
+ * (codices post excusationes; via = textus fontis ubi irresolutus;
+ * causa ubi resolutio non plena - effectus-plan-2 T1). Summa per
+ * genus, resolutionem, regulam, causam; et quot excusationes
+ * absorbuerunt (cursus sine excusatione comparatus). */
 interior integer
 _modus_census (
     Contextus* c)
@@ -329,7 +388,7 @@ _modus_census (
     chorda_aedificator_appendere_literis(tsv, "# effectus census "
         "(GENERATUM: ./crusta/effectus.sh -census) - plagula linea "
         "elementum per mandatum resolutio classis scripta via "
-        "lintrum\n");
+        "lintrum causa\n");
     dum (fgets(linea, (integer)magnitudo(linea), stdin) != NIHIL)
     {
         memoriae_index  n = strlen(linea);
@@ -438,7 +497,10 @@ _modus_census (
                         }
                         el = chorda_ut_cstr(*s->titulus, c->piscina);
                         octeti = _cella(c->piscina, s, "octeti");
-                        sprintf(clavis, "%s %s", el, octeti);
+                        /* unum per (elementum, octeti, via): elementa
+                         * tabulati sedem verbi eiusdem ferunt (T4) */
+                        sprintf(clavis, "%s %s %.200s", el, octeti,
+                            _cella(c->piscina, s, "via"));
                         per (w = ZEPHYRUM; w < xar_numerus(visa); w++)
                         {
                             si (strcmp(*(character**)xar_obtinere(visa,
@@ -479,20 +541,8 @@ _modus_census (
                                     x->codex);
                             }
                         }
-                        _numerare(c->piscina, claves, numeri, el);
-                        _numerare(c->piscina, claves, numeri,
-                            _cella(c->piscina, s, "resolutio"));
-                        sprintf(clavis,
-                            "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
-                            linea, _cella(c->piscina, s, "sedes"), el,
-                            _cella(c->piscina, s, "per"),
-                            _cella(c->piscina, s, "mandatum"),
-                            _cella(c->piscina, s, "resolutio"),
-                            _cella(c->piscina, s, "classis"),
-                            _cella(c->piscina, s, "scripta_in_ambitu"),
-                            inventa[ZEPHYRUM] != '\0' ? inventa : "-");
-                        chorda_aedificator_appendere_literis(tsv,
-                            clavis);
+                        _censum_lineam_scribere(c, tsv, claves, numeri,
+                            linea, s, el, inventa);
                         (vacuum)j;
                     }
                 }
@@ -522,11 +572,14 @@ _modus_census (
  *   probatio <via>       exsistentia et species (absentia quoque)
  *   nomina <dir> <ex>    nomina directorii exemplari congruentia
  *   globus <exemplar>    octeti omnium plagularum congruentium
- *   directorium <dir>    arbor tota (recursio: grep -r)
+ *   arbor <dir>          subarbor tota: nomina et contenta, recursive
+ *                        (recursio grep -r, cp -r; praefixum A3 - T6;
+ *                        ante T6 'directorium', nomina sola)
  *   ambitus <titulus>    valor variabilis ambitus
  *   dominus <via>        lectio build/ non scripta in ambitu: exitus
  *                        actionis declaratae esse debet
  *   ignotum <sedes> <causa>  situs irresolutus NON excusatus
+ * Classis temporaria (effectus-plan-2 T3) lineam nullam dat.
  * Excusatio per lintrum ipsum (in_catena VERUM): situs irresolutus
  * cuius inventum excusatio absorbuit clavem non intrat. Scripturae
  * clavem non intrant (vestigium). Processus custoditi: provenientia
@@ -691,6 +744,41 @@ _modus_clavis (
             pl     = _cella(c->piscina, s, "plagula");
             sprintf(clavis, "%s@%ld", pl, strtol(_cella(c->piscina, s,
                 "octeti"), NIHIL, X));
+            si (strcmp(cl, "temporaria") == ZEPHYRUM)
+            {
+                /* objectum mktemp recens: quidquid sub eo legitur hic
+                 * cursus scripsit (spec-2 par. VII) - nulla linea,
+                 * etiam cauda ignota (non ignotum) */
+                perge;
+            }
+            si (   strcmp(res, "partialis") == ZEPHYRUM
+                && strcmp(cl, "arbor")      == ZEPHYRUM)
+            {
+                /* PRAEFIXUM IN ARBORE (effectus-plan-2 T6, A3): lectio,
+                 * probatio, enumeratio -> 'arbor' (digestum
+                 * subarboris, grossum sed solidum); fontatio, exsecutio
+                 * -> ignotum (effectus filii ignoti); praefixum radicis
+                 * -> ignotum. Ante T6 situs partialis lineam NULLAM
+                 * dabat (irresolutum 'nulla' solum iudicat): foramen
+                 * soliditatis, iudicium-fumus P14. */
+                si (   (   strcmp(el, "lectio") == ZEPHYRUM
+                        || strcmp(el, "probatio") == ZEPHYRUM
+                        || strcmp(el, "enumeratio") == ZEPHYRUM)
+                    && v[ZEPHYRUM]     != '\0'
+                    && strcmp(v, "./") != ZEPHYRUM)
+                {
+                    _lineam_addere(c, lineae, "arbor", v, NIHIL);
+                }
+                alioquin
+                {
+                    character sedes[IV * MXXIV];
+
+                    sprintf(sedes, "%s:%s", pl,
+                        _cella(c->piscina, s, "sedes"));
+                    _lineam_addere(c, lineae, "ignotum", sedes, v);
+                }
+                perge;
+            }
             si (   strcmp(el, "ignotum") == ZEPHYRUM
                 || strcmp(res, "nulla")  == ZEPHYRUM
                 || (strcmp(res, "partialis") == ZEPHYRUM
@@ -766,7 +854,7 @@ _modus_clavis (
             }
             alioquin si (strcmp(forma, "praefixum") == ZEPHYRUM)
             {
-                _lineam_addere(c, lineae, "directorium", v, NIHIL);
+                _lineam_addere(c, lineae, "arbor", v, NIHIL);
             }
             alioquin si (   strcmp(cl, "build") == ZEPHYRUM
                          && strcmp(_cella(c->piscina, s,

@@ -1,5 +1,8 @@
 <canon dialectus="pictor-durabilis" versio="1">
-  <elementum nomen="documentum" radix="verum">
+  <elementum nomen="pictor" radix="verum"
+    nota="radix = genus applicationis: radix sola aut ramus montatus
+          (insula rami R3); id montationis">
+    <attributum nomen="id" genus="nomen"/>
     <attributum nomen="latitudo" genus="numerus" necessarium="verum"/>
     <attributum nomen="altitudo" genus="numerus" necessarium="verum"/>
     <attributum nomen="paletta"  genus="textus"

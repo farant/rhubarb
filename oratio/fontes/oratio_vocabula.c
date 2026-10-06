@@ -36,7 +36,7 @@ hic_manens constans character* TITULI_STATUUM[] = {
 };
 
 constans character* constans ORATIO_VOCABULA_EXCLUSA[] = {
-    "knotapel/", "vendor/", "archivum/", NIHIL
+    "knotapel/", "vendor/", "archivum/", "oracula/", NIHIL
 };
 
 constans character* constans ORATIO_PROSA_EXCLUSA[] = {

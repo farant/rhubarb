@@ -19,6 +19,9 @@
 
 nomen structura {
     PictorDocumentum* doc;
+                 i32  cellula_latitudo;  /* margo cellula extra paginam;
+                                          * 0 = I pixelum (olim) */
+                 i32 cellula_altitudo;
 } PictorFigurae;
 
 vacuum
@@ -34,6 +37,13 @@ pictor_imago_fons (
     vacuum* ctx);
 
 /* <purus/> */
+vacuum
+figura_prospectus (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx);
+
 vacuum
 figura_tabulae (
     constans Componens* c,

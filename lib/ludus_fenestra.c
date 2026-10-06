@@ -36,6 +36,7 @@ ludus_fenestra_creare (
     lf->fons      = fons;
     lf->fons_ctx  = fons_ctx;
     lf->tabula    = tabula;
+    lf->piscina   = piscina;
     lf->piscina_quadri = piscina_generare_dynamicum("ludus_quadrum",
                                                     LXIV * M);
     si (!lf->piscina_quadri)
@@ -43,6 +44,42 @@ ludus_fenestra_creare (
         redde NIHIL;
     }
     redde lf;
+}
+
+/* Tempus stampare et tradere (sine conversione) */
+interior vacuum
+_tradere (
+    LudusFenestra* lf,
+          Eventus* e,
+              s64  nunc)
+{
+    si (e->tempus == ZEPHYRUM)
+    {
+        e->tempus = nunc;
+    }
+    dispensator_tractare(lf->d, e);
+}
+
+/* Magnitudo initialis semel (013 B1), IAM in pixelis nostris
+ * (tabulae) - directe traditur, sine conversione B3b. */
+interior vacuum
+_magnitudinem_nuntiare (
+    LudusFenestra* lf,
+              s64  nunc)
+{
+    Eventus e;
+
+    si (lf->magnitudo_nuntiata)
+    {
+        redde;
+    }
+    lf->magnitudo_nuntiata = VERUM;
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                               = EVENTUS_MUTARE_MAGNITUDINEM;
+    e.tempus                              = nunc;
+    e.datum.mutare_magnitudinem.latitudo  = lf->tabula->latitudo;
+    e.datum.mutare_magnitudinem.altitudo  = lf->tabula->altitudo;
+    _tradere(lf, &e, nunc);
 }
 
 vacuum
@@ -57,12 +94,20 @@ ludus_fenestra_tractare (
     {
         redde;
     }
+    _magnitudinem_nuntiare(lf, nunc);
     e = *ev;
-    si (e.tempus == ZEPHYRUM)
+    si (e.genus == EVENTUS_MUTARE_MAGNITUDINEM && lf->piscina)
     {
-        e.tempus = nunc;
+        /* 013 B3b: puncta fenestrae -> tabula aptata (scala servata)
+         * -> eventus in pixela nostra: superficies idem significat in
+         * fenestra ac in terminali */
+        (vacuum)tabula_pixelorum_ad_fenestram(lf->tabula, lf->piscina,
+            e.datum.mutare_magnitudinem.latitudo,
+            e.datum.mutare_magnitudinem.altitudo);
+        e.datum.mutare_magnitudinem.latitudo = lf->tabula->latitudo;
+        e.datum.mutare_magnitudinem.altitudo = lf->tabula->altitudo;
     }
-    dispensator_tractare(lf->d, &e);
+    _tradere(lf, &e, nunc);
 }
 
 vacuum
@@ -79,6 +124,7 @@ ludus_quadrum (
     {
         redde;
     }
+    _magnitudinem_nuntiare(lf, nunc);
     t0 = fenestra_tempus_ms();
     dispensator_pulsare(lf->d, nunc);
     t1 = fenestra_tempus_ms();
@@ -101,6 +147,17 @@ ludus_quadrum (
     }
 }
 
+Mora
+ludus_fenestra_mora (
+    constans LudusFenestra* lf)
+{
+    si (!lf || lf->mensurae.quadra == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    redde (Mora)lf->d->quies_ms;
+}
+
 s32
 ludus_fenestra_currere (
     LudusFenestra* lf,
@@ -118,7 +175,7 @@ ludus_fenestra_currere (
     claudendum = FALSUM;
     dum (!claudendum && !fenestra_debet_claudere(fenestra))
     {
-        fenestra_perscrutari_eventus(fenestra);
+        fenestra_expectare_eventus(fenestra, ludus_fenestra_mora(lf));
         nunc = fenestra_tempus_ms();
         dum (fenestra_obtinere_eventus(fenestra, &e))
         {
@@ -137,6 +194,8 @@ ludus_fenestra_currere (
             claudendum = VERUM;
         }
     }
+    /* S1a: pendentia (gestus, pan/zoom) ante exitum effunduntur */
+    dispensator_finire(lf->d);
     imprimere("ludus: quadra=%d compositio=%ldms pingere=%ldms"
               " delineare=%ldms maximum=%ldms\n",
               (int)lf->mensurae.quadra,

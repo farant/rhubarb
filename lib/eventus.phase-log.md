@@ -1628,3 +1628,60 @@ terminal ⇄ fenestra.
 
 **Parks filed** (terminal-planning): 008, a promoted drop's position is
 the pointer before the drag (decision (a), contract documented).
+
+## S3a — `typus` → `producta` (spec D2 step 3, part 1) (2026-10-03)
+
+The step-3 inventory (`project-specs/eventus-typus-inventarium.md`, 41
+sites) showed `typus` is NOT redundant: under Alt/Ctrl/Cmd no TEXT is
+emitted, so it is the only record of the character a key produced
+(Alt+A vs Alt+a; Shift+Alt+'.' → `ESC >`). Its fault was its TYPE (one
+signed `character`, ASCII only). Fran: replace it with `s32 producta`;
+switch the old widget generation's reads (the real migration waits for
+park 009); migrate the f32 deltas next (S3b).
+
+- `eventus.h`: `typus` deleted, `producta` (Unicode, 0 = none).
+- fenestra: the first scalar of `characters` (surrogates joined;
+  AppKit's 0xF700-0xF8FF function-key characters → 0, where `typus`
+  used to hold a truncated garbage byte).
+- decoder: the full rune (Alt+é survives; red test first); manus: its
+  synthetic character.
+- eventus_stml: writes `producta`, reads an old recording's `typus`.
+- readers: encoder (UTF-8 of `producta` on the legacy Alt/Ctrl path),
+  tessera's projection, the 8 old-widget files (mechanical; ASCII kept),
+  the toy (Escape by logical key; `toy.eventus.stml` updated, and the
+  notarius' byte-for-byte check still holds).
+- The hook formats every touched file, so the old widget files were
+  reformatted whole (librarium_visus 140 → 20 complaints): a large but
+  mechanical diff.
+
+Plants caught: the stml reader dropping the `typus` fallback; the
+decoder truncating `producta` to ASCII. fenestra conformance 8/8,
+terminal 16/16, tessera 15/15, pictor/villa/forum, the auscultators and
+the GUI demos (navigator, combinado, pagina, elementa) build.
+
+## S3b — integer scroll in importatio; the f32 deltas deleted (2026-10-03)
+
+D2 step 3, part 2, and the step-2 item phase A missed: `importatio_visus`
+still zoomed from `delta_y * 0.5f`, the f32 copy of the raw
+`scrollingDelta`.
+
+- **The zoom keeps its feel, honouring `genus`.** fenestra's wheel
+  gives `dy = 16 × lines`, so the old `lines × 0.5` is
+  `dy / gradus × 0.5`; the gradus is the source's published
+  `gradus_rotulae` (FACULTATES), recorded in the visus (default 16,
+  fenestra's), so a terminal source (gradus = cell height) zooms the
+  same per notch. Trackpad: `dy` is our pixels, ≈ points at scale 1, so
+  `dy × 0.5`. Old recordings (genus IGNOTA) take the pixel path.
+- **`delta_x` / `delta_y` deleted** from `Eventus`; fenestra and the
+  decoder stop filling them; `eventus_stml` stops writing them (its
+  `attr_f` helper went with them) and, for an old recording without
+  `dx`/`dy`, rounds `delta_*` half away from zero (`_rotundare`; C89 has
+  no `round`).
+
+Red first: the new `probatio_importatio_visus` (zoom per notch at gradus
+16, per trackpad pixel, at a published gradus 20, half a notch) and an
+old-recording case in `probatio_eventus_stml` (`-1.5` → `-2`, `0.4` →
+0, present `dx`/`dy` win). Plants caught: the zoom ignoring the gradus;
+the fallback overwriting present `dx`/`dy`.
+
+**D2 is complete**: no deprecated field remains in `Eventus`.

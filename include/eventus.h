@@ -309,8 +309,11 @@ nomen structura {
         } mutare_magnitudinem;
         structura {
              clavis_t clavis;        /* LOGICA (nominata; ASCII ut olim) */
-            character typus;         /* DEPRECATUM (spec D2): textus in
-                                      * EVENTUS_TEXTUS */
+                  s32 producta;      /* character a clave PRODUCTUS sub
+                                      * modificantibus (Unicode, 0 =
+                                      * nullus): solus sub Alt/Ctrl/Cmd,
+                                      * ubi TEXTUS deest (S3a; olim
+                                      * 'typus', character ASCII) */
                   i32 modificantes;  /* MOD_* + latera */
                   s32 runa;          /* runa sine maiuscula (logica) */
          EventusCodex codex;         /* PHYSICUS; IGNOTUS si nescitur */
@@ -329,8 +332,6 @@ nomen structura {
                      i32 numerus_exemplorum;
         } mus;
         structura {
-            f32 delta_x;             /* DEPRECATUM (spec D2) */
-            f32 delta_y;
             s32 dx;                  /* pixela nostra, integra */
             s32 dy;
             EventusRotulaGenus genus;

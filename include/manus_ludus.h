@@ -102,6 +102,18 @@ manus_ludus_clavem (
             i32  modificantes);
 
 
+/* Textum scribere ut fons verus (fenestra, terminalis): pro quoque
+ * charactere imprimibili DEPRESSUS + TEXTUS COMMISSUM (eodem tempore,
+ * origo SCRIPTA) + LIBERATUS - consumptor qui ambo legit litteram bis
+ * videt, ut in usu. Characteres regiminis (< 0x20, 0x7F): clavis sola
+ * (fontes veri textum pro eis non mittunt). Contentum ex piscina
+ * manus (notarius id servare potest). */
+b32
+manus_ludus_scribere (
+             ManusLudus* m,
+     constans character* textus);
+
+
 /* ==================================================
  * Iteratio plagulae notatae (eventus A6b; spec D6)
  * ================================================== */

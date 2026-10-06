@@ -6,6 +6,7 @@
 #include "internamentum.h"
 #include "dispensator.h"
 #include "manus_ludus.h"
+#include "xar.h"
 #include "ludus_toy.h"
 #include "credo.h"
 #include <stdio.h>
@@ -139,6 +140,32 @@ s32 principale (vacuum)
         MOD_SHIFT | MOD_SHIFT_SINISTER));
     CREDO_MANUS_LUDUS_FOCUS(m, "tabula");
 
+    imprimere("\n--- scribere: clavis + textus eodem tempore ---\n");
+    {
+                     Xar* notata;
+        constans Eventus* e0;
+        constans Eventus* e1;
+
+        notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
+        dispensator_notarium_ponere(d, notata);
+        CREDO_VERUM(manus_ludus_scribere(m, "a\r"));
+        dispensator_notarium_ponere(d, NIHIL);
+        /* 'a': DEPRESSUS, TEXTUS, LIBERATUS;
+         * '\r': DEPRESSUS, LIBERATUS (regimen textum non fert) */
+        CREDO_AEQUALIS_I32(xar_numerus(notata), V);
+        e0 = &((EventusNotatum*)xar_obtinere(notata,
+            ZEPHYRUM))->eventus;
+        e1 = &((EventusNotatum*)xar_obtinere(notata, I))->eventus;
+        CREDO_AEQUALIS_I32((i32)e0->genus,
+            (i32)EVENTUS_CLAVIS_DEPRESSUS);
+        CREDO_AEQUALIS_I32((i32)e1->genus, (i32)EVENTUS_TEXTUS);
+        CREDO_AEQUALIS_S64(e1->tempus, e0->tempus);
+        CREDO_AEQUALIS_I32(e1->datum.textus.contentum.mensura, I);
+        CREDO_VERUM(e1->datum.textus.contentum.datum[ZEPHYRUM] == 'a');
+        CREDO_AEQUALIS_I32((i32)((EventusNotatum*)xar_obtinere(notata,
+            III))->eventus.genus, (i32)EVENTUS_CLAVIS_DEPRESSUS);
+    }
+
     imprimere("\n--- exspectare movet tempus (quies) ---\n");
     dispensator_motus(d)->pan.x                      = III;
     dispensator_motus(d)->sordida                    = VERUM;
@@ -150,6 +177,30 @@ s32 principale (vacuum)
     a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
     CREDO_NON_NIHIL(a);
     CREDO_CHORDA_AEQUALIS_LITERIS(*a, "3");
+
+    imprimere("\n--- botton ut fons verus (insula-rami T4) ---\n");
+    /* ictus et tractus bottonem sinistrum ferunt, motus nudus nullum -
+     * codificator terminalis pressionem sine bottone abicit */
+    {
+         Xar* notata;
+         i32  i;
+
+        notata = xar_creare(piscina, (i32)magnitudo(EventusNotatum));
+        dispensator_notarium_ponere(d, notata);
+        CREDO_VERUM(manus_ludus_premere_ad(m, V, XC));
+        CREDO_VERUM(manus_ludus_movere(m, CXX, L));
+        CREDO_VERUM(manus_ludus_trahere(m, "#tabula", via, III));
+        dispensator_notarium_ponere(d, NIHIL);
+        CREDO_AEQUALIS_I32(xar_numerus(notata), VII);
+        per (i = ZEPHYRUM; i < xar_numerus(notata); i++)
+        {
+            constans Eventus* e;
+
+            e = &((EventusNotatum*)xar_obtinere(notata, i))->eventus;
+            CREDO_AEQUALIS_I32((i32)e->datum.mus.botton,
+                (i32)(i == II ? ZEPHYRUM : MUS_SINISTER));
+        }
+    }
 
     imprimere("\n--- selector malus nominat causam ---\n");
     CREDO_FALSUM(manus_ludus_premere(m, "#nemo"));

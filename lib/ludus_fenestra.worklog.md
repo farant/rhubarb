@@ -37,3 +37,29 @@ accumulated elements are still under ten); the assertion now pins
 the second frame's count to the first's, and the plant went red
 there. Green on revert. Examen ACCIPE; formator 0 after four long
 lines.
+
+## 2026-10-05 — the window waits when idle
+
+Found during scriba H2 (a stray pictor window sat at 100% CPU for ten
+minutes): `ludus_fenestra_currere` polled (`fenestra_perscrutari_eventus`),
+composed, drew and presented in a loop with no wait, since ludus P3.
+The terminal glue already slept on `quies_ms`.
+
+Now the loop blocks in `fenestra_expectare_eventus` (the house's
+`nextEventMatchingMask:untilDate:` wait - vitrea, villa, forum, atrium,
+silex use it) for `ludus_fenestra_mora(lf)`: 0 before the first frame
+(draw at once), the dispensator's `quies_ms` after. An arriving event
+wakes it, so strokes and drags are not delayed; the quiet flush
+(`motus_quies` in `dispensator_pulsare`) still runs every frame, so it
+lands within ~2 × quies_ms as in the terminal.
+
+Measured: pictor `-fumus` (30 frames) under `/usr/bin/time` - real
+8.95 s, user 0.15 + sys 0.04 s (~2%, startup included; before: a core
+pinned). The smoke run is now ~9 s (idle frames wait 300 ms) instead
+of instant - it is a smoke bound, not a benchmark. Fran's look: idle
+CPU fine, drawing feels the same.
+
+Test: `probatio_ludus_fenestra` asserts the wait (0, then CCC). Plants:
+always 0 (= the old spin) and always quies (first frame delayed), both
+caught. The loop's USE of the wait needs a real window - covered by the
+measurement and Fran's look, not headlessly.

@@ -86,7 +86,7 @@ cd "$RADIX_DIR"
 _candidatae() {
     local omnes
     omnes="$(git ls-files '*.c' '*.h' \
-        | grep -vE '^vendor/|/vendor/|^build/|/build/|/amalgama/|_generata|/fixa/')"
+        | grep -vE '^vendor/|/vendor/|^oracula/|^build/|/build/|/amalgama/|_generata|/fixa/')"
     [ -n "$omnes" ] || return 0
     echo "$omnes" | tr '\n' '\0' \
         | xargs -0 grep -lE '/\*[[:space:]]*<[A-Za-z]|//[[:space:]]*<[A-Za-z]|^[[:space:]]*\*[[:space:]]*<[A-Za-z]' \

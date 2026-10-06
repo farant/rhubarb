@@ -94,6 +94,9 @@ interior constans Renominatio PRAEFIXA_FUNCTIONUM[] = {
     { "eventus_",            "tessera_eventus_" },
     { "claves_",             "tessera_claves_" },
     { "rivus_",              "tessera_rivus_" },
+    /* modulus 004: codex stili - non "tessera_stilus_" (tessera
+     * stilus_nativus/aequalis sua iam possidet; collisio in TU) */
+    { "stilus_",             "tessera_stilus_terminalis_" },
     { "utf8_",               "tessera_utf8_" }
 };
 
@@ -107,7 +110,10 @@ interior constans character* constans PROOEMIUM =
     " * tessera/amalgamare.sh\n"
     " */\n\n";
 
-/* Listas manifesti machinis emittere (tools/amalgama_auditor.sh) */
+/* Listas manifesti machinis emittere (tools/amalgama_auditor.sh);
+ * renominationes quoque (TE exactae, PF praefixa) - messis
+ * excludendorum nomina per HANC tabulam reddit (praefixum non semper
+ * "tessera_" + vetus: stilus_ -> tessera_stilus_terminalis_) */
 interior vacuum
 _enumerare (vacuum)
 {
@@ -128,6 +134,16 @@ _enumerare (vacuum)
     per (i = ZEPHYRUM; i < NUMERUS(CORPORA_PROPRIA); i++)
     {
         imprimere("OP\t%s\n", CORPORA_PROPRIA[i].via);
+    }
+    per (i = ZEPHYRUM; i < NUMERUS(TYPI_EXACTI); i++)
+    {
+        imprimere("TE\t%s\t%s\n", TYPI_EXACTI[i].vetus,
+            TYPI_EXACTI[i].novum);
+    }
+    per (i = ZEPHYRUM; i < NUMERUS(PRAEFIXA_FUNCTIONUM); i++)
+    {
+        imprimere("PF\t%s\t%s\n", PRAEFIXA_FUNCTIONUM[i].vetus,
+            PRAEFIXA_FUNCTIONUM[i].novum);
     }
 }
 

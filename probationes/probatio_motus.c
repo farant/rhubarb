@@ -8,6 +8,7 @@
 #include "motus.h"
 #include "credo.h"
 #include <stdio.h>
+#include <string.h>
 
 /* Mutator: pan ponere */
 interior vacuum
@@ -53,14 +54,52 @@ punctum_addere (
     *p  = *(Punctum*)ctx;
 }
 
+/* S1a: gestus ludicer - litterae numerantur, effusio notatur */
+nomen structura {
+       i32 litterae;
+       i32 effusiones;
+       b32 recusare;
+    chorda scriptor;   /* scriptor insulae dum effunditur */
+} GestusLudicer;
+
+interior vacuum
+littera_addere (
+     Motus* motus,
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    ((GestusLudicer*)motus->gestus.status)->litterae++;
+}
+
+interior b32
+gestum_effundere (
+                vacuum* gestus,
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    GestusLudicer* g;
+
+    (vacuum)ctx;
+    g = (GestusLudicer*)gestus;
+    si (g->recusare)
+    {
+        redde FALSUM;
+    }
+    g->effusiones++;
+    g->scriptor = repo->scriptor;
+    redde VERUM;
+}
+
 s32 principale (vacuum)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-     InsulaRepositorium* repo;
-                  Motus  motus;
-                Punctum  p;
-                 chorda* a;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+      InsulaRepositorium* repo;
+                   Motus  motus;
+                 Punctum  p;
+                  chorda* a;
+           GestusLudicer  g;
+                     i32  versio;
 
     piscina = piscina_generare_dynamicum("probatio_motus", XVI * M);
     si (!piscina)
@@ -146,6 +185,44 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(motus.captura));
 
     imprimere("\n");
+    imprimere("\n--- S1a: gestus - porta, quies, effusio ---\n");
+    memset(&g, ZEPHYRUM, magnitudo(g));
+    CREDO_FALSUM(motus_gestus_quies(&motus, X * M));   /* nullus */
+    motus_gestum_ponere(&motus, &g, gestum_effundere, NIHIL, M);
+    /* non sordidus: nihil effunditur */
+    CREDO_FALSUM(motus_gestum_effundere(&motus, repo));
+    CREDO_AEQUALIS_I32(g.effusiones, ZEPHYRUM);
+    versio = insula_versio(repo, INSULA_EPHEMERA);
+    mutare_gestum(&motus, littera_addere, NIHIL, XX * M);
+    CREDO_AEQUALIS_I32(g.litterae, I);
+    CREDO_VERUM(motus.gestus.sordidus);
+    /* gestus nec insulam nec sordiditatem pan/zoom tangit */
+    CREDO_FALSUM(motus.sordida);
+    CREDO_AEQUALIS_I32(insula_versio(repo, INSULA_EPHEMERA), versio);
+    CREDO_FALSUM(motus_gestus_quies(&motus, XX * M + CM));
+    CREDO_VERUM(motus_gestus_quies(&motus, XXI * M));
+    CREDO_VERUM(motus_gestum_effundere(&motus, repo));
+    CREDO_AEQUALIS_I32(g.effusiones, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(g.scriptor, "gestus");
+    CREDO_FALSUM(motus.gestus.sordidus);
+    CREDO_FALSUM(motus_gestus_quies(&motus, XXX * M));
+    /* effusor recusans: gestus sordidus manet, iterum temptatur */
+    g.recusare = VERUM;
+    mutare_gestum(&motus, littera_addere, NIHIL, XL * M);
+    CREDO_FALSUM(motus_gestum_effundere(&motus, repo));
+    CREDO_VERUM(motus.gestus.sordidus);
+    g.recusare = FALSUM;
+    CREDO_VERUM(motus_gestum_effundere(&motus, repo));
+    CREDO_AEQUALIS_I32(g.effusiones, II);
+    /* intra actionem vocata: scriptor prior RESTITUITUR (actio post
+     * effusionem scribere pergit sub nomine suo) */
+    insula_scriptorem_ponere(repo, chorda_ex_literis("pagina.clavis",
+        piscina));
+    mutare_gestum(&motus, littera_addere, NIHIL, L * M);
+    CREDO_VERUM(motus_gestum_effundere(&motus, repo));
+    CREDO_CHORDA_AEQUALIS_LITERIS(g.scriptor, "gestus");
+    CREDO_CHORDA_AEQUALIS_LITERIS(repo->scriptor, "pagina.clavis");
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

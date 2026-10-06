@@ -35,13 +35,49 @@ clavis (
     Eventus e;
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus               = EVENTUS_CLAVIS_DEPRESSUS;
-    e.tempus              = t;
-    e.datum.clavis.typus  = typus;
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.tempus                 = t;
+    e.datum.clavis.producta  = (s32)(insignatus character)typus;
     /* clavis logica: clavis_t ASCII ipsum fert (Tab IX, Effugium
      * XXVII) - ut fenestra */
     e.datum.clavis.clavis = (clavis_t)typus;
     redde e;
+}
+
+/* S1a: gestus ludicer - litterae numerantur, effusio notatur */
+nomen structura {
+       i32 litterae;
+       i32 effusiones;
+       b32 recusare;
+    chorda scriptor;   /* scriptor insulae dum effunditur */
+} GestusLudicer;
+
+interior vacuum
+littera_addere (
+     Motus* motus,
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    ((GestusLudicer*)motus->gestus.status)->litterae++;
+}
+
+interior b32
+gestum_effundere (
+                vacuum* gestus,
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    GestusLudicer* g;
+
+    (vacuum)ctx;
+    g = (GestusLudicer*)gestus;
+    si (g->recusare)
+    {
+        redde FALSUM;
+    }
+    g->effusiones++;
+    g->scriptor = repo->scriptor;
+    redde VERUM;
 }
 
 s32 principale (vacuum)
@@ -54,6 +90,7 @@ s32 principale (vacuum)
              Dispensator* d;
                  Eventus  e;
                   chorda* a;
+           GestusLudicer  g;
                   chorda  vacua_focus;
                      i32  n0;
 
@@ -217,7 +254,83 @@ s32 principale (vacuum)
     CREDO_FALSUM(insula_mendacium(repo));
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "b1");
 
+    imprimere("\n--- Superficies (013 B1): magnitudo in ephemera,"
+              " a dispensatore scripta ---\n");
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                               = EVENTUS_MUTARE_MAGNITUDINEM;
+    e.tempus                              = IV * M;
+    e.datum.mutare_magnitudinem.latitudo  = CCXL;
+    e.datum.mutare_magnitudinem.altitudo  = CIV;
+    dispensator_tractare(d, &e);
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "240");
+    }
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_altitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "104");
+    }
+    e.tempus                              = IV * M + C;
+    e.datum.mutare_magnitudinem.latitudo  = CCC;
+    e.datum.mutare_magnitudinem.altitudo  = LXXX;
+    dispensator_tractare(d, &e);
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_latitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "300");
+    }
+    a = insula_attributum(repo, INSULA_EPHEMERA,
+        "superficies_altitudo");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "80");
+    }
+    /* restitutio honesta etiam post superficiem */
+    CREDO_VERUM(insula_restituere(repo));
+    CREDO_FALSUM(insula_mendacium(repo));
+
     imprimere("\n");
+    imprimere("\n--- S1a: gestus in quiete propria et in fine ---\n");
+    memset(&g, ZEPHYRUM, magnitudo(g));
+    motus_gestum_ponere(dispensator_motus(d), &g, gestum_effundere,
+        NIHIL,
+                        M);
+    mutare_gestum(dispensator_motus(d), littera_addere, NIHIL, V * M);
+    dispensator_pulsare(d, V * M + D);
+    CREDO_AEQUALIS_I32(g.effusiones, ZEPHYRUM);
+    dispensator_pulsare(d, VI * M);
+    CREDO_AEQUALIS_I32(g.effusiones, I);
+    dispensator_pulsare(d, VIII * M);
+    CREDO_AEQUALIS_I32(g.effusiones, I);
+    /* finis: pendens effunditur sine quiete; deinde nihil */
+    mutare_gestum(dispensator_motus(d), littera_addere, NIHIL, IX * M);
+    dispensator_finire(d);
+    CREDO_AEQUALIS_I32(g.effusiones, II);
+    CREDO_FALSUM(dispensator_motus(d)->gestus.sordidus);
+    dispensator_finire(d);
+    CREDO_AEQUALIS_I32(g.effusiones, II);
+    /* finis pan/zoom pendentes quoque effundit */
+    dispensator_motus(d)->pan.x                      = XI;
+    dispensator_motus(d)->sordida                    = VERUM;
+    dispensator_motus(d)->tempus_ultimae_mutationis  = IX * M;
+    dispensator_finire(d);
+    a = insula_attributum(repo, INSULA_EPHEMERA, "pan_x");
+    CREDO_NON_NIHIL(a);
+    si (a)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS(*a, "11");
+    }
+    CREDO_FALSUM(dispensator_motus(d)->sordida);
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

@@ -330,3 +330,145 @@ source order).
   input".
 - Done-means check (spec §X): all met except toml judge time (2.2-3.0 s,
   wrapper's build check ~1 s, named in §XIII).
+
+## 2026-10-05 - slice 2 T1: causes named
+
+- One choke point: every unresolved site was born at
+  `_viam_classificare`'s "valor ignotus". The evaluator now records WHY
+  it failed in `d->causa` through `_deficere` (first failure wins = the
+  innermost, so `"$v"` with `v="$1"` says argumentum). Definitions carry
+  their own causa for `verbum NIHIL` (for -> ansa_read; arrays,
+  subscripts -> tabulatum; `X+=word` -> operator).
+- The word's cause must be captured BEFORE `_directorium_loci`: a
+  `cd "$NESCIO"` evaluated for the cwd would otherwise set its own
+  cause first (section VIII asserts `cwd ignotum` stays).
+- `profunditas` was a disguise: all 87 were `X="$X y"` accumulations
+  recursing to depth XVI. A title stack (`d->acervus`, wrapper around
+  `_variabilem_intus`) names them `recursio`. These are the T5 loop
+  class in another costume (an accumulation over a loop = a set).
+- Census: the header has said `via` since T6 but rows never wrote it;
+  table causae contain NEWLINES (the .git row), which split census
+  rows until sanitized. The census also dedupes sites by (element,
+  octeti) - T5's one-site-per-member will need (element, octeti, via).
+- Formator: the census loop was nested so deep that `-scribere` output
+  failed `-vitia` (declarations pushed past col 72). Extracting
+  `_censum_lineam_scribere` fixed it; struct members with trailing
+  comments that cannot align inside 72 get the comment above instead.
+- `effectus -radix .` (relative) says "scriptum absens" for everything
+  - use an absolute radix when calling the binary directly.
+
+## 2026-10-05 - slice 2 T2: Valor, same answers
+
+- The old evaluator's contract was implicit: return FALSUM and the area
+  holds whatever was appended before the failing part - nested partial
+  values included (a single definition that is itself partial keeps its
+  prefix: "praefixum definitionis unicae servatur"). The new one makes
+  it explicit: every failing return goes through `_valorem_frangere`,
+  which turns the collected text into PRAEFIXUM (IGNOTUS if empty). The
+  only reader of a failed value inside the evaluator is
+  `_variabilem_intus` (per definition), and the two outside entries
+  (`_viam_classificare`, `_cd_aestimare`).
+- `$(...)` idioms (dirname, cd && pwd, readlink -f) still manipulate a
+  char buffer in place; `_argumentum_in_aream` evaluates their argument
+  as a Valor and copies the CERTUS text in. Scratch, not a value.
+- T1's commit d2e2ba5c carried mis-indented blocks (control lines one
+  level deep, a parameter list shifted): my scratchpad edit helper
+  prepended the original line's indentation to text that already had
+  it, and the formator neither re-indents nor reports a wrong NESTING
+  level (R5 checks only spaces vs tabs) - vitium …MCGT. Fixed here;
+  edits are exact-string replacements from now on. Crude checker
+  (scratchpad indentatio.py) still reports 17 lines here - all inside
+  braced `casus` blocks, the same 17 the T3-era file shows.
+- A declaration block with `character**` came out with the type column
+  LEFT of the block indent after -scribere (CONFORMIS); rewritten with
+  single pointers.
+- Identity: index-numbered summaries (path flattening collided 8 names
+  in T1's check) - 306/306 identical.
+
+## 2026-10-05 - slice 2 T3: temporaria
+
+- A temp value's TEXT is its tail under the object. Two places that
+  read a value's text as a path broke on that, both silently: the
+  empty-definition skip (`inanes_omittere`: `F=$(mktemp)` looked like
+  `F=""`) and `_argumentum_in_aream` (`cd "$T"` = stay put). The second
+  was caught only because the census by causa moved in two classes that
+  T3 should not touch (cwd ignotum -88, absens +27). Lesson: when a
+  value gains a new form, grep every `_valoris_textus` reader.
+- `Valor.fractus`: a temp path with an unknown tail is still a temp path
+  (under a fresh object, everything is fresh), so failure cannot turn it
+  into PRAEFIXUM; the flag carries "incomplete" through joins and
+  continuations. CERTUS is never fractus; PRAEFIXUM/IGNOTUS always are,
+  so the join rule is unchanged for them.
+- Oracle fixtures run inside a `mktemp -d` copy: once temp roots were
+  kept, every aura gained bash's stats of its own cwd's ancestors
+  (/private/var/folders/l0, .../T, the copy). `_temporaria_observata`
+  drops the root and its ancestors; the eight old auras are byte-equal
+  again. The temp fixture's aura holds random names (tmp.XXXXXXXXXX) -
+  regenerating it changes the file; the gate checks coverage, and pins
+  the CLASS count (V), not paths.
+- Observed SIP commands (cat, rm) reach the oracle through argv;
+  `_observatam_relativam` dropped out-of-tree operands, so it needed the
+  same temp rule as the syscall path.
+- A dead excuse is an ERRATUM at commit: resolving what an excuse
+  covered means deleting the excuse in the same commit
+  (tools/mensor_suitae.sh:91).
+
+## 2026-10-06 - slice 2 T4: arrays
+
+- Expansion lives in ONE place (`_loca_tractare`), before
+  `_imperium_tractare` dispatches: every branch (table, source, bash,
+  exec/command/env) then sees elements as ordinary words. Positions go
+  through `_locus_verbi` (a per-command `Expansio` map, cleared after
+  each command) in `_situm_creare` and for the cwd in
+  `_viam_classificare`; evaluation uses the element node itself.
+- The dash bug (`-I"$X"` as a file) predates T4 and would have been
+  multiplied by it: every `"-I$R/include"` element. Lesson: before
+  widening an input stream, grep the census for the shape the widening
+  will produce (here: paths starting with '-').
+- Plants: the first (recognizer returns NIHIL) did not compile (`d`
+  unused); the second (inverted condition) CRASHED - NIHIL into strcmp
+  - which is not a prediction coming true. Third, clean: collector
+  always FALSE -> exactly the array assertions red. A plant must fail
+  at the asserted place, not anywhere.
+- Unquoted scalars with spaces (`$CFLAGS`) are the next shape of the
+  same problem (several words from one value) - left for T5's sets.
+
+## 2026-10-06 - slice 2 T5: sets
+
+- The design question was where one value becomes N sites. Callers of
+  `_viam_classificare` pre-create the site and post-process it; member
+  copies are appended right after it (`_situs_ultimus` guards the one
+  caller with a stack Situs - `_custodiam_quaerere`), and the two
+  callers whose post-processing matters loop over the index range.
+- Flow-insensitive union met the house's habit of reusing loop names
+  (`f`) on its first fixture: six loops' lists unioned past the cap.
+  `_ansa_ligans` (innermost enclosing `for X` whose LIST does not
+  contain the use; reassignment inside the body -> no binding) fixed it
+  lexically. The same wall stands for sequential reassignment
+  (`src=` x6): `discordia` 515 is the ordering slice's work list.
+- An oracle "explained" count that RISES is not automatically loss:
+  T4's prefix `toml/build/` covered reads it had nothing to do with.
+  Diffing static summaries old vs new on the same liber (old binary
+  built in a scratch worktree of HEAD) found it in minutes.
+- `/*` inside a C comment again (the `'#*/'` notation): describe
+  patterns in words in comments.
+- Plants a and c first did not compile (unused variable / function);
+  rewritten so the code still references what it declares.
+
+## 2026-10-06 - slice 2 T6: the key had two holes
+
+- Writing P14 first exposed it: the plan assumed "partial read in the
+  tree = ignotum", but the -clavis code only emits ignotum for sites
+  in `impedita` (unexcused lint findings), and irresolutum is
+  nulla-only. Partial reads were silently OUT of the key since T7.
+  Isolating P14 (scratch copy of the fumus without P15) showed RECENS
+  after the edit - the hole, measured, before any fix.
+- Then the fix still failed: `directorium` is fabrica's include-root
+  genus - it seals the LISTING. Every `grep -r` key line since T7 had
+  the same blindness. New kind `arbor`. Lesson: when emitting a key
+  line kind, read how the CONSUMER digests it; the name is not the
+  contract.
+- Partial exec/source stays ignotum (the child's reads are not in this
+  summary; digesting its directory would not cover them).
+- crusta drops the colon-less `${H-d}` operator into the argument text;
+  handled in `_praedefinitum_aestimare` (op NIHIL branch), filed.

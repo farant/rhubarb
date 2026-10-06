@@ -1220,3 +1220,17 @@ quantized at emission only. Undefers spec-v2 §6's "256-quantizing emit".
 Fran's look: Terminal.app finally shows spectaculum's colour bar and the
 red background, no blue text. Narrative: `lib/quadrans.phase-log.md`
 (Q4).
+
+## SGR THROUGH THE SHARED CODEC (module 004 T3, 2026-10-03)
+
+`_stilum_emittere` converts `TesseraStilus` losslessly to
+`StilusTerminalis` (six ornaments; sublineatum = single underline) and
+calls `stilus_codificare(aed, NIHIL, …)`; `TesseraColores` picks the
+codec's PLENA/CCLVI; `_cclvi` and `_colorem_emittere` deleted (the
+quantizer lives on as `stilus_quantizare`). Bytes identical. The amalgam
+vendors the codec (prefix `tessera_stilus_terminalis_`, see
+tools/amalgamatio.worklog.md for the harvest bug it exposed). Finding:
+no tessera test had ever pinned ORNAMENT bytes — a plant dropping
+strikethrough passed 15/15; probatio_tessera_colores IV now pins each
+ornament and the 17-parameter maximum (verified against the pre-codec
+code too). Narrative: `lib/stilus_terminalis.phase-log.md` (T3).

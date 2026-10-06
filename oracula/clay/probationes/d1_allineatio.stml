@@ -1,0 +1,17 @@
+<dispositio latitudo="80" altitudo="24">
+  <nodus directio="linea" latitudo="fixa:41" altitudo="fixa:12"
+         allineatio_x="medium" allineatio_y="finis">
+    <nodus latitudo="fixa:10" altitudo="fixa:3"/>
+    <nodus latitudo="fixa:6" altitudo="fixa:5"/>
+  </nodus>
+  <nodus directio="columna" latitudo="fixa:21" altitudo="fixa:12"
+         spatium="1 1 1 1" intervallum="1"
+         allineatio_x="medium" allineatio_y="medium">
+    <nodus latitudo="fixa:8" altitudo="fixa:2"/>
+    <nodus latitudo="fixa:5" altitudo="fixa:3"/>
+  </nodus>
+  <nodus directio="columna" latitudo="fixa:17" altitudo="fixa:12"
+         allineatio_x="finis" allineatio_y="finis">
+    <nodus latitudo="fixa:4" altitudo="fixa:3"/>
+  </nodus>
+</dispositio>

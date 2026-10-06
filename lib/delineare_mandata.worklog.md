@@ -46,3 +46,39 @@ coetus TRANSLATION was mute: the probatio's coetus translates by
 a plant must touch a value the test varies. The rasterizer's
 translation path is exercised by T9's prospectus pan (-5,3).
 Examen ACCIPE; formator 0 after five long lines (three comments).
+
+## 2026-10-05 — negative origins vanished, and lines/polygons HUNG
+
+Found via pictor's desk fill (module 013): a filled rectangle inside the
+viewport, panned left (pan x = −5), drew NOTHING. Cause: the delineare
+API takes coordinates as `i32`, which in this house is UNSIGNED;
+`primitivum_pingere` computed origins as `s32` and cast them. A −5
+became ~4·10⁹: `delineare_rectangulum_plenum`'s `x + latitudo` wrapped
+and its loop never ran; `delineare_lineam` works in s32 internally (the
+cast round-trips) but picks its step with an UNSIGNED compare
+(`x0 < x1`), so a line from −5 to 34 stepped AWAY from its end and never
+stopped - an infinite loop, as did a filled polygon with a negative
+vertex. Text was already right (glyph pixels by wrapping addition, each
+bounds-checked).
+
+Fix here, not in the API (Fran: clip every primitive; the legacy
+delineare API keeps its unsigned coordinates and ~14 consumers):
+primitives wholly in positive space take their old calls (bytes
+identical - the mandata_prima specimen is unchanged); otherwise they
+are clipped in SIGNED space first - `_plenum_secare` (filled rectangle
+to the canvas; outlines as their four edges, delineare_rectangulum's
+exact geometry), `_lineam_signatam` (the same Bresenham, plotting only
+non-negative pixels; bounds and group clip still by the pixel setter),
+`_polygonum_secare` (Sutherland–Hodgman against x ≥ 0 then y ≥ 0 before
+the old fill; outlines as signed lines).
+
+Tests (a 20×20 buffer, each primitive starting negative): fill, outline
+(top, bottom, right edges; inside empty), line (CREDO_NON_PENDET first,
+the real call only if it did not hang), filled polygon (same guard),
+text "M" at x = −3 (pinned, already correct). Red: rectangles absent,
+line and polygon HUNG (non_pendet failed). Plants caught, clean
+compiles: fill unclipped, outline via the old call, line via the old
+path (hang), polygon fill unclipped (hang).
+
+Still open, older and separate: text ignores the group clip (sectio) -
+`tabula_pixelorum_pingere_chordam` takes no clip.

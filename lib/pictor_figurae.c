@@ -14,6 +14,26 @@ color_thematis (
     redde cm;
 }
 
+/* <purus/> Prospectus (013): mensa - fines toti colore
+ * COLOR_SUPERFICIES; pagina (liber) supra pingitur */
+vacuum
+figura_prospectus (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    Fines f;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    f.x         = ZEPHYRUM;
+    f.y         = ZEPHYRUM;
+    f.latitudo  = c->fines.latitudo;
+    f.altitudo  = c->fines.altitudo;
+    mandata_rectangulum(m, f, color_thematis(COLOR_SUPERFICIES), VERUM);
+}
+
 /* <purus/> */
 vacuum
 figura_tabulae (
@@ -38,6 +58,27 @@ figura_tabulae (
     f.altitudo  = c->fines.altitudo;
     mandata_imago(m, pictor_documentum_sigillum_hex(pf->doc,
         m->piscina), f);
+    /* margo paginae (013): in cellulis MARGINIS (cellula tota extra
+     * documentum) - tessellatio rectangulum ad oras cellularum
+     * proximas rotundat et marginem in anulo interiore pingit: margo I
+     * pixeli extra documentum in cellulas documenti cadebat (scriba,
+     * Franus 2026-10-05). Sine cellula (0): I pixelum, ut olim. */
+    {
+        Fines margo;
+          s32 mx;
+          s32 my;
+
+        mx = pf->cellula_latitudo > ZEPHYRUM ? (s32)pf->cellula_latitudo
+                                             : I;
+        my = pf->cellula_altitudo > ZEPHYRUM ? (s32)pf->cellula_altitudo
+                                             : I;
+        margo.x         = -mx;
+        margo.y         = -my;
+        margo.latitudo  = f.latitudo + II * mx;
+        margo.altitudo  = f.altitudo + II * my;
+        mandata_rectangulum(m, margo, color_thematis(COLOR_BORDER),
+                            FALSUM);
+    }
     per (i = I; i < c->numerus_punctorum; i++)
     {
         mandata_linea(m, c->puncta[i - I], c->puncta[i], I,
@@ -70,8 +111,12 @@ figura_tituli (
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
     mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
-    mandata_textus(m, II, II, c->titulus, ZEPHYRUM,
-                   color_thematis(COLOR_TEXT));
+    /* 013 B3: linea status una cellula (VIII) - textus (fons 6x8)
+     * verticaliter centratus, numquam infra fines (olim II fixum in
+     * linea XII: in VIII pars inferior praecidebatur) */
+    mandata_textus(m, II, (f.altitudo > VIII) ? (f.altitudo - VIII) / II
+                                              : ZEPHYRUM,
+                   c->titulus, ZEPHYRUM, color_thematis(COLOR_TEXT));
 }
 
 constans Imago*
@@ -106,4 +151,6 @@ pictor_figurae_registrare (
     }
     figura_registrare(reg, PARTES_TABULA, thema, figura_tabulae, ctx);
     figura_registrare(reg, PARTES_TITULUS, thema, figura_tituli, ctx);
+    figura_registrare(reg, PARTES_PROSPECTUS, thema, figura_prospectus,
+                      ctx);
 }

@@ -34,6 +34,8 @@ nomen structura {
     i32  fenestra_latitudo;   /* Latitudo fenestrae actualis */
     i32  fenestra_altitudo;   /* Altitudo fenestrae actualis */
     f32  scala;               /* Factor scalae pro reddendo */
+    i32  capacitas;           /* pixela allocata (013 B3b; 0 =
+                               * ignota) - ad_fenestram eam reddit */
 } TabulaPixelorum;
 
 
@@ -225,5 +227,19 @@ fons_latitudo_chordae (
 i32
 fons_altitudo_chordae (
     i32 scala);
+
+/* Tabulam ad fenestram novam aptare (013 B3b): SCALA SERVATA -
+ * latitudo/altitudo = fenestra / scala (pavimentum, >= 1), ut fenestra
+ * maior PLUS tabulae ostendat, numquam imaginem distendat. Pixela ex
+ * piscina nova solum si capacitas excedit (minor: memoria eadem).
+ * fenestra_*: puncta fenestrae (contentum). FALSUM si argumentum
+ * NIHIL aut memoria deficit - tabula tunc intacta. Contentum non
+ * servatur (quadrum proximum totam pingit). */
+b32
+tabula_pixelorum_ad_fenestram (
+    TabulaPixelorum* tabula,
+            Piscina* piscina,
+                i32  fenestra_latitudo,
+                i32  fenestra_altitudo);
 
 #endif /* TABULA_PIXELORUM_H */

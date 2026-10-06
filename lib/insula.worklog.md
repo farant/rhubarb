@@ -84,3 +84,47 @@ Gate: `probatio_insula` (+15) and `probatio_pictor_canones` (12);
 dispensator, motus, and the toy replay unchanged. Planted fault: the
 owner compared against the attribute name instead of the scriptor —
 red at the owner's own write, green on revert.
+
+## 2026-10-05 — branches: `InsulaRamus` (insula-rami-plan R1)
+
+Fran's idea at the schirmata interview: one store owned by the host,
+apps and widgets given a "curried branch" of it (redux-like). A branch
+= repo + (element, id) - a child of the root by kind and `id`, or the
+root itself. Reads and the gate are relative to the branch's node:
+`mutare` now takes a target; after the whole root is copied (as
+before) the mutator receives the BRANCH's node in the copy; a missing
+branch refuses with a named cause. `mutare_durabile/_ephemera` are
+root-branch writes - unchanged behaviour (root 201/201).
+
+**Owners per branch:** `InsulaDominus` gained (element, id); judging
+compares the attribute on the owner's branch node before and after
+(`ramum_invenire` on both roots; a missing node counts as no
+attributes). Every write still judges every owner, so a write through
+one branch cannot change another branch's owned attribute.
+
+**Canons per branch:** each registered branch canon judges its node
+(`canon_iudicare` accepts any element as root - but compares the
+element's NAME with the canon's root: a mountable app's canon must name
+its root element after the app kind; R3/R4). The ROOT canon judges a
+shallow copy of the root whose child list omits branches that have
+their own canon (`visio_radicis`) - the host's canon never needs the
+apps' vocabulary, while a non-delegated child is still judged (an
+unknown element under the root is refused).
+
+Plants, all compiling (one first did not - an unused static; redone):
+owners on the root only; mutator handed the root; branch canons
+skipped; root canon seeing delegated branches; the view dropping every
+child. All caught.
+
+## 2026-10-05 — `insula_ramum_initiare` (insula-rami-plan T1a)
+
+Mounting an app needs "make sure my branch exists with my initial
+attributes": for a child branch, append the element (parsed in the
+gate's own arena) if absent - an existing one is left untouched; for
+the ROOT branch, add the element's attributes the root lacks (how a
+standalone app now starts: a bare `<scriba/>` root, then a root-branch
+mount). Through the gate, so canons and owners judge it. Order that
+matters, now in the header: register the branch canon BEFORE (the host
+canon never sees an undelegated mount), owners AFTER (scriba's `modus`
+is owned by `pagina.clavis`; an anonymous initial write would be
+refused - a plant moving owners first makes `scriba_montare` fail).

@@ -85,10 +85,10 @@ s32 principale (vacuum)
 
     imprimere("\n--- Insulae pictoris iudicantur ---\n");
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"320\" altitudo=\"200\" paletta=\"\">"
+        "<pictor latitudo=\"320\" altitudo=\"200\" paletta=\"\">"
         "<stratum titulus=\"fundus\" visibilis=\"verum\" ordo=\"0\"/>"
-        "</documentum>",
-        "<ephemera instrumentum=\"penicillus\" color_primus=\"0\""
+        "</pictor>",
+        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
         " color_secundus=\"5\" magnitudo=\"1\" stratum_activum=\"0\""
         " zoom=\"1\" focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
@@ -106,8 +106,11 @@ s32 principale (vacuum)
     res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
                                  piscina, intern);
     CREDO_VERUM(res.successus);
+    /* XIII: + superficies_latitudo/_altitudo, scriptor dispensator
+     * (modulus 013 B1) */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_EPHEMERA,
-                                             res.elementum_radix), XI);
+                                             res.elementum_radix),
+                                             XIII);
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_DURABILIS,
                                              res.elementum_radix), I);
     insula_scriptorem_ponere(repo,

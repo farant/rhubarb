@@ -35,3 +35,35 @@ Names introduced by Plan 2, to seal or rename (spec §10 bullet):
 `ludus_fenestra`, `ludus_quadrum`, `tabula_pixelorum_creare_nuda`,
 `ramus` (the undo branch actum), `domini`/`dominus`/`scriptor`
 (ownership), `limen` (the delivery boundary), `numerus_vivorum`.
+
+## 2026-10-03 — one assembly, two mains (module 013 A4)
+
+pictor's assembly (volume, document, canons + owners from disk,
+insulae, actions, figurae, dispensator) moved out of `principale` into
+`include/pictor_applicatio.h` + `lib/pictor_applicatio.c` (beside the
+other pictor_* libs - in apps/pictor aedilis could not resolve it from
+a test elsewhere). `pictor.c` = assembly + ludus_fenestra;
+`pictor_terminalis.c` (+ `pictor_terminalis.sh`, AEDIFICARE_SOLUM) =
+assembly + ludus_tessera. Canon paths take a `radix` prefix (tests pass
+RHUBARB_RADIX). Find: `pictor_documentum.h` included `fenestra.h` only
+for the `TabulaPixelorum` type, which dragged fenestra_macos.m and
+Cocoa into EVERY pictor build - now `tabula_pixelorum.h`; the terminal
+binary links no Cocoa (otool), root pictor tests unchanged.
+
+## 2026-10-03 — responsive layout (module 013 B3)
+
+`pictor_componere` lays out with `dispositio` in cells from the
+`superficies_*` attributes (written by the dispensator on resize):
+viewport GROW over a ONE-row status (Fran). Surface-touching edges snap
+to the surface (no sliver in a window that is not a cell multiple).
+figura_tituli's text is now vertically centred against the 8-px glyph
+(it was clipped at y = 2 in the 8-px row - the image specimen caught
+it). `PictorCompositio.status_altitudo` → `cellula_*` + `status_lineae`.
+
+## 2026-10-05 — desk and page frame (module 013 B3c)
+
+The viewport (`prospectus`) is now `PARTES_PROSPECTUS` with its own
+figura filling `COLOR_SUPERFICIES` (the desk); the page gets a 1-px
+`COLOR_BORDER` frame just outside it, so a resize is visible as the desk
+growing and shrinking around a fixed page. Building it exposed the
+negative-origin bug in delineare_mandata (fixed separately, 52bee5bf).

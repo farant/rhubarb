@@ -74,3 +74,28 @@ click. The plant that restored synchronous delivery went red there.
 Cost: an event that produces derived events composes twice. The toy
 replay's "one composition per event" assertion became "at least
 one". Measure in T10 with the rest of the frame.
+
+## 2026-10-05 — gesture flush and `dispensator_finire` (scriba-plan S1a)
+
+`dispensator_tractare` now flushes the app gesture (Motus S1a) when
+ITS quiet interval has passed, beside the pan/zoom flush, on event
+time - so a replay flushes at the same events. New
+`dispensator_finire`: flushes whatever is pending without waiting
+(dirty pan/zoom, dirty gesture). Before this, NOTHING flushed at exit:
+both glues just left their loop (pictor never noticed - a stroke ends
+on mouse-up). `ludus_fenestra_currere` and `ludus_tessera_currere` now
+call it after their loop, whatever ended it.
+
+Tests (probatio_dispensator): no flush before the gesture's own quiet,
+one at it, none again; `finire` flushes a fresh gesture and then
+nothing; `finire` flushes dirty pan/zoom. Plants: no quiet flush;
+`finire` skipping the gesture - caught. NOT covered headlessly: the
+glues' call itself (their loops need a window / a tty) - the scriba app
+proof (S3) is where it shows.
+
+## 2026-10-05 — focus lives in the active branch (insula-rami T3a)
+
+`attr_legere/_scribere` (focus, focus_acervus) resolve
+`d->motus.ramus` (unset = root). The window surface
+(`superficiem_scribere`) deliberately stays at the root - it is the
+host's. Details: lib/vicus.worklog.md, same date.

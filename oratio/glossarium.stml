@@ -1140,6 +1140,19 @@
     <forma textus="codificatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
     <forma textus="codificatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="sublinea" lingua="latina" classis="substantivum" nota="vox domus (sub + linea): linea sub textu (underline, SGR 4); genera simplex, duplex, undulata, punctata, lineolata; sedes include/stilus_terminalis.h (StilusSublinea), modulus 004">
+    <forma textus="sublinea" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="sublineae" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="superlinea" lingua="latina" classis="substantivum" nota="vox domus (super + linea): linea supra textum (overline, SGR 53); sedes include/stilus_terminalis.h (STILUS_SUPERLINEA)">
+    <forma textus="superlinea" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="undulatus" lingua="latina" classis="adiectivum" nota="undulatus, -a, -um (Varro, Plinius: undis distinctus): sublinea undulata (curly underline, SGR 4:3); sedes include/stilus_terminalis.h">
+    <forma textus="undulata" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="lineolatus" lingua="latina" classis="adiectivum" nota="lineolatus, -a, -um (ex lineola, linea parva): lineolis constans (dashed underline, SGR 4:5); sedes include/stilus_terminalis.h">
+    <forma textus="lineolata" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="scalaris" lingua="latina" classis="adiectivum" nota="scalaris, -e (classice: scalarum, gradibus pertinens; WORDS caret): sensu mathematico valor SIMPLEX, non compositus (chorda, numerus, boolean, tempus - non tabula, non series); sedes toml/fontes/toml_scalaris.{h,c} (toml_scalaria_iudicare, toml_scalarem_coquere)">
     <forma textus="scalaris" casus="nominativus" numerus="singularis"/>
     <forma textus="scalare" casus="nominativus" numerus="singularis" genus="neutrum"/>
@@ -1286,6 +1299,46 @@
     <forma textus="sanationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
+  <vocabulum lemma="allineatio" lingua="latina" classis="substantivum" nota="Lat. rec. ad + linea (allineare; cf. Ital. allineamento): hic positio liberorum intra spatium parentis secundum axem - initium, medium, finis; sedes include/dispositio.h (DispositioAllineatio, allineatio_x/_y), lib/dispositio.c (dispositio D1, 2026-10-03)">
+    <forma textus="allineatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="allineationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="allineationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="allineationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="allineationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="monto" lingua="latina" classis="verbum" nota="Lat. rec. (cf. Ital. montare, Fr. monter): hic applicationem in ramo repositorii hospitis collocare - documentum, canones, domini, contextus; sedes include/pictor_applicatio.h, include/scriba_applicatio.h (pictor_montare, scriba_montare; insula-rami-plan T1a, 2026-10-05)">
+    <forma textus="montare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="montat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>
+    <forma textus="montatur" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="passiva"/>
+    <forma textus="montatus" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="montata" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+    <forma textus="montatum" tempus="perfectum" vox="passiva" forma-verbi="participium"/>
+  </vocabulum>
+
+  <vocabulum lemma="montatio" lingua="latina" classis="substantivum" nota="Lat. rec. ex montare: applicatio in ramo collocata (documentum, ramus, contextus, registra propria); sedes include/pictor_applicatio.h (PictorMontatio), include/scriba_applicatio.h (ScribaMontatio), insula-rami-plan T1a, 2026-10-05">
+    <forma textus="montatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="montationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="montationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="montatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="montationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="montationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="initiatio" lingua="latina" classis="substantivum" nota="Lat. class. initiatio (initium facere): hic ramus primum constitutus - elementum radici additum aut attributa absentia radici addita; sedes lib/insula.c (InitiatioRami, insula_ramum_initiare; insula-rami-plan T1a, 2026-10-05)">
+    <forma textus="initiatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="initiationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="montator" lingua="latina" classis="substantivum" nota="Lat. rec. ex montare (nomen agentis, ut mutator, effusor): functio quae applicationem in ramo montat; sedes include/vicus.h (VicusMontator; insula-rami-plan T1b, 2026-10-05)">
+    <forma textus="montator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="montatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="montatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="montatores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="fonto" lingua="latina" classis="verbum" nota="vox domus (ex fons): scriptum bash FONTARE = 'source' / '.' - plagula in crusta currente legitur, variabiles communicat; 'FONTANDUM, non exsequendum' (tools/cursor_communis.sh); sedes olim crusta_fontationes.c (fabrica spec 3 T2), nunc crusta/fontes/crusta_effectus.c (situs fontatio; effectus T8)">
     <forma textus="fontare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
     <forma textus="fontat" persona="III" numerus="singularis" tempus="praesens" modus="indicativus" vox="activa"/>

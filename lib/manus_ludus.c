@@ -225,20 +225,25 @@ manus_ludus_ad_schirmum (
  * Actus
  * ================================================== */
 
+/* botton ut fons verus (insula-rami T4): ictus et tractus sinistrum,
+ * motus nudus nullum - codificator terminalis pressionem sine bottone
+ * abicit (iteratio per terminalem ictum perdebat) */
 interior vacuum
 mus (
          ManusLudus* m,
     eventus_genus_t  genus,
                 s32  x,
-                s32  y)
+                s32  y,
+       mus_botton_t  botton)
 {
     Eventus e;
 
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
-    e.genus        = genus;
-    e.tempus       = m->tempus;
-    e.datum.mus.x  = x;
-    e.datum.mus.y  = y;
+    e.genus             = genus;
+    e.tempus            = m->tempus;
+    e.datum.mus.x       = x;
+    e.datum.mus.y       = y;
+    e.datum.mus.botton  = botton;
     dispensator_tractare(m->d, &e);
     m->tempus += m->gradus_ms;
 }
@@ -253,8 +258,8 @@ manus_ludus_premere_ad (
     {
         redde FALSUM;
     }
-    mus(m, EVENTUS_MUS_DEPRESSUS, x, y);
-    mus(m, EVENTUS_MUS_LIBERATUS, x, y);
+    mus(m, EVENTUS_MUS_DEPRESSUS, x, y, MUS_SINISTER);
+    mus(m, EVENTUS_MUS_LIBERATUS, x, y, MUS_SINISTER);
     redde VERUM;
 }
 
@@ -291,7 +296,7 @@ manus_ludus_movere (
     {
         redde FALSUM;
     }
-    mus(m, EVENTUS_MUS_MOTUS, x, y);
+    mus(m, EVENTUS_MUS_MOTUS, x, y, (mus_botton_t)ZEPHYRUM);
     redde VERUM;
 }
 
@@ -316,13 +321,13 @@ manus_ludus_trahere (
         redde FALSUM;
     }
     p = manus_ludus_ad_schirmum(m, c, puncta[ZEPHYRUM]);
-    mus(m, EVENTUS_MUS_DEPRESSUS, p.x, p.y);
+    mus(m, EVENTUS_MUS_DEPRESSUS, p.x, p.y, MUS_SINISTER);
     per (i = I; i < n; i++)
     {
         p = manus_ludus_ad_schirmum(m, c, puncta[i]);
-        mus(m, EVENTUS_MUS_MOTUS, p.x, p.y);
+        mus(m, EVENTUS_MUS_MOTUS, p.x, p.y, MUS_SINISTER);
     }
-    mus(m, EVENTUS_MUS_LIBERATUS, p.x, p.y);
+    mus(m, EVENTUS_MUS_LIBERATUS, p.x, p.y, MUS_SINISTER);
     redde VERUM;
 }
 
@@ -339,9 +344,9 @@ _clavem_implere (
 {
     s32 c = (s32)(i8)typus;
 
-    e->datum.clavis.typus  = typus;
-    e->datum.clavis.codex  = EVENTUS_CODEX_IGNOTUS;
-    e->datum.clavis.runa   = ZEPHYRUM;
+    e->datum.clavis.producta  = (s32)(insignatus character)typus;
+    e->datum.clavis.codex     = EVENTUS_CODEX_IGNOTUS;
+    e->datum.clavis.runa      = ZEPHYRUM;
     si (c >= 'a' && c <= 'z')
     {
         e->datum.clavis.clavis  = (clavis_t)(c - 'a' + 'A');
@@ -412,6 +417,58 @@ manus_ludus_clavem (
     e.datum.clavis.actio  = EVENTUS_ACTIO_SOLUTA;
     dispensator_tractare(m->d, &e);
     m->tempus += m->gradus_ms;
+    redde VERUM;
+}
+
+b32
+manus_ludus_scribere (
+             ManusLudus* m,
+     constans character* textus)
+{
+      Eventus  e;
+    character* littera;
+          s32  c;
+
+    si (!m || !textus)
+    {
+        redde FALSUM;
+    }
+    dum (*textus)
+    {
+        c = (s32)(i8)*textus;
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus   = EVENTUS_CLAVIS_DEPRESSUS;
+        e.tempus  = m->tempus;
+        _clavem_implere(&e, *textus);
+        e.datum.clavis.actio = EVENTUS_ACTIO_PRESSA;
+        dispensator_tractare(m->d, &e);
+        si (c >= XXXII && c != CXXVII)
+        {
+            littera = (character*)piscina_allocare(m->piscina, I);
+            si (!littera)
+            {
+                redde FALSUM;
+            }
+            *littera = *textus;
+            memset(&e, ZEPHYRUM, magnitudo(Eventus));
+            e.genus = EVENTUS_TEXTUS;
+            e.tempus = m->tempus;
+            e.datum.textus.contentum.datum = (i8*)littera;
+            e.datum.textus.contentum.mensura = I;
+            e.datum.textus.genus = EVENTUS_TEXTUS_COMMISSUM;
+            e.datum.textus.origo = EVENTUS_ORIGO_SCRIPTA;
+            dispensator_tractare(m->d, &e);
+        }
+        m->tempus += m->gradus_ms;
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus   = EVENTUS_CLAVIS_LIBERATUS;
+        e.tempus  = m->tempus;
+        _clavem_implere(&e, *textus);
+        e.datum.clavis.actio = EVENTUS_ACTIO_SOLUTA;
+        dispensator_tractare(m->d, &e);
+        m->tempus += m->gradus_ms;
+        textus++;
+    }
     redde VERUM;
 }
 

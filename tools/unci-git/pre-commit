@@ -102,7 +102,7 @@ if [ -n "${UNCUS_VIAE:-}" ]; then
     VIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|m)$' || true)"
 else
     VIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.m' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel)/')"
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula|knotapel)/')"
 fi
 if [ -z "$VIAE" ]; then
     echo "examen (pre-commit): nulla plagula .c/.m in commissione - nihil iudicatum" >&2
@@ -189,7 +189,7 @@ echo "examen (pre-commit): $iudicatae plagulae ACCIPE" >&2
 # hominis manet (plagula nova = omnia nova, -scribere eam).
 if [ -z "${UNCUS_VIAE:-}" ]; then
     FVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|knotapel)/')"
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum|oracula|knotapel)/')"
 else
     FVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|h)$')"
 fi

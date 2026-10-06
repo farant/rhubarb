@@ -1,0 +1,90 @@
+/* vicus.c - vicus: hospes applicationum (scriba, pictor) in FENESTRA
+ *
+ * Compositio communis (vicus_applicatio) + glutinum fenestrae;
+ * gemellus vicus_terminalis.c (insula-rami-plan T4). Ctrl-A, deinde
+ * n / p / 1-9 aut Ctrl-A (tabula prior); ictus in tabulam. -fumus:
+ * volumen temporarium, XXX quadra, exitus; -volumen <via>
+ * (ordinarie vicus.volumen).
+ */
+#include "latina.h"
+#include "piscina.h"
+#include "internamentum.h"
+#include "thema.h"
+#include "volumen.h"
+#include "fenestra.h"
+#include "delineare_mandata.h"
+#include "ludus_fenestra.h"
+#include "vicus_applicatio.h"
+#include <stdio.h>
+#include <string.h>
+
+/* applicationes CDLXXX x CDLXXX ut solae, linea tabularum supra */
+#define VICUS_LATITUDO   CDLXXX
+#define VICUS_ALTITUDO   (CDLXXX + VICUS_ALTITUDO_TABULARUM)
+#define QUADRA_FUMI      XXX
+
+s32
+principale (
+      integer   argc,
+    character** argv)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+        VicusApplicatio  app;
+               Fenestra* fenestra;
+        TabulaPixelorum* tabula;
+          LudusFenestra* lf;
+   FenestraConfiguratio  cfg;
+                    b32  fumus;
+                    s32  exitus;
+
+    piscina = piscina_generare_dynamicum("vicus", VIII * M * M);
+    si (!piscina)
+    {
+        redde I;
+    }
+    intern = internamentum_creare(piscina);
+    thema_initiare();
+
+    vol = vicus_volumen_aperire(piscina, (s32)argc, argv, &fumus);
+    si (!vol)
+    {
+        fprintf(stderr, "vicus: volumen aperiri non potuit\n");
+        redde I;
+    }
+    si (!vicus_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
+            VICUS_LATITUDO, VICUS_ALTITUDO))
+    {
+        redde I;
+    }
+
+    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
+    cfg.titulus   = "vicus";
+    cfg.x         = C;
+    cfg.y         = C;
+    cfg.latitudo  = VICUS_LATITUDO;
+    cfg.altitudo  = VICUS_ALTITUDO;
+    cfg.vexilla   = FENESTRA_ORDINARIA;
+    fenestra      = fenestra_creare(piscina, &cfg);
+    si (!fenestra)
+    {
+        fprintf(stderr, "vicus: fenestra\n");
+        redde I;
+    }
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
+                                               VICUS_ALTITUDO);
+    lf = ludus_fenestra_creare(piscina, app.d, vicus_figurae(app.vicus),
+                               ZEPHYRUM, vicus_imago_fons, app.vicus,
+                               tabula);
+    si (!tabula || !lf)
+    {
+        redde I;
+    }
+    exitus = ludus_fenestra_currere(lf, fenestra,
+                                    fumus ? QUADRA_FUMI : ZEPHYRUM);
+    fenestra_destruere(fenestra);
+    volumen_claudere(vol);
+    piscina_destruere(piscina);
+    redde exitus;
+}

@@ -80,11 +80,11 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_actiones");
-    doc = pictor_documentum_creare(piscina, intern, vol, CCCXX, CC,
+    doc = pictor_documentum_creare(piscina, intern, vol, "", CCCXX, CC,
         LXIV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"320\" altitudo=\"200\"/>",
-        "<ephemera instrumentum=\"penicillus\" color_primus=\"0\""
+        "<pictor latitudo=\"320\" altitudo=\"200\"/>",
+        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
         " magnitudo=\"1\" zoom=\"1\"/>");
     fons = filum_legere_totum("apps/pictor/canones/ephemera.canon",
         piscina);
@@ -103,11 +103,15 @@ s32 principale (vacuum)
             res.elementum_radix);
     }
     reg           = actio_registrum_creare(piscina, intern);
+    memset(&actiones, ZEPHYRUM, magnitudo(actiones));
     actiones.doc  = doc;
     pictor_actiones_registrare(reg, &actiones);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.fenestra_latitudo  = CCCXX;
     cfg.fenestra_altitudo  = CCXII;
-    cfg.status_altitudo    = XII;
+    cfg.cellula_latitudo   = VI;
+    cfg.cellula_altitudo   = VIII;
+    cfg.status_lineae      = I;
     d = dispensator_creare(piscina, intern, repo, reg, pictor_componere,
                            &cfg, CCC);
     CREDO_NON_NIHIL(d);
@@ -150,7 +154,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(ictus, I);
     }
         CREDO_VERUM(pictor_documentum_cursor(doc) > ZEPHYRUM);
-    CREDO_AEQUALIS_I32(doc->numerus_vivorum, I);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), I);
     /* motus purgatus, captura soluta, nihil sordidum */
     CREDO_AEQUALIS_I32(xar_numerus(dispensator_motus(d)->ictus_pendens),
                        ZEPHYRUM);
@@ -179,7 +183,7 @@ s32 principale (vacuum)
     imprimere("\n--- Escape medio ictu: nihil paritur ---\n");
     /* premere in tabula = ictus puncti unius */
     manus_ludus_premere_ad(m, XL, XL);
-        CREDO_AEQUALIS_I32(doc->numerus_vivorum, II);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
     {
         Eventus e;
         memset(&e, ZEPHYRUM, magnitudo(Eventus));
@@ -201,7 +205,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(xar_numerus(dispensator_motus(d)->ictus_pendens),
                        ZEPHYRUM);
     /* cursor immotus */
-        CREDO_AEQUALIS_I32(doc->numerus_vivorum, II);
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), II);
 
     imprimere("\n--- 'p' instrumentum eligit (dominus = actio) ---\n");
     /* instrumentum aliud sub domino suo, deinde 'p' per manum */
