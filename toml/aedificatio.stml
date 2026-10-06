@@ -51,7 +51,11 @@
     <vestigium via="build/test_logs/toml.log" forma="plagula"/>
     <vestigium via="build/portae/tempora.tsv" forma="plagula" communis="verum"/>
     <ingressus genus="fasciculus" via="pythonica/silva.py"/>
-    <ingressus genus="effectus" via="toml/compile_probationes.sh"/>
+    <!-- argv radicis (effectus-plan-3 T5, A1): silva.py PORTAE['toml']
+         cursorem sine argumentis currit -->
+    <ingressus genus="effectus" via="toml/compile_probationes.sh">
+      <argumenta/>
+    </ingressus>
     <ingressus genus="instrumentum_domus" via="bin/aedilis"/>
     <ingressus genus="instrumentum_domus" via="bin/compilator"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>

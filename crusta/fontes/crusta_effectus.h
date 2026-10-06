@@ -55,6 +55,31 @@ crusta_effectus_derivare (
               StmlNodus*  mandata,
      constans character** causa_out);
 
+/* Idem cum ARGV radicis declarata (effectus-plan-3 T5, A1): argumenta =
+ * Xar de character* (verba post scriptum; vacua = nulla), NIHIL =
+ * ignota ($N radicis 'argumentum' manet). Processus filii $N per arcus
+ * (verba sedis exsecutionis) semper accipiunt. */
+StmlNodus*
+crusta_effectus_derivare_argumentis (
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+     constans character*  radix,
+     constans character*  scriptum,
+              StmlNodus*  mandata,
+                    Xar*  argumenta,
+     constans character** causa_out);
+
+/* ARGV RADICIS DECLARATA (effectus-plan-3 T5, A1): verba <argumenta>
+ * ingressus 'effectus' scripti in aedificatio.stml subsystematum
+ * (Xar de character*; vacua = nulla). NIHIL = non declarata, aut
+ * declarationes discordes / ingressus sine <argumenta>. */
+Xar*
+crusta_effectus_argumenta_radicis (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* radix,
+     constans character* scriptum);
+
 /* ORACULUM (planum T5): liber interpositionis (interpositio_macos.c)
  * -> summarium observatum eiusdem dialecti (per="observatum").
  * Processus soli bash; viae extra radicem et quaesitiones PATH

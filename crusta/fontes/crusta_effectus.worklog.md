@@ -569,3 +569,27 @@ source order).
 - Unsound corners left named, not modelled: `X=v f` prefix assignment
   into a function (never collected, as in slice 2); `trap 'X=1' EXIT`
   code strings (not eval).
+
+## 2026-10-06 - slice 3 T5: script arguments, sourcing, A1
+
+- A1 as decided would have stored "no arguments" as `argumenta=""`;
+  `stml formare` rewrites that as a bare attribute, read back as
+  "true". A 30-second probe (`bin/stml formare x.stml -probare`) before
+  writing the declaration; shown to Fran, amended to an element. Same
+  family as the memory note "never write EMPTY attr values".
+- Arcs are created while the parent is still in its fixpoint and a
+  child is derived once (visi), so "the arcs into me" are incomplete
+  when the child first evaluates - hence phase 2. The census derives
+  every script as its own root, so script arguments cannot move the
+  census by design (run by hand = no caller); they matter in chains.
+- The toml runner re-executes itself (`"$0" "$@" | tee`), an arc into
+  the ROOT with `"$@"`: without modelling forwarding, the declared argv
+  could never resolve `$1`. 18 house runners share the idiom.
+- Cost bug: `_fontationes_aequales(NIHIL, empty)` was FALSE, so every
+  ambitus ran one extra fixpoint pass (census 3.1 -> 4.3 s); found by
+  noticing the section time (2.6 -> 4.3 s) before the census.
+- The pythonica gate's two failures were fail-fast effects of one NOVA
+  word (`dabilia`) in the dirty tree, not of the cross-check: run the
+  Latin lint before reading a red pythonica.
+- Zero census delta checked by a probe: the sourced-definition path is
+  live (vexilla.sh ~3,700 uses), values identical (single definition).

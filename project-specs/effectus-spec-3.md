@@ -339,3 +339,59 @@ SAME with the T3 analyzer (the toml chain itself changed since T2's
 `$N` binding off -> A4 red; `tradita` ignored -> trap contrary red
 (over-exclusion, invisible to the subset check); definition-is-not-a-
 call off -> f2 red.
+
+**T5 (2026-10-06): sourced plagulae, script arguments, A1.** Opening
+reading: one effectus chain root (`toml/compile_probationes.sh`, the
+`porta_toml` ingressus); its gate argv is `PORTAE['toml'] =
+['./toml/compile_probationes.sh']` (none) - argv agrees. The FORM did
+not: `stml formare` turns `argumenta=""` into a bare attribute, read as
+`"true"` (a one-word argv). Shown to Fran; A1 AMENDED (decretum
+…CAYCAMW): `<argumenta/>` (none) or `<argumenta><verbum! (>w
+</argumenta>` (words, `<mandatum>`'s grammar), absent = unknown;
+`stml_textus_valor` is stable under formatting.
+
+As built. Script `$N` (top level of the root plagula, outside
+functions; `_argumentum_scripti`): union over the arcs into the
+ambitus of word N after the script word (`Arcus` keeps the exec site's
+`verba`, the script word's index and the parent plagula; arcs are
+deduplicated per parent, child and word), each evaluated in the
+parent; a missing word = `""` (an exec site's argv is complete when the
+earlier words are single), so `${2:-d}` -> d; `"$@"` alone after the
+script forwards the parent's `$N` (`_argumenta_traducta`) - a parent on
+the stack (the house's `"$0" "$@" | tee` self-exec, 18 runners) adds
+nothing (least fixpoint); the root adds its declared argv
+(`crusta_effectus_derivare_argumentis`; lookup
+`crusta_effectus_argumenta_radicis` over the aedificatio.stml files,
+undeclared or conflicting = unknown), used by `-clavis`, the chain
+summaries of the lint/census and `tools/diagnostica.c`. fabrica's API
+is unchanged: the key lines carry the argv's effect. Arcs are complete
+only after the whole derivation, so PHASE 2 recomputes every ambitus
+that asked for a script `$N` and can receive one (a root with declared
+argv, an incoming arc) until arcs and ambitus stop growing (bounded;
+no convergence -> phase 1, `argumentum`). Sourcing: each fixpoint pass
+records its resolved source sites (`Fontatio`); walks use the previous
+COMPLETE pass's record and the fixpoint repeats while the record
+changes (`_ambitum_computare`, extracted from `_ambitum_derivare`). At
+the top of a sourced plagula the walk continues at every site that
+sources it (`_fontationes_ambulare`; an unresolved source site anywhere
+= FALLBACK); a top-level definition of a sourced plagula reaches
+through any statement that (transitively, at top level) sources it -
+may, never a kill (`_fontatio_attingens`), allowed only when every
+chain of source sites to the root is at top level (`_fontatio_plana`);
+`source` of a plagula holding eval = eval. Cross-check (A1):
+`silva.argumenta_catenarum` / `_argumenta_discordantia` (pythonica
+gate) - declared words == `PORTAE[G][0][1:]` and the root ==
+`PORTAE[G][0][0]` for every `porta_<G>` iudicium.
+
+House: subset 316/316; census unchanged (10,081 rows identical): the
+census derives every script AS A ROOT (a child run by hand has no
+caller - Q4), and the sourced definitions that now go through the walk
+(probe: `tools/vexilla.sh` ~3,700 uses, mensor_suitae, sera) are only
+defined in the sourced file, so the value is the same. Toml key 32
+unchanged: `FILTER="${1:-}"` feeds only a name match, no site, and the
+key holds no `ignotum`. Oracle non tecta 0 (explicata 125); judge
+1.87-1.89 s; census 3.1-3.5 s (a first build cost 4.3 s: NIHIL vs empty
+record forced one extra pass on every ambitus - fixed). Plants: root
+argv ignored, arcs ignored, `"$@"` forwarding off, source continuation
+off, forward reach off -> section XXII red at each; a mismatched
+`<argumenta>` in toml/aedificatio.stml -> pythonica red.

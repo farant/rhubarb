@@ -145,21 +145,23 @@ plagula other than their own (cursor_communis, mensor_suitae), and how
 (`./crusta/effectus.sh -catenae`) and the argv silva.py runs it with;
 branch: a mismatch is shown to Fran before the attribute is written.
 
-- [ ] **Step 1: Failing section** `XXII. argumenta`: parent `./a/c.sh
+- [x] **Step 1: Failing section** `XXII. argumenta`: parent `./a/c.sh
   x.txt` + child `cat "$1"` -> x.txt; two callers -> union; one caller
   with `"$@"` -> `argumentum`; walk continues at the `source` site
   (definition in the sourcing plagula before `source` reaches the
   sourced plagula's top level).
-- [ ] **Step 2: Implement** `Arcus` argument words; child `$N`; the
+- [x] **Step 2: Implement** `Arcus` argument words; child `$N`; the
   `source`-site continuation.
-- [ ] **Step 3: A1:** `aedificatio.canon` ingressus attribute
+- [x] **Step 3: A1:** `aedificatio.canon` ingressus attribute
   `argumenta` (nota); `toml/aedificatio.stml` `argumenta=""`; `-clavis`
   passes it to the root; the cross-check against silva.py's table
   (where it lives decided by the opening reading); fabrica-fumus XXXII
   green.
-- [ ] **Step 4: House** subset check; toml key diff (FILTER resolves to
+- [x] **Step 4: House** subset check; toml key diff (FILTER resolves to
   ""?), oracle, judge time. **Plants:** argv dropped -> section red;
   mismatched declared argv -> cross-check red. **Commit** (owed gates).
+  (A1 amended to an ELEMENT `<argumenta>`, Fran 2026-10-06 - the
+  attribute does not survive `stml formare`; spec §XI T5.)
 
 ### Task T6: close
 

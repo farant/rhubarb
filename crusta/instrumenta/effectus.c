@@ -161,9 +161,14 @@ _contextum_parare (
     }
     per (k = ZEPHYRUM; k < xar_numerus(c->catenae); k++)
     {
-        StmlNodus* sm = crusta_effectus_derivare(c->piscina, c->intern,
-            c->radix, *(character**)xar_obtinere(c->catenae, k),
-            c->tabula, causa);
+        constans character* radix_catenae = *(character**)xar_obtinere(
+            c->catenae, k);
+                 StmlNodus* sm = crusta_effectus_derivare_argumentis(
+                     c->piscina, c->intern, c->radix, radix_catenae,
+                     c->tabula,
+                     crusta_effectus_argumenta_radicis(c->piscina,
+                     c->intern,
+                     c->radix, radix_catenae), causa);
 
         si (sm == NIHIL)
         {
@@ -621,8 +626,11 @@ _modus_clavis (
                    i32  i;
                    i32  j;
 
-    sm = crusta_effectus_derivare(c->piscina, c->intern, c->radix, via,
-        c->tabula, &causa);
+    /* argv radicis declarata (A1): fabrica radices catenarum vocat */
+    sm = crusta_effectus_derivare_argumentis(c->piscina, c->intern,
+        c->radix, via, c->tabula,
+        crusta_effectus_argumenta_radicis(c->piscina, c->intern,
+            c->radix, via), &causa);
     si (sm == NIHIL)
     {
         fprintf(stderr, "effectus: %s: %s\n", via,

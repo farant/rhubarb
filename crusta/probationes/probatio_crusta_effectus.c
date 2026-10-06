@@ -550,6 +550,81 @@ hic_manens constans character* FUNCTIONES =
 hic_manens constans character* FUNCTIO_LIB =
     "h() { cat \"$B\"; }\n";                                  /* 1 */
 
+/* argumenta scriptorum et fontatio (effectus-plan-3 T5; spec-3
+ * par. II.2, III.1) */
+hic_manens constans character* ARG_PATER =
+    "#!/bin/bash\n"                                          /* 1 */
+    "./a/arg_filius.sh x.txt\n"                              /* 2 */
+    "./a/arg_filius.sh y.txt\n"                              /* 3 */
+    "./a/arg_omnia.sh \"$@\"\n"                               /* 4 */
+    "bash a/arg_bash.sh z.txt\n";                            /* 5 */
+
+hic_manens constans character* ARG_FILIUS =
+    "#!/bin/bash\n"                                          /* 1 */
+    "cat \"$1\"\n"                                            /* 2 */
+    "cat \"${2:-d.txt}\"\n";                                  /* 3 */
+
+hic_manens constans character* ARG_SOLUS =
+    "#!/bin/bash\n"                                          /* 1 */
+    "cat \"$1\"\n";                                           /* 2 */
+
+hic_manens constans character* ARG_RADIX =
+    "#!/bin/bash\n"                                          /* 1 */
+    "cat \"$1\"\n"                                            /* 2 */
+    "cat \"${2:-e.txt}\"\n";                                  /* 3 */
+
+hic_manens constans character* ARG_IPSE =
+    "#!/bin/bash\n"                                          /* 1 */
+    "if [ -z \"${IPSE:-}\" ]; then\n"                         /* 2 */
+    "    export IPSE=1\n"                                    /* 3 */
+    "    \"$0\" \"$@\"\n"                                      /* 4 */
+    "    exit\n"                                             /* 5 */
+    "fi\n"                                                   /* 6 */
+    "cat \"$1\"\n";                                           /* 7 */
+
+/* declarationes fabricae fictae (A1): argumenta radicis */
+hic_manens constans character* FAB_FABRICA =
+    "<fabrica>\n"
+    "  <subsystema via=\"sub\"/>\n"
+    "</fabrica>\n";
+
+hic_manens constans character* FAB_AEDIFICATIO =
+    "<aedificatio>\n"
+    "  <actio titulus=\"porta\" genus=\"iudicium\">\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/r.sh\">\n"
+    "      <argumenta>\n"
+    "        <verbum! (>r.txt\n"
+    "      </argumenta>\n"
+    "    </ingressus>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/n.sh\">\n"
+    "      <argumenta/>\n"
+    "    </ingressus>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/u.sh\"/>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/c.sh\">\n"
+    "      <argumenta>\n"
+    "        <verbum! (>a\n"
+    "      </argumenta>\n"
+    "    </ingressus>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/c.sh\">\n"
+    "      <argumenta>\n"
+    "        <verbum! (>b\n"
+    "      </argumenta>\n"
+    "    </ingressus>\n"
+    "  </actio>\n"
+    "</aedificatio>\n";
+
+hic_manens constans character* FONS_PATER =
+    "#!/bin/bash\n"                                          /* 1 */
+    "S=s1\n"                                                 /* 2 */
+    "source a/fons_filius.sh\n"                              /* 3 */
+    "S=s9\n"                                                 /* 4 */
+    "cat \"$T\"\n"                                            /* 5 */
+    "T=t9\n";                                                /* 6 */
+
+hic_manens constans character* FONS_FILIUS =
+    "cat \"$S\"\n"                                            /* 1 */
+    "T=t1\n";                                                /* 2 */
+
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
 _causa_lineae (
@@ -1397,6 +1472,135 @@ s32 principale (vacuum)
             /* $1 functionis = $1 scripti: argumentum, non recursio
              * (custodia tituli $N non tangit) */
             CREDO_VERUM (_causa_lineae(ts, XXI, "argumentum"));
+        }
+    }
+
+    /* XXII. argumenta (effectus-plan-3 T5; A1) */
+    imprimere("\n--- XXII. argumenta ---\n");
+    _scribere("a/arg_pater.sh", ARG_PATER);
+    _scribere("a/arg_filius.sh", ARG_FILIUS);
+    _scribere("a/arg_omnia.sh", ARG_SOLUS);
+    _scribere("a/arg_bash.sh", ARG_SOLUS);
+    _scribere("a/arg_radix.sh", ARG_RADIX);
+    _scribere("a/fons_pater.sh", FONS_PATER);
+    _scribere("a/fons_filius.sh", FONS_FILIUS);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/arg_pater.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            /* filius: $1 = unio argumenti per arcus */
+            _situs_colligere(sm, ts, "a/arg_filius.sh");
+            _imprimere_situs(ts);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "x.txt", II));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "y.txt", II));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", II), II);
+            /* argumentum II nullum: "" -> ${2:-d} = d */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d.txt", III));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", III), I);
+            /* vocans "$@": argumentum manet */
+            xar_truncare(ts, ZEPHYRUM);
+            _situs_colligere(sm, ts, "a/arg_omnia.sh");
+            CREDO_VERUM (_causa_lineae(ts, II, "argumentum"));
+            /* 'bash S z.txt' */
+            xar_truncare(ts, ZEPHYRUM);
+            _situs_colligere(sm, ts, "a/arg_bash.sh");
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "z.txt", II));
+        }
+    }
+    {
+              Xar* argv;
+        StmlNodus* sm;
+              Xar* ts;
+
+        /* radix catenae: argv declarata (A1) */
+        argv = xar_creare(piscina, (i32)magnitudo(character*));
+        ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+        *(constans character**)xar_addere(argv) = "r.txt";
+        sm = crusta_effectus_derivare_argumentis(piscina, intern, radix,
+            "a/arg_radix.sh", NIHIL, argv, &causa);
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/arg_radix.sh");
+            _imprimere_situs(ts);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "r.txt", II));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e.txt", III));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", III), I);
+        }
+        /* "$0" "$@" (cursor se ipsum exsequens): argv eadem, nihil
+         * novi - punctum fixum minimum */
+        xar_truncare(ts, ZEPHYRUM);
+        _scribere("a/arg_ipse.sh", ARG_IPSE);
+        sm = crusta_effectus_derivare_argumentis(piscina, intern, radix,
+            "a/arg_ipse.sh", NIHIL, argv, &causa);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/arg_ipse.sh");
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "r.txt", VII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VII), I);
+        }
+        /* sine argv declarata: argumentum */
+        xar_truncare(ts, ZEPHYRUM);
+        sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/arg_radix.sh", NIHIL, &causa);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/arg_radix.sh");
+            CREDO_VERUM (_causa_lineae(ts, II, "argumentum"));
+        }
+    }
+    {
+        /* argv declarata in aedificatio.stml (A1): <argumenta> */
+        character  fab[CCLVI + XVI];
+              Xar* r;
+
+        _scribere("fab/fabrica.stml", FAB_FABRICA);
+        _scribere("fab/sub/aedificatio.stml", FAB_AEDIFICATIO);
+        sprintf(fab, "%s/fab", radix);
+        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+            "sub/r.sh");
+        CREDO_NON_NIHIL (r);
+        si (r != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (xar_numerus(r), I);
+            CREDO_VERUM (strcmp(*(character**)xar_obtinere(r, ZEPHYRUM),
+                "r.txt") == ZEPHYRUM);
+        }
+        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+            "sub/n.sh");
+        CREDO_NON_NIHIL (r);
+        si (r != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (xar_numerus(r), ZEPHYRUM);
+        }
+        /* sine <argumenta>, declarationes discordes, non declarata */
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+            fab, "sub/u.sh"));
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+            fab, "sub/c.sh"));
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+            fab, "sub/x.sh"));
+    }
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/fons_pater.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/fons_pater.sh");
+            _imprimere_situs(ts);
+            /* caput plagulae fontatae: ad situm fontationis */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "s1", I));
+            CREDO_NIHIL (_situs(ts, "lectio", "s9", ZEPHYRUM));
+            /* definitio capitis fontati post 'source' attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "t1", V));
+            CREDO_NIHIL (_situs(ts, "lectio", "t9", ZEPHYRUM));
         }
     }
 
