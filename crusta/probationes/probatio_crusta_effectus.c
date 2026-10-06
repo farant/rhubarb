@@ -324,9 +324,9 @@ hic_manens constans character* CAUSAE =
     "cat \"$A\"\n"                                        /* 13 */
     "for g in p q; do cat \"$g\"; done\n"                 /* 14 */
     "cat \"$((I + II))\"\n"                               /* 15 */
-        "cat \"$NESCIO/data/z\"\n"                            /* 16 */
+    "cat \"$NESCIO/data/z\"\n"                            /* 16 */
     "O=\"\"\n"                                             /* 17 */
-    "for o in a b; do O=\"$O $o\"; done\n"                  /* 18 */
+    "for o in a b; do O=\"$O $o\"; done\n"                 /* 18 */
     "cat $O\n";                                          /* 19 */
 
 /* causa situs lectionis in linea (NIHIL = situs absens) */
@@ -762,7 +762,7 @@ s32 principale (vacuum)
             CREDO_VERUM (_causa_lineae(cs, XI, "discordia"));
             CREDO_VERUM (_causa_lineae(cs, XIII, "tabulatum"));
             CREDO_VERUM (_causa_lineae(cs, XIV, "ansa_read"));
-                        CREDO_VERUM (_causa_lineae(cs, XV, "operator"));
+            CREDO_VERUM (_causa_lineae(cs, XV, "operator"));
             /* accumulatio in ansa: cyclus, non profunditas */
             CREDO_VERUM (_causa_lineae(cs, XIX, "recursio"));
             /* praefixum partiale quoque causam fert (resolutio non

@@ -356,3 +356,31 @@ source order).
   comments that cannot align inside 72 get the comment above instead.
 - `effectus -radix .` (relative) says "scriptum absens" for everything
   - use an absolute radix when calling the binary directly.
+
+## 2026-10-05 - slice 2 T2: Valor, same answers
+
+- The old evaluator's contract was implicit: return FALSUM and the area
+  holds whatever was appended before the failing part - nested partial
+  values included (a single definition that is itself partial keeps its
+  prefix: "praefixum definitionis unicae servatur"). The new one makes
+  it explicit: every failing return goes through `_valorem_frangere`,
+  which turns the collected text into PRAEFIXUM (IGNOTUS if empty). The
+  only reader of a failed value inside the evaluator is
+  `_variabilem_intus` (per definition), and the two outside entries
+  (`_viam_classificare`, `_cd_aestimare`).
+- `$(...)` idioms (dirname, cd && pwd, readlink -f) still manipulate a
+  char buffer in place; `_argumentum_in_aream` evaluates their argument
+  as a Valor and copies the CERTUS text in. Scratch, not a value.
+- T1's commit d2e2ba5c carried mis-indented blocks (control lines one
+  level deep, a parameter list shifted): my scratchpad edit helper
+  prepended the original line's indentation to text that already had
+  it, and the formator neither re-indents nor reports a wrong NESTING
+  level (R5 checks only spaces vs tabs) - vitium …MCGT. Fixed here;
+  edits are exact-string replacements from now on. Crude checker
+  (scratchpad indentatio.py) still reports 17 lines here - all inside
+  braced `casus` blocks, the same 17 the T3-era file shows.
+- A declaration block with `character**` came out with the type column
+  LEFT of the block indent after -scribere (CONFORMIS); rewritten with
+  single pointers.
+- Identity: index-numbered summaries (path flattening collided 8 names
+  in T1's check) - 306/306 identical.

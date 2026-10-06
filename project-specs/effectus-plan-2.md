@@ -151,21 +151,21 @@ nomen structura {
 } Valor;
 ```
 
-- [ ] **Step 1:** `_partes_aestimare` / `_verbum_aestimare` /
+- [x] **Step 1:** `_partes_aestimare` / `_verbum_aestimare` /
   `_variabilem_aestimare` / `_substitutionem_aestimare` take and fill a
   `Valor*` (piscina strings, no `VIA_MAXIMA` buffers); the join
   (spec §II) is ONE function `_valores_iungere`, the concatenation ONE
   function `_valorem_appendere`. Only `CERTUS` (one member),
   `PRAEFIXUM` and `IGNOTUS` are produced in this task.
-- [ ] **Step 2:** `_viam_classificare` consumes a `Valor`; `_cd_aestimare`
+- [x] **Step 2:** `_viam_classificare` consumes a `Valor`; `_cd_aestimare`
   and the guarded-builder path likewise.
-- [ ] **Step 3: Identity.** New binary over the same scripts:
+- [x] **Step 3: Identity.** New binary over the same scripts:
   `cmp` every summary against `summ_vetus/` -> 0 differences; census
   byte-identical; `probatio_crusta_effectus*` green unchanged.
-- [ ] **Step 4: Plant:** `_valores_iungere` keeps the FIRST definition
+- [x] **Step 4: Plant:** `_valores_iungere` keeps the FIRST definition
   instead of failing on disagreement -> identity check names the
   differing summaries (red). Restore.
-- [ ] **Step 5: Commit** (gate `crusta`).
+- [x] **Step 5: Commit** (gate `crusta`).
 
 ### Task T3: `temporaria`
 

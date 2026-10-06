@@ -60,6 +60,24 @@ nomen structura {
                 character* titulus;
 } Localis;
 
+/* VALOR (effectus-plan-2 T2; spec-2 par. II): quod verbum aut
+ * variabilis tenet. CERTUS = membra (chordae exactae); EXEMPLAR =
+ * globus (T5); PRAEFIXUM = textus notus, reliquum ignotum; TEMPORARIA =
+ * sub directorio mktemp (T3); IGNOTUS = nihil notum (causa in
+ * Derivatio).
+ * T2 solum CERTUS membro uno, PRAEFIXUM, IGNOTUS gignit. */
+nomen enumeratio {
+    VALOR_CERTUS = 0, VALOR_EXEMPLAR, VALOR_PRAEFIXUM,
+    VALOR_TEMPORARIA, VALOR_IGNOTUS
+} ValorForma;
+
+nomen structura {
+             ValorForma  forma;
+                    Xar* membra;      /* character*: CERTUS */
+              character* textus;      /* PRAEFIXUM, EXEMPLAR */
+     constans character* temporaria;  /* sedes mktemp (T3) */
+} Valor;
+
 /* situs effectus unus - attributa dialecti (NIHIL = absens) */
 nomen structura {
       constans character* elementum;
@@ -493,11 +511,6 @@ _titulus_staticus (
     redde chorda_ut_cstr(valor, piscina);
 }
 
-
-/* ==================================================
- * Aestimatio verborum
- * ================================================== */
-
 /* CAUSA (effectus-plan-2 T1): defectus PRIMUS vincit - intimus ante
  * exteriorem advenit, ergo '"$v"' cum v="$1" 'argumentum' dicit, non
  * causam exteriorem. Vocabularium in effectus.canon (causa). */
@@ -506,10 +519,10 @@ _deficere (
              Derivatio* d,
     constans character* causa)
 {
-        si (d->causa == NIHIL)
-        {
+    si (d->causa == NIHIL)
+    {
         d->causa = causa;
-        }
+    }
     redde FALSUM;
 }
 
@@ -519,6 +532,151 @@ _in_nominibus (
     constans character* verbum);
 
 
+/* ==================================================
+ * Valores (effectus-plan-2 T2)
+ * ================================================== */
+
+/* valor novus: CERTUS, membrum unum vacuum */
+interior vacuum
+_valorem_parare (
+    Derivatio* d,
+        Valor* v)
+{
+    v->forma       = VALOR_CERTUS;
+    v->membra      = xar_creare(d->piscina, (i32)magnitudo(character*));
+    v->textus      = NIHIL;
+    v->temporaria  = NIHIL;
+    si (v->membra != NIHIL)
+    {
+        *(character**)xar_addere(v->membra) = _duplicare(d->piscina,
+            "");
+    }
+}
+
+/* aestimatio defecit: quod iam collectum est PRAEFIXUM fit (vacuum:
+ * IGNOTUS) - idem quod area vetus post defectum tenebat. Semper
+ * FALSUM. */
+interior b32
+_valorem_frangere (
+    Valor* v)
+{
+    character* t;
+
+    si (v->forma != VALOR_CERTUS)
+    {
+        redde FALSUM;
+    }
+    t = v->membra != NIHIL && xar_numerus(v->membra) > ZEPHYRUM
+        ? *(character**)xar_obtinere(v->membra, ZEPHYRUM) : NIHIL;
+    v->textus = t;
+    v->forma  = t != NIHIL && t[ZEPHYRUM] != '\0' ? VALOR_PRAEFIXUM
+                                                  : VALOR_IGNOTUS;
+    redde FALSUM;
+}
+
+/* textus valoris: membrum primum (CERTUS) aut praefixum ("" si
+ * IGNOTUS) */
+interior constans character*
+_valoris_textus (
+    constans Valor* v)
+{
+    si (   v->forma == VALOR_CERTUS && v->membra != NIHIL
+        && xar_numerus(v->membra) > ZEPHYRUM)
+    {
+        redde *(character**)xar_obtinere(v->membra, ZEPHYRUM);
+    }
+    redde v->textus != NIHIL ? v->textus : "";
+}
+
+/* CONCATENATIO: litterae n ad omne membrum. Limes areae veteris
+ * (VIA_MAXIMA) servatur: longius = valor fractus, membra intacta. */
+interior b32
+_valorem_appendere (
+              Derivatio* d,
+                  Valor* v,
+    constans character* s,
+                    i32  n)
+{
+    i32 k;
+
+    si (v->forma != VALOR_CERTUS || v->membra == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(v->membra); k++)
+    {
+        character* m = *(character**)xar_obtinere(v->membra, k);
+
+        si ((i32)strlen(m) + n + I > (i32)VIA_MAXIMA)
+        {
+            redde _valorem_frangere(v);
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(v->membra); k++)
+    {
+        character* m = *(character**)xar_obtinere(v->membra, k);
+        character* novum;
+
+        novum = (character*)piscina_allocare(d->piscina,
+            (memoriae_index)strlen(m) + (memoriae_index)n + I);
+        si (novum == NIHIL)
+        {
+            redde _valorem_frangere(v);
+        }
+        strcpy(novum, m);
+        memcpy(novum + strlen(m), s, (size_t)n);
+        novum[strlen(m) + (memoriae_index)n]      = '\0';
+        *(character**)xar_obtinere(v->membra, k)  = novum;
+    }
+    redde VERUM;
+}
+
+/* valorem 'fons' post 'v' ponere: textus eius appenditur; fons fractus
+ * (PRAEFIXUM) v quoque frangit, praefixo eius servato */
+interior b32
+_valorem_continuare (
+         Derivatio* d,
+             Valor* v,
+    constans Valor* fons)
+{
+    constans character* t = _valoris_textus(fons);
+
+    si (!_valorem_appendere(d, v, t, (i32)strlen(t)))
+    {
+        redde FALSUM;
+    }
+    si (fons->forma != VALOR_CERTUS)
+    {
+        redde _valorem_frangere(v);
+    }
+    redde VERUM;
+}
+
+/* IUNCTIO definitionum (sine ordine, spec-2 par. I.2). numerus = quot
+ * definitiones iam iunctae. T2: regula vetus - omnes CERTAE et
+ * aequales, aliter FALSUM (discordia); prima sola fracta servatur
+ * (praefixum definitionis unicae). */
+interior b32
+_valores_iungere (
+             Valor* summa,
+    constans Valor* novus,
+               i32  numerus)
+{
+    si (numerus == ZEPHYRUM)
+    {
+        *summa = *novus;
+        redde VERUM;
+    }
+    redde summa->forma == VALOR_CERTUS && novus->forma == VALOR_CERTUS
+        && strcmp(_valoris_textus(summa), _valoris_textus(novus))
+           == ZEPHYRUM;
+}
+
+
+/* ==================================================
+ * Aestimatio verborum
+ * ================================================== */
+
 interior b32
 _partes_aestimare (
                 Derivatio* d,
@@ -526,8 +684,7 @@ _partes_aestimare (
                   Plagula* p,
     constans MateriaNodus* nodus,
                       i32  locus,
-                character* area,
-                      i32* longitudo,
+                    Valor* v,
                       i32  profunditas);
 
 interior b32
@@ -536,16 +693,16 @@ _verbum_aestimare (
                   Ambitus* a,
                   Plagula* p,
     constans MateriaNodus* verbum,
-                character* area,
-                      i32* longitudo,
+                    Valor* v,
                       i32  profunditas)
 {
     si (verbum == NIHIL || verbum->genus != (s32)CRUSTA_GENUS_VERBUM)
     {
-        redde FALSUM;
+        redde _valorem_frangere(v);
     }
     redde _partes_aestimare(d, a, p, verbum, (i32)CRUSTA_VERBUM_PARTES,
-        area, longitudo, profunditas);
+        v,
+        profunditas);
 }
 
 interior b32
@@ -570,52 +727,48 @@ _localis_est (
 }
 
 /* $titulus ad locum 'usus': definitiones ambitus (locales functionis
- * circumdantis si declaratae) - omnes plenae et aequales, aliter
- * FALSUM (praefixum definitionis unicae servatur). inanes_omittere:
+ * circumdantis si declaratae) per _valores_iungere. inanes_omittere:
  * verbum TOTUM est '$X' in sede imperii/fontationis - definitio vacua
  * ('X=""' ante 'X=via') plagulam nullam nominat, ergo omittitur (intra
  * verbum longius '"$P/x.sh"' viam mutaret: numquam omittitur) */
 interior b32
 _variabilem_intus (
-              Derivatio* d,
-                Ambitus* a,
-                Plagula* p,
+                Derivatio* d,
+                  Ambitus* a,
+                  Plagula* p,
     constans MateriaNodus* usus,
-    constans character* titulus,
-              character* area,
-                    i32* longitudo,
-                    i32  profunditas,
-                    b32  inanes_omittere)
+       constans character* titulus,
+                    Valor* v,
+                      i32  profunditas,
+                      b32  inanes_omittere)
 {
     constans MateriaNodus* functio;
                       b32  localis;
-                character  primus[VIA_MAXIMA];
-                      i32  primus_longitudo  = ZEPHYRUM;
-                      i32  numerus           = ZEPHYRUM;
-                      b32  plenus            = VERUM;
+                    Valor  summa;
+                      i32  numerus  = ZEPHYRUM;
                       i32  k;
 
     si (strcmp(titulus, "0") == ZEPHYRUM)
     {
-        redde _appendere(area, longitudo, a->radix_via,
+        redde _valorem_appendere(d, v, a->radix_via,
             (i32)strlen(a->radix_via));
     }
     si (strcmp(titulus, "BASH_SOURCE") == ZEPHYRUM)
     {
-        redde _appendere(area, longitudo, p->via, (i32)strlen(p->via));
+        redde _valorem_appendere(d, v, p->via, (i32)strlen(p->via));
     }
-        si (profunditas > PROFUNDITAS_MAXIMA)
-        {
+    si (profunditas > PROFUNDITAS_MAXIMA)
+    {
+        (vacuum)_valorem_frangere(v);
         redde _deficere(d, "profunditas");
-        }
+    }
     functio = _functio_circumdans(usus);
     localis = functio != NIHIL && _localis_est(a, functio, titulus);
-    primus[ZEPHYRUM] = '\0';
+    _valorem_parare(d, &summa);
     per (k = ZEPHYRUM; k < xar_numerus(a->definitiones); k++)
     {
          Definitio* def = (Definitio*)xar_obtinere(a->definitiones, k);
-         character  valor[VIA_MAXIMA];
-               i32  valor_longitudo = ZEPHYRUM;
+             Valor  valor;
                b32  bonus;
 
         si (strcmp(def->titulus, titulus) != ZEPHYRUM)
@@ -626,43 +779,43 @@ _variabilem_intus (
         {
             perge;
         }
-        valor[ZEPHYRUM] = '\0';
+        _valorem_parare(d, &valor);
         si (def->inanis)
         {
             bonus = VERUM;
         }
-                alioquin si (def->verbum == NIHIL)
+        alioquin si (def->verbum == NIHIL)
         {
             bonus = _deficere(d, def->causa);
         }
         alioquin
         {
             bonus = _verbum_aestimare(d, a, def->plagula, def->verbum,
-                valor, &valor_longitudo, profunditas + I);
+                &valor, profunditas + I);
         }
-        si (inanes_omittere && bonus && valor_longitudo == ZEPHYRUM)
+        si (!bonus)
+        {
+            (vacuum)_valorem_frangere(&valor);
+        }
+        si (   inanes_omittere && bonus
+            && _valoris_textus(&valor)[ZEPHYRUM] == '\0')
         {
             perge;
         }
-        si (numerus == ZEPHYRUM)
-        {
-            memcpy(primus, valor, (size_t)valor_longitudo + I);
-            primus_longitudo  = valor_longitudo;
-            plenus            = bonus;
-        }
-                alioquin si (   !bonus || !plenus
-                             || strcmp(primus, valor) != ZEPHYRUM)
+        si (!_valores_iungere(&summa, &valor, numerus))
         {
             /* definitiones discordes aut ignotae (ignotae causam suam
              * iam posuerunt) */
+            (vacuum)_valorem_frangere(v);
             redde _deficere(d, "discordia");
         }
         numerus++;
     }
-        si (numerus == ZEPHYRUM)
-        {
+    si (numerus == ZEPHYRUM)
+    {
         /* argumentum ($1 $@ ...), nomen a read/mapfile positum, aut
          * ambitus externus */
+        (vacuum)_valorem_frangere(v);
         redde _deficere(d,
               (titulus[ZEPHYRUM] >= '0' && titulus[ZEPHYRUM] <= '9')
             || strcmp(titulus, "@") == ZEPHYRUM
@@ -670,12 +823,8 @@ _variabilem_intus (
             || strcmp(titulus, "#") == ZEPHYRUM ? "argumentum"
             : _in_nominibus(a->assignata, titulus) ? "ansa_read"
             : "ambitus");
-        }
-    si (!_appendere(area, longitudo, primus, primus_longitudo))
-    {
-        redde FALSUM;
     }
-    redde plenus;
+    redde _valorem_continuare(d, v, &summa);
 }
 
 /* RECURSIO (plan-2 T1): definitio quae se ipsam nominat
@@ -689,8 +838,7 @@ _variabilem_aestimare (
                   Plagula* p,
     constans MateriaNodus* usus,
        constans character* titulus,
-                character* area,
-                      i32* longitudo,
+                    Valor* v,
                       i32  profunditas,
                       b32  inanes_omittere)
 {
@@ -702,31 +850,52 @@ _variabilem_aestimare (
         si (strcmp(*(constans character**)xar_obtinere(d->acervus, k),
                 titulus) == ZEPHYRUM)
         {
+            (vacuum)_valorem_frangere(v);
             redde _deficere(d, "recursio");
         }
     }
     *(constans character**)xar_addere(d->acervus) = titulus;
-    bonus = _variabilem_intus(d, a, p, usus, titulus, area, longitudo,
-        profunditas, inanes_omittere);
+    bonus = _variabilem_intus(d, a, p, usus, titulus, v, profunditas,
+        inanes_omittere);
     xar_truncare(d->acervus, xar_numerus(d->acervus) - I);
     redde bonus;
 }
 
-/* $( ... ): idiomata sola (vide caput) */
+/* argumentum verbi in aream (VIA_MAXIMA) aestimare - CERTUS solum;
+ * area = scrinium operandi idiomatum (dirname, cd && pwd), non valor */
+interior b32
+_argumentum_in_aream (
+                Derivatio* d,
+                  Ambitus* a,
+                  Plagula* p,
+    constans MateriaNodus* verbum,
+                character* area,
+                      i32  profunditas)
+{
+    Valor valor;
+
+    _valorem_parare(d, &valor);
+    si (!_verbum_aestimare(d, a, p, verbum, &valor, profunditas))
+    {
+        redde FALSUM;
+    }
+    strcpy(area, _valoris_textus(&valor));
+    redde VERUM;
+}
+
+/* $( ... ): idiomata sola (vide caput). Defectus nihil appendit. */
 interior b32
 _substitutionem_aestimare (
-              Derivatio* d,
-                Ambitus* a,
-                Plagula* p,
+                Derivatio* d,
+                  Ambitus* a,
+                  Plagula* p,
     constans MateriaNodus* pars,
-              character* area,
-                    i32* longitudo,
-                    i32  profunditas)
+                    Valor* v,
+                      i32  profunditas)
 {
                       Xar* sententiae;
     constans MateriaNodus* s;
                 character  valor[VIA_MAXIMA];
-                      i32  valor_longitudo = ZEPHYRUM;
                       Xar* argumenta;
                 character* t;
 
@@ -740,8 +909,8 @@ _substitutionem_aestimare (
     s = *(MateriaNodus**)xar_obtinere(sententiae, ZEPHYRUM);
     si (s->genus == (s32)CRUSTA_GENUS_CATENA)
     {
-                         Xar* membra = _nodi_listae(d->piscina, s,
-                                  (i32)CRUSTA_CATENA_LIBERI);
+                          Xar* membra = _nodi_listae(d->piscina, s,
+                                   (i32)CRUSTA_CATENA_LIBERI);
         constans MateriaNodus* cd;
         constans MateriaNodus* op;
         constans MateriaNodus* secundum;
@@ -788,15 +957,14 @@ _substitutionem_aestimare (
                 redde FALSUM;
             }
         }
-        si (   !_verbum_aestimare(d, a, p,
+        si (   !_argumentum_in_aream(d, a, p,
                 *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM),
-                valor, &valor_longitudo, profunditas + I)
+                valor, profunditas + I)
             || !_absolutam_facere(valor, d->radix, absoluta))
         {
             redde FALSUM;
         }
-        redde _appendere(area, longitudo, absoluta,
-            (i32)strlen(absoluta));
+        redde _valorem_appendere(d, v, absoluta, (i32)strlen(absoluta));
     }
     si (s->genus != (s32)CRUSTA_GENUS_IMPERIUM)
     {
@@ -812,9 +980,9 @@ _substitutionem_aestimare (
             || strcmp(t, "basename") == ZEPHYRUM)
         && xar_numerus(argumenta) == I)
     {
-        si (!_verbum_aestimare(d, a, p,
+        si (!_argumentum_in_aream(d, a, p,
                 *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM),
-                valor, &valor_longitudo, profunditas + I))
+                valor, profunditas + I))
         {
             redde FALSUM;
         }
@@ -826,7 +994,7 @@ _substitutionem_aestimare (
         {
             _caudam_viae(valor);
         }
-        redde _appendere(area, longitudo, valor, (i32)strlen(valor));
+        redde _valorem_appendere(d, v, valor, (i32)strlen(valor));
     }
     si (   strcmp(t, "readlink")  == ZEPHYRUM
         && xar_numerus(argumenta) == II)
@@ -836,19 +1004,20 @@ _substitutionem_aestimare (
         character absoluta[VIA_MAXIMA];
 
         si (   o == NIHIL || strcmp(o, "-f") != ZEPHYRUM
-            || !_verbum_aestimare(d, a, p,
+            || !_argumentum_in_aream(d, a, p,
                    *(MateriaNodus**)xar_obtinere(argumenta, I),
-                   valor, &valor_longitudo, profunditas + I)
+                   valor, profunditas + I)
             || !_absolutam_facere(valor, d->radix, absoluta))
         {
             redde FALSUM;
         }
-        redde _appendere(area, longitudo, absoluta,
-            (i32)strlen(absoluta));
+        redde _valorem_appendere(d, v, absoluta, (i32)strlen(absoluta));
     }
     redde FALSUM;
 }
 
+/* partes verbi in ordine ad v; defectus ubi pars ignota (v fractus,
+ * praefixo partium priorum servato) */
 interior b32
 _partes_aestimare (
                 Derivatio* d,
@@ -856,8 +1025,7 @@ _partes_aestimare (
                   Plagula* p,
     constans MateriaNodus* nodus,
                       i32  locus,
-                character* area,
-                      i32* longitudo,
+                    Valor* v,
                       i32  profunditas)
 {
     constans MateriaValor* partes;
@@ -889,21 +1057,21 @@ _partes_aestimare (
         {
             casus CRUSTA_GENUS_PARS_LITTERALIS:
                 t = _token(pars, (i32)CRUSTA_PARS_TOK);
-                si (   t == NIHIL || !_appendere(area, longitudo,
+                si (   t == NIHIL || !_valorem_appendere(d, v,
                         (constans character*)t->valor.datum,
                         (i32)t->valor.mensura))
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 frange;
             casus CRUSTA_GENUS_PARS_EFFUGIUM:
                 t = _token(pars, (i32)CRUSTA_PARS_TOK);
                 si (t == NIHIL)
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 si (   t->valor.mensura >= II
-                    && !_appendere(area, longitudo,
+                    && !_valorem_appendere(d, v,
                         (constans character*)t->valor.datum + I,
                         (i32)t->valor.mensura - I))
                 {
@@ -919,14 +1087,14 @@ _partes_aestimare (
                 t = _token(pars, (i32)CRUSTA_PARS_TOK);
                 si (t == NIHIL)
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 ad = (i32)t->valor.mensura;
                 si (ad > I && t->valor.datum[ad - I] == '\'')
                 {
                     ad--;
                 }
-                si (   ad > I && !_appendere(area, longitudo,
+                si (   ad > I && !_valorem_appendere(d, v,
                         (constans character*)t->valor.datum + I, ad
                             - I))
                 {
@@ -937,24 +1105,23 @@ _partes_aestimare (
             casus CRUSTA_GENUS_PARS_GEMINA:
             casus CRUSTA_GENUS_PARS_VERSA:
                 si (!_partes_aestimare(d, a, p, pars,
-                        (i32)CRUSTA_GEMINA_PARTES, area, longitudo,
-                        profunditas))
+                        (i32)CRUSTA_GEMINA_PARTES, v, profunditas))
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 frange;
             casus CRUSTA_GENUS_PARS_PARAMETRUM:
                 t = _token(pars, (i32)CRUSTA_PARAMETRUM_TOK_TITULUS);
                 si (t == NIHIL)
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 titulus = chorda_ut_cstr(t->valor, d->piscina);
                 si (   titulus == NIHIL
-                    || !_variabilem_aestimare(d, a, p, pars,
-                        titulus, area, longitudo, profunditas, FALSUM))
+                    || !_variabilem_aestimare(d, a, p, pars, titulus, v,
+                        profunditas, FALSUM))
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 frange;
             casus CRUSTA_GENUS_PARS_EXPANSIO:
@@ -972,38 +1139,44 @@ _partes_aestimare (
                     (i32)CRUSTA_EXPANSIO_ARGUMENTA))
                 {
                     /* ${X:-y}, ${#X}, ${!X} ... */
+                    (vacuum)_valorem_frangere(v);
                     redde _deficere(d, "operator");
                 }
                 titulus = chorda_ut_cstr(t->valor, d->piscina);
                 si (titulus == NIHIL)
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 si (   sub != NIHIL
                     && !(strcmp(titulus, "BASH_SOURCE") == ZEPHYRUM
                         && _aequalis(sub->valor, "[0]")))
                 {
-                    redde _deficere(d, "tabulatum");   /* subscripta */
+                    /* subscripta */
+                    (vacuum)_valorem_frangere(v);
+                    redde _deficere(d, "tabulatum");
                 }
-                si (!_variabilem_aestimare(d, a, p, pars, titulus, area,
-                        longitudo, profunditas, FALSUM))
+                si (!_variabilem_aestimare(d, a, p, pars, titulus, v,
+                        profunditas, FALSUM))
                 {
-                    redde FALSUM;
+                    redde _valorem_frangere(v);
                 }
                 frange;
             }
             casus CRUSTA_GENUS_PARS_SUBSTITUTIO:
-                                si (!_substitutionem_aestimare(d, a, p,
-                                    pars, area,
-                                    longitudo, profunditas))
-                                {
+                si (!_substitutionem_aestimare(d, a, p, pars, v,
+                        profunditas))
+                {
+                    (vacuum)_valorem_frangere(v);
                     redde _deficere(d, "substitutio");
-                                }
+                }
                 frange;
-                        casus CRUSTA_GENUS_PARS_DOMUS:
-                redde _deficere(d, "ambitus");     /* ~ : HOME */
+            casus CRUSTA_GENUS_PARS_DOMUS:
+                /* ~ : HOME */
+                (vacuum)_valorem_frangere(v);
+                redde _deficere(d, "ambitus");
             ordinarius:
                 /* effugia $'..', arithmetica, ... */
+                (vacuum)_valorem_frangere(v);
                 redde _deficere(d, "operator");
         }
     }
@@ -1240,15 +1413,15 @@ _locales_colligere (
 
 interior vacuum
 _definitionem_addere (
-                      Ambitus* a,
-                    Derivatio* d,
-                      Plagula* p,
-           constans character* titulus,
-        constans MateriaNodus* verbum,
-                          b32  inanis,
-        constans MateriaNodus* locus,
-                          b32  declaratio_localis,
-           constans character* causa)
+                  Ambitus* a,
+                Derivatio* d,
+                  Plagula* p,
+       constans character* titulus,
+    constans MateriaNodus* verbum,
+                      b32  inanis,
+    constans MateriaNodus* locus,
+                      b32  declaratio_localis,
+       constans character* causa)
 {
     constans MateriaNodus* functio = _functio_circumdans(locus);
                 Definitio* def;
@@ -1262,13 +1435,13 @@ _definitionem_addere (
     {
         functio = NIHIL;   /* assignatio in functione sine 'local' */
     }
-    def               = (Definitio*)xar_addere(a->definitiones);
-    def->titulus      = _duplicare(d->piscina, titulus);
-    def->verbum       = verbum;
-    def->inanis       = inanis;
-        def->functio  = functio;
-    def->plagula      = p;
-    def->causa        = causa;
+    def           = (Definitio*)xar_addere(a->definitiones);
+    def->titulus  = _duplicare(d->piscina, titulus);
+    def->verbum   = verbum;
+    def->inanis   = inanis;
+    def->functio  = functio;
+    def->plagula  = p;
+    def->causa    = causa;
 }
 
 interior vacuum
@@ -1290,6 +1463,7 @@ _definitiones_colligere (
         constans MateriaNodus* valor;
                     character* t = NIHIL;
                           b32  ignotum;
+                          b32  tabulatum;
 
         tt     = _token(as, (i32)CRUSTA_ASSIGNATIO_TOK_TITULUS);
         op     = _token(as, (i32)CRUSTA_ASSIGNATIO_TOK_OPERATOR);
@@ -1309,22 +1483,20 @@ _definitiones_colligere (
                 perge;   /* 'X=1 cmd': ambitus imperii solius */
             }
         }
-                ignotum = !_locus_vacuus(as,
-                    (i32)CRUSTA_ASSIGNATIO_TOK_SUBSCRIPTUM)
-                    || (op != NIHIL && !_aequalis(op->valor, "="))
-                    || (valor != NIHIL
-                    && valor->genus != (s32)CRUSTA_GENUS_VERBUM);
-        /* causa ignoti (T1): tabulatum (X=(..), X[i]=, X+=(..)), aliter
-         * operator (X+=verbum) */
+        /* causa ignoti (T1): tabulatum (X=(..), X[i]=, X+=(..)),
+         * aliter operator (X+=verbum) */
+        tabulatum = !_locus_vacuus(as,
+                (i32)CRUSTA_ASSIGNATIO_TOK_SUBSCRIPTUM)
+            || (valor != NIHIL
+                && valor->genus == (s32)CRUSTA_GENUS_TABULATUM);
+        ignotum = tabulatum
+            || (op != NIHIL && !_aequalis(op->valor, "="))
+            || (valor != NIHIL
+                && valor->genus != (s32)CRUSTA_GENUS_VERBUM);
         _definitionem_addere(a, d, p, chorda_ut_cstr(tt->valor,
             d->piscina),
             ignotum ? NIHIL : valor, !ignotum && valor == NIHIL, as,
-            _localis_verbum(t),
-            (   !_locus_vacuus(as,
-            (i32)CRUSTA_ASSIGNATIO_TOK_SUBSCRIPTUM)
-             || (valor != NIHIL
-                 && valor->genus == (s32)CRUSTA_GENUS_TABULATUM))
-                ? "tabulatum" : "operator");
+            _localis_verbum(t), tabulatum ? "tabulatum" : "operator");
     }
     per (k = ZEPHYRUM; k < xar_numerus(p->iterationes); k++)
     {
@@ -1337,11 +1509,10 @@ _definitiones_colligere (
 
         si (tt != NIHIL)
         {
-                        _definitionem_addere(a, d, p,
-                            chorda_ut_cstr(tt->valor, d->piscina),
-                            NIHIL, FALSUM,
-                            it,
-                            FALSUM, "ansa_read");
+            _definitionem_addere(a, d, p,
+                chorda_ut_cstr(tt->valor, d->piscina), NIHIL, FALSUM,
+                it,
+                FALSUM, "ansa_read");
         }
     }
 }
@@ -1773,7 +1944,6 @@ _cd_aestimare (
     character* t;
           Xar* argumenta;
     character  valor[VIA_MAXIMA];
-          i32  longitudo = ZEPHYRUM;
     character  absoluta[VIA_MAXIMA];
 
     *est_cd = FALSUM;
@@ -1787,9 +1957,9 @@ _cd_aestimare (
     }
     *est_cd          = VERUM;
     valor[ZEPHYRUM]  = '\0';
-    si (   !_verbum_aestimare(d, a, p,
+    si (   !_argumentum_in_aream(d, a, p,
                *(MateriaNodus**)xar_obtinere(argumenta, ZEPHYRUM),
-               valor, &longitudo, ZEPHYRUM)
+               valor, ZEPHYRUM)
         || (valor[ZEPHYRUM] != '/' && basis == NIHIL)
         || !_absolutam_facere(valor, basis != NIHIL ? basis : d->radix,
                absoluta))
@@ -1947,13 +2117,22 @@ _viam_classificare (
                 : (i32)CRUSTA_EXPANSIO_TOK_TITULUS);
         character* titulus = t == NIHIL ? NIHIL
             : chorda_ut_cstr(t->valor, d->piscina);
+                     Valor v;
 
+        _valorem_parare(d, &v);
         plenus = titulus != NIHIL
-            ? _variabilem_aestimare(d, a, p, sola, titulus, valor,
-                  &longitudo, ZEPHYRUM, VERUM)
-            : _verbum_aestimare(d, a, p, verbum, valor, &longitudo,
-                  ZEPHYRUM);
+            ? _variabilem_aestimare(d, a, p, sola, titulus, &v,
+            ZEPHYRUM,
+                  VERUM)
+            : _verbum_aestimare(d, a, p, verbum, &v, ZEPHYRUM);
+        si (!plenus)
+        {
+            (vacuum)_valorem_frangere(&v);
         }
+        /* area: textus valoris (CERTUS) aut praefixum eius */
+        strcpy(valor, _valoris_textus(&v));
+        longitudo = (i32)strlen(valor);
+    }
     /* causa verbi ANTE cwd (cd W aestimatio causam suam poneret) */
     causa_verbi  = d->causa != NIHIL ? d->causa : "valor ignotus";
     cwd          = _directorium_loci(d, a, p, locus);
@@ -1967,10 +2146,10 @@ _viam_classificare (
             {
                 _directorium_viae(absoluta);
             }
-            rel                   = _relativa(d, absoluta);
-                        s->forma  = "praefixum";
-            s->resolutio          = "partialis";
-            s->causa              = causa_verbi;
+            rel           = _relativa(d, absoluta);
+            s->forma      = "praefixum";
+            s->resolutio  = "partialis";
+            s->causa      = causa_verbi;
             {
                 character textus[VIA_MAXIMA];
                       i32 n = ZEPHYRUM;
@@ -2001,9 +2180,9 @@ _viam_classificare (
         longitudo        = ZEPHYRUM;
         valor[ZEPHYRUM]  = '\0';
         _textum_colligere(verbum, valor, &longitudo);
-        s->via                = _duplicare(d->piscina, valor);
-                s->resolutio  = "nulla";
-        s->causa              = causa_verbi;
+        s->via        = _duplicare(d->piscina, valor);
+        s->resolutio  = "nulla";
+        s->causa      = causa_verbi;
         redde FALSUM;
     }
     si (cwd == NIHIL || !_absolutam_facere(valor, cwd, absoluta))

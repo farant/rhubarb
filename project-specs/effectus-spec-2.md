@@ -332,3 +332,18 @@ The census header named a `via` column the rows never wrote (9 values
 under 10 names, since T6); rows now carry `via` (source text where
 unresolved, sanitized: tabs and newlines become spaces - table causae
 contain newlines) and `causa` as column 11.
+
+**T2 (2026-10-05): the `Valor` refactor.** The evaluator passes a
+`Valor` (forma, membra, textus, temporaria) instead of `character
+area[VIA_MAXIMA]` + `longitudo`; concatenation is `_valorem_appendere`
+(keeps the old 4,096-byte cap, so overflow behaves identically), the
+join of definitions is `_valores_iungere` (still "all CERTUS and
+equal"), failure is `_valorem_frangere` (collected text -> PRAEFIXUM,
+nothing -> IGNOTUS: what the old buffer held after a failure). The
+idioms in `$(...)` keep a scratch buffer, filled by
+`_argumentum_in_aream`. Identity: 306 of 306 summaries byte-identical
+against the pre-T2 binary, census byte-identical; plant (join keeps the
+first definition on disagreement) -> 87 summaries differ. Census run
+1.8 s both; peak RSS 4.64 GB before, 4.89 GB after (+5%, piscina
+strings) - the 4.6 GB itself predates T2 (one piscina for the whole
+census; vitium …7RD).
