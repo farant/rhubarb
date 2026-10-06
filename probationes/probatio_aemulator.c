@@ -71,6 +71,158 @@ campanam_numerare (
     (*(i32*)datum)++;
 }
 
+/* effectus capti (B2): responsa appenduntur, tituli numerantur */
+nomen structura {
+     i8 responsa[CCLVI];
+    i32 responsa_mensura;
+    i32 tituli;
+    i32 titulus_mensura;
+     i8 titulus[CCLVI];
+} Capta;
+
+interior vacuum
+responsum_capere (
+             vacuum* datum,
+        constans i8* octeti,
+                i32  n)
+{
+    Capta* c;
+      i32  k;
+
+    c = (Capta*)datum;
+    per (k = ZEPHYRUM; k < n && c->responsa_mensura < CCLVI; k++)
+    {
+        c->responsa[c->responsa_mensura++] = octeti[k];
+    }
+}
+
+interior vacuum
+titulum_capere (
+     vacuum* datum,
+     chorda  titulus)
+{
+    Capta* c;
+
+    c = (Capta*)datum;
+    c->tituli++;
+    c->titulus_mensura = titulus.mensura;
+    memcpy(c->titulus, titulus.datum,
+        (memoriae_index)(titulus.mensura < CCLVI ? titulus.mensura
+                                                 : CCLVI));
+}
+
+interior b32
+responsum_est (
+                 Capta* c,
+    constans character* expectatum)
+{
+    b32 par;
+
+    par = c->responsa_mensura == (i32)strlen(expectatum)
+        && memcmp(c->responsa, expectatum,
+              (memoriae_index)c->responsa_mensura) == ZEPHYRUM;
+    c->responsa_mensura = ZEPHYRUM;
+    redde par;
+}
+
+interior Aemulator*
+capientem_creare (
+                 Capta* c,
+    constans character* titulus,
+    constans character* versio)
+{
+    AemulatorConfiguratio cfg;
+
+    memset(c, ZEPHYRUM, magnitudo(Capta));
+    aemulator_configuratio_initiare(&cfg);
+    cfg.latitudo            = X;
+    cfg.altitudo            = III;
+    cfg.effectus.datum      = c;
+    cfg.effectus.responsum  = responsum_capere;
+    cfg.effectus.titulus    = titulum_capere;
+    cfg.titulus             = titulus;
+    cfg.versio              = versio;
+    redde aemulator_creare(piscina, &cfg);
+}
+
+/* XV: responsa et effectus (B2) quae vectores non exprimunt */
+interior vacuum
+responsa_probare (vacuum)
+{
+                Aemulator* a;
+                    Capta  c;
+    AemulatorConfiguratio  cfg;
+                character  identitas[XVI];
+                character  titulus[II * MXXIV + XVI];
+           memoriae_index  usus;
+                      i32  i;
+
+    imprimere("\n--- XV: responsa et effectus (B2) ---\n");
+    /* identitas configurata; chordae in creatione copiatae */
+    strcpy(identitas, "rhubarb");
+    a = capientem_creare(&c, identitas, "7");
+    CREDO_NON_NIHIL(a);
+    identitas[ZEPHYRUM] = 'X';
+    scribere(a, "\x1B[>q");
+    CREDO_VERUM(responsum_est(&c, "\x1BP>|rhubarb 7\x1B\\"));
+    /* NIHIL = defaltae */
+    a = capientem_creare(&c, NIHIL, NIHIL);
+    scribere(a, "\x1B[>q");
+    CREDO_VERUM(responsum_est(&c, "\x1BP>|aemulator " AEMULATOR_VERSIO
+                                  "\x1B\\"));
+    /* initiare defaltas ponit */
+    aemulator_configuratio_initiare(&cfg);
+    CREDO_VERUM(strcmp(cfg.titulus, "aemulator") == ZEPHYRUM);
+    CREDO_VERUM(strcmp(cfg.versio, AEMULATOR_VERSIO) == ZEPHYRUM);
+    /* series trans vocationes scissae: responsum unum, titulus unus */
+    scribere(a, "\x1B[2;3H\x1B[");
+    CREDO_VERUM(responsum_est(&c, ""));
+    scribere(a, "6n");
+    CREDO_VERUM(responsum_est(&c, "\x1B[2;3R"));
+    scribere(a, "\x1B]2;ab");
+    CREDO_AEQUALIS_I32(c.tituli, ZEPHYRUM);
+    scribere(a, "c\x07");
+    CREDO_AEQUALIS_I32(c.tituli, I);
+    CREDO_AEQUALIS_I32(c.titulus_mensura, III);
+    CREDO_VERUM(memcmp(c.titulus, "abc", III) == ZEPHYRUM);
+    /* sine effectibus: quaestiones et tituli tacite consumuntur */
+    a = creare(X, III);
+    scribere(a, "\x1B[c\x1B[5n\x1B[6n\x1B]2;t\x07\x1B[>q");
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+    CREDO_VERUM(textus_est(a, ""));
+    /* titulus longus: II*MXXIV - II octeti (cum '2;') nuntiatur; ultra
+     * limitem totus abicitur et numeratur (Ghostty osc
+     * change_window_title.zig:36 "longer than buffer"). Divergentia
+     * nominata: Ghostty usque ad MMXLVII accipit, nos MMXLVI. */
+    a = capientem_creare(&c, NIHIL, NIHIL);
+    strcpy(titulus, "\x1B]2;");
+    memset(titulus + IV, 'a', II * MXXIV - II);
+    strcpy(titulus + IV + II * MXXIV - II, "\x07");
+    scribere(a, titulus);
+    CREDO_AEQUALIS_I32(c.tituli, I);
+    CREDO_AEQUALIS_I32(c.titulus_mensura, II * MXXIV - II);
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+    strcpy(titulus, "\x1B]2;");
+    memset(titulus + IV, 'a', II * MXXIV + II);
+    strcpy(titulus + IV + II * MXXIV + II, "\x07");
+    scribere(a, titulus);
+    CREDO_AEQUALIS_I32(c.tituli, I);
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), I);
+    scribere(a, "ok");
+    CREDO_VERUM(textus_est(a, "ok"));
+    /* responsa et tituli status constans: nihil allocant */
+    a     = capientem_creare(&c, NIHIL, NIHIL);
+    usus  = piscina_summa_usus(piscina);
+    per (i = ZEPHYRUM; i < M; i++)
+    {
+        scribere(a, "\x1B[c\x1B[>c\x1B[=c\x1B[5n\x1B[6n\x1B[>q"
+                    "\x1B]0;titulus\x07\x1B]1;i\x07");
+        c.responsa_mensura = ZEPHYRUM;
+    }
+    CREDO_VERUM(piscina_summa_usus(piscina) == usus);
+    CREDO_AEQUALIS_I32(c.tituli, M);
+}
+
 s32 principale (vacuum)
 {
                 Aemulator* a;
@@ -127,7 +279,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- III: series ignotae numerantur ---\n");
     a = creare(X, III);
-    scribere(a, "\x1B[5n\x1B#8\x1B]0;titulus\x07" "Z");
+    scribere(a, "\x1B[99n\x1B#8\x1B]777;x\x07" "Z");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), III);
     CREDO_VERUM(textus_est(a, "Z"));
 
@@ -255,7 +407,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(c.y, V);
     /* intermedia, ':' extra SGR, privatum ignotum, SGR ignotum */
     a = creare(X, III);
-    scribere(a, "\x1B[?1$p\x1B[0 q\x1B[2:3H\x1B[>c\x1B[99m\x1B[3;3 H");
+    scribere(a, "\x1B[?1$p\x1B[0 q\x1B[2:3H\x1B[>5c\x1B[99m\x1B[3;3 H");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), VI);
     CREDO_AEQUALIS_I32(aemulator_cursor(a).x, ZEPHYRUM);
     /* SGR cum ':' licet */
@@ -410,6 +562,8 @@ s32 principale (vacuum)
     }
     post = piscina_summa_usus(piscina);
     CREDO_VERUM(post == usus);
+
+    responsa_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     a = creare(XX, V);

@@ -9,7 +9,10 @@
  * alterum, cursor servatus), 2026, DECSC/DECRC.
  * B1: regio volutionis (DECSTBM) et quae in ea volvunt (IND RI NEL
  * SU SD, LF et involutio), IL DL ICH DCH ECH, tabulationes (HT HTS
- * TBC CHT CBT), LNM. Series ceterae consumuntur et numerantur.
+ * TBC CHT CBT), LNM.
+ * B2: responsa (DA1/DA2/DA3, DSR 5, CPR, XTVERSION) per effectum
+ * 'responsum'; OSC 0/2 per effectum 'titulus'. Series ceterae
+ * consumuntur et numerantur.
  *
  * PURUS: solae series_terminalis, runae, utf8, stilus_terminalis,
  * piscina; <string.h> solum. Effusio sine chorda_aedificator. */
@@ -79,6 +82,7 @@ structura Aemulator {
                   i32  regio_summa;       /* DECSTBM (0-based) */
                   i32  regio_ultima;
                    i8* tabulae;           /* sistae per columnam */
+               chorda  identitas;         /* XTVERSION */
      StilusTerminalis* stili;             /* [0] = nativus */
                   i32  numerus_stilorum;
                   i32* transitus;         /* collectio: vetus->novus */
@@ -859,6 +863,132 @@ modum_privatum_ponere (
     }
 }
 
+/* responsum ad programma (effectus); sine effectu nihil */
+interior vacuum
+respondere (
+       Aemulator* a,
+     constans i8* octeti,
+             i32  n)
+{
+    si (a->effectus.responsum)
+    {
+        a->effectus.responsum(a->effectus.datum, octeti, n);
+    }
+}
+
+/* responsum fixum: mensura per strlen, numquam manu numerata (B2:
+ * DA1 cum X pro IX octetum NUL emittebat) */
+interior vacuum
+literas_respondere (
+                 Aemulator* a,
+        constans character* literae)
+{
+    respondere(a, (constans i8*)literae, (i32)strlen(literae));
+}
+
+/* numerus decimalis in b[*n] (sine stdio - puritas) */
+interior vacuum
+numerum_appendere (
+      i8* b,
+     i32* n,
+     i32  valor)
+{
+     i8 digiti[XII];
+    i32 k;
+
+    k = ZEPHYRUM;
+    fac
+    {
+        digiti[k++]  = (i8)('0' + valor % X);
+        valor        /= X;
+    } dum (valor > ZEPHYRUM);
+    dum (k > ZEPHYRUM)
+    {
+        b[(*n)++] = digiti[--k];
+    }
+}
+
+/* CPR (Ghostty device_status cursor_position): ESC [ y ; x R,
+ * 1-based */
+interior vacuum
+positum_nuntiare (
+    Aemulator* a)
+{
+     i8 b[XXXII];
+    i32 n;
+
+    n       = ZEPHYRUM;
+    b[n++]  = (i8)0x1B;
+    b[n++]  = '[';
+    numerum_appendere(b, &n, a->activum->cursor.y + I);
+    b[n++]  = ';';
+    numerum_appendere(b, &n, a->activum->cursor.x + I);
+    b[n++]  = 'R';
+    respondere(a, b, n);
+}
+
+/* XTVERSION: DCS > | titulus versio ST */
+interior vacuum
+versionem_nuntiare (
+    Aemulator* a)
+{
+    literas_respondere(a, "\033P>|");
+    respondere(a, a->identitas.datum, a->identitas.mensura);
+    literas_respondere(a, "\033\\");
+}
+
+/* OSC (Ghostty osc): 0 et 2 titulus (etiam vacuus), 1 icon
+ * (consumitur, nihil), cetera ignota. Corpus truncatum (ultra
+ * SERIES_CHORDA_MAXIMA) totum abicitur et numeratur, ut Ghostty
+ * (state invalid -> nullum mandatum): titulus praecisus numquam
+ * nuntiatur. */
+interior vacuum
+seriem_osc (
+                 Aemulator* a,
+     constans SeriesLexema* lx)
+{
+    chorda titulus;
+       i32 numerus;
+       i32 i;
+
+    si (lx->truncatum)
+    {
+        a->ignota++;
+        redde;
+    }
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < lx->textus.mensura
+             && lx->textus.datum[i] >= '0'
+             && lx->textus.datum[i] <= '9';
+         i++)
+    {
+        numerus = numerus * X + (i32)(lx->textus.datum[i] - '0');
+    }
+    si (   i                   == ZEPHYRUM || i >= lx->textus.mensura
+        || lx->textus.datum[i] != ';')
+    {
+        a->ignota++;
+        redde;
+    }
+    commutatio (numerus)
+    {
+        casus ZEPHYRUM:
+        casus II:
+            titulus.datum    = lx->textus.datum + i + I;
+            titulus.mensura  = lx->textus.mensura - i - I;
+            si (a->effectus.titulus)
+            {
+                a->effectus.titulus(a->effectus.datum, titulus);
+            }
+            frange;
+        casus I:
+            frange;
+        ordinarius:
+            a->ignota++;
+            frange;
+    }
+}
+
 /* Ghostty splitCellBoundary: si (x) cauda est, lata eius tota
  * vacatur (BCE) */
 interior vacuum
@@ -1106,6 +1236,23 @@ seriem_csi (
         }
         redde;
     }
+    /* DA2, XTVERSION, DA3 (Ghostty device_attributes, xtversion) */
+    si (   lx->privatum == '>' && lx->finale == 'c'
+        && parametrum(lx, ZEPHYRUM, ZEPHYRUM) == ZEPHYRUM)
+    {
+        literas_respondere(a, "\033[>1;0;0c");
+        redde;
+    }
+    si (lx->privatum == '>' && lx->finale == 'q')
+    {
+        versionem_nuntiare(a);
+        redde;
+    }
+    si (lx->privatum == '=' && lx->finale == 'c')
+    {
+        literas_respondere(a, "\033P!|00000000\033\\");
+        redde;
+    }
     si (lx->privatum != ZEPHYRUM)
     {
         a->ignota++;
@@ -1155,6 +1302,29 @@ seriem_csi (
             frange;
         casus 'r':
             regionem_ponere(a, lx);
+            frange;
+        casus 'c':
+            /* DA1: VT220 cum coloribus ANSI (Ghostty Primary) */
+            si (parametrum(lx, ZEPHYRUM, ZEPHYRUM) != ZEPHYRUM)
+            {
+                a->ignota++;
+                frange;
+            }
+            literas_respondere(a, "\033[?62;22c");
+            frange;
+        casus 'n':
+            commutatio (parametrum(lx, ZEPHYRUM, ZEPHYRUM))
+            {
+                casus V:
+                    literas_respondere(a, "\033[0n");
+                    frange;
+                casus VI:
+                    positum_nuntiare(a);
+                    frange;
+                ordinarius:
+                    a->ignota++;
+                    frange;
+            }
             frange;
         casus 'S':
             regionem_sursum(a, a->regio_summa, a->regio_ultima, n);
@@ -1295,6 +1465,32 @@ seriem_esc (
  * Vita
  * ================================================== */
 
+/* 'titulus versio' in piscinam copiatum (XTVERSION) */
+interior chorda
+identitatem_struere (
+               Piscina* piscina,
+    constans character* titulus,
+    constans character* versio)
+{
+     chorda c;
+        i32 lt;
+        i32 lv;
+
+    lt         = (i32)strlen(titulus);
+    lv         = (i32)strlen(versio);
+    c.mensura  = lt + I + lv;
+    c.datum    = (i8*)piscina_conari_allocare(piscina,
+        (memoriae_index)c.mensura);
+    si (!c.datum)
+    {
+        redde c;
+    }
+    memcpy(c.datum, titulus, (memoriae_index)lt);
+    c.datum[lt] = ' ';
+    memcpy(c.datum + lt + I, versio, (memoriae_index)lv);
+    redde c;
+}
+
 vacuum
 aemulator_configuratio_initiare (
     AemulatorConfiguratio* cfg)
@@ -1304,8 +1500,10 @@ aemulator_configuratio_initiare (
         redde;
     }
     memset(cfg, ZEPHYRUM, magnitudo(AemulatorConfiguratio));
-    cfg->latitudo = LATITUDO_ORDINARIA;
-    cfg->altitudo = ALTITUDO_ORDINARIA;
+    cfg->latitudo  = LATITUDO_ORDINARIA;
+    cfg->altitudo  = ALTITUDO_ORDINARIA;
+    cfg->titulus   = "aemulator";
+    cfg->versio    = AEMULATOR_VERSIO;
 }
 
 Aemulator*
@@ -1328,8 +1526,15 @@ aemulator_creare (
         redde NIHIL;
     }
     memset(a, ZEPHYRUM, magnitudo(Aemulator));
-    a->piscina                = piscina;
-    a->effectus               = cfg->effectus;
+    a->piscina   = piscina;
+    a->effectus  = cfg->effectus;
+    a->identitas = identitatem_struere(piscina,
+        cfg->titulus ? cfg->titulus : "aemulator",
+        cfg->versio ? cfg->versio : AEMULATOR_VERSIO);
+    si (!a->identitas.datum)
+    {
+        redde NIHIL;
+    }
     a->latitudo               = cfg->latitudo;
     a->altitudo               = cfg->altitudo;
     a->capacitas_latitudinis  = cfg->latitudo;
@@ -1403,6 +1608,9 @@ aemulator_scribere (
                 frange;
             casus SERIES_ESC:
                 seriem_esc(a, &lexema);
+                frange;
+            casus SERIES_OSC:
+                seriem_osc(a, &lexema);
                 frange;
             ordinarius:
                 a->ignota++;

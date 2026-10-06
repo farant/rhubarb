@@ -174,3 +174,37 @@ sentences. Verified both ways (without the entry: green; with: red).
 Fix: no entry; the identifier became `regio_ultima` (a word the lint
 already knows). Rule: after any glossary edit, run the oratio suite
 (or owe the oratio gate) - a new word can change parses.
+
+## 2026-10-06 — B2: answers and effects
+
+**A hand-counted length lied on the first vector run.** DA1 was sent
+with length X for `"\033[?62;22c"` (9 bytes) - the reply carried a
+trailing NUL. The unit tests had no reply assertions yet; the first
+Ghostty DA1 vector caught it. Every fixed reply now goes through
+`literas_respondere` (strlen); no reply length is counted by hand.
+
+**Over-long OSC: drop, never truncate.** `series_terminalis` caps a
+string body at `SERIES_CHORDA_MAXIMA` (2048) and sets `truncatum`.
+`seriem_osc` ignored the flag, so a 3000-byte title would have been
+delivered cut short. Ghostty's osc.zig puts title capture in a fixed
+2048 buffer; overflow sets state invalid and `end` returns no command
+(change_window_title.zig:36). Now: truncated body -> whole OSC dropped,
+counted as unknown. Named divergence: Ghostty also needs a NUL byte in
+that buffer, so it accepts titles up to 2047 bytes; our 2048 includes
+the `2;` prefix, so we accept up to 2046. Not worth a lexer change.
+
+**Testing "no reply" without empty attributes.** The STML pretty
+writer turns `a=""` into `"true"`, so a vector cannot say
+`responsum=""`. Instead the replayer drains replies every step, and a
+case that must NOT reply puts a DSR 5 in the same step and expects
+exactly `ESC[0n` (OSC 1, DA1 with a parameter).
+
+**Replayer shape:** the real adapter wraps the core in a `Verus`
+struct that captures replies (512 bytes) and titles (count + last 256
+bytes) through the effects; `responsa` drains. Two harness plants
+(no drain; no comparison) are caught by the vectors.
+
+**Unit-test changes:** III and X used `ESC[99n`-style probes for
+"unknown"; DSR 5 and DA2 are now real answers, so the probes became
+`ESC[99n` (DSR other) and `ESC[>5c` (DA2 with a parameter).
+

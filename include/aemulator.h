@@ -33,17 +33,20 @@
 #include "chorda.h"
 #include "stilus_terminalis.h"
 
+/* versio quam XTVERSION nuntiat (decisio VIII) */
+#define AEMULATOR_VERSIO "0.1"
+
 nomen structura Aemulator Aemulator;
 
 /* EFFECTUS - omnis exitus nuclei praeter statum. Campus NIHIL =
  * ignoratum. Synchroni; aemulatorem intra vocationem non reintrare. */
 nomen structura {
     vacuum* datum;
-    /* responsa quaestionum (DA, DSR...) ad programma - phasis B */
+    /* responsa quaestionum (DA, DSR, XTVERSION) ad programma */
     vacuum (*responsum) (vacuum* datum, constans i8* octeti, i32 n);
     /* BEL */
     vacuum (*campana)   (vacuum* datum);
-    /* OSC 0/2 - phasis B */
+    /* OSC 0/2 (etiam vacuus); chorda valet in vocatione sola */
     vacuum (*titulus)   (vacuum* datum, chorda titulus);
 } AemulatorEffectus;
 
@@ -51,10 +54,16 @@ nomen structura {
                   i32 latitudo;     /* cellulae, >= I */
                   i32 altitudo;
     AemulatorEffectus effectus;
+    /* identitas (B2): XTVERSION respondet 'titulus versio'; DA1/DA2/
+     * DA3 fixa ut Ghostty (VT220, colores ANSI). In creatione
+     * copiantur. */
+  constans character* titulus;
+  constans character* versio;
 } AemulatorConfiguratio;
 
-/* Configuratio ordinaria: LXXX x XXIV, effectus nulli. Campi postea
- * addendi hic defaltas accipiunt - vocantes semper ab hac incipiant. */
+/* Configuratio ordinaria: LXXX x XXIV, effectus nulli, titulus
+ * "aemulator", versio AEMULATOR_VERSIO. Campi postea addendi hic
+ * defaltas accipiunt - vocantes semper ab hac incipiant. */
 vacuum
 aemulator_configuratio_initiare (
     AemulatorConfiguratio* cfg);

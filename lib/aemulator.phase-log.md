@@ -147,3 +147,19 @@ ICH/DCH/ECH with Ghostty's wide-character boundary rules; tab stops
 80 new); the loopback unchanged and green; region scrolling allocates
 nothing. 16 plants: 14 caught, one exposed redundant code (removed),
 one rule invisible until reflow (named).
+
+## B2 — answers and effects (2026-10-06)
+
+**INTENTIO.** The terminal answers what programs ask (DA1/2/3, DSR 5,
+CPR, XTVERSION) and reports titles (OSC 0/2) through the effects that
+A1 already declared; identity joins the configuration (Fran approved
+the header change).
+
+Built: configured identity (copied, defaults "aemulator 0.1"); the
+replies byte-exact to Ghostty's tests; OSC 0/2 titles (empty too), OSC
+1 consumed, others counted; over-long OSC dropped whole like Ghostty.
+The replayer asserts replies and titles. 140 vectors (7 new from
+Ghostty, 6 house); the first run caught a hand-counted reply length
+(DA1 sent a NUL) - every fixed reply is now measured by strlen. 15
+plants, all caught. Replies allocate nothing.
+

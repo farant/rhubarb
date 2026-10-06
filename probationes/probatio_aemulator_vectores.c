@@ -53,6 +53,11 @@ nomen structura {
     b32     (*altera)   (vacuum* t);
     i32     (*ignota)   (vacuum* t);
     b32     (*modus)    (vacuum* t, i32 numerus, b32 privatus);
+    /* B2: responsa ab ultima lectione (deinde vacua); tituli
+     * nuntiati et ultimus */
+    chorda  (*responsa) (vacuum* t, Piscina* p);
+    i32     (*tituli)   (vacuum* t);
+    chorda  (*titulus)  (vacuum* t, Piscina* p);
 } Probandum;
 
 
@@ -438,6 +443,7 @@ exemplum_currere (
           b32  visibilis;
           b32  b;
        chorda  octeti;
+       chorda  responsa;
           i32  i;
 
     *absens         = FALSUM;
@@ -468,6 +474,21 @@ exemplum_currere (
         si (octetos_legere(&iu, g, "initus", &octeti))
         {
             pr->scribere(t, octeti.datum, octeti.mensura);
+        }
+        /* responsa gradus huius semper hauriuntur */
+        responsa = pr->responsa(t, piscina);
+        si (octetos_legere(&iu, g, "responsum", &octeti))
+        {
+            chordam_conferre(&iu, "responsum", octeti, responsa);
+        }
+        si (numerum_legere(g, "tituli", &n))
+        {
+            numerum_conferre(&iu, "tituli", n, (s32)pr->tituli(t));
+        }
+        si (octetos_legere(&iu, g, "titulus", &octeti))
+        {
+            chordam_conferre(&iu, "titulus", octeti,
+                             pr->titulus(t, piscina));
         }
         pr->cursor(t, &x, &y, &pendens, &visibilis);
         si (numerum_legere(g, "cursor_x", &n))
@@ -543,7 +564,7 @@ exemplum_validare (
 {
     hic_manens constans character* campi[] = {
         "cursor_x", "cursor_y", "pendens", "visibilis", "altera",
-        "ignota"
+        "ignota", "tituli"
     };
           Xar* gradus;
           Xar* filii;
@@ -571,7 +592,9 @@ exemplum_validare (
     {
         g = *(StmlNodus**)xar_obtinere(gradus, i);
         si (   !effugia_sana(g, "initus", NIHIL)
-            || !effugia_sana(g, "textus", &assertiones))
+            || !effugia_sana(g, "textus", &assertiones)
+            || !effugia_sana(g, "responsum", &assertiones)
+            || !effugia_sana(g, "titulus", &assertiones))
         {
             imprimere("  vitium '%s' gradus %d: effugium malum\n",
                 literae(exemplum, "titulus"), (integer)(i + I));
@@ -737,19 +760,92 @@ fictus_modus (
     redde FALSUM;
 }
 
-/* nucleus verus: aemulator (A1) */
+interior chorda
+fictus_responsa (
+     vacuum* t,
+    Piscina* p)
+{
+    (vacuum)t;
+    redde chorda_ex_literis("", p);
+}
+
+interior i32
+fictus_tituli (
+    vacuum* t)
+{
+    (vacuum)t;
+    redde ZEPHYRUM;
+}
+
+interior chorda
+fictus_titulus (
+     vacuum* t,
+    Piscina* p)
+{
+    (vacuum)t;
+    redde chorda_ex_literis("", p);
+}
+
+/* nucleus verus: aemulator cum effectibus captis (B2) */
+nomen structura {
+     Aemulator* a;
+            i8  responsa[DXII];
+           i32  responsa_mensura;
+           i32  tituli;
+            i8  titulus[CCLVI];
+           i32  titulus_mensura;
+} Verus;
+
+interior vacuum
+verus_responsum (
+             vacuum* datum,
+        constans i8* octeti,
+                i32  n)
+{
+    Verus* v;
+      i32  k;
+
+    v = (Verus*)datum;
+    per (k = ZEPHYRUM; k < n && v->responsa_mensura < DXII; k++)
+    {
+        v->responsa[v->responsa_mensura++] = octeti[k];
+    }
+}
+
+interior vacuum
+verus_titulum_nuntiare (
+     vacuum* datum,
+     chorda  titulus)
+{
+    Verus* v;
+
+    v = (Verus*)datum;
+    v->tituli++;
+    v->titulus_mensura = titulus.mensura < CCLVI ? titulus.mensura
+                                                 : CCLVI;
+    memcpy(v->titulus, titulus.datum,
+        (memoriae_index)v->titulus_mensura);
+}
+
 interior vacuum*
 verus_creare (
     Piscina* p,
         i32  latitudo,
         i32  altitudo)
 {
-    AemulatorConfiguratio cfg;
+    AemulatorConfiguratio  cfg;
+                    Verus* v;
 
+    v = (Verus*)piscina_allocare(p, magnitudo(Verus));
+    memset(v, ZEPHYRUM, magnitudo(Verus));
     aemulator_configuratio_initiare(&cfg);
-    cfg.latitudo = latitudo;
-    cfg.altitudo = altitudo;
-    redde aemulator_creare(p, &cfg);
+    cfg.latitudo            = latitudo;
+    cfg.altitudo            = altitudo;
+    cfg.effectus.datum      = v;
+    cfg.effectus.responsum  = verus_responsum;
+    cfg.effectus.titulus    = verus_titulum_nuntiare;
+    v->a                    = aemulator_creare(p, &cfg);
+    redde v->a ? (vacuum*)v : NIHIL;
 }
 
 interior vacuum
@@ -758,7 +854,7 @@ verus_scribere (
         constans i8* octeti,
                 i32  n)
 {
-    aemulator_scribere((Aemulator*)t, octeti, n);
+    aemulator_scribere(((Verus*)t)->a, octeti, n);
 }
 
 interior chorda
@@ -766,7 +862,7 @@ verus_textus (
      vacuum* t,
     Piscina* p)
 {
-    redde aemulator_textum_effundere((Aemulator*)t, p);
+    redde aemulator_textum_effundere(((Verus*)t)->a, p);
 }
 
 interior vacuum
@@ -779,7 +875,7 @@ verus_cursor (
 {
     AemulatorCursor c;
 
-    c           = aemulator_cursor((Aemulator*)t);
+    c           = aemulator_cursor(((Verus*)t)->a);
     *x          = (s32)c.x;
     *y          = (s32)c.y;
     *pendens    = c.pendens;
@@ -803,7 +899,7 @@ verus_cellula (
     ChordaAedificator* a;
 
     si (   x < ZEPHYRUM || y < ZEPHYRUM
-        || !aemulator_cellula((Aemulator*)t, (i32)x, (i32)y, &c))
+        || !aemulator_cellula(((Verus*)t)->a, (i32)x, (i32)y, &c))
     {
         redde FALSUM;
     }
@@ -819,14 +915,54 @@ interior b32
 verus_altera (
     vacuum* t)
 {
-    redde aemulator_alterum((Aemulator*)t);
+    redde aemulator_alterum(((Verus*)t)->a);
 }
 
 interior i32
 verus_ignota (
     vacuum* t)
 {
-    redde aemulator_ignota((Aemulator*)t);
+    redde aemulator_ignota(((Verus*)t)->a);
+}
+
+interior chorda
+verus_responsa (
+     vacuum* t,
+    Piscina* p)
+{
+     Verus* v;
+    chorda  c;
+
+    v          = (Verus*)t;
+    c.mensura  = v->responsa_mensura;
+    c.datum    = (i8*)piscina_allocare(p,
+        (memoriae_index)(c.mensura + I));
+    memcpy(c.datum, v->responsa, (memoriae_index)c.mensura);
+    v->responsa_mensura = ZEPHYRUM;
+    redde c;
+}
+
+interior i32
+verus_tituli (
+    vacuum* t)
+{
+    redde ((Verus*)t)->tituli;
+}
+
+interior chorda
+verus_titulus (
+     vacuum* t,
+    Piscina* p)
+{
+     Verus* v;
+    chorda  c;
+
+    v          = (Verus*)t;
+    c.mensura  = v->titulus_mensura;
+    c.datum    = (i8*)piscina_allocare(p,
+        (memoriae_index)(c.mensura + I));
+    memcpy(c.datum, v->titulus, (memoriae_index)c.mensura);
+    redde c;
 }
 
 interior b32
@@ -835,7 +971,7 @@ verus_modus (
        i32  numerus,
        b32  privatus)
 {
-    redde aemulator_modus((Aemulator*)t, numerus, privatus);
+    redde aemulator_modus(((Verus*)t)->a, numerus, privatus);
 }
 
 interior StmlNodus*
@@ -930,6 +1066,9 @@ s32 principale (vacuum)
     fictus.altera    = fictus_altera;
     fictus.ignota    = fictus_ignota;
     fictus.modus     = fictus_modus;
+    fictus.responsa  = fictus_responsa;
+    fictus.tituli    = fictus_tituli;
+    fictus.titulus   = fictus_titulus;
     e                = exemplum_titulo(exempla, "basic print");
     CREDO_NON_NIHIL(e);
     si (e)
@@ -974,6 +1113,9 @@ s32 principale (vacuum)
     verus.altera    = verus_altera;
     verus.ignota    = verus_ignota;
     verus.modus     = verus_modus;
+    verus.responsa  = verus_responsa;
+    verus.tituli    = verus_tituli;
+    verus.titulus   = verus_titulus;
     viridia         = ZEPHYRUM;
     debita          = ZEPHYRUM;
     absentia        = ZEPHYRUM;

@@ -669,4 +669,69 @@
     </gradus>
   </casus>
 
+  <!-- ==== B2: responsa et effectus ==== -->
+
+  <casus titulus="device status: operating status" fons="stream_terminal.zig:5373" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[5n" responsum="\x1B[0n"/>
+  </casus>
+
+  <casus titulus="device status: cursor position" fons="stream_terminal.zig:5398" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[6n" responsum="\x1B[1;1R"/>
+    <gradus initus="\x1B[5;10H\x1B[6n" responsum="\x1B[5;10R"/>
+  </casus>
+
+  <casus titulus="device attributes: primary DA" fons="stream_terminal.zig:5614" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[c" responsum="\x1B[?62;22c"/>
+  </casus>
+
+  <casus titulus="device attributes: secondary DA" fons="stream_terminal.zig:5642" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[>c" responsum="\x1B[>1;0;0c"/>
+  </casus>
+
+  <casus titulus="device attributes: tertiary DA" fons="stream_terminal.zig:5670" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[=c" responsum="\x1BP!|00000000\x1B\\"/>
+  </casus>
+
+  <casus titulus="window_title effect is called" fons="stream_terminal.zig:4859" latitudo="80" altitudo="24">
+    <gradus initus="\x1B]2;Hello World\x1B\\" titulus="Hello World" tituli="1"/>
+  </casus>
+
+  <!-- titulus vacuus effectum tamen vocat (Ghostty: getTitle null) -->
+  <casus titulus="window_title effect with empty title" fons="stream_terminal.zig:4903" latitudo="80" altitudo="24">
+    <gradus initus="\x1B]2;\x1B\\" tituli="1"/>
+  </casus>
+
+  <!-- XTVERSION: identitas configurata (decisio VIII); parametrus
+       absens = 0 -->
+  <casus titulus="xtversion reports the configured identity" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>0q" responsum="\x1BP>|aemulator 0.1\x1B\\"/>
+    <gradus initus="\x1B[>q" responsum="\x1BP>|aemulator 0.1\x1B\\"/>
+  </casus>
+
+  <!-- OSC 0 per BEL terminatum; textus sequens ut solet -->
+  <casus titulus="osc 0 sets the title, bel terminated" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B]0;fenestra\x07ab" titulus="fenestra" tituli="1" textus="ab" ignota="0"/>
+  </casus>
+
+  <!-- OSC 1 (titulus iconis) consumitur: nec effectus, nec ignotum,
+       nec responsum (DSR in eodem gradu solum respondet) -->
+  <casus titulus="osc 1 is consumed silently" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B]1;icon\x07\x1B[5n" responsum="\x1B[0n" tituli="0" ignota="0"/>
+  </casus>
+
+  <!-- OSC quem non tractamus numeratur -->
+  <casus titulus="unknown osc is counted" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B]777;notify;x\x07" tituli="0" ignota="1"/>
+  </casus>
+
+  <!-- DA1 cum parametro non nullo: nullum responsum, ignotum -->
+  <casus titulus="primary da with nonzero parameter is unknown" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[1c\x1B[5n" responsum="\x1B[0n" ignota="1"/>
+  </casus>
+
+  <!-- CPR cum involutione pendente: columna ultima, non sequens -->
+  <casus titulus="cursor report during pending wrap" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[1;10HA\x1B[6n" pendens="verum" responsum="\x1B[1;10R"/>
+  </casus>
+
 </vectores>

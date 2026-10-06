@@ -281,6 +281,20 @@ Later phases (re-planned after A's RELATIO):
     XTVERSION, OSC 0/2 title through the `titulus` effect, replies
     through `responsum`. Identity strings join
     `AemulatorConfiguratio` (an API addition - Fran approves).
+    B2 as built: `titulus`/`versio` in the configuration (default
+    "aemulator" / `AEMULATOR_VERSIO` "0.1", copied at creation,
+    NIHIL = default). DA1 `ESC[?62;22c` (a non-zero parameter =
+    unknown), DA2 `ESC[>1;0;0c` (likewise), DA3 `DCS !|00000000 ST`,
+    DSR 5 `ESC[0n`, DSR 6 CPR 1-based (during pending wrap: the last
+    column), other DSR = unknown; XTVERSION `DCS >|titulus versio
+    ST`; OSC 0/2 -> `titulus` effect (empty too), OSC 1 consumed
+    silently, other OSC counted; an OSC body longer than the lexer's
+    2048 bytes is dropped whole and counted (Ghostty drops it too;
+    named divergence: Ghostty keeps titles up to 2047 bytes, we up to
+    2046 because our limit includes the `2;`). No callbacks = silent.
+    Replies and titles allocate nothing. 140 vectors (122 Ghostty: 7
+    new); the replayer asserts `responsum`, `tituli`, `titulus`.
+    15 plants, all caught.
   - **B3 - the PTY pons** (module 008, its own library): header for
     Fran's approval, `pty_posix.c` (system headers only there),
     `pty_memoriae.c` (scripted child for headless host tests); real-

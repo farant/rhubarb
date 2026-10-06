@@ -27,7 +27,11 @@ Leges chartae:
   CUP et motus relativi, ED/EL (fundus calami servatur), SGR cum stilis
   internatis (collectio), DECTCEM, 1049, 2026, DECSC/DECRC; B1: regio
   volutionis (DECSTBM) et IND RI NEL SU SD in ea, IL DL ICH DCH ECH,
-  sistae tabulationis (HT HTS TBC CHT CBT), LNM. Series ceterae
+  sistae tabulationis (HT HTS TBC CHT CBT), LNM; B2: responsa (DA1,
+  DA2, DA3, DSR 5, CPR, XTVERSION) per effectum `responsum`, tituli
+  OSC 0/2 per effectum `titulus`; `AemulatorConfiguratio` campos
+  `titulus` et `versio` accipit (identitas XTVERSION;
+  `AEMULATOR_VERSIO`). Series ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex
