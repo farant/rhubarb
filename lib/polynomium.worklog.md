@@ -140,3 +140,41 @@ result. Acted on:
 - Plants, all red: copy-out skipped in multiply; quotient digit not copied
   out; no rollback in multiply / divide (red only via the new apex);
   span off-by-one; non-ASCII letter accepted. 155 checks; sanitizers clean.
+
+## 2026-10-06 — review II: officinae only when a sum can leave s64
+
+Reviewer: no lifetime bug — a POISONED piscina (reficere overwrites
+released bytes with 0xA5) plus ASan/UBSan, 10.5k fuzz cases, injected
+officina-creation failures; magnus_transcribe correct. Acted on:
+
+- **A1, term-count threshold paid time for nothing** with small
+  coefficients (8×8: 0.42 → 0.80 µs) — the knot-polynomial regime, where
+  the magnus fast path allocates nothing anyway. First fix: officinae
+  only if some |c| ≥ 2^31. Its plant ("scan omitted") then showed the
+  criterion was WRONG, not just slow: coefficients < 2^31 keep each
+  product in s64, but a sum of two products (~2^62) already overflows
+  and allocates in the caller. Final criterion (`_officinis_utendum`):
+  na·nb ≥ 64 AND NOT (all |c| < 2^31 and max|a|·max|b|·min(na,nb) <
+  2^63) — i.e. officinae unless no partial sum can leave s64. Test:
+  40 terms of ±(2^31−1) squared — products fast, sums overflow; caller
+  bounded and apex > 0 (the |c|-only criterion is red here).
+- The coefficient-at-a-time loop itself cost 16–35% on small inputs, so
+  the caller path keeps the original (i, j) loop; only the officinae
+  path computes coefficient by coefficient. Re-benchmarked (reviewer's
+  bench_thr, µs, before officinae → now): multiply 8×8 0.42 → 0.45,
+  16×16 2.06 → 2.12, 64×64 41.1 → 44.2; divide 8×8 0.51 → 0.57, 64×64
+  26.4 → 30.8 (per-step bookkeeping and the scan; not split further);
+  100-digit 32×32 multiply 164 → 162, divide 179 → 168.
+- Divide's interior-zero guard now runs only when officinae are in use.
+- C2/C3: few big terms (7×9, 100 digits) and many small terms (40×40,
+  4 digits) → apex 0 for multiply and divide; a text that CONTAINS the
+  byte 0xE9 refused with letter 0xE9.
+- "Scan omitted" (officinae whenever na·nb ≥ 64) still survives and must:
+  where the criterion says no officinae, nothing allocates, so using
+  them is invisible except in time. Equivalent by construction.
+- Open, asked Fran: C1, a piscina poisoning mode as a gate — two
+  lifetime mutants (rollback of the wrong scratch in divide's
+  zero-digit branch; rollback before copy-out in multiply) die only on
+  a poisoned build, since reficere does not free memory.
+- 170 checks; ASan/UBSan clean; also clean on the reviewer's poisoned
+  piscina.

@@ -3437,6 +3437,10 @@ s32 principale (vacuum)
         CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_literis("3_",
             piscina),
             '_', piscina, &r));
+        /* textus litteram ipsam continens: sine regula ASCII
+         * acciperetur */
+        CREDO_FALSUM (polynomium_ex_chorda(chorda_ex_literis("3\xE9^2",
+            piscina), (character)0xE9, piscina, &r));
         CREDO_VERUM (polynomium_aequalis(r, _custos()));
         CREDO_VERUM (polynomium_ex_chorda(chorda_ex_literis("q^2 - Z",
             piscina), 'q', piscina, &r) == FALSUM);
@@ -3477,6 +3481,57 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans officinas (memoria vocantis) ---\n");
         sors_seminare(&s, 2026ULL, IV);
+        /* officinae solum si opera multa ET coefficiens magnus:
+         * pauci termini magni et multi termini parvi in piscina
+         * vocantis (apex nullus) */
+        a = _polynomium_magnum(&s, VII, C, ZEPHYRUM);
+        b = _polynomium_magnum(&s, IX, C, ZEPHYRUM);
+        CREDO_VERUM (polynomium_multiplica(a, b, piscina, &productum));
+        CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
+            ZEPHYRUM);
+        CREDO_VERUM (polynomium_divide_exacte(productum, b, piscina,
+            &q));
+        CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
+            ZEPHYRUM);
+        a = _polynomium_magnum(&s, XL, IV, ZEPHYRUM);
+        b = _polynomium_magnum(&s, XL, IV, ZEPHYRUM);
+        CREDO_VERUM (polynomium_multiplica(a, b, piscina, &productum));
+        CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
+            ZEPHYRUM);
+        CREDO_VERUM (polynomium_divide_exacte(productum, b, piscina,
+            &q));
+        CREDO_VERUM (polynomium_aequalis(_c(q), a));
+        CREDO_AEQUALIS_I32 ((i32)polynomium_apex_officinarum(),
+            ZEPHYRUM);
+        /* coefficientes 2^31 - 1: producta in via celeri, sed summa
+         * duorum s64 exundat - officinae necessariae */
+        {
+             Magnus  c[XL];
+            Piscina* vocans_parvum;
+                i32  k;
+
+            per (k = ZEPHYRUM; k < XL; k++)
+            {
+                c[k] = magnus_ex_s64(k % II
+                    == ZEPHYRUM ? (s64)0x7FFFFFFFL
+                    : -(s64)0x7FFFFFFEL);
+            }
+            CREDO_VERUM (polynomium_ex_coefficientibus(c, XL, -III,
+                piscina, &a));
+            vocans_parvum =
+                piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            CREDO_VERUM (polynomium_multiplica(a, a, vocans_parvum,
+                &productum));
+            CREDO_MAIOR_I32 ((i32)polynomium_apex_officinarum(),
+                ZEPHYRUM);
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans_parvum),
+                XVI * M);
+            CREDO_VERUM (polynomium_aequalis(_c(productum),
+                _productum_per_terminos(a, a)));
+            piscina_destruere(vocans_parvum);
+        }
+
         a = _polynomium_magnum(&s, L, C, ZEPHYRUM);
         b = _polynomium_magnum(&s, L, C, III);
 

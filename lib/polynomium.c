@@ -12,10 +12,16 @@
 
 /* Officinae: piscinae temporariae pro summis partialibus (recensio
  * polynomium-I, A3: multiplicatio CC x CC terminorum C digitorum VI.VI
- * MB in piscina vocantis relinquebat pro XLII KB effectus). Pro
- * operationibus parvis (na * nb < LXIV) piscina vocantis manet:
- * creatio piscinarum plus constat quam servat. */
+ * MB in piscina vocantis relinquebat pro XLII KB effectus). Solum si
+ * na * nb >= LXIV ET summa partialis s64 relinquere potest (vide
+ * _officinis_utendum): aliter via celeris magni nihil allocat et
+ * officinae tempus solum constant (recensio polynomium-II: 8 x 8
+ * coefficientium parvorum 0.42 -> 0.80 us - regimen ipsum polynomiorum
+ * nodorum). Divisio: residua per quotientem crescere possunt; criterium
+ * idem in dividendo et divisore, casus rarus residuorum magnorum ex
+ * operandis parvis in piscina vocantis manet (ut olim). */
 #define POLYNOMIUM_LIMES_OFFICINARUM LXIV
+#define POLYNOMIUM_S64_SUMMUS ((s64)0x7FFFFFFFFFFFFFFFLL)
 
 
 /* ==================================================
@@ -188,6 +194,70 @@ _officinae_claudere (
         piscina_destruere(o->piscinae[ZEPHYRUM]);
         piscina_destruere(o->piscinae[I]);
     }
+}
+
+/* maximus |c| si omnes |c| < 2^31 (producta in via celeri magni);
+ * -1 si coefficiens aliquis maior */
+interior s64
+_modulus_maximus (
+    Polynomium p)
+{
+    s64 maximus = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < p.numerus; k++)
+    {
+        s64 valor;
+
+        si (!magnus_ad_s64(p.coefficientes[k], &valor))
+        {
+            redde -I;
+        }
+        si (valor < ZEPHYRUM)
+        {
+            valor = -valor;
+        }
+        si (valor > (s64)0x7FFFFFFFL)
+        {
+            redde -I;
+        }
+        si (valor > maximus)
+        {
+            maximus = valor;
+        }
+    }
+    redde maximus;
+}
+
+/* officinae nisi nulla summa partialis s64 relinquere potest:
+ * max|a| max|b| min(na, nb) < 2^63 (producta < 2^62, summae minus quam
+ * min(na, nb) productorum). Coefficientes < 2^31 soli non sufficiunt:
+ * summa duorum productorum ~2^62 iam exundat et allocat (recensio
+ * polynomium-II, planta "scrutatio omissa"). */
+interior b32
+_officinis_utendum (
+    Polynomium a,
+    Polynomium b,
+           s64 opera)
+{
+    s64 maximus_a;
+    s64 maximus_b;
+    s64 minimus_terminorum;
+
+    si (opera < (s64)POLYNOMIUM_LIMES_OFFICINARUM)
+    {
+        redde FALSUM;
+    }
+    maximus_a = _modulus_maximus(a);
+    maximus_b = _modulus_maximus(b);
+    si (maximus_a < ZEPHYRUM || maximus_b < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    minimus_terminorum = a.numerus < b.numerus ? (s64)a.numerus
+        : (s64)b.numerus;
+    redde maximus_a * maximus_b > POLYNOMIUM_S64_SUMMUS
+        / minimus_terminorum;
 }
 
 /* valor ex officina in piscinam vocantis servandus */
@@ -734,25 +804,46 @@ polynomium_multiplica (
     numerus  = a.numerus + b.numerus - I;
     alveus   = _alveus(piscina, numerus);
 
-    /* coefficiens quisque totus in officina computatur, solus valor
-     * finalis in piscinam vocantis transcribitur */
-    _officinae_aperire(&officinae, piscina, (s64)a.numerus
-        * (s64)b.numerus >= (s64)POLYNOMIUM_LIMES_OFFICINARUM);
-    per (m = ZEPHYRUM; m < numerus; m++)
+    _officinae_aperire(&officinae, piscina, _officinis_utendum(a, b,
+        (s64)a.numerus * (s64)b.numerus));
+    si (!officinae.propriae)
     {
-         Piscina* officina  = officinae.piscinae[ZEPHYRUM];
-          Magnus  summa     = magnus_ex_s64(ZEPHYRUM);
-             i32  i        = m + I > b.numerus ? m + I - b.numerus
-                 : ZEPHYRUM;
+        /* via vocantis: ansa ordinaria (i, j) sine sumptu officinarum -
+         * regimen polynomiorum nodorum */
+        i32 i;
+        i32 j;
 
-        per (; i < a.numerus && i <= m; i++)
+        per (i = ZEPHYRUM; i < a.numerus; i++)
         {
-            summa = magnus_adde(summa, magnus_multiplica(
-                a.coefficientes[i], b.coefficientes[m - i], officina),
-                officina);
+            per (j = ZEPHYRUM; j < b.numerus; j++)
+            {
+                alveus[i + j] = magnus_adde(alveus[i + j],
+                    magnus_multiplica(a.coefficientes[i],
+                        b.coefficientes[j], piscina), piscina);
+            }
         }
-        alveus[m] = _servare(&officinae, summa, piscina);
-        _officina_reficere(&officinae, ZEPHYRUM);
+    }
+    alioquin
+    {
+        /* coefficiens quisque totus in officina computatur, solus valor
+         * finalis in piscinam vocantis transcribitur */
+        per (m = ZEPHYRUM; m < numerus; m++)
+        {
+             Piscina* officina  = officinae.piscinae[ZEPHYRUM];
+              Magnus  summa     = magnus_ex_s64(ZEPHYRUM);
+                 i32  i         = m + I > b.numerus ? m + I - b.numerus
+                     : ZEPHYRUM;
+
+            per (; i < a.numerus && i <= m; i++)
+            {
+                summa = magnus_adde(summa, magnus_multiplica(
+                    a.coefficientes[i], b.coefficientes[m - i],
+                    officina),
+                    officina);
+            }
+            alveus[m] = magnus_transcribe(summa, piscina);
+            _officina_reficere(&officinae, ZEPHYRUM);
+        }
     }
     _officinae_claudere(&officinae);
     *exitus = _ex_alveo(alveus, numerus, (s32)imus);
@@ -863,8 +954,8 @@ polynomium_divide_exacte (
     {
         residua[k] = a.coefficientes[k];
     }
-    _officinae_aperire(&officinae, piscina, (s64)numerus
-        * (s64)b.numerus >= (s64)POLYNOMIUM_LIMES_OFFICINARUM);
+    _officinae_aperire(&officinae, piscina, _officinis_utendum(a, b,
+        (s64)numerus * (s64)b.numerus));
     per (k = numerus; k-- > ZEPHYRUM;)
     {
          Piscina* illic = officinae.piscinae[I - hic];
@@ -888,7 +979,8 @@ polynomium_divide_exacte (
         {
             /* coefficiens B internus nullus: x - 0 = x ipse, fortasse
              * in officina reficienda - transcribe in illic */
-            si (magnus_signum(b.coefficientes[j]) == ZEPHYRUM)
+            si (   officinae.propriae
+                && magnus_signum(b.coefficientes[j]) == ZEPHYRUM)
             {
                 residua[k + j] = _servare(&officinae, residua[k + j],
                     illic);
