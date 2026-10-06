@@ -188,3 +188,13 @@ values in s64 without allocation. Test: the copy equals the original, its
 limbs are NOT the original's (checked directly — reading after
 destroying the source piscina would pass without a sanitizer), and it
 survives the source piscina's destruction. 1256 checks.
+
+## 2026-10-06 — `magnus_residuum_parvum(a, n)`
+
+a mod n (Euclidean, 0 ≤ r < n) for word-size moduli 1 ≤ n < 2^32, by
+Horner over the limbs from the top — (r << 32) | limb < 2^64 since r < n
+— with no allocation; inline values handle S64_MIN via −(x + 1) + 1. Made
+public for `congruentia` (reducing big integers mod p is the inner loop
+of multimodular algorithms; limbs are private to magnus). Tested through
+congruentia's vectors (40 big values up to 60 digits, signs) and its
+CRT round trips; a plant dropping the sign adjustment is red there.

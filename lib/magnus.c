@@ -1051,6 +1051,44 @@ _transcribere (
     redde copia;
 }
 
+i32
+magnus_residuum_parvum (
+    Magnus a,
+       i32 n)
+{
+    i64 residuum = ZEPHYRUM;
+    i32 k;
+
+    si (n == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    si (a.membra == NIHIL)
+    {
+        /* |parvus| sine exundatione etiam pro S64 imo */
+        i64 modulus = a.parvus < ZEPHYRUM
+            ? (i64)(-(a.parvus + I)) + (i64)I : (i64)a.parvus;
+
+        residuum = modulus % (i64)n;
+        si (a.parvus < ZEPHYRUM && residuum != ZEPHYRUM)
+        {
+            residuum = (i64)n - residuum;
+        }
+        redde (i32)residuum;
+    }
+    /* Horner super membra ab summo: residuum < n < 2^32, ergo
+     * (residuum << 32) | membrum < 2^64 */
+    per (k = a.longitudo; k-- > ZEPHYRUM;)
+    {
+        residuum = ((residuum << XXXII) | (i64)a.membra[k]) % (i64)n;
+    }
+    si (a.signum < ZEPHYRUM && residuum != ZEPHYRUM)
+    {
+        residuum = (i64)n - residuum;
+    }
+    redde (i32)residuum;
+}
+
 Magnus
 magnus_transcribe (
       Magnus  a,

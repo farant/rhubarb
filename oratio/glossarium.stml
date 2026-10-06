@@ -279,6 +279,11 @@
     <forma textus="monomiorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
     <forma textus="monomiis" casus="ablativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="symmetricus" lingua="latina" classis="adiectivum" nota="Neolatina (Gk. symmetros): symmetricus, representans symmetricus residui (congruentia); WORDS caret">
+    <forma textus="symmetricus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="symmetrica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="symmetricum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
   <vocabulum lemma="unimodularis" lingua="latina" classis="adiectivum" nota="Neolatina: unimodularis, matrix determinantis +-1 (matrix: certificata Hermite et Smith); WORDS caret">
     <forma textus="unimodularis" casus="nominativus" numerus="singularis"/>
     <forma textus="unimodulares" casus="nominativus" numerus="pluralis"/>

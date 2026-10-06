@@ -149,6 +149,13 @@ magnus_potentia (
          i32  exponens,
      Piscina* piscina);
 
+/* a mod n (Euclideum: 0 <= r < n) pro moduli verbi (1 <= n < 2^32):
+ * per membra, sine piscina; n == 0 -> 0 */
+i32
+magnus_residuum_parvum (
+    Magnus a,
+       i32 n);
+
 /* maximus divisor communis, semper >= 0; (0, 0) -> 0 */
 Magnus
 magnus_divisor_communis (
