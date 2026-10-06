@@ -563,3 +563,112 @@ function-like macro (formator worklog).
 plus a tab bar; now there are two apps worth switching between. A
 short interview first.
 
+## C2 — RELATIO: insula rami - one store, branches, the vicus host (2026-10-06)
+
+**Done: one store owned by a host, every app on a BRANCH of it, and
+`vicus` - the host that mounts scriba and pictor as tabs, in both
+targets.** Plan `project-specs/insula-rami-plan.md`, from Fran's idea at
+the schirmata interview: widgets "like a curried branch of the parent
+state owner / wrapper that's invoking them", redux-style. Thirteen
+commits, e4b0626a (plan) to a1d3af4c (app). Fran's look: "seems like
+everything is working well!"
+
+**What exists:**
+- **`InsulaRamus`** (R1, be8d56a9): repo + a child of the root by
+  element kind and id (empty = the root). Reads, the gate
+  (`mutare_ramum` - the mutator gets the branch's node inside the copied
+  root), owners and canons per branch; the root canon judges a view
+  without delegated branches. A root branch IS the old API.
+  Convention found: a mountable app's canon names its root after the
+  app kind (`canon_iudicare` checks the element name).
+- **historia namespaces** (R2, 5d492349): one volume, many documents -
+  `s/` on act kinds, markers and checkpoint keys; "" = the old bytes
+  (H0 golden).
+- **pictor and scriba on a branch** (R3 639ca942, R4 245e82f1): the
+  branch travels in their contexts; no framework signature changed.
+- **Undo position persisted** (R5, da7ff7cd; Fran: as an act) -
+  `<cursor ad>`, honoured on reopen unless something followed it.
+- **Montatio** (T1a, 86f139f3): `pictor_montare` / `scriba_montare` -
+  canons, initial element, owners, in that order; standalone = a mount
+  on the root branch.
+- **`vicus`** (T1b dfc2a047 - name: Fran): host store with `<vicus>`
+  roots, ONE volume, the tab list + active tab durable in plagula
+  `vicus/tabulae`; kinds registered by main (mount size + mount fn +
+  describe fn), so vicus knows no app. Unknown kinds kept, not mounted,
+  with a cause.
+- **Registries follow the active tab** (T2a, ce4cccf2): one action and
+  one figura registry handed once to the dispatcher and the glue,
+  emptied and refilled on switch - only the active app is ever in them,
+  so two scribas never collide.
+- **Composition and surfaces** (T2b, 4bbf1cfb): root, an 8 px tab bar,
+  the active app's tree shifted under it (fines are parent-relative -
+  painting and hit-testing follow); the host writes each mount's
+  surface (window minus bar) into its branch.
+- **The active branch lives in Motus** (T3a, e01fcf04): `Motus.ramus`
+  (zeroed = root); focus and the pan/zoom flush go through it, so focus
+  is per tab for free. Switching flushes the leaving gesture (or refuses
+  the switch), flushes pan/zoom into the LEAVING branch, drops capture.
+- **Switching** (T3b, 9d1d3ae5): Ctrl-A, then n / p / 1-9, Ctrl-A again
+  = previous tab (Fran), Esc or anything else cancels, the bar tinted
+  while pending (Fran); tab clicks. The app never sees the prefix.
+- **The app** (T4, a1d3af4c): `lib/vicus_applicatio`,
+  `apps/vicus/vicus{,_terminalis}.sh`; a window session (type, switch,
+  draw, switch back, type, Ctrl-A Ctrl-A, click a tab) replays through
+  the terminal path to the same stores, seals, acts and active tab.
+
+**What the work found, by weight:**
+1. **"The root" meant the app; in a host it means someone else.** Three
+   framework writes went to the store root - the dispatcher's focus,
+   Motus's pan/zoom flush, the window surface. The fix put the active
+   branch in **Motus**, not the dispatcher: Motus already carried the
+   per-app gesture slot, and every action receives `Motus*`, so the
+   host's switch action can move it. The surface stayed at the root -
+   it IS the host's - and the host writes each branch's.
+2. **Writer names and zeroed fields are load-bearing.** The apps' owners
+   give `superficies_*` to writer "dispensator", so the host writes
+   under that name (a plant with another name: silently refused). Any
+   context holding an `InsulaRamus` must be zeroed - unset means root;
+   the aedilis gate caught stack garbage in R3, and leaving the new
+   Motus field unzeroed is caught by the EXISTING probatio_motus.
+3. **The cross-target replay proof is the test that finds things.** T4's
+   found a bug outside vicus: manus built mouse presses with NO button,
+   and the terminal encoder (correctly) drops those - pictor's own proof
+   built its events by hand and never saw it. The symptom appeared one
+   app away: with ONE volume the act sequence is global, so the lost
+   stroke shifted scriba's cursor by one.
+4. **A routing strategy has no context, so it reads the TREE.** The
+   pending prefix is marked on the root's titulus by `vicus_componere`;
+   the strategy and the bar figura read the mark. Store -> tree ->
+   routing stays pure and replays.
+5. **Plants that survived until the tests got sharper:** componere
+   ignoring the branch (R4, until the tree was inspected); adding a tab
+   without saving (T1b, masked by a later write - reopen at once); "the
+   active title is inverted" (T2b, trivially true - the bar's own
+   background supplied the pixels; now zero text pixels); no tab hit
+   zones (T4, the session clicked no tab - it now ends with one).
+   Pattern: check an effect where and when it happens, not after a
+   later step that also produces it.
+6. **A claim the red test corrected:** I said the idle pan/zoom flush
+   retried on every tick after any stroke. A finished stroke clears the
+   dirty flag itself; the real case is a pause MID-drag. The test holds
+   a stroke across a pulse; the plan says what was wrong.
+
+**Measured** (the plan's open item, T5): every write copies the whole
+store through text. 2 / 3 / 6 / 11 tabs: 13.6 / 11.8 / 19.5 / 52.7 us
+per write, store 488 -> 958 B - cost grows faster than the store
+(likely every branch's canon judged on every write). Far under a frame;
+parked: terminal-planning/parks/010-insula-write-cost-per-branch.md.
+
+**v1 limits, named:** no prefix timeout (the legacy schirmata had one;
+the tint shows the mode); background tabs are frozen - no events, no
+frames; no add/close/rename UI (`vicus_tabulam_addere` is API only);
+tabs past the window width are clipped, not scrolled; the vicus root
+canon still declares `focus`/`focus_acervus`, used only before a
+dispatcher is bound; an unknown kind's tab is kept but only named on
+stderr; the legacy `schirmata` library is untouched (the new host is
+`vicus` - Fran).
+
+**Owed:** the `pythonica` gate in main after merging secunda (red here
+by construction). **Next:** Fran's call - merge secunda into main, or
+the next widget.
+

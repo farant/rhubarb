@@ -55,6 +55,9 @@ probationes/pictor/specimina/*.differentia.png
 /scriba.volumen
 /scriba.volumen-shm
 /scriba.volumen-wal
+/vicus.volumen
+/vicus.volumen-shm
+/vicus.volumen-wal
 
 # Python dev-time (pythonica)
 __pycache__/

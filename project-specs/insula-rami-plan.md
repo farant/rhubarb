@@ -299,19 +299,27 @@ lib/manus_ludus.worklog.md. Four plants (one, "no tab zones",
 SURVIVED the first proof - the session clicked no tab; the proof now
 does).
 
-**T5 - RELATIO.**
+**T5 - RELATIO.** Done 2026-10-06: ludus_tessera/phase-log.md C2.
+Measured the write cost the AUDIENDA asked for (parked:
+terminal-planning/parks/010). Fran's look at T4: all good.
 
 ## AUDIENDA
 
 - Whether `canon_iudicare` on a non-root element checks that element's
   name against the canon's radix (needed for per-branch canons).
+  **Answered (R1/R3):** it does - hence the convention that a mountable
+  app's canon names its root after the app kind.
 - How the dispatcher, focus and `pingere` would take per-mount
-  registries (T2 reads before designing).
+  registries (T2 reads before designing). **Answered (T2a):** they
+  don't - the host owns one registry of each, refilled on switch.
 - The gesture slot is one per dispatcher: swap on switch (T3) vs one
-  per mount.
+  per mount. **Answered (T3a):** swap on switch, after flushing.
 - Every write copies the whole store through text: cost with N tabs
-  (measure at T4).
+  (measure at T4). **Measured (T5):** 13.6 us at 2 tabs, 52.7 us at 11
+  - grows faster than the store; parked (terminal-planning/parks/010).
 - **Decided (Fran):** persist the undo position as an act (R5).
 - Framework writes still go to the ROOT: Motus's pan/zoom flush
   (`motus_effundere`), the dispatcher's `focus` and `superficies_*`.
   In a host they must reach the active mount's branch (T2/T3).
+  **Resolved:** `Motus.ramus` carries the active branch (T3a); the
+  surface stays the host's and the host writes each branch's (T2b).
