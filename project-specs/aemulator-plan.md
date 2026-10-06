@@ -228,15 +228,38 @@ pen (BCE) and skipped blank cells; fixed in tessera (pen reset before
 plants: seven caught; "harness skips the style check" survives by
 construction (P2 shows that check is what catches SGR bugs).
 
-**A4 - RELATIO phase A.**
+**A4 - RELATIO phase A.** Done 2026-10-06: `lib/aemulator.phase-log.md`
+(A4). Phase A: 43 vectors, the loopback, 46 plants; a tessera bug found
+and fixed on the way.
 
 Later phases (re-planned after A's RELATIO):
 
-- **B - shell-sufficient + PTY.** Scroll regions (DECSTBM),
-  IL/DL/ICH/DCH/ECH, tabs, save/restore cursor, IND/RI, DA1/DSR/CPR
-  answers through `responsum`, OSC 0/2 title; the PTY pons
-  (`pty_posix` + `pty_memoriae`, module 008); esctest fetched (pinned)
-  and its relevant subset run.
+- **B - shell-sufficient + PTY** (re-planned after A4):
+  - **B0 - interview** (the PTY seam): `openpty` (BSD, `<util.h>`) vs
+    `posix_openpt`/`grantpt`/`unlockpt` (POSIX, the Linux door);
+    share an argv/exec/error-pipe helper with `processus` or stay
+    independent; child reaping (`waitpid(WNOHANG)` polling as
+    processus does, or a self-pipe); the host loop (poll in the frame
+    first - module 008 says measure before a reader thread).
+  - **B1 - the shell surface in the core** (vectors first, Ghostty's
+    convertible tests): DECSTBM scroll regions and everything that
+    scrolls inside them (LF/IND at the region bottom, RI at the top,
+    NEL, SU/SD), IL/DL, ICH/DCH/ECH, tab stops (HTS, TBC, CHT, CBT),
+    LNM. ESC 7/8 already exist (A2).
+  - **B2 - answers and effects:** DA1/DA2, DSR 5 and CPR (6),
+    XTVERSION, OSC 0/2 title through the `titulus` effect, replies
+    through `responsum`. Identity strings join
+    `AemulatorConfiguratio` (an API addition - Fran approves).
+  - **B3 - the PTY pons** (module 008, its own library): header for
+    Fran's approval, `pty_posix.c` (system headers only there),
+    `pty_memoriae.c` (scripted child for headless host tests); real-
+    child tests outside the default glob if they need a tty (printf
+    arrives, `stty size` = what we set, resize, exit code, no zombie,
+    exec failure distinct).
+  - **B4 - a headless host and esctest:** core + PTY + a loop; fetch
+    esctest (network: say when, pin the commit) and run its subset
+    for B's surface with our core answering its queries.
+  - **B5 - RELATIO.**
 - **C - scrollback.** The fixed page pool (Decision 4), viewport
   scrolling, byte limit, eviction; reflow stays deferred (Decision 7).
 - **D - full-screen v0.** Origin and insert modes, DEC special
