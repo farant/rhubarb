@@ -141,3 +141,17 @@ emptied (A10, RSS 1.3 → 168 MB unnoticed) — now bounded through the apex
 (< 16 KB; the mutant reads 8.8 MB / 21.9 MB). Not covered by the suite: the
 fallback when a scratch piscina cannot be created (reviewer verified it by
 fault injection). 1240 checks.
+
+## 2026-10-05 — review III: scratch piscinae only when BOTH operands are big
+
+The reviewer measured a time jump around 40 digits in fractio: gcd(big, 1)
+— constant in fractio (every integer has denominator 1) — opened the two
+scratch piscinae because ONE operand was over the threshold. Now
+`_per_alternas` requires both operands to exceed `MAGNUS_LIMES_ALTERNARUM`.
+Why the caller's memory stays bounded when one is small: after the first
+Euclid step the remainder is smaller than the small operand, so from the
+second step on everything is small (the witness variant's first quotient
+can be big, but it is one value, not a growth per step). Test: gcd(big,
+1001) and the Bézout gcd(−7, big) give correct results with
+`magnus_apex_alternarum() == 0`; with the old `||` both apex checks are
+red. 1245 checks.

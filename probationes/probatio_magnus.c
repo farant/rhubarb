@@ -816,6 +816,19 @@ s32 principale (vacuum)
         (vacuum)magnus_divisor_communis(f[MCC], f[CM], piscina);
         CREDO_VERUM (magnus_aequalis(g, f[CC]));
 
+        /* operandus unus parvus (recensio III): via vocantis, apex
+         * nullus, effectus rectus */
+        g = magnus_divisor_communis(f[X * M], _ex("1001"), piscina);
+        CREDO_AEQUALIS_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
+        CREDO_VERUM (magnus_aequalis(g, magnus_divisor_communis(
+            magnus_ex_s64(MI), f[X * M], piscina)));
+        g = magnus_divisor_communis_testatus(magnus_ex_s64(-VII), f[M],
+            piscina, &u, &w);
+        CREDO_AEQUALIS_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
+        CREDO_VERUM (magnus_aequalis(g, magnus_adde(
+            magnus_multiplica(u, magnus_ex_s64(-VII), piscina),
+            magnus_multiplica(w, f[M], piscina), piscina)));
+
         /* operandi pauci membrorum: via vocantis, apex nullus */
         (vacuum)magnus_divisor_communis(f[LX], f[LIX], piscina);
         CREDO_AEQUALIS_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);

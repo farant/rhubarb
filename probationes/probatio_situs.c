@@ -5031,6 +5031,161 @@ _plus (
     redde r;
 }
 
+interior Punctum
+_multiplex (
+    Punctum v,
+    Fractio k)
+{
+    Punctum r;
+
+    r.x = fractio_multiplica(v.x, k, piscina);
+    r.y = fractio_multiplica(v.y, k, piscina);
+    r.z = fractio_multiplica(v.z, k, piscina);
+    redde r;
+}
+
+/* u x w nullum (parallela aut alterum nullum) */
+interior b32
+_crux_nulla (
+    Punctum u,
+    Punctum w)
+{
+    redde fractio_aequalis(fractio_multiplica(u.y, w.z, piscina),
+            fractio_multiplica(u.z, w.y, piscina))
+        && fractio_aequalis(fractio_multiplica(u.z, w.x, piscina),
+            fractio_multiplica(u.x, w.z, piscina))
+        && fractio_aequalis(fractio_multiplica(u.x, w.y, piscina),
+            fractio_multiplica(u.y, w.x, piscina));
+}
+
+/* factor fortuitus in -4..4 (dimidia inclusa) */
+interior Fractio
+_factor_fortuitus (
+    Sors* s)
+{
+    Fractio k = fractio_ex_s64(ZEPHYRUM);
+
+    (vacuum)fractio_ex_s64_s64(sors_inter(s, -IV, IV), sors_inter(s, I,
+        II), piscina, &k);
+    redde k;
+}
+
+/* Vicini contra praedicata generalia: segmentum alterum a vertice
+ * communi b ad b + epsilon w contractum verticem non iam continet,
+ * ergo praedicatum generale idem nominare debet (epsilon = 1/1000 minor
+ * quam omnis longitudo in hac reticula). Casus degeneres (superpositio,
+ * coplanaritas, parallelismus in proiectione) constructi, quia puncta
+ * fortuita eos raro faciunt. */
+interior b32
+_vicinos_probare (
+    Sors* s)
+{
+           Punctum a   = _fortuitum(s);
+           Punctum b   = _fortuitum(s);
+           Punctum c   = _fortuitum(s);
+           Punctum t2  = _fortuitum(s);
+           Punctum v        = situs_punctum(sors_inter(s, -III, III),
+                                  sors_inter(s, -III, III),
+                                  sors_inter(s,
+                                  -III, III));
+           Punctum u;
+           Punctum w;
+           Punctum x;
+           Fractio epsilon  = fractio_ex_s64(ZEPHYRUM);
+               s32 superius;
+               s32 signum_transitus;
+    SitusContactus r;
+
+    (vacuum)fractio_ex_s64_s64(I, M, piscina, &epsilon);
+    u = _plus(a, _nega(b));
+
+    /* segmenta: c in recta ab-b saepe */
+    si (sors_intra(s, III) == ZEPHYRUM)
+    {
+        c = _plus(b, _multiplex(u, _factor_fortuitus(s)));
+    }
+    w = _plus(c, _nega(b));
+    r = situs_segmenta_vicina(a, b, c, piscina);
+    si (situs_segmenta_vicina(c, b, a, piscina) != r)
+    {
+        redde FALSUM;
+    }
+    si (situs_puncta_aequalia(a, b) || situs_puncta_aequalia(c, b))
+    {
+        si (r != SITUS_TANGUNT)
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (r != situs_segmenta(a, b, _plus(b, _multiplex(w,
+                 epsilon)), c, piscina))
+    {
+        redde FALSUM;
+    }
+
+    /* triangulum [b, a, t2] et segmentum [b, x]: x coplanare saepe */
+    x = c;
+    si (sors_intra(s, II) == ZEPHYRUM)
+    {
+        x = _plus(b, _plus(_multiplex(u, _factor_fortuitus(s)),
+            _multiplex(
+            _plus(t2, _nega(b)), _factor_fortuitus(s))));
+    }
+    w = _plus(x, _nega(b));
+    r = situs_triangulum_vicinum(b, a, t2, x, piscina);
+    si (situs_triangulum_vicinum(b, t2, a, x, piscina) != r)
+    {
+        redde FALSUM;
+    }
+    si (   situs_puncta_aequalia(x, b) || _crux_nulla(u, _plus(t2,
+        _nega(b))))
+    {
+        si (r != SITUS_TANGUNT)
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (r != situs_triangulum_segmentum(b, a, t2, _plus(b,
+                 _multiplex(w, epsilon)), x, piscina))
+    {
+        redde FALSUM;
+    }
+
+    /* transitus: c = b + k u + m v (proiectiones parallelae) saepe */
+    si (situs_puncta_aequalia(v, situs_punctum(ZEPHYRUM, ZEPHYRUM,
+        ZEPHYRUM)))
+    {
+        v.z = fractio_ex_s64(I);
+    }
+    si (sors_intra(s, III) == ZEPHYRUM)
+    {
+        c = _plus(b, _plus(_multiplex(u, _factor_fortuitus(s)),
+            _multiplex(v,
+            _factor_fortuitus(s))));
+    }
+    w = _plus(c, _nega(b));
+    r = situs_transitus_vicinus(a, b, c, v, piscina);
+    si (   situs_transitus_vicinus(c, b, a, v, piscina)        != r
+        || situs_transitus_vicinus(a, b, c, _nega(v), piscina) != r)
+    {
+        redde FALSUM;
+    }
+    si (_crux_nulla(u, v) || _crux_nulla(w, v))
+    {
+        si (r != SITUS_TANGUNT)
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (r != situs_transitus(a, b, _plus(b, _multiplex(w,
+                 epsilon)), c, v, piscina, &superius,
+                 &signum_transitus))
+    {
+        redde FALSUM;
+    }
+    redde r != SITUS_SECANT;
+}
+
 /* symmetriae et contractus memoriae unius casus */
 interior b32
 _casum_probare (
@@ -5267,6 +5422,117 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * VICINI MANU FACTI et lacunae a recensione III monstratae
+     * ================================================== */
+
+    {
+        Punctum o       = situs_punctum(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+        Punctum axis_x  = situs_punctum(IV, ZEPHYRUM, ZEPHYRUM);
+        Punctum axis_y  = situs_punctum(ZEPHYRUM, IV, ZEPHYRUM);
+        Punctum axis_z  = situs_punctum(ZEPHYRUM, ZEPHYRUM, I);
+
+        imprimere("\n--- Probans vicinos manu factos ---\n");
+        /* segmenta vicina: continuatio recta, reflexio, angulus rectus,
+         * segmentum nullum, a == c */
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta_vicina(
+            situs_punctum(-V, ZEPHYRUM, ZEPHYRUM), o, axis_x, piscina),
+            (s32)SITUS_DISIUNCTA);
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta_vicina(
+            situs_punctum(V, ZEPHYRUM, ZEPHYRUM), o, axis_x, piscina),
+            (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta_vicina(axis_x, o,
+            axis_y,
+            piscina), (s32)SITUS_DISIUNCTA);
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta_vicina(o, o, axis_x,
+            piscina), (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta_vicina(axis_x, o,
+            axis_x,
+            piscina), (s32)SITUS_TANGUNT);
+        /* praedicatum generale verticem communem semper tangit */
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta(axis_x, o, o, axis_y,
+            piscina),
+            (s32)SITUS_TANGUNT);
+
+        /* triangulum (0,0,0) (4,0,0) (0,4,0) et segmentum ab o */
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            axis_y,
+            situs_punctum(I, I, I), piscina), (s32)SITUS_DISIUNCTA);
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            axis_y,
+            situs_punctum(I, I, ZEPHYRUM), piscina),
+            (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            axis_y,
+            situs_punctum(ZEPHYRUM, IX, ZEPHYRUM), piscina),
+            (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            axis_y,
+            situs_punctum(-I, -I, ZEPHYRUM), piscina),
+            (s32)SITUS_DISIUNCTA);
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            axis_y,
+            situs_punctum(II, ZEPHYRUM, ZEPHYRUM), piscina),
+            (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            axis_y,
+            situs_punctum(I, -I, ZEPHYRUM), piscina),
+            (s32)SITUS_DISIUNCTA);
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            situs_punctum(VIII, ZEPHYRUM, ZEPHYRUM), axis_z, piscina),
+            (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_triangulum_vicinum(o, axis_x,
+            axis_y, o,
+            piscina), (s32)SITUS_TANGUNT);
+
+        /* transitus vicinus, spectator ex +z */
+        CREDO_AEQUALIS_S32 ((s32)situs_transitus_vicinus(
+            situs_punctum(-I, ZEPHYRUM, ZEPHYRUM), o, situs_punctum(I,
+            ZEPHYRUM, V), axis_z, piscina), (s32)SITUS_DISIUNCTA);
+        CREDO_AEQUALIS_S32 ((s32)situs_transitus_vicinus(
+            situs_punctum(I, ZEPHYRUM, ZEPHYRUM), o, situs_punctum(II,
+            ZEPHYRUM, III), axis_z, piscina), (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_transitus_vicinus(axis_x, o,
+            axis_y, axis_z,
+            piscina), (s32)SITUS_DISIUNCTA);
+        CREDO_AEQUALIS_S32 ((s32)situs_transitus_vicinus(axis_z, o,
+            axis_x, axis_z,
+            piscina), (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_transitus_vicinus(axis_x, o,
+            axis_y, o,
+            piscina), (s32)SITUS_TANGUNT);
+
+        /* orientatio plana: signum ipsum (non solum symmetriae) */
+        CREDO_AEQUALIS_S32 (situs_orientatio_plana(situs_punctum_plani(
+            ZEPHYRUM, ZEPHYRUM), situs_punctum_plani(I, ZEPHYRUM),
+            situs_punctum_plani(ZEPHYRUM, I), piscina), I);
+        CREDO_AEQUALIS_S32 (situs_orientatio_plana(situs_punctum_plani(
+            ZEPHYRUM, ZEPHYRUM), situs_punctum_plani(ZEPHYRUM, I),
+            situs_punctum_plani(I, ZEPHYRUM), piscina), -I);
+        CREDO_AEQUALIS_S32 (situs_orientatio_plana(situs_punctum_plani(
+            ZEPHYRUM, ZEPHYRUM), situs_punctum_plani(I, I),
+            situs_punctum_plani(III, III), piscina), ZEPHYRUM);
+
+        /* puncta aequalia: singulae coordinatae, z inclusa */
+        CREDO_VERUM (situs_puncta_aequalia(situs_punctum(I, II, III),
+            situs_punctum(I, II, III)));
+        CREDO_FALSUM (situs_puncta_aequalia(situs_punctum(I, II, III),
+            situs_punctum(I, II, IV)));
+        CREDO_FALSUM (situs_puncta_aequalia(situs_punctum(I, II, III),
+            situs_punctum(I, V, III)));
+        CREDO_FALSUM (situs_puncta_aequalia(situs_punctum(I, II, III),
+            situs_punctum(V, II, III)));
+
+        /* segmenta nulla: idem punctum tangit, diversa disiuncta */
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta(axis_x, axis_x, axis_x,
+            axis_x,
+            piscina), (s32)SITUS_TANGUNT);
+        CREDO_AEQUALIS_S32 ((s32)situs_segmenta(axis_x, axis_x, axis_y,
+            axis_y,
+            piscina), (s32)SITUS_DISIUNCTA);
+    }
+
+
+    /* ==================================================
      * CONTRACTUS MEMORIAE cum coordinatis MAGNIS
      *
      * Coordinatae parvae via celeri magni nihil allocant: probatio
@@ -5316,6 +5582,9 @@ s32 principale (vacuum)
         (vacuum)situs_triangulum_segmentum(a, b, q, d, v, piscina);
         (vacuum)situs_transitus(a, b, q, d, v, piscina, &superius,
             &signum_transitus);
+        (vacuum)situs_segmenta_vicina(a, b, q, piscina);
+        (vacuum)situs_triangulum_vicinum(a, b, q, d, piscina);
+        (vacuum)situs_transitus_vicinus(a, b, q, v, piscina);
         CREDO_VERUM (piscina_summa_usus(piscina) == usus);
         (vacuum)situs_volumen_sexies(a, b, q, d, piscina);
         CREDO_VERUM (piscina_summa_usus(piscina) > usus);
@@ -5449,6 +5718,34 @@ s32 principale (vacuum)
         per (k = ZEPHYRUM; k < MM; k++)
         {
             si (!_casum_probare(&s) && bene)
+            {
+                bene          = FALSUM;
+                casus_primus  = k;
+            }
+        }
+        si (!bene)
+        {
+            imprimere("  casus primus fractus: %u\n", casus_primus);
+        }
+        CREDO_VERUM (bene);
+    }
+
+
+    /* ==================================================
+     * VICINI contra praedicata generalia
+     * ================================================== */
+
+    {
+        Sors s;
+         i32 k;
+         b32 bene          = VERUM;
+         i32 casus_primus  = 0xFFFFFFFFU;
+
+        imprimere("\n--- Probans vicinos (MM casus) ---\n");
+        sors_seminare(&s, 2026ULL, III);
+        per (k = ZEPHYRUM; k < MM; k++)
+        {
+            si (!_vicinos_probare(&s) && bene)
             {
                 bene          = FALSUM;
                 casus_primus  = k;

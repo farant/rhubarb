@@ -13,10 +13,21 @@
  * non crescit.
  * Puncta ipsa in memoria vocantis manent.
  *
- * USUS:
- *   Punctum a = situs_punctum(0, 0, 0);  ...
- *   si (situs_triangulum_segmentum(a, c, b, p, q, piscina)
- *           != SITUS_DISIUNCTA) refutare motum;
+ * VICINI: segmenta polygoni contigua (vertice communi) per praedicata
+ * generalia semper TANGUNT (vertex ipse contactus est). Pro eis
+ * praedicata *_vicin* quaerunt num ALIUD punctum commune sit:
+ * DISIUNCTA = solum vertex communis, TANGUNT = superpositio aut
+ * degeneratio. Numquam SECANT.
+ *
+ * USUS (motus trianguli AB -> AC + CB in polygono ... Z A B W ...):
+ *   segmentum alienum [p,q]:
+ *     si (situs_triangulum_segmentum(a, b, c, p, q, piscina)
+ *             != SITUS_DISIUNCTA) refutare motum;
+ *   segmenta contigua [Z,A] et [B,W]:
+ *     si (   situs_triangulum_vicinum(a, b, c, z, piscina)
+ *             != SITUS_DISIUNCTA
+ *         || situs_triangulum_vicinum(b, c, a, w, piscina)
+ *             != SITUS_DISIUNCTA) refutare motum;
  *
  * Vide lib/situs.worklog.md.
  */
@@ -131,7 +142,7 @@ situs_segmenta (
  * vertice, extremo segmenti, aut coplanaritas cum contactu (triangulum
  * degener - collineare - semper TANGUNT aut DISIUNCTA). Motus trianguli
  * (AB -> AC + CB) licitus est sse DISIUNCTA pro omni segmento
- * alieno. */
+ * alieno; contigua per situs_triangulum_vicinum. */
 SitusContactus
 situs_triangulum_segmentum (
      Punctum  t0,
@@ -165,5 +176,42 @@ situs_transitus (
      Piscina* piscina,
          s32* superius,
          s32* signum);
+
+
+/* ==================================================
+ * Vicini: vertice communi
+ * ================================================== */
+
+/* [a,b] et [b,c]: TANGUNT sse collinearia eadem directione ab b
+ * (superpositio) aut segmentum nullum */
+SitusContactus
+situs_segmenta_vicina (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Piscina* piscina);
+
+/* segmentum [t0,x] et triangulum clausum [t0,t1,t2]: TANGUNT sse
+ * x - t0 in plano trianguli et in angulo ad t0 (margines inclusi),
+ * aut x == t0, aut triangulum degener. Pro aliis verticibus ordinem
+ * rota. */
+SitusContactus
+situs_triangulum_vicinum (
+     Punctum  t0,
+     Punctum  t1,
+     Punctum  t2,
+     Punctum  x,
+     Piscina* piscina);
+
+/* proiectiones [a,b] et [b,c] secundum v: TANGUNT sse proiectiones
+ * eadem directione ab b superponuntur, aliqua in punctum proiicitur,
+ * aut v nullus. Transitum non habent: DISIUNCTA aut TANGUNT. */
+SitusContactus
+situs_transitus_vicinus (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Punctum  v,
+     Piscina* piscina);
 
 #endif /* SITUS_H */

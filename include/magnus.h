@@ -165,8 +165,9 @@ magnus_divisor_communis_testatus (
 
 /* maximus usus (octeti) piscinae internae alternae in ultimo divisore
  * communi magnorum operandorum (Euclides in piscinis alternis); 0 si
- * operandi pauci membrorum erant. Computator sumptus deterministicus:
- * idem in omni machina, ergo probationibus asseribilis. */
+ * operandus aliquis pauci membrorum erat. Computator sumptus
+ * deterministicus: idem in omni machina, ergo probationibus
+ * asseribilis. */
 memoriae_index
 magnus_apex_alternarum (
     vacuum);

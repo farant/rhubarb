@@ -942,8 +942,12 @@ _per_alternas (
     Magnus a,
     Magnus b)
 {
+    /* AMBO magni: si unus parvus est, gradus primus (aut secundus)
+     * omnia parva facit, ergo Euclides in piscina vocantis finitus
+     * manet (recensio III: mdc(magnus, 1) in fractione piscinas
+     * alternas sine causa aperiebat - saltus temporis ad XL digitos) */
     redde (a.membra != NIHIL && a.longitudo > MAGNUS_LIMES_ALTERNARUM)
-        || (b.membra != NIHIL && b.longitudo > MAGNUS_LIMES_ALTERNARUM);
+        && (b.membra != NIHIL && b.longitudo > MAGNUS_LIMES_ALTERNARUM);
 }
 
 interior vacuum
@@ -1049,8 +1053,8 @@ magnus_divisor_communis (
             Magnus y = magnus_absolutum(b, piscina);
 
     _apex_alternarum = ZEPHYRUM;
-    /* operandi pauci membrorum: in piscina vocantis (vide
-     * MAGNUS_LIMES_ALTERNARUM) */
+    /* operandus pauci membrorum: in piscina vocantis (vide
+     * _per_alternas) */
     si (!_per_alternas(a, b) || !_alternae_aperire(&al))
     {
         dum (magnus_signum(y) != ZEPHYRUM)
@@ -1095,8 +1099,8 @@ magnus_divisor_communis_testatus (
             Magnus t0 = _parvus(ZEPHYRUM);
             Magnus t1 = _parvus(I);
 
-    /* operandi pauci membrorum: testes |s| <= |b|, |t| <= |a| parvi
-     * manent, ergo in piscina vocantis */
+    /* operandus pauci membrorum: post gradum primum omnia parva,
+     * testes |s| <= |b|, |t| <= |a|, ergo in piscina vocantis */
     _apex_alternarum  = ZEPHYRUM;
     alternae          = _per_alternas(a, b) && _alternae_aperire(&al);
 

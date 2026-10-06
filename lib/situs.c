@@ -304,6 +304,30 @@ _segmenta (
     }
 }
 
+/* [a,b] et [b,c] vertice b communi: aliud punctum commune sse
+ * collinearia eadem directione ab b (u x w nullum, u . w > 0) */
+interior SitusContactus
+_segmenta_vicina (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Piscina* piscina)
+{
+    Punctum u = _minus(a, b, piscina);
+    Punctum w = _minus(c, b, piscina);
+
+    si (_nullus(u) || _nullus(w))
+    {
+        redde SITUS_TANGUNT;   /* segmentum nullum: punctum ipsum b */
+    }
+    si (   _nullus(_crux(u, w, piscina))
+        && fractio_signum(_scalare(u, w, piscina)) > ZEPHYRUM)
+    {
+        redde SITUS_TANGUNT;
+    }
+    redde SITUS_DISIUNCTA;
+}
+
 /* p coplanare cum triangulo non degeneri: intra triangulum clausum? */
 interior b32
 _in_triangulo (
@@ -407,6 +431,43 @@ _triangulum_segmentum (
         redde SITUS_TANGUNT;
     }
     redde SITUS_SECANT;
+}
+
+/* segmentum [t0,x] et triangulum [t0,t1,t2] vertice t0 communi.
+ * Triangulum convexum t0 continet, ergo aliud punctum commune sse
+ * d = x - t0 coplanaris et in cono clauso {alpha e1 + beta e2: alpha,
+ * beta >= 0}. Pro d = alpha e1 + beta e2: (e1 x d) . n = beta |n|^2 et
+ * (d x e2) . n = alpha |n|^2, ergo signa coefficientes nominant. */
+interior SitusContactus
+_triangulum_vicinum (
+     Punctum  t0,
+     Punctum  t1,
+     Punctum  t2,
+     Punctum  x,
+     Piscina* piscina)
+{
+    Punctum e1        = _minus(t1, t0, piscina);
+    Punctum e2        = _minus(t2, t0, piscina);
+    Punctum d         = _minus(x, t0, piscina);
+    Punctum normalis  = _crux(e1, e2, piscina);
+
+    si (_nullus(d) || _nullus(normalis))
+    {
+        /* segmentum nullum aut triangulum degener */
+        redde SITUS_TANGUNT;
+    }
+    si (fractio_signum(_scalare(normalis, d, piscina)) != ZEPHYRUM)
+    {
+        redde SITUS_DISIUNCTA;   /* planum in t0 solo transit */
+    }
+    si (   fractio_signum(_scalare(_crux(e1, d, piscina), normalis,
+               piscina)) >= ZEPHYRUM
+        && fractio_signum(_scalare(_crux(d, e2, piscina), normalis,
+               piscina)) >= ZEPHYRUM)
+    {
+        redde SITUS_TANGUNT;
+    }
+    redde SITUS_DISIUNCTA;
 }
 
 
@@ -536,6 +597,37 @@ _transitus (
         || (o2 == ZEPHYRUM && _inter_proiectum(a, b, d, v, piscina))
         || (o3 == ZEPHYRUM && _inter_proiectum(c, d, a, v, piscina))
         || (o4 == ZEPHYRUM && _inter_proiectum(c, d, b, v, piscina)))
+    {
+        redde SITUS_TANGUNT;
+    }
+    redde SITUS_DISIUNCTA;
+}
+
+/* proiectiones [a,b] et [b,c] secundum v, vertice b communi: aliud
+ * punctum commune sse aliqua in punctum proiicitur aut proiectiones
+ * parallelae (det[u, w, v] nullum) eadem directione ab b */
+interior SitusContactus
+_transitus_vicinus (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Punctum  v,
+     Piscina* piscina)
+{
+    Punctum u = _minus(a, b, piscina);
+    Punctum w = _minus(c, b, piscina);
+
+    si (   _nullus(v)
+        || fractio_signum(_scalare_proiectum(u, u, v, piscina))
+            == ZEPHYRUM
+        || fractio_signum(_scalare_proiectum(w, w, v, piscina))
+            == ZEPHYRUM)
+    {
+        redde SITUS_TANGUNT;
+    }
+    si (   _signum_triplex(u, w, v, piscina) == ZEPHYRUM
+        && fractio_signum(_scalare_proiectum(u, w, v, piscina))
+            > ZEPHYRUM)
     {
         redde SITUS_TANGUNT;
     }
@@ -688,6 +780,50 @@ situs_transitus (
     PiscinaNotatio nota = piscina_notare(piscina);
     SitusContactus r    = _transitus(a, b, c, d, v, piscina, superius,
         signum);
+
+    piscina_reficere(piscina, nota);
+    redde r;
+}
+
+SitusContactus
+situs_segmenta_vicina (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Piscina* piscina)
+{
+    PiscinaNotatio nota  = piscina_notare(piscina);
+    SitusContactus r     = _segmenta_vicina(a, b, c, piscina);
+
+    piscina_reficere(piscina, nota);
+    redde r;
+}
+
+SitusContactus
+situs_triangulum_vicinum (
+     Punctum  t0,
+     Punctum  t1,
+     Punctum  t2,
+     Punctum  x,
+     Piscina* piscina)
+{
+    PiscinaNotatio nota  = piscina_notare(piscina);
+    SitusContactus r     = _triangulum_vicinum(t0, t1, t2, x, piscina);
+
+    piscina_reficere(piscina, nota);
+    redde r;
+}
+
+SitusContactus
+situs_transitus_vicinus (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Punctum  v,
+     Piscina* piscina)
+{
+    PiscinaNotatio nota  = piscina_notare(piscina);
+    SitusContactus r     = _transitus_vicinus(a, b, c, v, piscina);
 
     piscina_reficere(piscina, nota);
     redde r;
