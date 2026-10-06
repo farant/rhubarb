@@ -267,14 +267,13 @@ s32 principale (vacuum)
         catenae = crusta_effectus_catenae(piscina, intern, radix,
             &causa);
         CREDO_NON_NIHIL (catenae);
+        /* 'fontationes' (retiratum T8) et 'fasciculus' radices non sunt */
         CREDO_AEQUALIS_I32 (catenae ? xar_numerus(catenae) : ZEPHYRUM,
-            II);
-        si (catenae != NIHIL && xar_numerus(catenae) == II)
+            I);
+        si (catenae != NIHIL && xar_numerus(catenae) == I)
         {
             CREDO_VERUM (strcmp(*(character**)xar_obtinere(catenae,
-                ZEPHYRUM), "s/r.sh") == ZEPHYRUM);
-            CREDO_VERUM (strcmp(*(character**)xar_obtinere(catenae, I),
-                "s/q.sh") == ZEPHYRUM);
+                ZEPHYRUM), "s/q.sh") == ZEPHYRUM);
         }
     }
 

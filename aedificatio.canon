@@ -14,7 +14,8 @@
   Fabrica slice 3 (spec 3, 2026-10-03) valores addidit quos canon
   ignorabat usque ad 2026-10-05 (parcum ...9XNXY: VI vitia in
   toml/aedificatio.stml, porta nulla iudicabat): actio 'iudicium',
-  ingressus 'fontationes'/'instrumentum_domus'/'identitas_clang',
+  ingressus 'fontationes' (RETIRATUS effectus T8, 2026-10-05: genus
+  'effectus' eum subsumit)/'instrumentum_domus'/'identitas_clang',
   provenientia 'verdictum'. tools/fabrica_fumus.sh XXXII nunc omnes
   declarationes contra hunc canonem iudicat.
 -->
@@ -136,7 +137,7 @@
       <optio>plagulae</optio>
       <optio>manifesta</optio>
       <optio>radices</optio>
-      <optio>fontationes</optio>
+      
       <optio>instrumentum_domus</optio>
       <optio>identitas_clang</optio>
       <optio>effectus</optio>
@@ -145,8 +146,7 @@
       nota="manifesta: directorium manifestorum aedilis (--manifestum),
             quodque .stml explicatum; radices: configuratio aedilis,
             nomina directoriorum inclusorum OMNIUM sigillata;
-            fontationes: scriptum cuius fontationes (crusta) clavem
-            intrant (spec 3 par. III.2); instrumentum_domus: binarium
+            instrumentum_domus: binarium
             domus per provenientiam sigillatum; identitas_clang: clang
             per identitatem compilatoris (spec 3 par. III.3); effectus:
             scriptum cuius summarium effectuum (crusta/effectus.sh

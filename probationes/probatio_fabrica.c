@@ -1063,14 +1063,13 @@ _sanatio_invenire (
 /* memoriae per cursum, ut sutura vera (bin/fabrica) eas habet */
 /* sutura iudicii ficta (fabrica spec 3 T5b): ambitus portae (paria
  * titulus, valor; NIHIL finit), via ALIA (FIFO), identitas clang,
- * fontationes cursoris */
+ * effectus cursoris */
 hic_manens constans character* _ambitus_ficti[VIII] = {
     NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL
 };
 hic_manens constans character* _via_alia_ficta       = NIHIL;
 hic_manens constans character* _identitas_ficta      = "clang I";
-hic_manens constans character* _fontationes_effusio  = "";
-hic_manens               i32   _fontationes_codex    = ZEPHYRUM;
+
 hic_manens constans character* _effectus_effusio     = "";
 hic_manens constans character* _via_absens_ficta     = NIHIL;
 
@@ -1128,21 +1127,6 @@ _identitatem_fictam_dare (
     (vacuum)causa_out;
     *identitas_out = sigillum_computare(_identitas_ficta,
         strlen(_identitas_ficta));
-    redde VERUM;
-}
-
-interior b32
-_fontationes_fictae (
-                vacuum* datum,
-    constans character* via,
-               Piscina* piscina,
-                chorda* effusio_out,
-                   i32* codex_out)
-{
-    (vacuum)datum;
-    (vacuum)via;
-    *effusio_out  = chorda_ex_literis(_fontationes_effusio, piscina);
-    *codex_out    = _fontationes_codex;
     redde VERUM;
 }
 
@@ -4549,7 +4533,7 @@ s32 principale (vacuum)
         sutura.ambitus = _ambitus_fictum;
         sutura.species = _species_ficta;
         sutura.identitas = _identitatem_fictam_dare;
-        sutura.fontationes = _fontationes_fictae;
+        sutura.effectus = _effectus_ficti;
         sutura.exitus_noti = tabula_dispersa_creare_chorda(piscina, 16);
         (vacuum)tabula_dispersa_inserere(sutura.exitus_noti,
             chorda_ex_literis("build/corpus.lst", piscina), NIHIL);
@@ -4562,17 +4546,14 @@ s32 principale (vacuum)
         _ponere(&discus, "build/sine_domino.txt", "x\n");
         _ponere(&discus, "/home/u/silva.toml", "x = 1\n");
         _ponere(&discus, "tools/v.sh", "v I\n");
-        _fontationes_effusio =
-            "fasciculus\ttools/v.sh\tporta.sh:3\tfontatum\n";
-        _fontationes_codex = ZEPHYRUM;
+        _effectus_effusio = "octeti\ttools/v.sh\n";
         _scriptum_addere(&discus, "porta_sh", VERDICTUM, NIHIL,
             "x: transiit\n", 0, FALSUM);
         actiones_transitus[0] = _actio_scripta(piscina, "porta_x",
             "porta_sh", "porta.sh", VERDICTUM, "verdictum");
         actiones_transitus[0]->genus      = FABRICA_ACTIO_IUDICIUM;
         actiones_transitus[0]->lectiones  = VERUM;
-        _ingressum_addere(actiones_transitus[0], "fontationes",
-            "porta.sh",
+        _ingressum_addere(actiones_transitus[0], "effectus", "porta.sh",
             piscina);
         _ingressum_addere(actiones_transitus[0], "identitas_clang",
             "clang",
@@ -4653,19 +4634,16 @@ s32 principale (vacuum)
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
         _identitas_ficta = "clang I";
-        /* VI. fontatio irresoluta -> IGNOTUM nominatum */
-        _fontationes_effusio =
-            "irresolutum\t\"$X\"\tporta.sh:4\tfontatum\n";
-        _fontationes_codex = I;
+        /* VI. situs irresolutus (effectus) -> IGNOTUM nominatum */
+        _effectus_effusio =
+            "ignotum\tporta.sh:4:1-4:5\tvalor ignotus\n";
         iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
             exitus,
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
-        CREDO_VERUM(_continet(iudicium.causa, "fontatio irresoluta",
+        CREDO_VERUM(_continet(iudicium.causa, "effectus ignotus",
             piscina));
-        _fontationes_effusio =
-            "fasciculus\ttools/v.sh\tporta.sh:3\tfontatum\n";
-        _fontationes_codex = ZEPHYRUM;
+        _effectus_effusio = "octeti\ttools/v.sh\n";
         iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
             exitus,
             VERUM, piscina);

@@ -2,9 +2,9 @@
  * crusta_effectus.h (situs, regulae, limites).
  *
  * Aestimator verborum, ambitus et definitiones ex crusta_fontationes.c
- * TRANSLATI sunt (effectus-plan T3, sectiones notatae); T4
- * fontationes in proiectionem huius summarii vertit et duplicata
- * delet. Nova: situs omnium generum, tabula mandatorum,
+ * TRANSLATI sunt (effectus-plan T3, sectiones notatae); fontationes
+ * T4 proiectio huius summarii factae, T8 retiratae (genus fabricae
+ * 'effectus' eas subsumit). Nova: situs omnium generum, tabula mandatorum,
  * scripta_in_ambitu, emissio STML. */
 
 #include "latina.h"
@@ -4306,7 +4306,7 @@ crusta_effectus_non_tecta (
  * Catenae verdicti (planum T6, A4): radices ex declarationibus fabricae
  * ================================================== */
 
-/* 'ingressus' genere fontationes|effectus in arbore (recursive) */
+/* 'ingressus' genere effectus in arbore (recursive) */
 interior vacuum
 _ingressus_colligere (
               Piscina* piscina,
@@ -4327,8 +4327,7 @@ _ingressus_colligere (
         chorda* v = stml_attributum_capere(nodus, "via");
 
         si (   g != NIHIL && v != NIHIL
-            && (chorda_aequalis_literis(*g, "fontationes")
-                || chorda_aequalis_literis(*g, "effectus")))
+            && chorda_aequalis_literis(*g, "effectus"))
         {
             _nomen_addere(piscina, exitus, chorda_ut_cstr(*v, piscina));
         }

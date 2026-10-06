@@ -393,16 +393,16 @@ value).
 
 ### Task T8: retire `fontationes`, close
 
-- [ ] **Step 1:** grep-free check that no declaration uses
+- [x] **Step 1:** grep-free check that no declaration uses
   `genus="fontationes"` (`bin/fabrica` declarations dump); remove the
   genus, the seam slot, `crusta/fontationes.sh`,
   `crusta/instrumenta/fontationes.c`; keep `crusta_fontationes.{h,c}`
   only if a caller remains (else fold its test into
   `probatio_crusta_effectus`).
-- [ ] **Step 2:** `aedificatio.canon` drops the value; a declaration
+- [x] **Step 2:** `aedificatio.canon` drops the value; a declaration
   using it now fails the canon (plant = the old toml line restored →
   red).
-- [ ] **Step 3:** spec §XII As built; `crusta_effectus.worklog.md`;
+- [x] **Step 3:** spec §XII As built; `crusta_effectus.worklog.md`;
   crusta/CLAUDE.md section; MEMORY; ledger (park closed, slice 2 filed
   as a desideratum under region 'flow analysis' with the
   `ante_scripta.tsv` list and the census's unresolved count). Commit.

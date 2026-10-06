@@ -240,48 +240,6 @@ _identitas (
     redde VERUM;
 }
 
-/* crusta/fontationes.sh <via> (spec 3 par. III.2) */
-interior b32
-_fontationes (
-                vacuum* datum,
-    constans character* via,
-               Piscina* piscina,
-                chorda* effusio_out,
-                   i32* codex_out)
-{
-     constans character* argv[V];
-     constans character* instrumentum;
-      ProcessusResultus  resultus;
-              character  radix[IV * MXXIV];
-
-    (vacuum)datum;
-    /* FABRICA_FONTATIONES: via instrumenti (radices temporariae,
-     * iudicium-fumus); '-radix' = directorium operis - scripta in arbore
-     * IUDICATA resolvuntur, non in arbore instrumenti */
-    instrumentum = getenv("FABRICA_FONTATIONES");
-    si (instrumentum == NIHIL || instrumentum[0] == '\0')
-    {
-        instrumentum = "./crusta/fontationes.sh";
-    }
-    si (getcwd(radix, magnitudo(radix)) == NIHIL)
-    {
-        redde FALSUM;
-    }
-    argv[0]    = instrumentum;
-    argv[I]    = via;
-    argv[II]   = "-radix";
-    argv[III]  = radix;
-    argv[IV]   = NIHIL;
-    resultus   = processus_exsequi(argv, CXX * M, piscina);
-    si (!resultus.successus)
-    {
-        redde FALSUM;
-    }
-    *effusio_out  = resultus.effusio;
-    *codex_out    = (i32)resultus.codex_exitus;
-    redde VERUM;
-}
-
 /* crusta/effectus.sh -clavis <via> (effectus-plan T7) */
 interior b32
 _effectus (
@@ -358,10 +316,10 @@ _suturam_iudicii_parare (
      constans Xar* actiones,
           Piscina* piscina)
 {
-    sutura->ambitus      = _ambitus;
-    sutura->species      = _species;
-    sutura->identitas    = _identitas;
-    sutura->fontationes  = _fontationes;
+    sutura->ambitus    = _ambitus;
+    sutura->species    = _species;
+    sutura->identitas  = _identitas;
+
     sutura->effectus     = _effectus;
     sutura->exitus_noti  = _exitus_notos_colligere(actiones, piscina);
 }

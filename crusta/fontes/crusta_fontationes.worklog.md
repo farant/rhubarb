@@ -62,3 +62,12 @@ Gotchas hit while writing it:
   links lib/ objects from a HAND list without filum. Fixed by adding
   `filum` to that list; the real fix is diagnostica's W0ZBW row (closure
   from aedilis instead of glob + hand list).
+
+## 2026-10-05 - RETIRED (effectus T8)
+
+crusta_fontationes.{h,c}, crusta/fontationes.sh, crusta/instrumenta/
+fontationes.c and probatio_crusta_fontationes.c are deleted. The
+evaluator moved into crusta/fontes/crusta_effectus.c in effectus T3; the
+fabrica genus `effectus` (T7) replaced genus `fontationes`. Idiom test
+ported as crusta/probationes/probatio_crusta_effectus_idiomata.c. This
+worklog stays as history; continue in crusta_effectus.worklog.md.

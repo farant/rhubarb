@@ -547,6 +547,23 @@ zero ignotum); recorded pass judged RECENS. iudicium-fumus: P11 (bash
 read edited), P12 (tested-absent file created), P13 (state file
 edited) all invalidate the pass; audit catches the excused blind read.
 
+**T8 (2026-10-05).** Genus `fontationes` retired: `crusta/fontationes.sh`,
+`crusta/instrumenta/fontationes.c`, `crusta_fontationes.{h,c}` and its
+test deleted (no caller remained after T7); the seam slot,
+`_genus_fontationes`, `FABRICA_FONTATIONES` and the canon value are gone.
+Its idiom test is ported as `probatio_crusta_effectus_idiomata` (same
+script, same fixture tree, 33 assertions on summary sites; plant: the
+`X=1 cmd` rule disabled -> red). Plant (Step 2): toml's old
+`genus="fontationes"` line restored -> `canon_examen` VITIA 1,
+fabrica-fumus XXXII red, and the reader refuses ("genus ingressus
+ignotum 'fontationes'"). Found on the way: the test cursor
+(`tools/cursor_communis.sh`) unioned every `clausurae/*.lst`, so a
+DELETED test's closure kept pulling its (deleted) sources into the build
+- crusta's suite went FRACTA on `crusta_fontationes.c`; closures are now
+cleared before derivation. A fresh clone never sees this; every working
+tree that deletes a test did. Slice 2 (ordering / flow) is filed as a
+desideratum in the ledger region 'flow analysis'.
+
 ## XIII. Plan-time corrections (v2, 2026-10-05)
 
 Found while writing `effectus-plan.md`, from reading

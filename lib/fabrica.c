@@ -103,9 +103,9 @@ fabrica_suturam_parare (
     sutura->species             = NIHIL;
     sutura->exitus_noti         = NIHIL;
     sutura->identitas           = NIHIL;
-    sutura->fontationes         = NIHIL;
-    sutura->effectus            = NIHIL;
-    sutura->audita              = NIHIL;
+
+    sutura->effectus  = NIHIL;
+    sutura->audita    = NIHIL;
 }
 
 
@@ -975,103 +975,6 @@ _identitatem_sigillare (
     redde VERUM;
 }
 
-/* FONTATIONES (spec 3 par. III.2): scripta quae cursor fontat aut
- * exsequitur (crusta/fontationes.sh), contentis sigillata; irresolutum
- * = clavis ignota */
-interior b32
-_fontationes_sigillare (
-       constans FabricaSutura* sutura,
-    constans FabricaIngressus* ingressus,
-                 constans Xar* exclusa,
-                      Piscina* piscina,
-                          Xar* particulae,
-                       chorda* causa_out)
-{
-    chorda effusio;
-       i32 codex;
-       i32 i;
-       i32 initium;
-
-    si (sutura->fontationes == NIHIL)
-    {
-        *causa_out = chorda_ex_literis("sutura sine fontationibus",
-            piscina);
-        redde FALSUM;
-    }
-    si (!sutura->fontationes(sutura->datum,
-            chorda_ut_cstr(ingressus->via, piscina), piscina, &effusio,
-            &codex))
-    {
-        *causa_out = _iungere(piscina, "fontationes currere nequit: ",
-            ingressus->via, "");
-        redde FALSUM;
-    }
-    initium = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < effusio.mensura; i++)
-    {
-        chorda linea;
-        chorda genus;
-        chorda via;
-           s32 t;
-           s32 u;
-
-        si (effusio.datum[i] != '\n')
-        {
-            perge;
-        }
-        linea    = chorda_sectio(effusio, initium, i);
-        initium  = i + I;
-        t = chorda_invenire_index(linea, chorda_ex_literis("\t",
-            piscina));
-        si (t < ZEPHYRUM)
-        {
-            perge;
-        }
-        genus  = chorda_sectio(linea, 0, (i32)t);
-        via    = chorda_sectio(linea, (i32)t + I, linea.mensura);
-        u = chorda_invenire_index(via, chorda_ex_literis("\t",
-            piscina));
-        si (u >= ZEPHYRUM)
-        {
-            via = chorda_sectio(via, 0, (i32)u);
-        }
-        si (chorda_aequalis_literis(genus, "irresolutum"))
-        {
-            *causa_out = _iungere(piscina, "fontatio irresoluta: ",
-                linea,
-                "");
-            redde FALSUM;
-        }
-        si (   chorda_aequalis_literis(genus, "fasciculus")
-            || chorda_aequalis_literis(genus, "externum"))
-        {
-            si (!_particulam_legere(sutura, via, exclusa, piscina,
-                    particulae, causa_out))
-            {
-                redde FALSUM;
-            }
-        }
-        alioquin si (chorda_aequalis_literis(genus, "instrumentum"))
-        {
-            si (!_provenientia_legere(sutura, via, exclusa, piscina,
-                    particulae, causa_out))
-            {
-                redde FALSUM;
-            }
-        }
-    }
-    si (codex != ZEPHYRUM)
-    {
-        character numerus[32];
-
-        sprintf(numerus, "%d", (integer)codex);
-        *causa_out = _iungere(piscina, "fontationes fractae (exitus ",
-            chorda_ex_literis(numerus, piscina), ")");
-        redde FALSUM;
-    }
-    redde VERUM;
-}
-
 interior constans FabricaGenus _genus_identitas_clang = {
     "identitas_clang", _identitatem_sigillare, _nihil_enumerare, NIHIL,
     FALSUM
@@ -1445,10 +1348,6 @@ interior constans FabricaGenus _genus_effectus = {
     "effectus", _effectus_sigillare, _nihil_enumerare, NIHIL, FALSUM
 };
 
-interior constans FabricaGenus _genus_fontationes = {
-    "fontationes", _fontationes_sigillare, _nihil_enumerare, NIHIL,
-        FALSUM
-};
 
 interior constans FabricaGenus* constans _genera[] = {
     &_genus_fasciculus,
@@ -1461,7 +1360,7 @@ interior constans FabricaGenus* constans _genera[] = {
     &_genus_manifesta,
     &_genus_radices,
     &_genus_identitas_clang,
-    &_genus_fontationes,
+
     &_genus_instrumentum_domus,
     &_genus_effectus
 };

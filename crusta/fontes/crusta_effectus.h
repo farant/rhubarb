@@ -7,7 +7,8 @@
  * dialecti 'effectus' (effectus.canon): vocabularium LINGUA NEUTRA,
  * ut silva (C) idem olim emittat.
  *
- * AESTIMATOR idem ac crusta_fontationes (idiomata domus: cd && pwd,
+ * AESTIMATOR olim in crusta_fontationes (retiratae T8). Idiomata
+ * domus: cd && pwd,
  * dirname, basename, readlink -f; $0, BASH_SOURCE; 'local' in
  * functione; definitiones discordes = irresolutum). SITUS (spec par.
  * IV.2): redirectiones; source/.; '[' 'test' '[[ ]]'; globi in
@@ -92,8 +93,8 @@ crusta_effectus_non_tecta (
            Xar* explicata);
 
 /* CATENAE VERDICTI (planum T6; spec A4 - ex declarationibus fabricae
- * derivatae): viae scriptorum quae ingressus 'fontationes' aut
- * 'effectus' alicuius actionis sunt, per fabrica.stml et
+ * derivatae): viae scriptorum quae ingressus 'effectus' alicuius
+ * actionis sunt, per fabrica.stml et
  * aedificatio.stml subsystematum. Xar de character*; vacuum = arbor
  * sine fabrica aut sine catenis; NIHIL = fabrica.stml fracta. */
 Xar*

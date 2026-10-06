@@ -44,7 +44,7 @@ T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 R="$T/r"
 fracta=0
-export FABRICA_FONTATIONES="$RADIX/crusta/fontationes.sh"
+
 export FABRICA_EFFECTUS="$RADIX/crusta/effectus.sh"
 unset FABRICA_THESAURUS FABRICA_LECTIONES FABRICA_AUDITUS
 

@@ -1,7 +1,7 @@
 /* probatio_crusta_effectus.c - summarium effectuum (effectus-plan.md
  * T3; spec par. IV)
  *
- * Arbor ficta sub crusta/build/ (idioma probatio_crusta_fontationes):
+ * Arbor ficta sub crusta/build/ (idioma probatio_crusta_effectus_idiomata):
  * scriptum unum (a/r.sh) classem omnem situum spec par. IV.2 tangit,
  * linea per classem. Quaeque assertio CONTRARIUM quoque fert ubi
  * analysis errare potest: globus citatus non enumeratur; /dev/null et

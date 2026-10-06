@@ -307,3 +307,26 @@ source order).
   wrapper's build check (cursor_instrumentum_struere), the analyzer is
   20 ms. fontationes' wrapper cost the same; target 2 s missed by the
   wrapper, named (spec §XII).
+
+## 2026-10-05 - T8: fontationes retired, slice closed
+
+- No caller of crusta_fontationes remained after T7 (porta_toml on
+  genus effectus), so the whole module went, not just the CLI. Its test
+  was the only place the house idioms (`X=1 cmd`, `cd && pwd`, `${X:-y}`,
+  `source` vs `bash`, the CURSOR script) were pinned as a list; ported to
+  probatio_crusta_effectus_idiomata against summary SITES rather than the
+  old CrustaFontatio rows. The old test found specific irresolute rows
+  ($NESCIO, $q, P=""); the port keeps those AND adds a total (VI), which
+  the old one never pinned.
+- The lintrum catenae fixture kept `genus="fontationes"` as a NEGATIVE
+  case (expect I root, not II): a retired genus must not silently make a
+  chain.
+- Cursor bug: `cursor_fontes_compilare` unions `clausurae/*.lst`, and
+  nothing removed a deleted test's .lst. Symptom: "clang: no such file
+  crusta_fontationes.c / FRACTA". Fix in cursor_clausuras_derivare:
+  `rm -f probatio_*.lst` first (instrumenta closures live in their own
+  dirs). Frigida (fresh clone) cannot catch this class: it is a stale
+  CACHE in a live tree, the mirror of "a test reading a gitignored
+  input".
+- Done-means check (spec §X): all met except toml judge time (2.2-3.0 s,
+  wrapper's build check ~1 s, named in §XIII).
