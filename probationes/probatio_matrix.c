@@ -3302,10 +3302,16 @@ s32 principale (vacuum)
     /* formae normales: primum in filio sub custodia temporis (bug
      * terminationis Smith/Hermite suitam pendere faceret, non
      * frangere - recensio matrix-III), deinde vere */
-    CREDO_NON_PENDET (_formas_omnes_probare(), CXX * M);
-    si (credo_omnia_praeterierunt())
     {
-        _formas_omnes_probare();
+        /* reditus pendet solum ex sententia custodis (non ex fracturis
+         * prioribus, quae formas larvarent - recensio matrix-IV) */
+        memoriae_index fracti_ante = credo_numerus_fracti();
+
+        CREDO_NON_PENDET (_formas_omnes_probare(), CXX * M);
+        si (credo_numerus_fracti() == fracti_ante)
+        {
+            _formas_omnes_probare();
+        }
     }
 
     CREDO_VERUM (lectio_integra);

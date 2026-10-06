@@ -284,3 +284,25 @@ A2 is fixed by A1 — no "small matrices only" caveat needed. 12×12
   reticulum's private piscina never destroyed (a leak only an RSS or
   create/destroy counter could see — documented, not tested).
 - 198 checks; venenum sana.
+
+## 2026-10-06 — review IV (final pass on the Euclid rewrite)
+
+Correct on 6.6k random + 3k fault-injected + 40k tie-heavy cases
+(opposite-sign norm ties ±3, ±7, ±2^63 where `compara_normam`'s absolute
+value allocates) — no hang, no mismatch. Termination argument confirmed:
+strict remainders, swap only on strictly smaller, column operations never
+touch column t, pivot never zero. Growth polynomial: Hermite 60×60 112 ms
+(with U 361 ms, 8 MB peak); Smith with U, V 60×60 307 ms.
+
+- Accepted: Smith certificates still 10–22× the bits of D (V 6464 vs D
+  288 at 60×60 with 1-digit entries; 30×30 with 30-digit entries 30752
+  vs 3040) — roughly linear now, fine at knot sizes; certificate size
+  reduction is part of agenda A8.
+- Fixed: the parent re-ran the normal forms only if NOTHING earlier had
+  failed (`credo_omnia_praeterierunt`), so an unrelated earlier failure
+  masked their results. Now gated on the watchdog's verdict alone (the
+  failure count unchanged across `CREDO_NON_PENDET`). Probe: a planted
+  early failure → the forms still run (199 checks, 1 failed).
+- Memory-only survivors accepted: no compaction inside Hermite's
+  per-column rounds (W4) and after a Smith column swap (W5, a swap
+  allocates nothing).
