@@ -142,6 +142,15 @@
             nota="capita per -I lecta HIC NON apparent: in portis per
                   bin/compilator (liber lectionum) et identitas_clang
                   teguntur (fabrica spec 3 par. III.3)"/>
+  <!-- binarium DOMUS (per viam vocatum: bin/compilator; T7): ordo
+       eius quoque applicatur. Lectiones per librum lectionum
+       (FABRICA_LECTIONES) vestigantur - hic solum '-o' -->
+  <mandatum titulus="compilator" argumenta="nullum"
+            optiones_cum_valore="-o -I -L -l -D -U -include -isystem
+                                 -MF -MT -x"
+            optio_scriptura="-o"
+            nota="bin/compilator (tools/compilator.c): argumenta clang
+                  -c; capita et fontes in libro lectionum"/>
   <mandatum titulus="gcc" argumenta="lectio"
             optiones_cum_valore="-o -I -L -l -D -U -include -isystem
                                  -MF -MT -x"

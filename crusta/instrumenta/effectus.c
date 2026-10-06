@@ -3,6 +3,7 @@
  * Usus:  effectus <scriptum> [-radix DIR] [-tabula PLAGULA]
  *        effectus -catenae [-radix DIR]
  *        effectus -census [-radix DIR] < index   (T6: census.tsv)
+ *        effectus -clavis <scriptum> [-radix DIR]  (T7: clavis)
  *        effectus -lintrum <plagula>... [-radix DIR]   (T6: regulae
  *                 crusta/lintrum/effectus/, erratum -> exitus 1)
  *        effectus -observata <scriptum> <liber> [-radix DIR]
@@ -62,6 +63,34 @@ _attributum (
  * Lintrum effectuum et catenae (planum T6)
  * ================================================== */
 
+interior b32
+_nomen_tenet (
+                   Xar* nomina,
+    constans character* nomen_quaesitum)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(nomina); k++)
+    {
+        si (strcmp(*(character**)xar_obtinere(nomina, k),
+            nomen_quaesitum)
+            == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior s32
+_cstr_comparare (
+    constans vacuum* x,
+    constans vacuum* y)
+{
+    redde (s32)strcmp(*(constans character* constans*)x,
+        *(constans character* constans*)y);
+}
+
 /* contextus: regulae effectus, summaria catenarum - semel per cursum,
  * internamento uno (LEX INTERNAMENTI) */
 nomen structura {
@@ -73,6 +102,19 @@ nomen structura {
                      Xar* catenae;     /* character* */
                      Xar* summaria;  /* StmlNodus*: catenae */
 } Contextus;
+
+interior vacuum
+_nomen_addere_cstr (
+             Contextus* c,
+                   Xar* nomina,
+    constans character* nomen_novum)
+{
+    si (!_nomen_tenet(nomina, nomen_novum))
+    {
+        *(character**)xar_addere(nomina) = chorda_ut_cstr(
+            chorda_ex_literis(nomen_novum, c->piscina), c->piscina);
+    }
+}
 
 interior b32
 _contextum_parare (
@@ -217,7 +259,8 @@ _modus_lintri_quaerere (
     {
         si (   strcmp(argv[i], "-lintrum") == ZEPHYRUM
             || strcmp(argv[i], "-catenae") == ZEPHYRUM
-            || strcmp(argv[i], "-census")  == ZEPHYRUM)
+            || strcmp(argv[i], "-census")  == ZEPHYRUM
+            || strcmp(argv[i], "-clavis")  == ZEPHYRUM)
         {
             redde argv[i];
         }
@@ -472,6 +515,280 @@ _modus_census (
     redde ZEPHYRUM;
 }
 
+/* CLAVIS (planum T7, spec par. VII): lineae quas genus fabricae
+ * 'effectus' sigillat - una per ingressum, ordinatae, unicae:
+ *   octeti <via>         octeti plagulae (absentia quoque)
+ *   provenientia <via>   binarium domus (et custodia aedificatoris)
+ *   probatio <via>       exsistentia et species (absentia quoque)
+ *   nomina <dir> <ex>    nomina directorii exemplari congruentia
+ *   globus <exemplar>    octeti omnium plagularum congruentium
+ *   directorium <dir>    arbor tota (recursio: grep -r)
+ *   ambitus <titulus>    valor variabilis ambitus
+ *   dominus <via>        lectio build/ non scripta in ambitu: exitus
+ *                        actionis declaratae esse debet
+ *   ignotum <sedes> <causa>  situs irresolutus NON excusatus
+ * Excusatio per lintrum ipsum (in_catena VERUM): situs irresolutus
+ * cuius inventum excusatio absorbuit clavem non intrat. Scripturae
+ * clavem non intrant (vestigium). Processus custoditi: provenientia
+ * custodiae sola. Lectiones build/ in ambitu scriptae: octeti TAMEN
+ * (regula soliditatis, spec par. I). */
+interior vacuum
+_lineam_addere (
+             Contextus* c,
+                   Xar* lineae,
+    constans character* genus,
+    constans character* a,
+    constans character* b)
+{
+    character linea[IV * MXXIV];
+
+    si (strlen(genus) + strlen(a) + (b ? strlen(b) : 0) + IV
+            >= magnitudo(linea))
+    {
+        redde;
+    }
+    sprintf(linea, "%s\t%s%s%s", genus, a, b ? "\t" : "", b ? b : "");
+    _nomen_addere_cstr(c, lineae, linea);
+}
+
+interior integer
+_modus_clavis (
+               Contextus* c,
+      constans character* via)
+{
+             StmlNodus* sm;
+                   Xar* summaria;
+                   Xar* lineae;
+                   Xar* plagulae;
+                   Xar* impedita;
+    constans character* causa = NIHIL;
+                   i32  i;
+                   i32  j;
+
+    sm = crusta_effectus_derivare(c->piscina, c->intern, c->radix, via,
+        c->tabula, &causa);
+    si (sm == NIHIL)
+    {
+        fprintf(stderr, "effectus: %s: %s\n", via,
+            causa != NIHIL ? causa : "?");
+        redde II;
+    }
+    summaria = xar_creare(c->piscina, (i32)magnitudo(StmlNodus*));
+    lineae = xar_creare(c->piscina, (i32)magnitudo(character*));
+    plagulae = xar_creare(c->piscina, (i32)magnitudo(character*));
+    impedita = xar_creare(c->piscina, (i32)magnitudo(character*));
+    *(StmlNodus**)xar_addere(summaria) = sm;
+    /* plagulae processuum liberorum: lintrum (in_catena) quae situs
+     * irresoluti NON excusati sunt nominat */
+    per (i = ZEPHYRUM; sm->liberi && i < xar_numerus(sm->liberi); i++)
+    {
+        StmlNodus* pr = *(StmlNodus**)xar_obtinere(sm->liberi, i);
+
+        si (   pr->genus != STML_NODUS_ELEMENTUM
+            || stml_attributum_capere(pr, "custodia") != NIHIL)
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; pr->liberi && j < xar_numerus(pr->liberi);
+             j++)
+        {
+            StmlNodus* s = *(StmlNodus**)xar_obtinere(pr->liberi, j);
+
+            si (s->genus == STML_NODUS_ELEMENTUM)
+            {
+                _nomen_addere_cstr(c, plagulae,
+                    _cella(c->piscina, s, "plagula"));
+            }
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(plagulae); i++)
+    {
+        constans character* pl = *(character**)xar_obtinere(plagulae,
+            i);
+                  character  absoluta[IV * MXXIV];
+                     chorda  fons;
+                        Xar* d;
+
+        si (pl[ZEPHYRUM] == '/')
+        {
+            strcpy(absoluta, pl);
+        }
+        alioquin
+        {
+            sprintf(absoluta, "%s/%s", c->radix, pl);
+        }
+        fons = filum_legere_totum(absoluta, c->piscina);
+        si (fons.datum == NIHIL)
+        {
+            perge;
+        }
+        d = crusta_effectus_diagnostica(c->piscina, pl,
+            (constans character*)fons.datum, (i32)fons.mensura,
+            summaria, VERUM, &c->optiones, &causa);
+        per (j = ZEPHYRUM; d != NIHIL && j < xar_numerus(d); j++)
+        {
+            constans MateriaDiagnosticum* x =
+                (constans MateriaDiagnosticum*)
+                xar_obtinere(d, j);
+                          character clavis[IV * MXXIV];
+
+            si (   x->codex == NIHIL
+                || (strcmp(x->codex, "lint:effectus-irresolutum")
+                    != ZEPHYRUM
+                    && strcmp(x->codex,
+                    "lint:effectus-mandatum-ignotum")
+                       != ZEPHYRUM))
+            {
+                perge;
+            }
+            sprintf(clavis, "%s@%ld", pl, (longus)x->tractus.initium);
+            _nomen_addere_cstr(c, impedita, clavis);
+        }
+    }
+    per (i = ZEPHYRUM; sm->liberi && i < xar_numerus(sm->liberi); i++)
+    {
+                 StmlNodus* pr = *(StmlNodus**)xar_obtinere(sm->liberi,
+                     i);
+        constans character* radix_pr;
+
+        si (pr->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        si (stml_attributum_capere(pr, "custodia") != NIHIL)
+        {
+            _lineam_addere(c, lineae, "provenientia",
+                _cella(c->piscina, pr, "custodia"), NIHIL);
+            perge;
+        }
+        radix_pr = _cella(c->piscina, pr, "radix");
+        si (radix_pr[ZEPHYRUM] != '/')
+        {
+            _lineam_addere(c, lineae, "octeti", radix_pr, NIHIL);
+        }
+        per (j = ZEPHYRUM; pr->liberi && j < xar_numerus(pr->liberi);
+             j++)
+        {
+                     StmlNodus* s = *(StmlNodus**)xar_obtinere(
+                                        pr->liberi, j);
+             constans character* el;
+             constans character* v;
+             constans character* res;
+             constans character* cl;
+             constans character* forma;
+             constans character* pl;
+                      character  clavis[IV * MXXIV];
+
+            si (s->genus != STML_NODUS_ELEMENTUM)
+            {
+                perge;
+            }
+            el     = chorda_ut_cstr(*s->titulus, c->piscina);
+            v      = _cella(c->piscina, s, "via");
+            res    = _cella(c->piscina, s, "resolutio");
+            cl     = _cella(c->piscina, s, "classis");
+            forma  = _cella(c->piscina, s, "forma");
+            pl     = _cella(c->piscina, s, "plagula");
+            sprintf(clavis, "%s@%ld", pl, strtol(_cella(c->piscina, s,
+                "octeti"), NIHIL, X));
+            si (   strcmp(el, "ignotum") == ZEPHYRUM
+                || strcmp(res, "nulla")  == ZEPHYRUM
+                || (strcmp(res, "partialis") == ZEPHYRUM
+                    && strcmp(cl, "build") != ZEPHYRUM))
+            {
+                si (_nomen_tenet(impedita, clavis))
+                {
+                    character sedes[IV * MXXIV];
+
+                    sprintf(sedes, "%s:%s", pl,
+                        _cella(c->piscina, s, "sedes"));
+                    _lineam_addere(c, lineae, "ignotum", sedes,
+                        strcmp(el, "ignotum") == ZEPHYRUM
+                            ? _cella(c->piscina, s, "causa") : v);
+                }
+                perge;   /* excusatum: clavem non intrat */
+            }
+            si (   strcmp(el, "scriptura")  == ZEPHYRUM
+                || strcmp(res, "partialis") == ZEPHYRUM
+                || strcmp(cl, "systema")    == ZEPHYRUM)
+            {
+                perge;   /* vestigium; productum; identitas_clang */
+            }
+            si (strcmp(el, "ambitus_lectio") == ZEPHYRUM)
+            {
+                _lineam_addere(c, lineae, "ambitus",
+                    _cella(c->piscina, s, "titulus"), NIHIL);
+                perge;
+            }
+            si (strcmp(el, "enumeratio") == ZEPHYRUM)
+            {
+                constans character* ex = _cella(c->piscina, s,
+                    "exemplar");
+
+                _lineam_addere(c, lineae, "nomina", v,
+                    strcmp(ex, "-") == ZEPHYRUM ? "*" : ex);
+                perge;
+            }
+            si (strcmp(el, "probatio") == ZEPHYRUM)
+            {
+                _lineam_addere(c, lineae,
+                    strcmp(forma, "globus") == ZEPHYRUM ? "globus"
+                                                        : "probatio",
+                    v, NIHIL);
+                perge;
+            }
+            si (strcmp(el, "exsecutio") == ZEPHYRUM)
+            {
+                si (stml_attributum_capere(s, "custodia") != NIHIL)
+                {
+                    _lineam_addere(c, lineae, "provenientia",
+                        _cella(c->piscina, s, "custodia"), NIHIL);
+                }
+                alioquin si (strcmp(cl, "instrumentum_domus")
+                             == ZEPHYRUM)
+                {
+                    _lineam_addere(c, lineae, "provenientia", v, NIHIL);
+                }
+                alioquin si (strcmp(cl, "arbor") == ZEPHYRUM)
+                {
+                    _lineam_addere(c, lineae, "octeti", v, NIHIL);
+                }
+                perge;   /* build: productum; externa: alibi */
+            }
+            /* lectio, fontatio */
+            si (strcmp(cl, "instrumentum_domus") == ZEPHYRUM)
+            {
+                _lineam_addere(c, lineae, "provenientia", v, NIHIL);
+            }
+            alioquin si (strcmp(forma, "globus") == ZEPHYRUM)
+            {
+                _lineam_addere(c, lineae, "globus", v, NIHIL);
+            }
+            alioquin si (strcmp(forma, "praefixum") == ZEPHYRUM)
+            {
+                _lineam_addere(c, lineae, "directorium", v, NIHIL);
+            }
+            alioquin si (   strcmp(cl, "build") == ZEPHYRUM
+                         && strcmp(_cella(c->piscina, s,
+                                "scripta_in_ambitu"), "verum")
+                                    != ZEPHYRUM)
+            {
+                _lineam_addere(c, lineae, "dominus", v, NIHIL);
+            }
+            alioquin
+            {
+                _lineam_addere(c, lineae, "octeti", v, NIHIL);
+            }
+        }
+    }
+    xar_ordinare(lineae, _cstr_comparare);
+    per (i = ZEPHYRUM; i < xar_numerus(lineae); i++)
+    {
+        imprimere("%s\n", *(character**)xar_obtinere(lineae, i));
+    }
+    redde ZEPHYRUM;
+}
+
 interior integer
 _modus_lintri (
                 integer   argc,
@@ -506,6 +823,28 @@ _modus_lintri (
         fprintf(stderr, "effectus: %s\n", causa != NIHIL ? causa : "?");
         piscina_destruere(c.piscina);
         redde II;
+    }
+    si (strcmp(_modus_lintri_quaerere(argc, argv), "-clavis")
+        == ZEPHYRUM)
+    {
+        integer exitus = II;
+
+        per (i = I; i < argc; i++)
+        {
+            si (   strcmp(argv[i], "-radix")  == ZEPHYRUM
+                || strcmp(argv[i], "-tabula") == ZEPHYRUM)
+            {
+                i++;
+                perge;
+            }
+            si (argv[i][ZEPHYRUM] != '-')
+            {
+                exitus = _modus_clavis(&c, argv[i]);
+                frange;
+            }
+        }
+        piscina_destruere(c.piscina);
+        redde exitus;
     }
     si (strcmp(_modus_lintri_quaerere(argc, argv), "-census")
         == ZEPHYRUM)

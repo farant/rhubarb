@@ -342,12 +342,13 @@ nomen structura {
      * FABRICA_CLANG: octeti eius). FALSUM + causa: ignota. */
     b32 (*identitas)(vacuum* datum, Piscina* piscina,
                      Sigillum* identitas_out, chorda* causa_out);
-    /* fontationes scripti (genus ingressus 'fontationes'):
-     * crusta/fontationes.sh <via> - effusio et codex exitus (0
-     * resoluta, 1 irresolutum, 2 fractum). FALSUM: currere nequit. */
-    b32 (*fontationes)(vacuum* datum, constans character* via,
-                       Piscina* piscina, chorda* effusio_out,
-                       i32* codex_out);
+    /* effectus scripti (genus ingressus 'effectus', effectus-plan T7):
+     * crusta/effectus.sh -clavis <via> - lineae clavis (genus, via,
+     * extra; crusta/instrumenta/effectus.c) et codex exitus (0 sanum).
+     * FALSUM: currere nequit. */
+    b32 (*effectus)(vacuum* datum, constans character* via,
+                    Piscina* piscina, chorda* effusio_out,
+                    i32* codex_out);
     /* AUDITUS TRANSITUS (spec 3 par. XIII): sub sanare, actio iudicium
      * RECENS electa (auditus I = omnes, N = unus ex N) tamen currit;
      * vestigium VETUS hic servatur (titulus -> Xar de FabricaLectio) ut

@@ -34,7 +34,8 @@
   <!-- PORTA toml ut actio (fabrica spec 3 T5c): transitus sub vestigio
        libri lectionum servatur - nihil eorum quae porta legit mutatum =
        transitus idem, sine cursu. Ingressus declarati sunt quae liber
-       non videt: scripta (fontationes cursoris, crusta), silva.py,
+       non videt: effectus scriptorum (crusta/effectus.sh -clavis: quae
+       cursor fontat, legit, probat, enumerat - effectus-plan T7), silva.py,
        binaria quae currit, identitas clang, et artificia duarum actionum
        supra (ordo + domini lectionum build/). Vestigia: quae porta ipsa
        scribit. -->
@@ -50,7 +51,7 @@
     <vestigium via="build/test_logs/toml.log" forma="plagula"/>
     <vestigium via="build/portae/tempora.tsv" forma="plagula" communis="verum"/>
     <ingressus genus="fasciculus" via="pythonica/silva.py"/>
-    <ingressus genus="fontationes" via="toml/compile_probationes.sh"/>
+    <ingressus genus="effectus" via="toml/compile_probationes.sh"/>
     <ingressus genus="instrumentum_domus" via="bin/aedilis"/>
     <ingressus genus="instrumentum_domus" via="bin/compilator"/>
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>

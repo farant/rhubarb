@@ -10,6 +10,14 @@
 
   Mandatum = argv fixum, verbum unum per lineam (captura crudam: nec
   fuga nec quotae). Nomina a Frano approbata 2026-09-29.
+
+  Fabrica slice 3 (spec 3, 2026-10-03) valores addidit quos canon
+  ignorabat usque ad 2026-10-05 (parcum ...9XNXY: VI vitia in
+  toml/aedificatio.stml, porta nulla iudicabat): actio 'iudicium',
+  ingressus 'fontationes' (RETIRATUS effectus T8, 2026-10-05: genus
+  'effectus' eum subsumit)/'instrumentum_domus'/'identitas_clang',
+  provenientia 'verdictum'. tools/fabrica_fumus.sh XXXII nunc omnes
+  declarationes contra hunc canonem iudicat.
 -->
 <canon dialectus="aedificatio" versio="1">
 
@@ -29,7 +37,7 @@
           (materia citata). Nulla lingua expressionum. Fran
           2026-10-02">
     <attributum nomen="titulus" genus="nomen" necessarium="verum"/>
-    <attributum nomen="via" genus="via" necessarium="verum"/>
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
     <attributum nomen="praefixum" genus="textus"/>
     <attributum nomen="suffixum" genus="textus"/>
   </elementum>
@@ -61,6 +69,7 @@
       <optio>generator</optio>
       <optio>formatio</optio>
       <optio>institutio</optio>
+      <optio>iudicium</optio>
     </attributum>
     <attributum nomen="celer" genus="veritas"
       nota="verum: regeneratio tam vilis ut sub iudicio CELERI quoque
@@ -128,11 +137,20 @@
       <optio>plagulae</optio>
       <optio>manifesta</optio>
       <optio>radices</optio>
+      
+      <optio>instrumentum_domus</optio>
+      <optio>identitas_clang</optio>
+      <optio>effectus</optio>
     </attributum>
     <attributum nomen="via" genus="textus" necessarium="verum"
       nota="manifesta: directorium manifestorum aedilis (--manifestum),
             quodque .stml explicatum; radices: configuratio aedilis,
-            nomina directoriorum inclusorum OMNIUM sigillata"/>
+            nomina directoriorum inclusorum OMNIUM sigillata;
+            instrumentum_domus: binarium
+            domus per provenientiam sigillatum; identitas_clang: clang
+            per identitatem compilatoris (spec 3 par. III.3); effectus:
+            scriptum cuius summarium effectuum (crusta/effectus.sh
+            -clavis) clavem intrat (effectus-plan T7)"/>
     <attributum nomen="suffixa" genus="textus"
       nota="plagulae solum: suffixa spatio separata ('.c .h'); absens =
             omnes plagulae directorii (profunditate 0)"/>
@@ -145,6 +163,7 @@
       <optio>regeneratio</optio>
       <optio>relatio</optio>
       <optio>ignota</optio>
+      <optio>verdictum</optio>
     </attributum>
     <attributum nomen="scriptura" genus="textus"
       nota="via intra directorium scripturae ubi regeneratio cadit;

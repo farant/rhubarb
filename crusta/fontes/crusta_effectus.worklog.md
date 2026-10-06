@@ -275,3 +275,58 @@ source order).
 - diagnostica_fumus XIII's fixture changed from `[ $a -nt $b ]` to
   `[ a -nt b ]`: it tests that a crusta excuse leaves NOTHING printed,
   and the effectus pass rightly warns about unresolvable `$a`.
+
+## 2026-10-05 - T7: fabrica genus `effectus`
+
+- Q8 amended (Fran, decretum …39JMC): outside verdict chains
+  `effectus-irresolutum` is SILENT (filtered after excusation, so its
+  excuses never read dead); the other two rules still warn. House
+  monita 2,736 -> 294; the census still records every site.
+- `./crusta/effectus.sh -clavis <script>`: one line per key item
+  (octeti, provenientia, probatio, nomina, globus, directorium,
+  ambitus, dominus, ignotum). "Excused" is computed by the lint itself:
+  an unresolved site becomes `ignotum` only if a finding survives
+  excusation with in_catena VERUM. Custodial processes contribute their
+  guard's provenance only. Toml: 29 lines, zero ignotum.
+- The wrapper passes the TOOL tree's table and rules (`-tabula`,
+  `CRUSTA_LINTRUM`): judged trees (iudicium-fumus radices) have neither;
+  the caller's `-radix` comes last and wins.
+- House binaries called by path get their table row too (new row
+  `compilator`: only `-o` is written - its reads are in the read
+  ledger). Without it fumus's `clang build/x/a.o` link read had no
+  writer in scope and the key would say "build/ sine domino".
+- iudicium-fumus: P11 `$(cat flag.txt)` edited -> not RECENS DIRECTLY
+  (before T7 only the audit caught it); P12 `[ -f optio.txt ]` created;
+  P13 read-and-rewritten build state file edited (soundness rule). The
+  audit case moved to `caeca.txt`, read through an EXCUSED unresolved
+  site - the class the key deliberately ignores and only the audit
+  catches. Plant: key skips scripta-in-scope build reads -> P13 red.
+- A changed input yields IGNOTUM ("key changed"), not STALUM - the same
+  as fontationes' P2. The plan's "STALUM directly" means "not reused".
+- Cost: judging toml RECENS 2.2-3.0 s; ~1.0 s is the effectus.sh
+  wrapper's build check (cursor_instrumentum_struere), the analyzer is
+  20 ms. fontationes' wrapper cost the same; target 2 s missed by the
+  wrapper, named (spec §XII).
+
+## 2026-10-05 - T8: fontationes retired, slice closed
+
+- No caller of crusta_fontationes remained after T7 (porta_toml on
+  genus effectus), so the whole module went, not just the CLI. Its test
+  was the only place the house idioms (`X=1 cmd`, `cd && pwd`, `${X:-y}`,
+  `source` vs `bash`, the CURSOR script) were pinned as a list; ported to
+  probatio_crusta_effectus_idiomata against summary SITES rather than the
+  old CrustaFontatio rows. The old test found specific irresolute rows
+  ($NESCIO, $q, P=""); the port keeps those AND adds a total (VI), which
+  the old one never pinned.
+- The lintrum catenae fixture kept `genus="fontationes"` as a NEGATIVE
+  case (expect I root, not II): a retired genus must not silently make a
+  chain.
+- Cursor bug: `cursor_fontes_compilare` unions `clausurae/*.lst`, and
+  nothing removed a deleted test's .lst. Symptom: "clang: no such file
+  crusta_fontationes.c / FRACTA". Fix in cursor_clausuras_derivare:
+  `rm -f probatio_*.lst` first (instrumenta closures live in their own
+  dirs). Frigida (fresh clone) cannot catch this class: it is a stale
+  CACHE in a live tree, the mirror of "a test reading a gitignored
+  input".
+- Done-means check (spec §X): all met except toml judge time (2.2-3.0 s,
+  wrapper's build check ~1 s, named in §XIII).

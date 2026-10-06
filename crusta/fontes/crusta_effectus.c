@@ -2,9 +2,9 @@
  * crusta_effectus.h (situs, regulae, limites).
  *
  * Aestimator verborum, ambitus et definitiones ex crusta_fontationes.c
- * TRANSLATI sunt (effectus-plan T3, sectiones notatae); T4
- * fontationes in proiectionem huius summarii vertit et duplicata
- * delet. Nova: situs omnium generum, tabula mandatorum,
+ * TRANSLATI sunt (effectus-plan T3, sectiones notatae); fontationes
+ * T4 proiectio huius summarii factae, T8 retiratae (genus fabricae
+ * 'effectus' eas subsumit). Nova: situs omnium generum, tabula mandatorum,
  * scripta_in_ambitu, emissio STML. */
 
 #include "latina.h"
@@ -2782,9 +2782,33 @@ _imperium_tractare (
     t        = _titulus_staticus(d->piscina, titulus);
     si (t == NIHIL || strchr(t, '/') != NIHIL)
     {
-        redde _locum_tractare(d, a, p, titulus, FALSUM,
+        b32 bene = _locum_tractare(d, a, p, titulus, FALSUM,
             ab == ZEPHYRUM ? _custodiam_quaerere(d, a, p, imperium)
                            : NIHIL);
+
+        /* binarium DOMUS cum ordine tabulae (bin/compilator, T7):
+         * argumenta quoque per tabulam - situs exsecutionis ultimus */
+        si (bene && xar_numerus(a->situs) > ZEPHYRUM)
+        {
+            Situs* x = (Situs*)xar_obtinere(a->situs,
+                xar_numerus(a->situs) - I);
+
+            si (   x->classis                               != NIHIL
+                && strcmp(x->classis, "instrumentum_domus") == ZEPHYRUM
+                && x->via                                   != NIHIL)
+            {
+                character* basis = strrchr(x->via, '/');
+                StmlNodus* m = _mandatum_invenire(d,
+                    basis != NIHIL ? basis + I : x->via);
+
+                si (m != NIHIL)
+                {
+                    _tabulam_applicare(d, a, p, imperium, verba, ab, m,
+                        basis != NIHIL ? basis + I : x->via);
+                }
+            }
+        }
+        redde bene;
     }
     si (strcmp(t, "source") == ZEPHYRUM || strcmp(t, ".") == ZEPHYRUM)
     {
@@ -4282,7 +4306,7 @@ crusta_effectus_non_tecta (
  * Catenae verdicti (planum T6, A4): radices ex declarationibus fabricae
  * ================================================== */
 
-/* 'ingressus' genere fontationes|effectus in arbore (recursive) */
+/* 'ingressus' genere effectus in arbore (recursive) */
 interior vacuum
 _ingressus_colligere (
               Piscina* piscina,
@@ -4303,8 +4327,7 @@ _ingressus_colligere (
         chorda* v = stml_attributum_capere(nodus, "via");
 
         si (   g != NIHIL && v != NIHIL
-            && (chorda_aequalis_literis(*g, "fontationes")
-                || chorda_aequalis_literis(*g, "effectus")))
+            && chorda_aequalis_literis(*g, "effectus"))
         {
             _nomen_addere(piscina, exitus, chorda_ut_cstr(*v, piscina));
         }

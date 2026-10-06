@@ -155,7 +155,9 @@ crusta_regulae_legere (
  * proprium, ne excusationes eius in cursu crustae mortuae videantur)
  * super situs plagulae 'via' (arbori relativae) in summariis datis
  * (Xar de StmlNodus* <effectus>). in_catena FALSUM: erratum in monitum
- * (gravitas extra catenas verdicti). Excusationes ex commentariis
+ * (gravitas extra catenas verdicti), et effectus-irresolutum TACET
+ * (clavem solam tangit; Fran 2026-10-05, Q8 emendata). Excusationes
+ * ex commentariis
  * 'fons' ipsius, lex eadem ac gradus II crustae. optiones->intern
  * IDEM esse debet quo regulae et summaria facta sunt (LEX
  * INTERNAMENTI). Xar de MateriaDiagnosticum; NIHIL = refutatio. */

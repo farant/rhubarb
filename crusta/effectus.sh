@@ -34,4 +34,8 @@ if [ "${1:-}" = -census ]; then
         | "$BIN" -radix "$RADIX_DIR" -census
     exit $?
 fi
-exec "$BIN" -radix "$RADIX_DIR" "$@"
+# tabula et regulae ex arbore INSTRUMENTI (data instrumenti, non arboris
+# iudicatae): radices fictae (iudicium-fumus) eas non habent; '-radix'
+# vocantis (fabrica) arborem iudicatam nominat et postremum vincit
+export CRUSTA_LINTRUM="${CRUSTA_LINTRUM:-$CRUSTA_DIR/lintrum}"
+exec "$BIN" -radix "$RADIX_DIR" -tabula "$CRUSTA_DIR/effectus_mandata.stml" "$@"

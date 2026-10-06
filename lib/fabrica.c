@@ -103,8 +103,9 @@ fabrica_suturam_parare (
     sutura->species             = NIHIL;
     sutura->exitus_noti         = NIHIL;
     sutura->identitas           = NIHIL;
-    sutura->fontationes         = NIHIL;
-    sutura->audita              = NIHIL;
+
+    sutura->effectus  = NIHIL;
+    sutura->audita    = NIHIL;
 }
 
 
@@ -974,11 +975,150 @@ _identitatem_sigillare (
     redde VERUM;
 }
 
-/* FONTATIONES (spec 3 par. III.2): scripta quae cursor fontat aut
- * exsequitur (crusta/fontationes.sh), contentis sigillata; irresolutum
- * = clavis ignota */
+interior constans FabricaGenus _genus_identitas_clang = {
+    "identitas_clang", _identitatem_sigillare, _nihil_enumerare, NIHIL,
+    FALSUM
+};
+
+interior constans FabricaGenus _genus_instrumentum_domus = {
+    "instrumentum_domus", _instrumentum_domus_sigillare,
+        _nihil_enumerare,
+    NIHIL, FALSUM
+};
+
+/* congruentia globi ('*' '?' '[...]' intra segmentum - bash) */
 interior b32
-_fontationes_sigillare (
+_globus_congruit (
+    constans character* exemplar,
+    constans character* textus)
+{
+    dum (*exemplar != '\0')
+    {
+        si (*exemplar == '*')
+        {
+            exemplar++;
+            per (;;)
+            {
+                si (_globus_congruit(exemplar, textus))
+                {
+                    redde VERUM;
+                }
+                si (*textus == '\0' || *textus == '/')
+                {
+                    redde FALSUM;
+                }
+                textus++;
+            }
+        }
+        si (*textus == '\0')
+        {
+            redde FALSUM;
+        }
+        si (*exemplar == '[')
+        {
+            constans character* f = strchr(exemplar, ']');
+            constans character* k;
+                           b32  inventum = FALSUM;
+
+            si (f == NIHIL)
+            {
+                redde FALSUM;
+            }
+            per (k = exemplar + I; k < f; k++)
+            {
+                si (*k == *textus)
+                {
+                    inventum = VERUM;
+                }
+            }
+            si (!inventum)
+            {
+                redde FALSUM;
+            }
+            exemplar = f;
+        }
+        alioquin si (*exemplar != '?' && *exemplar != *textus)
+        {
+            redde FALSUM;
+        }
+        exemplar++;
+        textus++;
+    }
+    redde *textus == '\0';
+}
+
+/* particula ficta: 'genus:via' cum sigillo valoris dati */
+interior b32
+_particulam_valoris (
+               Piscina* piscina,
+                   Xar* particulae,
+    constans character* genus,
+                chorda  via,
+                chorda  valor)
+{
+    FabricaParticula* particula = (FabricaParticula*)xar_addere(
+        particulae);
+
+    si (particula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    particula->via     = _iungere(piscina, genus, via, "");
+    particula->octeti  = sigillum_computare(valor.datum,
+        (memoriae_index)valor.mensura);
+    redde VERUM;
+}
+
+/* nomina directorii 'dir' exemplari congruentia, ordinata, iuncta */
+interior b32
+_nomina_colligere (
+     constans FabricaSutura*  sutura,
+                     chorda   directorium,
+         constans character*  exemplar,
+                    Piscina*  piscina,
+                     chorda*  nomina_out,
+                        Xar** congruentia_out)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, CCLVI);
+                  Xar* nomina = NIHIL;
+                  Xar* congruentia = xar_creare(piscina,
+                           (i32)magnitudo(chorda));
+                  i32 k;
+
+    si (   a                 == NIHIL || congruentia == NIHIL
+        || sutura->enumerare == NIHIL
+        || !sutura->enumerare(sutura->datum,
+               chorda_ut_cstr(directorium, piscina), piscina, &nomina))
+    {
+        nomina = NIHIL;   /* directorium absens: nomina nulla */
+    }
+    per (k = ZEPHYRUM; nomina != NIHIL && k < xar_numerus(nomina); k++)
+    {
+        chorda n = *(chorda*)xar_obtinere(nomina, k);
+
+        si (_globus_congruit(exemplar, chorda_ut_cstr(n, piscina)))
+        {
+            chorda_aedificator_appendere_chorda(a, n);
+            chorda_aedificator_appendere_character(a, '\n');
+            *(chorda*)xar_addere(congruentia) = n;
+        }
+    }
+    *nomina_out = chorda_aedificator_finire(a);
+    si (congruentia_out != NIHIL)
+    {
+        *congruentia_out = congruentia;
+    }
+    redde VERUM;
+}
+
+/* EFFECTUS (effectus-plan T7, spec par. VII): lineae '-clavis' scripti
+ * in particulas - octeti (absentia quoque), provenientia, probatio
+ * (species), nomina, globus, directorium, ambitus (variabiles fabricae
+ * FABRICA_* propriae omittuntur: protocollum, non ingressus), dominus
+ * (exitus declaratus aut IGNOTUM), ignotum (IGNOTUM, sedes
+ * nominata). */
+interior b32
+_effectus_sigillare (
        constans FabricaSutura* sutura,
     constans FabricaIngressus* ingressus,
                  constans Xar* exclusa,
@@ -989,28 +1129,37 @@ _fontationes_sigillare (
     chorda effusio;
        i32 codex;
        i32 i;
-       i32 initium;
+       i32 initium = ZEPHYRUM;
 
-    si (sutura->fontationes == NIHIL)
+    si (sutura->effectus == NIHIL)
     {
-        *causa_out = chorda_ex_literis("sutura sine fontationibus",
+        *causa_out = chorda_ex_literis("sutura sine effectibus",
             piscina);
         redde FALSUM;
     }
-    si (!sutura->fontationes(sutura->datum,
+    si (!sutura->effectus(sutura->datum,
             chorda_ut_cstr(ingressus->via, piscina), piscina, &effusio,
             &codex))
     {
-        *causa_out = _iungere(piscina, "fontationes currere nequit: ",
+        *causa_out = _iungere(piscina, "effectus currere nequit: ",
             ingressus->via, "");
         redde FALSUM;
     }
-    initium = ZEPHYRUM;
+    si (codex != ZEPHYRUM)
+    {
+        character numerus[32];
+
+        sprintf(numerus, "%d", (integer)codex);
+        *causa_out = _iungere(piscina, "effectus fracti (exitus ",
+            chorda_ex_literis(numerus, piscina), ")");
+        redde FALSUM;
+    }
     per (i = ZEPHYRUM; i < effusio.mensura; i++)
     {
         chorda linea;
         chorda genus;
         chorda via;
+        chorda extra;
            s32 t;
            s32 u;
 
@@ -1028,29 +1177,62 @@ _fontationes_sigillare (
         }
         genus  = chorda_sectio(linea, 0, (i32)t);
         via    = chorda_sectio(linea, (i32)t + I, linea.mensura);
+        extra  = chorda_ex_literis("", piscina);
         u = chorda_invenire_index(via, chorda_ex_literis("\t",
             piscina));
         si (u >= ZEPHYRUM)
         {
-            via = chorda_sectio(via, 0, (i32)u);
+            extra  = chorda_sectio(via, (i32)u + I, via.mensura);
+            via    = chorda_sectio(via, 0, (i32)u);
         }
-        si (chorda_aequalis_literis(genus, "irresolutum"))
+        si (chorda_aequalis_literis(genus, "ignotum"))
         {
-            *causa_out = _iungere(piscina, "fontatio irresoluta: ",
-                linea,
+            *causa_out = _iungere(piscina, "effectus ignotus: ", linea,
                 "");
             redde FALSUM;
         }
-        si (   chorda_aequalis_literis(genus, "fasciculus")
-            || chorda_aequalis_literis(genus, "externum"))
+        si (   chorda_aequalis_literis(genus, "octeti")
+            || chorda_aequalis_literis(genus, "dominus"))
         {
-            si (!_particulam_legere(sutura, via, exclusa, piscina,
-                    particulae, causa_out))
+             vacuum* dominus = NIHIL;
+                i32  species = sutura->species != NIHIL
+                    ? sutura->species(sutura->datum,
+                      chorda_ut_cstr(via, piscina))
+                    : (i32)FABRICA_SPECIES_PLAGULA;
+
+            (vacuum)dominus;
+
+            si (   chorda_aequalis_literis(genus, "dominus")
+                && (sutura->exitus_noti == NIHIL
+                    || !tabula_dispersa_invenire(sutura->exitus_noti,
+                           via, &dominus)))
+            {
+                *causa_out = _iungere(piscina,
+                    "ingressus build/ sine domino: ", via, "");
+                redde FALSUM;
+            }
+            si (species == (i32)FABRICA_SPECIES_ALIA)
+            {
+                *causa_out = _iungere(piscina,
+                    "effectus: via non sigillabilis: ", via, "");
+                redde FALSUM;
+            }
+            si (species == (i32)FABRICA_SPECIES_ABSENS)
+            {
+                si (!_particulam_valoris(piscina, particulae, "absens:",
+                        via, chorda_ex_literis("absens", piscina)))
+                {
+                    redde FALSUM;
+                }
+            }
+            alioquin si (!_particulam_legere(sutura, via, exclusa,
+                         piscina,
+                         particulae, causa_out))
             {
                 redde FALSUM;
             }
         }
-        alioquin si (chorda_aequalis_literis(genus, "instrumentum"))
+        alioquin si (chorda_aequalis_literis(genus, "provenientia"))
         {
             si (!_provenientia_legere(sutura, via, exclusa, piscina,
                     particulae, causa_out))
@@ -1058,34 +1240,114 @@ _fontationes_sigillare (
                 redde FALSUM;
             }
         }
-    }
-    si (codex != ZEPHYRUM)
-    {
-        character numerus[32];
+        alioquin si (chorda_aequalis_literis(genus, "probatio"))
+        {
+            character species[XVI];
 
-        sprintf(numerus, "%d", (integer)codex);
-        *causa_out = _iungere(piscina, "fontationes fractae (exitus ",
-            chorda_ex_literis(numerus, piscina), ")");
-        redde FALSUM;
+            sprintf(species, "%d", (integer)(sutura->species != NIHIL
+                ? sutura->species(sutura->datum,
+                      chorda_ut_cstr(via, piscina))
+                : (i32)FABRICA_SPECIES_PLAGULA));
+            si (!_particulam_valoris(piscina, particulae, "probatio:",
+                    via, chorda_ex_literis(species, piscina)))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(genus, "nomina"))
+        {
+            chorda nomina;
+
+            si (   !_nomina_colligere(sutura, via,
+                       chorda_ut_cstr(extra, piscina), piscina, &nomina,
+                       NIHIL)
+                || !_particulam_valoris(piscina, particulae, "nomina:",
+                       _iungere(piscina, "", via,
+                           chorda_ut_cstr(extra, piscina)), nomina))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(genus, "globus"))
+        {
+             constans character* e   = chorda_ut_cstr(via, piscina);
+             constans character* sl  = strrchr(e, '/');
+                         chorda  dir = sl != NIHIL
+                             ? chorda_sectio(via, 0, (i32)(sl - e))
+                             : chorda_ex_literis(".", piscina);
+                         chorda  nomina;
+                            Xar* congruentia;
+                            i32  k;
+
+            si (   !_nomina_colligere(sutura, dir, sl != NIHIL ? sl
+                + I : e,
+                       piscina, &nomina, &congruentia)
+                || !_particulam_valoris(piscina, particulae, "globus:",
+                       via, nomina))
+            {
+                redde FALSUM;
+            }
+            per (k = ZEPHYRUM; k < xar_numerus(congruentia); k++)
+            {
+                chorda plena = sl != NIHIL
+                    ? _iungere(piscina, "", dir, "/")
+                    : chorda_ex_literis("", piscina);
+
+                plena = _iungere(piscina, chorda_ut_cstr(plena,
+                    piscina),
+                    *(chorda*)xar_obtinere(congruentia, k), "");
+                si (!_particulam_legere(sutura, plena, exclusa, piscina,
+                        particulae, causa_out))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+        alioquin si (chorda_aequalis_literis(genus, "directorium"))
+        {
+            si (!_directorium_explicare(sutura, via, piscina,
+                particulae,
+                    causa_out))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(genus, "ambitus"))
+        {
+            chorda valor;
+
+            si (   via.mensura                         >= VIII
+                && memcmp(via.datum, "FABRICA_", VIII) == ZEPHYRUM)
+            {
+                perge;   /* protocollum fabricae ipsius */
+            }
+            si (   sutura->ambitus == NIHIL
+                || !sutura->ambitus(sutura->datum,
+                       chorda_ut_cstr(via, piscina), piscina, &valor))
+            {
+                valor = chorda_ex_literis("\001absens", piscina);
+            }
+            si (!_particulam_valoris(piscina, particulae, "ambitus:",
+                via,
+                    valor))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin
+        {
+            *causa_out = _iungere(piscina, "effectus: linea ignota: ",
+                linea, "");
+            redde FALSUM;
+        }
     }
     redde VERUM;
 }
 
-interior constans FabricaGenus _genus_identitas_clang = {
-    "identitas_clang", _identitatem_sigillare, _nihil_enumerare, NIHIL,
-    FALSUM
+interior constans FabricaGenus _genus_effectus = {
+    "effectus", _effectus_sigillare, _nihil_enumerare, NIHIL, FALSUM
 };
 
-interior constans FabricaGenus _genus_instrumentum_domus = {
-    "instrumentum_domus", _instrumentum_domus_sigillare,
-        _nihil_enumerare,
-    NIHIL, FALSUM
-};
-
-interior constans FabricaGenus _genus_fontationes = {
-    "fontationes", _fontationes_sigillare, _nihil_enumerare, NIHIL,
-        FALSUM
-};
 
 interior constans FabricaGenus* constans _genera[] = {
     &_genus_fasciculus,
@@ -1098,8 +1360,9 @@ interior constans FabricaGenus* constans _genera[] = {
     &_genus_manifesta,
     &_genus_radices,
     &_genus_identitas_clang,
-    &_genus_fontationes,
-    &_genus_instrumentum_domus
+
+    &_genus_instrumentum_domus,
+    &_genus_effectus
 };
 
 constans FabricaGenus*

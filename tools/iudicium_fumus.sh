@@ -3,22 +3,30 @@
 # spec 3 T7, par. VI et XIII). Radix temporaria: generator unus (gen ->
 # build/gen.h ex gen/fons.txt) et porta ficta porta_x - porta.sh fontat
 # lib.sh, src/a.c per bin/compilator VERUM compilat (lector per filum:
-# vestigium verum), programma currit, et flag.txt per bash legit (lectio
-# quam liber NON videt - auditus eam capere debet).
+# vestigium verum), programma currit, et flag.txt per bash legit. Ab
+# effectus T7 (2026-10-05) clavis portae per GENUS 'effectus' (crusta/
+# effectus.sh -clavis): lectiones ipsius bash (flag.txt, probatio,
+# plagula status) clavem intrant; caeca.txt per lectionem EXCUSATAM
+# legitur - quam clavis consulto ignorat et auditus solus capit.
 #
 #   I    sanare: transitus servatus (nulla 'non servatus'), iudicare RECENS
 #   P3   README mutatum -> RECENS (finis portae)
 #   P1   caput src/a.h mutatum (per compilatorem lectum) -> STALUM nominans
-#   P2   scriptum fontatum lib.sh mutatum -> IGNOTUM (clavis per fontationes)
-#   P7   'source "$NESCIO"' in porta.sh -> IGNOTUM 'fontatio irresoluta'
+#   P2   scriptum fontatum lib.sh mutatum -> IGNOTUM (clavis per effectus)
+#   P7   'source "$NESCIO"' in porta.sh -> IGNOTUM 'effectus ignotus'
 #   P8   gen/fons.txt mutatum: sanare build/gen.h (ut porta() facit) ->
 #        regeneratum, verdictum non reutilis (IGNOTUM: ingressus declaratus
 #        clavem mutat); sanare -> currit, RECENS
 #   P6   porta fracta: FRACTUM, verdictum absens; iterum sanare -> iterum
 #        currit (defectus numquam servatur)
-#   AUD  flag.txt (lectio bash, extra librum) mutatum sub transitu RECENS:
-#        iudicare caecum RECENS; sanare -audit -> AUDITUM_DISCORS; restitutum
-#        sanare -audit -> 'auditus: transitus iterum congruit'
+#   P11  flag.txt ('$(cat flag.txt)', lectio bash) mutatum -> non RECENS
+#        DIRECTE (ante T7 auditus solus id capiebat)
+#   P12  '[ -f optio.txt ]' (absens) creatum -> non RECENS (absentia clavis)
+#   P13  build/x/status (lectum ET rescriptum in porta) inter cursus
+#        mutatum -> non RECENS (regula soliditatis, effectus-spec par. I)
+#   AUD  caeca.txt (lectio EXCUSATA, clavis eam ignorat) mutatum sub
+#        transitu RECENS: iudicare caecum RECENS; sanare -audit ->
+#        AUDITUM_DISCORS; restitutum -> 'auditus: transitus iterum congruit'
 #
 # Alibi tecta (nominata, non repetita): P4 IO cruda -> lectiones_lint
 # (planta T3); P5 FIFO, P9 ambitus, P10 relinkatio -> probatio_fabrica
@@ -36,7 +44,8 @@ T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 R="$T/r"
 fracta=0
-export FABRICA_FONTATIONES="$RADIX/crusta/fontationes.sh"
+
+export FABRICA_EFFECTUS="$RADIX/crusta/effectus.sh"
 unset FABRICA_THESAURUS FABRICA_LECTIONES FABRICA_AUDITUS
 
 mkdir -p "$R/bin" "$R/src" "$R/gen"
@@ -58,7 +67,7 @@ cat > "$R/aedificatio.stml" <<'DECL'
       <verbum! (>./porta.sh
     </mandatum>
     <vestigium via="build/x"/>
-    <ingressus genus="fontationes" via="porta.sh"/>
+    <ingressus genus="effectus" via="porta.sh"/>
     <ingressus genus="instrumentum_domus" via="bin/compilator"/>
     <ingressus genus="identitas_clang" via="clang"/>
     <ingressus genus="fasciculus" via="build/gen.h"/>
@@ -85,6 +94,11 @@ bin/compilator -std=c89 -Isrc -Ibuild -c src/a.c -o build/x/a.o || exit 1
 clang build/x/a.o -o build/x/a || exit 1
 ./build/x/a || exit 1
 [ "$(cat flag.txt)" = ok ] || exit 1
+[ -f optio.txt ] && echo "optio adest"
+s="$(cat build/x/status 2>/dev/null)"
+echo "status${s:+ }$s" > build/x/status
+# <tolera codex="lint:effectus-irresolutum" (>fumus: lectio caeca CONSULTO - auditus solus eam capit
+[ "$(cat "$(echo caeca.txt)")" = ok ] || exit 1
 echo "x: sanum" > build/fabrica/verdicta/x.txt
 PORTA
 chmod +x "$R/gen.sh" "$R/porta.sh"
@@ -92,6 +106,7 @@ printf '/* a.h */\n' > "$R/src/a.h"
 printf '#include "a.h"\n#include "gen.h"\nint main(void) { return GEN_VALOR < 0; }\n' > "$R/src/a.c"
 printf '3\n' > "$R/gen/fons.txt"
 printf 'ok\n' > "$R/flag.txt"
+printf 'ok\n' > "$R/caeca.txt"
 printf 'fumus\n' > "$R/README"
 V="build/fabrica/verdicta/x.txt"
 
@@ -124,7 +139,7 @@ printf '# lib.sh - fontatum a porta.sh\nFUMUS_LIB=1\n' > "$R/lib.sh"
 cp "$R/porta.sh" "$T/porta.bonum"
 printf 'source "$NESCIO"\n' >> "$R/porta.sh"
 fab iudicare -omnia "$V"
-if grep -q "^IGNOTUM $V.*fontatio irresoluta" "$T/o"; then ok "P7   source \"\$X\" -> IGNOTUM nominatum"; else non "P7  "; fi
+if grep -q "^IGNOTUM $V.*effectus ignotus" "$T/o"; then ok "P7   source \"\$X\" -> IGNOTUM nominatum"; else non "P7  "; fi
 cp "$T/porta.bonum" "$R/porta.sh"
 if status | grep -q '^RECENS'; then ok "     restitutum -> RECENS"; else non "     restitutum"; fi
 
@@ -148,12 +163,31 @@ printf '4\n' > "$R/gen/fons.txt"
 fab sanare "$V"
 if status | grep -q '^RECENS'; then ok "     restitutum -> RECENS"; else non "     restitutum"; fi
 
-# AUD
+# P11: lectio bash (flag.txt) - ab effectus T7 clavis eam videt
 printf 'non\n' > "$R/flag.txt"
+if ! status | grep -q '^RECENS'; then ok "P11  flag.txt mutatum -> non RECENS (clavis effectus)"; else non "P11 "; fi
+printf 'ok\n' > "$R/flag.txt"
+if status | grep -q '^RECENS'; then ok "     restitutum -> RECENS"; else non "     P11 restitutum"; fi
+
+# P12: probatio plagulae absentis
+printf 'x\n' > "$R/optio.txt"
+if ! status | grep -q '^RECENS'; then ok "P12  [ -f optio.txt ] creatum -> non RECENS"; else non "P12 "; fi
+rm -f "$R/optio.txt"
+if status | grep -q '^RECENS'; then ok "     remotum -> RECENS"; else non "     P12 remotum"; fi
+
+# P13: plagula status lecta et rescripta (regula soliditatis)
+cp "$R/build/x/status" "$T/status.bonum"
+printf 'alienum\n' > "$R/build/x/status"
+if ! status | grep -q '^RECENS'; then ok "P13  build/x/status mutatum -> non RECENS (soliditas)"; else non "P13 "; fi
+cp "$T/status.bonum" "$R/build/x/status"
+if status | grep -q '^RECENS'; then ok "     restitutum -> RECENS"; else non "     P13 restitutum"; fi
+
+# AUD
+printf 'non\n' > "$R/caeca.txt"
 if status | grep -q '^RECENS'; then ok "AUD  lectio extra librum: iudicium caecum RECENS"; else non "AUD caecum"; fi
 fab sanare -audit "$V"; rc=$?
 if [ "$rc" -eq 1 ] && grep -q '^AUDITUM_DISCORS porta_x' "$T/o"; then ok "     sanare -audit -> AUDITUM_DISCORS"; else non "AUD discors"; fi
-printf 'ok\n' > "$R/flag.txt"
+printf 'ok\n' > "$R/caeca.txt"
 fab sanare "$V"
 fab sanare -audit "$V"
 if grep -q 'auditus: transitus iterum congruit' "$T/o"; then ok "     restitutum: auditus congruit"; else non "AUD congruit"; fi

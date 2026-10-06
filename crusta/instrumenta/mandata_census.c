@@ -15,7 +15,7 @@
  *   dynamicum    titulus non staticus ('"$COMPILATOR"')
  *   externum     cetera - quae tabula mandatorum describere debet
  * Involucra (exec command env nohup) verbum sequens quoque numerant
- * (optiones et VAR=v praetereuntur), ut crusta_fontationes facit.
+ * (optiones et VAR=v praetereuntur), ut crusta_effectus facit.
  * Plagula illegibilis aut parsura non sana in stderr nominatur et
  * praeteritur. Exitus: 0 sanum | 2 usus / memoria. */
 
