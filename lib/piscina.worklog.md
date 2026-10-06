@@ -67,3 +67,32 @@ Consequences, all 14 suites run (scratchpad ordinatio/summa.txt):
 - `probatio_cliens_tabularii` failed once in the full parallel run
   (portus_int > 0) and passed alone twice with the new code: flaky in the
   worktree, unrelated.
+
+## 2026-10-06 — VENENUM: a poisoning mode for rollback lifetimes (Fran: yes)
+
+`piscina_reficere` neither frees nor clears, so a value that outlives its
+rollback usually still reads correctly — a lifetime bug stays silent and
+ASan cannot see it (the memory is still owned). The polynomium review II
+planted two such bugs in the scratch-piscina code (rolling back the wrong
+scratch in divide's zero-digit branch; rolling back before copying out in
+multiply): the normal suite stayed green, a poisoned build caught both.
+
+- `-DPISCINA_VENENUM=1` makes `piscina_reficere` fill every released byte
+  (rest of the marked block after the mark, and every later block up to
+  its offset) with `PISCINA_OCTETUS_VENENI` (0xA5) before resetting.
+  Same pattern as `PISCINA_DEBUG`: a constant defaulting to FALSUM and a
+  `si`, so the normal build compiles it out. `piscina_vacare` is
+  unchanged (it already zeroes; code may rely on that).
+- Gate `venenum` (`tools/venenum_probare.sh`, ~11 s): I. a probe — a byte
+  read after reficere is 165 with the mode and 42 without (the mode is
+  live AND off by default; a silent poisoning would be a dead gate);
+  II. the suites that mark and roll back in hot loops — piscina, magnus,
+  fractio, situs, polynomium — built poisoned with ASan/UBSan, outside the
+  shared build cache (own temp dir, explicit sources).
+- Born red: the two review mutants (each GREEN in the normal suite) turn
+  the gate red; switching the poisoning off turns the probe red.
+- Header note on `piscina_reficere`: memory is not freed or cleared;
+  stale reads look right; use the mode.
+- Owed automatically only once the ledger inventory ('suitae
+  probationum') gets a lens for it — not possible from a worktree;
+  agenda A7.

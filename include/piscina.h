@@ -143,7 +143,11 @@ piscina_notare (
 /* piscina_reficere - Reficit statum ad notationem
  * "Reficere piscinam ad statum notatum"
  *
- * Omnia allocata post notationem erunt invalida!
+ * Omnia allocata post notationem erunt invalida! Memoria NON
+ * liberatur nec deletur: lectio post refectionem valores veteres
+ * saepe adhuc videt, ergo vitium tacitum est. Modus probandi:
+ * -DPISCINA_VENENUM=1 octetos liberatos 0xA5 implet (porta
+ * tools/venenum_probare.sh).
  */
 vacuum
 piscina_reficere (

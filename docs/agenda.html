@@ -140,6 +140,24 @@ benchmark subject. Not related to the math stack except in idea: the same
 dense-or-sparse-per-region choice could later give a sparse polynomial
 type for multivariate work (HOMFLY), where dense storage is hopeless.</p>
 
+<h3><span class="id">A7</span>Make the <code>venenum</code> gate owed automatically</h3>
+<p><span class="status">todo</span> <span class="nota">2026-10-06, with the
+gate itself; needs main (the ledger is off in worktrees)</span></p>
+<p><strong>What.</strong> The new gate <code>venenum</code>
+(<code>tools/venenum_probare.sh</code>: piscina built with
+<code>-DPISCINA_VENENUM=1</code>, which fills rolled-back memory with 0xA5,
+plus ASan/UBSan, over the piscina, magnus, fractio, situs and polynomium
+suites) runs only when named by hand today. Add an inventory lens in the
+ledger ('suitae probationum', <code>tegit viae</code>) so
+<code>commissio</code> adds it whenever <code>lib/piscina.c</code>,
+<code>magnus</code>, <code>fractio</code>, <code>situs</code> or
+<code>polynomium</code> change — and extend its suite list as more code
+uses scratch piscinae (linear algebra next).</p>
+<p><strong>Why.</strong> A rollback does not free or clear memory, so a
+value that outlives it still reads correctly: two planted lifetime bugs
+passed the normal suite and were caught only by the poisoned build. A gate
+that is never owed is a dead gate.</p>
+
 <h2>Done</h2>
 <p class="nota">Finished items, with the commit that closed them.</p>
 

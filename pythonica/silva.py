@@ -1617,6 +1617,12 @@ PORTAE = {
               r'FUMUS (PLENUS|FRACTUS)|FRACTUM:'),
     'silex-semen': (['./tools/silex_semen_fumus.sh'],
                     r'FUMUS: FACTUM|FUMUS DEFECIT'),
+    # piscina venenata (-DPISCINA_VENENUM=1) + ASan/UBSan super suitas
+    # quae notant et reficiunt (piscina, magnus, fractio, situs,
+    # polynomium): vitia vitae quae suita ordinaria non videt, quia
+    # reficere memoriam non delet (recensio polynomium-II, 2026-10-06)
+    'venenum': (['./tools/venenum_probare.sh'],
+                r'venenum: (sana|FRACTA)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
