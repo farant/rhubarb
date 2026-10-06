@@ -1822,6 +1822,55 @@ def _portae_verdictorum():
 _VERDICTA_MEMORATA = None
 
 
+def _argumenta_discordantia(textus, portae):
+    """ARGV RADICIS DECLARATA (effectus-plan-3 T5, A1) contra PORTAE:
+    in actione 'porta_<G>' (genus iudicium; mandatum 'silva.py -iudicium
+    G' PORTAE[G] currit) ingressus 'effectus' cum <argumenta> radicem
+    PORTAE[G] nominare et verba eius declarare debet. Reddit lineas
+    discordiae (vacuum = concordia)."""
+    discordiae = []
+    for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
+                         r'(.*?)</actio>', textus, re.S):
+        nomen, corpus = m.group(1), m.group(2)
+        for g in re.finditer(r'<ingressus genus="effectus" via="([^"]+)"'
+                             r'\s*(/>|>(.*?)</ingressus>)', corpus, re.S):
+            via, intus = g.group(1), g.group(3) or ''
+            a = re.search(r'<argumenta\s*/>|<argumenta>(.*?)</argumenta>',
+                          intus, re.S)
+            if a is None:
+                continue
+            verba = re.findall(r'<verbum! \(>(.*)', a.group(1) or '')
+            if nomen not in portae:
+                discordiae.append('porta_%s: porta ignota in PORTAE' % nomen)
+                continue
+            argv = portae[nomen][0]
+            radix = argv[0][2:] if argv[0].startswith('./') else argv[0]
+            if via != radix:
+                discordiae.append('porta_%s: radix %s, PORTAE currit %s'
+                                  % (nomen, via, radix))
+            elif verba != list(argv[1:]):
+                discordiae.append('porta_%s: argumenta %r, PORTAE %r'
+                                  % (nomen, verba, list(argv[1:])))
+    return discordiae
+
+
+def argumenta_catenarum():
+    """_argumenta_discordantia super aedificatio.stml omnium
+    subsystematum arboris vivae (fabrica.stml)."""
+    discordiae = []
+    try:
+        radix_stml = open(os.path.join(RADIX, 'fabrica.stml')).read()
+    except (IOError, OSError):
+        return discordiae
+    for sub in re.findall(r'<subsystema via="([^"]+)"', radix_stml):
+        try:
+            t = open(os.path.join(RADIX, sub, 'aedificatio.stml')).read()
+        except (IOError, OSError):
+            continue
+        discordiae += _argumenta_discordantia(t, PORTAE)
+    return discordiae
+
+
 def _verdicti_via(nomen):
     return os.path.join('build', 'fabrica', 'verdicta', nomen + '.txt')
 

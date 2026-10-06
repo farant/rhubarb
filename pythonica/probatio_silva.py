@@ -2424,6 +2424,30 @@ try:
 finally:
     silva.AEDILIS_BIN = _ab_verum
 
+# ARGV RADICIS DECLARATA (effectus-plan-3 T5, A1): <argumenta> ingressus
+# 'effectus' in aedificatio.stml = argv quam PORTAE radici dat
+_d = silva.argumenta_catenarum()
+credo(_d == [], 'argumenta catenarum: declarata == PORTAE (arbor viva)',
+      causa=repr(_d))
+_ficta = ('<actio titulus="porta_toml" genus="iudicium">\n'
+          '  <ingressus genus="effectus" via="toml/compile_probationes.sh">\n'
+          '    <argumenta>\n      <verbum! (>registrum\n    </argumenta>\n'
+          '  </ingressus>\n</actio>\n')
+_d = silva._argumenta_discordantia(_ficta, silva.PORTAE)
+credo(len(_d) == 1 and 'registrum' in _d[0],
+      'argumenta catenarum: verbum non a PORTAE datum nominatur',
+      causa=repr(_d))
+_d = silva._argumenta_discordantia(
+    _ficta.replace('toml/compile_probationes.sh', 'toml/alia.sh'),
+    silva.PORTAE)
+credo(len(_d) == 1 and 'toml/alia.sh' in _d[0],
+      'argumenta catenarum: radix aliena nominatur', causa=repr(_d))
+_d = silva._argumenta_discordantia(
+    _ficta.replace('<argumenta>\n      <verbum! (>registrum\n    '
+                   '</argumenta>', '<argumenta/>'), silva.PORTAE)
+credo(_d == [], 'argumenta catenarum: <argumenta/> = PORTAE sine argv',
+      causa=repr(_d))
+
 credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
        else -1) == _tempora_vera_ante,
       'tempora vera (build/portae/tempora.tsv) a probationibus intacta')

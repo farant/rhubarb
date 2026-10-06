@@ -55,6 +55,31 @@ crusta_effectus_derivare (
               StmlNodus*  mandata,
      constans character** causa_out);
 
+/* Idem cum ARGV radicis declarata (effectus-plan-3 T5, A1): argumenta =
+ * Xar de character* (verba post scriptum; vacua = nulla), NIHIL =
+ * ignota ($N radicis 'argumentum' manet). Processus filii $N per arcus
+ * (verba sedis exsecutionis) semper accipiunt. */
+StmlNodus*
+crusta_effectus_derivare_argumentis (
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+     constans character*  radix,
+     constans character*  scriptum,
+              StmlNodus*  mandata,
+                    Xar*  argumenta,
+     constans character** causa_out);
+
+/* ARGV RADICIS DECLARATA (effectus-plan-3 T5, A1): verba <argumenta>
+ * ingressus 'effectus' scripti in aedificatio.stml subsystematum
+ * (Xar de character*; vacua = nulla). NIHIL = non declarata, aut
+ * declarationes discordes / ingressus sine <argumenta>. */
+Xar*
+crusta_effectus_argumenta_radicis (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* radix,
+     constans character* scriptum);
+
 /* ORACULUM (planum T5): liber interpositionis (interpositio_macos.c)
  * -> summarium observatum eiusdem dialecti (per="observatum").
  * Processus soli bash; viae extra radicem et quaesitiones PATH
@@ -91,6 +116,20 @@ crusta_effectus_non_tecta (
      StmlNodus* staticum,
      StmlNodus* observatum,
            Xar* explicata);
+
+/* SUBSUMPTIO (effectus-plan-3 T1; spec-3 par. VIII): situs NOVI quos
+ * summarium VETUS non subsumit (Xar de StmlNodus*; vacuum = omnia
+ * subsumpta; NIHIL = argumentum absens). Situs veteris eiusdem
+ * plagulae, sedis et elementi novum tegit: via aequalis, globus
+ * congruens aut continens, praefixum continens, aut vetus irresolutus
+ * (resolutio nulla) - ignotum ab ignoto solo. Situs novus minus certus
+ * quam vetus (praefixum ubi via erat) aut sedes nova = defectus:
+ * probatio 'valor novus subcopia veteris' slice 3. */
+Xar*
+crusta_effectus_subsumptio (
+       Piscina* piscina,
+     StmlNodus* vetus,
+     StmlNodus* novum);
 
 /* CATENAE VERDICTI (planum T6; spec A4 - ex declarationibus fabricae
  * derivatae): viae scriptorum quae ingressus 'effectus' alicuius

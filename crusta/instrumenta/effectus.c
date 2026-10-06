@@ -9,6 +9,8 @@
  *        effectus -observata <scriptum> <liber> [-radix DIR]
  *        effectus -comparare <scriptum> <liber> [-radix DIR]
  *                 [-ante_scripta PLAGULA]
+ *        effectus -subsumere <vetus.stml> <novum.stml>   (slice 3 T1:
+ *                 situs novi quos vetus non subsumit -> exitus 1)
  * Effusio: summarium STML dialecti 'effectus' (effectus.canon);
  * -observata: summarium liberi oraculi (interpositio_macos.c);
  * -comparare: situs observati quos summarium staticum NON tegit,
@@ -44,7 +46,8 @@ _usus (vacuum)
     fprintf(stderr, "usus: effectus <scriptum> [-radix DIR]\n"
         "       effectus -observata <scriptum> <liber> [-radix DIR]\n"
         "       effectus -comparare <scriptum> <liber> [-radix DIR] "
-        "[-ante_scripta PLAGULA]\n");
+        "[-ante_scripta PLAGULA]\n"
+        "       effectus -subsumere <vetus.stml> <novum.stml>\n");
 }
 
 interior constans character*
@@ -158,9 +161,14 @@ _contextum_parare (
     }
     per (k = ZEPHYRUM; k < xar_numerus(c->catenae); k++)
     {
-        StmlNodus* sm = crusta_effectus_derivare(c->piscina, c->intern,
-            c->radix, *(character**)xar_obtinere(c->catenae, k),
-            c->tabula, causa);
+        constans character* radix_catenae = *(character**)xar_obtinere(
+            c->catenae, k);
+                 StmlNodus* sm = crusta_effectus_derivare_argumentis(
+                     c->piscina, c->intern, c->radix, radix_catenae,
+                     c->tabula,
+                     crusta_effectus_argumenta_radicis(c->piscina,
+                     c->intern,
+                     c->radix, radix_catenae), causa);
 
         si (sm == NIHIL)
         {
@@ -618,8 +626,11 @@ _modus_clavis (
                    i32  i;
                    i32  j;
 
-    sm = crusta_effectus_derivare(c->piscina, c->intern, c->radix, via,
-        c->tabula, &causa);
+    /* argv radicis declarata (A1): fabrica radices catenarum vocat */
+    sm = crusta_effectus_derivare_argumentis(c->piscina, c->intern,
+        c->radix, via, c->tabula,
+        crusta_effectus_argumenta_radicis(c->piscina, c->intern,
+            c->radix, via), &causa);
     si (sm == NIHIL)
     {
         fprintf(stderr, "effectus: %s: %s\n", via,
@@ -985,6 +996,61 @@ _modus_lintri (
     redde errata > ZEPHYRUM ? I : ZEPHYRUM;
 }
 
+/* SUBSUMPTIO (effectus-plan-3 T1): summaria duo ex disco; situs novi
+ * non subsumpti, linea una quisque ('elementum\tvia\tplagula\t
+ * sedes'). 0 omnia subsumpta, 1 non, 2 plagula illegibilis. */
+interior integer
+_modus_subsumptionis (
+    constans character* via_veteris,
+    constans character* via_novi)
+{
+                  Piscina* piscina;
+      InternamentumChorda* intern;
+             StmlResultus  v;
+             StmlResultus  n;
+                      Xar* r;
+                      i32  k;
+                  integer  exitus;
+
+    piscina = piscina_generare_dynamicum("effectus_subsumptio",
+        (memoriae_index)XVI * M * M);
+    si (piscina == NIHIL)
+    {
+        redde II;
+    }
+    intern = internamentum_creare(piscina);
+    v = stml_legere(filum_legere_totum(via_veteris, piscina), piscina,
+        intern);
+    n = stml_legere(filum_legere_totum(via_novi, piscina), piscina,
+        intern);
+    si (!v.successus || !n.successus)
+    {
+        fprintf(stderr, "effectus: subsumptio: plagula illegibilis\n");
+        piscina_destruere(piscina);
+        redde II;
+    }
+    r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
+        n.elementum_radix);
+    si (r == NIHIL)
+    {
+        piscina_destruere(piscina);
+        redde II;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(r); k++)
+    {
+        StmlNodus* x = *(StmlNodus**)xar_obtinere(r, k);
+
+        imprimere("%.*s\t%s\t%s\t%s\n", (integer)x->titulus->mensura,
+            (constans character*)x->titulus->datum,
+            _attributum(piscina, x, "via"),
+            _attributum(piscina, x, "plagula"),
+            _attributum(piscina, x, "sedes"));
+    }
+    exitus = xar_numerus(r) > ZEPHYRUM ? I : ZEPHYRUM;
+    piscina_destruere(piscina);
+    redde exitus;
+}
+
 integer
 principale (
       integer   argc,
@@ -1006,6 +1072,10 @@ principale (
                      i32  k;
 
     radix[ZEPHYRUM] = '\0';
+    si (argc == IV && strcmp(argv[I], "-subsumere") == ZEPHYRUM)
+    {
+        redde _modus_subsumptionis(argv[II], argv[III]);
+    }
     /* modi lintri et catenarum: argumenta sua (plagulae plures) */
     si (_modus_lintri_quaerere(argc, argv) != NIHIL)
     {

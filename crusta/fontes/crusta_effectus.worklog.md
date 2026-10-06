@@ -472,3 +472,140 @@ source order).
   summary; digesting its directory would not cover them).
 - crusta drops the colon-less `${H-d}` operator into the argument text;
   handled in `_praedefinitum_aestimare` (op NIHIL branch), filed.
+
+## 2026-10-06 - slice 2 closed (T7)
+
+- Unresolved 43.6% -> 11.2% of sites; every unresolved site names its
+  cause. What is left is mostly ORDER (discordia 472: `src=` blocks)
+  and ARGUMENTS (argumentum 209 + 298 partial) - both need the next
+  slice (flow, call-site binding), measured, not guessed.
+- The slice's most valuable output may be the two key holes T6 found
+  (partial sites outside the key; `directorium` = names only). Both
+  were invisible to every gate because every gate tested the shapes the
+  key HAD, not the shapes the summary EMITTED. A plant per emitted
+  site class -> key line would have caught them in slice 1.
+- Toml's key stayed 31 lines through all of slice 2: its effects were
+  already resolved or excused; slice 2's value is house-wide (lint,
+  census) and in the chains to come (…J6HF: more gates as verdicts).
+
+## 2026-10-06 - slice 3 T1: subset check, and summaries were unreadable
+
+- The first `-subsumere` of a real summary against itself failed
+  "plagula illegibilis": `via=""$X""`. STML keeps inline attributes RAW
+  (spec §5.4) - escaping is the caller's job; effectus never did it.
+  Since slice 1, every summary with an unresolved quoted word was
+  invalid on disk, and nothing read one back. Same family as the T6
+  key holes: an output nobody consumed in its real form.
+- The frozen reference had the bug too, so it was re-frozen after the
+  fix (analysis unchanged; additions-only diff). The plan's Global
+  constraints record how to rebuild it.
+- The subset check is deliberately strict: a less precise new site is
+  a defect too (regression, not unsoundness) - slice 3 must only
+  sharpen.
+
+## 2026-10-06 - slice 3 T2: the walk
+
+- `a->assignata` holds EVERY assigned name, not just read-assigned
+  ones - the first build fell back on every use for that reason (a
+  debug print of the preconditions found it in one run). Read-set
+  names now come from their commands (`_a_lectione_positum`, cached).
+- Fixture expectations had to be corrected to ordering semantics four
+  times (eval AFTER the last assignment does not matter; `Y=a;
+  Y=$(mktemp)` is no longer discordia; an elif with nothing before the
+  `if` falls back; `P=""; P=x` now resolves). Writing them, I reasoned
+  in the old union semantics - the walk was right.
+- Cost lesson (again "measure, don't guess"): 2.3x slower, `sample`'s
+  top-of-stack named the two rescans in minutes.
+- The subset check's only failure was its own predicate (`./`), not
+  the walk - checks need plants AND real data.
+
+## 2026-10-06 - slice 3 T3: process boundaries, and a zero delta
+
+- One predicate, not per-construct code: a definition reaches a use
+  only if every process boundary above it also contains the use
+  (`_processum_attingit`). Inward is free; `{ }` is not a boundary.
+- `PIPA` is NOT always a pipeline: C8 also builds it for `! cmd` and
+  `time cmd` (one segment, current shell). The boundary test is "the
+  PIPA holds an OPERATOR" (only `|`/`|&` appear there), not "count the
+  members" - heredoc nodes can sit in list slots and would inflate a
+  count. Over-exclusion is the dangerous direction: the subset check
+  sees values grow, never shrink wrongly - hence the `! H=h2` contrary
+  fixture with its own plant.
+- Census delta was zero. Before believing it: a probe at the
+  exclusion (stderr print), checked first on a fixture (the binary had
+  the probe), then per file over the house: hits only in
+  tools/corpus_infixum.sh (`for f` inside `( )` in a function), whose
+  uses are in functions or in sourcing scripts - FALLBACK before the
+  rule. My first reading (parent chain cut at `$( )`) was wrong: the
+  ancestor dump showed PARS_SUBSTITUTIO in the chain; the "top-level"
+  hits were OTHER scripts' uses of `f`. Census mode does not show
+  stderr per file - probe through the per-file CLI.
+
+## 2026-10-06 - slice 3 T4: functions
+
+- Opening reading by a temporary probe at the end of `_ambitum_derivare`
+  (per-file CLI, stderr): numbers in spec-3 §XI T4. Two first-pass
+  metrics were noisy and had to be refined before designing: "passed"
+  counted calls written inside `$( )` (the word's text includes the
+  substitution) - static words only; dynamic titles needed their raw
+  text to see they are paths and binaries, not dispatch.
+- Design consequence: a dynamic title cannot name a function whose
+  name appears nowhere as text, so "passed" (static non-title word) +
+  title evaluation gives a sound call graph without giving up on the
+  357 ambitus that run binaries through variables.
+- T2's walk refused ANY definition inside a function - including
+  `local` ones, which never leave their function. That alone blocked
+  ordering in every silva runner (`local obj` in
+  materia_substratum.sh): most of the census gain is T2's walk finally
+  applying, not call sites.
+- Bug found by reading the census diff (not by a fixture): the
+  slice-2 FALLBACK guard is per TITLE, and `$1` inside `f` bound at
+  `f "$1"` evaluates the script's `$1` while "1" is on the stack ->
+  `recursio`. Positionals skip the title guard; call recursion has its
+  own stack (`functiones_argumentorum`).
+- Oracle explicata 75 -> 125 looked like a T4 regression; running the
+  oracle with the HEAD (T3) analyzer gave 125 too. Compare against the
+  previous analyzer on the SAME tree before attributing a number.
+- Unsound corners left named, not modelled: `X=v f` prefix assignment
+  into a function (never collected, as in slice 2); `trap 'X=1' EXIT`
+  code strings (not eval).
+
+## 2026-10-06 - slice 3 T5: script arguments, sourcing, A1
+
+- A1 as decided would have stored "no arguments" as `argumenta=""`;
+  `stml formare` rewrites that as a bare attribute, read back as
+  "true". A 30-second probe (`bin/stml formare x.stml -probare`) before
+  writing the declaration; shown to Fran, amended to an element. Same
+  family as the memory note "never write EMPTY attr values".
+- Arcs are created while the parent is still in its fixpoint and a
+  child is derived once (visi), so "the arcs into me" are incomplete
+  when the child first evaluates - hence phase 2. The census derives
+  every script as its own root, so script arguments cannot move the
+  census by design (run by hand = no caller); they matter in chains.
+- The toml runner re-executes itself (`"$0" "$@" | tee`), an arc into
+  the ROOT with `"$@"`: without modelling forwarding, the declared argv
+  could never resolve `$1`. 18 house runners share the idiom.
+- Cost bug: `_fontationes_aequales(NIHIL, empty)` was FALSE, so every
+  ambitus ran one extra fixpoint pass (census 3.1 -> 4.3 s); found by
+  noticing the section time (2.6 -> 4.3 s) before the census.
+- The pythonica gate's two failures were fail-fast effects of one NOVA
+  word (`dabilia`) in the dirty tree, not of the cross-check: run the
+  Latin lint before reading a red pythonica.
+- Zero census delta checked by a probe: the sourced-definition path is
+  live (vexilla.sh ~3,700 uses), values identical (single definition).
+
+## 2026-10-06 - slice 3 T6: close, and a contaminated stopwatch
+
+- Before/after measured on ONE tree with both binaries (frozen slice-2
+  vs final), not against numbers remembered from older trees.
+- Census cost: the committed T5 binary was +60-90% (2.5-3.2 s vs 1.6
+  s). `sample` named `__read_nocancel` under `_locum_sequi`:
+  `_scriptum_est` read whole binaries to look at two bytes, per exec
+  site per pass. Memo per derivation + first line only -> 1.6 s.
+- Then a false alarm: after the fix the census still timed at 2.2-2.5
+  s - because the background `sample` targets (4x index runs) were
+  still running. Clean alternating runs (nothing else alive, checked
+  with pgrep): slice 2 1.58-1.74 s, final 1.59-1.62 s. A memo of the
+  reaching sets was written for a slowdown that was not there - and,
+  luckily, its anchor did not match, so it never landed. Check the
+  machine is idle BEFORE optimizing a timing.
