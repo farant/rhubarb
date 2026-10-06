@@ -23,6 +23,11 @@
  *   memoria extra machinam POST signationem mutata non videtur
  *   (reproiectio eam tacite reficit).
  *
+ * - SPATIUM NOMINUM (insula-rami-plan R2): documenta plura in volumine
+ *   uno - genus actorum, notae (ramus, coniunctio) et claves
+ *   checkpointorum praefixum 'spatium/' ferunt; historia sua sola
+ *   legit. Spatium vacuum = nomina nuda (octeti veteres).
+ *
  * Historia volumen non describit: manifestum documenti (dimensiones,
  * intervallum) res clientis est. */
 
@@ -59,7 +64,11 @@ nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
       HistoriaProiectio  proiectio;
-     constans character* genus;           /* actorum clientis */
+     constans character* spatium;          /* R2; "" = nullum */
+     constans character* genus;            /* actorum (cum spatio) */
+     constans character* genus_rami;
+     constans character* genus_coniunctionis;
+     constans character* praefixum_checkpoint;
      constans character* origo_checkpoint; /* "pictor:checkpoint" */
                     i32  intervallum;      /* acta viva inter cp. */
                     s64  cursor;           /* acta applicata (seq) */
@@ -80,6 +89,7 @@ historia_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
      constans character* genus,
      constans character* origo_checkpoint,
                     i32  intervallum,
@@ -92,6 +102,7 @@ historia_aperire (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
      constans character* genus,
      constans character* origo_checkpoint,
                     i32  intervallum,

@@ -136,7 +136,8 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_scriba_figurae");
-    doc = scriba_documentum_creare(piscina, intern, vol, XVI, VI, IV);
+    doc = scriba_documentum_creare(piscina, intern, vol, "", XVI, VI,
+        IV);
     scriba_actiones_initiare(&sa, doc, piscina);
     memcpy(&tabula_cellula(&sa.laboris, ZEPHYRUM, ZEPHYRUM), "salve",
         V);

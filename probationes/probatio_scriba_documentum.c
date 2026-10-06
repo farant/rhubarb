@@ -216,7 +216,8 @@ s32 principale (vacuum)
 
     imprimere("\n--- IX: committere, revocare, ramus ---\n");
     vol = volumen_temporarium(piscina, "probatio_scriba_documentum");
-    doc = scriba_documentum_creare(piscina, intern, vol, LAT, ALT, II);
+    doc = scriba_documentum_creare(piscina, intern, vol, "", LAT, ALT,
+        II);
     CREDO_NON_NIHIL(doc);
     copiare(&c, scriba_documentum_tabula(doc));
     CREDO_AEQUALIS_S64(scriba_documentum_committere(doc, &c), ZEPHYRUM);
@@ -252,7 +253,7 @@ s32 principale (vacuum)
     CREDO_VERUM(scriba_documentum_verificare(doc));
 
     imprimere("\n--- X: aperire - folium et sigillum eadem ---\n");
-    doc2 = scriba_documentum_aperire(piscina, intern, vol);
+    doc2 = scriba_documentum_aperire(piscina, intern, vol, "");
     CREDO_NON_NIHIL(doc2);
     CREDO_AEQUALIS_S64(scriba_documentum_cursor(doc2), q);
     CREDO_VERUM(aequalia(scriba_documentum_tabula(doc2), &c));
@@ -268,6 +269,44 @@ s32 principale (vacuum)
     CREDO_VERUM(chorda_vacua(m));
     folium(&ante, "");
     CREDO_VERUM(aequalia(scriba_documentum_tabula(doc2), &ante));
+
+    imprimere("\n--- XI: duo documenta in volumine uno (spatia) ---\n");
+    {
+                 Volumen* vol_duplex;
+        ScribaDocumentum* d1;
+        ScribaDocumentum* d2;
+        ScribaDocumentum* r1;
+        ScribaDocumentum* r2;
+
+        vol_duplex = volumen_temporarium(piscina,
+            "probatio_scriba_duplex");
+        d1 = scriba_documentum_creare(piscina, intern, vol_duplex, "s1",
+                                      LAT, ALT, II);
+        d2 = scriba_documentum_creare(piscina, intern, vol_duplex, "s2",
+                                      LAT, ALT, II);
+        CREDO_NON_NIHIL(d1);
+        CREDO_NON_NIHIL(d2);
+        folium(&ante, "unum");
+        CREDO_VERUM(scriba_documentum_committere(d1, &ante) > ZEPHYRUM);
+        folium(&post, "duo");
+        CREDO_VERUM(scriba_documentum_committere(d2, &post) > ZEPHYRUM);
+        CREDO_VERUM(scriba_documentum_revocare(d1));
+        CREDO_VERUM(aequalia(scriba_documentum_tabula(d2), &post));
+        CREDO_VERUM(scriba_documentum_reficere(d1));
+        r1 = scriba_documentum_aperire(piscina, intern, vol_duplex,
+            "s1");
+        r2 = scriba_documentum_aperire(piscina, intern, vol_duplex,
+            "s2");
+        CREDO_NON_NIHIL(r1);
+        CREDO_NON_NIHIL(r2);
+        CREDO_VERUM(aequalia(scriba_documentum_tabula(r1), &ante));
+        CREDO_VERUM(aequalia(scriba_documentum_tabula(r2), &post));
+        /* spatium ignotum: nullum documentum */
+        CREDO_NIHIL(scriba_documentum_aperire(piscina, intern,
+            vol_duplex,
+            "s3"));
+        volumen_claudere(vol_duplex);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

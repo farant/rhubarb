@@ -105,6 +105,12 @@ theirs through (and prefix their manifest). Two documents in one
 volume replay independently (undo in one never touches the other).
 H0 golden byte-identical with the empty namespace.
 
+R2 as built: a `spatium` parameter after the volume in
+`historia_creare/_aperire`, `pictor_documentum_creare/_aperire`,
+`scriba_documentum_creare/_aperire` ("" = old bytes; H0 golden
+identical). Prefix `s/` on genus, markers, checkpoint keys, manifest.
+Three plants (bare markers caught only on reopening).
+
 **R3 - pictor on a branch.** Actions, componere, figurae read and
 write through an `InsulaRamus` in their contexts; canons and owners
 attached to the branch; `pictor_applicatio` hands the root branch.

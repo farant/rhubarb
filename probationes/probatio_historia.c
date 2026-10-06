@@ -123,7 +123,7 @@ s32 principale (vacuum)
     vol = volumen_temporarium(piscina, "probatio_historia");
     CREDO_NON_NIHIL(vol);
     l.numeratores[III] = VII;   /* sordes ante vacationem */
-    h = historia_creare(piscina, intern, vol, "numerus",
+    h = historia_creare(piscina, intern, vol, "", "numerus",
                         "probatio:checkpoint", II, proiectio(&l));
     CREDO_NON_NIHIL(h);
     CREDO_VERUM(numeratores_sunt(&l, "00000000"));
@@ -204,7 +204,7 @@ s32 principale (vacuum)
     CREDO_VERUM(historia_verificare(h));
 
     imprimere("\n--- IX: aperire - status idem ---\n");
-    h2 = historia_aperire(piscina, intern, vol, "numerus",
+    h2 = historia_aperire(piscina, intern, vol, "", "numerus",
                           "probatio:checkpoint", II, proiectio(&l2));
     CREDO_NON_NIHIL(h2);
     CREDO_AEQUALIS_S64(historia_cursor(h2), q[VII]);
@@ -233,7 +233,8 @@ s32 principale (vacuum)
         memset(&l3, ZEPHYRUM, magnitudo(l3));
         vol_discors = volumen_temporarium(piscina,
             "probatio_historia_discors");
-        h3 = historia_creare(piscina, intern, vol_discors, "numerus",
+        h3 = historia_creare(piscina, intern, vol_discors, "",
+            "numerus",
                              "probatio:checkpoint", II, proiectio(&l3));
         CREDO_NON_NIHIL(h3);
         actum(h3, piscina, ZEPHYRUM);
@@ -262,7 +263,7 @@ s32 principale (vacuum)
         memset(&ludicra_aperta, ZEPHYRUM, magnitudo(ludicra_aperta));
         vol_grex = volumen_temporarium(piscina,
             "probatio_historia_grex");
-        historia_grex = historia_creare(piscina, intern, vol_grex,
+        historia_grex = historia_creare(piscina, intern, vol_grex, "",
             "numerus",
                              "probatio:checkpoint", II,
                              proiectio(&ludicra_grex));
@@ -307,6 +308,7 @@ s32 principale (vacuum)
         a7 = historia_actum_coniunctum(historia_grex, chorda_ex_s32(VI,
             piscina));
         historia_aperta = historia_aperire(piscina, intern, vol_grex,
+            "",
             "numerus",
                                "probatio:checkpoint", II,
                                proiectio(&ludicra_aperta));
@@ -331,7 +333,7 @@ s32 principale (vacuum)
         memset(&ludicra_rami, ZEPHYRUM, magnitudo(ludicra_rami));
         vol_ramus = volumen_temporarium(piscina,
             "probatio_historia_ramus");
-        historia_rami = historia_creare(piscina, intern, vol_ramus,
+        historia_rami = historia_creare(piscina, intern, vol_ramus, "",
             "numerus",
                              "probatio:checkpoint", C,
                              proiectio(&ludicra_rami));
@@ -350,14 +352,106 @@ s32 principale (vacuum)
         volumen_claudere(vol_ramus);
     }
 
-    imprimere("\n--- XIII: argumenta mala ---\n");
+    imprimere("\n--- XIII: spatia nominum - duae historiae, volumen"
+              " unum ---\n");
+    {
+          Volumen* vol_duplex;
+          Ludicra  ludicra_a;
+          Ludicra  ludicra_b;
+          Ludicra  ludicra_a_aperta;
+          Ludicra  ludicra_b_aperta;
+         Historia* historia_a;
+         Historia* historia_b;
+         Historia* historia_a_aperta;
+         Historia* historia_b_aperta;
+              s64  a1;
+              Xar* plagulae;
+              i32  i;
+              b32  praefixa;
+
+        memset(&ludicra_a, ZEPHYRUM, magnitudo(ludicra_a));
+        memset(&ludicra_b, ZEPHYRUM, magnitudo(ludicra_b));
+        memset(&ludicra_a_aperta, ZEPHYRUM,
+            magnitudo(ludicra_a_aperta));
+        memset(&ludicra_b_aperta, ZEPHYRUM,
+            magnitudo(ludicra_b_aperta));
+        vol_duplex = volumen_temporarium(piscina,
+            "probatio_historia_duplex");
+        historia_a = historia_creare(piscina, intern, vol_duplex, "a",
+            "numerus",
+                             "probatio:checkpoint", II,
+                             proiectio(&ludicra_a));
+        historia_b = historia_creare(piscina, intern, vol_duplex, "b",
+            "numerus",
+                             "probatio:checkpoint", II,
+                             proiectio(&ludicra_b));
+        /* acta alternata */
+        a1 = actum(historia_a, piscina, ZEPHYRUM);
+        (vacuum)actum(historia_b, piscina, V);
+        (vacuum)actum(historia_a, piscina, I);
+        (vacuum)actum(historia_b, piscina, VI);
+        (vacuum)actum(historia_a, piscina, II);
+        (vacuum)actum(historia_b, piscina, VII);
+        CREDO_VERUM(numeratores_sunt(&ludicra_a, "11100000"));
+        CREDO_VERUM(numeratores_sunt(&ludicra_b, "00000111"));
+        /* revocare in a; b intactum */
+        CREDO_VERUM(historia_revocare(historia_a));
+        CREDO_VERUM(historia_revocare(historia_a));
+        CREDO_AEQUALIS_S64(historia_cursor(historia_a), a1);
+        CREDO_VERUM(numeratores_sunt(&ludicra_a, "10000000"));
+        CREDO_VERUM(numeratores_sunt(&ludicra_b, "00000111"));
+        /* ramus in a: acta b post ramum a non moriuntur */
+        (vacuum)actum(historia_a, piscina, III);
+        CREDO_VERUM(numeratores_sunt(&ludicra_a, "10010000"));
+        CREDO_VERUM(historia_revocare(historia_b));
+        CREDO_VERUM(numeratores_sunt(&ludicra_b, "00000110"));
+        CREDO_VERUM(historia_reficere(historia_b));
+        CREDO_VERUM(historia_verificare(historia_a));
+        CREDO_VERUM(historia_verificare(historia_b));
+        /* aperire utramque: status suus */
+        historia_a_aperta = historia_aperire(piscina, intern,
+            vol_duplex, "a",
+                               "numerus", "probatio:checkpoint", II,
+                               proiectio(&ludicra_a_aperta));
+        historia_b_aperta = historia_aperire(piscina, intern,
+            vol_duplex, "b",
+                               "numerus", "probatio:checkpoint", II,
+                               proiectio(&ludicra_b_aperta));
+        CREDO_VERUM(numeratores_sunt(&ludicra_a_aperta, "10010000"));
+        CREDO_VERUM(numeratores_sunt(&ludicra_b_aperta, "00000111"));
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_a_aperta),
+            II);
+        CREDO_AEQUALIS_I32(historia_numerus_vivorum(historia_b_aperta),
+            III);
+        /* claves checkpointorum praefixa */
+        plagulae = volumen_plagulas_enumerare(vol_duplex, piscina);
+        praefixa = xar_numerus(plagulae) > ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(plagulae); i++)
+        {
+            chorda via;
+
+            via = ((VolumenPlagula*)xar_obtinere(plagulae, i))->via;
+            si (!chorda_incipit(via, chorda_ex_literis("a/checkpoint/",
+                    piscina))
+                && !chorda_incipit(via,
+                chorda_ex_literis("b/checkpoint/",
+                    piscina)))
+            {
+                praefixa = FALSUM;
+            }
+        }
+        CREDO_VERUM(praefixa);
+        volumen_claudere(vol_duplex);
+    }
+
+    imprimere("\n--- XIV: argumenta mala ---\n");
     mala            = proiectio(&l);
     mala.applicare  = NIHIL;
-    CREDO_NIHIL(historia_creare(piscina, intern, vol, "numerus",
+    CREDO_NIHIL(historia_creare(piscina, intern, vol, "", "numerus",
                                 "probatio:checkpoint", II, mala));
     mala          = proiectio(&l);
     mala.mensura  = ZEPHYRUM;
-    CREDO_NIHIL(historia_creare(piscina, intern, vol, "numerus",
+    CREDO_NIHIL(historia_creare(piscina, intern, vol, "", "numerus",
                                 "probatio:checkpoint", II, mala));
     CREDO_NIHIL(historia_actum(NIHIL, chorda_ex_literis("1", piscina))
                 == ZEPHYRUM ? NIHIL : h);

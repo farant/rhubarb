@@ -117,10 +117,11 @@ pictor_applicatio_aedificare (
     app->volumen  = volumen;
 
     /* documentum */
-    app->doc = pictor_documentum_aperire(piscina, intern, volumen);
+    app->doc = pictor_documentum_aperire(piscina, intern, volumen, "");
     si (!app->doc)
     {
         app->doc = pictor_documentum_creare(piscina, intern, volumen,
+            "",
             DOC_LATITUDO, DOC_ALTITUDO, LXIV);
     }
     si (!app->doc)

@@ -79,7 +79,8 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_figurae");
-    doc = pictor_documentum_creare(piscina, intern, vol, XL, XXX, LXIV);
+    doc = pictor_documentum_creare(piscina, intern, vol, "", XL, XXX,
+        LXIV);
     /* actum: linea nigra horizontalis y=2, x 0..39 */
     pictor_documentum_actum(doc, chorda_ex_literis(
                 "<ictus instrumentum=\"penicillus\" color=\"0\""

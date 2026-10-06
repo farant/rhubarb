@@ -118,10 +118,11 @@ scriba_applicatio_aedificare (
     app->volumen  = volumen;
 
     /* documentum: exsistens aut novum */
-    app->doc = scriba_documentum_aperire(piscina, intern, volumen);
+    app->doc = scriba_documentum_aperire(piscina, intern, volumen, "");
     si (!app->doc)
     {
         app->doc = scriba_documentum_creare(piscina, intern, volumen,
+            "",
             FOLIUM_LATITUDO, FOLIUM_ALTITUDO, INTERVALLUM);
     }
     si (!app->doc)

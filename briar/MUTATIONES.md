@@ -195,6 +195,13 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus (FRANGIT): SPATIUM NOMINUM (insula-rami-plan R2) -
+  `historia_creare/_aperire`, `pictor_documentum_creare/_aperire`,
+  `scriba_documentum_creare/_aperire` parametrum `spatium` post volumen
+  accipiunt ("" = nomina nuda, octeti veteres). Documenta plura in
+  volumine uno: genus, notae, checkpoints et manifestum praefixum
+  'spatium/' ferunt.
+
 - corpus: insula RAMOS habet (insula-rami-plan R1) - `InsulaRamus`
   (repositorium + liberum radicis per elementum et id), `insula_ramus`,
   `insula_ramus_radix`, `_nodus`, `_attributum`, `mutare_ramum`,

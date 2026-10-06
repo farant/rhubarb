@@ -65,3 +65,28 @@ never rest mid-group), so it is always false: harmless. The SECOND new
 act inherits the old group's "joined" flag. The test now builds exactly
 that (group undone, two plain acts on the branch, undo the second must
 stop at the first) and the plant is caught.
+
+## 2026-10-05 — namespaces: several documents in one volume (insula-rami-plan R2)
+
+Fran chose ONE host volume for all of schirmata's tabs, so several
+histories must share one act log. `historia_creare/_aperire` take a
+`spatium` (namespace) right after the volume: with "s1" the act genus
+becomes `s1/<genus>`, the markers `s1/ramus` and `s1/coniunctio`, the
+checkpoint keys `s1/checkpoint/<seq>` (the slash keeps `a` and `ab`
+apart); each history reads only its own. Empty = the old bare names -
+the H0 golden is byte-identical (root 201/201 with "" at every existing
+call). pictor_documentum and scriba_documentum gained the same
+parameter and prefix their manifest (`s1/documentum`).
+
+Test (probatio_historia XIII): two histories, interleaved acts,
+independent undo, a branch in one leaves the other's acts alive,
+reopen both from the volume, every checkpoint key prefixed; scriba XI:
+two documents reopen to their own sheets, an unknown namespace opens
+nothing. Plants: bare markers - **caught only on REOPENING** (both live
+objects stayed right; the replay of b saw a's `<ramus>` and dropped its
+own act) - the incremental path and the replay can disagree, so the
+test must read back from the volume; bare checkpoint keys; bare act
+genus.
+
+Slip on the way: my helper's parameter was named `nomen` - the latina
+macro for `typedef` (compile error, renamed `titulus`).

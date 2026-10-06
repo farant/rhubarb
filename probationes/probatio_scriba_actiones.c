@@ -177,9 +177,10 @@ s32 principale (vacuum)
     { imprimere("FRACTA: piscina\n"); redde I;
     }
     credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
-    vol = volumen_temporarium(piscina, "probatio_scriba_actiones");
-    doc = scriba_documentum_creare(piscina, intern, vol, LAT, ALT, IV);
+    intern  = internamentum_creare(piscina);
+    vol     = volumen_temporarium(piscina, "probatio_scriba_actiones");
+    doc = scriba_documentum_creare(piscina, intern, vol, "", LAT, ALT,
+        IV);
     CREDO_NON_NIHIL(doc);
     t    = scriba_documentum_tabula(doc);
     repo = insula_repositorium_creare(piscina, intern,

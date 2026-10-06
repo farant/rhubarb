@@ -179,7 +179,7 @@ s32 principale (vacuum)
     vol = volumen_temporarium(piscina,
         "probatio_pictor_documentum_aurum");
     CREDO_NON_NIHIL(vol);
-    doc = pictor_documentum_creare(piscina, intern, vol, XXXII, XVI,
+    doc = pictor_documentum_creare(piscina, intern, vol, "", XXXII, XVI,
         II);
     CREDO_NON_NIHIL(doc);
     status_effundere(a, "creatum", doc, piscina);
@@ -209,7 +209,7 @@ s32 principale (vacuum)
     CREDO_VERUM(pictor_documentum_verificare(doc));
 
     imprimere("\n--- Aperire iterum: status idem ---\n");
-    doc2 = pictor_documentum_aperire(piscina, intern, vol);
+    doc2 = pictor_documentum_aperire(piscina, intern, vol, "");
     CREDO_NON_NIHIL(doc2);
     status_effundere(a, "apertum", doc2, piscina);
     volumen_effundere(a, vol, piscina);

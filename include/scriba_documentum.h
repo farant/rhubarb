@@ -104,6 +104,7 @@ scriba_documentum_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
                     i32  latitudo,
                     i32  altitudo,
                     i32  intervallum);
@@ -113,7 +114,8 @@ ScribaDocumentum*
 scriba_documentum_aperire (
                 Piscina* piscina,
     InternamentumChorda* intern,
-                Volumen* volumen);
+                Volumen* volumen,
+     constans character* spatium);
 
 /* folium laboris 'post' in caudam: mutatio contra proiectionem
  * computatur et appenditur. Redde seq (> 0); 0 si nihil mutatum

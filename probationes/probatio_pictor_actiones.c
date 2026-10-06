@@ -80,7 +80,7 @@ s32 principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     vol = volumen_temporarium(piscina, "probatio_pictor_actiones");
-    doc = pictor_documentum_creare(piscina, intern, vol, CCCXX, CC,
+    doc = pictor_documentum_creare(piscina, intern, vol, "", CCCXX, CC,
         LXIV);
     repo = insula_repositorium_creare(piscina, intern,
         "<documentum latitudo=\"320\" altitudo=\"200\"/>",

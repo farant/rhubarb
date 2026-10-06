@@ -43,6 +43,7 @@ pictor_documentum_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
                     i32  latitudo,
                     i32  altitudo,
                     i32  intervallum);
@@ -53,7 +54,8 @@ PictorDocumentum*
 pictor_documentum_aperire (
                 Piscina* piscina,
     InternamentumChorda* intern,
-                Volumen* volumen);
+                Volumen* volumen,
+     constans character* spatium);
 
 /* appendit (ramus prius si cursor < finis), applicat, checkpoint si
  * debetur. Redde seq (> 0) aut 0 si recusatum. */

@@ -166,6 +166,24 @@ proiectio_facere (
  * Vita
  * ================================================== */
 
+/* clavis manifesti: "spatium/documentum" (spatium vacuum: nuda) */
+interior chorda
+clavis_manifesti (
+               Piscina* piscina,
+    constans character* spatium)
+{
+    chorda c;
+
+    si (!spatium || !spatium[ZEPHYRUM])
+    {
+        redde chorda_ex_literis("documentum", piscina);
+    }
+    c = chorda_concatenare(chorda_ex_literis(spatium, piscina),
+                           chorda_ex_literis("/documentum", piscina),
+                           piscina);
+    redde c;
+}
+
 interior PictorDocumentum*
 documentum_struere (
                 Piscina* piscina,
@@ -205,6 +223,7 @@ pictor_documentum_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
                     i32  latitudo,
                     i32  altitudo,
                     i32  intervallum)
@@ -237,10 +256,11 @@ pictor_documentum_creare (
         chorda_ex_s32((s32)doc->intervallum, piscina), piscina);
     manifestum = chorda_concatenare(manifestum,
         chorda_ex_literis("\"/>", piscina), piscina);
-    volumen_plagulam_condere(volumen, chorda_ex_literis("documentum",
-        piscina),
+    volumen_plagulam_condere(volumen, clavis_manifesti(piscina,
+        spatium),
                              manifestum, "pictor:documentum");
-    doc->historia = historia_creare(piscina, intern, volumen, "ictus",
+    doc->historia = historia_creare(piscina, intern, volumen, spatium,
+        "ictus",
                                     "pictor:checkpoint",
                                     doc->intervallum,
                                     proiectio_facere(doc));
@@ -255,7 +275,8 @@ PictorDocumentum*
 pictor_documentum_aperire (
                 Piscina* piscina,
     InternamentumChorda* intern,
-                Volumen* volumen)
+                Volumen* volumen,
+     constans character* spatium)
 {
     PictorDocumentum* doc;
               chorda  manifestum;
@@ -270,7 +291,7 @@ pictor_documentum_aperire (
         redde NIHIL;
     }
     manifestum = volumen_plagulam_promere(volumen,
-        chorda_ex_literis("documentum", piscina), piscina, &inventum);
+        clavis_manifesti(piscina, spatium), piscina, &inventum);
     si (!inventum)
     {
         redde NIHIL;
@@ -293,7 +314,8 @@ pictor_documentum_aperire (
     {
         redde NIHIL;
     }
-    doc->historia = historia_aperire(piscina, intern, volumen, "ictus",
+    doc->historia = historia_aperire(piscina, intern, volumen, spatium,
+        "ictus",
                                      "pictor:checkpoint",
                                      doc->intervallum,
                                      proiectio_facere(doc));

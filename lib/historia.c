@@ -104,7 +104,7 @@ acta_viva (
         {
             frange;
         }
-        si (chorda_aequalis_literis(a->genus, "ramus"))
+        si (chorda_aequalis_literis(a->genus, h->genus_rami))
         {
             res = stml_legere_ex_literis(chorda_ut_cstr(a->datum,
                 h->piscina), h->piscina, h->intern);
@@ -125,7 +125,7 @@ acta_viva (
             pendens = FALSUM;
             perge;
         }
-        si (chorda_aequalis_literis(a->genus, "coniunctio"))
+        si (chorda_aequalis_literis(a->genus, h->genus_coniunctionis))
         {
             pendens = VERUM;
             perge;
@@ -185,7 +185,7 @@ checkpoint_proximus (
                i32  i;
                i32  n;
 
-    praefixum  = chorda_ex_literis("checkpoint/", h->piscina);
+    praefixum  = chorda_ex_literis(h->praefixum_checkpoint, h->piscina);
     plagulae   = volumen_plagulas_enumerare(h->volumen, h->piscina);
     optimum    = ZEPHYRUM;
     n          = xar_numerus(plagulae);
@@ -236,7 +236,7 @@ proicere_ad (
         si (basis > ZEPHYRUM)
         {
             clavis = chorda_concatenare(
-                chorda_ex_literis("checkpoint/", h->piscina),
+                chorda_ex_literis(h->praefixum_checkpoint, h->piscina),
                 seq_chorda(basis, h->piscina), h->piscina);
             hex = volumen_plagulam_promere(h->volumen, clavis,
                                            h->piscina, &inventum);
@@ -287,7 +287,8 @@ checkpoint_condere (
     {
         redde;
     }
-    clavis = chorda_concatenare(chorda_ex_literis("checkpoint/",
+    clavis =
+        chorda_concatenare(chorda_ex_literis(h->praefixum_checkpoint,
         h->piscina),
                                 seq_chorda(seq, h->piscina),
                                 h->piscina);
@@ -301,11 +302,32 @@ checkpoint_condere (
  * Vita
  * ================================================== */
 
+/* "spatium/titulus" (spatium vacuum: titulus ipse) */
+interior constans character*
+praefixum (
+               Piscina* piscina,
+    constans character* spatium,
+    constans character* titulus)
+{
+    chorda c;
+
+    si (!spatium[ZEPHYRUM])
+    {
+        redde titulus;
+    }
+    c = chorda_concatenare(chorda_ex_literis(spatium, piscina),
+                           chorda_ex_literis("/", piscina), piscina);
+    c = chorda_concatenare(c, chorda_ex_literis(titulus, piscina),
+        piscina);
+    redde chorda_ut_cstr(c, piscina);
+}
+
 interior Historia*
 historia_struere (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
      constans character* genus,
      constans character* origo_checkpoint,
                     i32  intervallum,
@@ -326,11 +348,20 @@ historia_struere (
         redde NIHIL;
     }
     memset(h, ZEPHYRUM, magnitudo(Historia));
-    h->volumen           = volumen;
-    h->piscina           = piscina;
-    h->intern            = intern;
-    h->proiectio         = proiectio;
-    h->genus             = genus;
+    h->volumen    = volumen;
+    h->piscina    = piscina;
+    h->intern     = intern;
+    h->proiectio  = proiectio;
+    /* spatium nominum (R2): 's/' ante genus, notas, checkpoints;
+     * vacuum = nomina nuda (volumina vetera) */
+    h->spatium              = (spatium && spatium[ZEPHYRUM]) ? spatium
+                                                             : "";
+    h->genus       = praefixum(piscina, h->spatium, genus);
+    h->genus_rami  = praefixum(piscina, h->spatium, "ramus");
+    h->genus_coniunctionis  = praefixum(piscina, h->spatium,
+                                        "coniunctio");
+    h->praefixum_checkpoint = praefixum(piscina, h->spatium,
+                                        "checkpoint/");
     h->origo_checkpoint  = origo_checkpoint;
     h->intervallum       = intervallum > ZEPHYRUM ? intervallum : LXIV;
     redde h;
@@ -341,6 +372,7 @@ historia_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
      constans character* genus,
      constans character* origo_checkpoint,
                     i32  intervallum,
@@ -348,7 +380,7 @@ historia_creare (
 {
     Historia* h;
 
-    h = historia_struere(piscina, intern, volumen, genus,
+    h = historia_struere(piscina, intern, volumen, spatium, genus,
                          origo_checkpoint, intervallum, proiectio);
     si (!h)
     {
@@ -364,6 +396,7 @@ historia_aperire (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
      constans character* genus,
      constans character* origo_checkpoint,
                     i32  intervallum,
@@ -373,7 +406,7 @@ historia_aperire (
          Xar* viva;
          i32  n;
 
-    h = historia_struere(piscina, intern, volumen, genus,
+    h = historia_struere(piscina, intern, volumen, spatium, genus,
                          origo_checkpoint, intervallum, proiectio);
     si (!h)
     {
@@ -424,11 +457,11 @@ actum_appendere (
                                    chorda_ex_literis("\"/>",
                                    h->piscina),
                                    h->piscina);
-        volumen_actum_appendere(h->volumen, "ramus", ramus);
+        volumen_actum_appendere(h->volumen, h->genus_rami, ramus);
     }
     si (coniunctum && h->numerus_vivorum > ZEPHYRUM)
     {
-        volumen_actum_appendere(h->volumen, "coniunctio",
+        volumen_actum_appendere(h->volumen, h->genus_coniunctionis,
             chorda_ex_literis("<coniunctio/>", h->piscina));
     }
     seq = volumen_actum_appendere(h->volumen, h->genus, actum);

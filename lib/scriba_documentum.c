@@ -499,6 +499,24 @@ proiectio_facere (
  * Vita
  * ================================================== */
 
+/* clavis manifesti: "spatium/documentum" (spatium vacuum: nuda) */
+interior chorda
+clavis_manifesti (
+               Piscina* piscina,
+    constans character* spatium)
+{
+    chorda c;
+
+    si (!spatium || !spatium[ZEPHYRUM])
+    {
+        redde chorda_ex_literis("documentum", piscina);
+    }
+    c = chorda_concatenare(chorda_ex_literis(spatium, piscina),
+                           chorda_ex_literis("/documentum", piscina),
+                           piscina);
+    redde c;
+}
+
 interior ScribaDocumentum*
 documentum_struere (
                 Piscina* piscina,
@@ -552,6 +570,7 @@ scriba_documentum_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,
                 Volumen* volumen,
+     constans character* spatium,
                     i32  latitudo,
                     i32  altitudo,
                     i32  intervallum)
@@ -574,10 +593,11 @@ scriba_documentum_creare (
     chorda_aedificator_appendere_i32(a, doc->intervallum);
     chorda_aedificator_appendere_literis(a, "\"/>");
     volumen_plagulam_condere(volumen,
-                             chorda_ex_literis("documentum", piscina),
+                             clavis_manifesti(piscina, spatium),
                              chorda_aedificator_finire(a),
                              "scriba:documentum");
-    doc->historia = historia_creare(piscina, intern, volumen, "mutatio",
+    doc->historia = historia_creare(piscina, intern, volumen, spatium,
+        "mutatio",
                                     "scriba:checkpoint",
                                     doc->intervallum,
                                     proiectio_facere(doc));
@@ -588,7 +608,8 @@ ScribaDocumentum*
 scriba_documentum_aperire (
                 Piscina* piscina,
     InternamentumChorda* intern,
-                Volumen* volumen)
+                Volumen* volumen,
+     constans character* spatium)
 {
     ScribaDocumentum* doc;
               chorda  manifestum;
@@ -603,7 +624,7 @@ scriba_documentum_aperire (
         redde NIHIL;
     }
     manifestum = volumen_plagulam_promere(volumen,
-        chorda_ex_literis("documentum", piscina), piscina, &inventum);
+        clavis_manifesti(piscina, spatium), piscina, &inventum);
     si (!inventum)
     {
         redde NIHIL;
@@ -630,7 +651,7 @@ scriba_documentum_aperire (
     {
         redde NIHIL;
     }
-    doc->historia = historia_aperire(piscina, intern, volumen,
+    doc->historia = historia_aperire(piscina, intern, volumen, spatium,
         "mutatio",
                                      "scriba:checkpoint",
                                      doc->intervallum,
