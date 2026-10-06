@@ -11,6 +11,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "aemulator.h"
+#include "stilus_terminalis.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -126,7 +127,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- III: series ignotae numerantur ---\n");
     a = creare(X, III);
-    scribere(a, "\x1B[5n\x1B" "7\x1B]0;titulus\x07" "Z");
+    scribere(a, "\x1B[5n\x1B#8\x1B]0;titulus\x07" "Z");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), III);
     CREDO_VERUM(textus_est(a, "Z"));
 
@@ -231,6 +232,150 @@ s32 principale (vacuum)
     scribere(a, "a\r\nb\r\nc\r\n");
     CREDO_VERUM(textus_est(a, "b\nc"));
     CREDO_AEQUALIS_I32(aemulator_cursor(a).y, II);
+
+    imprimere("\n--- X: motus et series (A2) ---\n");
+    a = creare(X, VI);
+    scribere(a, "\x1B[3;5H\x1B[2G");
+    c = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(c.x, I);
+    CREDO_AEQUALIS_I32(c.y, II);
+    scribere(a, "\x1B[4d");
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).y, III);
+    scribere(a, "\x1B[E");
+    c = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(c.x, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(c.y, IV);
+    scribere(a, "\x1B[7`\x1B[2F");
+    c = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(c.x, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(c.y, II);
+    scribere(a, "\x1B[99;99f");
+    c = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(c.x, IX);
+    CREDO_AEQUALIS_I32(c.y, V);
+    /* intermedia, ':' extra SGR, privatum ignotum, SGR ignotum */
+    a = creare(X, III);
+    scribere(a, "\x1B[?1$p\x1B[0 q\x1B[2:3H\x1B[>c\x1B[99m\x1B[3;3 H");
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), VI);
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, ZEPHYRUM);
+    /* SGR cum ':' licet */
+    scribere(a, "\x1B[4:3mU");
+    {
+        AemulatorCellula cellula_lecta;
+
+        CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM,
+            &cellula_lecta));
+        CREDO_VERUM(cellula_lecta.stilus.sublinea
+            == STILUS_SUBLINEA_UNDULATA);
+    }
+
+    imprimere("\n--- XI: deletio super latas ---\n");
+    a = creare(X, III);
+    scribere(a, "\xE6\xA9\x8BZ\x1B[1;2H\x1B[K");
+    CREDO_VERUM(cellula_est(a, ZEPHYRUM, ZEPHYRUM, "",
+        AEMULATOR_ANGUSTA));
+    CREDO_VERUM(textus_est(a, ""));
+    a = creare(X, III);
+    scribere(a, "AB\xE6\xA9\x8BZ\x1B[1;3H\x1B[1K");
+    CREDO_VERUM(cellula_est(a, III, ZEPHYRUM, "", AEMULATOR_ANGUSTA));
+    CREDO_VERUM(textus_est(a, "    Z"));
+
+    imprimere("\n--- XII: DECSC calamum servat; 1049 limites ---\n");
+    a = creare(X, III);
+    scribere(a, "\x1B[1m\x1B" "7\x1B[0m\x1B" "8X");
+    {
+        AemulatorCellula cellula_lecta;
+
+        CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM,
+            &cellula_lecta));
+        CREDO_VERUM((cellula_lecta.stilus.ornamenta & STILUS_CRASSUM)
+            != ZEPHYRUM);
+    }
+    /* exitus sine servatione: initium */
+    a = creare(X, III);
+    scribere(a, "\x1B[3;3H\x1B[?1049l");
+    c = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(c.x, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(c.y, ZEPHYRUM);
+    /* mutatio magnitudinis in altero: primarium servatum (cursor
+     * primarii intra altitudinem novam - aliter lineae summae abeunt,
+     * ut in VIII) */
+    a = creare(X, V);
+    scribere(a, "prima\x1B[2;6H\x1B[?1049haltera");
+    CREDO_VERUM(aemulator_amplitudo(a, VI, III));
+    CREDO_VERUM(aemulator_alterum(a));
+    scribere(a, "\x1B[?1049l");
+    CREDO_FALSUM(aemulator_alterum(a));
+    CREDO_VERUM(textus_est(a, "prima"));
+    c = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(c.x, V);
+    CREDO_AEQUALIS_I32(c.y, I);
+
+    imprimere("\n--- XIII: stili colliguntur; saturatio ---\n");
+    a = creare(X, III);
+    /* stilus moriturus (rubrum, index I) ante viridem (index II) in
+     * schirmo: collectio viridem ad I movet - cellula renumeranda */
+    scribere(a, "\x1B[2;1H\x1B[31mr\x1B[32mg\x1B[2;1H\x1B[0my\x1B[H");
+    scribere(a, "calefactio\r");
+    usus = piscina_summa_usus(piscina);
+    per (i = ZEPHYRUM; i < MM; i++)
+    {
+        character sgr[XLVIII];
+
+        sprintf(sgr, "\x1B[38;2;%d;%d;0mX\r", (integer)(i % CCLVI),
+            (integer)(i / CCLVI));
+        scribere(a, sgr);
+    }
+    post = piscina_summa_usus(piscina);
+    CREDO_VERUM(post == usus);
+    {
+        AemulatorCellula cellula_lecta;
+
+        CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM,
+            &cellula_lecta));
+        CREDO_VERUM(cellula_lecta.stilus.color_litterae.genus
+            == STILUS_COLOR_RGB);
+        CREDO_AEQUALIS_I32(cellula_lecta.stilus.color_litterae.valor,
+            (i32)((((MM - I) % CCLVI) << XVI) | (((MM - I) / CCLVI)
+            << VIII)));
+    }
+    {
+        AemulatorCellula cellula_lecta;
+
+        CREDO_VERUM(aemulator_cellula(a, I, I, &cellula_lecta));
+        CREDO_VERUM(chorda_aequalis_literis(cellula_lecta.graphema,
+            "g"));
+        CREDO_VERUM(cellula_lecta.stilus.color_litterae.genus
+            == STILUS_COLOR_TABULA);
+        CREDO_AEQUALIS_I32(cellula_lecta.stilus.color_litterae.valor,
+            II);
+    }
+    /* DC stili simul visibiles: tabula plena manet, degradatio */
+    a = creare(XL, XX);
+    per (i = ZEPHYRUM; i < DC; i++)
+    {
+        character sgr[XLVIII];
+
+        sprintf(sgr, "\x1B[38;2;%d;%d;1mY", (integer)(i % CCLVI),
+            (integer)(i / CCLVI));
+        scribere(a, sgr);
+    }
+    {
+        AemulatorCellula cellula_lecta;
+
+        /* ultima: tabula plena -> nativus (numquam ruina) */
+        CREDO_VERUM(aemulator_cellula(a, XIX, XIV, &cellula_lecta));
+        CREDO_VERUM(chorda_aequalis_literis(cellula_lecta.graphema,
+            "Y"));
+        CREDO_VERUM(cellula_lecta.stilus.color_litterae.genus
+            == STILUS_COLOR_NATIVUS);
+        /* post purgationem stili iterum valent */
+        scribere(a, "\x1B[0m\x1B[2J\x1B[H\x1B[38;2;1;2;3mW");
+        CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM,
+            &cellula_lecta));
+        CREDO_AEQUALIS_I32(cellula_lecta.stilus.color_litterae.valor,
+            0x010203);
+    }
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     a = creare(XX, V);

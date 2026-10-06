@@ -69,3 +69,33 @@ text "A\nB". A2 must keep it green for the right reason.
 **Purity:** aemulator.c is pure (house headers + <string.h>); the link
 closure is not - piscina.c and stilus_terminalis.c (via
 chorda_aedificator) pull stdio/stdlib. Exact list for the wasm door.
+
+## 2026-10-06 — A2: the loopback surface
+
+All 24 A1 debts passed on the first A2 run - the debt mechanism then
+FAILED the suite once per paid debt ("DEBITUM SOLUTUM - promove")
+until the `debitum` attributes were removed. That is the point of it.
+
+**Style table collection - a plant that survived:** "collection does
+not renumber cells" passed the first test because compaction keeps
+order: the only styled cell that outlived a collection sat at an index
+nothing below it freed, so its number never changed. The test now
+interns a style that dies (red, index 1) before one that stays on
+screen (green, index 2) and forces a collection: green must move to 1,
+and only real renumbering keeps that cell green.
+
+**A plant that did not compile proves nothing:** P6 first failed with
+"unused parameter" - recorded as SUPERSTES by the runner but it was a
+build failure. Replanted in a compiling form (erase with the DEFAULT
+style's background) and caught.
+
+**Resize with two screens:** each screen keeps ITS cursor row visible;
+the primary's cursor while you are on the alternate screen is where it
+was at entry, so shrinking below it scrolls the primary's top rows off
+(into scrollback in Ghostty; dropped here until phase C). My first test
+expected the primary untouched with its cursor below the new height -
+the core was right, the test was wrong.
+
+**ESC 7/8 came with 1049:** the saved-cursor machinery 1049 needs IS
+DECSC/DECRC, so they were implemented in A2 (planned for B) with
+Ghostty's "cursor save and restore" vector.

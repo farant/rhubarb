@@ -181,6 +181,26 @@ for the wasm door (decision 10).
 saved cursor, 2026 sync (mode tracked), unknown-sequence counters. All
 A0 vectors green.
 
+A2 as built: CSI dispatch (intermediates, or ':' outside SGR, or an
+unknown private marker -> counted unknown): CUP/HVP, CUU/CUD/CUF/CUB,
+CNL/CPL, CHA/HPA, VPA (parameter 0 = 1, all clamped, pending wrap
+cleared); EL/ED per Ghostty (right starts at a wide head under a tail,
+left includes the tail of a wide head, right/complete clear the row's
+soft-wrap; ED below/above = EL + whole rows; ED 3 = nothing until C);
+erased cells and rows scrolled in at the bottom take ONLY the pen's
+background (Ghostty blankCell; BCE - confirmed by "index bottom of
+primary screen background sgr"); SGR via `stilus_applicare` onto the
+pen with unknown parameters counted; styles interned in a fixed table
+(512) - when full, a collection marks styles held by cells, pens and
+saved cursors, compacts in order and renumbers; still full -> default
+(degrade, never break); DECSET 7/25/1049/2026; 1049 per Ghostty's
+xterm reading (save, switch, erase alt, copy cursor + pen; exit
+restores, or homes with no save); ESC 7/8 (position, pen, pending
+wrap). Two screens resize together (each keeps its cursor row on
+screen). Vectors 42 green (35 Ghostty), 0 debts; 17 plants caught -
+P10 (cells not renumbered) SURVIVED until the test made a style die
+BEFORE a surviving one.
+
 **A3 - loopback harness.** tessera frame -> memoria pons bytes ->
 aemulator -> every cell compared with tessera's back buffer (glyph,
 width kind, resolved style), cursor too; first mismatch named
