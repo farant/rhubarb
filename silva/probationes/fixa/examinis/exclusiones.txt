@@ -12,6 +12,7 @@
 ./briar/probationes/fixa/fabrica/salve_vitreum/fontes/salve_vitreum.c	generatum a briar: capsula_salve_vitreum symbolum est gradus infigendi (capsula) - in fonte non exsistit
 ./lib/imago.c	venditum: stb_image.h extra normam domus (acies non-constans c8, vocationes implicitae intra caput venditum)
 ./officina/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis (AmalgamaPlagula/EXCLUDENDA_* apud includentem definita)
+./oracula/clay/clay_vinculum.c	oracula/ (89e558d2): glutinum C99 circa Clay alienum (typi Clay_* ex ../clay) - per nomen ab examine exclusum; pinnatum 2026-10-06 (aemulator B3: porta examen-corpus primum post D0 debita)
 ./silva/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis
 ./silva/probationes/fixa/censoris/flagrationes.c	probatio: fixtura censoris consulto fracta (syntaxis + redeclarationes)
 ./tessera/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis

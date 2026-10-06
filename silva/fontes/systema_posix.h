@@ -180,6 +180,8 @@ int     execve(const char* plagula, char* const argumenta[],
 int     access(const char* via, int modus);
 int     faccessat(int fossa, const char* via, int modus, int vexilla);
 unsigned int alarm(unsigned int secunda);
+/* chdir: directorium infantis pseudoterminalis (B3, 2026-10-06) */
+int     chdir(const char* via);
 
 /* <sectio caput="stdlib.h"/> stdlib.h POSIX (getenv in systema_c89.h
  * ut C89; hae POSIX solae) */
@@ -193,7 +195,9 @@ int putenv(char* par);
 #define STDERR_FILENO 2
 
 /* <sectio caput="signal.h"/> signal.h (valores signorum communes) */
+#define SIGHUP  1
 #define SIGINT  2
+#define SIGQUIT 3
 #define SIGKILL 9
 #define SIGPIPE 13
 #define SIGALRM 14
@@ -468,6 +472,10 @@ struct winsize {
 };
 
 #define TIOCGWINSZ 0x40087468UL
+/* pseudoterminale (B3, 2026-10-06): magnitudo ponenda; terminale
+ * regens sessionis novae */
+#define TIOCSWINSZ 0x80087467UL
+#define TIOCSCTTY  0x20007461UL
 
 int ioctl(int fossa, unsigned long petitio, ...);
 
@@ -506,6 +514,10 @@ struct sigaction {
 #define SIGCONT  19
 #define SIGTSTP  18
 #define SIGWINCH 28
+/* pseudoterminale (B3, 2026-10-06): infans signa ordinaria recipit */
+#define SIGCHLD  20
+#define SIGTTIN  21
+#define SIGTTOU  22
 
 int sigaction(int signum, const struct sigaction* actio,
               struct sigaction* pristina);
@@ -513,6 +525,8 @@ int sigemptyset(sigset_t* copia);
 
 /* <sectio caput="errno.h"/> errno.h - supplementa Undae 3 */
 #define EEXIST 17
+/* pseudoterminale (B3): latus servum clausum -> lectio magistri */
+#define EIO    5
 
 /* <sectio caput="sys/utsname.h"/> sys/utsname.h - nomina systematis
  * (Unda 4, pro machina.h). Formae Darwin MENSURATAE 2026-08-13:
@@ -552,3 +566,10 @@ void* dlopen(const char* via, int modus);
 void* dlsym(void* bibliotheca, const char* titulus);
 int   dlclose(void* bibliotheca);
 char* dlerror(void);
+
+/* <sectio caput="util.h" poscit="termios.h,sys/ioctl.h"/> util.h
+ * (BSD; Linux pty.h + -lutil) - openpty: par pseudo-terminalis una
+ * vocatione (pseudoterminale B3, decisio XI). Forma Darwin: modus et
+ * fenestra non constantes. */
+int openpty(int* magister, int* servus, char* titulus,
+            struct termios* modus, struct winsize* fenestra);

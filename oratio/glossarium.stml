@@ -798,6 +798,19 @@
   <vocabulum lemma="dlsym" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: symbolum titulo quaerere"/>
   <vocabulum lemma="execve" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: programma cum ambitu explicito exsequi; systema_posix.h 2026-10-05 pro oraculo effectuum (interpositio_macos.c)"/>
   <vocabulum lemma="access" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: accessum plagulae probare; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+
+  <!-- pseudoterminale (aemulator-plan B3, 2026-10-06): nomina POSIX/BSD
+       fixa in lexico examinis (silva/fontes/systema_posix.h) - non vertenda -->
+  <vocabulum lemma="openpty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BSD util.h: par pseudo-terminalis una vocatione aperire; pseudoterminale_posix.c (decisio XI)"/>
+  <vocabulum lemma="chdir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: directorium currens mutare; infans pseudoterminalis"/>
+  <vocabulum lemma="tiocswinsz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TIOCSWINSZ sys/ioctl.h: magnitudinem terminalis ponere (nucleus SIGWINCH mittit)"/>
+  <vocabulum lemma="tiocsctty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TIOCSCTTY sys/ioctl.h: terminale regens sessionis novae"/>
+  <vocabulum lemma="sighup" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGHUP signal.h: terminale clausum; claudere pseudoterminalis gregi mittit"/>
+  <vocabulum lemma="sigquit" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGQUIT signal.h; infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="sigchld" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGCHLD signal.h; infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="sigttin" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGTTIN signal.h (lectio gregis posterioris); infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="sigttou" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGTTOU signal.h (scriptura gregis posterioris); infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="eio" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="EIO errno.h: latus servum clausum - lectio magistri pseudoterminalis finem significat"/>
   <vocabulum lemma="faccessat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/unistd.h: access relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
   <vocabulum lemma="fstatat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/stat.h: stat relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
   <vocabulum lemma="openat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX fcntl.h: open relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
@@ -1355,6 +1368,12 @@
   <vocabulum lemma="recursio" lingua="latina" classis="substantivum" nota="recursio (Plin.): reditus, recursus - optio mandati quae directoria recursive tractat (grep -r, rm -rf; tabula mandatorum effectus, optiones 'recursio' = recursiones)">
     <forma textus="recursio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="recursiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="pseudoterminale" lingua="latina" classis="substantivum" nota="Gr. pseudo- + terminale (ut animal, i-stirpis): terminale fictum (Angl. pseudo-terminal, PTY) - par magister/servus quo infans programmatum ut in terminali vivit; bibliotheca pseudoterminale (aemulator-plan B3, decisio XV)">
+    <forma textus="pseudoterminale" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pseudoterminalis" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pseudoterminalia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
 
 </glossarium>

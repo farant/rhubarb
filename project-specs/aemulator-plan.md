@@ -82,6 +82,13 @@ background - read them before a task.*
     therefore part of the pons API from B3. The examen lexicon
     (`silva/fontes/systema_posix.h`) learns the PTY calls (glossary +
     auspex assertions) in B3.
+15. **Name `pseudoterminale`** (Fran, B3 header review 2026-10-06):
+    `include/pseudoterminale.h`, `Pseudoterminale` vtable (legere,
+    scribere, amplitudo, finitus, fossa, claudere), posix and
+    memoriae bridges in one header (no system headers in it).
+16. **`scribere` never blocks:** it returns the bytes accepted (0..n,
+    -1 error); the host keeps the remainder. A large paste into a
+    child that is not reading cannot freeze the window.
 
 ## II. What exists (to read before tasks)
 
@@ -301,6 +308,20 @@ Later phases (re-planned after A's RELATIO):
     child tests outside the default glob if they need a tty (printf
     arrives, `stty size` = what we set, resize, exit code, no zombie,
     exec failure distinct).
+    B3 as built: `include/pseudoterminale.h` (one header; aedilis
+    convention -> `pseudoterminale_posix.c`, `<aedilis corpus>` adds
+    `lib/pseudoterminale.c` = defaults, error names, memoriae bridge).
+    Child: setsid, TIOCSCTTY, slave on 0/1/2, signals to SIG_DFL,
+    chdir, environment changes ("NAME=value" / "NAME"), execvp; exec
+    and chdir failures through a CLOEXEC pipe (EXEC, distinct from a
+    real exit 127). Master CLOEXEC + O_NONBLOCK; legere by poll (0 =
+    nothing, -1 = EOF/EIO); finitus by waitpid WNOHANG (code or
+    signal); claudere SIGHUP -> close -> 100 ms -> SIGKILL, never a
+    zombie. Real-child tests run in the ROOT suite (openpty needs no
+    terminal of its own): 0.65 s. 19 plants, all caught after two
+    test fixes (a shell repaired the missing controlling terminal; a
+    "lowest free fd" check missed leaks). Examen lexicon + auspex +
+    glossary learned the PTY names.
   - **B4 - a headless host and esctest:** core + PTY + a loop; fetch
     esctest (network: say when, pin the commit) and run its subset
     for B's surface with our core answering its queries.

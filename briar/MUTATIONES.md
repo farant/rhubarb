@@ -19,6 +19,13 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `pseudoterminale` nova (infans in pseudo-terminali,
+  aemulator-plan B3): tabula functionum `Pseudoterminale` (legere,
+  scribere numquam obstans, amplitudo, finitus, fossa, claudere),
+  pons posix (openpty, sessio nova, terminale regens, ambitus, exec
+  fractum distinctum ab exitu 127) et pons memoriae (sutura
+  probationum).
+
 - corpus: `aemulator` nova (nucleus emulatoris terminalis, aemulator-plan
   A1) - octeti programmatis intrant, schirmum exit: cellulae (UTF-8,
   latitudo angusta/lata/cauda/caput, stilus), cursor cum involutione

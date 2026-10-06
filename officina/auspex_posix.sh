@@ -170,6 +170,11 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(sizeof(struct winsize) == 8);"
     echo "IUNGO_ASSERTA(OFF(winsize, ws_row) == 0 && OFF(winsize, ws_col) == 2);"
     echo "IUNGO_ASSERTA(TIOCGWINSZ == 0x40087468UL);"
+    # pseudoterminale (B3, 2026-10-06)
+    echo "IUNGO_ASSERTA(TIOCSWINSZ == 0x80087467UL);"
+    echo "IUNGO_ASSERTA(TIOCSCTTY == 0x20007461UL);"
+    echo "IUNGO_ASSERTA(SIGHUP == 1 && SIGQUIT == 3 && SIGCHLD == 20);"
+    echo "IUNGO_ASSERTA(SIGTTIN == 21 && SIGTTOU == 22 && EIO == 5);"
     echo "IUNGO_ASSERTA(sizeof(struct utimbuf) == 16);"
     echo "IUNGO_ASSERTA(OFF(utimbuf, actime) == 0 && OFF(utimbuf, modtime) == 8);"
     echo "IUNGO_ASSERTA(sizeof(struct sigaction) == 16);"
@@ -215,6 +220,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <sys/utsname.h>"
     echo "#include <net/if.h>"
     echo "#include <dlfcn.h>"
+    echo "#include <util.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"

@@ -163,3 +163,21 @@ Ghostty, 6 house); the first run caught a hand-counted reply length
 (DA1 sent a NUL) - every fixed reply is now measured by strlen. 15
 plants, all caught. Replies allocate nothing.
 
+## B3 — the PTY pons (2026-10-06)
+
+**INTENTIO.** A child process on a pseudo-terminal behind a vtable
+(the test seam), so the host loop of B4 can run headless against a
+scripted child and for real against a shell. Header approved by Fran
+with its name (`pseudoterminale`) and never-blocking writes.
+
+Built: `pseudoterminale` - posix bridge (openpty, new session,
+controlling terminal, signal reset, environment, exec failure distinct
+from exit 127, non-blocking master, reaping without handlers, close
+that never leaves a zombie) and a memoriae bridge. Real children are
+tested in the root suite (0.65 s). 19 plants caught; two only after
+fixing the TESTS: `/bin/sh` quietly acquires a controlling terminal
+(the check now execs `stty -f /dev/tty` with no shell), and "lowest
+free fd" cannot see leaks (now: count all descriptors). The examen
+lexicon learned the PTY calls (auspex-certified); glossary entries
+moved no oratio pins. Details: `lib/pseudoterminale.worklog.md`.
+

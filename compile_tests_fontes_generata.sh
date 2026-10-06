@@ -146,6 +146,8 @@ declare -a SOURCE_FILES=(
     "lib/plist.c"
     "lib/processus_posix.c"
     "lib/provenientia.c"
+    "lib/pseudoterminale.c"
+    "lib/pseudoterminale_posix.c"
     "lib/qr.c"
     "lib/quadrans.c"
     "lib/quaerere.c"
