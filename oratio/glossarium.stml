@@ -263,6 +263,32 @@
     <forma textus="orientationem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="orientatione" casus="ablativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="polynomium" lingua="latina" classis="substantivum" nota="Neolatina: polynomium (Gk. poly + Lat. nomen), expressio multorum terminorum; WORDS caret">
+    <forma textus="polynomium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="polynomii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="polynomio" casus="dativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="polynomia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="polynomiorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="polynomiis" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="monomium" lingua="latina" classis="substantivum" nota="Neolatina: monomium, terminus unus (c t^e); WORDS caret">
+    <forma textus="monomium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="monomii" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="monomio" casus="dativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="monomia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="monomiorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="monomiis" casus="ablativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="coefficiens" lingua="latina" classis="substantivum" nota="Neolatina (Vieta): coefficiens, quantitas cum potentia coniuncta (polynomium); WORDS caret">
+    <forma textus="coefficiens" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="coefficientis" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="coefficienti" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="coefficientem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="coefficiente" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="coefficientes" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="coefficientium" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="coefficientibus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="syntaxis" lingua="latina" classis="substantivum" nota="Gk. syntaxis f.">
     <forma textus="syntaxis" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="syntaxeos" casus="genitivus" numerus="singularis" genus="femininum"/>

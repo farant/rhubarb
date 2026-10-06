@@ -140,6 +140,7 @@ declare -a SOURCE_FILES=(
     "lib/piscina.c"
     "lib/planta_lectio.c"
     "lib/plist.c"
+    "lib/polynomium.c"
     "lib/processus_posix.c"
     "lib/provenientia.c"
     "lib/qr.c"
