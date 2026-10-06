@@ -44,6 +44,26 @@ background - read them before a task.*
    writes allowed, reads denied; the title report (`CSI 21 t`) off - it
    echoes the title back as INPUT; new behaviour only when a program
    asks (mode 2027 etc.).
+10. **Keep the core wasm-able** (Fran: a terminal in a vitrea app or a
+    web version may come). Not built now - the door is kept open by
+    construction, Ghostty's way (its core ships as wasm because it is
+    pure):
+    - aemulator's closure is `<aedilis nexus="purus"/>` (like
+      series_terminalis and stilus_terminalis): no framework, no
+      system headers beyond `<string.h>`, no clock, no threads, no
+      mutable statics (two instances never share state), all memory
+      from the caller's piscina, every output an effect callback;
+    - the render-state snapshot (phase E, module 007) is plain
+      relocatable data - offsets, not pointers - so it crosses the
+      vitrea bridge or a wasm boundary by copy;
+    - two topologies, in this order: (a) the core native in vitrea's
+      C host, the page draws the snapshot (module 009 - no wasm);
+      (b) the core compiled to wasm in a plain web page;
+    - for (b) later: `piscina_ex_memoria(buffer, n)` (a pool over a
+      host-given region, no malloc) rather than a wasm libc; and a
+      probe that compiles the closure for `wasm32` once a wasm-capable
+      clang exists (Apple clang has no wasm backend; Homebrew LLVM 17
+      is installed but broken - missing libz3 - 2026-10-06).
 
 ## II. What exists (to read before tasks)
 
@@ -171,6 +191,11 @@ Later phases (re-planned after A's RELATIO):
   the E bar; box drawing as sprites is module 010's plan.
 - Recorded-session replay (vim, htop, zsh through the PTY) was not
   chosen as an oracle now; natural once B exists.
+- Purity of the closure is promised, not yet checked mechanically:
+  A1 should verify aemulator's include closure (legati inclusiones /
+  nexus graph) holds no system header beyond `<string.h>`;
+  `lib/piscina.c` itself includes `<stdlib.h>` and `<stdio.h>` - what
+  stdio is used for there is unread.
 - The fixed-block allocator question (module 006 open question 1):
   a pool carved from one piscina allocation is assumed; unverified
   against the memory apex discipline until C.
