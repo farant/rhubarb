@@ -106,6 +106,22 @@ again: a <code>piscina_vacare</code> without the clearing (callers that
 need zeroed memory zero what they allocate), or the mark-and-rollback
 pattern. Not changed house-wide; noted so the next hot loop knows.</p>
 
+<h3><span class="id">A5</span>The natura tests fail on a fresh checkout</h3>
+<p><span class="status">bug</span> <span class="nota">found 2026-10-05 by
+<code>tools/frigida_probare.sh</code> before merging tertia into main</span></p>
+<p><strong>What.</strong> In a fresh worktree, <code>probatio_natura_canones</code>,
+<code>_glossae</code> and <code>_quaesitor</code> fail: they build
+<code>bin/natura*</code> through <code>tools/natura_struere.sh</code>, whose
+provenance step for the FIRST binary needs the aedilis manifests of all
+four (<code>build/aedilis/natura_*/manifestum.stml</code>), which a fresh
+tree does not have. Main at 13064eed fails identically, so it predates the
+tertia merge; the other 13 suites are green fresh.</p>
+<p><strong>Workaround</strong> (used in tertia): run <code>bin/aedilis
+tools/&lt;x&gt;.c</code> for the four natura tools first, then
+<code>./tools/natura_struere.sh</code>. <strong>Fix:</strong> have the build
+script (or the fabrica action) produce the manifests before the provenance
+step, so "green on a fresh clone" holds again.</p>
+
 <h2>Done</h2>
 <p class="nota">Finished items, with the commit that closed them.</p>
 
