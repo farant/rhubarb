@@ -228,3 +228,59 @@ Measured (classical algorithms, known coefficient growth): Smith with U, V
 scratch peak 1.36 MB. Modular methods (Domich–Kannan–Trotter for Hermite,
 determinant-modulus Smith) would replace the internals without changing
 the API — agenda A8.
+
+## 2026-10-06 — review III: Euclid instead of Bézout (Fran approved)
+
+Reviewer (independent HNF — unique, so a full proof per case; Smith via
+iterated HNF + gcd/lcm; saturation via gcd of maximal minors; ~10k cases
+mostly poisoned, fault injection): every result correct, Smith
+terminates (the always-Bézout mutant ran 35 min — the divisible shortcut
+was what carried termination), lifetimes sound, 337ac625 verified. But:
+
+- **A1, Hermite blew up**: Bézout-combining the pivot row with each lower
+  row multiplies the WHOLE pivot row by Bézout coefficients column after
+  column. n×n in −9..9: 36 → 22.6 s (apex 40 MB), 40 → 95 s, while H is
+  ≤ 192 bits and a plain Euclid HNF takes 9 ms.
+- **A2, Smith's certificates exploded** (V 1.26e6 bits at 40×40, 126 s,
+  35 MB in the caller).
+
+Fix: new ring hook `compara_normam` (Z: |a| vs |b|); `_coefficientes`
+(Bézout) replaced by `_reductio` (x = q p + r → row/column −= q·pivot;
+the only multipliers are quotients) and `_minima_in_columna/_linea`
+(smallest-norm pivot). Hermite: per column, smallest pivot up, others
+modulo it, repeat until clear (compacting each round). Smith: column
+phase (smallest up, rows modulo), row phase (smallest left — a swap
+continues the loop — columns modulo), divisibility step as before;
+every non-zero remainder strictly lowers the pivot's norm, so it
+terminates; column operations cannot refill column t.
+
+Measured (reviewer's bench, before → after): Hermite 32×32 190 ms → 6.6
+ms, 36×36 22.6 s → 11.4 ms, 40×40 95 s → 17.8 ms, 60×60 112 ms; Hermite
+with U 32×32 987 ms / apex 23 MB → 17 ms / 0.54 MB; Smith D-only 40×40
+6.3 s → 15 ms; Smith with U, V 30×30 1.95 s / caller 2.8 MB / V 119200
+bits → 12 ms / 90 KB / 1248 bits, 40×40 126 s → 46 ms (V 2208 bits).
+A2 is fixed by A1 — no "small matrices only" caveat needed. 12×12
+9-digit Hermite with U: 24 ms / 1.36 MB → 4.5 ms / 103 KB.
+
+- Oracle independence restored: the library now uses the oracle's old
+  method (smallest-up Euclid), so `generare_formae.py` computes Hermite
+  with BÉZOUT (`hermite_bezout`) and asserts it equals the Euclid
+  version; the 120 vectors came out byte-identical (uniqueness).
+- **Hang guard**: a termination bug hangs the suite instead of failing it
+  (my plant earlier and the reviewer's mutants did). The whole normal-form
+  section is now one function run first under `CREDO_NON_PENDET(…, 120 s)`
+  in a forked child, and in the parent only if that passed. Hang plants
+  now FAIL in ~150 s.
+- Regression bounds (memory as a deterministic proxy for intermediate
+  growth): Hermite 32×32 with U — caller < 128 KB, apex < 2 MB (old 23
+  MB; never compacting: 6 MB); Smith 30×30 with U, V — caller and apex
+  < 256 KB (old 2.8 / 11.6 MB), certificates checked. The pre-Euclid
+  matrix.c fails all three.
+- Plants: smallest pivot replaced by first non-zero, remainder always
+  "exact", Smith without the column swap, reduction with +q, Z norm
+  reversed — all red (most via the hang guard); Hermite never compacting
+  red via the apex bound. Equivalent / accepted: dropping only the
+  per-round compaction (per-pivot compaction still bounds it); the
+  reticulum's private piscina never destroyed (a leak only an RSS or
+  create/destroy counter could see — documented, not tested).
+- 198 checks; venenum sana.

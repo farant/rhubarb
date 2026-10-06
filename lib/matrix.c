@@ -1289,48 +1289,93 @@ _columnae_transforma (
     redde VERUM;
 }
 
-/* Coefficientes (a, b, c, d) ut a p + b q = g et c p + d q = 0, ad - bc
- * = 1: si p q dividit, (1, 0, -q/p, 1) - cardo non mutatur, nihil
- * replet (terminatio Smith); aliter Bezout (u, v, -q/g, p/g). */
+/* Reductio Euclidea: x = q p + r; alvei (A, B, C, D) = (1, 0, -q, 1),
+ * ergo operatio (cardo, k) L_k <- L_k - q L_cardinis (aut columnae).
+ * *exacta = (r nullum). Sine Bezout: multiplicatores toti lineae soli
+ * quotientes sunt (recensio matrix-III: Bezout lineam cardinis per
+ * columnam totam multiplicabat - Hermite 36 x 36 22.6 s, 40 MB). */
 interior b32
-_coefficientes (
+_reductio (
              Operarius* o,
+       constans vacuum* x,
        constans vacuum* p,
-       constans vacuum* q)
+                   b32* exacta)
 {
-     constans Anulus* anulus  = o->anulus;
-             Piscina* hic     = _operis_piscina(o);
-                  i8* nullum  = o->alvei[ALVEUS_T];
+    constans Anulus* anulus  = o->anulus;
+            Piscina* hic     = _operis_piscina(o);
 
-    memcpy(o->alvei[ALVEUS_P], p, anulus->mensura);
-    memcpy(o->alvei[ALVEUS_Q], q, anulus->mensura);
-    anulus->nullum(nullum);
-    si (   !anulus->est_nullum(o->alvei[ALVEUS_P])
-        && anulus->divide_exacte(o->alvei[ALVEUS_Q], o->alvei[ALVEUS_P],
-            hic, o->alvei[ALVEUS_G]))
-    {
-        anulus->unum(hic, o->alvei[ALVEUS_A]);
-        anulus->nullum(o->alvei[ALVEUS_B]);
-        anulus->unum(hic, o->alvei[ALVEUS_D]);
-        redde anulus->subtrahe(nullum, o->alvei[ALVEUS_G], hic,
-            o->alvei[ALVEUS_C]);
-    }
-    si (   !anulus->divisor_communis(o->alvei[ALVEUS_P],
-        o->alvei[ALVEUS_Q],
-            hic, o->alvei[ALVEUS_G], o->alvei[ALVEUS_A],
-            o->alvei[ALVEUS_B])
-        || !anulus->divide_exacte(o->alvei[ALVEUS_Q],
-        o->alvei[ALVEUS_G],
-            hic, o->alvei[ALVEUS_X])
-        || !anulus->divide_exacte(o->alvei[ALVEUS_P],
-        o->alvei[ALVEUS_G],
-            hic, o->alvei[ALVEUS_D]))
+    si (!anulus->divide_cum_residuo(x, p, hic, o->alvei[ALVEUS_X],
+        o->alvei[ALVEUS_Y]))
     {
         redde FALSUM;
     }
-    anulus->nullum(nullum);
-    redde anulus->subtrahe(nullum, o->alvei[ALVEUS_X], hic,
+    *exacta = anulus->est_nullum(o->alvei[ALVEUS_Y]);
+    anulus->unum(hic, o->alvei[ALVEUS_A]);
+    anulus->nullum(o->alvei[ALVEUS_B]);
+    anulus->unum(hic, o->alvei[ALVEUS_D]);
+    anulus->nullum(o->alvei[ALVEUS_T]);
+    redde anulus->subtrahe(o->alvei[ALVEUS_T], o->alvei[ALVEUS_X], hic,
         o->alvei[ALVEUS_C]);
+}
+
+/* linea (>= ab) cum elemento non nullo normae minimae in columna c; -1
+ * si nullum */
+interior s32
+_minima_in_columna (
+     Operarius* o,
+           i32  c,
+           i32  ab)
+{
+     constans Anulus* anulus = o->anulus;
+                 s32  optima = -I;
+                 i32  i;
+
+    per (i = ab; i < o->lineae[TABULA_A]; i++)
+    {
+        i8* x = _operis(o, TABULA_A, i, c);
+
+        si (anulus->est_nullum(x))
+        {
+            perge;
+        }
+        si (   optima < ZEPHYRUM
+            || anulus->compara_normam(x, _operis(o, TABULA_A,
+            (i32)optima,
+                c), _operis_piscina(o)) < ZEPHYRUM)
+        {
+            optima = (s32)i;
+        }
+    }
+    redde optima;
+}
+
+/* columna (>= ab) cum elemento non nullo normae minimae in linea l */
+interior s32
+_minima_in_linea (
+     Operarius* o,
+           i32  l,
+           i32  ab)
+{
+     constans Anulus* anulus = o->anulus;
+                 s32  optima = -I;
+                 i32  j;
+
+    per (j = ab; j < o->columnae[TABULA_A]; j++)
+    {
+        i8* x = _operis(o, TABULA_A, l, j);
+
+        si (anulus->est_nullum(x))
+        {
+            perge;
+        }
+        si (   optima < ZEPHYRUM
+            || anulus->compara_normam(x, _operis(o, TABULA_A, l,
+                (i32)optima), _operis_piscina(o)) < ZEPHYRUM)
+        {
+            optima = (s32)j;
+        }
+    }
+    redde optima;
 }
 
 /* operatio linearum in A et U */
@@ -1469,7 +1514,10 @@ _tabula_reddere (
     redde VERUM;
 }
 
-/* Hermite in operario; *gradus = lineae non nullae */
+/* Hermite in operario per Euclidem in quaque columna: cardo normae
+ * minimae sursum, ceterae lineae modulo eum (quotiens solus
+ * multiplicator), donec columna infra nulla; *gradus = lineae non
+ * nullae */
 interior b32
 _hermite (
     Operarius* o,
@@ -1485,22 +1533,43 @@ _hermite (
 
     per (c = ZEPHYRUM; c < columnae && r < lineae; c++)
     {
-        per (i = r + I; i < lineae; i++)
+        dum (VERUM)
         {
-            si (anulus->est_nullum(_operis(o, TABULA_A, i, c)))
+            s32 cardo   = _minima_in_columna(o, c, r);
+            b32 exacta  = VERUM;
+
+            si (cardo < ZEPHYRUM)
             {
-                perge;
+                frange;
             }
-            si (   !_coefficientes(o, _operis(o, TABULA_A, r, c),
-                    _operis(o, TABULA_A, i, c))
-                || !_lineae(o, r, i))
+            _lineas_permuta(o, r, (i32)cardo);
+            per (i = r + I; i < lineae; i++)
             {
-                redde FALSUM;
+                b32 haec_exacta;
+
+                si (anulus->est_nullum(_operis(o, TABULA_A, i, c)))
+                {
+                    perge;
+                }
+                si (   !_reductio(o, _operis(o, TABULA_A, i, c),
+                        _operis(o, TABULA_A, r, c), &haec_exacta)
+                    || !_lineae(o, r, i))
+                {
+                    redde FALSUM;
+                }
+                si (!haec_exacta)
+                {
+                    exacta = FALSUM;
+                }
+            }
+            _compacta(o);
+            si (exacta)
+            {
+                frange;
             }
         }
         si (anulus->est_nullum(_operis(o, TABULA_A, r, c)))
         {
-            _compacta(o);
             perge;
         }
         si (!_linea_normalis(o, r, c))
@@ -1553,7 +1622,8 @@ matrix_forma_hermite (
        Matrix transformatio;
 
     si (   a.anulus->divisor_communis   == NIHIL
-        || a.anulus->divide_cum_residuo == NIHIL)
+        || a.anulus->divide_cum_residuo == NIHIL
+        || a.anulus->compara_normam     == NIHIL)
     {
         redde FALSUM;
     }
@@ -1619,7 +1689,8 @@ matrix_forma_smith (
               Matrix  dextra;
 
     si (   anulus->divisor_communis   == NIHIL
-        || anulus->divide_cum_residuo == NIHIL)
+        || anulus->divide_cum_residuo == NIHIL
+        || anulus->compara_normam     == NIHIL)
     {
         redde FALSUM;
     }
@@ -1647,44 +1718,73 @@ matrix_forma_smith (
         {
             frange;
         }
+        /* Euclides alternus: columna t (cardo minimus sursum, lineae
+         * modulo), deinde linea t (cardo minimus sinistrorsum, columnae
+         * modulo); quodque residuum non nullum normam cardinis stricte
+         * minuit, ergo terminatio. Operationes columnarum columnam t
+         * non replent (infra cardinem nulla). */
         dum (VERUM)
         {
-            b32 plena = FALSUM;
+            s32 k;
+            b32 exacta = VERUM;
             i32 linea;
 
+            k = _minima_in_columna(&o, t, t);
+            _lineas_permuta(&o, t, (i32)k);
             per (i = t + I; i < a.lineae; i++)
             {
-                si (   !anulus->est_nullum(_operis(&o, TABULA_A, i, t))
-                    && (   !_coefficientes(&o, _operis(&o, TABULA_A, t,
-                    t),
-                            _operis(&o, TABULA_A, i, t))
-                        || !_lineae(&o, t, i)))
+                b32 haec_exacta;
+
+                si (anulus->est_nullum(_operis(&o, TABULA_A, i, t)))
+                {
+                    perge;
+                }
+                si (   !_reductio(&o, _operis(&o, TABULA_A, i, t),
+                        _operis(&o, TABULA_A, t, t), &haec_exacta)
+                    || !_lineae(&o, t, i))
                 {
                     _officinae_claudere(&o.officinae);
                     redde FALSUM;
                 }
+                si (!haec_exacta)
+                {
+                    exacta = FALSUM;
+                }
+            }
+            si (!exacta)
+            {
+                _compacta(&o);
+                perge;
+            }
+            k = _minima_in_linea(&o, t, t);
+            si ((i32)k != t)
+            {
+                _columnas_permuta(&o, t, (i32)k);
+                _compacta(&o);
+                perge;
             }
             per (j = t + I; j < a.columnae; j++)
             {
-                si (   !anulus->est_nullum(_operis(&o, TABULA_A, t, j))
-                    && (   !_coefficientes(&o, _operis(&o, TABULA_A, t,
-                    t),
-                            _operis(&o, TABULA_A, t, j))
-                        || !_columnae(&o, t, j)))
+                b32 haec_exacta;
+
+                si (anulus->est_nullum(_operis(&o, TABULA_A, t, j)))
+                {
+                    perge;
+                }
+                si (   !_reductio(&o, _operis(&o, TABULA_A, t, j),
+                        _operis(&o, TABULA_A, t, t), &haec_exacta)
+                    || !_columnae(&o, t, j))
                 {
                     _officinae_claudere(&o.officinae);
                     redde FALSUM;
                 }
-            }
-            /* columna t repleta (cardo mutatus)? iterum */
-            per (i = t + I; i < a.lineae; i++)
-            {
-                si (!anulus->est_nullum(_operis(&o, TABULA_A, i, t)))
+                si (!haec_exacta)
                 {
-                    plena = VERUM;
+                    exacta = FALSUM;
                 }
             }
-            si (plena)
+            _compacta(&o);
+            si (!exacta)
             {
                 perge;
             }
@@ -1754,7 +1854,8 @@ matrix_reticulum_nuclei (
                  b32  bene;
 
     si (   anulus->divisor_communis   == NIHIL
-        || anulus->divide_cum_residuo == NIHIL)
+        || anulus->divide_cum_residuo == NIHIL
+        || anulus->compara_normam     == NIHIL)
     {
         redde FALSUM;
     }

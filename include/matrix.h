@@ -191,8 +191,11 @@ matrix_nucleus (
 
 
 /* ==================================================
- * Formae normales (anulus Euclideus: divisor_communis et
- * divide_cum_residuo; aliter FALSUM - Z solus hodie)
+ * Formae normales (anulus Euclideus: divisor_communis,
+ * divide_cum_residuo, compara_normam; aliter FALSUM - Z solus hodie).
+ * Euclides "cardo normae minimae sursum, ceteri modulo eum":
+ * incrementum intermedium modicum (Hermite 40 x 40 ~18 ms; Smith cum
+ * U, V 40 x 40 ~46 ms).
  * ================================================== */
 
 /* Hermite (lineae): H = U A, U unimodularis; cardines normales (Z: >

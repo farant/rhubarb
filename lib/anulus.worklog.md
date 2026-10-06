@@ -44,3 +44,10 @@ magnus_divisor_communis_testatus, g ≥ 0) and `divide_cum_residuo(a, b,
 piscina, q, r)` (Z: magnus_divide, Euclidean remainder). Appended at the
 END of the struct; NIHIL for Q and Z[t,t^-1] — algorithms needing them
 return FALSUM. Q[t] (when it exists) is the next ring to fill them.
+
+## 2026-10-06 — `compara_normam` (review matrix-III)
+
+Euclidean norm comparison (Z: |a| vs |b|; NIHIL elsewhere), appended after
+`divide_cum_residuo`. matrix's Hermite/Smith now pick the smallest-norm
+pivot and reduce the others modulo it instead of Bézout-combining rows —
+the Bézout version blew up intermediates (Hermite 36×36: 22.6 s → 11 ms).

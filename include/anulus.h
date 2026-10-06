@@ -99,6 +99,13 @@ nomen structura {
                 Piscina* piscina,
                  vacuum* q,
                  vacuum* r);
+    /* norma Euclidea: -1, 0, +1 sicut N(a) <, =, > N(b) (Z: |a|
+     * ad |b|); residuum divisionis normam stricte minorem habet quam
+     * divisor */
+    s32 (*compara_normam) (
+        constans vacuum* a,
+        constans vacuum* b,
+                Piscina* piscina);
 } Anulus;
 
 /* Z: elementa Magnus */

@@ -161,11 +161,14 @@ that is never owed is a dead gate.</p>
 <h3><span class="id">A8</span>Modular Hermite and Smith when matrix sizes grow</h3>
 <p><span class="status">idea</span> <span class="nota">2026-10-06, measured
 when <code>matrix</code> v2 landed</span></p>
+<p><strong>Update 2026-10-06.</strong> The review found the Bézout version
+blowing up (Hermite 36×36: 22.6 s); switching to smallest-pivot Euclid made
+it 11 ms and Smith with U, V at 40×40 46 ms. Modular methods are now only
+for genuinely large matrices.</p>
 <p><strong>What.</strong> <code>matrix_forma_hermite</code> and
-<code>matrix_forma_smith</code> use the classical Bézout row/column
-algorithms, whose intermediate entries grow fast: Hermite with U on a 12×12
-matrix of 9-digit integers takes 24 ms with a 1.36 MB scratch peak; Smith's
-U and V get large. Modular methods (Domich–Kannan–Trotter Hermite modulo
+<code>matrix_forma_smith</code> use classical elimination (now Euclid,
+smallest pivot first), whose intermediate entries still grow with size:
+Hermite 60×60 takes 112 ms with a ~0.9 MB scratch peak. Modular methods (Domich–Kannan–Trotter Hermite modulo
 the determinant; Smith via the determinant modulus) keep entries bounded
 and can replace the internals without changing the API or the
 certificates.</p>

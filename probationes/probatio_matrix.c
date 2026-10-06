@@ -2337,6 +2337,234 @@ _formas_probare (
     redde VERUM;
 }
 
+/* matrix n x n elementis in -IX..IX (semen datum) */
+interior Matrix
+_quadrata_parva (
+    i32 n,
+    i64 semen)
+{
+      Sors s;
+    Matrix m;
+       i32 i;
+       i32 j;
+
+    sors_seminare(&s, semen, XIV);
+    (vacuum)matrix_nulla(&ANULUS_INTEGRORUM, n, n, piscina, &m);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            Magnus x = magnus_ex_s64(sors_inter(&s, -IX, IX));
+
+            matrix_pone(&m, i, j, &x);
+        }
+    }
+    redde m;
+}
+
+/* Formae normales (v2): Hermite, Smith, reticulum nuclei - functio
+ * una ut sub CREDO_NON_PENDET in filio currat */
+interior vacuum
+_formas_omnes_probare (
+    vacuum)
+{
+    constans Anulus* z = &ANULUS_INTEGRORUM;
+    constans Anulus* q = &ANULUS_RATIONALIUM;
+    constans Anulus* p = &ANULUS_POLYNOMIORUM;
+
+
+    /* ==================================================
+     * FORMAE NORMALES (v2): Hermite, Smith, reticulum nuclei
+     * ================================================== */
+
+    {
+        Matrix h;
+        Matrix d;
+        Matrix k;
+           i32 exemplum;
+           b32 bene = VERUM;
+
+        imprimere("\n--- Probans formas normales ---\n");
+        /* exemplum classicum: Smith diag(2, 6, 12) */
+        CREDO_VERUM (matrix_forma_smith(_m(z,
+            "[2, 4, 4; -6, 6, 12; 10, -4, -16]"), piscina, &d, NIHIL,
+            NIHIL));
+        CREDO_VERUM (_textus_est(d, "[2, 0, 0; 0, 6, 0; 0, 0, 12]"));
+        /* Z/2 x Z/3 = Z/6 */
+        CREDO_VERUM (matrix_forma_smith(_m(z, "[2, 0; 0, 3]"), piscina,
+            &d,
+            NIHIL, NIHIL));
+        CREDO_VERUM (_textus_est(d, "[1, 0; 0, 6]"));
+        CREDO_VERUM (matrix_forma_hermite(_m(z,
+            "[2, 4, 4; -6, 6, 12; 10, -4, -16]"), piscina, &h, NIHIL));
+        CREDO_VERUM (_textus_est(h, "[2, 4, 4; 0, 6, 0; 0, 0, 12]"));
+        /* reticulum: 2x + 4y = 0 -> (-2, 1), primitivum (v1 nucleus:
+         * (-4, 2)) */
+        CREDO_VERUM (matrix_reticulum_nuclei(_m(z, "[2, 4]"), piscina,
+            &k));
+        CREDO_VERUM (_textus_est(k, "[-2; 1]")
+            || _textus_est(k, "[2; -1]"));
+        CREDO_VERUM (matrix_nucleus(_m(z, "[2, 4]"), piscina, &k));
+        CREDO_VERUM (_textus_est(k, "[-4; 2]"));
+        /* anuli non Euclidei: FALSUM, exitus non tactus */
+        d = _m(z, "[7]");
+        CREDO_FALSUM (matrix_forma_smith(_m(q, "[1/2]"), piscina, &d,
+            NIHIL,
+            NIHIL));
+        CREDO_FALSUM (matrix_forma_hermite(_m(p, "[t]"), piscina, &d,
+            NIHIL));
+        CREDO_FALSUM (matrix_reticulum_nuclei(_m(p, "[t]"), piscina,
+            &d));
+        CREDO_VERUM (_textus_est(d, "[7]"));
+        /* nulla et dimensiones extremae */
+        CREDO_VERUM (_formas_probare(_m(z, "[0, 0; 0, 0]")));
+        CREDO_VERUM (_formas_probare(_m(z, "[0, 3, 0]")));
+        CREDO_VERUM (_formas_probare(_m(z, "[5; -10; 15]")));
+
+        /* vectores oraculi */
+        per (exemplum = ZEPHYRUM; exemplum < (i32)(magnitudo(
+            vectores_formarum)
+                / magnitudo(vectores_formarum[ZEPHYRUM]));
+            exemplum++)
+        {
+            constans VectorFormae* v = &vectores_formarum[exemplum];
+                           Matrix  a = _m(z, v->matrix);
+
+            si (   !matrix_forma_hermite(a, piscina, &h, NIHIL)
+                || !_textus_est(h, v->hermite)
+                || !matrix_forma_smith(a, piscina, &d, NIHIL, NIHIL)
+                || !_textus_est(d, v->smith)
+                || !_formas_probare(a))
+            {
+                imprimere("  forma %u: %s\n", exemplum, v->matrix);
+                bene = FALSUM;
+            }
+        }
+        CREDO_VERUM (bene);
+
+        /* memoria: Smith cum U, V super 8 x 8 elementis ~9 digitorum -
+         * compacta post quemque cardinem (mensum: vocans 8.7 KB, apex
+         * 25 KB) */
+        {
+               Sors  s;
+             Matrix  a;
+             Matrix  u;
+             Matrix  v;
+            Piscina* vocans;
+                i32  i;
+                i32  j;
+
+            sors_seminare(&s, 2026ULL, XIII);
+            (vacuum)matrix_nulla(z, VIII, VIII, piscina, &a);
+            per (i = ZEPHYRUM; i < VIII; i++)
+            {
+                per (j = ZEPHYRUM; j < VIII; j++)
+                {
+                    Magnus x = magnus_ex_s64((s64)sors_inter(&s,
+                        -(s32)CMXCIX * (s32)M * (s32)M, (s32)CMXCIX
+                        * (s32)M * (s32)M));
+
+                    matrix_pone(&a, i, j, &x);
+                }
+            }
+            vocans = piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            CREDO_VERUM (matrix_forma_smith(a, vocans, &d, &u, &v));
+            imprimere("  Smith 8 x 8: usus vocantis %lu, apex %lu\n",
+                (unsigned long)piscina_summa_usus(vocans),
+                (unsigned long)matrix_apex_officinarum());
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans),
+                XXXII * M);
+            /* sine refectione compactae: apex ~71 KB */
+            CREDO_MINOR_I32 ((i32)matrix_apex_officinarum(),
+                XLVIII * M);
+            CREDO_VERUM (_unimodularis(u) && _unimodularis(v));
+            piscina_destruere(vocans);
+        }
+
+        /* RECENSIO matrix-III: Euclides "cardo minimus sursum" loco
+         * Bezout. Memoria ut procurator deterministicus incrementi
+         * intermedii (olim Bezout: Hermite 36 x 36 22.6 s, apex 40 MB;
+         * Smith 40 x 40 cum U, V 126 s, vocans 35 MB, V 1.26e6
+         * bitorum) */
+        {
+             Matrix  a;
+             Matrix  u;
+             Matrix  v;
+             Matrix  ua;
+             Matrix  uav;
+            Piscina* vocans;
+
+            a = _quadrata_parva(XXXII, 2026ULL);
+            vocans = piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            CREDO_VERUM (matrix_forma_hermite(a, vocans, &h, &u));
+            imprimere("  Hermite 32 x 32 cum U: usus vocantis %lu, "
+                "apex %lu\n",
+                (unsigned long)piscina_summa_usus(vocans),
+                (unsigned long)matrix_apex_officinarum());
+            /* mensum: apex 0.54 MB (olim Bezout 23 MB) */
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans),
+                CXXVIII * M);
+            CREDO_MINOR_I32 ((i32)matrix_apex_officinarum(),
+                II * M * M);
+            CREDO_VERUM (_hermite_canonica(h));
+            CREDO_VERUM (matrix_multiplica(u, a, piscina, &ua)
+                && matrix_aequalis(ua, h));
+            piscina_destruere(vocans);
+
+            a = _quadrata_parva(XXX, 2026ULL);
+            vocans = piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            CREDO_VERUM (matrix_forma_smith(a, vocans, &d, &u, &v));
+            imprimere("  Smith 30 x 30 cum U, V: usus vocantis %lu, "
+                "apex %lu\n",
+                (unsigned long)piscina_summa_usus(vocans),
+                (unsigned long)matrix_apex_officinarum());
+            /* mensum: vocans 90 KB, apex 73 KB (olim 2.8 MB, 11.6
+             * MB) */
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans),
+                CCLVI * M);
+            CREDO_MINOR_I32 ((i32)matrix_apex_officinarum(), CCLVI * M);
+            CREDO_VERUM (_smith_canonica(d));
+            CREDO_VERUM (matrix_multiplica(u, a, piscina, &ua)
+                && matrix_multiplica(ua, v, piscina, &uav)
+                && matrix_aequalis(uav, d));
+            CREDO_VERUM (_unimodularis(u) && _unimodularis(v));
+            piscina_destruere(vocans);
+        }
+
+        /* matrices fortuitae maiores (usque 7 x 7), deficientes */
+        {
+            Sors s;
+
+            bene = VERUM;
+            sors_seminare(&s, 2026ULL, XII);
+            per (exemplum = ZEPHYRUM; exemplum < LX; exemplum++)
+            {
+                PiscinaNotatio nota = piscina_notare(piscina);
+                           i32 lineae =
+                               (i32)sors_inter(&s, I, VII);
+                           i32 columnae =
+                               (i32)sors_inter(&s, I, VII);
+                        Matrix a;
+
+                a = (exemplum % II == ZEPHYRUM)
+                    ? _deficiens(&s, z, lineae, columnae)
+                    : _fortuita(&s, z, lineae, columnae);
+
+                si (!_formas_probare(a) && bene)
+                {
+                    imprimere("  casus formae fractus: %u\n", exemplum);
+                    bene = FALSUM;
+                }
+                piscina_reficere(piscina, nota);
+            }
+            CREDO_VERUM (bene);
+        }
+    }
+}
+
 s32 principale (vacuum)
 {
     constans Anulus* z = &ANULUS_INTEGRORUM;
@@ -3071,143 +3299,13 @@ s32 principale (vacuum)
     }
 
 
-    /* ==================================================
-     * FORMAE NORMALES (v2): Hermite, Smith, reticulum nuclei
-     * ================================================== */
-
+    /* formae normales: primum in filio sub custodia temporis (bug
+     * terminationis Smith/Hermite suitam pendere faceret, non
+     * frangere - recensio matrix-III), deinde vere */
+    CREDO_NON_PENDET (_formas_omnes_probare(), CXX * M);
+    si (credo_omnia_praeterierunt())
     {
-        Matrix h;
-        Matrix d;
-        Matrix k;
-           i32 exemplum;
-           b32 bene = VERUM;
-
-        imprimere("\n--- Probans formas normales ---\n");
-        /* exemplum classicum: Smith diag(2, 6, 12) */
-        CREDO_VERUM (matrix_forma_smith(_m(z,
-            "[2, 4, 4; -6, 6, 12; 10, -4, -16]"), piscina, &d, NIHIL,
-            NIHIL));
-        CREDO_VERUM (_textus_est(d, "[2, 0, 0; 0, 6, 0; 0, 0, 12]"));
-        /* Z/2 x Z/3 = Z/6 */
-        CREDO_VERUM (matrix_forma_smith(_m(z, "[2, 0; 0, 3]"), piscina,
-            &d,
-            NIHIL, NIHIL));
-        CREDO_VERUM (_textus_est(d, "[1, 0; 0, 6]"));
-        CREDO_VERUM (matrix_forma_hermite(_m(z,
-            "[2, 4, 4; -6, 6, 12; 10, -4, -16]"), piscina, &h, NIHIL));
-        CREDO_VERUM (_textus_est(h, "[2, 4, 4; 0, 6, 0; 0, 0, 12]"));
-        /* reticulum: 2x + 4y = 0 -> (-2, 1), primitivum (v1 nucleus:
-         * (-4, 2)) */
-        CREDO_VERUM (matrix_reticulum_nuclei(_m(z, "[2, 4]"), piscina,
-            &k));
-        CREDO_VERUM (_textus_est(k, "[-2; 1]")
-            || _textus_est(k, "[2; -1]"));
-        CREDO_VERUM (matrix_nucleus(_m(z, "[2, 4]"), piscina, &k));
-        CREDO_VERUM (_textus_est(k, "[-4; 2]"));
-        /* anuli non Euclidei: FALSUM, exitus non tactus */
-        d = _m(z, "[7]");
-        CREDO_FALSUM (matrix_forma_smith(_m(q, "[1/2]"), piscina, &d,
-            NIHIL,
-            NIHIL));
-        CREDO_FALSUM (matrix_forma_hermite(_m(p, "[t]"), piscina, &d,
-            NIHIL));
-        CREDO_FALSUM (matrix_reticulum_nuclei(_m(p, "[t]"), piscina,
-            &d));
-        CREDO_VERUM (_textus_est(d, "[7]"));
-        /* nulla et dimensiones extremae */
-        CREDO_VERUM (_formas_probare(_m(z, "[0, 0; 0, 0]")));
-        CREDO_VERUM (_formas_probare(_m(z, "[0, 3, 0]")));
-        CREDO_VERUM (_formas_probare(_m(z, "[5; -10; 15]")));
-
-        /* vectores oraculi */
-        per (exemplum = ZEPHYRUM; exemplum < (i32)(magnitudo(
-            vectores_formarum)
-                / magnitudo(vectores_formarum[ZEPHYRUM]));
-            exemplum++)
-        {
-            constans VectorFormae* v = &vectores_formarum[exemplum];
-                           Matrix  a = _m(z, v->matrix);
-
-            si (   !matrix_forma_hermite(a, piscina, &h, NIHIL)
-                || !_textus_est(h, v->hermite)
-                || !matrix_forma_smith(a, piscina, &d, NIHIL, NIHIL)
-                || !_textus_est(d, v->smith)
-                || !_formas_probare(a))
-            {
-                imprimere("  forma %u: %s\n", exemplum, v->matrix);
-                bene = FALSUM;
-            }
-        }
-        CREDO_VERUM (bene);
-
-        /* memoria: Smith cum U, V super 8 x 8 elementis ~9 digitorum -
-         * compacta post quemque cardinem (mensum: vocans 8.7 KB, apex
-         * 25 KB) */
-        {
-               Sors  s;
-             Matrix  a;
-             Matrix  u;
-             Matrix  v;
-            Piscina* vocans;
-                i32  i;
-                i32  j;
-
-            sors_seminare(&s, 2026ULL, XIII);
-            (vacuum)matrix_nulla(z, VIII, VIII, piscina, &a);
-            per (i = ZEPHYRUM; i < VIII; i++)
-            {
-                per (j = ZEPHYRUM; j < VIII; j++)
-                {
-                    Magnus x = magnus_ex_s64((s64)sors_inter(&s,
-                        -(s32)CMXCIX * (s32)M * (s32)M, (s32)CMXCIX
-                        * (s32)M * (s32)M));
-
-                    matrix_pone(&a, i, j, &x);
-                }
-            }
-            vocans = piscina_generare_dynamicum("probatio_vocans",
-                (memoriae_index)4096);
-            CREDO_VERUM (matrix_forma_smith(a, vocans, &d, &u, &v));
-            imprimere("  Smith 8 x 8: usus vocantis %lu, apex %lu\n",
-                (unsigned long)piscina_summa_usus(vocans),
-                (unsigned long)matrix_apex_officinarum());
-            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans),
-                XXXII * M);
-            /* sine refectione compactae: apex ~71 KB */
-            CREDO_MINOR_I32 ((i32)matrix_apex_officinarum(),
-                XLVIII * M);
-            CREDO_VERUM (_unimodularis(u) && _unimodularis(v));
-            piscina_destruere(vocans);
-        }
-
-        /* matrices fortuitae maiores (usque 7 x 7), deficientes */
-        {
-            Sors s;
-
-            bene = VERUM;
-            sors_seminare(&s, 2026ULL, XII);
-            per (exemplum = ZEPHYRUM; exemplum < LX; exemplum++)
-            {
-                PiscinaNotatio nota = piscina_notare(piscina);
-                           i32 lineae =
-                               (i32)sors_inter(&s, I, VII);
-                           i32 columnae =
-                               (i32)sors_inter(&s, I, VII);
-                        Matrix a;
-
-                a = (exemplum % II == ZEPHYRUM)
-                    ? _deficiens(&s, z, lineae, columnae)
-                    : _fortuita(&s, z, lineae, columnae);
-
-                si (!_formas_probare(a) && bene)
-                {
-                    imprimere("  casus formae fractus: %u\n", exemplum);
-                    bene = FALSUM;
-                }
-                piscina_reficere(piscina, nota);
-            }
-            CREDO_VERUM (bene);
-        }
+        _formas_omnes_probare();
     }
 
     CREDO_VERUM (lectio_integra);
