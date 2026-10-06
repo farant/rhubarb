@@ -51,3 +51,35 @@ Euclidean norm comparison (Z: |a| vs |b|; NIHIL elsewhere), appended after
 `divide_cum_residuo`. matrix's Hermite/Smith now pick the smallest-norm
 pivot and reduce the others modulo it instead of Bézout-combining rows —
 the Bézout version blew up intermediates (Hermite 36×36: 22.6 s → 11 ms).
+
+## 2026-10-06 — descriptor as first argument; Z/n ring
+
+Fran approved (with congruentia's API): parameterized rings need context,
+so EVERY ring function now takes the descriptor first —
+`anulus->adde(anulus, a, b, piscina, exitus)` — and `Anulus` has a final
+field `contextus` (NIHIL for Z, Q, Z[t]). Done now while matrix is the
+only consumer; #3 on the map (Q(√d), Z[ζ_n]) needs the same.
+
+- Struct now tagged (`nomen structura Anulus Anulus;` + `structura Anulus
+  { … }`, the house pattern for self-reference).
+- Mechanical: wrappers gained `constans Anulus* anulus` and
+  `(vacuum)anulus;` (inserted AFTER local declarations — C89); call
+  sites rewritten `X->f(` → `X->f(X, ` by one regex (71 in matrix.c, 28
+  in the test); suite green before any new code (198).
+- `anulus_residuorum(n, piscina)` (n ≥ 2, else NIHIL): copies a template
+  descriptor into the piscina, `contextus` → the modulus, `corpus` =
+  `congruentia_est_primus(n)`, title "Z/n" with the digits. Elements are
+  `i32` residues (always `parvum`). `divide_exacte` multiplies by the
+  inverse and REFUSES a non-unit divisor — over composite n, Bareiss can
+  therefore return FALSUM (a pivot that is a zero divisor), never a wrong
+  value. Euclidean hooks NIHIL (Z/p is a field; Hermite/Smith refuse).
+- Tests (probatio_matrix "ANULUS RESIDUORUM"): det over Z/p = det over Z
+  reduced mod p for 60 random matrices up to 8×8 (p = 7 and 4294967291,
+  small and ~10^21 entries, deficient ones), rank and kernel mod p (A·K =
+  0, columns = c − rank), rank drop [1,2;3,4] mod 2 = 1 / mod 3 = 2, the
+  Z/6 refusal, text "[8, -1; 14, 3]" → "[1, 6; 0, 3]" over Z/7. Plants
+  red: division without the inverse, unit 0, corpus always true, text
+  not reduced, modulus fixed at 7.
+- tools/venenum_probare.sh: the matrix suite now also links
+  lib/congruentia.c (the gate went red on a link error first — its
+  source lists are by hand).

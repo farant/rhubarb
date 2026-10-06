@@ -19,6 +19,7 @@
 #include "polynomium.h"
 #include "anulus.h"
 #include "matrix.h"
+#include "congruentia.h"
 #include <stdio.h>
 
 nomen structura {
@@ -1936,10 +1937,11 @@ _determinans_est (
                 Matrix  m,
     constans character* litterae)
 {
-    vacuum* d = _elementum(matrix_anulus(m));
+    constans Anulus* anulus  = matrix_anulus(m);
+             vacuum* d       = _elementum(anulus);
 
     redde matrix_determinans(m, piscina, d)
-        && chorda_aequalis_literis(matrix_anulus(m)->ad_chordam(d,
+        && chorda_aequalis_literis(anulus->ad_chordam(anulus, d,
         piscina),
             litterae);
 }
@@ -1954,7 +1956,7 @@ _elementum_fortuitum (
 {
     si (sors_intra(s, III) == ZEPHYRUM)
     {
-        anulus->nullum(exitus);
+        anulus->nullum(anulus, exitus);
         redde;
     }
     si (anulus == &ANULUS_INTEGRORUM)
@@ -2070,11 +2072,11 @@ _casum_probare (
         || !matrix_determinans(a, piscina, da)
         || !matrix_determinans(b, piscina, db)
         || !matrix_determinans(ab, piscina, determinans_producti)
-        || !anulus->multiplica(da, db, piscina, x)
-        || !anulus->aequalis(determinans_producti, x)
+        || !anulus->multiplica(anulus, da, db, piscina, x)
+        || !anulus->aequalis(anulus, determinans_producti, x)
         || !matrix_transposita(a, piscina, &t)
         || !matrix_determinans(t, piscina, x)
-        || !anulus->aequalis(da, x))
+        || !anulus->aequalis(anulus, da, x))
     {
         redde FALSUM;
     }
@@ -2086,8 +2088,8 @@ _casum_probare (
         vacuum* nullum  = _elementum(anulus);
            i32  i;
 
-        anulus->unum(piscina, unum);
-        anulus->nullum(nullum);
+        anulus->unum(anulus, piscina, unum);
+        anulus->nullum(anulus, nullum);
         (vacuum)matrix_identitas(anulus, n, piscina, &p);
         matrix_pone(&p, ZEPHYRUM, ZEPHYRUM, nullum);
         matrix_pone(&p, I, I, nullum);
@@ -2095,15 +2097,16 @@ _casum_probare (
         matrix_pone(&p, I, ZEPHYRUM, unum);
         si (   !matrix_multiplica(p, a, piscina, &r)
             || !matrix_determinans(r, piscina, x)
-            || !anulus->adde(x, da, piscina, x)
-            || !anulus->est_nullum(x))
+            || !anulus->adde(anulus, x, da, piscina, x)
+            || !anulus->est_nullum(anulus, x))
         {
             redde FALSUM;
         }
         /* falsificabile: P A != A nisi lineae aequales */
         per (i = ZEPHYRUM; i < n; i++)
         {
-            si (!anulus->aequalis(matrix_elementum(a, ZEPHYRUM, i),
+            si (!anulus->aequalis(anulus, matrix_elementum(a, ZEPHYRUM,
+                i),
                 matrix_elementum(a, I, i)))
             {
                 si (matrix_aequalis(r, a))
@@ -2565,6 +2568,32 @@ _formas_omnes_probare (
     }
 }
 
+/* matrix super Z in Z/n reducta (elementum quodque congruentia) */
+interior Matrix
+_reducta (
+              Matrix  m,
+     constans Anulus* anulus)
+{
+    Matrix r;
+       i32 i;
+       i32 j;
+
+    (vacuum)matrix_nulla(anulus, matrix_lineae(m), matrix_columnae(m),
+        piscina, &r);
+    per (i = ZEPHYRUM; i < matrix_lineae(m); i++)
+    {
+        per (j = ZEPHYRUM; j < matrix_columnae(m); j++)
+        {
+            i32 x = congruentia_ex_magno(*(constans Magnus*)
+                matrix_elementum(m, i, j), *(constans i32*)
+                anulus->contextus);
+
+            matrix_pone(&r, i, j, &x);
+        }
+    }
+    redde r;
+}
+
 s32 principale (vacuum)
 {
     constans Anulus* z = &ANULUS_INTEGRORUM;
@@ -2596,17 +2625,18 @@ s32 principale (vacuum)
         Polynomium pr    = polynomium_nullum();
 
         imprimere("\n--- Probans anulos ---\n");
-        CREDO_VERUM (z->divide_exacte(&a, &b, piscina, &r));
+        CREDO_VERUM (z->divide_exacte(z, &a, &b, piscina, &r));
         CREDO_VERUM (magnus_aequalis(r, magnus_ex_s64(III)));
         r = magnus_ex_s64(XLII);
         b = magnus_ex_s64(IV);
-        CREDO_FALSUM (z->divide_exacte(&a, &b, piscina, &r));
-        CREDO_FALSUM (z->divide_exacte(&a, &zero, piscina, &r));
+        CREDO_FALSUM (z->divide_exacte(z, &a, &b, piscina, &r));
+        CREDO_FALSUM (z->divide_exacte(z, &a, &zero, piscina, &r));
         CREDO_VERUM (magnus_aequalis(r, magnus_ex_s64(XLII)));
         {
             Fractio fractio_nulla = fractio_ex_s64(ZEPHYRUM);
 
-            CREDO_FALSUM (q->divide_exacte(&fa, &fractio_nulla, piscina,
+            CREDO_FALSUM (q->divide_exacte(q, &fa, &fractio_nulla,
+                piscina,
                 &fr));
             CREDO_VERUM (fractio_aequalis(fr, fractio_ex_s64(XLII)));
         }
@@ -2616,7 +2646,7 @@ s32 principale (vacuum)
         (vacuum)polynomium_ex_chorda(chorda_ex_literis("t + 1",
             piscina),
             't', piscina, &pb);
-        CREDO_FALSUM (p->divide_exacte(&pa, &pb, piscina, &pr));
+        CREDO_FALSUM (p->divide_exacte(p, &pa, &pb, piscina, &pr));
         CREDO_VERUM (polynomium_est_nullum(pr));
         /* parvum: sine memoria externa */
         {
@@ -2634,17 +2664,17 @@ s32 principale (vacuum)
                 &magnum_q);
             (vacuum)polynomium_monomium(magnus_ex_s64(I), I, piscina,
                 &t_p);
-            CREDO_VERUM (z->parvum(&parvum_z));
-            CREDO_FALSUM (z->parvum(&magnum_z));
-            CREDO_VERUM (q->parvum(&parvum_q));
-            CREDO_FALSUM (q->parvum(&magnum_q));
+            CREDO_VERUM (z->parvum(z, &parvum_z));
+            CREDO_FALSUM (z->parvum(z, &magnum_z));
+            CREDO_VERUM (q->parvum(q, &parvum_q));
+            CREDO_FALSUM (q->parvum(q, &magnum_q));
             /* numerator parvus, denominator magnus */
             (vacuum)fractio_ex_magnis(magnus_ex_s64(I), magnum_z,
                 piscina,
                 &magnum_q);
-            CREDO_FALSUM (q->parvum(&magnum_q));
-            CREDO_VERUM (p->parvum(&nullum_p));
-            CREDO_FALSUM (p->parvum(&t_p));
+            CREDO_FALSUM (q->parvum(q, &magnum_q));
+            CREDO_VERUM (p->parvum(p, &nullum_p));
+            CREDO_FALSUM (p->parvum(p, &t_p));
         }
         CREDO_FALSUM (z->corpus);
         CREDO_VERUM (q->corpus);
@@ -2654,10 +2684,10 @@ s32 principale (vacuum)
         {
             Polynomium unum = polynomium_nullum();
 
-            p->unum(piscina, &unum);
-            CREDO_VERUM (chorda_aequalis_literis(p->ad_chordam(&unum,
+            p->unum(p, piscina, &unum);
+            CREDO_VERUM (chorda_aequalis_literis(p->ad_chordam(p, &unum,
                 piscina), "1"));
-            CREDO_FALSUM (p->est_nullum(&unum));
+            CREDO_FALSUM (p->est_nullum(p, &unum));
         }
 
         /* transcribe profunde: membra et alvei NOVI */
@@ -2684,9 +2714,9 @@ s32 principale (vacuum)
                 magnum, origo), origo);
             textus_polynomii = polynomium_ad_chordam(polynomium, 't',
                 piscina);
-            z->transcribe(&magnum, piscina, &copia_magni);
-            q->transcribe(&fractio, piscina, &copia_fractionis);
-            p->transcribe(&polynomium, piscina, &copia_polynomii);
+            z->transcribe(z, &magnum, piscina, &copia_magni);
+            q->transcribe(q, &fractio, piscina, &copia_fractionis);
+            p->transcribe(p, &polynomium, piscina, &copia_polynomii);
             CREDO_VERUM (copia_magni.membra != magnum.membra);
             CREDO_VERUM (fractio_numerator(copia_fractionis).membra
                 != fractio_numerator(fractio).membra);
@@ -3302,6 +3332,103 @@ s32 principale (vacuum)
     /* formae normales: primum in filio sub custodia temporis (bug
      * terminationis Smith/Hermite suitam pendere faceret, non
      * frangere - recensio matrix-III), deinde vere */
+
+
+    /* ==================================================
+     * ANULUS RESIDUORUM Z/n (congruentia)
+     * ================================================== */
+
+    {
+        constans Anulus* septem  = anulus_residuorum(VII, piscina);
+        constans Anulus* sex     = anulus_residuorum(VI, piscina);
+        constans Anulus* duo     = anulus_residuorum(II, piscina);
+        constans Anulus* tres    = anulus_residuorum(III, piscina);
+        constans Anulus* magnus_primus = anulus_residuorum(
+            congruentia_primus_infra(0xFFFFFFFFU), piscina);
+           i32 gradus  = XCIX;
+           i32 d       = XLII;
+        Matrix k;
+        Matrix productum_nuclei;
+        Matrix nulla;
+          Sors s;
+           i32 exemplum;
+           b32 bene = VERUM;
+
+        imprimere("\n--- Probans anulum residuorum ---\n");
+        CREDO_VERUM (anulus_residuorum(I, piscina) == NIHIL);
+        CREDO_VERUM (chorda_aequalis_literis(chorda_ex_literis(
+            septem->titulus, piscina), "Z/7"));
+        CREDO_VERUM (septem->corpus);
+        CREDO_FALSUM (sex->corpus);
+        CREDO_VERUM (_textus_est(_m(septem, "[8, -1; 14, 3]"),
+            "[1, 6; 0, 3]"));
+        /* gradus modulo p cadit ubi p det dividit (det = -2) */
+        CREDO_VERUM (matrix_gradus(_m(duo, "[1, 2; 3, 4]"), piscina,
+            &gradus));
+        CREDO_AEQUALIS_I32 (gradus, I);
+        CREDO_VERUM (matrix_gradus(_m(tres, "[1, 2; 3, 4]"), piscina,
+            &gradus));
+        CREDO_AEQUALIS_I32 (gradus, II);
+        /* Z/6: divisio solum per unitates - Bareiss per cardinem 2
+         * refutat (non effectum falsum reddit) */
+        CREDO_FALSUM (matrix_determinans(_m(sex,
+            "[2, 1, 0; 1, 1, 1; 0, 1, 2]"), piscina, &d));
+        CREDO_AEQUALIS_I32 (d, XLII);
+        {
+            i32 quattuor  = IV;
+            i32 duo_r     = II;
+
+            CREDO_FALSUM (sex->divide_exacte(sex, &quattuor, &duo_r,
+                piscina, &d));
+        }
+        /* formae normales: Z/p non Euclideus in tabula */
+        CREDO_FALSUM (matrix_forma_smith(_m(septem, "[1]"), piscina, &k,
+            NIHIL, NIHIL));
+
+        /* determinans super Z/p = det super Z modulo p; nucleus mod
+         * p */
+        sors_seminare(&s, 2026ULL, XV);
+        per (exemplum = ZEPHYRUM; exemplum < LX; exemplum++)
+        {
+             PiscinaNotatio  nota = piscina_notare(piscina);
+            constans Anulus* r = (exemplum % II == ZEPHYRUM) ? septem
+                : magnus_primus;
+               i32 n = (i32)sors_inter(&s, I, VIII);
+            Matrix a_z = (exemplum % III == ZEPHYRUM)
+                ? _deficiens(&s, z, n, n) : _fortuita(&s, z, n, n);
+            Matrix a_r = _reducta(a_z, r);
+            Magnus det_z;
+               i32 det_r     = XLII;
+               i32 lineae    = (i32)sors_inter(&s, I, VI);
+               i32 columnae  = (i32)sors_inter(&s, I, VI);
+            Matrix b_r = _reducta(_fortuita(&s, z, lineae, columnae),
+                r);
+
+            si (   !matrix_determinans(a_z, piscina, &det_z)
+                || !matrix_determinans(a_r, piscina, &det_r)
+                || det_r != congruentia_ex_magno(det_z,
+                    *(constans i32*)r->contextus)
+                || !matrix_gradus(b_r, piscina, &gradus)
+                || !matrix_nucleus(b_r, piscina, &k)
+                || matrix_columnae(k) != columnae - gradus
+                || !matrix_multiplica(b_r, k, piscina,
+                &productum_nuclei)
+                || !matrix_nulla(r, lineae, columnae - gradus, piscina,
+                    &nulla)
+                || !matrix_aequalis(productum_nuclei, nulla))
+            {
+                si (bene)
+                {
+                    imprimere("  residua casus %u (%s)\n", exemplum,
+                        r->titulus);
+                }
+                bene = FALSUM;
+            }
+            piscina_reficere(piscina, nota);
+        }
+        CREDO_VERUM (bene);
+    }
+
     {
         /* reditus pendet solum ex sententia custodis (non ex fracturis
          * prioribus, quae formas larvarent - recensio matrix-IV) */

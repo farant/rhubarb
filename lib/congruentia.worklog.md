@@ -60,3 +60,21 @@ Verification:
   NOVA 0 after `reconstrue` → `restitue`, `sinici` → `restitutionis`,
   and a glossary entry for `symmetricus` (neo-Latin). `signatus` is a
   latina macro (`signed`) — examen refused it as a parameter name.
+
+## 2026-10-06 — review I
+
+Reviewer: 120k differential cases (own egcd, incremental-Bézout CRT),
+20k under UBSan/ASan; and an EXHAUSTIVE segmented sieve over every n <
+2^32 against Miller–Rabin {2, 7, 61}: 0 mismatches, π(2^32) =
+203,280,221. Speeds: est_primus 221 ns, primus_infra over the largest gap
+below 2^32 28 µs.
+
+- n = 0 in the arithmetic is a division by zero (silent on arm64,
+  SIGFPE on x86) — outside the 2 ≤ n contract. Documented in the header
+  (not guarded: hot path); ex_s64/ex_magno keep n = 0 → 0.
+- Unreduced arguments give wrong values (documented contract).
+- Gap closed: the symmetric boundary — with `>=`, x = M/2 became −M/2
+  and the suite stayed green. Tests: restitue([3], [6], symmetric) = 3,
+  moduli (2, 3) with x = 3 → 3 and x = 4 → −2; the mutant is red now.
+- potentia(a, 0, 1) = 0 pinned (n = 1 is outside the contract but the
+  special case exists). 31 checks.

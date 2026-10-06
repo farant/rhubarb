@@ -73,7 +73,7 @@ _nova (
         * _passus(anulus));
     per (k = ZEPHYRUM; k < numerus; k++)
     {
-        anulus->nullum(exitus->elementa + k * _passus(anulus));
+        anulus->nullum(anulus, exitus->elementa + k * _passus(anulus));
     }
     redde VERUM;
 }
@@ -127,7 +127,8 @@ _parvae (
 
     per (k = ZEPHYRUM; k < numerus; k++)
     {
-        si (!m.anulus->parvum(m.elementa + k * _passus(m.anulus)))
+        si (!m.anulus->parvum(m.anulus, m.elementa
+            + k * _passus(m.anulus)))
         {
             redde FALSUM;
         }
@@ -155,7 +156,7 @@ _effectus (
             Piscina* piscina,
                  i8* destinatio)
 {
-    anulus->transcribe(fons, piscina, destinatio);
+    anulus->transcribe(anulus, fons, piscina, destinatio);
 }
 
 /* Si non utendae aut creatio deficit, omnes = piscina vocantis et
@@ -233,7 +234,7 @@ _servare (
 {
     si (o->propriae)
     {
-        anulus->transcribe(fons, piscina, destinatio);
+        anulus->transcribe(anulus, fons, piscina, destinatio);
     }
     alioquin si (fons != destinatio)
     {
@@ -297,7 +298,8 @@ matrix_identitas (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        anulus->unum(piscina, _locus(m.elementa, anulus, n, k, k));
+        anulus->unum(anulus, piscina, _locus(m.elementa, anulus, n, k,
+            k));
     }
     *exitus = m;
     redde VERUM;
@@ -409,7 +411,7 @@ matrix_ex_chorda (
             || interior_textus.datum[k] == ','
             || interior_textus.datum[k] == ';')
         {
-            si (!anulus->ex_chorda(_sine_spatiis(chorda_sectio(
+            si (!anulus->ex_chorda(anulus, _sine_spatiis(chorda_sectio(
                 interior_textus, initium, k)), piscina, valor))
             {
                 redde FALSUM;
@@ -459,7 +461,8 @@ matrix_ad_chordam (
                     ", ");
             }
             (vacuum)chorda_aedificator_appendere_chorda(scriba,
-                m.anulus->ad_chordam(_locus(m.elementa, m.anulus,
+                m.anulus->ad_chordam(m.anulus, _locus(m.elementa,
+                m.anulus,
                     m.columnae, linea, columna), piscina));
         }
     }
@@ -538,7 +541,8 @@ matrix_aequalis (
     {
         per (columna = ZEPHYRUM; columna < a.columnae; columna++)
         {
-            si (!a.anulus->aequalis(_locus(a.elementa, a.anulus,
+            si (!a.anulus->aequalis(a.anulus, _locus(a.elementa,
+                a.anulus,
                 a.columnae,
                 linea, columna), _locus(b.elementa, b.anulus,
                 b.columnae,
@@ -584,8 +588,9 @@ _summa (
                          m.columnae,
                          linea, columna);
 
-            si (!(signum > ZEPHYRUM ? a.anulus->adde(x, y, piscina, z)
-                : a.anulus->subtrahe(x, y, piscina, z)))
+            si (!(signum > ZEPHYRUM ? a.anulus->adde(a.anulus, x, y,
+                piscina, z)
+                : a.anulus->subtrahe(a.anulus, x, y, piscina, z)))
             {
                 redde FALSUM;
             }
@@ -655,13 +660,15 @@ matrix_multiplica (
             Piscina* temporaria =
                 officinae.piscinae[OFFICINA_TEMPORARIA];
 
-            anulus->nullum(summa);
+            anulus->nullum(anulus, summa);
             per (k = ZEPHYRUM; bene && k < a.columnae; k++)
             {
-                bene = anulus->multiplica(_locus(a.elementa, anulus,
+                bene = anulus->multiplica(anulus, _locus(a.elementa,
+                    anulus,
                     a.columnae, linea, k), _locus(b.elementa, anulus,
                     b.columnae, k, columna), temporaria, productum)
-                    && anulus->adde(summa, productum, temporaria,
+                    && anulus->adde(anulus, summa, productum,
+                    temporaria,
                     summa);
             }
             si (bene)
@@ -765,7 +772,7 @@ _scala (
     primum      = (i8*)piscina_allocare(stabilis, passus);
     secundum    = (i8*)piscina_allocare(stabilis, passus);
     permutatio  = (i8*)piscina_allocare(stabilis, passus);
-    anulus->unum(stabilis, prior);
+    anulus->unum(anulus, stabilis, prior);
 
     per (c = ZEPHYRUM; c < m.columnae && r < m.lineae; c++)
     {
@@ -773,7 +780,7 @@ _scala (
              i32  linea_cardinis  = r;
 
         dum (   linea_cardinis < m.lineae
-             && anulus->est_nullum(_locus(tabula,
+             && anulus->est_nullum(anulus, _locus(tabula,
             anulus, m.columnae, linea_cardinis, c)))
         {
             linea_cardinis++;
@@ -817,16 +824,18 @@ _scala (
                 {
                     perge;
                 }
-                bene = anulus->multiplica(_locus(tabula, anulus,
+                bene = anulus->multiplica(anulus, _locus(tabula, anulus,
                     m.columnae, r, c), _locus(tabula, anulus,
                     m.columnae, i,
                     j), temporaria, primum)
-                    && anulus->multiplica(_locus(tabula, anulus,
+                    && anulus->multiplica(anulus, _locus(tabula, anulus,
                         m.columnae, i, c), _locus(tabula, anulus,
                         m.columnae, r, j), temporaria, secundum)
-                    && anulus->subtrahe(primum, secundum, temporaria,
+                    && anulus->subtrahe(anulus, primum, secundum,
+                    temporaria,
                         primum)
-                    && anulus->divide_exacte(primum, prior, temporaria,
+                    && anulus->divide_exacte(anulus, primum, prior,
+                    temporaria,
                         secundum);
                 si (!bene)
                 {
@@ -836,7 +845,8 @@ _scala (
                     _locus(tabula, anulus, m.columnae, i, j));
                 _officina_reficere(officinae, OFFICINA_TEMPORARIA);
             }
-            anulus->nullum(_locus(tabula, anulus, m.columnae, i, c));
+            anulus->nullum(anulus, _locus(tabula, anulus, m.columnae, i,
+                c));
         }
 
         /* linea r: perfecta in officinam stabilem (plena: in alternam,
@@ -881,7 +891,7 @@ matrix_determinans (
     }
     si (m.lineae == ZEPHYRUM)
     {
-        anulus->unum(piscina, exitus);
+        anulus->unum(anulus, piscina, exitus);
         redde VERUM;
     }
     _officinae_aperire(&officinae, piscina, _officinis_utendum(m,
@@ -899,7 +909,7 @@ matrix_determinans (
     }
     si (gradus < m.lineae)
     {
-        anulus->nullum(exitus);
+        anulus->nullum(anulus, exitus);
         _officinae_claudere(&officinae);
         redde VERUM;
     }
@@ -911,8 +921,8 @@ matrix_determinans (
         i8* nullum = (i8*)piscina_allocare(officinae.piscinae[
             OFFICINA_STABILIS], _passus(anulus));
 
-        anulus->nullum(nullum);
-        si (!anulus->subtrahe(nullum, valor, officinae.piscinae[
+        anulus->nullum(anulus, nullum);
+        si (!anulus->subtrahe(anulus, nullum, valor, officinae.piscinae[
             OFFICINA_STABILIS], valor))
         {
             _officinae_claudere(&officinae);
@@ -997,10 +1007,10 @@ matrix_nucleus (
         _officinae_claudere(&officinae);
         redde FALSUM;
     }
-    anulus->nullum(nullum);
+    anulus->nullum(anulus, nullum);
     si (gradus == ZEPHYRUM)
     {
-        anulus->unum(stabilis, d);
+        anulus->unum(anulus, stabilis, d);
     }
     alioquin
     {
@@ -1028,7 +1038,7 @@ matrix_nucleus (
             anulus, nucleus.columnae, j, q));
         per (i = ZEPHYRUM; i < gradus; i++)
         {
-            si (!anulus->subtrahe(nullum, _locus(tabula, anulus,
+            si (!anulus->subtrahe(anulus, nullum, _locus(tabula, anulus,
                 m.columnae, i, j),
                 officinae.piscinae[OFFICINA_TEMPORARIA],
                 valor))
@@ -1124,11 +1134,11 @@ _identitas_operis (
 
             si (i == j)
             {
-                o->anulus->unum(stabilis, x);
+                o->anulus->unum(o->anulus, stabilis, x);
             }
             alioquin
             {
-                o->anulus->nullum(x);
+                o->anulus->nullum(o->anulus, x);
             }
         }
     }
@@ -1225,18 +1235,20 @@ _lineae_transforma (
         i8* x = _operis(o, t, i, j);
         i8* y = _operis(o, t, k, j);
 
-        si (   !anulus->multiplica(o->alvei[ALVEUS_A], x, hic,
+        si (   !anulus->multiplica(anulus, o->alvei[ALVEUS_A], x, hic,
                 o->alvei[ALVEUS_NX])
-            || !anulus->multiplica(o->alvei[ALVEUS_B], y, hic,
+            || !anulus->multiplica(anulus, o->alvei[ALVEUS_B], y, hic,
                 o->alvei[ALVEUS_T])
-            || !anulus->adde(o->alvei[ALVEUS_NX], o->alvei[ALVEUS_T],
+            || !anulus->adde(anulus, o->alvei[ALVEUS_NX],
+            o->alvei[ALVEUS_T],
             hic,
                 o->alvei[ALVEUS_NX])
-            || !anulus->multiplica(o->alvei[ALVEUS_C], x, hic,
+            || !anulus->multiplica(anulus, o->alvei[ALVEUS_C], x, hic,
                 o->alvei[ALVEUS_NY])
-            || !anulus->multiplica(o->alvei[ALVEUS_D], y, hic,
+            || !anulus->multiplica(anulus, o->alvei[ALVEUS_D], y, hic,
                 o->alvei[ALVEUS_T])
-            || !anulus->adde(o->alvei[ALVEUS_NY], o->alvei[ALVEUS_T],
+            || !anulus->adde(anulus, o->alvei[ALVEUS_NY],
+            o->alvei[ALVEUS_T],
             hic,
                 o->alvei[ALVEUS_NY]))
         {
@@ -1266,18 +1278,20 @@ _columnae_transforma (
         i8* x = _operis(o, t, i, j);
         i8* y = _operis(o, t, i, k);
 
-        si (   !anulus->multiplica(o->alvei[ALVEUS_A], x, hic,
+        si (   !anulus->multiplica(anulus, o->alvei[ALVEUS_A], x, hic,
                 o->alvei[ALVEUS_NX])
-            || !anulus->multiplica(o->alvei[ALVEUS_B], y, hic,
+            || !anulus->multiplica(anulus, o->alvei[ALVEUS_B], y, hic,
                 o->alvei[ALVEUS_T])
-            || !anulus->adde(o->alvei[ALVEUS_NX], o->alvei[ALVEUS_T],
+            || !anulus->adde(anulus, o->alvei[ALVEUS_NX],
+            o->alvei[ALVEUS_T],
             hic,
                 o->alvei[ALVEUS_NX])
-            || !anulus->multiplica(o->alvei[ALVEUS_C], x, hic,
+            || !anulus->multiplica(anulus, o->alvei[ALVEUS_C], x, hic,
                 o->alvei[ALVEUS_NY])
-            || !anulus->multiplica(o->alvei[ALVEUS_D], y, hic,
+            || !anulus->multiplica(anulus, o->alvei[ALVEUS_D], y, hic,
                 o->alvei[ALVEUS_T])
-            || !anulus->adde(o->alvei[ALVEUS_NY], o->alvei[ALVEUS_T],
+            || !anulus->adde(anulus, o->alvei[ALVEUS_NY],
+            o->alvei[ALVEUS_T],
             hic,
                 o->alvei[ALVEUS_NY]))
         {
@@ -1304,17 +1318,19 @@ _reductio (
     constans Anulus* anulus  = o->anulus;
             Piscina* hic     = _operis_piscina(o);
 
-    si (!anulus->divide_cum_residuo(x, p, hic, o->alvei[ALVEUS_X],
+    si (!anulus->divide_cum_residuo(anulus, x, p, hic,
+        o->alvei[ALVEUS_X],
         o->alvei[ALVEUS_Y]))
     {
         redde FALSUM;
     }
-    *exacta = anulus->est_nullum(o->alvei[ALVEUS_Y]);
-    anulus->unum(hic, o->alvei[ALVEUS_A]);
-    anulus->nullum(o->alvei[ALVEUS_B]);
-    anulus->unum(hic, o->alvei[ALVEUS_D]);
-    anulus->nullum(o->alvei[ALVEUS_T]);
-    redde anulus->subtrahe(o->alvei[ALVEUS_T], o->alvei[ALVEUS_X], hic,
+    *exacta = anulus->est_nullum(anulus, o->alvei[ALVEUS_Y]);
+    anulus->unum(anulus, hic, o->alvei[ALVEUS_A]);
+    anulus->nullum(anulus, o->alvei[ALVEUS_B]);
+    anulus->unum(anulus, hic, o->alvei[ALVEUS_D]);
+    anulus->nullum(anulus, o->alvei[ALVEUS_T]);
+    redde anulus->subtrahe(anulus, o->alvei[ALVEUS_T],
+        o->alvei[ALVEUS_X], hic,
         o->alvei[ALVEUS_C]);
 }
 
@@ -1334,12 +1350,12 @@ _minima_in_columna (
     {
         i8* x = _operis(o, TABULA_A, i, c);
 
-        si (anulus->est_nullum(x))
+        si (anulus->est_nullum(anulus, x))
         {
             perge;
         }
         si (   optima < ZEPHYRUM
-            || anulus->compara_normam(x, _operis(o, TABULA_A,
+            || anulus->compara_normam(anulus, x, _operis(o, TABULA_A,
             (i32)optima,
                 c), _operis_piscina(o)) < ZEPHYRUM)
         {
@@ -1364,12 +1380,12 @@ _minima_in_linea (
     {
         i8* x = _operis(o, TABULA_A, l, j);
 
-        si (anulus->est_nullum(x))
+        si (anulus->est_nullum(anulus, x))
         {
             perge;
         }
         si (   optima < ZEPHYRUM
-            || anulus->compara_normam(x, _operis(o, TABULA_A, l,
+            || anulus->compara_normam(anulus, x, _operis(o, TABULA_A, l,
                 (i32)optima), _operis_piscina(o)) < ZEPHYRUM)
         {
             optima = (s32)j;
@@ -1464,8 +1480,8 @@ _linea_normalis (
                  i32  t;
                  i32  j;
 
-    anulus->nullum(o->alvei[ALVEUS_T]);
-    si (!anulus->divisor_communis(_operis(o, TABULA_A, i, c),
+    anulus->nullum(anulus, o->alvei[ALVEUS_T]);
+    si (!anulus->divisor_communis(anulus, _operis(o, TABULA_A, i, c),
         o->alvei[ALVEUS_T], hic, o->alvei[ALVEUS_G], o->alvei[ALVEUS_A],
         o->alvei[ALVEUS_B]))
     {
@@ -1477,7 +1493,8 @@ _linea_normalis (
         {
             i8* x = _operis(o, t, i, j);
 
-            si (!anulus->multiplica(o->alvei[ALVEUS_A], x, hic, x))
+            si (!anulus->multiplica(anulus, o->alvei[ALVEUS_A], x, hic,
+                x))
             {
                 redde FALSUM;
             }
@@ -1547,7 +1564,8 @@ _hermite (
             {
                 b32 haec_exacta;
 
-                si (anulus->est_nullum(_operis(o, TABULA_A, i, c)))
+                si (anulus->est_nullum(anulus, _operis(o, TABULA_A, i,
+                    c)))
                 {
                     perge;
                 }
@@ -1568,7 +1586,7 @@ _hermite (
                 frange;
             }
         }
-        si (anulus->est_nullum(_operis(o, TABULA_A, r, c)))
+        si (anulus->est_nullum(anulus, _operis(o, TABULA_A, r, c)))
         {
             perge;
         }
@@ -1581,22 +1599,23 @@ _hermite (
         {
             Piscina* hic = _operis_piscina(o);
 
-            si (!anulus->divide_cum_residuo(_operis(o, TABULA_A, k, c),
+            si (!anulus->divide_cum_residuo(anulus, _operis(o, TABULA_A,
+                k, c),
                 _operis(o, TABULA_A, r, c), hic, o->alvei[ALVEUS_X],
                 o->alvei[ALVEUS_Y]))
             {
                 redde FALSUM;
             }
-            anulus->unum(hic, o->alvei[ALVEUS_A]);
-            anulus->nullum(o->alvei[ALVEUS_T]);
-            si (!anulus->subtrahe(o->alvei[ALVEUS_T],
+            anulus->unum(anulus, hic, o->alvei[ALVEUS_A]);
+            anulus->nullum(anulus, o->alvei[ALVEUS_T]);
+            si (!anulus->subtrahe(anulus, o->alvei[ALVEUS_T],
                 o->alvei[ALVEUS_X],
                 hic, o->alvei[ALVEUS_B]))
             {
                 redde FALSUM;
             }
-            anulus->nullum(o->alvei[ALVEUS_C]);
-            anulus->unum(hic, o->alvei[ALVEUS_D]);
+            anulus->nullum(anulus, o->alvei[ALVEUS_C]);
+            anulus->unum(anulus, hic, o->alvei[ALVEUS_D]);
             si (!_lineae(o, k, r))
             {
                 redde FALSUM;
@@ -1660,7 +1679,8 @@ _dividit_reliqua (
     {
         per (j = t + I; j < o->columnae[TABULA_A]; j++)
         {
-            si (!anulus->divide_exacte(_operis(o, TABULA_A, i, j),
+            si (!anulus->divide_exacte(anulus, _operis(o, TABULA_A, i,
+                j),
                 _operis(o, TABULA_A, t, t), _operis_piscina(o),
                 o->alvei[ALVEUS_X]))
             {
@@ -1706,7 +1726,8 @@ matrix_forma_smith (
         {
             per (j = t; j < a.columnae && !inventum; j++)
             {
-                si (!anulus->est_nullum(_operis(&o, TABULA_A, i, j)))
+                si (!anulus->est_nullum(anulus, _operis(&o, TABULA_A, i,
+                    j)))
                 {
                     _lineas_permuta(&o, t, i);
                     _columnas_permuta(&o, t, j);
@@ -1735,7 +1756,8 @@ matrix_forma_smith (
             {
                 b32 haec_exacta;
 
-                si (anulus->est_nullum(_operis(&o, TABULA_A, i, t)))
+                si (anulus->est_nullum(anulus, _operis(&o, TABULA_A, i,
+                    t)))
                 {
                     perge;
                 }
@@ -1767,7 +1789,8 @@ matrix_forma_smith (
             {
                 b32 haec_exacta;
 
-                si (anulus->est_nullum(_operis(&o, TABULA_A, t, j)))
+                si (anulus->est_nullum(anulus, _operis(&o, TABULA_A, t,
+                    j)))
                 {
                     perge;
                 }
@@ -1792,10 +1815,13 @@ matrix_forma_smith (
              * L_t += L_i et iterum (cardo ad mdc decrescit) */
             si (!_dividit_reliqua(&o, t, &linea))
             {
-                anulus->unum(_operis_piscina(&o), o.alvei[ALVEUS_A]);
-                anulus->unum(_operis_piscina(&o), o.alvei[ALVEUS_B]);
-                anulus->nullum(o.alvei[ALVEUS_C]);
-                anulus->unum(_operis_piscina(&o), o.alvei[ALVEUS_D]);
+                anulus->unum(anulus, _operis_piscina(&o),
+                    o.alvei[ALVEUS_A]);
+                anulus->unum(anulus, _operis_piscina(&o),
+                    o.alvei[ALVEUS_B]);
+                anulus->nullum(anulus, o.alvei[ALVEUS_C]);
+                anulus->unum(anulus, _operis_piscina(&o),
+                    o.alvei[ALVEUS_D]);
                 si (!_lineae(&o, t, linea))
                 {
                     _officinae_claudere(&o.officinae);

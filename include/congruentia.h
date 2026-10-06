@@ -9,7 +9,10 @@
  *
  * Modulus n quilibet 2 <= n < 2^32 (non solum primi): inversa FALSUM
  * reddit si mdc(a, n) != 1. Argumenta arithmeticae iam reducta esse
- * debent (0 <= a < n) - ex_s64 / ex_magno reducunt.
+ * debent (0 <= a < n) - ex_s64 / ex_magno reducunt. Contractus non
+ * custoditur (ansa calida): n == 0 in arithmetica divisio per nullum
+ * est (indefinitum); argumenta non reducta effectum falsum dant.
+ * ex_s64, ex_magno n == 0 -> 0 definiunt.
  *
  * USUS:
  *   i32 p = congruentia_primus_infra(0xFFFFFFFFU);

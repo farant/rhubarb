@@ -1365,6 +1365,31 @@ s32 principale (vacuum)
             FALSUM, piscina, &x));
         CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(ZEPHYRUM)));
         CREDO_AEQUALIS_I32 (congruentia_primus_infra(II), ZEPHYRUM);
+        /* limes symmetricus: x = M/2 manet +M/2 (-M/2 < x <= M/2) -
+         * recensio congruentia-I: mutans '>=' superstes erat */
+        residua[ZEPHYRUM]  = III;
+        moduli[ZEPHYRUM]   = VI;
+        CREDO_VERUM (congruentia_restitue(residua, moduli, I, VERUM,
+            piscina, &x));
+        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(III)));
+        residua[ZEPHYRUM]  = I;    /* x = 3: 3 mod 2 = 1, 3 mod 3 = 0 */
+        moduli[ZEPHYRUM]   = II;
+        residua[I]         = ZEPHYRUM;
+        moduli[I]          = III;
+        CREDO_VERUM (congruentia_restitue(residua, moduli, II, VERUM,
+            piscina, &x));
+        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(III)));
+        residua[ZEPHYRUM]  = ZEPHYRUM;   /* x = 4 > 3: -2 */
+        residua[I]         = I;
+        CREDO_VERUM (congruentia_restitue(residua, moduli, II, VERUM,
+            piscina, &x));
+        CREDO_VERUM (magnus_aequalis(x, magnus_ex_s64(-II)));
+        /* modulus 1: omnis potentia 0 (etiam 0^0) */
+        CREDO_AEQUALIS_I32 (congruentia_potentia(V, ZEPHYRUM, I),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (congruentia_potentia(ZEPHYRUM, ZEPHYRUM,
+            VII),
+            I);
         CREDO_AEQUALIS_I32 (congruentia_ex_magno(magnus_ex_s64(-VII),
             X),
             III);
