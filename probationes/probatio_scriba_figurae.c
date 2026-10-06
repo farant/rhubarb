@@ -39,7 +39,8 @@ arbor (
       ScribaCompositio  cfg;
 
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"16\" altitudo=\"6\"/>", ephemera);
+        "<scriba latitudo=\"16\" altitudo=\"6\"/>", ephemera);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.fenestra_latitudo  = latitudo;
     cfg.fenestra_altitudo  = altitudo;
     cfg.cellula_latitudo   = VI;
@@ -145,7 +146,7 @@ s32 principale (vacuum)
     sf.sa = &sa;
 
     imprimere("\n--- I: arbor - fines, data figurae, status ---\n");
-    r = arbor("<ephemera superficies_latitudo=\"480\""
+    r = arbor("<scriba superficies_latitudo=\"480\""
               " superficies_altitudo=\"200\" cursor_linea=\"2\""
               " cursor_columna=\"8\" modus=\"normalis\"/>", CCCXX, CC);
     CREDO_NON_NIHIL(r);
@@ -198,7 +199,7 @@ s32 principale (vacuum)
                 > ZEPHYRUM);
 
     imprimere("\n--- III: cursor super litteram, modo inserendi ---\n");
-    r = arbor("<ephemera superficies_latitudo=\"480\""
+    r = arbor("<scriba superficies_latitudo=\"480\""
               " superficies_altitudo=\"200\" cursor_linea=\"0\""
               " cursor_columna=\"1\" modus=\"inserere\"/>", CCCXX, CC);
     t = reddere(r, &sf);
@@ -217,7 +218,7 @@ s32 principale (vacuum)
                 > ZEPHYRUM);
 
     imprimere("\n--- IV: selectio visualis (lineae totae) ---\n");
-    r = arbor("<ephemera superficies_latitudo=\"480\""
+    r = arbor("<scriba superficies_latitudo=\"480\""
               " superficies_altitudo=\"200\" cursor_linea=\"2\""
               " cursor_columna=\"0\" modus=\"visualis\""
               " selectio_linea=\"0\" selectio_columna=\"0\"/>", CCCXX,
@@ -242,13 +243,13 @@ s32 principale (vacuum)
     imprimere("\n--- V: volutio sine statu - cursor centratus ---\n");
     /* superficies X x V cellularum: prospectus X x IV; folium cum
      * margine XVIII x VIII */
-    r = arbor("<ephemera superficies_latitudo=\"60\""
+    r = arbor("<scriba superficies_latitudo=\"60\""
               " superficies_altitudo=\"40\" cursor_linea=\"2\""
               " cursor_columna=\"3\"/>", LX, XL);
     prosp = liberum(r, "prospectus");
     CREDO_AEQUALIS_S32(prosp->translatio.x, ZEPHYRUM);
     CREDO_AEQUALIS_S32(prosp->translatio.y, -VIII);
-    r = arbor("<ephemera superficies_latitudo=\"60\""
+    r = arbor("<scriba superficies_latitudo=\"60\""
               " superficies_altitudo=\"40\" cursor_linea=\"5\""
               " cursor_columna=\"15\"/>", LX, XL);
     prosp = liberum(r, "prospectus");

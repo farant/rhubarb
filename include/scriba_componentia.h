@@ -30,11 +30,16 @@
 #include "motus.h"
 
 nomen structura {
-    i32 fenestra_latitudo;   /* superficies si superficies_* absunt */
-    i32 fenestra_altitudo;
-    i32 cellula_latitudo;    /* Modulus: pixela = cellulae x cellula */
-    i32 cellula_altitudo;
-    i32 status_lineae;
+    /* superficies si superficies_* absunt */
+            i32 fenestra_latitudo;
+            i32 fenestra_altitudo;
+    /* Modulus: pixela = cellulae x cellula */
+            i32 cellula_latitudo;
+            i32 cellula_altitudo;
+            i32 status_lineae;
+    /* R4: status scribae; repo NIHIL = radix repositorii componenti
+     * dati - structuram TOTAM nulla (memset) ante campos */
+    InsulaRamus ramus;
 } ScribaCompositio;
 
 /* Componere-formata (dispensator.h): ctx = ScribaCompositio* */

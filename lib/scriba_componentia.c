@@ -13,15 +13,15 @@
 
 interior s32
 attributum_s32 (
-    InsulaRepositorium* repo,
-           InsulaGenus  genus,
-    constans character* titulus,
-                   s32  praestitutum)
+    constans InsulaRamus* ramus,
+             InsulaGenus  genus,
+      constans character* titulus,
+                     s32  praestitutum)
 {
     chorda* a;
        s32  v;
 
-    a = insula_attributum(repo, genus, titulus);
+    a = insula_ramus_attributum(ramus, genus, titulus);
     si (a && chorda_ut_s32(*a, &v))
     {
         redde v;
@@ -31,13 +31,13 @@ attributum_s32 (
 
 interior b32
 attributum_est (
-    InsulaRepositorium* repo,
-    constans character* titulus,
-    constans character* valor)
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+      constans character* valor)
 {
     chorda* a;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
     redde a ? chorda_aequalis_literis(*a, valor) : FALSUM;
 }
 
@@ -135,6 +135,7 @@ scriba_componere (
     InternamentumChorda* intern,
                  vacuum* ctx)
 {
+           InsulaRamus  ramus;
       ScribaCompositio* cfg;
              Componens* radix;
              Componens* prospectus;
@@ -166,9 +167,11 @@ scriba_componere (
         redde NIHIL;
     }
     cfg = (ScribaCompositio*)ctx;
-    latitudo = attributum_s32(repo, INSULA_EPHEMERA,
+    /* R4: status scribae per ramum (sine eo radix repositorii) */
+    ramus = cfg->ramus.repo ? cfg->ramus : insula_ramus_radix(repo);
+    latitudo = attributum_s32(&ramus, INSULA_EPHEMERA,
         "superficies_latitudo", (s32)cfg->fenestra_latitudo);
-    altitudo = attributum_s32(repo, INSULA_EPHEMERA,
+    altitudo = attributum_s32(&ramus, INSULA_EPHEMERA,
         "superficies_altitudo", (s32)cfg->fenestra_altitudo);
     cw = (cfg->cellula_latitudo > ZEPHYRUM) ? (s32)cfg->cellula_latitudo
                                             : I;
@@ -203,15 +206,15 @@ scriba_componere (
         / cw,
                    altitudo / ch, latitudo, altitudo, cw, ch);
 
-    folium_x = attributum_s32(repo, INSULA_DURABILIS, "latitudo", I);
-    folium_y = attributum_s32(repo, INSULA_DURABILIS, "altitudo", I);
-    cl = attributum_s32(repo, INSULA_EPHEMERA, "cursor_linea",
+    folium_x = attributum_s32(&ramus, INSULA_DURABILIS, "latitudo", I);
+    folium_y = attributum_s32(&ramus, INSULA_DURABILIS, "altitudo", I);
+    cl = attributum_s32(&ramus, INSULA_EPHEMERA, "cursor_linea",
         ZEPHYRUM);
-    cc = attributum_s32(repo, INSULA_EPHEMERA, "cursor_columna",
+    cc = attributum_s32(&ramus, INSULA_EPHEMERA, "cursor_columna",
         ZEPHYRUM);
-    sl = attributum_s32(repo, INSULA_EPHEMERA, "selectio_linea", -I);
-    visualis = attributum_est(repo, "modus", "visualis");
-    modus = attributum_est(repo, "modus", "inserere") ? "inserere"
+    sl = attributum_s32(&ramus, INSULA_EPHEMERA, "selectio_linea", -I);
+    visualis = attributum_est(&ramus, "modus", "visualis");
+    modus = attributum_est(&ramus, "modus", "inserere") ? "inserere"
           : visualis                                  ? "visualis"
           :                                             "normalis";
 
@@ -238,7 +241,7 @@ scriba_componere (
     pagina->puncta[ZEPHYRUM].y = cl;
     si (pagina->numerus_punctorum == II)
     {
-        pagina->puncta[I].x = attributum_s32(repo, INSULA_EPHEMERA,
+        pagina->puncta[I].x = attributum_s32(&ramus, INSULA_EPHEMERA,
             "selectio_columna", ZEPHYRUM);
         pagina->puncta[I].y = sl;
     }

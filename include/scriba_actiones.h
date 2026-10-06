@@ -42,6 +42,9 @@ nomen structura {
     TabulaCharacterum  laboris;    /* folium laboris (gestus) */
                   b32  inserere;   /* modus post clavem ultimam */
                   b32  insertio_commissa;  /* frustum iam commissum */
+    /* R4: status scribae; repo NIHIL = radix repositorii tractatori
+     * dati (scriba_actiones_initiare nullat) */
+          InsulaRamus ramus;
 } ScribaActiones;
 
 /* folium laboris = copia proiectionis documenti */

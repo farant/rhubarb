@@ -184,8 +184,8 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(doc);
     t    = scriba_documentum_tabula(doc);
     repo = insula_repositorium_creare(piscina, intern,
-        "<documentum latitudo=\"16\" altitudo=\"6\"/>",
-        "<ephemera focus=\"pagina\"/>");
+        "<scriba latitudo=\"16\" altitudo=\"6\"/>",
+        "<scriba focus=\"pagina\"/>");
     insula_ponere_canonem(repo, INSULA_DURABILIS,
         canonem_legere("apps/scriba/canones/durabilis.canon"));
     insula_ponere_canonem(repo, INSULA_EPHEMERA,

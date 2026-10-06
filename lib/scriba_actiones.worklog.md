@@ -53,3 +53,28 @@ v1 limits: bytes >= 0x80 in text are ignored (byte sheet); `capsa`
 lines split on '\n' (a cell holding '\n' would split - vim never
 writes one); per-key strings allocate from the document's arena
 (as pictor does).
+
+## 2026-10-05 — scriba on a branch (insula-rami-plan R4)
+
+`ScribaActiones.ramus` and `ScribaCompositio.ramus` (unset = the given
+repo's root; `scriba_actiones_initiare` zeroes, the one hand-built
+composition in tests now `memset`s - the R3 lesson). Every helper in
+this file takes `constans InsulaRamus*`; the action resolves its branch
+once; the gesture flush reaches the repo through `ramus->repo` (the
+effusor keeps the framework's fixed signature). Canon roots renamed
+`scriba` (+ `id`). Standalone unchanged: root 203/203, ludus_tessera
+6/6, the scriba tests also under aedilis's build.
+
+Proof (probatio_scriba_ramus): two scribae mounted in one store, real
+canons and owners on both, documents in ONE volume (namespaces s1/s2,
+R2), a dispatcher and a hand each. Typing in one changes only its
+branch, its document and its tree; undo is independent; the root holds
+no scriba state. Plants: action ignoring the branch; canon root back to
+`ephemera`; componere ignoring the branch - the last SURVIVED until the
+test looked at the composed tree (cursor point, status line).
+
+**Finding (open question for Fran):** the undo position is not
+persisted. `historia_aperire` reopens at the END of the log (cursor =
+finis); undo only moves an in-memory cursor (historia's header says so;
+pictor has always done this). So in scriba: undo, quit, reopen - the
+undone text is back. The test asserts today's behaviour with a note.

@@ -133,7 +133,7 @@ scriba_applicatio_aedificare (
     folium = scriba_documentum_tabula(app->doc);
 
     /* insulae + canones + domini */
-    durabilis_initialis = chorda_ex_literis("<documentum latitudo=\"",
+    durabilis_initialis = chorda_ex_literis("<scriba latitudo=\"",
         piscina);
     durabilis_initialis = chorda_concatenare(durabilis_initialis,
         chorda_ex_s32((s32)folium->latitudo, piscina), piscina);
@@ -145,7 +145,7 @@ scriba_applicatio_aedificare (
         chorda_ex_literis("\"/>", piscina), piscina);
     app->repo = insula_repositorium_creare(piscina, intern,
         chorda_ut_cstr(durabilis_initialis, piscina),
-        "<ephemera focus=\"pagina\" modus=\"normalis\"/>");
+        "<scriba focus=\"pagina\" modus=\"normalis\"/>");
     si (!app->repo)
     {
         redde FALSUM;

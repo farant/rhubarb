@@ -195,6 +195,11 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus (FRANGIT): scriba in RAMO (insula-rami-plan R4) - canones
+  scribae radicem `scriba` (cum `id`) nominant (olim `documentum` /
+  `ephemera`). `ScribaActiones.ramus`, `ScribaCompositio.ramus` (nova;
+  repo NIHIL = radix repositorii dati).
+
 - corpus (FRANGIT): pictor in RAMO (insula-rami-plan R3) - canones
   pictoris radicem `pictor` (cum `id`) nominant (olim `documentum` /
   `ephemera`): insulae pictoris `<pictor …>` radicem habeant.

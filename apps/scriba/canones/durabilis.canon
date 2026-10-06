@@ -1,6 +1,8 @@
 <canon dialectus="scriba-durabilis" versio="1">
-  <elementum nomen="documentum" radix="verum"
+  <elementum nomen="scriba" radix="verum"
     nota="folium fixum; textus ipse in volumine (historia), non hic">
+    <attributum nomen="id" genus="nomen"
+      nota="montatio (insula rami R4): radix sola aut ramus"/>
     <attributum nomen="latitudo" genus="numerus" necessarium="verum"/>
     <attributum nomen="altitudo" genus="numerus" necessarium="verum"/>
   </elementum>

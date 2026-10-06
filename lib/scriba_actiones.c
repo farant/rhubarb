@@ -18,14 +18,14 @@
 
 interior s32
 attributum_s32 (
-    InsulaRepositorium* repo,
-    constans character* titulus,
-                   s32  praestitutum)
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+                     s32  praestitutum)
 {
     chorda* a;
        s32  v;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
     si (a && chorda_ut_s32(*a, &v))
     {
         redde v;
@@ -36,13 +36,13 @@ attributum_s32 (
 /* tempora (ms) s64: Eventus.tempus s32 excedere potest */
 interior s64
 attributum_s64 (
-    InsulaRepositorium* repo,
-    constans character* titulus)
+    constans InsulaRamus* ramus,
+      constans character* titulus)
 {
     chorda* a;
        s64  v;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
     si (a && chorda_ut_s64(*a, &v))
     {
         redde v;
@@ -52,13 +52,13 @@ attributum_s64 (
 
 interior b32
 attributum_est (
-    InsulaRepositorium* repo,
-    constans character* titulus,
-    constans character* valor)
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+      constans character* valor)
 {
     chorda* a;
 
-    a = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
     redde a ? chorda_aequalis_literis(*a, valor) : FALSUM;
 }
 
@@ -112,7 +112,7 @@ laboris_reficere (
 /* capsa effugita -> clipboard vim (lineae '\n' separatae) */
 interior vacuum
 capsam_legere (
-    InsulaRepositorium* repo,
+    constans InsulaRamus* ramus,
           VimClipboard* capsa)
 {
         chorda* a;
@@ -124,7 +124,7 @@ capsam_legere (
            i32  columna;
 
     vim_clipboard_initiare(capsa);
-    n = attributum_s32(repo, "capsa_lineae", ZEPHYRUM);
+    n = attributum_s32(ramus, "capsa_lineae", ZEPHYRUM);
     si (n <= ZEPHYRUM)
     {
         redde;
@@ -133,7 +133,7 @@ capsam_legere (
     {
         n = VIM_CLIPBOARD_LINEAE_MAXIMAE;
     }
-    a = insula_attributum(repo, INSULA_EPHEMERA, "capsa");
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA, "capsa");
     longitudo = a ? scriba_solvere(*a, octeti, CAPSA_OCTETI) : ZEPHYRUM;
     si (longitudo < ZEPHYRUM)
     {
@@ -193,43 +193,45 @@ capsam_scribere (
 
 interior VimStatus
 status_legere (
-    InsulaRepositorium* repo,
-        ScribaActiones* sa,
-          VimClipboard* capsa)
+    constans InsulaRamus* ramus,
+          ScribaActiones* sa,
+            VimClipboard* capsa)
 {
     VimStatus  st;
        chorda* a;
     character  c;
 
-    capsam_legere(repo, capsa);
+    capsam_legere(ramus, capsa);
     st = vim_initiare_cum_contextu(&sa->laboris, capsa, NIHIL);
-    st.cursor_linea    = limitare(attributum_s32(repo, "cursor_linea",
+    st.cursor_linea    = limitare(attributum_s32(ramus, "cursor_linea",
         ZEPHYRUM), sa->laboris.altitudo);
-    st.cursor_columna  = limitare(attributum_s32(repo, "cursor_columna",
+    st.cursor_columna  = limitare(attributum_s32(ramus,
+        "cursor_columna",
         ZEPHYRUM), sa->laboris.latitudo);
-    st.modo = attributum_est(repo, "modus",
+    st.modo = attributum_est(ramus, "modus",
         "inserere") ? MODO_VIM_INSERERE
-            : attributum_est(repo, "modus",
+            : attributum_est(ramus, "modus",
             "visualis") ? MODO_VIM_VISUALIS
             : MODO_VIM_NORMALIS;
-    st.visualis_tipo = attributum_est(repo, "visualis_genus",
+    st.visualis_tipo = attributum_est(ramus, "visualis_genus",
         "character")
                      ? MODO_VIM_VISUALIS_CHARACTER
                      : MODO_VIM_VISUALIS_LINEA;
-    st.selectio_initium_linea    = attributum_s32(repo,
+    st.selectio_initium_linea    = attributum_s32(ramus,
         "selectio_linea",
         -I);
-    st.selectio_initium_columna  = attributum_s32(repo,
+    st.selectio_initium_columna  = attributum_s32(ramus,
         "selectio_columna", ZEPHYRUM);
-    a = insula_attributum(repo, INSULA_EPHEMERA, "clavis_praecedens");
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA,
+        "clavis_praecedens");
     si (a && scriba_solvere(*a, &c, I) == I)
     {
         st.clavis_praecedens = c;
     }
-    si (attributum_est(repo, "fd_exspectans", "verum"))
+    si (attributum_est(ramus, "fd_exspectans", "verum"))
     {
         st.esperans_fd = VERUM;
-        st.tempus_f = (f64)attributum_s64(repo, "fd_tempus")
+        st.tempus_f = (f64)attributum_s64(ramus, "fd_tempus")
             / 1000.0;
     }
     redde st;
@@ -306,10 +308,10 @@ status_scribere_mutator (
 
 interior vacuum
 status_scribere (
-       InsulaRepositorium* repo,
-           ScribaActiones* sa,
-                VimStatus  st,
-    constans VimClipboard* capsa)
+       constans InsulaRamus* ramus,
+             ScribaActiones* sa,
+                  VimStatus  st,
+      constans VimClipboard* capsa)
 {
     Scriptura s;
     character c;
@@ -324,7 +326,8 @@ status_scribere (
         c             = st.clavis_praecedens;
         s.praecedens  = scriba_effugere(&c, I, sa->doc->piscina);
     }
-    (vacuum)mutare_ephemera(repo, status_scribere_mutator, &s);
+    (vacuum)mutare_ramum(ramus, INSULA_EPHEMERA,
+        status_scribere_mutator, &s);
 }
 
 
@@ -408,14 +411,14 @@ gestum_effundere (
 /* revocare (retro) aut reficere: pendentia primum effunduntur */
 interior vacuum
 historiam_movere (
-       InsulaRepositorium* repo,
-                    Motus* motus,
-           ScribaActiones* sa,
-                VimStatus  st,
-    constans VimClipboard* capsa,
-                      b32  retro)
+       constans InsulaRamus* ramus,
+                      Motus* motus,
+             ScribaActiones* sa,
+                  VimStatus  st,
+      constans VimClipboard* capsa,
+                        b32  retro)
 {
-    (vacuum)motus_gestum_effundere(motus, repo);
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
     si (retro)
     {
         (vacuum)scriba_documentum_revocare(sa->doc);
@@ -427,35 +430,35 @@ historiam_movere (
     laboris_reficere(sa);
     sa->insertio_commissa  = FALSUM;
     st.clavis_praecedens   = '\0';
-    status_scribere(repo, sa, st, capsa);
+    status_scribere(ramus, sa, st, capsa);
 }
 
 interior vacuum
 clavem_tractare (
-    InsulaRepositorium* repo,
-                 Motus* motus,
-        ScribaActiones* sa,
-                   s32  clavis,
-                   s64  tempus)
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                     s32  clavis,
+                     s64  tempus)
 {
     VimClipboard capsa;
           Pactum pactum;
 
-    pactum.st = status_legere(repo, sa, &capsa);
+    pactum.st = status_legere(ramus, sa, &capsa);
     si (   pactum.st.modo              == MODO_VIM_NORMALIS
         && pactum.st.clavis_praecedens == '\0' && clavis == 'u')
     {
-        historiam_movere(repo, motus, sa, pactum.st, &capsa, VERUM);
+        historiam_movere(ramus, motus, sa, pactum.st, &capsa, VERUM);
         redde;
     }
     pactum.clavis = clavis;
     pactum.tempus = tempus;
     mutare_gestum(motus, vim_mutator, &pactum, tempus);
     sa->inserere = (b32)(pactum.st.modo == MODO_VIM_INSERERE);
-    status_scribere(repo, sa, pactum.st, &capsa);
+    status_scribere(ramus, sa, pactum.st, &capsa);
     si (!sa->inserere)
     {
-        (vacuum)motus_gestum_effundere(motus, repo);
+        (vacuum)motus_gestum_effundere(motus, ramus->repo);
     }
 }
 
@@ -495,6 +498,7 @@ scriba_pagina_clavis (
       constans Eventus* ev,
                 vacuum* ctx)
 {
+        InsulaRamus  ramus;
      ScribaActiones* sa;
        VimClipboard  capsa;
           VimStatus  st;
@@ -509,6 +513,8 @@ scriba_pagina_clavis (
     {
         redde FALSUM;
     }
+    /* R4: status scribae per ramum (sine eo radix repositorii) */
+    ramus = sa->ramus.repo ? sa->ramus : insula_ramus_radix(repo);
     si (ev->genus == EVENTUS_TEXTUS)
     {
         si (ev->datum.textus.genus != EVENTUS_TEXTUS_COMMISSUM)
@@ -530,7 +536,7 @@ scriba_pagina_clavis (
             {
                 perge;   /* octeti >= 0x80: v1 ignorati */
             }
-            clavem_tractare(repo, motus, sa, clavis, ev->tempus);
+            clavem_tractare(&ramus, motus, sa, clavis, ev->tempus);
         }
         redde VERUM;
     }
@@ -542,13 +548,14 @@ scriba_pagina_clavis (
     si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)
         && ev->datum.clavis.runa == 'r')
     {
-        si (   !attributum_est(repo, "modus", "normalis")
-            && insula_attributum(repo, INSULA_EPHEMERA, "modus"))
+        si (   !attributum_est(&ramus, "modus", "normalis")
+            && insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+            "modus"))
         {
             redde FALSUM;
         }
-        st = status_legere(repo, sa, &capsa);
-        historiam_movere(repo, motus, sa, st, &capsa, FALSUM);
+        st = status_legere(&ramus, sa, &capsa);
+        historiam_movere(&ramus, motus, sa, st, &capsa, FALSUM);
         redde VERUM;
     }
     clavis = clavis_nominata(ev);
@@ -558,11 +565,11 @@ scriba_pagina_clavis (
     }
     /* Tab in modo normali: focus proximus (dispensator) */
     si (   clavis == VIM_CLAVIS_TAB
-        && !attributum_est(repo, "modus", "inserere"))
+        && !attributum_est(&ramus, "modus", "inserere"))
     {
         redde FALSUM;
     }
-    clavem_tractare(repo, motus, sa, clavis, ev->tempus);
+    clavem_tractare(&ramus, motus, sa, clavis, ev->tempus);
     redde VERUM;
 }
 

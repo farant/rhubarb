@@ -124,6 +124,12 @@ plants.
 **R4 - scriba on a branch.** Likewise, including the gesture flush;
 all scriba suites and its replay unchanged.
 
+R4 as built: `ScribaActiones.ramus`, `ScribaCompositio.ramus`; helpers
+take the branch; canon roots `scriba` (+ `id`); `probatio_scriba_ramus`
+(two scribae, one store, one volume). Found: the undo position is not
+persisted (historia reopens at the end of the log) - open question.
+**Track R done.**
+
 Track T - schirmata (the host):
 
 **T1 - the host store.** Host canon (roots + mount elements + the tab
@@ -157,6 +163,9 @@ Fran's look.
   per mount.
 - Every write copies the whole store through text: cost with N tabs
   (measure at T4).
+- **Open (Fran):** persist the undo position? historia reopens at the
+  log's end; undo-then-quit brings undone text back (pictor and scriba
+  alike).
 - Framework writes still go to the ROOT: Motus's pan/zoom flush
   (`motus_effundere`), the dispatcher's `focus` and `superficies_*`.
   In a host they must reach the active mount's branch (T2/T3).
