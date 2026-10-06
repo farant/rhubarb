@@ -18,6 +18,7 @@
 #include "chorda.h"
 #include "chorda_aedificator.h"
 #include "xar.h"
+#include "tabula_dispersa.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -222,6 +223,10 @@ nomen structura {
                     b32 argumenta_parata;
     /* ambitus quorum $N aestimatur (recursio arcuum) */
                     Xar* ambitus_argumentorum;
+    /* via -> scriptum an binarium, semel per derivationem (T6:
+     * plagula tota legebatur ad omnem situm exsecutionis omni
+     * iteratione - binaria quoque) */
+         TabulaDispersa* scripta_nota;
 } Derivatio;
 
 
@@ -4067,23 +4072,50 @@ _plagulam_in_ambitu (
     redde FALSUM;
 }
 
-/* scriptum an binarium: '.sh' aut '#!' */
+/* signa tabulae scripta_nota (valores, non data) */
+hic_manens character SIGNUM_SCRIPTI  = 'S';
+hic_manens character SIGNUM_BINARII  = 'B';
+
+/* scriptum an binarium: '.sh' aut '#!' - semel per viam (T6) */
 interior b32
 _scriptum_est (
               Derivatio* d,
      constans character* via)
 {
-    memoriae_index n = strlen(via);
-            chorda c;
+    memoriae_index  n = strlen(via);
+            chorda  c;
+            vacuum* notum = NIHIL;
+               b32  scriptum;
+       FilumLector* lector;
 
     si (n > III && strcmp(via + n - III, ".sh") == ZEPHYRUM)
     {
         redde VERUM;
     }
-    c = filum_legere_totum(via, d->piscina);
-    redde c.datum != NIHIL && c.mensura >= II
-        && c.datum[ZEPHYRUM] == '#'
+    si (   d->scripta_nota != NIHIL
+        && tabula_dispersa_invenire_literis(d->scripta_nota, via,
+        &notum))
+    {
+        redde notum == (vacuum*)&SIGNUM_SCRIPTI;
+    }
+    /* linea prima sola (fgets): binaria tota non leguntur */
+    lector    = filum_lector_aperire(via, d->piscina);
+    scriptum  = lector != NIHIL
+        && filum_lector_lineam_proximam(lector, &c)
+        && c.mensura >= II && c.datum[ZEPHYRUM] == '#'
         && c.datum[I] == '!';
+    si (lector != NIHIL)
+    {
+        filum_lector_claudere(lector);
+    }
+    si (d->scripta_nota != NIHIL)
+    {
+        (vacuum)tabula_dispersa_inserere(d->scripta_nota,
+            chorda_ex_literis(via, d->piscina),
+            scriptum ? (vacuum*)&SIGNUM_SCRIPTI
+                     : (vacuum*)&SIGNUM_BINARII);
+    }
+    redde scriptum;
 }
 
 /* verbum = '$X' / '${X}' / '"$X"' / '"${X}"' solum? reddit partem
@@ -7398,6 +7430,7 @@ crusta_effectus_derivare_argumentis (
     d.argumenta_parata   = FALSUM;
     d.ambitus_argumentorum = xar_creare(piscina,
         (i32)magnitudo(Ambitus*));
+    d.scripta_nota = tabula_dispersa_creare_chorda(piscina, CXXVIII);
     si (   d.visi == NIHIL || d.ambitus == NIHIL || d.tabula == NIHIL
         || !_absolutam_facere(scriptum, radix, absoluta))
     {
@@ -7857,6 +7890,7 @@ crusta_effectus_observata (
     d.argumenta_parata   = FALSUM;
     d.ambitus_argumentorum = xar_creare(piscina,
         (i32)magnitudo(Ambitus*));
+    d.scripta_nota = tabula_dispersa_creare_chorda(piscina, CXXVIII);
     a = (Ambitus*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(Ambitus));
     p = (Plagula*)piscina_allocare(piscina,

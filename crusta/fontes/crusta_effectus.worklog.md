@@ -593,3 +593,19 @@ source order).
   Latin lint before reading a red pythonica.
 - Zero census delta checked by a probe: the sourced-definition path is
   live (vexilla.sh ~3,700 uses), values identical (single definition).
+
+## 2026-10-06 - slice 3 T6: close, and a contaminated stopwatch
+
+- Before/after measured on ONE tree with both binaries (frozen slice-2
+  vs final), not against numbers remembered from older trees.
+- Census cost: the committed T5 binary was +60-90% (2.5-3.2 s vs 1.6
+  s). `sample` named `__read_nocancel` under `_locum_sequi`:
+  `_scriptum_est` read whole binaries to look at two bytes, per exec
+  site per pass. Memo per derivation + first line only -> 1.6 s.
+- Then a false alarm: after the fix the census still timed at 2.2-2.5
+  s - because the background `sample` targets (4x index runs) were
+  still running. Clean alternating runs (nothing else alive, checked
+  with pgrep): slice 2 1.58-1.74 s, final 1.59-1.62 s. A memo of the
+  reaching sets was written for a slowdown that was not there - and,
+  luckily, its anchor did not match, so it never landed. Check the
+  machine is idle BEFORE optimizing a timing.

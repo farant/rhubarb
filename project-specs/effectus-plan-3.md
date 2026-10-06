@@ -165,13 +165,13 @@ branch: a mismatch is shown to Fran before the attribute is written.
 
 ### Task T6: close
 
-- [ ] **Step 1:** Census by causa before (slice-2 T7) / after in spec
+- [x] **Step 1:** Census by causa before (slice-2 T7) / after in spec
   §XI; `discordia`, `argumentum` deltas; subset check final.
-- [ ] **Step 2:** Toml: 0 errata, key, oracle non tecta 0, judge time.
-- [ ] **Step 3:** Docs (worklog, crusta/CLAUDE.md, MEMORY); ledger:
+- [x] **Step 2:** Toml: 0 errata, key, oracle non tecta 0, judge time.
+- [x] **Step 3:** Docs (worklog, crusta/CLAUDE.md, MEMORY); ledger:
   park closed; next (must-write-before-read key shrink, Q5; recursio
   fixpoint, A5) filed.
-- [ ] **Step 4: Commit.**
+- [x] **Step 4: Commit.**
 
 ## Not in this plan (stated)
 

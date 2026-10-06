@@ -395,3 +395,41 @@ record forced one extra pass on every ambitus - fixed). Plants: root
 argv ignored, arcs ignored, `"$@"` forwarding off, source continuation
 off, forward reach off -> section XXII red at each; a mismatched
 `<argumenta>` in toml/aedificatio.stml -> pythonica red.
+
+**T6 (2026-10-06): close.** Census by causa, measured on the SAME tree
+(today's) with the frozen slice-2 binary and the final slice-3 binary:
+
+| | slice 2 | slice 3 |
+|---|---:|---:|
+| sites | 10,773 | 10,081 |
+| plena | 8,691 | 8,436 |
+| partialis | 495 | 572 |
+| **nulla** | **1,210** | **696** (-42%) |
+| discordia (nulla+partialis) | 531 | 192 (-64%) |
+| argumentum | 509 | 439 |
+| substitutio | 152 | 121 |
+| recursio, ambitus, cwd ignotum, ansa_read, operator, tabulatum, absens | 130, 101, 94, 84, 73, 19, 12 | 130, 104, 94, 84, 73, 19, 12 |
+
+Fewer sites = smaller values (one site per member). Partialis rose
+because nulla sites gained a known prefix. The script-argument work (T5)
+cannot move the census by design (every script is derived as a root);
+it acts in chains. Subset check, final binary: 316/316.
+
+Cost. Census 1.58-1.74 s (slice 2) vs 1.59-1.62 s (final), measured
+alternately with nothing else running. Along the way the committed T5
+binary measured 2.5-3.2 s: `_scriptum_est` read every exec target WHOLE
+(binaries included) to test for `#!`, at every exec site, every
+fixpoint pass - T4/T5 multiplied the passes. Now memoized per
+derivation (`scripta_nota`) and reading the first line only
+(`filum_lector`). Judge 1.87-1.89 s (slice 2 era: 2.03-2.07).
+
+Toml: chain lint 0 errata (5 monita, `mandatum-ignotum`, outside the
+verdict's concern), key 32 lines (slice 2: 31; +1 =
+`octeti aurum.txt`, T2), oracle non tecta 0 (explicata 125 - the same
+with the T3 analyzer; the chain itself grew since T2's 75).
+
+Left (filed): the key shrink for reads of files the run wrote first
+(Q5, needs a MUST analysis and oracle proof - `ante_scripta`); the
+`recursio` accumulations (A5, 130 sites: a fixpoint over sets);
+unmodelled corners named in the worklog (`X=v f` prefix assignment into
+a function, `trap 'code'` strings).
