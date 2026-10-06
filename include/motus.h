@@ -60,6 +60,8 @@ nomen structura {
           b32  sordida;
       Piscina* piscina;
   MotusGestus  gestus;          /* S1a */
+  InsulaRamus  ramus;           /* T3a: ramus activus - focus et
+                                 * effusio pan/zoom; nullus = radix */
 } Motus;
 
 nomen vacuum (*MotusMutator)(

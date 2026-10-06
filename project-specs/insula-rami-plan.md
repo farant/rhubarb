@@ -226,6 +226,38 @@ T2 design (agreed with Fran, 2026-10-05), two commits:
 ephemeral state), clicking a tab; leaving flushes the app's gesture and
 swaps the Motus gesture slot to the arriving app's.
 
+T3 design (agreed with Fran, 2026-10-05), two commits:
+- **T3a - the active branch lives in Motus.** `Motus.ramus` (zeroed =
+  root: standalone apps unchanged); the dispatcher's focus helpers and
+  `motus_effundere` write through it - per-tab focus falls out, and
+  the idle pan/zoom flush stops hitting the host root (whose canon
+  refuses `pan_x`: a finished stroke clears the dirty flag itself, but
+  an idle pause MID-drag flushed to the root, was refused, and was
+  retried on every event until release). Mounts write their kind's default focus into their
+  branch. `vicus_motum_ligare(v, motus)`; on switch: flush the leaving
+  gesture (refuse the switch if that flush fails) and pan/zoom into the
+  LEAVING branch, drop capture + pending stroke, then point the branch
+  at the arriving tab and install its gesture (`VicusFacies.gestum_
+  ponere` + ctx).
+  T3a as built: `Motus.ramus` (zeroed in `motus_initiare`); the
+  dispatcher's `attr_legere/_scribere` (focus, focus_acervus) and
+  `motus_effundere` resolve it (unset = root); the window surface
+  stays at the root. Mount defaults `focus="pagina"` / `"tabula"`.
+  `vicus_motum_ligare` + internal `motum_aptare` (branch + gesture of
+  the active; none = root, empty slot) / `motum_relinquere` (gesture
+  flush - a dirty gesture that will not flush refuses the switch with
+  a named cause; pan/zoom flush, dropped if refused so it can never
+  land in the arriving branch; capture + pending stroke dropped). Ten
+  plants.
+- **T3b - switching UI.** Ctrl-A (`MOD_IMPERIUM` + 'a') sets host
+  ephemeral `praefixum`; a host routing strategy sends events to the
+  root while it is pending (the tree marks it); then `n` / `p` / `1-9`
+  act on TEXTUS (key-down swallowed); **Ctrl-A Ctrl-A = the previous
+  tab** (Fran; remembered id in host ephemeral); Esc / anything else
+  cancels; **the bar is tinted while a prefix is pending** (Fran). Tab
+  components = invisible hit zones `vicus.tabula.<id>` with a click
+  action.
+
 **T4 - the app.** `apps/schirmata/` in both targets, mounting pictor
 and scriba; replay proof (a session that types, switches, draws,
 switches back - the same store and volume through the terminal path);

@@ -49,8 +49,15 @@ nomen b32 (*VicusMontator)(
                     i32  latitudo,
                     i32  altitudo);
 
+/* gestum applicationis in Motum ponere (T3a) - e.g.
+ * scriba_gestum_ponere */
+nomen vacuum (*VicusGestor)(
+     Motus* motus,
+    vacuum* ctx);
+
 /* facies montationis (T2a): quod hospes ab applicatione activa
- * accipit - registra, componere, fons imaginum */
+ * accipit - registra, componere, fons imaginum, gestus (T3a). Ante
+ * describere tota nullatur: campi omissi = absentes. */
 nomen structura {
       ActioRegistrum* actiones;
      FiguraRegistrum* figurae;
@@ -58,6 +65,8 @@ nomen structura {
               vacuum* componere_ctx;
            ImagoFons  fons;           /* NIHIL = nullae imagines */
               vacuum* fons_ctx;
+         VicusGestor  gestum_ponere;  /* NIHIL = nullus gestus */
+              vacuum* gestum_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -95,6 +104,7 @@ nomen structura {
                  chorda  causa;
          ActioRegistrum* actiones;    /* hospitis + activae (T2a) */
         FiguraRegistrum* figurae;
+                  Motus* motus;       /* ligatus (T3a); NIHIL nullus */
 } Vicus;
 
 Vicus*
@@ -182,6 +192,16 @@ vicus_componere (
                 Piscina* piscina,
     InternamentumChorda* intern,
                  vacuum* ctx);
+
+/* Motum dispensatoris ligare (T3a): ramus eius = ramus activae (focus,
+ * effusio pan/zoom), gestus = gestus activae. In commutatione postea:
+ * gestus relinquentis et pan/zoom in ramum RELINQUENTIS effunduntur
+ * (gestus non effusus commutationem recusat), captura et ictus
+ * pendens abiciuntur, deinde ramus et gestus advenientis ponuntur. */
+vacuum
+vicus_motum_ligare (
+    Vicus* v,
+    Motus* motus);
 
 chorda
 vicus_causa (

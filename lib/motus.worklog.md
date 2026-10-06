@@ -61,3 +61,11 @@ ANONYMOUS. From the dispatcher that is fine; from INSIDE an action
 (scriba's Esc and `dd` flush at once) every later state write would be
 anonymous and owned attributes would refuse it silently. It now
 restores the previous writer. Red first (probatio_motus).
+
+## 2026-10-05 — `Motus.ramus` (insula-rami T3a)
+
+New field: the active branch. `motus_effundere` writes pan/zoom
+through it (`mutare_ramum`; zeroed = root, standalone unchanged).
+`motus_initiare` sets fields one by one, so the branch is memset there
+explicitly - leaving it out is caught by probatio_motus (stack Motus).
+Why and the host's switch protocol: lib/vicus.worklog.md, same date.

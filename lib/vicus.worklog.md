@@ -82,3 +82,46 @@ tab composed instead of the active; title not inverted. The last one
 SURVIVED my first assertion ("some background pixels in the active
 title" - trivially true, the bar's background supplies them); now it
 also asserts ZERO text-coloured pixels there.
+
+## 2026-10-05 — T3a: the active branch lives in Motus
+
+Framework writes went to the store ROOT: the dispatcher's `focus` /
+`focus_acervus` (`attr_legere/_scribere`) and Motus's idle flush of
+`pan_x/pan_y/zoom`. In a host that is wrong twice: focus is one value
+for all tabs, and the vicus root canon has no `pan_x`, so the flush is
+refused and stays dirty. My first claim ("after any pictor stroke the
+flush retries every idle tick") was wrong and the red test said so: a
+FINISHED stroke clears `sordida` itself (pictor_actiones, "a finished
+stroke does not touch the ephemera"). The real case is an idle pause
+MID-drag - mouse held still past the 300 ms quiet - which flushes to
+the root, is refused, and retries on every event until release. The
+test now holds a stroke across a pulse.
+
+Fix: `Motus.ramus` (an InsulaRamus; zeroed = root, so every standalone
+app is byte-for-byte unchanged). Motus is the right carrier: it already
+holds the per-app gesture slot, and every action receives `Motus*`, so
+T3b's switch action can move it without reaching the dispatcher. The
+window surface stays at the root - it is the host's.
+
+Switch protocol (`motum_relinquere`, then `motum_aptare`):
+1. leaving gesture flushed into the STILL-active branch; a dirty
+   gesture that will not flush refuses the switch (text would be lost)
+   with a named cause;
+2. pan/zoom flushed, and dropped if refused - otherwise the next idle
+   flush would land the leaving app's pan in the arriving branch;
+3. capture and pending stroke dropped (a drag cannot cross tabs);
+4. branch := arriving tab's, gesture slot := its `gestum_ponere` (or
+   empty).
+Per-tab focus then needs no save/restore: it lives in each branch.
+Mounts now write their kind's default focus (`pagina`, `tabula`) into
+the branch at mount time.
+
+`VicusFacies` is memset before `describere`, so kinds that ignore the
+new gesture fields get "no gesture", not garbage.
+
+Plants (10, all caught): flush to root; focus read from root; focus
+written to root; no default focus; leaving gesture not flushed; gesture
+not installed; capture kept; branch not set; bind without apply;
+`motus_initiare` not zeroing the branch - that last one is caught by
+the EXISTING probatio_motus (its stack Motus holds garbage), the same
+class the aedilis gate caught in R3.

@@ -170,6 +170,7 @@ tabulam_montare (
             "montatio defecit: ", v->piscina), t->id, v->piscina);
         redde;
     }
+    memset(&t->facies, ZEPHYRUM, magnitudo(VicusFacies));
     t->descriptio->describere(t->montatio, &t->facies);
 }
 
@@ -317,6 +318,64 @@ figura_tabularum (
                                             : COLOR_TEXT));
         x += lat;
     }
+}
+
+/* Motus ligatus (T3a): ramus et gestus activae. Sine activa montata:
+ * radix, nullus gestus. */
+interior vacuum
+motum_aptare (
+    Vicus* v)
+{
+    VicusTabula* t;
+
+    si (!v->motus)
+    {
+        redde;
+    }
+    memset(&v->motus->ramus, ZEPHYRUM, magnitudo(InsulaRamus));
+    motus_gestum_ponere(v->motus, NIHIL, NIHIL, NIHIL, ZEPHYRUM);
+    t = vicus_activa(v);
+    si (!t || !t->montata)
+    {
+        redde;
+    }
+    v->motus->ramus = insula_ramus(v->repo,
+        chorda_ut_cstr(t->genus, v->piscina),
+        chorda_ut_cstr(t->id, v->piscina));
+    si (t->facies.gestum_ponere)
+    {
+        t->facies.gestum_ponere(v->motus, t->facies.gestum_ctx);
+    }
+}
+
+/* relinquens (T3a): gestus et pan/zoom in ramum ADHUC activum
+ * effunduntur; gestus sordidus non effusus commutationem recusat
+ * (textus perderetur). Pan/zoom recusata abiciuntur - aliter in ramum
+ * advenientis effunderentur. Captura et ictus pendens abiciuntur. */
+interior b32
+motum_relinquere (
+    Vicus* v)
+{
+    si (!v->motus)
+    {
+        redde VERUM;
+    }
+    si (   v->motus->gestus.sordidus
+        && !motus_gestum_effundere(v->motus, v->repo))
+    {
+        v->causa = chorda_ex_literis(
+            "gestus relinquentis non effusus: commutatio recusata",
+            v->piscina);
+        redde FALSUM;
+    }
+    si (v->motus->sordida)
+    {
+        (vacuum)motus_effundere(v->motus, v->repo);
+        v->motus->sordida = FALSUM;
+    }
+    motus_captura_tollere(v->motus);
+    xar_vacare(v->motus->ictus_pendens);
+    redde VERUM;
 }
 
 /* registra hospitis: vacua, deinde introitus activae (T2a) */
@@ -601,6 +660,10 @@ vicus_activam_ponere (
     {
         redde FALSUM;
     }
+    si (!chorda_aequalis(t->id, v->activa) && !motum_relinquere(v))
+    {
+        redde FALSUM;
+    }
     v->activa  = t->id;
     radix      = insula_ramus_radix(v->repo);
     si (!mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
@@ -609,6 +672,7 @@ vicus_activam_ponere (
         redde FALSUM;
     }
     registra_reficere(v);
+    motum_aptare(v);
     redde indicem_scribere(v);
 }
 
@@ -712,6 +776,19 @@ vicus_componere (
         }
     }
     redde radix;
+}
+
+vacuum
+vicus_motum_ligare (
+    Vicus* v,
+    Motus* motus)
+{
+    si (!v)
+    {
+        redde;
+    }
+    v->motus = motus;
+    motum_aptare(v);
 }
 
 chorda

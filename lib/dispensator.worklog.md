@@ -92,3 +92,10 @@ nothing; `finire` flushes dirty pan/zoom. Plants: no quiet flush;
 `finire` skipping the gesture - caught. NOT covered headlessly: the
 glues' call itself (their loops need a window / a tty) - the scriba app
 proof (S3) is where it shows.
+
+## 2026-10-05 — focus lives in the active branch (insula-rami T3a)
+
+`attr_legere/_scribere` (focus, focus_acervus) resolve
+`d->motus.ramus` (unset = root). The window surface
+(`superficiem_scribere`) deliberately stays at the root - it is the
+host's. Details: lib/vicus.worklog.md, same date.

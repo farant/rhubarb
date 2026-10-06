@@ -195,6 +195,13 @@ Leges chartae:
   et `pictor_documentum_numerus_vivorum` (nova) lege. Volumina vetera
   octetis eisdem leguntur et scribuntur.
 
+- corpus: insula-rami T3a - `Motus.ramus` (novum; nullatum = radix,
+  mores applicationum solarum idem): focus dispensatoris et
+  `motus_effundere` per ramum activum. `pictor_montare` /
+  `scriba_montare` focum ordinarium in ramo scribunt. `vicus_motum_
+  ligare` (nova); `VicusFacies.gestum_ponere/_ctx` (nova; facies ante
+  describere nullatur).
+
 - corpus: vicus T2b - `vicus_componere` (nova; Componere-formata, ctx =
   Vicus*): radix `vicus` cum actione `vicus.magnitudo`, linea tabularum
   (`PARTES_INDEX`, VIII pixela), arbor activae infra eam translata.

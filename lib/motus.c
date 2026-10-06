@@ -2,6 +2,8 @@
 
 #include "motus.h"
 
+#include <string.h>
+
 
 /* ==================================================
  * Vita et porta
@@ -26,12 +28,13 @@ motus_initiare (
     motus->tempus_ultimae_mutationis  = ZEPHYRUM;
     motus->sordida                    = FALSUM;
     motus->piscina                    = piscina;
-    motus->gestus.status              = NIHIL;
-    motus->gestus.effusor             = NIHIL;
-    motus->gestus.ctx                 = NIHIL;
-    motus->gestus.quies_ms            = ZEPHYRUM;
-    motus->gestus.tempus              = ZEPHYRUM;
-    motus->gestus.sordidus            = FALSUM;
+    memset(&motus->ramus, ZEPHYRUM, magnitudo(InsulaRamus));
+    motus->gestus.status    = NIHIL;
+    motus->gestus.effusor   = NIHIL;
+    motus->gestus.ctx       = NIHIL;
+    motus->gestus.quies_ms  = ZEPHYRUM;
+    motus->gestus.tempus    = ZEPHYRUM;
+    motus->gestus.sordidus  = FALSUM;
 }
 
 vacuum
@@ -103,18 +106,21 @@ motus_effundere (
                  Motus* motus,
     InsulaRepositorium* repo)
 {
-        b32 ok;
-     chorda nulla;
+            b32 ok;
+         chorda nulla;
+    InsulaRamus ramus;
 
     si (!motus || !repo)
     {
         redde FALSUM;
     }
-        nulla.mensura  = ZEPHYRUM;
-    nulla.datum        = NIHIL;
+    /* T3a: in ramum activum (nullus = radix) */
+    ramus = motus->ramus.repo ? motus->ramus : insula_ramus_radix(repo);
+        nulla.mensura = ZEPHYRUM;
+    nulla.datum = NIHIL;
     insula_scriptorem_ponere(repo, chorda_ex_literis("motus",
         motus->piscina));
-    ok = mutare_ephemera(repo, effusio_mutator, motus);
+    ok = mutare_ramum(&ramus, INSULA_EPHEMERA, effusio_mutator, motus);
     insula_scriptorem_ponere(repo, nulla);
     si (ok)
     {

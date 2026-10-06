@@ -182,7 +182,7 @@ scriba_montare (
                elementum(piscina, id, attributa))
         || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
                elementum(piscina, id, chorda_ex_literis(
-                   " modus=\"normalis\"", piscina))))
+                   " modus=\"normalis\" focus=\"pagina\"", piscina))))
     {
         fprintf(stderr, "scriba: elementum initiale: %.*s\n",
                 (int)insula_causa(repo).mensura,
