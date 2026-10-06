@@ -188,6 +188,26 @@ the active mount's registries (read first how the dispatcher and
 `pingere` take a registry - a composite registry or a swap on switch);
 the host writes each mount's `superficies_*` (its area).
 
+T2 design (agreed with Fran, 2026-10-05), two commits:
+- **T2a - registries and the kind's description.** vicus owns ONE
+  `ActioRegistrum` and ONE `FiguraRegistrum` (handed once to the
+  dispatcher / glue - pointers never change); on open and on switch it
+  empties them, re-registers its own entries, then copies in the active
+  mount's (`actio_registrum_vacare/_miscere`, `figura_registrum_
+  vacare/_miscere`) - two tabs of one app never collide. Kind
+  registration gains `describere(montatio, &VicusFacies)` (actions,
+  figurae, componere + ctx, image source + ctx) - wrappers in the
+  host's main, so vicus and the apps stay unaware of each other. A
+  composite image source delegates to the active mount's.
+  T2a as built: registries emptied + merged on open/switch; `VicusFacies`
+  + `describere`; `vicus_imago_fons`. Three plants.
+- **T2b - composition and surfaces.** Host `componere`: root = a
+  one-row tab bar (a component per tab, a click action) + the active
+  app's tree (its own componere and ctx) offset below the bar. Each
+  app keeps reading `superficies_*` from its branch; a host action on
+  resize (and on open) writes each mount's area (window minus tab bar)
+  into its branch - recorded, replayable, componere pure.
+
 **T3 - switching.** Ctrl-A then n / p / 1-9 (the pending prefix is host
 ephemeral state), clicking a tab; leaving flushes the app's gesture and
 swaps the Motus gesture slot to the arriving app's.

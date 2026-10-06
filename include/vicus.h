@@ -27,6 +27,10 @@
 #include "internamentum.h"
 #include "volumen.h"
 #include "insula.h"
+#include "actio.h"
+#include "figura.h"
+#include "dispensator.h"
+#include "delineare_mandata.h"
 
 /* montatio applicationis in sedem (magnitudinis registratae) */
 nomen b32 (*VicusMontator)(
@@ -40,10 +44,26 @@ nomen b32 (*VicusMontator)(
                     i32  latitudo,
                     i32  altitudo);
 
+/* facies montationis (T2a): quod hospes ab applicatione activa
+ * accipit - registra, componere, fons imaginum */
 nomen structura {
-            chorda titulus;
-    memoriae_index mensura;     /* montationis (sedes) */
-     VicusMontator montare;
+      ActioRegistrum* actiones;
+     FiguraRegistrum* figurae;
+           Componere  componere;
+              vacuum* componere_ctx;
+           ImagoFons  fons;           /* NIHIL = nullae imagines */
+              vacuum* fons_ctx;
+} VicusFacies;
+
+nomen vacuum (*VicusDescriptor)(
+         vacuum* montatio,
+    VicusFacies* facies);
+
+nomen structura {
+             chorda titulus;
+     memoriae_index mensura;     /* montationis (sedes) */
+      VicusMontator montare;
+    VicusDescriptor describere;
 } VicusGenus;
 
 nomen structura {
@@ -53,6 +73,7 @@ nomen structura {
     constans VicusGenus* descriptio;   /* NIHIL = genus ignotum */
                  vacuum* montatio;       /* sedes montationis */
                     b32  montata;
+            VicusFacies  facies;         /* si montata */
 } VicusTabula;
 
 nomen structura {
@@ -67,6 +88,8 @@ nomen structura {
                     Xar* tabulae;     /* Xar de VicusTabula */
                  chorda  activa;
                  chorda  causa;
+         ActioRegistrum* actiones;    /* hospitis + activae (T2a) */
+        FiguraRegistrum* figurae;
 } Vicus;
 
 Vicus*
@@ -83,7 +106,8 @@ vicus_genus_addere (
                   Vicus* v,
      constans character* titulus,
          memoriae_index  mensura,
-          VicusMontator  montare);
+          VicusMontator  montare,
+        VicusDescriptor  describere);
 
 /* repositorium creatur, index e volumine legitur (absens: ordinarius,
  * qui scribitur), tabulae montantur. FALSUM si index malus aut
@@ -122,6 +146,24 @@ b32
 vicus_activam_ponere (
                   Vicus* v,
      constans character* id);
+
+/* registra hospitis (T2a): dispensatori et glutino SEMEL dantur;
+ * in aperire et commutatione vacantur et ex activa implentur -
+ * indices numquam mutantur */
+ActioRegistrum*
+vicus_actiones (
+    constans Vicus* v);
+
+FiguraRegistrum*
+vicus_figurae (
+    constans Vicus* v);
+
+/* ImagoFons compositus: ad fontem tabulae activae delegat (ctx =
+ * Vicus*) */
+constans Imago*
+vicus_imago_fons (
+     chorda  provenientia,
+     vacuum* ctx);
 
 chorda
 vicus_causa (

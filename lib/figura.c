@@ -78,6 +78,48 @@ figura_registrare (
     redde VERUM;
 }
 
+vacuum
+figura_registrum_vacare (
+    FiguraRegistrum* reg)
+{
+    si (!reg)
+    {
+        redde;
+    }
+    xar_vacare(reg->introitus);
+}
+
+b32
+figura_registrum_miscere (
+             FiguraRegistrum* reg,
+    constans FiguraRegistrum* fons)
+{
+    FiguraIntroitus* f;
+    FiguraIntroitus* novus;
+                i32  i;
+                i32  k;
+
+    si (!reg || !fons)
+    {
+        redde FALSUM;
+    }
+    k = xar_numerus(fons->introitus);
+    per (i = ZEPHYRUM; i < k; i++)
+    {
+        f = (FiguraIntroitus*)xar_obtinere(fons->introitus, i);
+        si (introitus_invenire(reg, f->partes, f->thema))
+        {
+            redde FALSUM;
+        }
+    }
+    per (i = ZEPHYRUM; i < k; i++)
+    {
+        novus   = (FiguraIntroitus*)xar_addere(reg->introitus);
+        *novus  = *(FiguraIntroitus*)xar_obtinere(fons->introitus, i);
+    }
+    redde VERUM;
+}
+
 b32
 figura_invenire (
     constans FiguraRegistrum*  reg,

@@ -108,6 +108,35 @@ s32 principale (vacuum)
         xar_numerus(actio_non_relatae(reg, radix, piscina)), II);
 
     imprimere("\n");
+    imprimere("\n--- T2a: vacare et miscere (vicus) ---\n");
+    {
+         ActioRegistrum* hospes;
+         ActioRegistrum* app;
+                    i32  alius;
+
+        alius   = ZEPHYRUM;
+        hospes  = actio_registrum_creare(piscina, intern);
+        app     = actio_registrum_creare(piscina, intern);
+        CREDO_VERUM(actio_registrare(hospes, "tabula.eligere", numerare,
+            &numerus));
+        CREDO_VERUM(actio_registrare(app, "pagina.clavis", numerare,
+            &alius));
+        CREDO_VERUM(actio_registrum_miscere(hospes, app));
+        CREDO_VERUM(actio_invenire(hospes, chorda_ex_literis(
+            "pagina.clavis", piscina), &fn, &ctx));
+        CREDO_VERUM(ctx == &alius);
+        /* collisio: recusatur, nihil additur */
+        CREDO_FALSUM(actio_registrum_miscere(hospes, app));
+        actio_registrum_vacare(hospes);
+        CREDO_FALSUM(actio_invenire(hospes, chorda_ex_literis(
+            "tabula.eligere", piscina), &fn, &ctx));
+        CREDO_FALSUM(actio_invenire(hospes, chorda_ex_literis(
+            "pagina.clavis", piscina), &fn, &ctx));
+        /* iterum utilis */
+        CREDO_VERUM(actio_registrare(hospes, "tabula.eligere", numerare,
+            &numerus));
+    }
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }

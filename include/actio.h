@@ -70,6 +70,18 @@ actio_registrare (
                ActioFn  fn,
                 vacuum* ctx);
 
+/* vicus (T2a): registrum vacuum reddere (memoria servatur) */
+vacuum
+actio_registrum_vacare (
+    ActioRegistrum* reg);
+
+/* introitus fontis (nomen, fn, ctx) in reg addere; collisio ulla =
+ * FALSUM et nihil additur. Nomina eiusdem internamenti esse debent. */
+b32
+actio_registrum_miscere (
+             ActioRegistrum* reg,
+    constans ActioRegistrum* fons);
+
 b32
 actio_invenire (
     constans ActioRegistrum*  reg,

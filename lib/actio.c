@@ -133,6 +133,57 @@ actio_registrare (
     redde VERUM;
 }
 
+vacuum
+actio_registrum_vacare (
+    ActioRegistrum* reg)
+{
+    si (!reg)
+    {
+        redde;
+    }
+    xar_vacare(reg->nomina);
+    xar_vacare(reg->functiones);
+    xar_vacare(reg->contextus);
+}
+
+b32
+actio_registrum_miscere (
+             ActioRegistrum* reg,
+    constans ActioRegistrum* fons)
+{
+      chorda*  n;
+      chorda*  nn;
+     ActioFn*  f;
+      vacuum** c;
+         i32   i;
+         i32   k;
+
+    si (!reg || !fons)
+    {
+        redde FALSUM;
+    }
+    k = xar_numerus(fons->nomina);
+    /* collisio ulla: nihil additur */
+    per (i = ZEPHYRUM; i < k; i++)
+    {
+        n = (chorda*)xar_obtinere(fons->nomina, i);
+        si (index_nominis(reg, *n) >= ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    per (i = ZEPHYRUM; i < k; i++)
+    {
+        nn   = (chorda*)xar_addere(reg->nomina);
+        *nn  = *(chorda*)xar_obtinere(fons->nomina, i);
+        f    = (ActioFn*)xar_addere(reg->functiones);
+        *f   = *(ActioFn*)xar_obtinere(fons->functiones, i);
+        c    = (vacuum**)xar_addere(reg->contextus);
+        *c   = *(vacuum**)xar_obtinere(fons->contextus, i);
+    }
+    redde VERUM;
+}
+
 b32
 actio_invenire (
     constans ActioRegistrum*  reg,

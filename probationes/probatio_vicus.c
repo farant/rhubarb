@@ -55,6 +55,38 @@ pictorem_montare (
                          latitudo, altitudo);
 }
 
+interior vacuum
+scribam_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    ScribaMontatio* m;
+
+    m                 = (ScribaMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = scriba_componere;
+    f->componere_ctx  = &m->compositio;
+    f->fons           = NIHIL;
+    f->fons_ctx       = NIHIL;
+}
+
+interior vacuum
+pictorem_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    PictorMontatio* m;
+
+    m                 = (PictorMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = pictor_componere;
+    f->componere_ctx  = &m->compositio;
+    f->fons           = pictor_imago_fons;
+    f->fons_ctx       = &m->figurae_ctx;
+}
+
 interior Vicus*
 vicum_aperire (
     Volumen* vol)
@@ -65,10 +97,10 @@ vicum_aperire (
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "scriba",
         magnitudo(ScribaMontatio),
-        scribam_montare));
+        scribam_montare, scribam_describere));
     CREDO_VERUM(vicus_genus_addere(v, "pictor",
         magnitudo(PictorMontatio),
-        pictorem_montare));
+        pictorem_montare, pictorem_describere));
     CREDO_VERUM(vicus_aperire(v,
         "<tabulae activa=\"s1\">"
         "<tabula id=\"s1\" genus=\"scriba\" titulus=\"scriba\"/>"
@@ -158,6 +190,50 @@ s32 principale (vacuum)
     sm = (ScribaMontatio*)vicus_tabula(v, II)->montatio;
     CREDO_VERUM(tabula_cellula(scriba_documentum_tabula(sm->doc),
         ZEPHYRUM, ZEPHYRUM) == 'q');
+
+    imprimere("\n--- IVb: registra hospitis activam sequuntur\n");
+    {
+               ActioFn  fn;
+                vacuum* ctx;
+              FiguraFn  ff;
+                vacuum* fc;
+        PictorMontatio* pm;
+
+        /* activa s2 (scriba): pagina.clavis cum contextu s2 */
+        CREDO_VERUM(actio_invenire(vicus_actiones(v), chorda_ex_literis(
+            "pagina.clavis", piscina), &fn, &ctx));
+        CREDO_VERUM(ctx == &((ScribaMontatio*)vicus_tabula(v,
+            II)->montatio)->actiones_ctx);
+        CREDO_FALSUM(actio_invenire(vicus_actiones(v),
+            chorda_ex_literis(
+            "penicillus.ictus", piscina), &fn, &ctx));
+        CREDO_VERUM(figura_invenire(vicus_figurae(v), PARTES_CAMPUS,
+            ZEPHYRUM, &ff, &fc));
+        CREDO_NIHIL(vicus_imago_fons(chorda_ex_literis("x", piscina),
+            v));
+        /* pictor: actiones et figurae eius, CAMPUS abest */
+        CREDO_VERUM(vicus_activam_ponere(v, "p1"));
+        CREDO_VERUM(actio_invenire(vicus_actiones(v), chorda_ex_literis(
+            "penicillus.ictus", piscina), &fn, &ctx));
+        CREDO_FALSUM(actio_invenire(vicus_actiones(v),
+            chorda_ex_literis(
+            "pagina.clavis", piscina), &fn, &ctx));
+        CREDO_FALSUM(figura_invenire(vicus_figurae(v), PARTES_CAMPUS,
+            ZEPHYRUM, &ff, &fc));
+        CREDO_VERUM(figura_invenire(vicus_figurae(v), PARTES_TABULA,
+            ZEPHYRUM, &ff, &fc));
+        pm = (PictorMontatio*)vicus_tabula(v, I)->montatio;
+        CREDO_VERUM(vicus_imago_fons(
+            pictor_documentum_sigillum_hex(pm->doc, piscina), v)
+            == pictor_documentum_proiectio(pm->doc));
+        /* scriba prima: contextus s1, non s2 */
+        CREDO_VERUM(vicus_activam_ponere(v, "s1"));
+        CREDO_VERUM(actio_invenire(vicus_actiones(v), chorda_ex_literis(
+            "pagina.clavis", piscina), &fn, &ctx));
+        CREDO_VERUM(ctx == &((ScribaMontatio*)vicus_tabula(v,
+            ZEPHYRUM)->montatio)->actiones_ctx);
+        CREDO_VERUM(vicus_activam_ponere(v, "s2"));
+    }
 
     imprimere("\n--- V: genus ignotum - addere recusat ---\n");
     CREDO_FALSUM(vicus_tabulam_addere(v, "lyra", "l1", "lyra"));

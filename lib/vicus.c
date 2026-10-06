@@ -165,6 +165,33 @@ tabulam_montare (
     {
         v->causa = chorda_concatenare(chorda_ex_literis(
             "montatio defecit: ", v->piscina), t->id, v->piscina);
+        redde;
+    }
+    t->descriptio->describere(t->montatio, &t->facies);
+}
+
+/* registra hospitis: vacua, deinde introitus activae (T2a) */
+interior vacuum
+registra_reficere (
+    Vicus* v)
+{
+    VicusTabula* t;
+
+    actio_registrum_vacare(v->actiones);
+    figura_registrum_vacare(v->figurae);
+    t = tabula_invenire(v, v->activa);
+    si (!t || !t->montata)
+    {
+        redde;
+    }
+    si (t->facies.actiones)
+    {
+        (vacuum)actio_registrum_miscere(v->actiones,
+            t->facies.actiones);
+    }
+    si (t->facies.figurae)
+    {
+        (vacuum)figura_registrum_miscere(v->figurae, t->facies.figurae);
     }
 }
 
@@ -212,6 +239,8 @@ vicus_creare (
     v->latitudo  = latitudo;
     v->altitudo  = altitudo;
     v->genera    = xar_creare(piscina, (i32)magnitudo(VicusGenus));
+    v->actiones  = actio_registrum_creare(piscina, intern);
+    v->figurae   = figura_registrum_creare(piscina);
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     redde v;
 }
@@ -221,12 +250,14 @@ vicus_genus_addere (
                   Vicus* v,
      constans character* titulus,
          memoriae_index  mensura,
-          VicusMontator  montare)
+          VicusMontator  montare,
+        VicusDescriptor  describere)
 {
      VicusGenus* g;
          chorda  t;
 
-    si (!v || !titulus || !montare || mensura == ZEPHYRUM)
+    si (   !v || !titulus || !montare || !describere
+        || mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
@@ -235,10 +266,11 @@ vicus_genus_addere (
     {
         redde FALSUM;
     }
-    g           = (VicusGenus*)xar_addere(v->genera);
-    g->titulus  = t;
-    g->mensura  = mensura;
-    g->montare  = montare;
+    g              = (VicusGenus*)xar_addere(v->genera);
+    g->titulus     = t;
+    g->mensura     = mensura;
+    g->montare     = montare;
+    g->describere  = describere;
     redde VERUM;
 }
 
@@ -327,6 +359,7 @@ vicus_aperire (
     {
         (vacuum)indicem_scribere(v);
     }
+    registra_reficere(v);
     redde VERUM;
 }
 
@@ -420,7 +453,37 @@ vicus_activam_ponere (
     {
         redde FALSUM;
     }
+    registra_reficere(v);
     redde indicem_scribere(v);
+}
+
+ActioRegistrum*
+vicus_actiones (
+    constans Vicus* v)
+{
+    redde v ? v->actiones : NIHIL;
+}
+
+FiguraRegistrum*
+vicus_figurae (
+    constans Vicus* v)
+{
+    redde v ? v->figurae : NIHIL;
+}
+
+constans Imago*
+vicus_imago_fons (
+     chorda  provenientia,
+     vacuum* ctx)
+{
+    VicusTabula* t;
+
+    t = vicus_activa((constans Vicus*)ctx);
+    si (!t || !t->montata || !t->facies.fons)
+    {
+        redde NIHIL;
+    }
+    redde t->facies.fons(provenientia, t->facies.fons_ctx);
 }
 
 chorda

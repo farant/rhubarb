@@ -186,6 +186,32 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(vocationes, III);
 
     imprimere("\n");
+    imprimere("\n--- T2a: vacare et miscere (vicus) ---\n");
+    {
+         FiguraRegistrum* hospes;
+         FiguraRegistrum* app;
+                     i32  signum;
+                FiguraFn  f;
+                  vacuum* c;
+
+        hospes  = figura_registrum_creare(piscina);
+        app     = figura_registrum_creare(piscina);
+        CREDO_VERUM(figura_registrare(hospes, PARTES_INDEX, ZEPHYRUM,
+            figura_finium, NIHIL));
+        CREDO_VERUM(figura_registrare(app, PARTES_CAMPUS, ZEPHYRUM,
+            figura_finium, &signum));
+        CREDO_VERUM(figura_registrum_miscere(hospes, app));
+        CREDO_VERUM(figura_invenire(hospes, PARTES_CAMPUS, ZEPHYRUM, &f,
+            &c));
+        CREDO_VERUM(c == &signum);
+        CREDO_FALSUM(figura_registrum_miscere(hospes, app));
+        figura_registrum_vacare(hospes);
+        CREDO_FALSUM(figura_invenire(hospes, PARTES_INDEX, ZEPHYRUM, &f,
+            &c));
+        CREDO_VERUM(figura_registrare(hospes, PARTES_INDEX, ZEPHYRUM,
+            figura_finium, NIHIL));
+    }
+
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
 }
