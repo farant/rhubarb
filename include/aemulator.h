@@ -36,6 +36,9 @@
 /* versio quam XTVERSION nuntiat (decisio VIII) */
 #define AEMULATOR_VERSIO "0.1"
 
+/* color sine valore proprio (color_cursoris: litteras sequitur) */
+#define AEMULATOR_COLOR_NULLUS  0xFFFFFFFF
+
 nomen structura Aemulator Aemulator;
 
 /* EFFECTUS - omnis exitus nuclei praeter statum. Campus NIHIL =
@@ -70,11 +73,24 @@ nomen structura {
      * limitem, deinde vetustissima recyclatur - post id nihil
      * allocatur. 0 = nulla historia. Ordinarius X MB. */
                   i32 historia_octeti;
+    /* COLORES (D5, decisio XXVIII): 0xRRGGBB quos OSC 10/11/12 et 4
+     * respondent et quos programma mutare potest (OSC 4/10/11/12);
+     * restitutio (104/110/111/112) ad hos valores redit.
+     * tabula_colorum: CCLVI colores (in creatione copiantur) aut NIHIL
+     * = tabula xterm ordinaria (0-15 xterm, 16-231 cubus, 232-255
+     * gradus grisei).
+     * color_cursoris AEMULATOR_COLOR_NULLUS = colorem litterarum
+     * currentem sequitur (Ghostty: cursor sine colore proprio). */
+                  i32  color_litterae;
+                  i32  color_fundi;
+                  i32  color_cursoris;
+         constans i32* tabula_colorum;
 } AemulatorConfiguratio;
 
 /* Configuratio ordinaria: LXXX x XXIV, effectus nulli, titulus
  * "aemulator", versio AEMULATOR_VERSIO, lectio_schirmi FALSUM,
- * historia_octeti X MB.
+ * historia_octeti X MB, color_litterae 0xFFFFFF, color_fundi 0x000000,
+ * color_cursoris AEMULATOR_COLOR_NULLUS, tabula_colorum NIHIL.
  * Campi postea addendi hic
  * defaltas accipiunt - vocantes semper ab hac incipiant. */
 vacuum
@@ -279,5 +295,23 @@ chorda
 aemulator_historiam_effundere (
     constans Aemulator* a,
                Piscina* piscina);
+
+
+/* ==================================================
+ * Colores (phasis D5)
+ * ================================================== */
+
+/* indices aemulator_color praeter tabulam 0-CCLV */
+#define AEMULATOR_COLOR_LITTERAE  CCLVI
+#define AEMULATOR_COLOR_FUNDI     CCLVII
+#define AEMULATOR_COLOR_CURSORIS  CCLVIII
+
+/* color vivus 0xRRGGBB post OSC 4/10/11/12 et 104/110/111/112 (quod
+ * hospes pingit; D6); cursor sine proprio = litterae currentes. Index
+ * extra 0-CCLVIII: 0. */
+i32
+aemulator_color (
+    constans Aemulator* a,
+                   i32  index);
 
 #endif /* AEMULATOR_H */

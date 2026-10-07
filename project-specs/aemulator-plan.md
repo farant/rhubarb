@@ -670,6 +670,21 @@ Later phases (re-planned after A's RELATIO):
     pop - a hostile-input guard, invisible in the result).
   - **D5 - colour queries** (decision 28; configuration addition for
     Fran's approval).
+    D5 as built: Fran chose the LIVE palette (Ghostty's model) over
+    queries-only. Header: AemulatorConfiguratio gains color_litterae /
+    color_fundi / color_cursoris (AEMULATOR_COLOR_NULLUS = follows the
+    current foreground, Ghostty) / tabula_colorum (NULL = xterm
+    table); `aemulator_color(a, 0..CCLVIII)` reads the live value for
+    the host (D6). OSC 4 / 10 / 11 / 12 set and query (10 advances to
+    11, 12 ...), 104 / 110 / 111 / 112 reset to the configuration; the
+    reply mirrors the request's terminator (lexer now records BEL /
+    ST in the OSC lexeme's `finale`). Spec forms: `#` 3/6/9/12 digits
+    = MOST SIGNIFICANT bits (X11 XParseColor, esctest - Ghostty
+    scales: named divergence), bare 3/6 hex (Ghostty, scaled), `rgb:`
+    1-4 digits (scaled); X11 names, rgbi: and CIE/TekHVC not yet. RIS
+    keeps colours (Ghostty). 251 vectors (+11: 5 Ghostty); section
+    XXII; 16 plants caught (+1 equivalent). esctest 264 -> 284;
+    remaining colour rows: CIE/TekHVC/rgbi (21), OSC 5/105 special (6).
   - **D6 - terminale wiring:** modes -> codificator (DECCKM arrows,
     keypad, kitty), mouse reporting from window mouse events, bracketed
     paste, focus events, window title from OSC 0/2.

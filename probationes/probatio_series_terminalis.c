@@ -349,11 +349,13 @@ s32 principale (vacuum)
     CREDO_VERUM (_videre(lx, piscina, "\x1b[3 q",
         "CSI i=[ P=3 I=\\x20 f=q"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b]0;abc\x07",
-        "OSC i=] T=0;abc"));
+        "OSC i=] f=\\x07 T=0;abc"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b]0;abc\x1b\\",
-        "OSC i=] T=0;abc"));
-    CREDO_VERUM (_videre(lx, piscina, "\x1b]112\x07", "OSC i=] T=112"));
-    CREDO_VERUM (_videre(lx, piscina, "\x1b]104\x07", "OSC i=] T=104"));
+        "OSC i=] f=\\x5c T=0;abc"));
+    CREDO_VERUM (_videre(lx, piscina, "\x1b]112\x07",
+        "OSC i=] f=\\x07 T=112"));
+    CREDO_VERUM (_videre(lx, piscina, "\x1b]104\x07",
+        "OSC i=] f=\\x07 T=104"));
     /* parametra nimia: series tota abicitur; proximum integrum */
     CREDO_VERUM (_videre(lx, piscina,
         _repetere("\x1b[", "1;", C, "1Cx", piscina), "IMP T=x"));
@@ -430,11 +432,11 @@ s32 principale (vacuum)
         "CSI i=[ p=> P=1 f=u"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b^pm\x1b\\", "APC i=^ T=pm"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b]0;t\x1b[A",
-        "OSC i=] T=0;t | CSI i=[ f=A"));
+        "OSC i=] f=\\x5c T=0;t | CSI i=[ f=A"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b]0;t\x18",
         "FUGA i=] C=\\x1b]0;t | EXS f=\\x18"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b]0;a\nb\x07",
-        "OSC i=] T=0;ab"));
+        "OSC i=] f=\\x07 T=0;ab"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b_a\x07" "b\x1b\\",
         "APC i=_ T=a\\x07b"));
     /* corpus chordae ultra SERIES_CHORDA_MAXIMA: praecisum, notatum */
@@ -551,7 +553,8 @@ s32 principale (vacuum)
     CREDO_VERUM (_videre(li, piscina, "\x1b^a", "ESC f=^ | IMP T=a"));
     CREDO_VERUM (_videre(li, piscina, "\x1bPa", "ESC f=P | IMP T=a"));
     /* OSC, APC series manent etiam in modo initus */
-    CREDO_VERUM (_videre(li, piscina, "\x1b]a\x07", "OSC i=] T=a"));
+    CREDO_VERUM (_videre(li, piscina, "\x1b]a\x07",
+        "OSC i=] f=\\x07 T=a"));
     CREDO_VERUM (_videre(li, piscina, "\x1b_x\x1b\\", "APC i=_ T=x"));
     CREDO_VERUM (_videre(li, piscina, "\x1b\r",
         "FUGA C=\\x1b | EXS f=\\x0d"));
@@ -563,7 +566,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_videre(li, piscina, "\x1bP1+r544e\x1b\\",
         "DCS i=P P=1 I=+ f=r T=544e"));
     CREDO_VERUM (_videre(li, piscina, "\x1b]4;0;#fff\x07",
-        "OSC i=] T=4;0;#fff"));
+        "OSC i=] f=\\x07 T=4;0;#fff"));
     CREDO_VERUM (_videre(li, piscina, "\x1b_Gi=1;OK\x1b\\",
         "APC i=_ T=Gi=1;OK"));
     CREDO_VERUM (_videre(li, piscina, "\x1bOA", "SS i=O f=A"));

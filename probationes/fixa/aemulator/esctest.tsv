@@ -78,46 +78,46 @@ CUUTests.test_CUU_ExplicitParam	transiit
 CUUTests.test_CUU_StopsAtTopLine	transiit	
 CUUTests.test_CUU_StopsAtTopLineWhenBegunAboveScrollRegion	transiit	
 CUUTests.test_CUU_StopsAtTopMarginInScrollRegion	transiit	
-ChangeColorTests.test_ChangeColor_CIELab	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIELuv	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIEXYZ	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIEuvY	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIExyY	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash12	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash3	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash6	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash9	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_RGB	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_RGBI	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_TekHVC	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIELab	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIELuv	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIEXYZ	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIEuvY	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIExyY	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash12	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash3	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash6	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash9	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_RGB	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_RGBI	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_TekHVC	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIELab	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIELuv	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIEXYZ	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIEuvY	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIExyY	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash12	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash3	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash6	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash9	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple2	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_RGB	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_RGBI	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_TekHVC	fractum	colores OSC 4/5/10-19/104-119
+ChangeColorTests.test_ChangeColor_CIELab	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIELuv	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIEXYZ	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIEuvY	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIExyY	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_Hash12	transiit	
+ChangeColorTests.test_ChangeColor_Hash3	transiit	
+ChangeColorTests.test_ChangeColor_Hash6	transiit	
+ChangeColorTests.test_ChangeColor_Hash9	transiit	
+ChangeColorTests.test_ChangeColor_Multiple	transiit	
+ChangeColorTests.test_ChangeColor_RGB	transiit	
+ChangeColorTests.test_ChangeColor_RGBI	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_TekHVC	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIELab	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIELuv	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIEXYZ	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIEuvY	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIExyY	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash12	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash3	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash6	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash9	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Multiple	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_RGB	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_RGBI	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_TekHVC	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIELab	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIELuv	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIEXYZ	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIEuvY	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIExyY	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash12	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash3	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash6	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash9	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple2	fractum	colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ChangeSpecialColorTests.test_ChangeSpecialColor_RGB	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_RGBI	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_TekHVC	fractum	colores: spatia CIE/TekHVC et rgbi: (nondum; Ghostty quoque caret)
 DA2Tests.test_DA2_0	fractum	identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
 DA2Tests.test_DA2_NoParameter	fractum	identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
 DATests.test_DA_0	fractum	identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
@@ -476,13 +476,13 @@ RITests.test_RI_ScrollsInTopBottomRegionStartingBelow	transiit
 RITests.test_RI_ScrollsInTopBottomRegionStartingWithin	transiit	
 RITests.test_RI_StopsAtTopLineWhenBegunAboveScrollRegion	transiit	
 RMTests.test_RM_IRM	transiit	
-ResetColorTests.test_ResetColor_All	fractum	colores OSC 4/5/10-19/104-119
-ResetColorTests.test_ResetColor_Standard	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Dynamic	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Multiple2	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Single	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Single2	fractum	colores OSC 4/5/10-19/104-119
+ResetColorTests.test_ResetColor_All	transiit	
+ResetColorTests.test_ResetColor_Standard	transiit	
+ResetSpecialColorTests.test_ResetSpecialColor_Dynamic	fractum	colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Multiple	fractum	colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Multiple2	fractum	colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Single	fractum	colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Single2	fractum	colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
 S8C1TTests.test_S8C1T_CSI	notum	esctest knownBug (xterm)
 S8C1TTests.test_S8C1T_DCS	notum	esctest knownBug (xterm)
 S8C1TTests.test_S8C1T_SPA_EPA	notum	esctest knownBug (xterm)

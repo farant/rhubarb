@@ -4915,7 +4915,9 @@ nomen structura {
              i8 privatum;       /* '?' '>' '<' '=' aut 0 */
              i8 introductor;    /* octetus post ESC ('[' ']' 'P' 'N'
                                  * 'O' '_' '^' 'X') aut 0 */
-             i8 finale;         /* finale; EXSEQUI: octetus regiminis */
+             i8 finale;         /* finale; EXSEQUI: octetus regiminis;
+                                 * OSC: terminator - 0x07 (BEL) aut
+                                 * '\\' (ESC: ST aut series nova) */
             b32 praefixum;      /* ESC solum seriem praecessit */
          TesseraChorda textus;         /* IMPRIMERE, OSC, DCS, APC */
          TesseraChorda crudum;         /* octeti seriei (ESC ... finale) */
@@ -10243,6 +10245,12 @@ tessera_series_lexema_proximum (
 
                 (*ptr)++;
                 habet             = _chordam_reddere(lx, l);
+                /* terminator OSC (aemulator D5: responsum eundem
+                 * reddit): ESC = ST aut series nova */
+                si (habet && l->genus == SERIES_OSC)
+                {
+                    l->finale = (i8)'\\';
+                }
                 lx->status        = STATUS_FUGAE;
                 lx->post_chordam  = VERUM;
                 lx->crudum_esc    = VERUM;
@@ -10354,7 +10362,8 @@ tessera_series_lexema_proximum (
         {
             (*ptr)++;
             (vacuum)_chordam_reddere(lx, l);
-            lx->status = STATUS_SOLUM;
+            l->finale   = (i8)0x07;
+            lx->status  = STATUS_SOLUM;
             redde SERIES_OSC;
         }
 

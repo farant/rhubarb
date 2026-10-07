@@ -573,6 +573,12 @@ series_lexema_proximum (
 
                 (*ptr)++;
                 habet             = _chordam_reddere(lx, l);
+                /* terminator OSC (aemulator D5: responsum eundem
+                 * reddit): ESC = ST aut series nova */
+                si (habet && l->genus == SERIES_OSC)
+                {
+                    l->finale = (i8)'\\';
+                }
                 lx->status        = STATUS_FUGAE;
                 lx->post_chordam  = VERUM;
                 lx->crudum_esc    = VERUM;
@@ -684,7 +690,8 @@ series_lexema_proximum (
         {
             (*ptr)++;
             (vacuum)_chordam_reddere(lx, l);
-            lx->status = STATUS_SOLUM;
+            l->finale   = (i8)0x07;
+            lx->status  = STATUS_SOLUM;
             redde SERIES_OSC;
         }
 

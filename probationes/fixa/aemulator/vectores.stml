@@ -1308,4 +1308,75 @@
     <gradus initus="\x1B[2;3H\x1B[s\x1B[1;1H\x1B[u" cursor_x="2" cursor_y="1" ignota="2"/>
   </casus>
 
+  <!-- ==================== D5: colores (OSC 4/10/11/12) ==================== -->
+  <!-- Ordinarii configurationis: litterae ffffff, fundus 000000, cursor
+       litteras sequitur, tabula xterm. Ghostty colorem non positum non
+       nuntiat; noster semper valorem habet (hospes eum dat). -->
+
+  <casus titulus="OSC color query responses" fons="stream_terminal.zig:3008" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;2;rgb:12/34/56;2;?\x1B\\" responsum="\x1B]4;2;rgb:1212/3434/5656\x1B\\"/>
+    <gradus initus="\x1B]10;rgb:01/02/03\x1B\\\x1B]11;rgb:04/05/06\x1B\\\x1B]12;rgb:07/08/09\x1B\\\x1B]10;?;?;?\x1B\\" responsum="\x1B]10;rgb:0101/0202/0303\x1B\\\x1B]11;rgb:0404/0505/0606\x1B\\\x1B]12;rgb:0707/0808/0909\x1B\\"/>
+    <gradus initus="\x1B]112\x1B\\\x1B]12;?\x07" responsum="\x1B]12;rgb:0101/0202/0303\x07"/>
+  </casus>
+
+  <casus titulus="OSC 4 set and reset palette" fons="stream_terminal.zig:2891" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;0;rgb:ff/00/00\x1B\\\x1B]4;0;?\x1B\\" responsum="\x1B]4;0;rgb:ffff/0000/0000\x1B\\"/>
+    <gradus initus="\x1B]104;0\x1B\\\x1B]4;0;?\x1B\\" responsum="\x1B]4;0;rgb:0000/0000/0000\x1B\\"/>
+  </casus>
+
+  <casus titulus="OSC 104 reset all palette colors" fons="stream_terminal.zig:2914" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;0;rgb:ff/00/00\x1B\\\x1B]4;1;rgb:00/ff/00\x1B\\\x1B]4;2;rgb:00/00/ff\x1B\\\x1B]104\x1B\\\x1B]4;0;?;1;?;2;?\x1B\\" responsum="\x1B]4;0;rgb:0000/0000/0000\x1B\\\x1B]4;1;rgb:cdcd/0000/0000\x1B\\\x1B]4;2;rgb:0000/cdcd/0000\x1B\\"/>
+  </casus>
+
+  <casus titulus="OSC 10 set and reset foreground color" fons="stream_terminal.zig:2939" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]10;rgb:ff/00/00\x1B\\\x1B]10;?\x1B\\" responsum="\x1B]10;rgb:ffff/0000/0000\x1B\\"/>
+    <gradus initus="\x1B]110\x1B\\\x1B]10;?\x1B\\" responsum="\x1B]10;rgb:ffff/ffff/ffff\x1B\\"/>
+  </casus>
+
+  <casus titulus="OSC 11 set and reset background color" fons="stream_terminal.zig:2961" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]11;rgb:00/ff/00\x1B\\\x1B]11;?\x1B\\" responsum="\x1B]11;rgb:0000/ffff/0000\x1B\\"/>
+    <gradus initus="\x1B]111\x1B\\\x1B]11;?\x1B\\" responsum="\x1B]11;rgb:0000/0000/0000\x1B\\"/>
+  </casus>
+
+  <!-- tabula xterm ordinaria: 16 colores, cubus, gradus grisei -->
+  <casus titulus="default xterm palette" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;1;?;12;?;16;?;196;?;232;?;255;?\x07" responsum="\x1B]4;1;rgb:cdcd/0000/0000\x07\x1B]4;12;rgb:5c5c/5c5c/ffff\x07\x1B]4;16;rgb:0000/0000/0000\x07\x1B]4;196;rgb:ffff/0000/0000\x07\x1B]4;232;rgb:0808/0808/0808\x07\x1B]4;255;rgb:eeee/eeee/eeee\x07"/>
+    <gradus initus="\x1B]4;;1;;?\x07" responsum="\x1B]4;1;rgb:cdcd/0000/0000\x07"/>
+  </casus>
+
+  <!-- formae specificationis: # cum 3/6/9/12 = bita summa (X11
+       XParseColor, esctest; Ghostty scalat - divergentia nominata),
+       nuda 3/6 (Ghostty, scalata), rgb: cum 1-4 digitis (scalati) -->
+  <casus titulus="colour spec forms" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;3;#abc;3;?\x07" responsum="\x1B]4;3;rgb:a0a0/b0b0/c0c0\x07"/>
+    <gradus initus="\x1B]4;3;#f00f00f00;3;?\x07" responsum="\x1B]4;3;rgb:f0f0/f0f0/f0f0\x07"/>
+    <gradus initus="\x1B]4;3;#a1b2c3;3;?\x07" responsum="\x1B]4;3;rgb:a1a1/b2b2/c3c3\x07"/>
+    <gradus initus="\x1B]4;3;#aaabbbccc;3;?\x07" responsum="\x1B]4;3;rgb:aaaa/bbbb/cccc\x07"/>
+    <gradus initus="\x1B]4;3;#1234abcdffff;3;?\x07" responsum="\x1B]4;3;rgb:1212/abab/ffff\x07"/>
+    <gradus initus="\x1B]4;3;rgb:f/80/abc;3;?\x07" responsum="\x1B]4;3;rgb:ffff/8080/abab\x07"/>
+    <gradus initus="\x1B]4;3;123456;3;?\x07" responsum="\x1B]4;3;rgb:1212/3434/5656\x07"/>
+    <gradus initus="\x1B]4;3;def;3;?\x07" responsum="\x1B]4;3;rgb:dddd/eeee/ffff\x07"/>
+  </casus>
+
+  <!-- specificatio mala: reliqua seriei omittuntur (Ghostty) -->
+  <casus titulus="bad colour spec stops the request list" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;5;#12345;6;#ffffff\x07\x1B]4;5;?;6;?\x07" responsum="\x1B]4;5;rgb:cdcd/0000/cdcd\x07\x1B]4;6;rgb:0000/cdcd/cdcd\x07"/>
+    <gradus initus="\x1B]4;7;rgb:1/2\x07\x1B]4;7;?\x07" responsum="\x1B]4;7;rgb:e5e5/e5e5/e5e5\x07"/>
+  </casus>
+
+  <!-- OSC 10 parametra sequentia: 10, 11, 12; cursor sine proprio
+       litteras currentes sequitur -->
+  <casus titulus="dynamic colours advance and cursor follows foreground" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]12;?\x07" responsum="\x1B]12;rgb:ffff/ffff/ffff\x07"/>
+    <gradus initus="\x1B]10;#111111;#222222\x07\x1B]11;?\x07\x1B]12;?\x07" responsum="\x1B]11;rgb:2222/2222/2222\x07\x1B]12;rgb:1111/1111/1111\x07"/>
+  </casus>
+
+  <!-- 104 cum indice speciali (256) transit; 110 cum parametro nihil;
+       RIS colores servat (Ghostty fullReset) -->
+  <casus titulus="colour resets: special index, extra parameter, ris" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;1;#010101\x07\x1B]104;256;1\x07\x1B]4;1;?\x07" responsum="\x1B]4;1;rgb:cdcd/0000/0000\x07"/>
+    <gradus initus="\x1B]10;#123456\x07\x1B]110;x\x07\x1B]10;?\x07" responsum="\x1B]10;rgb:1212/3434/5656\x07"/>
+    <gradus initus="\x1Bc\x1B]10;?\x07" responsum="\x1B]10;rgb:1212/3434/5656\x07"/>
+  </casus>
+
 </vectores>

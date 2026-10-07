@@ -744,6 +744,65 @@ modos_probare (vacuum)
                      MM);
 }
 
+/* XXII: colores (D5) - configuratio hospitis et lectio vivorum */
+interior vacuum
+colores_probare (vacuum)
+{
+                Aemulator* a;
+    AemulatorConfiguratio  cfg;
+                      i32  tabula[CCLVI];
+                      i32  i;
+
+    imprimere("\n--- XXII: colores (D5) ---\n");
+    /* ordinarii: tabula xterm, litterae albae, fundus niger, cursor
+     * litteras sequitur */
+    a = creare(X, V);
+    CREDO_AEQUALIS_I32(aemulator_color(a, I), 0xCD0000);
+    CREDO_AEQUALIS_I32(aemulator_color(a, CCLV), 0xEEEEEE);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_LITTERAE),
+                       0xFFFFFF);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_FUNDI),
+                       ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0xFFFFFF);
+    CREDO_AEQUALIS_I32(aemulator_color(a, CCLIX), ZEPHYRUM);
+    /* programma mutat: lectio vivum videt; cursor sequitur */
+    scribere(a, "\x1B]4;1;#102030\x07\x1B]10;#405060\x07");
+    CREDO_AEQUALIS_I32(aemulator_color(a, I), 0x102030);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0x405060);
+    /* configuratio hospitis: tabula propria, thema, cursor proprius;
+     * restitutio ad configurationem redit */
+    per (i = ZEPHYRUM; i < CCLVI; i++)
+    {
+        tabula[i] = (i32)(i * 0x010101);
+    }
+    aemulator_configuratio_initiare(&cfg);
+    cfg.latitudo         = X;
+    cfg.altitudo         = V;
+    cfg.historia_octeti  = ZEPHYRUM;
+    cfg.color_litterae   = 0x112233;
+    cfg.color_fundi      = 0x445566;
+    cfg.color_cursoris   = 0x778899;
+    cfg.tabula_colorum   = tabula;
+    a                    = aemulator_creare(piscina, &cfg);
+    tabula[VII]          = 0xABCDEF;
+    CREDO_AEQUALIS_I32(aemulator_color(a, VII), 0x070707);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_FUNDI),
+                       0x445566);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0x778899);
+    scribere(a, "\x1B]4;7;#000001\x07\x1B]12;#000002\x07"
+                "\x1B]11;#000003\x07");
+    CREDO_AEQUALIS_I32(aemulator_color(a, VII), I);
+    scribere(a, "\x1B]104;7\x07\x1B]112\x07\x1B]111\x07");
+    CREDO_AEQUALIS_I32(aemulator_color(a, VII), 0x070707);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0x778899);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_FUNDI),
+                       0x445566);
+}
+
 s32 principale (vacuum)
 {
                 Aemulator* a;
@@ -1092,6 +1151,7 @@ s32 principale (vacuum)
     retrahere_probare();
     lucra_probare();
     modos_probare();
+    colores_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     /* historia pagina una (limes I octeti): calefactio lineas in

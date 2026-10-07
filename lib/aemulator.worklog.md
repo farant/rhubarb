@@ -449,3 +449,36 @@ the same result (popping 2^31 one by one also ends empty) in ~1 s at
 our optimisation level - it is a hostile-input guard, kept, untestable
 by output.
 
+## 2026-10-07 — D5: colours
+
+**`#` forms are not scaled (X11), `rgb:` forms are.** XParseColor:
+"#RGB ... fewer than 16 bits ... represent the most significant bits
+(unlike rgb:, in which values are scaled)". Ghostty scales both, so
+`#f00f00f00` is ef there and f0 in xterm/esctest. With MSB semantics
+and 8-bit storage all three esctest Hash tests pass. Bare `abc` /
+`123456` is Ghostty's own extension - kept scaled, as Ghostty does.
+
+**Cursor colour without its own value follows the CURRENT foreground**
+(Ghostty test 3008: set 10, set 12, reset 112, query 12 -> the set
+foreground). Expressed with AEMULATOR_COLOR_NULLUS in the configuration
+and the live slot.
+
+**Request lists follow Ghostty's tokenizer:** empty fields skipped; a
+bad spec ends the whole list; OSC 4 indices 256-260 are "special"
+(no-op, list continues), beyond that the list ends; OSC 104 with no
+valid index resets the whole table; 110-112 with any parameter do
+nothing.
+
+**ChangeSpecialColor_* pass honestly:** esctest asks XTGETTCAP `Co` for
+the palette size, we do not answer, it assumes 16 and its "special"
+colours land on palette 16/17 - real round trips. ResetSpecialColor_*
+fail: the reset goes through OSC 105, which (like Ghostty) we ignore;
+their captured case files hold only the first command, so the cause is
+attributed by test name.
+
+**Equivalent plant:** `rgb:` accepting two parts - the third channel
+then has zero digits and fails anyway (the guard is redundant).
+
+**Lint:** `colores_xterm` -> `colores_ordinarii` (xterm is not a house
+word; renominare refuses dirty files, exact replace used).
+

@@ -20,3 +20,12 @@ emulator reads FUGA with introducer N/O as a single shift.
 
 Consumers: aemulator, interpres (via rivus), and the tessera amalgam
 (regenerated; `generata` stage VII judges it).
+
+## 2026-10-07 — OSC terminator in `finale` (aemulator D5)
+
+Colour replies must mirror the request's terminator (xterm, Ghostty).
+The OSC lexeme now carries it in `finale`: 0x07 for BEL, '\\' when ESC
+ended the string (ST, or an ESC that starts a new sequence - Ghostty
+also calls that ST). Only the emulator reads OSC lexemes (git grep), so
+nothing else moves; eight lexer expectations now print `f=`.
+

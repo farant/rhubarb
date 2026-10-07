@@ -69,7 +69,10 @@ Leges chartae:
   AemulatorMusForma) pro hospite; D3: copiae characterum (G0-G3, SO/SI,
   SS2/SS3, DEC Special Graphics). series_terminalis: octeti alti post
   ESC N|O non iam pereunt (FUGA); D4: acervus vexillorum clavium kitty
-  per schirmum (CSI ? > < = u), AemulatorModi.kitty_vexilla. Series
+  per schirmum (CSI ? > < = u), AemulatorModi.kitty_vexilla; D5:
+  tabula colorum viva (OSC 4/10/11/12, 104/110-112), configuratio
+  color_litterae/fundi/cursoris + tabula_colorum, aemulator_color.
+  series_terminalis: lexema OSC terminatorem in 'finale' fert. Series
   ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 

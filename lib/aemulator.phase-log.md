@@ -536,3 +536,16 @@ vectors pushed (moving off the base slot) where they should have set,
 and because no vector sent a bare push - the plants, not the code,
 found the gaps.
 
+## D5 — colours (2026-10-07)
+
+**INTENTIO.** Answer vim's "what is your background?" with the
+theme, and let programs that set the palette actually set it.
+
+Fran chose the live palette over answering queries only, which made
+esctest's colour rows (all set-then-query) reachable: 20 promoted.
+Two references disagreed on `#fff`: Ghostty scales it to ff, X11 and
+xterm (and esctest) take the digits as the most significant bits, f0.
+The spec text is explicit, so `#` follows X11 and `rgb:` stays scaled.
+The lexer learned to say which terminator ended an OSC, so the reply
+comes back the way the question was asked.
+
