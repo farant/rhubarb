@@ -2463,6 +2463,37 @@ try:
     _r = silva._clausurae([_fa, _fb, _fm])
     credo(all(v is None for v in _r.values()),
           '_clausurae: corpus RUENS (exitus CXXXIX) = omnes ignoti, numquam sectiones incompletae', causa=repr(_r))
+    # MEMORIA (pythonica S2, profilum T9: XXIV aedilis 63 s - eaedem
+    # clausurae in quinque probationibus): clavis = fontes + aedilis
+    # (via, mtime, magnitudo, inodus) + sigillum_arboris; redditum copia
+    _numerus = os.path.join(T, 'aedilis_numerus')
+    open(_numerus, 'w').close()
+
+    def _numeratus():
+        return len(open(_numerus).read().splitlines())
+    _vn = _aedilis_fictus('aedilis_numerans', False)
+    _textus = open(_vn).read().replace('#!/bin/bash\n', '#!/bin/bash\necho x >> %s\n' % _numerus)
+    open(_vn, 'w').write(_textus)
+    silva.AEDILIS_BIN = _vn
+    _r1 = silva._clausurae([_fa, _fb, _fm])
+    _n1 = _numeratus()
+    _r1[_fa].add('corruptum')
+    _r2 = silva._clausurae([_fa, _fb, _fm])
+    credo(_numeratus() == _n1 and _r2[_fa] == {_fa, 'x.h'},
+          '_clausurae memoria: arbor eadem -> nullus aedilis iterum, copia (mutatio vocantis non inficit)',
+          causa='aedilis %d -> %d; %r' % (_n1, _numeratus(), _r2))
+    import time as _t
+    _t.sleep(0.01)
+    open(_vn, 'w').write(_textus + '# mutatum\n')
+    silva._clausurae([_fa, _fb, _fm])
+    credo(_numeratus() == _n1 + 1, '_clausurae memoria: aedilis mutatus -> iterum computat')
+    _nova = os.path.join(RADIX, 'pythonica', 'probatio_clausurae_nova.txt')
+    try:
+        open(_nova, 'w').write('nova\n')
+        silva._clausurae([_fa, _fb, _fm])
+        credo(_numeratus() == _n1 + 2, '_clausurae memoria: arbor mutata (plagula nova) -> iterum computat')
+    finally:
+        os.unlink(_nova)
 finally:
     silva.AEDILIS_BIN = _ab_verum
 

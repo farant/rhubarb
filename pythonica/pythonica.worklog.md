@@ -989,3 +989,24 @@ snapshot cost is I/O volume (~70k files cloned then unlinked, 9 times);
 the levers are fewer snapshots or cheaper ones (clonefile, …6RME), not
 parallel deletion. Kept anyway (Fran): interactive commissio_umbra no
 longer blocks on deleting its snapshots.
+
+## 2026-10-07 - S2: closures once per tree state (in-process memo)
+
+`_clausurae` now memoizes per process: key = the source list + aedilis
+identity (path, mtime_ns, size, inode - so a test's fake aedilis
+rewritten in place still recomputes) + `sigillum_arboris()` (HEAD,
+tracked diff, untracked non-ignored files with contents); the result is
+returned as a copy. Not on disk on purpose: ignored inputs (generated
+headers under build/) are outside the key, and a stale closure means an
+OWED GATE MISSED - in-process, nothing but the tests changes the tree.
+Tests: repeat call spawns no aedilis and a caller's mutation does not
+leak; rewritten aedilis -> recompute; new untracked file -> recompute.
+Plants: key without the tree seal, without aedilis identity, result
+without copy -> each red.
+
+MEASURED: aedilis 24 calls 63.4 s -> 9 calls 24.2 s (~40 s). Whole
+suite 320.8 s in this run, but across the three profiles the same
+programs varied by up to 40 s with machine load (formator 37/45/34 s,
+compile_tests 10/16/9 s) - the honest attributable gain is the ~40 s.
+The live tools/portae_debitae.sh check (~20 s) is a separate process
+and keeps computing.

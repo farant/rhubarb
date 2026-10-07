@@ -2242,7 +2242,31 @@ def _index(valor):
 AEDILIS_BIN = os.path.join(RADIX, 'bin', 'aedilis')
 
 
+# MEMORIA CLAUSURARUM (pythonica S2; profilum T9: XXIV aedilis 63,4 s -
+# eaedem clausurae suitarum in quinque probationibus portarum debitarum):
+# per processum solum - clavis = fontes + aedilis (via, mtime, magnitudo,
+# inodus) + sigillum_arboris (HEAD, differentia tractarum, novae non
+# ignoratae). Ignorata (build/) clavem non intrant: memoria in disco
+# capita generata stala ignoraret (debitum omissum = porta omissa).
+_MEMORIA_CLAUSURARUM = {}
+
+
 def _clausurae(fontes, fila=4):
+    """memoria per processum (vide supra), deinde _clausurae_computare;
+    redditum copia (vocans sectiones mutare potest)"""
+    try:
+        st = os.stat(AEDILIS_BIN)
+        identitas = (AEDILIS_BIN, st.st_mtime_ns, st.st_size, st.st_ino)
+    except OSError:
+        identitas = (AEDILIS_BIN, None)
+    clavis = (tuple(fontes), identitas, sigillum_arboris())
+    if clavis not in _MEMORIA_CLAUSURARUM:
+        _MEMORIA_CLAUSURARUM[clavis] = _clausurae_computare(fontes, fila)
+    return dict((f, set(v) if v is not None else None)
+                for f, v in _MEMORIA_CLAUSURARUM[clavis].items())
+
+
+def _clausurae_computare(fontes, fila=4):
     """{fons: set(viarum) | None} per bin/aedilis (lineae O fontes, C
     capita, V vendor). Directorium cuius fontes .c petuntur dimidia
     parte saltem: 'aedilis --corpus <dir> --partes' (processus UNUS,
