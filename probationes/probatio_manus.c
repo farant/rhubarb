@@ -3,6 +3,7 @@
 #include "manus.h"
 #include "credo.h"
 #include "piscina.h"
+#include "lectiones.h"
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -143,7 +144,7 @@ _ultimum_servare (
         redde;
     }
     corpus  += IV;
-    f       = fopen(VIA_ULTIMI, "w");
+    f       = lectiones_fopen(VIA_ULTIMI, "w");
     si (f == NIHIL)
     {
         redde;
@@ -596,7 +597,7 @@ _js_legere (
          character* destinatio,
     memoriae_index  maximum)
 {
-    FILE* f      = fopen(VIA_ULTIMI, "r");
+    FILE* f      = lectiones_fopen(VIA_ULTIMI, "r");
      i32  lecta  = 0;
 
     destinatio[0] = '\0';

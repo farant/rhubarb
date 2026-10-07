@@ -19,6 +19,7 @@
 #include "xar.h"
 #include "villa_agens.h"
 #include "villa_lectores.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -512,7 +513,8 @@ s32 principale (vacuum)
             == ZEPHYRUM);
         per (k = ZEPHYRUM; k < XXV; k++)
         {
-            FILE* pf = fopen("build/probatio_villa.portus", "r");
+            FILE* pf = lectiones_fopen("build/probatio_villa.portus",
+                "r");
 
             si (pf != NIHIL)
             {

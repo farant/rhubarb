@@ -50,6 +50,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "internamentum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -177,7 +178,7 @@ _fasciculum_legere (
     exitus->datum    = NIHIL;
     exitus->mensura  = ZEPHYRUM;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde FALSUM;
@@ -658,7 +659,7 @@ _divergentiam_imprimere (
     {
         FILE* f;
 
-        f = fopen(NOVUM_VIA, "wb");
+        f = lectiones_fopen(NOVUM_VIA, "wb");
         si (f != NIHIL)
         {
             fwrite(novum.datum, I, (size_t)novum.mensura, f);
@@ -729,7 +730,7 @@ principale (
             redde I;
         }
 
-        f = fopen(AUREUM_VIA, "wb");
+        f = lectiones_fopen(AUREUM_VIA, "wb");
         si (f == NIHIL)
         {
             imprimere("FRACTA: scriptio %s (num directorium "

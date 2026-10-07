@@ -1957,3 +1957,20 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
 - The judge is careful about its own staleness: `sanare` refused while
   bin/fabrica was older than lib/fabrica.c ("iudex ipse non recens").
 
+## 2026-10-06 - plan 5 T5a: raw IO in the root suite
+
+- 57 raw calls in the closure of the root tests; a one-word change each
+  through two transitional shims (`lectiones_fopen`, `lectiones_stat`).
+  `/dev/` is excluded inside the shim: a device read noted as L would be
+  judged as machina (IGNOTUM) and the verdict would never be reusable.
+- Two self-inflicted detours: `formator -scribere` on files that were
+  NOT conforming at HEAD reformatted them whole (arbor2_expandere.c:
+  552 divergences -> 0) - the files were restored from HEAD and the
+  edits reapplied by line; and a zsh loop over `$FILES` ran once on one
+  argument (needs `${=FILES}`). Formatter comparisons must be made IN
+  PLACE: the formatter judges by path, and excluded legacy files copied
+  to the scratchpad report hundreds of divergences they do not have.
+- examen's own build broke: committed source lists (GENERATUM AB
+  AEDILE) did not know that vigilia.c now needs lectiones.c; the
+  generata gate named the four lists.
+

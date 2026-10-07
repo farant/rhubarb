@@ -4,6 +4,7 @@
 #include "filum.h"
 #include "piscina.h"
 #include "credo.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -476,7 +477,7 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans fines linearum diversos ---\n");
 
-        f = fopen(test_via, "wb");
+        f = lectiones_fopen(test_via, "wb");
         si (!f)
         {
             imprimere("FRACTA: fopen\n");
@@ -527,7 +528,7 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans filum sine newline finali (multi-linea) ---\n");
 
-        f = fopen(test_via, "w");
+        f = lectiones_fopen(test_via, "w");
         si (!f)
         {
             imprimere("FRACTA: fopen\n");
@@ -685,7 +686,7 @@ s32 principale (vacuum)
         /* Probatio 3: Lineas multiplices cum newlines, una longa */
         imprimere("  Probatio: Longitudines linearum mixtae cum newlines\n");
         {
-            FILUM* f = fopen(test_via, "w");
+            FILUM* f = lectiones_fopen(test_via, "w");
             si (!f)
             {
                 imprimere("FRACTA: fopen\n");

@@ -15,6 +15,7 @@
 #include "json.h"
 #include "credo.h"
 #include "cliens_tabularii.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -60,7 +61,7 @@ s32 principale (vacuum)
         " & echo $! > " VIA_PID) == ZEPHYRUM);
     per (k = ZEPHYRUM; k < XXV; k++)
     {
-        FILE* pf = fopen(VIA_PORT, "r");
+        FILE* pf = lectiones_fopen(VIA_PORT, "r");
 
         si (pf != NIHIL)
         {

@@ -8,6 +8,7 @@
 #include "vigilia.h"
 #include "sigillum.h"
 #include "xar.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -64,7 +65,8 @@ _litterae_copiare (
     constans character* fons)
 {
     memoriae_index  m = strlen(fons);
-         character* copia = (character*)piscina_allocare(piscina, m + I);
+         character* copia = (character*)piscina_allocare(piscina, m
+             + I);
 
     si (copia == NIHIL)
     {
@@ -82,7 +84,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura_out)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura_l;
     character* textus;
 
@@ -258,7 +260,7 @@ vigilia_creare (
     {
         structura stat status_disci;
 
-        si (stat(cfg->via_binarii, &status_disci) == ZEPHYRUM)
+        si (lectiones_stat(cfg->via_binarii, &status_disci) == ZEPHYRUM)
         {
             v->via_binarii = _litterae_copiare(piscina,
                 cfg->via_binarii);
@@ -293,7 +295,8 @@ vigilia_inspicere (
     {
         structura stat status_disci;
 
-        si (   stat(vigilia->via_binarii, &status_disci) == ZEPHYRUM
+        si (   lectiones_stat(vigilia->via_binarii, &status_disci)
+               == ZEPHYRUM
             && (_mtempus_ns(&status_disci) != vigilia->ortus_mtempus
                 || (s64)status_disci.st_size
                     != vigilia->ortus_magnitudo))
@@ -344,7 +347,7 @@ vigilia_inspicere (
             {
                 perge;
             }
-            si (   stat(*via, &status_disci) == ZEPHYRUM
+            si (   lectiones_stat(*via, &status_disci) == ZEPHYRUM
                 && _mtempus_ns(&status_disci)
                     > vigilia->ortus_mtempus)
             {
@@ -390,7 +393,7 @@ _commissi_mtempus (vacuum)
 {
     structura stat status_disci;
 
-    si (stat(VIGILIA_VIA_COMMISSI, &status_disci) != ZEPHYRUM)
+    si (lectiones_stat(VIGILIA_VIA_COMMISSI, &status_disci) != ZEPHYRUM)
     {
         redde (s64)ZEPHYRUM;
     }
@@ -450,7 +453,7 @@ vigilia_cautio_dicenda (
     /* re-armatio: causa aut status NOVUS - agnitio vetus novum
      * nuntium non tegit */
     si (   vigilia->status != vigilia->status_tacitus
-        || vigilia->causa_tacita                         == NIHIL
+        || vigilia->causa_tacita == NIHIL
         || strcmp(vigilia->causa, vigilia->causa_tacita) != ZEPHYRUM)
     {
         vigilia->tacita_reliqua = ZEPHYRUM;

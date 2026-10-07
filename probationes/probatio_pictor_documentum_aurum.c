@@ -21,6 +21,7 @@
 #include "volumen.h"
 #include "pictor_documentum.h"
 #include "credo.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -136,7 +137,7 @@ aurum_legere (
 
     c.datum    = NIHIL;
     c.mensura  = ZEPHYRUM;
-    f          = fopen(AURUM_VIA, "rb");
+    f          = lectiones_fopen(AURUM_VIA, "rb");
     si (!f)
     {
         redde c;
@@ -216,11 +217,11 @@ s32 principale (vacuum)
     textus = chorda_aedificator_spectare(a);
 
     imprimere("\n--- Aurum: octeti iidem ---\n");
-    scribere = (b32)(getenv("PICTOR_DOCUMENTUM_AURUM_SCRIBERE")
-        != NIHIL);
+    scribere = (b32)(lectiones_ambitus(
+        "PICTOR_DOCUMENTUM_AURUM_SCRIBERE") != NIHIL);
     si (scribere)
     {
-        FILE* f = fopen(AURUM_VIA, "wb");
+        FILE* f = lectiones_fopen(AURUM_VIA, "wb");
         CREDO_NON_NIHIL(f);
         si (f)
         {

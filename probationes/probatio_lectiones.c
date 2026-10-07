@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 
 #define LIBER "build/probatio_lectiones.tsv"
@@ -103,6 +104,53 @@ s32 principale (vacuum)
         "S\tbuild/probatio_lectiones_d.txt\n", piscina)));
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "E\tLECTIONES_PROBATIO\tvalor_fictus\n", piscina)));
+
+    imprimere("\n--- IIc. fopen et stat per librum (plan 5 T5a) ---\n");
+    (vacuum)remove(LIBER);
+    setenv("FABRICA_LECTIONES", LIBER, I);
+    {
+        FILE* f;
+        structura stat st;
+
+        f = lectiones_fopen("probationes/probatio_lectiones.c", "rb");
+        CREDO_NON_NIHIL(f);
+        si (f != NIHIL)
+        {
+            (vacuum)fclose(f);
+        }
+        CREDO_NIHIL(lectiones_fopen("include/nusquam_ii.h", "r"));
+        f = lectiones_fopen("build/probatio_lectiones_w.txt", "wb");
+        CREDO_NON_NIHIL(f);
+        si (f != NIHIL)
+        {
+            (vacuum)fclose(f);
+        }
+        f = lectiones_fopen("/dev/null", "rb");
+        si (f != NIHIL)
+        {
+            (vacuum)fclose(f);
+        }
+        CREDO_AEQUALIS_S32(lectiones_stat("include/latina.h", &st),
+            ZEPHYRUM);
+        CREDO_VERUM(lectiones_stat("include/nusquam_iii.h", &st)
+            != ZEPHYRUM);
+    }
+    unsetenv("FABRICA_LECTIONES");
+    liber = filum_legere_totum(LIBER, piscina);
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "L\tprobationes/probatio_lectiones.c\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "A\tinclude/nusquam_ii.h\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "S\tbuild/probatio_lectiones_w.txt\n", piscina)));
+    /* machina (/dev/): non ingressus - nulla linea */
+    CREDO_FALSUM(chorda_continet(liber, chorda_ex_literis(
+        "/dev/null", piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "X\tinclude/latina.h\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "A\tinclude/nusquam_iii.h\n", piscina)));
+    (vacuum)remove("build/probatio_lectiones_w.txt");
 
     imprimere("\n--- III. filii duo paralleli: lineae integrae ---\n");
     {

@@ -11,6 +11,7 @@
 #include "machina.h"
 #include "sigillum.h"
 #include "chorda_aedificator.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -44,7 +45,8 @@ machina_identitas_ex_fonte (
         redde vacua;
     }
 
-    sigillum = sigillum_computare(fons.datum, (memoriae_index)fons.mensura);
+    sigillum = sigillum_computare(fons.datum,
+        (memoriae_index)fons.mensura);
     sigillum_hex(&sigillum, hex);
 
     /* Truncatio: LXIV litterae in tabulis legi non possunt, XVI
@@ -96,10 +98,11 @@ machina_identitas (
         size_t    lecta;
         chorda    fons;
 
-        plagula = fopen("/etc/machine-id", "rb");
+        plagula = lectiones_fopen("/etc/machine-id", "rb");
         si (plagula != NIHIL)
         {
-            lecta = fread(tabula, (size_t)I, magnitudo(tabula), plagula);
+            lecta = fread(tabula, (size_t)I, magnitudo(tabula),
+                plagula);
             fclose(plagula);
 
             si (lecta > 0)
@@ -162,9 +165,11 @@ machina_nota (
         aedificator = chorda_aedificator_creare(piscina, (i32)C);
         si (aedificator != NIHIL)
         {
-            chorda_aedificator_appendere_literis(aedificator, nomina.sysname);
+            chorda_aedificator_appendere_literis(aedificator,
+                nomina.sysname);
             chorda_aedificator_appendere_literis(aedificator, " ");
-            chorda_aedificator_appendere_literis(aedificator, nomina.release);
+            chorda_aedificator_appendere_literis(aedificator,
+                nomina.release);
             nota.systema = chorda_aedificator_finire(aedificator);
         }
         nota.architectura = chorda_ex_literis(nomina.machine, piscina);

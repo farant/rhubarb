@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 
 hic_manens  integer  _descriptor = -I;
@@ -113,4 +114,52 @@ lectiones_ambitus (
     }
     lectiones_notare(LECTIO_AMBITUS, linea);
     redde valor;
+}
+
+/* via machinae (/dev/): non ingressus */
+interior b32
+_machina_est (
+    constans character* via)
+{
+    redde via != NIHIL && strncmp(via, "/dev/", V) == ZEPHYRUM;
+}
+
+FILE*
+lectiones_fopen (
+    constans character* via,
+    constans character* modus)
+{
+     FILE* f = fopen(via, modus);
+      b32  lectio;
+
+    si (via == NIHIL || modus == NIHIL || _machina_est(via))
+    {
+        redde f;
+    }
+    lectio = modus[ZEPHYRUM] == 'r' && strchr(modus, '+') == NIHIL;
+    si (lectio)
+    {
+        lectiones_notare(f != NIHIL ? LECTIO_LEGIT : LECTIO_ABSENS,
+            via);
+    }
+    alioquin si (f != NIHIL)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
+    redde f;
+}
+
+integer
+lectiones_stat (
+    constans character* via,
+       structura stat* status)
+{
+    integer r = stat(via, status);
+
+    si (via != NIHIL && !_machina_est(via))
+    {
+        lectiones_notare(r == ZEPHYRUM ? LECTIO_EXSTAT : LECTIO_ABSENS,
+            via);
+    }
+    redde r;
 }

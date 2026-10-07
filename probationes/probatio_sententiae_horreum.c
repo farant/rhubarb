@@ -44,6 +44,7 @@
 #include "xar.h"
 #include "json.h"
 #include "sigillum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>   /* system */
@@ -225,7 +226,8 @@ principale (vacuum)
 
         per (k = ZEPHYRUM; k < XXV; k++)
         {
-            FILE* pf = fopen("build/probatio_sent.portus", "r");
+            FILE* pf = lectiones_fopen("build/probatio_sent.portus",
+                "r");
 
             si (pf != NIHIL)
             {

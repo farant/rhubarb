@@ -16,6 +16,7 @@
 #include "processus.h"
 #include "filum.h"
 #include "json.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -132,12 +133,12 @@ villa_configurationem_parare (
     /* SUTURA UNA: ambiens semel legitur et in configuratione
 	 * habitat. Semita configurationis et semita probationis
 	 * eandem suturam premunt, non duas. */
-    configuratio->via_ssh              = getenv("VILLA_SSH");
+    configuratio->via_ssh              = lectiones_ambitus("VILLA_SSH");
     configuratio->mora_probationis_ms  = 15000;
     configuratio->mora_actionis_ms     = 30000;
     configuratio->portus_tabularii     = 8753;
 
-    domus = getenv("HOME");
+    domus = lectiones_ambitus("HOME");
     si (domus == NIHIL || domus[ZEPHYRUM] == '\0')
     {
         si (causa != NIHIL)

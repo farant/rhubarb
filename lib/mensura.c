@@ -11,6 +11,7 @@
 
 #include "mensura.h"
 #include "chorda_aedificator.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -278,7 +279,7 @@ mensura_annotare (
         redde FALSUM;
     }
 
-    plagula = fopen(via_diarii, "ab");
+    plagula = lectiones_fopen(via_diarii, "ab");
     si (plagula == NIHIL)
     {
         redde FALSUM;
@@ -317,7 +318,7 @@ mensura_condere (
         redde fructus;
     }
 
-    plagula = fopen(via_diarii, "rb");
+    plagula = lectiones_fopen(via_diarii, "rb");
     si (plagula == NIHIL)
     {
         fructus.causa = chorda_ex_literis(
@@ -385,7 +386,7 @@ mensura_condere (
 
     /* Diarium conditum truncare: aliter conditio proxima easdem
      * mensuras iterum conderet */
-    plagula = fopen(via_diarii, "wb");
+    plagula = lectiones_fopen(via_diarii, "wb");
     si (plagula != NIHIL)
     {
         fclose(plagula);

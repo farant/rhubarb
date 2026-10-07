@@ -120,7 +120,17 @@ Each row = the spec §III checklist, one commit with its plants and three
 audited reuses; the census split (in-chain vs standalone unresolved)
 lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
 
-- [ ] **T5** aedilis (`tools/aedilis_porta.sh`)
+- [ ] **T5** aedilis (`tools/aedilis_porta.sh`) - SPLIT (Fran 2026-10-06):
+  reuse ceiling ~45% (its inputs are nearly all of lib/ and include/;
+  file-precise proxy, T4 tool needs a stored trace first).
+  - [x] **T5a** the channel for the root suite: the lint pilot widened to
+    every `probationes/probatio_*.c` blocks 57 raw IO sites (39 reads,
+    `stat`, `getenv`; 18 writes) - reads through filum / lectiones,
+    writes through filum or annotated; pilot widened in the same commit
+    so regressions block (radix benefits too).
+  - [ ] **T5b** porta_aedilis (signum), effectus chain root, oracle
+    `-domus`, plants, three audited reuses, census in-chain/standalone
+    split.
 - [ ] **T6** fabrica (`tools/fabrica_oraculum.sh`)
 - [ ] **T7** generata (`tools/generata_probare.sh`)
 - [ ] **T8** oratio (`oratio/compile_probationes.sh`)

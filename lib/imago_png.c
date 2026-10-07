@@ -16,6 +16,7 @@
 
 #include "imago_png.h"
 #include "flatura.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -177,10 +178,12 @@ imago_png_codificare (
     versus_mensura = (i32)I + imago->latitudo * (i32)IV;
     crudum_mensura = versus_mensura * imago->altitudo;
 
-    crudum = (i8*)piscina_allocare(piscina, (memoriae_index)crudum_mensura);
+    crudum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)crudum_mensura);
     si (crudum == NIHIL)
     {
-        fructus.error = chorda_ex_literis("Allocatio fracta (crudum)", piscina);
+        fructus.error = chorda_ex_literis("Allocatio fracta (crudum)",
+            piscina);
         redde fructus;
     }
 
@@ -204,7 +207,8 @@ imago_png_codificare (
     si (compressa.status != FLATURA_STATUS_OK)
     {
         fructus.error = chorda_ex_literis(
-                            flatura_status_nuntium(compressa.status), piscina);
+                            flatura_status_nuntium(compressa.status),
+                            piscina);
         redde fructus;
     }
 
@@ -212,7 +216,8 @@ imago_png_codificare (
     zlib = (i8*)piscina_allocare(piscina, (memoriae_index)zlib_mensura);
     si (zlib == NIHIL)
     {
-        fructus.error = chorda_ex_literis("Allocatio fracta (zlib)", piscina);
+        fructus.error = chorda_ex_literis("Allocatio fracta (zlib)",
+            piscina);
         redde fructus;
     }
 
@@ -237,7 +242,8 @@ imago_png_codificare (
     tela = (i8*)piscina_allocare(piscina, (memoriae_index)png_mensura);
     si (tela == NIHIL)
     {
-        fructus.error = chorda_ex_literis("Allocatio fracta (tela)", piscina);
+        fructus.error = chorda_ex_literis("Allocatio fracta (tela)",
+            piscina);
         redde fructus;
     }
 
@@ -286,21 +292,24 @@ imago_png_scribere (
         redde fructus;
     }
 
-    plagula = fopen(via, "wb");
+    plagula = lectiones_fopen(via, "wb");
     si (plagula == NIHIL)
     {
         fructus.successus = FALSUM;
-        fructus.error = chorda_ex_literis("Plagula aperiri non potest", piscina);
+        fructus.error = chorda_ex_literis("Plagula aperiri non potest",
+            piscina);
         redde fructus;
     }
 
-    scripta = fwrite(fructus.datum, (size_t)I, (size_t)fructus.mensura, plagula);
+    scripta = fwrite(fructus.datum, (size_t)I, (size_t)fructus.mensura,
+        plagula);
     fclose(plagula);
 
     si (scripta != (size_t)fructus.mensura)
     {
         fructus.successus = FALSUM;
-        fructus.error = chorda_ex_literis("Scriptio incompleta", piscina);
+        fructus.error = chorda_ex_literis("Scriptio incompleta",
+            piscina);
     }
 
     redde fructus;

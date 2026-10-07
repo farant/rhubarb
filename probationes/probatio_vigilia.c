@@ -11,6 +11,7 @@
 #include "vigilia.h"
 #include "sigillum.h"
 #include "credo.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -31,7 +32,7 @@ _scribere (
     constans character* via,
     constans character* contentum)
 {
-    FILE* pl = fopen(via, "wb");
+    FILE* pl = lectiones_fopen(via, "wb");
 
     si (pl == NIHIL)
     {
