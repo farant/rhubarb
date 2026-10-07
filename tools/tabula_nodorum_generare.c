@@ -200,6 +200,13 @@ fixum_legere (
         {
             fracta("symmetria ignota: ", campi[II]);
         }
+        /* symmetria vacua = nodus trivialis solus */
+        si ((campi[II][ZEPHYRUM] == '\0') != (nodus->transitus
+            == ZEPHYRUM))
+        {
+            fracta("symmetria vacua sine transitu nullo (aut contra): ",
+                nodus->titulus);
+        }
         /* "[[1,5,2,4],[3,1,4,6],...]": numeri soli */
         per (p = campi[III]; ; p++)
         {

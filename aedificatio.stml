@@ -371,8 +371,20 @@
     <ingressus genus="fasciculus" via="tools/tabula_nodorum_generare.sh"/>
     <ingressus genus="fasciculus" via="tools/tabula_nodorum_generare.c"/>
     <ingressus genus="fasciculus" via="probationes/fixa/knotinfo/2026.10.5/nodi_x.tsv"/>
+    <ingressus genus="fasciculus" via="tools/vexilla.sh"/>
+    <ingressus genus="fasciculus" via="include/anulus.h"/>
+    <ingressus genus="fasciculus" via="include/chorda.h"/>
+    <ingressus genus="fasciculus" via="include/chorda_aedificator.h"/>
+    <ingressus genus="fasciculus" via="include/congruentia.h"/>
+    <ingressus genus="fasciculus" via="include/fractio.h"/>
     <ingressus genus="fasciculus" via="include/laqueus.h"/>
+    <ingressus genus="fasciculus" via="include/latina.h"/>
+    <ingressus genus="fasciculus" via="include/magnus.h"/>
+    <ingressus genus="fasciculus" via="include/matrix.h"/>
+    <ingressus genus="fasciculus" via="include/piscina.h"/>
     <ingressus genus="fasciculus" via="include/polynomium.h"/>
+    <ingressus genus="fasciculus" via="include/postulata_posix.h"/>
+    <ingressus genus="fasciculus" via="include/situs.h"/>
     <ingressus genus="fasciculus" via="lib/laqueus.c"/>
     <ingressus genus="fasciculus" via="lib/situs.c"/>
     <ingressus genus="fasciculus" via="lib/polynomium.c"/>

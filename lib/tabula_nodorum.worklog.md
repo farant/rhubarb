@@ -80,3 +80,29 @@ maps negative amphichiral -> reversible (symmetry counts).
 **Later.** 11-13 crossings (KnotInfo has them; the fixture would grow to
 ~12k knots and Jones state sums to 2^13 per knot - fine); HOMFLY or
 Khovanov to split the Jones coincidences; links (LinkInfo).
+
+## 2026-10-07 - review I (recensor-mathematicus, e6700cad)
+
+The reviewer independently re-verified the data against the pinned CSV in
+Python: the fixture matches the CSV row by row, its own parse of KnotInfo's
+polynomial strings gives 0 mismatches over 250 knots, and every pinned fact
+holds. It also ran the suite under ASan, UBSan and VENENUM. No bugs in
+agnoscere. But 3 (+1) plausible composite-search plants compiled and passed
+all 72 tests, because the composite cases were only 3_1#3_1, 3_1#3_1* and
+3_1#4_1:
+- mirror of the FIRST factor tried only when i == j (3_1* # 5_1 -> 0);
+- skip pairs whose later knot has the smaller Alexander span (5_1 # 6_1 lost);
+- a negative-amphichiral second factor treated as chiral (3_1 # 8_17 twice);
+- the exact Alexander product check dropped (span alone).
+New tests: 3_1*#5_1 and 3_1*#5_1* (each also returns the 10_132 partner,
+since J(5_1) = J(10_132*)), 5_1#6_1 (returns 6_1#10_132* as well; table
+order), 3_1#8_17 and 8_17#8_17 exactly once, and granny Jones with
+4_1#4_1 Alexander (same span) -> nothing. All four plants are now red
+(4, 2, 2 and 1 failures). The 5_1/10_132 test now pins the partner's
+chirality (10_132*) instead of accepting either.
+Nits fixed: the generator refuses an empty symmetry with crossings != 0
+(and the reverse); the fabrica ingressus list now holds the full header
+closure (from the aedilis manifest) plus tools/vexilla.sh; the header
+documents that a chiral knot with symmetric Jones is returned twice, and
+that composites are two nontrivial factors, mirrors considered, orientation
+of the summands ignored.

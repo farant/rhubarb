@@ -17,9 +17,12 @@
  * PD referuntur.
  *
  * AGNITIO: congruentia Alexander ET Jones - non probatio typi (5_1
- * et 10_132 utrumque communicant: ambo redduntur). Compositi duorum
- * nodorum tabulae (Alexander et Jones multiplicativi) quoque
- * quaeruntur.
+ * et 10_132* utrumque communicant: ambo redduntur). Nodus chiralis
+ * cuius Jones symmetricus est (9_42, 10_48, 10_71, 10_91, 10_104,
+ * 10_125) BIS redditur, K et K*: Jones chiralitatem non videt.
+ * Compositi DUORUM nodorum non trivialium tabulae (Alexander et Jones
+ * multiplicativi) quoque quaeruntur, speculo cuiusque factoris, sed
+ * orientatione summandorum neglecta (K1 # K2 et K1 # rev K2 hic idem).
  *
  * USUS:
  *   TabulaNodorum* t = tabula_nodorum_aperire(piscina);

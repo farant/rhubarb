@@ -71,6 +71,81 @@ _continet_primum (
     redde FALSUM;
 }
 
+/* agnitio continet compositum (primus, speculum) # (secundus,
+ * speculum)? */
+interior b32
+_continet_compositum (
+                Agnitio* a,
+                    i32  n,
+     constans character* primus,
+                    b32  primus_speculum,
+     constans character* secundus,
+                    b32  secundus_speculum)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (   a[k].secundus != NIHIL
+            && a[k].primus_speculum == primus_speculum
+            && a[k].secundus_speculum == secundus_speculum
+            && strcmp(a[k].primus->titulus, primus) == ZEPHYRUM
+            && strcmp(a[k].secundus->titulus, secundus) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* compositum K1 (speculum?) # K2 (speculum?) quaerit; candidati
+ * impressi */
+interior i32
+_compositum_quaerere (
+    constans TabulaNodorum* t,
+        constans character* primus,
+                       b32  primus_speculum,
+        constans character* secundus,
+                       b32  secundus_speculum,
+                   Agnitio* a)
+{
+    Polynomium alexander  = polynomium_nullum();
+    Polynomium jones      = polynomium_nullum();
+    Polynomium j1         = _jones(primus);
+    Polynomium j2         = _jones(secundus);
+           i32 n;
+           i32 k;
+
+    si (primus_speculum)
+    {
+        j1 = polynomium_inversum(j1, piscina);
+    }
+    si (secundus_speculum)
+    {
+        j2 = polynomium_inversum(j2, piscina);
+    }
+    (vacuum)polynomium_multiplica(_alexander(primus),
+        _alexander(secundus),
+        piscina, &alexander);
+    (vacuum)polynomium_multiplica(j1, j2, piscina, &jones);
+    n = tabula_nodorum_agnoscere(t, alexander, jones, piscina, a, XVI);
+    imprimere("  %s%s # %s%s:", primus, primus_speculum ? "*" : "",
+        secundus, secundus_speculum ? "*" : "");
+    per (k = ZEPHYRUM; k < n && k < XVI; k++)
+    {
+        imprimere(" %s%s", a[k].primus->titulus,
+            a[k].primus_speculum ? "*"
+            : "");
+        si (a[k].secundus != NIHIL)
+        {
+            imprimere("#%s%s", a[k].secundus->titulus,
+                a[k].secundus_speculum ? "*" : "");
+        }
+    }
+    imprimere("\n");
+    redde n;
+}
+
 s32 principale (vacuum)
 {
     piscina = piscina_generare_dynamicum("probatio_tabula_nodorum",
@@ -330,8 +405,8 @@ s32 principale (vacuum)
             a, XVI);
         CREDO_AEQUALIS_I32 (n, II);
         CREDO_VERUM (_continet_primum(a, n, "5_1", FALSUM));
-        CREDO_VERUM (_continet_primum(a, n, "10_132", FALSUM)
-            || _continet_primum(a, n, "10_132", VERUM));
+        /* J(5_1) = J(10_132*): chiralitas paris fixa */
+        CREDO_VERUM (_continet_primum(a, n, "10_132", VERUM));
         /* coincidentiae Jones tabulae Rolfsen notae (Alexander quoque
          * communis): par quisque bis agnoscitur */
         {
@@ -413,6 +488,47 @@ s32 principale (vacuum)
             && strcmp(a[ZEPHYRUM].primus->titulus, "3_1") == ZEPHYRUM
             && strcmp(a[ZEPHYRUM].secundus->titulus, "4_1")
                 == ZEPHYRUM);
+
+        /* speculum factoris PRIMI (non solum i == j); 10_132* pro 5_1
+         * quoque (J(5_1) = J(10_132*), Alexander communis) */
+        n = _compositum_quaerere(t, "3_1", VERUM, "5_1", FALSUM, a);
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_VERUM (_continet_compositum(a, n, "3_1", VERUM, "5_1",
+            FALSUM)
+                && _continet_compositum(a, n, "3_1", VERUM, "10_132",
+            VERUM));
+        n = _compositum_quaerere(t, "3_1", VERUM, "5_1", VERUM, a);
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_VERUM (_continet_compositum(a, n, "3_1", VERUM, "5_1",
+            VERUM)
+            && _continet_compositum(a, n, "3_1", VERUM, "10_132",
+            FALSUM));
+        /* factor posterior amplitudine MINORE (5_1: IV, 6_1: II) */
+        n = _compositum_quaerere(t, "5_1", FALSUM, "6_1", FALSUM, a);
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_VERUM (_continet_compositum(a, n, "5_1", FALSUM, "6_1",
+            FALSUM)
+                && _continet_compositum(a, n, "6_1", FALSUM, "10_132",
+            VERUM));
+        /* amphichiralis NEGATIVA in compositis: semel */
+        n = _compositum_quaerere(t, "3_1", FALSUM, "8_17", FALSUM, a);
+        CREDO_AEQUALIS_I32 (n, I);
+        CREDO_VERUM (_continet_compositum(a, n, "3_1", FALSUM, "8_17",
+            FALSUM));
+        n = _compositum_quaerere(t, "8_17", FALSUM, "8_17", FALSUM, a);
+        CREDO_AEQUALIS_I32 (n, I);
+        CREDO_VERUM (_continet_compositum(a, n, "8_17", FALSUM, "8_17",
+            FALSUM));
+
+        /* Alexander amplitudine eadem sed alienus: Jones aniculae cum
+         * Alexander 4_1 # 4_1 - nihil (productum Alexander iudicat, non
+         * amplitudo sola) */
+        CREDO_VERUM (polynomium_multiplica(_alexander("4_1"),
+            _alexander("4_1"), piscina, &productum));
+        CREDO_VERUM (polynomium_multiplica(j31, j31, piscina,
+            &productum_j));
+        CREDO_AEQUALIS_I32 (tabula_nodorum_agnoscere(t, productum,
+            productum_j, piscina, a, XVI), ZEPHYRUM);
 
         /* nihil: Alexander alienum */
         CREDO_AEQUALIS_I32 (tabula_nodorum_agnoscere(t, _p("t^2 + 1"),
