@@ -25,6 +25,7 @@
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #define CELL_X VI
 #define CELL_Y VIII
@@ -191,9 +192,11 @@ figuram_probare (vacuum)
 
     imprimere("\n--- I: figura ---\n");
     CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
-        piscina, (constans i8*)"salve \x1B[31mR\x1B[0m \x1B[44m \x1B[0m"
-        " \x1B[7mI\x1B[0m\r\nlinea\x1B[3;1H\x1B[1;31mB\x1B[0m"
-        "\x1B[38;5;196mC\x1B[38;5;244mG\x1B[0m\x1B[2;6H", XCVI,
+        piscina,
+        (constans i8*)"salve \x1B[31m\x1B[48;2;255;255;255mR\x1B[0m "
+        "\x1B[44m \x1B[0m \x1B[7mI\x1B[0m\r\nlinea\x1B[3;1H"
+        "\x1B[48;2;255;255;255m\x1B[1;31mB\x1B[0m\x1B[48;2;255;255;255m"
+        "\x1B[38;5;196mC\x1B[38;5;244mG\x1B[0m\x1B[2;6H", CLIII,
         ZEPHYRUM)));
     (vacuum)quadrum(&mc, ZEPHYRUM);
     /* textus per cellulam, colore nativo thematis */
@@ -202,7 +205,9 @@ figuram_probare (vacuum)
     md = mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM);
     CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_THEMA,
         (i32)COLOR_TEXT));
-    /* SGR 31: xterm rubrum (205, 0, 0) */
+    /* SGR 31: xterm rubrum (205, 0, 0) - super fundum album: mappatio
+     * tabulae exacta manet (contrastus minimus III satis: fundus
+     * thematis lucidus rubrum propelleret) */
     md = mandatum_ad(&mc, MANDATUM_TEXTUS, VI * CELL_X, ZEPHYRUM);
     CREDO_VERUM(md && chorda_aequalis_literis(md->textus, "R"));
     CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
@@ -580,22 +585,108 @@ titulum_colores_probare (vacuum)
     CREDO_FALSUM(mutatus);
     CREDO_VERUM(chorda_aequalis_literis(t, "salve"));
     terminale_claudere(&mc.app);
-    /* OSC 4: tabula viva; OSC 10/11/12: litterae, fundus, cursor */
+    /* OSC 4: tabula viva; OSC 10/11/12: litterae, fundus, cursor
+     * (litterae lucidae super fundum obscurum: contrastus satis,
+     * valores exacti) */
     CREDO_VERUM(machinam_effusione(&mc,
-        "\x1B]4;1;#010203\x07\x1B[31mR\x1B[0m"
-        "\x1B]10;#405060\x07\x1B]11;#102030\x07\x1B]12;#a0b0c0\x07N"));
+        "\x1B]4;1;#f0e0d0\x07\x1B[31mR\x1B[0m"
+        "\x1B]10;#c0d0e0\x07\x1B]11;#102030\x07\x1B]12;#a0b0c0\x07N"));
     md = mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM);
     CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
-        pixelum_rgb(I, II, III)));
+        pixelum_rgb(0xF0, 0xE0, 0xD0)));
     md = mandatum_ad(&mc, MANDATUM_TEXTUS, CELL_X, ZEPHYRUM);
     CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
-        pixelum_rgb(0x40, 0x50, 0x60)));
+        pixelum_rgb(0xC0, 0xD0, 0xE0)));
     md = mandatum_ad(&mc, MANDATUM_RECTANGULUM, ZEPHYRUM, ZEPHYRUM);
     CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
         pixelum_rgb(0x10, 0x20, 0x30)));
     md = mandatum_ad(&mc, MANDATUM_RECTANGULUM, II * CELL_X, ZEPHYRUM);
     CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
         pixelum_rgb(0xA0, 0xB0, 0xC0)));
+    terminale_claudere(&mc.app);
+}
+
+/* oraculum WCAG 2.0 (luminantia relativa, ratio contrastus) -
+ * independens a lib/terminale.c */
+interior f64
+canalis_linearis (
+    i32 c)
+{
+    f64 v;
+
+    v = (f64)c / 255.0;
+    redde v <= 0.03928 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4);
+}
+
+interior f64
+luminantia (
+    i32 r,
+    i32 g,
+    i32 b)
+{
+    redde 0.2126 * canalis_linearis(r) + 0.7152 * canalis_linearis(g)
+         + 0.0722 * canalis_linearis(b);
+}
+
+/* ratio inter pixelum mandati (a<<24|b<<16|g<<8|r) et colorem
+ * thematis */
+interior f64
+ratio_contra (
+           i32 pixelum,
+    ColorThema fundus)
+{
+    Color k;
+      f64 l1;
+      f64 l2;
+
+    k   = thema_color(fundus);
+    l1  = luminantia((i32)(pixelum & 0xFF), (i32)((pixelum
+        >> VIII) & 0xFF),
+        (i32)((pixelum >> XVI) & 0xFF));
+    l2  = luminantia((i32)(insignatus character)k.r,
+        (i32)(insignatus character)k.g, (i32)(insignatus character)k.b);
+    redde l1 > l2 ? (l1 + 0.05) / (l2 + 0.05) : (l2 + 0.05) / (l1
+        + 0.05);
+}
+
+/* VIII: contrastus minimus (III.0, propulsio minima) et obscurum */
+interior vacuum
+contrastum_probare (vacuum)
+{
+     Machina  mc;
+    Mandatum* md;
+         i32  v;
+
+    imprimere("\n--- VIII: contrastus minimus et obscurum ---\n");
+    CREDO_VERUM(machinam_effusione(&mc,
+        "\x1B[38;2;200;200;200mA\x1B[0m\x1B[30mB\x1B[0mC"
+        "\x1B[2mD\x1B[0m\x1B[48;2;0;0;0m\x1B[38;2;20;20;20mE"));
+    /* griseus pallidus: propulsus ad III, griseus manet, non ultra */
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(md && md->color.genus == COLOR_MANDATI_RGBA);
+    v = md ? md->color.valor : ZEPHYRUM;
+    CREDO_VERUM(ratio_contra(v, COLOR_BACKGROUND) >= 3.0);
+    CREDO_VERUM(ratio_contra(v, COLOR_BACKGROUND) < 3.3);
+    CREDO_VERUM((v & 0xFF) == ((v >> VIII) & 0xFF)
+             && (v & 0xFF) == ((v >> XVI) & 0xFF));
+    /* niger sufficit: immutatus */
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, CELL_X, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM)));
+    /* nativus non tactus: signum thematis manet */
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, II * CELL_X, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_THEMA,
+        (i32)COLOR_TEXT));
+    /* obscurum: mixtum cum fundo, differt a nativo, legibile manet */
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, III * CELL_X, ZEPHYRUM);
+    CREDO_VERUM(md && md->color.genus == COLOR_MANDATI_RGBA);
+    CREDO_VERUM(md && ratio_contra(md->color.valor, COLOR_BACKGROUND)
+                      >= 3.0);
+    /* fundus proprius niger: littera fere nigra illuminatur */
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, IV * CELL_X, ZEPHYRUM);
+    CREDO_VERUM(md && md->color.genus == COLOR_MANDATI_RGBA);
+    v = md ? md->color.valor : ZEPHYRUM;
+    CREDO_VERUM((v & 0xFF) > 0x50);
     terminale_claudere(&mc.app);
 }
 
@@ -615,6 +706,7 @@ principale (vacuum)
     modos_probare();
     murem_probare();
     titulum_colores_probare();
+    contrastum_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();

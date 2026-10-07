@@ -1497,6 +1497,18 @@
     <forma textus="pseudoterminalis" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="pseudoterminalia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="contrastus" lingua="latina" classis="substantivum" nota="Lat. med. ex contrastare (contra + stare): oppositio luminis inter litteram et fundum (WCAG contrast ratio) - terminale contrastus minimus (aemulator-plan, 2026-10-07); sedes ratio_contrastus, contrastum_curare">
+    <forma textus="contrastus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="contrastum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="contrastus" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="legibilis" lingua="latina" classis="adiectivum" nota="Lat. sera: quod legi potest - littera fundo satis distans; sedes litteram_legibilem (lib/terminale.c)">
+    <forma textus="legibilis" casus="nominativus" numerus="singularis"/>
+    <forma textus="legibilem" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+  <vocabulum lemma="opacitas" lingua="latina" classis="substantivum" nota="opacitas (Plin.): umbra, obscuritas - hic quanta littera obscura fundum tegit (Ghostty faint-opacity); sedes OBSCURUM_OPACITAS (lib/terminale.c)">
+    <forma textus="opacitas" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="synchronia" lingua="latina" classis="substantivum" nota="Neo-Lat. ex Gr. syn- + chronos (ut synchronismus): simultas temporis - modus ?2026 (synchronized output: programma quadrum totum ante pictionem perficit); sedes MODUS_SYNCHRONIA (lib/aemulator.c, aemulator-plan D2)">
     <forma textus="synchronia" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="synchroniae" casus="genitivus" numerus="singularis" genus="femininum"/>

@@ -24,7 +24,9 @@
  * fundus, cursor); pinguntur ex aemulator_color - OSC 4/10/11/12
  * programmatis videntur. Nativus non mutatus = signum thematis (thema
  * vivum); RGB ipsum. Inversum, crassum (color clarior 0-7) ut
- * Ghostty.
+ * Ghostty; obscurum (SGR 2) ad fundum dimidio mixtum. CONTRASTUS
+ * MINIMUS III (WCAG): littera fundo nimis similis versus nigrum aut
+ * album MINIME propellitur (programmata fundum obscurum putant).
  *
  * ANSA: principale suam ansam possidet (decisio XXV): quadrum quodque
  * terminale_pulsare(mora brevis) deinde tractare, quadrum, praesentare.

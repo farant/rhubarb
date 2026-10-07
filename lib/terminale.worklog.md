@@ -97,3 +97,33 @@ Also seen in that session: box-drawing characters render as tofu - the
 The first D6c commit failed the aedilis gate with "scripsit extra
 vestigium: bin/terminale": launching ./apps/terminale/terminale.sh
 during a gate rewrites bin/terminale. Not code - rerun passed.
+
+## 2026-10-07 — minimum contrast and faint text
+
+Fran's screenshot (Claude Code in terminale): status lines in #999999
+and similar grays nearly vanish on the warm theme background - programs
+choose colours for a DARK background. Ghostty's answer is
+`minimum-contrast` (WCAG ratio; below it the shader SNAPS text to black
+or white). Fran chose ratio 3.0 and a MINIMAL nudge instead: toward the
+extreme (black/white) that can contrast more, binary search for the
+smallest step reaching 3.0, then step up past rounding. Hues survive (a
+light blue path stays blue, cyan stays teal); dim stays dimmer than
+normal text.
+
+Faint (SGR 2) was documented in terminale.h but never drawn; now the
+text blends 50% toward its background (Ghostty faint-opacity), then the
+contrast floor applies. Background for the check = the cell's own
+background if it has one, else the page background (theme or OSC 11).
+An untouched default colour stays a THEMA token (live theme).
+
+Side effect on tests: section I's exact palette assertions (xterm red
+CD0000, bright red, gray 0x80) fall below 3.0 on the warm theme, so
+those cells now sit on a white background (all >= 3.9 there); section
+VII's OSC colours became light text on the dark OSC 11 background. Both
+still assert exact values - the floor simply has nothing to do there.
+
+Visual check: before/after renders of Claude-Code-like lines (headless
+PNG, ratio 1.0 vs 3.0) - gray 250, yellow, cyan and #999999 unreadable
+before, all readable after.
+
+Glossary: contrastus, legibilis, opacitas.

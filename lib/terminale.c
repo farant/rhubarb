@@ -28,12 +28,19 @@
 #include "terminale.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define CELLULA_LATITUDO VI
 #define CELLULA_ALTITUDO VIII
 #define QUIES_MS         CCC
 
 #define TITULUS_MAXIMUS  CCLVI
+/* CONTRASTUS MINIMUS (WCAG 2.0, ut Ghostty minimum-contrast; Franus
+ * 2026-10-07: III.0, propulsio minima): programmata fundum obscurum
+ * putant (Claude Code: grisei pallidi), thema nostrum lucidum est */
+#define CONTRASTUS_MINIMUS  3.0
+/* SGR 2: littera ad fundum mixta (Ghostty faint-opacity 0.5) */
+#define OBSCURUM_OPACITAS   0.5
 
 nomen structura {
      TerminaleApplicatio* app;
@@ -115,6 +122,148 @@ colorem_dynamicum (
         redde color_thematis(signum);
     }
     redde color_rgb(vivus);
+}
+
+
+/* ==================================================
+ * Contrastus (WCAG 2.0 relative luminance)
+ * ================================================== */
+
+interior f64
+canalis_linearis (
+    i32 c)
+{
+    f64 v;
+
+    v = (f64)c / 255.0;
+    redde v <= 0.03928 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4);
+}
+
+interior f64
+luminantia_rgb (
+    i32 rgb)
+{
+    redde 0.2126 * canalis_linearis((rgb >> XVI) & 0xFF)
+         + 0.7152 * canalis_linearis((rgb >> VIII) & 0xFF)
+         + 0.0722 * canalis_linearis(rgb & 0xFF);
+}
+
+interior f64
+ratio_contrastus (
+    i32 a,
+    i32 b)
+{
+    f64 la;
+    f64 lb;
+
+    la = luminantia_rgb(a);
+    lb = luminantia_rgb(b);
+    redde la > lb ? (la + 0.05) / (lb + 0.05)
+                  : (lb + 0.05) / (la + 0.05);
+}
+
+/* a ad b per t (0 = a, 1 = b), canalis per canalem rotundatus */
+interior i32
+rgb_miscere (
+    i32 a,
+    i32 b,
+    f64 t)
+{
+    i32 rgb;
+    i32 k;
+    f64 x;
+    f64 y;
+
+    rgb = ZEPHYRUM;
+    per (k = ZEPHYRUM; k <= XVI; k += VIII)
+    {
+        x    = (f64)((a >> k) & 0xFF);
+        y    = (f64)((b >> k) & 0xFF);
+        rgb  |= ((i32)(x + (y - x) * t + 0.5) & 0xFF) << k;
+    }
+    redde rgb;
+}
+
+/* contrastus minimus per propulsionem MINIMAM (Franus; Ghostty ad
+ * nigrum/album saltat): versus extremum quod plus contrastus dare
+ * potest, quaestio bipartita, deinde gradus post rotundationem */
+interior i32
+contrastum_curare (
+    i32 littera,
+    i32 fundus)
+{
+    i32 meta;
+    i32 k;
+    f64 imum;
+    f64 summum;
+    f64 medium;
+
+    si (ratio_contrastus(littera, fundus) >= CONTRASTUS_MINIMUS)
+    {
+        redde littera;
+    }
+    meta = ratio_contrastus(0xFFFFFF, fundus)
+               > ratio_contrastus(ZEPHYRUM, fundus)
+         ? 0xFFFFFF : ZEPHYRUM;
+    imum    = 0.0;
+    summum  = 1.0;
+    per (k = ZEPHYRUM; k < XVI; k++)
+    {
+        medium = (imum + summum) / 2.0;
+        si (   ratio_contrastus(rgb_miscere(littera, meta, medium),
+            fundus)
+            >= CONTRASTUS_MINIMUS)
+        {
+            summum = medium;
+        }
+        alioquin
+        {
+            imum = medium;
+        }
+    }
+    dum (   summum < 1.0
+         && ratio_contrastus(rgb_miscere(littera, meta, summum), fundus)
+            < CONTRASTUS_MINIMUS)
+    {
+        summum += 1.0 / 256.0;
+    }
+    redde rgb_miscere(littera, meta, summum > 1.0 ? 1.0 : summum);
+}
+
+/* color mandati -> 0xRRGGBB (signum thematis per thema; RGBA = pixelum
+ * a<<24|b<<16|g<<8|r) */
+interior i32
+rgb_mandati (
+    ColorMandati c)
+{
+    si (c.genus == COLOR_MANDATI_THEMA)
+    {
+        redde rgb_thematis((ColorThema)c.valor);
+    }
+    redde ((c.valor & 0xFF) << XVI) | (c.valor & 0xFF00)
+         | ((c.valor >> XVI) & 0xFF);
+}
+
+/* littera super fundum (0xRRGGBB): obscurum mixtum, deinde contrastus
+ * minimus; immutata manet ipsa (signum thematis vivum manet) */
+interior ColorMandati
+litteram_legibilem (
+    ColorMandati littera,
+             i32 fundus,
+             b32 obscurum)
+{
+    i32 rgb;
+    i32 novum;
+
+    rgb = rgb_mandati(littera);
+    novum = obscurum ? rgb_miscere(rgb, fundus,
+        OBSCURUM_OPACITAS) : rgb;
+    novum = contrastum_curare(novum, fundus);
+    si (novum == rgb && !obscurum)
+    {
+        redde littera;
+    }
+    redde color_rgb(novum);
 }
 
 interior ColorMandati
@@ -235,6 +384,11 @@ terminale_figura (
                 fundus           = t;
                 fundus_proprius  = VERUM;
             }
+            littera = litteram_legibilem(littera,
+                rgb_mandati(fundus_proprius ? fundus
+                                            : fundus_nativus(tc)),
+                (cellula.stilus.ornamenta & STILUS_OBSCURUM)
+                    != ZEPHYRUM);
             si (fundus_proprius)
             {
                 f.x = (s32)x * cw;
