@@ -535,6 +535,23 @@ murem_probare (vacuum)
     CREDO_VERUM(captum_est(&mc,
         "\x1B[<0;3;3M\x1B[<0;3;3m\x1B[<64;3;3M"));
     terminale_claudere(&mc.app);
+    /* tractus (?1002 + SGR, tmux): pressio, motus CUM bottone,
+     * solutio - fenestra bottonem in motu nunc fert (D7, Franus) */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1002h\x1B[?1006h"));
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    ev.genus             = EVENTUS_MUS_DEPRESSUS;
+    ev.datum.mus.x       = XIII;
+    ev.datum.mus.y       = XVII;
+    ev.datum.mus.botton  = MUS_SINISTER;
+    eventum_dare(&mc, &ev);
+    ev.genus        = EVENTUS_MUS_MOTUS;
+    ev.datum.mus.x  = XIX;
+    eventum_dare(&mc, &ev);
+    ev.genus               = EVENTUS_MUS_LIBERATUS;
+    eventum_dare(&mc, &ev);
+    CREDO_VERUM(captum_est(&mc,
+        "\x1B[<0;3;3M\x1B[<32;4;3M\x1B[<0;4;3m"));
+    terminale_claudere(&mc.app);
     /* ?1000 solum: forma X10 (ordinaria terminalis) */
     CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1000h"));
     CREDO_VERUM(manus_ludus_premere_ad(mc.manus, XIII, XVII));

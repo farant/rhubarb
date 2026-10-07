@@ -967,6 +967,19 @@ fenestra_perscrutari_eventus (
                 casus NSEventTypeOtherMouseDragged:
                     eventus.genus = EVENTUS_MUS_MOTUS;
                     _murem_implere(fenestra, eventus_ns, &eventus);
+                    /* tractus: botton tentus (spec D1, ut interpres et
+                     * manus_ludus). Olim 0 semper: tractus ut motus
+                     * nudus - tmux ?1002 nihil, Claude Code ?1003
+                     * 'super' tantum (aemulator D7, Franus) */
+                    eventus.datum.mus.botton =
+                        ([eventus_ns type] == NSEventTypeLeftMouseDragged)
+                            ? MUS_SINISTER
+                        : ([eventus_ns type]
+                            == NSEventTypeRightMouseDragged)
+                            ? MUS_DEXTER
+                        : ([eventus_ns type]
+                            == NSEventTypeOtherMouseDragged)
+                            ? MUS_MEDIUS : (mus_botton_t)ZEPHYRUM;
                     impellere_eventum(fenestra, &eventus);
                     frange;
 
