@@ -217,3 +217,80 @@ the vectors: any change - a new failure or a new pass - stops it. A
 DECSTR plant showed why soft reset mattered: without it one test's
 scroll region broke the tests after it.
 
+## B5 — RELATIO: phase B, shell-sufficient + the PTY (2026-10-06)
+
+**Phase B is done: a real shell runs through our own stack - a child on
+a pseudo-terminal, a host joining it to the core, the core answering
+the shell's questions - and an outside test suite (esctest2) drives
+all of it.** Three libraries behind Fran-approved headers
+(`aemulator` grown from 1269 to 2105 lines; `pseudoterminale` 739;
+`aemulator_hospes` 352), 147 vectors (121 from Ghostty, 26 house), 567
+esctest results pinned with causes, 80 plants over six commits
+(ee80c89f B0, 690d9e8f, fe02809d, 59e042b6, a943ac06, cbb6c826).
+
+**What exists:**
+- The shell surface in the core: scroll regions and everything that
+  scrolls in them, insert/delete lines and characters, erase
+  characters, tab stops, LNM (B1); answers - DA1/2/3, DSR, CPR,
+  XTVERSION, `CSI 18 t` - and OSC 0/2 titles through effects (B2,
+  B4b); DECSTR; DECRQCRA behind `lectio_schirmi`, off by default
+  (decision 18).
+- `pseudoterminale` (B3): a vtable with a posix bridge (openpty, new
+  session, controlling terminal, signal reset, environment, exec
+  failure distinct from exit 127, writes that never block, reaping
+  without handlers, a close that never leaves a zombie) and a memoriae
+  bridge.
+- `aemulator_hospes` (B4a, decision 17): the one place where core and
+  child meet - a pulse model, a reply reserve, a read cap, pure. Every
+  front end (headless tests now, fenestra in E, vitrea later) only
+  reads the screen and sends bytes.
+- An outside oracle (B4b): esctest2 @ 2798f12 as a child of the host;
+  216 of 567 pass, every failure named by the feature it needs; the
+  table changes only on purpose (`tools/aemulator_esctest.sh
+  -probare`).
+
+**What the work found, by weight:**
+1. **A seam is worth its weight when the TEST owns the other side.**
+   The vtable let a test define its own child - write quotas, endless
+   output, "dead but not drained", chunked reads, counted waits - and
+   every queue and loop property of the host became an exact
+   assertion. The memoriae child alone could not have reached the
+   reply reserve or the wrap-around.
+2. **Tests can be repaired by the very thing they test around.**
+   `/bin/sh` quietly acquires a controlling terminal, so a shell-based
+   check passed with TIOCSCTTY removed; "lowest free fd" cannot see a
+   leak above a hole. Both found only because the plants survived.
+   Rule kept: test the child's environment with no shell in between.
+3. **i32 is unsigned, and examen knows it.** The host's queue clip
+   (`limes - mensura`) underflowed once replies filled the reserve;
+   examen's "comparatio vana" on the neighbouring checks led to it
+   before any test did. A test now pins it.
+4. **An outside oracle needs the boring parts first.** esctest could
+   not run a single test until the core answered `CSI 18 t`, and its
+   results meant nothing until DECSTR stopped one test's scroll
+   region leaking into the next. Its cell checks exist only through
+   DECRQCRA - which is why that went in behind a flag, not by default.
+5. **Name every failure, or the table lies.** 306 esctest failures
+   were attributed from each test's own bytes; none is unexplained,
+   and the few that looked like B1 bugs all used left/right margins.
+   The pinned table now does for the whole emulator what named debts
+   did for the vectors.
+6. **Gates owed rarely are gates nobody has run.** B3's lexicon edit
+   was the first change since dispositio D0 to owe `examen-corpus`;
+   it found the Clay glue rejected and unpinned. Pinned with its
+   cause; nothing in B was at fault, but the commit was the one that
+   paid.
+
+**Named limits (phase B):** no scrollback (phase C); no origin mode,
+insert mode, reverse wrap, alt screens 47/1047/1048, SCOSC/SCORC,
+HPR/VPR, REP, DECALN, RIS; no mode or colour queries (DECRQM, DECRQSS,
+OSC 4/10/11); no left/right margins or VT420 rectangle/column
+operations; no protected areas; no window operations beyond `18 t`;
+DA answers Ghostty's identity, not xterm's; key encoding and
+mouse/paste modes are not wired (phase D); the host has no front end
+yet (phase E). A title longer than 2046 bytes is dropped (Ghostty:
+2047).
+
+**Next: phase C or D - see the re-plan in the plan (Fran decides the
+order).**
+

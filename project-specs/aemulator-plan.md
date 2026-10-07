@@ -375,7 +375,23 @@ Later phases (re-planned after A's RELATIO):
       DECCOLM 3, REP 3, DECALN 2, RIS 2, XTSAVE 2, DECID, MoreFix,
       IRM. None unexplained. `-probare` fails on ANY change (new
       pass = promote). A tool, not a gate (like frigida_probare).
-  - **B5 - RELATIO.**
+  - **B5 - RELATIO.** Done 2026-10-06: `lib/aemulator.phase-log.md`
+    (B5).
+- **Re-plan after B5 (PROPOSED - Fran decides order and scope).**
+  The esctest table (`probationes/fixa/aemulator/esctest.tsv`) ranks
+  what is missing by how many of its tests need it:
+  - quick wins, small and common: HPR/VPR (6), REP (3), SCOSC/SCORC
+    (4), alt screens 47/1047/1048 (9), DECALN (2), RIS (2) - ~26
+    tests;
+  - modes programs set: origin mode, insert mode (D already), reverse
+    wrap (10);
+  - queries modern programs ask: DECRQM (32 - neovim, OpenTUI), colour
+    OSC 4/10/11 (47 - theme detection), DECRQSS (9), DECDSR (10);
+  - VT420 and beyond, perhaps never: left/right margins (82),
+    rectangle and column operations (25), protected areas (24),
+    window operations (29), DECCOLM (3).
+  Open questions: C (scrollback) before D as planned, or D's quick
+  wins first? Which of the last group is "never"?
 - **C - scrollback.** The fixed page pool (Decision 4), viewport
   scrolling, byte limit, eviction; reflow stays deferred (Decision 7).
 - **D - full-screen v0.** Origin and insert modes, DEC special
