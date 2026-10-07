@@ -565,6 +565,22 @@ Later phases (re-planned after A's RELATIO):
     are now asserted from the PNG.
   - **E3 - the apps:** `terminale.c` (window) + `terminale_terminalis.c`
     + scripts; one announced smoke run with `-imago`; Fran's look.
+    E3 as built: `apps/terminale/terminale.c` (window, 80x24 cells at
+    scale 2; own loop: pulse the host without waiting, wait for window
+    events up to 16 ms, draw ONLY when something changed - an idle
+    shell draws nothing; the shell exiting closes the window, as
+    Ghostty; Ctrl-C goes to the shell) and `terminale_terminalis.c`
+    (terminal twin: the tessera loop copied with the host pulse, no
+    Ctrl-C exit, read wait capped at 16 ms, initial size via a resize
+    event), scripts `terminale.sh` / `terminale_terminalis.sh`
+    (AEDIFICARE_SOLUM builds only). Env TERM=xterm-256color,
+    COLORTERM=truecolor, TERM_PROGRAM=terminale. Smoke (announced, in
+    the approved E3): `terminale.sh -fumus -imago` -> 60 frames, exit
+    0, the PNG shows the scripted sample exactly (looked at 4x). The
+    twin, having no TTY here, was run NESTED inside our own emulator
+    (a scratch runner on aemulator_hospes): its screen held the same
+    sample - our terminal inside our terminal. Limits: no window title
+    from OSC yet, full-screen programs wait for phase D.
   - **E4 - RELATIO.**
 - **D - full-screen v0.** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to

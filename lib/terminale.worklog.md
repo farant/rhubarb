@@ -33,3 +33,18 @@ polling path. Stale comment in ludus_fenestra.h led there.
 
 **Byte counts again:** a 96-byte script passed as 89 cut the trailing
 cursor move. Count literal bytes with a tool.
+
+## 2026-10-07 — E3: the apps
+
+**Draw only on change.** The window loop pulses the host (no wait),
+waits on window events up to 16 ms (0 when a frame is owed), and runs
+ludus_quadrum + present only if the pulse reported `mutatum` or an
+event arrived. -fumus always draws (it counts frames).
+
+**Nested smoke for the twin.** The tool shell has no TTY, so
+`terminale_terminalis -fumus` ran as the CHILD of a scratch runner on
+aemulator_hospes; dumping its screen when "linea 3" appeared showed the
+exact sample. A dump after exit is empty - the twin draws on the
+alternate screen and restores the primary when it leaves. 4 unknown
+sequences = the twin's mouse/paste mode requests (phase D).
+

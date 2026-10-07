@@ -419,3 +419,15 @@ the PNG, and my eyes on the PNG - and the third caught what the first
 did not: a shared header documented the wrong RGBA byte order; the
 command-level test had passed under the same wrong belief. 12 plants.
 
+## E3 — the apps (2026-10-07)
+
+**INTENTIO.** `terminale` as runnable apps - a window and a terminal
+twin - so a real shell can be seen and typed into.
+
+Built: both mains with their own loops (the shared loops would sleep
+on the dispatcher's settle time and the terminal one ends on Ctrl-C);
+the window draws only on change. Smoke: the window's last frame shows
+the scripted sample exactly; the twin ran nested in our emulator and
+produced the same text. Next: Fran's look at `./apps/terminale/
+terminale.sh` with a real login shell.
+
