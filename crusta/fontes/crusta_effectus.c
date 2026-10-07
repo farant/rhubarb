@@ -8532,20 +8532,50 @@ _argumenta_colligere (
                   Xar* nodi;
                   i32  j;
 
+            verba = xar_creare(piscina, (i32)magnitudo(character*));
             si (declaratio == NIHIL)
             {
-                *conflictus = VERUM;   /* radix sine argv declarata */
-                redde;
+                /* ARGV EX MANDATO (fabrica plan 5 T3, A3): actio ipsa
+                 * hunc scriptum currit (verbum primum mandati = via
+                 * ingressus) - verba sequentia argv eius sunt */
+                StmlNodus* mandatum = nodus->parens != NIHIL
+                    ? stml_invenire_liberum(nodus->parens, "mandatum")
+                    : NIHIL;
+                 character prima[VIA_MAXIMA];
+
+                nodi = mandatum != NIHIL
+                    ? stml_invenire_omnes_liberos(mandatum, "verbum",
+                          piscina)
+                    : NIHIL;
+                si (   nodi == NIHIL || xar_numerus(nodi) == ZEPHYRUM
+                    || !_absolutam_facere(chorda_ut_cstr(
+                           stml_textus_valor(*(StmlNodus**)xar_obtinere(
+                               nodi, ZEPHYRUM), piscina), piscina),
+                           radix, prima)
+                    || strcmp(prima, absoluta) != ZEPHYRUM)
+                {
+                    *conflictus = VERUM;   /* sine argv declarata */
+                    redde;
+                }
+                per (j = I; verba != NIHIL
+                    && j < xar_numerus(nodi); j++)
+                {
+                    *(character**)xar_addere(verba) = chorda_ut_cstr(
+                        stml_textus_valor(*(StmlNodus**)xar_obtinere(
+                            nodi, j), piscina), piscina);
+                }
             }
-            verba = xar_creare(piscina, (i32)magnitudo(character*));
-            nodi = stml_invenire_omnes_liberos(declaratio, "verbum",
-                piscina);
-            per (j = ZEPHYRUM; verba != NIHIL && nodi != NIHIL
-                && j < xar_numerus(nodi); j++)
+            alioquin
             {
-                *(character**)xar_addere(verba) = chorda_ut_cstr(
-                    stml_textus_valor(*(StmlNodus**)xar_obtinere(nodi,
-                        j), piscina), piscina);
+                nodi = stml_invenire_omnes_liberos(declaratio, "verbum",
+                    piscina);
+                per (j = ZEPHYRUM; verba != NIHIL && nodi != NIHIL
+                    && j < xar_numerus(nodi); j++)
+                {
+                    *(character**)xar_addere(verba) = chorda_ut_cstr(
+                        stml_textus_valor(*(StmlNodus**)xar_obtinere(
+                            nodi, j), piscina), piscina);
+                }
             }
             si (*exitus == NIHIL)
             {

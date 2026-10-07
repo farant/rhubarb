@@ -83,18 +83,18 @@ membership-only (per-name A/X). Anything else -> Fran.
 
 ### Task T3: the verdict runner in C (A1–A3)
 
-- [ ] **Step 1: Failing tests:** `probatio_fabrica` - an `iudicium`
+- [x] **Step 1: Failing tests:** `probatio_fabrica` - an `iudicium`
   action whose mandatum is the runner itself and which declares a
   signum: exit 0 + signum -> verdict `<G>: <count line>`, written only
   on pass, deleted before the run; exit 0 without signum -> FRACTUM;
   `iudicium-fumus` case for the same in a temporary root.
-- [ ] **Step 2: Implement** in bin/fabrica (signum = literal prefix,
+- [x] **Step 2: Implement** in bin/fabrica (signum = literal prefix,
   matched in C, no regex - A2); canon: `signum` on iudicium actions.
-- [ ] **Step 3: toml moves:** porta_toml mandatum =
+- [x] **Step 3: toml moves:** porta_toml mandatum =
   `./toml/compile_probationes.sh`, signum `TOML PROBATIONES: `;
   `pythonica/silva.py` leaves its ingressus. Verdict text compared to
   the silva.py one (spec §VII.2).
-- [ ] **Step 4: A3:** effectus ingressus argv derived from its own
+- [x] **Step 4: A3:** effectus ingressus argv derived from its own
   action's mandatum when the via matches (`<argumenta>` stays only for
   roots run by other actions); `silva.argumenta_catenarum` compares
   PORTAE to the mandatum. **Plants:** signum check off -> red; mandatum

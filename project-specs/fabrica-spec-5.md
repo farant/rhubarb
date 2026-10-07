@@ -202,3 +202,32 @@ unrelated header in include/ -> RECENS; `toml/probationes/latina.h`
 (shadows include/latina.h) -> STALUM naming it. compilator fumus IX/X
 added (X/X); plant (probes off) -> V (shadowing) and IX red.
 
+**T3 (2026-10-06): the verdict runner in C (A1-A3).** An `iudicium`
+action may declare `signum` (aedificatio.canon; the parser refuses it
+elsewhere). Then bin/fabrica runs the mandatum - the runner itself -
+deletes the old verdict BEFORE the run (sutura `verdictum_ponere`,
+NIHIL = delete) and after exit 0 reads the action's log
+(build/fabrica/acta/<titulus>.log), strips ANSI, finds the first
+occurrence of the literal prefix, skips spaces, takes the next word
+(`_verdictum_ex_actis`): verdict `<porta>: <signum> <word>` written
+atomically; signature absent or `FRACT` (or `Fracti:`/`Failed:` with a
+non-zero count) in the summary -> FRACTUM. The prefix needs no trailing
+space (an attribute's trailing space would not survive formatting).
+toml: `porta_toml` mandatum = `./toml/compile_probationes.sh`,
+`signum="TOML PROBATIONES:"`; pythonica/silva.py and python3 left its
+ingressus; `<argumenta/>` dropped - A3: an effectus ingressus without
+`<argumenta>` takes the argv of its own action's mandatum when the
+mandatum's first word is that script (`crusta_effectus_argumenta_radicis`);
+the pythonica cross-check compares PORTAE to a runner mandatum.
+Verdict text after the switch: `toml: TOML PROBATIONES: 13/13`,
+byte-identical to silva.py's (§VII.2); RECENS afterwards; an edit of
+silva.py leaves the toml verdict RECENS. Tests: probatio_fabrica
+"signum" (pass writes the verdict; no signature -> FRACTUM + old
+verdict gone; FRACT -> FRACTUM), iudicium-fumus P16 (same, real
+bin/fabrica in a temporary root), crusta XXII (argv from the
+mandatum). Plants: signature check off -> probatio II and P16 red;
+`<verbum! (>lexicon` added to toml's mandatum -> the live cross-check
+names it. A first plant (accept any output from the start of the log)
+read past a short buffer and passed silently - undefined behaviour
+proves nothing; the plant used names the signature itself instead.
+

@@ -86,6 +86,13 @@
             enumeraverunt (FABRICA_LECTIONES) sigillatur et ingressus
             manifestorum supplet; ingressus declarati (scripta, argv)
             manent. Absens = falsum"/>
+    <attributum nomen="signum" genus="textus"
+      nota="iudicium solum (fabrica plan 5 T3): praefixum litterale quod
+            cursor portae edit ('TOML PROBATIONES: '). bin/fabrica
+            mandatum (cursorem ipsum) currit, verdictum ante cursum
+            delet et post transitum scribit: '<nomen>: <signum><verbum
+            sequens>' - exitus 0, signum praesens, nullum FRACT. Absens
+            = mandatum verdictum suum scribit (silva.py -iudicium)"/>
     <liberum nomen="mandatum" maximum="1"/>
     <liberum nomen="praecondicio"/>
     <liberum nomen="vestigium"/>

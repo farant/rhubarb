@@ -2447,6 +2447,21 @@ _d = silva._argumenta_discordantia(
                    '</argumenta>', '<argumenta/>'), silva.PORTAE)
 credo(_d == [], 'argumenta catenarum: <argumenta/> = PORTAE sine argv',
       causa=repr(_d))
+# A3 (fabrica plan 5 T3): mandatum = cursor ipse, comparatur cum PORTAE
+_ficta_m = ('<actio titulus="porta_toml" genus="iudicium"\n'
+            '    signum="TOML PROBATIONES:">\n  <mandatum>\n'
+            '    <verbum! (>./toml/compile_probationes.sh\n'
+            '  </mandatum>\n</actio>\n')
+_d = silva._argumenta_discordantia(_ficta_m, silva.PORTAE)
+credo(_d == [], 'argumenta catenarum: mandatum cursoris == PORTAE',
+      causa=repr(_d))
+_d = silva._argumenta_discordantia(
+    _ficta_m.replace('compile_probationes.sh\n',
+                     'compile_probationes.sh\n    <verbum! (>lexicon\n'),
+    silva.PORTAE)
+credo(len(_d) == 1 and 'lexicon' in _d[0],
+      'argumenta catenarum: mandatum a PORTAE discors nominatur',
+      causa=repr(_d))
 
 credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
        else -1) == _tempora_vera_ante,

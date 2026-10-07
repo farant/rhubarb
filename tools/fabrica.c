@@ -1707,6 +1707,36 @@ _particulas_legere (
     redde VERUM;
 }
 
+/* VERDICTUM PONERE (plan 5 T3): NIHIL = deletum (absens licet);
+ * aliter temporarium + rename (atomice, ut iudicium_currere silvae) */
+interior b32
+_verdictum_ponere (
+                vacuum* datum,
+    constans character* via,
+       constans chorda* contentum)
+{
+    character temporarium[IV * MXXIV];
+
+    (vacuum)datum;
+    si (contentum == NIHIL)
+    {
+        si (filum_existit(via))
+        {
+            redde filum_delere(via);
+        }
+        redde VERUM;
+    }
+    si (strlen(via) + V >= magnitudo(temporarium))
+    {
+        redde FALSUM;
+    }
+    sprintf(temporarium, "%s.tmp", via);
+    (vacuum)filum_directorium_creare_cum_parentibus(
+        "build/fabrica/verdicta");
+    redde filum_scribere(temporarium, *contentum)
+        && filum_movere(temporarium, via);
+}
+
 /* radix arboris absoluta (praefixum viarum libri demendum) */
 interior chorda
 _radix_absoluta (
@@ -2327,6 +2357,7 @@ _iudicare (
         sutura.lectiones_ultimae    = _lectiones_ultimae;
         sutura.particulas_scribere  = _particulas_scribere;
         sutura.particulas_legere    = _particulas_legere;
+        sutura.verdictum_ponere     = _verdictum_ponere;
     }
     sutura.radix    = _radix_absoluta(piscina);
     _suturam_iudicii_parare(&sutura, actiones, piscina);
@@ -2954,6 +2985,7 @@ _sanare (
         sutura.lectiones_ultimae    = _lectiones_ultimae;
         sutura.particulas_scribere  = _particulas_scribere;
         sutura.particulas_legere    = _particulas_legere;
+        sutura.verdictum_ponere     = _verdictum_ponere;
     }
     sutura.radix = _radix_absoluta(piscina);
     _suturam_iudicii_parare(&sutura, actiones, piscina);

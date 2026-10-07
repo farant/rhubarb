@@ -1941,3 +1941,19 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
   house binary) - rebuilding fabrica voids every verdict that declares
   it. To measure in T4.
 
+## 2026-10-06 - plan 5 T3: the verdict runner in C
+
+- silva.py was an input of every verdict only because the mandatum was
+  `silva.py -iudicium G` (run PORTAE[G], regex, write `<G>: <match>`).
+  That logic is small: bin/fabrica now does it for actions that declare
+  `signum` - delete the old verdict, run the runner, find the literal
+  prefix in the log (ANSI stripped), take the next word. toml's verdict
+  text did not change by a byte.
+- Two traps on the way: a local named `nomen` (latina macro for
+  typedef - "typedef requires a name"); and a plant that set the found
+  position to the start of a short log, so skipping the prefix length
+  read past the buffer - the test stayed GREEN. A plant with undefined
+  behaviour is not a plant; the one used names the signature itself.
+- The judge is careful about its own staleness: `sanare` refused while
+  bin/fabrica was older than lib/fabrica.c ("iudex ipse non recens").
+

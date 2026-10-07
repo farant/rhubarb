@@ -1832,6 +1832,20 @@ def _argumenta_discordantia(textus, portae):
     for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
                          r'(.*?)</actio>', textus, re.S):
         nomen, corpus = m.group(1), m.group(2)
+        # MANDATUM = cursor ipse (fabrica plan 5 T3, A3): verba eius ==
+        # PORTAE[G] (argv ex mandato derivatur, <argumenta> non eget)
+        mand = re.search(r'<mandatum>(.*?)</mandatum>', corpus, re.S)
+        verba_mandati = (re.findall(r'<verbum! \(>(.*)', mand.group(1))
+                         if mand else [])
+        if verba_mandati and 'pythonica/silva.py' not in verba_mandati:
+            if nomen not in portae:
+                discordiae.append('porta_%s: porta ignota in PORTAE' % nomen)
+            elif ([v[2:] if v.startswith('./') else v for v in verba_mandati]
+                  != [v[2:] if v.startswith('./') else v
+                      for v in portae[nomen][0]]):
+                discordiae.append('porta_%s: mandatum %r, PORTAE %r'
+                                  % (nomen, verba_mandati,
+                                     list(portae[nomen][0])))
         for g in re.finditer(r'<ingressus genus="effectus" via="([^"]+)"'
                              r'\s*(/>|>(.*?)</ingressus>)', corpus, re.S):
             via, intus = g.group(1), g.group(3) or ''

@@ -142,6 +142,12 @@ nomen structura {
                                          * manifestorum quoque). NIHIL
                                          * = non computatae: ordo per
                                          * vias declaratas (T5) */
+                  chorda signum;     /* iudicium (plan 5 T3): praefixum
+                                       * litterale quod cursor portae
+                                       * edit; fabrica verdictum IPSA
+                                       * scribit ('<nomen>: <signum>
+                                       * <verbum>'). Vacuum = mandatum
+                                       * verdictum suum scribit */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -326,6 +332,12 @@ nomen structura {
     b32 (*particulas_legere)(vacuum* datum, constans character* titulus,
                              constans character* exitus,
                              Piscina* piscina, Xar** particulae_out);
+    /* VERDICTUM PONERE (plan 5 T3): actio iudicium cum signo - fabrica
+     * verdictum ante cursum delet (contentum NIHIL) et post transitum
+     * scribit (atomice). NIHIL: actio signi FRACTA ('sine
+     * verdictum_ponere'). */
+    b32 (*verdictum_ponere)(vacuum* datum, constans character* via,
+                            constans chorda* contentum);
     /* praefixum absolutum arboris, ex viis libri demendum (instrumenta
      * vias absolutas scribere possunt); vacua = nihil demitur */
     chorda radix;

@@ -39,26 +39,20 @@
        binaria quae currit, identitas clang, et artificia duarum actionum
        supra (ordo + domini lectionum build/). Vestigia: quae porta ipsa
        scribit. -->
-  <actio titulus="porta_toml" genus="iudicium" lectiones="verum">
+  <!-- fabrica plan 5 T3: bin/fabrica cursorem IPSE currit et verdictum
+       IPSE scribit (signum) - silva.py extra clavem huius verdicti -->
+  <actio titulus="porta_toml" genus="iudicium" lectiones="verum"
+      signum="TOML PROBATIONES:">
     <mandatum>
-      <verbum! (>python3
-      <verbum! (>-B
-      <verbum! (>pythonica/silva.py
-      <verbum! (>-iudicium
-      <verbum! (>toml
+      <verbum! (>./toml/compile_probationes.sh
     </mandatum>
     <vestigium via="toml/build"/>
     <vestigium via="build/test_logs/toml.log" forma="plagula"/>
     <vestigium via="build/portae/tempora.tsv" forma="plagula" communis="verum"/>
-    <ingressus genus="fasciculus" via="pythonica/silva.py"/>
-    <!-- argv radicis (effectus-plan-3 T5, A1): silva.py PORTAE['toml']
-         cursorem sine argumentis currit -->
-    <ingressus genus="effectus" via="toml/compile_probationes.sh">
-      <argumenta/>
-    </ingressus>
+    <!-- argv radicis ex mandato ipso (plan 5 T3, A3) -->
+    <ingressus genus="effectus" via="toml/compile_probationes.sh"/>
     <ingressus genus="instrumentum_domus" via="bin/aedilis"/>
     <ingressus genus="instrumentum_domus" via="bin/compilator"/>
-    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <ingressus genus="identitas_clang" via="clang"/>
     <ingressus genus="fasciculus" via="build/toml_corpus.lst"/>
     <ingressus genus="fasciculus" via="toml/build/aurum_silvestre.txt"/>

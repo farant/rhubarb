@@ -3716,6 +3716,7 @@ fabrica_declarationes_legere_cum_sutura (
                  i32  j;
 
         nodus        = *(StmlNodus**)xar_obtinere(nodi, i);
+        memset(&actio, ZEPHYRUM, magnitudo(actio));
         actio.sedes  = _sedes(piscina, via, nodus);
 
         valor = stml_attributum_capere(nodus, "titulus");
@@ -3756,6 +3757,18 @@ fabrica_declarationes_legere_cum_sutura (
         {
             redde _recusare(piscina, causa_out, actio.sedes,
                 "celer nec verum nec falsum", *valor);
+        }
+        /* SIGNUM (plan 5 T3): iudicium solum - fabrica cursorem ipsa
+         * currit et verdictum ipsa scribit */
+        valor = stml_attributum_capere(nodus, "signum");
+        si (valor != NIHIL)
+        {
+            si (actio.genus != FABRICA_ACTIO_IUDICIUM)
+            {
+                redde _recusare(piscina, causa_out, actio.sedes,
+                    "signum solum actioni iudicium", *valor);
+            }
+            actio.signum = *valor;
         }
         valor = stml_attributum_capere(nodus, "lectiones");
         si (valor == NIHIL || chorda_aequalis_literis(*valor, "falsum"))
@@ -5324,6 +5337,125 @@ _memorias_vacare (
 
 /* agere per suturam; VERUM si codex 0. causa: "exitus N: cauda" aut
  * cauda (non incepit) */
+/* VERDICTUM EX ACTIS (plan 5 T3): signum (praefixum litterale) in actis
+ * cursoris sine sequentiis ANSI quaeritur (prima occurrentia, ut
+ * re.search porta() silvae); compendium = signum + spatia + verbum
+ * sequens (usque ad spatium) - octeti deterministici etiam si cursor
+ * tempora appendit. FRACTUM: acta illegibilia, signum absens, 'FRACT'
+ * (aut 'Fracti:'/'Failed:' cum numero non nullo) in compendio.
+ * Verdictum '<porta>: <compendium>' (porta = titulus sine 'porta_')
+ * atomice. */
+interior b32
+_verdictum_ex_actis (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+        constans character* acta_via,
+                   Piscina* piscina,
+                    chorda* causa_out)
+{
+    constans FabricaExitus* exitus = (constans FabricaExitus*)
+        xar_obtinere(actio->exitus, ZEPHYRUM);
+                    chorda  acta;
+                    chorda  compendium;
+                    chorda  porta;
+                    chorda  verdictum;
+                 character* area;
+                 character* signum;
+        constans character* inventum;
+        constans character* finis;
+                       i32  i;
+                       i32  j = ZEPHYRUM;
+
+    si (!sutura->legere(sutura->datum, acta_via, piscina, &acta))
+    {
+        *causa_out = _iungere(piscina, "acta illegibilia: ",
+            chorda_ex_literis(acta_via, piscina), "");
+        redde FALSUM;
+    }
+    area = (character*)piscina_allocare(piscina,
+        (memoriae_index)acta.mensura + I);
+    si (area == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < acta.mensura; i++)
+    {
+        character c = (character)acta.datum[i];
+
+        si (   c                 == '\033' && i + I < acta.mensura
+            && acta.datum[i + I] == '[')
+        {
+            /* ESC [ ... littera: sequentia ANSI omittitur */
+            i += II;
+            dum (   i < acta.mensura
+                 && !(   (acta.datum[i] >= 'A' && acta.datum[i] <= 'Z')
+                      || (acta.datum[i] >= 'a'
+                          && acta.datum[i] <= 'z')))
+            {
+                i++;
+            }
+            perge;
+        }
+        area[j++] = c == '\0' ? ' ' : c;
+    }
+    area[j]   = '\0';
+    signum    = chorda_ut_cstr(actio->signum, piscina);
+    inventum  = strstr(area, signum);
+    si (inventum == NIHIL)
+    {
+        *causa_out = _iungere(piscina, "signum absens: ", actio->signum,
+            "");
+        redde FALSUM;
+    }
+    /* signum, spatia sequentia, verbum unum (signum spatio finali non
+     * eget: attributum STML spatium finale formatione amitteret) */
+    finis = inventum + strlen(signum);
+    dum (*finis == ' ' || *finis == '\t')
+    {
+        finis++;
+    }
+    dum (   *finis != '\0' && *finis != ' ' && *finis != '\t'
+         && *finis != '\n' && *finis != '\r')
+    {
+        finis++;
+    }
+    compendium = chorda_ex_literis("", piscina);
+    compendium = chorda_concatenare(compendium, chorda_sectio(
+        chorda_ex_literis(inventum, piscina), ZEPHYRUM,
+        (i32)(finis - inventum)), piscina);
+    {
+        constans character* c = chorda_ut_cstr(compendium, piscina);
+        constans character* f = strstr(c, "Fracti:");
+        constans character* g = strstr(c, "Failed:");
+
+        si (   strstr(c, "FRACT") != NIHIL
+            || (f != NIHIL && strpbrk(f, "123456789") != NIHIL)
+            || (g != NIHIL && strpbrk(g, "123456789") != NIHIL))
+        {
+            *causa_out = _iungere(piscina, "compendium fractum: ",
+                compendium, "");
+            redde FALSUM;
+        }
+    }
+    porta = actio->titulus;
+    si (   porta.mensura > VI
+        && memcmp(porta.datum, "porta_", VI) == ZEPHYRUM)
+    {
+        porta = chorda_sectio(porta, VI, porta.mensura);
+    }
+    verdictum = _iungere(piscina, "", porta, ": ");
+    verdictum = chorda_concatenare(verdictum, compendium, piscina);
+    verdictum = _iungere(piscina, "", verdictum, "\n");
+    si (!sutura->verdictum_ponere(sutura->datum,
+            chorda_ut_cstr(exitus->via, piscina), &verdictum))
+    {
+        *causa_out = _iungere(piscina, "verdictum scribi nequit: ",
+            exitus->via, "");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 interior b32
 _actionem_agere (
     constans FabricaSutura* sutura,
@@ -5347,6 +5479,22 @@ _actionem_agere (
     {
         *causa_out = chorda_ex_literis("sutura sine agere", piscina);
         redde FALSUM;
+    }
+    /* SIGNUM (plan 5 T3): verdictum vetus ANTE cursum deletum - porta
+     * fracta nihil relinquit */
+    si (   actio->genus == FABRICA_ACTIO_IUDICIUM
+        && actio->signum.mensura > ZEPHYRUM)
+    {
+        si (sutura->verdictum_ponere == NIHIL)
+        {
+            *causa_out =
+                chorda_ex_literis("signum sine verdictum_ponere",
+                piscina);
+            redde FALSUM;
+        }
+        (vacuum)sutura->verdictum_ponere(sutura->datum,
+            chorda_ut_cstr(((constans FabricaExitus*)xar_obtinere(
+                actio->exitus, ZEPHYRUM))->via, piscina), NIHIL);
     }
     /* photographia ante et post (T4): scriptura extra vestigium */
     si (sutura->vestigium_capere != NIHIL)
@@ -5405,6 +5553,13 @@ _actionem_agere (
                 " - aut manu mutata dum currebat");
             redde FALSUM;
         }
+    }
+    si (   actio->genus == FABRICA_ACTIO_IUDICIUM
+        && actio->signum.mensura > ZEPHYRUM)
+    {
+        redde _verdictum_ex_actis(sutura, actio, chorda_ut_cstr(
+            _iungere(piscina, "build/fabrica/acta/", actio->titulus,
+                ".log"), piscina), piscina, causa_out);
     }
     redde VERUM;
 }
