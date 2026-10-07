@@ -167,3 +167,33 @@ about 84M per query, so:
 now, its output differs (the 13 unmatched pairs get names). That is the
 expected kind of library change and is documented here; the follow-up demo
 re-runs it.
+
+## 2026-10-07 - review of d34cf0c7 (v2, 13 crossings)
+
+No bugs. Independent checks by the reviewer, against the pinned CSV and its
+own exhaustive prime + two-sum search:
+- all 12,966 knots in both chiralities (25,932 queries): identical sets, no
+  duplicates, 330 composite candidates;
+- 4,800 random sums, including Alexander-1 factors;
+- all 760 pairs of Alexander-1 knots;
+- a det beyond s64 (filter off) and (1, 1);
+- every pinned fact, and Demo 116's new ambiguity groups, confirmed as
+  genuine KnotInfo groups.
+Changes:
+- **Correction:** the d34cf0c7 commit message says DCCLXXXII (782)
+  notation-only discrepancies; the true count is 7,782 (as stated above in
+  this worklog). Commits are not rewritten.
+- **Pinned:** 9_12 ~ 4_1 # 5_2 and 9_12* ~ 4_1 # 5_2*. This is the smallest
+  of the 95 primes up to 13 crossings (up to mirror) that share Alexander +
+  Jones with a two-knot sum. The count 95 is the reviewer's; the 9_12 case
+  was re-checked here. Mentioned in the header.
+- **Runtime:** the full self-recognition sweep took 126 s under
+  ASan/UBSan/VENENUM. It now covers every knot up to 10 crossings plus every
+  37th above (the full sweep was the review's exhaustive comparison). The
+  suite takes 1.5 s, with 107 checks.
+- **Plant G1** (hash chain walked without the string compare) passes the
+  suite. That is unobservable through table queries, since Jones always
+  separates the extra candidates, so it is left as is. Plants G2 (det filter
+  reversed) and G3 (j > i) are red.
+- **Not done:** the optional speedup (check Jones degrees before multiplying
+  each composite pair).

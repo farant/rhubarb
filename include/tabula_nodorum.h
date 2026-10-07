@@ -21,9 +21,10 @@
  *
  * AGNITIO: congruentia Alexander ET Jones - non probatio typi (5_1
  * et 10_132* utrumque communicant; 11n_34 et 11n_42, nodi Conway et
- * Kinoshita-Terasaka, Alexander 1: omnes redduntur). Nodus chiralis
- * cuius Jones symmetricus est (e.g. 9_42) BIS redditur, K et K*: Jones
- * chiralitatem non videt.
+ * Kinoshita-Terasaka, Alexander 1: omnes redduntur; nodus primus
+ * etiam composito aequalis esse potest, e.g. 9_12 ~ 4_1 # 5_2). Nodus
+ * chiralis cuius Jones symmetricus est (e.g. 9_42) BIS redditur, K et
+ * K*: Jones chiralitatem non videt.
  * Compositi DUORUM nodorum non trivialium tabulae (Alexander et Jones
  * multiplicativi) quoque quaeruntur, speculo cuiusque factoris, sed
  * orientatione summandorum neglecta (K1 # K2 et K1 # rev K2 hic idem).

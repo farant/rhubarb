@@ -625,11 +625,26 @@ s32 principale (vacuum)
                 && _continet_compositum(a, n, "3_1", FALSUM, "11n_42",
             FALSUM));
 
+        /* nodus primus minimus compositi invariantibus aequalis (XCV
+         * usque ad XIII, recensio): 9_12 ~ 4_1 # 5_2 et speculum */
+        n = _compositum_quaerere(t, "4_1", FALSUM, "5_2", FALSUM, a);
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_VERUM (_continet_primum(a, n, "9_12", FALSUM)
+            && _continet_compositum(a, n, "4_1", FALSUM, "5_2",
+            FALSUM));
+        n = _compositum_quaerere(t, "4_1", FALSUM, "5_2", VERUM, a);
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_VERUM (_continet_primum(a, n, "9_12", VERUM)
+            && _continet_compositum(a, n, "4_1", FALSUM, "5_2", VERUM));
+
         /* nihil: Alexander alienum */
         CREDO_AEQUALIS_I32 (tabula_nodorum_agnoscere(t, _p("t^2 + 1"),
             j31, piscina, a, XVI), ZEPHYRUM);
 
-        /* omnis nodus se ipsum agnoscit, et speculum suum */
+        /* omnis nodus se ipsum agnoscit, et speculum suum: omnes usque
+         * ad X, deinde quisque XXXVII-us (recensio: verrere totum sub
+         * ASan CXXVI s; collatio exhaustiva XXVDCCCCXXXII quaestionum
+         * in recensione) */
         per (k = ZEPHYRUM; k < tabula_nodorum_numerus(); k++)
         {
             constans NodusTabulae* nodus  = tabula_nodorum_nodus(k);
@@ -637,6 +652,12 @@ s32 principale (vacuum)
                        Polynomium  alexander_nodi =
                            _p(nodus->alexander);
                        Polynomium jones_nodi = _p(nodus->jones);
+
+            si (nodus->transitus > X && k % XXXVII != ZEPHYRUM)
+            {
+                piscina_reficere(piscina, nota);
+                perge;
+            }
 
             n = tabula_nodorum_agnoscere(t, alexander_nodi, jones_nodi,
                 piscina, a, XVI);
