@@ -251,7 +251,7 @@ DECRQMTests.test_DECRQM_DEC_DECPFF	fractum	CONSULTO: DECRQM modus non honoratus:
 DECRQMTests.test_DECRQM_DEC_DECRLCM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECRLM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECSCLM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
-DECRQMTests.test_DECRQM_DEC_DECSCNM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_DEC_DECSCNM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECTCEM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECVCCM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECXRLM	notum	esctest knownBug (xterm)

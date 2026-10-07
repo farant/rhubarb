@@ -556,3 +556,14 @@ Findings (verdicts pending with Fran):
 - Black-on-black text visible: the contrast floor, on purpose.
 - 8-bit GR bytes (locking-shift GR rows) show U+FFFD: we are a UTF-8
   terminal, like Ghostty.
+
+**DECSCNM (?5), core half (Fran approved the AemulatorModi field).**
+A bit only: `aemulator_modi(a).schirmus_inversus`; cells are never
+touched. Ghostty (render.zig:633) swaps just the DEFAULT fg/bg in the
+renderer - explicit colours and the cursor stay - and terminale will do
+the same. RIS clears it; DECSTR keeps it (VT510's DECSTR table has no
+screen mode; it resets from an explicit list, which ?5 is not on). Two
+old vectors used ?5 as their "unknown mode" example - moved to ?8
+(DECARM), which we do not honour. Plants: default set, snapshot not
+filled, DECSTR resetting it, wrong mode number - all caught. esctest
+295 -> 296 (DECRQM DECSCNM).

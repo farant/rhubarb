@@ -171,7 +171,7 @@ aemulator_alterum (
     constans Aemulator* a);
 
 /* modus ANSI (privatus FALSUM) aut DEC privatus (VERUM), bitum crudum
- * ut DECRQM nuntiat (D2): ANSI IV XX; DEC I III VI VII IX XXV XL XLV
+ * ut DECRQM nuntiat (D2): ANSI IV XX; DEC I III V VI VII IX XXV XL XLV
  * XLVII LXVI M-MVII MXV MXVI MXLV MXLVII-MXLIX MMIV MMXXVI. Ignotus =
  * FALSUM. */
 b32
@@ -201,7 +201,8 @@ nomen enumeratio {
 } AemulatorMusForma;
 
 /* MODI INITUS - quod hospes legit ut claves, murem, glutinum, focum
- * codificet (D6: in CodificatorModi transferuntur). Instantanea per
+ * codificet (D6: in CodificatorModi transferuntur) et schirmum pingat
+ * (D7c). Instantanea per
  * valorem; post aemulator_scribere iterum legenda. Campi postea
  * addendi (D4: kitty_vexilla) in fine. Relatio foci statim post ?1004
  * positum (Ghostty) res hospitis est: modum mutatum videt. */
@@ -220,6 +221,10 @@ nomen structura {
                                               * VERUM): rotula in
                                               * schirmo altero sine
                                               * mure = sagittae */
+                 b32 schirmus_inversus;      /* D7c: DECSCNM ?5 - hospes
+                                              * colores nativos permutat
+                                              * (Ghostty
+                                              * reverse_colors) */
 } AemulatorModi;
 
 AemulatorModi

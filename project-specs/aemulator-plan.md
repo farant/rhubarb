@@ -764,7 +764,12 @@ Later phases (re-planned after A's RELATIO):
     (Fran approved): ?3 honoured only under ?40, clears, resets the
     region, homes - width never changes (host owns the window; vttest
     leans on the clear even at 80 columns). esctest 294 -> 295; the
-    two width rows are CONSULTO. libghostty-vt differential oracle:
+    two width rows are CONSULTO. Walk findings fixed (Fran): reverse
+    screen ?5 (core bit + `AemulatorModi.schirmus_inversus`; terminale
+    swaps the default colours like Ghostty; esctest 296) and terminale
+    text decorations (underline styles, strike, overline, synthetic
+    bold; `TerminaleApplicatio.ornamenta_pixelorum`, off in the twin).
+    libghostty-vt differential oracle:
     deferred (Fran: zig + fetching OK when we need it).
   - **D8 - RELATIO.**
 - **D (old sketch).** Origin and insert modes, DEC special

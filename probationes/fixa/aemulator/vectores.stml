@@ -1134,12 +1134,13 @@
   </casus>
 
   <!-- DECRQM (Ghostty getReport): 1 positus, 2 remotus, 0 ignotus -
-       modi quos non honoramus (5 colores inversi, KAM 2) = 0 -->
+       modi quos non honoramus (8 DECARM, KAM 2) = 0; ?5 honoratur
+       post D7c -->
   <casus titulus="decrqm reports set, reset and unknown" fons="domus" latitudo="10" altitudo="5">
     <gradus initus="\x1B[?7$p" responsum="\x1B[?7;1$y"/>
     <gradus initus="\x1B[?1$p\x1B[?1h\x1B[?1$p" responsum="\x1B[?1;2$y\x1B[?1;1$y"/>
     <gradus initus="\x1B[4$p\x1B[4h\x1B[4$p" responsum="\x1B[4;2$y\x1B[4;1$y"/>
-    <gradus initus="\x1B[?5$p\x1B[2$p\x1B[?9999$p" responsum="\x1B[?5;0$y\x1B[2;0$y\x1B[?9999;0$y"/>
+    <gradus initus="\x1B[?8$p\x1B[2$p\x1B[?9999$p" responsum="\x1B[?8;0$y\x1B[2;0$y\x1B[?9999;0$y"/>
     <gradus initus="\x1B[?4$p\x1B[1$p" responsum="\x1B[?4;0$y\x1B[1;0$y"/>
     <gradus initus="\x1B[?1;7$p" responsum="\0" ignota="1"/>
   </casus>
@@ -1170,7 +1171,7 @@
 
   <!-- modus non honoratus: ignotus manet -->
   <casus titulus="unhonoured private mode stays unknown" fons="domus" latitudo="10" altitudo="5">
-    <gradus initus="\x1B[?5h" ignota="1"/>
+    <gradus initus="\x1B[?8h" ignota="1"/>
   </casus>
 
   <!-- ==================== D3: copiae characterum ==================== -->
@@ -1385,6 +1386,16 @@
     <gradus initus="\x1B[?1007$p" responsum="\x1B[?1007;1$y"/>
     <gradus initus="\x1B[?1007l\x1B[?1007$p" responsum="\x1B[?1007;2$y"/>
     <gradus initus="\x1Bc\x1B[?1007$p" responsum="\x1B[?1007;1$y"/>
+  </casus>
+
+  <!-- DECSCNM ?5 (D7c; Ghostty reverse_colors): bitum solum - hospes
+       colores nativos permutat, cellulae intactae; RIS remittit, DECSTR
+       servat (VT510: modus schirmi non in tabula DECSTR) -->
+  <casus titulus="reverse screen is a reported mode" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[?5$p" responsum="\x1B[?5;2$y"/>
+    <gradus initus="\x1B[?5hab\x1B[?5$p" textus="ab" responsum="\x1B[?5;1$y"/>
+    <gradus initus="\x1B[!p\x1B[?5$p" responsum="\x1B[?5;1$y"/>
+    <gradus initus="\x1Bc\x1B[?5$p" responsum="\x1B[?5;2$y"/>
   </casus>
 
   <!-- ==================== D7a: responsiones parvae ==================== -->

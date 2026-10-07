@@ -76,6 +76,7 @@ nomen enumeratio {
     MODUS_SAGITTAE,             /* I (DECCKM) */
     MODUS_COLUMNAE,             /* III (DECCOLM; latitudo manet) */
     MODUS_COLUMNAE_PERMISSAE,   /* XL (DECCOLM permissum) */
+    MODUS_SCHIRMUS_INVERSUS,    /* V (DECSCNM; hospes pingit) */
     MODUS_ORIGO,                /* VI (DECOM) */
     MODUS_INVOLUTIO,            /* VII (DECAWM) */
     MODUS_MUS_X10,              /* IX */
@@ -113,6 +114,7 @@ interior constans ModusDescriptio modi_tabula[MODI_NUMERUS] = {
     { I,       VERUM,  FALSUM },
     { III,     VERUM,  FALSUM },
     { XL,      VERUM,  FALSUM },
+    { V,       VERUM,  FALSUM },
     { VI,      VERUM,  FALSUM },
     { VII,     VERUM,  VERUM  },
     { IX,      VERUM,  FALSUM },
@@ -4110,7 +4112,8 @@ aemulator_modi (
     m.lnm                     = modus_est(a, MODUS_LINEA_NOVA);
     m.kitty_vexilla           =
         (i32)a->activum->kitty[a->activum->kitty_index];
-    m.rotula_sagittis         = modus_est(a, MODUS_ROTULA_SAGITTIS);
+    m.rotula_sagittis    = modus_est(a, MODUS_ROTULA_SAGITTIS);
+    m.schirmus_inversus  = modus_est(a, MODUS_SCHIRMUS_INVERSUS);
     redde m;
 }
 
