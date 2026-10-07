@@ -482,7 +482,24 @@ Later phases (re-planned after A's RELATIO):
     caught after two test fixes (three replants did not compile; the
     pulled style matched by index coincidence - now compared with a
     live red cell).
-  - **C5 - RELATIO** (and the esctest table re-run).
+  - **C5 - RELATIO** (and the esctest table re-run). Done 2026-10-06:
+    `lib/aemulator.phase-log.md` (C5); esctest unchanged (216 pass).
+- **Re-plan after C5 (PROPOSED - Fran decides).** The core is now
+  shell-ready (B) with history (C). Two ways forward:
+  - **D first (as planned):** full-screen programs - origin and insert
+    modes, alt screens 47/1047/1048, SCOSC/SCORC, HPR/VPR, REP, DECALN,
+    RIS (the esctest quick wins), DEC special graphics, key/mouse/
+    paste/focus/DECCKM/keypad modes handed to
+    `codificator_terminalis`, mode and colour queries (DECRQM, OSC
+    10/11); the bar: vim, less, htop.
+  - **A thin slice of E first:** the first time a shell is SEEN - a
+    vicus kind or a pictor-style window that draws
+    `aemulator_hospes`'s view with the house alphabet, keys through
+    `codificator_terminalis` (plain keys + Enter/Backspace/arrows),
+    wake on the PTY fd or poll in the frame (decision 14 / module 008).
+    No render-state module yet (draw the whole view when `mutatum`).
+    Risk: D's key/mouse modes then land on a front end already in
+    use - which is also how they get tested for real.
 - **D - full-screen v0.** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
   `codificator_terminalis`; the bar: vim, less, htop look right; a

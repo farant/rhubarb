@@ -338,3 +338,70 @@ survived because page and screen tables happened to give red the same
 index - the test now forces the tables apart and compares against a
 live red cell.
 
+## C5 — RELATIO: phase C, scrollback (2026-10-06)
+
+**Phase C is done: lines that leave the primary screen are kept, up to a
+byte limit, in pages that own their styles; a view can scroll through
+them without disturbing the program; resize and `clear` behave like
+Ghostty without reflow - and once history is full, output allocates
+nothing.** The core grew from 2105 to 2668 lines (header 239), the host
+to 370; 179 vectors (142 from Ghostty, 37 house); 34 plants; five
+commits (c59ae50d C0, 6c0f313b C1, 800724f1 C2, 5180678e C3, d67d8c58
+C4); the esctest table unchanged throughout (216 pass, every failure
+still named).
+
+**What exists:**
+- History: 64 KiB pages of one width with their own 128-entry style
+  table, a ring that grows to the limit (default 10 MB, decision 19)
+  and then recycles the oldest page (decision 20); rows are copied in
+  and re-interned, so the screen's style collection never walks
+  history.
+- The scroll-off rule from Ghostty/xterm: a region that starts at the
+  top row of the primary screen feeds history on index and SU; DL, a
+  lower region and the alternate screen never do; ED 2 keeps nothing
+  (no prompt marks).
+- The view: stays put under output (decision 21), clamps on eviction,
+  clamps both ways when moved; the host moves it and snaps it to the
+  bottom on accepted input.
+- Resize the Ghostty way (shrink trims trailing blank rows first, grow
+  pulls history back only with the cursor on the bottom row); ED 3
+  empties history and keeps the pages.
+- Three plain dumps over absolute rows (live, view, history+live),
+  matching Ghostty's three test reads; the replayer can scroll the
+  view and resize.
+
+**What the work found, by weight:**
+1. **The other implementation's TESTS changed the design, not just
+   checked it.** The scroll-off rule was "full screen" in the plan;
+   Ghostty's `index bottom of scroll region creates scrollback` made
+   it "region at the top row" - and showed DL needs an explicit no.
+   Its resize code turned "cut the bottom" (which lost text below the
+   cursor) into "trim blanks, then push".
+2. **Ownership decides cost.** Pages owning their styles is what makes
+   the screen's collection O(screen) and eviction free; the
+   alternative (indices into one table) would have made a colour flood
+   rewrite the whole history. The design was settled before code, with
+   Fran.
+3. **Order matters where collection can run.** Pulling history back
+   re-interns styles, which may collect, which walks the current size -
+   so the pull happens after the new size is set.
+4. **Coincidence hides missing work.** A pulled row "kept" its colour
+   only because both tables had given red the same index; the
+   evidence became a comparison with a live red cell. Five C2 plants
+   survived their first round for kindred reasons (empty neighbours,
+   no history to leak).
+5. **A gate that fails on untouched code is telling you about the
+   environment.** Two ludus_tessera tests never closed their temporary
+   volumes; after 100 runs the helper ran out of names. Fixed at the
+   source; the lesson is in memory.
+
+**Named limits (phase C):** no reflow (decision 7 - history rows keep
+their width, a resize truncates); ED 2 never saves the screen (Ghostty
+does at an OSC 133 prompt); no line-count limit, bytes only; no
+compression of idle history (Ghostty has it); a single row needing
+more than 127 styles degrades the rest to the default style; no
+selection, search or absolute history addressing (feature 013).
+
+**Next:** see "Re-plan after C5" in the plan - phase D (full-screen
+programs) or a thin slice of E (a shell in a window) first.
+
