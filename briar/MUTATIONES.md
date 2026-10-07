@@ -68,7 +68,10 @@ Leges chartae:
   45/1045, ESC = / ESC >, `aemulator_modi` (AemulatorModi, AemulatorMus,
   AemulatorMusForma) pro hospite; D3: copiae characterum (G0-G3, SO/SI,
   SS2/SS3, DEC Special Graphics). series_terminalis: octeti alti post
-  ESC N|O non iam pereunt (FUGA); D4: acervus vexillorum clavium kitty
+  ESC N|O non iam pereunt (FUGA); codificator_terminalis (D6a):
+  CodificatorModi mus_forma (X10/UTF-8/urxvt/SGR-pixela; 0 = SGR),
+  sagittae_applicationis (DECCKM), lnm, CODIFICATOR_MUS_X10; D4: acervus
+  vexillorum clavium kitty
   per schirmum (CSI ? > < = u), AemulatorModi.kitty_vexilla; D5:
   tabula colorum viva (OSC 4/10/11/12, 104/110-112), configuratio
   color_litterae/fundi/cursoris + tabula_colorum, aemulator_color.

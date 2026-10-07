@@ -497,11 +497,13 @@ _seriem_imperii (
 }
 
 /* Claves PC-style (sagittae, Domus/Finis, '~', F1-F12). FALSUM si
- * clavis non talis. */
+ * clavis non talis. applicationis (DECCKM, D6): sagittae, Domus,
+ * Finis sine modis SS3 (function_keys.zig cursorKey). */
 interior b32
 _pc (
      constans Eventus* e,
                   s32  m,
+                  b32  applicationis,
     ChordaAedificator* a)
 {
     Functionalis f;
@@ -517,7 +519,11 @@ _pc (
     si (m <= I)
     {
         si (   f.finale == 'P' || f.finale == 'Q' || f.finale == 'S'
-            || c        == CLAVIS_F3)
+            || c        == CLAVIS_F3
+            || (   applicationis
+                && (   f.finale == 'A' || f.finale == 'B'
+                    || f.finale == 'C' || f.finale == 'D'
+                    || f.finale == 'H' || f.finale == 'F')))
         {
             _literas(a, "\033O");
             _octetum(a, (c == CLAVIS_F3) ? 'R' : f.finale);
@@ -555,6 +561,7 @@ _alias (
 
 interior vacuum
 _vetustum (
+    constans CodificatorModi* cm,
            constans Eventus* e,
                      Textus  textus,
           ChordaAedificator* a)
@@ -582,7 +589,7 @@ _vetustum (
         textus.mensura  = (i32)utf8_codere(e->datum.clavis.producta,
             producta);
     }
-    si (_pc(e, m, a))
+    si (_pc(e, m, cm->sagittae_applicationis, a))
     {
         redde;
     }
@@ -727,15 +734,72 @@ _cellula (
     redde -((-pixelum + m - I) / m);
 }
 
-/* Relatio SGR una: CSI < codex ; columna ; linea M|m */
+/* Relatio una per formam (mouse_encode.zig encode): SGR CSI < codex ;
+ * columna ; linea M|m; SGR-pixela idem cum pixelis; formae veteres
+ * (X10, UTF-8, urxvt) solutionem ut botton III narrant; X10 cellulas
+ * ultra CCXXII non fert (nihil) */
 interior vacuum
 _relatio (
-    ChordaAedificator* a,
-                  s32  codex,
-                  s32  columna,
-                  s32  linea,
-                  b32  solutio)
+    constans CodificatorModi* modi,
+           ChordaAedificator* a,
+                         s32  codex,
+                         s32  columna,
+                         s32  linea,
+                         s32  x,
+                         s32  y,
+                         b32  solutio)
 {
+     i8 b[IV];
+    i32 n;
+    i32 k;
+
+    si (   solutio && modi->mus_forma != CODIFICATOR_FORMA_SGR
+        && modi->mus_forma != CODIFICATOR_FORMA_SGR_PIXELA)
+    {
+        codex = (codex & ~(s32)III) | III;
+    }
+    commutatio (modi->mus_forma)
+    {
+        casus CODIFICATOR_FORMA_X10:
+            si (columna > CCXXII || linea > CCXXII)
+            {
+                redde;
+            }
+            _literas(a, "\033[M");
+            _octetum(a, (i8)(XXXII + codex));
+            _octetum(a, (i8)(XXXIII + columna));
+            _octetum(a, (i8)(XXXIII + linea));
+            redde;
+        casus CODIFICATOR_FORMA_UTF8:
+            _literas(a, "\033[M");
+            _octetum(a, (i8)(XXXII + codex));
+            n = (i32)utf8_codere(columna + XXXIII, b);
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                _octetum(a, b[k]);
+            }
+            n = (i32)utf8_codere(linea + XXXIII, b);
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                _octetum(a, b[k]);
+            }
+            redde;
+        casus CODIFICATOR_FORMA_URXVT:
+            _literas(a, "\033[");
+            _numerum(a, XXXII + codex);
+            _octetum(a, ';');
+            _numerum(a, columna + I);
+            _octetum(a, ';');
+            _numerum(a, linea + I);
+            _octetum(a, 'M');
+            redde;
+        casus CODIFICATOR_FORMA_SGR_PIXELA:
+            columna  = x - I;
+            linea    = y - I;
+            frange;
+        ordinarius:
+            frange;
+    }
     _literas(a, "\033[<");
     _numerum(a, codex);
     _octetum(a, ';');
@@ -780,6 +844,7 @@ _positionem (
 {
     s32 c = _cellula(x, modi->cellula_latitudo);
     s32 l = _cellula(y, modi->cellula_altitudo);
+    b32 pixela = (b32)(modi->mus_forma == CODIFICATOR_FORMA_SGR_PIXELA);
 
     si ((c < ZEPHYRUM || l < ZEPHYRUM) && !solutio && !tractus)
     {
@@ -791,13 +856,15 @@ _positionem (
     si (l < ZEPHYRUM)
     { l = ZEPHYRUM;
     }
-    si (c == *prior_c && l == *prior_l)
+    /* repetitio omissa: cellula, aut pixelum in forma pixelorum */
+    si (pixela ? (x == *prior_c && y == *prior_l)
+               : (c == *prior_c && l == *prior_l))
     {
         redde;
     }
-    *prior_c = c;
-    *prior_l = l;
-    _relatio(a, codex, c, l, solutio);
+    *prior_c = pixela ? x : c;
+    *prior_l = pixela ? y : l;
+    _relatio(modi, a, codex, c, l, x, y, solutio);
 }
 
 interior vacuum
@@ -814,6 +881,12 @@ _murem (
     i32 k;
 
     si (modi->mus == CODIFICATOR_MUS_NULLUS)
+    {
+        redde;
+    }
+    /* X10 (?9): pressio sola sinistri, medii, dextri; sine modis */
+    si (   modi->mus == CODIFICATOR_MUS_X10
+        && e->genus  != EVENTUS_MUS_DEPRESSUS)
     {
         redde;
     }
@@ -842,7 +915,10 @@ _murem (
         }
         codex += XXXII;
     }
-    codex += _modi_muris(e->datum.mus.modificantes);
+    si (modi->mus != CODIFICATOR_MUS_X10)
+    {
+        codex += _modi_muris(e->datum.mus.modificantes);
+    }
     si (motus)
     {
         /* motus coalitus: exempla, deinde positio ultima */
@@ -871,7 +947,8 @@ _rotulam (
     s32 prior_c;
     s32 prior_l;
 
-    si (modi->mus == CODIFICATOR_MUS_NULLUS)
+    si (   modi->mus == CODIFICATOR_MUS_NULLUS
+        || modi->mus == CODIFICATOR_MUS_X10)
     {
         redde;
     }
@@ -1009,8 +1086,9 @@ _depositionem (
  * Publica
  * ================================================== */
 
-i32
-codificator_eventa (
+/* Eventum unum (et TEXTUS sequens) codificare; numerus consumptus */
+interior i32
+_codificare (
     constans CodificatorModi* modi,
             constans Eventus* eventa,
                          i32  numerus,
@@ -1085,7 +1163,69 @@ codificator_eventa (
     }
     alioquin
     {
-        _vetustum(e, textus, aedificator);
+        _vetustum(modi, e, textus, aedificator);
+    }
+    redde consumpta;
+}
+
+/* LNM (Ghostty Exec.queueWrite): omne CR ab initio emissum -> CR LF,
+ * in loco (aedificator auctus, deinde retrorsum translatus) */
+interior vacuum
+_lineas_novas (
+    ChordaAedificator* a,
+                  i32  initium)
+{
+    chorda v;
+       i32 finis;
+       i32 numerus;
+       i32 k;
+       i32 d;
+
+    v        = chorda_aedificator_spectare(a);
+    finis    = v.mensura;
+    numerus  = ZEPHYRUM;
+    per (k = initium; k < finis; k++)
+    {
+        si (v.datum[k] == '\r')
+        {
+            numerus++;
+        }
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        _octetum(a, '\n');
+    }
+    v = chorda_aedificator_spectare(a);
+    d = finis + numerus;
+    per (k = finis; k > initium; k--)
+    {
+        si (v.datum[k - I] == '\r')
+        {
+            v.datum[--d] = '\n';
+        }
+        v.datum[--d] = v.datum[k - I];
+    }
+}
+
+i32
+codificator_eventa (
+    constans CodificatorModi* modi,
+            constans Eventus* eventa,
+                         i32  numerus,
+           ChordaAedificator* aedificator)
+{
+    i32 initium;
+    i32 consumpta;
+
+    initium    = (i32)chorda_aedificator_longitudo(aedificator);
+    consumpta  = _codificare(modi, eventa, numerus, aedificator);
+    si (modi->lnm)
+    {
+        _lineas_novas(aedificator, initium);
     }
     redde consumpta;
 }

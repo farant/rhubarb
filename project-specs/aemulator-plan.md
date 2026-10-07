@@ -688,6 +688,15 @@ Later phases (re-planned after A's RELATIO):
   - **D6 - terminale wiring:** modes -> codificator (DECCKM arrows,
     keypad, kitty), mouse reporting from window mouse events, bracketed
     paste, focus events, window title from OSC 0/2.
+    Split (Fran approved): D6a encoder, D6b terminale wiring, D6c window
+    focus + paste events (fenestra_macos stubs). Keypad application
+    deferred: Eventus has no numpad keys.
+    D6a as built: CodificatorModi gains mus_forma (0 = SGR for existing
+    zero-filled callers; X10 / UTF-8 / urxvt / SGR-pixels),
+    sagittae_applicationis, lnm; CODIFICATOR_MUS_X10. Legacy releases =
+    button 3; X10 stops at cell 222; SGR-pixels reports and dedupes in
+    pixels; LNM turns every CR this call appended into CR LF (in place).
+    Ghostty mouse_encode.zig cases ported in section IX; 13 plants caught.
   - **D7 - the bar:** esctest table re-pinned (causes "later" per
     decision 26), vttest fetched and pinned, Fran's session (vim,
     less, htop, vttest).

@@ -549,3 +549,14 @@ The spec text is explicit, so `#` follows X11 and `rgb:` stays scaled.
 The lexer learned to say which terminator ended an OSC, so the reply
 comes back the way the question was asked.
 
+## D6a — the encoder learns the modes (2026-10-07)
+
+**INTENTIO.** Make `codificator_terminalis` able to say everything the
+modes ask for, before terminale starts asking.
+
+D6 split in three at the interview (encoder, terminale wiring, window
+events - the window's focus and paste handlers turned out to be empty
+stubs). The encoder part was Ghostty's mouse_encode.zig almost line for
+line, plus DECCKM and LNM; the one design point was keeping format 0 =
+SGR so every existing zero-filling caller keeps its behaviour.
+
