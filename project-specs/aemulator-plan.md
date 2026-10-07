@@ -500,6 +500,31 @@ Later phases (re-planned after A's RELATIO):
     No render-state module yet (draw the whole view when `mutatum`).
     Risk: D's key/mouse modes then land on a front end already in
     use - which is also how they get tested for real.
+- **E-thin - a shell SEEN** (Fran 2026-10-06: E slice before D; it
+  became checkable once frame screenshots existed - 4c468a8c: headless
+  frames are byte-identical to the real window's).
+  Decisions (E0 interview):
+  23. **The app is `terminale`** (`apps/terminale/`); the libraries
+      stay `aemulator` / `aemulator_hospes`.
+  24. **Standalone app first**, window and terminal twins like pictor
+      and scriba; a vicus tab kind comes after, reusing the component.
+  25. **Poll in the frame** (module 008's first option): each frame
+      pulses the host with a short wait; the fd wake source (decision
+      14) comes later, measured against this.
+  Tasks:
+  - **E1 - design read and API:** how pictor/scriba compose
+    (applicatio, dispensator, canon, figures), then the terminale
+    component + figure (cells from the host's VIEW via Mandata and
+    fons_6x8, styles through the theme, the cursor), keys through
+    `codificator_terminalis` (text, Enter, Backspace, Tab, arrows,
+    Ctrl-letters), trackpad scroll -> `aemulator_hospes_visum_movere`;
+    headers for Fran's approval.
+  - **E2 - component and figure, headless:** memoriae child and a real
+    `/bin/sh`; keys via `manus_ludus`; checks cell-exact through the
+    tessera target AND pixel-level through headless PNGs (looked at).
+  - **E3 - the apps:** `terminale.c` (window) + `terminale_terminalis.c`
+    + scripts; one announced smoke run with `-imago`; Fran's look.
+  - **E4 - RELATIO.**
 - **D - full-screen v0.** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
   `codificator_terminalis`; the bar: vim, less, htop look right; a
