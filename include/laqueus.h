@@ -131,8 +131,10 @@ laqueus_diagramma (
         Piscina* piscina,
       Diagramma* exitus);
 
-/* directiones ex serie fixa deterministica ((0,0,1), (1,2,3), ...)
- * donec generica; FALSUM si nulla */
+/* directiones ex serie fixa deterministica ((0,0,1), (1,2,3), ...),
+ * deinde (1, k, k^2) pro k = 1, 2, ... donec generica; FALSUM si
+ * laqueus non simplex (nulla directio generica). Conatus irriti
+ * reficiuntur. */
 b32
 laqueus_diagramma_genericum (
         Laqueus  l,
@@ -175,8 +177,8 @@ diagramma_uncinus (
     Polynomium* exitus);
 
 /* Jones V(t) = f(A = t^(-1/4)), f = (-A^3)^(-w) uncinus(D); FALSUM si
- * exponentes dimidii (catenae componentium numeri paris) aut transitus
- * nimii */
+ * exponentes dimidii (catenae componentium numeri paris - ante uncinum
+ * refutatur) aut transitus nimii */
 b32
 diagramma_jones (
      Diagramma  d,

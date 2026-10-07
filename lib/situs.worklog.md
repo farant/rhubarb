@@ -145,3 +145,12 @@ two `Fractio*` outputs, written only when the verdict is SECANT;
 `situs_transitus` passes NIHIL and is unchanged (16528 checks green).
 No rollback inside: the parameters live in the caller's piscina, so the
 caller owns their lifetime (laqueus keeps them in the Diagramma).
+
+## 2026-10-06 — situs_transitus_parametri now rolls back unless SECANT
+
+Review laqueus-I (A): "no rollback" kept EVERY pair's arithmetic in the
+caller's piscina, not just the parameters — O(n^2) per diagram, hidden
+by integer coordinates (fractio's small path allocates nothing). Now:
+notare, `_transitus`, reficere unless SECANT (the outputs, parameters
+included, are written only then). Header updated. Scaled trefoil diagram
+2.35 MB → 20.8 KB (laqueus test pins < 256 KB); situs 16528 green.

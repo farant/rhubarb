@@ -624,6 +624,49 @@ laqueus_diagramma_genericum (
         }
         piscina_reficere(piscina, nota);
     }
+    /* Series fixa exhauriri potest (polygonum simplex XIII verticum cum
+     * segmento parallelo cuique directioni: recensio laqueus-I, B).
+     * Curva momentorum (1, k, k^2): quaeque condicio non generica v in
+     * plano (vertex in segmento proiectus, vicini superpositi), in
+     * recta (segmentum parallelum) aut in cono quadrico (punctum
+     * triplex: rectae tres rectas obliquas secantes regulum faciunt)
+     * ponit; curva planum bis, conum quater ad summum secat - ergo pro
+     * laqueo simplici k finitus sufficit. Laqueus non simplex numquam
+     * genericus est: ante iter refutatur. Limes = numerus k irritorum
+     * possibilium + 1: n (parallela) + 2n (vicini) + 2n^2 (vertex in
+     * segmento) + 4 C(n, 3) (puncta triplicia); ultra eum FALSUM
+     * (error, non pendere - planta M32 sine limite X minuta currebat
+     * donec interfecta). k^2 < 2^63 etiam. */
+    si (!laqueus_simplex(l, piscina))
+    {
+        redde FALSUM;
+    }
+    {
+        s64 n = (s64)l.numerus;
+        s64 limes;
+        s64 k;
+
+        limes = (n > (s64)M * M)
+            ? (s64)MMMXXXVII * M * M
+            : I + III * n + II * n * n + II * n * (n - I) * (n - II)
+                / III;
+        si (limes > (s64)MMMXXXVII * M * M)
+        {
+            limes = (s64)MMMXXXVII * M * M;
+        }
+        per (k = I; k <= limes; k++)
+        {
+            PiscinaNotatio nota = piscina_notare(piscina);
+
+            si (laqueus_diagramma(l, situs_punctum(I, k, k * k),
+                piscina,
+                exitus))
+            {
+                redde VERUM;
+            }
+            piscina_reficere(piscina, nota);
+        }
+    }
     redde FALSUM;
 }
 
@@ -869,6 +912,12 @@ diagramma_jones (
     Polynomium f;
            s32 w = diagramma_scriptura(d);
 
+    /* catena componentium numeri paris: V in t^(1/2) Z[t, t^-1] -
+     * exponentes dimidii certi, uncinus (2^c status) frustra */
+    si (d.laqueus.componentes % II == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
     /* f = (-A^3)^-w D uncinatum = (-1)^w A^-3w D uncinatum */
     si (   !diagramma_uncinus(d, piscina, &uncinus)
         || !polynomium_monomium(magnus_ex_s64((w % II == ZEPHYRUM) ? I

@@ -103,3 +103,78 @@ Not done in v1 (deliberately): links' Jones with half-integer exponents,
 multivariable Alexander, bracket beyond 24 crossings (needs a
 tangle/planar-algebra algorithm), Reidemeister moves on diagrams (we move
 the polygon instead), HOMFLY.
+
+## 2026-10-06 — review I (recensor-mathematicus) and fixes
+
+Verdict: no correctness bugs. The reviewer's independent exact oracle
+(own geometry, PD, Fox code) agreed on ~13k random knots/links (box ±2
+lattice included: collinear points, vertex-on-segment, overlaps, triple
+points), 13.6k individual crossings (supra, infra, s, t, sign) and 22k
+move proposals. The sign convention is the PHYSICAL one: the suite's
+Hopf link has lk = +1 by the right-hand rule and the library says +1, so
+the trefoil table entry really is the right-handed trefoil.
+
+Fixed (verified by my own probe before touching code):
+- A. `situs_transitus_parametri` never rolled back, so a diagram kept
+  every pair's arithmetic, O(n^2), in the caller's piscina. Integer
+  coordinates allocate nothing (fractio small path) and hid it. My probe,
+  13-gon with +1/(10^6 + ...) coordinates: 1.45 MB → 234 KB; the
+  reviewer's 120-vertex T(3,4): 121 MB → 0.34 MB. Fix: roll back unless
+  SECANT (outputs are only written then). Test: the trefoil scaled by
+  (10^9 + 7)/(10^6 + 3) must stay under 256 KB — 20.8 KB fixed, 2.35 MB
+  with the plant.
+- B. `genericum`'s fixed list of 12 directions can be exhausted by a
+  simple polygon (13 vertices, one segment parallel to each direction;
+  (1, 4, 16) is generic). Fallback: simplicity check, then the moment
+  curve (1, k, k^2). Every non-generic condition puts v on a line, a
+  plane or a quadric cone; the curve meets a plane ≤ 2 times and a cone
+  ≤ 4, so at most n + 2n + 2n^2 + 4·C(n, 3) values of k fail. The loop is
+  BOUNDED by that count + 1 (and k^2 < 2^63). Lesson from the plants:
+  my first version looped to k ≈ 3·10^9 — the M32 plant (contiguous
+  check disabled, so nothing is ever generic) hung the suite for 10
+  minutes until killed. An unbounded "provably terminates" loop turns any
+  upstream bug into a hang; the bound turns it into a FALSUM.
+  A non-simple polygon is never generic (the 3D intersection projects to
+  a touching point in every direction) — hence the simplicity check first.
+- Jones refuses even-component links BEFORE the 2^c bracket (Jones of a
+  μ-component link lies in t^((μ−1)/2) Z[t, t^-1]); the contrahe check
+  stays as the backstop. Saves ~7 s at 24 crossings.
+
+Corrections to the natus entry:
+- Arc numbering: starting after the first under-passage is NOT needed
+  (reviewer's M06, removing the skip, is equivalent: the wrap gives the
+  arc containing position 0 index 0 again). Harmless; my reason was wrong.
+- Timing, now measured by the reviewer at -O2: one bracket ≈ 3.5 s at 23
+  crossings, ≈ 7 s at 24; it doubles per crossing.
+- Pe was right to call equivalent, but it is a different plant from the
+  reviewer's M11 (real A/B swap keeping the exponent), which is killed.
+
+New tests (each confirmed red under its plant, run sequentially — a
+first batch raced my own restore `cp` and showed M26 falsely green):
+- M30 (supra/infra swapped everywhere, sign kept): an EXACT cancelling
+  pair — reflecting the plane and switching every crossing is a rotation
+  by π about an in-plane axis, so every invariant survives. Now the two
+  Hopf crossings along (1, 2, 3) are pinned by hand computation: segment
+  5 over 1 at (2/3, 1/6), segment 1 over 7 at (5/6, 2/3), both +1.
+- Hopf lk asserted = +1 (was ±1).
+- M32 / M37 (one contiguous branch skipped): the collinear and the
+  projecting-to-a-line triangles in all 6 vertex orders (one order left
+  a branch untested).
+- M43 (`_collinearia` without the yz plane): addere in the x = 0 plane.
+- M26 (removere's next-segment check with the wrong shared vertex):
+  removal of (10,10,0) from (0,0,0)-(10,10,0)-(20,0,0)-(30,5,0)-...;
+  the next segment is in the triangle's plane but outside the angle at c,
+  while (30,5) − a IS inside the angle at a.
+- M39 (failed directions not rolled back): genericum on the scaled
+  13-gon must cost ≤ 1.5 × the winning direction alone (1706 vs 1704
+  bytes; 29 KB with the plant).
+- B: the 13-gon is found generic (Alexander 1); a non-simple link gives
+  FALSUM and terminates.
+- 25 crossings refused (a comb: zigzag + one return line, 28 vertices,
+  unknot, Alexander 1). 24 ITSELF stays untested (M42, `>=` for `>`):
+  one bracket there is ~7 s at -O2. Recorded gap.
+124 checks, 0.8 s; situs 16528; venenum sana.
+
+Not pinned, by choice: parameter VALUES beyond the Hopf case (only their
+order feeds the Gauss code), and `numerus_ligationis(d, a, a)` (header
+says a != b; returns half the self-crossing sum).

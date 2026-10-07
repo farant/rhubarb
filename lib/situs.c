@@ -808,10 +808,19 @@ situs_transitus_parametri (
      Fractio* parametrum_ab,
      Fractio* parametrum_cd)
 {
-    /* sine refectione: parametri in piscina vivunt (sicut
-     * volumen_sexies) */
-    redde _transitus(a, b, c, d, v, piscina, superius, signum,
-        parametrum_ab, parametrum_cd);
+    /* refectio nisi SECANT: parametri (soli exitus in piscina) tunc
+     * soli scribuntur. Sine ea laqueus_diagramma piscinam O(n^2)
+     * crescebat - coordinatis rationalibus CXX vertices CXXI MB
+     * (recensio laqueus-I, A) */
+    PiscinaNotatio nota = piscina_notare(piscina);
+    SitusContactus r    = _transitus(a, b, c, d, v, piscina, superius,
+        signum, parametrum_ab, parametrum_cd);
+
+    si (r != SITUS_SECANT)
+    {
+        piscina_reficere(piscina, nota);
+    }
+    redde r;
 }
 
 SitusContactus

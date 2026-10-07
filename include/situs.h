@@ -182,8 +182,9 @@ situs_transitus (
 
 /* idem, et si SECANT positiones transitus in segmentis: P = a + s (b -
  * a) = c + t (d - c) in proiectione, 0 < s, t < 1 (ordo transituum in
- * eodem segmento; codex Gauss). Hic piscina RETINETUR: parametri in ea
- * vivunt. Exitus (etiam parametri) solum si SECANT scribuntur. */
+ * eodem segmento; codex Gauss). Exitus (etiam parametri) solum si
+ * SECANT scribuntur; tunc piscina RETINETUR (parametri in ea vivunt),
+ * aliter refecta. */
 SitusContactus
 situs_transitus_parametri (
      Punctum  a,

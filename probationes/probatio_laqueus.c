@@ -214,6 +214,66 @@ _ex_textu (
     redde l;
 }
 
+/* triangulum ex tabula in ordine verticum dato (sex permutationes:
+ * vertex plicatus in omni positione, ambo sensus) */
+interior Laqueus
+_triangulum (
+    constans s32 (*tabula)[III],
+                 i32 ordo)
+{
+    s32 ordines[VI][III] = {
+        { 0, 1, 2 }, { 1, 2, 0 }, { 2, 0, 1 },
+        { 0, 2, 1 }, { 2, 1, 0 }, { 1, 0, 2 }
+    };
+    s32 puncta[III][III];
+    i32 k;
+    i32 m;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        per (m = ZEPHYRUM; m < III; m++)
+        {
+            puncta[k][m] = tabula[ordines[ordo][k]][m];
+        }
+    }
+    redde _ex_tabula((constans s32 (*)[III])puncta, III);
+}
+
+/* coordinatae per (10^9 + 7) / (10^6 + 3) multiplicatae: geometria
+ * eadem (parallelismus, transitus), sed producta s64 excedunt -
+ * fractio magnis utitur et piscinam vere consumit */
+interior Laqueus
+_dilatatus (
+    Laqueus l)
+{
+        i32  n      = laqueus_numerus(l);
+    Punctum* puncta = (Punctum*)piscina_allocare(piscina,
+        (memoriae_index)n * magnitudo(Punctum));
+    i32* initia = (i32*)piscina_allocare(piscina, (memoriae_index)(
+        laqueus_componentes(l) + I) * magnitudo(i32));
+    Fractio factor;
+        i32 k;
+    Laqueus r;
+
+    (vacuum)fractio_ex_s64_s64((s64)1000000007, (s64)1000003, piscina,
+        &factor);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        Punctum v = laqueus_vertex(l, k);
+
+        puncta[k].x = fractio_multiplica(v.x, factor, piscina);
+        puncta[k].y = fractio_multiplica(v.y, factor, piscina);
+        puncta[k].z = fractio_multiplica(v.z, factor, piscina);
+    }
+    per (k = ZEPHYRUM; k <= laqueus_componentes(l); k++)
+    {
+        initia[k] = l.initia[k];
+    }
+    (vacuum)laqueus_ex_punctis(puncta, initia, laqueus_componentes(l),
+        piscina, &r);
+    redde r;
+}
+
 /* transformatio puncti: speculum (z -> -z), rotatio rationalis per
  * quaternionem (1, 2, 3, 4) / 30 et translatio */
 interior Laqueus
@@ -416,9 +476,21 @@ s32 principale (vacuum)
         CREDO_FALSUM (laqueus_simplex(_ex_textu(
             "[(0, 0, 0), (10, 0, 0), (5, 0, 0), (5, 5, 0)]"), piscina));
         /* triangulum collineare: omnia paria contigua (solae
-         * probationes vicinorum id capiunt) */
-        CREDO_FALSUM (laqueus_simplex(_ex_textu(
-            "[(0, 0, 0), (10, 0, 0), (5, 0, 0)]"), piscina));
+         * probationes vicinorum id capiunt) - omnes ordines verticum
+         * (recensio laqueus-I, M37: ordo unus ramum unum non tegit) */
+        {
+            constans s32 collineare[III][III] = {
+                { 0, 0, 0 }, { 10, 0, 0 }, { 5, 0, 0 }
+            };
+            i32 o;
+
+            per (o = ZEPHYRUM; o < VI; o++)
+            {
+                CREDO_FALSUM (laqueus_simplex(_triangulum(collineare,
+                    o),
+                    piscina));
+            }
+        }
         /* componentes se tangunt */
         CREDO_FALSUM (laqueus_simplex(_ex_textu(
             "[(0, 0, 0), (10, 0, 0), (0, 10, 0); (5, 0, -5), "
@@ -450,12 +522,28 @@ s32 principale (vacuum)
             ZEPHYRUM), piscina, &d));
         CREDO_FALSUM (laqueus_diagramma(hopf, situs_punctum(ZEPHYRUM,
             ZEPHYRUM, I), piscina, &d));
-        /* triangulum in plano xz secundum z: proiectio in rectam -
-         * paria omnia contigua, solae probationes vicinorum capiunt */
-        CREDO_FALSUM (laqueus_diagramma(_ex_textu(
-            "[(0, 0, 0), (10, 0, 0), (5, 0, 5)]"),
-            situs_punctum(ZEPHYRUM,
-            ZEPHYRUM, I), piscina, &d));
+        /* triangula in plano xz secundum z: proiectio in rectam -
+         * paria omnia contigua, solae probationes vicinorum capiunt;
+         * omnes ordines verticum (recensio laqueus-I, M32) */
+        {
+            constans s32 plani[II][III][III] = {
+                { { 0, 0, 0 }, { 10, 0, 0 }, { 5, 0, 5 } },
+                { { 5, 0, 0 }, { 10, 0, 0 }, { 0, 0, 5 } }
+            };
+            i32 o;
+            i32 m;
+
+            per (m = ZEPHYRUM; m < II; m++)
+            {
+                per (o = ZEPHYRUM; o < VI; o++)
+                {
+                    Laqueus t = _triangulum(plani[m], o);
+
+                    CREDO_FALSUM (laqueus_diagramma(t, situs_punctum(
+                        ZEPHYRUM, ZEPHYRUM, I), piscina, &d));
+                }
+            }
+        }
         /* punctum triplex: tria segmenta per (0, 0) altitudinibus 0, 5,
          * 10 */
         CREDO_FALSUM (laqueus_diagramma(_ex_textu(
@@ -467,8 +555,11 @@ s32 principale (vacuum)
         CREDO_VERUM (laqueus_simplex(hopf, piscina));
         CREDO_VERUM (laqueus_diagramma_genericum(hopf, piscina, &d));
         CREDO_AEQUALIS_I32 (diagramma_numerus(d), II);
-        CREDO_VERUM (diagramma_numerus_ligationis(d, ZEPHYRUM, I) == I
-            || diagramma_numerus_ligationis(d, ZEPHYRUM, I) == -I);
+        /* regula dextrae: C1 contra horologium in z = 0, C2 per discum
+         * sursum ad (10, 10) - ligatio +1, conventio signi physica */
+        CREDO_AEQUALIS_S32 (diagramma_numerus_ligationis(d, ZEPHYRUM,
+            I),
+            I);
         CREDO_VERUM (diagramma_uncinus(d, piscina, &u));
         /* uncinus Hopf sub speculo invariabilis (A -> A^-1) */
         CREDO_CHORDA_AEQUALIS_LITERIS (polynomium_ad_chordam(u, 'A',
@@ -486,6 +577,158 @@ s32 principale (vacuum)
         CREDO_VERUM (diagramma_uncinus(d, piscina, &u));
         CREDO_CHORDA_AEQUALIS_LITERIS (polynomium_ad_chordam(u, 'A',
             piscina), "-A^2 - A^-2");
+
+        /* transitus Hopf secundum (1, 2, 3), manu computati (spectator
+         * ad +v: punctum maioris v-componentis supra): segmentum 5
+         * ((10,10,10)-(30,10,10)) supra 1 ((20,0,0)-(20,20,0)) ad 2/3,
+         * 1/6 - differentia (10/3)(1, 2, 3); segmentum 1 supra 7
+         * ((30,10,-10)-(10,10,-10)) ad 5/6, 2/3 - differentia
+         * -(10/3)(1, 2, 3). Supra/infra permutata invariantes omnes
+         * servant (rotatio pi circa axem in plano): solum hic capitur
+         * (recensio laqueus-I, M30) */
+        {
+            i32 k;
+            i32 visa = ZEPHYRUM;
+
+            CREDO_VERUM (laqueus_diagramma(hopf, situs_punctum(I, II,
+                III), piscina, &d));
+            CREDO_AEQUALIS_I32 (diagramma_numerus(d), II);
+            per (k = ZEPHYRUM; k < II && k < diagramma_numerus(d); k++)
+            {
+                Transitus t   = diagramma_transitus(d, k);
+                   chorda pa  = fractio_ad_chordam(t.parametrum_supra,
+                       piscina);
+                   chorda pb  = fractio_ad_chordam(t.parametrum_infra,
+                       piscina);
+
+                CREDO_AEQUALIS_S32 (t.signum, I);
+                si (t.supra == V)
+                {
+                    CREDO_AEQUALIS_I32 (t.infra, I);
+                    CREDO_CHORDA_AEQUALIS_LITERIS (pa, "2/3");
+                    CREDO_CHORDA_AEQUALIS_LITERIS (pb, "1/6");
+                    visa++;
+                }
+                alioquin
+                {
+                    CREDO_AEQUALIS_I32 (t.supra, I);
+                    CREDO_AEQUALIS_I32 (t.infra, VII);
+                    CREDO_CHORDA_AEQUALIS_LITERIS (pa, "5/6");
+                    CREDO_CHORDA_AEQUALIS_LITERIS (pb, "2/3");
+                }
+            }
+            CREDO_AEQUALIS_I32 (visa, I);
+        }
+    }
+
+
+    /* ==================================================
+     * DIRECTIONES ET MEMORIA
+     * ================================================== */
+
+    {
+        /* polygonum simplex XIII verticum, segmentum parallelum cuique
+         * directioni seriei fixae (recensio laqueus-I, B): series
+         * exhauritur, curva momentorum (1, k, k^2) invenit */
+        Laqueus adversus =
+            _ex_textu("[(0, 0, 0), (0, 0, 1), (1, 2, 4), "
+            "(3, 5, 9), (6, 10, 16), (7, 8, 20), (12, 5, 22), "
+            "(19, 16, 35), (17, 19, 46), (30, 12, 51), (31, 13, 68), "
+            "(50, -10, 97), (81, 27, 56)]");
+        Laqueus magnus_adversus = _dilatatus(adversus);
+        Laqueus magnum_trifolium = _dilatatus(_ex_tabula(trifolium,
+            XLVIII));
+               Diagramma d;
+               Diagramma e;
+              Polynomium a;
+                     b32 inventum;
+                     b32 directum;
+                     b32 trifolii;
+                     i32 numerus_trifolii;
+          memoriae_index ante;
+          memoriae_index usus_genericus;
+          memoriae_index usus_directus;
+          memoriae_index usus_trifolii;
+
+        imprimere("\n--- Probans directiones et memoriam ---\n");
+        CREDO_VERUM (laqueus_simplex(adversus, piscina));
+        CREDO_FALSUM (laqueus_diagramma(adversus,
+            situs_punctum(ZEPHYRUM,
+            ZEPHYRUM, I), piscina, &d));
+        CREDO_VERUM (laqueus_diagramma_genericum(adversus, piscina,
+            &d));
+        CREDO_VERUM (diagramma_alexander(d, piscina, &a));
+        CREDO_CHORDA_AEQUALIS_LITERIS (polynomium_ad_chordam(a, 't',
+            piscina), "1");
+        /* non simplex: nulla directio generica - refutatur, non errat
+         */
+        CREDO_FALSUM (laqueus_diagramma_genericum(_ex_textu(
+            "[(0, 0, 0), (10, 0, 0), (0, 10, 0); (5, 0, -5), "
+            "(5, 0, 5), (5, 5, 5)]"), piscina, &d));
+
+        /* conatus irriti reficiuntur (M39): genericum (series tota +
+         * curva) non plus consumit quam diagramma directionis inventae.
+         * Mensurae sine CREDO intermixto (CREDO in eadem piscina
+         * scribit) */
+        ante            = piscina_summa_usus(piscina);
+        inventum        = laqueus_diagramma_genericum(magnus_adversus,
+            piscina, &d);
+        usus_genericus  = piscina_summa_usus(piscina) - ante;
+        ante            = piscina_summa_usus(piscina);
+        directum        = laqueus_diagramma(magnus_adversus, d.directio,
+            piscina, &e);
+        usus_directus   = piscina_summa_usus(piscina) - ante;
+        /* parametri non SECANT reficiuntur (recensio laqueus-I, A):
+         * sine refectione O(n^2) */
+        ante              = piscina_summa_usus(piscina);
+        trifolii          = laqueus_diagramma(magnum_trifolium,
+            situs_punctum(II, III, V), piscina, &e);
+        usus_trifolii     = piscina_summa_usus(piscina) - ante;
+        numerus_trifolii  = diagramma_numerus(e);
+        imprimere("  usus: genericus %lu, directus %lu, "
+            "trifolium %lu\n", (unsigned long)usus_genericus,
+            (unsigned long)usus_directus,
+            (unsigned long)usus_trifolii);
+        CREDO_VERUM (inventum);
+        CREDO_VERUM (directum);
+        CREDO_VERUM (trifolii);
+        CREDO_AEQUALIS_I32 (numerus_trifolii, III);
+        CREDO_VERUM (usus_genericus <= usus_directus + usus_directus
+            / II);
+        CREDO_VERUM (usus_trifolii < (memoriae_index)CCLVI * M);
+
+        /* XXV transitus: uncinus et Jones refutant (limes XXIV; XXIV
+         * ipse non probatur - 2^24 status, secunda septem -O2) */
+        {
+            Punctum puncta[XXVIII];
+                i32 initia[II];
+                i32 k;
+            Laqueus pecten;
+
+            /* pecten: zigzag (2k, 0|10, 0) k = 0..25, deinde (52, 5, 5)
+             * et recta reditus y = 5, z = 5 ad (-2, 5, 5): quodque
+             * segmentum zigzag semel secat */
+            per (k = ZEPHYRUM; k <= XXV; k++)
+            {
+                puncta[k] = situs_punctum((s64)(II * k), (k % II) ? X
+                    : ZEPHYRUM, ZEPHYRUM);
+            }
+            puncta[XXVI]      = situs_punctum(LII, V, V);
+            puncta[XXVII]     = situs_punctum(-II, V, V);
+            initia[ZEPHYRUM]  = ZEPHYRUM;
+            initia[I]         = XXVIII;
+            CREDO_VERUM (laqueus_ex_punctis(puncta, initia, I, piscina,
+                &pecten));
+            CREDO_VERUM (laqueus_diagramma(pecten,
+                situs_punctum(ZEPHYRUM,
+                ZEPHYRUM, I), piscina, &d));
+            CREDO_AEQUALIS_I32 (diagramma_numerus(d), XXV);
+            CREDO_FALSUM (diagramma_uncinus(d, piscina, &a));
+            CREDO_FALSUM (diagramma_jones(d, piscina, &a));
+            CREDO_VERUM (diagramma_alexander(d, piscina, &a));
+            CREDO_CHORDA_AEQUALIS_LITERIS (polynomium_ad_chordam(a, 't',
+                piscina), "1");
+        }
     }
 
 
@@ -667,6 +910,23 @@ s32 principale (vacuum)
             CREDO_VERUM (laqueus_motus_addere(quadratum, ZEPHYRUM,
                 situs_punctum(V, -V, ZEPHYRUM), piscina, &l));
         }
+        /* triangulum in plano x = 0 (M43: _collinearia sine plano yz
+         * id degenerem putaret) */
+        CREDO_VERUM (laqueus_motus_addere(_ex_textu(
+            "[(0, 0, 0), (0, 10, 0), (0, 10, 10), (0, 0, 10)]"),
+            ZEPHYRUM,
+            situs_punctum(ZEPHYRUM, V, -V), piscina, &l));
+        /* removere (10,10,0) e (0,0,0)-(10,10,0)-(20,0,0): segmentum
+         * sequens (20,0,0)-(30,5,0) in plano trianguli sed extra
+         * angulum ad c - legitimus; (30,5) - a in angulo ad a, ergo
+         * vicinum cum vertice communi falso (a pro c) refutaret (M26)
+         */
+        CREDO_VERUM (laqueus_motus_removere(_ex_textu(
+            "[(0, 0, 0), (10, 10, 0), (20, 0, 0), (30, 5, 0), "
+            "(30, 5, 10), (0, -5, 10), (0, -5, 0)]"), I, piscina, &l));
+        CREDO_CHORDA_AEQUALIS_LITERIS (laqueus_ad_chordam(l, piscina),
+            "[(0, 0, 0), (20, 0, 0), (30, 5, 0), (30, 5, 10), "
+            "(0, -5, 10), (0, -5, 0)]");
         /* degener (punctum in recta segmenti): refutatur */
         CREDO_FALSUM (laqueus_motus_addere(hopf, ZEPHYRUM,
             situs_punctum(V,
