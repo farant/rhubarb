@@ -365,6 +365,22 @@
     <forma textus="unimodularem" casus="accusativus" numerus="singularis"/>
   </vocabulum>
   <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
+  <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>
+  <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
+  <vocabulum lemma="arf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Cahit Arf (invarians Arf nodi, V(i) = (-1)^Arf)"/>
+  <vocabulum lemma="phi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: phi(n) Euleri, Phi_n polynomium cyclotomicum"/>
+  <vocabulum lemma="mu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: mu(n) functio Moebius"/>
+  <vocabulum lemma="psi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: variabilis polynomii in probationibus"/>
+  <vocabulum lemma="cyclotomia" lingua="latina" classis="substantivum" nota="Neolatina (Gk. kyklos + tome): sectio circuli; Z[zeta_n], anulus integrorum cyclotomicorum; sedes include/cyclotomia.h; WORDS caret">
+    <forma textus="cyclotomia" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="cyclotomicus" lingua="latina" classis="adiectivum" nota="Neolatina: cyclotomicus, ad sectionem circuli pertinens (integer cyclotomicus, polynomium cyclotomicum); sedes include/cyclotomia.h; WORDS caret">
+    <forma textus="cyclotomicus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="cyclotomicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="automorphismus" lingua="latina" classis="substantivum" nota="Neolatina (Gk. autos + morphe): automorphismus, isomorphismus structurae in se (sigma_j: zeta -> zeta^j); sedes include/cyclotomia.h; WORDS caret">
+    <forma textus="automorphismus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="coefficiens" lingua="latina" classis="substantivum" nota="Neolatina (Vieta): coefficiens, quantitas cum potentia coniuncta (polynomium); WORDS caret">
     <forma textus="coefficiens" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="coefficientis" casus="genitivus" numerus="singularis" genus="masculinum"/>
