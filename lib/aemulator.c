@@ -1668,10 +1668,11 @@ aemulator_configuratio_initiare (
         redde;
     }
     memset(cfg, ZEPHYRUM, magnitudo(AemulatorConfiguratio));
-    cfg->latitudo  = LATITUDO_ORDINARIA;
-    cfg->altitudo  = ALTITUDO_ORDINARIA;
-    cfg->titulus   = "aemulator";
-    cfg->versio    = AEMULATOR_VERSIO;
+    cfg->latitudo         = LATITUDO_ORDINARIA;
+    cfg->altitudo         = ALTITUDO_ORDINARIA;
+    cfg->titulus          = "aemulator";
+    cfg->versio           = AEMULATOR_VERSIO;
+    cfg->historia_octeti  = X * MXXIV * MXXIV;
 }
 
 Aemulator*

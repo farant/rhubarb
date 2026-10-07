@@ -77,7 +77,8 @@ aemulator_hospes_pulsare (
                 s32  mora_ms);
 
 /* Initus ad infantem (claves iam codificatae, pasta). In caudam
- * ponitur et proximo pulsu mittitur. Reddit octetos acceptos (0..n):
+ * ponitur et proximo pulsu mittitur; initus acceptus visum ad imum
+ * reducit (decisio XXI). Reddit octetos acceptos (0..n):
  * minus quam n = cauda plena (praeter reservatum), reliquum vocans
  * postea offert. */
 i32
@@ -95,6 +96,13 @@ aemulator_hospes_amplitudo (
                 i32  altitudo,
                 i32  px_latitudo,
                 i32  px_altitudo);
+
+/* Visum movere per hospitem (facies aemulatorem constantem tenet):
+ * ut aemulator_visum_movere; pulsus proximus 'mutatum' nuntiat. */
+vacuum
+aemulator_hospes_visum_movere (
+    AemulatorHospes* h,
+                s32  delta);
 
 /* Schirmum legendum (cellulae, cursor, modi, textus). Valet usque ad
  * pulsum aut amplitudinem proximam. */

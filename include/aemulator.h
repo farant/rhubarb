@@ -64,10 +64,17 @@ nomen structura {
      * eam non habet, iTerm2 clausam praebet); probationes (esctest)
      * aperiunt. Clausa: series ignota, nullum responsum. */
                   b32 lectio_schirmi;
+    /* HISTORIA (phasis C, decisiones XIX-XX): limes historiae schirmi
+     * primarii in octetis, ad paginas integras sursum rotundatus
+     * (pagina una saltem). Paginae ex piscina crescunt usque ad
+     * limitem, deinde vetustissima recyclatur - post id nihil
+     * allocatur. 0 = nulla historia. Ordinarius X MB. */
+                  i32 historia_octeti;
 } AemulatorConfiguratio;
 
 /* Configuratio ordinaria: LXXX x XXIV, effectus nulli, titulus
- * "aemulator", versio AEMULATOR_VERSIO, lectio_schirmi FALSUM.
+ * "aemulator", versio AEMULATOR_VERSIO, lectio_schirmi FALSUM,
+ * historia_octeti X MB.
  * Campi postea addendi hic
  * defaltas accipiunt - vocantes semper ab hac incipiant. */
 vacuum
@@ -165,6 +172,67 @@ aemulator_ignota (
  * caudae omittuntur, lineae vacuae finales absunt, lineae per '\n'. */
 chorda
 aemulator_textum_effundere (
+    constans Aemulator* a,
+               Piscina* piscina);
+
+
+/* ==================================================
+ * Historia et visus (phasis C)
+ *
+ * Lineae quae schirmum primarium per volutionem TOTIUS schirmi
+ * relinquunt (LF/IND in imo, SU) in historiam intrant; volutio
+ * regionis, IL/DL et schirmum alterum numquam. VISUS = fenestra
+ * altitudinis lineas quam facies ostendit: 0 = imum (schirmum vivum),
+ * n = n lineis supra. Sub effusione visus MANET (decisio XXI: eaedem
+ * lineae ostenduntur, visus crescit); linea ostensa evicta = visus ad
+ * historiam vetustissimam praeciditur. Functiones superiores
+ * (cellula, cursor, textum_effundere) schirmum VIVUM legunt, ut
+ * programma - visus solum faciei est.
+ * ================================================== */
+
+/* lineae in historia (schirmo altero activo: 0 - nullam habet) */
+i32
+aemulator_historia (
+    constans Aemulator* a);
+
+/* positio visus: lineae supra schirmum vivum (0 = imum) */
+i32
+aemulator_visus (
+    constans Aemulator* a);
+
+/* visum movere: delta > 0 sursum (in historiam), < 0 deorsum;
+ * praeciditur ad [0, historia]. Status emulatoris non mutatur. */
+vacuum
+aemulator_visum_movere (
+    Aemulator* a,
+          s32  delta);
+
+/* cellula visus: y in [0, altitudo) lineae visus; visus 0 = idem ac
+ * aemulator_cellula */
+b32
+aemulator_visus_cellula (
+    constans Aemulator* a,
+                   i32  x,
+                   i32  y,
+      AemulatorCellula* cellula);
+
+/* linea visus y in lineam proximam involvitur (volutio mollis -
+ * selectio et refluxus futuri) */
+b32
+aemulator_visus_involuta (
+    constans Aemulator* a,
+                   i32  y);
+
+/* effusiones planae ut aemulator_textum_effundere (Ghostty
+ * plainString) super visum et super historiam + schirmum vivum
+ * (Ghostty dumpString .viewport / .screen) */
+chorda
+aemulator_visum_effundere (
+    constans Aemulator* a,
+               Piscina* piscina);
+
+chorda
+aemulator_historiam_effundere (
     constans Aemulator* a,
                Piscina* piscina);
 

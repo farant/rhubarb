@@ -417,6 +417,14 @@ Later phases (re-planned after A's RELATIO):
     to bottom, where am I); reading a history row (cells + soft-wrap
     flag) and the plain-text dump over history; the host's snap on
     keystroke.
+    C1 as built (Fran approved unchanged): `historia_octeti` (0 = no
+    history, default 10 MB, rounded up to whole pages);
+    `aemulator_historia`, `aemulator_visus`, `aemulator_visum_movere`
+    (s32 delta, clamped), `aemulator_visus_cellula`,
+    `aemulator_visus_involuta`, `aemulator_visum_effundere`,
+    `aemulator_historiam_effundere`; host `aemulator_hospes_visum_movere`
+    and snap-on-input. The old reads stay on the LIVE screen (vectors
+    and loopback untouched). Declared now, implemented in C2-C3.
   - **C2 - the pool and scroll-off:** primary-screen rows that leave
     the top of a FULL-SCREEN scroll (LF/IND at the bottom, SU, ED 2's
     xterm behaviour if any) enter history; a region scroll, IL/DL and
