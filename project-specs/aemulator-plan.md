@@ -519,6 +519,24 @@ Later phases (re-planned after A's RELATIO):
     `codificator_terminalis` (text, Enter, Backspace, Tab, arrows,
     Ctrl-letters), trackpad scroll -> `aemulator_hospes_visum_movere`;
     headers for Fran's approval.
+    E1 as built (Fran approved the header unchanged, 2026-10-06; it
+    lands with its implementation in E2 - its corpus file does not
+    exist yet): ONE library `terminale` (include/terminale.h,
+    lib/terminale.c): `TerminaleApplicatio`, `terminale_argumenta`
+    (-fumus: scripted /bin/sh; else `$SHELL -l`),
+    `terminale_applicatio_aedificare` (in-memory insula repository -
+    `insula_repositorium_creare` takes STML strings, nothing durable),
+    `terminale_pulsare` (fit size from the surface, then pulse the
+    host), `terminale_claudere`. Read from scriba/pictor: `componere`
+    pure, figures read live data through a context pointer (here the
+    host's view), actions take keys. Each main owns its loop (the
+    shared window loop sleeps for the dispatcher's gesture-settle
+    time - a different meaning). Keys one event at a time through
+    `codificator_terminalis` (a TEXTUS event encodes as its text; a
+    lone key press as itself). Colours: theme defaults, xterm 0-15,
+    6x6x6 cube, grey ramp, RGB. Found: fenestra's `scrollWheel:` is an
+    EMPTY method - the window drops scroll events; wiring it (internal
+    to fenestra_macos.m, existing event kinds) joins E2.
   - **E2 - component and figure, headless:** memoriae child and a real
     `/bin/sh`; keys via `manus_ludus`; checks cell-exact through the
     tessera target AND pixel-level through headless PNGs (looked at).
