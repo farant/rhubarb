@@ -66,7 +66,17 @@ nomen structura {
                    Xar* undae_currendi; /* chorda: praevisiones (T6b) */
                    i32  fila_ficta;   /* post fracturam: membra ultra
                                        * hunc indicem non incipiunt */
+                   Xar* particulae_servatae; /* ParticulaeFictae (plan-5
+                                              * T1) */
 } DiscusFictus;
+
+/* particulae transitus servatae (plan-5 T1): ultimae per (titulus,
+ * exitus) */
+nomen structura {
+    chorda  titulus;
+    chorda  exitus;
+       Xar* particulae;   /* FabricaParticula */
+} ParticulaeFictae;
 
 /* vestigium lectionum fictum (plan 2 T2): tabula 'lectiones' */
 nomen structura {
@@ -82,6 +92,7 @@ nomen structura {
             chorda titulus;
                i32 duratio_ms;
     FabricaEventus eventus;
+            chorda stalum;   /* cur acta (fabrica-plan-5 T1) */
 } CursusFictus;
 
 /* generator scriptus (plan 1b T3): verbum = mandatum[0] actionis.
@@ -433,6 +444,7 @@ _cursum_inscribere (
         cursus->titulus     = sanatio->actio->titulus;
         cursus->duratio_ms  = sanatio->duratio_ms;
         cursus->eventus     = sanatio->eventus;
+        cursus->stalum      = sanatio->stalum;
     }
 }
 
@@ -750,6 +762,81 @@ _lectiones_ultimae (
     redde VERUM;
 }
 
+/* particulae transitus fictae (plan-5 T1): ut tabula vera, ultimae per
+ * (titulus, exitus) */
+interior vacuum
+_particulas_scribere (
+                vacuum* datum,
+    constans character* titulus,
+    constans character* exitus,
+          constans Xar* particulae)
+{
+        DiscusFictus* discus;
+    ParticulaeFictae* p = NIHIL;
+                 i32  i;
+
+    discus = (DiscusFictus*)datum;
+    per (i = ZEPHYRUM; i
+        < xar_numerus(discus->particulae_servatae); i++)
+    {
+        ParticulaeFictae* q = (ParticulaeFictae*)xar_obtinere(
+            discus->particulae_servatae, i);
+
+        si (   chorda_aequalis_literis(q->titulus, titulus)
+            && chorda_aequalis_literis(q->exitus, exitus))
+        {
+            p = q;
+        }
+    }
+    si (p == NIHIL)
+    {
+        p = (ParticulaeFictae*)xar_addere(discus->particulae_servatae);
+        si (p == NIHIL)
+        {
+            redde;
+        }
+        p->titulus  = chorda_ex_literis(titulus, discus->piscina);
+        p->exitus   = chorda_ex_literis(exitus, discus->piscina);
+    }
+    p->particulae = xar_creare(discus->piscina,
+        (i32)magnitudo(FabricaParticula));
+    per (i = ZEPHYRUM; p->particulae != NIHIL
+        && i < xar_numerus(particulae); i++)
+    {
+        *(FabricaParticula*)xar_addere(p->particulae) =
+            *(constans FabricaParticula*)xar_obtinere(particulae, i);
+    }
+}
+
+interior b32
+_particulas_legere (
+                vacuum*  datum,
+    constans character*  titulus,
+    constans character*  exitus,
+               Piscina*  piscina,
+                   Xar** particulae_out)
+{
+    DiscusFictus* discus;
+             i32  i;
+
+    (vacuum)piscina;
+    discus = (DiscusFictus*)datum;
+    per (i = ZEPHYRUM; i
+        < xar_numerus(discus->particulae_servatae); i++)
+    {
+        ParticulaeFictae* q = (ParticulaeFictae*)xar_obtinere(
+            discus->particulae_servatae, i);
+
+        si (   chorda_aequalis_literis(q->titulus, titulus)
+            && chorda_aequalis_literis(q->exitus, exitus))
+        {
+            *particulae_out = q->particulae;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _lectiones_scribere (
                 vacuum* datum,
@@ -825,6 +912,8 @@ _discum_parare (
         (i32)magnitudo(CursusFictus));
     discus->lectiones_ficti = NIHIL;
     discus->undae_actae = xar_creare(piscina, (i32)magnitudo(chorda));
+    discus->particulae_servatae = xar_creare(piscina,
+        (i32)magnitudo(ParticulaeFictae));
     discus->acta_simul = ZEPHYRUM;
     discus->undae_currendi = xar_creare(piscina,
         (i32)magnitudo(chorda));
@@ -3493,6 +3582,8 @@ s32 principale (vacuum)
             sanatio = (FabricaSanatio*)xar_obtinere(sanationes, i);
             CREDO_AEQUALIS_I32((i32)sanatio->eventus,
                 (i32)FABRICA_SANATUM);
+            /* via undarum quoque causam stali fert (plan-5 T1) */
+            CREDO_VERUM(sanatio->stalum.mensura > ZEPHYRUM);
             si (chorda_aequalis_literis(sanatio->actio->titulus, "P1"))
             {
                 index_p1 = (s32)i;
@@ -4263,6 +4354,9 @@ s32 principale (vacuum)
                     acta++;
                     CREDO_VERUM(chorda_aequalis_literis(c->titulus, "A")
                         || chorda_aequalis_literis(c->titulus, "D"));
+                    /* cur acta (plan-5 T1): causa iudicis ante actum
+                     * in cursu - sanatum ET fractum */
+                    CREDO_VERUM(c->stalum.mensura > ZEPHYRUM);
                 }
             }
             CREDO_AEQUALIS_I32(acta, II);
@@ -4530,6 +4624,8 @@ s32 principale (vacuum)
          * novum per iudicium habet) */
         sutura.lectiones_legere = _lectiones_legere;
         sutura.lectiones_scribere = _lectiones_scribere;
+        sutura.particulas_scribere = _particulas_scribere;
+        sutura.particulas_legere = _particulas_legere;
         sutura.ambitus = _ambitus_fictum;
         sutura.species = _species_ficta;
         sutura.identitas = _identitatem_fictam_dare;
@@ -4626,6 +4722,8 @@ s32 principale (vacuum)
             exitus,
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        /* QUIS mutatus (plan-5 T1): ingressus nominatur */
+        CREDO_VERUM(_continet(iudicium.causa, "tools/v.sh", piscina));
         _ponere(&discus, "tools/v.sh", "v I\n");
         /* V. identitas clang mutata: clavis alia */
         _identitas_ficta = "clang II";
@@ -4633,6 +4731,7 @@ s32 principale (vacuum)
             exitus,
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        CREDO_VERUM(_continet(iudicium.causa, "clang", piscina));
         _identitas_ficta = "clang I";
         /* VI. situs irresolutus (effectus) -> IGNOTUM nominatum */
         _effectus_effusio =

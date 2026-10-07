@@ -1922,3 +1922,22 @@ plant proved it), dominus (declared exitus, else IGNOTUM "sine domino"),
 ignotum. Seam slot `sutura->effectus`; `FABRICA_EFFECTUS` overrides the
 tool like FABRICA_FONTATIONES. Canon value added in the same commit
 (fabrica_fumus XXXII enforces).
+
+## 2026-10-06 - plan 5 T1: why a verdict re-runs
+
+- `cursus.causa` only ever held the RUN's own cause; for a successful
+  heal that is empty, so 36 of toml's 41 recorded runs say nothing. The
+  judge's reason existed one frame earlier (`_ante_agere`'s `causa`) and
+  died with it. Now `stalum` (field + column, migration V).
+- The judge's own wording was the second problem: on a missed transitus
+  key it could not say WHICH declared input changed - the key is one
+  seal over all particles. Storing the particles of each recorded pass
+  (migration VI) makes the miss nameable; first live result:
+  `ingressus mutatus: pythonica/silva.py`.
+- Two traps fixed on the way: stack-built FabricaSanatio (field by
+  field - a new field is garbage; memset now) and the migration count
+  given as a literal at the call site (derived from the array now).
+- bin/fabrica is a declared input of the toml verdict (provenance of a
+  house binary) - rebuilding fabrica voids every verdict that declares
+  it. To measure in T4.
+

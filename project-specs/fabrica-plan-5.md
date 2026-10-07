@@ -55,13 +55,13 @@ read ledger, porta() thin); per-gate aedificatio.stml declarations.
 
 ### Task T1: why a verdict re-runs
 
-- [ ] **Step 1: Failing test** in `probatio_fabrica`: a stale verdict
+- [x] **Step 1: Failing test** in `probatio_fabrica`: a stale verdict
   healed by `sanare` leaves a `cursus` row whose causa names the changed
   input (`lectio transitus mutata: <via>` / `ingressus mutatus: ...`).
-- [ ] **Step 2: Implement:** the judge's stale reason carried into the
+- [x] **Step 2: Implement:** the judge's stale reason carried into the
   sanatio record; stored for SANATUM (causa of the run itself, if any,
   appended).
-- [ ] **Step 3: Query:** `bin/fabrica causae [titulus]` (or a tools/
+- [x] **Step 3: Query:** `bin/fabrica causae [titulus]` (or a tools/
   script) - counts per cause for a verdict. **Plant:** reason dropped ->
   test red. **Commit.**
 

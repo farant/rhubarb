@@ -156,3 +156,37 @@ savings in a table; park and desideratum closed or re-filed.
   `os.stat`/`os.path.*` shims) and a plant per channel proves each is
   seen. (b) Declare pythonica's environment and existence checks
   coarsely.
+
+## X. As built
+
+**T1 (2026-10-06): why a verdict re-runs.** `FabricaSanatio.stalum`
+(include/fabrica.h) = the judge's reason BEFORE the action ran; it
+travels through both heal paths in a `stala[]` array parallel to
+`status` (`_ante_agere` writes it, `_post_agere` stamps every record it
+writes, serial and wave paths alike) and lands in `cursus.stalum`
+(migration V; the insert binds an explicit empty text, never NULL). The
+judge's reason itself was vague where it mattered most: a verdict whose
+key is not found said "ingressus declarati aut verdictum mutati, aut
+numquam servatum". Now a pass also stores its PARTICLES (migration VI,
+table `particulae`, sutura `particulas_scribere/legere`): each declared
+input's seal, plus `<mandatum>` and `<verdictum>`; on a miss the judge
+diffs them (`_transitum_mutatum_nominare`: `ingressus mutatus: a, b +N`),
+then re-checks the latest trace's reads (`lectio transitus mutata: X`),
+and only then says "never recorded". `bin/fabrica causae [titulus]`
+counts runs per (title, event, reason).
+
+Live check on toml: appending a comment to pythonica/silva.py ->
+`IGNOTUM ... ingressus mutatus: pythonica/silva.py`; the first new
+cursus row read `lectio transitus mutata: aedilis.stml`. The stored
+particles show `bin/fabrica` among toml's declared inputs (house binary
+keyed by provenance): every rebuild of fabrica voids the toml pass - a
+T4 candidate. Plants: reason dropped in `_ante_agere` -> cursus and
+wave assertions red (7); naming off -> the two named-input assertions
+plus the transitus test red.
+
+Found on the way: three `FabricaSanatio` built on the stack field by
+field (`lib/fabrica.c` judge and audit paths) - a new field was garbage
+(`NOT NULL constraint failed: cursus.stalum`); now memset. The
+migration count was a second literal (`IV`) at the call site - adding a
+migration without it would silently skip it; now derived from the array.
+

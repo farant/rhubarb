@@ -315,6 +315,17 @@ nomen structura {
      * = nullum vestigium (clonus recens: nullus arcus). NIHIL licet. */
     b32 (*lectiones_ultimae)(vacuum* datum, constans character* titulus,
                              Piscina* piscina, Xar** lectiones_out);
+    /* PARTICULAE TRANSITUS (plan-5 T1): ingressus declarati singuli
+     * (via + sigillum; et '<mandatum>', '<verdictum>') transitus ULTIMI
+     * per (titulus, exitus) - iudex nominat QUIS mutatus est cum
+     * clavis transitus non invenitur. NIHIL licent (causa vaga). */
+    vacuum (*particulas_scribere)(vacuum* datum,
+                                  constans character* titulus,
+                                  constans character* exitus,
+                                  constans Xar* particulae);
+    b32 (*particulas_legere)(vacuum* datum, constans character* titulus,
+                             constans character* exitus,
+                             Piscina* piscina, Xar** particulae_out);
     /* praefixum absolutum arboris, ex viis libri demendum (instrumenta
      * vias absolutas scribere possunt); vacua = nihil demitur */
     chorda radix;
@@ -720,7 +731,11 @@ structura FabricaSanatio {
      constans FabricaActio* actio;
             FabricaEventus  eventus;
                     chorda  causa;
-                       i32  duratio_ms;   /* siccum: AESTIMATIO ex
+    /* CUR ACTA (fabrica-plan-5 T1): causa iudicii ante actum (exitus
+     * stalus, transitus mutatus: 'lectio transitus mutata: <via>');
+     * vacua = non acta aut causa ignota */
+                    chorda stalum;
+                       i32 duratio_ms;   /* siccum: AESTIMATIO ex
                                            * cursu ultimo (si notum) */
                        b32 tempus_notum; /* FALSUM: siccum sine
                                            * cursu priore (1b T7) */
