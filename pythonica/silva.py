@@ -1571,13 +1571,14 @@ PORTAE = {
     # (silva-migratio T19a)
     # fabrica plan 5 T7a: iudex = bin/fabrica (iudicare -plenus -omnia,
     # artificia COMMISSA): succedit generata_probare.sh (stadia I-VIII,
-    # XXXIV consensus oraculi) - CXXXV artificia, ~XXV s
+    # XXXIV consensus oraculi) - CXXXV artificia, ~XX s; et omnis
+    # plagula GENERATUM commissa iudicata esse debet (T7b)
     'generata': (['./tools/generata_iudicare.sh'],
                  r'generata: (sana|FRACTA)'),
-    # fabrica (plan 1a T8): oraculum = iudex plenus cum generata per
-    # artificium consentit (Q15); fumus = porta natalis bin/fabrica
-    'fabrica': (['./tools/fabrica_oraculum.sh'],
-                r'oraculum fabricae: (consensus|DISCORDIA)'),
+    # 'fabrica' (oraculum, plan 1a T8) RECESSIT (plan 5 T7b, 2026-10-07):
+    # generata ipsa per fabricam iudicat - iudex alter nullus restat.
+    # Tegmen eius ('declaratio omissa') nunc in generata_iudicare.sh
+    # (GENERATUM sine iudicio). fumus = porta natalis bin/fabrica
     'fabrica-fumus': (['./tools/fabrica_fumus.sh'],
                       r'fumus fabricae: (sanum|FRACTUM)'),
     # iudicium (fabrica spec 3 T7): porta ut actio - plantae P1-P8 et

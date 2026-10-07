@@ -146,8 +146,10 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
     side by side; oracle stops reading generata's receipt; inventory
     row swapped (debts: judge + declarations; per-input debts = the
     `-tacta` phase of commissio).
-  - [ ] **T7b** retire the oracle (`fabrica` gate): PORTAE, inventory
-    row, debts.
+  - [x] **T7b** retire the oracle (`fabrica` gate): PORTAE, inventory
+    row, debts. Its one property worth keeping - silent loss of
+    coverage ("declaratio omissa") - moved into generata_iudicare.sh:
+    every committed file with GENERATUM on line 1 must be judged.
   - [ ] **T7c** delete `tools/generata_probare.sh` and
     `tools/fabrica_oraculum.sh` once the swap has stood; docs, comments
     (tools/latina_numeri.*), docs/bibliothecae/instrumenta.html.

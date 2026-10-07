@@ -422,3 +422,19 @@ tables + amalgams; a grammar -> its cooked registry; a .genera -> the
 natura canons). The oracle no longer reads generata's receipt (it would
 now be the new gate's output - an empty comparison, a false
 consensus); it runs generata_probare.sh itself until T7b.
+
+**T7b (2026-10-07): the oracle retires.** `fabrica` left PORTAE and the
+inventory (row removed with cause); with generata judged by fabrica
+there is no second judge to compare. The one property the oracle had
+beyond agreement - a generated artifact whose declaration disappears is
+named, not silently unjudged - now lives in generata_iudicare.sh and is
+wider than before: every COMMITTED file with `GENERATUM` on line 1 must
+be among fabrica's judged artifacts, else `GENERATUM sine iudicio`
+(gate red). Today 87 such files; 6 unjudged, all in three named
+classes excluded with their cause: fixtures (`probationes/fixa/`:
+frozen copies carrying their source's header), knotapel's frozen demo
+snapshots, the ledger projection gesta/annales/tabula.md. Plant: the
+entitates_html declaration deleted -> `GENERATUM sine iudicio:
+lib/entitates_html_tabula.c`, FRACTA. The gate costs ~16-25 s; the
+retired pair cost generata 133 s + oracle 150-180 s per commit that
+owed them.
