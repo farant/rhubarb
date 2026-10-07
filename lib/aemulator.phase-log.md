@@ -311,3 +311,15 @@ round, each a gap in the tests (a narrow history row read past its
 end landed on an empty neighbour; the alt-screen vector's primary had
 no history to leak); all caught after.
 
+## C3 — the view (2026-10-06)
+
+**INTENTIO.** The view behaves as decided (21): it stays on what you are
+reading while output arrives, it survives eviction by clamping, and a
+keystroke through the host brings it back.
+
+Built: the replayer gained a view action and view assertions; five of
+Ghostty's viewport tests converted directly; the host's view move and
+snap-on-input; the clamp under eviction tested at page granularity;
+the full 10 MB measured - once history is at its limit, output
+allocates nothing. Nine plants caught.
+

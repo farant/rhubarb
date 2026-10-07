@@ -849,4 +849,40 @@
     <gradus initus="A\r\nB\x1B[2J" textus="" historia="0" historia_textus=""/>
   </casus>
 
+  <!-- ==== C3: visus (decisio XXI). visum_movere > 0 sursum (Ghostty
+       delta_row negativum); visus_textus = Ghostty dumpString
+       .viewport ==== -->
+
+  <casus titulus="scrolling moves viewport" fons="Screen.zig:5543" latitudo="10" altitudo="3">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL\r\n1ABCD\r\n2EFGH\r\n3IJKL" visum_movere="2" visus="2" visus_textus="2EFGH\n3IJKL\n1ABCD"/>
+  </casus>
+
+  <casus titulus="scrollback doesn't move viewport if not at bottom" fons="Screen.zig:5204" latitudo="10" altitudo="3">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL\r\n4ABCD\r\n5EFGH" visum_movere="1" visus_textus="2EFGH\n3IJKL\n4ABCD"/>
+    <gradus initus="\x1BD" visus_textus="2EFGH\n3IJKL\n4ABCD"/>
+    <gradus initus="\x1BD" visus_textus="2EFGH\n3IJKL\n4ABCD"/>
+  </casus>
+
+  <casus titulus="scrollback with multi-row delta" fons="Screen.zig:5161" latitudo="10" altitudo="3">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL\r\n4ABCD\r\n5EFGH\r\n6IJKL" visum_movere="1000" visus_textus="1ABCD\n2EFGH\n3IJKL"/>
+    <gradus visum_movere="-5" visus="0" visus_textus="4ABCD\n5EFGH\n6IJKL"/>
+  </casus>
+
+  <casus titulus="scrollback empty" fons="Screen.zig:5188" latitudo="10" altitudo="3">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL" visum_movere="-1" visus="0" visus_textus="1ABCD\n2EFGH\n3IJKL"/>
+  </casus>
+
+  <casus titulus="print writes to bottom if scrolled" fons="Terminal.zig:6854" latitudo="5" altitudo="2">
+    <gradus initus="hello\x1B[1;1H\x1BD\x1BD\x1BD" visus_textus=""/>
+    <gradus visum_movere="1000" visus_textus="hello"/>
+    <gradus initus="A" visus_textus="hello" textus="\nA"/>
+    <gradus visum_movere="-1000" visus_textus="\nA"/>
+  </casus>
+
+  <!-- decisio XXI: visus in historia sub effusione manet -->
+  <casus titulus="the view stays put while output arrives" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="1\r\n2\r\n3" visum_movere="1" visus="1" visus_textus="1\n2"/>
+    <gradus initus="\r\n4\r\n5" historia="3" visus="3" visus_textus="1\n2"/>
+  </casus>
+
 </vectores>

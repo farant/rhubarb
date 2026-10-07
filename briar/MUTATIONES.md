@@ -49,7 +49,9 @@ Leges chartae:
   visus (`aemulator_historia`, `aemulator_visus`,
   `aemulator_visum_movere`, `aemulator_visus_cellula`,
   `aemulator_visus_involuta`, `aemulator_visum_effundere`,
-  `aemulator_historiam_effundere`). Series ceterae
+  `aemulator_historiam_effundere`); hospes:
+  `aemulator_hospes_visum_movere`, initus acceptus visum ad imum
+  reducit. Series ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex

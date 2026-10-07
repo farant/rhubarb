@@ -452,6 +452,18 @@ Later phases (re-planned after A's RELATIO):
   - **C3 - viewport and eviction:** scroll by lines/top/bottom; stays
     put under output (decision 21); clamp on eviction; steady state
     and floods allocate nothing once full (measured).
+    C3 as built: the view stays put under output (each line entering
+    history while scrolled up moves the view one up), clamps when its
+    lines are evicted (two pages: view on line 0, page evicted -> the
+    view lands on the oldest kept line, then stays there; one page:
+    eviction empties history and the view returns to the bottom),
+    clamps both ways on `visum_movere`. Host:
+    `aemulator_hospes_visum_movere` (next pulse reports `mutatum`;
+    the field is now `repingendum`), accepted input snaps the view to
+    the bottom, refused input does not. Full limit measured: 10 MB at
+    80x24 = 160 pages x 68 lines; past it, 3000 styled lines with wide
+    characters allocate nothing. 167 vectors (6 view: 5 Ghostty). 9
+    plants, all caught (P3 replanted - the first did not compile).
   - **C4 - ED 3 and resize:** clear scrollback; resize without reflow
     the Ghostty way (rows pushed off by a shrink enter history, a grow
     pulls them back).

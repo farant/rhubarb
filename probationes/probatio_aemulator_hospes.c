@@ -196,6 +196,20 @@ textus_continet (
     redde FALSUM;
 }
 
+interior i32
+visus_hospitis (
+    AemulatorHospes* h)
+{
+    redde aemulator_visus(aemulator_hospes_aemulator(h));
+}
+
+interior i32
+historia_hospitis (
+    AemulatorHospes* h)
+{
+    redde aemulator_historia(aemulator_hospes_aemulator(h));
+}
+
 /* effectus vocantis: datum vocantis recipitur */
 nomen structura {
     i32 campanae;
@@ -303,6 +317,7 @@ memoriam_probare (vacuum)
           PseudoterminaleExitus  ex;
     AemulatorHospesConfiguratio  cfg;
                          Vocans  v;
+                             i8  b[LXIV];
                             i32  lat;
                             i32  alt;
 
@@ -350,6 +365,28 @@ memoriam_probare (vacuum)
     CREDO_VERUM(aemulator_hospes_pulsare(h, ZEPHYRUM).finitus);
     CREDO_AEQUALIS_I32(aemulator_hospes_scribere(h,
         (constans i8*)"x", I), ZEPHYRUM);
+
+    /* visus per hospitem (C3, decisio XXI): movere -> mutatum;
+     * initus acceptus visum ad imum reducit, recusatus non */
+    pt = pseudoterminale_memoriae_creare(piscina,
+        (constans i8*)"1\r\n2\r\n3\r\n4\r\n5", XIII, ZEPHYRUM);
+    h  = hospitem_creare(pt, V, II, ZEPHYRUM, LXIV);
+    (vacuum)aemulator_hospes_pulsare(h, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(historia_hospitis(h), III);
+    aemulator_hospes_visum_movere(h, II);
+    CREDO_AEQUALIS_I32(visus_hospitis(h), II);
+    CREDO_VERUM(aemulator_hospes_pulsare(h, ZEPHYRUM).mutatum);
+    CREDO_FALSUM(aemulator_hospes_pulsare(h, ZEPHYRUM).mutatum);
+    memset(b, 'q', LX);
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(h, (constans i8*)b,
+        LX),
+                       LX);
+    CREDO_AEQUALIS_I32(visus_hospitis(h), ZEPHYRUM);
+    aemulator_hospes_visum_movere(h, I);
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(h, (constans i8*)"q",
+        I),
+                       ZEPHYRUM);
+    CREDO_AEQUALIS_I32(visus_hospitis(h), I);
 
     /* campana et titulus ad vocantem cum datis SUIS */
     memset(&v, ZEPHYRUM, magnitudo(v));

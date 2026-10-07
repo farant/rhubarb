@@ -290,20 +290,29 @@ lectionem_probare (vacuum)
     CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
 }
 
-/* lineas numeratas "0".."n-1" scribere, quamque cum \r\n */
+/* lineas numeratas "ab".."ab+n-1" scribere, quamque cum \r\n */
 interior vacuum
-lineas_numeratas (
+lineas_ab (
     Aemulator* a,
+          i32  ab,
           i32  n)
 {
     character b[XXIV];
           i32 i;
 
-    per (i = ZEPHYRUM; i < n; i++)
+    per (i = ab; i < ab + n; i++)
     {
         sprintf(b, "%u\r\n", (unsigned)i);
         scribere(a, b);
     }
+}
+
+interior vacuum
+lineas_numeratas (
+    Aemulator* a,
+          i32  n)
+{
+    lineas_ab(a, ZEPHYRUM, n);
 }
 
 interior Aemulator*
@@ -472,6 +481,55 @@ historiam_probare (vacuum)
     aemulator_visum_movere(a, M);
     st = stilus_visus(a, XCIX, I);
     CREDO_FALSUM(stilus_aequalis(&st, &nativus));
+}
+
+/* XVIII: visus sub evictione et limes plenus (C3) */
+interior vacuum
+visum_probare (vacuum)
+{
+         Aemulator* a;
+            chorda  v;
+    memoriae_index  usus;
+               i32  i;
+
+    imprimere("\n--- XVIII: visus et limes plenus (C3) ---\n");
+    /* paginae duae (CCLXXIII lineae): visus in linea 0; pagina eius
+     * evicta -> visus ad historiam vetustissimam (273) praeciditur,
+     * deinde ibi manet dum lineae novae veniunt (decisio XXI) */
+    a = cum_historia(XX, V, LXIV * MXXIV + I);
+    lineas_ab(a, ZEPHYRUM, C);
+    aemulator_visum_movere(a, M);
+    CREDO_AEQUALIS_I32(aemulator_visus(a), XCVI);
+    lineas_ab(a, C, D);
+    CREDO_AEQUALIS_I32(aemulator_historia(a), CCCXXIII);
+    CREDO_AEQUALIS_I32(aemulator_visus(a), CCCXXIII);
+    v = aemulator_visum_effundere(a, piscina);
+    CREDO_VERUM(v.mensura > VIII
+        && memcmp(v.datum, "273\n274\n", VIII) == ZEPHYRUM);
+    /* pagina una: evictio totam historiam aufert, visus ad imum */
+    a = cum_historia(XX, V, I);
+    lineas_ab(a, ZEPHYRUM, C);
+    aemulator_visum_movere(a, M);
+    lineas_ab(a, C, CC);
+    CREDO_VERUM(aemulator_visus(a) <= aemulator_historia(a));
+
+    /* limes plenus (X MB ordinarii, LXXX x XXIV: CLX paginae x LXVIII
+     * = X DCCCLXXX lineae): post impletionem effusio nihil allocat */
+    a = creare(LXXX, XXIV);
+    per (i = ZEPHYRUM; i < XI * M; i++)
+    {
+        scribere(a, "linea \x1B[1;31mX\x1B[0m \xE6\xA9\x8B\r\n");
+    }
+    CREDO_VERUM(aemulator_historia(a) > X * M);
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+    usus = piscina_summa_usus(piscina);
+    per (i = ZEPHYRUM; i < III * M; i++)
+    {
+        scribere(a,
+            "linea \x1B[1;32mX\x1B[0m \xE6\xA9\x8B volvitur\r\n");
+    }
+    CREDO_VERUM(piscina_summa_usus(piscina) == usus);
+    CREDO_VERUM(aemulator_historia(a) <= X * M + DCCCLXXX);
 }
 
 s32 principale (vacuum)
@@ -817,6 +875,7 @@ s32 principale (vacuum)
     responsa_probare();
     lectionem_probare();
     historiam_probare();
+    visum_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     /* historia pagina una (limes I octeti): calefactio lineas in

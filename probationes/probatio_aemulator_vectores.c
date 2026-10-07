@@ -64,6 +64,11 @@ nomen structura {
      * dumpString .screen) */
     i32     (*historia) (vacuum* t);
     chorda  (*historia_textus) (vacuum* t, Piscina* p);
+    /* C3: visus (> 0 sursum), positio, effusio visus (Ghostty
+     * dumpString .viewport) */
+    vacuum  (*visum_movere) (vacuum* t, s32 delta);
+    i32     (*visus)    (vacuum* t);
+    chorda  (*visus_textus) (vacuum* t, Piscina* p);
 } Probandum;
 
 
@@ -486,6 +491,10 @@ exemplum_currere (
         {
             pr->scribere(t, octeti.datum, octeti.mensura);
         }
+        si (numerum_legere(g, "visum_movere", &n))
+        {
+            pr->visum_movere(t, n);
+        }
         /* responsa gradus huius semper hauriuntur */
         responsa = pr->responsa(t, piscina);
         si (octetos_legere(&iu, g, "responsum", &octeti))
@@ -540,6 +549,15 @@ exemplum_currere (
             chordam_conferre(&iu, "historia_textus", octeti,
                              pr->historia_textus(t, piscina));
         }
+        si (numerum_legere(g, "visus", &n))
+        {
+            numerum_conferre(&iu, "visus", n, (s32)pr->visus(t));
+        }
+        si (octetos_legere(&iu, g, "visus_textus", &octeti))
+        {
+            chordam_conferre(&iu, "visus_textus", octeti,
+                             pr->visus_textus(t, piscina));
+        }
         cellulas_conferre(&iu, pr, t, g);
         modos_conferre(&iu, pr, t, g);
     }
@@ -584,7 +602,7 @@ exemplum_validare (
 {
     hic_manens constans character* campi[] = {
         "cursor_x", "cursor_y", "pendens", "visibilis", "altera",
-        "ignota", "tituli", "historia"
+        "ignota", "tituli", "historia", "visus"
     };
           Xar* gradus;
           Xar* filii;
@@ -618,7 +636,10 @@ exemplum_validare (
             || !effugia_sana(g, "textus", &assertiones)
             || !effugia_sana(g, "responsum", &assertiones)
             || !effugia_sana(g, "titulus", &assertiones)
-            || !effugia_sana(g, "historia_textus", &assertiones))
+            || !effugia_sana(g, "historia_textus", &assertiones)
+            || !effugia_sana(g, "visus_textus", &assertiones)
+            || (stml_attributum_habet(g, "visum_movere")
+                && !numerum_legere(g, "visum_movere", &n)))
         {
             imprimere("  vitium '%s' gradus %d: effugium malum\n",
                 literae(exemplum, "titulus"), (integer)(i + I));
@@ -729,6 +750,23 @@ fictus_historia_textus (
 {
     (vacuum)t;
     redde chorda_ex_literis("", p);
+}
+
+interior vacuum
+fictus_visum_movere (
+    vacuum* t,
+       s32  delta)
+{
+    (vacuum)t;
+    (vacuum)delta;
+}
+
+interior i32
+fictus_visus (
+    vacuum* t)
+{
+    (vacuum)t;
+    redde ZEPHYRUM;
 }
 
 interior chorda
@@ -918,6 +956,29 @@ verus_historia_textus (
     Piscina* p)
 {
     redde aemulator_historiam_effundere(((Verus*)t)->a, p);
+}
+
+interior vacuum
+verus_visum_movere (
+    vacuum* t,
+       s32  delta)
+{
+    aemulator_visum_movere(((Verus*)t)->a, delta);
+}
+
+interior i32
+verus_visus (
+    vacuum* t)
+{
+    redde aemulator_visus(((Verus*)t)->a);
+}
+
+interior chorda
+verus_visus_textus (
+     vacuum* t,
+    Piscina* p)
+{
+    redde aemulator_visum_effundere(((Verus*)t)->a, p);
 }
 
 interior chorda
@@ -1126,6 +1187,9 @@ s32 principale (vacuum)
     fictus.textus           = fictus_textus;
     fictus.historia         = fictus_historia;
     fictus.historia_textus  = fictus_historia_textus;
+    fictus.visum_movere     = fictus_visum_movere;
+    fictus.visus            = fictus_visus;
+    fictus.visus_textus     = fictus_textus;
     fictus.cursor           = fictus_cursor;
     fictus.cellula          = fictus_cellula;
     fictus.altera           = fictus_altera;
@@ -1175,6 +1239,9 @@ s32 principale (vacuum)
     verus.textus           = verus_textus;
     verus.historia         = verus_historia;
     verus.historia_textus  = verus_historia_textus;
+    verus.visum_movere     = verus_visum_movere;
+    verus.visus            = verus_visus;
+    verus.visus_textus     = verus_visus_textus;
     verus.cursor           = verus_cursor;
     verus.cellula          = verus_cellula;
     verus.altera           = verus_altera;

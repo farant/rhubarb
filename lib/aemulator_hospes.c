@@ -37,7 +37,7 @@ structura AemulatorHospes {
                       i32  per_pulsum;
                       b32  finis_lectus;
                       b32  messus;
-                      b32  amplitudo_mutata;
+                      b32  repingendum;
                       b32  clausum;
                       i32  responsa_amissa;
     PseudoterminaleExitus  exitus;
@@ -255,9 +255,9 @@ aemulator_hospes_pulsare (
         aemulator_scribere(h->a, h->sacculus, (i32)r);
         p.lecti += (i32)r;
     }
-    p.missi              += caudam_mittere(h);
-    p.mutatum            = p.lecti > ZEPHYRUM || h->amplitudo_mutata;
-    h->amplitudo_mutata  = FALSUM;
+    p.missi         += caudam_mittere(h);
+    p.mutatum       = p.lecti > ZEPHYRUM || h->repingendum;
+    h->repingendum  = FALSUM;
     si (h->finis_lectus && !h->messus)
     {
         h->messus = h->pt->finitus(h->pt->datum, &h->exitus);
@@ -272,11 +272,29 @@ aemulator_hospes_scribere (
          constans i8* octeti,
                  i32  n)
 {
+    i32 accepti;
+
     si (h->clausum)
     {
         redde ZEPHYRUM;
     }
-    redde in_caudam(h, octeti, n, h->capacitas - h->reservatum);
+    accepti = in_caudam(h, octeti, n, h->capacitas - h->reservatum);
+    /* decisio XXI: initus acceptus visum ad imum reducit */
+    si (accepti > ZEPHYRUM && aemulator_visus(h->a) > ZEPHYRUM)
+    {
+        aemulator_visum_movere(h->a, -(s32)aemulator_visus(h->a));
+        h->repingendum = VERUM;
+    }
+    redde accepti;
+}
+
+vacuum
+aemulator_hospes_visum_movere (
+    AemulatorHospes* h,
+                s32  delta)
+{
+    aemulator_visum_movere(h->a, delta);
+    h->repingendum = VERUM;
 }
 
 b32
@@ -296,7 +314,7 @@ aemulator_hospes_amplitudo (
         (vacuum)h->pt->amplitudo(h->pt->datum, latitudo, altitudo,
             px_latitudo, px_altitudo);
     }
-    h->amplitudo_mutata = VERUM;
+    h->repingendum = VERUM;
     redde VERUM;
 }
 

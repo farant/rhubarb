@@ -280,3 +280,22 @@ check). P7 first did not compile (unused variable) - replanted.
 **1049 carries the cursor:** a vector expecting "A" at the top of the
 alt screen was wrong - the cursor arrives where it was on the primary.
 
+## 2026-10-06 — C3: the view
+
+**Sign convention.** Ghostty `scroll(.{ .delta_row = -1 })` moves UP;
+our `visum_movere(+1)` moves up (the view counts lines above the live
+screen). Converted vectors flip the sign.
+
+**Eviction granularity shows in the clamp.** With one page, evicting
+it removes ALL history, so a view parked at the top goes back to the
+bottom; with two or more, it lands on the oldest kept line and stays.
+Both are "clamp to the oldest remaining line" - the first just has
+none left.
+
+**The host's snap needs "accepted".** A paste refused by a full queue
+did not reach the program, so it must not move the view (plant P6).
+The repaint flag was named for resizes (`amplitudo_mutata`) and now
+also means "the view moved" -> renamed `repingendum` (renominare
+refuses dirty files; its plan listed 6 member uses, replaced by exact
+word).
+
