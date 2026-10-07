@@ -23,6 +23,7 @@
  *   ... conflatio_plagulam_emittere / conflatio_fontem_emittere
  */
 
+/* <aedilis corpus="silva/instrumenta/silva_conflatio.c"/> */
 #ifndef SILVA_CONFLATIO_H
 #define SILVA_CONFLATIO_H
 
