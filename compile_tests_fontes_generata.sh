@@ -196,6 +196,8 @@ declare -a SOURCE_FILES=(
     "lib/tabellarius.c"
     "lib/tabula_characterum.c"
     "lib/tabula_dispersa.c"
+    "lib/tabula_nodorum.c"
+    "lib/tabula_nodorum_data.c"
     "lib/tcp_posix.c"
     "lib/tempestivum.c"
     "lib/tempus.c"

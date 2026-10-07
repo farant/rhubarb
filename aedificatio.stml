@@ -360,6 +360,32 @@
     <ingressus genus="fasciculus" via="probationes/fixa/unicode/15.1.0/emoji-data.txt"/>
     <exitus via="lib/runae_tabulae.c" provenientia="regeneratio"/>
   </actio>
+  <!-- tabula nodorum: polynomia per laqueus ex codicibus PD extracti
+       KnotInfo fixi (tools/tabula_nodorum_extrahere.sh) computata -->
+  <actio titulus="tabula_nodorum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/tabula_nodorum_generare.sh
+    </mandatum>
+    <vestigium via="build/tabula_nodorum_generare" forma="plagula"/>
+    <vestigium via="build/tabula_nodorum_generare.dSYM"/>
+    <ingressus genus="fasciculus" via="tools/tabula_nodorum_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/tabula_nodorum_generare.c"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/knotinfo/2026.10.5/nodi_x.tsv"/>
+    <ingressus genus="fasciculus" via="include/laqueus.h"/>
+    <ingressus genus="fasciculus" via="include/polynomium.h"/>
+    <ingressus genus="fasciculus" via="lib/laqueus.c"/>
+    <ingressus genus="fasciculus" via="lib/situs.c"/>
+    <ingressus genus="fasciculus" via="lib/polynomium.c"/>
+    <ingressus genus="fasciculus" via="lib/matrix.c"/>
+    <ingressus genus="fasciculus" via="lib/congruentia.c"/>
+    <ingressus genus="fasciculus" via="lib/anulus.c"/>
+    <ingressus genus="fasciculus" via="lib/fractio.c"/>
+    <ingressus genus="fasciculus" via="lib/magnus.c"/>
+    <ingressus genus="fasciculus" via="lib/chorda.c"/>
+    <ingressus genus="fasciculus" via="lib/chorda_aedificator.c"/>
+    <ingressus genus="fasciculus" via="lib/piscina.c"/>
+    <exitus via="lib/tabula_nodorum_data.c" provenientia="regeneratio"/>
+  </actio>
   <!-- data ex tabula html.entities PYTHONIS legitur: ingressus EXTRA
        repositorium, per binarium python3 declaratus (versio mutata ->
        sigillum mutatum) -->

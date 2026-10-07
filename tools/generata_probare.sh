@@ -33,6 +33,9 @@
 #   VIII. tabula entitatum HTML (lib/entitates_html_tabula.c) ==
 #        generator (tools/entitates_html_generare.sh -probare,
 #        octetim) - olim sine custode (fabrica spec v2 par. 0.4).
+#   IX.  tabula nodorum (lib/tabula_nodorum_data.c) == generator ex
+#        extracto KnotInfo fixo (tools/tabula_nodorum_generare.sh
+#        -probare, octetim).
 # Stala per nomen; nihil tacite.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -165,6 +168,14 @@ if ./tools/entitates_html_generare.sh -probare >"$TMP/entitates.log" 2>&1; then
     echo "  ok   entitates: lib/entitates_html_tabula.c recens"
 else
     echo "  STALUM entitates: $(tail -1 "$TMP/entitates.log")"
+    fracta=1
+fi
+
+# ---- IX. tabula nodorum ----
+if ./tools/tabula_nodorum_generare.sh -probare >"$TMP/nodi.log" 2>&1; then
+    echo "  ok   tabula nodorum: lib/tabula_nodorum_data.c recens"
+else
+    echo "  STALUM tabula nodorum: $(tail -1 "$TMP/nodi.log")"
     fracta=1
 fi
 

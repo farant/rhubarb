@@ -283,6 +283,19 @@
     <forma textus="symmetricus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="symmetrica" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="symmetricum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="symmetrici" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="symmetrico" casus="ablativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="chiralis" lingua="latina" classis="adiectivum" nota="Neolatina (Gk. cheir, manus): chiralis, imagini suae speculari non congruens (nodus chiralis); sedes include/tabula_nodorum.h; WORDS caret">
+    <forma textus="chiralis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="chirales" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="amphichiralis" lingua="latina" classis="adiectivum" nota="Neolatina (Gk. amphi + cheir): amphichiralis, imagini suae speculari congruens (nodus amphichiralis, e.g. 4_1); sedes include/tabula_nodorum.h; WORDS caret">
+    <forma textus="amphichiralis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="amphichirales" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="reversibilis" lingua="latina" classis="adiectivum" nota="Neolatina (revertere + -bilis): reversibilis, directione inversa idem (nodus invertibilis, KnotInfo 'reversible'); sedes include/tabula_nodorum.h; WORDS caret">
+    <forma textus="reversibilis" casus="nominativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
   <vocabulum lemma="trifolium" lingua="latina" classis="substantivum" nota="Plinius: trifolium (planta); nodus trifolium (laqueus, nodus toroidalis T(2,3))">
     <forma textus="trifolium" casus="nominativus" numerus="singularis" genus="neutrum"/>
