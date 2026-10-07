@@ -30,6 +30,9 @@
 #        tacite non intrabat)
 #   P15  '${FUMUS_DIR:-data}/w.txt' - FUMUS_DIR a vocante positum ->
 #        non RECENS (clavis 'ambitus FUMUS_DIR', A4)
+#   P16  SIGNUM (fabrica plan 5 T3): porta_y signum declarat - bin/fabrica
+#        cursorem ipse currit et verdictum ipse scribit ('y: <signum>
+#        <verbum>'); signum absens -> FRACTUM, verdictum deletum
 #   AUD  caeca.txt (lectio EXCUSATA, clavis eam ignorat) mutatum sub
 #        transitu RECENS: iudicare caecum RECENS; sanare -audit ->
 #        AUDITUM_DISCORS; restitutum -> 'auditus: transitus iterum congruit'
@@ -79,8 +82,21 @@ cat > "$R/aedificatio.stml" <<'DECL'
     <ingressus genus="fasciculus" via="build/gen.h"/>
     <exitus via="build/fabrica/verdicta/x.txt" provenientia="verdictum"/>
   </actio>
+  <actio titulus="porta_y" genus="iudicium" lectiones="verum"
+      signum="Y PROBATIONES:">
+    <mandatum>
+      <verbum! (>./porta_y.sh
+    </mandatum>
+    <ingressus genus="effectus" via="porta_y.sh"/>
+    <exitus via="build/fabrica/verdicta/y.txt" provenientia="verdictum"/>
+  </actio>
 </aedificatio>
 DECL
+cat > "$R/porta_y.sh" <<'PORTAY'
+#!/bin/bash
+echo "initium"
+echo "Y PROBATIONES: 2/2 praeteritae"
+PORTAY
 cat > "$R/gen.sh" <<'GEN'
 #!/bin/bash
 D="${FABRICA_SCRIPTURA:-.}"
@@ -109,7 +125,7 @@ echo "status${s:+ }$s" > build/x/status
 [ "$(cat "$(echo caeca.txt)")" = ok ] || exit 1
 echo "x: sanum" > build/fabrica/verdicta/x.txt
 PORTA
-chmod +x "$R/gen.sh" "$R/porta.sh"
+chmod +x "$R/gen.sh" "$R/porta.sh" "$R/porta_y.sh"
 printf '/* a.h */\n' > "$R/src/a.h"
 printf '#include "a.h"\n#include "gen.h"\nint main(void) { return GEN_VALOR < 0; }\n' > "$R/src/a.c"
 printf '3\n' > "$R/gen/fons.txt"
@@ -213,6 +229,14 @@ printf 'ok\n' > "$R/caeca.txt"
 fab sanare "$V"
 fab sanare -audit "$V"
 if grep -q 'auditus: transitus iterum congruit' "$T/o"; then ok "     restitutum: auditus congruit"; else non "AUD congruit"; fi
+
+# P16: signum - verdictum a fabrica scriptum; signum absens -> FRACTUM
+VY="build/fabrica/verdicta/y.txt"
+fab sanare "$VY"
+if grep -q '^SANATUM     porta_y' "$T/o" && [ "$(cat "$R/$VY" 2>/dev/null)" = "y: Y PROBATIONES: 2/2" ]; then ok "P16  signum: verdictum a fabrica scriptum"; else non "P16 "; fi
+printf '#!/bin/bash\necho nihil\n' > "$R/porta_y.sh"
+fab sanare "$VY"; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'FRACTUM     porta_y' "$T/o" && [ ! -f "$R/$VY" ]; then ok "     signum absens -> FRACTUM, verdictum deletum"; else non "     P16 absens"; fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus iudicii: FRACTUM"; exit 1; fi
 echo "fumus iudicii: sanum"

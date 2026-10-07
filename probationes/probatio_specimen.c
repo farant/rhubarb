@@ -16,6 +16,7 @@
 #include "specimen.h"
 #include "imago.h"
 #include "imago_png.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -62,7 +63,7 @@ _exstat (
 {
     FILE* f;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f != NIHIL)
     {
         fclose(f);

@@ -178,6 +178,47 @@ site). The verdict key itself is `./crusta/effectus.sh -clavis`
 effectus T8: `effectus` subsumes it; its idiom test lives on as
 `probatio_crusta_effectus_idiomata`.
 
+**Effectus values (slice 2, 2026-10-06, `project-specs/effectus-spec-2.md`).**
+The evaluator passes a `Valor`, not a string: CERTUS (1..16 exact
+members), EXEMPLAR (patterns bash already expanded: `for f in lib/*.c`),
+PRAEFIXUM, TEMPORARIA (under a `$(mktemp)` object, id `plagula:L:C`;
+key ignores it), IGNOTUS. Joins are unions, concatenation a cross
+product, over 16 members -> common prefix. One SITE per member (same
+sedes). Arrays expand before the command table; `${X%s}`/`##`,
+basename/dirname per member; `${X:-d}` resolves to d when nothing in
+scope assigns X (the `ambitus X` key line guards it). Two lexical
+rules: a use inside `for X in L`'s body takes L alone (unless the body
+reassigns X); `X=""` joined with a path stays `discordia`. Every
+unresolved site names its `causa` (argumentum, ansa_read, substitutio,
+ambitus, operator, discordia, tabulatum, recursio, cwd ignotum, absens;
+`valor ignotus` = residual, counted, should be 0). Key: partial in-tree
+reads -> `arbor <dir>` (names AND contents, recursive; lib/fabrica.c);
+`directorium` seals NAMES only - never emit it for content reads.
+Ordering and arguments: slice 3, below.
+
+**Effectus ordering (slice 3, 2026-10-06, `project-specs/effectus-spec-3.md`
+§XI).** A use's value is the join of the definitions that may REACH it:
+a backward walk over crusta's tree (`_ambulare`) - sequence kills
+(plain assignment, `for X`, `local X`), branches/case items are
+alternatives, `&&`/pipeline members and loop back-edges are may; a
+definition across a process boundary (`( )`, `$( )`, `<( )`, coproc, a
+`|` pipeline member) does not reach out; the top of a function body
+continues at every call site (`FunctioNota`: static call sites; a
+function whose name appears as a static word - `trap f EXIT` - or that
+a dynamic title may call is `incerta`); the top of a sourced plagula
+continues at every site that sources it. `$N` = union over call sites
+(functions) or exec sites (scripts: `Arcus` words; `"$@"` forwards; a
+chain root's argv is DECLARED as `<argumenta>` on its effectus
+ingressus, checked against `silva.py` PORTAE by the pythonica gate).
+Anything unplaceable (eval, unresolved source, uncertain function) =
+FALLBACK to the slice-2 union, so values only shrink: the SUBSET CHECK
+`./crusta/effectus_subsumptio.sh <slice-2 binary>` proves it house-wide
+(316/316; frozen binary in the session scratchpad, md5 617cd37e -
+rebuild recipe in plan-3 Global constraints). It cannot see a wrongly
+DROPPED member: guard exclusions with contrary fixtures + plants.
+Census: nulla 1,210 -> 696, discordia 531 -> 192. The census derives
+every script as a ROOT, so script arguments only act in chains.
+
 **Reflexes.** `<tolera codex="lint:X" (>causa` in a comment exempts —
 one annotation covers a whole INVOCATION (exemption filters by the
 owning node's range), and inside `declare -a X=( … )` it must go above

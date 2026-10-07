@@ -141,3 +141,60 @@ emptied (A10, RSS 1.3 → 168 MB unnoticed) — now bounded through the apex
 (< 16 KB; the mutant reads 8.8 MB / 21.9 MB). Not covered by the suite: the
 fallback when a scratch piscina cannot be created (reviewer verified it by
 fault injection). 1240 checks.
+
+## 2026-10-05 — review III: scratch piscinae only when BOTH operands are big
+
+The reviewer measured a time jump around 40 digits in fractio: gcd(big, 1)
+— constant in fractio (every integer has denominator 1) — opened the two
+scratch piscinae because ONE operand was over the threshold. Now
+`_per_alternas` requires both operands to exceed `MAGNUS_LIMES_ALTERNARUM`.
+Why the caller's memory stays bounded when one is small: after the first
+Euclid step the remainder is smaller than the small operand, so from the
+second step on everything is small (the witness variant's first quotient
+can be big, but it is one value, not a growth per step). Test: gcd(big,
+1001) and the Bézout gcd(−7, big) give correct results with
+`magnus_apex_alternarum() == 0`; with the old `||` both apex checks are
+red. 1245 checks.
+
+## 2026-10-05 — review IV: the both-big rule was wrong for the witness variant
+
+My review-III claim ("after the first step everything is small; the
+witness variant's first quotient can be big, but it is one value") was
+false. With Bézout witnesses, the witness of the small operand becomes
+~|a|/g after step 1 and EVERY later step builds a new one of that size, so
+~180 small Euclid steps (a = K·F184 + F183, b = F184) each left O(n) limbs
+in the caller's piscina: 167 KB at 1k digits, 1.54 MB at 10k, for a 4 KB
+result (reviewer's repro, reproduced here before fixing).
+
+Fix: `_per_alternas(a, b, ambo)` — the plain gcd keeps "both big" (the
+fractio timing fix: fractio only calls the plain gcd), the witness variant
+goes back to "either big". Repro after the fix: caller usage == result
+size (448 B, 4184 B). Test: testatus(F10000·F184 + F183, F184) with a
+caller bound < 16 KB and apex > 0, plus the plain gcd on the same pair
+(apex 0, bounded); the review-III assertion apex == 0 for testatus(−7,
+F1000) encoded the wrong rule and now expects > 0. Plant (witness variant
+back to both-big) → the new bound and apex checks red. 1252 checks.
+
+Lesson: I tested the claim with −7 — two or three Euclid steps — so the
+per-step growth never showed. A memory claim about "the steps after"
+needs an input with MANY steps after.
+
+## 2026-10-06 — `magnus_transcribe` made public
+
+Polynomium's scratch piscinae need to copy a final value out to the
+caller (review polynomium-I, A3). The internal `_transcribere` (used by
+gcd) is now also public as `magnus_transcribe(a, piscina)`: fresh limbs,
+values in s64 without allocation. Test: the copy equals the original, its
+limbs are NOT the original's (checked directly — reading after
+destroying the source piscina would pass without a sanitizer), and it
+survives the source piscina's destruction. 1256 checks.
+
+## 2026-10-06 — `magnus_residuum_parvum(a, n)`
+
+a mod n (Euclidean, 0 ≤ r < n) for word-size moduli 1 ≤ n < 2^32, by
+Horner over the limbs from the top — (r << 32) | limb < 2^64 since r < n
+— with no allocation; inline values handle S64_MIN via −(x + 1) + 1. Made
+public for `congruentia` (reducing big integers mod p is the inner loop
+of multimodular algorithms; limbs are private to magnus). Tested through
+congruentia's vectors (40 big values up to 60 digits, signs) and its
+CRT round trips; a plant dropping the sign adjustment is red there.

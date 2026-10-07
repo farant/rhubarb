@@ -122,6 +122,60 @@ tools/&lt;x&gt;.c</code> for the four natura tools first, then
 script (or the fabrica action) produce the manifests before the provenance
 step, so "green on a fresh clone" holds again.</p>
 
+<h3><span class="id">A6</span>Future library: roaring bitmaps (compressed integer sets)</h3>
+<p><span class="status">idea</span> <span class="nota">agreed as a someday
+library, 2026-10-06, while discussing <code>polynomium</code>'s dense
+memory</span></p>
+<p><strong>What.</strong> Sets of 32-bit integers, compressed by splitting
+the space into chunks of 2<sup>16</sup> and choosing the representation per
+chunk: a sorted array of 16-bit values when sparse, a raw 8 KB bitmap when
+dense, runs when clustered. Fast union, intersection, difference,
+membership, rank and iteration; a stable serialized form.</p>
+<p><strong>Why.</strong> The standard structure for inverted indexes and
+posting lists ("which documents contain this word", set intersections in
+queries). Consumers would be the future database and search work, and
+possibly the house's own indexes (silva's symbol index, census and ledger
+queries). Clearly bounded, independent of everything else, and a good
+benchmark subject. Not related to the math stack except in idea: the same
+dense-or-sparse-per-region choice could later give a sparse polynomial
+type for multivariate work (HOMFLY), where dense storage is hopeless.</p>
+
+<h3><span class="id">A7</span>Make the <code>venenum</code> gate owed automatically</h3>
+<p><span class="status">todo</span> <span class="nota">2026-10-06, with the
+gate itself; needs main (the ledger is off in worktrees)</span></p>
+<p><strong>What.</strong> The new gate <code>venenum</code>
+(<code>tools/venenum_probare.sh</code>: piscina built with
+<code>-DPISCINA_VENENUM=1</code>, which fills rolled-back memory with 0xA5,
+plus ASan/UBSan, over the piscina, magnus, fractio, situs and polynomium
+suites) runs only when named by hand today. Add an inventory lens in the
+ledger ('suitae probationum', <code>tegit viae</code>) so
+<code>commissio</code> adds it whenever <code>lib/piscina.c</code>,
+<code>magnus</code>, <code>fractio</code>, <code>situs</code> or
+<code>polynomium</code> change — and extend its suite list as more code
+uses scratch piscinae (linear algebra next).</p>
+<p><strong>Why.</strong> A rollback does not free or clear memory, so a
+value that outlives it still reads correctly: two planted lifetime bugs
+passed the normal suite and were caught only by the poisoned build. A gate
+that is never owed is a dead gate.</p>
+
+<h3><span class="id">A8</span>Modular Hermite and Smith when matrix sizes grow</h3>
+<p><span class="status">idea</span> <span class="nota">2026-10-06, measured
+when <code>matrix</code> v2 landed</span></p>
+<p><strong>Update 2026-10-06.</strong> The review found the Bézout version
+blowing up (Hermite 36×36: 22.6 s); switching to smallest-pivot Euclid made
+it 11 ms and Smith with U, V at 40×40 46 ms. Modular methods are now only
+for genuinely large matrices.</p>
+<p><strong>What.</strong> <code>matrix_forma_hermite</code> and
+<code>matrix_forma_smith</code> use classical elimination (now Euclid,
+smallest pivot first), whose intermediate entries still grow with size:
+Hermite 60×60 takes 112 ms with a ~0.9 MB scratch peak. Modular methods (Domich–Kannan–Trotter Hermite modulo
+the determinant; Smith via the determinant modulus) keep entries bounded
+and can replace the internals without changing the API or the
+certificates.</p>
+<p><strong>Why later.</strong> No consumer needs big matrices yet (knot
+Seifert matrices and small homology computations are tiny); the agenda A3
+benchmarks should decide when.</p>
+
 <h2>Done</h2>
 <p class="nota">Finished items, with the commit that closed them.</p>
 

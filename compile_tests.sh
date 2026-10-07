@@ -644,8 +644,10 @@ run_all_tests() {
     fi
 
     # Daemon tabularii SEMEL praestructus: tres probationes (cliens_
-    # tabularii, villa_agens, sententiae_horreum) './gesta/tabulariumd.sh
-    # -struere' vocant - parallelae simul aedificarent (2026-09-02)
+    # tabularii, villa_agens, sententiae_horreum) eum CURRUNT, non
+    # struunt (fabrica plan 5 T5b; olim quaeque './gesta/tabulariumd.sh
+    # -struere' vocabat). Sub fabrica: actio tabulariumd, praecondicio
+    # portae aedilis
     if [ -x ./gesta/tabulariumd.sh ]; then
         ./gesta/tabulariumd.sh -struere > /dev/null 2>&1 || true
     fi

@@ -86,6 +86,13 @@
             enumeraverunt (FABRICA_LECTIONES) sigillatur et ingressus
             manifestorum supplet; ingressus declarati (scripta, argv)
             manent. Absens = falsum"/>
+    <attributum nomen="signum" genus="textus"
+      nota="iudicium solum (fabrica plan 5 T3): praefixum litterale quod
+            cursor portae edit ('TOML PROBATIONES: '). bin/fabrica
+            mandatum (cursorem ipsum) currit, verdictum ante cursum
+            delet et post transitum scribit: '<nomen>: <signum><verbum
+            sequens>' - exitus 0, signum praesens, nullum FRACT. Absens
+            = mandatum verdictum suum scribit (silva.py -iudicium)"/>
     <liberum nomen="mandatum" maximum="1"/>
     <liberum nomen="praecondicio"/>
     <liberum nomen="vestigium"/>
@@ -154,6 +161,17 @@
     <attributum nomen="suffixa" genus="textus"
       nota="plagulae solum: suffixa spatio separata ('.c .h'); absens =
             omnes plagulae directorii (profunditate 0)"/>
+    <liberum nomen="argumenta" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="argumenta"
+    nota="effectus solum (effectus-plan-3 T5, A1): argv radicis catenae -
+          verba post scriptum quae actio ei dat, ordine; vacuum = nulla;
+          absens = ignota ($N radicis 'argumentum' manet). Elementum,
+          non attributum: attributum vacuum formatio in nudum verteret
+          (lectum 'true'). Concordia cum PORTAE pythonicae/silva.py
+          probatur (silva.argumenta_catenarum, porta pythonica)">
+    <liberum nomen="verbum"/>
   </elementum>
 
   <elementum nomen="exitus">

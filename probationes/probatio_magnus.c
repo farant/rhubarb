@@ -757,6 +757,32 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+     * TRANSCRIPTIO: copia superstat piscinae originis destructae
+     * ================================================== */
+
+    {
+        Piscina* origo = piscina_generare_dynamicum("probatio_origo",
+            (memoriae_index)4096);
+          Magnus magnum;
+          Magnus copia;
+          Magnus parvum;
+
+        imprimere("\n--- Probans transcriptionem ---\n");
+        magnum  = magnus_potentia(magnus_ex_s64(-VII), C, origo);
+        copia   = magnus_transcribe(magnum, piscina);
+        parvum  = magnus_transcribe(magnus_ex_s64(-XLII), piscina);
+        CREDO_VERUM (magnus_aequalis(copia, magnum));
+        /* membra NOVA, non partita (lectio post destructionem sola
+         * sine sanitatore nihil probaret) */
+        CREDO_VERUM (copia.membra != magnum.membra);
+        piscina_destruere(origo);
+        CREDO_VERUM (magnus_aequalis(copia, magnus_potentia(
+            magnus_ex_s64(-VII), C, piscina)));
+        CREDO_VERUM (_textus_est(parvum, "-42"));
+    }
+
+
+    /* ==================================================
      * EUCLIDES: Fibonacci (casus pessimus) et memoria vocantis
      *
      * mdc(F_m, F_n) = F_mdc(m,n). Gradus Euclidis = index: olim omnes
@@ -815,6 +841,51 @@ s32 principale (vacuum)
         g = magnus_divisor_communis(f[M], f[DCCC], piscina);
         (vacuum)magnus_divisor_communis(f[MCC], f[CM], piscina);
         CREDO_VERUM (magnus_aequalis(g, f[CC]));
+
+        /* operandus unus parvus (recensio III): sine testibus via
+         * vocantis, apex nullus; cum testibus piscinae alternae (unus
+         * magnus sufficit, recensio IV) */
+        g = magnus_divisor_communis(f[X * M], _ex("1001"), piscina);
+        CREDO_AEQUALIS_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
+        CREDO_VERUM (magnus_aequalis(g, magnus_divisor_communis(
+            magnus_ex_s64(MI), f[X * M], piscina)));
+        g = magnus_divisor_communis_testatus(magnus_ex_s64(-VII), f[M],
+            piscina, &u, &w);
+        CREDO_MAIOR_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
+        CREDO_VERUM (magnus_aequalis(g, magnus_adde(
+            magnus_multiplica(u, magnus_ex_s64(-VII), piscina),
+            magnus_multiplica(w, f[M], piscina), piscina)));
+
+        /* testes cum operando uno parvo (recensio IV): testis operandi
+         * parvi post gradum primum magnus, deinde CLXXX gradus parvi -
+         * via vocantis MB crescebat, ergo piscinae alternae */
+        {
+            Magnus magnum = magnus_adde(magnus_multiplica(f[X * M],
+                f[CLXXXIV], arca), f[CLXXXIII], arca);
+
+            piscina_destruere(vocans);
+            vocans = piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            g = magnus_divisor_communis_testatus(magnum, f[CLXXXIV],
+                vocans, &u, &w);
+            CREDO_VERUM (_textus_est(g, "1"));
+            CREDO_VERUM (magnus_aequalis(g, magnus_adde(
+                magnus_multiplica(u, magnum, arca),
+                magnus_multiplica(w, f[CLXXXIV], arca), arca)));
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), XVI * M);
+            CREDO_MAIOR_I32 ((i32)magnus_apex_alternarum(), ZEPHYRUM);
+            piscina_destruere(vocans);
+
+            /* sine testibus: gradus primus solus magnus, via
+             * vocantis */
+            vocans = piscina_generare_dynamicum("probatio_vocans",
+                (memoriae_index)4096);
+            g = magnus_divisor_communis(magnum, f[CLXXXIV], vocans);
+            CREDO_VERUM (_textus_est(g, "1"));
+            CREDO_AEQUALIS_I32 ((i32)magnus_apex_alternarum(),
+                ZEPHYRUM);
+            CREDO_MINOR_I32 ((i32)piscina_summa_usus(vocans), XVI * M);
+        }
 
         /* operandi pauci membrorum: via vocantis, apex nullus */
         (vacuum)magnus_divisor_communis(f[LX], f[LIX], piscina);

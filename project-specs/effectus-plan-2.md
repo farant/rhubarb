@@ -269,16 +269,16 @@ fixtures + goldens.
 
 ### Task T7: close
 
-- [ ] **Step 1:** Census by causa, before (T1 baseline) and after, in
+- [x] **Step 1:** Census by causa, before (T1 baseline) and after, in
   spec §XII As built; unresolved share; classes A/B/C vs spec §XIII.
-- [ ] **Step 2:** Oracle on toml's chain: non tecta 0, temp paths
+- [x] **Step 2:** Oracle on toml's chain: non tecta 0, temp paths
   observed and covered; toml chain 0 errata; judge time vs 2.2–3.0 s.
-- [ ] **Step 3:** Docs: crusta_effectus worklog, crusta/CLAUDE.md
+- [x] **Step 3:** Docs: crusta_effectus worklog, crusta/CLAUDE.md
   (value forms, causa vocabulary), MEMORY.
-- [ ] **Step 4:** Ledger: park closed; next slice (ordering / flow +
+- [x] **Step 4:** Ledger: park closed; next slice (ordering / flow +
   function arguments, D 5% + whatever T1–T6 left) filed as a
   desideratum under 'flow analysis', seeded by the T7 census by causa.
-- [ ] **Step 5: Commit.**
+- [x] **Step 5: Commit.**
 
 ## Not in this plan (stated)
 

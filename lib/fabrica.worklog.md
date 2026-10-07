@@ -1922,3 +1922,81 @@ plant proved it), dominus (declared exitus, else IGNOTUM "sine domino"),
 ignotum. Seam slot `sutura->effectus`; `FABRICA_EFFECTUS` overrides the
 tool like FABRICA_FONTATIONES. Canon value added in the same commit
 (fabrica_fumus XXXII enforces).
+
+## 2026-10-06 - plan 5 T1: why a verdict re-runs
+
+- `cursus.causa` only ever held the RUN's own cause; for a successful
+  heal that is empty, so 36 of toml's 41 recorded runs say nothing. The
+  judge's reason existed one frame earlier (`_ante_agere`'s `causa`) and
+  died with it. Now `stalum` (field + column, migration V).
+- The judge's own wording was the second problem: on a missed transitus
+  key it could not say WHICH declared input changed - the key is one
+  seal over all particles. Storing the particles of each recorded pass
+  (migration VI) makes the miss nameable; first live result:
+  `ingressus mutatus: pythonica/silva.py`.
+- Two traps fixed on the way: stack-built FabricaSanatio (field by
+  field - a new field is garbage; memset now) and the migration count
+  given as a literal at the call site (derived from the array now).
+- bin/fabrica is a declared input of the toml verdict (provenance of a
+  house binary) - rebuilding fabrica voids every verdict that declares
+  it. To measure in T4.
+
+## 2026-10-06 - plan 5 T3: the verdict runner in C
+
+- silva.py was an input of every verdict only because the mandatum was
+  `silva.py -iudicium G` (run PORTAE[G], regex, write `<G>: <match>`).
+  That logic is small: bin/fabrica now does it for actions that declare
+  `signum` - delete the old verdict, run the runner, find the literal
+  prefix in the log (ANSI stripped), take the next word. toml's verdict
+  text did not change by a byte.
+- Two traps on the way: a local named `nomen` (latina macro for
+  typedef - "typedef requires a name"); and a plant that set the found
+  position to the start of a short log, so skipping the prefix length
+  read past the buffer - the test stayed GREEN. A plant with undefined
+  behaviour is not a plant; the one used names the signature itself.
+- The judge is careful about its own staleness: `sanare` refused while
+  bin/fabrica was older than lib/fabrica.c ("iudex ipse non recens").
+
+## 2026-10-06 - plan 5 T5a: raw IO in the root suite
+
+- 57 raw calls in the closure of the root tests; a one-word change each
+  through two transitional shims (`lectiones_fopen`, `lectiones_stat`).
+  `/dev/` is excluded inside the shim: a device read noted as L would be
+  judged as machina (IGNOTUM) and the verdict would never be reusable.
+- Two self-inflicted detours: `formator -scribere` on files that were
+  NOT conforming at HEAD reformatted them whole (arbor2_expandere.c:
+  552 divergences -> 0) - the files were restored from HEAD and the
+  edits reapplied by line; and a zsh loop over `$FILES` ran once on one
+  argument (needs `${=FILES}`). Formatter comparisons must be made IN
+  PLACE: the formatter judges by path, and excluded legacy files copied
+  to the scratchpad report hundreds of divergences they do not have.
+- examen's own build broke: committed source lists (GENERATUM AB
+  AEDILE) did not know that vigilia.c now needs lectiones.c; the
+  generata gate named the four lists.
+
+
+## 2026-10-06 - fabrica-5 T5b: porta_aedilis, and what a whole-suite verdict exposes
+
+- The first gate whose runner runs ~230 tests under the ledger. Each heal
+  failed for a NEW reason, and each was a real hole, not paperwork: tests
+  writing beside installed binaries and at the repo root (the vigilia test
+  deleted the residents' real commit stamp), three tests relinking the
+  live resident's binary, aedilis keying HEAD through a temp file, child
+  writes nobody notes (sqlite, shell redirects), /tmp, and a test that
+  reads the live .git. Lesson: the snapshot (before/after photograph) is
+  a better test-hygiene audit than anything we had - radix never faced it
+  because it is not a verdict action.
+- Two fabrica rules came out of it, both general: (1) a read under the
+  action's OWN vestigium is its product (communis excuses nothing);
+  (2) temporary roots are never inputs. Without (1) every child-written
+  scratch file needs a manual S note, and sqlite cannot note.
+- fabrica refuses an ignota exitus as an ingressus ("praecondicio sola
+  licet") - keyed the daemon's SOURCES (manifesta) instead of its bytes,
+  which is the better key: bytes move on relink, sources only on change.
+- `_lectiones_transitus_colligere` collects S in pass 0 over the WHOLE
+  ledger, then judges reads in pass 1: an S anywhere in the run exempts
+  the path, order does not matter.
+- Heals ~100 s each (the crude gate was 173 s; objects and the oracle
+  memory warm). Iterate on the ledger (awk over build/fabrica/lectiones/
+  porta_aedilis.tsv for build/ reads without S) instead of one heal per
+  finding.

@@ -16,6 +16,7 @@
 #include "piscina.h"
 #include "filum.h"
 #include "processus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <sys/stat.h>
 
@@ -61,7 +62,7 @@ _fons_absens (
 
     per (i = ZEPHYRUM; NG_FONTES[i] != NIHIL; i++)
     {
-        si (stat(NG_FONTES[i], &f) != ZEPHYRUM)
+        si (lectiones_stat(NG_FONTES[i], &f) != ZEPHYRUM)
         {
             redde NG_FONTES[i];
         }
@@ -76,7 +77,7 @@ _fons_recentior_binario (
     structura stat  b;
     i32 i;
 
-    si (stat(binarium, &b) != ZEPHYRUM)
+    si (lectiones_stat(binarium, &b) != ZEPHYRUM)
     {
         redde NIHIL;
     }
@@ -85,7 +86,7 @@ _fons_recentior_binario (
     {
         structura stat f;
 
-        si (stat(NG_FONTES[i], &f) != ZEPHYRUM)
+        si (lectiones_stat(NG_FONTES[i], &f) != ZEPHYRUM)
         {
             perge;   /* absentiam _fons_absens sola nuntiat */
         }

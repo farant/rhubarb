@@ -318,7 +318,7 @@ hic_manens constans character* CAUSAE =
     "cat \"$NESCIO/y\"\n"                                 /* 7 */
     "cat \"${X/a/b}\"\n"                                  /* 8 */
     "Y=a\n"                                               /* 9 */
-    "Y=\"$(mktemp)\"\n"                                    /* 10 */
+    "if c; then Y=\"$(mktemp)\"; fi\n"                     /* 10 */
     "cat \"$Y\"\n"                                        /* 11 */
     "A=(x y)\n"                                           /* 12 */
     "cat \"$A\"\n"                                        /* 13 */
@@ -418,6 +418,221 @@ hic_manens constans character* PRAEDEFINITUM =
     "cat \"${1:-data/u}/w\"\n"                             /* 6 */
     "E=\"\"\n"                                            /* 7 */
     "cat \"${E:-data/e}/v\"\n";                            /* 8 */
+
+/* subsumptio (effectus-plan-3 T1): summarium VETUS et NOVUM ficta */
+hic_manens constans character* SUMMARIUM_VETUS =
+    "<effectus lingua=\"bash\" radix=\"r.sh\">"
+    "<processus radix=\"r.sh\">"
+    "<lectio via=\"a/x\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "<lectio via=\"lib/*.c\" forma=\"globus\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"2:1-2:5\" octeti=\"6-10\"/>"
+    "<lectio via=\"d/\" forma=\"praefixum\" resolutio=\"partialis\" "
+        "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
+    "<lectio via=\"$X\" forma=\"via\" resolutio=\"nulla\" "
+        "plagula=\"r.sh\" sedes=\"4:1-4:5\" octeti=\"18-22\"/>"
+    "<lectio via=\"./\" forma=\"praefixum\" resolutio=\"partialis\" "
+        "plagula=\"r.sh\" sedes=\"5:1-5:5\" octeti=\"24-28\"/>"
+    "</processus></effectus>";
+
+/* NOVUM: membra quae VETUS tegit (aequalis, globus, praefixum,
+ * irresolutum) */
+hic_manens constans character* SUMMARIUM_BONUM =
+    "<effectus lingua=\"bash\" radix=\"r.sh\">"
+    "<processus radix=\"r.sh\">"
+    "<lectio via=\"a/x\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "<lectio via=\"lib/a.c\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"2:1-2:5\" octeti=\"6-10\"/>"
+    "<lectio via=\"d/q.txt\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
+    "<lectio via=\"z\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"4:1-4:5\" octeti=\"18-22\"/>"
+    "<lectio via=\"lib/q.c\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"5:1-5:5\" octeti=\"24-28\"/>"
+    "</processus></effectus>";
+
+/* NOVUM: membrum extra valorem veterem (a/y), et regressio (praefixum
+ * ubi vetus via exacta erat) - ambo nominantur */
+hic_manens constans character* SUMMARIUM_MALUM =
+    "<effectus lingua=\"bash\" radix=\"r.sh\">"
+    "<processus radix=\"r.sh\">"
+    "<lectio via=\"a/y\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "<lectio via=\"src/a.c\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"2:1-2:5\" octeti=\"6-10\"/>"
+    "<lectio via=\"d/q.txt\" forma=\"via\" resolutio=\"plena\" "
+        "plagula=\"r.sh\" sedes=\"3:1-3:5\" octeti=\"12-16\"/>"
+    "<lectio via=\"a/\" forma=\"praefixum\" resolutio=\"partialis\" "
+        "plagula=\"r.sh\" sedes=\"1:1-1:5\" octeti=\"0-4\"/>"
+    "</processus></effectus>";
+
+/* ordo (effectus-plan-3 T2; spec-3 par. II): definitiones
+ * attingentes */
+hic_manens constans character* ORDO =
+    "#!/bin/bash\n"                                          /* 1 */
+    "A=a1\n"                                                 /* 2 */
+    "A=a2\n"                                                 /* 3 */
+    "cat \"$A\"\n"                                            /* 4 */
+    "B=b1\n"                                                 /* 5 */
+    "if c; then B=b2; fi\n"                                  /* 6 */
+    "cat \"$B\"\n"                                            /* 7 */
+    "C=c1\n"                                                 /* 8 */
+    "case $Z in x) C=c2;; y) C=c3;; esac\n"                   /* 9 */
+    "cat \"$C\"\n"                                            /* 10 */
+    "for f in f1 f2; do cat \"$f\"; f=f3; done\n"              /* 11 */
+    "cat \"$f\"\n"                                            /* 12 */
+    "D=d1\n"                                                 /* 13 */
+    "while c; do cat \"$D\"; D=d2; done\n"                    /* 14 */
+    "E=e1\n"                                                 /* 15 */
+    "[ -n \"$Y\" ] || E=e2\n"                                 /* 16 */
+    "cat \"$E\"\n"                                            /* 17 */
+    "G=g1\n"                                                 /* 18 */
+    "G=g2\n"                                                 /* 19 */
+    "eval \"$CMD\"\n"                                         /* 20 */
+    "cat \"$G\"\n"                                            /* 21 */
+    "H=h\n"                                                  /* 22 */
+    "H=\"$H/x\"\n"                                            /* 23 */
+    "cat \"$H\"\n"                                            /* 24 */
+    "K=k0; if c; then K=k1; elif d; then cat \"$K\"; K=k2; "
+        "else K=k3; fi\n";                                   /* 25 */
+
+/* subprocessus (effectus-plan-3 T3; spec-3 Q7): fines processuum */
+hic_manens constans character* SUBPROCESSUS =
+    "#!/bin/bash\n"                                          /* 1 */
+    "A=a1\n"                                                 /* 2 */
+    "( A=a2 )\n"                                             /* 3 */
+    "cat \"$A\"\n"                                            /* 4 */
+    "B=b1\n"                                                 /* 5 */
+    "ls | while read x; do B=b2; done\n"                     /* 6 */
+    "cat \"$B\"\n"                                            /* 7 */
+    "C=c1\n"                                                 /* 8 */
+    "X=\"$(C=c2; echo \"$C\")\"\n"                           /* 9 */
+    "cat \"$C\"\n"                                            /* 10 */
+    "D=d1\n"                                                 /* 11 */
+    "( cat \"$D\" )\n"                                        /* 12 */
+    "E=e1\n"                                                 /* 13 */
+    "( E=e2; cat \"$E\" )\n"                                  /* 14 */
+    "F=f1\n"                                                 /* 15 */
+    "{ F=f2; }\n"                                            /* 16 */
+    "cat \"$F\"\n"                                            /* 17 */
+    "G=g1\n"                                                 /* 18 */
+    "ls | G=g2\n"                                            /* 19 */
+    "cat \"$G\"\n"                                            /* 20 */
+    "H=h1\n"                                                 /* 21 */
+    "! H=h2\n"                                               /* 22 */
+    "cat \"$H\"\n";                                           /* 23 */
+
+/* functiones (effectus-plan-3 T4; spec-3 par. II.2, III.2) */
+hic_manens constans character* FUNCTIONES =
+    "#!/bin/bash\n"                                          /* 1 */
+    "g1() { cat \"$A\"; }\n"                                  /* 2 */
+    "A=a1; g1\n"                                             /* 3 */
+    "A=a2; g1\n"                                             /* 4 */
+    "A=a3\n"                                                 /* 5 */
+    "fa() { cat \"$1\"; }\n"                                  /* 6 */
+    "fa a.txt; fa b.txt\n"                                   /* 7 */
+    "P=p1; fa \"$P/x\"; P=p2\n"                               /* 8 */
+    "setze() { E=e2; }\n"                                    /* 9 */
+    "E=e1; setze; cat \"$E\"; E=e3\n"                         /* 10 */
+    "F=f1; ff() { F=f2; }; cat \"$F\"\n"                       /* 11 */
+    "u() { cat \"$C\"; }\n"                                   /* 12 */
+    "C=c1; C=c2\n"                                           /* 13 */
+    "m1() { cat \"$D\"; m2; }; m2() { m1; }\n"                 /* 14 */
+    "D=d1; m1; D=d2\n"                                       /* 15 */
+    "s() { shift; cat \"$1\"; }; s x y\n"                     /* 16 */
+    "sc() { Q=q2; }; Q=q1; ( sc ); cat \"$Q\"\n"               /* 17 */
+    "trap pp EXIT; pp() { cat \"$G\"; }; G=g1; pp; G=g2\n"     /* 18 */
+    "source a/functio_lib.sh\n"                              /* 19 */
+    "B=b1; h; B=b9\n"                                        /* 20 */
+    "ct() { cat \"$1\"; }; ct \"$1\"\n";                        /* 21 */
+
+hic_manens constans character* FUNCTIO_LIB =
+    "h() { cat \"$B\"; }\n";                                  /* 1 */
+
+/* argumenta scriptorum et fontatio (effectus-plan-3 T5; spec-3
+ * par. II.2, III.1) */
+hic_manens constans character* ARG_PATER =
+    "#!/bin/bash\n"                                          /* 1 */
+    "./a/arg_filius.sh x.txt\n"                              /* 2 */
+    "./a/arg_filius.sh y.txt\n"                              /* 3 */
+    "./a/arg_omnia.sh \"$@\"\n"                               /* 4 */
+    "bash a/arg_bash.sh z.txt\n";                            /* 5 */
+
+hic_manens constans character* ARG_FILIUS =
+    "#!/bin/bash\n"                                          /* 1 */
+    "cat \"$1\"\n"                                            /* 2 */
+    "cat \"${2:-d.txt}\"\n";                                  /* 3 */
+
+hic_manens constans character* ARG_SOLUS =
+    "#!/bin/bash\n"                                          /* 1 */
+    "cat \"$1\"\n";                                           /* 2 */
+
+hic_manens constans character* ARG_RADIX =
+    "#!/bin/bash\n"                                          /* 1 */
+    "cat \"$1\"\n"                                            /* 2 */
+    "cat \"${2:-e.txt}\"\n";                                  /* 3 */
+
+hic_manens constans character* ARG_IPSE =
+    "#!/bin/bash\n"                                          /* 1 */
+    "if [ -z \"${IPSE:-}\" ]; then\n"                         /* 2 */
+    "    export IPSE=1\n"                                    /* 3 */
+    "    \"$0\" \"$@\"\n"                                      /* 4 */
+    "    exit\n"                                             /* 5 */
+    "fi\n"                                                   /* 6 */
+    "cat \"$1\"\n";                                           /* 7 */
+
+/* declarationes fabricae fictae (A1): argumenta radicis */
+hic_manens constans character* FAB_FABRICA =
+    "<fabrica>\n"
+    "  <subsystema via=\"sub\"/>\n"
+    "</fabrica>\n";
+
+hic_manens constans character* FAB_AEDIFICATIO =
+    "<aedificatio>\n"
+    "  <actio titulus=\"porta\" genus=\"iudicium\">\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/r.sh\">\n"
+    "      <argumenta>\n"
+    "        <verbum! (>r.txt\n"
+    "      </argumenta>\n"
+    "    </ingressus>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/n.sh\">\n"
+    "      <argumenta/>\n"
+    "    </ingressus>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/u.sh\"/>\n"
+    "  </actio>\n"
+    "  <actio titulus=\"porta_m\" genus=\"iudicium\">\n"
+    "    <mandatum>\n"
+    "      <verbum! (>./sub/m.sh\n"
+    "      <verbum! (>-x\n"
+    "    </mandatum>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/m.sh\"/>\n"
+    "  </actio>\n"
+    "  <actio titulus=\"porta_c\" genus=\"iudicium\">\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/c.sh\">\n"
+    "      <argumenta>\n"
+    "        <verbum! (>a\n"
+    "      </argumenta>\n"
+    "    </ingressus>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/c.sh\">\n"
+    "      <argumenta>\n"
+    "        <verbum! (>b\n"
+    "      </argumenta>\n"
+    "    </ingressus>\n"
+    "  </actio>\n"
+    "</aedificatio>\n";
+
+hic_manens constans character* FONS_PATER =
+    "#!/bin/bash\n"                                          /* 1 */
+    "S=s1\n"                                                 /* 2 */
+    "source a/fons_filius.sh\n"                              /* 3 */
+    "S=s9\n"                                                 /* 4 */
+    "cat \"$T\"\n"                                            /* 5 */
+    "T=t9\n";                                                /* 6 */
+
+hic_manens constans character* FONS_FILIUS =
+    "cat \"$S\"\n"                                            /* 1 */
+    "T=t1\n";                                                /* 2 */
 
 /* causa situs lectionis in linea (NIHIL = situs absens) */
 interior b32
@@ -1085,6 +1300,326 @@ s32 principale (vacuum)
             /* ':-' vacuum ut absens: E="" -> data/e solum */
             CREDO_NON_NIHIL (_situs(ts, "lectio", "data/e/v", VIII));
             CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VIII), I);
+        }
+    }
+
+    /* XVIII. subsumptio (effectus-plan-3 T1; spec-3 par. VIII): omnis
+     * situs NOVI a situ VETERIS eiusdem plagulae, sedis, elementi
+     * tegitur - aliter defectus (membrum novum aut regressio) */
+    imprimere("\n--- XVIII. subsumptio ---\n");
+    {
+        StmlResultus v = stml_legere(chorda_ex_literis(SUMMARIUM_VETUS,
+            piscina), piscina, intern);
+        StmlResultus b = stml_legere(chorda_ex_literis(SUMMARIUM_BONUM,
+            piscina), piscina, intern);
+        StmlResultus m = stml_legere(chorda_ex_literis(SUMMARIUM_MALUM,
+            piscina), piscina, intern);
+                 Xar* r;
+
+        CREDO_VERUM (v.successus && b.successus && m.successus);
+        si (v.successus && b.successus && m.successus)
+        {
+            r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
+                b.elementum_radix);
+            CREDO_NON_NIHIL (r);
+            CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : I, ZEPHYRUM);
+            r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
+                m.elementum_radix);
+            CREDO_NON_NIHIL (r);
+            si (r != NIHIL)
+            {
+                _imprimere_situs(r);
+            }
+            /* a/y (extra), src/a.c (extra globum), a/ (regressio) */
+            CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : ZEPHYRUM, III);
+            CREDO_NON_NIHIL (r ? _situs(r, "lectio", "a/y", ZEPHYRUM)
+                               : NIHIL);
+            CREDO_NON_NIHIL (r ? _situs(r, "lectio", "a/", ZEPHYRUM)
+                               : NIHIL);
+            /* idem contra se: omnia subsumpta */
+            r = crusta_effectus_subsumptio(piscina, v.elementum_radix,
+                v.elementum_radix);
+            CREDO_AEQUALIS_I32 (r ? xar_numerus(r) : I, ZEPHYRUM);
+        }
+    }
+
+    /* XIX. ordo (effectus-plan-3 T2; spec-3 par. II, A2, A3) */
+    imprimere("\n--- XIX. ordo ---\n");
+    _scribere("a/ordo.sh", ORDO);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/ordo.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/ordo.sh");
+            _imprimere_situs(ts);
+            /* series: assignatio ultima vincit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a2", IV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", IV), I);
+            /* ramus: unio cum priore */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b1", VII));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b2", VII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VII), II);
+            /* case: optiones et prior */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", X), III);
+            /* for: intra corpus ligatio ansae (f3 non); post ansam
+             * omnes */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f1", XI));
+            CREDO_NIHIL (_situs(ts, "lectio", "f3", XI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f3", XII));
+            /* while: arcus retro (d2) et prior (d1) */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d1", XIV));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d2", XIV));
+            /* A2 CONTRARIUM: membrum catenae non occidit - e1 manet */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e1", XVII));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e2", XVII));
+            /* A3: eval inter assignationem ultimam et usum -> unio
+             * slice 2 (g1 et g2); assignatio POST eval eum vinceret */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g1", XXI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g2", XXI));
+            /* H="$H/x" post H=h: h/x, non recursio */
+            s = _situs(ts, "lectio", "h/x", XXIV);
+            CREDO_VERUM (_attributum(s, "resolutio", "plena"));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XXIV), I);
+            /* elif: ramus prior (k1) alternativa est, non prior; k0
+             * ante 'if' attingit */
+            CREDO_NIHIL (_situs(ts, "lectio", "k1", XXV));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "k0", XXV));
+        }
+    }
+
+    /* XX. subprocessus (effectus-plan-3 T3; RF 1, RF 2) */
+    imprimere("\n--- XX. subprocessus ---\n");
+    _scribere("a/subprocessus.sh", SUBPROCESSUS);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/subprocessus.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/subprocessus.sh");
+            _imprimere_situs(ts);
+            /* RF 1: ( A=a2 ) foras non attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a1", IV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", IV), I);
+            /* RF 2: 'while read' in pipa = subprocessus */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b1", VII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VII), I);
+            /* $( ... ) foras non attingit */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", X), I);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "c1", X));
+            /* intro: definitiones exteriores attingunt */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d1", XII));
+            /* in eodem subprocessu: occidit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e2", XIV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XIV), I);
+            /* { } non subprocessus: f2 attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f2", XVII));
+            /* segmentum pipae assignans */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g1", XX));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XX), I);
+            /* CONTRARIUM: pipa sine '|' ('!') in processu ipso: h2
+             * attingit (exclusio falsa subsumptionem non frangit) */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "h2", XXIII));
+        }
+    }
+
+    /* XXI. functiones (effectus-plan-3 T4; RF 3, RF 5) */
+    imprimere("\n--- XXI. functiones ---\n");
+    _scribere("a/functiones.sh", FUNCTIONES);
+    _scribere("a/functio_lib.sh", FUNCTIO_LIB);
+    /* RF 5: recursio mutua (m1 <-> m2) finita */
+    CREDO_NON_PENDET ((vacuum)crusta_effectus_derivare(piscina, intern,
+        radix, "a/functiones.sh", NIHIL, &causa), (i32)MM);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/functiones.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/functiones.sh");
+            _imprimere_situs(ts);
+            /* corpus: unio eorum quae singulas vocationes attingunt */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a1", II));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a2", II));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", II), II);
+            /* A4: $1 = unio argumenti primi, ad vocationem aestimati */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "a.txt", VI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b.txt", VI));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "p1/x", VI));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VI), III);
+            /* vocatio inter definitionem et usum: forte assignat */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e1", X));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e2", X));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", X), II);
+            /* definitio functionis non vocatio: f2 non attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "f1", XI));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XI), I);
+            /* functio numquam vocata: FALLBACK (unio slice 2) */
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XII), II);
+            /* recursio mutua: d1 solum */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d1", XIV));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XIV), I);
+            /* shift in corpore: $1 argumentum manet */
+            CREDO_VERUM (_causa_lineae(ts, XVI, "argumentum"));
+            /* vocatio in ( ): q2 foras non attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "q1", XVII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XVII), I);
+            /* functio tradita (trap): FALLBACK - g2 ad EXIT attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "g2", XVIII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", XVIII), II);
+            /* RF 3: functio plagulae fontatae, vocata in fontante */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "b1", I));
+            CREDO_NIHIL (_situs(ts, "lectio", "b9", ZEPHYRUM));
+            /* $1 functionis = $1 scripti: argumentum, non recursio
+             * (custodia tituli $N non tangit) */
+            CREDO_VERUM (_causa_lineae(ts, XXI, "argumentum"));
+        }
+    }
+
+    /* XXII. argumenta (effectus-plan-3 T5; A1) */
+    imprimere("\n--- XXII. argumenta ---\n");
+    _scribere("a/arg_pater.sh", ARG_PATER);
+    _scribere("a/arg_filius.sh", ARG_FILIUS);
+    _scribere("a/arg_omnia.sh", ARG_SOLUS);
+    _scribere("a/arg_bash.sh", ARG_SOLUS);
+    _scribere("a/arg_radix.sh", ARG_RADIX);
+    _scribere("a/fons_pater.sh", FONS_PATER);
+    _scribere("a/fons_filius.sh", FONS_FILIUS);
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/arg_pater.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            /* filius: $1 = unio argumenti per arcus */
+            _situs_colligere(sm, ts, "a/arg_filius.sh");
+            _imprimere_situs(ts);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "x.txt", II));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "y.txt", II));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", II), II);
+            /* argumentum II nullum: "" -> ${2:-d} = d */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "d.txt", III));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", III), I);
+            /* vocans "$@": argumentum manet */
+            xar_truncare(ts, ZEPHYRUM);
+            _situs_colligere(sm, ts, "a/arg_omnia.sh");
+            CREDO_VERUM (_causa_lineae(ts, II, "argumentum"));
+            /* 'bash S z.txt' */
+            xar_truncare(ts, ZEPHYRUM);
+            _situs_colligere(sm, ts, "a/arg_bash.sh");
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "z.txt", II));
+        }
+    }
+    {
+              Xar* argv;
+        StmlNodus* sm;
+              Xar* ts;
+
+        /* radix catenae: argv declarata (A1) */
+        argv = xar_creare(piscina, (i32)magnitudo(character*));
+        ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+        *(constans character**)xar_addere(argv) = "r.txt";
+        sm = crusta_effectus_derivare_argumentis(piscina, intern, radix,
+            "a/arg_radix.sh", NIHIL, argv, &causa);
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/arg_radix.sh");
+            _imprimere_situs(ts);
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "r.txt", II));
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "e.txt", III));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", III), I);
+        }
+        /* "$0" "$@" (cursor se ipsum exsequens): argv eadem, nihil
+         * novi - punctum fixum minimum */
+        xar_truncare(ts, ZEPHYRUM);
+        _scribere("a/arg_ipse.sh", ARG_IPSE);
+        sm = crusta_effectus_derivare_argumentis(piscina, intern, radix,
+            "a/arg_ipse.sh", NIHIL, argv, &causa);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/arg_ipse.sh");
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "r.txt", VII));
+            CREDO_AEQUALIS_I32 (_numerare(ts, "lectio", VII), I);
+        }
+        /* sine argv declarata: argumentum */
+        xar_truncare(ts, ZEPHYRUM);
+        sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/arg_radix.sh", NIHIL, &causa);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/arg_radix.sh");
+            CREDO_VERUM (_causa_lineae(ts, II, "argumentum"));
+        }
+    }
+    {
+        /* argv declarata in aedificatio.stml (A1): <argumenta> */
+        character  fab[CCLVI + XVI];
+              Xar* r;
+
+        _scribere("fab/fabrica.stml", FAB_FABRICA);
+        _scribere("fab/sub/aedificatio.stml", FAB_AEDIFICATIO);
+        sprintf(fab, "%s/fab", radix);
+        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+            "sub/r.sh");
+        CREDO_NON_NIHIL (r);
+        si (r != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (xar_numerus(r), I);
+            CREDO_VERUM (strcmp(*(character**)xar_obtinere(r, ZEPHYRUM),
+                "r.txt") == ZEPHYRUM);
+        }
+        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+            "sub/n.sh");
+        CREDO_NON_NIHIL (r);
+        si (r != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (xar_numerus(r), ZEPHYRUM);
+        }
+        /* sine <argumenta>, declarationes discordes, non declarata */
+        /* A3 (fabrica plan 5 T3): argv ex mandato actionis ipsius */
+        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+            "sub/m.sh");
+        CREDO_NON_NIHIL (r);
+        si (r != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (xar_numerus(r), I);
+            CREDO_VERUM (strcmp(*(character**)xar_obtinere(r, ZEPHYRUM),
+                "-x") == ZEPHYRUM);
+        }
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+            fab, "sub/u.sh"));
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+            fab, "sub/c.sh"));
+        CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
+            fab, "sub/x.sh"));
+    }
+    {
+        StmlNodus* sm = crusta_effectus_derivare(piscina, intern, radix,
+            "a/fons_pater.sh", NIHIL, &causa);
+              Xar* ts = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+
+        CREDO_NON_NIHIL (sm);
+        si (sm != NIHIL)
+        {
+            _situs_colligere(sm, ts, "a/fons_pater.sh");
+            _imprimere_situs(ts);
+            /* caput plagulae fontatae: ad situm fontationis */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "s1", I));
+            CREDO_NIHIL (_situs(ts, "lectio", "s9", ZEPHYRUM));
+            /* definitio capitis fontati post 'source' attingit */
+            CREDO_NON_NIHIL (_situs(ts, "lectio", "t1", V));
+            CREDO_NIHIL (_situs(ts, "lectio", "t9", ZEPHYRUM));
         }
     }
 

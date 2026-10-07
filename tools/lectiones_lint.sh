@@ -29,7 +29,9 @@ EXEMPTAE="lib/filum.c lib/lectiones.c lib/thesaurus.c"
 # instrumenta quorum vestigia fabrica credit (lectiones="verum"), et
 # probationes portae quae per vestigium iudicatur (actio 'iudicium',
 # fabrica spec 3 T3: porta_toml) - IO cruda in clausura earum OBSTAT
-VIA_PILOTA_RADICES="tools/aedilis.c $(ls toml/probationes/probatio_toml_*.c | tr '\n' ' ')"
+# + probationes radicis omnes (fabrica plan 5 T5a: porta aedilis eas omnes
+# currit; radix quoque) - benchmark excluditur ut in tools/aedilis_porta.sh
+VIA_PILOTA_RADICES="tools/aedilis.c $(ls toml/probationes/probatio_toml_*.c | tr '\n' ' ') $(ls probationes/probatio_*.c | grep -v '_benchmark' | tr '\n' ' ')"
 
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT

@@ -79,3 +79,17 @@ from elsewhere - initial zoom, the canvas figure's drawing, or the
 prospectus clip. Not chased (time-boxed; Fran: "if you want to look...
 or we can just go ahead with E"). Repro: `./apps/pictor/pictor.sh
 -fumus -imago /tmp/p.png`, then look.
+
+## 2026-10-07 — open: probatio_pictor_actiones crashes INTERMITTENTLY
+
+During the secunda <- main merge (fabrica-5 etc.), the aedilis gate
+failed twice in a row: `FRACTA (cursus): probatio_pictor_actiones`,
+Segmentation fault (exit 139). Since then 0 crashes in 70 direct runs
+(plain aedilis build, --thesaurus build, the gate-built binary) and the
+third full gate run was green (237). The root runner never failed it.
+The test is unchanged since 639ca942 (insula rami R3). The shape fits
+uninitialised memory whose garbage depends on layout/history (cf. R3:
+"contexts holding an InsulaRamus must be ZEROED"). Needs a reproduction
+first: e.g. run it under the gate's exact sequence, or with
+MallocScribble / -fsanitize=memory-like tooling. A crashed run leaves
+/tmp/probatio_pictor_actiones-N.volumen behind (the leak signal).

@@ -334,7 +334,7 @@ s32 principale (vacuum)
     /* e.sh ambitum NOVUM habet: RADIX_DIR vocantis non videt */
     CREDO_NIHIL (_situs(summarium, NIHIL, "fontatio", "tools/z.sh"));
     s = _situs(summarium, "tools/e.sh", "fontatio",
-        "\"$RADIX_DIR/tools/z.sh\"");
+        "&quot;$RADIX_DIR/tools/z.sh&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     CREDO_VERUM (_attributum(s, "plagula", "tools/e.sh"));
     CREDO_NON_NIHIL (_situs(summarium, NIHIL, "exsecutio",
@@ -358,15 +358,16 @@ s32 principale (vacuum)
         "a/build/b"));
 
     imprimere("\n--- III. irresoluta (et quod NON irresolutum) ---\n");
-    s = _situs(summarium, NIHIL, "fontatio", "\"$NESCIO\"");
+    s = _situs(summarium, NIHIL, "fontatio", "&quot;$NESCIO&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
     /* local q="$1" in g: definitio globalis non valet */
-    s = _situs(summarium, NIHIL, "fontatio", "\"$q\"");
+    s = _situs(summarium, NIHIL, "fontatio", "&quot;$q&quot;");
     CREDO_VERUM (_attributum(s, "resolutio", "nulla"));
-    /* '"$P/..."': P="" viam mutaret -> irresolutum */
-    CREDO_NON_NIHIL (_situs(summarium, NIHIL, "fontatio",
-        "\"$P/tools/p.sh\""));
-    CREDO_NIHIL (_situs(summarium, NIHIL, "fontatio", "tools/p.sh"));
+    /* P="" deinde P="$RADIX_DIR": ordo (effectus-plan-3 T2)
+     * assignationem posteriorem solam attingere scit - resolutum (ante
+     * slice 3 unio cum "" irresolutum dabat) */
+    s = _situs(summarium, NIHIL, "fontatio", "tools/p.sh");
+    CREDO_VERUM (_attributum(s, "resolutio", "plena"));
     /* ${NESCIO:-...} (effectus-plan-2 T6, A4): NESCIO in ambitu non
      * definita -> valor praedefinitus resolutus; clavis lineam
      * 'ambitus NESCIO' per ambitus_lectio tenet */
@@ -378,7 +379,7 @@ s32 principale (vacuum)
     CREDO_VERUM (_attributum(s, "classis", "externa"));
     /* 'RADIX_DIR=/alibi true' non est definitio: aliter omnia supra
      * irresoluta essent - numerus irresolutorum exactus */
-    CREDO_AEQUALIS_I32 (_irresoluta_numerare(summarium), V);
+    CREDO_AEQUALIS_I32 (_irresoluta_numerare(summarium), IV);
 
     (vacuum)filum_arborem_delere(basis);
     credo_imprimere_compendium();

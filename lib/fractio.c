@@ -155,6 +155,18 @@ fractio_ex_chorda (
     redde fractio_ex_magnis(numerator, denominator, piscina, exitus);
 }
 
+Fractio
+fractio_transcribe (
+     Fractio  a,
+     Piscina* piscina)
+{
+    Fractio copia;
+
+    copia.numerator    = magnus_transcribe(a.numerator, piscina);
+    copia.denominator  = magnus_transcribe(a.denominator, piscina);
+    redde copia;
+}
+
 chorda
 fractio_ad_chordam (
      Fractio  a,

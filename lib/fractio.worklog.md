@@ -83,3 +83,10 @@ No wrong results in 20k differential cases. Acted on:
   header now says always construct with `fractio_ex_*`.
 - Null-data chorda test added. gcd memory fix in magnus benefits every
   fractio operation (they all call gcd). 972 checks.
+
+## 2026-10-06 — `fractio_transcribe`
+
+Deep copy into a given piscina (numerator and denominator through
+`magnus_transcribe`), for `anulus`'s scratch-piscina hook (matrix).
+Tested in probatio_matrix's ring block: limbs differ from the source,
+value survives destroying the source piscina.

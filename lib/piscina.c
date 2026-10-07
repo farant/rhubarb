@@ -9,6 +9,17 @@
                               * vel -DPISCINA_DEBUG=1 in linea compilandi */
 #endif
 
+/* VENENUM (modus probandi, -DPISCINA_VENENUM=1): piscina_reficere
+ * octetos liberatos PISCINA_OCTETUS_VENENI implet. Sine eo memoria
+ * post refectionem valores veteres servat, et valor qui refectionem
+ * superstat (vitium vitae) recte legi videtur - recensio polynomium-II
+ * duo talia vitia plantata invenit quae suita ordinaria non videbat.
+ * Porta: tools/venenum_probare.sh. */
+#ifndef PISCINA_VENENUM
+#define PISCINA_VENENUM FALSUM
+#endif
+#define PISCINA_OCTETUS_VENENI 0xA5
+
 
 /* ===========================================================
  * Structura Alvei - allocatio singularis
@@ -533,6 +544,24 @@ piscina_reficere (
     si (!piscina || !notatio.alveus_nunc) redde;
 
     alveus_notatus = (Alveus*)notatio.alveus_nunc;
+
+    si (PISCINA_VENENUM)
+    {
+        /* octeti liberati: pars alvei notati post positum, et alvei
+         * sequentes toti (usque ad offset suum) */
+        si (alveus_notatus->offset > notatio.positus)
+        {
+            memset((i8*)alveus_notatus->buffer + notatio.positus,
+                PISCINA_OCTETUS_VENENI,
+                alveus_notatus->offset - notatio.positus);
+        }
+        per (alveus_iter = alveus_notatus->sequens; alveus_iter;
+             alveus_iter = alveus_iter->sequens)
+        {
+            memset(alveus_iter->buffer, PISCINA_OCTETUS_VENENI,
+                alveus_iter->offset);
+        }
+    }
 
     /* Reficere alveum notatum ad positionem notatam */
     alveus_notatus->offset = notatio.positus;

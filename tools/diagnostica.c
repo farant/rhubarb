@@ -1023,9 +1023,15 @@ _contextus_effectuum (
         per (k = ZEPHYRUM; catenae != NIHIL && k < xar_numerus(catenae);
              k++)
         {
-            StmlNodus* sm = crusta_effectus_derivare(piscina, intern,
-                radix, *(character**)xar_obtinere(catenae, k), NIHIL,
-                &causa_prior);
+            constans character* radix_catenae = *(character**)
+                xar_obtinere(catenae, k);
+                     StmlNodus* sm =
+                         crusta_effectus_derivare_argumentis(
+                         piscina, intern, radix, radix_catenae, NIHIL,
+                         crusta_effectus_argumenta_radicis(piscina,
+                         intern,
+                         radix,
+                         radix_catenae), &causa_prior);
 
             si (sm != NIHIL)
             {

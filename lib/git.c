@@ -16,6 +16,7 @@
 #include "filum.h"
 #include "via.h"
 #include "iter_directoria.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -358,7 +359,7 @@ _partem_legere (
                Piscina* piscina,
                    s64* lectum)
 {
-    FILE* pl = fopen(via, "rb");
+    FILE* pl = lectiones_fopen(via, "rb");
       i8* buffer;
 
     *lectum = 0;

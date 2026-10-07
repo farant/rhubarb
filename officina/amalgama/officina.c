@@ -6104,6 +6104,17 @@ demissio_lineas_colligere (
                               * vel -DPISCINA_DEBUG=1 in linea compilandi */
 #endif
 
+/* VENENUM (modus probandi, -DPISCINA_VENENUM=1): piscina_reficere
+ * octetos liberatos PISCINA_OCTETUS_VENENI implet. Sine eo memoria
+ * post refectionem valores veteres servat, et valor qui refectionem
+ * superstat (vitium vitae) recte legi videtur - recensio polynomium-II
+ * duo talia vitia plantata invenit quae suita ordinaria non videbat.
+ * Porta: tools/venenum_probare.sh. */
+#ifndef PISCINA_VENENUM
+#define PISCINA_VENENUM FALSUM
+#endif
+#define PISCINA_OCTETUS_VENENI 0xA5
+
 
 /* ===========================================================
  * Structura Alvei - allocatio singularis

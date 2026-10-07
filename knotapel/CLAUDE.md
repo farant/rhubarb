@@ -140,3 +140,28 @@ raq_vs_free(&vs);
 - Run probatio_raqiya before and after any changes to raqiya.h
 - The test file includes D107-specific regression tests (13 values, 4 orbits, 7 Galois orbits, axis alignment)
 - When adding new detectors or modifying existing ones, add test cases that validate the specific behavior used by existing demos
+
+
+## House Libraries in Demos (rhubarb include/ + lib/) — new since 2026-10
+
+demos used to be single self-contained main.c files with only stdio/stdlib/string. from now on a demo MAY include rhubarb's house libraries, which give exact arithmetic that is tested, reviewed and shared with the rest of rhubarb. the lesson of D110–D112 was unchecked homemade arithmetic inside demos, so:
+
+- **general number types and algorithms never live in knotapel/ again.** if a demo needs something general (big integers, rationals, polynomials, matrices, geometry predicates, knot invariants), it belongs in a house library; knotapel only consumes. ask before writing a new one inside a demo.
+- the exact math stack (headers in `include/`, each header's first line says what it is; `briar -bibliothecae` lists them, `briar -bibliotheca <x> -functiones` prints signatures):
+  - `magnus` big integers · `fractio` exact rationals · `congruentia` Z/n arithmetic, primality, CRT
+  - `polynomium` Laurent polynomials Z[t, t^-1] · `anulus` ring descriptor (Z, Q, Z[t,t^-1], Z/n) · `matrix` det/rank/kernel, Hermite/Smith over any anulus
+  - `situs` exact 3D geometry predicates (segments, triangles, crossings) · `laqueus` polygonal knots/links in Z^3: diagram, writhe, linking number, Kauffman bracket (<= 24 crossings), Jones, Alexander, checked triangle moves
+- the libraries are written in Latin; demo code stays English.
+- **HAZARD:** including any house header brings in `latina.h`, so every Roman numeral (`I V X L C D M` and combinations like `II`, `XL`) and the Latin keywords (`si`, `per`, `dum`, `fac`, `redde`, `nomen`, `casus`, ...) are macros inside your demo. don't use them as variable names. usually a loud compile error, but know why it happens.
+- build and run live, from the repo root: `./bin/aedilis knotapel/demo_NNN/main.c && bash build/aedilis/main/struere.sh && ./build/aedilis/main/main` (aedilis derives the closure from the includes; house compile flags, -Werror).
+
+### freezing a finished demo (archive.sh)
+a demo that includes house libraries builds against code that keeps evolving. when the demo is finished (findings.md written), freeze it:
+
+```
+./knotapel/archive.sh knotapel/demo_NNN/main.c [program args]
+```
+
+this writes `demo_NNN/demo-snapshot.c`: the demo + its whole library closure as ONE file that compiles alone (the exact clang line is in its banner, with the commit and every library file's git hash). the script builds and RUNS both the live demo and the snapshot and refuses unless their output is byte-identical; it also refuses if a library file has uncommitted changes. commit the snapshot with the demo and cite it in findings.md. later, re-running main.c live is a free regression check: if its output ever differs from the snapshot's, a library changed behavior — investigate before trusting either.
+
+the snapshot is generated (line 1 says GENERATUM): never edit it by hand, regenerate it. regression fixture: `knotapel/archive-trial/`.

@@ -9,6 +9,7 @@
 #include "xar.h"
 #include "sigillum.h"
 #include "thesaurus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -27,7 +28,7 @@ _identitas (
 {
     structura stat informatio;
 
-    si (stat(via, &informatio) != ZEPHYRUM)
+    si (lectiones_stat(via, &informatio) != ZEPHYRUM)
     {
         redde FALSUM;
     }

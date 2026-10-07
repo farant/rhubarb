@@ -1,6 +1,7 @@
 #include "postulata_posix.h"
 #include "uuid.h"
 #include "friatio.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
@@ -34,7 +35,7 @@ _generare_randomos (
     FILE* urandom;
     i32   i;
 
-    urandom = fopen("/dev/urandom", "rb");
+    urandom = lectiones_fopen("/dev/urandom", "rb");
     si (urandom)
     {
         fread(bytes, I, (memoriae_index)mensura, urandom);
@@ -96,7 +97,8 @@ uuidv7_creare (
     bytes[VIII] = (i8)((bytes[VIII] & 0x3F) | 0x80);
 
     /* Allocare spatium pro chorda (36 characteres + nullus terminator) */
-    str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE + I);
+    str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE
+        + I);
     si (!str)
     {
         resultus.datum    = NIHIL;
@@ -111,7 +113,8 @@ uuidv7_creare (
             bytes[IV], bytes[V],
             bytes[VI], bytes[VII],
             bytes[VIII], bytes[IX],
-            bytes[X], bytes[XI], bytes[XII], bytes[XIII], bytes[XIV], bytes[XV]);
+            bytes[X], bytes[XI], bytes[XII], bytes[XIII], bytes[XIV],
+            bytes[XV]);
 
     /* Creare chordam */
     resultus.datum    = (i8*)str;
@@ -172,7 +175,8 @@ uuidv5_creare (
     uuid_bytes[VIII] = (i8)((uuid_bytes[VIII] & 0x3F) | 0x80);
 
     /* Allocate space for string */
-    str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE + I);
+    str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE
+        + I);
     si (!str)
     {
         resultus.datum    = NIHIL;
@@ -259,7 +263,8 @@ uuidv5_ex_genere_et_titulo (
     appellatio_buffer[genus_len + I + titulus_len] = '\0';
 
     /* Create namespace chorda from static bytes */
-    namespace_chorda = chorda_ex_literis(UUID_NAMESPACE_ENTITAS_BYTES, piscina);
+    namespace_chorda = chorda_ex_literis(UUID_NAMESPACE_ENTITAS_BYTES,
+        piscina);
 
     redde uuidv5_creare(piscina, namespace_chorda, appellatio_buffer);
 }
@@ -448,7 +453,8 @@ uuid_ad_chordam (
     }
 
     /* Allocare spatium */
-    str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE + I);
+    str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE
+        + I);
     si (!str)
     {
         resultus.datum    = NIHIL;
@@ -463,7 +469,8 @@ uuid_ad_chordam (
             bytes[IV], bytes[V],
             bytes[VI], bytes[VII],
             bytes[VIII], bytes[IX],
-            bytes[X], bytes[XI], bytes[XII], bytes[XIII], bytes[XIV], bytes[XV]);
+            bytes[X], bytes[XI], bytes[XII], bytes[XIII], bytes[XIV],
+            bytes[XV]);
 
     resultus.datum    = (i8*)str;
     resultus.mensura  = UUID_MENSURA_CHORDAE;

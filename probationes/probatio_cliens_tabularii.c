@@ -14,7 +14,9 @@
 #include "chorda.h"
 #include "json.h"
 #include "credo.h"
+#include "filum.h"
 #include "cliens_tabularii.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -52,15 +54,17 @@ s32 principale (vacuum)
     _purgare();
 
     /* daemon ephemerus portu auto (exemplar probatio_fori.c) */
-    CREDO_VERUM (system("./gesta/tabulariumd.sh -struere"
-        " > /dev/null 2>&1") == ZEPHYRUM);
+    /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
+     * semel struit): probatio currit, non struit (fabrica plan 5
+     * T5b) */
+    CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
     CREDO_VERUM (system("gesta/build/tabulariumd -portus 0"
         " -scrinium " VIA_DB " -annales " VIA_AN
         " > " VIA_PORT " 2> /dev/null"
         " & echo $! > " VIA_PID) == ZEPHYRUM);
     per (k = ZEPHYRUM; k < XXV; k++)
     {
-        FILE* pf = fopen(VIA_PORT, "r");
+        FILE* pf = lectiones_fopen(VIA_PORT, "r");
 
         si (pf != NIHIL)
         {

@@ -69,6 +69,14 @@ magnus_ad_chordam (
       Magnus  a,
      Piscina* piscina);
 
+/* copia in piscinam datam: membra NOVA (valores in s64 sine
+ * allocatione). Ad effectum ex piscina temporaria servandum, cum
+ * piscina illa reficienda aut destruenda est. */
+Magnus
+magnus_transcribe (
+      Magnus  a,
+     Piscina* piscina);
+
 
 /* ==================================================
  * Inspectio
@@ -141,6 +149,13 @@ magnus_potentia (
          i32  exponens,
      Piscina* piscina);
 
+/* a mod n (Euclideum: 0 <= r < n) pro moduli verbi (1 <= n < 2^32):
+ * per membra, sine piscina; n == 0 -> 0 */
+i32
+magnus_residuum_parvum (
+    Magnus a,
+       i32 n);
+
 /* maximus divisor communis, semper >= 0; (0, 0) -> 0 */
 Magnus
 magnus_divisor_communis (
@@ -165,8 +180,10 @@ magnus_divisor_communis_testatus (
 
 /* maximus usus (octeti) piscinae internae alternae in ultimo divisore
  * communi magnorum operandorum (Euclides in piscinis alternis); 0 si
- * operandi pauci membrorum erant. Computator sumptus deterministicus:
- * idem in omni machina, ergo probationibus asseribilis. */
+ * via vocantis electa est (sine testibus: operandus aliquis pauci
+ * membrorum; cum testibus: ambo). Computator sumptus
+ * deterministicus: idem in omni machina, ergo probationibus
+ * asseribilis. */
 memoriae_index
 magnus_apex_alternarum (
     vacuum);

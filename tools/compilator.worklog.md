@@ -44,3 +44,33 @@ predicted stage: no include-root listing -> V; constant compiler
 identity -> VI; header bytes dropped from the full key -> IV.
 All 194 lib/*.c: objects byte-identical to plain clang, cold and warm;
 plain 21 s, cold 26 s (+24%: -MD, hashing, identity), warm 5 s.
+
+## 2026-10-06 - fabrica plan 5 T2: shadowing by NAME, not by directory
+
+- Reading (plan 5 T2): the five D rows in porta_toml's trace (include,
+  lib, materia/fontes, toml/fontes, toml/probationes) came from HERE, not
+  from aedilis (`bin/aedilis <test.c> --enumerare` emits none - probed
+  with FABRICA_LECTIONES; aedilis's own listings, `--nexus-purus` and
+  `--corpus`, do not run in the toml gate). `_radicem_addere` sealed the
+  sorted `.h` names of every -I root and of the source's directory into
+  the head key, for shadowing (Review Focus 2), and `directorium_iterator`
+  noted each root as D - so any new header anywhere voided every verdict
+  whose closure compiled through bin/compilator (the include/ voider of
+  plan 5 §0).
+- Branch (c) of the plan: membership only. A compile depends on the
+  headers it USES and on no same-named file appearing in another root.
+  The head key now keeps only the roots' paths (order still matters);
+  the full key adds, per header in the depfile index, one existence bit
+  for the same relative name in EVERY other root (`filum_existit`, which
+  notes A/X precisely). Every other root, not only earlier ones: a
+  header living in a later root searches its own directory first.
+  Key version "compilator II" (old store entries never match).
+- Result: toml trace D 5 -> 0; an unrelated header in include/ leaves
+  the verdict RECENS; toml/probationes/latina.h (shadows include/
+  latina.h for the tests) -> `STALUM ... lectio transitus mutata:
+  toml/probationes/latina.h`. Fumus IX (no D, A for the earlier root)
+  and X (unrelated header = hit); plant (probes off) -> V and IX red.
+- Before: a shadowing header changed the head key (listing) -> miss.
+  Now it changes the FULL key (existence bit) -> miss; same outcome, but
+  an unrelated header no longer costs a recompile either.
+

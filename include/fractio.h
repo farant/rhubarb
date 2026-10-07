@@ -80,6 +80,13 @@ fractio_ex_chorda (
      Piscina* piscina,
      Fractio* exitus);
 
+/* copia in piscinam datam: membra NOVA numeratoris et denominatoris
+ * (vide magnus_transcribe) */
+Fractio
+fractio_transcribe (
+     Fractio  a,
+     Piscina* piscina);
+
 /* forma canonica: "a" si integra, aliter "a/b" */
 chorda
 fractio_ad_chordam (

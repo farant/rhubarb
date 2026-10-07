@@ -55,6 +55,7 @@
 #include "filum.h"
 #include "iter_directoria.h"
 #include "processus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <sys/stat.h>
 
@@ -590,7 +591,7 @@ _fons_recentior_binario(
     structura stat  b;
     i32             i;
 
-    si (stat(binarium, &b) != ZEPHYRUM)
+    si (lectiones_stat(binarium, &b) != ZEPHYRUM)
     {
         redde NIHIL;
     }
@@ -599,7 +600,7 @@ _fons_recentior_binario(
     {
         structura stat f;
 
-        si (stat(NC_FONTES[i], &f) != ZEPHYRUM)
+        si (lectiones_stat(NC_FONTES[i], &f) != ZEPHYRUM)
         {
             perge;   /* absentiam _fons_absens sola nuntiat */
         }
@@ -627,7 +628,7 @@ _fons_absens(
 
     per (i = ZEPHYRUM; NC_FONTES[i] != NIHIL; i++)
     {
-        si (stat(NC_FONTES[i], &f) != ZEPHYRUM)
+        si (lectiones_stat(NC_FONTES[i], &f) != ZEPHYRUM)
         {
             redde NC_FONTES[i];
         }

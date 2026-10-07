@@ -569,6 +569,45 @@
     <ingressus genus="plagulae" via="probationes" suffixa=".c"/>
     <exitus via="compile_tests_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
+  <!-- SPECULUM HOSPITIS (fabrica plan 5 T5b): capsula fontium quam
+       compile_tests.sh per tools/speculum_generare.sh generat - dominus
+       declaratus, strategia ignota (numquam iudicatur). Contentum
+       tempus, commissum, sordidum fert (omni cursu radicis mutatur):
+       porta_aedilis eam per EXSTANTIAM solam videt (X; clang contentum
+       extra librum legit) - approximatio nominata (Fran 2026-10-06);
+       provenientia determinata sub probationibus = desideratum. -->
+  <actio titulus="speculum_hospes" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/speculum_generare.sh
+      <verbum! (>hospes
+      <verbum! (>probationes/probatio_vitrea_hospes.c
+      <verbum! (>compile_tests.sh
+    </mandatum>
+    <vestigium via="build/speculum/hospes"/>
+    <ingressus genus="fasciculus" via="tools/speculum_generare.sh"/>
+    <exitus via="build/speculum/hospes/capsula_speculi_hospes.c" provenientia="ignota"/>
+    <exitus via="build/speculum/hospes/capsula_speculi_hospes.h" provenientia="ignota"/>
+  </actio>
+  <!-- TABULARIUMD (fabrica plan 5 T5b): daemon tabularii ut artificium
+       declaratum - probatio_cliens_tabularii id CURRIT, non struit
+       (olim './gesta/tabulariumd.sh -struere' per system(): lectiones
+       bash librum non intrabant et binarium residentis vivi e
+       probatione reaedificabatur). Strategia ignota (exemplar
+       obiecta_radicis): scriptum per mtime relinkat in loco, ergo
+       praecondicio sola, numquam iudicatur; porta_aedilis fontes eius
+       sigillat (manifesta fragmenti gesta_tabulariumd). -->
+  <actio titulus="tabulariumd" genus="generator">
+    <mandatum>
+      <verbum! (>./gesta/tabulariumd.sh
+      <verbum! (>-struere
+    </mandatum>
+    <vestigium via="gesta/build" forma="plagulae" suffixa=".o" communis="verum"/>
+    <vestigium via="gesta/build/tabulariumd.dSYM"/>
+    <vestigium via="gesta/build/tabulariumd.vigilia" forma="plagula"/>
+    <vestigium via="build/vexilla.sigillum" forma="plagula" communis="verum"/>
+    <ingressus genus="fasciculus" via="gesta/tabulariumd.sh"/>
+    <exitus via="gesta/build/tabulariumd" provenientia="ignota"/>
+  </actio>
   <!-- GENERATA COCTA (inventarium 'generata commissa (fabrica)',
        2026-09-30): canones naturae, lectores ex canonibus, pagina
        glossarum, registra grammaticarum materiae, capsula probationis.
@@ -753,6 +792,73 @@
     <ingressus genus="fasciculus" via="probationes/test_assets/lorem.txt"/>
     <exitus via="probationes/capsula_assets.c" provenientia="regeneratio"/>
     <exitus via="probationes/capsula_assets.h" provenientia="regeneratio"/>
+  </actio>
+  <!-- PORTA aedilis ut verdictum (fabrica plan 5 T5b): bin/fabrica
+       cursorem ipse currit (signum). Clausura C per librum lectionum
+       (bin/aedilis, probationes - canalis T5a); cursor ipse et stipes
+       ssh villae (probatio_villa_agens per execvp vocat: lectiones
+       bash librum non intrant) per effectus. struere.sh generata
+       (build/aedilis/probatio_*) clang directe vocant: fontes eorum
+       aedilis ipse legit et notat - identitas clang declaratur. -->
+  <actio titulus="porta_aedilis" genus="iudicium" lectiones="verum"
+      signum="PORTA AEDILIS:">
+    <mandatum>
+      <verbum! (>./tools/aedilis_porta.sh
+    </mandatum>
+    <praecondicio actio="tabulariumd"/>
+    <vestigium via="build/aedilis" communis="verum"/>
+    <!-- scripta probationum radicis in build/ (nominatim, Fran
+         2026-10-06: area una omnium probationum = desideratum) -->
+    <vestigium via="build/probatio_generare_instrumenta"/>
+    <vestigium via="build/probatio_git_arbores"/>
+    <vestigium via="build/probatio_natura_canones"/>
+    <vestigium via="build/probatio_silex_area"/>
+    <vestigium via="build/probatio_thesaurus"/>
+    <vestigium via="build/manus_ultimum.js" forma="plagula"/>
+    <vestigium via="build/probatio_ct.db" forma="plagula"/>
+    <vestigium via="build/probatio_ct.db-shm" forma="plagula"/>
+    <vestigium via="build/probatio_ct.db-wal" forma="plagula"/>
+    <vestigium via="build/probatio_ct.jsonl" forma="plagula"/>
+    <vestigium via="build/probatio_ct_pid.txt" forma="plagula"/>
+    <vestigium via="build/probatio_ct_portus.txt" forma="plagula"/>
+    <vestigium via="build/probatio_filum.sera" forma="plagula"/>
+    <vestigium via="build/probatio_glossae.html" forma="plagula"/>
+    <vestigium via="build/probatio_lectiones.tsv" forma="plagula"/>
+    <vestigium via="build/probatio_lectiones_s.txt" forma="plagula"/>
+    <vestigium via="build/probatio_mensa.db" forma="plagula"/>
+    <vestigium via="build/probatio_vigilia_binarium" forma="plagula"/>
+    <vestigium via="build/probatio_vigilia_commissum" forma="plagula"/>
+    <vestigium via="build/probatio_vigilia_fons.c" forma="plagula"/>
+    <vestigium via="build/probatio_vigilia_manifestum" forma="plagula"/>
+    <vestigium via="build/probatio_volumen.db" forma="plagula"/>
+    <vestigium via="build/probatio_volumen_aut.db" forma="plagula"/>
+    <vestigium via="build/probatio_sent.db" forma="plagula"/>
+    <vestigium via="build/probatio_sent.db-shm" forma="plagula"/>
+    <vestigium via="build/probatio_sent.db-wal" forma="plagula"/>
+    <vestigium via="build/probatio_sent.jsonl" forma="plagula"/>
+    <vestigium via="build/probatio_sent.portus" forma="plagula"/>
+    <vestigium via="build/probatio_villa.db" forma="plagula"/>
+    <vestigium via="build/probatio_villa.db-shm" forma="plagula"/>
+    <vestigium via="build/probatio_villa.db-wal" forma="plagula"/>
+    <vestigium via="build/probatio_villa.jsonl" forma="plagula"/>
+    <vestigium via="build/probatio_villa.portus" forma="plagula"/>
+    <ingressus genus="effectus" via="tools/aedilis_porta.sh"/>
+    <ingressus genus="effectus" via="probationes/fixa/villa/ssh_stipes.sh"/>
+    <ingressus genus="instrumentum_domus" via="bin/aedilis"/>
+    <!-- binaria quae probationes per system() currunt: exsecutio
+         librum non intrat (lectiones filii C eum intrant) -->
+    <ingressus genus="instrumentum_domus" via="bin/generare"/>
+    <ingressus genus="instrumentum_domus" via="bin/manus"/>
+    <ingressus genus="instrumentum_domus" via="bin/natura"/>
+    <ingressus genus="instrumentum_domus" via="bin/natura_canones"/>
+    <ingressus genus="instrumentum_domus" via="bin/natura_glossae"/>
+    <!-- daemon tabularii (praecondicio tabulariumd, numquam iudicata):
+         fontes eius per manifesta fragmenti, non octeti binarii -->
+    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabulariumd_fontes_generata"/>
+    <ingressus genus="fasciculus" via="gesta/tabulariumd.sh"/>
+    <ingressus genus="fasciculus" via="gesta/tabulariumd_fontes_generata.sh"/>
+    <ingressus genus="identitas_clang" via="clang"/>
+    <exitus via="build/fabrica/verdicta/aedilis.txt" provenientia="verdictum"/>
   </actio>
 
   <!-- INSTITUTIONES (1b T5, Q42): copia ~/.bin actio sua - fasciculus

@@ -8,6 +8,7 @@
 #include "arbor.h"
 #include "tabula_dispersa.h"
 #include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -709,7 +710,7 @@ _credo_roundtrip_filum_preservare (
             (int)fructus.mensura, (int)fons.mensura);
 
         /* DEBUG: Write output to file for inspection */
-        debug_fp = fopen("/tmp/roundtrip_output.c", "wb");
+        debug_fp = lectiones_fopen("/tmp/roundtrip_output.c", "wb");
         si (debug_fp != NIHIL)
         {
             fwrite(fructus.datum, 1, (size_t)fructus.mensura, debug_fp);
@@ -906,7 +907,7 @@ _credo_roundtrip_filum_hybrid (
             (int)fructus.mensura, (int)fons.mensura);
 
         /* DEBUG: Write output to file for inspection */
-        debug_fp = fopen("/tmp/roundtrip_output.c", "wb");
+        debug_fp = lectiones_fopen("/tmp/roundtrip_output.c", "wb");
         si (debug_fp != NIHIL)
         {
             fwrite(fructus.datum, 1, (size_t)fructus.mensura, debug_fp);
@@ -1531,7 +1532,7 @@ _credo_roundtrip_filum (
             (int)fructus.mensura, (int)fons.mensura);
 
         /* DEBUG: Write output to file for inspection */
-        debug_fp = fopen("/tmp/roundtrip_output.c", "wb");
+        debug_fp = lectiones_fopen("/tmp/roundtrip_output.c", "wb");
         si (debug_fp != NIHIL)
         {
             fwrite(fructus.datum, 1, (size_t)fructus.mensura, debug_fp);

@@ -8,6 +8,7 @@
 #include "arbor2_glr.h"
 #include "via.h"
 #include "chorda_aedificator.h"
+#include "lectiones.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -1060,7 +1061,7 @@ _legere_filum(Arbor2Expansion* exp, chorda* via)
     memcpy(buffer_via, via->datum, (size_t)via->mensura);
     buffer_via[via->mensura] = '\0';
 
-    filum = fopen(buffer_via, "rb");
+    filum = lectiones_fopen(buffer_via, "rb");
     si (filum == NIHIL)
     {
         redde resultus;
