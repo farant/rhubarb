@@ -67,3 +67,15 @@ figura filling `COLOR_SUPERFICIES` (the desk); the page gets a 1-px
 `COLOR_BORDER` frame just outside it, so a resize is visible as the desk
 growing and shrinking around a fixed page. Building it exposed the
 negative-origin bug in delineare_mandata (fixed separately, 52bee5bf).
+
+## 2026-10-06 — open: the canvas starts with its top-left off-screen
+
+Seen in the first frame screenshots (`-imago`, headless and real window
+byte-identical): the visible yellow is exactly the bottom-right quarter
+of a 640x400 canvas, as if the canvas CENTRE sat at the view's origin.
+The prospectus pan starts at (0, 0) (pictor_componentia.c:216,
+componens_ponere_transformatio just stores it), so the offset comes
+from elsewhere - initial zoom, the canvas figure's drawing, or the
+prospectus clip. Not chased (time-boxed; Fran: "if you want to look...
+or we can just go ahead with E"). Repro: `./apps/pictor/pictor.sh
+-fumus -imago /tmp/p.png`, then look.
