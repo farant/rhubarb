@@ -585,7 +585,42 @@ Later phases (re-planned after A's RELATIO):
     cool".
   - **E4 - RELATIO.** Done 2026-10-07: `lib/aemulator.phase-log.md`
     (E4). Next: secunda -> main merge (Fran's timing), then phase D.
-- **D - full-screen v0.** Origin and insert modes, DEC special
+- **D - full-screen v0** (D0 interview, Fran 2026-10-07):
+  26. **VT420-and-beyond is LATER, not never:** left/right margins,
+      rectangle/column operations, protected areas, most window ops,
+      132-column mode - their esctest rows get the cause "later
+      (phase F+)" so the table separates not-yet from missing.
+  27. **Kitty keyboard protocol in D:** the core keeps the flag stack
+      (CSI > u push, CSI < u pop, CSI = u set, CSI ? u query);
+      `codificator_terminalis` already encodes kitty keys.
+  28. **Colour queries answered with theme colours:** OSC 10/11
+      (foreground/background) and OSC 4 (palette) from colours the
+      host passes to the core.
+  29. **Done bar:** headless checks (vectors, esctest table), then
+      Fran uses vim, less and htop in terminale, and a vttest session
+      together (vttest: Dickey's interactive VT tester - network
+      fetch approved earlier; announce and pin).
+  Tasks:
+  - **D1 - quick wins:** HPR/VPR, REP, SCOSC/SCORC (CSI s/u), alt
+    screens 47/1047/1048, DECALN, RIS; Ghostty vectors first; esctest
+    rows promoted.
+  - **D2 - modes in the core:** origin (DECOM), insert (IRM), reverse
+    wrap (45/1045), DECCKM, keypad (DECKPAM/DECKPNM), mouse (9, 1000,
+    1002, 1003, 1006, 1015), bracketed paste 2004, focus 1004, DECRQM;
+    the API to hand modes to the host (header for Fran's approval).
+  - **D3 - DEC special graphics:** G0/G1 designation (ESC ( 0 ...),
+    SO/SI, line drawing.
+  - **D4 - kitty keyboard flags** (decision 27) + its query.
+  - **D5 - colour queries** (decision 28; configuration addition for
+    Fran's approval).
+  - **D6 - terminale wiring:** modes -> codificator (DECCKM arrows,
+    keypad, kitty), mouse reporting from window mouse events, bracketed
+    paste, focus events, window title from OSC 0/2.
+  - **D7 - the bar:** esctest table re-pinned (causes "later" per
+    decision 26), vttest fetched and pinned, Fran's session (vim,
+    less, htop, vttest).
+  - **D8 - RELATIO.**
+- **D (old sketch).** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
   `codificator_terminalis`; the bar: vim, less, htop look right; a
   vttest session with Fran.
