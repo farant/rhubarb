@@ -1356,6 +1356,40 @@ try:
     deletae = silva.umbrae_purgare()
     credo(sorted(deletae) == sorted([mortuus, orph]) and not os.path.exists(orph) and os.path.isdir(vivus) and os.path.isdir(seratus),
           'umbrae_purgare: orphani deleti, clones portae currentis et processus vivi servati')
+    # DELETIO ASYNCHRONA (S1, profilum T9: rmtree 52,9 s): nomen mutatum
+    # in purgatorium statim, 'rm -rf' in fundo; purgatorium ipsum numquam
+    # orphanus
+    magnus = os.path.join(silva.UMBRAE_DIR, 'probatio-magnus.1')
+    for _i in range(40):
+        os.makedirs(os.path.join(magnus, 'd%d' % _i))
+        for _j in range(25):
+            open(os.path.join(magnus, 'd%d' % _i, 'f%d' % _j), 'w').write('x')
+    import time as _tempus
+    _t0 = _tempus.time()
+    silva.photographia_delere(magnus)
+    _dt = _tempus.time() - _t0
+    credo(not os.path.exists(magnus) and _dt < 0.5,
+          'photographia_delere: clone statim sublatus (%.3f s), deletio in fundo' % _dt)
+    _purg = os.path.join(silva.UMBRAE_DIR, '.purgatorium')
+    credo(os.path.isdir(_purg) and silva.umbrae_orphanae() == [],
+          'umbrae_orphanae: purgatorium (nomen cum puncto) numquam orphanus')
+    _finis = _tempus.time() + 20
+    while _tempus.time() < _finis and os.path.isdir(_purg) and os.listdir(_purg):
+        _tempus.sleep(0.05)
+    credo(os.path.isdir(_purg) and os.listdir(_purg) == [],
+          'photographia_delere: purgatorium a "rm" in fundo vacuatum')
+    # EXSPECTARE (S1: intervallum II s -> breve): receptum post 0,3 s
+    # apparens intra ~0,5 s legitur, non post II s
+    _rv = os.path.join(silva.PORTAE_DIR, 'probatio-exspectata.0.json')
+    import threading as _fila
+    _fila.Timer(0.3, lambda: open(_rv, 'w').write(json.dumps({
+        'nomen': 'probatio', 'filtrum': None, 'sana': True, 'cucurrit': True,
+        'compendium': 'x', 'rc': 0, 'sigillum': '', 'rancida': False,
+        'finis': 0}))).start()
+    _t0 = _tempus.time()
+    silva.exspectare(_rv, tectum=10)
+    _dt = _tempus.time() - _t0
+    credo(_dt < 0.8, 'exspectare: receptum novum intra %.2f s lectum (intervallum breve)' % _dt)
 finally:
     for _d in (silva.UMBRAE_DIR, silva.PORTAE_DIR):
         shutil.rmtree(_d, ignore_errors=True)

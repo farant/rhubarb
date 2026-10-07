@@ -961,3 +961,31 @@ raise) -> A red. Live: deviation in tools/fabrica.c, built, guard ->
 Rejected for now: commissio re-heals installata itself (policy: commit
 would write bin/ - Fran's call); fumus builds its own binary (fixes one
 gate only).
+
+## 2026-10-07 - S1: snapshot deletion off the critical path (and what it did NOT buy)
+
+Follows the T9 profile (pythonica/profilare.py; fabrica spec 5 §X T9).
+`photographia_delere` now renames the clone into
+`UMBRAE_DIR/.purgatorium/` (atomic, same filesystem: the clone is gone
+at once) and starts a detached `rm -rf`; `umbrae_orphanae` skips dot
+names (it would otherwise call the purgatory an orphan clone and
+"delete" it into itself); `umbrae_purgare` re-sweeps purgatory leftovers
+(an interrupted rm; a second rm on the same path is harmless);
+`exspectare` polls every 0.1 s instead of 2 s. Tests in the hermetic
+orphan block; plants: synchronous delete -> both purgatory assertions
+red; dot-skip removed -> the orphan one; 2 s interval -> the wait one.
+
+MEASURED, before -> after (one profile each, same machine):
+suite 421.8 -> 432.8 s (noise band: 369-419 s this week).
+photographia_delere 52.9 -> 0.0 s, but _clonare_ignorata 102.5 ->
+113.3 s and photographia_materializare 137.6 -> 160.8 s: the background
+unlinks compete for the disk with the NEXT snapshot's clone. exspectare
+30.1 -> 20.2 s over 9 waits: the waits were the shadow workers running
+real gates, not polling waste. Net gate time: no gain.
+
+Lesson: a profile names where time is SPENT, not what removing it buys.
+Disk-bound work moved into the background is still disk-bound. The
+snapshot cost is I/O volume (~70k files cloned then unlinked, 9 times);
+the levers are fewer snapshots or cheaper ones (clonefile, …6RME), not
+parallel deletion. Kept anyway (Fran): interactive commissio_umbra no
+longer blocks on deleting its snapshots.

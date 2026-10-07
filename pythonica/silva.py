@@ -2972,11 +2972,36 @@ def photographia_materializare(ph, nomen='umbra'):
     return ph._replace(via=via)
 
 
+PURGATORIUM = '.purgatorium'
+
+
+def _purgatorium_vacuare(viae):
+    """'rm -rf' in fundo (sessio propria) - nemo exspectat"""
+    subprocess.Popen(['rm', '-rf', '--'] + list(viae), start_new_session=True,
+                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                     stderr=subprocess.DEVNULL)
+
+
 def photographia_delere(ph_aut_via):
+    """clone photographiae delere ASYNCHRONE (profilum T9: rmtree 52,9 s
+    in porta pythonica): nomen in UMBRAE_DIR/.purgatorium/ mutatum
+    (rename atomicum, eadem area) - clone STATIM abest - deinde 'rm -rf'
+    in fundo. Rename fractum -> rmtree ut olim. Reliquias (rm interruptum)
+    umbrae_purgare vacuat."""
     import shutil
     via = ph_aut_via.via if hasattr(ph_aut_via, 'via') else ph_aut_via
-    if via and via.startswith(UMBRAE_DIR) and os.path.isdir(via):
+    if not (via and via.startswith(UMBRAE_DIR) and os.path.isdir(via)):
+        return
+    purgatorium = os.path.join(UMBRAE_DIR, PURGATORIUM)
+    meta = os.path.join(purgatorium, '%s.%d.%d' % (
+        os.path.basename(via.rstrip('/')), os.getpid(), int(time.time() * 1000)))
+    try:
+        os.makedirs(purgatorium, exist_ok=True)
+        os.rename(via, meta)
+    except OSError:
         shutil.rmtree(via, ignore_errors=True)
+        return
+    _purgatorium_vacuare([meta])
 
 
 def _receptum_via(nomen, filtrum):
@@ -3241,8 +3266,10 @@ def recepta_viva_delere():
         receptum_delere(via)
 
 
-def exspectare(via, tectum=1800, intervallum=2.0):
-    """receptum manere (secunda); SilvaError post tectum"""
+def exspectare(via, tectum=1800, intervallum=0.1):
+    """receptum manere (secunda); SilvaError post tectum. Intervallum
+    breve (profilum T9: II s -> XV exspectationes 30,1 s, operarii
+    plerumque intra intervallum unum finiti) - exstantia plagulae vilis"""
     finis = time.time() + tectum
     while time.time() < finis:
         if os.path.exists(via):
@@ -3333,8 +3360,10 @@ def umbrae_orphanae():
     if not os.path.isdir(UMBRAE_DIR):
         return []
     vivi = _clones_vivi()
+    # nomina cum puncto (.purgatorium) clones non sunt
     return [os.path.join(UMBRAE_DIR, f) for f in sorted(os.listdir(UMBRAE_DIR))
-            if os.path.isdir(os.path.join(UMBRAE_DIR, f))
+            if not f.startswith('.')
+            and os.path.isdir(os.path.join(UMBRAE_DIR, f))
             and os.path.join(UMBRAE_DIR, f) not in vivi]
 
 
@@ -3343,6 +3372,12 @@ def umbrae_purgare():
     servat donec receptum deleatur, oblivio eos cumulat (~C MB veri
     quisque). Reddit vias deletas."""
     deletae = []
+    # reliquiae purgatorii (rm in fundo interruptum): iterum - 'rm -rf'
+    # geminum innocuum
+    purgatorium = os.path.join(UMBRAE_DIR, PURGATORIUM)
+    if os.path.isdir(purgatorium) and os.listdir(purgatorium):
+        _purgatorium_vacuare([os.path.join(purgatorium, f)
+                              for f in os.listdir(purgatorium)])
     for via in umbrae_orphanae():
         photographia_delere(via)
         deletae.append(via)
