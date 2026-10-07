@@ -1597,7 +1597,7 @@ PORTAE = {
     'amalgamata': (['./tools/amalgamata_probare.sh'],
                    r'amalgamata: \d+ compilata, \d+ fracta'),
     'aedilis': (['./tools/aedilis_porta.sh'],
-                r'PORTA AEDILIS: \d+ probationes'),
+                r'PORTA AEDILIS: \d+'),
     'briar-fumus': (['./tools/briar_fumus.sh'],
                     r'fumus briar: (sanum|FRACTUM)'),
     # 'materia-shim' RECESSIT (silva-migratio T10c, 2026-09-25): silva

@@ -2065,6 +2065,36 @@ hic_manens constans character* constans _radices_systematis[] = {
     "/System/", NIHIL
 };
 
+/* radices TEMPORARIAE (plan 5 T5b): status ambientis, non ingressus -
+ * probationes areas suas ibi faciunt (mkdir per shell, S non notatum)
+ * et /tmp ipsum enumerant; ut effectus classis temporaria (spec-2
+ * par. IX). Radix ipsa aut via sub ea. */
+hic_manens constans character* constans _radices_temporariae[] = {
+    "/tmp", "/private/tmp", "/var/folders", "/private/var/folders",
+    NIHIL
+};
+
+interior b32
+_sub_temporaria (
+    chorda via)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; _radices_temporariae[k] != NIHIL; k++)
+    {
+        memoriae_index n = strlen(_radices_temporariae[k]);
+
+        si (   (memoriae_index)via.mensura                   >= n
+            && memcmp(via.datum, _radices_temporariae[k], n) == ZEPHYRUM
+            && (   (memoriae_index)via.mensura == n
+                || via.datum[n] == (i8)'/'))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* sub build/ : 'build/...' aut '.../build/...' */
 interior b32
 _sub_build (
@@ -2100,6 +2130,12 @@ _sub_build (
  *     aedilis octetos binarii sui legit, relinkatio vestigium aliter
  *     moveret)
  * FALSUM + causa: transitus non reutilis (vestigium nullum). */
+interior b32
+_in_locis (
+     constans Xar* loci,
+           chorda  via,
+          Piscina* piscina);
+
 interior b32
 _lectiones_transitus_colligere (
     constans FabricaSutura*  sutura,
@@ -2258,6 +2294,14 @@ _lectiones_transitus_colligere (
             {
                 perge;
             }
+            /* in vestigio PROPRIO (non communi): opus actionis, non
+             * ingressus - filii (sqlite, redirectio) S non notant
+             * (plan 5 T5b). Commune alienis patet: non excusat. */
+            si (   actio->vestigia != NIHIL
+                && _in_locis(actio->vestigia, via, piscina))
+            {
+                perge;
+            }
             si (via.datum[0] == '/')
             {
                 i32 k;
@@ -2271,7 +2315,7 @@ _lectiones_transitus_colligere (
                         systematis = VERUM;
                     }
                 }
-                si (systematis)
+                si (systematis || _sub_temporaria(via))
                 {
                     perge;
                 }

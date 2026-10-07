@@ -32,6 +32,8 @@ structura Vigilia {
          VigiliaStatus  status_tacitus;
            MomentumSec  tempus_ultimum;  /* secunda; horologium iniectum */
                    s64  commissi_mtempus; /* stampa ad agnitionem (ns) */
+    constans character* via_commissi;    /* VIGILIA_VIA_COMMISSI nisi
+                                          * vigilia_viam_commissi_ponere */
 };
 
 
@@ -240,8 +242,9 @@ vigilia_creare (
         redde NIHIL;
     }
     memset(v, ZEPHYRUM, magnitudo(Vigilia));
-    v->piscina  = piscina;
-    v->causa    = "";
+    v->piscina       = piscina;
+    v->causa         = "";
+    v->via_commissi  = VIGILIA_VIA_COMMISSI;
     si (cfg == NIHIL)
     {
         redde v;   /* quieta */
@@ -389,15 +392,30 @@ vigilia_causa (
 
 /* stampa commissionis (ns; ZEPHYRUM = abest - excitator quietus) */
 interior s64
-_commissi_mtempus (vacuum)
+_commissi_mtempus (
+    constans Vigilia* vigilia)
 {
     structura stat status_disci;
 
-    si (lectiones_stat(VIGILIA_VIA_COMMISSI, &status_disci) != ZEPHYRUM)
+    si (lectiones_stat(vigilia->via_commissi, &status_disci)
+        != ZEPHYRUM)
     {
         redde (s64)ZEPHYRUM;
     }
     redde _mtempus_ns(&status_disci);
+}
+
+vacuum
+vigilia_viam_commissi_ponere (
+               Vigilia* vigilia,
+    constans character* via)
+{
+    si (vigilia == NIHIL)
+    {
+        redde;
+    }
+    vigilia->via_commissi = (via == NIHIL) ? VIGILIA_VIA_COMMISSI
+        : _litterae_copiare(vigilia->piscina, via);
 }
 
 b32
@@ -419,7 +437,7 @@ vigilia_tacere (
     vigilia->causa_tacita      = vigilia->causa;
     vigilia->status_tacitus    = vigilia->status;
     vigilia->tempus_ultimum    = nunc;
-    vigilia->commissi_mtempus  = _commissi_mtempus();
+    vigilia->commissi_mtempus  = _commissi_mtempus(vigilia);
     redde VERUM;
 }
 
@@ -460,7 +478,7 @@ vigilia_cautio_dicenda (
         redde vigilia->cautio;
     }
     /* re-armatio: commissio - mundus mutatus, limen semanticum */
-    si (_commissi_mtempus() != vigilia->commissi_mtempus)
+    si (_commissi_mtempus(vigilia) != vigilia->commissi_mtempus)
     {
         vigilia->tacita_reliqua = ZEPHYRUM;
         redde vigilia->cautio;

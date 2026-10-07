@@ -283,3 +283,108 @@ Lint: 0 blocking; root suite 215/215; generata sana. Plants: a raw
 `fopen` read in probatio_specimen.c -> OBSTAT naming it; noting off in
 lectiones_fopen -> probatio_lectiones IIc red.
 
+
+**T5b (2026-10-06): porta_aedilis.** `porta_aedilis` in the root
+aedificatio.stml: mandatum `./tools/aedilis_porta.sh`, signum
+`PORTA AEDILIS:` (PORTAE regex now `PORTA AEDILIS: \d+`, so the C
+verdict `aedilis: PORTA AEDILIS: 230` and `porta()`'s agree byte for
+byte), the runner as effectus chain root (lint 0, key: nomina
+probationes/probatio_*.c, its own .err/.diff, provenientia bin/aedilis),
+a second effectus ingressus for `probationes/fixa/villa/ssh_stipes.sh`
+(the villa test execs it; a child bash's `cat` reads never reach the
+ledger - its key names every fixture by content), the five house
+binaries tests run through `system()` (bin/generare, manus, natura,
+natura_canones, natura_glossae: an exec is not a ledger read), the
+daemon's sources (manifesta of fragmentum_gesta_tabulariumd +
+tabulariumd.sh) and clang's identity. First heal 104 s; reuse after it
+RECENS.
+
+What the first heals found, in order (each a real gap, not a
+formality):
+
+1. *Writes outside the vestigium (418).* Root tests write scratch all
+   over build/ - declared by name (5 directories, 28 files; Fran: a
+   single scratch area for all tests is a desideratum). Three were
+   worse and are fixed: `probatio_generare` wrote helper scripts into
+   bin/ beside the installed binaries (bin/generare gained
+   `--instrumenta DIR`, default bin; the test uses
+   build/probatio_generare_instrumenta), and `probatio_vigilia` wrote
+   and removed the REAL commit stamp `.vigilia_commissum` that the
+   residents read (`vigilia_viam_commissi_ponere`, NIHIL = default; the
+   stamp was in fact missing when looked at). Plant: setter a no-op ->
+   the "stamp moved re-arms" assertion red.
+2. *A test rebuilt the live resident.* `probatio_cliens_tabularii`,
+   `villa_agens` and `sententiae_horreum` ran `./gesta/tabulariumd.sh
+   -struere` via `system()` - relinking gesta/build/tabulariumd under
+   the running resident, with untraced reads (its key: 4 unresolved
+   sites -> IGNOTUM). Now they only check the binary exists; the root
+   runner already prebuilt it once; under fabrica the action
+   `tabulariumd` (strategy ignota, precondition of porta_aedilis)
+   builds it. fabrica refuses an ignota output as an ingressus
+   ("praecondicio sola licet"), so the verdict keys the daemon's
+   SOURCES, which is the better key anyway.
+3. *A child-written temp read back.* bin/aedilis captures `git
+   rev-parse HEAD` (and `clang -MM`) through a per-pid temp file under
+   build/aedilis: an unowned build/ read, and its content (HEAD) would
+   have voided every commit. aedilis now notes the child's write (S)
+   before reading - the existing rule "written in the run = not an
+   input" then applies.
+4. *Reads of the action's own scratch.* sqlite databases, daemon port
+   files and silex volumes are written by children that note nothing.
+   fabrica rule (new): a read under an action's OWN (non-communis)
+   vestigium is the action's product, not an input; communis areas
+   stay open to others and excuse nothing. probatio_fabrica VIIb (born
+   red).
+5. *Temporary roots.* Tests make their areas under /tmp by shell and
+   one enumerates /tmp itself (D /tmp - any process touching /tmp
+   would void the verdict). fabrica (new): /tmp, /private/tmp,
+   /var/folders, /private/var/folders are never inputs, like effectus
+   class temporaria (spec-2 par. IX). probatio_fabrica VIIc (born red).
+6. *The live repository.* `probatio_git` reads `.`'s HEAD, refs,
+   packs and fixed old commits by design - keyed honestly, every commit
+   voids the verdict. Fran: the aedilis gate still derives, builds and
+   clang-diffs it but does not RUN it (REPOSITORIUM_VIVUM_LISTA); radix
+   runs it. Desideratum: a committed fixture repository.
+7. *Speculum capsule* (build/speculum/hospes): rewritten every radix
+   run with tempus, commissum, sordidum; aedilis sees it only by
+   existence (clang reads it outside the ledger). Owner declared
+   (`speculum_hospes`, ignota); existence-only is a NAMED approximation
+   (Fran); deterministic provenance under tests = desideratum.
+
+Stored trace: 1243 L, 539 X, 2728 A, 44 D (the inclusion roots of
+`--nexus-purus` - this gate owns that house-wide check, spec par. II.2
+branch b - plus the gate's own test-data directories), 4 E (HOME and
+three unset switches). No .git, no temporary roots.
+
+Plants (judge only, restored after each): lib/xar.c, the ssh stub's
+df.txt, gesta/fontes/tabularium.c, the runner, bin/generare's bytes and
+a new probationes/probatio_*.c -> IGNOTUM naming the input; a new
+header in include/ -> STALUM `lectio transitus mutata: include`; an
+unrelated project-specs edit -> RECENS.
+
+Oracle (`effectus_oraculum.sh -domus`, par. III.5): 1850 observed
+effects not covered, all but a handful inside the GENERATED
+build/aedilis/probatio_*/struere.sh (bash `-f`/`-nt` probes, clang
+reading objects, mkdir) - build products written by bin/aedilis in the
+run, whose sources aedilis itself reads and notes. The rest led to
+items 2, 7 and the ssh stub above. Not 0: named residue.
+
+Census split (par. III.7): `effectus -census` now counts unresolved
+sites `in catena:` (in a declared chain) and `solum:` separately -
+today in catena 27 nulla + 7 partialis, solum 673 + 571 (sums equal
+the TSV's totals).
+
+Audited reuses (`bin/fabrica sanare -audit`, re-run of a RECENS pass):
+(1) after the census edit in crusta/instrumenta/effectus.c (outside the
+closure), (2) after this section's docs edits - both "transitus iterum
+congruit", verdict byte-identical; (3) after the commit itself (HEAD
+moved: no .git in the key), reported with T6.
+
+| porta_aedilis (`reusus_retro.sh`, today's trace) | last 40 | last 150 |
+|---|---:|---:|
+| reused | 12/40 (30%) | 64/150 (42%) |
+
+Of the 86 voids over 150, 75 are genuine closure inputs (headers of the
+math tier, tessera.h, runae.h, fabrica.h ...), 11 house-binary
+provenance (`aedilis.stml` through bin/natura_glossae - …57Y). The
+ceiling estimate (~45%) holds: aedilis reads nearly all of include/.

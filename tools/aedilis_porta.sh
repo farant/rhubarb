@@ -4,9 +4,9 @@
 #
 # Quaeque probatio radicis: (1) derivatio + emissio scriptorum
 # (bin/aedilis), (2) structura per scriptum emissum, (3) cursus
-# probationis (nisi GUI/reticularis), (4) differentia-clausurae
-# contra clang -MM (unio super TU clausurae). Porta per codicem
-# exitus; summarium demum.
+# probationis (nisi GUI/reticularis/repositorium vivum), (4)
+# differentia-clausurae contra clang -MM (unio super TU clausurae).
+# Porta per codicem exitus; summarium demum.
 #
 # Praesupponit: bin/aedilis paratum (./tools/aedilis_struere.sh)
 # et artificia generata recentia (suite semel cursa - capsulae
@@ -21,6 +21,11 @@ mkdir -p build/aedilis
 GUI_LISTA="probatio_fenestra probatio_vitrea probatio_vitrea_tabella probatio_vitrea_hospes probatio_delineare probatio_tempus probatio_pagina probatio_navigator probatio_combinado probatio_gradientum probatio_capsula_caudae probatio_elementa probatio_imago probatio_dithering"
 # aedificantur; cursus retem vivam requirit
 RETICULARIS_LISTA="probatio_tls probatio_tcp"
+# aedificantur et conferuntur; cursus REPOSITORIUM VIVUM legit (HEAD,
+# refs, sarcinae - omnis commissio verdictum portae irritum faceret;
+# fabrica plan 5 T5b, Fran 2026-10-06). Radix eas currit. Desideratum:
+# repositorium fixum commissum ut probatio HEAD non pendeat.
+REPOSITORIUM_VIVUM_LISTA="probatio_git"
 
 est_in_lista () {
     local quaesitum="$1"
@@ -67,7 +72,8 @@ for f in probationes/probatio_*.c; do
         continue
     fi
     if ! est_in_lista "$basis" "$GUI_LISTA" \
-        && ! est_in_lista "$basis" "$RETICULARIS_LISTA"; then
+        && ! est_in_lista "$basis" "$RETICULARIS_LISTA" \
+        && ! est_in_lista "$basis" "$REPOSITORIUM_VIVUM_LISTA"; then
         if ! "build/aedilis/$basis/$basis" > /dev/null 2>&1; then
             echo "FRACTA (cursus): $basis"
             fracta="$fracta $basis(cursus)"

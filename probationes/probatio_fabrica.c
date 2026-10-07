@@ -4794,6 +4794,70 @@ s32 principale (vacuum)
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
 
+        /* VIIb (plan-5 T5b). lectio in vestigio PROPRIO actionis: opus
+         * suum, non ingressus - filii (sqlite, redirectio) S non notant,
+         * ergo 'sine domino' aliter. Vestigium COMMUNE non excusat. */
+        {
+            FabricaLocus* locus;
+
+            si (actiones_transitus[0]->vestigia == NIHIL)
+            {
+                actiones_transitus[0]->vestigia = xar_creare(piscina,
+                    (i32)magnitudo(FabricaLocus));
+            }
+            locus = (FabricaLocus*)xar_addere(
+                actiones_transitus[0]->vestigia);
+            CREDO_NON_NIHIL(locus);
+            si (locus != NIHIL)
+            {
+                locus->forma    = FABRICA_LOCUS_ARBOR;
+                locus->via      = chorda_ex_literis("build/proprium",
+                    piscina);
+                locus->suffixa  = chorda_ex_literis("", piscina);
+            }
+            _ponere(&discus, LIBER,
+                "L\tdata/fons.txt\nL\tbuild/proprium/portus.txt\n");
+            _auferre(&discus, VERDICTUM);
+            sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+                piscina, &causa);
+            sanatio = _sanatio_invenire(sanationes, "porta_x");
+            CREDO_NON_NIHIL(sanatio);
+            si (sanatio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                    (i32)FABRICA_SANATUM);
+                CREDO_AEQUALIS_I32((i32)sanatio->causa.mensura,
+                    ZEPHYRUM);
+            }
+            iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
+                exitus,
+                VERUM, piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_RECENS);
+        }
+
+        /* VIIc (plan-5 T5b). radices TEMPORARIAE (/tmp, /private/tmp,
+         * /var/folders): status ambientis, non ingressus sigillabilis
+         * (ut effectus classis temporaria) - /tmp ipsum quoque */
+        _ponere(&discus, "/tmp/probatio_x/a.txt", "a I\n");
+        _ponere(&discus, LIBER,
+            "L\tdata/fons.txt\nD\t/tmp\nL\t/tmp/probatio_x/a.txt\n"
+            "X\t/private/var/folders/ab/T/f\n");
+        _auferre(&discus, VERDICTUM);
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "porta_x");
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->causa.mensura, ZEPHYRUM);
+        }
+        _ponere(&discus, "/tmp/probatio_x/a.txt", "a II\n");
+        iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
+            exitus,
+            VERUM, piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
+
         /* VIII. FIFO (species ALIA): non sigillabilis */
         _via_alia_ficta = "data/fifo";
         _ponere(&discus, LIBER, "L\tdata/fons.txt\nL\tdata/fifo\n");

@@ -4,7 +4,11 @@
  * et instrumenta execuit ante compilationem.
  *
  * USUS:
- *   ./bin/generare [--verbose] <via> [<via> ...]
+ *   ./bin/generare [--verbose] [--instrumenta DIR] <via> [<via> ...]
+ *
+ * Instrumentum directivae in DIR/<titulus> quaeritur (ordinarie bin):
+ * probationes instrumenta ficta in build/ ponunt, numquam iuxta
+ * binaria installata (fabrica plan 5 T5b).
  */
 
 #include "latina.h"
@@ -269,6 +273,7 @@ interior s32
 _executare_directivam (
     constans GenerareDirectiva* directiva,
                         chorda  filum_via,
+                        chorda  instrumenta,
                            b32  loquax,
                        Piscina* piscina)
 {
@@ -287,7 +292,8 @@ _executare_directivam (
     chorda_aedificator_appendere_s32(aed, directiva->versus);
     chorda_aedificator_appendere_character(aed, ' ');
 
-    chorda_aedificator_appendere_literis(aed, "bin/");
+    chorda_aedificator_appendere_chorda(aed, instrumenta);
+    chorda_aedificator_appendere_character(aed, '/');
     chorda_aedificator_appendere_chorda(aed, directiva->instrumentum);
 
     per (idx = ZEPHYRUM; idx
@@ -330,6 +336,7 @@ _executare_directivam (
 interior s32
 _processare_filum (
      chorda  via,
+     chorda  instrumenta,
         b32  loquax,
     Piscina* piscina)
 {
@@ -371,7 +378,8 @@ _processare_filum (
             perge;
         }
 
-        codex = _executare_directivam(dir, via, loquax, piscina);
+        codex = _executare_directivam(dir, via, instrumenta, loquax,
+            piscina);
         si (codex != ZEPHYRUM)
         {
             fprintf(stderr,
@@ -398,6 +406,7 @@ principale (
      ArgumentaParser* parser;
     ArgumentaFructus* fructus;
                  b32  loquax;
+              chorda  instrumenta;
                  i32  numerus_viarum;
                  i32  idx;
                  Xar* fila;
@@ -419,6 +428,8 @@ principale (
         "generare - Cursor directivarum generationis codicis");
     argumenta_addere_vexillum(parser, "-v", "--verbose",
         "Modus loquax");
+    argumenta_addere_optionem(parser, NIHIL, "--instrumenta",
+        "Directorium instrumentorum (ordinarie bin)");
     argumenta_addere_exemplum(parser,
         "generare lib/");
     argumenta_addere_exemplum(parser,
@@ -428,12 +439,19 @@ principale (
         (constans character* constans*)argv);
 
     loquax = argumenta_habet_vexillum(fructus, "--verbose");
+    instrumenta = argumenta_obtinere_optionem(fructus, "--instrumenta",
+        piscina);
+    si (instrumenta.mensura == ZEPHYRUM)
+    {
+        instrumenta = chorda_ex_literis("bin", piscina);
+    }
 
     numerus_viarum = argumenta_numerus_positionalium(fructus);
     si (numerus_viarum == ZEPHYRUM)
     {
         fprintf(stderr,
-            "Usus: generare [--verbose] <via> [<via> ...]\n");
+            "Usus: generare [--verbose] [--instrumenta DIR] <via> "
+            "[<via> ...]\n");
         piscina_destruere(piscina);
         redde I;
     }
@@ -496,7 +514,8 @@ principale (
             perge;
         }
 
-        fructus_fili = _processare_filum(*via, loquax, piscina);
+        fructus_fili = _processare_filum(*via, instrumenta, loquax,
+            piscina);
         si (fructus_fili < ZEPHYRUM)
         {
             piscina_destruere(piscina);

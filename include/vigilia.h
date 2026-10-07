@@ -120,6 +120,14 @@ vigilia_continet (
  * exsequuntur, ut manifestum). Abesse licet - excitator quietus. */
 #define VIGILIA_VIA_COMMISSI ".vigilia_commissum"
 
+/* stampa alia quam VIGILIA_VIA_COMMISSI (NIHIL = ea): probationes
+ * stampam propriam in build/ tangunt, numquam stampam veram radicis
+ * quam residentes legunt (fabrica plan 5 T5b) */
+vacuum
+vigilia_viam_commissi_ponere (
+               Vigilia* vigilia,
+    constans character* via);
+
 /* Quies re-armans (secunda): post tantum silentii petitionum
  * agnitio expirat - compactio/absentia = lector fortasse alius */
 #define VIGILIA_QUIES_SECUNDA CCC

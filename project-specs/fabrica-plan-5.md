@@ -128,9 +128,11 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
     `stat`, `getenv`; 18 writes) - reads through filum / lectiones,
     writes through filum or annotated; pilot widened in the same commit
     so regressions block (radix benefits too).
-  - [ ] **T5b** porta_aedilis (signum), effectus chain root, oracle
+  - [x] **T5b** porta_aedilis (signum), effectus chain root, oracle
     `-domus`, plants, three audited reuses, census in-chain/standalone
-    split.
+    split. (Spec §X T5b: seven gaps found by the first heals - Fran
+    decided scratch by name, speculum by existence, daemon prebuilt,
+    probatio_git built not run, temp roots never inputs.)
 - [ ] **T6** fabrica (`tools/fabrica_oraculum.sh`)
 - [ ] **T7** generata (`tools/generata_probare.sh`)
 - [ ] **T8** oratio (`oratio/compile_probationes.sh`)

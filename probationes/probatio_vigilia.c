@@ -18,6 +18,9 @@
 #define VIA_BIN "build/probatio_vigilia_binarium"
 #define VIA_MAN "build/probatio_vigilia_manifestum"
 #define VIA_FON "build/probatio_vigilia_fons.c"
+/* stampa commissionis PROPRIA (vigilia_viam_commissi_ponere): vera
+ * radicis (VIGILIA_VIA_COMMISSI) residentium est, numquam tangenda */
+#define VIA_COM "build/probatio_vigilia_commissum"
 
 interior vacuum
 _purgare (vacuum)
@@ -25,6 +28,7 @@ _purgare (vacuum)
     remove(VIA_BIN);
     remove(VIA_MAN);
     remove(VIA_FON);
+    remove(VIA_COM);
 }
 
 interior b32
@@ -254,7 +258,7 @@ s32 principale (vacuum)
          constans character* contentum  = "binarium tacendi";
                         s64  t          = (s64)1000;
 
-        remove(VIGILIA_VIA_COMMISSI);
+        remove(VIA_COM);
         CREDO_VERUM (_scribere(VIA_BIN, contentum));
         _sigillum_hex(contentum, hex);
         CREDO_VERUM (_scribere(VIA_MAN, VIA_FON "\n"));
@@ -263,6 +267,7 @@ s32 principale (vacuum)
         cfg.via_manifesti  = VIA_MAN;
         v                  = vigilia_creare(piscina, &cfg);
         CREDO_NON_NIHIL (v);
+        vigilia_viam_commissi_ponere(v, VIA_COM);
 
         /* recens: nihil tacendum; dicenda NIHIL */
         CREDO_VERUM (!vigilia_tacere(v, X, t));
@@ -297,7 +302,7 @@ s32 principale (vacuum)
         CREDO_VERUM (vigilia_tacere(v, X, t));
         t++;
         CREDO_VERUM (vigilia_cautio_dicenda(v, t) == NIHIL);
-        CREDO_VERUM (_scribere(VIGILIA_VIA_COMMISSI, "stampa\n"));
+        CREDO_VERUM (_scribere(VIA_COM, "stampa\n"));
         t++;
         CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
 
@@ -312,7 +317,7 @@ s32 principale (vacuum)
         t++;
         CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
 
-        remove(VIGILIA_VIA_COMMISSI);
+        remove(VIA_COM);
     }
 
     _purgare();

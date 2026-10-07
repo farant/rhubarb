@@ -1974,3 +1974,29 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
   AEDILE) did not know that vigilia.c now needs lectiones.c; the
   generata gate named the four lists.
 
+
+## 2026-10-06 - fabrica-5 T5b: porta_aedilis, and what a whole-suite verdict exposes
+
+- The first gate whose runner runs ~230 tests under the ledger. Each heal
+  failed for a NEW reason, and each was a real hole, not paperwork: tests
+  writing beside installed binaries and at the repo root (the vigilia test
+  deleted the residents' real commit stamp), three tests relinking the
+  live resident's binary, aedilis keying HEAD through a temp file, child
+  writes nobody notes (sqlite, shell redirects), /tmp, and a test that
+  reads the live .git. Lesson: the snapshot (before/after photograph) is
+  a better test-hygiene audit than anything we had - radix never faced it
+  because it is not a verdict action.
+- Two fabrica rules came out of it, both general: (1) a read under the
+  action's OWN vestigium is its product (communis excuses nothing);
+  (2) temporary roots are never inputs. Without (1) every child-written
+  scratch file needs a manual S note, and sqlite cannot note.
+- fabrica refuses an ignota exitus as an ingressus ("praecondicio sola
+  licet") - keyed the daemon's SOURCES (manifesta) instead of its bytes,
+  which is the better key: bytes move on relink, sources only on change.
+- `_lectiones_transitus_colligere` collects S in pass 0 over the WHOLE
+  ledger, then judges reads in pass 1: an S anywhere in the run exempts
+  the path, order does not matter.
+- Heals ~100 s each (the crude gate was 173 s; objects and the oracle
+  memory warm). Iterate on the ledger (awk over build/fabrica/lectiones/
+  porta_aedilis.tsv for build/ reads without S) instead of one heal per
+  finding.
