@@ -252,6 +252,28 @@ laqueus_alexander_ex_pd (
          Piscina* piscina,
       Polynomium* exitus);
 
+/* codex PD per motus Reidemeister I et II simplificatus: dum motus
+ * aliquis applicari potest, transitus removentur (R1: ansa - transitus
+ * cuius duo ora vicina idem sunt; R2: duo transitus duo ora
+ * communicantes, eodem filo supra utrumque - in nodo aut bilaterum
+ * facies aut summa connexa T1 # T2 per eos, utrimque isotopia). Ora
+ * deinde renumerantur 1..2c' secundum nodum, transitus [infra intrans,
+ * contra horologium] ut in diagramma_pd. Isotopia: invariantes omnes
+ * idem. Nullo motu possibili codex idem redditur.
+ *
+ * AVIDUS, non completus: motus R3 non tentatur, ergo minimum localem
+ * reddere potest. Sed c' == 0 = nodus trivialis PROBATUS (diagramma
+ * sine transitu; pd_exitus NIHIL). Transitus unus accipitur (semper
+ * ansa). Nodi soli; FALSUM si codex invalidus (exitus non tangitur).
+ * Memoria in piscina. */
+b32
+laqueus_pd_simplificare (
+    constans i32*  pd,
+             i32   transitus,
+         Piscina*  piscina,
+             i32** pd_exitus,
+             i32*  transitus_exitus);
+
 /* determinans nodi |Delta(-1)|, magnus exactus; nodi soli (FALSUM pro
  * catenis, sicut diagramma_alexander). Residua in piscina manent. */
 b32

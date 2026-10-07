@@ -264,6 +264,7 @@ s32 principale (vacuum)
          TabulaNodorum* t = tabula_nodorum_aperire(piscina);
                    i32  k;
                    b32  alexander_symmetrici       = VERUM;
+                   b32  puncta_fixa                = VERUM;
                    b32  amphichirales_symmetrici   = VERUM;
                    b32  ex_pd_concordes            = VERUM;
                    i32  chirales_jones_symmetrico  = ZEPHYRUM;
@@ -297,6 +298,24 @@ s32 principale (vacuum)
                        Polynomium  a2    = polynomium_nullum();
                        Polynomium  j2    = polynomium_nullum();
 
+            /* diagramma minimum: nullus motus R1, R2 - codex idem */
+            si (n->transitus > ZEPHYRUM)
+            {
+                i32* simplex  = NIHIL;
+                i32  c        = ZEPHYRUM;
+
+                si (   !laqueus_pd_simplificare(tabula_nodorum_pd(n),
+                        n->transitus, piscina, &simplex, &c)
+                    || c != n->transitus
+                    || memcmp(simplex, tabula_nodorum_pd(n),
+                        (memoriae_index)(IV * c) * magnitudo(i32))
+                    != ZEPHYRUM)
+                {
+                    imprimere("  simplificatio movit: %s\n",
+                        n->titulus);
+                    puncta_fixa = FALSUM;
+                }
+            }
             si (!polynomium_est_symmetricum(a))
             {
                 alexander_symmetrici = FALSUM;
@@ -342,6 +361,7 @@ s32 principale (vacuum)
             }
             piscina_reficere(piscina, nota);
         }
+        CREDO_VERUM (puncta_fixa);
         CREDO_VERUM (alexander_symmetrici);
         CREDO_VERUM (amphichirales_symmetrici);
         CREDO_VERUM (ex_pd_concordes);

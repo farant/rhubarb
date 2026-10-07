@@ -1266,6 +1266,26 @@ _pd_legere (
             redde FALSUM;
         }
     }
+    /* quodque os semel intrans, semel exiens (infra X0; supra X3
+     * positivus, X1 negativus): aliter ora "bis" sed orientatio falsa -
+     * [1, 1, 2, 2, 3, 3, 4, 4] = duae ansae disiunctae. Ita numeratio
+     * l -> l + 1 per omnia ora currit: componens una. */
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        visa[k] = ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        visa[(*ora)[IV * k]]++;
+        visa[(*ora)[IV * k + ((*signa)[k] > ZEPHYRUM ? III : I)]]++;
+    }
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        si (visa[k] != I)
+        {
+            redde FALSUM;
+        }
+    }
     redde VERUM;
 }
 
@@ -1393,6 +1413,298 @@ laqueus_alexander_ex_pd (
     redde _alexander_ex_arcubus(c, supra_arcus, in_arcus, ex_arcus,
         signa,
         piscina, exitus);
+}
+
+/* ora transituum vivorum (vivus) cum oris per pater coniunctis secundum
+ * nodum renumerantur 0..2c'-1 (ora intrans X0 -> exiens X2 = X0 + 1);
+ * signa servantur. FALSUM si os non semel intrans et semel exiens aut
+ * percursus ora omnia non tangit. c' == 0: ora nova NIHIL. */
+interior b32
+_pd_renumerare (
+    constans i32*  ora,
+    constans s32*  signa,
+    constans b32*  vivus,
+             i32   c,
+             i32*  pater,
+         Piscina*  piscina,
+             i32** ora_nova,
+             s32** signa_nova,
+             i32*  c_nova)
+{
+    i32  m             = II * c;
+    i32  locus_nullus  = IV * c;
+    i32* intrans  = (i32*)piscina_allocare(piscina, (memoriae_index)(m
+        + I)
+        * magnitudo(i32));
+    i32* numerus  = (i32*)piscina_allocare(piscina, (memoriae_index)(m
+        + I)
+        * magnitudo(i32));
+    i32* exiens   = (i32*)piscina_allocare(piscina, (memoriae_index)(m
+        + I)
+        * magnitudo(i32));
+    i32* novus    = (i32*)piscina_allocare(piscina, (memoriae_index)(c
+        + I)
+        * magnitudo(i32));
+    i32 vivi    = ZEPHYRUM;
+    i32 primus  = c;
+    i32 q       = ZEPHYRUM;
+    i32 os;
+    i32 os_primum;
+    i32 k;
+    i32 s;
+
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        intrans[k]  = locus_nullus;
+        exiens[k]   = locus_nullus;
+        numerus[k]  = m;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        si (vivus[k])
+        {
+            si (primus == c)
+            {
+                primus = k;
+            }
+            novus[k] = vivi;
+            vivi++;
+        }
+    }
+    *c_nova = vivi;
+    si (vivi == ZEPHYRUM)
+    {
+        *ora_nova    = NIHIL;
+        *signa_nova  = NIHIL;
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        per (s = ZEPHYRUM; vivus[k] && s < IV; s++)
+        {
+            i32 radix = _radix(pater, ora[IV * k + s]);
+
+            si (s == ZEPHYRUM || s == (signa[k] > ZEPHYRUM ? III : I))
+            {
+                si (intrans[radix] != locus_nullus)
+                {
+                    redde FALSUM;
+                }
+                intrans[radix] = IV * k + s;
+            }
+            alioquin
+            {
+                si (exiens[radix] != locus_nullus)
+                {
+                    redde FALSUM;
+                }
+                exiens[radix] = IV * k + s;
+            }
+        }
+    }
+    /* percursus: os intrans ad sedem s, exiens eiusdem fili */
+    os_primum  = _radix(pater, ora[IV * primus]);
+    os         = os_primum;
+    fac
+    {
+        i32 locus = intrans[os];
+
+        si (locus == locus_nullus || numerus[os] != m || q >= II * vivi)
+        {
+            redde FALSUM;
+        }
+        numerus[os] = q;
+        q++;
+        k = locus / IV;
+        s = locus % IV;
+        os  = _radix(pater, ora[IV * k + (s == ZEPHYRUM ? II : (signa[k]
+            > ZEPHYRUM ? I : III))]);
+    }
+    dum (os != os_primum);
+    si (q != II * vivi)
+    {
+        redde FALSUM;
+    }
+    *ora_nova = (i32*)piscina_allocare(piscina, (memoriae_index)(IV
+        * vivi + I) * magnitudo(i32));
+    *signa_nova = (s32*)piscina_allocare(piscina, (memoriae_index)(vivi
+        + I) * magnitudo(s32));
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        per (s = ZEPHYRUM; vivus[k] && s < IV; s++)
+        {
+            (*ora_nova)[IV * novus[k] + s] = numerus[_radix(pater,
+                ora[IV * k
+                + s])];
+        }
+        si (vivus[k])
+        {
+            (*signa_nova)[novus[k]] = signa[k];
+        }
+    }
+    redde VERUM;
+}
+
+/* motus unus Reidemeister in oris 0-basatis normalibus: R1 primum,
+ * deinde R2. R1: os ad sedes vicinas eiusdem transitus (ansa; in codice
+ * valido semper vicinas - monogonum). R2: transitus diversi j, k duo
+ * ora e, f communicantes, in j sedibus vicinis (fila diversa), eodem
+ * filo supra utrumque (paritas sedis ossis e in j et in k eadem). In
+ * nodo (componente una) e, f aut faciem bilateram claudunt (R2
+ * classicum) aut tangle 1-1 ad j et alterum ad k pendet ex utraque
+ * parte - tunc nodus T1 # T2 et ante et post remotionem, codex planus
+ * manet. Ergo facies non requiritur (vide lib/laqueus.worklog.md,
+ * 2026-10-07). Reddit 1 applicatus, 0 nullus, -1 error. */
+interior s32
+_pd_motus (
+         i32** ora,
+         s32** signa,
+         i32*  c,
+     Piscina*  piscina)
+{
+    i32  n = *c;
+    i32  m = II * n;
+    i32* o = *ora;
+    i32* alter  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(IV * n
+        + I) * magnitudo(i32));
+    i32* prima  = (i32*)piscina_allocare(piscina, (memoriae_index)(m
+        + I)
+        * magnitudo(i32));
+    i32* pater  = (i32*)piscina_allocare(piscina, (memoriae_index)(m
+        + I)
+        * magnitudo(i32));
+    b32* vivus  = (b32*)piscina_allocare(piscina, (memoriae_index)(n
+        + I)
+        * magnitudo(b32));
+    i32 d;
+    i32 k;
+
+    per (d = ZEPHYRUM; d < m; d++)
+    {
+        prima[d] = IV * n;
+        pater[d] = d;
+    }
+    per (d = ZEPHYRUM; d < IV * n; d++)
+    {
+        si (prima[o[d]] == IV * n)
+        {
+            prima[o[d]] = d;
+        }
+        alioquin
+        {
+            alter[d]            = prima[o[d]];
+            alter[prima[o[d]]]  = d;
+        }
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        vivus[k] = VERUM;
+    }
+    /* R1: ansa ad sedes s, s + 1 */
+    per (d = ZEPHYRUM; d < IV * n; d++)
+    {
+        k = d / IV;
+        si (alter[d] / IV == k && (d % IV + I) % IV == alter[d] % IV)
+        {
+            vivus[k] = FALSUM;
+            pater[_radix(pater, o[IV * k + (d % IV + II) % IV])] =
+                _radix(
+                pater, o[IV * k + (d % IV + III) % IV]);
+            redde _pd_renumerare(o, *signa, vivus, n, pater, piscina,
+                ora,
+                signa, c) ? I : -I;
+        }
+    }
+    /* R2: os e = sedes a in j, a1 in k; os f = sedes b = a + 1 in j,
+     * b1 in k */
+    per (d = ZEPHYRUM; d < IV * n; d++)
+    {
+        i32 j   = d / IV;
+        i32 a   = d % IV;
+        i32 a1  = alter[d] % IV;
+        i32 b   = (a + I) % IV;
+        i32 b1  = alter[IV * j + b] % IV;
+
+        k = alter[d] / IV;
+        si (k == j || alter[IV * j + b] / IV != k)
+        {
+            perge;
+        }
+        si (a % II != a1 % II)
+        {
+            /* fibula: filum supra in uno, infra in altero */
+            perge;
+        }
+        vivus[j] = FALSUM;
+        vivus[k] = FALSUM;
+        /* filum ossis e (sedes oppositae) et filum ossis f iunguntur */
+        pater[_radix(pater, o[IV * j + (a + II) % IV])] = _radix(pater,
+            o[IV * k + (a1 + II) % IV]);
+        pater[_radix(pater, o[IV * j + (b + II) % IV])] = _radix(pater,
+            o[IV * k + (b1 + II) % IV]);
+        redde _pd_renumerare(o, *signa, vivus, n, pater, piscina, ora,
+            signa, c) ? I : -I;
+    }
+    redde ZEPHYRUM;
+}
+
+b32
+laqueus_pd_simplificare (
+    constans i32*  pd,
+             i32   transitus,
+         Piscina*  piscina,
+             i32** pd_exitus,
+             i32*  transitus_exitus)
+{
+    i32* ora;
+    s32* signa;
+    i32  c = transitus;
+    i32  k;
+
+    si (c == I)
+    {
+        /* transitus unus: ora 1, 2 bis, X2 = X0 + 1 - ansa semper */
+        si (   pd[ZEPHYRUM] < I || pd[ZEPHYRUM] > II
+            || pd[II]  != III - pd[ZEPHYRUM] || pd[I] < I || pd[I] > II
+            || pd[III] != III - pd[I])
+        {
+            redde FALSUM;
+        }
+        c = ZEPHYRUM;
+    }
+    si (c > ZEPHYRUM && !_pd_legere(pd, c, piscina, &ora, &signa))
+    {
+        redde FALSUM;
+    }
+    dum (c > I)
+    {
+        s32 effectus = _pd_motus(&ora, &signa, &c, piscina);
+
+        si (effectus < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        si (effectus == ZEPHYRUM)
+        {
+            frange;
+        }
+    }
+    si (c <= I)
+    {
+        /* diagramma unius transitus semper ansam habet */
+        *pd_exitus         = NIHIL;
+        *transitus_exitus  = ZEPHYRUM;
+        redde VERUM;
+    }
+    *pd_exitus = (i32*)piscina_allocare(piscina, (memoriae_index)(IV * c
+        + I) * magnitudo(i32));
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        (*pd_exitus)[k] = ora[k] + I;
+    }
+    *transitus_exitus = c;
+    redde VERUM;
 }
 
 b32

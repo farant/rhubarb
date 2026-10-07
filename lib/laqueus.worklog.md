@@ -280,3 +280,65 @@ Jones itself, so laqueus needed invariants from a PD code.
   the refusal test via Jones never reached validation; refusals are now
   tested via bracket and Alexander, red. In/out under-arcs swapped at every
   crossing: equivalent (orientation reversal leaves Alexander unchanged).
+
+## 2026-10-07 - laqueus_pd_simplificare (Reidemeister I/II on PD codes) + PD validation hardened
+
+For demo 116: 7_2's honest polygon has 1,432 alternatives whose best
+projections have 21-30 crossings - past where the state sum is cheap.
+Greedy R1/R2 on the PD code shrinks those diagrams, and c' == 0 is a direct
+unknot proof. Fran approved the API (one function, PD in -> PD out).
+
+**Validation gap found and closed.** `_pd_legere` checked "each label twice,
+X2 = X0 + 1, sign consistent" but NOT "each label once entering, once
+leaving". `[1,1,2,2, 3,3,4,4]` (two disjoint one-crossing loops) passed. The
+in/out check is what makes the labeling l -> l+1 run through every label,
+i.e. what guarantees ONE component - the simplifier's correctness argument
+needs it. Test `pd_orientatio_falsa`; plant S4 red.
+
+**Algorithm.** Work on 0-based labels; after every move, union-find merges the
+cut edges and `_pd_renumerare` re-walks the knot (in-slot X0 -> out X2; over
+in X3/out X1 positive, X1/X3 negative) to relabel 0..2c'-1; signs carried.
+The walk itself re-checks in/out uniqueness and that it visits 2c' labels.
+- R1: a label at two slots of one crossing. In a valid code those slots are
+  always ADJACENT (opposite slots would need l = l + 1), so it is a monogon.
+- R2: crossings j != k sharing edges e (slot a at j, a1 at k) and f (slot
+  a+1 at j), same parity of e's slot at j and k (same strand over both).
+  Different parity = clasp, never removed (the trefoil's lobes are clasps;
+  plant S1 removing the parity test reds 14 laqueus + the 250-table check).
+
+**The face question (I got this wrong first).** I first required e, f to bound
+a bigon FACE (faces from the rotation system: next(d) = slot after the other
+end of d's edge), worried that a non-face bigon with sub-tangles on both sides
+would make the removal invalid. Built test diagrams with a Python helper:
+two-crossing core (same strand over both), trefoils tied into both kink loops.
+- opposite crossing signs -> e,f bound a face (classic R2);
+- equal signs -> NOT a face (one trefoil on each side).
+Both diagrams are 3_1 # 3_1 (any two-crossing core is the unknot; tying knots
+into its loops is a connected sum), and NAIVE removal of the non-face pair
+gives a valid PLANAR 6-crossing granny code (Euler V - E + F = 2 checked).
+General argument for a knot: e, f always sit on adjacent slots (else one
+strand closes on itself = second component); then either the far side is
+empty (face) or a 1-1 tangle hangs off each crossing and the knot is T1 # T2
+before and after. So the face condition was merely conservative - and a plant
+removing it could never go red (dead code). Dropped it; test `fictum` now
+must reduce 8 -> 6 with the granny Jones J(3_1)^2. The clasp version
+(`fibula`, also 3_1 # 3_1) must stay untouched - greedy R1/R2 is stuck
+there, which is honest (no R3).
+Construction of the test codes: core crossings j = [4,2,1,1] (positive),
+k = [3,3,4,2] / [3,2,4,3] (positive / negative), clasp k = [2,4,3,3];
+loops g1 = label 1 (at j), g2 = label 3 (at k); trefoil KnotInfo PD spliced
+into g2 then g1 (cut the trefoil at its last edge, rewire, renumber by walk).
+
+**Tests (343 laqueus, 86 tabula_nodorum):** refusals (orientation, bad
+three-crossing code, one-crossing codes failing exactly one of X0/X2, X1/X3);
+kinks (1 and 2 kinks -> 0; trefoil + positive/negative kink -> EXACT KnotInfo
+code); trefoil unchanged; R2 face and non-face -> 6 with granny Jones and
+Alexander; clasp unchanged; polygon projections in 4 directions for 5 knots:
+invariants preserved, idempotent, and >= 4 diagrams actually reduced (16 -> 8,
+11 -> 4, ...); all 250 table PDs are exact fixed points (a minimal diagram
+has no R1/R2).
+**Plants (all red):** S1 parity dropped, S2 R2 strands crossed, S3 R1 on
+opposite slots, S4 in/out validation dropped, S5 only one move, S6a/S6b
+one-crossing checks dropped singly (first test code failed BOTH checks, so a
+single-check plant survived - split into two codes), S7 R2 second edge not
+adjacent.

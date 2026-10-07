@@ -297,6 +297,10 @@
   <vocabulum lemma="reversibilis" lingua="latina" classis="adiectivum" nota="Neolatina (revertere + -bilis): reversibilis, directione inversa idem (nodus invertibilis, KnotInfo 'reversible'); sedes include/tabula_nodorum.h; WORDS caret">
     <forma textus="reversibilis" casus="nominativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="bilaterus" lingua="latina" classis="adiectivum" nota="Late Latin (bi- + latus): bilaterus, duorum laterum; bilaterum = bigon, two crossings joined by two edges (Reidemeister II); sedes lib/laqueus.c">
+    <forma textus="bilaterus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="bilaterum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
   <vocabulum lemma="trifolium" lingua="latina" classis="substantivum" nota="Plinius: trifolium (planta); nodus trifolium (laqueus, nodus toroidalis T(2,3))">
     <forma textus="trifolium" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="trifolii" casus="genitivus" numerus="singularis" genus="neutrum"/>
