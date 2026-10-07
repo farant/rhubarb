@@ -245,3 +245,38 @@ Test gaps closed (the plants named survived the first suite):
 Known gap, accepted: L4 (no `abs` in determinans) survives — the abs is
 required (e.g. Δ = t⁴ + t³ − 3t² + t + 1 gives −3 at −1) but no fixture
 knot has a negative normalized Δ(−1).
+
+## 2026-10-07 — PD codes (for the knot table, tabula_nodorum)
+
+The knot-identification library takes PD codes from KnotInfo (pinned
+snapshot `soehms/database_knotinfo` 2026.10.5) and computes Alexander and
+Jones itself, so laqueus needed invariants from a PD code.
+
+- Refactor, no behaviour change: the bracket's state sum is
+  `_uncinus_ex_oris` (any PD array, 0-based labels), Jones' normalisation
+  `_jones_ex_uncino`, the Fox matrix `_alexander_ex_arcubus`; the diagram
+  path builds its PD array (`_ora_diagrammatis`) and arcs as before and
+  calls them. 268 existing checks unchanged.
+- New: `diagramma_pd` (knots; KnotTheory convention, labels 1..2c along the
+  knot, each crossing [incoming under, then counterclockwise] — laqueus's
+  internal convention already was this), `laqueus_uncinus_ex_pd`,
+  `laqueus_jones_ex_pd`, `laqueus_alexander_ex_pd`. PD validation: labels
+  1..2c each exactly twice, under-edges consecutive, sign from the over
+  edges (positive iff X1 = X3 + 1 mod 2c). One crossing is refused: with
+  two labels the sign is ambiguous. Alexander from PD finds arcs by
+  union-find over over-edges — a different route from the diagram's walk,
+  so the round trip is a real cross-check.
+- External oracle: KnotInfo's own Jones and Alexander for 3_1, 4_1, 5_1,
+  8_20, 10_132 come out exactly from their PD codes — including the chiral
+  ones, so KnotInfo's chirality convention equals laqueus's physical one
+  (KnotInfo's 3_1 is the right-handed trefoil, −t⁴ + t³ + t; Knot Atlas
+  draws the left-handed one: the tables differ per knot, which is why the
+  table will compute from PD rather than copy polynomials).
+- Round trip on the 5 polygon knots: diagram → diagramma_pd → *_ex_pd ==
+  diagram invariants.
+- Plants: sign rule inverted, arcs through under-edges, PD export without
+  +1, no under-consecutive check — red. "Label used thrice" first SURVIVED:
+  the invalid PD made Jones fail incidentally (half-integer exponents), so
+  the refusal test via Jones never reached validation; refusals are now
+  tested via bracket and Alexander, red. In/out under-arcs swapped at every
+  crossing: equivalent (orientation reversal leaves Alexander unchanged).

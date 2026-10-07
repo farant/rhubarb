@@ -810,46 +810,21 @@ _radix (
     redde x;
 }
 
-b32
-diagramma_uncinus (
-     Diagramma  d,
-       Piscina* piscina,
-    Polynomium* exitus)
+/* ora (codex PD in positionibus 0..m-1, 4 per transitum, sicut
+ * diagramma_pd sed 0-basatum) diagrammatis */
+interior i32*
+_ora_diagrammatis (
+    Diagramma  d,
+      Piscina* piscina)
 {
-           i32  c = d.numerus;
-           i32  m = II * c;
-           i32* ora;        /* codex PD: 4 ora per transitum */
-           i32* positio;    /* positio passus 2k / 2k+1 in percursu */
-           i32* pater;
-           s64* numeri;     /* [exponens + c][ansae] */
-           i32  ansae_liberae = ZEPHYRUM;
-           i32  latitudo;
-           i32  k;
-           i64  status;
-    Polynomium  summa = polynomium_nullum();
-    Polynomium  dd;
-    Polynomium  potentia_d;
-
-    si (c > LAQUEUS_TRANSITUS_MAXIMI)
-    {
-        redde FALSUM;
-    }
-    per (k = ZEPHYRUM; k < d.laqueus.componentes; k++)
-    {
-        si (d.initia_percursus[k + I] == d.initia_percursus[k])
-        {
-            ansae_liberae++;
-        }
-    }
-    latitudo = c + d.laqueus.componentes + I;
-    ora      = (i32*)piscina_allocare(piscina, (memoriae_index)(IV * c
+    i32  c = d.numerus;
+    i32  m = II * c;
+    i32* ora      = (i32*)piscina_allocare(piscina, (memoriae_index)(IV
+        * c + I) * magnitudo(i32));
+    i32* positio  = (i32*)piscina_allocare(piscina, (memoriae_index)(m
         + I) * magnitudo(i32));
-    positio  = (i32*)piscina_allocare(piscina, (memoriae_index)(m + I)
-        * magnitudo(i32));
-    pater    = (i32*)piscina_allocare(piscina, (memoriae_index)(m + I)
-        * magnitudo(i32));
-    numeri   = (s64*)piscina_allocare(piscina, (memoriae_index)(II * c
-        + I) * (memoriae_index)latitudo * magnitudo(s64));
+    i32 k;
+
     per (k = ZEPHYRUM; k < m; k++)
     {
         positio[d.percursus[k]] = k;
@@ -875,6 +850,39 @@ diagramma_uncinus (
             ora[IV * k + III]  = o_out;
         }
     }
+    redde ora;
+}
+
+/* uncinus Kauffman ex ora (0..m-1) per summam statuum; ansae_liberae =
+ * componentes sine transitu */
+interior b32
+_uncinus_ex_oris (
+    constans i32* ora,
+             i32  c,
+             i32  m,
+             i32  ansae_liberae,
+             i32  componentes,
+         Piscina* piscina,
+      Polynomium* exitus)
+{
+           i32* pater;
+           s64* numeri;     /* [exponens + c][ansae] */
+           i32  latitudo;
+           i32  k;
+           i64  status;
+    Polynomium  summa = polynomium_nullum();
+    Polynomium  dd;
+    Polynomium  potentia_d;
+
+    si (c > LAQUEUS_TRANSITUS_MAXIMI)
+    {
+        redde FALSUM;
+    }
+    latitudo = c + componentes + I;
+    pater    = (i32*)piscina_allocare(piscina, (memoriae_index)(m + I)
+        * magnitudo(i32));
+    numeri   = (s64*)piscina_allocare(piscina, (memoriae_index)(II * c
+        + I) * (memoriae_index)latitudo * magnitudo(s64));
     per (k = ZEPHYRUM; k < (II * c + I) * latitudo; k++)
     {
         numeri[k] = ZEPHYRUM;
@@ -891,7 +899,7 @@ diagramma_uncinus (
         }
         per (k = ZEPHYRUM; k < c; k++)
         {
-            i32* x = ora + IV * k;
+            constans i32* x = ora + IV * k;
 
             si ((status >> k) & (i64)I)
             {
@@ -957,25 +965,43 @@ diagramma_uncinus (
 }
 
 b32
-diagramma_jones (
+diagramma_uncinus (
      Diagramma  d,
        Piscina* piscina,
     Polynomium* exitus)
 {
-    Polynomium uncinus;
-    Polynomium factor;
-    Polynomium f;
-           s32 w = diagramma_scriptura(d);
+    i32 ansae_liberae = ZEPHYRUM;
+    i32 k;
 
-    /* catena componentium numeri paris: V in t^(1/2) Z[t, t^-1] -
-     * exponentes dimidii certi, uncinus (2^c status) frustra */
-    si (d.laqueus.componentes % II == ZEPHYRUM)
+    si (d.numerus > LAQUEUS_TRANSITUS_MAXIMI)
     {
         redde FALSUM;
     }
-    /* f = (-A^3)^-w D uncinatum = (-1)^w A^-3w D uncinatum */
-    si (   !diagramma_uncinus(d, piscina, &uncinus)
-        || !polynomium_monomium(magnus_ex_s64((w % II == ZEPHYRUM) ? I
+    per (k = ZEPHYRUM; k < d.laqueus.componentes; k++)
+    {
+        si (d.initia_percursus[k + I] == d.initia_percursus[k])
+        {
+            ansae_liberae++;
+        }
+    }
+    redde _uncinus_ex_oris(_ora_diagrammatis(d, piscina), d.numerus,
+        II * d.numerus, ansae_liberae, d.laqueus.componentes, piscina,
+        exitus);
+}
+
+/* Jones V(t) = f(A = t^(-1/4)), f = (-A^3)^-w uncinus = (-1)^w A^-3w
+ * uncinus */
+interior b32
+_jones_ex_uncino (
+    Polynomium  uncinus,
+           s32  w,
+       Piscina* piscina,
+    Polynomium* exitus)
+{
+    Polynomium factor;
+    Polynomium f;
+
+    si (   !polynomium_monomium(magnus_ex_s64((w % II == ZEPHYRUM) ? I
             : -I), -III * w, piscina, &factor)
         || !polynomium_multiplica(factor, uncinus, piscina, &f))
     {
@@ -985,35 +1011,51 @@ diagramma_jones (
 }
 
 b32
-diagramma_alexander (
+diagramma_jones (
      Diagramma  d,
        Piscina* piscina,
     Polynomium* exitus)
 {
+    Polynomium uncinus;
+
+    /* catena componentium numeri paris: V in t^(1/2) Z[t, t^-1] -
+     * exponentes dimidii certi, uncinus (2^c status) frustra */
+    si (d.laqueus.componentes % II == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde diagramma_uncinus(d, piscina, &uncinus)
+        && _jones_ex_uncino(uncinus, diagramma_scriptura(d), piscina,
+            exitus);
+}
+
+/* Alexander ex arcubus (calculus Fox): linea k transitus k, columnae
+ * arcus supra, arcus intrans infra, arcus exiens infra; positivus (1 -
+ * t, t, -1), negativus (1 - t^-1, t^-1, -1); minor linea et columna
+ * ultimis deletis, forma normalis */
+interior b32
+_alexander_ex_arcubus (
+               i32  c,
+      constans i32* supra_arcus,
+      constans i32* in_arcus,
+      constans i32* ex_arcus,
+      constans s32* signa,
+           Piscina* piscina,
+        Polynomium* exitus)
+{
     constans Anulus* p = &ANULUS_POLYNOMIORUM;
-                i32  c = d.numerus;
-                i32  m = II * c;
-                i32* supra_arcus;
-                i32* in_arcus;
-                i32* ex_arcus;
-                i32  initium  = ZEPHYRUM;
-                i32  arcus    = ZEPHYRUM;
                 i32  q;
                 i32  k;
              Matrix  matrix_plena;
              Matrix  minor;
          Polynomium  delta;
-         Polynomium  unum;
-         Polynomium  t    = polynomium_nullum();
-         Polynomium  t_1  = polynomium_nullum();
-         Polynomium  minus_unum = polynomium_constans(magnus_ex_s64(-I),
+         Polynomium  unum = polynomium_constans(magnus_ex_s64(I),
+             piscina);
+         Polynomium t    = polynomium_nullum();
+         Polynomium t_1  = polynomium_nullum();
+         Polynomium minus_unum = polynomium_constans(magnus_ex_s64(-I),
              piscina);
 
-    unum = polynomium_constans(magnus_ex_s64(I), piscina);
-    si (d.laqueus.componentes != I)
-    {
-        redde FALSUM;
-    }
     si (c == ZEPHYRUM)
     {
         *exitus = unum;
@@ -1021,33 +1063,6 @@ diagramma_alexander (
     }
     (vacuum)polynomium_monomium(magnus_ex_s64(I), I, piscina, &t);
     (vacuum)polynomium_monomium(magnus_ex_s64(I), -I, piscina, &t_1);
-    supra_arcus = (i32*)piscina_allocare(piscina, (memoriae_index)c
-        * magnitudo(i32));
-    in_arcus = (i32*)piscina_allocare(piscina, (memoriae_index)c
-        * magnitudo(i32));
-    ex_arcus = (i32*)piscina_allocare(piscina, (memoriae_index)c
-        * magnitudo(i32));
-    /* incipe post passum infra primum: arcus 0 ibi incipit */
-    dum (d.percursus[initium] % II == ZEPHYRUM)
-    {
-        initium++;
-    }
-    per (q = I; q <= m; q++)
-    {
-        i32 codex  = d.percursus[(initium + q) % m];
-        i32 k_     = codex / II;
-
-        si (codex % II == ZEPHYRUM)
-        {
-            supra_arcus[k_] = arcus;
-        }
-        alioquin
-        {
-            in_arcus[k_]  = arcus;
-            arcus         = (arcus + I) % c;
-            ex_arcus[k_]  = arcus;
-        }
-    }
     (vacuum)matrix_nulla(p, c, c, piscina, &matrix_plena);
     per (k = ZEPHYRUM; k < c; k++)
     {
@@ -1055,7 +1070,7 @@ diagramma_alexander (
                i32 columnae[III];
                i32 r;
 
-        si (d.transitus[k].signum > ZEPHYRUM)
+        si (signa[k] > ZEPHYRUM)
         {
             valores[ZEPHYRUM]  = polynomium_subtrahe(unum, t, piscina);
             valores[I]         = t;
@@ -1094,6 +1109,290 @@ diagramma_alexander (
         redde FALSUM;
     }
     redde polynomium_normale(delta, piscina, exitus);
+}
+
+b32
+diagramma_alexander (
+     Diagramma  d,
+       Piscina* piscina,
+    Polynomium* exitus)
+{
+    i32  c = d.numerus;
+    i32  m = II * c;
+    i32* supra_arcus;
+    i32* in_arcus;
+    i32* ex_arcus;
+    s32* signa;
+    i32  initium  = ZEPHYRUM;
+    i32  arcus    = ZEPHYRUM;
+    i32  q;
+    i32  k;
+
+    si (d.laqueus.componentes != I)
+    {
+        redde FALSUM;
+    }
+    supra_arcus = (i32*)piscina_allocare(piscina, (memoriae_index)(c
+        + I)
+        * magnitudo(i32));
+    in_arcus = (i32*)piscina_allocare(piscina, (memoriae_index)(c + I)
+        * magnitudo(i32));
+    ex_arcus = (i32*)piscina_allocare(piscina, (memoriae_index)(c + I)
+        * magnitudo(i32));
+    signa = (s32*)piscina_allocare(piscina, (memoriae_index)(c + I)
+        * magnitudo(s32));
+    /* incipe post passum infra primum: arcus 0 ibi incipit */
+    per (k = ZEPHYRUM; c > ZEPHYRUM && d.percursus[k] % II == ZEPHYRUM;
+         k++)
+    {
+        initium++;
+    }
+    per (q = I; c > ZEPHYRUM && q <= m; q++)
+    {
+        i32 codex  = d.percursus[(initium + q) % m];
+        i32 k_     = codex / II;
+
+        si (codex % II == ZEPHYRUM)
+        {
+            supra_arcus[k_] = arcus;
+        }
+        alioquin
+        {
+            in_arcus[k_]  = arcus;
+            arcus         = (arcus + I) % c;
+            ex_arcus[k_]  = arcus;
+        }
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        signa[k] = d.transitus[k].signum;
+    }
+    redde _alexander_ex_arcubus(c, supra_arcus, in_arcus, ex_arcus,
+        signa,
+        piscina, exitus);
+}
+
+
+/* ==================================================
+ * Codex PD
+ * ================================================== */
+
+b32
+diagramma_pd (
+     Diagramma   d,
+       Piscina*  piscina,
+           i32** pd)
+{
+    i32* ora = _ora_diagrammatis(d, piscina);
+    i32  k;
+
+    si (d.laqueus.componentes != I)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < IV * d.numerus; k++)
+    {
+        ora[k] = ora[k] + I;
+    }
+    *pd = ora;
+    redde VERUM;
+}
+
+/* codex PD nodi (KnotTheory): ora 1..2c bis quaeque; infra X0 -> X2
+ * (X2 = sequens X0), supra aut X3 -> X1 (positivus) aut X1 -> X3
+ * (negativus). ora 0-basata et signa redduntur; FALSUM si invalidus aut
+ * c == 1 (signum ex ordine orarum non determinatur) */
+interior b32
+_pd_legere (
+    constans i32*  pd,
+             i32   c,
+         Piscina*  piscina,
+             i32** ora,
+             s32** signa)
+{
+    i32  m = II * c;
+    i32* visa;
+    i32  k;
+
+    si (c == I)
+    {
+        redde FALSUM;
+    }
+    *ora    = (i32*)piscina_allocare(piscina, (memoriae_index)(IV * c
+        + I)
+        * magnitudo(i32));
+    *signa  = (s32*)piscina_allocare(piscina, (memoriae_index)(c + I)
+        * magnitudo(s32));
+    visa    = (i32*)piscina_allocare(piscina, (memoriae_index)(m + I)
+        * magnitudo(i32));
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        visa[k] = ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        si (pd[k] < I || pd[k] > m)
+        {
+            redde FALSUM;
+        }
+        (*ora)[k] = pd[k] - I;
+        visa[(*ora)[k]]++;
+    }
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        si (visa[k] != II)
+        {
+            redde FALSUM;
+        }
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        constans i32* x = *ora + IV * k;
+
+        si (x[II] != (x[ZEPHYRUM] + I) % m)
+        {
+            redde FALSUM;
+        }
+        si (x[I] == (x[III] + I) % m)
+        {
+            (*signa)[k] = I;
+        }
+        alioquin si (x[III] == (x[I] + I) % m)
+        {
+            (*signa)[k] = -I;
+        }
+        alioquin
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+laqueus_uncinus_ex_pd (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+      Polynomium* exitus)
+{
+    i32* ora;
+    s32* signa;
+
+    si (transitus == ZEPHYRUM)
+    {
+        *exitus = polynomium_constans(magnus_ex_s64(I), piscina);
+        redde VERUM;
+    }
+    redde _pd_legere(pd, transitus, piscina, &ora, &signa)
+        && _uncinus_ex_oris(ora, transitus, II * transitus, ZEPHYRUM, I,
+            piscina, exitus);
+}
+
+b32
+laqueus_jones_ex_pd (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+      Polynomium* exitus)
+{
+           i32* ora;
+           s32* signa;
+           s32  w = ZEPHYRUM;
+           i32  k;
+    Polynomium  uncinus;
+
+    si (transitus == ZEPHYRUM)
+    {
+        *exitus = polynomium_constans(magnus_ex_s64(I), piscina);
+        redde VERUM;
+    }
+    si (!_pd_legere(pd, transitus, piscina, &ora, &signa))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < transitus; k++)
+    {
+        w = w + signa[k];
+    }
+    redde _uncinus_ex_oris(ora, transitus, II * transitus, ZEPHYRUM, I,
+            piscina, &uncinus)
+        && _jones_ex_uncino(uncinus, w, piscina, exitus);
+}
+
+b32
+laqueus_alexander_ex_pd (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+      Polynomium* exitus)
+{
+    i32  c = transitus;
+    i32  m = II * c;
+    i32* ora;
+    s32* signa;
+    i32* pater;
+    i32* numerus_arcus;
+    i32* supra_arcus;
+    i32* in_arcus;
+    i32* ex_arcus;
+    i32  arcus = ZEPHYRUM;
+    i32  k;
+
+    si (c == ZEPHYRUM)
+    {
+        *exitus = polynomium_constans(magnus_ex_s64(I), piscina);
+        redde VERUM;
+    }
+    si (!_pd_legere(pd, c, piscina, &ora, &signa))
+    {
+        redde FALSUM;
+    }
+    /* arcus: ora supra (X1, X3) eiusdem arcus; infra arcus finitur */
+    pater          = (i32*)piscina_allocare(piscina, (memoriae_index)(m
+        + I) * magnitudo(i32));
+    numerus_arcus  = (i32*)piscina_allocare(piscina, (memoriae_index)(m
+        + I) * magnitudo(i32));
+    supra_arcus    = (i32*)piscina_allocare(piscina, (memoriae_index)(c
+        + I) * magnitudo(i32));
+    in_arcus       = (i32*)piscina_allocare(piscina, (memoriae_index)(c
+        + I) * magnitudo(i32));
+    ex_arcus       = (i32*)piscina_allocare(piscina, (memoriae_index)(c
+        + I) * magnitudo(i32));
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        pater[k]          = k;
+        numerus_arcus[k]  = m;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        pater[_radix(pater, ora[IV * k + I])] = _radix(pater,
+            ora[IV * k + III]);
+    }
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        i32 r = _radix(pater, k);
+
+        si (numerus_arcus[r] == m)
+        {
+            numerus_arcus[r] = arcus;
+            arcus++;
+        }
+    }
+    si (arcus != c)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        supra_arcus[k]  = numerus_arcus[_radix(pater, ora[IV * k + I])];
+        in_arcus[k]     = numerus_arcus[_radix(pater, ora[IV * k])];
+        ex_arcus[k] = numerus_arcus[_radix(pater, ora[IV * k
+            + II])];
+    }
+    redde _alexander_ex_arcubus(c, supra_arcus, in_arcus, ex_arcus,
+        signa,
+        piscina, exitus);
 }
 
 b32
