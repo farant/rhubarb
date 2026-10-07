@@ -1061,6 +1061,7 @@ s32 principale (vacuum)
                            s32 determinans;
                            i32 baculi;
                            b32 minimus_attingitur;
+                           i32 simplificati;
         } Exemplar;
         /* tabulae: numerus transituum (crossing number), determinans,
          * numerus baculorum (stick number: 3_1 6, 4_1 7, 5_1 8, 7_1 9,
@@ -1068,12 +1069,15 @@ s32 principale (vacuum)
          * transgredi nequit; diagramma minimum ambitu II numerum
          * transituum attingit praeter T(2,7) (VIII, non VII) */
         Exemplar exempla[] = {
-            { "trifolium", trifolium, XLVIII, III, III, VI, VERUM },
-            { "octonaria", octonaria, LXXII, IV, V, VII, VERUM },
-            { "quinquefolium", quinquefolium, LXXX, V, V, VIII, VERUM },
-            { "septifolium", septifolium, CXII, VII, VII, IX, FALSUM },
-            { "torus (3, 4)", torus_iii_iv, CXX, VIII, III, VIII,
-                VERUM }
+            { "trifolium", trifolium, XLVIII, III, III, VI, VERUM,
+                VII },
+            { "octonaria", octonaria, LXXII, IV, V, VII, VERUM, VIII },
+            { "quinquefolium", quinquefolium, LXXX, V, V, VIII, VERUM,
+              VIII },
+            { "septifolium", septifolium, CXII, VII, VII, IX, FALSUM,
+                XI },
+            { "torus (3, 4)", torus_iii_iv, CXX, VIII, III, VIII, VERUM,
+              VIII }
         };
         i32 k;
 
@@ -1120,6 +1124,13 @@ s32 principale (vacuum)
                 CREDO_AEQUALIS_I32 (diagramma_numerus(dm),
                     exempla[k].transitus);
             }
+            /* aequalia -> primum ordine enumerationis: trifolio (0, 1,
+             * -2) (recensio) */
+            si (k == ZEPHYRUM)
+            {
+                CREDO_VERUM (situs_puncta_aequalia(dm.directio,
+                    situs_punctum(ZEPHYRUM, I, -II)));
+            }
             CREDO_VERUM (diagramma_alexander(dm, piscina, &a2)
                 && polynomium_aequalis(a, a2));
             /* simplificatio: simplex, idem nodus, localiter minima,
@@ -1130,6 +1141,10 @@ s32 principale (vacuum)
             CREDO_VERUM (laqueus_simplex(s, piscina));
             CREDO_VERUM (laqueus_numerus(s) < laqueus_numerus(l));
             CREDO_VERUM (laqueus_numerus(s) >= exempla[k].baculi);
+            /* numeri exacti (oraculum recensoris idem): avaritia
+             * "index primus" fixa */
+            CREDO_AEQUALIS_I32 (laqueus_numerus(s),
+                exempla[k].simplificati);
             /* memoria O(n): tabula laboris una, conatus refecti (copia
              * per motum ~ n^2 octetos posceret) */
             CREDO_VERUM (usus < (memoriae_index)CCLVI
@@ -1188,6 +1203,31 @@ s32 principale (vacuum)
         CREDO_FALSUM (diagramma_determinans(d, piscina, &det));
         CREDO_FALSUM (laqueus_diagramma_minimum(hopf, ZEPHYRUM, piscina,
             &ds));
+        /* radius "negativus" (i32 sine signo, ~4.3e9) refutatur, non
+         * pendet: sub custodia, ut limes amissus FRACTA det, non
+         * suitam suspendat */
+        CREDO_NON_PENDET(CREDO_FALSUM (laqueus_diagramma_minimum(hopf,
+            (i32)-I, piscina, &ds)), MM);
+        /* catena quae vertices amittit: Hopf cum puncto medio in omni
+         * latere (XVI vertices). Puncta media semper removentur, deinde
+         * anguli quoque (triangula dimidia componentem alteram non iam
+         * tangunt): exitus duo triangula (III + III, minimum catenae),
+         * simplex, numerus ligationis +1 servatus - limites
+         * componentium corrupti hic frangerent (recensio, L1) */
+        CREDO_VERUM (laqueus_simplificare(_ex_textu(
+            "[(0, 0, 0), (10, 0, 0), (20, 0, 0), (20, 10, 0), "
+            "(20, 20, 0), (10, 20, 0), (0, 20, 0), (0, 10, 0); "
+            "(10, 10, -10), (10, 10, 0), (10, 10, 10), (20, 10, 10), "
+            "(30, 10, 10), (30, 10, 0), (30, 10, -10), (20, 10, -10)]"),
+            piscina, &s));
+        CREDO_VERUM (laqueus_simplex(s, piscina));
+        CREDO_AEQUALIS_I32 (laqueus_componentes(s), II);
+        CREDO_AEQUALIS_I32 (s.initia[I], III);
+        CREDO_AEQUALIS_I32 (s.initia[II], VI);
+        CREDO_VERUM (laqueus_diagramma_genericum(s, piscina, &ds));
+        CREDO_AEQUALIS_S32 (diagramma_numerus_ligationis(ds, ZEPHYRUM,
+            I),
+            I);
         CREDO_VERUM (laqueus_simplificare(hopf, piscina, &s));
         CREDO_AEQUALIS_I32 (laqueus_componentes(s), II);
         CREDO_VERUM (laqueus_diagramma_genericum(s, piscina, &ds));

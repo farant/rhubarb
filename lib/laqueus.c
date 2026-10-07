@@ -685,7 +685,7 @@ laqueus_diagramma_minimum (
     i32 paucissimi  = ZEPHYRUM;
     b32 inventum    = FALSUM;
 
-    si (radius == ZEPHYRUM)
+    si (radius == ZEPHYRUM || radius > LAQUEUS_RADIUS_MAXIMUS)
     {
         redde FALSUM;
     }

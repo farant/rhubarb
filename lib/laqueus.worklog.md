@@ -213,3 +213,35 @@ Plants (all compile, all red): simplificare without the simple-input
 check, with moves unchecked, with a single pass, with `initia[m] >= k`;
 minimum → maximum; minimum without negative directions; speculum as a
 rotation (x and z negated); determinant evaluated at +1.
+
+## 2026-10-07 — review of the Demo 114 round (recensor, libround-I)
+
+No bugs: the new functions match the reviewer's independent oracle —
+simplificare byte-identical on 4,500 random knots and links (11,542
+removals, 1,926 at the first or last index of a non-first component),
+minimum + determinans (2,600 cases, same chosen direction), reflexio
+(4,000 cases incl. collinear triples, denominators ~10^12); all suites
+clean under ASan/UBSan/VENENUM. Stick numbers confirmed (7₁ ≥ 9 from
+Calvo's 8-stick classification; T(3,4) = 8₁₉ = 8 by Jin's formula); radius
+3 reaches T(2,7)'s 7 along (0,1,−3).
+
+Test gaps closed (the plants named survived the first suite):
+- L1 link boundaries corrupted on removal: the suite never simplified a
+  link that loses vertices. Now Hopf with a midpoint on every edge (16
+  vertices) → two triangles (3 + 3), simple, lk +1. My first expectation
+  ("back to the original Hopf") was wrong: with midpoints the corner
+  triangles shrink and no longer touch the other component.
+- L2 (no `frange`, not first-index greedy): exact counts 7/8/8/11/8.
+- L3 (ties → last direction): trefoil's radius-2 direction pinned to
+  (0, 1, −2).
+- Radius: `i32` is unsigned, so a "negative" radius was ~4.3e9 and hung;
+  now capped at LAQUEUS_RADIUS_MAXIMUS = 32 (FALSUM above). The test runs
+  under CREDO_NON_PENDET so a lost cap fails instead of hanging the suite
+  (the unguarded plant hung the runner; its watchdog killed the runner but
+  not the test binary, and the plant had to be restored by hand).
+- Header: "genericum then applies" overpromised (it fails on non-simple
+  input too); reworded.
+
+Known gap, accepted: L4 (no `abs` in determinans) survives — the abs is
+required (e.g. Δ = t⁴ + t³ − 3t² + t + 1 gives −3 at −1) but no fixture
+knot has a negative normalized Δ(−1).

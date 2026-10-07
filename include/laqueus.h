@@ -35,6 +35,10 @@
 
 /* transitus plures uncinus per summam statuum (2^c) non computat */
 #define LAQUEUS_TRANSITUS_MAXIMI XXIV
+/* laqueus_diagramma_minimum: radius maximus (XXXII: ~ 140000
+ * directiones; i32 sine signo - radius "negativus" aliter ~ 4.3e9
+ * pendet) */
+#define LAQUEUS_RADIUS_MAXIMUS XXXII
 
 /* Membra PRIVATA - per functiones legenda */
 nomen structura {
@@ -144,9 +148,10 @@ laqueus_diagramma_genericum (
 /* inter directiones v componentibus integris |v_i| <= radius (una ex
  * quoque +-v), diagramma genericum transituum paucissimorum; aequalia
  * -> primum ordine enumerationis (a, b, c crescentes). FALSUM si nulla
- * directio in ambitu generica (laqueus_diagramma_genericum tunc valet)
- * aut radius nullus. Sumptus ~ (2 radius + 1)^3 / 2 diagrammata;
- * conatus reficiuntur. */
+ * directio in ambitu generica (laqueus_diagramma_genericum tunc conari
+ * potest; laqueo simplici semper succedit) aut radius nullus aut
+ * radius > LAQUEUS_RADIUS_MAXIMUS. Sumptus ~ (2 radius + 1)^3 / 2
+ * diagrammata; conatus reficiuntur. */
 b32
 laqueus_diagramma_minimum (
      Laqueus  l,
