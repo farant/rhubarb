@@ -107,6 +107,7 @@ structura Aemulator {
                   i32   paginae_initium;
                   i32   historia_lineae;
                   i32   visus;             /* lineae supra vivum (C3) */
+                  s32   runa_prior;       /* REP; 0 = nulla (RIS) */
                   b32   lectio_schirmi;    /* DECRQCRA permissa */
      StilusTerminalis*  stili;             /* [0] = nativus */
                   i32   numerus_stilorum;
@@ -747,6 +748,7 @@ runam_imprimere (
     {
         redde;
     }
+    a->runa_prior = runa;
     si (latitudo == II && a->latitudo < II)
     {
         latitudo = I;
@@ -1153,6 +1155,35 @@ alterum_ponere (
     cursorem_restituere(a);
 }
 
+/* 47 / 1047 (Ghostty switchScreenMode ex xterm srm_ALTBUF /
+ * srm_OPT_ALTBUF): schirmum mutatur et cursor (cum calamo) in schirmum
+ * destinatum copiatur, si mutatum est; nulla servatio, nulla deletio
+ * in ingressu. 1047 (delere): exitus ex altero id prius delet. */
+interior vacuum
+alterum_simpliciter (
+    Aemulator* a,
+          b32  ingredi,
+          b32  delere)
+{
+    Schirmum* prior;
+    Schirmum* destinatum;
+
+    prior       = a->activum;
+    destinatum  = ingredi ? &a->alterum : &a->primarium;
+    si (!ingredi && delere && prior == &a->alterum)
+    {
+        schirmum_delere(a, II);
+    }
+    si (prior == destinatum)
+    {
+        redde;
+    }
+    a->activum           = destinatum;
+    destinatum->cursor   = prior->cursor;
+    destinatum->calamus  = prior->calamus;
+    a->visus             = ZEPHYRUM;
+}
+
 /* DECSET / DECRST */
 interior vacuum
 modum_privatum_ponere (
@@ -1170,6 +1201,22 @@ modum_privatum_ponere (
             frange;
         casus MXLIX:
             alterum_ponere(a, status);
+            frange;
+        casus XLVII:
+            alterum_simpliciter(a, status, FALSUM);
+            frange;
+        casus MXLVII:
+            alterum_simpliciter(a, status, VERUM);
+            frange;
+        casus MXLVIII:
+            si (status)
+            {
+                cursorem_servare(a);
+            }
+            alioquin
+            {
+                cursorem_restituere(a);
+            }
             frange;
         casus MMXXVI:
             a->synchronia = status;
@@ -1517,6 +1564,80 @@ cellulas_eradere (
     s->cursor.pendens  = FALSUM;
 }
 
+/* DECALN (Ghostty decaln): calamus ad colores solos redactus (manet),
+ * regio tota, schirmum totum 'E' eo calamo, cursor ad initium */
+interior vacuum
+schirmum_probationis_implere (
+    Aemulator* a)
+{
+            Schirmum* s;
+    StilusTerminalis  st;
+    StilusTerminalis  colores;
+                 i32  stilus;
+                 i32  x;
+                 i32  y;
+
+    s   = a->activum;
+    st  = a->stili[s->calamus];
+    stilus_nativus(&colores);
+    colores.color_litterae  = st.color_litterae;
+    colores.color_fundi     = st.color_fundi;
+    stilus                  = stilum_internare(a, &colores);
+    s->calamus              = stilus;
+    a->regio_summa          = ZEPHYRUM;
+    a->regio_ultima         = a->altitudo - I;
+    per (y = ZEPHYRUM; y < a->altitudo; y++)
+    {
+        per (x = ZEPHYRUM; x < a->latitudo; x++)
+        {
+            cellulam_vacare(&s->lineae[y]->cellulae[x], stilus);
+            s->lineae[y]->cellulae[x].octeti[ZEPHYRUM]  = 'E';
+            s->lineae[y]->cellulae[x].mensura           = I;
+        }
+        s->lineae[y]->involuta = FALSUM;
+    }
+    cursorem_ponere(a, ZEPHYRUM, ZEPHYRUM);
+}
+
+/* RIS (Ghostty fullReset): schirmum primarium, alterum deletum,
+ * historia vacua, cursores et servati, calami nativi, modi ordinarii,
+ * regio, sistae, character prior. Effectus et identitas manent. */
+interior vacuum
+plene_restituere (
+    Aemulator* a)
+{
+    Schirmum* schirma[II];
+         i32  k;
+         i32  y;
+
+    schirma[ZEPHYRUM]  = &a->primarium;
+    schirma[I]         = &a->alterum;
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        per (y = ZEPHYRUM; y < a->altitudo; y++)
+        {
+            lineam_vacare(schirma[k]->lineae[y], ZEPHYRUM,
+                a->capacitas_latitudinis, ZEPHYRUM);
+            schirma[k]->lineae[y]->involuta = FALSUM;
+        }
+        memset(&schirma[k]->cursor, ZEPHYRUM,
+            magnitudo(AemulatorCursor));
+        schirma[k]->calamus         = ZEPHYRUM;
+        schirma[k]->servatus.adest  = FALSUM;
+    }
+    a->activum       = &a->primarium;
+    historiam_delere(a);
+    a->involutio         = VERUM;
+    a->visibilis         = VERUM;
+    a->synchronia        = FALSUM;
+    a->lnm               = FALSUM;
+    a->regio_summa       = ZEPHYRUM;
+    a->regio_ultima      = a->altitudo - I;
+    a->runa_prior        = ZEPHYRUM;
+    a->residuum_mensura  = ZEPHYRUM;
+    tabulas_ordinare(a);
+}
+
 /* DECSTR (xterm, esctest2 decstr.py): cursor visibilis, regio tota,
  * calamus nativus, DECSC ad initium (servatio oblita - restitutio
  * initium et calamum nativum dat). Cursor manet; DECAWM VERUM manet
@@ -1803,6 +1924,56 @@ seriem_csi (
             regionem_sursum(a, a->regio_summa, a->regio_ultima, n,
                             VERUM);
             frange;
+        casus 'a':
+        casus 'e':
+            /* HPR / VPR (Ghostty cursor_col/row_relative): absens = 1,
+             * 0 explicitum = nihil; plura = ignotum */
+            si (lx->numerus_parametrorum > I)
+            {
+                a->ignota++;
+                frange;
+            }
+            n = lx->numerus_parametrorum == ZEPHYRUM
+                ? I : (i32)lx->parametra[ZEPHYRUM];
+            si (lx->finale == 'a')
+            {
+                cursorem_ponere(a, s->cursor.x + n, s->cursor.y);
+            }
+            alioquin
+            {
+                cursorem_ponere(a, s->cursor.x, s->cursor.y + n);
+            }
+            frange;
+        casus 'b':
+            /* REP (Ghostty printRepeat): character prior max(n, 1)
+             * vicibus; terminus: bis area schirmi (ultra volvitur;
+             * parametrum saturatum ne pendeat) */
+            si (lx->numerus_parametrorum > I)
+            {
+                a->ignota++;
+                frange;
+            }
+            si (a->runa_prior == ZEPHYRUM)
+            {
+                frange;
+            }
+            si (n > II * a->latitudo * a->altitudo)
+            {
+                n = II * a->latitudo * a->altitudo;
+            }
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                runam_imprimere(a, a->runa_prior);
+            }
+            frange;
+        casus 's':
+            /* SCOSC (marginibus lr absentibus, Ghostty) */
+            cursorem_servare(a);
+            frange;
+        casus 'u':
+            /* SCORC */
+            cursorem_restituere(a);
+            frange;
         casus 't':
             /* XTWINOPS 18 solum (Ghostty csi_18_t): magnitudo textus
              * in cellulis; parametra plura aut alia = ignota */
@@ -1898,6 +2069,12 @@ seriem_esc (
     Schirmum* s;
 
     s = a->activum;
+    si (   lx->numerus_intermediorum == I
+        && lx->intermedia[ZEPHYRUM]  == '#' && lx->finale == '8')
+    {
+        schirmum_probationis_implere(a);
+        redde;
+    }
     si (lx->numerus_intermediorum != ZEPHYRUM)
     {
         a->ignota++;
@@ -1905,6 +2082,9 @@ seriem_esc (
     }
     commutatio (lx->finale)
     {
+        casus 'c':
+            plene_restituere(a);
+            redde;
         casus 'D':
             indicem_movere(a);
             redde;

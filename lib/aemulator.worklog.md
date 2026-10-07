@@ -339,3 +339,27 @@ leftover files (with -shm/-wal) deleted. Two runs after: zero left.
 Lesson: a test that opens a temporary resource and passes is not done
 until it leaves nothing behind - volumen.h even says the leftover is
 the signal; nobody looked in /tmp.
+
+## 2026-10-07 — D1: quick wins
+
+**Empty expectations were never checked.** P7 (1047 does not clear on
+exit) and P12 (RIS keeps the previous char) survived although their
+vectors expect `textus=""`. A direct trace showed the core misbehaving
+under the plant, so the replayer was skipping the check. The house
+STML interns an empty attribute value as NIHIL, and
+`stml_attributum_habet` is `capere != NIHIL` - an empty value is
+indistinguishable from an absent attribute. Every empty expectation in
+the vectors (9, since phase A) was a silent no-op. Fix: the explicit
+marker `"\0"` (the whole value) = empty string, in the reader and the
+validator; all nine now run and hold. No other house fixture uses
+empty attributes (git grep).
+
+**REP is capped** at twice the screen area: a saturated parameter
+(0x7FFFFFFF) would loop for ages; beyond two screens only identical
+lines scroll. Named divergence from Ghostty (which loops the count).
+
+**The unknown-sequence probe moved:** section III used `ESC # 8` as an
+unknown sequence; DECALN is now real, so the probe is `ESC # 3`.
+
+**Greedy hex, twice more:** `"\x1Bc"` is 0x1BC - split literals.
+

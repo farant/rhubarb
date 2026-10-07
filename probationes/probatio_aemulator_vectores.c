@@ -30,6 +30,7 @@
 #include <string.h>
 
 hic_manens Piscina*             piscina;
+hic_manens i8                   octetus_vacuus[I];
 hic_manens InternamentumChorda* intern;
 
 
@@ -333,6 +334,16 @@ octetos_legere (
     {
         redde FALSUM;
     }
+    /* VALOR VACUUS: STML a="" ut ABSENTIAM legit (valor NIHIL), ergo
+     * assertio vacua olim TACITE omittebatur (inventum D1: plantae
+     * superstites). Signum expressum: valor totus '\0' = chorda
+     * vacua. */
+    si (chorda_aequalis_literis(*a, "\\0"))
+    {
+        ex->datum    = octetus_vacuus;
+        ex->mensura  = ZEPHYRUM;
+        redde VERUM;
+    }
     si (!effugia_solvere(*a, ex))
     {
         discrepantia(iu, titulus, "effugia sana", "effugium malum");
@@ -598,6 +609,10 @@ effugia_sana (
     si (assertiones)
     {
         (*assertiones)++;
+    }
+    si (chorda_aequalis_literis(*a, "\\0"))
+    {
+        redde VERUM;   /* signum chordae vacuae */
     }
     redde effugia_solvere(*a, &ex);
 }

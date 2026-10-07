@@ -486,3 +486,16 @@ pictor's initial canvas view is still an open question (its worklog).
 
 **Next:** merge secunda into main (Fran's timing), then phase D.
 
+## D1 — quick wins (2026-10-07)
+
+**INTENTIO.** The small, common sequences full-screen programs send:
+relative moves, repeat, ANSI cursor save, the older alt-screen modes,
+the alignment test, full reset.
+
+Built: HPR/VPR, REP, SCOSC/SCORC, 47/1047/1048, DECALN, RIS, each from
+Ghostty's code and tests. esctest 216 -> 245 with no regressions. Two
+plants survived for a reason worth more than the features: STML reads
+an empty attribute as absent, so every `textus=""` in the vectors had
+never been checked. An explicit empty marker fixed it; the nine
+assertions it revived all held.
+

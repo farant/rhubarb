@@ -599,6 +599,44 @@ retrahere_probare (vacuum)
     CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
 }
 
+/* XX: lucra parva (D1) quae vectores non exprimunt */
+interior vacuum
+lucra_probare (vacuum)
+{
+           Aemulator* a;
+    AemulatorCellula  c;
+    StilusTerminalis  rubrum_fundus;
+    StilusTerminalis  nativus;
+
+    imprimere("\n--- XX: lucra parva (D1) ---\n");
+    stilus_nativus(&nativus);
+    /* DECALN: fundus calami servatur, crassum tollitur; calamus manet
+     * redactus (Ghostty decaln) */
+    a = creare(V, II);
+    scribere(a, "\x1B[1;48;2;255;0;0m\x1B#8");
+    CREDO_VERUM(textus_est(a, "EEEEE\nEEEEE"));
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM((c.stilus.ornamenta & STILUS_CRASSUM) == ZEPHYRUM);
+    CREDO_VERUM(c.stilus.color_fundi.genus == STILUS_COLOR_RGB);
+    rubrum_fundus = c.stilus;
+    scribere(a, "x");
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM(stilus_aequalis(&c.stilus, &rubrum_fundus));
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, I);
+    /* RIS: calamus nativus, servatus oblitus (DECRC -> initium) */
+    a = creare(X, V);
+    scribere(a, "\x1B[31m\x1B[3;4H\x1B" "7\x1B" "c\x1B" "8x");
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, I);
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).y, ZEPHYRUM);
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM(stilus_aequalis(&c.stilus, &nativus));
+    /* REP saturatum non pendet (terminus: bis area schirmi) */
+    a = creare(X, V);
+    CREDO_NON_PENDET(scribere(a, "A\x1B[2147483647b"), MM);
+    scribere(a, "A\x1B[2147483647b");
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+}
+
 s32 principale (vacuum)
 {
                 Aemulator* a;
@@ -655,7 +693,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- III: series ignotae numerantur ---\n");
     a = creare(X, III);
-    scribere(a, "\x1B[99n\x1B#8\x1B]777;x\x07" "Z");
+    scribere(a, "\x1B[99n\x1B#3\x1B]777;x\x07" "Z");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), III);
     CREDO_VERUM(textus_est(a, "Z"));
 
@@ -944,6 +982,7 @@ s32 principale (vacuum)
     historiam_probare();
     visum_probare();
     retrahere_probare();
+    lucra_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     /* historia pagina una (limes I octeti): calefactio lineas in

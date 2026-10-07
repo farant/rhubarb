@@ -604,6 +604,21 @@ Later phases (re-planned after A's RELATIO):
   - **D1 - quick wins:** HPR/VPR, REP, SCOSC/SCORC (CSI s/u), alt
     screens 47/1047/1048, DECALN, RIS; Ghostty vectors first; esctest
     rows promoted.
+    D1 as built: HPR/VPR (absent = 1, explicit 0 = no move,
+    clamped, >1 parameter = unknown), REP (`runa_prior`, cleared only
+    by RIS; capped at twice the screen area - Ghostty loops the full
+    count, a saturated parameter would hang), SCOSC/SCORC (no
+    left/right margins, so CSI s always saves), 47 / 1047 (switch +
+    cursor copy; 1047 clears the alt screen on exit) / 1048 (save /
+    restore), DECALN (pen reduced to its colours, kept; region reset;
+    'E' everywhere; cursor home), RIS (both screens, history, cursors,
+    saved cursors, pens, modes, region, tab stops, previous char).
+    184 vectors (+11: 5 Ghostty); section XX; 13 plants caught.
+    esctest 216 -> 245 (29 promoted, 0 regressed), table re-pinned.
+    FOUND: STML reads `a=""` as ABSENT, so every empty expectation
+    (`textus=""` ...) had been a silent no-op since phase A (9
+    assertions) - two plants survived because of it. Empty is now the
+    explicit marker `"\0"`; all 9 now run and hold.
   - **D2 - modes in the core:** origin (DECOM), insert (IRM), reverse
     wrap (45/1045), DECCKM, keypad (DECKPAM/DECKPNM), mouse (9, 1000,
     1002, 1003, 1006, 1015), bracketed paste 2004, focus 1004, DECRQM;

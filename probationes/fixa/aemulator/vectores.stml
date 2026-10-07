@@ -23,6 +23,8 @@
                    lata | cauda | caput), stilus (SGR canonicum
                    stilus_codificare, \x1B[0...m)
      Nullum valorem vacuum (stml scriptor 'a=""' in 'verum' vertit). -->
+<!-- VALOR VACUUS: STML a="" ut absentiam legit; chorda vacua
+     exspectata scribitur "\0" (valor totus). -->
 <vectores pin="12752b2">
 
   <casus titulus="basic print" fons="stream_terminal.zig:2321" latitudo="10" altitudo="10">
@@ -793,7 +795,7 @@
 
   <casus titulus="index bottom of alt screen full region" fons="Terminal.zig:10782" latitudo="5" altitudo="3">
     <gradus initus="\x1B[?1049hA\r\nB\r\nC\x1BD\rD" textus="B\nC\nD" historia="0" historia_textus="B\nC\nD"/>
-    <gradus initus="\x1B[?1049l" textus="" historia="0" historia_textus=""/>
+    <gradus initus="\x1B[?1049l" textus="\0" historia="0" historia_textus="\0"/>
   </casus>
 
   <casus titulus="index bottom of alt screen top region" fons="Terminal.zig:10816" latitudo="5" altitudo="5">
@@ -846,7 +848,7 @@
 
   <!-- ED 2 sine signis promptus (OSC 133): historia non augetur -->
   <casus titulus="erase display does not feed the history" fons="domus" latitudo="5" altitudo="2">
-    <gradus initus="A\r\nB\x1B[2J" textus="" historia="0" historia_textus=""/>
+    <gradus initus="A\r\nB\x1B[2J" textus="\0" historia="0" historia_textus="\0"/>
   </casus>
 
   <!-- ==== C3: visus (decisio XXI). visum_movere > 0 sursum (Ghostty
@@ -873,7 +875,7 @@
   </casus>
 
   <casus titulus="print writes to bottom if scrolled" fons="Terminal.zig:6854" latitudo="5" altitudo="2">
-    <gradus initus="hello\x1B[1;1H\x1BD\x1BD\x1BD" visus_textus=""/>
+    <gradus initus="hello\x1B[1;1H\x1BD\x1BD\x1BD" visus_textus="\0"/>
     <gradus visum_movere="1000" visus_textus="hello"/>
     <gradus initus="A" visus_textus="hello" textus="\nA"/>
     <gradus visum_movere="-1000" visus_textus="\nA"/>
@@ -949,6 +951,72 @@
     <gradus initus="1\r\n2\r\n3" visum_movere="1" historia="1" visus="1"/>
     <gradus initus="\x1B[3J" historia="0" visus="0" textus="2\n3" historia_textus="2\n3" ignota="0"/>
     <gradus initus="\r\n4" historia="1" historia_textus="2\n3\n4"/>
+  </casus>
+
+  <!-- ==== D1: lucra parva (HPR/VPR, REP, SCOSC/SCORC, 47/1047/1048,
+       DECALN, RIS) ==== -->
+
+  <casus titulus="saveCursor position" fons="Terminal.zig:13534" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[1;5HA\x1B[s\x1B[1;1HB\x1B[uX" textus="B   AX"/>
+  </casus>
+
+  <casus titulus="saveCursor pending wrap state" fons="Terminal.zig:13555" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;5HA\x1B[s\x1B[1;1HB\x1B[uX" textus="B   A\nX"/>
+  </casus>
+
+  <casus titulus="printRepeat simple" fons="Terminal.zig:14279" latitudo="5" altitudo="5">
+    <gradus initus="A\x1B[b" textus="AA"/>
+  </casus>
+
+  <casus titulus="printRepeat wrap" fons="Terminal.zig:14296" latitudo="5" altitudo="5">
+    <gradus initus="    A\x1B[b" textus="    A\nA"/>
+  </casus>
+
+  <casus titulus="printRepeat no previous character" fons="Terminal.zig:14313" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[b" textus="\0" ignota="0"/>
+  </casus>
+
+  <!-- Ghostty modum origo quoque ponit (D2); effectus visibilis idem -->
+  <casus titulus="decaln reset margins" fons="Terminal.zig:12293" latitudo="3" altitudo="3">
+    <gradus initus="\x1B[2;3r\x1B#8\x1B[T" textus="\nEEE\nEEE"/>
+  </casus>
+
+  <!-- HPR/VPR (Ghostty cursor_col/row_relative): 0 explicitum = nihil,
+       praecisio ad oram, parametra plura = ignotum -->
+  <casus titulus="hpr and vpr move relative, zero stays, edges clamp" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[2;2H\x1B[3a" cursor_x="4" cursor_y="1"/>
+    <gradus initus="\x1B[0a\x1B[0e" cursor_x="4" cursor_y="1"/>
+    <gradus initus="\x1B[2e" cursor_x="4" cursor_y="3"/>
+    <gradus initus="\x1B[99a\x1B[99e" cursor_x="9" cursor_y="4"/>
+    <gradus initus="\x1B[1;2a" cursor_x="9" ignota="1"/>
+  </casus>
+
+  <!-- REP: character ultimus manet trans motus (Ghostty previous_char
+       solum RIS purgat) -->
+  <casus titulus="rep repeats the last printed character after moves" fons="domus" latitudo="5" altitudo="3">
+    <gradus initus="A\x1B[3;1H\x1B[2b" textus="A\n\nAA"/>
+  </casus>
+
+  <!-- 47: schirmum alterum sine deletione; cursor copiatur -->
+  <casus titulus="mode 47 keeps the alternate screen" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="P\x1B[?47h\x1B[1;1HA\x1B[?47l" textus="P" altera="falsum"/>
+    <gradus initus="\x1B[?47h" textus="A" altera="verum"/>
+  </casus>
+
+  <!-- 1047: exitus schirmum alterum delet -->
+  <casus titulus="mode 1047 clears the alternate screen on exit" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="\x1B[?1047h\x1B[1;1HA\x1B[?1047l\x1B[?1047h" textus="\0" altera="verum"/>
+  </casus>
+
+  <!-- 1048: cursorem servat et restituit -->
+  <casus titulus="mode 1048 saves and restores the cursor" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[2;3H\x1B[?1048h\x1B[1;1H\x1B[?1048l" cursor_x="2" cursor_y="1"/>
+  </casus>
+
+  <!-- RIS (Ghostty fullReset): schirmum, historia, cursor, alterum -->
+  <casus titulus="ris resets screen, history and cursor" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="1\r\n2\r\n3\x1B[?1049hX\x1Bc" textus="\0" historia="0" cursor_x="0" cursor_y="0" altera="falsum"/>
+    <gradus initus="\x1B[b" textus="\0"/>
   </casus>
 
 </vectores>

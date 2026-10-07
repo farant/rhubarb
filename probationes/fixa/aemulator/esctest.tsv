@@ -128,9 +128,9 @@ DCHTests.test_DCH_ExplicitParam	transiit
 DCHTests.test_DCH_RespectsMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 DCHTests.test_DCH_WorksOutsideTopBottomMargin	transiit	
 DCSTests.test_DCS_Unrecognized	transiit	
-DECALNTests.test_DECALN_ClearsMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECALNTests.test_DECALN_FillsScreen	fractum	DECALN
-DECALNTests.test_DECALN_MovesCursorHome	fractum	DECALN
+DECALNTests.test_DECALN_ClearsMargins	transiit	
+DECALNTests.test_DECALN_FillsScreen	transiit	
+DECALNTests.test_DECALN_MovesCursorHome	transiit	
 DECBITests.test_DECBI_Basic	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
 DECBITests.test_DECBI_LeftOfMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 DECBITests.test_DECBI_NoWrapOnLeftEdge	transiit	
@@ -191,7 +191,7 @@ DECICTests.test_DECIC_ScrollOffRightEdge	fractum	columnae VT420 DECBI/DECFI/DECI
 DECICTests.test_DECIC_ScrollOffRightMarginInScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 DECIDTests.test_DECID_8bit	notum	esctest knownBug (xterm)
 DECIDTests.test_DECID_Basic	fractum	DECID
-DECRCTests.test_SaveRestoreCursor_AltVsMain	fractum	schirmum alterum 47/1047/1048
+DECRCTests.test_SaveRestoreCursor_AltVsMain	transiit	
 DECRCTests.test_SaveRestoreCursor_Basic	transiit	
 DECRCTests.test_SaveRestoreCursor_InsertNotAffected	transiit	
 DECRCTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	transiit	
@@ -310,7 +310,7 @@ DECSERATests.test_DECSERA_ignoresMargins	fractum	margines-lr DECLRMM/DECSLRM (VT
 DECSERATests.test_DECSERA_invalidRectDoesNothing	transiit	
 DECSERATests.test_DECSERA_overlyLargeSourceClippedToScreenSize	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
 DECSERATests.test_DECSERA_respectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSETTests.test_DECSET_ALTBUF	fractum	schirmum alterum 47/1047/1048
+DECSETTests.test_DECSET_ALTBUF	transiit	
 DECSETTests.test_DECSET_Allow80To132	fractum	DECCOLM 132 columnae
 DECSETTests.test_DECSET_DECAWM	transiit	
 DECSETTests.test_DECSET_DECAWM_CursorAtRightMargin	transiit	
@@ -327,23 +327,23 @@ DECSETTests.test_DECSET_DECOM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 DECSETTests.test_DECSET_DECOM_DECRQCRA	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 DECSETTests.test_DECSET_DECOM_SoftReset	transiit	
 DECSETTests.test_DECSET_MoreFix	fractum	MoreFix 41
-DECSETTests.test_DECSET_OPT_ALTBUF	fractum	schirmum alterum 47/1047/1048
+DECSETTests.test_DECSET_OPT_ALTBUF	transiit	
 DECSETTests.test_DECSET_OPT_ALTBUF_CURSOR	transiit	
 DECSETTests.test_DECSET_ResetReverseWraparoundDisablesIt	transiit	
 DECSETTests.test_DECSET_ReverseWraparoundLastCol_BS	fractum	involutio-retro 45/1045
 DECSETTests.test_DECSET_ReverseWraparound_BS	fractum	involutio-retro 45/1045
 DECSETTests.test_DECSET_ReverseWraparound_Multi	fractum	involutio-retro 45/1045
 DECSETTests.test_DECSET_ReverseWraparound_RequiresDECAWM	transiit	
-DECSETTests.test_DECSET_SaveRestoreCursor	fractum	schirmum alterum 47/1047/1048
-DECSETTiteInhibitTests.test_SaveRestoreCursor_AltVsMain	fractum	schirmum alterum 47/1047/1048
-DECSETTiteInhibitTests.test_SaveRestoreCursor_Basic	fractum	schirmum alterum 47/1047/1048
+DECSETTests.test_DECSET_SaveRestoreCursor	transiit	
+DECSETTiteInhibitTests.test_SaveRestoreCursor_AltVsMain	transiit	
+DECSETTiteInhibitTests.test_SaveRestoreCursor_Basic	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_InsertNotAffected	transiit	
-DECSETTiteInhibitTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	fractum	schirmum alterum 47/1047/1048
+DECSETTiteInhibitTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_Protection	transiit	
-DECSETTiteInhibitTests.test_SaveRestoreCursor_Reset	fractum	schirmum alterum 47/1047/1048
+DECSETTiteInhibitTests.test_SaveRestoreCursor_Reset	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_ResetsOriginMode	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_ReverseWrapNotAffected	transiit	
-DECSETTiteInhibitTests.test_SaveRestoreCursor_WorksInLRM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTiteInhibitTests.test_SaveRestoreCursor_WorksInLRM	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_Wrap	transiit	
 DECSTBMTests.test_DECSTBM_BottomOfZeroIsBottomOfScreen	transiit	
 DECSTBMTests.test_DECSTBM_CursorBelowRegionAtBottomTriesToScroll	transiit	
@@ -408,10 +408,10 @@ HPATests.test_HPA_DefaultParams	transiit
 HPATests.test_HPA_DoesNotChangeRow	transiit	
 HPATests.test_HPA_IgnoresOriginMode	transiit	
 HPATests.test_HPA_StopsAtRightEdge	transiit	
-HPRTests.test_HPR_DefaultParams	fractum	HPR/VPR
-HPRTests.test_HPR_DoesNotChangeRow	fractum	HPR/VPR
+HPRTests.test_HPR_DefaultParams	transiit	
+HPRTests.test_HPR_DoesNotChangeRow	transiit	
 HPRTests.test_HPR_IgnoresOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-HPRTests.test_HPR_StopsAtRightEdge	fractum	HPR/VPR
+HPRTests.test_HPR_StopsAtRightEdge	transiit	
 HTSTests.test_HTS_8bit	notum	esctest knownBug (xterm)
 HTSTests.test_HTS_Basic	transiit	
 HVPTests.test_HVP_ColumnOnly	transiit	
@@ -455,14 +455,14 @@ NELTests.test_NEL_ScrollsInTopBottomRegionStartingWithin	transiit
 NELTests.test_NEL_StopsAtBottomLineWhenBegunBelowScrollRegion	transiit	
 PMTests.test_PM_8bit	notum	esctest knownBug (xterm)
 PMTests.test_PM_Basic	transiit	
-REPTests.test_REP_DefaultParam	fractum	REP repetitio
-REPTests.test_REP_ExplicitParam	fractum	REP repetitio
+REPTests.test_REP_DefaultParam	transiit	
+REPTests.test_REP_ExplicitParam	transiit	
 REPTests.test_REP_RespectsLeftRightMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-REPTests.test_REP_RespectsTopBottomMargins	fractum	REP repetitio
-RISTests.test_RIS_ClearsScreen	fractum	RIS
-RISTests.test_RIS_CursorToOrigin	fractum	RIS
-RISTests.test_RIS_ExitAltScreen	fractum	schirmum alterum 47/1047/1048
-RISTests.test_RIS_RemoveMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+REPTests.test_REP_RespectsTopBottomMargins	transiit	
+RISTests.test_RIS_ClearsScreen	transiit	
+RISTests.test_RIS_CursorToOrigin	transiit	
+RISTests.test_RIS_ExitAltScreen	transiit	
+RISTests.test_RIS_RemoveMargins	transiit	
 RISTests.test_RIS_ResetDECCOLM	fractum	DECCOLM 132 columnae
 RISTests.test_RIS_ResetDECOM	transiit	
 RISTests.test_RIS_ResetTabs	transiit	
@@ -485,12 +485,12 @@ ResetSpecialColorTests.test_ResetSpecialColor_Single2	fractum	colores OSC 4/5/10
 S8C1TTests.test_S8C1T_CSI	notum	esctest knownBug (xterm)
 S8C1TTests.test_S8C1T_DCS	notum	esctest knownBug (xterm)
 S8C1TTests.test_S8C1T_SPA_EPA	notum	esctest knownBug (xterm)
-SCORCTests.test_SaveRestoreCursor_AltVsMain	fractum	SCOSC/SCORC CSI s/u
-SCORCTests.test_SaveRestoreCursor_Basic	fractum	SCOSC/SCORC CSI s/u
+SCORCTests.test_SaveRestoreCursor_AltVsMain	transiit	
+SCORCTests.test_SaveRestoreCursor_Basic	transiit	
 SCORCTests.test_SaveRestoreCursor_InsertNotAffected	transiit	
-SCORCTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	fractum	SCOSC/SCORC CSI s/u
+SCORCTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	transiit	
 SCORCTests.test_SaveRestoreCursor_Protection	transiit	
-SCORCTests.test_SaveRestoreCursor_Reset	fractum	SCOSC/SCORC CSI s/u
+SCORCTests.test_SaveRestoreCursor_Reset	transiit	
 SCORCTests.test_SaveRestoreCursor_ResetsOriginMode	transiit	
 SCORCTests.test_SaveRestoreCursor_ReverseWrapNotAffected	transiit	
 SCORCTests.test_SaveRestoreCursor_WorksInLRM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
@@ -531,10 +531,10 @@ VPATests.test_VPA_DefaultParams	transiit
 VPATests.test_VPA_DoesNotChangeColumn	transiit	
 VPATests.test_VPA_IgnoresOriginMode	transiit	
 VPATests.test_VPA_StopsAtBottomEdge	transiit	
-VPRTests.test_VPR_DefaultParams	fractum	HPR/VPR
-VPRTests.test_VPR_DoesNotChangeColumn	fractum	HPR/VPR
+VPRTests.test_VPR_DefaultParams	transiit	
+VPRTests.test_VPR_DoesNotChangeColumn	transiit	
 VPRTests.test_VPR_IgnoresOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-VPRTests.test_VPR_StopsAtBottomEdge	fractum	HPR/VPR
+VPRTests.test_VPR_StopsAtBottomEdge	transiit	
 VTTests.test_VT_Basic	transiit	
 VTTests.test_VT_MovesDoesNotScrollOutsideLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 VTTests.test_VT_Scrolls	transiit	

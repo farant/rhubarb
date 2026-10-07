@@ -63,7 +63,8 @@ Leges chartae:
   `aemulator_visus_involuta`, `aemulator_visum_effundere`,
   `aemulator_historiam_effundere`); hospes:
   `aemulator_hospes_visum_movere`, initus acceptus visum ad imum
-  reducit. Series ceterae
+  reducit; D1: HPR/VPR, REP, SCOSC/SCORC, modi 47/1047/1048, DECALN,
+  RIS. Series ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex
