@@ -70,7 +70,10 @@ Leges chartae:
   SS2/SS3, DEC Special Graphics). series_terminalis: octeti alti post
   ESC N|O non iam pereunt (FUGA); codificator_terminalis (D6a):
   CodificatorModi mus_forma (X10/UTF-8/urxvt/SGR-pixela; 0 = SGR),
-  sagittae_applicationis (DECCKM), lnm, CODIFICATOR_MUS_X10; D4: acervus
+  sagittae_applicationis (DECCKM), lnm, CODIFICATOR_MUS_X10; D6b:
+  AemulatorModi.rotula_sagittis (?1007), terminale_titulus,
+  TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
+  focum, colores honorat; D4: acervus
   vexillorum clavium kitty
   per schirmum (CSI ? > < = u), AemulatorModi.kitty_vexilla; D5:
   tabula colorum viva (OSC 4/10/11/12, 104/110-112), configuratio

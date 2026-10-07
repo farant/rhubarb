@@ -560,3 +560,15 @@ stubs). The encoder part was Ghostty's mouse_encode.zig almost line for
 line, plus DECCKM and LNM; the one design point was keeping format 0 =
 SGR so every existing zero-filling caller keeps its behaviour.
 
+## D6b — terminale speaks the modes (2026-10-07)
+
+**INTENTIO.** Make the app honour what programs ask for: keys and mouse
+in the right encoding, paste brackets, focus reports, the title, the
+palette.
+
+All wiring, no new behaviour in the core except ?1007 - found while
+designing: less on the alternate screen has no history, so the wheel
+did nothing; Ghostty sends arrows there. One routing surprise: window
+focus events are neither focal nor positional and land on the root
+component, which had no action. Sixteen plants, all caught.
+

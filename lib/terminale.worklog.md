@@ -48,3 +48,32 @@ exact sample. A dump after exit is empty - the twin draws on the
 alternate screen and restores the primary when it leaves. 4 unknown
 sequences = the twin's mouse/paste mode requests (phase D).
 
+## 2026-10-07 — D6b: modes, mouse, focus, title, colours
+
+**Window focus events go to the root.** destinatio routes keys, text and
+wheel to the focus ("focal") and mouse buttons by position; anything
+else (EVENTUS_FOCUS / DEFOCUS from a window) goes to the tree root. Our
+root had no action, so DEFOCUS vanished; the root now carries
+"terminale.clavis" too (unhandled genera return FALSUM, harmless).
+
+**Wheel decision order** (Ghostty): program tracks the mouse -> wheel
+report (our own residue makes whole lines first; the encoder divides by
+the cell height again, so the synthetic event carries lines x cell
+height); alternate screen + ?1007 -> arrow keys through the encoder
+(DECCKM honoured); else the history view.
+
+**Focus report on enable** happens after each pulse: the snapshot's
+`focus` turning on sends CSI I or CSI O from the tracked state
+(initially focused, as Ghostty's flags). Plant G11 (report every pulse)
+is caught by the second frame.
+
+**Title:** the core's titulus effect needs the context BEFORE the host
+exists (effect datum) - creation order changed. The window main copies
+the title into a stack buffer: a pool copy per change would grow for
+the whole session (zsh retitles on every prompt).
+
+**Colours:** an unchanged dynamic colour (live value == theme colour
+given at creation) stays a THEMA token so a theme switch still applies;
+once a program sets it, RGB. A changed background paints one rectangle
+over the whole surface first.
+

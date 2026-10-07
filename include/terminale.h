@@ -8,19 +8,23 @@
  * cellularum, actio "terminale.clavis"), figura quae VISUM hospitis
  * legit (cellulae, stili, cursor), actiones, applicatio.
  *
- * CLAVES: eventus singuli per codificator_terminalis (legacy - modi
- * clavium et muris ab aemulatore phasis D) in
- * aemulator_hospes_scribere (initus visum ad imum reducit). ROTULA:
- * aemulator_hospes_visum_movere (lineae; trackpad pixela -> lineae
- * per altitudinem cellulae).
+ * CLAVES: eventus singuli per codificator_terminalis sub modis quos
+ * aemulator_modi reddit (D6b: DECCKM, kitty, mus, glutinum, focus,
+ * LNM) in aemulator_hospes_scribere (initus visum ad imum reducit).
+ * MUS: ictus ad programma si petivit. ROTULA (lineae; trackpad
+ * pixela -> lineae per altitudinem cellulae): ad programma si murem
+ * petivit; in schirmo altero cum ?1007 sagittae; aliter visum movet.
+ * FOCUS: ?1004 positum relationem statim mittit.
  *
  * MAGNITUDO: superficies (dispensator: superficies_*) / cellula ->
  * columnae x lineae -> aemulator_hospes_amplitudo - in PULSU, non in
  * componendo (componere purum manet).
  *
- * COLORES: nativus = thema (COLOR_TEXT / COLOR_BACKGROUND); 0-15
- * xterm, 16-231 cubus, 232-255 gradus grisei; RGB ipsum. Inversum,
- * crassum (color clarior 0-7), obscurum ut Ghostty.
+ * COLORES (D6b): thema in configurationem aemulatoris (litterae,
+ * fundus, cursor); pinguntur ex aemulator_color - OSC 4/10/11/12
+ * programmatis videntur. Nativus non mutatus = signum thematis (thema
+ * vivum); RGB ipsum. Inversum, crassum (color clarior 0-7) ut
+ * Ghostty.
  *
  * ANSA: principale suam ansam possidet (decisio XXV): quadrum quodque
  * terminale_pulsare(mora brevis) deinde tractare, quadrum, praesentare.
@@ -50,6 +54,7 @@ nomen structura {
         AemulatorHospes* hospes;
                     i32  cellula_latitudo;  /* pixela nostra */
                     i32  cellula_altitudo;
+                 vacuum* contextus;         /* privatum (D6b) */
 } TerminaleApplicatio;
 
 /* Argumenta infantis: -fumus -> /bin/sh scriptum breve (imago
@@ -83,6 +88,15 @@ AemulatorHospesPulsus
 terminale_pulsare (
     TerminaleApplicatio* app,
                     s32  mora_ms);
+
+/* Titulus (OSC 0/2, D6b): ultimus quem programma posuit (vacuus =
+ * nullus; praecisus ad CCLVI octetos). *mutatus VERUM semel post
+ * quamque mutationem - principale tunc titulum fenestrae ponit.
+ * Chorda valet usque ad pulsum proximum. */
+chorda
+terminale_titulus (
+    TerminaleApplicatio* app,
+                    b32* mutatus);
 
 /* Infantem claudere (aemulator_hospes_claudere). */
 vacuum

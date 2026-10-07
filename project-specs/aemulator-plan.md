@@ -697,6 +697,22 @@ Later phases (re-planned after A's RELATIO):
     button 3; X10 stops at cell 222; SGR-pixels reports and dedupes in
     pixels; LNM turns every CR this call appended into CR LF (in place).
     Ghostty mouse_encode.zig cases ported in section IX; 13 plants caught.
+    D6b as built: headers (Fran approved) - `terminale_titulus` +
+    TerminaleApplicatio.contextus; AemulatorModi.rotula_sagittis + core
+    mode 1007 (default on, Ghostty mouse_alternate_scroll). terminale:
+    every send maps aemulator_modi -> CodificatorModi (enums mapped,
+    X10 format explicit); mouse press / release / motion to the program
+    (encoder decides); wheel to the program when it tracks the mouse,
+    arrows on the alternate screen with 1007, else the history view;
+    focus tracked (initially VERUM), ?1004 set -> immediate report;
+    window focus events reach the ROOT component (neither focal nor
+    positional), so the root carries the same action; title through the
+    core's titulus effect (copied, 256 bytes), window main sets it on
+    change (stack buffer - shells retitle every prompt); colours: theme
+    -> core configuration, cells / background / cursor from
+    aemulator_color, an unchanged dynamic colour stays a theme token
+    (live theme). Sections V-VII in probatio_terminale; 16 plants
+    caught. D6c (window focus + paste events) remains.
   - **D7 - the bar:** esctest table re-pinned (causes "later" per
     decision 26), vttest fetched and pinned, Fran's session (vim,
     less, htop, vttest).

@@ -81,6 +81,7 @@ nomen enumeratio {
     MODUS_MUS_TRACTUS,          /* MII */
     MODUS_MUS_OMNIS,            /* MIII */
     MODUS_FOCUS,                /* MIV */
+    MODUS_ROTULA_SAGITTIS,      /* MVII: rotula alterna (D6b) */
     MODUS_FORMA_UTF8,           /* MV */
     MODUS_FORMA_SGR,            /* MVI */
     MODUS_FORMA_URXVT,          /* MXV */
@@ -115,6 +116,7 @@ interior constans ModusDescriptio modi_tabula[MODI_NUMERUS] = {
     { MII,     VERUM,  FALSUM },
     { MIII,    VERUM,  FALSUM },
     { MIV,     VERUM,  FALSUM },
+    { MVII,    VERUM,  VERUM  },
     { MV,      VERUM,  FALSUM },
     { MVI,     VERUM,  FALSUM },
     { MXV,     VERUM,  FALSUM },
@@ -3749,6 +3751,7 @@ aemulator_modi (
     m.lnm                     = modus_est(a, MODUS_LINEA_NOVA);
     m.kitty_vexilla           =
         (i32)a->activum->kitty[a->activum->kitty_index];
+    m.rotula_sagittis         = modus_est(a, MODUS_ROTULA_SAGITTIS);
     redde m;
 }
 

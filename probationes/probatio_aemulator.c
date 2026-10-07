@@ -658,6 +658,10 @@ modos_probare (vacuum)
     CREDO_FALSUM(m.focus);
     CREDO_FALSUM(m.lnm);
     CREDO_AEQUALIS_I32(m.kitty_vexilla, ZEPHYRUM);
+    CREDO_VERUM(m.rotula_sagittis);
+    scribere(a, "\x1B[?1007l");
+    CREDO_FALSUM(aemulator_modi(a).rotula_sagittis);
+    scribere(a, "\x1B[?1007h");
     /* kitty (D4): vexilla schirmi ACTIVI */
     scribere(a, "\x1B[>13u");
     CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, XIII);

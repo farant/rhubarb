@@ -33,26 +33,27 @@
 #define CELLULA_ALTITUDO VIII
 #define QUIES_MS         CCC
 
+#define TITULUS_MAXIMUS  CCLVI
+
 nomen structura {
      TerminaleApplicatio* app;
                  Piscina* scrutinium;
                  Eventus  pendens;
                      b32  pendet;
                      s32  rotula_residuum;
+    /* D6b: focus fenestrae (ordinarie VERUM, Ghostty) et ?1004 in
+     * pulsu ultimo (positum -> relatio statim) */
+                     b32 focus;
+                     b32 focus_relatus;
+               character titulus[TITULUS_MAXIMUS];
+                     i32 titulus_mensura;
+                     b32 titulus_mutatus;
+    /* colores thematis in configuratione: nativus non mutatus = signum
+     * thematis (thema vivum) */
+                     i32 littera_thematis;
+                     i32 fundus_thematis;
+                     i32 cursor_thematis;
 } TerminaleContextus;
-
-/* xterm 0-15 (0x00RRGGBB) */
-hic_manens constans i32 tabula_colorum[XVI] = {
-    0x000000, 0xCD0000, 0x00CD00, 0xCDCD00,
-    0x0000EE, 0xCD00CD, 0x00CDCD, 0xE5E5E5,
-    0x7F7F7F, 0xFF0000, 0x00FF00, 0xFFFF00,
-    0x5C5CFF, 0xFF00FF, 0x00FFFF, 0xFFFFFF
-};
-
-/* gradus cubi 6x6x6 */
-hic_manens constans i32 gradus_cubi[VI] = {
-    0x00, 0x5F, 0x87, 0xAF, 0xD7, 0xFF
-};
 
 
 /* ==================================================
@@ -83,34 +84,63 @@ color_rgb (
     redde cm;
 }
 
-/* index 0-255 -> 0x00RRGGBB (xterm) */
+/* color thematis -> 0x00RRGGBB (configuratio aemulatoris) */
 interior i32
-tabulae_color (
-    i32 index)
+rgb_thematis (
+    ColorThema c)
 {
-    i32 g;
+    Color k;
 
-    si (index < XVI)
-    {
-        redde tabula_colorum[index];
-    }
-    si (index < CCXXXII)
-    {
-        index -= XVI;
-        redde (gradus_cubi[index / XXXVI] << XVI)
-            | (gradus_cubi[(index / VI) % VI] << VIII)
-            | gradus_cubi[index % VI];
-    }
-    g = VIII + (index - CCXXXII) * X;
-    redde (g << XVI) | (g << VIII) | g;
+    k = thema_color(c);
+    redde ((i32)(insignatus character)k.r << XVI)
+        | ((i32)(insignatus character)k.g << VIII)
+        | (i32)(insignatus character)k.b;
 }
 
-/* color stili -> color mandati; nativus = signum thematis */
+/* color dynamicus (litterae, fundus, cursor): non mutatus ab
+ * programmate = signum thematis (thema vivum), aliter RGB vivum */
+interior ColorMandati
+colorem_dynamicum (
+    constans TerminaleContextus* tc,
+                            i32  index,
+                            i32  thematis,
+                     ColorThema  signum)
+{
+    i32 vivus;
+
+    vivus = aemulator_color(aemulator_hospes_aemulator(tc->app->hospes),
+        index);
+    si (vivus == thematis)
+    {
+        redde color_thematis(signum);
+    }
+    redde color_rgb(vivus);
+}
+
+interior ColorMandati
+littera_nativa (
+    constans TerminaleContextus* tc)
+{
+    redde colorem_dynamicum(tc, AEMULATOR_COLOR_LITTERAE,
+        tc->littera_thematis, COLOR_TEXT);
+}
+
+interior ColorMandati
+fundus_nativus (
+    constans TerminaleContextus* tc)
+{
+    redde colorem_dynamicum(tc, AEMULATOR_COLOR_FUNDI,
+        tc->fundus_thematis, COLOR_BACKGROUND);
+}
+
+/* color stili -> color mandati: tabula viva aemulatoris (OSC 4),
+ * nativus dynamicus */
 interior ColorMandati
 colorem_resolvere (
-    constans StilusColor* c,
-                     b32  crassum,
-              ColorThema  nativus)
+    constans TerminaleContextus* tc,
+           constans StilusColor* c,
+                            b32  crassum,
+                            b32  fundus)
 {
     i32 index;
 
@@ -123,11 +153,12 @@ colorem_resolvere (
             {
                 index += VIII;
             }
-            redde color_rgb(tabulae_color(index));
+            redde color_rgb(aemulator_color(
+                aemulator_hospes_aemulator(tc->app->hospes), index));
         casus STILUS_COLOR_RGB:
             redde color_rgb(c->valor);
         ordinarius:
-            redde color_thematis(nativus);
+            redde fundus ? fundus_nativus(tc) : littera_nativa(tc);
     }
 }
 
@@ -164,6 +195,16 @@ terminale_figura (
     a   = aemulator_hospes_aemulator(tc->app->hospes);
     cw  = (s32)tc->app->cellula_latitudo;
     ch  = (s32)tc->app->cellula_altitudo;
+    /* fundus mutatus (OSC 11): superficies tota */
+    fundus = fundus_nativus(tc);
+    si (fundus.genus == COLOR_MANDATI_RGBA)
+    {
+        f.x         = ZEPHYRUM;
+        f.y         = ZEPHYRUM;
+        f.latitudo  = (s32)aemulator_latitudo(a) * cw;
+        f.altitudo  = (s32)aemulator_altitudo(a) * ch;
+        mandata_rectangulum(m, f, fundus, VERUM);
+    }
     per (y = ZEPHYRUM; y < aemulator_altitudo(a); y++)
     {
         per (x = ZEPHYRUM; x < aemulator_latitudo(a); x++)
@@ -176,11 +217,13 @@ terminale_figura (
             }
             inversum = (cellula.stilus.ornamenta & STILUS_INVERSUM)
                 != ZEPHYRUM;
-            littera  = colorem_resolvere(&cellula.stilus.color_litterae,
+            littera  = colorem_resolvere(tc,
+                &cellula.stilus.color_litterae,
                 (cellula.stilus.ornamenta & STILUS_CRASSUM) != ZEPHYRUM,
-                COLOR_TEXT);
-            fundus   = colorem_resolvere(&cellula.stilus.color_fundi,
-                FALSUM, COLOR_BACKGROUND);
+                FALSUM);
+            fundus   = colorem_resolvere(tc,
+                &cellula.stilus.color_fundi,
+                FALSUM, VERUM);
             fundus_proprius = cellula.stilus.color_fundi.genus
                               != STILUS_COLOR_NATIVUS;
             si (inversum)
@@ -188,10 +231,7 @@ terminale_figura (
                 ColorMandati t;
 
                 t                = littera;
-                littera          = cellula.stilus.color_fundi.genus
-                                   == STILUS_COLOR_NATIVUS
-                                 ? color_thematis(COLOR_BACKGROUND)
-                                 : fundus;
+                littera          = fundus;
                 fundus           = t;
                 fundus_proprius  = VERUM;
             }
@@ -222,12 +262,15 @@ terminale_figura (
         f.y         = (s32)cursor.y * ch;
         f.latitudo  = cw;
         f.altitudo  = ch;
-        mandata_rectangulum(m, f, color_thematis(COLOR_CURSOR), VERUM);
+        mandata_rectangulum(m, f, colorem_dynamicum(tc,
+            AEMULATOR_COLOR_CURSORIS, tc->cursor_thematis,
+            COLOR_CURSOR),
+            VERUM);
         si (   aemulator_cellula(a, cursor.x, cursor.y, &cellula)
             && cellula.graphema.mensura > ZEPHYRUM)
         {
             mandata_textus(m, f.x, f.y, cellula.graphema, ZEPHYRUM,
-                color_thematis(COLOR_BACKGROUND));
+                fundus_nativus(tc));
         }
     }
 }
@@ -236,6 +279,62 @@ terminale_figura (
 /* ==================================================
  * Actiones
  * ================================================== */
+
+/* modi aemulatoris -> modi codificatoris (D6b; enumerationes
+ * proprias utrumque habet) */
+interior vacuum
+modos_transferre (
+    constans TerminaleContextus* tc,
+                CodificatorModi* modi)
+{
+    AemulatorModi am;
+
+    am = aemulator_modi(aemulator_hospes_aemulator(tc->app->hospes));
+    memset(modi, ZEPHYRUM, magnitudo(CodificatorModi));
+    modi->cellula_latitudo        = (s32)tc->app->cellula_latitudo;
+    modi->cellula_altitudo        = (s32)tc->app->cellula_altitudo;
+    modi->kitty_vexilla           = am.kitty_vexilla;
+    modi->glutinum                = am.glutinum;
+    modi->focus                   = am.focus;
+    modi->sagittae_applicationis  = am.sagittae_applicationis;
+    modi->lnm                     = am.lnm;
+    commutatio (am.mus)
+    {
+        casus AEMULATOR_MUS_X10:
+            modi->mus = CODIFICATOR_MUS_X10;
+            frange;
+        casus AEMULATOR_MUS_PRESSIO:
+            modi->mus = CODIFICATOR_MUS_PRESSIO;
+            frange;
+        casus AEMULATOR_MUS_TRACTUS:
+            modi->mus = CODIFICATOR_MUS_TRACTUS;
+            frange;
+        casus AEMULATOR_MUS_OMNIS:
+            modi->mus = CODIFICATOR_MUS_OMNIS;
+            frange;
+        ordinarius:
+            modi->mus = CODIFICATOR_MUS_NULLUS;
+            frange;
+    }
+    commutatio (am.mus_forma)
+    {
+        casus AEMULATOR_MUS_FORMA_UTF8:
+            modi->mus_forma = CODIFICATOR_FORMA_UTF8;
+            frange;
+        casus AEMULATOR_MUS_FORMA_SGR:
+            modi->mus_forma = CODIFICATOR_FORMA_SGR;
+            frange;
+        casus AEMULATOR_MUS_FORMA_URXVT:
+            modi->mus_forma = CODIFICATOR_FORMA_URXVT;
+            frange;
+        casus AEMULATOR_MUS_FORMA_SGR_PIXELA:
+            modi->mus_forma = CODIFICATOR_FORMA_SGR_PIXELA;
+            frange;
+        ordinarius:
+            modi->mus_forma = CODIFICATOR_FORMA_X10;
+            frange;
+    }
+}
 
 /* eventa[0..n) codificare et ad infantem mittere */
 interior vacuum
@@ -248,9 +347,7 @@ eventa_mittere (
     ChordaAedificator* aed;
                chorda  octeti;
 
-    memset(&modi, ZEPHYRUM, magnitudo(CodificatorModi));
-    modi.cellula_latitudo = (s32)tc->app->cellula_latitudo;
-    modi.cellula_altitudo = (s32)tc->app->cellula_altitudo;
+    modos_transferre(tc, &modi);
     piscina_vacare(tc->scrutinium);
     aed = chorda_aedificator_creare(tc->scrutinium, LXIV);
     si (!aed)
@@ -275,6 +372,49 @@ pendentem_effundere (
         tc->pendet = FALSUM;
         eventa_mittere(tc, &tc->pendens, I);
     }
+}
+
+/* lineae rotulae integrae: ad programma si murem petivit; in schirmo
+ * altero cum ?1007 sagittae (Ghostty mouse_alternate_scroll); aliter
+ * visus */
+interior vacuum
+rotulam_tractare (
+    TerminaleContextus* tc,
+      constans Eventus* ev,
+                   s32  lineae)
+{
+    constans Aemulator* a;
+         AemulatorModi  am;
+               Eventus  e;
+                   s32  k;
+
+    a   = aemulator_hospes_aemulator(tc->app->hospes);
+    am  = aemulator_modi(a);
+    si (am.mus != AEMULATOR_MUS_NULLUS)
+    {
+        e                  = *ev;
+        e.datum.rotula.dx  = ZEPHYRUM;
+        e.datum.rotula.dy  = lineae * (s32)tc->app->cellula_altitudo;
+        eventa_mittere(tc, &e, I);
+        redde;
+    }
+    si (aemulator_alterum(a) && am.rotula_sagittis)
+    {
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus                = EVENTUS_CLAVIS_DEPRESSUS;
+        e.datum.clavis.clavis  = lineae > ZEPHYRUM ? CLAVIS_SURSUM
+                                                   : CLAVIS_DEORSUM;
+        e.datum.clavis.codex   = lineae > ZEPHYRUM
+                               ? EVENTUS_CODEX_SAGITTA_SURSUM
+                               : EVENTUS_CODEX_SAGITTA_DEORSUM;
+        per (k = ZEPHYRUM; k < (lineae > ZEPHYRUM ? lineae : -lineae);
+             k++)
+        {
+            eventa_mittere(tc, &e, I);
+        }
+        redde;
+    }
+    aemulator_hospes_visum_movere(tc->app->hospes, lineae);
 }
 
 interior b32
@@ -319,6 +459,19 @@ terminale_clavis (
         casus EVENTUS_CLAVIS_LIBERATUS:
             pendentem_effundere(tc);
             redde VERUM;
+        casus EVENTUS_MUS_DEPRESSUS:
+        casus EVENTUS_MUS_LIBERATUS:
+        casus EVENTUS_MUS_MOTUS:
+            /* codificator decernit (mus non petitus: nihil) */
+            pendentem_effundere(tc);
+            eventa_mittere(tc, ev, I);
+            redde VERUM;
+        casus EVENTUS_FOCUS:
+        casus EVENTUS_DEFOCUS:
+            pendentem_effundere(tc);
+            tc->focus = (b32)(ev->genus == EVENTUS_FOCUS);
+            eventa_mittere(tc, ev, I);
+            redde VERUM;
         casus EVENTUS_MUS_ROTULA:
             pendentem_effundere(tc);
             tc->rotula_residuum += ev->datum.rotula.dy;
@@ -328,12 +481,29 @@ terminale_clavis (
                                  * (s32)tc->app->cellula_altitudo;
             si (lineae != ZEPHYRUM)
             {
-                aemulator_hospes_visum_movere(tc->app->hospes, lineae);
+                rotulam_tractare(tc, ev, lineae);
             }
             redde VERUM;
         ordinarius:
             redde FALSUM;
     }
+}
+
+/* effectus titulus (OSC 0/2): copiatur, praecisus */
+interior vacuum
+titulum_notare (
+     vacuum* datum,
+     chorda  titulus)
+{
+    TerminaleContextus* tc;
+                   i32  n;
+
+    tc  = (TerminaleContextus*)datum;
+    n   = titulus.mensura < TITULUS_MAXIMUS ? titulus.mensura
+                                            : TITULUS_MAXIMUS;
+    memcpy(tc->titulus, titulus.datum, (memoriae_index)n);
+    tc->titulus_mensura = n;
+    tc->titulus_mutatus = VERUM;
 }
 
 
@@ -392,6 +562,9 @@ terminale_componere (
     }
     componens_ponere_fines(radix, f);
     componens_ponere_fines(schirmum, f);
+    /* eventa nec focalia nec positionalia (focus fenestrae, D6b) ad
+     * radicem eunt: eadem actio */
+    componens_ponere_actio(radix, "terminale.clavis");
     componens_ponere_focusabilis(schirmum, VERUM);
     componens_ponere_actio(schirmum, "terminale.clavis");
     componens_addere_liberum(radix, schirmum);
@@ -469,20 +642,35 @@ terminale_applicatio_aedificare (
     app->intern            = intern;
     app->cellula_latitudo  = CELLULA_LATITUDO;
     app->cellula_altitudo  = CELLULA_ALTITUDO;
+    tc = (TerminaleContextus*)piscina_conari_allocare(piscina,
+        magnitudo(TerminaleContextus));
+    si (!tc)
+    {
+        pt->claudere(pt->datum);
+        redde FALSUM;
+    }
+    memset(tc, ZEPHYRUM, magnitudo(TerminaleContextus));
+    tc->app               = app;
+    tc->focus             = VERUM;
+    tc->littera_thematis  = rgb_thematis(COLOR_TEXT);
+    tc->fundus_thematis   = rgb_thematis(COLOR_BACKGROUND);
+    tc->cursor_thematis   = rgb_thematis(COLOR_CURSOR);
+    app->contextus        = tc;
     aemulator_hospes_configuratio_initiare(&cfg);
     cfg.aemulator.latitudo = latitudo / CELLULA_LATITUDO > ZEPHYRUM
                            ? latitudo / CELLULA_LATITUDO : I;
     cfg.aemulator.altitudo = altitudo / CELLULA_ALTITUDO > ZEPHYRUM
                            ? altitudo / CELLULA_ALTITUDO : I;
+    cfg.aemulator.color_litterae = tc->littera_thematis;
+    cfg.aemulator.color_fundi = tc->fundus_thematis;
+    cfg.aemulator.color_cursoris = tc->cursor_thematis;
+    cfg.aemulator.effectus.titulus = titulum_notare;
+    cfg.aemulator.effectus.datum = tc;
     app->hospes = aemulator_hospes_creare(piscina, &cfg, pt);
-    tc = (TerminaleContextus*)piscina_conari_allocare(piscina,
-        magnitudo(TerminaleContextus));
-    si (!app->hospes || !tc)
+    si (!app->hospes)
     {
         redde FALSUM;
     }
-    memset(tc, ZEPHYRUM, magnitudo(TerminaleContextus));
-    tc->app         = app;
     tc->scrutinium  = piscina_generare_dynamicum("terminale_scrutinium",
         LXIV * MXXIV);
     app->repo = insula_repositorium_creare(piscina, intern,
@@ -503,16 +691,36 @@ terminale_applicatio_aedificare (
     redde app->d != NIHIL;
 }
 
+/* ?1004 modo novo posito relatio status currentis statim (Ghostty
+ * stream_handler focus_event) */
+interior vacuum
+focum_nuntiare (
+    TerminaleContextus* tc)
+{
+    AemulatorModi am;
+          Eventus e;
+
+    am = aemulator_modi(aemulator_hospes_aemulator(tc->app->hospes));
+    si (am.focus && !tc->focus_relatus)
+    {
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus = tc->focus ? EVENTUS_FOCUS : EVENTUS_DEFOCUS;
+        eventa_mittere(tc, &e, I);
+    }
+    tc->focus_relatus = am.focus;
+}
+
 AemulatorHospesPulsus
 terminale_pulsare (
     TerminaleApplicatio* app,
                     s32  mora_ms)
 {
-    constans Aemulator* a;
-                   s32  lat;
-                   s32  alt;
-                   i32  columnae;
-                   i32  lineae;
+    AemulatorHospesPulsus  pulsus;
+       constans Aemulator* a;
+                      s32  lat;
+                      s32  alt;
+                      i32  columnae;
+                      i32  lineae;
 
     a    = aemulator_hospes_aemulator(app->hospes);
     lat  = superficies(app->repo, "superficies_latitudo",
@@ -535,7 +743,28 @@ terminale_pulsare (
         (vacuum)aemulator_hospes_amplitudo(app->hospes, columnae,
             lineae, (i32)lat, (i32)alt);
     }
-    redde aemulator_hospes_pulsare(app->hospes, mora_ms);
+    pulsus = aemulator_hospes_pulsare(app->hospes, mora_ms);
+    focum_nuntiare((TerminaleContextus*)app->contextus);
+    redde pulsus;
+}
+
+chorda
+terminale_titulus (
+    TerminaleApplicatio* app,
+                    b32* mutatus)
+{
+    TerminaleContextus* tc;
+                chorda  t;
+
+    tc         = (TerminaleContextus*)app->contextus;
+    t.datum    = (i8*)tc->titulus;
+    t.mensura  = tc->titulus_mensura;
+    si (mutatus)
+    {
+        *mutatus = tc->titulus_mutatus;
+    }
+    tc->titulus_mutatus = FALSUM;
+    redde t;
 }
 
 vacuum

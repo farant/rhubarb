@@ -172,7 +172,7 @@ aemulator_alterum (
 
 /* modus ANSI (privatus FALSUM) aut DEC privatus (VERUM), bitum crudum
  * ut DECRQM nuntiat (D2): ANSI IV XX; DEC I VI VII IX XXV XLV XLVII
- * LXVI M-MVI MXV MXVI MXLV MXLVII-MXLIX MMIV MMXXVI. Ignotus =
+ * LXVI M-MVII MXV MXVI MXLV MXLVII-MXLIX MMIV MMXXVI. Ignotus =
  * FALSUM. */
 b32
 aemulator_modus (
@@ -216,6 +216,10 @@ nomen structura {
                  i32 kitty_vexilla;          /* D4: protocollum clavium
                                               * kitty, schirmi activi
                                               * (0-31; 0 = legacy) */
+                 b32 rotula_sagittis;        /* D6b: ?1007 (ordinarie
+                                              * VERUM): rotula in
+                                              * schirmo altero sine
+                                              * mure = sagittae */
 } AemulatorModi;
 
 AemulatorModi

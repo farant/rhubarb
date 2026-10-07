@@ -1379,4 +1379,12 @@
     <gradus initus="\x1Bc\x1B]10;?\x07" responsum="\x1B]10;rgb:1212/3434/5656\x07"/>
   </casus>
 
+  <!-- ?1007 rotula alterna (D6b; Ghostty mouse_alternate_scroll,
+       ordinarie positum); RIS ad ordinarium -->
+  <casus titulus="alternate scroll mode defaults on" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[?1007$p" responsum="\x1B[?1007;1$y"/>
+    <gradus initus="\x1B[?1007l\x1B[?1007$p" responsum="\x1B[?1007;2$y"/>
+    <gradus initus="\x1Bc\x1B[?1007$p" responsum="\x1B[?1007;1$y"/>
+  </casus>
+
 </vectores>

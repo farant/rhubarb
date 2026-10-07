@@ -380,6 +380,199 @@ concham_probare (vacuum)
     terminale_claudere(&mc.app);
 }
 
+/* terminale super effusionem programmatis fixam (modi, OSC) */
+interior b32
+machinam_effusione (
+                Machina* mc,
+     constans character* effusio)
+{
+    si (!machinam_struere(mc, pseudoterminale_memoriae_creare(piscina,
+            (constans i8*)effusio, (i32)strlen(effusio), ZEPHYRUM)))
+    {
+        redde FALSUM;
+    }
+    (vacuum)quadrum(mc, ZEPHYRUM);
+    redde VERUM;
+}
+
+/* eventum crudum per fenestram, deinde quadrum */
+interior vacuum
+eventum_dare (
+             Machina* mc,
+    constans Eventus* ev)
+{
+    ludus_fenestra_tractare(mc->lf, ev, mc->tempus);
+    (vacuum)quadrum(mc, ZEPHYRUM);
+}
+
+/* clavis non typica (sagitta): depressa et liberata */
+interior vacuum
+clavem_crudam (
+         Machina* mc,
+        clavis_t  clavis,
+    EventusCodex  codex)
+{
+    Eventus ev;
+
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    ev.genus                = EVENTUS_CLAVIS_DEPRESSUS;
+    ev.datum.clavis.clavis  = clavis;
+    ev.datum.clavis.codex   = codex;
+    eventum_dare(mc, &ev);
+    ev.genus               = EVENTUS_CLAVIS_LIBERATUS;
+    ev.datum.clavis.actio  = EVENTUS_ACTIO_SOLUTA;
+    eventum_dare(mc, &ev);
+}
+
+interior vacuum
+rotulam_dare (
+    Machina* mc,
+        s32  lineae)
+{
+    Eventus ev;
+
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    ev.genus               = EVENTUS_MUS_ROTULA;
+    ev.datum.rotula.genus  = EVENTUS_ROTULA_GRADATA;
+    ev.datum.rotula.dy     = lineae * CELL_Y;
+    ev.datum.rotula.x      = XIII;
+    ev.datum.rotula.y      = XVII;
+    eventum_dare(mc, &ev);
+}
+
+/* V: modi ad codificatorem (D6b) */
+interior vacuum
+modos_probare (vacuum)
+{
+    Machina mc;
+    Eventus ev;
+    unio { constans character* l; i8* m; } u;
+
+    imprimere("\n--- V: modi ad codificatorem (D6b) ---\n");
+    /* DECCKM: sagitta SS3 */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1h"));
+    clavem_crudam(&mc, CLAVIS_SURSUM, EVENTUS_CODEX_SAGITTA_SURSUM);
+    CREDO_VERUM(captum_est(&mc, "\x1BOA"));
+    terminale_claudere(&mc.app);
+    /* LNM: Enter CR LF */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[20h"));
+    CREDO_VERUM(manus_ludus_clavem(mc.manus, '\r', ZEPHYRUM));
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(captum_est(&mc, "\r\n"));
+    terminale_claudere(&mc.app);
+    /* kitty: Effugium disambiguatum */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[>1u"));
+    CREDO_VERUM(manus_ludus_clavem(mc.manus, (character)0x1B,
+        ZEPHYRUM));
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(captum_est(&mc, "\x1B[27u"));
+    terminale_claudere(&mc.app);
+    /* glutinum (?2004) */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?2004h"));
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    u.l                                = "ab";
+    ev.genus                           = EVENTUS_TEXTUS;
+    ev.datum.textus.contentum.datum    = u.m;
+    ev.datum.textus.contentum.mensura  = II;
+    ev.datum.textus.origo              = EVENTUS_ORIGO_GLUTINATA;
+    eventum_dare(&mc, &ev);
+    CREDO_VERUM(captum_est(&mc, "\x1B[200~ab\x1B[201~"));
+    terminale_claudere(&mc.app);
+}
+
+/* VI: mus, rotula, focus (D6b) */
+interior vacuum
+murem_probare (vacuum)
+{
+    Machina mc;
+    Eventus ev;
+
+    imprimere("\n--- VI: mus, rotula, focus (D6b) ---\n");
+    /* sine modo muris: ictus nihil mittit */
+    CREDO_VERUM(machinam_effusione(&mc, ""));
+    CREDO_VERUM(manus_ludus_premere_ad(mc.manus, XIII, XVII));
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(captum_est(&mc, ""));
+    terminale_claudere(&mc.app);
+    /* ?1000 + ?1006: SGR, cellula (2, 2) */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1000h\x1B[?1006h"));
+    CREDO_VERUM(manus_ludus_premere_ad(mc.manus, XIII, XVII));
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(captum_est(&mc, "\x1B[<0;3;3M\x1B[<0;3;3m"));
+    /* rotula ad programma, non ad visum */
+    rotulam_dare(&mc, I);
+    CREDO_VERUM(captum_est(&mc,
+        "\x1B[<0;3;3M\x1B[<0;3;3m\x1B[<64;3;3M"));
+    terminale_claudere(&mc.app);
+    /* ?1000 solum: forma X10 (ordinaria terminalis) */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1000h"));
+    CREDO_VERUM(manus_ludus_premere_ad(mc.manus, XIII, XVII));
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(captum_est(&mc, "\x1B[M ##\x1B[M###"));
+    terminale_claudere(&mc.app);
+    /* ?1007: schirmum alterum sine mure - rotula = sagittae */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1049h"));
+    rotulam_dare(&mc, II);
+    CREDO_VERUM(captum_est(&mc, "\x1B[A\x1B[A"));
+    rotulam_dare(&mc, -I);
+    CREDO_VERUM(captum_est(&mc, "\x1B[A\x1B[A\x1B[B"));
+    terminale_claudere(&mc.app);
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1049h\x1B[?1h"));
+    rotulam_dare(&mc, I);
+    CREDO_VERUM(captum_est(&mc, "\x1BOA"));
+    terminale_claudere(&mc.app);
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1049h\x1B[?1007l"));
+    rotulam_dare(&mc, I);
+    CREDO_VERUM(captum_est(&mc, ""));
+    terminale_claudere(&mc.app);
+    /* ?1004: relatio statim (focus ordinarie VERUM), deinde eventa */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1004h"));
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(captum_est(&mc, "\x1B[I"));
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    ev.genus = EVENTUS_DEFOCUS;
+    eventum_dare(&mc, &ev);
+    CREDO_VERUM(captum_est(&mc, "\x1B[I\x1B[O"));
+    terminale_claudere(&mc.app);
+}
+
+/* VII: titulus et colores (D6b) */
+interior vacuum
+titulum_colores_probare (vacuum)
+{
+     Machina  mc;
+    Mandatum* md;
+      chorda  t;
+         b32  mutatus;
+
+    imprimere("\n--- VII: titulus et colores (D6b) ---\n");
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B]2;salve\x07"));
+    t = terminale_titulus(&mc.app, &mutatus);
+    CREDO_VERUM(mutatus);
+    CREDO_VERUM(chorda_aequalis_literis(t, "salve"));
+    t = terminale_titulus(&mc.app, &mutatus);
+    CREDO_FALSUM(mutatus);
+    CREDO_VERUM(chorda_aequalis_literis(t, "salve"));
+    terminale_claudere(&mc.app);
+    /* OSC 4: tabula viva; OSC 10/11/12: litterae, fundus, cursor */
+    CREDO_VERUM(machinam_effusione(&mc,
+        "\x1B]4;1;#010203\x07\x1B[31mR\x1B[0m"
+        "\x1B]10;#405060\x07\x1B]11;#102030\x07\x1B]12;#a0b0c0\x07N"));
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(I, II, III)));
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, CELL_X, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(0x40, 0x50, 0x60)));
+    md = mandatum_ad(&mc, MANDATUM_RECTANGULUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(0x10, 0x20, 0x30)));
+    md = mandatum_ad(&mc, MANDATUM_RECTANGULUM, II * CELL_X, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(0xA0, 0xB0, 0xC0)));
+    terminale_claudere(&mc.app);
+}
+
 s32
 principale (vacuum)
 {
@@ -393,6 +586,9 @@ principale (vacuum)
     claves_probare();
     magnitudinem_probare();
     concham_probare();
+    modos_probare();
+    murem_probare();
+    titulum_colores_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();
