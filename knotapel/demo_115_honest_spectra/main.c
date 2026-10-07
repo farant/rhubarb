@@ -268,8 +268,9 @@ variant (
 }
 
 /* alternative `choices` of base: vertex k >= 3 reflected through the
- * plane of vertices 0, 1, 2 iff bit k-3 is set */
-static void
+ * plane of vertices 0, 1, 2 iff bit k-3 is set; 0 if the reflection is
+ * undefined (vertices 0, 1, 2 collinear) */
+static int
 build_alternative (
     Laqueus        base,
     unsigned long  choices,
@@ -283,16 +284,21 @@ build_alternative (
     Punctum  c1  = laqueus_vertex(base, 1);
     Punctum  c2  = laqueus_vertex(base, 2);
     i32      k;
+    int      ok  = 1;
 
     for (k = 0; k < n; k++) {
         Punctum v = laqueus_vertex(base, k);
 
-        if (k >= 3 && ((choices >> (k - 3)) & 1UL))
-            (void)situs_reflexio(c0, c1, c2, v, pool, &pts[k]);
-        else
+        if (k >= 3 && ((choices >> (k - 3)) & 1UL)) {
+            if (!situs_reflexio(c0, c1, c2, v, pool, &pts[k])) {
+                ok     = 0;
+                pts[k] = v;
+            }
+        } else {
             pts[k] = v;
+        }
     }
-    (void)make_knot(pts, (long)n, pool, out);
+    return make_knot(pts, (long)n, pool, out) && ok;
 }
 
 /* ================================================================
@@ -308,6 +314,7 @@ typedef struct {
     chorda        alexander;
     chorda        jones;       /* NULL: not computed */
     chorda        jones_mirror;
+    int           jones_filled; /* taken from the mirror partner */
 } Exact;
 
 /* jones_cap 0: Alexander only */
@@ -331,6 +338,7 @@ classify (
     e.alexander        = empty_chorda();
     e.jones            = empty_chorda();
     e.jones_mirror     = empty_chorda();
+    e.jones_filled     = 0;
     if (e.simple && laqueus_diagramma_genericum(l, scratch, &d)) {
         Magnus m;
 
@@ -377,6 +385,8 @@ classify (
     return e;
 }
 
+static unsigned reflexio_failures = 0;
+
 static Exact
 classify_alternative (
     Laqueus        base,
@@ -389,7 +399,8 @@ classify_alternative (
     Laqueus        alt;
     Exact          e;
 
-    build_alternative(base, choices, scratch, &alt);
+    if (!build_alternative(base, choices, scratch, &alt))
+        reflexio_failures++;
     e = classify(alt, jones_cap, scratch, out_pool);
     piscina_reficere(scratch, mark);
     return e;
@@ -407,8 +418,58 @@ typedef struct {
 
 static Reference refs[N_KNOTS];
 
-/* writes "unknot", "K", "K*" (mirror) or "?" into buf; returns the
- * knot index or -1 (unknot: -2) */
+/* Beyond the 12: the trefoil composites, from the reference trefoil's
+ * Jones (V is multiplicative under connected sum; Alexander of both
+ * composites is (t^2 - t + 1)^2), and 8_20, whose Alexander is the same
+ * (t^2 - t + 1)^2. 8_20's Jones is taken from the Knot Atlas page 8_20
+ * (fetched 2026-10-07; q = t): -q + 2 - q^-1 + 2q^-2 - q^-3 + q^-4 -
+ * q^-5. The Knot Atlas 3_1 page has the same chirality as D112's braid
+ * trefoil (Jones t^-1 + t^-3 - t^-4), so "8_20" below is the Atlas
+ * diagram's chirality. External table value: not verified by this
+ * demo. */
+#define N_EXTRA 5
+#define ALEX_TREFOIL_SQUARED "t^4 - 2t^3 + 3t^2 - 2t + 1"
+#define JONES_8_20_ATLAS "-t + 2 - t^-1 + 2t^-2 - t^-3 + t^-4 - t^-5"
+
+typedef struct {
+    char   name[16];
+    chorda jones;
+} Extra;
+
+static Extra extras[N_EXTRA];
+
+static int
+init_extras (
+    Piscina *keep)
+{
+    Polynomium j, jm, q, a;
+
+    if (!polynomium_ex_chorda(refs[0].jones, 't', keep, &j)
+        || !polynomium_ex_chorda(refs[0].jones_mirror, 't', keep, &jm)
+        || !polynomium_ex_chorda(chorda_ex_literis(JONES_8_20_ATLAS, keep),
+               't', keep, &a))
+        return 0;
+    strcpy(extras[0].name, "3_1#3_1");
+    if (!polynomium_multiplica(j, j, keep, &q)) return 0;
+    extras[0].jones = polynomium_ad_chordam(q, 't', keep);
+    strcpy(extras[1].name, "3_1*#3_1*");
+    if (!polynomium_multiplica(jm, jm, keep, &q)) return 0;
+    extras[1].jones = polynomium_ad_chordam(q, 't', keep);
+    strcpy(extras[2].name, "3_1#3_1*");
+    if (!polynomium_multiplica(j, jm, keep, &q)) return 0;
+    extras[2].jones = polynomium_ad_chordam(q, 't', keep);
+    strcpy(extras[3].name, "8_20");
+    extras[3].jones = polynomium_ad_chordam(a, 't', keep);
+    strcpy(extras[4].name, "8_20*");
+    extras[4].jones = polynomium_ad_chordam(polynomium_inversum(a, keep),
+        't', keep);
+    return 1;
+}
+
+/* writes a name into buf. A name means "Alexander and Jones both match"
+ * - not a proof of the knot type (e.g. 5_1 and 10_132 share both).
+ * Returns the knot index 0..11, -2 unknot, -3 a named knot beyond the
+ * 12 (composites, 8_20), -1 unnamed. */
 static int
 name_class (
     Exact  e,
@@ -437,6 +498,14 @@ name_class (
         if (chorda_same(e.jones, refs[k].jones_mirror)) {
             sprintf(buf, "%s*", KNOT_CODE[k]);
             return k;
+        }
+    }
+    if (chorda_is(e.alexander, ALEX_TREFOIL_SQUARED)) {
+        for (k = 0; k < N_EXTRA; k++) {
+            if (chorda_same(e.jones, extras[k].jones)) {
+                strcpy(buf, extras[k].name);
+                return -3;
+            }
         }
     }
     strcpy(buf, "?");
@@ -603,6 +672,8 @@ part_a (
     }
     printf("  (chosen: + forward / r reversed, start vertex; ties go to the "
         "first)\n");
+    check("composite and 8_20 references built from the trefoil's Jones "
+        "and the cited Knot Atlas value", init_extras(keep));
 }
 
 /* ================================================================
@@ -610,6 +681,62 @@ part_a (
  * ================================================================ */
 
 static Spectrum spectra[N_KNOTS];
+static Exact    alt_exact[MAX_ALTS];
+
+/* All alternatives of base classified (strings in keep). The mirror
+ * theorem is CHECKED on independently computed pairs first (pair_bad);
+ * only then is it USED: alternative c ^ mask is the mirror image of c, so
+ * Jones(c) = Jones(c ^ mask)(1/t), and a diagram of one mirrors to a
+ * diagram of the other with the same crossings (the unknot certificate
+ * transfers). Exact, not an estimate. */
+static unsigned long
+classify_all (
+    Laqueus   base,
+    Piscina  *keep,
+    Piscina  *scratch,
+    unsigned *pair_bad,
+    unsigned *filled)
+{
+    unsigned long count = 1UL << (laqueus_numerus(base) - 3);
+    unsigned long mask  = count - 1UL;
+    unsigned long c;
+
+    *pair_bad = 0;
+    *filled   = 0;
+    for (c = 0; c < count; c++)
+        alt_exact[c] = classify_alternative(base, c, JONES_CAP_SEARCH,
+            scratch, keep);
+    for (c = 0; c < count; c++) {
+        const Exact *a = &alt_exact[c];
+        const Exact *b = &alt_exact[c ^ mask];
+
+        if (a->simple != b->simple)
+            (*pair_bad)++;
+        else if (a->simple
+                 && (!chorda_same(a->alexander, b->alexander)
+                     || (a->jones.datum != NULL && b->jones.datum != NULL
+                         && !chorda_aequalis(a->jones, b->jones_mirror))))
+            (*pair_bad)++;
+    }
+    for (c = 0; c < count; c++) {
+        Exact       *a = &alt_exact[c];
+        const Exact *b = &alt_exact[c ^ mask];
+
+        if (!a->simple)
+            continue;
+        if (a->jones.datum == NULL && b->jones.datum != NULL
+            && !b->jones_filled) {
+            a->jones        = b->jones_mirror;
+            a->jones_mirror = b->jones;
+            a->jones_filled = 1;
+            (*filled)++;
+        }
+        if (chorda_is(a->alexander, "1") && !a->unknot_certified
+            && b->unknot_certified)
+            a->unknot_certified = 1;
+    }
+    return count;
+}
 
 static void
 part_b (
@@ -617,19 +744,17 @@ part_b (
     Piscina *scratch,
     Piscina *work)
 {
-    static chorda alt_jones[MAX_ALTS];
-    static chorda alt_mirror[MAX_ALTS];
-    static chorda alt_alex[MAX_ALTS];
-    static int    alt_simple[MAX_ALTS];
-    int           k;
+    int k;
 
     printf("\n=== Part B: construction-word spectra of the honest polygons "
         "===\n");
+    printf("  (a name means Alexander AND Jones match the named knot - e.g. "
+        "5_1 and 10_132 share both)\n");
     for (k = 0; k < N_KNOTS; k++) {
         const char   *code = KNOT_CODE[k];
-        unsigned long count, c, mask;
+        unsigned long count, c;
         unsigned      n_simple = 0, missing = 0, trivial = 0, cert = 0;
-        unsigned      pair_bad = 0, self = 0, self_mirror = 0, q;
+        unsigned      pair_bad, filled, self = 0, self_mirror = 0, q;
         unsigned      n_alex = 0;
         unsigned long max_det = 0;
         unsigned      max_span = 0;
@@ -637,57 +762,27 @@ part_b (
         Spectrum     *sp = &spectra[k];
 
         spectrum_clear(sp);
-        count = 1UL << (laqueus_numerus(chosen[k]) - 3);
-        if (count > MAX_ALTS) {
+        if ((1UL << (laqueus_numerus(chosen[k]) - 3)) > MAX_ALTS) {
             sprintf(msg, "%s: spectrum within %d alternatives", code,
                 MAX_ALTS);
             check(msg, 0);
             continue;
         }
-        mask = count - 1UL;
+        count = classify_all(chosen[k], keep, scratch, &pair_bad, &filled);
         for (c = 0; c < count; c++) {
-            PiscinaNotatio mark = piscina_notare(work);
-            Exact          e = classify_alternative(chosen[k], c,
-                JONES_CAP_SEARCH, scratch, work);
+            const Exact *e = &alt_exact[c];
 
-            alt_simple[c] = e.simple;
-            alt_jones[c]  = empty_chorda();
-            alt_mirror[c] = empty_chorda();
-            alt_alex[c]   = empty_chorda();
-            if (e.simple) {
-                n_simple++;
-                spectrum_add(sp, e, work, keep);
-                alt_alex[c] = chorda_transcribere(e.alexander, keep);
-                if (e.jones.datum != NULL) {
-                    alt_jones[c]  = chorda_transcribere(e.jones, keep);
-                    alt_mirror[c] = chorda_transcribere(e.jones_mirror,
-                        keep);
-                } else {
-                    missing++;
-                }
-                if (chorda_is(e.alexander, "1")) {
-                    trivial++;
-                    if (e.unknot_certified) cert++;
-                }
-                if (e.det > max_det) max_det = e.det;
-                if (e.alex_span > max_span) max_span = e.alex_span;
+            if (!e->simple)
+                continue;
+            n_simple++;
+            spectrum_add(sp, *e, work, keep);
+            if (e->jones.datum == NULL) missing++;
+            if (chorda_is(e->alexander, "1")) {
+                trivial++;
+                if (e->unknot_certified) cert++;
             }
-            piscina_reficere(work, mark);
-        }
-        /* mirror theorem: c ^ mask is the reflection of c through the plane
-         * of vertices 0, 1, 2 */
-        for (c = 0; c < count; c++) {
-            unsigned long m = c ^ mask;
-
-            if (alt_simple[c] != alt_simple[m])
-                pair_bad++;
-            else if (alt_simple[c]
-                     && (!chorda_same(alt_alex[c], alt_alex[m])
-                         || (alt_jones[c].datum != NULL
-                             && alt_mirror[m].datum != NULL
-                             && !chorda_aequalis(alt_jones[c],
-                                 alt_mirror[m]))))
-                pair_bad++;
+            if (e->det > max_det) max_det = e->det;
+            if (e->alex_span > max_span) max_span = e->alex_span;
         }
         for (q = 0; q < sp->n; q++) {
             unsigned r;
@@ -707,18 +802,19 @@ part_b (
             code, (unsigned)laqueus_numerus(chosen[k]), count, n_simple, sp->n,
             n_alex, D112_DISTINCT[k], D114_DISTINCT[k]);
         printf("    itself %u, its mirror %u; unknots %u of %u trivial-"
-            "Alexander certified; Jones missing %u; max det %lu (source "
-            "%lu); max Alexander degree %u\n", self, self_mirror, cert,
-            trivial, missing, max_det, KNOT_DET[k], max_span);
+            "Alexander certified; Jones from the mirror partner %u, still "
+            "missing %u; max det %lu (source %lu); max Alexander degree %u\n",
+            self, self_mirror, cert, trivial, filled, missing, max_det,
+            KNOT_DET[k], max_span);
         for (q = 0; q < sp->n; q++) {
-            printf("      %-8s [%4u]  det %-4lu ", sp->c[q].name, sp->c[q].count,
-                sp->c[q].det);
+            printf("      %-9s [%4u]  det %-4lu ", sp->c[q].name,
+                sp->c[q].count, sp->c[q].det);
             print_chorda(sp->c[q].alexander);
             printf("  |  ");
             print_chorda(sp->c[q].jones);
             printf("\n");
         }
-        sprintf(msg, "%s: mirror theorem - alternatives c and ~c have the "
+        sprintf(msg, "%s: mirror theorem on independently computed pairs - "
             "same simplicity and Alexander, mirror Jones", code);
         check(msg, pair_bad == 0);
         sprintf(msg, "%s: the all-zero alternative (the polygon itself) is "
@@ -726,6 +822,11 @@ part_b (
         check(msg, self >= 1);
         sprintf(msg, "%s: every alternative is simple and classified", code);
         check(msg, n_simple == count && sp->overflow == 0);
+        if (missing == 0) {
+            sprintf(msg, "%s: after mirror filling, chirality is exactly "
+                "symmetric (itself = mirror, or amphichiral)", code);
+            check(msg, self_mirror == 0 || self == self_mirror);
+        }
     }
 }
 
@@ -736,16 +837,15 @@ part_b (
 static void
 part_c (void)
 {
-    int      k, j;
-    unsigned above = 0;
+    int k, j;
 
     printf("\n=== Part C: reachability (x = knot j or its mirror occurs among "
         "i's alternatives) ===\n  %-6s", "");
     for (j = 0; j < N_KNOTS; j++)
         printf("%5s", KNOT_CODE[j]);
-    printf("  out (D112)  unnamed\n");
+    printf("  out (D112)  beyond-12  unnamed (no Jones / Jones)\n");
     for (k = 0; k < N_KNOTS; k++) {
-        unsigned out = 0, unnamed = 0, q;
+        unsigned out = 0, beyond = 0, un_nojones = 0, un_jones = 0, q;
 
         printf("  %-6s", KNOT_CODE[k]);
         for (j = 0; j < N_KNOTS; j++) {
@@ -758,22 +858,50 @@ part_c (void)
             out += (unsigned)hit;
         }
         for (q = 0; q < spectra[k].n; q++) {
-            if (spectra[k].c[q].knot == -1)
-                unnamed++;
-            if (spectra[k].c[q].det > KNOT_DET[k])
-                above++;
+            if (spectra[k].c[q].knot == -3)
+                beyond++;
+            if (spectra[k].c[q].knot == -1) {
+                if (spectra[k].c[q].jones.datum == NULL) un_nojones++;
+                else un_jones++;
+            }
         }
-        printf("  %3u (%2u)  %7u\n", out, D112_OUT_DEGREE[k], unnamed);
+        printf("  %3u (%2u)  %9u  %7u / %u\n", out, D112_OUT_DEGREE[k],
+            beyond, un_nojones, un_jones);
     }
-    printf("  classes with a determinant above their source's: %u\n", above);
+    printf("\n  above the source's determinant (classes / distinct Alexander / "
+        "alternatives):\n");
+    for (k = 0; k < N_KNOTS; k++) {
+        unsigned classes = 0, alex = 0, alts = 0, q, r;
+
+        for (q = 0; q < spectra[k].n; q++) {
+            int first = 1;
+
+            if (spectra[k].c[q].det <= KNOT_DET[k])
+                continue;
+            classes++;
+            alts += spectra[k].c[q].count;
+            for (r = 0; r < q; r++)
+                if (spectra[k].c[r].det > KNOT_DET[k]
+                    && chorda_aequalis(spectra[k].c[r].alexander,
+                        spectra[k].c[q].alexander))
+                    first = 0;
+            alex += (unsigned)first;
+        }
+        if (classes > 0)
+            printf("    %-5s %u / %u / %u\n", KNOT_CODE[k], classes, alex,
+                alts);
+    }
     for (k = 0; k < N_KNOTS; k++) {
         unsigned q;
 
         for (q = 0; q < spectra[k].n; q++) {
-            if (spectra[k].c[q].knot != -1)
+            if (spectra[k].c[q].knot != -1 && spectra[k].c[q].knot != -3)
                 continue;
-            printf("    unnamed in %s [%u]: det %lu, Alexander ", KNOT_CODE[k],
-                spectra[k].c[q].count, spectra[k].c[q].det);
+            if (k == 8 && spectra[k].c[q].knot == -1)
+                continue;   /* 7_2's unnamed classes are listed in Part B */
+            printf("    %s in %s [%u]: det %lu, Alexander ",
+                spectra[k].c[q].name, KNOT_CODE[k], spectra[k].c[q].count,
+                spectra[k].c[q].det);
             print_chorda(spectra[k].c[q].alexander);
             printf(", Jones ");
             print_chorda(spectra[k].c[q].jones);
@@ -795,9 +923,10 @@ stability (
 {
     long     n = raw_n[k], shift;
     int      rev, best = (int)laqueus_numerus(chosen[k]), variants = 0;
+    int      above_variants = 0;
     Spectrum uni;              /* count = number of variants */
-    unsigned q;
-    char     msg[120];
+    unsigned q, uni_overflow = 0, bad_total = 0;
+    char     msg[160];
 
     spectrum_clear(&uni);
     printf("\n  %s: every fewest-vertex variant (%d vertices)\n", KNOT_CODE[k],
@@ -807,41 +936,48 @@ stability (
             Laqueus       v;
             Spectrum      sp;
             unsigned long count, c;
+            unsigned      pair_bad, filled;
+            int           above = 0;
 
             if (!variant(raw_pts[k], n, shift, rev, keep, &v)
                 || (int)laqueus_numerus(v) != best)
                 continue;
             variants++;
             spectrum_clear(&sp);
-            count = 1UL << (laqueus_numerus(v) - 3);
-            for (c = 0; c < count; c++) {
-                PiscinaNotatio mark = piscina_notare(work);
-                Exact          e = classify_alternative(v, c,
-                    JONES_CAP_SEARCH, scratch, work);
-
-                if (e.simple)
-                    spectrum_add(&sp, e, work, keep);
-                piscina_reficere(work, mark);
-            }
+            count = classify_all(v, keep, scratch, &pair_bad, &filled);
+            bad_total += pair_bad;
+            for (c = 0; c < count; c++)
+                if (alt_exact[c].simple)
+                    spectrum_add(&sp, alt_exact[c], work, keep);
             printf("    %s%-3ld %3u classes:", rev ? "r" : "+", shift, sp.n);
             for (q = 0; q < sp.n; q++) {
-                printf(" %s[%u]", sp.c[q].name, sp.c[q].count);
-                if (uni.n < MAX_CLASSES) {
-                    unsigned u;
-                    int      seen = 0;
+                unsigned u;
+                int      seen = 0;
 
-                    for (u = 0; u < uni.n; u++) {
-                        if (chorda_aequalis(uni.c[u].key, sp.c[q].key)) {
-                            uni.c[u].count++;
-                            seen = 1;
-                        }
+                printf(" %s[%u]", sp.c[q].name, sp.c[q].count);
+                if (sp.c[q].knot == -1 && sp.c[q].det > 1)
+                    printf("(det %lu)", sp.c[q].det);
+                if (sp.c[q].det > KNOT_DET[k])
+                    above = 1;
+                for (u = 0; u < uni.n; u++) {
+                    if (chorda_aequalis(uni.c[u].key, sp.c[q].key)) {
+                        uni.c[u].count++;
+                        seen = 1;
                     }
-                    if (!seen) {
+                }
+                if (!seen) {
+                    if (uni.n < MAX_CLASSES) {
                         uni.c[uni.n]       = sp.c[q];
                         uni.c[uni.n].count = 1;
                         uni.n++;
+                    } else {
+                        uni_overflow++;
                     }
                 }
+            }
+            if (above) {
+                above_variants++;
+                printf("  <- above source det");
             }
             printf("\n");
         }
@@ -854,10 +990,12 @@ stability (
     for (q = 0; q < uni.n; q++)
         if (uni.c[q].count == (unsigned)variants)
             printf(" %s", uni.c[q].name);
-    printf("\n");
+    printf("\n    variants with a class above the source's determinant: %d\n",
+        above_variants);
     sprintf(msg, "%s: stability covers exactly the %d fewest-vertex variants "
-        "found in Part A", KNOT_CODE[k], fewest[k]);
-    check(msg, variants == fewest[k]);
+        "found in Part A; union complete; mirror theorem holds in every "
+        "variant", KNOT_CODE[k], fewest[k]);
+    check(msg, variants == fewest[k] && uni_overflow == 0 && bad_total == 0);
 }
 
 static void
@@ -893,6 +1031,8 @@ main (void)
     part_b(keep, scratch, work);
     part_c();
     part_d(keep, scratch, work);
+    check("every reflection through the base plane was defined",
+        reflexio_failures == 0);
     printf("\n===================================================\n");
     printf("Results: %d pass, %d fail\n", n_pass, n_fail);
     piscina_destruere(work);
