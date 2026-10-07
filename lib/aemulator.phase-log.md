@@ -499,3 +499,17 @@ an empty attribute as absent, so every `textus=""` in the vectors had
 never been checked. An explicit empty marker fixed it; the nine
 assertions it revived all held.
 
+## D2 — modes in the core (2026-10-07)
+
+**INTENTIO.** Keep every mode a full-screen program sets, act on the
+ones that change the screen, and hand the input ones to the host.
+
+The four loose booleans became a table of honoured modes, one bit
+each, which DECRQM reads directly - so a program can now ask, and so
+can our vectors: many of the 29 new cases assert modes through DECRQM
+replies rather than through private accessors. Origin mode, insert,
+and both reverse-wrap modes landed with Ghostty's tests. The host gets
+one snapshot struct (`aemulator_modi`) for D6. esctest 245 -> 264.
+One honest loss: a test that passed only because we never answered
+DECRQM now fails for its real reason (no conformance levels).
+

@@ -154,13 +154,54 @@ b32
 aemulator_alterum (
     constans Aemulator* a);
 
-/* modus ANSI (privatus FALSUM) aut DEC privatus (VERUM); ignotus =
- * FALSUM */
+/* modus ANSI (privatus FALSUM) aut DEC privatus (VERUM), bitum crudum
+ * ut DECRQM nuntiat (D2): ANSI IV XX; DEC I VI VII IX XXV XLV XLVII
+ * LXVI M-MVI MXV MXVI MXLV MXLVII-MXLIX MMIV MMXXVI. Ignotus =
+ * FALSUM. */
 b32
 aemulator_modus (
     constans Aemulator* a,
                    i32  numerus,
                    b32  privatus);
+
+/* MUS - eventa muris quae programma petivit (DECSET 9 / 1000 / 1002 /
+ * 1003). Ut Ghostty: positum ultimum vincit; quodlibet eorum remotum
+ * = NULLUS (etiam si alius manet positus). */
+nomen enumeratio {
+    AEMULATOR_MUS_NULLUS = ZEPHYRUM,
+    AEMULATOR_MUS_X10,          /* ?9: pressio sola, sine modis */
+    AEMULATOR_MUS_PRESSIO,      /* ?1000: pressio + solutio */
+    AEMULATOR_MUS_TRACTUS,      /* ?1002: + motus cum bottone */
+    AEMULATOR_MUS_OMNIS         /* ?1003: + omnis motus */
+} AemulatorMus;
+
+/* forma relationis muris (?1005 / 1006 / 1015 / 1016); remota = X10 */
+nomen enumeratio {
+    AEMULATOR_MUS_FORMA_X10 = ZEPHYRUM,   /* octeti 32 + valor */
+    AEMULATOR_MUS_FORMA_UTF8,             /* ?1005 */
+    AEMULATOR_MUS_FORMA_SGR,              /* ?1006 */
+    AEMULATOR_MUS_FORMA_URXVT,            /* ?1015 */
+    AEMULATOR_MUS_FORMA_SGR_PIXELA        /* ?1016 */
+} AemulatorMusForma;
+
+/* MODI INITUS - quod hospes legit ut claves, murem, glutinum, focum
+ * codificet (D6: in CodificatorModi transferuntur). Instantanea per
+ * valorem; post aemulator_scribere iterum legenda. Campi postea
+ * addendi (D4: kitty_vexilla) in fine. Relatio foci statim post ?1004
+ * positum (Ghostty) res hospitis est: modum mutatum videt. */
+nomen structura {
+                 b32 sagittae_applicationis; /* DECCKM ?1: SS3 A */
+                 b32 tabula_applicationis;   /* DECKPAM ESC = / ?66 */
+        AemulatorMus mus;
+   AemulatorMusForma mus_forma;
+                 b32 glutinum;               /* ?2004 bracketed paste */
+                 b32 focus;                  /* ?1004 */
+                 b32 lnm;                    /* LNM 20: Enter = CR LF */
+} AemulatorModi;
+
+AemulatorModi
+aemulator_modi (
+    constans Aemulator* a);
 
 /* series ignotae consumptae ab creatione */
 i32

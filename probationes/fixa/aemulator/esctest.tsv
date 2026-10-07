@@ -1,26 +1,27 @@
 # esctest2 @ 2798f12 intra aemulatorem (tools/aemulator_esctest.sh -probare)
 # forma: nomen<TAB>status<TAB>causa - status: transiit|fractum|omissum|notum
 # Optiones: --expected-terminal=xterm --xterm-checksum=334 --max-vt-level=4
+# --xterm-reverse-wrap=383
 # Causa fracti = proprietas quam nondum habemus, ex octetis probationis
 # (--test-case-dir) attributa; nulla fracta sine causa. Mutatio status
 # (fractum novum AUT transiit novum) -probare frangit: promove cum causa.
 APCTests.test_APC_8bit	notum	esctest knownBug (xterm)
 APCTests.test_APC_Basic	transiit	
-BSTests.test_BS_AfterNoWrappedInlines	fractum	involutio-retro 45/1045
-BSTests.test_BS_AfterOneWrappedInline	fractum	involutio-retro 45/1045
+BSTests.test_BS_AfterNoWrappedInlines	transiit	
+BSTests.test_BS_AfterOneWrappedInline	transiit	
 BSTests.test_BS_Basic	transiit	
 BSTests.test_BS_CursorStartsInDoWrapPosition	transiit	
 BSTests.test_BS_InitialReverseWraparound	transiit	
 BSTests.test_BS_MovesLeftWhenLeftOfLeftMargin	transiit	
 BSTests.test_BS_NoWrapByDefault	transiit	
-BSTests.test_BS_ReverseWrapGoesToBottom	fractum	involutio-retro 45/1045
+BSTests.test_BS_ReverseWrapGoesToBottom	transiit	
 BSTests.test_BS_ReverseWrapRequiresDECAWM	transiit	
-BSTests.test_BS_ReverseWrapStartingInDoWrapPosition	fractum	involutio-retro 45/1045
+BSTests.test_BS_ReverseWrapStartingInDoWrapPosition	transiit	
 BSTests.test_BS_ReverseWrapWithLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 BSTests.test_BS_ReversewrapFromLeftEdgeToRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 BSTests.test_BS_StopsAtLeftMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 BSTests.test_BS_StopsAtOrigin	transiit	
-BSTests.test_BS_WrapsInWraparoundMode	fractum	involutio-retro 45/1045
+BSTests.test_BS_WrapsInWraparoundMode	transiit	
 CBTTests.test_CBT_ExplicitParameter	transiit	
 CBTTests.test_CBT_IgnoresRegion	transiit	
 CBTTests.test_CBT_OneTabStopByDefault	transiit	
@@ -49,8 +50,8 @@ CRTests.test_CR_MovesToLeftMarginWhenLeftOfLeftMarginInOriginMode	fractum	margin
 CRTests.test_CR_MovesToLeftMarginWhenRightOfLeftMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 CRTests.test_CR_MovesToLeftOfScreenWhenLeftOfLeftMargin	transiit	
 CRTests.test_CR_StaysPutWhenAtLeftMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-CUBTests.test_CUB_AfterNoWrappedInlines	fractum	involutio-retro 45/1045
-CUBTests.test_CUB_AfterOneWrappedInline	fractum	involutio-retro 45/1045
+CUBTests.test_CUB_AfterNoWrappedInlines	transiit	
+CUBTests.test_CUB_AfterOneWrappedInline	transiit	
 CUBTests.test_CUB_DefaultParam	transiit	
 CUBTests.test_CUB_ExplicitParam	transiit	
 CUBTests.test_CUB_StopsAtLeftEdge	transiit	
@@ -201,56 +202,56 @@ DECRCTests.test_SaveRestoreCursor_ResetsOriginMode	transiit
 DECRCTests.test_SaveRestoreCursor_ReverseWrapNotAffected	transiit	
 DECRCTests.test_SaveRestoreCursor_WorksInLRM	transiit	
 DECRCTests.test_SaveRestoreCursor_Wrap	transiit	
-DECRQMTests.test_DECRQM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_EBM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_FEAM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_FETM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_GATM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_HEM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_IRM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_KAM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_LNM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_MATM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_PUM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_SATM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_SRM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_SRTM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_TSM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_TTM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_VEM	fractum	DECRQM
+DECRQMTests.test_DECRQM	transiit	
+DECRQMTests.test_DECRQM_ANSI_EBM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_FEAM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_FETM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_GATM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_HEM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_IRM	transiit	
+DECRQMTests.test_DECRQM_ANSI_KAM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_LNM	transiit	
+DECRQMTests.test_DECRQM_ANSI_MATM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_PUM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_SATM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_SRM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_SRTM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_TSM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_TTM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_VEM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECAAM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECARM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECARSM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECAWM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECBKM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECAWM	transiit	
+DECRQMTests.test_DECRQM_DEC_DECBKM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECCANSM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECCKM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECCOLM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECCKM	transiit	
+DECRQMTests.test_DECRQM_DEC_DECCOLM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECCRTSM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECESKM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECHCCM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECHCCM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECHDPXM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECHEBM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECHEM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECKBUM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECKPM	notum	esctest knownBug (xterm)
-DECRQMTests.test_DECRQM_DEC_DECLRMM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECLRMM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECMCM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECNAKB	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECNCSM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECNKM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECNRCM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECNKM	transiit	
+DECRQMTests.test_DECRQM_DEC_DECNRCM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECNULM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECOM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECOM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECOSCNM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECPCCM	notum	esctest knownBug (xterm)
-DECRQMTests.test_DECRQM_DEC_DECPEX	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECPFF	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECPEX	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_DEC_DECPFF	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECRLCM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECRLM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECSCLM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECSCNM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECTCEM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECSCLM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_DEC_DECSCNM	fractum	DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_DEC_DECTCEM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECVCCM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECXRLM	notum	esctest knownBug (xterm)
 DECRQSSTests.test_DECRQSS_DECELF	notum	esctest knownBug (xterm)
@@ -258,7 +259,7 @@ DECRQSSTests.test_DECRQSS_DECLFKC	notum	esctest knownBug (xterm)
 DECRQSSTests.test_DECRQSS_DECSACE	fractum	DECRQSS
 DECRQSSTests.test_DECRQSS_DECSASD	fractum	DECRQSS
 DECRQSSTests.test_DECRQSS_DECSCA	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECRQSSTests.test_DECRQSS_DECSCL	fractum	DECRQSS
+DECRQSSTests.test_DECRQSS_DECSCL	fractum	DECSCL gradus conformitatis (nondum; VT420+ postea, decisio XXVI)
 DECRQSSTests.test_DECRQSS_DECSCUSR	fractum	DECRQSS
 DECRQSSTests.test_DECRQSS_DECSLPP	fractum	DECRQSS
 DECRQSSTests.test_DECRQSS_DECSLRM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
@@ -267,12 +268,12 @@ DECRQSSTests.test_DECRQSS_DECSNLS	fractum	DECRQSS
 DECRQSSTests.test_DECRQSS_DECSSDT	fractum	DECRQSS
 DECRQSSTests.test_DECRQSS_DECSTBM	fractum	DECRQSS
 DECRQSSTests.test_DECRQSS_SGR	fractum	DECRQSS
-DECSCLTests.test_DECSCL_Level2DoesntSupportDECRQM	transiit	
-DECSCLTests.test_DECSCL_Level4_SupportsDECSLRMDoesntSupportDECNCSM	fractum	DECCOLM 132 columnae
+DECSCLTests.test_DECSCL_Level2DoesntSupportDECRQM	fractum	DECSCL gradus conformitatis (nondum; VT420+ postea, decisio XXVI)
+DECSCLTests.test_DECSCL_Level4_SupportsDECSLRMDoesntSupportDECNCSM	fractum	DECSCL gradus conformitatis (nondum; VT420+ postea, decisio XXVI)
 DECSCLTests.test_DECSCL_Level5_SupportsDECNCSM	omissum	VT V (--max-vt-level=4)
 DECSCLTests.test_DECSCL_RISOnChange	notum	esctest knownBug (xterm)
 DECSCLTests.test_DSCSCL_Level2Supports7BitControls	transiit	
-DECSCLTests.test_DSCSCL_Level3_SupportsDECRQMDoesntSupportDECSLRM	fractum	DECRQM
+DECSCLTests.test_DSCSCL_Level3_SupportsDECRQMDoesntSupportDECSLRM	transiit	
 DECSEDTests.test_DECSED_0	fractum	protectio DECSCA/SPA/DECSED/DECSEL
 DECSEDTests.test_DECSED_0_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
 DECSEDTests.test_DECSED_0_WithScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
@@ -330,9 +331,9 @@ DECSETTests.test_DECSET_MoreFix	fractum	MoreFix 41
 DECSETTests.test_DECSET_OPT_ALTBUF	transiit	
 DECSETTests.test_DECSET_OPT_ALTBUF_CURSOR	transiit	
 DECSETTests.test_DECSET_ResetReverseWraparoundDisablesIt	transiit	
-DECSETTests.test_DECSET_ReverseWraparoundLastCol_BS	fractum	involutio-retro 45/1045
-DECSETTests.test_DECSET_ReverseWraparound_BS	fractum	involutio-retro 45/1045
-DECSETTests.test_DECSET_ReverseWraparound_Multi	fractum	involutio-retro 45/1045
+DECSETTests.test_DECSET_ReverseWraparoundLastCol_BS	transiit	
+DECSETTests.test_DECSET_ReverseWraparound_BS	transiit	
+DECSETTests.test_DECSET_ReverseWraparound_Multi	transiit	
 DECSETTests.test_DECSET_ReverseWraparound_RequiresDECAWM	transiit	
 DECSETTests.test_DECSET_SaveRestoreCursor	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_AltVsMain	transiit	
@@ -504,7 +505,7 @@ SDTests.test_SD_OutsideLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM
 SDTests.test_SD_OutsideTopBottomScrollRegion	transiit	
 SDTests.test_SD_RespectsLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 SDTests.test_SD_RespectsTopBottomScrollRegion	transiit	
-SMTests.test_SM_IRM	fractum	IRM insertio (phasis D)
+SMTests.test_SM_IRM	transiit	
 SMTests.test_SM_IRM_DoesNotWrapUnlessCursorAtMargin	transiit	
 SMTests.test_SM_IRM_TruncatesAtRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
 SMTests.test_SM_LNM	transiit	

@@ -623,6 +623,25 @@ Later phases (re-planned after A's RELATIO):
     wrap (45/1045), DECCKM, keypad (DECKPAM/DECKPNM), mouse (9, 1000,
     1002, 1003, 1006, 1015), bracketed paste 2004, focus 1004, DECRQM;
     the API to hand modes to the host (header for Fran's approval).
+    D2 as built: header approved as drafted (`AemulatorMus`,
+    `AemulatorMusForma`, `AemulatorModi`, `aemulator_modi`;
+    `aemulator_modus` now reads the raw bit of any honoured mode).
+    Core: one bit per honoured mode in a table (Ghostty modes.zig);
+    DECSET/DECRST/SM/RM set the bit then run side effects; mouse event
+    and format summaries follow Ghostty (last set wins, any reset ->
+    none / X10). DECOM (CUP, VPA, VPR clamp, CPR relative, DECSTBM
+    home, saved/restored by DECSC/DECRC), IRM, reverse wrap 45 / 1045
+    for CUB and BS, ESC = / ESC > (= mode 66), DECRQM (1 / 2 / 0;
+    only honoured modes answer 1 or 2), DECSTR also resets IRM,
+    DECOM, DECCKM, keypad, 45, 1045. 220 vectors (+29: 19 Ghostty;
+    D1's "184" was a miscount - D1 left 191);
+    section XXI; 18 plants caught (+1 equivalent: IRM at the last
+    column). esctest 245 -> 264 with `--xterm-reverse-wrap=383`; one
+    false pass now red (DECSCL level 2 forbids DECRQM; DECSCL = later).
+    Divergences from Ghostty, named: CHA/HPA/VPA/HPR/VPR under DECOM
+    follow xterm (Ghostty re-adds the region top); 1045 counts reduced
+    modulo the region cycle (exact; Ghostty loops); DECRQM answers 0
+    for modes Ghostty stores but does not act on (5, 12, 1007 ...).
   - **D3 - DEC special graphics:** G0/G1 designation (ESC ( 0 ...),
     SO/SI, line drawing.
   - **D4 - kitty keyboard flags** (decision 27) + its query.

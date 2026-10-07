@@ -1019,4 +1019,158 @@
     <gradus initus="\x1B[b" textus="\0"/>
   </casus>
 
+  <!-- ==================== D2: modi in nucleo ==================== -->
+
+  <!-- DECOM (Ghostty setCursorPos): CUP relativus ad summam regionis -->
+  <casus titulus="cursorPos relative to origin" fons="Terminal.zig:7844" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[3;4r\x1B[?6h\x1B[1;1HX" textus="\n\nX"/>
+  </casus>
+
+  <!-- Ghostty 7882 sine marginibus lr: linea ad ultimam regionis
+       praeciditur, columna ad oram -->
+  <casus titulus="cursorPos limits with full scroll region" fons="domus" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[3;4r\x1B[?6h\x1B[500;500HX" textus="\n\n\n    X"/>
+  </casus>
+
+  <!-- DECSC servat DECOM; DECRC positionem absolutam restituit -->
+  <casus titulus="saveCursor origin mode" fons="Terminal.zig:13576" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?6h\x1B7\x1B[2;4r\x1B8X" textus="X"/>
+  </casus>
+
+  <casus titulus="fullReset origin mode" fons="Terminal.zig:15814" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[3;5H\x1B[?6h\x1Bc" cursor_x="0" cursor_y="0"/>
+    <gradus initus="\x1B[?6$p" responsum="\x1B[?6;2$y"/>
+  </casus>
+
+  <!-- DECOM ponere et removere cursorem ad initium (regionis) mittit;
+       CPR relativum (xterm) -->
+  <casus titulus="decom homes and cpr reports relative" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[3;6r\x1B[5;5H\x1B[?6h" cursor_x="0" cursor_y="2"/>
+    <gradus initus="\x1B[2;3H\x1B[6n" cursor_x="2" cursor_y="3" responsum="\x1B[2;3R"/>
+    <gradus initus="\x1B[?6l" cursor_x="0" cursor_y="0"/>
+  </casus>
+
+  <!-- CHA lineam servat sub DECOM (xterm, esctest CHA_RespectsOriginMode
+       - Ghostty summam iterum addit: divergentia nominata); VPA
+       relativa; VPR ad ultimam regionis praeciditur; DECSTBM ad
+       summam regionis -->
+  <casus titulus="cha vpa vpr under origin mode" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[3;6r\x1B[?6h\x1B[2;4H\x1B[1G" cursor_x="0" cursor_y="3"/>
+    <gradus initus="\x1B[3d" cursor_x="0" cursor_y="4"/>
+    <gradus initus="\x1B[9e" cursor_y="5"/>
+    <gradus initus="\x1B[2d\x1B[3e" cursor_y="5"/>
+    <gradus initus="\x1B[4;8r" cursor_x="0" cursor_y="3"/>
+  </casus>
+
+  <!-- IRM (Ghostty print: insertBlanks ante scripturam, non in fine) -->
+  <casus titulus="insert mode with space" fons="Terminal.zig:12878" latitudo="10" altitudo="2">
+    <gradus initus="hello\x1B[1;2H\x1B[4hX" textus="hXello"/>
+  </casus>
+
+  <casus titulus="insert mode doesn't wrap pushed characters" fons="Terminal.zig:12896" latitudo="5" altitudo="2">
+    <gradus initus="hello\x1B[1;2H\x1B[4hX" textus="hXell"/>
+  </casus>
+
+  <casus titulus="insert mode does nothing at the end of the line" fons="Terminal.zig:12914" latitudo="5" altitudo="2">
+    <gradus initus="hello\x1B[4hX" textus="hello\nX"/>
+  </casus>
+
+  <casus titulus="insert mode with wide characters" fons="Terminal.zig:12931" latitudo="5" altitudo="2">
+    <gradus initus="hello\x1B[1;2H\x1B[4h\xF0\x9F\x98\x80" textus="h\xF0\x9F\x98\x80el"/>
+  </casus>
+
+  <casus titulus="insert mode with wide characters at end" fons="Terminal.zig:12949" latitudo="5" altitudo="2">
+    <gradus initus="well\x1B[4h\xF0\x9F\x98\x80" textus="well\n\xF0\x9F\x98\x80"/>
+  </casus>
+
+  <casus titulus="insert mode pushing off wide character" fons="Terminal.zig:12966" latitudo="5" altitudo="2">
+    <gradus initus="123\xF0\x9F\x98\x80\x1B[4h\x1B[1;1HX" textus="X123"/>
+  </casus>
+
+  <!-- involutio retro 45 / 1045 (Ghostty cursorLeft: CUB et BS) -->
+  <casus titulus="cursorLeft reverse wrap with pending wrap state" fons="Terminal.zig:11000" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE\x1B[DX" textus="ABCDX"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap extended with pending wrap state" fons="Terminal.zig:11054" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?1045hABCDE\x1B[DX" textus="ABCDX"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap" fons="Terminal.zig:11076" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE1\x1B[2DX" textus="ABCDX\n1" pendens="verum"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap with no soft wrap" fons="Terminal.zig:11097" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE\r\n1\x1B[2DX" textus="ABCDE\nX"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap before left margin" fons="Terminal.zig:11120" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45h\x1B[3r\x1B[DX" textus="\n\nX"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap" fons="Terminal.zig:11139" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?1045hABCDE\r\n1\x1B[2DX" textus="ABCDX\n1"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap bottom wraparound" fons="Terminal.zig:11162" latitudo="5" altitudo="3">
+    <gradus initus="\x1B[?1045hABCDE\r\n1\x1B[7DX" textus="ABCDE\n1\n    X"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap is priority if both set" fons="Terminal.zig:11185" latitudo="5" altitudo="3">
+    <gradus initus="\x1B[?45h\x1B[?1045hABCDE\r\n1\x1B[7DX" textus="ABCDE\n1\n    X"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap above top scroll region" fons="Terminal.zig:11209" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?1045h\x1B[3r\x1B[2;1H\x1B[1000D" cursor_x="0" cursor_y="0"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap on first row" fons="Terminal.zig:11226" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45h\x1B[3r\x1B[1;2H\x1B[1000D" cursor_x="0" cursor_y="0"/>
+  </casus>
+
+  <!-- BS = cursorLeft(1) (Ghostty backspace) -->
+  <casus titulus="backspace reverse wraps like cub" fons="domus" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE1\x08\x08X" textus="ABCDX\n1"/>
+  </casus>
+
+  <!-- DECRQM (Ghostty getReport): 1 positus, 2 remotus, 0 ignotus -
+       modi quos non honoramus (5 colores inversi, KAM 2) = 0 -->
+  <casus titulus="decrqm reports set, reset and unknown" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?7$p" responsum="\x1B[?7;1$y"/>
+    <gradus initus="\x1B[?1$p\x1B[?1h\x1B[?1$p" responsum="\x1B[?1;2$y\x1B[?1;1$y"/>
+    <gradus initus="\x1B[4$p\x1B[4h\x1B[4$p" responsum="\x1B[4;2$y\x1B[4;1$y"/>
+    <gradus initus="\x1B[?5$p\x1B[2$p\x1B[?9999$p" responsum="\x1B[?5;0$y\x1B[2;0$y\x1B[?9999;0$y"/>
+    <gradus initus="\x1B[?4$p\x1B[1$p" responsum="\x1B[?4;0$y\x1B[1;0$y"/>
+    <gradus initus="\x1B[?1;7$p" responsum="\0" ignota="1"/>
+  </casus>
+
+  <!-- bita cruda: 1003 positus 1000 non removet (Ghostty modes.set);
+       eventus muris summarium separatum (aemulator_modi) -->
+  <casus titulus="decrqm mouse bits stay raw" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?1000h\x1B[?1003h\x1B[?1000$p\x1B[?1003$p" responsum="\x1B[?1000;1$y\x1B[?1003;1$y"/>
+  </casus>
+
+  <!-- DECKPAM / DECKPNM = modus 66 (Ghostty keypad_keys) -->
+  <casus titulus="keypad application mode via esc equals" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B=\x1B[?66$p" responsum="\x1B[?66;1$y" ignota="0"/>
+    <gradus initus="\x1B>\x1B[?66$p" responsum="\x1B[?66;2$y" ignota="0"/>
+  </casus>
+
+  <!-- DECSTR (VT510, xterm, esctest decstr): IRM, DECOM, DECCKM,
+       tabula, 45 removentur; mus manet -->
+  <casus titulus="decstr resets input and editing modes" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[4h\x1B[?6h\x1B[?1h\x1B=\x1B[?45h\x1B[?1000h\x1B[!p"/>
+    <gradus initus="\x1B[4$p\x1B[?6$p\x1B[?1$p\x1B[?66$p\x1B[?45$p\x1B[?1000$p" responsum="\x1B[4;2$y\x1B[?6;2$y\x1B[?1;2$y\x1B[?66;2$y\x1B[?45;2$y\x1B[?1000;1$y"/>
+  </casus>
+
+  <!-- DECRC DECOM restituit (Ghostty restoreCursor) -->
+  <casus titulus="decrc restores origin mode" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?6h\x1B7\x1B[?6l\x1B8\x1B[?6$p" responsum="\x1B[?6;1$y"/>
+  </casus>
+
+  <!-- modus non honoratus: ignotus manet -->
+  <casus titulus="unhonoured private mode stays unknown" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?5h" ignota="1"/>
+  </casus>
+
 </vectores>

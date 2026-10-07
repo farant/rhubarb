@@ -363,3 +363,48 @@ unknown sequence; DECALN is now real, so the probe is `ESC # 3`.
 
 **Greedy hex, twice more:** `"\x1Bc"` is 0x1BC - split literals.
 
+## 2026-10-07 — D2: modes
+
+**Ghostty origin-mode bug (we diverge).** Ghostty's stream maps CHA,
+HPA, HPR and VPR to `setCursorPos(cursor.y + 1, ...)`; under DECOM
+setCursorPos adds the region top again, so CHA would move the cursor
+DOWN by the top margin. xterm's CursorRow is origin-relative, and
+esctest `CHA_RespectsOriginMode` expects the row kept (its X lands at
+the region's top-left). We follow xterm: only CUP/HVP and VPA are
+origin-relative; VPR is absolute + n, clamped to the region bottom
+under DECOM.
+
+**Reverse wrap 1045 cycles.** Once the extended mode wraps from the
+region top to its bottom, positions repeat every rows x width steps;
+the count is reduced modulo that (exact - unit test compares n and
+n + 1000 cycles). Ghostty counts down one by one: a saturated CUB on a
+one-column screen is ~2^31 iterations.
+
+**esctest reverse wrap.** esctest's `ReverseWraparound()` returns 45
+unless `--xterm-reverse-wrap >= 383`, then 1045; with the default it
+expects the OLD xterm meaning of 45 (wrap past the top). The runner now
+passes 383 - modern xterm and Ghostty semantics.
+
+**DECRQM is now our mode oracle.** Vectors assert modes through
+replies (`CSI ? n $ p` -> `CSI ? n ; s $ y`), not private accessors.
+Modes outside the table answer 0 - including ones Ghostty stores but
+does not act on (5, 12, 1007); xterm answers 4 for permanently reset
+ANSI modes (GATM, SRTM ...), 23 esctest rows carry that cause.
+
+**False pass exposed:** `DECSCL_Level2DoesntSupportDECRQM` passed only
+because DECRQM had no answer.
+
+**Equivalent plant:** inserting at the last column (`<=` for `<` in the
+IRM guard) is indistinguishable - the blank is overwritten at once.
+Ghostty's guard is a shortcut, not semantics.
+
+**Probe moved again:** section X used `CSI ? 1 $ p` as an unknown
+intermediate sequence; now DECRQPSR `CSI 1 $ w`.
+
+**Count correction:** D1's docs say 184 vectors (+11); the file at
+8e8859d0 has 191 (+12). Counted with `grep -c "<casus "` this time;
+the replayer agrees (220 viridia after D2).
+
+ICH (`cellulas_inserere`) moved above the print path - IRM calls it
+(the file has no forward declarations).
+

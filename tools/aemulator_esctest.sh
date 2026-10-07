@@ -11,7 +11,10 @@
 #
 # Optiones esctest: --expected-terminal=xterm --xterm-checksum=334
 # (cellula vacua = spatium, ut nucleus noster) --max-vt-level=4 (DECRQCRA
-# poscit IV; lectio_schirmi in ductore aperta, decisio XVIII).
+# poscit IV; lectio_schirmi in ductore aperta, decisio XVIII)
+# --xterm-reverse-wrap=383 (D2: XLV et MXLV ut xterm recens et Ghostty -
+# XLV solum in lineas involutas, MXLV trans summam; ordinarium 0 XLV
+# vetus exspectat).
 # Exitus: 0 congruit/scriptum; 1 discrepantia; 2 NIHIL CUCURRIT
 # (clonus deest aut commissum alienum - nominatur).
 set -u
@@ -64,6 +67,7 @@ clang "$BUILD/ductor.o" "${obiecta[@]}" -o "$BUILD/aemulator_esctest" \
 rm -f "$BUILD/esctest.log"
 "$BUILD/aemulator_esctest" python3 "$ESCTEST_DIR/esctest/esctest.py" \
     --expected-terminal=xterm --xterm-checksum=334 --max-vt-level=4 \
+    --xterm-reverse-wrap=383 \
     --timeout=0.5 --no-print-logs --logfile="$RADIX_DIR/$BUILD/esctest.log" \
     "${INCLUDE[@]+"${INCLUDE[@]}"}" > "$BUILD/ductor.out" 2>&1
 codex=$?
