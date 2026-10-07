@@ -1,7 +1,7 @@
 # Demo 116: Named Spectra — Findings
 
 **Date:** 2026-10-07
-**Status:** COMPLETE. 90 pass, 0 fail. Runtime about 5.5 minutes (D115: 7–18).
+**Status:** COMPLETE. 90 pass, 0 fail. Runtime about 5.5 minutes (D115: 7–18). **Revision II (same day): the table now goes to 13 crossings, and every class is named. See "Revisions II" at the end. The body below records the first run with the 10-crossing table.**
 **Depends on:** Demo 115 (the honest polygons, spectra and mirror theorem; its Alexander-level numbers are reproduced exactly here). House libraries: `laqueus` with the new `laqueus_pd_simplificare` (greedy Reidemeister I/II on PD codes, commit 81aa0eef), and `tabula_nodorum`, a table of the 250 prime knots up to 10 crossings. Names, symmetry and PD codes come from KnotInfo via database_knotinfo 2026.10.5; all polynomials are computed by laqueus. Commits e6700cad and df4c6348.
 **Frozen copy:** `demo-snapshot.c` (knotapel/archive.sh).
 
@@ -141,4 +141,52 @@ The reviewer verified the demo against KnotInfo's own columns: the chirality tra
 - **Unmatched check:** the wording no longer claims more than is searched. Sums of three or more knots (e.g. 3₁#3₁#3₁) are not searched.
 - **`unknot?` is now `unknot (TS)`:** by citation of the Jones unknot verification to 22 (24) crossings; the citation was checked.
 - **The 13 unmatched pairs are identified externally** as 11–13-crossing non-alternating primes (reviewer; two re-checked here).
+
+## Revisions II (13-crossing table, 2026-10-07)
+
+`tabula_nodorum` now holds all 12,966 prime knots up to 13 crossings (d34cf0c7). Its polynomials equal KnotInfo's for all 12,966. The demo was revised in place:
+- the table check is now 12,966;
+- `TABLE_MAX` is 13: a class is proven beyond the table if span(Jones) > 13;
+- names are pruned by the crossing bound (below).
+
+Everything at the Alexander level, all checks, and Parts A–D otherwise behave as above (90 pass, 0 fail).
+
+**Every class is named.** Status over all 9,768 alternatives:
+
+| status | classes | alternatives |
+|---|---|---|
+| unknot (proven) | 12 | 5,084 |
+| unknot (TS) (by citation) | 1 | 138 |
+| named by the table | 162 | 4,546 |
+| no table match | **0** | **0** |
+
+- **The 13 formerly unmatched mirror pairs** (26 classes, 88 alternatives, all from 7₂) carry exactly the names the review found externally:
+  - 11 crossings: 11n_89, 11n_100, 11n_102, 11n_111, and 11n_11|11n_112;
+  - 12 crossings: 12n_347, 12n_377, 12n_805, and 12n_20|12n_634;
+  - with 13-crossing alternatives: 11n_121|13n_3315, 12n_351|13n_420, 12n_719|13n_1575, 12n_468|13n_413|13n_2357.
+
+  All are non-alternating, and all lie inside the intervals [span, reduced] reported above.
+- **7₂'s polygon reaches 50 distinct prime table knots** (first candidate, up to mirror), up from 37.
+
+**New ambiguities, honestly.** With 12–13-crossing knots in the table, several smaller knots share Alexander + Jones with a larger one:
+- 6₂|12n_25, 7₁|12n_749, 7₃|12n_523;
+- 7₅|13n_3238, 8₄|13n_2067;
+- 8₇|13n_1588|13n_4010, 9₂₇|13n_1752|13n_2290;
+- 8₈|10₁₂₉\*|13n_1836.
+
+**The crossing bound resolves some of them.** A knot with a reduced diagram of r crossings has crossing number ≤ r. So a prime candidate whose crossing number exceeds the reduced count is impossible. A class can hold alternatives that are *different* knots with the same invariants, so the bound used for a class is the **largest** reduced count among its members. A candidate is dropped only if it is impossible for every member. This removes 14 candidates in 14 classes. For example:
+- D112's 5₁ source is named **5₁\*** alone: its raw polygon reduces to 6 crossings, ruling out 10₁₃₂.
+- Inside 6₂'s and 7₁'s own spectra, the 12-crossing alternatives disappear.
+
+Inside 7₂'s spectrum the same names stay ambiguous, because some members there reduce only to ≥ 12 crossings. Stability (Part D) is as before, and 6₃'s union now names 7₁ and 6₂ without their 12-crossing alternatives.
+
+**Superseded statements in the body:**
+- "13 mirror pairs the table cannot name" is now 0, because they lie in 11–13 crossings.
+- "37 distinct table knots" is now 50.
+- The open thread "extend the table to 11–13 crossings" is done.
+
+**Still open:**
+- the 138 `unknot (TS)` alternatives need R3 or a better minimizer for an in-house proof;
+- sums of three or more knots are not searched;
+- the 7₂ stability study.
 

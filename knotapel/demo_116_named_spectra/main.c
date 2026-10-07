@@ -12,11 +12,12 @@
  *     of a projection. Exact (an isotopy); a result with 0 crossings is
  *     a PROOF of the unknot, and the reduced crossing count is an upper
  *     bound on the crossing number;
- *   - tabula_nodorum: the 250 prime knots up to 10 crossings (names,
- *     symmetry and PD codes from KnotInfo, polynomials computed by
- *     laqueus) and tabula_nodorum_agnoscere, which names a knot by
- *     Alexander + Jones as a prime (as drawn or mirrored) or a sum of two
- *     table knots.
+ *   - tabula_nodorum: the 12,966 prime knots up to 13 crossings
+ *     (names, symmetry and PD codes from KnotInfo, polynomials computed
+ *     by laqueus; revision II - the first version used the 250 knots up
+ *     to 10 crossings) and tabula_nodorum_agnoscere, which names a knot
+ *     by Alexander + Jones as a prime (as drawn or mirrored) or a sum of
+ *     two table knots.
  *
  * Names are KnotInfo's: "K" is the KnotInfo diagram's chirality, "K*"
  * its mirror (D115 used D112's braid chirality - Part A translates).
@@ -24,8 +25,8 @@
  * 10_132* share both; every such ambiguity is printed, "a|b").
  * Beyond the table: span(Jones) <= crossing number for every knot
  * (Kauffman, Murasugi, Thistlethwaite), so a class whose Jones span
- * exceeds 10 is PROVEN to have more than 10 crossings; every prime knot
- * with <= 10 crossings is in the table.
+ * exceeds 13 is PROVEN to have more than 13 crossings; every prime knot
+ * with <= 13 crossings is in the table.
  *
  *   Part A  the honest polygons (as D115) and the chirality translation
  *           D112 -> KnotInfo for the 12 sources
@@ -167,7 +168,7 @@ static const unsigned D115_MISSING_7_2 = 1432;
 #define JONES_CAP        20
 #define JONES_CAP_REF    22
 #define UNKNOT_CERT      10
-#define TABLE_MAX        10
+#define TABLE_MAX        13
 #define NO_DIAGRAM      999u
 #define MAX_VERTS       128
 #define MAX_ALTS       4096
@@ -559,6 +560,8 @@ typedef struct {
     unsigned span;         /* Jones span: lower bound on crossing number */
     unsigned cand_c[MAX_CAND];     /* crossing number (sum for a sum) */
     int      cand_prime[MAX_CAND];
+    int      cand_source[MAX_CAND];
+    char     cand_name[MAX_CAND][48];
     char     first[16];    /* first candidate's table name if prime */
     char     name[96];
 } Naming;
@@ -616,6 +619,8 @@ name_class (
 
                 agnitio_name(&cand[k], piece);
                 append_name(nm.name, sizeof(nm.name), piece);
+                strcpy(nm.cand_name[k], piece);
+                nm.cand_source[k] = source_index(&cand[k]);
                 nm.cand_prime[k] = cand[k].secundus == NULL;
                 nm.cand_c[k]     = (unsigned)cand[k].primus->transitus
                     + (cand[k].secundus != NULL
@@ -631,6 +636,56 @@ name_class (
     return nm;
 }
 
+/* A knot with a diagram of r crossings has crossing number <= r, so a
+ * prime candidate whose crossing number exceeds the reduced diagram's
+ * crossings is impossible: the name keeps only the possible candidates
+ * (composites are kept - no bound is used for them). A class gathers
+ * alternatives that may be DIFFERENT knots with the same invariants, so
+ * the bound used is the LARGEST reduced count among its members. */
+static unsigned pruned_total   = 0;
+static unsigned pruned_classes = 0;
+
+static void
+prune_naming (
+    Naming   *nm,
+    unsigned  reduced)
+{
+    char     name[96];
+    unsigned m, kept = 0, dropped = 0;
+    int      source = -1;
+    char     first[16];
+
+    if (nm->status != ST_TABLE || reduced == NO_DIAGRAM
+        || nm->candidates > MAX_CAND)
+        return;
+    name[0]  = '\0';
+    first[0] = '\0';
+    for (m = 0; m < nm->candidates; m++) {
+        if (nm->cand_prime[m] && nm->cand_c[m] > reduced) {
+            dropped++;
+            continue;
+        }
+        append_name(name, sizeof(name), nm->cand_name[m]);
+        if (source < 0)
+            source = nm->cand_source[m];
+        if (first[0] == '\0' && nm->cand_prime[m]) {
+            size_t len = strcspn(nm->cand_name[m], "*");
+
+            memcpy(first, nm->cand_name[m], len);
+            first[len] = '\0';
+        }
+        kept++;
+    }
+    /* kept == 0 would contradict the table: left for the bracket check */
+    if (dropped == 0 || kept == 0)
+        return;
+    pruned_total += dropped;
+    pruned_classes++;
+    strcpy(nm->name, name);
+    nm->source = source;
+    strcpy(nm->first, first);
+}
+
 /* ================================================================
  * Spectrum: classes (Alexander | Jones) with populations
  * ================================================================ */
@@ -644,6 +699,9 @@ typedef struct {
     unsigned long det;
     unsigned      alex_span;
     unsigned      reduced;     /* min over members */
+    unsigned      reduced_max; /* max over members: a candidate is
+                                  impossible for the CLASS only if it is
+                                  impossible for every member */
 } Class;
 
 typedef struct {
@@ -695,6 +753,8 @@ spectrum_add (
             s->c[k].count++;
             if (e.reduced < s->c[k].reduced)
                 s->c[k].reduced = e.reduced;
+            if (e.reduced > s->c[k].reduced_max)
+                s->c[k].reduced_max = e.reduced;
             return;
         }
     }
@@ -710,6 +770,7 @@ spectrum_add (
     s->c[s->n].det       = e.det;
     s->c[s->n].alex_span = e.alex_span;
     s->c[s->n].reduced   = e.reduced;
+    s->c[s->n].reduced_max = e.reduced;
     s->c[s->n].nm        = name_class(e.alexander, e.jones, e.unknot_proven,
         work);
     s->n++;
@@ -779,6 +840,7 @@ part_a (
         (void)variant(raw_pts[k], n, best_shift, best_rev, keep, &chosen[k]);
         ec = classify(chosen[k], JONES_CAP_REF, scratch, keep);
         nm = name_class(er.alexander, er.jones, er.unknot_proven, scratch);
+        prune_naming(&nm, er.reduced);
         printf("  %-5s %4ld %7d %6d  %s%-6ld  %-22s %u -> %u\n", code, n, best,
             n_best, best_rev ? "r" : "+", best_shift, nm.name, er.crossings,
             er.reduced);
@@ -906,6 +968,8 @@ part_b (
             if (e->det > max_det) max_det = e->det;
         }
         missing_jones[k] = missing;
+        for (q = 0; q < sp->n; q++)
+            prune_naming(&sp->c[q].nm, sp->c[q].reduced_max);
         for (q = 0; q < sp->n; q++) {
             unsigned r;
             int      first = 1;
@@ -1083,11 +1147,13 @@ part_c (void)
                 }
             }
         }
+        printf("\n  candidates excluded by c(K) <= reduced crossings: %u, in "
+            "%u classes (Parts A-B)\n", pruned_total, pruned_classes);
         check("every table-named prime class: some candidate's crossing "
             "number <= the reduced crossing count", named > 0
             && inconsistent == 0);
-        check("every unmatched class has a reduced diagram above 10 "
-            "crossings (primes and two-knot sums up to 10 crossings are "
+        check("every unmatched class has a reduced diagram above 13 "
+            "crossings (primes and two-knot sums up to 13 crossings are "
             "searched; sums of three or more are not)", small_unmatched
             == 0);
     }
@@ -1148,6 +1214,8 @@ stability (
             for (c = 0; c < count; c++)
                 if (alt_exact[c].simple)
                     spectrum_add(&sp, alt_exact[c], work, keep);
+            for (q = 0; q < sp.n; q++)
+                prune_naming(&sp.c[q].nm, sp.c[q].reduced_max);
             printf("    %s%-3ld %3u classes:", rev ? "r" : "+", shift, sp.n);
             for (q = 0; q < sp.n; q++) {
                 unsigned u;
@@ -1218,8 +1286,8 @@ main (void)
         return 1;
     }
     table = tabula_nodorum_aperire(keep);
-    check("knot table opened (250 knots, KnotInfo 2026.10.5)",
-        table != NULL && tabula_nodorum_numerus() == 250);
+    check("knot table opened (12966 knots up to 13 crossings, KnotInfo "
+        "2026.10.5)", table != NULL && tabula_nodorum_numerus() == 12966);
     printf("  table source: %s\n", TABULA_NODORUM_FONS);
     part_a(keep, scratch);
     part_b(keep, scratch, work);
