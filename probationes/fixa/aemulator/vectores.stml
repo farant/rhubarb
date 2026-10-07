@@ -885,4 +885,70 @@
     <gradus initus="\r\n4\r\n5" historia="3" visus="3" visus_textus="1\n2"/>
   </casus>
 
+  <!-- ==== C4: mutatio magnitudinis sine refluxu (Ghostty PageList
+       resizeWithoutReflow: minuens lineas vacuas finales primum
+       praecidit, deinde summas in historiam; crescens historiam
+       retrahit SOLUM cursore in ima linea) et ED 3 ==== -->
+
+  <casus titulus="resize (no reflow) more rows" fons="Screen.zig:7017" latitudo="10" altitudo="3" historia_octeti="0">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL" amplitudo_latitudo="10" amplitudo_altitudo="10" visus_textus="1ABCD\n2EFGH\n3IJKL"/>
+  </casus>
+
+  <casus titulus="resize (no reflow) less rows" fons="Screen.zig:7036" latitudo="10" altitudo="3" historia_octeti="0">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL" cursor_x="5" cursor_y="2"/>
+    <gradus amplitudo_latitudo="10" amplitudo_altitudo="2" cursor_x="5" cursor_y="1" visus_textus="2EFGH\n3IJKL"/>
+  </casus>
+
+  <casus titulus="resize (no reflow) less rows trims blank lines" fons="Screen.zig:7060" latitudo="10" altitudo="3" historia_octeti="0">
+    <gradus initus="1ABCD\x1B[41m\r\n \x1B[2K\r\n \x1B[2K\x1B[1;6H\x1B[0m" cursor_x="5" cursor_y="0"/>
+    <gradus amplitudo_latitudo="6" amplitudo_altitudo="2" cursor_x="5" cursor_y="0" visus_textus="1ABCD"/>
+  </casus>
+
+  <casus titulus="resize (no reflow) more rows trims blank lines" fons="Screen.zig:7096" latitudo="10" altitudo="3" historia_octeti="0">
+    <gradus initus="1ABCD" amplitudo_latitudo="10" amplitudo_altitudo="7" cursor_x="5" cursor_y="0" visus_textus="1ABCD"/>
+  </casus>
+
+  <casus titulus="resize (no reflow) more cols" fons="Screen.zig:7132" latitudo="10" altitudo="3" historia_octeti="0">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL" amplitudo_latitudo="20" amplitudo_altitudo="3" visus_textus="1ABCD\n2EFGH\n3IJKL"/>
+  </casus>
+
+  <casus titulus="resize (no reflow) less cols" fons="Screen.zig:7150" latitudo="10" altitudo="3" historia_octeti="0">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL" amplitudo_latitudo="4" amplitudo_altitudo="3" visus_textus="1ABC\n2EFG\n3IJK"/>
+  </casus>
+
+  <casus titulus="resize (no reflow) more rows with scrollback cursor end" fons="Screen.zig:7169" latitudo="7" altitudo="3">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL\r\n4ABCD\r\n5EFGH" historia="2"/>
+    <gradus amplitudo_latitudo="7" amplitudo_altitudo="10" historia="0" cursor_y="4" visus_textus="1ABCD\n2EFGH\n3IJKL\n4ABCD\n5EFGH"/>
+  </casus>
+
+  <casus titulus="resize (no reflow) less rows with scrollback" fons="Screen.zig:7318" latitudo="7" altitudo="3">
+    <gradus initus="1ABCD\r\n2EFGH\r\n3IJKL\r\n4ABCD\r\n5EFGH" amplitudo_latitudo="7" amplitudo_altitudo="2" visus_textus="4ABCD\n5EFGH" historia_textus="1ABCD\n2EFGH\n3IJKL\n4ABCD\n5EFGH"/>
+  </casus>
+
+  <!-- crescens cursore NON in ima linea: historia non retrahitur,
+       cursor manet (Ghostty: 'pull' solum cursor.y >= rows - 1) -->
+  <casus titulus="growing with the cursor above the bottom keeps history" fons="domus" latitudo="5" altitudo="3">
+    <gradus initus="1\r\n2\r\n3\r\n4\r\n5\x1B[2;1H" historia="2" cursor_y="1"/>
+    <gradus amplitudo_latitudo="5" amplitudo_altitudo="5" historia="2" cursor_y="1" textus="3\n4\n5"/>
+  </casus>
+
+  <!-- minuens cum textu infra cursorem: summae in historiam, textus
+       infra servatur, cursor cum linea sua ascendit -->
+  <casus titulus="shrinking keeps text below the cursor" fons="domus" latitudo="5" altitudo="3">
+    <gradus initus="A\x1B[3;1HC\x1B[1;2H" amplitudo_latitudo="5" amplitudo_altitudo="2" historia="1" cursor_y="0" cursor_x="1" textus="\nC" historia_textus="A\n\nC"/>
+  </casus>
+
+  <!-- linea cursoris vacua numquam praeciditur: summa in historiam -->
+  <casus titulus="shrinking never trims the cursor's own blank row" fons="domus" latitudo="5" altitudo="3">
+    <gradus initus="1\r\n2\r\n" amplitudo_latitudo="5" amplitudo_altitudo="2" historia="1" cursor_y="1" textus="2"/>
+  </casus>
+
+  <!-- ED 3 (Ghostty eraseHistory): historia vacua, schirmum intactum,
+       visus ad imum -->
+  <casus titulus="erase display 3 clears the history only" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="1\r\n2\r\n3" visum_movere="1" historia="1" visus="1"/>
+    <gradus initus="\x1B[3J" historia="0" visus="0" textus="2\n3" historia_textus="2\n3" ignota="0"/>
+    <gradus initus="\r\n4" historia="1" historia_textus="2\n3\n4"/>
+  </casus>
+
 </vectores>

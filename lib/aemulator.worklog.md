@@ -299,3 +299,43 @@ also means "the view moved" -> renamed `repingendum` (renominare
 refuses dirty files; its plan listed 6 member uses, replaced by exact
 word).
 
+## 2026-10-06 — C4: ED 3 and resize
+
+**Ghostty's rows rules (PageList.zig ~2860):** shrink = trimTrailing
+BlankRows first ("matches macOS Terminal.app"), the remainder becomes
+history; grow = pull history only if `cursor.y >= rows - 1` (else
+blank rows, cursor stays: "we don't want to pull down scrollback").
+Our old shrink cut the bottom whenever the cursor stayed visible -
+text below the cursor was lost. New vector: "shrinking keeps text
+below the cursor". Blank = no text; the trim never takes the cursor's
+own row (vector: "...never trims the cursor's own blank row").
+
+**Pull after the new size.** Re-interning a pulled row's styles can
+trigger the screen's style collection, which walks rows x columns at
+the CURRENT size. Pulling inside `schirmum_aptare` (old size) would
+leave cells beyond the old width un-renumbered. So the pull count is
+decided before (old cursor, old rows) and done after the size is set.
+
+**Index coincidence hides a missing re-intern.** Page and screen
+tables interned red in the same order -> same index, so copying page
+indices "worked". The test now interns (and erases) a yellow first,
+and compares the pulled cell with a live SGR 31 cell.
+
+**ED 3 keeps the pages.** All pages emptied, ring unchanged; the next
+line reuses the newest (re-prepared if its width differs). One-page
+fill -> ED 3 -> refill allocates nothing (plant: dropping the ring
+re-allocates - caught).
+
+
+**Found at the C4 commit: two tests leaked temporary volumes.**
+`volumen_temporarium` tries /tmp/<prefix>-1..100.volumen and returns
+NIHIL when all 100 exist. `probatio_ludus_tessera_pictor` (lt_pictor_f,
+lt_pictor_t - since 2026-10-03) and my own loopback
+`probatio_ludus_tessera_reditus` (lt_reditus, A3) never closed their
+volumes, so every run left one behind; today's runs hit 100 for the
+pictor ones and the ludus_tessera gate went red on code that had not
+changed. Fix: `volumen_claudere` at the end of both tests; the 690
+leftover files (with -shm/-wal) deleted. Two runs after: zero left.
+Lesson: a test that opens a temporary resource and passes is not done
+until it leaves nothing behind - volumen.h even says the leftover is
+the signal; nobody looked in /tmp.

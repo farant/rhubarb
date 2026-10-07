@@ -69,6 +69,8 @@ nomen structura {
     vacuum  (*visum_movere) (vacuum* t, s32 delta);
     i32     (*visus)    (vacuum* t);
     chorda  (*visus_textus) (vacuum* t, Piscina* p);
+    /* C4: mutatio magnitudinis (FALSUM si mala) */
+    b32     (*amplitudo) (vacuum* t, i32 latitudo, i32 altitudo);
 } Probandum;
 
 
@@ -491,6 +493,11 @@ exemplum_currere (
         {
             pr->scribere(t, octeti.datum, octeti.mensura);
         }
+        si (   numerum_legere(g, "amplitudo_latitudo", &x)
+            && numerum_legere(g, "amplitudo_altitudo", &y))
+        {
+            (vacuum)pr->amplitudo(t, (i32)x, (i32)y);
+        }
         si (numerum_legere(g, "visum_movere", &n))
         {
             pr->visum_movere(t, n);
@@ -639,7 +646,9 @@ exemplum_validare (
             || !effugia_sana(g, "historia_textus", &assertiones)
             || !effugia_sana(g, "visus_textus", &assertiones)
             || (stml_attributum_habet(g, "visum_movere")
-                && !numerum_legere(g, "visum_movere", &n)))
+                && !numerum_legere(g, "visum_movere", &n))
+            || (stml_attributum_habet(g, "amplitudo_latitudo")
+                != stml_attributum_habet(g, "amplitudo_altitudo")))
         {
             imprimere("  vitium '%s' gradus %d: effugium malum\n",
                 literae(exemplum, "titulus"), (integer)(i + I));
@@ -759,6 +768,18 @@ fictus_visum_movere (
 {
     (vacuum)t;
     (vacuum)delta;
+}
+
+interior b32
+fictus_amplitudo (
+    vacuum* t,
+       i32  latitudo,
+       i32  altitudo)
+{
+    (vacuum)t;
+    (vacuum)latitudo;
+    (vacuum)altitudo;
+    redde VERUM;
 }
 
 interior i32
@@ -964,6 +985,15 @@ verus_visum_movere (
        s32  delta)
 {
     aemulator_visum_movere(((Verus*)t)->a, delta);
+}
+
+interior b32
+verus_amplitudo (
+    vacuum* t,
+       i32  latitudo,
+       i32  altitudo)
+{
+    redde aemulator_amplitudo(((Verus*)t)->a, latitudo, altitudo);
 }
 
 interior i32
@@ -1190,6 +1220,7 @@ s32 principale (vacuum)
     fictus.visum_movere     = fictus_visum_movere;
     fictus.visus            = fictus_visus;
     fictus.visus_textus     = fictus_textus;
+    fictus.amplitudo        = fictus_amplitudo;
     fictus.cursor           = fictus_cursor;
     fictus.cellula          = fictus_cellula;
     fictus.altera           = fictus_altera;
@@ -1242,6 +1273,7 @@ s32 principale (vacuum)
     verus.visum_movere     = verus_visum_movere;
     verus.visus            = verus_visus;
     verus.visus_textus     = verus_visus_textus;
+    verus.amplitudo        = verus_amplitudo;
     verus.cursor           = verus_cursor;
     verus.cellula          = verus_cellula;
     verus.altera           = verus_altera;

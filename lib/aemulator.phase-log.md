@@ -323,3 +323,18 @@ snap-on-input; the clamp under eviction tested at page granularity;
 the full 10 MB measured - once history is at its limit, output
 allocates nothing. Nine plants caught.
 
+## C4 — ED 3 and resize (2026-10-06)
+
+**INTENTIO.** Resize behaves like Ghostty without reflow, with history
+in the picture: a shrink keeps what matters, a grow brings history
+back when the cursor is at the bottom, and `clear` (ED 3) empties it.
+
+Built: blank-row trimming before pushing into history on shrink (the
+old code cut the bottom and lost text below the cursor), the pull on
+grow with styles re-interned after the new size is set, ED 3 that
+keeps pages for reuse. The replayer can resize; eight of Ghostty's
+no-reflow resize tests converted. A plant on the pull's styles
+survived because page and screen tables happened to give red the same
+index - the test now forces the tables apart and compares against a
+live red cell.
+

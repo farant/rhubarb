@@ -467,6 +467,21 @@ Later phases (re-planned after A's RELATIO):
   - **C4 - ED 3 and resize:** clear scrollback; resize without reflow
     the Ghostty way (rows pushed off by a shrink enter history, a grow
     pulls them back).
+    C4 as built (Ghostty PageList resizeWithoutReflow): shrinking
+    trims trailing BLANK rows below the cursor first (never the
+    cursor's row; a background colour is not text), then the rest
+    pushes the top into history - text below the cursor survives,
+    the cursor rises with its line (before: the bottom was simply
+    cut). Growing pulls history back ONLY with the primary cursor on
+    the bottom row, after the new size is set (style re-interning
+    may collect, and collection walks the current size); pulled rows
+    get their styles re-interned and their soft-wrap back. ED 3
+    empties history (primary only), keeps the pages for reuse, view
+    to the bottom. 179 vectors (12 new: 8 Ghostty no-reflow resize,
+    4 house); replayer resize step; section XIX. 11 plants, all
+    caught after two test fixes (three replants did not compile; the
+    pulled style matched by index coincidence - now compared with a
+    live red cell).
   - **C5 - RELATIO** (and the esctest table re-run).
 - **D - full-screen v0.** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to

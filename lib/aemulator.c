@@ -420,6 +420,11 @@ historiam_addere (
     }
     pg = a->paginae_numerus > ZEPHYRUM
         ? paginam_ad(a, a->paginae_numerus - I) : NIHIL;
+    /* pagina ultima vacua (post ED 3 aut retractionem) reutitur */
+    si (pg && pg->numerus == ZEPHYRUM && pg->latitudo != a->latitudo)
+    {
+        paginam_parare(pg, a->latitudo);
+    }
     si (   !pg || pg->numerus >= pg->capacitas
         || pg->latitudo != a->latitudo)
     {
@@ -457,6 +462,68 @@ historiam_addere (
     si (a->visus > ZEPHYRUM)
     {
         a->visus++;    /* decisio XXI: eaedem lineae in visu manent */
+    }
+}
+
+/* ED 3 (Ghostty eraseHistory): historia vacua; paginae manent ad
+ * usum iterum (nihil allocatur, nihil liberatur); visus ad imum */
+interior vacuum
+historiam_delere (
+    Aemulator* a)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < a->paginae_numerus; i++)
+    {
+        paginam_ad(a, i)->numerus = ZEPHYRUM;
+    }
+    a->historia_lineae  = ZEPHYRUM;
+    a->visus            = ZEPHYRUM;
+}
+
+/* linea historiae novissima in lineam l schirmi primarii (retractio
+ * in amplitudine crescente): cellulae usque ad latitudinem minorem,
+ * stili in tabulam schirmi re-internantur, cetera vacua */
+interior vacuum
+lineam_ex_historia (
+    Aemulator* a,
+        Linea* l)
+{
+      Pagina* pg;
+     Cellula* fons;
+         i32  i;
+         i32  n;
+         i32  x;
+
+    pg = NIHIL;
+    per (i = a->paginae_numerus; i > ZEPHYRUM; i--)
+    {
+        pg = paginam_ad(a, i - I);
+        si (pg->numerus > ZEPHYRUM)
+        {
+            frange;
+        }
+    }
+    si (!pg || pg->numerus == ZEPHYRUM)
+    {
+        redde;
+    }
+    pg->numerus--;
+    a->historia_lineae--;
+    fons  = pg->cellulae + pg->numerus * pg->latitudo;
+    n     = pg->latitudo < a->latitudo ? pg->latitudo : a->latitudo;
+    lineam_vacare(l, ZEPHYRUM, a->capacitas_latitudinis, ZEPHYRUM);
+    per (x = ZEPHYRUM; x < n; x++)
+    {
+        l->cellulae[x]         = fons[x];
+        l->cellulae[x].stilus  = ZEPHYRUM;
+    }
+    l->involuta = pg->involutae[pg->numerus] != ZEPHYRUM;
+    /* stili post copiam: collectio (si fit) cellulas positas videt */
+    per (x = ZEPHYRUM; x < n; x++)
+    {
+        l->cellulae[x].stilus = stilum_internare(a,
+            &pg->stili[fons[x].stilus]);
     }
 }
 
@@ -1012,6 +1079,11 @@ schirmum_delere (
             s->cursor.pendens = FALSUM;
             frange;
         casus III:
+            /* historia solum; schirmum alterum nullam habet */
+            si (s == &a->primarium)
+            {
+                historiam_delere(a);
+            }
             frange;
         ordinarius:
             a->ignota++;
@@ -2046,6 +2118,56 @@ aemulator_scribere (
     }
 }
 
+/* linea sine textu (stilus fundi non textus est - Ghostty) */
+interior b32
+lineam_vacuam_esse (
+     constans Aemulator* a,
+         constans Linea* l)
+{
+    i32 x;
+
+    per (x = ZEPHYRUM; x < a->latitudo; x++)
+    {
+        si (l->cellulae[x].mensura > ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* crescens cursore in ima linea (Ghostty 'pull'): k lineae historiae
+ * supra schirmum redeunt - schirmum deorsum volvitur (lineae vacuae
+ * novae imae abeunt), summae ex historia implentur, cursor descendit.
+ * Post magnitudinem novam positam: collectio stilorum dimensiones
+ * veras videt. */
+interior vacuum
+historiam_retrahere (
+    Aemulator* a,
+          i32  k)
+{
+    Schirmum* activum;
+         i32  i;
+
+    si (k == ZEPHYRUM)
+    {
+        redde;
+    }
+    activum     = a->activum;
+    a->activum  = &a->primarium;
+    regionem_deorsum(a, ZEPHYRUM, a->altitudo - I, k);
+    a->activum  = activum;
+    per (i = k; i > ZEPHYRUM; i--)
+    {
+        lineam_ex_historia(a, a->primarium.lineae[i - I]);
+    }
+    a->primarium.cursor.y += k;
+    si (a->visus > a->historia_lineae)
+    {
+        a->visus = a->historia_lineae;
+    }
+}
+
 /* schirmum unum ad magnitudinem novam (intra capacitatem) */
 interior vacuum
 schirmum_aptare (
@@ -2058,17 +2180,30 @@ schirmum_aptare (
          i32  y;
          i32  translatio;
 
-    /* cursor in schirmo manet: lineae summae abeunt (refluxus dilatus
-     * - decisio VII); volutio per indicem_movere schirmi huius */
-    si (s->cursor.y >= altitudo)
+    /* minuens (Ghostty resizeWithoutReflow, mos Terminal.app): lineae
+     * vacuae finales infra cursorem primum praeciduntur; quod restat
+     * summas in historiam mittit (textus infra cursorem servatur),
+     * cursor cum linea sua ascendit (refluxus dilatus - decisio VII) */
+    si (altitudo < a->altitudo)
     {
-        activum     = a->activum;
-        a->activum  = s;
-        translatio  = s->cursor.y - altitudo + I;
-        regionem_sursum(a, ZEPHYRUM, a->altitudo - I, translatio,
-                        VERUM);
-        s->cursor.y  = altitudo - I;
-        a->activum   = activum;
+        translatio = a->altitudo - altitudo;
+        per (y = a->altitudo - I;
+             y > s->cursor.y && translatio > ZEPHYRUM
+             && lineam_vacuam_esse(a, s->lineae[y]);
+             y--)
+        {
+            translatio--;
+        }
+        si (translatio > ZEPHYRUM)
+        {
+            activum     = a->activum;
+            a->activum  = s;
+            regionem_sursum(a, ZEPHYRUM, a->altitudo - I, translatio,
+                            VERUM);
+            a->activum  = activum;
+            s->cursor.y = s->cursor.y >= translatio
+                        ? s->cursor.y - translatio : ZEPHYRUM;
+        }
     }
     si (latitudo > a->latitudo)
     {
@@ -2103,6 +2238,7 @@ aemulator_amplitudo (
            i32   cap_lat;
            i32   cap_alt;
            i32   y;
+           i32   trahendae;
 
     si (   !a || latitudo < I || latitudo > LATUS_MAXIMUM
         || altitudo < I || altitudo > LATUS_MAXIMUM)
@@ -2163,10 +2299,22 @@ aemulator_amplitudo (
         a->capacitas_latitudinis  = cap_lat;
         a->capacitas_altitudinis  = cap_alt;
     }
+    /* retractio: solum crescens, cursore primarii in ima linea */
+    trahendae = ZEPHYRUM;
+    si (   altitudo > a->altitudo
+        && a->primarium.cursor.y + I >= a->altitudo)
+    {
+        trahendae = altitudo - a->altitudo;
+        si (trahendae > a->historia_lineae)
+        {
+            trahendae = a->historia_lineae;
+        }
+    }
     schirmum_aptare(a, &a->primarium, latitudo, altitudo);
     schirmum_aptare(a, &a->alterum, latitudo, altitudo);
     a->latitudo = latitudo;
     a->altitudo = altitudo;
+    historiam_retrahere(a, trahendae);
     /* Ghostty resize: regio et sistae ad ordinem redeunt */
     a->regio_summa   = ZEPHYRUM;
     a->regio_ultima  = altitudo - I;

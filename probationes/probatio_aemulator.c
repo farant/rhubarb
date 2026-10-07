@@ -532,6 +532,73 @@ visum_probare (vacuum)
     CREDO_VERUM(aemulator_historia(a) <= X * M + DCCCLXXX);
 }
 
+/* XIX: ED 3 et retractio historiae (C4) */
+interior vacuum
+retrahere_probare (vacuum)
+{
+           Aemulator* a;
+    AemulatorCellula  c;
+    StilusTerminalis  rubrum;
+    StilusTerminalis  nativus;
+      memoriae_index  usus;
+                 i32  i;
+
+    imprimere("\n--- XIX: ED 3 et retractio (C4) ---\n");
+    stilus_nativus(&nativus);
+    /* stilus et involutio cum linea redeunt. Flavus primum in tabula
+     * schirmi (index I) deletus: rubrum in pagina index I, in schirmo
+     * II - retractio sine re-internatione flavum redderet */
+    a = cum_historia(V, II, M * M);
+    scribere(a, "\x1B[33mY\x1B[0m\x1B[2K\r");
+    scribere(a, "\x1B[31mabcdefg\x1B[0m\r\n\n\n");
+    CREDO_AEQUALIS_I32(aemulator_historia(a), III);
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM(aemulator_amplitudo(a, V, V));
+    CREDO_AEQUALIS_I32(aemulator_historia(a), ZEPHYRUM);
+    CREDO_VERUM(textus_est(a, "abcde\nfg"));
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    rubrum = c.stilus;
+    CREDO_FALSUM(stilus_aequalis(&rubrum, &nativus));
+    CREDO_VERUM(aemulator_cellula(a, I, I, &c));
+    CREDO_VERUM(stilus_aequalis(&c.stilus, &rubrum));
+    /* rubrum vere rubrum: cellula viva SGR 31 comparatur */
+    scribere(a, "\x1B[5;5H\x1B[31mR\x1B[0m");
+    CREDO_VERUM(aemulator_cellula(a, IV, IV, &c));
+    CREDO_VERUM(stilus_aequalis(&c.stilus, &rubrum));
+    CREDO_VERUM(aemulator_visus_involuta(a, ZEPHYRUM));
+    CREDO_FALSUM(aemulator_visus_involuta(a, I));
+    /* linea latior in schirmum angustius: praeciditur */
+    a = cum_historia(XX, II, M * M);
+    scribere(a, "abcdefghijklmnop\r\n\r\n");
+    CREDO_VERUM(aemulator_amplitudo(a, VI, II));
+    CREDO_VERUM(aemulator_amplitudo(a, VI, III));
+    CREDO_VERUM(textus_est(a, "abcdef"));
+    /* ED 3 in schirmo altero historiam primarii non tangit */
+    a = cum_historia(V, II, M * M);
+    scribere(a, "1\r\n2\r\n3\x1B[?1049h\x1B[3J\x1B[?1049l");
+    CREDO_AEQUALIS_I32(aemulator_historia(a), I);
+    /* ED 3 deinde impletio: pagina reutitur, nihil allocatur */
+    a = cum_historia(XX, V, I);
+    lineas_numeratas(a, CCC);
+    scribere(a, "\x1B[3J");
+    usus = piscina_summa_usus(piscina);
+    lineas_numeratas(a, CCC);
+    scribere(a, "\x1B[3J");
+    lineas_numeratas(a, CCC);
+    CREDO_VERUM(piscina_summa_usus(piscina) == usus);
+    CREDO_VERUM(aemulator_historia(a) > ZEPHYRUM);
+    /* visus post retractionem intra historiam */
+    a = cum_historia(V, II, M * M);
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        scribere(a, "x\r\n");
+    }
+    aemulator_visum_movere(a, M);
+    CREDO_VERUM(aemulator_amplitudo(a, V, VIII));
+    CREDO_VERUM(aemulator_visus(a) <= aemulator_historia(a));
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+}
+
 s32 principale (vacuum)
 {
                 Aemulator* a;
@@ -876,6 +943,7 @@ s32 principale (vacuum)
     lectionem_probare();
     historiam_probare();
     visum_probare();
+    retrahere_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     /* historia pagina una (limes I octeti): calefactio lineas in

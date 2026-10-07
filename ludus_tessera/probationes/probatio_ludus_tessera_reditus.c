@@ -445,6 +445,9 @@ principale (vacuum)
         CREDO_VERUM(quadrum(&r));
         CREDO_VERUM(conferre(&r, "IV ictus"));
         CREDO_AEQUALIS_I32(aemulator_ignota(r.aem), ZEPHYRUM);
+        /* volumen temporarium claudendum (aliter /tmp/lt_reditus-N
+         * cumulantur; volumen_temporarium post C deficit) */
+        volumen_claudere(app.volumen);
     }
 
     credo_imprimere_compendium();

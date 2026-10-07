@@ -264,6 +264,12 @@ principale (vacuum)
             XIX).signum, (i32)'p');
     }
 
+    /* volumina temporaria claudenda: aliter /tmp/lt_pictor_*-N
+     * cumulantur et post C cursus volumen_temporarium deficit (vitium
+     * inventum 2026-10-06, porta commissionis aemulator C4) */
+    volumen_claudere(f.volumen);
+    volumen_claudere(t.volumen);
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
