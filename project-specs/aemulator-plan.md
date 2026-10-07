@@ -644,6 +644,20 @@ Later phases (re-planned after A's RELATIO):
     for modes Ghostty stores but does not act on (5, 12, 1007 ...).
   - **D3 - DEC special graphics:** G0/G1 designation (ESC ( 0 ...),
     SO/SI, line drawing.
+    D3 as built: one charset state per emulator (Ghostty copies it on
+    every screen switch, so equivalent): G0-G3 (UTF-8 default, ASCII
+    'B', British 'A', DEC Special Graphics '0'), GL / GR, single shift.
+    SCS `ESC ( ) * +`, SO/SI, LS2/LS3, LS1R-LS3R (GR stored, unused -
+    high bytes are UTF-8, as in Ghostty), SS2/SS3. Mapped AFTER the
+    width (Ghostty: width of the unmapped rune; outside a byte -> space).
+    REP repeats the unmapped rune under the current set. DECSC/DECRC
+    save it, RIS and DECSTR reset it (DECSTR per VT510/xterm - Ghostty
+    has no DECSTR). Lexer bug found and fixed (lib/series_terminalis
+    worklog): high bytes vanished after ESC N|O; now FUGA, byte kept,
+    and the core treats that FUGA as a single shift. 232 vectors (+12:
+    5 Ghostty, one checks the whole 31-glyph table); 16 plants caught
+    (+3 lexer tests). esctest unchanged (264; it has no charset tests -
+    vttest in D7). tessera amalgam regenerated.
   - **D4 - kitty keyboard flags** (decision 27) + its query.
   - **D5 - colour queries** (decision 28; configuration addition for
     Fran's approval).

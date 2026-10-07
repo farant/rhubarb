@@ -1173,4 +1173,78 @@
     <gradus initus="\x1B[?5h" ignota="1"/>
   </casus>
 
+  <!-- ==================== D3: copiae characterum ==================== -->
+
+  <!-- Ghostty print charset: configureCharset(.G0, .utf8) seriem non
+       habet (utf8 = ordinarius), ergo backtick secundus sub ordinario -->
+  <casus titulus="print charset" fons="Terminal.zig:6896" latitudo="20" altitudo="2">
+    <gradus initus="\x1B)0\x1B*0\x1B+0``\x1B(B`\x1B(0`" textus="```\xE2\x97\x86"/>
+  </casus>
+
+  <!-- latitudo ex runa NON versa (lata), cellula spatium -->
+  <casus titulus="print charset outside of ASCII" fons="Terminal.zig:6925" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0`\xF0\x9F\x98\x80" textus="\xE2\x97\x86 " cursor_x="3">
+      <cellula x="1" y="0" textus=" " latitudo="lata"/>
+    </gradus>
+  </casus>
+
+  <!-- invokeCharset(.GL, .G1, false) = SO; .G0 = SI -->
+  <casus titulus="print invoke charset" fons="Terminal.zig:6950" latitudo="20" altitudo="2">
+    <gradus initus="\x1B)0`\x0E``\x0F`" textus="`\xE2\x97\x86\xE2\x97\x86`"/>
+  </casus>
+
+  <!-- invokeCharset(.GL, .G1, true): G1 nullam seriem singularem habet
+       - hic G2 per SS2 (ESC N) -->
+  <casus titulus="print invoke charset single" fons="Terminal.zig:6974" latitudo="20" altitudo="2">
+    <gradus initus="\x1B*0`\x1BN``" textus="`\xE2\x97\x86`"/>
+  </casus>
+
+  <!-- REP runam NON versam cum copia currenti iterat -->
+  <casus titulus="printSlice charset single shift and repeat" fons="Terminal.zig:14421" latitudo="10" altitudo="2">
+    <gradus initus="\x1B(0\x1B*A\x1BN#q\x1B[2b\x1B(B\x1B[2b" textus="\xC2\xA3\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80qq"/>
+  </casus>
+
+  <!-- tabula tota DEC Special Graphics 0x60..0x7E; '_' manet -->
+  <casus titulus="dec special graphics full table" fons="domus" latitudo="40" altitudo="2">
+    <gradus initus="\x1B(0_`abcdefghijklmnopqrstuvwxyz{|}~" textus="_\xE2\x97\x86\xE2\x96\x92\xE2\x90\x89\xE2\x90\x8C\xE2\x90\x8D\xE2\x90\x8A\xC2\xB0\xC2\xB1\xE2\x90\xA4\xE2\x90\x8B\xE2\x94\x98\xE2\x94\x90\xE2\x94\x8C\xE2\x94\x94\xE2\x94\xBC\xE2\x8E\xBA\xE2\x8E\xBB\xE2\x94\x80\xE2\x8E\xBC\xE2\x8E\xBD\xE2\x94\x9C\xE2\x94\xA4\xE2\x94\xB4\xE2\x94\xAC\xE2\x94\x82\xE2\x89\xA4\xE2\x89\xA5\xCF\x80\xE2\x89\xA0\xC2\xA3\xC2\xB7"/>
+  </casus>
+
+  <!-- SS3 (ESC O) et LS2/LS3 (ESC n / ESC o); GR (LS1R/LS2R/LS3R)
+       servatur, nihil pingit -->
+  <casus titulus="single shift three and locking shifts" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B+0\x1BOqq" textus="\xE2\x94\x80q"/>
+    <gradus initus="\x1B+B\x1B*0\x1Bnqq\x1Bo\x1B+0q\x0Fq" textus="\xE2\x94\x80q\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80q"/>
+    <gradus initus="\x1B~\x1B}\x1B|" ignota="0"/>
+  </casus>
+
+  <!-- DECSC/DECRC copias et GL servant (Ghostty saveCursor .charset) -->
+  <casus titulus="decsc saves charsets" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0\x1B7\x1B(B\x1B8q" textus="\xE2\x94\x80"/>
+    <gradus initus="\x1B(B\x1B)0\x0E\x1B7\x0F\x1B8q" textus="\xE2\x94\x80\xE2\x94\x80"/>
+  </casus>
+
+  <!-- RIS et DECSTR (VT510/xterm: G0-G3 ASCII, GL = G0) -->
+  <casus titulus="ris and decstr reset charsets" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0\x1Bcq" textus="q"/>
+    <gradus initus="\x1B)0\x0E\x1B[!pq" textus="qq"/>
+  </casus>
+
+  <!-- schirmum alterum copias secum fert (Ghostty switchScreen) -->
+  <casus titulus="alternate screen carries charsets" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0\x1B[?1049hq" textus="\xE2\x94\x80" altera="verum"/>
+  </casus>
+
+  <!-- SS2 ante runam UTF-8 (octetus altus post ESC N): Ghostty runam
+       sub G2 imprimit - extra octetum = spatium (latum) -->
+  <casus titulus="single shift before a utf-8 rune" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B*0\x1BN\xF0\x9F\x98\x80q" textus=" q" cursor_x="3">
+      <cellula x="0" y="0" textus=" " latitudo="lata"/>
+    </gradus>
+  </casus>
+
+  <!-- finale ignotum (ESC ( K, Germanica): ignotum, nihil mutat -->
+  <casus titulus="unknown charset designation" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(Kq" textus="q" ignota="1"/>
+  </casus>
+
 </vectores>

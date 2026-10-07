@@ -408,3 +408,26 @@ the replayer agrees (220 viridia after D2).
 ICH (`cellulas_inserere`) moved above the print path - IRM calls it
 (the file has no forward declarations).
 
+## 2026-10-07 — D3: charsets
+
+**Width before mapping.** Ghostty computes the width from the unmapped
+rune and maps in printCell, so under DEC graphics an emoji becomes a
+WIDE cell holding a space (vector "print charset outside of ASCII").
+Mapping first would make it narrow - plant Q2 checks the order.
+
+**Single shift and REP.** The shift is consumed by the next printed
+cell only (zero-width runes return before mapping). REP keeps the
+UNMAPPED previous rune and maps it again under the current set
+(Ghostty test 14421: `q` repeats as `─` under DEC, then `q` under ASCII).
+
+**SS lexeme.** Our lexer delivers `ESC N x` as one SS lexeme; the core
+sets the shift and prints the printable bytes after the introducer
+(normally just `x`). `ESC N` + UTF-8 used to lose the rune in the lexer
+(see lib/series_terminalis.worklog.md); now it arrives as FUGA with
+introducer N, which the core treats the same way.
+
+**DECSTR resets charsets** (VT510 table, xterm) - Ghostty has no DECSTR.
+
+**Weak vector found by plant Q15:** LS2 landing in G3 survived while G2
+and G3 held the same set; G3 now differs in that step.
+

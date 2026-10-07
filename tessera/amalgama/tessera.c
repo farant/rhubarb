@@ -10338,8 +10338,11 @@ tessera_series_lexema_proximum (
             }
         }
 
-        /* ---- ESC + octetus altus: ESC solus (alterum + UTF-8) ---- */
-        si (lx->status == STATUS_FUGAE && c >= 0x80)
+        /* ---- ESC + octetus altus: ESC solus (alterum + UTF-8); idem
+         * in SS (ESC N|O + octetus altus - olim tacite periebat,
+         * aemulator D3): FUGA, octetus non consumptus ---- */
+        si (   (lx->status == STATUS_FUGAE || lx->status == STATUS_SS)
+            && c >= 0x80)
         {
             _fugam_implere(lx, l);
             lx->status = STATUS_SOLUM;

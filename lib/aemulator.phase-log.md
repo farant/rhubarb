@@ -513,3 +513,15 @@ one snapshot struct (`aemulator_modi`) for D6. esctest 245 -> 264.
 One honest loss: a test that passed only because we never answered
 DECRQM now fails for its real reason (no conformance levels).
 
+## D3 — DEC special graphics (2026-10-07)
+
+**INTENTIO.** Box drawing for htop, dialog and friends: the four
+charset slots, the shifts that invoke them, and the line-drawing table.
+
+Small and table-driven, from Ghostty's charsets.zig and its tests. The
+interesting part was underneath: the single-shift vector with an emoji
+after `ESC N` showed the shift landing on the NEXT character - the
+lexer had been silently eating high bytes in its SS state since it was
+written. Fixed there (FUGA, byte kept), with tests in the lexer's own
+suite and the tessera amalgam regenerated.
+

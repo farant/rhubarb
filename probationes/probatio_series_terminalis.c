@@ -412,6 +412,12 @@ s32 principale (vacuum)
         "FUGA i=[ C=\\x1b[1 | CSI i=[ f=A"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b\xc3\xa9",
         "FUGA C=\\x1b | IMP T=\\xc3\\xa9"));
+    /* SS + octetus altus: FUGA, octetus NON consumptus (aemulator D3 -
+     * olim octeti alti in statu SS tacite peribant) */
+    CREDO_VERUM (_videre(lx, piscina, "\x1bN\xc3\xa9",
+        "FUGA i=N C=\\x1bN | IMP T=\\xc3\\xa9"));
+    CREDO_VERUM (_videre(lx, piscina, "\x1bO2\xc3\xa9",
+        "FUGA i=O C=\\x1bO2 | IMP T=\\xc3\\xa9"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b_Gi=1;OK\x1b\\",
         "APC i=_ T=Gi=1;OK"));
     CREDO_VERUM (_videre(lx, piscina, "\x1b[!\"#$%&p",
@@ -561,6 +567,8 @@ s32 principale (vacuum)
     CREDO_VERUM (_videre(li, piscina, "\x1b_Gi=1;OK\x1b\\",
         "APC i=_ T=Gi=1;OK"));
     CREDO_VERUM (_videre(li, piscina, "\x1bOA", "SS i=O f=A"));
+    CREDO_VERUM (_videre(li, piscina, "\x1bO\xc3\xa9",
+        "FUGA i=O C=\\x1bO | IMP T=\\xc3\\xa9"));
     CREDO_VERUM (_videre(li, piscina, "\x1b\x1b[A",
         "CSI i=[ f=A PRAE"));
     /* modus scriptionis immutatus: ESC N = SS2, ESC SP = intermedium */

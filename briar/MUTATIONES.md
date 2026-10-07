@@ -66,7 +66,9 @@ Leges chartae:
   reducit; D1: HPR/VPR, REP, SCOSC/SCORC, modi 47/1047/1048, DECALN,
   RIS; D2: modi in tabula (DECRQM), DECOM, IRM, involutio retro
   45/1045, ESC = / ESC >, `aemulator_modi` (AemulatorModi, AemulatorMus,
-  AemulatorMusForma) pro hospite. Series ceterae
+  AemulatorMusForma) pro hospite; D3: copiae characterum (G0-G3, SO/SI,
+  SS2/SS3, DEC Special Graphics). series_terminalis: octeti alti post
+  ESC N|O non iam pereunt (FUGA). Series ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex
