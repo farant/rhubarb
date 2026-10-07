@@ -525,3 +525,50 @@ asks for `b'PATH'`) were noted as `E	b'PATH'`; titles are decoded now
 (pythonica assertion added; red before the fix). The copy assertion now
 watches a dedicated variable (LECTIONES_PROBATIO_COPIA), since
 get_exec_path legitimately notes PATH.
+
+## XI. Results (T12, 2026-10-07)
+
+**radix: recorded "never", for now.** No stored trace; estimated with
+the aedilis verdict's trace (the same root tests) plus radix's own
+subtrees (`compile_libraries` builds every lib/*.c: arbor lib/, arbor
+probationes/, the runner, compile_tests_fontes_generata.sh,
+tools/cursor_communis.sh, vendor/): reused 16/40 (40%), 36/150 (24%);
+voiders lib/ and the generated source list (20 each). An upper bound
+twice over: the runner's effectus key has 87 unresolved sites
+(IGNOTUM until resolved), and radix RUNS probatio_git, which reads the
+live HEAD (the aedilis gate skips running it because radix does) - an
+honest radix key changes with every commit: ceiling 0% until …F654M
+(fixture repository). Not migrated.
+
+**Per gate** (tempora.tsv, 110 commits 2026-10-02 - 10-07, before
+these changes; reuse from `tools/reusus_retro.sh` over 150 commits):
+
+| gate | runs | mean s | after slice 5 | saved in the window |
+|---|---:|---:|---|---:|
+| fabrica (oracle) | 34 | 178 | retired (T7b): generata judges through fabrica | ~6060 s |
+| generata | 17 | 117 | `bin/fabrica` judge, ~17 s (T7a), no verdict needed | ~1700 s |
+| aedilis | 28 | 163 | verdict, reuse 42% (T5b) | ~1900 s |
+| toml | 67 | 41 | verdict, reuse 68% -> 78% (T2-T4) | ~2100 s* |
+| oratio | 17 | 100 | not migrated: corpus gate, ceiling 2% (T8) | - |
+| pythonica | 24 | 369 | not migrated: live repo in key, ceiling 0% (T11) | - |
+| radix | 32 | 74 | not migrated: ceiling 0% (probatio_git) | - |
+
+\* at the measured 78%; the pilot already reused at 24% before.
+Roughly 3.2 of the window's 7.7 gate-hours (§0) would not have run -
+about 40%, most of it from retiring the generata/oracle pair rather
+than from verdict reuse.
+
+**Against §VIII.** toml measured before/after: done. aedilis migrated
+with plants and three audits: done. fabrica and generata: not migrated
+but RETIRED into fabrica's own judgment (Fran, re-plan T6/T7) - the
+gate count fell by one. oratio: measured, not migrated (Fran, T8).
+pythonica: read ledger built (T10); migration has a named blocker - the
+live repository in the key (…M651F). Per-gate table: above. Park and
+desideratum: see the ledger at T12.
+
+**What the slice taught.** Reuse is capped by the widest honest input,
+not by the tool: a gate that reads the live repository, the whole
+corpus, or every lib/*.c cannot be reused however precise the trace.
+Where a second judge duplicated a first, retiring it saved more than any
+verdict. And a gate run under the before/after photograph is the
+sharpest test-hygiene audit the house has (T5b's seven gaps).

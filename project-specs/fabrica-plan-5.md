@@ -186,11 +186,12 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
 
 ### Task T12: close
 
-- [ ] radix: retro reuse rate measured (T4 tool) -> migrate or record
-  "never" with the number.
-- [ ] Per-gate savings table and reuse rates in spec §XI; worklogs,
+- [x] radix: retro reuse rate measured (T4 tool) -> migrate or record
+  "never" with the number. (24%/150 as an upper bound; 0% while it runs
+  probatio_git - recorded "never, for now", spec §XI.)
+- [x] Per-gate savings table and reuse rates in spec §XI; worklogs,
   MEMORY; ledger: park closed, J6HF fulfilled or re-filed, shadow passes
-  (…2VP7) next. **Commit.**
+  (…2VP7) next. **Commit.** (J6HF fulfilled; opera closed; park closed after this commit.)
 
 ## Not in this plan (stated)
 

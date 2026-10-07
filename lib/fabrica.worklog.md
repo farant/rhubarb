@@ -2014,3 +2014,22 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
 - zsh: a space-separated list in a variable does not split - my plant
   backups silently copied nothing; the plants were on clean files so
   `git checkout -- <paths>` restored them. Back up with explicit paths.
+
+## 2026-10-07 - fabrica slice 5 closed (T12)
+
+- Outcome in one line: a gate's reuse is capped by its WIDEST honest
+  input. aedilis (42%) and toml (78%) became verdicts; oratio (whole
+  corpus), pythonica and radix (live HEAD through snapshots and
+  probatio_git) cannot be reused however precise the trace, and were
+  recorded with their blockers instead of migrated.
+- The biggest single saving was not a verdict: generata was a second
+  judge of artifacts fabrica already judged; retiring it (and the
+  oracle that compared the two) removed ~2.2 of the window's 7.7
+  gate-hours.
+- Tools left behind: tools/reusus_retro.sh (retro reuse from git
+  history, any trace + added rules - used for radix without a trace),
+  pythonica/profilare.py (where pythonica's time goes),
+  pythonica/lectiones.py (Python read ledger), tools/generata_iudicare.sh.
+- Next for fabrica: shadow passes (park …2VP7); the open desiderata in
+  park …JQFH2 (one test scratch area, snapshot speedups, fixture
+  repositories) are what would lift the 0% ceilings.
