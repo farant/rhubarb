@@ -166,9 +166,13 @@ s32 principale (vacuum)
         constans NodusTabulae* n;
 
         imprimere("\n--- Probans quaestionem et fontem ---\n");
-        CREDO_AEQUALIS_I32 (tabula_nodorum_numerus(), CCL);
-        CREDO_NIHIL (tabula_nodorum_nodus(CCL));
-        CREDO_NON_NIHIL (tabula_nodorum_nodus(CCXLIX));
+        /* A002863 usque ad XIII: 1 + 249 + 552 + 2176 + 9988 */
+        CREDO_AEQUALIS_I32 (tabula_nodorum_numerus(), XII * M + CMLXVI);
+        CREDO_NIHIL (tabula_nodorum_nodus(XII * M + CMLXVI));
+        CREDO_NON_NIHIL (tabula_nodorum_nodus(XII * M + CMLXV));
+        CREDO_VERUM (strcmp(tabula_nodorum_nodus(XII * M
+            + CMLXV)->titulus,
+            "13n_5110") == ZEPHYRUM);
         n = tabula_nodorum_quaere("8_20");
         CREDO_NON_NIHIL (n);
         CREDO_VERUM (n != NIHIL
@@ -199,25 +203,33 @@ s32 principale (vacuum)
     {
         i32 numeri[VI] = { ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
             ZEPHYRUM, ZEPHYRUM };
-        i32 per_transitus[XI] = { ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
-            ZEPHYRUM,
-            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
-            ZEPHYRUM };
+        i32 numeri_omnes[VI] = { ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, ZEPHYRUM };
+        i32 per_transitus[XIV];
         i32 k;
         b32 intra = VERUM;
 
         imprimere("\n--- Probans symmetriam et numeros ---\n");
-        per (k = ZEPHYRUM; k < CCL; k++)
+        per (k = ZEPHYRUM; k < XIV; k++)
+        {
+            per_transitus[k] = ZEPHYRUM;
+        }
+        per (k = ZEPHYRUM; k < tabula_nodorum_numerus(); k++)
         {
             constans NodusTabulae* n = tabula_nodorum_nodus(k);
 
             si (   n->symmetria > TABULA_NODORUM_AMPHICHIRALIS_POSITIVA
-                || n->transitus > X)
+                || n->transitus > XIII)
             {
                 intra = FALSUM;
                 perge;
             }
-            numeri[n->symmetria]++;
+            /* numeri usque ad X ut prius (CCL nodi) */
+            si (n->transitus <= X)
+            {
+                numeri[n->symmetria]++;
+            }
+            numeri_omnes[n->symmetria]++;
             per_transitus[n->transitus]++;
         }
         CREDO_VERUM (intra);
@@ -243,6 +255,26 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (per_transitus[VIII], XXI);
         CREDO_AEQUALIS_I32 (per_transitus[IX], XLIX);
         CREDO_AEQUALIS_I32 (per_transitus[X], CLXV);
+        CREDO_AEQUALIS_I32 (per_transitus[XI], DLII);
+        CREDO_AEQUALIS_I32 (per_transitus[XII], MMCLXXVI);
+        CREDO_AEQUALIS_I32 (per_transitus[XIII], IX * M + CMLXXXVIII);
+        /* KnotInfo usque ad XIII: 4649 reversibiles, 8238 chirales, 30
+         * plene, 47 negative, 1 positive amphichiralis (12a_427) */
+        CREDO_AEQUALIS_I32 (numeri_omnes[TABULA_NODORUM_REVERSIBILIS],
+            IV * M + DCXLIX);
+        CREDO_AEQUALIS_I32 (numeri_omnes[TABULA_NODORUM_CHIRALIS],
+            VIII * M + CCXXXVIII);
+        CREDO_AEQUALIS_I32 (numeri_omnes[
+            TABULA_NODORUM_AMPHICHIRALIS_PLENA], XXX);
+        CREDO_AEQUALIS_I32 (numeri_omnes[
+            TABULA_NODORUM_AMPHICHIRALIS_NEGATIVA], XLVII);
+        CREDO_AEQUALIS_I32 (numeri_omnes[
+            TABULA_NODORUM_AMPHICHIRALIS_POSITIVA], I);
+        CREDO_VERUM (tabula_nodorum_quaere("12a_427") != NIHIL
+            && tabula_nodorum_quaere("12a_427")->symmetria
+            == TABULA_NODORUM_AMPHICHIRALIS_POSITIVA
+            && tabula_nodorum_amphichiralis(tabula_nodorum_quaere(
+                "12a_427")));
         CREDO_VERUM (tabula_nodorum_amphichiralis(tabula_nodorum_quaere(
             "0_1"))
                 && tabula_nodorum_amphichiralis(tabula_nodorum_quaere(
@@ -269,8 +301,11 @@ s32 principale (vacuum)
                    b32  ex_pd_concordes            = VERUM;
                    i32  chirales_jones_symmetrico  = ZEPHYRUM;
                    b32  chirales_noti              = VERUM;
-        /* chiralitas Jones invisibilis: 9_42, 10_48, 10_71, 10_91,
-         * 10_104, 10_125 (nodi chirales Jones symmetrico) */
+                   i32  chirales_omnes             = ZEPHYRUM;
+        /* chiralitas Jones invisibilis usque ad X: 9_42, 10_48, 10_71,
+         * 10_91, 10_104, 10_125 (nodi chirales Jones symmetrico); usque
+         * ad XIII LXXVIII (ex datis, quae columnis KnotInfo aequalia
+         * sunt) */
         constans character* chirales[VI] = { "9_42", "10_48", "10_71",
             "10_91", "10_104", "10_125" };
 
@@ -289,7 +324,7 @@ s32 principale (vacuum)
             _p("1 - 2t + 3t^2 - 2t^3 + t^4")));
         CREDO_VERUM (polynomium_aequalis(_alexander("5_1"),
             _alexander("10_132")));
-        per (k = ZEPHYRUM; k < CCL; k++)
+        per (k = ZEPHYRUM; k < tabula_nodorum_numerus(); k++)
         {
             constans NodusTabulae* n     = tabula_nodorum_nodus(k);
                    PiscinaNotatio  nota  = piscina_notare(piscina);
@@ -340,13 +375,21 @@ s32 principale (vacuum)
                         notus = VERUM;
                     }
                 }
-                si (!notus)
+                si (!notus && n->transitus <= X)
                 {
                     chirales_noti = FALSUM;
                 }
-                chirales_jones_symmetrico++;
+                si (n->transitus <= X)
+                {
+                    chirales_jones_symmetrico++;
+                }
+                chirales_omnes++;
             }
-            si (   n->transitus > ZEPHYRUM && (
+            /* recomputatio ex PD: omnes usque ad X, deinde quisque
+             * XXXVII-us (tabula tota = officium generatoris, porta
+             * generata eam octetim iudicat) */
+            si (   n->transitus > ZEPHYRUM
+                && (n->transitus <= X || k % XXXVII == ZEPHYRUM) && (
                    !laqueus_alexander_ex_pd(tabula_nodorum_pd(n),
                     n->transitus, piscina, &a2)
                 || !polynomium_normale(a2, piscina, &a2)
@@ -366,6 +409,7 @@ s32 principale (vacuum)
         CREDO_VERUM (amphichirales_symmetrici);
         CREDO_VERUM (ex_pd_concordes);
         CREDO_AEQUALIS_I32 (chirales_jones_symmetrico, VI);
+        CREDO_AEQUALIS_I32 (chirales_omnes, LXXVIII);
         CREDO_VERUM (chirales_noti);
     }
 
@@ -428,11 +472,15 @@ s32 principale (vacuum)
         /* J(5_1) = J(10_132*): chiralitas paris fixa */
         CREDO_VERUM (_continet_primum(a, n, "10_132", VERUM));
         /* coincidentiae Jones tabulae Rolfsen notae (Alexander quoque
-         * communis): par quisque bis agnoscitur */
+         * communis): usque ad XIII 8_8 et 10_40 socium tertium habent
+         * (13n_1836, 12n_412) */
         {
-            constans character* paria[V][II] = { { "5_1", "10_132" },
-                { "8_8", "10_129" }, { "8_16", "10_156" },
-                { "10_25", "10_56" }, { "10_40", "10_103" } };
+            constans character* paria[V][III] = { { "5_1", "10_132",
+                "" },
+                { "8_8", "10_129", "13n_1836" }, { "8_16", "10_156",
+                    "" },
+                { "10_25", "10_56", "" }, { "10_40", "10_103",
+                    "12n_412" } };
                            i32 m;
                            b32 paria_bene = VERUM;
 
@@ -440,14 +488,21 @@ s32 principale (vacuum)
             {
                 constans NodusTabulae* x = tabula_nodorum_quaere(
                     paria[m][ZEPHYRUM]);
+                                   i32 membra = paria[m][II][ZEPHYRUM]
+                                       == '\0' ? II : III;
 
                 n = tabula_nodorum_agnoscere(t, _p(x->alexander),
                     _p(x->jones), piscina, a, XVI);
-                si (   n != II
+
+                si (   n != membra
                     || !_continet_primum(a, n, paria[m][ZEPHYRUM],
                         FALSUM)
                     || (!_continet_primum(a, n, paria[m][I], FALSUM)
-                        && !_continet_primum(a, n, paria[m][I], VERUM)))
+                        && !_continet_primum(a, n, paria[m][I], VERUM))
+                    || (membra == III
+                        && !_continet_primum(a, n, paria[m][II], FALSUM)
+                        && !_continet_primum(a, n, paria[m][II],
+                        VERUM)))
                 {
                     imprimere("  par non agnitum: %s %s (%u)\n",
                         paria[m][ZEPHYRUM], paria[m][I], n);
@@ -510,15 +565,18 @@ s32 principale (vacuum)
                 == ZEPHYRUM);
 
         /* speculum factoris PRIMI (non solum i == j); 10_132* pro 5_1
-         * quoque (J(5_1) = J(10_132*), Alexander communis) */
+         * quoque (J(5_1) = J(10_132*), Alexander communis); et nodus
+         * primus 13n_586* invariantes compositi habet */
         n = _compositum_quaerere(t, "3_1", VERUM, "5_1", FALSUM, a);
-        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_AEQUALIS_I32 (n, III);
+        CREDO_VERUM (_continet_primum(a, n, "13n_586", VERUM));
         CREDO_VERUM (_continet_compositum(a, n, "3_1", VERUM, "5_1",
             FALSUM)
                 && _continet_compositum(a, n, "3_1", VERUM, "10_132",
             VERUM));
         n = _compositum_quaerere(t, "3_1", VERUM, "5_1", VERUM, a);
-        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_AEQUALIS_I32 (n, III);
+        CREDO_VERUM (_continet_primum(a, n, "13n_593", VERUM));
         CREDO_VERUM (_continet_compositum(a, n, "3_1", VERUM, "5_1",
             VERUM)
             && _continet_compositum(a, n, "3_1", VERUM, "10_132",
@@ -532,7 +590,8 @@ s32 principale (vacuum)
             VERUM));
         /* amphichiralis NEGATIVA in compositis: semel */
         n = _compositum_quaerere(t, "3_1", FALSUM, "8_17", FALSUM, a);
-        CREDO_AEQUALIS_I32 (n, I);
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_VERUM (_continet_primum(a, n, "11a_176", FALSUM));
         CREDO_VERUM (_continet_compositum(a, n, "3_1", FALSUM, "8_17",
             FALSUM));
         n = _compositum_quaerere(t, "8_17", FALSUM, "8_17", FALSUM, a);
@@ -550,12 +609,28 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (tabula_nodorum_agnoscere(t, productum,
             productum_j, piscina, a, XVI), ZEPHYRUM);
 
+        /* Alexander 1: nodi Conway (11n_34) et Kinoshita-Terasaka
+         * (11n_42), mutantes - invariantes communes; Jones 1 solum
+         * nodus trivialis (supra probatum) */
+        n = tabula_nodorum_agnoscere(t, _p("1"), _jones("11n_34"),
+            piscina,
+            a, XVI);
+        CREDO_AEQUALIS_I32 (n, II);
+        CREDO_VERUM (_continet_primum(a, n, "11n_34", FALSUM)
+            && _continet_primum(a, n, "11n_42", FALSUM));
+        /* factor Alexander 1 in composito: amplitudo aequalis */
+        n = _compositum_quaerere(t, "3_1", FALSUM, "11n_34", FALSUM, a);
+        CREDO_VERUM (_continet_compositum(a, n, "3_1", FALSUM, "11n_34",
+            FALSUM)
+                && _continet_compositum(a, n, "3_1", FALSUM, "11n_42",
+            FALSUM));
+
         /* nihil: Alexander alienum */
         CREDO_AEQUALIS_I32 (tabula_nodorum_agnoscere(t, _p("t^2 + 1"),
             j31, piscina, a, XVI), ZEPHYRUM);
 
         /* omnis nodus se ipsum agnoscit, et speculum suum */
-        per (k = ZEPHYRUM; k < CCL; k++)
+        per (k = ZEPHYRUM; k < tabula_nodorum_numerus(); k++)
         {
             constans NodusTabulae* nodus  = tabula_nodorum_nodus(k);
                    PiscinaNotatio  nota   = piscina_notare(piscina);

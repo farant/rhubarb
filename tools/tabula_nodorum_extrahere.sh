@@ -3,9 +3,9 @@
 #
 # Ex instantaneo database_knotinfo 2026.10.5 (github.com/soehms/
 # database_knotinfo, data KnotInfo: C. Livingston, A. H. Moore,
-# knotinfo.math.indiana.edu) nodos usque ad X transitus extrahit:
+# knotinfo.math.indiana.edu) nodos usque ad XIII transitus extrahit:
 #
-#   probationes/fixa/knotinfo/2026.10.5/nodi_x.tsv  (COMMITTITUR)
+#   probationes/fixa/knotinfo/2026.10.5/nodi_xiii.tsv  (COMMITTITUR)
 #       titulus, numerus transituum, symmetria, codex PD - solum
 #   build/tabula_nodorum/knotinfo_polynomia.tsv      (NON committitur)
 #       titulus, Alexander, Jones KnotInfo - ad collationem solam
@@ -25,7 +25,7 @@ cd "$SCRIPT_DIR/.."
 
 SHA_FIXUM="eb511ebc61204bc1c6d700d9da42257dcbb0369cb6756e89ed978a7821867c7d"
 VERSIO="2026.10.5"
-EXITUS="probationes/fixa/knotinfo/$VERSIO/nodi_x.tsv"
+EXITUS="probationes/fixa/knotinfo/$VERSIO/nodi_xiii.tsv"
 POLYNOMIA="build/tabula_nodorum/knotinfo_polynomia.tsv"
 
 fracta() { echo "tabula_nodorum_extrahere: $1" >&2; exit 1; }
@@ -50,13 +50,14 @@ awk -F'|' -v versio="$VERSIO" -v sha="$SHA_FIXUM" -v pol="$POLYNOMIA" '
         print "# GENERATUM: tools/tabula_nodorum_extrahere.sh - NE EDITA MANU"
     }
     NR <= 2 { next }
-    $29 ~ /^[0-9]+$/ && $29 + 0 <= 10 {
+    $29 ~ /^[0-9]+$/ && $29 + 0 <= 13 {
         sym = $127; sub(/[ \t]+$/, "", sym)
         print $1 "\t" $29 "\t" sym "\t" $27
         print $1 "\t" $63 "\t" $67 > pol
     }' "$CSV" > "$EXITUS" || fracta "extractio fracta"
 
 N=$(grep -vc '^#' "$EXITUS")
-[ "$N" -eq 250 ] || fracta "nodi $N, non 250"
+# A002863: 1 + 249 (<= X) + 552 + 2176 + 9988
+[ "$N" -eq 12966 ] || fracta "nodi $N, non 12966"
 echo "tabula_nodorum_extrahere: $EXITUS ($N nodi); collatio cum polynomiis KnotInfo..."
 ./tools/tabula_nodorum_generare.sh -collatio "$POLYNOMIA" || fracta "collatio fracta"

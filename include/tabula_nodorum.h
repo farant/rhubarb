@@ -1,13 +1,16 @@
-/* tabula_nodorum.h - Tabula nodorum primorum (usque ad X transitus) et
- * agnitio per polynomia Alexander et Jones
+/* tabula_nodorum.h - Tabula nodorum primorum (usque ad XIII transitus,
+ * XIIDCCCCLXVI nodi) et agnitio per polynomia Alexander et Jones
  *
  * FONS: KnotInfo (C. Livingston, A. H. Moore, "KnotInfo: Table of Knot
  * Invariants", knotinfo.math.indiana.edu), per instantaneum
  * database_knotinfo 2026.10.5 (github.com/soehms/database_knotinfo).
  * Ex eo SOLUM nomina, numeri transituum, symmetria et codices PD
- * sumuntur (probationes/fixa/knotinfo/2026.10.5/nodi_x.tsv); polynomia
- * Alexander et Jones per laqueus ex codicibus PD COMPUTANTUR (cum
- * columnis KnotInfo in extractione collata).
+ * sumuntur (probationes/fixa/knotinfo/2026.10.5/nodi_xiii.tsv);
+ * polynomia Alexander et Jones per laqueus ex codicibus PD COMPUTANTUR
+ * (cum columnis KnotInfo in extractione collata: omnes aequales).
+ *
+ * NOMINA KnotInfo verbatim: "3_1", "10_132" usque ad X transitus;
+ * supra "11a_1", "11n_34", "13n_5110" (a alternans, n non alternans).
  *
  * CHIRALITAS: nomen "K" = diagramma tabulae (codex PD KnotInfo); "K*" =
  * eius speculum. Conventio KnotInfo = conventio physica laqueus: 3_1
@@ -17,9 +20,10 @@
  * PD referuntur.
  *
  * AGNITIO: congruentia Alexander ET Jones - non probatio typi (5_1
- * et 10_132* utrumque communicant: ambo redduntur). Nodus chiralis
- * cuius Jones symmetricus est (9_42, 10_48, 10_71, 10_91, 10_104,
- * 10_125) BIS redditur, K et K*: Jones chiralitatem non videt.
+ * et 10_132* utrumque communicant; 11n_34 et 11n_42, nodi Conway et
+ * Kinoshita-Terasaka, Alexander 1: omnes redduntur). Nodus chiralis
+ * cuius Jones symmetricus est (e.g. 9_42) BIS redditur, K et K*: Jones
+ * chiralitatem non videt.
  * Compositi DUORUM nodorum non trivialium tabulae (Alexander et Jones
  * multiplicativi) quoque quaeruntur, speculo cuiusque factoris, sed
  * orientatione summandorum neglecta (K1 # K2 et K1 # rev K2 hic idem).

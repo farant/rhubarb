@@ -2,7 +2,7 @@
 # tools/tabula_nodorum_generare.sh - tabula nodorum GENERATA
 #
 # lib/tabula_nodorum_data.c ex extracto KnotInfo fixo
-# (probationes/fixa/knotinfo/2026.10.5/nodi_x.tsv: nomina, symmetria,
+# (probationes/fixa/knotinfo/2026.10.5/nodi_xiii.tsv: nomina, symmetria,
 # codices PD) per tools/tabula_nodorum_generare.c: polynomia Alexander
 # et Jones per laqueus computantur.
 #
@@ -20,7 +20,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$RADIX_DIR"
 
-FIXUM="probationes/fixa/knotinfo/2026.10.5/nodi_x.tsv"
+FIXUM="probationes/fixa/knotinfo/2026.10.5/nodi_xiii.tsv"
 EXITUS="lib/tabula_nodorum_data.c"
 MODUS=scribere
 POLYNOMIA=""

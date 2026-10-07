@@ -1,13 +1,14 @@
 /* tools/tabula_nodorum_generare.c - tabula nodorum GENERATA
  *
  * Ex extracto KnotInfo fixo (probationes/fixa/knotinfo/<versio>/
- * nodi_x.tsv: titulus, transitus, symmetria, codex PD) polynomia
+ * nodi_xiii.tsv: titulus, transitus, symmetria, codex PD) polynomia
  * Alexander (forma normalis) et Jones per laqueus COMPUTAT et
  * lib/tabula_nodorum_data.c scribit. Polynomia KnotInfo non leguntur
  * nisi in modo -collatio (extractio sola, plagula non commissa).
  *
- * Usus: tabula_nodorum_generare <nodi_x.tsv> <exitus.c>
- *       tabula_nodorum_generare -collatio <nodi_x.tsv> <polynomia.tsv>
+ * Usus: tabula_nodorum_generare <nodi_xiii.tsv> <exitus.c>
+ *       tabula_nodorum_generare -collatio <nodi_xiii.tsv>
+ *           <polynomia.tsv>
  * Exitus: 0 bene · 1 discrepantia (collatio) · 2 usus, lectio aut
  * calculus.
  */
@@ -20,7 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define NODI_MAXIMI    CD
+#define NODI_MAXIMI    (XIV * M)
 #define LINEA_MAXIMA   (VIII * M)
 #define ORAE_MAXIMAE   (VIII * X)
 
@@ -319,20 +320,37 @@ scribere (
 }
 
 /* forma KnotInfo -> forma polynomium_ex_chorda: "t^(-2)-t^(-1)+ 1-3*t"
- * -> "t^-2-t^-1+1-3t" (spatia, '*', parentheses absunt) */
+ * -> "t^-2-t^-1+1-3t" (spatia, '*', parentheses absunt); supra X
+ * transitus KnotInfo "N/t" et "N/t^K" scribit -> "Nt^-1", "Nt^-K" */
 interior chorda
 alienum_purgare (
     constans character* textus,
                Piscina* piscina)
 {
     character* alveus = (character*)piscina_allocare(piscina,
-        (memoriae_index)strlen(textus) + I);
+        (memoriae_index)(II * strlen(textus) + I));
           i32 n = ZEPHYRUM;
 
     per (; *textus != '\0'; textus++)
     {
-        si (   *textus != ' ' && *textus != '*' && *textus != '('
-            && *textus != ')')
+        si (*textus == '/' && textus[I] == 't')
+        {
+            textus++;
+            alveus[n++] = 't';
+            alveus[n++] = '^';
+            alveus[n++] = '-';
+            si (textus[I] == '^')
+            {
+                textus++;
+            }
+            alioquin
+            {
+                alveus[n++] = '1';
+            }
+        }
+        alioquin si (   *textus != ' ' && *textus != '*'
+                     && *textus != '('
+                     && *textus != ')')
         {
             alveus[n++] = *textus;
         }
@@ -438,7 +456,7 @@ principale (
     si (argc != III)
     {
         fracta("usus: tabula_nodorum_generare [-collatio] ",
-            "nodi_x.tsv (exitus.c | polynomia.tsv)");
+            "nodi_xiii.tsv (exitus.c | polynomia.tsv)");
     }
     fixum_legere(argv[I], piscina);
     scribere(argv[I], argv[II]);

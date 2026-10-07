@@ -370,7 +370,7 @@
     <vestigium via="build/tabula_nodorum_generare.dSYM"/>
     <ingressus genus="fasciculus" via="tools/tabula_nodorum_generare.sh"/>
     <ingressus genus="fasciculus" via="tools/tabula_nodorum_generare.c"/>
-    <ingressus genus="fasciculus" via="probationes/fixa/knotinfo/2026.10.5/nodi_x.tsv"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/knotinfo/2026.10.5/nodi_xiii.tsv"/>
     <ingressus genus="fasciculus" via="tools/vexilla.sh"/>
     <ingressus genus="fasciculus" via="include/anulus.h"/>
     <ingressus genus="fasciculus" via="include/chorda.h"/>

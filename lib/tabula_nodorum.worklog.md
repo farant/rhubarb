@@ -106,3 +106,64 @@ closure (from the aedilis manifest) plus tools/vexilla.sh; the header
 documents that a chiral knot with symmetric Jones is returned twice, and
 that composites are two nontrivial factors, mirrors considered, orientation
 of the summands ignored.
+
+## 2026-10-07 - v2: up to 13 crossings (12,966 knots)
+
+Fran's decisions: keep the polynomials as strings (accept about 8.5 MB of
+committed generated data rather than change the approved struct), and keep
+KnotInfo's names VERBATIM ("11n_34", not "11n34"). Names up to 10 crossings
+are unchanged.
+
+**Data.** Same pinned CSV. The fixture is now `nodi_xiii.tsv` (2.9 MB,
+replaces `nodi_x.tsv`): 1 + 249 + 552 + 2,176 + 9,988 = 12,966 (A002863), and
+every knot has a PD code and a symmetry type. `lib/tabula_nodorum_data.c` is
+5.6 MB and compiles in 0.5 s. Generation takes about 16 s, so the generata
+stage and fabrica's heal take about 16 s longer when an input changes.
+- **Collation: 12,966 / 12,966 Alexander and Jones equal to KnotInfo**,
+  chirality included. This is an external oracle for laqueus up to 13
+  crossings.
+- **Trap:** beyond 10 crossings KnotInfo writes negative powers as `N/t` and
+  `N/t^K` (with `t^(-K)` when the coefficient is 1). The old converter gave
+  7,782 "discrepancies" that were only notation. `alienum_purgare` now
+  rewrites `N/t^K` -> `Nt^-K`. Surveyed every notation in the ≤ 13 rows
+  first; no other forms occur.
+
+**agnoscere internals (API unchanged).** Brute-force two-knot pairs would be
+about 84M per query, so:
+- primes: hash (FNV-1a) of the normalized Alexander STRING (the table stores
+  exactly polynomium_ad_chordam of the normal form). Chains are kept in table
+  order by inserting in reverse, so the output order is unchanged;
+- composites: for each table knot i with span_i <= span and det_i | det
+  (s64 filter; det = |Delta(-1)|, odd and nonzero for knots), divide exactly
+  and hash-look-up the quotient, j >= i. The filter is `<=`, not `<`:
+  **Alexander-1 knots are now in the table** (19 nontrivial ones, starting
+  11n_34 and 11n_42), and K # 11n_34 has Alexander Delta_K. Plant H2 (strict
+  `<`) misses 3_1 # 11n_34: red.
+
+**New facts pinned (from data equal to KnotInfo's columns):**
+- counts per crossing number, with symmetry totals 4,649 reversible, 8,238
+  chiral, 30 fully, 47 negative and 1 positive amphichiral (12a_427, the only
+  one up to 13 crossings);
+- 78 chiral knots up to 13 crossings with symmetric Jones (6 up to 10, as
+  before);
+- the Rolfsen coincidence groups grow: 8_8 ~ 10_129* ~ 13n_1836, and
+  10_40 ~ 10_103 ~ 12n_412; the other three stay pairs;
+- **prime knots that look like sums:** 13n_586* has the Alexander and Jones
+  of 3_1* # 5_1, 13n_593* those of 3_1* # 5_1*, and 11a_176 those of
+  3_1 # 8_17. Alexander + Jones cannot separate them;
+- Conway (11n_34) and Kinoshita-Terasaka (11n_42): Alexander 1, the same
+  Jones; both returned, and (1, 1) still names only the unknot.
+
+**Tests (103, about 15 s).**
+- Every knot: theorems (Alexander symmetric, amphichiral J(t) = J(1/t)),
+  simplification fixpoints, and self-recognition in both chiralities.
+- Recomputation from PD for all knots up to 10 crossings plus every 37th
+  above. The full recomputation is the generator's job, and the generata
+  gate compares it byte for byte.
+- Plants: H2 red; H3 (no j >= i) red with 6 failures; H4 (hash chain cut
+  after the first match) red with 16.
+
+**Demo 116's snapshot** was frozen against the 10-crossing table. Run live
+now, its output differs (the 13 unmatched pairs get names). That is the
+expected kind of library change and is documented here; the follow-up demo
+re-runs it.
