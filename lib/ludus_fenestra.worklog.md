@@ -86,3 +86,10 @@ headless artifact; the real-window smoke run (-fumus -imago) decides.
 Not covered: the macOS composite (title bar, Retina scaling) - if ever
 needed, fenestra_numerus_nativus + `screencapture -l<id>` (permission
 prompt). 6 plants caught.
+
+**Real-window smoke (Fran approved, 2026-10-06):** `pictor.sh -fumus
+-imago /tmp/pictor_fenestra.png` -> exit 0, 30 frames; the window's PNG
+is BYTE-IDENTICAL (`cmp`) to the headless one from probatio_ludus_imago.
+So headless frames are faithful screenshots, and the off-screen canvas
+corner is pictor's REAL initial view (not a headless artifact) - open
+question for Fran whether that initial pan is intended.
