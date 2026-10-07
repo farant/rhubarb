@@ -52,7 +52,7 @@ D115's Alexander-level numbers are reproduced exactly for all 12 knots: all 9,76
 | 8₁₈ | 512 | 9 (10) | **336** / 336 (288) | 0 (0) |
 
 - **7₂ now has Jones for every alternative.** Reduced diagrams brought the 21–30-crossing projections below the cap; only 20 Jones polynomials were filled from mirror partners (D115: 268).
-- **Unknots.** 1,600 more of 7₂'s trivial-Alexander alternatives are proven unknots, through the reduced diagrams: reduction to 0 crossings, or Δ = 1 on a reduced diagram of ≤ 10 crossings. The demo does not count the two routes separately. D115's unknot certificate needed an unreduced ≤ 10-crossing projection and rarely found one. 8₁₈'s 48 `unknot?` are all proven, so its class count drops from 10 to 9. 138 of 7₂'s alternatives remain `unknot?` (Δ = V = 1). Their smallest reduced diagram has 11 crossings, so greedy R1/R2 is stuck; an R3 move or a better projection would be needed.
+- **Unknots.** 1,600 more of 7₂'s trivial-Alexander alternatives are proven unknots, through the reduced diagrams: reduction to 0 crossings, or Δ = 1 on a reduced diagram of ≤ 10 crossings. The demo does not count the two routes separately. D115's unknot certificate needed an unreduced ≤ 10-crossing projection and rarely found one. 8₁₈'s 48 `unknot?` are all proven, so its class count drops from 10 to 9. 138 of 7₂'s alternatives have Δ = V = 1 but are not proven here: their smallest reduced diagram has 11 crossings, and greedy R1/R2 is stuck there. Their Jones polynomial was computed on a diagram of ≤ 20 crossings, and the Jones polynomial is known to detect the unknot for every knot up to 22 crossings (Tuzun & Sikora, *J. Knot Theory Ramifications* 27(3), 2018; extended to 24 crossings, arXiv:2003.06724). So they are unknots **by citation**, labelled `unknot (TS)` and kept apart from what this demo proves. This is the same footing as the "first Δ = 1 knots are 11n34 and 11n42" fact behind the unknot certificate. A proof inside the house would need R3 or a better minimizer.
 - **7₂ itself.** The polygon's own knot and its mirror occur 32 + 32 times; D115 saw 8 + 8, the rest hidden among the missing Jones.
 
 ### Result 3: what the construction words reach (Part C)
@@ -62,7 +62,7 @@ D115's Alexander-level numbers are reproduced exactly for all 12 knots: all 9,76
 | status | classes | alternatives |
 |---|---|---|
 | unknot (proven) | 12 | 5,084 |
-| `unknot?` (Δ = V = 1, unproven) | 1 | 138 |
+| `unknot (TS)` (Δ = V = 1 on ≤ 20 crossings; by citation) | 1 | 138 |
 | named by the table | 136 | 4,458 |
 | no table match | 26 | 88 |
 
@@ -86,14 +86,20 @@ D115's Alexander-level numbers are reproduced exactly for all 12 knots: all 9,76
 
 Every 10-crossing name here (10₁₂₅–10₁₆₀) is non-alternating, as are 8₂₀, 8₂₁ and 9₄₂–9₄₈ (Rolfsen numbering: 8₁₉–8₂₁, 9₄₂–9₄₉, 10₁₂₄–10₁₆₅). The construction words reach well beyond the alternating knots.
 
-**Consistency with theory.** Every table-named class fits span(Jones) ≤ c(K) ≤ reduced crossings for at least one candidate (asserted). A wrong name or a wrong Jones would typically break this bracket. A plant (Jones span off by 3) turned the check red.
+**Consistency with theory.** For every table-named prime class, some candidate's crossing number is at most the reduced crossing count (asserted). The reduced diagram is a diagram of the knot, so a wrong name, or a reduction that cuts too deep, would typically break this. A plant understating the reduced count by 3 turns the check red. The other half, span(Jones) ≤ c(K), holds by construction for named classes, since their Jones *is* the table knot's. It is used only for the unnamed ones.
 
 **What the table cannot name: 13 mirror pairs (26 classes, 88 alternatives), all from 7₂.**
 - All have Jones span 8–10, so none is *proven* beyond 10 crossings by the span bound alone.
 - All have reduced diagrams of 12–18 crossings (asserted: none ≤ 10).
 - They are neither prime knots of ≤ 10 crossings nor sums of two table knots.
 - So each is one of: a prime knot of ≥ 11 crossings; a sum with a factor of ≥ 11 crossings; or a sum of three or more knots. Those with Alexander degree 4 cannot be sums of three nontrivial table knots, since each factor adds ≥ 2 to the degree.
-- Several share their Alexander polynomial with a table knot but not its Jones, e.g. det 39 with 10₁₅₉'s Alexander. KnotInfo's 11–13-crossing tables would very likely name them.
+- Several share their Alexander polynomial with a table knot but not its Jones, e.g. det 39 with 10₁₅₉'s Alexander.
+- **External identification (review I, not computed by this demo).** The reviewer matched all 13 pairs by Alexander + Jones against KnotInfo's own 11–13-crossing columns in the pinned CSV. All are non-alternating primes, and each lies inside its interval [span, reduced]:
+  - 11 crossings: 11n89, 11n100, 11n102, 11n111, 11n121, and 11n11|11n112;
+  - 12 crossings: 12n347, 12n351, 12n377, 12n468, 12n805, and 12n20|12n634;
+  - mixed: 12n719|13n1575.
+
+  I re-checked two against the CSV: 11n89 = our det-61 class (exact Jones), and 11n111 = our det-7 pair (one exact, one mirror). Extending the house table to 13 crossings would let the demo itself name them.
 
 ### Result 4: stability, named (Part D)
 
@@ -105,7 +111,7 @@ Every 10-crossing name here (10₁₂₅–10₁₆₀) is non-alternating, as a
 1. **Table and simplification were the missing tools, not more search.** D115's open threads (39 "unknown" classes, 1,432 missing Jones, 1,200 + 538 `unknot?`) mostly came from having no table and from computing on unreduced projections. With both tools, 37 distinct table knots appear in 7₂'s spectrum, and 1,600 more alternatives are proven unknots.
 2. **Chirality conventions differ per table and per construction.** Five of D112's braid knots are KnotInfo's mirrors. Naming against one fixed table, with a translation row, removes the ambiguity.
 3. **Bounds turn "unknown" into a statement.** An unnamed class now carries an interval for its crossing number. The bracket span(V) ≤ c ≤ reduced also checks every named class.
-4. **Greedy R1/R2 has a visible limit.** 138 alternatives are stuck at 11+ crossings with Δ = V = 1, and a few unmatched classes reduce only to 15–18 crossings while their spans are 8–10. R3 or a better minimizer is the next lever.
+4. **Greedy R1/R2 has a visible limit.** 138 alternatives are stuck at 11+ crossings with Δ = V = 1 (unknots only by citation), and a few unmatched classes reduce only to 15–18 crossings while their spans are 8–10. R3 or a better minimizer is the next lever.
 
 ## Method notes
 
@@ -122,6 +128,17 @@ Every 10-crossing name here (10₁₂₅–10₁₆₀) is non-alternating, as a
 
 ## Open threads
 
-1. **Extend the table to 11–13 crossings** (KnotInfo has them). The 13 unmatched pairs and the `unknot?` question would get answers, or at least proofs that they lie beyond.
-2. **R3 or a better minimizer** for the 138 stuck `unknot?` alternatives and the 15–18-crossing unmatched classes.
+1. **Extend the table to 11–13 crossings** (KnotInfo has them). The demo would then name the 13 unmatched pairs itself; the review has already identified them externally.
+2. **R3 or a better minimizer**, to prove the 138 `unknot (TS)` alternatives in-house and to shrink the 15–18-crossing unmatched classes.
 3. **Why 7₂?** It is still the only polygon that explodes. Its stability study (all fewest-vertex 7₂ polygons) is now affordable: about 5 minutes per 4,096 alternatives.
+
+## Revisions (after review I, 2026-10-07)
+
+The reviewer verified the demo against KnotInfo's own columns: the chirality translation, all 73 named 7₂ classes, the 37 distinct primes, the det-31 pair = 8₁₄, and the hard-coded D115 numbers. It also independently checked the simplifier, with about 4,000 random planar diagrams and 1,000 spliced composites. It found no bugs. Changes:
+
+- **Library (94c5d5d7).** PD codes must now be planar: `_pd_legere` counts faces, F = c + 2. A valid but non-planar (virtual) code had been accepted, and the simplifier could "prove" such codes unknots; no projection in this demo is affected. Also added a mirrored non-face R2 test; the plant "R2 only for even slots" had survived the suite.
+- **Bracket check:** reduced to its informative half, c(K) ≤ reduced crossings. The span half is a tautology for named classes. Re-planted: understating the reduced count turns it red.
+- **Unmatched check:** the wording no longer claims more than is searched. Sums of three or more knots (e.g. 3₁#3₁#3₁) are not searched.
+- **`unknot?` is now `unknot (TS)`:** by citation of the Jones unknot verification to 22 (24) crossings; the citation was checked.
+- **The 13 unmatched pairs are identified externally** as 11–13-crossing non-alternating primes (reviewer; two re-checked here).
+

@@ -38,10 +38,15 @@
  *
  * Jones: generic projection -> PD -> R1/R2 reduction; if still above 20
  * crossings, the fewest-crossing projections with direction components
- * in -1..1, then -2..2, each reduced the same way. Unknots: reduced to 0
- * crossings, or Alexander 1 on a reduced diagram of <= 10 crossings (no
- * nontrivial knot with <= 10 crossings has trivial Alexander polynomial;
- * the first are 11n34 and 11n42).
+ * in -1..1, then -2..2, each reduced the same way. Unknots PROVEN here:
+ * reduced to 0 crossings, or Alexander 1 on a reduced diagram of <= 10
+ * crossings (no nontrivial knot with <= 10 crossings has trivial
+ * Alexander polynomial; the first are 11n34 and 11n42). Unknots by
+ * CITATION, "unknot (TS)": Alexander 1 and Jones 1 computed on a diagram
+ * of <= 20 crossings - the Jones polynomial detects the unknot for every
+ * knot up to 22 crossings (Tuzun, Sikora, J. Knot Theory Ramifications
+ * 27(3), 2018; extended to 24 crossings, arXiv:2003.06724) - an external
+ * computer verification, kept apart from what this demo proves.
  *
  * House libraries: includes laqueus.h and tabula_nodorum.h, hence
  * latina.h (Roman numerals and Latin keywords are macros here). Build and
@@ -472,7 +477,8 @@ static TabulaNodorum *table;
 
 enum {
     ST_UNKNOT,      /* proven */
-    ST_UNKNOT_Q,    /* Alexander 1 and Jones 1, not proven */
+    ST_UNKNOT_Q,    /* Alexander 1 and Jones 1 on a <= 20-crossing diagram:
+                       the unknot by Tuzun-Sikora (cited, not proven) */
     ST_TABLE,       /* agnoscere found candidates */
     ST_BEYOND,      /* no candidate, span(Jones) > 10: proven > 10 crossings */
     ST_UNMATCHED,   /* no candidate, span(Jones) <= 10 */
@@ -480,7 +486,7 @@ enum {
 };
 
 static const char *const STATUS_NAME[] = {
-    "unknot", "unknot?", "table", "beyond", "unmatched", "no Jones"
+    "unknot", "unknot (TS)", "table", "beyond", "unmatched", "no Jones"
 };
 
 static unsigned
@@ -579,7 +585,9 @@ name_class (
     nm.first[0]   = '\0';
     if (chorda_is(alexander, "1") && (unknot_proven || chorda_is(jones, "1"))) {
         nm.status = unknot_proven ? ST_UNKNOT : ST_UNKNOT_Q;
-        strcpy(nm.name, unknot_proven ? "unknot" : "unknot?");
+        /* Jones 1 is only ever computed on a diagram of <= JONES_CAP
+         * crossings (or its mirror partner's) */
+        strcpy(nm.name, unknot_proven ? "unknot" : "unknot (TS)");
     } else if (jones.datum == NULL) {
         /* Alexander only: the table primes that share it */
         nm.status = ST_NOJONES;
@@ -921,7 +929,8 @@ part_b (
 
             printf("      %-24s [%4u]  det %-4lu ", cl->nm.name, cl->count,
                 cl->det);
-            if (cl->nm.status != ST_UNKNOT && cl->nm.status != ST_TABLE) {
+            if (cl->nm.status != ST_UNKNOT && cl->nm.status != ST_UNKNOT_Q
+                && cl->nm.status != ST_TABLE) {
                 if (cl->jones.datum != NULL)
                     printf("[%u..", cl->nm.span);
                 else
@@ -1046,8 +1055,10 @@ part_c (void)
             }
             printf("    %-5s %u\n", KNOT_CODE[k], n_seen);
         }
-        /* span(V) <= c(K) for every knot, and the reduced diagram is a
-         * diagram of K, so c(K) <= reduced: some candidate must fit */
+        /* the reduced diagram is a diagram of the knot, so its crossing
+         * count is at least the crossing number of the named candidate
+         * (span(V) <= c(K) holds by construction here: the Jones IS the
+         * table knot's) */
         for (k = 0; k < N_KNOTS; k++) {
             unsigned q;
 
@@ -1062,23 +1073,23 @@ part_c (void)
                     continue;
                 named++;
                 for (m = 0; m < cl->nm.candidates && m < MAX_CAND; m++)
-                    if (cl->nm.span <= cl->nm.cand_c[m]
-                        && (!cl->nm.cand_prime[m]
-                            || cl->nm.cand_c[m] <= cl->reduced))
+                    if (!cl->nm.cand_prime[m]
+                        || cl->nm.cand_c[m] <= cl->reduced)
                         fits = 1;
                 if (!fits) {
                     inconsistent++;
-                    printf("    INCONSISTENT: %s in %s (span %u, reduced "
-                        "%u)\n", cl->nm.name, KNOT_CODE[k], cl->nm.span,
-                        cl->reduced);
+                    printf("    INCONSISTENT: %s in %s (reduced %u)\n",
+                        cl->nm.name, KNOT_CODE[k], cl->reduced);
                 }
             }
         }
-        check("every table-named class fits span(Jones) <= c(K) <= reduced "
-            "crossings for some candidate", named > 0 && inconsistent == 0);
+        check("every table-named prime class: some candidate's crossing "
+            "number <= the reduced crossing count", named > 0
+            && inconsistent == 0);
         check("every unmatched class has a reduced diagram above 10 "
-            "crossings (no <= 10-crossing knot escapes the table)",
-            small_unmatched == 0);
+            "crossings (primes and two-knot sums up to 10 crossings are "
+            "searched; sums of three or more are not)", small_unmatched
+            == 0);
     }
     printf("\n  not named by the table (crossing number in [span(Jones), "
         "reduced]):\n");

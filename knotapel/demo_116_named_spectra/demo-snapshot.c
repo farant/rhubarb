@@ -7,7 +7,7 @@
  *
  *   clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 -O2 -g demo-snapshot.c -o demo-snapshot
  *
- * Commit (library closure clean): 81aa0eefc500807dafc21ae574ddb8a2483fb426
+ * Commit (library closure clean): 94c5d5d74635e5aa4a456c69f75ee0bb1ace6df1
  * Regenerate: ./knotapel/archive.sh knotapel/demo_116_named_spectra/main.c
  * Verified: live build and snapshot gave byte-identical output.
  * Sources (git blob hashes):
@@ -16,7 +16,7 @@
  *   6f9b7a043cebe2912c612139453b66fcb04770cb  include/chorda_aedificator.h
  *   37b6fb1c16e76827120976705e418e11c89406a6  include/congruentia.h
  *   53645f652dd16a7a8c8ad79df9e2e70289ee5e52  include/fractio.h
- *   2f1c4caa4c4f3e8c829376630939ee9f1efc4f34  include/laqueus.h
+ *   e1804770abd50053442c4d8f3ec6c02012e43bc9  include/laqueus.h
  *   f45b10ad9c303c02d43655b950600fcdab8997bb  include/latina.h
  *   f0c8e680438f15b7e1fea4de9790bae94f9c1bba  include/magnus.h
  *   423a176668f285b2661452e215cdf84259389d93  include/matrix.h
@@ -30,7 +30,7 @@
  *   ee055a36d7e4726ad5b3731e2ca64e62e93d084c  lib/chorda_aedificator.c
  *   c446f3092b17cdca38b584886d86a5ca80856eac  lib/congruentia.c
  *   61ec3b3106345cce9ea64477aafe7d1072030be7  lib/fractio.c
- *   3d90487806eddfee58de59da180d426a87ea7f3f  lib/laqueus.c
+ *   f9469ae1e33a342ae8d9c4b77cf170fec719a674  lib/laqueus.c
  *   41efe7184a1027d6fb4b9c2a576dcb92ddf5c9b8  lib/magnus.c
  *   5fc06983f571b6cf493cc884ab9647db9f499d44  lib/matrix.c
  *   c6ab1e19274a3b36ff5cfdde651e45d079905b56  lib/piscina.c
@@ -38,7 +38,7 @@
  *   216c408f5f2064e64312685d551841f3cabdc92f  lib/situs.c
  *   3efb457d4592611775994befdfc3e8938c406de7  lib/tabula_nodorum.c
  *   8af4e457aef16eb25e9a370e5c3bf883c153c18d  lib/tabula_nodorum_data.c
- *   b776bd3dfd076df34e0c8adc7a4c219948435f91  knotapel/demo_116_named_spectra/main.c (uncommitted, embedded verbatim)
+ *   119dc962d76ad057f03b6efadd18e43495e4cb01  knotapel/demo_116_named_spectra/main.c (uncommitted, embedded verbatim)
  */
 
 #line 1 "include/postulata_posix.h"
@@ -5951,9 +5951,11 @@ diagramma_pd (
 
 /* invariantes ex codice PD nodi (transitus 0 = nodus trivialis; ora
  * 1..2c bis quaeque, infra X0 -> X2 consecutiva; transitus unus
- * refutatur: signum ex ordine orarum non determinatur). FALSUM si codex
- * invalidus aut transitus > LAQUEUS_TRANSITUS_MAXIMI (uncinus, Jones).
- */
+ * refutatur: signum ex ordine orarum non determinatur). Codex validus:
+ * os quodque semel intrans et semel exiens (componens una) et PLANUS (V
+ * - E + F = 2 in systemate rotationis; codices nodorum virtualium
+ * refutantur). FALSUM si codex invalidus aut transitus >
+ * LAQUEUS_TRANSITUS_MAXIMI (uncinus, Jones). */
 b32
 laqueus_uncinus_ex_pd (
     constans i32* pd,
@@ -13881,6 +13883,7 @@ polynomium_apex_officinarum (
 #define _ora_diagrammatis _ora_diagrammatis_laqueus
 #define _pd_legere _pd_legere_laqueus
 #define _pd_motus _pd_motus_laqueus
+#define _pd_planus _pd_planus_laqueus
 #define _pd_renumerare _pd_renumerare_laqueus
 #define _positio_sequens _positio_sequens_laqueus
 #define _prior _prior_laqueus
@@ -15090,6 +15093,66 @@ diagramma_pd (
     redde VERUM;
 }
 
+/* codex planus? Systema rotationis (sedes 0..3 contra horologium):
+ * facies = orbitae sequentis(d) = sedes post alterum finem ossis d;
+ * planum iff V - E + F = 2, i.e. F = c + 2. Codex validus sed non
+ * planus (nodus virtualis, e.g. [[1,3,2,4],[2,5,3,6],[4,1,5,6]]: facies
+ * una) refutatur - invariantes et motus R2 sine facie planitiem
+ * praesumunt. ora 0-basata, bis quodque. */
+interior b32
+_pd_planus (
+    constans i32* ora,
+             i32  c,
+         Piscina* piscina)
+{
+    i32  n = IV * c;
+    i32* alter  = (i32*)piscina_allocare(piscina, (memoriae_index)(n
+        + I)
+        * magnitudo(i32));
+    i32* prima  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(II * c
+        + I) * magnitudo(i32));
+    b32* visa   = (b32*)piscina_allocare(piscina, (memoriae_index)(n
+        + I)
+        * magnitudo(b32));
+    i32 facies = ZEPHYRUM;
+    i32 d;
+
+    per (d = ZEPHYRUM; d < II * c; d++)
+    {
+        prima[d] = n;
+    }
+    per (d = ZEPHYRUM; d < n; d++)
+    {
+        visa[d] = FALSUM;
+        si (prima[ora[d]] == n)
+        {
+            prima[ora[d]] = d;
+        }
+        alioquin
+        {
+            alter[d]              = prima[ora[d]];
+            alter[prima[ora[d]]]  = d;
+        }
+    }
+    per (d = ZEPHYRUM; d < n; d++)
+    {
+        i32 e = d;
+
+        si (visa[d])
+        {
+            perge;
+        }
+        facies++;
+        dum (!visa[e])
+        {
+            visa[e]  = VERUM;
+            e        = IV * (alter[e] / IV) + (alter[e] % IV + I) % IV;
+        }
+    }
+    redde facies == c + II;
+}
+
 /* codex PD nodi (KnotTheory): ora 1..2c bis quaeque; infra X0 -> X2
  * (X2 = sequens X0), supra aut X3 -> X1 (positivus) aut X1 -> X3
  * (negativus). ora 0-basata et signa redduntur; FALSUM si invalidus aut
@@ -15178,7 +15241,7 @@ _pd_legere (
             redde FALSUM;
         }
     }
-    redde VERUM;
+    redde _pd_planus(*ora, c, piscina);
 }
 
 b32
@@ -15920,6 +15983,7 @@ laqueus_speculum (
 #undef _ora_diagrammatis
 #undef _pd_legere
 #undef _pd_motus
+#undef _pd_planus
 #undef _pd_renumerare
 #undef _positio_sequens
 #undef _prior
@@ -21382,10 +21446,15 @@ constans i32 TABULA_NODORUM_NUMERUS = 250;
  *
  * Jones: generic projection -> PD -> R1/R2 reduction; if still above 20
  * crossings, the fewest-crossing projections with direction components
- * in -1..1, then -2..2, each reduced the same way. Unknots: reduced to 0
- * crossings, or Alexander 1 on a reduced diagram of <= 10 crossings (no
- * nontrivial knot with <= 10 crossings has trivial Alexander polynomial;
- * the first are 11n34 and 11n42).
+ * in -1..1, then -2..2, each reduced the same way. Unknots PROVEN here:
+ * reduced to 0 crossings, or Alexander 1 on a reduced diagram of <= 10
+ * crossings (no nontrivial knot with <= 10 crossings has trivial
+ * Alexander polynomial; the first are 11n34 and 11n42). Unknots by
+ * CITATION, "unknot (TS)": Alexander 1 and Jones 1 computed on a diagram
+ * of <= 20 crossings - the Jones polynomial detects the unknot for every
+ * knot up to 22 crossings (Tuzun, Sikora, J. Knot Theory Ramifications
+ * 27(3), 2018; extended to 24 crossings, arXiv:2003.06724) - an external
+ * computer verification, kept apart from what this demo proves.
  *
  * House libraries: includes laqueus.h and tabula_nodorum.h, hence
  * latina.h (Roman numerals and Latin keywords are macros here). Build and
@@ -21816,7 +21885,8 @@ static TabulaNodorum *table;
 
 enum {
     ST_UNKNOT,      /* proven */
-    ST_UNKNOT_Q,    /* Alexander 1 and Jones 1, not proven */
+    ST_UNKNOT_Q,    /* Alexander 1 and Jones 1 on a <= 20-crossing diagram:
+                       the unknot by Tuzun-Sikora (cited, not proven) */
     ST_TABLE,       /* agnoscere found candidates */
     ST_BEYOND,      /* no candidate, span(Jones) > 10: proven > 10 crossings */
     ST_UNMATCHED,   /* no candidate, span(Jones) <= 10 */
@@ -21824,7 +21894,7 @@ enum {
 };
 
 static const char *const STATUS_NAME[] = {
-    "unknot", "unknot?", "table", "beyond", "unmatched", "no Jones"
+    "unknot", "unknot (TS)", "table", "beyond", "unmatched", "no Jones"
 };
 
 static unsigned
@@ -21923,7 +21993,9 @@ name_class (
     nm.first[0]   = '\0';
     if (chorda_is(alexander, "1") && (unknot_proven || chorda_is(jones, "1"))) {
         nm.status = unknot_proven ? ST_UNKNOT : ST_UNKNOT_Q;
-        strcpy(nm.name, unknot_proven ? "unknot" : "unknot?");
+        /* Jones 1 is only ever computed on a diagram of <= JONES_CAP
+         * crossings (or its mirror partner's) */
+        strcpy(nm.name, unknot_proven ? "unknot" : "unknot (TS)");
     } else if (jones.datum == NULL) {
         /* Alexander only: the table primes that share it */
         nm.status = ST_NOJONES;
@@ -22265,7 +22337,8 @@ part_b (
 
             printf("      %-24s [%4u]  det %-4lu ", cl->nm.name, cl->count,
                 cl->det);
-            if (cl->nm.status != ST_UNKNOT && cl->nm.status != ST_TABLE) {
+            if (cl->nm.status != ST_UNKNOT && cl->nm.status != ST_UNKNOT_Q
+                && cl->nm.status != ST_TABLE) {
                 if (cl->jones.datum != NULL)
                     printf("[%u..", cl->nm.span);
                 else
@@ -22390,8 +22463,10 @@ part_c (void)
             }
             printf("    %-5s %u\n", KNOT_CODE[k], n_seen);
         }
-        /* span(V) <= c(K) for every knot, and the reduced diagram is a
-         * diagram of K, so c(K) <= reduced: some candidate must fit */
+        /* the reduced diagram is a diagram of the knot, so its crossing
+         * count is at least the crossing number of the named candidate
+         * (span(V) <= c(K) holds by construction here: the Jones IS the
+         * table knot's) */
         for (k = 0; k < N_KNOTS; k++) {
             unsigned q;
 
@@ -22406,23 +22481,23 @@ part_c (void)
                     continue;
                 named++;
                 for (m = 0; m < cl->nm.candidates && m < MAX_CAND; m++)
-                    if (cl->nm.span <= cl->nm.cand_c[m]
-                        && (!cl->nm.cand_prime[m]
-                            || cl->nm.cand_c[m] <= cl->reduced))
+                    if (!cl->nm.cand_prime[m]
+                        || cl->nm.cand_c[m] <= cl->reduced)
                         fits = 1;
                 if (!fits) {
                     inconsistent++;
-                    printf("    INCONSISTENT: %s in %s (span %u, reduced "
-                        "%u)\n", cl->nm.name, KNOT_CODE[k], cl->nm.span,
-                        cl->reduced);
+                    printf("    INCONSISTENT: %s in %s (reduced %u)\n",
+                        cl->nm.name, KNOT_CODE[k], cl->reduced);
                 }
             }
         }
-        check("every table-named class fits span(Jones) <= c(K) <= reduced "
-            "crossings for some candidate", named > 0 && inconsistent == 0);
+        check("every table-named prime class: some candidate's crossing "
+            "number <= the reduced crossing count", named > 0
+            && inconsistent == 0);
         check("every unmatched class has a reduced diagram above 10 "
-            "crossings (no <= 10-crossing knot escapes the table)",
-            small_unmatched == 0);
+            "crossings (primes and two-knot sums up to 10 crossings are "
+            "searched; sums of three or more are not)", small_unmatched
+            == 0);
     }
     printf("\n  not named by the table (crossing number in [span(Jones), "
         "reduced]):\n");
