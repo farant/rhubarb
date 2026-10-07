@@ -372,6 +372,11 @@ nomen structura {
     b32 (*effectus)(vacuum* datum, constans character* via,
                     Piscina* piscina, chorda* effusio_out,
                     i32* codex_out);
+    /* status repositorii (genus 'repositorium', fabrica-6 T2): clavis
+     * "commissum" = sha HEAD (per lib/git, non per processum).
+     * FALSUM: non repositorium aut clavis ignota. */
+    b32 (*repositorium)(vacuum* datum, constans character* clavis,
+                        Piscina* piscina, chorda* valor_out);
     /* AUDITUS TRANSITUS (spec 3 par. XIII): sub sanare, actio iudicium
      * RECENS electa (auditus I = omnes, N = unus ex N) tamen currit;
      * vestigium VETUS hic servatur (titulus -> Xar de FabricaLectio) ut
@@ -495,6 +500,19 @@ fabrica_genera_numerus (vacuum);
  * (enumeratio propria) */
 constans character*
 fabrica_genus_loci (
+    constans FabricaGenus* genus);
+
+/* AXES DUO (fabrica-6 T2): genus ex pari (res, clavis) - NIHIL si par
+ * nullum genus habet (recusatio nominat: signum designi). Et inverse:
+ * par generis ("res/clavis") aut NIHIL (genus alias solum: configuratio,
+ * binarium, radices). */
+constans FabricaGenus*
+fabrica_genus_ex_pari (
+    chorda res,
+    chorda clavis);
+
+constans character*
+fabrica_genus_par (
     constans FabricaGenus* genus);
 
 constans FabricaGenus*

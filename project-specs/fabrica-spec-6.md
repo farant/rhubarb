@@ -200,3 +200,26 @@ what depends on it that way. For external tools and toolchain identity
 that is right; for effectus, radices and instrumentum_domus it is a
 gap to close (their places are knowable: the effectus key's octeti and
 nomina lines, the roots' directories, the binary's closure).
+
+**T2 (2026-10-07): inputs on two axes + `repositorium`.** An ingressus
+is declared either by `genus` (alias, unchanged) or by `res` + `clavis`;
+a pair table maps ten pairs to kinds (`fabrica_genus_ex_pari`, inverse
+`fabrica_genus_par`). Both at once -> refusal "genus et res/clavis
+simul"; a pair with no kind -> refusal naming the pair (the design
+signal). configuratio, binarium and radices have no pair (census:
+`par:nullum`). canon: `genus` optional, `res`/`clavis` choices.
+New kind `repositorium` (pair repositorium/commissum): seals HEAD's
+sha as particle `repositorium:commissum` through a new sutura hook,
+implemented in tools/fabrica.c with lib/git (`git_aperire`,
+`git_ref_resolvere`) - a library, not a `git` process. Places: none,
+deliberately (a commit is not a path; census `loci:nulli`, now 6).
+Deferred (no consumer in the pilot): `clavis="index"` and
+`fons="repositorium"` file sets - lib/git reads refs, objects and
+trees but not the index.
+Tests: equivalence of every pair with its alias; both-forms and
+unknown-pair refusals; the `repositorium` conformance fixture (13
+kinds); fumus XXXIV in a real temporary git repository: a remembered
+generator with the repository input is RECENS by memory, and after an
+empty new commit the memory no longer matches. Plants: a pair mapped
+to the wrong kind -> equivalence red; HEAD ignored in the seal ->
+the fixture red by name.

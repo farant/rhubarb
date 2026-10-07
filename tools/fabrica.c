@@ -42,6 +42,7 @@
 #include "processus.h"
 #include "internamentum.h"
 #include "sigillum.h"
+#include "git.h"
 #include "tabula_dispersa.h"
 #include "chorda_aedificator.h"
 #include "fabrica.h"
@@ -310,6 +311,34 @@ _exitus_notos_colligere (
     redde noti;
 }
 
+/* REPOSITORIUM (fabrica-6 T2): sha HEAD per lib/git (bibliotheca, non
+ * processus 'git') - radix = directorium currens */
+interior b32
+_repositorium (
+                vacuum* datum,
+    constans character* clavis,
+               Piscina* piscina,
+                chorda* valor_out)
+{
+    GitRepositorium* repositorium;
+          character  sha[GIT_SHA_HEX_MENSURA];
+
+    (vacuum)datum;
+    si (strcmp(clavis, "commissum") != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    repositorium = git_aperire(piscina, ".");
+    si (   repositorium == NIHIL
+        || !git_ref_resolvere(repositorium, "HEAD", sha))
+    {
+        redde FALSUM;
+    }
+    *valor_out = chorda_transcribere(chorda_ex_literis(sha, piscina),
+        piscina);
+    redde VERUM;
+}
+
 interior vacuum
 _suturam_iudicii_parare (
     FabricaSutura* sutura,
@@ -320,8 +349,9 @@ _suturam_iudicii_parare (
     sutura->species    = _species;
     sutura->identitas  = _identitas;
 
-    sutura->effectus     = _effectus;
-    sutura->exitus_noti  = _exitus_notos_colligere(actiones, piscina);
+    sutura->effectus      = _effectus;
+    sutura->repositorium  = _repositorium;
+    sutura->exitus_noti   = _exitus_notos_colligere(actiones, piscina);
 }
 
 interior s32
@@ -3309,8 +3339,10 @@ _censum (vacuum)
                : g->sumptus
                    == FABRICA_SUMPTUS_MEDIUS ? "medius" : "carus";
 
-        printf("genus\t%s\tparticulae:%s\treproducibile:%s\tsumptus:%s"
-            "\tloci:%s\tlocat:%s\n", g->titulus,
+        printf("genus\t%s\tpar:%s\tparticulae:%s\treproducibile:%s"
+            "\tsumptus:%s\tloci:%s\tlocat:%s\n", g->titulus,
+            fabrica_genus_par(g)
+                != NIHIL ? fabrica_genus_par(g) : "nullum",
             g->particulae_nominatae ? "nominatae" : "crassae",
             g->reproducibile ? "ita" : "non", sumptus,
             fabrica_genus_loci(g),

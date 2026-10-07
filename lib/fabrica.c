@@ -1449,6 +1449,56 @@ interior constans FabricaGenus _genus_effectus = {
 };
 
 
+/* REPOSITORIUM (fabrica-6 T2): status repositorii clave data - hodie
+ * "commissum" (sha HEAD) solum. Particula 'repositorium:commissum'.
+ * Loci nulli: commissio via non est (quaestionibus inversis invisibile,
+ * consulto - census id nominat). */
+interior b32
+_repositorium_sigillare (
+       constans FabricaSutura* sutura,
+    constans FabricaIngressus* ingressus,
+                 constans Xar* exclusa,
+                      Piscina* piscina,
+                          Xar* particulae,
+                       chorda* causa_out)
+{
+     FabricaParticula* particula;
+               chorda  valor;
+
+    (vacuum)ingressus;
+    (vacuum)exclusa;
+    si (sutura->repositorium == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("sutura sine repositorio",
+            piscina);
+        redde FALSUM;
+    }
+    si (!sutura->repositorium(sutura->datum, "commissum", piscina,
+            &valor))
+    {
+        *causa_out =
+            chorda_ex_literis("repositorium: commissum ignotum",
+            piscina);
+        redde FALSUM;
+    }
+    particula = (FabricaParticula*)xar_addere(particulae);
+    si (particula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    particula->via     = chorda_ex_literis("repositorium:commissum",
+        piscina);
+    particula->octeti  = sigillum_computare(valor.datum,
+        (memoriae_index)valor.mensura);
+    redde VERUM;
+}
+
+interior constans FabricaGenus _genus_repositorium = {
+    "repositorium", _repositorium_sigillare, _nihil_enumerare, NIHIL,
+    FALSUM,
+    VERUM, FABRICA_SUMPTUS_MEDIUS
+};
+
 interior constans FabricaGenus* constans _genera[] = {
     &_genus_fasciculus,
     &_genus_configuratio,
@@ -1462,8 +1512,72 @@ interior constans FabricaGenus* constans _genera[] = {
     &_genus_identitas_clang,
 
     &_genus_instrumentum_domus,
-    &_genus_effectus
+    &_genus_effectus,
+    &_genus_repositorium
 };
+
+/* AXES DUO (fabrica-6 T2): (res, clavis) -> genus. Genera sine pari
+ * (configuratio, binarium, radices) alias soli manent. */
+interior constans character* constans _paria[][III] = {
+    { "plagula", "contentum", "fasciculus" },
+    { "plagulae", "contentum", "plagulae" },
+    { "directorium", "nomina", "directorium" },
+    { "plagula", "clausura", "manifestum" },
+    { "directorium", "clausura", "manifesta" },
+    { "instrumentum", "contentum", "instrumentum" },
+    { "instrumentum", "provenientia", "instrumentum_domus" },
+    { "instrumentum", "identitas", "identitas_clang" },
+    { "plagula", "effectus", "effectus" },
+    { "repositorium", "commissum", "repositorium" }
+};
+
+constans FabricaGenus*
+fabrica_genus_ex_pari (
+    chorda res,
+    chorda clavis)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM;
+         i < (i32)(magnitudo(_paria) / magnitudo(_paria[0])); i++)
+    {
+        si (   chorda_aequalis_literis(res, _paria[i][0])
+            && chorda_aequalis_literis(clavis, _paria[i][1]))
+        {
+            i32 g;
+
+            per (g = ZEPHYRUM; g < fabrica_genera_numerus(); g++)
+            {
+                si (strcmp(_genera[g]->titulus, _paria[i][2])
+                    == ZEPHYRUM)
+                {
+                    redde _genera[g];
+                }
+            }
+            redde NIHIL;
+        }
+    }
+    redde NIHIL;
+}
+
+constans character*
+fabrica_genus_par (
+    constans FabricaGenus* genus)
+{
+    hic_manens character par[LXIV];
+                     i32 i;
+
+    per (i = ZEPHYRUM;
+         i < (i32)(magnitudo(_paria) / magnitudo(_paria[0])); i++)
+    {
+        si (strcmp(genus->titulus, _paria[i][2]) == ZEPHYRUM)
+        {
+            sprintf(par, "%s/%s", _paria[i][0], _paria[i][1]);
+            redde par;
+        }
+    }
+    redde NIHIL;
+}
 
 i32
 fabrica_genera_numerus (vacuum)
@@ -3993,8 +4107,39 @@ fabrica_declarationes_legere_cum_sutura (
             genus = stml_attributum_capere(filius, "genus");
             ingressus_via = stml_attributum_capere(filius, "via");
             ingressus = (FabricaIngressus*)xar_addere(actio.ingressus);
-            ingressus->genus = (genus != NIHIL)
-                ? fabrica_genus_invenire(*genus) : NIHIL;
+            {
+                /* AXES DUO (fabrica-6 T2): genus (alias) AUT res+clavis */
+                chorda* res = stml_attributum_capere(filius, "res");
+                chorda* clavis = stml_attributum_capere(filius,
+                    "clavis");
+
+                si (genus != NIHIL && (res != NIHIL || clavis != NIHIL))
+                {
+                    redde _recusare(piscina, causa_out,
+                        _sedes(piscina, via, filius),
+                        "ingressus: genus et res/clavis simul (alterum)",
+                        *genus);
+                }
+                si (genus == NIHIL && res != NIHIL && clavis != NIHIL)
+                {
+                    ingressus->genus = fabrica_genus_ex_pari(*res,
+                        *clavis);
+                    si (ingressus->genus == NIHIL)
+                    {
+                        redde _recusare(piscina, causa_out,
+                            _sedes(piscina, via, filius),
+                            "ingressus: par res/clavis sine genere",
+                            _iungere(piscina, "", *res, chorda_ut_cstr(
+                                _iungere(piscina, "/", *clavis, ""),
+                                piscina)));
+                    }
+                }
+                alioquin
+                {
+                    ingressus->genus = (genus != NIHIL)
+                        ? fabrica_genus_invenire(*genus) : NIHIL;
+                }
+            }
             si (ingressus->genus == NIHIL)
             {
                 redde _recusare(piscina, causa_out,

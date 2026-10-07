@@ -387,11 +387,28 @@ if [ -x "$RADIX/bin/canon_examen" ] && [ "$vitia_canonis" -eq 0 ]; then echo "  
 
 # XXXIII (fabrica-6 T1): CENSUS CHASSIS - 'bin/fabrica census' genera
 # registrata cum proprietatibus (TSV) enumerat; numerus = registrum
-# (XII hodie), nullum genus sine linea
+# (XIII post T2: repositorium), nullum genus sine linea; par res/clavis
 (cd "$RADIX" && bin/fabrica census) > "$T/census.o" 2>&1; rc=$?
 n_gen=$(grep -c '^genus	' "$T/census.o")
-if [ "$rc" -eq 0 ] && [ "$n_gen" -eq 12 ] && grep -q '^genus	fasciculus	' "$T/census.o" && grep -q '^census: genera 12' "$T/census.o"; then echo "  XXXIII census chassis (XII genera)      OK"; else echo "  XXXIII FRACTUM (census: rc=$rc, genera $n_gen)"; head -5 "$T/census.o" | sed 's/^/      /'; fracta=1; fi
+n_summa=$(sed -n 's/^census: genera \([0-9]*\).*/\1/p' "$T/census.o")
+if [ "$rc" -eq 0 ] && [ -n "$n_summa" ] && [ "$n_gen" -eq "$n_summa" ] && [ "$n_gen" -ge 13 ] && grep -q '^genus	fasciculus	par:plagula/contentum	' "$T/census.o" && grep -q '^genus	repositorium	par:repositorium/commissum	' "$T/census.o"; then echo "  XXXIII census chassis ($n_gen genera)      OK"; else echo "  XXXIII FRACTUM (census: rc=$rc, genera $n_gen, summa $n_summa)"; head -5 "$T/census.o" | sed 's/^/      /'; fracta=1; fi
+
+# XXXIV (fabrica-6 T2): REPOSITORIUM VERUM - ingressus res="repositorium"
+# clavis="commissum" per lib/git (sutura vera): generator memorabilis
+# sanatus -> iudicium per memoriam RECENS; commissio nova (HEAD alius)
+# -> clavis mutata, memoria non congruit (non RECENS)
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+: > "$T/r/a"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator" memorabilis="verum">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <ingressus res="repositorium" clavis="commissum" via="."/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; printf "b\\n" > "$D/b"\n' > "$T/r/gen_b.sh"
+G="git -C $T/r -c user.name=fumus -c user.email=fumus@fumus"
+$G init -q && $G add -A && $G commit -q -m primum
+(cd "$T/r" && "$F" sanare) > "$T/o" 2>&1
+(cd "$T/r" && "$F" iudicare b) > "$T/o2" 2>&1
+$G commit -q --allow-empty -m alterum
+(cd "$T/r" && "$F" iudicare b) > "$T/o3" 2>&1
+if grep -q '^SANATUM *g' "$T/o" && grep -q '^fabrica: 1 recentia' "$T/o2" && grep -q '^NON IUDICATUM b' "$T/o3"; then echo "  XXXIV repositorium: HEAD novus clavem mutat OK"; else echo "  XXXIV FRACTUM (repositorium)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -12; fracta=1; fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXXIII/XXXIII)"
+echo "fumus fabricae: sanum (XXXIV/XXXIV)"
 exit 0

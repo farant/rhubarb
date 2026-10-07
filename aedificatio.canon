@@ -134,8 +134,26 @@
     nota="captura lineae: '<verbum! (>./silva/amalgamare.sh' - argumentum
           unum, octetis suis"/>
 
-  <elementum nomen="ingressus">
-    <attributum nomen="genus" genus="electio" necessarium="verum">
+  <elementum nomen="ingressus"
+    nota="genus (alias) AUT res + clavis (axes duo, fabrica-6 T2): par
+          sine genere aut ambo simul recusantur (lib/fabrica.c)">
+    <attributum nomen="res" genus="electio">
+      <optio>plagula</optio>
+      <optio>plagulae</optio>
+      <optio>directorium</optio>
+      <optio>instrumentum</optio>
+      <optio>repositorium</optio>
+    </attributum>
+    <attributum nomen="clavis" genus="electio">
+      <optio>contentum</optio>
+      <optio>nomina</optio>
+      <optio>clausura</optio>
+      <optio>provenientia</optio>
+      <optio>identitas</optio>
+      <optio>effectus</optio>
+      <optio>commissum</optio>
+    </attributum>
+    <attributum nomen="genus" genus="electio">
       <optio>fasciculus</optio>
       <optio>manifestum</optio>
       <optio>configuratio</optio>
@@ -148,6 +166,7 @@
       <optio>instrumentum_domus</optio>
       <optio>identitas_clang</optio>
       <optio>effectus</optio>
+      <optio>repositorium</optio>
     </attributum>
     <attributum nomen="via" genus="textus" necessarium="verum"
       nota="manifesta: directorium manifestorum aedilis (--manifestum),

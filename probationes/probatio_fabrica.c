@@ -1580,6 +1580,42 @@ _fx_effectus (
     _fx_plagula(d);
 }
 
+/* repositorium fictum (fabrica-6 T2): HEAD quem sutura.repositorium
+ * reddit */
+hic_manens constans character* _caput_fictum = "commissum I";
+
+interior b32
+_repositorium_fictum (
+                vacuum* datum,
+    constans character* clavis,
+               Piscina* piscina,
+                chorda* valor_out)
+{
+    (vacuum)datum;
+    si (strcmp(clavis, "commissum") != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *valor_out = chorda_ex_literis(_caput_fictum, piscina);
+    redde VERUM;
+}
+
+interior vacuum
+_fx_repositorium (
+    DiscusFictus* d)
+{
+    _caput_fictum = "commissum I";
+    _fx_plagula(d);
+}
+
+interior vacuum
+_fx_repositorium_mutatum (
+    DiscusFictus* d)
+{
+    (vacuum)d;
+    _caput_fictum = "commissum II";
+}
+
 /* titulus, mundus, via, suffixa, mutatio classis, particula, aliena */
 hic_manens constans FixumConformitatis _fixa_conformitatis[] = {
     { "fasciculus", _fx_plagula, "data/f.txt", NIHIL,
@@ -1606,6 +1642,9 @@ hic_manens constans FixumConformitatis _fixa_conformitatis[] = {
       _fx_domus_mutata, "bin/x", _fx_domus_commissum },
     { "effectus", _fx_effectus, "porta.sh", NIHIL,
       _fx_plagula_mutata, "data/f.txt", _fx_alia_mutata },
+    { "repositorium", _fx_repositorium, ".", NIHIL,
+      _fx_repositorium_mutatum, "repositorium:commissum",
+          _fx_alia_mutata },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
@@ -1640,8 +1679,9 @@ _particulas_fixi (
                chorda  causa;
 
     _discum_parare(&discus, &sutura, piscina);
-    sutura.identitas  = _identitatem_fictam_dare;
-    sutura.effectus   = _effectus_ficti;
+    sutura.identitas     = _identitatem_fictam_dare;
+    sutura.effectus      = _effectus_ficti;
+    sutura.repositorium  = _repositorium_fictum;
     fixum->mundus(&discus);
     si (mutatio != NIHIL)
     {
@@ -5622,6 +5662,92 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * AXES DUO (fabrica-6 T2): res x clavis -> genus; alias 'genus'
+     * idem; ambo aut par ignotum recusantur nominatim
+     * ======================================================== */
+
+    {
+        hic_manens constans character* constans paria[][III] = {
+            { "plagula", "contentum", "fasciculus" },
+            { "plagulae", "contentum", "plagulae" },
+            { "directorium", "nomina", "directorium" },
+            { "plagula", "clausura", "manifestum" },
+            { "directorium", "clausura", "manifesta" },
+            { "instrumentum", "contentum", "instrumentum" },
+            { "instrumentum", "provenientia", "instrumentum_domus" },
+            { "instrumentum", "identitas", "identitas_clang" },
+            { "plagula", "effectus", "effectus" },
+            { "repositorium", "commissum", "repositorium" }
+        };
+         InternamentumChorda* intern = internamentum_creare(piscina);
+                      chorda  causa;
+                         i32  k;
+
+        imprimere("\n--- Probans axes duo (res x clavis) ---\n");
+        per (k = ZEPHYRUM;
+             k < (i32)(magnitudo(paria) / magnitudo(paria[0])); k++)
+        {
+            character  textus[DXII];
+                  Xar* actiones;
+
+            sprintf(textus, "<aedificatio>\n  <actio titulus=\"a\" "
+                "genus=\"generator\">\n    <mandatum>\n"
+                "      <verbum! (>x\n    </mandatum>\n"
+                "    <ingressus res=\"%s\" clavis=\"%s\" via=\"v\"/>\n"
+                "    <exitus via=\"o\" provenientia=\"regeneratio\"/>\n"
+                "  </actio>\n</aedificatio>\n", paria[k][0],
+                paria[k][1]);
+            causa = chorda_ex_literis("", piscina);
+            actiones = fabrica_declarationes_legere(
+                chorda_ex_literis(textus, piscina), "d.stml", piscina,
+                intern, &causa);
+            CREDO_NON_NIHIL(actiones);
+            si (actiones != NIHIL)
+            {
+                constans FabricaIngressus* ingressus_lectus =
+                    (constans FabricaIngressus*)xar_obtinere(
+                        ((FabricaActio*)xar_obtinere(actiones,
+                            ZEPHYRUM))->ingressus, ZEPHYRUM);
+
+                CREDO_VERUM(ingressus_lectus->genus
+                    == fabrica_genus_invenire(
+                    chorda_ex_literis(paria[k][2], piscina)));
+            }
+            alioquin
+            {
+                imprimere("  par %s/%s: %.*s\n", paria[k][0],
+                    paria[k][1],
+                    (integer)causa.mensura,
+                    (constans character*)causa.datum);
+            }
+        }
+        /* ambo -> recusatio */
+        causa = chorda_ex_literis("", piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(chorda_ex_literis(
+            "<aedificatio>\n  <actio titulus=\"a\" genus=\"generator\">\n"
+            "    <mandatum>\n      <verbum! (>x\n    </mandatum>\n"
+            "    <ingressus genus=\"fasciculus\" res=\"plagula\" "
+            "clavis=\"contentum\" via=\"v\"/>\n"
+            "    <exitus via=\"o\" provenientia=\"regeneratio\"/>\n"
+            "  </actio>\n</aedificatio>\n", piscina), "d.stml", piscina,
+            intern, &causa));
+        CREDO_VERUM(_continet(causa, "genus et res", piscina));
+        /* par sine genere -> recusatio par nominans */
+        causa = chorda_ex_literis("", piscina);
+        CREDO_NIHIL(fabrica_declarationes_legere(chorda_ex_literis(
+            "<aedificatio>\n  <actio titulus=\"a\" genus=\"generator\">\n"
+            "    <mandatum>\n      <verbum! (>x\n    </mandatum>\n"
+            "    <ingressus res=\"directorium\" clavis=\"provenientia\" "
+            "via=\"v\"/>\n"
+            "    <exitus via=\"o\" provenientia=\"regeneratio\"/>\n"
+            "  </actio>\n</aedificatio>\n", piscina), "d.stml", piscina,
+            intern, &causa));
+        CREDO_VERUM(_continet(causa, "directorium/provenientia",
+            piscina));
+    }
+
+
+    /* ========================================================
      * CHASSIS (fabrica-6 T1): omne genus registratum fixum
      * conformitatis habet et id implet
      * ======================================================== */
@@ -5677,6 +5803,7 @@ s32 principale (vacuum)
         }
         _identitas_ficta   = "clang I";
         _effectus_effusio  = "";
+        _caput_fictum      = "commissum I";
     }
 
     credo_imprimere_compendium();

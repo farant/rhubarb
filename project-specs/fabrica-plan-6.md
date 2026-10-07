@@ -24,10 +24,10 @@ Fran before code.
 
 ### T2: inputs on two axes + `repositorium`
 
-- [ ] **Step 1: failing test:** declarations with `res`/`clavis`/`fons`
+- [x] **Step 1: failing test:** declarations with `res`/`clavis`/`fons`
   parse and judge identically to their alias (`genus`) forms; a
   `repositorium clavis="commissum"` input changes with HEAD.
-- [ ] **Step 2:** aedificatio.canon attributes; alias table; the
+- [x] **Step 2:** aedificatio.canon attributes; alias table; the
   `repositorium` kind (+ conformance fixture). **Plant:** alias mapped
   to the wrong key -> equivalence red. **Commit.**
 
