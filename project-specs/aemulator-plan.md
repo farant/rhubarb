@@ -581,6 +581,8 @@ Later phases (re-planned after A's RELATIO):
     (a scratch runner on aemulator_hospes): its screen held the same
     sample - our terminal inside our terminal. Limits: no window title
     from OSC yet, full-screen programs wait for phase D.
+    Fran's look (2026-10-07): "it seems like it is all working! very
+    cool".
   - **E4 - RELATIO.**
 - **D - full-screen v0.** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
