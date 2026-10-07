@@ -178,7 +178,11 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
 
 ### Task T11: pythonica migrated
 
-- [ ] spec §III checklist for pythonica; three audited reuses. **Commit.**
+- [x] MEASURED, NOT MIGRATED (Fran 2026-10-07: measure first): under
+  the Python ledger the honest key holds .git/HEAD, index and the HEAD
+  commit object (snapshots clone the live repo) - reuse ceiling 0%.
+  Desideratum …M651F (tests against a fixed repository). Bytes-keyed
+  environment titles fixed in lectiones.py on the way.
 
 ### Task T12: close
 

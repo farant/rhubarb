@@ -133,6 +133,13 @@ def _stat_notans(verum, littera_absentis='A'):
     return stat
 
 
+def _titulus(titulus):
+    """titulus variabilis ut textus (os.get_exec_path b'PATH' quaerit)"""
+    if isinstance(titulus, bytes):
+        return titulus.decode('utf-8', 'surrogateescape')
+    return titulus
+
+
 class _EnvironNotans(dict):
     """os.environ notans: lectiones explicitae (get, [], in) E notant;
     mutationes per os.environ verum (putenv) transeunt et hic
@@ -143,24 +150,25 @@ class _EnvironNotans(dict):
         try:
             valor = dict.__getitem__(self, titulus)
         except KeyError:
-            notare('E', titulus)
+            notare('E', _titulus(titulus))
             raise
-        notare('E', '%s\t%s' % (titulus, valor))
+        notare('E', '%s\t%s' % (_titulus(titulus), valor))
         return valor
 
     def get(self, titulus, ordinarium=None):
         if dict.__contains__(self, titulus):
             valor = dict.__getitem__(self, titulus)
-            notare('E', '%s\t%s' % (titulus, valor))
+            notare('E', '%s\t%s' % (_titulus(titulus), valor))
             return valor
-        notare('E', titulus)
+        notare('E', _titulus(titulus))
         return ordinarium
 
     def __contains__(self, titulus):
         if dict.__contains__(self, titulus):
-            notare('E', '%s\t%s' % (titulus, dict.__getitem__(self, titulus)))
+            notare('E', '%s\t%s' % (_titulus(titulus),
+                                    dict.__getitem__(self, titulus)))
             return True
-        notare('E', titulus)
+        notare('E', _titulus(titulus))
         return False
 
     def __setitem__(self, titulus, valor):

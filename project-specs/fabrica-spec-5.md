@@ -505,3 +505,23 @@ the copy. Plants: open ignored -> the three open assertions red; stat
 wrapper off -> the two stat ones; environ off -> the two E ones;
 `__iter__`/`keys` overridden on the subclass -> the copy assertion red.
 Not yet wired into the gate: T11.
+
+**T11 (2026-10-07): pythonica measured, not migrated.** One full run
+with the Python ledger installed (C children note through the same
+variable): 3,748,973 lines - 3.2 M absent header probes by bin/aedilis
+in the closure tests, 73 k L and 355 k X in the tree, 41 k D under
+`~/.rhubarb/umbrae` (the snapshots' own clones: declarable scratch).
+The blocker is the live repository: `.git/HEAD`, `.git/index` and the
+HEAD commit object are read (snapshots are clones of the live repo at
+HEAD; `sigillum_arboris` runs git 210 times) - an honest key changes
+with every commit, so the reuse ceiling is 0%. Recorded, not migrated;
+desideratum …M651F: the commit-machinery tests against a
+FIXED repository (git init in build/, fictitious commits), the snapshot
+area declared - then re-estimate. The 43 spawned scripts (formator,
+extenta, examen, differre, frigida, diagnostica, test-written fakes)
+would also need effectus chains; moot until the repository isolation.
+Found on the way and fixed: bytes-keyed lookups (`os.get_exec_path`
+asks for `b'PATH'`) were noted as `E	b'PATH'`; titles are decoded now
+(pythonica assertion added; red before the fix). The copy assertion now
+watches a dedicated variable (LECTIONES_PROBATIO_COPIA), since
+get_exec_path legitimately notes PATH.

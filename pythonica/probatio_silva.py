@@ -2499,11 +2499,13 @@ with tempfile.TemporaryDirectory() as _ll:
         'open(%r, "w").write("y")\n'
         'open("/dev/null").read()\n'
         'dict(os.environ); os.environ.copy()\n'
+        'os.get_exec_path()\n'
         % (os.path.join(RADIX, 'pythonica'), _ll_f,
            os.path.join(_ll, 'absens.txt'), _ll_d, _ll_d, _ll_f,
            os.path.join(_ll, 'nusquam'), os.path.join(_ll, 'scriptum.txt')))
     _ll_amb = dict(os.environ, FABRICA_LECTIONES=_ll_liber,
-                   LECTIONES_PROBATIO_ADEST='valor')
+                   LECTIONES_PROBATIO_ADEST='valor',
+                   LECTIONES_PROBATIO_COPIA='copia')
     _ll_amb.pop('LECTIONES_PROBATIO_ABEST', None)
     _ll_r = subprocess.run([sys.executable, '-B', '-c', _ll_scriptum],
                            env=_ll_amb, capture_output=True, text=True)
@@ -2524,8 +2526,13 @@ with tempfile.TemporaryDirectory() as _ll:
           'liber pythonis: /dev/ non notatur (machina, non ingressus)')
     credo(_ll_lineae.count('D\t' + _ll_d) >= 2,
           'liber pythonis: os.scandir -> D quoque')
-    credo(not any(l.startswith('E\tPATH') for l in _ll_lineae),
+    credo(not any(l.startswith('E\tLECTIONES_PROBATIO_COPIA')
+                  for l in _ll_lineae),
           'liber pythonis: copia ambitus tota (dict, copy) nihil notat')
+    credo(not any(l.startswith("E\tb'") for l in _ll_lineae),
+          'liber pythonis: titulus octetorum (os.get_exec_path: b"PATH") ut'
+          ' textus notatur', causa='\n'.join(l for l in _ll_lineae
+                                             if l.startswith('E')))
 
 credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
        else -1) == _tempora_vera_ante,
