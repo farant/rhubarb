@@ -1311,6 +1311,70 @@ finally:
 credo(not os.path.exists(ph.via), 'photographia_delere: clone sublatus')
 os.unlink(tmpf)
 
+print('--- clonatio: bin/clonare (clonefile) et regressus ad cp ---')
+# pythonica S3: _clonare_paria per bin/clonare (processus unus, clonefile
+# arborum totarum); binarium absens aut par fractum -> 'cp -c [-R]' pro
+# paribus quorum destinatio nondum exstat. Area in /tmp (eadem area APFS)
+import shutil as _sh
+_CA = '/tmp/probatio_silva_clonatio'
+_sh.rmtree(_CA, ignore_errors=True)
+os.makedirs(os.path.join(_CA, 'fons', 'sub'))
+open(os.path.join(_CA, 'fons', 'a.txt'), 'w').write('alpha\n')
+open(os.path.join(_CA, 'fons', 'sub', 'b.txt'), 'w').write('beta\n')
+open(os.path.join(_CA, 'solum.txt'), 'w').write('solum\n')
+
+
+def _clon_idem(dest):
+    try:
+        return (open(os.path.join(dest, 'a.txt')).read() == 'alpha\n'
+                and open(os.path.join(dest, 'sub', 'b.txt')).read() == 'beta\n')
+    except OSError:
+        return False
+
+
+try:
+    silva._clonare_paria([(os.path.join(_CA, 'fons'), os.path.join(_CA, 'd1'))],
+                         arbores=True)
+    silva._clonare_paria([(os.path.join(_CA, 'solum.txt'), os.path.join(_CA, 's1.txt'))],
+                         arbores=False)
+    credo(os.path.exists(silva.CLONARE_BIN) and _clon_idem(os.path.join(_CA, 'd1'))
+          and open(os.path.join(_CA, 's1.txt')).read() == 'solum\n',
+          'clonatio: bin/clonare arborem et plagulam clonat')
+    _cb_verum = silva.CLONARE_BIN
+    # binarium VERE adhibetur (regressus solus probationes supra quoque
+    # impleret): involucrum signum relinquit, deinde bin/clonare verum
+    _signum = os.path.join(_CA, 'signum')
+    _inv = os.path.join(_CA, 'clonare_involucrum')
+    open(_inv, 'w').write('#!/bin/sh\ntouch %s\nexec %s "$@"\n' % (_signum, _cb_verum))
+    os.chmod(_inv, 0o755)
+    silva.CLONARE_BIN = _inv
+    silva._clonare_paria([(os.path.join(_CA, 'fons'), os.path.join(_CA, 'd4'))], arbores=True)
+    credo(os.path.exists(_signum) and _clon_idem(os.path.join(_CA, 'd4')),
+          'clonatio: bin/clonare vere vocatur (regressus non solus)')
+    silva.CLONARE_BIN = os.path.join(_CA, 'nusquam_clonare')
+    try:
+        silva._clonare_paria([(os.path.join(_CA, 'fons'), os.path.join(_CA, 'd2'))],
+                             arbores=True)
+        credo(_clon_idem(os.path.join(_CA, 'd2')),
+              'clonatio: binarium absens -> regressus ad cp -c -R, idem effectus')
+    finally:
+        silva.CLONARE_BIN = _cb_verum
+    try:
+        silva._clonare_paria([(os.path.join(_CA, 'nusquam'), os.path.join(_CA, 'd3'))],
+                             arbores=True)
+        credo(False, 'clonatio: fons absens SilvaError')
+    except silva.SilvaError as ex:
+        credo('nusquam' in str(ex), 'clonatio: fons absens -> SilvaError par nominans')
+finally:
+    _sh.rmtree(_CA, ignore_errors=True)
+# res ignorata INTRA directorium ignoratum (git status: 'x/.claude/' et
+# 'x/.claude/settings.local.json') cum directorio clonatur, non seorsum -
+# aliter destinatio directorii ante clonationem exstat (EEXIST) et
+# regressus eam praeterit: photographia TACITE incompleta (S3, mensuratum)
+_dirs, _plag = silva._ignorata_dividere(['a/', 'a/f.txt', 'a/sub/', 'b.txt', 'ab.txt', 'c/d/'])
+credo(_dirs == ['a', 'c/d'] and _plag == ['ab.txt', 'b.txt'],
+      'clonatio: res intra directorium ignoratum non seorsum clonatur', causa=repr((_dirs, _plag)))
+
 print('--- custodes: nomina plana, clones orphani ---')
 for malum in ('a/b', '..', '.', '', 'x y'):
     try:

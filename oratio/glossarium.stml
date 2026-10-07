@@ -1496,5 +1496,12 @@
     <forma textus="pseudoterminalis" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="pseudoterminalia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="clono" lingua="latina" classis="verbum" nota="vox domus (Graece klon, surculus): clonatio copy-on-write plagulae aut arboris (clonefile(2), APFS) - include/clonatio.h, bin/clonare (pythonica S3)">
+    <forma textus="clonare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+  </vocabulum>
+  <vocabulum lemma="clonatio" lingua="latina" classis="substantivum" nota="vox domus (clonare): actio clonandi - copia copy-on-write, spatium nullum donec scribatur (include/clonatio.h, pythonica S3)">
+    <forma textus="clonatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="clonationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
 
 </glossarium>

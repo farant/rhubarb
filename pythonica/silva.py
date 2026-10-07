@@ -2925,31 +2925,62 @@ def _ignorata():
     return exitus
 
 
-def _clonare_ignorata(ad):
-    """res ignoratae (bin/, build/, silva/build/, book_assets/*.txt ...)
-    in clone: cp -c (clonefile, copy-on-write) - spatium nullum donec
-    scribantur; directoria singula, plagulae fascibus per directorium"""
-    per_dir = {}
-    for l in _ignorata():
-        if l.endswith('/'):
-            d = l.rstrip('/')
-            os.makedirs(os.path.join(ad, os.path.dirname(d)), exist_ok=True)
-            r = subprocess.run(['cp', '-c', '-R', os.path.join(RADIX, d),
-                                os.path.join(ad, d)], capture_output=True,
+# bin/clonare (pythonica S3): clonefile(2) arborum totarum - 'cp -c -R'
+# plagulam singulam clonat (XIII,IV s per photographiam mensurata, clonefile
+# II,VI s). Substituibilis in probationibus.
+CLONARE_BIN = os.path.join(RADIX, 'bin', 'clonare')
+
+
+def _clonare_paria(paria, arbores):
+    """paria [(fons, destinatio)] copy-on-write clonare: bin/clonare
+    (fascibus D parium, processus unus per fascem); binarium absens aut
+    fascis fractus -> 'cp -c' (-R si arbores) pro paribus quorum
+    destinatio nondum exstat (clonefile destinationem totam aut nullam
+    facit). Par etiam per cp fractum: SilvaError par nominans."""
+    for i in range(0, len(paria), 500):
+        fascis = paria[i:i + 500]
+        if os.access(CLONARE_BIN, os.X_OK):
+            r = subprocess.run([CLONARE_BIN] + [v for par in fascis for v in par],
+                               capture_output=True, text=True)
+            if r.returncode == 0:
+                continue
+        for fons, destinatio in fascis:
+            if os.path.lexists(destinatio):
+                continue
+            r = subprocess.run(['cp', '-c'] + (['-R'] if arbores else [])
+                               + [fons, destinatio], capture_output=True,
                                text=True)
             if r.returncode != 0:
-                raise SilvaError('clonatio %s: %s' % (d, r.stderr.strip()[-200:]))
-        else:
-            per_dir.setdefault(os.path.dirname(l), []).append(l)
-    for d, plagulae in per_dir.items():
-        dest = os.path.join(ad, d) if d else ad
-        os.makedirs(dest, exist_ok=True)
-        for i in range(0, len(plagulae), 500):
-            r = subprocess.run(['cp', '-c'] + [os.path.join(RADIX, f) for f
-                                                in plagulae[i:i + 500]]
-                               + [dest], capture_output=True, text=True)
-            if r.returncode != 0:
-                raise SilvaError('clonatio %s: %s' % (d, r.stderr.strip()[-200:]))
+                raise SilvaError('clonatio %s: %s' % (fons, r.stderr.strip()[-200:]))
+
+
+def _ignorata_dividere(ignorata):
+    """(directoria, plagulae) ordinata, sine '/' finali; res INTRA
+    directorium ignoratum omissa (git status 'x/.claude/' et
+    'x/.claude/settings.local.json' simul nominat): cum directorio
+    clonatur - seorsum destinationem directorii ante clonationem faceret
+    (clonefile EEXIST, photographia tacite incompleta)"""
+    directoria = sorted(l.rstrip('/') for l in ignorata if l.endswith('/'))
+    def tecta(via):
+        return any(via != d and via.startswith(d + '/') for d in directoria)
+    return ([d for d in directoria if not tecta(d)],
+            sorted(l for l in ignorata if not l.endswith('/') and not tecta(l)))
+
+
+def _clonare_ignorata(ad):
+    """res ignoratae (bin/, build/, silva/build/, book_assets/*.txt ...)
+    in clone: copy-on-write (_clonare_paria: clonefile per bin/clonare,
+    regressus cp -c) - spatium nullum donec scribantur. Directoria
+    PRIMUM, deinde parentes plagularum solutarum"""
+    directoria, plagulae = _ignorata_dividere(_ignorata())
+    for d in directoria:
+        os.makedirs(os.path.join(ad, os.path.dirname(d)), exist_ok=True)
+    _clonare_paria([(os.path.join(RADIX, d), os.path.join(ad, d))
+                    for d in directoria], arbores=True)
+    for l in plagulae:
+        os.makedirs(os.path.join(ad, os.path.dirname(l)), exist_ok=True)
+    _clonare_paria([(os.path.join(RADIX, l), os.path.join(ad, l))
+                    for l in plagulae], arbores=False)
 
 
 def _tempora_speculari(ad, arbor):

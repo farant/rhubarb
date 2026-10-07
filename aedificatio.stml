@@ -63,6 +63,21 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
+  <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
+       silvae (silva._clonare_ignorata) -->
+  <actio titulus="clonare" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/clonare_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/clonare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/clonare/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/clonare_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/clonare" provenientia="relatio"/>
+  </actio>
   <!-- compilator (plan 2 T4): 'clang -c' per thesaurum contentorum -->
   <actio titulus="compilator" genus="institutio">
     <mandatum>
@@ -910,6 +925,7 @@
   <compositum titulus="installata">
     <pars actio="fabrica"/>
     <pars actio="manus"/>
+    <pars actio="clonare"/>
     <pars actio="compilator"/>
     <pars actio="aedilis"/>
     <pars actio="canon"/>
