@@ -1003,6 +1003,14 @@ try:
     silva._VERDICTA_MEMORATA = None
     credo('toml' in silva._portae_verdictorum(),
           'portae verdictorum: porta_toml in toml/aedificatio.stml inventa')
+    # praevia = artificia quae 'sanare' nominare potest: manifesta
+    # (directorium alterius actionis vestigium) NON (plan 5 T5b:
+    # 'sanare' exitus 2 -> porta aedilis via cruda in commissione)
+    _praevia_aed = silva._portae_verdictorum().get('aedilis')
+    credo(_praevia_aed is not None
+          and not any('clausurae' in v for v in _praevia_aed),
+          'portae verdictorum: aedilis sine manifestis in praeviis (%r)'
+          % (_praevia_aed,))
 finally:
     silva.FABRICA_BIN = _fb_porta_vera
     silva._VERDICTA_MEMORATA = _verdicta_vera

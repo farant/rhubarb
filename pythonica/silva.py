@@ -1810,11 +1810,15 @@ def _portae_verdictorum():
         for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
                              r'(.*?)</actio>', t, re.S):
             # ingressus sub build/: artificia actionum NON commissa, in
-            # porta() ante iudicium realizanda (spec 3 XIII v5)
+            # porta() ante iudicium realizanda (spec 3 XIII v5). Solum
+            # FASCICULI - artificia quae 'sanare' nominat; manifesta
+            # (directorium vestigii alieni) per fontes suos sigillantur
+            # et 'sanare' ea nominare nequit (exitus 2; plan 5 T5b)
             nomina[m.group(1)] = [
-                v for v in re.findall(r'<ingressus [^>]*via="([^"]+)"',
-                                      m.group(2))
-                if v.startswith('build/') or '/build/' in v]
+                v for g, v in re.findall(
+                    r'<ingressus genus="([^"]+)" via="([^"]+)"', m.group(2))
+                if g == 'fasciculus'
+                and (v.startswith('build/') or '/build/' in v)]
     _VERDICTA_MEMORATA = nomina
     return nomina
 
