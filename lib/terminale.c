@@ -435,6 +435,17 @@ terminale_clavis (
     (vacuum)destinatio;
     (vacuum)nodus;
     tc = (TerminaleContextus*)ctx;
+    /* Cmd (super) = brevitates fenestrae (Cmd+V glutinat per menu,
+     * D6c), numquam programmati - ut Terminal.app, iTerm; codificator
+     * legacy ea iam tacebat, kitty 'super+v' mittebat (Claude Code:
+     * 'v' ante glutinum) */
+    si (   (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+            || ev->genus == EVENTUS_CLAVIS_LIBERATUS)
+        && (ev->datum.clavis.modificantes & MOD_SUPER))
+    {
+        pendentem_effundere(tc);
+        redde VERUM;
+    }
     commutatio (ev->genus)
     {
         casus EVENTUS_CLAVIS_DEPRESSUS:

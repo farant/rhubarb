@@ -77,3 +77,23 @@ given at creation) stays a THEMA token so a theme switch still applies;
 once a program sets it, RGB. A changed background paints one rectangle
 over the whole surface first.
 
+
+## 2026-10-07 — Cmd keys never reach the program (D6c follow-up)
+
+Fran pasted with Cmd+V into Claude Code and got `v` + text. Our window
+loop queues EVERY key event and then hands it to AppKit, which runs the
+menu's Paste (now a GLUTINATA event); Claude Code enables kitty keys, so
+the queued Cmd+v went out as super+v and was typed as `v`. Ghostty never
+forwards a key its keybinding consumed. Suppressing menu-handled keys in
+fenestra_macos would break lib/schirmata.c (it imports images on the
+Cmd+V KEY event), so terminale drops super key events itself - the
+macOS terminal convention (Terminal.app, iTerm), and what the legacy
+encoder already did; only the kitty path leaked. Divergence from
+Ghostty: it can send unbound super keys under kitty; we never do.
+
+Also seen in that session: box-drawing characters render as tofu - the
+6x8 font has no glyphs for them (fonts come after the emulator).
+
+The first D6c commit failed the aedilis gate with "scripsit extra
+vestigium: bin/terminale": launching ./apps/terminale/terminale.sh
+during a gate rewrites bin/terminale. Not code - rerun passed.

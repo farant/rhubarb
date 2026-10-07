@@ -478,6 +478,32 @@ modos_probare (vacuum)
     eventum_dare(&mc, &ev);
     CREDO_VERUM(captum_est(&mc, "\x1B[200~ab\x1B[201~"));
     terminale_claudere(&mc.app);
+    /* Cmd+V (D6c, Frani sessio cum Claude Code): clavis Cmd fenestrae
+     * est, numquam programmatis - etiam sub kitty; glutinum solum */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[>1u"));
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    ev.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    ev.datum.clavis.clavis        = (clavis_t)'V';
+    ev.datum.clavis.runa          = 'v';
+    ev.datum.clavis.producta      = 'v';
+    ev.datum.clavis.modificantes  = MOD_SUPER;
+    eventum_dare(&mc, &ev);
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    u.l                                = "ab";
+    ev.genus                           = EVENTUS_TEXTUS;
+    ev.datum.textus.contentum.datum    = u.m;
+    ev.datum.textus.contentum.mensura  = II;
+    ev.datum.textus.origo              = EVENTUS_ORIGO_GLUTINATA;
+    eventum_dare(&mc, &ev);
+    memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+    ev.genus                      = EVENTUS_CLAVIS_LIBERATUS;
+    ev.datum.clavis.clavis        = (clavis_t)'V';
+    ev.datum.clavis.runa          = 'v';
+    ev.datum.clavis.modificantes  = MOD_SUPER;
+    ev.datum.clavis.actio         = EVENTUS_ACTIO_SOLUTA;
+    eventum_dare(&mc, &ev);
+    CREDO_VERUM(captum_est(&mc, "ab"));
+    terminale_claudere(&mc.app);
 }
 
 /* VI: mus, rotula, focus (D6b) */
