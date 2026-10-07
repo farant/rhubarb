@@ -73,7 +73,8 @@ Leges chartae:
   sagittae_applicationis (DECCKM), lnm, CODIFICATOR_MUS_X10; D6b:
   AemulatorModi.rotula_sagittis (?1007), terminale_titulus,
   TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
-  focum, colores honorat; D7a: DECXCPR, DECDSR, DECID, DECRQSS,
+  focum, colores honorat; D7c: DECCOLM minimum (sub ?40 delet,
+  regionem et cursorem restituit, latitudo manet); D7a: DECXCPR, DECDSR, DECID, DECRQSS,
   acervus titulorum, DECSCUSR servatus; codificator legacy Ctrl-[/I/M
   = C0; D6c: fenestra_macos focum/defocum et
   glutinum (Cmd-V) ut eventa; codificator kitty: shift consumptus ->

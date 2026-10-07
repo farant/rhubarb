@@ -1432,4 +1432,20 @@
     <gradus initus="\x1B]2;tres\x07\x1B[22;1t\x1B]2;quattuor\x07\x1B[23;2t" titulus="quattuor" tituli="5" ignota="0"/>
   </casus>
 
+  <!-- DECCOLM minimus (D7c, Franus): sine ?40 ignoratur (Ghostty);
+       cum ?40 schirmum delet, cursorem ad initium, regionem restituit -
+       latitudo NON mutatur (hospes fenestram regit; divergentia
+       nominata). vttest in hoc effectu nititur etiam LXXX columnis. -->
+  <casus titulus="deccolm without permission is ignored" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="X\x1B[?3h" textus="X" cursor_x="1"/>
+    <gradus initus="\x1B[?3$p\x1B[?40$p" responsum="\x1B[?3;2$y\x1B[?40;2$y"/>
+  </casus>
+
+  <casus titulus="deccolm clears, homes and resets margins" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?40hab\x1B[3;4r\x1B[2;2H\x1B[?3l" textus="\0" cursor_x="0" cursor_y="0"/>
+    <gradus initus="\x1BP$qr\x1B\\\x1B[?3$p" responsum="\x1BP1$r1;5r\x1B\\\x1B[?3;2$y"/>
+    <gradus initus="cd\x1B[?3h\x1B[1;200H" textus="\0" cursor_x="9" cursor_y="0"/>
+    <gradus initus="\x1B[?3$p" responsum="\x1B[?3;1$y"/>
+  </casus>
+
 </vectores>

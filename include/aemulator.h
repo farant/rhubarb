@@ -171,8 +171,8 @@ aemulator_alterum (
     constans Aemulator* a);
 
 /* modus ANSI (privatus FALSUM) aut DEC privatus (VERUM), bitum crudum
- * ut DECRQM nuntiat (D2): ANSI IV XX; DEC I VI VII IX XXV XLV XLVII
- * LXVI M-MVII MXV MXVI MXLV MXLVII-MXLIX MMIV MMXXVI. Ignotus =
+ * ut DECRQM nuntiat (D2): ANSI IV XX; DEC I III VI VII IX XXV XL XLV
+ * XLVII LXVI M-MVII MXV MXVI MXLV MXLVII-MXLIX MMIV MMXXVI. Ignotus =
  * FALSUM. */
 b32
 aemulator_modus (

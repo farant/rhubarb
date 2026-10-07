@@ -508,3 +508,51 @@ Fran chose to close only the small answers before the D7 session.
   vector now asserts `ignota="0"`.
 esctest 284 -> 294. Parked by Fran: protection/selective erase (24),
 DECCOLM (2), XTSAVE/XTRESTORE (2).
+
+
+## 2026-10-07 — D7c: vttest driver and minimal DECCOLM
+
+**Driver.** `tools/aemulator_vttest.c` runs vttest as the child of a
+headless `TerminaleApplicatio` (80x24, 6x8 cells). A script of
+`mitte <bytes>` lines (escapes \r \n \e \\ \xHH) is fed one line at a
+time; after each, the driver pulses until output is quiet (8 x 50 ms,
+10 s cap) and saves `NNN.txt` (screen text) + `NNN.png` (the frame
+terminale would draw). Build: `./bin/aedilis tools/aemulator_vttest.c
+&& bash build/aedilis/aemulator_vttest/struere.sh`. Run vttest with
+geometry `24x80.80` or it also walks 132-column passes we never draw.
+Limits: bytes go straight to the pty, NOT through the encoder - so
+vttest's LNM test reports "<13> Not expected" (the encoder's LNM path
+is covered by the codificator tests); and timed tests (RIS sleeps 5 s)
+need more returns than a quiet wait gives.
+
+**DECCOLM.** vttest's autowrap screen relies on DECCOLM clearing the
+screen even at 80 columns (it writes, switches, expects a blank page).
+Ghostty's deccolm: ignored unless ?40; otherwise clear, reset margins,
+home - and resize. We do everything but the resize: the host owns the
+window. Without ?40 the ?3 bit is put back to 0 so DECRQM keeps saying
+"reset". Four plants (permission ignored, no clear, region kept, bit
+left set) all caught. esctest 294 -> 295; Allow80To132 and
+RIS_ResetDECCOLM need the width to change -> CONSULTO.
+
+**Walk so far** (menus 1, 2, 3, 4, 6, 7, 8, 10, 11.5, 11.6, 11.7):
+correct: cursor movement, autowrap, tabs, origin mode, scroll regions
+(soft/jump read alike), save/restore cursor, DEC graphics, British set,
+SI/SO, single shifts, VT102 insert/delete (both passes), DSR/DA1/DA2/
+DA3, ECMA-48 HPA/CBT/CHA/CHT/HPR/VPA/CNL/CPL/VPR/SD/SU, the 8x8 colour
+matrix (bold brightens 0-7), SGR 0, BCE on ED/EL/ECH/IL/DL.
+Findings (verdicts pending with Fran):
+- terminale draws NO underline, strike, overline or italic, and bold
+  only as a brighter palette colour - the core stores all of them
+  (rendition screen: "underline" looks like "vanilla").
+- DECSCNM (?5 reverse screen) not honoured: light/dark screens
+  identical. Ghostty has it.
+- blink not rendered (Ghostty blinks).
+- DECDWL/DECDHL double-size lines ignored (Ghostty too).
+- VT52 mode (?2) absent (Ghostty too).
+- SL/SR (CSI SP @ / SP A) absent (Ghostty too).
+- REP after an intervening control sequence still repeats (12 '+'
+  where vttest hopes for 2) - same as Ghostty; ECMA-48 leaves it
+  undefined.
+- Black-on-black text visible: the contrast floor, on purpose.
+- 8-bit GR bytes (locking-shift GR rows) show U+FFFD: we are a UTF-8
+  terminal, like Ghostty.

@@ -227,7 +227,7 @@ DECRQMTests.test_DECRQM_DEC_DECAWM	transiit
 DECRQMTests.test_DECRQM_DEC_DECBKM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECCANSM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECCKM	transiit	
-DECRQMTests.test_DECRQM_DEC_DECCOLM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_DEC_DECCOLM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECCRTSM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECESKM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECHCCM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
@@ -313,7 +313,7 @@ DECSERATests.test_DECSERA_invalidRectDoesNothing	transiit
 DECSERATests.test_DECSERA_overlyLargeSourceClippedToScreenSize	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
 DECSERATests.test_DECSERA_respectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECSETTests.test_DECSET_ALTBUF	transiit	
-DECSETTests.test_DECSET_Allow80To132	fractum	LACUNA: DECCOLM 132 columnae (Ghostty sub ?40)
+DECSETTests.test_DECSET_Allow80To132	fractum	CONSULTO: DECCOLM latitudinem non mutat: delet, regionem et cursorem restituit, hospes fenestram regit (D7c)
 DECSETTests.test_DECSET_DECAWM	transiit	
 DECSETTests.test_DECSET_DECAWM_CursorAtRightMargin	transiit	
 DECSETTests.test_DECSET_DECAWM_NoLineWrapOnTabWithLeftRightMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
@@ -465,7 +465,7 @@ RISTests.test_RIS_ClearsScreen	transiit
 RISTests.test_RIS_CursorToOrigin	transiit	
 RISTests.test_RIS_ExitAltScreen	transiit	
 RISTests.test_RIS_RemoveMargins	transiit	
-RISTests.test_RIS_ResetDECCOLM	fractum	LACUNA: DECCOLM 132 columnae (Ghostty sub ?40)
+RISTests.test_RIS_ResetDECCOLM	fractum	CONSULTO: DECCOLM latitudinem non mutat: delet, regionem et cursorem restituit, hospes fenestram regit (D7c)
 RISTests.test_RIS_ResetDECOM	transiit	
 RISTests.test_RIS_ResetTabs	transiit	
 RISTests.test_RIS_ResetTitleMode	fractum	CONSULTO: modi tituli xterm (CSI > t)

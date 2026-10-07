@@ -74,6 +74,8 @@ nomen enumeratio {
     MODUS_INSERTIO = ZEPHYRUM,  /* ANSI IV (IRM) */
     MODUS_LINEA_NOVA,           /* ANSI XX (LNM) */
     MODUS_SAGITTAE,             /* I (DECCKM) */
+    MODUS_COLUMNAE,             /* III (DECCOLM; latitudo manet) */
+    MODUS_COLUMNAE_PERMISSAE,   /* XL (DECCOLM permissum) */
     MODUS_ORIGO,                /* VI (DECOM) */
     MODUS_INVOLUTIO,            /* VII (DECAWM) */
     MODUS_MUS_X10,              /* IX */
@@ -109,6 +111,8 @@ interior constans ModusDescriptio modi_tabula[MODI_NUMERUS] = {
     { IV,      FALSUM, FALSUM },
     { XX,      FALSUM, FALSUM },
     { I,       VERUM,  FALSUM },
+    { III,     VERUM,  FALSUM },
+    { XL,      VERUM,  FALSUM },
     { VI,      VERUM,  FALSUM },
     { VII,     VERUM,  VERUM  },
     { IX,      VERUM,  FALSUM },
@@ -1581,6 +1585,22 @@ modum_ponere (
     commutatio (k)
     {
         casus MODUS_ORIGO:
+            cursorem_locare(a, ZEPHYRUM, ZEPHYRUM);
+            frange;
+        casus MODUS_COLUMNAE:
+            /* DECCOLM (Ghostty deccolm): sine ?40 ignoratur et bitum
+             * remotum manet; aliter schirmum totum deletur, regio
+             * restituitur, cursor ad initium. Latitudo NON mutatur -
+             * hospes fenestram regit (divergentia nominata, D7c;
+             * vttest hoc effectu etiam LXXX columnis nititur) */
+            si (!modus_est(a, MODUS_COLUMNAE_PERMISSAE))
+            {
+                a->modi[k] = ZEPHYRUM;
+                frange;
+            }
+            schirmum_delere(a, II);
+            a->regio_summa   = ZEPHYRUM;
+            a->regio_ultima  = a->altitudo - I;
             cursorem_locare(a, ZEPHYRUM, ZEPHYRUM);
             frange;
         casus MODUS_ALTERUM_SERVATUM:

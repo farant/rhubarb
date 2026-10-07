@@ -51,7 +51,8 @@ CAUSAE = [
     (LACUNA + 'OSC 52 delectus', EFFUGIUM + r'\]52;'),
     ('XTWINOPS', CSI + r'(?!18t)[\d;]+t|' + CSI + r'>[\d;]*t'),
     (LACUNA + 'XTSAVE/XTRESTORE CSI ? s/r', CSI + r'\?[\d;]+[sr]'),
-    (LACUNA + 'DECCOLM 132 columnae (Ghostty sub ?40)',
+    (CONSULTO + 'DECCOLM latitudinem non mutat: delet, regionem et '
+     'cursorem restituit, hospes fenestram regit (D7c)',
      CSI + r'\?(3|40)[hl]'),
     (CONSULTO + 'MoreFix 41 (xterm curses)', CSI + r'\?41[hl]'),
     (LACUNA + 'DECID (ESC Z = DA1)', EFFUGIUM + r'Z'),

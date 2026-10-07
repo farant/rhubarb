@@ -755,6 +755,17 @@ Later phases (re-planned after A's RELATIO):
     Cmd keys leaked to programs (f74965dd), unreadable grays ->
     minimum contrast + faint (0fecd4c9), Ctrl-[/I/M sent nothing
     (a7577310), drags carried no button (6407deb6).
+    D7c (in progress): Fran chose the driven walk (option b) - Claude
+    runs vttest headless through `tools/aemulator_vttest.c` (script of
+    `mitte` lines -> NNN.txt screen text + NNN.png drawn frame per
+    step, geometry `24x80.80`) and judges each screen against vttest's
+    source. vttest = smoke/integration evidence, not a unit oracle:
+    every fix still lands as a vector, red first. Minimal DECCOLM
+    (Fran approved): ?3 honoured only under ?40, clears, resets the
+    region, homes - width never changes (host owns the window; vttest
+    leans on the clear even at 80 columns). esctest 294 -> 295; the
+    two width rows are CONSULTO. libghostty-vt differential oracle:
+    deferred (Fran: zig + fetching OK when we need it).
   - **D8 - RELATIO.**
 - **D (old sketch).** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
