@@ -725,6 +725,17 @@ Later phases (re-planned after A's RELATIO):
   - **D7 - the bar:** esctest table re-pinned (causes "later" per
     decision 26), vttest fetched and pinned, Fran's session (vim,
     less, htop, vttest).
+    D7a as built: every failing esctest row now carries a VERDICT -
+    POSTEA (decision 26: VT420 margins 79, rectangles 14, column ops
+    11, DECSCL 3, DECDSR VT420 status 4), CONSULTO (DECRQM 0 for
+    unhonoured modes 23, CIE/TekHVC/rgbi 21, XTWINOPS window
+    manipulation 18 + title reports 2 + title modes 1, OSC 5/105 6,
+    Ghostty identity 4, MoreFix 1), LACUNA (protection/selective erase
+    24, DECRQSS 8, XTWINOPS title stack 22t/23t 8, DECDSR fixed status
+    replies 5, DECCOLM 2, XTSAVE/XTRESTORE 2, DECXCPR 1, DECID 1). The
+    attribution moved from session scratch into the repo:
+    tools/aemulator_esctest_causae.py, run by `aemulator_esctest.sh
+    -pinnare`; '?' (failure without cause) exits 1.
   - **D8 - RELATIO.**
 - **D (old sketch).** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
