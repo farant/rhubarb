@@ -388,3 +388,37 @@ Of the 86 voids over 150, 75 are genuine closure inputs (headers of the
 math tier, tessera.h, runae.h, fabrica.h ...), 11 house-binary
 provenance (`aedilis.stml` through bin/natura_glossae - …57Y). The
 ceiling estimate (~45%) holds: aedilis reads nearly all of include/.
+
+**T6/T7 re-plan (2026-10-07).** The fabrica gate runs
+`tools/generata_probare.sh` inside itself: 73 of its 78 unresolved key
+sites are generata's (amalgama_fontes_generare.sh 21,
+amalgama_excludenda_generare.sh 15 - argv parsed by `for arg in "$@";
+case` that effectus does not carry loop values through). Fran: T7
+first; then, given the oracle's record (34/34 consensus since 10-02,
+fabrica judging 98 artifacts generata never saw), generata RETIRES into
+fabrica (spec 1a Q15: oracle, then deletion) and the oracle with it.
+
+**T7a (2026-10-07): the swap.** `tools/generata_iudicare.sh` runs
+`bin/fabrica iudicare -plenus -omnia`, keeps the COMMITTED artifacts
+(git ls-files; build/, bin/, ~/.bin counted only, as
+`_fabricam_exigere` does) and names every non-RECENS one; nothing
+judged = FRACTA (a gate that judges nothing is dead, not green). 135
+committed artifacts in ~25 s (generata: 51 in 2-6 min); generata's 51
+are a subset. Plants, side by side on one tree (latina.h number block,
+runae tables, silva amalgam, a fragmentum, silva's amalgamator
+manifest, the lexicon header, the entities table, crusta's cooked
+registry): the new gate named all 8 plus the artifacts that embed them
+(silva_latina_datum.c, officina and tessera amalgams) and tessera's
+excludenda generator broken by the latina.h plant (IGNOTUM, named);
+generata named the same 7 it covers, not the registry, and reported
+the excludenda break as "manifestum amalgamatoris tessera" - the new
+gate names the right artifact. Debts: the gate is owed when the judge
+or the declarations change (runner, tools/fabrica.c closure,
+aedificatio/fabrica stml and canons - inventory row swapped); per-input
+debts belong to commissio's `iudicare -plenus -tacta VIAE` phase, which
+already blocks every commit on touched committed artifacts (reach
+checked: a parser source -> silva tables + amalgam; runae.h -> runae
+tables + amalgams; a grammar -> its cooked registry; a .genera -> the
+natura canons). The oracle no longer reads generata's receipt (it would
+now be the new gate's output - an empty comparison, a false
+consensus); it runs generata_probare.sh itself until T7b.

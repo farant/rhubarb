@@ -2000,3 +2000,17 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
   memory warm). Iterate on the ledger (awk over build/fabrica/lectiones/
   porta_aedilis.tsv for build/ reads without S) instead of one heal per
   finding.
+
+## 2026-10-07 - fabrica-5 T7a: generata retires into fabrica (swap)
+
+- Retiring a gate has a trap: a consumer of the OLD gate's output format.
+  fabrica_oraculum.sh reused generata's receipt (silva.receptum_vivum) and
+  parsed stage lines; after the PORTAE swap the receipt is the new gate's
+  output, the parse finds nothing, and "0 discordiae" over 0 artifacts
+  reads as consensus. Grep for consumers of a runner's OUTPUT, not only
+  of its path.
+- `iudicare -tacta` prints only the summary when everything is RECENS;
+  add `-omnia` to see what a path reaches.
+- zsh: a space-separated list in a variable does not split - my plant
+  backups silently copied nothing; the plants were on clean files so
+  `git checkout -- <paths>` restored them. Back up with explicit paths.

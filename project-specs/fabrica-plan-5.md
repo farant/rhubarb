@@ -133,8 +133,24 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
     split. (Spec §X T5b: seven gaps found by the first heals - Fran
     decided scratch by name, speculum by existence, daemon prebuilt,
     probatio_git built not run, temp roots never inputs.)
-- [ ] **T6** fabrica (`tools/fabrica_oraculum.sh`)
-- [ ] **T7** generata (`tools/generata_probare.sh`)
+- [ ] **T6** fabrica (`tools/fabrica_oraculum.sh`) - RE-PLANNED (Fran
+  2026-10-07): its key inherits generata's whole bash tree (73 of 78
+  unresolved sites), so T7 first; then (Fran, second decision) generata
+  RETIRES into fabrica instead of migrating, and the oracle retires with
+  it (no second judge left) - T6 becomes T7b.
+- [ ] **T7** generata: RETIRE INTO FABRICA (oracle 34/34 consensus
+  2026-10-02 - 10-07; spec 1a Q15 'oracle, then deletion').
+  - [x] **T7a** swap: `tools/generata_iudicare.sh` (bin/fabrica
+    iudicare -plenus -omnia over COMMITTED artifacts: 135, ~25 s) is
+    the `generata` gate; old set (51) a subset; plants per stage family
+    side by side; oracle stops reading generata's receipt; inventory
+    row swapped (debts: judge + declarations; per-input debts = the
+    `-tacta` phase of commissio).
+  - [ ] **T7b** retire the oracle (`fabrica` gate): PORTAE, inventory
+    row, debts.
+  - [ ] **T7c** delete `tools/generata_probare.sh` and
+    `tools/fabrica_oraculum.sh` once the swap has stood; docs, comments
+    (tools/latina_numeri.*), docs/bibliothecae/instrumenta.html.
 - [ ] **T8** oratio (`oratio/compile_probationes.sh`)
 
 ### Task T9: pythonica - where the time goes

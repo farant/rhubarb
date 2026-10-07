@@ -1569,7 +1569,10 @@ PORTAE = {
     # manifesta amalgamatoris (porta_vetustatis, olim intra
     # amalgamare.sh solum) - aedilis.stml sic primum tegitur
     # (silva-migratio T19a)
-    'generata': (['./tools/generata_probare.sh'],
+    # fabrica plan 5 T7a: iudex = bin/fabrica (iudicare -plenus -omnia,
+    # artificia COMMISSA): succedit generata_probare.sh (stadia I-VIII,
+    # XXXIV consensus oraculi) - CXXXV artificia, ~XXV s
+    'generata': (['./tools/generata_iudicare.sh'],
                  r'generata: (sana|FRACTA)'),
     # fabrica (plan 1a T8): oraculum = iudex plenus cum generata per
     # artificium consentit (Q15); fumus = porta natalis bin/fabrica
