@@ -525,3 +525,14 @@ lexer had been silently eating high bytes in its SS state since it was
 written. Fixed there (FUGA, byte kept), with tests in the lexer's own
 suite and the tessera amalgam regenerated.
 
+## D4 — kitty keyboard flags (2026-10-07)
+
+**INTENTIO.** Remember which kitty keyboard flags a program asked for,
+per screen, so D6 can encode keys the way it expects.
+
+A small stack machine ported from Ghostty's FlagStack, one field added
+to the host snapshot. Two of the first plants survived because my
+vectors pushed (moving off the base slot) where they should have set,
+and because no vector sent a bare push - the plants, not the code,
+found the gaps.
+

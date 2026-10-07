@@ -197,6 +197,9 @@ nomen structura {
                  b32 glutinum;               /* ?2004 bracketed paste */
                  b32 focus;                  /* ?1004 */
                  b32 lnm;                    /* LNM 20: Enter = CR LF */
+                 i32 kitty_vexilla;          /* D4: protocollum clavium
+                                              * kitty, schirmi activi
+                                              * (0-31; 0 = legacy) */
 } AemulatorModi;
 
 AemulatorModi

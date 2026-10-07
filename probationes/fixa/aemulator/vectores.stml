@@ -1247,4 +1247,65 @@
     <gradus initus="\x1B(Kq" textus="q" ignota="1"/>
   </casus>
 
+  <!-- ==================== D4: protocollum clavium kitty ==================== -->
+
+  <casus titulus="kitty_keyboard_query" fons="stream_terminal.zig:4927" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[>1u\x1B[?u" responsum="\x1B[?1u"/>
+  </casus>
+
+  <casus titulus="FlagStack: push pop" fons="kitty/key.zig:126" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>1u\x1B[?u" responsum="\x1B[?1u"/>
+    <gradus initus="\x1B[<1u\x1B[?u" responsum="\x1B[?0u"/>
+  </casus>
+
+  <casus titulus="FlagStack: pop big number" fons="kitty/key.zig:139" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>3u\x1B[<100u\x1B[?u" responsum="\x1B[?0u"/>
+  </casus>
+
+  <casus titulus="FlagStack: set" fons="kitty/key.zig:146" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[=1u\x1B[?u" responsum="\x1B[?1u"/>
+    <gradus initus="\x1B[=2;2u\x1B[?u" responsum="\x1B[?3u"/>
+    <gradus initus="\x1B[=2;3u\x1B[?u" responsum="\x1B[?1u"/>
+  </casus>
+
+  <!-- CSI > u sine parametro vexilla 0 impellit (Ghostty) -->
+  <casus titulus="kitty push without flags pushes zero" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[=7u\x1B[>u\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[<u\x1B[?u" responsum="\x1B[?7u"/>
+  </casus>
+
+  <!-- anulus VIII: impulsus nonus vetustissimos evincit; CSI < sine
+       parametro = I -->
+  <casus titulus="kitty stack is a ring of eight" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>1u\x1B[>2u\x1B[>3u\x1B[>4u\x1B[>5u\x1B[>6u\x1B[>7u\x1B[>8u\x1B[>9u"/>
+    <gradus initus="\x1B[<u\x1B[?u" responsum="\x1B[?8u"/>
+    <gradus initus="\x1B[<6u\x1B[?u" responsum="\x1B[?2u"/>
+    <gradus initus="\x1B[<u\x1B[?u" responsum="\x1B[?0u"/>
+  </casus>
+
+  <!-- acervus proprius per schirmum; alterum suum servat (Ghostty:
+       schirmum alterum semel creatum manet) -->
+  <casus titulus="kitty stack per screen" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>5u\x1B[?1049h\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[>3u\x1B[?1049l\x1B[?u" responsum="\x1B[?5u"/>
+    <gradus initus="\x1B[?1049h\x1B[?u" responsum="\x1B[?3u"/>
+  </casus>
+
+  <!-- RIS acervos ambos purgat (Ghostty fullReset, issue 1607); DECSTR
+       et DECSC non tangunt -->
+  <casus titulus="ris clears both kitty stacks, decstr keeps them" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[=5u\x1B[?1049h\x1B[=3u\x1Bc\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[?1049h\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[>1u\x1B[!p\x1B7\x1B[>2u\x1B8\x1B[?u" responsum="\x1B[?2u"/>
+  </casus>
+
+  <!-- vexilla > XXXI aut modus extra I-III: series tota ignota;
+       CSI u nudum manet SCORC -->
+  <casus titulus="kitty invalid flags are ignored" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>32u\x1B[?u" responsum="\x1B[?0u" ignota="1"/>
+    <gradus initus="\x1B[=1;4u\x1B[?u" responsum="\x1B[?0u" ignota="2"/>
+    <gradus initus="\x1B[2;3H\x1B[s\x1B[1;1H\x1B[u" cursor_x="2" cursor_y="1" ignota="2"/>
+  </casus>
+
 </vectores>

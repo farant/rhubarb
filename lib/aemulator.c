@@ -165,6 +165,11 @@ nomen structura {
      AemulatorCursor   cursor;   /* visibilis: vide Aemulator */
                  i32   calamus;  /* stilus currens (index) */
             Servatus   servatus;
+    /* protocollum clavium kitty (D4, Ghostty kitty/key.zig FlagStack):
+     * anulus VIII vexillorum per schirmum; impulsus ultra summum
+     * vetustissimum evincit */
+                  i8 kitty[VIII];
+                 i32 kitty_index;
 } Schirmum;
 
 structura Aemulator {
@@ -1998,6 +2003,8 @@ plene_restituere (
             magnitudo(AemulatorCursor));
         schirma[k]->calamus         = ZEPHYRUM;
         schirma[k]->servatus.adest  = FALSUM;
+        memset(schirma[k]->kitty, ZEPHYRUM, VIII);
+        schirma[k]->kitty_index     = ZEPHYRUM;
     }
     a->activum       = &a->primarium;
     historiam_delere(a);
@@ -2164,6 +2171,93 @@ regionem_ponere (
     cursorem_locare(a, ZEPHYRUM, ZEPHYRUM);
 }
 
+/* CSI ? u / > u / < u / = u (Ghostty stream 'u' et FlagStack):
+ * quaestio, impulsus (vexilla absentia = 0), extractio (absens = I;
+ * >= VIII acervum purgat), positio (modus I ponit, II addit, III
+ * removet). Vexilla > XXXI aut modus alius: series tota ignota. */
+interior vacuum
+kitty_tractare (
+                 Aemulator* a,
+     constans SeriesLexema* lx)
+{
+    Schirmum* s;
+          i8  b[XVI];
+         i32  m;
+         i32  vexilla;
+         i32  modus;
+         i32  n;
+         i32  k;
+
+    s = a->activum;
+    commutatio (lx->privatum)
+    {
+        casus '?':
+            m       = ZEPHYRUM;
+            b[m++]  = (i8)0x1B;
+            b[m++]  = '[';
+            b[m++]  = '?';
+            numerum_appendere(b, &m, (i32)s->kitty[s->kitty_index]);
+            b[m++]  = 'u';
+            respondere(a, b, m);
+            frange;
+        casus '>':
+            vexilla = lx->numerus_parametrorum == I
+                ? (i32)lx->parametra[ZEPHYRUM] : ZEPHYRUM;
+            si (vexilla > XXXI)
+            {
+                a->ignota++;
+                frange;
+            }
+            s->kitty_index               = (s->kitty_index + I) % VIII;
+            s->kitty[s->kitty_index]     = (i8)vexilla;
+            frange;
+        casus '<':
+            n = lx->numerus_parametrorum == I
+                ? (i32)lx->parametra[ZEPHYRUM] : I;
+            si (n >= VIII)
+            {
+                memset(s->kitty, ZEPHYRUM, VIII);
+                s->kitty_index = ZEPHYRUM;
+                frange;
+            }
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                s->kitty[s->kitty_index] = ZEPHYRUM;
+                s->kitty_index = (s->kitty_index + VII)
+                    % VIII;
+            }
+            frange;
+        casus '=':
+            vexilla = lx->numerus_parametrorum >= I
+                ? (i32)lx->parametra[ZEPHYRUM] : ZEPHYRUM;
+            modus = lx->numerus_parametrorum >= II
+                ? (i32)lx->parametra[I] : I;
+            si (vexilla > XXXI || modus < I || modus > III)
+            {
+                a->ignota++;
+                frange;
+            }
+            si (modus == I)
+            {
+                s->kitty[s->kitty_index] = (i8)vexilla;
+            }
+            alioquin si (modus == II)
+            {
+                s->kitty[s->kitty_index] =
+                    (i8)((i32)s->kitty[s->kitty_index] | vexilla);
+            }
+            alioquin
+            {
+                s->kitty[s->kitty_index] =
+                    (i8)((i32)s->kitty[s->kitty_index] & ~vexilla);
+            }
+            frange;
+        ordinarius:
+            a->ignota++;
+            frange;
+    }
+}
+
 interior vacuum
 seriem_csi (
                  Aemulator* a,
@@ -2211,6 +2305,12 @@ seriem_csi (
         || (lx->separatores != ZEPHYRUM && lx->finale != 'm'))
     {
         a->ignota++;
+        redde;
+    }
+    /* kitty claves (D4); CSI u nudum = SCORC infra */
+    si (lx->finale == 'u' && lx->privatum != ZEPHYRUM)
+    {
+        kitty_tractare(a, lx);
         redde;
     }
     si (lx->privatum == '?')
@@ -3092,6 +3192,8 @@ aemulator_modi (
     m.glutinum                = modus_est(a, MODUS_GLUTINUM);
     m.focus                   = modus_est(a, MODUS_FOCUS);
     m.lnm                     = modus_est(a, MODUS_LINEA_NOVA);
+    m.kitty_vexilla           =
+        (i32)a->activum->kitty[a->activum->kitty_index];
     redde m;
 }
 

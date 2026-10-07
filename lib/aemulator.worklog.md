@@ -431,3 +431,21 @@ introducer N, which the core treats the same way.
 **Weak vector found by plant Q15:** LS2 landing in G3 survived while G2
 and G3 held the same set; G3 now differs in that step.
 
+## 2026-10-07 — D4: kitty keyboard flags
+
+**Ring, not stack.** Ghostty's FlagStack is 8 slots with a wrapping
+index: a ninth push overwrites the oldest, and popping below the base
+wraps too (slots are zeroed as they are popped, so it reads 0). We copy
+that exactly; the ring vector pushes 9 and pops back through it.
+
+**Vectors that test the slot, not the index.** RIS resets the index to
+0; a vector that PUSHED before RIS left its value in slot 1, so a plant
+that forgot to zero the slots still read 0. Using `CSI = n u` (writes
+the current slot) makes the zeroing visible. Same lesson as D3's Q15:
+a vector must make the broken and the correct paths diverge.
+
+**Equivalent plant:** removing the `pop >= 8 -> clear` shortcut gives
+the same result (popping 2^31 one by one also ends empty) in ~1 s at
+our optimisation level - it is a hostile-input guard, kept, untestable
+by output.
+

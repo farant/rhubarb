@@ -657,6 +657,17 @@ modos_probare (vacuum)
     CREDO_FALSUM(m.glutinum);
     CREDO_FALSUM(m.focus);
     CREDO_FALSUM(m.lnm);
+    CREDO_AEQUALIS_I32(m.kitty_vexilla, ZEPHYRUM);
+    /* kitty (D4): vexilla schirmi ACTIVI */
+    scribere(a, "\x1B[>13u");
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, XIII);
+    scribere(a, "\x1B[?1049h");
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, ZEPHYRUM);
+    scribere(a, "\x1B[?1049l\x1B[<u");
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, ZEPHYRUM);
+    /* extractio saturata non pendet (Ghostty: >= VIII purgat) */
+    CREDO_NON_PENDET(scribere(a, "\x1B[>1u\x1B[<2147483647u"), MM);
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, ZEPHYRUM);
     scribere(a, "\x1B[?1h\x1B=\x1B[?2004h\x1B[?1004h\x1B[20h");
     m = aemulator_modi(a);
     CREDO_VERUM(m.sagittae_applicationis);

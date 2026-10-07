@@ -68,7 +68,9 @@ Leges chartae:
   45/1045, ESC = / ESC >, `aemulator_modi` (AemulatorModi, AemulatorMus,
   AemulatorMusForma) pro hospite; D3: copiae characterum (G0-G3, SO/SI,
   SS2/SS3, DEC Special Graphics). series_terminalis: octeti alti post
-  ESC N|O non iam pereunt (FUGA). Series ceterae
+  ESC N|O non iam pereunt (FUGA); D4: acervus vexillorum clavium kitty
+  per schirmum (CSI ? > < = u), AemulatorModi.kitty_vexilla. Series
+  ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex

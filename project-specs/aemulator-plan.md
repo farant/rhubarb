@@ -659,6 +659,15 @@ Later phases (re-planned after A's RELATIO):
     (+3 lexer tests). esctest unchanged (264; it has no charset tests -
     vttest in D7). tessera amalgam regenerated.
   - **D4 - kitty keyboard flags** (decision 27) + its query.
+    D4 as built: header field `AemulatorModi.kitty_vexilla` (Fran
+    approved; same bits as CodificatorModi.kitty_vexilla). Per-screen
+    ring of 8 (Ghostty FlagStack): push past the top evicts the oldest,
+    pop >= 8 clears; CSI ? u answers; flags > 31 or set mode outside
+    1-3 = whole sequence ignored. The alternate screen keeps its own
+    stack across visits; RIS clears both; DECSTR and DECSC leave them.
+    241 vectors (+9: 4 Ghostty); section XXI extended; 11 plants caught
+    (+1 equivalent: the pop >= 8 shortcut, ~1 s of CPU on a saturated
+    pop - a hostile-input guard, invisible in the result).
   - **D5 - colour queries** (decision 28; configuration addition for
     Fran's approval).
   - **D6 - terminale wiring:** modes -> codificator (DECCKM arrows,
