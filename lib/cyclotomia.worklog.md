@@ -76,3 +76,55 @@ equality.
 
 **Next.** Redo knotapel's DKC line on the house ring (the D114-style audit
 of D29 / D100-109), and Q(zeta_n) if the TL matrices need inverses.
+
+## 2026-10-07 - review I (fresh recensor-mathematicus)
+
+The exact arithmetic is correct. The reviewer checked it with its own Python
+oracle, also under ASan/UBSan:
+- Phi_n for n = 1..1000 against the Moebius product; 105 is the first n
+  with a coefficient outside {-1, 0, 1};
+- 17,908 ring checks over 30 values of n, including 30-digit coefficients:
+  every automorphism, refusal of non-units, divisibility decided by an
+  integral solve of the multiplication matrix;
+- 63 Bareiss determinants against a Leibniz oracle (Vandermonde 4x4/5x5 at
+  n = 3, 5, 8, 12, 16, 24, a 6x6 at n = 8, random, singular, pivot swap);
+- the knot facts are theorems: Jones, Murakami, Levine.
+
+Fixed:
+- **HIGH, stack overflow in the display.** `sprintf("%.*f")` into a
+  128-byte buffer prints every integer digit of a large double:
+  (1 + zeta_8)^230, or 10^100 at 15 digits, wrote 253 bytes (rc 133 without
+  ASan). C89 has no snprintf, so |x| >= 10^15 now goes through %e, the two
+  parts are formatted separately, and the line buffer is 256 bytes.
+- **Magnus -> f64 truncated at 255 characters**, so 10^300 displayed as
+  about 1e254. It now builds a 17-digit mantissa plus an exponent for
+  strtod.
+- **The f64 cancellation is silent:** (sqrt2 - 1)^60 = 1e-23 displays as
+  millions. The header now states the error bound
+  (~phi * max|c| * 2^-52); the display stays display-only.
+- **Division computed the conjugate product twice** (inside norma and again
+  directly). It is now computed once and N = b * product, about 2x faster
+  (10.8 ms per division at n = 105 before).
+- **Documented:** the embedding Z[zeta_8] -> Z[zeta_16] via ex_polynomio
+  with k = 2; that radix shares the context table (immutable); the measured
+  memory (n = 840: 6 MB, creation < 5 ms).
+- **Test gaps (mutations that survived, now red):**
+  - P54, automorphism = identity, and P55, j -> j^2: the composition law
+    alone held for both. Now sigma_3(zeta_8) = zeta_8^3 and sigma_-1 =
+    conjugate are pinned;
+  - P1, gcd refusal removed: now j = 2, 0, 8 must be refused;
+  - P13, est_integer checking imus: now 1 + zeta must not be an integer;
+  - P4, n = M refused: now creare(M) must work;
+  - display: zeta_8^6 = "0.0000 - 1.0000i", 10^100 and 10^300 strings, and
+    a length check for (1 + zeta_8)^230. The plant restoring %f for large
+    values is red.
+
+  53 tests.
+- **Performance, recorded:** one Z[zeta_8] multiply costs 180-270 ns and
+  allocates 288 B, against under 1 ns for the demos' `long`. That is fine
+  for the D114-style audit (1e6-1e7 operations). Sweeps of 1e8-1e9 would
+  need a fixed-width layer later, with this library as its oracle.
+
+Open for Fran (the API): elements carry no ring, so aequalis(zeta_8,
+zeta_16) = VERUM and rings mix silently; and there is no s64-array
+constructor or reader for demo interop.

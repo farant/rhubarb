@@ -533,6 +533,60 @@ s32 principale (vacuum)
             "-0.71 - 0.71i");
         CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_chordam(r8,
             cyclotomicus_radix(r8, V, piscina), piscina), "-z");
+        /* recensio: automorphismus non identitas (sigma_3(zeta_8) =
+         * zeta_8^3, sigma_-1 = conjugatum), non unitates refutatae */
+        CREDO_VERUM (cyclotomicus_automorphismus(r8, z8, III, piscina,
+            &w)
+            && cyclotomicus_aequalis(w, cyclotomicus_radix(r8, III,
+                piscina)));
+        CREDO_VERUM (cyclotomicus_automorphismus(r8, z8, -I, piscina,
+            &w)
+            && cyclotomicus_aequalis(w, cyclotomicus_conjugatum(r8, z8,
+                piscina)));
+        CREDO_FALSUM (cyclotomicus_automorphismus(r8, z8, II, piscina,
+            &w));
+        CREDO_FALSUM (cyclotomicus_automorphismus(r8, z8, ZEPHYRUM,
+            piscina, &w));
+        CREDO_FALSUM (cyclotomicus_automorphismus(r8, z8, VIII, piscina,
+            &w));
+        /* est_integer: 1 + zeta non integer; 5 integer */
+        CREDO_FALSUM (cyclotomicus_est_integer(cyclotomicus_adde(z8,
+            cyclotomicus_integer(r8, magnus_ex_s64(I), piscina),
+            piscina),
+            NIHIL));
+        CREDO_VERUM (_integer_est(cyclotomicus_integer(r8,
+            magnus_ex_s64(V),
+            piscina), V));
+        /* ordo maximus M creatur */
+        CREDO_VERUM (cyclotomia_creare(M, piscina) != NIHIL
+            && cyclotomia_gradus(cyclotomia_creare(M, piscina)) == CD);
+        /* ostensio: zeta_8^6 = -i (signum, -0 non scribitur); numeri
+         * magni per notationem e, sine exundatione alvei; 10^300 non in
+         * 10^254 truncatum */
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(r8,
+            cyclotomicus_radix(r8, VI, piscina), IV, piscina),
+            "0.0000 - 1.0000i");
+        {
+                  Magnus decies = magnus_ex_s64(X);
+            Cyclotomicus x;
+                  chorda textus;
+
+            x = cyclotomicus_integer(r8, magnus_potentia(decies, C,
+                piscina), piscina);
+            textus = cyclotomicus_ad_ostendendum(r8, x, XV, piscina);
+            CREDO_CHORDA_AEQUALIS_LITERIS (textus,
+                "1.000000000000000e+100 + 0.000000000000000i");
+            x = cyclotomicus_integer(r8, magnus_potentia(decies, CCC,
+                piscina), piscina);
+            textus = cyclotomicus_ad_ostendendum(r8, x, IV, piscina);
+            CREDO_CHORDA_AEQUALIS_LITERIS (textus,
+                "1.0000e+300 + 0.0000i");
+            x = cyclotomicus_potentia(r8, cyclotomicus_adde(z8,
+                cyclotomicus_integer(r8, magnus_ex_s64(I), piscina),
+                piscina), CCXXX, piscina);
+            textus = cyclotomicus_ad_ostendendum(r8, x, IV, piscina);
+            CREDO_VERUM (textus.mensura < C && textus.mensura > X);
+        }
         /* matrix: Vandermonde nodorum 1, zeta, zeta^2 in Z[zeta_5]:
          * det = prod_{i < j} (x_j - x_i) */
         {

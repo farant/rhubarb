@@ -55,7 +55,8 @@ polynomium_cyclotomicum (
     Polynomium* exitus);
 
 /* contextus Z[zeta_n]; NIHIL si n < 1 aut n > CYCLOTOMIA_ORDO_MAXIMUS.
- * Memoria ~ n * phi(n) coefficientes (tabula potentiarum). */
+ * Memoria: tabulae potentiarum (n * phi(n) coefficientes, plerumque
+ * parvi); n = 840: ~6 MB, creatio < 5 ms (recensio). */
 Cyclotomia*
 cyclotomia_creare (
          i32  n,
@@ -98,7 +99,8 @@ cyclotomicus_integer (
                  Magnus  c,
                 Piscina* piscina);
 
-/* zeta^k, k quilibet (modulo n, negativus licet) */
+/* zeta^k, k quilibet (modulo n, negativus licet). Elementum tabulam
+ * contextus PARTITUR (immutabile, sicut omnia polynomia): non copia. */
 Cyclotomicus
 cyclotomicus_radix (
     constans Cyclotomia* r,
@@ -108,7 +110,8 @@ cyclotomicus_radix (
 /* p(zeta^k): variabilis polynomii (exponentes Laurent quilibet)
  * substituitur et reducitur - e.g. Jones V(t) ad t = zeta^k, uncinus
  * ad A = zeta^k. k = 1: reductio simplex. FALSUM nunquam nisi memoria;
- * b32 pro consensu. */
+ * b32 pro consensu. Etiam immersio: a in Z[zeta_8] -> Z[zeta_16] per
+ * cyclotomicus_ex_polynomio(r16, a.p, II) (zeta_8 = zeta_16^2). */
 b32
 cyclotomicus_ex_polynomio (
     constans Cyclotomia* r,
@@ -259,8 +262,10 @@ cyclotomicus_ex_chorda (
            Cyclotomicus* exitus);
 
 /* AD OSTENDENDUM SOLUM: "0.7071 + 0.7071i" cum digitis decimalibus
- * datis (f64 interius, cos/sin). Numquam ad decisiones: aequalis,
- * est_radix, modulus_quadratus exacta sunt. */
+ * datis (maximum XV; |x| >= 10^15 per notationem e). f64 interius
+ * (cos/sin): error absolutus ~ phi(n) * max|c| * 2^-52 - cancellatio
+ * TACITA est ((sqrt2 - 1)^60 = 1e-23 ut milliones ostenditur). Numquam
+ * ad decisiones: aequalis, est_radix, modulus_quadratus exacta sunt. */
 chorda
 cyclotomicus_ad_ostendendum (
     constans Cyclotomia* r,

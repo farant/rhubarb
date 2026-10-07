@@ -753,10 +753,16 @@ cyclotomicus_divide_exacte (
     {
         redde FALSUM;
     }
-    n = cyclotomicus_norma(r, b, piscina);
-    c = cyclotomicus_multiplica(r, a, _conjugata_producta(r, b,
-        piscina),
-        piscina);
+    /* productum conjugatorum semel: N(b) = b * productum (recensio:
+     * olim bis computatum) */
+    {
+        Cyclotomicus productum = _conjugata_producta(r, b, piscina);
+
+        n = magnus_ex_s64(ZEPHYRUM);
+        (vacuum)cyclotomicus_est_integer(cyclotomicus_multiplica(r, b,
+            productum, piscina), &n);
+        c = cyclotomicus_multiplica(r, a, productum, piscina);
+    }
     si (cyclotomicus_est_nullum(c))
     {
         *exitus = c;
@@ -877,10 +883,29 @@ _ad_f64 (
     {
         redde (f64)parvus;
     }
+    /* textus decimalis longus: mantissa (XVII digiti) et exponens,
+     * ne truncatio 10^300 in 10^254 vertat (recensio) */
     textus  = magnus_ad_chordam(c, piscina);
-    n       = textus.mensura < CCLV ? textus.mensura : CCLV;
-    memcpy(alveus, textus.datum, (size_t)n);
-    alveus[n] = '\0';
+    {
+        i32 signum  = textus.mensura > ZEPHYRUM
+            && textus.datum[ZEPHYRUM]
+            == '-' ? I : ZEPHYRUM;
+        i32 digiti  = (i32)textus.mensura - signum;
+        i32 k;
+
+        n = ZEPHYRUM;
+        si (signum)
+        {
+            alveus[n++] = '-';
+        }
+        alveus[n++] = (character)textus.datum[signum];
+        alveus[n++] = '.';
+        per (k = I; k < digiti && k < XVII; k++)
+        {
+            alveus[n++] = (character)textus.datum[signum + k];
+        }
+        sprintf(alveus + n, "e%u", digiti - I);
+    }
     redde strtod(alveus, NIHIL);
 }
 
@@ -895,7 +920,11 @@ cyclotomicus_ad_ostendendum (
           f64 im = 0.0;
           f64 limes;
           s32 e;
-    character alveus[CXXVIII];
+    /* |x| >= 10^15 per %e scribitur: longitudo finita (C89 snprintf
+     * caret; olim %.*f numeri magni alveum CXXVIII excedebat) */
+    character alveus[CCLVI];
+    character pars_re[CXXVIII];
+    character pars_im[CXXVIII];
 
     si (!polynomium_est_nullum(a.p))
     {
@@ -923,8 +952,14 @@ cyclotomicus_ad_ostendendum (
     {
         im = 0.0;
     }
-    sprintf(alveus, "%.*f %c %.*fi", (integer)digiti, re, im < 0.0 ? '-'
-        : '+', (integer)digiti, fabs(im));
+    sprintf(pars_re, fabs(re) >= 1e15 ? "%.*e" : "%.*f",
+        (integer)digiti,
+        re);
+    sprintf(pars_im, fabs(im) >= 1e15 ? "%.*e" : "%.*f",
+        (integer)digiti,
+        fabs(im));
+    sprintf(alveus, "%s %c %si", pars_re, im < 0.0 ? '-' : '+',
+        pars_im);
     redde chorda_transcribere(chorda_ex_literis(alveus, piscina),
         piscina);
 }
