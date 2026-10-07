@@ -105,6 +105,23 @@ background - read them before a task.*
     program could read the screen back). The esctest runner turns it
     on; it is esctest's only way to read cells.
 
+### Phase C decisions (Fran, C0 interview 2026-10-06; Fran chose C
+before D's quick wins: C is the last structural change in the core)
+
+19. **Default scrollback limit 10 MB per terminal** (bytes, decision
+    4; ~11k lines at 80 columns with 12-byte cells), configurable.
+20. **The pool grows, then recycles:** pages come from the piscina as
+    history fills, up to the limit; from then on the oldest page is
+    recycled and nothing is allocated (a short-lived tab never pays
+    the full limit).
+21. **Scrolled up, the view stays put** while output arrives
+    (Ghostty's default); a keystroke returns it to the bottom - that
+    is the HOST's job (`aemulator_hospes_scribere`), the core never
+    sees keys. If the lines in view are evicted, the view clamps to
+    the oldest remaining line.
+22. **ED 3 (`CSI 3 J`, clear scrollback) in C** - macOS `clear` sends
+    it.
+
 ## II. What exists (to read before tasks)
 
 - `include/series_terminalis.h`: the DEC/Williams lexer from Ghostty's
@@ -394,6 +411,26 @@ Later phases (re-planned after A's RELATIO):
   wins first? Which of the last group is "never"?
 - **C - scrollback.** The fixed page pool (Decision 4), viewport
   scrolling, byte limit, eviction; reflow stays deferred (Decision 7).
+  - **C0 - interview** - done 2026-10-06 (decisions 19-22).
+  - **C1 - API** (header for Fran's approval): scrollback limit in the
+    configuration; history length; viewport (scroll by lines, to top,
+    to bottom, where am I); reading a history row (cells + soft-wrap
+    flag) and the plain-text dump over history; the host's snap on
+    keystroke.
+  - **C2 - the pool and scroll-off:** primary-screen rows that leave
+    the top of a FULL-SCREEN scroll (LF/IND at the bottom, SU, ED 2's
+    xterm behaviour if any) enter history; a region scroll, IL/DL and
+    the alternate screen never do. Fixed-size pages from the piscina
+    up to the limit, then recycle (decision 20); styles referenced by
+    history survive style-table collection. Vectors from Ghostty's
+    scrollback tests first.
+  - **C3 - viewport and eviction:** scroll by lines/top/bottom; stays
+    put under output (decision 21); clamp on eviction; steady state
+    and floods allocate nothing once full (measured).
+  - **C4 - ED 3 and resize:** clear scrollback; resize without reflow
+    the Ghostty way (rows pushed off by a shrink enter history, a grow
+    pulls them back).
+  - **C5 - RELATIO** (and the esctest table re-run).
 - **D - full-screen v0.** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
   `codificator_terminalis`; the bar: vim, less, htop look right; a
