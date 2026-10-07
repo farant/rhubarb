@@ -438,3 +438,21 @@ entitates_html declaration deleted -> `GENERATUM sine iudicio:
 lib/entitates_html_tabula.c`, FRACTA. The gate costs ~16-25 s; the
 retired pair cost generata 133 s + oracle 150-180 s per commit that
 owed them.
+
+**T7c (2026-10-07):** tools/generata_probare.sh and
+tools/fabrica_oraculum.sh deleted (0d652faa); comments, the tools page
+and memory follow; park …GTQHQ (generata 381 s) closed - 16-18 s
+measured in three commits.
+
+**T8 (2026-10-07): oratio measured, not migrated** (Fran). The runner
+writes `git ls-files` lists of every tracked `*.md` (the prose corpus)
+and `*.c`/`*.h` (the identifier lint) and renews the house-wide nexus
+index before its tests; seven of its nineteen tests read those. An
+honest key is therefore nearly the whole repository: only 3 of the last
+150 first-parent commits touched no .c/.h/.m/.md file - a reuse ceiling
+of 2%. Where its 96.6 s go (mensor, 96ebd536): probatio_oratio_oraculum
+44.0 s, _stml 26.7 s (reads the md corpus), _canon 7.2 s, _vocabula
+3.9 s, the other fifteen ~15 s. The oracle test reads its own fixtures,
+not the corpus, but through raw `fopen` (oratio's tests are outside the
+lectiones lint): carving it out as its own verdict = desideratum
+…BPRSBB (channel first, as T5a). The gate stays crude.

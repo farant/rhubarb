@@ -153,7 +153,10 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
   - [x] **T7c** delete `tools/generata_probare.sh` and
     `tools/fabrica_oraculum.sh` once the swap has stood; docs, comments
     (tools/latina_numeri.*), docs/bibliothecae/instrumenta.html.
-- [ ] **T8** oratio (`oratio/compile_probationes.sh`)
+- [x] **T8** oratio (`oratio/compile_probationes.sh`) - MEASURED, NOT
+  MIGRATED (Fran 2026-10-07): a corpus gate (every tracked .md, .c/.h,
+  the nexus index), reuse ceiling 3/150 commits (2%); carving out
+  probatio_oratio_oraculum (44 s) = desideratum …BPRSBB.
 
 ### Task T9: pythonica - where the time goes
 
