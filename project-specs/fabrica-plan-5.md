@@ -102,14 +102,14 @@ membership-only (per-name A/X). Anything else -> Fran.
 
 ### Task T4: measure reuse
 
-- [ ] **Step 1: Tool** `tools/reusus_retro.sh <verdict> [-n N]`: over
+- [x] **Step 1: Tool** `tools/reusus_retro.sh <verdict> [-n N]`: over
   the last N commits, would the recorded trace have been reused between
   consecutive commits (changed paths from git ∩ trace L/X/A paths, D
   directories with added/removed entries, declared ingressus)? Prints
   rate and the voiding causes. Born checked: on toml's trace from
   BEFORE T2/T3 (saved at T1) it must name `include` and `silva.py`
   among the causes.
-- [ ] **Step 2:** toml before (saved trace) / after (current) over the
+- [x] **Step 2:** toml before (saved trace) / after (current) over the
   same commits; live causes from T1 since then. Numbers in spec §XI.
   **Commit.** Result shown to Fran before T5 (if the rate is still low,
   the next voiders are named first).

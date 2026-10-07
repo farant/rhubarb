@@ -231,3 +231,35 @@ names it. A first plant (accept any output from the start of the log)
 read past a short buffer and passed silently - undefined behaviour
 proves nothing; the plant used names the signature itself instead.
 
+**T4 (2026-10-06): measured reuse.** `tools/reusus_retro.sh TITULUS [-n N]
+[-addere F] [-specificatio F]` turns a verdict's inputs - the stored
+trace (L -> content, X/A -> existence, D -> entries), its effectus key
+(octeti, probatio, nomina, globus, arbor; `provenientia bin/X` -> the
+binary's closure as bin/aedilis reads it under FABRICA_LECTIONES), its
+declared ingressus (build/ products: the producing action's inputs, one
+level) - into rules, and replays `git diff --name-status` of the last N
+first-parent commits: reused, or the FIRST voiding cause. Approximations
+named in the tool (build/ and absolute paths invisible to git;
+environment and clang identity skipped; closures as of today; build
+scripts of house binaries not modelled - an undercount). The trace from
+BEFORE T2/T3 was not saved at T1 as the plan said; it is reconstructed
+exactly from §0 (the five D rows) and toml/aedificatio.stml @41c4a788
+(pythonica/silva.py declared) - `-addere`.
+
+| porta_toml | last 40 | last 150 |
+|---|---:|---:|
+| before T2/T3 | 24/40 (60%) | 103/150 (68%) |
+| after T2/T3 | 30/40 (75%) | 118/150 (78%) |
+
+Born checked: "before" names `enumeratio include` (14 of 150) and
+`silva.py` (3, first cause only). Remaining 32 voids over 150: 23 are
+house-binary provenance (bin/mensor 9 - 7 of them `aedilis.stml`, which
+every binary's build action declares as `configuratio`; bin/fabrica 8;
+bin/aedilis 5; bin/compilator 1), 9 genuine toml inputs (include/runae.h
+5, toml_arbor.c, excerptum.h, tomllib_aurum.sh, the runner). Live
+causes since T1 agree (bin/compilator, bin/fabrica, aedilis.stml).
+Finding: bin/fabrica, corpus_indicem.sh and tomllib_aurum.sh are in the
+key only through the runner's MANUAL branch `[ -z "$FABRICA_LECTIONES" ]`
+- dead whenever fabrica runs the verdict (it always sets the variable);
+effectus treats conditions as "may".
+
