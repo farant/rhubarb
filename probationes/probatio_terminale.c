@@ -858,6 +858,112 @@ inversum_probare (vacuum)
     terminale_claudere(&mc.app);
 }
 
+/* rectangulum quodvis (x, y, latitudo, altitudo) */
+interior Mandatum*
+rectangulum_ad (
+    Machina* mc,
+        s32  x,
+        s32  y,
+        s32  latitudo,
+        s32  altitudo)
+{
+    Mandatum* md;
+         i32  i;
+
+    per (i = ZEPHYRUM; i < mandata_numerus(mc->lf->mandata); i++)
+    {
+        md = mandata_obtinere(mc->lf->mandata, i);
+        si (   md->genus          == MANDATUM_RECTANGULUM
+            && md->fines.x        == x
+            && md->fines.y        == y
+            && md->fines.latitudo == latitudo
+            && md->fines.altitudo == altitudo)
+        {
+            redde md;
+        }
+    }
+    redde NIHIL;
+}
+
+/* XI: lineae capsarum, quadra, braille ut figurae ductae (D7c,
+ * glyphae_ductae): rectangula per cursum ordinis, nullus textus;
+ * geminus textum servat; cursor larvam colore fundi pingit */
+interior vacuum
+ductas_probare (vacuum)
+{
+     Machina  mc;
+    Mandatum* md;
+
+    imprimere("\n--- XI: figurae ductae (D7c) ---\n");
+    /* ─ │ ╭ █(rubrum) ░ ⣿ x ; cursor ad (VII, 0) */
+    CREDO_VERUM(machinam_effusione(&mc,
+        "\xE2\x94\x80\xE2\x94\x82\xE2\x95\xAD\x1B[31m\xE2\x96\x88"
+        "\x1B[0m\xE2\x96\x91\xE2\xA3\xBF" "x\x1B[1;8H"));
+    /* ─: ordo III totus, colore litterae; nullus textus */
+    md = rectangulum_ad(&mc, ZEPHYRUM, III, CELL_X, I);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_THEMA,
+        (i32)COLOR_TEXT));
+    CREDO_VERUM(mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM)
+        == NIHIL);
+    /* │: columna II, ordo quisque */
+    CREDO_VERUM(rectangulum_ad(&mc, CELL_X + II, ZEPHYRUM, I, I)
+        != NIHIL);
+    CREDO_VERUM(rectangulum_ad(&mc, CELL_X + II, VII, I, I) != NIHIL);
+    /* ╭: ordo III columnae III-V */
+    CREDO_VERUM(rectangulum_ad(&mc, II * CELL_X + III, III, III, I)
+        != NIHIL);
+    /* █ rubrum: ordo 0 totus colore xterm (205, 0, 0) */
+    md = rectangulum_ad(&mc, III * CELL_X, ZEPHYRUM, CELL_X, I);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(0xCD, ZEPHYRUM, ZEPHYRUM)));
+    /* ░: opacitas 0x40 - mixtum, nec littera nec fundus */
+    md = rectangulum_ad(&mc, IV * CELL_X, ZEPHYRUM, CELL_X, I);
+    CREDO_VERUM(md && md->color.genus == COLOR_MANDATI_RGBA);
+    /* ⣿: punctum (I, 0) cellulae V */
+    CREDO_VERUM(rectangulum_ad(&mc, V * CELL_X + I, ZEPHYRUM, I, I)
+        != NIHIL);
+    /* x: textus ut antea */
+    CREDO_VERUM(textus_cellulae(&mc, VI, ZEPHYRUM, "x"));
+    terminale_claudere(&mc.app);
+
+    /* cursor super ─: larva colore fundi super cursorem */
+    CREDO_VERUM(machinam_effusione(&mc,
+        "\xE2\x94\x80\x1B[1;1H"));
+    md = NIHIL;
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM; i < mandata_numerus(mc.lf->mandata); i++)
+        {
+            Mandatum* x;
+
+            x = mandata_obtinere(mc.lf->mandata, i);
+            si (   x->genus   == MANDATUM_RECTANGULUM
+                && x->fines.y == III && x->fines.altitudo == I
+                && color_est(x->color, COLOR_MANDATI_THEMA,
+                       (i32)COLOR_BACKGROUND))
+            {
+                md = x;
+            }
+        }
+    }
+    CREDO_VERUM(md != NIHIL);
+    terminale_claudere(&mc.app);
+
+    /* crassum: nec textus nec duplicatio */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[1m\xE2\x94\x80"));
+    CREDO_AEQUALIS_I32(textus_numerus(&mc, ZEPHYRUM, ZEPHYRUM),
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(textus_numerus(&mc, I, ZEPHYRUM), ZEPHYRUM);
+    /* geminus: textus ut antea */
+    mc.app.ornamenta_pixelorum = FALSUM;
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(textus_cellulae(&mc, ZEPHYRUM, ZEPHYRUM,
+        "\xE2\x94\x80"));
+    CREDO_VERUM(rectangulum_ad(&mc, ZEPHYRUM, III, CELL_X, I) == NIHIL);
+    terminale_claudere(&mc.app);
+}
+
 s32
 principale (vacuum)
 {
@@ -877,6 +983,7 @@ principale (vacuum)
     contrastum_probare();
     ornamenta_probare();
     inversum_probare();
+    ductas_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();

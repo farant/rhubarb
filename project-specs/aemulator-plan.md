@@ -773,7 +773,9 @@ Later phases (re-planned after A's RELATIO):
     `glyphae_ductae` (API approved) draws U+2500-259F and braille
     U+2800-28FF as opacity masks at cell size, ported from Ghostty's
     sprite font (box.zig table generated from the source); step 1 =
-    library + picture tests, step 2 = terminale draws the masks.
+    library + picture tests (8068d0fe), step 2 = terminale draws the
+    masks (box/block colours exempt from the contrast floor like
+    Ghostty's noMinContrast; braille not).
     libghostty-vt differential oracle:
     deferred (Fran: zig + fetching OK when we need it).
   - **D8 - RELATIO.**

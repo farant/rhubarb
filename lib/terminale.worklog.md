@@ -167,3 +167,32 @@ entry `imus` turned the oratio oracle gate red (subject precision) -
 the glossary is oratio's FIRST lexical source and `imus` is also
 "we go" (eo). Renamed to `infima` (WORDS knows it) instead; a house
 gloss must never shadow a real Latin form.
+
+
+## 2026-10-07 — D7c: drawn glyphs (glyphae_ductae)
+
+Box drawing U+2500-257F, blocks U+2580-259F and braille U+2800-28FF no
+longer go to the font (tofu): when `ornamenta_pixelorum` is on and the
+cell's grapheme is ONE such rune, `larvam_pingere` asks glyphae_ductae
+for the opacity mask at cell size and emits one rectangle per run of
+equal opacity per row (full = text colour, shade = text blended into the
+cell's background). No synthetic bold on these (the extra pixel would
+smear lines); decorations still apply. Under the cursor the mask is drawn
+in the background colour, as text is. The twin keeps the rune as text
+(the host terminal has a real font).
+
+Contrast: Ghostty's `noMinContrast` exempts box drawing, block elements,
+legacy computing and powerline from minimum contrast (renderer/cell.zig)
+- the colour of a block IS the picture (logo blocks, colour bars).
+`litteram_legibilem` gained `graphica`: faint still applies, the
+contrast floor does not, for U+2500-259F; braille is NOT exempt
+(Ghostty neither). Found red-first: a red `█` came out nudged.
+
+Multi-rune graphemes fall back to text (guard in `runa_ducta`) - not
+reachable today: the core drops zero-width marks (graphemes = v2), so
+the test I wrote for it could not pass and was removed; the guard stays
+for v2. Specimen (Claude Code box, light/double/heavy grids, logo,
+shades, eighths, braille, diagonals, dashes, a tmux border) rendered
+headless through tools/aemulator_vttest.c and looked at. Six plants
+caught (no rune, shade unmixed, cursor as text, contrast on graphics,
+twin ignored, runs unmerged).

@@ -25,6 +25,8 @@
 #include "stilus_terminalis.h"
 #include "codificator_terminalis.h"
 #include "aemulator.h"
+#include "glyphae_ductae.h"
+#include "utf8.h"
 #include "terminale.h"
 #include <stdlib.h>
 #include <string.h>
@@ -39,6 +41,9 @@
  * 2026-10-07: III.0, propulsio minima): programmata fundum obscurum
  * putant (Claude Code: grisei pallidi), thema nostrum lucidum est */
 #define CONTRASTUS_MINIMUS  3.0
+/* larva glyphae ductae (D7c): cellula maxima quam ducimus; maior =
+ * textus ut antea */
+#define LARVA_MAXIMA        (XXXII * LXIV)
 /* SGR 2: littera ad fundum mixta (Ghostty faint-opacity 0.5) */
 #define OBSCURUM_OPACITAS   0.5
 
@@ -245,12 +250,15 @@ rgb_mandati (
 }
 
 /* littera super fundum (0xRRGGBB): obscurum mixtum, deinde contrastus
- * minimus; immutata manet ipsa (signum thematis vivum manet) */
+ * minimus - nisi graphica (lineae capsarum, quadra: Ghostty
+ * noMinContrast, color figurae ipse est); immutata manet ipsa (signum
+ * thematis vivum manet) */
 interior ColorMandati
 litteram_legibilem (
     ColorMandati littera,
              i32 fundus,
-             b32 obscurum)
+             b32 obscurum,
+             b32 graphica)
 {
     i32 rgb;
     i32 novum;
@@ -258,7 +266,7 @@ litteram_legibilem (
     rgb = rgb_mandati(littera);
     novum = obscurum ? rgb_miscere(rgb, fundus,
         OBSCURUM_OPACITAS) : rgb;
-    novum = contrastum_curare(novum, fundus);
+    novum = graphica ? novum : contrastum_curare(novum, fundus);
     si (novum == rgb && !obscurum)
     {
         redde littera;
@@ -341,6 +349,86 @@ colorem_resolvere (
 /* ==================================================
  * Figura
  * ================================================== */
+
+/* runa sola graphematis quam glyphae_ductae pingunt; -1 si nulla
+ * (graphema plurium runarum, aliena) */
+interior s32
+runa_ducta (
+    chorda graphema)
+{
+    constans i8* p;
+    constans i8* finis;
+            s32  runa;
+
+    si (graphema.mensura == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    p      = graphema.datum;
+    finis  = graphema.datum + graphema.mensura;
+    runa   = utf8_decodere(&p, finis);
+    si (p != finis || !glyphae_ductae_est(runa))
+    {
+        redde -I;
+    }
+    redde runa;
+}
+
+/* larva glyphae ductae ut rectangula: cursus aequalis opacitatis per
+ * ordinem; plenum = littera, umbra = littera in fundum mixta. FALSUM
+ * si cellula maior quam LARVA_MAXIMA (vocans textum pingit) */
+interior b32
+larvam_pingere (
+         Mandata* m,
+             s32  runa,
+             s32  x0,
+             s32  y0,
+             s32  cw,
+             s32  ch,
+    ColorMandati  littera,
+             i32  fundus)
+{
+              i8 larva[LARVA_MAXIMA];
+           Fines f;
+    ColorMandati color;
+             s32 x;
+             s32 y;
+             s32 initium;
+              i8 valor;
+
+    si (   cw * ch > LARVA_MAXIMA
+        || !glyphae_ductae_pingere(runa, (i32)cw, (i32)ch, larva))
+    {
+        redde FALSUM;
+    }
+    f.altitudo = I;
+    per (y = ZEPHYRUM; y < ch; y++)
+    {
+        x = ZEPHYRUM;
+        dum (x < cw)
+        {
+            valor = larva[y * cw + x];
+            si (valor == ZEPHYRUM)
+            {
+                x++;
+                perge;
+            }
+            initium = x;
+            dum (x < cw && larva[y * cw + x] == valor)
+            {
+                x++;
+            }
+            color = valor == 0xFF ? littera
+                  : color_rgb(rgb_miscere(fundus, rgb_mandati(littera),
+                        (f64)valor / 255.0));
+            f.x         = x0 + initium;
+            f.y         = y0 + y;
+            f.latitudo  = x - initium;
+            mandata_rectangulum(m, f, color, VERUM);
+        }
+    }
+    redde VERUM;
+}
 
 /* linea unius pixeli in (x0 ... x0 + latitudo - 1, y): pixela ubi
  * ((x + phasis) % periodus) < plenum, cursus continui ut rectangula;
@@ -459,6 +547,8 @@ terminale_figura (
                     Fines  f;
                       b32  inversum;
                       b32  fundus_proprius;
+                      s32  runa;
+                      i32  fundus_rgb;
                       s32  cw;
                       s32  ch;
                       i32  x;
@@ -511,11 +601,13 @@ terminale_figura (
                 fundus           = t;
                 fundus_proprius  = VERUM;
             }
-            littera = litteram_legibilem(littera,
-                rgb_mandati(fundus_proprius ? fundus
-                                            : fundus_nativus(tc)),
+            runa        = runa_ducta(cellula.graphema);
+            fundus_rgb  = rgb_mandati(fundus_proprius
+                ? fundus : fundus_nativus(tc));
+            littera = litteram_legibilem(littera, fundus_rgb,
                 (cellula.stilus.ornamenta & STILUS_OBSCURUM)
-                    != ZEPHYRUM);
+                    != ZEPHYRUM,
+                runa >= 0x2500 && runa <= 0x259F);
             si (fundus_proprius)
             {
                 f.x = (s32)x * cw;
@@ -530,7 +622,16 @@ terminale_figura (
             {
                 perge;   /* occultum: nec ornamenta (longitudo) */
             }
-            si (cellula.graphema.mensura > ZEPHYRUM)
+            /* lineae capsarum, quadra, braille: figurae ductae (D7c),
+             * non textus - nec crassum fictum */
+            si (   tc->app->ornamenta_pixelorum
+                && runa >= ZEPHYRUM
+                && larvam_pingere(m, runa, (s32)x * cw, (s32)y * ch, cw,
+                       ch, littera, fundus_rgb))
+            {
+                /* pictum */
+            }
+            alioquin si (cellula.graphema.mensura > ZEPHYRUM)
             {
                 mandata_textus(m, (s32)x * cw, (s32)y * ch,
                     cellula.graphema,
@@ -572,7 +673,18 @@ terminale_figura (
             COLOR_CURSOR),
             VERUM);
         si (   aemulator_cellula(a, cursor.x, cursor.y, &cellula)
-            && cellula.graphema.mensura > ZEPHYRUM)
+            && tc->app->ornamenta_pixelorum
+            && runa_ducta(cellula.graphema) >= ZEPHYRUM)
+        {
+            (vacuum)larvam_pingere(m, runa_ducta(cellula.graphema), f.x,
+                f.y, cw, ch, fundus_nativus(tc),
+                rgb_mandati(colorem_dynamicum(tc,
+                    AEMULATOR_COLOR_CURSORIS, tc->cursor_thematis,
+                    COLOR_CURSOR)));
+        }
+        alioquin si (   aemulator_cellula(a, cursor.x, cursor.y,
+                            &cellula)
+                     && cellula.graphema.mensura > ZEPHYRUM)
         {
             mandata_textus(m, f.x, f.y, cellula.graphema, ZEPHYRUM,
                 fundus_nativus(tc));
