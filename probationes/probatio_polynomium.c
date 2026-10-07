@@ -3812,6 +3812,70 @@ s32 principale (vacuum)
     CREDO_VERUM (lectio_integra);
     CREDO_VERUM (canonica_omnia);
 
+
+    /* ==================================================
+     * INVERSUM et SYMMETRIA
+     * ================================================== */
+
+    {
+        Sors s;
+         i32 k;
+
+        imprimere("\n--- Probans inversum et symmetriam ---\n");
+        CREDO_VERUM (_textus_est(polynomium_inversum(
+            _p("-t^4 + t^3 + t"), piscina), "t^-1 + t^-3 - t^-4"));
+        CREDO_VERUM (_textus_est(polynomium_inversum(_p("t^2 - 3t + 1"),
+            piscina), "1 - 3t^-1 + t^-2"));
+        CREDO_VERUM (_textus_est(polynomium_inversum(
+            polynomium_nullum(), piscina), "0"));
+        CREDO_VERUM (polynomium_est_symmetricum(_p("t^2 - 3t + 1")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p("2t^2 - 3t + 2")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p(
+            "t^2 - t + 1 - t^-1 + t^-2")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p("t^2 + 1")));
+        CREDO_VERUM (polynomium_est_symmetricum(_p("5t^3")));
+        CREDO_VERUM (polynomium_est_symmetricum(polynomium_nullum()));
+        CREDO_FALSUM (polynomium_est_symmetricum(_p("-t^4 + t^3 + t")));
+        CREDO_FALSUM (polynomium_est_symmetricum(_p("t + 2")));
+        /* signum: -t^2 + 1 non symmetricum (coefficientes -1, 0, 1) */
+        CREDO_FALSUM (polynomium_est_symmetricum(_p("t^2 - 1")));
+        sors_seminare(&s, 2026ULL, IX);
+        per (k = ZEPHYRUM; k < CCC; k++)
+        {
+            Polynomium p    = _fortuitum(&s);
+            Polynomium inv  = _c(polynomium_inversum(p, piscina));
+            Polynomium q;
+               Fractio x    = _fractio_fortuita(&s);
+               Fractio x_1;
+               Fractio v1;
+               Fractio v2;
+
+            /* involutio */
+            CREDO_VERUM (polynomium_aequalis(_c(polynomium_inversum(inv,
+                piscina)), p));
+            /* p(1/t) ad x = p ad 1/x */
+            (vacuum)fractio_inversa(x, piscina, &x_1);
+            CREDO_VERUM (polynomium_valor(inv, x, piscina, &v1)
+                && polynomium_valor(p, x_1, piscina, &v2)
+                && fractio_aequalis(v1, v2));
+            /* p(t) p(1/t) et p + p(1/t) symmetrica */
+            CREDO_VERUM (polynomium_est_symmetricum(_multiplica(p,
+                inv)));
+            CREDO_VERUM (polynomium_est_symmetricum(_c(
+                polynomium_adde(p, inv, piscina))));
+            /* characterismus alter: symmetricum sse p = t^(imus+summus)
+             * p(1/t) */
+            si (p.numerus > ZEPHYRUM)
+            {
+                CREDO_VERUM (polynomium_translata(inv,
+                    polynomium_gradus_imus(p)
+                    + polynomium_gradus_summus(p), piscina, &q));
+                CREDO_VERUM (polynomium_est_symmetricum(p)
+                    == polynomium_aequalis(p, _c(q)));
+            }
+        }
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

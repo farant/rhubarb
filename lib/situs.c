@@ -866,3 +866,62 @@ situs_transitus_vicinus (
     piscina_reficere(piscina, nota);
     redde r;
 }
+
+b32
+situs_reflexio (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Punctum  p,
+     Piscina* piscina,
+     Punctum* exitus)
+{
+    Punctum u;
+    Punctum w;
+    Punctum n;
+    Fractio nn;
+    Fractio dd;
+    Fractio t;
+
+    u.x = fractio_subtrahe(b.x, a.x, piscina);
+    u.y = fractio_subtrahe(b.y, a.y, piscina);
+    u.z = fractio_subtrahe(b.z, a.z, piscina);
+    w.x = fractio_subtrahe(c.x, a.x, piscina);
+    w.y = fractio_subtrahe(c.y, a.y, piscina);
+    w.z = fractio_subtrahe(c.z, a.z, piscina);
+    /* n = u x w */
+    n.x = fractio_subtrahe(fractio_multiplica(u.y, w.z, piscina),
+        fractio_multiplica(u.z, w.y, piscina), piscina);
+    n.y = fractio_subtrahe(fractio_multiplica(u.z, w.x, piscina),
+        fractio_multiplica(u.x, w.z, piscina), piscina);
+    n.z = fractio_subtrahe(fractio_multiplica(u.x, w.y, piscina),
+        fractio_multiplica(u.y, w.x, piscina), piscina);
+    nn = fractio_adde(fractio_adde(fractio_multiplica(n.x, n.x,
+        piscina),
+        fractio_multiplica(n.y, n.y, piscina), piscina),
+        fractio_multiplica(n.z, n.z, piscina), piscina);
+    si (fractio_signum(nn) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    dd = fractio_adde(fractio_adde(
+        fractio_multiplica(n.x, fractio_subtrahe(p.x, a.x, piscina),
+        piscina),
+        fractio_multiplica(n.y, fractio_subtrahe(p.y, a.y, piscina),
+        piscina), piscina),
+        fractio_multiplica(n.z, fractio_subtrahe(p.z, a.z, piscina),
+        piscina), piscina);
+    /* t = 2 (n.(p - a)) / (n.n) */
+    (vacuum)fractio_divide(fractio_adde(dd, dd, piscina), nn, piscina,
+        &t);
+    exitus->x = fractio_subtrahe(p.x, fractio_multiplica(t, n.x,
+        piscina),
+        piscina);
+    exitus->y = fractio_subtrahe(p.y, fractio_multiplica(t, n.y,
+        piscina),
+        piscina);
+    exitus->z = fractio_subtrahe(p.z, fractio_multiplica(t, n.z,
+        piscina),
+        piscina);
+    redde VERUM;
+}

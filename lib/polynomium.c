@@ -1204,6 +1204,44 @@ polynomium_normale (
     redde VERUM;
 }
 
+Polynomium
+polynomium_inversum (
+    Polynomium  p,
+       Piscina* piscina)
+{
+     Magnus* alveus;
+        i32  k;
+
+    si (p.numerus == ZEPHYRUM)
+    {
+        redde p;
+    }
+    alveus = _alveus(piscina, p.numerus);
+    per (k = ZEPHYRUM; k < p.numerus; k++)
+    {
+        alveus[k] = p.coefficientes[p.numerus - I - k];
+    }
+    /* t^e -> t^-e: summus fit -imus; |e| <= MAXIMUS utrimque */
+    redde _ex_alveo(alveus, p.numerus, (s32)(-_summus(p)));
+}
+
+b32
+polynomium_est_symmetricum (
+    Polynomium p)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < p.numerus / II; k++)
+    {
+        si (!magnus_aequalis(p.coefficientes[k],
+            p.coefficientes[p.numerus - I - k]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Valor

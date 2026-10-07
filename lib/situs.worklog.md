@@ -154,3 +154,18 @@ by integer coordinates (fractio's small path allocates nothing). Now:
 notare, `_transitus`, reficere unless SECANT (the outputs, parameters
 included, are written only then). Header updated. Scaled trefoil diagram
 2.35 MB → 20.8 KB (laqueus test pins < 256 KB); situs 16528 green.
+
+## 2026-10-07 — situs_reflexio
+
+Reflection of p through the plane of a, b, c: p − 2 (n·(p−a))/(n·n) n with
+n = (b−a)×(c−a); FALSUM for collinear a, b, c (exitus untouched). Folded in
+from Demo 114 (D110–D112's construction words are exactly this
+operation). Oracle without the formula: the image is the unique point with
+(i) the midpoint of p and its image on the plane (`situs_orientatio`, other
+code) and (ii) the difference perpendicular to b−a and c−a; plus
+involution, points on the plane fixed, orientation flipped — 500 random
+rational cases. Plants: projection instead of reflection (factor 1), no
+collinearity guard — both red. (A first rewrite script replaced the wrong
+function — `rindex` excluded the match ending at the anchor; the file was
+restored from git and the function re-appended; additions-only diff
+verified.)

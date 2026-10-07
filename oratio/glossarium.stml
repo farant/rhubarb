@@ -335,6 +335,13 @@
     <forma textus="renominati" casus="genitivus" numerus="singularis" genus="masculinum"/>
     <forma textus="renominatae" casus="genitivus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="reflexio" lingua="latina" classis="substantivum" nota="reflectere: reflexio, -onis f., flexus retro (situs_reflexio: punctum per planum reflexum)">
+    <forma textus="reflexio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="reflexionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="reflexionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="reflexione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="reflexiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="unimodularis" lingua="latina" classis="adiectivum" nota="Neolatina: unimodularis, matrix determinantis +-1 (matrix: certificata Hermite et Smith); WORDS caret">
     <forma textus="unimodularis" casus="nominativus" numerus="singularis"/>
     <forma textus="unimodulares" casus="nominativus" numerus="pluralis"/>

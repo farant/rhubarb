@@ -670,6 +670,61 @@ laqueus_diagramma_genericum (
     redde FALSUM;
 }
 
+b32
+laqueus_diagramma_minimum (
+     Laqueus  l,
+         i32  radius,
+     Piscina* piscina,
+   Diagramma* exitus)
+{
+    s64 r = (s64)radius;
+    s64 a;
+    s64 b;
+    s64 c;
+    s64 optima[III];
+    i32 paucissimi  = ZEPHYRUM;
+    b32 inventum    = FALSUM;
+
+    si (radius == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (a = -r; a <= r; a++)
+    {
+        per (b = -r; b <= r; b++)
+        {
+            per (c = -r; c <= r; c++)
+            {
+                PiscinaNotatio nota;
+                     Diagramma d;
+
+                /* una ex +-v: componens prima non nulla positiva */
+                si (   a < ZEPHYRUM || (a == ZEPHYRUM && (b < ZEPHYRUM
+                    || (b == ZEPHYRUM && c <= ZEPHYRUM))))
+                {
+                    perge;
+                }
+                nota = piscina_notare(piscina);
+                si (   laqueus_diagramma(l, situs_punctum(a, b, c),
+                    piscina,
+                        &d)
+                    && (!inventum || d.numerus < paucissimi))
+                {
+                    inventum          = VERUM;
+                    paucissimi        = d.numerus;
+                    optima[ZEPHYRUM]  = a;
+                    optima[I]         = b;
+                    optima[II]        = c;
+                }
+                piscina_reficere(piscina, nota);
+            }
+        }
+    }
+    redde inventum
+        && laqueus_diagramma(l, situs_punctum(optima[ZEPHYRUM],
+        optima[I], optima[II]), piscina, exitus);
+}
+
 i32
 diagramma_numerus (
     Diagramma d)
@@ -1041,6 +1096,26 @@ diagramma_alexander (
     redde polynomium_normale(delta, piscina, exitus);
 }
 
+b32
+diagramma_determinans (
+     Diagramma  d,
+       Piscina* piscina,
+        Magnus* exitus)
+{
+    Polynomium delta;
+       Fractio valor;
+
+    si (   !diagramma_alexander(d, piscina, &delta)
+        || !polynomium_valor(delta, fractio_ex_s64(-I), piscina,
+        &valor))
+    {
+        redde FALSUM;
+    }
+    /* Delta in Z[t, t^-1]: valor ad -1 integer */
+    *exitus = magnus_absolutum(fractio_numerator(valor), piscina);
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Motus trianguli
@@ -1238,4 +1313,98 @@ laqueus_motus_removere (
     exitus->initia       = initia;
     exitus->componentes  = l.componentes;
     redde VERUM;
+}
+
+b32
+laqueus_simplificare (
+     Laqueus  l,
+     Piscina* piscina,
+     Laqueus* exitus)
+{
+    PiscinaNotatio  nota;
+           Punctum* vertices;
+               i32* initia;
+           Laqueus  cur;
+               b32  simplex;
+               b32  mutatum = VERUM;
+               i32  k;
+
+    nota     = piscina_notare(piscina);
+    simplex  = laqueus_simplex(l, piscina);
+    piscina_reficere(piscina, nota);
+    si (!simplex)
+    {
+        redde FALSUM;
+    }
+    /* tabula laboris propria: motus removere solum ut oraculum legitimi
+     * vocatur et statim reficitur */
+    vertices = (Punctum*)piscina_allocare(piscina, (memoriae_index)
+        l.numerus * magnitudo(Punctum));
+    initia = (i32*)piscina_allocare(piscina, (memoriae_index)(
+        l.componentes + I) * magnitudo(i32));
+    memcpy(vertices, l.vertices, (memoriae_index)l.numerus
+        * magnitudo(Punctum));
+    memcpy(initia, l.initia, (memoriae_index)(l.componentes + I)
+        * magnitudo(i32));
+    cur.vertices     = vertices;
+    cur.numerus      = l.numerus;
+    cur.initia       = initia;
+    cur.componentes  = l.componentes;
+    dum (mutatum)
+    {
+        mutatum = FALSUM;
+        per (k = ZEPHYRUM; k < cur.numerus; k++)
+        {
+            Laqueus ignotus;
+                b32 legitimus;
+                i32 j;
+                i32 m;
+
+            nota       = piscina_notare(piscina);
+            legitimus  = laqueus_motus_removere(cur, k, piscina,
+                &ignotus);
+            piscina_reficere(piscina, nota);
+            si (!legitimus)
+            {
+                perge;
+            }
+            /* vertex k e tabula laboris removetur */
+            per (j = k; j + I < cur.numerus; j++)
+            {
+                vertices[j] = vertices[j + I];
+            }
+            per (m = ZEPHYRUM; m <= cur.componentes; m++)
+            {
+                si (initia[m] > k)
+                {
+                    initia[m]--;
+                }
+            }
+            cur.numerus--;
+            mutatum = VERUM;
+            frange;
+        }
+    }
+    *exitus = cur;
+    redde VERUM;
+}
+
+b32
+laqueus_speculum (
+     Laqueus  l,
+     Piscina* piscina,
+     Laqueus* exitus)
+{
+    Punctum* puncta = (Punctum*)piscina_allocare(piscina,
+        (memoriae_index)
+        l.numerus * magnitudo(Punctum));
+        i32 k;
+
+    per (k = ZEPHYRUM; k < l.numerus; k++)
+    {
+        puncta[k]    = l.vertices[k];
+        puncta[k].z  = fractio_nega(l.vertices[k].z, piscina);
+    }
+    redde laqueus_ex_punctis(puncta, l.initia, l.componentes, piscina,
+        exitus);
 }

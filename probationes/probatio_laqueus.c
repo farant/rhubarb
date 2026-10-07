@@ -1047,6 +1047,167 @@ s32 principale (vacuum)
         }
     }
 
+
+    /* ==================================================
+     * SIMPLIFICATIO, DIAGRAMMA MINIMUM, SPECULUM, DETERMINANS
+     * ================================================== */
+
+    {
+        nomen structura {
+            constans character* titulus;
+            constans s32      (*tabula)[III];
+                           i32 numerus;
+                           i32 transitus;
+                           s32 determinans;
+                           i32 baculi;
+                           b32 minimus_attingitur;
+        } Exemplar;
+        /* tabulae: numerus transituum (crossing number), determinans,
+         * numerus baculorum (stick number: 3_1 6, 4_1 7, 5_1 8, 7_1 9,
+         * 8_19 = T(3,4) 8) - limes inferior quem simplificatio
+         * transgredi nequit; diagramma minimum ambitu II numerum
+         * transituum attingit praeter T(2,7) (VIII, non VII) */
+        Exemplar exempla[] = {
+            { "trifolium", trifolium, XLVIII, III, III, VI, VERUM },
+            { "octonaria", octonaria, LXXII, IV, V, VII, VERUM },
+            { "quinquefolium", quinquefolium, LXXX, V, V, VIII, VERUM },
+            { "septifolium", septifolium, CXII, VII, VII, IX, FALSUM },
+            { "torus (3, 4)", torus_iii_iv, CXX, VIII, III, VIII,
+                VERUM }
+        };
+        i32 k;
+
+        imprimere("\n--- Probans simplificationem, diagramma minimum, "
+            "speculum, determinans ---\n");
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            Laqueus l = _ex_tabula(exempla[k].tabula,
+                exempla[k].numerus);
+                   Laqueus s;
+                   Laqueus s2;
+                   Laqueus sp;
+                 Diagramma dg;
+                 Diagramma dm;
+                 Diagramma ds;
+                Polynomium a;
+                Polynomium a2;
+                Polynomium j;
+                Polynomium j2;
+                    Magnus det;
+            memoriae_index ante;
+            memoriae_index usus;
+                       b32 jones;
+                       b32 minimus;
+                       i32 i;
+                       i32 legitimi = ZEPHYRUM;
+
+            CREDO_VERUM (laqueus_diagramma_genericum(l, piscina, &dg));
+            CREDO_VERUM (diagramma_alexander(dg, piscina, &a));
+            jones = diagramma_jones(dg, piscina, &j);
+            /* determinans = |Delta(-1)| tabulae */
+            CREDO_VERUM (diagramma_determinans(dg, piscina, &det));
+            CREDO_VERUM (magnus_aequalis(det,
+                magnus_ex_s64(exempla[k].determinans)));
+            /* diagramma minimum: non plus quam genericum, non minus
+             * quam numerus transituum, idem nodus */
+            minimus = laqueus_diagramma_minimum(l, II, piscina, &dm);
+            CREDO_VERUM (minimus);
+            CREDO_VERUM (diagramma_numerus(dm)
+                <= diagramma_numerus(dg));
+            CREDO_VERUM (diagramma_numerus(dm) >= exempla[k].transitus);
+            si (exempla[k].minimus_attingitur)
+            {
+                CREDO_AEQUALIS_I32 (diagramma_numerus(dm),
+                    exempla[k].transitus);
+            }
+            CREDO_VERUM (diagramma_alexander(dm, piscina, &a2)
+                && polynomium_aequalis(a, a2));
+            /* simplificatio: simplex, idem nodus, localiter minima,
+             * idempotens */
+            ante = piscina_summa_usus(piscina);
+            CREDO_VERUM (laqueus_simplificare(l, piscina, &s));
+            usus = piscina_summa_usus(piscina) - ante;
+            CREDO_VERUM (laqueus_simplex(s, piscina));
+            CREDO_VERUM (laqueus_numerus(s) < laqueus_numerus(l));
+            CREDO_VERUM (laqueus_numerus(s) >= exempla[k].baculi);
+            /* memoria O(n): tabula laboris una, conatus refecti (copia
+             * per motum ~ n^2 octetos posceret) */
+            CREDO_VERUM (usus < (memoriae_index)CCLVI
+                * (memoriae_index)laqueus_numerus(l));
+            CREDO_VERUM (laqueus_diagramma_genericum(s, piscina, &ds));
+            CREDO_VERUM (diagramma_alexander(ds, piscina, &a2)
+                && polynomium_aequalis(a, a2));
+            si (jones)
+            {
+                CREDO_VERUM (diagramma_jones(ds, piscina, &j2)
+                    && polynomium_aequalis(j, j2));
+            }
+            per (i = ZEPHYRUM; i < laqueus_numerus(s); i++)
+            {
+                Laqueus r;
+
+                si (laqueus_motus_removere(s, i, piscina, &r))
+                {
+                    legitimi++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (legitimi, ZEPHYRUM);
+            CREDO_VERUM (laqueus_simplificare(s, piscina, &s2));
+            CREDO_VERUM (chorda_aequalis(laqueus_ad_chordam(s, piscina),
+                laqueus_ad_chordam(s2, piscina)));
+            /* speculum: Alexander idem, Jones(1/t) */
+            CREDO_VERUM (laqueus_speculum(l, piscina, &sp));
+            CREDO_VERUM (laqueus_diagramma_genericum(sp, piscina, &ds));
+            CREDO_VERUM (diagramma_alexander(ds, piscina, &a2)
+                && polynomium_aequalis(a, a2));
+            si (jones)
+            {
+                CREDO_VERUM (diagramma_jones(ds, piscina, &j2)
+                    && polynomium_aequalis(j2, polynomium_inversum(j,
+                    piscina)));
+            }
+            imprimere("  %s: vertices %u -> %u, transitus genericus "
+                "%u, minimus %u, usus simplificationis %lu\n",
+                exempla[k].titulus, laqueus_numerus(l),
+                laqueus_numerus(s), diagramma_numerus(dg),
+                diagramma_numerus(dm), (unsigned long)usus);
+        }
+    }
+    {
+        Laqueus hopf =
+            _ex_textu("[(0, 0, 0), (20, 0, 0), (20, 20, 0), "
+            "(0, 20, 0); (10, 10, -10), (10, 10, 10), (30, 10, 10), "
+            "(30, 10, -10)]");
+          Laqueus s;
+          Laqueus sp;
+        Diagramma d;
+        Diagramma ds;
+           Magnus det;
+
+        CREDO_VERUM (laqueus_diagramma_genericum(hopf, piscina, &d));
+        CREDO_FALSUM (diagramma_determinans(d, piscina, &det));
+        CREDO_FALSUM (laqueus_diagramma_minimum(hopf, ZEPHYRUM, piscina,
+            &ds));
+        CREDO_VERUM (laqueus_simplificare(hopf, piscina, &s));
+        CREDO_AEQUALIS_I32 (laqueus_componentes(s), II);
+        CREDO_VERUM (laqueus_diagramma_genericum(s, piscina, &ds));
+        CREDO_AEQUALIS_S32 (diagramma_numerus_ligationis(ds, ZEPHYRUM,
+            I),
+            I);
+        CREDO_VERUM (laqueus_speculum(hopf, piscina, &sp));
+        CREDO_VERUM (laqueus_diagramma_genericum(sp, piscina, &ds));
+        CREDO_AEQUALIS_S32 (diagramma_numerus_ligationis(ds, ZEPHYRUM,
+            I),
+            -I);
+        /* non simplex: refutatur */
+        CREDO_FALSUM (laqueus_simplificare(_ex_textu(
+            "[(0, 0, 0), (10, 10, 0), (10, 0, 0), (0, 10, 0)]"),
+            piscina,
+            &s));
+        imprimere("  catena Hopf simplificata: vertices %u\n",
+            laqueus_numerus(s));
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

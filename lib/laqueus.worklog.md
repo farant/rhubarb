@@ -178,3 +178,38 @@ first batch raced my own restore `cp` and showed M26 falsely green):
 Not pinned, by choice: parameter VALUES beyond the Hopf case (only their
 order feeds the Gauss code), and `numerus_ligationis(d, a, a)` (header
 says a != b; returns half the self-crossing sum).
+
+## 2026-10-07 — four functions folded in from Demo 114
+
+Demo 114 (knotapel, exact audit of D110–D112) needed general knot tools
+that do not belong in a demo (knotapel only consumes). API approved by Fran
+before implementation:
+
+- `laqueus_simplificare`: greedy simplification by LEGAL triangle moves
+  only — repeat {first vertex in index order whose removal
+  `laqueus_motus_removere` accepts} until none. An ambient isotopy, so the
+  knot/link type is unchanged; FALSUM on non-simple input (the move check
+  presumes an embedding — D114 showed D112's det-greedy deletions breaking
+  the embedding on all 12 paths). Memory O(n): one working vertex buffer,
+  `removere` used only as a legality oracle and rolled back at once
+  (measured ~150 B per input vertex; a per-move-copy version would be
+  O(n²)). Results on the table polygons: 48→7, 72→8, 80→8, 112→11, 120→8;
+  each ≥ the published stick number (6, 7, 8, 9, 8) — a bound the code
+  knows nothing about, asserted.
+- `laqueus_diagramma_minimum(l, radius)`: the generic diagram with the
+  fewest crossings over integer directions with |components| ≤ radius (one
+  of each ±v, ties → first in enumeration). Radius 2 reaches the crossing
+  number for 3₁, 4₁, 5₁ and T(3,4) (asserted), not for T(2,7) (8, not 7).
+  Cost ~ (2r+1)³/2 diagrams. Makes Jones affordable and enables unknot
+  certificates (Δ = 1 on ≤ 10 crossings).
+- `laqueus_speculum`: z → −z. Jones(mirror) = Jones(1/t), Alexander
+  unchanged, Hopf linking number +1 → −1 (asserted).
+- `diagramma_determinans`: |Δ(−1)| as Magnus; table values 3, 5, 5, 7, 3
+  asserted; FALSUM for links (as `diagramma_alexander`). Leaves its
+  scratch in the caller's piscina like `diagramma_alexander`: copying a
+  rolled-back result would read freed memory (VENENUM would catch it).
+
+Plants (all compile, all red): simplificare without the simple-input
+check, with moves unchecked, with a single pass, with `initia[m] >= k`;
+minimum → maximum; minimum without negative directions; speculum as a
+rotation (x and z negated); determinant evaluated at +1.

@@ -5758,6 +5758,89 @@ s32 principale (vacuum)
         CREDO_VERUM (bene);
     }
 
+
+    /* ==================================================
+     * REFLEXIO per planum
+     * ================================================== */
+
+    {
+           Sors s;
+        Punctum r;
+        Punctum custos = situs_punctum(VII, VII, VII);
+            i32 k;
+            i32 facta = ZEPHYRUM;
+
+        imprimere("\n--- Probans reflexionem ---\n");
+        /* collinearia: planum nullum, exitus intactus */
+        r = custos;
+        CREDO_FALSUM (situs_reflexio(situs_punctum(ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM), situs_punctum(I, I, I), situs_punctum(II, II,
+            II),
+            situs_punctum(I, II, III), piscina, &r));
+        CREDO_VERUM (situs_puncta_aequalia(r, custos));
+        /* planum z = 0 */
+        CREDO_VERUM (situs_reflexio(situs_punctum(ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM), situs_punctum(I, ZEPHYRUM, ZEPHYRUM),
+            situs_punctum(ZEPHYRUM, I, ZEPHYRUM), situs_punctum(I, II,
+            III), piscina, &r));
+        CREDO_VERUM (situs_puncta_aequalia(r, situs_punctum(I, II,
+            -III)));
+        /* oraculum: reflexio unica determinatur per (i) medium p, r in
+         * plano (situs_orientatio, codex alius), (ii) r - p ad b - a et
+         * c - a perpendiculare; praeterea involutio, puncta plani fixa,
+         * orientatio inversa */
+        sors_seminare(&s, 2026ULL, VII);
+        per (k = ZEPHYRUM; k < D; k++)
+        {
+            Punctum a = _fortuitum(&s);
+            Punctum b = _fortuitum(&s);
+            Punctum c = _fortuitum(&s);
+            Punctum p = _fortuitum(&s);
+            Punctum u = _plus(b, _multiplex(a, fractio_ex_s64(-I)));
+            Punctum w = _plus(c, _multiplex(a, fractio_ex_s64(-I)));
+            Punctum q;
+            Punctum m;
+            Punctum d;
+            Punctum in_plano;
+            Fractio dimidium;
+
+            si (_crux_nulla(u, w))
+            {
+                CREDO_FALSUM (situs_reflexio(a, b, c, p, piscina, &r));
+                perge;
+            }
+            facta++;
+            CREDO_VERUM (situs_reflexio(a, b, c, p, piscina, &r));
+            CREDO_VERUM (situs_reflexio(a, b, c, r, piscina, &q));
+            CREDO_VERUM (situs_puncta_aequalia(q, p));
+            (vacuum)fractio_ex_s64_s64(I, II, piscina, &dimidium);
+            m = _multiplex(_plus(p, r), dimidium);
+            CREDO_AEQUALIS_S32 (situs_orientatio(a, b, c, m, piscina),
+                ZEPHYRUM);
+            d = _plus(r, _multiplex(p, fractio_ex_s64(-I)));
+            CREDO_VERUM (fractio_signum(fractio_adde(fractio_adde(
+                fractio_multiplica(d.x, u.x, piscina),
+                fractio_multiplica(d.y, u.y, piscina), piscina),
+                fractio_multiplica(d.z, u.z, piscina), piscina))
+                == ZEPHYRUM);
+            CREDO_VERUM (fractio_signum(fractio_adde(fractio_adde(
+                fractio_multiplica(d.x, w.x, piscina),
+                fractio_multiplica(d.y, w.y, piscina), piscina),
+                fractio_multiplica(d.z, w.z, piscina), piscina))
+                == ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (situs_orientatio(a, b, c, r, piscina),
+                -situs_orientatio(a, b, c, p, piscina));
+            in_plano = _plus(_plus(a, _multiplex(u, fractio_ex_s64(
+                sors_inter(&s, -III, III)))), _multiplex(w,
+                fractio_ex_s64(
+                sors_inter(&s, -III, III))));
+            CREDO_VERUM (situs_reflexio(a, b, c, in_plano, piscina,
+                &q));
+            CREDO_VERUM (situs_puncta_aequalia(q, in_plano));
+        }
+        CREDO_VERUM (facta > CD);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

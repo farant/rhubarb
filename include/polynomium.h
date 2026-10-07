@@ -244,6 +244,19 @@ polynomium_normale (
        Piscina* piscina,
     Polynomium* exitus);
 
+/* p(1/t): exponentes negati (fines symmetrici: semper intra) */
+Polynomium
+polynomium_inversum (
+    Polynomium  p,
+       Piscina* piscina);
+
+/* coefficientes ordine inverso idem (p = t^k p(1/t), signo eodem):
+ * symmetria omnis polynomii Alexander et Jones nodorum amphichiralium;
+ * nullum symmetricum est */
+b32
+polynomium_est_symmetricum (
+    Polynomium p);
+
 
 /* ==================================================
  * Valor

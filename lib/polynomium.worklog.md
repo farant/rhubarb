@@ -186,3 +186,15 @@ Deep copy (new coefficient array, every coefficient through
 share arrays, so a shallow copy would not survive a rollback. Tested in
 probatio_matrix's ring block (array and limbs differ; text survives
 destroying the source piscina).
+
+## 2026-10-07 — polynomium_inversum, polynomium_est_symmetricum
+
+`inversum`: p(1/t), coefficients reversed, low exponent −high. Returns the
+Polynomium directly (like `nega`), not b32 as first sketched: the exponent
+range is symmetric, so it can never fail. `est_symmetricum`: coefficients
+read the same reversed, same sign (zero polynomial symmetric). Folded in
+from Demo 114, which needed Jones mirrors and Alexander palindromy checks.
+Oracles: involution; valor of p(1/t) at x = valor of p at 1/x; p·p(1/t)
+and p + p(1/t) always symmetric; symmetric ⇔ p = t^(low+high)·p(1/t)
+(via `translata`) on 300 random polynomials. Plants: no reversal, wrong
+low exponent, last pair skipped — all red.

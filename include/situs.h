@@ -235,4 +235,21 @@ situs_transitus_vicinus (
      Punctum  v,
      Piscina* piscina);
 
+
+/* ==================================================
+ * Reflexio
+ * ================================================== */
+
+/* p per planum (a, b, c) reflexum: p - 2 (n.(p - a)) / (n.n) n, n =
+ * (b - a) x (c - a). FALSUM si a, b, c collinearia (planum nullum;
+ * exitus non tangitur). Effectus in piscina vivit. */
+b32
+situs_reflexio (
+     Punctum  a,
+     Punctum  b,
+     Punctum  c,
+     Punctum  p,
+     Piscina* piscina,
+     Punctum* exitus);
+
 #endif /* SITUS_H */

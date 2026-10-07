@@ -141,6 +141,19 @@ laqueus_diagramma_genericum (
         Piscina* piscina,
       Diagramma* exitus);
 
+/* inter directiones v componentibus integris |v_i| <= radius (una ex
+ * quoque +-v), diagramma genericum transituum paucissimorum; aequalia
+ * -> primum ordine enumerationis (a, b, c crescentes). FALSUM si nulla
+ * directio in ambitu generica (laqueus_diagramma_genericum tunc valet)
+ * aut radius nullus. Sumptus ~ (2 radius + 1)^3 / 2 diagrammata;
+ * conatus reficiuntur. */
+b32
+laqueus_diagramma_minimum (
+     Laqueus  l,
+         i32  radius,
+     Piscina* piscina,
+   Diagramma* exitus);
+
 i32
 diagramma_numerus (
     Diagramma d);
@@ -193,6 +206,14 @@ diagramma_alexander (
        Piscina* piscina,
     Polynomium* exitus);
 
+/* determinans nodi |Delta(-1)|, magnus exactus; nodi soli (FALSUM pro
+ * catenis, sicut diagramma_alexander). Residua in piscina manent. */
+b32
+diagramma_determinans (
+     Diagramma  d,
+       Piscina* piscina,
+        Magnus* exitus);
+
 
 /* ==================================================
  * Motus trianguli
@@ -215,6 +236,26 @@ b32
 laqueus_motus_removere (
      Laqueus  l,
          i32  i,
+     Piscina* piscina,
+     Laqueus* exitus);
+
+/* vertices avide per motus LEGITIMOS removentur
+ * (laqueus_motus_removere): iterum vertex primus (ordine indicum) cuius
+ * remotio legitima est, donec nullus. Isotopia ambiens: typus
+ * nodi/catenae idem. Componens quisque >= III vertices servat. FALSUM
+ * si l non simplex (probatio motus immersionem praesumit). Memoria
+ * O(n): conatus irriti reficiuntur. */
+b32
+laqueus_simplificare (
+     Laqueus  l,
+     Piscina* piscina,
+     Laqueus* exitus);
+
+/* speculum (z -> -z): Jones(t) -> Jones(1/t), Alexander idem, numeri
+ * ligationis negati */
+b32
+laqueus_speculum (
+     Laqueus  l,
      Piscina* piscina,
      Laqueus* exitus);
 
