@@ -3288,6 +3288,53 @@ _purgare (
 interior vacuum
 _usus (vacuum);
 
+/* CENSUS (fabrica-6 T1): genera ingressus registrata cum proprietatibus
+ * chassis, TSV - 'genus<TAB>titulus<TAB>particulae<TAB>reproducibile
+ * <TAB>sumptus<TAB>enumerat<TAB>locat'. Additio quae proprietatem
+ * implere nequit hic CLASSIFICATUR (signum designi), non recusatur. */
+interior s32
+_censum (vacuum)
+{
+    i32 i;
+    i32 nominatae       = ZEPHYRUM;
+    i32 reproducibilia  = ZEPHYRUM;
+    i32 invisibilia     = ZEPHYRUM;
+
+    printf("# census chassis fabricae (genera ingressus)\n");
+    per (i = ZEPHYRUM; i < fabrica_genera_numerus(); i++)
+    {
+        constans FabricaGenus* g = fabrica_genus_obtinere(i);
+           constans character* sumptus =
+               g->sumptus == FABRICA_SUMPTUS_VILIS ? "vilis"
+               : g->sumptus
+                   == FABRICA_SUMPTUS_MEDIUS ? "medius" : "carus";
+
+        printf("genus\t%s\tparticulae:%s\treproducibile:%s\tsumptus:%s"
+            "\tloci:%s\tlocat:%s\n", g->titulus,
+            g->particulae_nominatae ? "nominatae" : "crassae",
+            g->reproducibile ? "ita" : "non", sumptus,
+            fabrica_genus_loci(g),
+            g->locare != NIHIL ? "ita" : "non");
+        si (strcmp(fabrica_genus_loci(g), "nulli") == ZEPHYRUM)
+        {
+            invisibilia++;
+        }
+        si (g->particulae_nominatae)
+        {
+            nominatae++;
+        }
+        si (g->reproducibile)
+        {
+            reproducibilia++;
+        }
+    }
+    printf("census: genera %d (particulae nominatae %d, reproducibilia %d,"
+        " quaestionibus inversis invisibilia %d)\n",
+        (integer)fabrica_genera_numerus(), (integer)nominatae,
+        (integer)reproducibilia, (integer)invisibilia);
+    redde ZEPHYRUM;
+}
+
 /* CAUSAE (plan 5 T1): cur actiones actae sunt - cursus per (titulus,
  * eventus, stalum), frequentissimae primum; titulus optionalis. Ordines
  * ante migrationem V causam non habent ('non notata'). */
@@ -3363,6 +3410,7 @@ _usus (vacuum)
         "      bin/fabrica digestum TITULUS\n"
         "      bin/fabrica purgare [-verificare]\n"
         "      bin/fabrica causae [titulus]  (cur actae sunt)\n"
+        "      bin/fabrica census  (genera chassis et proprietates)\n"
         "(ex radice repositorii; exitus 0 sanum, 1 stalum/ignotum, "
         "2 nihil iudicatum)\n");
 }
@@ -3431,6 +3479,10 @@ principale (
     alioquin si (strcmp(argv[1], "causae") == 0)
     {
         exitus = _causae(argc, argv, piscina);
+    }
+    alioquin si (strcmp(argv[1], "census") == 0)
+    {
+        exitus = _censum();
     }
     alioquin
     {

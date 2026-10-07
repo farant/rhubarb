@@ -168,3 +168,35 @@ switched; plants for every rule.
 - Per-step reuse is unknown until the A/B; the switch waits on it.
 - The step dialect canon (attributes, kinds) is drafted in this slice;
   names may change at review.
+
+## XIII. As built
+
+**T1 (2026-10-07): chassis for input kinds.** The registry was already
+there (`_genera[]`, 12 static tables) but private and unchecked.
+Public now: `fabrica_genera_numerus`, `fabrica_genus_obtinere`,
+`fabrica_genus_loci`; census fields on `FabricaGenus`:
+`particulae_nominatae`, `sumptus` (`FabricaSumptus`: vilis / medius /
+carus). Conformance fixtures live in probatio_fabrica.c (its fake world
+- not a separate probatio_fabrica_chassis file, which would have to
+duplicate it): a table keyed by title; the chassis section enumerates
+the REGISTRY, so a kind without a fixture is red by name. Each fixture:
+a small world; a change of the kind's input class must change the
+named particle; an unrelated change must leave the particles equal.
+All 12 pass. Plants: `plagulae` sealed by the names-only sealer ->
+"particulam src/a.c non mutat"; a fixture renamed away -> "genus
+'manifesta' sine fixo conformitatis".
+Fake world fix on the way: `_directorium_ponere` APPENDED a second
+record for a directory already listed, so a re-listing was invisible -
+it now replaces, as a real directory would.
+
+`bin/fabrica census` (TSV per kind: particles, reproducible, cost,
+places, locates; fumus case XXXIII). FIRST FINDING of the census, by
+design: five kinds declare NO places (`loci:nulli` -
+`_nihil_enumerare`): instrumentum, radices, identitas_clang,
+instrumentum_domus, effectus. They are invisible to reverse-dependency
+queries (`iudicare -tacta`, debts): a change to a file an effectus
+script reads, or to an include root's names, cannot be traced back to
+what depends on it that way. For external tools and toolchain identity
+that is right; for effectus, radices and instrumentum_domus it is a
+gap to close (their places are knowable: the effectus key's octeti and
+nomina lines, the roots' directories, the binary's closure).

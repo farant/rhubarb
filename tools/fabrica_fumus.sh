@@ -385,6 +385,13 @@ if ! (cd "$RADIX" && bin/canon_examen aedificatio.canon) > "$T/canon.o" 2>&1; th
 fi
 if [ -x "$RADIX/bin/canon_examen" ] && [ "$vitia_canonis" -eq 0 ]; then echo "  XXXII declarationes contra aedificatio.canon OK"; else echo "  XXXII FRACTUM (declarationes contra canonem)"; fracta=1; fi
 
+# XXXIII (fabrica-6 T1): CENSUS CHASSIS - 'bin/fabrica census' genera
+# registrata cum proprietatibus (TSV) enumerat; numerus = registrum
+# (XII hodie), nullum genus sine linea
+(cd "$RADIX" && bin/fabrica census) > "$T/census.o" 2>&1; rc=$?
+n_gen=$(grep -c '^genus	' "$T/census.o")
+if [ "$rc" -eq 0 ] && [ "$n_gen" -eq 12 ] && grep -q '^genus	fasciculus	' "$T/census.o" && grep -q '^census: genera 12' "$T/census.o"; then echo "  XXXIII census chassis (XII genera)      OK"; else echo "  XXXIII FRACTUM (census: rc=$rc, genera $n_gen)"; head -5 "$T/census.o" | sed 's/^/      /'; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXXII/XXXII)"
+echo "fumus fabricae: sanum (XXXIII/XXXIII)"
 exit 0

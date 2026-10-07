@@ -410,8 +410,20 @@ nomen structura {
            chorda causa;
 } FabricaIudicium;
 
+/* SUMPTUS (fabrica-6 T1, census chassis): quantum sigillatio costat -
+ * VILIS (plagula una aut valor), MEDIUS (directorium, manifestum),
+ * CARUS (processus externus: effectus). Ordo est, non mensura. */
+nomen enumeratio {
+    FABRICA_SUMPTUS_VILIS = ZEPHYRUM,
+    FABRICA_SUMPTUS_MEDIUS,
+    FABRICA_SUMPTUS_CARUS
+} FabricaSumptus;
+
 /* GENUS: quomodo artificium observetur. Verba NIHIL licent ubi
- * dictum. */
+ * dictum. CHASSIS (fabrica-6 T1): omne genus registratum fixum
+ * conformitatis habere DEBET (probatio_fabrica, sectio chassis, per
+ * fabrica_genera_numerus enumerat) - proprietates infra in censu
+ * ('bin/fabrica census') nominantur. */
 structura FabricaGenus {
     constans character* titulus;   /* nomen in declaratione */
     /* sigillare: particulas (FabricaParticula) ingressus addere -
@@ -436,6 +448,11 @@ structura FabricaGenus {
     /* VERUM: octeti ex ingressibus determinati (regeneratio licet).
      * Binarium FALSUM: LC_UUID et signatura (mensuratum, 1a T6). */
     b32 reproducibile;
+    /* CENSUS (fabrica-6 T1): VERUM si particulae per viam nominantur
+     * (causae 'ingressus mutatus: X' dicere possunt); FALSUM =
+     * sigillum crassum (particula una pro toto) */
+               b32 particulae_nominatae;
+    FabricaSumptus sumptus;
 };
 
 /* STRATEGIA: quomodo exitus RECENS esse sciatur, genere et actione
@@ -465,6 +482,24 @@ structura FabricaStrategia {
 constans FabricaGenus*
 fabrica_genus_invenire (
     chorda titulus);
+
+/* REGISTRUM ENUMERATUM (fabrica-6 T1): numerus generum et genus ad
+ * indicem (0 .. numerus-1; NIHIL extra) - chassis et census per haec,
+ * numquam per indicem manu scriptum. */
+i32
+fabrica_genera_numerus (vacuum);
+
+/* LOCI LECTI generis (census, '-tacta'): "ex particulis" (enumerare
+ * NIHIL: plagulae sigillatae ipsae), "nulli" (enumerare explicite
+ * nihil - genus quaestionibus inversis INVISIBILE), "proprii"
+ * (enumeratio propria) */
+constans character*
+fabrica_genus_loci (
+    constans FabricaGenus* genus);
+
+constans FabricaGenus*
+fabrica_genus_obtinere (
+    i32 index);
 
 /* Registra: regeneratio (memoria ante eam, actionibus memorabilibus
  * solis), relatio, ignota (praecondicio: numquam iudicatur), verdictum

@@ -9,18 +9,18 @@ Fran before code.
 
 ### T1: chassis - registries, conformance harness, census
 
-- [ ] **Step 1:** explicit registry for input kinds (today's 12
+- [x] **Step 1:** explicit registry for input kinds (today's 12
   `FabricaGenus` tables enumerated by one function, not scattered);
   property fields for the census (reads static/dynamic, deterministic,
   particles, cost class).
-- [ ] **Step 2: failing test** `probatio_fabrica_chassis`: enumerates
+- [x] **Step 2: failing test** `probatio_fabrica_chassis`: enumerates
   the registry; every entry must have a conformance fixture; runs each
   (input-class change -> judgment flips naming the particle; unrelated
   change -> RECENS; writes inside declared places). Red: no fixtures.
-- [ ] **Step 3:** fixtures for the 12 input kinds (one table of small
+- [x] **Step 3:** fixtures for the 12 input kinds (one table of small
   declared worlds). **Plant:** a kind whose `sigillare` ignores content
   -> its fixture red.
-- [ ] **Step 4:** `bin/fabrica census` (entries by properties). **Commit.**
+- [x] **Step 4:** `bin/fabrica census` (entries by properties). **Commit.**
 
 ### T2: inputs on two axes + `repositorium`
 

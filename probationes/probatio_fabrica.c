@@ -191,10 +191,26 @@ _directorium_ponere (
           constans character* nomina[],
                          i32  numerus)
 {
-    DirectoriumFictum* d;
+    DirectoriumFictum* d = NIHIL;
                   i32  i;
 
-    d = (DirectoriumFictum*)xar_addere(discus->directoria);
+    /* via eadem iterum = enumeratio NOVA (ut directorium verum), non
+     * recordum alterum quod quaestio prima numquam invenit (chassis
+     * fabrica-6 T1: directorium auctum aliter invisibile) */
+    per (i = ZEPHYRUM; i < xar_numerus(discus->directoria); i++)
+    {
+        DirectoriumFictum* e = (DirectoriumFictum*)xar_obtinere(
+            discus->directoria, i);
+
+        si (chorda_aequalis_literis(e->via, via))
+        {
+            d = e;
+        }
+    }
+    si (d == NIHIL)
+    {
+        d = (DirectoriumFictum*)xar_addere(discus->directoria);
+    }
     si (d == NIHIL)
     {
         redde;
@@ -1344,6 +1360,381 @@ _contentum_est (
     f = _fasciculum_invenire(discus, via);
     redde f != NIHIL
         && chorda_aequalis_literis(f->contentum, contentum);
+}
+
+
+/* ==================================================
+ * CHASSIS (fabrica-6 T1): fixum conformitatis per genus ingressus.
+ * Mundus fictus, deinde (a) mutatio classis ingressus sigillum mutat
+ * et particulam nominat, (b) mutatio aliena sigillum servat. Genus
+ * registratum sine fixo = FRACTUM (probatio per registrum enumerat,
+ * non per indicem manu scriptum).
+ * ================================================== */
+
+nomen structura {
+    constans character* titulus;
+    vacuum (*mundus)(DiscusFictus* discus);
+    constans character* via;
+    constans character* suffixa;
+    vacuum (*mutare)(DiscusFictus* discus);
+    constans character* particula;      /* via particulae mutatae */
+    vacuum (*alienum)(DiscusFictus* discus);
+} FixumConformitatis;
+
+/* mundi fixorum (DiscusFictus + ficta globalia identitatis/effectus) */
+interior vacuum
+_fx_plagula (
+    DiscusFictus* d)
+{
+    _ponere(d, "data/f.txt", "f I\n");
+    _ponere(d, "data/alia.txt", "a I\n");
+}
+
+interior vacuum
+_fx_plagula_mutata (
+    DiscusFictus* d)
+{
+    _ponere(d, "data/f.txt", "f II\n");
+}
+
+interior vacuum
+_fx_alia_mutata (
+    DiscusFictus* d)
+{
+    _ponere(d, "data/alia.txt", "a II\n");
+}
+
+interior vacuum
+_fx_directorium (
+    DiscusFictus* d)
+{
+    constans character* nomina[I];
+
+    nomina[0] = "f.txt";
+    _directorium_ponere(d, "data", nomina, I);
+    _ponere(d, "data/f.txt", "f I\n");
+}
+
+interior vacuum
+_fx_directorium_auctum (
+    DiscusFictus* d)
+{
+    constans character* nomina[II];
+
+    nomina[0] = "f.txt";
+    nomina[1] = "g.txt";
+    _directorium_ponere(d, "data", nomina, II);
+    _ponere(d, "data/g.txt", "g I\n");
+}
+
+interior vacuum
+_fx_plagulae (
+    DiscusFictus* d)
+{
+    constans character* nomina[II];
+
+    nomina[0] = "a.c";
+    nomina[1] = "n.txt";
+    _directorium_ponere(d, "src", nomina, II);
+    _ponere(d, "src/a.c", "int a;\n");
+    _ponere(d, "src/n.txt", "nota I\n");
+}
+
+interior vacuum
+_fx_plagulae_mutatae (
+    DiscusFictus* d)
+{
+    _ponere(d, "src/a.c", "int a2;\n");
+}
+
+interior vacuum
+_fx_plagulae_alienae (
+    DiscusFictus* d)
+{
+    _ponere(d, "src/n.txt", "nota II\n");
+}
+
+interior vacuum
+_fx_manifestum (
+    DiscusFictus* d)
+{
+    _ponere(d, "build/m.stml",
+        "<aedilis-manifestum scopus=\"tools/a.c\">\n"
+        "  <obiecta><obiectum via=\"lib/x.c\"/></obiecta>\n"
+        "</aedilis-manifestum>\n");
+    _ponere(d, "tools/a.c", "int a;\n");
+    _ponere(d, "lib/x.c", "int x;\n");
+    _ponere(d, "lib/z.c", "int z;\n");
+}
+
+interior vacuum
+_fx_x_mutatum (
+    DiscusFictus* d)
+{
+    _ponere(d, "lib/x.c", "int x2;\n");
+}
+
+interior vacuum
+_fx_z_mutatum (
+    DiscusFictus* d)
+{
+    _ponere(d, "lib/z.c", "int z2;\n");
+}
+
+interior vacuum
+_fx_manifesta (
+    DiscusFictus* d)
+{
+    constans character* nomina[I];
+
+    nomina[0] = "a.stml";
+    _directorium_ponere(d, "build/cl", nomina, I);
+    _ponere(d, "build/cl/a.stml",
+        "<aedilis-manifestum scopus=\"tools/a.c\">\n"
+        "  <obiecta><obiectum via=\"lib/x.c\"/></obiecta>\n"
+        "</aedilis-manifestum>\n");
+    _ponere(d, "tools/a.c", "int a;\n");
+    _ponere(d, "lib/x.c", "int x;\n");
+    _ponere(d, "lib/z.c", "int z;\n");
+}
+
+interior vacuum
+_fx_radices (
+    DiscusFictus* d)
+{
+    constans character* nomina[I];
+
+    _ponere(d, "aedilis.stml",
+        "<aedilis>\n  <inclusa>\n    <via (>include\n  </inclusa>\n"
+        "</aedilis>\n");
+    nomina[0] = "a.h";
+    _directorium_ponere(d, "include", nomina, I);
+    _ponere(d, "include/a.h", "int a;\n");
+}
+
+interior vacuum
+_fx_radices_auctae (
+    DiscusFictus* d)
+{
+    constans character* nomina[II];
+
+    nomina[0] = "a.h";
+    nomina[1] = "b.h";
+    _directorium_ponere(d, "include", nomina, II);
+    _ponere(d, "include/b.h", "int b;\n");
+}
+
+interior vacuum
+_fx_caput_mutatum (
+    DiscusFictus* d)
+{
+    _ponere(d, "include/a.h", "int a2;\n");
+}
+
+interior vacuum
+_fx_identitas (
+    DiscusFictus* d)
+{
+    _identitas_ficta = "clang I";
+    _fx_plagula(d);
+}
+
+interior vacuum
+_fx_identitas_mutata (
+    DiscusFictus* d)
+{
+    (vacuum)d;
+    _identitas_ficta = "clang II";
+}
+
+interior vacuum
+_fx_domus (
+    DiscusFictus* d)
+{
+    d->relatio = "provenientia 1\nartificium bin/x\ningressus aaaa\n"
+        "commissum c1\n";
+}
+
+interior vacuum
+_fx_domus_mutata (
+    DiscusFictus* d)
+{
+    d->relatio = "provenientia 1\nartificium bin/x\ningressus bbbb\n"
+        "commissum c1\n";
+}
+
+interior vacuum
+_fx_domus_commissum (
+    DiscusFictus* d)
+{
+    d->relatio = "provenientia 1\nartificium bin/x\ningressus aaaa\n"
+        "commissum c2\n";
+}
+
+interior vacuum
+_fx_effectus (
+    DiscusFictus* d)
+{
+    _effectus_effusio = "octeti\tdata/f.txt\n";
+    _ponere(d, "porta.sh", "#!/bin/sh\ncat data/f.txt\n");
+    _fx_plagula(d);
+}
+
+/* titulus, mundus, via, suffixa, mutatio classis, particula, aliena */
+hic_manens constans FixumConformitatis _fixa_conformitatis[] = {
+    { "fasciculus", _fx_plagula, "data/f.txt", NIHIL,
+      _fx_plagula_mutata, "data/f.txt", _fx_alia_mutata },
+    { "configuratio", _fx_plagula, "data/f.txt", NIHIL,
+      _fx_plagula_mutata, "data/f.txt", _fx_alia_mutata },
+    { "instrumentum", _fx_plagula, "data/f.txt", NIHIL,
+      _fx_plagula_mutata, "data/f.txt", _fx_alia_mutata },
+    { "binarium", _fx_plagula, "data/f.txt", NIHIL,
+      _fx_plagula_mutata, "data/f.txt", _fx_alia_mutata },
+    { "directorium", _fx_directorium, "data", NIHIL,
+      _fx_directorium_auctum, "data/", _fx_plagula_mutata },
+    { "plagulae", _fx_plagulae, "src", ".c",
+      _fx_plagulae_mutatae, "src/a.c", _fx_plagulae_alienae },
+    { "manifestum", _fx_manifestum, "build/m.stml", NIHIL,
+      _fx_x_mutatum, "lib/x.c", _fx_z_mutatum },
+    { "manifesta", _fx_manifesta, "build/cl", NIHIL,
+      _fx_x_mutatum, "lib/x.c", _fx_z_mutatum },
+    { "radices", _fx_radices, "aedilis.stml", NIHIL,
+      _fx_radices_auctae, "include/", _fx_caput_mutatum },
+    { "identitas_clang", _fx_identitas, "clang", NIHIL,
+      _fx_identitas_mutata, "identitas:clang", _fx_alia_mutata },
+    { "instrumentum_domus", _fx_domus, "bin/x", NIHIL,
+      _fx_domus_mutata, "bin/x", _fx_domus_commissum },
+    { "effectus", _fx_effectus, "porta.sh", NIHIL,
+      _fx_plagula_mutata, "data/f.txt", _fx_alia_mutata },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+interior constans FixumConformitatis*
+_fixum_invenire (
+    constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; _fixa_conformitatis[i].titulus != NIHIL; i++)
+    {
+        si (strcmp(_fixa_conformitatis[i].titulus, titulus) == ZEPHYRUM)
+        {
+            redde &_fixa_conformitatis[i];
+        }
+    }
+    redde NIHIL;
+}
+
+/* particulae mundi post 'mutatio' (NIHIL = nulla) */
+interior Xar*
+_particulas_fixi (
+    constans FixumConformitatis* fixum,
+          constans FabricaGenus* genus,
+                           vacuum (*mutatio)(DiscusFictus* discus),
+                        Piscina* piscina)
+{
+         DiscusFictus  discus;
+        FabricaSutura  sutura;
+     FabricaIngressus  ingressus;
+                  Xar* particulae;
+               chorda  causa;
+
+    _discum_parare(&discus, &sutura, piscina);
+    sutura.identitas  = _identitatem_fictam_dare;
+    sutura.effectus   = _effectus_ficti;
+    fixum->mundus(&discus);
+    si (mutatio != NIHIL)
+    {
+        mutatio(&discus);
+    }
+    ingressus.genus  = genus;
+    ingressus.via    = chorda_ex_literis(fixum->via, piscina);
+    ingressus.suffixa  = chorda_ex_literis(fixum->suffixa != NIHIL
+        ? fixum->suffixa : "", piscina);
+    particulae  = xar_creare(piscina, (i32)magnitudo(FabricaParticula));
+    causa       = chorda_ex_literis("", piscina);
+    si (!genus->sigillare(&sutura, &ingressus, NIHIL, piscina,
+        particulae,
+            &causa))
+    {
+        imprimere("  sigillare %s: %.*s\n", genus->titulus,
+            (integer)causa.mensura, (constans character*)causa.datum);
+        redde NIHIL;
+    }
+    redde particulae;
+}
+
+/* viae particularum quae inter a et b differunt (octetis aut praesentia) */
+interior b32
+_particula_differt (
+          constans Xar* a,
+          constans Xar* b,
+    constans character* via,
+               Piscina* piscina)
+{
+         i32 i;
+         i32 j;
+         b32 in_a = FALSUM;
+         b32 in_b = FALSUM;
+    Sigillum sa;
+    Sigillum sb;
+
+    (vacuum)piscina;
+    per (i = ZEPHYRUM; i < xar_numerus(a); i++)
+    {
+        constans FabricaParticula* p = (constans FabricaParticula*)
+            xar_obtinere(a, i);
+
+        si (chorda_aequalis_literis(p->via, via))
+        {
+            in_a  = VERUM;
+            sa    = p->octeti;
+        }
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(b); j++)
+    {
+        constans FabricaParticula* p = (constans FabricaParticula*)
+            xar_obtinere(b, j);
+
+        si (chorda_aequalis_literis(p->via, via))
+        {
+            in_b  = VERUM;
+            sb    = p->octeti;
+        }
+    }
+    si (in_a != in_b)
+    {
+        redde VERUM;
+    }
+    redde in_a && memcmp(&sa, &sb, magnitudo(Sigillum)) != ZEPHYRUM;
+}
+
+interior b32
+_particulae_aequales (
+    constans Xar* a,
+    constans Xar* b)
+{
+    i32 i;
+
+    si (xar_numerus(a) != xar_numerus(b))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(a); i++)
+    {
+        constans FabricaParticula* p = (constans FabricaParticula*)
+            xar_obtinere(a, i);
+        constans FabricaParticula* q = (constans FabricaParticula*)
+            xar_obtinere(b, i);
+
+        si (   !chorda_aequalis(p->via, q->via)
+            || memcmp(&p->octeti, &q->octeti, magnitudo(Sigillum))
+               != ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -5227,6 +5618,65 @@ s32 principale (vacuum)
         CREDO_VERUM(_continet(iudicium.causa, "sine domino", piscina));
         _effectus_effusio = "";
         _via_absens_ficta = NIHIL;
+    }
+
+
+    /* ========================================================
+     * CHASSIS (fabrica-6 T1): omne genus registratum fixum
+     * conformitatis habet et id implet
+     * ======================================================== */
+
+    {
+        i32 g;
+
+        imprimere("\n--- Probans chassis: fixa conformitatis generum ---\n");
+        CREDO_VERUM(fabrica_genera_numerus() > ZEPHYRUM);
+        CREDO_NIHIL(fabrica_genus_obtinere(fabrica_genera_numerus()));
+        per (g = ZEPHYRUM; g < fabrica_genera_numerus(); g++)
+        {
+                  constans FabricaGenus* genus =
+                      fabrica_genus_obtinere(g);
+            constans FixumConformitatis* fixum = _fixum_invenire(
+                genus->titulus);
+                                    Xar* p0;
+                                    Xar* p1;
+                                    Xar* p2;
+
+            si (fixum == NIHIL)
+            {
+                imprimere("  FRACTUM: genus '%s' sine fixo conformitatis\n",
+                    genus->titulus);
+                CREDO_NON_NIHIL(fixum);
+                perge;
+            }
+            p0 = _particulas_fixi(fixum, genus, NIHIL, piscina);
+            p1 = _particulas_fixi(fixum, genus, fixum->mutare, piscina);
+            p2 = _particulas_fixi(fixum, genus, fixum->alienum,
+                piscina);
+            CREDO_NON_NIHIL(p0);
+            CREDO_NON_NIHIL(p1);
+            CREDO_NON_NIHIL(p2);
+            si (p0 == NIHIL || p1 == NIHIL || p2 == NIHIL)
+            {
+                perge;
+            }
+            si (!_particula_differt(p0, p1, fixum->particula, piscina))
+            {
+                imprimere("  FRACTUM: genus '%s': mutatio classis particulam"
+                    " '%s' non mutat\n", genus->titulus,
+                    fixum->particula);
+            }
+            CREDO_VERUM(_particula_differt(p0, p1, fixum->particula,
+                piscina));
+            si (!_particulae_aequales(p0, p2))
+            {
+                imprimere("  FRACTUM: genus '%s': mutatio aliena sigillum"
+                    " mutat\n", genus->titulus);
+            }
+            CREDO_VERUM(_particulae_aequales(p0, p2));
+        }
+        _identitas_ficta   = "clang I";
+        _effectus_effusio  = "";
     }
 
     credo_imprimere_compendium();

@@ -806,11 +806,13 @@ _plagulam_locare (
  * reproducibile */
 interior constans FabricaGenus _genus_fasciculus = {
     "fasciculus", _fasciculum_sigillare, NIHIL, _plagulam_locare,
-    VERUM
+    VERUM,
+    VERUM, FABRICA_SUMPTUS_VILIS
 };
 
 interior constans FabricaGenus _genus_configuratio = {
-    "configuratio", _fasciculum_sigillare, NIHIL, NIHIL, VERUM
+    "configuratio", _fasciculum_sigillare, NIHIL, NIHIL, VERUM,
+    VERUM, FABRICA_SUMPTUS_VILIS
 };
 
 /* instrumentum ADHIBETUR, non consumitur: nullus locus (nullus arcus
@@ -833,29 +835,35 @@ _nihil_enumerare (
 
 interior constans FabricaGenus _genus_instrumentum = {
     "instrumentum", _fasciculum_sigillare, _nihil_enumerare, NIHIL,
-    FALSUM
+    FALSUM,
+    VERUM, FABRICA_SUMPTUS_VILIS
 };
 
 /* binarium: octeti plagulae ut ingressus; ut exitus relatione sola
  * iudicatur (LC_UUID, signatura) */
 interior constans FabricaGenus _genus_binarium = {
-    "binarium", _fasciculum_sigillare, NIHIL, _plagulam_locare, FALSUM
+    "binarium", _fasciculum_sigillare, NIHIL, _plagulam_locare, FALSUM,
+    VERUM, FABRICA_SUMPTUS_VILIS
 };
 
 interior constans FabricaGenus _genus_directorium = {
-    "directorium", _directorium_sigillare, NIHIL, NIHIL, FALSUM
+    "directorium", _directorium_sigillare, NIHIL, NIHIL, FALSUM,
+    VERUM, FABRICA_SUMPTUS_MEDIUS
 };
 
 interior constans FabricaGenus _genus_manifestum = {
-    "manifestum", _manifestum_sigillare, NIHIL, NIHIL, FALSUM
+    "manifestum", _manifestum_sigillare, NIHIL, NIHIL, FALSUM,
+    VERUM, FABRICA_SUMPTUS_MEDIUS
 };
 
 interior constans FabricaGenus _genus_plagulae = {
-    "plagulae", _plagulas_explicare, _plagulas_enumerare, NIHIL, FALSUM
+    "plagulae", _plagulas_explicare, _plagulas_enumerare, NIHIL, FALSUM,
+    VERUM, FABRICA_SUMPTUS_MEDIUS
 };
 
 interior constans FabricaGenus _genus_manifesta = {
-    "manifesta", _manifesta_sigillare, NIHIL, NIHIL, FALSUM
+    "manifesta", _manifesta_sigillare, NIHIL, NIHIL, FALSUM,
+    VERUM, FABRICA_SUMPTUS_MEDIUS
 };
 
 /* radices SIGILLANTUR (obumbratio: caput novum in radice priore), non
@@ -865,7 +873,8 @@ interior constans FabricaGenus _genus_manifesta = {
  * sigillat silva/amalgama, amalgama_silva ibi scribit) - ut
  * instrumentum (T5) */
 interior constans FabricaGenus _genus_radices = {
-    "radices", _radices_sigillare, _nihil_enumerare, NIHIL, FALSUM
+    "radices", _radices_sigillare, _nihil_enumerare, NIHIL, FALSUM,
+    VERUM, FABRICA_SUMPTUS_MEDIUS
 };
 
 /* INSTRUMENTUM DOMUS (spec 3 par. XII v4): binarium domus per lineam
@@ -977,13 +986,15 @@ _identitatem_sigillare (
 
 interior constans FabricaGenus _genus_identitas_clang = {
     "identitas_clang", _identitatem_sigillare, _nihil_enumerare, NIHIL,
-    FALSUM
+    FALSUM,
+    VERUM, FABRICA_SUMPTUS_CARUS
 };
 
 interior constans FabricaGenus _genus_instrumentum_domus = {
     "instrumentum_domus", _instrumentum_domus_sigillare,
         _nihil_enumerare,
-    NIHIL, FALSUM
+    NIHIL, FALSUM,
+    VERUM, FABRICA_SUMPTUS_CARUS
 };
 
 /* congruentia globi ('*' '?' '[...]' intra segmentum - bash) */
@@ -1433,7 +1444,8 @@ _effectus_sigillare (
 }
 
 interior constans FabricaGenus _genus_effectus = {
-    "effectus", _effectus_sigillare, _nihil_enumerare, NIHIL, FALSUM
+    "effectus", _effectus_sigillare, _nihil_enumerare, NIHIL, FALSUM,
+    VERUM, FABRICA_SUMPTUS_CARUS
 };
 
 
@@ -1452,6 +1464,38 @@ interior constans FabricaGenus* constans _genera[] = {
     &_genus_instrumentum_domus,
     &_genus_effectus
 };
+
+i32
+fabrica_genera_numerus (vacuum)
+{
+    redde (i32)(magnitudo(_genera) / magnitudo(_genera[0]));
+}
+
+constans character*
+fabrica_genus_loci (
+    constans FabricaGenus* genus)
+{
+    si (genus->enumerare == NIHIL)
+    {
+        redde "ex particulis";
+    }
+    si (genus->enumerare == _nihil_enumerare)
+    {
+        redde "nulli";
+    }
+    redde "proprii";
+}
+
+constans FabricaGenus*
+fabrica_genus_obtinere (
+    i32 index)
+{
+    si (index < ZEPHYRUM || index >= fabrica_genera_numerus())
+    {
+        redde NIHIL;
+    }
+    redde _genera[index];
+}
 
 constans FabricaGenus*
 fabrica_genus_invenire (

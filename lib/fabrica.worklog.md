@@ -2033,3 +2033,20 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
 - Next for fabrica: shadow passes (park …2VP7); the open desiderata in
   park …JQFH2 (one test scratch area, snapshot speedups, fixture
   repositories) are what would lift the 0% ceilings.
+
+## 2026-10-07 - fabrica-6 T1: the chassis for input kinds
+
+- The registry existed (`_genera[]`) but nothing required anything of an
+  entry. Now the chassis test enumerates the registry and demands a
+  conformance fixture per kind; the fixtures run against probatio_fabrica's
+  fake world (input-class change -> named particle changes; unrelated
+  change -> equal).
+- The fake world had a quiet bug: `_directorium_ponere` appended a
+  second record for an already-listed directory, so re-listing never
+  showed. Fixed to replace - a fake that cannot express a change makes
+  every test of that change vacuous.
+- The census's first output was misleading: `enumerare == NIHIL` means
+  "places from particles", while the explicit `_nihil_enumerare` means
+  "no places" - printing pointer-non-NULL as "enumerates" inverted it.
+  `fabrica_genus_loci` names the three cases. Five kinds have no places:
+  invisible to -tacta. That is the census doing its job.

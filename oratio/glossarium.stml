@@ -1503,5 +1503,9 @@
     <forma textus="clonatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="clonationis" casus="genitivus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="reproducibilis" lingua="latina" classis="adiectivum" nota="vox domus (re + producere): quod iterum productum idem reddit - artificium octetis ex ingressibus determinatum (FabricaGenus.reproducibile; census fabricae, fabrica-6 T1)">
+    <forma textus="reproducibile" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="reproducibilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
 
 </glossarium>
