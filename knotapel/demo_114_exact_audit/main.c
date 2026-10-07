@@ -33,9 +33,14 @@
  * reproduces D112's published self-intersection census exactly.
  *
  *   Part A  base knots: raw braid polygons and their simplifications
- *   Part B  D112's simplification replayed move by move
- *   Part C  census + Alexander/Jones spectra on D112's polygons
- *   Part D  the 20 randomized 6_3 polygons (D112 Phase 5)
+ *   Part B  D112's simplification replayed move by move: where does
+ *           each path stop being an embedding?
+ *   Part C  census + Alexander/Jones spectra on D112's polygons (Jones
+ *           for every simple alternative, on a fewest-crossing
+ *           projection when needed; unknots certified; mirror pairing
+ *           of alternatives c and ~c asserted)
+ *   Part D  the 20 randomized 6_3 polygons (D112 Phase 5) and their
+ *           union
  *   Part E  D110's figure-eight "4-check classifier", re-checked
  *   Part F  D111's summary table (det spectra), re-checked
  *
@@ -257,6 +262,8 @@ static const char *const D111_CODE[N_D111] = {
 };
 static const unsigned D111_DISTINCT_DETS[N_D111] = { 2, 4, 3, 4, 22, 10 };
 static const unsigned D111_SELF_PRES[N_D111] = { 2, 2, 4, 4, 12, 8 };
+/* table determinants |Delta(-1)| of D111's six knots */
+static const unsigned long D111_TABLE_DET[N_D111] = { 3, 5, 5, 7, 13, 45 };
 
 /* D110's 12-vertex figure-eight at scale 10 (make_figure_eight) */
 static const long FIG8_D110[12][3] = {
@@ -467,15 +474,22 @@ delete_vertex (
  * Exact classification
  * ================================================================ */
 
+/* every nontrivial knot with at most 10 crossings has a nontrivial
+ * Alexander polynomial (the first knots with Delta = 1 have 11), so
+ * Delta = 1 on a diagram with <= 10 crossings proves the unknot */
+#define UNKNOT_CERT_CROSSINGS 10
+
 typedef struct {
     int      simple;
-    unsigned crossings;
+    unsigned crossings;      /* first generic projection (genericum) */
+    unsigned min_crossings;  /* projection Jones was computed on */
     int      writhe;
-    unsigned long det;      /* |Delta(-1)| */
+    unsigned long det;       /* |Delta(-1)| */
     int      palindromic;
-    chorda   alexander;     /* in the caller's pool */
-    chorda   jones;         /* datum NULL: not computed */
-    int      jones_skipped; /* crossings above the cap */
+    int      unknot_certified;
+    chorda   alexander;      /* in the caller's pool */
+    chorda   jones;          /* datum NULL: not computed */
+    chorda   jones_mirror;   /* Jones with t -> 1/t (the mirror image) */
 } Exact;
 
 static chorda
@@ -502,8 +516,59 @@ chorda_to_ulong (
     return strtoul(buf, NULL, 10);
 }
 
+static int
+chorda_is (
+    chorda      c,
+    const char *lit)
+{
+    return c.datum != NULL && chorda_aequalis_literis(c, lit);
+}
+
+/* the generic projection with the fewest crossings among directions
+ * with components in -2..2 (one of each +-v pair); 0 if none */
+static int
+fewest_crossings (
+    Laqueus    l,
+    Piscina   *scratch,
+    Diagramma *best)
+{
+    long     a, b, c;
+    long     ba = 0, bb = 0, bc = 0;
+    unsigned fewest = 0;
+    int      found = 0;
+
+    for (a = -2; a <= 2; a++) {
+        for (b = -2; b <= 2; b++) {
+            for (c = -2; c <= 2; c++) {
+                PiscinaNotatio mark;
+                Diagramma      d;
+
+                if (a < 0 || (a == 0 && (b < 0 || (b == 0 && c <= 0))))
+                    continue;
+                mark = piscina_notare(scratch);
+                if (laqueus_diagramma(l, situs_punctum((s64)a, (s64)b,
+                        (s64)c), scratch, &d)
+                    && (!found || (unsigned)diagramma_numerus(d) < fewest)) {
+                    found  = 1;
+                    fewest = (unsigned)diagramma_numerus(d);
+                    ba = a;
+                    bb = b;
+                    bc = c;
+                }
+                piscina_reficere(scratch, mark);
+            }
+        }
+    }
+    return found && laqueus_diagramma(l, situs_punctum((s64)ba, (s64)bb,
+        (s64)bc), scratch, best);
+}
+
 /* classify l; intermediate work in scratch (rolled back), strings
- * copied into out_pool */
+ * copied into out_pool. jones_cap = 0: Alexander only (no Jones, no
+ * projection search). Otherwise Jones is computed on the first generic
+ * projection if it has <= jones_cap crossings, else on the
+ * fewest-crossing projection found; a trivial Alexander polynomial
+ * also triggers the search, to certify the unknot. */
 static Exact
 classify (
     Laqueus   l,
@@ -516,17 +581,22 @@ classify (
     Diagramma      d;
     Polynomium     p;
 
-    e.simple        = laqueus_simplex(l, scratch) ? 1 : 0;
-    e.crossings     = 0;
-    e.writhe        = 0;
-    e.det           = 0;
-    e.palindromic   = 0;
-    e.alexander     = empty_chorda();
-    e.jones         = empty_chorda();
-    e.jones_skipped = 0;
+    e.simple           = laqueus_simplex(l, scratch) ? 1 : 0;
+    e.crossings        = 0;
+    e.min_crossings    = 0;
+    e.writhe           = 0;
+    e.det              = 0;
+    e.palindromic      = 0;
+    e.unknot_certified = 0;
+    e.alexander        = empty_chorda();
+    e.jones            = empty_chorda();
+    e.jones_mirror     = empty_chorda();
     if (e.simple && laqueus_diagramma_genericum(l, scratch, &d)) {
-        e.crossings = (unsigned)diagramma_numerus(d);
-        e.writhe    = (int)diagramma_scriptura(d);
+        Diagramma use = d;
+
+        e.crossings     = (unsigned)diagramma_numerus(d);
+        e.min_crossings = e.crossings;
+        e.writhe        = (int)diagramma_scriptura(d);
         if (diagramma_alexander(d, scratch, &p)) {
             Polynomium inv;
             Fractio    v;
@@ -540,13 +610,30 @@ classify (
                 e.det = chorda_to_ulong(fractio_ad_chordam(
                     fractio_absolutum(v, scratch), scratch));
         }
-        if (e.crossings <= jones_cap) {
-            if (diagramma_jones(d, scratch, &p))
-                e.jones = chorda_transcribere(
-                    polynomium_ad_chordam(p, 't', scratch), out_pool);
-        } else {
-            e.jones_skipped = 1;
+        if (jones_cap > 0
+            && (e.crossings > jones_cap
+                || (chorda_is(e.alexander, "1")
+                    && e.crossings > UNKNOT_CERT_CROSSINGS))) {
+            Diagramma fewer;
+
+            if (fewest_crossings(l, scratch, &fewer)
+                && (unsigned)diagramma_numerus(fewer) < e.crossings) {
+                use             = fewer;
+                e.min_crossings = (unsigned)diagramma_numerus(fewer);
+            }
         }
+        if (jones_cap > 0 && e.min_crossings <= jones_cap
+            && diagramma_jones(use, scratch, &p)) {
+            Polynomium q;
+
+            e.jones = chorda_transcribere(
+                polynomium_ad_chordam(p, 't', scratch), out_pool);
+            if (polynomium_contrahe(p, -1, scratch, &q))
+                e.jones_mirror = chorda_transcribere(
+                    polynomium_ad_chordam(q, 't', scratch), out_pool);
+        }
+        e.unknot_certified = chorda_is(e.alexander, "1")
+            && e.min_crossings <= UNKNOT_CERT_CROSSINGS;
     }
     piscina_reficere(scratch, mark);
     return e;
@@ -571,6 +658,41 @@ classify_alternative (
     return e;
 }
 
+/* writhe of alternative `choices` along direction v; 0 in *ok if v is
+ * not generic */
+static int
+writhe_along (
+    Laqueus        base,
+    unsigned long  choices,
+    Punctum        v,
+    Piscina       *scratch,
+    int           *ok)
+{
+    PiscinaNotatio mark = piscina_notare(scratch);
+    Laqueus        alt;
+    Diagramma      d;
+    int            w = 0;
+
+    build_alternative(base, choices, scratch, &alt);
+    *ok = laqueus_diagramma(alt, v, scratch, &d) ? 1 : 0;
+    if (*ok)
+        w = (int)diagramma_scriptura(d);
+    piscina_reficere(scratch, mark);
+    return w;
+}
+
+static int
+is_simple (
+    Laqueus  l,
+    Piscina *scratch)
+{
+    PiscinaNotatio mark = piscina_notare(scratch);
+    int            s    = laqueus_simplex(l, scratch) ? 1 : 0;
+
+    piscina_reficere(scratch, mark);
+    return s;
+}
+
 static void
 print_chorda (
     chorda c)
@@ -579,14 +701,6 @@ print_chorda (
         printf("-");
     else
         printf("%.*s", (int)c.mensura, (const char*)c.datum);
-}
-
-static int
-chorda_is (
-    chorda      c,
-    const char *lit)
-{
-    return c.datum != NULL && chorda_aequalis_literis(c, lit);
 }
 
 /* ================================================================
@@ -647,18 +761,16 @@ spectrum_has (
     return 0;
 }
 
-/* Alexander | Jones as one key (Jones "?" when skipped) */
+/* Alexander | Jones as one key (only when Jones is known) */
 static chorda
 pair_key (
     Exact    e,
     Piscina *pool)
 {
     chorda bar = chorda_ex_literis("  |  ", pool);
-    chorda j   = e.jones.datum != NULL ? e.jones
-               : chorda_ex_literis("?", pool);
 
     return chorda_concatenare(chorda_concatenare(e.alexander, bar, pool),
-        j, pool);
+        e.jones, pool);
 }
 
 /* ================================================================
@@ -694,9 +806,9 @@ part_a (
         ec = classify(reach, JONES_CAP_BASE, scratch, keep);
         es = classify(spec, JONES_CAP_BASE, scratch, keep);
         printf("  %-5s %2u/%-3u %2u/%-3u %2u/%-3u  %-9s %-9s %-9s  ", code,
-            (unsigned)laqueus_numerus(raw), er.crossings,
-            (unsigned)laqueus_numerus(reach), ec.crossings,
-            (unsigned)laqueus_numerus(spec), es.crossings,
+            (unsigned)laqueus_numerus(raw), er.min_crossings,
+            (unsigned)laqueus_numerus(reach), ec.min_crossings,
+            (unsigned)laqueus_numerus(spec), es.min_crossings,
             !er.simple ? "SINGULAR" : chorda_is(er.alexander,
                 KNOT_ALEXANDER[k]) ? "table" : "OTHER",
             !ec.simple ? "SINGULAR" : chorda_is(ec.alexander,
@@ -711,78 +823,106 @@ part_a (
         printf(" / %s / %s\n",
             ec.jones.datum == NULL ? "-" : same_rs ? "same" : "DIFFERENT",
             es.jones.datum == NULL ? "-" : same_rp ? "same" : "DIFFERENT");
-        if (!chorda_is(ec.alexander, KNOT_ALEXANDER[k])
-            || (ec.jones.datum != NULL && er.jones.datum != NULL
-                && !same_rs)) {
-            printf("        reach Alexander: ");
-            print_chorda(ec.alexander);
-            printf("   Jones: ");
-            print_chorda(ec.jones);
-            printf("\n");
-        }
-        if (laqueus_numerus(spec) != laqueus_numerus(reach)
-            && !chorda_is(es.alexander, KNOT_ALEXANDER[k])) {
-            printf("        spec  Alexander: ");
-            print_chorda(es.alexander);
-            printf("   Jones: ");
-            print_chorda(es.jones);
-            printf("\n");
-        }
         sprintf(msg, "%s raw braid polygon is simple with the table "
             "Alexander polynomial", code);
         check(msg, er.simple && chorda_is(er.alexander, KNOT_ALEXANDER[k]));
+        if (ec.simple) {
+            sprintf(msg, "%s simplified polygon: table Alexander and the "
+                "raw polygon's Jones", code);
+            check(msg, chorda_is(ec.alexander, KNOT_ALEXANDER[k])
+                && same_rs);
+        }
     }
+    printf("  (crossings: fewest found when Jones needed it; Jones on "
+        "that projection)\n");
 }
 
 /* ================================================================
  * Part B: D112's simplification, replayed as triangle moves
  * ================================================================ */
 
-static void
+typedef struct {
+    unsigned steps;
+    unsigned illegal_any;        /* move check refuses (any polygon) */
+    unsigned illegal_on_simple;  /* refused while the polygon was simple */
+    unsigned illegal_breaking;   /* ... and the result is singular */
+    unsigned breaks;             /* simple -> singular */
+    unsigned repairs;            /* singular -> simple */
+    int      first_break;        /* step index, -1 if none */
+    int      ends_simple;
+    int      ends_equal;         /* replay lands on D112's polygon */
+} Replay;
+
+/* D112's removal sequence (indices into the then-current polygon),
+ * each deletion checked as a triangle move. The move check presumes a
+ * simple polygon: on a singular one "illegal" means nothing, so only
+ * refusals on simple polygons are counted as broken isotopy steps. */
+static Replay
 replay_steps (
     const char *which,
     const char *code,
     Laqueus     raw,
     Laqueus     expect,
     Piscina    *keep,
-    unsigned   *n_steps,
-    unsigned   *n_illegal,
-    int        *first_illegal,
-    int        *ends_equal)
+    Piscina    *scratch)
 {
+    Replay      r;
     const char *line;
     char        tag[32];
     const char *p;
     Laqueus     cur = raw;
+    int         cur_simple = is_simple(raw, scratch);
 
-    *n_steps       = 0;
-    *n_illegal     = 0;
-    *first_illegal = -1;
-    *ends_equal    = 0;
+    r.steps             = 0;
+    r.illegal_any       = 0;
+    r.illegal_on_simple = 0;
+    r.illegal_breaking  = 0;
+    r.breaks            = 0;
+    r.repairs           = 0;
+    r.first_break       = -1;
+    r.ends_simple       = cur_simple;
+    r.ends_equal        = 0;
     sprintf(tag, "STEPS %s", which);
     line = find_line(tag, code);
     if (line == NULL)
-        return;
+        return r;
     p = strchr(line, ' ');   /* skip "target_det=N" */
     while (p != NULL && *p == ' ') {
-        char *end;
-        long  idx = strtol(p + 1, &end, 10);
-        Laqueus next;
+        char    *end;
+        long     idx = strtol(p + 1, &end, 10);
+        Laqueus  next;
+        int      legal, next_simple;
 
         if (end == p + 1)
             break;
-        if (!laqueus_motus_removere(cur, (i32)idx, keep, &next)) {
-            if (*first_illegal < 0)
-                *first_illegal = (int)*n_steps;
-            (*n_illegal)++;
+        legal = laqueus_motus_removere(cur, (i32)idx, keep, &next) ? 1 : 0;
+        if (!legal)
             delete_vertex(cur, (i32)idx, keep, &next);
+        next_simple = is_simple(next, scratch);
+        if (!legal) {
+            r.illegal_any++;
+            if (cur_simple) {
+                r.illegal_on_simple++;
+                if (!next_simple)
+                    r.illegal_breaking++;
+            }
         }
-        cur = next;
-        (*n_steps)++;
+        if (cur_simple && !next_simple) {
+            r.breaks++;
+            if (r.first_break < 0)
+                r.first_break = (int)r.steps;
+        }
+        if (!cur_simple && next_simple)
+            r.repairs++;
+        cur        = next;
+        cur_simple = next_simple;
+        r.steps++;
         p = end;
     }
-    *ends_equal = chorda_aequalis(laqueus_ad_chordam(cur, keep),
+    r.ends_simple = cur_simple;
+    r.ends_equal  = chorda_aequalis(laqueus_ad_chordam(cur, keep),
         laqueus_ad_chordam(expect, keep));
+    return r;
 }
 
 /* greedy legal simplification: delete the first vertex whose triangle
@@ -816,19 +956,18 @@ part_b (
     Piscina *keep,
     Piscina *scratch)
 {
-    int k;
-    unsigned total_illegal = 0;
+    int      k;
+    unsigned tot_any = 0, tot_simple = 0, tot_breaking = 0, tot_breaks = 0;
 
     printf("\n=== Part B: D112's det-greedy simplification replayed as "
         "triangle moves ===\n");
-    printf("  %-5s %-22s %-22s %-24s\n", "knot",
-        "REACH: steps/illegal", "SPEC: steps/illegal",
+    printf("  %-5s %6s %8s %13s %13s %8s %6s  %s\n", "knot", "steps",
+        "refused", "on simple", "breaks (1st)", "repairs", "ends",
         "legal greedy: verts, knot");
     for (k = 0; k < N_KNOTS; k++) {
         const char *code = KNOT_CODE[k];
         Laqueus     raw, reach, spec, legal;
-        unsigned    ns1, ni1, ns2, ni2;
-        int         f1, f2, eq1, eq2;
+        Replay      r1, r2;
         Exact       er, el;
         char        msg[160];
 
@@ -836,30 +975,40 @@ part_b (
             || !polygon_of("REACH", code, keep, &reach)
             || !polygon_of("SPEC", code, keep, &spec))
             continue;
-        replay_steps("REACH", code, raw, reach, keep, &ns1, &ni1, &f1, &eq1);
-        replay_steps("SPEC", code, raw, spec, keep, &ns2, &ni2, &f2, &eq2);
+        r1 = replay_steps("REACH", code, raw, reach, keep, scratch);
+        r2 = replay_steps("SPEC", code, raw, spec, keep, scratch);
         legal = simplify_legal(raw, keep);
         er = classify(raw, 0, scratch, keep);
         el = classify(legal, 0, scratch, keep);
-        printf("  %-5s %3u / %-3u (first #%-3d) %3u / %-3u (first #%-3d) "
-            "%3u -> %-3u %s\n", code, ns1, ni1, f1, ns2, ni2, f2,
+        printf("  %-5s %6u %8u %13u %8u (#%-2d) %8u %6s  %3u -> %-3u %s\n",
+            code, r1.steps, r1.illegal_any, r1.illegal_on_simple, r1.breaks,
+            r1.first_break, r1.repairs, r1.ends_simple ? "simple" : "SING",
             (unsigned)laqueus_numerus(raw), (unsigned)laqueus_numerus(legal),
             el.simple && chorda_aequalis(el.alexander, er.alexander)
                 ? "same Alexander" : "CHANGED");
-        total_illegal += ni1;
-        sprintf(msg, "%s: replay of D112's removal sequence ends on D112's "
-            "polygon", code);
-        check(msg, eq1 && eq2);
+        tot_any      += r1.illegal_any;
+        tot_simple   += r1.illegal_on_simple;
+        tot_breaking += r1.illegal_breaking;
+        tot_breaks   += r1.breaks;
+        sprintf(msg, "%s: replay of D112's removal sequences (REACH, SPEC) "
+            "ends on D112's polygons", code);
+        check(msg, r1.ends_equal && r2.ends_equal);
         sprintf(msg, "%s: legal greedy simplification keeps the knot", code);
         check(msg, el.simple && chorda_aequalis(el.alexander, er.alexander));
     }
-    printf("  illegal deletions along the 12 reachability simplifications: "
-        "%u\n", total_illegal);
+    printf("  12 reachability paths: %u refused moves, %u of them on a "
+        "simple polygon;\n  %u simple -> singular steps\n", tot_any,
+        tot_simple, tot_breaks);
+    check("every refused move on a simple polygon breaks the embedding, "
+        "and every break is a refused move",
+        tot_breaking == tot_simple && tot_breaks == tot_simple);
 }
 
 /* ================================================================
  * Part C: census and spectra on D112's polygons
  * ================================================================ */
+
+#define MAX_ALTS 2048
 
 static Spectrum spectra[N_KNOTS];      /* Alexander, per base knot */
 
@@ -869,8 +1018,11 @@ part_c (
     Piscina *scratch,
     Piscina *work)
 {
-    int k;
+    int      k;
     unsigned reach_exact[N_KNOTS][N_KNOTS];
+    static chorda alt_jones[MAX_ALTS];
+    static chorda alt_mirror[MAX_ALTS];
+    static int    alt_simple[MAX_ALTS];
 
     printf("\n=== Part C: census + spectra on D112's reachability polygons "
         "===\n");
@@ -881,66 +1033,109 @@ part_c (
         const char   *code = KNOT_CODE[k];
         Laqueus       base;
         unsigned      count, n_v = 0, n_s = 0, n_simple = 0, n_sing = 0;
-        unsigned      s_simple = 0, v_sing = 0, jones_skipped = 0;
-        unsigned      nonpal = 0;
+        unsigned      s_simple = 0, v_sing = 0, jones_missing = 0;
+        unsigned      nonpal = 0, trivial = 0, certified = 0;
+        unsigned      trivial_jones1 = 0;
+        unsigned      pair_bad = 0;
         const char   *verd = d112_verdicts(code, &count);
-        unsigned long c;
+        unsigned long c, mask;
         Spectrum      pairs;
         int           j;
         char          msg[200];
 
         spectrum_clear(&spectra[k]);
         spectrum_clear(&pairs);
-        if (verd == NULL || !polygon_of("REACH", code, keep, &base))
+        if (verd == NULL || !polygon_of("REACH", code, keep, &base)
+            || count > MAX_ALTS)
             continue;
+        mask = (unsigned long)count - 1UL;
         for (c = 0; c < count; c++) {
             PiscinaNotatio mark = piscina_notare(work);
             Exact          e = classify_alternative(base, c, JONES_CAP_BULK,
                 scratch, work);
 
             if (verd[c] == 'V') n_v++; else n_s++;
+            alt_simple[c] = e.simple;
+            alt_jones[c]  = empty_chorda();
+            alt_mirror[c] = empty_chorda();
             if (e.simple) {
                 n_simple++;
                 if (verd[c] != 'V') s_simple++;
                 spectrum_add(&spectra[k], e.alexander, keep);
-                spectrum_add(&pairs, pair_key(e, work), keep);
-                if (e.jones_skipped) jones_skipped++;
+                if (e.jones.datum != NULL) {
+                    spectrum_add(&pairs, pair_key(e, work), keep);
+                    alt_jones[c]  = chorda_transcribere(e.jones, keep);
+                    alt_mirror[c] = chorda_transcribere(e.jones_mirror,
+                        keep);
+                } else {
+                    jones_missing++;
+                }
                 if (!e.palindromic) nonpal++;
+                if (chorda_is(e.alexander, "1")) {
+                    trivial++;
+                    if (e.unknot_certified) certified++;
+                    if (chorda_is(e.jones, "1")) trivial_jones1++;
+                }
             } else {
                 n_sing++;
                 if (verd[c] == 'V') v_sing++;
             }
             piscina_reficere(work, mark);
         }
+        /* vertices 0, 1, 2 lie on the mirror plane: alternative c ^ mask
+         * IS the reflection of alternative c - same simplicity, mirror
+         * Jones */
+        for (c = 0; c < count; c++) {
+            unsigned long m = c ^ mask;
+
+            if (alt_simple[c] != alt_simple[m])
+                pair_bad++;
+            else if (alt_jones[c].datum != NULL
+                && alt_mirror[m].datum != NULL
+                && !chorda_aequalis(alt_jones[c], alt_mirror[m]))
+                pair_bad++;
+        }
         printf("  %-5s %5u | %5u / %-13u | %5u / %-18u | %5u / %-16u\n",
             code, count, n_v, n_s, n_simple, n_sing, s_simple, v_sing);
         printf("        distinct Alexander: exact %u (D112 %u); "
-            "Alexander|Jones pairs %u; Jones skipped (>%d crossings) %u; "
-            "non-palindromic %u\n", spectra[k].n, D112_DISTINCT[k], pairs.n,
-            JONES_CAP_BULK, jones_skipped, nonpal);
+            "Alexander|Jones pairs %u (Jones missing %u);\n"
+            "        trivial Alexander %u (Jones = 1: %u), certified "
+            "unknots %u; mirror pairing c <-> ~c: %s\n", spectra[k].n,
+            D112_DISTINCT[k], pairs.n, jones_missing, trivial,
+            trivial_jones1, certified, pair_bad == 0 ? "holds" : "BROKEN");
         sprintf(msg, "%s: every exact Alexander polynomial is palindromic",
             code);
         check(msg, nonpal == 0);
+        sprintf(msg, "%s: alternatives c and ~c are mirror images (same "
+            "simplicity, mirror Jones)", code);
+        check(msg, pair_bad == 0);
+        if (n_simple > 0) {
+            sprintf(msg, "%s: Jones known for every simple alternative",
+                code);
+            check(msg, jones_missing == 0);
+        }
+        /* the unknot claim of the findings: 6_3's 144 */
+        if (strcmp(code, "6_3") == 0)
+            check("6_3: all 144 trivial-Alexander alternatives are "
+                "certified unknots (<= 10 crossings)",
+                trivial == 144 && certified == 144);
         for (j = 0; j < N_KNOTS; j++)
             reach_exact[k][j] = (unsigned)spectrum_has(&spectra[k],
                 KNOT_ALEXANDER[j]);
-        if (strcmp(code, "6_3") == 0) {
+        if (strcmp(code, "6_3") == 0 || strcmp(code, "7_2") == 0) {
             unsigned q;
 
-            printf("        6_3 spectrum (Alexander [population]):\n");
+            printf("        %s spectrum (Alexander [population]):\n", code);
             for (q = 0; q < spectra[k].n; q++) {
                 printf("          ");
                 print_chorda(spectra[k].key[q]);
                 printf(" [%u]\n", spectra[k].count[q]);
             }
-            printf("        6_3 Alexander|Jones pairs with population "
-                ">= 4:\n");
+            printf("        %s Alexander | Jones [population]:\n", code);
             for (q = 0; q < pairs.n; q++) {
-                if (pairs.count[q] >= 4) {
-                    printf("          ");
-                    print_chorda(pairs.key[q]);
-                    printf(" [%u]\n", pairs.count[q]);
-                }
+                printf("          ");
+                print_chorda(pairs.key[q]);
+                printf(" [%u]\n", pairs.count[q]);
             }
         }
     }
@@ -973,19 +1168,22 @@ part_d (
     Piscina *scratch,
     Piscina *work)
 {
-    int trial;
+    int      trial;
+    Spectrum union_sp;            /* count = number of trials */
+    unsigned q, rare = 0, with_63 = 0;
 
+    spectrum_clear(&union_sp);
     printf("\n=== Part D: the 20 randomized 6_3 simplifications (D112 Phase "
         "5) ===\n");
-    printf("  %-6s %5s %5s | %-15s | %-15s | %-17s | %s\n", "trial",
+    printf("  %-5s %5s %5s | %-15s | %-15s | %-16s | %s\n", "trial",
         "verts", "alts", "valid D112/exact", "distinct D112/ex",
-        "illegal deletions", "base polygon");
+        "breaks / refused", "base polygon");
     for (trial = 0; trial < 20; trial++) {
         char          tag[32];
         Laqueus       base, raw;
         unsigned long c, count;
-        unsigned      n_simple = 0, ns, ni;
-        int           first, eq;
+        unsigned      n_simple = 0;
+        Replay        r;
         Spectrum      sp;
         Exact         eb;
 
@@ -993,7 +1191,7 @@ part_d (
         if (!polygon_of(tag, "6_3", keep, &base)
             || !polygon_of("RAW", "6_3", keep, &raw))
             continue;
-        replay_steps(tag, "6_3", raw, base, keep, &ns, &ni, &first, &eq);
+        r  = replay_steps(tag, "6_3", raw, base, keep, scratch);
         eb = classify(base, 0, scratch, keep);
         count = 1UL << (laqueus_numerus(base) - 3);
         spectrum_clear(&sp);
@@ -1008,10 +1206,14 @@ part_d (
             }
             piscina_reficere(work, mark);
         }
-        printf("  %-6d %5u %5lu | %6u / %-6u | %6u / %-6u | %5u of %-7u | ",
-            trial, (unsigned)laqueus_numerus(base), count,
+        for (q = 0; q < sp.n; q++)
+            spectrum_add(&union_sp, sp.key[q], keep);
+        if (spectrum_has(&sp, KNOT_ALEXANDER[6]))
+            with_63++;
+        printf("  %-5d %5u %5lu | %6u / %-6u | %6u / %-6u | %2u / %-2u (on "
+            "simple) | ", trial, (unsigned)laqueus_numerus(base), count,
             D112_TRIAL_VALID[trial], n_simple, D112_TRIAL_DISTINCT[trial],
-            sp.n, ni, ns);
+            sp.n, r.breaks, r.illegal_on_simple);
         if (!eb.simple)
             printf("SINGULAR\n");
         else if (chorda_is(eb.alexander, KNOT_ALEXANDER[6]))
@@ -1022,6 +1224,17 @@ part_d (
             printf("\n");
         }
     }
+    printf("  union over the 20 trials (Alexander [trials containing it]):\n");
+    for (q = 0; q < union_sp.n; q++) {
+        printf("    ");
+        print_chorda(union_sp.key[q]);
+        printf(" [%u]\n", union_sp.count[q]);
+        if (union_sp.count[q] == 1)
+            rare++;
+    }
+    printf("  union %u (D112 118), rare %u (D112 73); 6_3 itself in %u of 20 "
+        "trials (D112: 20/20, the base filled in by Fox calculus)\n",
+        union_sp.n, rare, with_63);
 }
 
 /* ================================================================
@@ -1039,8 +1252,7 @@ exact_type (
     Exact e)
 {
     if (!e.simple) return T_SINGULAR;
-    if (chorda_is(e.alexander, "1") && chorda_is(e.jones, "1"))
-        return T_UNKNOT;
+    if (e.unknot_certified && chorda_is(e.jones, "1")) return T_UNKNOT;
     if (chorda_is(e.alexander, "t^2 - 3t + 1")) return T_FIG8;
     if (chorda_is(e.alexander, "t^2 - t + 1")) {
         if (chorda_is(e.jones, JONES_RIGHT_TREFOIL)) return T_RIGHT3;
@@ -1050,7 +1262,7 @@ exact_type (
 }
 
 /* D110 Result 2: b2 = b4? no -> unknot; b7 = maj(b0,b1,b5)? no ->
- * unknot; b7 = b2 -> figure-eight; else trefoil, left if b2 = 1 */
+ * unknot; b7 = b2 -> figure-eight; else trefoil, "left" if b2 = 1 */
 static int
 d110_classifier (
     unsigned long c)
@@ -1080,9 +1292,9 @@ part_e (
     unsigned      exact_count[N_TYPES];
     unsigned long c;
     int           a, b, k;
-    unsigned      agree = 0, simple_total = 0, agree_simple = 0;
-    unsigned      agree_swapped = 0;
-    Spectrum      others;
+    unsigned      agree = 0, agree_swapped = 0;
+    unsigned      l_pos = 0, l_n = 0, r_nonpos = 0, r_n = 0, w_generic = 0;
+    Punctum       v235 = situs_punctum(2, 3, 5);
 
     printf("\n=== Part E: D110's figure-eight 4-check classifier (512 "
         "alternatives, all-base) ===\n");
@@ -1095,9 +1307,9 @@ part_e (
         check("D110 figure-eight parses", 0);
         return;
     }
-    e0 = classify(fig8, JONES_CAP_BULK, scratch, keep);
+    e0 = classify(fig8, JONES_CAP_BASE, scratch, keep);
     printf("  base polygon: simple %d, %u crossings, Alexander ", e0.simple,
-        e0.crossings);
+        e0.min_crossings);
     print_chorda(e0.alexander);
     printf(", Jones ");
     print_chorda(e0.jones);
@@ -1110,7 +1322,6 @@ part_e (
         for (b = 0; b < N_TYPES; b++)
             confusion[a][b] = 0;
     }
-    spectrum_clear(&others);
     for (c = 0; c < 512UL; c++) {
         PiscinaNotatio mark = piscina_notare(work);
         Exact          e = classify_alternative(fig8, c, JONES_CAP_BASE,
@@ -1125,19 +1336,28 @@ part_e (
             || (p == T_RIGHT3 && t == T_LEFT3)
             || (p == T_LEFT3 && t == T_RIGHT3))
             agree_swapped++;
-        if (t != T_SINGULAR) {
-            simple_total++;
-            if (p == t) agree_simple++;
+        /* D110 read chirality off the writhe along (2,3,5) */
+        if (p == T_LEFT3 || p == T_RIGHT3) {
+            int ok;
+            int w = writhe_along(fig8, c, v235, scratch, &ok);
+
+            if (ok) w_generic++;
+            if (p == T_LEFT3) {
+                l_n++;
+                if (ok && w > 0 && t == T_RIGHT3) l_pos++;
+            } else {
+                r_n++;
+                if (ok && w <= 0 && t == T_LEFT3) r_nonpos++;
+            }
         }
-        if (t == T_OTHER)
-            spectrum_add(&others, pair_key(e, work), keep);
         piscina_reficere(work, mark);
     }
     printf("  exact census:");
     for (a = 0; a < N_TYPES; a++)
         printf(" %s %u", TYPE_NAME[a], exact_count[a]);
     printf("\n  (D110 reported: fig-8 64, L-trefoil 32, R-trefoil 32, "
-        "unknot 384)\n");
+        "unknot 384; unknots here certified: Delta = 1 on <= %d "
+        "crossings, Jones = 1)\n", UNKNOT_CERT_CROSSINGS);
     printf("  confusion (rows: D110 classifier, columns: exact)\n  %-10s",
         "");
     for (b = 0; b < N_TYPES; b++)
@@ -1150,23 +1370,19 @@ part_e (
             printf("%11u", confusion[a][b]);
         printf("\n");
     }
-    printf("  classifier agrees with the exact type on %u / 512; on the "
-        "%u simple alternatives %u\n", agree, simple_total, agree_simple);
-    printf("  with D110's L/R names swapped: %u / 512\n", agree_swapped);
+    printf("  classifier agrees with the exact type on %u / 512; with "
+        "D110's L/R names swapped: %u / 512\n", agree, agree_swapped);
+    printf("  D110 'left' trefoils with positive writhe along (2,3,5) and "
+        "right-handed Jones: %u / %u;\n  D110 'right' trefoils with writhe "
+        "<= 0 and left-handed Jones: %u / %u; (2,3,5) generic for %u\n",
+        l_pos, l_n, r_nonpos, r_n, w_generic);
     check("D110 classifier is exact on all 512 alternatives up to "
         "swapped chirality names", agree_swapped == 512);
     check("D110's 512 alternatives are all simple (no singular polygon)",
         exact_count[T_SINGULAR] == 0);
-    if (others.n > 0) {
-        unsigned q;
-
-        printf("  'other' knot types (Alexander | Jones [population]):\n");
-        for (q = 0; q < others.n; q++) {
-            printf("    ");
-            print_chorda(others.key[q]);
-            printf(" [%u]\n", others.count[q]);
-        }
-    }
+    check("D110 named positive-writhe trefoils 'left'; Jones says they are "
+        "right-handed", l_n == 32 && l_pos == 32 && r_n == 32
+        && r_nonpos == 32);
 }
 
 /* ================================================================
@@ -1192,7 +1408,6 @@ part_f (
         unsigned      n_sing = 0, self_pres = 0;
         unsigned long dets[256];
         unsigned      n_dets = 0, q;
-        unsigned long base_det = 0;
 
         if (!polygon_of("SPEC", code, keep, &base))
             continue;
@@ -1207,8 +1422,7 @@ part_f (
             } else {
                 int seen = 0;
 
-                if (c == 0) base_det = e.det;
-                if (e.det == base_det) self_pres++;
+                if (e.det == D111_TABLE_DET[k]) self_pres++;
                 for (q = 0; q < n_dets; q++)
                     if (dets[q] == e.det) seen = 1;
                 if (!seen && n_dets < 256)
@@ -1220,6 +1434,8 @@ part_f (
             D111_DISTINCT_DETS[k], n_dets, D111_SELF_PRES[k], self_pres,
             n_sing);
     }
+    printf("  (self-preserving = simple alternatives with the knot's table "
+        "determinant)\n");
 }
 
 /* ================================================================
