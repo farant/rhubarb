@@ -777,4 +777,76 @@
     <gradus initus="\x1B[18;1t\x1B[5n" responsum="\x1B[0n" ignota="1"/>
   </casus>
 
+  <!-- ==== C2: historia (Ghostty: regio a summa linea, sine marginibus
+       lr, in schirmo primario -> linea abiens in historiam; DL, regio
+       infra summam, schirmum alterum numquam). historia_octeti="0" =
+       nulla historia. historia = lineae; historia_textus = Ghostty
+       dumpString .screen ==== -->
+
+  <casus titulus="index bottom of scroll region creates scrollback" fons="Terminal.zig:10651" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;3r1\r\n2\r\n3\x1B[4;1HX\x1B[3;1H\x1BDY" textus="2\n3\nY\nX" historia="1" historia_textus="1\n2\n3\nY\nX"/>
+  </casus>
+
+  <casus titulus="index bottom of scroll region no scrollback" fons="Terminal.zig:10677" latitudo="5" altitudo="5" historia_octeti="0">
+    <gradus initus="\x1B[1;3r\x1B[4;1HB\x1B[3;1HA\x1BDX" textus="\nA\n X\nB" historia="0" historia_textus="\nA\n X\nB"/>
+  </casus>
+
+  <casus titulus="index bottom of alt screen full region" fons="Terminal.zig:10782" latitudo="5" altitudo="3">
+    <gradus initus="\x1B[?1049hA\r\nB\r\nC\x1BD\rD" textus="B\nC\nD" historia="0" historia_textus="B\nC\nD"/>
+    <gradus initus="\x1B[?1049l" textus="" historia="0" historia_textus=""/>
+  </casus>
+
+  <casus titulus="index bottom of alt screen top region" fons="Terminal.zig:10816" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?1049h1\r\n2\r\n3\r\n4\r\n5\x1B[1;4r\x1B[4;1H\x1BDX" textus="2\n3\n4\nX\n5" historia_textus="2\n3\n4\nX\n5"/>
+  </casus>
+
+  <casus titulus="scrollUp top region no scrollback" fons="Terminal.zig:10844" latitudo="5" altitudo="5" historia_octeti="0">
+    <gradus initus="A\r\nB\r\nC\r\nD\r\nE\x1B[1;3r\x1B[S" textus="B\nC\n\nD\nE" historia_textus="B\nC\n\nD\nE"/>
+  </casus>
+
+  <casus titulus="scrollUp creates scrollback in primary screen" fons="Terminal.zig:9157" latitudo="5" altitudo="5">
+    <gradus initus="AAAAA\r\nBBBBB\r\nCCCCC\r\nDDDDD\r\nEEEEE\x1B[S" textus="BBBBB\nCCCCC\nDDDDD\nEEEEE" historia="1" historia_textus="AAAAA\nBBBBB\nCCCCC\nDDDDD\nEEEEE"/>
+  </casus>
+
+  <casus titulus="scrollUp with max_scrollback_bytes zero" fons="Terminal.zig:9205" latitudo="5" altitudo="5" historia_octeti="0">
+    <gradus initus="AAAAA\r\nBBBBB\r\nCCCCC\x1B[S" textus="BBBBB\nCCCCC" historia="0" historia_textus="BBBBB\nCCCCC"/>
+  </casus>
+
+  <casus titulus="scrollUp with max_scrollback_bytes zero and top margin" fons="Terminal.zig:9238" latitudo="5" altitudo="5" historia_octeti="0">
+    <gradus initus="AAAAA\r\nBBBBB\r\nCCCCC\r\nDDDDD\x1B[2;5r\x1B[S" textus="AAAAA\nCCCCC\nDDDDD" historia_textus="AAAAA\nCCCCC\nDDDDD"/>
+  </casus>
+
+  <!-- LF in imo schirmi toti: lineae in historiam, ordine -->
+  <casus titulus="linefeeds at the bottom fill the history in order" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="1\r\n2\r\n3\r\n4" textus="3\n4" historia="2" historia_textus="1\n2\n3\n4"/>
+  </casus>
+
+  <!-- regio top region cum historia: SU lineam summam in historiam
+       mittit (Ghostty scrollUp: regio in summo, sine marginibus lr) -->
+  <casus titulus="scroll up of a top region with scrollback keeps the line" fons="domus" latitudo="5" altitudo="5">
+    <gradus initus="A\r\nB\r\nC\r\nD\r\nE\x1B[1;3r\x1B[S" textus="B\nC\n\nD\nE" historia="1" historia_textus="A\nB\nC\n\nD\nE"/>
+  </casus>
+
+  <!-- regio infra summam lineam: numquam historia -->
+  <casus titulus="a region below the top never feeds the history" fons="domus" latitudo="5" altitudo="4">
+    <gradus initus="A\r\nB\r\nC\r\nD\x1B[2;4r\x1B[4;1H\x1BD\x1B[S" historia="0" textus="A\nD"/>
+  </casus>
+
+  <!-- DL in linea summa: numquam historia (Ghostty deleteLines) -->
+  <casus titulus="delete lines at the top never feeds the history" fons="domus" latitudo="5" altitudo="3">
+    <gradus initus="A\r\nB\r\nC\x1B[1;1H\x1B[2M" textus="C" historia="0" historia_textus="C"/>
+  </casus>
+
+  <!-- historia primarii in schirmo altero non videtur; redit -->
+  <casus titulus="the alternate screen hides the primary history" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="1\r\n2\r\n3" historia="1" historia_textus="1\n2\n3"/>
+    <gradus initus="\x1B[?1049hA" historia="0" historia_textus="\n A"/>
+    <gradus initus="\x1B[?1049l" historia="1" historia_textus="1\n2\n3"/>
+  </casus>
+
+  <!-- ED 2 sine signis promptus (OSC 133): historia non augetur -->
+  <casus titulus="erase display does not feed the history" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="A\r\nB\x1B[2J" textus="" historia="0" historia_textus=""/>
+  </casus>
+
 </vectores>

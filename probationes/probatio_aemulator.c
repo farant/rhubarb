@@ -290,6 +290,190 @@ lectionem_probare (vacuum)
     CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
 }
 
+/* lineas numeratas "0".."n-1" scribere, quamque cum \r\n */
+interior vacuum
+lineas_numeratas (
+    Aemulator* a,
+          i32  n)
+{
+    character b[XXIV];
+          i32 i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        sprintf(b, "%u\r\n", (unsigned)i);
+        scribere(a, b);
+    }
+}
+
+interior Aemulator*
+cum_historia (
+    i32 latitudo,
+    i32 altitudo,
+    i32 octeti)
+{
+    AemulatorConfiguratio cfg;
+
+    aemulator_configuratio_initiare(&cfg);
+    cfg.latitudo         = latitudo;
+    cfg.altitudo         = altitudo;
+    cfg.historia_octeti  = octeti;
+    redde aemulator_creare(piscina, &cfg);
+}
+
+interior b32
+historia_incipit (
+             Aemulator* a,
+    constans character* praefixum)
+{
+    chorda h;
+
+    h = aemulator_historiam_effundere(a, piscina);
+    redde h.mensura >= (i32)strlen(praefixum)
+        && memcmp(h.datum, praefixum, strlen(praefixum)) == ZEPHYRUM;
+}
+
+/* stilus cellulae visus (x, y) */
+interior StilusTerminalis
+stilus_visus (
+    Aemulator* a,
+          i32  x,
+          i32  y)
+{
+    AemulatorCellula c;
+
+    (vacuum)aemulator_visus_cellula(a, x, y, &c);
+    redde c.stilus;
+}
+
+/* XVII: historia - paginae, evictio, latitudo, stili (C2) */
+interior vacuum
+historiam_probare (vacuum)
+{
+           Aemulator* a;
+    AemulatorCellula  c;
+    StilusTerminalis  st;
+    StilusTerminalis  nativus;
+           character  b[XXXII];
+                 i32  i;
+
+    imprimere("\n--- XVII: historia (C2) ---\n");
+    stilus_nativus(&nativus);
+    /* pagina una (latitudo XX: CCLXXIII lineae): DXCVI lineae abeunt
+     * -> II paginae recyclatae, L manent (DXLVI..DXCV) */
+    a = cum_historia(XX, V, I);
+    lineas_numeratas(a, DC);
+    CREDO_AEQUALIS_I32(aemulator_historia(a), L);
+    CREDO_VERUM(historia_incipit(a, "546\n547\n"));
+    /* paginae duae: CCLXXIII + L */
+    a = cum_historia(XX, V, LXIV * MXXIV + I);
+    lineas_numeratas(a, DC);
+    CREDO_AEQUALIS_I32(aemulator_historia(a), CCCXXIII);
+    CREDO_VERUM(historia_incipit(a, "273\n274\n"));
+    /* sine historia: nihil */
+    a = cum_historia(XX, V, ZEPHYRUM);
+    lineas_numeratas(a, C);
+    CREDO_AEQUALIS_I32(aemulator_historia(a), ZEPHYRUM);
+
+    /* latitudo mutata: pagina nova; lineae angustiores (plenae)
+     * legibiles, cellula ultra latitudinem suam vacua (non linea
+     * proxima); linea latior in historia tota */
+    a = cum_historia(XX, III, M * M);
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        scribere(a, "aaaaaaaaaaaaaaaaaaaa\r");
+        scribere(a, i + I < V ? "\n" : "");
+    }
+    CREDO_AEQUALIS_I32(aemulator_historia(a), II);
+    CREDO_VERUM(aemulator_amplitudo(a, XXX, III));
+    scribere(a, "\x1B[3;1H\x1B[2K");
+    scribere(a, "latior linea quae XXV excedit\r\n\n\n");
+    CREDO_AEQUALIS_I32(aemulator_historia(a), V);
+    CREDO_VERUM(historia_incipit(a,
+        "aaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaa\n"
+        "aaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaa\n"
+        "latior linea quae XXV excedit"));
+    aemulator_visum_movere(a, M);
+    CREDO_AEQUALIS_I32(aemulator_visus(a), V);
+    CREDO_VERUM(aemulator_visus_cellula(a, XXV, ZEPHYRUM, &c));
+    CREDO_AEQUALIS_I32(c.graphema.mensura, ZEPHYRUM);
+    CREDO_VERUM(aemulator_visus_cellula(a, XIX, ZEPHYRUM, &c));
+    CREDO_AEQUALIS_I32(c.graphema.mensura, I);
+
+    /* involutio mollis in historia servatur */
+    a = cum_historia(V, II, M * M);
+    scribere(a, "abcdefg\r\n\n\n");
+    CREDO_AEQUALIS_I32(aemulator_historia(a), III);
+    aemulator_visum_movere(a, M);
+    CREDO_VERUM(aemulator_visus_involuta(a, ZEPHYRUM));
+    CREDO_FALSUM(aemulator_visus_involuta(a, I));
+
+    /* schirmum alterum: historia nulla et visus ad imum */
+    a = cum_historia(V, II, M * M);
+    scribere(a, "1\r\n2\r\n3");
+    aemulator_visum_movere(a, I);
+    CREDO_AEQUALIS_I32(aemulator_visus(a), I);
+    scribere(a, "\x1B[?1049hA");
+    CREDO_AEQUALIS_I32(aemulator_visus(a), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_historia(a), ZEPHYRUM);
+    aemulator_visum_movere(a, I);
+    CREDO_AEQUALIS_I32(aemulator_visus(a), ZEPHYRUM);
+    scribere(a, "\x1B[?1049l");
+    CREDO_AEQUALIS_I32(aemulator_historia(a), I);
+
+    /* stili historiae collectionem schirmi superant */
+    a = cum_historia(XX, V, M * M);
+    scribere(a, "\x1B[38;2;255;0;0mR\x1B[0m\r\n\r\n\r\n\r\n\r\n");
+    CREDO_AEQUALIS_I32(aemulator_historia(a), I);
+    per (i = ZEPHYRUM; i < DC; i++)
+    {
+        sprintf(b, "\x1B[38;2;0;%u;%umX", (unsigned)(i / CCLVI),
+            (unsigned)(i % CCLVI));
+        scribere(a, b);
+    }
+    scribere(a, "\x1B[H\x1B[38;2;255;0;0mR");
+    aemulator_visum_movere(a, M);
+    st = stilus_visus(a, ZEPHYRUM, ZEPHYRUM);
+    aemulator_visum_movere(a, -(s32)M);
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM(stilus_aequalis(&st, &c.stilus));
+    CREDO_FALSUM(stilus_aequalis(&st, &nativus));
+
+    /* tabula paginae plena: linea CC stilorum - CXXVII servantur,
+     * ceteri nativi (degradatio) */
+    a = cum_historia(CC, III, M * M);
+    per (i = ZEPHYRUM; i < CC; i++)
+    {
+        sprintf(b, "\x1B[38;2;1;%u;%umX", (unsigned)(i / CCLVI),
+            (unsigned)(i % CCLVI));
+        scribere(a, b);
+    }
+    scribere(a, "\x1B[0m\r\n\r\n\r\n");
+    aemulator_visum_movere(a, M);
+    st = stilus_visus(a, CXXVI, ZEPHYRUM);
+    CREDO_FALSUM(stilus_aequalis(&st, &nativus));
+    st = stilus_visus(a, CXXVII, ZEPHYRUM);
+    CREDO_VERUM(stilus_aequalis(&st, &nativus));
+    /* linea secunda quae cum prima non capitur: pagina nova, integra */
+    a = cum_historia(CXX, III, M * M);
+    per (i = ZEPHYRUM; i < C; i++)
+    {
+        sprintf(b, "\x1B[38;2;2;0;%umX", (unsigned)i);
+        scribere(a, b);
+    }
+    scribere(a, "\x1B[0m\r\n");
+    per (i = ZEPHYRUM; i < C; i++)
+    {
+        sprintf(b, "\x1B[38;2;3;0;%umX", (unsigned)i);
+        scribere(a, b);
+    }
+    scribere(a, "\x1B[0m\r\n\r\n\r\n");
+    CREDO_AEQUALIS_I32(aemulator_historia(a), II);
+    aemulator_visum_movere(a, M);
+    st = stilus_visus(a, XCIX, I);
+    CREDO_FALSUM(stilus_aequalis(&st, &nativus));
+}
+
 s32 principale (vacuum)
 {
                 Aemulator* a;
@@ -632,10 +816,19 @@ s32 principale (vacuum)
 
     responsa_probare();
     lectionem_probare();
+    historiam_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
-    a = creare(XX, V);
-    scribere(a, "calefactio\r\n");
+    /* historia pagina una (limes I octeti): calefactio lineas in
+     * historiam mittit, pagina allocatur; deinde solum recyclatur
+     * (decisio XX) */
+    aemulator_configuratio_initiare(&cfg);
+    cfg.latitudo         = XX;
+    cfg.altitudo         = V;
+    cfg.historia_octeti  = I;
+    a                    = aemulator_creare(piscina, &cfg);
+    scribere(a, "calefactio\r\n\r\n\r\n\r\n\r\n\r\n");
+    CREDO_VERUM(aemulator_historia(a) > ZEPHYRUM);
     usus = piscina_summa_usus(piscina);
     per (i = ZEPHYRUM; i < M; i++)
     {

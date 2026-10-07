@@ -368,14 +368,15 @@ memoriam_probare (vacuum)
 interior vacuum
 obstinatum_probare (vacuum)
 {
-                 Obstinatus  o;
-            Pseudoterminale* pt;
-            AemulatorHospes* h;
-      AemulatorHospesPulsus  p;
-                         i8  b[C];
-                         i8  expectatum[C];
-             memoriae_index  usus;
-                        i32  i;
+                     Obstinatus  o;
+                Pseudoterminale* pt;
+                AemulatorHospes* h;
+          AemulatorHospesPulsus  p;
+    AemulatorHospesConfiguratio  cfg;
+                             i8  b[C];
+                             i8  expectatum[C];
+                 memoriae_index  usus;
+                            i32  i;
 
     imprimere("\n--- III: infans obstinatus ---\n");
     /* reservatum: cauda LXIV, initus LX ad summum; responsum in
@@ -462,9 +463,15 @@ obstinatum_probare (vacuum)
     o.mortuus = VERUM;
     CREDO_VERUM(aemulator_hospes_pulsare(h, ZEPHYRUM).finitus);
 
-    /* status constans: lectio, responsa, missio - nihil allocat */
+    /* status constans: lectio, responsa, missio - nihil allocat
+     * (historia pagina una: calefactio eam implet, deinde
+     * recyclatur) */
     pt  = obstinatum_creare(&o);
-    h   = hospitem_creare(pt, XX, V, ZEPHYRUM, ZEPHYRUM);
+    aemulator_hospes_configuratio_initiare(&cfg);
+    cfg.aemulator.latitudo = XX;
+    cfg.aemulator.altitudo = V;
+    cfg.aemulator.historia_octeti = I;
+    h = aemulator_hospes_creare(piscina, &cfg, pt);
     effusionem_ponere(&o, "linea \x1B[1mX\x1B[0m\x1B[6n\r\n");
     o.cyclus  = VERUM;
     o.quota   = M * M;

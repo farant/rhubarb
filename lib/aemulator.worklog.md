@@ -242,3 +242,41 @@ tests bite.
 **P4 (no 16-bit mask) survives by construction:** the reply prints
 only four hex digits. Mask kept for intent.
 
+## 2026-10-06 — C2: history
+
+**The scroll-off rule is "region at the top", not "full screen".**
+Ghostty `Terminal: index bottom of scroll region creates scrollback`
+(Terminal.zig:10651): region 1-3 of 5 rows, IND at row 3 pushes row 1
+into history while row 4 stays. Same in `scrollUp` ("if our scroll
+region is at the top and we have no left/right margins"). DL at the
+top row scrolls the same rows but must NOT feed history, so
+`regionem_sursum` takes an explicit `historia` flag (IND, SU, resize:
+VERUM; DL: FALSUM) and feeds only when summa == 0 on the primary.
+
+**ED 2 keeps nothing.** Ghostty scrolls the screen into history on ED
+2 only when the last non-empty row is an OSC 133 prompt (#905). No
+prompt marks here -> plain clear.
+
+**Pages own their styles.** Rows are copied into a page and their
+style indices re-interned into the page's 128-entry table, so the
+screen's mark-compact collection (which renumbers) never walks
+history. Table full mid-row: roll back the row's new entries
+(numerus_stilorum = n0), take a fresh page, retry once; a row that
+alone needs > 127 styles degrades the rest to the default style.
+
+**Steady-state tests had to learn about history.** With history on by
+default, 1000 lines legitimately allocate pages until the limit. The
+"allocates nothing" tests now use a one-page limit (historia_octeti =
+1) and a warm-up that pushes a line into history; the full-limit
+measurement is C3's.
+
+**Plants that survived, and why:** width change without a new page
+(the wide row's text was never checked in history); reading past a
+narrow row (landed on an EMPTY neighbour - rows are now full of 'a');
+alt screen hiding history (the Ghostty vector's primary had none);
+soft-wrap flag (nothing read it); entering alt keeps the view (no
+check). P7 first did not compile (unused variable) - replanted.
+
+**1049 carries the cursor:** a vector expecting "A" at the top of the
+alt screen was wrong - the cursor arrives where it was on the primary.
+

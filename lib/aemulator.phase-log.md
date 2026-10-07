@@ -294,3 +294,20 @@ yet (phase E). A title longer than 2046 bytes is dropped (Ghostty:
 **Next: phase C or D - see the re-plan in the plan (Fran decides the
 order).**
 
+## C2 — history pages and scroll-off (2026-10-06)
+
+**INTENTIO.** Rows leaving the primary screen are kept, in pages that
+own their styles, up to the byte limit; the screen's style collection
+never touches history.
+
+Built: Ghostty-style pages (64 KiB of cells, one width, own style
+table), copied rows with re-interned styles, a ring of pages that
+grows then recycles, the history and view reads, one dump routine over
+absolute rows (live, view, history+live). Ghostty's own tests moved the
+scroll-off rule: a region starting at the top row feeds history, not
+only the full screen - and DL never does, so the scroll function now
+takes an explicit flag. Five of fourteen plants survived the first
+round, each a gap in the tests (a narrow history row read past its
+end landed on an empty neighbour; the alt-screen vector's primary had
+no history to leak); all caught after.
+

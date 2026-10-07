@@ -44,7 +44,12 @@ Leges chartae:
   OSC 0/2 per effectum `titulus`; `AemulatorConfiguratio` campos
   `titulus` et `versio` accipit (identitas XTVERSION;
   `AEMULATOR_VERSIO`); B4b: DECSTR, `CSI 18 t`, DECRQCRA sub campo
-  novo `lectio_schirmi` (ordinarie FALSUM). Series ceterae
+  novo `lectio_schirmi` (ordinarie FALSUM); C: historia (campus
+  `historia_octeti`, ordinarie X MB, paginae cum stilis propriis) et
+  visus (`aemulator_historia`, `aemulator_visus`,
+  `aemulator_visum_movere`, `aemulator_visus_cellula`,
+  `aemulator_visus_involuta`, `aemulator_visum_effundere`,
+  `aemulator_historiam_effundere`). Series ceterae
   consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
 
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex

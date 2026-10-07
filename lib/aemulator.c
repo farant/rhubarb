@@ -45,6 +45,24 @@ nomen structura {
          b32  involuta;  /* in lineam proximam continuat (refluxus) */
 } Linea;
 
+/* HISTORIA (phasis C, decisiones XIX-XX): paginae magnitudinis fixae
+ * (cellulae PAGINA_OCTETI), lineae unius latitudinis, tabula stilorum
+ * PROPRIA - collectio stilorum schirmi historiam numquam tangit; stili
+ * cum pagina vivunt et cum ea evincuntur (exemplar Ghostty page). */
+#define PAGINA_OCTETI      (LXIV * MXXIV)
+#define PAGINA_LINEAE_MAX  (PAGINA_OCTETI / (i32)magnitudo(Cellula))
+#define PAGINA_STILI       CXXVIII
+
+nomen structura {
+                 i32  latitudo;    /* cellulae per lineam */
+                 i32  capacitas;   /* lineae */
+                 i32  numerus;     /* lineae scriptae */
+             Cellula* cellulae;    /* PAGINA_OCTETI */
+                  i8* involutae;   /* PAGINA_LINEAE_MAX */
+    StilusTerminalis* stili;       /* PAGINA_STILI; [0] = nativus */
+                 i32  numerus_stilorum;
+} Pagina;
+
 /* DECSC (Ghostty saveCursor: positio, stilus, involutio pendens) */
 nomen structura {
     i32 x;
@@ -62,31 +80,37 @@ nomen structura {
 } Schirmum;
 
 structura Aemulator {
-              Piscina* piscina;
-    AemulatorEffectus  effectus;
-                  i32  latitudo;
-                  i32  altitudo;
-                  i32  capacitas_latitudinis;
-                  i32  capacitas_altitudinis;
-             Schirmum  primarium;
-             Schirmum  alterum;
-             Schirmum* activum;
-         SeriesLector* lector;
-                   i8  residuum[IV];      /* runa UTF-8 scissa */
-                  i32  residuum_mensura;
-                  i32  ignota;
-                  b32  involutio;         /* DEC VII */
-                  b32  visibilis;         /* DEC XXV */
-                  b32  synchronia;        /* DEC MMXXVI */
-                  b32  lnm;               /* ANSI XX: LF et CR */
-                  i32  regio_summa;       /* DECSTBM (0-based) */
-                  i32  regio_ultima;
-                   i8* tabulae;           /* sistae per columnam */
-               chorda  identitas;         /* XTVERSION */
-                  b32  lectio_schirmi;    /* DECRQCRA permissa */
-     StilusTerminalis* stili;             /* [0] = nativus */
-                  i32  numerus_stilorum;
-                  i32* transitus;         /* collectio: vetus->novus */
+              Piscina*  piscina;
+    AemulatorEffectus   effectus;
+                  i32   latitudo;
+                  i32   altitudo;
+                  i32   capacitas_latitudinis;
+                  i32   capacitas_altitudinis;
+             Schirmum   primarium;
+             Schirmum   alterum;
+             Schirmum*  activum;
+         SeriesLector*  lector;
+                   i8   residuum[IV];      /* runa UTF-8 scissa */
+                  i32   residuum_mensura;
+                  i32   ignota;
+                  b32   involutio;         /* DEC VII */
+                  b32   visibilis;         /* DEC XXV */
+                  b32   synchronia;        /* DEC MMXXVI */
+                  b32   lnm;               /* ANSI XX: LF et CR */
+                  i32   regio_summa;       /* DECSTBM (0-based) */
+                  i32   regio_ultima;
+                   i8*  tabulae;           /* sistae per columnam */
+               chorda   identitas;         /* XTVERSION */
+               Pagina** paginae;           /* anulus historiae */
+                  i32   paginae_maximae;   /* 0 = nulla historia */
+                  i32   paginae_numerus;
+                  i32   paginae_initium;
+                  i32   historia_lineae;
+                  i32   visus;             /* lineae supra vivum (C3) */
+                  b32   lectio_schirmi;    /* DECRQCRA permissa */
+     StilusTerminalis*  stili;             /* [0] = nativus */
+                  i32   numerus_stilorum;
+                  i32*  transitus;         /* collectio: vetus->novus */
 };
 
 
@@ -269,14 +293,229 @@ stilus_vacuus (
  * Cursor et lineae
  * ================================================== */
 
-/* lineas [summa, ultima] n sursum volvere: summae abeunt (scrollback:
- * phasis C), imae novae vacuae (BCE) */
+
+/* ==================================================
+ * Historia (phasis C)
+ * ================================================== */
+
+interior Pagina*
+paginam_ad (
+    constans Aemulator* a,
+                   i32  i)
+{
+    redde a->paginae[(a->paginae_initium + i) % a->paginae_maximae];
+}
+
+interior vacuum
+paginam_parare (
+    Pagina* pg,
+        i32  latitudo)
+{
+    pg->latitudo          = latitudo;
+    pg->capacitas         = PAGINA_OCTETI
+                          / (latitudo * (i32)magnitudo(Cellula));
+    pg->numerus           = ZEPHYRUM;
+    pg->numerus_stilorum  = I;
+    stilus_nativus(&pg->stili[ZEPHYRUM]);
+}
+
+/* pagina nova pro latitudine currente: ex piscina dum infra limitem,
+ * aliter vetustissima recyclatur (decisio XX). NIHIL solum si nulla
+ * pagina exstat et piscina deficit (linea tunc perit). */
+interior Pagina*
+paginam_novam (
+    Aemulator* a)
+{
+    Pagina* pg;
+
+    pg = NIHIL;
+    si (a->paginae_numerus < a->paginae_maximae)
+    {
+        pg = (Pagina*)piscina_conari_allocare(a->piscina,
+            magnitudo(Pagina));
+        si (pg)
+        {
+            pg->cellulae = (Cellula*)piscina_conari_allocare(a->piscina,
+                PAGINA_OCTETI);
+            pg->involutae = (i8*)piscina_conari_allocare(a->piscina,
+                (memoriae_index)PAGINA_LINEAE_MAX);
+            pg->stili = (StilusTerminalis*)piscina_conari_allocare(
+                a->piscina, PAGINA_STILI * magnitudo(StilusTerminalis));
+            si (!pg->cellulae || !pg->involutae || !pg->stili)
+            {
+                pg = NIHIL;
+            }
+        }
+        si (pg)
+        {
+            a->paginae[(a->paginae_initium + a->paginae_numerus)
+                       % a->paginae_maximae] = pg;
+            a->paginae_numerus++;
+        }
+    }
+    si (!pg)
+    {
+        si (a->paginae_numerus == ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        /* evictio: vetustissima ad finem anuli */
+        pg                  = paginam_ad(a, ZEPHYRUM);
+        a->historia_lineae  -= pg->numerus;
+        a->paginae_initium   = (a->paginae_initium + I)
+                             % a->paginae_maximae;
+        a->paginae[(a->paginae_initium + a->paginae_numerus - I)
+                   % a->paginae_maximae] = pg;
+        si (a->visus > a->historia_lineae)
+        {
+            a->visus = a->historia_lineae;
+        }
+    }
+    paginam_parare(pg, a->latitudo);
+    redde pg;
+}
+
+/* stilus in tabula paginae; -1 si plena */
+interior s32
+paginae_stilum (
+                       Pagina* pg,
+    constans StilusTerminalis* st)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < pg->numerus_stilorum; i++)
+    {
+        si (stilus_aequalis(&pg->stili[i], st))
+        {
+            redde (s32)i;
+        }
+    }
+    si (pg->numerus_stilorum >= PAGINA_STILI)
+    {
+        redde -I;
+    }
+    pg->stili[pg->numerus_stilorum] = *st;
+    redde (s32)pg->numerus_stilorum++;
+}
+
+/* linea schirmi primarii abiens in historiam (copia; stili in tabulam
+ * paginae internantur). Tabula plena: semel in pagina nova; linea
+ * sola plures stilos poscens quam pagina capit -> stili superflui
+ * nativi (degradatio). */
+interior vacuum
+historiam_addere (
+    Aemulator* a,
+        Linea* l)
+{
+     Pagina* pg;
+    Cellula* linea;
+        i32  n0;
+        i32  x;
+        s32  k;
+        b32  iteratum;
+
+    si (a->paginae_maximae == ZEPHYRUM)
+    {
+        redde;
+    }
+    pg = a->paginae_numerus > ZEPHYRUM
+        ? paginam_ad(a, a->paginae_numerus - I) : NIHIL;
+    si (   !pg || pg->numerus >= pg->capacitas
+        || pg->latitudo != a->latitudo)
+    {
+        pg = paginam_novam(a);
+        si (!pg)
+        {
+            redde;
+        }
+    }
+    iteratum  = FALSUM;
+    n0        = pg->numerus_stilorum;
+    linea     = pg->cellulae + pg->numerus * pg->latitudo;
+    per (x = ZEPHYRUM; x < pg->latitudo; x++)
+    {
+        k = paginae_stilum(pg, &a->stili[l->cellulae[x].stilus]);
+        si (k < ZEPHYRUM && !iteratum && pg->numerus > ZEPHYRUM)
+        {
+            pg->numerus_stilorum  = n0;
+            pg                    = paginam_novam(a);
+            si (!pg)
+            {
+                redde;
+            }
+            iteratum  = VERUM;
+            linea     = pg->cellulae;
+            x         = (i32)-I;
+            perge;
+        }
+        linea[x]         = l->cellulae[x];
+        linea[x].stilus  = k < ZEPHYRUM ? ZEPHYRUM : (i32)k;
+    }
+    pg->involutae[pg->numerus] = (i8)(l->involuta ? I : ZEPHYRUM);
+    pg->numerus++;
+    a->historia_lineae++;
+    si (a->visus > ZEPHYRUM)
+    {
+        a->visus++;    /* decisio XXI: eaedem lineae in visu manent */
+    }
+}
+
+/* historia schirmi activi (alterum nullam habet) */
+interior i32
+historia_activa (
+    constans Aemulator* a)
+{
+    redde a->activum == &a->primarium ? a->historia_lineae : ZEPHYRUM;
+}
+
+/* linea absoluta r in [0, historia_activa + altitudo): cellulae,
+ * latitudo, tabula stilorum, involutio */
+interior Cellula*
+lineam_absolutam (
+             constans Aemulator*  a,
+                            i32   r,
+                            i32*  latitudo,
+      constans StilusTerminalis** stili,
+                            b32*  involuta)
+{
+    constans Pagina* pg;
+                i32  h;
+                i32  i;
+
+    h = historia_activa(a);
+    si (r >= h)
+    {
+        *latitudo  = a->latitudo;
+        *stili     = a->stili;
+        *involuta  = a->activum->lineae[r - h]->involuta;
+        redde a->activum->lineae[r - h]->cellulae;
+    }
+    per (i = ZEPHYRUM; i < a->paginae_numerus; i++)
+    {
+        pg = paginam_ad(a, i);
+        si (r < pg->numerus)
+        {
+            *latitudo  = pg->latitudo;
+            *stili     = pg->stili;
+            *involuta  = pg->involutae[r] != ZEPHYRUM;
+            redde pg->cellulae + r * pg->latitudo;
+        }
+        r -= pg->numerus;
+    }
+    *latitudo = ZEPHYRUM;
+    redde NIHIL;
+}
+
+/* lineas [summa, ultima] n sursum volvere: summae abeunt - in
+ * historiam si 'historia' et regio in summa linea schirmi primarii
+ * (Ghostty index/scrollUp; DL numquam) - imae novae vacuae (BCE) */
 interior vacuum
 regionem_sursum (
     Aemulator* a,
           i32  summa,
           i32  ultima,
-          i32  n)
+          i32  n,
+          b32  historia)
 {
     Schirmum* s;
        Linea* l;
@@ -293,6 +532,10 @@ regionem_sursum (
     per (k = ZEPHYRUM; k < n; k++)
     {
         l = s->lineae[summa];
+        si (historia && summa == ZEPHYRUM && s == &a->primarium)
+        {
+            historiam_addere(a, l);
+        }
         per (y = summa; y < ultima; y++)
         {
             s->lineae[y] = s->lineae[y + I];
@@ -357,7 +600,7 @@ indicem_movere (
     }
     si (s->cursor.y == a->regio_ultima)
     {
-        regionem_sursum(a, a->regio_summa, a->regio_ultima, I);
+        regionem_sursum(a, a->regio_summa, a->regio_ultima, I, VERUM);
         redde;
     }
     s->cursor.y++;
@@ -823,6 +1066,7 @@ alterum_ponere (
     si (ingredi)
     {
         cursorem_servare(a);
+        a->visus    = ZEPHYRUM;
         prior       = a->activum;
         a->activum  = &a->alterum;
         si (prior != &a->alterum)
@@ -1075,7 +1319,7 @@ lineas_inserere (
     }
     si (delere)
     {
-        regionem_sursum(a, s->cursor.y, a->regio_ultima, n);
+        regionem_sursum(a, s->cursor.y, a->regio_ultima, n, FALSUM);
     }
     alioquin
     {
@@ -1484,7 +1728,8 @@ seriem_csi (
             }
             frange;
         casus 'S':
-            regionem_sursum(a, a->regio_summa, a->regio_ultima, n);
+            regionem_sursum(a, a->regio_summa, a->regio_ultima, n,
+                            VERUM);
             frange;
         casus 't':
             /* XTWINOPS 18 solum (Ghostty csi_18_t): magnitudo textus
@@ -1728,6 +1973,18 @@ aemulator_creare (
     {
         redde NIHIL;
     }
+    /* historia: limes ad paginas integras sursum, una saltem */
+    si (cfg->historia_octeti > ZEPHYRUM)
+    {
+        a->paginae_maximae = (cfg->historia_octeti + PAGINA_OCTETI - I)
+                           / PAGINA_OCTETI;
+        a->paginae = (Pagina**)piscina_conari_allocare(piscina,
+            (memoriae_index)a->paginae_maximae * magnitudo(Pagina*));
+        si (!a->paginae)
+        {
+            redde NIHIL;
+        }
+    }
     a->regio_summa   = ZEPHYRUM;
     a->regio_ultima  = cfg->altitudo - I;
     tabulas_ordinare(a);
@@ -1808,7 +2065,8 @@ schirmum_aptare (
         activum     = a->activum;
         a->activum  = s;
         translatio  = s->cursor.y - altitudo + I;
-        regionem_sursum(a, ZEPHYRUM, a->altitudo - I, translatio);
+        regionem_sursum(a, ZEPHYRUM, a->altitudo - I, translatio,
+                        VERUM);
         s->cursor.y  = altitudo - I;
         a->activum   = activum;
     }
@@ -2015,35 +2273,42 @@ aemulator_ignota (
     redde a ? a->ignota : ZEPHYRUM;
 }
 
-/* Ghostty formatter (plain, unwrap=false, trim=false): vacuae ante
- * textum spatia, scripta spatia manent, caudae et capita omittuntur,
- * lineae sine textu solum ante lineam cum textu */
-chorda
-aemulator_textum_effundere (
+/* Ghostty formatter (plain, unwrap=false, trim=false) super lineas
+ * absolutas [ab, ad): vacuae ante textum spatia, scripta spatia manent,
+ * caudae et capita omittuntur, lineae sine textu solum ante lineam cum
+ * textu */
+interior chorda
+lineas_effundere (
     constans Aemulator* a,
-               Piscina* piscina)
+               Piscina* piscina,
+                   i32  ab,
+                   i32  ad)
 {
-      chorda  ex;
-          i8* b;
-         i32  n;
-         i32  x;
-         i32  y;
-         i32  k;
-         i32  lineae_vacuae;
-         i32  cellulae_vacuae;
-         b32  scriptum;
-     Cellula* c;
-       Linea* l;
+                       chorda  ex;
+                           i8* b;
+               memoriae_index  capacitas;
+                          i32  n;
+                          i32  r;
+                          i32  x;
+                          i32  k;
+                          i32  lat;
+                          b32  involuta;
+                          i32  lineae_vacuae;
+                          i32  cellulae_vacuae;
+                          b32  scriptum;
+             constans Cellula* l;
+             constans Cellula* c;
+    constans StilusTerminalis* stili;
 
     ex.datum    = NIHIL;
     ex.mensura  = ZEPHYRUM;
-    si (!a || !piscina)
+    capacitas   = I;
+    per (r = ab; r < ad; r++)
     {
-        redde ex;
+        (vacuum)lineam_absolutam(a, r, &lat, &stili, &involuta);
+        capacitas += (memoriae_index)lat * IV + I;
     }
-    b = (i8*)piscina_conari_allocare(piscina,
-        (memoriae_index)a->altitudo
-        * ((memoriae_index)a->latitudo * IV + I) + I);
+    b = (i8*)piscina_conari_allocare(piscina, capacitas);
     si (!b)
     {
         redde ex;
@@ -2051,14 +2316,14 @@ aemulator_textum_effundere (
     n              = ZEPHYRUM;
     lineae_vacuae  = ZEPHYRUM;
     scriptum       = FALSUM;
-    per (y = ZEPHYRUM; y < a->altitudo; y++)
+    per (r = ab; r < ad; r++)
     {
-        l = a->activum->lineae[y];
+        l = lineam_absolutam(a, r, &lat, &stili, &involuta);
         /* linea sine textu: numeratur */
         k = ZEPHYRUM;
-        per (x = ZEPHYRUM; x < a->latitudo; x++)
+        per (x = ZEPHYRUM; l && x < lat; x++)
         {
-            si (l->cellulae[x].mensura > ZEPHYRUM)
+            si (l[x].mensura > ZEPHYRUM)
             {
                 k = I;
                 frange;
@@ -2078,9 +2343,9 @@ aemulator_textum_effundere (
         lineae_vacuae    = ZEPHYRUM;
         scriptum         = VERUM;
         cellulae_vacuae  = ZEPHYRUM;
-        per (x = ZEPHYRUM; x < a->latitudo; x++)
+        per (x = ZEPHYRUM; x < lat; x++)
         {
-            c = &l->cellulae[x];
+            c = &l[x];
             si (   c->latitudo == AEMULATOR_CAUDA
                 || c->latitudo == AEMULATOR_CAPUT)
             {
@@ -2103,4 +2368,153 @@ aemulator_textum_effundere (
     ex.datum    = b;
     ex.mensura  = n;
     redde ex;
+}
+
+chorda
+aemulator_textum_effundere (
+    constans Aemulator* a,
+               Piscina* piscina)
+{
+    chorda ex;
+       i32 h;
+
+    ex.datum    = NIHIL;
+    ex.mensura  = ZEPHYRUM;
+    si (!a || !piscina)
+    {
+        redde ex;
+    }
+    h = historia_activa(a);
+    redde lineas_effundere(a, piscina, h, h + a->altitudo);
+}
+
+
+/* ==================================================
+ * Historia et visus (phasis C)
+ * ================================================== */
+
+i32
+aemulator_historia (
+    constans Aemulator* a)
+{
+    redde a ? historia_activa(a) : ZEPHYRUM;
+}
+
+chorda
+aemulator_historiam_effundere (
+    constans Aemulator* a,
+               Piscina* piscina)
+{
+    chorda ex;
+
+    ex.datum    = NIHIL;
+    ex.mensura  = ZEPHYRUM;
+    si (!a || !piscina)
+    {
+        redde ex;
+    }
+    redde lineas_effundere(a, piscina, ZEPHYRUM,
+        historia_activa(a) + a->altitudo);
+}
+
+i32
+aemulator_visus (
+    constans Aemulator* a)
+{
+    redde a ? a->visus : ZEPHYRUM;
+}
+
+vacuum
+aemulator_visum_movere (
+    Aemulator* a,
+          s32  delta)
+{
+    s32 v;
+    s32 h;
+
+    si (!a)
+    {
+        redde;
+    }
+    h = (s32)historia_activa(a);
+    v = (s32)a->visus + delta;
+    si (v < ZEPHYRUM)
+    {
+        v = ZEPHYRUM;
+    }
+    si (v > h)
+    {
+        v = h;
+    }
+    a->visus = (i32)v;
+}
+
+b32
+aemulator_visus_cellula (
+    constans Aemulator* a,
+                   i32  x,
+                   i32  y,
+      AemulatorCellula* cellula)
+{
+                      Cellula* l;
+    constans StilusTerminalis* stili;
+                          i32  lat;
+                          b32  involuta;
+
+    si (!a || !cellula || x >= a->latitudo || y >= a->altitudo)
+    {
+        redde FALSUM;
+    }
+    l = lineam_absolutam(a, historia_activa(a) - a->visus + y, &lat,
+        &stili, &involuta);
+    si (!l || x >= lat)
+    {
+        /* linea historiae angustior (latitudo prior): cellula vacua */
+        cellula->graphema.datum    = NIHIL;
+        cellula->graphema.mensura  = ZEPHYRUM;
+        cellula->latitudo          = AEMULATOR_ANGUSTA;
+        stilus_nativus(&cellula->stilus);
+        redde VERUM;
+    }
+    cellula->graphema.datum    = l[x].octeti;
+    cellula->graphema.mensura  = (i32)l[x].mensura;
+    cellula->latitudo          = (AemulatorLatitudo)l[x].latitudo;
+    cellula->stilus            = stili[l[x].stilus];
+    redde VERUM;
+}
+
+b32
+aemulator_visus_involuta (
+    constans Aemulator* a,
+                   i32  y)
+{
+    constans StilusTerminalis* stili;
+                          i32  lat;
+                          b32  involuta;
+
+    si (!a || y >= a->altitudo)
+    {
+        redde FALSUM;
+    }
+    (vacuum)lineam_absolutam(a, historia_activa(a) - a->visus + y, &lat,
+        &stili, &involuta);
+    redde involuta;
+}
+
+chorda
+aemulator_visum_effundere (
+    constans Aemulator* a,
+               Piscina* piscina)
+{
+    chorda ex;
+       i32 ab;
+
+    ex.datum    = NIHIL;
+    ex.mensura  = ZEPHYRUM;
+    si (!a || !piscina)
+    {
+        redde ex;
+    }
+    ab = historia_activa(a) - a->visus;
+    redde lineas_effundere(a, piscina, ab, ab + a->altitudo);
 }

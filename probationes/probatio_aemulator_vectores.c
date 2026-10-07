@@ -38,7 +38,9 @@ hic_manens InternamentumChorda* intern;
  * ================================================== */
 
 nomen structura {
-    vacuum* (*creare)   (Piscina* p, i32 latitudo, i32 altitudo);
+    /* historia: octeti historiae (C); -1 = ordinaria */
+    vacuum* (*creare)   (Piscina* p, i32 latitudo, i32 altitudo,
+                         s32 historia);
     vacuum  (*scribere) (vacuum* t, constans i8* octeti, i32 n);
     /* effusio plana ut Ghostty plainString */
     chorda  (*textus)   (vacuum* t, Piscina* p);
@@ -58,6 +60,10 @@ nomen structura {
     chorda  (*responsa) (vacuum* t, Piscina* p);
     i32     (*tituli)   (vacuum* t);
     chorda  (*titulus)  (vacuum* t, Piscina* p);
+    /* C: lineae historiae; effusio historiae + schirmi (Ghostty
+     * dumpString .screen) */
+    i32     (*historia) (vacuum* t);
+    chorda  (*historia_textus) (vacuum* t, Piscina* p);
 } Probandum;
 
 
@@ -436,6 +442,7 @@ exemplum_currere (
        vacuum* t;
           s32  latitudo;
           s32  altitudo;
+          s32  historia;
           s32  n;
           s32  x;
           s32  y;
@@ -460,7 +467,11 @@ exemplum_currere (
                      "absentes");
         redde FALSUM;
     }
-    t = pr->creare(piscina, (i32)latitudo, (i32)altitudo);
+    si (!numerum_legere(exemplum, "historia_octeti", &historia))
+    {
+        historia = -I;
+    }
+    t = pr->creare(piscina, (i32)latitudo, (i32)altitudo, historia);
     si (!t)
     {
         *absens = VERUM;
@@ -520,6 +531,15 @@ exemplum_currere (
             chordam_conferre(&iu, "textus", octeti,
                              pr->textus(t, piscina));
         }
+        si (numerum_legere(g, "historia", &n))
+        {
+            numerum_conferre(&iu, "historia", n, (s32)pr->historia(t));
+        }
+        si (octetos_legere(&iu, g, "historia_textus", &octeti))
+        {
+            chordam_conferre(&iu, "historia_textus", octeti,
+                             pr->historia_textus(t, piscina));
+        }
         cellulas_conferre(&iu, pr, t, g);
         modos_conferre(&iu, pr, t, g);
     }
@@ -564,7 +584,7 @@ exemplum_validare (
 {
     hic_manens constans character* campi[] = {
         "cursor_x", "cursor_y", "pendens", "visibilis", "altera",
-        "ignota", "tituli"
+        "ignota", "tituli", "historia"
     };
           Xar* gradus;
           Xar* filii;
@@ -579,9 +599,12 @@ exemplum_validare (
 
     si (   !numerum_legere(exemplum, "latitudo", &n) || n < I
         || !numerum_legere(exemplum, "altitudo", &n) || n < I
-        || !stml_attributum_habet(exemplum, "fons"))
+        || !stml_attributum_habet(exemplum, "fons")
+        || (stml_attributum_habet(exemplum, "historia_octeti")
+            && (!numerum_legere(exemplum, "historia_octeti", &n)
+                || n < ZEPHYRUM)))
     {
-        imprimere("  vitium '%s': magnitudo aut fons\n",
+        imprimere("  vitium '%s': magnitudo, fons aut historia\n",
             literae(exemplum, "titulus"));
         redde FALSUM;
     }
@@ -594,7 +617,8 @@ exemplum_validare (
         si (   !effugia_sana(g, "initus", NIHIL)
             || !effugia_sana(g, "textus", &assertiones)
             || !effugia_sana(g, "responsum", &assertiones)
-            || !effugia_sana(g, "titulus", &assertiones))
+            || !effugia_sana(g, "titulus", &assertiones)
+            || !effugia_sana(g, "historia_textus", &assertiones))
         {
             imprimere("  vitium '%s' gradus %d: effugium malum\n",
                 literae(exemplum, "titulus"), (integer)(i + I));
@@ -669,11 +693,13 @@ interior vacuum*
 fictus_creare (
     Piscina* p,
         i32  latitudo,
-        i32  altitudo)
+        i32  altitudo,
+        s32  historia)
 {
     (vacuum)p;
     (vacuum)latitudo;
     (vacuum)altitudo;
+    (vacuum)historia;
     redde &fictus_sedes;
 }
 
@@ -686,6 +712,23 @@ fictus_scribere (
     (vacuum)t;
     (vacuum)octeti;
     (vacuum)n;
+}
+
+interior i32
+fictus_historia (
+    vacuum* t)
+{
+    (vacuum)t;
+    redde ZEPHYRUM;
+}
+
+interior chorda
+fictus_historia_textus (
+     vacuum* t,
+    Piscina* p)
+{
+    (vacuum)t;
+    redde chorda_ex_literis("", p);
 }
 
 interior chorda
@@ -831,7 +874,8 @@ interior vacuum*
 verus_creare (
     Piscina* p,
         i32  latitudo,
-        i32  altitudo)
+        i32  altitudo,
+        s32  historia)
 {
     AemulatorConfiguratio  cfg;
                     Verus* v;
@@ -844,6 +888,10 @@ verus_creare (
     cfg.effectus.datum      = v;
     cfg.effectus.responsum  = verus_responsum;
     cfg.effectus.titulus    = verus_titulum_nuntiare;
+    si (historia >= ZEPHYRUM)
+    {
+        cfg.historia_octeti = (i32)historia;
+    }
     v->a                    = aemulator_creare(p, &cfg);
     redde v->a ? (vacuum*)v : NIHIL;
 }
@@ -855,6 +903,21 @@ verus_scribere (
                 i32  n)
 {
     aemulator_scribere(((Verus*)t)->a, octeti, n);
+}
+
+interior i32
+verus_historia (
+    vacuum* t)
+{
+    redde aemulator_historia(((Verus*)t)->a);
+}
+
+interior chorda
+verus_historia_textus (
+     vacuum* t,
+    Piscina* p)
+{
+    redde aemulator_historiam_effundere(((Verus*)t)->a, p);
 }
 
 interior chorda
@@ -1058,18 +1121,20 @@ s32 principale (vacuum)
         &octeti));
     CREDO_FALSUM(effugia_solvere(chorda_ex_literis("\\q", piscina),
         &octeti));
-    fictus.creare    = fictus_creare;
-    fictus.scribere  = fictus_scribere;
-    fictus.textus    = fictus_textus;
-    fictus.cursor    = fictus_cursor;
-    fictus.cellula   = fictus_cellula;
-    fictus.altera    = fictus_altera;
-    fictus.ignota    = fictus_ignota;
-    fictus.modus     = fictus_modus;
-    fictus.responsa  = fictus_responsa;
-    fictus.tituli    = fictus_tituli;
-    fictus.titulus   = fictus_titulus;
-    e                = exemplum_titulo(exempla, "basic print");
+    fictus.creare           = fictus_creare;
+    fictus.scribere         = fictus_scribere;
+    fictus.textus           = fictus_textus;
+    fictus.historia         = fictus_historia;
+    fictus.historia_textus  = fictus_historia_textus;
+    fictus.cursor           = fictus_cursor;
+    fictus.cellula          = fictus_cellula;
+    fictus.altera           = fictus_altera;
+    fictus.ignota           = fictus_ignota;
+    fictus.modus            = fictus_modus;
+    fictus.responsa         = fictus_responsa;
+    fictus.tituli           = fictus_tituli;
+    fictus.titulus          = fictus_titulus;
+    e                       = exemplum_titulo(exempla, "basic print");
     CREDO_NON_NIHIL(e);
     si (e)
     {
@@ -1105,20 +1170,22 @@ s32 principale (vacuum)
     }
 
     imprimere("\n--- II: vectores contra nucleum ---\n");
-    verus.creare    = verus_creare;
-    verus.scribere  = verus_scribere;
-    verus.textus    = verus_textus;
-    verus.cursor    = verus_cursor;
-    verus.cellula   = verus_cellula;
-    verus.altera    = verus_altera;
-    verus.ignota    = verus_ignota;
-    verus.modus     = verus_modus;
-    verus.responsa  = verus_responsa;
-    verus.tituli    = verus_tituli;
-    verus.titulus   = verus_titulus;
-    viridia         = ZEPHYRUM;
-    debita          = ZEPHYRUM;
-    absentia        = ZEPHYRUM;
+    verus.creare           = verus_creare;
+    verus.scribere         = verus_scribere;
+    verus.textus           = verus_textus;
+    verus.historia         = verus_historia;
+    verus.historia_textus  = verus_historia_textus;
+    verus.cursor           = verus_cursor;
+    verus.cellula          = verus_cellula;
+    verus.altera           = verus_altera;
+    verus.ignota           = verus_ignota;
+    verus.modus            = verus_modus;
+    verus.responsa         = verus_responsa;
+    verus.tituli           = verus_tituli;
+    verus.titulus          = verus_titulus;
+    viridia                = ZEPHYRUM;
+    debita                 = ZEPHYRUM;
+    absentia               = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(exempla); i++)
     {
         e         = *(StmlNodus**)xar_obtinere(exempla, i);

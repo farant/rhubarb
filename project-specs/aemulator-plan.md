@@ -432,6 +432,23 @@ Later phases (re-planned after A's RELATIO):
     up to the limit, then recycle (decision 20); styles referenced by
     history survive style-table collection. Vectors from Ghostty's
     scrollback tests first.
+    C2 as built: the scroll-off rule is Ghostty's/xterm's - a region
+    that STARTS AT THE TOP ROW of the primary screen (not only the
+    full screen; no left/right margins exist) feeds history on index
+    and SU; DL never (explicit flag on `regionem_sursum`); resize
+    shrink feeds it too (its scroll passes the flag). ED 2 does not
+    (Ghostty only does so at an OSC 133 prompt - we have no prompt
+    marks). Pages: 64 KiB of cells (width-dependent line count), one
+    width per page, own 128-entry style table (rows are COPIED in,
+    styles re-interned; a full table moves the row to a fresh page
+    once, then degrades to the default style); a ring of page
+    pointers allocated at creation; eviction per page, oldest first.
+    The view reads (`visus`, `visum_movere`, `visus_cellula`,
+    `visus_involuta`, `visum_effundere`) went in with C2 - the style
+    test needed them. 161 vectors (13 new: 8 Ghostty, 5 house + 1);
+    section XVII (eviction counts per page, widths, styles across
+    collection, table overflow, soft-wrap, alt screen). 14 plants,
+    all caught after test fixes (five survived the first round).
   - **C3 - viewport and eviction:** scroll by lines/top/bottom; stays
     put under output (decision 21); clamp on eviction; steady state
     and floods allocate nothing once full (measured).
