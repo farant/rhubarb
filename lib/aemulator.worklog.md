@@ -482,3 +482,29 @@ then has zero digits and fails anyway (the guard is redundant).
 **Lint:** `colores_xterm` -> `colores_ordinarii` (xterm is not a house
 word; renominare refuses dirty files, exact replace used).
 
+
+## 2026-10-07 — D7a: quick replies
+
+Fran chose to close only the small answers before the D7 session.
+- DECXCPR (`CSI ? 6 n`) answers `CSI ? y ; x R` WITHOUT the page field:
+  esctest infers our VT level from DA2 (`>1` -> level 2) and expects the
+  VT220 form; consistent with the identity we claim.
+- DECDSR hardware status: fixed answers (no printer ?13n, UDK unlocked
+  ?20n, keyboard ?27;1n - two parameters at level 2 - no locator ?50n,
+  locator type ?57;0n). VT420 queries stay unknown.
+- DECID (ESC Z) = DA1.
+- DECRQSS (DCS $ q Pt ST): SGR (own fixed-buffer encoder - the house
+  stilus_codificare needs a ChordaAedificator, and the core promises no
+  allocation in steady state), DECSTBM, DECSCUSR (now stored; default
+  reported as 2 = steady block, what terminale draws). Anything else
+  `DCS 0 $ r ST`.
+- Title stack CSI 22/23 ; 0|2 t: the core now remembers the current
+  title and keeps xterm's 10-deep stack; a pop re-announces through the
+  titulus effect. Ghostty parses these and does nothing. esctest's eight
+  title-stack rows stay red: they read the title back with 21t, which
+  we refuse on purpose (title echo = input injection).
+- Plant R10 (icon-only push not ignored) survived at first: the next
+  check rejected mode 1 anyway and only the unknown counter moved - the
+  vector now asserts `ignota="0"`.
+esctest 284 -> 294. Parked by Fran: protection/selective erase (24),
+DECCOLM (2), XTSAVE/XTRESTORE (2).

@@ -438,12 +438,17 @@ interior s32
 _imperium_octetum (
     s32 c)
 {
-    si (c >= 'a' && c <= 'z' && c != 'i' && c != 'm')
+    /* i, m, [ : C0 ut xterm/Terminal.app (Tab, CR, ESC). Ghostty eas
+     * fixterms CSI u mittit; fenestra macOS characteres regiminis pro
+     * eis fert (nullus TEXTUS), ergo ramus CSI u nihil emittebat -
+     * Ctrl-[ ut Effugium in vim/tmux mortuum (aemulator D7a) */
+    si (c >= 'a' && c <= 'z')
     {
         redde c - 'a' + I;
     }
     commutatio (c)
     {
+        casus '[':  redde XXVII;
         casus ' ':  redde ZEPHYRUM;
         casus '/':  redde XXXI;
         casus '0':  redde XLVIII;

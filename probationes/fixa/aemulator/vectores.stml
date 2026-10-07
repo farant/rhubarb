@@ -1387,4 +1387,49 @@
     <gradus initus="\x1Bc\x1B[?1007$p" responsum="\x1B[?1007;1$y"/>
   </casus>
 
+  <!-- ==================== D7a: responsiones parvae ==================== -->
+
+  <!-- DECXCPR (CSI ? 6 n): positio sine pagina - identitas nostra VT220
+       (DA2 >1), esctest gradum II ex ea deducit -->
+  <casus titulus="decxcpr reports position without page" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[6;5H\x1B[?6n" responsum="\x1B[?6;5R"/>
+  </casus>
+
+  <!-- DECDSR status apparatus: responsa fixa (nullum typographum, UDK
+       aperta, claviatura Americana, nullus locator); VT420 ignota -->
+  <casus titulus="decdsr fixed status replies" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[?15n" responsum="\x1B[?13n"/>
+    <gradus initus="\x1B[?25n" responsum="\x1B[?20n"/>
+    <gradus initus="\x1B[?26n" responsum="\x1B[?27;1n"/>
+    <gradus initus="\x1B[?53n\x1B[?55n" responsum="\x1B[?50n\x1B[?50n"/>
+    <gradus initus="\x1B[?56n" responsum="\x1B[?57;0n"/>
+    <gradus initus="\x1B[?62n" responsum="\0" ignota="1"/>
+  </casus>
+
+  <!-- DECID (ESC Z) = DA1 -->
+  <casus titulus="decid answers like da1" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1BZ" responsum="\x1B[?62;22c" ignota="0"/>
+  </casus>
+
+  <!-- DECRQSS (Ghostty dcs.zig DECRQSS): SGR, DECSTBM, DECSCUSR; alia
+       0$r. DECSCUSR servatur (ordinarius = II, quadrum fixum) -->
+  <casus titulus="decrqss sgr, margins and cursor style" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[1m\x1BP$qm\x1B\\" responsum="\x1BP1$r0;1m\x1B\\"/>
+    <gradus initus="\x1B[0;2;7;38;5;100;48;2;10;20;30m\x1BP$qm\x1B\\" responsum="\x1BP1$r0;2;7;38;5;100;48;2;10;20;30m\x1B\\"/>
+    <gradus initus="\x1B[0;4;9;34;101m\x1BP$qm\x1B\\" responsum="\x1BP1$r0;4;9;34;101m\x1B\\"/>
+    <gradus initus="\x1B[5;6r\x1BP$qr\x1B\\" responsum="\x1BP1$r5;6r\x1B\\"/>
+    <gradus initus="\x1BP$q q\x1B\\" responsum="\x1BP1$r2 q\x1B\\"/>
+    <gradus initus="\x1B[4 q\x1BP$q q\x1B\\" responsum="\x1BP1$r4 q\x1B\\" ignota="0"/>
+    <gradus initus="\x1BP$qx\x1B\\" responsum="\x1BP0$r\x1B\\"/>
+  </casus>
+
+  <!-- acervus titulorum (xterm CSI 22/23 ; 0|2 t; Ghostty nihil agit):
+       vim titulum servat et restituit; 22;1 (icon solum) ignoratur -->
+  <casus titulus="title stack push and pop" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B]2;eins\x07\x1B[22;0t\x1B]2;zwei\x07" titulus="zwei" tituli="2"/>
+    <gradus initus="\x1B[23;0t" titulus="eins" tituli="3"/>
+    <gradus initus="\x1B[23;0t" tituli="3"/>
+    <gradus initus="\x1B]2;tres\x07\x1B[22;1t\x1B]2;quattuor\x07\x1B[23;2t" titulus="quattuor" tituli="5" ignota="0"/>
+  </casus>
+
 </vectores>

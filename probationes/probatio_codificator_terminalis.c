@@ -154,6 +154,17 @@ interior constans Vector VECTORES[] = {
     /* --- legacy --- */
     { "l ctrl+c", 0, P, (clavis_t)'C', LIT('c'), 'c', 'c', CT, NIHIL,
       "\003" },
+    /* fenestra macOS: Ctrl+[ / I / M characteres regiminis ferunt
+     * (nullus TEXTUS) - legacy C0 ut xterm/Terminal.app (Ghostty
+     * fixterms CSI u mittit; olim nihil mittebamus: aemulator D7a,
+     * Franus in tmux) */
+    { "l ctrl+[", 0, P, (clavis_t)'[', EVENTUS_CODEX_UNCUS_SINISTER,
+        '[',
+      '\033', CT, NIHIL, "\033" },
+    { "l ctrl+i", 0, P, (clavis_t)'I', LIT('i'), 'i', '\t', CT, NIHIL,
+      "\t" },
+    { "l ctrl+m", 0, P, (clavis_t)'M', LIT('m'), 'm', '\r', CT, NIHIL,
+      "\r" },
     { "l ctrl+spatium", 0, P, CLAVIS_SPATIUM, EVENTUS_CODEX_SPATIUM,
         ' ',
       ' ', CT, NIHIL, "\000" },
@@ -233,8 +244,10 @@ interior constans Vector VECTORES[] = {
     { "l ctrl+1 (kitty: '1')", 0, P, (clavis_t)'1', NUM(1), '1', '1',
         CT,
       NIHIL, "1" },
-    { "l ctrl+i fixterms", 0, P, (clavis_t)'I', LIT('i'), 'i', 'i', CT,
-      NIHIL, "\033[105;5u" }
+    /* divergentia (D7a): Ghostty fixterms CSI 105;5u; nos xterm C0 -
+     * programmata legacy (tmux, vim sine kitty) CSI u non legunt */
+    { "l ctrl+i xterm C0", 0, P, (clavis_t)'I', LIT('i'), 'i', 'i', CT,
+      NIHIL, "\t" }
 };
 
 #define VECTORUM_NUMERUS \

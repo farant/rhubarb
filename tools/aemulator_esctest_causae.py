@@ -41,8 +41,7 @@ CAUSAE = [
      EFFUGIUM + r'[69]|' + CSI + r"[\d;]*'[}~]"),
     (CONSULTO + 'DECRQM modus non honoratus: 0 ut Ghostty (xterm IV '
      'permanenter remotum aut modum habet)', CSI + r'\??[\d;]*\$p'),
-    (LACUNA + 'DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)',
-     EFFUGIUM + r'P\$q'),
+    ('DECRQSS', EFFUGIUM + r'P\$q'),
     (CONSULTO + 'colores speciales OSC 5/105 (xterm; Ghostty nihil agit)',
      EFFUGIUM + r'\](5|105)[;\x07\x1b]'),
     (CONSULTO + 'colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque '
@@ -68,7 +67,9 @@ def xtwinops(titulus):
     """XTWINOPS per nomen probationis."""
     si_acervus = 'Push' in titulus or 'Pop' in titulus
     if si_acervus:
-        return LACUNA + 'XTWINOPS acervus titulorum 22t/23t (vim utitur)'
+        return (CONSULTO + 'acervus titulorum 22t/23t habemus (D7a), sed '
+                'esctest eum per 21t legit - titulum reddere consulto '
+                'recusamus')
     if 'ReportIconLabel' in titulus or 'ReportWindowLabel' in titulus:
         return (CONSULTO + 'XTWINOPS titulum reddere 20t/21t (securitas: '
                 'titulus ut initus redit)')
@@ -76,6 +77,13 @@ def xtwinops(titulus):
         return CONSULTO + 'modi tituli xterm (CSI > t)'
     return (CONSULTO + 'XTWINOPS fenestram movere/mutare (programma '
             'fenestram non regit, ut Ghostty)')
+
+
+# DECRQSS: SGR, DECSTBM, DECSCUSR habemus (D7a); cetera VT420
+def decrqss(titulus):
+    """DECRQSS per nomen probationis."""
+    return (POSTEA + 'DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, '
+            'DECSNLS, DECSSDT)')
 
 
 def decdsr(titulus):
@@ -102,6 +110,8 @@ def causam_invenire(titulus, octeti):
                 return xtwinops(titulus)
             if causa == 'DECDSR':
                 return decdsr(titulus)
+            if causa == 'DECRQSS':
+                return decrqss(titulus)
             return causa
     if titulus.startswith('XtermWinopsTests.'):
         return xtwinops(titulus)

@@ -157,14 +157,14 @@ DECDCTests.test_DECDC_ExplicitParam	fractum	POSTEA (decisio XXVI): columnae VT42
 DECDCTests.test_DECDC_IsNoOpWhenCursorBeginsOutsideScrollRegion	transiit	
 DECDSRTests.test_DECDSR_DECCKSR	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
 DECDSRTests.test_DECDSR_DECMSR	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
-DECDSRTests.test_DECDSR_DECXCPR	fractum	LACUNA: DECXCPR CSI ? 6 n (positio cum pagina)
-DECDSRTests.test_DECDSR_DSRDECLocatorStatus	fractum	LACUNA: DECDSR status apparatus (responsa fixa: typographum, UDK, claviatura, locator)
+DECDSRTests.test_DECDSR_DECXCPR	transiit	
+DECDSRTests.test_DECDSR_DSRDECLocatorStatus	transiit	
 DECDSRTests.test_DECDSR_DSRDataIntegrity	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
-DECDSRTests.test_DECDSR_DSRKeyboard	fractum	LACUNA: DECDSR status apparatus (responsa fixa: typographum, UDK, claviatura, locator)
+DECDSRTests.test_DECDSR_DSRKeyboard	transiit	
 DECDSRTests.test_DECDSR_DSRMultipleSessionStatus	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
-DECDSRTests.test_DECDSR_DSRPrinterPort	fractum	LACUNA: DECDSR status apparatus (responsa fixa: typographum, UDK, claviatura, locator)
-DECDSRTests.test_DECDSR_DSRUDKLocked	fractum	LACUNA: DECDSR status apparatus (responsa fixa: typographum, UDK, claviatura, locator)
-DECDSRTests.test_DECDSR_LocatorType	fractum	LACUNA: DECDSR status apparatus (responsa fixa: typographum, UDK, claviatura, locator)
+DECDSRTests.test_DECDSR_DSRPrinterPort	transiit	
+DECDSRTests.test_DECDSR_DSRUDKLocked	transiit	
+DECDSRTests.test_DECDSR_LocatorType	transiit	
 DECERATests.test_DECERA_basic	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
 DECERATests.test_DECERA_cursorDoesNotMove	transiit	
 DECERATests.test_DECERA_defaultArgs	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
@@ -192,7 +192,7 @@ DECICTests.test_DECIC_ScrollEntirelyOffRightEdge	fractum	POSTEA (decisio XXVI): 
 DECICTests.test_DECIC_ScrollOffRightEdge	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
 DECICTests.test_DECIC_ScrollOffRightMarginInScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECIDTests.test_DECID_8bit	notum	esctest knownBug (xterm)
-DECIDTests.test_DECID_Basic	fractum	LACUNA: DECID (ESC Z = DA1)
+DECIDTests.test_DECID_Basic	transiit	
 DECRCTests.test_SaveRestoreCursor_AltVsMain	transiit	
 DECRCTests.test_SaveRestoreCursor_Basic	transiit	
 DECRCTests.test_SaveRestoreCursor_InsertNotAffected	transiit	
@@ -257,18 +257,18 @@ DECRQMTests.test_DECRQM_DEC_DECVCCM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECXRLM	notum	esctest knownBug (xterm)
 DECRQSSTests.test_DECRQSS_DECELF	notum	esctest knownBug (xterm)
 DECRQSSTests.test_DECRQSS_DECLFKC	notum	esctest knownBug (xterm)
-DECRQSSTests.test_DECRQSS_DECSACE	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
-DECRQSSTests.test_DECRQSS_DECSASD	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
+DECRQSSTests.test_DECRQSS_DECSACE	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSASD	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
 DECRQSSTests.test_DECRQSS_DECSCA	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
 DECRQSSTests.test_DECRQSS_DECSCL	fractum	POSTEA (decisio XXVI): DECSCL gradus conformitatis
-DECRQSSTests.test_DECRQSS_DECSCUSR	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
-DECRQSSTests.test_DECRQSS_DECSLPP	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
+DECRQSSTests.test_DECRQSS_DECSCUSR	transiit	
+DECRQSSTests.test_DECRQSS_DECSLPP	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
 DECRQSSTests.test_DECRQSS_DECSLRM	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECRQSSTests.test_DECRQSS_DECSMKR	notum	esctest knownBug (xterm)
-DECRQSSTests.test_DECRQSS_DECSNLS	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
-DECRQSSTests.test_DECRQSS_DECSSDT	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
-DECRQSSTests.test_DECRQSS_DECSTBM	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
-DECRQSSTests.test_DECRQSS_SGR	fractum	LACUNA: DECRQSS (Ghostty: SGR, DECSCUSR, DECSTBM)
+DECRQSSTests.test_DECRQSS_DECSNLS	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSSDT	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSTBM	transiit	
+DECRQSSTests.test_DECRQSS_SGR	transiit	
 DECSCLTests.test_DECSCL_Level2DoesntSupportDECRQM	fractum	POSTEA (decisio XXVI): DECSCL gradus conformitatis
 DECSCLTests.test_DECSCL_Level4_SupportsDECSLRMDoesntSupportDECNCSM	fractum	POSTEA (decisio XXVI): DECSCL gradus conformitatis
 DECSCLTests.test_DECSCL_Level5_SupportsDECNCSM	omissum	VT V (--max-vt-level=4)
@@ -553,14 +553,14 @@ XtermWinopsTests.test_XtermWinops_MaximizeWindow_HorizontallyAndVertically	fract
 XtermWinopsTests.test_XtermWinops_MaximizeWindow_Vertically	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
 XtermWinopsTests.test_XtermWinops_MoveToXY	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
 XtermWinopsTests.test_XtermWinops_MoveToXY_Defaults	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
-XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIcon	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
-XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIconAndWindow	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
-XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopWindow	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
-XtermWinopsTests.test_XtermWinops_PushIconThenWindowThenPopBoth	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
-XtermWinopsTests.test_XtermWinops_PushIcon_PopIcon	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
-XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Icon	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
-XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Window	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
-XtermWinopsTests.test_XtermWinops_PushWindow_PopWindow	fractum	LACUNA: XTWINOPS acervus titulorum 22t/23t (vim utitur)
+XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIcon	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIconAndWindow	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopWindow	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIconThenWindowThenPopBoth	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIcon_PopIcon	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Icon	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Window	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushWindow_PopWindow	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
 XtermWinopsTests.test_XtermWinops_ReportIconLabel	fractum	CONSULTO: XTWINOPS titulum reddere 20t/21t (securitas: titulus ut initus redit)
 XtermWinopsTests.test_XtermWinops_ReportWindowLabel	fractum	CONSULTO: XTWINOPS titulum reddere 20t/21t (securitas: titulus ut initus redit)
 XtermWinopsTests.test_XtermWinops_ResizeChars_BothParameters	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)

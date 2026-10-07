@@ -29,6 +29,10 @@
 #define LATUS_MAXIMUM       (IV * MXXIV)
 #define TABULATIO           VIII
 #define RUNA_SUBSTITUTA     0xFFFD
+/* titulus servatus (acervus CSI 22/23 t, D7a): octeti et profunditas
+ * (xterm X) */
+#define TITULUS_MAXIMUS     CCLVI
+#define TITULI_PROFUNDITAS  X
 /* stili simul vivi; plena tabula colligitur (status constans) */
 #define STILI_MAXIMI        DXII
 
@@ -203,6 +207,14 @@ structura Aemulator {
                   i32   visus;             /* lineae supra vivum (C3) */
                   s32   runa_prior;       /* REP; 0 = nulla (RIS) */
                Copiae   copiae;            /* D3 */
+    /* D7a: titulus currens et acervus eius (CSI 22/23 t), figura
+     * cursoris DECSCUSR (0-VI; 0 = ordinaria) */
+                   i8* titulus;
+                  i32  titulus_mensura;
+                   i8* tituli;            /* PROFUNDITAS x MAXIMUS */
+                  i32  tituli_mensurae[TITULI_PROFUNDITAS];
+                  i32  tituli_numerus;
+                   i8  cursor_figura;
     /* COLORES (D5): 0-CCLV tabula, CCLVI litterae, CCLVII fundus,
      * CCLVIII cursor (NULLUS = litteras sequitur); vivi et origo
      * (configuratio - restitutio OSC 104/110/111/112 eo redit) */
@@ -1672,10 +1684,12 @@ numerum_appendere (
 }
 
 /* CPR (Ghostty device_status cursor_position): ESC [ y ; x R,
- * 1-based */
+ * 1-based; privatum (DECXCPR, CSI ? 6 n): ESC [ ? y ; x R - sine
+ * pagina, ut identitas VT220 nostra (D7a) */
 interior vacuum
 positum_nuntiare (
-    Aemulator* a)
+    Aemulator* a,
+          b32  privatum)
 {
      i8 b[XXXII];
     i32 n;
@@ -1684,6 +1698,10 @@ positum_nuntiare (
     n       = ZEPHYRUM;
     b[n++]  = (i8)0x1B;
     b[n++]  = '[';
+    si (privatum)
+    {
+        b[n++] = '?';
+    }
     y       = a->activum->cursor.y;
     si (modus_est(a, MODUS_ORIGO) && y >= a->regio_summa)
     {
@@ -2241,6 +2259,24 @@ tabulam_restituere (
     }
 }
 
+/* titulus currens servatur (acervus) et effectu nuntiatur */
+interior vacuum
+titulum_ponere (
+    Aemulator* a,
+       chorda  titulus)
+{
+    i32 n;
+
+    n = titulus.mensura < TITULUS_MAXIMUS ? titulus.mensura
+                                          : TITULUS_MAXIMUS;
+    memcpy(a->titulus, titulus.datum, (memoriae_index)n);
+    a->titulus_mensura = n;
+    si (a->effectus.titulus)
+    {
+        a->effectus.titulus(a->effectus.datum, titulus);
+    }
+}
+
 /* OSC 4/10/11/12/104/110/111/112; FALSUM = numerus non noster */
 interior b32
 colores_tractare (
@@ -2328,10 +2364,7 @@ seriem_osc (
         casus II:
             titulus.datum    = lx->textus.datum + i + I;
             titulus.mensura  = lx->textus.mensura - i - I;
-            si (a->effectus.titulus)
-            {
-                a->effectus.titulus(a->effectus.datum, titulus);
-            }
+            titulum_ponere(a, titulus);
             frange;
         casus I:
             frange;
@@ -2554,6 +2587,8 @@ plene_restituere (
     a->regio_summa       = ZEPHYRUM;
     a->regio_ultima      = a->altitudo - I;
     a->runa_prior        = ZEPHYRUM;
+    a->tituli_numerus    = ZEPHYRUM;
+    a->cursor_figura     = ZEPHYRUM;
     a->residuum_mensura  = ZEPHYRUM;
     tabulas_ordinare(a);
 }
@@ -2799,6 +2834,268 @@ kitty_tractare (
     }
 }
 
+/* DECDSR (CSI ? n): DECXCPR et status apparatus fixi (D7a): nullum
+ * typographum, UDK apertae, claviatura Americana (gradus II: duo
+ * parametra), nullus locator; VT420 (62 63 75 85) ignota */
+interior vacuum
+statum_privatum_nuntiare (
+    Aemulator* a,
+          i32  quaestio)
+{
+    commutatio (quaestio)
+    {
+        casus VI:
+            positum_nuntiare(a, VERUM);
+            frange;
+        casus XV:
+            literas_respondere(a, "\033[?13n");
+            frange;
+        casus XXV:
+            literas_respondere(a, "\033[?20n");
+            frange;
+        casus XXVI:
+            literas_respondere(a, "\033[?27;1n");
+            frange;
+        casus LIII:
+        casus LV:
+            literas_respondere(a, "\033[?50n");
+            frange;
+        casus LVI:
+            literas_respondere(a, "\033[?57;0n");
+            frange;
+        ordinarius:
+            a->ignota++;
+            frange;
+    }
+}
+
+/* color SGR (base 30/40/58: 0-7 basis, 8-15 basis + 60, ceteri ;5;n;
+ * RGB ;2;r;g;b); nativus nihil */
+interior vacuum
+colorem_sgr_appendere (
+                      i8* b,
+                     i32* n,
+    constans StilusColor* c,
+                     i32  basis)
+{
+    si (   c->genus == STILUS_COLOR_TABULA && basis != LVIII
+        && c->valor < XVI)
+    {
+        b[(*n)++] = ';';
+        numerum_appendere(b, n, (c->valor < VIII ? basis : basis + LX)
+                                + c->valor % VIII);
+        redde;
+    }
+    si (c->genus == STILUS_COLOR_NATIVUS)
+    {
+        redde;
+    }
+    b[(*n)++] = ';';
+    numerum_appendere(b, n, basis + VIII);
+    si (c->genus == STILUS_COLOR_TABULA)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '5';
+        b[(*n)++] = ';';
+        numerum_appendere(b, n, c->valor);
+        redde;
+    }
+    b[(*n)++] = ';';
+    b[(*n)++] = '2';
+    b[(*n)++] = ';';
+    numerum_appendere(b, n, (c->valor >> XVI) & 0xFF);
+    b[(*n)++] = ';';
+    numerum_appendere(b, n, (c->valor >> VIII) & 0xFF);
+    b[(*n)++] = ';';
+    numerum_appendere(b, n, c->valor & 0xFF);
+}
+
+/* SGR stili currentis pro DECRQSS (Ghostty printAttributes): 0, deinde
+ * ornamenta ordine numeri, colores litterae, fundi, sublineae */
+interior vacuum
+stilum_sgr_appendere (
+                           i8* b,
+                          i32* n,
+    constans StilusTerminalis* st)
+{
+    hic_manens constans character* sublineae[] = {
+        "", ";4", ";4:2", ";4:3", ";4:4", ";4:5"
+    };
+    constans character* t;
+
+    b[(*n)++] = '0';
+    si (st->ornamenta & STILUS_CRASSUM)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '1';
+    }
+    si (st->ornamenta & STILUS_OBSCURUM)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '2';
+    }
+    si (st->ornamenta & STILUS_CURSIVUM)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '3';
+    }
+    per (t = sublineae[st->sublinea <= STILUS_SUBLINEA_LINEOLATA
+                       ? st->sublinea : ZEPHYRUM];
+         *t; t++)
+    {
+        b[(*n)++] = (i8)*t;
+    }
+    si (st->ornamenta & STILUS_NICTANS)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '5';
+    }
+    si (st->ornamenta & STILUS_INVERSUM)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '7';
+    }
+    si (st->ornamenta & STILUS_INVISIBILE)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '8';
+    }
+    si (st->ornamenta & STILUS_TRANSFIXUM)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '9';
+    }
+    si (st->ornamenta & STILUS_SUPERLINEA)
+    {
+        b[(*n)++] = ';';
+        b[(*n)++] = '5';
+        b[(*n)++] = '3';
+    }
+    colorem_sgr_appendere(b, n, &st->color_litterae, XXX);
+    colorem_sgr_appendere(b, n, &st->color_fundi, XL);
+    colorem_sgr_appendere(b, n, &st->color_sublineae, LVIII);
+}
+
+/* DECRQSS (DCS $ q Pt ST; Ghostty dcs.zig): SGR 'm', DECSTBM 'r',
+ * DECSCUSR ' q' -> DCS 1 $ r ... ST; alia DCS 0 $ r ST */
+interior vacuum
+statum_selectum_nuntiare (
+    Aemulator* a,
+       chorda  petitio)
+{
+     i8 b[CXXVIII];
+    i32 n;
+
+    n = ZEPHYRUM;
+    memcpy(b, "\033P1$r", V);
+    n = V;
+    si (petitio.mensura == I && petitio.datum[ZEPHYRUM] == 'm')
+    {
+        stilum_sgr_appendere(b, &n, &a->stili[a->activum->calamus]);
+        b[n++] = 'm';
+    }
+    alioquin si (petitio.mensura == I && petitio.datum[ZEPHYRUM] == 'r')
+    {
+        numerum_appendere(b, &n, a->regio_summa + I);
+        b[n++] = ';';
+        numerum_appendere(b, &n, a->regio_ultima + I);
+        b[n++] = 'r';
+    }
+    alioquin si (   petitio.mensura         == II
+                 && petitio.datum[ZEPHYRUM] == ' '
+                 && petitio.datum[I]        == 'q')
+    {
+        /* ordinaria (0) = quadrum fixum (II), ut terminale pingit */
+        numerum_appendere(b, &n, a->cursor_figura == ZEPHYRUM
+                                 ? II : (i32)a->cursor_figura);
+        b[n++] = ' ';
+        b[n++] = 'q';
+    }
+    alioquin
+    {
+        literas_respondere(a, "\033P0$r\033\\");
+        redde;
+    }
+    b[n++] = (i8)0x1B;
+    b[n++] = '\\';
+    respondere(a, b, n);
+}
+
+/* DCS: solum DECRQSS (D7a) */
+interior vacuum
+seriem_dcs (
+                 Aemulator* a,
+     constans SeriesLexema* lx)
+{
+    si (   lx->numerus_intermediorum == I
+        && lx->intermedia[ZEPHYRUM] == '$'
+        && lx->finale == 'q' && lx->numerus_parametrorum == ZEPHYRUM
+        && lx->privatum == ZEPHYRUM && !lx->truncatum)
+    {
+        statum_selectum_nuntiare(a, lx->textus);
+        redde;
+    }
+    a->ignota++;
+}
+
+/* CSI 22/23 ; Ps (; index) t (xterm; Ghostty parsit sed nihil agit):
+ * titulum fenestrae (Ps 0 aut 2) impellere / extrahere; Ps I (icon
+ * solum) ignoratur; acervus plenus vetustissimum amittit, vacuus
+ * nihil reddit */
+interior vacuum
+titulorum_acervum (
+                 Aemulator* a,
+     constans SeriesLexema* lx)
+{
+       i32 k;
+       i32 genus;
+    chorda t;
+
+    si (lx->numerus_parametrorum < II || lx->numerus_parametrorum > III)
+    {
+        a->ignota++;
+        redde;
+    }
+    genus = (i32)lx->parametra[I];
+    si (genus == I)
+    {
+        redde;
+    }
+    si (genus != ZEPHYRUM && genus != II)
+    {
+        a->ignota++;
+        redde;
+    }
+    si (lx->parametra[ZEPHYRUM] == XXII)
+    {
+        si (a->tituli_numerus == TITULI_PROFUNDITAS)
+        {
+            per (k = I; k < TITULI_PROFUNDITAS; k++)
+            {
+                memcpy(a->tituli + (k - I) * TITULUS_MAXIMUS,
+                       a->tituli + k * TITULUS_MAXIMUS,
+                       TITULUS_MAXIMUS);
+                a->tituli_mensurae[k - I] = a->tituli_mensurae[k];
+            }
+            a->tituli_numerus--;
+        }
+        memcpy(a->tituli + a->tituli_numerus * TITULUS_MAXIMUS,
+            a->titulus,
+               (memoriae_index)a->titulus_mensura);
+        a->tituli_mensurae[a->tituli_numerus] = a->titulus_mensura;
+        a->tituli_numerus++;
+        redde;
+    }
+    si (a->tituli_numerus == ZEPHYRUM)
+    {
+        redde;
+    }
+    a->tituli_numerus--;
+    t.datum    = a->tituli + a->tituli_numerus * TITULUS_MAXIMUS;
+    t.mensura  = a->tituli_mensurae[a->tituli_numerus];
+    titulum_ponere(a, t);
+}
+
 interior vacuum
 seriem_csi (
                  Aemulator* a,
@@ -2841,7 +3138,23 @@ seriem_csi (
                        lx->privatum == '?');
         redde;
     }
-    /* intermedia aut ':' extra SGR: non nostra (DECSCUSR...) */
+    /* DECSCUSR (CSI Ps SP q): figura cursoris servatur (DECRQSS,
+     * D7a) */
+    si (   lx->numerus_intermediorum == I
+        && lx->intermedia[ZEPHYRUM]  == ' '
+        && lx->finale                == 'q' && lx->privatum == ZEPHYRUM
+        && lx->separatores           == ZEPHYRUM)
+    {
+        si (   lx->numerus_parametrorum > I
+            || parametrum(lx, ZEPHYRUM, ZEPHYRUM) > VI)
+        {
+            a->ignota++;
+            redde;
+        }
+        a->cursor_figura = (i8)parametrum(lx, ZEPHYRUM, ZEPHYRUM);
+        redde;
+    }
+    /* intermedia aut ':' extra SGR: non nostra */
     si (   lx->numerus_intermediorum > ZEPHYRUM
         || (lx->separatores != ZEPHYRUM && lx->finale != 'm'))
     {
@@ -2856,6 +3169,11 @@ seriem_csi (
     }
     si (lx->privatum == '?')
     {
+        si (lx->finale == 'n' && lx->numerus_parametrorum == I)
+        {
+            statum_privatum_nuntiare(a, (i32)lx->parametra[ZEPHYRUM]);
+            redde;
+        }
         si (lx->finale != 'h' && lx->finale != 'l')
         {
             a->ignota++;
@@ -2949,7 +3267,7 @@ seriem_csi (
                     literas_respondere(a, "\033[0n");
                     frange;
                 casus VI:
-                    positum_nuntiare(a);
+                    positum_nuntiare(a, FALSUM);
                     frange;
                 ordinarius:
                     a->ignota++;
@@ -3018,8 +3336,15 @@ seriem_csi (
             cursorem_restituere(a);
             frange;
         casus 't':
-            /* XTWINOPS 18 solum (Ghostty csi_18_t): magnitudo textus
-             * in cellulis; parametra plura aut alia = ignota */
+            si (   lx->numerus_parametrorum > ZEPHYRUM
+                && (   lx->parametra[ZEPHYRUM] == XXII
+                    || lx->parametra[ZEPHYRUM] == XXIII))
+            {
+                titulorum_acervum(a, lx);
+                frange;
+            }
+            /* XTWINOPS 18 (Ghostty csi_18_t): magnitudo textus in
+             * cellulis; parametra plura aut alia = ignota */
             si (   lx->numerus_parametrorum           != I
                 || parametrum(lx, ZEPHYRUM, ZEPHYRUM) != XVIII)
             {
@@ -3179,6 +3504,10 @@ seriem_esc (
         casus 'c':
             plene_restituere(a);
             redde;
+        casus 'Z':
+            /* DECID = DA1 (D7a) */
+            literas_respondere(a, "\033[?62;22c");
+            redde;
         casus 'n':
             /* LS2 / LS3: G2 / G3 in GL */
             a->copiae.sinistra = (i8)II;
@@ -3324,6 +3653,13 @@ aemulator_creare (
     {
         redde NIHIL;
     }
+    a->titulus = (i8*)piscina_conari_allocare(piscina, TITULUS_MAXIMUS);
+    a->tituli  = (i8*)piscina_conari_allocare(piscina,
+        TITULI_PROFUNDITAS * TITULUS_MAXIMUS);
+    si (!a->titulus || !a->tituli)
+    {
+        redde NIHIL;
+    }
     a->latitudo               = cfg->latitudo;
     a->altitudo               = cfg->altitudo;
     a->capacitas_latitudinis  = cfg->latitudo;
@@ -3415,6 +3751,9 @@ aemulator_scribere (
                 frange;
             casus SERIES_SS:
                 seriem_ss(a, &lexema);
+                frange;
+            casus SERIES_DCS:
+                seriem_dcs(a, &lexema);
                 frange;
             casus SERIES_FUGA:
                 /* ESC N|O ante octetum altum (runa UTF-8): invocatio

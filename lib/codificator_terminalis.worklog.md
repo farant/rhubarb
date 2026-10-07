@@ -49,3 +49,18 @@ consumed. Verified end to end headlessly: real nvim in terminale via the
 probe harness (pty), shift+; q a shift+1 Enter -> nvim exits; with the
 rule reverted it stays open. Limitation of the heuristic: a shifted key
 whose text equals its rune (shift+space) still goes out as CSI u.
+
+## 2026-10-07 — Ctrl-[ / Ctrl-I / Ctrl-M sent nothing (legacy)
+
+Fran (terminale + tmux, so legacy keys): Ctrl-[ did not act as Escape in
+Claude Code or vim. Ghostty's ctrlSeq table (copied) deliberately omits
+i, m and [ - fixterms: those go out as CSI u so programs can tell Ctrl-I
+from Tab. Ghostty's fallback reads the event's UTF-8; ours reads TEXTUS
+or the produced character, and the macOS window delivers those keys with
+CONTROL characters as their text (\t, \r, ESC) - below 0x20, so no
+TEXTUS. Every branch fell through: nothing was sent. Fix: legacy maps
+them to C0 like xterm / Terminal.app / iTerm (Tab, CR, ESC) - what
+legacy programs (tmux, vim without kitty) understand. The old vector
+"l ctrl+i fixterms" (CSI 105;5u) became "l ctrl+i xterm C0" (\t) - a
+named divergence from Ghostty. Kitty mode is unchanged: CSI 91;5u for
+Ctrl-[ under disambiguate, as the kitty spec requires.

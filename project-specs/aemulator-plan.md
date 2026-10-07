@@ -736,6 +736,15 @@ Later phases (re-planned after A's RELATIO):
     attribution moved from session scratch into the repo:
     tools/aemulator_esctest_causae.py, run by `aemulator_esctest.sh
     -pinnare`; '?' (failure without cause) exits 1.
+    Gaps closed (Fran: quick replies only): DECXCPR (VT220 form, no
+    page), DECDSR fixed status replies, DECID, DECRQSS (SGR, DECSTBM,
+    DECSCUSR - cursor style now stored), title stack 22t/23t (xterm;
+    Ghostty no-op; esctest can only check it via 21t, refused - those
+    rows CONSULTO). esctest 284 -> 294. PARKED: protection / selective
+    erase (24 rows), DECCOLM (2), XTSAVE/XTRESTORE (2).
+    Found through use (Fran in tmux): Ctrl-[ / Ctrl-I / Ctrl-M sent
+    NOTHING in legacy mode (copied Ghostty fixterms gap + macOS control
+    text) - now C0 like xterm (codificator worklog).
   - **D8 - RELATIO.**
 - **D (old sketch).** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to

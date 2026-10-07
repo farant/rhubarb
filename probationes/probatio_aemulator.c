@@ -989,10 +989,11 @@ s32 principale (vacuum)
     c = aemulator_cursor(a);
     CREDO_AEQUALIS_I32(c.x, IX);
     CREDO_AEQUALIS_I32(c.y, V);
-    /* intermedia (DECRQPSR - DECRQM iam noster, D2), ':' extra SGR,
+    /* intermedia (DECRQPSR - DECRQM iam noster, D2; DECSCA - DECSCUSR
+     * iam noster, D7a), ':' extra SGR,
      * privatum ignotum, SGR ignotum */
     a = creare(X, III);
-    scribere(a, "\x1B[1$w\x1B[0 q\x1B[2:3H\x1B[>5c\x1B[99m\x1B[3;3 H");
+    scribere(a, "\x1B[1$w\x1B[0\"q\x1B[2:3H\x1B[>5c\x1B[99m\x1B[3;3 H");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), VI);
     CREDO_AEQUALIS_I32(aemulator_cursor(a).x, ZEPHYRUM);
     /* SGR cum ':' licet */
