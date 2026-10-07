@@ -431,3 +431,58 @@ the scripted sample exactly; the twin ran nested in our emulator and
 produced the same text. Next: Fran's look at `./apps/terminale/
 terminale.sh` with a real login shell.
 
+## E4 — RELATIO: the thin E slice, a shell seen (2026-10-07)
+
+**The slice is done: `terminale` runs a real login shell in a window
+drawn entirely by the house stack - pseudoterminale, aemulator_hospes,
+the emulator core with history, ludus, the 6x8 font - and in a
+terminal twin. Fran: "it seems like it is all working! very cool".**
+New: `lib/terminale.c` (549 lines) behind a 92-line approved header,
+the two apps (369 lines), frame screenshots for every ludus app; tests
+probatio_terminale (400) and probatio_ludus_imago (147); 18 plants.
+Commits: 4c468a8c (screenshots), 152a2e3f (window smoke), a956a8dd
+(pictor note), 6f47be82 E0, 2dc98f10 E1, 34142c3b E2, 87d406e6 E3,
+c43cb5fd (Fran's look).
+
+**What exists:**
+- Screenshots of any ludus app's frame (`-imago <path>` on pictor,
+  scriba, vicus, terminale) and HEADLESS rendering (a bare tabula +
+  ludus_quadrum) - byte-identical to the real window's frame.
+- `terminale`: the host's view drawn per cell (xterm colours, cube,
+  grey ramp, inverse, bold-bright, cursor only at the live bottom);
+  keys paired with their text for the codificator; scroll with a
+  remainder; resize in the pulse; an in-memory state repository.
+- Two apps with their own loops (draw only on change; Ctrl-C to the
+  shell; the shell exiting closes the window).
+
+**What the work found, by weight:**
+1. **Looking is a test.** The first terminal screenshot showed a blue
+   background as near-white. `mandatum.h` documented RGBA mandate
+   colours as 0xRRGGBBAA; both rasterizers and every producer use
+   frame-buffer packing. The command-level test had passed because it
+   shared the wrong belief. Pixels are now asserted from the PNG - and
+   the screenshot tool that made this visible did not exist the day
+   before (Fran asked for it).
+2. **Match the source's shape, not the event's.** Real windows send
+   key down, its text, key up; the codificator wants (key, text) as
+   one series. Pairing them - a pending key press - is the whole key
+   design; encoding events one by one types each letter twice.
+3. **A terminal can test a terminal.** With no TTY in the tool shell,
+   the terminal twin ran as the child of our own headless host; its
+   screen was read back cell-exact.
+4. **Read the code, not the comment.** E1 concluded scroll events were
+   dropped from an empty view method and a stale comment; the events
+   are translated earlier. Corrected in E2 - before anything was built
+   on the wrong belief.
+5. **Shared loops encode one app's assumptions.** Both run loops sleep
+   on the dispatcher's settle time and the terminal one ends on Ctrl-C;
+   a terminal needs neither, so each main owns its loop (decision 25).
+
+**Named limits (slice):** no window title from OSC 0/2 yet; no
+selection or copy; full-screen programs wait for phase D (modes); the
+16 ANSI colours are xterm's, not themed; idle polling at 16 ms (the fd
+wake source, decision 14, comes later); no vicus tab kind yet;
+pictor's initial canvas view is still an open question (its worklog).
+
+**Next:** merge secunda into main (Fran's timing), then phase D.
+

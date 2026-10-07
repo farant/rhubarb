@@ -583,7 +583,8 @@ Later phases (re-planned after A's RELATIO):
     from OSC yet, full-screen programs wait for phase D.
     Fran's look (2026-10-07): "it seems like it is all working! very
     cool".
-  - **E4 - RELATIO.**
+  - **E4 - RELATIO.** Done 2026-10-07: `lib/aemulator.phase-log.md`
+    (E4). Next: secunda -> main merge (Fran's timing), then phase D.
 - **D - full-screen v0.** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
   `codificator_terminalis`; the bar: vim, less, htop look right; a
