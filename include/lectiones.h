@@ -15,6 +15,7 @@
 #define LECTIONES_H
 
 #include "latina.h"
+#include <stdio.h>
 
 nomen enumeratio {
     LECTIO_LEGIT = 0,     /* 'L' plagula lecta */
@@ -38,5 +39,24 @@ lectiones_notare (
 constans character*
 lectiones_ambitus (
          constans character* titulus);
+
+/* FOPEN PER LIBRUM (fabrica plan 5 T5a) - fulcrum TRANSITORIUM pro
+ * vocationibus stdio crudis quae manent (codex novus filum adhibet):
+ * modus 'r'/'rb' (sine '+'): L si apertum, A si non; ceteri (w, a,
+ * r+): S. Viae sub /dev/ (machinae: entropia, terminalia) NON
+ * notantur - ingressus non sunt, et fabrica machinam sigillare nequit
+ * (IGNOTUM: verdictum numquam reutile). */
+FILE*
+lectiones_fopen (
+    constans character* via,
+    constans character* modus);
+
+/* STAT PER LIBRUM: stat(2) idem; X si exstat, A si non (sub /dev/
+ * nihil). Status per 'structura stat' (sys/stat.h vocantis). */
+structura stat;
+integer
+lectiones_stat (
+    constans character* via,
+       structura stat* status);
 
 #endif /* LECTIONES_H */

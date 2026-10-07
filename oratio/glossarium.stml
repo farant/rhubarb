@@ -1427,6 +1427,10 @@
     <forma textus="subsumptio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="subsumptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="obumbratio" lingua="latina" classis="substantivum" nota="Lat. (ob + umbra): caput eiusdem nominis in radice inclusionis priore aliud obumbrat - compilator per nomen capitis usi probat (fabrica-plan-5 T2)">
+    <forma textus="obumbratio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="obumbrationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="subprocessus" lingua="latina" classis="substantivum" nota="Lat. technica (sub + processus): processus filius a crusta creatus - crustula, substitutio, membrum pipae; assignatio intra eum foras non attingit (effectus-plan-3 T3)">
     <forma textus="subprocessus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="subprocessu" casus="ablativus" numerus="singularis" genus="masculinum"/>

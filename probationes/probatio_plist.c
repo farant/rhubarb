@@ -10,6 +10,7 @@
 #include "credo.h"
 #include "piscina.h"
 #include "internamentum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -447,7 +448,7 @@ principale (vacuum)
         /* pro porta plutil (probatio_plist_plutil.sh): si PLIST_AREA
          * in ambitu est, scriptionem nostram illuc pone */
         {
-            constans character* area = getenv("PLIST_AREA");
+            constans character* area = lectiones_ambitus("PLIST_AREA");
 
             si (area != NIHIL)
             {

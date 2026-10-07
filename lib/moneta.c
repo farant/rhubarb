@@ -6,6 +6,7 @@
 
 #include "postulata_posix.h"
 #include "moneta.h"
+#include "lectiones.h"
 #include "fasti.h"   /* Momentum: millisecunda ab epocha (canon) */
 #include <stdio.h>
 #include <string.h>
@@ -24,7 +25,7 @@ _fortuita_implere (
                 i8* effusio,
     memoriae_index  mensura)
 {
-    FILE* fons = fopen("/dev/urandom", "rb");
+    FILE* fons = lectiones_fopen("/dev/urandom", "rb");
 
     si (fons != NIHIL)
     {
@@ -181,7 +182,7 @@ moneta_octeti_fortuiti (
     {
         redde FALSUM;
     }
-    fons = fopen("/dev/urandom", "rb");
+    fons = lectiones_fopen("/dev/urandom", "rb");
     si (fons == NIHIL)
     {
         redde FALSUM;

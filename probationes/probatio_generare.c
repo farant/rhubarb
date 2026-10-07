@@ -11,6 +11,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* instrumenta ficta in build/, numquam iuxta binaria installata in
+ * bin/ (fabrica plan 5 T5b: scriptura extra vestigium portae) */
+#define INSTRUMENTA "build/probatio_generare_instrumenta"
+#define GENERARE    "./bin/generare --instrumenta " INSTRUMENTA " "
+
 
 /* ========================================================================
  * Reproducere logicam extractionis directivarum ex generare.c
@@ -512,19 +517,20 @@ s32 principale(vacuum)
         CREDO_VERUM(scriptum);
 
         /* Creare scriptum quod scribit variabiles ambitus ad filum */
+        CREDO_VERUM(filum_directorium_creare_cum_parentibus(INSTRUMENTA));
         scriptum = filum_scribere_literis(
-            "bin/env_probatio",
+            INSTRUMENTA "/env_probatio",
             "#!/bin/sh\n"
             "echo \"FILUM=$GENERARE_FILUM\" > /tmp/probatio_generare_env_out\n"
             "echo \"VERSUS=$GENERARE_VERSUS\" >> /tmp/probatio_generare_env_out\n");
         CREDO_VERUM(scriptum);
 
-        codex = system("chmod +x bin/env_probatio");
+        codex = system("chmod +x " INSTRUMENTA "/env_probatio");
         CREDO_AEQUALIS_S32(codex, ZEPHYRUM);
 
         filum_delere("/tmp/probatio_generare_env_out");
 
-        codex = system("./bin/generare /tmp/probatio_generare_env.c");
+        codex = system(GENERARE "/tmp/probatio_generare_env.c");
         CREDO_AEQUALIS_S32(codex, ZEPHYRUM);
 
         /* Legere et verificare output */
@@ -553,7 +559,7 @@ s32 principale(vacuum)
         /* Purgare */
         filum_delere("/tmp/probatio_generare_env.c");
         filum_delere("/tmp/probatio_generare_env_out");
-        filum_delere("bin/env_probatio");
+        filum_delere(INSTRUMENTA "/env_probatio");
     }
 
 
@@ -574,23 +580,23 @@ s32 principale(vacuum)
         CREDO_VERUM(scriptum);
 
         scriptum = filum_scribere_literis(
-            "bin/echo_test",
+            INSTRUMENTA "/echo_test",
             "#!/bin/sh\ntouch /tmp/probatio_generare_indicator\n");
         CREDO_VERUM(scriptum);
 
-        codex = system("chmod +x bin/echo_test");
+        codex = system("chmod +x " INSTRUMENTA "/echo_test");
         CREDO_AEQUALIS_S32(codex, ZEPHYRUM);
 
         filum_delere("/tmp/probatio_generare_indicator");
 
-        codex = system("./bin/generare /tmp/probatio_generare_test.c");
+        codex = system(GENERARE "/tmp/probatio_generare_test.c");
         CREDO_AEQUALIS_S32(codex, ZEPHYRUM);
 
         CREDO_VERUM(filum_existit("/tmp/probatio_generare_indicator"));
 
         filum_delere("/tmp/probatio_generare_test.c");
         filum_delere("/tmp/probatio_generare_indicator");
-        filum_delere("bin/echo_test");
+        filum_delere(INSTRUMENTA "/echo_test");
     }
 
 
@@ -610,7 +616,7 @@ s32 principale(vacuum)
         CREDO_VERUM(scriptum);
 
         codex =
-            system("./bin/generare /tmp/probatio_generare_error.c 2>/dev/null");
+            system(GENERARE "/tmp/probatio_generare_error.c 2>/dev/null");
         CREDO_INAEQUALITAS_S32(codex, ZEPHYRUM);
 
         filum_delere("/tmp/probatio_generare_error.c");

@@ -5,6 +5,7 @@
 
 #include "capsula_caudae.h"
 #include "flatura.h"
+#include "lectiones.h"
 
 #include <string.h>  /* memcmp */
 
@@ -112,7 +113,7 @@ capsula_caudae_aperire (
     }
 
     /* Aperire filum binarii */
-    filum = fopen(via_binarii, "rb");
+    filum = lectiones_fopen(via_binarii, "rb");
     si (filum == NIHIL)
     {
         redde NIHIL;
@@ -248,7 +249,8 @@ capsula_caudae_aperire (
         raw_size     = _caudae_legere_i32(entry_p + XVI);
 
         /* Allocare et legere path string */
-        path_copy = (i8*)piscina_allocare(piscina, (memoriae_index)path_len);
+        path_copy = (i8*)piscina_allocare(piscina,
+            (memoriae_index)path_len);
         si (path_copy == NIHIL)
         {
             fclose(filum);
@@ -257,13 +259,15 @@ capsula_caudae_aperire (
 
         /* Seek to path in string table et legere
          * path_offset is relative to asset blob, add asset_offset */
-        si (fseek(filum, (longus)(asset_offset + (i64)path_offset), SEEK_SET) != 0)
+        si (fseek(filum, (longus)(asset_offset + (i64)path_offset),
+            SEEK_SET) != 0)
         {
             fclose(filum);
             redde NIHIL;
         }
 
-        si (fread(path_copy, I, (size_t)path_len, filum) != (size_t)path_len)
+        si (fread(path_copy, I, (size_t)path_len, filum)
+            != (size_t)path_len)
         {
             fclose(filum);
             redde NIHIL;
@@ -355,7 +359,8 @@ capsula_caudae_legere (
             redde fructus;
         }
 
-        si (fread(compressed_data, I, (size_t)entry->mensura_compressa, capsula->filum)
+        si (fread(compressed_data, I, (size_t)entry->mensura_compressa,
+            capsula->filum)
             != (size_t)entry->mensura_compressa)
         {
             fructus.status = CAPSULA_FRACTA_DATUM;
@@ -381,7 +386,8 @@ capsula_caudae_legere (
         /* Uncompressed - legere directe */
         i8* data;
 
-        data = (i8*)piscina_allocare(piscina, (memoriae_index)entry->mensura_cruda);
+        data = (i8*)piscina_allocare(piscina,
+            (memoriae_index)entry->mensura_cruda);
         si (data == NIHIL)
         {
             fructus.status = CAPSULA_FRACTA_ALLOCATIO;
@@ -484,7 +490,8 @@ capsula_caudae_legere_chorda (
             redde fructus;
         }
 
-        si (fread(compressed_data, I, (size_t)entry->mensura_compressa, capsula->filum)
+        si (fread(compressed_data, I, (size_t)entry->mensura_compressa,
+            capsula->filum)
             != (size_t)entry->mensura_compressa)
         {
             fructus.status = CAPSULA_FRACTA_DATUM;
@@ -508,7 +515,8 @@ capsula_caudae_legere_chorda (
     {
         i8* data;
 
-        data = (i8*)piscina_allocare(piscina, (memoriae_index)entry->mensura_cruda);
+        data = (i8*)piscina_allocare(piscina,
+            (memoriae_index)entry->mensura_cruda);
         si (data == NIHIL)
         {
             fructus.status = CAPSULA_FRACTA_ALLOCATIO;
@@ -587,7 +595,8 @@ capsula_caudae_indexum (
     CapsulaCaudae* capsula,
               i32  index)
 {
-    si (capsula == NIHIL || index < 0 || index >= capsula->numerus_filorum)
+    si (   capsula == NIHIL || index < 0
+        || index   >= capsula->numerus_filorum)
     {
         redde NIHIL;
     }
@@ -644,7 +653,7 @@ capsula_caudae_habet_assets (
         redde FALSUM;
     }
 
-    filum = fopen(via_binarii, "rb");
+    filum = lectiones_fopen(via_binarii, "rb");
     si (filum == NIHIL)
     {
         redde FALSUM;

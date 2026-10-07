@@ -600,6 +600,15 @@ hic_manens constans character* FAB_AEDIFICATIO =
     "      <argumenta/>\n"
     "    </ingressus>\n"
     "    <ingressus genus=\"effectus\" via=\"sub/u.sh\"/>\n"
+    "  </actio>\n"
+    "  <actio titulus=\"porta_m\" genus=\"iudicium\">\n"
+    "    <mandatum>\n"
+    "      <verbum! (>./sub/m.sh\n"
+    "      <verbum! (>-x\n"
+    "    </mandatum>\n"
+    "    <ingressus genus=\"effectus\" via=\"sub/m.sh\"/>\n"
+    "  </actio>\n"
+    "  <actio titulus=\"porta_c\" genus=\"iudicium\">\n"
     "    <ingressus genus=\"effectus\" via=\"sub/c.sh\">\n"
     "      <argumenta>\n"
     "        <verbum! (>a\n"
@@ -1578,6 +1587,16 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (xar_numerus(r), ZEPHYRUM);
         }
         /* sine <argumenta>, declarationes discordes, non declarata */
+        /* A3 (fabrica plan 5 T3): argv ex mandato actionis ipsius */
+        r = crusta_effectus_argumenta_radicis(piscina, intern, fab,
+            "sub/m.sh");
+        CREDO_NON_NIHIL (r);
+        si (r != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (xar_numerus(r), I);
+            CREDO_VERUM (strcmp(*(character**)xar_obtinere(r, ZEPHYRUM),
+                "-x") == ZEPHYRUM);
+        }
         CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,
             fab, "sub/u.sh"));
         CREDO_NIHIL (crusta_effectus_argumenta_radicis(piscina, intern,

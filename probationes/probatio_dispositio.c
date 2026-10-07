@@ -21,6 +21,7 @@
 #include "runae.h"
 #include "dispositio.h"
 #include "credo.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -248,7 +249,7 @@ _fixum (
     dispositio_computare(d, latitudo, altitudo, _mensor, NIHIL);
 
     sprintf(via, "oracula/clay/probationes/%s.exspectata", titulus);
-    exs = fopen(via, "r");
+    exs = lectiones_fopen(via, "r");
     si (!exs)
     {
         imprimere("  FRACTA: %s deest\n", via);

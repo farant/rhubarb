@@ -1003,6 +1003,14 @@ try:
     silva._VERDICTA_MEMORATA = None
     credo('toml' in silva._portae_verdictorum(),
           'portae verdictorum: porta_toml in toml/aedificatio.stml inventa')
+    # praevia = artificia quae 'sanare' nominare potest: manifesta
+    # (directorium alterius actionis vestigium) NON (plan 5 T5b:
+    # 'sanare' exitus 2 -> porta aedilis via cruda in commissione)
+    _praevia_aed = silva._portae_verdictorum().get('aedilis')
+    credo(_praevia_aed is not None
+          and not any('clausurae' in v for v in _praevia_aed),
+          'portae verdictorum: aedilis sine manifestis in praeviis (%r)'
+          % (_praevia_aed,))
 finally:
     silva.FABRICA_BIN = _fb_porta_vera
     silva._VERDICTA_MEMORATA = _verdicta_vera
@@ -2446,6 +2454,21 @@ _d = silva._argumenta_discordantia(
     _ficta.replace('<argumenta>\n      <verbum! (>registrum\n    '
                    '</argumenta>', '<argumenta/>'), silva.PORTAE)
 credo(_d == [], 'argumenta catenarum: <argumenta/> = PORTAE sine argv',
+      causa=repr(_d))
+# A3 (fabrica plan 5 T3): mandatum = cursor ipse, comparatur cum PORTAE
+_ficta_m = ('<actio titulus="porta_toml" genus="iudicium"\n'
+            '    signum="TOML PROBATIONES:">\n  <mandatum>\n'
+            '    <verbum! (>./toml/compile_probationes.sh\n'
+            '  </mandatum>\n</actio>\n')
+_d = silva._argumenta_discordantia(_ficta_m, silva.PORTAE)
+credo(_d == [], 'argumenta catenarum: mandatum cursoris == PORTAE',
+      causa=repr(_d))
+_d = silva._argumenta_discordantia(
+    _ficta_m.replace('compile_probationes.sh\n',
+                     'compile_probationes.sh\n    <verbum! (>lexicon\n'),
+    silva.PORTAE)
+credo(len(_d) == 1 and 'lexicon' in _d[0],
+      'argumenta catenarum: mandatum a PORTAE discors nominatur',
       causa=repr(_d))
 
 credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)

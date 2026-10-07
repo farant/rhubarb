@@ -23,6 +23,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "internamentum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -131,7 +132,7 @@ _fasciculum_legere (
     exitus->datum    = NIHIL;
     exitus->mensura  = ZEPHYRUM;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde FALSUM;

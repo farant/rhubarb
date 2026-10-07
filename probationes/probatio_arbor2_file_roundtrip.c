@@ -9,6 +9,7 @@
 #include "arbor2_expandere.h"
 #include "arbor2_glr.h"
 #include "arbor2_scribere.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -47,7 +48,7 @@ _scribere_resultatum(constans character* via_originalis, constans character* dat
     snprintf(via_resultatum, magnitudo(via_resultatum),
              "probationes/results/roundtrip/%s", nomen_fasciculi);
 
-    f = fopen(via_resultatum, "wb");
+    f = lectiones_fopen(via_resultatum, "wb");
     si (f != NIHIL)
     {
         fwrite(datum, I, (size_t)mensura, f);
@@ -69,7 +70,7 @@ _legere_fasciculum(constans character* via, i32* mensura_out)
     character* buffer;
     size_t lectum;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         *mensura_out = ZEPHYRUM;

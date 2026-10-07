@@ -1597,7 +1597,7 @@ PORTAE = {
     'amalgamata': (['./tools/amalgamata_probare.sh'],
                    r'amalgamata: \d+ compilata, \d+ fracta'),
     'aedilis': (['./tools/aedilis_porta.sh'],
-                r'PORTA AEDILIS: \d+ probationes'),
+                r'PORTA AEDILIS: \d+'),
     'briar-fumus': (['./tools/briar_fumus.sh'],
                     r'fumus briar: (sanum|FRACTUM)'),
     # 'materia-shim' RECESSIT (silva-migratio T10c, 2026-09-25): silva
@@ -1810,11 +1810,15 @@ def _portae_verdictorum():
         for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
                              r'(.*?)</actio>', t, re.S):
             # ingressus sub build/: artificia actionum NON commissa, in
-            # porta() ante iudicium realizanda (spec 3 XIII v5)
+            # porta() ante iudicium realizanda (spec 3 XIII v5). Solum
+            # FASCICULI - artificia quae 'sanare' nominat; manifesta
+            # (directorium vestigii alieni) per fontes suos sigillantur
+            # et 'sanare' ea nominare nequit (exitus 2; plan 5 T5b)
             nomina[m.group(1)] = [
-                v for v in re.findall(r'<ingressus [^>]*via="([^"]+)"',
-                                      m.group(2))
-                if v.startswith('build/') or '/build/' in v]
+                v for g, v in re.findall(
+                    r'<ingressus genus="([^"]+)" via="([^"]+)"', m.group(2))
+                if g == 'fasciculus'
+                and (v.startswith('build/') or '/build/' in v)]
     _VERDICTA_MEMORATA = nomina
     return nomina
 
@@ -1832,6 +1836,20 @@ def _argumenta_discordantia(textus, portae):
     for m in re.finditer(r'<actio titulus="porta_([^"]+)" genus="iudicium"'
                          r'(.*?)</actio>', textus, re.S):
         nomen, corpus = m.group(1), m.group(2)
+        # MANDATUM = cursor ipse (fabrica plan 5 T3, A3): verba eius ==
+        # PORTAE[G] (argv ex mandato derivatur, <argumenta> non eget)
+        mand = re.search(r'<mandatum>(.*?)</mandatum>', corpus, re.S)
+        verba_mandati = (re.findall(r'<verbum! \(>(.*)', mand.group(1))
+                         if mand else [])
+        if verba_mandati and 'pythonica/silva.py' not in verba_mandati:
+            if nomen not in portae:
+                discordiae.append('porta_%s: porta ignota in PORTAE' % nomen)
+            elif ([v[2:] if v.startswith('./') else v for v in verba_mandati]
+                  != [v[2:] if v.startswith('./') else v
+                      for v in portae[nomen][0]]):
+                discordiae.append('porta_%s: mandatum %r, PORTAE %r'
+                                  % (nomen, verba_mandati,
+                                     list(portae[nomen][0])))
         for g in re.finditer(r'<ingressus genus="effectus" via="([^"]+)"'
                              r'\s*(/>|>(.*?)</ingressus>)', corpus, re.S):
             via, intus = g.group(1), g.group(3) or ''

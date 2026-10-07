@@ -44,6 +44,7 @@
 #include "xar.h"
 #include "json.h"
 #include "sigillum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>   /* system */
@@ -215,8 +216,10 @@ principale (vacuum)
     imprimere("\n--- I. daemon ephemerus ---\n");
     {
         (vacuum)system("rm -f build/probatio_sent.*");
-        CREDO_VERUM (system("./gesta/tabulariumd.sh -struere"
-            " > /dev/null 2>&1") == ZEPHYRUM);
+        /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
+         * semel struit): probatio currit, non struit (fabrica plan 5
+         * T5b) */
+        CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
         CREDO_VERUM (system("gesta/build/tabulariumd -portus 0"
             " -scrinium build/probatio_sent.db"
             " -annales build/probatio_sent.jsonl"
@@ -225,7 +228,8 @@ principale (vacuum)
 
         per (k = ZEPHYRUM; k < XXV; k++)
         {
-            FILE* pf = fopen("build/probatio_sent.portus", "r");
+            FILE* pf = lectiones_fopen("build/probatio_sent.portus",
+                "r");
 
             si (pf != NIHIL)
             {

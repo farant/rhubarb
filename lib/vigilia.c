@@ -8,6 +8,7 @@
 #include "vigilia.h"
 #include "sigillum.h"
 #include "xar.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -31,6 +32,8 @@ structura Vigilia {
          VigiliaStatus  status_tacitus;
            MomentumSec  tempus_ultimum;  /* secunda; horologium iniectum */
                    s64  commissi_mtempus; /* stampa ad agnitionem (ns) */
+    constans character* via_commissi;    /* VIGILIA_VIA_COMMISSI nisi
+                                          * vigilia_viam_commissi_ponere */
 };
 
 
@@ -64,7 +67,8 @@ _litterae_copiare (
     constans character* fons)
 {
     memoriae_index  m = strlen(fons);
-         character* copia = (character*)piscina_allocare(piscina, m + I);
+         character* copia = (character*)piscina_allocare(piscina, m
+             + I);
 
     si (copia == NIHIL)
     {
@@ -82,7 +86,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura_out)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura_l;
     character* textus;
 
@@ -238,8 +242,9 @@ vigilia_creare (
         redde NIHIL;
     }
     memset(v, ZEPHYRUM, magnitudo(Vigilia));
-    v->piscina  = piscina;
-    v->causa    = "";
+    v->piscina       = piscina;
+    v->causa         = "";
+    v->via_commissi  = VIGILIA_VIA_COMMISSI;
     si (cfg == NIHIL)
     {
         redde v;   /* quieta */
@@ -258,7 +263,7 @@ vigilia_creare (
     {
         structura stat status_disci;
 
-        si (stat(cfg->via_binarii, &status_disci) == ZEPHYRUM)
+        si (lectiones_stat(cfg->via_binarii, &status_disci) == ZEPHYRUM)
         {
             v->via_binarii = _litterae_copiare(piscina,
                 cfg->via_binarii);
@@ -293,7 +298,8 @@ vigilia_inspicere (
     {
         structura stat status_disci;
 
-        si (   stat(vigilia->via_binarii, &status_disci) == ZEPHYRUM
+        si (   lectiones_stat(vigilia->via_binarii, &status_disci)
+               == ZEPHYRUM
             && (_mtempus_ns(&status_disci) != vigilia->ortus_mtempus
                 || (s64)status_disci.st_size
                     != vigilia->ortus_magnitudo))
@@ -344,7 +350,7 @@ vigilia_inspicere (
             {
                 perge;
             }
-            si (   stat(*via, &status_disci) == ZEPHYRUM
+            si (   lectiones_stat(*via, &status_disci) == ZEPHYRUM
                 && _mtempus_ns(&status_disci)
                     > vigilia->ortus_mtempus)
             {
@@ -386,15 +392,30 @@ vigilia_causa (
 
 /* stampa commissionis (ns; ZEPHYRUM = abest - excitator quietus) */
 interior s64
-_commissi_mtempus (vacuum)
+_commissi_mtempus (
+    constans Vigilia* vigilia)
 {
     structura stat status_disci;
 
-    si (stat(VIGILIA_VIA_COMMISSI, &status_disci) != ZEPHYRUM)
+    si (lectiones_stat(vigilia->via_commissi, &status_disci)
+        != ZEPHYRUM)
     {
         redde (s64)ZEPHYRUM;
     }
     redde _mtempus_ns(&status_disci);
+}
+
+vacuum
+vigilia_viam_commissi_ponere (
+               Vigilia* vigilia,
+    constans character* via)
+{
+    si (vigilia == NIHIL)
+    {
+        redde;
+    }
+    vigilia->via_commissi = (via == NIHIL) ? VIGILIA_VIA_COMMISSI
+        : _litterae_copiare(vigilia->piscina, via);
 }
 
 b32
@@ -416,7 +437,7 @@ vigilia_tacere (
     vigilia->causa_tacita      = vigilia->causa;
     vigilia->status_tacitus    = vigilia->status;
     vigilia->tempus_ultimum    = nunc;
-    vigilia->commissi_mtempus  = _commissi_mtempus();
+    vigilia->commissi_mtempus  = _commissi_mtempus(vigilia);
     redde VERUM;
 }
 
@@ -450,14 +471,14 @@ vigilia_cautio_dicenda (
     /* re-armatio: causa aut status NOVUS - agnitio vetus novum
      * nuntium non tegit */
     si (   vigilia->status != vigilia->status_tacitus
-        || vigilia->causa_tacita                         == NIHIL
+        || vigilia->causa_tacita == NIHIL
         || strcmp(vigilia->causa, vigilia->causa_tacita) != ZEPHYRUM)
     {
         vigilia->tacita_reliqua = ZEPHYRUM;
         redde vigilia->cautio;
     }
     /* re-armatio: commissio - mundus mutatus, limen semanticum */
-    si (_commissi_mtempus() != vigilia->commissi_mtempus)
+    si (_commissi_mtempus(vigilia) != vigilia->commissi_mtempus)
     {
         vigilia->tacita_reliqua = ZEPHYRUM;
         redde vigilia->cautio;

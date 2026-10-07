@@ -32,6 +32,7 @@
 #include "imago_opus.h"
 #include "quadrans.h"
 #include "credo.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,6 +40,22 @@
 #define AURUM_VIA "probationes/fixa/quadrans/aurum_errores.txt"
 #define MENSURA_LAT CLX
 #define MENSURA_ALT XCVI
+
+/* aurum scribendum? (QUADRANS_AURUM_SCRIBERE per librum, T5a) */
+interior b32
+_aurum_scribendum (vacuum)
+{
+    redde lectiones_ambitus("QUADRANS_AURUM_SCRIBERE") != NIHIL;
+}
+
+/* aurum ad scribendum apertum (per librum: S), aut NIHIL */
+interior FILE*
+_aurum_aperire (
+                    b32  scribere,
+     constans character* modus)
+{
+    redde scribere ? lectiones_fopen(AURUM_VIA, modus) : NIHIL;
+}
 
 /* quadrantChars OpenTUI (bita TL 8, TR 4, BL 2, BR 1) */
 hic_manens constans s32 FIGURAE[XVI] = {
@@ -222,7 +239,7 @@ _aurum_legere (
                    s32* extrema,
                    s32* media)
 {
-          FILE* f = fopen(AURUM_VIA, "r");
+          FILE* f = lectiones_fopen(AURUM_VIA, "r");
      character  t[LXIV];
         longus  e;
         longus  m;
@@ -415,9 +432,8 @@ principale (vacuum)
             "assumptio", "christus_sculptus", "gradiens", "tabula",
             "strepitus"
         };
-        b32 scribere = (b32)(getenv("QUADRANS_AURUM_SCRIBERE")
-            != NIHIL);
-        FILE* aurum = scribere ? fopen(AURUM_VIA, "w") : NIHIL;
+         b32  scribere  = _aurum_scribendum();
+        FILE* aurum     = _aurum_aperire(scribere, "w");
          i32  k;
 
         per (k = ZEPHYRUM; k < V; k++)
@@ -551,9 +567,8 @@ principale (vacuum)
         hic_manens constans character* constans PHOTOGRAPHIAE[] = {
             "assumptio", "christus_sculptus"
         };
-        b32 scribere = (b32)(getenv("QUADRANS_AURUM_SCRIBERE")
-            != NIHIL);
-        FILE* aurum = scribere ? fopen(AURUM_VIA, "a") : NIHIL;
+         b32  scribere  = _aurum_scribendum();
+        FILE* aurum     = _aurum_aperire(scribere, "a");
          i32  k;
 
         per (k = ZEPHYRUM; k < II; k++)

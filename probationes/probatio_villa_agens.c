@@ -19,6 +19,7 @@
 #include "xar.h"
 #include "villa_agens.h"
 #include "villa_lectores.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -503,8 +504,10 @@ s32 principale (vacuum)
 		 * relinquit quos lista explicita praeterit (id ipsum hic
 		 * accidit - porta sordes suas in build/ reliquit) */
         (vacuum)system("rm -f build/probatio_villa.*");
-        CREDO_VERUM (system("./gesta/tabulariumd.sh -struere"
-            " > /dev/null 2>&1") == ZEPHYRUM);
+        /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
+         * semel struit): probatio currit, non struit (fabrica plan 5
+         * T5b) */
+        CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
         CREDO_VERUM (system("gesta/build/tabulariumd -portus 0"
             " -scrinium build/probatio_villa.db"
             " -annales build/probatio_villa.jsonl"
@@ -512,7 +515,8 @@ s32 principale (vacuum)
             == ZEPHYRUM);
         per (k = ZEPHYRUM; k < XXV; k++)
         {
-            FILE* pf = fopen("build/probatio_villa.portus", "r");
+            FILE* pf = lectiones_fopen("build/probatio_villa.portus",
+                "r");
 
             si (pf != NIHIL)
             {

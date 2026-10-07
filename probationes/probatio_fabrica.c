@@ -66,7 +66,17 @@ nomen structura {
                    Xar* undae_currendi; /* chorda: praevisiones (T6b) */
                    i32  fila_ficta;   /* post fracturam: membra ultra
                                        * hunc indicem non incipiunt */
+                   Xar* particulae_servatae; /* ParticulaeFictae (plan-5
+                                              * T1) */
 } DiscusFictus;
+
+/* particulae transitus servatae (plan-5 T1): ultimae per (titulus,
+ * exitus) */
+nomen structura {
+    chorda  titulus;
+    chorda  exitus;
+       Xar* particulae;   /* FabricaParticula */
+} ParticulaeFictae;
 
 /* vestigium lectionum fictum (plan 2 T2): tabula 'lectiones' */
 nomen structura {
@@ -82,6 +92,7 @@ nomen structura {
             chorda titulus;
                i32 duratio_ms;
     FabricaEventus eventus;
+            chorda stalum;   /* cur acta (fabrica-plan-5 T1) */
 } CursusFictus;
 
 /* generator scriptus (plan 1b T3): verbum = mandatum[0] actionis.
@@ -102,6 +113,9 @@ nomen structura {
                                  * scriptura extra vestigium) */
     constans character* scriptum_s; /* plagula scripta ET in libro 'S'
                                      * notata (plan 2 T6) */
+    constans character* effusio;    /* acta cursoris (plan 5 T3:
+                                     * signum in eis quaeritur); NIHIL
+                                     * = nulla */
 } ScriptumFictum;
 
 /* memoria verificationum ficta (T6): tabula sqlite in memoria */
@@ -384,7 +398,6 @@ _agere (
       DiscusFictus* discus;
     ScriptumFictum* scriptum;
 
-    (vacuum)acta_via;
     discus = (DiscusFictus*)datum;
     discus->acta++;
     actum_out->duratio_ms = I;
@@ -405,6 +418,10 @@ _agere (
     {
         _ponere(discus, scriptum->alia, "alia\n");
     }
+    si (scriptum->effusio != NIHIL)
+    {
+        _ponere(discus, acta_via, scriptum->effusio);
+    }
     si (scriptum->relatio != NIHIL)
     {
         discus->relatio = scriptum->relatio;
@@ -415,6 +432,24 @@ _agere (
         actum_out->cauda = chorda_ex_literis("error ficti acti",
             piscina);
     }
+    redde VERUM;
+}
+
+/* verdictum ponere fictum (plan 5 T3): contentum NIHIL = deletum */
+interior b32
+_verdictum_ponere (
+                vacuum* datum,
+    constans character* via,
+       constans chorda* contentum)
+{
+    DiscusFictus* discus = (DiscusFictus*)datum;
+
+    si (contentum == NIHIL)
+    {
+        _auferre(discus, via);
+        redde VERUM;
+    }
+    _ponere(discus, via, chorda_ut_cstr(*contentum, discus->piscina));
     redde VERUM;
 }
 
@@ -433,6 +468,7 @@ _cursum_inscribere (
         cursus->titulus     = sanatio->actio->titulus;
         cursus->duratio_ms  = sanatio->duratio_ms;
         cursus->eventus     = sanatio->eventus;
+        cursus->stalum      = sanatio->stalum;
     }
 }
 
@@ -750,6 +786,81 @@ _lectiones_ultimae (
     redde VERUM;
 }
 
+/* particulae transitus fictae (plan-5 T1): ut tabula vera, ultimae per
+ * (titulus, exitus) */
+interior vacuum
+_particulas_scribere (
+                vacuum* datum,
+    constans character* titulus,
+    constans character* exitus,
+          constans Xar* particulae)
+{
+        DiscusFictus* discus;
+    ParticulaeFictae* p = NIHIL;
+                 i32  i;
+
+    discus = (DiscusFictus*)datum;
+    per (i = ZEPHYRUM; i
+        < xar_numerus(discus->particulae_servatae); i++)
+    {
+        ParticulaeFictae* q = (ParticulaeFictae*)xar_obtinere(
+            discus->particulae_servatae, i);
+
+        si (   chorda_aequalis_literis(q->titulus, titulus)
+            && chorda_aequalis_literis(q->exitus, exitus))
+        {
+            p = q;
+        }
+    }
+    si (p == NIHIL)
+    {
+        p = (ParticulaeFictae*)xar_addere(discus->particulae_servatae);
+        si (p == NIHIL)
+        {
+            redde;
+        }
+        p->titulus  = chorda_ex_literis(titulus, discus->piscina);
+        p->exitus   = chorda_ex_literis(exitus, discus->piscina);
+    }
+    p->particulae = xar_creare(discus->piscina,
+        (i32)magnitudo(FabricaParticula));
+    per (i = ZEPHYRUM; p->particulae != NIHIL
+        && i < xar_numerus(particulae); i++)
+    {
+        *(FabricaParticula*)xar_addere(p->particulae) =
+            *(constans FabricaParticula*)xar_obtinere(particulae, i);
+    }
+}
+
+interior b32
+_particulas_legere (
+                vacuum*  datum,
+    constans character*  titulus,
+    constans character*  exitus,
+               Piscina*  piscina,
+                   Xar** particulae_out)
+{
+    DiscusFictus* discus;
+             i32  i;
+
+    (vacuum)piscina;
+    discus = (DiscusFictus*)datum;
+    per (i = ZEPHYRUM; i
+        < xar_numerus(discus->particulae_servatae); i++)
+    {
+        ParticulaeFictae* q = (ParticulaeFictae*)xar_obtinere(
+            discus->particulae_servatae, i);
+
+        si (   chorda_aequalis_literis(q->titulus, titulus)
+            && chorda_aequalis_literis(q->exitus, exitus))
+        {
+            *particulae_out = q->particulae;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _lectiones_scribere (
                 vacuum* datum,
@@ -825,6 +936,8 @@ _discum_parare (
         (i32)magnitudo(CursusFictus));
     discus->lectiones_ficti = NIHIL;
     discus->undae_actae = xar_creare(piscina, (i32)magnitudo(chorda));
+    discus->particulae_servatae = xar_creare(piscina,
+        (i32)magnitudo(ParticulaeFictae));
     discus->acta_simul = ZEPHYRUM;
     discus->undae_currendi = xar_creare(piscina,
         (i32)magnitudo(chorda));
@@ -866,6 +979,7 @@ _actio (
 
     actio = (FabricaActio*)piscina_allocare(piscina,
         magnitudo(FabricaActio));
+    memset(actio, ZEPHYRUM, magnitudo(FabricaActio));
     actio->titulus = chorda_ex_literis(titulus, piscina);
     actio->genus = genus;
     actio->mandatum = xar_creare(piscina, (i32)magnitudo(chorda));
@@ -995,6 +1109,7 @@ _scriptum_addere (
     scriptum->relatio     = NIHIL;
     scriptum->alia        = NIHIL;
     scriptum->scriptum_s  = NIHIL;
+    scriptum->effusio     = NIHIL;
 }
 
 /* actio cum generatore scripto, ingressu uno, exitu uno (scriptura =
@@ -3493,6 +3608,8 @@ s32 principale (vacuum)
             sanatio = (FabricaSanatio*)xar_obtinere(sanationes, i);
             CREDO_AEQUALIS_I32((i32)sanatio->eventus,
                 (i32)FABRICA_SANATUM);
+            /* via undarum quoque causam stali fert (plan-5 T1) */
+            CREDO_VERUM(sanatio->stalum.mensura > ZEPHYRUM);
             si (chorda_aequalis_literis(sanatio->actio->titulus, "P1"))
             {
                 index_p1 = (s32)i;
@@ -4263,6 +4380,9 @@ s32 principale (vacuum)
                     acta++;
                     CREDO_VERUM(chorda_aequalis_literis(c->titulus, "A")
                         || chorda_aequalis_literis(c->titulus, "D"));
+                    /* cur acta (plan-5 T1): causa iudicis ante actum
+                     * in cursu - sanatum ET fractum */
+                    CREDO_VERUM(c->stalum.mensura > ZEPHYRUM);
                 }
             }
             CREDO_AEQUALIS_I32(acta, II);
@@ -4530,6 +4650,8 @@ s32 principale (vacuum)
          * novum per iudicium habet) */
         sutura.lectiones_legere = _lectiones_legere;
         sutura.lectiones_scribere = _lectiones_scribere;
+        sutura.particulas_scribere = _particulas_scribere;
+        sutura.particulas_legere = _particulas_legere;
         sutura.ambitus = _ambitus_fictum;
         sutura.species = _species_ficta;
         sutura.identitas = _identitatem_fictam_dare;
@@ -4626,6 +4748,8 @@ s32 principale (vacuum)
             exitus,
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        /* QUIS mutatus (plan-5 T1): ingressus nominatur */
+        CREDO_VERUM(_continet(iudicium.causa, "tools/v.sh", piscina));
         _ponere(&discus, "tools/v.sh", "v I\n");
         /* V. identitas clang mutata: clavis alia */
         _identitas_ficta = "clang II";
@@ -4633,6 +4757,7 @@ s32 principale (vacuum)
             exitus,
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+        CREDO_VERUM(_continet(iudicium.causa, "clang", piscina));
         _identitas_ficta = "clang I";
         /* VI. situs irresolutus (effectus) -> IGNOTUM nominatum */
         _effectus_effusio =
@@ -4668,6 +4793,70 @@ s32 principale (vacuum)
             exitus,
             VERUM, piscina);
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_IGNOTUM);
+
+        /* VIIb (plan-5 T5b). lectio in vestigio PROPRIO actionis: opus
+         * suum, non ingressus - filii (sqlite, redirectio) S non notant,
+         * ergo 'sine domino' aliter. Vestigium COMMUNE non excusat. */
+        {
+            FabricaLocus* locus;
+
+            si (actiones_transitus[0]->vestigia == NIHIL)
+            {
+                actiones_transitus[0]->vestigia = xar_creare(piscina,
+                    (i32)magnitudo(FabricaLocus));
+            }
+            locus = (FabricaLocus*)xar_addere(
+                actiones_transitus[0]->vestigia);
+            CREDO_NON_NIHIL(locus);
+            si (locus != NIHIL)
+            {
+                locus->forma    = FABRICA_LOCUS_ARBOR;
+                locus->via      = chorda_ex_literis("build/proprium",
+                    piscina);
+                locus->suffixa  = chorda_ex_literis("", piscina);
+            }
+            _ponere(&discus, LIBER,
+                "L\tdata/fons.txt\nL\tbuild/proprium/portus.txt\n");
+            _auferre(&discus, VERDICTUM);
+            sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+                piscina, &causa);
+            sanatio = _sanatio_invenire(sanationes, "porta_x");
+            CREDO_NON_NIHIL(sanatio);
+            si (sanatio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                    (i32)FABRICA_SANATUM);
+                CREDO_AEQUALIS_I32((i32)sanatio->causa.mensura,
+                    ZEPHYRUM);
+            }
+            iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
+                exitus,
+                VERUM, piscina);
+            CREDO_AEQUALIS_I32((i32)iudicium.status,
+                (i32)FABRICA_RECENS);
+        }
+
+        /* VIIc (plan-5 T5b). radices TEMPORARIAE (/tmp, /private/tmp,
+         * /var/folders): status ambientis, non ingressus sigillabilis
+         * (ut effectus classis temporaria) - /tmp ipsum quoque */
+        _ponere(&discus, "/tmp/probatio_x/a.txt", "a I\n");
+        _ponere(&discus, LIBER,
+            "L\tdata/fons.txt\nD\t/tmp\nL\t/tmp/probatio_x/a.txt\n"
+            "X\t/private/var/folders/ab/T/f\n");
+        _auferre(&discus, VERDICTUM);
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "porta_x");
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->causa.mensura, ZEPHYRUM);
+        }
+        _ponere(&discus, "/tmp/probatio_x/a.txt", "a II\n");
+        iudicium = fabrica_iudicare(&sutura, actiones_transitus[0],
+            exitus,
+            VERUM, piscina);
+        CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
 
         /* VIII. FIFO (species ALIA): non sigillabilis */
         _via_alia_ficta = "data/fifo";
@@ -4743,6 +4932,95 @@ s32 principale (vacuum)
         sutura.auditus     = ZEPHYRUM;
         sutura.audita      = NIHIL;
         _ambitus_ficti[0]  = NIHIL;
+    }
+
+
+    /* ==================================================
+     * PROBARE: SIGNUM (fabrica plan 5 T3) - bin/fabrica cursorem portae
+     * IPSE currit et verdictum IPSE scribit ('<nomen>: <signum>
+     * <verbum>'): signum absens aut FRACT in compendio = FRACTUM;
+     * verdictum vetus
+     * ANTE cursum deletum - silva.py extra omnem clavem
+     * ================================================== */
+
+    {
+         DiscusFictus  discus;
+        FabricaSutura  sutura;
+         FabricaActio* actiones_signi[I];
+       ScriptumFictum* scriptum;
+                  Xar* ordo;
+                  Xar* electa;
+                  Xar* sanationes;
+       FabricaSanatio* sanatio;
+               chorda  causa;
+
+        imprimere("\n--- Probans signum (verdictum in C) ---\n");
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        _discum_parare(&discus, &sutura, piscina);
+        _memorias_parare(&sutura, piscina);
+        sutura.verdictum_ponere = _verdictum_ponere;
+        _ponere(&discus, "y.sh", "echo y\n");
+        /* mutus: cursor ipse verdictum NON scribit */
+        _scriptum_addere(&discus, "run_y", "verdicta/y.txt", NIHIL,
+            "ignoratum\n", 0, VERUM);
+        scriptum = (ScriptumFictum*)xar_obtinere(discus.scripta,
+            xar_numerus(discus.scripta) - I);
+        scriptum->effusio = "initium\nY PROBATIONES: 3/3 praeteritae\n";
+        actiones_signi[0] = _actio_scripta(piscina, "porta_y", "run_y",
+            "y.sh", "verdicta/y.txt", "verdictum");
+        actiones_signi[0]->genus   = FABRICA_ACTIO_IUDICIUM;
+        /* signum sine spatio finali: spatia sequentia transiliuntur */
+        actiones_signi[0]->signum  = chorda_ex_literis("Y PROBATIONES:",
+            piscina);
+        ordo    = _ordinare_fictas(piscina, actiones_signi, I);
+        electa  = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) =
+            chorda_ex_literis("verdicta/y.txt",
+            piscina);
+
+        /* I. transitus: verdictum a fabrica scriptum */
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "porta_y");
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_SANATUM);
+        }
+        CREDO_VERUM(_contentum_est(&discus, "verdicta/y.txt",
+            "y: Y PROBATIONES: 3/3\n"));
+
+        /* II. signum absens: FRACTUM, verdictum vetus deletum */
+        scriptum->effusio = "nihil hic\n";
+        _ponere(&discus, "y.sh", "echo y II\n");
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "porta_y");
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+            CREDO_VERUM(_continet(sanatio->causa, "signum absens",
+                piscina));
+        }
+        CREDO_NIHIL(_fasciculum_invenire(&discus, "verdicta/y.txt"));
+
+        /* III. FRACT in compendio: FRACTUM */
+        scriptum->effusio = "Y PROBATIONES: FRACTA\n";
+        _ponere(&discus, "y.sh", "echo y III\n");
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = _sanatio_invenire(sanationes, "porta_y");
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+        }
+        CREDO_NIHIL(_fasciculum_invenire(&discus, "verdicta/y.txt"));
     }
 
 

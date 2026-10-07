@@ -32,7 +32,6 @@
 #include "xar.h"
 #include "sigillum.h"
 #include "thesaurus.h"
-#include "iter_directoria.h"
 #include "processus.h"
 #include "provenientia.h"
 #include "lectiones.h"
@@ -63,6 +62,9 @@ nomen structura {
                integer   index_exitus; /* index valoris -o */
     constans character*  exitus;
     constans character*  fons;
+    /* radices inclusionis ordine clavis (-I, deinde directorium fontis):
+     * obumbratio per NOMEN in clave plena (fabrica plan 5 T2) */
+                   Xar* radices;
 } Compilatio;
 
 interior b32
@@ -233,56 +235,20 @@ _identitas_compilatoris (
     redde VERUM;
 }
 
-interior s32
-_chordas_comparare (
-    constans vacuum* a,
-    constans vacuum* b)
-{
-    redde chorda_comparare(*(constans chorda*)a, *(constans chorda*)b);
-}
-
-/* radix una: via ‖ nomina .h ordinata (obumbratio mutat) */
+/* radix una: via sola in clave capitis (ordo radicum mutat) - nomina
+ * capitum NON (fabrica plan 5 T2): enumeratio radicis tota omnem
+ * verdictum caput quodvis novum faciebat irritum. Obumbratio per nomen
+ * capitis usi in clave plena probatur (_obumbrationem_addere). */
 interior vacuum
 _radicem_addere (
-     SigillumContextus* contextus,
-    constans character* radix,
-               Piscina* piscina)
+           Compilatio* c,
+    SigillumContextus* contextus,
+   constans character* radix)
 {
-     DirectoriumIterator* iterator;
-    DirectoriumIntroitus* introitus;
-                     Xar* nomina;
-                     i32  i;
-
     sigillum_addere(contextus, radix, strlen(radix) + I);
-    nomina    = xar_creare(piscina, (i32)magnitudo(chorda));
-    iterator  = directorium_iterator_aperire(radix, piscina);
-    si (iterator == NIHIL || nomina == NIHIL)
+    si (c->radices != NIHIL)
     {
-        sigillum_addere(contextus, "\001absens\n", VIII);
-        redde;
-    }
-    dum ((introitus = directorium_iterator_proximum(iterator)) != NIHIL)
-    {
-        si (   introitus->titulus.mensura > II
-            && introitus->titulus.datum[introitus->titulus.mensura - II]
-            == '.'
-            && introitus->titulus.datum[introitus->titulus.mensura - I]
-            == 'h')
-        {
-            *(chorda*)xar_addere(nomina) = chorda_transcribere(
-                introitus->titulus, piscina);
-        }
-    }
-    directorium_iterator_claudere(iterator);
-    xar_ordinare(nomina, _chordas_comparare);
-    per (i = ZEPHYRUM; i < xar_numerus(nomina); i++)
-    {
-        chorda titulus;
-
-        titulus = *(chorda*)xar_obtinere(nomina, i);
-        sigillum_addere(contextus, titulus.datum,
-            (memoriae_index)titulus.mensura);
-        sigillum_addere(contextus, "\n", I);
+        *(constans character**)xar_addere(c->radices) = radix;
     }
 }
 
@@ -306,7 +272,7 @@ _clavem_capitis (
         redde FALSUM;
     }
     sigillum_incipere(&contextus);
-    sigillum_addere(&contextus, "compilator I\n", XIII);
+    sigillum_addere(&contextus, "compilator II\n", XIV);
     sigillum_addere(&contextus, cwd, strlen(cwd) + I);
     sigillum_addere(&contextus, identitas->octeti, XXXII);
     per (i = ZEPHYRUM; i < c->numerus; i++)
@@ -329,13 +295,12 @@ _clavem_capitis (
         a = c->argumenta[i];
         si (strcmp(a, "-I") == ZEPHYRUM && i + I < c->numerus)
         {
-            _radicem_addere(&contextus, c->argumenta[i + I],
-                c->piscina);
+            _radicem_addere(c, &contextus, c->argumenta[i + I]);
             i++;
         }
         alioquin si (strncmp(a, "-I", II) == ZEPHYRUM && a[II] != '\0')
         {
-            _radicem_addere(&contextus, a + II, c->piscina);
+            _radicem_addere(c, &contextus, a + II);
         }
     }
     strcpy(directorium, c->fons);
@@ -348,13 +313,97 @@ _clavem_capitis (
     {
         strcpy(directorium, ".");
     }
-    _radicem_addere(&contextus, directorium, c->piscina);
+    _radicem_addere(c, &contextus, chorda_ut_cstr(chorda_ex_literis(
+        directorium, c->piscina), c->piscina));
     *out = sigillum_finire(&contextus);
     redde VERUM;
 }
 
-/* CLAVIS PLENA: caput ‖ per caput indicis: via ‖ sigillum. FALSUM si
- * caput absens (miss). */
+/* via sine './' initiali */
+interior constans character*
+_sine_puncto (
+    constans character* via)
+{
+    dum (via[ZEPHYRUM] == '.' && via[I] == '/')
+    {
+        via += II;
+    }
+    redde via;
+}
+
+/* OBUMBRATIO PER NOMEN (fabrica plan 5 T2): caput 'via' in radice R
+ * inventum - idem nomen relativum in OMNI radice altera quaeritur
+ * (filum_existit: liber A/X notat; clavis bit unum). Radix posterior
+ * quoque: caput includens in ea habitans directorium suum primum
+ * quaerit. Via absoluta (systema) et via extra radices: nihil. */
+interior vacuum
+_obumbrationem_addere (
+           Compilatio* c,
+    SigillumContextus* contextus,
+   constans character* via_capitis)
+{
+    constans character* via       = _sine_puncto(via_capitis);
+    constans character* relativa  = NIHIL;
+                   s32  inventa   = -I;
+                   i32  k;
+
+    si (c->radices == NIHIL || via[ZEPHYRUM] == '/')
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; inventa < ZEPHYRUM
+        && k < xar_numerus(c->radices); k++)
+    {
+        constans character* r = _sine_puncto(*(constans character**)
+            xar_obtinere(c->radices, k));
+           memoriae_index n = strlen(r);
+
+        si (n == ZEPHYRUM || strcmp(r, ".") == ZEPHYRUM)
+        {
+            inventa   = (s32)k;
+            relativa  = via;
+        }
+        alioquin si (strncmp(via, r, n) == ZEPHYRUM && via[n] == '/')
+        {
+            inventa   = (s32)k;
+            relativa  = via + n + I;
+        }
+    }
+    si (inventa < ZEPHYRUM)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(c->radices); k++)
+    {
+        constans character* r = _sine_puncto(*(constans character**)
+            xar_obtinere(c->radices, k));
+                character candidata[VIA_MAXIMA];
+                      b32 exstat;
+
+        si ((s32)k == inventa)
+        {
+            perge;
+        }
+        si (strlen(r) + strlen(relativa) + II
+            >= (memoriae_index)VIA_MAXIMA)
+        {
+            perge;
+        }
+        si (r[ZEPHYRUM] == '\0' || strcmp(r, ".") == ZEPHYRUM)
+        {
+            strcpy(candidata, relativa);
+        }
+        alioquin
+        {
+            sprintf(candidata, "%s/%s", r, relativa);
+        }
+        exstat = filum_existit(candidata);
+        sigillum_addere(contextus, exstat ? "1" : "0", I);
+    }
+}
+
+/* CLAVIS PLENA: caput ‖ per caput indicis: via ‖ sigillum ‖
+ * obumbratio per nomen (T2). FALSUM si caput absens (miss). */
 interior b32
 _clavem_plenam (
      Compilatio* c,
@@ -393,6 +442,8 @@ _clavem_plenam (
             (memoriae_index)via.mensura);
         sigillum_addere(&contextus, "\n", I);
         sigillum_addere(&contextus, sigillum.octeti, XXXII);
+        _obumbrationem_addere(c, &contextus,
+            chorda_ut_cstr(via, c->piscina));
     }
     *out = sigillum_finire(&contextus);
     redde VERUM;
@@ -685,7 +736,9 @@ principale (
     {
         radix = THESAURUS_ORDINARIUS;
     }
-    c.piscina   = piscina;
+    c.piscina = piscina;
+    c.radices = xar_creare(piscina,
+        (i32)magnitudo(constans character*));
     c.thesaurus = (piscina != NIHIL)
         ? thesaurus_aperire(radix, piscina) : NIHIL;
     si (   c.thesaurus == NIHIL || !_argumenta_parare(&c)

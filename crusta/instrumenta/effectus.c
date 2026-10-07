@@ -525,6 +525,24 @@ _modus_census (
                             chorda_ex_literis(clavis, c->piscina),
                             c->piscina);
                         situs++;
+                        /* CENSUS SCISSUS (fabrica plan 5 T5b, spec 5
+                         * par. III.7): irresoluti in catena portae
+                         * (radix declarata aut fontata ab ea) et soli
+                         * seorsum - in catena verdictum IGNOTUM
+                         * faciunt, soli non */
+                        si (   stml_attributum_capere(s, "resolutio")
+                                   != NIHIL
+                            && strcmp(_cella(c->piscina, s,
+                                   "resolutio"), "plena") != ZEPHYRUM)
+                        {
+                            character k_catena[CCLVI];
+
+                            sprintf(k_catena, "%s: %.200s",
+                                in_catena ? "in catena" : "solum",
+                                _cella(c->piscina, s, "resolutio"));
+                            _numerare(c->piscina, claves, numeri,
+                                k_catena);
+                        }
                         initium = (s32)strtol(octeti, NIHIL, X);
                         inventa[ZEPHYRUM] = '\0';
                         per (w = ZEPHYRUM; d != NIHIL

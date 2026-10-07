@@ -11,6 +11,7 @@
 #include "credo.h"
 #include "mensura.h"
 #include "volumen.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -43,7 +44,7 @@ _lineas_numerare (
     i32   numerus;
     integer c;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde (i32)0;
@@ -259,7 +260,7 @@ s32 principale (vacuum)
         bona = _mensura_ficta(piscina, "bona", 3.0);
         CREDO_VERUM(mensura_annotare(DIARIUM, &bona, piscina));
 
-        f = fopen(DIARIUM, "ab");
+        f = lectiones_fopen(DIARIUM, "ab");
         si (f != NIHIL)
         {
             fputs("hoc\tnon\test\tmensura\n", f);
