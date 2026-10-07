@@ -150,7 +150,7 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
     row, debts. Its one property worth keeping - silent loss of
     coverage ("declaratio omissa") - moved into generata_iudicare.sh:
     every committed file with GENERATUM on line 1 must be judged.
-  - [ ] **T7c** delete `tools/generata_probare.sh` and
+  - [x] **T7c** delete `tools/generata_probare.sh` and
     `tools/fabrica_oraculum.sh` once the swap has stood; docs, comments
     (tools/latina_numeri.*), docs/bibliothecae/instrumenta.html.
 - [ ] **T8** oratio (`oratio/compile_probationes.sh`)

@@ -3,10 +3,11 @@
 # plan 5 T7a): omne artificium generatum COMMISSUM == regeneratio
 # hodierna, iudice bin/fabrica (iudicare -plenus -omnia: regeneratio in
 # area scripturae aut verificatio memorata cum clave ingressuum et
-# mandati). Succedit tools/generata_probare.sh (stadia I-VIII): oraculum
-# fabricae (tools/fabrica_oraculum.sh) consensum in omni artificio
-# communi XXXIV cursibus ostendit (2026-10-02 - 10-07), et fabrica
-# XCVIII artificia plura iudicat quae generata non videbat.
+# mandati). Succedit tools/generata_probare.sh (stadia I-VIII; deleta
+# T7c, in historia git): oraculum fabricae (fabrica_oraculum.sh, item
+# deletum) consensum in omni artificio communi XXXIV cursibus ostendit
+# (2026-10-02 - 10-07), et fabrica XCVIII artificia plura iudicat quae
+# generata non videbat.
 #
 # Artificia NON commissa (build/, bin/, ~/.bin, verdicta) nominantur
 # numero solo: commissionem non obstant (sanare ea sanat - ut

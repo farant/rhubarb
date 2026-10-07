@@ -1571,7 +1571,7 @@ PORTAE = {
     # (silva-migratio T19a)
     # fabrica plan 5 T7a: iudex = bin/fabrica (iudicare -plenus -omnia,
     # artificia COMMISSA): succedit generata_probare.sh (stadia I-VIII,
-    # XXXIV consensus oraculi) - CXXXV artificia, ~XX s; et omnis
+    # XXXIV consensus oraculi; deleta T7c) - CXXXV artificia, ~XX s; et omnis
     # plagula GENERATUM commissa iudicata esse debet (T7b)
     'generata': (['./tools/generata_iudicare.sh'],
                  r'generata: (sana|FRACTA)'),
