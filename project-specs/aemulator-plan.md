@@ -769,6 +769,11 @@ Later phases (re-planned after A's RELATIO):
     swaps the default colours like Ghostty; esctest 296) and terminale
     text decorations (underline styles, strike, overline, synthetic
     bold; `TerminaleApplicatio.ornamenta_pixelorum`, off in the twin).
+    Line drawing (Fran: "a great project"): new pure library
+    `glyphae_ductae` (API approved) draws U+2500-259F and braille
+    U+2800-28FF as opacity masks at cell size, ported from Ghostty's
+    sprite font (box.zig table generated from the source); step 1 =
+    library + picture tests, step 2 = terminale draws the masks.
     libghostty-vt differential oracle:
     deferred (Fran: zig + fetching OK when we need it).
   - **D8 - RELATIO.**
