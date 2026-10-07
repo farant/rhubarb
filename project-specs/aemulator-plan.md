@@ -745,6 +745,16 @@ Later phases (re-planned after A's RELATIO):
     Found through use (Fran in tmux): Ctrl-[ / Ctrl-I / Ctrl-M sent
     NOTHING in legacy mode (copied Ghostty fixterms gap + macOS control
     text) - now C0 like xterm (codificator worklog).
+    D7b as built: vttest fetched (Fran: tarball, not Homebrew) from
+    https://invisible-island.net/archives/vttest/vttest.tar.gz into
+    ../vttest (outside the repo, like ../esctest2); PIN = version 2.7
+    (20251205), sha256 cd6886f9aefe6a3f6c566fa61271a55710901a71849c630bf5376aa984bf77cc;
+    built with ./configure && make -> ../vttest/vttest-20251205/vttest.
+    Interactive: run inside terminale during the D7c session.
+    Bugs found through daily use before D7c (Fran in terminale + tmux):
+    Cmd keys leaked to programs (f74965dd), unreadable grays ->
+    minimum contrast + faint (0fecd4c9), Ctrl-[/I/M sent nothing
+    (a7577310), drags carried no button (6407deb6).
   - **D8 - RELATIO.**
 - **D (old sketch).** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
