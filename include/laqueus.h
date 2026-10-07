@@ -228,9 +228,11 @@ diagramma_pd (
 
 /* invariantes ex codice PD nodi (transitus 0 = nodus trivialis; ora
  * 1..2c bis quaeque, infra X0 -> X2 consecutiva; transitus unus
- * refutatur: signum ex ordine orarum non determinatur). FALSUM si codex
- * invalidus aut transitus > LAQUEUS_TRANSITUS_MAXIMI (uncinus, Jones).
- */
+ * refutatur: signum ex ordine orarum non determinatur). Codex validus:
+ * os quodque semel intrans et semel exiens (componens una) et PLANUS (V
+ * - E + F = 2 in systemate rotationis; codices nodorum virtualium
+ * refutantur). FALSUM si codex invalidus aut transitus >
+ * LAQUEUS_TRANSITUS_MAXIMI (uncinus, Jones). */
 b32
 laqueus_uncinus_ex_pd (
     constans i32* pd,

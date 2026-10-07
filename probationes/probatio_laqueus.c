@@ -1398,6 +1398,18 @@ s32 principale (vacuum)
         hic_manens constans i32 pd_unus_malus_supra[] = { 1, 1, 2, 1 };
         /* ora "bis" sed orientatio falsa: duae ansae disiunctae (olim
          * accepta) */
+        /* validus (ora, orientatio) sed NON planus: facies una, non
+         * V - E + 2 = 5 (recensio; nodus virtualis) */
+        hic_manens constans i32 pd_non_planus[] = { 1, 3, 2, 4, 2, 5, 3,
+            6,
+            4, 1, 5, 6 };
+        /* bilaterum fictum speculatum ([a,b,c,d] -> [a,d,c,b]): ora
+         * communia ad sedes 3, 0 (planta Q2: R2 solum pro sede pari) */
+        hic_manens constans i32 pd_fictum_speculum[] = { 1, 8,
+            2,
+            9, 16, 9, 1, 10, 11, 14, 12, 15, 13, 10, 14, 11, 15, 12, 16,
+                13,
+            3, 6, 4, 7, 5, 2, 6, 3, 7, 4, 8, 5 };
         hic_manens constans i32 pd_orientatio_falsa[] = { 1, 1, 2, 2, 3,
             3,
             4, 4 };
@@ -1443,6 +1455,14 @@ s32 principale (vacuum)
             piscina, &q));
         CREDO_FALSUM (laqueus_pd_simplificare(pd_orientatio_falsa, II,
             piscina, &exitus, &c));
+        CREDO_FALSUM (laqueus_uncinus_ex_pd(pd_non_planus, III, piscina,
+            &q));
+        CREDO_FALSUM (laqueus_alexander_ex_pd(pd_non_planus, III,
+            piscina,
+            &q));
+        CREDO_FALSUM (laqueus_pd_simplificare(pd_non_planus, III,
+            piscina,
+            &exitus, &c));
         CREDO_FALSUM (laqueus_pd_simplificare(pd_malus, III, piscina,
             &exitus, &c));
         CREDO_FALSUM (laqueus_pd_simplificare(pd_unus_malus_infra, I,
@@ -1495,6 +1515,13 @@ s32 principale (vacuum)
         CREDO_VERUM (laqueus_jones_ex_pd(pd_bilaterum_fictum, VIII,
             piscina,
             &q) && polynomium_aequalis(q, r));
+        /* speculum: J(3_1)(1/t)^2 */
+        CREDO_VERUM (laqueus_pd_simplificare(pd_fictum_speculum,
+            VIII, piscina, &exitus, &c) && c == VI);
+        CREDO_VERUM (laqueus_jones_ex_pd(exitus, c, piscina, &q)
+            && polynomium_multiplica(polynomium_inversum(j31, piscina),
+                polynomium_inversum(j31, piscina), piscina, &r)
+            && polynomium_aequalis(q, r));
         /* fibula manet (avidus: nodus 3_1 # 3_1 sed nullus motus R1,
          * R2) */
         CREDO_VERUM (laqueus_pd_simplificare(pd_fibula, VIII, piscina,

@@ -1198,6 +1198,66 @@ diagramma_pd (
     redde VERUM;
 }
 
+/* codex planus? Systema rotationis (sedes 0..3 contra horologium):
+ * facies = orbitae sequentis(d) = sedes post alterum finem ossis d;
+ * planum iff V - E + F = 2, i.e. F = c + 2. Codex validus sed non
+ * planus (nodus virtualis, e.g. [[1,3,2,4],[2,5,3,6],[4,1,5,6]]: facies
+ * una) refutatur - invariantes et motus R2 sine facie planitiem
+ * praesumunt. ora 0-basata, bis quodque. */
+interior b32
+_pd_planus (
+    constans i32* ora,
+             i32  c,
+         Piscina* piscina)
+{
+    i32  n = IV * c;
+    i32* alter  = (i32*)piscina_allocare(piscina, (memoriae_index)(n
+        + I)
+        * magnitudo(i32));
+    i32* prima  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(II * c
+        + I) * magnitudo(i32));
+    b32* visa   = (b32*)piscina_allocare(piscina, (memoriae_index)(n
+        + I)
+        * magnitudo(b32));
+    i32 facies = ZEPHYRUM;
+    i32 d;
+
+    per (d = ZEPHYRUM; d < II * c; d++)
+    {
+        prima[d] = n;
+    }
+    per (d = ZEPHYRUM; d < n; d++)
+    {
+        visa[d] = FALSUM;
+        si (prima[ora[d]] == n)
+        {
+            prima[ora[d]] = d;
+        }
+        alioquin
+        {
+            alter[d]              = prima[ora[d]];
+            alter[prima[ora[d]]]  = d;
+        }
+    }
+    per (d = ZEPHYRUM; d < n; d++)
+    {
+        i32 e = d;
+
+        si (visa[d])
+        {
+            perge;
+        }
+        facies++;
+        dum (!visa[e])
+        {
+            visa[e]  = VERUM;
+            e        = IV * (alter[e] / IV) + (alter[e] % IV + I) % IV;
+        }
+    }
+    redde facies == c + II;
+}
+
 /* codex PD nodi (KnotTheory): ora 1..2c bis quaeque; infra X0 -> X2
  * (X2 = sequens X0), supra aut X3 -> X1 (positivus) aut X1 -> X3
  * (negativus). ora 0-basata et signa redduntur; FALSUM si invalidus aut
@@ -1286,7 +1346,7 @@ _pd_legere (
             redde FALSUM;
         }
     }
-    redde VERUM;
+    redde _pd_planus(*ora, c, piscina);
 }
 
 b32

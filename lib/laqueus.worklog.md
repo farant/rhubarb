@@ -342,3 +342,29 @@ opposite slots, S4 in/out validation dropped, S5 only one move, S6a/S6b
 one-crossing checks dropped singly (first test code failed BOTH checks, so a
 single-check plant survived - split into two codes), S7 R2 second edge not
 adjacent.
+
+## 2026-10-07 - review of 81aa0eef: planarity check, mirrored non-face test
+
+The reviewer found no bugs and checked the simplifier against its own PD
+toolkit: about 4,000 random planar diagrams up to 55 crossings, plus 1,000
+composites through face, non-face and clasp cores. It confirmed that R1 is
+always adjacent and that the R2-without-face argument holds for PLANAR codes.
+Two findings, both verified here and fixed:
+- **Non-planar codes were accepted.** `[[1,3,2,4],[2,5,3,6],[4,1,5,6]]` is
+  valid by every earlier check (labels, orientation, one component) but its
+  rotation system has 1 face, where planarity needs V - E + 2 = 5. It is a
+  virtual knot diagram. The simplifier "proved" some such codes unknots, and
+  both the non-face R2 argument and "c' == 0 = unknot" need planarity.
+  `_pd_legere` now ends with `_pd_planus`: count the face orbits of
+  next(d) = slot after the other end of d's edge, require F == c + 2.
+  Every caller (uncinus, Jones, Alexander, simplification) refuses non-planar
+  codes. All 250 table PDs pass; both valid one-crossing codes are planar
+  (F = 3), so the c == 1 shortcut is safe.
+- **Plant Q2 survived:** "R2 only when e's slot at j is even". The test
+  fictum had its core edges at slots (0,1) only. Its mirror (plane
+  reflection [a,b,c,d] -> [a,d,c,b]) puts them at (3,0). New test
+  `pd_fictum_speculum`: reduces 8 -> 6 with Jones J(3_1)(1/t)^2. Q2 now red.
+Plants: E1 (planarity check skipped) red. E2 (faces traced with the slot
+BEFORE instead of after) survives, and that is correct: sigma^-1 alpha traces
+the faces of the mirrored rotation system, which has the same count. It is
+an equivalent implementation, not a bug.
