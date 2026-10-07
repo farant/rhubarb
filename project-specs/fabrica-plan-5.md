@@ -73,11 +73,12 @@ listing is used for. Branches (spec §II.2): genuine (stays, named);
 house-wide check inside a subsystem gate (moves out or is scoped);
 membership-only (per-name A/X). Anything else -> Fran.
 
-- [ ] **Step 1:** Reading recorded in the aedilis worklog.
-- [ ] **Step 2: Failing test** per branch taken (aedilis test or
+- [x] **Step 1:** Reading recorded in the aedilis worklog. (It was
+  bin/compilator, not aedilis: recorded in `tools/compilator.worklog.md`.)
+- [x] **Step 2: Failing test** per branch taken (aedilis test or
   fabrica fumus): adding an unrelated header leaves toml's trace digest
   unchanged; adding a file the gate DOES depend on changes it.
-- [ ] **Step 3: Implement**; **plant:** the genuine enumeration removed
+- [x] **Step 3: Implement**; **plant:** the genuine enumeration removed
   -> the "file it depends on" case reuses (red). **Commit.**
 
 ### Task T3: the verdict runner in C (A1–A3)

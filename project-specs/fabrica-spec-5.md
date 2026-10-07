@@ -190,3 +190,15 @@ field (`lib/fabrica.c` judge and audit paths) - a new field was garbage
 migration count was a second literal (`IV`) at the call site - adding a
 migration without it would silently skip it; now derived from the array.
 
+**T2 (2026-10-06): directory enumerations.** Reading: all five D rows
+of porta_toml came from `bin/compilator` (its head key sealed the `.h`
+names of every -I root and of the source directory - shadowing), not
+from aedilis (`--enumerare` emits none; `--nexus-purus` / `--corpus`
+never run in this gate). Branch (c), membership only: the head key
+keeps the roots' paths; the full key adds, per header used, the
+existence of the same relative name in every other root (A/X noted by
+`filum_existit`); key version II. toml trace: D 5 -> 0. Live: a new
+unrelated header in include/ -> RECENS; `toml/probationes/latina.h`
+(shadows include/latina.h) -> STALUM naming it. compilator fumus IX/X
+added (X/X); plant (probes off) -> V (shadowing) and IX red.
+

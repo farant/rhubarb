@@ -18,6 +18,11 @@
 #   VII  compilatio fracta: exitus clang (1) et stderr transeunt;
 #        nihil conditum (iterum: clang iterum vocatur)
 #   VIII destinatio identica non rescribitur (inode idem)
+#   IX   liber lectionum PRAECISUS (fabrica plan 5 T2): nulla
+#        enumeratio radicis (D); caput in radice priore quaesitum (A) -
+#        obumbratio per NOMEN, non per directorium totum
+#   X    caput ALIENUM in radice additum: hit (clavis nomina radicis
+#        non sigillat; verdicta caput novum non tangit)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/compilator deest.
 set -u
@@ -101,6 +106,18 @@ ino1=$(stat -f '%i' "$B/o/fons.o")
 ino2=$(stat -f '%i' "$B/o/fons.o")
 if [ "$rc" -eq 0 ] && [ "$ino1" = "$ino2" ]; then echo "  VIII destinatio identica non rescripta OK"; else echo "  VIII FRACTUM (rc=$rc, inode $ino1 -> $ino2)"; cat "$B/err"; fracta=1; fi
 
+# IX: liber lectionum praecisus
+L="$B/liber"; rm -f "$L"
+FABRICA_LECTIONES="$RADIX/$L" "$C" "${VF[@]}" -c "$B/fixa/fons.c" -o "$B/o/fons.o" 2> "$B/err"; rc=$?
+if [ "$rc" -eq 0 ] && ! grep -q $'^D\t' "$L" && grep -q $'^A\t'"$B/fixa/radix_prior/caput.h\$" "$L"; then echo "  IX   liber: sine D, obumbratio per nomen OK"; else echo "  IX   FRACTUM (rc=$rc)"; grep -E $'^(D|A)\t' "$L" | head -5; fracta=1; fi
+
+# X: caput alienum additum -> hit
+n_x=$(numerus)
+printf '#define ALIENUM 1\n' > "$B/fixa/radix_posterior/alienum.h"
+"$C" "${VF[@]}" -c "$B/fixa/fons.c" -o "$B/o/fons.o" 2> "$B/err"; rc=$?
+if [ "$rc" -eq 0 ] && [ "$(numerus)" -eq "$n_x" ]; then echo "  X    caput alienum additum: hit      OK"; else echo "  X    FRACTUM (rc=$rc, clang $n_x -> $(numerus))"; cat "$B/err"; fracta=1; fi
+rm -f "$B/fixa/radix_posterior/alienum.h"
+
 if [ "$fracta" -ne 0 ]; then echo "fumus compilatoris: FRACTUM"; exit 1; fi
-echo "fumus compilatoris: sanum (VIII/VIII)"
+echo "fumus compilatoris: sanum (X/X)"
 exit 0
