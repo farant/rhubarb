@@ -74,7 +74,9 @@ Leges chartae:
   AemulatorModi.rotula_sagittis (?1007), terminale_titulus,
   TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
   focum, colores honorat; D7c: AemulatorModi.schirmus_inversus
-  (DECSCNM ?5), DECCOLM minimum (sub ?40 delet,
+  (DECSCNM ?5; terminale colores nativos permutat), terminale
+  ornamenta (sublineae V, transfixa, superlinea, crassum fictum;
+  TerminaleApplicatio.ornamenta_pixelorum), DECCOLM minimum (sub ?40 delet,
   regionem et cursorem restituit, latitudo manet); D7a: DECXCPR, DECDSR, DECID, DECRQSS,
   acervus titulorum, DECSCUSR servatus; codificator legacy Ctrl-[/I/M
   = C0; D6c: fenestra_macos focum/defocum et

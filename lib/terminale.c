@@ -266,8 +266,18 @@ litteram_legibilem (
     redde color_rgb(novum);
 }
 
+/* DECSCNM ?5 (D7c): colores NATIVI permutantur, ut Ghostty
+ * (render.zig reverse_colors); expliciti et cursor manent */
+interior b32
+schirmus_inversus (
+    constans TerminaleContextus* tc)
+{
+    redde aemulator_modi(aemulator_hospes_aemulator(tc->app->hospes))
+        .schirmus_inversus;
+}
+
 interior ColorMandati
-littera_nativa (
+littera_cruda (
     constans TerminaleContextus* tc)
 {
     redde colorem_dynamicum(tc, AEMULATOR_COLOR_LITTERAE,
@@ -275,11 +285,27 @@ littera_nativa (
 }
 
 interior ColorMandati
-fundus_nativus (
+fundus_crudus (
     constans TerminaleContextus* tc)
 {
     redde colorem_dynamicum(tc, AEMULATOR_COLOR_FUNDI,
         tc->fundus_thematis, COLOR_BACKGROUND);
+}
+
+interior ColorMandati
+littera_nativa (
+    constans TerminaleContextus* tc)
+{
+    redde schirmus_inversus(tc) ? fundus_crudus(tc)
+                                : littera_cruda(tc);
+}
+
+interior ColorMandati
+fundus_nativus (
+    constans TerminaleContextus* tc)
+{
+    redde schirmus_inversus(tc) ? littera_cruda(tc)
+                                : fundus_crudus(tc);
 }
 
 /* color stili -> color mandati: tabula viva aemulatoris (OSC 4),
@@ -316,6 +342,106 @@ colorem_resolvere (
  * Figura
  * ================================================== */
 
+/* linea unius pixeli in (x0 ... x0 + latitudo - 1, y): pixela ubi
+ * ((x + phasis) % periodus) < plenum, cursus continui ut rectangula;
+ * x ABSOLUTUS, ut forma trans cellulas continuetur */
+interior vacuum
+lineam_formatam (
+         Mandata* m,
+             s32  x0,
+             s32  y,
+             s32  latitudo,
+             s32  periodus,
+             s32  plenum,
+             s32  phasis,
+    ColorMandati  color)
+{
+    Fines f;
+      s32 k;
+      s32 initium;
+
+    f.y         = y;
+    f.altitudo  = I;
+    initium     = -I;
+    per (k = ZEPHYRUM; k <= latitudo; k++)
+    {
+        si (k < latitudo && (x0 + k + phasis) % periodus < plenum)
+        {
+            si (initium < ZEPHYRUM)
+            {
+                initium = k;
+            }
+            perge;
+        }
+        si (initium >= ZEPHYRUM)
+        {
+            f.x         = x0 + initium;
+            f.latitudo  = k - initium;
+            mandata_rectangulum(m, f, color, VERUM);
+            initium     = -I;
+        }
+    }
+}
+
+/* ornamenta cellulae ut pixela (D7c): sublinea (formae V) colore
+ * sublineae aut litterae; linea transfixa et superlinea colore
+ * litterae */
+interior vacuum
+ornamenta_pingere (
+                      Mandata* m,
+    constans StilusTerminalis* st,
+                          s32  x0,
+                          s32  y0,
+                          s32  latitudo,
+                          s32  ch,
+                 ColorMandati  littera,
+                 ColorMandati  sublinea)
+{
+    s32 infima;
+
+    infima = y0 + ch - I;
+    commutatio (st->sublinea)
+    {
+        casus STILUS_SUBLINEA_SIMPLEX:
+            lineam_formatam(m, x0, infima, latitudo, I, I, ZEPHYRUM,
+                sublinea);
+            frange;
+        casus STILUS_SUBLINEA_DUPLEX:
+            lineam_formatam(m, x0, infima, latitudo, I, I, ZEPHYRUM,
+                sublinea);
+            lineam_formatam(m, x0, infima - II, latitudo, I, I,
+                ZEPHYRUM,
+                sublinea);
+            frange;
+        casus STILUS_SUBLINEA_UNDULATA:
+            /* binae columnae imae, binae superiores */
+            lineam_formatam(m, x0, infima, latitudo, IV, II, ZEPHYRUM,
+                sublinea);
+            lineam_formatam(m, x0, infima - I, latitudo, IV, II, II,
+                sublinea);
+            frange;
+        casus STILUS_SUBLINEA_PUNCTATA:
+            lineam_formatam(m, x0, infima, latitudo, II, I, ZEPHYRUM,
+                sublinea);
+            frange;
+        casus STILUS_SUBLINEA_LINEOLATA:
+            lineam_formatam(m, x0, infima, latitudo, VI, III, ZEPHYRUM,
+                sublinea);
+            frange;
+        ordinarius:
+            frange;
+    }
+    si ((st->ornamenta & STILUS_TRANSFIXUM) != ZEPHYRUM)
+    {
+        lineam_formatam(m, x0, y0 + ch / II, latitudo, I, I, ZEPHYRUM,
+            littera);
+    }
+    si ((st->ornamenta & STILUS_SUPERLINEA) != ZEPHYRUM)
+    {
+        lineam_formatam(m, x0, y0, latitudo, I, I, ZEPHYRUM, littera);
+    }
+}
+
 /* <purus/> schirmum: VISUS hospitis, cellula per cellulam */
 interior vacuum
 terminale_figura (
@@ -344,9 +470,10 @@ terminale_figura (
     a   = aemulator_hospes_aemulator(tc->app->hospes);
     cw  = (s32)tc->app->cellula_latitudo;
     ch  = (s32)tc->app->cellula_altitudo;
-    /* fundus mutatus (OSC 11): superficies tota */
+    /* fundus non thematis (OSC 11, ?5): superficies tota */
     fundus = fundus_nativus(tc);
-    si (fundus.genus == COLOR_MANDATI_RGBA)
+    si (   fundus.genus != COLOR_MANDATI_THEMA
+        || fundus.valor != (i32)COLOR_BACKGROUND)
     {
         f.x         = ZEPHYRUM;
         f.y         = ZEPHYRUM;
@@ -398,13 +525,37 @@ terminale_figura (
                 f.altitudo = ch;
                 mandata_rectangulum(m, f, fundus, VERUM);
             }
-            si (   cellula.graphema.mensura > ZEPHYRUM
-                && (cellula.stilus.ornamenta & STILUS_INVISIBILE)
-                    == ZEPHYRUM)
+            si ((cellula.stilus.ornamenta & STILUS_INVISIBILE)
+                != ZEPHYRUM)
+            {
+                perge;   /* occultum: nec ornamenta (longitudo) */
+            }
+            si (cellula.graphema.mensura > ZEPHYRUM)
             {
                 mandata_textus(m, (s32)x * cw, (s32)y * ch,
                     cellula.graphema,
                     ZEPHYRUM, littera);
+                /* crassum fictum: fons unius ponderis */
+                si (   tc->app->ornamenta_pixelorum
+                    && (cellula.stilus.ornamenta & STILUS_CRASSUM)
+                       != ZEPHYRUM)
+                {
+                    mandata_textus(m, (s32)x * cw + I, (s32)y * ch,
+                        cellula.graphema, ZEPHYRUM, littera);
+                }
+            }
+            si (tc->app->ornamenta_pixelorum)
+            {
+                ornamenta_pingere(m, &cellula.stilus, (s32)x * cw,
+                    (s32)y * ch,
+                    cellula.latitudo == AEMULATOR_LATA ? II * cw : cw,
+                    ch, littera,
+                    cellula.stilus.color_sublineae.genus
+                        == STILUS_COLOR_NATIVUS
+                        ? littera
+                        : colorem_resolvere(tc,
+                              &cellula.stilus.color_sublineae, FALSUM,
+                              FALSUM));
             }
         }
     }
@@ -803,10 +954,11 @@ terminale_applicatio_aedificare (
         redde FALSUM;
     }
     memset(app, ZEPHYRUM, magnitudo(TerminaleApplicatio));
-    app->piscina           = piscina;
-    app->intern            = intern;
-    app->cellula_latitudo  = CELLULA_LATITUDO;
-    app->cellula_altitudo  = CELLULA_ALTITUDO;
+    app->piscina              = piscina;
+    app->intern               = intern;
+    app->cellula_latitudo     = CELLULA_LATITUDO;
+    app->cellula_altitudo     = CELLULA_ALTITUDO;
+    app->ornamenta_pixelorum  = VERUM;
     tc = (TerminaleContextus*)piscina_conari_allocare(piscina,
         magnitudo(TerminaleContextus));
     si (!tc)

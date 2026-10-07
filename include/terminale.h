@@ -57,6 +57,10 @@ nomen structura {
                     i32  cellula_latitudo;  /* pixela nostra */
                     i32  cellula_altitudo;
                  vacuum* contextus;         /* privatum (D6b) */
+    /* D7c: sublineae, linea transfixa, superlinea, crassum fictum ut
+     * pixela (ordinarie VERUM); geminus terminalis FALSUM - tessellatio
+     * lineas in cellulas vertit */
+                    b32 ornamenta_pixelorum;
 } TerminaleApplicatio;
 
 /* Argumenta infantis: -fumus -> /bin/sh scriptum breve (imago

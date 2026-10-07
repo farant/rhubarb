@@ -707,6 +707,157 @@ contrastum_probare (vacuum)
     terminale_claudere(&mc.app);
 }
 
+/* rectangulum unius pixeli altitudinis ad (x, y) latitudinis datae -
+ * linea ornamenti (D7c) */
+interior Mandatum*
+linea_ad (
+    Machina* mc,
+        s32  x,
+        s32  y,
+        s32  latitudo)
+{
+    Mandatum* md;
+         i32  i;
+
+    per (i = ZEPHYRUM; i < mandata_numerus(mc->lf->mandata); i++)
+    {
+        md = mandata_obtinere(mc->lf->mandata, i);
+        si (   md->genus          == MANDATUM_RECTANGULUM
+            && md->fines.x        == x
+            && md->fines.y        == y
+            && md->fines.latitudo == latitudo
+            && md->fines.altitudo == I)
+        {
+            redde md;
+        }
+    }
+    redde NIHIL;
+}
+
+/* textus ad (x, y) numeratus (crassum fictum = bis, D7c) */
+interior i32
+textus_numerus (
+    Machina* mc,
+        s32  x,
+        s32  y)
+{
+    Mandatum* md;
+         i32  i;
+         i32  n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < mandata_numerus(mc->lf->mandata); i++)
+    {
+        md = mandata_obtinere(mc->lf->mandata, i);
+        si (   md->genus   == MANDATUM_TEXTUS
+            && md->fines.x == x
+            && md->fines.y == y)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* IX: ornamenta ut pixela (D7c, ambulatio vttest: sublinea non
+ * pingebatur). Cellula VI x VIII: sublinea ima linea (VII), duplex
+ * VII et V, undulata binae columnae inter VII et VI, punctata pixelum
+ * alternum, lineolata III/III, transfixa IV, superlinea 0; phasis ex x
+ * absoluto. Crassum fictum: littera iterum uno pixelo dextrorsum. */
+interior vacuum
+ornamenta_probare (vacuum)
+{
+         Machina  mc;
+        Mandatum* md;
+    ImagoFructus  lecta;
+
+    imprimere("\n--- IX: ornamenta (D7c) ---\n");
+    CREDO_VERUM(machinam_effusione(&mc,
+        "\x1B[4mA\x1B[0m\x1B[9mB\x1B[0m\x1B[53mC\x1B[0m\x1B[4:2mD"
+        "\x1B[4:3mEE\x1B[4:4mFF\x1B[4:5mGG\x1B[0m\x1B[1mH\x1B[0m"
+        "\x1B[4;58;2;255;0;0mI\x1B[0m\x1B[8;4mJ\x1B[0m\x1B[5;1H"));
+    /* A: sublinea simplex, colore litterae (thema) */
+    md = linea_ad(&mc, ZEPHYRUM, VII, VI);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_THEMA,
+        (i32)COLOR_TEXT));
+    /* B: transfixa; C: superlinea */
+    CREDO_VERUM(linea_ad(&mc, VI, IV, VI) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XII, ZEPHYRUM, VI) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, VI, VII, VI) == NIHIL);
+    /* D: duplex */
+    CREDO_VERUM(linea_ad(&mc, XVIII, VII, VI) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XVIII, V, VI) != NIHIL);
+    /* EE (x XXIV-XXXV): unda continua trans cellulas */
+    CREDO_VERUM(linea_ad(&mc, XXIV, VII, II) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XXVI, VI, II) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XXVIII, VII, II) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XXX, VI, II) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XXXII, VII, II) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XXX, VII, II) == NIHIL);
+    /* FF (x XXXVI-XLVII): puncta */
+    CREDO_VERUM(linea_ad(&mc, XXXVI, VII, I) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XXXVIII, VII, I) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, XXXVII, VII, I) == NIHIL);
+    /* GG (x XLVIII-LIX): lineolae III */
+    CREDO_VERUM(linea_ad(&mc, XLVIII, VII, III) != NIHIL);
+    CREDO_VERUM(linea_ad(&mc, LIV, VII, III) != NIHIL);
+    /* H: crassum fictum - bis, secundum uno pixelo dextrorsum */
+    CREDO_AEQUALIS_I32(textus_numerus(&mc, LX, ZEPHYRUM), I);
+    CREDO_AEQUALIS_I32(textus_numerus(&mc, LXI, ZEPHYRUM), I);
+    /* I: color sublineae proprius (SGR 58), etiam in pixelis */
+    md = linea_ad(&mc, LXVI, VII, VI);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(0xFF, ZEPHYRUM, ZEPHYRUM)));
+    CREDO_VERUM(ludus_fenestra_imaginem_scribere(mc.lf, VIA_IMAGINIS));
+    lecta = imago_caricare_ex_file(VIA_IMAGINIS, piscina);
+    CREDO_VERUM(lecta.successus);
+    CREDO_VERUM(lecta.successus && pixelum_est(&lecta.imago, LXVII, VII,
+        0xFF, ZEPHYRUM, ZEPHYRUM));
+    /* J: occultum - nec sublinea */
+    CREDO_VERUM(linea_ad(&mc, LXXII, VII, VI) == NIHIL);
+    /* geminus terminalis: ornamenta pixelorum remota */
+    mc.app.ornamenta_pixelorum = FALSUM;
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_VERUM(linea_ad(&mc, ZEPHYRUM, VII, VI) == NIHIL);
+    CREDO_VERUM(linea_ad(&mc, VI, IV, VI) == NIHIL);
+    CREDO_AEQUALIS_I32(textus_numerus(&mc, LXI, ZEPHYRUM), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(textus_numerus(&mc, LX, ZEPHYRUM), I);
+    terminale_claudere(&mc.app);
+}
+
+/* X: schirmus inversus ?5 (D7c; Ghostty render.zig reverse_colors):
+ * colores NATIVI permutantur, superficies tota fundo novo; colores
+ * expliciti manent; ?5l restituit */
+interior vacuum
+inversum_probare (vacuum)
+{
+     Machina  mc;
+    Mandatum* md;
+
+    imprimere("\n--- X: schirmus inversus (D7c) ---\n");
+    CREDO_VERUM(machinam_effusione(&mc,
+        "x\x1B[41my\x1B[0m\x1B[?5h"));
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_THEMA,
+        (i32)COLOR_BACKGROUND));
+    md = mandatum_ad(&mc, MANDATUM_RECTANGULUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(md && md->fines.latitudo == LXXX * CELL_X
+                   && md->fines.altitudo == XXIV * CELL_Y
+                   && color_est(md->color, COLOR_MANDATI_THEMA,
+                          (i32)COLOR_TEXT));
+    md = mandatum_ad(&mc, MANDATUM_RECTANGULUM, CELL_X, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_RGBA,
+        pixelum_rgb(0xCD, ZEPHYRUM, ZEPHYRUM)));
+    terminale_claudere(&mc.app);
+    CREDO_VERUM(machinam_effusione(&mc, "x\x1B[?5h\x1B[?5l"));
+    md = mandatum_ad(&mc, MANDATUM_TEXTUS, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(md && color_est(md->color, COLOR_MANDATI_THEMA,
+        (i32)COLOR_TEXT));
+    md = mandatum_ad(&mc, MANDATUM_RECTANGULUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(md == NIHIL || md->fines.latitudo != LXXX * CELL_X);
+    terminale_claudere(&mc.app);
+}
+
 s32
 principale (vacuum)
 {
@@ -724,6 +875,8 @@ principale (vacuum)
     murem_probare();
     titulum_colores_probare();
     contrastum_probare();
+    ornamenta_probare();
+    inversum_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();

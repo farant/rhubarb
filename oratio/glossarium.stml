@@ -1509,6 +1509,9 @@
   <vocabulum lemma="opacitas" lingua="latina" classis="substantivum" nota="opacitas (Plin.): umbra, obscuritas - hic quanta littera obscura fundum tegit (Ghostty faint-opacity); sedes OBSCURUM_OPACITAS (lib/terminale.c)">
     <forma textus="opacitas" casus="nominativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="phasis" lingua="latina" classis="substantivum" nota="Gr. phasis (Plin., de luna): apparitio, gradus cycli - hic offset formae lineae (sublinea undulata, punctata, lineolata) ut forma trans cellulas continuetur; sedes lineam_formatam (lib/terminale.c)">
+    <forma textus="phasis" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="synchronia" lingua="latina" classis="substantivum" nota="Neo-Lat. ex Gr. syn- + chronos (ut synchronismus): simultas temporis - modus ?2026 (synchronized output: programma quadrum totum ante pictionem perficit); sedes MODUS_SYNCHRONIA (lib/aemulator.c, aemulator-plan D2)">
     <forma textus="synchronia" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="synchroniae" casus="genitivus" numerus="singularis" genus="femininum"/>

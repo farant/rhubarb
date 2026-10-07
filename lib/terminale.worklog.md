@@ -127,3 +127,43 @@ PNG, ratio 1.0 vs 3.0) - gray 250, yellow, cyan and #999999 unreadable
 before, all readable after.
 
 Glossary: contrastus, legibilis, opacitas.
+
+
+## 2026-10-07 — D7c: decorations and reverse screen (vttest walk)
+
+vttest's rendition screen showed "underline" identical to "vanilla":
+terminale drew only colours, inverse, faint and conceal although the
+core stores every SGR attribute. Now (window only):
+- underline in all five forms at the bottom pixel row: double = rows
+  ch-1 and ch-3, curly = 2-px runs alternating rows ch-1/ch-2, dotted =
+  every other pixel, dashed = 3 on / 3 off. Patterns take their phase
+  from ABSOLUTE x (`lineam_formatam(..., periodus, plenum, phasis)`), so
+  a wave runs on across cells. First draft shifted the curly upper row
+  by passing x0+2, which moved the pixels instead of the phase - the
+  test caught it; phase is now its own argument.
+- underline colour = SGR 58 if set, else the text colour after the
+  contrast floor; strike (row ch/2) and overline (row 0) use the text
+  colour.
+- bold: the 6x8 font has one weight, so the glyph is drawn again one
+  pixel right (plus the existing bright palette for 0-7). Its spill
+  into the next cell's first column is painted over when that cell has
+  its own background - harmless at this size.
+- concealed cells (SGR 8) get no decorations either: an underline
+  would give away the hidden text's length.
+- `TerminaleApplicatio.ornamenta_pixelorum` (Fran approved; default
+  VERUM, the twin sets FALSUM): tessellatio turns a horizontal mandate
+  line into box-drawing cells, so in the twin an underline would erase
+  its letter. Twin decorations would need SGR on tessera cells - parked.
+- DECSCNM ?5: `littera_nativa` / `fundus_nativus` swap when
+  `aemulator_modi().schirmus_inversus` (Ghostty swaps only the
+  defaults; explicit colours and the cursor stay). The surface fill now
+  happens whenever the native background is not the theme background
+  (was: only after OSC 11), otherwise the window's own theme fill would
+  show through.
+Parked: italic (mandates cannot shear text), blink (needs a redraw
+timer). Tests IX/X; eight plants caught.
+Lint note: the local `ima` (bottom row) was a new word; a glossary
+entry `imus` turned the oratio oracle gate red (subject precision) -
+the glossary is oratio's FIRST lexical source and `imus` is also
+"we go" (eo). Renamed to `infima` (WORDS knows it) instead; a house
+gloss must never shadow a real Latin form.

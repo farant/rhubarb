@@ -123,6 +123,9 @@ principale (
         fprintf(stderr, "terminale_terminalis: concha non generata\n");
         redde I;
     }
+    /* tessellatio lineas in cellulas verteret: sublinea litteram
+     * deleret (D7c) */
+    app.ornamenta_pixelorum = FALSUM;
     lt = ludus_tessera_creare(piscina, app.d, app.figurae, ZEPHYRUM,
         NIHIL, NIHIL, opus, CELLULA_X, CELLULA_Y);
     rivus = rivus_creare(piscina, CELLULA_X, CELLULA_Y);
