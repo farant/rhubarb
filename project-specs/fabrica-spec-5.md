@@ -481,3 +481,27 @@ closures once per tree state through a batch aedilis mode (…4WYGT,
 (…JFQ99, ~65 s). Together ~250 of 422 s. T10/T11 (the ledger and the
 verdict) proceed independently: a reused pythonica verdict costs none of
 it.
+
+**T10 (2026-10-07): the Python read ledger.** `pythonica/lectiones.py`
+writes the same ledger as lib/lectiones.c, same line forms, same file
+(`FABRICA_LECTIONES`, re-read on every note), `/dev/` skipped, paths as
+given. `instituere()` once (an audit hook cannot be removed - tests set
+it in a CHILD process):
+- audit hook: `open` -> L or A for reads (existence through the REAL
+  stat, since the hook runs before the open), S for writes; `os.listdir`
+  and `os.scandir` -> D;
+- wrappers for what CPython does not audit: `os.stat` and `os.lstat`
+  (X or A) - the os.path family (exists, isfile, isdir, getmtime) looks
+  `os.stat` up at call time and is covered; `os.environ` becomes a dict
+  subclass that notes E on explicit lookups (get, [], in) and mirrors
+  writes into the real environ (putenv).
+A whole copy of the environment (`dict(os.environ)`, `.copy()`) notes
+NOTHING, as C's environ is never noted: the subclass leaves `__iter__`
+and `keys` alone, so CPython copies it by its fast path without
+`__getitem__`. Otherwise every `env=dict(os.environ, ...)` in silva.py
+would key the verdict on TERM_SESSION_ID and friends. Test (pythonica,
+child process): eleven assertions over every channel plus `/dev/` and
+the copy. Plants: open ignored -> the three open assertions red; stat
+wrapper off -> the two stat ones; environ off -> the two E ones;
+`__iter__`/`keys` overridden on the subclass -> the copy assertion red.
+Not yet wired into the gate: T11.

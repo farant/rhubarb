@@ -168,12 +168,12 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
 
 ### Task T10: the Python read ledger (A4)
 
-- [ ] **Step 1: Failing test** (pythonica): a harness run that opens,
+- [x] **Step 1: Failing test** (pythonica): a harness run that opens,
   lists, stats a file and reads an environment variable writes L, D,
   X/A and E lines in the `lib/lectiones.c` format.
-- [ ] **Step 2: Implement:** `sys.addaudithook` (open, os.listdir,
+- [x] **Step 2: Implement:** `sys.addaudithook` (open, os.listdir,
   os.scandir) + recording wrappers (`os.environ`, stat family).
-- [ ] **Step 3: Plants**, one per channel (hook off for open; wrapper
+- [x] **Step 3: Plants**, one per channel (hook off for open; wrapper
   off for stat; wrapper off for environ) -> red. **Commit.**
 
 ### Task T11: pythonica migrated

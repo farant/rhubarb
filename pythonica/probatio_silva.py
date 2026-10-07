@@ -2471,6 +2471,62 @@ credo(len(_d) == 1 and 'lexicon' in _d[0],
       'argumenta catenarum: mandatum a PORTAE discors nominatur',
       causa=repr(_d))
 
+# LIBER LECTIONUM PYTHONIS (fabrica plan 5 T10, A4): pythonica/lectiones.py
+# - auditus (open, os.listdir, os.scandir) + involucra (os.stat cum
+# familia os.path, os.environ) lineas formae lib/lectiones.c scribunt.
+# Filius: auditus semel positus removeri nequit.
+print('\n--- liber lectionum pythonis (T10) ---')
+import tempfile  # noqa: E402
+with tempfile.TemporaryDirectory() as _ll:
+    _ll_liber = os.path.join(_ll, 'liber.tsv')
+    _ll_f = os.path.join(_ll, 'fons.txt')
+    _ll_d = os.path.join(_ll, 'dir')
+    os.mkdir(_ll_d)
+    open(_ll_f, 'w').write('x\n')
+    _ll_scriptum = (
+        'import os, sys\n'
+        'sys.path.insert(0, %r)\n'
+        'import lectiones\n'
+        'lectiones.instituere()\n'
+        'open(%r).read()\n'
+        'try:\n    open(%r)\nexcept OSError:\n    pass\n'
+        'os.listdir(%r)\n'
+        'list(os.scandir(%r))\n'
+        'os.path.exists(%r)\n'
+        'os.path.isfile(%r)\n'
+        'os.environ.get("LECTIONES_PROBATIO_ADEST")\n'
+        'os.getenv("LECTIONES_PROBATIO_ABEST")\n'
+        'open(%r, "w").write("y")\n'
+        'open("/dev/null").read()\n'
+        'dict(os.environ); os.environ.copy()\n'
+        % (os.path.join(RADIX, 'pythonica'), _ll_f,
+           os.path.join(_ll, 'absens.txt'), _ll_d, _ll_d, _ll_f,
+           os.path.join(_ll, 'nusquam'), os.path.join(_ll, 'scriptum.txt')))
+    _ll_amb = dict(os.environ, FABRICA_LECTIONES=_ll_liber,
+                   LECTIONES_PROBATIO_ADEST='valor')
+    _ll_amb.pop('LECTIONES_PROBATIO_ABEST', None)
+    _ll_r = subprocess.run([sys.executable, '-B', '-c', _ll_scriptum],
+                           env=_ll_amb, capture_output=True, text=True)
+    _ll_lineae = (open(_ll_liber).read().splitlines()
+                  if os.path.exists(_ll_liber) else [])
+    for _ll_exspectata, _ll_titulus in (
+            ('L\t' + _ll_f, 'open lectio -> L'),
+            ('A\t' + os.path.join(_ll, 'absens.txt'), 'open absens -> A'),
+            ('D\t' + _ll_d, 'os.listdir -> D'),
+            ('X\t' + _ll_f, 'os.path.exists -> X (os.stat involutum)'),
+            ('A\t' + os.path.join(_ll, 'nusquam'), 'os.path.isfile absens -> A'),
+            ('E\tLECTIONES_PROBATIO_ADEST\tvalor', 'os.environ.get -> E cum valore'),
+            ('E\tLECTIONES_PROBATIO_ABEST', 'os.getenv absens -> E sine valore'),
+            ('S\t' + os.path.join(_ll, 'scriptum.txt'), 'open scriptura -> S')):
+        credo(_ll_exspectata in _ll_lineae, 'liber pythonis: ' + _ll_titulus,
+              causa=_ll_r.stderr + '\n'.join(_ll_lineae[-12:]))
+    credo(not any('/dev/' in l for l in _ll_lineae),
+          'liber pythonis: /dev/ non notatur (machina, non ingressus)')
+    credo(_ll_lineae.count('D\t' + _ll_d) >= 2,
+          'liber pythonis: os.scandir -> D quoque')
+    credo(not any(l.startswith('E\tPATH') for l in _ll_lineae),
+          'liber pythonis: copia ambitus tota (dict, copy) nihil notat')
+
 credo((os.path.getsize(_TEMPORA_VERA) if os.path.exists(_TEMPORA_VERA)
        else -1) == _tempora_vera_ante,
       'tempora vera (build/portae/tempora.tsv) a probationibus intacta')
