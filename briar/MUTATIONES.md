@@ -19,6 +19,12 @@ Leges chartae:
 
 ## inedita
 
+- corpus: imagines quadrorum (screenshots): `tabula_pixelorum_in_imaginem`
+  (tabula_pixelorum.h nunc imago_typus.h includit) et
+  `ludus_fenestra_imaginem_scribere` (quadrum ultimum in PNG; etiam sine
+  fenestra in tabula nuda); applicationes pictor/scriba/vicus optionem
+  `-imago <via>` accipiunt.
+
 - corpus: `aemulator_hospes` nova (hospes emulatoris, aemulator-plan
   B4): nucleus + pseudoterminale + pulsus - effusio infantis in
   nucleum, responsa et initus per caudam (pars responsis reservata),

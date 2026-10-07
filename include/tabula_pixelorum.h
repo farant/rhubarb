@@ -20,6 +20,7 @@
 
 #include "latina.h"
 #include "chorda.h"
+#include "imago_typus.h"
 
 
 /* ==================================================
@@ -241,5 +242,17 @@ tabula_pixelorum_ad_fenestram (
             Piscina* piscina,
                 i32  fenestra_latitudo,
                 i32  fenestra_altitudo);
+
+/* Pixela tabulae in imaginem RGBA (octeti R, G, B, A per
+ * translationes - ordo octetorum machinae non refert): latitudo x
+ * altitudo TABULAE ipsius (non fenestrae, non scala). Pixela ex
+ * piscina copiantur. FALSUM si argumentum NIHIL aut memoria deficit
+ * (imago tunc intacta). Imagines quadrorum (screenshots) - vide
+ * ludus_fenestra_imaginem_scribere. */
+b32
+tabula_pixelorum_in_imaginem (
+    constans TabulaPixelorum* tabula,
+                     Piscina* piscina,
+                       Imago* imago);
 
 #endif /* TABULA_PIXELORUM_H */

@@ -94,4 +94,14 @@ ludus_fenestra_currere (
          Fenestra* fenestra,
               i32  quadra_maxima);
 
+/* Quadrum ultimum (tabulam) in plagulam PNG scribere - pixela ipsa
+ * quae fenestrae praesentata sunt aut praesentarentur (etiam sine
+ * fenestra, in tabula_pixelorum_creare_nuda). FALSUM si nullum
+ * quadrum adhuc aut scriptio fracta. Memoria ex piscina quadri
+ * (quadro proximo vacatur). */
+b32
+ludus_fenestra_imaginem_scribere (
+    constans LudusFenestra* lf,
+        constans character* via);
+
 #endif /* LUDUS_FENESTRA_H */

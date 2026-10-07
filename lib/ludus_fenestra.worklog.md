@@ -63,3 +63,26 @@ Test: `probatio_ludus_fenestra` asserts the wait (0, then CCC). Plants:
 always 0 (= the old spin) and always quies (first frame delayed), both
 caught. The loop's USE of the wait needs a real window - covered by the
 measurement and Fran's look, not headlessly.
+
+## 2026-10-06 — screenshots of frames (Fran: "might be a bit of an oversight")
+
+fenestra draws in SOFTWARE: every frame is a TabulaPixelorum (RGBA
+packed `a<<24|b<<16|g<<8|r`) handed to fenestra_praesentare_pixela, so a
+screenshot is that buffer written out - no Screen Recording permission,
+no dependence on the window being visible. Added (Fran approved the
+draft): `tabula_pixelorum_in_imaginem` (pure; channels by SHIFTS, not
+memcpy - a byte-order plant is caught), `ludus_fenestra_imaginem_scribere`
+(last frame -> PNG, from the frame piscina; FALSUM before any frame or
+on a failed write), and `-imago <path>` in apps pictor/scriba/vicus
+(written after the frame loop; with -fumus = frame 30).
+
+Headless for free: `tabula_pixelorum_creare_nuda` + ludus_fenestra_creare
++ `ludus_quadrum` renders an app with NO window (probatio_ludus_imago
+writes build/probatio_ludus_imago_pictor.png). Claude can open the PNG.
+First look: pictor's canvas sits with its top-left off-screen (only the
+bottom/right border visible) - either pictor's real initial pan or a
+headless artifact; the real-window smoke run (-fumus -imago) decides.
+
+Not covered: the macOS composite (title bar, Retina scaling) - if ever
+needed, fenestra_numerus_nativus + `screencapture -l<id>` (permission
+prompt). 6 plants caught.

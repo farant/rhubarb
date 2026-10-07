@@ -27,21 +27,32 @@ principale (
       integer   argc,
     character** argv)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                Volumen* vol;
-       PictorApplicatio  app;
-               Fenestra* fenestra;
-        TabulaPixelorum* tabula;
-          LudusFenestra* lf;
-   FenestraConfiguratio  cfg;
-                    b32  fumus;
-                    s32  exitus;
+                                    Piscina* piscina;
+                        InternamentumChorda* intern;
+                                    Volumen* vol;
+                           PictorApplicatio  app;
+                                   Fenestra* fenestra;
+                            TabulaPixelorum* tabula;
+                              LudusFenestra* lf;
+                       FenestraConfiguratio  cfg;
+                                        b32  fumus;
+                                        s32  exitus;
+                         constans character* via_imaginis;
+                                        s32  k;
 
     piscina = piscina_generare_dynamicum("pictor", IV * M * M);
     si (!piscina)
     {
         redde I;
+    }
+    /* -imago <via>: quadrum ultimum in PNG (screenshot) */
+    via_imaginis = NIHIL;
+    per (k = I; k + I < (s32)argc; k++)
+    {
+        si (strcmp(argv[k], "-imago") == ZEPHYRUM)
+        {
+            via_imaginis = argv[k + I];
+        }
     }
     intern = internamentum_creare(piscina);
     thema_initiare();
@@ -84,6 +95,13 @@ principale (
     }
     exitus = ludus_fenestra_currere(lf, fenestra,
                                     fumus ? QUADRA_FUMI : ZEPHYRUM);
+    si (   via_imaginis
+        && !ludus_fenestra_imaginem_scribere(lf, via_imaginis))
+    {
+        fprintf(stderr, "pictor: imago non scripta: %s\n",
+            via_imaginis);
+        exitus = I;
+    }
     fenestra_destruere(fenestra);
     volumen_claudere(vol);
     piscina_destruere(piscina);

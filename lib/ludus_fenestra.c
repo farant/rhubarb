@@ -1,6 +1,7 @@
 /* ludus_fenestra.c - glutinum fenestrae */
 
 #include "ludus_fenestra.h"
+#include "imago_png.h"
 #include "thema.h"
 #include "color.h"
 
@@ -204,4 +205,25 @@ ludus_fenestra_currere (
               (long)lf->mensurae.ms_delineandi,
               (long)lf->mensurae.ms_quadri_maximum);
     redde ZEPHYRUM;
+}
+
+b32
+ludus_fenestra_imaginem_scribere (
+    constans LudusFenestra* lf,
+        constans character* via)
+{
+         Imago imago;
+    PngFructus fructus;
+
+    si (!lf || !via || lf->mensurae.quadra == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (!tabula_pixelorum_in_imaginem(lf->tabula, lf->piscina_quadri,
+            &imago))
+    {
+        redde FALSUM;
+    }
+    fructus = imago_png_scribere(&imago, via, lf->piscina_quadri);
+    redde fructus.successus;
 }

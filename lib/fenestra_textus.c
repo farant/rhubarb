@@ -435,3 +435,41 @@ tabula_pixelorum_ad_fenestram (
     tabula->fenestra_altitudo  = fenestra_altitudo;
     redde VERUM;
 }
+
+b32
+tabula_pixelorum_in_imaginem (
+    constans TabulaPixelorum* tabula,
+                     Piscina* piscina,
+                       Imago* imago)
+{
+     i8* octeti;
+    i32  n;
+    i32  i;
+    i32  p;
+
+    si (   !tabula || !piscina || !imago || !tabula->pixela
+        || tabula->latitudo <= ZEPHYRUM || tabula->altitudo <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    n       = tabula->latitudo * tabula->altitudo;
+    octeti  = (i8*)piscina_conari_allocare(piscina,
+        (memoriae_index)n * IV);
+    si (!octeti)
+    {
+        redde FALSUM;
+    }
+    /* RGBA(r, g, b, a) = a<<24 | b<<16 | g<<8 | r */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        p                     = tabula->pixela[i];
+        octeti[i * IV]        = (i8)(p & 0xFF);
+        octeti[i * IV + I]    = (i8)((p >> VIII) & 0xFF);
+        octeti[i * IV + II]   = (i8)((p >> XVI) & 0xFF);
+        octeti[i * IV + III]  = (i8)((p >> XXIV) & 0xFF);
+    }
+    imago->pixela    = octeti;
+    imago->latitudo  = tabula->latitudo;
+    imago->altitudo  = tabula->altitudo;
+    redde VERUM;
+}
