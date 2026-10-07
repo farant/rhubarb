@@ -160,9 +160,11 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
 
 ### Task T9: pythonica - where the time goes
 
-- [ ] **Step 1:** `cProfile` of `pythonica/probatio_silva.py`: time per
+- [x] **Step 1:** `cProfile` of `pythonica/probatio_silva.py`: time per
   silva.py function and per spawned tool; candidates for C named (each
   becomes a desideratum, not work in this slice). **Commit** (docs).
+  (`pythonica/profilare.py`; spec §X T9: snapshots ~190 s, closures
+  ~85 s, polling ~30 s of 422 s; desiderata …6RME, …4WYGT, …JFQ99.)
 
 ### Task T10: the Python read ledger (A4)
 

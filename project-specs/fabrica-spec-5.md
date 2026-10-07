@@ -456,3 +456,28 @@ of 2%. Where its 96.6 s go (mensor, 96ebd536): probatio_oratio_oraculum
 not the corpus, but through raw `fopen` (oratio's tests are outside the
 lectiones lint): carving it out as its own verdict = desideratum
 …BPRSBB (channel first, as T5a). The gate stays crude.
+
+**T9 (2026-10-07): where pythonica's time goes.** `pythonica/profilare.py`
+(new, rerunnable) runs probatio_silva.py under cProfile and wraps
+`subprocess.Popen` to time every child with its calling test line and
+nearest silva.py function. One run: 421.8 s, 1076 children whose wall
+time sums to 351 s - the suite is a driver of other programs, not
+Python work.
+
+| where | s | what |
+|---|---:|---|
+| `photographia_materializare` (9 calls) | 137.6 | `_clonare_ignorata` 102.5 (46 `cp -c -R` per snapshot - clonefile per FILE), git clone + read-tree ~13 |
+| `photographia_delere` (10) | 52.9 | `shutil.rmtree`: 719,611 unlinks |
+| bin/aedilis via `_clausurae` (24) | 63.4 | the same all-suite closures in five portae-debitae tests (~12 s each) |
+| `portae_debitae.sh` live (1) | 22.8 | the same closures again |
+| `exspectare` sleep (15) | 30.1 | polling shadow-gate workers every 2 s |
+| `extenta` / `_porta_cruda` / `formare` / `examen` / `differre` | 25.4 / 20.5 / 11.2 / 9.9 / 8.8 | tests of those tools - inherent |
+| git (331 children) | 37.9 | `sigillum_arboris` 210 calls 5.1, snapshots, the rest scattered |
+
+Candidates (desiderata, not this slice's work - plan "not in this
+plan"): clonefile(2) on whole directories in C (…6RME, ~100 s);
+closures once per tree state through a batch aedilis mode (…4WYGT,
+~85 s); asynchronous snapshot deletion and pid-based waiting in Python
+(…JFQ99, ~65 s). Together ~250 of 422 s. T10/T11 (the ledger and the
+verdict) proceed independently: a reused pythonica verdict costs none of
+it.
