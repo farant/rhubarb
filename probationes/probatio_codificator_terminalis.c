@@ -108,6 +108,14 @@ interior constans Vector VECTORES[] = {
     { "k shift+a omnia", OMNIA, P, (clavis_t)'A', LIT('a'), 'a', 'A',
         SH,
       "A", "\033[97:65;2;65u" },
+    /* disambiguata: shift CONSUMPTUS (textus a runa differt) -> textus
+     * ipse (Ghostty effectiveMods; aemulator D6c: vim ':' ut ';') */
+    { "k shift+a disambiguata", DIS, P, (clavis_t)'A', LIT('a'), 'a',
+        'A', SH, "A", "A" },
+    { "k shift+; disambiguata", DIS, P, (clavis_t)';',
+      EVENTUS_CODEX_PUNCTUM_VIRGULA, ';', ':', SH, ":", ":" },
+    { "k shift+1 disambiguata", DIS, P, (clavis_t)'1', NUM(1), '1', '!',
+        SH, "!", "!" },
     { "k shift+a soluta", OMNIA, S, (clavis_t)'A', LIT('a'), 'a', 'A',
         SH,
       NIHIL, "\033[97;2:3u" },

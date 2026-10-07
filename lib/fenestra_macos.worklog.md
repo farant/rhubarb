@@ -113,3 +113,18 @@ by `tools/manus_struere.sh`, but the fumus's own hint said
 (bin/manus_instrumentum). Hint fixed. The tester's report shows the same
 stale binary date.
 
+
+## 2026-10-07 — focus and paste events (aemulator D6c)
+
+`windowDidBecomeKey` / `windowDidResignKey` were empty stubs; they now
+queue EVENTUS_FOCUS / EVENTUS_DEFOCUS (the window becomes key at
+creation, so a FOCUS is almost always the first event). Cmd-V: the
+"Glutinare" menu item has no target, so AppKit walks the responder
+chain - our view is never made first responder (keys come through the
+polling loop, not responders), so the window, then its DELEGATE: the
+delegate implements `paste:`, reads the general pasteboard's string and
+queues EVENTUS_TEXTUS origin GLUTINATA. Payload limit: the event queue's
+text table is 64 KiB per read - a longer paste is truncated and flagged
+(not split yet). Every fenestra app now receives these; focus lands on
+tree roots (ignored unless an action is there), a paste reaches the
+focus as text. Fran's run: focus reports seen in terminale.

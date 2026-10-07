@@ -572,3 +572,15 @@ did nothing; Ghostty sends arrows there. One routing surprise: window
 focus events are neither focal nor positional and land on the root
 component, which had no action. Sixteen plants, all caught.
 
+## D6c — the window's own events, and the first real session (2026-10-07)
+
+**INTENTIO.** Let the macOS window report focus and paste, then use it.
+
+The platform part was small (two empty delegate stubs, one missing
+`paste:`). The session was the real test: Fran ran nvim and found
+shift+; typing ';'. The chain was D4 -> nvim sees kitty support ->
+pushes disambiguate -> our encoder treated shift as a modifier even when
+it only produced the character. Reproduced and verified with real nvim
+in a headless pty before and after. The title "not changing" was the
+shell rewriting it at every prompt.
+

@@ -194,6 +194,23 @@ _specialis (
  * kitty
  * ================================================== */
 
+/* Shift CONSUMPTUS (Ghostty effectiveMods = mods - consumed_mods, quae
+ * Eventus non fert): textus a runa sine maiuscula differt - shift
+ * characterem produxit (':' ex ';', 'A' ex 'a', '!' ex '1'). Tunc
+ * textus planus mittitur, non CSI u (aemulator D6c: vim ':' ut ';'). */
+interior b32
+_shift_consumptus (
+    constans Eventus* e,
+              Textus  textus)
+{
+    constans i8* p;
+            s32  primus;
+
+    p       = textus.datum;
+    primus  = utf8_decodere(&p, textus.datum + textus.mensura);
+    redde (b32)(primus > ZEPHYRUM && primus != e->datum.clavis.runa);
+}
+
 interior vacuum
 _kitty (
     constans CodificatorModi* modi,
@@ -260,8 +277,10 @@ _kitty (
                 redde;
             }
         }
-        si (   textus.mensura > ZEPHYRUM && ligantes == ZEPHYRUM
-            && !solutio)
+        si (   textus.mensura > ZEPHYRUM && !solutio
+            && (ligantes == ZEPHYRUM
+                || (   ligantes == MOD_SHIFT
+                    && _shift_consumptus(e, textus))))
         {
             i32 k;
             b32 planus = VERUM;

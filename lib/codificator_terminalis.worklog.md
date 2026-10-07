@@ -31,3 +31,21 @@ starts at the length on entry - a test appends twice and checks no
 
 **Keypad application mode is deferred:** Eventus has no numpad keys
 (the Mac's numpad arrives as digits), so the field would be dead.
+
+## 2026-10-07 — shift+; sent ';' in nvim (kitty disambiguate)
+
+Found in Fran's first terminale session: nvim (0.9.4, `vim` alias)
+queries `CSI ? u` at startup; since D4 we answer, so it pushes kitty
+flag 1. Our disambiguate path sent text plainly only with NO modifier;
+any shifted key became `CSI <runa>;2 u`. nvim decodes `CSI 104;2u` as
+`H` (letters looked fine) but `CSI 59;2u` as shift+';' - so `:` typed
+`;`. Kitty (and Ghostty, via effectiveMods = mods - consumed_mods) send
+the TEXT when the only modifiers were consumed producing it. Eventus
+carries no consumed mods, so: shift counts as consumed when the text
+differs from the unshifted rune (`:` vs `;`, `A` vs `a`, `!` vs `1`).
+Ghostty's unit test "kitty: shift+a on US keyboard" expects CSI 97:65;2u
+only because it sets no consumed_mods; real macOS reports shift as
+consumed. Verified end to end headlessly: real nvim in terminale via the
+probe harness (pty), shift+; q a shift+1 Enter -> nvim exits; with the
+rule reverted it stays open. Limitation of the heuristic: a shifted key
+whose text equals its rune (shift+space) still goes out as CSI u.

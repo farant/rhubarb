@@ -713,6 +713,15 @@ Later phases (re-planned after A's RELATIO):
     aemulator_color, an unchanged dynamic colour stays a theme token
     (live theme). Sections V-VII in probatio_terminale; 16 plants
     caught. D6c (window focus + paste events) remains.
+    D6c as built: fenestra_macos queues FOCUS / DEFOCUS from the
+    key-window notifications and a GLUTINATA text event from `paste:`
+    on the window delegate (responder chain; 64 KiB per read). Fran's
+    first session: focus reports seen; title "did not change" = zsh's
+    oh-my-zsh termsupport resets it every prompt (verified hooks);
+    shift+; typed ';' in nvim - nvim enables kitty flag 1 since D4 and
+    our disambiguate path sent shifted text as CSI u; fixed (shift
+    consumed when text != unshifted rune), verified with real nvim
+    headlessly.
   - **D7 - the bar:** esctest table re-pinned (causes "later" per
     decision 26), vttest fetched and pinned, Fran's session (vim,
     less, htop, vttest).

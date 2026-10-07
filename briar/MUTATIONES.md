@@ -73,7 +73,9 @@ Leges chartae:
   sagittae_applicationis (DECCKM), lnm, CODIFICATOR_MUS_X10; D6b:
   AemulatorModi.rotula_sagittis (?1007), terminale_titulus,
   TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
-  focum, colores honorat; D4: acervus
+  focum, colores honorat; D6c: fenestra_macos focum/defocum et
+  glutinum (Cmd-V) ut eventa; codificator kitty: shift consumptus ->
+  textus planus; D4: acervus
   vexillorum clavium kitty
   per schirmum (CSI ? > < = u), AemulatorModi.kitty_vexilla; D5:
   tabula colorum viva (OSC 4/10/11/12, 104/110-112), configuratio
