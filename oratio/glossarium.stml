@@ -327,6 +327,14 @@
     <forma textus="invariantium" casus="genitivus" numerus="pluralis" genus="masculinum"/>
     <forma textus="invariantibus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="renominatus" lingua="latina" classis="adiectivum" nota="Neolatina (re + nominare): renominatus, nomine novo donatus (silva_conflatio: statica renominata, renominare.sh); WORDS caret">
+    <forma textus="renominatus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="renominata" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="renominatum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="renominatam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="renominati" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="renominatae" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="unimodularis" lingua="latina" classis="adiectivum" nota="Neolatina: unimodularis, matrix determinantis +-1 (matrix: certificata Hermite et Smith); WORDS caret">
     <forma textus="unimodularis" casus="nominativus" numerus="singularis"/>
     <forma textus="unimodulares" casus="nominativus" numerus="pluralis"/>

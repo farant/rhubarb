@@ -160,7 +160,8 @@ while IFS= read -r caput_via; do
         CAPUT_RECENS="$caput_via"
     fi
 done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$MD_DIR/fontes" "$BRIAR_DIR/fontes" "$BRIAR_DIR/probationes" "$RADIX_DIR/silva/amalgama" \
-             "$RADIX_DIR/officina/instrumenta/compendium.h" -name "*.h" 2>/dev/null)
+             "$RADIX_DIR/officina/instrumenta/compendium.h" \
+             "$RADIX_DIR/silva/instrumenta/silva_conflatio.h" -name "*.h" 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
@@ -216,6 +217,18 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" 
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -I"$RADIX_DIR/silva/fontes" \
             -c "$src" -o "$obj"; then
         echo "FRACTA: silva_lexicon.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# conflatio (plagula una; silva/instrumenta, communis cum
+# knotapel/archive.sh): mechanismus amalgamae briar
+src="$RADIX_DIR/silva/instrumenta/silva_conflatio.c"
+obj="$BUILD_DIR/silva_conflatio.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [silva] silva_conflatio.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+        echo "FRACTA: silva_conflatio.c" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"
