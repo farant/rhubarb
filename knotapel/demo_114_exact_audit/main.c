@@ -277,6 +277,9 @@ static const long FIG8_D110[12][3] = {
  * descending exponent). laqueus's sign convention is the physical one
  * (its review confirmed the right-hand rule on a Hopf link), so a
  * right-handed trefoil gives -t^4 + t^3 + t, as in Jones's tables. */
+/* 6_3 (amphichiral), as Part A computes it on D112's raw braid
+ * polygon */
+#define JONES_6_3 "-t^3 + 2t^2 - 2t + 3 - 2t^-1 + 2t^-2 - t^-3"
 #define JONES_RIGHT_TREFOIL "-t^4 + t^3 + t"
 #define JONES_LEFT_TREFOIL  "t^-1 + t^-3 - t^-4"
 
@@ -1045,9 +1048,15 @@ part_c (
 
         spectrum_clear(&spectra[k]);
         spectrum_clear(&pairs);
+        for (j = 0; j < N_KNOTS; j++)
+            reach_exact[k][j] = 0;
         if (verd == NULL || !polygon_of("REACH", code, keep, &base)
-            || count > MAX_ALTS)
+            || count > MAX_ALTS) {
+            sprintf(msg, "%s: D112 data present and within %d alternatives",
+                code, MAX_ALTS);
+            check(msg, 0);
             continue;
+        }
         mask = (unsigned long)count - 1UL;
         for (c = 0; c < count; c++) {
             PiscinaNotatio mark = piscina_notare(work);
@@ -1170,7 +1179,7 @@ part_d (
 {
     int      trial;
     Spectrum union_sp;            /* count = number of trials */
-    unsigned q, rare = 0, with_63 = 0;
+    unsigned q, rare = 0, with_63 = 0, base_63 = 0, base_63_jones = 0;
 
     spectrum_clear(&union_sp);
     printf("\n=== Part D: the 20 randomized 6_3 simplifications (D112 Phase "
@@ -1192,7 +1201,7 @@ part_d (
             || !polygon_of("RAW", "6_3", keep, &raw))
             continue;
         r  = replay_steps(tag, "6_3", raw, base, keep, scratch);
-        eb = classify(base, 0, scratch, keep);
+        eb = classify(base, JONES_CAP_BULK, scratch, keep);
         count = 1UL << (laqueus_numerus(base) - 3);
         spectrum_clear(&sp);
         for (c = 0; c < count; c++) {
@@ -1210,15 +1219,24 @@ part_d (
             spectrum_add(&union_sp, sp.key[q], keep);
         if (spectrum_has(&sp, KNOT_ALEXANDER[6]))
             with_63++;
+        if (eb.simple && chorda_is(eb.alexander, KNOT_ALEXANDER[6])) {
+            base_63++;
+            if (chorda_is(eb.jones, JONES_6_3)) base_63_jones++;
+        }
         printf("  %-5d %5u %5lu | %6u / %-6u | %6u / %-6u | %2u / %-2u (on "
             "simple) | ", trial, (unsigned)laqueus_numerus(base), count,
             D112_TRIAL_VALID[trial], n_simple, D112_TRIAL_DISTINCT[trial],
             sp.n, r.breaks, r.illegal_on_simple);
         if (!eb.simple)
             printf("SINGULAR\n");
-        else if (chorda_is(eb.alexander, KNOT_ALEXANDER[6]))
-            printf("6_3 Alexander\n");
-        else {
+        else if (chorda_is(eb.alexander, KNOT_ALEXANDER[6])
+                 && chorda_is(eb.jones, JONES_6_3))
+            printf("6_3 (Alexander and Jones)\n");
+        else if (chorda_is(eb.alexander, KNOT_ALEXANDER[6])) {
+            printf("6_3 Alexander, Jones ");
+            print_chorda(eb.jones);
+            printf("\n");
+        } else {
             printf("Alexander ");
             print_chorda(eb.alexander);
             printf("\n");
@@ -1235,6 +1253,9 @@ part_d (
     printf("  union %u (D112 118), rare %u (D112 73); 6_3 itself in %u of 20 "
         "trials (D112: 20/20, the base filled in by Fox calculus)\n",
         union_sp.n, rare, with_63);
+    check("every simple trial base polygon with 6_3's Alexander polynomial "
+        "also has 6_3's Jones polynomial (7 trials)", base_63 == 7
+        && base_63_jones == 7);
 }
 
 /* ================================================================

@@ -1,10 +1,10 @@
 # Demo 114: Exact Audit of Demos 110–112 — Findings
 
 **Date:** 2026-10-07 (revised the same day after review I)
-**Status:** COMPLETE. 76 pass, 0 fail (the checks encode what is verified; the audit verdicts are below).
+**Status:** COMPLETE. 77 pass, 0 fail (the checks encode what is verified; the audit verdicts are below).
 **Depends on:** Demos 110, 111, 112 (their polygons, as data); rhubarb house libraries `laqueus` (exact knots), `situs`, `fractio`, `polynomium`, `matrix`.
 **Frozen copy:** `demo-snapshot.c` (knotapel/archive.sh).
-**Reviewed:** independently re-derived by the math reviewer with its own exact oracle (own embedding test, projection, Fox matrix, bracket and mirror construction — no code shared with laqueus); every number below reproduces. The review corrected two errors and several overstatements in the first version of this file (see "Revisions").
+**Reviewed (two passes):** independently re-derived by the math reviewer with its own exact oracle (own embedding test, projection, Fox matrix, bracket and mirror construction — no code shared with laqueus); every number below reproduces. The review corrected two errors and several overstatements in the first version of this file (see "Revisions").
 
 ## Why this demo
 
@@ -21,7 +21,7 @@ Inputs are D112's own artifacts. `d112_export.c` compiles Demo 112's `main.c` **
 | D112 R1–R10: 6₃ spectrum = 37 distinct palindromic polynomials (10-crossing knots, non-alternating knots, connected sums, det up to 161) | **FALLS** — exactly 6: unknot, 3₁, 4₁, 5₁, 5₂, 6₃; caused by `long` overflow (proven by intervention: the same code with 128-bit integers gives the exact spectrum) |
 | D112: 7₂ spectrum = 68 polynomials | **FALLS** — 7 |
 | D112 Phase 4: reachability (6₃ out-degree 10, 7₂ 9) | **FALLS** — 6₃ 5, 7₂ 6; no knot with a singular base polygon reaches itself, and 3₁, 5₁, 6₁, 7₁, 7₃, 7₄, 8₁₈ reach nothing |
-| D112 Phase 5: universal core {6₃} 20/20, union 118, 73 rare | **FALLS** — 6₃ occurs in only 11 of 20 trials (D112's 20/20 came from filling the base in by Fox calculus); exact union 9, rare 3; 14 of 20 trial polygons are singular |
+| D112 Phase 5: universal core {6₃} 20/20, union 118, 73 rare | **FALLS** — 6₃ occurs in only 11 of 20 trials (D112's 20/20 came from filling the base in by Fox calculus); exact union 9, rare 3; 13 of 20 trial polygons are singular |
 | D112: self-intersection census (SI rates per knot) | **SURVIVES** for the 12 base knots, except the base polygon itself, which D112 never checked |
 | D112: "100% palindromic after SI filter" | true but empty — exact Alexander polynomials are palindromic by theorem; D112's wrong polynomials were palindromic too, so palindromy never certified anything |
 | D111 Results 3–20 (det spectra, influence, complement closure, Hamming profiles, 8₁₈ 28 dets) | **VOID / UNSUPPORTED** — computed on singular polygons with overflowing arithmetic and no SI filter; the det spectra recomputed here collapse (6₃ 22 dets → 5; every 8₁₈ alternative is singular); the derived statistics were not recomputed |
@@ -76,7 +76,7 @@ D112 deletes a vertex when the (2,3,5)-projection determinant is unchanged. Repl
 
 Over the 12 paths: 117 refused deletions, of which **22 on a simple polygon — and each of those 22 is exactly a step that turns a simple polygon into a singular one** (asserted: refusal-on-simple ⇔ break). Such a step is definitively not an isotopy step: its output is not an embedding. After the first break D112 keeps deleting vertices from a singular polygon; 4₁ and 6₃ happen to return to simple polygons of the right type, the other ten never do.
 
-A refusal does not by itself change the knot type: in trial 19 (Part D) one refused deletion leaves the polygon simple, and the path ends on a genuine 6₃.
+A refusal does not by itself change the knot type: in trial 19 (Part D) one refused deletion leaves the polygon simple, and the path ends on a 6₃ (Alexander and Jones).
 
 A **legal** greedy simplification (same scan order, `laqueus_motus_removere`) always keeps the knot (checked: same Alexander polynomial) and lands 0–4 vertices above D112's counts (3₁, 6₂ and 8₁₈ need none). These are the honest polygons for a future re-run.
 
@@ -96,7 +96,7 @@ On D112's 6₃ polygon (one of the two that is a knot), all 256 alternatives are
 
 D112 reported 37 polynomials (unknot 76, trefoil 68, …, det 161).
 
-- **Unknots are proven, not assumed:** each of the 144 has Δ = 1 on a diagram with ≤ 10 crossings, and every nontrivial knot with ≤ 10 crossings has a nontrivial Alexander polynomial (the first knots with Δ = 1 have 11 crossings).
+- **Unknots are proven, not assumed:** each of the 144 has Δ = 1 on a diagram with ≤ 10 crossings, so its crossing number is ≤ 10; and every nontrivial knot of crossing number ≤ 10 has a nontrivial Alexander polynomial — by the knot tables (Rolfsen; KnotInfo), the first knots with Δ = 1 are 11n34 and 11n42. The certificate rests on that external table fact, which the demo does not check.
 - **The chirality split is exact by symmetry:** vertices 0, 1, 2 lie on the mirror plane, so alternative c XOR (all ones) is exactly the mirror image of alternative c. The demo asserts this pairing (same simplicity, mirror Jones) for all 12 knots.
 - **Independent confirmation:** the reviewer's oracle, with its own mirror construction (vertex-for-vertex identical to D112's `evaluate_inplace` on all 256), gives the same spectrum.
 
@@ -151,7 +151,7 @@ Exact reachability out-degrees (D112 in parentheses): 4₁ 2 (3), 5₂ 2 (3), 6�
 | 18 | 13 | 1024 | 1024/1024 | 65/6 | 0/0 | 6₃ |
 | 19 | 11 | 256 | 192/192 | 5/5 | 0/1 | 6₃ |
 
-14 of 20 trial polygons are singular. In trials 4, 9 and 15 D112's self-intersection filter accepted alternatives that are singular (2048 accepted in trial 9, where none is simple) — the one place the heuristic failed.
+13 of 20 trial polygons are singular; the 7 simple ones (trials 0, 2, 5, 13, 14, 18, 19) are 6₃ by Alexander and Jones. In trials 4, 9 and 15 D112's self-intersection filter accepted alternatives that are singular (2048 accepted in trial 9, where none is simple) — the one place the heuristic failed.
 
 **Union over the trials** (number of trials containing each polynomial): 3₁, 4₁ and the unknot 17; 5₂ 16; 5₁ 11; **6₃ 11**; and once each (trial 11) the Alexander polynomials of 6₁ (2t² − 5t + 2), 6₂ (t⁴ − 3t³ + 3t² − 3t + 1) and 7₆ (t⁴ − 5t³ + 7t² − 5t + 1). Union **9**, rare **3** — against D112's union 118 and 73 rare. D112's "universal core {6₃}, 20/20" held only because the base was filled in by Fox calculus; 6₃ actually occurs in 11 trials.
 
@@ -161,7 +161,7 @@ D112's "power of 2 minus 1" SI counts: in the trials whose base polygon is singu
 
 D110's 12-vertex scale-10 figure-eight is a simple figure-eight (Jones t² − t + 1 − t⁻¹ + t⁻²). All 512 all-base alternatives are simple. Exact census: unknot 384 (certified: Δ = 1 on ≤ 10 crossings, and Jones = 1), figure-eight 64, right trefoil 32, left trefoil 32 — exactly D110's counts, and the 4-check classifier assigns every alternative correctly once its chirality names are swapped (512/512).
 
-The swap: D110's crossing signs are the standard ones (the reviewer matched them to the exact physical convention crossing by crossing on all 512; algebraically, D110's sign formula on the projection (5x − 2z, 5y − 3z) equals det[over, under, (2,3,5)] up to the factor 5). D110 simply **named positive writhe "left"**. All 32 of its "left" trefoils have positive writhe along (2,3,5) and right-handed Jones; all 32 "right" ones have writhe ≤ 0 and left-handed Jones. (The writhe of one projection is not a chirality invariant; here it happens to agree with Jones on all 64.)
+The swap: D110's crossing signs are the standard ones. The reviewer matched them to the exact physical convention crossing by crossing on all 512; algebraically, on D110's projection (5x − 2z, 5y − 3z) the 2D cross product of the projected over and under directions equals 5·det[over, under, (2,3,5)] (Binet–Cauchy: the projection rows (5,0,−2) and (0,5,−3) have cross product 5·(2,3,5)), so D110's sign is the sign of that determinant, with over = larger 2x + 3y + 5z — the same viewer side as laqueus. D110 simply **named positive writhe "left"**. All 32 of its "left" trefoils have positive writhe along (2,3,5) and right-handed Jones; all 32 "right" ones have writhe ≤ 0 and left-handed Jones. (The writhe of one projection is not a chirality invariant; here it happens to agree with Jones on all 64.)
 
 So D110's central result stands on exact ground. Its later results (scale survey, influence profiles, 6₃ searches) used the same `long` arithmetic and the det-only classification and were not re-checked here.
 
@@ -192,12 +192,12 @@ On D111's own polygons:
 
 - Exact tools: `laqueus_simplex` (any touching or overlap is singular), `laqueus_diagramma_genericum` (provably generic projection), `diagramma_alexander` (Fox calculus over Z[t, t⁻¹], Bareiss), `diagramma_jones` (Kauffman bracket state sum), `laqueus_motus_removere` (checked triangle move).
 - Jones: on the first generic projection when it has ≤ 16 crossings (22 for base knots and D110); otherwise on the fewest-crossing generic projection among directions with components in −2..2. Every simple alternative of the 12 reachability polygons gets a Jones polynomial this way.
-- Unknot certification: Δ = 1 on a diagram with ≤ 10 crossings (searched the same way when the first projection has more).
+- Unknot certification: Δ = 1 on a diagram with ≤ 10 crossings (searched the same way when the first projection has more), using the table fact that no nontrivial knot of crossing number ≤ 10 has Δ = 1. For 7₂, widening the search to components in −4..4 would certify 171 more (594 of 664, per the reviewer); not done here.
 - Construction words rebuilt exactly with `fractio`: vertex k ≥ 3 mirrored through the plane of vertices 0, 1, 2 iff bit k − 3 is set (D110 all-base = D111 default word = D112 base (0,1,2)).
 - Provenance tools in this directory (not part of the demo build): `d112_export.c` (D112's polygons, removal sequences, verdicts → `d112_export.txt`, embedded in `main.c`), `d112_overflow_probe.c` (per-alternative overflow). The 128-bit intervention and the independent oracle are the reviewer's (scratch, not committed).
-- Runtime: about 2 min 50 s (7₂ census and the 20 trials dominate).
+- Runtime: 1–3 minutes depending on the machine (68 s and 2 min 50 s measured, both -O2; the 7₂ census and the 20 trials dominate).
 
-## Revisions (after review I, 2026-10-07)
+## Revisions (after reviews I and II, 2026-10-07)
 
 - "117 illegal deletions" → 22 refusals on simple polygons, each the step that breaks the embedding (95 were judged on already-singular polygons, where the move check has no isotopy meaning).
 - D110: the sign convention is standard; the label for positive writhe was reversed.
@@ -205,3 +205,4 @@ On D111's own polygons:
 - "SI count = exact − 1" restricted to trials with a singular base polygon.
 - The stability union was claimed to fall without being computed; now computed (9, rare 3, 6₃ in 11/20 trials).
 - D111's inputs confirmed identical (hedge removed); D111's derived statistics marked unsupported rather than "fall"; overflow shown causal by the reviewer's 128-bit intervention; unknots certified.
+- Review II: the unknot certificate's table fact named and sourced; the D110 sign sentence made precise; trial base polygons now get Jones too (the 7 simple ones are 6₃ by Alexander and Jones; this check also caught an old miscount: 13 of 20 trial polygons are singular, not 14); a skipped knot in Part C now fails a check instead of dropping out of the reachability table. Review II also reproduced all 12 raw-polygon Jones polynomials.
