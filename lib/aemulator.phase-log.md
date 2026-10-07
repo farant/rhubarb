@@ -405,3 +405,17 @@ selection, search or absolute history addressing (feature 013).
 **Next:** see "Re-plan after C5" in the plan - phase D (full-screen
 programs) or a thin slice of E (a shell in a window) first.
 
+## E2 — terminale, headless (2026-10-07)
+
+**INTENTIO.** The terminal as a ludus app, built and checked with no
+window: the host's view drawn cell by cell, keys and scroll through the
+dispatcher, resize to the child, a real shell answering.
+
+Built: `lib/terminale.c` on the approved header (private context keeps
+it unchanged); key pairing that matches how real windows deliver keys;
+xterm colours, inverse, bold-bright, cursor only at the live bottom.
+Checked three ways: the frame's drawing commands, pixels read back from
+the PNG, and my eyes on the PNG - and the third caught what the first
+did not: a shared header documented the wrong RGBA byte order; the
+command-level test had passed under the same wrong belief. 12 plants.
+

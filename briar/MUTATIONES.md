@@ -19,6 +19,12 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `terminale` nova (applicatio terminalis super aemulator_hospes:
+  componens, figura visus, claves per codificator_terminalis, rotula ad
+  visum). Nota mandatum.h emendata: color RGBA mandati = pixelum
+  tabulae (color_ad_pixelum), non litteralis 0xRRGGBBAA - mores nulli
+  mutati.
+
 - corpus: imagines quadrorum (screenshots): `tabula_pixelorum_in_imaginem`
   (tabula_pixelorum.h nunc imago_typus.h includit) et
   `ludus_fenestra_imaginem_scribere` (quadrum ultimum in PNG; etiam sine

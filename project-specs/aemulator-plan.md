@@ -534,12 +534,35 @@ Later phases (re-planned after A's RELATIO):
     time - a different meaning). Keys one event at a time through
     `codificator_terminalis` (a TEXTUS event encodes as its text; a
     lone key press as itself). Colours: theme defaults, xterm 0-15,
-    6x6x6 cube, grey ramp, RGB. Found: fenestra's `scrollWheel:` is an
-    EMPTY method - the window drops scroll events; wiring it (internal
-    to fenestra_macos.m, existing event kinds) joins E2.
+    6x6x6 cube, grey ramp, RGB. (E1 claimed fenestra drops scroll
+    events because its `scrollWheel:` view method is empty - WRONG,
+    corrected in E2: scroll is translated in fenestra's polling path
+    (NSEventTypeScrollWheel -> _rotulam_implere -> EVENTUS_MUS_ROTULA)
+    before the view is asked; the empty method is simply unused. The
+    `ludus_fenestra.h` comment that suggested it is stale.)
   - **E2 - component and figure, headless:** memoriae child and a real
     `/bin/sh`; keys via `manus_ludus`; checks cell-exact through the
     tessera target AND pixel-level through headless PNGs (looked at).
+    E2 as built: `lib/terminale.c` - private context (pending key,
+    scroll remainder, scratch piscina) so the approved header stayed
+    unchanged; keys: a key press PENDS, its following text is encoded
+    WITH it (codificator pair), anything else flushes it alone
+    (`manus_ludus_scribere` warns a consumer reading both sees the
+    letter twice); scroll: dy accumulates, whole cell rows move the
+    view; figure: per cell, background only when not default, inverse
+    swaps, bold brightens 0-7, cursor only at the bottom of the view.
+    In-memory repository WITHOUT a canon (dispatcher's focus and
+    surface writes land). Tests (probatio_terminale): mandata per
+    cell, PIXELS read back from the PNG, keys (pair once, Enter,
+    Ctrl-C), resize to the child, scroll + remainder + no cursor in
+    history, real /bin/sh round trip. 12 plants caught.
+    FOUND BY LOOKING: the blue background rendered as transparent
+    yellow - `mandatum.h` documented an RGBA mandate colour as
+    0xRRGGBBAA, but both rasterizers (delineare_mandata, tessellatio)
+    and every existing producer use frame-buffer packing
+    (`color_ad_pixelum`). The comment was the lie; corrected. The
+    command-level test had passed with the wrong assumption - pixels
+    are now asserted from the PNG.
   - **E3 - the apps:** `terminale.c` (window) + `terminale_terminalis.c`
     + scripts; one announced smoke run with `-imago`; Fran's look.
   - **E4 - RELATIO.**

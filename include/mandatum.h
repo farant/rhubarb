@@ -58,7 +58,11 @@ nomen enumeratio {
 } MandatumGenus;
 
 /* Color: signum thematis (thema.h resolvit), index palettae, aut
- * RGBA literalis (0xRRGGBBAA). Rasterizator solus resolvit. */
+ * RGBA = PIXELUM TABULAE (color_ad_pixelum(color_ex_rgba(r, g, b, a)):
+ * a<<24 | b<<16 | g<<8 | r) - NON litteralis 0xRRGGBBAA (nota olim
+ * mentiebatur; rasterizatores ambo, delineare_mandata et tessellatio,
+ * per color_ex_pixelum legunt - inventum 2026-10-06, terminale E2).
+ * Rasterizator solus resolvit. */
 nomen enumeratio {
     COLOR_MANDATI_THEMA = ZEPHYRUM,
     COLOR_MANDATI_INDEX,

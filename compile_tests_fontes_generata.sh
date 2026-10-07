@@ -197,6 +197,7 @@ declare -a SOURCE_FILES=(
     "lib/tcp_posix.c"
     "lib/tempestivum.c"
     "lib/tempus.c"
+    "lib/terminale.c"
     "lib/tessellatio.c"
     "lib/thema.c"
     "lib/thema_visus.c"
