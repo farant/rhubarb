@@ -4000,6 +4000,21 @@ fabrica_declarationes_legere_cum_sutura (
             redde _recusare(piscina, causa_out, actio.sedes,
                 "memorabilis nec verum nec falsum", *valor);
         }
+        /* STADIUM IUDICUM (fabrica-6 T3) */
+        valor = stml_attributum_capere(nodus, "iudex");
+        si (valor == NIHIL || chorda_aequalis_literis(*valor, "falsum"))
+        {
+            actio.iudex = FALSUM;
+        }
+        alioquin si (chorda_aequalis_literis(*valor, "verum"))
+        {
+            actio.iudex = VERUM;
+        }
+        alioquin
+        {
+            redde _recusare(piscina, causa_out, actio.sedes,
+                "iudex nec verum nec falsum", *valor);
+        }
         actio.mandatum = _mandatum_legere(nodus, piscina);
 
         actio.praecondiciones  = _xar_chordarum(piscina);

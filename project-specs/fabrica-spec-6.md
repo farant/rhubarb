@@ -223,3 +223,32 @@ generator with the repository input is RECENS by memory, and after an
 empty new commit the memory no longer matches. Plants: a pair mapped
 to the wrong kind -> equivalence red; HEAD ignored in the seal ->
 the fixture red by name.
+
+**T3 (2026-10-07): the judges' stage.** Actions may declare
+`iudex="verum"` (canon attribute; `FabricaActio.iudex`); the root marks
+fabrica, compilator and aedilis. `iudicare`: the marked actions are
+judged FIRST; if one is not RECENS its own sentence is printed first
+(counted, named under SANATIO) and every other selected artifact gets
+`NON IUDICATUM <via> - iudex <X> non recens - sana <X> prius` without
+being judged; exit 1. `sanare`: stale judges are healed in a first pass
+(`stadium iudicum primum`), the rest after; bin/fabrica itself keeps
+its existing refusal (it does not rebuild itself). The data-driven
+marker replaces the hard-coded "bin/fabrica first" special case on the
+judging side.
+commissio: `_fabricam_exigere` refuses when the stage refused. Without
+it a stale (untracked) bin/compilator would have made every touched
+artifact NON IUDICATUM, and the rule "untracked stale artifacts do not
+block" would have let the commit through with NOTHING judged - the
+stage now enforces "heal installed binaries before committing" instead
+of memory doing it.
+Tests: fumus XXXV (stale judge -> others refused, exit 1) and XXXVI
+(sanare heals the judge first, even when not selected); pythonica
+(refusal lines block the commit). Plants: the stage off in iudicare ->
+XXXV red; off in sanare -> XXXVI red; the commissio check off ->
+pythonica red.
+Found while planting: a plant restored with `cp -p` keeps the backup's
+OLD mtime; fabrica_struere's mtime-judged struere.sh then keeps the
+object compiled from the plant, and the provenance relation (a digest
+of SOURCES) would still call that binary RECENS. Restore with plain cp
+or touch (MEMORY). One more argument for content-addressed caching only
+(vision §II.6).

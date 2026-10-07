@@ -2307,6 +2307,23 @@ try:
         err = str(ex)
     credo(err is not None and 'STALUM g/x.c' in err and './gen.sh' in err and 'sine_fabrica' in err,
           'fabrica: exitus 1 obstat cum verdicto et sanatione')
+    # STADIUM IUDICUM (fabrica-6 T3): iudex stalus NON commissus (bin/
+    # compilator) + artificia tacta NON IUDICATA - olim 'non commissa
+    # non obstant' tacite pergebat, NIHIL iudicato. Nunc obstat
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM bin/compilator - ingressus mutati\n'
+                                          'NON IUDICATUM lib/a_genitum.c - iudex compilator non recens - sana compilator prius\n')
+    _vc_vera = silva.VIAE_COMMISSAE
+    silva.VIAE_COMMISSAE = lambda viae: set()
+    err = None
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    finally:
+        silva.VIAE_COMMISSAE = _vc_vera
+    credo(err is not None and 'sana compilator prius' in err,
+          'fabrica: iudex stalus (non commissus) obstat - artificia tacta NON IUDICATA')
     # exitus 2: iudicare nequit (sera) - obstat
     silva.FABRICA_BIN = _fabrica_ficta(2, 'fabrica: iudex plenus alius currit\n')
     err = None

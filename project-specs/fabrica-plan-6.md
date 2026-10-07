@@ -33,7 +33,7 @@ Fran before code.
 
 ### T3: bootstrap stage
 
-- [ ] failing test: a stale judge (fabrica, compilator or aedilis) ->
+- [x] failing test: a stale judge (fabrica, compilator or aedilis) ->
   every other judgment refuses "iudex X non recens - sana X prius";
   fresh judges -> normal. Implement; plant (stage check off -> red).
   **Commit.**

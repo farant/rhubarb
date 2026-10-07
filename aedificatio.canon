@@ -80,6 +80,10 @@
             aedilis derivatae) - verificatio memorata (build/fabrica.db)
             regenerationem supplet. Absens = falsum: sub -plenus semper
             regeneratur (plan 1a T6, decretum 01M3RDBCB8)"/>
+    <attributum nomen="iudex" genus="veritas"
+      nota="verum: STADIUM IUDICUM (fabrica-6 T3) - actio iudicatur
+            primum; non recens = ceteri NON IUDICATI ('iudex X non
+            recens - sana X prius'), sanare eam ante ceteras sanat"/>
     <attributum nomen="lectiones" genus="veritas"
       nota="verum: actio per LIBRUM LECTIONUM suum clavatur (plan 2
             T2) - quod instrumenta domus vere legerunt, quaesiverunt,

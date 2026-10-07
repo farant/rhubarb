@@ -121,6 +121,11 @@ nomen structura {
                                         * regenerationem supplet (T6).
                                         * Absens = FALSUM: regeneratur
                                         * semper sub -plenus. */
+                     b32 iudex;        /* iudex="verum" (fabrica-6 T3):
+                                        * STADIUM IUDICUM - iudicatur
+                                        * primum; stalus = ceteri
+                                        * recusantur, sanare eum primum
+                                        * sanat */
                      b32 lectiones;   /* lectiones="verum" (plan 2 T2):
                                        * clavis = vestigium libri
                                        * lectionum (L A X D) ultimi

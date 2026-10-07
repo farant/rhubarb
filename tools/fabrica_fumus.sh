@@ -409,6 +409,25 @@ $G commit -q --allow-empty -m alterum
 (cd "$T/r" && "$F" iudicare b) > "$T/o3" 2>&1
 if grep -q '^SANATUM *g' "$T/o" && grep -q '^fabrica: 1 recentia' "$T/o2" && grep -q '^NON IUDICATUM b' "$T/o3"; then echo "  XXXIV repositorium: HEAD novus clavem mutat OK"; else echo "  XXXIV FRACTUM (repositorium)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -12; fracta=1; fi
 
+# XXXV-XXXVI (fabrica-6 T3): STADIUM IUDICUM - actio iudex="verum" stala:
+# iudicium ceterorum recusatur nominans iudicem; sanare iudicem PRIMUM sanat
+radix_iudicum () {
+    radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+    printf 'a I\n' > "$T/r/a"; printf 'c I\n' > "$T/r/c"
+    printf '<aedificatio>\n  <actio titulus="j" genus="generator" iudex="verum">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_j.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="jb" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_d.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="c"/>\n    <exitus via="d" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+    printf 'D="${FABRICA_SCRIPTURA:-.}"; cat a > "$D/jb"\n' > "$T/r/gen_j.sh"
+    printf 'D="${FABRICA_SCRIPTURA:-.}"; cat c > "$D/d"\n' > "$T/r/gen_d.sh"
+    cp "$T/r/a" "$T/r/jb"; cp "$T/r/c" "$T/r/d"
+}
+radix_iudicum
+printf 'a II\n' > "$T/r/a"
+(cd "$T/r" && "$F" iudicare -plenus d) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q '^STALUM jb ' "$T/o" && grep -q '^NON IUDICATUM d - iudex j non recens - sana j prius' "$T/o"; then echo "  XXXV iudex stalus: ceteri recusati       OK"; else echo "  XXXV FRACTUM (rc=$rc)"; cat "$T/o" | sed 's/^/      /' | head -8; fracta=1; fi
+radix_iudicum
+printf 'a II\n' > "$T/r/a"
+(cd "$T/r" && "$F" sanare d) > "$T/o" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q '^SANATUM *j ' "$T/o" && [ "$(cat "$T/r/jb")" = "a II" ]; then echo "  XXXVI sanare: iudex stalus PRIMUS sanatus OK"; else echo "  XXXVI FRACTUM (rc=$rc)"; cat "$T/o" | sed 's/^/      /' | head -8; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXXIV/XXXIV)"
+echo "fumus fabricae: sanum (XXXVI/XXXVI)"
 exit 0

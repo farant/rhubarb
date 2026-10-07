@@ -2624,6 +2624,17 @@ def _fabricam_exigere(viae, sine_fabrica=None):
     if r.returncode == 0:
         print(lineae[-1] if lineae else 'fabrica: sana')
         return
+    # STADIUM IUDICUM (fabrica-6 T3): iudex stalus (bin/compilator,
+    # bin/aedilis - non commissi) artificia tacta NON IUDICATA reddit;
+    # regula 'non commissa non obstant' hic NIHIL iudicatum transmitteret
+    recusata = [l for l in lineae
+                if l.startswith('NON IUDICATUM ') and ' - iudex ' in l]
+    if recusata:
+        raise SilvaError(
+            'FABRICA (ante portas): stadium iudicum - artificia tacta NON'
+            ' iudicata, nihil cursum, nihil commissum:\n  %s\nSana iudicem'
+            ' (linea supra: "sana X prius") et committe iterum.'
+            % '\n  '.join(lineae[-40:]))
     # 1b T7: regeneratio etiam artificia in build/ iudicat (capsulae,
     # corpus) - commissio de COMMISSIS solis iudicat; stala non commissa
     # nominantur, non obstant (sanare ea sanat)
