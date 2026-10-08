@@ -437,6 +437,16 @@
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <exitus via="lib/entitates_html_tabula.c" provenientia="regeneratio"/>
   </actio>
+  <!-- canon normae infixus (norma-plan-3 A2, regula R1): norma.canon ->
+       lib/norma_canon.c, lector .norma sine plagula vivit -->
+  <actio titulus="norma_canon" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/norma_canon_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/norma_canon_infigere.sh"/>
+    <ingressus genus="fasciculus" via="norma.canon"/>
+    <exitus via="lib/norma_canon.c" provenientia="regeneratio"/>
+  </actio>
   <!-- capsulae ex TOML (tools/capsula_regenerare.sh). Duae sine TOML
        (book_assets/capsula_libri.c, probationes/capsula_assets.c)
        generatorem ignotum habent: NON declaratae - desideratum

@@ -142,6 +142,7 @@ declare -a SOURCE_FILES=(
     "lib/natura.c"
     "lib/navigator_entitatum.c"
     "lib/norma.c"
+    "lib/norma_canon.c"
     "lib/norma_gignere.c"
     "lib/numerus_romanus.c"
     "lib/nuntium.c"

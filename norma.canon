@@ -1,0 +1,169 @@
+<!--
+  norma.canon - canon dialecti NORMAE (plagulae .norma)
+  Specificatio: project-specs/norma-spec-2.md §II.
+
+  QUID CANON TENET: vocabularium clausum; attributa per genus (ergo
+  'forma' in integer = attributum ignotum); genera attributorum;
+  citationes <ad norma="x"> ad <norma titulus="x"> (claves INTRA
+  documentum, sine signo: '#' fragmentis STML redditum, '&x;'
+  individuis mundi - decretum 2026-08-10, lib/canon.c); tituli normarum
+  unici; claves campi intra objectum unicae; valores variationis
+  intra discrimen unici.
+
+  QUID LECTOR TENET (lib/norma_stml.c), CONSULTO: typus filius UNUS
+  (canon numerum per nomen solum novit, non per gregem nominum);
+  fines bini et parsabiles (minimum numeri fluitans est - textus
+  hic); electio non vacua nec cum <licitum> simul; circuli
+  referentiarum; gignentes contra registrum.
+
+  INFIXUS: lib/norma_canon.c ex hac plagula GENERATUR
+  (tools/norma_canon_infigere.sh) - mutata hac, regenera.
+-->
+<canon dialectus="normae" versio="1">
+
+  <elementum nomen="normae" radix="verum">
+    <attributum nomen="versio" genus="numerus" necessarium="verum"
+      minimum="1" maximum="1"/>
+    <liberum nomen="norma"/>
+  </elementum>
+
+  <elementum nomen="norma">
+    <attributum nomen="titulus" genus="nomen" necessarium="verum"/>
+    <liberum nomen="liberum"    maximum="1"/>
+    <liberum nomen="nullum"     maximum="1"/>
+    <liberum nomen="boolean"    maximum="1"/>
+    <liberum nomen="integer"    maximum="1"/>
+    <liberum nomen="numerus"    maximum="1"/>
+    <liberum nomen="textus"     maximum="1"/>
+    <liberum nomen="tabulatum"  maximum="1"/>
+    <liberum nomen="objectum"   maximum="1"/>
+    <liberum nomen="discrimen"  maximum="1"/>
+    <liberum nomen="ad"         maximum="1"/>
+  </elementum>
+
+  <elementum nomen="campus">
+    <attributum nomen="titulus"    genus="textus" necessarium="verum"/>
+    <attributum nomen="requiritur" genus="veritas" ordinarius="verum"/>
+    <liberum nomen="liberum"    maximum="1"/>
+    <liberum nomen="nullum"     maximum="1"/>
+    <liberum nomen="boolean"    maximum="1"/>
+    <liberum nomen="integer"    maximum="1"/>
+    <liberum nomen="numerus"    maximum="1"/>
+    <liberum nomen="textus"     maximum="1"/>
+    <liberum nomen="tabulatum"  maximum="1"/>
+    <liberum nomen="objectum"   maximum="1"/>
+    <liberum nomen="discrimen"  maximum="1"/>
+    <liberum nomen="ad"         maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tabulatum">
+    <attributum nomen="aut_nullum"       genus="veritas"/>
+    <attributum nomen="gignens"          genus="nomen"/>
+    <attributum nomen="longitudo_minima" genus="numerus" minimum="0"/>
+    <attributum nomen="longitudo_maxima" genus="numerus" minimum="0"/>
+    <liberum nomen="descriptio" maximum="1"/>
+    <liberum nomen="liberum"    maximum="1"/>
+    <liberum nomen="nullum"     maximum="1"/>
+    <liberum nomen="boolean"    maximum="1"/>
+    <liberum nomen="integer"    maximum="1"/>
+    <liberum nomen="numerus"    maximum="1"/>
+    <liberum nomen="textus"     maximum="1"/>
+    <liberum nomen="tabulatum"  maximum="1"/>
+    <liberum nomen="objectum"   maximum="1"/>
+    <liberum nomen="discrimen"  maximum="1"/>
+    <liberum nomen="ad"         maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberum">
+    <attributum nomen="aut_nullum" genus="veritas"/>
+    <attributum nomen="gignens"    genus="nomen"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="nullum">
+    <attributum nomen="gignens" genus="nomen"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="boolean">
+    <attributum nomen="aut_nullum" genus="veritas"/>
+    <attributum nomen="gignens"    genus="nomen"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="integer">
+    <attributum nomen="aut_nullum" genus="veritas"/>
+    <attributum nomen="gignens"    genus="nomen"/>
+    <attributum nomen="minimum"    genus="numerus"/>
+    <attributum nomen="maximum"    genus="numerus"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="numerus">
+    <attributum nomen="aut_nullum" genus="veritas"/>
+    <attributum nomen="gignens"    genus="nomen"/>
+    <attributum nomen="minimum"    genus="textus"
+      nota="f64 - lector parsat (1e-300 licet; canon numerus non)"/>
+    <attributum nomen="maximum"    genus="textus"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="textus">
+    <attributum nomen="aut_nullum"       genus="veritas"/>
+    <attributum nomen="gignens"          genus="nomen"/>
+    <attributum nomen="longitudo_minima" genus="numerus" minimum="0"/>
+    <attributum nomen="longitudo_maxima" genus="numerus" minimum="0"/>
+    <attributum nomen="forma"            genus="compositum"/>
+    <attributum nomen="electio"          genus="textus"
+      nota="valores spatiis separati; valor cum spatio -> licitum"/>
+    <liberum nomen="descriptio" maximum="1"/>
+    <liberum nomen="licitum"/>
+  </elementum>
+
+  <elementum nomen="objectum">
+    <attributum nomen="aut_nullum" genus="veritas"/>
+    <attributum nomen="gignens"    genus="nomen"/>
+    <attributum nomen="modus"      genus="electio" ordinarius="clausum">
+      <optio>clausum</optio>
+      <optio>apertum</optio>
+      <optio>notandum</optio>
+    </attributum>
+    <liberum nomen="descriptio" maximum="1"/>
+    <liberum nomen="campus"/>
+  </elementum>
+
+  <elementum nomen="discrimen">
+    <attributum nomen="clavis"     genus="textus"  necessarium="verum"/>
+    <attributum nomen="aut_nullum" genus="veritas"/>
+    <attributum nomen="gignens"    genus="nomen"/>
+    <attributum nomen="modus"      genus="electio" ordinarius="clausum">
+      <optio>clausum</optio>
+      <optio>apertum</optio>
+      <optio>notandum</optio>
+    </attributum>
+    <liberum nomen="descriptio" maximum="1"/>
+    <liberum nomen="variatio" minimum="1"/>
+  </elementum>
+
+  <elementum nomen="variatio">
+    <attributum nomen="valor" genus="textus" necessarium="verum"/>
+    <liberum nomen="objectum" minimum="1" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="ad"
+    nota="sine aut_nullum consulto: nodus communis mutaretur ubique">
+    <attributum nomen="norma" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="descriptio" textus="verum"/>
+  <elementum nomen="licitum"    textus="verum"/>
+
+  <citatio nomen="normae-citatae" attributum="norma"
+    ad="norma/titulus" super="ad"/>
+  <unicitas nomen="normarum-tituli" attributum="titulus" super="norma"/>
+  <unicitas nomen="campi-objecti" attributum="titulus" super="campus"
+    intra="objectum"/>
+  <unicitas nomen="variationes-discriminis" attributum="valor"
+    super="variatio" intra="discrimen"/>
+
+</canon>

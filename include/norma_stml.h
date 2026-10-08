@@ -3,7 +3,7 @@
  *
  * Dialectus in specificatione; canon norma.canon (infixus). Canon
  * PRIMUS iudicat: vocabularium, cardinalitas, genera attributorum,
- * citationes '#x', tituli unici, modificatores in genere alieno.
+ * citationes <ad norma="x">, tituli unici, modificatores alieni.
  * Lector deinde sensum: typus filius unus, fines (bini, parsabiles,
  * non inversi), electio, circuli, gignentes.
  *
@@ -53,7 +53,7 @@ nomen structura {
 } NormaStmlVitium;
 
 nomen structura {
-    chorda  titulus;   /* sine '#' */
+    chorda  titulus;   /* nomen (canon genus nomen) */
      Norma* norma;
 } NormaNominata;
 
@@ -74,14 +74,14 @@ norma_stml_legere (
                                   i32  numerus_gignentium,
                               Piscina* piscina);
 
-/* titulus sine '#' ('#' praefixum toleratur); NIHIL si abest */
+/* NIHIL si abest */
 Norma*
 norma_stml_quaerere (
     constans NormaStmlLectio* lectio,
           constans character* titulus);
 
 /* Forma canonica = stml_scribere pulchrum. Nodus normae nominatae
- * alterius -> <ad norma="#x"/>. Recusat (chorda vacua, *causa
+ * alterius -> <ad norma="x"/>. Recusat (chorda vacua, *causa
  * posita): titulus vacuus, nodus pravus (SCHEMA_PRAVA), gignens cum
  * functione sine titulo, textus attributi quem STML ferre nequit
  * (" & < > linea nova), circulus (profunditas > CXXVIII). */
