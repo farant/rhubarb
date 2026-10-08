@@ -70,6 +70,26 @@ Three principles:
    or a file for secrets; `vates_anthropic_aperire` takes the key as
    bytes and never logs, echoes or stores it in error text. Arca plugs
    in above vates without an API change.
+4. **Configuration speaks the provider's language; code speaks none**
+   (Fran, 2026-10-07 header review). Provider name, model id, effort
+   and any provider-specific option come from configuration at
+   initialization; calling code touches only `Vates*` and the neutral
+   types. Switching provider = editing configuration:
+   - `vates_aperire(piscina, provisor, clavis, optiones)` - factory by
+     name over a compiled-in registry (`"anthropic"`, `"fictus"`, later
+     `"openai"`); unknown name -> NIHIL + stderr listing known names.
+     Provider constructors stay public.
+   - escape hatches are TAGGED with their provider
+     (`vates_extra_ponere(petitio, "anthropic", ...)`,
+     `vates_caput_addere(...)`); a backend applies only its own.
+   - OPACUM blocks record their origin provider; another backend omits
+     them (as the API itself omits foreign thinking). Text, tool calls
+     and tool results are neutral and always carry over.
+   - provider-specific init options (base URL, API version) become named
+     `VatesOptiones` fields when needed - never caller-code knowledge.
+   Effort and model id deliberately stay strings in the provider's own
+   vocabulary (a neutral enum would lose `xhigh`/`max`/`minimal`); they
+   travel together with `provisor` in the same config entry.
 
 ## II. The neutral model
 
@@ -141,10 +161,11 @@ Vates* vates_fictus_aperire    (Piscina*);   /* scripted, no network */
   kind key (status + `error.type` + masked message). vates also calls
   `herbarium_premere` on NOVELTY - a block type, `stop_reason` or field
   it did not model - so API shape changes are pressed even on HTTP 200.
-- **fictus**: a backend for CONSUMERS' tests. The test pushes scripted
-  neutral responses (text, tool calls, usage, stop reasons, errors);
-  fictus records every request it received so a test can assert what
-  was sent (e.g. where breakpoints fell). optchat's whole pipeline runs
+- **fictus**: the Anthropic backend over a scripted `HttpVectura` (not a
+  separate backend; refined in vates-plan-1 T3): consumers queue
+  neutral replies that render as real Anthropic JSON, so the real
+  serializer and parser run, and `vates_fictus_petitio` returns the
+  exact JSON vates sent (e.g. to assert where breakpoints fell). optchat's whole pipeline runs
   under credo on fictus, free and offline.
 - OpenAI is the named second backend (not in this slice). The model is
   shaped with it in view: encrypted reasoning items ride as OPACUM;

@@ -83,7 +83,7 @@ taught us something, and the suite says so.
 
 ```c
 Herbarium*    herbarium_aperire (Piscina*, constans HerbariumOptiones*);
-HttpVectura   herbarium_vectura (Herbarium*, HttpVectura interior);  /* capturing wrapper */
+HttpVectura   herbarium_vectura (Herbarium*, HttpVectura involuta);  /* capturing wrapper */
 vacuum        herbarium_premere (Herbarium*, HttpPetitio*, HttpResponsum*,
                                  chorda causa);                      /* explicit / novelty */
 Xar*          herbarium_enumerare (Piscina*, constans character* directorium);
