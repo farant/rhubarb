@@ -2176,3 +2176,24 @@ path, bin/fabrica (fumus) the wave path - so a fault in one copy was
 invisible to the other's tests (seen with the H2 plants). The serial
 path now calls `_dependentia_fracta`. The same plant (`j > i`) in the
 one copy now turns both red: fumus XVIII/XXIX and the sanare suite.
+
+## 2026-10-08 - H4b: iudicare and sanare as phases
+
+`_iudicare` (607 lines) and `_sanare` (557) in tools/fabrica.c are now
+72 and 92 lines of phase calls. What they shared lives in
+`CursusFabricae` (declarations, memory, order by location, selection,
+sutura, lock) with `_cursum_parare`, `_electa_colligere` (the composite
+expansion was written twice, almost line for line) and `_cursum_finire`
+(cleanup was repeated at each exit - four places in `_sanare`; some
+exits skipped it, harmless only because the process ended). Each
+command has its own run struct (`CursusIudicandi`, `CursusSanandi`;
+`Iudicatio` was taken by crusta) and phases under ~100 lines.
+`_sanare_eventum` counts once and then prints: the machine and human
+branches used to count separately (estimate, unknown time, "generated
+files changed") - the same two-copies risk as the dependency check.
+Oracle extended to the human forms: 13 views (machine and human
+iudicare, a composite in both modes, the error paths, siccum, real heal
+of installata and of a composite) byte-identical against the old code,
+built from a saved copy; fumus XL/XL covers healing with fractures;
+pythonica sana. Plants: FRACTUM not counted -> XVII/XXI/XXIV red; stale
+not counted -> XV/XXIV/XXVII red.

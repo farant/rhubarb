@@ -673,106 +673,71 @@ _iungere_iudicem (
         piscina);
 }
 
-interior s32
-_iudicare (
-          s32   argc,
-    character** argv,
-      Piscina*  piscina)
+
+/* ==================================================
+ * CURSUS MANDATI (fabrica-6 H4b): status communis iudicare et sanare -
+ * declarationes, memoria, ordo per locos, electa, sutura, sera
+ * ================================================== */
+
+nomen structura {
+          Piscina* piscina;
+              Xar* actiones;     /* declarationes */
+              Xar* composita;
+              Xar* ordo;         /* per locos */
+   TabulaDispersa* sigilla;      /* memoria sigillorum per cursum */
+          Memoria  memoria;
+              b32  memoria_aperta;
+        FilumSera* sera;         /* NIHIL = non capta */
+    FabricaSutura  sutura;
+              Xar* electa;       /* NIHIL = omnia */
+              Xar* nominata;     /* FabricaCompositum* nominata */
+           chorda  causa;
+} CursusFabricae;
+
+/* declarationes, memoria aperta, ordo per locos. FALSUM = exitus II
+ * (causa iam nuntiata; _cursum_finire tamen vocandum) */
+interior b32
+_cursum_parare (
+    CursusFabricae* c,
+           Piscina* piscina)
 {
-             chorda* iudex_stalus;
-       FabricaActio* iudex_actio;
-      FabricaSutura  sutura;
-            Memoria  memoria;
-                b32  memoria_aperta;
-          FilumSera* sera;
-     TabulaDispersa* sigilla;
-                Xar* actiones;
-                Xar* ordo;
-                Xar* sententiae;
-             chorda  causa;
-                b32  plenus;
-                b32  omnia;
-                b32  tacta;
-                i32  auditus;
-                Xar* viae_tactae;
-                Xar* composita;
-                Xar* electa;
-                Xar* nominata;
-                s32  a;
-                i32  i;
-                i32  j;
-                i32  recentia;
-                i32  stala;
-                i32  ignota;
-                i32  non_iudicata;
-                i32  orphana;
+    memset(c, ZEPHYRUM, magnitudo(CursusFabricae));
+    c->piscina   = piscina;
+    c->nominata  = xar_creare(piscina,
+        (i32)magnitudo(FabricaCompositum*));
+    c->actiones  = _declarationes_colligere(piscina, &c->composita);
+    si (c->actiones == NIHIL)
+    {
+        redde FALSUM;
+    }
+    c->causa           = chorda_ex_literis("", piscina);
+    c->sigilla         = tabula_dispersa_creare_chorda(piscina, 1024);
+    c->memoria_aperta  = suturae_memoriam_aperire(&c->memoria, piscina);
+    c->ordo = _ordinare_per_locos(c->actiones, c->sigilla, piscina,
+        c->memoria_aperta ? &c->memoria : NIHIL, &c->causa);
+    si (c->ordo == NIHIL)
+    {
+        fprintf(stderr, "fabrica: %.*s\n", (s32)c->causa.mensura,
+            (constans character*)c->causa.datum);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
 
-    plenus   = FALSUM;
-    omnia    = FALSUM;
-    tacta    = FALSUM;
-    auditus  = XX;   /* A2: unus ex XX ictuum sub -plenus regeneratur */
+/* argumenta positionalia: via artificii aut titulus COMPOSITI (partes
+ * eius eliguntur; compositum in 'nominata' - iudicium aut verdictum
+ * eius post partes imprimitur). Nullum argumentum: electa NIHIL */
+interior vacuum
+_electa_colligere (
+    CursusFabricae*  c,
+               s32   argc,
+         character** argv)
+{
+    s32 a;
+    i32 i;
+    i32 j;
+
     per (a = II; a < argc; a++)
-    {
-        si (strcmp(argv[a], "-plenus") == 0)
-        {
-            plenus = VERUM;
-        }
-        alioquin si (strcmp(argv[a], "-audit") == 0)
-        {
-            /* AUDITUS omnium (plan 2 T2): omnis ictus vestigii aut
-             * memoriae regeneratur et confertur; -plenus implicat */
-            plenus   = VERUM;
-            auditus  = I;
-        }
-        alioquin si (strcmp(argv[a], "-tacta") == 0)
-        {
-            /* argumenta positionalia = viae commissionis: artificia
-             * GENERATA (regeneratio) quae tangunt iudicantur, non
-             * installata (binaria non committuntur; uncus sessionis ea
-             * nominat). Nullum tactum = exitus 0 (T8 gradus III) */
-            tacta = VERUM;
-        }
-        alioquin si (strcmp(argv[a], "-omnia") == 0)
-        {
-            /* RECENS quoque cum causa ('memoria', 'regeneratio
-             * congruit', 'relatio congruit') - plantae T6 */
-            omnia = VERUM;
-        }
-        alioquin si (strcmp(argv[a], "-machina") == 0)
-        {
-            suturae_machina = VERUM;   /* fabrica-6 H1: lineae TSV */
-        }
-        alioquin si (argv[a][0] == '-')
-        {
-            fprintf(stderr, "fabrica: vexillum ignotum %s\n", argv[a]);
-            redde II;
-        }
-    }
-
-    viae_tactae = xar_creare(piscina, (i32)magnitudo(chorda));
-    per (a = II; tacta && a < argc; a++)
-    {
-        si (argv[a][0] != '-')
-        {
-            *(chorda*)xar_addere(viae_tactae) =
-                chorda_ex_literis(argv[a],
-                piscina);
-        }
-    }
-
-    actiones = _declarationes_colligere(piscina, &composita);
-    si (actiones == NIHIL)
-    {
-        redde II;
-    }
-    causa  = chorda_ex_literis("", piscina);
-
-    /* argumenta positionalia (sine -tacta): via artificii aut titulus
-     * COMPOSITI (partes eius eliguntur, iudicium coniunctum post eas
-     * imprimitur) */
-    electa    = NIHIL;
-    nominata  = xar_creare(piscina, (i32)magnitudo(FabricaCompositum*));
-    per (a = II; !tacta && a < argc; a++)
     {
         chorda argumentum;
            b32 compositum_est;
@@ -781,155 +746,273 @@ _iudicare (
         {
             perge;
         }
-        si (electa == NIHIL)
+        si (c->electa == NIHIL)
         {
-            electa = xar_creare(piscina, (i32)magnitudo(chorda));
+            c->electa = xar_creare(c->piscina, (i32)magnitudo(chorda));
         }
-        argumentum      = chorda_ex_literis(argv[a], piscina);
+        argumentum      = chorda_ex_literis(argv[a], c->piscina);
         compositum_est  = FALSUM;
-        per (i = ZEPHYRUM; i < xar_numerus(composita); i++)
+        per (i = ZEPHYRUM; i < xar_numerus(c->composita); i++)
         {
             FabricaCompositum* compositum;
                           Xar* partes;
 
-            compositum = (FabricaCompositum*)xar_obtinere(composita, i);
+            compositum = (FabricaCompositum*)xar_obtinere(c->composita,
+                i);
             si (!chorda_aequalis(compositum->titulus, argumentum))
             {
                 perge;
             }
-            compositum_est                              = VERUM;
-            *(FabricaCompositum**)xar_addere(nominata)  = compositum;
-            partes = fabrica_compositum_explicare(composita, actiones,
-                compositum->titulus, piscina, &causa);
+            compositum_est                                 = VERUM;
+            *(FabricaCompositum**)xar_addere(c->nominata)  = compositum;
+            partes = fabrica_compositum_explicare(c->composita,
+                c->actiones, compositum->titulus, c->piscina,
+                &c->causa);
             per (j = ZEPHYRUM; partes != NIHIL
-                && j < xar_numerus(partes);
-                 j++)
+                && j < xar_numerus(partes); j++)
             {
-                *(chorda*)xar_addere(electa) =
+                *(chorda*)xar_addere(c->electa) =
                     *(chorda*)xar_obtinere(partes, j);
             }
         }
         si (!compositum_est)
         {
-            *(chorda*)xar_addere(electa) = argumentum;
+            *(chorda*)xar_addere(c->electa) = argumentum;
         }
     }
-    sigilla         = tabula_dispersa_creare_chorda(piscina, 1024);
-    memoria_aperta  = suturae_memoriam_aperire(&memoria, piscina);
-    ordo     = _ordinare_per_locos(actiones, sigilla, piscina,
-        memoria_aperta ? &memoria : NIHIL, &causa);
-    si (ordo == NIHIL)
-    {
-        fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
-            (constans character*)causa.datum);
-        redde II;
-    }
+}
 
-    /* SERA sub -plenus: generatores clausuras et scripturas VACUANT -
-     * iudex plenus alter simul eas sub pedibus huius deleret (T6:
-     * factum, claves ternae per actionem). flock: nucleus eam cum
-     * processu liberat, nulla sera stala. Celer nihil scribit:
-     * libera. */
-    sera = NIHIL;
-    si (plenus)
+/* finis omnis exitus post parationem: memoria clausa, sera liberata */
+interior vacuum
+_cursum_finire (
+    CursusFabricae* c)
+{
+    si (c->memoria_aperta)
+    {
+        scrinium_claudere(c->memoria.scrinium);
+        c->memoria_aperta = FALSUM;
+    }
+    filum_seram_liberare(c->sera);
+    c->sera = NIHIL;
+}
+
+/* partes compositi nominati: viae artificiorum eius */
+interior Xar*
+_partes_compositi (
+       CursusFabricae* c,
+    FabricaCompositum* compositum)
+{
+    redde fabrica_compositum_explicare(c->composita, c->actiones,
+        compositum->titulus, c->piscina, &c->causa);
+}
+
+/* cursus iudicandi: optiones, sententiae, iudex stalus, numeri */
+nomen structura {
+    CursusFabricae  cursus;
+               b32  plenus;
+               b32  omnia;
+               b32  tacta;
+               i32  auditus;
+               Xar* viae_tactae;   /* -tacta: viae commissionis */
+               Xar* sententiae;    /* Sententia */
+      FabricaActio* iudex_actio;   /* iudex stalus; NIHIL = nullus */
+               i32  recentia;
+               i32  stala;
+               i32  ignota;
+               i32  non_iudicata;
+} CursusIudicandi;
+
+/* vexilla iudicandi et viae tactae. FALSUM = vexillum ignotum */
+interior b32
+_iudicare_optiones (
+    CursusIudicandi*  t,
+                s32   argc,
+          character** argv,
+            Piscina*  piscina)
+{
+    s32 a;
+
+    /* A2: unus ex XX ictuum sub -plenus regeneratur */
+    t->auditus = XX;
+    per (a = II; a < argc; a++)
+    {
+        si (strcmp(argv[a], "-plenus") == 0)
+        {
+            t->plenus = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-audit") == 0)
+        {
+            /* AUDITUS omnium (plan 2 T2): omnis ictus vestigii aut
+             * memoriae regeneratur et confertur; -plenus implicat */
+            t->plenus   = VERUM;
+            t->auditus  = I;
+        }
+        alioquin si (strcmp(argv[a], "-tacta") == 0)
+        {
+            /* argumenta positionalia = viae commissionis: artificia
+             * GENERATA (regeneratio) quae tangunt iudicantur, non
+             * installata (binaria non committuntur; uncus sessionis ea
+             * nominat). Nullum tactum = exitus 0 (T8 gradus III) */
+            t->tacta = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-omnia") == 0)
+        {
+            /* RECENS quoque cum causa ('memoria', 'regeneratio
+             * congruit', 'relatio congruit') - plantae T6 */
+            t->omnia = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-machina") == 0)
+        {
+            suturae_machina = VERUM;   /* fabrica-6 H1: lineae TSV */
+        }
+        alioquin si (argv[a][0] == '-')
+        {
+            fprintf(stderr, "fabrica: vexillum ignotum %s\n", argv[a]);
+            redde FALSUM;
+        }
+    }
+    t->viae_tactae = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (a = II; t->tacta && a < argc; a++)
+    {
+        si (argv[a][0] != '-')
+        {
+            *(chorda*)xar_addere(t->viae_tactae) =
+                chorda_ex_literis(argv[a], piscina);
+        }
+    }
+    redde VERUM;
+}
+
+/* SERA sub -plenus: generatores clausuras et scripturas VACUANT -
+ * iudex plenus alter simul eas sub pedibus huius deleret (T6:
+ * factum, claves ternae per actionem). flock: nucleus eam cum
+ * processu liberat, nulla sera stala. Celer nihil scribit: libera.
+ * Deinde sutura vera nectitur. FALSUM = sera tenetur */
+interior b32
+_iudicare_suturam (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c = &t->cursus;
+
+    si (t->plenus)
     {
         (vacuum)filum_directorium_creare_cum_parentibus(
             "build/fabrica");
-        sera = filum_seram_capere("build/fabrica/sera", ZEPHYRUM,
-            piscina);
-        si (sera == NIHIL)
+        c->sera = filum_seram_capere("build/fabrica/sera", ZEPHYRUM,
+            c->piscina);
+        si (c->sera == NIHIL)
         {
             fprintf(stderr, "fabrica: iudex plenus alius currit "
                 "(build/fabrica/sera tenetur) - exspecta eum aut "
                 "siste\n");
-            redde II;
+            redde FALSUM;
         }
     }
-
-    suturae_legentem_parare(&sutura);
-    suturae_currentem_addere(&sutura);
-    si (memoria_aperta)
+    suturae_legentem_parare(&c->sutura);
+    suturae_currentem_addere(&c->sutura);
+    si (c->memoria_aperta)
     {
-        suturae_memoriam_nectere(&sutura, &memoria);
+        suturae_memoriam_nectere(&c->sutura, &c->memoria);
     }
-    sutura.radix    = suturae_radix_absoluta(piscina);
-    suturae_iudicii_parare(&sutura, actiones, piscina);
-    sutura.auditus  = auditus;
+    c->sutura.radix    = suturae_radix_absoluta(c->piscina);
+    suturae_iudicii_parare(&c->sutura, c->actiones, c->piscina);
+    c->sutura.auditus  = t->auditus;
     /* memoria sigillorum per cursum: communis semel sigillatur (iam
      * impleta per ordinem per locos) */
-    sutura.sigilla    = sigilla;
+    c->sutura.sigilla  = c->sigilla;
     /* generator semel per actionem (exitus multi, cursus unus) */
-    sutura.regenerationes = tabula_dispersa_creare_chorda(piscina, 64);
+    c->sutura.regenerationes = tabula_dispersa_creare_chorda(c->piscina,
+        64);
     /* sigillum ingressuum semel per actionem */
-    sutura.digesta = tabula_dispersa_creare_chorda(piscina, 128);
+    c->sutura.digesta = tabula_dispersa_creare_chorda(c->piscina, 128);
+    redde VERUM;
+}
 
-    /* PRAEVISIO (T6b): sub -plenus regenerationes actionum tutarum
-     * (lectiones) quas iudicium hoc posceret SIMUL currunt; iudicium
-     * infra (ordine suo, immutatum) eas memoratas invenit */
-    suturae_fila_maxima = suturae_fila_computare(piscina);
-    si (plenus && suturae_fila_maxima > I)
+/* PRAEVISIO (T6b): sub -plenus regenerationes actionum tutarum
+ * (lectiones) quas iudicium hoc posceret SIMUL currunt; iudicium
+ * postea (ordine suo, immutatum) eas memoratas invenit */
+interior vacuum
+_iudicare_praevidere (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c       = &t->cursus;
+     FabricaSutura* sutura  = &c->sutura;
+               Xar* praevidendae;
+               i32  i;
+               i32  j;
+
+    suturae_fila_maxima = suturae_fila_computare(c->piscina);
+    si (!t->plenus || suturae_fila_maxima <= I)
     {
-        Xar* praevidendae;
+        redde;
+    }
+    sutura->currere_simul = suturae_currere_simul;
+    praevidendae = xar_creare(c->piscina,
+        (i32)magnitudo(FabricaActio*));
+    per (i = ZEPHYRUM; praevidendae != NIHIL
+         && i < xar_numerus(c->ordo); i++)
+    {
+        FabricaActio* actio;
+                 b32  iudicanda;
 
-        sutura.currere_simul = suturae_currere_simul;
-        praevidendae = xar_creare(piscina,
-            (i32)magnitudo(FabricaActio*));
-        per (i = ZEPHYRUM; praevidendae != NIHIL
-             && i < xar_numerus(ordo); i++)
+        actio = *(FabricaActio**)xar_obtinere(c->ordo, i);
+        si (   !actio->lectiones
+            || actio->genus == FABRICA_ACTIO_IUDICIUM)
         {
-            FabricaActio* actio;
-                     b32  iudicanda;
+            perge;   /* iudicium: verdictum numquam praevidetur */
+        }
+        iudicanda = FALSUM;
+        si (t->tacta)
+        {
+            iudicanda = fabrica_actio_tacta(sutura, actio,
+                t->viae_tactae, c->piscina);
+        }
+        alioquin
+        {
+            per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+            {
+                FabricaExitus* exitus;
 
-            actio = *(FabricaActio**)xar_obtinere(ordo, i);
-            si (   !actio->lectiones
-                || actio->genus == FABRICA_ACTIO_IUDICIUM)
-            {
-                perge;   /* iudicium: verdictum numquam praevidetur */
-            }
-            iudicanda = FALSUM;
-            si (tacta)
-            {
-                iudicanda = fabrica_actio_tacta(&sutura, actio,
-                    viae_tactae, piscina);
-            }
-            alioquin
-            {
-                per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
+                exitus = (FabricaExitus*)xar_obtinere(actio->exitus, j);
+                si (   exitus->strategia->iudicatur
+                    && _electum(c->electa, exitus->via))
                 {
-                    FabricaExitus* exitus;
-
-                    exitus = (FabricaExitus*)xar_obtinere(actio->exitus,
-                        j);
-                    si (   exitus->strategia->iudicatur
-                        && _electum(electa, exitus->via))
-                    {
-                        iudicanda = VERUM;
-                    }
+                    iudicanda = VERUM;
                 }
             }
-            si (iudicanda)
-            {
-                *(FabricaActio**)xar_addere(praevidendae) = actio;
-            }
         }
-        si (praevidendae != NIHIL)
+        si (iudicanda)
         {
-            fabrica_regenerationes_praevidere(&sutura, praevidendae,
-                plenus, piscina);
+            *(FabricaActio**)xar_addere(praevidendae) = actio;
         }
     }
+    si (praevidendae != NIHIL)
+    {
+        fabrica_regenerationes_praevidere(sutura, praevidendae,
+            t->plenus, c->piscina);
+    }
+}
 
-    /* STADIUM IUDICUM (fabrica-6 T3): actiones iudex="verum" primum;
-     * quaevis non recens -> ceteri NON IUDICATI nominantes eam (iudex
-     * stalus sententias suspectas faceret) */
-    iudex_stalus  = NIHIL;
-    iudex_actio   = NIHIL;
-    sententiae    = xar_creare(piscina, (i32)magnitudo(Sententia));
-    per (i = ZEPHYRUM; i < xar_numerus(actiones)
-        && iudex_stalus == NIHIL;
+/* STADIUM IUDICUM (fabrica-6 T3): actiones iudex="verum" primum;
+ * quaevis non recens -> ceteri NON IUDICATI nominantes eam (iudex
+ * stalus sententias suspectas faceret). Sententia iudicis stali ipsa
+ * PRIMA (numeratur, sanatio eum nominat) - etiam si non electa */
+interior vacuum
+_iudicare_iudices (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c = &t->cursus;
+               i32  i;
+               i32  j;
+
+    t->iudex_actio  = NIHIL;
+    t->sententiae   = xar_creare(c->piscina, (i32)magnitudo(Sententia));
+    per (i = ZEPHYRUM; i < xar_numerus(c->actiones)
+        && t->iudex_actio == NIHIL;
          i++)
     {
-        FabricaActio* actio = (FabricaActio*)xar_obtinere(actiones, i);
+        FabricaActio* actio = (FabricaActio*)xar_obtinere(c->actiones,
+            i);
 
         si (!actio->iudex)
         {
@@ -946,36 +1029,44 @@ _iudicare (
             {
                 perge;
             }
-            iudicium = fabrica_iudicare(&sutura, actio, exitus, plenus,
-                piscina);
+            iudicium = fabrica_iudicare(&c->sutura, actio, exitus,
+                t->plenus, c->piscina);
             si (iudicium.status != FABRICA_RECENS)
             {
-                /* sententia iudicis ipsa PRIMA (numeratur, sanatio eum
-                 * nominat) - etiam si non electa */
                 Sententia* sententia =
-                    (Sententia*)xar_addere(sententiae);
+                    (Sententia*)xar_addere(t->sententiae);
 
                 sententia->actio     = actio;
                 sententia->iudicium  = iudicium;
-                iudex_stalus         = &actio->titulus;
-                iudex_actio          = actio;
+                t->iudex_actio       = actio;
                 frange;
             }
         }
     }
+}
 
-    per (i = ZEPHYRUM; i < xar_numerus(ordo); i++)
+/* sententiae ordine dependentiae: electa (aut tacta generata); sub
+ * iudice stalo ceterae NON IUDICATAE */
+interior vacuum
+_iudicare_sententias (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c = &t->cursus;
+               i32  i;
+               i32  j;
+
+    per (i = ZEPHYRUM; i < xar_numerus(c->ordo); i++)
     {
         FabricaActio* actio;
 
-        actio = *(FabricaActio**)xar_obtinere(ordo, i);
-        si (actio == iudex_actio)
+        actio = *(FabricaActio**)xar_obtinere(c->ordo, i);
+        si (actio == t->iudex_actio)
         {
             perge;   /* sententia eius iam prima */
         }
-        si (   tacta
-            && !fabrica_actio_tacta(&sutura, actio, viae_tactae,
-            piscina))
+        si (   t->tacta
+            && !fabrica_actio_tacta(&c->sutura, actio, t->viae_tactae,
+            c->piscina))
         {
             perge;
         }
@@ -988,14 +1079,15 @@ _iudicare (
             /* praecondicio (strategia ignota): numquam iudicatur */
             si (!exitus->strategia->iudicatur)
             {
-                si (suturae_machina && _electum(electa, exitus->via))
+                si (suturae_machina && _electum(c->electa, exitus->via))
                 {
                     fputs("PRAECONDICIO", stdout);
                     suturae_campus(exitus->via);
                     suturae_campus(actio->titulus);
                     putchar('\n');
                 }
-                alioquin si (omnia && _electum(electa, exitus->via))
+                alioquin si (   t->omnia && _electum(c->electa,
+                             exitus->via))
                 {
                     printf("PRAECONDICIO %.*s - %.*s (ignota, numquam "
                         "iudicatur)\n", (s32)exitus->via.mensura,
@@ -1005,7 +1097,7 @@ _iudicare (
                 }
                 perge;
             }
-            si (tacta)
+            si (t->tacta)
             {
                 /* commissa generata solum: strategia quae octetis
                  * comparat */
@@ -1014,116 +1106,115 @@ _iudicare (
                     perge;
                 }
             }
-            alioquin si (!_electum(electa, exitus->via))
+            alioquin si (!_electum(c->electa, exitus->via))
             {
                 perge;
             }
             /* iudicium (porta, spec 3 par. XII) solum NOMINATUM
              * iudicatur: verritio sine argumentis id omittit */
-            si (   electa       == NIHIL
+            si (   c->electa    == NIHIL
                 && actio->genus == FABRICA_ACTIO_IUDICIUM)
             {
                 perge;
             }
-            sententia         = (Sententia*)xar_addere(sententiae);
+            sententia         = (Sententia*)xar_addere(t->sententiae);
             sententia->actio  = actio;
-            si (iudex_stalus != NIHIL && !actio->iudex)
+            si (t->iudex_actio != NIHIL && !actio->iudex)
             {
                 sententia->iudicium.artificium  = exitus->via;
                 sententia->iudicium.status      = FABRICA_NON_IUDICATUM;
                 sententia->iudicium.causa       =
-                    _iungere_iudicem(piscina,
-                    *iudex_stalus);
+                    _iungere_iudicem(c->piscina,
+                    t->iudex_actio->titulus);
                 perge;
             }
-            sententia->iudicium = fabrica_iudicare(&sutura, actio,
-                exitus, plenus, piscina);
+            sententia->iudicium = fabrica_iudicare(&c->sutura, actio,
+                exitus, t->plenus, c->piscina);
         }
     }
-    si (xar_numerus(sententiae) == 0 && tacta)
-    {
-        printf(suturae_machina
-            ? "NOTA\tnulla artificia generata a viis tacta\n"
-            : "fabrica: nulla artificia generata a viis tacta\n");
-        filum_seram_liberare(sera);
-        redde ZEPHYRUM;
-    }
-    si (xar_numerus(sententiae) == 0)
-    {
-        fprintf(stderr, "fabrica: nihil iudicatum (nulla artificia "
-            "declarata%s)\n",
-            electa == NIHIL ? "" : " congruunt");
-        redde II;
-    }
+}
 
-    /* iudex ipse PRIMUS: si bin/fabrica stalum est, ceterae
-     * sententiae ab eo scriptae suspectae sunt */
-    per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
+/* iudex ipse PRIMUS: si bin/fabrica stalum est, ceterae sententiae ab
+ * eo scriptae suspectae sunt; deinde ceterae, numeratae */
+interior vacuum
+_iudicare_imprimere (
+    CursusIudicandi* t)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(t->sententiae); i++)
     {
         Sententia* s;
 
-        s = (Sententia*)xar_obtinere(sententiae, i);
+        s = (Sententia*)xar_obtinere(t->sententiae, i);
         si (chorda_aequalis_literis(s->iudicium.artificium,
                 "bin/fabrica"))
         {
-            _sententiam_imprimere(s, omnia);
+            _sententiam_imprimere(s, t->omnia);
         }
     }
-    recentia      = ZEPHYRUM;
-    stala         = ZEPHYRUM;
-    ignota        = ZEPHYRUM;
-    non_iudicata  = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
+    per (i = ZEPHYRUM; i < xar_numerus(t->sententiae); i++)
     {
         Sententia* s;
 
-        s = (Sententia*)xar_obtinere(sententiae, i);
+        s = (Sententia*)xar_obtinere(t->sententiae, i);
         commutatio (s->iudicium.status)
         {
             casus FABRICA_RECENS:
-                recentia++;
+                t->recentia++;
                 frange;
             casus FABRICA_STALUM:
-                stala++;
+                t->stala++;
                 frange;
             casus FABRICA_IGNOTUM:
-                ignota++;
+                t->ignota++;
                 frange;
             ordinarius:
-                non_iudicata++;
+                t->non_iudicata++;
                 frange;
         }
         si (!chorda_aequalis_literis(s->iudicium.artificium,
                 "bin/fabrica"))
         {
-            _sententiam_imprimere(s, omnia);
+            _sententiam_imprimere(s, t->omnia);
         }
     }
+}
 
-    /* composita nominata: pessimum partium, post partes */
-    per (i = ZEPHYRUM; i < xar_numerus(nominata); i++)
+/* composita nominata: pessimum partium, post partes; VERDICTUM
+ * (fabrica-6 T7) '<titulus>: N/M' ex partibus */
+interior vacuum
+_iudicare_composita (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c = &t->cursus;
+               i32  i;
+               i32  j;
+
+    per (i = ZEPHYRUM; i < xar_numerus(c->nominata); i++)
     {
         FabricaCompositum* compositum;
           FabricaIudicium  coniunctum;
                       Xar* partes;
                       Xar* iudicia;
+                   chorda  verdictum;
 
-        compositum = *(FabricaCompositum**)xar_obtinere(nominata, i);
-        partes = fabrica_compositum_explicare(composita, actiones,
-            compositum->titulus, piscina, &causa);
-        iudicia = xar_creare(piscina, (i32)magnitudo(FabricaIudicium));
-        per (j = ZEPHYRUM; j < xar_numerus(sententiae); j++)
+        compositum = *(FabricaCompositum**)xar_obtinere(c->nominata, i);
+        partes = _partes_compositi(c, compositum);
+        iudicia = xar_creare(c->piscina,
+            (i32)magnitudo(FabricaIudicium));
+        per (j = ZEPHYRUM; j < xar_numerus(t->sententiae); j++)
         {
             Sententia* s;
 
-            s = (Sententia*)xar_obtinere(sententiae, j);
+            s = (Sententia*)xar_obtinere(t->sententiae, j);
             si (_electum(partes, s->iudicium.artificium))
             {
                 *(FabricaIudicium*)xar_addere(iudicia) = s->iudicium;
             }
         }
         coniunctum = fabrica_iudicia_coniungere(iudicia,
-            compositum->titulus, piscina);
+            compositum->titulus, c->piscina);
         si (suturae_machina)
         {
             fputs("COMPOSITUM", stdout);
@@ -1139,147 +1230,206 @@ _iudicare (
             (constans character*)coniunctum.artificium.datum,
             (s32)coniunctum.causa.mensura,
             (constans character*)coniunctum.causa.datum);
-        /* VERDICTUM (fabrica-6 T7): '<titulus>: N/M' ex partibus */
-        {
-            chorda verdictum;
-
-            verdictum = fabrica_compositum_verdictum(iudicia,
-                compositum->titulus, piscina);
-            printf("VERDICTUM %.*s\n", (s32)verdictum.mensura,
-                (constans character*)verdictum.datum);
-        }
+        verdictum = fabrica_compositum_verdictum(iudicia,
+            compositum->titulus, c->piscina);
+        printf("VERDICTUM %.*s\n", (s32)verdictum.mensura,
+            (constans character*)verdictum.datum);
     }
+}
 
-    /* SANATIO: actiones artificiorum stalorum/ignotorum, ordine
-     * dependentiae, semel quaeque */
-    si (stala + ignota > 0)
+/* SANATIO: actiones artificiorum stalorum/ignotorum, ordine
+ * dependentiae, semel quaeque */
+interior vacuum
+_iudicare_sanationem (
+    CursusIudicandi* t)
+{
+    FabricaActio* prior;
+             i32  i;
+             i32  k;
+
+    si (t->stala + t->ignota == 0)
     {
-        FabricaActio* prior;
+        redde;
+    }
+    si (!suturae_machina)
+    {
+        printf("SANATIO:\n");
+    }
+    prior = NIHIL;
+    per (i = ZEPHYRUM; i < xar_numerus(t->sententiae); i++)
+    {
+        Sententia* s;
 
-        si (!suturae_machina)
+        s = (Sententia*)xar_obtinere(t->sententiae, i);
+        si (   s->iudicium.status != FABRICA_STALUM
+            && s->iudicium.status != FABRICA_IGNOTUM)
         {
-            printf("SANATIO:\n");
+            perge;
         }
-        prior = NIHIL;
-        per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
+        si (s->actio == prior)
         {
-            Sententia* s;
-                  i32  k;
-
-            s = (Sententia*)xar_obtinere(sententiae, i);
-            si (   s->iudicium.status != FABRICA_STALUM
-                && s->iudicium.status != FABRICA_IGNOTUM)
-            {
-                perge;
-            }
-            si (s->actio == prior)
-            {
-                perge;
-            }
-            prior = s->actio;
-            si (suturae_machina)
-            {
-                fputs("SANANDA", stdout);
-                suturae_campus(s->actio->titulus);
-                suturae_campus(s->actio->sedes);
-                putchar('\t');
-                per (k = ZEPHYRUM; k < xar_numerus(s->actio->mandatum);
-                     k++)
-                {
-                    chorda verbum = *(chorda*)xar_obtinere(
-                        s->actio->mandatum, k);
-
-                    printf(k > ZEPHYRUM ? " %.*s" : "%.*s",
-                        (s32)verbum.mensura,
-                        (constans character*)verbum.datum);
-                }
-                putchar('\n');
-                perge;
-            }
-            printf(" ");
-            si (xar_numerus(s->actio->mandatum) == 0)
-            {
-                printf(" (sanatio non declarata)");
-            }
+            perge;
+        }
+        prior = s->actio;
+        si (suturae_machina)
+        {
+            fputs("SANANDA", stdout);
+            suturae_campus(s->actio->titulus);
+            suturae_campus(s->actio->sedes);
+            putchar('\t');
             per (k = ZEPHYRUM; k < xar_numerus(s->actio->mandatum); k++)
             {
-                chorda verbum;
+                chorda verbum = *(chorda*)xar_obtinere(
+                    s->actio->mandatum, k);
 
-                verbum = *(chorda*)xar_obtinere(s->actio->mandatum, k);
-                printf(" %.*s", (s32)verbum.mensura,
+                printf(k > ZEPHYRUM ? " %.*s" : "%.*s",
+                    (s32)verbum.mensura,
                     (constans character*)verbum.datum);
             }
-            printf("   # %.*s (%.*s)\n",
-                (s32)s->actio->titulus.mensura,
-                (constans character*)s->actio->titulus.datum,
-                (s32)s->actio->sedes.mensura,
-                (constans character*)s->actio->sedes.datum);
+            putchar('\n');
+            perge;
         }
-    }
+        printf(" ");
+        si (xar_numerus(s->actio->mandatum) == 0)
+        {
+            printf(" (sanatio non declarata)");
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(s->actio->mandatum); k++)
+        {
+            chorda verbum;
 
-    /* orphana et binaria sine declaratione solum sine filtro
-     * artificiorum (vexilla non filtrant) */
-    orphana = (!tacta && electa == NIHIL)
-        ? _orphana_imprimere(piscina) : ZEPHYRUM;
-    si (!tacta && electa == NIHIL)
+            verbum = *(chorda*)xar_obtinere(s->actio->mandatum, k);
+            printf(" %.*s", (s32)verbum.mensura,
+                (constans character*)verbum.datum);
+        }
+        printf("   # %.*s (%.*s)\n",
+            (s32)s->actio->titulus.mensura,
+            (constans character*)s->actio->titulus.datum,
+            (s32)s->actio->sedes.mensura,
+            (constans character*)s->actio->sedes.datum);
+    }
+}
+
+/* orphana et binaria sine declaratione solum sine filtro artificiorum
+ * (vexilla non filtrant); numerus orphanorum */
+interior i32
+_iudicare_orphana (
+    CursusIudicandi* t)
+{
+    CursusFabricae* c = &t->cursus;
+               i32  orphana;
+               i32  sine;
+               Xar* areae;
+               i32  a;
+
+    si (t->tacta || c->electa != NIHIL)
     {
-        i32  sine;
-        Xar* areae;
-        i32  a;
-
-        /* areae graduum sine membro (fabrica-6 T5): nuntiatae */
-        areae = fabrica_areas_orphanas(&sutura, actiones, piscina);
-        per (a = ZEPHYRUM; areae != NIHIL
-            && a < xar_numerus(areae); a++)
-        {
-            chorda via = *(chorda*)xar_obtinere(areae, a);
-
-            si (suturae_machina)
-            {
-                fputs("ORPHANUM", stdout);
-                suturae_campus(via);
-                _campus_literis("area gradus sine membro");
-                putchar('\n');
-            }
-            alioquin
-            {
-                printf("ORPHANUM: %.*s (area gradus sine membro)\n",
-                    (s32)via.mensura, (constans character*)via.datum);
-            }
-            orphana++;
-        }
-
-        sine = _binaria_sine_declaratione(actiones, piscina);
-        si (sine > 0)
-        {
-            printf(suturae_machina ? "BINARIA\t%u\n"
-                : "IGNOTUM: %u binaria in bin/ sine declaratione "
-                "(numerus solus, Q36)\n", (insignatus integer)sine);
-        }
+        redde ZEPHYRUM;
     }
+    orphana = _orphana_imprimere(c->piscina);
+    /* areae graduum sine membro (fabrica-6 T5): nuntiatae */
+    areae = fabrica_areas_orphanas(&c->sutura, c->actiones, c->piscina);
+    per (a = ZEPHYRUM; areae != NIHIL
+        && a < xar_numerus(areae); a++)
+    {
+        chorda via = *(chorda*)xar_obtinere(areae, a);
+
+        si (suturae_machina)
+        {
+            fputs("ORPHANUM", stdout);
+            suturae_campus(via);
+            _campus_literis("area gradus sine membro");
+            putchar('\n');
+        }
+        alioquin
+        {
+            printf("ORPHANUM: %.*s (area gradus sine membro)\n",
+                (s32)via.mensura, (constans character*)via.datum);
+        }
+        orphana++;
+    }
+    sine = _binaria_sine_declaratione(c->actiones, c->piscina);
+    si (sine > 0)
+    {
+        printf(suturae_machina ? "BINARIA\t%u\n"
+            : "IGNOTUM: %u binaria in bin/ sine declaratione "
+            "(numerus solus, Q36)\n", (insignatus integer)sine);
+    }
+    redde orphana;
+}
+
+interior s32
+_iudicare (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina)
+{
+    CursusIudicandi t;
+                i32 orphana;
+                s32 exitus;
+
+    memset(&t, ZEPHYRUM, magnitudo(CursusIudicandi));
+    si (!_iudicare_optiones(&t, argc, argv, piscina))
+    {
+        redde II;
+    }
+    si (!_cursum_parare(&t.cursus, piscina))
+    {
+        _cursum_finire(&t.cursus);
+        redde II;
+    }
+    si (!t.tacta)
+    {
+        _electa_colligere(&t.cursus, argc, argv);
+    }
+    si (!_iudicare_suturam(&t))
+    {
+        _cursum_finire(&t.cursus);
+        redde II;
+    }
+    _iudicare_praevidere(&t);
+    _iudicare_iudices(&t);
+    _iudicare_sententias(&t);
+    si (xar_numerus(t.sententiae) == 0 && t.tacta)
+    {
+        printf(suturae_machina
+            ? "NOTA\tnulla artificia generata a viis tacta\n"
+            : "fabrica: nulla artificia generata a viis tacta\n");
+        _cursum_finire(&t.cursus);
+        redde ZEPHYRUM;
+    }
+    si (xar_numerus(t.sententiae) == 0)
+    {
+        fprintf(stderr, "fabrica: nihil iudicatum (nulla artificia "
+            "declarata%s)\n",
+            t.cursus.electa == NIHIL ? "" : " congruunt");
+        _cursum_finire(&t.cursus);
+        redde II;
+    }
+    _iudicare_imprimere(&t);
+    _iudicare_composita(&t);
+    _iudicare_sanationem(&t);
+    orphana = _iudicare_orphana(&t);
     si (suturae_machina)
     {
         printf("SUMMA\t%u\t%u\t%u\t%u\t%u\t%s\n",
-            (insignatus integer)recentia, (insignatus integer)stala,
-            (insignatus integer)ignota,
-            (insignatus integer)non_iudicata,
-            (insignatus integer)orphana, plenus ? "plenus" : "celer");
+            (insignatus integer)t.recentia, (insignatus integer)t.stala,
+            (insignatus integer)t.ignota,
+            (insignatus integer)t.non_iudicata,
+            (insignatus integer)orphana, t.plenus ? "plenus" : "celer");
     }
     alioquin
     {
         printf("fabrica: %u recentia, %u stala, %u ignota, %u non "
             "iudicata%s, %u orphana\n",
-            (insignatus integer)recentia, (insignatus integer)stala,
-            (insignatus integer)ignota,
-            (insignatus integer)non_iudicata,
-            plenus ? "" : " (celer)", (insignatus integer)orphana);
+            (insignatus integer)t.recentia, (insignatus integer)t.stala,
+            (insignatus integer)t.ignota,
+            (insignatus integer)t.non_iudicata,
+            t.plenus ? "" : " (celer)", (insignatus integer)orphana);
     }
-    si (sutura.datum != NIHIL)
-    {
-        scrinium_claudere(memoria.scrinium);
-    }
-    filum_seram_liberare(sera);
-    redde (stala + ignota > 0) ? I : ZEPHYRUM;
+    exitus = (t.stala + t.ignota > 0) ? I : ZEPHYRUM;
+    _cursum_finire(&t.cursus);
+    redde exitus;
 }
 
 
@@ -1321,48 +1471,39 @@ _causam_imprimere (
 /* auditus sub sanare: -audit (I) aut FABRICA_AUDITUS=N */
 hic_manens i32 auditus_sanandi = ZEPHYRUM;
 
-interior s32
-_sanare (
-          s32   argc,
-    character** argv,
-      Piscina*  piscina)
-{
-                  Xar* nominata;
-                  Xar* sanationes_iudicum;
-        FabricaSutura  sutura;
-              Memoria  memoria;
-                  b32  memoria_aperta;
-            FilumSera* sera;
-       TabulaDispersa* sigilla;
-                  Xar* actiones;
-                  Xar* composita;
-                  Xar* ordo;
-                  Xar* electa;
-                  Xar* sanationes;
-               chorda  causa;
-                  b32  siccum;
-                  b32  commissa;
-                  s32  a;
-                  i32  i;
-                  i32  j;
-                  i32  numeri[FABRICA_IUDICIUM + I];   /* omnes eventus:
-                                     * VI erat - AUDITUM_DISCORS (index VI)
-                                     * ultra finem scribebat (T7) */
-                i32 duratio;
-                i32 aestimatio;
-                i32 sine_tempore;
+/* cursus sanandi: sanationes et numeri earum */
+nomen structura {
+    CursusFabricae  cursus;
+               b32  siccum;
+               Xar* sanationes;    /* iudicum primae, deinde ceterae */
+               i32  numeri[FABRICA_IUDICIUM + I];   /* omnes eventus:
+                                     * VI erat - AUDITUM_DISCORS (index
+                                     * VI) ultra finem scribebat (T7) */
+               i32 duratio;
+               i32 aestimatio;    /* siccum: ex cursibus ultimis */
+               i32 sine_tempore;
+               b32 commissa;      /* generata in arbore mutata */
+} CursusSanandi;
 
-    siccum = FALSUM;
+/* vexilla sanandi. FALSUM = vexillum ignotum */
+interior b32
+_sanare_optiones (
+    CursusSanandi*  m,
+              s32   argc,
+        character** argv)
+{
+    s32 a;
+
     per (a = II; a < argc; a++)
     {
         si (strcmp(argv[a], "-siccum") == 0)
         {
-            siccum = VERUM;
+            m->siccum = VERUM;
         }
         alioquin si (strcmp(argv[a], "-audit") == 0)
         {
-            /* AUDITUS TRANSITUS (spec 3 par. XIII): actio iudicium RECENS
-             * tamen currit; defectus = AUDITUM DISCORS */
+            /* AUDITUS TRANSITUS (spec 3 par. XIII): actio iudicium
+             * RECENS tamen currit; defectus = AUDITUM DISCORS */
             auditus_sanandi = I;
         }
         alioquin si (strcmp(argv[a], "-machina") == 0)
@@ -1372,89 +1513,28 @@ _sanare (
         alioquin si (argv[a][0] == '-')
         {
             fprintf(stderr, "fabrica: vexillum ignotum %s\n", argv[a]);
-            redde II;
+            redde FALSUM;
         }
     }
-    actiones = _declarationes_colligere(piscina, &composita);
-    si (actiones == NIHIL)
-    {
-        redde II;
-    }
-    causa           = chorda_ex_literis("", piscina);
-    sigilla         = tabula_dispersa_creare_chorda(piscina, 1024);
-    memoria_aperta  = suturae_memoriam_aperire(&memoria, piscina);
-    ordo     = _ordinare_per_locos(actiones, sigilla, piscina,
-        memoria_aperta ? &memoria : NIHIL, &causa);
-    si (ordo == NIHIL)
-    {
-        fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
-            (constans character*)causa.datum);
-        redde II;
-    }
+    redde VERUM;
+}
 
-    /* electa: via artificii aut titulus compositi */
-    electa    = NIHIL;
-    nominata  = xar_creare(piscina, (i32)magnitudo(FabricaCompositum*));
-    per (a = II; a < argc; a++)
-    {
-        b32 compositum_est;
+/* iudex ipse PRIMUS (Review Focus 1): iudex stalus digesta stala
+ * scriberet et sanaret - nihil agitur. FALSUM = bin/fabrica non
+ * recens */
+interior b32
+_sanare_iudicem_ipsum (
+    CursusSanandi* m)
+{
+    CursusFabricae* c = &m->cursus;
+               i32  i;
+               i32  j;
 
-        si (argv[a][0] == '-')
-        {
-            perge;
-        }
-        si (electa == NIHIL)
-        {
-            electa = xar_creare(piscina, (i32)magnitudo(chorda));
-        }
-        compositum_est = FALSUM;
-        per (i = ZEPHYRUM; i < xar_numerus(composita); i++)
-        {
-            FabricaCompositum* compositum;
-                          Xar* partes;
-
-            compositum = (FabricaCompositum*)xar_obtinere(composita, i);
-            si (!chorda_aequalis_literis(compositum->titulus, argv[a]))
-            {
-                perge;
-            }
-            compositum_est = VERUM;
-            si (nominata != NIHIL)
-            {
-                *(FabricaCompositum**)xar_addere(nominata) = compositum;
-            }
-            partes = fabrica_compositum_explicare(composita, actiones,
-                compositum->titulus, piscina, &causa);
-            per (j = ZEPHYRUM; partes != NIHIL
-                && j < xar_numerus(partes);
-                 j++)
-            {
-                *(chorda*)xar_addere(electa) =
-                    *(chorda*)xar_obtinere(partes, j);
-            }
-        }
-        si (!compositum_est)
-        {
-            *(chorda*)xar_addere(electa) = chorda_ex_literis(argv[a],
-                piscina);
-        }
-    }
-
-    suturae_legentem_parare(&sutura);
-    suturae_currentem_addere(&sutura);
-    suturae_agentem_addere(&sutura, actiones, siccum, piscina);
-    sutura.sigilla         = sigilla;
-    sutura.regenerationes  = tabula_dispersa_creare_chorda(piscina, 64);
-    sutura.digesta = tabula_dispersa_creare_chorda(piscina,
-        128);
-
-    /* iudex ipse PRIMUS (Review Focus 1): iudex stalus digesta stala
-     * scriberet et sanaret - nihil agitur */
-    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    per (i = ZEPHYRUM; i < xar_numerus(c->actiones); i++)
     {
         FabricaActio* actio;
 
-        actio = (FabricaActio*)xar_obtinere(actiones, i);
+        actio = (FabricaActio*)xar_obtinere(c->actiones, i);
         per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
         {
             FabricaExitus* exitus;
@@ -1465,8 +1545,8 @@ _sanare (
             {
                 perge;
             }
-            iudicium = fabrica_iudicare(&sutura, actio, exitus, FALSUM,
-                piscina);
+            iudicium = fabrica_iudicare(&c->sutura, actio, exitus,
+                FALSUM, c->piscina);
             si (iudicium.status != FABRICA_RECENS)
             {
                 fprintf(stderr,
@@ -1474,342 +1554,322 @@ _sanare (
                     "./tools/fabrica_struere.sh prius, deinde iterum "
                     "sanare\n", (s32)iudicium.causa.mensura,
                     (constans character*)iudicium.causa.datum);
-                redde II;
+                redde FALSUM;
             }
         }
     }
+    redde VERUM;
+}
+
+/* sera capta, deinde memoria et ansae iudicii nexae, auditus.
+ * FALSUM = sera tenetur */
+interior b32
+_sanare_seram_capere (
+    CursusSanandi* m)
+{
+        CursusFabricae* c = &m->cursus;
+    constans character* n;
 
     (vacuum)filum_directorium_creare_cum_parentibus(
         "build/fabrica/acta");
-    sera = filum_seram_capere("build/fabrica/sera", ZEPHYRUM, piscina);
-    si (sera == NIHIL)
+    c->sera = filum_seram_capere("build/fabrica/sera", ZEPHYRUM,
+        c->piscina);
+    si (c->sera == NIHIL)
     {
         fprintf(stderr, "fabrica: iudex plenus aut sanatio alia currit "
             "(build/fabrica/sera tenetur) - exspecta eam aut siste\n");
-        redde II;
+        redde FALSUM;
     }
-    si (memoria_aperta)
+    si (c->memoria_aperta)
     {
-        suturae_memoriam_nectere(&sutura, &memoria);
+        suturae_memoriam_nectere(&c->sutura, &c->memoria);
     }
-    sutura.radix = suturae_radix_absoluta(piscina);
-    suturae_iudicii_parare(&sutura, actiones, piscina);
+    c->sutura.radix = suturae_radix_absoluta(c->piscina);
+    suturae_iudicii_parare(&c->sutura, c->actiones, c->piscina);
+    n = getenv("FABRICA_AUDITUS");
+    si (auditus_sanandi == ZEPHYRUM && n != NIHIL && n[0] != '\0')
     {
-        constans character* n = getenv("FABRICA_AUDITUS");
-
-        si (auditus_sanandi == ZEPHYRUM && n != NIHIL && n[0] != '\0')
-        {
-            auditus_sanandi = (i32)strtoul(n, NIHIL, X);
-        }
-        sutura.auditus  = auditus_sanandi;
-        sutura.audita   = tabula_dispersa_creare_chorda(piscina, 16);
+        auditus_sanandi = (i32)strtoul(n, NIHIL, X);
     }
+    c->sutura.auditus  = auditus_sanandi;
+    c->sutura.audita   = tabula_dispersa_creare_chorda(c->piscina, 16);
+    redde VERUM;
+}
 
-    printf(suturae_machina ? "NOTA\tsanare%s: iudicium plenum, ordine "
-        "dependentiae\n" : "fabrica sanare%s: iudicium plenum, ordine "
-        "dependentiae\n", siccum ? " -siccum" : "");
-    fflush(stdout);
-    /* STADIUM IUDICUM (fabrica-6 T3): iudices (iudex="verum") stali
-     * PRIMUM sanantur, deinde cetera - nihil sub iudice stalo sanatur.
-     * bin/fabrica ipse supra recusatur (se ipsum non restruit). */
-    sanationes_iudicum = NIHIL;
-    si (!siccum)
+/* STADIUM IUDICUM (fabrica-6 T3): iudices (iudex="verum") stali PRIMUM
+ * sanantur, deinde cetera - nihil sub iudice stalo sanatur. bin/fabrica
+ * ipse supra recusatur (se ipsum non restruit). FALSUM = fractura
+ * (causa nuntiata); *sanationes_out NIHIL si nullus iudex stalus */
+interior b32
+_sanare_iudices (
+    CursusSanandi*  m,
+              Xar** sanationes_out)
+{
+    CursusFabricae* c = &m->cursus;
+               Xar* viae_iudicum;
+               i32  i;
+               i32  j;
+
+    *sanationes_out = NIHIL;
+    si (m->siccum)
     {
-        Xar* viae_iudicum = xar_creare(piscina, (i32)magnitudo(chorda));
-
-        per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
-        {
-            FabricaActio* actio = (FabricaActio*)xar_obtinere(actiones,
-                i);
-
-            si (!actio->iudex)
-            {
-                perge;
-            }
-            per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
-            {
-                FabricaExitus* exitus = (FabricaExitus*)xar_obtinere(
-                    actio->exitus, j);
-
-                si (   exitus->strategia->iudicatur
-                    && fabrica_iudicare(&sutura, actio, exitus, FALSUM,
-                           piscina).status != FABRICA_RECENS)
-                {
-                    *(chorda*)xar_addere(viae_iudicum) = exitus->via;
-                }
-            }
-        }
-        si (xar_numerus(viae_iudicum) > ZEPHYRUM)
-        {
-            printf(suturae_machina
-                ? "NOTA\tstadium iudicum primum (%d)\n"
-                : "fabrica sanare: stadium iudicum primum (%d)\n",
-                (integer)xar_numerus(viae_iudicum));
-            fflush(stdout);
-            sanationes_iudicum = fabrica_sanare(&sutura, ordo,
-                viae_iudicum,
-                FALSUM, piscina, &causa);
-            si (sanationes_iudicum == NIHIL)
-            {
-                fprintf(stderr, "fabrica: stadium iudicum: %.*s\n",
-                    (s32)causa.mensura,
-                    (constans character*)causa.datum);
-                si (sutura.datum != NIHIL)
-                {
-                    scrinium_claudere(memoria.scrinium);
-                }
-                filum_seram_liberare(sera);
-                redde II;
-            }
-        }
+        redde VERUM;
     }
-    sanationes = fabrica_sanare(&sutura, ordo, electa, siccum, piscina,
-        &causa);
-    si (sanationes != NIHIL && sanationes_iudicum != NIHIL)
+    viae_iudicum = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    per (i = ZEPHYRUM; i < xar_numerus(c->actiones); i++)
     {
-        Xar* omnes = xar_creare(piscina,
-            (i32)magnitudo(FabricaSanatio));
+        FabricaActio* actio = (FabricaActio*)xar_obtinere(c->actiones,
+            i);
 
-        per (i = ZEPHYRUM; i < xar_numerus(sanationes_iudicum); i++)
+        si (!actio->iudex)
         {
-            *(FabricaSanatio*)xar_addere(omnes) =
-                *(FabricaSanatio*)xar_obtinere(sanationes_iudicum, i);
-        }
-        per (i = ZEPHYRUM; i < xar_numerus(sanationes); i++)
-        {
-            *(FabricaSanatio*)xar_addere(omnes) =
-                *(FabricaSanatio*)xar_obtinere(sanationes, i);
-        }
-        sanationes = omnes;
-    }
-    si (sanationes == NIHIL)
-    {
-        fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
-            (constans character*)causa.datum);
-        si (sutura.datum != NIHIL)
-        {
-            scrinium_claudere(memoria.scrinium);
-        }
-        filum_seram_liberare(sera);
-        redde II;
-    }
-
-    per (i = ZEPHYRUM; i <= (i32)FABRICA_IUDICIUM; i++)
-    {
-        numeri[i] = ZEPHYRUM;
-    }
-    duratio       = ZEPHYRUM;
-    aestimatio    = ZEPHYRUM;
-    sine_tempore  = ZEPHYRUM;
-    commissa      = FALSUM;
-    per (i = ZEPHYRUM; i < xar_numerus(sanationes); i++)
-    {
-        FabricaSanatio* sanatio;
-
-        sanatio = (FabricaSanatio*)xar_obtinere(sanationes, i);
-        numeri[sanatio->eventus]++;
-        duratio += sanatio->duratio_ms;
-        si (suturae_machina)
-        {
-            fputs("SANATIO", stdout);
-            _campus_literis(suturae_eventus_titulus(sanatio->eventus));
-            suturae_campus(sanatio->actio->titulus);
-            _campus_numerus((longus)sanatio->duratio_ms);
-            suturae_campus(sanatio->causa);
-            putchar('\n');
-            si (   sanatio->eventus == FABRICA_AGENDUM
-                || sanatio->eventus == FABRICA_FORTASSE)
-            {
-                si (sanatio->tempus_notum)
-                {
-                    aestimatio += sanatio->duratio_ms;
-                }
-                alioquin
-                {
-                    sine_tempore++;
-                }
-            }
-            si (sanatio->eventus == FABRICA_SANATUM)
-            {
-                per (j = ZEPHYRUM; j
-                    < xar_numerus(sanatio->actio->exitus);
-                     j++)
-                {
-                    si (((FabricaExitus*)xar_obtinere(
-                            sanatio->actio->exitus,
-                            j))->strategia->octetis_comparat)
-                    {
-                        commissa = VERUM;
-                    }
-                }
-            }
             perge;
         }
-        printf("%-11s %.*s", suturae_eventus_titulus(sanatio->eventus),
-            (s32)sanatio->actio->titulus.mensura,
-            (constans character*)sanatio->actio->titulus.datum);
-        si (   sanatio->eventus == FABRICA_AGENDUM
-            || sanatio->eventus == FABRICA_FORTASSE)
+        per (j = ZEPHYRUM; j < xar_numerus(actio->exitus); j++)
         {
-            /* aestimatio ex cursu ultimo (1b T7) */
-            si (sanatio->tempus_notum)
-            {
-                printf(" (~%u.%u s)",
-                    (insignatus integer)(sanatio->duratio_ms / M),
-                    (insignatus integer)((sanatio->duratio_ms % M)
-                        / C));
-                aestimatio += sanatio->duratio_ms;
-            }
-            alioquin
-            {
-                printf(" (tempus ignotum)");
-                sine_tempore++;
-            }
-        }
-        alioquin si (sanatio->eventus != FABRICA_OMISSUM)
-        {
-            printf(" (%u.%u s)",
-                (insignatus integer)(sanatio->duratio_ms / M),
-                (insignatus integer)((sanatio->duratio_ms % M) / C));
-        }
-        si (sanatio->causa.mensura > 0)
-        {
-            _causam_imprimere(sanatio->causa);
-        }
-        alioquin
-        {
-            printf("\n");
-        }
-        si (sanatio->eventus == FABRICA_SANATUM)
-        {
-            per (j = ZEPHYRUM; j < xar_numerus(sanatio->actio->exitus);
-                 j++)
-            {
-                FabricaExitus* exitus;
+            FabricaExitus* exitus = (FabricaExitus*)xar_obtinere(
+                actio->exitus, j);
 
-                exitus = (FabricaExitus*)xar_obtinere(
-                    sanatio->actio->exitus, j);
-                si (exitus->strategia->octetis_comparat)
-                {
-                    commissa = VERUM;
-                }
+            si (   exitus->strategia->iudicatur
+                && fabrica_iudicare(&c->sutura, actio, exitus, FALSUM,
+                       c->piscina).status != FABRICA_RECENS)
+            {
+                *(chorda*)xar_addere(viae_iudicum) = exitus->via;
             }
         }
     }
-    si (siccum && xar_numerus(sanationes) > 0)
+    si (xar_numerus(viae_iudicum) == ZEPHYRUM)
     {
-        Xar* agendae;
-        Xar* undae;
+        redde VERUM;
+    }
+    printf(suturae_machina
+        ? "NOTA\tstadium iudicum primum (%d)\n"
+        : "fabrica sanare: stadium iudicum primum (%d)\n",
+        (integer)xar_numerus(viae_iudicum));
+    fflush(stdout);
+    *sanationes_out = fabrica_sanare(&c->sutura, c->ordo, viae_iudicum,
+        FALSUM, c->piscina, &c->causa);
+    si (*sanationes_out == NIHIL)
+    {
+        fprintf(stderr, "fabrica: stadium iudicum: %.*s\n",
+            (s32)c->causa.mensura, (constans character*)c->causa.datum);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
 
-        /* undae (Q41): quae SIMUL currere possent - monstratur solum */
-        agendae = xar_creare(piscina, (i32)magnitudo(FabricaActio*));
-        per (i = ZEPHYRUM; i < xar_numerus(sanationes); i++)
-        {
-            *(constans FabricaActio**)xar_addere(agendae) =
-                ((FabricaSanatio*)xar_obtinere(sanationes, i))->actio;
-        }
-        undae = fabrica_undas_formare(agendae, piscina);
-        per (i = ZEPHYRUM; suturae_machina && undae != NIHIL
-             && i < xar_numerus(undae); i++)
-        {
-            Xar* membra = *(Xar**)xar_obtinere(undae, i);
+/* sanatio una: numeri (semel, utrique formae communes), deinde linea
+ * machinae aut humana */
+interior vacuum
+_sanare_eventum (
+              CursusSanandi* m,
+    constans FabricaSanatio* sanatio)
+{
+    b32 agenda;
+    i32 j;
 
-            fputs("UNDA", stdout);
-            _campus_numerus((longus)(i + I));
-            putchar('\t');
-            per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
+    agenda = (   sanatio->eventus == FABRICA_AGENDUM
+              || sanatio->eventus == FABRICA_FORTASSE);
+    m->numeri[sanatio->eventus]++;
+    m->duratio += sanatio->duratio_ms;
+    si (agenda && sanatio->tempus_notum)
+    {
+        m->aestimatio += sanatio->duratio_ms;   /* ex cursu ultimo */
+    }
+    alioquin si (agenda)
+    {
+        m->sine_tempore++;
+    }
+    si (sanatio->eventus == FABRICA_SANATUM)
+    {
+        per (j = ZEPHYRUM; j < xar_numerus(sanatio->actio->exitus); j++)
+        {
+            si (((FabricaExitus*)xar_obtinere(sanatio->actio->exitus,
+                    j))->strategia->octetis_comparat)
             {
-                FabricaActio* actio = *(FabricaActio**)xar_obtinere(
-                    membra, j);
-
-                printf(j > ZEPHYRUM ? " %.*s" : "%.*s",
-                    (s32)actio->titulus.mensura,
-                    (constans character*)actio->titulus.datum);
+                m->commissa = VERUM;
             }
-            putchar('\n');
-        }
-        si (!suturae_machina)
-        {
-            printf("UNDAE (simul possent; sanare tutas - "
-                "lectiones=\"verum\" - simul currit, fila %u; ceteras "
-                "seriatim):\n",
-                (insignatus integer)suturae_fila_maxima);
-        }
-        per (i = ZEPHYRUM; !suturae_machina && undae != NIHIL
-            && i < xar_numerus(undae); i++)
-        {
-            Xar* membra;
-
-            membra = *(Xar**)xar_obtinere(undae, i);
-            printf("  %s:", chorda_ut_cstr(numerus_romanus_exprimere(
-                (i64)(i + I), NIHIL, piscina), piscina));
-            per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
-            {
-                FabricaActio* actio;
-
-                actio = *(FabricaActio**)xar_obtinere(membra, j);
-                printf(" %.*s", (s32)actio->titulus.mensura,
-                    (constans character*)actio->titulus.datum);
-            }
-            printf("\n");
         }
     }
-    si (siccum && suturae_machina)
+
+    si (suturae_machina)
+    {
+        fputs("SANATIO", stdout);
+        _campus_literis(suturae_eventus_titulus(sanatio->eventus));
+        suturae_campus(sanatio->actio->titulus);
+        _campus_numerus((longus)sanatio->duratio_ms);
+        suturae_campus(sanatio->causa);
+        putchar('\n');
+        redde;
+    }
+    printf("%-11s %.*s", suturae_eventus_titulus(sanatio->eventus),
+        (s32)sanatio->actio->titulus.mensura,
+        (constans character*)sanatio->actio->titulus.datum);
+    si (agenda && sanatio->tempus_notum)
+    {
+        /* aestimatio ex cursu ultimo (1b T7) */
+        printf(" (~%u.%u s)",
+            (insignatus integer)(sanatio->duratio_ms / M),
+            (insignatus integer)((sanatio->duratio_ms % M) / C));
+    }
+    alioquin si (agenda)
+    {
+        printf(" (tempus ignotum)");
+    }
+    alioquin si (sanatio->eventus != FABRICA_OMISSUM)
+    {
+        printf(" (%u.%u s)",
+            (insignatus integer)(sanatio->duratio_ms / M),
+            (insignatus integer)((sanatio->duratio_ms % M) / C));
+    }
+    si (sanatio->causa.mensura > 0)
+    {
+        _causam_imprimere(sanatio->causa);
+    }
+    alioquin
+    {
+        printf("\n");
+    }
+}
+
+/* undae (Q41, siccum): quae SIMUL currere possent - monstratur solum */
+interior vacuum
+_sanare_undas (
+    CursusSanandi* m)
+{
+    CursusFabricae* c = &m->cursus;
+               Xar* agendae;
+               Xar* undae;
+               i32  i;
+               i32  j;
+
+    si (!m->siccum || xar_numerus(m->sanationes) == 0)
+    {
+        redde;
+    }
+    agendae = xar_creare(c->piscina, (i32)magnitudo(FabricaActio*));
+    per (i = ZEPHYRUM; i < xar_numerus(m->sanationes); i++)
+    {
+        *(constans FabricaActio**)xar_addere(agendae) =
+            ((FabricaSanatio*)xar_obtinere(m->sanationes, i))->actio;
+    }
+    undae = fabrica_undas_formare(agendae, c->piscina);
+    per (i = ZEPHYRUM; suturae_machina && undae != NIHIL
+         && i < xar_numerus(undae); i++)
+    {
+        Xar* membra = *(Xar**)xar_obtinere(undae, i);
+
+        fputs("UNDA", stdout);
+        _campus_numerus((longus)(i + I));
+        putchar('\t');
+        per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
+        {
+            FabricaActio* actio = *(FabricaActio**)xar_obtinere(
+                membra, j);
+
+            printf(j > ZEPHYRUM ? " %.*s" : "%.*s",
+                (s32)actio->titulus.mensura,
+                (constans character*)actio->titulus.datum);
+        }
+        putchar('\n');
+    }
+    si (!suturae_machina)
+    {
+        printf("UNDAE (simul possent; sanare tutas - "
+            "lectiones=\"verum\" - simul currit, fila %u; ceteras "
+            "seriatim):\n",
+            (insignatus integer)suturae_fila_maxima);
+    }
+    per (i = ZEPHYRUM; !suturae_machina && undae != NIHIL
+        && i < xar_numerus(undae); i++)
+    {
+        Xar* membra;
+
+        membra = *(Xar**)xar_obtinere(undae, i);
+        printf("  %s:", chorda_ut_cstr(numerus_romanus_exprimere(
+            (i64)(i + I), NIHIL, c->piscina), c->piscina));
+        per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
+        {
+            FabricaActio* actio;
+
+            actio = *(FabricaActio**)xar_obtinere(membra, j);
+            printf(" %.*s", (s32)actio->titulus.mensura,
+                (constans character*)actio->titulus.datum);
+        }
+        printf("\n");
+    }
+}
+
+/* linea summae (machina aut humana; siccum aut actum) */
+interior vacuum
+_sanare_summam (
+    constans CursusSanandi* m)
+{
+    si (m->siccum && suturae_machina)
     {
         printf("SUMMA\t%u\t%u\t%u\t%u\tsiccum\n",
-            (insignatus integer)numeri[FABRICA_AGENDUM],
-            (insignatus integer)numeri[FABRICA_FORTASSE],
-            (insignatus integer)aestimatio,
-            (insignatus integer)sine_tempore);
+            (insignatus integer)m->numeri[FABRICA_AGENDUM],
+            (insignatus integer)m->numeri[FABRICA_FORTASSE],
+            (insignatus integer)m->aestimatio,
+            (insignatus integer)m->sine_tempore);
     }
     alioquin si (suturae_machina)
     {
         printf("SUMMA\t%u\t%u\t%u\t%u\t%u\t%u\n",
-            (insignatus integer)numeri[FABRICA_SANATUM],
-            (insignatus integer)numeri[FABRICA_PRAEPARATUM],
-            (insignatus integer)numeri[FABRICA_FRACTUM],
-            (insignatus integer)numeri[FABRICA_OMISSUM],
-            (insignatus integer)numeri[FABRICA_AUDITUM_DISCORS],
-            (insignatus integer)duratio);
-        si (commissa)
+            (insignatus integer)m->numeri[FABRICA_SANATUM],
+            (insignatus integer)m->numeri[FABRICA_PRAEPARATUM],
+            (insignatus integer)m->numeri[FABRICA_FRACTUM],
+            (insignatus integer)m->numeri[FABRICA_OMISSUM],
+            (insignatus integer)m->numeri[FABRICA_AUDITUM_DISCORS],
+            (insignatus integer)m->duratio);
+        si (m->commissa)
         {
             printf("NOTA\tplagulae generatae in arbore mutatae "
                 "fortasse (git status) - committe per "
                 "silva.commissio\n");
         }
     }
-    alioquin si (siccum)
+    alioquin si (m->siccum)
     {
         printf("fabrica sanare -siccum: %u agenda, %u fortasse - "
             "aestimatio ~%u s (%u sine tempore)\n",
-            (insignatus integer)numeri[FABRICA_AGENDUM],
-            (insignatus integer)numeri[FABRICA_FORTASSE],
-            (insignatus integer)(aestimatio / M),
-            (insignatus integer)sine_tempore);
+            (insignatus integer)m->numeri[FABRICA_AGENDUM],
+            (insignatus integer)m->numeri[FABRICA_FORTASSE],
+            (insignatus integer)(m->aestimatio / M),
+            (insignatus integer)m->sine_tempore);
     }
     alioquin
     {
         printf("fabrica sanare: %u sanata, %u praeparata, %u fracta, "
             "%u omissa%s (%u s)\n",
-            (insignatus integer)numeri[FABRICA_SANATUM],
-            (insignatus integer)numeri[FABRICA_PRAEPARATUM],
-            (insignatus integer)numeri[FABRICA_FRACTUM],
-            (insignatus integer)numeri[FABRICA_OMISSUM],
-            numeri[FABRICA_AUDITUM_DISCORS]
+            (insignatus integer)m->numeri[FABRICA_SANATUM],
+            (insignatus integer)m->numeri[FABRICA_PRAEPARATUM],
+            (insignatus integer)m->numeri[FABRICA_FRACTUM],
+            (insignatus integer)m->numeri[FABRICA_OMISSUM],
+            m->numeri[FABRICA_AUDITUM_DISCORS]
                 > 0 ? ", AUDITUM DISCORS" : "",
-            (insignatus integer)(duratio / M));
-        si (commissa)
+            (insignatus integer)(m->duratio / M));
+        si (m->commissa)
         {
             printf("plagulae generatae in arbore mutatae fortasse "
                 "(git status) - committe per silva.commissio; sanare "
                 "numquam committit\n");
         }
     }
-    /* VERDICTUM compositorum nominatorum (fabrica-6 T10) ex sanatione
-     * ipsa: pars recens nisi actio eius fracta, omissa, discors aut
-     * (siccum) agenda - iudicium alterum non eget */
-    per (i = ZEPHYRUM; nominata != NIHIL
-        && i < xar_numerus(nominata); i++)
+}
+
+/* VERDICTUM compositorum nominatorum (fabrica-6 T10) ex sanatione
+ * ipsa: pars recens nisi actio eius fracta, omissa, discors aut
+ * (siccum) agenda - iudicium alterum non eget */
+interior vacuum
+_sanare_verdicta (
+    CursusSanandi* m)
+{
+    CursusFabricae* c = &m->cursus;
+               i32  i;
+               i32  j;
+
+    per (i = ZEPHYRUM; i < xar_numerus(c->nominata); i++)
     {
         FabricaCompositum* compositum;
                       Xar* partes;
@@ -1817,10 +1877,10 @@ _sanare (
                    chorda  verdictum;
                       i32  k;
 
-        compositum = *(FabricaCompositum**)xar_obtinere(nominata, i);
-        partes = fabrica_compositum_explicare(composita, actiones,
-            compositum->titulus, piscina, &causa);
-        iudicia = xar_creare(piscina, (i32)magnitudo(FabricaIudicium));
+        compositum = *(FabricaCompositum**)xar_obtinere(c->nominata, i);
+        partes = _partes_compositi(c, compositum);
+        iudicia = xar_creare(c->piscina,
+            (i32)magnitudo(FabricaIudicium));
         per (j = ZEPHYRUM; partes != NIHIL && iudicia != NIHIL
              && j < xar_numerus(partes); j++)
         {
@@ -1831,13 +1891,14 @@ _sanare (
             iudicium = (FabricaIudicium*)xar_addere(iudicia);
             iudicium->artificium = via;
             iudicium->status = FABRICA_RECENS;
-            iudicium->causa = chorda_ex_literis("", piscina);
-            per (k = ZEPHYRUM; k < xar_numerus(sanationes); k++)
+            iudicium->causa = chorda_ex_literis("", c->piscina);
+            per (k = ZEPHYRUM; k < xar_numerus(m->sanationes); k++)
             {
                 FabricaSanatio* sanatio;
                            i32  e;
 
-                sanatio = (FabricaSanatio*)xar_obtinere(sanationes, k);
+                sanatio = (FabricaSanatio*)xar_obtinere(m->sanationes,
+                    k);
                 si (   sanatio->eventus != FABRICA_FRACTUM
                     && sanatio->eventus != FABRICA_OMISSUM
                     && sanatio->eventus != FABRICA_AUDITUM_DISCORS
@@ -1863,21 +1924,104 @@ _sanare (
             perge;
         }
         verdictum = fabrica_compositum_verdictum(iudicia,
-            compositum->titulus, piscina);
+            compositum->titulus, c->piscina);
         printf("VERDICTUM %.*s\n", (s32)verdictum.mensura,
             (constans character*)verdictum.datum);
     }
-    si (sutura.datum != NIHIL)
+}
+
+interior s32
+_sanare (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina)
+{
+    CursusSanandi  m;
+              Xar* iudicum;
+              Xar* ceterae;
+              i32  i;
+              s32  exitus;
+
+    memset(&m, ZEPHYRUM, magnitudo(CursusSanandi));
+    si (!_sanare_optiones(&m, argc, argv))
     {
-        scrinium_claudere(memoria.scrinium);
+        redde II;
     }
-    filum_seram_liberare(sera);
-    si (siccum)
+    si (!_cursum_parare(&m.cursus, piscina))
     {
-        redde (numeri[FABRICA_AGENDUM] > 0) ? I : ZEPHYRUM;
+        _cursum_finire(&m.cursus);
+        redde II;
     }
-    redde (numeri[FABRICA_FRACTUM] + numeri[FABRICA_OMISSUM]
-           + numeri[FABRICA_AUDITUM_DISCORS] > 0) ? I : ZEPHYRUM;
+    _electa_colligere(&m.cursus, argc, argv);
+
+    suturae_legentem_parare(&m.cursus.sutura);
+    suturae_currentem_addere(&m.cursus.sutura);
+    suturae_agentem_addere(&m.cursus.sutura, m.cursus.actiones,
+        m.siccum, piscina);
+    m.cursus.sutura.sigilla         = m.cursus.sigilla;
+    m.cursus.sutura.regenerationes  = tabula_dispersa_creare_chorda(
+        piscina, 64);
+    m.cursus.sutura.digesta = tabula_dispersa_creare_chorda(piscina,
+        128);
+    si (   !_sanare_iudicem_ipsum(&m)
+        || !_sanare_seram_capere(&m))
+    {
+        _cursum_finire(&m.cursus);
+        redde II;
+    }
+
+    printf(suturae_machina ? "NOTA\tsanare%s: iudicium plenum, ordine "
+        "dependentiae\n" : "fabrica sanare%s: iudicium plenum, ordine "
+        "dependentiae\n", m.siccum ? " -siccum" : "");
+    fflush(stdout);
+    si (!_sanare_iudices(&m, &iudicum))
+    {
+        _cursum_finire(&m.cursus);
+        redde II;
+    }
+    ceterae = fabrica_sanare(&m.cursus.sutura, m.cursus.ordo,
+        m.cursus.electa, m.siccum, piscina, &m.cursus.causa);
+    si (ceterae == NIHIL)
+    {
+        fprintf(stderr, "fabrica: %.*s\n", (s32)m.cursus.causa.mensura,
+            (constans character*)m.cursus.causa.datum);
+        _cursum_finire(&m.cursus);
+        redde II;
+    }
+    /* sanationes iudicum primae, deinde ceterae */
+    m.sanationes = ceterae;
+    si (iudicum != NIHIL)
+    {
+        m.sanationes = xar_creare(piscina,
+            (i32)magnitudo(FabricaSanatio));
+        per (i = ZEPHYRUM; i < xar_numerus(iudicum); i++)
+        {
+            *(FabricaSanatio*)xar_addere(m.sanationes) =
+                *(FabricaSanatio*)xar_obtinere(iudicum, i);
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(ceterae); i++)
+        {
+            *(FabricaSanatio*)xar_addere(m.sanationes) =
+                *(FabricaSanatio*)xar_obtinere(ceterae, i);
+        }
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(m.sanationes); i++)
+    {
+        _sanare_eventum(&m,
+            (FabricaSanatio*)xar_obtinere(m.sanationes, i));
+    }
+    _sanare_undas(&m);
+    _sanare_summam(&m);
+    _sanare_verdicta(&m);
+    _cursum_finire(&m.cursus);
+    si (m.siccum)
+    {
+        redde (m.numeri[FABRICA_AGENDUM] > 0) ? I : ZEPHYRUM;
+    }
+    exitus = (m.numeri[FABRICA_FRACTUM] + m.numeri[FABRICA_OMISSUM]
+              + m.numeri[FABRICA_AUDITUM_DISCORS] > 0) ? I : ZEPHYRUM;
+    redde exitus;
 }
 
 
