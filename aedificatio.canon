@@ -107,6 +107,16 @@
     <liberum nomen="exitus"/>
     <liberum nomen="probationes_c" maximum="1"/>
     <liberum nomen="ambitus"/>
+    <liberum nomen="post"/>
+  </elementum>
+
+  <elementum nomen="post"
+    nota="actio PRODUCENDA ante hanc (fabrica-6 T7): ordo solus, numquam
+          clavis - sanare producentem stalum primum sanat, fractum
+          membra omittit; membrum quod productum legit per vestigium
+          suum clavatur, cetera non. Membra gradus a parente
+          hereditant">
+    <attributum nomen="actio" genus="nomen" necessarium="verum"/>
   </elementum>
 
   <elementum nomen="probationes_c"

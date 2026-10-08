@@ -60,6 +60,7 @@
 #   XXXVII probationes_c vere (fabrica-6 T6c): III membra (facultas: nexus
 #        solum), RECENS, bibliotheca mutata -> membrum suum solum
 #   XXXVIII probationes_c: cursus fractus -> FRACTUM, area orphana
+#   XXXIX post et compositum (T7): producens primum, VERDICTUM N/M
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -473,6 +474,27 @@ printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <
 if [ "$rc1" -eq 1 ] && grep -q '^FRACTUM *probationes_t/probatio_b .*exitus 4' "$T/o" \
    && grep -q '^ORPHANUM: build/fabrica/area/probationes_t/probatio_deletum/' "$T/o2"; then echo "  XXXVIII probationes_c: fractum, orphanum OK"; else echo "  XXXVIII FRACTUM (rc=$rc1)"; cat "$T/o" "$T/o2" | sed 's/^/      /' | head -12; fracta=1; fi
 
+# XXXIX (fabrica-6 T7): POST ET COMPOSITUM VERE - generator g scribit
+# build/corpus.lst; probatio a eum legit (exitus 3 si abest); actio gradus
+# <post actio="g"/>: 'sanare probationes_t' (titulus compositi) g PRIMUM
+# sanat; iudicare -> VERDICTUM 2/2; b mutatus -> 1/2 nominans b
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+cp "$RADIX/aedilis.stml" "$T/r/aedilis.stml"
+mkdir -p "$T/r/t"
+printf 'fons I\n' > "$T/r/src.txt"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; mkdir -p "$D/build"; cp src.txt "$D/build/corpus.lst"\n' > "$T/r/gen_g.sh"
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("build/corpus.lst", "r"); if (f == 0) { return 3; } fclose(f); return 0; }\n' > "$T/r/t/probatio_a.c"
+printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_b.c"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_g.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="src.txt"/>\n    <exitus via="build/corpus.lst" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n    <post actio="g"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" sanare probationes_t) > "$T/o" 2>&1; rc1=$?
+(cd "$T/r" && "$F" iudicare -plenus probationes_t) > "$T/o2" 2>&1; rc2=$?
+printf 'int main(void) { return 0; } /* II */\n' > "$T/r/t/probatio_b.c"
+(cd "$T/r" && "$F" iudicare -plenus probationes_t) > "$T/o3" 2>&1; rc3=$?
+lg=$(grep -n '^SANATUM *g ' "$T/o" | cut -d: -f1); la=$(grep -n '^SANATUM *probationes_t/probatio_a' "$T/o" | cut -d: -f1)
+if [ "$rc1" -eq 0 ] && [ -n "$lg" ] && [ -n "$la" ] && [ "$lg" -lt "$la" ] \
+   && [ "$rc2" -eq 0 ] && grep -q '^VERDICTUM probationes_t: 2/2$' "$T/o2" \
+   && [ "$rc3" -eq 1 ] && grep -q '^VERDICTUM probationes_t: 1/2 - non recentia: probationes_t/probatio_b$' "$T/o3"; then echo "  XXXIX post et compositum: ordo, VERDICTUM N/M OK"; else echo "  XXXIX FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -24; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXXVIII/XXXVIII)"
+echo "fumus fabricae: sanum (XXXIX/XXXIX)"
 exit 0

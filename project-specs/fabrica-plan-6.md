@@ -78,7 +78,7 @@ facultas, T6c-1 the kind in the machine, T6c-2 the tool hooks + smoke.)
 
 ### T7: gates as composites + `post`
 
-- [ ] failing test: a gate action of steps -> composite verdict
+- [x] failing test: a gate action of steps -> composite verdict
   (`<porta>: N/N`, non-RECENS parts named); `post` orders producers
   before steps; a member that reads a `post` product is keyed on it,
   the others are not. Implement; plants. **Commit.**

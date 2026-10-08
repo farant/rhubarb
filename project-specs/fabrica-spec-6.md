@@ -458,3 +458,34 @@ its exit code; a vanished member's area is ORPHANUM. Plants (3, red):
 environment inherited (b sees the variable), scope not first (b links
 nothing), closure hook missing while reading declarations (the library
 edit re-runs nothing).
+
+**T7 (2026-10-07): gates as composites + `post`.** API approved by Fran.
+- `FabricaActio.post` (`<post actio="X"/>`, canon element `post`):
+  ORDER only - checked in `_pendet` beside `praecondicio`, so ordering,
+  the heal's scope (healing a member first heals a stale producer) and
+  "dependency broken -> OMISSUM" all follow; never a key. Members
+  inherit their parent's `post`. A member whose run READS the product
+  is keyed on it through its own trace (the product has a declared
+  owner); a member that does not read it is untouched. `post` naming no
+  action is refused with `fabrica_praecondiciones_probare`.
+- `fabrica_gradus_composita`: every step action becomes a composite of
+  the same title whose parts are its members; bin/fabrica adds them to
+  the declared composites (a title clash is refused), so `iudicare X`
+  and `sanare X` work by the step action's title.
+- `fabrica_compositum_verdictum`: `<title>: N/M`, and if N < M
+  ` - non recentia: a, b, c +K` (member verdicts named by their id).
+  bin/fabrica prints it as a `VERDICTUM` line after `COMPOSITUM` - the
+  line T10 judges instead of grepping a runner.
+Tests (probatio_fabrica 'post et composita'): post parsed, unknown post
+refused; producer ordered before members though declared after them;
+healing only the member verdicts heals the producer FIRST; product
+changed -> the reading member STALUM naming it, the other RECENS;
+one composite with both parts; verdict `1/2 - non recentia: <id>` and
+`2/2`. Fumus XXXIX (XXXIX/XXXIX) on a real tree: a generator writes
+build/corpus.lst, test a fails without it; `sanare probationes_t` heals
+g before a; `VERDICTUM probationes_t: 2/2`; after b's source changes
+`1/2 - non recentia: probationes_t/probatio_b`. Plants (6, all red):
+post ignored in `_pendet`; post as a key (producer outputs as member
+inputs - the reading-only member goes stale too); verdict counting
+stale parts as recent; members not inheriting post; step composites not
+added (sanare by title refused); VERDICTUM line not printed.

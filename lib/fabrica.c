@@ -4094,6 +4094,26 @@ fabrica_declarationes_legere_cum_sutura (
             }
             _chordam_addere(actio.ambitus, *variabilis);
         }
+        /* POST (fabrica-6 T7): producentes ante hanc - ordo, non
+         * clavis */
+        actio.post = _xar_chordarum(piscina);
+        filii = stml_invenire_omnes_liberos(nodus, "post", piscina);
+        per (j = ZEPHYRUM; filii != NIHIL && j < xar_numerus(filii);
+             j++)
+        {
+            StmlNodus* filius;
+               chorda* producens;
+
+            filius     = *(StmlNodus**)xar_obtinere(filii, j);
+            producens  = stml_attributum_capere(filius, "actio");
+            si (producens == NIHIL)
+            {
+                redde _recusare(piscina, causa_out,
+                    _sedes(piscina, via, filius), "post sine actione",
+                    nihil);
+            }
+            _chordam_addere(actio.post, *producens);
+        }
 
         actio.praecondiciones  = _xar_chordarum(piscina);
         actio.dependentiae     = NIHIL;
@@ -4882,6 +4902,30 @@ fabrica_praecondiciones_probare (
                 redde FALSUM;
             }
         }
+        /* POST (fabrica-6 T7): producens nominatus exstat */
+        per (j = ZEPHYRUM;
+             actio->post != NIHIL && j < xar_numerus(actio->post); j++)
+        {
+            chorda nominata;
+               b32 inventa;
+
+            nominata  = *(chorda*)xar_obtinere(actio->post, j);
+            inventa   = FALSUM;
+            per (k = ZEPHYRUM; k < xar_numerus(actiones); k++)
+            {
+                si (chorda_aequalis(((FabricaActio*)xar_obtinere(
+                        actiones, k))->titulus, nominata))
+                {
+                    inventa = VERUM;
+                }
+            }
+            si (!inventa)
+            {
+                (vacuum)_recusare(piscina, causa_out, actio->sedes,
+                    "post ignotum (actio nulla)", nominata);
+                redde FALSUM;
+            }
+        }
         /* exitus ignotus ut ingressus: verdictum eius numquam notum -
          * sigillum quoque nullum habet sensum */
         per (j = ZEPHYRUM; j < xar_numerus(actio->ingressus); j++)
@@ -5111,6 +5155,17 @@ _pendet (
     i32 i;
     i32 j;
 
+    /* POST (fabrica-6 T7): producens ante - ordo sine sigillo */
+    per (i = ZEPHYRUM;
+         posterior->post != NIHIL && i < xar_numerus(posterior->post);
+         i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(posterior->post, i),
+                prior->titulus))
+        {
+            redde VERUM;
+        }
+    }
     /* praecondicio: ordo sine sigillo */
     per (i = ZEPHYRUM;
          posterior->praecondiciones != NIHIL
@@ -8074,6 +8129,7 @@ _membrum_actionem_facere (
     actio_out->gradus     = parens->gradus;
     actio_out->attributa  = parens->attributa;
     actio_out->ambitus    = parens->ambitus;
+    actio_out->post       = parens->post;
     actio_out->membrum    = copia;
     /* mandatum in clave memoriae: genus gradus et fons membri */
     actio_out->mandatum = _xar_chordarum(piscina);
@@ -8274,4 +8330,141 @@ fabrica_areas_orphanas (
         }
     }
     redde orphana;
+}
+
+
+/* ==================================================
+ * COMPOSITA GRADUUM et VERDICTUM COMPOSITI (fabrica-6 T7)
+ * ================================================== */
+
+Xar*
+fabrica_gradus_composita (
+    constans Xar* actiones,
+         Piscina* piscina)
+{
+    Xar* composita;
+    i32  i;
+    i32  j;
+
+    composita = xar_creare(piscina, (i32)magnitudo(FabricaCompositum));
+    per (i = ZEPHYRUM; composita != NIHIL && i < xar_numerus(actiones);
+         i++)
+    {
+        constans FabricaActio* parens = (constans FabricaActio*)
+            xar_obtinere(actiones, i);
+           FabricaCompositum* compositum;
+
+        si (parens->gradus == NIHIL || parens->membrum != NIHIL)
+        {
+            perge;
+        }
+        compositum = (FabricaCompositum*)xar_addere(composita);
+        si (compositum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        compositum->titulus  = parens->titulus;
+        compositum->sedes    = parens->sedes;
+        compositum->partes   = xar_creare(piscina,
+            (i32)magnitudo(FabricaPars));
+        per (j = ZEPHYRUM; j < xar_numerus(actiones); j++)
+        {
+            constans FabricaActio* membrum = (constans FabricaActio*)
+                xar_obtinere(actiones, j);
+                     FabricaPars* pars;
+
+            /* membrum parentis: titulus 'parens/...' */
+            si (   membrum->membrum         == NIHIL
+                || membrum->titulus.mensura <= parens->titulus.mensura
+                || !chorda_incipit(membrum->titulus, parens->titulus)
+                || membrum->titulus.datum[parens->titulus.mensura]
+                   != '/')
+            {
+                perge;
+            }
+            pars = (FabricaPars*)xar_addere(compositum->partes);
+            si (pars == NIHIL)
+            {
+                redde NIHIL;
+            }
+            pars->forma    = FABRICA_PARS_ACTIO;
+            pars->titulus  = membrum->titulus;
+            pars->sedes    = parens->sedes;
+        }
+    }
+    redde composita;
+}
+
+/* verdictum membri 'build/fabrica/area/<id>/verdictum.txt' -> id */
+interior chorda
+_partem_nominare (
+     chorda  artificium,
+    Piscina* piscina)
+{
+    chorda praefixum;
+    chorda suffixum;
+
+    praefixum  = chorda_ex_literis(AREAE_DIRECTORIUM, piscina);
+    suffixum   = chorda_ex_literis("/verdictum.txt", piscina);
+    si (   artificium.mensura > praefixum.mensura + suffixum.mensura
+        && chorda_incipit(artificium, praefixum)
+        && chorda_aequalis(chorda_sectio(artificium,
+               artificium.mensura - suffixum.mensura,
+               artificium.mensura), suffixum))
+    {
+        redde chorda_sectio(artificium, praefixum.mensura,
+            artificium.mensura - suffixum.mensura);
+    }
+    redde artificium;
+}
+
+chorda
+fabrica_compositum_verdictum (
+    constans Xar* iudicia,
+          chorda  titulus,
+         Piscina* piscina)
+{
+       chorda verdictum;
+       chorda nomina;
+    character numeri[LXIV];
+          i32 recentia  = ZEPHYRUM;
+          i32 ceterae   = ZEPHYRUM;
+          i32 i;
+
+    nomina = chorda_ex_literis("", piscina);
+    per (i = ZEPHYRUM; i < xar_numerus(iudicia); i++)
+    {
+        constans FabricaIudicium* iudicium = (constans FabricaIudicium*)
+            xar_obtinere(iudicia, i);
+
+        si (iudicium->status == FABRICA_RECENS)
+        {
+            recentia++;
+            perge;
+        }
+        si (ceterae < III)
+        {
+            nomina = chorda_concatenare(ceterae > ZEPHYRUM ? _iungere(
+                piscina, "", nomina, ", ") : nomina,
+                _partem_nominare(iudicium->artificium, piscina),
+                piscina);
+        }
+        ceterae++;
+    }
+    sprintf(numeri, ": %u/%u", (insignatus integer)recentia,
+        (insignatus integer)xar_numerus(iudicia));
+    verdictum = _iungere(piscina, "", titulus, numeri);
+    si (ceterae > ZEPHYRUM)
+    {
+        verdictum = chorda_concatenare(_iungere(piscina, "", verdictum,
+            " - non recentia: "), nomina, piscina);
+        si (ceterae > III)
+        {
+            verdictum = _iungere(piscina, "", verdictum, " +");
+            verdictum = chorda_concatenare(verdictum,
+                numerus_romanus_exprimere((i64)(ceterae - III), NIHIL,
+                piscina), piscina);
+        }
+    }
+    redde verdictum;
 }

@@ -186,6 +186,15 @@ nomen structura {
                                          * declarata ultra basim */
     constans FabricaMembrum* membrum;   /* actio synthetica: membrum
                                          * suum (parens: NIHIL) */
+                       Xar* post;       /* chorda: tituli actionum
+                                         * PRODUCENDARUM ante hanc
+                                         * (<post actio="X"/>; fabrica-6
+                                         * T7) - ORDO solus (_pendet),
+                                         * numquam clavis: membrum quod
+                                         * productum legit per vestigium
+                                         * suum clavatur, cetera non.
+                                         * Membra gradus a parente
+                                         * hereditant. NIHIL licet. */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -999,6 +1008,25 @@ fabrica_areas_orphanas (
     constans FabricaSutura* sutura,
               constans Xar* actiones,
                    Piscina* piscina);
+
+/* COMPOSITA GRADUUM (fabrica-6 T7): pro quaque actione gradus
+ * compositum eiusdem tituli, partes = membra (FABRICA_PARS_ACTIO),
+ * ordine membrorum. Xar de FabricaCompositum (actiones = post
+ * explicationem). */
+Xar*
+fabrica_gradus_composita (
+    constans Xar* actiones,
+         Piscina* piscina);
+
+/* VERDICTUM COMPOSITI (spec 6 par. V): "<titulus>: N/M" (N partes
+ * RECENS ex M), et si N < M " - non recentia: " + nominata (III,
+ * deinde "+K"); verdictum membri gradus nominatur id suo
+ * ('actio/membrum'), cetera artificio. Signum nullum, grep nullum. */
+chorda
+fabrica_compositum_verdictum (
+    constans Xar* iudicia,     /* FabricaIudicium partium */
+          chorda  titulus,
+         Piscina* piscina);
 
 /* RECUSATIO AMBITUS: nomina lectionum E (FabricaLectio, genus
  * LECTIO_AMBITUS, via = nomen) quae nec in basi nec declarata sunt -

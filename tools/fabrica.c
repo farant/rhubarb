@@ -2369,6 +2369,36 @@ _declarationes_colligere (
             (constans character*)causa.datum);
         redde NIHIL;
     }
+    /* COMPOSITA GRADUUM (fabrica-6 T7): actio gradus = compositum
+     * membrorum eius (iudicare/sanare per titulum actionis) */
+    {
+        Xar* gradus;
+
+        gradus = fabrica_gradus_composita(omnes, piscina);
+        per (i = ZEPHYRUM; gradus != NIHIL && i < xar_numerus(gradus);
+             i++)
+        {
+            FabricaCompositum* novum;
+                          i32  k;
+
+            novum = (FabricaCompositum*)xar_obtinere(gradus, i);
+            per (k = ZEPHYRUM; k < xar_numerus(composita); k++)
+            {
+                si (chorda_aequalis(((FabricaCompositum*)xar_obtinere(
+                        composita, k))->titulus, novum->titulus))
+                {
+                    fprintf(stderr, "fabrica: %.*s: compositum '%.*s' "
+                        "titulum actionis gradus iam fert\n",
+                        (s32)novum->sedes.mensura,
+                        (constans character*)novum->sedes.datum,
+                        (s32)novum->titulus.mensura,
+                        (constans character*)novum->titulus.datum);
+                    redde NIHIL;
+                }
+            }
+            *(FabricaCompositum*)xar_addere(composita) = *novum;
+        }
+    }
     /* post omnes declarationes: praecondiciones et composita trans
      * subsystemata probantur - fracta numquam tacite */
     si (!fabrica_praecondiciones_probare(omnes, piscina, &causa))
@@ -3108,6 +3138,15 @@ _iudicare (
             (constans character*)coniunctum.artificium.datum,
             (s32)coniunctum.causa.mensura,
             (constans character*)coniunctum.causa.datum);
+        /* VERDICTUM (fabrica-6 T7): '<titulus>: N/M' ex partibus */
+        {
+            chorda verdictum;
+
+            verdictum = fabrica_compositum_verdictum(iudicia,
+                compositum->titulus, piscina);
+            printf("VERDICTUM %.*s\n", (s32)verdictum.mensura,
+                (constans character*)verdictum.datum);
+        }
     }
 
     /* SANATIO: actiones artificiorum stalorum/ignotorum, ordine

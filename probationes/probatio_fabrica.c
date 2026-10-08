@@ -1790,6 +1790,8 @@ _particulae_aequales (
 hic_manens constans character* _gradus_fractus       = NIHIL;
 hic_manens constans character* _gradus_liber_extra   = "";
 hic_manens constans character* _gradus_alienum       = NIHIL;
+/* T7: membrum cuius cursus productum 'post' (build/corpus.lst) legit */
+hic_manens constans character* _gradus_lectio_fons   = NIHIL;
 hic_manens                 i32 _gradus_cursus        = ZEPHYRUM;
 hic_manens                 i32 _gradus_areae_paratae = ZEPHYRUM;
 hic_manens        constans Xar* _gradus_ambitus_ultimus = NIHIL;
@@ -1994,6 +1996,11 @@ _in_area_currere_fictum (
     sprintf(liber, "L\t%.*s\nL\tdata/communis.txt\nL\t%s\n%s",
         (integer)fons.mensura, (constans character*)fons.datum,
         productum, _gradus_liber_extra);
+    si (   _gradus_lectio_fons != NIHIL
+        && chorda_aequalis_literis(fons, _gradus_lectio_fons))
+    {
+        strcat(liber, "L\tbuild/corpus.lst\n");
+    }
     _ponere(discus, liber_via, liber);
     si (_gradus_alienum != NIHIL)
     {
@@ -6511,6 +6518,247 @@ s32 principale (vacuum)
         CREDO_VERUM(_continet(causa, "membrum duplex", piscina));
         CREDO_VERUM(_continet(causa, "t.stml:3", piscina));
         _ambitus_ficti[0] = NIHIL;
+    }
+
+
+    /* ==================================================
+     * POST ET COMPOSITA (fabrica-6 T7): <post actio=/> ordinat
+     * (productor ante membra, sanatus primum) sed non clavat - membrum
+     * quod productum legit per vestigium suum clavatur, alterum non;
+     * compositum gradus per actionem, verdictum '<titulus>: N/M'
+     * ================================================== */
+
+    {
+                 DiscusFictus  discus;
+                FabricaSutura  sutura;
+          InternamentumChorda* intern = internamentum_creare(piscina);
+                 FabricaActio  parens;
+            FabricaAttributum* attributum;
+                 FabricaActio* membrum_a;
+                 FabricaActio* membrum_b;
+                 FabricaActio* g;
+                          Xar* actiones;
+                          Xar* explicata;
+                          Xar* ordo;
+                          Xar* electa;
+                          Xar* sanationes;
+                          Xar* composita;
+                          Xar* iudicia;
+                       chorda  causa;
+                       chorda  verdictum;
+                          s32  locus_g         = -I;
+                          s32  locus_a         = -I;
+                          s32  locus_sanati_g  = -I;
+                          s32  locus_sanati_a  = -I;
+                          i32  k;
+           constans character* nomina_t[] = { "a.c", "b.c" };
+           constans character* VA =
+               "build/fabrica/area/probationes_t/a/verdictum.txt";
+          constans character* VB =
+              "build/fabrica/area/probationes_t/b/verdictum.txt";
+
+        imprimere("\n--- Probans post et composita (T7) ---\n");
+        causa = chorda_ex_literis("", piscina);
+        _discum_parare(&discus, &sutura, piscina);
+        sutura.lectiones_legere = _lectiones_legere;
+        sutura.lectiones_scribere = _lectiones_scribere;
+        sutura.ambitus = _ambitus_fictum;
+        sutura.species = _species_ficta;
+        sutura.verdictum_ponere = _verdictum_ponere;
+        sutura.area_parare = _area_parare_ficta;
+        sutura.in_area_currere = _in_area_currere_fictum;
+        sutura.exitus_noti = tabula_dispersa_creare_chorda(piscina, 16);
+        (vacuum)tabula_dispersa_inserere(sutura.exitus_noti,
+            chorda_ex_literis("build/corpus.lst", piscina), NIHIL);
+        _ponere(&discus, "t/a.c", "a I\n");
+        _ponere(&discus, "t/b.c", "b I\n");
+        _ponere(&discus, "data/communis.txt", "communis I\n");
+        _ponere(&discus, "src.txt", "fons I\n");
+        _directorium_ponere(&discus, "t/", nomina_t, II);
+        _scriptum_addere(&discus, "gen_g", "build/corpus.lst",
+            "src.txt",
+            "corpus:", 0, FALSUM);
+        _gradus_lectio_fons = "t/a.c";
+
+        /* I. declaratio: <post actio="g"/>; post ignotum recusatur */
+        actiones = fabrica_declarationes_legere(chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"p\" genus=\"iudicium\">\n"
+            "    <probationes_c exemplar=\"t/probatio_*.c\"/>\n"
+            "    <post actio=\"g\"/>\n"
+            "  </actio>\n</aedificatio>\n", piscina), "t.stml",
+            piscina, intern, &causa);
+        CREDO_NON_NIHIL(actiones);
+        si (actiones != NIHIL)
+        {
+            FabricaActio* p = (FabricaActio*)xar_obtinere(actiones,
+                ZEPHYRUM);
+
+            CREDO_AEQUALIS_I32(p->post != NIHIL ? xar_numerus(p->post)
+                : ZEPHYRUM, I);
+            causa = chorda_ex_literis("", piscina);
+            CREDO_FALSUM(fabrica_praecondiciones_probare(actiones,
+                piscina, &causa));
+            CREDO_VERUM(_continet(causa, "post", piscina));
+            CREDO_VERUM(_continet(causa, "'g'", piscina));
+        }
+
+        /* actiones: parens gradus (post g) et productor g */
+        memset(&parens, ZEPHYRUM, magnitudo(parens));
+        parens.titulus   = chorda_ex_literis("probationes_t", piscina);
+        parens.genus     = FABRICA_ACTIO_IUDICIUM;
+        parens.sedes     = chorda_ex_literis("t.stml:3", piscina);
+        parens.mandatum  = xar_creare(piscina, (i32)magnitudo(chorda));
+        parens.ingressus  = xar_creare(piscina,
+            (i32)magnitudo(FabricaIngressus));
+        parens.exitus     = xar_creare(piscina,
+            (i32)magnitudo(FabricaExitus));
+        parens.gradus     = &_gradus_ludicrum;
+        parens.attributa  = xar_creare(piscina,
+            (i32)magnitudo(FabricaAttributum));
+        attributum = (FabricaAttributum*)xar_addere(parens.attributa);
+        attributum->titulus = chorda_ex_literis("exemplar", piscina);
+        attributum->valor = chorda_ex_literis("t/", piscina);
+        parens.post = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(parens.post) = chorda_ex_literis("g",
+            piscina);
+        g = _actio_scripta(piscina, "g", "gen_g", "src.txt",
+            "build/corpus.lst", "regeneratio");
+        actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+        *(FabricaActio*)xar_addere(actiones) = parens;
+        *(FabricaActio*)xar_addere(actiones) = *g;
+        causa = chorda_ex_literis("", piscina);
+        CREDO_VERUM(fabrica_praecondiciones_probare(actiones, piscina,
+            &causa));
+        explicata = fabrica_gradus_explicare(&sutura, actiones, piscina,
+            &causa);
+        CREDO_NON_NIHIL(explicata);
+        membrum_a = _actio_explicata(explicata, "probationes_t/a");
+        membrum_b = _actio_explicata(explicata, "probationes_t/b");
+        CREDO_NON_NIHIL(membrum_a);
+        CREDO_NON_NIHIL(membrum_b);
+        si (membrum_a != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(membrum_a->post != NIHIL
+                ? xar_numerus(membrum_a->post) : ZEPHYRUM, I);
+        }
+
+        /* II. ordo: productor g ante membra (declaratus post ea) */
+        ordo = explicata != NIHIL ? fabrica_ordinare(explicata, piscina,
+            &causa) : NIHIL;
+        CREDO_NON_NIHIL(ordo);
+        per (k = ZEPHYRUM; ordo != NIHIL && k < xar_numerus(ordo); k++)
+        {
+            FabricaActio* a = *(FabricaActio**)xar_obtinere(ordo, k);
+
+            si (chorda_aequalis_literis(a->titulus, "g"))
+            {
+                locus_g = (s32)k;
+            }
+            si (chorda_aequalis_literis(a->titulus, "probationes_t/a"))
+            {
+                locus_a = (s32)k;
+            }
+        }
+        CREDO_VERUM(locus_g >= ZEPHYRUM && locus_a > locus_g);
+
+        /* III. sanare membra nominata: g (exitus absens) PRIMUM
+         * sanatur */
+        electa = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(VA, piscina);
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(VB, piscina);
+        sanationes = ordo != NIHIL ? fabrica_sanare(&sutura, ordo,
+            electa,
+            FALSUM, piscina, &causa) : NIHIL;
+        CREDO_NON_NIHIL(sanationes);
+        per (k = ZEPHYRUM; sanationes != NIHIL
+             && k < xar_numerus(sanationes); k++)
+        {
+            FabricaSanatio* s =
+                (FabricaSanatio*)xar_obtinere(sanationes,
+                k);
+
+            si (chorda_aequalis_literis(s->actio->titulus, "g"))
+            {
+                locus_sanati_g = (s32)k;
+                CREDO_AEQUALIS_I32((i32)s->eventus,
+                    (i32)FABRICA_SANATUM);
+            }
+            si (chorda_aequalis_literis(s->actio->titulus,
+                    "probationes_t/a"))
+            {
+                locus_sanati_a = (s32)k;
+                CREDO_AEQUALIS_I32((i32)s->eventus,
+                    (i32)FABRICA_SANATUM);
+            }
+        }
+        CREDO_VERUM(locus_sanati_g >= ZEPHYRUM
+            && locus_sanati_a > locus_sanati_g);
+        CREDO_VERUM(_contentum_est(&discus, "build/corpus.lst",
+            "corpus:fons I\n"));
+
+        /* IV. productum mutatum: a (legit) STALUM, b (non legit)
+         * RECENS */
+        _ponere(&discus, "build/corpus.lst", "corpus:alterum\n");
+        si (membrum_a != NIHIL && membrum_b != NIHIL)
+        {
+            FabricaIudicium ia;
+            FabricaIudicium ib;
+
+            ia = fabrica_iudicare(&sutura, membrum_a,
+                (FabricaExitus*)xar_obtinere(membrum_a->exitus,
+                ZEPHYRUM), VERUM, piscina);
+            ib = fabrica_iudicare(&sutura, membrum_b,
+                (FabricaExitus*)xar_obtinere(membrum_b->exitus,
+                ZEPHYRUM), VERUM, piscina);
+            CREDO_AEQUALIS_I32((i32)ia.status, (i32)FABRICA_STALUM);
+            CREDO_VERUM(_continet(ia.causa, "build/corpus.lst",
+                piscina));
+            CREDO_AEQUALIS_I32((i32)ib.status, (i32)FABRICA_RECENS);
+
+            /* V. compositum gradus et verdictum eius */
+            composita = fabrica_gradus_composita(explicata, piscina);
+            CREDO_AEQUALIS_I32(composita != NIHIL
+                ? xar_numerus(composita) : ZEPHYRUM, I);
+            si (composita != NIHIL && xar_numerus(composita) == I)
+            {
+                FabricaCompositum* c = (FabricaCompositum*)xar_obtinere(
+                    composita, ZEPHYRUM);
+                               Xar* partes;
+
+                CREDO_VERUM(chorda_aequalis_literis(c->titulus,
+                    "probationes_t"));
+                CREDO_AEQUALIS_I32(xar_numerus(c->partes), II);
+                partes = fabrica_compositum_explicare(composita,
+                    explicata, c->titulus, piscina, &causa);
+                CREDO_AEQUALIS_I32(partes != NIHIL ? xar_numerus(partes)
+                    : ZEPHYRUM, II);
+            }
+            iudicia = xar_creare(piscina,
+                (i32)magnitudo(FabricaIudicium));
+            *(FabricaIudicium*)xar_addere(iudicia) = ia;
+            *(FabricaIudicium*)xar_addere(iudicia) = ib;
+            verdictum = fabrica_compositum_verdictum(iudicia,
+                chorda_ex_literis("probationes_t", piscina), piscina);
+            CREDO_VERUM(chorda_aequalis_literis(verdictum,
+                "probationes_t: 1/2 - non recentia: probationes_t/a"));
+            si (!chorda_aequalis_literis(verdictum,
+                    "probationes_t: 1/2 - non recentia: "
+                    "probationes_t/a"))
+            {
+                imprimere("  verdictum: %.*s\n",
+                    (integer)verdictum.mensura,
+                    (constans character*)verdictum.datum);
+            }
+            xar_vacare(iudicia);
+            *(FabricaIudicium*)xar_addere(iudicia) = ib;
+            *(FabricaIudicium*)xar_addere(iudicia) = ib;
+            CREDO_VERUM(chorda_aequalis_literis(
+                fabrica_compositum_verdictum(iudicia, chorda_ex_literis(
+                "probationes_t", piscina), piscina),
+                "probationes_t: 2/2"));
+        }
+        _gradus_lectio_fons = NIHIL;
     }
 
 
