@@ -1,0 +1,698 @@
+/* probatio_extensio.c - Probationes corporum numerorum algebraicorum
+ *
+ * Oracula a codice independentia: (1) polynomia minima nota (Psi_5 =
+ * t^2 + t - 1, Psi_7 = t^3 + t^2 - 2t - 1, Psi_9 = t^3 - 3t + 1, ...),
+ * gradus phi(n)/2 per numerationem gcd, radices 2 cos(2 pi j/n) in f64;
+ * (2) norma et vestigium in f64 ut productum et summa super radices
+ * conjugatas (corpora cosinus), et forma clausa a^2 - d b^2 (corpora
+ * quadratica, etiam imaginaria); (3) identitates corporis super
+ * elementa fortuita (inversa, associativitas, distributivitas, N
+ * multiplicativa, Tr additiva, textus reversibilis); (4) facta: phi^2 =
+ * phi + 1, N(1 + sqrt 2) = -1, Vandermonde super Q(sqrt 5) = productum
+ * differentiarum.
+ */
+#include "latina.h"
+#include "piscina.h"
+#include "credo.h"
+#include "chorda.h"
+#include "sors.h"
+#include "magnus.h"
+#include "fractio.h"
+#include "polynomium.h"
+#include "anulus.h"
+#include "matrix.h"
+#include "extensio.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+hic_manens Piscina* piscina;
+
+interior Polynomium
+_p (
+    constans character* textus)
+{
+    Polynomium p = polynomium_nullum();
+
+    si (!polynomium_ex_chorda(chorda_ex_literis(textus, piscina), 't',
+            piscina, &p))
+    {
+        imprimere("FRACTA: polynomium malum: %s\n", textus);
+    }
+    redde p;
+}
+
+interior Algebraicus
+_a (
+     constans Extensio* k,
+    constans character* textus)
+{
+    Algebraicus a;
+
+    a.corpus = NIHIL;
+    si (!algebraicus_ex_chorda(k, chorda_ex_literis(textus, piscina),
+        piscina, &a))
+    {
+        imprimere("FRACTA: elementum malum: %s\n", textus);
+    }
+    redde a;
+}
+
+interior b32
+_textus_est (
+             Algebraicus  a,
+      constans character* textus)
+{
+    redde chorda_aequalis_literis(algebraicus_ad_chordam(a, piscina),
+        textus);
+}
+
+interior i32
+_divisor_communis (
+    i32 a,
+    i32 b)
+{
+    dum (b != ZEPHYRUM)
+    {
+        i32 r = a % b;
+
+        a = b;
+        b = r;
+    }
+    redde a;
+}
+
+/* magnus -> f64 per textum decimalem (numeri magni extra s64) */
+interior f64
+_magnus_ad_f64 (
+    Magnus m)
+{
+    redde strtod(chorda_ut_cstr(magnus_ad_chordam(m, piscina), piscina),
+        NIHIL);
+}
+
+interior f64
+_fractio_ad_f64 (
+    Fractio q)
+{
+    redde _magnus_ad_f64(fractio_numerator(q)) / _magnus_ad_f64(
+        fractio_denominator(q));
+}
+
+/* valor elementi ad alpha = x (f64) */
+interior f64
+_valor (
+    Algebraicus a,
+            f64 x,
+            i32 d)
+{
+    f64 summa     = 0.0;
+    f64 potentia  = 1.0;
+    i32 j;
+
+    per (j = ZEPHYRUM; j < d; j++)
+    {
+        summa = summa + _fractio_ad_f64(algebraicus_coefficiens(a, j,
+            piscina)) * potentia;
+        potentia = potentia * x;
+    }
+    redde summa;
+}
+
+/* elementum fortuitum: coefficientes [-9, 9], denominator [1, 9] */
+interior Algebraicus
+_fortuitum (
+    constans Extensio* k,
+                 Sors* s)
+{
+         Magnus c[XXIV];
+     Polynomium p = polynomium_nullum();
+    Algebraicus a;
+            i32 j;
+            i32 d = extensio_gradus(k);
+
+    per (j = ZEPHYRUM; j < d; j++)
+    {
+        c[j] = magnus_ex_s64((s64)sors_inter(s, -IX, IX));
+    }
+    (vacuum)polynomium_ex_coefficientibus(c, d, ZEPHYRUM, piscina, &p);
+    a.corpus = NIHIL;
+    (vacuum)algebraicus_ex_polynomio(k, p,
+        magnus_ex_s64((s64)sors_inter(
+        s, I, IX)), piscina, &a);
+    redde a;
+}
+
+interior b32
+_unum_est (
+    Algebraicus a)
+{
+    Fractio q = fractio_ex_s64(ZEPHYRUM);
+
+    redde algebraicus_est_rationalis(a, piscina, &q)
+        && fractio_aequalis(q, fractio_ex_s64(I));
+}
+
+s32 principale (vacuum)
+{
+    piscina = piscina_generare_dynamicum("probatio_extensio", 1048576);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+
+
+    /* ==================================================
+     * CORPORA QUADRATICA
+     * ================================================== */
+
+    {
+           Extensio* k5            = extensio_quadratica(V, piscina);
+           Extensio* k_minus_unum  = extensio_quadratica(-I, piscina);
+        Algebraicus  r;
+        Algebraicus  aureus;
+        Algebraicus  x;
+            Fractio  q = fractio_ex_s64(ZEPHYRUM);
+
+        imprimere("\n--- Corpora quadratica ---\n");
+        CREDO_NON_NIHIL (k5);
+        CREDO_NON_NIHIL (k_minus_unum);
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(k5),
+            _p("t^2 - 5")));
+        CREDO_AEQUALIS_I32 (extensio_gradus(k5), II);
+        CREDO_VERUM (extensio_ordinata(k5));
+        CREDO_FALSUM (extensio_ordinata(k_minus_unum));
+        /* refutationes: 0, 1, non liberi quadratis, nimis magni */
+        CREDO_NIHIL (extensio_quadratica(ZEPHYRUM, piscina));
+        CREDO_NIHIL (extensio_quadratica(I, piscina));
+        CREDO_NIHIL (extensio_quadratica(IV, piscina));
+        CREDO_NIHIL (extensio_quadratica(XII, piscina));
+        CREDO_NIHIL (extensio_quadratica(-VIII, piscina));
+        CREDO_NIHIL (extensio_quadratica((s64)0x80000000L, piscina));
+        CREDO_NON_NIHIL (extensio_quadratica((s64)0x7FFFFFFFL,
+            piscina));
+        /* sqrt 5 ^ 2 = 5, i^2 = -1 */
+        r = algebraicus_generator(k5, piscina);
+        x = algebraicus_multiplica(r, r, piscina);
+        CREDO_VERUM (algebraicus_est_rationalis(x, piscina, &q));
+        CREDO_VERUM (fractio_aequalis(q, fractio_ex_s64(V)));
+        x = algebraicus_generator(k_minus_unum, piscina);
+        x = algebraicus_multiplica(x, x, piscina);
+        CREDO_VERUM (algebraicus_est_rationalis(x, piscina, &q));
+        CREDO_VERUM (fractio_aequalis(q, fractio_ex_s64(-I)));
+        /* aureus: phi^2 = phi + 1, N = -1, Tr = 1, 1/phi = phi - 1 */
+        aureus = _a(k5, "(a + 1)/2");
+        CREDO_VERUM (_textus_est(aureus, "(a + 1)/2"));
+        CREDO_VERUM (algebraicus_aequalis(algebraicus_multiplica(aureus,
+            aureus, piscina), algebraicus_adde(aureus, _a(k5, "1"),
+            piscina)));
+        CREDO_VERUM (algebraicus_norma(aureus, piscina, &q)
+            && fractio_aequalis(q, fractio_ex_s64(-I)));
+        CREDO_VERUM (algebraicus_vestigium(aureus, piscina, &q)
+            && fractio_aequalis(q, fractio_ex_s64(I)));
+        CREDO_VERUM (algebraicus_inversum(aureus, piscina, &x)
+            && algebraicus_aequalis(x, algebraicus_subtrahe(aureus,
+            _a(k5,
+            "1"), piscina)));
+        /* N(1 + sqrt 2) = -1 (unitas), Tr(sqrt 2) = 0 */
+        {
+            Extensio* k2 = extensio_quadratica(II, piscina);
+
+            CREDO_VERUM (algebraicus_norma(_a(k2, "a + 1"), piscina, &q)
+                && fractio_aequalis(q, fractio_ex_s64(-I)));
+            CREDO_VERUM (algebraicus_vestigium(_a(k2, "a"), piscina, &q)
+                && fractio_est_integra(q) && fractio_signum(q)
+                == ZEPHYRUM);
+            /* Laurent, f(0) > 0 et < 0: 1/i = -i, 1/sqrt(-3) =
+             * -sqrt(-3)/3 */
+            CREDO_VERUM (_textus_est(_a(k_minus_unum, "a^-1"), "-a"));
+            CREDO_VERUM (_textus_est(_a(extensio_quadratica(-III,
+                piscina),
+                "a^-1"), "-a/3"));
+            /* Laurent: sqrt 2 + 1/sqrt 2 = 3 sqrt 2 / 2 */
+            CREDO_VERUM (_textus_est(_a(k2, "a + a^-1"), "3a/2"));
+        }
+        /* textus */
+        CREDO_VERUM (_textus_est(_a(k5, "3/6"), "1/2"));
+        CREDO_VERUM (_textus_est(_a(k5, "a^3"), "5a"));
+        CREDO_VERUM (_textus_est(_a(k5, "(2a + 4)/-6"), "(-a - 2)/3"));
+        CREDO_VERUM (_textus_est(_a(k5, "0/7"), "0"));
+        CREDO_FALSUM (algebraicus_ex_chorda(k5, chorda_ex_literis("a/0",
+            piscina), piscina, &x));
+        CREDO_FALSUM (algebraicus_ex_chorda(k5,
+            chorda_ex_literis("b + 1",
+            piscina), piscina, &x));
+    }
+
+
+    /* ==================================================
+     * CORPORA COSINUS
+     * ================================================== */
+
+    {
+        imprimere("\n--- Corpora cosinus ---\n");
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(I, piscina)), _p("t - 2")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(II, piscina)), _p("t + 2")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(III, piscina)), _p("t + 1")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(IV, piscina)), _p("t")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(VI, piscina)), _p("t - 1")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(V, piscina)), _p("t^2 + t - 1")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(VII, piscina)), _p("t^3 + t^2 - 2t - 1")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(VIII, piscina)), _p("t^2 - 2")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(IX, piscina)), _p("t^3 - 3t + 1")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(X, piscina)), _p("t^2 - t - 1")));
+        CREDO_VERUM (polynomium_aequalis(extensio_polynomium(
+            extensio_cosinus(XII, piscina)), _p("t^2 - 3")));
+        CREDO_NIHIL (extensio_cosinus(ZEPHYRUM, piscina));
+        CREDO_NIHIL (extensio_cosinus(M + I, piscina));
+        CREDO_VERUM (extensio_ordinata(extensio_cosinus(VII, piscina)));
+        /* gradus phi(n)/2 et radices 2 cos(2 pi j/n), n <= 120 */
+        {
+            b32 gradus_bene   = VERUM;
+            b32 radices_bene  = VERUM;
+            i32 n;
+
+            per (n = III; n <= CXX; n++)
+            {
+                PiscinaNotatio  nota  = piscina_notare(piscina);
+                      Extensio* k     = extensio_cosinus(n,
+                          piscina);
+                    Polynomium f    = extensio_polynomium(k);
+                           i32 phi  = ZEPHYRUM;
+                           i32 j;
+
+                per (j = I; j <= n; j++)
+                {
+                    si (_divisor_communis(j, n) == I)
+                    {
+                        phi++;
+                    }
+                }
+                si (extensio_gradus(k) != phi / II)
+                {
+                    gradus_bene = FALSUM;
+                }
+                per (j = I; II * j < n; j++)
+                {
+                    f64 x = 2.0 * cos(2.0 * 3.14159265358979323846
+                        * (f64)j / (f64)n);
+                    f64 valor        = 0.0;
+                    f64 magnitudo_f  = 0.0;
+                    s32 e;
+
+                    si (_divisor_communis(j, n) != I)
+                    {
+                        perge;
+                    }
+                    per (e = polynomium_gradus_summus(f); e >= ZEPHYRUM;
+                        e--)
+                    {
+                        s64 c = ZEPHYRUM;
+
+                        (vacuum)magnus_ad_s64(polynomium_coefficiens(f,
+                            e), &c);
+                        valor = valor * x + (f64)c;
+                        magnitudo_f = magnitudo_f * fabs(x) + fabs(
+                            (f64)c);
+                    }
+                    si (fabs(valor) > 1e-9 * (magnitudo_f + 1.0))
+                    {
+                        radices_bene = FALSUM;
+                    }
+                }
+                piscina_reficere(piscina, nota);
+            }
+            CREDO_VERUM (gradus_bene);
+            CREDO_VERUM (radices_bene);
+        }
+        /* N(alpha) et Tr(alpha) in Q(cos 2pi/7): 1 et -1 */
+        {
+               Extensio* k7     = extensio_cosinus(VII, piscina);
+                Fractio  q      = fractio_ex_s64(ZEPHYRUM);
+            Algebraicus  alpha  = algebraicus_generator(k7, piscina);
+
+            CREDO_VERUM (algebraicus_norma(alpha, piscina, &q)
+                && fractio_aequalis(q, fractio_ex_s64(I)));
+            CREDO_VERUM (algebraicus_vestigium(alpha, piscina, &q)
+                && fractio_aequalis(q, fractio_ex_s64(-I)));
+        }
+    }
+
+
+    /* ==================================================
+     * IDENTITATES ET ORACULA F64
+     * ================================================== */
+
+    {
+        hic_manens constans s64 quadratica[] = { II, III, V, VII, -I,
+            -III,
+            -V };
+        hic_manens constans i32 cosinus[] = { V, VII, IX, XI, XIII, XVI,
+            XXIV, XXXV };
+        Sors s;
+         b32 inversa_bene              = VERUM;
+         b32 anulus_bene               = VERUM;
+         b32 norma_bene                = VERUM;
+         b32 norma_oraculum_bene       = VERUM;
+         b32 vestigium_oraculum_bene   = VERUM;
+         b32 vestigium_bene            = VERUM;
+         b32 textus_bene               = VERUM;
+         b32 potentia_bene             = VERUM;
+         b32 rationales_bene           = VERUM;
+         b32 exponentes_negativi_bene  = VERUM;
+         i32 numerus_corporum          = VII + VIII;
+         i32 c;
+
+        imprimere("\n--- Identitates (elementa fortuita) ---\n");
+        sors_seminare(&s, CXXIII, I);
+        per (c = ZEPHYRUM; c < numerus_corporum; c++)
+        {
+            Extensio* k = c < VII ? extensio_quadratica(quadratica[c],
+                piscina) : extensio_cosinus(cosinus[c - VII], piscina);
+            i32 d = extensio_gradus(k);
+            i32 iteratio;
+
+            per (iteratio = ZEPHYRUM; iteratio < XL; iteratio++)
+            {
+                PiscinaNotatio nota  = piscina_notare(piscina);
+                   Algebraicus a     = _fortuitum(k, &s);
+                   Algebraicus b     = _fortuitum(k, &s);
+                   Algebraicus e     = _fortuitum(k, &s);
+                   Algebraicus x;
+                   Algebraicus y;
+                       Fractio na   = fractio_ex_s64(ZEPHYRUM);
+                       Fractio nb   = fractio_ex_s64(ZEPHYRUM);
+                       Fractio nc   = fractio_ex_s64(ZEPHYRUM);
+                       Fractio ta   = fractio_ex_s64(ZEPHYRUM);
+                       Fractio tb   = fractio_ex_s64(ZEPHYRUM);
+                       Fractio tab  = fractio_ex_s64(ZEPHYRUM);
+
+                /* a * (1/a) = 1 */
+                si (!algebraicus_est_nullum(a))
+                {
+                    si (   !algebraicus_inversum(a, piscina, &x)
+                        || !_unum_est(algebraicus_multiplica(a, x,
+                        piscina)))
+                    {
+                        inversa_bene = FALSUM;
+                    }
+                    /* a^-3 a^3 = 1 */
+                    si (   !algebraicus_potentia(a, -III, piscina, &x)
+                        || !algebraicus_potentia(a, III, piscina, &y)
+                        || !_unum_est(algebraicus_multiplica(x, y,
+                        piscina)))
+                    {
+                        potentia_bene = FALSUM;
+                    }
+                }
+                /* (ab)e = a(be), a(b + e) = ab + ae, (a + b) - b = a */
+                si (   !algebraicus_aequalis(algebraicus_multiplica(
+                    algebraicus_multiplica(a, b, piscina), e, piscina),
+                    algebraicus_multiplica(a, algebraicus_multiplica(b,
+                    e,
+                    piscina), piscina))
+                    || !algebraicus_aequalis(algebraicus_multiplica(a,
+                    algebraicus_adde(b, e, piscina), piscina),
+                    algebraicus_adde(algebraicus_multiplica(a, b,
+                    piscina),
+                    algebraicus_multiplica(a, e, piscina), piscina))
+                    || !algebraicus_aequalis(algebraicus_subtrahe(
+                    algebraicus_adde(a, b, piscina), b, piscina), a))
+                {
+                    anulus_bene = FALSUM;
+                }
+                /* N multiplicativa, Tr additiva */
+                si (   !algebraicus_norma(a, piscina, &na)
+                    || !algebraicus_norma(b, piscina, &nb)
+                    || !algebraicus_norma(algebraicus_multiplica(a, b,
+                    piscina), piscina, &nc)
+                    || !fractio_aequalis(nc,
+                    fractio_multiplica(na, nb,
+                    piscina)))
+                {
+                    norma_bene = FALSUM;
+                }
+                si (   !algebraicus_vestigium(a, piscina, &ta)
+                    || !algebraicus_vestigium(b, piscina, &tb)
+                    || !algebraicus_vestigium(algebraicus_adde(a, b,
+                    piscina), piscina, &tab)
+                    || !fractio_aequalis(tab, fractio_adde(ta, tb,
+                    piscina)))
+                {
+                    vestigium_bene = FALSUM;
+                }
+                /* oraculum externum normae et vestigii */
+                si (c < VII)
+                {
+                    /* a = p + q sqrt d: N = p^2 - d q^2, Tr = 2p */
+                    Fractio p = algebraicus_coefficiens(a, ZEPHYRUM,
+                        piscina);
+                    Fractio qq = algebraicus_coefficiens(a, I, piscina);
+                    Fractio n = fractio_subtrahe(fractio_multiplica(p,
+                        p,
+                        piscina), fractio_multiplica(fractio_ex_s64(
+                        quadratica[c]), fractio_multiplica(qq, qq,
+                        piscina), piscina), piscina);
+
+                    si (!fractio_aequalis(n, na))
+                    {
+                        norma_oraculum_bene = FALSUM;
+                    }
+                    si (!fractio_aequalis(fractio_multiplica(
+                        fractio_ex_s64(II), p, piscina), ta))
+                    {
+                        vestigium_oraculum_bene = FALSUM;
+                    }
+                }
+                alioquin
+                {
+                    /* productum et summa super 2 cos(2 pi j/n) */
+                    i32 n          = cosinus[c - VII];
+                    f64 productum  = 1.0;
+                    f64 summa      = 0.0;
+                    i32 j;
+
+                    per (j = I; II * j < n; j++)
+                    {
+                        f64 x64;
+
+                        si (_divisor_communis(j, n) != I)
+                        {
+                            perge;
+                        }
+                        x64 = _valor(a, 2.0 * cos(2.0
+                            * 3.14159265358979323846 * (f64)j / (f64)n),
+                            d);
+                        productum  = productum * x64;
+                        summa      = summa + x64;
+                    }
+                    si (fabs(productum - _fractio_ad_f64(na)) > 1e-7
+                        * (fabs(productum) + 1.0))
+                    {
+                        norma_oraculum_bene = FALSUM;
+                    }
+                    si (fabs(summa - _fractio_ad_f64(ta))
+                        > 1e-9 * (fabs(
+                        summa) + 1.0))
+                    {
+                        vestigium_oraculum_bene = FALSUM;
+                    }
+                }
+                /* textus reversibilis */
+                si (   !algebraicus_ex_chorda(k,
+                    algebraicus_ad_chordam(a,
+                    piscina), piscina, &x)
+                    || !algebraicus_aequalis(x, a))
+                {
+                    textus_bene = FALSUM;
+                }
+                piscina_reficere(piscina, nota);
+            }
+            /* alpha^-1 (Laurent) * alpha = 1, et a^-2 = 1/(a^2) */
+            {
+                Algebraicus inversa;
+                Algebraicus alpha = algebraicus_generator(k, piscina);
+                Algebraicus quadratum_inversum;
+                Algebraicus x;
+
+                inversa.corpus             = NIHIL;
+                quadratum_inversum.corpus  = NIHIL;
+                si (   !algebraicus_ex_chorda(k,
+                    chorda_ex_literis("a^-1",
+                    piscina), piscina, &inversa)
+                    || !_unum_est(algebraicus_multiplica(inversa, alpha,
+                    piscina))
+                    || !algebraicus_ex_chorda(k, chorda_ex_literis(
+                    "a^-2 + 1", piscina), piscina, &quadratum_inversum)
+                    || !algebraicus_inversum(algebraicus_multiplica(
+                    alpha, alpha, piscina), piscina, &x)
+                    || !algebraicus_aequalis(quadratum_inversum,
+                    algebraicus_adde(x, _a(k, "1"), piscina)))
+                {
+                    exponentes_negativi_bene = FALSUM;
+                }
+            }
+            /* rationales: N(q) = q^d, Tr(q) = d q */
+            {
+                    Fractio q           = fractio_ex_s64(ZEPHYRUM);
+                    Fractio n           = fractio_ex_s64(ZEPHYRUM);
+                    Fractio t           = fractio_ex_s64(ZEPHYRUM);
+                    Fractio q_potentia  = fractio_ex_s64(ZEPHYRUM);
+                Algebraicus elementum_q;
+
+                (vacuum)fractio_ex_s64_s64(-III, VII, piscina, &q);
+                (vacuum)fractio_potentia(q, (s32)d, piscina,
+                    &q_potentia);
+                elementum_q = algebraicus_ex_fractione(k, q, piscina);
+
+                si (   !algebraicus_norma(elementum_q, piscina, &n)
+                    || !fractio_aequalis(n, q_potentia)
+                    || !algebraicus_vestigium(elementum_q, piscina, &t)
+                    || !fractio_aequalis(t, fractio_multiplica(
+                    fractio_ex_s64((s64)d), q, piscina)))
+                {
+                    rationales_bene = FALSUM;
+                }
+            }
+        }
+        CREDO_VERUM (inversa_bene);
+        CREDO_VERUM (potentia_bene);
+        CREDO_VERUM (anulus_bene);
+        CREDO_VERUM (norma_bene);
+        CREDO_VERUM (norma_oraculum_bene);
+        CREDO_VERUM (vestigium_oraculum_bene);
+        CREDO_VERUM (vestigium_bene);
+        CREDO_VERUM (textus_bene);
+        CREDO_VERUM (rationales_bene);
+        CREDO_VERUM (exponentes_negativi_bene);
+    }
+
+
+    /* ==================================================
+     * REFUTATIONES ET CORPORA MIXTA
+     * ================================================== */
+
+    {
+           Extensio* k2 = extensio_quadratica(II, piscina);
+           Extensio* k3 = extensio_quadratica(III, piscina);
+        Algebraicus  a2 = algebraicus_generator(k2, piscina);
+        Algebraicus  a3 = algebraicus_generator(k3, piscina);
+        Algebraicus  x;
+            Fractio  q = fractio_ex_s64(ZEPHYRUM);
+
+        imprimere("\n--- Refutationes ---\n");
+        CREDO_FALSUM (algebraicus_aequalis(a2, a3));
+        CREDO_FALSUM (algebraicus_est_validum(algebraicus_adde(a2, a3,
+            piscina)));
+        CREDO_FALSUM (algebraicus_est_validum(algebraicus_multiplica(a2,
+            a3, piscina)));
+        CREDO_FALSUM (algebraicus_divide(a2, a3, piscina, &x));
+        CREDO_FALSUM (algebraicus_inversum(_a(k2, "0"), piscina, &x));
+        CREDO_FALSUM (algebraicus_potentia(_a(k2, "0"), -I, piscina,
+            &x));
+        CREDO_FALSUM (algebraicus_norma(algebraicus_adde(a2, a3,
+            piscina),
+            piscina, &q));
+        CREDO_VERUM (_textus_est(algebraicus_adde(a2, a3, piscina),
+            "invalidum"));
+        /* alpha = 0 (cos 2pi/4): Laurent refutatur */
+        CREDO_FALSUM (algebraicus_ex_chorda(extensio_cosinus(IV,
+            piscina),
+            chorda_ex_literis("a^-1", piscina), piscina, &x));
+    }
+
+
+    /* ==================================================
+     * MATRIX SUPER Q(sqrt 5)
+     * ================================================== */
+
+    {
+               Extensio* k5      = extensio_quadratica(V,
+                   piscina);
+        constans Anulus* corpus  = extensio_anulus(k5);
+            Algebraicus  nodi[IV];
+            Algebraicus  det;
+            Algebraicus  productum;
+                 Matrix  m;
+                    i32  i;
+                    i32  j;
+                    i32  gradus = ZEPHYRUM;
+
+        imprimere("\n--- Matrix super Q(sqrt 5) ---\n");
+        CREDO_VERUM (corpus->corpus);
+        /* Vandermonde nodis 1, phi, phi^2, 1/phi: det = prod_{i<j}
+         * (x_j - x_i) */
+        nodi[ZEPHYRUM] = _a(k5, "1");
+        nodi[I] = _a(k5, "(a + 1)/2");
+        nodi[II] = algebraicus_multiplica(nodi[I], nodi[I], piscina);
+        (vacuum)algebraicus_inversum(nodi[I], piscina, &nodi[III]);
+        CREDO_VERUM (matrix_nulla(corpus, IV, IV, piscina, &m));
+        per (i = ZEPHYRUM; i < IV; i++)
+        {
+            per (j = ZEPHYRUM; j < IV; j++)
+            {
+                Algebraicus v;
+
+                (vacuum)algebraicus_potentia(nodi[i], (s32)j, piscina,
+                    &v);
+                matrix_pone(&m, i, j, &v);
+            }
+        }
+        productum = _a(k5, "1");
+        per (i = ZEPHYRUM; i < IV; i++)
+        {
+            per (j = i + I; j < IV; j++)
+            {
+                productum = algebraicus_multiplica(productum,
+                    algebraicus_subtrahe(nodi[j], nodi[i], piscina),
+                    piscina);
+            }
+        }
+        CREDO_VERUM (matrix_determinans(m, piscina, &det));
+        CREDO_VERUM (algebraicus_aequalis(det, productum));
+        CREDO_FALSUM (algebraicus_est_nullum(det));
+        /* singularis: linea 3 = linea 1 + phi linea 2 */
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            Algebraicus v = algebraicus_adde(*(constans Algebraicus*)
+                matrix_elementum(m, I, j),
+                algebraicus_multiplica(nodi[I],
+                *(constans Algebraicus*)matrix_elementum(m, II, j),
+                piscina), piscina);
+
+            matrix_pone(&m, III, j, &v);
+        }
+        CREDO_VERUM (matrix_gradus(m, piscina, &gradus));
+        CREDO_AEQUALIS_I32 (gradus, III);
+        /* elementum alterius corporis refutatur */
+        {
+            Algebraicus alienum =
+                algebraicus_generator(extensio_quadratica(
+                II, piscina), piscina);
+
+            matrix_pone(&m, ZEPHYRUM, ZEPHYRUM, &alienum);
+            CREDO_FALSUM (matrix_determinans(m, piscina, &det));
+        }
+    }
+
+    credo_imprimere_compendium();
+    {
+        b32 praeteritus = credo_omnia_praeterierunt();
+
+        credo_claudere();
+        piscina_destruere(piscina);
+        redde praeteritus ? ZEPHYRUM : I;
+    }
+}

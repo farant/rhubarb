@@ -381,6 +381,22 @@
   <vocabulum lemma="automorphismus" lingua="latina" classis="substantivum" nota="Neolatina (Gk. autos + morphe): automorphismus, isomorphismus structurae in se (sigma_j: zeta -> zeta^j); sedes include/cyclotomia.h; WORDS caret">
     <forma textus="automorphismus" casus="nominativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="algebraicus" lingua="latina" classis="adiectivum" nota="Neolatina: algebraicus, ad algebram pertinens (numerus algebraicus, radix polynomii in Z[t]); sedes include/extensio.h; WORDS caret">
+    <forma textus="algebraicus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="algebraica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="algebraicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="quadraticus" lingua="latina" classis="adiectivum" nota="Neolatina: quadraticus, secundi gradus (corpus quadraticum Q(sqrt d)); sedes include/extensio.h; WORDS caret">
+    <forma textus="quadraticus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="quadratica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="quadraticum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="cosinus" lingua="latina" classis="substantivum" nota="Neolatina (Gunter, ex 'complementi sinus'): cosinus anguli (Q(cos 2 pi/n)); sedes include/extensio.h; WORDS caret">
+    <forma textus="cosinus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="binomium" lingua="latina" classis="substantivum" nota="Neolatina: binomium, polynomium duorum terminorum (t + 1/t); sedes lib/extensio.c; WORDS caret">
+    <forma textus="binomium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
   <vocabulum lemma="coefficiens" lingua="latina" classis="substantivum" nota="Neolatina (Vieta): coefficiens, quantitas cum potentia coniuncta (polynomium); WORDS caret">
     <forma textus="coefficiens" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="coefficientis" casus="genitivus" numerus="singularis" genus="masculinum"/>

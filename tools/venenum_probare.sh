@@ -14,7 +14,8 @@
 #     (porta muta hic caperetur);
 # II. suitae quae piscinas notant et reficiunt in ansis calidis:
 #     piscina, magnus (Euclides alternus), fractio, situs, polynomium
-#     (officinae), matrix (Bareiss in officinis alternis), sub veneno et
+#     (officinae), matrix (Bareiss in officinis alternis), laqueus,
+#     extensio (inversa et norma per Bareiss), sub veneno et
 #     sanitatoribus.
 # Exitus 0 sana | 1 FRACTA | 2 nihil actum.
 set -u
@@ -24,7 +25,11 @@ source tools/vexilla.sh
 fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
 T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
-SANITAS=("-g" "-O1" "-fsanitize=address,undefined" "-fno-sanitize-recover=all")
+# -Wno-deprecated-declarations: SDK macOS sprintf 'deprecated' notat SOLUM
+# sub sanitatoribus (aedificatio ordinaria tacet); C89 snprintf caret, ergo
+# sprintf domus legitimum est (cyclotomia, extensio)
+SANITAS=("-g" "-O1" "-fsanitize=address,undefined" "-fno-sanitize-recover=all"
+    "-Wno-deprecated-declarations")
 BASIS=(lib/piscina.c lib/chorda.c lib/chorda_aedificator.c lib/credo.c lib/sors.c)
 
 # I. specimen
@@ -61,7 +66,9 @@ for suita in "piscina:" "magnus:lib/magnus.c" \
     "matrix:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
 lib/anulus.c lib/matrix.c" \
     "laqueus:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/situs.c lib/laqueus.c"; do
+lib/anulus.c lib/matrix.c lib/situs.c lib/laqueus.c" \
+    "extensio:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
+lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c"; do
     titulus="${suita%%:*}"
     read -r -a fontes <<< "${suita#*:}"
     if ! clang "${VEXILLA_C89[@]}" -Wno-overlength-strings -Iinclude \
