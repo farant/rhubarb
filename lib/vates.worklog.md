@@ -136,3 +136,22 @@ Key-leak grep (Fran): 0 in stdout, ledger, herbarium (4 files).
 hidden because only the first novelty is reported) and usage extras
 `output_tokens_details`, `service_tier`, `inference_geo` (usage keys are
 not novelty-checked). -> T7b.
+
+## 2026-10-08 - the live shape taught (vates-plan-2 T7b, Fran's ruling)
+
+`_claves_summae` gains `container` and `diagnostics` (both `null` in an
+ordinary call: no code-execution container, no cache diagnostics asked).
+Test `probatio_forma_viva` feeds the EXACT live body from the T7 run
+through fictus + herbarium and demands zero specimens (was one). Plant:
+dropping only "diagnostics" is red - the first-novelty-only rule had
+hidden it behind "container", the test pins both.
+
+Known but unmodelled (recorded, not parsed): `usage.output_tokens_details`
+(seen: `{"thinking_tokens":0}` - thinking is ALREADY inside output_tokens;
+a future VatesUsus field could show the thinking share of a turn's cost),
+`usage.service_tier` ("standard"), `usage.inference_geo` ("global").
+Usage keys are not novelty-checked, so these never pressed.
+
+Promoted (Fran read it first, approved unchanged): the live text response
+as `probationes/fixa/vates/herbarium/specimina/vivum_textus_sonnet_5_5-1.json`
+- the sweep now covers the API's real shape, not only hand-made seeds.

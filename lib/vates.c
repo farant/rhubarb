@@ -506,7 +506,10 @@ vates_anthropic_corpus (
 
 hic_manens constans character* _claves_summae[] = {
     "id", "type", "role", "model", "content", "stop_reason",
-    "stop_sequence", "stop_details", "usage", NIHIL
+    "stop_sequence", "stop_details", "usage",
+    /* fumus vivus T7 (2026-10-08): in omni responso, null nisi
+     * container codicis / diagnostica cache petita */
+    "container", "diagnostics", NIHIL
 };
 hic_manens constans character* _claves_textus[] = {
     "type", "text", "citations", NIHIL

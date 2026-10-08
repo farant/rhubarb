@@ -741,6 +741,46 @@ probatio_specimina_commissa(Piscina* piscina)
 }
 
 
+interior vacuum
+probatio_forma_viva(Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+             Vates* v;
+    VatesResponsum* r;
+         character  via_herbarii[CCLVI];
+         character  via[DXII];
+
+    /* corpus VERUM ex fumo vivo T7 (2026-10-08): 'container' et
+     * 'diagnostics' in summo noti esse debent - nulla novitas */
+    imprimere("\n--- Probans forma viva API: nulla novitas ---\n");
+    sprintf(via_herbarii, "/tmp/probatio_vates_forma_%ld",
+        (longus)getpid());
+    o.herbarium_via  = via_herbarii;
+    v                = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, CC,
+        "{\"model\":\"claude-sonnet-5-5\",\"id\":\"msg_011CfpvgCh25e34mA"
+        "ahvG2wb\",\"type\":\"message\",\"role\":\"assistant\",\"content\":["
+        "{\"type\":\"text\",\"text\":\"Salve.\"}],\"container\":null,\"stop_"
+        "reason\":\"end_turn\",\"stop_sequence\":null,\"stop_details\":n"
+        "ull,\"usage\":{\"input_tokens\":18,\"cache_creation_input_tok"
+        "ens\":1839,\"cache_read_input_tokens\":0,\"cache_creation\":{"
+        "\"ephemeral_5m_input_tokens\":1839,\"ephemeral_1h_input_tok"
+        "ens\":0},\"output_tokens\":6,\"output_tokens_details\":{\"thin"
+        "king_tokens\":0},\"service_tier\":\"standard\",\"inference_geo"
+        "\":\"global\"},\"diagnostics\":null}");
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->successus);
+    CREDO_AEQUALIS_I32(xar_numerus(herbarium_enumerare(piscina,
+        via_herbarii)), 0);
+    sprintf(via, "%s/index.jsonl", via_herbarii);
+    (vacuum)unlink(via);
+    sprintf(via, "%s/specimina", via_herbarii);
+    (vacuum)rmdir(via);
+    (vacuum)rmdir(via_herbarii);
+}
+
+
 s32
 principale (vacuum)
 {
@@ -766,6 +806,8 @@ principale (vacuum)
     probatio_novitas_pressa(piscina);
     /* T6 */
     probatio_specimina_commissa(piscina);
+    /* T7b */
+    probatio_forma_viva(piscina);
 
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
