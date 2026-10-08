@@ -65,6 +65,9 @@ Fran before code.
 
 ### T6: `probationes_c`
 
+(As built in four commits: T6a processus options, T6b extractor library +
+facultas, T6c-1 the kind in the machine, T6c-2 the tool hooks + smoke.)
+
 - [ ] **Step 1: failing test** (temporary root, two tiny C tests and a
   library): link via aedilis_derivare + compilator library (flags from
   aedilis.stml), run, verdict per member; edit one library source ->

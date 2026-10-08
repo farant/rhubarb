@@ -387,3 +387,47 @@ third first crashed reading element 0 unguarded; guarded).
 Decided for T6c (Fran): a test runs with cwd = tree root (tests are
 root-relative), its binary, objects and TMPDIR in the member's area;
 objects compiled into the area through the compilator store.
+
+**T6c-1 (2026-10-07): `probationes_c` in the machine.** API approved by
+Fran: `FabricaClausuraC {fontes, capita, vexilla_nexus, facultates}`
+and two sutura hooks, `clausura_c` (closure of a test) and `compilare`
+(source -> object through the store); the kind stays PURE in
+lib/fabrica.c, the tool implements the hooks (T6c-2). Registered: the
+step registry now holds `probationes_c`.
+- membra: `exemplar="dir/forma"` - the .c files of dir matching the
+  glob (fabrica's `_globus_congruit`), `praeter` excludes by name;
+  member title = name without `.c`.
+- ingressus (static key): closure sources + headers, `aedilis.stml`
+  (the one flag source), `identitas_clang`. A closure that cannot be
+  derived does NOT refuse the declarations: the member keys on its
+  source alone and fails in agere with aedilis's cause (failures
+  re-run).
+- agere: compile each closure source into `<area>obiecta/<path__>.o`,
+  link `<area><member>` (link flags split into argv words), and unless
+  the scope declares a `facultas`, run it (cwd = tree root); the run's
+  trace is the dynamic key. Facultas -> linked only, verdict
+  `<id>: transiit (nexus solum: facultas fenestra)` (a kind may give a
+  deterministic verdict note via `cauda` on a pass).
+- Declarations: an action child named after a registered kind
+  (`<probationes_c exemplar= praeter=/>`; attributes copied generically)
+  plus `<ambitus variabilis="X"/>`; refused: a step outside `iudicium`,
+  two steps; a step action needs no ingressus/exitus/lectiones. Canon:
+  `probationes_c`, `ambitus`; ingressus/exitus lose `minimum="1"` (the
+  reader keeps the rule for actions without a step).
+- `in_area_currere` contract: cwd = tree root (Fran, T6b), the ledger
+  created EMPTY before the run.
+Found and fixed: an EMPTY trace could never be stored - an empty write
+is a deletion in the trace store (spec 3 T5b), so a member that reads
+nothing (link-only facultas member, a test without reads) re-ran every
+time. A pass with an empty trace now stores one sentinel read (`X .`,
+the root exists).
+Tests (probatio_fabrica PROBATIONES_C I-X, fake closure table, fake
+compiler, fake runner counting links and runs): declaration and its two
+refusals; members a b c (zeta excluded, notes not matched); first heal
+3 links / 2 runs / 5 compiles, framework flag split; nothing changed ->
+nothing; library source of a -> a only; header of b -> b only; test c
+(facultas) -> relinked, not run; run-time read -> a and b, not c;
+failing run -> FRACTUM, runs again; compile error -> FRACTUM naming the
+source and clang's message. Plants (5, all red): closure ignored,
+facultas ignored, empty-trace sentinel off, step-outside-iudicium
+refusal off, praeter ignored.

@@ -109,6 +109,18 @@ nomen structura {
     chorda valor;
 } FabricaAttributum;
 
+/* CLAUSURA C scopi (fabrica-6 T6c, per sutura->clausura_c): quod
+ * probatio C nectit et legit */
+nomen structura {
+    Xar* fontes;         /* chorda: nectendi, scopus primus (.c/.m) */
+    Xar* capita;         /* chorda: capita clausurae (ingressus
+                          * clavis) */
+    Xar* vexilla_nexus;  /* chorda: e.g. "-framework Cocoa" (verba
+                          * spatio separata) */
+    Xar* facultates;     /* chorda: scopi solius (fenestra, rete,
+                          * repositorium) */
+} FabricaClausuraC;
+
 /* MEMBRUM gradus (fabrica-6 T5): id stabilis = "<actio>/<titulus>" */
 nomen structura {
     chorda titulus; /* intra actionem: "probatio_x" */
@@ -412,16 +424,31 @@ nomen structura {
     /* aream parare: directorium (et <area>tmp/) creatum et VACUUM -
      * reliquiae cursus prioris membrum mutum celarent */
     b32 (*area_parare)(vacuum* datum, constans character* area);
-    /* argv currere cum cwd = area et ambitu EXACTO (Xar de "N=V";
+    /* argv currere cum cwd = RADIX arboris (probationes viis radicis
+     * utuntur - decisio Frani T6b) et ambitu EXACTO (Xar de "N=V";
      * nihil hereditatur) praeter FABRICA_LECTIONES = liber_via
-     * (absoluta, liber vetus deletus). Acta (effusio, erratum) in
-     * acta_via. FALSUM = incipi non potuit (cauda causam dicit). */
+     * (absoluta; liber vetus deletus et VACUUS creatus - processus
+     * qui nihil notat vestigium vacuum, non absens, relinquit). area:
+     * ubi scripturae cadunt. Acta (effusio, erratum) in acta_via.
+     * FALSUM = incipi non potuit (cauda causam dicit). */
     b32 (*in_area_currere)(vacuum* datum, constans Xar* argv,
                            constans character* area,
                            constans Xar* ambitus,
                            constans character* liber_via,
                            constans character* acta_via,
                            Piscina* piscina, FabricaActum* actum_out);
+    /* CLAUSURA C (fabrica-6 T6c): scopi (probationis .c) per
+     * aedilis_derivare + aedilis_silva. FALSUM + causa: recusatio
+     * aedilis (annotatio mala, facultas extra scopum...). */
+    b32 (*clausura_c)(vacuum* datum, constans character* scopus,
+                      Piscina* piscina, FabricaClausuraC* clausura_out,
+                      chorda* causa_out);
+    /* COMPILARE fontem in obiectum (via data) per thesaurum
+     * compilatoris; vexilla domus (aedilis.stml: communia, per
+     * fontem, vendor) ab sutura. FALSUM + erratum clang. */
+    b32 (*compilare)(vacuum* datum, constans character* fons,
+                     constans character* obiectum, Piscina* piscina,
+                     chorda* erratum_out);
 } FabricaSutura;
 
 /* species viae (sutura->species) */
@@ -550,7 +577,9 @@ structura FabricaGradus {
     /* membrum agere in area (parata et vacua) cum ambitu dato, per
      * sutura->in_area_currere (liber: fabrica_liber_via, acta:
      * fabrica_acta_via - titulo actionis syntheticae). FALSUM = non
-     * actum; codex 0 = transitus. */
+     * actum; codex 0 = transitus: cauda tum NOTA VERDICTI (vacua =
+     * nulla; '<id>: transiit (nota)') - deterministica esse debet,
+     * verdictum artificium sigillatum est. */
     b32 (*agere)(constans FabricaSutura* sutura,
                  constans FabricaActio* actio,
                  constans FabricaMembrum* membrum,
@@ -912,9 +941,9 @@ fabrica_sanare (
  * GRADUS (fabrica-6 T5): registrum, areae, ambitus, explicatio
  * ================================================== */
 
-/* REGISTRUM GRADUUM (ut generum T1): vacuum usque ad T6
- * (probationes_c) - genus probationis T5 in probatione ipsa vivit
- * (actio->gradus ad tabulam localem), non registratur. */
+/* REGISTRUM GRADUUM (ut generum T1): probationes_c (T6c) - genus
+ * ludicrum probationis T5 in probatione ipsa vivit (actio->gradus ad
+ * tabulam localem), non registratur. */
 i32
 fabrica_graduum_numerus (vacuum);
 
