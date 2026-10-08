@@ -85,6 +85,7 @@ declare -a SOURCE_FILES=(
     "lib/fractio.c"
     "lib/friatio.c"
     "lib/git.c"
+    "lib/herbarium.c"
     "lib/historia.c"
     "lib/hospitium.c"
     "lib/html_lexema.c"
