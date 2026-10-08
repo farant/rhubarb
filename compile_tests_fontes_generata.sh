@@ -215,6 +215,7 @@ declare -a SOURCE_FILES=(
     "lib/url.c"
     "lib/utf8.c"
     "lib/uuid.c"
+    "lib/vates.c"
     "lib/via.c"
     "lib/vicus.c"
     "lib/vigilia.c"
