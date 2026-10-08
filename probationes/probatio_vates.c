@@ -129,6 +129,138 @@ probatio_opaca(Piscina* piscina)
         "{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Et nunc?\"}]}]}");
 }
 
+interior VatesBlocus*
+_blocus (
+    VatesResponsum* r,
+               i32  i)
+{
+    redde (VatesBlocus*)xar_obtinere(r->bloci, i);
+}
+
+interior vacuum
+probatio_legere(Piscina* piscina)
+{
+    VatesResponsum* r;
+      VatesPetitio* p;
+      VatesNuntius* n;
+
+    imprimere("\n--- Probans vates_anthropic_legere ---\n");
+
+    /* textus + usus cum cache_creation */
+    r = vates_anthropic_legere(CC, _c(
+        "{\"id\":\"msg_1\",\"type\":\"message\",\"role\":\"assistant\","
+        "\"model\":\"claude-opus-5-5\",\"content\":[{\"type\":\"text\",\"text\":\"Salve!\"}],"
+        "\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":12,"
+        "\"cache_read_input_tokens\":3000,\"cache_creation_input_tokens\":400,"
+        "\"cache_creation\":{\"ephemeral_5m_input_tokens\":300,\"ephemeral_1h_input_tokens\":100},"
+        "\"output_tokens\":5}}", piscina), piscina);
+    CREDO_VERUM(r->successus);
+    CREDO_VERUM(r->causa_finis == VATES_FINIS);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->id, "msg_1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->exemplar, "claude-opus-5-5");
+    CREDO_AEQUALIS_I32(xar_numerus(r->bloci), I);
+    CREDO_VERUM(_blocus(r, 0)->genus == VATES_TEXTUS);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_blocus(r, 0)->textus, "Salve!");
+    CREDO_AEQUALIS_S64(r->usus.input, 12);
+    CREDO_AEQUALIS_S64(r->usus.cache_lectum, 3000);
+    CREDO_AEQUALIS_S64(r->usus.cache_scriptum_5m, 300);
+    CREDO_AEQUALIS_S64(r->usus.cache_scriptum_1h, 100);
+    CREDO_AEQUALIS_S64(r->usus.output, 5);
+
+    /* usus sine cache_creation: totum in 5m */
+    r = vates_anthropic_legere(CC, _c(
+        "{\"id\":\"m\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"x\","
+        "\"content\":[],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,"
+        "\"usage\":{\"input_tokens\":1,\"cache_creation_input_tokens\":77,\"output_tokens\":1}}",
+        piscina), piscina);
+    CREDO_AEQUALIS_S64(r->usus.cache_scriptum_5m, 77);
+
+    /* cogitatio + tool_use: OPACUM et PETITUM; reditus verbatim */
+    r = vates_anthropic_legere(CC, _c(
+        "{\"id\":\"m2\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"x\","
+        "\"content\":[{\"type\":\"thinking\",\"thinking\":\"\",\"signature\":\"SIG\"},"
+        "{\"type\":\"tool_use\",\"id\":\"toolu_9\",\"name\":\"zoom\",\"input\":{\"id\":0,\"n\":8}}],"
+        "\"stop_reason\":\"tool_use\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":1,\"output_tokens\":1}}",
+        piscina), piscina);
+    CREDO_VERUM(r->causa_finis == VATES_FINIS_INSTRUMENTUM);
+    CREDO_VERUM(_blocus(r, 0)->genus == VATES_OPACUM);
+    CREDO_VERUM(_blocus(r, I)->genus == VATES_INSTRUMENTUM_PETITUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_blocus(r, I)->id, "toolu_9");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_blocus(r, I)->titulus, "zoom");
+    CREDO_AEQUALIS_S64(json_capere_integer(_blocus(r, I)->input, "n",
+        0), 8);
+    p = vates_petitio_creare(piscina, _c("x", piscina));
+    vates_responsum_addere(p, r);
+    n = vates_nuntium_addere(p, VATES_USOR);
+    vates_effectum_addere(n, _c("toolu_9", piscina), _c("linea",
+        piscina), FALSUM);
+    CREDO_CHORDA_CONTINET(vates_anthropic_corpus(p, piscina), _c(
+        "{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"\","
+        "\"signature\":\"SIG\"},{\"type\":\"tool_use\",\"id\":\"toolu_9\",\"name\":\"zoom\","
+        "\"input\":{\"id\":0,\"n\":8}}]}", piscina));
+
+    /* citationes: TEXTUS cum crudo - redditur cum citationibus */
+    r = vates_anthropic_legere(CC, _c(
+        "{\"id\":\"m3\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"x\","
+        "\"content\":[{\"type\":\"text\",\"text\":\"t\",\"citations\":[{\"x\":1}]}],"
+        "\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":1,\"output_tokens\":1}}",
+        piscina), piscina);
+    CREDO_VERUM(_blocus(r, 0)->genus == VATES_TEXTUS);
+    p = vates_petitio_creare(piscina, _c("x", piscina));
+    vates_responsum_addere(p, r);
+    CREDO_CHORDA_CONTINET(vates_anthropic_corpus(p, piscina),
+                          _c("\"citations\":[{\"x\":1}]", piscina));
+
+    /* recusatio cum categoria */
+    r = vates_anthropic_legere(CC, _c(
+        "{\"id\":\"m4\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"x\","
+        "\"content\":[],\"stop_reason\":\"refusal\",\"stop_sequence\":null,"
+        "\"stop_details\":{\"type\":\"refusal\",\"category\":\"cyber\",\"explanation\":\"e\"},"
+        "\"usage\":{\"input_tokens\":1,\"output_tokens\":0}}", piscina),
+        piscina);
+    CREDO_VERUM(r->successus);
+    CREDO_VERUM(r->causa_finis == VATES_FINIS_RECUSATIO);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->recusatio_categoria, "cyber");
+
+    /* max_tokens */
+    r = vates_anthropic_legere(CC, _c(
+        "{\"id\":\"m5\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"x\","
+        "\"content\":[{\"type\":\"text\",\"text\":\"trunc\"}],\"stop_reason\":\"max_tokens\","
+        "\"stop_sequence\":null,\"usage\":{\"input_tokens\":1,\"output_tokens\":9}}",
+        piscina), piscina);
+    CREDO_VERUM(r->causa_finis == VATES_FINIS_MAXIMUM);
+
+    /* errores provisoris */
+    r = vates_anthropic_legere(DXXIX, _c(
+        "{\"type\":\"error\",\"error\":{\"type\":\"overloaded_error\",\"message\":\"Overloaded\"},"
+        "\"request_id\":\"req_1\"}", piscina), piscina);
+    CREDO_FALSUM(r->successus);
+    CREDO_VERUM(r->error == VATES_ERROR_STATUS);
+    CREDO_AEQUALIS_I32(r->status_http, DXXIX);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->error_genus, "overloaded_error");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->error_nuntius, "Overloaded");
+    r = vates_anthropic_legere(DII, _c("<html>bad gateway</html>",
+        piscina), piscina);
+    CREDO_VERUM(r->error == VATES_ERROR_STATUS);
+    CREDO_CHORDA_CONTINET(r->error_nuntius, _c("bad gateway", piscina));
+
+    /* CC sed non legibile */
+    r = vates_anthropic_legere(CC, _c("{\"id\":", piscina), piscina);
+    CREDO_FALSUM(r->successus);
+    CREDO_VERUM(r->error == VATES_ERROR_PARSE);
+
+    /* blocus ignotus -> OPACUM, non abicitur */
+    r = vates_anthropic_legere(CC, _c(
+        "{\"id\":\"m6\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"x\","
+        "\"content\":[{\"type\":\"server_tool_use\",\"id\":\"s1\"},{\"type\":\"text\",\"text\":\"ok\"}],"
+        "\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":1,\"output_tokens\":1}}",
+        piscina), piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(r->bloci), II);
+    CREDO_VERUM(_blocus(r, 0)->genus == VATES_OPACUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_blocus(r, 0)->provisor, "anthropic");
+}
+
+
 s32
 principale (vacuum)
 {
@@ -142,7 +274,9 @@ principale (vacuum)
     probatio_corpus_minimum(piscina);
     probatio_corpus_plenum(piscina);
     probatio_opaca(piscina);
-    /* T4, T5, T6 addunt hic vocationes suas */
+    /* T4 */
+    probatio_legere(piscina);
+    /* T5, T6 addunt hic vocationes suas */
 
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();

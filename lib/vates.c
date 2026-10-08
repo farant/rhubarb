@@ -498,3 +498,252 @@ vates_anthropic_corpus (
     }
     redde json_scribere(_corpus_anthropic(petitio, piscina), piscina);
 }
+
+
+/* ======================================================================
+ * B. LECTIO ANTHROPIC
+ * ====================================================================== */
+
+hic_manens constans character* _claves_summae[] = {
+    "id", "type", "role", "model", "content", "stop_reason",
+    "stop_sequence", "stop_details", "usage", NIHIL
+};
+hic_manens constans character* _claves_textus[] = {
+    "type", "text", "citations", NIHIL
+};
+hic_manens constans character* _claves_petiti[] = {
+    "type", "id", "name", "input", NIHIL
+};
+
+interior b32
+_in_indice (
+    chorda clavis,
+    constans character* constans* index)
+{
+    i32 i;
+
+    per (i = 0; index[i]; i++)
+    {
+        si (chorda_aequalis_literis(clavis, index[i]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* prima novitas sola servatur */
+interior vacuum
+_novitas (
+                chorda* novitas,
+    constans character* praefixum,
+                chorda  quid,
+               Piscina* piscina)
+{
+    character buffer[CCLVI];
+
+    si (novitas->mensura > 0)
+    {
+        redde;
+    }
+    sprintf(buffer, "%s%.*s", praefixum,
+            (integer)(quid.mensura > CC ? CC : quid.mensura),
+            (constans character*)quid.datum);
+    *novitas = chorda_ex_literis(buffer, piscina);
+}
+
+interior vacuum
+_claves_probare (
+            JsonValor* obj,
+    constans character* constans* nota,
+    constans character* praefixum,
+               chorda* novitas,
+             Piscina*  piscina)
+{
+    JsonObjectumIterator  it = json_objectum_iterator(obj);
+                  chorda  clavis;
+               JsonValor* valor;
+
+    dum (json_objectum_iterator_proxima(&it, &clavis, &valor))
+    {
+        si (!_in_indice(clavis, nota))
+        {
+            _novitas(novitas, praefixum, clavis, piscina);
+        }
+    }
+}
+
+interior VatesCausaFinis
+_causa_finis (
+     chorda  s,
+     chorda* novitas,
+    Piscina* piscina)
+{
+    si (   chorda_aequalis_literis(s, "end_turn")
+        || chorda_aequalis_literis(s, "stop_sequence"))
+    {
+        redde VATES_FINIS;
+    }
+    si (chorda_aequalis_literis(s, "tool_use"))
+    {
+        redde VATES_FINIS_INSTRUMENTUM;
+    }
+    si (chorda_aequalis_literis(s, "max_tokens"))
+    {
+        redde VATES_FINIS_MAXIMUM;
+    }
+    si (chorda_aequalis_literis(s, "refusal"))
+    {
+        redde VATES_FINIS_RECUSATIO;
+    }
+    si (chorda_aequalis_literis(s, "pause_turn"))
+    {
+        redde VATES_FINIS_PAUSA;
+    }
+    _novitas(novitas, "stop_reason ignota: ", s, piscina);
+    redde VATES_FINIS_ALIA;
+}
+
+interior VatesResponsum*
+_responsum_vacuum (
+    Piscina* piscina)
+{
+    VatesResponsum* r = (VatesResponsum*)piscina_allocare(piscina,
+        (i64)magnitudo(VatesResponsum));
+
+    memset(r, 0, magnitudo(*r));
+    r->bloci         = xar_creare(piscina, (i32)magnitudo(VatesBlocus));
+    r->usus.pretium  = -I;
+    redde r;
+}
+
+interior VatesResponsum*
+_legere (
+       i32  status,
+    chorda  corpus,
+   Piscina* piscina,
+    chorda* novitas)
+{
+    VatesResponsum* r      = _responsum_vacuum(piscina);
+      JsonResultus  j      = json_legere(corpus, piscina);
+            chorda  vacua  = chorda_ex_literis("", piscina);
+         JsonValor* content;
+         JsonValor* usus;
+               i32  i;
+
+    *novitas        = _vacua();
+    r->status_http  = status;
+    r->conatus      = I;
+    si (status != CC)
+    {
+        r->error = VATES_ERROR_STATUS;
+        si (j.successus)
+        {
+            JsonValor* e = json_objectum_capere(j.radix, "error");
+
+            r->error_genus    = json_capere_chorda(e, "type", vacua);
+            r->error_nuntius  = json_capere_chorda(e, "message", vacua);
+        }
+        alioquin
+        {
+            r->error_nuntius.datum = corpus.datum;
+            r->error_nuntius.mensura = corpus.mensura
+                > CCLVI ? CCLVI : corpus.mensura;
+        }
+        redde r;
+    }
+    si (!j.successus || !json_est_objectum(j.radix))
+    {
+        r->error         = VATES_ERROR_PARSE;
+        r->error_nuntius =
+            j.successus ? chorda_ex_literis("radix non objectum",
+            piscina)
+                                       : j.error;
+        redde r;
+    }
+    _claves_probare(j.radix, _claves_summae, "campus ignotus: ",
+        novitas, piscina);
+    r->id        = json_capere_chorda(j.radix, "id", vacua);
+    r->exemplar  = json_capere_chorda(j.radix, "model", vacua);
+    r->causa_finis_cruda = json_capere_chorda(j.radix, "stop_reason",
+        vacua);
+    r->causa_finis = _causa_finis(r->causa_finis_cruda, novitas,
+        piscina);
+    r->recusatio_categoria = json_capere_chorda(
+        json_objectum_capere(j.radix, "stop_details"), "category",
+        vacua);
+
+    content = json_objectum_capere(j.radix, "content");
+    per (i = 0; content && i < json_tabulatum_numerus(content); i++)
+    {
+          JsonValor* e      = json_tabulatum_obtinere(content, i);
+             chorda  typus  = json_capere_chorda(e, "type", vacua);
+        VatesBlocus* b      = (VatesBlocus*)xar_addere(r->bloci);
+
+        memset(b, 0, magnitudo(*b));
+        b->crudum    = e;
+        b->provisor  = chorda_ex_literis("anthropic", piscina);
+        si (chorda_aequalis_literis(typus, "text"))
+        {
+            b->genus   = VATES_TEXTUS;
+            b->textus  = json_capere_chorda(e, "text", vacua);
+            _claves_probare(e, _claves_textus,
+                "campus ignotus in text: ",
+                            novitas, piscina);
+        }
+        alioquin si (chorda_aequalis_literis(typus, "tool_use"))
+        {
+            b->genus    = VATES_INSTRUMENTUM_PETITUM;
+            b->id       = json_capere_chorda(e, "id", vacua);
+            b->titulus  = json_capere_chorda(e, "name", vacua);
+            b->input    = json_objectum_capere(e, "input");
+            _claves_probare(e, _claves_petiti,
+                "campus ignotus in tool_use: ",
+                            novitas, piscina);
+        }
+        alioquin
+        {
+            b->genus = VATES_OPACUM;
+            si (   !chorda_aequalis_literis(typus, "thinking")
+                && !chorda_aequalis_literis(typus, "redacted_thinking"))
+            {
+                _novitas(novitas, "blocus ignotus: ", typus, piscina);
+            }
+        }
+    }
+
+    usus           = json_objectum_capere(j.radix, "usage");
+    r->usus.input  = json_capere_integer(usus, "input_tokens", 0);
+    r->usus.output = json_capere_integer(usus, "output_tokens",
+        0);
+    r->usus.cache_lectum = json_capere_integer(usus,
+        "cache_read_input_tokens", 0);
+    si (json_objectum_capere(usus, "cache_creation"))
+    {
+        JsonValor* cc = json_objectum_capere(usus, "cache_creation");
+
+        r->usus.cache_scriptum_5m = json_capere_integer(cc,
+            "ephemeral_5m_input_tokens", 0);
+        r->usus.cache_scriptum_1h = json_capere_integer(cc,
+            "ephemeral_1h_input_tokens", 0);
+    }
+    alioquin
+    {
+        r->usus.cache_scriptum_5m = json_capere_integer(usus,
+            "cache_creation_input_tokens", 0);
+    }
+    r->successus  = VERUM;
+    r->error      = VATES_OK;
+    redde r;
+}
+
+VatesResponsum*
+vates_anthropic_legere (
+       i32  status_http,
+    chorda  corpus,
+   Piscina* piscina)
+{
+    chorda novitas;
+
+    redde _legere(status_http, corpus, piscina, &novitas);
+}
