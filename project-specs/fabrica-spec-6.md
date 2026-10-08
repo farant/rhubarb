@@ -289,3 +289,51 @@ its bytes when a cheaper key exists (we key on sources - correct); a
 determinism check over compiled objects would flag this file, so the
 check must compare twice-built outputs per kind, and clang objects
 need the rule "equal sources -> equal by declaration", not by bytes.
+
+**T5 (2026-10-07): step kinds - `FabricaGradus`, areas, base env.**
+A step's MEMBERS become synthetic `iudicium` actions:
+`fabrica_gradus_explicare` keeps every action and appends, after each
+action carrying a `gradus`, one action per member - title
+`<action>/<member>`, `lectiones`, exitus `build/fabrica/area/<action>/
+<member>/verdictum.txt` (strategy `verdictum`), vestigium = the area
+(ARBOR), static inputs from the kind's `ingressus`, mandatum = (kind,
+member source) in the memory key. The existing judge then does the
+rest: key = static inputs + read trace, a trace is stored only after a
+pass (passes cached, failures re-run), reads inside the area are
+products. `_actionem_agere` branches to `_membrum_agere` for members:
+old verdict deleted, `sutura->area_parare` (created and EMPTIED),
+`fabrica_ambitum_basis` (PATH fixed to the system dirs, HOME,
+TMPDIR=<area>tmp, RHUBARB_RADIX, then declared names - fabrica's own
+environment never passes through), snapshot, kind `agere`
+(`sutura->in_area_currere`, exact env), then refusals: write outside
+the area (`scripsit extra vestigium: X`), environment read of a name
+neither base nor declared (`ambitus non declaratus: X`, from the E lines
+of the member's ledger); a pass -> fabrica writes `<id>: transiit`.
+`fabrica_areas_orphanas` reports areas of vanished actions or members
+(never deletes). Registry `fabrica_graduum_numerus/_obtinere/_invenire`
+is EMPTY until T6; the chassis loop over it is in place.
+Differences from the approved draft: `FabricaMembrum.titulus` (the
+draft said `nomen` - a latina.h macro, examen refused it); sutura
+`area_parare` added (the draft folded emptying into the contract);
+`in_area_currere` also takes `acta_via`; `fabrica_acta_via` public (a
+kind names the log the machine snapshots).
+Tests (probatio_fabrica, GRADUS I-X + CHASSIS GRADUUM) with a toy kind
+that lives in the test, not the registry: ids and order, base env
+(fabrica's OMNIA=1 never leaks, declared CREDO_FILTRUM does), both
+members pass in their areas, RECENS without a run, a static-input edit
+re-runs one member, a dynamic read edit is named and re-runs, a failure
+leaves no verdict and runs again, write outside and undeclared env
+refused by name, orphans (`probationes_t/c/`, `vetus_actio/`),
+duplicate member refused with its sedes. Plants: outside-write check
+off, env refusal off, failure stored as pass, orphan check blind - each
+red at its assertion. (A fifth plant first ran a STALE binary: `VERUM
+|| a && b` failed -Werror and the old object ran - checked by deleting
+the binary before the rerun.)
+Found: `fabrica_suturam_parare` zeroed members one by one and the list
+already lacked `particulas_*`, `verdictum_ponere`, `repositorium`; the
+new test section shifted the stack and a garbage hook was called (Bus
+error). It now memsets the whole struct first.
+For T6: the real sutura hooks - `processus` has no cwd / exact-env
+path, so `in_area_currere` needs a small `processus` API addition (to
+Fran first); bin/fabrica calling `fabrica_gradus_explicare` and
+printing orphan areas; the step element in aedificatio.stml + canon.

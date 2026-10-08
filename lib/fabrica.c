@@ -76,6 +76,10 @@ vacuum
 fabrica_suturam_parare (
     FabricaSutura* sutura)
 {
+    /* totum primum (fabrica-6 T5): index membrorum infra iam
+     * deficiebat (particulae, verdictum_ponere, repositorium) - membrum
+     * novum numquam stercus manet */
+    memset(sutura, ZEPHYRUM, magnitudo(FabricaSutura));
     sutura->datum               = NIHIL;
     sutura->legere              = NIHIL;
     sutura->enumerare           = NIHIL;
@@ -5704,6 +5708,391 @@ _verdictum_ex_actis (
     redde VERUM;
 }
 
+/* "scripsit extra vestigium: a, b, c +N" (III nominatae, ut
+ * iudicia_coniungere) */
+interior chorda
+_extra_nominare (
+    constans Xar* extra,
+         Piscina* piscina)
+{
+    chorda nuntius;
+       i32 k;
+
+    nuntius = chorda_ex_literis("scripsit extra vestigium: ", piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(extra) && k < III; k++)
+    {
+        si (k > 0)
+        {
+            nuntius = _iungere(piscina, "", nuntius, ", ");
+        }
+        nuntius = chorda_concatenare(nuntius,
+            *(constans chorda*)xar_obtinere(extra, k), piscina);
+    }
+    si (xar_numerus(extra) > III)
+    {
+        nuntius = _iungere(piscina, "", nuntius, " +");
+        nuntius = chorda_concatenare(nuntius, numerus_romanus_exprimere(
+            (i64)(xar_numerus(extra) - III), NIHIL, piscina), piscina);
+    }
+    redde nuntius;
+}
+
+
+/* ==================================================
+ * GRADUS (fabrica-6 T5): areae, ambitus basis, membrum agere
+ * ================================================== */
+
+#define AREAE_DIRECTORIUM "build/fabrica/area/"
+#define PATH_BASIS        "/usr/bin:/bin:/usr/sbin:/sbin"
+
+/* nomina quae basis ponit (et FABRICA_LECTIONES, protocollum libri) -
+ * lectio eorum numquam recusatur */
+hic_manens constans character* constans _ambitus_basis_nomina[] = {
+    "PATH", "HOME", "TMPDIR", "RHUBARB_RADIX", "FABRICA_LECTIONES",
+    NIHIL
+};
+
+chorda
+fabrica_area_via (
+     chorda  actio,
+     chorda  membrum,
+    Piscina* piscina)
+{
+    redde chorda_concatenare(_iungere(piscina, AREAE_DIRECTORIUM, actio,
+        "/"), _iungere(piscina, "", membrum, "/"), piscina);
+}
+
+chorda
+fabrica_acta_via (
+     chorda  titulus,
+    Piscina* piscina)
+{
+    redde _iungere(piscina, "build/fabrica/acta/", titulus, ".log");
+}
+
+/* area actionis syntheticae (titulus = "<actio>/<membrum>") */
+interior chorda
+_area_membri (
+    constans FabricaActio* actio,
+                  Piscina* piscina)
+{
+    redde _iungere(piscina, AREAE_DIRECTORIUM, actio->titulus, "/");
+}
+
+interior s32
+_chordas_ordinare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(*(constans chorda*)a, *(constans chorda*)b);
+}
+
+interior b32
+_nomen_basis (
+    chorda titulus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; _ambitus_basis_nomina[k] != NIHIL; k++)
+    {
+        si (chorda_aequalis_literis(titulus, _ambitus_basis_nomina[k]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+Xar*
+fabrica_ambitum_basis (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+        constans character* area,
+                   Piscina* piscina)
+{
+       Xar* ambitus;
+    chorda  valor;
+    chorda  radix;
+    chorda  tmp;
+       i32  i;
+
+    ambitus = _xar_chordarum(piscina);
+    si (ambitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    radix = sutura->radix.mensura > ZEPHYRUM ? sutura->radix
+        : chorda_ex_literis(".", piscina);
+    _chordam_addere(ambitus, chorda_ex_literis("PATH=" PATH_BASIS,
+        piscina));
+    si (   sutura->ambitus != NIHIL
+        && sutura->ambitus(sutura->datum, "HOME", piscina, &valor))
+    {
+        _chordam_addere(ambitus, _iungere(piscina, "HOME=", valor, ""));
+    }
+    _chordam_addere(ambitus, _iungere(piscina, "RHUBARB_RADIX=", radix,
+        ""));
+    /* TMPDIR absoluta ubi radix nota (processus 'cd' facere possunt) */
+    tmp = _iungere(piscina, "", chorda_ex_literis(area, piscina),
+        "tmp");
+    si (sutura->radix.mensura > ZEPHYRUM)
+    {
+        tmp = chorda_concatenare(_iungere(piscina, "", sutura->radix,
+            "/"),
+            tmp, piscina);
+    }
+    _chordam_addere(ambitus, _iungere(piscina, "TMPDIR=", tmp, ""));
+    per (i = ZEPHYRUM; actio->ambitus != NIHIL
+         && i < xar_numerus(actio->ambitus); i++)
+    {
+        chorda titulus = *(constans chorda*)xar_obtinere(actio->ambitus,
+            i);
+
+        si (   _nomen_basis(titulus) || sutura->ambitus == NIHIL
+            || !sutura->ambitus(sutura->datum, chorda_ut_cstr(titulus,
+                   piscina), piscina, &valor))
+        {
+            perge;   /* basis vincit; absens = non positum */
+        }
+        _chordam_addere(ambitus, chorda_concatenare(_iungere(piscina,
+            "",
+            titulus, "="), valor, piscina));
+    }
+    xar_ordinare(ambitus, _chordas_ordinare);
+    redde ambitus;
+}
+
+Xar*
+fabrica_ambitum_non_declaratum (
+    constans FabricaActio* actio,
+             constans Xar* lectiones,
+                  Piscina* piscina)
+{
+    Xar* nomina;
+    i32  i;
+    i32  j;
+
+    nomina = _xar_chordarum(piscina);
+    per (i = ZEPHYRUM; nomina != NIHIL && lectiones != NIHIL
+         && i < xar_numerus(lectiones); i++)
+    {
+        constans FabricaLectio* lectio = (constans FabricaLectio*)
+            xar_obtinere(lectiones, i);
+                           b32 admissum;
+
+        si (   lectio->genus != LECTIO_AMBITUS
+            || _nomen_basis(lectio->via))
+        {
+            perge;
+        }
+        admissum = FALSUM;
+        per (j = ZEPHYRUM; actio->ambitus != NIHIL
+             && j < xar_numerus(actio->ambitus); j++)
+        {
+            si (chorda_aequalis(lectio->via,
+                    *(constans chorda*)xar_obtinere(actio->ambitus, j)))
+            {
+                admissum = VERUM;
+            }
+        }
+        per (j = ZEPHYRUM; !admissum && j < xar_numerus(nomina); j++)
+        {
+            si (chorda_aequalis(lectio->via,
+                    *(constans chorda*)xar_obtinere(nomina, j)))
+            {
+                admissum = VERUM;   /* iam nominatum */
+            }
+        }
+        si (!admissum)
+        {
+            _chordam_addere(nomina, lectio->via);
+        }
+    }
+    redde nomina;
+}
+
+/* lectiones E libri (nomina; valor neglectus): Xar de FabricaLectio,
+ * vacua si liber absens */
+interior Xar*
+_lectiones_ambitus_libri (
+    constans FabricaSutura* sutura,
+        constans character* liber_via,
+                   Piscina* piscina)
+{
+    chorda  liber;
+       Xar* lectiones;
+       i32  i;
+       i32  initium;
+
+    lectiones = xar_creare(piscina, (i32)magnitudo(FabricaLectio));
+    si (   lectiones == NIHIL
+        || !sutura->legere(sutura->datum, liber_via, piscina, &liber))
+    {
+        redde lectiones;
+    }
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < liber.mensura; i++)
+    {
+               chorda  linea;
+               chorda  titulus;
+                  s32  t;
+        FabricaLectio* lectio;
+
+        si (liber.datum[i] != '\n')
+        {
+            perge;
+        }
+        linea    = chorda_sectio(liber, initium, i);
+        initium  = i + I;
+        si (   linea.mensura < III || linea.datum[0] != 'E'
+            || linea.datum[I] != '\t')
+        {
+            perge;
+        }
+        titulus  = chorda_sectio(linea, II, linea.mensura);
+        t        = chorda_invenire_index(titulus,
+            chorda_ex_literis("\t",
+            piscina));
+        si (t >= ZEPHYRUM)
+        {
+            titulus = chorda_sectio(titulus, ZEPHYRUM, (i32)t);
+        }
+        lectio = (FabricaLectio*)xar_addere(lectiones);
+        si (lectio != NIHIL)
+        {
+            lectio->genus  = LECTIO_AMBITUS;
+            lectio->via    = titulus;
+            memset(&lectio->sigillum, ZEPHYRUM, magnitudo(Sigillum));
+        }
+    }
+    redde lectiones;
+}
+
+/* MEMBRUM AGERE (T5): verdictum vetus deletum, area parata et vacua,
+ * ambitus basis, genus gradus agit; deinde scriptura extra vestigium,
+ * ambitus non declaratus -> FALSUM nominatum; transitus -> verdictum
+ * '<id>: transiit' a fabrica scriptum (post photographiam) */
+interior b32
+_membrum_agere (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                   Piscina* piscina,
+                       i32* duratio_out,
+                    chorda* causa_out)
+{
+    constans FabricaExitus* exitus;
+              FabricaActum  actum;
+                    chorda  area;
+                    chorda  verdictum;
+                       Xar* ambitus;
+                       Xar* ante;
+                       Xar* post;
+                       Xar* alieni;
+                       b32  incepit;
+                 character  numerus[XXXII];
+
+    *duratio_out = ZEPHYRUM;
+    si (   actio->gradus == NIHIL || actio->gradus->agere == NIHIL
+        || sutura->area_parare == NIHIL
+        || sutura->in_area_currere == NIHIL
+        || sutura->verdictum_ponere == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("gradus agi nequit (sutura sine "
+            "area_parare, in_area_currere aut verdictum_ponere)",
+            piscina);
+        redde FALSUM;
+    }
+    exitus = (constans FabricaExitus*)xar_obtinere(actio->exitus,
+        ZEPHYRUM);
+    (vacuum)sutura->verdictum_ponere(sutura->datum,
+        chorda_ut_cstr(exitus->via, piscina), NIHIL);
+    area = _area_membri(actio, piscina);
+    si (!sutura->area_parare(sutura->datum, chorda_ut_cstr(area,
+            piscina)))
+    {
+        *causa_out = _iungere(piscina, "area parari nequit: ", area,
+            "");
+        redde FALSUM;
+    }
+    ambitus = fabrica_ambitum_basis(sutura, actio, chorda_ut_cstr(area,
+        piscina), piscina);
+    si (ambitus == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("memoria deficit (ambitus)",
+            piscina);
+        redde FALSUM;
+    }
+    ante = NIHIL;
+    post = NIHIL;
+    si (sutura->vestigium_capere != NIHIL)
+    {
+        (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
+    }
+    actum.codex       = -I;
+    actum.duratio_ms  = ZEPHYRUM;
+    actum.cauda       = chorda_ex_literis("", piscina);
+    incepit = actio->gradus->agere(sutura, actio, actio->membrum,
+        chorda_ut_cstr(area, piscina), ambitus, piscina, &actum);
+    _memorias_vacare(sutura);
+    *duratio_out = actum.duratio_ms;
+    si (!incepit)
+    {
+        *causa_out = _iungere(piscina, "non actum: ", actum.cauda, "");
+        redde FALSUM;
+    }
+    si (actum.codex != 0)
+    {
+        sprintf(numerus, "exitus %d: ", (integer)actum.codex);
+        *causa_out = _iungere(piscina, numerus, actum.cauda, "");
+        redde FALSUM;
+    }
+    si (   ante != NIHIL
+        && sutura->vestigium_capere(sutura->datum, piscina, &post))
+    {
+        Xar* extra;
+
+        extra = fabrica_vestigia_comparare(actio, ante, post, piscina);
+        si (extra != NIHIL && xar_numerus(extra) > 0)
+        {
+            *causa_out = _extra_nominare(extra, piscina);
+            redde FALSUM;
+        }
+    }
+    alieni = fabrica_ambitum_non_declaratum(actio,
+        _lectiones_ambitus_libri(sutura, chorda_ut_cstr(
+            fabrica_liber_via(actio->titulus, piscina), piscina),
+            piscina), piscina);
+    si (alieni != NIHIL && xar_numerus(alieni) > 0)
+    {
+        chorda nuntius;
+           i32 k;
+
+        nuntius = chorda_ex_literis("ambitus non declaratus: ",
+            piscina);
+        per (k = ZEPHYRUM; k < xar_numerus(alieni); k++)
+        {
+            si (k > 0)
+            {
+                nuntius = _iungere(piscina, "", nuntius, ", ");
+            }
+            nuntius = chorda_concatenare(nuntius,
+                *(chorda*)xar_obtinere(alieni, k), piscina);
+        }
+        *causa_out = _iungere(piscina, "", nuntius,
+            " (declara <ambitus> in actione)");
+        redde FALSUM;
+    }
+    verdictum = _iungere(piscina, "", actio->titulus, ": transiit\n");
+    si (!sutura->verdictum_ponere(sutura->datum,
+            chorda_ut_cstr(exitus->via, piscina), &verdictum))
+    {
+        *causa_out = _iungere(piscina, "verdictum scribi nequit: ",
+            exitus->via, "");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 interior b32
 _actionem_agere (
     constans FabricaSutura* sutura,
@@ -5718,6 +6107,12 @@ _actionem_agere (
              Xar* ante;
              Xar* post;
 
+    /* membrum gradus (fabrica-6 T5): per genus gradus, in area */
+    si (actio->membrum != NIHIL)
+    {
+        redde _membrum_agere(sutura, actio, piscina, duratio_out,
+            causa_out);
+    }
     actum.codex       = -I;
     actum.duratio_ms  = ZEPHYRUM;
     actum.cauda       = chorda_ex_literis("", piscina);
@@ -5773,32 +6168,8 @@ _actionem_agere (
         extra = fabrica_vestigia_comparare(actio, ante, post, piscina);
         si (extra != NIHIL && xar_numerus(extra) > 0)
         {
-            chorda nuntius;
-               i32 k;
-
-            /* III nominatae, deinde "+N" (ut iudicia_coniungere) */
-            nuntius = chorda_ex_literis("scripsit extra vestigium: ",
-                piscina);
-            per (k = ZEPHYRUM; k < xar_numerus(extra) && k < III; k++)
-            {
-                si (k > 0)
-                {
-                    nuntius = _iungere(piscina, "", nuntius, ", ");
-                }
-                nuntius = chorda_concatenare(nuntius,
-                    *(chorda*)xar_obtinere(extra, k), piscina);
-            }
-            si (xar_numerus(extra) > III)
-            {
-                nuntius = _iungere(piscina, "", nuntius, " +");
-                nuntius = chorda_concatenare(nuntius,
-                    numerus_romanus_exprimere(
-                        (i64)(xar_numerus(extra) - III), NIHIL,
-                        piscina),
-                    piscina);
-            }
-            *causa_out = _iungere(piscina, "", nuntius,
-                " - aut manu mutata dum currebat");
+            *causa_out = _iungere(piscina, "", _extra_nominare(extra,
+                piscina), " - aut manu mutata dum currebat");
             redde FALSUM;
         }
     }
@@ -7132,4 +7503,303 @@ fabrica_sanare (
             duratio, piscina);
     }
     redde sanationes;
+}
+
+
+/* ==================================================
+ * GRADUS (fabrica-6 T5): registrum, explicatio, orphana
+ * ================================================== */
+
+/* REGISTRUM GRADUUM: vacuum usque ad T6 (probationes_c) */
+interior constans FabricaGradus* constans _genera_graduum[] = {
+    NIHIL
+};
+
+i32
+fabrica_graduum_numerus (vacuum)
+{
+    i32 n;
+
+    n = ZEPHYRUM;
+    dum (_genera_graduum[n] != NIHIL)
+    {
+        n++;
+    }
+    redde n;
+}
+
+constans FabricaGradus*
+fabrica_gradus_obtinere (
+    i32 index)
+{
+    si (index >= fabrica_graduum_numerus())
+    {
+        redde NIHIL;
+    }
+    redde _genera_graduum[index];
+}
+
+constans FabricaGradus*
+fabrica_gradus_invenire (
+    chorda titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < fabrica_graduum_numerus(); i++)
+    {
+        si (chorda_aequalis_literis(titulus,
+                _genera_graduum[i]->titulus))
+        {
+            redde _genera_graduum[i];
+        }
+    }
+    redde NIHIL;
+}
+
+interior s32
+_membra_ordinare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(((constans FabricaMembrum*)a)->titulus,
+        ((constans FabricaMembrum*)b)->titulus);
+}
+
+/* actio synthetica membri: iudicium in area sua (vide caput) */
+interior b32
+_membrum_actionem_facere (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* parens,
+    constans FabricaMembrum* membrum,
+                    Piscina* piscina,
+               FabricaActio* actio_out,
+                     chorda* causa_out)
+{
+    constans FabricaStrategia* strategia;
+               FabricaMembrum* copia;
+                FabricaExitus* exitus;
+                       chorda  area;
+                       chorda  causa;
+
+    memset(actio_out, ZEPHYRUM, magnitudo(FabricaActio));
+    copia = (FabricaMembrum*)piscina_allocare(piscina,
+        magnitudo(FabricaMembrum));
+    strategia =
+        fabrica_strategia_invenire(chorda_ex_literis("verdictum",
+        piscina));
+    si (copia == NIHIL || strategia == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("memoria deficit (membrum)",
+            piscina);
+        redde FALSUM;
+    }
+    *copia = *membrum;
+    actio_out->titulus    = chorda_concatenare(_iungere(piscina, "",
+        parens->titulus, "/"), membrum->titulus, piscina);
+    actio_out->genus      = FABRICA_ACTIO_IUDICIUM;
+    actio_out->lectiones  = VERUM;
+    actio_out->sedes      = parens->sedes;
+    actio_out->gradus     = parens->gradus;
+    actio_out->attributa  = parens->attributa;
+    actio_out->ambitus    = parens->ambitus;
+    actio_out->membrum    = copia;
+    /* mandatum in clave memoriae: genus gradus et fons membri */
+    actio_out->mandatum = _xar_chordarum(piscina);
+    actio_out->ingressus = xar_creare(piscina,
+        (i32)magnitudo(FabricaIngressus));
+    actio_out->exitus = xar_creare(piscina,
+        (i32)magnitudo(FabricaExitus));
+    actio_out->praecondiciones = _xar_chordarum(piscina);
+    actio_out->vestigia = xar_creare(piscina,
+        (i32)magnitudo(FabricaLocus));
+    actio_out->communia = xar_creare(piscina,
+        (i32)magnitudo(FabricaLocus));
+    si (   actio_out->mandatum == NIHIL || actio_out->ingressus == NIHIL
+        || actio_out->exitus == NIHIL || actio_out->vestigia == NIHIL
+        || actio_out->communia == NIHIL
+        || actio_out->praecondiciones == NIHIL)
+    {
+        *causa_out = chorda_ex_literis("memoria deficit (membrum)",
+            piscina);
+        redde FALSUM;
+    }
+    _chordam_addere(actio_out->mandatum, chorda_ex_literis(
+        parens->gradus->titulus, piscina));
+    _chordam_addere(actio_out->mandatum, membrum->fons);
+    causa = chorda_ex_literis("", piscina);
+    si (   parens->gradus->ingressus != NIHIL
+        && !parens->gradus->ingressus(sutura, parens, copia, piscina,
+               actio_out->ingressus, &causa))
+    {
+        *causa_out = chorda_concatenare(_iungere(piscina, "",
+            parens->sedes, ": ingressus membri "), _iungere(piscina, "",
+            actio_out->titulus, chorda_ut_cstr(_iungere(piscina, ": ",
+            causa, ""), piscina)), piscina);
+        redde FALSUM;
+    }
+    area = fabrica_area_via(parens->titulus, membrum->titulus, piscina);
+    exitus = (FabricaExitus*)xar_addere(actio_out->exitus);
+    si (exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    exitus->via        = _iungere(piscina, "", area, "verdictum.txt");
+    exitus->scriptura  = exitus->via;
+    exitus->strategia  = strategia;
+    exitus->genus      = fabrica_genus_invenire(chorda_ex_literis(
+        strategia->genus_ordinarium, piscina));
+    /* sine '/' finali: locus ARBOR 'via/' ipse addit */
+    _locum_addere(actio_out->vestigia, FABRICA_LOCUS_ARBOR,
+        chorda_sectio(area, ZEPHYRUM, area.mensura - I),
+        chorda_ex_literis("", piscina));
+    redde VERUM;
+}
+
+Xar*
+fabrica_gradus_explicare (
+    constans FabricaSutura* sutura,
+              constans Xar* actiones,
+                   Piscina* piscina,
+                    chorda* causa_out)
+{
+    Xar* explicata;
+    i32  i;
+    i32  j;
+
+    explicata = xar_creare(piscina, (i32)magnitudo(FabricaActio));
+    si (explicata == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        constans FabricaActio* actio = (constans FabricaActio*)
+            xar_obtinere(actiones, i);
+                          Xar* membra;
+                       chorda  causa;
+
+        *(FabricaActio*)xar_addere(explicata) = *actio;
+        si (actio->gradus == NIHIL || actio->membrum != NIHIL)
+        {
+            perge;
+        }
+        membra  = xar_creare(piscina, (i32)magnitudo(FabricaMembrum));
+        causa   = chorda_ex_literis("", piscina);
+        si (   membra == NIHIL || actio->gradus->membra == NIHIL
+            || !actio->gradus->membra(sutura, actio, piscina, membra,
+                   &causa))
+        {
+            *causa_out = chorda_concatenare(_iungere(piscina, "",
+                actio->sedes, ": membra recusata: "), causa, piscina);
+            redde NIHIL;
+        }
+        xar_ordinare(membra, _membra_ordinare);
+        per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
+        {
+            constans FabricaMembrum* membrum =
+                (constans FabricaMembrum*)
+                xar_obtinere(membra, j);
+                       FabricaActio synthetica;
+
+            si (   j > ZEPHYRUM
+                && chorda_aequalis(membrum->titulus,
+                       ((constans FabricaMembrum*)xar_obtinere(membra,
+                       j - I))->titulus))
+            {
+                *causa_out = chorda_concatenare(_iungere(piscina, "",
+                    actio->sedes, ": membrum duplex: "),
+                    _iungere(piscina,
+                    "", actio->titulus, chorda_ut_cstr(_iungere(piscina,
+                    "/", membrum->titulus, ""), piscina)), piscina);
+                redde NIHIL;
+            }
+            si (!_membrum_actionem_facere(sutura, actio, membrum,
+                piscina,
+                    &synthetica, causa_out))
+            {
+                redde NIHIL;
+            }
+            *(FabricaActio*)xar_addere(explicata) = synthetica;
+        }
+    }
+    redde explicata;
+}
+
+/* actio gradus (parens) aut membrum titulo dato? */
+interior b32
+_titulus_gradus_est (
+    constans Xar* actiones,
+          chorda  titulus,
+             b32  membrum)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        constans FabricaActio* actio = (constans FabricaActio*)
+            xar_obtinere(actiones, i);
+
+        si (   actio->gradus             != NIHIL
+            && (actio->membrum != NIHIL) == membrum
+            && chorda_aequalis(actio->titulus, titulus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+Xar*
+fabrica_areas_orphanas (
+    constans FabricaSutura* sutura,
+              constans Xar* actiones,
+                   Piscina* piscina)
+{
+    Xar* orphana;
+    Xar* actiones_areae;
+    i32  i;
+    i32  j;
+
+    orphana = _xar_chordarum(piscina);
+    si (   orphana == NIHIL || sutura->enumerare == NIHIL
+        || !sutura->enumerare(sutura->datum, AREAE_DIRECTORIUM, piscina,
+               &actiones_areae))
+    {
+        redde orphana;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(actiones_areae); i++)
+    {
+        chorda actio = *(constans chorda*)xar_obtinere(actiones_areae,
+            i);
+        chorda  directorium;
+           Xar* membra;
+
+        directorium = _iungere(piscina, AREAE_DIRECTORIUM, actio, "/");
+        si (!_titulus_gradus_est(actiones, actio, FALSUM))
+        {
+            _chordam_addere(orphana, directorium);
+            perge;
+        }
+        si (!sutura->enumerare(sutura->datum,
+            chorda_ut_cstr(directorium,
+                piscina), piscina, &membra))
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
+        {
+            chorda membrum = *(constans chorda*)xar_obtinere(membra, j);
+
+            si (!_titulus_gradus_est(actiones, chorda_concatenare(
+                    _iungere(piscina, "", actio, "/"), membrum,
+                    piscina),
+                    VERUM))
+            {
+                _chordam_addere(orphana, _iungere(piscina, "",
+                    chorda_concatenare(directorium, membrum, piscina),
+                    "/"));
+            }
+        }
+    }
+    redde orphana;
 }

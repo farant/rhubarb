@@ -51,15 +51,17 @@ Fran before code.
 
 ### T5: step-kind chassis - `FabricaGradus`, areas, base env
 
-- [ ] **Step 1:** API (`FabricaGradus` in include/fabrica.h) to Fran.
-- [ ] **Step 2: failing tests:** a toy step kind registered with a
+- [x] **Step 1:** API (`FabricaGradus` in include/fabrica.h) to Fran.
+- [x] **Step 2: failing tests:** a toy step kind registered with a
   fixture; members get stable ids `<action>/<member>`; each step runs
   in `build/fabrica/area/<action>/<member>/` with the base environment
   only; a write outside the area or an undeclared variable read ->
   refusal naming it; deleted member -> orphan reported; passes cached,
   failures re-run.
-- [ ] **Step 3:** implement; plants (area not enforced; env leaks;
-  failure cached) -> red. **Commit.**
+- [x] **Step 3:** implement; plants (area not enforced; env leaks;
+  failure cached) -> red. **Commit.** (As built: the toy kind lives in
+  the test, not the registry; real sutura hooks move to T6 - spec
+  §XIII T5.)
 
 ### T6: `probationes_c`
 

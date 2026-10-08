@@ -39,6 +39,7 @@
 nomen structura FabricaGenus     FabricaGenus;
 nomen structura FabricaStrategia FabricaStrategia;
 nomen structura FabricaSanatio   FabricaSanatio;
+nomen structura FabricaGradus    FabricaGradus;
 
 nomen enumeratio {
     FABRICA_ACTIO_GENERATOR = ZEPHYRUM,
@@ -102,6 +103,18 @@ nomen structura {
                                              * 'provenientia' */
 } FabricaExitus;
 
+/* attributum elementi gradus (fabrica-6 T5): exemplar, praeter... */
+nomen structura {
+    chorda titulus;
+    chorda valor;
+} FabricaAttributum;
+
+/* MEMBRUM gradus (fabrica-6 T5): id stabilis = "<actio>/<titulus>" */
+nomen structura {
+    chorda titulus; /* intra actionem: "probatio_x" */
+    chorda fons;    /* via fontis (arbori relativa); vacua licet */
+} FabricaMembrum;
+
 nomen structura {
                   chorda  titulus;
     FabricaGenusActionis  genus;
@@ -153,6 +166,14 @@ nomen structura {
                                        * scribit ('<nomen>: <signum>
                                        * <verbum>'). Vacuum = mandatum
                                        * verdictum suum scribit */
+    /* GRADUS (fabrica-6 T5) - omnia NIHIL in actione sine gradu */
+    constans FabricaGradus* gradus;     /* genus gradus */
+                       Xar* attributa;  /* FabricaAttributum: elementi
+                                         * gradus (exemplar, praeter) */
+                       Xar* ambitus;    /* chorda: NOMINA variabilium
+                                         * declarata ultra basim */
+    constans FabricaMembrum* membrum;   /* actio synthetica: membrum
+                                         * suum (parens: NIHIL) */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -387,6 +408,20 @@ nomen structura {
      * vestigium VETUS hic servatur (titulus -> Xar de FabricaLectio) ut
      * defectus lectiones novas nominet. NIHIL: auditus sine nominibus. */
     TabulaDispersa* audita;
+    /* ==== GRADUS (fabrica-6 T5) - NIHIL: membra agi nequeunt ==== */
+    /* aream parare: directorium (et <area>tmp/) creatum et VACUUM -
+     * reliquiae cursus prioris membrum mutum celarent */
+    b32 (*area_parare)(vacuum* datum, constans character* area);
+    /* argv currere cum cwd = area et ambitu EXACTO (Xar de "N=V";
+     * nihil hereditatur) praeter FABRICA_LECTIONES = liber_via
+     * (absoluta, liber vetus deletus). Acta (effusio, erratum) in
+     * acta_via. FALSUM = incipi non potuit (cauda causam dicit). */
+    b32 (*in_area_currere)(vacuum* datum, constans Xar* argv,
+                           constans character* area,
+                           constans Xar* ambitus,
+                           constans character* liber_via,
+                           constans character* acta_via,
+                           Piscina* piscina, FabricaActum* actum_out);
 } FabricaSutura;
 
 /* species viae (sutura->species) */
@@ -484,6 +519,46 @@ structura FabricaStrategia {
                                 constans FabricaExitus* exitus,
                                 constans Sigillum* ingressus,
                                 b32 plenus, Piscina* piscina);
+};
+
+
+/* ==================================================
+ * GRADUS (fabrica-6 T5): genus gradus explicat declarationem actionis
+ * in MEMBRA; quodque membrum ACTIO SYNTHETICA fit - titulus
+ * "<actio>/<membrum>", genus iudicium, lectiones="verum", vestigium =
+ * area membri, exitus = verdictum in area. Clavis per vestigium
+ * lectionum, transitus servati, defectus iterum currunt, scripturae
+ * extra aream nominatae: machina iudicii hodierna tota. Genus
+ * nominationem possidet (nullum templum, nulla expressio).
+ * ================================================== */
+
+structura FabricaGradus {
+    constans character* titulus;   /* nomen elementi in declaratione */
+    /* membra ex attributis (per sutura->enumerare): Xar de
+     * FabricaMembrum ordinata per nomen. FALSUM + causa: attributum
+     * deest aut malum. */
+    b32 (*membra)(constans FabricaSutura* sutura,
+                  constans FabricaActio* actio, Piscina* piscina,
+                  Xar* membra_out, chorda* causa_out);
+    /* ingressus STATICI membri (FabricaIngressus) in clavem actionis
+     * syntheticae (gradus 'nectere' T6: clausura, vexilla, identitas
+     * clang). NIHIL = nulli (clavis = vestigium solum). */
+    b32 (*ingressus)(constans FabricaSutura* sutura,
+                     constans FabricaActio* actio,
+                     constans FabricaMembrum* membrum, Piscina* piscina,
+                     Xar* ingressus_out, chorda* causa_out);
+    /* membrum agere in area (parata et vacua) cum ambitu dato, per
+     * sutura->in_area_currere (liber: fabrica_liber_via, acta:
+     * fabrica_acta_via - titulo actionis syntheticae). FALSUM = non
+     * actum; codex 0 = transitus. */
+    b32 (*agere)(constans FabricaSutura* sutura,
+                 constans FabricaActio* actio,
+                 constans FabricaMembrum* membrum,
+                 constans character* area, constans Xar* ambitus,
+                 Piscina* piscina, FabricaActum* actum_out);
+    /* CENSUS */
+               b32 lectiones_dynamicae; /* clavis ex vestigio cursus */
+    FabricaSumptus sumptus;
 };
 
 /* Registra: fasciculus, configuratio, instrumentum (octeti plagulae;
@@ -831,5 +906,79 @@ fabrica_sanare (
                        b32  siccum,
                    Piscina* piscina,
                     chorda* causa_out);
+
+
+/* ==================================================
+ * GRADUS (fabrica-6 T5): registrum, areae, ambitus, explicatio
+ * ================================================== */
+
+/* REGISTRUM GRADUUM (ut generum T1): vacuum usque ad T6
+ * (probationes_c) - genus probationis T5 in probatione ipsa vivit
+ * (actio->gradus ad tabulam localem), non registratur. */
+i32
+fabrica_graduum_numerus (vacuum);
+
+constans FabricaGradus*
+fabrica_gradus_obtinere (
+    i32 index);
+
+constans FabricaGradus*
+fabrica_gradus_invenire (
+    chorda titulus);
+
+/* build/fabrica/area/<actio>/<membrum>/ */
+chorda
+fabrica_area_via (
+     chorda  actio,
+     chorda  membrum,
+    Piscina* piscina);
+
+/* build/fabrica/acta/<titulus>.log (acta cursus actionis) */
+chorda
+fabrica_acta_via (
+     chorda  titulus,
+    Piscina* piscina);
+
+/* AMBITUS BASIS: PATH fixum (/usr/bin:/bin:/usr/sbin:/sbin - systema
+ * solum, ~/.bin ingressus non declaratus esset), HOME (sutura->
+ * ambitus), TMPDIR = <radix>/<area>tmp, RHUBARB_RADIX = sutura->radix;
+ * deinde declarata actionis (valor per sutura->ambitus; absens = non
+ * positum). Xar de chorda "N=V" ordinata per nomen. */
+Xar*
+fabrica_ambitum_basis (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+        constans character* area,
+                   Piscina* piscina);
+
+/* actiones (valore) -> eaedem + actiones syntheticae membrorum (post
+ * parentem, ordine nominum). Parens manet (compositum membrorum T7).
+ * NIHIL + causa: membra recusata (sedes parentis nominata), id duplex.
+ * Actio sine gradu immutata transit. */
+Xar*
+fabrica_gradus_explicare (
+    constans FabricaSutura* sutura,
+              constans Xar* actiones,   /* FabricaActio (valore) */
+                   Piscina* piscina,
+                    chorda* causa_out);
+
+/* ORPHANA: areae sub build/fabrica/area/ sine actione gradus aut sine
+ * membro hodierno (Xar de chorda, viae cum '/' finali) - nuntiantur,
+ * numquam deletae (ut build/aedilis). actiones = post explicationem. */
+Xar*
+fabrica_areas_orphanas (
+    constans FabricaSutura* sutura,
+              constans Xar* actiones,
+                   Piscina* piscina);
+
+/* RECUSATIO AMBITUS: nomina lectionum E (FabricaLectio, genus
+ * LECTIO_AMBITUS, via = nomen) quae nec in basi nec declarata sunt -
+ * Xar de chorda sine duplicibus; vacua = sanum. Membrum cuius cursus
+ * talem legit FRACTUM: 'ambitus non declaratus: X'. */
+Xar*
+fabrica_ambitum_non_declaratum (
+    constans FabricaActio* actio,
+             constans Xar* lectiones,
+                  Piscina* piscina);
 
 #endif /* FABRICA_H */
