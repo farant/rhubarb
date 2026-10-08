@@ -7483,7 +7483,13 @@ _sanare_per_undas (
                 index),
                 index, status, stala, sanationes, actum, causa, duratio,
                 piscina);
-            si (status[index] == SANANDI_FRACTUM)
+            /* MEMBRA GRADUS (fabrica-6 T8): fractura membri fratres non
+             * sistit - membra independentia sunt et verdictum gradus
+             * omnia nominare debet; dependentes per _ante_agere OMISSI
+             * manent */
+            si (   status[index] == SANANDI_FRACTUM
+                && (*(FabricaActio**)xar_obtinere(ordo,
+                       index))->membrum == NIHIL)
             {
                 fractum = VERUM;
             }

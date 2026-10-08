@@ -85,7 +85,7 @@ facultas, T6c-1 the kind in the machine, T6c-2 the tool hooks + smoke.)
 
 ### T8: toml as steps - the oracle phase
 
-- [ ] `probationes_toml` beside `porta_toml`; both on one tree agree
+- [x] `probationes_toml` beside `porta_toml`; both on one tree agree
   per test; plants: a broken toml test -> both red naming it; a broken
   toml/fontes source -> both red. Record in spec §XIII. **Commit.**
 

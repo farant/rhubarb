@@ -7036,6 +7036,34 @@ s32 principale (vacuum)
         CREDO_FALSUM(strstr(_c_cursus_ultimus, "probatio_a") != NIHIL
             && _c_cursus > cursus);
         _c_fractus_compilatio = NIHIL;
+
+        /* XI (fabrica-6 T8). PER UNDAS (agere_simul): fractura membri
+         * fratres NON sistit - b et c currunt etsi a fractum est
+         * (olim 'post fracturam: nova non incipiuntur', VIII OMISSI) */
+        sutura.agere_simul  = _agere_simul;
+        _c_fractus_cursus   = "probatio_a";
+        _ponere(&discus, "t/probatio_a.c", "a IV\n");
+        _ponere(&discus, "t/probatio_b.c", "b IV\n");
+        sanationes = fabrica_sanare(&sutura, ordo, electa, FALSUM,
+            piscina, &causa);
+        sanatio = sanationes != NIHIL ? _sanatio_invenire(sanationes,
+            "probationes_t/probatio_a") : NIHIL;
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+        }
+        sanatio = sanationes != NIHIL ? _sanatio_invenire(sanationes,
+            "probationes_t/probatio_b") : NIHIL;
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_SANATUM);
+        }
+        sutura.agere_simul  = NIHIL;
+        _c_fractus_cursus   = NIHIL;
         (vacuum)membrum_c;
     }
 

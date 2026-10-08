@@ -489,3 +489,39 @@ post ignored in `_pendet`; post as a key (producer outputs as member
 inputs - the reading-only member goes stale too); verdict counting
 stale parts as recent; members not inheriting post; step composites not
 added (sanare by title refused); VERDICTUM line not printed.
+
+**T8 (2026-10-08): toml as steps - the oracle phase.**
+`probationes_toml` in toml/aedificatio.stml beside `porta_toml`:
+`probationes_c exemplar="toml/probationes/probatio_*.c"`, `post` on
+`toml_corpus` and `toml_aurum_silvestre`, and three declared variables
+the env refusal found on the first run (`COMPUTUS_SCRIBERE`,
+`ORACULUM_OMNIA`, `ORACULUM_EXEMPLUM` - optional switches the tests
+read). Oracle tool `tools/toml_gradus_oraculum.sh [-machina]`: runner
+and step version on the SAME tree, pass/fail per test, exit 0 only on
+full agreement (it names every DISSONAT test).
+Findings, in order:
+1. A failing member stopped its siblings: the wave heal's "after a
+   fracture nothing new starts" applied to step members, so one failure
+   left 8 tests OMISSUM and the verdict blind. Members are independent:
+   a member's FRACTUM no longer stops the wave (dependents are still
+   OMISSUM through `_ante_agere`). Test: PROBATIONES_C XI (with
+   `agere_simul`); plant (rule restored for members) red.
+2. THE oracle finding: runner 13/13, steps 12/13 -
+   `probatio_toml_totalitas` SIGSEGV at the pinned "emission 40 000
+   deep survives". The step binary crashed with the full shell
+   environment too: FLAGS. The house had two flag sources -
+   tools/vexilla.sh (`-O2 -g`, every runner) and aedilis.stml (no
+   optimization, bin/ tools and the aedilis gate); materia's recursive
+   emission (park ...FAD8) overflows the -O0 stack at 40 000. Decided
+   (Fran 2026-10-08): `-O2 -g` into aedilis.stml - the vexilla lists are
+   now IDENTICAL (vexilla.sh derivable later). Everything aedilis-built
+   rebuilt once (17 installed binaries healed; bin/fabrica in 9 s, the
+   -O2 objects were already in the store from the runners).
+3. After it: `oraculum toml: congruunt 13/13`, VERDICTUM 13/13, steps
+   28 s of runs (cold) vs the runner's ~25 s.
+Plants (both sides red, the SAME tests named, oracle agrees 13/13): a
+failing assertion in probatio_toml_lector -> both `12/13`, lector named;
+toml_scalaris boolean decoding inverted -> both `9/13`, api,
+differentia, oraculum, scalaris named. (The oracle's own first draft
+had a BSD-sed bug - no `\|` alternation in basic regex - and reported
+DISSONAT absens/fracta: a real mismatch report, fixed with `sed -E`.)
