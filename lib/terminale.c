@@ -1299,6 +1299,12 @@ terminale_applicatio_aedificare (
         latitudo, altitudo);
 }
 
+constans character* constans*
+terminale_ambitus (vacuum)
+{
+    redde ambitus_terminalis;
+}
+
 b32
 terminale_montare (
     TerminaleApplicatio* app,

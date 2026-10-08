@@ -34,13 +34,6 @@
 #define MORA_MS       XVI
 #define QUADRA_FUMI   LX
 
-hic_manens constans character* constans ambitus[] = {
-    "TERM=xterm-256color",
-    "COLORTERM=truecolor",
-    "TERM_PROGRAM=terminale",
-    NIHIL
-};
-
 externus constans ProvenientiaRelatio provenientia_terminale;
 
 s32
@@ -94,7 +87,7 @@ principale (
     pseudoterminale_configuratio_initiare(&cfg_pt);
     cfg_pt.argumenta  = terminale_argumenta(piscina, (s32)argc, argv,
         &fumus);
-    cfg_pt.ambitus = ambitus;
+    cfg_pt.ambitus = terminale_ambitus();
     cfg_pt.latitudo = COLUMNAE;
     cfg_pt.altitudo = LINEAE;
     pt = pseudoterminale_posix_creare(piscina, &cfg_pt, NIHIL, NIHIL);

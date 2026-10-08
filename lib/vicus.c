@@ -13,6 +13,9 @@
 #include <string.h>
 
 hic_manens constans character clavis_indicis[] = "vicus/tabulae";
+/* tabula finita (vicus-latera S1c): post titulum in linea, numquam in
+ * indice */
+hic_manens constans character suffixum_finitae[] = " [exitus]";
 
 
 /* ==================================================
@@ -486,12 +489,20 @@ tabulam_tractare (
     redde VERUM;
 }
 
-/* latitudo tabulae in pixelis: titulus + cellula utrimque */
+/* latitudo tabulae in pixelis: titulus (+ suffixum finitae) +
+ * cellula utrimque - zona ictus et figura eandem legunt */
 interior s32
 latitudo_tabulae (
     constans VicusTabula* t)
 {
-    redde ((s32)t->titulus.mensura + II) * VICUS_CELLULA_LATITUDO;
+    s32 n;
+
+    n = (s32)t->titulus.mensura + II;
+    si (t->finita)
+    {
+        n += (s32)(magnitudo(suffixum_finitae) - I);
+    }
+    redde n * VICUS_CELLULA_LATITUDO;
 }
 
 interior ColorMandati
@@ -550,6 +561,13 @@ figura_tabularum (
             t->titulus,
             ZEPHYRUM, color_thematis(activa ? COLOR_BACKGROUND
                                             : COLOR_TEXT));
+        si (t->finita)
+        {
+            mandata_textus(m, x + ((s32)t->titulus.mensura + I)
+                * VICUS_CELLULA_LATITUDO, ZEPHYRUM, chorda_ex_literis(
+                suffixum_finitae, m->piscina), ZEPHYRUM,
+                color_thematis(activa ? COLOR_BACKGROUND : COLOR_TEXT));
+        }
         x += lat;
     }
 }
@@ -1091,6 +1109,45 @@ vicus_dispensatorem_ligare (
     v->motus = dispensator_motus(d);
     motum_aptare(v);
     dispensator_ponere_strategiam(d, destinare);
+}
+
+b32
+vicus_pulsare (
+    Vicus* v)
+{
+    VicusTabula* t;
+    VicusPulsus  p;
+            i32  i;
+            b32  activa;
+            b32  pingendum;
+
+    si (!v)
+    {
+        redde FALSUM;
+    }
+    pingendum = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        t       = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        activa  = chorda_aequalis(t->id, v->activa);
+        si (   !t->montata || t->finita || !t->facies.pulsare
+            || (!activa && !t->facies.vivit_in_fundo))
+        {
+            perge;
+        }
+        p = t->facies.pulsare(t->facies.pulsare_ctx);
+        si (p.mutatum && activa)
+        {
+            pingendum = VERUM;
+        }
+        si (p.finitus)
+        {
+            /* linea tabularum mutatur, quaecumque activa */
+            t->finita = VERUM;
+            pingendum = VERUM;
+        }
+    }
+    redde pingendum;
 }
 
 chorda

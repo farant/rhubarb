@@ -1238,6 +1238,12 @@ montationem_probare (vacuum)
             chorda_ex_literis("ambitus_terminale\n", piscina));
     }
     CREDO_VERUM(visum);
+    /* accessor publicus (S1c): vector quem principalia dant */
+    CREDO_VERUM(strcmp(terminale_ambitus()[ZEPHYRUM],
+        "TERM=xterm-256color") == ZEPHYRUM);
+    CREDO_VERUM(strcmp(terminale_ambitus()[II],
+        "TERM_PROGRAM=terminale") == ZEPHYRUM);
+    CREDO_VERUM(terminale_ambitus()[III] == NIHIL);
     terminale_claudere(&app);
 }
 

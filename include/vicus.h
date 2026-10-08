@@ -55,9 +55,20 @@ nomen vacuum (*VicusGestor)(
      Motus* motus,
     vacuum* ctx);
 
+/* pulsus montationis vivae (vicus-latera S1c): mutatum = quadrum
+ * pingendum (si activa); finitus = vita exiit (concha), tabula
+ * manet sed non iam pulsatur */
+nomen structura {
+    b32 mutatum;
+    b32 finitus;
+} VicusPulsus;
+
+nomen VicusPulsus (*VicusPulsator)(
+    vacuum* ctx);
+
 /* facies montationis (T2a): quod hospes ab applicatione activa
- * accipit - registra, componere, fons imaginum, gestus (T3a). Ante
- * describere tota nullatur: campi omissi = absentes. */
+ * accipit - registra, componere, fons imaginum, gestus (T3a), pulsus
+ * (S1c). Ante describere tota nullatur: campi omissi = absentes. */
 nomen structura {
       ActioRegistrum* actiones;
      FiguraRegistrum* figurae;
@@ -67,6 +78,9 @@ nomen structura {
               vacuum* fons_ctx;
          VicusGestor  gestum_ponere;  /* NIHIL = nullus gestus */
               vacuum* gestum_ctx;
+       VicusPulsator  pulsare;        /* NIHIL = non vivit */
+              vacuum* pulsare_ctx;
+                 b32  vivit_in_fundo; /* pulsatur etiam non activa */
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -88,6 +102,9 @@ nomen structura {
                  vacuum* montatio;       /* sedes montationis */
                     b32  montata;
             VicusFacies  facies;         /* si montata */
+                    b32  finita;         /* concha exiit: titulus
+                                          * "[exitus]", non iam
+                                          * pulsatur */
 } VicusTabula;
 
 nomen structura {
@@ -206,6 +223,15 @@ vacuum
 vicus_dispensatorem_ligare (
           Vicus* v,
     Dispensator* d);
+
+/* Pulsus unus (vicus-latera S1c): activa semper, ceterae solum si
+ * vivit_in_fundo (decisio VI: in fundo legitur, non pingitur); finita
+ * numquam. VERUM si quadrum pingendum: activa mutata, aut tabula
+ * nunc finita (titulus in linea mutatur). Index durabilis non
+ * tangitur. */
+b32
+vicus_pulsare (
+    Vicus* v);
 
 chorda
 vicus_causa (

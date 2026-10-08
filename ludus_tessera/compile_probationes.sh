@@ -136,6 +136,12 @@ declare -a RADIX_FONTES=(
     # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
     "sors"
+    # vicus-latera S1c: terminale genus vici (tabula t1 ordinaria)
+    "terminale"
+    "aemulator_hospes"
+    "pseudoterminale"
+    "pseudoterminale_posix"
+    "glyphae_ductae"
 )
 
 FILTER="${1:-}"

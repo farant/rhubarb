@@ -1,6 +1,9 @@
-/* vicus.c - vicus: hospes applicationum (scriba, pictor) in FENESTRA
+/* vicus.c - vicus: hospes applicationum (scriba, pictor, terminale) in
+ * FENESTRA
  *
  * Compositio communis (vicus_applicatio) + glutinum fenestrae;
+ * fenestra ad SCALA II (pixelum nostrum = II puncta, ut terminale);
+ * tabulae vivae pulsantur (vicus-latera S1c);
  * gemellus vicus_terminalis.c (insula-rami-plan T4). Ctrl-A, deinde
  * n / p / 1-9 aut Ctrl-A (tabula prior); ictus in tabulam. -fumus:
  * volumen temporarium, XXX quadra, exitus; -volumen <via>
@@ -22,6 +25,17 @@
 #define VICUS_LATITUDO   CDLXXX
 #define VICUS_ALTITUDO   (CDLXXX + VICUS_ALTITUDO_TABULARUM)
 #define QUADRA_FUMI      XXX
+/* pixelum nostrum = II puncta fenestrae (ut terminale) */
+#define SCALA            II
+
+/* tabulae vivae (terminale) in omni quadro pulsantur, etiam in fundo
+ * (vicus-latera S1c) */
+interior b32
+vicum_pulsare (
+    vacuum* ctx)
+{
+    redde vicus_pulsare((Vicus*)ctx);
+}
 
 s32
 principale (
@@ -74,8 +88,8 @@ principale (
     cfg.titulus   = "vicus";
     cfg.x         = C;
     cfg.y         = C;
-    cfg.latitudo  = VICUS_LATITUDO;
-    cfg.altitudo  = VICUS_ALTITUDO;
+    cfg.latitudo  = VICUS_LATITUDO * SCALA;
+    cfg.altitudo  = VICUS_ALTITUDO * SCALA;
     cfg.vexilla   = FENESTRA_ORDINARIA;
     fenestra      = fenestra_creare(piscina, &cfg);
     si (!fenestra)
@@ -92,6 +106,7 @@ principale (
     {
         redde I;
     }
+    ludus_fenestra_pulsum_ponere(lf, vicum_pulsare, app.vicus);
     exitus = ludus_fenestra_currere(lf, fenestra,
                                     fumus ? QUADRA_FUMI : ZEPHYRUM);
     si (   via_imaginis

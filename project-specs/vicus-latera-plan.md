@@ -101,6 +101,24 @@ pulse change or a store-version change since the last frame (the
 dispatcher recomposes on every event, so its counter cannot signal).
 Eight plants.
 
+S1c-2 as built: `vicus_pulsare` (active always, background only for
+`vivit_in_fundo` kinds, finished never; a background change does not
+ask for a frame, a tab FINISHING does - the bar changes); `finita` is
+host memory only - the bar draws `title [exitus]` and the hit zone
+widens with it (one width function for both), the durable index never
+sees it, so a restart reopens the tab with a fresh shell. terminale
+registered in `vicus_applicatio` (mount ignores volume and path root -
+canons embedded; pulse with no wait, the loop's 16 ms is the wait);
+default index gains `t1` (existing volumes keep theirs);
+`terminale_ambitus()` replaces the two apps' copies; both vicus mains
+install the pulse; the vicus twin turns `ornamenta_pixelorum` off on
+its terminals as terminale's twin does. Window scale (Fran
+2026-10-08): vicus, pictor, scriba open at SCALA II like terminale
+(buffer stays logical height; one of our pixels = two window points).
+Test `probatio_vicus_pulsus` (toy kinds, then the real terminale with
+/bin/sh: echo read in the background, `exit` finishes the tab).
+Eleven plants.
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);

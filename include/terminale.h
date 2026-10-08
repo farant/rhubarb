@@ -78,6 +78,13 @@ terminale_argumenta (
    character** argv,
          b32*  fumus);
 
+/* Ambitus infantis (vicus-latera S1c): TERM=xterm-256color,
+ * COLORTERM=truecolor, TERM_PROGRAM=terminale; vector NIHIL-
+ * terminatus, staticus - principalia eum in pseudoterminale dant,
+ * terminale_montare ipsa. */
+constans character* constans*
+terminale_ambitus (vacuum);
+
 /* Compositio tota: repositorium, registra, dispensator, hospes super
  * pt (hospes eum possidet). latitudo/altitudo superficiei in pixelis
  * nostris; cellula ordinaria VI x VIII. FALSUM si pars deficit (pt

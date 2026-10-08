@@ -20,6 +20,7 @@
  * Graphemata plurium runarum absunt (aemulator v2: notae iungentes
  * abiciuntur - limes nominatus).
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -414,6 +415,9 @@ principale (vacuum)
             cfg.altitudo  = XXX;
             r.aem         = aemulator_creare(piscina, &cfg);
         }
+        /* tabula t1 ordinaria = terminale: concha brevis, non
+         * initialis cum ambitu probantis (vicus-latera S1c) */
+        (vacuum)setenv("SHELL", "/bin/sh", I);
         CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern,
             volumen_temporarium(piscina, "lt_reditus"),
             getenv("RHUBARB_RADIX"), LXXX * VI, XXX * VIII));

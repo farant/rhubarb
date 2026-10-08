@@ -21,6 +21,8 @@
 #define SCRIBA_LATITUDO   CDLXXX
 #define SCRIBA_ALTITUDO   CDLXXX
 #define QUADRA_FUMI       XXX
+/* pixelum nostrum = II puncta fenestrae (ut terminale) */
+#define SCALA             II
 
 s32
 principale (
@@ -73,8 +75,8 @@ principale (
     cfg.titulus   = "scriba";
     cfg.x         = C;
     cfg.y         = C;
-    cfg.latitudo  = SCRIBA_LATITUDO;
-    cfg.altitudo  = SCRIBA_ALTITUDO;
+    cfg.latitudo  = SCRIBA_LATITUDO * SCALA;
+    cfg.altitudo  = SCRIBA_ALTITUDO * SCALA;
     cfg.vexilla   = FENESTRA_ORDINARIA;
     fenestra      = fenestra_creare(piscina, &cfg);
     si (!fenestra)

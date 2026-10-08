@@ -21,6 +21,8 @@
 #define PICTOR_LATITUDO   (DC + XL)
 #define PICTOR_ALTITUDO   CDLXXX
 #define QUADRA_FUMI       XXX
+/* pixelum nostrum = II puncta fenestrae (ut terminale) */
+#define SCALA             II
 
 s32
 principale (
@@ -74,8 +76,8 @@ principale (
     cfg.titulus   = "pictor";
     cfg.x         = C;
     cfg.y         = C;
-    cfg.latitudo  = PICTOR_LATITUDO;
-    cfg.altitudo  = PICTOR_ALTITUDO;
+    cfg.latitudo  = PICTOR_LATITUDO * SCALA;
+    cfg.altitudo  = PICTOR_ALTITUDO * SCALA;
     cfg.vexilla   = FENESTRA_ORDINARIA;
     fenestra      = fenestra_creare(piscina, &cfg);
     si (!fenestra)

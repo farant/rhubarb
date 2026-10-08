@@ -216,6 +216,7 @@ declare -a SOURCE_FILES=(
     "lib/uuid.c"
     "lib/via.c"
     "lib/vicus.c"
+    "lib/vicus_applicatio.c"
     "lib/vigilia.c"
     "lib/villa_agens.c"
     "lib/villa_lectores.c"

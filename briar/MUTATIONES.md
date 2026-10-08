@@ -75,7 +75,10 @@ Leges chartae:
   TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
   focum, colores honorat; vicus-latera S1a: TerminaleApplicatio.ramus
   (superficies ex ramo); S1b: terminale_montare, terminale_componere
-  publica; S1c: ludus_fenestra/ludus_tessera pulsus et pingendum; D7c: AemulatorModi.schirmus_inversus
+  publica; S1c: ludus_fenestra/ludus_tessera pulsus et pingendum,
+  vicus_pulsare (VicusPulsus, VicusFacies.pulsare/vivit_in_fundo,
+  VicusTabula.finita), terminale_ambitus, terminale genus vici
+  (tabula t1 ordinaria); D7c: AemulatorModi.schirmus_inversus
   (DECSCNM ?5; terminale colores nativos permutat), terminale
   ornamenta (sublineae V, transfixa, superlinea, crassum fictum;
   TerminaleApplicatio.ornamenta_pixelorum; lineae capsarum, quadra,

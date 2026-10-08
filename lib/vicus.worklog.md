@@ -198,3 +198,28 @@ Plant lesson: "no tab hit zones" survived the first proof - nothing in
 the session clicked a tab, and the bar is painted by its figura
 either way. The session now ends with a click on the scriba tab at a
 cell centre on row 0, through the encoder.
+
+## 2026-10-08 - vicus-latera S1c-2: living tabs, terminale as a kind
+
+- `vicus_pulsare` returns "draw a frame" only for the ACTIVE tab's
+  change or for a tab that just finished (its title in the bar
+  changes even when it is in the background). A background terminal's
+  output is read but asks for nothing - the frame skip in the loop
+  (S1c-1) then keeps the window idle while a hidden `top` runs.
+- `finita` is host memory: computed into the bar at draw time, never
+  written to the index. `latitudo_tabulae` is the single width
+  function for the drawn tab AND its hit zone; the suffix goes in
+  there, or clicks on " [exitus]" would hit the next tab.
+- The toy-kind test needs the finishing tab LAST in the bar: before
+  it finishes, the region where the suffix will be drawn must be
+  empty, or the "no text there yet" check would see the next tab's
+  title.
+- Adding `vicus_applicatio.h` to a root test pulled
+  `lib/vicus_applicatio.c` into the root suite: the source list is
+  GENERATED (`./tools/compile_tests_fontes_generare.sh`); the
+  ludus_tessera suite's list is by hand and needed terminale +
+  aemulator_hospes + pseudoterminale(_posix) + glyphae_ductae.
+- Every vicus built from the default index now spawns a shell. Tests
+  set `SHELL=/bin/sh` first (no login shell with the tester's
+  dotfiles); the two ludus_tessera vicus tests too.
+

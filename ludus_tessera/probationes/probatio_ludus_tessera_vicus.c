@@ -2,9 +2,10 @@
  * tesserae, sine terminali (insula-rami-plan T4)
  *
  * Compositio EADEM ac principalia (vicus_applicatio: scriba s1,
- * pictor p1; volumina temporaria, canones e radice). Sessio fenestrae
- * notata: scriptio in scriba, Ctrl-A n, ictus in pictore (centra
- * cellularum - terminalis sola centra narrat), Ctrl-A p, scriptio,
+ * pictor p1, terminale t1 cum /bin/sh; volumina temporaria, canones
+ * e radice). Sessio fenestrae notata: scriptio in scriba, Ctrl-A n,
+ * ictus in pictore (centra cellularum - terminalis sola centra
+ * narrat), Ctrl-A p, scriptio,
  * Esc, Ctrl-A Ctrl-A, ictus in tabulam. Eadem notata per terminalem
  * iterantur (codificator -> rivus -> ludus_tessera_tractare;
  * transitus ut probatio_ludus_tessera_scriba: clavis cum textu suo
@@ -12,6 +13,7 @@
  * praefixum, prior, activa), sigilla documentorum ambo, acta
  * voluminis.
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -276,6 +278,9 @@ principale (vacuum)
     intern = internamentum_creare(piscina);
     thema_initiare();
     radix = getenv("RHUBARB_RADIX");
+    /* tabula t1 ordinaria = terminale: concha brevis, non initialis
+     * cum ambitu probantis (vicus-latera S1c) */
+    (vacuum)setenv("SHELL", "/bin/sh", I);
 
     imprimere("\n--- I. sessio fenestrae: scriba, pictor, reditus\n");
     vol_f = volumen_temporarium(piscina, "lt_vicus_f");

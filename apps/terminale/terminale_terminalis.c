@@ -30,13 +30,6 @@
 #define LECTIO       CCLVI
 #define QUADRA_FUMI  LX
 
-hic_manens constans character* constans ambitus[] = {
-    "TERM=xterm-256color",
-    "COLORTERM=truecolor",
-    "TERM_PROGRAM=terminale",
-    NIHIL
-};
-
 interior vacuum
 magnitudinem_nuntiare (
     LudusTessera* lt,
@@ -112,7 +105,7 @@ principale (
     pseudoterminale_configuratio_initiare(&cfg_pt);
     cfg_pt.argumenta  = terminale_argumenta(piscina, (s32)argc, argv,
         &fumus);
-    cfg_pt.ambitus = ambitus;
+    cfg_pt.ambitus = terminale_ambitus();
     cfg_pt.latitudo = (i32)tessera_latitudo(opus);
     cfg_pt.altitudo = (i32)tessera_altitudo(opus);
     pt = pseudoterminale_posix_creare(piscina, &cfg_pt, NIHIL, NIHIL);

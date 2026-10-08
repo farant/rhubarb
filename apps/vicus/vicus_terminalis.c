@@ -17,9 +17,19 @@
 #include "ludus_tessera_pons.h"
 #include "ludus_tessera.h"
 #include "vicus_applicatio.h"
+#include "terminale.h"
 #include <stdio.h>
 
 #define QUADRA_FUMI  XXX
+
+/* tabulae vivae (terminale) in omni quadro pulsantur, etiam in fundo
+ * (vicus-latera S1c) */
+interior b32
+vicum_pulsare (
+    vacuum* ctx)
+{
+    redde vicus_pulsare((Vicus*)ctx);
+}
 
 s32
 principale (
@@ -35,6 +45,8 @@ principale (
            LudusTessera* lt;
                     b32  fumus;
                     s32  exitus;
+            VicusTabula* t;
+                    i32  k;
 
     si (!terminalis_adest())
     {
@@ -73,6 +85,19 @@ principale (
     {
         redde I;
     }
+    /* terminalia montata: ornamenta ut cellulae, non pixela (ut
+     * terminale_terminalis) - tessellatio lineas in cellulas
+     * verteret */
+    per (k = ZEPHYRUM; k < vicus_numerus_tabularum(app.vicus); k++)
+    {
+        t = vicus_tabula(app.vicus, k);
+        si (   t->montata
+            && chorda_aequalis_literis(t->genus, "terminale"))
+        {
+            ((TerminaleApplicatio*)t->montatio)->ornamenta_pixelorum =
+                FALSUM;
+        }
+    }
     lt = ludus_tessera_creare(piscina, app.d, vicus_figurae(app.vicus),
         ZEPHYRUM, vicus_imago_fons, app.vicus, opus,
         VICUS_CELLULA_LATITUDO, VICUS_CELLULA_ALTITUDO);
@@ -80,6 +105,7 @@ principale (
     {
         redde I;
     }
+    ludus_tessera_pulsum_ponere(lt, vicum_pulsare, app.vicus);
     exitus = ludus_tessera_currere(lt, fumus ? QUADRA_FUMI : ZEPHYRUM);
     volumen_claudere(vol);
     piscina_destruere(piscina);
