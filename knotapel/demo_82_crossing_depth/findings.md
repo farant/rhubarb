@@ -270,3 +270,11 @@ cc -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion \
    -O2 main.c -lm -o demo82
 ./demo82
 ```
+
+## Audit (Demo 117, 2026-10-07)
+
+Directions are capped at `MAX_DIR 512` without a message; uncapped (`demo_117_cyclotomic_audit/audit_cap_impact.sh`, with `MAX_ACT` raised too) the full catalog has 2,043. All 17 tests pass uncapped.
+
+- **Section 3 falls.** New directions at depths 7 and 8 are **468 and 1,068**, not 5 and 0 (cumulative 975 and 2,043). There is no direction saturation, so "Depths 7-8: Angle refinement" and "the transition from XOR10 to XOR12 requires not more directions but finer angles" have no support from this table.
+- **The matched-size control survives.** Strided 564 has 517 directions and 43 angles, deep 564 has 476 and 19, shallow 564 239 and 16; only the deep set reaches XOR12. Finding 3 holds with the true counts.
+- The individual XOR12 winners change (mean depth 1.98 → 1.68); max XOR per subset is unchanged.

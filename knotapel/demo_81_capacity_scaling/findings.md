@@ -177,3 +177,7 @@ cc -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion \
    -O2 main.c -lm -o demo81
 ./demo81
 ```
+
+## Audit (Demo 117, 2026-10-07)
+
+"After round 7, directions saturate at 512" is `MAX_DIR 512`, not the group. Uncapped (`demo_117_cyclotomic_audit/audit_cap_impact.sh`, with `MAX_ACT` raised too, since more directions push k × cells past the 16,384-cell budget) round 7 has 975 directions and round 8 has 2,043. Nothing else changes: the max-XOR ladder (6, 6, 8, 8, 10, 10, 12, 12, 12), the angle counts and the fit are identical, and 14/14 tests pass. The direction thresholds in section 4 lie below the cap and are unaffected; the reading that angles take over from directions after round 7 rests on the cap.
