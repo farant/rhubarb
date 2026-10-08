@@ -157,6 +157,22 @@ sixteen plants. Found on the way: the dispatcher CANNOT clear focus -
 old value stays (pre-existing; see lib/dispensator.worklog.md).
 Pending Fran: `Dispensator.super_spatium` (hover across panes).
 
+S2a-2 as built (headers approved 2026-10-08): `VicusLatus` (one
+mount) and `VicusTabula` = left pane + right stack + focus;
+`vicus_latus`, `vicus_latus_focatum`, `vicus_focum_ponere`;
+`vicus_tabulam_addere` gone (slots fixed); `Dispensator.super_spatium`.
+Pane id = `<tab>_<side>_<kind>` (canon `nomen` refuses dots) = branch
+= scope. Layout in plagula `vicus/latera`; ten default tabs from
+vicus_applicatio; Ctrl-A 0 = tab 10. Left = half width rounded down to
+a cell; 1 px divider; titles derived (id + right kind if different +
+"[exitus]"). Click into the other pane only focuses it (strategy sends
+the press to the host root). Tests: all vicus tests converted; new
+`probatio_vicus_latera` (keys to the focused pane, first click
+focuses / second acts in pictor, typed text handed over on a pane
+switch, Motus follows, hover scope, focus durable, Ctrl-A 0);
+fourteen plants. Parked: formator false positive inside a macro
+expansion (terminal-planning parks/014).
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);

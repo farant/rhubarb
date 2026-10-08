@@ -31,6 +31,18 @@ vicum_pulsare (
     redde vicus_pulsare((Vicus*)ctx);
 }
 
+/* terminale montatum: ornamenta ut cellulae, non pixela */
+interior vacuum
+ornamenta_exstinguere (
+    VicusLatus* l)
+{
+    si (l->montata && chorda_aequalis_literis(l->genus, "terminale"))
+    {
+        ((TerminaleApplicatio*)l->montatio)->ornamenta_pixelorum =
+            FALSUM;
+    }
+}
+
 s32
 principale (
       integer   argc,
@@ -47,6 +59,7 @@ principale (
                     s32  exitus;
             VicusTabula* t;
                     i32  k;
+                    i32  j;
 
     si (!terminalis_adest())
     {
@@ -91,11 +104,11 @@ principale (
     per (k = ZEPHYRUM; k < vicus_numerus_tabularum(app.vicus); k++)
     {
         t = vicus_tabula(app.vicus, k);
-        si (   t->montata
-            && chorda_aequalis_literis(t->genus, "terminale"))
+        ornamenta_exstinguere(&t->sinistrum);
+        per (j = ZEPHYRUM; j < xar_numerus(t->acervus); j++)
         {
-            ((TerminaleApplicatio*)t->montatio)->ornamenta_pixelorum =
-                FALSUM;
+            ornamenta_exstinguere((VicusLatus*)xar_obtinere(t->acervus,
+                j));
         }
     }
     lt = ludus_tessera_creare(piscina, app.d, vicus_figurae(app.vicus),

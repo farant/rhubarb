@@ -19,6 +19,12 @@ Leges chartae:
 
 ## inedita
 
+- corpus: vicus = decem tabulae, par laterum (vicus-latera S2a-2):
+  `VicusLatus`, `VicusTabula` (sinistrum, acervus, focus),
+  `vicus_latus`, `vicus_latus_focatum`, `vicus_focum_ponere`;
+  `vicus_tabulam_addere` REMOTA; dispositio in plagula `vicus/latera`;
+  `Dispensator.super_spatium` (structura crevit, rebake).
+
 - corpus: glyphae_ductae v3 - litterae Graecae Latinis dissimiles,
   numeri supra et infra scripti, radices, << >> (LXI nova); fons.c
   Graeca Latinis similia in litteras Latinas vertit (antea TOFU).

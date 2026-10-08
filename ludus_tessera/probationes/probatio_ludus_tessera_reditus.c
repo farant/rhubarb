@@ -415,8 +415,8 @@ principale (vacuum)
             cfg.altitudo  = XXX;
             r.aem         = aemulator_creare(piscina, &cfg);
         }
-        /* tabula t1 ordinaria = terminale: concha brevis, non
-         * initialis cum ambitu probantis (vicus-latera S1c) */
+        /* tabula 1 ordinaria: latus dextrum terminale - concha brevis,
+         * non initialis cum ambitu probantis (vicus-latera S1c) */
         (vacuum)setenv("SHELL", "/bin/sh", I);
         CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern,
             volumen_temporarium(piscina, "lt_reditus"),
@@ -438,6 +438,9 @@ principale (vacuum)
         ludus_tessera_quadrum(lt, M * III);
         CREDO_VERUM(quadrum(&r));
         CREDO_VERUM(conferre(&r, "IV pictor"));
+        /* vicus-latera S2a: pictor = latus DEXTRUM tabulae 2 - focus
+         * ante tractum (ictus primus solum focaret) */
+        CREDO_VERUM(vicus_focum_ponere(app.vicus, VICUS_DEXTRUM));
         p[0].x = X;
         p[0].y = X;
         p[1].x = XL;

@@ -7,11 +7,26 @@
 #include <stdio.h>
 #include <string.h>
 
-#define INDEX_ORDINARIUS                                          \
-    "<tabulae activa=\"s1\">"                                     \
-    "<tabula id=\"s1\" genus=\"scriba\" titulus=\"scriba\"/>"     \
-    "<tabula id=\"p1\" genus=\"pictor\" titulus=\"pictor\"/>"     \
-    "<tabula id=\"t1\" genus=\"terminale\" titulus=\"terminale\"/>" \
+/* dispositio ordinaria (vicus-latera decisio IX, Franus 2026-10-08):
+ * decem tabulae - I scriba | terminale, II scriba | pictor, III-X
+ * scriba | scriba */
+#define TABULA_ORDINARIA(id, dextrum)                               \
+    "<tabula id=\"" id "\" focus=\"sinistrum\">"                    \
+    "<latus genus=\"scriba\"/>"                                     \
+    "<acervus><latus genus=\"" dextrum "\"/></acervus></tabula>"
+
+#define INDEX_ORDINARIUS                                            \
+    "<tabulae activa=\"1\">"                                        \
+    TABULA_ORDINARIA("1", "terminale")                              \
+    TABULA_ORDINARIA("2", "pictor")                                 \
+    TABULA_ORDINARIA("3", "scriba")                                 \
+    TABULA_ORDINARIA("4", "scriba")                                 \
+    TABULA_ORDINARIA("5", "scriba")                                 \
+    TABULA_ORDINARIA("6", "scriba")                                 \
+    TABULA_ORDINARIA("7", "scriba")                                 \
+    TABULA_ORDINARIA("8", "scriba")                                 \
+    TABULA_ORDINARIA("9", "scriba")                                 \
+    TABULA_ORDINARIA("10", "scriba")                                \
     "</tabulae>"
 
 

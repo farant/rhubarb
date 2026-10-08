@@ -4,12 +4,17 @@
  *
  * Vicus (via Romana insularum) repositorium UNUM possidet: radices
  * <vicus> (durabilis, ephemera), liberi = montationes applicationum
- * (rami, canonibus suis iudicati). Volumen UNUM: documenta tabularum in
- * spatiis suis (id), index tabularum in plagula 'vicus/tabulae'
- * (tabulae cum activa, tabula cum id genus titulus - configuratio,
- * non historia: superscribitur). Vicus nullam applicationem novit:
- * principale genera registrat (titulus -> magnitudo montationis +
- * functio montandi).
+ * (rami, canonibus suis iudicati). Volumen UNUM: documenta montationum
+ * in spatiis suis (id), dispositio in plagula 'vicus/latera'
+ * (configuratio, non historia: superscribitur). Vicus nullam
+ * applicationem novit: principale genera registrat (titulus ->
+ * magnitudo montationis + functio montandi).
+ *
+ * vicus-latera S2a: tabula = par laterum. SINISTRUM = editor (genus non
+ * fixum), DEXTRUM = acervus cuius ultimus in fronte. Latus montatio
+ * una est; id eius = via "<tabula>_<latus>_<genus>" = id rami = spatium
+ * arboris (actiones, figurae, ids intra resolvuntur). Ictus in latus
+ * non focatum id focat (ictus primus solum focat).
  *
  * Genus ignotum in indice (volumen ab hospite recentiore): tabula
  * servatur, non montatur, causa nominatur. Addere generis ignoti
@@ -31,6 +36,12 @@
 #include "figura.h"
 #include "dispensator.h"
 #include "delineare_mandata.h"
+
+/* tabulae fixae (vicus-latera decisio IX): index ordinarius tot
+ * dat; vicus plures non legit */
+#define VICUS_TABULAE    X
+#define VICUS_SINISTRUM  ZEPHYRUM
+#define VICUS_DEXTRUM    I
 
 /* linea tabularum (T2b): una, cellula domus VI x VIII */
 #define VICUS_CELLULA_LATITUDO  VI
@@ -94,10 +105,12 @@ nomen structura {
     VicusDescriptor describere;
 } VicusGenus;
 
+/* latus (S2a): montatio una. id = via "<tabula>_<latus>_<genus>"
+ * ("3_sinistrum_scriba"; canon 'nomen' puncta non admittit) = id rami
+ * repositorii = spatium arboris */
 nomen structura {
                  chorda  id;
                  chorda  genus;
-                 chorda  titulus;
     constans VicusGenus* descriptio;   /* NIHIL = genus ignotum */
                  vacuum* montatio;       /* sedes montationis */
                     b32  montata;
@@ -105,6 +118,15 @@ nomen structura {
                     b32  finita;         /* concha exiit: titulus
                                           * "[exitus]", non iam
                                           * pulsatur */
+} VicusLatus;
+
+nomen structura {
+        chorda  id;          /* "1".."10" */
+    VicusLatus  sinistrum;
+           Xar* acervus;     /* Xar de VicusLatus (dextrum); ultimus =
+                              * in fronte; numquam vacuus (decisio
+                              * VIII) */
+           i32 focus;       /* VICUS_SINISTRUM aut VICUS_DEXTRUM */
 } VicusTabula;
 
 nomen structura {
@@ -141,22 +163,17 @@ vicus_genus_addere (
           VicusMontator  montare,
         VicusDescriptor  describere);
 
-/* repositorium creatur, index e volumine legitur (absens: ordinarius,
- * qui scribitur), tabulae montantur. FALSUM si index malus aut
- * repositorium deficit; tabula generis ignoti praeteritur (causa). */
+/* repositorium creatur, dispositio e volumine legitur (absens:
+ * ordinaria, quae scribitur), latera montantur. Forma:
+ * <tabulae activa="1"><tabula id="1" focus="sinistrum"><latus
+ * genus="scriba"/><acervus><latus genus="terminale"/></acervus>
+ * </tabula>...</tabulae>; acervus absens = latus sinistrum iteratum.
+ * FALSUM si dispositio mala aut repositorium deficit; latus generis
+ * ignoti praeteritur (causa). */
 b32
 vicus_aperire (
                   Vicus* v,
      constans character* index_ordinarius);
-
-/* tabulam novam montare et indicem servare; FALSUM si genus ignotum,
- * id geminum aut montatio deficit */
-b32
-vicus_tabulam_addere (
-                  Vicus* v,
-     constans character* genus,
-     constans character* id,
-     constans character* titulus);
 
 i32
 vicus_numerus_tabularum (
@@ -171,6 +188,26 @@ vicus_tabula (
 VicusTabula*
 vicus_activa (
     constans Vicus* v);
+
+/* latus tabulae: VICUS_SINISTRUM aut VICUS_DEXTRUM (= frons
+ * acervi); NIHIL si tabula NIHIL */
+VicusLatus*
+vicus_latus (
+    VicusTabula* t,
+            i32  latus);
+
+/* latus focatum tabulae activae; NIHIL si nulla */
+VicusLatus*
+vicus_latus_focatum (
+    constans Vicus* v);
+
+/* focum tabulae activae ad latus ponere (ictus idem facit): Motus
+ * ramum, spatium, gestum sequitur; pendentia relinquentis effunduntur
+ * ut in commutatione tabularum. Dispositio servatur. */
+b32
+vicus_focum_ponere (
+    Vicus* v,
+      i32  latus);
 
 /* activam ponere (insula ephemera et index servatus); FALSUM si id
  * ignotum */
@@ -198,10 +235,12 @@ vicus_imago_fons (
      vacuum* ctx);
 
 /* Componere-formata (dispensator.h), ctx = Vicus*: radix (actio
- * 'vicus.magnitudo'), linea tabularum (PARTES_INDEX, figura hospitis
- * ex Vicus legit), arbor applicationis ACTIVAE (componere eius)
- * infra lineam tabularum translata. Applicatio superficiem suam ex
- * ramo legit - hospes eam scribit (aperire, mutatio magnitudinis). */
+ * 'vicus.radix'), linea tabularum (PARTES_INDEX, figura hospitis ex
+ * Vicus legit), arbores laterum VISIBILIUM tabulae activae (componere
+ * cuiusque) infra lineam translatae, sinistrum ad x 0, dextrum post
+ * dimidium (cellulis rotundatum), radix cuiusque spatio lateris
+ * signata; divisor post latera. Applicatio superficiem suam ex ramo
+ * legit - hospes eam scribit (aperire, mutatio magnitudinis). */
 Componens*
 vicus_componere (
      InsulaRepositorium* repo,
@@ -224,11 +263,12 @@ vicus_dispensatorem_ligare (
           Vicus* v,
     Dispensator* d);
 
-/* Pulsus unus (vicus-latera S1c): activa semper, ceterae solum si
- * vivit_in_fundo (decisio VI: in fundo legitur, non pingitur); finita
- * numquam. VERUM si quadrum pingendum: activa mutata, aut tabula
- * nunc finita (titulus in linea mutatur). Index durabilis non
- * tangitur. */
+/* Pulsus unus (vicus-latera S1c, S2a): latera VISIBILIA tabulae
+ * activae (sinistrum, frons acervi) semper, cetera (acervi, tabulae
+ * aliae) solum si vivit_in_fundo (decisio VI: in fundo legitur, non
+ * pingitur); finita numquam. VERUM si quadrum pingendum: latus
+ * visibile mutatum, aut latus nunc finitum (titulus in linea
+ * mutatur). Dispositio durabilis non tangitur. */
 b32
 vicus_pulsare (
     Vicus* v);

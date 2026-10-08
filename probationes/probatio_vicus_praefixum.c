@@ -5,7 +5,8 @@
  * p / 1-9 (in textu agitur, clavis devoratur), Ctrl-A iterum = tabula
  * prior, Esc aut cetera = abolitio. Linea tabularum dum pendet
  * tingitur. Litterae praefixi in scribam non effluunt; insertio trans
- * commutationem perstat. Ictus in tabulam eam activat. */
+ * commutationem perstat. Ictus in tabulam eam activat. vicus-latera
+ * S2a: tabula = par laterum, latus sinistrum focatum. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -208,12 +209,14 @@ s32 principale (vacuum)
         pictorem_montare, pictorem_describere));
     CREDO_VERUM(vicus_aperire(v,
         "<tabulae activa=\"s1\">"
-        "<tabula id=\"s1\" genus=\"scriba\" titulus=\"scriba\"/>"
-        "<tabula id=\"p1\" genus=\"pictor\" titulus=\"pictor\"/>"
-        "<tabula id=\"s2\" genus=\"scriba\" titulus=\"secunda\"/>"
+        "<tabula id=\"s1\"><latus genus=\"scriba\"/></tabula>"
+        "<tabula id=\"p1\"><latus genus=\"pictor\"/></tabula>"
+        "<tabula id=\"s2\"><latus genus=\"scriba\"/></tabula>"
         "</tabulae>"));
-    s1 = (ScribaMontatio*)vicus_tabula(v, ZEPHYRUM)->montatio;
-    s2 = (ScribaMontatio*)vicus_tabula(v, II)->montatio;
+    s1 = (ScribaMontatio*)vicus_latus(vicus_tabula(v, ZEPHYRUM),
+        VICUS_SINISTRUM)->montatio;
+    s2 = (ScribaMontatio*)vicus_latus(vicus_tabula(v, II),
+        VICUS_SINISTRUM)->montatio;
     d = dispensator_creare(piscina, intern, v->repo, vicus_actiones(v),
         vicus_componere, v, CCC);
     m = manus_ludus_creare(piscina, d);
@@ -299,8 +302,8 @@ s32 principale (vacuum)
             CREDO_CHORDA_AEQUALIS_LITERIS(c->titulus, "p1");
         }
     }
-    /* 'scriba' cellulae 0..7, 'pictor' 8..15 */
-    CREDO_VERUM(manus_ludus_premere_ad(m, LX, IV));
+    /* tituli = id (S2a): 's1' cellulae 0..3, 'p1' 4..7, 's2' 8..11 */
+    CREDO_VERUM(manus_ludus_premere_ad(m, XXX, IV));
     CREDO_VERUM(activa_est(v, "p1"));
     CREDO_VERUM(manus_ludus_premere_ad(m, X, IV));
     CREDO_VERUM(activa_est(v, "s1"));

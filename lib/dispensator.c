@@ -19,6 +19,18 @@ chorda_nulla (vacuum)
     redde c;
 }
 
+/* spatia vacua aequalia sine memcmp (datum NIHIL) */
+interior b32
+spatia_aequalia (
+    chorda a,
+    chorda b)
+{
+    si (a.mensura == ZEPHYRUM && b.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde chorda_aequalis(a, b);
+}
 
 /* Eventus derivatus differendus ad limen (T5) */
 nomen structura {
@@ -562,6 +574,7 @@ tractare_unum (
         Destinatio  des;
             chorda  focus;
             chorda  focus_novus;
+            chorda  spatium_super;
          Componens* radix;
          Componens* destinatum;
                b32  consumptus;
@@ -581,15 +594,23 @@ tractare_unum (
         _notare(d, e, &des);
     }
 
-    /* super derivatur */
+    /* super derivatur (S2a: cum spatio suo - idem id in latere altero
+     * est componens alius) */
+    spatium_super = (   destinatum
+                     && chorda_aequalis(destinatum->id,
+                            des.id_geometricum))
+                  ? componens_spatium(destinatum) : d->motus.spatium;
     si (   e->genus == EVENTUS_MUS_MOTUS
-        && !chorda_aequalis(des.id_geometricum, d->super))
+        && (   !chorda_aequalis(des.id_geometricum, d->super)
+            || !spatia_aequalia(spatium_super, d->super_spatium)))
     {
-        mittere_ad(d, invenire_id(d, d->super), EVENTUS_MUS_EXIIT,
-                   e->tempus);
-        d->super = des.id_geometricum;
-        mittere_ad(d, invenire_id(d, d->super), EVENTUS_MUS_INTRAVIT,
-                   e->tempus);
+        mittere_ad(d, componens_invenire_in_spatio(d->arbor,
+            d->super_spatium, d->super), EVENTUS_MUS_EXIIT, e->tempus);
+        d->super          = des.id_geometricum;
+        d->super_spatium  = spatium_super;
+        mittere_ad(d, componens_invenire_in_spatio(d->arbor,
+            d->super_spatium, d->super), EVENTUS_MUS_INTRAVIT,
+            e->tempus);
     }
 
     /* ictus dat focum */

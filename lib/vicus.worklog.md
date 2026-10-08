@@ -223,3 +223,43 @@ cell centre on row 0, through the encoder.
   set `SHELL=/bin/sh` first (no login shell with the tester's
   dotfiles); the two ludus_tessera vicus tests too.
 
+## 2026-10-08 - vicus-latera S2a-2: ten tabs, two panes each
+
+- A tab is now a left pane + a right STACK (front = last, never empty:
+  a missing stack repeats the left kind). A pane is one mount; its id
+  is the path `<tab>_<side>_<kind>` and is at the same time the store
+  BRANCH id and the tree SCOPE (S2a-1). Underscores, not dots: the
+  apps' canons type `id` as `nomen` (letters, digits, `_`, `*`) - with
+  dots every mount was refused ("montatio defecit"); found by probing
+  `vicus_causa` after the first converted test went red everywhere.
+- Layout lives in plagula `vicus/latera` (new key; old `vicus/tabulae`
+  volumes just get the default). At most VICUS_TABULAE (10) are read.
+  The default (1 scriba|terminale, 2 scriba|pictor, 3-10 scriba|scriba)
+  is vicus_applicatio's, vicus knows no kinds.
+- Geometry: left = half the width rounded DOWN to a 6 px cell, right =
+  the rest; each pane's surface written to its branch. A 1 px divider
+  component after the panes (host scope "", PARTES_NULLUM figure that
+  draws only for id `vicus.divisor` - the root gets the same figure
+  and draws nothing, and pane roots never see it: lookups are strict).
+- Click focus: the strategy compares the pressed component's scope
+  with Motus.spatium; another pane -> the press goes to the host root,
+  whose handler focuses the side under x. FIRST CLICK ONLY FOCUSES.
+  The strategy has no ctx, so the decision is made where the data is
+  (Motus) and the action where the Vicus is (root handler) - no
+  dispatcher hook needed.
+- Motus follows the focused pane: ramus, spatium, gesture; switching
+  pane = same handover as switching tab (motum_relinquere).
+- Titles are derived: id, + front kind when it differs from the left
+  kind, + " [exitus]" when a visible pane finished. One function for
+  the drawn title and the hit zone.
+- scriba does not handle mouse presses at all (no cursor move on
+  click): the "first click only focuses, second acts" proof uses
+  pictor (stroke count). House vim's Esc leaves the cursor where it
+  is (real vim steps back one).
+- Plant lesson again: the gesture-flush plant survived while the test
+  typed `iuno` + Esc - Esc commits scriba's text by itself. The test now
+  types WITHOUT Esc before switching panes.
+- `vicus_latus` takes a mutable `VicusTabula*` (approved header said
+  constans; returning a mutable pane from a const tab is a cast-qual
+  error and vicus_tabula hands out mutable tabs anyway).
+
