@@ -62,3 +62,35 @@ against a registry. Every class has a fixture; a bitmask over
 - Plant notes: a plant must COMPILE under -Werror - deleting the only
   call of a static function is "unused function", not a red test. The
   cycle plant keeps `_circulus` referenced behind `si (FALSUM)`.
+
+## 2026-10-08 - the writer; oracles I, II, V (norma-plan-3 A4)
+
+- **Canonical form = the formatter's form, byte for byte.** The writer
+  builds an STML tree and calls `stml_scribere(radix, VERUM)`; measured:
+  the pretty writer chooses capture form (`<campus titulus="id" (>
+  <textus/>`) on API-built trees exactly as `stml formare` does on parsed
+  ones. ONE difference found: the document-level rewrite (formare,
+  `_formatum`) ends at `</normae>` with NO trailing newline; the plan's
+  writer appended one. Dropped - the writer matches the formatter, and
+  `stml formare -probare` passes on writer output. The committed
+  fixture is the writer's output (R5): `cmp` against `stml formare` of it
+  = identical.
+- Attribute values are written RAW by STML (`_attributa_scribere`, no
+  escaping): keys/tags/forms containing `" & < >` or a newline are
+  refused with "STML ferre nequit"; enum values with them go to
+  `<licitum>` children (text is escaped). A value equal to `true` is
+  printed bare (`titulus`) and reads back as `true` - round trip intact.
+- Floats: shortest `%.*g` (1..17) that `strtod` returns exactly - `0.1`,
+  `0.3`, `-1e-300` print as written and survive two cycles.
+- `<variatio>` never gets `<ad>`: canon demands an `<objectum>` child
+  there, so a named objectum used as a variant is written inline (DAG
+  sharing lost at that one spot, meaning unchanged).
+- Refusals with named reasons: key canon/STML cannot carry, generator
+  function without a name, SCHEMA_PRAVA node, a named norma containing
+  itself ("circulus"), an unnamed builder cycle (depth > CXXVIII).
+- Oracle II: the two builder schemas of probatio_norma_gignere (copied,
+  generator NAMED) survive writer -> reader with identical JSON Schema
+  export and identical judgments on values generated from BOTH sides
+  (TYPICA, FINES, INVALIDA; L seeds).
+- Plants: no `requiritur="falsum"` -> I, II red; shared nodes inlined ->
+  I + pointer equality red; reader ignoring `modus` -> II red.

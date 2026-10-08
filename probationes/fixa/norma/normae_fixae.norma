@@ -1,36 +1,39 @@
 <normae versio="1">
-  <norma titulus="usus">
+  <norma titulus="usus" (>
     <objectum modus="notandum">
-      <descriptio>Usus signorum.</descriptio>
-      <campus titulus="input_tokens"><integer minimum="0" maximum="1000000"/></campus>
-      <campus titulus="cache_read_input_tokens" requiritur="falsum"><integer minimum="0" maximum="1000000"/></campus>
-      <campus titulus="ratio"><numerus minimum="0.1" maximum="0.3"/></campus>
-      <campus titulus="minima" requiritur="falsum"><numerus minimum="-1e-300" maximum="1e-300"/></campus>
-    </objectum>
-  </norma>
-  <norma titulus="omnia">
+      <descriptio(> Usus signorum.
+      <campus titulus="input_tokens" (> <integer minimum="0" maximum="1000000"/>
+      <campus titulus="cache_read_input_tokens" requiritur="falsum" (> <integer minimum="0" maximum="1000000"/>
+      <campus titulus="ratio" (> <numerus minimum="0.1" maximum="0.3"/>
+      <campus titulus="minima" requiritur="falsum" (> <numerus minimum="-1e-300" maximum="1e-300"/>
+    </>
+  <norma titulus="omnia" (>
     <objectum aut_nullum="verum">
-      <campus titulus="quodvis"><liberum/></campus>
-      <campus titulus="nihil"><nullum/></campus>
-      <campus titulus="verum_falsum"><boolean aut_nullum="verum"/></campus>
-      <campus titulus="a.b"><integer minimum="-5" maximum="5"/></campus>
-      <campus titulus="clāvis"><textus longitudo_minima="1" longitudo_maxima="40"/></campus>
-      <campus titulus="dies"><textus forma="date-time"/></campus>
-      <campus titulus="stop_reason"><textus aut_nullum="verum" electio="end_turn tool_use max_tokens"/></campus>
-      <campus titulus="spatiosa"><textus><licitum>cum spatio</licitum><licitum>sine</licitum></textus></campus>
-      <campus titulus="origo"><textus gignens="ex_functione"/></campus>
-      <campus titulus="tags" requiritur="falsum"><tabulatum longitudo_minima="0" longitudo_maxima="4"><textus electio="a b c"/></tabulatum></campus>
-      <campus titulus="usus_primus"><ad norma="usus"/></campus>
-      <campus titulus="usus_secundus" requiritur="falsum"><ad norma="usus"/></campus>
-      <campus titulus="input"><objectum modus="apertum"/></campus>
-      <campus titulus="content">
-        <tabulatum>
-          <discrimen clavis="type" modus="notandum">
-            <variatio valor="text"><objectum><campus titulus="text"><textus/></campus></objectum></variatio>
-            <variatio valor="tool_use"><objectum><campus titulus="id"><textus/></campus><campus titulus="input"><liberum/></campus></objectum></variatio>
-          </discrimen>
-        </tabulatum>
-      </campus>
-    </objectum>
-  </norma>
+      <campus titulus="quodvis" (> <liberum/>
+      <campus titulus="nihil" (> <nullum/>
+      <campus titulus="verum_falsum" (> <boolean aut_nullum="verum"/>
+      <campus titulus="a.b" (> <integer minimum="-5" maximum="5"/>
+      <campus titulus="clāvis" (> <textus longitudo_minima="1" longitudo_maxima="40"/>
+      <campus titulus="dies" (> <textus forma="date-time"/>
+      <campus titulus="stop_reason" (> <textus electio="end_turn tool_use max_tokens" aut_nullum="verum"/>
+      <campus titulus="spatiosa" (>
+        <textus((>
+          <licitum(> cum spatio
+          <licitum(> sine
+      <campus titulus="origo" (> <textus gignens="ex_functione"/>
+      <campus titulus="tags" requiritur="falsum" (>
+        <tabulatum longitudo_minima="0" longitudo_maxima="4" (> <textus electio="a b c"/>
+      <campus titulus="usus_primus" (> <ad norma="usus"/>
+      <campus titulus="usus_secundus" requiritur="falsum" (> <ad norma="usus"/>
+      <campus titulus="input" (> <objectum modus="apertum"/>
+      <campus titulus="content" (> <tabulatum(>
+        <discrimen clavis="type" modus="notandum">
+          <variatio valor="text" (> <objectum(>
+            <campus titulus="text" (> <textus/>
+          <variatio valor="tool_use" (>
+            <objectum((>
+              <campus titulus="id" (> <textus/>
+              <campus titulus="input" (> <liberum/>
+        </>
+    </>
 </normae>
