@@ -133,37 +133,65 @@ lands with T5 (aedilis). Order may change after T5–T6 (spec §VI).
     split. (Spec §X T5b: seven gaps found by the first heals - Fran
     decided scratch by name, speculum by existence, daemon prebuilt,
     probatio_git built not run, temp roots never inputs.)
-- [ ] **T6** fabrica (`tools/fabrica_oraculum.sh`)
-- [ ] **T7** generata (`tools/generata_probare.sh`)
-- [ ] **T8** oratio (`oratio/compile_probationes.sh`)
+- [ ] **T6** fabrica (`tools/fabrica_oraculum.sh`) - RE-PLANNED (Fran
+  2026-10-07): its key inherits generata's whole bash tree (73 of 78
+  unresolved sites), so T7 first; then (Fran, second decision) generata
+  RETIRES into fabrica instead of migrating, and the oracle retires with
+  it (no second judge left) - T6 becomes T7b.
+- [ ] **T7** generata: RETIRE INTO FABRICA (oracle 34/34 consensus
+  2026-10-02 - 10-07; spec 1a Q15 'oracle, then deletion').
+  - [x] **T7a** swap: `tools/generata_iudicare.sh` (bin/fabrica
+    iudicare -plenus -omnia over COMMITTED artifacts: 135, ~25 s) is
+    the `generata` gate; old set (51) a subset; plants per stage family
+    side by side; oracle stops reading generata's receipt; inventory
+    row swapped (debts: judge + declarations; per-input debts = the
+    `-tacta` phase of commissio).
+  - [x] **T7b** retire the oracle (`fabrica` gate): PORTAE, inventory
+    row, debts. Its one property worth keeping - silent loss of
+    coverage ("declaratio omissa") - moved into generata_iudicare.sh:
+    every committed file with GENERATUM on line 1 must be judged.
+  - [x] **T7c** delete `tools/generata_probare.sh` and
+    `tools/fabrica_oraculum.sh` once the swap has stood; docs, comments
+    (tools/latina_numeri.*), docs/bibliothecae/instrumenta.html.
+- [x] **T8** oratio (`oratio/compile_probationes.sh`) - MEASURED, NOT
+  MIGRATED (Fran 2026-10-07): a corpus gate (every tracked .md, .c/.h,
+  the nexus index), reuse ceiling 3/150 commits (2%); carving out
+  probatio_oratio_oraculum (44 s) = desideratum …BPRSBB.
 
 ### Task T9: pythonica - where the time goes
 
-- [ ] **Step 1:** `cProfile` of `pythonica/probatio_silva.py`: time per
+- [x] **Step 1:** `cProfile` of `pythonica/probatio_silva.py`: time per
   silva.py function and per spawned tool; candidates for C named (each
   becomes a desideratum, not work in this slice). **Commit** (docs).
+  (`pythonica/profilare.py`; spec §X T9: snapshots ~190 s, closures
+  ~85 s, polling ~30 s of 422 s; desiderata …6RME, …4WYGT, …JFQ99.)
 
 ### Task T10: the Python read ledger (A4)
 
-- [ ] **Step 1: Failing test** (pythonica): a harness run that opens,
+- [x] **Step 1: Failing test** (pythonica): a harness run that opens,
   lists, stats a file and reads an environment variable writes L, D,
   X/A and E lines in the `lib/lectiones.c` format.
-- [ ] **Step 2: Implement:** `sys.addaudithook` (open, os.listdir,
+- [x] **Step 2: Implement:** `sys.addaudithook` (open, os.listdir,
   os.scandir) + recording wrappers (`os.environ`, stat family).
-- [ ] **Step 3: Plants**, one per channel (hook off for open; wrapper
+- [x] **Step 3: Plants**, one per channel (hook off for open; wrapper
   off for stat; wrapper off for environ) -> red. **Commit.**
 
 ### Task T11: pythonica migrated
 
-- [ ] spec §III checklist for pythonica; three audited reuses. **Commit.**
+- [x] MEASURED, NOT MIGRATED (Fran 2026-10-07: measure first): under
+  the Python ledger the honest key holds .git/HEAD, index and the HEAD
+  commit object (snapshots clone the live repo) - reuse ceiling 0%.
+  Desideratum …M651F (tests against a fixed repository). Bytes-keyed
+  environment titles fixed in lectiones.py on the way.
 
 ### Task T12: close
 
-- [ ] radix: retro reuse rate measured (T4 tool) -> migrate or record
-  "never" with the number.
-- [ ] Per-gate savings table and reuse rates in spec §XI; worklogs,
+- [x] radix: retro reuse rate measured (T4 tool) -> migrate or record
+  "never" with the number. (24%/150 as an upper bound; 0% while it runs
+  probatio_git - recorded "never, for now", spec §XI.)
+- [x] Per-gate savings table and reuse rates in spec §XI; worklogs,
   MEMORY; ledger: park closed, J6HF fulfilled or re-filed, shadow passes
-  (…2VP7) next. **Commit.**
+  (…2VP7) next. **Commit.** (J6HF fulfilled; opera closed; park closed after this commit.)
 
 ## Not in this plan (stated)
 

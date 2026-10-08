@@ -573,6 +573,12 @@ series_lexema_proximum (
 
                 (*ptr)++;
                 habet             = _chordam_reddere(lx, l);
+                /* terminator OSC (aemulator D5: responsum eundem
+                 * reddit): ESC = ST aut series nova */
+                si (habet && l->genus == SERIES_OSC)
+                {
+                    l->finale = (i8)'\\';
+                }
                 lx->status        = STATUS_FUGAE;
                 lx->post_chordam  = VERUM;
                 lx->crudum_esc    = VERUM;
@@ -668,8 +674,11 @@ series_lexema_proximum (
             }
         }
 
-        /* ---- ESC + octetus altus: ESC solus (alterum + UTF-8) ---- */
-        si (lx->status == STATUS_FUGAE && c >= 0x80)
+        /* ---- ESC + octetus altus: ESC solus (alterum + UTF-8); idem
+         * in SS (ESC N|O + octetus altus - olim tacite periebat,
+         * aemulator D3): FUGA, octetus non consumptus ---- */
+        si (   (lx->status == STATUS_FUGAE || lx->status == STATUS_SS)
+            && c >= 0x80)
         {
             _fugam_implere(lx, l);
             lx->status = STATUS_SOLUM;
@@ -681,7 +690,8 @@ series_lexema_proximum (
         {
             (*ptr)++;
             (vacuum)_chordam_reddere(lx, l);
-            lx->status = STATUS_SOLUM;
+            l->finale   = (i8)0x07;
+            lx->status  = STATUS_SOLUM;
             redde SERIES_OSC;
         }
 

@@ -63,3 +63,76 @@ Test: `probatio_ludus_fenestra` asserts the wait (0, then CCC). Plants:
 always 0 (= the old spin) and always quies (first frame delayed), both
 caught. The loop's USE of the wait needs a real window - covered by the
 measurement and Fran's look, not headlessly.
+
+## 2026-10-06 — screenshots of frames (Fran: "might be a bit of an oversight")
+
+fenestra draws in SOFTWARE: every frame is a TabulaPixelorum (RGBA
+packed `a<<24|b<<16|g<<8|r`) handed to fenestra_praesentare_pixela, so a
+screenshot is that buffer written out - no Screen Recording permission,
+no dependence on the window being visible. Added (Fran approved the
+draft): `tabula_pixelorum_in_imaginem` (pure; channels by SHIFTS, not
+memcpy - a byte-order plant is caught), `ludus_fenestra_imaginem_scribere`
+(last frame -> PNG, from the frame piscina; FALSUM before any frame or
+on a failed write), and `-imago <path>` in apps pictor/scriba/vicus
+(written after the frame loop; with -fumus = frame 30).
+
+Headless for free: `tabula_pixelorum_creare_nuda` + ludus_fenestra_creare
++ `ludus_quadrum` renders an app with NO window (probatio_ludus_imago
+writes build/probatio_ludus_imago_pictor.png). Claude can open the PNG.
+First look: pictor's canvas sits with its top-left off-screen (only the
+bottom/right border visible) - either pictor's real initial pan or a
+headless artifact; the real-window smoke run (-fumus -imago) decides.
+
+Not covered: the macOS composite (title bar, Retina scaling) - if ever
+needed, fenestra_numerus_nativus + `screencapture -l<id>` (permission
+prompt). 6 plants caught.
+
+**Real-window smoke (Fran approved, 2026-10-06):** `pictor.sh -fumus
+-imago /tmp/pictor_fenestra.png` -> exit 0, 30 frames; the window's PNG
+is BYTE-IDENTICAL (`cmp`) to the headless one from probatio_ludus_imago.
+So headless frames are faithful screenshots, and the off-screen canvas
+corner is pictor's REAL initial view (not a headless artifact) - open
+question for Fran whether that initial pan is intended.
+
+
+## 2026-10-08 — vicus-latera S1c-1: pulse hook and frame skip
+
+A living app (a terminal) must be pulsed every iteration, and the
+shared loop waited up to quies_ms (300 ms) and then ALWAYS repainted
+the whole window. `ludus_fenestra_pulsum_ponere(lf, fn, ctx)`: with a
+pulse the loop waits at most 16 ms; `ludus_fenestra_pingendum(lf,
+eventa, nunc)` (public so it is testable without a window) decides
+whether to draw: events, or the pulse saw something, or - otherwise -
+the dispatcher alone is pulsed (its timers, e.g. scriba's debounced
+save) and the STORE VERSION is compared with the version at the last
+drawn frame (`versio_picta`, set by ludus_quadrum). Without a pulse:
+always draw, exactly as before.
+
+Found while building it: the dispatcher recomposes on EVERY event,
+including the empty pulse ("regula staleness"), so
+`compositiones` cannot signal change - the store version
+(`insula_versio`, bumped per accepted write) can. Comparing against the
+LAST DRAWN frame (not just around this pulse) matters: a click handled
+in an earlier iteration may still be undrawn. The twin
+(ludus_tessera) got the same pair under its own names (its header must
+not include the window's). Eight plants caught (version ignored,
+version not recorded, no-pulse path changed, events ignored - each in
+both loops). The 16 ms cap itself lives in the loops, which need a real
+window / terminal: verified by use in S1c-2.
+
+## 2026-10-08 - smoke mode vs the frame skip (S1c-1 regression)
+
+With a pulse installed (vicus), the loop draws only on events, a pulse
+change or a store-version change. An idle `vicus -fumus` drew frame 1
+and then never reached its 30 frames - smoke runs and `-fumus -imago`
+screenshots hung. Fix in both loops: with `quadra_maxima` set, every
+iteration draws. Neither loop runs headless in a test (window /
+real terminal); the twin was proven with `script -q /dev/null
+vicus_terminalis -fumus` (a pty): before = still alive after 10 s,
+after = exits, `quadra=30`. The window loop carries the same one-line
+rule.
+
+Side find the same day (not a fenestra bug): a GUI app that gets
+mouse but never keys, even after a click, was launched inside an
+ORPHANED tmux server (its original terminal app had quit). From a
+fresh Ghostty tab the same binary types fine.

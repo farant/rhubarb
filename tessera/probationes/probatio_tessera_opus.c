@@ -81,7 +81,7 @@ principale (vacuum)
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
-            "\033[?2026h" "\033[?25l\033[2J\033[1;1H\033[0mab" "\033[?2026l");
+            "\033[?2026h" "\033[?25l\033[0m\033[2J\033[1;1H\033[0mab" "\033[?2026l");
     }
 
 
@@ -325,7 +325,44 @@ principale (vacuum)
         CREDO_VERUM (tessera_praesentare(opus));
         captum = tessera_pons_memoriae_captum(pm);
         CREDO_CHORDA_AEQUALIS_LITERIS (captum,
-            "\033[?2026h" "\033[?25l\033[2J\033[1;1H\033[0mr" "\033[?2026l");
+            "\033[?2026h" "\033[?25l\033[0m\033[2J\033[1;1H\033[0mr" "\033[?2026l");
+    }
+
+
+    /* ========================================================
+     * PROBARE: calamus nativus ANTE 2J - quadrum fundo colorato
+     * finitur; pictura plena (renovatio) 2J calamo relicto pingeret
+     * (BCE: xterm, Ghostty) dum cellulas vacuas praeterit. Reditus
+     * aemulatoris (aemulator-plan A3) invenit.
+     * ======================================================== */
+
+    {
+        chorda captum;
+           i32 k;
+           b32 inventum;
+
+        imprimere("\n--- Probans calamum nativum ante 2J ---\n");
+
+        tessera_pons_memoriae_purgare(pm);
+        tessera_purgare(opus, _nativus());
+        tessera_scribere_literis(opus, ZEPHYRUM, ZEPHYRUM, "q",
+            tessera_stilus(0xFFFFFF, 0xFF0000, ZEPHYRUM));
+        CREDO_VERUM (tessera_praesentare(opus));
+        tessera_pons_memoriae_purgare(pm);
+        tessera_pons_memoriae_amplitudo(pm, IV, II);
+        CREDO_VERUM (tessera_magnitudinem_renovare(opus));
+        CREDO_VERUM (tessera_praesentare(opus));
+        captum    = tessera_pons_memoriae_captum(pm);
+        inventum  = FALSUM;
+        per (k = ZEPHYRUM; k + VIII <= captum.mensura; k++)
+        {
+            si (memcmp(captum.datum + k, "\033[0m\033[2J", VIII)
+                == ZEPHYRUM)
+            {
+                inventum = VERUM;
+            }
+        }
+        CREDO_VERUM (inventum);
     }
 
 

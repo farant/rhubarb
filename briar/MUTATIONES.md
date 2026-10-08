@@ -19,6 +19,95 @@ Leges chartae:
 
 ## inedita
 
+- corpus: glyphae_ductae v3 - litterae Graecae Latinis dissimiles,
+  numeri supra et infra scripti, radices, << >> (LXI nova); fons.c
+  Graeca Latinis similia in litteras Latinas vertit (antea TOFU).
+
+- corpus: SPATIA arboris (vicus-latera S2a-1) - `Componens.spatium`
+  (`componens_ponere_spatium`, `componens_spatium`,
+  `componens_invenire_in_spatio`), registra actionum et figurarum cum
+  spatio per introitum (`*_miscere_in_spatio`, `*_invenire_in_spatio`),
+  `Motus.spatium`; pingere et dispensator intra spatium resolvunt.
+  Spatium "" = mores priores. Structurae crevere (rebake).
+
+- corpus: `terminale` nova (applicatio terminalis super aemulator_hospes:
+  componens, figura visus, claves per codificator_terminalis, rotula ad
+  visum). Nota mandatum.h emendata: color RGBA mandati = pixelum
+  tabulae (color_ad_pixelum), non litteralis 0xRRGGBBAA - mores nulli
+  mutati.
+
+- corpus: imagines quadrorum (screenshots): `tabula_pixelorum_in_imaginem`
+  (tabula_pixelorum.h nunc imago_typus.h includit) et
+  `ludus_fenestra_imaginem_scribere` (quadrum ultimum in PNG; etiam sine
+  fenestra in tabula nuda); applicationes pictor/scriba/vicus optionem
+  `-imago <via>` accipiunt.
+
+- corpus: `aemulator_hospes` nova (hospes emulatoris, aemulator-plan
+  B4): nucleus + pseudoterminale + pulsus - effusio infantis in
+  nucleum, responsa et initus per caudam (pars responsis reservata),
+  magnitudo ad ambos, campana/titulus ad vocantem. Purus.
+
+- corpus: `pseudoterminale` nova (infans in pseudo-terminali,
+  aemulator-plan B3): tabula functionum `Pseudoterminale` (legere,
+  scribere numquam obstans, amplitudo, finitus, fossa, claudere),
+  pons posix (openpty, sessio nova, terminale regens, ambitus, exec
+  fractum distinctum ab exitu 127) et pons memoriae (sutura
+  probationum).
+
+- corpus: `aemulator` nova (nucleus emulatoris terminalis, aemulator-plan
+  A1) - octeti programmatis intrant, schirmum exit: cellulae (UTF-8,
+  latitudo angusta/lata/cauda/caput, stilus), cursor cum involutione
+  pendente, impressio per runae, CR LF BS HT BEL, mutatio magnitudinis
+  (capacitas geometrica), effusio plana ut Ghostty plainString; A2:
+  CUP et motus relativi, ED/EL (fundus calami servatur), SGR cum stilis
+  internatis (collectio), DECTCEM, 1049, 2026, DECSC/DECRC; B1: regio
+  volutionis (DECSTBM) et IND RI NEL SU SD in ea, IL DL ICH DCH ECH,
+  sistae tabulationis (HT HTS TBC CHT CBT), LNM; B2: responsa (DA1,
+  DA2, DA3, DSR 5, CPR, XTVERSION) per effectum `responsum`, tituli
+  OSC 0/2 per effectum `titulus`; `AemulatorConfiguratio` campos
+  `titulus` et `versio` accipit (identitas XTVERSION;
+  `AEMULATOR_VERSIO`); B4b: DECSTR, `CSI 18 t`, DECRQCRA sub campo
+  novo `lectio_schirmi` (ordinarie FALSUM); C: historia (campus
+  `historia_octeti`, ordinarie X MB, paginae cum stilis propriis) et
+  visus (`aemulator_historia`, `aemulator_visus`,
+  `aemulator_visum_movere`, `aemulator_visus_cellula`,
+  `aemulator_visus_involuta`, `aemulator_visum_effundere`,
+  `aemulator_historiam_effundere`); hospes:
+  `aemulator_hospes_visum_movere`, initus acceptus visum ad imum
+  reducit; D1: HPR/VPR, REP, SCOSC/SCORC, modi 47/1047/1048, DECALN,
+  RIS; D2: modi in tabula (DECRQM), DECOM, IRM, involutio retro
+  45/1045, ESC = / ESC >, `aemulator_modi` (AemulatorModi, AemulatorMus,
+  AemulatorMusForma) pro hospite; D3: copiae characterum (G0-G3, SO/SI,
+  SS2/SS3, DEC Special Graphics). series_terminalis: octeti alti post
+  ESC N|O non iam pereunt (FUGA); codificator_terminalis (D6a):
+  CodificatorModi mus_forma (X10/UTF-8/urxvt/SGR-pixela; 0 = SGR),
+  sagittae_applicationis (DECCKM), lnm, CODIFICATOR_MUS_X10; D6b:
+  AemulatorModi.rotula_sagittis (?1007), terminale_titulus,
+  TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
+  focum, colores honorat; vicus-latera S1a: TerminaleApplicatio.ramus
+  (superficies ex ramo); S1b: terminale_montare, terminale_componere
+  publica; S1c: ludus_fenestra/ludus_tessera pulsus et pingendum,
+  vicus_pulsare (VicusPulsus, VicusFacies.pulsare/vivit_in_fundo,
+  VicusTabula.finita), terminale_ambitus, terminale genus vici
+  (tabula t1 ordinaria); D7c: AemulatorModi.schirmus_inversus
+  (DECSCNM ?5; terminale colores nativos permutat), terminale
+  ornamenta (sublineae V, transfixa, superlinea, crassum fictum;
+  TerminaleApplicatio.ornamenta_pixelorum; lineae capsarum, quadra,
+  braille per glyphae_ductae, contrastus non in graphicis), DECCOLM
+  minimum (sub ?40 delet,
+  regionem et cursorem restituit, latitudo manet); D7a: DECXCPR, DECDSR, DECID, DECRQSS,
+  acervus titulorum, DECSCUSR servatus; codificator legacy Ctrl-[/I/M
+  = C0; D6c: fenestra_macos focum/defocum et
+  glutinum (Cmd-V) ut eventa; codificator kitty: shift consumptus ->
+  textus planus; D4: acervus
+  vexillorum clavium kitty
+  per schirmum (CSI ? > < = u), AemulatorModi.kitty_vexilla; D5:
+  tabula colorum viva (OSC 4/10/11/12, 104/110-112), configuratio
+  color_litterae/fundi/cursoris + tabula_colorum, aemulator_color.
+  series_terminalis: lexema OSC terminatorem in 'finale' fert. Series
+  ceterae
+  consumuntur et numerantur. PURUS: nulla I/O, nullum tempus.
+
 - corpus: caput `eventus.h` novum - vocabularium initus commune ex
   fenestra.h divisum (fenestra.h id includit), sine iactura auctum:
   codex physicus W3C (`EventusCodex`), runa logica, actio

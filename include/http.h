@@ -153,9 +153,10 @@ http_petitio_caput_addere (
     constans character* valor);
 
 /* Ponere tempus receptionis/connexionis (millisecunda; 0 = defaltum
- * XXX secundorum). Semita http plana sola (v1) - TLS tempus suum
- * internum servat. Tempore icto http_exsequi HTTP_ERROR_TIMEOUT
- * reddit, corpore partiali consulto abiecto. */
+ * XXX secundorum). Valet in semita plana ET https (vates-plan-1 T2:
+ * olim https ordinarium tls XXX s semper habebat). Tempore icto
+ * http_exsequi HTTP_ERROR_TIMEOUT reddit, corpore partiali consulto
+ * abiecto. */
 vacuum
 http_petitio_tempus_ponere (
     HttpPetitio* petitio,
@@ -204,6 +205,52 @@ http_exsequi_cum_redirectionibus (
     HttpPetitio* petitio,
         Piscina* piscina,
             i32  max_redirectiones);
+
+
+/* ========================================================================
+ * VECTURA - sutura transportus (herbarium-spec par. V)
+ *
+ * Functio quae petitionem exsequitur + datum eius. Ordinaria =
+ * http_exsequi. Involucra (herbarium) vecturam interiorem in datum
+ * tenent; probationes vecturam scriptam inserunt.
+ * ======================================================================== */
+
+nomen structura {
+    HttpResultus (*exsequi)(HttpPetitio* petitio, Piscina* piscina,
+                            vacuum* datum);
+    vacuum* datum;
+} HttpVectura;
+
+/* Vectura ordinaria: http_exsequi, datum NIHIL. */
+HttpVectura
+http_vectura_ordinaria (vacuum);
+
+/* Exsequi per vecturam. exsequi NIHIL -> HTTP_ERROR_CONNEXIO
+ * nominatus, numquam ruina. */
+HttpResultus
+http_vectura_exsequi (
+    HttpVectura  vectura,
+    HttpPetitio* petitio,
+        Piscina* piscina);
+
+/* Visus lectionis petitionis - petitio opaca manet. Campi ut dati
+ * sunt; capita in petitione ipsa iacent (non mutanda). NIHIL ->
+ * visus vacuus (capita NIHIL, numeri 0). */
+nomen structura {
+          HttpMethodus  methodus;
+                chorda  schema;
+                chorda  hospes;
+                   i32  portus;
+                chorda  via;
+                chorda  corpus;
+    constans HttpCaput* capita;
+                   i32  capita_numerus;
+           MoraAngusta  tempus_ms;
+} HttpPetitioVisus;
+
+HttpPetitioVisus
+http_petitio_visus (
+    constans HttpPetitio* petitio);
 
 
 /* ========================================================================

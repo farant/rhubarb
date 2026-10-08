@@ -8,9 +8,33 @@
  * Registrum
  * ================================================== */
 
+interior chorda
+chorda_vacua_figurae (vacuum)
+{
+    chorda c;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    redde c;
+}
+
+/* spatia vacua aequalia sine memcmp (datum NIHIL) */
+interior b32
+spatia_aequalia (
+    chorda a,
+    chorda b)
+{
+    si (a.mensura == ZEPHYRUM && b.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde chorda_aequalis(a, b);
+}
+
 interior FiguraIntroitus*
 introitus_invenire (
     constans FiguraRegistrum* reg,
+                      chorda  spatium,
                       Partes  partes,
                          i32  thema)
 {
@@ -22,7 +46,8 @@ introitus_invenire (
     per (i = ZEPHYRUM; i < n; i++)
     {
         f = (FiguraIntroitus*)xar_obtinere(reg->introitus, i);
-        si (f->partes == partes && f->thema == thema)
+        si (   f->partes == partes && f->thema == thema
+            && spatia_aequalia(f->spatium, spatium))
         {
             redde f;
         }
@@ -66,15 +91,16 @@ figura_registrare (
     {
         redde FALSUM;
     }
-    si (introitus_invenire(reg, partes, thema))
+    si (introitus_invenire(reg, chorda_vacua_figurae(), partes, thema))
     {
         redde FALSUM;
     }
-    f          = (FiguraIntroitus*)xar_addere(reg->introitus);
-    f->partes  = partes;
-    f->thema   = thema;
-    f->fn      = fn;
-    f->ctx     = ctx;
+    f           = (FiguraIntroitus*)xar_addere(reg->introitus);
+    f->partes   = partes;
+    f->thema    = thema;
+    f->fn       = fn;
+    f->ctx      = ctx;
+    f->spatium  = chorda_vacua_figurae();
     redde VERUM;
 }
 
@@ -89,15 +115,18 @@ figura_registrum_vacare (
     xar_vacare(reg->introitus);
 }
 
-b32
-figura_registrum_miscere (
+/* spatium NIHIL = spatium cuiusque introitus servatur */
+interior b32
+miscere (
              FiguraRegistrum* reg,
-    constans FiguraRegistrum* fons)
+    constans FiguraRegistrum* fons,
+             constans chorda* spatium)
 {
-    FiguraIntroitus* f;
-    FiguraIntroitus* novus;
-                i32  i;
-                i32  k;
+     FiguraIntroitus* f;
+     FiguraIntroitus* novus;
+              chorda  s;
+                 i32  i;
+                 i32  k;
 
     si (!reg || !fons)
     {
@@ -107,22 +136,58 @@ figura_registrum_miscere (
     per (i = ZEPHYRUM; i < k; i++)
     {
         f = (FiguraIntroitus*)xar_obtinere(fons->introitus, i);
-        si (introitus_invenire(reg, f->partes, f->thema))
+        s = spatium ? *spatium : f->spatium;
+        si (introitus_invenire(reg, s, f->partes, f->thema))
         {
             redde FALSUM;
         }
     }
     per (i = ZEPHYRUM; i < k; i++)
     {
+        f       = (FiguraIntroitus*)xar_obtinere(fons->introitus, i);
         novus   = (FiguraIntroitus*)xar_addere(reg->introitus);
-        *novus  = *(FiguraIntroitus*)xar_obtinere(fons->introitus, i);
+        *novus  = *f;
+        si (spatium)
+        {
+            novus->spatium = *spatium;
+        }
     }
     redde VERUM;
 }
 
 b32
+figura_registrum_miscere (
+             FiguraRegistrum* reg,
+    constans FiguraRegistrum* fons)
+{
+    redde miscere(reg, fons, NIHIL);
+}
+
+b32
+figura_registrum_miscere_in_spatio (
+             FiguraRegistrum* reg,
+    constans FiguraRegistrum* fons,
+                      chorda  spatium)
+{
+    redde miscere(reg, fons, &spatium);
+}
+
+b32
 figura_invenire (
     constans FiguraRegistrum*  reg,
+                      Partes   partes,
+                         i32   thema,
+                    FiguraFn*  fn_ex,
+                      vacuum** ctx_ex)
+{
+    redde figura_invenire_in_spatio(reg, chorda_vacua_figurae(), partes,
+        thema, fn_ex, ctx_ex);
+}
+
+b32
+figura_invenire_in_spatio (
+    constans FiguraRegistrum*  reg,
+                      chorda   spatium,
                       Partes   partes,
                          i32   thema,
                     FiguraFn*  fn_ex,
@@ -134,7 +199,7 @@ figura_invenire (
     {
         redde FALSUM;
     }
-    f = introitus_invenire(reg, partes, thema);
+    f = introitus_invenire(reg, spatium, partes, thema);
     si (!f)
     {
         redde FALSUM;
@@ -150,13 +215,15 @@ figura_invenire (
  * ================================================== */
 
 /* Coetus per componens; figura ante liberos (parens sub liberis
- * pingitur = ordo z). */
+ * pingitur = ordo z). Spatium parentis descendit nisi componens suum
+ * aperit (S2a). */
 interior vacuum
 pingere_nodum (
           constans Componens* c,
     constans FiguraRegistrum* reg,
                          i32  thema,
-                     Mandata* m)
+                     Mandata* m,
+                      chorda  spatium)
 {
     FiguraFn  fn;
       vacuum* ctx;
@@ -164,17 +231,22 @@ pingere_nodum (
          i32  i;
          i32  n;
 
+    si (!chorda_vacua(c->spatium))
+    {
+        spatium = c->spatium;
+    }
     coetus = mandata_coetus_incipere(m, c->fines, c->sectio,
                                      c->translatio.x, c->translatio.y,
                                      c->scala, c->id);
-    si (figura_invenire(reg, c->partes, thema, &fn, &ctx))
+    si (figura_invenire_in_spatio(reg, spatium, c->partes, thema, &fn,
+            &ctx))
     {
         fn(c, m, thema, ctx);
     }
     n = componens_numerus_liberorum(c);
     per (i = ZEPHYRUM; i < n; i++)
     {
-        pingere_nodum(componens_liberum(c, i), reg, thema, m);
+        pingere_nodum(componens_liberum(c, i), reg, thema, m, spatium);
     }
     mandata_coetus_finire(m, coetus);
 }
@@ -191,7 +263,7 @@ pingere (
     {
         redde;
     }
-    pingere_nodum(radix, reg, thema, m);
+    pingere_nodum(radix, reg, thema, m, componens_spatium(radix));
 }
 
 /* <purus/> */

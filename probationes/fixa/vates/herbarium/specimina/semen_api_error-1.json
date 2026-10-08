@@ -1,0 +1,19 @@
+{
+  "clavis": "500:api_error:Internal server error",
+  "causa": "status",
+  "status": 500,
+  "capita": [
+    {
+      "titulus": "content-type",
+      "valor": "application/json"
+    }
+  ],
+  "corpus": "{\"type\":\"error\",\"error\":{\"type\":\"api_error\",\"message\":\"Internal server error\"}}",
+  "primum_visum": "2026-10-08T00:00:00Z",
+  "methodus": "POST",
+  "hospes": "api.anthropic.com",
+  "via": "/v1/messages",
+  "summarium": {
+    "model": "claude-sonnet-5-5"
+  }
+}

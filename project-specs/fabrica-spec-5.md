@@ -388,3 +388,187 @@ Of the 86 voids over 150, 75 are genuine closure inputs (headers of the
 math tier, tessera.h, runae.h, fabrica.h ...), 11 house-binary
 provenance (`aedilis.stml` through bin/natura_glossae - …57Y). The
 ceiling estimate (~45%) holds: aedilis reads nearly all of include/.
+
+**T6/T7 re-plan (2026-10-07).** The fabrica gate runs
+`tools/generata_probare.sh` inside itself: 73 of its 78 unresolved key
+sites are generata's (amalgama_fontes_generare.sh 21,
+amalgama_excludenda_generare.sh 15 - argv parsed by `for arg in "$@";
+case` that effectus does not carry loop values through). Fran: T7
+first; then, given the oracle's record (34/34 consensus since 10-02,
+fabrica judging 98 artifacts generata never saw), generata RETIRES into
+fabrica (spec 1a Q15: oracle, then deletion) and the oracle with it.
+
+**T7a (2026-10-07): the swap.** `tools/generata_iudicare.sh` runs
+`bin/fabrica iudicare -plenus -omnia`, keeps the COMMITTED artifacts
+(git ls-files; build/, bin/, ~/.bin counted only, as
+`_fabricam_exigere` does) and names every non-RECENS one; nothing
+judged = FRACTA (a gate that judges nothing is dead, not green). 135
+committed artifacts in ~25 s (generata: 51 in 2-6 min); generata's 51
+are a subset. Plants, side by side on one tree (latina.h number block,
+runae tables, silva amalgam, a fragmentum, silva's amalgamator
+manifest, the lexicon header, the entities table, crusta's cooked
+registry): the new gate named all 8 plus the artifacts that embed them
+(silva_latina_datum.c, officina and tessera amalgams) and tessera's
+excludenda generator broken by the latina.h plant (IGNOTUM, named);
+generata named the same 7 it covers, not the registry, and reported
+the excludenda break as "manifestum amalgamatoris tessera" - the new
+gate names the right artifact. Debts: the gate is owed when the judge
+or the declarations change (runner, tools/fabrica.c closure,
+aedificatio/fabrica stml and canons - inventory row swapped); per-input
+debts belong to commissio's `iudicare -plenus -tacta VIAE` phase, which
+already blocks every commit on touched committed artifacts (reach
+checked: a parser source -> silva tables + amalgam; runae.h -> runae
+tables + amalgams; a grammar -> its cooked registry; a .genera -> the
+natura canons). The oracle no longer reads generata's receipt (it would
+now be the new gate's output - an empty comparison, a false
+consensus); it runs generata_probare.sh itself until T7b.
+
+**T7b (2026-10-07): the oracle retires.** `fabrica` left PORTAE and the
+inventory (row removed with cause); with generata judged by fabrica
+there is no second judge to compare. The one property the oracle had
+beyond agreement - a generated artifact whose declaration disappears is
+named, not silently unjudged - now lives in generata_iudicare.sh and is
+wider than before: every COMMITTED file with `GENERATUM` on line 1 must
+be among fabrica's judged artifacts, else `GENERATUM sine iudicio`
+(gate red). Today 87 such files; 6 unjudged, all in three named
+classes excluded with their cause: fixtures (`probationes/fixa/`:
+frozen copies carrying their source's header), knotapel's frozen demo
+snapshots, the ledger projection gesta/annales/tabula.md. Plant: the
+entitates_html declaration deleted -> `GENERATUM sine iudicio:
+lib/entitates_html_tabula.c`, FRACTA. The gate costs ~16-25 s; the
+retired pair cost generata 133 s + oracle 150-180 s per commit that
+owed them.
+
+**T7c (2026-10-07):** tools/generata_probare.sh and
+tools/fabrica_oraculum.sh deleted (0d652faa); comments, the tools page
+and memory follow; park …GTQHQ (generata 381 s) closed - 16-18 s
+measured in three commits.
+
+**T8 (2026-10-07): oratio measured, not migrated** (Fran). The runner
+writes `git ls-files` lists of every tracked `*.md` (the prose corpus)
+and `*.c`/`*.h` (the identifier lint) and renews the house-wide nexus
+index before its tests; seven of its nineteen tests read those. An
+honest key is therefore nearly the whole repository: only 3 of the last
+150 first-parent commits touched no .c/.h/.m/.md file - a reuse ceiling
+of 2%. Where its 96.6 s go (mensor, 96ebd536): probatio_oratio_oraculum
+44.0 s, _stml 26.7 s (reads the md corpus), _canon 7.2 s, _vocabula
+3.9 s, the other fifteen ~15 s. The oracle test reads its own fixtures,
+not the corpus, but through raw `fopen` (oratio's tests are outside the
+lectiones lint): carving it out as its own verdict = desideratum
+…BPRSBB (channel first, as T5a). The gate stays crude.
+
+**T9 (2026-10-07): where pythonica's time goes.** `pythonica/profilare.py`
+(new, rerunnable) runs probatio_silva.py under cProfile and wraps
+`subprocess.Popen` to time every child with its calling test line and
+nearest silva.py function. One run: 421.8 s, 1076 children whose wall
+time sums to 351 s - the suite is a driver of other programs, not
+Python work.
+
+| where | s | what |
+|---|---:|---|
+| `photographia_materializare` (9 calls) | 137.6 | `_clonare_ignorata` 102.5 (46 `cp -c -R` per snapshot - clonefile per FILE), git clone + read-tree ~13 |
+| `photographia_delere` (10) | 52.9 | `shutil.rmtree`: 719,611 unlinks |
+| bin/aedilis via `_clausurae` (24) | 63.4 | the same all-suite closures in five portae-debitae tests (~12 s each) |
+| `portae_debitae.sh` live (1) | 22.8 | the same closures again |
+| `exspectare` sleep (15) | 30.1 | polling shadow-gate workers every 2 s |
+| `extenta` / `_porta_cruda` / `formare` / `examen` / `differre` | 25.4 / 20.5 / 11.2 / 9.9 / 8.8 | tests of those tools - inherent |
+| git (331 children) | 37.9 | `sigillum_arboris` 210 calls 5.1, snapshots, the rest scattered |
+
+Candidates (desiderata, not this slice's work - plan "not in this
+plan"): clonefile(2) on whole directories in C (…6RME, ~100 s);
+closures once per tree state through a batch aedilis mode (…4WYGT,
+~85 s); asynchronous snapshot deletion and pid-based waiting in Python
+(…JFQ99, ~65 s). Together ~250 of 422 s. T10/T11 (the ledger and the
+verdict) proceed independently: a reused pythonica verdict costs none of
+it.
+
+**T10 (2026-10-07): the Python read ledger.** `pythonica/lectiones.py`
+writes the same ledger as lib/lectiones.c, same line forms, same file
+(`FABRICA_LECTIONES`, re-read on every note), `/dev/` skipped, paths as
+given. `instituere()` once (an audit hook cannot be removed - tests set
+it in a CHILD process):
+- audit hook: `open` -> L or A for reads (existence through the REAL
+  stat, since the hook runs before the open), S for writes; `os.listdir`
+  and `os.scandir` -> D;
+- wrappers for what CPython does not audit: `os.stat` and `os.lstat`
+  (X or A) - the os.path family (exists, isfile, isdir, getmtime) looks
+  `os.stat` up at call time and is covered; `os.environ` becomes a dict
+  subclass that notes E on explicit lookups (get, [], in) and mirrors
+  writes into the real environ (putenv).
+A whole copy of the environment (`dict(os.environ)`, `.copy()`) notes
+NOTHING, as C's environ is never noted: the subclass leaves `__iter__`
+and `keys` alone, so CPython copies it by its fast path without
+`__getitem__`. Otherwise every `env=dict(os.environ, ...)` in silva.py
+would key the verdict on TERM_SESSION_ID and friends. Test (pythonica,
+child process): eleven assertions over every channel plus `/dev/` and
+the copy. Plants: open ignored -> the three open assertions red; stat
+wrapper off -> the two stat ones; environ off -> the two E ones;
+`__iter__`/`keys` overridden on the subclass -> the copy assertion red.
+Not yet wired into the gate: T11.
+
+**T11 (2026-10-07): pythonica measured, not migrated.** One full run
+with the Python ledger installed (C children note through the same
+variable): 3,748,973 lines - 3.2 M absent header probes by bin/aedilis
+in the closure tests, 73 k L and 355 k X in the tree, 41 k D under
+`~/.rhubarb/umbrae` (the snapshots' own clones: declarable scratch).
+The blocker is the live repository: `.git/HEAD`, `.git/index` and the
+HEAD commit object are read (snapshots are clones of the live repo at
+HEAD; `sigillum_arboris` runs git 210 times) - an honest key changes
+with every commit, so the reuse ceiling is 0%. Recorded, not migrated;
+desideratum …M651F: the commit-machinery tests against a
+FIXED repository (git init in build/, fictitious commits), the snapshot
+area declared - then re-estimate. The 43 spawned scripts (formator,
+extenta, examen, differre, frigida, diagnostica, test-written fakes)
+would also need effectus chains; moot until the repository isolation.
+Found on the way and fixed: bytes-keyed lookups (`os.get_exec_path`
+asks for `b'PATH'`) were noted as `E	b'PATH'`; titles are decoded now
+(pythonica assertion added; red before the fix). The copy assertion now
+watches a dedicated variable (LECTIONES_PROBATIO_COPIA), since
+get_exec_path legitimately notes PATH.
+
+## XI. Results (T12, 2026-10-07)
+
+**radix: recorded "never", for now.** No stored trace; estimated with
+the aedilis verdict's trace (the same root tests) plus radix's own
+subtrees (`compile_libraries` builds every lib/*.c: arbor lib/, arbor
+probationes/, the runner, compile_tests_fontes_generata.sh,
+tools/cursor_communis.sh, vendor/): reused 16/40 (40%), 36/150 (24%);
+voiders lib/ and the generated source list (20 each). An upper bound
+twice over: the runner's effectus key has 87 unresolved sites
+(IGNOTUM until resolved), and radix RUNS probatio_git, which reads the
+live HEAD (the aedilis gate skips running it because radix does) - an
+honest radix key changes with every commit: ceiling 0% until …F654M
+(fixture repository). Not migrated.
+
+**Per gate** (tempora.tsv, 110 commits 2026-10-02 - 10-07, before
+these changes; reuse from `tools/reusus_retro.sh` over 150 commits):
+
+| gate | runs | mean s | after slice 5 | saved in the window |
+|---|---:|---:|---|---:|
+| fabrica (oracle) | 34 | 178 | retired (T7b): generata judges through fabrica | ~6060 s |
+| generata | 17 | 117 | `bin/fabrica` judge, ~17 s (T7a), no verdict needed | ~1700 s |
+| aedilis | 28 | 163 | verdict, reuse 42% (T5b) | ~1900 s |
+| toml | 67 | 41 | verdict, reuse 68% -> 78% (T2-T4) | ~2100 s* |
+| oratio | 17 | 100 | not migrated: corpus gate, ceiling 2% (T8) | - |
+| pythonica | 24 | 369 | not migrated: live repo in key, ceiling 0% (T11) | - |
+| radix | 32 | 74 | not migrated: ceiling 0% (probatio_git) | - |
+
+\* at the measured 78%; the pilot already reused at 24% before.
+Roughly 3.2 of the window's 7.7 gate-hours (§0) would not have run -
+about 40%, most of it from retiring the generata/oracle pair rather
+than from verdict reuse.
+
+**Against §VIII.** toml measured before/after: done. aedilis migrated
+with plants and three audits: done. fabrica and generata: not migrated
+but RETIRED into fabrica's own judgment (Fran, re-plan T6/T7) - the
+gate count fell by one. oratio: measured, not migrated (Fran, T8).
+pythonica: read ledger built (T10); migration has a named blocker - the
+live repository in the key (…M651F). Per-gate table: above. Park and
+desideratum: see the ledger at T12.
+
+**What the slice taught.** Reuse is capped by the widest honest input,
+not by the tool: a gate that reads the live repository, the whole
+corpus, or every lib/*.c cannot be reused however precise the trace.
+Where a second judge duplicated a first, retiring it saved more than any
+verdict. And a gate run under the before/after photograph is the
+sharpest test-hygiene audit the house has (T5b's seven gaps).

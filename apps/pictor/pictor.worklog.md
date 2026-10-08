@@ -67,3 +67,29 @@ figura filling `COLOR_SUPERFICIES` (the desk); the page gets a 1-px
 `COLOR_BORDER` frame just outside it, so a resize is visible as the desk
 growing and shrinking around a fixed page. Building it exposed the
 negative-origin bug in delineare_mandata (fixed separately, 52bee5bf).
+
+## 2026-10-06 — open: the canvas starts with its top-left off-screen
+
+Seen in the first frame screenshots (`-imago`, headless and real window
+byte-identical): the visible yellow is exactly the bottom-right quarter
+of a 640x400 canvas, as if the canvas CENTRE sat at the view's origin.
+The prospectus pan starts at (0, 0) (pictor_componentia.c:216,
+componens_ponere_transformatio just stores it), so the offset comes
+from elsewhere - initial zoom, the canvas figure's drawing, or the
+prospectus clip. Not chased (time-boxed; Fran: "if you want to look...
+or we can just go ahead with E"). Repro: `./apps/pictor/pictor.sh
+-fumus -imago /tmp/p.png`, then look.
+
+## 2026-10-07 — open: probatio_pictor_actiones crashes INTERMITTENTLY
+
+During the secunda <- main merge (fabrica-5 etc.), the aedilis gate
+failed twice in a row: `FRACTA (cursus): probatio_pictor_actiones`,
+Segmentation fault (exit 139). Since then 0 crashes in 70 direct runs
+(plain aedilis build, --thesaurus build, the gate-built binary) and the
+third full gate run was green (237). The root runner never failed it.
+The test is unchanged since 639ca942 (insula rami R3). The shape fits
+uninitialised memory whose garbage depends on layout/history (cf. R3:
+"contexts holding an InsulaRamus must be ZEROED"). Needs a reproduction
+first: e.g. run it under the gate's exact sequence, or with
+MallocScribble / -fsanitize=memory-like tooling. A crashed run leaves
+/tmp/probatio_pictor_actiones-N.volumen behind (the leak signal).

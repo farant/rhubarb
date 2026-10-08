@@ -110,3 +110,51 @@ causa truncationis futura numquam successum mendacem gignat:
 Plantae omnes rubrae (Content-Length, completa, custos involutionis).
 Nondum factum, notatum: HTTPS tempus petitionis (petitio->tempus_ms)
 ignorat - tls_connectere optiones defaltas (XXX s) semper accipit.
+
+## 2026-10-07 - fumus retis (vates-plan-1 T1): what the real network says
+
+New hand-run probe `tools/rete_fumus.sh` (NOT a gate: needs the network,
+and `-anthropic` needs `~/.rhubarb/anthropic.clavis`). Results against
+the unmodified stack (SecureTransport via `lib/tls_macos.m`):
+
+| probe | result |
+|---|---|
+| howsmyssl.com/a/check | TLS 1.2 negotiated; rating **Bad**: offers `TLS_ECDHE_{ECDSA,RSA}_WITH_3DES_EDE_CBC_SHA` |
+| expired / wrong.host / self-signed / untrusted-root .badssl.com | all refused (good) |
+| tls-v1-0.badssl.com:1010, tls-v1-1.badssl.com:1011 | **ACCEPTED** (bad) |
+| tls-v1-2.badssl.com:1012 | accepted |
+| httpbin /delay/5 with 20 s | succeeds (control) |
+| httpbin /delay/10 with **3 s** | **succeeds** - the caller's timeout never reaches TLS on https (`http.c:801` calls `tls_connectere` with defaults = 30 s, `tls_macos.m:190`) |
+| api.anthropic.com GET /v1/models | 200, 14 models; key read in-process, absent from all output (checked by grep) |
+
+Consequences: T1b (tls hardening: min TLS 1.2 + modern cipher allowlist)
+and T2 (timeout reaches TLS; `HttpVectura`; `http_petitio_visus`).
+httpbin caps `/delay/n` at 10 s, so the timeout bug is staged with a
+SHORT timeout ignored, not a long call killed - same plumbing.
+
+## 2026-10-07 - caller's timeout on https, HttpVectura, http_petitio_visus (vates-plan-1 T2)
+
+**Timeout on https (the gap noted above as "Nondum factum").** The https
+branch of `http_exsequi` now builds `TlsOptiones` from
+`tls_optiones_default()` and, when `tempus_ms > 0`, passes the caller's
+value to `tls_connectere_cum_optionibus`. Proven LIVE only:
+`./tools/rete_fumus.sh -mora` - `/delay/10` with 3 s: before = succeeded
+(timeout ignored), after = `Timeout` at ~3 s; `/delay/5` with 20 s
+succeeds both ways (control). Plant (assignment removed) -> FRACT again.
+The OFFLINE suite cannot see this plant (no local TLS server): it stays
+green - recorded on purpose so nobody believes probatio_http covers it.
+
+**`HttpVectura`** `{exsequi(petitio, piscina, datum), datum}` +
+`http_vectura_ordinaria()` (= `http_exsequi`) + `http_vectura_exsequi()`
+(exsequi NIHIL -> named HTTP_ERROR_CONNEXIO, never a crash). The seam
+herbarium wraps and vates sends through (herbarium-spec par. V).
+
+**`http_petitio_visus`** - read-only view of the opaque request (method,
+url parts, body, header array + count, tempus_ms); NIHIL -> empty view.
+
+Tests (probatio_http, +21 assertions): every visus field of a non-trivial
+request (explicit port 8443, query string, body, two headers, 600 s);
+vectura ordinaria against the local fixture, a scripted vectura (datum
+reaches it, its response is returned), a vectura without function.
+Plants: ordinaria without function -> red at :982; visus without portus
+-> red at :927.

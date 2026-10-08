@@ -17,6 +17,7 @@
 #include "credo.h"
 #include "processus.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* chordam ut litterae NUL-terminatas in piscina (pro strstr/strcmp) */
@@ -625,6 +626,104 @@ s32 principale (vacuum)
         CREDO_FALSUM (r.successus);
         CREDO_VERUM (r.error == PROCESSUS_ERROR_TEMPUS);
         CREDO_VERUM (r.mora_ms < 2500);
+    }
+
+    /* XXII. OPTIONES (fabrica-6 T6): directorium infantis */
+    {
+         constans character* argumenta[II];
+          ProcessusOptiones  optiones;
+          ProcessusResultus  r;
+
+        imprimere("\n--- XXII. directorium infantis ---\n");
+        argumenta[0] = "/bin/pwd";
+        argumenta[I] = NIHIL;
+        optiones.directorium = "/usr/bin";
+        optiones.ambitus = NIHIL;
+        r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (strcmp(_litterae_ex(piscina, r.effusio),
+            "/usr/bin\n") == ZEPHYRUM);
+    }
+
+    /* XXIII. ambitus EXACTUS: nihil hereditatur, parens intactus */
+    {
+         constans character* argumenta[II];
+         constans character* ambitus[III];
+          ProcessusOptiones  optiones;
+          ProcessusResultus  r;
+
+        imprimere("\n--- XXIII. ambitus exactus ---\n");
+        argumenta[0] = "/usr/bin/env";
+        argumenta[I] = NIHIL;
+        ambitus[0] = "A=1";
+        ambitus[I] = "PATH=/usr/bin:/bin";
+        ambitus[II] = NIHIL;
+        optiones.directorium = NIHIL;
+        optiones.ambitus = ambitus;
+        r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (strcmp(_litterae_ex(piscina, r.effusio),
+            "A=1\nPATH=/usr/bin:/bin\n") == ZEPHYRUM);
+        CREDO_NON_NIHIL (getenv("PATH"));
+        CREDO_NIHIL (getenv("A"));
+    }
+
+    /* XXIV. quaestio PATH per ambitum datum */
+    {
+         constans character* argumenta[II];
+         constans character* ambitus[II];
+          ProcessusOptiones  optiones;
+          ProcessusResultus  r;
+
+        imprimere("\n--- XXIV. PATH ambitus dati ---\n");
+        argumenta[0] = "env";
+        argumenta[I] = NIHIL;
+        ambitus[0] = "PATH=/usr/bin";
+        ambitus[I] = NIHIL;
+        optiones.directorium = NIHIL;
+        optiones.ambitus = ambitus;
+        r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (strcmp(_litterae_ex(piscina, r.effusio),
+            "PATH=/usr/bin\n") == ZEPHYRUM);
+        ambitus[0] = "PATH=/nusquam_directorium";
+        r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
+        CREDO_FALSUM (r.successus);
+        CREDO_VERUM (r.error == PROCESSUS_ERROR_EXEC);
+    }
+
+    /* XXV. directorium absens: error EXEC nominatus, nihil cucurrit */
+    {
+         constans character* argumenta[II];
+          ProcessusOptiones  optiones;
+          ProcessusResultus  r;
+
+        imprimere("\n--- XXV. directorium absens ---\n");
+        argumenta[0] = "/bin/pwd";
+        argumenta[I] = NIHIL;
+        optiones.directorium = "/nusquam_directorium";
+        optiones.ambitus = NIHIL;
+        r = processus_exsequi_cum(argumenta, &optiones, 5000, piscina);
+        CREDO_FALSUM (r.successus);
+        CREDO_VERUM (r.error == PROCESSUS_ERROR_EXEC);
+        CREDO_VERUM (strstr(_litterae_ex(piscina, r.error_descriptio),
+            "No such file") != NIHIL);
+        CREDO_AEQUALIS_I32 (r.effusio.mensura, ZEPHYRUM);
+    }
+
+    /* XXVI. optiones NIHIL = processus_exsequi */
+    {
+        constans character* argumenta[III];
+         ProcessusResultus  r;
+
+        imprimere("\n--- XXVI. optiones NIHIL ---\n");
+        argumenta[0] = "/bin/echo";
+        argumenta[I] = "salve";
+        argumenta[II] = NIHIL;
+        r = processus_exsequi_cum(argumenta, NIHIL, 5000, piscina);
+        CREDO_VERUM (r.successus);
+        CREDO_VERUM (strcmp(_litterae_ex(piscina, r.effusio),
+            "salve\n") == ZEPHYRUM);
     }
 
     imprimere("\n");

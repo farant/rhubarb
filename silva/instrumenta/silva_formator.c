@@ -2183,7 +2183,7 @@ _corpus_interius_censere (
             si (   nodus
                 && nodus->genus == SILVA_C89_GENUS_DECLARATIO)
             {
-                SilvaValor  declaratores;
+                SilvaValor declaratores;
                 SilvaNodus* declarator;
 
                 declarator   = NIHIL;
@@ -3598,6 +3598,7 @@ interior vacuum
 _sententiam_intimam_invenire (
     Xar* sententiae,
     i32  linea,
+    i32  columna,
     i32* la_exitus,
     i32* ca_exitus)
 {
@@ -3614,7 +3615,13 @@ _sententiam_intimam_invenire (
         s = (constans ContinuatioSpatium*)xar_obtinere(
             sententiae, i);
         si (linea < s->la || linea > s->lb) perge;
-        si (s->la >= *la_exitus)
+        /* sententia quae in linea fracturae POST punctum fracturae
+         * incipit (corpus in 'si (...) redde;') eam non continet -
+         * olim vincebat (ultima cum la aequali) et continuationem ad
+         * 'redde' + IV trudebat (2026-10-08) */
+        si (s->la == linea && s->ca > columna) perge;
+        si (   s->la > *la_exitus
+            || (s->la == *la_exitus && s->ca >= *ca_exitus))
         {
             *la_exitus = s->la;
             *ca_exitus = s->ca;
@@ -3872,7 +3879,9 @@ _fracturas_censere (
          * quam operator lineam ducens (comparatio intra ramum
          * catenae ||) -> gradus interior (+ IV). Sine sententia
          * (parsura fracta, membra, tabulae) linea ipsa ancora. */
-        _sententiam_intimam_invenire(sententiae, linea, &la, &ca);
+        electum = _lexema(cruda, candidati[electus].index);
+        _sententiam_intimam_invenire(sententiae, linea,
+            electum->columna, &la, &ca);
         si (ca == (i32)ZEPHYRUM || la == linea)
         {
             si (ca == (i32)ZEPHYRUM) ca = columna_primi;
@@ -3887,7 +3896,6 @@ _fracturas_censere (
                 indentatio += IV;
             }
         }
-        electum = _lexema(cruda, candidati[electus].index);
         _emendationem_ponere(d, linea, electum->columna, linea,
             electum->columna + electum->valor.mensura,
             _textus_emendationis(piscina, I, indentatio), FALSUM);

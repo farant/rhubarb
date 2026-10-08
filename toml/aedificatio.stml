@@ -58,4 +58,21 @@
     <ingressus genus="fasciculus" via="toml/build/aurum_silvestre.txt"/>
     <exitus via="build/fabrica/verdicta/toml.txt" provenientia="verdictum"/>
   </actio>
+  <!-- GRADUS (fabrica-6 T8): eadem suita ut membra probationes_c -
+       quaeque probatio actio sua (clausura aedilis, thesaurus, area,
+       ambitus basis, vestigium suum). Porta toml (cursor supra) eius
+       ORACULUM est usque ad commutationem (T10): transitus et fracturae
+       per probationem congruere debent. Producentes per post (ordo, non
+       clavis): probatio quae indicem aut aurum legit per vestigium suum
+       clavatur. -->
+  <actio titulus="probationes_toml" genus="iudicium">
+    <probationes_c exemplar="toml/probationes/probatio_*.c"/>
+    <post actio="toml_corpus"/>
+    <post actio="toml_aurum_silvestre"/>
+    <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
+    <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <!-- oraculum: casus omnes / exemplum unum (manu) -->
+    <ambitus variabilis="ORACULUM_OMNIA"/>
+    <ambitus variabilis="ORACULUM_EXEMPLUM"/>
+  </actio>
 </aedificatio>

@@ -169,6 +169,36 @@ s32 principale(vacuum)
 
 
     /* ==================================================
+     * Graeca Latinis similes (2026-10-08): maiusculae quae litteris
+     * Latinis pinguntur, et omicron; ceterae (alpha, pi) TOFU manent -
+     * terminale eas per glyphae_ductae ducit
+     * ================================================== */
+
+    {
+        hic_manens constans s32 similes[][II] = {
+            { 0x0391, 'A' }, { 0x0392, 'B' }, { 0x0395, 'E' },
+            { 0x0396, 'Z' }, { 0x0397, 'H' }, { 0x0399, 'I' },
+            { 0x039A, 'K' }, { 0x039C, 'M' }, { 0x039D, 'N' },
+            { 0x039F, 'O' }, { 0x03A1, 'P' }, { 0x03A4, 'T' },
+            { 0x03A5, 'Y' }, { 0x03A7, 'X' }, { 0x03BF, 'o' } };
+        i32 k;
+
+        imprimere("\n--- Probans Graeca Latinis similia ---\n");
+        per (k = ZEPHYRUM; k < (i32)(magnitudo(similes)
+                / magnitudo(similes[ZEPHYRUM])); k++)
+        {
+            CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(
+                similes[k][ZEPHYRUM]), similes[k][I]);
+        }
+        /* Gamma, Delta Latinis dissimiles: TOFU */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x0393),
+            FONS_TOFU);
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x0394),
+            FONS_TOFU);
+    }
+
+
+    /* ==================================================
      * Probare fons_est_mappatum
      * ================================================== */
 

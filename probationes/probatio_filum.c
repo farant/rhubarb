@@ -1281,6 +1281,41 @@ s32 principale (vacuum)
 
 
     /* ==================================================
+	 * Probare filum_appendere_firmiter (vates-plan-2 T1)
+	 * ================================================== */
+
+    {
+        constans character* test_via =
+            "/tmp/test_rhubarb_appendere_firmiter.txt";
+                    chorda lectum;
+
+        imprimere("\n--- Probans filum_appendere_firmiter ---\n");
+        filum_delere(test_via);
+
+        /* creat si abest, deinde appendit - ordo servatur */
+        CREDO_VERUM(filum_appendere_firmiter(test_via,
+            chorda_ex_literis("prima\n", piscina)));
+        CREDO_VERUM(filum_appendere_firmiter(test_via,
+            chorda_ex_literis("secunda\n", piscina)));
+        lectum = filum_legere_totum(test_via, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS(lectum, "prima\nsecunda\n");
+
+        /* contentum vacuum: filum manet, nihil additur */
+        CREDO_VERUM(filum_appendere_firmiter(test_via,
+            chorda_ex_literis("", piscina)));
+        lectum = filum_legere_totum(test_via, piscina);
+        CREDO_AEQUALIS_I32(lectum.mensura, XIV);  /* VI + VIII */
+
+        /* directorium absens -> FALSUM, non ruina */
+        CREDO_FALSUM(filum_appendere_firmiter(
+            "/tmp/test_rhubarb_absens_directorium_xyz/x.txt",
+            chorda_ex_literis("x", piscina)));
+
+        filum_delere(test_via);
+    }
+
+
+    /* ==================================================
 	 * Compendium
 	 * ================================================== */
 

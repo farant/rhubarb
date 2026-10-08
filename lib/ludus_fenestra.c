@@ -1,11 +1,24 @@
 /* ludus_fenestra.c - glutinum fenestrae */
 
 #include "ludus_fenestra.h"
+#include "imago_png.h"
 #include "thema.h"
 #include "color.h"
 
 #include <stdio.h>
 #include <string.h>
+
+/* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
+#define MORA_PULSUS  XVI
+
+/* summa versionum repositorii (durabilis + ephemera) */
+interior i32
+versionem_summare (
+    constans LudusFenestra* lf)
+{
+    redde insula_versio(lf->d->repo, INSULA_DURABILIS)
+        + insula_versio(lf->d->repo, INSULA_EPHEMERA);
+}
 
 LudusFenestra*
 ludus_fenestra_creare (
@@ -138,6 +151,7 @@ ludus_quadrum (
     delineare_mandata(lf->mandata, lf->tabula, lf->fons, lf->fons_ctx);
     t3 = fenestra_tempus_ms();
     lf->mensurae.quadra++;
+    lf->versio_picta               = versionem_summare(lf);
     lf->mensurae.ms_compositionis  += t1 - t0;
     lf->mensurae.ms_pingendi       += t2 - t1;
     lf->mensurae.ms_delineandi     += t3 - t2;
@@ -145,6 +159,45 @@ ludus_quadrum (
     {
         lf->mensurae.ms_quadri_maximum = t3 - t0;
     }
+}
+
+vacuum
+ludus_fenestra_pulsum_ponere (
+    LudusFenestra* lf,
+    LudusPulsator  fn,
+           vacuum* ctx)
+{
+    si (!lf)
+    {
+        redde;
+    }
+    lf->pulsator      = fn;
+    lf->pulsator_ctx  = fn ? ctx : NIHIL;
+}
+
+b32
+ludus_fenestra_pingendum (
+    LudusFenestra* lf,
+              b32  eventa,
+              s64  nunc)
+{
+    b32 mutatum;
+
+    si (!lf || !lf->pulsator)
+    {
+        redde VERUM;
+    }
+    mutatum = lf->pulsator(lf->pulsator_ctx);
+    si (eventa || mutatum || lf->mensurae.quadra == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    /* nihil novi: dispensator SOLUS pulsatur (horologia, e.g.
+     * scriptura differta). Signum = VERSIO repositorii contra quadrum
+     * ultimum (compositiones non: dispensator omni eventu recomponit,
+     * 'regula staleness') */
+    dispensator_pulsare(lf->d, nunc);
+    redde versionem_summare(lf) != lf->versio_picta;
 }
 
 Mora
@@ -175,8 +228,18 @@ ludus_fenestra_currere (
     claudendum = FALSUM;
     dum (!claudendum && !fenestra_debet_claudere(fenestra))
     {
-        fenestra_expectare_eventus(fenestra, ludus_fenestra_mora(lf));
-        nunc = fenestra_tempus_ms();
+        Mora mora;
+         b32 eventa;
+
+        /* S1c: applicatio viva (pulsus) - XVI ms ad summum */
+        mora = ludus_fenestra_mora(lf);
+        si (lf->pulsator && (mora == ZEPHYRUM || mora > MORA_PULSUS))
+        {
+            mora = MORA_PULSUS;
+        }
+        fenestra_expectare_eventus(fenestra, mora);
+        nunc    = fenestra_tempus_ms();
+        eventa  = FALSUM;
         dum (fenestra_obtinere_eventus(fenestra, &e))
         {
             si (e.genus == EVENTUS_CLAUDERE)
@@ -185,6 +248,14 @@ ludus_fenestra_currere (
                 frange;
             }
             ludus_fenestra_tractare(lf, &e, nunc);
+            eventa = VERUM;
+        }
+        /* fumus (quadra_maxima): omne quadrum pingitur - aliter
+         * applicatio viva otiosa post quadrum primum numquam exit */
+        si (   quadra_maxima == ZEPHYRUM
+            && !ludus_fenestra_pingendum(lf, eventa, nunc))
+        {
+            perge;
         }
         ludus_quadrum(lf, nunc);
         fenestra_praesentare_pixela(fenestra, lf->tabula);
@@ -204,4 +275,25 @@ ludus_fenestra_currere (
               (long)lf->mensurae.ms_delineandi,
               (long)lf->mensurae.ms_quadri_maximum);
     redde ZEPHYRUM;
+}
+
+b32
+ludus_fenestra_imaginem_scribere (
+    constans LudusFenestra* lf,
+        constans character* via)
+{
+         Imago imago;
+    PngFructus fructus;
+
+    si (!lf || !via || lf->mensurae.quadra == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (!tabula_pixelorum_in_imaginem(lf->tabula, lf->piscina_quadri,
+            &imago))
+    {
+        redde FALSUM;
+    }
+    fructus = imago_png_scribere(&imago, via, lf->piscina_quadri);
+    redde fructus.successus;
 }

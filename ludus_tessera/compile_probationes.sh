@@ -133,6 +133,15 @@ declare -a RADIX_FONTES=(
     # insula-rami T4: hospes (vicus) et compositio eius
     "vicus"
     "vicus_applicatio"
+    # aemulator A3: reditus (tessera -> octeti -> aemulator)
+    "aemulator"
+    "sors"
+    # vicus-latera S1c: terminale genus vici (tabula t1 ordinaria)
+    "terminale"
+    "aemulator_hospes"
+    "pseudoterminale"
+    "pseudoterminale_posix"
+    "glyphae_ductae"
 )
 
 FILTER="${1:-}"

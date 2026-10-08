@@ -2,12 +2,13 @@
  * T4)
  *
  * Quod principalia vici (fenestra, terminalis) communicant: genera
- * scriba et pictor registrata (montare + describere - hic, non in
- * vico: vicus applicationes non novit), vicus apertus (index
- * ordinarius: scriba s1, pictor p1), dispensator super repositorium
- * vici ligatus (Motus, destinatio). Glutina accipiunt d, registra
- * figurarum vici (vicus_figurae) et fontem imaginum (vicus_imago_fons,
- * ctx = vicus) - indices semel dati, numquam mutati. */
+ * scriba, pictor, terminale registrata (montare + describere - hic,
+ * non in vico: vicus applicationes non novit), vicus apertus (index
+ * ordinarius: scriba s1, pictor p1, terminale t1), dispensator super
+ * repositorium vici ligatus (Motus, destinatio). Glutina accipiunt
+ * d, registra figurarum vici (vicus_figurae) et fontem imaginum
+ * (vicus_imago_fons, ctx = vicus) - indices semel dati, numquam
+ * mutati. */
 
 #ifndef VICUS_APPLICATIO_H
 #define VICUS_APPLICATIO_H

@@ -34,6 +34,10 @@ nomen structura {
     s64 ms_quadri_maximum;
 } LudusMensurae;
 
+/* pulsus applicationis vivae (vicus-latera S1c): vocatur iteratione
+ * ansae quaque; VERUM = aliquid mutatum, pingendum */
+nomen b32 (*LudusPulsator)(vacuum* ctx);
+
 nomen structura {
         Dispensator* d;
     FiguraRegistrum* figurae;
@@ -46,6 +50,10 @@ nomen structura {
             Mandata* mandata;        /* quadri ultimi */
       LudusMensurae  mensurae;
                 b32  magnitudo_nuntiata;  /* 013 B1: initialis missa */
+      LudusPulsator  pulsator;            /* S1c: NIHIL = nullus */
+             vacuum* pulsator_ctx;
+                i32  versio_picta;        /* S1c: repositorii, quadro
+                                           * ultimo (summa generum) */
 } LudusFenestra;
 
 LudusFenestra*
@@ -93,5 +101,35 @@ ludus_fenestra_currere (
     LudusFenestra* lf,
          Fenestra* fenestra,
               i32  quadra_maxima);
+
+/* Quadrum ultimum (tabulam) in plagulam PNG scribere - pixela ipsa
+ * quae fenestrae praesentata sunt aut praesentarentur (etiam sine
+ * fenestra, in tabula_pixelorum_creare_nuda). FALSUM si nullum
+ * quadrum adhuc aut scriptio fracta. Memoria ex piscina quadri
+ * (quadro proximo vacatur). */
+b32
+ludus_fenestra_imaginem_scribere (
+    constans LudusFenestra* lf,
+        constans character* via);
+
+/* vicus-latera S1c: pulsum ponere (NIHIL tollit). Cum pulsu ansa
+ * fenestrae XVI ms ad summum exspectat et quadrum SOLUM pingit cum
+ * ludus_fenestra_pingendum VERUM reddit. */
+vacuum
+ludus_fenestra_pulsum_ponere (
+    LudusFenestra* lf,
+    LudusPulsator  fn,
+           vacuum* ctx);
+
+/* decisio iterationis (publica ut sine fenestra probetur): pulsum
+ * vocat; si nulla eventa et pulsus nihil novi vidit, dispensatorem
+ * SOLUM pulsat (horologia, e.g. scriptura differta scribae) et
+ * reddit an recomposuit. VERUM = quadrum pingendum. Sine pulsu
+ * semper VERUM (mores prior). */
+b32
+ludus_fenestra_pingendum (
+    LudusFenestra* lf,
+              b32  eventa,
+              s64  nunc);
 
 #endif /* LUDUS_FENESTRA_H */

@@ -10,6 +10,8 @@
 ./briar/probationes/fixa/amalgama/fabrica/lib/alpha.c	fixtura: fabrica amalgamae cum capitibus localibus (alpha.h, postulata_posix.h gemellus) quae examen sine radicibus fabricae non resolvit - b32 ignotus
 ./briar/probationes/fixa/amalgama/fabrica/lib/beta.c	fixtura: ut alpha.c (Cella ex beta.h locali) - collisio staticorum probanda consulto
 ./briar/probationes/fixa/fabrica/salve_vitreum/fontes/salve_vitreum.c	generatum a briar: capsula_salve_vitreum symbolum est gradus infigendi (capsula) - in fonte non exsistit
+./knotapel/demo_114_exact_audit/d112_export.c	demonstratio knotapel 114: harness #include "../demo_112_alexander_polynomial/main.c" (plagula .c textualiter inclusa) - examen per plagulam eam non componit, typi (Rat, StickKnot, BraidWord) ignoti; pinnatum 2026-10-07 in fusione main -> secunda (porta examen-corpus post knotapel 114 non currebat)
+./knotapel/demo_114_exact_audit/d112_overflow_probe.c	demonstratio knotapel 114: harness #include "../demo_112_alexander_polynomial/main.c" (plagula .c textualiter inclusa) - examen per plagulam eam non componit, typi (Rat, StickKnot, BraidWord) ignoti; pinnatum 2026-10-07 in fusione main -> secunda (porta examen-corpus post knotapel 114 non currebat)
 ./lib/imago.c	venditum: stb_image.h extra normam domus (acies non-constans c8, vocationes implicitae intra caput venditum)
 ./officina/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis (AmalgamaPlagula/EXCLUDENDA_* apud includentem definita)
 ./oracula/clay/clay_vinculum.c	oraculum: glutinum dialecti alieni (clay.h ex ../clay externum, typi Clay_* extra arborem) - classis oracula/ alibi nomine exclusa; pinnata 2026-10-06 (fabrica-5 T5a: porta examen-corpus ab adventu eius non currebat)

@@ -771,6 +771,64 @@ filum_appendere (
     redde VERUM;
 }
 
+/* vates-plan-2 T1: write() UNUM + fsync() - annales 'append-only'
+ * (rationarium vatis, index herbarii, acta optchat). fflush solum
+ * (filum_scriptor_sync) discum non attingit. */
+b32
+filum_appendere_firmiter (
+    constans character* via,
+                chorda  contentum)
+{
+#ifdef _WIN32
+    (vacuum)contentum;
+    _filum_error_ponere("filum_appendere_firmiter: _WIN32 nondum");
+    (vacuum)via;
+    redde FALSUM;
+#else
+    integer descriptor;
+    ssize_t scripta = 0;
+        b32 bene;
+
+    si (!via || (contentum.mensura > 0 && !contentum.datum))
+    {
+        _filum_error_ponere("via vel contentum est NIHIL");
+        redde FALSUM;
+    }
+
+    _filum_error_purgare();
+
+    descriptor = open(via, O_WRONLY | O_APPEND | O_CREAT, 0644);
+    si (descriptor < 0)
+    {
+        _filum_error_ponere("open pro appendere firmiter fracta");
+        redde FALSUM;
+    }
+    lectiones_notare(LECTIO_SCRIPSIT, via);
+
+    si (contentum.mensura > 0)
+    {
+        scripta = write(descriptor, contentum.datum,
+                        (size_t)contentum.mensura);
+    }
+    bene = (scripta == (ssize_t)contentum.mensura);
+    si (!bene)
+    {
+        _filum_error_ponere("write fracta - non omnia scripta");
+    }
+    si (bene && fsync(descriptor) != 0)
+    {
+        _filum_error_ponere("fsync fracta");
+        bene = FALSUM;
+    }
+    si (close(descriptor) != 0 && bene)
+    {
+        _filum_error_ponere("close fracta");
+        bene = FALSUM;
+    }
+    redde bene;
+#endif
+}
+
 b32
 filum_appendere_literis (
     constans character* via,

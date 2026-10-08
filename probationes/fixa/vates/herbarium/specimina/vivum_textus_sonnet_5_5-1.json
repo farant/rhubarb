@@ -1,0 +1,23 @@
+{
+  "clavis": "200:{model:s,id:s,type:s,role:s,content:[{type:s,text:s}],container:z,stop_reason:s,stop_sequence:z,stop_details:z,usage:{input_tokens:n,cache_creation_input_tokens:n,cache_read_input_tokens:n,cache_creation:{ephemeral_5m_input_tokens:n,ephemeral_1h_input_tokens:n},output_tokens:n,output_tokens_details:{thinking_tokens:n},service_tier:s,inference_geo:s},diagnostics:z}",
+  "causa": "campus ignotus: container",
+  "status": 200,
+  "capita": [
+    {
+      "titulus": "Content-Type",
+      "valor": "application/json"
+    },
+    {
+      "titulus": "request-id",
+      "valor": "req_011CfpvgA6zuphWqjWy3DBEB"
+    }
+  ],
+  "corpus": "{\"model\":\"claude-sonnet-5-5\",\"id\":\"msg_011CfpvgCh25e34mAahvG2wb\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"Salve.\"}],\"container\":null,\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":18,\"cache_creation_input_tokens\":1839,\"cache_read_input_tokens\":0,\"cache_creation\":{\"ephemeral_5m_input_tokens\":1839,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":6,\"output_tokens_details\":{\"thinking_tokens\":0},\"service_tier\":\"standard\",\"inference_geo\":\"global\"},\"diagnostics\":null}",
+  "primum_visum": "2026-10-08T10:27:15Z",
+  "methodus": "POST",
+  "hospes": "api.anthropic.com",
+  "via": "/v1/messages",
+  "summarium": {
+    "model": "claude-sonnet-5-5"
+  }
+}

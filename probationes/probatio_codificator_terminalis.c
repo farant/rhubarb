@@ -108,6 +108,14 @@ interior constans Vector VECTORES[] = {
     { "k shift+a omnia", OMNIA, P, (clavis_t)'A', LIT('a'), 'a', 'A',
         SH,
       "A", "\033[97:65;2;65u" },
+    /* disambiguata: shift CONSUMPTUS (textus a runa differt) -> textus
+     * ipse (Ghostty effectiveMods; aemulator D6c: vim ':' ut ';') */
+    { "k shift+a disambiguata", DIS, P, (clavis_t)'A', LIT('a'), 'a',
+        'A', SH, "A", "A" },
+    { "k shift+; disambiguata", DIS, P, (clavis_t)';',
+      EVENTUS_CODEX_PUNCTUM_VIRGULA, ';', ':', SH, ":", ":" },
+    { "k shift+1 disambiguata", DIS, P, (clavis_t)'1', NUM(1), '1', '!',
+        SH, "!", "!" },
     { "k shift+a soluta", OMNIA, S, (clavis_t)'A', LIT('a'), 'a', 'A',
         SH,
       NIHIL, "\033[97;2:3u" },
@@ -146,6 +154,17 @@ interior constans Vector VECTORES[] = {
     /* --- legacy --- */
     { "l ctrl+c", 0, P, (clavis_t)'C', LIT('c'), 'c', 'c', CT, NIHIL,
       "\003" },
+    /* fenestra macOS: Ctrl+[ / I / M characteres regiminis ferunt
+     * (nullus TEXTUS) - legacy C0 ut xterm/Terminal.app (Ghostty
+     * fixterms CSI u mittit; olim nihil mittebamus: aemulator D7a,
+     * Franus in tmux) */
+    { "l ctrl+[", 0, P, (clavis_t)'[', EVENTUS_CODEX_UNCUS_SINISTER,
+        '[',
+      '\033', CT, NIHIL, "\033" },
+    { "l ctrl+i", 0, P, (clavis_t)'I', LIT('i'), 'i', '\t', CT, NIHIL,
+      "\t" },
+    { "l ctrl+m", 0, P, (clavis_t)'M', LIT('m'), 'm', '\r', CT, NIHIL,
+      "\r" },
     { "l ctrl+spatium", 0, P, CLAVIS_SPATIUM, EVENTUS_CODEX_SPATIUM,
         ' ',
       ' ', CT, NIHIL, "\000" },
@@ -225,8 +244,10 @@ interior constans Vector VECTORES[] = {
     { "l ctrl+1 (kitty: '1')", 0, P, (clavis_t)'1', NUM(1), '1', '1',
         CT,
       NIHIL, "1" },
-    { "l ctrl+i fixterms", 0, P, (clavis_t)'I', LIT('i'), 'i', 'i', CT,
-      NIHIL, "\033[105;5u" }
+    /* divergentia (D7a): Ghostty fixterms CSI 105;5u; nos xterm C0 -
+     * programmata legacy (tmux, vim sine kitty) CSI u non legunt */
+    { "l ctrl+i xterm C0", 0, P, (clavis_t)'I', LIT('i'), 'i', 'i', CT,
+      NIHIL, "\t" }
 };
 
 #define VECTORUM_NUMERUS \
@@ -805,6 +826,166 @@ s32 principale (vacuum)
             }
             CREDO_VERUM (_aequat(c, octeti[j]));
         }
+    }
+
+    imprimere("\n--- IX. modi D6: X10, formae, DECCKM, LNM ---\n");
+    {
+        CodificatorModi m;
+                Eventus e;
+                Eventus k[II];
+        EventusExemplum ex[II];
+                 Vector v;
+                    i32 n;
+                 chorda sine;
+                 chorda cum;
+
+        /* mouse_encode.zig (cellula 1 x 1: pixelum = cellula) */
+        memset(&m, ZEPHYRUM, magnitudo(CodificatorModi));
+        m.cellula_latitudo  = I;
+        m.cellula_altitudo  = I;
+        m.mus               = CODIFICATOR_MUS_X10;
+        m.mus_forma         = CODIFICATOR_FORMA_X10;
+        /* "x10 press left": modi omittuntur */
+        e = _murem(EVENTUS_MUS_DEPRESSUS, ZEPHYRUM, ZEPHYRUM,
+            MUS_SINISTER,
+            MOD_SHIFT | MOD_ALT | MOD_IMPERIUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[M !!"));
+        /* "x10 ignores release"; motus et rotula quoque nihil */
+        e.genus = EVENTUS_MUS_LIBERATUS;
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina), ""));
+        e = _murem(EVENTUS_MUS_MOTUS, ZEPHYRUM, ZEPHYRUM, MUS_SINISTER,
+            ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina), ""));
+        e = _rotulam(ZEPHYRUM, I);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina), ""));
+        /* "x10 coordinate limit": cellula CCXXIII nihil, CCXXII \xff */
+        e = _murem(EVENTUS_MUS_DEPRESSUS, CCXXIII, ZEPHYRUM,
+            MUS_SINISTER,
+            ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina), ""));
+        e = _murem(EVENTUS_MUS_DEPRESSUS, CCXXII, ZEPHYRUM,
+            MUS_SINISTER,
+            ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[M \377!"));
+        /* forma X10 sub ?1000: solutio = III; rota 64 + 32 */
+        m.mus = CODIFICATOR_MUS_PRESSIO;
+        e = _murem(EVENTUS_MUS_LIBERATUS, ZEPHYRUM, ZEPHYRUM,
+            MUS_SINISTER, ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[M#!!"));
+        e = _rotulam(ZEPHYRUM, I);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[M`:S"));
+        /* "urxvt with modifiers", "urxvt release uses legacy
+         * button 3 encoding" */
+        m.mus        = CODIFICATOR_MUS_OMNIS;
+        m.mus_forma  = CODIFICATOR_FORMA_URXVT;
+        e = _murem(EVENTUS_MUS_DEPRESSUS, II, III, MUS_SINISTER,
+            MOD_SHIFT | MOD_ALT | MOD_IMPERIUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[60;3;4M"));
+        e = _murem(EVENTUS_MUS_LIBERATUS, II, III, MUS_DEXTER,
+            ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[35;3;4M"));
+        /* "utf8 encodes large coordinates": CCCXXXIII, CDXXXIII */
+        m.mus_forma = CODIFICATOR_FORMA_UTF8;
+        e = _murem(EVENTUS_MUS_DEPRESSUS, CCC, CD, MUS_SINISTER,
+            ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[M \305\215\306\261"));
+        /* "sgr pixels ..." (cellula X x XX: pixela, non cellulae) */
+        m.mus_forma         = CODIFICATOR_FORMA_SGR_PIXELA;
+        m.cellula_latitudo  = X;
+        m.cellula_altitudo  = XX;
+        e = _murem(EVENTUS_MUS_DEPRESSUS, X, XX, MUS_SINISTER,
+            ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[<0;10;20M"));
+        e = _murem(EVENTUS_MUS_LIBERATUS, X, XX, MUS_DEXTER, ZEPHYRUM);
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[<2;10;20m"));
+        /* motus intra cellulam unam: pixela omnia; SGR unum */
+        ex[0].x = I;
+        ex[0].y = I;
+        ex[1].x = II;
+        ex[1].y = I;
+        e = _murem(EVENTUS_MUS_MOTUS, III, I, MUS_SINISTER, ZEPHYRUM);
+        e.datum.mus.exempla = ex;
+        e.datum.mus.numerus_exemplorum = II;
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[<32;1;1M\033[<32;2;1M\033[<32;3;1M"));
+        m.mus_forma = CODIFICATOR_FORMA_SGR;
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "\033[<32;1;1M"));
+
+        /* DECCKM (function_keys.zig cursorKey): sine modis SS3 */
+        memset(&m, ZEPHYRUM, magnitudo(CodificatorModi));
+        m.sagittae_applicationis = VERUM;
+        memset(&v, ZEPHYRUM, magnitudo(Vector));
+        v.actio   = P;
+        v.clavis  = CLAVIS_SURSUM;
+        v.codex   = EVENTUS_CODEX_SAGITTA_SURSUM;
+        n         = _eventa(&v, k);
+        CREDO_VERUM (_aequat(_codificare(&m, k, piscina), "\033OA"));
+        v.clavis  = CLAVIS_DOMUS;
+        v.codex   = EVENTUS_CODEX_DOMUS;
+        n         = _eventa(&v, k);
+        CREDO_VERUM (_aequat(_codificare(&m, k, piscina), "\033OH"));
+        v.clavis  = CLAVIS_FINIS;
+        v.codex   = EVENTUS_CODEX_FINIS;
+        n         = _eventa(&v, k);
+        CREDO_VERUM (_aequat(_codificare(&m, k, piscina), "\033OF"));
+        /* cum modis CSI 1;m; Pagina ~ et F1 immutatae */
+        v.clavis  = CLAVIS_SURSUM;
+        v.codex   = EVENTUS_CODEX_SAGITTA_SURSUM;
+        v.modi    = MOD_SHIFT;
+        n         = _eventa(&v, k);
+        CREDO_VERUM (_aequat(_codificare(&m, k, piscina), "\033[1;2A"));
+        v.modi    = ZEPHYRUM;
+        v.clavis  = CLAVIS_PAGINA_SURSUM;
+        v.codex   = EVENTUS_CODEX_PAGINA_SURSUM;
+        n         = _eventa(&v, k);
+        CREDO_VERUM (_aequat(_codificare(&m, k, piscina), "\033[5~"));
+        /* sine DECCKM: CSI A */
+        m.sagittae_applicationis  = FALSUM;
+        v.clavis                  = CLAVIS_SURSUM;
+        v.codex                   = EVENTUS_CODEX_SAGITTA_SURSUM;
+        n                         = _eventa(&v, k);
+        CREDO_VERUM (_aequat(_codificare(&m, k, piscina), "\033[A"));
+        /* kitty: DECCKM nihil mutat (solum legacy) */
+        m.kitty_vexilla           = I;
+        sine                      = _codificare(&m, k, piscina);
+        m.sagittae_applicationis  = VERUM;
+        cum                       = _codificare(&m, k, piscina);
+        CREDO_VERUM (chorda_aequalis(sine, cum));
+        (vacuum)n;
+
+        /* LNM (Ghostty Exec.queueWrite): omne CR -> CR LF */
+        memset(&m, ZEPHYRUM, magnitudo(CodificatorModi));
+        m.lnm     = VERUM;
+        v.clavis  = CLAVIS_REDITUS;
+        v.codex   = EVENTUS_CODEX_REDITUS;
+        v.typus   = '\r';
+        n         = _eventa(&v, k);
+        CREDO_VERUM (_aequat(_codificare(&m, k, piscina), "\r\n"));
+        /* aedificator communis: solum octeti novi vertuntur */
+        {
+            ChordaAedificator* ae = chorda_aedificator_creare(piscina,
+                VIII);
+
+            (vacuum)codificator_eventa(&m, k, n, ae);
+            (vacuum)codificator_eventa(&m, k, n, ae);
+            CREDO_VERUM (_aequat(chorda_aedificator_finire(ae),
+                "\r\n\r\n"));
+        }
+        e = _glutinum(EVENTUS_TEXTUS, "a\nb\rc");
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina),
+            "a\r\nb\r\nc"));
+        m.lnm = FALSUM;
+        CREDO_VERUM (_aequat(_codificare(&m, &e, piscina), "a\rb\rc"));
     }
 
     imprimere("\n");

@@ -41,6 +41,7 @@ nomen structura {
          i32  thema;
     FiguraFn  fn;
       vacuum* ctx;
+      chorda  spatium;    /* "" = hospes (vicus-latera S2a) */
 } FiguraIntroitus;
 
 nomen structura {
@@ -86,13 +87,34 @@ figura_invenire (
                     FiguraFn*  fn_ex,
                       vacuum** ctx_ex);
 
+/* Spatia (vicus-latera S2a): introitus fontis in spatium datum
+ * (internatum - vivit cum registro); collisio solum intra idem
+ * spatium. figura_registrare et figura_invenire = spatium "";
+ * figura_registrum_miscere spatium cuiusque introitus servat. */
+b32
+figura_registrum_miscere_in_spatio (
+             FiguraRegistrum* reg,
+    constans FiguraRegistrum* fons,
+                      chorda  spatium);
+
+/* strictum: introitus solum eiusdem spatii */
+b32
+figura_invenire_in_spatio (
+    constans FiguraRegistrum*  reg,
+                      chorda   spatium,
+                      Partes   partes,
+                         i32   thema,
+                    FiguraFn*  fn_ex,
+                      vacuum** ctx_ex);
+
 
 /* ==================================================
  * Pingere
  * ================================================== */
 
 /* <purus/> arbor logica -> mandata. Coetus per componens; figura
- * (si registrata pro (partes, thema)) ante liberos. */
+ * (si registrata pro (spatium, partes, thema) - spatium efficax
+ * componentis, S2a) ante liberos. */
 vacuum
 pingere (
           constans Componens* radix,

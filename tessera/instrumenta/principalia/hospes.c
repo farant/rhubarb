@@ -67,7 +67,7 @@ int main(void)
     {
         TesseraChorda captum;
         const char* speratum = "\033[?2026h"
-            "\033[?25l\033[2J\033[1;1H\033[0mab" "\033[?2026l";
+            "\033[?25l\033[0m\033[2J\033[1;1H\033[0mab" "\033[?2026l";
 
         tessera_scribere_literis(opus, 0, 0, "ab",
             tessera_stilus_nativus());

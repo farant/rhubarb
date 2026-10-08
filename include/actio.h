@@ -48,6 +48,8 @@ nomen structura {
                     Xar* nomina;      /* Xar de chorda (internatae) */
                     Xar* functiones;  /* Xar de ActioFn */
                     Xar* contextus;   /* Xar de vacuum* */
+                    Xar* spatia;      /* Xar de chorda; "" = hospes
+                                       * (vicus-latera S2a) */
                 Piscina* piscina;
     InternamentumChorda* intern;
 } ActioRegistrum;
@@ -89,12 +91,32 @@ actio_invenire (
                     ActioFn*  fn_ex,
                      vacuum** ctx_ex);
 
+/* Spatia (vicus-latera S2a): introitus fontis in spatium datum
+ * (internatum - vivit cum registro); collisio solum intra idem
+ * spatium. actio_registrare et actio_invenire = spatium "";
+ * actio_registrum_miscere spatium cuiusque introitus servat. */
+b32
+actio_registrum_miscere_in_spatio (
+             ActioRegistrum* reg,
+    constans ActioRegistrum* fons,
+                     chorda  spatium);
+
+/* strictum: introitus solum eiusdem spatii */
+b32
+actio_invenire_in_spatio (
+    constans ActioRegistrum*  reg,
+                     chorda   spatium,
+                     chorda   titulus,
+                    ActioFn*  fn_ex,
+                     vacuum** ctx_ex);
+
 
 /* ==================================================
  * Resolutio utrimque (L10)
  * ================================================== */
 
-/* Nomina in arbore relata sine tractatore (semel quodque). */
+/* Nomina in arbore relata sine tractatore (semel quodque; per
+ * spatium componentis). */
 Xar*
 actio_non_registratae (
     constans ActioRegistrum* reg,

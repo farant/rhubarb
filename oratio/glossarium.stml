@@ -522,6 +522,9 @@
   <vocabulum lemma="silva" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="briar" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (instrumentum: programmata litterata .thistle)"/>
   <vocabulum lemma="thistle" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (forma plagulae litteratae briaris: x.thistle)"/>
+  <vocabulum lemma="anthropic" lingua="latina" classis="nomen-proprium" nota="nomen proprium (provisor exemplarium linguae; vates_anthropic_aperire, vates-spec)"/>
+  <vocabulum lemma="badssl" lingua="latina" classis="nomen-proprium" nota="nomen proprium (badssl.com, hospites TLS consulto fracti; tools/rete_fumus)"/>
+  <vocabulum lemma="herbarium" lingua="latina" classis="substantivum" nota="Latina nova (herbarium, -i n.): collectio plantarum pressarum - bibliotheca speciminum responsorum API (herbarium-spec)"><forma textus="herbarium"/><forma textus="herbarii"/></vocabulum>
   <vocabulum lemma="gamma" lingua="latina" classis="substantivum" nota="littera Graeca tertia (Latine gamma, -ae f.; fixum briaris post alpha/beta)"/>
   <vocabulum lemma="amalgamo" lingua="latina" classis="verbum" nota="Latina media (alchemica): in amalgama redigere - briar_amalgamare">
     <forma textus="amalgamare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
@@ -552,9 +555,11 @@
   <vocabulum lemma="eof" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="fcntl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="posix" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="environ" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum - POSIX: ambitus processus (processus_exsequi_cum)"/>
   <vocabulum lemma="http" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="tcp" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="uuid" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="email" lingua="anglica" classis="ignotum-permissum" nota="terminus technicus (forma JSON Schema 'email'; fictio_email)"/>
   <vocabulum lemma="toml" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="css" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="md" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
@@ -917,7 +922,9 @@
     <forma textus="bits"/>
   </vocabulum>
   <vocabulum lemma="hash" lingua="anglica" classis="ignotum-permissum" nota="sedes 594"/>
-  <vocabulum lemma="cache" lingua="anglica" classis="ignotum-permissum" nota="sedes 96"/>
+  <vocabulum lemma="cache" lingua="anglica" classis="ignotum-permissum" nota="sedes 96">
+    <forma textus="cacheabile"/>
+  </vocabulum>
   <vocabulum lemma="buffer" lingua="anglica" classis="ignotum-permissum" nota="sedes 2316">
     <forma textus="buffers"/>
   </vocabulum>
@@ -959,6 +966,19 @@
   <vocabulum lemma="dlsym" lingua="anglica" classis="ignotum-permissum" nota="POSIX dlfcn.h: symbolum titulo quaerere"/>
   <vocabulum lemma="execve" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: programma cum ambitu explicito exsequi; systema_posix.h 2026-10-05 pro oraculo effectuum (interpositio_macos.c)"/>
   <vocabulum lemma="access" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: accessum plagulae probare; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
+
+  <!-- pseudoterminale (aemulator-plan B3, 2026-10-06): nomina POSIX/BSD
+       fixa in lexico examinis (silva/fontes/systema_posix.h) - non vertenda -->
+  <vocabulum lemma="openpty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BSD util.h: par pseudo-terminalis una vocatione aperire; pseudoterminale_posix.c (decisio XI)"/>
+  <vocabulum lemma="chdir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX unistd.h: directorium currens mutare; infans pseudoterminalis"/>
+  <vocabulum lemma="tiocswinsz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TIOCSWINSZ sys/ioctl.h: magnitudinem terminalis ponere (nucleus SIGWINCH mittit)"/>
+  <vocabulum lemma="tiocsctty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TIOCSCTTY sys/ioctl.h: terminale regens sessionis novae"/>
+  <vocabulum lemma="sighup" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGHUP signal.h: terminale clausum; claudere pseudoterminalis gregi mittit"/>
+  <vocabulum lemma="sigquit" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGQUIT signal.h; infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="sigchld" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGCHLD signal.h; infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="sigttin" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGTTIN signal.h (lectio gregis posterioris); infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="sigttou" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SIGTTOU signal.h (scriptura gregis posterioris); infans pseudoterminalis ad ordinarium restituit"/>
+  <vocabulum lemma="eio" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="EIO errno.h: latus servum clausum - lectio magistri pseudoterminalis finem significat"/>
   <vocabulum lemma="faccessat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/unistd.h: access relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
   <vocabulum lemma="fstatat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX sys/stat.h: stat relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
   <vocabulum lemma="openat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="POSIX fcntl.h: open relativa ad fossam directorii; systema_posix.h 2026-10-05 (oraculum effectuum)"/>
@@ -1016,7 +1036,7 @@
   <vocabulum lemma="defocus" lingua="latina" classis="substantivum" nota="coinage domus (pictor): amissio foci (fenestra)"><forma textus="defocus"/></vocabulum>
   <vocabulum lemma="ephemera" lingua="latina" classis="substantivum" nota="Graeca: res diei unius (insula: contra durabile)"><forma textus="ephemera"/></vocabulum>
   <vocabulum lemma="rotula" lingua="latina" classis="substantivum" nota="Latina: rota parva (fenestra: rotula muris)"><forma textus="rotula"/><forma textus="rotulae"/><forma textus="rotulam"/></vocabulum>
-  <vocabulum lemma="schirmum" lingua="latina" classis="substantivum" nota="coinage domus (pictor, ex Germanico Schirm): screen (manus_ludus)"><forma textus="schirmum"/><forma textus="schirmi"/></vocabulum>
+  <vocabulum lemma="schirmum" lingua="latina" classis="substantivum" nota="coinage domus (pictor, ex Germanico Schirm): screen (manus_ludus)"><forma textus="schirmum"/><forma textus="schirmi"/><forma textus="schirmus"/></vocabulum>
   <vocabulum lemma="strategia" lingua="latina" classis="substantivum" nota="Graeca: ratio ducis (destinatio, dispensator)"><forma textus="strategia"/><forma textus="strategiam"/><forma textus="strategiae"/></vocabulum>
   <vocabulum lemma="dctx" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio pictor (delineare_mandata: contextus delineandi) - renominanda si placet"/>
   <vocabulum lemma="toy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: ludus_toy.h fixtura - renominanda si placet"/>
@@ -1236,6 +1256,7 @@
   <vocabulum lemma="apc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ECMA-48: APC (Application Program Command, ESC _) - nomen protocolli (kitty graphics); sedes SERIES_APC in include/series_terminalis.h"/>
   <vocabulum lemma="sgr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ECMA-48: SGR (Select Graphic Rendition, CSI ... m) - nomen protocolli; mus SGR (?1006, CSI &lt; ... M/m); sedes RELIQUIAE_SGR in tessera/fontes/tessera_eventum.c"/>
   <vocabulum lemma="kitty" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen terminalis et protocolli eius claviaturae (CSI ... u: claves sine iactura, solutiones, clavis basis); sedes claves_codex_ex_kitty (include/claves_physicae.h), INTERPRES_KITTY_* (include/interpres_terminalis.h)"/>
+  <vocabulum lemma="urxvt" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen terminalis (rxvt-unicode) et formae relationis muris eius (?1015, CSI b ; x ; y M) - nomen protocolli; sedes AEMULATOR_MUS_FORMA_URXVT (include/aemulator.h), MODUS_FORMA_URXVT (lib/aemulator.c)"/>
   <vocabulum lemma="praemultiplicatus" lingua="latina" classis="adiectivum" nota="color per alpha iam multiplicatus (R x A / 255): forma quam iconutil in planis ARGB exspectat et per alpha dividit (mensuratum 2026-09-12); vox technica ex prae + multiplicare"><forma textus="praemultiplicata"/></vocabulum>
 
   <!-- ================= TERMINI T38 (decretor, 2026-09-15) ================= -->
@@ -1378,7 +1399,7 @@
     <forma textus="sinicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="sinicae" casus="genitivus" numerus="singularis" genus="femininum"/>
   </vocabulum>
-  <vocabulum lemma="subsystema" lingua="latina" classis="substantivum" nota="Gk. sub + systema n. (subsystematis), ut graphema: pars repositorii cum declarationibus aedificationis suis (silva, tessera, officina ...); radix fabrica.stml ea enumerat; sedes lib/fabrica.c (fabrica_subsystemata_legere, fabrica plan 1a T2)">
+  <vocabulum lemma="subsystema" lingua="latina" classis="substantivum" nota="Gk. sub + systema n. (subsystematis), ut graphema: pars repositorii cum declarationibus aedificationis suis (silva, tessera, officina ...); radix fabrica.stml ea enumerat; sedes lib/fabrica_declarationes.c (fabrica_subsystemata_legere, fabrica plan 1a T2)">
     <forma textus="subsystema" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="subsystematis" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="subsystemata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
@@ -1389,7 +1410,7 @@
     <forma textus="regenerare" modus="infinitivus"/>
   </vocabulum>
 
-  <vocabulum lemma="verificatio" lingua="latina" classis="substantivum" nota="Lat. med. verificatio (verificare, verum facere): hic tripla memorata (titulus actionis, sigillum ingressuum, sigillum artificii) post regenerationem congruentem scripta, ut iudex eam iterum non currat; sedes tools/fabrica_memoria.c, probationes/probatio_fabrica.c (fabrica plan 1a T6)">
+  <vocabulum lemma="verificatio" lingua="latina" classis="substantivum" nota="Lat. med. verificatio (verificare, verum facere): hic tripla memorata (titulus actionis, sigillum ingressuum, sigillum artificii) post regenerationem congruentem scripta, ut iudex eam iterum non currat; sedes tools/fabrica_memoria.c, probationes/probatio_fabrica_iudicium.c (fabrica plan 1a T6)">
     <forma textus="verificatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="verificationis" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="verificationem" casus="accusativus" numerus="singularis" genus="femininum"/>
@@ -1406,7 +1427,7 @@
     <forma textus="blobos" casus="accusativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
 
-  <vocabulum lemma="praecondicio" lingua="latina" classis="substantivum" nota="Lat. rec. prae + condicio (condicio quae ante stat): hic actio realizanda ANTE aliam, ordo sine sigillo - obiecta caece nexa (strategia ignota) et instrumenta quae installator vocat; sedes lib/fabrica.c (fabrica_praecondiciones_probare, FabricaActio.praecondiciones, fabrica plan 1b T2)">
+  <vocabulum lemma="praecondicio" lingua="latina" classis="substantivum" nota="Lat. rec. prae + condicio (condicio quae ante stat): hic actio realizanda ANTE aliam, ordo sine sigillo - obiecta caece nexa (strategia ignota) et instrumenta quae installator vocat; sedes lib/fabrica_declarationes.c (fabrica_praecondiciones_probare, FabricaActio.praecondiciones, fabrica plan 1b T2)">
     <forma textus="praecondicio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="praecondicionis" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="praecondicionem" casus="accusativus" numerus="singularis" genus="femininum"/>
@@ -1414,13 +1435,13 @@
     <forma textus="praecondicionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
-  <vocabulum lemma="pessimus" lingua="latina" classis="adiectivum" nota="Lat. class. pessimus, superlativus mali: hic iudicium compositi = PESSIMUM partium ordine RECENS lt NON IUDICATUM lt IGNOTUM lt STALUM (associativum: planum == nidificatum); sedes lib/fabrica.c (fabrica_iudicia_coniungere, fabrica plan 1b T2)">
+  <vocabulum lemma="pessimus" lingua="latina" classis="adiectivum" nota="Lat. class. pessimus, superlativus mali: hic iudicium compositi = PESSIMUM partium ordine RECENS lt NON IUDICATUM lt IGNOTUM lt STALUM (associativum: planum == nidificatum); sedes lib/fabrica_declarationes.c (fabrica_iudicia_coniungere, fabrica plan 1b T2)">
     <forma textus="pessimus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="pessimum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="pessimi" casus="genitivus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
 
-  <vocabulum lemma="sanatio" lingua="latina" classis="substantivum" nota="Lat. class. sanatio (Cicero; sanare): hic actum unum executoris fabricae - actio artificii stali ordine dependentiae acta et iterum iudicata (SANATUM, FRACTUM, OMISSUM ...); sedes lib/fabrica.c (fabrica_sanare, FabricaSanatio), tools/fabrica.c (bin/fabrica sanare; fabrica plan 1b T3)">
+  <vocabulum lemma="sanatio" lingua="latina" classis="substantivum" nota="Lat. class. sanatio (Cicero; sanare): hic actum unum executoris fabricae - actio artificii stali ordine dependentiae acta et iterum iudicata (SANATUM, FRACTUM, OMISSUM ...); sedes lib/fabrica_sanare.c (fabrica_sanare), include/fabrica.h (FabricaSanatio), tools/fabrica.c (bin/fabrica sanare; fabrica plan 1b T3)">
     <forma textus="sanatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="sanationis" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="sanationem" casus="accusativus" numerus="singularis" genus="femininum"/>
@@ -1536,6 +1557,42 @@
   <vocabulum lemma="recursio" lingua="latina" classis="substantivum" nota="recursio (Plin.): reditus, recursus - optio mandati quae directoria recursive tractat (grep -r, rm -rf; tabula mandatorum effectus, optiones 'recursio' = recursiones)">
     <forma textus="recursio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="recursiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
+  <vocabulum lemma="pseudoterminale" lingua="latina" classis="substantivum" nota="Gr. pseudo- + terminale (ut animal, i-stirpis): terminale fictum (Angl. pseudo-terminal, PTY) - par magister/servus quo infans programmatum ut in terminali vivit; bibliotheca pseudoterminale (aemulator-plan B3, decisio XV)">
+    <forma textus="pseudoterminale" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pseudoterminalis" casus="genitivus" numerus="singularis" genus="neutrum"/>
+    <forma textus="pseudoterminalia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="contrastus" lingua="latina" classis="substantivum" nota="Lat. med. ex contrastare (contra + stare): oppositio luminis inter litteram et fundum (WCAG contrast ratio) - terminale contrastus minimus (aemulator-plan, 2026-10-07); sedes ratio_contrastus, contrastum_curare">
+    <forma textus="contrastus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="contrastum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="contrastus" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="legibilis" lingua="latina" classis="adiectivum" nota="Lat. sera: quod legi potest - littera fundo satis distans; sedes litteram_legibilem (lib/terminale.c)">
+    <forma textus="legibilis" casus="nominativus" numerus="singularis"/>
+    <forma textus="legibilem" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+  <vocabulum lemma="opacitas" lingua="latina" classis="substantivum" nota="opacitas (Plin.): umbra, obscuritas - hic quanta littera obscura fundum tegit (Ghostty faint-opacity); sedes OBSCURUM_OPACITAS (lib/terminale.c)">
+    <forma textus="opacitas" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="phasis" lingua="latina" classis="substantivum" nota="Gr. phasis (Plin., de luna): apparitio, gradus cycli - hic offset formae lineae (sublinea undulata, punctata, lineolata) ut forma trans cellulas continuetur; sedes lineam_formatam (lib/terminale.c)">
+    <forma textus="phasis" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="synchronia" lingua="latina" classis="substantivum" nota="Neo-Lat. ex Gr. syn- + chronos (ut synchronismus): simultas temporis - modus ?2026 (synchronized output: programma quadrum totum ante pictionem perficit); sedes MODUS_SYNCHRONIA (lib/aemulator.c, aemulator-plan D2)">
+    <forma textus="synchronia" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="synchroniae" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="clono" lingua="latina" classis="verbum" nota="vox domus (Graece klon, surculus): clonatio copy-on-write plagulae aut arboris (clonefile(2), APFS) - include/clonatio.h, bin/clonare (pythonica S3)">
+    <forma textus="clonare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+  </vocabulum>
+  <vocabulum lemma="clonatio" lingua="latina" classis="substantivum" nota="vox domus (clonare): actio clonandi - copia copy-on-write, spatium nullum donec scribatur (include/clonatio.h, pythonica S3)">
+    <forma textus="clonatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="clonationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="reproducibilis" lingua="latina" classis="adiectivum" nota="vox domus (re + producere): quod iterum productum idem reddit - artificium octetis ex ingressibus determinatum (FabricaGenus.reproducibile; census fabricae, fabrica-6 T1)">
+    <forma textus="reproducibile" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="reproducibilia" casus="nominativus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
 
 </glossarium>

@@ -4,7 +4,7 @@
 #
 # Usus: ./tools/latina_numeri.sh [-scribere]
 # Exitus: 0 recens/scriptum · 1 stalum · 2 usus/aedificatio.
-# Porta: tools/generata_probare.sh (V).
+# Porta: generata (tools/generata_iudicare.sh, actio numeri_latinae).
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$RADIX/tools/vexilla.sh"

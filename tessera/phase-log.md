@@ -1234,3 +1234,20 @@ no tessera test had ever pinned ORNAMENT bytes — a plant dropping
 strikethrough passed 15/15; probatio_tessera_colores IV now pins each
 ornament and the 17-parameter maximum (verified against the pre-codec
 code too). Narrative: `lib/stilus_terminalis.phase-log.md` (T3).
+
+## PEN RESET BEFORE THE CLEAR (aemulator A3, 2026-10-06)
+
+The emulator loopback (`ludus_tessera/probationes/
+probatio_ludus_tessera_reditus.c`: tessera frame -> captured bytes ->
+aemulator -> every cell compared) found a real bug: a FULL repaint
+(first frame, resize, resume) began `ESC[?25l ESC[2J` with whatever
+SGR pen the PREVIOUS frame left - tessera never resets the pen at
+frame end, and ED paints the current background (BCE: xterm, Ghostty,
+Terminal.app). The repaint then skips cells equal to the empty cell
+("2J already painted them"), so every blank cell kept the previous
+frame's last background. pictor and scriba hid it by painting nearly
+every cell; the loopback showed it after a resize following a coloured
+fill. Fix: `ESC[?25l ESC[0m ESC[2J`. Byte goldens updated (opus,
+graphemata, eventum, latae, hospes, saltuarius salve); new regression
+"calamus nativus ante 2J" in probatio_tessera_opus (red before the
+fix). Plant (fix reverted): the regression AND the loopback go red.

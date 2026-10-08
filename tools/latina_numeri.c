@@ -8,7 +8,7 @@
  *   sine -scribere: comparat - exitus 0 recens, 1 stalum (linea
  *   prima discrepans nominatur), 2 usus/lectio.
  *   -scribere: sectionem in loco rescribit.
- * Porta: tools/generata_probare.sh (V). */
+ * Porta: generata (tools/generata_iudicare.sh, actio numeri_latinae). */
 
 #include "latina.h"
 #include "numerus_romanus.h"
