@@ -68,12 +68,12 @@ Fran before code.
 (As built in four commits: T6a processus options, T6b extractor library +
 facultas, T6c-1 the kind in the machine, T6c-2 the tool hooks + smoke.)
 
-- [ ] **Step 1: failing test** (temporary root, two tiny C tests and a
+- [x] **Step 1: failing test** (temporary root, two tiny C tests and a
   library): link via aedilis_derivare + compilator library (flags from
   aedilis.stml), run, verdict per member; edit one library source ->
   only members whose closure holds it re-link and re-run; edit one test
   -> only it; a `facultas="fenestra"` member is linked, not run.
-- [ ] **Step 2:** implement; conformance fixture; plants (closure
+- [x] **Step 2:** implement; conformance fixture; plants (closure
   ignored -> all re-run; facultas ignored -> GUI member run). **Commit.**
 
 ### T7: gates as composites + `post`

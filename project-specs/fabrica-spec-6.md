@@ -431,3 +431,30 @@ failing run -> FRACTUM, runs again; compile error -> FRACTUM naming the
 source and clang's message. Plants (5, all red): closure ignored,
 facultas ignored, empty-trace sentinel off, step-outside-iudicium
 refusal off, praeter ignored.
+
+**T6c-2 (2026-10-07): the real hooks in bin/fabrica.** tools/fabrica.c
+implements the four step hooks: `area_parare` (area deleted, `<area>tmp/`
+created), `in_area_currere` (`processus_exsequi_cum` with the EXACT
+vector `ambitus + FABRICA_LECTIONES=<absolute ledger>`, cwd = tree
+root, ledger created empty, acta like every other action),
+`clausura_c` (`aedilis_derivare` + `aedilis_silva` sharing the store
+build/aedilis/obiecta; key prefix = bin/fabrica's own bytes + aedilis.stml;
+the test file FIRST - aedilis's `obiecta` does not list the scope,
+its struere.sh compiles it separately) and `compilare` (argv exactly as
+aedilis's struere.sh: vendor rule flags alone, else house flags + `-I`
+roots + per-source rule; through `compilator_compilare` - argv WITHOUT
+`clang`, which the compilator would count as a second source). Set up
+lazily (temporary fumus roots have an empty aedilis.stml). Declarations
+are expanded while being read (`_declarationes_colligere`, the
+enumerating sutura has `clausura_c`); `iudicare` prints step-area
+orphans; bin/fabrica now links the silva amalgam (1.9 -> 3.3 MB).
+Smoke (tools/fabrica_fumus.sh, now XXXVIII/XXXVIII), a real temporary
+tree: XXXVII - three members (one `facultas="fenestra"`), first heal
+passes all three (the facultas verdict says linked only), all RECENS
+after, a library edit re-runs ONLY the member whose closure holds it;
+member b exits 5 if it sees `FUMUS_ALIENUM` from fabrica's own
+environment (it does not). XXXVIII - a failing test is FRACTUM with
+its exit code; a vanished member's area is ORPHANUM. Plants (3, red):
+environment inherited (b sees the variable), scope not first (b links
+nothing), closure hook missing while reading declarations (the library
+edit re-runs nothing).
