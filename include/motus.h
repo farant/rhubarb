@@ -62,6 +62,9 @@ nomen structura {
   MotusGestus  gestus;          /* S1a */
   InsulaRamus  ramus;           /* T3a: ramus activus - focus et
                                  * effusio pan/zoom; nullus = radix */
+       chorda spatium;         /* S2a: spatium activum - focus et
+                                 * captura intra id quaeruntur;
+                                 * vacuum = arbor tota */
 } Motus;
 
 nomen vacuum (*MotusMutator)(

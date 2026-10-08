@@ -46,6 +46,29 @@ rebuilt on the insula-native apps.*
    document and its stack; a terminal reopens with a FRESH shell
    (aemulator decision: fresh shell on restart).
 
+### S2 decisions (Fran, 2026-10-08, after S1)
+
+8. **Always two panes**, split in half (amends decision 5's "empty
+   stack"): a tab never shows one pane - an app would be clipped
+   when the second appears. A right pane with nothing opened shows a
+   scriba. Full-screen-one-pane waits for real pane-management UI.
+9. **Exactly ten tabs, fixed slots** (no add, no remove): tab 1 =
+   scriba | terminale, tab 2 = scriba | pictor, tabs 3-10 = scriba |
+   scriba. Changes to panes are durable and restored on restart.
+10. **scriba views share pages**: the text lives in PAGES (shared);
+    a scriba view holds its own current page and cursor. In a fresh
+    volume every view shows the same page. Pages are NAMED and picked
+    later by command (S3, `$scriba(name)`); the legacy app's page
+    management is the starting point when we get there.
+11. **Focus by click only** for now. (Shift-Tab rejected: programs in
+    the terminal use it; Ctrl-A is Fran's tmux leader.)
+12. **Layout target = the maximized window** (Fran works maximized /
+    full screen): the window opens filling the screen's usable area.
+    On this machine 1920 x 1200 points at SCALA II = 960 x 600 of our
+    pixels: a half pane ~480 x 592 px = 80 x 74 cells.
+13. **New documents are sized to their pane** (pictor canvas, scriba
+    page) at creation; existing documents keep their size.
+
 ## II. What exists (read 2026-10-08)
 
 - **vicus** (`include/vicus.h`, `lib/vicus.c`, `lib/vicus_applicatio.c`,
@@ -119,6 +142,21 @@ Test `probatio_vicus_pulsus` (toy kinds, then the real terminale with
 /bin/sh: echo read in the background, `exit` finishes the tab).
 Eleven plants.
 
+S2a-1 as built (scope in core, headers approved 2026-10-08):
+`Componens.spatium` marks a scope root (inherited down the tree);
+action and figura registries carry a scope per entry (`""` = host;
+lookups STRICT; plain register/find/miscere = scope "" or the entry's
+own scope); `pingere` carries the scope down; the dispatcher resolves
+a component's action in the COMPONENT's scope, focus / capture / Tab
+cycling inside `Motus.spatium`, and deferred derived events in the
+scope they were addressed in (internal `Differendum.spatium` - the
+host root and a pane root can share an id like 'radix'). Test
+`probatio_spatium` (one toy app twice, same ids/actions/figures);
+sixteen plants. Found on the way: the dispatcher CANNOT clear focus -
+`dispensator_focus_ponere(d, "")` interns "" (refused, NIHIL) and the
+old value stays (pre-existing; see lib/dispensator.worklog.md).
+Pending Fran: `Dispensator.super_spatium` (hover across panes).
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);
@@ -131,6 +169,15 @@ the named action through the host's registry; the open-widget verbs
 with the identity rule; a first non-widget command or two.
 
 ## AUDIENDA
+
+- **vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader**: tmux
+  inside a vicus terminal pane never sees Ctrl-A. The prefix needs
+  another key before tmux is used inside vicus.
+- **Two panes of the same kind collide** (found 2026-10-08 planning
+  S2a): figura registry keyed by (partes, thema) - miscere refuses
+  collisions; action registry keyed by name; component ids ('pagina')
+  repeat, and focus / lookups by id find the first. Needs a subtree
+  scope (see S2a proposal).
 
 - Focus between the panes (S2): click to focus, a prefix key to toggle,
   and whether opening a widget moves focus right.

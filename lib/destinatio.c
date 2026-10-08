@@ -190,8 +190,9 @@ destinatio_geometrica (
         si (motus && !chorda_vacua(motus->captura))
         {
             d.id_captum = motus->captura;
-            destinatum  = componens_invenire_per_id(arbor,
-                                                    motus->captura);
+            /* S2a: captura intra spatium activum */
+            destinatum  = componens_invenire_in_spatio(arbor,
+                motus->spatium, motus->captura);
             si (!destinatum)
             {
                 destinatum = geo ? geo : arbor;
@@ -200,7 +201,11 @@ destinatio_geometrica (
     }
     alioquin si (est_focalis(ev->genus) && !chorda_vacua(focus))
     {
-        destinatum = componens_invenire_per_id(arbor, focus);
+        /* S2a: focus intra spatium activum (motus NIHIL = arbor
+         * tota) */
+        destinatum = motus
+            ? componens_invenire_in_spatio(arbor, motus->spatium, focus)
+            : componens_invenire_per_id(arbor, focus);
         si (!destinatum)
         {
             destinatum = arbor;

@@ -81,6 +81,9 @@ nomen structura Componens {
     structura Componens*  parens;
     /* pro actio/titulus internandis */
     InternamentumChorda* intern;
+                  /* non vacuum = radix spatii (vicus-latera S2a):
+                   * actiones, figurae, ids intra resolvuntur */
+                  chorda spatium;
 } Componens;
 
 
@@ -144,6 +147,27 @@ componens_liberum (
 Componens*
 componens_invenire_per_id (
      Componens* radix,
+        chorda  id);
+
+/* Spatia (vicus-latera S2a): applicatio bis montata (scriba | scriba)
+ * ids, actiones, figuras eadem habet - hospes radicem cuiusque
+ * montationis spatio signat, et omnia intra id resolvuntur. */
+vacuum
+componens_ponere_spatium (
+             Componens* c,
+    constans character* spatium);
+
+/* spatium efficax: proximum ascendens cum spatio; "" = hospes */
+chorda
+componens_spatium (
+    constans Componens* c);
+
+/* id intra radicem spatii (spatium "" = arbor tota, ut hodie);
+ * spatia nidificata non intrantur */
+Componens*
+componens_invenire_in_spatio (
+     Componens* arbor,
+        chorda  spatium,
         chorda  id);
 
 

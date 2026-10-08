@@ -19,6 +19,13 @@ Leges chartae:
 
 ## inedita
 
+- corpus: SPATIA arboris (vicus-latera S2a-1) - `Componens.spatium`
+  (`componens_ponere_spatium`, `componens_spatium`,
+  `componens_invenire_in_spatio`), registra actionum et figurarum cum
+  spatio per introitum (`*_miscere_in_spatio`, `*_invenire_in_spatio`),
+  `Motus.spatium`; pingere et dispensator intra spatium resolvunt.
+  Spatium "" = mores priores. Structurae crevere (rebake).
+
 - corpus: `terminale` nova (applicatio terminalis super aemulator_hospes:
   componens, figura visus, claves per codificator_terminalis, rotula ad
   visum). Nota mandatum.h emendata: color RGBA mandati = pixelum

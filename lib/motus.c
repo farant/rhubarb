@@ -29,6 +29,8 @@ motus_initiare (
     motus->sordida                    = FALSUM;
     motus->piscina                    = piscina;
     memset(&motus->ramus, ZEPHYRUM, magnitudo(InsulaRamus));
+    motus->spatium.mensura  = ZEPHYRUM;
+    motus->spatium.datum    = NIHIL;
     motus->gestus.status    = NIHIL;
     motus->gestus.effusor   = NIHIL;
     motus->gestus.ctx       = NIHIL;
