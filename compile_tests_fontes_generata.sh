@@ -144,6 +144,7 @@ declare -a SOURCE_FILES=(
     "lib/norma.c"
     "lib/norma_canon.c"
     "lib/norma_gignere.c"
+    "lib/norma_stml.c"
     "lib/numerus_romanus.c"
     "lib/nuntium.c"
     "lib/nuntium_schema.c"

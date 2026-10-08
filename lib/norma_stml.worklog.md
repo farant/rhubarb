@@ -35,3 +35,30 @@ keys and variants with a line.
 **Inline capture strings in C tests** are easy to get wrong (an
 implicit capture plus a stray `</>` = parse failure at 3:1); fixtures in
 C strings are written explicit-close.
+
+## 2026-10-08 - the reader (norma-plan-3 A3)
+
+Canon judges first (vocabulary, cardinality per name, genera, citatio,
+unicitas); the reader only what canon cannot say: exactly ONE type child
+(canon counts per element name, not per group of names), bounds in
+pairs (R3) that parse (`strtol`/`strtod`, finite only) and are not
+inverted, `electio=` vs `<licitum>`, reference cycles, generators
+against a registry. Every class has a fixture; a bitmask over
+`NormaStmlCausa` asserts all eleven fired.
+
+- Captures are ordinary children after parsing (measured while
+  planning), so the reader never looks at `captio_numerus`.
+- Named normae resolve lazily with a three-state memo (0 / building /
+  built) and a stack (`catena`) so a cycle names its chain:
+  "circulus: a -> b -> a". A cycle is reported once: the second root of
+  the cycle is already 'built' (with NIHIL) when the top loop reaches it.
+- Column = byte offset from the previous newline (`positus_initium`);
+  line from the parser.
+- s64 range taken as LONG_MIN..LONG_MAX because `strtol` returns long;
+  equal on macOS LP64 (the only target, CLAUDE.md).
+- Bit me: a parameter named `ordinarius` - latina.h `default`. Renamed
+  `praestitutum`. (The plan text had it; examen would have caught it at
+  commit, clang caught it first.)
+- Plant notes: a plant must COMPILE under -Werror - deleting the only
+  call of a static function is "unused function", not a red test. The
+  cycle plant keeps `_circulus` referenced behind `si (FALSUM)`.
