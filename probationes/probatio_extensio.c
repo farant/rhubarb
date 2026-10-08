@@ -1278,29 +1278,38 @@ s32 principale (vacuum)
     }
 
     {
-        /* E17/E28 (N12): limes derivatae D in forma centrata. c =
-         * approximatio XVII digitorum radicis: |alpha - c| ~ 1e-16,
+        /* E17/E28 (N12), recensio III C5 (radius 1 in D: signa falsa
+         * ubi |alpha| >> 1 - radices -9, -7, 2, 17): limes derivatae D.
+         * c = approximatio XVII digitorum radicis: |alpha - c| ~ 1e-16,
          * signum ignotum sed per elementum LINEARE certum (derivata
          * constans, D exactum). Tum (alpha - c)^e (alpha^2 + 5) signum
          * sign(alpha - c)^e habere DEBET; D infra verum (Horner
          * intervallorum cum angulis omissis) signum falsum dat. */
         hic_manens constans character* polynomia[] = { "t^3 - 3t + 1",
             "t^3 - 3t + 1", "t^3 - 3t + 1", "t^3 + t^2 - 2t - 1",
-            "t^5 - t - 1", "t^4 - 10t^2 + 1" };
+            "t^5 - t - 1", "t^4 - 10t^2 + 1",
+            "t^4 - 3t^3 - 207t^2 - 653t + 2141",
+            "t^4 - 3t^3 - 207t^2 - 653t + 2141",
+            "t^4 - 3t^3 - 207t^2 - 653t + 2141",
+            "t^4 - 3t^3 - 207t^2 - 653t + 2141" };
         hic_manens constans s32 indices[] = { ZEPHYRUM, I, II, ZEPHYRUM,
-            ZEPHYRUM, ZEPHYRUM };
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, II, III };
         hic_manens constans character* propinquae[] = {
             "-18793852415718167/10000000000000000",
             "34729635533386069/100000000000000000",
             "15320888862379561/10000000000000000",
             "-18019377358048383/10000000000000000",
             "11673039782614187/10000000000000000",
-            "-31462643699419726/10000000000000000" };
+            "-31462643699419726/10000000000000000",
+            "-9001746332008945/1000000000000000",
+            "-6997687041858209/1000000000000000",
+            "19993265379358194/10000000000000000",
+            "17000106835931323/1000000000000000" };
         b32 constantia_bene = VERUM;
         i32 c;
 
         imprimere("\n--- Recensio II: limes derivatae (N12) ---\n");
-        per (c = ZEPHYRUM; c < VI; c++)
+        per (c = ZEPHYRUM; c < X; c++)
         {
             Extensio* k = extensio_ex_polynomio(_p(polynomia[c]),
                 indices[c], piscina);

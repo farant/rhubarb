@@ -227,3 +227,36 @@ loops structurally bounded. Contract and cost problems, all fixed:
   (Sturm property), E16 (radix range, refused by _creare), E31 (all integers
   tested), E35 (R from |infra| only: on a 2^-16 interval |infra| ~ |supra|
   and the absolute-sum bound already overestimates |num'|).
+
+## 2026-10-08 - review III fixes (E2c)
+
+Review III: no wrong result anywhere (4200+ signs, 1267 compara, 188
+generic fields, (1 - sqrt 2)^10000, (alpha - c)^500 in degree 3-12, ASan /
+UBSan / venenum); centred-form argument, computed limit, degree-2 sigma
+mapping, Mahler-Mignotte depth and the rollback all confirmed. Fixed:
+- **M1 (crash):** the recursive isolation overflowed the C stack for
+  Mignotte a = 10^1000 (17,434 frames). Now iterative with an explicit
+  stack of pending intervals (right child pushed first so roots stay
+  ascending; stack <= depth + 1 frames). a = 10^1000 accepted (161 s,
+  400 MB - extreme input).
+- **M2 (near-zero signs cubic):** numerator evaluated at every bisection
+  through fractions with gcds. Now the interval is DYADIC integers
+  (A, C) / 2^S (every root interval in the library is dyadic by
+  construction: integers, /2^20, bisections from an integer bound; a
+  non-dyadic interval refuses, unreachable): a bisection is one addition
+  and one doubling, f's sign by integer homogeneous Horner, and the
+  numerator is evaluated EXACTLY only at doubling checkpoints (iterations
+  1, 2, 4, 8, ... and the limit), so at most twice the needed bisections
+  but O(log) numerator evaluations. (alpha - c)^500: cos 2pi/27 (degree
+  9) 220 s -> 2.5 s; cube root of 2 43 s -> 14 s. The remaining cost is
+  O(bits^3) inherent to exact bisection (8850 steps at 9000-bit points);
+  interval Newton (quadratic convergence) is the next step if needed.
+- **T1 (wrong signs not caught):** R forced to 1 in D gave wrong signs
+  where |alpha| >> 1. The consistency test now runs at all four roots
+  (-9, -7, 2, 17) of t^4 - 3t^3 - 207t^2 - 653t + 2141; plant E36 red.
+- **L1, L2 (docs):** the generic constructor grows ~d^7 (40: 0.3 s, 60:
+  4 s, 80: 34 s), not d^3; exact values like a^(2^30) in Q(sqrt 5) are
+  ~10^9 bits by nature.
+- Plants: 33, 28 red; equivalent or caught downstream: E8, E13, E16, E31,
+  E35 (reasons in the E2b entry). New red: E36 (radius 1), E37 (isolation
+  stack in reverse order), E38 (dyadic step without doubling).

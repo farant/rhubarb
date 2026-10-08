@@ -113,9 +113,9 @@ extensio_radix (
  * extra [-1, radices reales). Gradu 2-3 sine radice rationali
  * irreducibilis est; gradu >= 4 VOCANS irreducibilitatem asserit
  * (divisor nullius in inversa refutatur, signum testimonio nullius
- * refutat). SUMPTUS: catena Sturm semel, in officina, evaluatio
- * integra homogenea: gradu 40 omnibus radicibus realibus ~0.3 s (olim
- * 4.8 s / 1.4 GB); crescit tamen ut d^3. Familiae nominatae
+ * refutat). SUMPTUS (omnibus radicibus realibus, recensio III):
+ * gradu 40 ~0.3 s, 60 ~4 s, 80 ~34 s - crescit ut ~d^7 (catena Sturm
+ * et isolatio); memoria parva (officina). Familiae nominatae
  * (quadratica, cosinus) catenam omnino vitant (Descartes). */
 Extensio*
 extensio_ex_polynomio (
@@ -158,8 +158,10 @@ algebraicus_generator (
 
 /* p(alpha) / denominator, p Laurent quilibet (exponentes negativi per
  * alpha^-1; exponentes magni per potentias, non per Hornerum densum).
- * FALSUM si denominator nullus, k NIHIL, aut exponens negativus cum
- * f(0) = 0 (alpha = 0 non invertibilis). */
+ * NOTA: valor EXACTUS ipse magnus esse potest - a^(2^30) in Q(sqrt 5)
+ * ~10^9 bita habet et finem non attingit; magnitudo effectus, non
+ * algorithmi. FALSUM si denominator nullus, k NIHIL, aut exponens
+ * negativus cum f(0) = 0 (alpha = 0 non invertibilis). */
 b32
 algebraicus_ex_polynomio (
      constans Extensio* k,
