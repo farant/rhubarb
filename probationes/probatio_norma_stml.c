@@ -14,9 +14,15 @@
 #include "norma_stml.h"
 #include "norma_gignere.h"
 #include "chorda_aedificator.h"
+#include "norma_ad_c.h"
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+
+/* fons GENERATUS a bin/norma c (oraculum III, norma-plan-3 A5) */
+#include "fixa/norma/normae_fixae.h"
+#include "fixa/norma/normae_fixae.c"
 
 /* canon infixus super documentum: numerus vitiorum; *genera = bit per
  * CanonVitiumGenus visum (canon unum defectum saepe bis nominat -
@@ -679,6 +685,111 @@ probatio_scriptor_communis_et_recusationes(Piscina* p)
         p)));
 }
 
+/* gignens quem fons generatus externum declarat (R7) */
+JsonValor*
+fixa_norma_gignens_ex_functione (
+       Sors* sors,
+    Piscina* p,
+     vacuum* datum)
+{
+    redde _ex_functione(sors, p, datum);
+}
+
+interior vacuum
+probatio_oraculum_tertium(Piscina* p)
+{
+    NormaGignensNominatum  gignentes[I];
+                   chorda  fixa = filum_legere_totum(FIXA, p);
+          NormaStmlLectio  l;
+               NormaFonsC  fons;
+                   chorda  causa;
+                    Norma* omnia;
+               NormaVisus  v;
+               NormaVisus  a;
+               NormaVisus  b;
+
+    imprimere("\n--- Oraculum III: emissor contra lectorem ---\n");
+    gignentes[0].titulus  = "ex_functione";
+    gignentes[0].functio  = fixa_norma_gignens_ex_functione;
+    gignentes[0].datum    = NIHIL;
+    l                     = norma_stml_legere(fixa, gignentes, I, p);
+    CREDO_VERUM(l.successus);
+    CREDO_AEQUALIS_I32(_idem_dicunt(norma_stml_quaerere(&l, "usus"),
+        fixa_norma_usus(p), p), 0);
+    CREDO_AEQUALIS_I32(_idem_dicunt(norma_stml_quaerere(&l, "omnia"),
+        fixa_norma_omnia(p), p), 0);
+    /* DAG in C servatum */
+    omnia  = fixa_norma_omnia(p);
+    v      = norma_visus(omnia);
+    {
+        Norma* primus    = NIHIL;
+        Norma* secundus  = NIHIL;
+          i32  i;
+
+        per (i = 0; i < xar_numerus(v.campi); i++)
+        {
+            NormaCampus* c = (NormaCampus*)xar_obtinere(v.campi, i);
+
+            si (chorda_aequalis_literis(c->titulus, "usus_primus"))
+            {
+                primus = c->valor;
+            }
+            si (chorda_aequalis_literis(c->titulus, "usus_secundus"))
+            {
+                secundus = c->valor;
+            }
+        }
+        CREDO_VERUM(primus && primus == secundus);
+    }
+    /* fines fluitantes per litteras C intacti: campus 'minima' (III) */
+    a = norma_visus(((NormaCampus*)xar_obtinere(norma_visus(
+        norma_stml_quaerere(&l, "usus")).campi, III))->valor);
+    b = norma_visus(((NormaCampus*)xar_obtinere(norma_visus(
+        fixa_norma_usus(p)).campi, III))->valor);
+    CREDO_VERUM(a.minimum_fluitans == b.minimum_fluitans);
+    CREDO_VERUM(a.maximum_fluitans == b.maximum_fluitans);
+    /* fons commissus recens: emissor hodiernus idem scribit */
+    fons = norma_ad_c(_tabula(l.normae, p), xar_numerus(l.normae),
+        "fixa_norma_", "normae_fixae.h", FIXA, p, &causa);
+    CREDO_CHORDA_AEQUALIS(fons.caput, filum_legere_totum(
+        "probationes/fixa/norma/normae_fixae.h", p));
+    CREDO_CHORDA_AEQUALIS(fons.corpus, filum_legere_totum(
+        "probationes/fixa/norma/normae_fixae.c", p));
+}
+
+interior vacuum
+probatio_emissor_recusat(Piscina* p)
+{
+    NormaNominata nn;
+           chorda causa;
+        character longus_textus[DCCC];
+
+    imprimere("\n--- Probans emissorem recusantem ---\n");
+    nn.titulus  = chorda_ex_literis("a-b", p);
+    nn.norma    = norma_textus(p);
+    CREDO_AEQUALIS_I32(norma_ad_c(&nn, I, "x_", "x.h", "x.norma", p,
+        &causa).corpus.mensura, 0);
+    nn.titulus = chorda_ex_literis("bonum", p);
+    memset(longus_textus, 'a', DCCC - I);
+    longus_textus[DCCC - I] = '\0';
+    nn.norma = norma_descriptio(norma_textus(p), longus_textus);
+    CREDO_AEQUALIS_I32(norma_ad_c(&nn, I, "x_", "x.h", "x.norma", p,
+        &causa).corpus.mensura, 0);
+    CREDO_VERUM(chorda_continet(causa, chorda_ex_literis("DIX", p)));
+    nn.norma = norma_intra_fluitans(norma_numerus(p), 0.0, HUGE_VAL);
+    CREDO_AEQUALIS_I32(norma_ad_c(&nn, I, "x_", "x.h", "x.norma", p,
+        &causa).corpus.mensura, 0);
+    nn.norma = norma_gignens(norma_textus(p), _ex_functione, NIHIL);
+    CREDO_AEQUALIS_I32(norma_ad_c(&nn, I, "x_", "x.h", "x.norma", p,
+        &causa).corpus.mensura, 0);
+    /* literae: '?' et '"' et linea nova effugiuntur (trigraphi!) */
+    nn.norma = norma_descriptio(norma_textus(p), "a?\?-b \"c\"\nd\\e");
+    CREDO_VERUM(chorda_continet(norma_ad_c(&nn, I, "x_", "x.h",
+        "x.norma",
+        p, &causa).corpus, chorda_ex_literis(
+        "\"a\\?\\?-b \\\"c\\\"\\nd\\\\e\"", p)));
+}
+
 s32
 principale (vacuum)
 {
@@ -693,6 +804,8 @@ principale (vacuum)
     probatio_oraculum_primum(p);
     probatio_oraculum_secundum(p);
     probatio_scriptor_communis_et_recusationes(p);
+    probatio_oraculum_tertium(p);
+    probatio_emissor_recusat(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

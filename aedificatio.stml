@@ -447,6 +447,23 @@
     <ingressus genus="fasciculus" via="norma.canon"/>
     <exitus via="lib/norma_canon.c" provenientia="regeneratio"/>
   </actio>
+  <!-- normae fixae -> C generatum (norma-plan-3 A5, oraculum III):
+       bin/norma c per aedilis structum (regula R8) -->
+  <actio titulus="normae_fixae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/norma_c_regenerare.sh
+      <verbum! (>probationes/fixa/norma/normae_fixae.norma
+      <verbum! (>fixa_norma_
+      <verbum! (>probationes/fixa/norma/normae_fixae.h
+      <verbum! (>probationes/fixa/norma/normae_fixae.c
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
+    <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
+    <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/norma/normae_fixae.norma"/>
+    <exitus via="probationes/fixa/norma/normae_fixae.h" provenientia="regeneratio"/>
+    <exitus via="probationes/fixa/norma/normae_fixae.c" provenientia="regeneratio"/>
+  </actio>
   <!-- capsulae ex TOML (tools/capsula_regenerare.sh). Duae sine TOML
        (book_assets/capsula_libri.c, probationes/capsula_assets.c)
        generatorem ignotum habent: NON declaratae - desideratum
