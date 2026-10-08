@@ -155,3 +155,29 @@ Usage keys are not novelty-checked, so these never pressed.
 Promoted (Fran read it first, approved unchanged): the live text response
 as `probationes/fixa/vates/herbarium/specimina/vivum_textus_sonnet_5_5-1.json`
 - the sweep now covers the API's real shape, not only hand-made seeds.
+
+## 2026-10-08 - novelty = a declared NOTANDUM schema (norma-plan-2 N5)
+
+The hand-kept key lists (`_claves_summae`, `_claves_textus`,
+`_claves_petiti`, `_in_indice`, `_claves_probare`) are gone. `_legere` now
+judges every 200 body against `_forma_responsi` - a norma schema of the
+Anthropic message in NOTANDUM mode: top level (id, type, role, model,
+content, stop_reason, stop_sequence, stop_details, usage, container,
+diagnostics), usage (incl. cache_creation, output_tokens_details,
+service_tier, inference_geo), and content blocks as a discriminated union
+on "type" (text {text, citations?}, tool_use {id, name, input}, thinking
+{thinking, signature}, redacted_thinking {data}).
+
+Novelty = ALL of norma's notes (and issues), joined with "; ":
+- unknown block -> "blocus ignotus: <type>" (same text as before; the T5
+  test still sees exactly "blocus ignotus: server_tool_use");
+- undeclared key -> "campus ignotus: <path>" (now WITH the path, and
+  every one, not just the first);
+- a schema issue (e.g. a required field missing) -> "forma fracta: <path>";
+- unknown stop_reason still from `_causa_finis`, first in the line.
+
+Regression oracle: probatio_vates UNCHANGED, 106/106. Plants: drop
+"diagnostics" from the schema -> live-shape test red; content union
+APERTUM -> novelty test red. Live (N5.4, claude-sonnet-5-5, $0.0078):
+all checks pass and herbarium recorded 0 new sightings for ordinary
+calls (4 before, 4 after).

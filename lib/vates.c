@@ -4,6 +4,7 @@
 #include "postulata_posix.h"
 #include "vates.h"
 #include "herbarium.h"
+#include "norma.h"
 #include "filum.h"
 #include "fasti.h"
 #include "chorda_aedificator.h"
@@ -504,37 +505,6 @@ vates_anthropic_corpus (
  * B. LECTIO ANTHROPIC
  * ====================================================================== */
 
-hic_manens constans character* _claves_summae[] = {
-    "id", "type", "role", "model", "content", "stop_reason",
-    "stop_sequence", "stop_details", "usage",
-    /* fumus vivus T7 (2026-10-08): in omni responso, null nisi
-     * container codicis / diagnostica cache petita */
-    "container", "diagnostics", NIHIL
-};
-hic_manens constans character* _claves_textus[] = {
-    "type", "text", "citations", NIHIL
-};
-hic_manens constans character* _claves_petiti[] = {
-    "type", "id", "name", "input", NIHIL
-};
-
-interior b32
-_in_indice (
-    chorda clavis,
-    constans character* constans* index)
-{
-    i32 i;
-
-    per (i = 0; index[i]; i++)
-    {
-        si (chorda_aequalis_literis(clavis, index[i]))
-        {
-            redde VERUM;
-        }
-    }
-    redde FALSUM;
-}
-
 /* prima novitas sola servatur */
 interior vacuum
 _novitas (
@@ -555,25 +525,139 @@ _novitas (
     *novitas = chorda_ex_literis(buffer, piscina);
 }
 
-interior vacuum
-_claves_probare (
-            JsonValor* obj,
-    constans character* constans* nota,
-    constans character* praefixum,
-               chorda* novitas,
-             Piscina*  piscina)
+interior Norma*
+_forma_responsi (
+    Piscina* p)
 {
-    JsonObjectumIterator  it = json_objectum_iterator(obj);
-                  chorda  clavis;
-               JsonValor* valor;
+    Norma* textus     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* petitum    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* cogitatio  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* redacta    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* blocus = norma_modus(norma_discrimen(p, "type"),
+        NORMA_NOTANDUM);
+    Norma* cc    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* usus  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* r     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
 
-    dum (json_objectum_iterator_proxima(&it, &clavis, &valor))
+    norma_campus(textus, "text", norma_textus(p), VERUM);
+    norma_campus(textus, "citations", norma_liberum(p), FALSUM);
+    norma_campus(petitum, "id", norma_textus(p), VERUM);
+    norma_campus(petitum, "name", norma_textus(p), VERUM);
+    norma_campus(petitum, "input", norma_liberum(p), VERUM);
+    norma_campus(cogitatio, "thinking", norma_textus(p), VERUM);
+    norma_campus(cogitatio, "signature", norma_textus(p), VERUM);
+    norma_campus(redacta, "data", norma_textus(p), VERUM);
+    norma_variatio(blocus, "text", textus);
+    norma_variatio(blocus, "tool_use", petitum);
+    norma_variatio(blocus, "thinking", cogitatio);
+    norma_variatio(blocus, "redacted_thinking", redacta);
+    norma_campus(cc, "ephemeral_5m_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(cc, "ephemeral_1h_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "input_tokens", norma_integer(p), VERUM);
+    norma_campus(usus, "output_tokens", norma_integer(p), VERUM);
+    norma_campus(usus, "cache_read_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "cache_creation_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "cache_creation", cc, FALSUM);
+    norma_campus(usus, "output_tokens_details", norma_liberum(p),
+        FALSUM);
+    norma_campus(usus, "service_tier",
+        norma_aut_nullum(norma_textus(p)), FALSUM);
+    norma_campus(usus, "inference_geo",
+        norma_aut_nullum(norma_textus(p)), FALSUM);
+    norma_campus(r, "id", norma_textus(p), VERUM);
+    norma_campus(r, "type", norma_textus(p), VERUM);
+    norma_campus(r, "role", norma_textus(p), VERUM);
+    norma_campus(r, "model", norma_textus(p), VERUM);
+    norma_campus(r, "content", norma_tabulatum(p, blocus), VERUM);
+    norma_campus(r, "stop_reason", norma_aut_nullum(norma_textus(p)),
+        VERUM);
+    norma_campus(r, "stop_sequence", norma_aut_nullum(norma_textus(p)),
+        FALSUM);
+    norma_campus(r, "stop_details", norma_liberum(p), FALSUM);
+    norma_campus(r, "usage", usus, VERUM);
+    norma_campus(r, "container", norma_liberum(p), FALSUM);
+    norma_campus(r, "diagnostics", norma_liberum(p), FALSUM);
+    redde r;
+}
+
+/* "$.content[N].type" -> typus blocu N (nota VARIATIO); aliter via ipsa */
+interior chorda
+_typum_ex_via (
+    JsonValor* radix,
+       chorda  via,
+      Piscina* p)
+{
+    constans character* praefixum             = "$.content[";
+                   i32  lp     =
+                       (i32)strlen(praefixum);
+                   i32  index  = 0;
+                   i32  i;
+             JsonValor* content;
+             JsonValor* blocus;
+
+    (vacuum)p;
+    si (   via.mensura                              <= lp
+        || memcmp(via.datum, praefixum, (size_t)lp) != 0)
     {
-        si (!_in_indice(clavis, nota))
+        redde via;
+    }
+    per (i = lp; i < via.mensura && via.datum[i] >= '0'
+        && via.datum[i] <= '9'; i++)
+    {
+        index = index * X + (i32)(via.datum[i] - '0');
+    }
+    content = json_objectum_capere(radix, "content");
+    blocus = content ? json_tabulatum_obtinere(content, index) : NIHIL;
+    redde json_capere_chorda(blocus, "type", via);
+}
+
+/* novitas = notae (et vitia) normae, OMNES, '; ' iunctae. Nota VARIATIO
+ * in content -> "blocus ignotus: <type>" (forma veterum probationum). */
+interior vacuum
+_novitates_ex_norma (
+    JsonValor* radix,
+       chorda* novitas,
+      Piscina* p)
+{
+        NormaIudicium j = norma_iudicare(_forma_responsi(p), radix,
+            p);
+    ChordaAedificator* aed = chorda_aedificator_creare(p, CCLVI);
+                  i32  i;
+
+    si (novitas->mensura > 0)
+    {
+        chorda_aedificator_appendere_chorda(aed, *novitas);
+    }
+    per (i = 0; i < xar_numerus(j.notae) + xar_numerus(j.vitia); i++)
+    {
+                b32  nota = i < xar_numerus(j.notae);
+        NormaVitium* v =
+            (NormaVitium*)xar_obtinere(nota ? j.notae : j.vitia,
+                             nota ? i : i - xar_numerus(j.notae));
+
+        si (chorda_aedificator_longitudo(aed) > 0)
         {
-            _novitas(novitas, praefixum, clavis, piscina);
+            chorda_aedificator_appendere_literis(aed, "; ");
+        }
+        si (nota && v->causa == NORMA_CAUSA_VARIATIO)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                "blocus ignotus: ");
+            chorda_aedificator_appendere_chorda(aed,
+                _typum_ex_via(radix, v->via, p));
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(aed,
+                nota ? "campus ignotus: " : "forma fracta: ");
+            chorda_aedificator_appendere_chorda(aed, v->via);
         }
     }
+    *novitas = chorda_aedificator_finire(aed);
 }
 
 interior VatesCausaFinis
@@ -664,8 +748,6 @@ _legere (
                                        : j.error;
         redde r;
     }
-    _claves_probare(j.radix, _claves_summae, "campus ignotus: ",
-        novitas, piscina);
     r->id        = json_capere_chorda(j.radix, "id", vacua);
     r->exemplar  = json_capere_chorda(j.radix, "model", vacua);
     r->causa_finis_cruda = json_capere_chorda(j.radix, "stop_reason",
@@ -690,9 +772,6 @@ _legere (
         {
             b->genus   = VATES_TEXTUS;
             b->textus  = json_capere_chorda(e, "text", vacua);
-            _claves_probare(e, _claves_textus,
-                "campus ignotus in text: ",
-                            novitas, piscina);
         }
         alioquin si (chorda_aequalis_literis(typus, "tool_use"))
         {
@@ -700,20 +779,15 @@ _legere (
             b->id       = json_capere_chorda(e, "id", vacua);
             b->titulus  = json_capere_chorda(e, "name", vacua);
             b->input    = json_objectum_capere(e, "input");
-            _claves_probare(e, _claves_petiti,
-                "campus ignotus in tool_use: ",
-                            novitas, piscina);
         }
         alioquin
         {
             b->genus = VATES_OPACUM;
-            si (   !chorda_aequalis_literis(typus, "thinking")
-                && !chorda_aequalis_literis(typus, "redacted_thinking"))
-            {
-                _novitas(novitas, "blocus ignotus: ", typus, piscina);
-            }
         }
     }
+
+    /* novitates OMNES per schema declaratum (norma, NOTANDUM) */
+    _novitates_ex_norma(j.radix, novitas, piscina);
 
     usus           = json_objectum_capere(j.radix, "usage");
     r->usus.input  = json_capere_integer(usus, "input_tokens", 0);
