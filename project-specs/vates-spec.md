@@ -130,11 +130,17 @@ Vates* vates_fictus_aperire    (Piscina*);   /* scripted, no network */
   `FabricaGenus` pattern): build the provider body from a
   `VatesPetitio`, send, parse the provider response into a
   `VatesResponsum` + `VatesUsus`.
-- **Transport seam**: the Anthropic backend sends through a
-  `VatesVectura` function pointer (url, headers, body -> status,
-  headers, body). Default = `http_exsequi`. vates' own tests inject a
-  scripted transport and assert the exact request bytes and the parse
-  of recorded responses.
+- **Transport seam**: the Anthropic backend sends through an
+  `HttpVectura` (http.h addition, `herbarium-spec.md` §V; there is no
+  vates-specific transport type). Default = `http_exsequi`. vates' own
+  tests inject a scripted transport and assert the exact request bytes
+  and the parse of recorded responses.
+- **herbarium** (`project-specs/herbarium-spec.md`, added 2026-10-07 at
+  Fran's request): when the caller gives vates a capture directory,
+  the transport is wrapped by `herbarium_vectura`, with vates' Anthropic
+  kind key (status + `error.type` + masked message). vates also calls
+  `herbarium_premere` on NOVELTY - a block type, `stop_reason` or field
+  it did not model - so API shape changes are pressed even on HTTP 200.
 - **fictus**: a backend for CONSUMERS' tests. The test pushes scripted
   neutral responses (text, tool calls, usage, stop reasons, errors);
   fictus records every request it received so a test can assert what
@@ -177,6 +183,9 @@ passes it in. Arca later replaces the file read; vates does not change.
    proves it against httpbin `/delay/n` over https. Worklog:
    `lib/http.worklog.md`.
 
+2. **http seam + accessors** (`herbarium-spec.md` §V): `HttpVectura`
+   and read accessors on `HttpPetitio`.
+
 Nothing else is owed by the design. Anything the smoke probes (§IX Q1)
 uncover is added here before it is fixed.
 
@@ -189,6 +198,11 @@ uncover is added here before it is fixed.
   policy over the scripted transport (429 with retry-after, then 200;
   529 x N; 400 no retry), price arithmetic, ledger lines, breakpoint
   limit refusal, fictus behaviour.
+- **Specimen sweep**: one test enumerates every committed specimen
+  (`probationes/fixa/vates/herbarium/`), replays it through
+  `herbarium_reddens`, and asserts a NAMED outcome (a specific
+  `VatesError` / `causa_finis`), never a crash or bare PARSE. Hand-made
+  specimens seed it until live capture supplies real ones.
 - **Local scripted server** (plain HTTP on port 0, from the house
   `tcp` + `http_parser`): proves the real `http_exsequi` path against
   exact bytes, including malformed and truncated responses.
@@ -212,7 +226,8 @@ uncover is added here before it is fixed.
 - **Q2** `include/vates.h` for Fran's review (the API is the thing to
   get right; implementation can improve later). No implementation
   before approval.
-- **Q3** §VII fix; neutral model + Anthropic body building + response
+- **Q3** §VII fixes; herbarium (its header reviewed with vates.h);
+  neutral model + Anthropic body building + response
   parsing + fictus + transport seam, test-first.
 - **Q4** retries, accounting, ledger; live smoke (one call, then cache
   proof).
