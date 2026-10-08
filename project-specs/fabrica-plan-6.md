@@ -65,36 +65,39 @@ Fran before code.
 
 ### T6: `probationes_c`
 
-- [ ] **Step 1: failing test** (temporary root, two tiny C tests and a
+(As built in four commits: T6a processus options, T6b extractor library +
+facultas, T6c-1 the kind in the machine, T6c-2 the tool hooks + smoke.)
+
+- [x] **Step 1: failing test** (temporary root, two tiny C tests and a
   library): link via aedilis_derivare + compilator library (flags from
   aedilis.stml), run, verdict per member; edit one library source ->
   only members whose closure holds it re-link and re-run; edit one test
   -> only it; a `facultas="fenestra"` member is linked, not run.
-- [ ] **Step 2:** implement; conformance fixture; plants (closure
+- [x] **Step 2:** implement; conformance fixture; plants (closure
   ignored -> all re-run; facultas ignored -> GUI member run). **Commit.**
 
 ### T7: gates as composites + `post`
 
-- [ ] failing test: a gate action of steps -> composite verdict
+- [x] failing test: a gate action of steps -> composite verdict
   (`<porta>: N/N`, non-RECENS parts named); `post` orders producers
   before steps; a member that reads a `post` product is keyed on it,
   the others are not. Implement; plants. **Commit.**
 
 ### T8: toml as steps - the oracle phase
 
-- [ ] `probationes_toml` beside `porta_toml`; both on one tree agree
+- [x] `probationes_toml` beside `porta_toml`; both on one tree agree
   per test; plants: a broken toml test -> both red naming it; a broken
   toml/fontes source -> both red. Record in spec §XIII. **Commit.**
 
 ### T9: A/B
 
-- [ ] `tools/reusus_retro.sh` reads step traces; per-step reuse vs
+- [x] `tools/reusus_retro.sh` reads step traces; per-step reuse vs
   runner reuse over the same 150 commits; numbers in spec §XIII.
   Shown to Fran before T10. **Commit** (docs + tool).
 
 ### T10: switch and close
 
-- [ ] PORTAE['toml'] judged through the composite; runner kept until
+- [x] PORTAE['toml'] judged through the composite; runner kept until
   the switch has stood, then deleted (as generata T7c); spec §XIII as
   built; worklog; MEMORY; ledger park closed. **Commit.**
 

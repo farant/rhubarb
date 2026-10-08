@@ -33,7 +33,7 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-bin/fabrica iudicare -plenus -omnia > "$T/fabrica" 2>&1
+bin/fabrica iudicare -plenus -omnia -machina > "$T/fabrica" 2>&1
 rc=$?
 if [ "$rc" -eq 2 ]; then
     echo "  FRACTUM bin/fabrica iudicare nequit (exitus 2):"
@@ -42,9 +42,10 @@ if [ "$rc" -eq 2 ]; then
     exit 2
 fi
 
-# 'VERDICTUM via - causa' -> 'via<TAB>VERDICTUM<TAB>causa'
-sed -nE 's/^(RECENS|STALUM|IGNOTUM|NON IUDICATUM) ([^ ]+)( - (.*))?$/\2	\1	\4/p' \
-    "$T/fabrica" | sort -u > "$T/verdicta.tsv"
+# lineae machinae (fabrica-6 H1): 'IUDICIUM<TAB>status<TAB>via<TAB>causa'
+# -> 'via<TAB>status<TAB>causa' (viae cum spatiis quoque)
+awk -F'\t' '$1 == "IUDICIUM" { print $3 "\t" $2 "\t" $4 }' "$T/fabrica" \
+    | sort -u > "$T/verdicta.tsv"
 cut -f1 "$T/verdicta.tsv" > "$T/viae"
 # commissa: quae git sequitur
 git ls-files -- $(cat "$T/viae") 2>/dev/null | sort -u > "$T/commissa"

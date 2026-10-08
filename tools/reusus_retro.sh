@@ -8,7 +8,11 @@
 # cuiusque commissionis contra parentem primum eas probat.
 #
 # Usage:  ./tools/reusus_retro.sh TITULUS [-n N] [-addere PLAGULA]
-#         [-specificatio PLAGULA]
+#         [-specificatio PLAGULA] [-fons PLAGULA]
+#   -fons          MEMBRUM GRADUS (fabrica-6 T9): TITULUS = 'actio/membrum',
+#                  PLAGULA = fons eius; clavis statica = clausura aedilis
+#                  (bin/aedilis --partes: O, C, V) + aedilis.stml (vexilla)
+#                  - ingressus synthetici in aedificatio.stml non stant
 #   -addere        regulae additae (forma infra) - ut vestigium VETUS
 #                  reconstruatur (enumerationes, ingressus remoti)
 #   -specificatio  regulas scribit et exit (nihil probat)
@@ -30,12 +34,13 @@ RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
 TITULUS="${1:-}"; shift || true
 [ -n "$TITULUS" ] || { sed -n '9,13p' "$0" >&2; exit 2; }
-N=40; ADDITA=""; SCRIBERE=""
+N=40; ADDITA=""; SCRIBERE=""; FONS=""
 while [ $# -gt 0 ]; do
     case "$1" in
         -n) N="$2"; shift 2 ;;
         -addere) ADDITA="$2"; shift 2 ;;
         -specificatio) SCRIBERE="$2"; shift 2 ;;
+        -fons) FONS="$2"; shift 2 ;;
         *) echo "reusus_retro: optio ignota $1" >&2; exit 2 ;;
     esac
 done
@@ -116,7 +121,20 @@ _ingressus () {
         "SELECT DISTINCT genus, via FROM lectiones WHERE titulus = '$TITULUS'" |
     while IFS=$'\t' read -r g v; do
         v="${v#./}"
-        _servanda "$v" || continue
+        if ! _servanda "$v"; then
+            # lectio sub build/ (fabrica-6 T9): productum actionis
+            # declaratae - ingressus producentis uno gradu (ut ingressus
+            # declarati build/ infra)
+            case "$v" in
+                build/*|*/build/*)
+                    # shellcheck disable=SC2086
+                    p="$(awk -v e="$v" '
+                        /<actio titulus="/ { a = $0; sub(/.*titulus="/, "", a); sub(/".*/, "", a) }
+                        $0 ~ "<exitus via=\"" e "\"" { print a; exit }' $PLAGULAE_AED)"
+                    [ -n "$p" ] && _ingressus "$p" 1 ;;
+            esac
+            continue
+        fi
         case "$g" in
             L) printf 'F\t%s\t\tlectio %s\n' "$v" "$v" ;;
             X|A) printf 'E\t%s\t\tlectio %s\n' "$v" "$v" ;;
@@ -124,6 +142,16 @@ _ingressus () {
         esac
     done
     _ingressus "$TITULUS" 0
+    # MEMBRUM GRADUS (T9): clavis statica ex clausura aedilis fontis
+    if [ -n "$FONS" ]; then
+        printf 'F\t%s\t\tfons membri %s\n' "$FONS" "$FONS"
+        printf 'F\taedilis.stml\t\tvexilla aedilis.stml\n'
+        bin/aedilis "$FONS" --partes 2>/dev/null | while IFS=$'\t' read -r g v; do
+            case "$g" in
+                O|C|V) _servanda "$v" && printf 'F\t%s\t\tclausura %s\n' "$v" "$v" ;;
+            esac
+        done
+    fi
     [ -n "$ADDITA" ] && grep -v '^#' "$ADDITA"
 } | sort -u > "$REG"
 if [ ! -s "$REG" ]; then

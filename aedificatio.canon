@@ -4,7 +4,7 @@
   declarationes actionum fabricae (project-specs/fabrica-spec-v2.md,
   planum fabrica-plan-1a.md T2). Actio = ingressus -> exitus per
   genus typatum (nulla lingua expressionum - decretum Canonis).
-  Lector: fabrica_declarationes_legere (lib/fabrica.c), qui praeterea
+  Lector: fabrica_declarationes_legere (lib/fabrica_declarationes.c), qui praeterea
   titulum duplicem recusat (directoria scripturae colliderent) -
   regula quam canon dicere non potest.
 
@@ -100,8 +100,46 @@
     <liberum nomen="mandatum" maximum="1"/>
     <liberum nomen="praecondicio"/>
     <liberum nomen="vestigium"/>
-    <liberum nomen="ingressus" minimum="1"/>
-    <liberum nomen="exitus" minimum="1"/>
+    <!-- ingressus et exitus: lector UNUM saltem postulat nisi actio
+         gradum fert (fabrica-6 T6c: membra ea ferunt) - regula quam
+         canon dicere non potest -->
+    <liberum nomen="ingressus"/>
+    <liberum nomen="exitus"/>
+    <liberum nomen="probationes_c" maximum="1"/>
+    <liberum nomen="ambitus"/>
+    <liberum nomen="post"/>
+  </elementum>
+
+  <elementum nomen="post"
+    nota="actio PRODUCENDA ante hanc (fabrica-6 T7): ordo solus, numquam
+          clavis - sanare producentem stalum primum sanat, fractum
+          membra omittit; membrum quod productum legit per vestigium
+          suum clavatur, cetera non. Membra gradus a parente
+          hereditant">
+    <attributum nomen="actio" genus="nomen" necessarium="verum"/>
+  </elementum>
+
+  <elementum nomen="probationes_c"
+    nota="GRADUS (fabrica-6 T6c): actio iudicium in membra explicatur -
+          probatio C quaeque actio synthetica 'actio/membrum' cum area
+          build/fabrica/area/actio/membrum/: clausura aedilis (fontes,
+          capita, aedilis.stml, identitas clang = clavis statica),
+          compilatio per thesaurum, nexus, cursus cum cwd radice et
+          ambitu basis (vestigium = clavis dynamica). Facultas scopi
+          (aedilis facultas) = nexus solum. Nulla lingua expressionum">
+    <attributum nomen="exemplar" genus="textus" necessarium="verum"
+      nota="'dir/forma': plagulae .c directorii formae congruentes
+            ('*' globus), e.g. toml/probationes/probatio_*.c"/>
+    <attributum nomen="praeter" genus="textus"
+      nota="forma nominum exclusorum, e.g. *_benchmark.c"/>
+  </elementum>
+
+  <elementum nomen="ambitus"
+    nota="variabilis ambitus ULTRA basim (PATH, HOME, TMPDIR,
+          RHUBARB_RADIX) quam membra legere licet - valor ex ambitu
+          fabricae; lectio non declarata membrum FRACTUM facit
+          (fabrica-6 T5)">
+    <attributum nomen="variabilis" genus="textus" necessarium="verum"/>
   </elementum>
 
   <elementum nomen="praecondicio"
@@ -140,7 +178,7 @@
 
   <elementum nomen="ingressus"
     nota="genus (alias) AUT res + clavis (axes duo, fabrica-6 T2): par
-          sine genere aut ambo simul recusantur (lib/fabrica.c)">
+          sine genere aut ambo simul recusantur (lib/fabrica_declarationes.c)">
     <attributum nomen="res" genus="electio">
       <optio>plagula</optio>
       <optio>plagulae</optio>

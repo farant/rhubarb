@@ -1338,7 +1338,7 @@
     <forma textus="sinicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="sinicae" casus="genitivus" numerus="singularis" genus="femininum"/>
   </vocabulum>
-  <vocabulum lemma="subsystema" lingua="latina" classis="substantivum" nota="Gk. sub + systema n. (subsystematis), ut graphema: pars repositorii cum declarationibus aedificationis suis (silva, tessera, officina ...); radix fabrica.stml ea enumerat; sedes lib/fabrica.c (fabrica_subsystemata_legere, fabrica plan 1a T2)">
+  <vocabulum lemma="subsystema" lingua="latina" classis="substantivum" nota="Gk. sub + systema n. (subsystematis), ut graphema: pars repositorii cum declarationibus aedificationis suis (silva, tessera, officina ...); radix fabrica.stml ea enumerat; sedes lib/fabrica_declarationes.c (fabrica_subsystemata_legere, fabrica plan 1a T2)">
     <forma textus="subsystema" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="subsystematis" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="subsystemata" casus="nominativus" numerus="pluralis" genus="neutrum"/>
@@ -1349,7 +1349,7 @@
     <forma textus="regenerare" modus="infinitivus"/>
   </vocabulum>
 
-  <vocabulum lemma="verificatio" lingua="latina" classis="substantivum" nota="Lat. med. verificatio (verificare, verum facere): hic tripla memorata (titulus actionis, sigillum ingressuum, sigillum artificii) post regenerationem congruentem scripta, ut iudex eam iterum non currat; sedes tools/fabrica_memoria.c, probationes/probatio_fabrica.c (fabrica plan 1a T6)">
+  <vocabulum lemma="verificatio" lingua="latina" classis="substantivum" nota="Lat. med. verificatio (verificare, verum facere): hic tripla memorata (titulus actionis, sigillum ingressuum, sigillum artificii) post regenerationem congruentem scripta, ut iudex eam iterum non currat; sedes tools/fabrica_memoria.c, probationes/probatio_fabrica_iudicium.c (fabrica plan 1a T6)">
     <forma textus="verificatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="verificationis" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="verificationem" casus="accusativus" numerus="singularis" genus="femininum"/>
@@ -1366,7 +1366,7 @@
     <forma textus="blobos" casus="accusativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
 
-  <vocabulum lemma="praecondicio" lingua="latina" classis="substantivum" nota="Lat. rec. prae + condicio (condicio quae ante stat): hic actio realizanda ANTE aliam, ordo sine sigillo - obiecta caece nexa (strategia ignota) et instrumenta quae installator vocat; sedes lib/fabrica.c (fabrica_praecondiciones_probare, FabricaActio.praecondiciones, fabrica plan 1b T2)">
+  <vocabulum lemma="praecondicio" lingua="latina" classis="substantivum" nota="Lat. rec. prae + condicio (condicio quae ante stat): hic actio realizanda ANTE aliam, ordo sine sigillo - obiecta caece nexa (strategia ignota) et instrumenta quae installator vocat; sedes lib/fabrica_declarationes.c (fabrica_praecondiciones_probare, FabricaActio.praecondiciones, fabrica plan 1b T2)">
     <forma textus="praecondicio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="praecondicionis" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="praecondicionem" casus="accusativus" numerus="singularis" genus="femininum"/>
@@ -1374,13 +1374,13 @@
     <forma textus="praecondicionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
-  <vocabulum lemma="pessimus" lingua="latina" classis="adiectivum" nota="Lat. class. pessimus, superlativus mali: hic iudicium compositi = PESSIMUM partium ordine RECENS lt NON IUDICATUM lt IGNOTUM lt STALUM (associativum: planum == nidificatum); sedes lib/fabrica.c (fabrica_iudicia_coniungere, fabrica plan 1b T2)">
+  <vocabulum lemma="pessimus" lingua="latina" classis="adiectivum" nota="Lat. class. pessimus, superlativus mali: hic iudicium compositi = PESSIMUM partium ordine RECENS lt NON IUDICATUM lt IGNOTUM lt STALUM (associativum: planum == nidificatum); sedes lib/fabrica_declarationes.c (fabrica_iudicia_coniungere, fabrica plan 1b T2)">
     <forma textus="pessimus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="pessimum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="pessimi" casus="genitivus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
 
-  <vocabulum lemma="sanatio" lingua="latina" classis="substantivum" nota="Lat. class. sanatio (Cicero; sanare): hic actum unum executoris fabricae - actio artificii stali ordine dependentiae acta et iterum iudicata (SANATUM, FRACTUM, OMISSUM ...); sedes lib/fabrica.c (fabrica_sanare, FabricaSanatio), tools/fabrica.c (bin/fabrica sanare; fabrica plan 1b T3)">
+  <vocabulum lemma="sanatio" lingua="latina" classis="substantivum" nota="Lat. class. sanatio (Cicero; sanare): hic actum unum executoris fabricae - actio artificii stali ordine dependentiae acta et iterum iudicata (SANATUM, FRACTUM, OMISSUM ...); sedes lib/fabrica_sanare.c (fabrica_sanare), include/fabrica.h (FabricaSanatio), tools/fabrica.c (bin/fabrica sanare; fabrica plan 1b T3)">
     <forma textus="sanatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="sanationis" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="sanationem" casus="accusativus" numerus="singularis" genus="femininum"/>

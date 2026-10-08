@@ -2,6 +2,7 @@
 # regeneratio: ./tools/fontes_generare.sh tools/aedilis_fontes_generata.sh tools/aedilis.c
 declare -a RADIX_FONTES=(
     "aedilis"
+    "aedilis_silva"
     "argumenta"
     "chorda"
     "chorda_aedificator"

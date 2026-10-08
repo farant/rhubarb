@@ -857,6 +857,7 @@ aedilis_derivare (
 
     fructus->inresolutae  = _xar_chordarum(piscina);
     fructus->pura         = _xar_chordarum(piscina);
+    fructus->facultates   = _xar_chordarum(piscina);
 
     machina.piscina       = piscina;
     machina.configuratio  = configuratio;
@@ -1134,6 +1135,31 @@ aedilis_derivare (
                     redde NIHIL;
                 }
                 _chordam_addere(fructus->pura, fons);
+            }
+            alioquin si (chorda_aequalis_literis(verbum, "facultas"))
+            {
+                /* FACULTAS (fabrica-6 T6): quod scopus postulat ut
+                 * curratur. Scopi SOLIUS: caput eam pro includentibus
+                 * omnibus non declarat (multae probationes fenestra.h
+                 * includunt et sine fenestra pingunt) */
+                si (!chorda_aequalis(fons, fructus->scopus))
+                {
+                    _causam_ponere(causa_out, piscina,
+                        "facultas extra scopum (solum in scopo): ",
+                        fons);
+                    redde NIHIL;
+                }
+                si (   !chorda_aequalis_literis(reliquum, "fenestra")
+                    && !chorda_aequalis_literis(reliquum, "rete")
+                    && !chorda_aequalis_literis(reliquum,
+                           "repositorium"))
+                {
+                    _causam_ponere(causa_out, piscina,
+                        "facultas ignota (fenestra | rete | "
+                        "repositorium): ", annotatio);
+                    redde NIHIL;
+                }
+                _chordam_addere(fructus->facultates, reliquum);
             }
             alioquin
             {

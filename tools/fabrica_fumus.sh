@@ -56,6 +56,12 @@
 #   XXX  non tuta numquam simul: intervallum eius nullum alium tangit
 #   XXXI iudicium simul (T6b, praevisio): IV generatores tuti, II s sub
 #        iudice singuli, -plenus FABRICA_FILA=IV -> < IV s, verdicta recta
+#   ... XXXII-XXXVI: canon, census, repositorium, stadium iudicum (infra)
+#   XXXVII probationes_c vere (fabrica-6 T6c): III membra (facultas: nexus
+#        solum), RECENS, bibliotheca mutata -> membrum suum solum
+#   XXXVIII probationes_c: cursus fractus -> FRACTUM, area orphana
+#   XXXIX post et compositum (T7): producens primum, VERDICTUM N/M
+#   XL   lineae machinae (H1): iudicare/sanare -machina, genera nota sola
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -428,6 +434,85 @@ printf 'a II\n' > "$T/r/a"
 (cd "$T/r" && "$F" sanare d) > "$T/o" 2>&1; rc=$?
 if [ "$rc" -eq 0 ] && grep -q '^SANATUM *j ' "$T/o" && [ "$(cat "$T/r/jb")" = "a II" ]; then echo "  XXXVI sanare: iudex stalus PRIMUS sanatus OK"; else echo "  XXXVI FRACTUM (rc=$rc)"; cat "$T/o" | sed 's/^/      /' | head -8; fracta=1; fi
 
+# XXXVII-XXXVIII (fabrica-6 T6c): PROBATIONES_C VERE - radix temporaria cum
+# aedilis.stml vero, bibliotheca (include/bib.h + lib/bib.c), probationes
+# t/probatio_a.c (bibliotheca), t/probatio_b.c (sola), t/probatio_c.c
+# (facultas fenestra): sanare -> III SANATUM (c nexu solo), iudicare ->
+# RECENS; lib/bib.c mutatus -> a solum iterum; b fractus -> FRACTUM, area
+# membri deleti -> ORPHANUM
+radix_c () {
+    radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+    cp "$RADIX/aedilis.stml" "$T/r/aedilis.stml"
+    mkdir -p "$T/r/include" "$T/r/lib" "$T/r/t"
+    printf '#ifndef BIB_H\n#define BIB_H\nint bib(void);\n#endif\n' > "$T/r/include/bib.h"
+    printf '#include "bib.h"\nint bib(void) { return 3; }\n' > "$T/r/lib/bib.c"
+    printf '#include "bib.h"\nint main(void) { return bib() == 3 ? 0 : 1; }\n' > "$T/r/t/probatio_a.c"
+    # b: ambitus EXACTUS - variabilis fabricae (FUMUS_ALIENUM) invisibilis
+    printf '#include <stdlib.h>\nint main(void) { return getenv("FUMUS_ALIENUM") == 0 ? 0 : 5; }\n' > "$T/r/t/probatio_b.c"
+    printf '/* <aedilis facultas="fenestra"/> */\nint main(void) { return 1; }\n' > "$T/r/t/probatio_c.c"
+    printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+}
+VA="build/fabrica/area/probationes_t/probatio_a/verdictum.txt"
+VB="build/fabrica/area/probationes_t/probatio_b/verdictum.txt"
+VC="build/fabrica/area/probationes_t/probatio_c/verdictum.txt"
+radix_c
+(cd "$T/r" && FUMUS_ALIENUM=1 "$F" sanare "$VA" "$VB" "$VC") > "$T/o" 2>&1; rc1=$?
+(cd "$T/r" && "$F" iudicare -plenus "$VA" "$VB" "$VC") > "$T/o2" 2>&1; rc2=$?
+printf '#include "bib.h"\n/* mutatus */\nint bib(void) { return 3; }\n' > "$T/r/lib/bib.c"
+(cd "$T/r" && "$F" sanare "$VA" "$VB" "$VC") > "$T/o3" 2>&1; rc3=$?
+if [ "$rc1" -eq 0 ] && [ "$(grep -c '^SANATUM' "$T/o")" -eq 3 ] \
+   && grep -q 'transiit (nexus solum: facultas fenestra)' "$T/r/$VC" \
+   && [ "$rc2" -eq 0 ] && [ "$rc3" -eq 0 ] \
+   && grep -q '^SANATUM *probationes_t/probatio_a' "$T/o3" && ! grep -q 'probatio_b\|probatio_c' "$T/o3"; then echo "  XXXVII probationes_c: nexus, cursus, reusus OK"; else echo "  XXXVII FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -20; fracta=1; fi
+printf 'int main(void) { return 4; }\n' > "$T/r/t/probatio_b.c"
+(cd "$T/r" && "$F" sanare "$VB") > "$T/o" 2>&1; rc1=$?
+mkdir -p "$T/r/build/fabrica/area/probationes_t/probatio_deletum"
+# verritio sine argumentis iudicia omittit: actio ordinaria una, ne
+# 'nihil iudicatum' ante orphana exeat
+: > "$T/r/a"; : > "$T/r/b"
+printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n  <actio titulus="g" genus="generator">\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" iudicare) > "$T/o2" 2>&1
+if [ "$rc1" -eq 1 ] && grep -q '^FRACTUM *probationes_t/probatio_b .*exitus 4' "$T/o" \
+   && grep -q '^ORPHANUM: build/fabrica/area/probationes_t/probatio_deletum/' "$T/o2"; then echo "  XXXVIII probationes_c: fractum, orphanum OK"; else echo "  XXXVIII FRACTUM (rc=$rc1)"; cat "$T/o" "$T/o2" | sed 's/^/      /' | head -12; fracta=1; fi
+
+# XXXIX (fabrica-6 T7): POST ET COMPOSITUM VERE - generator g scribit
+# build/corpus.lst; probatio a eum legit (exitus 3 si abest); actio gradus
+# <post actio="g"/>: 'sanare probationes_t' (titulus compositi) g PRIMUM
+# sanat; iudicare -> VERDICTUM 2/2; b mutatus -> 1/2 nominans b
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+cp "$RADIX/aedilis.stml" "$T/r/aedilis.stml"
+mkdir -p "$T/r/t"
+printf 'fons I\n' > "$T/r/src.txt"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; mkdir -p "$D/build"; cp src.txt "$D/build/corpus.lst"\n' > "$T/r/gen_g.sh"
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("build/corpus.lst", "r"); if (f == 0) { return 3; } fclose(f); return 0; }\n' > "$T/r/t/probatio_a.c"
+printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_b.c"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_g.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="src.txt"/>\n    <exitus via="build/corpus.lst" provenientia="regeneratio"/>\n  </actio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n    <post actio="g"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" sanare probationes_t) > "$T/o" 2>&1; rc1=$?
+(cd "$T/r" && "$F" iudicare -plenus probationes_t) > "$T/o2" 2>&1; rc2=$?
+printf 'int main(void) { return 0; } /* II */\n' > "$T/r/t/probatio_b.c"
+(cd "$T/r" && "$F" iudicare -plenus probationes_t) > "$T/o3" 2>&1; rc3=$?
+lg=$(grep -n '^SANATUM *g ' "$T/o" | cut -d: -f1); la=$(grep -n '^SANATUM *probationes_t/probatio_a' "$T/o" | cut -d: -f1)
+# sanare compositi nominati VERDICTUM ipse dat (T10: porta per gradum)
+if [ "$rc1" -eq 0 ] && [ -n "$lg" ] && [ -n "$la" ] && [ "$lg" -lt "$la" ] \
+   && grep -q '^VERDICTUM probationes_t: 2/2$' "$T/o" \
+   && [ "$rc2" -eq 0 ] && grep -q '^VERDICTUM probationes_t: 2/2$' "$T/o2" \
+   && [ "$rc3" -eq 1 ] && grep -q '^VERDICTUM probationes_t: 1/2 - non recentia: probationes_t/probatio_b$' "$T/o3"; then echo "  XXXIX post et compositum: ordo, VERDICTUM N/M OK"; else echo "  XXXIX FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -24; fracta=1; fi
+
+# XL (fabrica-6 H1): LINEAE MACHINAE - contractus consumptorum (silva.py,
+# generata, oraculum toml): arbor XXXIX, b mutatus. iudicare -machina:
+# IUDICIUM per membrum, VERDICTUM <c> 1 2 <b>, SUMMA; sanare -machina:
+# SANATIO b, VERDICTUM <c> 2 2; OMNIS linea genus notum fert (nulla forma
+# humana in modo machinae)
+(cd "$T/r" && "$F" iudicare -plenus -machina probationes_t) > "$T/m1" 2>/dev/null; rc1=$?
+(cd "$T/r" && "$F" sanare -machina probationes_t) > "$T/m2" 2>/dev/null; rc2=$?
+ignotae=$(cat "$T/m1" "$T/m2" | awk -F'\t' '$1 !~ /^(IUDICIUM|COMPOSITUM|VERDICTUM|SANANDA|ORPHANUM|BINARIA|PRAECONDICIO|SANATIO|AGITUR|UNDA|NOTA|SUMMA)$/ || NF < 2' | wc -l | tr -d ' ')
+if [ "$rc1" -eq 1 ] && grep -q "^IUDICIUM	RECENS	build/fabrica/area/probationes_t/probatio_a/verdictum.txt	" "$T/m1" \
+   && grep -qE "^IUDICIUM	(STALUM|IGNOTUM)	build/fabrica/area/probationes_t/probatio_b/verdictum.txt	" "$T/m1" \
+   && grep -q "^VERDICTUM	probationes_t	1	2	probationes_t/probatio_b$" "$T/m1" \
+   && grep -q "^SUMMA	" "$T/m1" \
+   && [ "$rc2" -eq 0 ] && grep -q "^SANATIO	SANATUM	probationes_t/probatio_b	" "$T/m2" \
+   && grep -q "^VERDICTUM	probationes_t	2	2	$" "$T/m2" && [ "$ignotae" -eq 0 ]; then echo "  XL   lineae machinae (iudicare, sanare)  OK"; else echo "  XL   FRACTUM (rc=$rc1 $rc2, lineae ignotae $ignotae)"; cat "$T/m1" "$T/m2" | sed 's/^/      /' | head -20; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXXVI/XXXVI)"
+echo "fumus fabricae: sanum (XL/XL)"
 exit 0
