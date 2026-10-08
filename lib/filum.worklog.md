@@ -231,3 +231,24 @@ mkdir, stat again; a directory there now = success (error cleared).
 Pinned by a probatio_filum section: two forked children create the
 same 300 fresh nested paths in the same order (red 3/3 before, green
 3/3 after). Matters for T6 (parallel executor) too.
+
+## 2026-10-08 - filum_appendere_firmiter (vates-plan-2 T1)
+
+**Why:** `filum_scriptor_sync` is `fflush` only - it reaches the kernel's
+buffers, not the disk. Three append-only logs need a line that is ON DISK
+before the call returns: the vates ledger (`rationarium`), herbarium's
+sighting index, and optchat's message log (Taelin's OptChat §2: "each line
+is written with one write and then fsync").
+
+**What:** `open(O_WRONLY|O_APPEND|O_CREAT, 0644)`, ONE `write`, `fsync`,
+`close`; any failure -> FALSUM with a named `_filum_error_ponere`; the open
+is recorded with `lectiones_notare(LECTIO_SCRIPSIT, via)` like every other
+writer here (fabrica provenance). O_APPEND + a single write keeps lines
+< PIPE_BUF from different processes from interleaving. `_WIN32` branch
+returns FALSUM with a named error rather than untested Windows code.
+
+**Proof:** probatio_filum block (create, append order, empty content,
+absent directory). Plants: O_APPEND -> O_TRUNC red at :1301/:1307; open
+failure returning VERUM red at :1312. NOT provable by a test: the fsync
+itself (would need a crash) - the claim rests on reading the code.
+silva's amalgam regenerated: no diff (it does not embed this part).

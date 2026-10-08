@@ -135,6 +135,19 @@ filum_appendere (
     constans character* via,
                 chorda  contentum);
 
+/* Appendere contentum ad filum (creatur si abest, modus 0644) per
+ * write() UNUM deinde fsync() - in disco ante reditum, aut FALSUM.
+ * Pro annalibus 'append-only' (rationarium vatis, index herbarii,
+ * acta optchat). O_APPEND: lineae < PIPE_BUF (4096) a processibus
+ * pluribus scriptae non intermiscentur. Contentum vacuum: filum
+ * creatur, nihil scribitur, fsync tamen. filum_scriptor_sync
+ * fflush SOLUM est - hoc discum attingit. _WIN32: nondum (FALSUM
+ * cum errore nominato). */
+b32
+filum_appendere_firmiter (
+    constans character* via,
+                chorda  contentum);
+
 /* Appendere literas C ad filum existens */
 b32
 filum_appendere_literis (
