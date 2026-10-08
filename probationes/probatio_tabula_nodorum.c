@@ -183,10 +183,38 @@ s32 principale (vacuum)
         CREDO_VERUM (strcmp(tabula_nodorum_nodus(ZEPHYRUM)->titulus,
             "0_1")
             == ZEPHYRUM);
-        CREDO_NIHIL (tabula_nodorum_pd(tabula_nodorum_nodus(ZEPHYRUM)));
+        CREDO_NIHIL (tabula_nodorum_pd(tabula_nodorum_nodus(ZEPHYRUM),
+            piscina));
         n = tabula_nodorum_quaere("3_1");
-        CREDO_VERUM (n != NIHIL && tabula_nodorum_pd(n)[ZEPHYRUM] == I
-            && tabula_nodorum_pd(n)[XI] == II);
+        CREDO_VERUM (n != NIHIL
+            && tabula_nodorum_pd(n, piscina)[ZEPHYRUM] == I
+            && tabula_nodorum_pd(n, piscina)[XI] == II);
+        /* lector PD strictus: numerus IV * transitus, quisque in
+         * 1..2n, nec campus vacuus nec comma ultimum */
+        {
+                             NodusTabulae  falsus;
+                                      i32  k;
+            hic_manens constans character* mali[] = {
+                "", "1,2,3,4,5,6,7,8,9,10,11",
+                    "1,2,3,4,5,6,7,8,9,10,11,1,2",
+                "1,2,3,4,5,6,7,8,9,10,11,7", "0,2,3,4,5,6,1,2,3,4,5,6",
+                "1,2,3,4,5,6,1,2,3,4,5,6,", "1,2,3,4,5,6,1,2,3,4,,6",
+                "1,2,3,4,5,6,1,2,3,4,5,6x", "1,2,3,4,5,6,1,2,3,4,5,-6",
+                "1,2,3,4,5,6,1,2,3,4,5,00006" };
+
+            falsus     = *n;
+            falsus.pd  = "6,1,2,3,4,5,6,1,2,3,4,5";
+            CREDO_VERUM (tabula_nodorum_pd(&falsus, piscina) != NIHIL
+                && tabula_nodorum_pd(&falsus, piscina)[ZEPHYRUM] == VI
+                && tabula_nodorum_pd(&falsus, piscina)[XI] == V);
+            per (k = ZEPHYRUM; k < magnitudo(mali)
+                / magnitudo(mali[0]); k++)
+            {
+                falsus.pd = mali[k];
+                CREDO_NIHIL (tabula_nodorum_pd(&falsus, piscina));
+            }
+            CREDO_NIHIL (tabula_nodorum_pd(NIHIL, piscina));
+        }
         CREDO_VERUM (strstr(TABULA_NODORUM_FONS, "KnotInfo") != NIHIL
             && strstr(TABULA_NODORUM_FONS, "2026.10.5") != NIHIL
             && strstr(TABULA_NODORUM_FONS,
@@ -339,10 +367,11 @@ s32 principale (vacuum)
                 i32* simplex  = NIHIL;
                 i32  c        = ZEPHYRUM;
 
-                si (   !laqueus_pd_simplificare(tabula_nodorum_pd(n),
+                si (   !laqueus_pd_simplificare(tabula_nodorum_pd(n,
+                    piscina),
                         n->transitus, piscina, &simplex, &c)
                     || c != n->transitus
-                    || memcmp(simplex, tabula_nodorum_pd(n),
+                    || memcmp(simplex, tabula_nodorum_pd(n, piscina),
                         (memoriae_index)(IV * c) * magnitudo(i32))
                     != ZEPHYRUM)
                 {
@@ -390,11 +419,12 @@ s32 principale (vacuum)
              * generata eam octetim iudicat) */
             si (   n->transitus > ZEPHYRUM
                 && (n->transitus <= X || k % XXXVII == ZEPHYRUM) && (
-                   !laqueus_alexander_ex_pd(tabula_nodorum_pd(n),
+                   !laqueus_alexander_ex_pd(tabula_nodorum_pd(n,
+                   piscina),
                     n->transitus, piscina, &a2)
                 || !polynomium_normale(a2, piscina, &a2)
                 || !polynomium_aequalis(a, a2)
-                || !laqueus_jones_ex_pd(tabula_nodorum_pd(n),
+                || !laqueus_jones_ex_pd(tabula_nodorum_pd(n, piscina),
                 n->transitus,
                     piscina, &j2)
                 || !polynomium_aequalis(j, j2)))

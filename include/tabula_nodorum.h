@@ -59,7 +59,9 @@ nomen structura {
     constans character* titulus;      /* "3_1", "10_132" */
                    i32  transitus;    /* numerus transituum */
                    i32  symmetria;    /* TABULA_NODORUM_* */
-                   i32  initium_pd;   /* in TABULA_NODORUM_PD */
+    constans character* pd;           /* "1,5,2,4,...", IV per
+                                       * transitum ("" trivialis);
+                                       * tabula_nodorum_pd legit */
     constans character* alexander;    /* forma normalis laqueus */
     constans character* jones;        /* diagrammatis tabulae */
 } NodusTabulae;
@@ -67,7 +69,6 @@ nomen structura {
 /* data generata (lib/tabula_nodorum_data.c) */
 extern constans NodusTabulae TABULA_NODORUM[];
 extern constans i32          TABULA_NODORUM_NUMERUS;
-extern constans i32          TABULA_NODORUM_PD[];
 extern constans character*   TABULA_NODORUM_FONS;   /* provenientia */
 
 i32
@@ -83,10 +84,13 @@ constans NodusTabulae*
 tabula_nodorum_quaere (
     constans character* titulus);
 
-/* codex PD nodi (4 per transitum; NIHIL pro nodo triviali) */
+/* codex PD nodi (IV per transitum) in piscina lectus ex n->pd;
+ * NIHIL pro nodo triviali aut textu malformato (numerus != IV *
+ * transitus) */
 constans i32*
 tabula_nodorum_pd (
-    constans NodusTabulae* n);
+    constans NodusTabulae* n,
+                  Piscina* piscina);
 
 /* speculum nodus ipse est (amphichiralis) */
 b32

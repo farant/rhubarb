@@ -286,26 +286,23 @@ scribere (
         "    \"KnotInfo (C. Livingston, A. H. Moore) per "
         "database_knotinfo "
         "%s, sha256 %s\";\n\n", versio, sha);
-    fprintf(f, "constans i32 TABULA_NODORUM_PD[] = {\n");
+    /* codex PD ut textus per nodum ("1,5,2,4,..."), non tabula
+     * numerorum: tabula numerorum (DCLVII milia, ~2.4M lexemata cum
+     * commatibus) limen lexematum silvae (2^20) excedebat - plagula
+     * iudicari non poterat. Textus brevis (<= ~150 litterae ad XIII
+     * transitus) lexema unum est. */
+    fprintf(f, "constans NodusTabulae TABULA_NODORUM[] = {\n");
     per (k = ZEPHYRUM; k < numerus_nodorum; k++)
     {
-        si (nodi[k].transitus == ZEPHYRUM)
-        {
-            perge;
-        }
-        fprintf(f, "    /* %s */\n   ", nodi[k].titulus);
+        fprintf(f, "    { \"%s\", %u, %s,\n        \"",
+            nodi[k].titulus,
+            nodi[k].transitus, nodi[k].symmetria);
         per (j = ZEPHYRUM; j < IV * nodi[k].transitus; j++)
         {
-            fprintf(f, " %u,", piscina_pd[nodi[k].initium_pd + j]);
+            fprintf(f, j > ZEPHYRUM ? ",%u" : "%u",
+                piscina_pd[nodi[k].initium_pd + j]);
         }
-        fprintf(f, "\n");
-    }
-    fprintf(f, "};\n\nconstans NodusTabulae TABULA_NODORUM[] = {\n");
-    per (k = ZEPHYRUM; k < numerus_nodorum; k++)
-    {
-        fprintf(f, "    { \"%s\", %u, %s, %u,\n        \"",
-            nodi[k].titulus,
-            nodi[k].transitus, nodi[k].symmetria, nodi[k].initium_pd);
+        fprintf(f, "\",\n        \"");
         chordam_scribere(f, nodi[k].alexander);
         fprintf(f, "\",\n        \"");
         chordam_scribere(f, nodi[k].jones);

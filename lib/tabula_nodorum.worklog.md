@@ -197,3 +197,44 @@ Changes:
   reversed) and G3 (j > i) are red.
 - **Not done:** the optional speedup (check Jones degrees before multiplying
   each composite pair).
+
+## 2026-10-08 - PD as one string per knot (silva token limit)
+
+**Found by** the fresh-clone run (`tools/frigida_probare.sh`) after
+merging main into tertia: 5 silva tests red (arbor_plagula, canon_corpus,
+exemplaria_inutilia/lint/obsoleta), all on this file: "latina.h in
+clausura, ZERO lexemata expansa", round trip 243/244, examen RECUSO
+("fines tactae: expansio trunca"). Cause: silva caps one file's expanded
+token stream at 2^20 (SILVA_LIMEN_LEXEMATUM_DEFALTUM, a deliberate
+guard against judging a truncated TU). The 13-crossing table
+(d34cf0c7) emitted `TABULA_NODORUM_PD[]` as 657,484 integers, about 2.4M
+tokens with commas; the 10-crossing version was far under. d34cf0c7 named
+its gates by hand without `silva`, so nothing saw it (same trap as the
+memory note on hand-picked gates missing `generata`).
+
+**Fix (Fran chose option 1 of 3; the others were splitting the file or
+raising silva's cap):** `NodusTabulae.initium_pd` -> `constans character*
+pd` = "1,5,2,4,..." (<= ~150 chars at 13 crossings, under C89's 509);
+`TABULA_NODORUM_PD[]` removed; `tabula_nodorum_pd(n, piscina)` decodes
+into the pool. The file now has ~210K tokens (the struct array was already
+~200K), headroom to about 5x. 4.7 MB instead of 5.6 MB.
+
+**Decoder is strict:** decimal fields without a leading '0', each label
+in 1..2n (arcs of an n-crossing diagram), exactly 4n fields, no empty
+field, no trailing comma, nothing but digits and commas; anything else ->
+NIHIL. Also NIHIL for n == NIHIL and the trivial knot.
+
+**Evidence:**
+- every knot's PD parsed by Python straight from the OLD data file
+  (independent of the C decoder) == the new decoder's output for all
+  12,966 knots (scratch `pd_oraculum.tsv` vs `pd_novum.tsv`, cmp);
+- generator `-probare` recens; examen ACCIPE (was RECUSO);
+- suite 119 (decoder: one good string + 10 malformed);
+- plants (7): leading zero accepted, trailing comma accepted, 1..2n range
+  ignored, count unchecked, stray character skipped, 3_1 data corrupted,
+  8_20 data corrupted - all RED. The trailing-comma plant first SURVIVED:
+  my malformed string had 11 numbers, so the count check refused it
+  anyway; now the trailing comma follows a complete 12.
+
+Callers: only this suite. knotapel demo 116's snapshot embeds its own
+frozen copy and is untouched; no live demo calls the accessor.

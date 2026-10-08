@@ -123,15 +123,60 @@ tabula_nodorum_quaere (
     redde NIHIL;
 }
 
+/* textus "a,b,c,..." -> IV * transitus numeri decimales sine '0'
+ * initiali, quisque in 1..2n (arcus diagrammatis n transituum);
+ * quidquid aliud NIHIL */
 constans i32*
 tabula_nodorum_pd (
-    constans NodusTabulae* n)
+    constans NodusTabulae* n,
+                  Piscina* piscina)
 {
-    si (n->transitus == ZEPHYRUM)
+    constans character* c;
+                   i32* pd;
+                   i32  numerus  = ZEPHYRUM;
+                   i32  maximus;
+
+    si (n == NIHIL || n->transitus == ZEPHYRUM)
     {
         redde NIHIL;
     }
-    redde TABULA_NODORUM_PD + n->initium_pd;
+    maximus  = IV * n->transitus;
+    pd       = (i32*)piscina_allocare(piscina, (memoriae_index)maximus
+        * magnitudo(i32));
+    c        = n->pd;
+    dum (*c != '\0')
+    {
+        i32 valor = ZEPHYRUM;
+
+        /* nulla '0' initialis: forma canonica (et 0 arcus non est) */
+        si (numerus >= maximus || *c < '1' || *c > '9')
+        {
+            redde NIHIL;
+        }
+        dum (*c >= '0' && *c <= '9' && valor <= II * n->transitus)
+        {
+            valor = valor * X + (i32)(*c - '0');
+            c++;
+        }
+        si (valor > II * n->transitus)
+        {
+            redde NIHIL;
+        }
+        pd[numerus++] = valor;
+        si (*c == ',')
+        {
+            c++;
+            si (*c == '\0')
+            {
+                redde NIHIL;
+            }
+        }
+        alioquin si (*c != '\0')
+        {
+            redde NIHIL;
+        }
+    }
+    redde numerus == maximus ? pd : NIHIL;
 }
 
 b32
