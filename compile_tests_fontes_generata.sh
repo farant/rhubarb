@@ -132,6 +132,7 @@ declare -a SOURCE_FILES=(
     "lib/multipart.c"
     "lib/natura.c"
     "lib/navigator_entitatum.c"
+    "lib/norma.c"
     "lib/numerus_romanus.c"
     "lib/nuntium.c"
     "lib/nuntium_schema.c"
