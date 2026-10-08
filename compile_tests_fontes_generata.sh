@@ -156,6 +156,7 @@ declare -a SOURCE_FILES=(
     "lib/quadrans.c"
     "lib/quaerere.c"
     "lib/quaestiones_lectio.c"
+    "lib/quaternio.c"
     "lib/reactor.c"
     "lib/registrum_commandi.c"
     "lib/registrum_widget.c"
