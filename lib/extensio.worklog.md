@@ -260,3 +260,21 @@ mapping, Mahler-Mignotte depth and the rollback all confirmed. Fixed:
 - Plants: 33, 28 red; equivalent or caught downstream: E8, E13, E16, E31,
   E35 (reasons in the E2b entry). New red: E36 (radius 1), E37 (isolation
   stack in reverse order), E38 (dyadic step without doubling).
+
+## 2026-10-08 - review IV (E2c) + predicted checkpoints
+
+Review IV (focused on E2c): iterative isolation ascending and its stack
+bound (<= limes + 1; the + 3 guard can never fire), the dyadic invariant
+unreachable-to-violate on every path, the final-limit test always decides,
+no aliasing across the status rollback; ~3400 signs / 1267 compara, 0
+wrong, 0 refused; T1 kills C5, C6, C3, C1, D3. One perf note (P1): doubling
+checkpoints overshoot up to 2x in iterations (Q(cos 2pi/19), (alpha - c)^500
+~150 s). Now the next checkpoint is PREDICTED from the current miss: the
+error halves per bisection, so i + log2(error / |num(m)|) + 2, capped by the
+doubling schedule (never worse) and doubling when num(m) = 0; correctness
+still rests on the test at the limit. (alpha - c)^500: cos 2pi/19 150 s ->
+6.6 s, cube root of 2 14 s -> 4.0 s, cos 2pi/27 2.4 s. New deadline test:
+(alpha - c)^250 in Q(cos 2pi/27) (~0.3 s, limit 2 s) - kills the
+"test only at the limit" plant (E39). Doubling-only (E40, the E2c
+behaviour) survives: a 2x difference is not reliably separable by a
+deadline; recorded as a bounded performance mutant. 172 tests.

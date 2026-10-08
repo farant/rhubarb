@@ -2410,8 +2410,29 @@ algebraicus_signum (
             {
                 frange;
             }
-            proba_proxima = proba_proxima == ZEPHYRUM ? I
-                : II * proba_proxima;
+            /* proxima probatio PRAEDICTA: |num| ~ |num(m)|, error
+             * dimidiatur quoque passu, ergo log2(error / |num(m)|) + 2
+             * passus
+             * (recensio IV P1: duplicatio usque ad 2x passuum). Tecta
+             * duplicatione (numquam peior); num(m) = 0 -> duplicatio.
+             * Correctio a limite pendet, non ab hac praedictione. */
+            {
+                s32 duplicatio = proba_proxima == ZEPHYRUM ? I
+                    : II * proba_proxima;
+                s32 conjectura = duplicatio;
+
+                si (fractio_signum(valor) != ZEPHYRUM)
+                {
+                    conjectura = (s32)iteratio + _bita_fractionis(error)
+                        - _bita_fractionis(valor) + II;
+                }
+                si (conjectura <= (s32)iteratio)
+                {
+                    conjectura = (s32)iteratio + I;
+                }
+                proba_proxima = conjectura < duplicatio ? conjectura
+                    : duplicatio;
+            }
         }
         s = _signum_numeri(k->f, medium, quantum_novum, opus);
         si (s == ZEPHYRUM)

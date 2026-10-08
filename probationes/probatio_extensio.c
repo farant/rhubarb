@@ -28,6 +28,7 @@
 #include <string.h>
 
 hic_manens Piscina* piscina;
+hic_manens s32 signum_mora;
 
 interior Polynomium
 _p (
@@ -1354,6 +1355,22 @@ s32 principale (vacuum)
             }
         }
         CREDO_VERUM (constantia_bene);
+    }
+
+    {
+        /* recensio IV D1/D8: signum prope nullum sub mora - probationes
+         * num PRAEDICTAE (~0.3 s); solum ad limitem aut duplicatio
+         * caeca multo tardiores */
+           Extensio* k27 = extensio_cosinus(XXVII, piscina);
+        Algebraicus  differentia;
+        Algebraicus  potentia;
+
+        differentia = algebraicus_subtrahe(algebraicus_generator(k27,
+            piscina), _a(k27, "19/10"), piscina);
+        (vacuum)algebraicus_potentia(differentia, CCL, piscina,
+            &potentia);
+        CREDO_NON_PENDET ((vacuum)algebraicus_signum(potentia, piscina,
+            &signum_mora), MM);
     }
 
     {
