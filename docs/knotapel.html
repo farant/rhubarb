@@ -1465,7 +1465,7 @@ so this group is not an image of the braid group at all (<a
 href="#nota-braidae">note 41</a>). The capacity ladder is a dense set of
 quaternions read through ever larger tables (<a
 href="#nota-capacitas">note 42</a>).
-The axis counts are the limits of fixed arrays, not the group's: 112 and 2,043 axes, and with all 112, 214 XOR10 solutions (<a href="#nota-auditus">note 61</a>).</p>
+The axis counts are the limits of fixed arrays, not the group's: 112 and 2,043 axes, and with all 112, 214 XOR10 solutions (both counts extend only the first 1,024 XOR8 winners; <a href="#nota-auditus">note 61</a>).</p>
 
 <h2>Demo 80 · Which angles close</h2>
 <p class="nota"><code>knotapel/demo_80_group_finiteness/main.c</code> · 467 lines · 11/11 tests · <code>findings.md</code></p>
@@ -1518,7 +1518,7 @@ two rotations (note 41), not crossings of a knot; deep elements of a dense
 group are spread more generically, which is what tables reward (note 42). The
 framework is beyond what this page can assess; two checkable slips in it are
 in <a href="#nota-zeta12">note 43</a>.
-The saturation of directions at depth 7 is an array limit: depth 8 adds 1,068 new directions, while the matched-size control survives with the true counts (<a href="#nota-auditus">note 61</a>).</p>
+The saturation of directions at depth 7 is an array limit: depth 8 adds at least 1,068 new directions (the catalog cuts that round short), while the matched-size control survives with the true counts (<a href="#nota-auditus">note 61</a>).</p>
 
 <h2>Demo 83 · Framing</h2>
 <p class="nota"><code>knotapel/demo_83_framing_test/main.c</code> · 1,035 lines · 12/12 tests (about 3½ minutes) · <code>findings.md</code></p>
@@ -1648,11 +1648,12 @@ in 50,000 pairs, against 1,313 for two deep elements; and the axes become
 uniform on the sphere as depth grows (spherical-harmonic bandwidth falls).
 The log's account: the mechanism is relational, how elements combine, not
 where they sit, and the linear law is two exponentials balancing.</p>
-<p>The observations are concrete and the failed predictions stay failed.
+<p>The observations are concrete, but the failed predictions are an array
+limit: every distinct count stops at 2,048 (see below).
 The uniformity is expected: the elements of a dense subgroup of SU(2),
 reached by growing words, spread out evenly. The balanced-exponential
 argument is offered as preliminary, and that is what it is.
-Built unoptimised, as knotapel builds it, the demo crashes in phase 2d on a stack overrun; the optimised output equals a patched build byte for byte, so the numbers stand (<a href="#nota-auditus">note 61</a>).</p>
+Two faults (<a href="#nota-auditus">note 61</a>). Built unoptimised, as knotapel builds it, the demo crashes in phase 2d on a stack overrun (the optimised output equals a patched build). And its distinct-angle counter stops silently at 2,048: all four Phase 1 counts are that limit, so its two failing tests compared 2,048 with 2,048. Uncapped, deep 564 has 6,179 distinct sum angles against 10,160 strided and 10,184 random, both predictions hold and all 12 tests pass; the 73 and 1,313 of phase 2c count the first 2,048 of the 50,000 pairs (2,226 and 7,456 in all).</p>
 
 <h2>Demo 91 · Is the activation the bottleneck?</h2>
 <p class="nota"><code>knotapel/demo_91_activation_bottleneck/main.c</code> · 768 lines · 6/7 tests (one prediction fails as shipped, by design; about 3½ minutes) · no <code>findings.md</code></p>
@@ -2955,33 +2956,42 @@ or 7<sub>4</sub>"; t<sup>6</sup> − t<sup>5</sup> + t<sup>3</sup> − t + 1 is
 3t<sup>2</sup> − 3t + 1 is its own 6<sub>2</sub>, not "7<sub>3</sub> or
 8<sub>1</sub>". An Alexander polynomial also does not name a knot (many
 share one), so every such table needs "a knot with this polynomial".</p></li>
-<li id="nota-auditus"><p><strong>Demo 117: silent caps, and three
-overflows.</strong> Demo 117 audits the 57 cyclotomic demos: each built with
-UBSan, and each one with undefined behaviour or a suspicious limit run again
-with the fault removed and compared. The ring arithmetic holds: demo 29's
-87,890 brackets agree exactly with a second route through the house library,
-and demo 56's floating-point classification never disagrees with exact values.
-What changed published numbers is mostly fixed arrays that stop accepting
-entries without a word. Demo 29's catalog stops at 8,192 of 69,960 nonzero
-brackets, so its 64 distinct values are 100 (a second cap beside note 16's).
-Demo 79's axis table stops at 64 in the main program and 512 in its
-companions; the catalogs have 112 and 2,043 axes, and with all 112, XOR10 has
-214 solutions at six sectors rather than 124 at eight. Its XOR12 result,
-reproduced exactly, uses 4,104 cells of the capped table, while the full table
-needs at least 12,264: the published result is the stronger one, of a coarser
-activation than described. The same helper caps demos 80 to 83 at 512 (the
-true counts are 1,708 to 2,431); their maxima, verdicts and demo 82's
+<li id="nota-auditus"><p><strong>Demo 117: silent caps, and four kinds of
+undefined behaviour.</strong> Demo 117 audits the 57 cyclotomic demos: each
+built with UBSan, and each one with undefined behaviour or a suspicious limit
+run again with the fault removed and compared; an independent review
+re-derived the numbers with its own exact code. Where it was checked, the ring
+arithmetic is exact: demo 29's 87,890 brackets agree with a second route
+through the house library, and classifying demo 56's exact values in floating
+point agrees with exact predicates. What changed published numbers is mostly
+fixed arrays that stop accepting entries without a word. Demo 29's catalog
+stops at 8,192 of 69,960 nonzero brackets, so its 64 distinct values are 100
+(a second cap beside note 16's). Demo 79's axis table stops at 64 in the main
+program and 512 in its companions; the catalogs have 112 and 2,043 axes, and
+with all 112, XOR10 has 214 solutions at six sectors rather than 124 at eight
+(both counted over the first 1,024 XOR8 winners). Its XOR12 result,
+reproduced exactly, uses 4,104 cells of the capped table; with the full table
+the smallest sector count on its ladder that works gives 12,264, so the
+published result is the stronger one, of a coarser activation than described.
+The same helper caps demos 80 to 83 at 512 (the true counts are 1,708 to
+2,431), and demo 84's ζ<sub>12</sub> census has a 512 of its own (2,043 axes,
+67 null-only rather than 29); their maxima, verdicts and demo 82's
 matched-size control survive, but the saturation of directions after depth 7
-in demos 81 and 82 is the cap (depth 8 adds 1,068 new directions). Three
-overflows: demo 56's two-sector search reaches 11 classes, not 12; demo 90
-overruns a stack array and crashes unoptimised, though its optimised output
-equals a patched build; and demos 100 and 106 hash 36 signs in an
-<code>int</code> that overflows on every call. That hash computes what was
-published (a defined version reproduces every byte), but the intended hash
-moves most counts and restores a symmetry the overflow breaks: negating the
-inputs permutes the cells, so AND3 and OR3 must score the same. Every test of
-every demo passes in every variant. The tests assert thresholds; it is the
-numbers that moved.</p></li>
+in demos 81 and 82 is the cap. Demo 90's distinct-angle counter stops at
+2,048, which is what made its two predictions fail: uncapped, deep elements
+do give fewer distinct sum angles (6,179, against 10,160 strided and 10,184
+random), and all its tests pass. The undefined behaviour: demo 56 overflows <code>long</code> in
+its triple products, so its two-sector search reaches 11 classes, not 12;
+demo 79 reads one past an array (cosmetic); demo 90 overruns a stack array
+and crashes unoptimised, though its optimised output equals a patched build;
+and demos 100 and 106 hash 36 signs in an <code>int</code> that overflows on
+every call. That hash computes what was published (a defined version
+reproduces every byte), but the intended hash moves most counts and restores
+a symmetry the overflow breaks: negating the inputs permutes the cells, so a
+triple computes AND3 exactly when it computes OR3. Apart from demo 90, every
+test passes in every variant: those tests assert thresholds, and it is the
+numbers that moved. Demo 90's tests compared two capped counts, which is the
+other way a cap misleads.</p></li>
 </ol>
 
 <h2>Where it goes next</h2>

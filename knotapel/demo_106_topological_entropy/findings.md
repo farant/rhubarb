@@ -203,6 +203,6 @@ all Boolean functions). 20 pass, 0 fail.
 
 The activation hash (`mat3_activate`, from D100) accumulates 36 base-3 digits in an `int`, which overflows on every call (3^36 ≈ 1.5 × 10^17); it is the only undefined behaviour UBSan finds in a full run. `demo_117_cyclotomic_audit/audit_hash.sh` shows:
 
-- **The numbers are what the code computes.** A defined version (unsigned wrap mod 2^32, magnitude in unsigned) reproduces the output byte for byte, and the one value that would give a negative cell index never occurs.
+- **The numbers are what the code computes.** A defined version (unsigned wrap mod 2^32, magnitude in unsigned) reproduces the output byte for byte, and the one value where the code negates INT_MIN (undefined) never occurs.
 - **They depend on the hash.** The intended hash, the exact base-3 value (it fits 64 bits) mod k, keeps 20/20 tests but changes the counts: XOR6 triples 168,100 → 218,375; mean scores periodic 3,969 / pseudo-Anosov 3,857 → 5,180 / 4,970; in the Boolean sweep the periodic-minus-pA gaps reach 6.6 points (AND2) and 7.3 (XOR2). The negative result stands (pseudo-Anosov braids do not compute better; if anything the periodic ones do), but "no gap above 3.7 points" belongs to the overflowing hash.
-- The intended hash is symmetric under negating the inputs, so AND3 and OR3 score the same under it (320,265 each); the overflowing hash breaks that (313,332 vs 320,929).
+- The intended hash is symmetric under negating the inputs (+w for a 1 bit, −w for a 0 bit, so complementing negates the sum), so each triple computes AND3 exactly when it computes OR3: 320,265 each, with equal periodic / pA / mixed splits. The overflowing hash breaks that (313,332 vs 320,929).
