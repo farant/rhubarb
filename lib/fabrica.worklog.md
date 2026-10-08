@@ -2216,3 +2216,41 @@ rewritten by regex). Oracle: 772/772, the 13 H4b views identical,
 fumus XL/XL. Plants: 'verum' read as FALSUM -> memorabilis assertion
 red; a name not appended -> praecondiciones and order assertions red.
 `_familiam_explicare` (244) is the next long one here.
+
+## 2026-10-08 - families as stages, tests pinned first
+
+`_familiam_explicare` (244 lines) is now 66: `ExplicatioFamiliae`
+carries the run (piscina, sedes, causa, attributes, prefix/suffix
+lengths computed once, the template and which slots it declares) and
+the stages run in the original order: `_familiae_attributa` (titulus,
+via, praefixum, suffixum, the enumerating hook), `_templum_invenire`
+(exactly one `<#@id>`), then per directory entry `_plagula_congruit`
+(pure prefix/suffix match) and `_vocationem_addere` (refuses `"`/`&`,
+builds `#@id basis="..." fons="..."` with one `_argumentum_addere` for
+both slots, records an `InstantiaFamiliae` pair instead of the old
+interleaved basis/fons array), `stml_expandere`, and
+`_instantias_colligere` (one `<actio>` per call, no titulus in the
+template, `familia:basis` title, `<ingressus genus="fasciculus">`).
+
+The finding that set the order: NO declaration in the repo uses
+`<familia>`, so the census/iudicare oracle of steps 1-3 says nothing
+about this code, and six refusals were reached by no test (no
+titulus/via, two templates or a non-template element, no template, a
+file name with `"` or `&`, an empty body, two actions in one body).
+They are now tested in a new 'familias' section of
+`probatio_fabrica_declarationes.c` - added and passing against the OLD
+code first - and the family section moved there from
+`probatio_fabrica_genera.c` (H3 had left it where it was): 794
+assertions (772 + 22), genera 258 -> 238, declarationes 84 -> 126.
+
+Oracle: a driver (scratchpad, built through aedilis from
+`build/oraculum_familiae/` - aedilis refuses a source outside the
+tree: "plagula imparsabilis") prints every action field or the full
+refusal for the 10 family texts of the suite x 6 setups (5 directory
+sets, no hook): 120 lines, byte-identical old vs new, all ten refusal
+kinds present. Plants through `silva.planta` (tolerans='spatia' for a
+two-line anchor): suffix ignored -> the moved count assertion red;
+call-count check disabled -> the new empty-body test red (it is the
+only test reaching the check after the loop). fumus XL/XL after
+healing. Also: the map comment at the top of `lib/fabrica.c` (files
+by flow, the three naming tiers), pointed to from fabrica_interna.h.

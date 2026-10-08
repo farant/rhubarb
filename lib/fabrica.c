@@ -3,14 +3,32 @@
  * thesaurus, regeneratio, strategiae, fabrica_iudicare)
  *
  * Machina pura: discum et processus per FabricaSutura solam tangit.
- * Partes ceterae (fabrica-6 H2): fabrica_genera.c (genera ingressuum),
- * fabrica_declarationes.c (declarationes, composita, praecondiciones),
- * fabrica_ordo.c (dependentiae, ordo, vestigia scripturae, undae),
- * fabrica_sanare.c (sanare), fabrica_gradus.c (gradus: areae,
- * ambitus, registrum, composita graduum), fabrica_probationes_c.c
- * (genus gradus probationes_c); auxilia communia in
- * fabrica_interna.h. Vide include/fabrica.h et
- * project-specs/fabrica-spec-v2.md. */
+ *
+ * TABULA FABRICAE (fabrica-6 H2-H4b) - ubi legere incipias:
+ *   declarationes  fabrica_declarationes.c: aedificatio.stml ->
+ *                  actiones (fabrica_declarationes_legere_cum_sutura:
+ *                  familiae, gradus, ingressus, exitus), composita,
+ *                  praecondiciones
+ *   iudicium       fabrica.c: fabrica_iudicare - sigilla, vestigia
+ *                  lectionum, thesaurus, strategiae exituum
+ *   genera         fabrica_genera.c: genera ingressuum, sigillare
+ *   ordo, undae    fabrica_ordo.c: dependentiae, fabrica_ordinare,
+ *                  fabrica_undas_formare, vestigia scripturae
+ *   sanare         fabrica_sanare.c: fabrica_sanare (ante, unda, post)
+ *   gradus         fabrica_gradus.c: areae, ambitus, registrum,
+ *                  composita graduum; fabrica_probationes_c.c: genus
+ *                  gradus probationes_c
+ *   instrumentum   tools/fabrica.c (mandata) super
+ *                  tools/fabrica_sutura.c (mundus verus),
+ *                  fabrica_memoria.c, fabrica_ansae.c
+ *   probationes    probationes/probatio_fabrica_*.c super
+ *                  probationes/fabrica_mundus_fictus.c
+ *
+ * NOMINA, ordines tres: fabrica_ = API (include/fabrica.h); fabricae_
+ * = interna bibliothecae inter plagulas (include/fabrica_interna.h);
+ * _x = plagulae propria (interior). Extra bibliothecam: suturae_
+ * (instrumentum, tools/fabrica_sutura.h), mundi_ (mundus fictus
+ * probationum). Vide project-specs/fabrica-spec-v2.md et sequentes. */
 
 #include "fabrica.h"
 #include "fabrica_interna.h"
