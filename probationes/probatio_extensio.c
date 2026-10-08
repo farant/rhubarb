@@ -1868,6 +1868,63 @@ s32 principale (vacuum)
             }
             CREDO_AEQUALIS_I32 (bona, XX);
         }
+        /* via m = 2 mod 4 SOLUM: Q(cos 2pi/8) (sqrt 2) non in Q(cos
+         * 2pi/12), Q(cos 2pi/16) non in Q(cos 2pi/24); Q(cos 2pi/10) =
+         * Q(cos 2pi/5) in Q(cos 2pi/15) (recensio ABEL T1: planta
+         * m = 0 mod 4 sqrt 2 -> 0 immergebat) */
+        CREDO_FALSUM (algebraicus_immergere(algebraicus_generator(
+            extensio_cosinus(VIII, piscina), piscina),
+            extensio_cosinus(XII,
+            piscina), piscina, &x));
+        CREDO_FALSUM (algebraicus_immergere(algebraicus_generator(
+            extensio_cosinus(XVI, piscina), piscina),
+            extensio_cosinus(XXIV,
+            piscina), piscina, &x));
+        {
+            Extensio* k15 = extensio_cosinus(XV, piscina);
+
+            CREDO_VERUM (algebraicus_immergere(algebraicus_generator(
+                corpus_decem, piscina), k15, piscina, &x)
+                && algebraicus_aequalis(algebraicus_multiplica(x, x,
+                piscina), algebraicus_adde(x, _a(k15, "1"), piscina)));
+        }
+        /* pars libera: p^2 saepius (80 = 4^2 5, 144 = 12^2) - recensio
+         * ABEL A17 */
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, LXXX, piscina, &x)
+            && algebraicus_aequalis(x,
+            algebraicus_adde(algebraicus_adde(
+            r5, r5, piscina), algebraicus_adde(r5, r5, piscina),
+            piscina)));
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, CXLIV, piscina,
+            &x)
+            && _textus_est(x, "12"));
+        /* testimonium nullius exponente (d-1) B: unitas unitas = 2^(1/3) - 1
+         * (norma 1, conjugatae ~1.96): |unitas^30| ~ 0.26^30 < 1/M sed >=
+         * 1/M^2 - signum, non "nullum" (recensio ABEL M1: limes 1/M
+         * sine gradu falso nullum probaret) */
+        {
+               Extensio* corpus_cubicum =
+                   extensio_ex_polynomio(_p("t^3 - 2"),
+                   ZEPHYRUM, piscina);
+            Algebraicus unitas;
+
+            CREDO_VERUM (corpus_cubicum != NIHIL
+                && algebraicus_potentia(_a(corpus_cubicum,
+                "a - 1"), XXX, piscina, &unitas)
+                    && algebraicus_signum(unitas,
+                piscina, &signum) && signum == I);
+            CREDO_VERUM (algebraicus_potentia(_a(corpus_cubicum,
+                "1 - a"), XXXI,
+                piscina, &unitas)
+                    && algebraicus_signum(unitas, piscina, &signum)
+                && signum == -I);
+        }
+        /* corpora generalia semper refutantur (etiam gradu 1, etiam
+         * quadrata perfecta) - recensio ABEL A9/A10 */
+        CREDO_FALSUM (algebraicus_radix_quadrata(corpus_generale, IV,
+            piscina, &x));
+        CREDO_FALSUM (algebraicus_immergere(_a(extensio_ex_polynomio(_p(
+            "t - 3"), ZEPHYRUM, piscina), "5"), k120, piscina, &x));
         /* Q (gradus 1) ubique; refutationes */
         CREDO_VERUM (algebraicus_immergere(_a(extensio_cosinus(III,
             piscina), "7/3"), k120, piscina, &x)

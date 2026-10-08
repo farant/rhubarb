@@ -216,7 +216,8 @@ algebraicus_cosinus (
  * eiusdem partis liberae; FALSUM si sqrt d in K non est (conductor non
  * dividit n), aut K generalis. Per summam Gauss characteris realis
  * discriminantis D: sqrt D = sum chi(a) cos(2 pi a/D), chi Kronecker
- * (D/a); radix POSITIVA, PROBATA (x^2 = d, x > 0) antequam redditur. */
+ * (D/a); radix POSITIVA, PROBATA (x^2 = d, x > 0) antequam redditur.
+ * Corpus generale (ex_polynomio) semper FALSUM, etiam d quadratum. */
 b32
 algebraicus_radix_quadrata (
     constans Extensio* k,
@@ -228,7 +229,11 @@ algebraicus_radix_quadrata (
  * cosinus K = Q(cos 2 pi/n): alpha -> sqrt d, aut alpha_m -> 2 cos(2
  * pi/m) in K. Homomorphismus anulorum qui radicem realem electam servat
  * (signa congruunt). FALSUM si corpus a in K non continetur (conductor
- * non dividit n), K non cosinus, aut corpus a generale. */
+ * non dividit n), K non cosinus, aut corpus a generale (etiam gradu 1).
+ * Imago generatoris in OMNI vocatione computatur (summa Gauss aut
+ * Dickson): in K = Q(cos 2 pi/120) ~0.1 ms, n = 840 ~0.26 s per
+ * elementum - vocans multa elementa imaginem generatoris semel faciat
+ * (recensio ABEL P1; ansa immersionis desideratum). */
 b32
 algebraicus_immergere (
           Algebraicus  a,

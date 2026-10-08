@@ -410,3 +410,54 @@ dropped - all RED. The x^2 = s self-check removed SURVIVES by design (a
 safety net that correct code never trips).
 
 Glossary: kronecker (proper name, like sturm/cauchy/horner).
+
+## 2026-10-08 - review ABEL (recensor, RECENSIO_ABEL.md)
+
+**Confirmed against oracles that never use the conductor formula, 0
+failures:**
+- 304k Kronecker values;
+- 203 conductors against brute force;
+- 22,800 containment decisions ((m, n) <= 60, d <= 200) against a Galois
+  test - no false accept, no false refusal;
+- 1,444 cos/sqrt values to 30 certified digits;
+- 4,144 homomorphism, sign and value checks under ASan.
+The Gauss sum (tau(chi_D) = sqrt D) and the sign are right.
+
+**Fixed:**
+- **M1 - signum hung in high-degree cosine fields.** This was pre-existing
+  code, newly exposed: the zero certificate 1/M^(d-1) was built as an
+  EXACT magnus_potentia(M, d-1), and at degree ~500 that power never
+  returned (radix_quadrata(cosinus(997), 997) > 120 s, killed).
+  - Now the bound is taken in bits: M < 2^B, so 2^-(d-1)B < 1/M^(d-1).
+  - _infra_potentiam tests p/q < 2^-e as bita(p) + e <= bita(q) - 1. It
+    is conservative and costs nothing; the step limit uses the same
+    exponent.
+  - Degree 498 now finishes: sqrt 997 in 54 s, the sign of
+    cos(2pi 300/997) in 9 s, 20 certified digits in 54 s (right value).
+    That is slow but bounded; the cost is ordinary degree-500
+    arithmetic. K120 is unaffected (<= 0.2 ms).
+- **T1 - a surviving mutant made sqrt 2 -> 0 with the suite green.** The
+  m = 2 mod 4 path, mutated to accept m = 0 mod 4, embedded
+  Q(cos 2pi/8) into Q(cos 2pi/12) with sqrt 2 -> 0. Tests added: cos 8
+  -> cos 12 and cos 16 -> cos 24 are refused; cos 10 -> cos 15 is
+  accepted (phi^2 = phi + 1). The plant is red.
+- **A17 - squared primes removed only once** (80 = 4^2 5, 144 = 12^2).
+  sqrt 80 = 4 sqrt 5 and sqrt 144 = 12 are now tested. Red.
+- **A9/A10 - generic fields.** Generic fields are always refused, even at
+  degree 1 and even for a perfect square. This is now documented in the
+  header and tested.
+- **Certificate soundness test.** The plant "exponent without the factor
+  d - 1" (bound 1/M instead of 1/M^(d-1)) survived. It is UNSOUND: a
+  unit has a tiny value with large conjugates. Test: u = 2^(1/3) - 1
+  (norm 1, conjugates ~1.96), so |u^30| ~ 0.26^30 is below 1/M but
+  above 1/M^2. sign(u^30) = +1 and sign((1 - 2^(1/3))^31) = -1; the
+  plant is red. The plant "never certify zero" is equivalent in
+  outcome: the routine still refuses at the computed step limit, so it
+  only makes the refusal slower.
+
+**Not done (documented in the header):** P1 - immergere recomputes the
+generator's image on every call (Gauss sum or Dickson). That is
+~0.1 ms/element in K120 and 0.26 s at n = 840. The wish is an immersio
+handle (an API change - ask Fran). Demo 119 keeps its own cached image.
+
+Suite 254.

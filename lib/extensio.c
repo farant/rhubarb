@@ -713,6 +713,22 @@ _bita_i32 (
     redde bita;
 }
 
+/* x < 2^-e (x >= 0): x = p/q, p < 2^bita(p), q >= 2^(bita(q)-1),
+ * ergo bita(p) + e <= bita(q) - 1 sufficit (conservativum); x = 0
+ * semper */
+interior b32
+_infra_potentiam (
+    Fractio x,
+        s32 e)
+{
+    si (fractio_signum(x) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde (s64)magnus_bitorum(fractio_numerator(x)) + (s64)e
+        <= (s64)magnus_bitorum(fractio_denominator(x)) - I;
+}
+
 /* profunditas bisectionum SUFFICIENS ab intervallo (-B, B] ad radices
  * separatas: separatio radicum f liberi quadratis >= sqrt 3 d^-(d+2)/2
  * |f|_2^(1-d) (Mahler-Mignotte; |disc| >= 1 in Z), ergo log2(2B/sep)
@@ -2297,7 +2313,7 @@ _signum_ex (
      constans Extensio* k = a.corpus;
                Fractio  infra;
                Fractio  supra;
-               Fractio  limes_nullius;
+                   s32  exponens_nullius;
                Fractio  derivata_maxima;
                    s32  signum_supra;
                    s32  limes_passuum;
@@ -2380,7 +2396,8 @@ _signum_ex (
     /* FORMA CENTRATA (recensio II H1): |num(alpha) - num(m)| <= D w/2,
      * m medium, w latitudo, D >= sup |num'| super intervallum initiale
      * (et ergo omne sub-intervallum). |num(m)| > D w/2 signum decernit;
-     * aliter |num(alpha)| <= D w, et D w < 1/M^(d-1) num(alpha) = 0
+     * aliter |num(alpha)| <= D w, et D w < 2^-(d-1)B <= 1/M^(d-1)
+     * (B = bita M) num(alpha) = 0
      * PROBAT (testimonium nullius: N(num(alpha)) integer, conjugatae <=
      * M = sum |c_i| B^i). Ergo passus log2(w0 D M^(d-1)) + O(1)
      * sufficiunt: limes COMPUTATUS, non MM fixum (quod
@@ -2418,15 +2435,18 @@ _signum_ex (
                 potentia, status), status);
             potentia = magnus_multiplica(potentia, limes, status);
         }
-        (vacuum)fractio_ex_magnis(magnus_ex_s64(I),
-            magnus_potentia(summa,
-            k->gradus - I, status), status, &limes_nullius);
+        /* 1/M^(d-1) per BITA, non potentiam exactam (recensio ABEL
+         * M1: magnus_potentia(M, d-1) gradu ~500 numquam redibat):
+         * M < 2^B, B = bita(M), ergo 2^-(d-1)B < 1/M^(d-1) -
+         * testimonium tutum, paulo conservativius */
+        exponens_nullius = (s32)(k->gradus - I) * (s32)magnus_bitorum(
+            summa);
         derivata_maxima = _derivata_limes(a.numerator, infra, supra,
             status);
     }
     limes_passuum = _bita_fractionis(fractio_subtrahe(supra, infra,
         status)) + _bita_fractionis(derivata_maxima)
-        - _bita_fractionis(limes_nullius) + VIII;
+        + exponens_nullius + VIII;
     si (limes_passuum < VIII)
     {
         limes_passuum = VIII;
@@ -2481,8 +2501,8 @@ _signum_ex (
                 exitus_bene  = VERUM;
                 frange;
             }
-            si (fractio_compara(fractio_multiplica(derivata_maxima,
-                latitudo, opus), limes_nullius, opus) < ZEPHYRUM)
+            si (_infra_potentiam(fractio_multiplica(derivata_maxima,
+                latitudo, opus), exponens_nullius))
             {
                 /* num(alpha) = 0 PROBATUM: f reducibilis */
                 frange;
