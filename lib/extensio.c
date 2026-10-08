@@ -345,6 +345,17 @@ _an_transcribe (
         piscina));
 }
 
+interior b32
+_an_signum (
+    constans Anulus* anulus,
+    constans vacuum* a,
+            Piscina* piscina,
+                s32* exitus)
+{
+    redde ((constans Algebraicus*)a)->corpus == CORPUS_ANULI(anulus)
+        && algebraicus_signum(ELEMENTUM(a), piscina, exitus);
+}
+
 interior chorda
 _an_ad_chordam (
     constans Anulus* anulus,
@@ -1179,6 +1190,8 @@ _creare (
     k->anulus.compara_normam        = NIHIL;
     k->anulus.contextus             = k;
     k->anulus.integrum              = VERUM;
+    k->anulus.signum = radix
+        >= ZEPHYRUM ? _an_signum : NIHIL;
     redde k;
 }
 

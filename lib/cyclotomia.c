@@ -463,6 +463,7 @@ cyclotomia_creare (
     r->anulus.compara_normam      = NIHIL;
     r->anulus.contextus           = r;
     r->anulus.integrum            = VERUM;
+    r->anulus.signum              = NIHIL;
     redde r;
 }
 

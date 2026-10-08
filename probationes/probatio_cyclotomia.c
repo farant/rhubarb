@@ -873,6 +873,10 @@ s32 principale (vacuum)
             tabula_nodorum_numerus());
     }
 
+    /* anulus Z[zeta_n] sine ordine: signum NIHIL */
+    CREDO_NIHIL (cyclotomia_anulus(cyclotomia_creare(VIII,
+        piscina))->signum);
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

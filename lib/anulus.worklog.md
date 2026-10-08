@@ -114,3 +114,18 @@ and never about multiplication by a zero divisor.
 - Lesson: "refuses rather than lies" needs an argument about EVERY
   operation the algorithm performs on the ring, not just the one that
   can refuse.
+
+## 2026-10-08 - signum hook (ordered rings)
+
+New optional hook `signum(anulus, a, piscina, &s)` (-1 / 0 / +1, FALSUM if
+refused), last field of `Anulus`. Provided by Z (`magnus_signum`), Q
+(`fractio_signum`) and ordered `extensio` fields (`algebraicus_signum`;
+foreign elements refused); NIHIL for Z[t, t^-1], Z/n, cyclotomia and
+unordered `extensio` fields. Needed by `quaternio` (approved API, Fran
+2026-10-08): exact geometry (rotation-angle comparison, nearest direction)
+compares squares and needs the ring's order. Static descriptors are
+positional initializers: every literal (Z, Q, Z[t], the Z/n template)
+gained the field. Tests in probatio_matrix (Z, Q, NIHIL for Z[t] and Z/7),
+probatio_cyclotomia (NIHIL), probatio_extensio (ordered, foreign refused,
+Q(i) NIHIL). Plants (negated Z sign, extensio hook never set, foreign
+accepted) all red.

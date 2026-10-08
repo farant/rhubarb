@@ -134,6 +134,16 @@ structura Anulus {
      * cardine 4 (divisore nullius) columnam totam necabat, det 0 pro 3
      * (recensio anulus-I). */
     b32 integrum;
+
+    /* anuli ORDINATI solum (NIHIL aliter: Z[t, t^-1], Z/n,
+     * cyclotomia, extensio sine radice electa): signum a, -1 / 0 / +1;
+     * FALSUM si refutatum. Geometria exacta (quaternio: angulus,
+     * directio proxima) per quadrata et hoc signum comparat. */
+    b32 (*signum) (
+        constans Anulus* anulus,
+        constans vacuum* a,
+                Piscina* piscina,
+                    s32* exitus);
 };
 
 /* Z: elementa Magnus */

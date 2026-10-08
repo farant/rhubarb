@@ -1594,6 +1594,25 @@ s32 principale (vacuum)
         CREDO_VERUM (ostensio_bene);
     }
 
+    {
+        /* anulus: signum ordinatis, NIHIL sine ordine, alienum
+         * refutatum */
+           Extensio* k2  = extensio_quadratica(II, piscina);
+        Algebraicus  x   = _a(k2, "1 - a");
+        Algebraicus  alienum = _a(extensio_quadratica(III, piscina),
+            "a");
+        s32 s = ZEPHYRUM;
+
+        imprimere("\n--- Anulus: signum ---\n");
+        CREDO_VERUM (extensio_anulus(k2)->signum(extensio_anulus(k2),
+            &x,
+            piscina, &s) && s == -I);
+        CREDO_FALSUM (extensio_anulus(k2)->signum(extensio_anulus(k2),
+            &alienum, piscina, &s));
+        CREDO_NIHIL (extensio_anulus(extensio_quadratica(-I,
+            piscina))->signum);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();
