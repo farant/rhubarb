@@ -782,7 +782,6 @@ _ante_agere (
     constans FabricaActio* actio;
                    chorda  causa;
                    chorda  fracta;
-                      b32  impedita;
                       b32  recens;
                       b32  auditum;
                       i32  duratio;
@@ -790,23 +789,10 @@ _ante_agere (
 
     actio = *(FabricaActio**)xar_obtinere(ordo, i);
 
-    /* dependentia fracta aut omissa (ingressus aut praecondicio) */
-    impedita  = FALSUM;
-    fracta    = chorda_ex_literis("", piscina);
-    per (j = ZEPHYRUM; j < i; j++)
-    {
-        si (   (   status[j] == SANANDI_FRACTUM
-                || status[j] == SANANDI_OMISSUM)
-            && fabricae_pendet(actio,
-            *(FabricaActio**)xar_obtinere(ordo, j)))
-        {
-            impedita  = VERUM;
-            fracta    = (*(FabricaActio**)xar_obtinere(ordo,
-                j))->titulus;
-            frange;
-        }
-    }
-    si (impedita)
+    /* dependentia fracta aut omissa (ingressus aut praecondicio):
+     * iudicium unum cum via undarum (_dependentia_fracta) */
+    fracta = chorda_ex_literis("", piscina);
+    si (_dependentia_fracta(ordo, i, status, &fracta))
     {
         status[i] = SANANDI_OMISSUM;
         _sanationem_notare(sutura, piscina, sanationes, actio,

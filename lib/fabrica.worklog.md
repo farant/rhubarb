@@ -2166,3 +2166,13 @@ failed in the full run, then passed alone and on a rerun (ledger note).
 - Plants must compile: `(VERUM == FALSUM) ? _agere : NIHIL` keeps
   `_agere` referenced; a plain NIHIL would make it an unused static,
   fail -Werror and leave the old binary in place.
+
+## 2026-10-08 - one dependency-fracture check
+
+`_ante_agere` (serial heal) carried an inline copy of
+`_dependentia_fracta` (wave heal): same loop, same result. Each copy
+was covered by one path only - probatio_fabrica_sanare takes the serial
+path, bin/fabrica (fumus) the wave path - so a fault in one copy was
+invisible to the other's tests (seen with the H2 plants). The serial
+path now calls `_dependentia_fracta`. The same plant (`j > i`) in the
+one copy now turns both red: fumus XVIII/XXIX and the sanare suite.
