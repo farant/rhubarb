@@ -119,3 +119,20 @@ not include the window's). Eight plants caught (version ignored,
 version not recorded, no-pulse path changed, events ignored - each in
 both loops). The 16 ms cap itself lives in the loops, which need a real
 window / terminal: verified by use in S1c-2.
+
+## 2026-10-08 - smoke mode vs the frame skip (S1c-1 regression)
+
+With a pulse installed (vicus), the loop draws only on events, a pulse
+change or a store-version change. An idle `vicus -fumus` drew frame 1
+and then never reached its 30 frames - smoke runs and `-fumus -imago`
+screenshots hung. Fix in both loops: with `quadra_maxima` set, every
+iteration draws. Neither loop runs headless in a test (window /
+real terminal); the twin was proven with `script -q /dev/null
+vicus_terminalis -fumus` (a pty): before = still alive after 10 s,
+after = exits, `quadra=30`. The window loop carries the same one-line
+rule.
+
+Side find the same day (not a fenestra bug): a GUI app that gets
+mouse but never keys, even after a click, was launched inside an
+ORPHANED tmux server (its original terminal app had quit). From a
+fresh Ghostty tab the same binary types fine.

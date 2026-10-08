@@ -312,8 +312,11 @@ ludus_tessera_currere (
                 * lt->modulus.cellula_altitudo);
             ludus_tessera_tractare(lt, &e, nunc);
         }
-        /* S1c: applicatio viva - quadrum solum si pingendum */
-        si (ludus_tessera_pingendum(lt, eventa, nunc))
+        /* S1c: applicatio viva - quadrum solum si pingendum; fumus
+         * (quadra_maxima) omne quadrum pingit - aliter applicatio viva
+         * otiosa post quadrum primum numquam exit */
+        si (   quadra_maxima > ZEPHYRUM
+            || ludus_tessera_pingendum(lt, eventa, nunc))
         {
             ludus_tessera_quadrum(lt, nunc);
             (vacuum)tessera_praesentare(lt->opus);

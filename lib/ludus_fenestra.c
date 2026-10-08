@@ -250,7 +250,10 @@ ludus_fenestra_currere (
             ludus_fenestra_tractare(lf, &e, nunc);
             eventa = VERUM;
         }
-        si (!ludus_fenestra_pingendum(lf, eventa, nunc))
+        /* fumus (quadra_maxima): omne quadrum pingitur - aliter
+         * applicatio viva otiosa post quadrum primum numquam exit */
+        si (   quadra_maxima == ZEPHYRUM
+            && !ludus_fenestra_pingendum(lf, eventa, nunc))
         {
             perge;
         }
