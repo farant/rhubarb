@@ -93,3 +93,29 @@ is BYTE-IDENTICAL (`cmp`) to the headless one from probatio_ludus_imago.
 So headless frames are faithful screenshots, and the off-screen canvas
 corner is pictor's REAL initial view (not a headless artifact) - open
 question for Fran whether that initial pan is intended.
+
+
+## 2026-10-08 — vicus-latera S1c-1: pulse hook and frame skip
+
+A living app (a terminal) must be pulsed every iteration, and the
+shared loop waited up to quies_ms (300 ms) and then ALWAYS repainted
+the whole window. `ludus_fenestra_pulsum_ponere(lf, fn, ctx)`: with a
+pulse the loop waits at most 16 ms; `ludus_fenestra_pingendum(lf,
+eventa, nunc)` (public so it is testable without a window) decides
+whether to draw: events, or the pulse saw something, or - otherwise -
+the dispatcher alone is pulsed (its timers, e.g. scriba's debounced
+save) and the STORE VERSION is compared with the version at the last
+drawn frame (`versio_picta`, set by ludus_quadrum). Without a pulse:
+always draw, exactly as before.
+
+Found while building it: the dispatcher recomposes on EVERY event,
+including the empty pulse ("regula staleness"), so
+`compositiones` cannot signal change - the store version
+(`insula_versio`, bumped per accepted write) can. Comparing against the
+LAST DRAWN frame (not just around this pulse) matters: a click handled
+in an earlier iteration may still be undrawn. The twin
+(ludus_tessera) got the same pair under its own names (its header must
+not include the window's). Eight plants caught (version ignored,
+version not recorded, no-pulse path changed, events ignored - each in
+both loops). The 16 ms cap itself lives in the loops, which need a real
+window / terminal: verified by use in S1c-2.

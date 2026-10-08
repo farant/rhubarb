@@ -18,6 +18,23 @@
 #include <stdio.h>
 #include <string.h>
 
+/* pulsus probandus (vicus-latera S1c) */
+nomen structura {
+    i32 vocationes;
+    b32 reddere;
+} PulsusProbandus;
+
+interior b32
+pulsus_probandus (
+    vacuum* ctx)
+{
+    PulsusProbandus* p;
+
+    p              = (PulsusProbandus*)ctx;
+    p->vocationes  += I;
+    redde p->reddere;
+}
+
 s32 principale (vacuum)
 {
                                     Piscina* piscina;
@@ -101,6 +118,39 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(lf->mensurae.quadra, II);
     /* piscina quadri vacatur: mandata nova, non accumulata */
     CREDO_AEQUALIS_I32(mandata_numerus(lf->mandata), n1);
+
+    imprimere("\n--- vicus-latera S1c: pingendum ---\n");
+    {
+        PulsusProbandus pp;
+
+        /* sine pulsu: semper (mores prior) */
+        CREDO_VERUM(ludus_fenestra_pingendum(lf, FALSUM, M + CC));
+        pp.vocationes  = ZEPHYRUM;
+        pp.reddere     = FALSUM;
+        ludus_fenestra_pulsum_ponere(lf, pulsus_probandus, &pp);
+        ludus_quadrum(lf, M + CC);
+        /* otiosum: nihil novi, quadrum omittitur */
+        CREDO_FALSUM(ludus_fenestra_pingendum(lf, FALSUM, M + CCC));
+        CREDO_AEQUALIS_I32(pp.vocationes, I);
+        /* eventa: pingendum */
+        CREDO_VERUM(ludus_fenestra_pingendum(lf, VERUM, M + CCC));
+        /* pulsus mutatum: pingendum */
+        pp.reddere = VERUM;
+        CREDO_VERUM(ludus_fenestra_pingendum(lf, FALSUM, M + CCC));
+        pp.reddere = FALSUM;
+        /* status mutatus sine eventu in hac iteratione (e.g. horologium
+         * dispensatoris): pulsus eius recomponit -> pingendum */
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus        = EVENTUS_MUS_DEPRESSUS;
+        e.datum.mus.x  = XXXV;
+        e.datum.mus.y  = XX;
+        dispensator_tractare(lf->d, &e);
+        CREDO_VERUM(ludus_fenestra_pingendum(lf, FALSUM, M + CD));
+        ludus_quadrum(lf, M + CD);
+        CREDO_FALSUM(ludus_fenestra_pingendum(lf, FALSUM, M + D));
+        ludus_fenestra_pulsum_ponere(lf, NIHIL, NIHIL);
+        CREDO_VERUM(ludus_fenestra_pingendum(lf, FALSUM, M + D));
+    }
 
     imprimere("\n--- 013 B3b: tabula ad fenestram (scala servata)"
               " ---\n");

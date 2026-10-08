@@ -75,7 +75,7 @@ Leges chartae:
   TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
   focum, colores honorat; vicus-latera S1a: TerminaleApplicatio.ramus
   (superficies ex ramo); S1b: terminale_montare, terminale_componere
-  publica; D7c: AemulatorModi.schirmus_inversus
+  publica; S1c: ludus_fenestra/ludus_tessera pulsus et pingendum; D7c: AemulatorModi.schirmus_inversus
   (DECSCNM ?5; terminale colores nativos permutat), terminale
   ornamenta (sublineae V, transfixa, superlinea, crassum fictum;
   TerminaleApplicatio.ornamenta_pixelorum; lineae capsarum, quadra,

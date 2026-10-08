@@ -94,6 +94,13 @@ S1b as built: shared builder (standalone vs host repo); embedded canons
 environment list in the library; test XIV on vicus's real canons with a
 real shell; five plants.
 
+S1c-1 as built: `LudusPulsator` + `ludus_fenestra_pulsum_ponere` /
+`ludus_fenestra_pingendum` (+ the twin's), `versio_picta`: a living
+app is pulsed every <= 16 ms and the window repaints only on events,
+pulse change or a store-version change since the last frame (the
+dispatcher recomposes on every event, so its counter cannot signal).
+Eight plants.
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);
