@@ -100,6 +100,7 @@ _probare_tls (
                       chorda  clavis;
                    JsonValor* valor;
         JsonObjectumIterator  it;
+                         i32  numerus_infirmarum = 0;
 
         si (infirmae && json_est_objectum(infirmae))
         {
@@ -109,8 +110,16 @@ _probare_tls (
                 imprimere("        insecura: %.*s\n",
                     (integer)clavis.mensura,
                           (constans character*)clavis.datum);
+                numerus_infirmarum++;
             }
         }
+        /* asseritur, non solum imprimitur (T1b): sine hoc planta quae
+         * indicem cifrarum exstinguit viridis manebat */
+        _nuntiare("howsmyssl: nullae cifrae insecurae oblatae",
+                  infirmae != NIHIL && numerus_infirmarum == 0,
+                  infirmae
+                      == NIHIL ? "campus insecure_cipher_suites abest"
+                                    : "");
         imprimere("        compressio TLS: %s, beast: %s, tesserae sessionis: %s\n",
                   json_capere_boolean(json.radix,
                   "tls_compression_supported", FALSUM) ? "ita" : "non",

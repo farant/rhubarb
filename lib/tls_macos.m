@@ -178,6 +178,93 @@ _osstatus_descriptio(OSStatus status)
     }
 }
 
+/* Cifrae admissae (vates-plan-1 T1b): INDEX ADMISSUS, non vetitus -
+ * cifra quam Apple postea addit exclusa manet donec hic nominetur.
+ * ECDHE solum (secretum anterius), AEAD solum (AES-GCM, ChaCha20-
+ * Poly1305). Fumus 2026-10-07: SecureTransport sine indice 3DES
+ * offerebat (howsmyssl 'Bad', SWEET32). */
+interior b32
+_cifra_admissa(SSLCipherSuite cifra)
+{
+    commutatio (cifra)
+    {
+        casus TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:
+        casus TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:
+        casus TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:
+        casus TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:
+        casus TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256:
+        casus TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* Contextum durare: TLS 1.2 minimum + cifrae admissae solae. Redde
+ * NIHIL si bene, aliter causam nominatam (connexio recusanda). Fumus
+ * 2026-10-07: tls-v1-0/1-1.badssl.com ACCEPTA erant. */
+interior constans character*
+_durare(SSLContextRef ssl_context, Piscina* piscina)
+{
+          OSStatus  status;
+            size_t  numerus  = 0;
+            size_t  admissae = 0;
+            size_t  i;
+    SSLCipherSuite* omnes;
+    SSLCipherSuite* electae;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    status = SSLSetProtocolVersionMin(ssl_context, kTLSProtocol12);
+    si (status != noErr)
+    {
+        redde "SSLSetProtocolVersionMin fallita";
+    }
+
+    status = SSLGetNumberSupportedCiphers(ssl_context, &numerus);
+    si (status != noErr || numerus == 0)
+    {
+        redde "SSLGetNumberSupportedCiphers fallita";
+    }
+
+    omnes   = (SSLCipherSuite*)piscina_allocare(piscina,
+                  (i64)(numerus * magnitudo(SSLCipherSuite)));
+    electae = (SSLCipherSuite*)piscina_allocare(piscina,
+                  (i64)(numerus * magnitudo(SSLCipherSuite)));
+    si (!omnes || !electae)
+    {
+        redde "Allocatio cifrarum fallita";
+    }
+
+    status = SSLGetSupportedCiphers(ssl_context, omnes, &numerus);
+    si (status != noErr)
+    {
+        redde "SSLGetSupportedCiphers fallita";
+    }
+
+    per (i = 0; i < numerus; i++)
+    {
+        si (_cifra_admissa(omnes[i]))
+        {
+            electae[admissae] = omnes[i];
+            admissae++;
+        }
+    }
+    si (admissae == 0)
+    {
+        redde "Nulla cifra admissa a systemate sustentata";
+    }
+
+    status = SSLSetEnabledCiphers(ssl_context, electae, admissae);
+    si (status != noErr)
+    {
+        redde "SSLSetEnabledCiphers fallita";
+    }
+#pragma clang diagnostic pop
+
+    redde NIHIL;
+}
+
 
 /* ========================================================================
  * FUNCTIONES PUBLICAE - CONNEXIO
@@ -304,6 +391,18 @@ tls_connectere_cum_optionibus(
         CFRelease(ssl_context);
         tcp_claudere(conn->tcp);
         redde _creare_error(TLS_ERROR_HANDSHAKE, "SSLSetPeerDomainName fallita", piscina);
+    }
+
+    /* Durare: TLS 1.2 minimum, cifrae admissae solae (T1b) */
+    {
+        constans character* causa = _durare(ssl_context, piscina);
+
+        si (causa)
+        {
+            CFRelease(ssl_context);
+            tcp_claudere(conn->tcp);
+            redde _creare_error(TLS_ERROR_HANDSHAKE, causa, piscina);
+        }
     }
 
     /* Disactivare verificatio certificati si petitum */
