@@ -32,3 +32,22 @@ rules decided in project-specs/norma-plan-2.md ("Rules decided").
 judged as CLAUSUM, cap removed, every key "simple" (bracket paths), runes
 counted as bytes, implicit tag not skipped in variants, pravitas not
 recursing into array elements.
+
+## 2026-10-08 - JSON Schema export (norma-plan-2 N3)
+
+`norma_json_schema` -> a JsonValor that drops into `VatesInstrumentum.schema`.
+Deterministic key order (pinned by 10 goldens):
+
+| node | keys, in order |
+|---|---|
+| scalar | type, description, minimum, maximum, minLength, maxLength, enum, format |
+| array | type, description, items, minItems, maxItems |
+| object | type, description, properties, required, additionalProperties (false only when CLAUSUM) |
+| discriminated union | description, oneOf - each variant an object whose properties START with the tag `{"const": value}` and whose required starts with the tag; aut_nullum adds `{"type":"null"}` |
+| liberum | `{}` (+ description) |
+
+aut_nullum -> `"type": [X, "null"]`; integer bounds as JSON integers,
+float bounds as JSON floats (`0.5`, `2.5` - the writer's shortest form).
+No `$schema` key (the Anthropic input_schema does not want one).
+Plants 3/3 red: CLAUSUM not exported, tag missing from `required`,
+aut_nullum ignored.

@@ -266,6 +266,63 @@ probatio_pravitas_et_visus(Piscina* p)
     CREDO_AEQUALIS_I32(xar_numerus(v.campi), I);
 }
 
+interior chorda
+_js (
+      Norma* n,
+    Piscina* p)
+{
+    redde json_scribere(norma_json_schema(n, p), p);
+}
+
+interior vacuum
+probatio_json_schema(Piscina* p)
+{
+    constans character* constans licita[] = { "a", "b", NIHIL };
+    Norma* o;
+    Norma* d;
+    Norma* t;
+
+    imprimere("\n--- Probans exportatio JSON Schema ---\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_descriptio(
+        norma_intra(norma_integer(p), 0, MMXLVIII), "n"), p),
+        "{\"type\":\"integer\",\"description\":\"n\",\"minimum\":0,\"maximum\":2048}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_forma(norma_longitudo(
+        norma_aut_nullum(norma_textus(p)), I, V), "date-time"), p),
+        "{\"type\":[\"string\",\"null\"],\"minLength\":1,\"maxLength\":5,"
+        "\"format\":\"date-time\"}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_electio(norma_textus(p),
+        licita), p),
+        "{\"type\":\"string\",\"enum\":[\"a\",\"b\"]}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_intra_fluitans(norma_numerus(p),
+        0.5, 2.5), p),
+        "{\"type\":\"number\",\"minimum\":0.5,\"maximum\":2.5}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_longitudo(
+        norma_tabulatum(p, norma_boolean(p)), I, III), p),
+        "{\"type\":\"array\",\"items\":{\"type\":\"boolean\"},\"minItems\":1,\"maxItems\":3}");
+    o = norma_objectum(p);
+    norma_campus(o, "id", norma_integer(p), VERUM);
+    norma_campus(o, "n", norma_integer(p), FALSUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(o, p),
+        "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},"
+        "\"n\":{\"type\":\"integer\"}},\"required\":[\"id\"],"
+        "\"additionalProperties\":false}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_modus(o, NORMA_NOTANDUM),
+        p),
+        "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},"
+        "\"n\":{\"type\":\"integer\"}},\"required\":[\"id\"]}");
+    t = norma_objectum(p);
+    norma_campus(t, "text", norma_textus(p), VERUM);
+    d = norma_discrimen(p, "type");
+    norma_variatio(d, "text", t);
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(d, p),
+        "{\"oneOf\":[{\"type\":\"object\",\"properties\":{\"type\":{\"const\":\"text\"},"
+        "\"text\":{\"type\":\"string\"}},\"required\":[\"type\",\"text\"],"
+        "\"additionalProperties\":false}]}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_js(norma_liberum(p), p), "{}");
+    CREDO_CHORDA_AEQUALIS(_js(o, p), _js(o, p));
+}
+
+
 s32
 principale (vacuum)
 {
@@ -280,7 +337,8 @@ principale (vacuum)
     probatio_discrimen(p);
     probatio_limes(p);
     probatio_pravitas_et_visus(p);
-    /* N3 addit hic vocationem suam */
+    /* N3 */
+    probatio_json_schema(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

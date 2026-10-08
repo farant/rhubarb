@@ -1073,3 +1073,220 @@ norma_iudicare (
     j.validum = xar_numerus(j.vitia) == 0;
     redde j;
 }
+
+
+/* ====================================================================
+ * C. EXPORTATIO JSON SCHEMA
+ * ==================================================================== */
+
+interior constans character*
+_typus_json (
+    NormaGenus g)
+{
+    commutatio (g)
+    {
+        casus NORMA_NULLUM:    redde "null";
+        casus NORMA_BOOLEAN:   redde "boolean";
+        casus NORMA_INTEGER:   redde "integer";
+        casus NORMA_NUMERUS:   redde "number";
+        casus NORMA_TEXTUS:    redde "string";
+        casus NORMA_TABULATUM: redde "array";
+        ordinarius:            redde "object";
+    }
+}
+
+interior vacuum
+_typum_ponere (
+         JsonValor* o,
+    constans Norma* n,
+           Piscina* p)
+{
+    si (n->aut_nullum && n->genus != NORMA_NULLUM)
+    {
+        JsonValor* arr = json_tabulatum_creare(p);
+
+        json_tabulatum_addere(arr, json_chorda_creare_literis(p,
+            _typus_json(n->genus)));
+        json_tabulatum_addere(arr, json_chorda_creare_literis(p,
+            "null"));
+        json_objectum_ponere(o, "type", arr);
+    }
+    alioquin
+    {
+        json_objectum_ponere(o, "type", json_chorda_creare_literis(p,
+            _typus_json(n->genus)));
+    }
+    si (n->descriptio.mensura > 0)
+    {
+        json_objectum_ponere(o, "description", json_chorda_creare(p,
+            n->descriptio));
+    }
+}
+
+interior JsonValor*
+_exportare (
+    constans Norma* n,
+           Piscina* p);
+
+interior JsonValor*
+_exportare_objectum (
+    constans Norma* n,
+            chorda  tag,
+            chorda  valor_tag,
+           Piscina* p)
+{
+    JsonValor* o             = json_objectum_creare(p);
+    JsonValor* proprietates  = json_objectum_creare(p);
+    JsonValor* req           = json_tabulatum_creare(p);
+          i32  i;
+
+    _typum_ponere(o, n, p);
+    si (tag.mensura > 0)
+    {
+        JsonValor* c = json_objectum_creare(p);
+
+        json_objectum_ponere(c, "const", json_chorda_creare(p,
+            valor_tag));
+        json_objectum_ponere_chorda(proprietates, tag, c);
+        json_tabulatum_addere(req, json_chorda_creare(p, tag));
+    }
+    per (i = 0; i < xar_numerus(n->campi); i++)
+    {
+        NormaCampus* c = (NormaCampus*)xar_obtinere(n->campi, i);
+
+        json_objectum_ponere_chorda(proprietates, c->titulus,
+            _exportare(c->valor, p));
+        si (c->requiritur)
+        {
+            json_tabulatum_addere(req, json_chorda_creare(p,
+                c->titulus));
+        }
+    }
+    json_objectum_ponere(o, "properties", proprietates);
+    si (json_tabulatum_numerus(req) > 0)
+    {
+        json_objectum_ponere(o, "required", req);
+    }
+    si (n->modus == NORMA_CLAUSUM)
+    {
+        json_objectum_ponere(o, "additionalProperties",
+            json_boolean_creare(p, FALSUM));
+    }
+    redde o;
+}
+
+interior JsonValor*
+_exportare (
+    constans Norma* n,
+           Piscina* p)
+{
+    JsonValor* o = json_objectum_creare(p);
+          i32  i;
+
+    si (!n)
+    {
+        redde o;
+    }
+    commutatio (n->genus)
+    {
+        casus NORMA_LIBERUM:
+            si (n->descriptio.mensura > 0)
+            {
+                json_objectum_ponere(o, "description",
+                    json_chorda_creare(p, n->descriptio));
+            }
+            redde o;
+        casus NORMA_OBJECTUM:
+            redde _exportare_objectum(n, _vacua(), _vacua(), p);
+        casus NORMA_DISCRIMEN:
+        {
+            JsonValor* una = json_tabulatum_creare(p);
+
+            si (n->descriptio.mensura > 0)
+            {
+                json_objectum_ponere(o, "description",
+                    json_chorda_creare(p, n->descriptio));
+            }
+            per (i = 0; i < xar_numerus(n->variationes); i++)
+            {
+                NormaVariatio* v =
+                    (NormaVariatio*)xar_obtinere(n->variationes, i);
+
+                json_tabulatum_addere(una,
+                    _exportare_objectum(v->objectum,
+                    n->clavis_discriminis, v->valor, p));
+            }
+            si (n->aut_nullum)
+            {
+                JsonValor* nul = json_objectum_creare(p);
+
+                json_objectum_ponere(nul, "type",
+                    json_chorda_creare_literis(p, "null"));
+                json_tabulatum_addere(una, nul);
+            }
+            json_objectum_ponere(o, "oneOf", una);
+            redde o;
+        }
+        ordinarius:
+            frange;
+    }
+    _typum_ponere(o, n, p);
+    si (n->habet_intra)
+    {
+        json_objectum_ponere(o, "minimum", json_integer_creare(p,
+            n->minimum));
+        json_objectum_ponere(o, "maximum", json_integer_creare(p,
+            n->maximum));
+    }
+    si (n->habet_intra_fluitans)
+    {
+        json_objectum_ponere(o, "minimum", json_fluitans_creare(p,
+            n->minimum_fluitans));
+        json_objectum_ponere(o, "maximum", json_fluitans_creare(p,
+            n->maximum_fluitans));
+    }
+    si (n->genus == NORMA_TABULATUM)
+    {
+        json_objectum_ponere(o, "items", _exportare(n->elementum, p));
+        si (n->habet_longitudinem)
+        {
+            json_objectum_ponere(o, "minItems", json_integer_creare(p,
+                (s64)n->longitudo_minima));
+            json_objectum_ponere(o, "maxItems", json_integer_creare(p,
+                (s64)n->longitudo_maxima));
+        }
+        redde o;
+    }
+    si (n->habet_longitudinem)
+    {
+        json_objectum_ponere(o, "minLength", json_integer_creare(p,
+            (s64)n->longitudo_minima));
+        json_objectum_ponere(o, "maxLength", json_integer_creare(p,
+            (s64)n->longitudo_maxima));
+    }
+    si (n->licita)
+    {
+        JsonValor* e = json_tabulatum_creare(p);
+
+        per (i = 0; i < xar_numerus(n->licita); i++)
+        {
+            json_tabulatum_addere(e, json_chorda_creare(p,
+                *(chorda*)xar_obtinere(n->licita, i)));
+        }
+        json_objectum_ponere(o, "enum", e);
+    }
+    si (n->forma.mensura > 0)
+    {
+        json_objectum_ponere(o, "format", json_chorda_creare(p,
+            n->forma));
+    }
+    redde o;
+}
+
+JsonValor*
+norma_json_schema (
+    constans Norma* n,
+           Piscina* piscina)
+{
+    redde _exportare(n, piscina);
+}
