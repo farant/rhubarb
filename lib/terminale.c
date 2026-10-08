@@ -134,14 +134,41 @@ colorem_dynamicum (
  * Contrastus (WCAG 2.0 relative luminance)
  * ================================================== */
 
+/* park 011 (mensura: contrastus = XXII% quadri btop, pow() in
+ * quaestione bipartita): canalis in tabula CCLVI valorum EADEM formula
+ * semel computata (valores identici), et eventus contrastum_curare in
+ * memoria parva per par (littera, fundus) - functio pura est */
+#define MEMORIA_CONTRASTUS  CCLVI
+
+nomen structura {
+    i32 littera;
+    i32 fundus;
+    i32 exitus;
+    b32 valida;
+} ContrastusMemoria;
+
+hic_manens f64               tabula_linearis[CCLVI];
+hic_manens b32               tabula_linearis_parata = FALSUM;
+hic_manens ContrastusMemoria memoria_contrastus[MEMORIA_CONTRASTUS];
+
 interior f64
 canalis_linearis (
     i32 c)
 {
     f64 v;
+    i32 k;
 
-    v = (f64)c / 255.0;
-    redde v <= 0.03928 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4);
+    si (!tabula_linearis_parata)
+    {
+        per (k = ZEPHYRUM; k < CCLVI; k++)
+        {
+            v = (f64)k / 255.0;
+            tabula_linearis[k] = v <= 0.03928
+                ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4);
+        }
+        tabula_linearis_parata = VERUM;
+    }
+    redde tabula_linearis[c & 0xFF];
 }
 
 interior f64
@@ -193,7 +220,7 @@ rgb_miscere (
  * nigrum/album saltat): versus extremum quod plus contrastus dare
  * potest, quaestio bipartita, deinde gradus post rotundationem */
 interior i32
-contrastum_curare (
+contrastum_computare (
     i32 littera,
     i32 fundus)
 {
@@ -233,6 +260,32 @@ contrastum_curare (
         summum += 1.0 / 256.0;
     }
     redde rgb_miscere(littera, meta, summum > 1.0 ? 1.0 : summum);
+}
+
+/* contrastum_computare per memoriam (directe mappata; collisio
+ * superscribit) */
+interior i32
+contrastum_curare (
+    i32 littera,
+    i32 fundus)
+{
+    ContrastusMemoria* m;
+                  i32  h;
+
+    /* mixtura multiplicativa, octetus summus = index (XOR octetorum
+     * colores permutatos ut (r,g,b)/(b,g,r) confundebat) */
+    h = (littera * 0x9E3779B1) ^ (fundus * 0x85EBCA77);
+    h ^= h >> XV;
+    h *= 0x2C1B3C6D;
+    m = &memoria_contrastus[(h >> XXIV) % MEMORIA_CONTRASTUS];
+    si (!m->valida || m->littera != littera || m->fundus != fundus)
+    {
+        m->littera  = littera;
+        m->fundus   = fundus;
+        m->exitus   = contrastum_computare(littera, fundus);
+        m->valida   = VERUM;
+    }
+    redde m->exitus;
 }
 
 /* color mandati -> 0xRRGGBB (signum thematis per thema; RGBA = pixelum

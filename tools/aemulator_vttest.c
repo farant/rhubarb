@@ -10,7 +10,13 @@
  * quiescit (CD ms sine mutatione, X s summum) et photographiam capit:
  * NNN.txt (textus schirmi) et NNN.png (quadrum pictum, ut fenestra
  * ostenderet). '#' = commentarium. index.tsv: numerus, octeti missi.
- * Schirmum LXXX x XXIV (vttest id exspectat), cellula VI x VIII.
+ * Schirmum LXXX x XXIV (vttest id exspectat), cellula VI x VIII;
+ * MAGNITUDO=CxL in ambitu aliam dat (columnae x lineae).
+ *
+ * Mensura (park 011): 'metire N' quadra N tota pingit (figura +
+ * rasterizatio, ut fenestra quadro quoque) et microsecunda per quadrum
+ * imprimit; 'ornamenta 0|1' ornamenta pixelorum (figurae ductae,
+ * sublineae) aufert aut reddit.
  *
  * Exitus: 0 scriptum totum; I infans ante finem exiit; II usus aut
  * structura fracta.
@@ -28,8 +34,11 @@
 #include "aemulator.h"
 #include "aemulator_hospes.h"
 #include "terminale.h"
+#include "tempus.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define COLUMNAE         LXXX
 #define LINEAE           XXIV
@@ -115,6 +124,36 @@ quiescere (
     redde VERUM;
 }
 
+/* N quadra tota: microsecunda per quadrum */
+interior vacuum
+metiri (
+    LudusFenestra* lf,
+              i32  numerus,
+              s64* tempus)
+{
+        f64 initium;
+        f64 finis;
+    clock_t cpu_initium;
+    clock_t cpu_finis;
+        i32 k;
+
+    initium      = tempus_nunc();
+    cpu_initium  = clock();
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        *tempus += XVI;
+        ludus_quadrum(lf, *tempus);
+    }
+    finis      = tempus_nunc();
+    cpu_finis  = clock();
+    /* cpu = processus noster solus (onus alienum minus turbat) */
+    printf("metire: %u quadra, %.1f us/quadrum (cpu %.1f us)\n",
+        (unsigned)numerus,
+        (finis - initium) * 1.0e6 / (f64)(numerus ? numerus : I),
+        (f64)(cpu_finis - cpu_initium) * 1.0e6 / (f64)CLOCKS_PER_SEC
+            / (f64)(numerus ? numerus : I));
+}
+
 /* photographia NNN: textus et imago */
 interior b32
 photographiam_capere (
@@ -170,6 +209,9 @@ principale (
                             i32 n;
                             i32 photographiae;
                             s64 tempus;
+                            i32 columnae;
+                            i32 lineae;
+             constans character* magnitudo_ambitus;
 
     si (numerus < IV)
     {
@@ -178,25 +220,36 @@ principale (
                         "<vttest> [argumenta...]\n");
         redde II;
     }
+    columnae           = COLUMNAE;
+    lineae             = LINEAE;
+    magnitudo_ambitus  = getenv("MAGNITUDO");
+    si (magnitudo_ambitus)
+    {
+        columnae = (i32)atoi(magnitudo_ambitus);
+        lineae   = strchr(magnitudo_ambitus, 'x')
+                 ? (i32)atoi(strchr(magnitudo_ambitus, 'x')
+                     + I) : LINEAE;
+    }
+    tempus_initiare();
     piscina = piscina_generare_dynamicum("aemulator_vttest",
         LXIV * MXXIV * MXXIV);
     intern  = internamentum_creare(piscina);
     thema_initiare();
     pseudoterminale_configuratio_initiare(&cfg_pt);
     cfg_pt.argumenta = argumenta + III;
-    cfg_pt.latitudo = COLUMNAE;
-    cfg_pt.altitudo = LINEAE;
+    cfg_pt.latitudo = columnae;
+    cfg_pt.altitudo = lineae;
     pt = pseudoterminale_posix_creare(piscina, &cfg_pt, NIHIL, NIHIL);
     si (   !pt
         || !terminale_applicatio_aedificare(&app, piscina, intern, pt,
-            COLUMNAE * CELLULA_X, LINEAE * CELLULA_Y))
+            columnae * CELLULA_X, lineae * CELLULA_Y))
     {
         fprintf(stderr,
             "aemulator_vttest: infans aut terminale fractum\n");
         redde II;
     }
-    tabula = tabula_pixelorum_creare_nuda(piscina, COLUMNAE * CELLULA_X,
-        LINEAE * CELLULA_Y);
+    tabula = tabula_pixelorum_creare_nuda(piscina, columnae * CELLULA_X,
+        lineae * CELLULA_Y);
     lf = ludus_fenestra_creare(piscina, app.d, app.figurae, ZEPHYRUM,
         NIHIL, NIHIL, tabula);
     scriptum = fopen(argumenta[II], "r");
@@ -212,6 +265,16 @@ principale (
     (vacuum)quiescere(&app);
     dum (fgets(linea, LINEA_MAXIMA, scriptum))
     {
+        si (strncmp(linea, "metire", VI) == ZEPHYRUM)
+        {
+            metiri(lf, (i32)atoi(linea + VI), &tempus);
+            perge;
+        }
+        si (strncmp(linea, "ornamenta", IX) == ZEPHYRUM)
+        {
+            app.ornamenta_pixelorum = atoi(linea + IX) != ZEPHYRUM;
+            perge;
+        }
         si (strncmp(linea, "mitte", V) != ZEPHYRUM)
         {
             perge;

@@ -964,6 +964,133 @@ ductas_probare (vacuum)
     terminale_claudere(&mc.app);
 }
 
+/* ratio inter duo pixela mandatorum (oraculum independens) */
+interior f64
+ratio_pixelorum (
+    i32 a,
+    i32 b)
+{
+    f64 la;
+    f64 lb;
+
+    la = luminantia((i32)(a & 0xFF), (i32)((a >> VIII) & 0xFF),
+        (i32)((a >> XVI) & 0xFF));
+    lb = luminantia((i32)(b & 0xFF), (i32)((b >> VIII) & 0xFF),
+        (i32)((b >> XVI) & 0xFF));
+    redde la > lb ? (la + 0.05) / (lb + 0.05) : (lb + 0.05) / (la
+        + 0.05);
+}
+
+/* pixelum b inter a et extremum (0 aut CCLV) in omni canali? -
+ * propulsio minima colorem SUUM versus nigrum aut album movet */
+interior b32
+inter_extremum (
+    i32 a,
+    i32 b,
+    i32 extremum)
+{
+    i32 k;
+    i32 x;
+    i32 y;
+
+    per (k = ZEPHYRUM; k < XXIV; k += VIII)
+    {
+        x = (a >> k) & 0xFF;
+        y = (b >> k) & 0xFF;
+        si (extremum ? (y < x) : (y > x))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* XII: memoria contrastus (park 011) - CCLVI paria (littera, fundus)
+ * truecolor, XVI litterae x XVI fundi (quaeque littera cum XVI fundis,
+ * quisque fundus cum XVI litteris - collisiones clavem partialem
+ * produnt; sub mixtura praesenti VIII collisiones eiusdem fundi et
+ * XII eiusdem litterae, computatae - mixtura mutata: plantae M2/M3
+ * iterum currendae): par satis contrarium colorem SUUM servat,
+ * cetera contra fundum SUUM III attingunt. Memoria cuius clavis
+ * fallit (collisio) colorem alterius paris redderet. */
+interior vacuum
+memoriam_contrastus_probare (vacuum)
+{
+               Machina  mc;
+              Mandatum* textus;
+              Mandatum* fundus;
+                   i32  k;
+                   i32  littera;
+                   i32  fundus_rgb;
+                   i32  servati;
+                   i32  propulsi;
+                   b32  boni;
+             character  effusio[XVI * MXXIV];
+                   i32  n;
+
+    imprimere("\n--- XII: memoria contrastus (park 011) ---\n");
+    n = ZEPHYRUM;
+    n += (i32)sprintf(effusio + n, "\x1B[2J\x1B[H");
+    per (k = ZEPHYRUM; k < CCLVI; k++)
+    {
+        n += (i32)sprintf(effusio + n,
+            "\x1B[38;2;%u;%u;%u;48;2;%u;%u;%umx",
+            (unsigned)(((k % XVI) * XXXVII) & 0xFF),
+            (unsigned)(((k % XVI) * XCI) & 0xFF),
+            (unsigned)(((k % XVI) * LIII) & 0xFF),
+            (unsigned)(((k / XVI) * XIII + LXIV) & 0xFF),
+            (unsigned)(((k / XVI) * LXXIII) & 0xFF),
+            (unsigned)(((k / XVI) * XXIX + CXXVIII) & 0xFF));
+    }
+    CREDO_VERUM(machinam_effusione(&mc, effusio));
+    boni      = VERUM;
+    servati   = ZEPHYRUM;
+    propulsi  = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < CCLVI; k++)
+    {
+        littera    = pixelum_rgb(((k % XVI) * XXXVII) & 0xFF,
+            ((k % XVI) * XCI) & 0xFF, ((k % XVI) * LIII) & 0xFF);
+        fundus_rgb = pixelum_rgb(((k / XVI) * XIII + LXIV) & 0xFF,
+            ((k / XVI) * LXXIII) & 0xFF,
+            ((k / XVI) * XXIX + CXXVIII) & 0xFF);
+        textus = mandatum_ad(&mc, MANDATUM_TEXTUS,
+            (s32)((k % LXXX) * CELL_X), (s32)((k / LXXX) * CELL_Y));
+        fundus = mandatum_ad(&mc, MANDATUM_RECTANGULUM,
+            (s32)((k % LXXX) * CELL_X), (s32)((k / LXXX) * CELL_Y));
+        si (!textus || !fundus || fundus->color.valor != fundus_rgb)
+        {
+            boni = FALSUM;
+            perge;
+        }
+        si (ratio_pixelorum(littera, fundus_rgb) >= 3.0)
+        {
+            servati++;
+            si (textus->color.valor != littera)
+            {
+                boni = FALSUM;
+            }
+        }
+        alioquin
+        {
+            propulsi++;
+            si (   ratio_pixelorum(textus->color.valor, fundus_rgb)
+                < 3.0
+                || (   !inter_extremum(littera, textus->color.valor,
+                           ZEPHYRUM)
+                    && !inter_extremum(littera, textus->color.valor,
+                           I)))
+            {
+                boni = FALSUM;
+            }
+        }
+    }
+    CREDO_VERUM(boni);
+    /* utraque via exercetur */
+    CREDO_VERUM(servati > XXXII);
+    CREDO_VERUM(propulsi > XXXII);
+    terminale_claudere(&mc.app);
+}
+
 s32
 principale (vacuum)
 {
@@ -984,6 +1111,7 @@ principale (vacuum)
     ornamenta_probare();
     inversum_probare();
     ductas_probare();
+    memoriam_contrastus_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();

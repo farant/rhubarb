@@ -212,3 +212,40 @@ fails. INSTALL ONLY FROM MAIN (after the merge): `./tools/instituere.sh
 bin/terminale` or `bin/fabrica sanare installata`. The twin stays
 dev-only. terminale is self-contained at run time (font and theme
 compiled in, only $SHELL read), so the ~/.bin copy runs anywhere.
+
+
+## 2026-10-07 — park 011 step 1: contrast cache (measured)
+
+Measured first (tools/aemulator_vttest.c gained `metire N`,
+`ornamenta 0|1` and `MAGNITUDO=CxL`): btop at Fran's window size
+(160x75 cells) costs ~17 ms per FULL frame at light load - the whole
+60 Hz budget; drawn glyphs on/off made no difference. `sample`: raster
+62% (pixel-at-a-time fills), contrast floor 22% (`pow()` per channel
+inside a 16-step bisection, every cell every frame), glyph masks 6%.
+
+Fix (the function is pure): `canalis_linearis` reads a 256-entry table
+filled once with the SAME formula (identical doubles), and
+`contrastum_curare` sits in front of `contrastum_computare` with a
+256-slot direct-mapped cache keyed by the full (text, background)
+pair. Proof of identity: a deterministic colour screen (4 backgrounds
+x 52 colours, plain + faint, truecolour, drawn glyphs; under the 512
+style cap) renders byte-identical PNGs before/after. A/B under load
+(driver built against old vs new terminale.c, 200 frames): ~20 ms ->
+~16 ms per frame, CPU time likewise.
+
+The cache test (section XII, 16 text x 16 background colours) first
+let two plants through: a key comparing only text, or only
+background. The first hash (XOR of bytes) made same-background
+collisions IMPOSSIBLE - only colours whose bytes XOR alike collide,
+e.g. (r,g,b)/(b,g,r) - so the test could never see them, and real
+palettes collided more than they should. Multiplicative mix (top
+byte); the test now asserts the nudge DIRECTION too (a correct nudge
+moves each channel toward 0 or toward 255 from the cell's own colour),
+and its comment records the computed collision counts (8 same
+background, 12 same text) so a hash change knows to rerun the plants.
+Four plants caught.
+
+Found on the way (not this step's work): the core keeps at most 512
+styles per screen (STILI_MAXIMI) - beyond that, new styles fall back to
+the default (Ghostty grows page style capacity); and interning a style
+is a linear scan over up to 512 entries per SGR. Filed as park 012.
