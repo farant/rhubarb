@@ -641,3 +641,17 @@ Behaviour unchanged: census, `iudicare -plenus -omnia -machina` and
 normalised - memo and audit state, not code); fumus XL/XL; root suite
 green. Plants in fabrica_sanare.c: the wave path's dependency check ->
 fumus red, the serial path's -> root suite red.
+
+H3 (test harness split) - probationes/probatio_fabrica.c (7,178 lines,
+one `principale` of 38 blocks) is now six suites that mirror the
+library files - probatio_fabrica_{genera,iudicium,declarationes,ordo,
+sanare,gradus}.c - over a shared fake world,
+probationes/fabrica_mundus_fictus.{h,c}: the in-memory disk, fake
+sutura, fake actions, runs and traces, and the five knob variables
+(51 names, prefix `mundi_`). Helpers that only one suite uses stay
+static in it. Every section that changes a knob now puts it back
+(transitum left `effectus_effusio` set - reset added before the split),
+so the suites do not depend on order. Oracle: the same 37 sections with
+the same assertion count each (772 in total). Plants: a fake-world fault
+(deleting does nothing) -> iudicium and ordo red; the serial-path
+library fault -> only sanare red, so a red suite now names the area.

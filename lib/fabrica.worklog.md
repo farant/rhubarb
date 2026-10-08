@@ -2124,3 +2124,24 @@ failed in the full run, then passed alone and on a rerun (ledger note).
   `_ante_agere` (serial - the path probatio_fabrica takes). A plant in
   one is invisible to the other's tests; fumus covers the first, the
   root suite the second.
+
+## 2026-10-08 - housekeeping H3: the test harness split
+
+- Knobs (mutable file-scope statics read by the fake hooks) are where
+  hidden ordering lives in a one-`principale` harness. I listed every
+  write to them: five of the six sections that set knobs reset them;
+  transitum left `_effectus_effusio` set for every later section. The
+  reset went in first, in the single file, while it was still green
+  (772/772), so the split could not change any section's world.
+- The rename tool reports sites inside macro arguments
+  (`CREDO_VERUM(_continet(...))`) as "manuales" and does not rewrite
+  them - 173 such sites. They were replaced with a whole-word regex,
+  since the names are file-local helpers with no other meaning.
+- The usage scan must read whole items: a data table
+  (`_fixa_conformitatis`) is the only user of the `_fx_*` fixtures, and
+  reading just the first 12 lines of each initializer missed them.
+- Oracle: every assertion prints a dot under its section heading, so
+  the dots per heading compare sections exactly across the split. This
+  is stronger than the total.
+- The original had an orphaned comment ("photographia ficta") sitting
+  above `_currere_simul`; it now sits on `_photographia`.

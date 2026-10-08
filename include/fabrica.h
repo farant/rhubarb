@@ -510,9 +510,9 @@ nomen enumeratio {
 
 /* GENUS: quomodo artificium observetur. Verba NIHIL licent ubi
  * dictum. CHASSIS (fabrica-6 T1): omne genus registratum fixum
- * conformitatis habere DEBET (probatio_fabrica, sectio chassis, per
- * fabrica_genera_numerus enumerat) - proprietates infra in censu
- * ('bin/fabrica census') nominantur. */
+ * conformitatis habere DEBET (probatio_fabrica_genera, sectio
+ * chassis, per fabrica_genera_numerus enumerat) - proprietates infra
+ * in censu ('bin/fabrica census') nominantur. */
 structura FabricaGenus {
     constans character* titulus;   /* nomen in declaratione */
     /* sigillare: particulas (FabricaParticula) ingressus addere -

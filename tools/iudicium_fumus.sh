@@ -38,8 +38,9 @@
 #        AUDITUM_DISCORS; restitutum -> 'auditus: transitus iterum congruit'
 #
 # Alibi tecta (nominata, non repetita): P4 IO cruda -> lectiones_lint
-# (planta T3); P5 FIFO, P9 ambitus, P10 relinkatio -> probatio_fabrica
-# (transitus VIII/III, instrumentum_domus).
+# (planta T3); P5 FIFO, P9 ambitus -> probatio_fabrica_iudicium
+# (transitus VIII/III); P10 relinkatio -> probatio_fabrica_genera
+# (instrumentum_domus).
 #
 # Exitus: 0 sanum · 1 fractum · 2 instrumenta desunt.
 set -u

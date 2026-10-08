@@ -242,6 +242,7 @@ declare -a SOURCE_FILES=(
     "materia/fontes/materia_pictor.c"
     "materia/fontes/materia_token.c"
     "probationes/capsula_assets.c"
+    "probationes/fabrica_mundus_fictus.c"
     "probationes/hospes_assets/capsula_hospes.c"
     "probationes/tabella_assets/capsula_tabella.c"
     "probationes/vitrea_assets/capsula_templates.c"
