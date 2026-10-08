@@ -74,7 +74,8 @@ Leges chartae:
   AemulatorModi.rotula_sagittis (?1007), terminale_titulus,
   TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
   focum, colores honorat; vicus-latera S1a: TerminaleApplicatio.ramus
-  (superficies ex ramo); D7c: AemulatorModi.schirmus_inversus
+  (superficies ex ramo); S1b: terminale_montare, terminale_componere
+  publica; D7c: AemulatorModi.schirmus_inversus
   (DECSCNM ?5; terminale colores nativos permutat), terminale
   ornamenta (sublineae V, transfixa, superlinea, crassum fictum;
   TerminaleApplicatio.ornamenta_pixelorum; lineae capsarum, quadra,

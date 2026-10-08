@@ -91,6 +91,32 @@ terminale_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo);
 
+/* vicus-latera S1b: montare in repositorium hospitis (vicus): ramus
+ * <terminale id=…> cum canonibus suis (radix hospitis liberos non
+ * declarat); concha nova ($SHELL -l, ambitus TERM/COLORTERM/
+ * TERM_PROGRAM ex bibliotheca); dispensator NULLUS - hospes suum
+ * habet. latitudo/altitudo in pixelis nostris. FALSUM si concha non
+ * generatur aut ramus recusatur. */
+b32
+terminale_montare (
+    TerminaleApplicatio* app,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     InsulaRepositorium* repo,
+     constans character* id,
+                    i32  latitudo,
+                    i32  altitudo);
+
+/* componere hospitis (dispensator.h Componere), ctx =
+ * TerminaleApplicatio* */
+Componens*
+terminale_componere (
+     InsulaRepositorium* repo,
+         constans Motus* motus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 vacuum* ctx);
+
 /* Pulsus unus ante quadrum: magnitudinem ex superficie aptare,
  * hospitem pulsare (mora ut aemulator_hospes_pulsare). Pulsus hospitis
  * redditur (mutatum -> quadrum pingendum; finitus -> concha exiit). */

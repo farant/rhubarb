@@ -23,7 +23,10 @@
 #include "terminale.h"
 #include "imago.h"
 #include "credo.h"
+#include "canon.h"
+#include "filum.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
@@ -1130,6 +1133,114 @@ ramum_probare (vacuum)
     terminale_claudere(&mc.app);
 }
 
+/* superficies ut hospes (vicus) scribit: scriptor 'dispensator' */
+nomen structura {
+    s32 latitudo;
+    s32 altitudo;
+} SuperficiesProbanda;
+
+interior vacuum
+superficiem_ponere (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans SuperficiesProbanda* sp;
+
+    sp = (constans SuperficiesProbanda*)ctx;
+    insula_attributum_ponere(nodus, p, in, "superficies_latitudo",
+        chorda_ut_cstr(chorda_ex_s32(sp->latitudo, p), p));
+    insula_attributum_ponere(nodus, p, in, "superficies_altitudo",
+        chorda_ut_cstr(chorda_ex_s32(sp->altitudo, p), p));
+}
+
+interior Canon*
+canonem_vici (
+    constans character* via)
+{
+    chorda causa;
+
+    redde canon_legere(filum_legere_totum(via, piscina), piscina,
+        intern, &causa);
+}
+
+/* XIV: montatio in hospite (vicus-latera S1b) - repositorium cum
+ * canonibus VERIS vici (radix liberos non declarat: montatio sine
+ * canone suo recusaretur); concha vera (SHELL=/bin/sh) */
+interior vacuum
+montationem_probare (vacuum)
+{
+    TerminaleApplicatio  app;
+     InsulaRepositorium* repo;
+            InsulaRamus  r;
+    SuperficiesProbanda  sp;
+              Componens* arbor;
+                 chorda  textus;
+                    i32  k;
+                    b32  visum;
+
+    imprimere("\n--- XIV: montatio (vicus-latera S1b) ---\n");
+    (vacuum)setenv("SHELL", "/bin/sh", I);
+    repo = insula_repositorium_creare(piscina, intern, "<vicus/>",
+        "<vicus/>");
+    CREDO_NON_NIHIL(repo);
+    insula_ponere_canonem(repo, INSULA_DURABILIS,
+        canonem_vici("apps/vicus/canones/durabilis.canon"));
+    insula_ponere_canonem(repo, INSULA_EPHEMERA,
+        canonem_vici("apps/vicus/canones/ephemera.canon"));
+    CREDO_VERUM(terminale_montare(&app, piscina, intern, repo, "t1",
+        CDLXXX, CXCII));
+    /* ramus in utroque genere; dispensator nullus (hospitis est) */
+    r = insula_ramus(repo, "terminale", "t1");
+    CREDO_NON_NIHIL(insula_ramus_nodus(&r, INSULA_DURABILIS));
+    CREDO_NON_NIHIL(insula_ramus_nodus(&r, INSULA_EPHEMERA));
+    CREDO_NIHIL(app.d);
+    CREDO_AEQUALIS_I32(aemulator_latitudo(
+        aemulator_hospes_aemulator(app.hospes)), LXXX);
+    /* hospes superficiem scribit: canon terminalis eam admittit */
+    insula_scriptorem_ponere(repo, chorda_ex_literis("dispensator",
+        piscina));
+    sp.latitudo = CXX;
+    sp.altitudo = LXXX;
+    CREDO_VERUM(mutare_ramum(&r, INSULA_EPHEMERA, superficiem_ponere,
+        &sp));
+    (vacuum)terminale_pulsare(&app, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_latitudo(
+        aemulator_hospes_aemulator(app.hospes)), XX);
+    /* componere publica, ctx = applicatio: radix ex ramo */
+    arbor = terminale_componere(repo, NIHIL, piscina, intern, &app);
+    CREDO_NON_NIHIL(arbor);
+    CREDO_VERUM(arbor && arbor->fines.latitudo == CXX);
+    /* concha vera currit */
+    (vacuum)aemulator_hospes_scribere(app.hospes,
+        (constans i8*)"echo salve_montatio\r", XX);
+    visum = FALSUM;
+    per (k = ZEPHYRUM; k < CC && !visum; k++)
+    {
+        (vacuum)terminale_pulsare(&app, XX);
+        textus = aemulator_textum_effundere(
+            aemulator_hospes_aemulator(app.hospes), piscina);
+        visum = chorda_continet(textus,
+            chorda_ex_literis("salve_montatio\n", piscina));
+    }
+    CREDO_VERUM(visum);
+    /* ambitus bibliothecae ad conchum montatam pervenit */
+    (vacuum)aemulator_hospes_scribere(app.hospes,
+        (constans i8*)"echo ambitus_$TERM_PROGRAM\r", XXVII);
+    visum = FALSUM;
+    per (k = ZEPHYRUM; k < CC && !visum; k++)
+    {
+        (vacuum)terminale_pulsare(&app, XX);
+        textus = aemulator_textum_effundere(
+            aemulator_hospes_aemulator(app.hospes), piscina);
+        visum = chorda_continet(textus,
+            chorda_ex_literis("ambitus_terminale\n", piscina));
+    }
+    CREDO_VERUM(visum);
+    terminale_claudere(&app);
+}
+
 s32
 principale (vacuum)
 {
@@ -1152,6 +1263,7 @@ principale (vacuum)
     ductas_probare();
     memoriam_contrastus_probare();
     ramum_probare();
+    montationem_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();

@@ -300,3 +300,34 @@ emulator size (pulse) and the composed root's bounds (mouse routing)
 follow the branch. Plants: pulse reads the root, composition reads the
 root, branch never initialised (the last also breaks the standalone
 resize section - an unset branch cannot hide).
+
+## 2026-10-08 — vicus-latera S1b: terminale mountable
+
+`terminale_montare(app, piscina, intern, repo, id, lat, alt)` and a
+PUBLIC `terminale_componere` (ctx = the app; Fran approved). One
+shared builder (`applicationem_struere`): repo NIHIL = standalone (own
+store, root branch, own dispatcher - unchanged); a host repo = branch
+`<terminale id>`, no dispatcher (the host has one). The mount starts
+its own shell (`$SHELL -l`) with the environment list now in the
+library (`ambitus_terminalis`).
+
+CANONS were the non-obvious part: vicus's root canon declares NO
+children, and the root canon only skips branches that carry their own
+canon - so a mount without one is refused. terminale's canons are
+embedded strings (durable: id; ephemeral: id, focus, focus_acervus,
+superficies_*), not files: the approved signature takes no path root,
+and they are five lines. Canons BEFORE the initial element (the scriba
+pattern).
+
+Test XIV mounts on a store guarded by vicus's REAL canons, writes the
+surface as the host does (scriptor 'dispensator', mutare_ramum), checks
+the branch, no dispatcher, the resize, the public componere's bounds,
+and a real /bin/sh: `echo salve_montatio` and `echo
+ambitus_$TERM_PROGRAM` -> `ambitus_terminale`. Five plants (no durable
+canon, no surface in the ephemeral canon, dispatcher created, empty
+environment, wrong id) caught; the environment plant needed `+ III`
+(empty list) - removing the array is an unused-static compile error.
+
+Known duplication: apps/terminale/terminale.c and the twin keep their
+own copy of the environment list (they spawn their own child); removing
+it needs a one-line public accessor - asked Fran.

@@ -89,6 +89,11 @@ S1a as built: `TerminaleApplicatio.ramus`; both surface reads through
 it; standalone = root branch; test XIII (another store's `<terminale
 id="t1">`); three plants.
 
+S1b as built: shared builder (standalone vs host repo); embedded canons
+(vicus's root canon declares no children - a mount needs its own);
+environment list in the library; test XIV on vicus's real canons with a
+real shell; five plants.
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);
