@@ -114,6 +114,14 @@ attr_ponere (
     AttrCtx* a;
 
     a = (AttrCtx*)ctx;
+    /* valor vacuus TOLLITUR: "" internari non potest (internamentum
+     * recusat) - ponere eum valorem veterem relinquebat, focus numquam
+     * tollebatur (inventum S2a-1) */
+    si (chorda_vacua(a->valor))
+    {
+        (vacuum)insula_attributum_tollere(radix, a->titulus);
+        redde;
+    }
     insula_attributum_ponere(radix, p, in, a->titulus,
                              chorda_ut_cstr(a->valor, p));
 }
