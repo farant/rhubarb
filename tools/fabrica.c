@@ -3402,24 +3402,25 @@ _sanare (
     character** argv,
       Piscina*  piscina)
 {
-                Xar* sanationes_iudicum;
-      FabricaSutura  sutura;
-            Memoria  memoria;
-                b32  memoria_aperta;
-          FilumSera* sera;
-     TabulaDispersa* sigilla;
-                Xar* actiones;
-                Xar* composita;
-                Xar* ordo;
-                Xar* electa;
-                Xar* sanationes;
-             chorda  causa;
-                b32  siccum;
-                b32  commissa;
-                s32  a;
-                i32  i;
-                i32  j;
-                i32  numeri[FABRICA_IUDICIUM + I];   /* omnes eventus:
+                  Xar* nominata;
+                  Xar* sanationes_iudicum;
+        FabricaSutura  sutura;
+              Memoria  memoria;
+                  b32  memoria_aperta;
+            FilumSera* sera;
+       TabulaDispersa* sigilla;
+                  Xar* actiones;
+                  Xar* composita;
+                  Xar* ordo;
+                  Xar* electa;
+                  Xar* sanationes;
+               chorda  causa;
+                  b32  siccum;
+                  b32  commissa;
+                  s32  a;
+                  i32  i;
+                  i32  j;
+                  i32  numeri[FABRICA_IUDICIUM + I];   /* omnes eventus:
                                      * VI erat - AUDITUM_DISCORS (index VI)
                                      * ultra finem scribebat (T7) */
                 i32 duratio;
@@ -3463,7 +3464,8 @@ _sanare (
     }
 
     /* electa: via artificii aut titulus compositi */
-    electa = NIHIL;
+    electa    = NIHIL;
+    nominata  = xar_creare(piscina, (i32)magnitudo(FabricaCompositum*));
     per (a = II; a < argc; a++)
     {
         b32 compositum_est;
@@ -3488,6 +3490,10 @@ _sanare (
                 perge;
             }
             compositum_est = VERUM;
+            si (nominata != NIHIL)
+            {
+                *(FabricaCompositum**)xar_addere(nominata) = compositum;
+            }
             partes = fabrica_compositum_explicare(composita, actiones,
                 compositum->titulus, piscina, &causa);
             per (j = ZEPHYRUM; partes != NIHIL
@@ -3805,6 +3811,63 @@ _sanare (
                 "(git status) - committe per silva.commissio; sanare "
                 "numquam committit\n");
         }
+    }
+    /* VERDICTUM compositorum nominatorum (fabrica-6 T10) ex sanatione
+     * ipsa: pars recens nisi actio eius fracta, omissa, discors aut
+     * (siccum) agenda - iudicium alterum non eget */
+    per (i = ZEPHYRUM; nominata != NIHIL
+        && i < xar_numerus(nominata); i++)
+    {
+        FabricaCompositum* compositum;
+                      Xar* partes;
+                      Xar* iudicia;
+                   chorda  verdictum;
+                      i32  k;
+
+        compositum = *(FabricaCompositum**)xar_obtinere(nominata, i);
+        partes = fabrica_compositum_explicare(composita, actiones,
+            compositum->titulus, piscina, &causa);
+        iudicia = xar_creare(piscina, (i32)magnitudo(FabricaIudicium));
+        per (j = ZEPHYRUM; partes != NIHIL && iudicia != NIHIL
+             && j < xar_numerus(partes); j++)
+        {
+            FabricaIudicium* iudicium;
+                     chorda  via;
+
+            via = *(chorda*)xar_obtinere(partes, j);
+            iudicium = (FabricaIudicium*)xar_addere(iudicia);
+            iudicium->artificium = via;
+            iudicium->status = FABRICA_RECENS;
+            iudicium->causa = chorda_ex_literis("", piscina);
+            per (k = ZEPHYRUM; k < xar_numerus(sanationes); k++)
+            {
+                FabricaSanatio* sanatio;
+                           i32  e;
+
+                sanatio = (FabricaSanatio*)xar_obtinere(sanationes, k);
+                si (   sanatio->eventus != FABRICA_FRACTUM
+                    && sanatio->eventus != FABRICA_OMISSUM
+                    && sanatio->eventus != FABRICA_AUDITUM_DISCORS
+                    && sanatio->eventus != FABRICA_AGENDUM
+                    && sanatio->eventus != FABRICA_FORTASSE)
+                {
+                    perge;
+                }
+                per (e = ZEPHYRUM;
+                     e < xar_numerus(sanatio->actio->exitus); e++)
+                {
+                    si (chorda_aequalis(((FabricaExitus*)xar_obtinere(
+                            sanatio->actio->exitus, e))->via, via))
+                    {
+                        iudicium->status = FABRICA_STALUM;
+                    }
+                }
+            }
+        }
+        verdictum = fabrica_compositum_verdictum(iudicia,
+            compositum->titulus, piscina);
+        printf("VERDICTUM %.*s\n", (s32)verdictum.mensura,
+            (constans character*)verdictum.datum);
     }
     si (sutura.datum != NIHIL)
     {

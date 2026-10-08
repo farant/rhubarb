@@ -97,7 +97,7 @@ facultas, T6c-1 the kind in the machine, T6c-2 the tool hooks + smoke.)
 
 ### T10: switch and close
 
-- [ ] PORTAE['toml'] judged through the composite; runner kept until
+- [x] PORTAE['toml'] judged through the composite; runner kept until
   the switch has stood, then deleted (as generata T7c); spec §XIII as
   built; worklog; MEMORY; ledger park closed. **Commit.**
 

@@ -2050,3 +2050,39 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
   "no places" - printing pointer-non-NULL as "enumerates" inverted it.
   `fabrica_genus_loci` names the three cases. Five kinds have no places:
   invisible to -tacta. That is the census doing its job.
+
+## 2026-10-08 — slice 6 T5-T10: steps, the toml pilot, the switch
+
+Finds worth keeping, in the order they bit:
+
+- `fabrica_suturam_parare` zeroed fields one by one and the list had
+  silently fallen behind (`particulas_*`, `verdictum_ponere`,
+  `repositorium`); a new test section shifted the stack and a garbage
+  hook was called (Bus error). It memsets the whole struct now - a
+  member added later can never be garbage.
+- An EMPTY read trace could not be stored: an empty write is a
+  deletion in the trace store, so a member that reads nothing re-ran
+  forever. A pass with an empty trace stores the sentinel `X .`.
+- The wave heal's "after a fracture nothing new starts" stopped a
+  step's independent members; one toml failure left 8 tests OMISSUM.
+  Members continue; dependents are still omitted.
+- aedilis's `obiecta` does not list the scope (its struere.sh compiles
+  the scope separately) - the closure hook puts the test FIRST.
+- The compilator's argv excludes `clang`; with it, `clang` counts as a
+  second source and nothing is cacheable.
+- THE oracle finding: steps 12/13 vs runner 13/13 - two flag sources
+  (vexilla.sh `-O2 -g`, aedilis.stml none); materia's recursive
+  emission (park ...FAD8) overflows the -O0 stack at the depth
+  probatio_toml_totalitas pins. aedilis.stml now carries `-O2 -g`.
+- Trace reads (`L`) were re-hashed per member; eight toml members read
+  the same ~2,500 corpus files. They go through the per-run seal memo
+  (`sutura->sigilla`) now, and no longer try to enumerate a directory
+  for every read.
+- Every `bin/fabrica iudicare` pays ~1.6 s fixed (dependency computation
+  and sealing over all actions) - pre-existing, not from steps
+  (declaration expansion of 13 members costs ~80 ms).
+- Commits whose header lies in the gesta closure stale the ledger
+  binaries; something (not the resident) rebuilt gesta/build/tabularium
+  mid-gate and the aedilis gate refused 'scripsit extra vestigium'.
+  Prebuild `./gesta/{tabularium,fori,tabulariumd}.sh -struere` first
+  (ledger note ...MZV7).

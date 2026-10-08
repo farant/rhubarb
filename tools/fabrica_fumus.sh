@@ -491,7 +491,9 @@ printf '<aedificatio>\n  <actio titulus="g" genus="generator">\n    <mandatum>\n
 printf 'int main(void) { return 0; } /* II */\n' > "$T/r/t/probatio_b.c"
 (cd "$T/r" && "$F" iudicare -plenus probationes_t) > "$T/o3" 2>&1; rc3=$?
 lg=$(grep -n '^SANATUM *g ' "$T/o" | cut -d: -f1); la=$(grep -n '^SANATUM *probationes_t/probatio_a' "$T/o" | cut -d: -f1)
+# sanare compositi nominati VERDICTUM ipse dat (T10: porta per gradum)
 if [ "$rc1" -eq 0 ] && [ -n "$lg" ] && [ -n "$la" ] && [ "$lg" -lt "$la" ] \
+   && grep -q '^VERDICTUM probationes_t: 2/2$' "$T/o" \
    && [ "$rc2" -eq 0 ] && grep -q '^VERDICTUM probationes_t: 2/2$' "$T/o2" \
    && [ "$rc3" -eq 1 ] && grep -q '^VERDICTUM probationes_t: 1/2 - non recentia: probationes_t/probatio_b$' "$T/o3"; then echo "  XXXIX post et compositum: ordo, VERDICTUM N/M OK"; else echo "  XXXIX FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -24; fracta=1; fi
 

@@ -2163,6 +2163,45 @@ _lectionem_sigillare (
             : sigillum_computare(SIGNUM_ABSENS, strlen(SIGNUM_ABSENS));
         redde VERUM;
     }
+    /* L (fabrica-6 T10): per MEMORIAM CURSUS (sutura->sigilla, via ->
+     * sigillum octetorum, ut ingressus declarati) - membra gradus
+     * corpus idem legunt (toml: VIII membra MMD plagulas easdem), olim
+     * quodque iterum legebat et sigillabat; nec directorium pro L
+     * enumeratur */
+    si (genus == LECTIO_LEGIT)
+    {
+        vacuum* memoratum;
+
+        si (   sutura->sigilla != NIHIL
+            && tabula_dispersa_invenire(sutura->sigilla, via,
+            &memoratum))
+        {
+            *sigillum_out = *(Sigillum*)memoratum;
+            redde VERUM;
+        }
+        si (!sutura->legere(sutura->datum, via_cstr, piscina,
+            &contentum))
+        {
+            *sigillum_out = sigillum_computare(SIGNUM_ABSENS,
+                strlen(SIGNUM_ABSENS));
+            redde VERUM;
+        }
+        *sigillum_out = sigillum_computare(contentum.datum,
+            (memoriae_index)contentum.mensura);
+        si (sutura->sigilla != NIHIL)
+        {
+            Sigillum* locus = (Sigillum*)piscina_allocare(piscina,
+                magnitudo(Sigillum));
+
+            si (locus != NIHIL)
+            {
+                *locus = *sigillum_out;
+                (vacuum)tabula_dispersa_inserere(sutura->sigilla, via,
+                    locus);
+            }
+        }
+        redde VERUM;
+    }
     legibile     = sutura->legere(sutura->datum, via_cstr, piscina,
         &contentum);
     est_directorium  = (sutura->enumerare != NIHIL)

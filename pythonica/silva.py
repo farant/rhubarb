@@ -1787,10 +1787,71 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
     tenta) via cruda: _porta_cruda. auditus: None = FABRICA_AUDITUS
     ambitus; VERUM/FALSUM expresse (commissio: _auditum_commissionis)."""
     if filtrum is None and radix is None and receptum:
+        p = _porta_per_gradum(nomen, vis, auditus)
+        if p is not None:
+            return p
         p = _porta_per_fabricam(nomen, vis, auditus)
         if p is not None:
             return p
     return _porta_cruda(nomen, filtrum, radix, receptum)
+
+
+# PORTAE GRADUUM (fabrica-6 T10): porta iudicata per COMPOSITUM actionis
+# gradus (membra = probationes singulae) - linea 'VERDICTUM <c>: N/M'
+# bin/fabrica, non signum cursoris. Cursor (PORTAE[nomen]) manet: filtrum,
+# umbra, bin/fabrica absens, oraculum (tools/toml_gradus_oraculum.sh).
+PORTAE_GRADUUM = {'toml': 'probationes_toml'}
+
+
+def _porta_per_gradum(nomen, vis=False, auditus=None):
+    """porta per compositum gradus; None = via altera (fabrica verdicti
+    cursoris, deinde cruda). 'bin/fabrica sanare <c>' membra stala (et
+    producentes per post) currit, recentia reutitur; deinde 'iudicare
+    -plenus <c>' lineam VERDICTUM dat: sana SOLUM si N == M. vis: verdicta
+    membrorum deleta (omnia currunt); auditus: 'sanare -audit'."""
+    compositum = PORTAE_GRADUUM.get(nomen)
+    if compositum is None or not os.path.exists(FABRICA_BIN):
+        return None
+    initium = time.time()
+    if vis:
+        for v in glob.glob(os.path.join(RADIX, 'build', 'fabrica', 'area',
+                                        compositum, '*', 'verdictum.txt')):
+            try:
+                os.unlink(v)
+            except OSError:
+                pass
+    if auditus is None:
+        auditus = bool(os.environ.get('FABRICA_AUDITUS'))
+    r = _curre([FABRICA_BIN, 'sanare'] + (['-audit'] if auditus else [])
+               + [compositum])
+    if r.returncode == 2:
+        print('porta %s: fabrica sanare %s nequit (exitus 2) - via altera'
+              % (nomen, compositum))
+        return None
+    # VERDICTUM ab ipsa sanatione (bin/fabrica: compositum nominatum);
+    # iudicium alterum solum si linea abest (binarium vetus)
+    signum = r'^VERDICTUM (%s: (\d+)/(\d+).*)$' % re.escape(compositum)
+    rj = r
+    m = re.search(signum, r.stdout, re.M)
+    if m is None:
+        rj = _curre([FABRICA_BIN, 'iudicare', '-plenus', compositum])
+        m = re.search(signum, rj.stdout, re.M)
+    if m is None:
+        print('porta %s: VERDICTUM %s absens - via altera' % (nomen, compositum))
+        return None
+    recentia, omnia = int(m.group(2)), int(m.group(3))
+    cursa = re.findall(r'^(SANATUM|FRACTUM|AUDITUM\S*)\s+%s/(\S+)(.*)$'
+                       % re.escape(compositum), r.stdout, re.M)
+    sana = r.returncode == 0 and omnia > 0 and recentia == omnia
+    compendium = '%s [membra cursa %d/%d, cetera reusa]' % (
+        m.group(1), len(cursa), omnia)
+    fr = [] if sana else [
+        Fractura('%s/%s' % (compositum, membrum), [linea.strip(' -')[:300]])
+        for genus, membrum, linea in cursa if genus != 'SANATUM']
+    _tempus_notare('porta', nomen, initium, sana, 0 if sana else 1)
+    return Porta(nomen, True, sana, compendium, 0 if sana else 1,
+                 _ANSI.sub('', r.stdout + r.stderr
+                           + (rj.stdout if rj is not r else '')), fr, False)
 
 
 def _portae_verdictorum():

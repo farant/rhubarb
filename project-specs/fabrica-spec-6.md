@@ -562,3 +562,45 @@ member's time is its run only (compile and link through the store are
 not counted) - the test-run count (-68%) is the fair number. The
 slice-5 figure (78% over 150 commits ending at a0ccbd5f) is a different
 window.
+
+**T10 (2026-10-08): the switch.** `pythonica/silva.py`:
+`PORTAE_GRADUUM = {'toml': 'probationes_toml'}` and `_porta_per_gradum`
+- `porta('toml')` (no filter, live tree) runs `bin/fabrica sanare
+probationes_toml` (stale producers through `post`, stale members) and
+reads `VERDICTUM probationes_toml: N/M`; sane ONLY if N == M; compendium
+`probationes_toml: 13/13 [membra cursa K/13, cetera reusa]`; failing
+members become fracturae with their cause. Fallbacks: sanare exit 2 or
+no VERDICTUM -> the runner's verdict path, then the raw runner; a filter
+or a snapshot clone -> the raw runner. bin/fabrica `sanare` now prints
+the VERDICTUM line for every composite named on its command line, from
+the heal itself (a part is recent unless its action broke, was omitted,
+went discordant or - dry run - is still to do), so the gate needs ONE
+call. Trace reads (`L`) use the per-run seal memo.
+Measured on the live tree: full reuse ~3.5 s (0/13 members run); the
+first call after the switch re-ran the 7 members the T8 plants had left
+without verdicts. Tests: pythonica 'porta gradus' (6 cases: pass, full
+reuse, failing member named, exit 2 -> runner, VERDICTUM missing ->
+iudicare, filter -> runner; the real mapping declared); fumus XXXIX
+checks sanare's own VERDICTUM. Plants: sanity ignoring N == M -> red;
+porta() not consulting the step path -> red.
+The runner stays (manual tool, oracle `tools/toml_gradus_oraculum.sh`,
+filtered and snapshot runs) until the switch has stood; its deletion is
+desideratum ...MX8N (with the 'suitae probationum' inventory lens, which
+reads the runner).
+
+## Slice 6 as built - summary
+
+The tool now has: registries with conformance fixtures for input kinds
+(13) and step kinds (`probationes_c`), and a census; inputs on two axes
+with aliases and `repositorium`; the judges' stage; compilator and the
+aedilis extractor as libraries linked into bin/fabrica; `FabricaGradus`
+(members = synthetic `iudicium` actions in their own areas, exact base
+environment, undeclared-variable and outside-write refusals, orphan
+areas); `probationes_c` end to end; composites with `post` and the
+VERDICTUM line; toml judged through its steps (oracle 13/13, A/B over
+150 commits: 273 -> 87 test runs; the gain is the narrower key, not
+per-test granularity, on this suite). One flag source (aedilis.stml =
+vexilla.sh). Not done (recorded): volumes / filum backend (next slice),
+other step kinds, source annotations beyond `facultas`, snapshot builds,
+PORTAE as a derived view, other runners (root and silva are where
+per-test granularity should show), deleting the toml runner (...MX8N).
