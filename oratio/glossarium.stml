@@ -462,6 +462,8 @@
   <vocabulum lemma="silva" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (bibliotheca/ars)"/>
   <vocabulum lemma="briar" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (instrumentum: programmata litterata .thistle)"/>
   <vocabulum lemma="thistle" lingua="latina" classis="nomen-proprium" nota="nomen proprium domus (forma plagulae litteratae briaris: x.thistle)"/>
+  <vocabulum lemma="anthropic" lingua="latina" classis="nomen-proprium" nota="nomen proprium (provisor exemplarium linguae; vates_anthropic_aperire, vates-spec)"/>
+  <vocabulum lemma="badssl" lingua="latina" classis="nomen-proprium" nota="nomen proprium (badssl.com, hospites TLS consulto fracti; tools/rete_fumus)"/>
   <vocabulum lemma="gamma" lingua="latina" classis="substantivum" nota="littera Graeca tertia (Latine gamma, -ae f.; fixum briaris post alpha/beta)"/>
   <vocabulum lemma="amalgamo" lingua="latina" classis="verbum" nota="Latina media (alchemica): in amalgama redigere - briar_amalgamare">
     <forma textus="amalgamare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>

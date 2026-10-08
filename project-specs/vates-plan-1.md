@@ -445,6 +445,35 @@ silva.commissio(
 
 ---
 
+### Task 1b: tls hardening (added 2026-10-07 from T1's findings, Fran's ruling)
+
+T1 measured: SecureTransport negotiates TLS 1.2 but ACCEPTS TLS 1.0
+and 1.1 (`tls-v1-0.badssl.com:1010`, `tls-v1-1.badssl.com:1011`) and
+OFFERS `TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA` +
+`TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA` (howsmyssl rating "Bad",
+SWEET32-class ciphers).
+
+**Files:** Modify `lib/tls_macos.m` (context setup in
+`tls_connectere_cum_optionibus`), `lib/tls_macos.worklog.md`.
+
+- [ ] Born red: `./tools/rete_fumus.sh -tls -badssl` shows the three
+  FRACT/"Bad" lines (already recorded in `build/rete_fumus_T1.txt`).
+- [ ] After `SSLCreateContext`: `SSLSetProtocolVersionMin(ctx,
+  kTLSProtocol12)`; then enumerate `SSLGetSupportedCiphers` and pass
+  to `SSLSetEnabledCiphers` only ECDHE suites with AES-GCM or
+  ChaCha20-Poly1305 (allowlist, not a denylist: a cipher Apple adds
+  later is excluded until named). Refuse the connection with
+  `TLS_ERROR_HANDSHAKE` + a named description if the filtered list is
+  empty.
+- [ ] Green: `./tools/rete_fumus.sh -tls -badssl` all BENE; howsmyssl
+  rating "Probably Okay"; no insecure suites printed; the four
+  certificate refusals still BENE; `tls-v1-2` still accepted;
+  `-anthropic` still BENE.
+- [ ] Plant: remove the min-version call -> `tls-v1-0` FRACT again;
+  restore.
+- [ ] Gates: `radix` + every suite whose sources include `tls.h` or
+  `http.h` (grep as in T2 Step 2.8), via `commissio_umbra`.
+
 ### Task 2: http - caller's timeout on HTTPS, the transport seam, a request view
 
 **Files:**

@@ -110,3 +110,24 @@ causa truncationis futura numquam successum mendacem gignat:
 Plantae omnes rubrae (Content-Length, completa, custos involutionis).
 Nondum factum, notatum: HTTPS tempus petitionis (petitio->tempus_ms)
 ignorat - tls_connectere optiones defaltas (XXX s) semper accipit.
+
+## 2026-10-07 - fumus retis (vates-plan-1 T1): what the real network says
+
+New hand-run probe `tools/rete_fumus.sh` (NOT a gate: needs the network,
+and `-anthropic` needs `~/.rhubarb/anthropic.clavis`). Results against
+the unmodified stack (SecureTransport via `lib/tls_macos.m`):
+
+| probe | result |
+|---|---|
+| howsmyssl.com/a/check | TLS 1.2 negotiated; rating **Bad**: offers `TLS_ECDHE_{ECDSA,RSA}_WITH_3DES_EDE_CBC_SHA` |
+| expired / wrong.host / self-signed / untrusted-root .badssl.com | all refused (good) |
+| tls-v1-0.badssl.com:1010, tls-v1-1.badssl.com:1011 | **ACCEPTED** (bad) |
+| tls-v1-2.badssl.com:1012 | accepted |
+| httpbin /delay/5 with 20 s | succeeds (control) |
+| httpbin /delay/10 with **3 s** | **succeeds** - the caller's timeout never reaches TLS on https (`http.c:801` calls `tls_connectere` with defaults = 30 s, `tls_macos.m:190`) |
+| api.anthropic.com GET /v1/models | 200, 14 models; key read in-process, absent from all output (checked by grep) |
+
+Consequences: T1b (tls hardening: min TLS 1.2 + modern cipher allowlist)
+and T2 (timeout reaches TLS; `HttpVectura`; `http_petitio_visus`).
+httpbin caps `/delay/n` at 10 s, so the timeout bug is staged with a
+SHORT timeout ignored, not a long call killed - same plumbing.
