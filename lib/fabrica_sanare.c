@@ -1649,9 +1649,212 @@ _undam_agere (
     redde fractum;
 }
 
-/* SANARE PER UNDAS (plan 2 T6): undae ex actionibus ambitus; in unda
- * non tutae SOLAE (photographia sua), tutae (lectiones="verum") simul.
- * Fractura: nova non incipiuntur (OMISSUM), dependentes OMISSUM. */
+/* CURSUS UNDARUM (plan 2 T6; per gradus fabrica-6): status communis
+ * omnium undarum. 'fractum' = fractura vera (membrum gradus excepto):
+ * post eam nihil novum incipitur */
+nomen structura {
+    constans FabricaSutura* sutura;
+                   Piscina* piscina;
+              constans Xar* ordo;
+             StatusSanandi* status;
+                    chorda* stala;
+                       Xar* sanationes;
+                       b32  fractum;
+} CursusUndarum;
+
+/* actio ordinis 'index' */
+interior FabricaActio*
+_actio_ordinis (
+    constans CursusUndarum* cursus,
+                       i32  index)
+{
+    redde *(FabricaActio**)xar_obtinere(cursus->ordo, index);
+}
+
+/* post fracturam: non incipitur - OMISSUM 'post fracturam' */
+interior vacuum
+_post_fracturam_omittere (
+    CursusUndarum* cursus,
+              i32  index)
+{
+    cursus->status[index] = SANANDI_OMISSUM;
+    _sanationem_notare(cursus->sutura, cursus->piscina,
+        cursus->sanationes,
+        _actio_ordinis(cursus, index), FABRICA_OMISSUM,
+        chorda_ex_literis("post fracturam: nova non incipiuntur",
+            cursus->piscina), ZEPHYRUM);
+}
+
+/* membrum post fracturam: nihil incipitur, sed iudicatur - dependentia
+ * fracta nominatur, recens tacet, agendum OMISSUM 'post fracturam' */
+interior vacuum
+_membrum_post_fracturam (
+    CursusUndarum* cursus,
+              i32  index)
+{
+    FabricaActio* actio;
+          chorda  fracta;
+          chorda  causa;
+
+    actio = _actio_ordinis(cursus, index);
+    causa = chorda_ex_literis("", cursus->piscina);
+    si (_dependentia_fracta(cursus->ordo, index, cursus->status,
+        &fracta))
+    {
+        cursus->status[index] = SANANDI_OMISSUM;
+        _sanationem_notare(cursus->sutura, cursus->piscina,
+            cursus->sanationes,
+            actio, FABRICA_OMISSUM, fabricae_iungere(cursus->piscina,
+                "dependentia fracta: ", fracta, ""), ZEPHYRUM);
+    }
+    alioquin si (_exitus_recentes(cursus->sutura, actio,
+                 cursus->piscina,
+                 &causa))
+    {
+        cursus->status[index] = SANANDI_RECENS;
+    }
+    alioquin
+    {
+        _post_fracturam_omittere(cursus, index);
+    }
+}
+
+/* actio SOLA (via vetus, photographia sua): actum et post-condicio.
+ * VERUM si fracta */
+interior b32
+_solam_agere (
+    CursusUndarum* cursus,
+              i32  index)
+{
+       i32 duratio;
+    chorda causa;
+       b32 actum;
+
+    duratio  = ZEPHYRUM;
+    causa    = chorda_ex_literis("", cursus->piscina);
+    actum    = _actionem_agere(cursus->sutura, _actio_ordinis(cursus,
+        index),
+        cursus->piscina, &duratio, &causa);
+    _post_agere(cursus->sutura, _actio_ordinis(cursus, index), index,
+        cursus->status,
+        cursus->stala, cursus->sanationes, actum, causa, duratio,
+        cursus->piscina);
+    redde cursus->status[index] == SANANDI_FRACTUM;
+}
+
+/* membra undae dividere: post fracturam iudicantur solum; nihil
+ * agendum (_ante_agere) praetermittitur; tutae (lectiones, non
+ * iudicium - iudicium numquam simul: scripturae suitae totae) in
+ * 'tuta', ceterae in 'ceteri' */
+interior vacuum
+_undam_dividere (
+     CursusUndarum* cursus,
+      constans Xar* membra,
+               Xar* tuta,
+               Xar* ceteri)
+{
+    i32 m;
+
+    per (m = ZEPHYRUM; m < xar_numerus(membra); m++)
+    {
+        FabricaActio* actio;
+                 s32  index;
+
+        actio = *(FabricaActio**)xar_obtinere(membra, m);
+        index = _index_actionis(cursus->ordo, actio->titulus);
+        si (index < 0)
+        {
+            perge;
+        }
+        si (cursus->fractum)
+        {
+            _membrum_post_fracturam(cursus, (i32)index);
+            perge;
+        }
+        si (!_ante_agere(cursus->sutura, cursus->ordo, (i32)index,
+            cursus->status,
+                cursus->stala, cursus->sanationes, FALSUM,
+                cursus->piscina))
+        {
+            perge;
+        }
+        si (actio->lectiones && actio->genus != FABRICA_ACTIO_IUDICIUM)
+        {
+            *(i32*)xar_addere(tuta) = (i32)index;
+        }
+        alioquin
+        {
+            *(i32*)xar_addere(ceteri) = (i32)index;
+        }
+    }
+}
+
+/* non tutae: SOLAE, ordine. MEMBRA GRADUS (fabrica-6 T8): fractura
+ * membri fratres non sistit - membra independentia sunt et verdictum
+ * gradus omnia nominare debet; dependentes per _ante_agere OMISSI
+ * manent */
+interior vacuum
+_ceteros_agere (
+    CursusUndarum* cursus,
+     constans Xar* ceteri)
+{
+    i32 m;
+
+    per (m = ZEPHYRUM; m < xar_numerus(ceteri); m++)
+    {
+        i32 index;
+
+        index = *(i32*)xar_obtinere(ceteri, m);
+        si (cursus->fractum)
+        {
+            _post_fracturam_omittere(cursus, index);
+        }
+        alioquin si (   _solam_agere(cursus, index)
+                     && _actio_ordinis(cursus, index)->membrum == NIHIL)
+        {
+            cursus->fractum = VERUM;
+        }
+    }
+}
+
+/* tutae: post fracturam OMISSAE; sola via vetere (nihil simul); plures
+ * simul (_undam_agere) */
+interior vacuum
+_tutas_agere (
+    CursusUndarum* cursus,
+              Xar* tuta)
+{
+    i32 m;
+
+    si (cursus->fractum)
+    {
+        per (m = ZEPHYRUM; m < xar_numerus(tuta); m++)
+        {
+            _post_fracturam_omittere(cursus, *(i32*)xar_obtinere(tuta,
+                m));
+        }
+    }
+    alioquin si (xar_numerus(tuta) == I)
+    {
+        si (_solam_agere(cursus, *(i32*)xar_obtinere(tuta, ZEPHYRUM)))
+        {
+            cursus->fractum = VERUM;
+        }
+    }
+    alioquin si (   xar_numerus(tuta) > I
+                 && _undam_agere(cursus->sutura, cursus->ordo, tuta,
+                 cursus->status,
+                        cursus->stala, cursus->sanationes,
+                        cursus->piscina))
+    {
+        cursus->fractum = VERUM;
+    }
+}
+
+/* SANARE PER UNDAS (plan 2 T6): undae ex actionibus ambitus (ignotae
+ * excluduntur - exitus non iudicati); in unda non tutae SOLAE
+ * (photographia sua), tutae (lectiones="verum") simul. Fractura: nova
+ * non incipiuntur (OMISSUM), dependentes OMISSUM. */
 interior b32
 _sanare_per_undas (
     constans FabricaSutura* sutura,
@@ -1662,11 +1865,11 @@ _sanare_per_undas (
                        Xar* sanationes,
                    Piscina* piscina)
 {
-     Xar* membra_ambitus;
-     Xar* undae;
-     i32  i;
-     i32  w;
-     b32  fractum;
+    CursusUndarum  cursus;
+              Xar* membra_ambitus;
+              Xar* undae;
+              i32  i;
+              i32  w;
 
     membra_ambitus = xar_creare(piscina, (i32)magnitudo(FabricaActio*));
     si (membra_ambitus == NIHIL)
@@ -1688,13 +1891,18 @@ _sanare_per_undas (
     {
         redde FALSUM;
     }
-    fractum = FALSUM;
+    cursus.sutura      = sutura;
+    cursus.piscina     = piscina;
+    cursus.ordo        = ordo;
+    cursus.status      = status;
+    cursus.stala       = stala;
+    cursus.sanationes  = sanationes;
+    cursus.fractum     = FALSUM;
     per (w = ZEPHYRUM; w < xar_numerus(undae); w++)
     {
         Xar* membra;
         Xar* tuta;
         Xar* ceteri;
-        i32  m;
 
         membra  = *(Xar**)xar_obtinere(undae, w);
         tuta    = xar_creare(piscina, (i32)magnitudo(i32));
@@ -1708,152 +1916,9 @@ _sanare_per_undas (
          * regenerationum vacat) - membra undae independentia sunt */
         fabrica_regenerationes_praevidere(sutura, membra, VERUM,
             piscina);
-        per (m = ZEPHYRUM; m < xar_numerus(membra); m++)
-        {
-            FabricaActio* actio;
-                     s32  index;
-
-            actio = *(FabricaActio**)xar_obtinere(membra, m);
-            index = _index_actionis(ordo, actio->titulus);
-            si (index < 0)
-            {
-                perge;
-            }
-            si (fractum)
-            {
-                chorda fracta;
-                chorda causa;
-
-                /* post fracturam nihil novum incipitur - sed iudicatur:
-                 * recens tacet, dependentia fracta nominatur, sola
-                 * agenda OMISSUM 'post fracturam' */
-                causa = chorda_ex_literis("", piscina);
-                si (_dependentia_fracta(ordo, (i32)index, status,
-                    &fracta))
-                {
-                    status[index] = SANANDI_OMISSUM;
-                    _sanationem_notare(sutura, piscina, sanationes,
-                        actio,
-                        FABRICA_OMISSUM, fabricae_iungere(piscina,
-                        "dependentia fracta: ", fracta, ""), ZEPHYRUM);
-                }
-                alioquin si (_exitus_recentes(sutura, actio, piscina,
-                             &causa))
-                {
-                    status[index] = SANANDI_RECENS;
-                }
-                alioquin
-                {
-                    status[index] = SANANDI_OMISSUM;
-                    _sanationem_notare(sutura, piscina, sanationes,
-                        actio,
-                        FABRICA_OMISSUM, chorda_ex_literis("post "
-                        "fracturam: nova non incipiuntur", piscina),
-                        ZEPHYRUM);
-                }
-                perge;
-            }
-            si (!_ante_agere(sutura, ordo, (i32)index, status, stala,
-                sanationes,
-                    FALSUM, piscina))
-            {
-                perge;
-            }
-            si (   actio->lectiones
-                && actio->genus != FABRICA_ACTIO_IUDICIUM)
-            {
-                /* iudicium numquam simul: scripturae suitae totae */
-                *(i32*)xar_addere(tuta) = (i32)index;
-            }
-            alioquin
-            {
-                *(i32*)xar_addere(ceteri) = (i32)index;
-            }
-        }
-        /* non tutae: SOLAE, photographia sua (via vetus) */
-        per (m = ZEPHYRUM; m < xar_numerus(ceteri); m++)
-        {
-               i32 index;
-               i32 duratio;
-            chorda causa;
-               b32 actum;
-
-            index = *(i32*)xar_obtinere(ceteri, m);
-            si (fractum)
-            {
-                status[index] = SANANDI_OMISSUM;
-                _sanationem_notare(sutura, piscina, sanationes,
-                    *(FabricaActio**)xar_obtinere(ordo, index),
-                    FABRICA_OMISSUM,
-                    chorda_ex_literis("post fracturam: "
-                    "nova non incipiuntur", piscina), ZEPHYRUM);
-                perge;
-            }
-            duratio  = ZEPHYRUM;
-            causa    = chorda_ex_literis("", piscina);
-            actum    = _actionem_agere(sutura,
-                *(FabricaActio**)xar_obtinere(ordo, index), piscina,
-                &duratio, &causa);
-            _post_agere(sutura, *(FabricaActio**)xar_obtinere(ordo,
-                index),
-                index, status, stala, sanationes, actum, causa, duratio,
-                piscina);
-            /* MEMBRA GRADUS (fabrica-6 T8): fractura membri fratres non
-             * sistit - membra independentia sunt et verdictum gradus
-             * omnia nominare debet; dependentes per _ante_agere OMISSI
-             * manent */
-            si (   status[index] == SANANDI_FRACTUM
-                && (*(FabricaActio**)xar_obtinere(ordo,
-                       index))->membrum == NIHIL)
-            {
-                fractum = VERUM;
-            }
-        }
-        si (fractum || xar_numerus(tuta) == 0)
-        {
-            per (m = ZEPHYRUM; fractum && m < xar_numerus(tuta); m++)
-            {
-                i32 index;
-
-                index          = *(i32*)xar_obtinere(tuta, m);
-                status[index]  = SANANDI_OMISSUM;
-                _sanationem_notare(sutura, piscina, sanationes,
-                    *(FabricaActio**)xar_obtinere(ordo, index),
-                    FABRICA_OMISSUM,
-                    chorda_ex_literis("post fracturam: "
-                    "nova non incipiuntur", piscina), ZEPHYRUM);
-            }
-            perge;
-        }
-        si (xar_numerus(tuta) == I)
-        {
-            /* tuta sola: nihil simul - via vetus cum photographia */
-               i32 index;
-               i32 duratio;
-            chorda causa;
-               b32 actum;
-
-            index    = *(i32*)xar_obtinere(tuta, ZEPHYRUM);
-            duratio  = ZEPHYRUM;
-            causa    = chorda_ex_literis("", piscina);
-            actum   = _actionem_agere(sutura,
-                *(FabricaActio**)xar_obtinere(ordo, index), piscina,
-                &duratio, &causa);
-            _post_agere(sutura, *(FabricaActio**)xar_obtinere(ordo,
-                index),
-                index, status, stala, sanationes, actum, causa, duratio,
-                piscina);
-            si (status[index] == SANANDI_FRACTUM)
-            {
-                fractum = VERUM;
-            }
-            perge;
-        }
-        si (_undam_agere(sutura, ordo, tuta, status, stala, sanationes,
-            piscina))
-        {
-            fractum = VERUM;
-        }
+        _undam_dividere(&cursus, membra, tuta, ceteri);
+        _ceteros_agere(&cursus, ceteri);
+        _tutas_agere(&cursus, tuta);
     }
     redde VERUM;
 }

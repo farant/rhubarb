@@ -2288,3 +2288,44 @@ first. Plants on the new code: `_viam_continet` never matching -> IV
 red; the S-write cause ignored -> III red. fumus XL/XL.
 `_sanare_per_undas` (204, three copies of the "post fracturam"
 omission, two of "run one action alone") is next.
+
+## 2026-10-08 - the wave scheduler as phases, after-fracture paths pinned
+
+`_sanare_per_undas` (204 lines) is now 66 (most of it the scope list
+and setup): `CursusUndarum` carries sutura/ordo/status/stala/
+sanationes and the one flag that matters across waves, `fractum`; per
+wave: praevisio, `_undam_dividere` (judge-only after a fracture,
+skip what `_ante_agere` says needs nothing, split safe/other),
+`_ceteros_agere`, `_tutas_agere` (omit / one alone / `_undam_agere`).
+The duplicates are now one helper each: `_post_fracturam_omittere`
+(three copies of the 'post fracturam' omission) and `_solam_agere`
+(two copies of "run one action alone"). Every piece <= 40 lines.
+
+Coverage first: 14 plants, ONE per branch - only 3 red. Nothing
+asserted the after-fracture paths: their verdicts are mostly
+OMISSUM through more than one road (a dependent of a broken action
+is OMISSUM whether the fracture branch or `_ante_agere` catches it),
+so outcome-only assertions could not tell the branches apart. New
+tests IX-XII (wave fracture stops later waves: dependent 'dependentia
+fracta', independent 'post fracturam', fresh one silent; an unsafe
+member breaking omits the rest of its wave; a lone safe member
+breaking stops the next wave; fresh and unjudged actions never run),
+green on the OLD code; then 10 of the 11 remaining plants red. They
+read results through `_eventus_sanationis`/`_causa_sanationis`
+(NIHIL-safe: the Q11 plant first went "red" by SEGFAULT on an
+unguarded `->eventus`). The one survivor, excluding unjudged
+(`_actio_ignota`) actions from the waves, is an equivalent mutant
+here: `_ante_agere` sees no judged output, calls it fresh and skips
+it anyway - only the wave grouping could differ. Kept verbatim.
+
+Asymmetry kept, not fixed: an unsafe member's fracture stops later
+waves only if it is not a step member (T8), a lone safe member's
+always does. Step members are iudicium actions and iudicium is never
+'safe', so the second path cannot see one today.
+
+Oracle: the sanare suite as a driver, every sanatio after each of
+its 23 heals, each record starting on a fresh line (the credo-dots
+trap from the last entry): 80 lines identical old vs new. Plants on
+the new code: the omission recorded as SANATUM -> IX red; a step
+member's fracture stopping its siblings -> gradus XI red. 836
+assertions; fumus XL/XL.
