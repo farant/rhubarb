@@ -73,7 +73,8 @@ Leges chartae:
   sagittae_applicationis (DECCKM), lnm, CODIFICATOR_MUS_X10; D6b:
   AemulatorModi.rotula_sagittis (?1007), terminale_titulus,
   TerminaleApplicatio.contextus; terminale modos, murem, rotulam,
-  focum, colores honorat; D7c: AemulatorModi.schirmus_inversus
+  focum, colores honorat; vicus-latera S1a: TerminaleApplicatio.ramus
+  (superficies ex ramo); D7c: AemulatorModi.schirmus_inversus
   (DECSCNM ?5; terminale colores nativos permutat), terminale
   ornamenta (sublineae V, transfixa, superlinea, crassum fictum;
   TerminaleApplicatio.ornamenta_pixelorum; lineae capsarum, quadra,

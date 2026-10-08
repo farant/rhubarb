@@ -997,16 +997,18 @@ titulum_notare (
  * Componere
  * ================================================== */
 
+/* vicus-latera S1a: ex RAMO applicationis (radix in applicatione
+ * sola, <terminale id> in hospite) */
 interior s32
 superficies (
-    InsulaRepositorium* repo,
-    constans character* titulus,
-                   s32  ordinarium)
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+                     s32  ordinarium)
 {
     chorda* v;
        s32  n;
 
-    v = insula_attributum(repo, INSULA_EPHEMERA, titulus);
+    v = insula_ramus_attributum(ramus, INSULA_EPHEMERA, titulus);
     si (!v || !chorda_ut_s32(*v, &n) || n < I)
     {
         redde ordinarium;
@@ -1029,15 +1031,19 @@ terminale_componere (
                        Componens* radix;
                        Componens* schirmum;
                            Fines  f;
+                     InsulaRamus  ramus;
 
     (vacuum)motus;
-    tc   = (TerminaleContextus*)ctx;
-    a    = aemulator_hospes_aemulator(tc->app->hospes);
-    f.x  = ZEPHYRUM;
-    f.y  = ZEPHYRUM;
-    f.latitudo  = superficies(repo, "superficies_latitudo",
+    tc  = (TerminaleContextus*)ctx;
+    a   = aemulator_hospes_aemulator(tc->app->hospes);
+    /* ramus applicationis; sine eo radix repositorii dati */
+    ramus = tc->app->ramus.repo ? tc->app->ramus
+                                : insula_ramus_radix(repo);
+    f.x = ZEPHYRUM;
+    f.y = ZEPHYRUM;
+    f.latitudo  = superficies(&ramus, "superficies_latitudo",
         (s32)(aemulator_latitudo(a) * tc->app->cellula_latitudo));
-    f.altitudo  = superficies(repo, "superficies_altitudo",
+    f.altitudo  = superficies(&ramus, "superficies_altitudo",
         (s32)(aemulator_altitudo(a) * tc->app->cellula_altitudo));
     radix = componens_creare(piscina, intern, "radix", PARTES_NULLUM);
     schirmum = componens_creare(piscina, intern, "schirmum",
@@ -1162,6 +1168,8 @@ terminale_applicatio_aedificare (
         LXIV * MXXIV);
     app->repo = insula_repositorium_creare(piscina, intern,
         "<terminale/>", "<terminale focus=\"schirmum\"/>");
+    app->ramus = app->repo ? insula_ramus_radix(app->repo)
+                           : app->ramus;
     app->actiones  = actio_registrum_creare(piscina, intern);
     app->figurae   = figura_registrum_creare(piscina);
     si (   !tc->scrutinium || !app->repo || !app->actiones
@@ -1210,9 +1218,9 @@ terminale_pulsare (
                       i32  lineae;
 
     a    = aemulator_hospes_aemulator(app->hospes);
-    lat  = superficies(app->repo, "superficies_latitudo",
+    lat  = superficies(&app->ramus, "superficies_latitudo",
         (s32)(aemulator_latitudo(a) * app->cellula_latitudo));
-    alt  = superficies(app->repo, "superficies_altitudo",
+    alt  = superficies(&app->ramus, "superficies_altitudo",
         (s32)(aemulator_altitudo(a) * app->cellula_altitudo));
     columnae  = (i32)lat / app->cellula_latitudo;
     lineae    = (i32)alt / app->cellula_altitudo;

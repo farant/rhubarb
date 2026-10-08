@@ -1091,6 +1091,45 @@ memoriam_contrastus_probare (vacuum)
     terminale_claudere(&mc.app);
 }
 
+/* XIII: ramus (vicus-latera S1a) - superficies ex RAMO legitur, non ex
+ * radice repositorii proprii: terminale in hospite (vicus) ramum
+ * <terminale id> habet */
+interior vacuum
+ramum_probare (vacuum)
+{
+               Machina  mc;
+    InsulaRepositorium* alter;
+
+    imprimere("\n--- XIII: ramus (vicus-latera S1a) ---\n");
+    CREDO_VERUM(machinam_struere(&mc, pseudoterminale_memoriae_creare(
+        piscina, (constans i8*)"", ZEPHYRUM, ZEPHYRUM)));
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_latitudo(
+        aemulator_hospes_aemulator(mc.app.hospes)), LXXX);
+    /* repositorium hospitis: ramus t1 cum superficie sua (XX x X
+     * cellulae); radix applicationis intacta */
+    alter = insula_repositorium_creare(piscina, intern,
+        "<vicus><terminale id=\"t1\"/></vicus>",
+        "<vicus><terminale id=\"t1\" superficies_latitudo=\"120\""
+        " superficies_altitudo=\"80\"/></vicus>");
+    CREDO_NON_NIHIL(alter);
+    mc.app.ramus = insula_ramus(alter, "terminale", "t1");
+    (vacuum)terminale_pulsare(&mc.app, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_latitudo(
+        aemulator_hospes_aemulator(mc.app.hospes)), XX);
+    CREDO_AEQUALIS_I32(aemulator_altitudo(
+        aemulator_hospes_aemulator(mc.app.hospes)), X);
+    /* compositio quoque ex ramo: radix XX x X cellulae (fines =
+     * ictus muris) */
+    (vacuum)quadrum(&mc, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_latitudo(
+        aemulator_hospes_aemulator(mc.app.hospes)), XX);
+    CREDO_NON_NIHIL(dispensator_arbor(mc.app.d));
+    CREDO_AEQUALIS_I32((i32)dispensator_arbor(mc.app.d)->fines.latitudo,
+        XX * CELL_X);
+    terminale_claudere(&mc.app);
+}
+
 s32
 principale (vacuum)
 {
@@ -1112,6 +1151,7 @@ principale (vacuum)
     inversum_probare();
     ductas_probare();
     memoriam_contrastus_probare();
+    ramum_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();

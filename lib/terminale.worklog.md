@@ -283,3 +283,20 @@ clip inside the buffer. Plants R1 R3 R4 R5 R6 caught.
 Not done (park 011 rest): buffer clear (~5%), mandate list overhead
 (~10%), glyph masks rebuilt per frame (~7%) - a mask cache; dirty rows
 (module 007) if it is still felt.
+
+
+## 2026-10-08 — vicus-latera S1a: terminale on a branch
+
+First step to mounting terminale in vicus (plan
+`project-specs/vicus-latera-plan.md`). `TerminaleApplicatio.ramus`
+(Fran approved): the two surface reads (`superficies_latitudo/
+_altitudo`, in componere and in the pulse) go through an
+`InsulaRamus`; standalone sets the root branch of its own store in
+`terminale_applicatio_aedificare`, so behaviour is unchanged (every
+earlier section green). componere falls back to the given repo's root
+when no branch is set (the scriba R4 pattern). Test XIII points a
+terminal at `<terminale id="t1">` in ANOTHER store and checks both the
+emulator size (pulse) and the composed root's bounds (mouse routing)
+follow the branch. Plants: pulse reads the root, composition reads the
+root, branch never initialised (the last also breaks the standalone
+resize section - an unset branch cannot hide).

@@ -61,6 +61,10 @@ nomen structura {
      * pixela (ordinarie VERUM); geminus terminalis FALSUM - tessellatio
      * lineas in cellulas vertit */
                     b32 ornamenta_pixelorum;
+    /* vicus-latera S1a: superficies et focus hic leguntur; radix
+     * repositorii proprii in applicatione sola, ramus <terminale id>
+     * in hospite (vicus) */
+             InsulaRamus ramus;
 } TerminaleApplicatio;
 
 /* Argumenta infantis: -fumus -> /bin/sh scriptum breve (imago
