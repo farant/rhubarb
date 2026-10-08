@@ -57,8 +57,8 @@ nomen structura {
  * 'pictor' iam exstat); aliter liberum <pictor id> creatur si abest.
  * Ordo: canones, elementum initiale, domini. radix = praefixum viarum
  * canonum. Tabula NOVA (vicus-latera S2c) magnitudine prospectus
- * superficiei: latitudo, altitudo minus linea status (LXIV minimum);
- * exstans suam servat. */
+ * superficiei minus margo cellulae utrimque (altitudo etiam minus
+ * linea status; LXIV minimum); exstans suam servat. */
 b32
 pictor_montare (
          PictorMontatio* m,

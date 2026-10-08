@@ -631,6 +631,8 @@ s32 principale (vacuum)
      constans character* exspectata[XXX];
               character  medium[CXXVIII];
               character  summum[CCLVI];        /* ─ = III octeti */
+              character  tabulae_summum[CCLVI];
+              character  tabulae_medium[CXXVIII];
 
         fons =
             filum_legere_totum("probationes/pictor/pictor.arbor.stml",
@@ -674,10 +676,29 @@ s32 principale (vacuum)
             strcat(medium, " ");
         }
         strcat(medium, "\xE2\x94\x82       ");
-        exspectata[ZEPHYRUM] = summum;
-        per (l = I; l < XXIX; l++)
+        /* tabula ad cellulam I prospectus (margo pictoris,
+         * vicus-latera 2026-10-08): x VI*II-V = VII -> columna I, y
+         * VIII*II+III = XIX -> linea II; margo summus tabulae (ad
+         * marginem dextrum prospectus iungitur), deinde latus sinistrum
+         * intra prospectum; imus extra (tabula prospectu altior) */
+        strcpy(tabulae_summum, "\xE2\x94\x82\xE2\x94\x8C");
+        per (l = ZEPHYRUM; l < L; l++)
         {
-            exspectata[l] = medium;
+            strcat(tabulae_summum, "\xE2\x94\x80");
+        }
+        strcat(tabulae_summum, "\xE2\x94\xBC       ");
+        strcpy(tabulae_medium, "\xE2\x94\x82\xE2\x94\x82");
+        per (l = ZEPHYRUM; l < L; l++)
+        {
+            strcat(tabulae_medium, " ");
+        }
+        strcat(tabulae_medium, "\xE2\x94\x82       ");
+        exspectata[ZEPHYRUM]  = summum;
+        exspectata[I]         = medium;
+        exspectata[II]        = tabulae_summum;
+        per (l = III; l < XXIX; l++)
+        {
+            exspectata[l] = tabulae_medium;
         }
         exspectata[XXIX] =
             "penicillus                                        "

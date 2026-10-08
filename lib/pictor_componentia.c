@@ -219,8 +219,10 @@ pictor_componere (
         motus ? motus->pan.y : ZEPHYRUM,
         (i32)zoom);
 
-    tabula = nodus(piscina, intern, "tabula", PARTES_TABULA, ZEPHYRUM,
-                   ZEPHYRUM, doc_latitudo, doc_altitudo);
+    /* margo cellulae utrimque (ut folium scribae): margo paginae
+     * (figura) in cellulis marginis visibilis, non extra prospectum */
+    tabula = nodus(piscina, intern, "tabula", PARTES_TABULA, cw, ch,
+                   doc_latitudo, doc_altitudo);
     componens_ponere_praedicatum(tabula, PRAEDICATUM_PROPRIUS);
     componens_ponere_focusabilis(tabula, VERUM);
     componens_ponere_actio(tabula,

@@ -91,11 +91,12 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
         INSULA_DURABILIS)), III);
     /* S2c: documentum novum magnitudine superficiei - pictor:
-     * superficies minus linea status (CDLXXX x CDLXXII) */
+     * superficies minus linea status et margo cellulae utrimque
+     * (CDLXXX - XII x CDLXXX - VIII - XVI) */
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_DURABILIS, "latitudo"), "480"));
+        INSULA_DURABILIS, "latitudo"), "468"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_DURABILIS, "altitudo"), "472"));
+        INSULA_DURABILIS, "altitudo"), "456"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
         INSULA_EPHEMERA, "instrumentum"), "penicillus"));
     /* scriba: cellulae VI x VIII minus margines (II) et status (I) -
