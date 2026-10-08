@@ -20,7 +20,8 @@ Leges chartae:
 ## inedita
 
 - corpus: `fenestra_spatium_utile` (nova: rectangulum contenti fenestrae
-  quae aream visibilem schirmi implet); scriba_montare / pictor_montare
+  quae aream visibilem schirmi implet) et `fenestra_spatium_schirmi`
+  (nova: schirmus totus, contentum plenae visionis); scriba_montare / pictor_montare
   documentum NOVUM magnitudine superficiei creant (antea 68 x 56 et
   320 x 200 fixa).
 

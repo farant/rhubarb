@@ -283,3 +283,18 @@ cell centre on row 0, through the encoder.
 - The window main itself has no test (it needs a window); the query,
   the size rules and their floors do (5 plants).
 
+## 2026-10-08 - S2c follow-up: open in FULL SCREEN
+
+Fran went full screen after launch: the window grew 573 -> 600 of our
+pixels but new documents had been sized for 573 (scriba ~4 rows,
+pictor ~27 px short). Fran works full screen, so vicus now opens in
+it: `fenestra_spatium_schirmi` (new) = the screen's frame minus the
+notch (`safeAreaInsets.top`, macOS 12+) - here 1920 x 1200 -> mounts
+and new documents get 960 x 600. The window starts at the usable
+rectangle with FENESTRA_PLENA_VISIO; its height is a whole number of
+OUR pixels (573 x 2 = 1146 points) because the buffer's scale is fixed
+at creation (window height / buffer height) and kept on resize:
+1147/573 = 2.0017 would make full screen 599, a pixel shorter than the
+documents. Checked headless first: at 960 x 573 page and canvas fit
+exactly - the mismatch was only the later full-screen growth.
+

@@ -2,10 +2,11 @@
  * S2c)
  *
  * fenestra_spatium_utile: rectangulum contenti fenestrae titulatae quae
- * aream visibilem implet. Magnitudo exacta a schirmo pendet; probatio
- * solum verisimilitudinem iudicat (area positiva, saltem DCXL x CD,
- * origo non sub schirmo) et argumenta NIHIL recusari. Fenestra nulla
- * aperitur. */
+ * aream visibilem implet; fenestra_spatium_schirmi: schirmus totus
+ * (contentum plenae visionis), non minor. Magnitudo exacta a schirmo
+ * pendet; probatio solum verisimilitudinem iudicat (area positiva,
+ * saltem DCXL x CD, origo non sub schirmo) et argumenta NIHIL
+ * recusari. Fenestra nulla aperitur. */
 #include "latina.h"
 #include "piscina.h"
 #include "fenestra.h"
@@ -41,7 +42,25 @@ s32 principale (vacuum)
     CREDO_VERUM(x < XX * M);
     CREDO_VERUM(y < XX * M);
 
-    imprimere("\n--- II: argumenta NIHIL ---\n");
+    imprimere("\n--- II: schirmus totus (plena visio) ---\n");
+    {
+        i32 lat_s;
+        i32 alt_s;
+
+        lat_s = ZEPHYRUM;
+        alt_s = ZEPHYRUM;
+        CREDO_VERUM(fenestra_spatium_schirmi(&lat_s, &alt_s));
+        imprimere("  schirmus: %ux%u puncta\n", (unsigned)lat_s,
+            (unsigned)alt_s);
+        /* plena visio saltem spatium utile (sine menu, navali,
+         * titulo) */
+        CREDO_VERUM(lat_s >= latitudo);
+        CREDO_VERUM(alt_s > altitudo);
+        CREDO_FALSUM(fenestra_spatium_schirmi(NIHIL, &alt_s));
+        CREDO_FALSUM(fenestra_spatium_schirmi(&lat_s, NIHIL));
+    }
+
+    imprimere("\n--- III: argumenta NIHIL ---\n");
     CREDO_FALSUM(fenestra_spatium_utile(NIHIL, &y, &latitudo,
         &altitudo));
     CREDO_FALSUM(fenestra_spatium_utile(&x, &y, &latitudo, NIHIL));

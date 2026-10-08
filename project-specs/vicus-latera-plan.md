@@ -179,7 +179,11 @@ filling the screen's usable area (here 960 x 573 of our pixels;
 take the size of the surface they are mounted on (floors 20 x 10 and
 64), existing documents keep theirs. Tests: probatio_fenestra_spatium
 (plausibility, NIHIL refused), probatio_montatio (sizes, floors,
-remount keeps size); five plants.
+remount keeps size); five plants. Follow-up (Fran: full screen after
+launch left new documents short): vicus OPENS in full screen -
+`fenestra_spatium_schirmi` (screen minus notch) sizes mounts and new
+documents; the window starts at the usable area with an even height
+so the buffer scale is exactly II; two more plants.
 
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane

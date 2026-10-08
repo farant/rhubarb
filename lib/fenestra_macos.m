@@ -1253,6 +1253,40 @@ fenestra_spatium_utile (
     redde *latitudo > ZEPHYRUM && *altitudo > ZEPHYRUM;
 }
 
+b32
+fenestra_spatium_schirmi (
+    i32* latitudo,
+    i32* altitudo)
+{
+    NSScreen* schirmus;
+    NSRect    totum;
+    CGFloat   incisura;
+
+    si (!latitudo || !altitudo)
+    {
+        redde FALSUM;
+    }
+    @autoreleasepool {
+        schirmus = [[NSScreen screens] count] > ZEPHYRUM
+                 ? [[NSScreen screens] objectAtIndex:ZEPHYRUM]
+                 : [NSScreen mainScreen];
+        si (!schirmus)
+        {
+            redde FALSUM;
+        }
+        totum     = [schirmus frame];
+        incisura  = 0.0;
+        /* plena visio sub incisura (MacBook) contentum non ponit */
+        si (@available(macOS 12.0, *))
+        {
+            incisura = [schirmus safeAreaInsets].top;
+        }
+        *latitudo  = (i32)totum.size.width;
+        *altitudo  = (i32)(totum.size.height - incisura);
+    }
+    redde *latitudo > ZEPHYRUM && *altitudo > ZEPHYRUM;
+}
+
 vacuum
 fenestra_minuere (
     Fenestra* fenestra)

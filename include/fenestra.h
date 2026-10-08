@@ -334,6 +334,14 @@ fenestra_spatium_utile (
     i32* latitudo,
     i32* altitudo);
 
+/* Rectangulum schirmi principalis TOTUM (vicus-latera S2c: contentum
+ * fenestrae in plena visione - schirmus minus incisura, si est), in
+ * punctis. FALSUM si schirmus nullus. */
+b32
+fenestra_spatium_schirmi (
+    i32* latitudo,
+    i32* altitudo);
+
 /* Minuere fenestram
  *
  * fenestra: fenestra
