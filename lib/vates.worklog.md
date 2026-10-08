@@ -56,3 +56,38 @@ tool_use come back byte-exact in the next request; a text block with
 dropped, cache_creation ignored, error.message in error_genus, crudum
 ignored for TEXTUS. `_responsum_vacuum` re-inserted here (moved out of
 part A in T3).
+
+## 2026-10-08 - part C: providers, vates_mittere, ledger, fictus (vates-plan-2 T5)
+
+- **Provider table** compiled in: {"anthropic", vates_anthropic_aperire},
+  {"fictus", ...}. `vates_aperire` by name; unknown -> NIHIL + stderr
+  listing the known names (seen in the test: "provisor ignotus 'openai'
+  - noti: anthropic fictus").
+- **The key**: copied ONCE into the Vates (NUL-terminated for the header).
+  http_petitio_caput_addere necessarily copies it into the call's piscina
+  too (http's API). Proven absent from the ledger, herbarium index,
+  every specimen file and the error text (probatio_clavis_non_effunditur:
+  a distinctive key through a scripted vectura, every written file read
+  back). Plant (key as a ledger field) red.
+- **Retry**: RETE always; TEMPUS on the first attempt only (a 10-minute
+  call is expensive to repeat); HTTP 408/409/429/>=500. Wait =
+  retry-after seconds if present else mora_iterandi_ms, ALWAYS capped by
+  mora_iterandi_maxima_ms (a hostile retry-after 3600 with a 5 ms cap:
+  the whole test runs in 0.3 s; a cap 1000x too large is red).
+- **Usage** on the returned response = sum over attempts; each attempt is
+  its own ledger line (write + fsync); price -1 when the model is not in
+  the caller's table. Worked example 1000/2000/300/0/50 tokens at
+  $4/$0.20/$5/$8/$20 per MTok = 6900 micro-dollars (asserted).
+- **Breakpoints**: > IV -> LIMES before anything is sent (fictus saw 0
+  requests).
+- **fictus** = the Anthropic backend over a scripted vectura: replies are
+  rendered as real Anthropic JSON and parsed by the real parser; the sent
+  body equals `vates_anthropic_corpus` byte for byte.
+- **Novelty -> herbarium**: an unknown block on HTTP 200 is pressed with
+  causa "blocus ignotus: server_tool_use" (test; plant red).
+- Masking for the Anthropic kind key is a copy of herbarium's (the
+  approved header does not export it). `piscina == NIHIL` -> NIHIL, the
+  one exception to "never NIHIL".
+- Lint renames: hr->resultus_http, ho->optiones_herbarii,
+  in_cifris->in_numeris; glossary entry herbarium gained the form
+  "herbarii".

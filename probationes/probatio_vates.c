@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 interior chorda
 _c (
@@ -261,6 +262,446 @@ probatio_legere(Piscina* piscina)
 }
 
 
+/* ---- vectura scripta pro provisore Anthropic: capita capit ---- */
+nomen structura {
+                   i32  status;          /* 0 = HTTP_ERROR_TIMEOUT */
+    constans character* corpus;
+    constans character* retry_after; /* NIHIL = sine */
+} Scriptum;
+
+nomen structura {
+    constans Scriptum* scripta;
+                  i32  numerus;
+                  i32  index;
+            character  capita_visa[MMMCMXCIX];
+} ScriptorVatis;
+
+interior HttpResultus
+_scriptor_exsequi (
+    HttpPetitio* petitio,
+        Piscina* piscina,
+         vacuum* datum)
+{
+        ScriptorVatis* s      = (ScriptorVatis*)datum;
+     HttpPetitioVisus  visus  = http_petitio_visus(petitio);
+         HttpResultus  res;
+        HttpResponsum* resp;
+    constans Scriptum* sc;
+                  i32  i;
+               size_t  longitudo = 0;
+
+    s->capita_visa[0] = '\0';
+    per (i = 0; i < visus.capita_numerus; i++)
+    {
+        longitudo = strlen(s->capita_visa);
+        sprintf(s->capita_visa + longitudo, "%.*s: %.*s\n",
+                (integer)visus.capita[i].titulus.mensura,
+                (constans character*)visus.capita[i].titulus.datum,
+                (integer)visus.capita[i].valor.mensura,
+                (constans character*)visus.capita[i].valor.datum);
+    }
+    memset(&res, 0, magnitudo(res));
+    si (s->index >= s->numerus)
+    {
+        res.error = HTTP_ERROR_CONNEXIO;
+        redde res;
+    }
+    sc = &s->scripta[s->index];
+    s->index++;
+    si (sc->status == 0)
+    {
+        res.error = HTTP_ERROR_TIMEOUT;
+        res.error_descriptio = chorda_ex_literis("tempus scriptum",
+            piscina);
+        redde res;
+    }
+    resp = (HttpResponsum*)piscina_allocare(piscina,
+        (i64)magnitudo(HttpResponsum));
+    memset(resp, 0, magnitudo(*resp));
+    resp->status = sc->status;
+    resp->corpus = chorda_ex_literis(sc->corpus, piscina);
+    resp->capita = (HttpCaput*)piscina_allocare(piscina,
+        (i64)magnitudo(HttpCaput));
+    si (sc->retry_after)
+    {
+        resp->capita[0].titulus = chorda_ex_literis("retry-after",
+            piscina);
+        resp->capita[0].valor = chorda_ex_literis(sc->retry_after,
+            piscina);
+        resp->capita_numerus = I;
+    }
+    res.successus = VERUM;
+    res.responsum = resp;
+    redde res;
+}
+
+hic_manens constans character* _textus_bonus =
+    "{\"id\":\"msg_b\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\","
+    "\"content\":[{\"type\":\"text\",\"text\":\"bene\"}],\"stop_reason\":\"end_turn\","
+    "\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"output_tokens\":2}}";
+hic_manens constans character* _onustus =
+    "{\"type\":\"error\",\"error\":{\"type\":\"overloaded_error\",\"message\":\"Overloaded\"}}";
+
+interior VatesPetitio*
+_petitio_simplex (
+    Piscina* piscina)
+{
+    VatesPetitio* p = vates_petitio_creare(piscina, _c("m", piscina));
+
+    vates_textum_addere(vates_nuntium_addere(p, VATES_USOR), _c("salve",
+        piscina));
+    redde p;
+}
+
+interior i32
+_lineae (
+    constans character* via,
+               Piscina* piscina)
+{
+    chorda t = filum_legere_totum(via, piscina);
+       i32 i;
+       i32 n = 0;
+
+    per (i = 0; i < t.mensura; i++)
+    {
+        si (t.datum[i] == '\n')
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior vacuum
+probatio_provisores(Piscina* piscina)
+{
+    VatesOptiones  o = vates_optiones_ordinariae();
+            Vates* v;
+
+    imprimere("\n--- Probans vates_aperire per nomen ---\n");
+    v = vates_aperire(piscina, _c("anthropic", piscina), _c("k",
+        piscina), &o);
+    CREDO_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(vates_provisor(v), "anthropic");
+    v = vates_aperire(piscina, _c("fictus", piscina), _c("", piscina),
+        &o);
+    CREDO_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(vates_provisor(v), "fictus");
+    CREDO_NIHIL(vates_aperire(piscina, _c("openai", piscina), _c("k",
+        piscina), &o));
+}
+
+interior vacuum
+probatio_fictus_et_rationarium(Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+      VatesPretium  pretium;
+         VatesUsus  u;
+             Vates* v;
+      VatesPetitio* p;
+    VatesResponsum* r;
+         character  via[CCLVI];
+            chorda  linea;
+
+    imprimere("\n--- Probans fictus + pretium + rationarium ---\n");
+    sprintf(via, "/tmp/probatio_vates_rationarium_%ld.jsonl",
+        (longus)getpid());
+    (vacuum)unlink(via);
+    pretium.exemplar      = "fictus";
+    pretium.input         = IV * M * M;      /* $4 / MTok */
+    pretium.output        = XX * M * M;
+    pretium.cache_lectum  = CC * M;
+    pretium.cache_5m      = V * M * M;
+    pretium.cache_1h      = VIII * M * M;
+    o.pretia              = &pretium;
+    o.pretia_numerus      = I;
+    o.rationarium_via     = via;
+    v                     = vates_fictus_aperire(piscina, &o);
+    memset(&u, 0, magnitudo(u));
+    u.input              = M;
+    u.cache_lectum       = MM;
+    u.cache_scriptum_5m  = CCC;
+    u.output             = L;
+    vates_fictus_textum(v, _c("responsum fictum", piscina), u);
+    p = _petitio_simplex(piscina);
+    r = vates_mittere(v, p, _c("probatio", piscina), piscina);
+    CREDO_VERUM(r->successus);
+    CREDO_AEQUALIS_I32(r->conatus, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((VatesBlocus*)xar_obtinere(r->bloci,
+        0))->textus,
+                                  "responsum fictum");
+    /* (1000*4e6 + 2000*2e5 + 300*5e6 + 50*2e7) / 1e6 = 6900 */
+    CREDO_AEQUALIS_S64(r->usus.pretium, 6900);
+    CREDO_AEQUALIS_I32(_lineae(via, piscina), I);
+    linea = filum_legere_totum(via, piscina);
+    CREDO_CHORDA_CONTINET(linea, _c("\"propositum\":\"probatio\"",
+        piscina));
+    CREDO_CHORDA_CONTINET(linea, _c("\"pretium\":6900", piscina));
+    /* fictus: corpus missum = corpus purum */
+    CREDO_AEQUALIS_I32(vates_fictus_petitiones_numerus(v), I);
+    CREDO_CHORDA_AEQUALIS(vates_fictus_petitio(v, 0),
+        vates_anthropic_corpus(p, piscina));
+    (vacuum)unlink(via);
+}
+
+interior vacuum
+probatio_iterationes(Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+         VatesUsus  u;
+             Vates* v;
+    VatesResponsum* r;
+         character  via[CCLVI];
+
+    imprimere("\n--- Probans iterationes ---\n");
+    sprintf(via, "/tmp/probatio_vates_iter_%ld.jsonl",
+        (longus)getpid());
+    (vacuum)unlink(via);
+    o.mora_iterandi_ms  = I;
+    o.rationarium_via   = via;
+    memset(&u, 0, magnitudo(u));
+    u.input   = X;
+    u.output  = II;
+
+    /* 429 deinde bene: conatus II, lineae II, usus summatus */
+    v = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, CDXXIX,
+        "{\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"x\"}}");
+    vates_fictus_textum(v, _c("bene", piscina), u);
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->successus);
+    CREDO_AEQUALIS_I32(r->conatus, II);
+    CREDO_AEQUALIS_I32(_lineae(via, piscina), II);
+    CREDO_AEQUALIS_S64(r->usus.input, X);
+
+    /* 400: non iteratur */
+    v = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, CD,
+        "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"y\"}}");
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_FALSUM(r->successus);
+    CREDO_AEQUALIS_I32(r->conatus, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(r->error_genus,
+        "invalid_request_error");
+
+    /* 529 ter: conatus III, STATUS */
+    v = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, DXXIX, _onustus);
+    vates_fictus_crudum(v, DXXIX, _onustus);
+    vates_fictus_crudum(v, DXXIX, _onustus);
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->error == VATES_ERROR_STATUS);
+    CREDO_AEQUALIS_I32(r->conatus, III);
+
+    /* fictus exhaustus: RETE, iteratur usque ad III */
+    v = vates_fictus_aperire(piscina, &o);
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->error == VATES_ERROR_RETE);
+    CREDO_AEQUALIS_I32(r->conatus, III);
+    (vacuum)unlink(via);
+}
+
+interior vacuum
+probatio_limes(Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+             Vates* v = vates_fictus_aperire(piscina, &o);
+      VatesPetitio* p = vates_petitio_creare(piscina, _c("m",
+          piscina));
+      VatesNuntius* n = vates_nuntium_addere(p, VATES_USOR);
+    VatesResponsum* r;
+               i32  i;
+
+    imprimere("\n--- Probans limes punctorum cache ---\n");
+    vates_petitio_caudam_signare(p, VERUM);
+    per (i = 0; i < IV; i++)
+    {
+        vates_textum_addere(n, _c("x", piscina))->signum_thesauri =
+            VERUM;
+    }
+    r = vates_mittere(v, p, _c("t", piscina), piscina);
+    CREDO_VERUM(r->error == VATES_ERROR_LIMES);
+    CREDO_AEQUALIS_I32(vates_fictus_petitiones_numerus(v), 0);
+}
+
+interior vacuum
+probatio_tempus_et_mora_iterandi(Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+     ScriptorVatis  s;
+          Scriptum  scripta[II];
+             Vates* v;
+    VatesResponsum* r;
+            time_t  initium;
+
+    imprimere("\n--- Probans retry-after hostile + TEMPUS semel ---\n");
+    scripta[0].status = CDXXIX;
+    scripta[0].corpus =
+        "{\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"z\"}}";
+    scripta[0].retry_after  = "3600";
+    scripta[I].status       = CC;
+    scripta[I].corpus       = _textus_bonus;
+    scripta[I].retry_after  = NIHIL;
+    memset(&s, 0, magnitudo(s));
+    s.scripta = scripta;
+    s.numerus = II;
+    o.mora_iterandi_maxima_ms = V;
+    o.vectura.exsequi = _scriptor_exsequi;
+    o.vectura.datum = &s;
+    v = vates_anthropic_aperire(piscina, _c("k", piscina), &o);
+    initium = time(NIHIL);
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->successus);
+    CREDO_VERUM(time(NIHIL) - initium < II);
+
+    /* TEMPUS bis: iteratur semel tantum */
+    scripta[0].status = 0;
+    scripta[I].status = 0;
+    s.index = 0;
+    v = vates_anthropic_aperire(piscina, _c("k", piscina), &o);
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->error == VATES_ERROR_TEMPUS);
+    CREDO_AEQUALIS_I32(r->conatus, II);
+}
+
+interior vacuum
+probatio_clavis_non_effunditur(Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+     ScriptorVatis  s;
+          Scriptum  scripta[II];
+             Vates* v;
+      VatesPetitio* p;
+    VatesResponsum* r;
+         character  via_rationarii[CCLVI];
+         character  via_herbarii[CCLVI];
+         character  via[DXII];
+            chorda  clavis = _c("CLAVIS_SECRETA_PROBATIONIS",
+                piscina);
+
+    imprimere("\n--- Probans clavis numquam effunditur ---\n");
+    sprintf(via_rationarii, "/tmp/probatio_vates_clavis_%ld.jsonl",
+        (longus)getpid());
+    sprintf(via_herbarii, "/tmp/probatio_vates_herb_%ld",
+        (longus)getpid());
+    (vacuum)unlink(via_rationarii);
+    scripta[0].status       = DXXIX;
+    scripta[0].corpus       = _onustus;
+    scripta[0].retry_after  = NIHIL;
+    scripta[I].status       = CC;
+    scripta[I].corpus       = _textus_bonus;
+    scripta[I].retry_after  = NIHIL;
+    memset(&s, 0, magnitudo(s));
+    s.scripta           = scripta;
+    s.numerus           = II;
+    o.mora_iterandi_ms  = I;
+    o.rationarium_via   = via_rationarii;
+    o.herbarium_via     = via_herbarii;
+    o.vectura.exsequi   = _scriptor_exsequi;
+    o.vectura.datum     = &s;
+    v                   = vates_anthropic_aperire(piscina, clavis, &o);
+    p                   = _petitio_simplex(piscina);
+    vates_caput_addere(p, "anthropic", "anthropic-beta",
+        "beta-probationis");
+    vates_caput_addere(p, "openai", "openai-beta", "alienum");
+    r = vates_mittere(v, p, _c("t", piscina), piscina);
+    CREDO_VERUM(r->successus);
+    /* clavis in capite petitionis - et solum ibi */
+    CREDO_VERUM(strstr(s.capita_visa,
+        "x-api-key: CLAVIS_SECRETA_PROBATIONIS") != NIHIL);
+    CREDO_VERUM(strstr(s.capita_visa,
+        "anthropic-beta: beta-probationis") != NIHIL);
+    CREDO_VERUM(strstr(s.capita_visa, "openai-beta") == NIHIL);
+    CREDO_FALSUM(chorda_continet(filum_legere_totum(via_rationarii,
+        piscina), clavis));
+    sprintf(via, "%s/index.jsonl", via_herbarii);
+    CREDO_FALSUM(chorda_continet(filum_legere_totum(via, piscina),
+        clavis));
+    {
+        Xar* sp = herbarium_enumerare(piscina, via_herbarii);
+        i32  i;
+
+        CREDO_AEQUALIS_I32(xar_numerus(sp), I);
+        per (i = 0; i < xar_numerus(sp); i++)
+        {
+            HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp,
+                i);
+
+            CREDO_FALSUM(chorda_continet(h->corpus, clavis));
+            CREDO_CHORDA_INCIPIT(h->clavis, _c("529:overloaded_error:",
+                piscina));
+            sprintf(via, "%s/specimina/%.*s-%u.json", via_herbarii,
+                    (integer)h->sigillum.mensura,
+                    (constans character*)h->sigillum.datum,
+                    h->variantes_index);
+            CREDO_FALSUM(chorda_continet(filum_legere_totum(via,
+                piscina), clavis));
+            (vacuum)unlink(via);
+        }
+    }
+    sprintf(via, "%s/index.jsonl", via_herbarii);
+    (vacuum)unlink(via);
+    sprintf(via, "%s/specimina", via_herbarii);
+    (vacuum)rmdir(via);
+    (vacuum)rmdir(via_herbarii);
+    (vacuum)unlink(via_rationarii);
+}
+
+interior vacuum
+probatio_novitas_pressa(Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+             Vates* v;
+    VatesResponsum* r;
+         character  via_herbarii[CCLVI];
+         character  via[DXII];
+               Xar* sp;
+               i32  i;
+               b32  inventa = FALSUM;
+
+    imprimere("\n--- Probans novitas in herbarium premitur ---\n");
+    sprintf(via_herbarii, "/tmp/probatio_vates_novitas_%ld",
+        (longus)getpid());
+    o.herbarium_via  = via_herbarii;
+    v                = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, CC,
+        "{\"id\":\"m\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\","
+        "\"content\":[{\"type\":\"server_tool_use\",\"id\":\"s\"}],\"stop_reason\":\"end_turn\","
+        "\"stop_sequence\":null,\"usage\":{\"input_tokens\":1,\"output_tokens\":1}}");
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->successus);
+    sp = herbarium_enumerare(piscina, via_herbarii);
+    per (i = 0; i < xar_numerus(sp); i++)
+    {
+        HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp, i);
+
+        si (chorda_aequalis_literis(h->causa,
+            "blocus ignotus: server_tool_use"))
+        {
+            inventa = VERUM;
+        }
+        sprintf(via, "%s/specimina/%.*s-%u.json", via_herbarii,
+            (integer)h->sigillum.mensura,
+                (constans character*)h->sigillum.datum,
+                h->variantes_index);
+        (vacuum)unlink(via);
+    }
+    CREDO_VERUM(inventa);
+    sprintf(via, "%s/index.jsonl", via_herbarii);
+    (vacuum)unlink(via);
+    sprintf(via, "%s/specimina", via_herbarii);
+    (vacuum)rmdir(via);
+    (vacuum)rmdir(via_herbarii);
+}
+
+
 s32
 principale (vacuum)
 {
@@ -276,7 +717,15 @@ principale (vacuum)
     probatio_opaca(piscina);
     /* T4 */
     probatio_legere(piscina);
-    /* T5, T6 addunt hic vocationes suas */
+    /* T5 */
+    probatio_provisores(piscina);
+    probatio_fictus_et_rationarium(piscina);
+    probatio_iterationes(piscina);
+    probatio_limes(piscina);
+    probatio_tempus_et_mora_iterandi(piscina);
+    probatio_clavis_non_effunditur(piscina);
+    probatio_novitas_pressa(piscina);
+    /* T6 addit hic vocationem suam */
 
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
