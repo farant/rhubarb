@@ -3857,6 +3857,27 @@ override `-exemplar <id>`.
 
 ---
 
+### Task 7b: teach vates the live response shape (added 2026-10-08 from T7, Fran's ruling)
+
+T7's live run pressed specimens on every 200: the API returns top-level
+`container` and `diagnostics` (not in `_claves_summae`) and usage extras
+`output_tokens_details`, `service_tier`, `inference_geo` (usage keys are
+not novelty-checked).
+
+- [ ] Failing test: a T4-style parse of a body carrying `container`
+  and `diagnostics` must report NO novelty - expose via the herbarium
+  path: fictus + `herbarium_via`, a 200 body with both keys -> zero
+  specimens pressed (today: one).
+- [ ] Add `"container"`, `"diagnostics"` to `_claves_summae`.
+- [ ] Promote one captured live specimen (Fran reads it first: it holds a
+  real response text + thinking signature, no request content) into
+  `probationes/fixa/vates/herbarium/specimina/` under a descriptive
+  name; the sweep test then covers the REAL shape.
+- [ ] Worklog: the usage extras are known-but-unmodelled (output_tokens
+  already includes thinking; service_tier/inference_geo are reporting).
+- [ ] Plant: remove "diagnostics" from the list -> the new test red.
+- [ ] Commit; gates `radix`, `generata`.
+
 ### Task 8: integrate and merge (STOP for Fran before the merge)
 
 - [ ] Merge main into `rhubarb-quarta` (no-ff "Fusio main in

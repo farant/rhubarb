@@ -112,3 +112,27 @@ the request back), then `cp` it here unchanged. If the sweep turns red,
 the API sent something vates cannot name yet: teach the parser, then the
 suite is green again. Plant: a seed with stop_reason "novum_finis" -> red
 at :733 (ALIA = unnamed), removed.
+
+## 2026-10-08 - first live run (vates-plan-2 T7, tools/vates_fumus)
+
+claude-sonnet-5-5, 10:27Z, system prompt 3851 bytes (1839 tokens):
+
+| call | what | in | cache read | cache write | out | udollaria | ms |
+|---|---|---|---|---|---|---|---|
+| A | first call, system marked | 18 | 0 | 1839 | 6 | 4693 | 1975 |
+| B | identical prefix | 18 | **1839** | 0 | 6 | **463** | 1437 |
+| C | thinking, effort high | 34 | 0 | 0 | 138 | 1448 | 3695 |
+| D | C's thinking block re-sent + new turn | 196 | 0 | 0 | 58 | 972 | 3227 |
+
+Total 7576 udollaria ($0.0076). Cache read ~10x cheaper than the write
+call. D proves OPACUM re-emission: the API accepted the thinking
+signature from a re-serialized JsonValor (vates-spec AUDIENDA "OPACUM
+re-serialization": RESOLVED - harmless). Ledger: 4 lines = 4 attempts.
+Key-leak grep (Fran): 0 in stdout, ledger, herbarium (4 files).
+
+**herbarium caught the API's real shape on the first live call:** every
+200 carries top-level `container` and `diagnostics` (unknown to
+`_claves_summae`, novelty "campus ignotus: container" - `diagnostics`
+hidden because only the first novelty is reported) and usage extras
+`output_tokens_details`, `service_tier`, `inference_geo` (usage keys are
+not novelty-checked). -> T7b.
