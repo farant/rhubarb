@@ -198,3 +198,12 @@ public for `congruentia` (reducing big integers mod p is the inner loop
 of multimodular algorithms; limbs are private to magnus). Tested through
 congruentia's vectors (40 big values up to 60 digits, signs) and its
 CRT round trips; a plant dropping the sign adjustment is red there.
+
+## 2026-10-08 - magnus_bitorum (bit length)
+
+`magnus_bitorum(a)` = number of bits of |a| (0 for 0, k + 1 for 2^k <= |a|
+< 2^(k+1)), computed from the limb view (`_aspectus`) without allocation.
+Added for `extensio` E2b, which needs log2 bounds (root-separation depth,
+the zero certificate's bisection count) and must not read the private
+limbs. Tested at 2^k and 2^k - 1 for k = 1..200 (crossing limb
+boundaries), negatives, S64_MIN (64 bits) and S64_MAX (63).

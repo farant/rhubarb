@@ -25,6 +25,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 hic_manens Piscina* piscina;
 
@@ -1058,6 +1059,312 @@ s32 principale (vacuum)
         CREDO_VERUM (signum_bene);
         CREDO_VERUM (compara_inversa_bene);
         CREDO_MAIOR_I32 (probata, CCC);
+    }
+
+
+    /* ==================================================
+     * RECENSIO II (E2b): FORMA CENTRATA, PROFUNDITAS, SUMPTUS
+     * ================================================== */
+
+    {
+        /* T1/N12: signa prope nullum in gradu 3 (via generalis, non
+         * forma clausa gradus 2), radice NEGATIVA et coefficientibus
+         * signorum mixtorum: (alpha - c)^e, c rationalis > 1e-3 ab
+         * alpha, signum exspectatum sign(alpha - c)^e */
+        hic_manens constans character* polynomia[] = { "t^3 - 3t + 1",
+            "t^3 - 3t + 1", "t^3 - 3t + 1", "t^3 + t^2 - 2t - 1" };
+        hic_manens constans s32 indices[] = { ZEPHYRUM, I, II,
+            ZEPHYRUM };
+        hic_manens constans f64 radices[] = { -1.8793852415718167,
+            0.34729635533386069, 1.5320888862379560,
+                -1.8019377358048383 };
+        hic_manens constans character* constantes[] = { "-1879/1000",
+            "-188/100", "347/1000", "348/1000", "1532/1000",
+                "1533/1000",
+            "-1802/1000", "-1801/1000" };
+        b32 signa_bene   = VERUM;
+        b32 sordes_bene  = VERUM;
+        i32 probata      = ZEPHYRUM;
+        i32 c;
+
+        imprimere("\n--- Recensio II: gradus 3, prope nullum ---\n");
+        per (c = ZEPHYRUM; c < IV; c++)
+        {
+            Extensio* k = extensio_ex_polynomio(_p(polynomia[c]),
+                indices[c], piscina);
+            i32 j;
+
+            si (k == NIHIL)
+            {
+                signa_bene = FALSUM;
+                perge;
+            }
+            per (j = ZEPHYRUM; j < VIII; j++)
+            {
+                Algebraicus differentia;
+                        f64 constans_f64;
+                        s32 basis;
+                        s32 e;
+
+                {
+                    Fractio q = fractio_ex_s64(ZEPHYRUM);
+
+                    (vacuum)fractio_ex_chorda(chorda_ex_literis(
+                        constantes[j], piscina), piscina, &q);
+                    differentia = algebraicus_subtrahe(
+                        algebraicus_generator(k, piscina),
+                        algebraicus_ex_fractione(k, q, piscina),
+                        piscina);
+                    constans_f64 = _fractio_ad_f64(q);
+                }
+                si (fabs(radices[c] - constans_f64) < 1e-4)
+                {
+                    perge;
+                }
+                basis = radices[c] > constans_f64 ? I : -I;
+                per (e = I; e <= LX; e = e + VII)
+                {
+                    PiscinaNotatio nota = piscina_notare(piscina);
+                       Algebraicus potentia;
+                               s32 signum = ZEPHYRUM;
+                               s32 expectatum;
+                    memoriae_index ante;
+
+                    expectatum = (basis < ZEPHYRUM && (e & I)) ? -I : I;
+
+                    (vacuum)algebraicus_potentia(differentia, e,
+                        piscina,
+                        &potentia);
+                    ante = piscina_summa_usus(piscina);
+                    si (   !algebraicus_signum(potentia, piscina,
+                        &signum)
+                        || signum != expectatum)
+                    {
+                        signa_bene = FALSUM;
+                    }
+                    /* L1: signum nihil in piscina vocantis relinquit */
+                    si (piscina_summa_usus(piscina) != ante)
+                    {
+                        sordes_bene = FALSUM;
+                    }
+                    probata++;
+                    piscina_reficere(piscina, nota);
+                }
+            }
+        }
+        CREDO_VERUM (signa_bene);
+        CREDO_VERUM (sordes_bene);
+        CREDO_MAIOR_I32 (probata, C);
+    }
+
+    {
+        /* N03/M1: Mignotte t^5 - 2(a t - 1)^2 (Eisenstein ad 2), a =
+         * 10^6: radices r0 < 1/a < r1 ~1e-21 distantes; profunditas ex
+         * separatione, non MM */
+        Polynomium  f          = polynomium_nullum();
+        Polynomium  linea      = polynomium_nullum();
+        Polynomium  quadratum  = polynomium_nullum();
+          Extensio* k0;
+          Extensio* k1;
+           Fractio  inversum  = fractio_ex_s64(ZEPHYRUM);
+               s32  signum    = ZEPHYRUM;
+               i32  n         = ZEPHYRUM;
+
+        imprimere("\n--- Recensio II: Mignotte ---\n");
+        linea = _p("1000000t - 1");
+        (vacuum)polynomium_multiplica(linea, linea, piscina,
+            &quadratum);
+        f = polynomium_subtrahe(_p("t^5"),
+            polynomium_multiplica_scalari(
+            quadratum, magnus_ex_s64(II), piscina), piscina);
+        CREDO_VERUM (extensio_radices_reales(f, piscina, &n)
+            && n == III);
+        CREDO_NON_NIHIL (extensio_ex_polynomio(f, -I, piscina));
+        k0 = extensio_ex_polynomio(f, ZEPHYRUM, piscina);
+        k1 = extensio_ex_polynomio(f, I, piscina);
+        CREDO_NON_NIHIL (k0);
+        CREDO_NON_NIHIL (k1);
+        (vacuum)fractio_ex_s64_s64(I, 1000000L, piscina, &inversum);
+        CREDO_VERUM (algebraicus_compara(algebraicus_generator(k0,
+            piscina), algebraicus_ex_fractione(k0, inversum, piscina),
+            piscina, &signum) && signum == -I);
+        CREDO_VERUM (algebraicus_compara(algebraicus_generator(k1,
+            piscina), algebraicus_ex_fractione(k1, inversum, piscina),
+            piscina, &signum) && signum == I);
+    }
+
+    {
+        /* N20: altus cum denominatore; N30: radix integra (t - r)(t^2
+         * - 2), r = 2..40, semper refutatur */
+           Extensio* k5 = extensio_quadratica(V, piscina);
+        Algebraicus  x;
+            Fractio  q              = fractio_ex_s64(ZEPHYRUM);
+                b32  integrae_bene  = VERUM;
+                s64  r;
+
+        imprimere("\n--- Recensio II: denominator, integrae ---\n");
+        CREDO_VERUM (algebraicus_ex_chorda(k5, chorda_ex_literis(
+            "(a^20 + 1)/2", piscina), piscina, &x)
+            && algebraicus_est_rationalis(x, piscina, &q)
+            && fractio_aequalis(q, fractio_ex_s64(4882813L)));
+        per (r = II; r <= XL; r++)
+        {
+            PiscinaNotatio nota       = piscina_notare(piscina);
+                Polynomium productum  = polynomium_nullum();
+                    Magnus c[II];
+                Polynomium factor = polynomium_nullum();
+
+            c[ZEPHYRUM]  = magnus_ex_s64(-r);
+            c[I]         = magnus_ex_s64(I);
+            (vacuum)polynomium_ex_coefficientibus(c, II, ZEPHYRUM,
+                piscina, &factor);
+            (vacuum)polynomium_multiplica(factor, _p("t^2 - 2"),
+                piscina,
+                &productum);
+            si (extensio_ex_polynomio(productum, -I, piscina) != NIHIL)
+            {
+                integrae_bene = FALSUM;
+            }
+            piscina_reficere(piscina, nota);
+        }
+        CREDO_VERUM (integrae_bene);
+    }
+
+    {
+        /* M2, M3, H1: sumptus sub mora (processus filius) */
+           Extensio* k2 = extensio_quadratica(II, piscina);
+           Extensio* k5 = extensio_quadratica(V, piscina);
+        Algebraicus  x;
+        Algebraicus  potentia;
+                s32  signum  = ZEPHYRUM;
+         Polynomium  f       = _p("1");
+          character* textus;
+          character* cursor;
+                i32  j;
+
+        imprimere("\n--- Recensio II: sumptus ---\n");
+        /* H1: (1 - sqrt 2)^1000 > 0, forma clausa (olim FALSUM post
+         * MM bisectiones) */
+        (vacuum)algebraicus_potentia(_a(k2, "1 - a"), M, piscina,
+            &potentia);
+        CREDO_VERUM (algebraicus_signum(potentia, piscina, &signum)
+            && signum == I);
+        /* M2: prod (t - 2i) + 1, gradus 40, omnes radices reales */
+        per (j = I; j <= XL; j++)
+        {
+                Magnus c[II];
+            Polynomium factor = polynomium_nullum();
+
+            c[ZEPHYRUM]  = magnus_ex_s64(-(s64)(II * j));
+            c[I]         = magnus_ex_s64(I);
+            (vacuum)polynomium_ex_coefficientibus(c, II, ZEPHYRUM,
+                piscina, &factor);
+            (vacuum)polynomium_multiplica(f, factor, piscina, &f);
+        }
+        f = polynomium_adde(f, _p("1"), piscina);
+        CREDO_NON_PENDET ((vacuum)extensio_ex_polynomio(f, XX, piscina),
+            MM);
+        /* M3: densum gradus 20000 (Horner sparsus) */
+        textus = (character*)piscina_allocare(piscina, (memoriae_index)
+            CCC * M);
+        cursor = textus;
+        per (j = XX * M; j >= I; j--)
+        {
+            cursor = cursor + sprintf(cursor, "a^%u + ", j);
+        }
+        sprintf(cursor, "1");
+        CREDO_NON_PENDET ((vacuum)algebraicus_ex_chorda(k5,
+            chorda_ex_literis(textus, piscina), piscina, &x), MM);
+    }
+
+    {
+        /* E17/E28 (N12): limes derivatae D in forma centrata. c =
+         * approximatio XVII digitorum radicis: |alpha - c| ~ 1e-16,
+         * signum ignotum sed per elementum LINEARE certum (derivata
+         * constans, D exactum). Tum (alpha - c)^e (alpha^2 + 5) signum
+         * sign(alpha - c)^e habere DEBET; D infra verum (Horner
+         * intervallorum cum angulis omissis) signum falsum dat. */
+        hic_manens constans character* polynomia[] = { "t^3 - 3t + 1",
+            "t^3 - 3t + 1", "t^3 - 3t + 1", "t^3 + t^2 - 2t - 1",
+            "t^5 - t - 1", "t^4 - 10t^2 + 1" };
+        hic_manens constans s32 indices[] = { ZEPHYRUM, I, II, ZEPHYRUM,
+            ZEPHYRUM, ZEPHYRUM };
+        hic_manens constans character* propinquae[] = {
+            "-18793852415718167/10000000000000000",
+            "34729635533386069/100000000000000000",
+            "15320888862379561/10000000000000000",
+            "-18019377358048383/10000000000000000",
+            "11673039782614187/10000000000000000",
+            "-31462643699419726/10000000000000000" };
+        b32 constantia_bene = VERUM;
+        i32 c;
+
+        imprimere("\n--- Recensio II: limes derivatae (N12) ---\n");
+        per (c = ZEPHYRUM; c < VI; c++)
+        {
+            Extensio* k = extensio_ex_polynomio(_p(polynomia[c]),
+                indices[c], piscina);
+            Algebraicus differentia;
+            Algebraicus positivum;
+                Fractio q      = fractio_ex_s64(ZEPHYRUM);
+                    s32 basis  = ZEPHYRUM;
+                    s32 e;
+
+            si (k == NIHIL)
+            {
+                constantia_bene = FALSUM;
+                perge;
+            }
+            (vacuum)fractio_ex_chorda(chorda_ex_literis(
+                propinquae[c], piscina), piscina, &q);
+            differentia = algebraicus_subtrahe(algebraicus_generator(k,
+                piscina), algebraicus_ex_fractione(k, q, piscina),
+                piscina);
+            positivum = _a(k, "a^2 + 5");
+            si (   !algebraicus_signum(differentia, piscina, &basis)
+                || basis == ZEPHYRUM)
+            {
+                constantia_bene = FALSUM;
+                perge;
+            }
+            per (e = II; e <= VII; e++)
+            {
+                Algebraicus potentia;
+                        s32 signum = ZEPHYRUM;
+                        s32 expectatum;
+
+                expectatum = (basis < ZEPHYRUM && (e & I)) ? -I : I;
+                (vacuum)algebraicus_potentia(differentia, e, piscina,
+                    &potentia);
+                si (   !algebraicus_signum(algebraicus_multiplica(
+                    potentia, positivum, piscina), piscina, &signum)
+                    || signum != expectatum)
+                {
+                    constantia_bene = FALSUM;
+                }
+            }
+        }
+        CREDO_VERUM (constantia_bene);
+    }
+
+    {
+        /* E25: potentiae altae per officinas - in piscina vocantis
+         * solum effectus manet (Horner densus sordes O(N)
+         * relinqueret) */
+              Extensio* k_i  = extensio_quadratica(-I, piscina);
+            Polynomium  p    = polynomium_nullum();
+           Algebraicus  x;
+        memoriae_index  ante;
+
+        CREDO_VERUM (polynomium_ex_chorda(chorda_ex_literis(
+            "t^200000 + 1", piscina), 't', piscina, &p));
+        ante = piscina_summa_usus(piscina);
+        CREDO_VERUM (algebraicus_ex_polynomio(k_i, p, magnus_ex_s64(I),
+            piscina, &x));
+        CREDO_MINOR_I32 ((i32)(piscina_summa_usus(piscina) - ante),
+            IV * M);
+        /* i^200000 + 1 = 2 */
+        CREDO_VERUM (_textus_est(x, "2"));
     }
 
     credo_imprimere_compendium();

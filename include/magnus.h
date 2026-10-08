@@ -149,6 +149,12 @@ magnus_potentia (
          i32  exponens,
      Piscina* piscina);
 
+/* numerus bitorum |a|: 0 pro 0, 1 pro +-1, k + 1 pro 2^k <= |a| <
+ * 2^(k+1). Pro limitibus (log2) sine allocatione. */
+i32
+magnus_bitorum (
+    Magnus a);
+
 /* a mod n (Euclideum: 0 <= r < n) pro moduli verbi (1 <= n < 2^32):
  * per membra, sine piscina; n == 0 -> 0 */
 i32

@@ -173,3 +173,57 @@ downstream: `_creare` refuses an index >= the roots found.
 **Not done (E3 next):** certified decimal digits for display. Generic
 constructor still uses Sturm: high degree is expensive (document; the named
 families avoid it).
+
+## 2026-10-08 - review II fixes (E2b)
+
+Review II (same reviewer, own exact oracles: Sturm over Q, rigorous sign by
+refinement + Lipschitz bound, 60-digit Decimal cosines): no wrong sign, root
+order or arithmetic anywhere; zero certificate and Descartes use valid; all
+loops structurally bounded. Contract and cost problems, all fixed:
+- **H1 (signum refused valid input):** the fixed 2000-bisection cap ran out
+  for small values ((1 - sqrt 2)^1000: FALSUM after 0.9 s / 47 MB; generic
+  fields up to 18 s / 548 MB) although the header promised FALSUM only for a
+  proven zero. Now:
+  - degree 2: exact closed form, sign of X + Y sqrt D by the signs of X, Y
+    or X^2 against Y^2 D (instant; (1 - sqrt 2)^3000 was 12 s by bisection);
+  - degree >= 3: CENTRED FORM |num(alpha) - num(m)| <= D w / 2 with D =
+    sum |c_i| i R^(i-1) (R = max |endpoint|), exact num(m); the loop limit
+    is COMPUTED: log2(w0 D M^(d-1)) + 8, which the certificate argument
+    proves sufficient (nonzero values are decided before D w drops below
+    1/M^(d-1); below it, 0 in the enclosure PROVES zero);
+  - state in two scratch pools (status / opus) alternating: zero bytes left
+    in the caller's pool (tested).
+  - D was first computed by interval Horner; dropping two of its four
+    corner products (plants E17/E28) survived every test because on a
+    2^-16 interval the corners nearly coincide. The direct bound needs no
+    interval arithmetic, so the proof no longer depends on corner logic;
+    `_horner_intervalli` is gone.
+- **M1 (valid polynomial refused):** isolation depth capped at 2000:
+  Mignotte t^5 - 2(10^200 t - 1)^2 was NIHIL even with radix -1. Depth now
+  from the Mahler-Mignotte separation bound (bit lengths via the new
+  `magnus_bitorum`); 10^200 accepted in 1 s.
+- **M2 (generic constructor cost):** the Sturm chain was built four times in
+  the caller's pool (all-real degree 40: 4.8 s / 1.4 GB; degree 60: 43 s /
+  10.8 GB of pool). Now built once in scratch; point evaluation by integer
+  homogeneous Horner q^g p(n/q) (no fractions, no gcds) that rolls back its
+  own allocations; the chosen root's interval is passed to `_creare` as
+  certified. Degree 40: 0.33 s, 87 KB left in the caller's pool.
+- **M3 (my F2 fix regressed dense input):** one `potentia` per term made
+  the all-ones degree-40000 polynomial 17 s / 2.2 GB. Now sparse Horner in
+  Z[t] mod f: acc t^gap + c, gap <= 2d by shift + reduce, larger gaps by
+  t^gap through squaring; two scratch pools alternate. 0.2 s / 13 MB.
+- **Rational-root check** now tests EVERY integer in the narrowed interval,
+  so its correctness no longer depends on the width (reviewer's N30 /
+  plant E31 is now equivalent by design).
+- New tests: degree-3 near-zero signs at negative roots with mixed-sign
+  coefficients; a self-consistency test independent of floats (c = 17-digit
+  approximation of alpha, sign of (alpha - c)^e (alpha^2 + 5) must be
+  sign(alpha - c)^e); Mignotte close roots ordered around 1/a; (t - r)(t^2 -
+  2) refused for r = 2..40; "(a^20 + 1)/2"; caller-pool growth of a sparse
+  high power bounded; deadline tests for degree-40 construction and dense
+  degree-20000 input. 171 tests, 2.2 s.
+- Plants: 30 run, 24 red. Equivalent or caught downstream: E8 (perfect
+  squares pass the squarefree loop but fail the Descartes certificate), E13
+  (Sturm property), E16 (radix range, refused by _creare), E31 (all integers
+  tested), E35 (R from |infra| only: on a 2^-16 interval |infra| ~ |supra|
+  and the absolute-sum bound already overestimates |num'|).
