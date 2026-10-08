@@ -567,3 +567,20 @@ old vectors used ?5 as their "unknown mode" example - moved to ?8
 (DECARM), which we do not honour. Plants: default set, snapshot not
 filled, DECSTR resetting it, wrong mode number - all caught. esctest
 295 -> 296 (DECRQM DECSCNM).
+
+**vttest walk - closed (driven part), 2026-10-07.** Menus 1-4, 6-11
+walked headless with tools/aemulator_vttest.c and judged against
+vttest's source; PNGs looked at where attributes matter. Fixed from the
+walk: DECCOLM minimum (ae44dc66), DECSCNM ?5 (12c8f851), terminale
+decorations (6bc29e81), drawn box/block/braille glyphs (8068d0fe,
+f7774b27). Correct: cursor movement, screen features, charsets at
+level 2 (vttest sends `ESC ) A` = British, not the 96-set, because DA1
+says 62), VT102 insert/delete, reports (DSR/DA1/DA2/DA3), RIS/DECSTR,
+ECMA-48 cursor/scroll (HPA..VPR, SD, SU), colours incl. BCE paths,
+known bugs A/W/S, VT220 DECTCEM/ECH, alternate screens 47/1047/1049.
+By design (Ghostty does the same or lacks it too): double-size lines
+(DECDWL/DECDHL; also makes bug B unjudgeable), VT52, SL/SR, REP after
+a control sequence, 8-bit GR bytes as U+FFFD, black-on-black visible
+(contrast floor). Driver artefact: LNM "Not expected" (raw bytes skip
+the encoder). Parked: blink, italic. Left for Fran's session
+(interactive): keyboard menu 5, mouse 11.8.5, SRM, window title typing.

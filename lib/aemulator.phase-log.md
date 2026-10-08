@@ -584,3 +584,98 @@ it only produced the character. Reproduced and verified with real nvim
 in a headless pty before and after. The title "not changing" was the
 shell rewriting it at every prompt.
 
+
+## D7 — the bar (2026-10-07)
+
+**INTENTIO.** Meet decision 29's bar: every esctest failure named, the
+small answers programs ask for, vttest walked, Fran's own session.
+
+- **D7a** (a12eeefb, a7577310): every failing esctest row now carries a
+  VERDICT - POSTEA (decision 26, VT420+), CONSULTO (deliberately
+  different: Ghostty's identity, title echo refused, window ops), or
+  LACUNA - attributed by `tools/aemulator_esctest_causae.py` through
+  `-pinnare`; a failure without a cause fails the pin. Fran chose the
+  quick replies: DECXCPR (VT220 form, matching the identity we claim),
+  DECDSR fixed answers, DECID, DECRQSS (SGR via a fixed-buffer encoder -
+  the core allocates nothing), the xterm title stack. esctest 284 -> 294.
+- **Found by use, between steps** (Fran in terminale + tmux): Cmd keys
+  reaching programs (f74965dd), unreadable greys -> a WCAG contrast
+  floor of 3.0 with the minimal nudge Fran chose, plus faint (0fecd4c9),
+  Ctrl-[ / Ctrl-I / Ctrl-M sending nothing in legacy mode (a copied
+  Ghostty fixterms gap meeting macOS control text; a7577310), drags
+  without a button so tmux dividers would not move (6407deb6).
+- **D7b** (d046ea85): vttest 2.7 (20251205) from the tarball (Fran: not
+  Homebrew), sha256 pinned in the plan, built outside the repo.
+- **D7c**: a headless driver (`tools/aemulator_vttest.c`: script ->
+  screen text + drawn frame per step) let Claude walk vttest against
+  its source (Fran's option b). The walk found: DECCOLM's clear is
+  needed even at 80 columns (minimal DECCOLM, width never changes;
+  ae44dc66), DECSCNM ignored (12c8f851), terminale drawing no
+  underline/strike/overline/bold weight (6bc29e81). Fran then asked
+  for line drawing: a new pure library `glyphae_ductae` draws box,
+  block and braille characters as masks at cell size, ported from
+  Ghostty's sprite font (8068d0fe, f7774b27). esctest 294 -> 296.
+  Fran's session: Claude Code, tmux, nvim, btop all good; vttest's
+  geometry screen differs from 80x24 the same way in Ghostty.
+
+## D8 — RELATIO: phase D, full-screen programs (2026-10-07)
+
+**Phase D is done: vim, less, htop/btop, tmux and Claude Code run in
+terminale and look right - modes, charsets, colours, mouse, paste,
+focus, title, kitty keys, and real line drawing. Fran: "it looks
+great!"** The core grew from 2668 to 4371 lines (header 239 -> 326),
+terminale from 549 to 1207, the encoder from 1091 to 1255, plus the
+new `glyphae_ductae` (1050) and the vttest driver (249); vectors 179 ->
+260; probatio_terminale 400 -> 991 lines; 21 commits from D0
+(afe4019d) to f7774b27. esctest 216 -> 296 passing, every remaining
+failure named (POSTEA 116, CONSULTO 84, LACUNA 26).
+
+**What exists:**
+- A mode table (one bit per honoured mode) that DECRQM reads, and one
+  snapshot for the host (`aemulator_modi`): cursor keys, keypad, mouse
+  mode and format, paste, focus, LNM, kitty flags (per-screen stack),
+  alternate scroll, reverse screen.
+- Charsets G0-G3 with locking and single shifts, DEC special graphics,
+  British.
+- A live palette (OSC 4/10/11/12/104/110-112) answered in the form it
+  was asked; DECRQSS, DECXCPR, DECDSR, DECID, title stack.
+- terminale honours all of it: keys in legacy or kitty encoding, mouse
+  in X10/normal/button/any with SGR/UTF-8/urxvt/pixel formats, wheel
+  as arrows on the alternate screen, bracketed paste from Cmd-V, focus
+  reports, the window title; theme colours with a contrast floor;
+  underline (5 styles), strike, overline, synthetic bold, reverse
+  screen; box/block/braille drawn as shapes.
+- Tools: the esctest verdict table and the headless vttest driver.
+
+**What the work found, by weight:**
+1. **Use finds what conformance suites cannot.** Five of the most
+   visible bugs came from Fran simply working in terminale - Cmd keys,
+   shift consumed by kitty in nvim, Ctrl-[ as Escape, tmux drags, grey
+   text on the warm theme. None of them is in esctest or vttest.
+2. **A copied reference copies its gaps.** Ghostty's fixterms table
+   left Ctrl-[ to the platform; ours had no platform layer doing it.
+   Ghostty's DECOM CHA differs from xterm; we follow xterm and named
+   it. Every divergence now has a name in a vector or a verdict.
+3. **Name every failure, or the count lies.** Turning 306 bare
+   failures into verdicts separated "later" from "never" from "missing"
+   and made the quick-reply list obvious.
+4. **Look at the pixels.** The headless driver plus PNGs found the
+   undrawn underline and the ignored reverse screen; text dumps alone
+   said every screen was right.
+5. **The house lexicon is shared ground.** Twice a glossary entry for
+   `imus` broke the Latin parser's oracle; new identifiers are renamed
+   to words WORDS already knows, and new untracked files must be
+   `git add -N`'d before a hand lint sees them.
+
+**Named limits (phase D):** VT420+ (margins, rectangles, protection,
+132 columns that resize) later per decision 26; italic and blink not
+drawn; decorations and drawn glyphs absent from the terminal twin;
+double-size lines and VT52 not supported (as Ghostty); multi-rune
+graphemes still dropped by the core (v2); full redraw per frame makes
+fast scrolling (btop) laggier than Ghostty - park 011
+(../terminal-planning/parks/011-terminale-full-redraw-cost.md);
+remaining spinner/geometric symbols (●, ✻, ⎿) are tofu.
+
+**Next:** install stage (`terminale` build action + `institutio` ->
+`~/.bin/terminale`, from main), merge secunda -> main; then Fran's
+choice among park 011 (dirty rows), the symbol extras, or phase F.
