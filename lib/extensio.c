@@ -2236,9 +2236,14 @@ algebraicus_ex_chorda (
  * Ordo
  * ================================================== */
 
-b32
-algebraicus_signum (
+/* signum ab intervallo initiali dato (dyadico, radicem electam solam
+ * continente): k->infra/supra pro signo publico, intervallum iam
+ * angustatum pro ostensione (recensio V P2: ter ab 2^-16) */
+interior b32
+_signum_ex (
     Algebraicus  a,
+        Fractio  infra_initium,
+        Fractio  supra_initium,
         Piscina* piscina,
             s32* exitus)
 {
@@ -2349,8 +2354,8 @@ algebraicus_signum (
         redde FALSUM;
     }
     (vacuum)piscina;
-    infra = fractio_transcribe(k->infra, status);
-    supra = fractio_transcribe(k->supra, status);
+    infra = fractio_transcribe(infra_initium, status);
+    supra = fractio_transcribe(supra_initium, status);
     {
          Magnus limes = fractio_numerator(_limes_cauchy(k->f, status));
          Magnus summa = magnus_ex_s64(ZEPHYRUM);
@@ -2455,9 +2460,14 @@ algebraicus_signum (
                     conjectura = (s32)iteratio + _bita_fractionis(error)
                         - _bita_fractionis(valor) + II;
                 }
-                si (conjectura <= (s32)iteratio)
+                /* saltem i/2 passus: prope nullum |num(m)| cum errore
+                 * dimidiatur et conjectura 'paucos' semper dicit -
+                 * probationes logarithmicae manent (recensio V P1) */
+                si (conjectura < (s32)iteratio + (s32)(iteratio / II)
+                    + I)
                 {
-                    conjectura = (s32)iteratio + I;
+                    conjectura = (s32)iteratio + (s32)(iteratio / II)
+                        + I;
                 }
                 proba_proxima = conjectura < duplicatio ? conjectura
                     : duplicatio;
@@ -2484,6 +2494,20 @@ algebraicus_signum (
     piscina_destruere(status);
     piscina_destruere(opus);
     redde exitus_bene;
+}
+
+b32
+algebraicus_signum (
+    Algebraicus  a,
+        Piscina* piscina,
+            s32* exitus)
+{
+    si (a.corpus == NIHIL || a.corpus->radix < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde _signum_ex(a, a.corpus->infra, a.corpus->supra, piscina,
+        exitus);
 }
 
 b32
@@ -2516,7 +2540,9 @@ _propinquum (
     Algebraicus  a,
         Fractio  epsilon,
         Piscina* piscina,
-        Fractio* exitus)
+        Fractio* exitus,
+        Fractio* infra_exitus,
+        Fractio* supra_exitus)
 {
      constans Extensio* k       = a.corpus;
                Piscina* status  = _officina_aperire();
@@ -2593,7 +2619,13 @@ _propinquum (
             (vacuum)fractio_divide(valor, fractio_ex_magno(
                 a.denominator), opus, &valor);
             *exitus  = fractio_transcribe(valor, piscina);
-            bene     = VERUM;
+            (vacuum)fractio_ex_magnis(numerus_infra, quantum, opus,
+                infra_exitus);
+            (vacuum)fractio_ex_magnis(numerus_supra, quantum, opus,
+                supra_exitus);
+            *infra_exitus  = fractio_transcribe(*infra_exitus, piscina);
+            *supra_exitus  = fractio_transcribe(*supra_exitus, piscina);
+            bene           = VERUM;
             frange;
         }
         s = _signum_numeri(k->f, medium, quantum_novum, opus);
@@ -2668,11 +2700,19 @@ algebraicus_ad_ostendendum (
                  Magnus  r;
                  chorda  exitus;
                     i32  passus;
+                Fractio  infra_angusta = fractio_ex_s64(ZEPHYRUM);
+                Fractio  supra_angusta = fractio_ex_s64(ZEPHYRUM);
 
     si (k == NIHIL)
     {
         redde chorda_transcribere(chorda_ex_literis("invalidum",
             piscina), piscina);
+    }
+    /* digiti > 100000: textus exactus (recensio V L1: (i32)-1 =
+     * 10^(2^32 - 1) numquam redibat) */
+    si (digiti > (i32)C * M)
+    {
+        redde algebraicus_ad_chordam(a, piscina);
     }
     officina = _officina_aperire();
     si (officina == NIHIL)
@@ -2705,7 +2745,8 @@ algebraicus_ad_ostendendum (
      * limes. */
     (vacuum)fractio_ex_magnis(magnus_ex_s64(I), magnus_multiplica(
         magnus_ex_s64(IV), decem, officina), officina, &epsilon);
-    si (!_propinquum(a, epsilon, officina, &propinquum))
+    si (!_propinquum(a, epsilon, officina, &propinquum, &infra_angusta,
+        &supra_angusta))
     {
         piscina_destruere(officina);
         redde algebraicus_ad_chordam(a, piscina);
@@ -2726,9 +2767,9 @@ algebraicus_ad_ostendendum (
             magnus_ex_s64(II), r, officina), magnus_ex_s64(I),
             officina),
             magnus_ex_s64(II), officina, &dimidium);
-        si (!algebraicus_signum(algebraicus_subtrahe(scalatum,
+        si (!_signum_ex(algebraicus_subtrahe(scalatum,
             algebraicus_ex_fractione(k, dimidium, officina), officina),
-            officina, &signum_supra))
+            infra_angusta, supra_angusta, officina, &signum_supra))
         {
             frange;
         }
@@ -2736,9 +2777,9 @@ algebraicus_ad_ostendendum (
             magnus_ex_s64(II), r, officina), magnus_ex_s64(I),
             officina),
             magnus_ex_s64(II), officina, &dimidium);
-        si (!algebraicus_signum(algebraicus_subtrahe(scalatum,
+        si (!_signum_ex(algebraicus_subtrahe(scalatum,
             algebraicus_ex_fractione(k, dimidium, officina), officina),
-            officina, &signum_infra))
+            infra_angusta, supra_angusta, officina, &signum_infra))
         {
             frange;
         }

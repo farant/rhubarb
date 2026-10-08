@@ -313,3 +313,34 @@ rationals floored instead of rounded.
 no wrong arithmetic found in any). Next library: quaternions over any ring
 descriptor (#7), which needs an optional `signum` hook in `anulus` for
 ordered rings.
+
+## 2026-10-08 - review V (E3) fixes
+
+Review V: 0 wrong digits in ~7,100 displays against an independent
+exact-rounding oracle (fuzz over every field kind and radix, digiti 0..200,
+1,600 rational ties, 1,032 near-half constructions at k = 0..150);
+certification exact, a wrong decimal can never be returned (fallback = the
+exact text); signum results unchanged. Fixed:
+- **T1:** certifying with the lower bound at R - 1 (O11b) printed 193 wrong
+  roundings in the reviewer's near-half sweep while the suite stayed green
+  (my two hand-made cases happened to approximate on the right side). Now a
+  SWEEP: 12345.5 / 10^k +- u^n (u = sqrt 2 - 1 or (sqrt 5 - 1)/2, u^n <=
+  10^-(k+1) or 10^-(k+3)), k = 0..40, both directions, two fields; expected
+  strings from the separately tested RATIONAL path. O11b red.
+- **P1 (my review-IV change regressed most fields):** near zero |num(m)|
+  halves with the error, so the prediction kept saying "a few more steps":
+  one evaluation every 3-5 bisections (870 vs 13). The next checkpoint is
+  now at least i + i/2 + 1 (logarithmic) and at most the doubling.
+  (alpha - c)^500: cube root 2 2.5 s, cos 2pi/7 0.94 s, cos 2pi/13 0.43 s,
+  cos 2pi/19 8.2 s (E2c 1.7 / 2.2 / 9.3 / ~150).
+- **P2:** each display refined the root interval three times from 2^-16.
+  `signum` is now `_signum_ex(a, infra, supra, ...)` with the public wrapper
+  passing the field's interval; `_propinquum` returns its refined interval
+  and both certification signs start from it. 1000 digits: degree 9 1.6 s,
+  18 6.5 s, 21 9.1 s (was 5-14 s at 9-12); ~3 KB left in the caller's pool.
+- **L1:** digiti > 100000 returns the exact text (was 10^(2^32 - 1) for
+  (i32)-1).
+- Plants: 41; 34 red; equivalent / performance-only: E8, E13, E16, E31,
+  E35, E40 (doubling only), E41 (approximation error underestimated - the
+  exact certification corrects R, so approximation quality affects speed,
+  never correctness). 195 tests, 1.6 s.

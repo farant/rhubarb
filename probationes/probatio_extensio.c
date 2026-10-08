@@ -1475,6 +1475,83 @@ s32 principale (vacuum)
     }
 
     {
+        /* recensio V T1: verrere medium. 12345.5 / 10^k +- minimum
+         * irrationale (u^n, u = sqrt 2 - 1 aut (sqrt 5 - 1)/2, u^n <=
+         * 10^-(k+1) aut 10^-(k+3)), k = 0..40: rotundatio sursum aut
+         * deorsum; exspectatum per viam RATIONALEM (alibi probatam) */
+                             Extensio* corpora[II];
+        hic_manens constans character* bases[] = { "a - 1",
+            "(a - 1)/2" };
+        hic_manens constans i32 factores[] = { MMDCXIII, IV * M
+            + DCCLXXXV };
+                            b32 medium_bene = VERUM;
+                            i32 c;
+
+        corpora[ZEPHYRUM]  = extensio_quadratica(II, piscina);
+        corpora[I]         = extensio_quadratica(V, piscina);
+        per (c = ZEPHYRUM; c < II; c++)
+        {
+            Algebraicus u = _a(corpora[c], bases[c]);
+                    i32 digiti;
+
+            per (digiti = ZEPHYRUM; digiti <= XL; digiti++)
+            {
+                i32 magnitudo_minimi;
+
+                per (magnitudo_minimi = ZEPHYRUM; magnitudo_minimi < II;
+                    magnitudo_minimi++)
+                {
+                    PiscinaNotatio nota = piscina_notare(piscina);
+                            Magnus decem;
+                           Fractio medium   = fractio_ex_s64(ZEPHYRUM);
+                           Fractio sursum   = fractio_ex_s64(ZEPHYRUM);
+                           Fractio deorsum  = fractio_ex_s64(ZEPHYRUM);
+                       Algebraicus minimum;
+                       Algebraicus centrum;
+                               i32 n;
+
+                    decem = magnus_potentia(magnus_ex_s64(X), digiti,
+                        piscina);
+                    n = ((digiti + I + II * magnitudo_minimi)
+                        * factores[c]) / M + I;
+                    (vacuum)algebraicus_potentia(u, (s32)n, piscina,
+                        &minimum);
+                    (vacuum)fractio_ex_magnis(magnus_ex_s64(24691L),
+                        magnus_multiplica(magnus_ex_s64(II), decem,
+                        piscina), piscina, &medium);
+                    (vacuum)fractio_ex_magnis(magnus_ex_s64(12346L),
+                        decem,
+                        piscina, &sursum);
+                    (vacuum)fractio_ex_magnis(magnus_ex_s64(12345L),
+                        decem,
+                        piscina, &deorsum);
+                    centrum = algebraicus_ex_fractione(corpora[c],
+                        medium,
+                        piscina);
+                    si (   !chorda_aequalis(algebraicus_ad_ostendendum(
+                        algebraicus_adde(centrum, minimum, piscina),
+                        digiti, piscina), algebraicus_ad_ostendendum(
+                        algebraicus_ex_fractione(corpora[c], sursum,
+                        piscina), digiti, piscina))
+                        || !chorda_aequalis(algebraicus_ad_ostendendum(
+                        algebraicus_subtrahe(centrum, minimum, piscina),
+                        digiti, piscina), algebraicus_ad_ostendendum(
+                        algebraicus_ex_fractione(corpora[c], deorsum,
+                        piscina), digiti, piscina)))
+                    {
+                        medium_bene = FALSUM;
+                    }
+                    piscina_reficere(piscina, nota);
+                }
+            }
+        }
+        CREDO_VERUM (medium_bene);
+        /* recensio V L1: digiti > 100000 -> textus exactus, statim */
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(
+            corpora[ZEPHYRUM], "a"), (i32)0xFFFFFFFFUL, piscina), "a");
+    }
+
+    {
         /* ostensio fortuita contra f64: digiti VIII, |valor| < 1e6,
          * congruentia intra unitatem ultimam (f64 ~1e-10 relativus) */
         hic_manens constans character* polynomia[] = { "t^2 - 2",

@@ -332,7 +332,9 @@ algebraicus_compara (
  * rotundatio exacta, paritas in medio (sicut fractio_rotunda).
  * "-1.4142"; valor ad nullum rotundatus sine signo ("0.0000").
  * Corpus sine ordine (Q(i)): textus exactus (algebraicus_ad_chordam);
- * "invalidum" si invalidum. Sumptus: bisectiones ~ log2(D 10^k). */
+ * "invalidum" si invalidum; digiti > 100000: textus exactus.
+ * Sumptus: bisectiones ~ log2(D 10^k). Textus exactus a decimali
+ * forma sola distinguitur (littera 'a', '/'). */
 chorda
 algebraicus_ad_ostendendum (
     Algebraicus  a,
