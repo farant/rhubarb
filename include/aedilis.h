@@ -157,6 +157,11 @@ nomen structura {
        Xar* pura;              /* chorda: plagulae clausurae quae
                                 * <aedilis nexus="purus"/> ferunt
                                 * (eventus A1b) */
+       Xar* facultates;        /* chorda: <aedilis facultas="X"/>
+                                * SCOPI solius (fabrica-6 T6): fenestra
+                                * | rete | repositorium. In plagula
+                                * non-scopo aut valor ignotus ->
+                                * recusatio nominata */
 } AedilisFructus;
 
 /* Clausuram scopi derivare (punctum fixum trans plagulas).

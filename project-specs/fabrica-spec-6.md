@@ -353,3 +353,37 @@ PATH search through the given PATH and its failure, missing directory
 = named EXEC error with no output, NIHIL options = processus_exsequi).
 Plants: chdir skipped, environ not swapped, chdir failure swallowed -
 each red. Glossary: `environ` (POSIX name).
+
+**T6b (2026-10-07): the aedilis extractor as a library + `facultas`.**
+`aedilis_derivare` takes its extractor through a seam; the real one
+(silva for .c/.h, `clang -MM` for .m, per-run memo, content-store
+records across runs) lived in tools/aedilis.c. Moved VERBATIM into
+`lib/aedilis_silva.c` + `include/aedilis_silva.h` (API approved by
+Fran): `aedilis_silva_creare(piscina, configuratio, radix_thesauri,
+praefixum, memoria_oraculi)` and `aedilis_silva_extrahere` (an
+`AedilisExtractor`); the two state structs merged into `AedilisSilva`.
+One addition beyond the approved header: `aedilis_silva_oraculum` (the
+`-MM` oracle on any source - `bin/aedilis --differentia` needs it).
+tools/aedilis.c keeps only the CLI (1903 -> ~1100 lines); its source
+list regenerated (`aedilis_silva`). Oracle: old vs new bin/aedilis
+byte-identical on `--partes` for all 307 test closures (root, toml,
+silva), `--corpus silva/fontes`, `--nexus-purus`, `--thesaurus` cold
+and warm (8 runs), `--differentia`.
+Asked about conflatio (Fran): it consumes a closure (its driver calls
+`aedilis --partes`), so it does not replace the extractor; it could
+replace per-object compile + link with ONE conflated translation unit
+per member (key = sha of the text) but refuses vendor and .m sources
+and recompiles the whole closure on any change - a possible later
+variant of `probationes_c`, not T6.
+`facultas` (Fran's choice of spelling): `<aedilis facultas="X"/>`,
+X in fenestra | rete | repositorium, recorded in
+`AedilisFructus.facultates` for the SCOPE only; in any other file of
+the closure or an unknown value -> named refusal (a header cannot
+declare it for all includers: many tests include fenestra.h and draw
+headless). Tests probatio_aedilis 'facultatem' (fixtures fenestralis,
+facultas_ignota, includens_facultatem + facultas_caput.h); plants:
+scope check off, value check off, value not recorded - each red (the
+third first crashed reading element 0 unguarded; guarded).
+Decided for T6c (Fran): a test runs with cwd = tree root (tests are
+root-relative), its binary, objects and TMPDIR in the member's area;
+objects compiled into the area through the compilator store.
