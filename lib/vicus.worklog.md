@@ -298,3 +298,15 @@ at creation (window height / buffer height) and kept on resize:
 documents. Checked headless first: at 960 x 573 page and canvas fit
 exactly - the mismatch was only the later full-screen growth.
 
+
+## 2026-10-08 - full screen AFTER the buffer (scale trap)
+
+The first full-screen version passed FENESTRA_PLENA_VISIO to
+fenestra_creare, which starts the transition before it returns; the
+pixel buffer was created after, from the window's CURRENT (already
+growing) height, so the scale came out above 2 and the logical area
+shrank below the documents' size - Fran: one column too wide, one row
+too tall. Now: create window, create buffer (scale exactly 2), then
+`fenestra_commutare_plenam_visionem`. Fran confirmed the page fits.
+Rule: anything that fixes a scale at creation must run before any
+size transition starts.

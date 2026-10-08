@@ -61,6 +61,7 @@ principale (
                                         i32  spatium_alt;
                                         i32  latitudo_fenestrae;
                                         i32  altitudo_fenestrae;
+                                        b32  plena;
 
     piscina = piscina_generare_dynamicum("vicus", VIII * M * M);
     si (!piscina)
@@ -113,7 +114,7 @@ principale (
             latitudo_fenestrae = spatium_lat / SCALA;
             altitudo_fenestrae = spatium_alt / SCALA;
         }
-        cfg.vexilla |= FENESTRA_PLENA_VISIO;
+        plena = VERUM;
     }
     si (!vicus_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
             latitudo, altitudo))
@@ -132,6 +133,15 @@ principale (
     }
     tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
                                                altitudo_fenestrae);
+    /* plena visio POST tabulam: scala in creatione tabulae ex
+     * altitudine fenestrae CURRENTE figitur - vexillum PLENA_VISIO
+     * transitum in fenestra_creare incipit, et fenestra iam crescens
+     * scalam > II dabat (spatium logicum minus documentis: columna et
+     * linea nimiae, Franus) */
+    si (plena)
+    {
+        fenestra_commutare_plenam_visionem(fenestra);
+    }
     lf = ludus_fenestra_creare(piscina, app.d, vicus_figurae(app.vicus),
                                ZEPHYRUM, vicus_imago_fons, app.vicus,
                                tabula);
