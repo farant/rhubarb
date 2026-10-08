@@ -77,6 +77,7 @@ declare -a SOURCE_FILES=(
     "lib/fasti.c"
     "lib/fenestra_tempus_macos.c"
     "lib/fenestra_textus.c"
+    "lib/fictio.c"
     "lib/figura.c"
     "lib/filum.c"
     "lib/flatura.c"
