@@ -13,8 +13,20 @@
 #define CELLULA_LATITUDO  VI
 #define CELLULA_ALTITUDO  VIII
 #define STATUS_LINEAE     I      /* Franus 2026-10-03: linea una */
-#define DOC_LATITUDO      CCCXX
-#define DOC_ALTITUDO      CC
+/* tabula nova (vicus-latera S2c): prospectus superficiei (latitudo
+ * tota, altitudo minus linea status), non hoc minimo minus */
+#define DOC_MINIMUM       LXIV
+
+interior i32
+tabulae_dimensio (
+    i32 pixela,
+    s32 demendum)
+{
+    s32 n;
+
+    n = (s32)pixela - demendum;
+    redde (i32)(n < DOC_MINIMUM ? DOC_MINIMUM : n);
+}
 
 /* radix + "/" + via (radix NIHIL aut vacua: via sola) */
 interior constans character*
@@ -148,7 +160,10 @@ pictor_montare (
     si (!m->doc)
     {
         m->doc = pictor_documentum_creare(piscina, intern, volumen,
-            spatium, DOC_LATITUDO, DOC_ALTITUDO, LXIV);
+            spatium, tabulae_dimensio(latitudo, ZEPHYRUM),
+            tabulae_dimensio(altitudo,
+            STATUS_LINEAE * CELLULA_ALTITUDO),
+            LXIV);
     }
     si (!m->doc)
     {

@@ -90,12 +90,20 @@ s32 principale (vacuum)
         NIHIL, CDLXXX, CDLXXX));
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
         INSULA_DURABILIS)), III);
+    /* S2c: documentum novum magnitudine superficiei - pictor:
+     * superficies minus linea status (CDLXXX x CDLXXII) */
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_DURABILIS, "latitudo"), "320"));
+        INSULA_DURABILIS, "latitudo"), "480"));
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
+        INSULA_DURABILIS, "altitudo"), "472"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
         INSULA_EPHEMERA, "instrumentum"), "penicillus"));
+    /* scriba: cellulae VI x VIII minus margines (II) et status (I) -
+     * LXXX - II x LX - III */
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m1.ramus,
-        INSULA_DURABILIS, "latitudo"), "68"));
+        INSULA_DURABILIS, "latitudo"), "78"));
+    CREDO_VERUM(valor_est(insula_ramus_attributum(&m1.ramus,
+        INSULA_DURABILIS, "altitudo"), "57"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus,
         INSULA_EPHEMERA, "modus"), "normalis"));
     CREDO_VERUM(plagula_exstat(vol, "p1/documentum"));
@@ -148,13 +156,41 @@ s32 principale (vacuum)
         vivi = scriba_documentum_numerus_vivorum(m1.doc);
         repo2 = insula_repositorium_creare(piscina, intern,
             "<schirmata/>", "<schirmata/>");
+        /* superficies alia (S2c): documentum exstans magnitudinem
+         * suam servat */
         CREDO_VERUM(scriba_montare(&r1, piscina, intern, vol, repo2,
             "s1",
-            NIHIL, CDLXXX, CDLXXX));
+            NIHIL, CCXL, CCXL));
         CREDO_AEQUALIS_I32(scriba_documentum_numerus_vivorum(r1.doc),
                            vivi);
         CREDO_VERUM(tabula_cellula(scriba_documentum_tabula(r1.doc),
             ZEPHYRUM, ZEPHYRUM) == 'x');
+        CREDO_AEQUALIS_I32(scriba_documentum_tabula(r1.doc)->latitudo,
+            LXXVIII);
+    }
+
+    imprimere("\n--- V: superficies parva - documenta minima ---\n");
+    {
+        InsulaRepositorium* repo_parvum;
+            ScribaMontatio  sp;
+            PictorMontatio  pp;
+
+        repo_parvum = insula_repositorium_creare(piscina, intern,
+            "<schirmata/>", "<schirmata/>");
+        CREDO_VERUM(scriba_montare(&sp, piscina, intern, vol,
+            repo_parvum,
+            "s9", NIHIL, LX, XL));
+        CREDO_AEQUALIS_I32(scriba_documentum_tabula(sp.doc)->latitudo,
+            XX);
+        CREDO_AEQUALIS_I32(scriba_documentum_tabula(sp.doc)->altitudo,
+            X);
+        CREDO_VERUM(pictor_montare(&pp, piscina, intern, vol,
+            repo_parvum,
+            "p9", NIHIL, LX, XL));
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,
+            INSULA_DURABILIS, "latitudo"), "64"));
+        CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,
+            INSULA_DURABILIS, "altitudo"), "64"));
     }
 
     imprimere("\n");

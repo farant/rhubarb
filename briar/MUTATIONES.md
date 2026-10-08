@@ -19,6 +19,11 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `fenestra_spatium_utile` (nova: rectangulum contenti fenestrae
+  quae aream visibilem schirmi implet); scriba_montare / pictor_montare
+  documentum NOVUM magnitudine superficiei creant (antea 68 x 56 et
+  320 x 200 fixa).
+
 - corpus: vicus = decem tabulae, par laterum (vicus-latera S2a-2):
   `VicusLatus`, `VicusTabula` (sinistrum, acervus, focus),
   `vicus_latus`, `vicus_latus_focatum`, `vicus_focum_ponere`;

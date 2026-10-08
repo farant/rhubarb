@@ -13,9 +13,26 @@
 #define CELLULA_LATITUDO  VI
 #define CELLULA_ALTITUDO  VIII
 #define STATUS_LINEAE     I
-#define FOLIUM_LATITUDO   TABULA_LATITUDO_DEFALTA
-#define FOLIUM_ALTITUDO   TABULA_ALTITUDO_DEFALTA
+/* folium novum (vicus-latera S2c): magnitudine superficiei, non hoc
+ * minimo minus */
+#define FOLIUM_LATITUDO_MINIMA  XX
+#define FOLIUM_ALTITUDO_MINIMA  X
 #define INTERVALLUM       LXIV
+
+/* cellulae superficiei minus margines (cellula utrimque) et, in
+ * altitudine, lineae status; minimum servatur */
+interior i32
+folii_dimensio (
+    i32 pixela,
+    s32 cellula,
+    s32 demendum,
+    s32 minimum)
+{
+    s32 n;
+
+    n = (s32)pixela / cellula - demendum;
+    redde (i32)(n < minimum ? minimum : n);
+}
 
 /* radix + "/" + via (radix NIHIL aut vacua: via sola) */
 interior constans character*
@@ -149,7 +166,13 @@ scriba_montare (
     si (!m->doc)
     {
         m->doc = scriba_documentum_creare(piscina, intern, volumen,
-            spatium, FOLIUM_LATITUDO, FOLIUM_ALTITUDO, INTERVALLUM);
+            spatium,
+            folii_dimensio(latitudo, CELLULA_LATITUDO, II,
+                FOLIUM_LATITUDO_MINIMA),
+            folii_dimensio(altitudo, CELLULA_ALTITUDO, II
+                + STATUS_LINEAE,
+                FOLIUM_ALTITUDO_MINIMA),
+            INTERVALLUM);
     }
     si (!m->doc)
     {

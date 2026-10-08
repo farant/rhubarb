@@ -1214,6 +1214,45 @@ fenestra_maximizare (
     }
 }
 
+b32
+fenestra_spatium_utile (
+    i32* x,
+    i32* y,
+    i32* latitudo,
+    i32* altitudo)
+{
+    NSScreen* schirmus;
+    NSRect    visibile;
+    NSRect    contentum;
+
+    si (!x || !y || !latitudo || !altitudo)
+    {
+        redde FALSUM;
+    }
+    @autoreleasepool {
+        /* principalis = cum linea menuum (prima); mainScreen sine
+         * fenestra clavi idem reddit */
+        schirmus = [[NSScreen screens] count] > ZEPHYRUM
+                 ? [[NSScreen screens] objectAtIndex:ZEPHYRUM]
+                 : [NSScreen mainScreen];
+        si (!schirmus)
+        {
+            redde FALSUM;
+        }
+        visibile  = [schirmus visibleFrame];
+        /* styli fenestrae ordinariae: titulus subtrahitur */
+        contentum = [NSWindow contentRectForFrameRect:visibile
+            styleMask:(NSWindowStyleMaskTitled | NSWindowStyleMaskClosable
+                       | NSWindowStyleMaskMiniaturizable
+                       | NSWindowStyleMaskResizable)];
+        *x         = (i32)contentum.origin.x;
+        *y         = (i32)contentum.origin.y;
+        *latitudo  = (i32)contentum.size.width;
+        *altitudo  = (i32)contentum.size.height;
+    }
+    redde *latitudo > ZEPHYRUM && *altitudo > ZEPHYRUM;
+}
+
 vacuum
 fenestra_minuere (
     Fenestra* fenestra)

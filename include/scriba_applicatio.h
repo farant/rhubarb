@@ -55,7 +55,9 @@ nomen structura {
 /* scribam montare: id NIHIL = radix repositorii (elementum radicis
  * 'scriba' iam exstat); aliter liberum <scriba id> creatur si abest.
  * Ordo: canones, elementum initiale, domini (scriptura initialis
- * anonyma ne recusetur). radix = praefixum viarum canonum. */
+ * anonyma ne recusetur). radix = praefixum viarum canonum. Folium
+ * NOVUM (vicus-latera S2c) magnitudine superficiei: cellulae minus
+ * margines et linea status (XX x X minimum); exstans suum servat. */
 b32
 scriba_montare (
          ScribaMontatio* m,

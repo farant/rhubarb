@@ -2,7 +2,9 @@
  * FENESTRA
  *
  * Compositio communis (vicus_applicatio) + glutinum fenestrae;
- * fenestra ad SCALA II (pixelum nostrum = II puncta, ut terminale);
+ * fenestra ad SCALA II (pixelum nostrum = II puncta, ut terminale)
+ * spatium utile schirmi implens (vicus-latera S2c; -fumus: magnitudo
+ * fixa);
  * tabulae vivae pulsantur (vicus-latera S1c);
  * gemellus vicus_terminalis.c (insula-rami-plan T4). Ctrl-A, deinde
  * n / p / 1-9 aut Ctrl-A (tabula prior); ictus in tabulam. -fumus:
@@ -54,6 +56,10 @@ principale (
                                         s32  exitus;
                          constans character* via_imaginis;
                                         s32  k;
+                                        i32  latitudo;
+                                        i32  altitudo;
+                                        i32  spatium_lat;
+                                        i32  spatium_alt;
 
     piscina = piscina_generare_dynamicum("vicus", VIII * M * M);
     si (!piscina)
@@ -78,18 +84,29 @@ principale (
         fprintf(stderr, "vicus: volumen aperiri non potuit\n");
         redde I;
     }
+    /* S2c: fenestra spatium utile schirmi implet (decisio XII); fumus
+     * magnitudinem fixam servat (imagines certae) */
+    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
+    cfg.x     = C;
+    cfg.y     = C;
+    latitudo  = VICUS_LATITUDO;
+    altitudo  = VICUS_ALTITUDO;
+    si (   !fumus
+        && fenestra_spatium_utile(&cfg.x, &cfg.y, &spatium_lat,
+               &spatium_alt))
+    {
+        latitudo = spatium_lat / SCALA;
+        altitudo = spatium_alt / SCALA;
+    }
     si (!vicus_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
-            VICUS_LATITUDO, VICUS_ALTITUDO))
+            latitudo, altitudo))
     {
         redde I;
     }
 
-    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
     cfg.titulus   = "vicus";
-    cfg.x         = C;
-    cfg.y         = C;
-    cfg.latitudo  = VICUS_LATITUDO * SCALA;
-    cfg.altitudo  = VICUS_ALTITUDO * SCALA;
+    cfg.latitudo  = latitudo * SCALA;
+    cfg.altitudo  = altitudo * SCALA;
     cfg.vexilla   = FENESTRA_ORDINARIA;
     fenestra      = fenestra_creare(piscina, &cfg);
     si (!fenestra)
@@ -98,7 +115,7 @@ principale (
         redde I;
     }
     tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
-                                               VICUS_ALTITUDO);
+                                               altitudo);
     lf = ludus_fenestra_creare(piscina, app.d, vicus_figurae(app.vicus),
                                ZEPHYRUM, vicus_imago_fons, app.vicus,
                                tabula);

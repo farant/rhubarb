@@ -173,6 +173,14 @@ switch, Motus follows, hover scope, focus durable, Ctrl-A 0);
 fourteen plants. Parked: formator false positive inside a macro
 expansion (terminal-planning parks/014).
 
+S2c as built: `fenestra_spatium_utile` (approved header) - vicus opens
+filling the screen's usable area (here 960 x 573 of our pixels;
+`-fumus` keeps the fixed size); new scriba pages and pictor canvases
+take the size of the surface they are mounted on (floors 20 x 10 and
+64), existing documents keep theirs. Tests: probatio_fenestra_spatium
+(plausibility, NIHIL refused), probatio_montatio (sizes, floors,
+remount keeps size); five plants.
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);

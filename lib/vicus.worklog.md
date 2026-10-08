@@ -263,3 +263,23 @@ cell centre on row 0, through the encoder.
   constans; returning a mutable pane from a const tab is a cast-qual
   error and vicus_tabula hands out mutable tabs anyway).
 
+## 2026-10-08 - vicus-latera S2c: window fills the screen, new docs fit their pane
+
+- `fenestra_spatium_utile` (new, fenestra_macos.m): the primary
+  screen's visibleFrame through `contentRectForFrameRect:` for the
+  ordinary window style = the content rect of a titled window filling
+  the usable area. Here: 0,0 1920x1147 points -> 960x573 of our pixels
+  at SCALA II -> panes 480x565 (80 x 70 cells).
+- vicus main asks BEFORE building the composition (mounts take their
+  size, new documents their size from the mount); `-fumus` keeps the
+  fixed size so screenshots stay deterministic. The window opens at
+  the usable rectangle; the twin and the standalone apps unchanged.
+- New documents from the mount size (scriba_montare, pictor_montare -
+  standalone mounts too, a window is a pane): scriba page = cells
+  minus margins (and the status line in height), floor 20 x 10;
+  pictor canvas = prospect (status line off the height), floor 64.
+  Existing documents keep theirs (tested by remounting at another
+  size). `i32` is unsigned: the subtraction is done in s32.
+- The window main itself has no test (it needs a window); the query,
+  the size rules and their floors do (5 plants).
+

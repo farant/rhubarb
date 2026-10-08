@@ -323,6 +323,17 @@ vacuum
 fenestra_maximizare (
     Fenestra* fenestra);
 
+/* Spatium utile schirmi principalis (vicus-latera S2c): rectangulum
+ * CONTENTI fenestrae titulatae quae aream visibilem (sine linea menuum
+ * et navali) implet, in punctis, origo infra sinistra ut
+ * FenestraConfiguratio. FALSUM si schirmus nullus. */
+b32
+fenestra_spatium_utile (
+    i32* x,
+    i32* y,
+    i32* latitudo,
+    i32* altitudo);
+
 /* Minuere fenestram
  *
  * fenestra: fenestra
