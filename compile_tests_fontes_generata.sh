@@ -185,6 +185,7 @@ declare -a SOURCE_FILES=(
     "lib/scriba_componentia.c"
     "lib/scriba_documentum.c"
     "lib/scriba_figurae.c"
+    "lib/scriba_liber.c"
     "lib/scrinium.c"
     "lib/sectio.c"
     "lib/selectio.c"

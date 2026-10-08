@@ -19,6 +19,9 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `scriba_liber` nova - liber paginarum scribae (paginae
+  nominatae in volumine, documentum unum per nomen, sine limite).
+
 - corpus: `fenestra_spatium_utile` (nova: rectangulum contenti fenestrae
   quae aream visibilem schirmi implet) et `fenestra_spatium_schirmi`
   (nova: schirmus totus, contentum plenae visionis); scriba_montare / pictor_montare

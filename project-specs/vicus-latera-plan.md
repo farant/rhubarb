@@ -69,6 +69,32 @@ rebuilt on the insula-native apps.*
 13. **New documents are sized to their pane** (pictor canvas, scriba
     page) at creation; existing documents keep their size.
 
+### Legacy pages (read 2026-10-08, before S2b)
+
+`lib/schirmata.c` + `lib/libro_paginarum.c` + `lib/pagina.c` = the
+design vicus revives: TEN screens (Ctrl-A), ONE `LibroPaginarum` shared
+by all screens, PER-SCREEN view state (`SchirmaLibroStatus`: page index,
+cursor line/column, vim mode - saved/restored on screen switch; only the
+left panel viewed the book, so only one live view). Pages: fixed 68x56
+grid + vim, optional NAME, navigating past the last creates one, 32-step
+back history, max 100. Navigation: Ctrl+Shift+Left/Right; clicked
+`#next #prev #back #last #N #name` links; `$goto $new $rename` commands.
+Persistence: one entity per page (`LibroPagina`) in the entity
+repository, saved on navigate + debounced. Click regions:
+`pagina_obtinere_regio_ad_punctum` - a word starting `$` (command) or
+`#` (link).
+
+### S2b decisions (Fran, 2026-10-08)
+
+14. **No page limit** (legacy's 100 dropped): pages are documents in the
+    volume.
+15. **A scriba view = which page + its cursor/mode**; the text lives once
+    in the page document. Each VIEW keeps its own gesture (uncommitted
+    edit) - "a gesture per instance, not per document".
+16. **Other views of the same page see committed text** debounced, on
+    switching to normal mode, or on a pane switch - not keystroke by
+    keystroke.
+
 ## II. What exists (read 2026-10-08)
 
 - **vicus** (`include/vicus.h`, `lib/vicus.c`, `lib/vicus_applicatio.c`,
@@ -184,6 +210,20 @@ launch left new documents short): vicus OPENS in full screen -
 `fenestra_spatium_schirmi` (screen minus notch) sizes mounts and new
 documents; the window starts at the usable area with an even height
 so the buffer scale is exactly II; two more plants.
+
+S2b design (Fran 2026-10-08, approved): a page BOOK (`scriba_liber`)
+hands out one shared document per page name; a scriba view = page
+name (durable, in its branch) + cursor/mode; vicus passes a `ctx` to
+mounts (the book). Commits on every pane focus change and tab switch
+mean only the focused view ever holds an uncommitted edit - no
+simultaneous edits; what remains is a STALE view, handled by
+`scriba_reficere` (clean + document moved -> re-copy; pulse and on
+focus). Ctrl+Shift+Left/Right = previous/next page (past the last
+creates one). Slices: S2b-1 book, S2b-2 mount ctx, S2b-3 scriba view.
+
+S2b-1 as built: `include/scriba_liber.h` + lib; probatio_scriba_liber
+(new volume, same name = same object, unknown name, new page + reopen
+keeps order and text, never reuses a name, 121 pages); three plants.
 
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
