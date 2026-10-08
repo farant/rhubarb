@@ -40,12 +40,14 @@ Fran before code.
 
 ### T4: compilator as a library
 
-- [ ] **Step 1:** API header `include/compilator.h` to Fran (key of a
+- [x] **Step 1:** API header `include/compilator.h` to Fran (key of a
   compilation, store lookup/put, compile-through-store).
-- [ ] **Step 2:** extract from tools/compilator.c into lib/compilator.c;
+- [x] **Step 2:** extract from tools/compilator.c into lib/compilator.c;
   tools/compilator.c thin CLI. Oracle: `tools/compilator_fumus.sh`
   (X/X) unchanged and green; objects byte-identical before/after on
-  the toml closure. **Commit.**
+  the toml closure. **Commit.** (As built: fumus XI/XI - case XI
+  closes an oracle gap; toml_scalaris.o is nondeterministic in clang
+  itself, spec §XIII T4.)
 
 ### T5: step-kind chassis - `FabricaGradus`, areas, base env
 

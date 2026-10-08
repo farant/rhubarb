@@ -857,7 +857,9 @@
     <forma textus="bits"/>
   </vocabulum>
   <vocabulum lemma="hash" lingua="anglica" classis="ignotum-permissum" nota="sedes 594"/>
-  <vocabulum lemma="cache" lingua="anglica" classis="ignotum-permissum" nota="sedes 96"/>
+  <vocabulum lemma="cache" lingua="anglica" classis="ignotum-permissum" nota="sedes 96">
+    <forma textus="cacheabile"/>
+  </vocabulum>
   <vocabulum lemma="buffer" lingua="anglica" classis="ignotum-permissum" nota="sedes 2316">
     <forma textus="buffers"/>
   </vocabulum>

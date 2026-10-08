@@ -252,3 +252,40 @@ object compiled from the plant, and the provenance relation (a digest
 of SOURCES) would still call that binary RECENS. Restore with plain cp
 or touch (MEMORY). One more argument for content-addressed caching only
 (vision §II.6).
+
+**T4 (2026-10-07): compilator as a library.** `include/compilator.h`
+(API approved by Fran): `compilator_aperire(piscina, radix_thesauri,
+clang)`, `compilator_cacheabile(argv, n)`, `compilator_clavem(c, argv,
+n, &clavis)` (the head key WITHOUT compiling - for T6's link step) and
+`compilator_compilare(c, argv, n)` returning `CompilatorResultus
+{codex, ex_thesauro, effusio, erratum}`. Fran chose clang's output as
+STRINGS over stdout/stderr passthrough: a step can keep a failing
+compile's diagnostics as its verdict cause; the CLI prints them.
+`codex -1` = not cacheable or clang identity unknown. `lib/compilator.c`
+(837 lines) is the old tool's logic unchanged (head key, full key with
+per-name shadowing, depfile index, temp + rename into the store); the
+only behaviour change is collecting output instead of writing it.
+`tools/compilator.c` is now a 98-line CLI: provenance answer,
+`FABRICA_THESAURUS`, exec clang itself when the call is not cacheable
+or `codex < 0`, else print and return `codex`. Lint: `cacheabile`
+admitted as a form of the permitted `cache` (glossary).
+Oracle: `compilator_fumus.sh` stayed green - and so did the PLANT
+(the source's bytes dropped from the head key): no case changed a
+source without changing a header, and the source sits only in the head
+key. New case XI (source edited -> miss, new object); fumus is XI/XI,
+the plant is red on XI. Byte comparison over the 58 commands of the
+toml closure (fresh store miss, then hit), new vs old binary: identical
+except `toml_scalaris.o`, which also differs between two runs of the
+OLD binary.
+Finding (determinism, vision §II.10): Apple clang 16.0.0
+(clang-1600.0.26.4) at `-O2` emits `toml_scalaris.o` with different
+lane/register choices in one vectorized digit loop (`mul.4s` by 10,
+`uzp1`/`uzp2` swapped) - semantically equal, bytes not. It depends on
+process layout: stable 6/6 in one shell, a different object under
+`env -i` and DIFFERENT AGAIN on each `env -i` run, flips with
+environment size. A hermetic environment does NOT make it
+deterministic. Consequence for keys: an object is never an input by
+its bytes when a cheaper key exists (we key on sources - correct); a
+determinism check over compiled objects would flag this file, so the
+check must compare twice-built outputs per kind, and clang objects
+need the rule "equal sources -> equal by declaration", not by bytes.
