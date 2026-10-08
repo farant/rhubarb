@@ -77,3 +77,125 @@ assert [c for c,_,_,_ in out]==list(range(0x2500,0x2580))
 for cp,ch,v,c in out:
     print('    %s,   /* %04X %s %s */' % (v, cp, ch, c))
 ```
+
+## 2026-10-07 — v2: symbols (Fran: "symbol extras would be good")
+
+Which symbols: a CENSUS, not a guess. Claude Code's binary (Bun) keeps
+its JS strings partly as UTF-16 and as `\uXXXX` escapes; raw byte
+counts of single symbols were noise (any 2-byte pair appears hundreds
+of times in a 236 MB binary). The escape census was the clean signal:
+`— … → ⚠ • ← ✓ ↑ ↓ › ≥ ≤ ✗ ⎿ ◐ ...` plus the UI set (⏺ ✻ ✶ ✳ ✢ ✽ ● ❯
+⏵ ⏸ ⌘ ⏎ ...). 57 symbols, all width 1 in our runae tables.
+
+Design: hand-drawn 6x8 pictures (body in columns 1-5, rows 0-6 like
+fons_6x8), stored as ASCII rows in a table sorted by rune (binary
+search), drawn into the same mask, nearest-neighbour scaled for other
+cell sizes. API unchanged - `glyphae_ductae_est` simply recognises
+more runes; header doc lists the v2 range. Symbols are TEXT for the
+contrast floor (only U+2500-259F are exempt). `– — …` used to reach
+the font mapped to '-' and '.' ("Thinking." for "Thinking…"); now
+drawn. Specimen rendered headless and looked at; redrawn after the
+first look: ⚠ (read as a rook -> filled triangle with the mark cut
+out) and ⇧ (mushroom -> outlined arrow). Tests: two exact pictures,
+2x scaling, every census symbol recognised and non-empty, neighbours
+rejected; four plants caught (table order, scale, recognition, search).
+The v1 boundary assertion 0x25A0 moved to 0x25A2 (■ is now a symbol).
+
+### The symbol table generator (symbola.py; output pasted into
+`symbola[]` - edit the pictures here, then regenerate)
+
+```python
+# symbola 6x8 (columnae 1-5 corpus, ordines 0-6; ordo 7 descensor)
+B='......'
+S={}
+def d(cp, *rows):
+    rows=list(rows)+[B]*(8-len(rows))
+    assert len(rows)==8 and all(len(r)==6 for r in rows), hex(cp)
+    S[cp]=rows
+# sagittae
+d(0x2190, B,B,'..#...','.#####','..#...')
+d(0x2191, '...#..','..###.','.#.#.#','...#..','...#..','...#..','...#..')
+d(0x2192, B,B,'....#.','.#####','....#.')
+d(0x2193, '...#..','...#..','...#..','...#..','.#.#.#','..###.','...#..')
+d(0x21B5, B,'.....#','.....#','..#..#','.#####','..#...')
+d(0x21E7, '...#..','..#.#.','.#...#','.##.##','..#.#.','..#.#.','..###.')
+# notae
+d(0x2713, B,B,'.....#','....#.','.#.#..','..#...')
+d(0x2714, B,'.....#','....##','.#.##.','.###..','..#...')
+d(0x2715, B,'.#...#','..#.#.','...#..','..#.#.','.#...#')
+d(0x2716, B,'.#...#','.##.##','..###.','.##.##','.#...#')
+d(0x2717, B,'.#...#','..#.#.','...#..','..#.#.','.#...#')
+d(0x2718, B,'.#...#','.##.##','..###.','.##.##','.#...#')
+# circuli et puncta
+d(0x2022, B,B,'...#..','..###.','...#..')
+d(0x2219, B,B,B,'..##..','..##..')
+d(0x25CF, B,'..###.','.#####','.#####','.#####','..###.')
+d(0x23FA, B,'..###.','.#####','.#####','.#####','..###.')
+d(0x25CB, B,'..###.','.#...#','.#...#','.#...#','..###.')
+d(0x25C9, B,'..###.','.#...#','.#.#.#','.#...#','..###.')
+d(0x25EF, '..###.','.#...#','.#...#','.#...#','.#...#','.#...#','..###.')
+d(0x2B24, '..###.','.#####','.#####','.#####','.#####','.#####','..###.')
+d(0x25D0, B,'..###.','.##..#','.##..#','.##..#','..###.')
+d(0x25D1, B,'..###.','.#..##','.#..##','.#..##','..###.')
+d(0x25D2, B,'..###.','.#...#','.#####','.#####','..###.')
+d(0x25D3, B,'..###.','.#####','.#####','.#...#','..###.')
+# stellae (Claude Code: · ✢ ✳ ✶ ✻ ✽)
+d(0x2722, B,'...#..','...#..','.##.##','...#..','...#..')
+d(0x2733, B,'.#.#.#','..###.','.#####','..###.','.#.#.#')
+d(0x2736, B,'...#..','.#####','..###.','.#####','...#..')
+d(0x273B, B,'.#.#.#','..#.#.','.##.##','..#.#.','.#.#.#')
+d(0x273D, B,'..#.#.','.##.##','...#..','.##.##','..#.#.')
+d(0x2726, '...#..','...#..','..###.','.#####','..###.','...#..','...#..')
+d(0x2605, '...#..','...#..','.#####','..###.','..#.#.','.#...#')
+# anguli
+d(0x203A, B,B,'..#...','...#..','..#...')
+d(0x276F, B,'.##...','..##..','...##.','..##..','.##...')
+# media et figurae
+d(0x23F5, B,'..#...','..##..','..###.','..##..','..#...')
+d(0x23F8, B,'.##.##','.##.##','.##.##','.##.##','.##.##')
+d(0x25B6, '.#....','.##...','.###..','.####.','.###..','.##...','.#....')
+d(0x25B8, B,B,'..#...','..##..','..#...')
+d(0x25B2, B,'...#..','..###.','.#####')
+d(0x25BC, B,B,'.#####','..###.','...#..')
+d(0x25A0, B,'.#####','.#####','.#####','.#####','.#####')
+d(0x25A1, B,'.#####','.#...#','.#...#','.#...#','.#####')
+d(0x25AA, B,B,'..###.','..###.','..###.')
+# claves macOS
+d(0x2318, B,'.##.##','.#####','..#.#.','.#####','.##.##')
+d(0x2325, B,B,'.##.##','...#..','....##')
+d(0x23CE, B,'.....#','.....#','..#..#','.#####','..#...')
+# varia
+d(0x26A0, '...#..','..###.','..#.#.','.##.##','.#####','.##.##','.#####')
+d(0x23BF, '..#...','..#...','..#...','..####')
+d(0x29C9, B,'.###..','.#.###','.###.#','...#.#','...###')
+d(0x22EE, B,'...#..',B,'...#..',B,'...#..')
+d(0x2610, '.#####','.#...#','.#...#','.#...#','.#...#','.#...#','.#####')
+d(0x2612, B,'.#####','.##.##','.#.#.#','.##.##','.#####')
+d(0x2264, '....#.','...#..','..#...','...#..','....#.',B,'..###.')
+d(0x2265, '..#...','...#..','....#.','...#..','..#...',B,'..###.')
+d(0x2261, B,'.#####',B,'.#####',B,'.#####')
+# punctuatio (fons.c ad '-' '.' vertebat)
+d(0x2013, B,B,B,'.####.')
+d(0x2014, B,B,B,'######')
+d(0x2026, B,B,B,B,B,B,'.#.#.#')
+import unicodedata, sys
+out=[]
+for cp in sorted(S):
+    nm=unicodedata.name(chr(cp))
+    nm=nm.lower()
+    while len(('    { 0x%04X,   /* %s %s */' % (cp, chr(cp), nm)).encode())>72: nm=nm.rsplit(' ',1)[0]
+    out.append('    { 0x%04X,   /* %s %s */\n' % (cp, chr(cp), nm))
+    for i,r in enumerate(S[cp]):
+        out.append('      { "%s" }%s\n' % (r, ',' if i<7 else ' },') if False else '')
+    out.append('        { ' + ', '.join('"%s"'%r for r in S[cp][:4]) + ',\n')
+    out.append('          ' + ', '.join('"%s"'%r for r in S[cp][4:]) + ' } },\n')
+sys.stdout.write(''.join(out))
+print('/* numerus %d */' % len(S), file=sys.stderr)
+# specimen sheet for review
+with open('/private/tmp/claude-501/-Users-francisarant-Documents-projects-rhubarb-secunda/134c8417-d34b-49a2-b8c8-3d3b81913875/scratchpad/symbola_specimen.txt','w') as f:
+    cps=sorted(S)
+    for i in range(0,len(cps),10):
+        grp=cps[i:i+10]
+        for r in range(8): f.write('  '.join(S[c][r] for c in grp)+'\n')
+        f.write('  '.join(('U+%04X'%c)[2:].ljust(6) for c in grp)+'\n\n')
+```

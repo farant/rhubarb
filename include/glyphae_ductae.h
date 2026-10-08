@@ -13,6 +13,14 @@
  * quadrata: dimidia, octavae, quadrantes; umbrae ░▒▓ ut
  * opacitas),
  * U+2800-28FF (braille, puncta II x IV).
+ *
+ * Ambitus v2 (symbola, census Claude Code 2026-10-07): LVII picturae
+ * VI x VIII manu ductae, per proximum scalatae - sagittae, notae
+ * (✓ ✗), circuli et puncta (● ○ ◐ •), stellae
+ * (✻ ✶ ✳ ✢ ✽ ✦ ★), anguli (❯ ›), media
+ * (⏺ ⏵ ⏸ ▶ ▲ ▼ ■ □), claves (⌘ ⌥ ⏎),
+ * ⚠ ⎿ ⧉ ⋮ ☐ ☒ ≤ ≥ ≡, et – — …
+ * (fons ad '-' '.' vertebat).
  */
 #ifndef GLYPHAE_DUCTAE_H
 #define GLYPHAE_DUCTAE_H

@@ -291,7 +291,8 @@ ambitum_probare (vacuum)
     CREDO_VERUM(glyphae_ductae_est(0x257F));
     CREDO_VERUM(glyphae_ductae_est(0x2580));
     CREDO_VERUM(glyphae_ductae_est(0x259F));
-    CREDO_FALSUM(glyphae_ductae_est(0x25A0));
+    /* 0x25A0 ■ symbolum v2 est; finis quadrorum per 0x25A2 */
+    CREDO_FALSUM(glyphae_ductae_est(0x25A2));
     CREDO_FALSUM(glyphae_ductae_est(0x27FF));
     CREDO_VERUM(glyphae_ductae_est(0x2800));
     CREDO_VERUM(glyphae_ductae_est(0x28FF));
@@ -453,6 +454,74 @@ leges_probare (vacuum)
     CREDO_VERUM(intra_larvam(XVII, XXXI));
 }
 
+/* VII: symbola (v2, census Claude Code): picturae VI x VIII manu
+ * ductae, scalatae per proximum; lex: quodque symbolum agnoscitur et
+ * aliquid pingit */
+interior vacuum
+symbola_probare (vacuum)
+{
+    hic_manens constans s32 symbola[] = {
+        0x2013, 0x2014, 0x2022, 0x2026, 0x203A, 0x2190, 0x2191,
+        0x2192, 0x2193, 0x21B5, 0x21E7, 0x2219, 0x2261, 0x2264,
+        0x2265, 0x22EE, 0x2318, 0x2325, 0x23BF, 0x23CE, 0x23F5,
+        0x23F8, 0x23FA, 0x25A0, 0x25A1, 0x25AA, 0x25B2, 0x25B6,
+        0x25B8, 0x25BC, 0x25C9, 0x25CB, 0x25CF, 0x25D0, 0x25D1,
+        0x25D2, 0x25D3, 0x25EF, 0x2605, 0x2610, 0x2612, 0x26A0,
+        0x2713, 0x2714, 0x2715, 0x2716, 0x2717, 0x2718, 0x2722,
+        0x2726, 0x2733, 0x2736, 0x273B, 0x273D, 0x276F, 0x29C9,
+        0x2B24, ZEPHYRUM };
+    constans character* nota[] = {
+        "......", "......", ".....#", "....#.",
+        ".#.#..", "..#...", "......", "......" };
+    constans character* circulus[] = {
+        "......", "..###.", ".#####", ".#####",
+        ".#####", "..###.", "......", "......" };
+    i32 k;
+    i32 j;
+    b32 omnia;
+    b32 pictum;
+
+    imprimere("\n--- VII: symbola (v2) ---\n");
+    CREDO_VERUM(pictura_est(0x2713, nota));
+    CREDO_VERUM(pictura_est(0x23FA, circulus));
+    /* XII x XVI = II x: pixelum (x, y) = pictura[y / II][x / II] */
+    CREDO_VERUM(glyphae_ductae_pingere(0x25CF, XII, XVI, larva));
+    CREDO_AEQUALIS_I32((i32)larva[II * XII + IV], 0xFF);
+    CREDO_AEQUALIS_I32((i32)larva[II * XII + III], ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)larva[III * XII + V], 0xFF);
+    CREDO_AEQUALIS_I32((i32)larva[ZEPHYRUM * XII + V], ZEPHYRUM);
+    omnia = VERUM;
+    per (k = ZEPHYRUM; symbola[k]; k++)
+    {
+        si (   !glyphae_ductae_est(symbola[k])
+            || !glyphae_ductae_pingere(symbola[k], LAT, ALT, larva))
+        {
+            imprimere("  U+%04X: non agnitum\n", (unsigned)symbola[k]);
+            omnia = FALSUM;
+            perge;
+        }
+        pictum = FALSUM;
+        per (j = ZEPHYRUM; j < LAT * ALT; j++)
+        {
+            si (larva[j] != ZEPHYRUM)
+            {
+                pictum = VERUM;
+            }
+        }
+        si (!pictum)
+        {
+            imprimere("  U+%04X: vacuum\n", (unsigned)symbola[k]);
+            omnia = FALSUM;
+        }
+    }
+    CREDO_VERUM(omnia);
+    CREDO_AEQUALIS_I32(k, LVII);
+    CREDO_FALSUM(glyphae_ductae_est(0x2012));
+    CREDO_FALSUM(glyphae_ductae_est(0x2600));
+    CREDO_FALSUM(glyphae_ductae_est(0x2B23));
+    CREDO_FALSUM(glyphae_ductae_est(0x2B25));
+}
+
 s32
 principale (vacuum)
 {
@@ -469,6 +538,7 @@ principale (vacuum)
     puncta_probare();
     ambitum_probare();
     leges_probare();
+    symbola_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();
