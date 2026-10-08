@@ -525,3 +525,40 @@ toml_scalaris boolean decoding inverted -> both `9/13`, api,
 differentia, oraculum, scalaris named. (The oracle's own first draft
 had a BSD-sed bug - no `\|` alternation in basic regex - and reported
 DISSONAT absens/fracta: a real mismatch report, fixed with `sed -E`.)
+
+**T9 (2026-10-08): A/B - step reuse vs runner reuse.** Tools:
+`tools/reusus_retro.sh` gains `-fons` (a step member's static key =
+its source + aedilis closure `--partes` O/C/V + aedilis.stml) and
+resolves trace reads under build/ to their producer's declared inputs
+(one level, as declared build/ inputs already were);
+`tools/reusus_gradus_ab.sh GRADUS PORTA DIR [-n N]` replays both over the
+same commits (today's traces, `git diff` per commit) with times from the
+last SANATUM run in `cursus`.
+Over the last 150 commits (HEAD 34762c46):
+
+| | reused | test runs | time |
+|---|---|---|---|
+| runner `porta_toml` | 129/150 (86%) | 273 | ~723 s |
+| steps, whole composite | 143/150 (95%) | 87 | ~188 s |
+| steps, per member | 1863/1950 (95%) | | |
+
+Test runs -68%. Where it comes from: the runner's 21 invalidating
+commits = 7 shared with the steps + 14 runner-only, all RUNNER
+MACHINERY - provenance of the house binaries its script calls (bin/fabrica
+via `include/fabrica.h`, lib/fabrica.c, ...; bin/mensor via aedilis.stml,
+processus.h), which its effectus key carries and a step member's key
+does not (fabrica itself is the judges' stage). The steps were never
+invalidated alone (0 step-only commits). On the 7 shared commits nearly
+every member re-ran (87 runs ~ 12.4 of 13 per commit): toml's tests share
+one closure core - member causes: aedilis.stml 39 (3 commits x 13, one
+of them T8's own flag change), include/lectiones.h 20, piscina.h 16,
+xar.h 12 - so PER-TEST granularity gains little on this suite; the gain
+is the narrower key. Suites with disjoint closures (root, silva) are
+where granularity itself should show.
+Approximations (both sides alike): today's traces replayed over history;
+clang identity omitted. TIME is overstated for the steps: the runner's
+34.4 s is its whole run (closures, compile orchestration, run), a
+member's time is its run only (compile and link through the store are
+not counted) - the test-run count (-68%) is the fair number. The
+slice-5 figure (78% over 150 commits ending at a0ccbd5f) is a different
+window.

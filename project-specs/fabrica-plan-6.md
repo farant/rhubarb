@@ -91,7 +91,7 @@ facultas, T6c-1 the kind in the machine, T6c-2 the tool hooks + smoke.)
 
 ### T9: A/B
 
-- [ ] `tools/reusus_retro.sh` reads step traces; per-step reuse vs
+- [x] `tools/reusus_retro.sh` reads step traces; per-step reuse vs
   runner reuse over the same 150 commits; numbers in spec §XIII.
   Shown to Fran before T10. **Commit** (docs + tool).
 
