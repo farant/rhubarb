@@ -2254,3 +2254,37 @@ call-count check disabled -> the new empty-body test red (it is the
 only test reaching the check after the loop). fumus XL/XL after
 healing. Also: the map comment at the top of `lib/fabrica.c` (files
 by flow, the three naming tiers), pointed to from fabrica_interna.h.
+
+## 2026-10-08 - the wave run as phases, gaps pinned first
+
+`_undam_agere` (283 lines) is now 39: `CursusUndae` holds the parallel
+per-member arrays (kept parallel - `agere_simul`'s signature is public
+API) plus status/stala/sanationes and the before-snapshot; phases:
+`_membra_ordinare` (title order), `_undam_parare` (arrays, log and
+trace-book paths), `_undam_currere` (snapshot, run together, clear the
+memo caches, batch post-conditions of the successful members, read
+each book's S lines), `_scripturas_ignotas` (`_extra_omnium` = the
+intersection of each member's outside-trace writes, then drop what
+any book recorded; `_viam_continet` replaces four inline search
+loops), `_causa_ignotarum` (computed once instead of per member), and
+`_membrum_iudicare`: the six-branch ladder becomes "find the first
+cause, then ONE `_post_agere(FALSUM, cause)`" instead of five copies.
+
+Coverage first, by plants (silva.planta, one per branch, against the
+six suites): 8 of 11 went red; three were green - a member left
+unstarted after a fracture (OMISSUM 'non incepta'), a member that
+never started ('non actum', only the cause text differs from the exit
+branch), and the plural '+N' of the unknown-writer cause. Fumus does
+not assert those texts either. New tests VI-VIII in 'sanare parallele'
+(fila_ficta = I; a command with no script; two silent writes), green
+on the OLD code, then the three plants red: 809 assertions.
+
+Oracle: the whole sanare suite compiled as a driver that prints every
+sanatio (title, outcome, cause, stale reason, duration) after each of
+its 19 heals: 63 lines identical old vs new, every wave cause present.
+Trap: credo prints its progress dots on the same line, so the first
+`grep '^ORACULUM'` silently dropped half the lines - strip the dots
+first. Plants on the new code: `_viam_continet` never matching -> IV
+red; the S-write cause ignored -> III red. fumus XL/XL.
+`_sanare_per_undas` (204, three copies of the "post fracturam"
+omission, two of "run one action alone") is next.
