@@ -499,6 +499,7 @@
   <vocabulum lemma="http" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="tcp" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="uuid" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="email" lingua="anglica" classis="ignotum-permissum" nota="terminus technicus (forma JSON Schema 'email'; fictio_email)"/>
   <vocabulum lemma="toml" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="css" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="md" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>

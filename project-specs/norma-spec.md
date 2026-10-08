@@ -71,7 +71,7 @@ shared by several parents (a DAG). Recursion is not in v1.
 
 ```c
 /* leaves */
-Norma* norma_quodvis  (Piscina*);
+Norma* norma_liberum  (Piscina*);
 Norma* norma_nullum   (Piscina*);
 Norma* norma_boolean  (Piscina*);
 Norma* norma_integer  (Piscina*);
@@ -115,17 +115,18 @@ Rules:
   generator hint only (judge silent).
 - **Builder misuse** (`norma_campus` on a non-object, minimum > maximum,
   `norma_variatio` on a non-discrimen, a NIHIL child ...) marks the node
-  with its first error; `norma_iudicare` reports it as `NORMA_SCHEMA_PRAVA`
+  with its first error; `norma_iudicare` reports it as `NORMA_CAUSA_SCHEMA_PRAVA`
   at `$` and judges nothing else. No crash, no stderr from a library.
 - `nuntius` texts never echo the judged value (it may be huge or secret).
 
 ## III. `norma` - the judge and the export
 
 ```c
-typedef enum { NORMA_GENUS, NORMA_DEEST, NORMA_EXTRA, NORMA_MINIMUM,
-               NORMA_MAXIMUM, NORMA_LONGITUDO, NORMA_ELECTIO, NORMA_FORMA,
-               NORMA_VARIATIO, NORMA_DISCRIMEN, NORMA_LIMES,
-               NORMA_SCHEMA_PRAVA } NormaCausa;
+typedef enum { NORMA_CAUSA_GENUS, NORMA_CAUSA_DEEST, NORMA_CAUSA_EXTRA,
+               NORMA_CAUSA_MINIMUM, NORMA_CAUSA_MAXIMUM, NORMA_CAUSA_LONGITUDO,
+               NORMA_CAUSA_ELECTIO, NORMA_CAUSA_FORMA, NORMA_CAUSA_VARIATIO,
+               NORMA_CAUSA_DISCRIMEN, NORMA_CAUSA_LIMES,
+               NORMA_CAUSA_SCHEMA_PRAVA } NormaCausa;
 typedef struct { chorda via; NormaCausa causa; chorda nuntius; } NormaVitium;
 typedef struct { b32 validum; Xar* vitia; Xar* notae; } NormaIudicium;
 
@@ -135,8 +136,8 @@ JsonValor*    norma_json_schema (const Norma*, Piscina*);
 
 - **Paths**: `$`, `.clavis`, `[i]`; a key that is not `[A-Za-z_][A-Za-z0-9_]*`
   is written `["..."]` with JSON escaping. Notes use the same record
-  (`causa` = NORMA_EXTRA or NORMA_VARIATIO).
-- **Cap**: at 256 issues judging stops; the 257th record is NORMA_LIMES.
+  (`causa` = NORMA_CAUSA_EXTRA or NORMA_CAUSA_VARIATIO).
+- **Cap**: at 256 issues judging stops; the 257th record is NORMA_CAUSA_LIMES.
 - **Export** (deterministic key order) - CLAUSUM `additionalProperties:
   false`; APERTUM/NOTANDUM omit it; discriminated union -> `oneOf` of
   variants, each with `properties.<tag>.const` and the tag in `required`;

@@ -27,6 +27,7 @@ NUL-terminated; `i32` unsigned, `s32`/`s64` signed; worktree commit guard
 3. `fictio_difficilia_numerus` + `fictio_difficile(i)`: exhaustive,
    ordered access to the difficult strings for tests, besides the seeded
    `fictio_textus_difficilis`.
+5. NormaCausa constants carry the prefix `NORMA_CAUSA_` (C enum constants share ONE namespace: `NORMA_DISCRIMEN` was both a genus and a causa - caught by the N0 compile check; spec amended); `quodvis` -> `liberum` (real Latin form: no glossary entry, per the house rule).
 4. `NormaGenitum.valor == NIHIL` means "nothing violable" in INVALIDA
    (no extra flag); `via_fracta` is then empty.
 
@@ -172,7 +173,7 @@ fictio_difficile (
 nomen structura Norma Norma;   /* opacum */
 
 nomen enumeratio {
-    NORMA_QUODVIS = 0,
+    NORMA_LIBERUM = 0,
     NORMA_NULLUM,
     NORMA_BOOLEAN,
     NORMA_INTEGER,
@@ -200,10 +201,10 @@ nomen JsonValor* (*NormaGignens)(
 /* ======================================================================
  * AEDIFICATORES - reddunt nodum suum ut nidificentur. Usus pravus
  * (campus in non-objecto, minimum > maximum, filius NIHIL ...) nodum
- * notat; norma_iudicare id ut NORMA_SCHEMA_PRAVA ad '$' reddit.
+ * notat; norma_iudicare id ut NORMA_CAUSA_SCHEMA_PRAVA ad '$' reddit.
  * ====================================================================== */
 
-Norma* norma_quodvis   (Piscina* piscina);
+Norma* norma_liberum   (Piscina* piscina);
 Norma* norma_nullum    (Piscina* piscina);
 Norma* norma_boolean   (Piscina* piscina);
 Norma* norma_integer   (Piscina* piscina);
@@ -309,8 +310,8 @@ nomen enumeratio {
     NORMA_FORMA,         /* forma nota fracta */
     NORMA_VARIATIO,      /* tag ignotum (vitium aut nota) */
     NORMA_DISCRIMEN,     /* tag deest aut non textus */
-    NORMA_LIMES,         /* CCLVI vitia: iudicium cessavit */
-    NORMA_SCHEMA_PRAVA   /* aedificatores male usi */
+    NORMA_CAUSA_LIMES,         /* CCLVI vitia: iudicium cessavit */
+    NORMA_CAUSA_SCHEMA_PRAVA   /* aedificatores male usi */
 } NormaCausa;
 
 nomen structura {
@@ -376,7 +377,7 @@ nomen enumeratio {
 
 /* INVALIDA: via_fracta + causa_fracta nominant vitium unum infixum.
  * valor NIHIL in INVALIDA = nihil violabile (schema totum apertum
- * aut quodvis); via_fracta tunc vacua. TYPICA/FINES: via_fracta vacua. */
+ * aut liberum); via_fracta tunc vacua. TYPICA/FINES: via_fracta vacua. */
 nomen structura {
     JsonValor*  valor;
         chorda  via_fracta;
