@@ -797,10 +797,19 @@ http_exsequi (
     /* Connectere */
     si (est_https)
     {
-        TlsResultus tls_res =
-            tls_connectere((constans character*)petitio->hospes.datum,
-                                              petitio->portus,
-                                              piscina);
+        TlsOptiones tls_opt = tls_optiones_default();
+        TlsResultus tls_res;
+
+        /* tempus vocantis etiam in https (vates-plan-1 T2): olim
+         * tls_connectere sine optionibus = XXX s semper, et vocatio
+         * exemplaris sine fluxu longior frangebatur */
+        si (petitio->tempus_ms > 0)
+        {
+            tls_opt.timeout_ms = (i32)petitio->tempus_ms;
+        }
+        tls_res = tls_connectere_cum_optionibus(
+            (constans character*)petitio->hospes.datum,
+            petitio->portus, &tls_opt, piscina);
         si (!tls_res.successus)
         {
             res.successus         = FALSUM;
@@ -2345,4 +2354,67 @@ http_petitio_parse (
     }
 
     redde http_parser_adicere(parser, datum, longitudo);
+}
+
+
+/* ========================================================================
+ * VECTURA ET VISUS (vates-plan-1 T2; herbarium-spec par. V)
+ * ======================================================================== */
+
+interior HttpResultus
+_vectura_ordinaria_exsequi (
+    HttpPetitio* petitio,
+        Piscina* piscina,
+         vacuum* datum)
+{
+    (vacuum)datum;
+    redde http_exsequi(petitio, piscina);
+}
+
+HttpVectura
+http_vectura_ordinaria (vacuum)
+{
+    HttpVectura v;
+
+    v.exsequi  = _vectura_ordinaria_exsequi;
+    v.datum    = NIHIL;
+    redde v;
+}
+
+HttpResultus
+http_vectura_exsequi (
+    HttpVectura  vectura,
+    HttpPetitio* petitio,
+        Piscina* piscina)
+{
+    si (vectura.exsequi == NIHIL)
+    {
+        redde _creare_error(HTTP_ERROR_CONNEXIO,
+            "Vectura sine functione exsequendi", piscina);
+    }
+    redde vectura.exsequi(petitio, piscina, vectura.datum);
+}
+
+HttpPetitioVisus
+http_petitio_visus (
+    constans HttpPetitio* petitio)
+{
+    HttpPetitioVisus v;
+
+    memset(&v, 0, magnitudo(v));
+    si (!petitio)
+    {
+        v.capita = NIHIL;
+        redde v;
+    }
+    v.methodus        = petitio->methodus;
+    v.schema          = petitio->schema;
+    v.hospes          = petitio->hospes;
+    v.portus          = petitio->portus;
+    v.via             = petitio->via;
+    v.corpus          = petitio->corpus;
+    v.capita          = petitio->capita;
+    v.capita_numerus  = petitio->capita_numerus;
+    v.tempus_ms       = petitio->tempus_ms;
+    redde v;
 }
