@@ -11,7 +11,13 @@ activation on all antipodal triples with three tie rules:
   robust    passes under every tie resolution
   possible  passes under some tie resolution (backtracking over the
             per-sum choices - a different algorithm from main.c's
-            cell-labeling search)
+            cell-labeling search); a tie rule is a function of the
+            POINT: one sum vector reached with both parities fails
+
+and checks the characterization independently: possible <=> the three
+classes are mutually orthogonal; robust <=> they lie in one coset of
+Q8 = {+-1, +-i, +-j, +-k}; a non-orthogonal set has a pair sum tied
+between its own two members.
 
 Usage: python3 oracle.py   (prints the counts; exit 0)
 """
@@ -107,6 +113,24 @@ assert len(catalog) == 24, len(catalog)
 gram = [[dot(p, q) for q in catalog] for p in catalog]
 
 
+def vec_sum(xs, idx):
+    v = (ZERO, ZERO, ZERO, ZERO)
+    for x, j in zip(xs, idx):
+        if x == 1:
+            v = tuple(add(p, q) for p, q in zip(v, catalog[j]))
+        elif x == -1:
+            v = tuple(sub(p, q) for p, q in zip(v, catalog[j]))
+    return v
+
+
+def clash(a, b, c):
+    seen = {}
+    for xs in product((-1, 0, 1), repeat=3):
+        parity = sum(1 for x in xs if x) % 2
+        seen.setdefault(vec_sum(xs, (a, b, c)), set()).add(parity)
+    return any(len(v) == 2 for v in seen.values())
+
+
 def cells(a, b, c):
     out = []
     for xs in product((-1, 0, 1), repeat=3):
@@ -121,7 +145,7 @@ def cells(a, b, c):
                     d = sub(d, gram[j][m])
             dots.append(d)
         if all(d == ZERO for d in dots):
-            out.append((parity, [24]))
+            out.append((parity, [24], xs))
             continue
         sq = [mul(d, d) for d in dots]
         best = sq[0]
@@ -129,13 +153,13 @@ def cells(a, b, c):
             if sign(sub(v, best)) > 0:
                 best = v
         ties = [m for m in range(24) if sq[m] == best]
-        out.append((parity, ties))
+        out.append((parity, ties, xs))
     return out
 
 
 def passes(choice, sums):
     seen = {}
-    for (parity, _), cell in zip(sums, choice):
+    for (parity, _, _), cell in zip(sums, choice):
         seen.setdefault(cell, set()).add(parity)
         if len(seen[cell]) == 2:
             return False
@@ -150,7 +174,7 @@ def possible(sums):
     def go(k):
         if k == len(order):
             return True
-        parity, ties = sums[order[k]]
+        parity, ties, _ = sums[order[k]]
         for cell in ties:
             prev = owner.get(cell)
             if prev is not None and prev != parity:
@@ -166,21 +190,59 @@ def possible(sums):
     return go(0)
 
 
+# Q8 and its cosets, by left multiplication
+q8 = [e for e in reached if sum(1 for x in e if x != ZERO) == 1]
+assert len(q8) == 8
+
+
+def cls(e):
+    for i, c in enumerate(catalog):
+        if e == c or qneg(e) == c:
+            return i
+    raise ValueError
+
+
+coset = {}
+for i, c in enumerate(catalog):
+    if i not in coset:
+        k = len(set(coset.values()))
+        for h in q8:
+            coset[cls(qmul(c, h))] = k
+assert len(set(coset.values())) == 6
+
 first = robust = poss = tied = 0
+n_clash = bad_char = n_orth = n_pair_tie = 0
 for a, b, c in combinations(range(24), 3):
     sums = cells(a, b, c)
-    tied += any(len(t) > 1 for _, t in sums)
-    first += passes([t[0] for _, t in sums], sums)
+    tied += any(len(t) > 1 for _, t, _ in sums)
+    v_first = passes([t[0] for _, t, _ in sums], sums)
     # robust: no cell reachable from both parities
     reach = {}
-    for parity, ties in sums:
+    for parity, ties, _ in sums:
         for cell in ties:
             reach.setdefault(cell, set()).add(parity)
-    robust += all(len(v) < 2 for v in reach.values())
-    poss += possible(sums)
+    v_robust = all(len(v) < 2 for v in reach.values())
+    cl = clash(a, b, c)
+    n_clash += cl
+    v_poss = (not cl) and possible(sums)
+    first += v_first
+    robust += v_robust
+    poss += v_poss
+    orth = all(gram[x][y] == ZERO for x, y in ((a, b), (a, c), (b, c)))
+    in_coset = coset[a] == coset[b] == coset[c]
+    pair_tie = any(sum(1 for x in xs if x) == 2
+                   and all(j in ties for x, j in zip(xs, (a, b, c)) if x)
+                   for _, ties, xs in sums)
+    n_orth += orth
+    n_pair_tie += pair_tie
+    bad_char += (v_poss != orth) + (v_robust != in_coset) + \
+        (pair_tie == orth)
 
 print("catalog 24, group 48")
 print("first-index", first)
 print("robust", robust)
 print("possible", poss)
 print("tied sets", tied)
+print("vector clash sets", n_clash)
+print("orthogonal", n_orth, "own-pair tie", n_pair_tie,
+      "characterization violations", bad_char)

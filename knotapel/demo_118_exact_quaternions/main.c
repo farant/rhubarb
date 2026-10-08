@@ -586,16 +586,29 @@ part_b (void)
  * entries (a < b < c). A mask's sum is x_a c_a + x_b c_b + x_c c_c
  * with x in {-1, 0, 1} (both of a pair = 0), and its parity is the
  * number of nonzero x (a pair contributes 0 or 2 bits when x = 0):
- * the 64 masks give 27 sums, each with ONE parity. Cell of a sum: the
- * catalog entry maximizing |sum . c_m| (25th cell: the zero sum).
- * XOR6 is computed iff no cell receives both parities.
+ * the 64 masks give 27 x-PATTERNS, each with one parity. As VECTORS
+ * there may be fewer (19-27): linear relations among c_a, c_b, c_c can
+ * give two patterns the same sum with opposite parities - such a set
+ * fails outright (one point, one cell). Cell of a sum: the catalog
+ * entry maximizing |sum . c_m| (25th cell: the zero sum). XOR6 is
+ * computed iff no cell receives both parities.
  *
  * Exactly: dot(sum, c_m) = sum_j x_j G[j][m] with the Gram table G;
  * |d| is compared as d^2. T(s) = the set of tied maxima.
  *   first-index  ties to the lowest index (D66's '>' rule, if its
  *                float dots had been exact)
  *   robust       passes under EVERY tie resolution
- *   possible     passes under SOME tie resolution
+ *   possible     passes under SOME tie resolution (a tie rule is a
+ *                function of the point: one vector, one cell)
+ *
+ * Characterization (asserted set by set; recensio D118 M2):
+ *   possible <=> c_a, c_b, c_c mutually orthogonal;
+ *   robust   <=> the triple lies inside one coset g Q8 of the quaternion
+ *                group Q8 = {+-1, +-i, +-j, +-k} (6 cosets, each an
+ *                orthonormal 4-frame; the catalog has 24 such frames,
+ *                and the 18 others contain no robust triple);
+ *   a non-orthogonal set has a pair sum c_i +- c_j tied between its
+ *   own two members and fails under every tie rule.
  * ================================================================ */
 
 #define N_CELLS 25
@@ -720,6 +733,7 @@ verdict_robust (
 static int
 verdict_possible (
     const SumCell *s,
+    int            clash,
     int           *undecided)
 {
     int label[N_CELLS];
@@ -729,6 +743,9 @@ verdict_possible (
     int k;
     unsigned long bits;
 
+    if (clash) {
+        return 0;
+    }
     for (k = 0; k < N_CELLS; k++) {
         label[k] = -1;
     }
@@ -1023,6 +1040,265 @@ symmetry_breaks (
     return broken;
 }
 
+/* D66's actual Part H winners: knotapel/demo_66_quaternionic_dkc/
+ * main.c compiled unmodified except one fprintf of (ai, aj, ak) per
+ * winner (scratch copy, clang -O2), 2026-10-08. */
+static const int D66_WINNERS[35][3] = {
+    {0,1,18}, {0,1,22}, {0,1,23}, {0,18,22}, {1,18,22}, {2,3,9},
+    {2,3,23}, {2,9,19}, {2,9,21}, {2,9,23}, {2,18,22}, {3,9,23},
+    {4,5,15}, {4,5,16}, {4,5,23}, {4,15,16}, {5,15,16}, {6,7,11},
+    {6,7,12}, {6,11,12}, {6,12,20}, {7,11,12}, {7,11,17}, {8,10,13},
+    {8,10,14}, {8,13,14}, {8,14,20}, {9,15,16}, {10,13,14}, {10,13,17},
+    {17,19,20}, {17,19,21}, {17,20,21}, {17,20,23}, {19,20,21}
+};
+
+static int
+d66_winner (
+    int a,
+    int b,
+    int c)
+{
+    int k;
+
+    for (k = 0; k < 35; k++) {
+        if (D66_WINNERS[k][0] == a && D66_WINNERS[k][1] == b
+            && D66_WINNERS[k][2] == c) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/* the 27 x-pattern sums as exact VECTORS: distinct count, x != 0
+ * patterns summing to 0, and whether one vector has both parities */
+static int
+vector_clash (
+    int  a,
+    int  b,
+    int  c,
+    int *n_distinct,
+    int *n_zero)
+{
+    PiscinaNotatio mark = piscina_notare(pool);
+    Quaternio      vec[27];
+    int            par[27];
+    int            seen_par[27];
+    int            rep[27];
+    int            xs[3];
+    int            idx[3];
+    int            t = 0;
+    int            u;
+    int            clash = 0;
+
+    idx[0] = a;
+    idx[1] = b;
+    idx[2] = c;
+    *n_distinct = 0;
+    *n_zero = 0;
+    for (xs[0] = -1; xs[0] <= 1; xs[0]++) {
+        for (xs[1] = -1; xs[1] <= 1; xs[1]++) {
+            for (xs[2] = -1; xs[2] <= 1; xs[2]++) {
+                Quaternio sum;
+                int       j;
+
+                (void)quaternio_nullum(extensio_anulus(q2), pool, &sum);
+                for (j = 0; j < 3; j++) {
+                    Quaternio next;
+
+                    if (xs[j] > 0) {
+                        (void)quaternio_adde(sum, g48.el[cat_index[idx[j]]],
+                            pool, &next);
+                        sum = next;
+                    } else if (xs[j] < 0) {
+                        (void)quaternio_subtrahe(sum,
+                            g48.el[cat_index[idx[j]]], pool, &next);
+                        sum = next;
+                    }
+                }
+                par[t] = ((xs[0] != 0) + (xs[1] != 0) + (xs[2] != 0)) & 1;
+                if ((xs[0] || xs[1] || xs[2]) && quaternio_est_nullum(sum)) {
+                    (*n_zero)++;
+                }
+                rep[t] = -1;
+                for (u = 0; u < *n_distinct; u++) {
+                    if (quaternio_aequalis(vec[u], sum)) {
+                        rep[t] = u;
+                        break;
+                    }
+                }
+                if (rep[t] < 0) {
+                    vec[*n_distinct] = sum;
+                    seen_par[*n_distinct] = 0;
+                    rep[t] = (*n_distinct)++;
+                }
+                seen_par[rep[t]] |= 1 << par[t];
+                if (seen_par[rep[t]] == 3) {
+                    clash = 1;
+                }
+                t++;
+            }
+        }
+    }
+    piscina_reficere(pool, mark);
+    return clash;
+}
+
+/* orthonormal 4-frames of the catalog (4 mutually orthogonal classes)
+ * and the cosets of Q8 = {+-1, +-i, +-j, +-k} (normal in 2O): each
+ * coset g Q8 is 8 elements = 4 classes, and left multiplication keeps
+ * the frame {1, i, j, k} orthonormal - so the 6 cosets are 6 of the
+ * frames. coset_of[m] = coset index of class m. */
+static int orth[24][24];
+static int coset_of[24];
+
+static int class_of (int e);
+
+static int
+count_frames (void)
+{
+    int a;
+    int b;
+    int c;
+    int d;
+    int n = 0;
+
+    for (a = 0; a < 24; a++) {
+        for (b = 0; b < 24; b++) {
+            orth[a][b] = algebraicus_est_nullum(gram[a][b]);
+        }
+    }
+    for (a = 0; a < 24; a++) {
+        for (b = a + 1; b < 24; b++) {
+            for (c = b + 1; c < 24; c++) {
+                for (d = c + 1; d < 24; d++) {
+                    n += orth[a][b] && orth[a][c] && orth[a][d] && orth[b][c]
+                        && orth[b][d] && orth[c][d];
+                }
+            }
+        }
+    }
+    return n;
+}
+
+/* returns the number of cosets; 0 if Q8 is not 8 elements or a coset is
+ * not an orthonormal 4-frame */
+static int
+q8_cosets (void)
+{
+    int q8[8];
+    int n_q8 = 0;
+    int e;
+    int m;
+    int k;
+    int n = 0;
+
+    for (e = 0; e < g48.n; e++) {
+        if (nonzero_parts(g48.el[e]) == 1) {
+            if (n_q8 >= 8) {
+                return 0;
+            }
+            q8[n_q8++] = e;
+        }
+    }
+    if (n_q8 != 8) {
+        return 0;
+    }
+    for (m = 0; m < 24; m++) {
+        coset_of[m] = -1;
+    }
+    for (m = 0; m < 24; m++) {
+        int members[8];
+        int n_members = 0;
+        int j;
+
+        if (coset_of[m] >= 0) {
+            continue;
+        }
+        for (k = 0; k < 8; k++) {
+            int cl = class_of(g48.mul[cat_index[m]][q8[k]]);
+            int known = 0;
+
+            for (j = 0; j < n_members; j++) {
+                known |= members[j] == cl;
+            }
+            if (!known) {
+                members[n_members++] = cl;
+            }
+        }
+        if (n_members != 4) {
+            return 0;
+        }
+        printf("  coset %d of Q8: classes {%d,%d,%d,%d}\n", n, members[0],
+            members[1], members[2], members[3]);
+        for (j = 0; j < 4; j++) {
+            int i2;
+
+            coset_of[members[j]] = n;
+            for (i2 = j + 1; i2 < 4; i2++) {
+                if (!orth[members[j]][members[i2]]) {
+                    return 0;
+                }
+            }
+        }
+        n++;
+    }
+    return n;
+}
+
+/* size of the orbit of a triple under the 96 maps (perms filled by
+ * symmetry_breaks) */
+static unsigned char in_orbit[24][24][24];
+
+static void
+sort3 (
+    int *x)
+{
+    int t;
+
+    if (x[0] > x[1]) { t = x[0]; x[0] = x[1]; x[1] = t; }
+    if (x[1] > x[2]) { t = x[1]; x[1] = x[2]; x[2] = t; }
+    if (x[0] > x[1]) { t = x[0]; x[0] = x[1]; x[1] = t; }
+}
+
+static int
+orbit_size (
+    int a,
+    int b,
+    int c)
+{
+    static int queue[2024][3];
+    int        head = 0;
+    int        tail = 0;
+
+    memset(in_orbit, 0, sizeof(in_orbit));
+    queue[tail][0] = a;
+    queue[tail][1] = b;
+    queue[tail][2] = c;
+    tail++;
+    in_orbit[a][b][c] = 1;
+    while (head < tail) {
+        int k;
+
+        for (k = 0; k < 96; k++) {
+            int x[3];
+
+            x[0] = perms[k][queue[head][0]];
+            x[1] = perms[k][queue[head][1]];
+            x[2] = perms[k][queue[head][2]];
+            sort3(x);
+            if (!in_orbit[x[0]][x[1]][x[2]]) {
+                in_orbit[x[0]][x[1]][x[2]] = 1;
+                queue[tail][0] = x[0];
+                queue[tail][1] = x[1];
+                queue[tail][2] = x[2];
+                tail++;
+            }
+        }
+        head++;
+    }
+    return tail;
+}
+
 static void
 part_c (void)
 {
@@ -1040,6 +1316,21 @@ part_c (void)
     int     n_float_vs_first = 0;
     int     n_float_outside_possible = 0;
     int     max_ties = 0;
+    int     n_clash = 0;
+    int     min_distinct = 99;
+    int     max_distinct = 0;
+    int     n_zero_patterns = 0;
+    int     n_orth = 0;
+    int     n_in_frame = 0;
+    int     n_pair_tie = 0;
+    int     bad_possible = 0;
+    int     bad_robust = 0;
+    int     bad_pair_tie = 0;
+    int     bad_tie_size = 0;
+    int     d66_vs_float = 0;
+    int     d66_vs_first = 0;
+    int     n_frames;
+    int     first_robust[3];
     char    msg[256];
 
     printf("\n=== Part C: D66 Part H (24-cell Voronoi XOR6), exactly ===\n");
@@ -1076,6 +1367,11 @@ part_c (void)
             gram[a][b] = dot4(g48.el[cat_index[a]], g48.el[cat_index[b]]);
         }
     }
+    n_frames = count_frames();
+    printf("  orthonormal 4-frames among the 24 classes: %d\n", n_frames);
+    check("24 orthonormal 4-frames; the 6 cosets of Q8 are 6 of them and "
+        "partition the classes", n_frames == 24 && q8_cosets() == 6);
+    first_robust[0] = -1;
     for (a = 0; a < 24; a++) {
         for (b = a + 1; b < 24; b++) {
             for (c = b + 1; c < 24; c++) {
@@ -1086,19 +1382,76 @@ part_c (void)
                 int     v_first;
                 int     v_robust;
                 int     v_possible;
+                int     n_distinct;
+                int     n_zero;
+                int     clash = vector_clash(a, b, c, &n_distinct, &n_zero);
+                int     is_orth = orth[a][b] && orth[a][c] && orth[b][c];
+                int     is_frame = coset_of[a] >= 0 && coset_of[a] == coset_of[b]
+                    && coset_of[a] == coset_of[c];
+                int     pair_tie = 0;
+                int     idx[3];
 
+                idx[0] = a;
+                idx[1] = b;
+                idx[2] = c;
                 cells_of_triple(a, b, c, s);
                 for (t = 0; t < 27; t++) {
+                    int x0 = t / 9 - 1;
+                    int x1 = (t / 3) % 3 - 1;
+                    int x2 = t % 3 - 1;
+
                     if (s[t].n_ties > 1) {
                         tied = 1;
                     }
                     if (s[t].n_ties > max_ties) {
                         max_ties = s[t].n_ties;
                     }
+                    if (s[t].n_ties == 3 || s[t].n_ties > 4) {
+                        bad_tie_size++;
+                    }
+                    /* pair pattern: exactly two nonzero x; tie set holds
+                     * both of its own members */
+                    if ((x0 != 0) + (x1 != 0) + (x2 != 0) == 2) {
+                        int own[2];
+                        int n_own = 0;
+                        int hits = 0;
+                        int k;
+                        int j;
+
+                        if (x0 != 0) own[n_own++] = idx[0];
+                        if (x1 != 0) own[n_own++] = idx[1];
+                        if (x2 != 0) own[n_own++] = idx[2];
+                        for (j = 0; j < 2; j++) {
+                            for (k = 0; k < s[t].n_ties; k++) {
+                                hits += s[t].ties[k] == own[j];
+                            }
+                        }
+                        if (hits == 2) {
+                            pair_tie = 1;
+                        }
+                    }
                 }
+                n_clash += clash;
+                n_zero_patterns += n_zero;
+                if (n_distinct < min_distinct) min_distinct = n_distinct;
+                if (n_distinct > max_distinct) max_distinct = n_distinct;
                 v_first = verdict_first_index(s);
                 v_robust = verdict_robust(s);
-                v_possible = verdict_possible(s, &n_undecided);
+                v_possible = verdict_possible(s, clash, &n_undecided);
+                n_orth += is_orth;
+                n_in_frame += is_frame;
+                n_pair_tie += pair_tie;
+                bad_possible += v_possible != is_orth;
+                bad_robust += v_robust != is_frame;
+                bad_pair_tie += pair_tie != !is_orth
+                    || (pair_tie && (v_first || v_robust || v_possible));
+                d66_vs_float += d66_winner(a, b, c) != v_float;
+                d66_vs_first += d66_winner(a, b, c) != v_first;
+                if (v_robust && first_robust[0] < 0) {
+                    first_robust[0] = a;
+                    first_robust[1] = b;
+                    first_robust[2] = c;
+                }
                 v_robust_of[a][b][c] = (unsigned char)v_robust;
                 v_first_of[a][b][c] = (unsigned char)v_first;
                 v_possible_of[a][b][c] = (unsigned char)v_possible;
@@ -1136,15 +1489,32 @@ part_c (void)
         n_robust <= n_first && n_first <= n_possible);
     check("every float pass is possible under some exact tie rule",
         n_float_outside_possible == 0);
-    /* the numbers themselves, confirmed by oracle.py (independent exact
-     * Q(sqrt 2) arithmetic, different 'possible' search) */
-    check("oracle.py: first-index 35, robust 24, possible 96",
+    /* constants as computed by oracle.py (2026-10-08; independent exact
+     * Q(sqrt 2) arithmetic, its own 'possible' search) and by the
+     * recensio's vector-level oracle - NOT re-run here */
+    check("= oracle.py's counts: first-index 35, robust 24, possible 96",
         n_first == 35 && n_robust == 24 && n_possible == 96);
-    check("oracle.py: every one of the 2,024 sets has a tied sum",
+    check("= oracle.py's count: every one of the 2,024 sets has a tied sum",
         n_tied_sets == 2024);
-    check("float replica == exact first-index on every set; 11 of D66's 35 "
-        "depend on the tie rule", n_float_vs_first == 0
-        && n_float_not_robust == 11);
+    printf("  sum vectors per set: %d-%d distinct of 27 patterns; sets where "
+        "one vector has both parities: %d; nonzero patterns summing to 0: "
+        "%d\n", min_distinct, max_distinct, n_clash, n_zero_patterns);
+    check("32 sets reach one vector with both parities (19-27 distinct "
+        "sums) - all fail", n_clash == 32 && min_distinct == 19
+        && max_distinct == 27);
+    printf("  orthogonal triples %d, inside a Q8 coset %d, with an own-pair "
+        "tie %d\n", n_orth, n_in_frame, n_pair_tie);
+    check("possible <=> mutually orthogonal, on every set (96)",
+        bad_possible == 0 && n_orth == 96);
+    check("robust <=> inside one coset of Q8, on every set (24 = 6 x "
+        "C(4,3)); the other 18 frames give none", bad_robust == 0
+        && n_in_frame == 24);
+    check("own-pair tie <=> not orthogonal (1,928 sets), and such a set "
+        "fails under every rule", bad_pair_tie == 0 && n_pair_tie == 1928);
+    check("tie sizes are 1, 2 or 4 only", bad_tie_size == 0);
+    check("D66's ACTUAL 35 winners == float replica == exact first-index, "
+        "set by set", d66_vs_float == 0 && d66_vs_first == 0);
+    check("11 of D66's 35 depend on the tie rule", n_float_not_robust == 11);
     {
         int br = symmetry_breaks(v_robust_of);
         int bp = symmetry_breaks(v_possible_of);
@@ -1160,6 +1530,16 @@ part_c (void)
         /* left or right by +-1 fixes every class: 4 maps act trivially */
         check("lowest-index tie rule (= D66's floats) breaks every one of "
             "the 92 non-trivial maps", bf == 92);
+        if (first_robust[0] >= 0) {
+            int o = orbit_size(first_robust[0], first_robust[1],
+                first_robust[2]);
+
+            printf("  orbit of robust [%d,%d,%d] under the 96 maps: %d "
+                "triples\n", first_robust[0], first_robust[1],
+                first_robust[2], o);
+            check("the 24 robust triples are ONE orbit", o == 24
+                && in_orbit[4][5][15]);
+        }
     }
 }
 
