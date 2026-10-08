@@ -22,7 +22,16 @@ structura Extensio {
     Polynomium inversa_numerator;
         Magnus inversa_denominator;
         Anulus anulus;
+           /* familia nominata (corpora abeliana): genus et
+            * parametrum (d quadraticae, n cosinus); GENUS_GENERALE
+            * pro ex_polynomio */
+           s32 genus;
+           s64 parametrum;
 };
+
+#define GENUS_GENERALE    ZEPHYRUM
+#define GENUS_QUADRATICA  I
+#define GENUS_COSINUS     II
 
 
 /* ==================================================
@@ -1067,6 +1076,8 @@ _creare (
     k = (Extensio*)piscina_allocare(piscina, magnitudo(Extensio));
     k->gradus = (i32)polynomium_gradus_summus(f);
     k->f = f;
+    k->genus = GENUS_GENERALE;
+    k->parametrum = ZEPHYRUM;
     k->radix = radix;
     k->radices_reales = radices_reales;
     k->infra = fractio_ex_s64(ZEPHYRUM);
@@ -1200,10 +1211,11 @@ extensio_quadratica (
          s64  d,
      Piscina* piscina)
 {
-           s64 absolutum;
-           s64 p;
-    Polynomium f = polynomium_nullum();
-        Magnus c[III];
+           s64  absolutum;
+           s64  p;
+    Polynomium  f = polynomium_nullum();
+        Magnus  c[III];
+      Extensio* k;
 
     /* fines ANTE negationem: -S64 minimum indefinitum (recensio E1,
      * F1) */
@@ -1236,11 +1248,20 @@ extensio_quadratica (
         {
             r++;
         }
-        candidatum[ZEPHYRUM]  = fractio_ex_s64(r);
-        candidatum[I]         = fractio_ex_s64(r + I);
-        redde _creare(f, I, II, candidatum, FALSUM, piscina);
+        candidatum[ZEPHYRUM] = fractio_ex_s64(r);
+        candidatum[I] = fractio_ex_s64(r + I);
+        k = _creare(f, I, II, candidatum, FALSUM, piscina);
     }
-    redde _creare(f, -I, ZEPHYRUM, NIHIL, FALSUM, piscina);
+    alioquin
+    {
+        k = _creare(f, -I, ZEPHYRUM, NIHIL, FALSUM, piscina);
+    }
+    si (k != NIHIL)
+    {
+        k->genus       = GENUS_QUADRATICA;
+        k->parametrum  = d;
+    }
+    redde k;
 }
 
 Extensio*
@@ -1248,10 +1269,11 @@ extensio_cosinus (
          i32  n,
      Piscina* piscina)
 {
-    Polynomium phi  = polynomium_nullum();
-    Polynomium f    = polynomium_nullum();
-           i32 m;
-           s32 j;
+    Polynomium  phi  = polynomium_nullum();
+    Polynomium  f    = polynomium_nullum();
+           i32  m;
+           s32  j;
+      Extensio* k;
 
     si (n == ZEPHYRUM || n > CYCLOTOMIA_ORDO_MAXIMUS)
     {
@@ -1267,7 +1289,13 @@ extensio_cosinus (
         (vacuum)polynomium_ex_coefficientibus(coefficientes, II,
             ZEPHYRUM,
             piscina, &f);
-        redde _creare(f, ZEPHYRUM, I, NIHIL, FALSUM, piscina);
+        k = _creare(f, ZEPHYRUM, I, NIHIL, FALSUM, piscina);
+        si (k != NIHIL)
+        {
+            k->genus       = GENUS_COSINUS;
+            k->parametrum  = (s64)n;
+        }
+        redde k;
     }
     si (!polynomium_cyclotomicum(n, piscina, &phi))
     {
@@ -1334,7 +1362,13 @@ extensio_cosinus (
             &candidatum[ZEPHYRUM]);
         (vacuum)fractio_ex_s64_s64(centrum + XVI, 0x100000L, piscina,
             &candidatum[I]);
-        redde _creare(f, (s32)m - I, m, candidatum, FALSUM, piscina);
+        k = _creare(f, (s32)m - I, m, candidatum, FALSUM, piscina);
+        si (k != NIHIL)
+        {
+            k->genus       = GENUS_COSINUS;
+            k->parametrum  = (s64)n;
+        }
+        redde k;
     }
 }
 
@@ -2807,4 +2841,400 @@ algebraicus_ad_ostendendum (
     }
     piscina_destruere(officina);
     redde algebraicus_ad_chordam(a, piscina);
+}
+
+
+/* ==================================================
+ * Corpora abeliana (Kronecker-Weber): omnia in Q(cos 2 pi/n)
+ * ================================================== */
+
+/* pars libera quadratis s et radix r: d = s r^2 (d > 0) */
+interior s64
+_liber_quadratis (
+    s64  d,
+    s64* radix)
+{
+    s64 p;
+
+    *radix = I;
+    per (p = II; p * p <= d; p++)
+    {
+        dum (d % (p * p) == ZEPHYRUM)
+        {
+            d       /= p * p;
+            *radix  *= p;
+        }
+    }
+    redde d;
+}
+
+/* discriminans Q(sqrt s), s > 1 liber quadratis */
+interior s64
+_discriminans (
+    s64 s)
+{
+    redde s % IV == I ? s : IV * s;
+}
+
+/* symbolum Kronecker (D/a), D > 0 discriminans, a >= 1 */
+interior s32
+_kronecker (
+    s64 discriminans,
+    s64 a)
+{
+    s32 signum = I;
+    s64 x;
+    s64 n;
+    s64 t;
+
+    dum (a % II == ZEPHYRUM)
+    {
+        s64 residuum = discriminans % VIII;
+
+        a /= II;
+        si (discriminans % II == ZEPHYRUM)
+        {
+            redde ZEPHYRUM;
+        }
+        si (residuum == III || residuum == V)
+        {
+            signum = -signum;
+        }
+    }
+    /* Jacobi (D mod a / a), a impar */
+    x = discriminans % a;
+    n = a;
+    dum (x != ZEPHYRUM)
+    {
+        dum (x % II == ZEPHYRUM)
+        {
+            s64 residuum = n % VIII;
+
+            x /= II;
+            si (residuum == III || residuum == V)
+            {
+                signum = -signum;
+            }
+        }
+        t = x;
+        x = n;
+        n = t;
+        si (x % IV == III && n % IV == III)
+        {
+            signum = -signum;
+        }
+        x = x % n;
+    }
+    redde n == I ? signum : ZEPHYRUM;
+}
+
+/* conductor (vide caput) */
+i32
+extensio_conductor (
+    constans Extensio* k)
+{
+    si (k == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    si (k->gradus == I && k->genus != GENUS_GENERALE)
+    {
+        redde I;
+    }
+    si (k->genus == GENUS_QUADRATICA)
+    {
+        s64 radix;
+
+        si (k->parametrum < ZEPHYRUM)
+        {
+            redde ZEPHYRUM;
+        }
+        redde (i32)_discriminans(_liber_quadratis(k->parametrum,
+            &radix));
+    }
+    si (k->genus == GENUS_COSINUS)
+    {
+        s64 n = k->parametrum;
+
+        redde (i32)(n % IV == II ? n / II : n);
+    }
+    redde ZEPHYRUM;
+}
+
+/* valores[j] = 2 cos(2 pi j/n), j = 0..maximus (D_j(alpha)), in
+ * piscina data */
+interior Algebraicus*
+_cosinus_omnes (
+    constans Extensio* k,
+                  i32  maximus,
+              Piscina* piscina)
+{
+    Algebraicus* valores = (Algebraicus*)piscina_allocare(piscina,
+        (memoriae_index)(maximus + I) * magnitudo(Algebraicus));
+    Algebraicus alpha = algebraicus_generator(k, piscina);
+            i32 j;
+
+    valores[ZEPHYRUM] = algebraicus_ex_fractione(k, fractio_ex_s64(II),
+        piscina);
+    si (maximus >= I)
+    {
+        valores[I] = alpha;
+    }
+    per (j = II; j <= maximus; j++)
+    {
+        valores[j] = algebraicus_subtrahe(algebraicus_multiplica(alpha,
+            valores[j - I], piscina), valores[j - II], piscina);
+    }
+    redde valores;
+}
+
+/* j modulo n in [0, n/2] (cos par et periodicus) */
+interior i32
+_index_cosinus (
+    s64 j,
+    s64 n)
+{
+    j = j % n;
+    si (j < ZEPHYRUM)
+    {
+        j += n;
+    }
+    redde (i32)(j > n - j ? n - j : j);
+}
+
+b32
+algebraicus_cosinus (
+    constans Extensio* k,
+                  s64  j,
+              Piscina* piscina,
+          Algebraicus* exitus)
+{
+    Piscina* officina;
+        i32  index;
+
+    si (k == NIHIL || k->genus != GENUS_COSINUS)
+    {
+        redde FALSUM;
+    }
+    index     = _index_cosinus(j, k->parametrum);
+    officina  = _officina_aperire();
+    si (officina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *exitus = _transcribere(_cosinus_omnes(k, index, officina)[index],
+        piscina);
+    piscina_destruere(officina);
+    redde VERUM;
+}
+
+/* x^2 = s et x > 0 ? */
+interior b32
+_radix_probata (
+    Algebraicus  x,
+            s64  s,
+        Piscina* piscina)
+{
+    s32 signum = ZEPHYRUM;
+
+    redde algebraicus_aequalis(algebraicus_multiplica(x, x, piscina),
+        algebraicus_ex_fractione(x.corpus, fractio_ex_s64(s), piscina))
+        && algebraicus_signum(x, piscina, &signum) && signum > ZEPHYRUM;
+}
+
+b32
+algebraicus_radix_quadrata (
+    constans Extensio* k,
+                  s64  d,
+              Piscina* piscina,
+          Algebraicus* exitus)
+{
+         Piscina* officina;
+     Algebraicus  x;
+             s64  radix;
+             s64  s;
+             s64  discriminans;
+
+    si (   k        == NIHIL || d <= ZEPHYRUM || d >= (s64)0x80000000L
+        || k->genus == GENUS_GENERALE)
+    {
+        redde FALSUM;
+    }
+    s = _liber_quadratis(d, &radix);
+    si (s == I)
+    {
+        *exitus = algebraicus_ex_fractione(k, fractio_ex_s64(radix),
+            piscina);
+        redde VERUM;
+    }
+    officina = _officina_aperire();
+    si (officina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (k->genus == GENUS_QUADRATICA)
+    {
+        s64 radix_k;
+    Fractio inversa_radicis = fractio_ex_s64(ZEPHYRUM);
+
+        /* Q(sqrt d') continet sqrt d sole si partes liberae aequales:
+         * alpha = r' sqrt s */
+        si (   k->parametrum                             <= ZEPHYRUM
+            || _liber_quadratis(k->parametrum, &radix_k) != s)
+        {
+            piscina_destruere(officina);
+            redde FALSUM;
+        }
+        (vacuum)fractio_ex_s64_s64(I, radix_k, officina,
+            &inversa_radicis);
+        x = algebraicus_multiplica(algebraicus_generator(k, officina),
+            algebraicus_ex_fractione(k, inversa_radicis, officina),
+            officina);
+    }
+    alioquin
+    {
+        /* sqrt D = sum_a chi(a) cos(2 pi a/D), D | n: 2 cos(2 pi a/D)
+         * = valores[a n/D]; sqrt s = S/2 (D = s) aut S/4 (D = 4s), S =
+         * sum chi(a) 2 cos(2 pi a/D) */
+             s64  n = k->parametrum;
+     Algebraicus* valores;
+     Algebraicus  summa;
+             s64  a;
+         Fractio  divisor = fractio_ex_s64(ZEPHYRUM);
+
+        discriminans = _discriminans(s);
+        si (n % discriminans != ZEPHYRUM)
+        {
+            piscina_destruere(officina);
+            redde FALSUM;
+        }
+        valores  = _cosinus_omnes(k, (i32)(n / II), officina);
+        summa    = algebraicus_ex_fractione(k, fractio_ex_s64(ZEPHYRUM),
+            officina);
+        per (a = I; a < discriminans; a++)
+        {
+            s32 valor_characteris = _kronecker(discriminans, a);
+            i32 j = _index_cosinus(a * (n / discriminans), n);
+
+            si (valor_characteris > ZEPHYRUM)
+            {
+                summa = algebraicus_adde(summa, valores[j], officina);
+            }
+            alioquin si (valor_characteris < ZEPHYRUM)
+            {
+                summa = algebraicus_subtrahe(summa, valores[j],
+                    officina);
+            }
+        }
+        (vacuum)fractio_ex_s64_s64(I, discriminans == s ? II : IV,
+            officina,
+            &divisor);
+        x = algebraicus_multiplica(summa, algebraicus_ex_fractione(k,
+            divisor, officina), officina);
+    }
+    /* nihil redditur nisi probatum */
+    si (!_radix_probata(x, s, officina))
+    {
+        piscina_destruere(officina);
+        redde FALSUM;
+    }
+    x = algebraicus_multiplica(x, algebraicus_ex_fractione(k,
+        fractio_ex_s64(radix), officina), officina);
+    *exitus = _transcribere(x, piscina);
+    piscina_destruere(officina);
+    redde VERUM;
+}
+
+b32
+algebraicus_immergere (
+          Algebraicus  a,
+    constans Extensio* k,
+              Piscina* piscina,
+          Algebraicus* exitus)
+{
+    constans Extensio* fons = a.corpus;
+              Piscina* officina;
+          Algebraicus  imago;
+          Algebraicus  summa;
+              Fractio  inversa_denominatoris = fractio_ex_s64(ZEPHYRUM);
+                  s32  e;
+
+    si (   fons == NIHIL || k == NIHIL || k->genus != GENUS_COSINUS
+        || !algebraicus_est_validum(a))
+    {
+        redde FALSUM;
+    }
+    si (fons == k)
+    {
+        *exitus = _transcribere(a, piscina);
+        redde VERUM;
+    }
+    officina = _officina_aperire();
+    si (officina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* imago generatoris fontis in K */
+    si (fons->gradus == I && fons->genus != GENUS_GENERALE)
+    {
+        /* corpus Q: numerator constans, imago generatoris irrelevans */
+        imago = algebraicus_ex_fractione(k, fractio_ex_s64(ZEPHYRUM),
+            officina);
+    }
+    alioquin si (fons->genus == GENUS_QUADRATICA)
+    {
+        si (!algebraicus_radix_quadrata(k, fons->parametrum, officina,
+                &imago))
+        {
+            piscina_destruere(officina);
+            redde FALSUM;
+        }
+    }
+    alioquin si (fons->genus == GENUS_COSINUS)
+    {
+        /* 2 cos(2 pi/m) in K: m | n -> D_(n/m); m = 2 mod 4, h = m/2
+         * impar, h | n: cos(pi/h) = -cos(2 pi ((h-1)/2)/h) */
+        s64 m = fons->parametrum;
+        s64 n = k->parametrum;
+
+        si (n % m == ZEPHYRUM)
+        {
+            (vacuum)algebraicus_cosinus(k, n / m, officina, &imago);
+        }
+        alioquin si (m % IV == II && n % (m / II) == ZEPHYRUM)
+        {
+            s64 h = m / II;
+
+            (vacuum)algebraicus_cosinus(k, ((h - I) / II) * (n / h),
+                officina, &imago);
+            imago = algebraicus_nega(imago, officina);
+        }
+        alioquin
+        {
+            piscina_destruere(officina);
+            redde FALSUM;
+        }
+    }
+    alioquin
+    {
+        piscina_destruere(officina);
+        redde FALSUM;
+    }
+    /* numerator(imago) per Hornerum, deinde / denominator */
+    summa = algebraicus_ex_fractione(k, fractio_ex_s64(ZEPHYRUM),
+        officina);
+    per (e = polynomium_gradus_summus(a.numerator); e >= ZEPHYRUM; e--)
+    {
+        summa = algebraicus_adde(algebraicus_multiplica(summa, imago,
+            officina), algebraicus_ex_fractione(k, fractio_ex_magno(
+            polynomium_coefficiens(a.numerator, e)), officina),
+            officina);
+    }
+    (vacuum)fractio_ex_magnis(magnus_ex_s64(I), a.denominator, officina,
+        &inversa_denominatoris);
+    *exitus = _transcribere(algebraicus_multiplica(summa,
+        algebraicus_ex_fractione(k, inversa_denominatoris, officina),
+        officina), piscina);
+    piscina_destruere(officina);
+    redde VERUM;
 }
