@@ -109,13 +109,25 @@ fons_codepoint_ad_glypham (
         casus 0x00B6:  /* ¶ PILCROW SIGN */
             redde 0x14;  /* Alcuin habet symbolum */
 
-        /* Nota bene: Litterae Graecae non mappantur
-         * quia fons_6x8 non habet eas.
-         * Si necessariae, addere hic:
-         * casus 0x03B1: redde ???;  (alpha)
-         * casus 0x03B2: redde ???;  (beta)
-         * casus 0x03C0: redde ???;  (pi)
-         */
+        /* Graeca Latinis similia (2026-10-08): fons_6x8 Graeca non
+         * habet; quae Latinis pinguntur hic mappantur. Ceterae (alpha,
+         * pi, Gamma...) TOFU manent - terminale eas per glyphae_ductae
+         * ducit. */
+        casus 0x0391: redde 'A';  /* Alpha */
+        casus 0x0392: redde 'B';  /* Beta */
+        casus 0x0395: redde 'E';  /* Epsilon */
+        casus 0x0396: redde 'Z';  /* Zeta */
+        casus 0x0397: redde 'H';  /* Eta */
+        casus 0x0399: redde 'I';  /* Iota */
+        casus 0x039A: redde 'K';  /* Kappa */
+        casus 0x039C: redde 'M';  /* Mu */
+        casus 0x039D: redde 'N';  /* Nu */
+        casus 0x039F: redde 'O';  /* Omicron */
+        casus 0x03A1: redde 'P';  /* Rho */
+        casus 0x03A4: redde 'T';  /* Tau */
+        casus 0x03A5: redde 'Y';  /* Upsilon */
+        casus 0x03A7: redde 'X';  /* Chi */
+        casus 0x03BF: redde 'o';  /* omicron */
 
         ordinarius:
             redde FONS_TOFU;

@@ -19,6 +19,10 @@ Leges chartae:
 
 ## inedita
 
+- corpus: glyphae_ductae v3 - litterae Graecae Latinis dissimiles,
+  numeri supra et infra scripti, radices, << >> (LXI nova); fons.c
+  Graeca Latinis similia in litteras Latinas vertit (antea TOFU).
+
 - corpus: SPATIA arboris (vicus-latera S2a-1) - `Componens.spatium`
   (`componens_ponere_spatium`, `componens_spatium`,
   `componens_invenire_in_spatio`), registra actionum et figurarum cum

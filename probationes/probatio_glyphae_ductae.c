@@ -522,6 +522,80 @@ symbola_probare (vacuum)
     CREDO_FALSUM(glyphae_ductae_est(0x2B25));
 }
 
+/* VIII: symbola v3 (Franus 2026-10-08, tofu in terminale): Graeca
+ * Latinis dissimilia, numeri supra et infra scripti, radices, >> et
+ * <<. Similia (Alpha, omicron) per fons, non hic. */
+interior vacuum
+graeca_probare (vacuum)
+{
+    hic_manens constans s32 nova[] = {
+        0x00B2, 0x00B3, 0x00B9, 0x0393, 0x0394, 0x0398, 0x039B,
+        0x039E, 0x03A0, 0x03A3, 0x03A6, 0x03A8, 0x03A9, 0x03B1,
+        0x03B2, 0x03B3, 0x03B4, 0x03B5, 0x03B6, 0x03B7, 0x03B8,
+        0x03B9, 0x03BA, 0x03BB, 0x03BC, 0x03BD, 0x03BE, 0x03C0,
+        0x03C1, 0x03C2, 0x03C3, 0x03C4, 0x03C5, 0x03C6, 0x03C7,
+        0x03C8, 0x03C9, 0x2070, 0x2074, 0x2075, 0x2076, 0x2077,
+        0x2078, 0x2079, 0x207A, 0x207B, 0x207F, 0x2080, 0x2081,
+        0x2082, 0x2083, 0x2084, 0x2085, 0x2086, 0x2087, 0x2088,
+        0x2089, 0x221A, 0x221B, 0x226A, 0x226B, ZEPHYRUM };
+    constans character* pi[] = {
+        "......", "......", ".#####", "..#.#.",
+        "..#.#.", "..#.#.", "..#..#", "......" };
+    constans character* duo_supra[] = {
+        ".###..", "...#..", ".###..", ".#....",
+        ".###..", "......", "......", "......" };
+    i32 k;
+    i32 j;
+    b32 omnia;
+    b32 situs;
+
+    imprimere("\n--- VIII: symbola v3 (Graeca, mathematica) ---\n");
+    CREDO_VERUM(pictura_est(0x03C0, pi));
+    CREDO_VERUM(pictura_est(0x00B2, duo_supra));
+    omnia = VERUM;
+    situs = VERUM;
+    per (k = ZEPHYRUM; nova[k]; k++)
+    {
+        si (   !glyphae_ductae_est(nova[k])
+            || !glyphae_ductae_pingere(nova[k], LAT, ALT, larva))
+        {
+            imprimere("  U+%04X: non agnitum\n", (unsigned)nova[k]);
+            omnia = FALSUM;
+            perge;
+        }
+        /* supra scripti: ordines V-VII vacui; infra: 0-II vacui */
+        per (j = ZEPHYRUM; j < LAT * ALT; j++)
+        {
+            si (larva[j] == ZEPHYRUM)
+            {
+                perge;
+            }
+            si (   (   nova[k] == 0x00B2 || nova[k] == 0x00B3
+                    || nova[k] == 0x00B9
+                    || (nova[k] >= 0x2070 && nova[k] <= 0x207F))
+                && j / LAT >= V)
+            {
+                situs = FALSUM;
+            }
+            si (   nova[k] >= 0x2080 && nova[k] <= 0x2089
+                && j / LAT < III)
+            {
+                situs = FALSUM;
+            }
+        }
+    }
+    CREDO_VERUM(omnia);
+    CREDO_VERUM(situs);
+    CREDO_AEQUALIS_I32(k, LXI);
+    /* similia Latinis per fons; vicini non assignati */
+    CREDO_FALSUM(glyphae_ductae_est(0x0391));
+    CREDO_FALSUM(glyphae_ductae_est(0x03BF));
+    CREDO_FALSUM(glyphae_ductae_est(0x03A2));
+    CREDO_FALSUM(glyphae_ductae_est(0x03CA));
+    CREDO_FALSUM(glyphae_ductae_est(0x208A));
+    CREDO_FALSUM(glyphae_ductae_est(0x221C));
+}
+
 s32
 principale (vacuum)
 {
@@ -539,6 +613,7 @@ principale (vacuum)
     ambitum_probare();
     leges_probare();
     symbola_probare();
+    graeca_probare();
 
     imprimere("\n");
     credo_imprimere_compendium();
