@@ -48,6 +48,13 @@
     <vexillum! (>-Wno-long-long
     <vexillum! (>-Wno-overlength-strings
     <vexillum! (>-fbracket-depth=512
+    <!-- -O2 -g (fabrica-6 T8, Franus 2026-10-08): fons vexillorum UNUS -
+         cursores omnes (tools/vexilla.sh VEXILLA_C89) iam sic
+         compilabant; sine eis probatio_toml_totalitas in gradu
+         (aedilis) ruebat ubi cursor transibat: emissio materiae
+         recursiva (...FAD8) acervum -O0 excedit ad XL milia -->
+    <vexillum! (>-O2
+    <vexillum! (>-g
   </vexilla>
   <variantes praelatio="macos posix"/>
   <nexus>

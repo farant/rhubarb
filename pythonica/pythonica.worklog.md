@@ -961,3 +961,88 @@ raise) -> A red. Live: deviation in tools/fabrica.c, built, guard ->
 Rejected for now: commissio re-heals installata itself (policy: commit
 would write bin/ - Fran's call); fumus builds its own binary (fixes one
 gate only).
+
+## 2026-10-07 - S1: snapshot deletion off the critical path (and what it did NOT buy)
+
+Follows the T9 profile (pythonica/profilare.py; fabrica spec 5 §X T9).
+`photographia_delere` now renames the clone into
+`UMBRAE_DIR/.purgatorium/` (atomic, same filesystem: the clone is gone
+at once) and starts a detached `rm -rf`; `umbrae_orphanae` skips dot
+names (it would otherwise call the purgatory an orphan clone and
+"delete" it into itself); `umbrae_purgare` re-sweeps purgatory leftovers
+(an interrupted rm; a second rm on the same path is harmless);
+`exspectare` polls every 0.1 s instead of 2 s. Tests in the hermetic
+orphan block; plants: synchronous delete -> both purgatory assertions
+red; dot-skip removed -> the orphan one; 2 s interval -> the wait one.
+
+MEASURED, before -> after (one profile each, same machine):
+suite 421.8 -> 432.8 s (noise band: 369-419 s this week).
+photographia_delere 52.9 -> 0.0 s, but _clonare_ignorata 102.5 ->
+113.3 s and photographia_materializare 137.6 -> 160.8 s: the background
+unlinks compete for the disk with the NEXT snapshot's clone. exspectare
+30.1 -> 20.2 s over 9 waits: the waits were the shadow workers running
+real gates, not polling waste. Net gate time: no gain.
+
+Lesson: a profile names where time is SPENT, not what removing it buys.
+Disk-bound work moved into the background is still disk-bound. The
+snapshot cost is I/O volume (~70k files cloned then unlinked, 9 times);
+the levers are fewer snapshots or cheaper ones (clonefile, …6RME), not
+parallel deletion. Kept anyway (Fran): interactive commissio_umbra no
+longer blocks on deleting its snapshots.
+
+## 2026-10-07 - S2: closures once per tree state (in-process memo)
+
+`_clausurae` now memoizes per process: key = the source list + aedilis
+identity (path, mtime_ns, size, inode - so a test's fake aedilis
+rewritten in place still recomputes) + `sigillum_arboris()` (HEAD,
+tracked diff, untracked non-ignored files with contents); the result is
+returned as a copy. Not on disk on purpose: ignored inputs (generated
+headers under build/) are outside the key, and a stale closure means an
+OWED GATE MISSED - in-process, nothing but the tests changes the tree.
+Tests: repeat call spawns no aedilis and a caller's mutation does not
+leak; rewritten aedilis -> recompute; new untracked file -> recompute.
+Plants: key without the tree seal, without aedilis identity, result
+without copy -> each red.
+
+MEASURED: aedilis 24 calls 63.4 s -> 9 calls 24.2 s (~40 s). Whole
+suite 320.8 s in this run, but across the three profiles the same
+programs varied by up to 40 s with machine load (formator 37/45/34 s,
+compile_tests 10/16/9 s) - the honest attributable gain is the ~40 s.
+The live tools/portae_debitae.sh check (~20 s) is a separate process
+and keeps computing.
+
+## 2026-10-07 - S3: snapshots by clonefile(2) (include/clonatio.h, bin/clonare)
+
+New house API `clonatio_facere(fons, destinatio)` (include/clonatio.h,
+lib/clonatio_macos.c - Fran approved the header): copy-on-write clone
+of a file or a whole directory tree in one syscall. Tool `bin/clonare
+FONS DEST [...]` (tools/clonare.c, -provenientia, installer
+tools/clonare_struere.sh, fabrica action `clonare` in `installata`).
+`silva._clonare_paria` sends pairs through bin/clonare in batches of
+500; missing binary or a failed batch -> `cp -c [-R]` for pairs whose
+destination does not exist yet (clonefile makes a destination whole or
+not at all). examen: `clonefile` is a [suspectum] implicit call (macOS
+API outside the POSIX lexicon), the same as mach_absolute_time in
+fenestra_tempus_macos.c - verdict ACCIPE.
+
+Measured before deciding: per snapshot, 31 ignored directories (71,934
+files) `cp -c -R` 13.4 s vs clonefile 2.6 s; 3,316 loose files 0.57 vs
+0.39 s; deletion the same either way. Sharing snapshots between tests
+rejected: each test exercises one-snapshot-per-shadow-gate, the
+production behaviour.
+
+FOUND by the profile, not by a test: the first S3 run still spent
+15.7 s in cp. `_ignorata()` (git status --ignored) names an ignored
+directory AND a file inside it (`x/.claude/` and
+`x/.claude/settings.local.json`, five times); my restructure created
+the file's parent before cloning the directory -> clonefile EEXIST ->
+the whole batch fell back, and the fallback SKIPPED the directory whose
+destination existed - a silently incomplete snapshot (harmless only
+because those directories held just that file). The old code survived by
+order (directories first, the file re-copied over itself). Fixed:
+`_ignorata_dividere` drops entries under an ignored directory;
+directories are cloned before loose files' parents are made.
+
+MEASURED (final profile): suite 421.8 -> 246.3 s; _clonare_ignorata
+102.5 -> 23.8 s (8 snapshots, ~3 s each); cp 102 -> 0 s; children
+351 -> 231 s. With S2 (closures, ~40 s) this is the gain; S1 none.

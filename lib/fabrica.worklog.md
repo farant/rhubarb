@@ -2000,3 +2000,219 @@ tool like FABRICA_FONTATIONES. Canon value added in the same commit
   memory warm). Iterate on the ledger (awk over build/fabrica/lectiones/
   porta_aedilis.tsv for build/ reads without S) instead of one heal per
   finding.
+
+## 2026-10-07 - fabrica-5 T7a: generata retires into fabrica (swap)
+
+- Retiring a gate has a trap: a consumer of the OLD gate's output format.
+  fabrica_oraculum.sh reused generata's receipt (silva.receptum_vivum) and
+  parsed stage lines; after the PORTAE swap the receipt is the new gate's
+  output, the parse finds nothing, and "0 discordiae" over 0 artifacts
+  reads as consensus. Grep for consumers of a runner's OUTPUT, not only
+  of its path.
+- `iudicare -tacta` prints only the summary when everything is RECENS;
+  add `-omnia` to see what a path reaches.
+- zsh: a space-separated list in a variable does not split - my plant
+  backups silently copied nothing; the plants were on clean files so
+  `git checkout -- <paths>` restored them. Back up with explicit paths.
+
+## 2026-10-07 - fabrica slice 5 closed (T12)
+
+- Outcome in one line: a gate's reuse is capped by its WIDEST honest
+  input. aedilis (42%) and toml (78%) became verdicts; oratio (whole
+  corpus), pythonica and radix (live HEAD through snapshots and
+  probatio_git) cannot be reused however precise the trace, and were
+  recorded with their blockers instead of migrated.
+- The biggest single saving was not a verdict: generata was a second
+  judge of artifacts fabrica already judged; retiring it (and the
+  oracle that compared the two) removed ~2.2 of the window's 7.7
+  gate-hours.
+- Tools left behind: tools/reusus_retro.sh (retro reuse from git
+  history, any trace + added rules - used for radix without a trace),
+  pythonica/profilare.py (where pythonica's time goes),
+  pythonica/lectiones.py (Python read ledger), tools/generata_iudicare.sh.
+- Next for fabrica: shadow passes (park …2VP7); the open desiderata in
+  park …JQFH2 (one test scratch area, snapshot speedups, fixture
+  repositories) are what would lift the 0% ceilings.
+
+## 2026-10-07 - fabrica-6 T1: the chassis for input kinds
+
+- The registry existed (`_genera[]`) but nothing required anything of an
+  entry. Now the chassis test enumerates the registry and demands a
+  conformance fixture per kind; the fixtures run against probatio_fabrica's
+  fake world (input-class change -> named particle changes; unrelated
+  change -> equal).
+- The fake world had a quiet bug: `_directorium_ponere` appended a
+  second record for an already-listed directory, so re-listing never
+  showed. Fixed to replace - a fake that cannot express a change makes
+  every test of that change vacuous.
+- The census's first output was misleading: `enumerare == NIHIL` means
+  "places from particles", while the explicit `_nihil_enumerare` means
+  "no places" - printing pointer-non-NULL as "enumerates" inverted it.
+  `fabrica_genus_loci` names the three cases. Five kinds have no places:
+  invisible to -tacta. That is the census doing its job.
+
+## 2026-10-08 — slice 6 T5-T10: steps, the toml pilot, the switch
+
+Finds worth keeping, in the order they bit:
+
+- `fabrica_suturam_parare` zeroed fields one by one and the list had
+  silently fallen behind (`particulas_*`, `verdictum_ponere`,
+  `repositorium`); a new test section shifted the stack and a garbage
+  hook was called (Bus error). It memsets the whole struct now - a
+  member added later can never be garbage.
+- An EMPTY read trace could not be stored: an empty write is a
+  deletion in the trace store, so a member that reads nothing re-ran
+  forever. A pass with an empty trace stores the sentinel `X .`.
+- The wave heal's "after a fracture nothing new starts" stopped a
+  step's independent members; one toml failure left 8 tests OMISSUM.
+  Members continue; dependents are still omitted.
+- aedilis's `obiecta` does not list the scope (its struere.sh compiles
+  the scope separately) - the closure hook puts the test FIRST.
+- The compilator's argv excludes `clang`; with it, `clang` counts as a
+  second source and nothing is cacheable.
+- THE oracle finding: steps 12/13 vs runner 13/13 - two flag sources
+  (vexilla.sh `-O2 -g`, aedilis.stml none); materia's recursive
+  emission (park ...FAD8) overflows the -O0 stack at the depth
+  probatio_toml_totalitas pins. aedilis.stml now carries `-O2 -g`.
+- Trace reads (`L`) were re-hashed per member; eight toml members read
+  the same ~2,500 corpus files. They go through the per-run seal memo
+  (`sutura->sigilla`) now, and no longer try to enumerate a directory
+  for every read.
+- Every `bin/fabrica iudicare` pays ~1.6 s fixed (dependency computation
+  and sealing over all actions) - pre-existing, not from steps
+  (declaration expansion of 13 members costs ~80 ms).
+- Commits whose header lies in the gesta closure stale the ledger
+  binaries; something (not the resident) rebuilt gesta/build/tabularium
+  mid-gate and the aedilis gate refused 'scripsit extra vestigium'.
+  Prebuild `./gesta/{tabularium,fori,tabulariumd}.sh -struere` first
+  (ledger note ...MZV7).
+
+## 2026-10-08 - housekeeping H1: `-machina` output
+
+Four consumers parsed bin/fabrica's human lines with regexes (silva.py
+four times, generata_iudicare.sh, the toml oracle), so any rewording of
+a message was a silent consumer break. `-machina` gives them TSV
+records with the type in field one. Fumus XL checks that every line in
+machine mode has a known type, so a stray human printf is caught as an
+"unknown line". The pythonica fakes are built with repr(), which
+escapes tabs to a literal `\t`; `_fabrica_ficta` turns them back into
+tabs after repr. The dry-run UNDAE printing used to set `undae = NIHIL`
+to skip the human loop in machine mode; it is now a plain `!_machina`
+guard. Flake seen once: pythonica "commissio_umbra: recepta sua deleta"
+failed in the full run, then passed alone and on a rerun (ledger note).
+
+## 2026-10-08 - housekeeping H2: the library split
+
+- The cut was decided by measuring the static call graph across
+  candidate files, not by the section banners: the first map (read
+  traces in their own file) crossed 29 names, because the judging
+  strategies lean on five read-trace helpers; keeping judgment and read
+  traces together in the core and moving composites/preconditions to
+  the declarations file (they use `_recusare`/`_sedes`) brought it to
+  24. The banners also misled: everything between "GRADUS: areae" and
+  "GRADUS: registrum" was mostly sanare machinery.
+- `silva/renominare.sh -scribere` refuses a dirty file (its undo is
+  git). After the first rename, the remaining 22 went through
+  `silva/build/renominare` directly with `-via lib/fabrica.c`, keeping
+  a copy of the file as the undo.
+- The oracle's first compare after a rebuild differs only in the cause
+  of RECENS rows: a new bin/fabrica changes memo keys ("regeneratio
+  congruit" until refilled) and the spot audit rotates. Compare status
+  + artifact for RECENS, everything else whole.
+- The dependency-fracture check exists twice in fabrica_sanare.c:
+  `_dependentia_fracta` (wave heal - bin/fabrica's path) and inline in
+  `_ante_agere` (serial - the path probatio_fabrica takes). A plant in
+  one is invisible to the other's tests; fumus covers the first, the
+  root suite the second.
+
+## 2026-10-08 - housekeeping H3: the test harness split
+
+- Knobs (mutable file-scope statics read by the fake hooks) are where
+  hidden ordering lives in a one-`principale` harness. I listed every
+  write to them: five of the six sections that set knobs reset them;
+  transitum left `_effectus_effusio` set for every later section. The
+  reset went in first, in the single file, while it was still green
+  (772/772), so the split could not change any section's world.
+- The rename tool reports sites inside macro arguments
+  (`CREDO_VERUM(_continet(...))`) as "manuales" and does not rewrite
+  them - 173 such sites. They were replaced with a whole-word regex,
+  since the names are file-local helpers with no other meaning.
+- The usage scan must read whole items: a data table
+  (`_fixa_conformitatis`) is the only user of the `_fx_*` fixtures, and
+  reading just the first 12 lines of each initializer missed them.
+- Oracle: every assertion prints a dot under its section heading, so
+  the dots per heading compare sections exactly across the split. This
+  is stronger than the total.
+- The original had an orphaned comment ("photographia ficta") sitting
+  above `_currere_simul`; it now sits on `_photographia`.
+
+## 2026-10-08 - housekeeping H4: the tool split
+
+- The real hooks were assigned one by one in five places (iudicare,
+  sanare, digestum, the declarations reader, ordering by location);
+  that, not the size, was the coupling: 42 names crossed a four-way
+  split. Helpers for wiring brought it to 21.
+- The two memory blocks differed: sanare also wired `cursum_legere`.
+  The unified helper wires it for iudicare as well - safe, because
+  only fabrica_sanare reads it, and iudicare never heals.
+- Splitter bug caught by review: a plain assignment in principale
+  (`suturae_via_binarii = argv[0];`) was taken for a definition and
+  produced `externus suturae_via_binarii;`. Only definitions at
+  column 0 count.
+- aedilis resolves a quoted include relative to the including file, so
+  a header in tools/ works without an include path; its
+  `<aedilis corpus>` lines link the bodies the same way lib/ headers
+  do.
+- Plants must compile: `(VERUM == FALSUM) ? _agere : NIHIL` keeps
+  `_agere` referenced; a plain NIHIL would make it an unused static,
+  fail -Werror and leave the old binary in place.
+
+## 2026-10-08 - one dependency-fracture check
+
+`_ante_agere` (serial heal) carried an inline copy of
+`_dependentia_fracta` (wave heal): same loop, same result. Each copy
+was covered by one path only - probatio_fabrica_sanare takes the serial
+path, bin/fabrica (fumus) the wave path - so a fault in one copy was
+invisible to the other's tests (seen with the H2 plants). The serial
+path now calls `_dependentia_fracta`. The same plant (`j > i`) in the
+one copy now turns both red: fumus XVIII/XXIX and the sanare suite.
+
+## 2026-10-08 - H4b: iudicare and sanare as phases
+
+`_iudicare` (607 lines) and `_sanare` (557) in tools/fabrica.c are now
+72 and 92 lines of phase calls. What they shared lives in
+`CursusFabricae` (declarations, memory, order by location, selection,
+sutura, lock) with `_cursum_parare`, `_electa_colligere` (the composite
+expansion was written twice, almost line for line) and `_cursum_finire`
+(cleanup was repeated at each exit - four places in `_sanare`; some
+exits skipped it, harmless only because the process ended). Each
+command has its own run struct (`CursusIudicandi`, `CursusSanandi`;
+`Iudicatio` was taken by crusta) and phases under ~100 lines.
+`_sanare_eventum` counts once and then prints: the machine and human
+branches used to count separately (estimate, unknown time, "generated
+files changed") - the same two-copies risk as the dependency check.
+Oracle extended to the human forms: 13 views (machine and human
+iudicare, a composite in both modes, the error paths, siccum, real heal
+of installata and of a composite) byte-identical against the old code,
+built from a saved copy; fumus XL/XL covers healing with fractures;
+pythonica sana. Plants: FRACTUM not counted -> XVII/XXI/XXIV red; stale
+not counted -> XV/XXIV/XXVII red.
+
+## 2026-10-08 - the declarations reader as stages
+
+`fabrica_declarationes_legere_cum_sutura` (526 lines) is now 67: the
+loop over `<actio>` calls `_actionem_legere`, a short-circuit chain of
+stages in the original order (the first refusal still wins):
+`_attributa_actionis`, `_gradum_legere`, three `_nomina_filiorum`
+(ambitus/variabilis, post/actio, praecondicio/actio - the same loop was
+written three times), `_vestigia_legere`, `_ingressus_legere`,
+`_exitus_legere`, `_actionem_probare`. `_verum_falsum` replaces four
+copies of the true/false attribute block (celer, lectiones,
+memorabilis, iudex); its message is built with sprintf and is
+byte-identical. `LectorActionum` carries piscina, via, causa; stages
+refuse through `_lectio_recusata`. The input/output/trace/step stages
+were moved mechanically (dedent, `actio.` -> `actio->`, refusal calls
+rewritten by regex). Oracle: 772/772, the 13 H4b views identical,
+fumus XL/XL. Plants: 'verum' read as FALSUM -> memorabilis assertion
+red; a name not appended -> praecondiciones and order assertions red.
+`_familiam_explicare` (244) is the next long one here.

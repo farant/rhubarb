@@ -21,6 +21,7 @@
 #   IX   liber lectionum PRAECISUS (fabrica plan 5 T2): nulla
 #        enumeratio radicis (D); caput in radice priore quaesitum (A) -
 #        obumbratio per NOMEN, non per directorium totum
+#   XI   FONS mutatus (octeti): miss, obiectum novum (fabrica-6 T4)
 #   X    caput ALIENUM in radice additum: hit (clavis nomina radicis
 #        non sigillat; verdicta caput novum non tangit)
 #
@@ -118,6 +119,15 @@ printf '#define ALIENUM 1\n' > "$B/fixa/radix_posterior/alienum.h"
 if [ "$rc" -eq 0 ] && [ "$(numerus)" -eq "$n_x" ]; then echo "  X    caput alienum additum: hit      OK"; else echo "  X    FRACTUM (rc=$rc, clang $n_x -> $(numerus))"; cat "$B/err"; fracta=1; fi
 rm -f "$B/fixa/radix_posterior/alienum.h"
 
+# XI (fabrica-6 T4): FONS MUTATUS -> miss, obiectum novum. Fons in
+# indice depfile NON est (praerequisita post primum) - solum clavis
+# capitis eum tenet; planta 'octeti fontis extra clavem' hic rubet
+# (oraculum extractionis bibliothecae id non probabat)
+n_xi=$(numerus)
+printf '#include "caput.h"\nint functio(void) { return VALOR + 1; }\n' > "$B/fixa/fons.c"
+"$C" "${VF[@]}" -c "$B/fixa/fons.c" -o "$B/o/fons.o" 2> "$B/err"; rc=$?
+if [ "$rc" -eq 0 ] && [ "$(numerus)" -gt "$n_xi" ] && ! cmp -s "$B/o/fons.o" "$B/o/fons_originale.o"; then echo "  XI   fons mutatus: miss, obiectum novum OK"; else echo "  XI   FRACTUM (rc=$rc, clang $n_xi -> $(numerus))"; cat "$B/err"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus compilatoris: FRACTUM"; exit 1; fi
-echo "fumus compilatoris: sanum (X/X)"
+echo "fumus compilatoris: sanum (XI/XI)"
 exit 0

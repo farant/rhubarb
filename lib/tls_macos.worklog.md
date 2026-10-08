@@ -112,3 +112,36 @@ body == Content-Length and loop exit == clean EOF. Plant (old
 single-SSLRead behaviour) red 3/3 (0 or 235 bytes received); fixed
 65536/65536. Live probe: README 7351, png 338806, llama.cpp release
 11755622 through two redirects — all exact, 10/10 runs.
+
+## 2026-10-07 - hardening: TLS 1.2 floor + cipher allowlist (vates-plan-1 T1b)
+
+**Measured first** (`tools/rete_fumus.sh`, T1): SecureTransport with its
+defaults negotiated TLS 1.2 with good servers, but ACCEPTED
+tls-v1-0.badssl.com:1010 and tls-v1-1.badssl.com:1011, and OFFERED
+`TLS_ECDHE_{ECDSA,RSA}_WITH_3DES_EDE_CBC_SHA` - howsmyssl rated us "Bad".
+
+**Fix** (`_durare`, called after SNI, before the handshake):
+`SSLSetProtocolVersionMin(kTLSProtocol12)`, then the supported suites
+filtered through an ALLOWLIST (`_cifra_admissa`: ECDHE + AES-GCM or
+ChaCha20-Poly1305 only) into `SSLSetEnabledCiphers`. Allowlist, not
+denylist: a suite Apple adds later stays out until named here. Empty
+filtered list or any setter failure = connection refused with a named
+`TLS_ERROR_HANDSHAKE`.
+
+**After**: howsmyssl "Improvable" (not "Probably Okay" - the remaining
+gap is TLS 1.3, which SecureTransport cannot do; Network.framework or
+BearSSL would be the route), insecure suites: none; badssl certificate
+refusals 4/4 still; TLS 1.0/1.1 refused; TLS 1.2 accepted;
+api.anthropic.com still fine.
+
+**Plants - each line protects on its own, but not observably alone:**
+- min-version removed (allowlist kept): probe stays GREEN - TLS 1.0/1.1
+  cannot negotiate any AEAD suite, so the allowlist alone refuses them.
+- allowlist removed (min-version kept): 3DES offered again, rating
+  "Bad", but TLS 1.0/1.1 STILL refused - the floor is load-bearing
+  whenever the ciphers are not restricted.
+- The probe used to only PRINT howsmyssl's insecure suites, so the
+  second plant first stayed green (a dead check). It now ASSERTS
+  "nullae cifrae insecurae oblatae"; with the allowlist plant that line
+  is FRACT. The floor's own plant has no observable red through public
+  servers (TLS 1.0 + AEAD does not exist) - kept as defense in depth.

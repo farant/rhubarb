@@ -136,7 +136,7 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 <thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
 <tbody>
 <tr><td><code>portae_debitae.sh</code></td><td>which gates a change owes, and why (commissio now adds and runs them itself)</td><td></td></tr>
-<tr><td><code>generata_probare.sh</code></td><td>the generata gate: every derived artefact must equal its regeneration</td><td></td></tr>
+<tr><td><code>generata_iudicare.sh</code></td><td>the generata gate: bin/fabrica judges every committed generated artefact against its regeneration, and every committed GENERATUM file must be judged</td><td><a href="fabrica.html">fabrica</a></td></tr>
 <tr><td><code>frigida_probare.sh</code></td><td>all suites in a COLD tree: a fresh worktree from a commit, about twelve minutes</td><td></td></tr>
 <tr><td><code>unci-git/pre-commit</code></td><td>git hook: examen (C89 judgement, see the Examen page for its 92 codes) on the .c files being committed</td><td></td></tr>
 <tr><td><code>unci-git/lint_latinus.sh</code></td><td>the Latin identifier lint, at commit</td><td></td></tr>
@@ -157,7 +157,6 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 <tr><td><code>lectiones_lint.sh</code></td><td>lint: raw I/O calls that bypass the read log (filum, lectiones), so fabrica&#x27;s footprints stay complete</td><td><a href="lectiones.html">lectiones</a></td></tr>
 <tr><td><code>lectiones_spica.sh</code></td><td>spike: does the read log see everything a run&#x27;s manifest names?</td><td><a href="lectiones.html">lectiones</a></td></tr>
 <tr><td><code>toml_oraculum.sh</code></td><td>oracle for the toml test runner: the old runner at a ref against the new one in the same tree, objects byte for byte and test output line by line</td><td></td></tr>
-<tr><td><code>fabrica_oraculum.sh</code></td><td>oracle gate over bin/fabrica&#x27;s full judgement (iudicare -plenus)</td><td></td></tr>
 <tr><td><code>briar_fumus.sh</code></td><td>gate: the INSTALLED briar really runs thistle files</td><td></td></tr>
 <tr><td><code>fasciculum_fumus.sh</code></td><td>smoke: an .app bundle built by the library</td><td></td></tr>
 <tr><td><code>icones_fumus.sh</code></td><td>smoke: does Finder actually draw our icon?</td><td></td></tr>
@@ -178,7 +177,7 @@ and the other suite runners. See <a href="provinciae.html">Provinciae</a>.</p>
 </table>
 
 <h2 id="generata">Generators</h2>
-<p>Files the house does not write by hand. Each generator&#x27;s output is committed with a GENERATUM marker on its first line, and the generata gate regenerates and compares byte for byte, so a stale table blocks the commit.</p>
+<p>Files the house does not write by hand. Each generator&#x27;s output is committed with a GENERATUM marker on its first line, and fabrica regenerates and compares byte for byte (the generata gate for everything, the commit itself for what a change touches), so a stale table blocks the commit.</p>
 <table>
 <thead><tr><th>Tool</th><th>What it does</th><th>Library</th></tr></thead>
 <tbody>

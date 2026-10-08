@@ -900,6 +900,113 @@ probatio_corpus_magnum(Piscina* piscina)
 }
 
 
+/* ========================================================================
+ * PROBATIONES - VISUS PETITIONIS ET VECTURA (vates-plan-1 T2)
+ * ======================================================================== */
+
+interior vacuum
+probatio_petitio_visus(Piscina* piscina)
+{
+         HttpPetitio* pet;
+    HttpPetitioVisus  v;
+
+    printf("--- Probans http_petitio_visus ---\n");
+
+    pet = http_petitio_creare(piscina, HTTP_POST,
+        "https://api.example.com:8443/v1/messages?beta=1");
+    CREDO_NON_NIHIL(pet);
+    http_petitio_caput_addere(pet, "content-type", "application/json");
+    http_petitio_caput_addere(pet, "anthropic-version", "2023-06-01");
+    http_petitio_corpus_ponere(pet, "{\"a\":1}", VII);
+    http_petitio_tempus_ponere(pet, DC * M);
+
+    v = http_petitio_visus(pet);
+    CREDO_VERUM(v.methodus == HTTP_POST);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.schema, "https");
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.hospes, "api.example.com");
+    CREDO_AEQUALIS_I32(v.portus, 8443);
+    CREDO_CHORDA_INCIPIT(v.via, chorda_ex_literis("/v1/messages",
+        piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.corpus, "{\"a\":1}");
+    CREDO_AEQUALIS_I32(v.capita_numerus, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.capita[I].titulus,
+        "anthropic-version");
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.capita[I].valor, "2023-06-01");
+    CREDO_AEQUALIS_S32(v.tempus_ms, DC * M);
+
+    /* NIHIL -> visus vacuus, non ruina */
+    v = http_petitio_visus(NIHIL);
+    CREDO_AEQUALIS_I32(v.capita_numerus, 0);
+    CREDO_NIHIL(v.capita);
+
+    printf("\n");
+}
+
+hic_manens i32 _vectura_ficta_vocata = 0;
+
+interior HttpResultus
+_vectura_ficta (
+    HttpPetitio* petitio,
+        Piscina* piscina,
+         vacuum* datum)
+{
+     HttpResultus  res;
+    HttpResponsum* resp;
+
+    (vacuum)petitio;
+    _vectura_ficta_vocata += *(i32*)datum;
+    resp = (HttpResponsum*)piscina_allocare(piscina,
+        (i64)magnitudo(HttpResponsum));
+    memset(resp, 0, magnitudo(*resp));
+    resp->status = CDXVIII;
+    resp->corpus = chorda_ex_literis("ficta", piscina);
+    memset(&res, 0, magnitudo(res));
+    res.successus = VERUM;
+    res.responsum = resp;
+    redde res;
+}
+
+interior vacuum
+probatio_vectura(Piscina* piscina, i32 portus)
+{
+     HttpVectura  v;
+     HttpPetitio* pet;
+    HttpResultus  res;
+       character  url[CCLVI];
+             i32  incrementum = VII;
+
+    printf("--- Probans HttpVectura ---\n");
+
+    /* ordinaria = http_exsequi verum, contra fixturam localem */
+    pet = http_petitio_creare(piscina, HTTP_GET,
+                              _url_fixturae(url, portus, "/get"));
+    res = http_vectura_exsequi(http_vectura_ordinaria(), pet, piscina);
+    CREDO_VERUM(res.successus);
+    si (res.successus)
+    {
+        CREDO_AEQUALIS_I32(res.responsum->status, CC);
+        CREDO_CHORDA_CONTINET(res.responsum->corpus,
+            chorda_ex_literis("fixtura localis", piscina));
+    }
+
+    /* ficta: functio vocatur cum datis suis, responsum eius redditur */
+    v.exsequi  = _vectura_ficta;
+    v.datum    = &incrementum;
+    res        = http_vectura_exsequi(v, pet, piscina);
+    CREDO_VERUM(res.successus);
+    CREDO_AEQUALIS_I32(_vectura_ficta_vocata, VII);
+    CREDO_AEQUALIS_I32(res.responsum->status, CDXVIII);
+
+    /* sine functione: error nominatus, non ruina */
+    v.exsequi  = NIHIL;
+    res        = http_vectura_exsequi(v, pet, piscina);
+    CREDO_FALSUM(res.successus);
+    CREDO_VERUM(res.error == HTTP_ERROR_CONNEXIO);
+
+    printf("\n");
+}
+
+
 integer
 principale(vacuum)
 {
@@ -921,6 +1028,7 @@ principale(vacuum)
     probatio_methodus_nomen(piscina);
     probatio_error_descriptio(piscina);
     probatio_petitio_creare(piscina);
+    probatio_petitio_visus(piscina);
     probatio_connexio_invalida(piscina);
 
     /* Fixtura: hospitium filiatum, portus auto */
@@ -935,6 +1043,7 @@ principale(vacuum)
         probatio_post_localis(piscina, portus);
         probatio_headers(piscina, portus);
         probatio_status_codes(piscina, portus);
+        probatio_vectura(piscina, portus);
     }
 
     _fixturam_terminare(fixtura_pid);

@@ -27,6 +27,10 @@
 #include <errno.h>
 #include <string.h>
 
+/* ambitus processus (POSIX; in nullo capite declaratus) - infans eum
+ * ante exec substituit (ProcessusOptiones.ambitus) */
+externus character** environ;
+
 /* magnitudo lectionis unius; sacculus ab hoc incipit et duplicat */
 #define PROCESSUS_FRUSTUM 4096
 
@@ -273,7 +277,8 @@ _fistulam_haurire (
     dum (*apertus && frusta < (i32)PROCESSUS_FRUSTA_PER_PULSUM)
     {
              i8 frustum[PROCESSUS_FRUSTUM];
-        ssize_t n = read(fd, frustum, (memoriae_index)PROCESSUS_FRUSTUM);
+        ssize_t n = read(fd, frustum,
+            (memoriae_index)PROCESSUS_FRUSTUM);
 
         si (n > 0)
         {
@@ -737,11 +742,14 @@ processus_error_nomen (
     }
 }
 
-Processus*
-processus_incipere (
+/* incipere cum optionibus (NIHIL = hereditas): semita UNA pro
+ * processus_incipere et processus_exsequi_cum */
+interior Processus*
+_incipere_cum (
     constans character* constans* argumenta,
-    i32 mora_maxima_ms,
-    Piscina* piscina)
+      constans ProcessusOptiones* optiones,
+                              i32 mora_maxima_ms,
+                         Piscina* piscina)
 {
     Processus* p;
       integer  fistula_ef[II];
@@ -819,6 +827,27 @@ processus_incipere (
         close(fistula_ef[I]);
         close(fistula_er[I]);
 
+        /* OPTIONES (fabrica-6 T6): cwd et ambitus EXACTUS infantis;
+         * chdir fallitum per fistulam exec (nihil cucurrit). Ambitus
+         * ANTE execvp: quaestio PATH eo utitur. */
+        si (   optiones != NIHIL && optiones->directorium != NIHIL
+            && chdir(optiones->directorium) != 0)
+        {
+            e = errno;
+            (vacuum)write(fistula_exec[I], &e, magnitudo(e));
+            _exit(CXXVII);
+        }
+        si (optiones != NIHIL && optiones->ambitus != NIHIL)
+        {
+            unio {
+                constans character* constans* c;
+                character** m;
+            } v;
+
+            v.c      = optiones->ambitus;
+            environ  = v.m;
+        }
+
         u.c = argumenta;
         (vacuum)execvp(argumenta[0], u.m);
 
@@ -840,6 +869,15 @@ processus_incipere (
     p->ef_apertus = VERUM;
     p->er_apertus = VERUM;
     redde p;
+}
+
+Processus*
+processus_incipere (
+    constans character* constans* argumenta,
+    i32 mora_maxima_ms,
+    Piscina* piscina)
+{
+    redde _incipere_cum(argumenta, NIHIL, mora_maxima_ms, piscina);
 }
 
 ProcessusStatus
@@ -938,6 +976,29 @@ processus_exsequi (
             "manubrium allocari non potuit", piscina);
     }
     /* metere OBSTANTER: ansam eandem ad finem ducit */
+    redde processus_metere(p);
+}
+
+ProcessusResultus
+processus_exsequi_cum (
+    constans character* constans* argumenta,
+      constans ProcessusOptiones* optiones,
+                              i32 mora_maxima_ms,
+                         Piscina* piscina)
+{
+    Processus* p;
+
+    si (piscina == NIHIL)
+    {
+        redde _error_reddere(PROCESSUS_ERROR_ARGUMENTA,
+            "piscina requiritur", NIHIL);
+    }
+    p = _incipere_cum(argumenta, optiones, mora_maxima_ms, piscina);
+    si (p == NIHIL)
+    {
+        redde _error_reddere(PROCESSUS_ERROR_GENERARE,
+            "manubrium allocari non potuit", piscina);
+    }
     redde processus_metere(p);
 }
 

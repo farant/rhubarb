@@ -35,7 +35,7 @@
     <ingressus genus="fasciculus" via="briar/compile_probationes.sh"/>
     <exitus via="briar/build" provenientia="ignota"/>
   </actio>
-  <actio titulus="fabrica" genus="institutio">
+  <actio titulus="fabrica" genus="institutio" iudex="verum">
     <mandatum>
       <verbum! (>./tools/fabrica_struere.sh
     </mandatum>
@@ -63,8 +63,23 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/manus" provenientia="relatio"/>
   </actio>
+  <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
+       silvae (silva._clonare_ignorata) -->
+  <actio titulus="clonare" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/clonare_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/clonare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/clonare/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/clonare_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/clonare" provenientia="relatio"/>
+  </actio>
   <!-- compilator (plan 2 T4): 'clang -c' per thesaurum contentorum -->
-  <actio titulus="compilator" genus="institutio">
+  <actio titulus="compilator" genus="institutio" iudex="verum">
     <mandatum>
       <verbum! (>./tools/compilator_struere.sh
     </mandatum>
@@ -80,7 +95,7 @@
   <!-- T7 pars II: binaria installata. Ingressus = clausura aedilis
        (manifestum, plenum post P1) etiam ubi installator indice manu
        struit; installator ipse et scriptor provenientiae. -->
-  <actio titulus="aedilis" genus="institutio">
+  <actio titulus="aedilis" genus="institutio" iudex="verum">
     <mandatum>
       <verbum! (>./tools/aedilis_struere.sh
     </mandatum>
@@ -932,6 +947,7 @@
   <compositum titulus="installata">
     <pars actio="fabrica"/>
     <pars actio="manus"/>
+    <pars actio="clonare"/>
     <pars actio="compilator"/>
     <pars actio="aedilis"/>
     <pars actio="canon"/>

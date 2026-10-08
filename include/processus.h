@@ -98,6 +98,29 @@ processus_exsequi (
     i32                          mora_maxima_ms,
     Piscina*                     piscina);
 
+/* OPTIONES (fabrica-6 T6): directorium et ambitus infantis.
+ *
+ * directorium:  cwd infantis (chdir ante exec); NIHIL = parentis.
+ *               chdir fallitum = PROCESSUS_ERROR_EXEC cum errno eius
+ *               (ut binarium absens: nihil cucurrit).
+ * ambitus:      vector "N=V" NIHIL-terminatus = ambitus EXACTUS
+ *               infantis (nihil hereditatur); NIHIL = hereditas.
+ *               Quaestio PATH (execvp) hoc ambitu utitur - PATH
+ *               absens = semita ordinaria systematis.
+ * Parens numquam mutatur (omnia in infante post furcam). */
+nomen structura {
+    constans character* directorium;
+    constans character* constans* ambitus;
+} ProcessusOptiones;
+
+/* processus_exsequi cum optionibus (NIHIL = processus_exsequi) */
+ProcessusResultus
+processus_exsequi_cum (
+    constans character* constans* argumenta,
+    constans ProcessusOptiones*   optiones,
+    i32                           mora_maxima_ms,
+    Piscina*                      piscina);
+
 /* Descriptio erroris ut litterae staticae (pro nuntiis). */
 constans character*
 processus_error_nomen (

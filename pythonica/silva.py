@@ -1569,12 +1569,16 @@ PORTAE = {
     # manifesta amalgamatoris (porta_vetustatis, olim intra
     # amalgamare.sh solum) - aedilis.stml sic primum tegitur
     # (silva-migratio T19a)
-    'generata': (['./tools/generata_probare.sh'],
+    # fabrica plan 5 T7a: iudex = bin/fabrica (iudicare -plenus -omnia,
+    # artificia COMMISSA): succedit generata_probare.sh (stadia I-VIII,
+    # XXXIV consensus oraculi; deleta T7c) - CXXXV artificia, ~XX s; et omnis
+    # plagula GENERATUM commissa iudicata esse debet (T7b)
+    'generata': (['./tools/generata_iudicare.sh'],
                  r'generata: (sana|FRACTA)'),
-    # fabrica (plan 1a T8): oraculum = iudex plenus cum generata per
-    # artificium consentit (Q15); fumus = porta natalis bin/fabrica
-    'fabrica': (['./tools/fabrica_oraculum.sh'],
-                r'oraculum fabricae: (consensus|DISCORDIA)'),
+    # 'fabrica' (oraculum, plan 1a T8) RECESSIT (plan 5 T7b, 2026-10-07):
+    # generata ipsa per fabricam iudicat - iudex alter nullus restat.
+    # Tegmen eius ('declaratio omissa') nunc in generata_iudicare.sh
+    # (GENERATUM sine iudicio). fumus = porta natalis bin/fabrica
     'fabrica-fumus': (['./tools/fabrica_fumus.sh'],
                       r'fumus fabricae: (sanum|FRACTUM)'),
     # iudicium (fabrica spec 3 T7): porta ut actio - plantae P1-P8 et
@@ -1783,10 +1787,114 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
     tenta) via cruda: _porta_cruda. auditus: None = FABRICA_AUDITUS
     ambitus; VERUM/FALSUM expresse (commissio: _auditum_commissionis)."""
     if filtrum is None and radix is None and receptum:
+        p = _porta_per_gradum(nomen, vis, auditus)
+        if p is not None:
+            return p
         p = _porta_per_fabricam(nomen, vis, auditus)
         if p is not None:
             return p
     return _porta_cruda(nomen, filtrum, radix, receptum)
+
+
+# PORTAE GRADUUM (fabrica-6 T10): porta iudicata per COMPOSITUM actionis
+# gradus (membra = probationes singulae) - linea 'VERDICTUM <c>: N/M'
+# bin/fabrica, non signum cursoris. Cursor (PORTAE[nomen]) manet: filtrum,
+# umbra, bin/fabrica absens, oraculum (tools/toml_gradus_oraculum.sh).
+PORTAE_GRADUUM = {'toml': 'probationes_toml'}
+
+
+def _machina_legere(textus):
+    """lineae '-machina' bin/fabrica (fabrica-6 H1): [(genus, campi...)]
+    ex lineis TSV quarum genus in campo primo est; ceterae (stderr,
+    errata) omittuntur"""
+    ordines = []
+    for linea in textus.splitlines():
+        campi = linea.split('\t')
+        if len(campi) >= 2 and campi[0].isupper() and campi[0].isalpha():
+            ordines.append(tuple(campi))
+    return ordines
+
+
+def _machina_humana(ordines):
+    """ordines machinae in lineas legibiles (nuntii erratorum)"""
+    lineae = []
+    for o in ordines:
+        if o[0] == 'IUDICIUM' and len(o) >= 4:
+            lineae.append('%s %s - %s' % (o[1], o[2], o[3]))
+        elif o[0] == 'SANANDA' and len(o) >= 4:
+            lineae.append('  %s   # %s (%s)' % (o[3] or '(sanatio non declarata)',
+                                                o[1], o[2]))
+        elif o[0] == 'SANATIO' and len(o) >= 5:
+            lineae.append('%-11s %s%s' % (o[1], o[2],
+                                          ' - ' + o[4] if o[4] else ''))
+        elif o[0] == 'SUMMA' and len(o) >= 7:
+            lineae.append('fabrica: %s recentia, %s stala, %s ignota, %s non'
+                          ' iudicata (%s), %s orphana'
+                          % (o[1], o[2], o[3], o[4], o[6], o[5]))
+        elif o[0] == 'NOTA':
+            lineae.append('fabrica: ' + o[1])
+        else:
+            lineae.append(' '.join(o))
+    return lineae
+
+
+def _porta_per_gradum(nomen, vis=False, auditus=None):
+    """porta per compositum gradus; None = via altera (fabrica verdicti
+    cursoris, deinde cruda). 'bin/fabrica sanare <c>' membra stala (et
+    producentes per post) currit, recentia reutitur; deinde 'iudicare
+    -plenus <c>' lineam VERDICTUM dat: sana SOLUM si N == M. vis: verdicta
+    membrorum deleta (omnia currunt); auditus: 'sanare -audit'."""
+    compositum = PORTAE_GRADUUM.get(nomen)
+    if compositum is None or not os.path.exists(FABRICA_BIN):
+        return None
+    initium = time.time()
+    if vis:
+        for v in glob.glob(os.path.join(RADIX, 'build', 'fabrica', 'area',
+                                        compositum, '*', 'verdictum.txt')):
+            try:
+                os.unlink(v)
+            except OSError:
+                pass
+    if auditus is None:
+        auditus = bool(os.environ.get('FABRICA_AUDITUS'))
+    r = _curre([FABRICA_BIN, 'sanare', '-machina']
+               + (['-audit'] if auditus else []) + [compositum])
+    if r.returncode == 2:
+        print('porta %s: fabrica sanare %s nequit (exitus 2) - via altera'
+              % (nomen, compositum))
+        return None
+    # VERDICTUM ab ipsa sanatione (lineae machinae, H1); iudicium alterum
+    # solum si linea abest
+    ordines = _machina_legere(r.stdout)
+    rj = r
+    v = [o for o in ordines if o[0] == 'VERDICTUM' and len(o) >= 4
+         and o[1] == compositum]
+    if not v:
+        rj = _curre([FABRICA_BIN, 'iudicare', '-plenus', '-machina',
+                     compositum])
+        v = [o for o in _machina_legere(rj.stdout) if o[0] == 'VERDICTUM'
+             and len(o) >= 4 and o[1] == compositum]
+    if not v:
+        print('porta %s: VERDICTUM %s absens - via altera' % (nomen, compositum))
+        return None
+    recentia, omnia = int(v[0][2]), int(v[0][3])
+    non_recentia = [x for x in (v[0][4] if len(v[0]) > 4 else '').split(',')
+                    if x]
+    cursa = [o for o in ordines if o[0] == 'SANATIO' and len(o) >= 5
+             and o[2].startswith(compositum + '/')]
+    sana = r.returncode == 0 and omnia > 0 and recentia == omnia
+    compendium = '%s: %d/%d%s [membra cursa %d/%d, cetera reusa]' % (
+        compositum, recentia, omnia,
+        (' - non recentia: ' + ', '.join(non_recentia[:3])
+         + (' +%d' % (len(non_recentia) - 3) if len(non_recentia) > 3 else ''))
+        if non_recentia else '', len(cursa), omnia)
+    fr = [] if sana else [
+        Fractura(o[2], [('%s: %s' % (o[1], o[4]))[:300]])
+        for o in cursa if o[1] != 'SANATUM']
+    _tempus_notare('porta', nomen, initium, sana, 0 if sana else 1)
+    return Porta(nomen, True, sana, compendium, 0 if sana else 1,
+                 _ANSI.sub('', r.stdout + r.stderr
+                           + (rj.stdout if rj is not r else '')), fr, False)
 
 
 def _portae_verdictorum():
@@ -1951,8 +2059,9 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             return None
     # II. iudicium solum (vile): RECENS = transitus servatus
     if not vis and not auditus:
-        rj = _curre([FABRICA_BIN, 'iudicare', '-omnia', via])
-        if re.search(r'^RECENS ', rj.stdout, re.M):
+        rj = _curre([FABRICA_BIN, 'iudicare', '-omnia', '-machina', via])
+        if any(o[0] == 'IUDICIUM' and len(o) >= 3 and o[1] == 'RECENS'
+               for o in _machina_legere(rj.stdout)):
             try:
                 textus = open(os.path.join(RADIX, via)).read().strip()
                 aetas = time.time() - os.path.getmtime(os.path.join(RADIX, via))
@@ -1963,15 +2072,19 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             return Porta(nomen, True, True, '%s [transitus servatus, ante %s]'
                          % (compendium, _aetas(aetas)), 0, '', [], False)
     # III. sanare: porta currit (auditus: etiam RECENS) et servatur
-    argv = [FABRICA_BIN, 'sanare'] + (['-audit'] if auditus else []) + [via]
+    argv = ([FABRICA_BIN, 'sanare', '-machina']
+            + (['-audit'] if auditus else []) + [via])
     r = _curre(argv)
     if r.returncode == 2:
         # sera tenta aut declaratio fracta: via cruda (nihil servatum)
         print('porta %s: fabrica sanare nequit (exitus 2) - via cruda'
               % nomen)
         return None
-    cucurrit = re.search(r'^(SANATUM|FRACTUM|AUDITUM)\S*\s+porta_%s\b'
-                         % re.escape(nomen), r.stdout, re.M) is not None
+    sanationes = [o for o in _machina_legere(r.stdout)
+                  if o[0] == 'SANATIO' and len(o) >= 5
+                  and o[2] == 'porta_%s' % nomen]
+    cucurrit = any(o[1].startswith(('SANATUM', 'FRACTUM', 'AUDITUM'))
+                   for o in sanationes)
     adest = os.path.exists(os.path.join(RADIX, via))
     if not cucurrit and r.returncode == 0 and adest:
         try:
@@ -1993,8 +2106,10 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
     imperium, signum = PORTAE[nomen]
     m = re.search(signum, acta)
     compendium = m.group(0) if m else '(signum absens)'
-    nota = re.search(r'(transitus non servatus[^\n]*|auditus: [^\n]*'
-                     r'|AUDITUM DISCORS[^\n]*)', r.stdout)
+    nota = None
+    for o in sanationes:
+        nota = nota or re.search(r'(transitus non servatus.*|auditus: .*'
+                                 r'|AUDITUM DISCORS.*)', o[4])
     if nota:
         compendium += ' [%s]' % nota.group(0)[:300]
     fr = [] if sana else fracturae(acta, nomen)
@@ -2238,7 +2353,31 @@ def _index(valor):
 AEDILIS_BIN = os.path.join(RADIX, 'bin', 'aedilis')
 
 
+# MEMORIA CLAUSURARUM (pythonica S2; profilum T9: XXIV aedilis 63,4 s -
+# eaedem clausurae suitarum in quinque probationibus portarum debitarum):
+# per processum solum - clavis = fontes + aedilis (via, mtime, magnitudo,
+# inodus) + sigillum_arboris (HEAD, differentia tractarum, novae non
+# ignoratae). Ignorata (build/) clavem non intrant: memoria in disco
+# capita generata stala ignoraret (debitum omissum = porta omissa).
+_MEMORIA_CLAUSURARUM = {}
+
+
 def _clausurae(fontes, fila=4):
+    """memoria per processum (vide supra), deinde _clausurae_computare;
+    redditum copia (vocans sectiones mutare potest)"""
+    try:
+        st = os.stat(AEDILIS_BIN)
+        identitas = (AEDILIS_BIN, st.st_mtime_ns, st.st_size, st.st_ino)
+    except OSError:
+        identitas = (AEDILIS_BIN, None)
+    clavis = (tuple(fontes), identitas, sigillum_arboris())
+    if clavis not in _MEMORIA_CLAUSURARUM:
+        _MEMORIA_CLAUSURARUM[clavis] = _clausurae_computare(fontes, fila)
+    return dict((f, set(v) if v is not None else None)
+                for f, v in _MEMORIA_CLAUSURARUM[clavis].items())
+
+
+def _clausurae_computare(fontes, fila=4):
     """{fons: set(viarum) | None} per bin/aedilis (lineae O fontes, C
     capita, V vendor). Directorium cuius fontes .c petuntur dimidia
     parte saltem: 'aedilis --corpus <dir> --partes' (processus UNUS,
@@ -2515,12 +2654,12 @@ def _formam_praeparare(viae):
 def _stala_celeria():
     """bin/fabrica iudicare (celer, ~1.4 s): viae STALUM et lineae
     effusionis - status installatorum ante et post formam"""
-    r = subprocess.run([FABRICA_BIN, 'iudicare'], cwd=RADIX,
+    r = subprocess.run([FABRICA_BIN, 'iudicare', '-machina'], cwd=RADIX,
                        capture_output=True, text=True)
-    lineae = (r.stdout + r.stderr).splitlines()
-    stala = set(l.split(' ', 2)[1] for l in lineae
-                if l.startswith('STALUM ') and len(l.split(' ', 2)) > 1)
-    return stala, lineae
+    ordines = _machina_legere(r.stdout)
+    stala = set(o[2] for o in ordines
+                if o[0] == 'IUDICIUM' and len(o) >= 3 and o[1] == 'STALUM')
+    return stala, ordines
 
 
 def _formam_custodire(viae, sine_fabrica=None):
@@ -2541,14 +2680,11 @@ def _formam_custodire(viae, sine_fabrica=None):
     _formam_praeparare(viae)
     if not custodia or _sigilla_viarum(formandae) == ante_sigilla:
         return
-    post_stala, lineae = _stala_celeria()
+    post_stala, ordines = _stala_celeria()
     novae = sorted(post_stala - ante_stala)
     if not novae:
         return
-    sanatio = []
-    if 'SANATIO:' in lineae:
-        sanatio = [l for l in lineae[lineae.index('SANATIO:') + 1:]
-                   if l.startswith('  ')]
+    sanatio = _machina_humana([o for o in ordines if o[0] == 'SANANDA'])
     raise SilvaError(
         'FORMA artificia installata stala fecit (%s): forma fontes eorum'
         ' post aedificationem rescripsit - portae binarium vetus'
@@ -2589,19 +2725,39 @@ def _fabricam_exigere(viae, sine_fabrica=None):
               ' iudicata (./tools/fabrica_struere.sh)')
         return
     print('fabrica iudicat artificia generata tacta (%d viae)...' % len(viae))
-    r = subprocess.run([FABRICA_BIN, 'iudicare', '-plenus', '-tacta'] + list(viae),
+    r = subprocess.run([FABRICA_BIN, 'iudicare', '-plenus', '-tacta',
+                        '-machina'] + list(viae),
                        cwd=RADIX, capture_output=True, text=True)
-    lineae = [l for l in (r.stdout + r.stderr).splitlines()
-              if l and not l.startswith('ORPHANUM')]
+    ordines = [o for o in _machina_legere(r.stdout) if o[0] != 'ORPHANUM']
+    # lineae legibiles (nuntii) + lineae non-machinae et errata stderr
+    # (exitus 2) ut sunt
+    lineae = (_machina_humana(ordines)
+              + [l for l in r.stdout.splitlines()
+                 if l and not (l.split('\t')[0].isupper()
+                               and l.split('\t')[0].isalpha() and '\t' in l)]
+              + [l for l in r.stderr.splitlines() if l])
     if r.returncode == 0:
         print(lineae[-1] if lineae else 'fabrica: sana')
         return
+    # STADIUM IUDICUM (fabrica-6 T3): iudex stalus (bin/compilator,
+    # bin/aedilis - non commissi) artificia tacta NON IUDICATA reddit;
+    # regula 'non commissa non obstant' hic NIHIL iudicatum transmitteret
+    recusata = [o for o in ordines
+                if o[0] == 'IUDICIUM' and len(o) >= 4
+                and o[1] == 'NON IUDICATUM' and o[3].startswith('iudex ')]
+    if recusata:
+        raise SilvaError(
+            'FABRICA (ante portas): stadium iudicum - artificia tacta NON'
+            ' iudicata, nihil cursum, nihil commissum:\n  %s\nSana iudicem'
+            ' (linea supra: "sana X prius") et committe iterum.'
+            % '\n  '.join(lineae[-40:]))
     # 1b T7: regeneratio etiam artificia in build/ iudicat (capsulae,
     # corpus) - commissio de COMMISSIS solis iudicat; stala non commissa
     # nominantur, non obstant (sanare ea sanat)
     if r.returncode == 1:
-        malae = [l.split(' ', 2)[1] for l in lineae
-                 if l.startswith(('STALUM ', 'IGNOTUM ')) and len(l.split(' ', 2)) > 1]
+        malae = [o[2] for o in ordines
+                 if o[0] == 'IUDICIUM' and len(o) >= 3
+                 and o[1] in ('STALUM', 'IGNOTUM')]
         if malae and not VIAE_COMMISSAE(malae):
             print('fabrica: %d artificia NON commissa non recentia (%s) -'
                   ' commissionem non obstant; bin/fabrica sanare ea sanat'
@@ -2897,31 +3053,62 @@ def _ignorata():
     return exitus
 
 
-def _clonare_ignorata(ad):
-    """res ignoratae (bin/, build/, silva/build/, book_assets/*.txt ...)
-    in clone: cp -c (clonefile, copy-on-write) - spatium nullum donec
-    scribantur; directoria singula, plagulae fascibus per directorium"""
-    per_dir = {}
-    for l in _ignorata():
-        if l.endswith('/'):
-            d = l.rstrip('/')
-            os.makedirs(os.path.join(ad, os.path.dirname(d)), exist_ok=True)
-            r = subprocess.run(['cp', '-c', '-R', os.path.join(RADIX, d),
-                                os.path.join(ad, d)], capture_output=True,
+# bin/clonare (pythonica S3): clonefile(2) arborum totarum - 'cp -c -R'
+# plagulam singulam clonat (XIII,IV s per photographiam mensurata, clonefile
+# II,VI s). Substituibilis in probationibus.
+CLONARE_BIN = os.path.join(RADIX, 'bin', 'clonare')
+
+
+def _clonare_paria(paria, arbores):
+    """paria [(fons, destinatio)] copy-on-write clonare: bin/clonare
+    (fascibus D parium, processus unus per fascem); binarium absens aut
+    fascis fractus -> 'cp -c' (-R si arbores) pro paribus quorum
+    destinatio nondum exstat (clonefile destinationem totam aut nullam
+    facit). Par etiam per cp fractum: SilvaError par nominans."""
+    for i in range(0, len(paria), 500):
+        fascis = paria[i:i + 500]
+        if os.access(CLONARE_BIN, os.X_OK):
+            r = subprocess.run([CLONARE_BIN] + [v for par in fascis for v in par],
+                               capture_output=True, text=True)
+            if r.returncode == 0:
+                continue
+        for fons, destinatio in fascis:
+            if os.path.lexists(destinatio):
+                continue
+            r = subprocess.run(['cp', '-c'] + (['-R'] if arbores else [])
+                               + [fons, destinatio], capture_output=True,
                                text=True)
             if r.returncode != 0:
-                raise SilvaError('clonatio %s: %s' % (d, r.stderr.strip()[-200:]))
-        else:
-            per_dir.setdefault(os.path.dirname(l), []).append(l)
-    for d, plagulae in per_dir.items():
-        dest = os.path.join(ad, d) if d else ad
-        os.makedirs(dest, exist_ok=True)
-        for i in range(0, len(plagulae), 500):
-            r = subprocess.run(['cp', '-c'] + [os.path.join(RADIX, f) for f
-                                                in plagulae[i:i + 500]]
-                               + [dest], capture_output=True, text=True)
-            if r.returncode != 0:
-                raise SilvaError('clonatio %s: %s' % (d, r.stderr.strip()[-200:]))
+                raise SilvaError('clonatio %s: %s' % (fons, r.stderr.strip()[-200:]))
+
+
+def _ignorata_dividere(ignorata):
+    """(directoria, plagulae) ordinata, sine '/' finali; res INTRA
+    directorium ignoratum omissa (git status 'x/.claude/' et
+    'x/.claude/settings.local.json' simul nominat): cum directorio
+    clonatur - seorsum destinationem directorii ante clonationem faceret
+    (clonefile EEXIST, photographia tacite incompleta)"""
+    directoria = sorted(l.rstrip('/') for l in ignorata if l.endswith('/'))
+    def tecta(via):
+        return any(via != d and via.startswith(d + '/') for d in directoria)
+    return ([d for d in directoria if not tecta(d)],
+            sorted(l for l in ignorata if not l.endswith('/') and not tecta(l)))
+
+
+def _clonare_ignorata(ad):
+    """res ignoratae (bin/, build/, silva/build/, book_assets/*.txt ...)
+    in clone: copy-on-write (_clonare_paria: clonefile per bin/clonare,
+    regressus cp -c) - spatium nullum donec scribantur. Directoria
+    PRIMUM, deinde parentes plagularum solutarum"""
+    directoria, plagulae = _ignorata_dividere(_ignorata())
+    for d in directoria:
+        os.makedirs(os.path.join(ad, os.path.dirname(d)), exist_ok=True)
+    _clonare_paria([(os.path.join(RADIX, d), os.path.join(ad, d))
+                    for d in directoria], arbores=True)
+    for l in plagulae:
+        os.makedirs(os.path.join(ad, os.path.dirname(l)), exist_ok=True)
+    _clonare_paria([(os.path.join(RADIX, l), os.path.join(ad, l))
+                    for l in plagulae], arbores=False)
 
 
 def _tempora_speculari(ad, arbor):
@@ -2968,11 +3155,36 @@ def photographia_materializare(ph, nomen='umbra'):
     return ph._replace(via=via)
 
 
+PURGATORIUM = '.purgatorium'
+
+
+def _purgatorium_vacuare(viae):
+    """'rm -rf' in fundo (sessio propria) - nemo exspectat"""
+    subprocess.Popen(['rm', '-rf', '--'] + list(viae), start_new_session=True,
+                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                     stderr=subprocess.DEVNULL)
+
+
 def photographia_delere(ph_aut_via):
+    """clone photographiae delere ASYNCHRONE (profilum T9: rmtree 52,9 s
+    in porta pythonica): nomen in UMBRAE_DIR/.purgatorium/ mutatum
+    (rename atomicum, eadem area) - clone STATIM abest - deinde 'rm -rf'
+    in fundo. Rename fractum -> rmtree ut olim. Reliquias (rm interruptum)
+    umbrae_purgare vacuat."""
     import shutil
     via = ph_aut_via.via if hasattr(ph_aut_via, 'via') else ph_aut_via
-    if via and via.startswith(UMBRAE_DIR) and os.path.isdir(via):
+    if not (via and via.startswith(UMBRAE_DIR) and os.path.isdir(via)):
+        return
+    purgatorium = os.path.join(UMBRAE_DIR, PURGATORIUM)
+    meta = os.path.join(purgatorium, '%s.%d.%d' % (
+        os.path.basename(via.rstrip('/')), os.getpid(), int(time.time() * 1000)))
+    try:
+        os.makedirs(purgatorium, exist_ok=True)
+        os.rename(via, meta)
+    except OSError:
         shutil.rmtree(via, ignore_errors=True)
+        return
+    _purgatorium_vacuare([meta])
 
 
 def _receptum_via(nomen, filtrum):
@@ -3237,8 +3449,10 @@ def recepta_viva_delere():
         receptum_delere(via)
 
 
-def exspectare(via, tectum=1800, intervallum=2.0):
-    """receptum manere (secunda); SilvaError post tectum"""
+def exspectare(via, tectum=1800, intervallum=0.1):
+    """receptum manere (secunda); SilvaError post tectum. Intervallum
+    breve (profilum T9: II s -> XV exspectationes 30,1 s, operarii
+    plerumque intra intervallum unum finiti) - exstantia plagulae vilis"""
     finis = time.time() + tectum
     while time.time() < finis:
         if os.path.exists(via):
@@ -3329,8 +3543,10 @@ def umbrae_orphanae():
     if not os.path.isdir(UMBRAE_DIR):
         return []
     vivi = _clones_vivi()
+    # nomina cum puncto (.purgatorium) clones non sunt
     return [os.path.join(UMBRAE_DIR, f) for f in sorted(os.listdir(UMBRAE_DIR))
-            if os.path.isdir(os.path.join(UMBRAE_DIR, f))
+            if not f.startswith('.')
+            and os.path.isdir(os.path.join(UMBRAE_DIR, f))
             and os.path.join(UMBRAE_DIR, f) not in vivi]
 
 
@@ -3339,6 +3555,12 @@ def umbrae_purgare():
     servat donec receptum deleatur, oblivio eos cumulat (~C MB veri
     quisque). Reddit vias deletas."""
     deletae = []
+    # reliquiae purgatorii (rm in fundo interruptum): iterum - 'rm -rf'
+    # geminum innocuum
+    purgatorium = os.path.join(UMBRAE_DIR, PURGATORIUM)
+    if os.path.isdir(purgatorium) and os.listdir(purgatorium):
+        _purgatorium_vacuare([os.path.join(purgatorium, f)
+                              for f in os.listdir(purgatorium)])
     for via in umbrae_orphanae():
         photographia_delere(via)
         deletae.append(via)
