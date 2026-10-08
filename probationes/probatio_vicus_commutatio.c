@@ -38,8 +38,10 @@ scribam_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo);
 }
@@ -54,8 +56,10 @@ pictorem_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo);
 }
@@ -208,10 +212,10 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "scriba",
         magnitudo(ScribaMontatio),
-        scribam_montare, scribam_describere));
+        scribam_montare, scribam_describere, NIHIL));
     CREDO_VERUM(vicus_genus_addere(v, "pictor",
         magnitudo(PictorMontatio),
-        pictorem_montare, pictorem_describere));
+        pictorem_montare, pictorem_describere, NIHIL));
     CREDO_VERUM(vicus_aperire(v,
         "<tabulae activa=\"s1\">"
         "<tabula id=\"s1\"><latus genus=\"scriba\"/></tabula>"

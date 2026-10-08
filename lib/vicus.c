@@ -260,7 +260,7 @@ latus_montare (
         v->intern,
         v->volumen, v->repo, chorda_ut_cstr(l->id, v->piscina),
         v->radix,
-        (i32)latitudo, (i32)altitudo);
+        (i32)latitudo, (i32)altitudo, l->descriptio->ctx);
     si (!l->montata)
     {
         v->causa = chorda_concatenare(chorda_ex_literis(
@@ -1072,7 +1072,8 @@ vicus_genus_addere (
      constans character* titulus,
          memoriae_index  mensura,
           VicusMontator  montare,
-        VicusDescriptor  describere)
+        VicusDescriptor  describere,
+                 vacuum* ctx)
 {
      VicusGenus* g;
          chorda  t;
@@ -1092,6 +1093,7 @@ vicus_genus_addere (
     g->mensura     = mensura;
     g->montare     = montare;
     g->describere  = describere;
+    g->ctx         = ctx;
     redde VERUM;
 }
 

@@ -19,6 +19,10 @@ Leges chartae:
 
 ## inedita
 
+- corpus: vicus - `VicusMontator` et `vicus_genus_addere` argumentum
+  ultimum `vacuum* ctx` accipiunt (contextus generis montatori datus;
+  `VicusGenus.ctx`) - montatores exstantes frangit.
+
 - corpus: `scriba_liber` nova - liber paginarum scribae (paginae
   nominatae in volumine, documentum unum per nomen, sine limite).
 

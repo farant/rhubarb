@@ -40,10 +40,14 @@ hic_manens InternamentumChorda* intern;
 
 /* montatio ficta: pulsus numerati, responsum proximum */
 nomen structura {
-    i32 pulsus;
-    b32 mutatum;
-    b32 finitus;
+       i32  pulsus;
+       b32  mutatum;
+       b32  finitus;
+    vacuum* ctx;       /* contextus generis montatori datus (S2b) */
 } Vivens;
+
+/* signum contextus generis 'vivus' (S2b: ctx montatori datur) */
+hic_manens i32 signum_generis;
 
 interior b32
 vivum_montare (
@@ -55,9 +59,10 @@ vivum_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
-    (vacuum)sedes;
+    ((Vivens*)sedes)->ctx = ctx;
     (vacuum)p;
     (vacuum)in;
     (vacuum)vol;
@@ -122,11 +127,11 @@ vicum_aperire (
     v = vicus_creare(piscina, intern, vol, NIHIL, CDLXXX, CDLXXX);
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "vivus", magnitudo(Vivens),
-        vivum_montare, vivum_describere));
+        vivum_montare, vivum_describere, &signum_generis));
     CREDO_VERUM(vicus_genus_addere(v, "gelidus", magnitudo(Vivens),
-        vivum_montare, gelidum_describere));
+        vivum_montare, gelidum_describere, NIHIL));
     CREDO_VERUM(vicus_genus_addere(v, "quietus", magnitudo(Vivens),
-        vivum_montare, quietum_describere));
+        vivum_montare, quietum_describere, NIHIL));
     CREDO_VERUM(vicus_aperire(v,
         "<tabulae activa=\"A\">"
         "<tabula id=\"A\"><latus genus=\"vivus\"/>"
@@ -345,6 +350,11 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->pulsus, I);
     CREDO_AEQUALIS_I32(vivens(v, I, VICUS_SINISTRUM)->pulsus, ZEPHYRUM);
     CREDO_AEQUALIS_I32(vivens(v, II, VICUS_DEXTRUM)->pulsus, I);
+
+    /* S2b: contextus generis montatori datus; gelidus NIHIL */
+    CREDO_VERUM(vivens(v, ZEPHYRUM, VICUS_SINISTRUM)->ctx
+        == (vacuum*)&signum_generis);
+    CREDO_NIHIL(vivens(v, ZEPHYRUM, VICUS_DEXTRUM)->ctx);
 
     imprimere("\n--- II: mutatum visibilis pingit, fundi non ---\n");
     vivens(v, II, VICUS_DEXTRUM)->mutatum = VERUM;

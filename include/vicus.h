@@ -48,7 +48,9 @@
 #define VICUS_CELLULA_ALTITUDO  VIII
 #define VICUS_ALTITUDO_TABULARUM VICUS_CELLULA_ALTITUDO
 
-/* montatio applicationis in sedem (magnitudinis registratae) */
+/* montatio applicationis in sedem (magnitudinis registratae); ctx =
+ * contextus generis (vicus_genus_addere; vicus-latera S2b: liber
+ * paginarum scribae communis) */
 nomen b32 (*VicusMontator)(
                  vacuum* sedes,
                 Piscina* piscina,
@@ -58,7 +60,8 @@ nomen b32 (*VicusMontator)(
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo);
+                    i32  altitudo,
+                 vacuum* ctx);
 
 /* gestum applicationis in Motum ponere (T3a) - e.g.
  * scriba_gestum_ponere */
@@ -99,10 +102,11 @@ nomen vacuum (*VicusDescriptor)(
     VicusFacies* facies);
 
 nomen structura {
-             chorda titulus;
-     memoriae_index mensura;     /* montationis (sedes) */
-      VicusMontator montare;
-    VicusDescriptor describere;
+             chorda  titulus;
+     memoriae_index  mensura;     /* montationis (sedes) */
+      VicusMontator  montare;
+    VicusDescriptor  describere;
+             vacuum* ctx;        /* montatori datur (S2b) */
 } VicusGenus;
 
 /* latus (S2a): montatio una. id = via "<tabula>_<latus>_<genus>"
@@ -161,7 +165,8 @@ vicus_genus_addere (
      constans character* titulus,
          memoriae_index  mensura,
           VicusMontator  montare,
-        VicusDescriptor  describere);
+        VicusDescriptor  describere,
+                 vacuum* ctx);
 
 /* repositorium creatur, dispositio e volumine legitur (absens:
  * ordinaria, quae scribitur), latera montantur. Forma:

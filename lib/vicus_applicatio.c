@@ -44,8 +44,10 @@ scribam_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, piscina, intern,
         volumen, repo, id, radix, latitudo, altitudo);
 }
@@ -84,8 +86,10 @@ pictorem_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, piscina, intern,
         volumen, repo, id, radix, latitudo, altitudo);
 }
@@ -119,8 +123,10 @@ terminale_montare_in_vico (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)ctx;
     (vacuum)volumen;
     (vacuum)radix;
     redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
@@ -220,13 +226,13 @@ vicus_applicatio_aedificare (
     si (   !app->vicus
         || !vicus_genus_addere(app->vicus, "scriba",
                magnitudo(ScribaMontatio), scribam_montare,
-               scribam_describere)
+               scribam_describere, NIHIL)
         || !vicus_genus_addere(app->vicus, "pictor",
                magnitudo(PictorMontatio), pictorem_montare,
-               pictorem_describere)
+               pictorem_describere, NIHIL)
         || !vicus_genus_addere(app->vicus, "terminale",
                magnitudo(TerminaleApplicatio),
-               terminale_montare_in_vico, terminale_describere)
+               terminale_montare_in_vico, terminale_describere, NIHIL)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

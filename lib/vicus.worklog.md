@@ -310,3 +310,14 @@ too tall. Now: create window, create buffer (scale exactly 2), then
 `fenestra_commutare_plenam_visionem`. Fran confirmed the page fits.
 Rule: anything that fixes a scale at creation must run before any
 size transition starts.
+
+## 2026-10-08 - S2b-2: a context per kind, handed to every mount
+
+`VicusMontator` gained a final `vacuum* ctx`; `vicus_genus_addere`
+takes it and `VicusGenus.ctx` keeps it; `latus_montare` passes it on.
+Purpose: every scriba mount must receive the SAME page book (S2b-3);
+vicus still knows no kind - the composition (vicus_applicatio) owns the
+book and registers it with the scriba kind. Other kinds pass NIHIL.
+Proof: the pulse test's toy kind records the ctx it was mounted with
+(registered with a marker pointer, a second kind with NIHIL); plant
+(vicus passes NIHIL) caught.
