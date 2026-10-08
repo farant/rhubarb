@@ -61,6 +61,7 @@
 #        solum), RECENS, bibliotheca mutata -> membrum suum solum
 #   XXXVIII probationes_c: cursus fractus -> FRACTUM, area orphana
 #   XXXIX post et compositum (T7): producens primum, VERDICTUM N/M
+#   XL   lineae machinae (H1): iudicare/sanare -machina, genera nota sola
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -497,6 +498,21 @@ if [ "$rc1" -eq 0 ] && [ -n "$lg" ] && [ -n "$la" ] && [ "$lg" -lt "$la" ] \
    && [ "$rc2" -eq 0 ] && grep -q '^VERDICTUM probationes_t: 2/2$' "$T/o2" \
    && [ "$rc3" -eq 1 ] && grep -q '^VERDICTUM probationes_t: 1/2 - non recentia: probationes_t/probatio_b$' "$T/o3"; then echo "  XXXIX post et compositum: ordo, VERDICTUM N/M OK"; else echo "  XXXIX FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -24; fracta=1; fi
 
+# XL (fabrica-6 H1): LINEAE MACHINAE - contractus consumptorum (silva.py,
+# generata, oraculum toml): arbor XXXIX, b mutatus. iudicare -machina:
+# IUDICIUM per membrum, VERDICTUM <c> 1 2 <b>, SUMMA; sanare -machina:
+# SANATIO b, VERDICTUM <c> 2 2; OMNIS linea genus notum fert (nulla forma
+# humana in modo machinae)
+(cd "$T/r" && "$F" iudicare -plenus -machina probationes_t) > "$T/m1" 2>/dev/null; rc1=$?
+(cd "$T/r" && "$F" sanare -machina probationes_t) > "$T/m2" 2>/dev/null; rc2=$?
+ignotae=$(cat "$T/m1" "$T/m2" | awk -F'\t' '$1 !~ /^(IUDICIUM|COMPOSITUM|VERDICTUM|SANANDA|ORPHANUM|BINARIA|PRAECONDICIO|SANATIO|AGITUR|UNDA|NOTA|SUMMA)$/ || NF < 2' | wc -l | tr -d ' ')
+if [ "$rc1" -eq 1 ] && grep -q "^IUDICIUM	RECENS	build/fabrica/area/probationes_t/probatio_a/verdictum.txt	" "$T/m1" \
+   && grep -qE "^IUDICIUM	(STALUM|IGNOTUM)	build/fabrica/area/probationes_t/probatio_b/verdictum.txt	" "$T/m1" \
+   && grep -q "^VERDICTUM	probationes_t	1	2	probationes_t/probatio_b$" "$T/m1" \
+   && grep -q "^SUMMA	" "$T/m1" \
+   && [ "$rc2" -eq 0 ] && grep -q "^SANATIO	SANATUM	probationes_t/probatio_b	" "$T/m2" \
+   && grep -q "^VERDICTUM	probationes_t	2	2	$" "$T/m2" && [ "$ignotae" -eq 0 ]; then echo "  XL   lineae machinae (iudicare, sanare)  OK"; else echo "  XL   FRACTUM (rc=$rc1 $rc2, lineae ignotae $ignotae)"; cat "$T/m1" "$T/m2" | sed 's/^/      /' | head -20; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XXXIX/XXXIX)"
+echo "fumus fabricae: sanum (XL/XL)"
 exit 0

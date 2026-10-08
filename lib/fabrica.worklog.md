@@ -2086,3 +2086,17 @@ Finds worth keeping, in the order they bit:
   mid-gate and the aedilis gate refused 'scripsit extra vestigium'.
   Prebuild `./gesta/{tabularium,fori,tabulariumd}.sh -struere` first
   (ledger note ...MZV7).
+
+## 2026-10-08 - housekeeping H1: `-machina` output
+
+Four consumers parsed bin/fabrica's human lines with regexes (silva.py
+four times, generata_iudicare.sh, the toml oracle), so any rewording of
+a message was a silent consumer break. `-machina` gives them TSV
+records with the type in field one. Fumus XL checks that every line in
+machine mode has a known type, so a stray human printf is caught as an
+"unknown line". The pythonica fakes are built with repr(), which
+escapes tabs to a literal `\t`; `_fabrica_ficta` turns them back into
+tabs after repr. The dry-run UNDAE printing used to set `undae = NIHIL`
+to skip the human loop in machine mode; it is now a plain `!_machina`
+guard. Flake seen once: pythonica "commissio_umbra: recepta sua deleta"
+failed in the full run, then passed alone and on a rerun (ledger note).

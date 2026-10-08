@@ -25,14 +25,15 @@ def _fabrica_ficta(rc, effusio='', via_argv=None):
         f.write('#!/bin/bash\n')
         if via_argv:
             f.write('printf "%%s\\n" "$@" > %s\n' % via_argv)
-        f.write('printf %%s %s\n' % repr(effusio).replace('\\n', '\n'))
+        f.write('printf %%s %s\n' % repr(effusio).replace('\\n', '\n')
+                .replace('\\t', '\t'))
         f.write('exit %d\n' % rc)
     os.chmod(via, 0o755)
     return via
 
 
 # omnes commissiones probationum sub fabrica ficta sana (exitus 0)
-silva.FABRICA_BIN = _fabrica_ficta(0, 'fabrica: nulla artificia generata a viis tacta\n')
+silva.FABRICA_BIN = _fabrica_ficta(0, 'NOTA\tnulla artificia generata a viis tacta\n')
 
 # tempora portarum et phasium (parcum fabricae …AR15): in T, numquam in
 # build/portae/tempora.tsv vivum (portae fictae ibi mentirentur)
@@ -904,7 +905,7 @@ def _fabrica_iudicii(modus):
     with open(via, 'w') as f:
         f.write('#!/bin/bash\n'
                 'if [ "$1" = iudicare ]; then\n'
-                '  echo "%s build/fabrica/verdicta/ficta-v.txt - fictum"; exit 0\n'
+                '  printf "IUDICIUM\\t%s\\tbuild/fabrica/verdicta/ficta-v.txt\\tfictum\\n"; exit 0\n'
                 'fi\n' % modus[0])
         if modus[1] == 'recens':
             f.write('echo "fabrica sanare: 0 sanata"; exit 0\n')
@@ -912,12 +913,12 @@ def _fabrica_iudicii(modus):
             f.write('mkdir -p "$(dirname %s)" "$(dirname %s)"\n'
                     'echo "ficta-v: fictum: sanum" > %s\n'
                     'echo "fictum: sanum" > %s\n'
-                    'echo "SANATUM     porta_ficta-v (0.1 s)"; exit 0\n'
+                    'printf "SANATIO\\tSANATUM\\tporta_ficta-v\\t100\\t\\n"; exit 0\n'
                     % (verdictum, acta, verdictum, acta))
         elif modus[1] == 'frangitur':
             f.write('rm -f %s; mkdir -p "$(dirname %s)"\n'
                     'printf "%%s\\n" "=== probatio_ficta ===" "fictum: FRACTUM" > %s\n'
-                    'echo "FRACTUM     porta_ficta-v (0.1 s) - exitus 1"; exit 1\n'
+                    'printf "SANATIO\\tFRACTUM\\tporta_ficta-v\\t100\\texitus 1\\n"; exit 1\n'
                     % (verdictum, acta, acta))
         else:
             f.write('echo "fabrica: iudex plenus alius currit" >&2; exit 2\n')
@@ -986,14 +987,14 @@ try:
                     'mkdir -p "$(dirname %s)" "$(dirname %s)"\n'
                     'echo "ficta-v: fictum: sanum" > %s\n'
                     'echo "fictum: sanum" > %s\n'
-                    'echo "SANATUM     porta_ficta-v (0.1 s) - auditus: transitus iterum congruit"\n'
+                    'printf "SANATIO\\tSANATUM\\tporta_ficta-v\\t100\\tauditus: transitus iterum congruit\\n"\n'
                     'exit 0\n' % (_log, _vv, _acta, _vv, _acta))
         os.chmod(_fa, 0o755)
         silva.FABRICA_BIN = _fa
         pv = silva.porta('ficta-v', auditus=True)
         _argv = open(_log).read().splitlines()
         credo(pv.sana and 'auditus: transitus iterum congruit' in pv.compendium
-              and any(l.startswith('sanare -audit') for l in _argv)
+              and any(l.startswith('sanare -machina -audit') for l in _argv)
               and not any(l.startswith('iudicare') for l in _argv),
               'porta(auditus=True): sanare -audit, iudicare omissum')
     finally:
@@ -1025,23 +1026,23 @@ def _fabrica_gradus(modus):
     with open(via, 'w') as f:
         f.write('#!/bin/bash\n')
         if modus == 'transit':
-            f.write('echo "SANATUM     gradus_fictus/a (0.1 s)"\n'
-                    'echo "SANATUM     gradus_fictus/b (0.1 s)"\n'
-                    'echo "VERDICTUM gradus_fictus: 2/2"; exit 0\n')
+            f.write('printf "SANATIO\\tSANATUM\\tgradus_fictus/a\\t100\\t\\n"\n'
+                    'printf "SANATIO\\tSANATUM\\tgradus_fictus/b\\t100\\t\\n"\n'
+                    'printf "VERDICTUM\\tgradus_fictus\\t2\\t2\\t\\n"; exit 0\n')
         elif modus == 'reusus':
-            f.write('echo "fabrica sanare: 0 sanata"\n'
-                    'echo "VERDICTUM gradus_fictus: 2/2"; exit 0\n')
+            f.write('printf "SUMMA\\t0\\t0\\t0\\t0\\t0\\t0\\n"\n'
+                    'printf "VERDICTUM\\tgradus_fictus\\t2\\t2\\t\\n"; exit 0\n')
         elif modus == 'frangitur':
-            f.write('echo "FRACTUM     gradus_fictus/b (0.1 s) - exitus 1: '
-                    'probatio fracta"\n'
-                    'echo "VERDICTUM gradus_fictus: 1/2 - non recentia: '
-                    'gradus_fictus/b"; exit 1\n')
+            f.write('printf "SANATIO\\tFRACTUM\\tgradus_fictus/b\\t100\\t'
+                    'exitus 1: probatio fracta\\n"\n'
+                    'printf "VERDICTUM\\tgradus_fictus\\t1\\t2\\t'
+                    'gradus_fictus/b\\n"; exit 1\n')
         elif modus == 'sera':
             f.write('echo "fabrica: iudex plenus alius currit" >&2; exit 2\n')
         else:
             f.write('if [ "$1" = iudicare ]; then\n'
-                    '  echo "VERDICTUM gradus_fictus: 2/2"; exit 0\nfi\n'
-                    'echo "fabrica sanare: 0 sanata"; exit 0\n')
+                    '  printf "VERDICTUM\\tgradus_fictus\\t2\\t2\\t\\n"; exit 0\nfi\n'
+                    'printf "SUMMA\\t0\\t0\\t0\\t0\\t0\\t0\\n"; exit 0\n')
     os.chmod(via, 0o755)
     return via
 
@@ -2363,15 +2364,15 @@ silva.VIAE_COMMISSAE = lambda viae: set(viae)
 try:
     _argv = os.path.join(T, 'fabrica_argv.txt')
     # exitus 0: pergit; argumenta: iudicare -plenus -tacta viae
-    silva.FABRICA_BIN = _fabrica_ficta(0, 'fabrica: 1 recentia\n', _argv)
+    silva.FABRICA_BIN = _fabrica_ficta(0, 'SUMMA\t1\t0\t0\t0\t0\tplenus\n', _argv)
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
         silva._fabricam_exigere(['lib/a.c', 'x/b.sh'])
-    credo(open(_argv).read().split() == ['iudicare', '-plenus', '-tacta', 'lib/a.c', 'x/b.sh'],
-          'fabrica: argv = iudicare -plenus -tacta viae')
+    credo(open(_argv).read().split() == ['iudicare', '-plenus', '-tacta', '-machina', 'lib/a.c', 'x/b.sh'],
+          'fabrica: argv = iudicare -plenus -tacta -machina viae')
     credo('\nfabrica: 1 recentia' in buf.getvalue(), 'fabrica: exitus 0 pergit, linea ultima impressa')
     # exitus 1: SilvaError cum STALUM et sanatione
-    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM g/x.c - regeneratio differt\nSANATIO:\n  ./gen.sh   # g\n')
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'IUDICIUM\tSTALUM\tg/x.c\tregeneratio differt\nSANANDA\tg\tfixa:1\t./gen.sh\n')
     err = None
     try:
         with contextlib.redirect_stdout(io.StringIO()):
@@ -2383,8 +2384,8 @@ try:
     # STADIUM IUDICUM (fabrica-6 T3): iudex stalus NON commissus (bin/
     # compilator) + artificia tacta NON IUDICATA - olim 'non commissa
     # non obstant' tacite pergebat, NIHIL iudicato. Nunc obstat
-    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM bin/compilator - ingressus mutati\n'
-                                          'NON IUDICATUM lib/a_genitum.c - iudex compilator non recens - sana compilator prius\n')
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'IUDICIUM\tSTALUM\tbin/compilator\tingressus mutati\n'
+                                          'IUDICIUM\tNON IUDICATUM\tlib/a_genitum.c\tiudex compilator non recens - sana compilator prius\n')
     _vc_vera = silva.VIAE_COMMISSAE
     silva.VIAE_COMMISSAE = lambda viae: set()
     err = None
@@ -2408,7 +2409,7 @@ try:
     credo(err is not None and 'iudicare nequit' in err and 'alius currit' in err,
           'fabrica: exitus 2 obstat (sera tenetur)')
     # sine_fabrica causa: non currit; vacua: refutatur
-    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM numquam\n')
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'IUDICIUM\tSTALUM\tnumquam\t-\n')
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
         silva._fabricam_exigere(['lib/a.c'], sine_fabrica='probatio: consulto')
@@ -2421,7 +2422,7 @@ try:
     credo(err is not None and 'sine_fabrica causam poscit' in err, 'fabrica: sine_fabrica vacua refutatur')
     # 1b T7: stala NON commissa (build/ capsulae) non obstant, nominantur;
     # commissa obstant ut antea
-    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM build/capsula_x.c - regeneratio differt\nSANATIO:\n  ./c.sh   # c\n')
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'IUDICIUM\tSTALUM\tbuild/capsula_x.c\tregeneratio differt\nSANANDA\tc\tfixa:1\t./c.sh\n')
     silva.VIAE_COMMISSAE = lambda viae: set()
     buf = io.StringIO()
     err = None
@@ -2443,7 +2444,7 @@ try:
     # Hermetica: via ABSENS, portae nullae - si vocatio deest, commissio
     # in 'nec in disco' cadit (numquam committit), assertio rubra munda
     # (planta prima: porta ficta prior manserat, scriptum deletum -> ruina)
-    silva.FABRICA_BIN = _fabrica_ficta(1, 'STALUM g/x.c - regeneratio differt\n')
+    silva.FABRICA_BIN = _fabrica_ficta(1, 'IUDICIUM\tSTALUM\tg/x.c\tregeneratio differt\n')
     err = None
     with contextlib.redirect_stdout(io.StringIO()):
         try:
@@ -2467,7 +2468,7 @@ _forma_ficta = os.path.join(T, 'forma_ficta.sh')
 _fabrica_ordinis = os.path.join(T, 'fabrica_ordinis.sh')
 open(_forma_ficta, 'w').write('#!/bin/bash\necho "forma $*" >> %s\n' % _acta_ordinis)
 open(_fabrica_ordinis, 'w').write('#!/bin/bash\necho "fabrica $*" >> %s\n'
-                                  'printf "STALUM g/x.c - regeneratio differt\\n"\nexit 1\n'
+                                  'printf "IUDICIUM\\tSTALUM\\tg/x.c\\tregeneratio differt\\n"\nexit 1\n'
                                   % _acta_ordinis)
 os.chmod(_forma_ficta, 0o755)
 os.chmod(_fabrica_ordinis, 0o755)
@@ -2490,13 +2491,15 @@ try:
         _ordo = open(_acta_ordinis).read().splitlines() if os.path.exists(_acta_ordinis) else []
         if _verificare:
             # 'fabrica iudicare' primum = custodia installatorum (…ET4262)
-            credo(_ordo == ['fabrica iudicare',
+            credo(_ordo == ['fabrica iudicare -machina',
                             'forma pythonica/via_absens_formae.c',
-                            'fabrica iudicare -plenus -tacta pythonica/via_absens_formae.c'
+                            'fabrica iudicare -plenus -tacta -machina'
+                            ' pythonica/via_absens_formae.c'
                             ' pythonica/via_absens_formae.txt'],
                   'commissio: forma (solae .c/.h) ANTE iudicium fabricae', causa=repr(_ordo))
         else:
-            credo(_ordo == ['fabrica iudicare -plenus -tacta pythonica/via_absens_formae.c'
+            credo(_ordo == ['fabrica iudicare -plenus -tacta -machina'
+                            ' pythonica/via_absens_formae.c'
                             ' pythonica/via_absens_formae.txt'],
                   'commissio verificare=False: nulla forma (ut uncus --no-verify)', causa=repr(_ordo))
 finally:
@@ -2524,7 +2527,7 @@ def _custos_fabricam_scribere(ante, post):
     """celer: primum 'ante' (STALUM lineae), deinde 'post'; -plenus: 1"""
     open(_custos_fabrica, 'w').write(
         '#!/bin/bash\n'
-        'if [ "$2" = "-plenus" ]; then echo "STALUM g/x.c - regeneratio differt"; exit 1; fi\n'
+        'if [ "$2" = "-plenus" ]; then printf "IUDICIUM\\tSTALUM\\tg/x.c\\tregeneratio differt\\n"; exit 1; fi\n'
         'if [ ! -e %s ]; then touch %s; printf "%%b" %s; exit 0; fi\n'
         'printf "%%b" %s\nexit 1\n'
         % (_custos_numerus, _custos_numerus, repr(ante), repr(post)))
@@ -2534,8 +2537,8 @@ def _custos_fabricam_scribere(ante, post):
 os.chmod(_custos_forma, 0o755)
 os.chmod(_custos_forma_inertis, 0o755)
 _custos_verae = (silva.FORMA_BIN, silva.FABRICA_BIN, silva.VIAE_COMMISSAE)
-_STALUM_FICTUM = ('STALUM bin/fictum - ingressus mutati post institutionem\n'
-                  'SANATIO:\n  ./struere_fictum.sh   # fictum (./a.stml:1)\n')
+_STALUM_FICTUM = ('IUDICIUM\tSTALUM\tbin/fictum\tingressus mutati post institutionem\n'
+                  'SANANDA\tfictum\t./a.stml:1\t./struere_fictum.sh\n')
 
 
 def _custos_commissio(forma, ante, post):
@@ -2558,13 +2561,13 @@ def _custos_commissio(forma, ante, post):
 try:
     silva.VIAE_COMMISSAE = lambda viae: set(viae)
     # A. recens ante, stalum post forma mutante: obstat statim, nominat
-    err = _custos_commissio(_custos_forma, 'fabrica: 1 recentia\n', _STALUM_FICTUM)
+    err = _custos_commissio(_custos_forma, 'SUMMA\t1\t0\t0\t0\t0\tceler\n', _STALUM_FICTUM)
     credo('bin/fictum' in err and './struere_fictum.sh' in err
           and 'FABRICA (ante portas)' not in err,
           'custodia: forma installatum stalum facit -> obstat ante iudicium, sanatio nominata',
           causa=err[:300])
     # B. forma nihil mutat: iudicium secundum non currit, nihil obstat
-    err = _custos_commissio(_custos_forma_inertis, 'fabrica: 1 recentia\n', _STALUM_FICTUM)
+    err = _custos_commissio(_custos_forma_inertis, 'SUMMA\t1\t0\t0\t0\t0\tceler\n', _STALUM_FICTUM)
     credo('FABRICA (ante portas)' in err and 'bin/fictum' not in err,
           'custodia: forma iners -> nulla obstantia (iudicium tactorum sequitur)',
           causa=err[:300])

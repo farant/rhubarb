@@ -31,11 +31,14 @@ sed -n 's/^--- \(probatio_[a-z_]*\) praeteriit.*/\1 transiit/p;
 
 # II. gradus: sanare (membra stala), deinde iudicium plenum per membrum
 bin/fabrica sanare probationes_toml > "$T/sanare" 2>&1
-bin/fabrica iudicare -plenus -omnia probationes_toml > "$T/gradus" 2>&1
-# sed -E: BSD sed (macOS) alternationem '\|' in forma basica non habet
-sed -En 's#^RECENS build/fabrica/area/probationes_toml/([a-z_]*)/verdictum.txt.*#\1 transiit#p;
-         s#^(STALUM|IGNOTUM|NON IUDICATUM) build/fabrica/area/probationes_toml/([a-z_]*)/verdictum.txt.*#\2 fracta#p' \
-    "$T/gradus" | sort -u > "$T/g"
+bin/fabrica iudicare -plenus -omnia -machina probationes_toml > "$T/gradus" 2>&1
+# lineae machinae (fabrica-6 H1): IUDICIUM status via causa
+awk -F'\t' '$1 == "IUDICIUM" {
+        v = $3
+        if (v !~ /^build\/fabrica\/area\/probationes_toml\/[a-z_]*\/verdictum\.txt$/) next
+        sub(/^build\/fabrica\/area\/probationes_toml\//, "", v); sub(/\/verdictum\.txt$/, "", v)
+        print v " " ($2 == "RECENS" ? "transiit" : "fracta")
+    }' "$T/gradus" | sort -u > "$T/g"
 [ -s "$T/g" ] || { echo "oraculum toml: gradus nihil iudicavit" >&2; tail -5 "$T/gradus" >&2; exit 2; }
 
 # III. comparatio per probationem (unio nominum)
@@ -58,7 +61,7 @@ while read -r nomen; do
 done < "$T/nomina"
 echo "fractae cursoris: $(awk '$2=="fracta" {printf "%s ", $1}' "$T/c")"
 echo "fractae gradus: $(awk '$2=="fracta" {printf "%s ", $1}' "$T/g")"
-grep '^VERDICTUM probationes_toml' "$T/gradus"
+awk -F'\t' '$1 == "VERDICTUM" { printf "VERDICTUM %s: %s/%s\n", $2, $3, $4 }' "$T/gradus"
 grep '^TOML PROBATIONES' "$T/cursor"
 echo "oraculum toml: congruunt $n/$m"
 [ "$n" -eq "$m" ] && exit 0

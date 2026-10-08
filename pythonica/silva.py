@@ -1803,6 +1803,41 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 PORTAE_GRADUUM = {'toml': 'probationes_toml'}
 
 
+def _machina_legere(textus):
+    """lineae '-machina' bin/fabrica (fabrica-6 H1): [(genus, campi...)]
+    ex lineis TSV quarum genus in campo primo est; ceterae (stderr,
+    errata) omittuntur"""
+    ordines = []
+    for linea in textus.splitlines():
+        campi = linea.split('\t')
+        if len(campi) >= 2 and campi[0].isupper() and campi[0].isalpha():
+            ordines.append(tuple(campi))
+    return ordines
+
+
+def _machina_humana(ordines):
+    """ordines machinae in lineas legibiles (nuntii erratorum)"""
+    lineae = []
+    for o in ordines:
+        if o[0] == 'IUDICIUM' and len(o) >= 4:
+            lineae.append('%s %s - %s' % (o[1], o[2], o[3]))
+        elif o[0] == 'SANANDA' and len(o) >= 4:
+            lineae.append('  %s   # %s (%s)' % (o[3] or '(sanatio non declarata)',
+                                                o[1], o[2]))
+        elif o[0] == 'SANATIO' and len(o) >= 5:
+            lineae.append('%-11s %s%s' % (o[1], o[2],
+                                          ' - ' + o[4] if o[4] else ''))
+        elif o[0] == 'SUMMA' and len(o) >= 7:
+            lineae.append('fabrica: %s recentia, %s stala, %s ignota, %s non'
+                          ' iudicata (%s), %s orphana'
+                          % (o[1], o[2], o[3], o[4], o[6], o[5]))
+        elif o[0] == 'NOTA':
+            lineae.append('fabrica: ' + o[1])
+        else:
+            lineae.append(' '.join(o))
+    return lineae
+
+
 def _porta_per_gradum(nomen, vis=False, auditus=None):
     """porta per compositum gradus; None = via altera (fabrica verdicti
     cursoris, deinde cruda). 'bin/fabrica sanare <c>' membra stala (et
@@ -1822,32 +1857,40 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
                 pass
     if auditus is None:
         auditus = bool(os.environ.get('FABRICA_AUDITUS'))
-    r = _curre([FABRICA_BIN, 'sanare'] + (['-audit'] if auditus else [])
-               + [compositum])
+    r = _curre([FABRICA_BIN, 'sanare', '-machina']
+               + (['-audit'] if auditus else []) + [compositum])
     if r.returncode == 2:
         print('porta %s: fabrica sanare %s nequit (exitus 2) - via altera'
               % (nomen, compositum))
         return None
-    # VERDICTUM ab ipsa sanatione (bin/fabrica: compositum nominatum);
-    # iudicium alterum solum si linea abest (binarium vetus)
-    signum = r'^VERDICTUM (%s: (\d+)/(\d+).*)$' % re.escape(compositum)
+    # VERDICTUM ab ipsa sanatione (lineae machinae, H1); iudicium alterum
+    # solum si linea abest
+    ordines = _machina_legere(r.stdout)
     rj = r
-    m = re.search(signum, r.stdout, re.M)
-    if m is None:
-        rj = _curre([FABRICA_BIN, 'iudicare', '-plenus', compositum])
-        m = re.search(signum, rj.stdout, re.M)
-    if m is None:
+    v = [o for o in ordines if o[0] == 'VERDICTUM' and len(o) >= 4
+         and o[1] == compositum]
+    if not v:
+        rj = _curre([FABRICA_BIN, 'iudicare', '-plenus', '-machina',
+                     compositum])
+        v = [o for o in _machina_legere(rj.stdout) if o[0] == 'VERDICTUM'
+             and len(o) >= 4 and o[1] == compositum]
+    if not v:
         print('porta %s: VERDICTUM %s absens - via altera' % (nomen, compositum))
         return None
-    recentia, omnia = int(m.group(2)), int(m.group(3))
-    cursa = re.findall(r'^(SANATUM|FRACTUM|AUDITUM\S*)\s+%s/(\S+)(.*)$'
-                       % re.escape(compositum), r.stdout, re.M)
+    recentia, omnia = int(v[0][2]), int(v[0][3])
+    non_recentia = [x for x in (v[0][4] if len(v[0]) > 4 else '').split(',')
+                    if x]
+    cursa = [o for o in ordines if o[0] == 'SANATIO' and len(o) >= 5
+             and o[2].startswith(compositum + '/')]
     sana = r.returncode == 0 and omnia > 0 and recentia == omnia
-    compendium = '%s [membra cursa %d/%d, cetera reusa]' % (
-        m.group(1), len(cursa), omnia)
+    compendium = '%s: %d/%d%s [membra cursa %d/%d, cetera reusa]' % (
+        compositum, recentia, omnia,
+        (' - non recentia: ' + ', '.join(non_recentia[:3])
+         + (' +%d' % (len(non_recentia) - 3) if len(non_recentia) > 3 else ''))
+        if non_recentia else '', len(cursa), omnia)
     fr = [] if sana else [
-        Fractura('%s/%s' % (compositum, membrum), [linea.strip(' -')[:300]])
-        for genus, membrum, linea in cursa if genus != 'SANATUM']
+        Fractura(o[2], [('%s: %s' % (o[1], o[4]))[:300]])
+        for o in cursa if o[1] != 'SANATUM']
     _tempus_notare('porta', nomen, initium, sana, 0 if sana else 1)
     return Porta(nomen, True, sana, compendium, 0 if sana else 1,
                  _ANSI.sub('', r.stdout + r.stderr
@@ -2016,8 +2059,9 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             return None
     # II. iudicium solum (vile): RECENS = transitus servatus
     if not vis and not auditus:
-        rj = _curre([FABRICA_BIN, 'iudicare', '-omnia', via])
-        if re.search(r'^RECENS ', rj.stdout, re.M):
+        rj = _curre([FABRICA_BIN, 'iudicare', '-omnia', '-machina', via])
+        if any(o[0] == 'IUDICIUM' and len(o) >= 3 and o[1] == 'RECENS'
+               for o in _machina_legere(rj.stdout)):
             try:
                 textus = open(os.path.join(RADIX, via)).read().strip()
                 aetas = time.time() - os.path.getmtime(os.path.join(RADIX, via))
@@ -2028,15 +2072,19 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
             return Porta(nomen, True, True, '%s [transitus servatus, ante %s]'
                          % (compendium, _aetas(aetas)), 0, '', [], False)
     # III. sanare: porta currit (auditus: etiam RECENS) et servatur
-    argv = [FABRICA_BIN, 'sanare'] + (['-audit'] if auditus else []) + [via]
+    argv = ([FABRICA_BIN, 'sanare', '-machina']
+            + (['-audit'] if auditus else []) + [via])
     r = _curre(argv)
     if r.returncode == 2:
         # sera tenta aut declaratio fracta: via cruda (nihil servatum)
         print('porta %s: fabrica sanare nequit (exitus 2) - via cruda'
               % nomen)
         return None
-    cucurrit = re.search(r'^(SANATUM|FRACTUM|AUDITUM)\S*\s+porta_%s\b'
-                         % re.escape(nomen), r.stdout, re.M) is not None
+    sanationes = [o for o in _machina_legere(r.stdout)
+                  if o[0] == 'SANATIO' and len(o) >= 5
+                  and o[2] == 'porta_%s' % nomen]
+    cucurrit = any(o[1].startswith(('SANATUM', 'FRACTUM', 'AUDITUM'))
+                   for o in sanationes)
     adest = os.path.exists(os.path.join(RADIX, via))
     if not cucurrit and r.returncode == 0 and adest:
         try:
@@ -2058,8 +2106,10 @@ def _porta_per_fabricam(nomen, vis=False, auditus=None):
     imperium, signum = PORTAE[nomen]
     m = re.search(signum, acta)
     compendium = m.group(0) if m else '(signum absens)'
-    nota = re.search(r'(transitus non servatus[^\n]*|auditus: [^\n]*'
-                     r'|AUDITUM DISCORS[^\n]*)', r.stdout)
+    nota = None
+    for o in sanationes:
+        nota = nota or re.search(r'(transitus non servatus.*|auditus: .*'
+                                 r'|AUDITUM DISCORS.*)', o[4])
     if nota:
         compendium += ' [%s]' % nota.group(0)[:300]
     fr = [] if sana else fracturae(acta, nomen)
@@ -2604,12 +2654,12 @@ def _formam_praeparare(viae):
 def _stala_celeria():
     """bin/fabrica iudicare (celer, ~1.4 s): viae STALUM et lineae
     effusionis - status installatorum ante et post formam"""
-    r = subprocess.run([FABRICA_BIN, 'iudicare'], cwd=RADIX,
+    r = subprocess.run([FABRICA_BIN, 'iudicare', '-machina'], cwd=RADIX,
                        capture_output=True, text=True)
-    lineae = (r.stdout + r.stderr).splitlines()
-    stala = set(l.split(' ', 2)[1] for l in lineae
-                if l.startswith('STALUM ') and len(l.split(' ', 2)) > 1)
-    return stala, lineae
+    ordines = _machina_legere(r.stdout)
+    stala = set(o[2] for o in ordines
+                if o[0] == 'IUDICIUM' and len(o) >= 3 and o[1] == 'STALUM')
+    return stala, ordines
 
 
 def _formam_custodire(viae, sine_fabrica=None):
@@ -2630,14 +2680,11 @@ def _formam_custodire(viae, sine_fabrica=None):
     _formam_praeparare(viae)
     if not custodia or _sigilla_viarum(formandae) == ante_sigilla:
         return
-    post_stala, lineae = _stala_celeria()
+    post_stala, ordines = _stala_celeria()
     novae = sorted(post_stala - ante_stala)
     if not novae:
         return
-    sanatio = []
-    if 'SANATIO:' in lineae:
-        sanatio = [l for l in lineae[lineae.index('SANATIO:') + 1:]
-                   if l.startswith('  ')]
+    sanatio = _machina_humana([o for o in ordines if o[0] == 'SANANDA'])
     raise SilvaError(
         'FORMA artificia installata stala fecit (%s): forma fontes eorum'
         ' post aedificationem rescripsit - portae binarium vetus'
@@ -2678,18 +2725,26 @@ def _fabricam_exigere(viae, sine_fabrica=None):
               ' iudicata (./tools/fabrica_struere.sh)')
         return
     print('fabrica iudicat artificia generata tacta (%d viae)...' % len(viae))
-    r = subprocess.run([FABRICA_BIN, 'iudicare', '-plenus', '-tacta'] + list(viae),
+    r = subprocess.run([FABRICA_BIN, 'iudicare', '-plenus', '-tacta',
+                        '-machina'] + list(viae),
                        cwd=RADIX, capture_output=True, text=True)
-    lineae = [l for l in (r.stdout + r.stderr).splitlines()
-              if l and not l.startswith('ORPHANUM')]
+    ordines = [o for o in _machina_legere(r.stdout) if o[0] != 'ORPHANUM']
+    # lineae legibiles (nuntii) + lineae non-machinae et errata stderr
+    # (exitus 2) ut sunt
+    lineae = (_machina_humana(ordines)
+              + [l for l in r.stdout.splitlines()
+                 if l and not (l.split('\t')[0].isupper()
+                               and l.split('\t')[0].isalpha() and '\t' in l)]
+              + [l for l in r.stderr.splitlines() if l])
     if r.returncode == 0:
         print(lineae[-1] if lineae else 'fabrica: sana')
         return
     # STADIUM IUDICUM (fabrica-6 T3): iudex stalus (bin/compilator,
     # bin/aedilis - non commissi) artificia tacta NON IUDICATA reddit;
     # regula 'non commissa non obstant' hic NIHIL iudicatum transmitteret
-    recusata = [l for l in lineae
-                if l.startswith('NON IUDICATUM ') and ' - iudex ' in l]
+    recusata = [o for o in ordines
+                if o[0] == 'IUDICIUM' and len(o) >= 4
+                and o[1] == 'NON IUDICATUM' and o[3].startswith('iudex ')]
     if recusata:
         raise SilvaError(
             'FABRICA (ante portas): stadium iudicum - artificia tacta NON'
@@ -2700,8 +2755,9 @@ def _fabricam_exigere(viae, sine_fabrica=None):
     # corpus) - commissio de COMMISSIS solis iudicat; stala non commissa
     # nominantur, non obstant (sanare ea sanat)
     if r.returncode == 1:
-        malae = [l.split(' ', 2)[1] for l in lineae
-                 if l.startswith(('STALUM ', 'IGNOTUM ')) and len(l.split(' ', 2)) > 1]
+        malae = [o[2] for o in ordines
+                 if o[0] == 'IUDICIUM' and len(o) >= 3
+                 and o[1] in ('STALUM', 'IGNOTUM')]
         if malae and not VIAE_COMMISSAE(malae):
             print('fabrica: %d artificia NON commissa non recentia (%s) -'
                   ' commissionem non obstant; bin/fabrica sanare ea sanat'

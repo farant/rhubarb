@@ -604,3 +604,21 @@ vexilla.sh). Not done (recorded): volumes / filum backend (next slice),
 other step kinds, source annotations beyond `facultas`, snapshot builds,
 PORTAE as a derived view, other runners (root and silva are where
 per-test granularity should show), deleting the toml runner (...MX8N).
+
+## Housekeeping after slice 6
+
+H1 (machine output) - `bin/fabrica iudicare|sanare -machina` prints TSV
+records; the first field is the type: IUDICIUM (status, artifact,
+cause), COMPOSITUM, VERDICTUM (title, N, M, the non-fresh members),
+SANANDA, ORPHANUM, BINARIA, PRAECONDICIO, SANATIO (event, title, ms,
+cause), AGITUR, UNDA, NOTA, SUMMA. Tabs and newlines inside a field
+become a space and ` | `. Errors (exit 2) stay on stderr. The human form
+is unchanged. Consumers moved off the human lines: silva.py
+(`_porta_per_gradum`, `_porta_per_fabricam`, `_stala_celeria`,
+`_fabricam_exigere` via `_machina_legere`/`_machina_humana`),
+`tools/generata_iudicare.sh`, `tools/toml_gradus_oraculum.sh`. The
+pythonica fakes now speak TSV. Fumus XL is the contract: every line has
+a known type, and the VERDICTUM counts are checked before and after a
+heal. Plants: VERDICTUM N miscounted -> red; one human line leaking
+into machine mode -> red ("lineae ignotae 1").
+H2-H4 (file splits, no behaviour change) follow.
