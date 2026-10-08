@@ -196,3 +196,19 @@ shades, eighths, braille, diagonals, dashes, a tmux border) rendered
 headless through tools/aemulator_vttest.c and looked at. Six plants
 caught (no rune, shade unmixed, cursor as text, contrast on graphics,
 twin ignored, runs unmerged).
+
+
+## 2026-10-07 — install stage (aemulator-plan D8 follow-up)
+
+Fran approved: fabrica action `terminale` (tools/terminale_struere.sh,
+the mensor_ui pattern: aedilis -> provenance -> struere -> rm + cp into
+bin/terminale) and `institutio_terminale` (tools/instituere.sh ->
+~/.bin/terminale, the briar pattern). The app answers `-provenientia`
+(fabrica's `relatio`: the binary reports the digest it was built
+from), so `bin/fabrica iudicare` can tell a stale install.
+apps/terminale/terminale.sh now builds through the same script - once
+terminale.c names the provenance file a build that skips writing it
+fails. INSTALL ONLY FROM MAIN (after the merge): `./tools/instituere.sh
+bin/terminale` or `bin/fabrica sanare installata`. The twin stays
+dev-only. terminale is self-contained at run time (font and theme
+compiled in, only $SHELL read), so the ~/.bin copy runs anywhere.

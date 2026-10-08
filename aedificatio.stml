@@ -173,6 +173,19 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/mensor" provenientia="relatio"/>
   </actio>
+  <actio titulus="terminale" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/terminale_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/terminale"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/terminale/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/terminale_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/terminale" provenientia="relatio"/>
+  </actio>
   <actio titulus="mensor_ui" genus="institutio">
     <mandatum>
       <verbum! (>./tools/mensor_ui_struere.sh
@@ -894,6 +907,15 @@
     <ingressus genus="fasciculus" via="bin/silex"/>
     <ingressus genus="fasciculus" via="tools/instituere.sh"/>
     <exitus via="~/.bin/silex" scriptura="silex" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="institutio_terminale" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/terminale
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/terminale"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/terminale" scriptura="terminale" provenientia="regeneratio"/>
   </actio>
   <actio titulus="institutio_stml" genus="institutio" memorabilis="verum" celer="verum">
     <mandatum>

@@ -8,8 +8,11 @@
  * ad conchum it, numquam applicationem claudit.
  *
  * Optiones: -fumus (concha scripta, LX quadra, exitus), -imago <via>
- * (quadrum ultimum in PNG).
+ * (quadrum ultimum in PNG), -provenientia (fabrica: digestum
+ * structurae; ~/.bin/terminale per institutio_terminale).
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/terminale.c"/> */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -19,6 +22,7 @@
 #include "ludus_fenestra.h"
 #include "pseudoterminale.h"
 #include "terminale.h"
+#include "provenientia.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -36,6 +40,8 @@ hic_manens constans character* constans ambitus[] = {
     "TERM_PROGRAM=terminale",
     NIHIL
 };
+
+externus constans ProvenientiaRelatio provenientia_terminale;
 
 s32
 principale (
@@ -64,6 +70,11 @@ principale (
                        character  titulus_c[CCLVII];
               constans character* via_imaginis;
 
+    si (provenientia_respondere((s32)argc, argv,
+        &provenientia_terminale))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("terminale", VIII * M * M);
     si (!piscina)
     {

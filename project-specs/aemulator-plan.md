@@ -781,6 +781,8 @@ Later phases (re-planned after A's RELATIO):
   - **D8 - RELATIO.** Done 2026-10-07 (phase-log D8): Fran's bar met
     (Claude Code, tmux, nvim, btop); esctest 296 with every failure
     named; park 011 = full redraw per frame (btop scroll lag).
+    Install stage built in secunda (fabrica actions `terminale` +
+    `institutio_terminale`); installing waits for the merge (from main).
 - **D (old sketch).** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
   `codificator_terminalis`; the bar: vim, less, htop look right; a
