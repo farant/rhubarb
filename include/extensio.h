@@ -10,6 +10,9 @@
  * Elementa SIGNATA corpore suo (sicut cyclotomia): operationes corpus
  * ex elementis legunt, corpora mixta refutantur; corpus NIHIL =
  * INVALIDUM, ex corporibus mixtis ortum, sicut NaN propagatur.
+ * IDENTITAS CORPORIS PER INDICEM (sicut anulus_residuorum): duo
+ * vocamina extensio_quadratica(5) corpora DIVERSA reddunt, quorum
+ * elementa non miscentur - corpus semel creatum communica.
  *
  * CORPORA: extensio_quadratica (Q(sqrt d)) et extensio_cosinus
  * (Q(cos 2 pi/n): Q(sqrt 2) n = 8, Q(sqrt 3) n = 12, Q(sqrt 5) n = 5).
@@ -18,7 +21,15 @@
  * super matricem multiplicationis (determinans = norma).
  *
  * ORDO: corpus radicem realem f electam portare potest (extensio_
- * ordinata); signum et comparatio exacta sequuntur (gradus E2).
+ * ordinata), indice ordine crescente electam (radix 0 = minima). Radix
+ * per catenam Sturm isolatur (intervallum rationale unam radicem
+ * continens); algebraicus_signum numeratorem super intervallum per
+ * arithmeticam intervallorum EXACTAM aestimat et bisecat donec nullum
+ * excludatur - terminatur quia numerator gradus < d in alpha non
+ * evanescit (f irreducibilis). Testimonium nullius: |numerator(alpha)|
+ * >= 1/M^(d-1) nisi nullus (norma integra), ergo intervallum angustius
+ * nullum continens nullum PROBAT - f reducibilis (a vocante asserta
+ * irreducibilis) refutationem dat, non ansam aeternam.
  *
  * USUS:
  *   Extensio*   k = extensio_quadratica(V, piscina);
@@ -90,6 +101,34 @@ b32
 extensio_ordinata (
     constans Extensio* k);
 
+/* index radicis electae (0 = minima realis), -1 si sine ordine */
+s32
+extensio_radix (
+    constans Extensio* k);
+
+/* Q(alpha), f(alpha) = 0: f monicus in Z[t] (exponentes >= 0), gradus
+ * >= 1; radix = index radicis realis ordine crescente (0 = minima) ->
+ * corpus ordinatum, aut -1 = sine ordine. NIHIL si f non monicus, non
+ * liber quadratis, radicem rationalem habet (gradu > 1), aut radix
+ * extra [-1, radices reales). Gradu 2-3 sine radice rationali
+ * irreducibilis est; gradu >= 4 VOCANS irreducibilitatem asserit
+ * (divisor nullius in inversa refutatur, signum testimonio nullius
+ * refutat). SUMPTUS: catena Sturm crescit ut d^3 (gradu ~200 centena
+ * MB); familiae nominatae (quadratica, cosinus) eam vitant. */
+Extensio*
+extensio_ex_polynomio (
+    Polynomium  f,
+           s32  radix,
+       Piscina* piscina);
+
+/* numerus radicum realium DISTINCTARUM f (Sturm); FALSUM si f nullum,
+ * constans, aut exponentes negativos habet */
+b32
+extensio_radices_reales (
+    Polynomium  f,
+       Piscina* piscina,
+           i32* exitus);
+
 /* corpus pro matrix (elementa Algebraicus, titulus "Q(...)"): corpus et
  * integrum; divide_exacte = divisio (FALSUM solum si divisor nullus).
  * Una descriptio per corpus; elementa alterius corporis refutantur. */
@@ -116,7 +155,9 @@ algebraicus_generator (
               Piscina* piscina);
 
 /* p(alpha) / denominator, p Laurent quilibet (exponentes negativi per
- * alpha^-1). FALSUM si denominator nullus aut k NIHIL. */
+ * alpha^-1; exponentes magni per potentias, non per Hornerum densum).
+ * FALSUM si denominator nullus, k NIHIL, aut exponens negativus cum
+ * f(0) = 0 (alpha = 0 non invertibilis). */
 b32
 algebraicus_ex_polynomio (
      constans Extensio* k,
@@ -252,5 +293,28 @@ algebraicus_ex_chorda (
                 chorda  textus,
                Piscina* piscina,
            Algebraicus* exitus);
+
+
+/* ==================================================
+ * Ordo (solum si extensio_ordinata)
+ * ================================================== */
+
+/* signum a ad radicem electam: -1, 0, +1 EXACTUM. FALSUM si
+ * invalidum, corpus sine ordine, aut numerator(alpha) = 0 cum
+ * numerator non nullus PROBATUM (testimonio |N| >= 1: f
+ * reducibilis). */
+b32
+algebraicus_signum (
+    Algebraicus  a,
+        Piscina* piscina,
+            s32* exitus);
+
+/* signum(a - b); FALSUM sicut algebraicus_signum aut corpora mixta */
+b32
+algebraicus_compara (
+    Algebraicus  a,
+    Algebraicus  b,
+        Piscina* piscina,
+            s32* exitus);
 
 #endif /* EXTENSIO_H */

@@ -83,3 +83,93 @@ alpha^-1 sign.
 by bisection on exact rationals, `extensio_radices_reales`,
 `extensio_ex_polynomio(f, radix)` with its checks, `algebraicus_signum`,
 `algebraicus_compara`. Then E3: certified decimal digits.
+
+## 2026-10-08 - review I (E1) fixes + E2: Sturm, root isolation, exact order
+
+**Review I (fresh recensor-mathematicus, own Python oracle).** No wrong
+arithmetic: ~20k operations over 131 fields (60-digit coefficients, ASan /
+UBSan / venenum), Psi_n correct for every n <= 1000 by a separate Chebyshev
+derivation, 360 random matrices over 6 fields. Fixed:
+- F1 (UB): `extensio_quadratica(INT64_MIN)` negated INT64_MIN before the
+  range check and returned an out-of-contract field. Range now checked first.
+- F2 (DoS): text "a^100000" took 1.1 s / 427 MB through dense Horner (one
+  step per exponent); "a^1073741823" never returned. Inputs of degree >= 2d
+  now go term by term with `algebraicus_potentia` in a scratch pool
+  (`_ex_positivo`).
+- F3 (perf): the inverse ran d + 1 Bareiss determinants (Cramer): d = 24,
+  40-digit coefficients, 1.1 s and 1.5 MB of garbage. Now ONE kernel solve
+  of [M | -e_0] (`matrix_nucleus`), x / lambda, in a scratch pool; norm and
+  trace also use scratch pools (`_officina_aperire` + `_transcribere`).
+- F4: "a + 1/2" was read as (a + 1)/2. Unparenthesised "P/D" now requires a
+  single-term P (refused otherwise).
+- F5: Psi_n by the Chebyshev recurrence C_(j+1) = x C_j - C_(j-1), O(m^2)
+  (was O(m^3)).
+- F6: header documents Laurent refusal when f(0) = 0 and that field identity
+  is by POINTER (two calls of extensio_quadratica(5) are different fields).
+- Test gaps (14 surviving mutants): `aequalis` was never asserted FALSUM
+  within one field (identity tests vacuous); est_rationalis negative;
+  canonical `nega`; degree-1 fields (n = 3, 4, 6) now in the identity loop;
+  generator of a degree-1 field reduced; denominator 0 via ex_polynomio;
+  foreign elements in matrix add/multiply/aequalis; n = M boundary.
+
+**E2 (API approved 2026-10-08).** `extensio_ex_polynomio(f, radix)`,
+`extensio_radices_reales`, `extensio_radix`, `algebraicus_signum`,
+`algebraicus_compara`.
+- Sturm chain: primitive PRS with POSITIVE pseudo-remainder scaling
+  |lc|^k (signs preserved). Isolation by bisection from the Cauchy bound,
+  left to right, so roots come out ascending and "radix = k-th smallest" is
+  well defined.
+- Generic constructor checks: monic, squarefree (last chain element
+  constant), radix range, and no rational root: every real root refined to
+  width < 1 and the integer next to it tested (monic: rational roots are
+  integers). (t - 3)(t^2 - 2) is refused although 3 is never a bisection
+  midpoint.
+- `signum`: interval Horner of the numerator over the root's interval,
+  bisecting until 0 is excluded. ZERO CERTIFICATE instead of a blind limit:
+  the numerator is integral and alpha an algebraic integer, so N(num(alpha))
+  is a nonzero integer unless num(alpha) = 0, and every conjugate is bounded
+  by M = sum |c_i| B^i (B = Cauchy bound): |num(alpha)| >= 1/M^(d-1). An
+  enclosure narrower than that still containing 0 PROVES num(alpha) = 0,
+  i.e. f reducible -> FALSUM. The test of that case went from 4 s (2000
+  blind bisections) to milliseconds.
+- Named families do not isolate all roots: a candidate interval (sqrt d in
+  (r, r + 1]; 2cos(2pi/n) from f64 +- 2^-16 with denominator 2^20) is
+  CERTIFIED by Descartes' rule, which is exact because every root is real:
+  roots above infra = d - radix, above supra = d - radix - 1 (Taylor shift
+  of the integer polynomial q^d f((p + w)/q), O(d^2) small multiplications).
+  If the certificate fails the constructor returns NIHIL (loud) rather than
+  falling back to Sturm.
+
+**Memory and time (Fran saw ~80 GB during the plant run).**
+- The 80 GB was plant E11 (signed scaling): leading terms never cancel, the
+  `dum` loop in `_residuum` never ended and coefficients doubled in an
+  unbounded test pool. The shipped test peaked at 15 MB. Fixed at the root:
+  `_residuum` is STRUCTURALLY bounded (deg a - deg b + 1 passes), the Sturm
+  chain cannot run past its array. The plant runner now has a memory
+  watchdog (kills a test above 2 GB, counts it red).
+- The first E2 candidate check used a Sturm chain: degree 498 (n = 997) took
+  3.3 s and 2.85 GB (chains grow like d^3). Descartes: 0.11 s; n = 1000 is
+  0.01 s / 15 MB. A Sturm fallback for the named families was itself a
+  multi-GB bomb at degree 200 (plants E20, E24): now refused instead.
+- I briefly deleted the "use the candidate" branch while editing, so every
+  certified candidate fell into full isolation (n = 500: 4.3 GB). Results
+  were identical, so no correctness test could see it; two CREDO_NON_PENDET
+  deadline tests (cosinus(997), "a^200000 + 1") now catch any return to a
+  slow path, and run in a child process, which also caps runaway memory.
+
+**Tests: 152, 0.7 s.** Oracles: hand root counts (incl. non-squarefree
+counting distinct roots), Psi_n all-real for n <= 60, refusals (non-monic,
+rational roots, not squarefree, radix range, Laurent f), cube root of 2
+bounds, signs of (1 + sqrt 2)^k and phi^k conjugates up to k = 100 (sign
+(-1)^k, magnitude down to 1e-38, far below f64), random signs against f64 at
+known roots in 6 generic fields, compara antisymmetry, a reducible quartic
+accepted by assertion with its zero divisor refused by inverse and signum.
+
+**Plants: 24, 22 red, 2 equivalent.** E13 (zeros counted as sign changes in
+a Sturm chain) is equivalent by the Sturm property (a zero inside the chain
+sits between opposite signs). E16 (radix range `>` for `>=`) is caught
+downstream: `_creare` refuses an index >= the roots found.
+
+**Not done (E3 next):** certified decimal digits for display. Generic
+constructor still uses Sturm: high degree is expensive (document; the named
+families avoid it).

@@ -367,6 +367,9 @@
   <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
   <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>
   <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
+  <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
+  <vocabulum lemma="cauchy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: A.-L. Cauchy (limes radicum 1 + max |f_i|; lib/extensio.c)"/>
+  <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
   <vocabulum lemma="arf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Cahit Arf (invarians Arf nodi, V(i) = (-1)^Arf)"/>
   <vocabulum lemma="phi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: phi(n) Euleri, Phi_n polynomium cyclotomicum"/>
   <vocabulum lemma="mu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: mu(n) functio Moebius"/>
@@ -393,6 +396,14 @@
   </vocabulum>
   <vocabulum lemma="cosinus" lingua="latina" classis="substantivum" nota="Neolatina (Gunter, ex 'complementi sinus'): cosinus anguli (Q(cos 2 pi/n)); sedes include/extensio.h; WORDS caret">
     <forma textus="cosinus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="bisectio" lingua="latina" classis="substantivum" nota="Neolatina: bisectio, sectio in duas partes aequales (intervalli, ad radicem isolandam); sedes lib/extensio.c; WORDS caret">
+    <forma textus="bisectio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="bisectionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
   <vocabulum lemma="binomium" lingua="latina" classis="substantivum" nota="Neolatina: binomium, polynomium duorum terminorum (t + 1/t); sedes lib/extensio.c; WORDS caret">
     <forma textus="binomium" casus="nominativus" numerus="singularis" genus="neutrum"/>
