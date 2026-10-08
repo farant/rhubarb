@@ -337,3 +337,19 @@ For T6: the real sutura hooks - `processus` has no cwd / exact-env
 path, so `in_area_currere` needs a small `processus` API addition (to
 Fran first); bin/fabrica calling `fabrica_gradus_explicare` and
 printing orphan areas; the step element in aedificatio.stml + canon.
+
+**T6a (2026-10-07): `processus_exsequi_cum`.** The real
+`in_area_currere` needs a child with its own cwd and an EXACT
+environment; `processus` (fork + execvp) inherited both. Added (API
+approved by Fran): `ProcessusOptiones {directorium, ambitus}` and
+`processus_exsequi_cum` - in the child after fork: `chdir` (failure
+goes through the exec-error pipe, so it is `PROCESSUS_ERROR_EXEC` with
+errno: nothing ran), then `environ` = the given vector, then `execvp`
+(the PATH search uses the GIVEN environment). The parent never changes;
+`processus_incipere` is now `_incipere_cum(.., NIHIL, ..)` - one path.
+Tests probatio_processus XXII-XXVI (cwd honoured, `/usr/bin/env`
+prints exactly the vector and the parent's environment is untouched,
+PATH search through the given PATH and its failure, missing directory
+= named EXEC error with no output, NIHIL options = processus_exsequi).
+Plants: chdir skipped, environ not swapped, chdir failure swallowed -
+each red. Glossary: `environ` (POSIX name).

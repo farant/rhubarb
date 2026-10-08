@@ -492,6 +492,7 @@
   <vocabulum lemma="eof" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="fcntl" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="posix" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
+  <vocabulum lemma="environ" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum - POSIX: ambitus processus (processus_exsequi_cum)"/>
   <vocabulum lemma="http" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="tcp" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
   <vocabulum lemma="uuid" lingua="anglica" classis="ignotum-permissum" nota="C / API / formatum"/>
