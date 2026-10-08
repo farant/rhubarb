@@ -1,6 +1,13 @@
 #ifndef FABRICA_H
 #define FABRICA_H
 
+/* <aedilis corpus="lib/fabrica_genera.c"/> */
+/* <aedilis corpus="lib/fabrica_declarationes.c"/> */
+/* <aedilis corpus="lib/fabrica_ordo.c"/> */
+/* <aedilis corpus="lib/fabrica_sanare.c"/> */
+/* <aedilis corpus="lib/fabrica_gradus.c"/> */
+/* <aedilis corpus="lib/fabrica_probationes_c.c"/> */
+
 #include "latina.h"
 #include "chorda.h"
 #include "piscina.h"
@@ -35,7 +42,8 @@
  * exitus RECENS esse sciatur (iudicare). Registra nominibus quaeruntur
  * (fabrica_genus_invenire, fabrica_strategia_invenire) - machina
  * numquam super genus commutat. Genus novum = structura nova in
- * lib/fabrica.c, numquam enumeratio crescens. */
+ * lib/fabrica_genera.c (strategia: lib/fabrica.c), numquam
+ * enumeratio crescens. */
 nomen structura FabricaGenus     FabricaGenus;
 nomen structura FabricaStrategia FabricaStrategia;
 nomen structura FabricaSanatio   FabricaSanatio;

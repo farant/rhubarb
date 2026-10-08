@@ -2100,3 +2100,27 @@ tabs after repr. The dry-run UNDAE printing used to set `undae = NIHIL`
 to skip the human loop in machine mode; it is now a plain `!_machina`
 guard. Flake seen once: pythonica "commissio_umbra: recepta sua deleta"
 failed in the full run, then passed alone and on a rerun (ledger note).
+
+## 2026-10-08 - housekeeping H2: the library split
+
+- The cut was decided by measuring the static call graph across
+  candidate files, not by the section banners: the first map (read
+  traces in their own file) crossed 29 names, because the judging
+  strategies lean on five read-trace helpers; keeping judgment and read
+  traces together in the core and moving composites/preconditions to
+  the declarations file (they use `_recusare`/`_sedes`) brought it to
+  24. The banners also misled: everything between "GRADUS: areae" and
+  "GRADUS: registrum" was mostly sanare machinery.
+- `silva/renominare.sh -scribere` refuses a dirty file (its undo is
+  git). After the first rename, the remaining 22 went through
+  `silva/build/renominare` directly with `-via lib/fabrica.c`, keeping
+  a copy of the file as the undo.
+- The oracle's first compare after a rebuild differs only in the cause
+  of RECENS rows: a new bin/fabrica changes memo keys ("regeneratio
+  congruit" until refilled) and the spot audit rotates. Compare status
+  + artifact for RECENS, everything else whole.
+- The dependency-fracture check exists twice in fabrica_sanare.c:
+  `_dependentia_fracta` (wave heal - bin/fabrica's path) and inline in
+  `_ante_agere` (serial - the path probatio_fabrica takes). A plant in
+  one is invisible to the other's tests; fumus covers the first, the
+  root suite the second.

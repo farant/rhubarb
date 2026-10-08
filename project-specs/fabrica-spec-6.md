@@ -622,3 +622,22 @@ a known type, and the VERDICTUM counts are checked before and after a
 heal. Plants: VERDICTUM N miscounted -> red; one human line leaking
 into machine mode -> red ("lineae ignotae 1").
 H2-H4 (file splits, no behaviour change) follow.
+
+H2 (library split) - lib/fabrica.c (8,515 lines) is now seven files, the
+code moved as whole ranges in its original order: fabrica.c (core:
+helpers, sutura, manifest, judgment - action seal, read traces, store,
+regeneration, strategies, fabrica_iudicare; ~1,830), fabrica_genera.c
+(input kinds; ~1,680), fabrica_declarationes.c (reader, subsystems,
+composites, preconditions; ~1,510), fabrica_ordo.c (dependencies,
+order, write traces, waves; ~670), fabrica_sanare.c (~1,890),
+fabrica_gradus.c (areas, environment, step registry, expansion,
+orphans, step composites; ~620), fabrica_probationes_c.c (~360).
+include/fabrica.h names the six extra bodies with `<aedilis corpus>`;
+the 24 helpers that cross files are declared in the private
+include/fabrica_interna.h with the prefix `fabricae_` (genitive -
+distinct from the API, and no clash in the link-everything suite).
+Behaviour unchanged: census, `iudicare -plenus -omnia -machina` and
+`sanare -siccum -machina` byte-identical before/after (RECENS causes
+normalised - memo and audit state, not code); fumus XL/XL; root suite
+green. Plants in fabrica_sanare.c: the wave path's dependency check ->
+fumus red, the serial path's -> root suite red.

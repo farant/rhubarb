@@ -4,7 +4,7 @@
   declarationes actionum fabricae (project-specs/fabrica-spec-v2.md,
   planum fabrica-plan-1a.md T2). Actio = ingressus -> exitus per
   genus typatum (nulla lingua expressionum - decretum Canonis).
-  Lector: fabrica_declarationes_legere (lib/fabrica.c), qui praeterea
+  Lector: fabrica_declarationes_legere (lib/fabrica_declarationes.c), qui praeterea
   titulum duplicem recusat (directoria scripturae colliderent) -
   regula quam canon dicere non potest.
 
@@ -178,7 +178,7 @@
 
   <elementum nomen="ingressus"
     nota="genus (alias) AUT res + clavis (axes duo, fabrica-6 T2): par
-          sine genere aut ambo simul recusantur (lib/fabrica.c)">
+          sine genere aut ambo simul recusantur (lib/fabrica_declarationes.c)">
     <attributum nomen="res" genus="electio">
       <optio>plagula</optio>
       <optio>plagulae</optio>
