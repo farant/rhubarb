@@ -2197,3 +2197,22 @@ of installata and of a composite) byte-identical against the old code,
 built from a saved copy; fumus XL/XL covers healing with fractures;
 pythonica sana. Plants: FRACTUM not counted -> XVII/XXI/XXIV red; stale
 not counted -> XV/XXIV/XXVII red.
+
+## 2026-10-08 - the declarations reader as stages
+
+`fabrica_declarationes_legere_cum_sutura` (526 lines) is now 67: the
+loop over `<actio>` calls `_actionem_legere`, a short-circuit chain of
+stages in the original order (the first refusal still wins):
+`_attributa_actionis`, `_gradum_legere`, three `_nomina_filiorum`
+(ambitus/variabilis, post/actio, praecondicio/actio - the same loop was
+written three times), `_vestigia_legere`, `_ingressus_legere`,
+`_exitus_legere`, `_actionem_probare`. `_verum_falsum` replaces four
+copies of the true/false attribute block (celer, lectiones,
+memorabilis, iudex); its message is built with sprintf and is
+byte-identical. `LectorActionum` carries piscina, via, causa; stages
+refuse through `_lectio_recusata`. The input/output/trace/step stages
+were moved mechanically (dedent, `actio.` -> `actio->`, refusal calls
+rewritten by regex). Oracle: 772/772, the 13 H4b views identical,
+fumus XL/XL. Plants: 'verum' read as FALSUM -> memorabilis assertion
+red; a name not appended -> praecondiciones and order assertions red.
+`_familiam_explicare` (244) is the next long one here.
