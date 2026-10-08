@@ -1393,6 +1393,130 @@ s32 principale (vacuum)
         CREDO_VERUM (_textus_est(x, "2"));
     }
 
+
+    /* ==================================================
+     * OSTENSIO: DIGITI CERTI (E3)
+     * oraculum: Python decimal, praecisio 250, ROUND_HALF_EVEN;
+     * 2cos(2pi/7) per Newton in Decimal super t^3 + t^2 - 2t - 1
+     * ================================================== */
+
+    {
+        Extensio* k2 = extensio_quadratica(II, piscina);
+        Extensio* k3 = extensio_quadratica(III, piscina);
+        Extensio* k5 = extensio_quadratica(V, piscina);
+        Extensio* k7 = extensio_cosinus(VII, piscina);
+        Extensio* k_cubica = extensio_ex_polynomio(_p("t^3 - 2"),
+            ZEPHYRUM,
+            piscina);
+           Extensio* k_minus_unum = extensio_quadratica(-I, piscina);
+        Algebraicus  x;
+
+        imprimere("\n--- Ostensio (digiti certi) ---\n");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "a"), L, piscina),
+            "1.41421356237309504880168872420969807856967187537695");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k5,
+            "(a + 1)/2"), XL, piscina),
+            "1.6180339887498948482045868343656381177203");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k3,
+            "-a/7"), XXX, piscina),
+            "-0.247435829652696756218206620215");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(
+            algebraicus_generator(k7, piscina), XXX, piscina),
+            "1.246979603717467061050009768008");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(
+            algebraicus_generator(k_cubica, piscina), XL, piscina),
+            "1.2599210498948731647672106072782283505703");
+        /* (1 + sqrt 2)^50 = integer - ~1e-19: prope integrum */
+        (vacuum)algebraicus_potentia(_a(k2, "1 + a"), L, piscina, &x);
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(x, X,
+            piscina), "13765255184676885126.0000000000");
+        /* (1 - sqrt 2)^21 ~ -9.2e-9: ad nullum, sine signo */
+        (vacuum)algebraicus_potentia(_a(k2, "1 - a"), XXI, piscina, &x);
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(x, V,
+            piscina), "0.00000");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "a"), ZEPHYRUM, piscina), "1");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "a"), I, piscina), "1.4");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k5,
+            "(-a - 1)/2"), III, piscina), "-1.618");
+        /* prope medium: 0.123455 +- (sqrt 2 - 1)^30 (~2.7e-12) ad V
+         * digitos - a 10^5 intra 1e-7 a 12345.5: approximatio sola
+         * (error < 1/4 unitatis) errare potest, certificatio
+         * decernit */
+        (vacuum)algebraicus_potentia(_a(k2, "a - 1"), XXX, piscina, &x);
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(
+            algebraicus_adde(_a(k2, "123455/1000000"), x, piscina), V,
+            piscina), "0.12346");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(
+            algebraicus_subtrahe(_a(k2, "123455/1000000"), x, piscina),
+            V,
+            piscina), "0.12345");
+        /* rationales: rotundatio exacta, paritas in medio */
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "1/3"), V, piscina), "0.33333");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "2/3"), V, piscina), "0.66667");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "5/2"), ZEPHYRUM, piscina), "2");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "7/2"), ZEPHYRUM, piscina), "4");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "-1/8"), II, piscina), "-0.12");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(k2,
+            "-1/1000"), II, piscina), "0.00");
+        /* sine ordine: textus exactus; invalidum */
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(_a(
+            k_minus_unum, "a + 1"), IV, piscina), "a + 1");
+        CREDO_CHORDA_AEQUALIS_LITERIS (algebraicus_ad_ostendendum(
+            algebraicus_adde(_a(k2, "a"), _a(k3, "a"), piscina), IV,
+            piscina), "invalidum");
+    }
+
+    {
+        /* ostensio fortuita contra f64: digiti VIII, |valor| < 1e6,
+         * congruentia intra unitatem ultimam (f64 ~1e-10 relativus) */
+        hic_manens constans character* polynomia[] = { "t^2 - 2",
+            "t^2 + t - 1", "t^3 - 2", "t^3 - 3t + 1" };
+        hic_manens constans s32 indices[] = { I, I, ZEPHYRUM,
+            ZEPHYRUM };
+        hic_manens constans f64 radices[] = { 1.4142135623730951,
+            0.6180339887498949, 1.2599210498948732,
+                -1.8793852415718167 };
+        Sors s;
+         b32 ostensio_bene = VERUM;
+         i32 c;
+
+        sors_seminare(&s, DCCLXXVII, III);
+        per (c = ZEPHYRUM; c < IV; c++)
+        {
+            Extensio* k = extensio_ex_polynomio(_p(polynomia[c]),
+                indices[c], piscina);
+            i32 iteratio;
+
+            per (iteratio = ZEPHYRUM; iteratio < XX; iteratio++)
+            {
+                PiscinaNotatio nota  = piscina_notare(piscina);
+                   Algebraicus a     = _fortuitum(k, &s);
+                           f64 valor;
+                        chorda textus;
+                           f64 lectum;
+
+                valor   = _valor(a, radices[c], extensio_gradus(k));
+                textus  = algebraicus_ad_ostendendum(a, VIII, piscina);
+                lectum = strtod(chorda_ut_cstr(textus, piscina),
+                    NIHIL);
+                si (fabs(lectum - valor) > 0.6e-8 + 1e-12 * fabs(valor))
+                {
+                    ostensio_bene = FALSUM;
+                }
+                piscina_reficere(piscina, nota);
+            }
+        }
+        CREDO_VERUM (ostensio_bene);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

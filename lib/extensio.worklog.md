@@ -278,3 +278,38 @@ still rests on the test at the limit. (alpha - c)^500: cos 2pi/19 150 s ->
 "test only at the limit" plant (E39). Doubling-only (E40, the E2c
 behaviour) survives: a 2x difference is not reliably separable by a
 deadline; recorded as a bounded performance mutant. 172 tests.
+
+## 2026-10-08 - E3: certified decimal display
+
+`algebraicus_ad_ostendendum(a, digiti, p)`: a to `digiti` decimals,
+CORRECTLY ROUNDED, every printed digit certain.
+- Rational elements: exact rounding, ties to even (as `fractio_rotunda`).
+- Ordered fields: `_propinquum` refines the root interval (the dyadic
+  bisection of signum, in scratch pools) until the centred-form error D w /
+  (2 den) is below 1/(4 10^k), giving a rational m. R = round(m 10^k) is
+  then CERTIFIED exactly: signum(a 10^k - (R + 1/2)) < 0 < signum(a 10^k -
+  (R - 1/2)), with a +-1 correction (at most a few steps). The checks reuse
+  signum, so they are bounded by the zero certificate, and a 10^k for
+  irrational a is never exactly a half-integer, so they always decide.
+- Unordered fields (Q(i)...): exact text (no real embedding chosen);
+  invalid: "invalidum". Format "-1.4142", ASCII minus; a value rounding to
+  zero prints without sign ("0.00000").
+- Shared helpers factored out of signum: `_derivata_limes` (D) and
+  `_intervallum_binarium` (interval as A / 2^S, C / 2^S).
+
+Tests (oracle: Python decimal at 250 digits, ROUND_HALF_EVEN; 2cos(2pi/7)
+by Newton in Decimal): sqrt 2 to 50 digits, phi to 40, -sqrt3/7 to 30,
+2cos(2pi/7) to 30, cube root of 2 to 40, (1 + sqrt 2)^50 (an integer minus
+1e-19) to 10, (1 - sqrt 2)^21 rounding to "0.00000", rational ties
+(5/2 -> 2, 7/2 -> 4, -1/8 -> -0.12), NEAR-HALF cases 0.123455 +- (sqrt 2 -
+1)^30 at 5 digits ("0.12346" / "0.12345"), 80 random elements against f64
+(within one unit in the last of 8 places). 193 tests, 1.6 s.
+
+Plants (6, all red): decimal point misplaced, zero padding short,
+certification skipped, correction in the wrong direction, minus sign lost,
+rationals floored instead of rounded.
+
+**v1 complete** (E1 arithmetic, E2 order, E3 display; four review passes,
+no wrong arithmetic found in any). Next library: quaternions over any ring
+descriptor (#7), which needs an optional `signum` hook in `anulus` for
+ordered rings.

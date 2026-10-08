@@ -321,4 +321,22 @@ algebraicus_compara (
         Piscina* piscina,
             s32* exitus);
 
+
+/* ==================================================
+ * Ostensio (digiti CERTI)
+ * ================================================== */
+
+/* a ad 'digiti' decimales, ROTUNDATUM recte: omnis digitus certus.
+ * Approximatio per intervallum radicis (forma centrata), deinde R
+ * exacte certificatur (signum(a 10^k - (R +- 1/2))). Rationalis:
+ * rotundatio exacta, paritas in medio (sicut fractio_rotunda).
+ * "-1.4142"; valor ad nullum rotundatus sine signo ("0.0000").
+ * Corpus sine ordine (Q(i)): textus exactus (algebraicus_ad_chordam);
+ * "invalidum" si invalidum. Sumptus: bisectiones ~ log2(D 10^k). */
+chorda
+algebraicus_ad_ostendendum (
+    Algebraicus  a,
+            i32  digiti,
+        Piscina* piscina);
+
 #endif /* EXTENSIO_H */

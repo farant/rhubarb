@@ -598,6 +598,73 @@ _denominator_binarius (
         piscina));
 }
 
+/* D = sum |c_i| i R^(i-1), R = max(|infra|, |supra|): limes |num'|
+ * super intervallum TRIVIALITER validus (nulla arithmetica
+ * intervallorum, cuius anguli omissi D infra verum darent - plantae
+ * E17/E28); laxitas passus paucos (log) addit. */
+interior Fractio
+_derivata_limes (
+    Polynomium  num,
+       Fractio  infra,
+       Fractio  supra,
+       Piscina* piscina)
+{
+    Fractio radius    = fractio_absolutum(infra, piscina);
+    Fractio summa     = fractio_ex_s64(ZEPHYRUM);
+    Fractio potestas  = fractio_ex_s64(I);
+        s32 e;
+
+    si (fractio_compara(fractio_absolutum(supra, piscina), radius,
+        piscina) > ZEPHYRUM)
+    {
+        radius = fractio_absolutum(supra, piscina);
+    }
+    per (e = I; e <= polynomium_gradus_summus(num); e++)
+    {
+        Magnus c = magnus_absolutum(polynomium_coefficiens(num, e),
+            piscina);
+
+        c = magnus_multiplica(c, magnus_ex_s64((s64)e), piscina);
+        summa = fractio_adde(summa,
+            fractio_multiplica(fractio_ex_magno(c),
+            potestas, piscina), piscina);
+        potestas = fractio_multiplica(potestas, radius, piscina);
+    }
+    redde summa;
+}
+
+/* (infra, supra) dyadica -> A / Q, C / Q cum Q = 2^S communi. FALSUM
+ * si non dyadica (invarians: omnia intervalla radicum dyadica) */
+interior b32
+_intervallum_binarium (
+    Fractio  infra,
+    Fractio  supra,
+    Piscina* piscina,
+     Magnus* numerus_infra,
+     Magnus* numerus_supra,
+     Magnus* quantum)
+{
+    i32 exponens_infra;
+    i32 exponens_supra;
+    i32 exponens;
+
+    si (   !_denominator_binarius(infra, piscina, &exponens_infra)
+        || !_denominator_binarius(supra, piscina, &exponens_supra))
+    {
+        redde FALSUM;
+    }
+    exponens = exponens_infra > exponens_supra ? exponens_infra
+        : exponens_supra;
+    *quantum = magnus_potentia(magnus_ex_s64(II), exponens, piscina);
+    *numerus_infra = magnus_multiplica(fractio_numerator(infra),
+        magnus_potentia(magnus_ex_s64(II), exponens - exponens_infra,
+        piscina), piscina);
+    *numerus_supra = magnus_multiplica(fractio_numerator(supra),
+        magnus_potentia(magnus_ex_s64(II), exponens - exponens_supra,
+        piscina), piscina);
+    redde VERUM;
+}
+
 /* limes superior log2 |x| (bita numeratoris - bita denominatoris + 1);
  * x nullum -> -(1 << 20) */
 interior s32
@@ -2288,8 +2355,6 @@ algebraicus_signum (
          Magnus limes = fractio_numerator(_limes_cauchy(k->f, status));
          Magnus summa = magnus_ex_s64(ZEPHYRUM);
          Magnus potentia = magnus_ex_s64(I);
-        Fractio radius;
-        Fractio potestas;
             s32 e;
 
         per (e = ZEPHYRUM; e <= polynomium_gradus_summus(a.numerator);
@@ -2304,28 +2369,8 @@ algebraicus_signum (
         (vacuum)fractio_ex_magnis(magnus_ex_s64(I),
             magnus_potentia(summa,
             k->gradus - I, status), status, &limes_nullius);
-        /* D = sum |c_i| i R^(i-1), R = max(|infra|, |supra|): limes
-         * |num'| super intervallum TRIVIALITER validus (nulla
-         * arithmetica intervallorum, cuius anguli omissi D infra verum
-         * darent - plantae E17/E28); laxitas passus paucos (log)
-         * addit. */
-        radius = fractio_absolutum(infra, status);
-        si (fractio_compara(fractio_absolutum(supra, status), radius,
-            status) > ZEPHYRUM)
-        {
-            radius = fractio_absolutum(supra, status);
-        }
-        derivata_maxima  = fractio_ex_s64(ZEPHYRUM);
-        potestas         = fractio_ex_s64(I);
-        per (e = I; e <= polynomium_gradus_summus(a.numerator); e++)
-        {
-            derivata_maxima = fractio_adde(derivata_maxima,
-                fractio_multiplica(fractio_ex_magno(magnus_multiplica(
-                magnus_absolutum(polynomium_coefficiens(a.numerator, e),
-                status), magnus_ex_s64((s64)e), status)), potestas,
-                status), status);
-            potestas = fractio_multiplica(potestas, radius, status);
-        }
+        derivata_maxima = _derivata_limes(a.numerator, infra, supra,
+            status);
     }
     limes_passuum = _bita_fractionis(fractio_subtrahe(supra, infra,
         status)) + _bita_fractionis(derivata_maxima)
@@ -2337,30 +2382,14 @@ algebraicus_signum (
     /* intervallum DYADICUM: infra = A / Q, supra = C / Q, Q = 2^S.
      * Bisectio = additio et duplicatio, sine gcd (recensio III M2:
      * medium per fractiones gcd O(n^2) in omni passu). */
+    si (!_intervallum_binarium(infra, supra, status, &numerus_infra,
+        &numerus_supra,
+        &quantum))
     {
-        i32 exponens_infra;
-        i32 exponens_supra;
-        i32 exponens;
-
-        si (   !_denominator_binarius(infra, status, &exponens_infra)
-            || !_denominator_binarius(supra, status, &exponens_supra))
-        {
-            /* invarians violata (inattingibile): refutatio */
-            piscina_destruere(status);
-            piscina_destruere(opus);
-            redde FALSUM;
-        }
-        exponens = exponens_infra > exponens_supra ? exponens_infra
-            : exponens_supra;
-        quantum = magnus_potentia(magnus_ex_s64(II), exponens, status);
-        numerus_infra = magnus_multiplica(fractio_numerator(infra),
-            magnus_potentia(magnus_ex_s64(II), exponens
-                - exponens_infra,
-            status), status);
-        numerus_supra = magnus_multiplica(fractio_numerator(supra),
-            magnus_potentia(magnus_ex_s64(II), exponens
-                - exponens_supra,
-            status), status);
+        /* invarians violata (inattingibile): refutatio */
+        piscina_destruere(status);
+        piscina_destruere(opus);
+        redde FALSUM;
     }
     signum_supra  = _signum_numeri(k->f, numerus_supra, quantum, opus);
     nota_status   = piscina_notare(status);
@@ -2471,4 +2500,257 @@ algebraicus_compara (
     redde algebraicus_signum(algebraicus_subtrahe(a, b, piscina),
         piscina,
         exitus);
+}
+
+
+/* ==================================================
+ * Ostensio decimalis CERTA
+ * ================================================== */
+
+/* q rationalis cum |a - q| <= epsilon (a non rationalis, corpus
+ * ordinatum gradus >= 2): intervallum radicis bisecatur (dyadice, sicut
+ * signum) donec D w / 2 <= epsilon den; tum num(m) / den. Forma
+ * centrata: |num(alpha) - num(m)| <= D w / 2. */
+interior b32
+_propinquum (
+    Algebraicus  a,
+        Fractio  epsilon,
+        Piscina* piscina,
+        Fractio* exitus)
+{
+     constans Extensio* k       = a.corpus;
+               Piscina* status  = _officina_aperire();
+               Piscina* opus    = _officina_aperire();
+        PiscinaNotatio  nota_status;
+        PiscinaNotatio  nota_opus;
+               Fractio  derivata_maxima;
+               Fractio  scopus;
+                Magnus  numerus_infra;
+                Magnus  numerus_supra;
+                Magnus  quantum;
+                   s32  signum_supra;
+                   s32  limes;
+                   s32  iteratio;
+                   b32  bene = FALSUM;
+
+    si (status == NIHIL || opus == NIHIL)
+    {
+        si (status != NIHIL)
+        {
+            piscina_destruere(status);
+        }
+        si (opus != NIHIL)
+        {
+            piscina_destruere(opus);
+        }
+        redde FALSUM;
+    }
+    derivata_maxima = _derivata_limes(a.numerator, k->infra, k->supra,
+        status);
+    scopus = fractio_multiplica(epsilon,
+        fractio_ex_magno(a.denominator),
+        status);
+    si (!_intervallum_binarium(k->infra, k->supra, status,
+        &numerus_infra,
+        &numerus_supra, &quantum))
+    {
+        piscina_destruere(status);
+        piscina_destruere(opus);
+        redde FALSUM;
+    }
+    /* limes STRUCTURALIS: log2(w0 D / scopus) + margo */
+    limes = _bita_fractionis(fractio_subtrahe(k->supra, k->infra,
+        status))
+        + _bita_fractionis(derivata_maxima) - _bita_fractionis(scopus)
+        + VIII;
+    si (limes < VIII)
+    {
+        limes = VIII;
+    }
+    signum_supra  = _signum_numeri(k->f, numerus_supra, quantum, opus);
+    nota_status   = piscina_notare(status);
+    nota_opus     = piscina_notare(opus);
+    per (iteratio = ZEPHYRUM; iteratio <= limes; iteratio++)
+    {
+        Magnus medium = magnus_adde(numerus_infra, numerus_supra, opus);
+        Magnus quantum_novum = magnus_multiplica(quantum, magnus_ex_s64(
+            II), opus);
+        Fractio latitudo = fractio_ex_s64(ZEPHYRUM);
+        Fractio error;
+         Magnus infra_nova;
+         Magnus supra_nova;
+            s32 s;
+
+        (vacuum)fractio_ex_magnis(magnus_subtrahe(numerus_supra,
+            numerus_infra, opus), quantum, opus, &latitudo);
+        error = fractio_multiplica(derivata_maxima, latitudo, opus);
+        (vacuum)fractio_divide(error, fractio_ex_s64(II), opus, &error);
+        si (fractio_compara(error, scopus, opus) <= ZEPHYRUM)
+        {
+            Fractio valor = _valor_numeri(a.numerator, medium,
+                quantum_novum, opus);
+
+            (vacuum)fractio_divide(valor, fractio_ex_magno(
+                a.denominator), opus, &valor);
+            *exitus  = fractio_transcribe(valor, piscina);
+            bene     = VERUM;
+            frange;
+        }
+        s = _signum_numeri(k->f, medium, quantum_novum, opus);
+        si (s == ZEPHYRUM)
+        {
+            frange;
+        }
+        infra_nova = s
+            == signum_supra ? magnus_multiplica(numerus_infra,
+            magnus_ex_s64(II), opus) : medium;
+        supra_nova = s == signum_supra ? medium : magnus_multiplica(
+            numerus_supra, magnus_ex_s64(II), opus);
+        piscina_reficere(status, nota_status);
+        numerus_infra  = magnus_transcribe(infra_nova, status);
+        numerus_supra  = magnus_transcribe(supra_nova, status);
+        quantum        = magnus_transcribe(quantum_novum, status);
+        piscina_reficere(opus, nota_opus);
+    }
+    piscina_destruere(status);
+    piscina_destruere(opus);
+    redde bene;
+}
+
+/* R / 10^k ut textus: "-1.4142"; R = 0 sine signo */
+interior chorda
+_textus_decimalis (
+     Magnus  r,
+        i32  digiti,
+    Piscina* piscina)
+{
+       chorda textus = magnus_ad_chordam(magnus_absolutum(r, piscina),
+           piscina);
+          i32 longitudo = (i32)textus.mensura;
+          i32 zephyra = longitudo <= digiti ? digiti + I - longitudo
+              : ZEPHYRUM;
+          i32  totum    = longitudo + zephyra;
+          i32  positus  = ZEPHYRUM;
+          i32  j;
+    character* alveus;
+
+    alveus = (character*)piscina_allocare(piscina,
+        (memoriae_index)(totum
+        + III));
+    si (magnus_signum(r) < ZEPHYRUM)
+    {
+        alveus[positus++] = '-';
+    }
+    per (j = ZEPHYRUM; j < totum; j++)
+    {
+        si (digiti > ZEPHYRUM && j == totum - digiti)
+        {
+            alveus[positus++] = '.';
+        }
+        alveus[positus++] = j < zephyra ? '0'
+            : (character)textus.datum[j - zephyra];
+    }
+    redde chorda_ex_buffer((i8*)alveus, positus);
+}
+
+chorda
+algebraicus_ad_ostendendum (
+    Algebraicus  a,
+            i32  digiti,
+        Piscina* piscina)
+{
+      constans Extensio* k = a.corpus;
+                Piscina* officina;
+                Fractio  q           = fractio_ex_s64(ZEPHYRUM);
+                Fractio  propinquum  = fractio_ex_s64(ZEPHYRUM);
+                Fractio  epsilon     = fractio_ex_s64(ZEPHYRUM);
+                 Magnus  decem;
+                 Magnus  r;
+                 chorda  exitus;
+                    i32  passus;
+
+    si (k == NIHIL)
+    {
+        redde chorda_transcribere(chorda_ex_literis("invalidum",
+            piscina), piscina);
+    }
+    officina = _officina_aperire();
+    si (officina == NIHIL)
+    {
+        redde algebraicus_ad_chordam(a, piscina);
+    }
+    decem = magnus_potentia(magnus_ex_s64(X), digiti, officina);
+    /* rationalis: rotundatio exacta (paritas in medio, sicut
+     * fractio_rotunda) */
+    si (algebraicus_est_rationalis(a, officina, &q))
+    {
+        r = fractio_rotunda(fractio_multiplica(q,
+            fractio_ex_magno(decem),
+            officina), officina);
+        exitus = _textus_decimalis(r, digiti, piscina);
+        piscina_destruere(officina);
+        redde exitus;
+    }
+    /* sine ordine (e.g. Q(i)): nulla immersio realis electa - textus
+     * exactus */
+    si (k->radix < ZEPHYRUM || k->gradus < II)
+    {
+        piscina_destruere(officina);
+        redde algebraicus_ad_chordam(a, piscina);
+    }
+    /* propinquum cum errore < 1/(4 10^k), deinde R = round(m 10^k)
+     * CERTIFICATUR: signum(a 10^k - (R + 1/2)) < 0 < signum(a 10^k - (R
+     * - 1/2)), exacte (testimonium nullius: a 10^k non rationalis
+     * numquam dimidium integri). Correctio +-1 rara; passus IV
+     * limes. */
+    (vacuum)fractio_ex_magnis(magnus_ex_s64(I), magnus_multiplica(
+        magnus_ex_s64(IV), decem, officina), officina, &epsilon);
+    si (!_propinquum(a, epsilon, officina, &propinquum))
+    {
+        piscina_destruere(officina);
+        redde algebraicus_ad_chordam(a, piscina);
+    }
+    r = fractio_rotunda(fractio_multiplica(propinquum,
+        fractio_ex_magno(
+        decem), officina), officina);
+    per (passus = ZEPHYRUM; passus < IV; passus++)
+    {
+        Algebraicus scalatum = algebraicus_multiplica(a,
+            algebraicus_ex_fractione(k, fractio_ex_magno(decem),
+            officina), officina);
+        Fractio dimidium      = fractio_ex_s64(ZEPHYRUM);
+            s32 signum_supra  = ZEPHYRUM;
+            s32 signum_infra  = ZEPHYRUM;
+
+        (vacuum)fractio_ex_magnis(magnus_adde(magnus_multiplica(
+            magnus_ex_s64(II), r, officina), magnus_ex_s64(I),
+            officina),
+            magnus_ex_s64(II), officina, &dimidium);
+        si (!algebraicus_signum(algebraicus_subtrahe(scalatum,
+            algebraicus_ex_fractione(k, dimidium, officina), officina),
+            officina, &signum_supra))
+        {
+            frange;
+        }
+        (vacuum)fractio_ex_magnis(magnus_subtrahe(magnus_multiplica(
+            magnus_ex_s64(II), r, officina), magnus_ex_s64(I),
+            officina),
+            magnus_ex_s64(II), officina, &dimidium);
+        si (!algebraicus_signum(algebraicus_subtrahe(scalatum,
+            algebraicus_ex_fractione(k, dimidium, officina), officina),
+            officina, &signum_infra))
+        {
+            frange;
+        }
+        si (signum_infra > ZEPHYRUM && signum_supra < ZEPHYRUM)
+        {
+            exitus = _textus_decimalis(r, digiti, piscina);
+            piscina_destruere(officina);
+            redde exitus;
+        }
+        r = magnus_adde(r, magnus_ex_s64(signum_supra >= ZEPHYRUM ? I
+            : -I), officina);
+    }
+    piscina_destruere(officina);
+    redde algebraicus_ad_chordam(a, piscina);
 }
