@@ -155,19 +155,50 @@ _variabilis_negata (
     redde summa;
 }
 
+/* norma, vestigium ut Magnus (FALSUM -> -1 et nuntius: numquam in
+ * probationibus validis) */
+interior Magnus
+_norma (
+    Cyclotomicus  a,
+         Piscina* p)
+{
+    Magnus m = magnus_ex_s64(-I);
+
+    si (!cyclotomicus_norma(a, p, &m))
+    {
+        imprimere("FRACTA: norma refutata\n");
+    }
+    redde m;
+}
+
+interior Magnus
+_vestigium (
+    Cyclotomicus  a,
+         Piscina* p)
+{
+    Magnus m = magnus_ex_s64(-I);
+
+    si (!cyclotomicus_vestigium(a, p, &m))
+    {
+        imprimere("FRACTA: vestigium refutatum\n");
+    }
+    redde m;
+}
+
 /* elementum fortuitum, coefficientes in [-9, 9] */
 interior Cyclotomicus
 _fortuitum (
     constans Cyclotomia* r,
                    Sors* s)
 {
-    Cyclotomicus a = cyclotomicus_nullum();
+    Cyclotomicus a = cyclotomicus_nullum(r);
              i32 j;
 
     per (j = ZEPHYRUM; j < cyclotomia_gradus(r); j++)
     {
-        a = cyclotomicus_adde(a, cyclotomicus_multiplica(r,
-            cyclotomicus_integer(r, magnus_ex_s64(sors_inter(s, -IX,
+        a = cyclotomicus_adde(a,
+            cyclotomicus_multiplica(cyclotomicus_integer(r,
+            magnus_ex_s64(sors_inter(s, -IX,
             IX)),
             piscina), cyclotomicus_radix(r, (s32)j, piscina), piscina),
             piscina);
@@ -300,7 +331,7 @@ s32 principale (vacuum)
                      i32  n = ordines[q];
               Cyclotomia* r = cyclotomia_creare(n, piscina);
             Cyclotomicus  z;
-            Cyclotomicus  summa = cyclotomicus_nullum();
+            Cyclotomicus  summa = cyclotomicus_nullum(r);
                  Fractio  phi_unum;
                      i32  k;
                      i32  t;
@@ -314,9 +345,9 @@ s32 principale (vacuum)
             z = cyclotomicus_radix(r, I, piscina);
             /* zeta^n = 1, zeta^-1 zeta = 1, summa radicum = 0
              * (n > 1) */
-            si (   !_integer_est(cyclotomicus_potentia(r, z, n,
+            si (   !_integer_est(cyclotomicus_potentia(z, n,
                 piscina), I)
-                || !_integer_est(cyclotomicus_multiplica(r, z,
+                || !_integer_est(cyclotomicus_multiplica(z,
                     cyclotomicus_radix(r, -I, piscina), piscina), I))
             {
                 radices_bene = FALSUM;
@@ -333,17 +364,17 @@ s32 principale (vacuum)
             /* N(1 - zeta) = Phi_n(1); Tr(zeta) = mu(n); Tr(1) = phi */
             (vacuum)polynomium_valor(cyclotomia_polynomium(r),
                 fractio_ex_s64(I), piscina, &phi_unum);
-            si (   n > I && !magnus_aequalis(cyclotomicus_norma(r,
+            si (   n > I && !magnus_aequalis(_norma(
                     cyclotomicus_subtrahe(cyclotomicus_integer(r,
                     magnus_ex_s64(I), piscina), z, piscina), piscina),
                     magnus_ex_s64(p != ZEPHYRUM ? (s64)p : I)))
             {
                 normae_bene = FALSUM;
             }
-            si (   !magnus_aequalis(cyclotomicus_vestigium(r, z,
+            si (   !magnus_aequalis(_vestigium( z,
                 piscina),
                     magnus_ex_s64(_mu(n)))
-                || !magnus_aequalis(cyclotomicus_vestigium(r,
+                || !magnus_aequalis(_vestigium(
                     cyclotomicus_integer(r, magnus_ex_s64(I), piscina),
                     piscina), magnus_ex_s64((s64)cyclotomia_gradus(r))))
             {
@@ -357,7 +388,7 @@ s32 principale (vacuum)
                 Cyclotomicus b = _fortuitum(r, &s);
                 Cyclotomicus x;
                 Cyclotomicus y;
-                Cyclotomicus ab = cyclotomicus_multiplica(r, a, b,
+                Cyclotomicus ab = cyclotomicus_multiplica(a, b,
                     piscina);
                 Cyclotomicus quotiens;
                          i32 unitas_prima    = I;
@@ -377,45 +408,44 @@ s32 principale (vacuum)
                         }
                     }
                 }
-                si (   !cyclotomicus_automorphismus(r, a,
+                si (   !cyclotomicus_automorphismus(a,
                     (s32)unitas_secunda,
                     piscina,
                         &x)
-                    || !cyclotomicus_automorphismus(r, x,
+                    || !cyclotomicus_automorphismus(x,
                     (s32)unitas_prima,
                     piscina,
                         &x)
-                    || !cyclotomicus_automorphismus(r, a,
+                    || !cyclotomicus_automorphismus(a,
                     (s32)(unitas_prima * unitas_secunda),
                         piscina, &y)
                     || !cyclotomicus_aequalis(x, y))
                 {
                     galois_bene = FALSUM;
                 }
-                si (   !magnus_aequalis(cyclotomicus_norma(r, ab,
+                si (   !magnus_aequalis(_norma( ab,
                     piscina),
-                        magnus_multiplica(cyclotomicus_norma(r, a,
+                        magnus_multiplica(_norma( a,
                         piscina),
-                        cyclotomicus_norma(r, b, piscina), piscina))
-                    || !magnus_aequalis(cyclotomicus_vestigium(r,
+                        _norma( b, piscina), piscina))
+                    || !magnus_aequalis(_vestigium(
                         cyclotomicus_adde(a, b, piscina), piscina),
-                        magnus_adde(cyclotomicus_vestigium(r, a,
+                        magnus_adde(_vestigium( a,
                         piscina),
-                        cyclotomicus_vestigium(r, b, piscina),
+                        _vestigium( b, piscina),
                         piscina)))
                 {
                     normae_bene = FALSUM;
                 }
                 si (   !cyclotomicus_est_nullum(b)
-                    && (!cyclotomicus_divide_exacte(r, ab, b, piscina,
+                    && (!cyclotomicus_divide_exacte(ab, b, piscina,
                             &quotiens)
                         || !cyclotomicus_aequalis(quotiens, a)))
                 {
                     divisio_bene = FALSUM;
                 }
                 si (   !cyclotomicus_ex_chorda(r,
-                    cyclotomicus_ad_chordam(r,
-                        a, piscina), piscina, &x)
+                    cyclotomicus_ad_chordam(a, piscina), piscina, &x)
                     || !cyclotomicus_aequalis(x, a))
                 {
                     textus_bene = FALSUM;
@@ -423,7 +453,7 @@ s32 principale (vacuum)
             }
             /* 1 / (1 - zeta) non integer (n = p^k: N = p) */
             si (   p != ZEPHYRUM
-                && cyclotomicus_divide_exacte(r, cyclotomicus_integer(r,
+                && cyclotomicus_divide_exacte(cyclotomicus_integer(r,
                     magnus_ex_s64(I), piscina), cyclotomicus_subtrahe(
                     cyclotomicus_integer(r, magnus_ex_s64(I), piscina),
                     z,
@@ -449,7 +479,7 @@ s32 principale (vacuum)
           Cyclotomia* r8          = cyclotomia_creare(VIII, piscina);
           Cyclotomia* r5          = cyclotomia_creare(V, piscina);
         Cyclotomicus  z8          = cyclotomicus_radix(r8, I, piscina);
-        Cyclotomicus  w           = cyclotomicus_nullum();
+        Cyclotomicus  w           = cyclotomicus_nullum(r8);
                  s32  signum      = ZEPHYRUM;
                  i32  k           = ZEPHYRUM;
 
@@ -458,7 +488,7 @@ s32 principale (vacuum)
         {
                      i32  p = primi[q];
               Cyclotomia* r = cyclotomia_creare(p, piscina);
-            Cyclotomicus  g = cyclotomicus_nullum();
+            Cyclotomicus  g = cyclotomicus_nullum(r);
                      i32  a;
 
             per (a = I; a < p; a++)
@@ -480,7 +510,7 @@ s32 principale (vacuum)
                     cyclotomicus_radix(r, (s32)a, piscina), piscina);
             }
             /* g^2 = p si p = 1 mod 4, -p si p = 3 mod 4 */
-            si (!_integer_est(cyclotomicus_multiplica(r, g, g, piscina),
+            si (!_integer_est(cyclotomicus_multiplica(g, g, piscina),
                     p % IV == I ? (s64)p : -(s64)p))
             {
                 gauss_bene = FALSUM;
@@ -490,10 +520,10 @@ s32 principale (vacuum)
         /* (zeta_8 + zeta_8^-1)^2 = 2 (radix 2); zeta_8^4 = -1 */
         w = cyclotomicus_adde(z8, cyclotomicus_radix(r8, -I, piscina),
             piscina);
-        CREDO_VERUM (_integer_est(cyclotomicus_multiplica(r8, w, w,
+        CREDO_VERUM (_integer_est(cyclotomicus_multiplica(w, w,
             piscina),
             II));
-        CREDO_VERUM (_integer_est(cyclotomicus_potentia(r8, z8, IV,
+        CREDO_VERUM (_integer_est(cyclotomicus_potentia(z8, IV,
             piscina),
             -I));
         /* substitutio Laurent: t^-1 + t ad t = zeta_8^2 = i: 0 */
@@ -501,53 +531,56 @@ s32 principale (vacuum)
             piscina, &w) && cyclotomicus_est_nullum(w));
         /* est_radix: zeta_5^3 (+, 3); -zeta_5^3 (-, 3); -zeta_8^3 =
          * zeta_8^7 (+, 7); 1 + zeta non radix */
-        CREDO_VERUM (cyclotomicus_est_radix(r5, cyclotomicus_radix(r5,
+        CREDO_VERUM (cyclotomicus_est_radix(cyclotomicus_radix(r5,
             III,
             piscina), &signum, &k) && signum == I && k == III);
-        CREDO_VERUM (cyclotomicus_est_radix(r5, cyclotomicus_nega(
+        CREDO_VERUM (cyclotomicus_est_radix(cyclotomicus_nega(
             cyclotomicus_radix(r5, III, piscina), piscina), &signum, &k)
             && signum == -I && k == III);
-        CREDO_VERUM (cyclotomicus_est_radix(r8, cyclotomicus_nega(
+        CREDO_VERUM (cyclotomicus_est_radix(cyclotomicus_nega(
             cyclotomicus_radix(r8, III, piscina), piscina), &signum, &k)
             && signum == I && k == VII);
-        CREDO_FALSUM (cyclotomicus_est_radix(r8, cyclotomicus_adde(z8,
+        CREDO_FALSUM (cyclotomicus_est_radix(cyclotomicus_adde(z8,
             cyclotomicus_integer(r8, magnus_ex_s64(I), piscina),
             piscina),
             &signum, &k));
         /* |zeta^3|^2 = 1; |1 + i|^2 = 2 */
-        CREDO_VERUM (_integer_est(cyclotomicus_modulus_quadratus(r8,
-            cyclotomicus_radix(r8, III, piscina), piscina), I));
-        CREDO_VERUM (_integer_est(cyclotomicus_modulus_quadratus(r8,
-            cyclotomicus_adde(cyclotomicus_integer(r8, magnus_ex_s64(I),
-            piscina), cyclotomicus_radix(r8, II, piscina), piscina),
+        w = cyclotomicus_radix(r8, III, piscina);
+        CREDO_VERUM (_integer_est(cyclotomicus_modulus_quadratus(w,
+            piscina), I));
+        w = cyclotomicus_adde(cyclotomicus_integer(r8, magnus_ex_s64(I),
+            piscina), cyclotomicus_radix(r8, II, piscina), piscina);
+        CREDO_VERUM (_integer_est(cyclotomicus_modulus_quadratus(w,
             piscina), II));
         /* ostensio */
-        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(r8,
-            z8,
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(z8,
             IV, piscina), "0.7071 + 0.7071i");
-        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(r8,
-            cyclotomicus_radix(r8, II, piscina), IV, piscina),
-            "0.0000 + 1.0000i");
-        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(r8,
-            cyclotomicus_radix(r8, V, piscina), II, piscina),
-            "-0.71 - 0.71i");
-        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_chordam(r8,
-            cyclotomicus_radix(r8, V, piscina), piscina), "-z");
+        w = cyclotomicus_radix(r8, II, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(w,
+            IV,
+            piscina), "0.0000 + 1.0000i");
+        w = cyclotomicus_radix(r8, V, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(w,
+            II,
+            piscina), "-0.71 - 0.71i");
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_chordam(w,
+            piscina),
+            "-z");
         /* recensio: automorphismus non identitas (sigma_3(zeta_8) =
          * zeta_8^3, sigma_-1 = conjugatum), non unitates refutatae */
-        CREDO_VERUM (cyclotomicus_automorphismus(r8, z8, III, piscina,
+        CREDO_VERUM (cyclotomicus_automorphismus(z8, III, piscina,
             &w)
             && cyclotomicus_aequalis(w, cyclotomicus_radix(r8, III,
                 piscina)));
-        CREDO_VERUM (cyclotomicus_automorphismus(r8, z8, -I, piscina,
+        CREDO_VERUM (cyclotomicus_automorphismus(z8, -I, piscina,
             &w)
-            && cyclotomicus_aequalis(w, cyclotomicus_conjugatum(r8, z8,
+            && cyclotomicus_aequalis(w, cyclotomicus_conjugatum(z8,
                 piscina)));
-        CREDO_FALSUM (cyclotomicus_automorphismus(r8, z8, II, piscina,
+        CREDO_FALSUM (cyclotomicus_automorphismus(z8, II, piscina,
             &w));
-        CREDO_FALSUM (cyclotomicus_automorphismus(r8, z8, ZEPHYRUM,
+        CREDO_FALSUM (cyclotomicus_automorphismus(z8, ZEPHYRUM,
             piscina, &w));
-        CREDO_FALSUM (cyclotomicus_automorphismus(r8, z8, VIII, piscina,
+        CREDO_FALSUM (cyclotomicus_automorphismus(z8, VIII, piscina,
             &w));
         /* est_integer: 1 + zeta non integer; 5 integer */
         CREDO_FALSUM (cyclotomicus_est_integer(cyclotomicus_adde(z8,
@@ -563,9 +596,10 @@ s32 principale (vacuum)
         /* ostensio: zeta_8^6 = -i (signum, -0 non scribitur); numeri
          * magni per notationem e, sine exundatione alvei; 10^300 non in
          * 10^254 truncatum */
-        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(r8,
-            cyclotomicus_radix(r8, VI, piscina), IV, piscina),
-            "0.0000 - 1.0000i");
+        w = cyclotomicus_radix(r8, VI, piscina);
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(w,
+            IV,
+            piscina), "0.0000 - 1.0000i");
         {
                   Magnus decies = magnus_ex_s64(X);
             Cyclotomicus x;
@@ -573,18 +607,18 @@ s32 principale (vacuum)
 
             x = cyclotomicus_integer(r8, magnus_potentia(decies, C,
                 piscina), piscina);
-            textus = cyclotomicus_ad_ostendendum(r8, x, XV, piscina);
+            textus = cyclotomicus_ad_ostendendum(x, XV, piscina);
             CREDO_CHORDA_AEQUALIS_LITERIS (textus,
                 "1.000000000000000e+100 + 0.000000000000000i");
             x = cyclotomicus_integer(r8, magnus_potentia(decies, CCC,
                 piscina), piscina);
-            textus = cyclotomicus_ad_ostendendum(r8, x, IV, piscina);
+            textus = cyclotomicus_ad_ostendendum(x, IV, piscina);
             CREDO_CHORDA_AEQUALIS_LITERIS (textus,
                 "1.0000e+300 + 0.0000i");
-            x = cyclotomicus_potentia(r8, cyclotomicus_adde(z8,
+            x = cyclotomicus_potentia(cyclotomicus_adde(z8,
                 cyclotomicus_integer(r8, magnus_ex_s64(I), piscina),
                 piscina), CCXXX, piscina);
-            textus = cyclotomicus_ad_ostendendum(r8, x, IV, piscina);
+            textus = cyclotomicus_ad_ostendendum(x, IV, piscina);
             CREDO_VERUM (textus.mensura < C && textus.mensura > X);
         }
         /* matrix: Vandermonde nodorum 1, zeta, zeta^2 in Z[zeta_5]:
@@ -592,7 +626,7 @@ s32 principale (vacuum)
         {
             constans Anulus* a5 = cyclotomia_anulus(r5);
                      Matrix  m;
-               Cyclotomicus  det = cyclotomicus_nullum();
+               Cyclotomicus  det = cyclotomicus_nullum(r5);
                Cyclotomicus  expectatum;
                Cyclotomicus  x[III];
                         i32  i;
@@ -607,7 +641,7 @@ s32 principale (vacuum)
             {
                 per (j = ZEPHYRUM; j < III; j++)
                 {
-                    Cyclotomicus v = cyclotomicus_potentia(r5, x[i], j,
+                    Cyclotomicus v = cyclotomicus_potentia(x[i], j,
                         piscina);
 
                     matrix_pone(&m, i, j, &v);
@@ -619,7 +653,7 @@ s32 principale (vacuum)
             {
                 per (j = i + I; j < III; j++)
                 {
-                    expectatum = cyclotomicus_multiplica(r5, expectatum,
+                    expectatum = cyclotomicus_multiplica(expectatum,
                         cyclotomicus_subtrahe(x[j], x[i], piscina),
                         piscina);
                 }
@@ -627,6 +661,147 @@ s32 principale (vacuum)
             CREDO_VERUM (matrix_determinans(m, piscina, &det)
                 && cyclotomicus_aequalis(det, expectatum));
             CREDO_VERUM (strcmp(a5->titulus, "Z[zeta_5]") == ZEPHYRUM);
+        }
+    }
+
+
+    /* ==================================================
+     * ANULI SIGNATI ET INTEROPERATIO s64 (recensio I)
+     * ================================================== */
+
+    {
+          Cyclotomia* r8      = cyclotomia_creare(VIII, piscina);
+          Cyclotomia* r16     = cyclotomia_creare(XVI, piscina);
+          Cyclotomia* r5      = cyclotomia_creare(V, piscina);
+        Cyclotomicus  z8      = cyclotomicus_radix(r8, I, piscina);
+        Cyclotomicus  z16     = cyclotomicus_radix(r16, I, piscina);
+        Cyclotomicus  mixtum  = cyclotomicus_adde(z8, z16, piscina);
+        Cyclotomicus  x;
+              Magnus  m       = magnus_ex_s64(ZEPHYRUM);
+                 s32  signum  = ZEPHYRUM;
+                 i32  k       = ZEPHYRUM;
+                 s64  quattuor[IV];
+                 s64  octo[V];
+                 s64  lectum[IV];
+
+        imprimere("\n--- Probans anulos signatos et s64 ---\n");
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            si (k < IV)
+            {
+                quattuor[k]  = (s64)(k + I);
+                lectum[k]    = ZEPHYRUM;
+            }
+            octo[k] = k == IV ? I : ZEPHYRUM;
+        }
+        k = ZEPHYRUM;
+        /* olim aequalis(zeta_8, zeta_16) VERUM: idem polynomium t */
+        CREDO_FALSUM (cyclotomicus_aequalis(z8, z16));
+        CREDO_VERUM (cyclotomicus_anulus(z8) == r8
+            && cyclotomicus_anulus(z16) == r16);
+        /* mixtum = invalidum, propagatur, refutatur */
+        CREDO_FALSUM (cyclotomicus_est_validum(mixtum));
+        CREDO_FALSUM (cyclotomicus_est_validum(cyclotomicus_multiplica(
+            mixtum, z8, piscina)));
+        x = cyclotomicus_multiplica(z8, z16, piscina);
+        CREDO_FALSUM (cyclotomicus_est_validum(x));
+        CREDO_FALSUM (cyclotomicus_est_nullum(cyclotomicus_subtrahe(z8,
+            z16,
+            piscina)));
+        CREDO_FALSUM (cyclotomicus_aequalis(mixtum, mixtum));
+        CREDO_FALSUM (cyclotomicus_norma(mixtum, piscina, &m));
+        CREDO_FALSUM (cyclotomicus_vestigium(mixtum, piscina, &m));
+        CREDO_FALSUM (cyclotomicus_divide_exacte(z8, z16, piscina, &x));
+        CREDO_FALSUM (cyclotomicus_automorphismus(mixtum, III, piscina,
+            &x));
+        CREDO_FALSUM (cyclotomicus_est_radix(mixtum, &signum, &k));
+        CREDO_FALSUM (cyclotomicus_est_integer(mixtum, NIHIL));
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_chordam(mixtum,
+            piscina), "invalidum");
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_ostendendum(
+            mixtum, IV, piscina), "invalidum");
+        /* matrix super Z[zeta_5] cum elemento Z[zeta_8]: determinans
+         * refutatur (anulus elementa aliena refutat) */
+        {
+                  Matrix matrix_mixta;
+            Cyclotomicus unum = cyclotomicus_integer(r5,
+                magnus_ex_s64(I),
+                piscina);
+            Cyclotomicus det = cyclotomicus_nullum(r5);
+
+            (vacuum)matrix_nulla(cyclotomia_anulus(r5), II, II, piscina,
+                &matrix_mixta);
+            matrix_pone(&matrix_mixta, ZEPHYRUM, ZEPHYRUM, &unum);
+            matrix_pone(&matrix_mixta, ZEPHYRUM, I, &z8);
+            matrix_pone(&matrix_mixta, I, ZEPHYRUM, &unum);
+            matrix_pone(&matrix_mixta, I, I, &unum);
+            CREDO_FALSUM (matrix_determinans(matrix_mixta, piscina,
+                &det));
+        }
+        /* operationes sine divisione (productum, summa): solum anulus
+         * elementa aliena refutat - determinans etiam per divisionem
+         * */
+        {
+                  Matrix ma;
+                  Matrix mb;
+                  Matrix mc;
+            Cyclotomicus unum = cyclotomicus_integer(r5,
+                magnus_ex_s64(I),
+                piscina);
+
+            (vacuum)matrix_nulla(cyclotomia_anulus(r5), I, I, piscina,
+                &ma);
+            (vacuum)matrix_nulla(cyclotomia_anulus(r5), I, I, piscina,
+                &mb);
+            matrix_pone(&ma, ZEPHYRUM, ZEPHYRUM, &z8);
+            matrix_pone(&mb, ZEPHYRUM, ZEPHYRUM, &unum);
+            CREDO_FALSUM (matrix_multiplica(ma, mb, piscina, &mc));
+            CREDO_FALSUM (matrix_adde(ma, mb, piscina, &mc));
+        }
+        /* s64: 1 + 2z + 3z^2 + 4z^3 (Cyc8 demonstrationum), itus et
+         * reditus; z^4 = -1 reducitur; coefficiens magnus refutatur */
+        CREDO_VERUM (cyclotomicus_ex_s64(r8, quattuor, IV,
+            piscina, &x)
+            && cyclotomicus_ad_s64(x, lectum) && lectum[ZEPHYRUM] == I
+            && lectum[I] == II && lectum[II] == III
+            && lectum[III] == IV);
+        CREDO_CHORDA_AEQUALIS_LITERIS (cyclotomicus_ad_chordam(x,
+            piscina),
+            "4z^3 + 3z^2 + 2z + 1");
+        CREDO_VERUM (cyclotomicus_ex_s64(r8, octo, V, piscina, &x)
+            && _integer_est(x, -I));
+        x = cyclotomicus_integer(r8, magnus_potentia(magnus_ex_s64(X),
+            XXX,
+            piscina), piscina);
+        CREDO_FALSUM (cyclotomicus_ad_s64(x, lectum));
+        CREDO_FALSUM (cyclotomicus_ad_s64(mixtum, lectum));
+        /* immersio Z[zeta_8] -> Z[zeta_16] (k = 2) homomorphismus:
+         * zeta_8 -> zeta_16^2, producta servantur */
+        {
+            Cyclotomicus a = cyclotomicus_adde(z8,
+                cyclotomicus_integer(r8,
+                magnus_ex_s64(III), piscina), piscina);
+            Cyclotomicus b = cyclotomicus_potentia(z8, III, piscina);
+            Cyclotomicus ia;
+            Cyclotomicus ib;
+            Cyclotomicus imago_producti;
+
+            CREDO_VERUM (cyclotomicus_ex_polynomio(r16, z8.p, II,
+                piscina,
+                &x)
+                    && cyclotomicus_aequalis(x, cyclotomicus_radix(r16,
+                    II,
+                piscina)));
+            CREDO_VERUM (cyclotomicus_ex_polynomio(r16, a.p, II,
+                piscina,
+                &ia)
+                && cyclotomicus_ex_polynomio(r16, b.p, II, piscina, &ib)
+                && cyclotomicus_ex_polynomio(r16,
+                cyclotomicus_multiplica(a,
+                    b, piscina).p, II, piscina, &imago_producti)
+                && cyclotomicus_aequalis(imago_producti,
+                cyclotomicus_multiplica(ia,
+                    ib, piscina)));
         }
     }
 

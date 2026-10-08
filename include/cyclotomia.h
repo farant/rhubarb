@@ -40,10 +40,15 @@
 /* contextus Z[zeta_n]: opacus */
 nomen structura Cyclotomia Cyclotomia;
 
-/* forma canonica: polynomium in zeta, gradus < phi(n), imus >= 0;
- * PRIVATUM - per functiones legendum */
+/* Elementum SIGNATUM anulo suo: operationes anulum ex elementis legunt,
+ * anuli mixti refutantur (aequalis(zeta_8, zeta_16) FALSUM; recensio
+ * I). anulus NIHIL = INVALIDUM: ex anulis mixtis ortum, sicut NaN
+ * propagatur (cyclotomicus_est_validum). Forma canonica: polynomium in
+ * zeta, gradus < phi(n), imus >= 0. PRIVATUM - per functiones
+ * legendum. */
 nomen structura {
-    Polynomium p;
+     constans Cyclotomia* anulus;
+              Polynomium  p;
 } Cyclotomicus;
 
 /* Phi_n(t), n >= 1, per Phi_n = (t^n - 1) / prod_{d | n, d < n} Phi_d.
@@ -79,19 +84,20 @@ cyclotomia_polynomium (
 
 /* anulus Z[zeta_n] (elementa Cyclotomicus, titulus "Z[zeta_n]") pro
  * matrix: integrum, non corpus, non Euclideus; divide_exacte per
- * normam. Una descriptio per contextum. */
+ * normam. Una descriptio per contextum; elementa alterius anuli
+ * refutantur (FALSUM). */
 constans Anulus*
 cyclotomia_anulus (
     constans Cyclotomia* r);
 
 
 /* ==================================================
- * Constructio
+ * Constructio (contextum accipiunt)
  * ================================================== */
 
 Cyclotomicus
 cyclotomicus_nullum (
-    vacuum);
+    constans Cyclotomia* r);
 
 Cyclotomicus
 cyclotomicus_integer (
@@ -109,9 +115,9 @@ cyclotomicus_radix (
 
 /* p(zeta^k): variabilis polynomii (exponentes Laurent quilibet)
  * substituitur et reducitur - e.g. Jones V(t) ad t = zeta^k, uncinus
- * ad A = zeta^k. k = 1: reductio simplex. FALSUM nunquam nisi memoria;
- * b32 pro consensu. Etiam immersio: a in Z[zeta_8] -> Z[zeta_16] per
- * cyclotomicus_ex_polynomio(r16, a.p, II) (zeta_8 = zeta_16^2). */
+ * ad A = zeta^k. k = 1: reductio simplex. Etiam immersio: a in
+ * Z[zeta_8] -> Z[zeta_16] per cyclotomicus_ex_polynomio(r16, a.p, II)
+ * (zeta_8 = zeta_16^2). b32 pro consensu (FALSUM si r NIHIL). */
 b32
 cyclotomicus_ex_polynomio (
     constans Cyclotomia* r,
@@ -120,22 +126,55 @@ cyclotomicus_ex_polynomio (
                 Piscina* piscina,
            Cyclotomicus* exitus);
 
-/* coefficiens zeta^j in basi (0 <= j < phi(n)) */
-Magnus
-cyclotomicus_coefficiens (
+/* summa c[k] zeta^k, k < numerus (quilibet: reducitur) - ex
+ * arithmetica 's64' demonstrationum (Cyc8: numerus IV) */
+b32
+cyclotomicus_ex_s64 (
     constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    i32  j);
+           constans s64* c,
+                    i32  numerus,
+                Piscina* piscina,
+           Cyclotomicus* exitus);
 
 
 /* ==================================================
- * Arithmetica
+ * Lectio
  * ================================================== */
 
+/* VERUM nisi ex anulis mixtis ortum */
+b32
+cyclotomicus_est_validum (
+    Cyclotomicus a);
+
+/* contextus elementi; NIHIL si invalidum */
+constans Cyclotomia*
+cyclotomicus_anulus (
+    Cyclotomicus a);
+
+/* coefficiens zeta^j in basi (0 <= j < phi(n)); 0 si invalidum */
+Magnus
+cyclotomicus_coefficiens (
+    Cyclotomicus a,
+             i32 j);
+
+/* phi(n) coefficientes in exitus (basis potentiarum); FALSUM si
+ * invalidum aut coefficiens extra s64 (exitus tunc non fidus) */
+b32
+cyclotomicus_ad_s64 (
+    Cyclotomicus  a,
+             s64* exitus);
+
+
+/* ==================================================
+ * Arithmetica (anulus ex elementis; mixti -> invalidum)
+ * ================================================== */
+
+/* FALSUM si invalidum */
 b32
 cyclotomicus_est_nullum (
     Cyclotomicus a);
 
+/* FALSUM si anuli diversi aut invalidum */
 b32
 cyclotomicus_aequalis (
     Cyclotomicus a,
@@ -166,92 +205,87 @@ cyclotomicus_nega (
 
 Cyclotomicus
 cyclotomicus_multiplica (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-           Cyclotomicus  b,
-                Piscina* piscina);
+    Cyclotomicus  a,
+    Cyclotomicus  b,
+         Piscina* piscina);
 
 /* a^e, e >= 0 (quadrando) */
 Cyclotomicus
 cyclotomicus_potentia (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    i32  e,
-                Piscina* piscina);
+    Cyclotomicus  a,
+             i32  e,
+         Piscina* piscina);
 
 /* q = a / b in Z[zeta_n]: q = a * prod_{sigma != 1} sigma(b) / N(b).
- * FALSUM si b nullum aut b non dividit a (exitus non tangitur). */
+ * FALSUM si b nullum, b non dividit a, aut anuli mixti (exitus non
+ * tangitur). */
 b32
 cyclotomicus_divide_exacte (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-           Cyclotomicus  b,
-                Piscina* piscina,
-           Cyclotomicus* exitus);
+    Cyclotomicus  a,
+    Cyclotomicus  b,
+         Piscina* piscina,
+    Cyclotomicus* exitus);
 
 
 /* ==================================================
  * Galois et invariantes EXACTAE
  * ================================================== */
 
-/* sigma_j: zeta -> zeta^j; FALSUM si gcd(j, n) != 1 */
+/* sigma_j: zeta -> zeta^j; FALSUM si gcd(j, n) != 1 aut invalidum */
 b32
 cyclotomicus_automorphismus (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    s32  j,
-                Piscina* piscina,
-           Cyclotomicus* exitus);
+    Cyclotomicus  a,
+             s32  j,
+         Piscina* piscina,
+    Cyclotomicus* exitus);
 
 /* conjugatum complexum = sigma_{-1} */
 Cyclotomicus
 cyclotomicus_conjugatum (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina);
+    Cyclotomicus  a,
+         Piscina* piscina);
 
-/* N(a) = prod_{gcd(j, n) = 1} sigma_j(a), in Z */
-Magnus
+/* N(a) = prod_{gcd(j, n) = 1} sigma_j(a), in Z; FALSUM si invalidum */
+b32
 cyclotomicus_norma (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina);
+    Cyclotomicus  a,
+         Piscina* piscina,
+          Magnus* exitus);
 
-/* Tr(a) = summa_{gcd(j, n) = 1} sigma_j(a), in Z */
-Magnus
+/* Tr(a) = summa_{gcd(j, n) = 1} sigma_j(a), in Z; FALSUM si invalidum
+ * (vestigium 0 legitimum est - ergo b32) */
+b32
 cyclotomicus_vestigium (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina);
+    Cyclotomicus  a,
+         Piscina* piscina,
+          Magnus* exitus);
 
 /* |a|^2 = a * conjugatum(a): realis (in Z[zeta + zeta^-1]), EXACTUM */
 Cyclotomicus
 cyclotomicus_modulus_quadratus (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina);
+    Cyclotomicus  a,
+         Piscina* piscina);
 
 /* a = signum * zeta^k? (radix unitatis, angulus EXACTUS). VERUM et
  * *signum (+1/-1), *k (0 <= k < n) - signum +1 praefertur (n par:
- * -zeta^k = zeta^(k + n/2)). */
+ * -zeta^k = zeta^(k + n/2)). FALSUM si non radix aut invalidum. */
 b32
 cyclotomicus_est_radix (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    s32* signum,
-                    i32* k);
+    Cyclotomicus  a,
+             s32* signum,
+             i32* k);
 
 
 /* ==================================================
  * Textus
  * ================================================== */
 
-/* "z^3 - 2z + 1": littera 'z' = zeta_n; nullum = "0" */
+/* "z^3 - 2z + 1": littera 'z' = zeta_n; nullum = "0"; invalidum =
+ * "invalidum" */
 chorda
 cyclotomicus_ad_chordam (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina);
+    Cyclotomicus  a,
+         Piscina* piscina);
 
 /* polynomium in 'z' (Laurent licet), reductum */
 b32
@@ -265,12 +299,12 @@ cyclotomicus_ex_chorda (
  * datis (maximum XV; |x| >= 10^15 per notationem e). f64 interius
  * (cos/sin): error absolutus ~ phi(n) * max|c| * 2^-52 - cancellatio
  * TACITA est ((sqrt2 - 1)^60 = 1e-23 ut milliones ostenditur). Numquam
- * ad decisiones: aequalis, est_radix, modulus_quadratus exacta sunt. */
+ * ad decisiones: aequalis, est_radix, modulus_quadratus exacta sunt.
+ * invalidum = "invalidum". */
 chorda
 cyclotomicus_ad_ostendendum (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    i32  digiti,
-                Piscina* piscina);
+    Cyclotomicus  a,
+             i32  digiti,
+         Piscina* piscina);
 
 #endif /* CYCLOTOMIA_H */

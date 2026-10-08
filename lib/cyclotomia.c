@@ -124,6 +124,34 @@ _addere_potentiam (
     }
 }
 
+/* elementum signatum */
+interior Cyclotomicus
+_elementum (
+    constans Cyclotomia* r,
+             Polynomium  p)
+{
+    Cyclotomicus a;
+
+    a.anulus  = r;
+    a.p       = p;
+    redde a;
+}
+
+interior Cyclotomicus
+_invalidum (vacuum)
+{
+    redde _elementum(NIHIL, polynomium_nullum());
+}
+
+/* anulus communis duorum; NIHIL si mixti aut invalidi */
+interior constans Cyclotomia*
+_communis (
+    Cyclotomicus a,
+    Cyclotomicus b)
+{
+    redde a.anulus == b.anulus ? a.anulus : NIHIL;
+}
+
 /* p(zeta^k) reductum: terminus c t^e -> c * zeta^((k e) mod n) */
 interior Cyclotomicus
 _reducere (
@@ -132,15 +160,14 @@ _reducere (
                     s32  k,
                 Piscina* piscina)
 {
-    Cyclotomicus  exitus;
-          Magnus* alveus;
-             s32  e;
-             i32  j;
+    Polynomium  exitus = polynomium_nullum();
+        Magnus* alveus;
+           s32  e;
+           i32  j;
 
-    exitus.p = polynomium_nullum();
     si (polynomium_est_nullum(p))
     {
-        redde exitus;
+        redde _elementum(r, exitus);
     }
     alveus = (Magnus*)piscina_allocare(piscina, (memoriae_index)r->phi
         * magnitudo(Magnus));
@@ -168,31 +195,31 @@ _reducere (
     }
     (vacuum)polynomium_ex_coefficientibus(alveus, r->phi, ZEPHYRUM,
         piscina,
-        &exitus.p);
-    redde exitus;
+        &exitus);
+    redde _elementum(r, exitus);
 }
 
 
 /* ==================================================
- * Anulus Z[zeta_n]: elementa Cyclotomicus
+ * Anulus Z[zeta_n]: elementa Cyclotomicus eiusdem contextus
  * ================================================== */
 
 #define CYCLO(anulus) ((constans Cyclotomia*)(anulus)->contextus)
+#define ELEMENTUM(x) (*(constans Cyclotomicus*)(x))
 
 interior vacuum
 _an_nullum (
     constans Anulus* anulus,
              vacuum* exitus)
 {
-    (vacuum)anulus;
-    *(Cyclotomicus*)exitus = cyclotomicus_nullum();
+    *(Cyclotomicus*)exitus = cyclotomicus_nullum(CYCLO(anulus));
 }
 
 interior vacuum
 _an_unum (
     constans Anulus* anulus,
-           Piscina* piscina,
-            vacuum* exitus)
+            Piscina* piscina,
+             vacuum* exitus)
 {
     *(Cyclotomicus*)exitus = cyclotomicus_integer(CYCLO(anulus),
         magnus_ex_s64(I), piscina);
@@ -203,8 +230,8 @@ _an_est_nullum (
     constans Anulus* anulus,
     constans vacuum* a)
 {
-    (vacuum)anulus;
-    redde cyclotomicus_est_nullum(*(constans Cyclotomicus*)a);
+    redde ((constans Cyclotomicus*)a)->anulus == CYCLO(anulus)
+        && cyclotomicus_est_nullum(ELEMENTUM(a));
 }
 
 interior b32
@@ -212,8 +239,7 @@ _an_parvum (
     constans Anulus* anulus,
     constans vacuum* a)
 {
-    (vacuum)anulus;
-    redde cyclotomicus_est_nullum(*(constans Cyclotomicus*)a);
+    redde _an_est_nullum(anulus, a);
 }
 
 interior b32
@@ -222,9 +248,23 @@ _an_aequalis (
     constans vacuum* a,
     constans vacuum* b)
 {
-    (vacuum)anulus;
-    redde cyclotomicus_aequalis(*(constans Cyclotomicus*)a,
-        *(constans Cyclotomicus*)b);
+    redde ((constans Cyclotomicus*)a)->anulus == CYCLO(anulus)
+        && cyclotomicus_aequalis(ELEMENTUM(a), ELEMENTUM(b));
+}
+
+/* exitus validus et huius anuli? */
+interior b32
+_an_bonum (
+    constans Anulus* anulus,
+        Cyclotomicus c,
+             vacuum* exitus)
+{
+    si (c.anulus != CYCLO(anulus))
+    {
+        redde FALSUM;
+    }
+    *(Cyclotomicus*)exitus = c;
+    redde VERUM;
 }
 
 interior b32
@@ -235,11 +275,9 @@ _an_adde (
             Piscina* piscina,
              vacuum* exitus)
 {
-    (vacuum)anulus;
-    *(Cyclotomicus*)exitus =
-        cyclotomicus_adde(*(constans Cyclotomicus*)a,
-        *(constans Cyclotomicus*)b, piscina);
-    redde VERUM;
+    redde _an_bonum(anulus, cyclotomicus_adde(ELEMENTUM(a),
+        ELEMENTUM(b),
+        piscina), exitus);
 }
 
 interior b32
@@ -250,11 +288,8 @@ _an_subtrahe (
             Piscina* piscina,
              vacuum* exitus)
 {
-    (vacuum)anulus;
-    *(Cyclotomicus*)exitus = cyclotomicus_subtrahe(
-        *(constans Cyclotomicus*)a, *(constans Cyclotomicus*)b,
-        piscina);
-    redde VERUM;
+    redde _an_bonum(anulus, cyclotomicus_subtrahe(ELEMENTUM(a),
+        ELEMENTUM(b), piscina), exitus);
 }
 
 interior b32
@@ -262,13 +297,11 @@ _an_multiplica (
     constans Anulus* anulus,
     constans vacuum* a,
     constans vacuum* b,
-           Piscina* piscina,
-            vacuum* exitus)
+            Piscina* piscina,
+             vacuum* exitus)
 {
-    *(Cyclotomicus*)exitus = cyclotomicus_multiplica(CYCLO(anulus),
-        *(constans Cyclotomicus*)a, *(constans Cyclotomicus*)b,
-        piscina);
-    redde VERUM;
+    redde _an_bonum(anulus, cyclotomicus_multiplica(ELEMENTUM(a),
+        ELEMENTUM(b), piscina), exitus);
 }
 
 interior b32
@@ -276,12 +309,13 @@ _an_divide_exacte (
     constans Anulus* anulus,
     constans vacuum* a,
     constans vacuum* b,
-           Piscina* piscina,
-            vacuum* exitus)
+            Piscina* piscina,
+             vacuum* exitus)
 {
-    redde cyclotomicus_divide_exacte(CYCLO(anulus),
-        *(constans Cyclotomicus*)a, *(constans Cyclotomicus*)b, piscina,
-        (Cyclotomicus*)exitus);
+    redde ((constans Cyclotomicus*)a)->anulus == CYCLO(anulus)
+        && cyclotomicus_divide_exacte(ELEMENTUM(a), ELEMENTUM(b),
+        piscina,
+            (Cyclotomicus*)exitus);
 }
 
 interior vacuum
@@ -292,26 +326,27 @@ _an_transcribe (
              vacuum* exitus)
 {
     (vacuum)anulus;
-    ((Cyclotomicus*)exitus)->p = polynomium_transcribe(
-        ((constans Cyclotomicus*)a)->p, piscina);
+    *(Cyclotomicus*)exitus =
+        _elementum(((constans Cyclotomicus*)a)->anulus,
+        polynomium_transcribe(((constans Cyclotomicus*)a)->p, piscina));
 }
 
 interior chorda
 _an_ad_chordam (
     constans Anulus* anulus,
     constans vacuum* a,
-           Piscina* piscina)
+            Piscina* piscina)
 {
-    redde cyclotomicus_ad_chordam(CYCLO(anulus),
-        *(constans Cyclotomicus*)a, piscina);
+    (vacuum)anulus;
+    redde cyclotomicus_ad_chordam(ELEMENTUM(a), piscina);
 }
 
 interior b32
 _an_ex_chorda (
     constans Anulus* anulus,
-             chorda  textus,
-           Piscina*  piscina,
-            vacuum*  exitus)
+              chorda  textus,
+            Piscina*  piscina,
+             vacuum*  exitus)
 {
     redde cyclotomicus_ex_chorda(CYCLO(anulus), textus, piscina,
         (Cyclotomicus*)exitus);
@@ -465,12 +500,10 @@ cyclotomia_anulus (
  * ================================================== */
 
 Cyclotomicus
-cyclotomicus_nullum (vacuum)
+cyclotomicus_nullum (
+    constans Cyclotomia* r)
 {
-    Cyclotomicus a;
-
-    a.p = polynomium_nullum();
-    redde a;
+    redde _elementum(r, polynomium_nullum());
 }
 
 Cyclotomicus
@@ -479,11 +512,7 @@ cyclotomicus_integer (
                  Magnus  c,
                 Piscina* piscina)
 {
-    Cyclotomicus a;
-
-    (vacuum)r;
-    a.p = polynomium_constans(c, piscina);
-    redde a;
+    redde _elementum(r, polynomium_constans(c, piscina));
 }
 
 Cyclotomicus
@@ -492,19 +521,19 @@ cyclotomicus_radix (
                     s32  k,
                 Piscina* piscina)
 {
-    s64 m = (s64)k % (s64)r->n;
+    s64 m;
 
     (vacuum)piscina;
+    si (r == NIHIL)
+    {
+        redde _invalidum();
+    }
+    m = (s64)k % (s64)r->n;
     si (m < ZEPHYRUM)
     {
         m = m + (s64)r->n;
     }
-    {
-        Cyclotomicus a;
-
-        a.p = r->potentiae[(i32)m];
-        redde a;
-    }
+    redde _elementum(r, r->potentiae[(i32)m]);
 }
 
 b32
@@ -515,18 +544,103 @@ cyclotomicus_ex_polynomio (
                 Piscina* piscina,
            Cyclotomicus* exitus)
 {
+    si (r == NIHIL)
+    {
+        redde FALSUM;
+    }
     *exitus = _reducere(r, p, k, piscina);
     redde VERUM;
 }
 
+b32
+cyclotomicus_ex_s64 (
+    constans Cyclotomia* r,
+           constans s64* c,
+                    i32  numerus,
+                Piscina* piscina,
+           Cyclotomicus* exitus)
+{
+        Magnus* alveus;
+           i32  k;
+    Polynomium  p = polynomium_nullum();
+
+    si (r == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        *exitus = cyclotomicus_nullum(r);
+        redde VERUM;
+    }
+    alveus = (Magnus*)piscina_allocare(piscina, (memoriae_index)numerus
+        * magnitudo(Magnus));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        alveus[k] = magnus_ex_s64(c[k]);
+    }
+    si (!polynomium_ex_coefficientibus(alveus, numerus, ZEPHYRUM,
+        piscina,
+            &p))
+    {
+        redde FALSUM;
+    }
+    *exitus = _reducere(r, p, I, piscina);
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Lectio
+ * ================================================== */
+
+b32
+cyclotomicus_est_validum (
+    Cyclotomicus a)
+{
+    redde a.anulus != NIHIL;
+}
+
+constans Cyclotomia*
+cyclotomicus_anulus (
+    Cyclotomicus a)
+{
+    redde a.anulus;
+}
+
 Magnus
 cyclotomicus_coefficiens (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    i32  j)
+    Cyclotomicus a,
+             i32 j)
 {
-    (vacuum)r;
+    si (a.anulus == NIHIL)
+    {
+        redde magnus_ex_s64(ZEPHYRUM);
+    }
     redde polynomium_coefficiens(a.p, (s32)j);
+}
+
+b32
+cyclotomicus_ad_s64 (
+    Cyclotomicus  a,
+             s64* exitus)
+{
+    i32 j;
+
+    si (a.anulus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < a.anulus->phi; j++)
+    {
+        exitus[j] = ZEPHYRUM;
+        si (!magnus_ad_s64(polynomium_coefficiens(a.p, (s32)j),
+                &exitus[j]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -538,7 +652,7 @@ b32
 cyclotomicus_est_nullum (
     Cyclotomicus a)
 {
-    redde polynomium_est_nullum(a.p);
+    redde a.anulus != NIHIL && polynomium_est_nullum(a.p);
 }
 
 b32
@@ -546,7 +660,7 @@ cyclotomicus_aequalis (
     Cyclotomicus a,
     Cyclotomicus b)
 {
-    redde polynomium_aequalis(a.p, b.p);
+    redde _communis(a, b) != NIHIL && polynomium_aequalis(a.p, b.p);
 }
 
 b32
@@ -554,6 +668,10 @@ cyclotomicus_est_integer (
     Cyclotomicus  a,
           Magnus* valor)
 {
+    si (a.anulus == NIHIL)
+    {
+        redde FALSUM;
+    }
     si (polynomium_est_nullum(a.p))
     {
         si (valor != NIHIL)
@@ -579,10 +697,13 @@ cyclotomicus_adde (
     Cyclotomicus  b,
          Piscina* piscina)
 {
-    Cyclotomicus c;
+    constans Cyclotomia* r = _communis(a, b);
 
-    c.p = polynomium_adde(a.p, b.p, piscina);
-    redde c;
+    si (r == NIHIL)
+    {
+        redde _invalidum();
+    }
+    redde _elementum(r, polynomium_adde(a.p, b.p, piscina));
 }
 
 Cyclotomicus
@@ -591,10 +712,13 @@ cyclotomicus_subtrahe (
     Cyclotomicus  b,
          Piscina* piscina)
 {
-    Cyclotomicus c;
+    constans Cyclotomia* r = _communis(a, b);
 
-    c.p = polynomium_subtrahe(a.p, b.p, piscina);
-    redde c;
+    si (r == NIHIL)
+    {
+        redde _invalidum();
+    }
+    redde _elementum(r, polynomium_subtrahe(a.p, b.p, piscina));
 }
 
 Cyclotomicus
@@ -602,21 +726,26 @@ cyclotomicus_nega (
     Cyclotomicus  a,
          Piscina* piscina)
 {
-    Cyclotomicus c;
-
-    c.p = polynomium_nega(a.p, piscina);
-    redde c;
+    si (a.anulus == NIHIL)
+    {
+        redde _invalidum();
+    }
+    redde _elementum(a.anulus, polynomium_nega(a.p, piscina));
 }
 
 Cyclotomicus
 cyclotomicus_multiplica (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-           Cyclotomicus  b,
-                Piscina* piscina)
+    Cyclotomicus  a,
+    Cyclotomicus  b,
+         Piscina* piscina)
 {
-    Polynomium productum = polynomium_nullum();
+     constans Cyclotomia* r          = _communis(a, b);
+              Polynomium  productum  = polynomium_nullum();
 
+    si (r == NIHIL)
+    {
+        redde _invalidum();
+    }
     /* gradus < 2 phi: exponentes semper intra fines */
     (vacuum)polynomium_multiplica(a.p, b.p, piscina, &productum);
     redde _reducere(r, productum, I, piscina);
@@ -624,24 +753,27 @@ cyclotomicus_multiplica (
 
 Cyclotomicus
 cyclotomicus_potentia (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    i32  e,
-                Piscina* piscina)
+    Cyclotomicus  a,
+             i32  e,
+         Piscina* piscina)
 {
-    Cyclotomicus summa = cyclotomicus_integer(r, magnus_ex_s64(I),
-        piscina);
+    Cyclotomicus summa;
 
+    si (a.anulus == NIHIL)
+    {
+        redde _invalidum();
+    }
+    summa = cyclotomicus_integer(a.anulus, magnus_ex_s64(I), piscina);
     dum (e > ZEPHYRUM)
     {
         si (e & I)
         {
-            summa = cyclotomicus_multiplica(r, summa, a, piscina);
+            summa = cyclotomicus_multiplica(summa, a, piscina);
         }
         e = e >> I;
         si (e > ZEPHYRUM)
         {
-            a = cyclotomicus_multiplica(r, a, a, piscina);
+            a = cyclotomicus_multiplica(a, a, piscina);
         }
     }
     redde summa;
@@ -649,14 +781,19 @@ cyclotomicus_potentia (
 
 b32
 cyclotomicus_automorphismus (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    s32  j,
-                Piscina* piscina,
-           Cyclotomicus* exitus)
+    Cyclotomicus  a,
+             s32  j,
+         Piscina* piscina,
+    Cyclotomicus* exitus)
 {
-    s64 m = (s64)j % (s64)r->n;
+     constans Cyclotomia* r = a.anulus;
+                     s64  m;
 
+    si (r == NIHIL)
+    {
+        redde FALSUM;
+    }
+    m = (s64)j % (s64)r->n;
     si (m < ZEPHYRUM)
     {
         m = m + (s64)r->n;
@@ -671,23 +808,26 @@ cyclotomicus_automorphismus (
 
 Cyclotomicus
 cyclotomicus_conjugatum (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina)
+    Cyclotomicus  a,
+         Piscina* piscina)
 {
-    redde _reducere(r, a.p, -I, piscina);
+    si (a.anulus == NIHIL)
+    {
+        redde _invalidum();
+    }
+    redde _reducere(a.anulus, a.p, -I, piscina);
 }
 
 /* prod_{j unitas, j != 1} sigma_j(a) */
 interior Cyclotomicus
 _conjugata_producta (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina)
+    Cyclotomicus  a,
+         Piscina* piscina)
 {
-    Cyclotomicus productum = cyclotomicus_integer(r, magnus_ex_s64(I),
-        piscina);
-             i32 u;
+     constans Cyclotomia* r = a.anulus;
+            Cyclotomicus  productum = cyclotomicus_integer(r,
+                magnus_ex_s64(I), piscina);
+                     i32 u;
 
     per (u = ZEPHYRUM; u < r->numerus_unitatum; u++)
     {
@@ -695,73 +835,74 @@ _conjugata_producta (
         {
             perge;
         }
-        productum = cyclotomicus_multiplica(r, productum, _reducere(r,
-            a.p,
+        productum = cyclotomicus_multiplica(productum, _reducere(r, a.p,
             (s32)r->unitates[u], piscina), piscina);
     }
     redde productum;
 }
 
-Magnus
+b32
 cyclotomicus_norma (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina)
+     Cyclotomicus  a,
+          Piscina* piscina,
+           Magnus* exitus)
 {
-    Cyclotomicus n = cyclotomicus_multiplica(r, a,
-        _conjugata_producta(r,
-        a, piscina), piscina);
-          Magnus valor = magnus_ex_s64(ZEPHYRUM);
-
-    (vacuum)cyclotomicus_est_integer(n, &valor);
-    redde valor;
+    si (a.anulus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde cyclotomicus_est_integer(cyclotomicus_multiplica(a,
+        _conjugata_producta(a, piscina), piscina), exitus);
 }
 
-Magnus
+b32
 cyclotomicus_vestigium (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina)
+     Cyclotomicus  a,
+          Piscina* piscina,
+           Magnus* exitus)
 {
-    Cyclotomicus summa = cyclotomicus_nullum();
-          Magnus valor = magnus_ex_s64(ZEPHYRUM);
-             i32 u;
+     constans Cyclotomia* r = a.anulus;
+            Cyclotomicus  summa;
+                     i32  u;
 
+    si (r == NIHIL)
+    {
+        redde FALSUM;
+    }
+    summa = cyclotomicus_nullum(r);
     per (u = ZEPHYRUM; u < r->numerus_unitatum; u++)
     {
         summa = cyclotomicus_adde(summa, _reducere(r, a.p,
             (s32)r->unitates[u], piscina), piscina);
     }
-    (vacuum)cyclotomicus_est_integer(summa, &valor);
-    redde valor;
+    redde cyclotomicus_est_integer(summa, exitus);
 }
 
 b32
 cyclotomicus_divide_exacte (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-           Cyclotomicus  b,
-                Piscina* piscina,
-           Cyclotomicus* exitus)
+    Cyclotomicus  a,
+    Cyclotomicus  b,
+         Piscina* piscina,
+    Cyclotomicus* exitus)
 {
-    Cyclotomicus  c;
-          Magnus  n;
-          Magnus* alveus;
-             s32  e;
+     constans Cyclotomia* r = _communis(a, b);
+            Cyclotomicus  c;
+                  Magnus  n = magnus_ex_s64(ZEPHYRUM);
+                  Magnus* alveus;
+                     s32  e;
 
-    si (cyclotomicus_est_nullum(b))
+    si (r == NIHIL || cyclotomicus_est_nullum(b))
     {
         redde FALSUM;
     }
     /* productum conjugatorum semel: N(b) = b * productum (recensio:
      * olim bis computatum) */
     {
-        Cyclotomicus productum = _conjugata_producta(r, b, piscina);
+        Cyclotomicus productum = _conjugata_producta(b, piscina);
 
-        n = magnus_ex_s64(ZEPHYRUM);
-        (vacuum)cyclotomicus_est_integer(cyclotomicus_multiplica(r, b,
+        (vacuum)cyclotomicus_est_integer(cyclotomicus_multiplica(b,
             productum, piscina), &n);
-        c = cyclotomicus_multiplica(r, a, productum, piscina);
+        c = cyclotomicus_multiplica(a, productum, piscina);
     }
     si (cyclotomicus_est_nullum(c))
     {
@@ -782,14 +923,15 @@ cyclotomicus_divide_exacte (
             perge;
         }
         si (   !magnus_divide(polynomium_coefficiens(c.p, e), n,
-            piscina, &q,
-                &residuum)
+            piscina,
+                &q, &residuum)
             || magnus_signum(residuum) != ZEPHYRUM)
         {
             redde FALSUM;
         }
         alveus[e] = q;
     }
+    exitus->anulus = r;
     (vacuum)polynomium_ex_coefficientibus(alveus, r->phi, ZEPHYRUM,
         piscina,
         &exitus->p);
@@ -798,23 +940,27 @@ cyclotomicus_divide_exacte (
 
 Cyclotomicus
 cyclotomicus_modulus_quadratus (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina)
+    Cyclotomicus  a,
+         Piscina* piscina)
 {
-    redde cyclotomicus_multiplica(r, a, cyclotomicus_conjugatum(r, a,
-        piscina), piscina);
+    redde cyclotomicus_multiplica(a, cyclotomicus_conjugatum(a,
+        piscina),
+        piscina);
 }
 
 b32
 cyclotomicus_est_radix (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    s32* signum,
-                    i32* k)
+    Cyclotomicus  a,
+             s32* signum,
+             i32* k)
 {
-    i32 m;
+     constans Cyclotomia* r = a.anulus;
+                     i32  m;
 
+    si (r == NIHIL)
+    {
+        redde FALSUM;
+    }
     per (m = ZEPHYRUM; m < r->n; m++)
     {
         si (polynomium_aequalis(a.p, r->potentiae[m]))
@@ -843,11 +989,15 @@ cyclotomicus_est_radix (
 
 chorda
 cyclotomicus_ad_chordam (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                Piscina* piscina)
+    Cyclotomicus  a,
+         Piscina* piscina)
 {
-    (vacuum)r;
+    si (a.anulus == NIHIL)
+    {
+        redde chorda_transcribere(chorda_ex_literis("invalidum",
+            piscina),
+            piscina);
+    }
     redde polynomium_ad_chordam(a.p, 'z', piscina);
 }
 
@@ -860,7 +1010,7 @@ cyclotomicus_ex_chorda (
 {
     Polynomium p = polynomium_nullum();
 
-    si (!polynomium_ex_chorda(textus, 'z', piscina, &p))
+    si (r == NIHIL || !polynomium_ex_chorda(textus, 'z', piscina, &p))
     {
         redde FALSUM;
     }
@@ -885,12 +1035,11 @@ _ad_f64 (
     }
     /* textus decimalis longus: mantissa (XVII digiti) et exponens,
      * ne truncatio 10^300 in 10^254 vertat (recensio) */
-    textus  = magnus_ad_chordam(c, piscina);
+    textus = magnus_ad_chordam(c, piscina);
     {
-        i32 signum  = textus.mensura > ZEPHYRUM
-            && textus.datum[ZEPHYRUM]
+        i32 signum = textus.mensura > ZEPHYRUM && textus.datum[ZEPHYRUM]
             == '-' ? I : ZEPHYRUM;
-        i32 digiti  = (i32)textus.mensura - signum;
+        i32 digiti = (i32)textus.mensura - signum;
         i32 k;
 
         n = ZEPHYRUM;
@@ -911,10 +1060,9 @@ _ad_f64 (
 
 chorda
 cyclotomicus_ad_ostendendum (
-    constans Cyclotomia* r,
-           Cyclotomicus  a,
-                    i32  digiti,
-                Piscina* piscina)
+    Cyclotomicus  a,
+             i32  digiti,
+         Piscina* piscina)
 {
           f64 re = 0.0;
           f64 im = 0.0;
@@ -926,6 +1074,12 @@ cyclotomicus_ad_ostendendum (
     character pars_re[CXXVIII];
     character pars_im[CXXVIII];
 
+    si (a.anulus == NIHIL)
+    {
+        redde chorda_transcribere(chorda_ex_literis("invalidum",
+            piscina),
+            piscina);
+    }
     si (!polynomium_est_nullum(a.p))
     {
         per (e = polynomium_gradus_imus(a.p);
@@ -933,7 +1087,7 @@ cyclotomicus_ad_ostendendum (
         {
             f64 c = _ad_f64(polynomium_coefficiens(a.p, e), piscina);
             f64 angulus = 2.0 * 3.14159265358979323846 * (f64)e
-                / (f64)r->n;
+                / (f64)a.anulus->n;
 
             re = re + c * cos(angulus);
             im = im + c * sin(angulus);

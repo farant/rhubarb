@@ -128,3 +128,37 @@ Fixed:
 Open for Fran (the API): elements carry no ring, so aequalis(zeta_8,
 zeta_16) = VERUM and rings mix silently; and there is no s64-array
 constructor or reader for demo interop.
+
+## 2026-10-07 - v2 API: ring-tagged elements, s64 interop (Fran approved)
+
+**Ring tags.** `Cyclotomicus` now carries `constans Cyclotomia* anulus`.
+- Operations read the ring from their elements, so `multiplica(a, b, p)`
+  and the like no longer take a context. Constructors (nullum, integer,
+  radix, ex_polynomio, ex_chorda, ex_s64) do.
+- Mixing rings gives an INVALID element: `anulus == NIHIL`, tested with
+  `cyclotomicus_est_validum`, and it propagates like NaN. Functions that
+  return b32 refuse instead: aequalis (zeta_8 vs zeta_16 is now FALSUM; it
+  used to be VERUM because both are the polynomial t), divide_exacte,
+  automorphismus, est_radix, est_integer.
+- ad_chordam / ad_ostendendum print "invalidum".
+- `norma` and `vestigium` now return b32 with an out-parameter: a trace of
+  0 is legitimate, so a Magnus return value could not signal an error.
+- The Anulus hooks refuse elements of another ring (`_an_bonum` checks the
+  ring of every result). **Lesson from plant T2:** a mixed Bareiss
+  determinant is ALSO caught by the exact-division hook, so a det-only test
+  could not see the hook check. matrix_multiplica and matrix_adde have no
+  division, so only the hook guards them. Tests now pin a mixed product and
+  a mixed sum.
+
+**s64 interop**, for the D114-style audit of the old `Cyc8` demos:
+- `cyclotomicus_ex_s64(r, c, numerus)` takes any length and reduces, so
+  {0,0,0,0,1} in Z[zeta_8] = -1;
+- `cyclotomicus_ad_s64(a, out)` writes phi(n) coefficients and refuses a
+  coefficient outside s64, or an invalid element.
+
+The embedding Z[zeta_8] -> Z[zeta_16] via ex_polynomio(k = 2) is tested as a
+homomorphism.
+
+**Tests: 78.** Plants: T1 (rings never compared) red, 14 failures; T2 (hook
+accepts foreign elements) red after the product/sum tests were added; T3
+(ad_s64 ignores overflow) and T4 (ex_s64 skips reduction) red.
