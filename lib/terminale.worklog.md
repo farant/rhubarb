@@ -249,3 +249,37 @@ Found on the way (not this step's work): the core keeps at most 512
 styles per screen (STILI_MAXIMI) - beyond that, new styles fall back to
 the default (Ghostty grows page style capacity); and interning a style
 is a linear scan over up to 512 entries per SGR. Filed as park 012.
+
+
+## 2026-10-07 — park 011 step 2: rasteriser fast paths (measured)
+
+After step 1, `sample` still put most of a frame in the rasteriser.
+Three changes, each proven byte-identical on the deterministic colour
+screen and A/B-timed on btop at 160x75:
+- `delineare_rectangulum_plenum` (lib/delineare.c): in MODUS_SOLIDUS
+  the visible pixels are the rectangle clipped to the buffer AND the
+  clip region - computed once, rows filled directly (was: a helper per
+  pixel re-checking buffer, bounds, clip and switching on the mode).
+- `tabula_pixelorum_pingere_characterem` (lib/fenestra_textus.c): a
+  glyph wholly inside the buffer writes its rows directly and skips
+  empty rows.
+- terminale: a cell holding just a space emits no text mandate (blank
+  glyph; btop fills every cell with space + background).
+btop full frame: ~13.0 ms -> ~4.8 ms at light load (~20 -> under
+8 ms at load 7) - with step 1, about 2.7x overall.
+
+A CRASH I introduced and the suite caught: the first glyph check was
+`x + 8 <= latitudo`. i32 is UNSIGNED here; a glyph at a negative x
+arrives as a huge number, the sum wraps small, the check passes and
+the write lands outside the buffer (probatio_delineare_mandata exit
+139). Now `x <= latitudo - 8` with latitudo >= 8 first. My first plant
+run happened on that crashing baseline - every "caught by delineare"
+was meaningless; rerun on a green baseline it showed the clip region
+was untested for solid rectangles (R1/R5 survived) -> new section in
+probatio_delineare_mandata (clip 6x6 inside 20x20, four edges). R2
+(dropping the buffer clamp) is equivalent: every clip setter keeps the
+clip inside the buffer. Plants R1 R3 R4 R5 R6 caught.
+
+Not done (park 011 rest): buffer clear (~5%), mandate list overhead
+(~10%), glyph masks rebuilt per frame (~7%) - a mask cache; dirty rows
+(module 007) if it is still felt.

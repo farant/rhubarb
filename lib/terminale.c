@@ -684,7 +684,12 @@ terminale_figura (
             {
                 /* pictum */
             }
-            alioquin si (cellula.graphema.mensura > ZEPHYRUM)
+            /* spatium: glypha vacua, nihil pingendum (btop omnem
+             * cellulam spatio et fundo implet - park 011) */
+            alioquin si (   cellula.graphema.mensura > ZEPHYRUM
+                         && !(   cellula.graphema.mensura == I
+                              && cellula.graphema.datum[ZEPHYRUM]
+                                  == ' '))
             {
                 mandata_textus(m, (s32)x * cw, (s32)y * ch,
                     cellula.graphema,
