@@ -655,3 +655,23 @@ so the suites do not depend on order. Oracle: the same 37 sections with
 the same assertion count each (772 in total). Plants: a fake-world fault
 (deleting does nothing) -> iudicium and ordo red; the serial-path
 library fault -> only sanare red, so a red suite now names the area.
+
+H4 (the tool split, option A) - tools/fabrica.c (4,550 lines) keeps the
+commands only (~2,200: declarations, orphans, iudicare, sanare,
+digestum, purgare, causae, principale). The real world moved into
+three files: tools/fabrica_sutura.c (disk, processes, act and act in
+parallel, tree snapshot; ~1,340), tools/fabrica_memoria.c
+(build/fabrica.db: verifications, read traces, particles, verdicts,
+runs; ~670) and tools/fabrica_ansae.c (step hooks; ~410). They share
+tools/fabrica_sutura.h, which names the three bodies with
+`<aedilis corpus>`; the 21 shared names use the prefix `suturae_`.
+Before the cut, five blocks that each assigned the real hooks one by
+one became helpers: suturae_legentem_parare (read and list),
+suturae_currentem_addere (run and ask), suturae_agentem_addere (act,
+snapshot, parallel choice, extra directories) and
+suturae_memoriam_nectere (the memory hooks). Iudicare now also wires
+`cursum_legere`, which only fabrica_sanare reads - no change in
+behaviour. Oracle as in H2: identical, fumus XL/XL. Plants: no `agere`
+in the acting helper -> XVI/XVII red; area preparation failing ->
+XXXVII red. Option B (the real sutura as a library) is desideratum
+...DCF4G1; note that the memory code says sqlite must stay out of lib/.

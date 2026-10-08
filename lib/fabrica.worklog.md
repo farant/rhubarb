@@ -2145,3 +2145,24 @@ failed in the full run, then passed alone and on a rerun (ledger note).
   is stronger than the total.
 - The original had an orphaned comment ("photographia ficta") sitting
   above `_currere_simul`; it now sits on `_photographia`.
+
+## 2026-10-08 - housekeeping H4: the tool split
+
+- The real hooks were assigned one by one in five places (iudicare,
+  sanare, digestum, the declarations reader, ordering by location);
+  that, not the size, was the coupling: 42 names crossed a four-way
+  split. Helpers for wiring brought it to 21.
+- The two memory blocks differed: sanare also wired `cursum_legere`.
+  The unified helper wires it for iudicare as well - safe, because
+  only fabrica_sanare reads it, and iudicare never heals.
+- Splitter bug caught by review: a plain assignment in principale
+  (`suturae_via_binarii = argv[0];`) was taken for a definition and
+  produced `externus suturae_via_binarii;`. Only definitions at
+  column 0 count.
+- aedilis resolves a quoted include relative to the including file, so
+  a header in tools/ works without an include path; its
+  `<aedilis corpus>` lines link the bodies the same way lib/ headers
+  do.
+- Plants must compile: `(VERUM == FALSUM) ? _agere : NIHIL` keeps
+  `_agere` referenced; a plain NIHIL would make it an unused static,
+  fail -Werror and leave the old binary in place.
