@@ -91,3 +91,24 @@ part A in T3).
 - Lint renames: hr->resultus_http, ho->optiones_herbarii,
   in_cifris->in_numeris; glossary entry herbarium gained the form
   "herbarii".
+
+## 2026-10-08 - committed specimens + the sweep (vates-plan-2 T6)
+
+`probationes/fixa/vates/herbarium/specimina/` holds eight hand-made seeds
+in herbarium's exact format (semen_<kind>-1.json): 529 overloaded, 429
+rate_limit (with retry-after), 400 invalid_request, 401 authentication,
+500 api_error, 200 refusal (category cyber), 200 max_tokens, 200 with an
+unknown block (server_tool_use). `probatio_specimina_commissa` replays
+EVERY committed specimen through `herbarium_reddens` +
+`vates_anthropic_legere` and demands a NAMED outcome: non-200 ->
+VATES_ERROR_STATUS with a non-empty error_genus; 200 -> success with a
+causa_finis other than ALIA. Presence is asserted (> 0), not a fixed
+count - the set is meant to grow.
+
+**Promotion (how the set grows):** live capture lands in the caller's
+herbarium directory (optchat: ../optchat-acta/herbarium, tools/vates_fumus:
+build/vates_fumus_herbarium). Read the specimen (error bodies can quote
+the request back), then `cp` it here unchanged. If the sweep turns red,
+the API sent something vates cannot name yet: teach the parser, then the
+suite is green again. Plant: a seed with stop_reason "novum_finis" -> red
+at :733 (ALIA = unnamed), removed.

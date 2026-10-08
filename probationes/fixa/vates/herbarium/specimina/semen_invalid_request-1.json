@@ -1,0 +1,19 @@
+{
+  "clavis": "400:invalid_request_error:messages: at least one message is required",
+  "causa": "status",
+  "status": 400,
+  "capita": [
+    {
+      "titulus": "content-type",
+      "valor": "application/json"
+    }
+  ],
+  "corpus": "{\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages: at least one message is required\"}}",
+  "primum_visum": "2026-10-08T00:00:00Z",
+  "methodus": "POST",
+  "hospes": "api.anthropic.com",
+  "via": "/v1/messages",
+  "summarium": {
+    "model": "claude-sonnet-5-5"
+  }
+}

@@ -702,6 +702,45 @@ probatio_novitas_pressa(Piscina* piscina)
 }
 
 
+interior vacuum
+probatio_specimina_commissa(Piscina* piscina)
+{
+    Xar* s = herbarium_enumerare(piscina,
+        "probationes/fixa/vates/herbarium");
+    HttpVectura reddens;
+            i32 i;
+
+    imprimere("\n--- Probans specimina commissa (exitus NOMINATUS) ---\n");
+    /* praesentia > 0, non numerus fixus: semina crescunt */
+    CREDO_MAIOR_I32(xar_numerus(s), 0);
+    reddens = herbarium_reddens(piscina, s);
+    per (i = 0; i < xar_numerus(s); i++)
+    {
+        HerbariumSpecimen* sp = (HerbariumSpecimen*)xar_obtinere(s, i);
+             HttpResultus  resultus_http = http_vectura_exsequi(reddens,
+                 NIHIL,
+                 piscina);
+           VatesResponsum* r =
+               vates_anthropic_legere(resultus_http.responsum->status,
+                                                      resultus_http.responsum->corpus,
+                                                      piscina);
+
+        imprimere("  %.*s\n", (integer)sp->sigillum.mensura,
+                  (constans character*)sp->sigillum.datum);
+        si (sp->status != CC)
+        {
+            CREDO_VERUM(r->error == VATES_ERROR_STATUS);
+            CREDO_CHORDA_NON_VACUA(r->error_genus);
+        }
+        alioquin
+        {
+            CREDO_VERUM(r->successus);
+            CREDO_VERUM(r->causa_finis != VATES_FINIS_ALIA);
+        }
+    }
+}
+
+
 s32
 principale (vacuum)
 {
@@ -725,7 +764,8 @@ principale (vacuum)
     probatio_tempus_et_mora_iterandi(piscina);
     probatio_clavis_non_effunditur(piscina);
     probatio_novitas_pressa(piscina);
-    /* T6 addit hic vocationem suam */
+    /* T6 */
+    probatio_specimina_commissa(piscina);
 
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();

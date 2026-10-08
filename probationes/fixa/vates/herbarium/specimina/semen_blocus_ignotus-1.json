@@ -1,0 +1,19 @@
+{
+  "clavis": "200:blocus ignotus: server_tool_use",
+  "causa": "blocus ignotus: server_tool_use",
+  "status": 200,
+  "capita": [
+    {
+      "titulus": "content-type",
+      "valor": "application/json"
+    }
+  ],
+  "corpus": "{\"id\":\"msg_semen\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-5-5\",\"content\":[{\"type\":\"server_tool_use\",\"id\":\"srvtoolu_1\"},{\"type\":\"text\",\"text\":\"ok\"}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":12,\"output_tokens\":3}}",
+  "primum_visum": "2026-10-08T00:00:00Z",
+  "methodus": "POST",
+  "hospes": "api.anthropic.com",
+  "via": "/v1/messages",
+  "summarium": {
+    "model": "claude-sonnet-5-5"
+  }
+}
