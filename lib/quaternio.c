@@ -48,13 +48,15 @@ _summa (
               vacuum*       exitus)
 {
      i8* summa      = _alveus(anulus, I, piscina);
+     i8* altera     = _alveus(anulus, I, piscina);
      i8* productum  = _alveus(anulus, I, piscina);
     i32  k;
 
     anulus->nullum(anulus, summa);
+    /* summa et altera alternant: nullus alveus novus per terminum */
     per (k = ZEPHYRUM; k < IV; k++)
     {
-        i8* nova = _alveus(anulus, I, piscina);
+        i8* commutatum;
 
         si (!anulus->multiplica(anulus, x[k], y[k], piscina, productum))
         {
@@ -62,7 +64,8 @@ _summa (
         }
         si (signa[k] > ZEPHYRUM)
         {
-            si (!anulus->adde(anulus, summa, productum, piscina, nova))
+            si (!anulus->adde(anulus, summa, productum, piscina,
+                altera))
             {
                 redde FALSUM;
             }
@@ -70,12 +73,14 @@ _summa (
         alioquin
         {
             si (!anulus->subtrahe(anulus, summa, productum, piscina,
-                nova))
+                altera))
             {
                 redde FALSUM;
             }
         }
-        summa = nova;
+        commutatum  = summa;
+        summa       = altera;
+        altera      = commutatum;
     }
     memcpy(exitus, summa, (size_t)anulus->mensura);
     redde VERUM;
@@ -236,6 +241,7 @@ _adde_subtrahe (
       Piscina* piscina,
     Quaternio* exitus)
 {
+           Quaternio  effectus;
      constans Anulus* anulus = _communis(p, q);
                  i32  k;
 
@@ -243,18 +249,19 @@ _adde_subtrahe (
     {
         redde FALSUM;
     }
-    exitus->anulus = anulus;
-    exitus->partes = _alveus(anulus, IV, piscina);
+    effectus.anulus = anulus;
+    effectus.partes = _alveus(anulus, IV, piscina);
     per (k = ZEPHYRUM; k < IV; k++)
     {
         si (signum > ZEPHYRUM ? !anulus->adde(anulus, _pars(p, k),
             _pars(q,
-            k), piscina, _pars(*exitus, k)) : !anulus->subtrahe(anulus,
-            _pars(p, k), _pars(q, k), piscina, _pars(*exitus, k)))
+            k), piscina, _pars(effectus, k)) : !anulus->subtrahe(anulus,
+            _pars(p, k), _pars(q, k), piscina, _pars(effectus, k)))
         {
             redde FALSUM;
         }
     }
+    *exitus = effectus;
     redde VERUM;
 }
 
@@ -285,6 +292,7 @@ quaternio_multiplica (
       Piscina* piscina,
     Quaternio* exitus)
 {
+    Quaternio effectus;
     /* a = a1a2 - b1b2 - c1c2 - d1d2
      * b = a1b2 + b1a2 + c1d2 - d1c2
      * c = a1c2 - b1d2 + c1a2 + d1b2
@@ -305,8 +313,8 @@ quaternio_multiplica (
     {
         redde FALSUM;
     }
-    exitus->anulus = anulus;
-    exitus->partes = _alveus(anulus, IV, piscina);
+    effectus.anulus = anulus;
+    effectus.partes = _alveus(anulus, IV, piscina);
     per (m = ZEPHYRUM; m < IV; m++)
     {
         x[m] = _pars(p, m);
@@ -317,11 +325,13 @@ quaternio_multiplica (
         {
             y[m] = _pars(q, (i32)ordo[k][m]);
         }
-        si (!_summa(anulus, signa[k], x, y, piscina, _pars(*exitus, k)))
+        si (!_summa(anulus, signa[k], x, y, piscina, _pars(effectus,
+            k)))
         {
             redde FALSUM;
         }
     }
+    *exitus = effectus;
     redde VERUM;
 }
 
@@ -332,22 +342,24 @@ quaternio_scalari (
              Piscina* piscina,
            Quaternio* exitus)
 {
-    i32 k;
+    Quaternio effectus;
+          i32 k;
 
     si (q.anulus == NIHIL)
     {
         redde FALSUM;
     }
-    exitus->anulus = q.anulus;
-    exitus->partes = _alveus(q.anulus, IV, piscina);
+    effectus.anulus = q.anulus;
+    effectus.partes = _alveus(q.anulus, IV, piscina);
     per (k = ZEPHYRUM; k < IV; k++)
     {
         si (!q.anulus->multiplica(q.anulus, s, _pars(q, k), piscina,
-            _pars(*exitus, k)))
+            _pars(effectus, k)))
         {
             redde FALSUM;
         }
     }
+    *exitus = effectus;
     redde VERUM;
 }
 
@@ -357,8 +369,9 @@ quaternio_conjugatum (
       Piscina* piscina,
     Quaternio* exitus)
 {
-     i8* nullum;
-    i32  k;
+    Quaternio  effectus;
+           i8* nullum;
+          i32  k;
 
     si (q.anulus == NIHIL)
     {
@@ -366,18 +379,19 @@ quaternio_conjugatum (
     }
     nullum = _alveus(q.anulus, I, piscina);
     q.anulus->nullum(q.anulus, nullum);
-    exitus->anulus = q.anulus;
-    exitus->partes = _alveus(q.anulus, IV, piscina);
+    effectus.anulus = q.anulus;
+    effectus.partes = _alveus(q.anulus, IV, piscina);
     q.anulus->transcribe(q.anulus, _pars(q, ZEPHYRUM), piscina, _pars(
-        *exitus, ZEPHYRUM));
+        effectus, ZEPHYRUM));
     per (k = I; k < IV; k++)
     {
         si (!q.anulus->subtrahe(q.anulus, nullum, _pars(q, k), piscina,
-            _pars(*exitus, k)))
+            _pars(effectus, k)))
         {
             redde FALSUM;
         }
     }
+    *exitus = effectus;
     redde VERUM;
 }
 
@@ -408,6 +422,7 @@ quaternio_inversum (
       Piscina* piscina,
     Quaternio* exitus)
 {
+    Quaternio  effectus;
            i8* norma;
     Quaternio  conjugatum;
           i32  k;
@@ -423,17 +438,18 @@ quaternio_inversum (
     {
         redde FALSUM;
     }
-    exitus->anulus = q.anulus;
-    exitus->partes = _alveus(q.anulus, IV, piscina);
+    effectus.anulus = q.anulus;
+    effectus.partes = _alveus(q.anulus, IV, piscina);
     per (k = ZEPHYRUM; k < IV; k++)
     {
         si (!q.anulus->divide_exacte(q.anulus, _pars(conjugatum, k),
             norma,
-            piscina, _pars(*exitus, k)))
+            piscina, _pars(effectus, k)))
         {
             redde FALSUM;
         }
     }
+    *exitus = effectus;
     redde VERUM;
 }
 
@@ -508,15 +524,16 @@ quaternio_matrix (
     /* N R = [[aa+bb-cc-dd, 2(bc-ad), 2(bd+ac)],
      *        [2(bc+ad), aa-bb+cc-dd, 2(cd-ab)],
      *        [2(bd-ac), 2(cd+ab), aa-bb-cc+dd]] */
-    constans Anulus* r = q.anulus;
-                 i8* aa;
-                 i8* bb;
-                 i8* cc;
-                 i8* dd;
-                 i8* elementa[IX];
-                i32  k;
+     constans Anulus* r = q.anulus;
+              Matrix  effectus;
+                  i8* aa;
+                  i8* bb;
+                  i8* cc;
+                  i8* dd;
+                  i8* elementa[IX];
+                 i32  k;
 
-    si (r == NIHIL || !matrix_nulla(r, III, III, piscina, exitus))
+    si (r == NIHIL || !matrix_nulla(r, III, III, piscina, &effectus))
     {
         redde FALSUM;
     }
@@ -586,8 +603,9 @@ quaternio_matrix (
         {
             redde FALSUM;
         }
-        matrix_pone(exitus, k / III, k % III, elementa[k]);
+        matrix_pone(&effectus, k / III, k % III, elementa[k]);
     }
+    *exitus = effectus;
     redde VERUM;
 }
 
@@ -634,8 +652,8 @@ _partes_nullae (
     redde VERUM;
 }
 
-b32
-quaternio_eadem_rotatio (
+interior b32
+_eadem_rotatio (
     Quaternio  p,
     Quaternio  q,
       Piscina* piscina)
@@ -662,8 +680,8 @@ quaternio_eadem_rotatio (
     redde VERUM;
 }
 
-b32
-quaternio_eadem_axis (
+interior b32
+_eadem_axis (
     Quaternio  p,
     Quaternio  q,
       Piscina* piscina)
@@ -680,8 +698,8 @@ quaternio_eadem_axis (
         && _minor_nullus(anulus, p, q, I, III, piscina);
 }
 
-b32
-quaternio_compara_angulum (
+interior b32
+_compara_angulum (
     Quaternio  p,
     Quaternio  q,
       Piscina* piscina,
@@ -772,8 +790,8 @@ _aestimatio (
     redde _summa_duorum(anulus, nullum, exitus, -I, piscina);
 }
 
-b32
-quaternio_proximus (
+interior b32
+_proximus (
              Quaternio  v,
     constans Quaternio* directiones,
                    i32  numerus,
@@ -854,6 +872,70 @@ quaternio_proximus (
 
 
 /* ==================================================
+ * Geometria publica: responsum solum (b32, signum, index), ergo
+ * piscina vocantis ad notationem initii reficitur - nihil relinquit
+ * (Voronoi super multas directiones sine purgatione vocantis)
+ * ================================================== */
+
+b32
+quaternio_eadem_rotatio (
+    Quaternio  p,
+    Quaternio  q,
+      Piscina* piscina)
+{
+    PiscinaNotatio nota = piscina_notare(piscina);
+               b32 bene = _eadem_rotatio(p, q, piscina);
+
+    piscina_reficere(piscina, nota);
+    redde bene;
+}
+
+b32
+quaternio_eadem_axis (
+    Quaternio  p,
+    Quaternio  q,
+      Piscina* piscina)
+{
+    PiscinaNotatio nota = piscina_notare(piscina);
+               b32 bene = _eadem_axis(p, q, piscina);
+
+    piscina_reficere(piscina, nota);
+    redde bene;
+}
+
+b32
+quaternio_compara_angulum (
+    Quaternio  p,
+    Quaternio  q,
+      Piscina* piscina,
+          s32* exitus)
+{
+    PiscinaNotatio nota = piscina_notare(piscina);
+               b32 bene = _compara_angulum(p, q, piscina, exitus);
+
+    piscina_reficere(piscina, nota);
+    redde bene;
+}
+
+b32
+quaternio_proximus (
+             Quaternio  v,
+    constans Quaternio* directiones,
+                   i32  numerus,
+                   b32  antipodes_idem,
+               Piscina* piscina,
+                   i32* index)
+{
+    PiscinaNotatio nota  = piscina_notare(piscina);
+               b32 bene  = _proximus(v, directiones, numerus,
+                   antipodes_idem, piscina, index);
+
+    piscina_reficere(piscina, nota);
+    redde bene;
+}
+
+
+/* ==================================================
  * Textus
  * ================================================== */
 
@@ -893,9 +975,10 @@ quaternio_ex_chorda (
              Piscina* piscina,
            Quaternio* exitus)
 {
-    s32 initium = ZEPHYRUM;
-    i32 k;
-    i32 j;
+    Quaternio effectus;
+          s32 initium = ZEPHYRUM;
+          i32 k;
+          i32 j;
 
     si (anulus == NIHIL)
     {
@@ -907,10 +990,10 @@ quaternio_ex_chorda (
     {
         redde FALSUM;
     }
-    textus          = chorda_sectio(textus, I, textus.mensura - I);
-    exitus->anulus  = anulus;
-    exitus->partes  = _alveus(anulus, IV, piscina);
-    k               = ZEPHYRUM;
+    textus           = chorda_sectio(textus, I, textus.mensura - I);
+    effectus.anulus  = anulus;
+    effectus.partes  = _alveus(anulus, IV, piscina);
+    k                = ZEPHYRUM;
     per (j = ZEPHYRUM; j <= textus.mensura; j++)
     {
         si (j == textus.mensura || textus.datum[j] == ',')
@@ -918,7 +1001,7 @@ quaternio_ex_chorda (
             si (   k >= IV
                 || !anulus->ex_chorda(anulus, chorda_praecidere(
                 chorda_sectio(textus, (i32)initium, j)), piscina, _pars(
-                *exitus, k)))
+                effectus, k)))
             {
                 redde FALSUM;
             }
@@ -926,5 +1009,10 @@ quaternio_ex_chorda (
             initium = (s32)j + I;
         }
     }
-    redde k == IV;
+    si (k != IV)
+    {
+        redde FALSUM;
+    }
+    *exitus = effectus;
+    redde VERUM;
 }

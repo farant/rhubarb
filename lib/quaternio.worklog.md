@@ -71,3 +71,46 @@ following line.
 
 venenum: quaternio added to tools/venenum_probare.sh (it resets no pool
 itself, but drives extensio/matrix over Q(sqrt 5) under ASan/UBSan).
+
+## 2026-10-08 - review Q1 (recensor, RECENSIO_Q1.md)
+
+Verdict: no wrong result (104,903 differential checks over Z, Q, Q(sqrt
+2/3/5) with an independent basis-table oracle and 120-digit cosines; the
+Hamilton tables and N R derived independently). Findings and fixes:
+
+- M1 (exitus half-built on FALSUM): add/sub, multiplica, scalari,
+  conjugatum, inversum, ex_chorda and matrix wrote `exitus->anulus` and
+  partes before a loop that can refuse. Now built into a local
+  `effectus`, assigned only on success (header states the contract).
+  Tests: a Q(sqrt 5) quaternion carrying one element of a SECOND
+  Q(sqrt 5) at index 2 makes each operation refuse mid-loop; a sentinel
+  exitus (NIHIL, NIHIL) and a sentinel Matrix must stay untouched.
+- P (caller-pool garbage): proximus over 118 icosian directions left
+  ~390 KB per call (39 GB for a 10^5-point Voronoi pass). The four
+  answer-only functions (eadem_rotatio, eadem_axis, compara_angulum,
+  proximus) are now thin public wrappers: piscina_notare, the old body
+  (`_proximus` etc.), piscina_reficere. Safe because they return only
+  b32/s32/index and no ring hook caches into the caller pool (extensio
+  writes its field struct only in the constructor). Test: usage before
+  and after == equal. GOTCHA: credo records into the SAME pool, so the
+  answers are collected into locals and both usage readings are taken
+  before any CREDO. venenum stays green (rolled-back bytes are 0xA5, so a
+  result read after the reset would break the suite).
+- _summa: two alternating accumulators instead of a new buffer per term
+  (6 -> 3 per component). Not pursued: precomputed |u_k|^2 for proximus
+  (API change; with the rollback the cost is time only, ~0.3 ms per call
+  over 118 directions).
+- Test vacuity, 8 surviving mutants, all now planted and RED: real parts
+  in v.u (every proximus test had a = 0; the demo's icosians do not -
+  now directions [100, 2, 1, 0] / [-100, 2, 1, 0]), zero direction
+  accepted (+-1 lies in 2I), foreign-ring direction, eadem_rotatio
+  minors with index 0 only / adjacent only ([0,1,1,0]~[0,1,2,0],
+  [1,0,1,0]~[2,0,1,0]), compara_angulum with zero, eadem_axis pure real
+  on the RIGHT (same blind spot as Q12), Z inverting a unit (the old Z
+  test used N = 2, refused by the division anyway).
+- LOW docs: foreign elements accepted by ex_partibus (later ops refuse)
+  and the no-comma assumption for ring text now in quaternio.h.
+
+Plants: 23 (12 original + 8 survivors + M1 x2 + rollback removal), all
+red; M1b (matrix_nulla into exitus) goes red by a crash on the success
+path, not an assertion. Suite 82 checks.

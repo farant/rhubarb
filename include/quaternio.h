@@ -3,7 +3,8 @@
  * q = a + b i + c j + d k, i^2 = j^2 = k^2 = ijk = -1 (Hamilton).
  * Partes elementa anuli dati (Anulus): Z (quaterniones Lipschitz), Q,
  * Q(sqrt 2), Q(sqrt 5) (icosiani), ... Valores immutabiles, effectus in
- * piscina data; anuli mixti refutantur (FALSUM), sicut matrix.
+ * piscina data; anuli mixti refutantur (FALSUM), sicut matrix. FALSUM
+ * -> exitus non tangitur (sicut anulus.h).
  *
  * ROTATIONES INTRA ANULUM: q v conj(q) = N(q) R(v), ergo quaternio
  * integer rotationem cum matrice integra dat sine divisione;
@@ -47,7 +48,10 @@ nomen structura {
  * Creatio et lectio
  * ================================================== */
 
-/* a + b i + c j + d k (elementa copiantur); FALSUM si anulus NIHIL */
+/* a + b i + c j + d k (elementa copiantur); FALSUM si anulus NIHIL.
+ * Elementa NON verificantur (anulus generice non potest): elementum
+ * alienum (e.g. alterius extensionis) accipitur, operationes
+ * posteriores refutant. */
 b32
 quaternio_ex_partibus (
     constans Anulus* anulus,
@@ -168,7 +172,9 @@ quaternio_matrix (
 
 
 /* ==================================================
- * Geometria exacta
+ * Geometria exacta - responsum solum (b32, signum, index): piscina ad
+ * statum initii reficitur, nihil relinquitur (Voronoi super multas
+ * directiones sine purgatione vocantis)
  * ================================================== */
 
 /* p = s q pro scalari s (p, q non nulli): eadem rotatio (etiam -q) */
@@ -222,7 +228,9 @@ quaternio_ad_chordam (
       Piscina* piscina);
 
 /* "[a, b, c, d]" (spatia libera); FALSUM si malformatum aut pars
- * refutata ab anulo */
+ * refutata ab anulo. Partes per ',' separantur: anulus cuius
+ * ad_chordam ',' emittit non sustinetur (nullus hodie: Z, Q, Z/n, Z[t],
+ * cyclotomia, extensio). */
 b32
 quaternio_ex_chorda (
      constans Anulus* anulus,
