@@ -39,6 +39,11 @@ nomen structura {
     i32 octeti_emissi;        /* ex TesseraFructus (currere) */
 } LudusTesseraMensurae;
 
+/* pulsus applicationis vivae (vicus-latera S1c): vocatur iteratione
+ * ansae quaque; VERUM = aliquid mutatum. Typus suus (non
+ * LudusPulsator): geminus caput fenestrae non includit. */
+nomen b32 (*LudusTesseraPulsator)(vacuum* ctx);
+
 nomen structura {
              Dispensator* d;
          FiguraRegistrum* figurae;
@@ -54,6 +59,9 @@ nomen structura {
                      i32  claudendi_modificantes;
                      b32  magnitudo_nuntiata;  /* B1: initialis missa */
     LudusTesseraMensurae  mensurae;
+    LudusTesseraPulsator  pulsator;           /* S1c: NIHIL = nullus */
+                  vacuum* pulsator_ctx;
+                     i32  versio_picta;       /* S1c: quadro ultimo */
 } LudusTessera;
 
 /* opus apertum (pons ludus_tessera aut memoriae); cellula in pixelis
@@ -106,5 +114,22 @@ s32
 ludus_tessera_currere (
     LudusTessera* lt,
              i32  quadra_maxima);
+
+/* vicus-latera S1c: pulsum ponere (NIHIL tollit); cum pulsu ansa
+ * XVI ms ad summum exspectat et quadrum solum pingit cum
+ * ludus_tessera_pingendum VERUM reddit. */
+vacuum
+ludus_tessera_pulsum_ponere (
+            LudusTessera* lt,
+    LudusTesseraPulsator  fn,
+                  vacuum* ctx);
+
+/* decisio iterationis ut ludus_fenestra_pingendum (versio
+ * repositorii contra quadrum ultimum); sine pulsu semper VERUM */
+b32
+ludus_tessera_pingendum (
+    LudusTessera* lt,
+             b32  eventa,
+             s64  nunc);
 
 #endif /* LUDUS_TESSERA_H */

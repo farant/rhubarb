@@ -99,3 +99,35 @@ proof (S3) is where it shows.
 `d->motus.ramus` (unset = root). The window surface
 (`superficiem_scribere`) deliberately stays at the root - it is the
 host's. Details: lib/vicus.worklog.md, same date.
+
+## 2026-10-08 - scopes (vicus-latera S2a-1) and the focus that never clears
+
+Scopes: a component's ACTION resolves in that component's own scope
+(`componens_spatium(c)`), so a click lands in the right copy of an app
+whatever pane has focus; focus, capture and Tab cycling resolve inside
+`Motus.spatium` (the focused pane). Deferred derived events
+(`Differendum`) now record the scope they were addressed in:
+`mittere_ad` the target component's, the public `addressare` the
+active one. Without it FOCUS_PETITUS addressed to the host root
+('radix') was delivered to the pane root that is also called 'radix'.
+
+Not yet scoped: hover (`d->super`) - looked up in the active scope, so
+hovering the unfocused pane loses EXIIT/INTRAVIT once vicus uses
+scopes. Needs `Dispensator.super_spatium` (header - proposed to Fran).
+
+PRE-EXISTING BUG found by the scope test: the "focus requested, id
+still missing -> focus cleared" branch never clears.
+`dispensator_focus_ponere(d, <empty>)` -> attr_scribere ->
+`insula_attributum_ponere(..., "focus", "")` -> interning "" returns
+NIHIL (the interner refuses empty strings) and the old value stays.
+Probe: focus 'tertia', branch taken, `post tollere 'tertia'`. No test
+ever covered the branch. Fix needs a way to REMOVE an attribute (an
+insula API) or an agreed empty marker - Fran's call.
+
+Plant-runner lesson: my verdict regex `Tests Failed: \S*?[1-9]`
+matched the colour code `[31m` before the 0 - two surviving plants
+read as caught. Strip ANSI first; trust a plant only when a named
+FRACTA line shows. A plant that breaks the LIBRARY build (unused
+static under -Werror) makes the runner exit 2 = nothing ran - not
+"survived".
+

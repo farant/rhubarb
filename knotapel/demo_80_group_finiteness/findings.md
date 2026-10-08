@@ -202,3 +202,7 @@ cc -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion \
    -O2 main.c -lm -o demo80
 ./demo80
 ```
+
+## Audit (Demo 117, 2026-10-07)
+
+The direction counts in the table above (512 for every infinite group) are `MAX_DIR 512`, which `count_directions` reaches without a message. Uncapped (`demo_117_cyclotomic_audit/audit_cap_impact.sh`) the 4,096-entry catalogs have ζ₆ 1,965, ζ₁₀ 2,431, ζ₁₂ 2,043, ζ₁₆ 1,708 and ζ₂₀ 1,938 directions. Every finiteness verdict, element count and angle count is unchanged, and 11/11 tests pass.

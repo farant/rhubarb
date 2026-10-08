@@ -585,7 +585,205 @@ Later phases (re-planned after A's RELATIO):
     cool".
   - **E4 - RELATIO.** Done 2026-10-07: `lib/aemulator.phase-log.md`
     (E4). Next: secunda -> main merge (Fran's timing), then phase D.
-- **D - full-screen v0.** Origin and insert modes, DEC special
+- **D - full-screen v0** (D0 interview, Fran 2026-10-07):
+  26. **VT420-and-beyond is LATER, not never:** left/right margins,
+      rectangle/column operations, protected areas, most window ops,
+      132-column mode - their esctest rows get the cause "later
+      (phase F+)" so the table separates not-yet from missing.
+  27. **Kitty keyboard protocol in D:** the core keeps the flag stack
+      (CSI > u push, CSI < u pop, CSI = u set, CSI ? u query);
+      `codificator_terminalis` already encodes kitty keys.
+  28. **Colour queries answered with theme colours:** OSC 10/11
+      (foreground/background) and OSC 4 (palette) from colours the
+      host passes to the core.
+  29. **Done bar:** headless checks (vectors, esctest table), then
+      Fran uses vim, less and htop in terminale, and a vttest session
+      together (vttest: Dickey's interactive VT tester - network
+      fetch approved earlier; announce and pin).
+  Tasks:
+  - **D1 - quick wins:** HPR/VPR, REP, SCOSC/SCORC (CSI s/u), alt
+    screens 47/1047/1048, DECALN, RIS; Ghostty vectors first; esctest
+    rows promoted.
+    D1 as built: HPR/VPR (absent = 1, explicit 0 = no move,
+    clamped, >1 parameter = unknown), REP (`runa_prior`, cleared only
+    by RIS; capped at twice the screen area - Ghostty loops the full
+    count, a saturated parameter would hang), SCOSC/SCORC (no
+    left/right margins, so CSI s always saves), 47 / 1047 (switch +
+    cursor copy; 1047 clears the alt screen on exit) / 1048 (save /
+    restore), DECALN (pen reduced to its colours, kept; region reset;
+    'E' everywhere; cursor home), RIS (both screens, history, cursors,
+    saved cursors, pens, modes, region, tab stops, previous char).
+    184 vectors (+11: 5 Ghostty); section XX; 13 plants caught.
+    esctest 216 -> 245 (29 promoted, 0 regressed), table re-pinned.
+    FOUND: STML reads `a=""` as ABSENT, so every empty expectation
+    (`textus=""` ...) had been a silent no-op since phase A (9
+    assertions) - two plants survived because of it. Empty is now the
+    explicit marker `"\0"`; all 9 now run and hold.
+  - **D2 - modes in the core:** origin (DECOM), insert (IRM), reverse
+    wrap (45/1045), DECCKM, keypad (DECKPAM/DECKPNM), mouse (9, 1000,
+    1002, 1003, 1006, 1015), bracketed paste 2004, focus 1004, DECRQM;
+    the API to hand modes to the host (header for Fran's approval).
+    D2 as built: header approved as drafted (`AemulatorMus`,
+    `AemulatorMusForma`, `AemulatorModi`, `aemulator_modi`;
+    `aemulator_modus` now reads the raw bit of any honoured mode).
+    Core: one bit per honoured mode in a table (Ghostty modes.zig);
+    DECSET/DECRST/SM/RM set the bit then run side effects; mouse event
+    and format summaries follow Ghostty (last set wins, any reset ->
+    none / X10). DECOM (CUP, VPA, VPR clamp, CPR relative, DECSTBM
+    home, saved/restored by DECSC/DECRC), IRM, reverse wrap 45 / 1045
+    for CUB and BS, ESC = / ESC > (= mode 66), DECRQM (1 / 2 / 0;
+    only honoured modes answer 1 or 2), DECSTR also resets IRM,
+    DECOM, DECCKM, keypad, 45, 1045. 220 vectors (+29: 19 Ghostty;
+    D1's "184" was a miscount - D1 left 191);
+    section XXI; 18 plants caught (+1 equivalent: IRM at the last
+    column). esctest 245 -> 264 with `--xterm-reverse-wrap=383`; one
+    false pass now red (DECSCL level 2 forbids DECRQM; DECSCL = later).
+    Divergences from Ghostty, named: CHA/HPA/VPA/HPR/VPR under DECOM
+    follow xterm (Ghostty re-adds the region top); 1045 counts reduced
+    modulo the region cycle (exact; Ghostty loops); DECRQM answers 0
+    for modes Ghostty stores but does not act on (5, 12, 1007 ...).
+  - **D3 - DEC special graphics:** G0/G1 designation (ESC ( 0 ...),
+    SO/SI, line drawing.
+    D3 as built: one charset state per emulator (Ghostty copies it on
+    every screen switch, so equivalent): G0-G3 (UTF-8 default, ASCII
+    'B', British 'A', DEC Special Graphics '0'), GL / GR, single shift.
+    SCS `ESC ( ) * +`, SO/SI, LS2/LS3, LS1R-LS3R (GR stored, unused -
+    high bytes are UTF-8, as in Ghostty), SS2/SS3. Mapped AFTER the
+    width (Ghostty: width of the unmapped rune; outside a byte -> space).
+    REP repeats the unmapped rune under the current set. DECSC/DECRC
+    save it, RIS and DECSTR reset it (DECSTR per VT510/xterm - Ghostty
+    has no DECSTR). Lexer bug found and fixed (lib/series_terminalis
+    worklog): high bytes vanished after ESC N|O; now FUGA, byte kept,
+    and the core treats that FUGA as a single shift. 232 vectors (+12:
+    5 Ghostty, one checks the whole 31-glyph table); 16 plants caught
+    (+3 lexer tests). esctest unchanged (264; it has no charset tests -
+    vttest in D7). tessera amalgam regenerated.
+  - **D4 - kitty keyboard flags** (decision 27) + its query.
+    D4 as built: header field `AemulatorModi.kitty_vexilla` (Fran
+    approved; same bits as CodificatorModi.kitty_vexilla). Per-screen
+    ring of 8 (Ghostty FlagStack): push past the top evicts the oldest,
+    pop >= 8 clears; CSI ? u answers; flags > 31 or set mode outside
+    1-3 = whole sequence ignored. The alternate screen keeps its own
+    stack across visits; RIS clears both; DECSTR and DECSC leave them.
+    241 vectors (+9: 4 Ghostty); section XXI extended; 11 plants caught
+    (+1 equivalent: the pop >= 8 shortcut, ~1 s of CPU on a saturated
+    pop - a hostile-input guard, invisible in the result).
+  - **D5 - colour queries** (decision 28; configuration addition for
+    Fran's approval).
+    D5 as built: Fran chose the LIVE palette (Ghostty's model) over
+    queries-only. Header: AemulatorConfiguratio gains color_litterae /
+    color_fundi / color_cursoris (AEMULATOR_COLOR_NULLUS = follows the
+    current foreground, Ghostty) / tabula_colorum (NULL = xterm
+    table); `aemulator_color(a, 0..CCLVIII)` reads the live value for
+    the host (D6). OSC 4 / 10 / 11 / 12 set and query (10 advances to
+    11, 12 ...), 104 / 110 / 111 / 112 reset to the configuration; the
+    reply mirrors the request's terminator (lexer now records BEL /
+    ST in the OSC lexeme's `finale`). Spec forms: `#` 3/6/9/12 digits
+    = MOST SIGNIFICANT bits (X11 XParseColor, esctest - Ghostty
+    scales: named divergence), bare 3/6 hex (Ghostty, scaled), `rgb:`
+    1-4 digits (scaled); X11 names, rgbi: and CIE/TekHVC not yet. RIS
+    keeps colours (Ghostty). 251 vectors (+11: 5 Ghostty); section
+    XXII; 16 plants caught (+1 equivalent). esctest 264 -> 284;
+    remaining colour rows: CIE/TekHVC/rgbi (21), OSC 5/105 special (6).
+  - **D6 - terminale wiring:** modes -> codificator (DECCKM arrows,
+    keypad, kitty), mouse reporting from window mouse events, bracketed
+    paste, focus events, window title from OSC 0/2.
+    Split (Fran approved): D6a encoder, D6b terminale wiring, D6c window
+    focus + paste events (fenestra_macos stubs). Keypad application
+    deferred: Eventus has no numpad keys.
+    D6a as built: CodificatorModi gains mus_forma (0 = SGR for existing
+    zero-filled callers; X10 / UTF-8 / urxvt / SGR-pixels),
+    sagittae_applicationis, lnm; CODIFICATOR_MUS_X10. Legacy releases =
+    button 3; X10 stops at cell 222; SGR-pixels reports and dedupes in
+    pixels; LNM turns every CR this call appended into CR LF (in place).
+    Ghostty mouse_encode.zig cases ported in section IX; 13 plants caught.
+    D6b as built: headers (Fran approved) - `terminale_titulus` +
+    TerminaleApplicatio.contextus; AemulatorModi.rotula_sagittis + core
+    mode 1007 (default on, Ghostty mouse_alternate_scroll). terminale:
+    every send maps aemulator_modi -> CodificatorModi (enums mapped,
+    X10 format explicit); mouse press / release / motion to the program
+    (encoder decides); wheel to the program when it tracks the mouse,
+    arrows on the alternate screen with 1007, else the history view;
+    focus tracked (initially VERUM), ?1004 set -> immediate report;
+    window focus events reach the ROOT component (neither focal nor
+    positional), so the root carries the same action; title through the
+    core's titulus effect (copied, 256 bytes), window main sets it on
+    change (stack buffer - shells retitle every prompt); colours: theme
+    -> core configuration, cells / background / cursor from
+    aemulator_color, an unchanged dynamic colour stays a theme token
+    (live theme). Sections V-VII in probatio_terminale; 16 plants
+    caught. D6c (window focus + paste events) remains.
+    D6c as built: fenestra_macos queues FOCUS / DEFOCUS from the
+    key-window notifications and a GLUTINATA text event from `paste:`
+    on the window delegate (responder chain; 64 KiB per read). Fran's
+    first session: focus reports seen; title "did not change" = zsh's
+    oh-my-zsh termsupport resets it every prompt (verified hooks);
+    shift+; typed ';' in nvim - nvim enables kitty flag 1 since D4 and
+    our disambiguate path sent shifted text as CSI u; fixed (shift
+    consumed when text != unshifted rune), verified with real nvim
+    headlessly.
+  - **D7 - the bar:** esctest table re-pinned (causes "later" per
+    decision 26), vttest fetched and pinned, Fran's session (vim,
+    less, htop, vttest).
+    D7a as built: every failing esctest row now carries a VERDICT -
+    POSTEA (decision 26: VT420 margins 79, rectangles 14, column ops
+    11, DECSCL 3, DECDSR VT420 status 4), CONSULTO (DECRQM 0 for
+    unhonoured modes 23, CIE/TekHVC/rgbi 21, XTWINOPS window
+    manipulation 18 + title reports 2 + title modes 1, OSC 5/105 6,
+    Ghostty identity 4, MoreFix 1), LACUNA (protection/selective erase
+    24, DECRQSS 8, XTWINOPS title stack 22t/23t 8, DECDSR fixed status
+    replies 5, DECCOLM 2, XTSAVE/XTRESTORE 2, DECXCPR 1, DECID 1). The
+    attribution moved from session scratch into the repo:
+    tools/aemulator_esctest_causae.py, run by `aemulator_esctest.sh
+    -pinnare`; '?' (failure without cause) exits 1.
+    Gaps closed (Fran: quick replies only): DECXCPR (VT220 form, no
+    page), DECDSR fixed status replies, DECID, DECRQSS (SGR, DECSTBM,
+    DECSCUSR - cursor style now stored), title stack 22t/23t (xterm;
+    Ghostty no-op; esctest can only check it via 21t, refused - those
+    rows CONSULTO). esctest 284 -> 294. PARKED: protection / selective
+    erase (24 rows), DECCOLM (2), XTSAVE/XTRESTORE (2).
+    Found through use (Fran in tmux): Ctrl-[ / Ctrl-I / Ctrl-M sent
+    NOTHING in legacy mode (copied Ghostty fixterms gap + macOS control
+    text) - now C0 like xterm (codificator worklog).
+    D7b as built: vttest fetched (Fran: tarball, not Homebrew) from
+    https://invisible-island.net/archives/vttest/vttest.tar.gz into
+    ../vttest (outside the repo, like ../esctest2); PIN = version 2.7
+    (20251205), sha256 cd6886f9aefe6a3f6c566fa61271a55710901a71849c630bf5376aa984bf77cc;
+    built with ./configure && make -> ../vttest/vttest-20251205/vttest.
+    Interactive: run inside terminale during the D7c session.
+    Bugs found through daily use before D7c (Fran in terminale + tmux):
+    Cmd keys leaked to programs (f74965dd), unreadable grays ->
+    minimum contrast + faint (0fecd4c9), Ctrl-[/I/M sent nothing
+    (a7577310), drags carried no button (6407deb6).
+    D7c (in progress): Fran chose the driven walk (option b) - Claude
+    runs vttest headless through `tools/aemulator_vttest.c` (script of
+    `mitte` lines -> NNN.txt screen text + NNN.png drawn frame per
+    step, geometry `24x80.80`) and judges each screen against vttest's
+    source. vttest = smoke/integration evidence, not a unit oracle:
+    every fix still lands as a vector, red first. Minimal DECCOLM
+    (Fran approved): ?3 honoured only under ?40, clears, resets the
+    region, homes - width never changes (host owns the window; vttest
+    leans on the clear even at 80 columns). esctest 294 -> 295; the
+    two width rows are CONSULTO. Walk findings fixed (Fran): reverse
+    screen ?5 (core bit + `AemulatorModi.schirmus_inversus`; terminale
+    swaps the default colours like Ghostty; esctest 296) and terminale
+    text decorations (underline styles, strike, overline, synthetic
+    bold; `TerminaleApplicatio.ornamenta_pixelorum`, off in the twin).
+    Line drawing (Fran: "a great project"): new pure library
+    `glyphae_ductae` (API approved) draws U+2500-259F and braille
+    U+2800-28FF as opacity masks at cell size, ported from Ghostty's
+    sprite font (box.zig table generated from the source); step 1 =
+    library + picture tests (8068d0fe), step 2 = terminale draws the
+    masks (box/block colours exempt from the contrast floor like
+    Ghostty's noMinContrast; braille not).
+    libghostty-vt differential oracle:
+    deferred (Fran: zig + fetching OK when we need it).
+  - **D8 - RELATIO.** Done 2026-10-07 (phase-log D8): Fran's bar met
+    (Claude Code, tmux, nvim, btop); esctest 296 with every failure
+    named; park 011 = full redraw per frame (btop scroll lag).
+    Install stage built in secunda (fabrica actions `terminale` +
+    `institutio_terminale`); installing waits for the merge (from main).
+- **D (old sketch).** Origin and insert modes, DEC special
   graphics, mouse / paste / focus / DECCKM / keypad modes handed to
   `codificator_terminalis`; the bar: vim, less, htop look right; a
   vttest session with Fran.

@@ -1,26 +1,28 @@
-# esctest2 @ 2798f12 intra aemulatorem (tools/aemulator_esctest.sh -probare)
+# esctest2 @ 2798f12 intra aemulatorem (tools/aemulator_esctest.sh -probare;
+# pinnatur per -pinnare -> tools/aemulator_esctest_causae.py)
 # forma: nomen<TAB>status<TAB>causa - status: transiit|fractum|omissum|notum
 # Optiones: --expected-terminal=xterm --xterm-checksum=334 --max-vt-level=4
-# Causa fracti = proprietas quam nondum habemus, ex octetis probationis
-# (--test-case-dir) attributa; nulla fracta sine causa. Mutatio status
-# (fractum novum AUT transiit novum) -probare frangit: promove cum causa.
+# --xterm-reverse-wrap=383
+# Causa fracti = VERDICTUM: proprietas. POSTEA (decisio XXVI: VT420
+# et ultra), CONSULTO (aliter consulto), LACUNA (habenda). Nulla
+# fracta sine causa. Mutatio status -probare frangit: promove.
 APCTests.test_APC_8bit	notum	esctest knownBug (xterm)
 APCTests.test_APC_Basic	transiit	
-BSTests.test_BS_AfterNoWrappedInlines	fractum	involutio-retro 45/1045
-BSTests.test_BS_AfterOneWrappedInline	fractum	involutio-retro 45/1045
+BSTests.test_BS_AfterNoWrappedInlines	transiit	
+BSTests.test_BS_AfterOneWrappedInline	transiit	
 BSTests.test_BS_Basic	transiit	
 BSTests.test_BS_CursorStartsInDoWrapPosition	transiit	
 BSTests.test_BS_InitialReverseWraparound	transiit	
 BSTests.test_BS_MovesLeftWhenLeftOfLeftMargin	transiit	
 BSTests.test_BS_NoWrapByDefault	transiit	
-BSTests.test_BS_ReverseWrapGoesToBottom	fractum	involutio-retro 45/1045
+BSTests.test_BS_ReverseWrapGoesToBottom	transiit	
 BSTests.test_BS_ReverseWrapRequiresDECAWM	transiit	
-BSTests.test_BS_ReverseWrapStartingInDoWrapPosition	fractum	involutio-retro 45/1045
-BSTests.test_BS_ReverseWrapWithLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-BSTests.test_BS_ReversewrapFromLeftEdgeToRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-BSTests.test_BS_StopsAtLeftMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+BSTests.test_BS_ReverseWrapStartingInDoWrapPosition	transiit	
+BSTests.test_BS_ReverseWrapWithLeftRight	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+BSTests.test_BS_ReversewrapFromLeftEdgeToRightMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+BSTests.test_BS_StopsAtLeftMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 BSTests.test_BS_StopsAtOrigin	transiit	
-BSTests.test_BS_WrapsInWraparoundMode	fractum	involutio-retro 45/1045
+BSTests.test_BS_WrapsInWraparoundMode	transiit	
 CBTTests.test_CBT_ExplicitParameter	transiit	
 CBTTests.test_CBT_IgnoresRegion	transiit	
 CBTTests.test_CBT_OneTabStopByDefault	transiit	
@@ -29,33 +31,33 @@ CHATests.test_CHA_DefaultParam	transiit
 CHATests.test_CHA_ExplicitParam	transiit	
 CHATests.test_CHA_IgnoresScrollRegion	transiit	
 CHATests.test_CHA_OutOfBoundsLarge	transiit	
-CHATests.test_CHA_RespectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CHATests.test_CHA_RespectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CHATests.test_CHA_ZeroParam	transiit	
 CHTTests.test_CHT_ExplicitParameter	transiit	
-CHTTests.test_CHT_IgnoresScrollingRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CHTTests.test_CHT_IgnoresScrollingRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CHTTests.test_CHT_OneTabStopByDefault	transiit	
 CNLTests.test_CNL_DefaultParam	transiit	
 CNLTests.test_CNL_ExplicitParam	transiit	
 CNLTests.test_CNL_StopsAtBottomLine	transiit	
-CNLTests.test_CNL_StopsAtBottomLineWhenBegunBelowScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-CNLTests.test_CNL_StopsAtBottomMarginInScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CNLTests.test_CNL_StopsAtBottomLineWhenBegunBelowScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+CNLTests.test_CNL_StopsAtBottomMarginInScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CPLTests.test_CPL_DefaultParam	transiit	
 CPLTests.test_CPL_ExplicitParam	transiit	
 CPLTests.test_CPL_StopsAtTopLine	transiit	
-CPLTests.test_CPL_StopsAtTopLineWhenBegunAboveScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-CPLTests.test_CPL_StopsAtTopMarginInScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CPLTests.test_CPL_StopsAtTopLineWhenBegunAboveScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+CPLTests.test_CPL_StopsAtTopMarginInScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CRTests.test_CR_Basic	transiit	
-CRTests.test_CR_MovesToLeftMarginWhenLeftOfLeftMarginInOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-CRTests.test_CR_MovesToLeftMarginWhenRightOfLeftMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CRTests.test_CR_MovesToLeftMarginWhenLeftOfLeftMarginInOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+CRTests.test_CR_MovesToLeftMarginWhenRightOfLeftMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CRTests.test_CR_MovesToLeftOfScreenWhenLeftOfLeftMargin	transiit	
-CRTests.test_CR_StaysPutWhenAtLeftMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-CUBTests.test_CUB_AfterNoWrappedInlines	fractum	involutio-retro 45/1045
-CUBTests.test_CUB_AfterOneWrappedInline	fractum	involutio-retro 45/1045
+CRTests.test_CR_StaysPutWhenAtLeftMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+CUBTests.test_CUB_AfterNoWrappedInlines	transiit	
+CUBTests.test_CUB_AfterOneWrappedInline	transiit	
 CUBTests.test_CUB_DefaultParam	transiit	
 CUBTests.test_CUB_ExplicitParam	transiit	
 CUBTests.test_CUB_StopsAtLeftEdge	transiit	
 CUBTests.test_CUB_StopsAtLeftEdgeWhenBegunLeftOfScrollRegion	transiit	
-CUBTests.test_CUB_StopsAtLeftMarginInScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CUBTests.test_CUB_StopsAtLeftMarginInScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CUDTests.test_CUD_DefaultParam	transiit	
 CUDTests.test_CUD_ExplicitParam	transiit	
 CUDTests.test_CUD_StopsAtBottomLine	transiit	
@@ -64,12 +66,12 @@ CUDTests.test_CUD_StopsAtBottomMarginInScrollRegion	transiit
 CUFTests.test_CUF_DefaultParam	transiit	
 CUFTests.test_CUF_ExplicitParam	transiit	
 CUFTests.test_CUF_StopsAtRightEdgeWhenBegunRightOfScrollRegion	transiit	
-CUFTests.test_CUF_StopsAtRightMarginInScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CUFTests.test_CUF_StopsAtRightMarginInScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CUFTests.test_CUF_StopsAtRightSide	transiit	
 CUPTests.test_CUP_ColumnOnly	transiit	
 CUPTests.test_CUP_DefaultParams	transiit	
 CUPTests.test_CUP_OutOfBoundsParams	transiit	
-CUPTests.test_CUP_RespectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+CUPTests.test_CUP_RespectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 CUPTests.test_CUP_RowOnly	transiit	
 CUPTests.test_CUP_ZeroIsTreatedAsOne	transiit	
 CUUTests.test_CUU_DefaultParam	transiit	
@@ -77,121 +79,121 @@ CUUTests.test_CUU_ExplicitParam	transiit
 CUUTests.test_CUU_StopsAtTopLine	transiit	
 CUUTests.test_CUU_StopsAtTopLineWhenBegunAboveScrollRegion	transiit	
 CUUTests.test_CUU_StopsAtTopMarginInScrollRegion	transiit	
-ChangeColorTests.test_ChangeColor_CIELab	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIELuv	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIEXYZ	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIEuvY	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_CIExyY	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash12	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash3	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash6	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Hash9	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_RGB	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_RGBI	fractum	colores OSC 4/5/10-19/104-119
-ChangeColorTests.test_ChangeColor_TekHVC	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIELab	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIELuv	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIEXYZ	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIEuvY	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_CIExyY	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash12	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash3	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash6	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Hash9	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_RGB	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_RGBI	fractum	colores OSC 4/5/10-19/104-119
-ChangeDynamicColorTests.test_ChangeDynamicColor_TekHVC	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIELab	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIELuv	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIEXYZ	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIEuvY	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_CIExyY	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash12	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash3	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash6	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Hash9	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple2	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_RGB	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_RGBI	fractum	colores OSC 4/5/10-19/104-119
-ChangeSpecialColorTests.test_ChangeSpecialColor_TekHVC	fractum	colores OSC 4/5/10-19/104-119
-DA2Tests.test_DA2_0	fractum	identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
-DA2Tests.test_DA2_NoParameter	fractum	identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
-DATests.test_DA_0	fractum	identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
-DATests.test_DA_NoParameter	fractum	identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
+ChangeColorTests.test_ChangeColor_CIELab	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIELuv	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIEXYZ	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIEuvY	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_CIExyY	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_Hash12	transiit	
+ChangeColorTests.test_ChangeColor_Hash3	transiit	
+ChangeColorTests.test_ChangeColor_Hash6	transiit	
+ChangeColorTests.test_ChangeColor_Hash9	transiit	
+ChangeColorTests.test_ChangeColor_Multiple	transiit	
+ChangeColorTests.test_ChangeColor_RGB	transiit	
+ChangeColorTests.test_ChangeColor_RGBI	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeColorTests.test_ChangeColor_TekHVC	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIELab	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIELuv	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIEXYZ	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIEuvY	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_CIExyY	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash12	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash3	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash6	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Hash9	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_Multiple	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_RGB	transiit	
+ChangeDynamicColorTests.test_ChangeDynamicColor_RGBI	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeDynamicColorTests.test_ChangeDynamicColor_TekHVC	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIELab	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIELuv	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIEXYZ	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIEuvY	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_CIExyY	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash12	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash3	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash6	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Hash9	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_Multiple2	fractum	CONSULTO: colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ChangeSpecialColorTests.test_ChangeSpecialColor_RGB	transiit	
+ChangeSpecialColorTests.test_ChangeSpecialColor_RGBI	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+ChangeSpecialColorTests.test_ChangeSpecialColor_TekHVC	fractum	CONSULTO: colores: spatia CIE/TekHVC et rgbi: (Ghostty quoque caret)
+DA2Tests.test_DA2_0	fractum	CONSULTO: identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
+DA2Tests.test_DA2_NoParameter	fractum	CONSULTO: identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
+DATests.test_DA_0	fractum	CONSULTO: identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
+DATests.test_DA_NoParameter	fractum	CONSULTO: identitas Ghostty (decisio V): DA1 ?62;22 / DA2 >1;0;0 - esctest identitatem xterm exspectat
 DCHTests.test_DCH_DefaultParam	transiit	
-DCHTests.test_DCH_DeleteAllWithMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DCHTests.test_DCH_DoesNothingOutsideLeftRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DCHTests.test_DCH_DeleteAllWithMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DCHTests.test_DCH_DoesNothingOutsideLeftRightMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DCHTests.test_DCH_ExplicitParam	transiit	
-DCHTests.test_DCH_RespectsMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DCHTests.test_DCH_RespectsMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DCHTests.test_DCH_WorksOutsideTopBottomMargin	transiit	
 DCSTests.test_DCS_Unrecognized	transiit	
-DECALNTests.test_DECALN_ClearsMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECALNTests.test_DECALN_FillsScreen	fractum	DECALN
-DECALNTests.test_DECALN_MovesCursorHome	fractum	DECALN
-DECBITests.test_DECBI_Basic	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
-DECBITests.test_DECBI_LeftOfMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECALNTests.test_DECALN_ClearsMargins	transiit	
+DECALNTests.test_DECALN_FillsScreen	transiit	
+DECALNTests.test_DECALN_MovesCursorHome	transiit	
+DECBITests.test_DECBI_Basic	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECBITests.test_DECBI_LeftOfMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECBITests.test_DECBI_NoWrapOnLeftEdge	transiit	
-DECBITests.test_DECBI_Scrolls	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECBITests.test_DECBI_WholeScreenScrolls	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECBITests.test_DECBI_Scrolls	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECBITests.test_DECBI_WholeScreenScrolls	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
 DECCRATests.test_DECCRA_cursorDoesNotMove	transiit	
-DECCRATests.test_DECCRA_defaultValuesInDest	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECCRATests.test_DECCRA_defaultValuesInSource	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECCRATests.test_DECCRA_destinationPartiallyOffscreen	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECCRATests.test_DECCRA_ignoresMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECCRATests.test_DECCRA_defaultValuesInDest	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECCRATests.test_DECCRA_defaultValuesInSource	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECCRATests.test_DECCRA_destinationPartiallyOffscreen	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECCRATests.test_DECCRA_ignoresMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECCRATests.test_DECCRA_invalidSourceRectDoesNothing	transiit	
-DECCRATests.test_DECCRA_nonOverlappingSourceAndDest	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECCRATests.test_DECCRA_overlappingSourceAndDest	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECCRATests.test_DECCRA_overlyLargeSourceClippedToScreenSize	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECCRATests.test_DECCRA_respectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECDCTests.test_DECDC_CursorWithinTopBottom	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECDCTests.test_DECDC_DefaultParam	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
-DECDCTests.test_DECDC_DeleteAll	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
-DECDCTests.test_DECDC_DeleteAllWithLeftRightMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECDCTests.test_DECDC_DeleteWithLeftRightMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECDCTests.test_DECDC_ExplicitParam	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECCRATests.test_DECCRA_nonOverlappingSourceAndDest	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECCRATests.test_DECCRA_overlappingSourceAndDest	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECCRATests.test_DECCRA_overlyLargeSourceClippedToScreenSize	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECCRATests.test_DECCRA_respectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECDCTests.test_DECDC_CursorWithinTopBottom	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECDCTests.test_DECDC_DefaultParam	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECDCTests.test_DECDC_DeleteAll	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECDCTests.test_DECDC_DeleteAllWithLeftRightMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECDCTests.test_DECDC_DeleteWithLeftRightMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECDCTests.test_DECDC_ExplicitParam	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
 DECDCTests.test_DECDC_IsNoOpWhenCursorBeginsOutsideScrollRegion	transiit	
-DECDSRTests.test_DECDSR_DECCKSR	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DECMSR	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DECXCPR	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DSRDECLocatorStatus	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DSRDataIntegrity	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DSRKeyboard	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DSRMultipleSessionStatus	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DSRPrinterPort	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_DSRUDKLocked	fractum	DECDSR CSI ? n
-DECDSRTests.test_DECDSR_LocatorType	fractum	DECDSR CSI ? n
-DECERATests.test_DECERA_basic	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECDSRTests.test_DECDSR_DECCKSR	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
+DECDSRTests.test_DECDSR_DECMSR	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
+DECDSRTests.test_DECDSR_DECXCPR	transiit	
+DECDSRTests.test_DECDSR_DSRDECLocatorStatus	transiit	
+DECDSRTests.test_DECDSR_DSRDataIntegrity	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
+DECDSRTests.test_DECDSR_DSRKeyboard	transiit	
+DECDSRTests.test_DECDSR_DSRMultipleSessionStatus	fractum	POSTEA (decisio XXVI): DECDSR status VT420 (summa, macro, sessiones)
+DECDSRTests.test_DECDSR_DSRPrinterPort	transiit	
+DECDSRTests.test_DECDSR_DSRUDKLocked	transiit	
+DECDSRTests.test_DECDSR_LocatorType	transiit	
+DECERATests.test_DECERA_basic	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
 DECERATests.test_DECERA_cursorDoesNotMove	transiit	
-DECERATests.test_DECERA_defaultArgs	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECERATests.test_DECERA_ignoresMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECERATests.test_DECERA_defaultArgs	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECERATests.test_DECERA_ignoresMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECERATests.test_DECERA_invalidRectDoesNothing	transiit	
-DECERATests.test_DECERA_overlyLargeSourceClippedToScreenSize	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECERATests.test_DECERA_respectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECFITests.test_DECFI_Basic	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECERATests.test_DECERA_overlyLargeSourceClippedToScreenSize	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECERATests.test_DECERA_respectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECFITests.test_DECFI_Basic	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
 DECFITests.test_DECFI_NoWrapOnRightEdge	transiit	
-DECFITests.test_DECFI_RightOfMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECFITests.test_DECFI_Scrolls	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECFITests.test_DECFI_WholeScreenScrolls	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
-DECFRATests.test_DECFRA_basic	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECFITests.test_DECFI_RightOfMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECFITests.test_DECFI_Scrolls	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECFITests.test_DECFI_WholeScreenScrolls	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECFRATests.test_DECFRA_basic	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
 DECFRATests.test_DECFRA_cursorDoesNotMove	transiit	
-DECFRATests.test_DECFRA_defaultArgs	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECFRATests.test_DECFRA_ignoresMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECFRATests.test_DECFRA_defaultArgs	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECFRATests.test_DECFRA_ignoresMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECFRATests.test_DECFRA_invalidRectDoesNothing	transiit	
-DECFRATests.test_DECFRA_overlyLargeSourceClippedToScreenSize	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECFRATests.test_DECFRA_respectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECICTests.test_DECIC_CursorWithinTopBottom	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECICTests.test_DECIC_DefaultParam	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
-DECICTests.test_DECIC_ExplicitParam	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECFRATests.test_DECFRA_overlyLargeSourceClippedToScreenSize	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECFRATests.test_DECFRA_respectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECICTests.test_DECIC_CursorWithinTopBottom	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECICTests.test_DECIC_DefaultParam	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECICTests.test_DECIC_ExplicitParam	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
 DECICTests.test_DECIC_IsNoOpWhenCursorBeginsOutsideScrollRegion	transiit	
-DECICTests.test_DECIC_ScrollEntirelyOffRightEdge	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
-DECICTests.test_DECIC_ScrollOffRightEdge	fractum	columnae VT420 DECBI/DECFI/DECIC/DECDC
-DECICTests.test_DECIC_ScrollOffRightMarginInScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECICTests.test_DECIC_ScrollEntirelyOffRightEdge	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECICTests.test_DECIC_ScrollOffRightEdge	fractum	POSTEA (decisio XXVI): columnae VT420 DECBI/DECFI/DECIC/DECDC
+DECICTests.test_DECIC_ScrollOffRightMarginInScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECIDTests.test_DECID_8bit	notum	esctest knownBug (xterm)
-DECIDTests.test_DECID_Basic	fractum	DECID
-DECRCTests.test_SaveRestoreCursor_AltVsMain	fractum	schirmum alterum 47/1047/1048
+DECIDTests.test_DECID_Basic	transiit	
+DECRCTests.test_SaveRestoreCursor_AltVsMain	transiit	
 DECRCTests.test_SaveRestoreCursor_Basic	transiit	
 DECRCTests.test_SaveRestoreCursor_InsertNotAffected	transiit	
 DECRCTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	transiit	
@@ -201,149 +203,149 @@ DECRCTests.test_SaveRestoreCursor_ResetsOriginMode	transiit
 DECRCTests.test_SaveRestoreCursor_ReverseWrapNotAffected	transiit	
 DECRCTests.test_SaveRestoreCursor_WorksInLRM	transiit	
 DECRCTests.test_SaveRestoreCursor_Wrap	transiit	
-DECRQMTests.test_DECRQM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_EBM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_FEAM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_FETM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_GATM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_HEM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_IRM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_KAM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_LNM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_MATM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_PUM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_SATM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_SRM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_SRTM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_TSM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_TTM	fractum	DECRQM
-DECRQMTests.test_DECRQM_ANSI_VEM	fractum	DECRQM
+DECRQMTests.test_DECRQM	transiit	
+DECRQMTests.test_DECRQM_ANSI_EBM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_FEAM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_FETM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_GATM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_HEM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_IRM	transiit	
+DECRQMTests.test_DECRQM_ANSI_KAM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_LNM	transiit	
+DECRQMTests.test_DECRQM_ANSI_MATM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_PUM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_SATM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_SRM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_SRTM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_TSM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_TTM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_ANSI_VEM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECAAM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECARM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECARSM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECAWM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECBKM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECAWM	transiit	
+DECRQMTests.test_DECRQM_DEC_DECBKM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECCANSM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECCKM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECCOLM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECCKM	transiit	
+DECRQMTests.test_DECRQM_DEC_DECCOLM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECCRTSM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECESKM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECHCCM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECHCCM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECHDPXM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECHEBM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECHEM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECKBUM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECKPM	notum	esctest knownBug (xterm)
-DECRQMTests.test_DECRQM_DEC_DECLRMM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECLRMM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECMCM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECNAKB	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECNCSM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECNKM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECNRCM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECNKM	transiit	
+DECRQMTests.test_DECRQM_DEC_DECNRCM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECNULM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECOM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECOM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECOSCNM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECPCCM	notum	esctest knownBug (xterm)
-DECRQMTests.test_DECRQM_DEC_DECPEX	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECPFF	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECPEX	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_DEC_DECPFF	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
 DECRQMTests.test_DECRQM_DEC_DECRLCM	omissum	VT V (--max-vt-level=4)
 DECRQMTests.test_DECRQM_DEC_DECRLM	omissum	VT V (--max-vt-level=4)
-DECRQMTests.test_DECRQM_DEC_DECSCLM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECSCNM	fractum	DECRQM
-DECRQMTests.test_DECRQM_DEC_DECTCEM	fractum	DECRQM
+DECRQMTests.test_DECRQM_DEC_DECSCLM	fractum	CONSULTO: DECRQM modus non honoratus: 0 ut Ghostty (xterm IV permanenter remotum aut modum habet)
+DECRQMTests.test_DECRQM_DEC_DECSCNM	transiit	
+DECRQMTests.test_DECRQM_DEC_DECTCEM	transiit	
 DECRQMTests.test_DECRQM_DEC_DECVCCM	notum	esctest knownBug (xterm)
 DECRQMTests.test_DECRQM_DEC_DECXRLM	notum	esctest knownBug (xterm)
 DECRQSSTests.test_DECRQSS_DECELF	notum	esctest knownBug (xterm)
 DECRQSSTests.test_DECRQSS_DECLFKC	notum	esctest knownBug (xterm)
-DECRQSSTests.test_DECRQSS_DECSACE	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_DECSASD	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_DECSCA	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECRQSSTests.test_DECRQSS_DECSCL	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_DECSCUSR	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_DECSLPP	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_DECSLRM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECRQSSTests.test_DECRQSS_DECSACE	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSASD	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSCA	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECRQSSTests.test_DECRQSS_DECSCL	fractum	POSTEA (decisio XXVI): DECSCL gradus conformitatis
+DECRQSSTests.test_DECRQSS_DECSCUSR	transiit	
+DECRQSSTests.test_DECRQSS_DECSLPP	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSLRM	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECRQSSTests.test_DECRQSS_DECSMKR	notum	esctest knownBug (xterm)
-DECRQSSTests.test_DECRQSS_DECSNLS	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_DECSSDT	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_DECSTBM	fractum	DECRQSS
-DECRQSSTests.test_DECRQSS_SGR	fractum	DECRQSS
-DECSCLTests.test_DECSCL_Level2DoesntSupportDECRQM	transiit	
-DECSCLTests.test_DECSCL_Level4_SupportsDECSLRMDoesntSupportDECNCSM	fractum	DECCOLM 132 columnae
+DECRQSSTests.test_DECRQSS_DECSNLS	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSSDT	fractum	POSTEA (decisio XXVI): DECRQSS status VT420 (DECSACE, DECSASD, DECSLPP, DECSNLS, DECSSDT)
+DECRQSSTests.test_DECRQSS_DECSTBM	transiit	
+DECRQSSTests.test_DECRQSS_SGR	transiit	
+DECSCLTests.test_DECSCL_Level2DoesntSupportDECRQM	fractum	POSTEA (decisio XXVI): DECSCL gradus conformitatis
+DECSCLTests.test_DECSCL_Level4_SupportsDECSLRMDoesntSupportDECNCSM	fractum	POSTEA (decisio XXVI): DECSCL gradus conformitatis
 DECSCLTests.test_DECSCL_Level5_SupportsDECNCSM	omissum	VT V (--max-vt-level=4)
 DECSCLTests.test_DECSCL_RISOnChange	notum	esctest knownBug (xterm)
 DECSCLTests.test_DSCSCL_Level2Supports7BitControls	transiit	
-DECSCLTests.test_DSCSCL_Level3_SupportsDECRQMDoesntSupportDECSLRM	fractum	DECRQM
-DECSEDTests.test_DECSED_0	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_0_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_0_WithScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSEDTests.test_DECSED_0_WithScrollRegion_Protection	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSEDTests.test_DECSED_1	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_1_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_1_WithScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSEDTests.test_DECSED_1_WithScrollRegion_Protection	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSEDTests.test_DECSED_2	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_2_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_2_WithScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSEDTests.test_DECSED_2_WithScrollRegion_Protection	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSCLTests.test_DSCSCL_Level3_SupportsDECRQMDoesntSupportDECSLRM	transiit	
+DECSEDTests.test_DECSED_0	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_0_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_0_WithScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSEDTests.test_DECSED_0_WithScrollRegion_Protection	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSEDTests.test_DECSED_1	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_1_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_1_WithScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSEDTests.test_DECSED_1_WithScrollRegion_Protection	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSEDTests.test_DECSED_2	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_2_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_2_WithScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSEDTests.test_DECSED_2_WithScrollRegion_Protection	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECSEDTests.test_DECSED_3	transiit	
 DECSEDTests.test_DECSED_3_Protection	transiit	
-DECSEDTests.test_DECSED_DECSCA_2	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_Default	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSEDTests.test_DECSED_Default_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
+DECSEDTests.test_DECSED_DECSCA_2	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_Default	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSEDTests.test_DECSED_Default_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
 DECSEDTests.test_DECSED_doesNotRespectISOProtect	notum	esctest knownBug (xterm)
-DECSELTests.test_DECSEL_0	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_0_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_1	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_1_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_2	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_2_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_Default	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_Default_Protection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSELTests.test_DECSEL_IgnoresScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSELTests.test_DECSEL_IgnoresScrollRegion_Protection	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSELTests.test_DECSEL_0	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_0_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_1	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_1_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_2	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_2_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_Default	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_Default_Protection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSELTests.test_DECSEL_IgnoresScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSELTests.test_DECSEL_IgnoresScrollRegion_Protection	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECSELTests.test_DECSEL_doesNotRespectISOProtect	notum	esctest knownBug (xterm)
-DECSERATests.test_DECSERA_basic	fractum	protectio DECSCA/SPA/DECSED/DECSEL
+DECSERATests.test_DECSERA_basic	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
 DECSERATests.test_DECSERA_cursorDoesNotMove	transiit	
-DECSERATests.test_DECSERA_defaultArgs	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECSERATests.test_DECSERA_doesNotRespectISOProtect	fractum	protectio DECSCA/SPA/DECSED/DECSEL
-DECSERATests.test_DECSERA_ignoresMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSERATests.test_DECSERA_defaultArgs	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECSERATests.test_DECSERA_doesNotRespectISOProtect	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
+DECSERATests.test_DECSERA_ignoresMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECSERATests.test_DECSERA_invalidRectDoesNothing	transiit	
-DECSERATests.test_DECSERA_overlyLargeSourceClippedToScreenSize	fractum	rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
-DECSERATests.test_DECSERA_respectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSETTests.test_DECSET_ALTBUF	fractum	schirmum alterum 47/1047/1048
-DECSETTests.test_DECSET_Allow80To132	fractum	DECCOLM 132 columnae
+DECSERATests.test_DECSERA_overlyLargeSourceClippedToScreenSize	fractum	POSTEA (decisio XXVI): rectangula VT420 DECFRA/DECCRA/DECERA/DECSERA
+DECSERATests.test_DECSERA_respectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_ALTBUF	transiit	
+DECSETTests.test_DECSET_Allow80To132	fractum	CONSULTO: DECCOLM latitudinem non mutat: delet, regionem et cursorem restituit, hospes fenestram regit (D7c)
 DECSETTests.test_DECSET_DECAWM	transiit	
 DECSETTests.test_DECSET_DECAWM_CursorAtRightMargin	transiit	
-DECSETTests.test_DECSET_DECAWM_NoLineWrapOnTabWithLeftRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSETTests.test_DECSET_DECAWM_OffRespectsLeftRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSETTests.test_DECSET_DECAWM_OnRespectsLeftRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_DECAWM_NoLineWrapOnTabWithLeftRightMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_DECAWM_OffRespectsLeftRightMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_DECAWM_OnRespectsLeftRightMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECSETTests.test_DECSET_DECAWM_TabDoesNotWrapAround	transiit	
-DECSETTests.test_DECSET_DECCOLM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSETTests.test_DECSET_DECLRMM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_DECCOLM	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_DECLRMM	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECSETTests.test_DECSET_DECLRMM_MarginsResetByDECSTR	transiit	
 DECSETTests.test_DECSET_DECLRMM_ModeResetByDECSTR	transiit	
 DECSETTests.test_DECSET_DECNCSM	omissum	VT V (--max-vt-level=4)
-DECSETTests.test_DECSET_DECOM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DECSETTests.test_DECSET_DECOM_DECRQCRA	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_DECOM	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTests.test_DECSET_DECOM_DECRQCRA	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DECSETTests.test_DECSET_DECOM_SoftReset	transiit	
-DECSETTests.test_DECSET_MoreFix	fractum	MoreFix 41
-DECSETTests.test_DECSET_OPT_ALTBUF	fractum	schirmum alterum 47/1047/1048
+DECSETTests.test_DECSET_MoreFix	fractum	CONSULTO: MoreFix 41 (xterm curses)
+DECSETTests.test_DECSET_OPT_ALTBUF	transiit	
 DECSETTests.test_DECSET_OPT_ALTBUF_CURSOR	transiit	
 DECSETTests.test_DECSET_ResetReverseWraparoundDisablesIt	transiit	
-DECSETTests.test_DECSET_ReverseWraparoundLastCol_BS	fractum	involutio-retro 45/1045
-DECSETTests.test_DECSET_ReverseWraparound_BS	fractum	involutio-retro 45/1045
-DECSETTests.test_DECSET_ReverseWraparound_Multi	fractum	involutio-retro 45/1045
+DECSETTests.test_DECSET_ReverseWraparoundLastCol_BS	transiit	
+DECSETTests.test_DECSET_ReverseWraparound_BS	transiit	
+DECSETTests.test_DECSET_ReverseWraparound_Multi	transiit	
 DECSETTests.test_DECSET_ReverseWraparound_RequiresDECAWM	transiit	
-DECSETTests.test_DECSET_SaveRestoreCursor	fractum	schirmum alterum 47/1047/1048
-DECSETTiteInhibitTests.test_SaveRestoreCursor_AltVsMain	fractum	schirmum alterum 47/1047/1048
-DECSETTiteInhibitTests.test_SaveRestoreCursor_Basic	fractum	schirmum alterum 47/1047/1048
+DECSETTests.test_DECSET_SaveRestoreCursor	transiit	
+DECSETTiteInhibitTests.test_SaveRestoreCursor_AltVsMain	transiit	
+DECSETTiteInhibitTests.test_SaveRestoreCursor_Basic	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_InsertNotAffected	transiit	
-DECSETTiteInhibitTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	fractum	schirmum alterum 47/1047/1048
+DECSETTiteInhibitTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_Protection	transiit	
-DECSETTiteInhibitTests.test_SaveRestoreCursor_Reset	fractum	schirmum alterum 47/1047/1048
+DECSETTiteInhibitTests.test_SaveRestoreCursor_Reset	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_ResetsOriginMode	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_ReverseWrapNotAffected	transiit	
-DECSETTiteInhibitTests.test_SaveRestoreCursor_WorksInLRM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DECSETTiteInhibitTests.test_SaveRestoreCursor_WorksInLRM	transiit	
 DECSETTiteInhibitTests.test_SaveRestoreCursor_Wrap	transiit	
 DECSTBMTests.test_DECSTBM_BottomOfZeroIsBottomOfScreen	transiit	
 DECSTBMTests.test_DECSTBM_CursorBelowRegionAtBottomTriesToScroll	transiit	
@@ -361,26 +363,26 @@ DECSTRTests.test_DECSTR_DECOM	transiit
 DECSTRTests.test_DECSTR_DECRLM	transiit	
 DECSTRTests.test_DECSTR_DECSASD	transiit	
 DECSTRTests.test_DECSTR_DECSC	transiit	
-DECSTRTests.test_DECSTR_DECSCA	fractum	protectio DECSCA/SPA/DECSED/DECSEL
+DECSTRTests.test_DECSTR_DECSCA	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
 DECSTRTests.test_DECSTR_IRM	transiit	
 DECSTRTests.test_DECSTR_ReverseWraparound	transiit	
 DECSTRTests.test_DECSTR_STBM	transiit	
-DLTests.test_DL_ClearOutLeftRightAndTopBottomScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DLTests.test_DL_ClearOutLeftRightAndTopBottomScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DLTests.test_DL_DefaultParam	transiit	
 DLTests.test_DL_DeleteMoreThanVisible	transiit	
 DLTests.test_DL_ExplicitParam	transiit	
-DLTests.test_DL_InLeftRightAndTopBottomScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-DLTests.test_DL_InLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DLTests.test_DL_InLeftRightAndTopBottomScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+DLTests.test_DL_InLeftRightScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DLTests.test_DL_InScrollRegion	transiit	
 DLTests.test_DL_OutsideLeftRightAndTopBottomScrollRegion	transiit	
-DLTests.test_DL_OutsideLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+DLTests.test_DL_OutsideLeftRightScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 DLTests.test_DL_OutsideScrollRegion	transiit	
 ECHTests.test_ECH_DefaultParam	transiit	
 ECHTests.test_ECH_ExplicitParam	transiit	
 ECHTests.test_ECH_IgnoresScrollRegion	transiit	
 ECHTests.test_ECH_OutsideScrollRegion	transiit	
 ECHTests.test_ECH_doesNotRespectDECPRotection	transiit	
-ECHTests.test_ECH_respectsISOProtection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
+ECHTests.test_ECH_respectsISOProtection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
 EDTests.test_ED_0	transiit	
 EDTests.test_ED_0_WithScrollRegion	transiit	
 EDTests.test_ED_1	transiit	
@@ -390,16 +392,16 @@ EDTests.test_ED_2_WithScrollRegion	transiit
 EDTests.test_ED_3	transiit	
 EDTests.test_ED_Default	transiit	
 EDTests.test_ED_doesNotRespectDECProtection	transiit	
-EDTests.test_ED_respectsISOProtection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
+EDTests.test_ED_respectsISOProtection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
 ELTests.test_EL_0	transiit	
 ELTests.test_EL_1	transiit	
 ELTests.test_EL_2	transiit	
 ELTests.test_EL_Default	transiit	
 ELTests.test_EL_IgnoresScrollRegion	transiit	
 ELTests.test_EL_doesNotRespectDECProtection	transiit	
-ELTests.test_EL_respectsISOProtection	fractum	protectio DECSCA/SPA/DECSED/DECSEL
+ELTests.test_EL_respectsISOProtection	fractum	LACUNA: protectio DECSCA/SPA/DECSED/DECSEL (Ghostty habet)
 FFTests.test_FF_Basic	transiit	
-FFTests.test_FF_MovesDoesNotScrollOutsideLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+FFTests.test_FF_MovesDoesNotScrollOutsideLeftRight	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 FFTests.test_FF_Scrolls	transiit	
 FFTests.test_FF_ScrollsInTopBottomRegionStartingAbove	transiit	
 FFTests.test_FF_ScrollsInTopBottomRegionStartingWithin	transiit	
@@ -408,39 +410,39 @@ HPATests.test_HPA_DefaultParams	transiit
 HPATests.test_HPA_DoesNotChangeRow	transiit	
 HPATests.test_HPA_IgnoresOriginMode	transiit	
 HPATests.test_HPA_StopsAtRightEdge	transiit	
-HPRTests.test_HPR_DefaultParams	fractum	HPR/VPR
-HPRTests.test_HPR_DoesNotChangeRow	fractum	HPR/VPR
-HPRTests.test_HPR_IgnoresOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-HPRTests.test_HPR_StopsAtRightEdge	fractum	HPR/VPR
+HPRTests.test_HPR_DefaultParams	transiit	
+HPRTests.test_HPR_DoesNotChangeRow	transiit	
+HPRTests.test_HPR_IgnoresOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+HPRTests.test_HPR_StopsAtRightEdge	transiit	
 HTSTests.test_HTS_8bit	notum	esctest knownBug (xterm)
 HTSTests.test_HTS_Basic	transiit	
 HVPTests.test_HVP_ColumnOnly	transiit	
 HVPTests.test_HVP_DefaultParams	transiit	
 HVPTests.test_HVP_OutOfBoundsParams	transiit	
-HVPTests.test_HVP_RespectsOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+HVPTests.test_HVP_RespectsOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 HVPTests.test_HVP_RowOnly	transiit	
 HVPTests.test_HVP_ZeroIsTreatedAsOne	transiit	
 ICHTests.test_ICH_DefaultParam	transiit	
 ICHTests.test_ICH_ExplicitParam	transiit	
-ICHTests.test_ICH_IsNoOpWhenCursorBeginsOutsideScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+ICHTests.test_ICH_IsNoOpWhenCursorBeginsOutsideScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 ICHTests.test_ICH_ScrollEntirelyOffRightEdge	transiit	
 ICHTests.test_ICH_ScrollOffRightEdge	transiit	
-ICHTests.test_ICH_ScrollOffRightMarginInScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+ICHTests.test_ICH_ScrollOffRightMarginInScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 ILTests.test_IL_AboveScrollRegion	transiit	
 ILTests.test_IL_DefaultParam	transiit	
 ILTests.test_IL_ExplicitParam	transiit	
-ILTests.test_IL_RespectsScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-ILTests.test_IL_RespectsScrollRegion_Over	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+ILTests.test_IL_RespectsScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+ILTests.test_IL_RespectsScrollRegion_Over	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 ILTests.test_IL_ScrollsOffBottom	transiit	
 INDTests.test_IND_8bit	notum	esctest knownBug (xterm)
 INDTests.test_IND_Basic	transiit	
-INDTests.test_IND_MovesDoesNotScrollOutsideLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+INDTests.test_IND_MovesDoesNotScrollOutsideLeftRight	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 INDTests.test_IND_Scrolls	transiit	
 INDTests.test_IND_ScrollsInTopBottomRegionStartingAbove	transiit	
 INDTests.test_IND_ScrollsInTopBottomRegionStartingWithin	transiit	
 INDTests.test_IND_StopsAtBottomLineWhenBegunBelowScrollRegion	transiit	
 LFTests.test_LF_Basic	transiit	
-LFTests.test_LF_MovesDoesNotScrollOutsideLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+LFTests.test_LF_MovesDoesNotScrollOutsideLeftRight	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 LFTests.test_LF_Scrolls	transiit	
 LFTests.test_LF_ScrollsInTopBottomRegionStartingAbove	transiit	
 LFTests.test_LF_ScrollsInTopBottomRegionStartingWithin	transiit	
@@ -448,65 +450,65 @@ LFTests.test_LF_StopsAtBottomLineWhenBegunBelowScrollRegion	transiit
 ManipulateSelectionDataTests.test_ManipulateSelectionData_default	notum	esctest knownBug (xterm)
 NELTests.test_NEL_8bit	notum	esctest knownBug (xterm)
 NELTests.test_NEL_Basic	transiit	
-NELTests.test_NEL_MovesDoesNotScrollOutsideLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+NELTests.test_NEL_MovesDoesNotScrollOutsideLeftRight	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 NELTests.test_NEL_Scrolls	transiit	
 NELTests.test_NEL_ScrollsInTopBottomRegionStartingAbove	transiit	
 NELTests.test_NEL_ScrollsInTopBottomRegionStartingWithin	transiit	
 NELTests.test_NEL_StopsAtBottomLineWhenBegunBelowScrollRegion	transiit	
 PMTests.test_PM_8bit	notum	esctest knownBug (xterm)
 PMTests.test_PM_Basic	transiit	
-REPTests.test_REP_DefaultParam	fractum	REP repetitio
-REPTests.test_REP_ExplicitParam	fractum	REP repetitio
-REPTests.test_REP_RespectsLeftRightMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-REPTests.test_REP_RespectsTopBottomMargins	fractum	REP repetitio
-RISTests.test_RIS_ClearsScreen	fractum	RIS
-RISTests.test_RIS_CursorToOrigin	fractum	RIS
-RISTests.test_RIS_ExitAltScreen	fractum	schirmum alterum 47/1047/1048
-RISTests.test_RIS_RemoveMargins	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-RISTests.test_RIS_ResetDECCOLM	fractum	DECCOLM 132 columnae
+REPTests.test_REP_DefaultParam	transiit	
+REPTests.test_REP_ExplicitParam	transiit	
+REPTests.test_REP_RespectsLeftRightMargins	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+REPTests.test_REP_RespectsTopBottomMargins	transiit	
+RISTests.test_RIS_ClearsScreen	transiit	
+RISTests.test_RIS_CursorToOrigin	transiit	
+RISTests.test_RIS_ExitAltScreen	transiit	
+RISTests.test_RIS_RemoveMargins	transiit	
+RISTests.test_RIS_ResetDECCOLM	fractum	CONSULTO: DECCOLM latitudinem non mutat: delet, regionem et cursorem restituit, hospes fenestram regit (D7c)
 RISTests.test_RIS_ResetDECOM	transiit	
 RISTests.test_RIS_ResetTabs	transiit	
-RISTests.test_RIS_ResetTitleMode	fractum	fenestra XTWINOPS (praeter 18)
+RISTests.test_RIS_ResetTitleMode	fractum	CONSULTO: modi tituli xterm (CSI > t)
 RITests.test_RI_8bit	notum	esctest knownBug (xterm)
 RITests.test_RI_Basic	transiit	
-RITests.test_RI_MovesDoesNotScrollOutsideLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+RITests.test_RI_MovesDoesNotScrollOutsideLeftRight	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 RITests.test_RI_Scrolls	transiit	
 RITests.test_RI_ScrollsInTopBottomRegionStartingBelow	transiit	
 RITests.test_RI_ScrollsInTopBottomRegionStartingWithin	transiit	
 RITests.test_RI_StopsAtTopLineWhenBegunAboveScrollRegion	transiit	
 RMTests.test_RM_IRM	transiit	
-ResetColorTests.test_ResetColor_All	fractum	colores OSC 4/5/10-19/104-119
-ResetColorTests.test_ResetColor_Standard	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Dynamic	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Multiple	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Multiple2	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Single	fractum	colores OSC 4/5/10-19/104-119
-ResetSpecialColorTests.test_ResetSpecialColor_Single2	fractum	colores OSC 4/5/10-19/104-119
+ResetColorTests.test_ResetColor_All	transiit	
+ResetColorTests.test_ResetColor_Standard	transiit	
+ResetSpecialColorTests.test_ResetSpecialColor_Dynamic	fractum	CONSULTO: colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Multiple	fractum	CONSULTO: colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Multiple2	fractum	CONSULTO: colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Single	fractum	CONSULTO: colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
+ResetSpecialColorTests.test_ResetSpecialColor_Single2	fractum	CONSULTO: colores speciales OSC 5/105 (xterm; Ghostty nihil agit)
 S8C1TTests.test_S8C1T_CSI	notum	esctest knownBug (xterm)
 S8C1TTests.test_S8C1T_DCS	notum	esctest knownBug (xterm)
 S8C1TTests.test_S8C1T_SPA_EPA	notum	esctest knownBug (xterm)
-SCORCTests.test_SaveRestoreCursor_AltVsMain	fractum	SCOSC/SCORC CSI s/u
-SCORCTests.test_SaveRestoreCursor_Basic	fractum	SCOSC/SCORC CSI s/u
+SCORCTests.test_SaveRestoreCursor_AltVsMain	transiit	
+SCORCTests.test_SaveRestoreCursor_Basic	transiit	
 SCORCTests.test_SaveRestoreCursor_InsertNotAffected	transiit	
-SCORCTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	fractum	SCOSC/SCORC CSI s/u
+SCORCTests.test_SaveRestoreCursor_MoveToHomeWhenNotSaved	transiit	
 SCORCTests.test_SaveRestoreCursor_Protection	transiit	
-SCORCTests.test_SaveRestoreCursor_Reset	fractum	SCOSC/SCORC CSI s/u
+SCORCTests.test_SaveRestoreCursor_Reset	transiit	
 SCORCTests.test_SaveRestoreCursor_ResetsOriginMode	transiit	
 SCORCTests.test_SaveRestoreCursor_ReverseWrapNotAffected	transiit	
-SCORCTests.test_SaveRestoreCursor_WorksInLRM	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SCORCTests.test_SaveRestoreCursor_WorksInLRM	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SCORCTests.test_SaveRestoreCursor_Wrap	transiit	
-SDTests.test_SD_BigScrollLeftRightAndTopBottomScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SDTests.test_SD_BigScrollLeftRightAndTopBottomScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SDTests.test_SD_CanClearScreen	transiit	
 SDTests.test_SD_DefaultParam	transiit	
 SDTests.test_SD_ExplicitParam	transiit	
-SDTests.test_SD_LeftRightAndTopBottomScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-SDTests.test_SD_OutsideLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SDTests.test_SD_LeftRightAndTopBottomScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+SDTests.test_SD_OutsideLeftRightScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SDTests.test_SD_OutsideTopBottomScrollRegion	transiit	
-SDTests.test_SD_RespectsLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SDTests.test_SD_RespectsLeftRightScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SDTests.test_SD_RespectsTopBottomScrollRegion	transiit	
-SMTests.test_SM_IRM	fractum	IRM insertio (phasis D)
+SMTests.test_SM_IRM	transiit	
 SMTests.test_SM_IRM_DoesNotWrapUnlessCursorAtMargin	transiit	
-SMTests.test_SM_IRM_TruncatesAtRightMargin	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SMTests.test_SM_IRM_TruncatesAtRightMargin	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SMTests.test_SM_LNM	transiit	
 SMTitleTests.test_SMTitle_SetHexQueryHex	notum	esctest knownBug (xterm)
 SMTitleTests.test_SMTitle_SetHexQueryUTF8	notum	esctest knownBug (xterm)
@@ -514,14 +516,14 @@ SMTitleTests.test_SMTitle_SetUTF8QueryHex	notum	esctest knownBug (xterm)
 SMTitleTests.test_SMTitle_SetUTF8QueryUTF8	notum	esctest knownBug (xterm)
 SOSTests.test_SOS_8bit	notum	esctest knownBug (xterm)
 SOSTests.test_SOS_Basic	transiit	
-SUTests.test_SU_BigScrollLeftRightAndTopBottomScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SUTests.test_SU_BigScrollLeftRightAndTopBottomScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SUTests.test_SU_CanClearScreen	transiit	
 SUTests.test_SU_DefaultParam	transiit	
 SUTests.test_SU_ExplicitParam	transiit	
-SUTests.test_SU_LeftRightAndTopBottomScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-SUTests.test_SU_OutsideLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SUTests.test_SU_LeftRightAndTopBottomScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+SUTests.test_SU_OutsideLeftRightScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SUTests.test_SU_OutsideTopBottomScrollRegion	transiit	
-SUTests.test_SU_RespectsLeftRightScrollRegion	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+SUTests.test_SU_RespectsLeftRightScrollRegion	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 SUTests.test_SU_RespectsTopBottomScrollRegion	transiit	
 TBCTests.test_TBC_0	transiit	
 TBCTests.test_TBC_3	transiit	
@@ -531,43 +533,43 @@ VPATests.test_VPA_DefaultParams	transiit
 VPATests.test_VPA_DoesNotChangeColumn	transiit	
 VPATests.test_VPA_IgnoresOriginMode	transiit	
 VPATests.test_VPA_StopsAtBottomEdge	transiit	
-VPRTests.test_VPR_DefaultParams	fractum	HPR/VPR
-VPRTests.test_VPR_DoesNotChangeColumn	fractum	HPR/VPR
-VPRTests.test_VPR_IgnoresOriginMode	fractum	margines-lr DECLRMM/DECSLRM (VT420)
-VPRTests.test_VPR_StopsAtBottomEdge	fractum	HPR/VPR
+VPRTests.test_VPR_DefaultParams	transiit	
+VPRTests.test_VPR_DoesNotChangeColumn	transiit	
+VPRTests.test_VPR_IgnoresOriginMode	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
+VPRTests.test_VPR_StopsAtBottomEdge	transiit	
 VTTests.test_VT_Basic	transiit	
-VTTests.test_VT_MovesDoesNotScrollOutsideLeftRight	fractum	margines-lr DECLRMM/DECSLRM (VT420)
+VTTests.test_VT_MovesDoesNotScrollOutsideLeftRight	fractum	POSTEA (decisio XXVI): margines-lr DECLRMM/DECSLRM (VT420)
 VTTests.test_VT_Scrolls	transiit	
 VTTests.test_VT_ScrollsInTopBottomRegionStartingAbove	transiit	
 VTTests.test_VT_ScrollsInTopBottomRegionStartingWithin	transiit	
 VTTests.test_VT_StopsAtBottomLineWhenBegunBelowScrollRegion	transiit	
-XtermSaveTests.test_XtermSave_SaveResetState	fractum	XTSAVE/XTRESTORE CSI ? s/r
-XtermSaveTests.test_XtermSave_SaveSetState	fractum	XTSAVE/XTRESTORE CSI ? s/r
-XtermWinopsTests.test_XtermWinops_DECSLPP	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_Fullscreen	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_IconifyDeiconfiy	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_MaximizeWindow_Horizontally	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_MaximizeWindow_HorizontallyAndVertically	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_MaximizeWindow_Vertically	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_MoveToXY	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_MoveToXY_Defaults	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIcon	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIconAndWindow	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopWindow	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushIconThenWindowThenPopBoth	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushIcon_PopIcon	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Icon	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Window	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_PushWindow_PopWindow	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ReportIconLabel	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ReportWindowLabel	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizeChars_BothParameters	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizeChars_DefaultHeight	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizeChars_DefaultWidth	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizeChars_ZeroHeight	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizeChars_ZeroWidth	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizePixels_BothParameters	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizePixels_OmittedHeight	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizePixels_OmittedWidth	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizePixels_ZeroHeight	fractum	fenestra XTWINOPS (praeter 18)
-XtermWinopsTests.test_XtermWinops_ResizePixels_ZeroWidth	fractum	fenestra XTWINOPS (praeter 18)
+XtermSaveTests.test_XtermSave_SaveResetState	fractum	LACUNA: XTSAVE/XTRESTORE CSI ? s/r
+XtermSaveTests.test_XtermSave_SaveSetState	fractum	LACUNA: XTSAVE/XTRESTORE CSI ? s/r
+XtermWinopsTests.test_XtermWinops_DECSLPP	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_Fullscreen	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_IconifyDeiconfiy	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_MaximizeWindow_Horizontally	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_MaximizeWindow_HorizontallyAndVertically	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_MaximizeWindow_Vertically	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_MoveToXY	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_MoveToXY_Defaults	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIcon	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopIconAndWindow	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIconAndWindow_PopWindow	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIconThenWindowThenPopBoth	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushIcon_PopIcon	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Icon	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushMultiplePopMultiple_Window	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_PushWindow_PopWindow	fractum	CONSULTO: acervus titulorum 22t/23t habemus (D7a), sed esctest eum per 21t legit - titulum reddere consulto recusamus
+XtermWinopsTests.test_XtermWinops_ReportIconLabel	fractum	CONSULTO: XTWINOPS titulum reddere 20t/21t (securitas: titulus ut initus redit)
+XtermWinopsTests.test_XtermWinops_ReportWindowLabel	fractum	CONSULTO: XTWINOPS titulum reddere 20t/21t (securitas: titulus ut initus redit)
+XtermWinopsTests.test_XtermWinops_ResizeChars_BothParameters	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizeChars_DefaultHeight	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizeChars_DefaultWidth	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizeChars_ZeroHeight	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizeChars_ZeroWidth	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizePixels_BothParameters	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizePixels_OmittedHeight	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizePixels_OmittedWidth	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizePixels_ZeroHeight	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)
+XtermWinopsTests.test_XtermWinops_ResizePixels_ZeroWidth	fractum	CONSULTO: XTWINOPS fenestram movere/mutare (programma fenestram non regit, ut Ghostty)

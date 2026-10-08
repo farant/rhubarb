@@ -68,6 +68,39 @@ tabula_pixelorum_pingere_characterem (
     ch      = (i8)c;
     glypha  = fons_6x8[ch];
 
+    /* VIA CELERIS (terminale park 011): glypha tota intra tabulam -
+     * ordines directe, sine probatione finium per pixelum. i32 sine
+     * signo: x negativum ingens advenit, ergo 'x + VIII <= latitudo'
+     * circumvolveret (ruina in probatio_delineare_mandata) - comparatio
+     * per subtractionem a latitudine */
+    si (   tabula && tabula->pixela
+        && tabula->latitudo >= FONS_LATITUDO_REDDENDI
+        && tabula->altitudo >= FONS_ALTITUDO
+        && x                <= tabula->latitudo - FONS_LATITUDO_REDDENDI
+        && y                <= tabula->altitudo - FONS_ALTITUDO)
+    {
+        i32* linea;
+
+        per (ordo = ZEPHYRUM; ordo < FONS_ALTITUDO; ordo++)
+        {
+            bits  = glypha[ordo];
+            si (bits == ZEPHYRUM)
+            {
+                perge;
+            }
+            linea = tabula->pixela + (y + ordo) * tabula->latitudo + x;
+            per (columna = ZEPHYRUM; columna
+                < FONS_LATITUDO_REDDENDI; columna++)
+            {
+                si (bits & (0x80 >> columna))
+                {
+                    linea[columna] = color;
+                }
+            }
+        }
+        redde;
+    }
+
     per (ordo = ZEPHYRUM; ordo < FONS_ALTITUDO; ordo++)
     {
         bits = glypha[ordo];

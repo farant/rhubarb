@@ -204,13 +204,26 @@ _z_compara_normam (
         magnus_absolutum(VALOR_Z(b), piscina));
 }
 
+interior b32
+_z_signum (
+    constans Anulus* anulus,
+    constans vacuum* a,
+            Piscina* piscina,
+                s32* exitus)
+{
+    (vacuum)anulus;
+    (vacuum)piscina;
+    *exitus = magnus_signum(VALOR_Z(a));
+    redde VERUM;
+}
+
 constans Anulus ANULUS_INTEGRORUM = {
     "Z", (memoriae_index)magnitudo(Magnus), FALSUM,
     _z_nullum, _z_unum, _z_est_nullum, _z_parvum, _z_aequalis, _z_adde,
         _z_subtrahe,
     _z_multiplica, _z_divide_exacte, _z_transcribe, _z_ad_chordam,
     _z_ex_chorda, _z_divisor_communis, _z_divide_cum_residuo,
-    _z_compara_normam, NIHIL, VERUM
+    _z_compara_normam, NIHIL, VERUM, _z_signum
 };
 
 
@@ -357,12 +370,25 @@ _q_ex_chorda (
     redde fractio_ex_chorda(textus, piscina, (Fractio*)exitus);
 }
 
+interior b32
+_q_signum (
+    constans Anulus* anulus,
+    constans vacuum* a,
+            Piscina* piscina,
+                s32* exitus)
+{
+    (vacuum)anulus;
+    (vacuum)piscina;
+    *exitus = fractio_signum(VALOR_Q(a));
+    redde VERUM;
+}
+
 constans Anulus ANULUS_RATIONALIUM = {
     "Q", (memoriae_index)magnitudo(Fractio), VERUM,
     _q_nullum, _q_unum, _q_est_nullum, _q_parvum, _q_aequalis, _q_adde,
         _q_subtrahe,
     _q_multiplica, _q_divide_exacte, _q_transcribe, _q_ad_chordam,
-    _q_ex_chorda, NIHIL, NIHIL, NIHIL, NIHIL, VERUM
+    _q_ex_chorda, NIHIL, NIHIL, NIHIL, NIHIL, VERUM, _q_signum
 };
 
 
@@ -512,7 +538,7 @@ constans Anulus ANULUS_POLYNOMIORUM = {
     _p_nullum, _p_unum, _p_est_nullum, _p_parvum, _p_aequalis, _p_adde,
         _p_subtrahe,
     _p_multiplica, _p_divide_exacte, _p_transcribe, _p_ad_chordam,
-    _p_ex_chorda, NIHIL, NIHIL, NIHIL, NIHIL, VERUM
+    _p_ex_chorda, NIHIL, NIHIL, NIHIL, NIHIL, VERUM, NIHIL
 };
 
 
@@ -690,7 +716,8 @@ interior constans Anulus FORMA_RESIDUORUM = {
     "Z/n", (memoriae_index)magnitudo(i32), FALSUM,
     _r_nullum, _r_unum, _r_est_nullum, _r_parvum, _r_aequalis, _r_adde,
     _r_subtrahe, _r_multiplica, _r_divide_exacte, _r_transcribe,
-    _r_ad_chordam, _r_ex_chorda, NIHIL, NIHIL, NIHIL, NIHIL, FALSUM
+    _r_ad_chordam, _r_ex_chorda, NIHIL, NIHIL, NIHIL, NIHIL, FALSUM,
+    NIHIL
 };
 
 constans Anulus*

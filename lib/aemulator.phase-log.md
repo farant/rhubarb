@@ -486,3 +486,196 @@ pictor's initial canvas view is still an open question (its worklog).
 
 **Next:** merge secunda into main (Fran's timing), then phase D.
 
+## D1 — quick wins (2026-10-07)
+
+**INTENTIO.** The small, common sequences full-screen programs send:
+relative moves, repeat, ANSI cursor save, the older alt-screen modes,
+the alignment test, full reset.
+
+Built: HPR/VPR, REP, SCOSC/SCORC, 47/1047/1048, DECALN, RIS, each from
+Ghostty's code and tests. esctest 216 -> 245 with no regressions. Two
+plants survived for a reason worth more than the features: STML reads
+an empty attribute as absent, so every `textus=""` in the vectors had
+never been checked. An explicit empty marker fixed it; the nine
+assertions it revived all held.
+
+## D2 — modes in the core (2026-10-07)
+
+**INTENTIO.** Keep every mode a full-screen program sets, act on the
+ones that change the screen, and hand the input ones to the host.
+
+The four loose booleans became a table of honoured modes, one bit
+each, which DECRQM reads directly - so a program can now ask, and so
+can our vectors: many of the 29 new cases assert modes through DECRQM
+replies rather than through private accessors. Origin mode, insert,
+and both reverse-wrap modes landed with Ghostty's tests. The host gets
+one snapshot struct (`aemulator_modi`) for D6. esctest 245 -> 264.
+One honest loss: a test that passed only because we never answered
+DECRQM now fails for its real reason (no conformance levels).
+
+## D3 — DEC special graphics (2026-10-07)
+
+**INTENTIO.** Box drawing for htop, dialog and friends: the four
+charset slots, the shifts that invoke them, and the line-drawing table.
+
+Small and table-driven, from Ghostty's charsets.zig and its tests. The
+interesting part was underneath: the single-shift vector with an emoji
+after `ESC N` showed the shift landing on the NEXT character - the
+lexer had been silently eating high bytes in its SS state since it was
+written. Fixed there (FUGA, byte kept), with tests in the lexer's own
+suite and the tessera amalgam regenerated.
+
+## D4 — kitty keyboard flags (2026-10-07)
+
+**INTENTIO.** Remember which kitty keyboard flags a program asked for,
+per screen, so D6 can encode keys the way it expects.
+
+A small stack machine ported from Ghostty's FlagStack, one field added
+to the host snapshot. Two of the first plants survived because my
+vectors pushed (moving off the base slot) where they should have set,
+and because no vector sent a bare push - the plants, not the code,
+found the gaps.
+
+## D5 — colours (2026-10-07)
+
+**INTENTIO.** Answer vim's "what is your background?" with the
+theme, and let programs that set the palette actually set it.
+
+Fran chose the live palette over answering queries only, which made
+esctest's colour rows (all set-then-query) reachable: 20 promoted.
+Two references disagreed on `#fff`: Ghostty scales it to ff, X11 and
+xterm (and esctest) take the digits as the most significant bits, f0.
+The spec text is explicit, so `#` follows X11 and `rgb:` stays scaled.
+The lexer learned to say which terminator ended an OSC, so the reply
+comes back the way the question was asked.
+
+## D6a — the encoder learns the modes (2026-10-07)
+
+**INTENTIO.** Make `codificator_terminalis` able to say everything the
+modes ask for, before terminale starts asking.
+
+D6 split in three at the interview (encoder, terminale wiring, window
+events - the window's focus and paste handlers turned out to be empty
+stubs). The encoder part was Ghostty's mouse_encode.zig almost line for
+line, plus DECCKM and LNM; the one design point was keeping format 0 =
+SGR so every existing zero-filling caller keeps its behaviour.
+
+## D6b — terminale speaks the modes (2026-10-07)
+
+**INTENTIO.** Make the app honour what programs ask for: keys and mouse
+in the right encoding, paste brackets, focus reports, the title, the
+palette.
+
+All wiring, no new behaviour in the core except ?1007 - found while
+designing: less on the alternate screen has no history, so the wheel
+did nothing; Ghostty sends arrows there. One routing surprise: window
+focus events are neither focal nor positional and land on the root
+component, which had no action. Sixteen plants, all caught.
+
+## D6c — the window's own events, and the first real session (2026-10-07)
+
+**INTENTIO.** Let the macOS window report focus and paste, then use it.
+
+The platform part was small (two empty delegate stubs, one missing
+`paste:`). The session was the real test: Fran ran nvim and found
+shift+; typing ';'. The chain was D4 -> nvim sees kitty support ->
+pushes disambiguate -> our encoder treated shift as a modifier even when
+it only produced the character. Reproduced and verified with real nvim
+in a headless pty before and after. The title "not changing" was the
+shell rewriting it at every prompt.
+
+
+## D7 — the bar (2026-10-07)
+
+**INTENTIO.** Meet decision 29's bar: every esctest failure named, the
+small answers programs ask for, vttest walked, Fran's own session.
+
+- **D7a** (a12eeefb, a7577310): every failing esctest row now carries a
+  VERDICT - POSTEA (decision 26, VT420+), CONSULTO (deliberately
+  different: Ghostty's identity, title echo refused, window ops), or
+  LACUNA - attributed by `tools/aemulator_esctest_causae.py` through
+  `-pinnare`; a failure without a cause fails the pin. Fran chose the
+  quick replies: DECXCPR (VT220 form, matching the identity we claim),
+  DECDSR fixed answers, DECID, DECRQSS (SGR via a fixed-buffer encoder -
+  the core allocates nothing), the xterm title stack. esctest 284 -> 294.
+- **Found by use, between steps** (Fran in terminale + tmux): Cmd keys
+  reaching programs (f74965dd), unreadable greys -> a WCAG contrast
+  floor of 3.0 with the minimal nudge Fran chose, plus faint (0fecd4c9),
+  Ctrl-[ / Ctrl-I / Ctrl-M sending nothing in legacy mode (a copied
+  Ghostty fixterms gap meeting macOS control text; a7577310), drags
+  without a button so tmux dividers would not move (6407deb6).
+- **D7b** (d046ea85): vttest 2.7 (20251205) from the tarball (Fran: not
+  Homebrew), sha256 pinned in the plan, built outside the repo.
+- **D7c**: a headless driver (`tools/aemulator_vttest.c`: script ->
+  screen text + drawn frame per step) let Claude walk vttest against
+  its source (Fran's option b). The walk found: DECCOLM's clear is
+  needed even at 80 columns (minimal DECCOLM, width never changes;
+  ae44dc66), DECSCNM ignored (12c8f851), terminale drawing no
+  underline/strike/overline/bold weight (6bc29e81). Fran then asked
+  for line drawing: a new pure library `glyphae_ductae` draws box,
+  block and braille characters as masks at cell size, ported from
+  Ghostty's sprite font (8068d0fe, f7774b27). esctest 294 -> 296.
+  Fran's session: Claude Code, tmux, nvim, btop all good; vttest's
+  geometry screen differs from 80x24 the same way in Ghostty.
+
+## D8 — RELATIO: phase D, full-screen programs (2026-10-07)
+
+**Phase D is done: vim, less, htop/btop, tmux and Claude Code run in
+terminale and look right - modes, charsets, colours, mouse, paste,
+focus, title, kitty keys, and real line drawing. Fran: "it looks
+great!"** The core grew from 2668 to 4371 lines (header 239 -> 326),
+terminale from 549 to 1207, the encoder from 1091 to 1255, plus the
+new `glyphae_ductae` (1050) and the vttest driver (249); vectors 179 ->
+260; probatio_terminale 400 -> 991 lines; 21 commits from D0
+(afe4019d) to f7774b27. esctest 216 -> 296 passing, every remaining
+failure named (POSTEA 116, CONSULTO 84, LACUNA 26).
+
+**What exists:**
+- A mode table (one bit per honoured mode) that DECRQM reads, and one
+  snapshot for the host (`aemulator_modi`): cursor keys, keypad, mouse
+  mode and format, paste, focus, LNM, kitty flags (per-screen stack),
+  alternate scroll, reverse screen.
+- Charsets G0-G3 with locking and single shifts, DEC special graphics,
+  British.
+- A live palette (OSC 4/10/11/12/104/110-112) answered in the form it
+  was asked; DECRQSS, DECXCPR, DECDSR, DECID, title stack.
+- terminale honours all of it: keys in legacy or kitty encoding, mouse
+  in X10/normal/button/any with SGR/UTF-8/urxvt/pixel formats, wheel
+  as arrows on the alternate screen, bracketed paste from Cmd-V, focus
+  reports, the window title; theme colours with a contrast floor;
+  underline (5 styles), strike, overline, synthetic bold, reverse
+  screen; box/block/braille drawn as shapes.
+- Tools: the esctest verdict table and the headless vttest driver.
+
+**What the work found, by weight:**
+1. **Use finds what conformance suites cannot.** Five of the most
+   visible bugs came from Fran simply working in terminale - Cmd keys,
+   shift consumed by kitty in nvim, Ctrl-[ as Escape, tmux drags, grey
+   text on the warm theme. None of them is in esctest or vttest.
+2. **A copied reference copies its gaps.** Ghostty's fixterms table
+   left Ctrl-[ to the platform; ours had no platform layer doing it.
+   Ghostty's DECOM CHA differs from xterm; we follow xterm and named
+   it. Every divergence now has a name in a vector or a verdict.
+3. **Name every failure, or the count lies.** Turning 306 bare
+   failures into verdicts separated "later" from "never" from "missing"
+   and made the quick-reply list obvious.
+4. **Look at the pixels.** The headless driver plus PNGs found the
+   undrawn underline and the ignored reverse screen; text dumps alone
+   said every screen was right.
+5. **The house lexicon is shared ground.** Twice a glossary entry for
+   `imus` broke the Latin parser's oracle; new identifiers are renamed
+   to words WORDS already knows, and new untracked files must be
+   `git add -N`'d before a hand lint sees them.
+
+**Named limits (phase D):** VT420+ (margins, rectangles, protection,
+132 columns that resize) later per decision 26; italic and blink not
+drawn; decorations and drawn glyphs absent from the terminal twin;
+double-size lines and VT52 not supported (as Ghostty); multi-rune
+graphemes still dropped by the core (v2); full redraw per frame makes
+fast scrolling (btop) laggier than Ghostty - park 011
+(../terminal-planning/parks/011-terminale-full-redraw-cost.md);
+remaining spinner/geometric symbols (●, ✻, ⎿) are tofu.
+
+**Next:** install stage (`terminale` build action + `institutio` ->
+`~/.bin/terminale`, from main), merge secunda -> main; then Fran's
+choice among park 011 (dirty rows), the symbol extras, or phase F.

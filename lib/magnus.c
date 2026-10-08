@@ -1052,6 +1052,32 @@ _transcribere (
 }
 
 i32
+magnus_bitorum (
+    Magnus a)
+{
+               i32  alveus[II];
+    constans   i32* moduli;
+               i32  longitudo;
+               s32  signum;
+               i32  summum;
+               i32  bita;
+
+    si (magnus_signum(a) == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    _aspectus(a, alveus, &moduli, &longitudo, &signum);
+    summum  = moduli[longitudo - I];
+    bita    = (longitudo - I) * XXXII;
+    dum (summum != ZEPHYRUM)
+    {
+        bita++;
+        summum = summum >> I;
+    }
+    redde bita;
+}
+
+i32
 magnus_residuum_parvum (
     Magnus a,
        i32 n)

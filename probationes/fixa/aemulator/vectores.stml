@@ -23,6 +23,8 @@
                    lata | cauda | caput), stilus (SGR canonicum
                    stilus_codificare, \x1B[0...m)
      Nullum valorem vacuum (stml scriptor 'a=""' in 'verum' vertit). -->
+<!-- VALOR VACUUS: STML a="" ut absentiam legit; chorda vacua
+     exspectata scribitur "\0" (valor totus). -->
 <vectores pin="12752b2">
 
   <casus titulus="basic print" fons="stream_terminal.zig:2321" latitudo="10" altitudo="10">
@@ -793,7 +795,7 @@
 
   <casus titulus="index bottom of alt screen full region" fons="Terminal.zig:10782" latitudo="5" altitudo="3">
     <gradus initus="\x1B[?1049hA\r\nB\r\nC\x1BD\rD" textus="B\nC\nD" historia="0" historia_textus="B\nC\nD"/>
-    <gradus initus="\x1B[?1049l" textus="" historia="0" historia_textus=""/>
+    <gradus initus="\x1B[?1049l" textus="\0" historia="0" historia_textus="\0"/>
   </casus>
 
   <casus titulus="index bottom of alt screen top region" fons="Terminal.zig:10816" latitudo="5" altitudo="5">
@@ -846,7 +848,7 @@
 
   <!-- ED 2 sine signis promptus (OSC 133): historia non augetur -->
   <casus titulus="erase display does not feed the history" fons="domus" latitudo="5" altitudo="2">
-    <gradus initus="A\r\nB\x1B[2J" textus="" historia="0" historia_textus=""/>
+    <gradus initus="A\r\nB\x1B[2J" textus="\0" historia="0" historia_textus="\0"/>
   </casus>
 
   <!-- ==== C3: visus (decisio XXI). visum_movere > 0 sursum (Ghostty
@@ -873,7 +875,7 @@
   </casus>
 
   <casus titulus="print writes to bottom if scrolled" fons="Terminal.zig:6854" latitudo="5" altitudo="2">
-    <gradus initus="hello\x1B[1;1H\x1BD\x1BD\x1BD" visus_textus=""/>
+    <gradus initus="hello\x1B[1;1H\x1BD\x1BD\x1BD" visus_textus="\0"/>
     <gradus visum_movere="1000" visus_textus="hello"/>
     <gradus initus="A" visus_textus="hello" textus="\nA"/>
     <gradus visum_movere="-1000" visus_textus="\nA"/>
@@ -949,6 +951,512 @@
     <gradus initus="1\r\n2\r\n3" visum_movere="1" historia="1" visus="1"/>
     <gradus initus="\x1B[3J" historia="0" visus="0" textus="2\n3" historia_textus="2\n3" ignota="0"/>
     <gradus initus="\r\n4" historia="1" historia_textus="2\n3\n4"/>
+  </casus>
+
+  <!-- ==== D1: lucra parva (HPR/VPR, REP, SCOSC/SCORC, 47/1047/1048,
+       DECALN, RIS) ==== -->
+
+  <casus titulus="saveCursor position" fons="Terminal.zig:13534" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[1;5HA\x1B[s\x1B[1;1HB\x1B[uX" textus="B   AX"/>
+  </casus>
+
+  <casus titulus="saveCursor pending wrap state" fons="Terminal.zig:13555" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[1;5HA\x1B[s\x1B[1;1HB\x1B[uX" textus="B   A\nX"/>
+  </casus>
+
+  <casus titulus="printRepeat simple" fons="Terminal.zig:14279" latitudo="5" altitudo="5">
+    <gradus initus="A\x1B[b" textus="AA"/>
+  </casus>
+
+  <casus titulus="printRepeat wrap" fons="Terminal.zig:14296" latitudo="5" altitudo="5">
+    <gradus initus="    A\x1B[b" textus="    A\nA"/>
+  </casus>
+
+  <casus titulus="printRepeat no previous character" fons="Terminal.zig:14313" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[b" textus="\0" ignota="0"/>
+  </casus>
+
+  <!-- Ghostty modum origo quoque ponit (D2); effectus visibilis idem -->
+  <casus titulus="decaln reset margins" fons="Terminal.zig:12293" latitudo="3" altitudo="3">
+    <gradus initus="\x1B[2;3r\x1B#8\x1B[T" textus="\nEEE\nEEE"/>
+  </casus>
+
+  <!-- HPR/VPR (Ghostty cursor_col/row_relative): 0 explicitum = nihil,
+       praecisio ad oram, parametra plura = ignotum -->
+  <casus titulus="hpr and vpr move relative, zero stays, edges clamp" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[2;2H\x1B[3a" cursor_x="4" cursor_y="1"/>
+    <gradus initus="\x1B[0a\x1B[0e" cursor_x="4" cursor_y="1"/>
+    <gradus initus="\x1B[2e" cursor_x="4" cursor_y="3"/>
+    <gradus initus="\x1B[99a\x1B[99e" cursor_x="9" cursor_y="4"/>
+    <gradus initus="\x1B[1;2a" cursor_x="9" ignota="1"/>
+  </casus>
+
+  <!-- REP: character ultimus manet trans motus (Ghostty previous_char
+       solum RIS purgat) -->
+  <casus titulus="rep repeats the last printed character after moves" fons="domus" latitudo="5" altitudo="3">
+    <gradus initus="A\x1B[3;1H\x1B[2b" textus="A\n\nAA"/>
+  </casus>
+
+  <!-- 47: schirmum alterum sine deletione; cursor copiatur -->
+  <casus titulus="mode 47 keeps the alternate screen" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="P\x1B[?47h\x1B[1;1HA\x1B[?47l" textus="P" altera="falsum"/>
+    <gradus initus="\x1B[?47h" textus="A" altera="verum"/>
+  </casus>
+
+  <!-- 1047: exitus schirmum alterum delet -->
+  <casus titulus="mode 1047 clears the alternate screen on exit" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="\x1B[?1047h\x1B[1;1HA\x1B[?1047l\x1B[?1047h" textus="\0" altera="verum"/>
+  </casus>
+
+  <!-- 1048: cursorem servat et restituit -->
+  <casus titulus="mode 1048 saves and restores the cursor" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[2;3H\x1B[?1048h\x1B[1;1H\x1B[?1048l" cursor_x="2" cursor_y="1"/>
+  </casus>
+
+  <!-- RIS (Ghostty fullReset): schirmum, historia, cursor, alterum -->
+  <casus titulus="ris resets screen, history and cursor" fons="domus" latitudo="5" altitudo="2">
+    <gradus initus="1\r\n2\r\n3\x1B[?1049hX\x1Bc" textus="\0" historia="0" cursor_x="0" cursor_y="0" altera="falsum"/>
+    <gradus initus="\x1B[b" textus="\0"/>
+  </casus>
+
+  <!-- ==================== D2: modi in nucleo ==================== -->
+
+  <!-- DECOM (Ghostty setCursorPos): CUP relativus ad summam regionis -->
+  <casus titulus="cursorPos relative to origin" fons="Terminal.zig:7844" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[3;4r\x1B[?6h\x1B[1;1HX" textus="\n\nX"/>
+  </casus>
+
+  <!-- Ghostty 7882 sine marginibus lr: linea ad ultimam regionis
+       praeciditur, columna ad oram -->
+  <casus titulus="cursorPos limits with full scroll region" fons="domus" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[3;4r\x1B[?6h\x1B[500;500HX" textus="\n\n\n    X"/>
+  </casus>
+
+  <!-- DECSC servat DECOM; DECRC positionem absolutam restituit -->
+  <casus titulus="saveCursor origin mode" fons="Terminal.zig:13576" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?6h\x1B7\x1B[2;4r\x1B8X" textus="X"/>
+  </casus>
+
+  <casus titulus="fullReset origin mode" fons="Terminal.zig:15814" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[3;5H\x1B[?6h\x1Bc" cursor_x="0" cursor_y="0"/>
+    <gradus initus="\x1B[?6$p" responsum="\x1B[?6;2$y"/>
+  </casus>
+
+  <!-- DECOM ponere et removere cursorem ad initium (regionis) mittit;
+       CPR relativum (xterm) -->
+  <casus titulus="decom homes and cpr reports relative" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[3;6r\x1B[5;5H\x1B[?6h" cursor_x="0" cursor_y="2"/>
+    <gradus initus="\x1B[2;3H\x1B[6n" cursor_x="2" cursor_y="3" responsum="\x1B[2;3R"/>
+    <gradus initus="\x1B[?6l" cursor_x="0" cursor_y="0"/>
+  </casus>
+
+  <!-- CHA lineam servat sub DECOM (xterm, esctest CHA_RespectsOriginMode
+       - Ghostty summam iterum addit: divergentia nominata); VPA
+       relativa; VPR ad ultimam regionis praeciditur; DECSTBM ad
+       summam regionis -->
+  <casus titulus="cha vpa vpr under origin mode" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[3;6r\x1B[?6h\x1B[2;4H\x1B[1G" cursor_x="0" cursor_y="3"/>
+    <gradus initus="\x1B[3d" cursor_x="0" cursor_y="4"/>
+    <gradus initus="\x1B[9e" cursor_y="5"/>
+    <gradus initus="\x1B[2d\x1B[3e" cursor_y="5"/>
+    <gradus initus="\x1B[4;8r" cursor_x="0" cursor_y="3"/>
+  </casus>
+
+  <!-- IRM (Ghostty print: insertBlanks ante scripturam, non in fine) -->
+  <casus titulus="insert mode with space" fons="Terminal.zig:12878" latitudo="10" altitudo="2">
+    <gradus initus="hello\x1B[1;2H\x1B[4hX" textus="hXello"/>
+  </casus>
+
+  <casus titulus="insert mode doesn't wrap pushed characters" fons="Terminal.zig:12896" latitudo="5" altitudo="2">
+    <gradus initus="hello\x1B[1;2H\x1B[4hX" textus="hXell"/>
+  </casus>
+
+  <casus titulus="insert mode does nothing at the end of the line" fons="Terminal.zig:12914" latitudo="5" altitudo="2">
+    <gradus initus="hello\x1B[4hX" textus="hello\nX"/>
+  </casus>
+
+  <casus titulus="insert mode with wide characters" fons="Terminal.zig:12931" latitudo="5" altitudo="2">
+    <gradus initus="hello\x1B[1;2H\x1B[4h\xF0\x9F\x98\x80" textus="h\xF0\x9F\x98\x80el"/>
+  </casus>
+
+  <casus titulus="insert mode with wide characters at end" fons="Terminal.zig:12949" latitudo="5" altitudo="2">
+    <gradus initus="well\x1B[4h\xF0\x9F\x98\x80" textus="well\n\xF0\x9F\x98\x80"/>
+  </casus>
+
+  <casus titulus="insert mode pushing off wide character" fons="Terminal.zig:12966" latitudo="5" altitudo="2">
+    <gradus initus="123\xF0\x9F\x98\x80\x1B[4h\x1B[1;1HX" textus="X123"/>
+  </casus>
+
+  <!-- involutio retro 45 / 1045 (Ghostty cursorLeft: CUB et BS) -->
+  <casus titulus="cursorLeft reverse wrap with pending wrap state" fons="Terminal.zig:11000" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE\x1B[DX" textus="ABCDX"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap extended with pending wrap state" fons="Terminal.zig:11054" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?1045hABCDE\x1B[DX" textus="ABCDX"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap" fons="Terminal.zig:11076" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE1\x1B[2DX" textus="ABCDX\n1" pendens="verum"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap with no soft wrap" fons="Terminal.zig:11097" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE\r\n1\x1B[2DX" textus="ABCDE\nX"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap before left margin" fons="Terminal.zig:11120" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45h\x1B[3r\x1B[DX" textus="\n\nX"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap" fons="Terminal.zig:11139" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?1045hABCDE\r\n1\x1B[2DX" textus="ABCDX\n1"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap bottom wraparound" fons="Terminal.zig:11162" latitudo="5" altitudo="3">
+    <gradus initus="\x1B[?1045hABCDE\r\n1\x1B[7DX" textus="ABCDE\n1\n    X"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap is priority if both set" fons="Terminal.zig:11185" latitudo="5" altitudo="3">
+    <gradus initus="\x1B[?45h\x1B[?1045hABCDE\r\n1\x1B[7DX" textus="ABCDE\n1\n    X"/>
+  </casus>
+
+  <casus titulus="cursorLeft extended reverse wrap above top scroll region" fons="Terminal.zig:11209" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?1045h\x1B[3r\x1B[2;1H\x1B[1000D" cursor_x="0" cursor_y="0"/>
+  </casus>
+
+  <casus titulus="cursorLeft reverse wrap on first row" fons="Terminal.zig:11226" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45h\x1B[3r\x1B[1;2H\x1B[1000D" cursor_x="0" cursor_y="0"/>
+  </casus>
+
+  <!-- BS = cursorLeft(1) (Ghostty backspace) -->
+  <casus titulus="backspace reverse wraps like cub" fons="domus" latitudo="5" altitudo="5">
+    <gradus initus="\x1B[?45hABCDE1\x08\x08X" textus="ABCDX\n1"/>
+  </casus>
+
+  <!-- DECRQM (Ghostty getReport): 1 positus, 2 remotus, 0 ignotus -
+       modi quos non honoramus (8 DECARM, KAM 2) = 0; ?5 honoratur
+       post D7c -->
+  <casus titulus="decrqm reports set, reset and unknown" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?7$p" responsum="\x1B[?7;1$y"/>
+    <gradus initus="\x1B[?1$p\x1B[?1h\x1B[?1$p" responsum="\x1B[?1;2$y\x1B[?1;1$y"/>
+    <gradus initus="\x1B[4$p\x1B[4h\x1B[4$p" responsum="\x1B[4;2$y\x1B[4;1$y"/>
+    <gradus initus="\x1B[?8$p\x1B[2$p\x1B[?9999$p" responsum="\x1B[?8;0$y\x1B[2;0$y\x1B[?9999;0$y"/>
+    <gradus initus="\x1B[?4$p\x1B[1$p" responsum="\x1B[?4;0$y\x1B[1;0$y"/>
+    <gradus initus="\x1B[?1;7$p" responsum="\0" ignota="1"/>
+  </casus>
+
+  <!-- bita cruda: 1003 positus 1000 non removet (Ghostty modes.set);
+       eventus muris summarium separatum (aemulator_modi) -->
+  <casus titulus="decrqm mouse bits stay raw" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?1000h\x1B[?1003h\x1B[?1000$p\x1B[?1003$p" responsum="\x1B[?1000;1$y\x1B[?1003;1$y"/>
+  </casus>
+
+  <!-- DECKPAM / DECKPNM = modus 66 (Ghostty keypad_keys) -->
+  <casus titulus="keypad application mode via esc equals" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B=\x1B[?66$p" responsum="\x1B[?66;1$y" ignota="0"/>
+    <gradus initus="\x1B>\x1B[?66$p" responsum="\x1B[?66;2$y" ignota="0"/>
+  </casus>
+
+  <!-- DECSTR (VT510, xterm, esctest decstr): IRM, DECOM, DECCKM,
+       tabula, 45 removentur; mus manet -->
+  <casus titulus="decstr resets input and editing modes" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[4h\x1B[?6h\x1B[?1h\x1B=\x1B[?45h\x1B[?1000h\x1B[!p"/>
+    <gradus initus="\x1B[4$p\x1B[?6$p\x1B[?1$p\x1B[?66$p\x1B[?45$p\x1B[?1000$p" responsum="\x1B[4;2$y\x1B[?6;2$y\x1B[?1;2$y\x1B[?66;2$y\x1B[?45;2$y\x1B[?1000;1$y"/>
+  </casus>
+
+  <!-- DECRC DECOM restituit (Ghostty restoreCursor) -->
+  <casus titulus="decrc restores origin mode" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?6h\x1B7\x1B[?6l\x1B8\x1B[?6$p" responsum="\x1B[?6;1$y"/>
+  </casus>
+
+  <!-- modus non honoratus: ignotus manet -->
+  <casus titulus="unhonoured private mode stays unknown" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?8h" ignota="1"/>
+  </casus>
+
+  <!-- ==================== D3: copiae characterum ==================== -->
+
+  <!-- Ghostty print charset: configureCharset(.G0, .utf8) seriem non
+       habet (utf8 = ordinarius), ergo backtick secundus sub ordinario -->
+  <casus titulus="print charset" fons="Terminal.zig:6896" latitudo="20" altitudo="2">
+    <gradus initus="\x1B)0\x1B*0\x1B+0``\x1B(B`\x1B(0`" textus="```\xE2\x97\x86"/>
+  </casus>
+
+  <!-- latitudo ex runa NON versa (lata), cellula spatium -->
+  <casus titulus="print charset outside of ASCII" fons="Terminal.zig:6925" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0`\xF0\x9F\x98\x80" textus="\xE2\x97\x86 " cursor_x="3">
+      <cellula x="1" y="0" textus=" " latitudo="lata"/>
+    </gradus>
+  </casus>
+
+  <!-- invokeCharset(.GL, .G1, false) = SO; .G0 = SI -->
+  <casus titulus="print invoke charset" fons="Terminal.zig:6950" latitudo="20" altitudo="2">
+    <gradus initus="\x1B)0`\x0E``\x0F`" textus="`\xE2\x97\x86\xE2\x97\x86`"/>
+  </casus>
+
+  <!-- invokeCharset(.GL, .G1, true): G1 nullam seriem singularem habet
+       - hic G2 per SS2 (ESC N) -->
+  <casus titulus="print invoke charset single" fons="Terminal.zig:6974" latitudo="20" altitudo="2">
+    <gradus initus="\x1B*0`\x1BN``" textus="`\xE2\x97\x86`"/>
+  </casus>
+
+  <!-- REP runam NON versam cum copia currenti iterat -->
+  <casus titulus="printSlice charset single shift and repeat" fons="Terminal.zig:14421" latitudo="10" altitudo="2">
+    <gradus initus="\x1B(0\x1B*A\x1BN#q\x1B[2b\x1B(B\x1B[2b" textus="\xC2\xA3\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80qq"/>
+  </casus>
+
+  <!-- tabula tota DEC Special Graphics 0x60..0x7E; '_' manet -->
+  <casus titulus="dec special graphics full table" fons="domus" latitudo="40" altitudo="2">
+    <gradus initus="\x1B(0_`abcdefghijklmnopqrstuvwxyz{|}~" textus="_\xE2\x97\x86\xE2\x96\x92\xE2\x90\x89\xE2\x90\x8C\xE2\x90\x8D\xE2\x90\x8A\xC2\xB0\xC2\xB1\xE2\x90\xA4\xE2\x90\x8B\xE2\x94\x98\xE2\x94\x90\xE2\x94\x8C\xE2\x94\x94\xE2\x94\xBC\xE2\x8E\xBA\xE2\x8E\xBB\xE2\x94\x80\xE2\x8E\xBC\xE2\x8E\xBD\xE2\x94\x9C\xE2\x94\xA4\xE2\x94\xB4\xE2\x94\xAC\xE2\x94\x82\xE2\x89\xA4\xE2\x89\xA5\xCF\x80\xE2\x89\xA0\xC2\xA3\xC2\xB7"/>
+  </casus>
+
+  <!-- SS3 (ESC O) et LS2/LS3 (ESC n / ESC o); GR (LS1R/LS2R/LS3R)
+       servatur, nihil pingit -->
+  <casus titulus="single shift three and locking shifts" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B+0\x1BOqq" textus="\xE2\x94\x80q"/>
+    <gradus initus="\x1B+B\x1B*0\x1Bnqq\x1Bo\x1B+0q\x0Fq" textus="\xE2\x94\x80q\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80q"/>
+    <gradus initus="\x1B~\x1B}\x1B|" ignota="0"/>
+  </casus>
+
+  <!-- DECSC/DECRC copias et GL servant (Ghostty saveCursor .charset) -->
+  <casus titulus="decsc saves charsets" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0\x1B7\x1B(B\x1B8q" textus="\xE2\x94\x80"/>
+    <gradus initus="\x1B(B\x1B)0\x0E\x1B7\x0F\x1B8q" textus="\xE2\x94\x80\xE2\x94\x80"/>
+  </casus>
+
+  <!-- RIS et DECSTR (VT510/xterm: G0-G3 ASCII, GL = G0) -->
+  <casus titulus="ris and decstr reset charsets" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0\x1Bcq" textus="q"/>
+    <gradus initus="\x1B)0\x0E\x1B[!pq" textus="qq"/>
+  </casus>
+
+  <!-- schirmum alterum copias secum fert (Ghostty switchScreen) -->
+  <casus titulus="alternate screen carries charsets" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(0\x1B[?1049hq" textus="\xE2\x94\x80" altera="verum"/>
+  </casus>
+
+  <!-- SS2 ante runam UTF-8 (octetus altus post ESC N): Ghostty runam
+       sub G2 imprimit - extra octetum = spatium (latum) -->
+  <casus titulus="single shift before a utf-8 rune" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B*0\x1BN\xF0\x9F\x98\x80q" textus=" q" cursor_x="3">
+      <cellula x="0" y="0" textus=" " latitudo="lata"/>
+    </gradus>
+  </casus>
+
+  <!-- finale ignotum (ESC ( K, Germanica): ignotum, nihil mutat -->
+  <casus titulus="unknown charset designation" fons="domus" latitudo="20" altitudo="2">
+    <gradus initus="\x1B(Kq" textus="q" ignota="1"/>
+  </casus>
+
+  <!-- ==================== D4: protocollum clavium kitty ==================== -->
+
+  <casus titulus="kitty_keyboard_query" fons="stream_terminal.zig:4927" latitudo="80" altitudo="24">
+    <gradus initus="\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[>1u\x1B[?u" responsum="\x1B[?1u"/>
+  </casus>
+
+  <casus titulus="FlagStack: push pop" fons="kitty/key.zig:126" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>1u\x1B[?u" responsum="\x1B[?1u"/>
+    <gradus initus="\x1B[<1u\x1B[?u" responsum="\x1B[?0u"/>
+  </casus>
+
+  <casus titulus="FlagStack: pop big number" fons="kitty/key.zig:139" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>3u\x1B[<100u\x1B[?u" responsum="\x1B[?0u"/>
+  </casus>
+
+  <casus titulus="FlagStack: set" fons="kitty/key.zig:146" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[=1u\x1B[?u" responsum="\x1B[?1u"/>
+    <gradus initus="\x1B[=2;2u\x1B[?u" responsum="\x1B[?3u"/>
+    <gradus initus="\x1B[=2;3u\x1B[?u" responsum="\x1B[?1u"/>
+  </casus>
+
+  <!-- CSI > u sine parametro vexilla 0 impellit (Ghostty) -->
+  <casus titulus="kitty push without flags pushes zero" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[=7u\x1B[>u\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[<u\x1B[?u" responsum="\x1B[?7u"/>
+  </casus>
+
+  <!-- anulus VIII: impulsus nonus vetustissimos evincit; CSI < sine
+       parametro = I -->
+  <casus titulus="kitty stack is a ring of eight" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>1u\x1B[>2u\x1B[>3u\x1B[>4u\x1B[>5u\x1B[>6u\x1B[>7u\x1B[>8u\x1B[>9u"/>
+    <gradus initus="\x1B[<u\x1B[?u" responsum="\x1B[?8u"/>
+    <gradus initus="\x1B[<6u\x1B[?u" responsum="\x1B[?2u"/>
+    <gradus initus="\x1B[<u\x1B[?u" responsum="\x1B[?0u"/>
+  </casus>
+
+  <!-- acervus proprius per schirmum; alterum suum servat (Ghostty:
+       schirmum alterum semel creatum manet) -->
+  <casus titulus="kitty stack per screen" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>5u\x1B[?1049h\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[>3u\x1B[?1049l\x1B[?u" responsum="\x1B[?5u"/>
+    <gradus initus="\x1B[?1049h\x1B[?u" responsum="\x1B[?3u"/>
+  </casus>
+
+  <!-- RIS acervos ambos purgat (Ghostty fullReset, issue 1607); DECSTR
+       et DECSC non tangunt -->
+  <casus titulus="ris clears both kitty stacks, decstr keeps them" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[=5u\x1B[?1049h\x1B[=3u\x1Bc\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[?1049h\x1B[?u" responsum="\x1B[?0u"/>
+    <gradus initus="\x1B[>1u\x1B[!p\x1B7\x1B[>2u\x1B8\x1B[?u" responsum="\x1B[?2u"/>
+  </casus>
+
+  <!-- vexilla > XXXI aut modus extra I-III: series tota ignota;
+       CSI u nudum manet SCORC -->
+  <casus titulus="kitty invalid flags are ignored" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[>32u\x1B[?u" responsum="\x1B[?0u" ignota="1"/>
+    <gradus initus="\x1B[=1;4u\x1B[?u" responsum="\x1B[?0u" ignota="2"/>
+    <gradus initus="\x1B[2;3H\x1B[s\x1B[1;1H\x1B[u" cursor_x="2" cursor_y="1" ignota="2"/>
+  </casus>
+
+  <!-- ==================== D5: colores (OSC 4/10/11/12) ==================== -->
+  <!-- Ordinarii configurationis: litterae ffffff, fundus 000000, cursor
+       litteras sequitur, tabula xterm. Ghostty colorem non positum non
+       nuntiat; noster semper valorem habet (hospes eum dat). -->
+
+  <casus titulus="OSC color query responses" fons="stream_terminal.zig:3008" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;2;rgb:12/34/56;2;?\x1B\\" responsum="\x1B]4;2;rgb:1212/3434/5656\x1B\\"/>
+    <gradus initus="\x1B]10;rgb:01/02/03\x1B\\\x1B]11;rgb:04/05/06\x1B\\\x1B]12;rgb:07/08/09\x1B\\\x1B]10;?;?;?\x1B\\" responsum="\x1B]10;rgb:0101/0202/0303\x1B\\\x1B]11;rgb:0404/0505/0606\x1B\\\x1B]12;rgb:0707/0808/0909\x1B\\"/>
+    <gradus initus="\x1B]112\x1B\\\x1B]12;?\x07" responsum="\x1B]12;rgb:0101/0202/0303\x07"/>
+  </casus>
+
+  <casus titulus="OSC 4 set and reset palette" fons="stream_terminal.zig:2891" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;0;rgb:ff/00/00\x1B\\\x1B]4;0;?\x1B\\" responsum="\x1B]4;0;rgb:ffff/0000/0000\x1B\\"/>
+    <gradus initus="\x1B]104;0\x1B\\\x1B]4;0;?\x1B\\" responsum="\x1B]4;0;rgb:0000/0000/0000\x1B\\"/>
+  </casus>
+
+  <casus titulus="OSC 104 reset all palette colors" fons="stream_terminal.zig:2914" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;0;rgb:ff/00/00\x1B\\\x1B]4;1;rgb:00/ff/00\x1B\\\x1B]4;2;rgb:00/00/ff\x1B\\\x1B]104\x1B\\\x1B]4;0;?;1;?;2;?\x1B\\" responsum="\x1B]4;0;rgb:0000/0000/0000\x1B\\\x1B]4;1;rgb:cdcd/0000/0000\x1B\\\x1B]4;2;rgb:0000/cdcd/0000\x1B\\"/>
+  </casus>
+
+  <casus titulus="OSC 10 set and reset foreground color" fons="stream_terminal.zig:2939" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]10;rgb:ff/00/00\x1B\\\x1B]10;?\x1B\\" responsum="\x1B]10;rgb:ffff/0000/0000\x1B\\"/>
+    <gradus initus="\x1B]110\x1B\\\x1B]10;?\x1B\\" responsum="\x1B]10;rgb:ffff/ffff/ffff\x1B\\"/>
+  </casus>
+
+  <casus titulus="OSC 11 set and reset background color" fons="stream_terminal.zig:2961" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]11;rgb:00/ff/00\x1B\\\x1B]11;?\x1B\\" responsum="\x1B]11;rgb:0000/ffff/0000\x1B\\"/>
+    <gradus initus="\x1B]111\x1B\\\x1B]11;?\x1B\\" responsum="\x1B]11;rgb:0000/0000/0000\x1B\\"/>
+  </casus>
+
+  <!-- tabula xterm ordinaria: 16 colores, cubus, gradus grisei -->
+  <casus titulus="default xterm palette" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;1;?;12;?;16;?;196;?;232;?;255;?\x07" responsum="\x1B]4;1;rgb:cdcd/0000/0000\x07\x1B]4;12;rgb:5c5c/5c5c/ffff\x07\x1B]4;16;rgb:0000/0000/0000\x07\x1B]4;196;rgb:ffff/0000/0000\x07\x1B]4;232;rgb:0808/0808/0808\x07\x1B]4;255;rgb:eeee/eeee/eeee\x07"/>
+    <gradus initus="\x1B]4;;1;;?\x07" responsum="\x1B]4;1;rgb:cdcd/0000/0000\x07"/>
+  </casus>
+
+  <!-- formae specificationis: # cum 3/6/9/12 = bita summa (X11
+       XParseColor, esctest; Ghostty scalat - divergentia nominata),
+       nuda 3/6 (Ghostty, scalata), rgb: cum 1-4 digitis (scalati) -->
+  <casus titulus="colour spec forms" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;3;#abc;3;?\x07" responsum="\x1B]4;3;rgb:a0a0/b0b0/c0c0\x07"/>
+    <gradus initus="\x1B]4;3;#f00f00f00;3;?\x07" responsum="\x1B]4;3;rgb:f0f0/f0f0/f0f0\x07"/>
+    <gradus initus="\x1B]4;3;#a1b2c3;3;?\x07" responsum="\x1B]4;3;rgb:a1a1/b2b2/c3c3\x07"/>
+    <gradus initus="\x1B]4;3;#aaabbbccc;3;?\x07" responsum="\x1B]4;3;rgb:aaaa/bbbb/cccc\x07"/>
+    <gradus initus="\x1B]4;3;#1234abcdffff;3;?\x07" responsum="\x1B]4;3;rgb:1212/abab/ffff\x07"/>
+    <gradus initus="\x1B]4;3;rgb:f/80/abc;3;?\x07" responsum="\x1B]4;3;rgb:ffff/8080/abab\x07"/>
+    <gradus initus="\x1B]4;3;123456;3;?\x07" responsum="\x1B]4;3;rgb:1212/3434/5656\x07"/>
+    <gradus initus="\x1B]4;3;def;3;?\x07" responsum="\x1B]4;3;rgb:dddd/eeee/ffff\x07"/>
+  </casus>
+
+  <!-- specificatio mala: reliqua seriei omittuntur (Ghostty) -->
+  <casus titulus="bad colour spec stops the request list" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;5;#12345;6;#ffffff\x07\x1B]4;5;?;6;?\x07" responsum="\x1B]4;5;rgb:cdcd/0000/cdcd\x07\x1B]4;6;rgb:0000/cdcd/cdcd\x07"/>
+    <gradus initus="\x1B]4;7;rgb:1/2\x07\x1B]4;7;?\x07" responsum="\x1B]4;7;rgb:e5e5/e5e5/e5e5\x07"/>
+  </casus>
+
+  <!-- OSC 10 parametra sequentia: 10, 11, 12; cursor sine proprio
+       litteras currentes sequitur -->
+  <casus titulus="dynamic colours advance and cursor follows foreground" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]12;?\x07" responsum="\x1B]12;rgb:ffff/ffff/ffff\x07"/>
+    <gradus initus="\x1B]10;#111111;#222222\x07\x1B]11;?\x07\x1B]12;?\x07" responsum="\x1B]11;rgb:2222/2222/2222\x07\x1B]12;rgb:1111/1111/1111\x07"/>
+  </casus>
+
+  <!-- 104 cum indice speciali (256) transit; 110 cum parametro nihil;
+       RIS colores servat (Ghostty fullReset) -->
+  <casus titulus="colour resets: special index, extra parameter, ris" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B]4;1;#010101\x07\x1B]104;256;1\x07\x1B]4;1;?\x07" responsum="\x1B]4;1;rgb:cdcd/0000/0000\x07"/>
+    <gradus initus="\x1B]10;#123456\x07\x1B]110;x\x07\x1B]10;?\x07" responsum="\x1B]10;rgb:1212/3434/5656\x07"/>
+    <gradus initus="\x1Bc\x1B]10;?\x07" responsum="\x1B]10;rgb:1212/3434/5656\x07"/>
+  </casus>
+
+  <!-- ?1007 rotula alterna (D6b; Ghostty mouse_alternate_scroll,
+       ordinarie positum); RIS ad ordinarium -->
+  <casus titulus="alternate scroll mode defaults on" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[?1007$p" responsum="\x1B[?1007;1$y"/>
+    <gradus initus="\x1B[?1007l\x1B[?1007$p" responsum="\x1B[?1007;2$y"/>
+    <gradus initus="\x1Bc\x1B[?1007$p" responsum="\x1B[?1007;1$y"/>
+  </casus>
+
+  <!-- DECSCNM ?5 (D7c; Ghostty reverse_colors): bitum solum - hospes
+       colores nativos permutat, cellulae intactae; RIS remittit, DECSTR
+       servat (VT510: modus schirmi non in tabula DECSTR) -->
+  <casus titulus="reverse screen is a reported mode" fons="domus" latitudo="10" altitudo="2">
+    <gradus initus="\x1B[?5$p" responsum="\x1B[?5;2$y"/>
+    <gradus initus="\x1B[?5hab\x1B[?5$p" textus="ab" responsum="\x1B[?5;1$y"/>
+    <gradus initus="\x1B[!p\x1B[?5$p" responsum="\x1B[?5;1$y"/>
+    <gradus initus="\x1Bc\x1B[?5$p" responsum="\x1B[?5;2$y"/>
+  </casus>
+
+  <!-- ==================== D7a: responsiones parvae ==================== -->
+
+  <!-- DECXCPR (CSI ? 6 n): positio sine pagina - identitas nostra VT220
+       (DA2 >1), esctest gradum II ex ea deducit -->
+  <casus titulus="decxcpr reports position without page" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[6;5H\x1B[?6n" responsum="\x1B[?6;5R"/>
+  </casus>
+
+  <!-- DECDSR status apparatus: responsa fixa (nullum typographum, UDK
+       aperta, claviatura Americana, nullus locator); VT420 ignota -->
+  <casus titulus="decdsr fixed status replies" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[?15n" responsum="\x1B[?13n"/>
+    <gradus initus="\x1B[?25n" responsum="\x1B[?20n"/>
+    <gradus initus="\x1B[?26n" responsum="\x1B[?27;1n"/>
+    <gradus initus="\x1B[?53n\x1B[?55n" responsum="\x1B[?50n\x1B[?50n"/>
+    <gradus initus="\x1B[?56n" responsum="\x1B[?57;0n"/>
+    <gradus initus="\x1B[?62n" responsum="\0" ignota="1"/>
+  </casus>
+
+  <!-- DECID (ESC Z) = DA1 -->
+  <casus titulus="decid answers like da1" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1BZ" responsum="\x1B[?62;22c" ignota="0"/>
+  </casus>
+
+  <!-- DECRQSS (Ghostty dcs.zig DECRQSS): SGR, DECSTBM, DECSCUSR; alia
+       0$r. DECSCUSR servatur (ordinarius = II, quadrum fixum) -->
+  <casus titulus="decrqss sgr, margins and cursor style" fons="domus" latitudo="10" altitudo="10">
+    <gradus initus="\x1B[1m\x1BP$qm\x1B\\" responsum="\x1BP1$r0;1m\x1B\\"/>
+    <gradus initus="\x1B[0;2;7;38;5;100;48;2;10;20;30m\x1BP$qm\x1B\\" responsum="\x1BP1$r0;2;7;38;5;100;48;2;10;20;30m\x1B\\"/>
+    <gradus initus="\x1B[0;4;9;34;101m\x1BP$qm\x1B\\" responsum="\x1BP1$r0;4;9;34;101m\x1B\\"/>
+    <gradus initus="\x1B[5;6r\x1BP$qr\x1B\\" responsum="\x1BP1$r5;6r\x1B\\"/>
+    <gradus initus="\x1BP$q q\x1B\\" responsum="\x1BP1$r2 q\x1B\\"/>
+    <gradus initus="\x1B[4 q\x1BP$q q\x1B\\" responsum="\x1BP1$r4 q\x1B\\" ignota="0"/>
+    <gradus initus="\x1BP$qx\x1B\\" responsum="\x1BP0$r\x1B\\"/>
+  </casus>
+
+  <!-- acervus titulorum (xterm CSI 22/23 ; 0|2 t; Ghostty nihil agit):
+       vim titulum servat et restituit; 22;1 (icon solum) ignoratur -->
+  <casus titulus="title stack push and pop" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B]2;eins\x07\x1B[22;0t\x1B]2;zwei\x07" titulus="zwei" tituli="2"/>
+    <gradus initus="\x1B[23;0t" titulus="eins" tituli="3"/>
+    <gradus initus="\x1B[23;0t" tituli="3"/>
+    <gradus initus="\x1B]2;tres\x07\x1B[22;1t\x1B]2;quattuor\x07\x1B[23;2t" titulus="quattuor" tituli="5" ignota="0"/>
+  </casus>
+
+  <!-- DECCOLM minimus (D7c, Franus): sine ?40 ignoratur (Ghostty);
+       cum ?40 schirmum delet, cursorem ad initium, regionem restituit -
+       latitudo NON mutatur (hospes fenestram regit; divergentia
+       nominata). vttest in hoc effectu nititur etiam LXXX columnis. -->
+  <casus titulus="deccolm without permission is ignored" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="X\x1B[?3h" textus="X" cursor_x="1"/>
+    <gradus initus="\x1B[?3$p\x1B[?40$p" responsum="\x1B[?3;2$y\x1B[?40;2$y"/>
+  </casus>
+
+  <casus titulus="deccolm clears, homes and resets margins" fons="domus" latitudo="10" altitudo="5">
+    <gradus initus="\x1B[?40hab\x1B[3;4r\x1B[2;2H\x1B[?3l" textus="\0" cursor_x="0" cursor_y="0"/>
+    <gradus initus="\x1BP$qr\x1B\\\x1B[?3$p" responsum="\x1BP1$r1;5r\x1B\\\x1B[?3;2$y"/>
+    <gradus initus="cd\x1B[?3h\x1B[1;200H" textus="\0" cursor_x="9" cursor_y="0"/>
+    <gradus initus="\x1B[?3$p" responsum="\x1B[?3;1$y"/>
   </casus>
 
 </vectores>

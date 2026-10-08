@@ -7,11 +7,15 @@
 #   ./tools/aemulator_esctest.sh [-include REGEX]  # currit; tabula in
 #                                                  # build/aemulator_esctest/eventus.tsv
 #   ./tools/aemulator_esctest.sh -probare           # tabula == fixa pinnata
+#   ./tools/aemulator_esctest.sh -pinnare           # fixa cum causis scribere
 #   ESCTEST_DIR=<via> ...                           # clonus alius
 #
 # Optiones esctest: --expected-terminal=xterm --xterm-checksum=334
 # (cellula vacua = spatium, ut nucleus noster) --max-vt-level=4 (DECRQCRA
-# poscit IV; lectio_schirmi in ductore aperta, decisio XVIII).
+# poscit IV; lectio_schirmi in ductore aperta, decisio XVIII)
+# --xterm-reverse-wrap=383 (D2: XLV et MXLV ut xterm recens et Ghostty -
+# XLV solum in lineas involutas, MXLV trans summam; ordinarium 0 XLV
+# vetus exspectat).
 # Exitus: 0 congruit/scriptum; 1 discrepantia; 2 NIHIL CUCURRIT
 # (clonus deest aut commissum alienum - nominatur).
 set -u
@@ -24,12 +28,14 @@ FIXA="probationes/fixa/aemulator/esctest.tsv"
 si_fracta() { echo "aemulator_esctest: $1" >&2; exit "${2:-1}"; }
 
 PROBARE=0
+PINNARE=0
 INCLUDE=()
 while [ $# -gt 0 ]; do
     case "$1" in
         -probare) PROBARE=1 ;;
+        -pinnare) PINNARE=1 ;;
         -include) shift; INCLUDE=("--include=$1") ;;
-        *) si_fracta "usus: aemulator_esctest.sh [-include REGEX] [-probare]" 2 ;;
+        *) si_fracta "usus: aemulator_esctest.sh [-include REGEX] [-probare | -pinnare]" 2 ;;
     esac
     shift
 done
@@ -64,6 +70,7 @@ clang "$BUILD/ductor.o" "${obiecta[@]}" -o "$BUILD/aemulator_esctest" \
 rm -f "$BUILD/esctest.log"
 "$BUILD/aemulator_esctest" python3 "$ESCTEST_DIR/esctest/esctest.py" \
     --expected-terminal=xterm --xterm-checksum=334 --max-vt-level=4 \
+    --xterm-reverse-wrap=383 \
     --timeout=0.5 --no-print-logs --logfile="$RADIX_DIR/$BUILD/esctest.log" \
     "${INCLUDE[@]+"${INCLUDE[@]}"}" > "$BUILD/ductor.out" 2>&1
 codex=$?
@@ -83,6 +90,11 @@ for s in transiit fractum omissum notum; do
 done
 echo "($(tail -1 "$BUILD/ductor.out"))"
 
+if [ "$PINNARE" -eq 1 ]; then
+    # causae per verdictum (D7a): POSTEA / CONSULTO / LACUNA
+    python3 tools/aemulator_esctest_causae.py \
+        || si_fracta "pinnatio fracta (fractum sine causa?)" 1
+fi
 if [ "$PROBARE" -eq 1 ]; then
     [ -f "$FIXA" ] || si_fracta "fixa deest: $FIXA" 2
     if ! grep -v '^#' "$FIXA" | cut -f1,2 | diff -u - "$BUILD/eventus.tsv"; then

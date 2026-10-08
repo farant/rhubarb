@@ -48,3 +48,286 @@ exact sample. A dump after exit is empty - the twin draws on the
 alternate screen and restores the primary when it leaves. 4 unknown
 sequences = the twin's mouse/paste mode requests (phase D).
 
+## 2026-10-07 — D6b: modes, mouse, focus, title, colours
+
+**Window focus events go to the root.** destinatio routes keys, text and
+wheel to the focus ("focal") and mouse buttons by position; anything
+else (EVENTUS_FOCUS / DEFOCUS from a window) goes to the tree root. Our
+root had no action, so DEFOCUS vanished; the root now carries
+"terminale.clavis" too (unhandled genera return FALSUM, harmless).
+
+**Wheel decision order** (Ghostty): program tracks the mouse -> wheel
+report (our own residue makes whole lines first; the encoder divides by
+the cell height again, so the synthetic event carries lines x cell
+height); alternate screen + ?1007 -> arrow keys through the encoder
+(DECCKM honoured); else the history view.
+
+**Focus report on enable** happens after each pulse: the snapshot's
+`focus` turning on sends CSI I or CSI O from the tracked state
+(initially focused, as Ghostty's flags). Plant G11 (report every pulse)
+is caught by the second frame.
+
+**Title:** the core's titulus effect needs the context BEFORE the host
+exists (effect datum) - creation order changed. The window main copies
+the title into a stack buffer: a pool copy per change would grow for
+the whole session (zsh retitles on every prompt).
+
+**Colours:** an unchanged dynamic colour (live value == theme colour
+given at creation) stays a THEMA token so a theme switch still applies;
+once a program sets it, RGB. A changed background paints one rectangle
+over the whole surface first.
+
+
+## 2026-10-07 — Cmd keys never reach the program (D6c follow-up)
+
+Fran pasted with Cmd+V into Claude Code and got `v` + text. Our window
+loop queues EVERY key event and then hands it to AppKit, which runs the
+menu's Paste (now a GLUTINATA event); Claude Code enables kitty keys, so
+the queued Cmd+v went out as super+v and was typed as `v`. Ghostty never
+forwards a key its keybinding consumed. Suppressing menu-handled keys in
+fenestra_macos would break lib/schirmata.c (it imports images on the
+Cmd+V KEY event), so terminale drops super key events itself - the
+macOS terminal convention (Terminal.app, iTerm), and what the legacy
+encoder already did; only the kitty path leaked. Divergence from
+Ghostty: it can send unbound super keys under kitty; we never do.
+
+Also seen in that session: box-drawing characters render as tofu - the
+6x8 font has no glyphs for them (fonts come after the emulator).
+
+The first D6c commit failed the aedilis gate with "scripsit extra
+vestigium: bin/terminale": launching ./apps/terminale/terminale.sh
+during a gate rewrites bin/terminale. Not code - rerun passed.
+
+## 2026-10-07 — minimum contrast and faint text
+
+Fran's screenshot (Claude Code in terminale): status lines in #999999
+and similar grays nearly vanish on the warm theme background - programs
+choose colours for a DARK background. Ghostty's answer is
+`minimum-contrast` (WCAG ratio; below it the shader SNAPS text to black
+or white). Fran chose ratio 3.0 and a MINIMAL nudge instead: toward the
+extreme (black/white) that can contrast more, binary search for the
+smallest step reaching 3.0, then step up past rounding. Hues survive (a
+light blue path stays blue, cyan stays teal); dim stays dimmer than
+normal text.
+
+Faint (SGR 2) was documented in terminale.h but never drawn; now the
+text blends 50% toward its background (Ghostty faint-opacity), then the
+contrast floor applies. Background for the check = the cell's own
+background if it has one, else the page background (theme or OSC 11).
+An untouched default colour stays a THEMA token (live theme).
+
+Side effect on tests: section I's exact palette assertions (xterm red
+CD0000, bright red, gray 0x80) fall below 3.0 on the warm theme, so
+those cells now sit on a white background (all >= 3.9 there); section
+VII's OSC colours became light text on the dark OSC 11 background. Both
+still assert exact values - the floor simply has nothing to do there.
+
+Visual check: before/after renders of Claude-Code-like lines (headless
+PNG, ratio 1.0 vs 3.0) - gray 250, yellow, cyan and #999999 unreadable
+before, all readable after.
+
+Glossary: contrastus, legibilis, opacitas.
+
+
+## 2026-10-07 — D7c: decorations and reverse screen (vttest walk)
+
+vttest's rendition screen showed "underline" identical to "vanilla":
+terminale drew only colours, inverse, faint and conceal although the
+core stores every SGR attribute. Now (window only):
+- underline in all five forms at the bottom pixel row: double = rows
+  ch-1 and ch-3, curly = 2-px runs alternating rows ch-1/ch-2, dotted =
+  every other pixel, dashed = 3 on / 3 off. Patterns take their phase
+  from ABSOLUTE x (`lineam_formatam(..., periodus, plenum, phasis)`), so
+  a wave runs on across cells. First draft shifted the curly upper row
+  by passing x0+2, which moved the pixels instead of the phase - the
+  test caught it; phase is now its own argument.
+- underline colour = SGR 58 if set, else the text colour after the
+  contrast floor; strike (row ch/2) and overline (row 0) use the text
+  colour.
+- bold: the 6x8 font has one weight, so the glyph is drawn again one
+  pixel right (plus the existing bright palette for 0-7). Its spill
+  into the next cell's first column is painted over when that cell has
+  its own background - harmless at this size.
+- concealed cells (SGR 8) get no decorations either: an underline
+  would give away the hidden text's length.
+- `TerminaleApplicatio.ornamenta_pixelorum` (Fran approved; default
+  VERUM, the twin sets FALSUM): tessellatio turns a horizontal mandate
+  line into box-drawing cells, so in the twin an underline would erase
+  its letter. Twin decorations would need SGR on tessera cells - parked.
+- DECSCNM ?5: `littera_nativa` / `fundus_nativus` swap when
+  `aemulator_modi().schirmus_inversus` (Ghostty swaps only the
+  defaults; explicit colours and the cursor stay). The surface fill now
+  happens whenever the native background is not the theme background
+  (was: only after OSC 11), otherwise the window's own theme fill would
+  show through.
+Parked: italic (mandates cannot shear text), blink (needs a redraw
+timer). Tests IX/X; eight plants caught.
+Lint note: the local `ima` (bottom row) was a new word; a glossary
+entry `imus` turned the oratio oracle gate red (subject precision) -
+the glossary is oratio's FIRST lexical source and `imus` is also
+"we go" (eo). Renamed to `infima` (WORDS knows it) instead; a house
+gloss must never shadow a real Latin form.
+
+
+## 2026-10-07 — D7c: drawn glyphs (glyphae_ductae)
+
+Box drawing U+2500-257F, blocks U+2580-259F and braille U+2800-28FF no
+longer go to the font (tofu): when `ornamenta_pixelorum` is on and the
+cell's grapheme is ONE such rune, `larvam_pingere` asks glyphae_ductae
+for the opacity mask at cell size and emits one rectangle per run of
+equal opacity per row (full = text colour, shade = text blended into the
+cell's background). No synthetic bold on these (the extra pixel would
+smear lines); decorations still apply. Under the cursor the mask is drawn
+in the background colour, as text is. The twin keeps the rune as text
+(the host terminal has a real font).
+
+Contrast: Ghostty's `noMinContrast` exempts box drawing, block elements,
+legacy computing and powerline from minimum contrast (renderer/cell.zig)
+- the colour of a block IS the picture (logo blocks, colour bars).
+`litteram_legibilem` gained `graphica`: faint still applies, the
+contrast floor does not, for U+2500-259F; braille is NOT exempt
+(Ghostty neither). Found red-first: a red `█` came out nudged.
+
+Multi-rune graphemes fall back to text (guard in `runa_ducta`) - not
+reachable today: the core drops zero-width marks (graphemes = v2), so
+the test I wrote for it could not pass and was removed; the guard stays
+for v2. Specimen (Claude Code box, light/double/heavy grids, logo,
+shades, eighths, braille, diagonals, dashes, a tmux border) rendered
+headless through tools/aemulator_vttest.c and looked at. Six plants
+caught (no rune, shade unmixed, cursor as text, contrast on graphics,
+twin ignored, runs unmerged).
+
+
+## 2026-10-07 — install stage (aemulator-plan D8 follow-up)
+
+Fran approved: fabrica action `terminale` (tools/terminale_struere.sh,
+the mensor_ui pattern: aedilis -> provenance -> struere -> rm + cp into
+bin/terminale) and `institutio_terminale` (tools/instituere.sh ->
+~/.bin/terminale, the briar pattern). The app answers `-provenientia`
+(fabrica's `relatio`: the binary reports the digest it was built
+from), so `bin/fabrica iudicare` can tell a stale install.
+apps/terminale/terminale.sh now builds through the same script - once
+terminale.c names the provenance file a build that skips writing it
+fails. INSTALL ONLY FROM MAIN (after the merge): `./tools/instituere.sh
+bin/terminale` or `bin/fabrica sanare installata`. The twin stays
+dev-only. terminale is self-contained at run time (font and theme
+compiled in, only $SHELL read), so the ~/.bin copy runs anywhere.
+
+
+## 2026-10-07 — park 011 step 1: contrast cache (measured)
+
+Measured first (tools/aemulator_vttest.c gained `metire N`,
+`ornamenta 0|1` and `MAGNITUDO=CxL`): btop at Fran's window size
+(160x75 cells) costs ~17 ms per FULL frame at light load - the whole
+60 Hz budget; drawn glyphs on/off made no difference. `sample`: raster
+62% (pixel-at-a-time fills), contrast floor 22% (`pow()` per channel
+inside a 16-step bisection, every cell every frame), glyph masks 6%.
+
+Fix (the function is pure): `canalis_linearis` reads a 256-entry table
+filled once with the SAME formula (identical doubles), and
+`contrastum_curare` sits in front of `contrastum_computare` with a
+256-slot direct-mapped cache keyed by the full (text, background)
+pair. Proof of identity: a deterministic colour screen (4 backgrounds
+x 52 colours, plain + faint, truecolour, drawn glyphs; under the 512
+style cap) renders byte-identical PNGs before/after. A/B under load
+(driver built against old vs new terminale.c, 200 frames): ~20 ms ->
+~16 ms per frame, CPU time likewise.
+
+The cache test (section XII, 16 text x 16 background colours) first
+let two plants through: a key comparing only text, or only
+background. The first hash (XOR of bytes) made same-background
+collisions IMPOSSIBLE - only colours whose bytes XOR alike collide,
+e.g. (r,g,b)/(b,g,r) - so the test could never see them, and real
+palettes collided more than they should. Multiplicative mix (top
+byte); the test now asserts the nudge DIRECTION too (a correct nudge
+moves each channel toward 0 or toward 255 from the cell's own colour),
+and its comment records the computed collision counts (8 same
+background, 12 same text) so a hash change knows to rerun the plants.
+Four plants caught.
+
+Found on the way (not this step's work): the core keeps at most 512
+styles per screen (STILI_MAXIMI) - beyond that, new styles fall back to
+the default (Ghostty grows page style capacity); and interning a style
+is a linear scan over up to 512 entries per SGR. Filed as park 012.
+
+
+## 2026-10-07 — park 011 step 2: rasteriser fast paths (measured)
+
+After step 1, `sample` still put most of a frame in the rasteriser.
+Three changes, each proven byte-identical on the deterministic colour
+screen and A/B-timed on btop at 160x75:
+- `delineare_rectangulum_plenum` (lib/delineare.c): in MODUS_SOLIDUS
+  the visible pixels are the rectangle clipped to the buffer AND the
+  clip region - computed once, rows filled directly (was: a helper per
+  pixel re-checking buffer, bounds, clip and switching on the mode).
+- `tabula_pixelorum_pingere_characterem` (lib/fenestra_textus.c): a
+  glyph wholly inside the buffer writes its rows directly and skips
+  empty rows.
+- terminale: a cell holding just a space emits no text mandate (blank
+  glyph; btop fills every cell with space + background).
+btop full frame: ~13.0 ms -> ~4.8 ms at light load (~20 -> under
+8 ms at load 7) - with step 1, about 2.7x overall.
+
+A CRASH I introduced and the suite caught: the first glyph check was
+`x + 8 <= latitudo`. i32 is UNSIGNED here; a glyph at a negative x
+arrives as a huge number, the sum wraps small, the check passes and
+the write lands outside the buffer (probatio_delineare_mandata exit
+139). Now `x <= latitudo - 8` with latitudo >= 8 first. My first plant
+run happened on that crashing baseline - every "caught by delineare"
+was meaningless; rerun on a green baseline it showed the clip region
+was untested for solid rectangles (R1/R5 survived) -> new section in
+probatio_delineare_mandata (clip 6x6 inside 20x20, four edges). R2
+(dropping the buffer clamp) is equivalent: every clip setter keeps the
+clip inside the buffer. Plants R1 R3 R4 R5 R6 caught.
+
+Not done (park 011 rest): buffer clear (~5%), mandate list overhead
+(~10%), glyph masks rebuilt per frame (~7%) - a mask cache; dirty rows
+(module 007) if it is still felt.
+
+
+## 2026-10-08 — vicus-latera S1a: terminale on a branch
+
+First step to mounting terminale in vicus (plan
+`project-specs/vicus-latera-plan.md`). `TerminaleApplicatio.ramus`
+(Fran approved): the two surface reads (`superficies_latitudo/
+_altitudo`, in componere and in the pulse) go through an
+`InsulaRamus`; standalone sets the root branch of its own store in
+`terminale_applicatio_aedificare`, so behaviour is unchanged (every
+earlier section green). componere falls back to the given repo's root
+when no branch is set (the scriba R4 pattern). Test XIII points a
+terminal at `<terminale id="t1">` in ANOTHER store and checks both the
+emulator size (pulse) and the composed root's bounds (mouse routing)
+follow the branch. Plants: pulse reads the root, composition reads the
+root, branch never initialised (the last also breaks the standalone
+resize section - an unset branch cannot hide).
+
+## 2026-10-08 — vicus-latera S1b: terminale mountable
+
+`terminale_montare(app, piscina, intern, repo, id, lat, alt)` and a
+PUBLIC `terminale_componere` (ctx = the app; Fran approved). One
+shared builder (`applicationem_struere`): repo NIHIL = standalone (own
+store, root branch, own dispatcher - unchanged); a host repo = branch
+`<terminale id>`, no dispatcher (the host has one). The mount starts
+its own shell (`$SHELL -l`) with the environment list now in the
+library (`ambitus_terminalis`).
+
+CANONS were the non-obvious part: vicus's root canon declares NO
+children, and the root canon only skips branches that carry their own
+canon - so a mount without one is refused. terminale's canons are
+embedded strings (durable: id; ephemeral: id, focus, focus_acervus,
+superficies_*), not files: the approved signature takes no path root,
+and they are five lines. Canons BEFORE the initial element (the scriba
+pattern).
+
+Test XIV mounts on a store guarded by vicus's REAL canons, writes the
+surface as the host does (scriptor 'dispensator', mutare_ramum), checks
+the branch, no dispatcher, the resize, the public componere's bounds,
+and a real /bin/sh: `echo salve_montatio` and `echo
+ambitus_$TERM_PROGRAM` -> `ambitus_terminale`. Five plants (no durable
+canon, no surface in the ephemeral canon, dispatcher created, empty
+environment, wrong id) caught; the environment plant needed `+ III`
+(empty list) - removing the array is an unused-static compile error.
+
+Known duplication: apps/terminale/terminale.c and the twin keep their
+own copy of the environment list (they spawn their own child); removing
+it needs a one-line public accessor - asked Fran.

@@ -34,7 +34,33 @@ structura Fenestra {
 @interface FenestraDelegatus : NSObject <NSWindowDelegate>
 @property (assign) BOOL debet_claudere;
 @property (assign) Fenestra *fenestra;
+- (void)paste:(id)sender;
 @end
+
+/* prototypum (definitio infra): delegatus focum et glutinum impellit */
+interior vacuum
+impellere_eventum (
+    Fenestra* fenestra,
+    constans Eventus* eventus);
+
+/* Focus fenestrae ut eventus (aemulator D6c: terminale ?1004 relationes
+ * CSI I / CSI O). Fenestra clavis fit etiam in creatione: eventus
+ * FOCUS primus caudae fere semper. */
+interior vacuum
+_focum_impellere (
+           Fenestra* fenestra,
+    eventus_genus_t  genus)
+{
+    Eventus eventus;
+
+    si (!fenestra)
+    {
+        redde;
+    }
+    memset(&eventus, ZEPHYRUM, magnitudo(Eventus));
+    eventus.genus = genus;
+    impellere_eventum(fenestra, &eventus);
+}
 
 @implementation FenestraDelegatus
 - (BOOL)windowShouldClose:(NSWindow *)sender {
@@ -47,11 +73,37 @@ structura Fenestra {
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {
-    /* Tractare eventus focus */
+    _focum_impellere(self.fenestra, EVENTUS_FOCUS);
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
-    /* Tractare eventus defocus */
+    _focum_impellere(self.fenestra, EVENTUS_DEFOCUS);
+}
+
+/* Glutinare (Cmd-V; aemulator D6c). Res menu sine scopo actionem per
+ * catenam respondentium mittit - visus primus respondens non fit
+ * (claves per perscrutationem veniunt), ergo fenestra deinde delegatus
+ * eius: hic. Textus tabulae communis = EVENTUS_TEXTUS origo GLUTINATA
+ * (terminale: cancelli ?2004). Onus caudae LXIV KiB per lectionem:
+ * longius truncatur (truncatum VERUM). */
+- (void)paste:(id)sender {
+    NSString*           textus;
+    constans character* utf8;
+
+    si (!self.fenestra)
+    {
+        redde;
+    }
+    textus = [[NSPasteboard generalPasteboard]
+        stringForType:NSPasteboardTypeString];
+    utf8 = textus ? [textus UTF8String] : NULL;
+    si (!utf8 || utf8[ZEPHYRUM] == '\0')
+    {
+        redde;
+    }
+    (vacuum)eventus_caudae_textum_impellere(&self.fenestra->cauda,
+        fenestra_tempus_ms(), (constans i8*)utf8, (i32)strlen(utf8),
+        EVENTUS_ORIGO_GLUTINATA);
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification {
@@ -915,6 +967,19 @@ fenestra_perscrutari_eventus (
                 casus NSEventTypeOtherMouseDragged:
                     eventus.genus = EVENTUS_MUS_MOTUS;
                     _murem_implere(fenestra, eventus_ns, &eventus);
+                    /* tractus: botton tentus (spec D1, ut interpres et
+                     * manus_ludus). Olim 0 semper: tractus ut motus
+                     * nudus - tmux ?1002 nihil, Claude Code ?1003
+                     * 'super' tantum (aemulator D7, Franus) */
+                    eventus.datum.mus.botton =
+                        ([eventus_ns type] == NSEventTypeLeftMouseDragged)
+                            ? MUS_SINISTER
+                        : ([eventus_ns type]
+                            == NSEventTypeRightMouseDragged)
+                            ? MUS_DEXTER
+                        : ([eventus_ns type]
+                            == NSEventTypeOtherMouseDragged)
+                            ? MUS_MEDIUS : (mus_botton_t)ZEPHYRUM;
                     impellere_eventum(fenestra, &eventus);
                     frange;
 

@@ -16,8 +16,10 @@
  * reddit. Quod modus exprimere nequit (solutio in legacy, clavis
  * modificans sine OMNES) nihil scribit, sed consumitur.
  *
- * Nondum (cum emulatore, modulus 006): DECCKM (sagittae SS3),
- * tabula numerica applicationis, modifyOtherKeys gradus II, X10.
+ * D6 (aemulator-plan): DECCKM (sagittae SS3), eventa X10 (?9), formae
+ * muris X10/UTF-8/urxvt/SGR-pixela, LNM (CR -> CR LF, Ghostty Exec).
+ * Nondum: tabula numerica applicationis (Eventus claves tabulae
+ * numericae non distinguit), modifyOtherKeys gradus II.
  */
 
 #ifndef CODIFICATOR_TERMINALIS_H
@@ -30,19 +32,34 @@
 #include "chorda_aedificator.h"
 #include "eventus.h"
 
-/* Mus quem programma petivit (B6a-ii) */
+/* Mus quem programma petivit (B6a-ii; D6: X10) */
 #define CODIFICATOR_MUS_NULLUS   ZEPHYRUM
 #define CODIFICATOR_MUS_PRESSIO  I     /* ?1000 */
 #define CODIFICATOR_MUS_TRACTUS  II    /* ?1002 */
 #define CODIFICATOR_MUS_OMNIS    III   /* ?1003 */
+#define CODIFICATOR_MUS_X10      IV    /* ?9: pressio sola sine modis */
+
+/* Forma relationis muris (D6). 0 = SGR: forma huius codificatoris
+ * historica (vocantes memset-0 manent); X10 ordinaria terminalis -
+ * hospes eam ex aemulatore expresse ponit. */
+#define CODIFICATOR_FORMA_SGR         ZEPHYRUM  /* ?1006 (CSI <) */
+#define CODIFICATOR_FORMA_X10         I         /* CSI M + octeti 32+ */
+#define CODIFICATOR_FORMA_UTF8        II        /* ?1005 */
+#define CODIFICATOR_FORMA_URXVT       III       /* ?1015: CSI b;x;y M */
+#define CODIFICATOR_FORMA_SGR_PIXELA  IV        /* ?1016: pixela */
 
 nomen structura {
     i32 kitty_vexilla;      /* INTERPRES_KITTY_* (0 = legacy) */
-    i32 mus;                /* CODIFICATOR_MUS_*; forma SGR (?1006) */
+    i32 mus;                /* CODIFICATOR_MUS_* */
     b32 glutinum;           /* ?2004 */
     b32 focus;              /* ?1004 */
     s32 cellula_latitudo;   /* Modulus: pixela nostra per cellulam */
     s32 cellula_altitudo;
+    /* D6 (ex aemulator_modi): */
+    i32 mus_forma;               /* CODIFICATOR_FORMA_* */
+    b32 sagittae_applicationis;  /* DECCKM: sagittae, Domus, Finis sine
+                                  * modis -> SS3 (solum legacy) */
+    b32 lnm;                     /* LNM: omne CR emissum -> CR LF */
 } CodificatorModi;
 
 /* Eventa[0..numerus) a capite codificare: eventus primus (et TEXTUS

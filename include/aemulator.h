@@ -36,6 +36,9 @@
 /* versio quam XTVERSION nuntiat (decisio VIII) */
 #define AEMULATOR_VERSIO "0.1"
 
+/* color sine valore proprio (color_cursoris: litteras sequitur) */
+#define AEMULATOR_COLOR_NULLUS  0xFFFFFFFF
+
 nomen structura Aemulator Aemulator;
 
 /* EFFECTUS - omnis exitus nuclei praeter statum. Campus NIHIL =
@@ -70,11 +73,24 @@ nomen structura {
      * limitem, deinde vetustissima recyclatur - post id nihil
      * allocatur. 0 = nulla historia. Ordinarius X MB. */
                   i32 historia_octeti;
+    /* COLORES (D5, decisio XXVIII): 0xRRGGBB quos OSC 10/11/12 et 4
+     * respondent et quos programma mutare potest (OSC 4/10/11/12);
+     * restitutio (104/110/111/112) ad hos valores redit.
+     * tabula_colorum: CCLVI colores (in creatione copiantur) aut NIHIL
+     * = tabula xterm ordinaria (0-15 xterm, 16-231 cubus, 232-255
+     * gradus grisei).
+     * color_cursoris AEMULATOR_COLOR_NULLUS = colorem litterarum
+     * currentem sequitur (Ghostty: cursor sine colore proprio). */
+                  i32  color_litterae;
+                  i32  color_fundi;
+                  i32  color_cursoris;
+         constans i32* tabula_colorum;
 } AemulatorConfiguratio;
 
 /* Configuratio ordinaria: LXXX x XXIV, effectus nulli, titulus
  * "aemulator", versio AEMULATOR_VERSIO, lectio_schirmi FALSUM,
- * historia_octeti X MB.
+ * historia_octeti X MB, color_litterae 0xFFFFFF, color_fundi 0x000000,
+ * color_cursoris AEMULATOR_COLOR_NULLUS, tabula_colorum NIHIL.
  * Campi postea addendi hic
  * defaltas accipiunt - vocantes semper ab hac incipiant. */
 vacuum
@@ -154,13 +170,66 @@ b32
 aemulator_alterum (
     constans Aemulator* a);
 
-/* modus ANSI (privatus FALSUM) aut DEC privatus (VERUM); ignotus =
- * FALSUM */
+/* modus ANSI (privatus FALSUM) aut DEC privatus (VERUM), bitum crudum
+ * ut DECRQM nuntiat (D2): ANSI IV XX; DEC I III V VI VII IX XXV XL XLV
+ * XLVII LXVI M-MVII MXV MXVI MXLV MXLVII-MXLIX MMIV MMXXVI. Ignotus =
+ * FALSUM. */
 b32
 aemulator_modus (
     constans Aemulator* a,
                    i32  numerus,
                    b32  privatus);
+
+/* MUS - eventa muris quae programma petivit (DECSET 9 / 1000 / 1002 /
+ * 1003). Ut Ghostty: positum ultimum vincit; quodlibet eorum remotum
+ * = NULLUS (etiam si alius manet positus). */
+nomen enumeratio {
+    AEMULATOR_MUS_NULLUS = ZEPHYRUM,
+    AEMULATOR_MUS_X10,          /* ?9: pressio sola, sine modis */
+    AEMULATOR_MUS_PRESSIO,      /* ?1000: pressio + solutio */
+    AEMULATOR_MUS_TRACTUS,      /* ?1002: + motus cum bottone */
+    AEMULATOR_MUS_OMNIS         /* ?1003: + omnis motus */
+} AemulatorMus;
+
+/* forma relationis muris (?1005 / 1006 / 1015 / 1016); remota = X10 */
+nomen enumeratio {
+    AEMULATOR_MUS_FORMA_X10 = ZEPHYRUM,   /* octeti 32 + valor */
+    AEMULATOR_MUS_FORMA_UTF8,             /* ?1005 */
+    AEMULATOR_MUS_FORMA_SGR,              /* ?1006 */
+    AEMULATOR_MUS_FORMA_URXVT,            /* ?1015 */
+    AEMULATOR_MUS_FORMA_SGR_PIXELA        /* ?1016 */
+} AemulatorMusForma;
+
+/* MODI INITUS - quod hospes legit ut claves, murem, glutinum, focum
+ * codificet (D6: in CodificatorModi transferuntur) et schirmum pingat
+ * (D7c). Instantanea per
+ * valorem; post aemulator_scribere iterum legenda. Campi postea
+ * addendi (D4: kitty_vexilla) in fine. Relatio foci statim post ?1004
+ * positum (Ghostty) res hospitis est: modum mutatum videt. */
+nomen structura {
+                 b32 sagittae_applicationis; /* DECCKM ?1: SS3 A */
+                 b32 tabula_applicationis;   /* DECKPAM ESC = / ?66 */
+        AemulatorMus mus;
+   AemulatorMusForma mus_forma;
+                 b32 glutinum;               /* ?2004 bracketed paste */
+                 b32 focus;                  /* ?1004 */
+                 b32 lnm;                    /* LNM 20: Enter = CR LF */
+                 i32 kitty_vexilla;          /* D4: protocollum clavium
+                                              * kitty, schirmi activi
+                                              * (0-31; 0 = legacy) */
+                 b32 rotula_sagittis;        /* D6b: ?1007 (ordinarie
+                                              * VERUM): rotula in
+                                              * schirmo altero sine
+                                              * mure = sagittae */
+                 b32 schirmus_inversus;      /* D7c: DECSCNM ?5 - hospes
+                                              * colores nativos permutat
+                                              * (Ghostty
+                                              * reverse_colors) */
+} AemulatorModi;
+
+AemulatorModi
+aemulator_modi (
+    constans Aemulator* a);
 
 /* series ignotae consumptae ab creatione */
 i32
@@ -235,5 +304,23 @@ chorda
 aemulator_historiam_effundere (
     constans Aemulator* a,
                Piscina* piscina);
+
+
+/* ==================================================
+ * Colores (phasis D5)
+ * ================================================== */
+
+/* indices aemulator_color praeter tabulam 0-CCLV */
+#define AEMULATOR_COLOR_LITTERAE  CCLVI
+#define AEMULATOR_COLOR_FUNDI     CCLVII
+#define AEMULATOR_COLOR_CURSORIS  CCLVIII
+
+/* color vivus 0xRRGGBB post OSC 4/10/11/12 et 104/110/111/112 (quod
+ * hospes pingit; D6); cursor sine proprio = litterae currentes. Index
+ * extra 0-CCLVIII: 0. */
+i32
+aemulator_color (
+    constans Aemulator* a,
+                   i32  index);
 
 #endif /* AEMULATOR_H */

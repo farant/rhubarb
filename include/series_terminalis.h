@@ -78,7 +78,9 @@ nomen structura {
              i8 privatum;       /* '?' '>' '<' '=' aut 0 */
              i8 introductor;    /* octetus post ESC ('[' ']' 'P' 'N'
                                  * 'O' '_' '^' 'X') aut 0 */
-             i8 finale;         /* finale; EXSEQUI: octetus regiminis */
+             i8 finale;         /* finale; EXSEQUI: octetus regiminis;
+                                 * OSC: terminator - 0x07 (BEL) aut
+                                 * '\\' (ESC: ST aut series nova) */
             b32 praefixum;      /* ESC solum seriem praecessit */
          chorda textus;         /* IMPRIMERE, OSC, DCS, APC */
          chorda crudum;         /* octeti seriei (ESC ... finale) */

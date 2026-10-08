@@ -3472,6 +3472,35 @@ s32 principale (vacuum)
     }
 
     CREDO_VERUM (lectio_integra);
+
+
+    /* ==================================================
+     * ANULUS: signum (anuli ordinati)
+     * ================================================== */
+
+    {
+         Magnus z       = magnus_ex_s64(-V);
+         Magnus nullum  = magnus_ex_s64(ZEPHYRUM);
+        Fractio q       = fractio_ex_s64(ZEPHYRUM);
+            s32 s       = VII;
+
+        imprimere("\n--- Anulus: signum ---\n");
+        CREDO_NON_NIHIL (ANULUS_INTEGRORUM.signum);
+        CREDO_VERUM (ANULUS_INTEGRORUM.signum(&ANULUS_INTEGRORUM, &z,
+            piscina, &s) && s == -I);
+        CREDO_VERUM (ANULUS_INTEGRORUM.signum(&ANULUS_INTEGRORUM,
+            &nullum, piscina, &s) && s == ZEPHYRUM);
+        (vacuum)fractio_ex_s64_s64(I, -II, piscina, &q);
+        CREDO_VERUM (ANULUS_RATIONALIUM.signum(&ANULUS_RATIONALIUM, &q,
+            piscina, &s) && s == -I);
+        (vacuum)fractio_ex_s64_s64(III, VII, piscina, &q);
+        CREDO_VERUM (ANULUS_RATIONALIUM.signum(&ANULUS_RATIONALIUM, &q,
+            piscina, &s) && s == I);
+        /* sine ordine */
+        CREDO_NIHIL (ANULUS_POLYNOMIORUM.signum);
+        CREDO_NIHIL (anulus_residuorum(VII, piscina)->signum);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

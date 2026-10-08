@@ -339,3 +339,248 @@ leftover files (with -shm/-wal) deleted. Two runs after: zero left.
 Lesson: a test that opens a temporary resource and passes is not done
 until it leaves nothing behind - volumen.h even says the leftover is
 the signal; nobody looked in /tmp.
+
+## 2026-10-07 — D1: quick wins
+
+**Empty expectations were never checked.** P7 (1047 does not clear on
+exit) and P12 (RIS keeps the previous char) survived although their
+vectors expect `textus=""`. A direct trace showed the core misbehaving
+under the plant, so the replayer was skipping the check. The house
+STML interns an empty attribute value as NIHIL, and
+`stml_attributum_habet` is `capere != NIHIL` - an empty value is
+indistinguishable from an absent attribute. Every empty expectation in
+the vectors (9, since phase A) was a silent no-op. Fix: the explicit
+marker `"\0"` (the whole value) = empty string, in the reader and the
+validator; all nine now run and hold. No other house fixture uses
+empty attributes (git grep).
+
+**REP is capped** at twice the screen area: a saturated parameter
+(0x7FFFFFFF) would loop for ages; beyond two screens only identical
+lines scroll. Named divergence from Ghostty (which loops the count).
+
+**The unknown-sequence probe moved:** section III used `ESC # 8` as an
+unknown sequence; DECALN is now real, so the probe is `ESC # 3`.
+
+**Greedy hex, twice more:** `"\x1Bc"` is 0x1BC - split literals.
+
+## 2026-10-07 — D2: modes
+
+**Ghostty origin-mode bug (we diverge).** Ghostty's stream maps CHA,
+HPA, HPR and VPR to `setCursorPos(cursor.y + 1, ...)`; under DECOM
+setCursorPos adds the region top again, so CHA would move the cursor
+DOWN by the top margin. xterm's CursorRow is origin-relative, and
+esctest `CHA_RespectsOriginMode` expects the row kept (its X lands at
+the region's top-left). We follow xterm: only CUP/HVP and VPA are
+origin-relative; VPR is absolute + n, clamped to the region bottom
+under DECOM.
+
+**Reverse wrap 1045 cycles.** Once the extended mode wraps from the
+region top to its bottom, positions repeat every rows x width steps;
+the count is reduced modulo that (exact - unit test compares n and
+n + 1000 cycles). Ghostty counts down one by one: a saturated CUB on a
+one-column screen is ~2^31 iterations.
+
+**esctest reverse wrap.** esctest's `ReverseWraparound()` returns 45
+unless `--xterm-reverse-wrap >= 383`, then 1045; with the default it
+expects the OLD xterm meaning of 45 (wrap past the top). The runner now
+passes 383 - modern xterm and Ghostty semantics.
+
+**DECRQM is now our mode oracle.** Vectors assert modes through
+replies (`CSI ? n $ p` -> `CSI ? n ; s $ y`), not private accessors.
+Modes outside the table answer 0 - including ones Ghostty stores but
+does not act on (5, 12, 1007); xterm answers 4 for permanently reset
+ANSI modes (GATM, SRTM ...), 23 esctest rows carry that cause.
+
+**False pass exposed:** `DECSCL_Level2DoesntSupportDECRQM` passed only
+because DECRQM had no answer.
+
+**Equivalent plant:** inserting at the last column (`<=` for `<` in the
+IRM guard) is indistinguishable - the blank is overwritten at once.
+Ghostty's guard is a shortcut, not semantics.
+
+**Probe moved again:** section X used `CSI ? 1 $ p` as an unknown
+intermediate sequence; now DECRQPSR `CSI 1 $ w`.
+
+**Count correction:** D1's docs say 184 vectors (+11); the file at
+8e8859d0 has 191 (+12). Counted with `grep -c "<casus "` this time;
+the replayer agrees (220 viridia after D2).
+
+ICH (`cellulas_inserere`) moved above the print path - IRM calls it
+(the file has no forward declarations).
+
+## 2026-10-07 — D3: charsets
+
+**Width before mapping.** Ghostty computes the width from the unmapped
+rune and maps in printCell, so under DEC graphics an emoji becomes a
+WIDE cell holding a space (vector "print charset outside of ASCII").
+Mapping first would make it narrow - plant Q2 checks the order.
+
+**Single shift and REP.** The shift is consumed by the next printed
+cell only (zero-width runes return before mapping). REP keeps the
+UNMAPPED previous rune and maps it again under the current set
+(Ghostty test 14421: `q` repeats as `─` under DEC, then `q` under ASCII).
+
+**SS lexeme.** Our lexer delivers `ESC N x` as one SS lexeme; the core
+sets the shift and prints the printable bytes after the introducer
+(normally just `x`). `ESC N` + UTF-8 used to lose the rune in the lexer
+(see lib/series_terminalis.worklog.md); now it arrives as FUGA with
+introducer N, which the core treats the same way.
+
+**DECSTR resets charsets** (VT510 table, xterm) - Ghostty has no DECSTR.
+
+**Weak vector found by plant Q15:** LS2 landing in G3 survived while G2
+and G3 held the same set; G3 now differs in that step.
+
+## 2026-10-07 — D4: kitty keyboard flags
+
+**Ring, not stack.** Ghostty's FlagStack is 8 slots with a wrapping
+index: a ninth push overwrites the oldest, and popping below the base
+wraps too (slots are zeroed as they are popped, so it reads 0). We copy
+that exactly; the ring vector pushes 9 and pops back through it.
+
+**Vectors that test the slot, not the index.** RIS resets the index to
+0; a vector that PUSHED before RIS left its value in slot 1, so a plant
+that forgot to zero the slots still read 0. Using `CSI = n u` (writes
+the current slot) makes the zeroing visible. Same lesson as D3's Q15:
+a vector must make the broken and the correct paths diverge.
+
+**Equivalent plant:** removing the `pop >= 8 -> clear` shortcut gives
+the same result (popping 2^31 one by one also ends empty) in ~1 s at
+our optimisation level - it is a hostile-input guard, kept, untestable
+by output.
+
+## 2026-10-07 — D5: colours
+
+**`#` forms are not scaled (X11), `rgb:` forms are.** XParseColor:
+"#RGB ... fewer than 16 bits ... represent the most significant bits
+(unlike rgb:, in which values are scaled)". Ghostty scales both, so
+`#f00f00f00` is ef there and f0 in xterm/esctest. With MSB semantics
+and 8-bit storage all three esctest Hash tests pass. Bare `abc` /
+`123456` is Ghostty's own extension - kept scaled, as Ghostty does.
+
+**Cursor colour without its own value follows the CURRENT foreground**
+(Ghostty test 3008: set 10, set 12, reset 112, query 12 -> the set
+foreground). Expressed with AEMULATOR_COLOR_NULLUS in the configuration
+and the live slot.
+
+**Request lists follow Ghostty's tokenizer:** empty fields skipped; a
+bad spec ends the whole list; OSC 4 indices 256-260 are "special"
+(no-op, list continues), beyond that the list ends; OSC 104 with no
+valid index resets the whole table; 110-112 with any parameter do
+nothing.
+
+**ChangeSpecialColor_* pass honestly:** esctest asks XTGETTCAP `Co` for
+the palette size, we do not answer, it assumes 16 and its "special"
+colours land on palette 16/17 - real round trips. ResetSpecialColor_*
+fail: the reset goes through OSC 105, which (like Ghostty) we ignore;
+their captured case files hold only the first command, so the cause is
+attributed by test name.
+
+**Equivalent plant:** `rgb:` accepting two parts - the third channel
+then has zero digits and fails anyway (the guard is redundant).
+
+**Lint:** `colores_xterm` -> `colores_ordinarii` (xterm is not a house
+word; renominare refuses dirty files, exact replace used).
+
+
+## 2026-10-07 — D7a: quick replies
+
+Fran chose to close only the small answers before the D7 session.
+- DECXCPR (`CSI ? 6 n`) answers `CSI ? y ; x R` WITHOUT the page field:
+  esctest infers our VT level from DA2 (`>1` -> level 2) and expects the
+  VT220 form; consistent with the identity we claim.
+- DECDSR hardware status: fixed answers (no printer ?13n, UDK unlocked
+  ?20n, keyboard ?27;1n - two parameters at level 2 - no locator ?50n,
+  locator type ?57;0n). VT420 queries stay unknown.
+- DECID (ESC Z) = DA1.
+- DECRQSS (DCS $ q Pt ST): SGR (own fixed-buffer encoder - the house
+  stilus_codificare needs a ChordaAedificator, and the core promises no
+  allocation in steady state), DECSTBM, DECSCUSR (now stored; default
+  reported as 2 = steady block, what terminale draws). Anything else
+  `DCS 0 $ r ST`.
+- Title stack CSI 22/23 ; 0|2 t: the core now remembers the current
+  title and keeps xterm's 10-deep stack; a pop re-announces through the
+  titulus effect. Ghostty parses these and does nothing. esctest's eight
+  title-stack rows stay red: they read the title back with 21t, which
+  we refuse on purpose (title echo = input injection).
+- Plant R10 (icon-only push not ignored) survived at first: the next
+  check rejected mode 1 anyway and only the unknown counter moved - the
+  vector now asserts `ignota="0"`.
+esctest 284 -> 294. Parked by Fran: protection/selective erase (24),
+DECCOLM (2), XTSAVE/XTRESTORE (2).
+
+
+## 2026-10-07 — D7c: vttest driver and minimal DECCOLM
+
+**Driver.** `tools/aemulator_vttest.c` runs vttest as the child of a
+headless `TerminaleApplicatio` (80x24, 6x8 cells). A script of
+`mitte <bytes>` lines (escapes \r \n \e \\ \xHH) is fed one line at a
+time; after each, the driver pulses until output is quiet (8 x 50 ms,
+10 s cap) and saves `NNN.txt` (screen text) + `NNN.png` (the frame
+terminale would draw). Build: `./bin/aedilis tools/aemulator_vttest.c
+&& bash build/aedilis/aemulator_vttest/struere.sh`. Run vttest with
+geometry `24x80.80` or it also walks 132-column passes we never draw.
+Limits: bytes go straight to the pty, NOT through the encoder - so
+vttest's LNM test reports "<13> Not expected" (the encoder's LNM path
+is covered by the codificator tests); and timed tests (RIS sleeps 5 s)
+need more returns than a quiet wait gives.
+
+**DECCOLM.** vttest's autowrap screen relies on DECCOLM clearing the
+screen even at 80 columns (it writes, switches, expects a blank page).
+Ghostty's deccolm: ignored unless ?40; otherwise clear, reset margins,
+home - and resize. We do everything but the resize: the host owns the
+window. Without ?40 the ?3 bit is put back to 0 so DECRQM keeps saying
+"reset". Four plants (permission ignored, no clear, region kept, bit
+left set) all caught. esctest 294 -> 295; Allow80To132 and
+RIS_ResetDECCOLM need the width to change -> CONSULTO.
+
+**Walk so far** (menus 1, 2, 3, 4, 6, 7, 8, 10, 11.5, 11.6, 11.7):
+correct: cursor movement, autowrap, tabs, origin mode, scroll regions
+(soft/jump read alike), save/restore cursor, DEC graphics, British set,
+SI/SO, single shifts, VT102 insert/delete (both passes), DSR/DA1/DA2/
+DA3, ECMA-48 HPA/CBT/CHA/CHT/HPR/VPA/CNL/CPL/VPR/SD/SU, the 8x8 colour
+matrix (bold brightens 0-7), SGR 0, BCE on ED/EL/ECH/IL/DL.
+Findings (verdicts pending with Fran):
+- terminale draws NO underline, strike, overline or italic, and bold
+  only as a brighter palette colour - the core stores all of them
+  (rendition screen: "underline" looks like "vanilla").
+- DECSCNM (?5 reverse screen) not honoured: light/dark screens
+  identical. Ghostty has it.
+- blink not rendered (Ghostty blinks).
+- DECDWL/DECDHL double-size lines ignored (Ghostty too).
+- VT52 mode (?2) absent (Ghostty too).
+- SL/SR (CSI SP @ / SP A) absent (Ghostty too).
+- REP after an intervening control sequence still repeats (12 '+'
+  where vttest hopes for 2) - same as Ghostty; ECMA-48 leaves it
+  undefined.
+- Black-on-black text visible: the contrast floor, on purpose.
+- 8-bit GR bytes (locking-shift GR rows) show U+FFFD: we are a UTF-8
+  terminal, like Ghostty.
+
+**DECSCNM (?5), core half (Fran approved the AemulatorModi field).**
+A bit only: `aemulator_modi(a).schirmus_inversus`; cells are never
+touched. Ghostty (render.zig:633) swaps just the DEFAULT fg/bg in the
+renderer - explicit colours and the cursor stay - and terminale will do
+the same. RIS clears it; DECSTR keeps it (VT510's DECSTR table has no
+screen mode; it resets from an explicit list, which ?5 is not on). Two
+old vectors used ?5 as their "unknown mode" example - moved to ?8
+(DECARM), which we do not honour. Plants: default set, snapshot not
+filled, DECSTR resetting it, wrong mode number - all caught. esctest
+295 -> 296 (DECRQM DECSCNM).
+
+**vttest walk - closed (driven part), 2026-10-07.** Menus 1-4, 6-11
+walked headless with tools/aemulator_vttest.c and judged against
+vttest's source; PNGs looked at where attributes matter. Fixed from the
+walk: DECCOLM minimum (ae44dc66), DECSCNM ?5 (12c8f851), terminale
+decorations (6bc29e81), drawn box/block/braille glyphs (8068d0fe,
+f7774b27). Correct: cursor movement, screen features, charsets at
+level 2 (vttest sends `ESC ) A` = British, not the 96-set, because DA1
+says 62), VT102 insert/delete, reports (DSR/DA1/DA2/DA3), RIS/DECSTR,
+ECMA-48 cursor/scroll (HPA..VPR, SD, SU), colours incl. BCE paths,
+known bugs A/W/S, VT220 DECTCEM/ECH, alternate screens 47/1047/1049.
+By design (Ghostty does the same or lacks it too): double-size lines
+(DECDWL/DECDHL; also makes bug B unjudgeable), VT52, SL/SR, REP after
+a control sequence, 8-bit GR bytes as U+FFFD, black-on-black visible
+(contrast floor). Driver artefact: LNM "Not expected" (raw bytes skip
+the encoder). Parked: blink, italic. Left for Fran's session
+(interactive): keyboard menu 5, mouse 11.8.5, SRM, window title typing.

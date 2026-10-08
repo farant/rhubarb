@@ -211,6 +211,117 @@ componens_invenire_per_id (
 
 
 /* ==================================================
+ * SPATIA (vicus-latera S2a)
+ * ================================================== */
+
+vacuum
+componens_ponere_spatium (
+             Componens* c,
+    constans character* spatium)
+{
+    c->spatium = internare_aut_vacua(c->intern, spatium);
+}
+
+chorda
+componens_spatium (
+    constans Componens* c)
+{
+    chorda vacua;
+
+    dum (c)
+    {
+        si (!chorda_vacua(c->spatium))
+        {
+            redde c->spatium;
+        }
+        c = c->parens;
+    }
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = datum_vacuum;
+    redde vacua;
+}
+
+/* id intra spatium: radix data inspicitur, liberi qui spatium
+ * proprium aperiunt praetereuntur */
+interior Componens*
+invenire_intra (
+    Componens* c,
+       chorda  id)
+{
+          i32  i;
+          i32  n;
+    Componens* l;
+    Componens* inventus;
+
+    si (chorda_aequalis(c->id, id))
+    {
+        redde c;
+    }
+    n = componens_numerus_liberorum(c);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        l = componens_liberum(c, i);
+        si (!chorda_vacua(l->spatium))
+        {
+            perge;
+        }
+        inventus = invenire_intra(l, id);
+        si (inventus)
+        {
+            redde inventus;
+        }
+    }
+    redde NIHIL;
+}
+
+interior Componens*
+radicem_spatii_invenire (
+    Componens* c,
+       chorda  spatium)
+{
+          i32  i;
+          i32  n;
+    Componens* inventus;
+
+    si (chorda_aequalis(c->spatium, spatium))
+    {
+        redde c;
+    }
+    n = componens_numerus_liberorum(c);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        inventus = radicem_spatii_invenire(componens_liberum(c, i),
+            spatium);
+        si (inventus)
+        {
+            redde inventus;
+        }
+    }
+    redde NIHIL;
+}
+
+Componens*
+componens_invenire_in_spatio (
+    Componens* arbor,
+       chorda  spatium,
+       chorda  id)
+{
+    Componens* radix;
+
+    si (!arbor)
+    {
+        redde NIHIL;
+    }
+    si (chorda_vacua(spatium))
+    {
+        redde componens_invenire_per_id(arbor, id);
+    }
+    radix = radicem_spatii_invenire(arbor, spatium);
+    redde radix ? invenire_intra(radix, id) : NIHIL;
+}
+
+
+/* ==================================================
  * SERIALIZATIO
  * ================================================== */
 

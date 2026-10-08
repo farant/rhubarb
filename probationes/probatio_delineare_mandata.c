@@ -8,6 +8,7 @@
 #include "thema.h"
 #include "fenestra.h"
 #include "mandatum.h"
+#include "delineare.h"
 #include "delineare_mandata.h"
 #include "imago_typus.h"
 #include "specimen.h"
@@ -329,6 +330,39 @@ s32 principale (vacuum)
                   (int)sf.causa.mensura, sf.causa.datum);
     }
     CREDO_VERUM(sf.sententia == SPECIMEN_CONGRUIT);
+
+    imprimere("\n--- praecisio, via celeris (park 011) ---\n");
+    {
+        /* rectangulum plenum solidum per ordines impletur (terminale
+         * park 011): pixela visibilia = rectangulum ^ tabula ^
+         * praecisio - margo quisque praecisionis */
+        TabulaPixelorum* tp = tabula_pixelorum_creare_nuda(piscina, XX,
+            XX);
+     ContextusDelineandi* cp = delineare_creare_contextum(piscina, tp);
+                     i32  niger;
+                     i32  ruber;
+
+        niger = color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM,
+            (i8)ZEPHYRUM, (i8)ZEPHYRUM));
+        ruber = color_ad_pixelum(color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM,
+            (i8)ZEPHYRUM));
+        tabula_pixelorum_vacare(tp, niger);
+        delineare_ponere_praecisionem(cp, V, V, VI, VI);
+        delineare_rectangulum_plenum(cp, ZEPHYRUM, ZEPHYRUM, XX, XX,
+            color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM));
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tp, V, V),
+            ruber);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tp, X, X),
+            ruber);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tp, IV, V),
+            niger);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tp, V, IV),
+            niger);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tp, XI, X),
+            niger);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(tp, X, XI),
+            niger);
+    }
 
     imprimere("\n--- 013: origo NEGATIVA - primitiva praeciduntur, non"
               " evanescunt ---\n");

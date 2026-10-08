@@ -599,6 +599,219 @@ retrahere_probare (vacuum)
     CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
 }
 
+/* XX: lucra parva (D1) quae vectores non exprimunt */
+interior vacuum
+lucra_probare (vacuum)
+{
+           Aemulator* a;
+    AemulatorCellula  c;
+    StilusTerminalis  rubrum_fundus;
+    StilusTerminalis  nativus;
+
+    imprimere("\n--- XX: lucra parva (D1) ---\n");
+    stilus_nativus(&nativus);
+    /* DECALN: fundus calami servatur, crassum tollitur; calamus manet
+     * redactus (Ghostty decaln) */
+    a = creare(V, II);
+    scribere(a, "\x1B[1;48;2;255;0;0m\x1B#8");
+    CREDO_VERUM(textus_est(a, "EEEEE\nEEEEE"));
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM((c.stilus.ornamenta & STILUS_CRASSUM) == ZEPHYRUM);
+    CREDO_VERUM(c.stilus.color_fundi.genus == STILUS_COLOR_RGB);
+    rubrum_fundus = c.stilus;
+    scribere(a, "x");
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM(stilus_aequalis(&c.stilus, &rubrum_fundus));
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, I);
+    /* RIS: calamus nativus, servatus oblitus (DECRC -> initium) */
+    a = creare(X, V);
+    scribere(a, "\x1B[31m\x1B[3;4H\x1B" "7\x1B" "c\x1B" "8x");
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).x, I);
+    CREDO_AEQUALIS_I32(aemulator_cursor(a).y, ZEPHYRUM);
+    CREDO_VERUM(aemulator_cellula(a, ZEPHYRUM, ZEPHYRUM, &c));
+    CREDO_VERUM(stilus_aequalis(&c.stilus, &nativus));
+    /* REP saturatum non pendet (terminus: bis area schirmi) */
+    a = creare(X, V);
+    CREDO_NON_PENDET(scribere(a, "A\x1B[2147483647b"), MM);
+    scribere(a, "A\x1B[2147483647b");
+    CREDO_AEQUALIS_I32(aemulator_ignota(a), ZEPHYRUM);
+}
+
+/* XXI: modi initus (D2) - instantanea aemulator_modi; bita cruda per
+ * DECRQM in vectoribus, summaria muris solum hic videntur */
+interior vacuum
+modos_probare (vacuum)
+{
+             Aemulator* a;
+         AemulatorModi  m;
+       AemulatorCursor  prope;
+       AemulatorCursor  longe;
+
+    imprimere("\n--- XXI: modi initus (D2) ---\n");
+    a = creare(X, V);
+    m = aemulator_modi(a);
+    CREDO_FALSUM(m.sagittae_applicationis);
+    CREDO_FALSUM(m.tabula_applicationis);
+    CREDO_AEQUALIS_I32((i32)m.mus, (i32)AEMULATOR_MUS_NULLUS);
+    CREDO_AEQUALIS_I32((i32)m.mus_forma, (i32)AEMULATOR_MUS_FORMA_X10);
+    CREDO_FALSUM(m.glutinum);
+    CREDO_FALSUM(m.focus);
+    CREDO_FALSUM(m.lnm);
+    CREDO_AEQUALIS_I32(m.kitty_vexilla, ZEPHYRUM);
+    CREDO_VERUM(m.rotula_sagittis);
+    CREDO_FALSUM(m.schirmus_inversus);
+    scribere(a, "\x1B[?5h");
+    CREDO_VERUM(aemulator_modi(a).schirmus_inversus);
+    scribere(a, "\x1B[?5l");
+    CREDO_FALSUM(aemulator_modi(a).schirmus_inversus);
+    scribere(a, "\x1B[?1007l");
+    CREDO_FALSUM(aemulator_modi(a).rotula_sagittis);
+    scribere(a, "\x1B[?1007h");
+    /* kitty (D4): vexilla schirmi ACTIVI */
+    scribere(a, "\x1B[>13u");
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, XIII);
+    scribere(a, "\x1B[?1049h");
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, ZEPHYRUM);
+    scribere(a, "\x1B[?1049l\x1B[<u");
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, ZEPHYRUM);
+    /* extractio saturata non pendet (Ghostty: >= VIII purgat) */
+    CREDO_NON_PENDET(scribere(a, "\x1B[>1u\x1B[<2147483647u"), MM);
+    CREDO_AEQUALIS_I32(aemulator_modi(a).kitty_vexilla, ZEPHYRUM);
+    scribere(a, "\x1B[?1h\x1B=\x1B[?2004h\x1B[?1004h\x1B[20h");
+    m = aemulator_modi(a);
+    CREDO_VERUM(m.sagittae_applicationis);
+    CREDO_VERUM(m.tabula_applicationis);
+    CREDO_VERUM(m.glutinum);
+    CREDO_VERUM(m.focus);
+    CREDO_VERUM(m.lnm);
+    /* mus: positum ultimum vincit */
+    scribere(a, "\x1B[?1000h\x1B[?1003h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus,
+                       (i32)AEMULATOR_MUS_OMNIS);
+    scribere(a, "\x1B[?9h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus,
+                       (i32)AEMULATOR_MUS_X10);
+    scribere(a, "\x1B[?1000h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus,
+                       (i32)AEMULATOR_MUS_PRESSIO);
+    scribere(a, "\x1B[?1002h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus,
+                       (i32)AEMULATOR_MUS_TRACTUS);
+    /* remotum quodlibet -> nullus, etiam alio posito (Ghostty) */
+    scribere(a, "\x1B[?1000l");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus,
+                       (i32)AEMULATOR_MUS_NULLUS);
+    /* forma: positum ultimum vincit, remotum -> X10 */
+    scribere(a, "\x1B[?1006h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus_forma,
+                       (i32)AEMULATOR_MUS_FORMA_SGR);
+    scribere(a, "\x1B[?1015h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus_forma,
+                       (i32)AEMULATOR_MUS_FORMA_URXVT);
+    scribere(a, "\x1B[?1005h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus_forma,
+                       (i32)AEMULATOR_MUS_FORMA_UTF8);
+    scribere(a, "\x1B[?1016h");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus_forma,
+                       (i32)AEMULATOR_MUS_FORMA_SGR_PIXELA);
+    scribere(a, "\x1B[?1006l");
+    CREDO_AEQUALIS_I32((i32)aemulator_modi(a).mus_forma,
+                       (i32)AEMULATOR_MUS_FORMA_X10);
+    /* DECSTR: sagittae et tabula remota; mus et glutinum manent */
+    scribere(a, "\x1B[?1003h\x1B[?1006h\x1B[!p");
+    m = aemulator_modi(a);
+    CREDO_FALSUM(m.sagittae_applicationis);
+    CREDO_FALSUM(m.tabula_applicationis);
+    CREDO_AEQUALIS_I32((i32)m.mus, (i32)AEMULATOR_MUS_OMNIS);
+    CREDO_AEQUALIS_I32((i32)m.mus_forma, (i32)AEMULATOR_MUS_FORMA_SGR);
+    CREDO_VERUM(m.glutinum);
+    /* RIS: omnia ordinaria */
+    scribere(a, "\x1B" "c");
+    m = aemulator_modi(a);
+    CREDO_AEQUALIS_I32((i32)m.mus, (i32)AEMULATOR_MUS_NULLUS);
+    CREDO_AEQUALIS_I32((i32)m.mus_forma, (i32)AEMULATOR_MUS_FORMA_X10);
+    CREDO_FALSUM(m.glutinum);
+    CREDO_FALSUM(m.focus);
+    CREDO_FALSUM(m.lnm);
+    CREDO_VERUM(aemulator_modus(a, VII, VERUM));
+    CREDO_VERUM(aemulator_cursor(a).visibilis);
+    /* MXLV cyclus: residuum exactum - n et n + M * (V x III) idem
+     * (Ghostty "extended reverse wrap bottom wraparound", n = VII) */
+    a = creare(V, III);
+    scribere(a, "\x1B[?1045hABCDE\r\n1\x1B[7D");
+    prope = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(prope.x, IV);
+    CREDO_AEQUALIS_I32(prope.y, II);
+    a = creare(V, III);
+    scribere(a, "\x1B[?1045hABCDE\r\n1\x1B[15007D");
+    longe = aemulator_cursor(a);
+    CREDO_AEQUALIS_I32(longe.x, prope.x);
+    CREDO_AEQUALIS_I32(longe.y, prope.y);
+    /* saturatum in columna una non pendet */
+    a = creare(I, V);
+    CREDO_NON_PENDET(scribere(a, "\x1B[?1045hA\r\nB\x1B[2147483647D"),
+                     MM);
+}
+
+/* XXII: colores (D5) - configuratio hospitis et lectio vivorum */
+interior vacuum
+colores_probare (vacuum)
+{
+                Aemulator* a;
+    AemulatorConfiguratio  cfg;
+                      i32  tabula[CCLVI];
+                      i32  i;
+
+    imprimere("\n--- XXII: colores (D5) ---\n");
+    /* ordinarii: tabula xterm, litterae albae, fundus niger, cursor
+     * litteras sequitur */
+    a = creare(X, V);
+    CREDO_AEQUALIS_I32(aemulator_color(a, I), 0xCD0000);
+    CREDO_AEQUALIS_I32(aemulator_color(a, CCLV), 0xEEEEEE);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_LITTERAE),
+                       0xFFFFFF);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_FUNDI),
+                       ZEPHYRUM);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0xFFFFFF);
+    CREDO_AEQUALIS_I32(aemulator_color(a, CCLIX), ZEPHYRUM);
+    /* programma mutat: lectio vivum videt; cursor sequitur */
+    scribere(a, "\x1B]4;1;#102030\x07\x1B]10;#405060\x07");
+    CREDO_AEQUALIS_I32(aemulator_color(a, I), 0x102030);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0x405060);
+    /* configuratio hospitis: tabula propria, thema, cursor proprius;
+     * restitutio ad configurationem redit */
+    per (i = ZEPHYRUM; i < CCLVI; i++)
+    {
+        tabula[i] = (i32)(i * 0x010101);
+    }
+    aemulator_configuratio_initiare(&cfg);
+    cfg.latitudo         = X;
+    cfg.altitudo         = V;
+    cfg.historia_octeti  = ZEPHYRUM;
+    cfg.color_litterae   = 0x112233;
+    cfg.color_fundi      = 0x445566;
+    cfg.color_cursoris   = 0x778899;
+    cfg.tabula_colorum   = tabula;
+    a                    = aemulator_creare(piscina, &cfg);
+    tabula[VII]          = 0xABCDEF;
+    CREDO_AEQUALIS_I32(aemulator_color(a, VII), 0x070707);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_FUNDI),
+                       0x445566);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0x778899);
+    scribere(a, "\x1B]4;7;#000001\x07\x1B]12;#000002\x07"
+                "\x1B]11;#000003\x07");
+    CREDO_AEQUALIS_I32(aemulator_color(a, VII), I);
+    scribere(a, "\x1B]104;7\x07\x1B]112\x07\x1B]111\x07");
+    CREDO_AEQUALIS_I32(aemulator_color(a, VII), 0x070707);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_CURSORIS),
+                       0x778899);
+    CREDO_AEQUALIS_I32(aemulator_color(a, AEMULATOR_COLOR_FUNDI),
+                       0x445566);
+}
+
 s32 principale (vacuum)
 {
                 Aemulator* a;
@@ -655,7 +868,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- III: series ignotae numerantur ---\n");
     a = creare(X, III);
-    scribere(a, "\x1B[99n\x1B#8\x1B]777;x\x07" "Z");
+    scribere(a, "\x1B[99n\x1B#3\x1B]777;x\x07" "Z");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), III);
     CREDO_VERUM(textus_est(a, "Z"));
 
@@ -781,9 +994,11 @@ s32 principale (vacuum)
     c = aemulator_cursor(a);
     CREDO_AEQUALIS_I32(c.x, IX);
     CREDO_AEQUALIS_I32(c.y, V);
-    /* intermedia, ':' extra SGR, privatum ignotum, SGR ignotum */
+    /* intermedia (DECRQPSR - DECRQM iam noster, D2; DECSCA - DECSCUSR
+     * iam noster, D7a), ':' extra SGR,
+     * privatum ignotum, SGR ignotum */
     a = creare(X, III);
-    scribere(a, "\x1B[?1$p\x1B[0 q\x1B[2:3H\x1B[>5c\x1B[99m\x1B[3;3 H");
+    scribere(a, "\x1B[1$w\x1B[0\"q\x1B[2:3H\x1B[>5c\x1B[99m\x1B[3;3 H");
     CREDO_AEQUALIS_I32(aemulator_ignota(a), VI);
     CREDO_AEQUALIS_I32(aemulator_cursor(a).x, ZEPHYRUM);
     /* SGR cum ':' licet */
@@ -944,6 +1159,9 @@ s32 principale (vacuum)
     historiam_probare();
     visum_probare();
     retrahere_probare();
+    lucra_probare();
+    modos_probare();
+    colores_probare();
 
     imprimere("\n--- IX: status constans nihil allocat ---\n");
     /* historia pagina una (limes I octeti): calefactio lineas in

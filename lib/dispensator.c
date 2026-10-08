@@ -23,6 +23,7 @@ chorda_nulla (vacuum)
 /* Eventus derivatus differendus ad limen (T5) */
 nomen structura {
              chorda id;
+             chorda spatium;    /* S2a: id intra id quaeritur */
     eventus_genus_t genus;
                 s64 tempus;
 } Differendum;
@@ -37,7 +38,48 @@ invenire_id (
     {
         redde NIHIL;
     }
-    redde componens_invenire_per_id(d->arbor, id);
+    /* S2a: intra spatium activum (vacuum = arbor tota) */
+    redde componens_invenire_in_spatio(d->arbor, d->motus.spatium, id);
+}
+
+interior Componens*
+radicem_spatii_quaerere (
+    Componens* c,
+       chorda  spatium)
+{
+          i32  i;
+          i32  n;
+    Componens* inventus;
+
+    si (   !chorda_vacua(c->spatium)
+        && chorda_aequalis(c->spatium, spatium))
+    {
+        redde c;
+    }
+    n = componens_numerus_liberorum(c);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        inventus = radicem_spatii_quaerere(componens_liberum(c, i),
+            spatium);
+        si (inventus)
+        {
+            redde inventus;
+        }
+    }
+    redde NIHIL;
+}
+
+/* radix spatii activi (Tab circuit intra eam); vacuum = arbor */
+interior Componens*
+radix_spatii (
+     Componens* arbor,
+        chorda  spatium)
+{
+    si (!arbor || chorda_vacua(spatium))
+    {
+        redde arbor;
+    }
+    redde radicem_spatii_quaerere(arbor, spatium);
 }
 
 
@@ -359,7 +401,9 @@ mittere (
         {
             perge;
         }
-        si (!actio_invenire(d->actiones, c->actio, &fn, &ctx))
+        /* S2a: actio in spatio COMPONENTIS */
+        si (!actio_invenire_in_spatio(d->actiones, componens_spatium(c),
+                c->actio, &fn, &ctx))
         {
             perge;
         }
@@ -372,6 +416,28 @@ mittere (
         }
     }
     redde FALSUM;
+}
+
+/* differendum in spatio dato (S2a) */
+interior vacuum
+differre (
+     Dispensator* d,
+          chorda  spatium,
+          chorda  id,
+ eventus_genus_t  genus,
+             s64  tempus)
+{
+    Differendum* x;
+
+    si (chorda_vacua(id))
+    {
+        redde;
+    }
+    x           = (Differendum*)xar_addere(d->differenda);
+    x->id       = id;
+    x->spatium  = spatium;
+    x->genus    = genus;
+    x->tempus   = tempus;
 }
 
 /* Eventus derivatus ad nodum certum */
@@ -387,7 +453,9 @@ mittere_ad (
     {
         redde;
     }
-    dispensator_addressare(d, c->id, genus, tempus);
+    /* S2a: spatium COMPONENTIS - radix hospitis et radix montationis
+     * idem id habere possunt */
+    differre(d, componens_spatium(c), c->id, genus, tempus);
 }
 
 vacuum
@@ -397,16 +465,12 @@ dispensator_addressare (
  eventus_genus_t  genus,
              s64  tempus)
 {
-    Differendum* x;
-
-    si (!d || chorda_vacua(id))
+    si (!d)
     {
         redde;
     }
-    x          = (Differendum*)xar_addere(d->differenda);
-    x->id      = id;
-    x->genus   = genus;
-    x->tempus  = tempus;
+    /* id nudum: spatium activum (S2a) */
+    differre(d, d->motus.spatium, id, genus, tempus);
 }
 
 /* Limen: differenda TUNC praesentia traduntur contra arborem novam;
@@ -439,7 +503,7 @@ limen_transire (
     per (i = ZEPHYRUM; i < n; i++)
     {
         x = (Differendum*)xar_obtinere(praesentia, i);
-        c = invenire_id(d, x->id);
+        c = componens_invenire_in_spatio(d->arbor, x->spatium, x->id);
         si (!c)
         {
             perge;
@@ -498,6 +562,7 @@ tractare_unum (
         Destinatio  des;
             chorda  focus;
             chorda  focus_novus;
+         Componens* radix;
          Componens* destinatum;
                b32  consumptus;
 
@@ -547,9 +612,12 @@ tractare_unum (
     si (   !consumptus && e->genus == EVENTUS_CLAVIS_DEPRESSUS
         && e->datum.clavis.clavis == CLAVIS_TABULA)
     {
-        focus_novus = (e->datum.clavis.modificantes & MOD_SHIFT)
-            ? destinatio_focus_praecedens(d->arbor, focus, d->scratch)
-            : destinatio_focus_proximum(d->arbor, focus, d->scratch);
+        /* S2a: circuitus intra spatium activum */
+        radix = radix_spatii(d->arbor, d->motus.spatium);
+        focus_novus = !radix ? chorda_nulla()
+            : (e->datum.clavis.modificantes & MOD_SHIFT)
+            ? destinatio_focus_praecedens(radix, focus, d->scratch)
+            : destinatio_focus_proximum(radix, focus, d->scratch);
         si (!chorda_vacua(focus_novus))
         {
             mittere_ad(d, invenire_id(d, focus), EVENTUS_FOCUS_AMISSUS,

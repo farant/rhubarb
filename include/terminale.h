@@ -8,19 +8,25 @@
  * cellularum, actio "terminale.clavis"), figura quae VISUM hospitis
  * legit (cellulae, stili, cursor), actiones, applicatio.
  *
- * CLAVES: eventus singuli per codificator_terminalis (legacy - modi
- * clavium et muris ab aemulatore phasis D) in
- * aemulator_hospes_scribere (initus visum ad imum reducit). ROTULA:
- * aemulator_hospes_visum_movere (lineae; trackpad pixela -> lineae
- * per altitudinem cellulae).
+ * CLAVES: eventus singuli per codificator_terminalis sub modis quos
+ * aemulator_modi reddit (D6b: DECCKM, kitty, mus, glutinum, focus,
+ * LNM) in aemulator_hospes_scribere (initus visum ad imum reducit).
+ * MUS: ictus ad programma si petivit. ROTULA (lineae; trackpad
+ * pixela -> lineae per altitudinem cellulae): ad programma si murem
+ * petivit; in schirmo altero cum ?1007 sagittae; aliter visum movet.
+ * FOCUS: ?1004 positum relationem statim mittit.
  *
  * MAGNITUDO: superficies (dispensator: superficies_*) / cellula ->
  * columnae x lineae -> aemulator_hospes_amplitudo - in PULSU, non in
  * componendo (componere purum manet).
  *
- * COLORES: nativus = thema (COLOR_TEXT / COLOR_BACKGROUND); 0-15
- * xterm, 16-231 cubus, 232-255 gradus grisei; RGB ipsum. Inversum,
- * crassum (color clarior 0-7), obscurum ut Ghostty.
+ * COLORES (D6b): thema in configurationem aemulatoris (litterae,
+ * fundus, cursor); pinguntur ex aemulator_color - OSC 4/10/11/12
+ * programmatis videntur. Nativus non mutatus = signum thematis (thema
+ * vivum); RGB ipsum. Inversum, crassum (color clarior 0-7) ut
+ * Ghostty; obscurum (SGR 2) ad fundum dimidio mixtum. CONTRASTUS
+ * MINIMUS III (WCAG): littera fundo nimis similis versus nigrum aut
+ * album MINIME propellitur (programmata fundum obscurum putant).
  *
  * ANSA: principale suam ansam possidet (decisio XXV): quadrum quodque
  * terminale_pulsare(mora brevis) deinde tractare, quadrum, praesentare.
@@ -50,6 +56,15 @@ nomen structura {
         AemulatorHospes* hospes;
                     i32  cellula_latitudo;  /* pixela nostra */
                     i32  cellula_altitudo;
+                 vacuum* contextus;         /* privatum (D6b) */
+    /* D7c: sublineae, linea transfixa, superlinea, crassum fictum ut
+     * pixela (ordinarie VERUM); geminus terminalis FALSUM - tessellatio
+     * lineas in cellulas vertit */
+                    b32 ornamenta_pixelorum;
+    /* vicus-latera S1a: superficies et focus hic leguntur; radix
+     * repositorii proprii in applicatione sola, ramus <terminale id>
+     * in hospite (vicus) */
+             InsulaRamus ramus;
 } TerminaleApplicatio;
 
 /* Argumenta infantis: -fumus -> /bin/sh scriptum breve (imago
@@ -62,6 +77,13 @@ terminale_argumenta (
          s32   argc,
    character** argv,
          b32*  fumus);
+
+/* Ambitus infantis (vicus-latera S1c): TERM=xterm-256color,
+ * COLORTERM=truecolor, TERM_PROGRAM=terminale; vector NIHIL-
+ * terminatus, staticus - principalia eum in pseudoterminale dant,
+ * terminale_montare ipsa. */
+constans character* constans*
+terminale_ambitus (vacuum);
 
 /* Compositio tota: repositorium, registra, dispensator, hospes super
  * pt (hospes eum possidet). latitudo/altitudo superficiei in pixelis
@@ -76,6 +98,32 @@ terminale_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo);
 
+/* vicus-latera S1b: montare in repositorium hospitis (vicus): ramus
+ * <terminale id=…> cum canonibus suis (radix hospitis liberos non
+ * declarat); concha nova ($SHELL -l, ambitus TERM/COLORTERM/
+ * TERM_PROGRAM ex bibliotheca); dispensator NULLUS - hospes suum
+ * habet. latitudo/altitudo in pixelis nostris. FALSUM si concha non
+ * generatur aut ramus recusatur. */
+b32
+terminale_montare (
+    TerminaleApplicatio* app,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     InsulaRepositorium* repo,
+     constans character* id,
+                    i32  latitudo,
+                    i32  altitudo);
+
+/* componere hospitis (dispensator.h Componere), ctx =
+ * TerminaleApplicatio* */
+Componens*
+terminale_componere (
+     InsulaRepositorium* repo,
+         constans Motus* motus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 vacuum* ctx);
+
 /* Pulsus unus ante quadrum: magnitudinem ex superficie aptare,
  * hospitem pulsare (mora ut aemulator_hospes_pulsare). Pulsus hospitis
  * redditur (mutatum -> quadrum pingendum; finitus -> concha exiit). */
@@ -83,6 +131,15 @@ AemulatorHospesPulsus
 terminale_pulsare (
     TerminaleApplicatio* app,
                     s32  mora_ms);
+
+/* Titulus (OSC 0/2, D6b): ultimus quem programma posuit (vacuus =
+ * nullus; praecisus ad CCLVI octetos). *mutatus VERUM semel post
+ * quamque mutationem - principale tunc titulum fenestrae ponit.
+ * Chorda valet usque ad pulsum proximum. */
+chorda
+terminale_titulus (
+    TerminaleApplicatio* app,
+                    b32* mutatus);
 
 /* Infantem claudere (aemulator_hospes_claudere). */
 vacuum

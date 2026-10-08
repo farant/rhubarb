@@ -3,6 +3,7 @@
 #include "vicus_applicatio.h"
 #include "pictor_applicatio.h"
 #include "scriba_applicatio.h"
+#include "terminale.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -10,6 +11,7 @@
     "<tabulae activa=\"s1\">"                                     \
     "<tabula id=\"s1\" genus=\"scriba\" titulus=\"scriba\"/>"     \
     "<tabula id=\"p1\" genus=\"pictor\" titulus=\"pictor\"/>"     \
+    "<tabula id=\"t1\" genus=\"terminale\" titulus=\"terminale\"/>" \
     "</tabulae>"
 
 
@@ -89,6 +91,58 @@ pictorem_describere (
     f->fons_ctx       = &m->figurae_ctx;
 }
 
+/* terminale (vicus-latera S1c): concha nova in omni apertura (decisio
+ * aemulatoris: nihil durabile praeter ramum); volumen et radix
+ * viarum non leguntur - canones infixi */
+interior b32
+terminale_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* radix,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+    (vacuum)volumen;
+    (vacuum)radix;
+    redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
+        intern, repo, id, latitudo, altitudo);
+}
+
+/* pulsus sine mora: ansa hospitis XVI ms ipsa exspectat */
+interior VicusPulsus
+terminale_pulsare_in_vico (
+    vacuum* ctx)
+{
+    AemulatorHospesPulsus ph;
+              VicusPulsus p;
+
+    ph         = terminale_pulsare((TerminaleApplicatio*)ctx, ZEPHYRUM);
+    p.mutatum  = ph.mutatum;
+    p.finitus  = ph.finitus;
+    redde p;
+}
+
+interior vacuum
+terminale_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    TerminaleApplicatio* m;
+
+    m                  = (TerminaleApplicatio*)montatio;
+    f->actiones        = m->actiones;
+    f->figurae         = m->figurae;
+    f->componere       = terminale_componere;
+    f->componere_ctx   = m;
+    f->pulsare         = terminale_pulsare_in_vico;
+    f->pulsare_ctx     = m;
+    f->vivit_in_fundo  = VERUM;
+}
+
 
 /* ==================================================
  * Applicatio
@@ -155,6 +209,9 @@ vicus_applicatio_aedificare (
         || !vicus_genus_addere(app->vicus, "pictor",
                magnitudo(PictorMontatio), pictorem_montare,
                pictorem_describere)
+        || !vicus_genus_addere(app->vicus, "terminale",
+               magnitudo(TerminaleApplicatio),
+               terminale_montare_in_vico, terminale_describere)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS))
     {
         causa = app->vicus ? vicus_causa(app->vicus)

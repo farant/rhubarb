@@ -77,6 +77,23 @@ _cellulae_delineandi (
     redde n;
 }
 
+/* pulsus probandus (vicus-latera S1c) */
+nomen structura {
+    i32 vocationes;
+    b32 reddere;
+} PulsusProbandus;
+
+interior b32
+pulsus_probandus (
+    vacuum* ctx)
+{
+    PulsusProbandus* p;
+
+    p              = (PulsusProbandus*)ctx;
+    p->vocationes  += I;
+    redde p->reddere;
+}
+
 interior Eventus
 _clavis (
     s32 runa,
@@ -247,6 +264,33 @@ TesseraPonsMemoriae* pm;
 
     imprimere("\n--- VII. ansa vera sine terminali ---\n");
     CREDO_AEQUALIS_S32 (ludus_tessera_currere(lt, I), I);
+
+    imprimere("\n--- VIII. vicus-latera S1c: pingendum ---\n");
+    {
+        PulsusProbandus pp;
+
+        CREDO_VERUM (ludus_tessera_pingendum(lt, FALSUM, M + CC));
+        pp.vocationes  = ZEPHYRUM;
+        pp.reddere     = FALSUM;
+        ludus_tessera_pulsum_ponere(lt, pulsus_probandus, &pp);
+        ludus_tessera_quadrum(lt, M + CC);
+        CREDO_FALSUM (ludus_tessera_pingendum(lt, FALSUM, M + CCC));
+        CREDO_AEQUALIS_I32 (pp.vocationes, I);
+        CREDO_VERUM (ludus_tessera_pingendum(lt, VERUM, M + CCC));
+        pp.reddere = VERUM;
+        CREDO_VERUM (ludus_tessera_pingendum(lt, FALSUM, M + CCC));
+        pp.reddere = FALSUM;
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus        = EVENTUS_MUS_DEPRESSUS;
+        e.datum.mus.x  = XXXV;
+        e.datum.mus.y  = XX;
+        dispensator_tractare(lt->d, &e);
+        CREDO_VERUM (ludus_tessera_pingendum(lt, FALSUM, M + CD));
+        ludus_tessera_quadrum(lt, M + CD);
+        CREDO_FALSUM (ludus_tessera_pingendum(lt, FALSUM, M + D));
+        ludus_tessera_pulsum_ponere(lt, NIHIL, NIHIL);
+        CREDO_VERUM (ludus_tessera_pingendum(lt, FALSUM, M + D));
+    }
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

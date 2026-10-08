@@ -2010,6 +2010,36 @@ principale (vacuum)
             "um);\n"
             "}\n"));
 
+        /* corpus in linea conditionis ('si (...) redde;'): sententia
+         * intima est quae PUNCTUM FRACTURAE continet, non corpus quod
+         * post id incipit - olim indentatio ad 'redde' + IV (columna
+         * LXXVII) et fractura iterata ad '>=' cum spatiis CXX
+         * (lib/fenestra_textus.c, lib/delineare.c, 2026-10-08) */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (\n"
+            "    i32 x,\n"
+            "    i32 y,\n"
+            "    i32 latitudo,\n"
+            "    i32 altitudo)\n"
+            "{\n"
+            "    si (x < ZEPHYRUM || x >= latitudo || y < ZEPHYRUM ||"
+            " y >= altitudo) redde;\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (\n"
+            "    i32 x,\n"
+            "    i32 y,\n"
+            "    i32 latitudo,\n"
+            "    i32 altitudo)\n"
+            "{\n"
+            "    si (   x < ZEPHYRUM || x >= latitudo || y < ZEPHYRUM\n"
+            "        || y >= altitudo) redde;\n"
+            "}\n"));
+
         /* fracturae binae: cauda argumentorum eodem gradu manet */
         s = _scribere(piscina,
             "vacuum\n"

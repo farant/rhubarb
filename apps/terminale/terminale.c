@@ -8,8 +8,11 @@
  * ad conchum it, numquam applicationem claudit.
  *
  * Optiones: -fumus (concha scripta, LX quadra, exitus), -imago <via>
- * (quadrum ultimum in PNG).
+ * (quadrum ultimum in PNG), -provenientia (fabrica: digestum
+ * structurae; ~/.bin/terminale per institutio_terminale).
  */
+/* plagula provenientiae (fabrica T7): '-provenientia' respondetur */
+/* <aedilis obiectum="build/fabrica/provenientia/terminale.c"/> */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -19,6 +22,7 @@
 #include "ludus_fenestra.h"
 #include "pseudoterminale.h"
 #include "terminale.h"
+#include "provenientia.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -30,12 +34,7 @@
 #define MORA_MS       XVI
 #define QUADRA_FUMI   LX
 
-hic_manens constans character* constans ambitus[] = {
-    "TERM=xterm-256color",
-    "COLORTERM=truecolor",
-    "TERM_PROGRAM=terminale",
-    NIHIL
-};
+externus constans ProvenientiaRelatio provenientia_terminale;
 
 s32
 principale (
@@ -59,8 +58,16 @@ principale (
                              b32  pingendum;
                              s32  exitus;
                              s32  k;
+                          chorda  titulus;
+                             b32  mutatus;
+                       character  titulus_c[CCLVII];
               constans character* via_imaginis;
 
+    si (provenientia_respondere((s32)argc, argv,
+        &provenientia_terminale))
+    {
+        redde ZEPHYRUM;
+    }
     piscina = piscina_generare_dynamicum("terminale", VIII * M * M);
     si (!piscina)
     {
@@ -80,7 +87,7 @@ principale (
     pseudoterminale_configuratio_initiare(&cfg_pt);
     cfg_pt.argumenta  = terminale_argumenta(piscina, (s32)argc, argv,
         &fumus);
-    cfg_pt.ambitus = ambitus;
+    cfg_pt.ambitus = terminale_ambitus();
     cfg_pt.latitudo = COLUMNAE;
     cfg_pt.altitudo = LINEAE;
     pt = pseudoterminale_posix_creare(piscina, &cfg_pt, NIHIL, NIHIL);
@@ -123,6 +130,17 @@ principale (
         si (p.mutatum)
         {
             pingendum = VERUM;
+        }
+        /* titulus programmatis (OSC 0/2, D6b); vacuus = nomen nostrum.
+         * In acervo, non piscina: concha titulum omni mandato mutat */
+        titulus = terminale_titulus(&app, &mutatus);
+        si (mutatus)
+        {
+            memcpy(titulus_c, titulus.datum,
+                (memoriae_index)titulus.mensura);
+            titulus_c[titulus.mensura] = '\0';
+            fenestra_ponere_titulum(fenestra, titulus.mensura > ZEPHYRUM
+                ? titulus_c : "terminale");
         }
         si (p.finitus && !fumus)
         {

@@ -18,6 +18,7 @@
 #include "polynomium.h"
 #include "laqueus.h"
 #include <stdio.h>
+#include <string.h>
 
 interior constans s32 trifolium[][III] = {
     { 300, 0, 0 }, { 282, 76, -38 }, { 234, 135, -71 },
@@ -1246,6 +1247,357 @@ s32 principale (vacuum)
             &s));
         imprimere("  catena Hopf simplificata: vertices %u\n",
             laqueus_numerus(s));
+    }
+
+
+    /* ==================================================
+     * CODEX PD (KnotTheory / KnotInfo)
+     * ================================================== */
+
+    {
+        /* codices et polynomia ex KnotInfo (database_knotinfo
+         * 2026.10.5), in formam laqueus conversa: oraculum externum
+         * conventionis (signa, ordo contra horologium, chiralitas) */
+        nomen structura {
+            constans character* titulus;
+                           i32  transitus;
+                  constans i32* pd;
+            constans character* jones;
+            constans character* alexander;
+        } ExemplarPd;
+        hic_manens constans i32 pd_3_1[] = { 1, 5, 2, 4, 3, 1, 4, 6, 5,
+            3,
+            6, 2 };
+        hic_manens constans i32 pd_4_1[] = { 4, 2, 5, 1, 8, 6, 1, 5, 6,
+            3,
+            7, 4, 2, 7, 3, 8 };
+        hic_manens constans i32 pd_5_1[] = { 2, 8, 3, 7, 4, 10, 5, 9, 6,
+            2,
+            7, 1, 8, 4, 9, 3, 10, 6, 1, 5 };
+        hic_manens constans i32 pd_8_20[] = { 1, 7, 2, 6, 4, 13, 5, 14,
+            5,
+            9, 6, 8, 7, 3, 8, 2, 10, 15, 11, 16, 12, 9, 13, 10, 14, 3,
+                15,
+            4, 16, 11, 1, 12 };
+        hic_manens constans i32 pd_10_132[] = { 1, 8, 2, 9, 3, 18, 4,
+            19, 5,
+            12, 6, 13, 7, 10, 8, 11, 9, 2, 10, 3, 11, 6, 12, 7, 14, 20,
+                15,
+            19, 16, 14, 17, 13, 17, 4, 18, 5, 20, 16, 1, 15 };
+        ExemplarPd exempla_pd[] = {
+            { "3_1", III, pd_3_1, "-t^4 + t^3 + t", "t^2 - t + 1" },
+            { "4_1", IV, pd_4_1, "t^2 - t + 1 - t^-1 + t^-2",
+              "t^2 - 3t + 1" },
+            { "5_1", V, pd_5_1, "-t^7 + t^6 - t^5 + t^4 + t^2",
+              "t^4 - t^3 + t^2 - t + 1" },
+            { "8_20", VIII, pd_8_20,
+              "-t + 2 - t^-1 + 2t^-2 - t^-3 + t^-4 - t^-5",
+              "t^4 - 2t^3 + 3t^2 - 2t + 1" },
+            { "10_132", X, pd_10_132,
+                "t^-2 + t^-4 - t^-5 + t^-6 - t^-7",
+              "t^4 - t^3 + t^2 - t + 1" }
+        };
+        hic_manens constans i32 pd_malus_extra[] = { 1, 5, 2, 4, 3, 1,
+            4,
+            6, 5, 3, 6, 7 };
+        hic_manens constans i32 pd_malus_ter[] = { 1, 5, 2, 4, 3, 1, 4,
+            6,
+            5, 1, 6, 2 };
+        hic_manens constans i32 pd_malus_infra[] = { 1, 5, 3, 4, 2, 1,
+            4,
+            6, 5, 3, 6, 2 };
+        hic_manens constans i32 pd_unus[] = { 1, 2, 2, 1 };
+                     Polynomium q;
+                            i32 k;
+
+        imprimere("\n--- Probans codicem PD ---\n");
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            CREDO_VERUM (laqueus_jones_ex_pd(exempla_pd[k].pd,
+                exempla_pd[k].transitus, piscina, &q));
+            CREDO_VERUM (chorda_aequalis_literis(
+                polynomium_ad_chordam(q, 't', piscina),
+                exempla_pd[k].jones));
+            CREDO_VERUM (laqueus_alexander_ex_pd(exempla_pd[k].pd,
+                exempla_pd[k].transitus, piscina, &q));
+            CREDO_VERUM (chorda_aequalis_literis(
+                polynomium_ad_chordam(q, 't', piscina),
+                exempla_pd[k].alexander));
+        }
+        /* nodus trivialis: transitus nulli */
+        CREDO_VERUM (laqueus_jones_ex_pd(NIHIL, ZEPHYRUM, piscina, &q));
+        CREDO_VERUM (chorda_aequalis_literis(polynomium_ad_chordam(q,
+            't', piscina), "1"));
+        /* codices invalidi refutantur */
+        /* per uncinum et Alexander, non per Jones: codex invalidus
+         * Jones saepe casu refutat (exponentes dimidii), validatione
+         * non probata (planta Q5) */
+        CREDO_FALSUM (laqueus_uncinus_ex_pd(pd_malus_extra, III,
+            piscina,
+            &q));
+        CREDO_FALSUM (laqueus_uncinus_ex_pd(pd_malus_ter, III, piscina,
+            &q));
+        CREDO_FALSUM (laqueus_alexander_ex_pd(pd_malus_ter, III,
+            piscina,
+            &q));
+        CREDO_FALSUM (laqueus_alexander_ex_pd(pd_malus_infra, III,
+            piscina, &q));
+        CREDO_FALSUM (laqueus_uncinus_ex_pd(pd_unus, I, piscina, &q));
+
+        /* itus et reditus: diagramma -> codex PD -> invariantes ==
+         * invariantes diagrammatis (Alexander per arcus aliter
+         * inventos) */
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            constans s32 (*tabulae[V])[III] = { trifolium, octonaria,
+                quinquefolium, septifolium, torus_iii_iv };
+                   i32  numeri[V]  = { XLVIII, LXXII, LXXX, CXII, CXX };
+               Laqueus  l          = _ex_tabula(tabulae[k], numeri[k]);
+             Diagramma  d;
+                   i32* pd;
+            Polynomium  a1;
+            Polynomium  a2;
+            Polynomium  j1;
+            Polynomium  j2;
+
+            CREDO_VERUM (laqueus_diagramma_minimum(l, I, piscina, &d));
+            CREDO_VERUM (diagramma_pd(d, piscina, &pd));
+            CREDO_VERUM (diagramma_alexander(d, piscina, &a1)
+                && laqueus_alexander_ex_pd(pd, diagramma_numerus(d),
+                    piscina, &a2) && polynomium_aequalis(a1, a2));
+            CREDO_VERUM (diagramma_jones(d, piscina, &j1)
+                && laqueus_jones_ex_pd(pd, diagramma_numerus(d),
+                piscina,
+                    &j2) && polynomium_aequalis(j1, j2));
+        }
+    }
+
+
+    /* ==================================================
+     * SIMPLIFICATIO CODICIS PD (Reidemeister I, II)
+     * ================================================== */
+
+    {
+        /* trifolium (KnotInfo) cum ansa addita in osse 6: positiva et
+         * negativa; reductio = codex KnotInfo ipse */
+        hic_manens constans i32 pd_3_1[] = { 1, 5, 2, 4, 3, 1, 4, 6, 5,
+            3, 6, 2 };
+        hic_manens constans i32 pd_3_1_ansa_pos[] = { 1, 5, 2, 4, 3, 1,
+            4,
+            8, 5, 3, 6, 2, 6, 8, 7, 7 };
+        hic_manens constans i32 pd_3_1_ansa_neg[] = { 1, 5, 2, 4, 3, 1,
+            4,
+            8, 5, 3, 6, 2, 6, 7, 7, 8 };
+        /* nodus trivialis: ansae duae */
+        hic_manens constans i32 pd_ansae_duae[] = { 1, 3, 2, 2, 3, 1, 4,
+            4 };
+        hic_manens constans i32 pd_unus[]        = { 1, 2, 2, 1 };
+        /* transitus unus invalidus: X2 != X0 + 1 solum; X3 != X1 + 1
+         * solum (planta: utraque condicio sola nominatur) */
+        hic_manens constans i32 pd_unus_malus_infra[] = { 1, 1, 1, 2 };
+        hic_manens constans i32 pd_unus_malus_supra[] = { 1, 1, 2, 1 };
+        /* ora "bis" sed orientatio falsa: duae ansae disiunctae (olim
+         * accepta) */
+        /* validus (ora, orientatio) sed NON planus: facies una, non
+         * V - E + 2 = 5 (recensio; nodus virtualis) */
+        hic_manens constans i32 pd_non_planus[] = { 1, 3, 2, 4, 2, 5, 3,
+            6,
+            4, 1, 5, 6 };
+        /* bilaterum fictum speculatum ([a,b,c,d] -> [a,d,c,b]): ora
+         * communia ad sedes 3, 0 (planta Q2: R2 solum pro sede pari) */
+        hic_manens constans i32 pd_fictum_speculum[] = { 1, 8,
+            2,
+            9, 16, 9, 1, 10, 11, 14, 12, 15, 13, 10, 14, 11, 15, 12, 16,
+                13,
+            3, 6, 4, 7, 5, 2, 6, 3, 7, 4, 8, 5 };
+        hic_manens constans i32 pd_orientatio_falsa[] = { 1, 1, 2, 2, 3,
+            3,
+            4, 4 };
+        /* nucleus duorum transituum cum trifolio in utraque ansa nexo
+         * (constructio in lib/laqueus.worklog.md; nodus = 3_1 # 3_1):
+         * VERUM = filum idem supra utrumque, bilaterum facies (signa
+         * opposita) - R2 classicum; FICTUM = filum idem supra,
+         * bilaterum NON facies (trifolia utrimque) - summa connexa,
+         * etiam R2; FIBULA = filum supra in uno, infra in altero - non
+         * R2 */
+        hic_manens constans i32 pd_bilaterum_verum[] = { 1, 9, 2, 8, 16,
+            9,
+            1, 10, 11, 15, 12, 14, 13, 11, 14, 10, 15, 13, 16, 12, 3, 7,
+                4,
+            6, 5, 3, 6, 2, 7, 5, 8, 4 };
+        hic_manens constans i32 pd_bilaterum_fictum[] = { 1, 9, 2, 8,
+            16,
+            10, 1, 9, 11, 15, 12, 14, 13, 11, 14, 10, 15, 13, 16, 12, 3,
+                7,
+            4, 6, 5, 3, 6, 2, 7, 5, 8, 4 };
+        hic_manens constans i32 pd_fibula[] = { 1, 9, 2, 8, 9, 1, 10,
+            16,
+            11, 15, 12, 14, 13, 11, 14, 10, 15, 13, 16, 12, 3, 7, 4, 6,
+                5,
+            3, 6, 2, 7, 5, 8, 4 };
+        hic_manens constans i32 pd_malus[] = { 1, 5, 2, 4, 3, 1, 4, 6,
+            5,
+            1, 6, 2 };
+               i32* exitus  = NIHIL;
+               i32  c       = ZEPHYRUM;
+               i32  k;
+               i32  reducti  = ZEPHYRUM;
+        Polynomium  j31      = polynomium_nullum();
+        Polynomium  a31      = polynomium_nullum();
+        Polynomium  q        = polynomium_nullum();
+        Polynomium  r        = polynomium_nullum();
+
+        imprimere("\n--- Probans simplificationem codicis PD ---\n");
+        /* validatio: os semel intrans, semel exiens */
+        CREDO_FALSUM (laqueus_uncinus_ex_pd(pd_orientatio_falsa, II,
+            piscina, &q));
+        CREDO_FALSUM (laqueus_alexander_ex_pd(pd_orientatio_falsa, II,
+            piscina, &q));
+        CREDO_FALSUM (laqueus_pd_simplificare(pd_orientatio_falsa, II,
+            piscina, &exitus, &c));
+        CREDO_FALSUM (laqueus_uncinus_ex_pd(pd_non_planus, III, piscina,
+            &q));
+        CREDO_FALSUM (laqueus_alexander_ex_pd(pd_non_planus, III,
+            piscina,
+            &q));
+        CREDO_FALSUM (laqueus_pd_simplificare(pd_non_planus, III,
+            piscina,
+            &exitus, &c));
+        CREDO_FALSUM (laqueus_pd_simplificare(pd_malus, III, piscina,
+            &exitus, &c));
+        CREDO_FALSUM (laqueus_pd_simplificare(pd_unus_malus_infra, I,
+            piscina, &exitus, &c));
+        CREDO_FALSUM (laqueus_pd_simplificare(pd_unus_malus_supra, I,
+            piscina, &exitus, &c));
+
+        /* R1 */
+        CREDO_VERUM (laqueus_pd_simplificare(pd_unus, I, piscina,
+            &exitus,
+            &c) && c == ZEPHYRUM && exitus == NIHIL);
+        CREDO_VERUM (laqueus_pd_simplificare(pd_ansae_duae, II, piscina,
+            &exitus, &c) && c == ZEPHYRUM);
+        CREDO_VERUM (laqueus_pd_simplificare(pd_3_1_ansa_pos, IV,
+            piscina,
+            &exitus, &c) && c == III
+            && memcmp(exitus, pd_3_1, magnitudo(pd_3_1)) == ZEPHYRUM);
+        CREDO_VERUM (laqueus_pd_simplificare(pd_3_1_ansa_neg, IV,
+            piscina,
+            &exitus, &c) && c == III
+            && memcmp(exitus, pd_3_1, magnitudo(pd_3_1)) == ZEPHYRUM);
+        /* nullo motu: codex idem (trifolii lobi fibulae sunt, non R2)
+         */
+        CREDO_VERUM (laqueus_pd_simplificare(pd_3_1, III, piscina,
+            &exitus,
+            &c) && c == III
+            && memcmp(exitus, pd_3_1, magnitudo(pd_3_1)) == ZEPHYRUM);
+
+        /* R2 et eius limites */
+        CREDO_VERUM (laqueus_jones_ex_pd(pd_3_1, III, piscina, &j31));
+        CREDO_VERUM (laqueus_alexander_ex_pd(pd_3_1, III, piscina,
+            &a31));
+        CREDO_VERUM (laqueus_pd_simplificare(pd_bilaterum_verum, VIII,
+            piscina, &exitus, &c) && c == VI);
+        /* nodus aniculae: J(3_1)^2, Alexander (t^2 - t + 1)^2 */
+        CREDO_VERUM (laqueus_jones_ex_pd(exitus, c, piscina, &q)
+            && polynomium_multiplica(j31, j31, piscina, &r)
+            && polynomium_aequalis(q, r));
+        CREDO_VERUM (laqueus_jones_ex_pd(pd_bilaterum_verum, VIII,
+            piscina,
+            &q) && polynomium_aequalis(q, r));
+        CREDO_VERUM (laqueus_alexander_ex_pd(exitus, c, piscina, &q)
+            && polynomium_multiplica(a31, a31, piscina, &r)
+            && polynomium_aequalis(q, r));
+        CREDO_VERUM (polynomium_multiplica(j31, j31, piscina, &r));
+        CREDO_VERUM (laqueus_pd_simplificare(pd_bilaterum_fictum, VIII,
+            piscina, &exitus, &c) && c == VI);
+        CREDO_VERUM (laqueus_jones_ex_pd(exitus, c, piscina, &q)
+            && polynomium_aequalis(q, r));
+        CREDO_VERUM (laqueus_jones_ex_pd(pd_bilaterum_fictum, VIII,
+            piscina,
+            &q) && polynomium_aequalis(q, r));
+        /* speculum: J(3_1)(1/t)^2 */
+        CREDO_VERUM (laqueus_pd_simplificare(pd_fictum_speculum,
+            VIII, piscina, &exitus, &c) && c == VI);
+        CREDO_VERUM (laqueus_jones_ex_pd(exitus, c, piscina, &q)
+            && polynomium_multiplica(polynomium_inversum(j31, piscina),
+                polynomium_inversum(j31, piscina), piscina, &r)
+            && polynomium_aequalis(q, r));
+        /* fibula manet (avidus: nodus 3_1 # 3_1 sed nullus motus R1,
+         * R2) */
+        CREDO_VERUM (laqueus_pd_simplificare(pd_fibula, VIII, piscina,
+            &exitus, &c) && c == VIII
+            && memcmp(exitus, pd_fibula, magnitudo(pd_fibula))
+                == ZEPHYRUM);
+
+        /* diagrammata polygonorum (projectiones genericae et
+         * directiones aliae): invariantes servantur, simplificatio
+         * idempotens */
+        per (k = ZEPHYRUM; k < V; k++)
+        {
+            constans s32 (*tabulae[V])[III] = { trifolium, octonaria,
+                quinquefolium, septifolium, torus_iii_iv };
+                   i32 numeri[V]  = { XLVIII, LXXII, LXXX, CXII, CXX };
+               Laqueus l          = _ex_tabula(tabulae[k], numeri[k]);
+                   i32 v;
+                   b32 bene = VERUM;
+
+            per (v = ZEPHYRUM; v < IV; v++)
+            {
+                Punctum  directiones[IV];
+              Diagramma  d;
+                    i32* pd         = NIHIL;
+                    i32* pd_iterum  = NIHIL;
+                    i32  c2         = ZEPHYRUM;
+             Polynomium  a1         = polynomium_nullum();
+             Polynomium  a2         = polynomium_nullum();
+             Polynomium  j1         = polynomium_nullum();
+             Polynomium  j2         = polynomium_nullum();
+
+                directiones[ZEPHYRUM]  = situs_punctum(I, II, VII);
+                directiones[I]         = situs_punctum(III, -I, V);
+                directiones[II]        = situs_punctum(-II, V, III);
+                directiones[III]       = situs_punctum(VII, I, -IV);
+                si (!laqueus_diagramma(l, directiones[v], piscina, &d)
+                    || diagramma_numerus(d) > XX)
+                {
+                    perge;
+                }
+                si (   !diagramma_pd(d, piscina, &pd)
+                    || !laqueus_pd_simplificare(pd,
+                    diagramma_numerus(d),
+                        piscina, &exitus, &c)
+                    || !laqueus_pd_simplificare(exitus, c, piscina,
+                    &pd_iterum,
+                        &c2)
+                    || c2 != c
+                    || (c > ZEPHYRUM
+                        && memcmp(pd_iterum, exitus, (memoriae_index)
+                        (IV * c) * magnitudo(i32)) != ZEPHYRUM)
+                    || !laqueus_alexander_ex_pd(pd,
+                    diagramma_numerus(d),
+                        piscina, &a1)
+                    || !laqueus_alexander_ex_pd(exitus, c, piscina, &a2)
+                    || !polynomium_aequalis(a1, a2)
+                    || !laqueus_jones_ex_pd(pd, diagramma_numerus(d),
+                        piscina, &j1)
+                    || !laqueus_jones_ex_pd(exitus, c, piscina, &j2)
+                    || !polynomium_aequalis(j1, j2))
+                {
+                    bene = FALSUM;
+                }
+                si (c < diagramma_numerus(d))
+                {
+                    reducti++;
+                }
+                imprimere("  polygonum %u directio %u: %u -> %u\n", k,
+                    v,
+                    diagramma_numerus(d), c);
+            }
+            CREDO_VERUM (bene);
+        }
+        /* projectiones non minimae vere reducuntur (non vacua probatio)
+         */
+        CREDO_MAIOR_I32 (reducti, III);
     }
 
     credo_imprimere_compendium();

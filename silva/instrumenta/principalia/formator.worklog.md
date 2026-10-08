@@ -1081,3 +1081,37 @@ from the LHS's EXPANDED extent. `-scribere` leaves the line alone
 (tolerant), so it is a standing false divergence, not damage. Not
 fixed (found mid-task); the fix is to measure the gap from the
 invocation's closing paren when the LHS radix is a macro site.
+
+## 2026-10-08 — R16 indentation anchored on the statement CONTAINING the break
+
+Seen three times in committed code (lib/fenestra_textus.c x2,
+lib/delineare.c): `si (a || b || c || d) redde;` too long became
+
+    si (   a || b || c
+        || d
+                                    (~120 spaces)  >= ...) redde;
+
+Trace (FORMATOR_INDAGO=1 + pass-limited builds in the scratchpad):
+pass 1 R16 breaks before the last `||` but indents the new line to
+`redde` + IV (column 77) - `_sententiam_intimam_invenire` took the
+innermost statement covering the LINE with the latest start, and on a
+tie (the `si` and its body `redde;` both start on that line) the later
+entry, i.e. the BODY, which begins AFTER the break point. Pass 2 R17
+pulls `||` back to paren + I, but R16 breaks the still-long line again
+at `>=` with the same wrong anchor; nothing corrects that one.
+
+Fix: the finder takes the break column; a statement starting on the
+break line AFTER the break point does not contain it; ties ordered by
+(line, column). Test in probatio_silva_formator (R16 FIX section),
+red first; plant (column check disabled) caught; the tie-order plant
+is equivalent today (statements are listed outer before inner).
+Measured over the tree: lint reports identical (340,928 rows, 1,659
+files - the fix only changes a break's emendation text); rewriting
+the 72 hand-written files with breakable lines differs in exactly two,
+both improvements (lib/macho.c the same `|| index >= ...` shape;
+lib/sputnik_interpres.c `si (...) redde f(...)` runs no longer pushed
+to column ~70 and stacked one argument per line). Neither file is
+reformatted by this commit. CAUTION for whoever repeats the
+comparison: exclude GENERATUM files and giants (book_assets capsula
+12.8 MB, the silva amalgam) and run ONE process at a time - six
+parallel -scribere runs over them took ~60 GB of RAM.

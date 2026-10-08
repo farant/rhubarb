@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/* S1c: exspectatio maxima cum applicatione viva */
+#define MORA_PULSUS  XVI
+
 /* Octeti per lectionem terminalis (ut auscultator_terminalis) */
 #define LECTIO  CCLVI
 
@@ -145,6 +148,52 @@ ludus_tessera_tractare (
     dispensator_tractare(lt->d, &e);
 }
 
+/* summa versionum repositorii (durabilis + ephemera) */
+interior i32
+versionem_summare (
+    constans LudusTessera* lt)
+{
+    redde insula_versio(lt->d->repo, INSULA_DURABILIS)
+        + insula_versio(lt->d->repo, INSULA_EPHEMERA);
+}
+
+vacuum
+ludus_tessera_pulsum_ponere (
+            LudusTessera* lt,
+    LudusTesseraPulsator  fn,
+                  vacuum* ctx)
+{
+    si (!lt)
+    {
+        redde;
+    }
+    lt->pulsator      = fn;
+    lt->pulsator_ctx  = fn ? ctx : NIHIL;
+}
+
+b32
+ludus_tessera_pingendum (
+    LudusTessera* lt,
+             b32  eventa,
+             s64  nunc)
+{
+    b32 mutatum;
+
+    si (!lt || !lt->pulsator)
+    {
+        redde VERUM;
+    }
+    mutatum = lt->pulsator(lt->pulsator_ctx);
+    si (eventa || mutatum || lt->mensurae.quadra == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    /* ut ludus_fenestra_pingendum: dispensator solus, signum =
+     * versio repositorii contra quadrum ultimum */
+    dispensator_pulsare(lt->d, nunc);
+    redde versionem_summare(lt) != lt->versio_picta;
+}
+
 vacuum
 ludus_tessera_quadrum (
     LudusTessera* lt,
@@ -176,6 +225,7 @@ ludus_tessera_quadrum (
         lt->fons, lt->fons_ctx, lt->piscina_quadri);
     t3 = fenestra_tempus_ms();
     lt->mensurae.quadra++;
+    lt->versio_picta               = versionem_summare(lt);
     lt->mensurae.ms_compositionis  += t1 - t0;
     lt->mensurae.ms_pingendi       += t2 - t1;
     lt->mensurae.ms_demittendi     += t3 - t2;
@@ -225,8 +275,10 @@ ludus_tessera_currere (
         s32 mora;
         s32 capax;
         s32 lecti;
+        b32 eventa;
 
-        nunc = fenestra_tempus_ms();
+        nunc    = fenestra_tempus_ms();
+        eventa  = FALSUM;
         dum (rivus_eventum_coalitum(rivus, nunc, &e))
         {
             si (ludus_tessera_claudendum_est(lt, &e))
@@ -235,6 +287,7 @@ ludus_tessera_currere (
                 frange;
             }
             ludus_tessera_tractare(lt, &e, nunc);
+            eventa = VERUM;
         }
         si (!currens)
         {
@@ -259,10 +312,17 @@ ludus_tessera_currere (
                 * lt->modulus.cellula_altitudo);
             ludus_tessera_tractare(lt, &e, nunc);
         }
-        ludus_tessera_quadrum(lt, nunc);
-        (vacuum)tessera_praesentare(lt->opus);
-        lt->mensurae.octeti_emissi =
-            (i32)lt->opus->fructus.octeti_emissi;
+        /* S1c: applicatio viva - quadrum solum si pingendum; fumus
+         * (quadra_maxima) omne quadrum pingit - aliter applicatio viva
+         * otiosa post quadrum primum numquam exit */
+        si (   quadra_maxima > ZEPHYRUM
+            || ludus_tessera_pingendum(lt, eventa, nunc))
+        {
+            ludus_tessera_quadrum(lt, nunc);
+            (vacuum)tessera_praesentare(lt->opus);
+            lt->mensurae.octeti_emissi =
+                (i32)lt->opus->fructus.octeti_emissi;
+        }
         si (   quadra_maxima > ZEPHYRUM
             && lt->mensurae.quadra >= (i32)quadra_maxima)
         {
@@ -275,6 +335,10 @@ ludus_tessera_currere (
         si (mora <= ZEPHYRUM)
         {
             mora = (s32)lt->d->quies_ms;
+        }
+        si (lt->pulsator && mora > MORA_PULSUS)
+        {
+            mora = MORA_PULSUS;   /* S1c: applicatio viva */
         }
         capax = (s32)rivus_spatium(rivus);
         lecti = terminalis_legere(buffer,
