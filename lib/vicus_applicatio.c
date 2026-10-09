@@ -47,17 +47,37 @@ scribam_montare (
                     i32  altitudo,
                  vacuum* ctx)
 {
-    (vacuum)ctx;
+    /* S2b: ctx = liber paginarum communis (aedificare) */
     redde scriba_montare((ScribaMontatio*)sedes, piscina, intern,
-        volumen, repo, id, radix, latitudo, altitudo);
+        volumen, repo, id, radix, latitudo, altitudo,
+        (ScribaLiber*)ctx);
 }
 
+/* focus advenit (S2b): visus stalus PRIMUM reficitur - aliter clavis
+ * prima super folium vetus scriberet et mutationem alterius visus
+ * reverteret; deinde gestus */
 interior vacuum
 scribae_gestum (
      Motus* motus,
     vacuum* ctx)
 {
-    scriba_gestum_ponere(motus, (ScribaActiones*)ctx);
+    ScribaMontatio* m;
+
+    m = (ScribaMontatio*)ctx;
+    (vacuum)scriba_reficere(m);
+    scriba_gestum_ponere(motus, &m->actiones_ctx);
+}
+
+/* pulsus (S2b): visus stalus reficitur (pagina ab alio visu mutata) */
+interior VicusPulsus
+scribam_pulsare (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = scriba_reficere((ScribaMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
 }
 
 interior vacuum
@@ -73,7 +93,9 @@ scribam_describere (
     f->componere      = scriba_componere;
     f->componere_ctx  = &m->compositio;
     f->gestum_ponere  = scribae_gestum;
-    f->gestum_ctx     = &m->actiones_ctx;
+    f->gestum_ctx     = m;
+    f->pulsare        = scribam_pulsare;
+    f->pulsare_ctx    = m;
 }
 
 interior b32
@@ -164,6 +186,30 @@ terminale_describere (
     f->vivit_in_fundo  = VERUM;
 }
 
+/* folium paginae novae (S2b): lateris sinistri cellulae (dimidium
+ * cellulis rotundatum) minus margines; altitudo minus linea tabularum,
+ * status, margines - minima ut scriba (XX x X) */
+interior i32
+folii_columnae (
+    i32 latitudo)
+{
+    s32 n;
+
+    n = ((s32)latitudo / II) / VICUS_CELLULA_LATITUDO - II;
+    redde (i32)(n < XX ? XX : n);
+}
+
+interior i32
+folii_lineae (
+    i32 altitudo)
+{
+    s32 n;
+
+    n = ((s32)altitudo - VICUS_ALTITUDO_TABULARUM)
+        / VICUS_CELLULA_ALTITUDO - III;
+    redde (i32)(n < X ? X : n);
+}
+
 
 /* ==================================================
  * Applicatio
@@ -211,7 +257,8 @@ vicus_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo)
 {
-    chorda causa;
+         chorda  causa;
+    ScribaLiber* liber;
 
     si (!app || !piscina || !intern || !volumen)
     {
@@ -223,10 +270,15 @@ vicus_applicatio_aedificare (
     app->volumen  = volumen;
     app->vicus    = vicus_creare(piscina, intern, volumen, radix,
         latitudo, altitudo);
-    si (   !app->vicus
+    /* S2b: liber paginarum UNUS pro omnibus visibus scribae; paginae
+     * novae magnitudine lateris (dimidium cellulis rotundatum, minus
+     * margines et status - ut folium S2c) */
+    liber = scriba_liber_aperire(piscina, intern, volumen,
+        folii_columnae(latitudo), folii_lineae(altitudo));
+    si (   !app->vicus || !liber
         || !vicus_genus_addere(app->vicus, "scriba",
                magnitudo(ScribaMontatio), scribam_montare,
-               scribam_describere, NIHIL)
+               scribam_describere, liber)
         || !vicus_genus_addere(app->vicus, "pictor",
                magnitudo(PictorMontatio), pictorem_montare,
                pictorem_describere, NIHIL)

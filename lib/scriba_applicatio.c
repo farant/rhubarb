@@ -145,11 +145,15 @@ scriba_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+            ScribaLiber* liber)
 {
                         chorda  domini;
                   StmlResultus  res;
                         chorda  attributa;
+                        chorda  visus;
+                        chorda  pagina;
+                           b32  inventum;
     constans TabulaCharacterum* folium;
             constans character* spatium;
 
@@ -158,12 +162,31 @@ scriba_montare (
         redde FALSUM;
     }
     memset(m, ZEPHYRUM, magnitudo(ScribaMontatio));
-    spatium = id ? id : "";
+    spatium   = id ? id : "";
+    m->liber  = liber;
+    visus     = chorda_concatenare(chorda_ex_literis("scriba/visus/",
+        piscina), chorda_ex_literis(id ? id : "radix", piscina),
+        piscina);
 
-    /* documentum: exsistens aut novum, in spatio montationis */
-    m->doc = scriba_documentum_aperire(piscina, intern, volumen,
-        spatium);
-    si (!m->doc)
+    /* S2b: visus paginae libri - pagina ex plagula visus (absens aut
+     * ignota: prima), documentum libri commune */
+    si (liber)
+    {
+        pagina = volumen_plagulam_promere(volumen, visus, piscina,
+            &inventum);
+        si (!inventum || scriba_liber_index(liber, pagina) < ZEPHYRUM)
+        {
+            pagina = scriba_liber_nomen(liber, ZEPHYRUM);
+        }
+        m->doc = scriba_liber_pagina(liber, pagina);
+    }
+    /* documentum proprium: exsistens aut novum (spatium montationis) */
+    si (!liber)
+    {
+        m->doc = scriba_documentum_aperire(piscina, intern, volumen,
+            spatium);
+    }
+    si (!m->doc && !liber)
     {
         m->doc = scriba_documentum_creare(piscina, intern, volumen,
             spatium,
@@ -230,6 +253,8 @@ scriba_montare (
     m->actiones = actio_registrum_creare(piscina, intern);
     scriba_actiones_initiare(&m->actiones_ctx, m->doc, piscina);
     m->actiones_ctx.ramus = m->ramus;
+    m->actiones_ctx.liber = liber;
+    m->actiones_ctx.visus = visus;
     scriba_actiones_registrare(m->actiones, &m->actiones_ctx);
     m->figurae         = figura_registrum_creare(piscina);
     m->figurae_ctx.sa  = &m->actiones_ctx;
@@ -241,6 +266,36 @@ scriba_montare (
     m->compositio.status_lineae      = STATUS_LINEAE;
     m->compositio.ramus              = m->ramus;
     redde VERUM;
+}
+
+b32
+scriba_reficere (
+    ScribaMontatio* m)
+{
+                ScribaActiones* sa;
+    constans TabulaCharacterum* t;
+                           b32  mutatum;
+
+    si (!m || !m->actiones_ctx.doc)
+    {
+        redde FALSUM;
+    }
+    sa       = &m->actiones_ctx;
+    mutatum  = m->doc != sa->doc;
+    m->doc   = sa->doc;
+    /* visus stalus: alius visus commisit (solus focatus scribit -
+     * hic gestus pendens nullus) */
+    si (scriba_documentum_cursor(sa->doc) != sa->cursor_laboris)
+    {
+        t = scriba_documentum_tabula(sa->doc);
+        memcpy(sa->laboris.cellulae, t->cellulae,
+            (memoriae_index)(t->latitudo * t->altitudo));
+        memcpy(sa->laboris.indentatio, t->indentatio,
+            (memoriae_index)t->altitudo * magnitudo(s32));
+        sa->cursor_laboris  = scriba_documentum_cursor(sa->doc);
+        mutatum             = VERUM;
+    }
+    redde mutatum;
 }
 
 b32
@@ -267,7 +322,7 @@ scriba_applicatio_aedificare (
         "<scriba focus=\"pagina\"/>");
     si (   !app->repo
         || !scriba_montare(&app->montatio, piscina, intern, volumen,
-               app->repo, NIHIL, radix, latitudo, altitudo))
+               app->repo, NIHIL, radix, latitudo, altitudo, NIHIL))
     {
         redde FALSUM;
     }

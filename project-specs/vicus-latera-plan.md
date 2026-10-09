@@ -225,6 +225,31 @@ S2b-1 as built: `include/scriba_liber.h` + lib; probatio_scriba_liber
 (new volume, same name = same object, unknown name, new page + reopen
 keeps order and text, never reuses a name, 121 pages); three plants.
 
+S2b-3 as built: `scriba_montare(..., ScribaLiber* liber)`; with a book
+the view's page name lives in plagula `scriba/visus/<mount id>` (first
+page if absent or unknown) and `m->doc` is that page's shared document.
+`ScribaActiones` carries `liber`, `visus` and `cursor_laboris` (the
+document's history cursor when the working sheet was last equal to the
+projection - set on refresh AND after the view's own commit).
+`scriba_reficere` re-copies the projection when the cursor moved; vicus
+calls it from the scriba kind's pulse and before handing the gesture
+to a newly focused view. Ctrl+Shift+Right/Left flush the gesture and
+move the view to the next/previous page (past the last creates one,
+before the first does nothing), resetting cursor/mode/selection.
+vicus_applicatio opens the book and gives it to the scriba kind as its
+ctx; new documents are sized from the half-screen pane. Test
+probatio_vicus_paginae (real composition, tab 3): one document for both
+views; unflushed text reaches the other view via the click; pulse
+refreshes the unfocused view (and reports change only once); focus
+refreshes without a pulse; next/previous/new page, view page durable
+across reopen; an idle commit mid-typing does not erase the letters
+typed after it. Six plants caught (the last one, cursor_laboris after
+the view's own commit, looked harmless and was not: without it the
+pulse treats the focused view as stale and wipes uncommitted letters).
+NOT done: the standalone scriba app still passes NIHIL (its own
+document, old layout) - giving it a book hides existing standalone
+documents until they are migrated into `paginae/`; decision for Fran.
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);

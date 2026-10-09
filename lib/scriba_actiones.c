@@ -102,6 +102,8 @@ laboris_reficere (
            (size_t)(t->latitudo * t->altitudo));
     memcpy(sa->laboris.indentatio, t->indentatio,
            (size_t)t->altitudo * magnitudo(s32));
+    /* S2b: folium laboris ex hac versione */
+    sa->cursor_laboris = scriba_documentum_cursor(sa->doc);
 }
 
 
@@ -394,6 +396,8 @@ gestum_effundere (
     seq = sa->insertio_commissa
         ? scriba_documentum_committere_coniunctum(sa->doc, &sa->laboris)
         : scriba_documentum_committere(sa->doc, &sa->laboris);
+    /* S2b: proiectio == folium laboris post commissionem */
+    sa->cursor_laboris = scriba_documentum_cursor(sa->doc);
     si (sa->inserere)
     {
         si (seq > ZEPHYRUM)
@@ -488,6 +492,89 @@ clavis_nominata (
  * Tractator
  * ================================================== */
 
+/* dimensiones folii in ramo durabili (S2b: pagina mutata) */
+interior vacuum
+dimensiones_mutator (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans ScribaDocumentum* doc;
+
+    doc = (constans ScribaDocumentum*)ctx;
+    insula_attributum_ponere(nodus, p, in, "latitudo",
+        chorda_ut_cstr(chorda_ex_s32((s32)doc->latitudo, p), p));
+    insula_attributum_ponere(nodus, p, in, "altitudo",
+        chorda_ut_cstr(chorda_ex_s32((s32)doc->altitudo, p), p));
+}
+
+/* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam
+ * nova, ante primam nihil. Gestus pendens primum effunditur; deinde
+ * documentum, folium laboris, plagula visus, cursor ad 0,0 modo
+ * normali (status pagina.clavis est - ideo hic), dimensiones folii in
+ * ramo durabili. */
+interior vacuum
+paginam_mutare (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                     s32  gradus)
+{
+         VimClipboard  capsa;
+            VimStatus  st;
+               chorda  currens;
+               chorda  novum;
+                  b32  inventum;
+                  s32  i;
+     ScribaDocumentum* doc;
+
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
+    currens = volumen_plagulam_promere(sa->doc->volumen, sa->visus,
+        sa->doc->piscina, &inventum);
+    i = inventum ? scriba_liber_index(sa->liber, currens) : -I;
+    si (i < ZEPHYRUM)
+    {
+        i = ZEPHYRUM;
+    }
+    i += gradus;
+    si (i < ZEPHYRUM)
+    {
+        redde;
+    }
+    novum = i >= (s32)scriba_liber_numerus(sa->liber)
+          ? scriba_liber_pagina_nova(sa->liber)
+          : scriba_liber_nomen(sa->liber, (i32)i);
+    doc = scriba_liber_pagina(sa->liber, novum);
+    si (!doc)
+    {
+        redde;
+    }
+    si (   doc->latitudo != sa->laboris.latitudo
+        || doc->altitudo != sa->laboris.altitudo)
+    {
+        tabula_initiare(&sa->laboris, doc->piscina, doc->latitudo,
+            doc->altitudo);
+    }
+    sa->doc                = doc;
+    sa->inserere           = FALSUM;
+    sa->insertio_commissa  = FALSUM;
+    laboris_reficere(sa);
+    (vacuum)volumen_plagulam_condere(doc->volumen, sa->visus, novum,
+        "scriba:visus");
+    st                           = status_legere(ramus, sa, &capsa);
+    st.cursor_linea              = ZEPHYRUM;
+    st.cursor_columna            = ZEPHYRUM;
+    st.modo                      = MODO_VIM_NORMALIS;
+    st.selectio_initium_linea    = -I;
+    st.selectio_initium_columna  = ZEPHYRUM;
+    st.clavis_praecedens         = '\0';
+    st.esperans_fd               = FALSUM;
+    status_scribere(ramus, sa, st, &capsa);
+    (vacuum)mutare_ramum(ramus, INSULA_DURABILIS, dimensiones_mutator,
+        doc);
+}
+
 /* <tractator/> */
 b32
 scriba_pagina_clavis (
@@ -543,6 +630,21 @@ scriba_pagina_clavis (
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
         redde FALSUM;
+    }
+    /* S2b: Ctrl+Shift+Sinister/Dexter - pagina prior/proxima (sine
+     * libro: non tractatur) */
+    si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)
+        && (ev->datum.clavis.modificantes & MOD_SHIFT)
+        && (   ev->datum.clavis.clavis == CLAVIS_DEXTER
+            || ev->datum.clavis.clavis == CLAVIS_SINISTER))
+    {
+        si (!sa->liber)
+        {
+            redde FALSUM;
+        }
+        paginam_mutare(&ramus, motus, sa,
+            ev->datum.clavis.clavis == CLAVIS_DEXTER ? I : -I);
+        redde VERUM;
     }
     /* Ctrl-R in modo normali: reficere */
     si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)

@@ -78,3 +78,22 @@ persisted. `historia_aperire` reopens at the END of the log (cursor =
 finis); undo only moves an in-memory cursor (historia's header says so;
 pictor has always done this). So in scriba: undo, quit, reopen - the
 undone text is back. The test asserts today's behaviour with a note.
+
+## 2026-10-08 - S2b-3: a view on a shared page, and when it is stale
+
+A scriba view now edits a page document that other views share. The
+working sheet (`laboris`) is the view's private copy; it is stale when
+the document's history moved without it. `cursor_laboris` records the
+history cursor at the moment laboris == projection: set by
+`laboris_reficere` and ALSO right after this view's own commit
+(`gestum_effundere`). The second one matters: an idle commit
+(SCRIBA_QUIES_MS) fires mid-typing; without updating cursor_laboris the
+next pulse sees "document moved", re-copies the projection over the
+sheet and erases the letters typed since the commit. A plant that
+dropped that line first SURVIVED (Esc-terminated typing hides it);
+the test now types, pulses the dispatcher past the idle time, types
+more, pulses vicus, and checks the later letter survived.
+Page navigation (Ctrl+Shift+Left/Right) lives in the key handler next
+to Ctrl-R because cursor/mode are owned by pagina.clavis; it flushes
+the gesture first, and resizes laboris only if the new page's
+dimensions differ.

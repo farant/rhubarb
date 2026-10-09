@@ -34,6 +34,7 @@
 #include "motus.h"
 #include "tabula_characterum.h"
 #include "scriba_documentum.h"
+#include "scriba_liber.h"
 
 #define SCRIBA_QUIES_MS M   /* insertio in cursu servatur post ~1 s */
 
@@ -45,6 +46,16 @@ nomen structura {
     /* R4: status scribae; repo NIHIL = radix repositorii tractatori
      * dati (scriba_actiones_initiare nullat) */
           InsulaRamus ramus;
+    /* S2b (vicus-latera): versio documenti (cursor) ex qua folium
+     * laboris est - aliter = visus stalus (alius visus commisit) */
+                  s64 cursor_laboris;
+    /* S2b: liber paginarum; NIHIL = documentum proprium (mos prior,
+     * sine navigatione). Ctrl+Shift+Sinister/Dexter paginam priorem/
+     * proximam (ultra ultimam nova) - cursor, modus pagina.clavis
+     * sunt, ergo hic */
+          ScribaLiber* liber;
+    /* S2b: clavis plagulae paginae visus ('scriba/visus/<id>') */
+               chorda visus;
 } ScribaActiones;
 
 /* folium laboris = copia proiectionis documenti */

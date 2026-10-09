@@ -321,3 +321,15 @@ book and registers it with the scriba kind. Other kinds pass NIHIL.
 Proof: the pulse test's toy kind records the ctx it was mounted with
 (registered with a marker pointer, a second kind with NIHIL); plant
 (vicus passes NIHIL) caught.
+
+## 2026-10-08 - S2b-3: shared pages need two refresh points
+
+Fran's simplification: every focus change and tab switch commits the
+leaving view's gesture, so only the focused view can hold uncommitted
+text - no rebase, only stale unfocused views. Refresh happens (a) in
+the scriba kind's pulse (`scribam_pulsare` -> `scriba_reficere`;
+returns VERUM once, so the frame repaints once) and (b) when focus
+arrives (`scribae_gestum` refreshes before installing the gesture).
+(b) is not redundant: a click into a stale view with no pulse in
+between would otherwise type onto the old sheet and the commit would
+REVERT the other view's text (plant caught).

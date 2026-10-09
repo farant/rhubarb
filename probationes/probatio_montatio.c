@@ -84,10 +84,10 @@ s32 principale (vacuum)
         NIHIL, CDLXXX, CDLXXX));
     CREDO_VERUM(scriba_montare(&m1, piscina, intern, vol,
         repo, "s1",
-        NIHIL, CDLXXX, CDLXXX));
+        NIHIL, CDLXXX, CDLXXX, NIHIL));
     CREDO_VERUM(scriba_montare(&m2, piscina, intern, vol,
         repo, "s2",
-        NIHIL, CDLXXX, CDLXXX));
+        NIHIL, CDLXXX, CDLXXX, NIHIL));
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
         INSULA_DURABILIS)), III);
     /* S2c: documentum novum magnitudine superficiei - pictor:
@@ -161,7 +161,7 @@ s32 principale (vacuum)
          * suam servat */
         CREDO_VERUM(scriba_montare(&r1, piscina, intern, vol, repo2,
             "s1",
-            NIHIL, CCXL, CCXL));
+            NIHIL, CCXL, CCXL, NIHIL));
         CREDO_AEQUALIS_I32(scriba_documentum_numerus_vivorum(r1.doc),
                            vivi);
         CREDO_VERUM(tabula_cellula(scriba_documentum_tabula(r1.doc),
@@ -180,7 +180,7 @@ s32 principale (vacuum)
             "<schirmata/>", "<schirmata/>");
         CREDO_VERUM(scriba_montare(&sp, piscina, intern, vol,
             repo_parvum,
-            "s9", NIHIL, LX, XL));
+            "s9", NIHIL, LX, XL, NIHIL));
         CREDO_AEQUALIS_I32(scriba_documentum_tabula(sp.doc)->latitudo,
             XX);
         CREDO_AEQUALIS_I32(scriba_documentum_tabula(sp.doc)->altitudo,

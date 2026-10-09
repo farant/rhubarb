@@ -19,6 +19,12 @@ Leges chartae:
 
 ## inedita
 
+- corpus: scriba - `scriba_montare` argumentum ultimum `ScribaLiber*
+  liber` accipit (NIHIL = documentum proprium, mos vetus; liber = visus
+  super paginas communes) et `scriba_reficere` nova (visum stalum
+  reficit); `ScribaMontatio.liber`, `ScribaActiones.liber`/`.visus`/
+  `.cursor_laboris` - vocatores exstantes frangit.
+
 - corpus: vicus - `VicusMontator` et `vicus_genus_addere` argumentum
   ultimum `vacuum* ctx` accipiunt (contextus generis montatori datus;
   `VicusGenus.ctx`) - montatores exstantes frangit.

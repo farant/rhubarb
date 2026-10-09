@@ -361,9 +361,9 @@ principale (vacuum)
         scriba_documentum_cursor(scriba_s1(&f)->doc));
     CREDO_AEQUALIS_S64 (pictor_documentum_cursor(pictor_p1(&t)->doc),
         pictor_documentum_cursor(pictor_p1(&f)->doc));
-    CREDO_AEQUALIS_I32 (_acta(vol_t, "1_sinistrum_scriba/mutatio",
-        piscina), _acta(vol_f, "1_sinistrum_scriba/mutatio", piscina));
-    CREDO_VERUM (_acta(vol_t, "1_sinistrum_scriba/mutatio", piscina)
+    CREDO_AEQUALIS_I32 (_acta(vol_t, "paginae/1/mutatio",
+        piscina), _acta(vol_f, "paginae/1/mutatio", piscina));
+    CREDO_VERUM (_acta(vol_t, "paginae/1/mutatio", piscina)
         > ZEPHYRUM);
     CREDO_VERUM (chorda_aequalis(_status(&t, piscina),
         _status(&f, piscina)));
