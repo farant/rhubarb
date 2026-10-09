@@ -150,3 +150,21 @@ build the garbage was 0, in aedilis's it was not. Four constructions
 now `memset` first (actiones ×2, componentia, figurae, plus my own new
 test); both headers say "zero the whole struct". The second build
 (aedilis's own closure and flags) is what caught it.
+
+## 2026-10-08 - strokes off the canvas: clipped, not wrapped (Fran)
+
+Fran: dragging off the left or bottom edge drew a line across the canvas
+to the opposite edge. Cause: `ictum_applicare` cast the stored (signed)
+points straight to `i32` - UNSIGNED in this house - for
+`delineare_lineam` / `delineare_rectangulum_plenum`. x = -10 became
+~4.3e9; the line was walked toward it (and, in a test, effectively
+forever - the first red run hung 9 minutes). Now each segment is
+clipped to [0, w) x [0, h) with Cohen-Sutherland in s64 before any cast,
+and each brush dot is intersected with the canvas. A drag that leaves
+the canvas stops at the edge.
+
+Test lesson: the bug's red state is a HANG, so the off-canvas strokes run
+first in a CREDO_NON_PENDET child with its own temporary volume (a
+forked child must not write the parent's volume); the pixel checks run
+only if that passed. Plants: no clipping and no trivial reject = named
+hang; wrong left/bottom edge = pixel checks.

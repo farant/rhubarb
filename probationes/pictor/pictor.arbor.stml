@@ -16,6 +16,7 @@
   <componens
               id="prospectus"
           partes="prospectus"
+         titulus="focatum"
                x="0"
                y="0"
         latitudo="320"
@@ -26,7 +27,7 @@
     translatio_x="-5"
     translatio_y="3"
            scala="2"
-               (> <componens id="tabula" partes="tabula" actio="penicillus.ictus" x="0" y="0" latitudo="320" altitudo="200" praedicatum="proprius" focusabilis="verum" sectio="falsum" translatio_x="0" translatio_y="0" scala="1" puncta="10,20 12,22"/>
+               (> <componens id="tabula" partes="tabula" actio="penicillus.ictus" x="6" y="8" latitudo="320" altitudo="200" praedicatum="proprius" focusabilis="verum" sectio="falsum" translatio_x="0" translatio_y="0" scala="1" puncta="10,20 12,22"/>
   <componens
               id="status"
           partes="titulus"

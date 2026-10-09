@@ -35,3 +35,20 @@ promoted — it shows the stroke in flight (`puncta="10,20 12,22"`)
 and the pan as `translatio_x="-5"`, the signed serializer at work.
 Planted fault: the stroke copy skipped — red at `numerus_punctorum`
 and at the exemplar, green on revert. Examen ACCIPE; formator 0.
+
+## 2026-10-08 - canvas one cell in from the prospect (border visible, like scriba)
+
+Fran: no border around the pictor canvas in vicus. The border existed
+(figura_tabulae draws the page margin one whole CELL outside the
+document) but S2c sized new canvases to fill the whole prospect, so the
+margin lay outside the view. Now the canvas node sits at (cw, ch) in
+the prospect (like scriba's page at its margin cell) and new canvases
+are the prospect minus one cell on each side (pictor_applicatio). The
+margin cell and border show on all sides in a fitting pane.
+
+Goldens moved with it, each inspected before promotion: pictor.arbor
+(only the tabula's x/y), specimen pictor_prima (border now visible top
+and right; stroke and pending line shifted with the canvas), and the
+tessellation scene VII in probatio_tessellatio (canvas outline one
+column/row in). Pixel pins in probatio_pictor_figurae moved by (6, 8)
+and now also pin the TOP border pixel - the visible proof.

@@ -75,10 +75,16 @@ nomen structura {
 } ColorMandati;
 
 nomen structura {
-    MandatumGenus  genus;
-            Fines  fines;
-     ColorMandati  color;
-              b32  impletum;            /* rectangulum/polygonum */
+    MandatumGenus genus;
+            Fines fines;
+     ColorMandati color;
+              b32 impletum;            /* rectangulum/polygonum */
+              /* rectangulum impletum (vicus-latera, indicium foci):
+               * 0 = plenum; aliter id exemplaris (exemplaria.h) -
+               * solum bitus positi colore pinguntur (fundum manet),
+               * exemplar ad coordinatas TABULAE alligatum (impleta
+               * vicina congruunt) */
+              i32  exemplar;
               i32  crassitudo;          /* linea */
           Punctum* puncta;              /* linea (II) / polygonum (n) */
               i32  numerus_punctorum;
@@ -135,6 +141,15 @@ mandata_rectangulum (
            Fines  fines,
     ColorMandati  color,
              b32  impletum);
+
+/* rectangulum impletum exemplari (vide Mandatum.exemplar); duo
+ * colores = rectangulum plenum prius, deinde hoc */
+vacuum
+mandata_rectangulum_exemplar (
+         Mandata* m,
+           Fines  fines,
+    ColorMandati  color,
+             i32  exemplar);
 
 vacuum
 mandata_linea (

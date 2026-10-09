@@ -5,6 +5,7 @@
 #include "chorda.h"
 
 #include <stdio.h>
+#include <string.h>
 
 
 /* ==================================================
@@ -127,6 +128,17 @@ volutio (
  * ================================================== */
 
 /* <componens/> <purus/> */
+/* indicium foci (vicus-latera): ramus focatus - sine Motu aut ramo
+ * radicis (applicatio sola) semper; in vico spatium Motus = id rami */
+interior b32
+focatum_est (
+    constans Motus* motus,
+       InsulaRamus  ramus)
+{
+    redde !motus || chorda_vacua(ramus.id)
+        || chorda_aequalis(motus->spatium, ramus.id);
+}
+
 Componens*
 scriba_componere (
      InsulaRepositorium* repo,
@@ -141,6 +153,7 @@ scriba_componere (
              Componens* prospectus;
              Componens* pagina;
              Componens* status;
+             Componens* paginae;
             Dispositio* dispositio;
        DispositioForma  forma;
                    s32  d_radix;
@@ -159,9 +172,17 @@ scriba_componere (
                    s32  sl;
                    b32  visualis;
              character  titulus[XLVIII];
+             character  index[XLVIII];
     constans character* modus;
+                   s32  positio;
+                   s32  numerus;
+                   s32  ix;
+                   s32  nx;
+                   s32  limes;
+                chorda* nuntius;
+                chorda  textus_nuntii;
+             Componens* nodus_nuntii;
 
-    (vacuum)motus;
     si (!repo || !piscina || !intern || !ctx)
     {
         redde NIHIL;
@@ -223,6 +244,11 @@ scriba_componere (
     prospectus = nodus(piscina, intern, "prospectus", PARTES_PROSPECTUS,
                        fp);
     componens_ponere_sectio(prospectus, VERUM);
+    /* indicium foci: figura mensae exemplar addit */
+    si (focatum_est(motus, ramus))
+    {
+        componens_ponere_titulum(prospectus, "focatum");
+    }
     /* volutio: folium cum margine (cellula utrimque) in cellulis */
     componens_ponere_transformatio(prospectus,
         -volutio(cc + I, folium_x + II, fp.latitudo / cw) * cw,
@@ -252,6 +278,49 @@ scriba_componere (
             : modus[ZEPHYRUM] == 'v' ? "VISUALIS" : "NORMALIS",
             (integer)(cl + I), (integer)(cc + I));
     componens_ponere_titulum(status, titulus);
+    /* index paginae (visus super librum, vicus-latera S2b): dextrorsum,
+     * cellula ab ora; omittitur si textum status tangeret */
+    limes   = fs.latitudo - cw;
+    positio = attributum_s32(&ramus, INSULA_EPHEMERA, "pagina_positio",
+        ZEPHYRUM);
+    numerus = attributum_s32(&ramus, INSULA_EPHEMERA, "paginae_numerus",
+        ZEPHYRUM);
+    si (positio > ZEPHYRUM && numerus > ZEPHYRUM)
+    {
+        sprintf(index, "pagina %d/%d", (integer)positio,
+            (integer)numerus);
+        ix = fs.latitudo - (s32)(strlen(index) + I) * cw;
+        si (ix >= II + (s32)(strlen(titulus) + II) * cw)
+        {
+            paginae = nodus(piscina, intern, "paginae", PARTES_INDEX,
+                fines(ix, ZEPHYRUM, (s32)strlen(index) * cw,
+                fs.altitudo));
+            componens_ponere_titulum(paginae, index);
+            componens_addere_liberum(status, paginae);
+            limes = ix - cw;
+        }
+    }
+    /* S3b-2: nuntius post modum et positionem (duabus cellulis), ante
+     * indicem paginae (cellula una); praecisus ut capiat, omissus si
+     * nulla cellula restat */
+    nuntius = insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+        "nuntius");
+    nx = II + (s32)(strlen(titulus) + II) * cw;
+    si (nuntius && nuntius->mensura > ZEPHYRUM && limes - nx >= cw)
+    {
+        textus_nuntii = *nuntius;
+        si ((s32)textus_nuntii.mensura * cw > limes - nx)
+        {
+            textus_nuntii.mensura = (i32)((limes - nx) / cw);
+        }
+        nodus_nuntii = nodus(piscina, intern, "nuntius",
+            PARTES_DIALOGUS,
+            fines(nx, ZEPHYRUM, (s32)textus_nuntii.mensura * cw,
+            fs.altitudo));
+        componens_ponere_titulum(nodus_nuntii, chorda_ut_cstr(
+            textus_nuntii, piscina));
+        componens_addere_liberum(status, nodus_nuntii);
+    }
 
     componens_addere_liberum(prospectus, pagina);
     componens_addere_liberum(radix, prospectus);

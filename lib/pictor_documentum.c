@@ -54,6 +54,85 @@ vacare_albam (
  * Applicatio actorum
  * ================================================== */
 
+/* segmentum ad tabulam [0, latitudo) x [0, altitudo) praecidere
+ * (Cohen-Sutherland, s64 - nihil revolvitur); FALSUM si totum extra.
+ * Coordinatae negativae ut i32 insignatum ingentes fiebant: tractus
+ * extra marginem ad oppositum saliebat (Franus 2026-10-08). */
+interior b32
+segmentum_praecidere (
+     s64* x0,
+     s64* y0,
+     s64* x1,
+     s64* y1,
+     s64  latitudo,
+     s64  altitudo)
+{
+    s64 x_ultimum;
+    s64 y_ultimum;
+    s64 x;
+    s64 y;
+    i32 c0;
+    i32 c1;
+    i32 c;
+
+    x_ultimum = latitudo - I;
+    y_ultimum = altitudo - I;
+    si (x_ultimum < ZEPHYRUM || y_ultimum < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    dum (VERUM)
+    {
+        c0 = (*x0 < ZEPHYRUM ? I : ZEPHYRUM) | (*x0
+            > x_ultimum ? II : ZEPHYRUM)
+            | (*y0 < ZEPHYRUM ? IV : ZEPHYRUM) | (*y0
+               > y_ultimum ? VIII : ZEPHYRUM);
+        c1 = (*x1 < ZEPHYRUM ? I : ZEPHYRUM) | (*x1
+            > x_ultimum ? II : ZEPHYRUM)
+            | (*y1 < ZEPHYRUM ? IV : ZEPHYRUM) | (*y1
+               > y_ultimum ? VIII : ZEPHYRUM);
+        si (!(c0 | c1))
+        {
+            redde VERUM;
+        }
+        si (c0 & c1)
+        {
+            redde FALSUM;
+        }
+        c = c0 ? c0 : c1;
+        si (c & IV)
+        {
+            x = *x0 + (*x1 - *x0) * (ZEPHYRUM - *y0) / (*y1 - *y0);
+            y = ZEPHYRUM;
+        }
+        alioquin si (c & VIII)
+        {
+            x = *x0 + (*x1 - *x0) * (y_ultimum - *y0) / (*y1 - *y0);
+            y = y_ultimum;
+        }
+        alioquin si (c & II)
+        {
+            y = *y0 + (*y1 - *y0) * (x_ultimum - *x0) / (*x1 - *x0);
+            x = x_ultimum;
+        }
+        alioquin
+        {
+            y = *y0 + (*y1 - *y0) * (ZEPHYRUM - *x0) / (*x1 - *x0);
+            x = ZEPHYRUM;
+        }
+        si (c == c0)
+        {
+            *x0 = x;
+            *y0 = y;
+        }
+        alioquin
+        {
+            *x1 = x;
+            *y1 = y;
+        }
+    }
+}
+
 /* <ictus instrumentum color magnitudo><punctum x y/>...</ictus> */
 interior vacuum
 ictum_applicare (
@@ -70,6 +149,16 @@ ictum_applicare (
                     i32  i;
                     i32  n;
               StmlNodus* punctum;
+                    s64  x0;
+                    s64  y0;
+                    s64  x1;
+                    s64  y1;
+                    s64  sinistra;
+                    s64  summa;
+                    s64  dextra;
+                    s64  infima;
+                    s64  lat;
+                    s64  alt;
 
     ctx = delineare_creare_contextum(doc->piscina, doc->tabula);
     si (!ctx)
@@ -83,6 +172,8 @@ ictum_applicare (
     {
         magnitudo_penicilli = I;
     }
+    lat     = (s64)doc->tabula->latitudo;
+    alt     = (s64)doc->tabula->altitudo;
     n       = stml_numerus_liberorum(ictus);
     x_ante  = ZEPHYRUM;
     y_ante  = ZEPHYRUM;
@@ -97,14 +188,30 @@ ictum_applicare (
         y = attributum_s32(punctum, "y", ZEPHYRUM);
         si (i > ZEPHYRUM)
         {
-            delineare_lineam(ctx, (i32)x_ante, (i32)y_ante, (i32)x,
-                (i32)y,
-                             color);
+            x0 = (s64)x_ante;
+            y0 = (s64)y_ante;
+            x1 = (s64)x;
+            y1 = (s64)y;
+            si (segmentum_praecidere(&x0, &y0, &x1, &y1, lat, alt))
+            {
+                delineare_lineam(ctx, (i32)x0, (i32)y0, (i32)x1,
+                    (i32)y1, color);
+            }
         }
-        delineare_rectangulum_plenum(ctx,
-            (i32)(x - magnitudo_penicilli / II),
-            (i32)(y - magnitudo_penicilli / II),
-            (i32)magnitudo_penicilli, (i32)magnitudo_penicilli, color);
+        /* punctum penicilli: rectangulum ad tabulam praecisum */
+        sinistra  = (s64)x - magnitudo_penicilli / II;
+        summa     = (s64)y - magnitudo_penicilli / II;
+        dextra    = sinistra + magnitudo_penicilli;
+        infima    = summa + magnitudo_penicilli;
+        sinistra  = sinistra < ZEPHYRUM ? ZEPHYRUM : sinistra;
+        summa     = summa < ZEPHYRUM ? ZEPHYRUM : summa;
+        dextra    = dextra > lat ? lat : dextra;
+        infima    = infima > alt ? alt : infima;
+        si (dextra > sinistra && infima > summa)
+        {
+            delineare_rectangulum_plenum(ctx, (i32)sinistra, (i32)summa,
+                (i32)(dextra - sinistra), (i32)(infima - summa), color);
+        }
         x_ante = x;
         y_ante = y;
     }

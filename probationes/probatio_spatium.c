@@ -491,6 +491,16 @@ dispensatorem_probare (vacuum)
     CREDO_AEQUALIS_I32(sinistra.petitiones, ZEPHYRUM);
     CREDO_AEQUALIS_I32(dextra.petitiones, ZEPHYRUM);
     CREDO_AEQUALIS_I32(dextra.claves, I);
+    /* petitione vana focus TOLLITUR (attributum removetur - valor ""
+     * internari non potest) */
+    CREDO_VERUM(chorda_vacua(dispensator_focus(d)));
+    /* idem sine spatio: id nusquam */
+    dispensator_motus(d)->spatium = chorda_internata("");
+    dispensator_focus_ponere(d, chorda_internata("nusquam"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_focus(d), "nusquam");
+    e = clavis(M + DL, 'r');
+    dispensator_tractare(d, &e);
+    CREDO_VERUM(chorda_vacua(dispensator_focus(d)));
     /* captura 'pagina' in spatio B: ictus super 'alia' (A) ad
      * paginam B */
     dispensator_motus(d)->spatium  = chorda_internata(spatium_b);

@@ -233,6 +233,38 @@ s32 principale (vacuum)
     CREDO_MANUS_LUDUS_EXISTIT(m, "[actio=penicillus.ictus]");
     CREDO_VERUM(insula_restituere(repo));
 
+    imprimere("\n--- Captura: punctum in spatio TABULAE ---\n");
+    /* Franus 2026-10-08: tractus extra tabulam (super lineam status aut
+     * latus alterum) ad marginem oppositum saliebat - punctum_locale
+     * ad ictum GEOMETRICUM pertinet (linea status: y ~ 3), non ad
+     * componentem captum */
+    {
+           Xar* omnia;
+           i32  k;
+        chorda  ultimum;
+
+        via[ZEPHYRUM].x  = X;
+        via[ZEPHYRUM].y  = CXC;
+        via[I].x         = X;
+        via[I].y         = CXCIX;
+        via[II].x        = X;
+        via[II].y        = CCVII;
+        CREDO_VERUM(manus_ludus_trahere(m, "#tabula", via, III));
+        omnia    = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+        ultimum  = chorda_ex_literis("", piscina);
+        per (k = ZEPHYRUM; k < xar_numerus(omnia); k++)
+        {
+            a = (VolumenActum*)xar_obtinere(omnia, k);
+            si (chorda_aequalis_literis(a->genus, "ictus"))
+            {
+                ultimum = a->datum;
+            }
+        }
+        /* punctum ultimum in spatio tabulae (CCVII), non status */
+        CREDO_CHORDA_CONTINET(ultimum, chorda_ex_literis("y=\"207\"",
+            piscina));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     volumen_claudere(vol);
