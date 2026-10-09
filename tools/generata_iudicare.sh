@@ -53,8 +53,7 @@ git ls-files -- $(cat "$T/viae") 2>/dev/null | sort -u > "$T/commissa"
 # GENERATUM sine iudicio: classes exclusae (exemplar<TAB>causa)
 EXCLUSA='*/probationes/fixa/*	fixum: copia congelata (caput fontis sui fert)
 probationes/fixa/*	fixum: copia congelata (caput fontis sui fert)
-knotapel/*/demo-snapshot.c	demonstratio congelata (knotapel/archive.sh)
-gesta/annales/tabula.md	proiectio tabularii (residens scribit, non generator)'
+knotapel/*/demo-snapshot.c	demonstratio congelata (knotapel/archive.sh)'
 _exclusa () {
     local via="$1" exemplar
     while IFS='	' read -r exemplar _; do
