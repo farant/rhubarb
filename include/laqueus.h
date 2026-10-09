@@ -211,6 +211,71 @@ diagramma_alexander (
        Piscina* piscina,
     Polynomium* exitus);
 
+
+/* ==================================================
+ * Codex PD (KnotTheory, KnotInfo)
+ * ================================================== */
+
+/* codex PD nodi: 4 ora per transitum, ora 1..2c secundum nodum; quisque
+ * transitus [infra intrans, deinde contra horologium] - positivus [i, o
+ * exiens, i exiens, o intrans]. Ita KnotTheory et KnotInfo. Nodi soli;
+ * memoria in piscina. */
+b32
+diagramma_pd (
+     Diagramma   d,
+       Piscina*  piscina,
+           i32** pd);
+
+/* invariantes ex codice PD nodi (transitus 0 = nodus trivialis; ora
+ * 1..2c bis quaeque, infra X0 -> X2 consecutiva; transitus unus
+ * refutatur: signum ex ordine orarum non determinatur). Codex validus:
+ * os quodque semel intrans et semel exiens (componens una) et PLANUS (V
+ * - E + F = 2 in systemate rotationis; codices nodorum virtualium
+ * refutantur). FALSUM si codex invalidus aut transitus >
+ * LAQUEUS_TRANSITUS_MAXIMI (uncinus, Jones). */
+b32
+laqueus_uncinus_ex_pd (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+      Polynomium* exitus);
+
+b32
+laqueus_jones_ex_pd (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+      Polynomium* exitus);
+
+b32
+laqueus_alexander_ex_pd (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+      Polynomium* exitus);
+
+/* codex PD per motus Reidemeister I et II simplificatus: dum motus
+ * aliquis applicari potest, transitus removentur (R1: ansa - transitus
+ * cuius duo ora vicina idem sunt; R2: duo transitus duo ora
+ * communicantes, eodem filo supra utrumque - in nodo aut bilaterum
+ * facies aut summa connexa T1 # T2 per eos, utrimque isotopia). Ora
+ * deinde renumerantur 1..2c' secundum nodum, transitus [infra intrans,
+ * contra horologium] ut in diagramma_pd. Isotopia: invariantes omnes
+ * idem. Nullo motu possibili codex idem redditur.
+ *
+ * AVIDUS, non completus: motus R3 non tentatur, ergo minimum localem
+ * reddere potest. Sed c' == 0 = nodus trivialis PROBATUS (diagramma
+ * sine transitu; pd_exitus NIHIL). Transitus unus accipitur (semper
+ * ansa). Nodi soli; FALSUM si codex invalidus (exitus non tangitur).
+ * Memoria in piscina. */
+b32
+laqueus_pd_simplificare (
+    constans i32*  pd,
+             i32   transitus,
+         Piscina*  piscina,
+             i32** pd_exitus,
+             i32*  transitus_exitus);
+
 /* determinans nodi |Delta(-1)|, magnus exactus; nodi soli (FALSUM pro
  * catenis, sicut diagramma_alexander). Residua in piscina manent. */
 b32

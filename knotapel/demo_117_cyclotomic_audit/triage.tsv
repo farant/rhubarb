@@ -1,0 +1,58 @@
+demo	status	seconds	ubsan_sites	overflow_sites	first_site	limit_s
+demo_100_4strand_dkc	ok	493	1	1	main.c:386:15: runtime error: signed integer overflow: 1743392200 * 3 cannot be represented in type 'int'	600
+demo_101_5strand_dkc	ok	1854	0	0	-	3600
+demo_102_6strand_ab	rc1	132	0	0	-	600
+demo_103_dimension_scaling	rc1	597	0	0	-	3600
+demo_104_coarseness_sweep	ok	254	0	0	-	600
+demo_105_8strand_k_regime	ok	374	0	0	-	600
+demo_106_topological_entropy	ok	69	1	1	main.c:682:15: runtime error: signed integer overflow: 1743392200 * 3 cannot be represented in type 'int'	600
+demo_107_algebraic_graph	ok	2	0	0	-	3600
+demo_108_parity_vocabulary	ok	16	0	0	-	3600
+demo_109_d55_graph_analysis	ok	3	0	0	-	600
+demo_113_rosetta	ok	47	0	0	-	600
+demo_19_braid_compiler	ok	1	0	0	-	600
+demo_27_complex_reverse_dkc	rc1	17	0	0	-	600
+demo_29_cyclotomic_arithmetic	ok	46	0	0	-	600
+demo_35_tl_matrices	ok	16	0	0	-	600
+demo_47_parity_investigation	rc1	528	0	0	-	600
+demo_48_forward_dkc_zoo	ok	31	0	0	-	600
+demo_49_neglecton_weights	rc1	275	0	0	-	600
+demo_50_activation_zoo	rc1	22	0	0	-	600
+demo_51_radical_anatomy	ok	65	0	0	-	600
+demo_53_dkc_d1	ok	6	0	0	-	600
+demo_54_dkc_l4	ok	46	0	0	-	600
+demo_55_dkc_boolean	ok	5	0	0	-	600
+demo_56_potts_tl	ok	38	4	4	main.c:106:32: runtime error: signed integer overflow: -5724964536630093240 - 3840917080422582720 cannot be represented in type 'long'	600
+demo_57_additive_dkc	ok	4	0	0	-	600
+demo_58_fibonacci_dkc	ok	8	0	0	-	600
+demo_59_q3_potts_dkc	ok	4	0	0	-	600
+demo_63_angular_anatomy	ok	25	0	0	-	600
+demo_64_parity_matroid_recursion	ok	20	0	0	-	600
+demo_65_clifford_staircase	ok	94	0	0	-	600
+demo_66_quaternionic_dkc	ok	21	0	0	-	600
+demo_67_coordinate_zoo	ok	21	0	0	-	600
+demo_68_stereographic_dkc	ok	19	0	0	-	600
+demo_69_clifford_staircase	ok	1004	0	0	-	3600
+demo_70_musica_nodorum	ok	1	0	0	-	600
+demo_71_spectral_dkc	ok	3	0	0	-	600
+demo_72_spherical_design	ok	5	0	0	-	600
+demo_73_eigenvector_automaton	ok	1	0	0	-	600
+demo_74_computational_invariant	ok	19	0	0	-	600
+demo_77_activation_zoo	ok	1	0	0	-	600
+demo_78_recursive_scaling	ok	8	0	0	-	600
+demo_79_zeta12_capacity	ok	782	2	0	main.c:591:9: runtime error: index 64 out of bounds for type 'int[64]'	3600
+demo_80_group_finiteness	ok	2	0	0	-	600
+demo_81_capacity_scaling	ok	458	0	0	-	600
+demo_82_crossing_depth	ok	409	0	0	-	600
+demo_83_framing_test	ok	414	0	0	-	600
+demo_84_null_states	ok	3	0	0	-	600
+demo_87_null_indispensability	ok	88	0	0	-	600
+demo_88_anti_correlation	ok	11	0	0	-	600
+demo_89_depth_law_mechanism	rc3	362	0	0	-	600
+demo_90_sum_angle_structure	rc134	9	4	1	main.c:1258:21: runtime error: index 4096 out of bounds for type 'double[4096]'	600
+demo_91_activation_bottleneck	rc1	344	0	0	-	600
+demo_92_function_scaling	rc3	63	0	0	-	600
+demo_93_function_scaling_1wpi	ok	569	0	0	-	600
+demo_94_binary_icosahedral	ok	371	0	0	-	600
+demo_98_3strand_dkc	ok	4	0	0	-	600
+demo_99_column_readout	ok	874	0	0	-	3600

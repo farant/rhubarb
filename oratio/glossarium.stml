@@ -283,6 +283,23 @@
     <forma textus="symmetricus" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="symmetrica" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="symmetricum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="symmetrici" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="symmetrico" casus="ablativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="chiralis" lingua="latina" classis="adiectivum" nota="Neolatina (Gk. cheir, manus): chiralis, imagini suae speculari non congruens (nodus chiralis); sedes include/tabula_nodorum.h; WORDS caret">
+    <forma textus="chiralis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="chirales" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="amphichiralis" lingua="latina" classis="adiectivum" nota="Neolatina (Gk. amphi + cheir): amphichiralis, imagini suae speculari congruens (nodus amphichiralis, e.g. 4_1); sedes include/tabula_nodorum.h; WORDS caret">
+    <forma textus="amphichiralis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="amphichirales" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="reversibilis" lingua="latina" classis="adiectivum" nota="Neolatina (revertere + -bilis): reversibilis, directione inversa idem (nodus invertibilis, KnotInfo 'reversible'); sedes include/tabula_nodorum.h; WORDS caret">
+    <forma textus="reversibilis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="bilaterus" lingua="latina" classis="adiectivum" nota="Late Latin (bi- + latus): bilaterus, duorum laterum; bilaterum = bigon, two crossings joined by two edges (Reidemeister II); sedes lib/laqueus.c">
+    <forma textus="bilaterus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="bilaterum" casus="nominativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
   <vocabulum lemma="trifolium" lingua="latina" classis="substantivum" nota="Plinius: trifolium (planta); nodus trifolium (laqueus, nodus toroidalis T(2,3))">
     <forma textus="trifolium" casus="nominativus" numerus="singularis" genus="neutrum"/>
@@ -348,6 +365,49 @@
     <forma textus="unimodularem" casus="accusativus" numerus="singularis"/>
   </vocabulum>
   <vocabulum lemma="hermite" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Charles Hermite (forma normalis Hermite, matrix_forma_hermite)"/>
+  <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>
+  <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
+  <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
+  <vocabulum lemma="cauchy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: A.-L. Cauchy (limes radicum 1 + max |f_i|; lib/extensio.c)"/>
+  <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
+  <vocabulum lemma="arf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Cahit Arf (invarians Arf nodi, V(i) = (-1)^Arf)"/>
+  <vocabulum lemma="phi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: phi(n) Euleri, Phi_n polynomium cyclotomicum"/>
+  <vocabulum lemma="mu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: mu(n) functio Moebius"/>
+  <vocabulum lemma="psi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: variabilis polynomii in probationibus"/>
+  <vocabulum lemma="cyclotomia" lingua="latina" classis="substantivum" nota="Neolatina (Gk. kyklos + tome): sectio circuli; Z[zeta_n], anulus integrorum cyclotomicorum; sedes include/cyclotomia.h; WORDS caret">
+    <forma textus="cyclotomia" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="cyclotomicus" lingua="latina" classis="adiectivum" nota="Neolatina: cyclotomicus, ad sectionem circuli pertinens (integer cyclotomicus, polynomium cyclotomicum); sedes include/cyclotomia.h; WORDS caret">
+    <forma textus="cyclotomicus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="cyclotomicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="automorphismus" lingua="latina" classis="substantivum" nota="Neolatina (Gk. autos + morphe): automorphismus, isomorphismus structurae in se (sigma_j: zeta -> zeta^j); sedes include/cyclotomia.h; WORDS caret">
+    <forma textus="automorphismus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="algebraicus" lingua="latina" classis="adiectivum" nota="Neolatina: algebraicus, ad algebram pertinens (numerus algebraicus, radix polynomii in Z[t]); sedes include/extensio.h; WORDS caret">
+    <forma textus="algebraicus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="algebraica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="algebraicum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="quadraticus" lingua="latina" classis="adiectivum" nota="Neolatina: quadraticus, secundi gradus (corpus quadraticum Q(sqrt d)); sedes include/extensio.h; WORDS caret">
+    <forma textus="quadraticus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="quadratica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="quadraticum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="cosinus" lingua="latina" classis="substantivum" nota="Neolatina (Gunter, ex 'complementi sinus'): cosinus anguli (Q(cos 2 pi/n)); sedes include/extensio.h; WORDS caret">
+    <forma textus="cosinus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="bisectio" lingua="latina" classis="substantivum" nota="Neolatina: bisectio, sectio in duas partes aequales (intervalli, ad radicem isolandam); sedes lib/extensio.c; WORDS caret">
+    <forma textus="bisectio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="bisectiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="bisectionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="binomium" lingua="latina" classis="substantivum" nota="Neolatina: binomium, polynomium duorum terminorum (t + 1/t); sedes lib/extensio.c; WORDS caret">
+    <forma textus="binomium" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
   <vocabulum lemma="coefficiens" lingua="latina" classis="substantivum" nota="Neolatina (Vieta): coefficiens, quantitas cum potentia coniuncta (polynomium); WORDS caret">
     <forma textus="coefficiens" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="coefficientis" casus="genitivus" numerus="singularis" genus="masculinum"/>

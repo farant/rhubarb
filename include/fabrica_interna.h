@@ -3,7 +3,8 @@
  * fabrica.c et fabrica_<pars>.c id includunt; consumptores fabrica.h
  * solum. Praefixum 'fabricae_' (genetivus) ab API 'fabrica_' distinguit
  * et nomina cum ceteris bibliothecis in suite necte-omnia non
- * collidunt. */
+ * collidunt. Tabula plagularum et ordines nominum: caput
+ * lib/fabrica.c. */
 
 #ifndef FABRICA_INTERNA_H
 #define FABRICA_INTERNA_H

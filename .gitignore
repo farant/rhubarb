@@ -19,14 +19,14 @@ episodes/*-audio/audio/
 episodes/*-audio/output/
 *.mp3
 
-# tabularium (status vivus - annales JSONL committitur, db non)
+# tabularium et forum: acta DOMUS TOTIUS, extra arborem
+# (~/.rhubarb/annales, repositorium git proprium; sedes per
+# gesta/fontes/annales_sedes.h - ./gesta/frigida.sh -sedes). Copiae
+# veteres in arbore (legatum, ante 2026-10-08) numquam committuntur.
+gesta/annales/
 tabularium.db
 tabularium.db-wal
 tabularium.db-shm
-
-# proiectio entitatum (tertia proiectio super tabularium.jsonl -
-# una plagula markdown per rem, regenerabilis ut .db, non committitur)
-gesta/annales/entities/
 
 # effusum debug probationum roundtrip (scriptum in fractione - regenerabile)
 probationes/results/

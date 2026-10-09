@@ -120,3 +120,7 @@ At ζ₈ (24 entries, finite group), the same pattern holds: bracket XOR8, Jones
 2. Can we prove the "+2 per writhe unit" analytically from the (-A³)^w factor?
 3. At ζ₈ where Jones gives XOR6, is this exactly the "standard sector activation" capacity from Demo 63?
 4. What is the writhe distribution of the 24-cell vertices? Does antipodal pairing correlate with writhe inversion?
+
+## Audit (Demo 117, 2026-10-07)
+
+Both catalogs' direction counts (512) are `MAX_DIR 512`, reached without a message. Uncapped (`demo_117_cyclotomic_audit/audit_cap_impact.sh`, with `MAX_ACT` raised too) the bracket catalog has 2,043 directions and the "Jones-normalized" one 1,389. The angle counts (43 → 31), max XOR (12 → 10) and 12/12 tests are unchanged; mixed-writhe XOR12 winners go from 4/32 to 0/32 because the winners themselves change. (Whether the operation is Jones normalization at all is a separate question; see note 43 of `docs/knotapel.html`.)

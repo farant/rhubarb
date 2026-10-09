@@ -198,3 +198,13 @@ cc -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion \
    main.c -lm -o demo79
 ./demo79
 ```
+
+## Audit (Demo 117, 2026-10-07)
+
+Demo 117 re-ran this demo with its silent limits lifted (`demo_117_cyclotomic_audit/audit_d79.sh`; Part D of its findings). The qualitative result stands: ζ₁₂ passes XOR12. The numbers above are set by limits in the code:
+
+- **Directions are capped.** `build_dir_catalog` stops adding axes at `MAX_DIR` without a message: 64 in main.c, 512 in the companions. The 256-entry catalog has **112** axes, not 64; the 4,096-entry catalog has **2,043**, not 512. A capped run reads the dropped axes through their nearest kept one, so it is a valid run of a coarser activation, but "64 directions / 65 cells" and "512 directions" are the caps.
+- **Cells and winners are capped.** main.c's `MAX_ACT_CELLS 1024` cuts the k ladder (k ≤ 12 at 65 cells, k ≤ 8 at 113); `MAX_WIN 1024` saturates XOR6 and XOR8; `xor12_fast` stops at 50 winners ("50+") and `xor12_retest` at 20.
+- **With all 112 axes**, main.c gives XOR10 = **214** (min k = 6, 678 cells) instead of 124 (k = 8, 520); XOR6 and XOR8 stay at the 1,024 cap; XOR12 stays 0 on the 256 catalog; 14/14 tests. Both 124 and 214 count extensions of the first 1,024 XOR8 winners only (`MAX_WIN`).
+- **XOR12 with the 4,096 catalog** reproduces exactly as published (50 winners, min k = 8, 4,104 cells, after 46,874 candidates). With all 2,043 axes, 50 winners appear after 192 candidates; the smallest ladder k that works is 6 (12,264 cells; k = 1 fails and k = 2–5 are not on the ladder). The capped result, about one cell per mask, is the stronger statement.
+- The out-of-bounds read `dir_count[g_nd]` (one past `int dir_count[MAX_DIR]`) only changes the identity row of the direction table at -O0.

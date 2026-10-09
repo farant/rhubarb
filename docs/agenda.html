@@ -176,6 +176,37 @@ certificates.</p>
 Seifert matrices and small homology computations are tiny); the agenda A3
 benchmarks should decide when.</p>
 
+<h3><span class="id">A9</span>Declaration-level tree shaking for demo snapshots</h3>
+<p><span class="status">idea</span> <span class="nota">2026-10-07, Fran,
+after the 13-crossing knot table made snapshots ~6 MB; not yet in
+tabularium</span></p>
+<p><strong>What.</strong> A <code>silva_conflatio</code> mode that drops
+declarations unreachable from <code>main</code>: functions, globals, types,
+later macros. Silva parses the conflated file and re-emits it byte for byte,
+so removal is just deleting declaration nodes. Rules are conservative:
+any reference counts, address-taken functions stay (the <code>Anulus</code>
+descriptors are tables of function pointers), and macros are kept wholesale
+at first. The oracle already exists: <code>archive.sh</code> demands
+byte-identical output under <code>-Werror</code>.</p>
+<p><strong>Why.</strong> D115's snapshot is about 20k lines for a 1,000-line
+demo. A shaken snapshot is also a map of exactly what a result rests on,
+which makes it a comprehension artifact as well as a smaller file.</p>
+<p><strong>Not for data.</strong> Reference tables such as
+<code>TABULA_NODORUM</code> stay whole. Their completeness is part of the
+result: negative answers ("no other candidate") need every row, and the
+composite search touches every row anyway. See A10.</p>
+
+<h3><span class="id">A10</span>Snapshots reference large data by hash</h3>
+<p><span class="status">idea</span> <span class="nota">2026-10-07, Fran;
+not yet in tabularium</span></p>
+<p><strong>What.</strong> Instead of inlining
+<code>lib/tabula_nodorum_data.c</code> (5.6 MB) into every frozen demo, the
+snapshot names the committed data file by its git blob hash and checks it
+at build time.</p>
+<p><strong>Why.</strong> Every demo that uses the knot table now freezes
+about 6 MB. The evidence stays complete and verifiable without copying
+it.</p>
+
 <h2>Done</h2>
 <p class="nota">Finished items, with the commit that closed them.</p>
 

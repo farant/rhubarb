@@ -927,6 +927,42 @@ s32 principale (vacuum)
         CREDO_VERUM (bene);
     }
 
+
+    /* ==================================================
+     * BITA: magnus_bitorum (log2 sine allocatione)
+     * ================================================== */
+
+    {
+        Magnus duo             = magnus_ex_s64(II);
+           b32 potentiae_bene  = VERUM;
+           i32 k;
+
+        imprimere("\n--- Bita ---\n");
+        CREDO_AEQUALIS_I32 (magnus_bitorum(magnus_ex_s64(ZEPHYRUM)),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (magnus_bitorum(magnus_ex_s64(I)), I);
+        CREDO_AEQUALIS_I32 (magnus_bitorum(magnus_ex_s64(-I)), I);
+        CREDO_AEQUALIS_I32 (magnus_bitorum(magnus_ex_s64(-VIII)), IV);
+        CREDO_AEQUALIS_I32 (magnus_bitorum(magnus_ex_s64(
+            (s64)0x7FFFFFFFFFFFFFFFL)), LXIII);
+        CREDO_AEQUALIS_I32 (magnus_bitorum(magnus_ex_s64(
+            -(s64)0x7FFFFFFFFFFFFFFFL - I)), LXIV);
+        /* 2^k: k + 1 bita, 2^k - 1: k bita (trans limites membrorum) */
+        per (k = I; k <= CC; k++)
+        {
+            Magnus p = magnus_potentia(duo, k, piscina);
+
+            si (   magnus_bitorum(p)                       != k + I
+                || magnus_bitorum(magnus_subtrahe(p, magnus_ex_s64(I),
+                piscina)) != k
+                || magnus_bitorum(magnus_nega(p, piscina)) != k + I)
+            {
+                potentiae_bene = FALSUM;
+            }
+        }
+        CREDO_VERUM (potentiae_bene);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();
