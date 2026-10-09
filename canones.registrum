@@ -49,3 +49,8 @@
 # Declaratio registri generum (materia, 2026-09-15): fons tabularum
 # coctarum cuiusque clientis (materia/coquere.sh); radix <registrum>.
 <registrum>	materia/grammatica/registrum.canon
+# Normae (norma-spec-2, 2026-10-08): schemata JSON ut data; radix
+# <normae>, extensio .norma. Canon in lib/norma_canon.c INFIXUS est
+# (tools/norma_canon_infigere.sh) - lector sine plagula vivit.
+<normae>	norma.canon
+.norma	norma.canon

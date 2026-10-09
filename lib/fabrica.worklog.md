@@ -2329,3 +2329,35 @@ trap from the last entry): 80 lines identical old vs new. Plants on
 the new code: the omission recorded as SANATUM -> IX red; a step
 member's fracture stopping its siblings -> gradus XI red. 836
 assertions; fumus XL/XL.
+
+## 2026-10-08 - cold-tree stamping: family installers prime every manifest
+
+Found while bootstrapping the fresh worktree ../rhubarb-quinta (ledger
+quaestio …J3108ZW6; the natura half was already filed as …XCDT7W -
+bitten twice). An action that builds several binaries (`canon`: 2,
+`natura`: 4) is stamped with the ACTION's digest, and that digest covers
+the aedilis manifests of EVERY scope. The installers stamp binary by
+binary, and `provenientia_obiectum.sh` refreshed only the current
+binary's manifest - so in a cold tree the first stamp found the siblings'
+manifests absent ('manifestum absens: build/aedilis/natura_canones/...')
+and the build stopped. Main never saw it: its manifests were left over
+from earlier runs. The other five stamping installers are single-binary
+actions and cannot hit it.
+
+Fix: `provenientia_obiectum.sh -familia S1 S2 ...` refreshes every
+scope's manifest; `natura_struere.sh` and `canon_struere.sh` call it once
+before the first binary. A scope left out of the list is not silent: the
+digest names the missing manifest. Reproduced first (sibling manifests
+moved aside -> both installers rc 1), then green cold, then all seven
+binaries judged RECENS by fabrica (after rebuilding aedilis - the edited
+helper is one of aedilis's declared inputs).
+
+Gate: fabrica-fumus XLI, data-driven from aedificatio.stml: every action
+with 2+ `manifestum` inputs and a `*_struere.sh` command is a family;
+its script's `-familia` list must equal the declared scopes. Plus the
+mode itself: one manifest moved into the fumus temp dir must come back.
+Plants (hand-rolled - silva.Editio never on a .sh; exact anchors,
+originals saved, byte-compare after restore): scope dropped from natura
+-> XLI red; canon's call deleted -> red; mode made a no-op (`for S in;`)
+-> red via the behavioural check (the list check alone would have
+passed - the reason it exists). Summary line now XLI/XLI.

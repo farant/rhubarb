@@ -322,6 +322,26 @@ probatio_json_schema(Piscina* p)
     CREDO_CHORDA_AEQUALIS(_js(o, p), _js(o, p));
 }
 
+/* norma-plan-3 A1: titulus gignentis sine functione */
+interior vacuum
+probatio_gignens_titulus(Piscina* p)
+{
+         Norma* n = norma_gignens_titulus(norma_textus(p), "sententia");
+    NormaVisus  v = norma_visus(n);
+
+    imprimere("\n--- Probans gignens_titulus ---\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.gignens_titulus, "sententia");
+    CREDO_NIHIL(v.gignens);
+    CREDO_AEQUALIS_I32(norma_visus(norma_textus(p)).gignens_titulus.mensura,
+        0);
+    /* titulus non iudicat: valor textus validus manet */
+    CREDO_VERUM(_iud(n, "\"x\"", p).validum);
+    /* NIHIL tolerantur */
+    CREDO_NIHIL(norma_gignens_titulus(NIHIL, "x"));
+    CREDO_AEQUALIS_I32(norma_visus(norma_gignens_titulus(norma_textus(p),
+        NIHIL)).gignens_titulus.mensura, 0);
+}
+
 
 s32
 principale (vacuum)
@@ -339,6 +359,8 @@ principale (vacuum)
     probatio_pravitas_et_visus(p);
     /* N3 */
     probatio_json_schema(p);
+    /* norma-plan-3 A1 */
+    probatio_gignens_titulus(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

@@ -155,6 +155,13 @@ norma_gignens (
            Norma* n,
     NormaGignens  functio,
           vacuum* datum);
+/* titulus functionis gignentis (norma-spec-2 §III.1): .norma eum
+ * scribit, norma_ad_c symbolum ex eo facit. Functio NIHIL licet -
+ * generator tunc genus suum ordinarium gignit. */
+Norma*
+norma_gignens_titulus (
+                 Norma* n,
+    constans character* titulus);
 
 
 /* ======================================================================
@@ -194,6 +201,7 @@ nomen structura {
           chorda  descriptio;
     NormaGignens  gignens;
           vacuum* gignens_datum;
+          chorda  gignens_titulus;  /* vacua si nullus (norma-spec-2) */
           chorda  error_schematis;  /* vacua si nodus sanus */
 } NormaVisus;
 
