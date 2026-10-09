@@ -29,6 +29,7 @@
 #include "piscina.h"
 #include "json.h"
 #include "norma.h"
+#include "norma_stml.h"   /* NormaCommentarius - typus solus */
 
 nomen structura {
     NormaModus modus;             /* objecta et discrimina; ordinarium NOTANDUM */
@@ -74,5 +75,66 @@ Norma*
 inferentia_normam (
     constans Inferentia* inferentia,
                 Piscina* piscina);
+
+
+/* ======================================================================
+ * TESTIMONIA (norma-spec-4 §III): cur quaeque linea adumbrationis talis
+ * sit - numeri et decisiones solum, numquam valores (praeter tag
+ * discriminis et electiones rogatas)
+ * ====================================================================== */
+
+nomen structura InferentiaTestimonia InferentiaTestimonia;   /* opaca */
+
+/* adumbratio + testimonium cuiusque nodi; NIHIL si nullum exemplum */
+Norma*
+inferentia_normam_testatam (
+     constans Inferentia*  inferentia,
+                 Piscina*  piscina,
+    InferentiaTestimonia** testimonia);
+
+/* NormaCommentarius pro norma_stml_scribere_cum_commentis; datum =
+ * InferentiaTestimonia* ex inferentia_normam_testatam */
+chorda
+inferentia_commentarius (
+    constans Norma* nodus,
+           Piscina* piscina,
+            vacuum* testimonia);
+
+
+/* ======================================================================
+ * DISCREPANTIA (norma-spec-4 §IV): schema declaratum contra figuras
+ * exemplorum - numeri, numquam valores
+ * ====================================================================== */
+
+nomen enumeratio {
+    NORMA_DISCREPANTIA_FORTASSE_REQUISITUM = 0, /* optionale, in omnibus visum */
+    NORMA_DISCREPANTIA_REQUISITUM_ABSENS,       /* requisitum, in quibusdam deest */
+    NORMA_DISCREPANTIA_NUMQUAM_VISUM,           /* declaratum, numquam visum */
+    NORMA_DISCREPANTIA_NON_DECLARATUM,          /* visum, non declaratum */
+    NORMA_DISCREPANTIA_GENUS_LATIUS,            /* genera visa extra declaratum */
+    NORMA_DISCREPANTIA_NULLUM_NOVUM,            /* null visum, non aut_nullum */
+    NORMA_DISCREPANTIA_VARIATIO_NUMQUAM_VISA,
+    NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA,
+    NORMA_DISCREPANTIA_NON_COMPARABILE          /* e.g. tag non candidatus */
+} NormaDiscrepantiaGenus;
+
+nomen structura {
+                    chorda via;      /* $.content[].type ; $["a.b"] */
+    NormaDiscrepantiaGenus genus;
+                    chorda nuntius;  /* numeri, numquam valores */
+} NormaDiscrepantia;
+
+/* Xar de NormaDiscrepantia, ordine ambulationis (vacuum = sine
+ * discrepantia); NIHIL si declarata aut inferentia NIHIL */
+Xar*
+norma_comparare (
+         constans Norma* declarata,
+    constans Inferentia* inferentia,
+                Piscina* piscina);
+
+/* nomen genus discrepantiae ("FORTASSE_REQUISITUM" ...) */
+constans character*
+norma_discrepantia_descriptio (
+    NormaDiscrepantiaGenus genus);
 
 #endif /* NORMA_INFERRE_H */
