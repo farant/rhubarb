@@ -1,0 +1,58 @@
+<normae versio="1">
+  <norma titulus="responsum" (>
+    <objectum modus="notandum">
+      <campus titulus="id" (> <textus/>
+      <campus titulus="type" (> <textus/>
+      <campus titulus="role" (> <textus/>
+      <campus titulus="model" (> <textus/>
+      <campus titulus="content" (> <tabulatum(> <ad norma="blocus"/>
+      <campus titulus="stop_reason" (> <textus aut_nullum="verum"/>
+      <campus titulus="stop_sequence" requiritur="falsum" (> <textus aut_nullum="verum"/>
+      <campus titulus="stop_details" requiritur="falsum" (> <liberum/>
+      <campus titulus="usage" (> <ad norma="usus"/>
+      <campus titulus="container" requiritur="falsum" (> <liberum/>
+      <campus titulus="diagnostics" requiritur="falsum" (> <liberum/>
+    </>
+  <norma titulus="usus" (>
+    <objectum modus="notandum">
+      <campus titulus="input_tokens" (> <integer/>
+      <campus titulus="output_tokens" (> <integer/>
+      <campus titulus="cache_read_input_tokens" requiritur="falsum" (> <integer/>
+      <campus
+           titulus="cache_creation_input_tokens"
+        requiritur="falsum"
+                 (> <integer/>
+      <campus titulus="cache_creation" requiritur="falsum" (>
+        <objectum modus="notandum" ((>
+          <campus
+               titulus="ephemeral_5m_input_tokens"
+            requiritur="falsum"
+                     (> <integer/>
+          <campus
+               titulus="ephemeral_1h_input_tokens"
+            requiritur="falsum"
+                     (> <integer/>
+      <campus titulus="output_tokens_details" requiritur="falsum" (> <liberum/>
+      <campus titulus="service_tier" requiritur="falsum" (> <textus aut_nullum="verum"/>
+      <campus titulus="inference_geo" requiritur="falsum" (> <textus aut_nullum="verum"/>
+    </>
+  <norma titulus="blocus" (>
+    <discrimen clavis="type" modus="notandum">
+      <variatio valor="text" (>
+        <objectum modus="notandum" ((>
+          <campus titulus="text" (> <textus/>
+          <campus titulus="citations" requiritur="falsum" (> <liberum/>
+      <variatio valor="tool_use" (>
+        <objectum modus="notandum" (((>
+          <campus titulus="id" (> <textus/>
+          <campus titulus="name" (> <textus/>
+          <campus titulus="input" (> <liberum/>
+      <variatio valor="thinking" (>
+        <objectum modus="notandum" ((>
+          <campus titulus="thinking" (> <textus/>
+          <campus titulus="signature" (> <textus/>
+      <variatio valor="redacted_thinking" (>
+        <objectum modus="notandum" (>
+          <campus titulus="data" (> <textus/>
+    </>
+</normae>

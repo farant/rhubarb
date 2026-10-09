@@ -181,3 +181,30 @@ Regression oracle: probatio_vates UNCHANGED, 106/106. Plants: drop
 APERTUM -> novelty test red. Live (N5.4, claude-sonnet-5-5, $0.0078):
 all checks pass and herbarium recorded 0 new sightings for ordinary
 calls (4 before, 4 after).
+
+## 2026-10-08 - response schema moved to `.norma` (norma-plan-3 A6)
+
+The Anthropic response schema (N5's `_forma_responsi`, ~58 lines of
+builder calls) now lives in `lib/vates_responsum.norma` - three named
+normae `responsum`, `usus`, `blocus` - and reaches the binary as
+GENERATED C (`include/vates_responsum_norma.h` + `lib/vates_responsum_norma.c`,
+fabrica action `vates_responsum`, `bin/norma c`). No STML parser is linked
+into vates; `_novitates_ex_norma` calls `vates_norma_responsum(p)`.
+
+How the file was made: a throwaway program ran a copy of the OLD builder
+(handing back its `usus` and `blocus` nodes) through `norma_stml_scribere`
+- equivalence by construction, then proven: `probatio_forma_ex_norma`
+keeps a verbatim copy of the old builder as an ORACLE ONLY and asserts the
+generated schema has the same JSON Schema export and the same judgments
+on values generated from both (TYPICA/FINES/INVALIDA, L seeds), that the
+file is in formatter form, and that the reader loads it without notes.
+
+To change the schema now: edit `lib/vates_responsum.norma`, run
+`./tools/norma_c_regenerare.sh lib/vates_responsum.norma vates_norma_ include/vates_responsum_norma.h lib/vates_responsum_norma.c`
+(fabrica's judge prints that line when the C is stale), and update the
+oracle copy in the test if the change is deliberate.
+
+Plants: `stop_sequence` made required + regenerated -> export and
+judgment oracle red (the committed specimens all carry the field, so the
+specimen test stays green - it is not this change's witness); one byte of
+the generated C edited -> fabrica STALUM with the healing command.

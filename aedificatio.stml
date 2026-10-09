@@ -464,6 +464,22 @@
     <exitus via="probationes/fixa/norma/normae_fixae.h" provenientia="regeneratio"/>
     <exitus via="probationes/fixa/norma/normae_fixae.c" provenientia="regeneratio"/>
   </actio>
+  <!-- schema responsi vatis ex .norma (norma-plan-3 A6) -->
+  <actio titulus="vates_responsum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/norma_c_regenerare.sh
+      <verbum! (>lib/vates_responsum.norma
+      <verbum! (>vates_norma_
+      <verbum! (>include/vates_responsum_norma.h
+      <verbum! (>lib/vates_responsum_norma.c
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
+    <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
+    <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="lib/vates_responsum.norma"/>
+    <exitus via="include/vates_responsum_norma.h" provenientia="regeneratio"/>
+    <exitus via="lib/vates_responsum_norma.c" provenientia="regeneratio"/>
+  </actio>
   <!-- capsulae ex TOML (tools/capsula_regenerare.sh). Duae sine TOML
        (book_assets/capsula_libri.c, probationes/capsula_assets.c)
        generatorem ignotum habent: NON declaratae - desideratum

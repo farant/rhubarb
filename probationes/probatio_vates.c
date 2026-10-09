@@ -11,6 +11,12 @@
 #include "filum.h"
 #include "herbarium.h"
 #include "vates.h"
+#include "norma.h"
+#include "norma_gignere.h"
+#include "norma_stml.h"
+#include "vates_responsum_norma.h"
+#include "internamentum.h"
+#include "stml.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -781,6 +787,139 @@ probatio_forma_viva(Piscina* piscina)
 }
 
 
+/* norma-plan-3 A6: aedificator VETUS (copia verbatim lib/vates.c ante
+ * migrationem) - oraculum solum: schema ex .norma idem dicere debet */
+interior Norma*
+_forma_responsi_vetus (
+    Piscina* p)
+{
+    Norma* textus     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* petitum    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* cogitatio  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* redacta    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* blocus = norma_modus(norma_discrimen(p, "type"),
+        NORMA_NOTANDUM);
+    Norma* cc    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* usus  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* r     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+
+    norma_campus(textus, "text", norma_textus(p), VERUM);
+    norma_campus(textus, "citations", norma_liberum(p), FALSUM);
+    norma_campus(petitum, "id", norma_textus(p), VERUM);
+    norma_campus(petitum, "name", norma_textus(p), VERUM);
+    norma_campus(petitum, "input", norma_liberum(p), VERUM);
+    norma_campus(cogitatio, "thinking", norma_textus(p), VERUM);
+    norma_campus(cogitatio, "signature", norma_textus(p), VERUM);
+    norma_campus(redacta, "data", norma_textus(p), VERUM);
+    norma_variatio(blocus, "text", textus);
+    norma_variatio(blocus, "tool_use", petitum);
+    norma_variatio(blocus, "thinking", cogitatio);
+    norma_variatio(blocus, "redacted_thinking", redacta);
+    norma_campus(cc, "ephemeral_5m_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(cc, "ephemeral_1h_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "input_tokens", norma_integer(p), VERUM);
+    norma_campus(usus, "output_tokens", norma_integer(p), VERUM);
+    norma_campus(usus, "cache_read_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "cache_creation_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "cache_creation", cc, FALSUM);
+    norma_campus(usus, "output_tokens_details", norma_liberum(p),
+        FALSUM);
+    norma_campus(usus, "service_tier",
+        norma_aut_nullum(norma_textus(p)), FALSUM);
+    norma_campus(usus, "inference_geo",
+        norma_aut_nullum(norma_textus(p)), FALSUM);
+    norma_campus(r, "id", norma_textus(p), VERUM);
+    norma_campus(r, "type", norma_textus(p), VERUM);
+    norma_campus(r, "role", norma_textus(p), VERUM);
+    norma_campus(r, "model", norma_textus(p), VERUM);
+    norma_campus(r, "content", norma_tabulatum(p, blocus), VERUM);
+    norma_campus(r, "stop_reason", norma_aut_nullum(norma_textus(p)),
+        VERUM);
+    norma_campus(r, "stop_sequence", norma_aut_nullum(norma_textus(p)),
+        FALSUM);
+    norma_campus(r, "stop_details", norma_liberum(p), FALSUM);
+    norma_campus(r, "usage", usus, VERUM);
+    norma_campus(r, "container", norma_liberum(p), FALSUM);
+    norma_campus(r, "diagnostics", norma_liberum(p), FALSUM);
+    redde r;
+}
+
+interior b32
+_iudicia_aequalia (
+    NormaIudicium a,
+    NormaIudicium b)
+{
+    i32 i;
+
+    si (   a.validum            != b.validum
+        || xar_numerus(a.vitia) != xar_numerus(b.vitia)
+        || xar_numerus(a.notae) != xar_numerus(b.notae))
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i < xar_numerus(a.vitia) + xar_numerus(a.notae); i++)
+    {
+                b32  vit  = i < xar_numerus(a.vitia);
+                i32  k    = vit ? i : i - xar_numerus(a.vitia);
+        NormaVitium* x =
+            (NormaVitium*)xar_obtinere(vit ? a.vitia : a.notae, k);
+        NormaVitium* y =
+            (NormaVitium*)xar_obtinere(vit ? b.vitia : b.notae, k);
+
+        si (x->causa != y->causa || !chorda_aequalis(x->via, y->via))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* norma-plan-3 A6: schema ex .norma generatum idem dicit ac aedificator
+ * vetus (exportatio + iudicia super valores ab utroque genitos) */
+interior vacuum
+probatio_forma_ex_norma(Piscina* p)
+{
+    Norma* vetus  = _forma_responsi_vetus(p);
+    Norma* nova   = vates_norma_responsum(p);
+    i32 diversa   = 0;
+    s64 semen;
+    i32 m;
+    i32 q;
+    chorda fons = filum_legere_totum("lib/vates_responsum.norma", p);
+    StmlResultus r = stml_legere(fons, p, internamentum_creare(p));
+
+    imprimere("\n--- Probans formam responsi ex .norma ---\n");
+    CREDO_CHORDA_AEQUALIS(json_scribere(norma_json_schema(vetus, p), p),
+                          json_scribere(norma_json_schema(nova, p), p));
+    per (q = 0; q < II; q++)
+    {
+        per (semen = 0; semen < L; semen++)
+        {
+            per (m = (i32)NORMA_TYPICA; m <= (i32)NORMA_INVALIDA; m++)
+            {
+                NormaGenitum g = norma_gignere(q == 0 ? vetus : nova,
+                    (NormaModusGignendi)m, semen, p);
+
+                si (g.valor && !_iudicia_aequalia(norma_iudicare(vetus,
+                        g.valor, p), norma_iudicare(nova, g.valor, p)))
+                {
+                    diversa++;
+                }
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32(diversa, 0);
+    /* oraculum V: plagula forma pulchra */
+    CREDO_VERUM(r.successus);
+    CREDO_CHORDA_AEQUALIS(stml_scribere(r.radix, p, VERUM), fons);
+    /* lector eam sine vitio legit, sine notis (nullus gignens) */
+    CREDO_VERUM(norma_stml_legere(fons, NIHIL, 0, p).successus);
+}
+
 s32
 principale (vacuum)
 {
@@ -808,6 +947,8 @@ principale (vacuum)
     probatio_specimina_commissa(piscina);
     /* T7b */
     probatio_forma_viva(piscina);
+    /* norma-plan-3 A6 */
+    probatio_forma_ex_norma(piscina);
 
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();

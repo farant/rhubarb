@@ -5,6 +5,7 @@
 #include "vates.h"
 #include "herbarium.h"
 #include "norma.h"
+#include "vates_responsum_norma.h"
 #include "filum.h"
 #include "fasti.h"
 #include "chorda_aedificator.h"
@@ -525,65 +526,6 @@ _novitas (
     *novitas = chorda_ex_literis(buffer, piscina);
 }
 
-interior Norma*
-_forma_responsi (
-    Piscina* p)
-{
-    Norma* textus     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* petitum    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* cogitatio  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* redacta    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* blocus = norma_modus(norma_discrimen(p, "type"),
-        NORMA_NOTANDUM);
-    Norma* cc    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* usus  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* r     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-
-    norma_campus(textus, "text", norma_textus(p), VERUM);
-    norma_campus(textus, "citations", norma_liberum(p), FALSUM);
-    norma_campus(petitum, "id", norma_textus(p), VERUM);
-    norma_campus(petitum, "name", norma_textus(p), VERUM);
-    norma_campus(petitum, "input", norma_liberum(p), VERUM);
-    norma_campus(cogitatio, "thinking", norma_textus(p), VERUM);
-    norma_campus(cogitatio, "signature", norma_textus(p), VERUM);
-    norma_campus(redacta, "data", norma_textus(p), VERUM);
-    norma_variatio(blocus, "text", textus);
-    norma_variatio(blocus, "tool_use", petitum);
-    norma_variatio(blocus, "thinking", cogitatio);
-    norma_variatio(blocus, "redacted_thinking", redacta);
-    norma_campus(cc, "ephemeral_5m_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(cc, "ephemeral_1h_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(usus, "input_tokens", norma_integer(p), VERUM);
-    norma_campus(usus, "output_tokens", norma_integer(p), VERUM);
-    norma_campus(usus, "cache_read_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(usus, "cache_creation_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(usus, "cache_creation", cc, FALSUM);
-    norma_campus(usus, "output_tokens_details", norma_liberum(p),
-        FALSUM);
-    norma_campus(usus, "service_tier",
-        norma_aut_nullum(norma_textus(p)), FALSUM);
-    norma_campus(usus, "inference_geo",
-        norma_aut_nullum(norma_textus(p)), FALSUM);
-    norma_campus(r, "id", norma_textus(p), VERUM);
-    norma_campus(r, "type", norma_textus(p), VERUM);
-    norma_campus(r, "role", norma_textus(p), VERUM);
-    norma_campus(r, "model", norma_textus(p), VERUM);
-    norma_campus(r, "content", norma_tabulatum(p, blocus), VERUM);
-    norma_campus(r, "stop_reason", norma_aut_nullum(norma_textus(p)),
-        VERUM);
-    norma_campus(r, "stop_sequence", norma_aut_nullum(norma_textus(p)),
-        FALSUM);
-    norma_campus(r, "stop_details", norma_liberum(p), FALSUM);
-    norma_campus(r, "usage", usus, VERUM);
-    norma_campus(r, "container", norma_liberum(p), FALSUM);
-    norma_campus(r, "diagnostics", norma_liberum(p), FALSUM);
-    redde r;
-}
-
 /* "$.content[N].type" -> typus blocu N (nota VARIATIO); aliter via ipsa */
 interior chorda
 _typum_ex_via (
@@ -623,7 +565,8 @@ _novitates_ex_norma (
        chorda* novitas,
       Piscina* p)
 {
-        NormaIudicium j = norma_iudicare(_forma_responsi(p), radix,
+        NormaIudicium j = norma_iudicare(vates_norma_responsum(p),
+            radix,
             p);
     ChordaAedificator* aed = chorda_aedificator_creare(p, CCLVI);
                   i32  i;

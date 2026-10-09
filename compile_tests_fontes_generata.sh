@@ -234,6 +234,7 @@ declare -a SOURCE_FILES=(
     "lib/utf8.c"
     "lib/uuid.c"
     "lib/vates.c"
+    "lib/vates_responsum_norma.c"
     "lib/via.c"
     "lib/vicus.c"
     "lib/vicus_applicatio.c"
