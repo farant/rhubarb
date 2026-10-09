@@ -41,8 +41,7 @@
           sectio="falsum"
     translatio_x="0"
     translatio_y="0"
-           scala="1"
-             (((>
+           scala="1">
     <componens
                 id="quadratum.instrumentum"
             partes="bottone"
@@ -88,3 +87,19 @@
       translatio_x="0"
       translatio_y="0"
              scala="1"/>
+    <componens
+                id="quadratum.exemplar"
+            partes="bottone"
+             actio="palette.aperire"
+           titulus="exemplar:0:0:-1"
+                 x="84"
+                 y="0"
+          latitudo="20"
+          altitudo="20"
+       praedicatum="rectangulum"
+       focusabilis="falsum"
+            sectio="falsum"
+      translatio_x="0"
+      translatio_y="0"
+             scala="1"/>
+  </componens>

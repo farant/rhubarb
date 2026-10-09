@@ -199,31 +199,41 @@ figura_tabulae (
     {
       longus semen;
      integer radius;
+     integer primus;
+     integer secundus;
+     integer exemplar;
      integer color;
          s32 dx;
          s32 dy;
          i32 k;
        Fines g;
 
-        semen   = ZEPHYRUM;
-        radius  = ZEPHYRUM;
-        color   = ZEPHYRUM;
+        semen     = ZEPHYRUM;
+        radius    = ZEPHYRUM;
+        primus    = ZEPHYRUM;
+        secundus  = -I;
+        exemplar  = ZEPHYRUM;
         (vacuum)sscanf(chorda_ut_cstr(c->titulus, m->piscina),
-            "%ld %d %d", &semen, &radius, &color);
+            "%ld %d %d %d %d", &semen, &radius, &primus, &secundus,
+            &exemplar);
         g.latitudo = I;
         g.altitudo = I;
-        /* color primus nullus (-1): ictus nihil pingit, praevisio
-         * quoque nihil */
-        per (i = ZEPHYRUM; color >= ZEPHYRUM && color < XVI
-                           && i < c->numerus_punctorum; i++)
+        /* P3: gutta quaeque colorem atramenti ad locum suum (ut
+         * documentum); color nullus (-1): nihil, ut ictus */
+        per (i = ZEPHYRUM; i < c->numerus_punctorum; i++)
         {
             per (k = ZEPHYRUM; k < PICTOR_GUTTAE_PUNCTO; k++)
             {
                 pictor_gutta((s64)semen, i, k, (s32)radius, &dx, &dy);
                 g.x = c->puncta[i].x + dx;
                 g.y = c->puncta[i].y + dy;
-                mandata_rectangulum(m, g,
-                    color_thematis_index((s32)color), VERUM);
+                color = exemplar_punctum((i32)exemplar, g.x, g.y)
+                    ? primus : secundus;
+                si (color >= ZEPHYRUM && color < XVI)
+                {
+                    mandata_rectangulum(m, g,
+                        color_thematis_index((s32)color), VERUM);
+                }
             }
         }
     }
@@ -458,6 +468,46 @@ figura_quadrati (
     si (chorda_aequalis_literis(t, "instrumentum:spongia"))
     {
         iconem_pingere(m, icon_spongiae, II, II);
+        redde;
+    }
+    /* P3: exemplar - "exemplar:<n>" 1-bit colore textus (optio),
+     * "exemplar:<n>:<primus>:<secundus>" coloribus veris (secundus
+     * plenus prius, primus per exemplar; nullus = fundus) */
+    si (   t.mensura > IX
+        && memcmp(t.datum, "exemplar:", IX) == ZEPHYRUM)
+    {
+        integer exemplar;
+        integer primus;
+        integer secundus;
+        integer numerus;
+
+        exemplar  = ZEPHYRUM;
+        primus    = -I;
+        secundus  = -I;
+        numerus   = sscanf(chorda_ut_cstr(t, m->piscina) + IX,
+            "%d:%d:%d", &exemplar, &primus, &secundus);
+        /* sine coloribus (aut ambo nulli): 1-bit, ut exemplaria
+         * legibilia maneant */
+        si (   numerus < III
+            || (   (primus < ZEPHYRUM || primus >= XVI)
+                && (secundus < ZEPHYRUM || secundus >= XVI)))
+        {
+            mandata_rectangulum_exemplar(m, intus,
+                color_thematis(COLOR_TEXT), (i32)exemplar);
+            redde;
+        }
+        /* solidus (0): secundus invisibilis */
+        si (   exemplar != ZEPHYRUM && secundus >= ZEPHYRUM
+            && secundus < XVI)
+        {
+            mandata_rectangulum(m, intus,
+                color_thematis_index((s32)secundus), VERUM);
+        }
+        si (primus >= ZEPHYRUM && primus < XVI)
+        {
+            mandata_rectangulum_exemplar(m, intus,
+                color_thematis_index((s32)primus), (i32)exemplar);
+        }
         redde;
     }
     si (   t.mensura > VI

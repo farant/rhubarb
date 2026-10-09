@@ -2,6 +2,7 @@
 
 #include "pictor_actiones.h"
 #include "xar.h"
+#include "exemplaria.h"
 
 #include <string.h>
 
@@ -201,6 +202,24 @@ ictum_scribere (
             chorda_ex_s32(attributum_s32(ramus, "color_primus",
             ZEPHYRUM),
             p), p);
+        /* P3: non ordinaria sola - acta vetera idem significant */
+        si (attributum_s32(ramus, "color_secundus", -I) != -I)
+        {
+            s = chorda_concatenare(s, chorda_ex_literis(
+                "\" color_secundus=\"", p), p);
+            s = chorda_concatenare(s,
+                chorda_ex_s32(attributum_s32(ramus,
+                "color_secundus", -I), p), p);
+        }
+        si (attributum_s32(ramus, "exemplar", ZEPHYRUM) != ZEPHYRUM)
+        {
+            s = chorda_concatenare(s,
+                chorda_ex_literis("\" exemplar=\"",
+                p), p);
+            s = chorda_concatenare(s,
+                chorda_ex_s32(attributum_s32(ramus,
+                "exemplar", ZEPHYRUM), p), p);
+        }
     }
     s = chorda_concatenare(s, chorda_ex_literis("\" magnitudo=\"", p),
         p);
@@ -558,6 +577,38 @@ pictor_colorem_ponere (
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }
 
+/* <tractator/> */
+b32
+pictor_exemplar_ponere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+      InsulaRamus ramus;
+    ColorPonendus cp;
+           chorda valor;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    si (!repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    valor          = post_praefixum(nodus, "optio.exemplar.");
+    cp.attributum  = "exemplar";
+    si (   valor.mensura == ZEPHYRUM || !chorda_ut_s32(valor, &cp.valor)
+        || cp.valor < ZEPHYRUM || cp.valor >= (s32)EXEMPLAR_NUMERUS)
+    {
+        redde FALSUM;
+    }
+    ramus = ramus_pictoris(repo, ctx);
+    (vacuum)palettam_claudere(&ramus);
+    redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
+}
+
 vacuum
 pictor_actiones_registrare (
     ActioRegistrum* reg,
@@ -578,6 +629,8 @@ pictor_actiones_registrare (
         ctx);
     actio_registrare(reg, "color_secundus.ponere",
         pictor_colorem_ponere,
+        ctx);
+    actio_registrare(reg, "exemplar.ponere", pictor_exemplar_ponere,
         ctx);
     actio_registrare(reg, "instrumentum.eligere",
                      pictor_instrumentum_eligere, ctx);

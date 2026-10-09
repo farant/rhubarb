@@ -106,11 +106,12 @@ s32 principale (vacuum)
     res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
                                  piscina, intern);
     CREDO_VERUM(res.successus);
-    /* XIV: + superficies_latitudo/_altitudo, scriptor dispensator
-     * (modulus 013 B1); + semen, scriptor aspergillum.ictus */
+    /* XV: + superficies_latitudo/_altitudo, scriptor dispensator
+     * (modulus 013 B1); + semen, scriptor aspergillum.ictus; +
+     * exemplar, scriptor exemplar.ponere (P3) */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_EPHEMERA,
                                              res.elementum_radix),
-                                             XIV);
+                                             XV);
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_DURABILIS,
                                              res.elementum_radix), I);
     insula_scriptorem_ponere(repo,

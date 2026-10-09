@@ -7,8 +7,9 @@
  * (COLOR_BACKGROUND), ictus pingere,
  * manifestum 'documentum' (dimensiones, intervallum).
  *
- * Acta v1: <ictus instrumentum color magnitudo [semen]><punctum x y
- * [t]/>...</ictus>, <ramus ab/>. Cetera (§4) ignorantur cum nota.
+ * Acta v1: <ictus instrumentum color magnitudo [color_secundus]
+ * [exemplar] [semen]><punctum x y [t]/>...</ictus>, <ramus ab/>.
+ * Cetera (§4) ignorantur cum nota.
  * instrumentum "aspergillum" (MacPaint): guttae (pixela singula) in
  * disco circa quodque punctum; GUTTAE_PUNCTO per punctum et una plus
  * per GUTTA_MS morae (t, ms ab initio ictus) - eaedem semper ex
@@ -16,6 +17,11 @@
  * centratum in quoque puncto lineae inter puncta, colore fundi
  * thematis (ut vacatio); color ignoratur. Instrumentum absens aut
  * aliud: penicillus.
+ * exemplar (P3; exemplaria.h, absens = 0 solidus): pixelum quod
+ * penicillus aut aspergillum pingit colorem 'color' accipit ubi bitus
+ * exemplaris ad (x, y) TABULAE positus est, 'color_secundus' ubi non;
+ * color -1 (nullus; color_secundus absens = -1) = pixelum intactum.
+ * Spongia exemplar ignorat.
  */
 
 #ifndef PICTOR_DOCUMENTUM_H

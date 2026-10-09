@@ -220,3 +220,26 @@ Fran's plan: the eraser paints the canvas background. Named `spongia`
 - ictum_tractare / ictum_scribere now take the tool's litterae instead
   of a b32 aspergillum; pointer comparison against the static
   litterae_* is deliberate (one tag per tool).
+
+## 2026-10-09 - P3 exemplaria (patterns)
+
+- Rule: a pixel the brush or spray touches gets `color` where the
+  pattern bit at its CANVAS (x, y) is set, `color_secundus` where not;
+  colour -1 = leave the pixel alone. Pattern 0 = solid. Both new log
+  attributes are written only when non-default, so old logs mean what
+  they meant.
+- Brush = two passes through delineare's existing MODUS_EXEMPLAR:
+  foreground with the pattern, background with the INVERTED bytes
+  (`~bitus[k]`). Solid strokes stay in MODUS_SOLIDUS, so pre-P3
+  drawings replay byte-identically (aurum seals unchanged).
+  `penicillum_pingere` is the old brush loop pulled out so it can run
+  twice.
+- Spray sets single pixels, so each dot asks `atramenti_pixelum`.
+- Bug fixed on the way: a brush stroke with foreground "none" (-1)
+  called color_ex_palette(-1), reading 3 bytes BEFORE the palette
+  array. "none" is now a skipped pass (test IV pins it: plant X4).
+- Twin/tessellation: the 4th bar square moved the status text from
+  x 84 (= cell 14 exactly) to x 110 -> cell 18 in the terminal twin.
+- Fran: pattern palette options use the chosen fg/bg (title
+  "exemplar:<n>:<fg>:<bg>", same as the bar square); both none falls
+  back to 1-bit text colour so the patterns stay legible.

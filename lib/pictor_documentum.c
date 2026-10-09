@@ -3,6 +3,7 @@
 
 #include "pictor_documentum.h"
 #include "sors.h"
+#include "exemplaria.h"
 #include "delineare_mandata.h"
 #include "delineare.h"
 #include "thema.h"
@@ -177,14 +178,69 @@ pictor_gutta (
     }
 }
 
-/* aspergillum: guttae circa quodque punctum (vide caput) */
+/* P3: atramentum ictus - color primus (bitus positi), secundus
+ * (ceteri), exemplar; color extra [0, XVI) = nullus (intactum) */
+nomen structura {
+    s32 primus;
+    s32 secundus;
+    i32 exemplar;
+} Atramentum;
+
+interior b32
+color_validus (
+    s32 color)
+{
+    redde color >= ZEPHYRUM && color < XVI;
+}
+
+interior Atramentum
+atramentum_legere (
+    StmlNodus* ictus)
+{
+    Atramentum a;
+           s32 e;
+
+    a.primus    = attributum_s32(ictus, "color", (s32)PALETTE_BLACK);
+    a.secundus  = attributum_s32(ictus, "color_secundus", -I);
+    e           = attributum_s32(ictus, "exemplar", ZEPHYRUM);
+    a.exemplar  = ZEPHYRUM;
+    si (e > ZEPHYRUM && e < (s32)EXEMPLAR_NUMERUS)
+    {
+        a.exemplar = (i32)e;
+    }
+    redde a;
+}
+
+/* pixelum atramenti ad (x, y) TABULAE; FALSUM = intactum */
+interior b32
+atramenti_pixelum (
+    constans Atramentum* a,
+                    s32  x,
+                    s32  y,
+                    i32* pixelum)
+{
+    s32 color;
+
+    color = exemplar_punctum(a->exemplar, x, y) ? a->primus
+                                                : a->secundus;
+    si (!color_validus(color))
+    {
+        redde FALSUM;
+    }
+    *pixelum = color_ad_pixelum(color_ex_palette((i32)color));
+    redde VERUM;
+}
+
+/* aspergillum: guttae circa quodque punctum (vide caput); gutta
+ * quaeque colorem atramenti ad locum suum */
 interior vacuum
 guttas_applicare (
-    PictorDocumentum* doc,
-           StmlNodus* ictus,
-               Color  color,
-                 s32  magnitudo_penicilli)
+       PictorDocumentum* doc,
+              StmlNodus* ictus,
+    constans Atramentum* atramentum,
+                    s32  magnitudo_penicilli)
 {
+          i32  pixelum;
     StmlNodus* punctum;
           s64  semen;
           s32  radius;
@@ -225,11 +281,12 @@ guttas_applicare (
             pictor_gutta(semen, ordo, k, radius, &dx, &dy);
             si (   x + dx >= ZEPHYRUM && y + dy >= ZEPHYRUM
                 && x + dx < (s32)doc->tabula->latitudo
-                && y + dy < (s32)doc->tabula->altitudo)
+                && y + dy < (s32)doc->tabula->altitudo
+                && atramenti_pixelum(atramentum, x + dx, y + dy,
+                       &pixelum))
             {
                 tabula_pixelorum_ponere_pixelum(doc->tabula,
-                    (i32)(x + dx), (i32)(y + dy),
-                    color_ad_pixelum(color));
+                    (i32)(x + dx), (i32)(y + dy), pixelum);
             }
         }
         t_ante = t;
@@ -346,15 +403,17 @@ spongiam_applicare (
     }
 }
 
-/* <ictus instrumentum color magnitudo><punctum x y/>...</ictus> */
+/* penicillus: linea inter puncta et rectangulum magnitudinis in
+ * quoque puncto, colore 'color' per modum contextus (solidus aut
+ * exemplar) */
 interior vacuum
-ictum_applicare (
-    PictorDocumentum* doc,
-           StmlNodus* ictus)
+penicillum_pingere (
+       PictorDocumentum* doc,
+    ContextusDelineandi* ctx,
+              StmlNodus* ictus,
+                  Color  color,
+                    s32  magnitudo_penicilli)
 {
-    ContextusDelineandi* ctx;
-                  Color  color;
-                    s32  magnitudo_penicilli;
                     s32  x;
                     s32  y;
                     s32  x_ante;
@@ -373,38 +432,6 @@ ictum_applicare (
                     s64  lat;
                     s64  alt;
 
-    ctx = delineare_creare_contextum(doc->piscina, doc->tabula);
-    si (!ctx)
-    {
-        redde;
-    }
-    /* palette Aquinas ipsa (XVI colores distincti; Franus 2026-10-09)
-     * - olim thema_color_ex_indice_colorationis, quae munera
-     * syntaxeos (0-12) colorat: XIII-XV et duplicata colorem textus
-     * dabant, V ('album') aurum */
-    color = color_ex_palette(
-        (i32)attributum_s32(ictus, "color", (s32)PALETTE_BLACK));
-    magnitudo_penicilli = attributum_s32(ictus, "magnitudo", I);
-    si (magnitudo_penicilli < I)
-    {
-        magnitudo_penicilli = I;
-    }
-    si (   stml_attributum_capere(ictus, "instrumentum")
-        && chorda_aequalis_literis(*stml_attributum_capere(ictus,
-               "instrumentum"), "aspergillum"))
-    {
-        guttas_applicare(doc, ictus, color, magnitudo_penicilli);
-        delineare_restituere_contextum(ctx);
-        redde;
-    }
-    si (   stml_attributum_capere(ictus, "instrumentum")
-        && chorda_aequalis_literis(*stml_attributum_capere(ictus,
-               "instrumentum"), "spongia"))
-    {
-        spongiam_applicare(doc, ictus, magnitudo_penicilli);
-        delineare_restituere_contextum(ctx);
-        redde;
-    }
     lat     = (s64)doc->tabula->latitudo;
     alt     = (s64)doc->tabula->altitudo;
     n       = stml_numerus_liberorum(ictus);
@@ -447,6 +474,83 @@ ictum_applicare (
         }
         x_ante = x;
         y_ante = y;
+    }
+}
+
+/* <ictus instrumentum color magnitudo [color_secundus] [exemplar]>
+ * <punctum x y/>...</ictus> */
+interior vacuum
+ictum_applicare (
+    PictorDocumentum* doc,
+           StmlNodus* ictus)
+{
+    ContextusDelineandi* ctx;
+             Atramentum  atramentum;
+                    s32  magnitudo_penicilli;
+                     i8  inversum[VIII];
+            constans i8* octeti;
+                    i32  k;
+
+    ctx = delineare_creare_contextum(doc->piscina, doc->tabula);
+    si (!ctx)
+    {
+        redde;
+    }
+    /* palette Aquinas ipsa (XVI colores distincti; Franus 2026-10-09)
+     * - olim thema_color_ex_indice_colorationis, quae munera
+     * syntaxeos (0-12) colorat: XIII-XV et duplicata colorem textus
+     * dabant, V ('album') aurum */
+    atramentum           = atramentum_legere(ictus);
+    magnitudo_penicilli  = attributum_s32(ictus, "magnitudo", I);
+    si (magnitudo_penicilli < I)
+    {
+        magnitudo_penicilli = I;
+    }
+    si (   stml_attributum_capere(ictus, "instrumentum")
+        && chorda_aequalis_literis(*stml_attributum_capere(ictus,
+               "instrumentum"), "aspergillum"))
+    {
+        guttas_applicare(doc, ictus, &atramentum, magnitudo_penicilli);
+        delineare_restituere_contextum(ctx);
+        redde;
+    }
+    si (   stml_attributum_capere(ictus, "instrumentum")
+        && chorda_aequalis_literis(*stml_attributum_capere(ictus,
+               "instrumentum"), "spongia"))
+    {
+        spongiam_applicare(doc, ictus, magnitudo_penicilli);
+        delineare_restituere_contextum(ctx);
+        redde;
+    }
+    /* P3: bis pingitur - primus per exemplar, secundus per exemplar
+     * inversum; solidus (0) = modus solidus, pixela eadem ac ante P3.
+     * Color nullus: transitus omittitur (olim color_ex_palette(-1)
+     * octetos ante palettam legebat) */
+    si (color_validus(atramentum.primus))
+    {
+        si (atramentum.exemplar != ZEPHYRUM)
+        {
+            delineare_ponere_exemplar_internum(ctx,
+                atramentum.exemplar);
+            delineare_ponere_modum(ctx, MODUS_EXEMPLAR);
+        }
+        penicillum_pingere(doc, ctx, ictus,
+            color_ex_palette((i32)atramentum.primus),
+            magnitudo_penicilli);
+    }
+    octeti = exemplar_obtinere(atramentum.exemplar);
+    si (   atramentum.exemplar != ZEPHYRUM && octeti
+        && color_validus(atramentum.secundus))
+    {
+        per (k = ZEPHYRUM; k < VIII; k++)
+        {
+            inversum[k] = (i8)~octeti[k];
+        }
+        delineare_ponere_exemplar(ctx, inversum);
+        delineare_ponere_modum(ctx, MODUS_EXEMPLAR);
+        penicillum_pingere(doc, ctx, ictus,
+            color_ex_palette((i32)atramentum.secundus),
+            magnitudo_penicilli);
     }
     delineare_restituere_contextum(ctx);
 }

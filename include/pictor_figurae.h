@@ -53,7 +53,11 @@ figura_tabulae (
 
 /* <purus/> quadratum lineae status (PARTES_BOTTONE): titulus dicit
  * quid pingatur - "instrumentum:<nomen>" (icon 1-bit XVI x XVI),
- * "color:<index>" (palette Aquinas, XVI), "color:-1" (nullus: crux).
+ * "color:<index>" (palette Aquinas, XVI), "color:-1" (nullus: crux),
+ * "exemplar:<n>" (exemplar 1-bit colore textus; optio palettae),
+ * "exemplar:<n>:<primus>:<secundus>" (exemplar coloribus veris, ut
+ * pingetur - quadratum et optiones palettae; nullus = fundus
+ * quadrati; ambo nulli: 1-bit).
  * Margo colore marginis; titulus in ":electum" desinens (optio
  * electa in palette, P1b): margo colore accentus. */
 vacuum

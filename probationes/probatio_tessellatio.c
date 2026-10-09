@@ -728,7 +728,8 @@ s32 principale (vacuum)
         {
             exspectata[l] = tabulae_medium;
         }
-        /* P1a: quadrata lineae status (XX x XX, x VI/XXXII/LVIII) ut
+        /* P1a: quadrata lineae status (XX x XX, x VI/XXXII/LVIII;
+         * P3 LXXXIV exemplar) ut
          * fines (figura_finium probationis) - margines summi super
          * titulum (figura tituli probationis textum non promovet;
          * linea status hic VIII alta, quadrata infra eam exeunt) */
@@ -736,7 +737,8 @@ s32 principale (vacuum)
             "p\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
             "c\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x80\xE2\x94\x90"
             "s\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
-            "                                               ";
+            " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
+            "                                           ";
         CREDO_VERUM(_scaena_congruit(grandes, LX, XXX, exspectata));
     }
 

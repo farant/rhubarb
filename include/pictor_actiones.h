@@ -66,7 +66,8 @@ pictor_spongia_ictus (
                 vacuum* ctx);
 
 /* <tractator/> quadratum lineae status ictum: palettam suam aperit
- * (ephemera 'palette' = instrumentum / color_primus / color_secundus);
+ * (ephemera 'palette' = instrumentum / color_primus / color_secundus
+ * / exemplar);
  * eadem iterum: claudit */
 b32
 pictor_palettam_aperire (
@@ -83,6 +84,18 @@ pictor_palettam_aperire (
  * 'color_secundus.ponere' (domini harum attributorum) */
 b32
 pictor_colorem_ponere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> optio exemplaris ictum ('optio.exemplar.<n>', n in
+ * [0, EXEMPLAR_NUMERUS)): exemplar ponit, palettam claudit. Dominus
+ * attributi 'exemplar' */
+b32
+pictor_exemplar_ponere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

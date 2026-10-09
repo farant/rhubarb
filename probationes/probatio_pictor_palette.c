@@ -258,9 +258,9 @@ s32 principale (vacuum)
                     n++;
                 }
             }
-            /* quadrata in linea (primus III, secundus VII) + XVI
-             * optiones */
-            CREDO_AEQUALIS_I32(n, XVIII);
+            /* quadrata in linea (primus III, secundus VII, exemplar
+             * solidum colore III - P3) + XVI optiones */
+            CREDO_AEQUALIS_I32(n, XIX);
             duplicata = ZEPHYRUM;
             per (j = ZEPHYRUM; j < n; j++)
             {
@@ -272,8 +272,9 @@ s32 principale (vacuum)
                     }
                 }
             }
-            /* III et VII bis (linea et palette), ceteri semel */
-            CREDO_AEQUALIS_I32(duplicata, II);
+            /* III ter (paria III: linea, exemplar, palette), VII bis
+             * (par I), ceteri semel */
+            CREDO_AEQUALIS_I32(duplicata, IV);
         }
     }
 
