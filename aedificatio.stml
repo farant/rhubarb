@@ -437,6 +437,49 @@
     <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
     <exitus via="lib/entitates_html_tabula.c" provenientia="regeneratio"/>
   </actio>
+  <!-- canon normae infixus (norma-plan-3 A2, regula R1): norma.canon ->
+       lib/norma_canon.c, lector .norma sine plagula vivit -->
+  <actio titulus="norma_canon" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/norma_canon_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/norma_canon_infigere.sh"/>
+    <ingressus genus="fasciculus" via="norma.canon"/>
+    <exitus via="lib/norma_canon.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- normae fixae -> C generatum (norma-plan-3 A5, oraculum III):
+       bin/norma c per aedilis structum (regula R8) -->
+  <actio titulus="normae_fixae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/norma_c_regenerare.sh
+      <verbum! (>probationes/fixa/norma/normae_fixae.norma
+      <verbum! (>fixa_norma_
+      <verbum! (>probationes/fixa/norma/normae_fixae.h
+      <verbum! (>probationes/fixa/norma/normae_fixae.c
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
+    <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
+    <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="probationes/fixa/norma/normae_fixae.norma"/>
+    <exitus via="probationes/fixa/norma/normae_fixae.h" provenientia="regeneratio"/>
+    <exitus via="probationes/fixa/norma/normae_fixae.c" provenientia="regeneratio"/>
+  </actio>
+  <!-- schema responsi vatis ex .norma (norma-plan-3 A6) -->
+  <actio titulus="vates_responsum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/norma_c_regenerare.sh
+      <verbum! (>lib/vates_responsum.norma
+      <verbum! (>vates_norma_
+      <verbum! (>include/vates_responsum_norma.h
+      <verbum! (>lib/vates_responsum_norma.c
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/norma_c_regenerare.sh"/>
+    <ingressus genus="fasciculus" via="tools/norma_struere.sh"/>
+    <ingressus genus="manifestum" via="build/aedilis/norma/manifestum.stml"/>
+    <ingressus genus="fasciculus" via="lib/vates_responsum.norma"/>
+    <exitus via="include/vates_responsum_norma.h" provenientia="regeneratio"/>
+    <exitus via="lib/vates_responsum_norma.c" provenientia="regeneratio"/>
+  </actio>
   <!-- capsulae ex TOML (tools/capsula_regenerare.sh). Duae sine TOML
        (book_assets/capsula_libri.c, probationes/capsula_assets.c)
        generatorem ignotum habent: NON declaratae - desideratum

@@ -181,3 +181,66 @@ Regression oracle: probatio_vates UNCHANGED, 106/106. Plants: drop
 APERTUM -> novelty test red. Live (N5.4, claude-sonnet-5-5, $0.0078):
 all checks pass and herbarium recorded 0 new sightings for ordinary
 calls (4 before, 4 after).
+
+## 2026-10-08 - response schema moved to `.norma` (norma-plan-3 A6)
+
+The Anthropic response schema (N5's `_forma_responsi`, ~58 lines of
+builder calls) now lives in `lib/vates_responsum.norma` - three named
+normae `responsum`, `usus`, `blocus` - and reaches the binary as
+GENERATED C (`include/vates_responsum_norma.h` + `lib/vates_responsum_norma.c`,
+fabrica action `vates_responsum`, `bin/norma c`). No STML parser is linked
+into vates; `_novitates_ex_norma` calls `vates_norma_responsum(p)`.
+
+How the file was made: a throwaway program ran a copy of the OLD builder
+(handing back its `usus` and `blocus` nodes) through `norma_stml_scribere`
+- equivalence by construction, then proven: `probatio_forma_ex_norma`
+keeps a verbatim copy of the old builder as an ORACLE ONLY and asserts the
+generated schema has the same JSON Schema export and the same judgments
+on values generated from both (TYPICA/FINES/INVALIDA, L seeds), that the
+file is in formatter form, and that the reader loads it without notes.
+
+To change the schema now: edit `lib/vates_responsum.norma`, run
+`./tools/norma_c_regenerare.sh lib/vates_responsum.norma vates_norma_ include/vates_responsum_norma.h lib/vates_responsum_norma.c`
+(fabrica's judge prints that line when the C is stale), and update the
+oracle copy in the test if the change is deliberate.
+
+Plants: `stop_sequence` made required + regenerated -> export and
+judgment oracle red (the committed specimens all carry the field, so the
+specimen test stays green - it is not this change's witness); one byte of
+the generated C edited -> fabrica STALUM with the healing command.
+
+## 2026-10-09 - the guard before use, vates side (herbarium-spec-2 H2)
+
+Fran's floor: "is this an outlier payload that I need to save as a
+specimen before I do anything else". Measured before: a 200 whose body
+was not JSON (or whose root was not an object) was NEVER saved -
+`_legere` returned VATES_ERROR_PARSE before computing novelty, and the
+press came after `_legere`; statuses 201..399 were neither parsed nor
+saved. Plant b re-creates exactly that (late press back, judge off): the
+schema-note case stays green, the non-JSON / array / 204 / 302 cases go
+red.
+
+Now:
+- `_iudex_anthropic` runs INSIDE herbarium's transport wrapper, before
+  vates sees the response: status != 200 -> "status inexspectatus: N";
+  not JSON -> "corpus non JSON"; root not object -> "radix non objectum";
+  else `_novitates_corporis` (unknown stop_reason + schema notes/errors,
+  i.e. the old novelty, unchanged in wording). Uses only status,
+  json_legere, norma_iudicare. The late press in `vates_mittere` and the
+  schema call in `_legere` are gone - one capture point.
+- Capture is ON by default: `herbarium_via` NIHIL = the default location
+  (`herbarium_sedes_ordinaria`) + host; the Anthropic host is derived
+  from VATES_URL_ANTHROPIC ("api.anthropic.com"); the fictus provider
+  uses host "fictus" so fake responses never join the real pile.
+  `sine_herbario` switches it off. An unresolvable default (e.g.
+  $RHUBARB_HERBARIUM naming a missing directory) prints one stderr line
+  and the call proceeds without capture.
+- Test isolation: `principale` points $RHUBARB_HERBARIUM at
+  /tmp/probatio_vates_sedes_<pid> before any Vates exists and removes
+  the piles at the end; ~/.rhubarb/herbarium verified untouched.
+- Ruling: the spec's "judge without vates_mittere" test would need the
+  judge public; it stays static. Order is proven by H1's in-loop count
+  (wrapper presses before return) plus the non-JSON case here (saved
+  although vates' parse exits early).
+- The judge parses the body once more than before (json_legere in the
+  judge, again in `_legere`) - cost accepted, noted.

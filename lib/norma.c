@@ -34,6 +34,7 @@ structura Norma {
            chorda  descriptio;
      NormaGignens  gignens;
            vacuum* gignens_datum;
+           chorda  gignens_titulus;
            chorda  error_schematis;
 };
 
@@ -408,6 +409,18 @@ norma_gignens (
     redde n;
 }
 
+Norma*
+norma_gignens_titulus (
+                 Norma* n,
+    constans character* titulus)
+{
+    si (n && titulus)
+    {
+        n->gignens_titulus = chorda_ex_literis(titulus, n->piscina);
+    }
+    redde n;
+}
+
 NormaVisus
 norma_visus (
     constans Norma* n)
@@ -441,6 +454,7 @@ norma_visus (
     v.descriptio            = n->descriptio;
     v.gignens               = n->gignens;
     v.gignens_datum         = n->gignens_datum;
+    v.gignens_titulus       = n->gignens_titulus;
     v.error_schematis       = n->error_schematis;
     redde v;
 }

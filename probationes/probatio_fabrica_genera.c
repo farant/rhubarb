@@ -436,28 +436,15 @@ _particulae_aequales (
 }
 
 
-s32 principale (vacuum)
+/* ================================================== */
+
+interior vacuum
+_probare_sigillum_copiae (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_fabrica_genera", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ================================================== */
-
-    /* PROBARE: sigillum copiae - ordo et contentum        */
-
-
-    /* ================================================== */
-
+    piscina = c->piscina;
     {
               DiscusFictus  discus;
              FabricaSutura  sutura;
@@ -466,7 +453,6 @@ s32 principale (vacuum)
                   Sigillum  sa;
                   Sigillum  sb;
 
-        imprimere("\n--- Probans sigillum copiae ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "lib/x.c", "int x;\n");
         mundi_ponere(&discus, "lib/y.c", "int y;\n");
@@ -541,15 +527,18 @@ s32 principale (vacuum)
                 piscina));
         }
     }
+}
 
 
-    /* ================================================== */
+/* ================================================== */
 
-    /* PROBARE: manifestum aedilis                         */
+interior vacuum
+_probare_manifestum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
-
-    /* ================================================== */
-
+    piscina = c->piscina;
     {
               DiscusFictus  discus;
              FabricaSutura  sutura;
@@ -561,7 +550,6 @@ s32 principale (vacuum)
               FabricaActio* a;
                   Sigillum  s;
 
-        imprimere("\n--- Probans manifestum ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         parvum = filum_legere_totum(
             "probationes/fixa/fabrica/manifestum_parvum.stml",
@@ -645,15 +633,18 @@ s32 principale (vacuum)
             piscina, &s, &causa));
         CREDO_VERUM(mundi_continet(causa, "nusquam.h", piscina));
     }
+}
 
 
-    /* ================================================== */
+/* ================================================== */
 
-    /* PROBARE: directorium - nomen novum (Review Focus 2) */
+interior vacuum
+_probare_directorium (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
-
-    /* ================================================== */
-
+    piscina = c->piscina;
     {
                     DiscusFictus  discus;
                    FabricaSutura  sutura;
@@ -663,7 +654,6 @@ s32 principale (vacuum)
               constans character* bina[II];
               constans character* terna[III];
 
-        imprimere("\n--- Probans directorium ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         bina[0]   = "a.h";
         bina[1]   = "b.h";
@@ -685,12 +675,20 @@ s32 principale (vacuum)
         CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
             == 0);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: plagula provenientiae exclusa (T7, Review Focus 3)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: plagula provenientiae exclusa (T7, Review Focus 3)
+ * ================================================== */
 
+interior vacuum
+_probare_provenientia_exclusa (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
               DiscusFictus  discus;
              FabricaSutura  sutura;
@@ -700,7 +698,6 @@ s32 principale (vacuum)
                   Sigillum  s2;
                     chorda  causa;
 
-        imprimere("\n--- Probans provenientiam exclusam ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         causa = chorda_ex_literis("", piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(
@@ -763,12 +760,20 @@ s32 principale (vacuum)
             &s2, &causa));
         CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: memoria sigillorum per cursum (celer < II s)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: memoria sigillorum per cursum (celer < II s)
+ * ================================================== */
 
+interior vacuum
+_probare_memoriam_sigillorum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DiscusFictus  discus;
         FabricaSutura  sutura;
@@ -777,7 +782,6 @@ s32 principale (vacuum)
              Sigillum  s2;
                   i32  lecturae;
 
-        imprimere("\n--- Probans memoriam sigillorum ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "lib/x.c", "int x;\n");
         mundi_ponere(&discus, "lib/y.c", "int y;\n");
@@ -801,12 +805,20 @@ s32 principale (vacuum)
         CREDO_VERUM(mundi_sigillum(&sutura, a, piscina, &s2));
         CREDO_VERUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI) == 0);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: ingressus PLAGULAE (corpus infixum)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: ingressus PLAGULAE (corpus infixum)
+ * ================================================== */
 
+interior vacuum
+_probare_plagulas_directorii (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             DiscusFictus  discus;
            FabricaSutura  sutura;
@@ -817,7 +829,6 @@ s32 principale (vacuum)
       constans character* nomina[IV];
       constans character* nomina_plus[V];
 
-        imprimere("\n--- Probans plagulas directorii ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         nomina[0] = "a.c";
         nomina[1] = "b.h";
@@ -864,12 +875,20 @@ s32 principale (vacuum)
         CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
             == 0);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: ingressus MANIFESTA (directorium manifestorum)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: ingressus MANIFESTA (directorium manifestorum)
+ * ================================================== */
 
+interior vacuum
+_probare_manifesta (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             DiscusFictus  discus;
            FabricaSutura  sutura;
@@ -880,7 +899,6 @@ s32 principale (vacuum)
       constans character* nomina[III];
       constans character* nomina_minus[II];
 
-        imprimere("\n--- Probans manifesta ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         nomina[0] = "a.stml";
         nomina[1] = "b.stml";
@@ -935,12 +953,20 @@ s32 principale (vacuum)
             piscina, &s2, &causa));
         CREDO_VERUM(mundi_continet(causa, "build/cl", piscina));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: ingressus RADICES (radices inclusionum configurationis)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: ingressus RADICES (radices inclusionum configurationis)
+ * ================================================== */
 
+interior vacuum
+_probare_radices (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             DiscusFictus  discus;
            FabricaSutura  sutura;
@@ -952,7 +978,6 @@ s32 principale (vacuum)
       constans character* src_nomina[I];
       constans character* src_plus[II];
 
-        imprimere("\n--- Probans radices ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "aedilis.stml",
             "<aedilis>\n"
@@ -1000,12 +1025,20 @@ s32 principale (vacuum)
             piscina, &s2, &causa));
         CREDO_VERUM(mundi_continet(causa, "inclusa", piscina));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: actio tacta a viis commissis (T8 gradus III)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: actio tacta a viis commissis (T8 gradus III)
+ * ================================================== */
 
+interior vacuum
+_probare_actionem_tactam (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
             DiscusFictus  discus;
            FabricaSutura  sutura;
@@ -1017,7 +1050,6 @@ s32 principale (vacuum)
       constans character* nomina[II];
       constans character* src_nomina[I];
 
-        imprimere("\n--- Probans actionem tactam ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "lib/x.c", "int x;\n");
         mundi_ponere(&discus, "gen/exitus.c", "g\n");
@@ -1097,12 +1129,20 @@ s32 principale (vacuum)
             piscina);
         CREDO_VERUM(fabrica_actio_tacta(&sutura, a, viae, piscina));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: genera et strategiae (plan 1b T1)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: genera et strategiae (plan 1b T1)
+ * ================================================== */
 
+interior vacuum
+_probare_genera_et_strategias (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                DiscusFictus  discus;
               FabricaSutura  sutura;
@@ -1121,7 +1161,6 @@ s32 principale (vacuum)
          constans character* genera[IX];
          constans character* src_nomina[II];
 
-        imprimere("\n--- Probans genera et strategias ---\n");
         intern         = internamentum_creare(piscina);
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -1264,15 +1303,23 @@ s32 principale (vacuum)
         CREDO_VERUM(plagulae_inventae);
         CREDO_VERUM(plagula_inventa);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: instrumentum_domus (fabrica spec 3 v4) - binarium domus
-     * per lineam 'ingressus' relationis sigillatum: relinkatio (octeti
-     * alii) et linea 'commissum' clavem non mutant; fontes alii (linea
-     * ingressus alia) mutant; sine relatione: octeti
-     * ================================================== */
+/* ==================================================
+ * PROBARE: instrumentum_domus (fabrica spec 3 v4) - binarium domus
+ * per lineam 'ingressus' relationis sigillatum: relinkatio (octeti
+ * alii) et linea 'commissum' clavem non mutant; fontes alii (linea
+ * ingressus alia) mutant; sine relatione: octeti
+ * ================================================== */
 
+interior vacuum
+_probare_instrumentum_domus (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DiscusFictus  discus;
         FabricaSutura  sutura;
@@ -1280,7 +1327,6 @@ s32 principale (vacuum)
              Sigillum  s1;
              Sigillum  s2;
 
-        imprimere("\n--- Probans instrumentum domus (provenientia) ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "bin/inst", "octeti I\n");
         a = mundi_actio(piscina, "usor", FABRICA_ACTIO_GENERATOR);
@@ -1307,14 +1353,22 @@ s32 principale (vacuum)
         CREDO_FALSUM(memcmp(s1.octeti, s2.octeti, SIGILLUM_OCTETI)
             == 0);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: genus ingressus 'effectus' (effectus-plan T7, spec par.
-     * VII) - regula digestionis quaeque: ingressus mutatus clavem mutat
-     * (IGNOTUM, cursus novus); idem -> RECENS
-     * ================================================== */
+/* ==================================================
+ * PROBARE: genus ingressus 'effectus' (effectus-plan T7, spec par.
+ * VII) - regula digestionis quaeque: ingressus mutatus clavem mutat
+ * (IGNOTUM, cursus novus); idem -> RECENS
+ * ================================================== */
 
+interior vacuum
+_probare_genus_effectus (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -1329,7 +1383,6 @@ s32 principale (vacuum)
           constans character* nomina_aucta[] = { "a.c", "b.h", "c.c" };
           constans character* nomina_aliena[] = { "a.c", "b.h", "d.h" };
 
-        imprimere("\n--- Probans genus effectus ---\n");
         VERDICTUM      = "build/fabrica/verdicta/e.txt";
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -1465,13 +1518,21 @@ s32 principale (vacuum)
         mundi_effectus_effusio = "";
         mundi_via_absens_ficta = NIHIL;
     }
+}
 
 
-    /* ========================================================
-     * AXES DUO (fabrica-6 T2): res x clavis -> genus; alias 'genus'
-     * idem; ambo aut par ignotum recusantur nominatim
-     * ======================================================== */
+/* ========================================================
+ * AXES DUO (fabrica-6 T2): res x clavis -> genus; alias 'genus'
+ * idem; ambo aut par ignotum recusantur nominatim
+ * ======================================================== */
 
+interior vacuum
+_probare_axes_duo (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         hic_manens constans character* constans paria[][III] = {
             { "plagula", "contentum", "fasciculus" },
@@ -1489,7 +1550,6 @@ s32 principale (vacuum)
                       chorda  causa;
                          i32  k;
 
-        imprimere("\n--- Probans axes duo (res x clavis) ---\n");
         per (k = ZEPHYRUM;
              k < (i32)(magnitudo(paria) / magnitudo(paria[0])); k++)
         {
@@ -1551,17 +1611,24 @@ s32 principale (vacuum)
         CREDO_VERUM(mundi_continet(causa, "directorium/provenientia",
             piscina));
     }
+}
 
 
-    /* ========================================================
-     * CHASSIS (fabrica-6 T1): omne genus registratum fixum
-     * conformitatis habet et id implet
-     * ======================================================== */
+/* ========================================================
+ * CHASSIS (fabrica-6 T1): omne genus registratum fixum
+ * conformitatis habet et id implet
+ * ======================================================== */
 
+interior vacuum
+_probare_fixa_conformitatis_generum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         i32 g;
 
-        imprimere("\n--- Probans chassis: fixa conformitatis generum ---\n");
         CREDO_VERUM(fabrica_genera_numerus() > ZEPHYRUM);
         CREDO_NIHIL(fabrica_genus_obtinere(fabrica_genera_numerus()));
         per (g = ZEPHYRUM; g < fabrica_genera_numerus(); g++)
@@ -1611,19 +1678,56 @@ s32 principale (vacuum)
         mundi_effectus_effusio  = "";
         _caput_fictum           = "commissum I";
     }
+}
 
-    imprimere("\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "sigillum copiae",
+      _probare_sigillum_copiae,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "manifestum",
+      _probare_manifestum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "directorium",
+      _probare_directorium,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "provenientiam exclusam",
+      _probare_provenientia_exclusa,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "memoriam sigillorum",
+      _probare_memoriam_sigillorum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "plagulas directorii",
+      _probare_plagulas_directorii,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "manifesta",
+      _probare_manifesta,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "radices",
+      _probare_radices,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "actionem tactam",
+      _probare_actionem_tactam,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "genera et strategias",
+      _probare_genera_et_strategias,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "instrumentum domus (provenientia)",
+      _probare_instrumentum_domus,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "genus effectus",
+      _probare_genus_effectus,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "axes duo (res x clavis)",
+      _probare_axes_duo,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chassis: fixa conformitatis generum",
+      _probare_fixa_conformitatis_generum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fabrica_genera", SECTIONES);
 }

@@ -18,25 +18,18 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * PROBARE: declarationes (T2)
+ * ================================================== */
+
+interior vacuum
+_probare_declarationes (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_fabrica_declarationes", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * PROBARE: declarationes (T2)
-     * ================================================== */
-
+    piscina = c->piscina;
     {
          InternamentumChorda* intern;
                       chorda  contentum;
@@ -47,7 +40,6 @@ s32 principale (vacuum)
                FabricaExitus* exitus;
             FabricaIngressus* ingressus;
 
-        imprimere("\n--- Probans declarationes ---\n");
         intern         = internamentum_creare(piscina);
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -162,12 +154,20 @@ s32 principale (vacuum)
         CREDO_NIHIL(fabrica_subsystemata_legere(contentum, piscina,
             intern, &causa));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: composita et praecondiciones (plan 1b T2)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: composita et praecondiciones (plan 1b T2)
+ * ================================================== */
 
+interior vacuum
+_probare_composita_et_praecondiciones (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         InternamentumChorda* intern;
                      chorda  contentum;
@@ -181,7 +181,6 @@ s32 principale (vacuum)
             FabricaIudicium* locus;
                         i32  i;
 
-        imprimere("\n--- Probans composita et praecondiciones ---\n");
         intern         = internamentum_creare(piscina);
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -392,12 +391,20 @@ s32 principale (vacuum)
         CREDO_VERUM(mundi_continet(causa, "praecondicio", piscina));
         CREDO_VERUM(mundi_continet(causa, "build/o", piscina));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: familiae (plan 2 T4; ex probatio_fabrica_genera)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: familiae (plan 2 T4; ex probatio_fabrica_genera)
+ * ================================================== */
 
+interior vacuum
+_probare_familias (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                DiscusFictus  discus;
               FabricaSutura  sutura;
@@ -407,7 +414,6 @@ s32 principale (vacuum)
                         Xar* actiones;
          constans character* plagulae[II];
 
-        imprimere("\n--- Probans familias ---\n");
         intern         = internamentum_creare(piscina);
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
@@ -692,19 +698,23 @@ s32 principale (vacuum)
             "d.stml", &sutura, piscina, intern, &causa));
         CREDO_VERUM(mundi_continet(causa, "nomen plagulae", piscina));
     }
+}
 
-    imprimere("\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "declarationes",
+      _probare_declarationes,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "composita et praecondiciones",
+      _probare_composita_et_praecondiciones,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "familias",
+      _probare_familias,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fabrica_declarationes", SECTIONES);
 }

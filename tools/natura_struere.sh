@@ -78,6 +78,11 @@ nectere () {
     echo "$binarium paratum" >&2
 }
 
+# manifesta familiae TOTIUS ante binarium primum (digestum actionis
+# 'natura' omnia poscit - arbor frigida, quaestio …J3108ZW6)
+"$SCRIPT_DIR/provenientia_obiectum.sh" -familia tools/natura_examen.c \
+    tools/natura_canones.c tools/natura_glossae.c \
+    tools/natura_quaesitor.c || exit 1
 nectere natura_examen bin/natura_examen tools/natura_examen.c \
     "$SCRIPT_DIR/natura_examen.c"
 nectere natura_canones bin/natura_canones tools/natura_canones.c \
