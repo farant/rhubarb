@@ -1,8 +1,10 @@
 /* iussum.h - iussa in textu, stilo acme (vicus-latera S3a)
  *
  * '$verbum' aut '$verbum(arg, arg)' in tabula characterum: verbum
- * '[a-z][a-z0-9_]*', '$' in initio lineae aut post characterem non
- * verbalem (littera, numerus, '_'), ergo 'a$b' iussum non est.
+ * '[a-z][a-z0-9_-]*' - litterae minusculae, numeri, '_' et '-' (intra
+ * solum: '-' finale verbum non est - "$dies-" = $dies et '-'; S3e),
+ * '$' in initio lineae aut post characterem non verbalem (littera,
+ * numerus, '_'), ergo 'a$b' iussum non est.
  * Argumenta: '(' statim post verbum, ')' prima in EADEM linea;
  * commatibus divisa, spatia extrema dempta; '()' = nulla. '$verbum('
  * sine ')' iussum NON est (dimidium iussi numquam currit). Solum

@@ -9,7 +9,8 @@
  * ordine. VI: exitus copia est (tabula postea mutata). VII: argumenta
  * mala recusantur. VIII (S3b): registrum - nota, consumit, currere
  * (ctx, effectus vacuatus, iussum datum), substitutio, verba
- * invalida. */
+ * invalida. IX: nexus. X (S3e): '-' intra verbum, non in fine nec in
+ * initio. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -264,7 +265,12 @@ s32 principale (vacuum)
             &n));
         CREDO_FALSUM(iussum_registrare(r, "Dies", VERUM, probare_iussum,
             &n));
-        CREDO_FALSUM(iussum_registrare(r, "a-b", VERUM, probare_iussum,
+        /* S3e: '-' finale aut initiale invalidum; intra validum */
+        CREDO_FALSUM(iussum_registrare(r, "a-", VERUM, probare_iussum,
+            &n));
+        CREDO_FALSUM(iussum_registrare(r, "-a", VERUM, probare_iussum,
+            &n));
+        CREDO_VERUM(iussum_registrare(r, "a-b", VERUM, probare_iussum,
             &n));
         CREDO_FALSUM(iussum_registrare(r, "x", VERUM, NIHIL, &n));
         CREDO_FALSUM(iussum_registrare(NIHIL, "x", VERUM,
@@ -369,6 +375,32 @@ s32 principale (vacuum)
             piscina,
             &x));
     }
+
+    imprimere("\n--- X: '-' intra verbum (S3e) ---\n");
+    ponere("$pictor-next x");
+    CREDO_VERUM(ad(ZEPHYRUM, &i));
+    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "pictor-next");
+    CREDO_AEQUALIS_S32(i.finis, XII);
+    CREDO_VERUM(ad(XI, &i));
+    /* '-' finale verbum non est */
+    ponere("$dies- x");
+    CREDO_VERUM(ad(ZEPHYRUM, &i));
+    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "dies");
+    CREDO_AEQUALIS_S32(i.finis, V);
+    CREDO_FALSUM(ad(V, &i));
+    ponere("$dies--");
+    CREDO_VERUM(ad(ZEPHYRUM, &i));
+    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "dies");
+    ponere("$a--b");
+    CREDO_VERUM(ad(ZEPHYRUM, &i));
+    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "a--b");
+    ponere("$a-b-c(1)");
+    CREDO_VERUM(ad(ZEPHYRUM, &i));
+    CREDO_CHORDA_AEQUALIS_LITERIS(i.verbum, "a-b-c");
+    CREDO_AEQUALIS_I32(i.numerus_argumentorum, I);
+    /* '-' initium verbi non est */
+    ponere("$-x");
+    CREDO_FALSUM(ad(ZEPHYRUM, &i));
 
     imprimere("\n");
     credo_imprimere_compendium();

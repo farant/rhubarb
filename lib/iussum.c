@@ -35,11 +35,13 @@ verbi_initium (
     redde c >= 'a' && c <= 'z';
 }
 
+/* S3e: '-' intra verbum (non in fine - vide legere) */
 interior b32
 verbi_sequens (
     character c)
 {
-    redde (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_';
+    redde (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_'
+        || c == '-';
 }
 
 /* cellula vacua ('\0') ut spatium */
@@ -116,6 +118,11 @@ legere (
     dum (j < latitudo && verbi_sequens(cellula(t, linea, j)))
     {
         j++;
+    }
+    /* '-' finale verbum non est: "$dies-" = $dies et '-' */
+    dum (cellula(t, linea, j - I) == '-')
+    {
+        j--;
     }
     exitus->linea    = linea;
     exitus->initium  = c;
@@ -421,9 +428,10 @@ iussum_registrare (
         redde FALSUM;
     }
     c = chorda_ex_literis(verbum, r->piscina);
-    /* forma eadem ac in textu: '[a-z][a-z0-9_]*' */
-    si (   c.mensura == ZEPHYRUM
-        || !verbi_initium((character)c.datum[ZEPHYRUM]))
+    /* forma eadem ac in textu: '[a-z][a-z0-9_-]*', '-' non finale */
+    si (   c.mensura              == ZEPHYRUM
+        || !verbi_initium((character)c.datum[ZEPHYRUM])
+        || c.datum[c.mensura - I] == '-')
     {
         redde FALSUM;
     }

@@ -31,3 +31,13 @@ entry winning the lookup). `iussum_currere` clears the effect before
 calling, so a verb never sees a stale error. Gotcha: `registrum` is a
 latina.h macro (`register`) - the examen rejected it as a parameter
 name; the `IussumNotum`-shaped function takes `ctx`.
+
+## 2026-10-09 - '-' inside verb names (S3e, Fran)
+
+For `$pictor-next` / `$pictor-prev`. Grammar is now
+`[a-z][a-z0-9_-]*` with no trailing '-': `legere` scans '-' with the
+other verb characters and then backs off trailing dashes, so "$dies-"
+stays $dies followed by prose '-' (and "$dies--" too). Registration
+applies the same rule (rejects "a-", "-a"; accepts "a-b"). The '$'
+precondition (not after a verbal character) still uses
+verbi_character, which does NOT include '-': "a-$b" is a command.
