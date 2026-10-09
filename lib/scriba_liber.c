@@ -232,3 +232,37 @@ scriba_liber_pagina_nova (
     }
     redde scriba_liber_nomen(l, xar_numerus(l->nomina) - I);
 }
+
+ScribaDocumentum*
+scriba_liber_paginam_condere (
+    ScribaLiber* l,
+         chorda  titulus)
+{
+          i32 i;
+    character c;
+
+    si (!l || titulus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < titulus.mensura; i++)
+    {
+        c = (character)titulus.datum[i];
+        si (!(   (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
+              || c == '_' || c == '-'))
+        {
+            redde NIHIL;
+        }
+    }
+    si (scriba_liber_index(l, titulus) < ZEPHYRUM)
+    {
+        nomen_addere(l, titulus);
+        si (!indicem_scribere(l))
+        {
+            xar_truncare(l->nomina, xar_numerus(l->nomina) - I);
+            xar_truncare(l->documenta, xar_numerus(l->documenta) - I);
+            redde NIHIL;
+        }
+    }
+    redde scriba_liber_pagina(l, titulus);
+}

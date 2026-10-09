@@ -339,7 +339,38 @@ label. `$dies(N)` = N days from today (signed; mktime normalises),
 VI-VII; nine plants caught. Note: in a narrow pane the message is cut
 hard (240 px test pane: ~13 characters) - if that bites, let a long
 message replace the position text.
-NEXT S3c: right-pane stack.
+
+S3c decisions (Fran 2026-10-09): opening a widget moves focus to the
+right pane; `$pictor(name)` = identity only for now (each stacked
+pictor keeps its own drawing under its pane id) - shared named
+drawings later (pictor mount API).
+
+S3c as built: `VicusMontator` gains `argumentum` (after id);
+`VicusLatus.argumentum`; identity = kind + argument. Layout writes `id`
+(and `argumentum` if any) for every pane - bringing a pane forward
+reorders the stack, so ids cannot be derived from order; absent id =
+the old derived one. `vicus_acervo_aperire(v, genus, arg)` QUEUES a
+request (`Vicus.petitiones`) applied in `vicus_pulsare` - never inside
+event handling (the command runs inside scriba's handler); applying:
+same kind+arg -> moved to the front, others keep their order; else
+mounted with a new id (`<tab>_dextrum_<kind>`, then `_2`, `_3`...);
+focus -> right; registries/Motus re-fitted; layout saved. The frame's
+EVENTUS_NIHIL recomposes the tree, so the change shows next frame.
+Verbs (non-consuming, registered in vicus_applicatio): `$terminale`,
+`$scriba`, `$scriba(name)` (page created if missing via
+`scriba_liber_paginam_condere`, names `[a-z0-9_-]+`; the view starts
+there, a saved view page wins), `$pictor`, `$pictor(name)`; errors:
+more than one argument, invalid page name. Background terminals were
+already pulsed (`vivit_in_fundo`). Tests: probatio_vicus_acervus
+(I-VII incl. reopen), probatio_scriba_liber VII; 13 plants caught.
+
+FOCUS INDICATOR (Fran 2026-10-09, next): today nothing shows which
+pane has focus. Fran: the margin cells around scriba's page and
+pictor's canvas (line border + differently coloured cells) could be
+a 1-bit MacPaint-style PATTERN in the focused pane instead of flat
+colour. The house has pattern code (find it); the pane needs to know
+it is focused (vicus focus -> an ephemeral attribute the composer
+reads?).
 
 ## AUDIENDA
 

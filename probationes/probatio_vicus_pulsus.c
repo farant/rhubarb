@@ -57,11 +57,13 @@ vivum_montare (
                 Volumen* vol,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
+    (vacuum)argumentum;
     ((Vivens*)sedes)->ctx = ctx;
     (vacuum)p;
     (vacuum)in;

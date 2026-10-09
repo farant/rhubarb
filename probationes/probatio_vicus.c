@@ -34,11 +34,13 @@ scribam_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
+    (vacuum)argumentum;
     (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo, NIHIL);
@@ -52,11 +54,13 @@ pictorem_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
+    (vacuum)argumentum;
     (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo);
@@ -196,14 +200,15 @@ s32 principale (vacuum)
     /* rami: quattuor montationes */
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(v->repo,
         INSULA_DURABILIS)), IV);
-    /* dispositio scripta, forma nova */
+    /* dispositio scripta, forma nova (S3c: id cuiusque lateris) */
     index = volumen_plagulam_promere(vol, lit("vicus/latera"), piscina,
         &inventum);
     CREDO_VERUM(inventum);
     CREDO_VERUM(chorda_continet(index, lit(
         "<tabula id=\"p1\" focus=\"sinistrum\">"
-        "<latus genus=\"pictor\"/>"
-        "<acervus><latus genus=\"pictor\"/></acervus></tabula>")));
+        "<latus genus=\"pictor\" id=\"p1_sinistrum_pictor\"/>"
+        "<acervus><latus genus=\"pictor\" id=\"p1_dextrum_pictor\"/>"
+        "</acervus></tabula>")));
 
     imprimere("\n--- II: focus et documentum servantur ---\n");
     CREDO_FALSUM(vicus_focum_ponere(v, II));

@@ -115,6 +115,35 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(scriba_liber_pagina(l, scriba_liber_nomen(l,
         CXXII)));
 
+    imprimere("\n--- VII: pagina nominata (S3c) ---\n");
+    {
+        ScribaDocumentum* d;
+
+        d = scriba_liber_paginam_condere(l, lit("notae"));
+        CREDO_NON_NIHIL(d);
+        CREDO_AEQUALIS_I32(scriba_liber_numerus(l), CXXIV);
+        CREDO_AEQUALIS_S32(scriba_liber_index(l, lit("notae")), CXXIII);
+        /* iterum: eadem, nulla nova */
+        CREDO_VERUM(scriba_liber_paginam_condere(l, lit("notae")) == d);
+        CREDO_VERUM(scriba_liber_pagina(l, lit("notae")) == d);
+        CREDO_AEQUALIS_I32(scriba_liber_numerus(l), CXXIV);
+        /* exstans numerata */
+        CREDO_VERUM(scriba_liber_paginam_condere(l, lit("1"))
+            == scriba_liber_pagina(l, lit("1")));
+        CREDO_AEQUALIS_I32(scriba_liber_numerus(l), CXXIV);
+        /* invalida */
+        CREDO_NIHIL(scriba_liber_paginam_condere(l, lit("")));
+        CREDO_NIHIL(scriba_liber_paginam_condere(l, lit("Notae")));
+        CREDO_NIHIL(scriba_liber_paginam_condere(l, lit("a b")));
+        CREDO_NIHIL(scriba_liber_paginam_condere(l, lit("a/b")));
+        CREDO_NIHIL(scriba_liber_paginam_condere(NIHIL, lit("x")));
+        CREDO_AEQUALIS_I32(scriba_liber_numerus(l), CXXIV);
+        /* reapertio: index servatus */
+        l = scriba_liber_aperire(piscina, intern, vol, XL, XX);
+        CREDO_AEQUALIS_S32(scriba_liber_index(l, lit("notae")), CXXIII);
+        CREDO_NON_NIHIL(scriba_liber_paginam_condere(l, lit("x-1_b")));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     volumen_claudere(vol);

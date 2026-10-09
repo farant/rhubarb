@@ -42,11 +42,13 @@ scribam_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
+    (vacuum)argumentum;
     (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo, NIHIL);
@@ -60,11 +62,13 @@ pictorem_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
+    (vacuum)argumentum;
     (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo);

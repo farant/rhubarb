@@ -95,6 +95,97 @@ dies_iussum (
     redde VERUM;
 }
 
+/* S3c: verba aperientia ('$terminale', '$scriba(nomen)',
+ * '$pictor(nomen)') - latus in acervo tabulae activae (petitio,
+ * pulsu proximo applicata); signum manet (non consumunt) */
+nomen structura {
+                  Vicus* vicus;
+     constans character* genus;
+} ContextusAperiendi;
+
+interior b32
+nomen_paginae_validum (
+    chorda c)
+{
+          i32 i;
+    character x;
+
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        x = (character)c.datum[i];
+        si (!(   (x >= 'a' && x <= 'z') || (x >= '0' && x <= '9')
+              || x == '_' || x == '-'))
+        {
+            redde FALSUM;
+        }
+    }
+    redde c.mensura > ZEPHYRUM;
+}
+
+interior b32
+aperire_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    constans ContextusAperiendi* ca;
+                         chorda  arg;
+
+    ca = (constans ContextusAperiendi*)ctx;
+    si (iussum->numerus_argumentorum > I)
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis(
+            ca->genus, piscina), chorda_ex_literis(": unum argumentum",
+            piscina), piscina);
+        redde VERUM;
+    }
+    arg.datum    = NIHIL;
+    arg.mensura  = ZEPHYRUM;
+    si (iussum->numerus_argumentorum == I)
+    {
+        arg = iussum->argumenta[ZEPHYRUM];
+    }
+    si (   arg.mensura > ZEPHYRUM
+        && strcmp(ca->genus, "scriba") == ZEPHYRUM
+        && !nomen_paginae_validum(arg))
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis(
+            "scriba: nomen paginae invalidum: ", piscina), arg,
+            piscina);
+        redde VERUM;
+    }
+    si (!vicus_acervo_aperire(ca->vicus, ca->genus,
+            arg.mensura > ZEPHYRUM ? chorda_ut_cstr(arg, piscina)
+                                   : NIHIL))
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis(
+            ca->genus, piscina), chorda_ex_literis(
+            ": aperiri non potest", piscina), piscina);
+    }
+    redde VERUM;
+}
+
+interior b32
+aperiens_registrare (
+        IussumRegistrum* r,
+                  Vicus* v,
+     constans character* genus,
+                Piscina* piscina)
+{
+    ContextusAperiendi* ca;
+
+    ca = (ContextusAperiendi*)piscina_allocare(piscina,
+        magnitudo(ContextusAperiendi));
+    si (!ca)
+    {
+        redde FALSUM;
+    }
+    ca->vicus = v;
+    ca->genus = genus;
+    redde iussum_registrare(r, genus, FALSUM, aperire_iussum, ca);
+}
+
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -103,6 +194,7 @@ scribam_montare (
                 Volumen* volumen,
      InsulaRepositorium* repo,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
@@ -114,6 +206,29 @@ scribam_montare (
     /* S2b/S3b: ctx = contextus communis (aedificare) */
     cs  = (ContextusScribae*)ctx;
     m   = (ScribaMontatio*)sedes;
+    /* S3c: '$scriba(nomen)' - pagina nominata (condita si deest) est
+     * pagina PRIMA visus; visus iam servatus (reapertura, navigatio)
+     * suam servat */
+    si (argumentum && cs->liber)
+    {
+        chorda visus;
+           b32 inventum;
+
+        visus = chorda_concatenare(chorda_ex_literis("scriba/visus/",
+            piscina), chorda_ex_literis(id, piscina), piscina);
+        (vacuum)volumen_plagulam_promere(volumen, visus, piscina,
+            &inventum);
+        si (!inventum)
+        {
+            si (!scriba_liber_paginam_condere(cs->liber,
+                    chorda_ex_literis(argumentum, piscina)))
+            {
+                redde FALSUM;
+            }
+            (vacuum)volumen_plagulam_condere(volumen, visus,
+                chorda_ex_literis(argumentum, piscina), "scriba:visus");
+        }
+    }
     si (!scriba_montare(m, piscina, intern, volumen, repo, id, radix,
             latitudo, altitudo, cs->liber))
     {
@@ -176,12 +291,16 @@ pictorem_montare (
                 Volumen* volumen,
      InsulaRepositorium* repo,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
                  vacuum* ctx)
 {
     (vacuum)ctx;
+    /* S3c: argumentum identitatem solam dat (documentum per id
+     * lateris) - picturae nominatae communes postea */
+    (vacuum)argumentum;
     redde pictor_montare((PictorMontatio*)sedes, piscina, intern,
         volumen, repo, id, radix, latitudo, altitudo);
 }
@@ -213,6 +332,7 @@ terminale_montare_in_vico (
                 Volumen* volumen,
      InsulaRepositorium* repo,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
@@ -221,6 +341,7 @@ terminale_montare_in_vico (
     (vacuum)ctx;
     (vacuum)volumen;
     (vacuum)radix;
+    (vacuum)argumentum;
     redde terminale_montare((TerminaleApplicatio*)sedes, piscina,
         intern, repo, id, latitudo, altitudo);
 }
@@ -352,6 +473,12 @@ vicus_applicatio_aedificare (
     si (   !app->vicus || !cs->liber || !cs->iussa
         || !iussum_registrare(cs->iussa, "dies", VERUM, dies_iussum,
                NIHIL)
+        || !aperiens_registrare(cs->iussa, app->vicus, "terminale",
+               piscina)
+        || !aperiens_registrare(cs->iussa, app->vicus, "scriba",
+               piscina)
+        || !aperiens_registrare(cs->iussa, app->vicus, "pictor",
+               piscina)
         || !vicus_genus_addere(app->vicus, "scriba",
                magnitudo(ScribaMontatio), scribam_montare,
                scribam_describere, cs)

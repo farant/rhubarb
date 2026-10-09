@@ -343,3 +343,19 @@ well as one book; `scribam_montare` sets `actiones_ctx.iussa` after
 library called from scriba must be added BY HAND to
 ludus_tessera/compile_probationes.sh (`iussum`, like `scriba_liber`
 before) - the root suite's list is generated, that one is not.
+
+## 2026-10-09 - S3c: the right-pane stack opens by command
+
+Two traps avoided by design: (1) a command click runs INSIDE scriba's
+event handler, so opening a pane there would swap registries and the
+Motus gesture mid-dispatch - `vicus_acervo_aperire` only queues, and
+`vicus_pulsare` applies (the next frame's EVENTUS_NIHIL recomposes,
+so nothing waits for input). (2) ids were derived from position
+(`<tab>_<side>_<kind>`); with several panes of one kind and reordering
+on bring-forward, a derived id would hand one pane's state (branch,
+pictor document, scriba visus plagula) to another after a restart -
+so the layout now stores each pane's id. Old layouts without ids keep
+their derived ids. Moving a pane to the front copies VicusLatus
+structs within the Xar; nothing outside holds VicusLatus pointers
+across a pulse (Motus keeps the branch by value and the montatio
+pointer, which does not move).

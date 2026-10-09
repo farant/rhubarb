@@ -61,4 +61,12 @@ chorda
 scriba_liber_pagina_nova (
     ScribaLiber* l);
 
+/* pagina nominata: exstans aut nova ad finem (vicus-latera S3c,
+ * '$scriba(nomen)'); nomen '[a-z0-9_-]+'. NIHIL si nomen invalidum aut
+ * scriptura deficit. */
+ScribaDocumentum*
+scriba_liber_paginam_condere (
+    ScribaLiber* l,
+         chorda  titulus);
+
 #endif /* SCRIBA_LIBER_H */

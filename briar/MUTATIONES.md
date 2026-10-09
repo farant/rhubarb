@@ -19,6 +19,13 @@ Leges chartae:
 
 ## inedita
 
+- corpus: vicus - `VicusMontator` argumentum `argumentum` post `id`
+  accipit (montatores exstantes frangit); `VicusLatus.argumentum`;
+  `vicus_acervo_aperire` nova (latus in acervo dextro aperire aut in
+  frontem reddere, pulsu proximo); dispositio `id`/`argumentum`
+  lateris scribit. `scriba_liber_paginam_condere` nova (pagina
+  nominata).
+
 - corpus: `iussum` nova - iussa in textu stilo acme (`$verbum(arg,
   arg)`): iussum ad cellulam aut proximum in linea, verba nota solum;
   registrum verborum (`iussum_registrare`, `iussum_currere`, effectus

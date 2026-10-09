@@ -50,7 +50,8 @@
 
 /* montatio applicationis in sedem (magnitudinis registratae); ctx =
  * contextus generis (vicus_genus_addere; vicus-latera S2b: liber
- * paginarum scribae communis) */
+ * paginarum scribae communis). argumentum (S3c): '$genus(argumentum)'
+ * quo latus apertum est; NIHIL = nullum */
 nomen b32 (*VicusMontator)(
                  vacuum* sedes,
                 Piscina* piscina,
@@ -58,6 +59,7 @@ nomen b32 (*VicusMontator)(
                 Volumen* volumen,
      InsulaRepositorium* repo,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
@@ -113,8 +115,10 @@ nomen structura {
  * ("3_sinistrum_scriba"; canon 'nomen' puncta non admittit) = id rami
  * repositorii = spatium arboris */
 nomen structura {
-                 chorda  id;
-                 chorda  genus;
+                 chorda id;
+                 chorda genus;
+                 chorda argumentum;   /* S3c: identitas = genus +
+                                        * argumentum; vacuum = nullum */
     constans VicusGenus* descriptio;   /* NIHIL = genus ignotum */
                  vacuum* montatio;       /* sedes montationis */
                     b32  montata;
@@ -148,6 +152,8 @@ nomen structura {
          ActioRegistrum* actiones;    /* hospitis + activae (T2a) */
         FiguraRegistrum* figurae;
                   Motus* motus;       /* ligatus (T3a); NIHIL nullus */
+                    Xar* petitiones;  /* S3c: aperitiones in acervo
+                                       * pendentes (vicus_pulsare) */
 } Vicus;
 
 Vicus*
@@ -173,6 +179,8 @@ vicus_genus_addere (
  * <tabulae activa="1"><tabula id="1" focus="sinistrum"><latus
  * genus="scriba"/><acervus><latus genus="terminale"/></acervus>
  * </tabula>...</tabulae>; acervus absens = latus sinistrum iteratum.
+ * S3c: latus 'id' et 'argumentum' optionalia (absens id = ordinarium
+ * "<tabula>_<latus>_<genus>").
  * FALSUM si dispositio mala aut repositorium deficit; latus generis
  * ignoti praeteritur (causa). */
 b32
@@ -277,6 +285,19 @@ vicus_dispensatorem_ligare (
 b32
 vicus_pulsare (
     Vicus* v);
+
+/* S3c: latus (genus, argumentum) in acervo tabulae activae: iam
+ * praesens in frontem venit, aliter montatur (id novum: id
+ * ordinarium, deinde '_2', '_3'...) et frons fit; focus ad dextrum;
+ * dispositio servatur (id et argumentum cuiusque lateris). PETITIO:
+ * applicatur in vicus_pulsare proximo, numquam intra tractationem
+ * eventus (iussum ex scriba inter tractationem currit). FALSUM si
+ * genus ignotum. */
+b32
+vicus_acervo_aperire (
+                  Vicus* v,
+     constans character* genus,
+     constans character* argumentum);
 
 chorda
 vicus_causa (
