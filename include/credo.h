@@ -618,4 +618,98 @@ credo_processus_iudicare (
 #define CREDO_RUIT_CUM(expressio, signum) \
     CREDO_RUIT_CUM_INTRA(expressio, signum, CREDO_MORA_ORDINARIA_MS)
 
+
+/* ============================================
+ * Sectiones (credo v2): suita ut tabula sectionum nominatarum
+ * ============================================
+ *
+ * Additum, non mutatio: suitae veteres (credo_aperire, assertiones in
+ * principale, compendium) immutatae currunt; transeunt cum tanguntur.
+ *
+ * Sectio quaeque: piscinam PROPRIAM accipit (destruitur post purgare),
+ * parare -> probare -> purgare (purgare SEMPER, etiam post NECESSE
+ * fractum), verdictum suum (numeri, tempus, fractura prima).
+ * Sectiones ordine liberae esse debent (status communis = vitium).
+ */
+
+nomen structura CredoContextus {
+                Piscina* piscina;   /* sectionis propria */
+                 vacuum* datum;     /* parare ponit, probare/purgare
+                                     * legunt */
+    constans character* titulus;   /* sectio currens */
+} CredoContextus;
+
+nomen vacuum (*CredoFunctio)(CredoContextus* c);
+
+nomen structura CredoSectio {
+    constans character* titulus;           /* unicus in suita: clavis
+                                            * verdicti */
+           CredoFunctio probare;
+           CredoFunctio parare;            /* NIHIL = nihil */
+           CredoFunctio purgare;           /* NIHIL = nihil; SEMPER
+                                            * vocatur */
+    constans character* signa;             /* RESERVATUM (gradus II):
+                                            * "lentus rete" */
+    constans character* exspectata_fracta; /* RESERVATUM (gradus II):
+                                            * id tabularii */
+} CredoSectio;
+
+/* Suitam currere: sectiones ordine usque ad titulum NIHIL. Ambitus:
+ *   CREDO_SECTIO=<titulus>  sectio sola (ceterae non currunt, non
+ *                           numerantur); titulus ignotus = I, nihil
+ *                           cursum, nominatum
+ *   CREDO_VERDICTA=<via>    plagula verdictorum (TSV) scribitur
+ * Plagula: linea per sectionem STATIM post eam (effluxa), deinde linea
+ * SUITA - linea SUITA absens = suita ruit (sectiones priores tamen
+ * notae). Campi tabulatione separati; '\t' '\n' '\\' in valoribus
+ * effugiuntur:
+ *   SECTIO  suita  titulus  exitus  praeteriti  totales  ms
+ *           filum:versus  genus  expressio      (fractura prima; vacua
+ *                                                si transiit)
+ *   SUITA   suita  exitus  transeuntes  sectiones  praeteriti  totales
+ *           ms
+ * exitus sectionis: TRANSIIT | FRACTA | VACUA (nulla assertio = non
+ * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum); RESERVATA
+ * (gradus II): OMISSA, NOTA_FRACTA, INOPINATA. exitus suitae: TRANSIIT
+ * | FRACTA.
+ * Effusio humana ut olim (--- Probans <titulus> ---, puncta, FRACTA,
+ * compendium). Redde ZEPHYRUM si omnes sectiones cursae transierunt, I
+ * aliter. */
+s32
+credo_suitam_currere (
+      constans character* titulus_suitae,
+    constans CredoSectio* sectiones);
+
+/* NECESSE: assertio FATALIS - fracta sectionem finit (longjmp ad
+ * cursorem; purgare tamen vocatur), loco custodiarum
+ * 'si (p != NIHIL) { ... }'. Extra sectionem = CREDO_VERUM. In filio
+ * CREDO_NON_RUIT fracta filium finit (_exit), numquam sectiones
+ * sequentes in filio currit (assertiones filii, ut semper, a parente
+ * non numerantur). */
+#define CREDO_NECESSE(x) \
+    _credo_necesse( \
+            "credo_necesse", \
+            #x, \
+            __FILE__, \
+            __LINE__, \
+            (x) != FALSUM \
+    )
+
+#define CREDO_NECESSE_NON_NIHIL(p) \
+    _credo_necesse( \
+            "credo_necesse_non_nihil", \
+            #p, \
+            __FILE__, \
+            __LINE__, \
+            (p) != NIHIL \
+    )
+
+vacuum
+_credo_necesse (
+    constans character* genus,
+    constans character* expressio,
+    constans character* filum,
+                   s32  versus,
+                   b32  praeteritus);
+
 #endif /* CREDO_H */
