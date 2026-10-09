@@ -62,6 +62,8 @@
 #   XXXVIII probationes_c: cursus fractus -> FRACTUM, area orphana
 #   XXXIX post et compositum (T7): producens primum, VERDICTUM N/M
 #   XL   lineae machinae (H1): iudicare/sanare -machina, genera nota sola
+#   XLI  familiae installatorum: actio cum II+ manifestis -> installator
+#        '-familia' cum scopis OMNIBUS (arbor frigida, quaestio …J3108ZW6)
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -513,6 +515,35 @@ if [ "$rc1" -eq 1 ] && grep -q "^IUDICIUM	RECENS	build/fabrica/area/probationes_
    && [ "$rc2" -eq 0 ] && grep -q "^SANATIO	SANATUM	probationes_t/probatio_b	" "$T/m2" \
    && grep -q "^VERDICTUM	probationes_t	2	2	$" "$T/m2" && [ "$ignotae" -eq 0 ]; then echo "  XL   lineae machinae (iudicare, sanare)  OK"; else echo "  XL   FRACTUM (rc=$rc1 $rc2, lineae ignotae $ignotae)"; cat "$T/m1" "$T/m2" | sed 's/^/      /' | head -20; fracta=1; fi
 
+# XLI (quaestio …J3108ZW6): FAMILIAE INSTALLATORUM - actio cum II+
+# ingressibus 'manifestum' (familia binariorum: canon, natura) digestum
+# OMNIUM manifestorum poscit, sed binarium primum ante ceteros struitur;
+# installator ergo '-familia' cum scopis OMNIBUS ante binarium primum
+# vocat (arbor frigida: scopus omissus = digestum fractum, nullum
+# binarium). Lectio sola arboris vivae: scopi '-familia' (tools/X.c) ==
+# manifesta declarata (build/aedilis/X/manifestum.stml).
+xli=""; xli_n=0
+while IFS='|' read -r act scr man; do
+    xli_n=$((xli_n + 1))
+    fam=$(awk '/provenientia_obiectum.sh" -familia/{f=1} f{print} f && !/\\$/{exit}' "$RADIX/${scr#./}" 2>/dev/null \
+        | grep -o 'tools/[a-z_]*\.c' | sed 's|^tools/||; s|\.c$||' | sort | tr '\n' ' ')
+    dec=$(printf '%s\n' $man | sort | tr '\n' ' ')
+    [ "$fam" = "$dec" ] || xli="$xli $act (familia: ${fam:-nulla}/ declarata: $dec)"
+done < <(awk '/<actio titulus=/{t=$0; sub(/.*titulus="/,"",t); sub(/".*/,"",t); n=0; m=""; c=""}
+              /genus="manifestum"/{n++; v=$0; sub(/.*build\/aedilis\//,"",v); sub(/\/manifestum.stml.*/,"",v); m=m" "v}
+              /verbum! \(>.*_struere.sh/{c=$0; sub(/.*\(>/,"",c); sub(/[ \t]*$/,"",c)}
+              /<\/actio>/{ if (n >= 2 && c != "") print t "|" c "|" m }' "$RADIX/aedificatio.stml")
+# et MODUS ipse: manifestum familiae absens (arbor frigida) per '-familia'
+# renascitur (artificium build/ regenerabile; interruptio = struere
+# proximum id reficit)
+MX="$RADIX/build/aedilis/natura_quaesitor/manifestum.stml"
+if [ -x "$RADIX/bin/aedilis" ] && [ -f "$MX" ]; then
+    mv "$MX" "$T/manifestum_xli.stml"
+    "$RADIX/tools/provenientia_obiectum.sh" -familia tools/natura_quaesitor.c >/dev/null 2>&1; rc=$?
+    [ "$rc" -eq 0 ] && [ -f "$MX" ] || { xli="$xli -familia manifestum non renovavit (rc=$rc)"; [ -f "$MX" ] || mv "$T/manifestum_xli.stml" "$MX"; }
+fi
+if [ "$xli_n" -ge 2 ] && [ -z "$xli" ]; then echo "  XLI  familiae installatorum ($xli_n): -familia == manifesta declarata, manifestum absens renascitur OK"; else echo "  XLI  FRACTUM (familiae $xli_n):$xli"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XL/XL)"
+echo "fumus fabricae: sanum (XLI/XLI)"
 exit 0
