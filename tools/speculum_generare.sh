@@ -32,7 +32,16 @@ TITULUS="$1"; APP="$2"; FABRICA="$3"
 [ -n "$TITULUS" ] || si_fracta "titulus vacuus"
 [ -f "$APP" ] || si_fracta "app non exstat: $APP"
 
-VEXILLA="${SPECULUM_VEXILLA:-}"
+# vexilla in proventu: a cursore data (compile_tests.sh: GCC_FLAGS),
+# aliter vexilla domus ex sede una (fabrica-7 T4: actio speculum_hospes
+# sub fabrica ambitum basis solum habet - proventus sine -std=c89 erat)
+if [ -n "${SPECULUM_VEXILLA:-}" ]; then
+    VEXILLA="$SPECULUM_VEXILLA"
+else
+    # shellcheck source=tools/vexilla.sh
+    source "$(dirname "$0")/vexilla.sh"
+    VEXILLA="${VEXILLA_C89[*]}"
+fi
 
 STAGE="build/speculum/$TITULUS"
 SECTIO="speculi_$TITULUS"

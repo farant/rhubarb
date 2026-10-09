@@ -173,15 +173,32 @@ _probationes_c_ingressus (
         && sutura->clausura_c(sutura->datum, chorda_ut_cstr(
                membrum->fons, piscina), piscina, &clausura, &causa))
     {
+        /* fons aut caput sub build/ = productum praecondicionis
+         * (capsula speculi: tempus et commissum fert) - in clave per
+         * EXSTANTIAM solam, ut porta_aedilis (approximatio nominata,
+         * Franus 2026-10-06; fabrica-7 T4): contentum omni generatione
+         * mutatum membra semper iterum curreret */
         per (i = ZEPHYRUM; i < xar_numerus(clausura.fontes); i++)
         {
-            _ingressum_c_addere(ingressus_out, "fasciculus",
-                *(chorda*)xar_obtinere(clausura.fontes, i), piscina);
+            chorda via = *(chorda*)xar_obtinere(clausura.fontes, i);
+
+            si (!chorda_incipit(via, chorda_ex_literis("build/",
+                    piscina)))
+            {
+                _ingressum_c_addere(ingressus_out, "fasciculus", via,
+                    piscina);
+            }
         }
         per (i = ZEPHYRUM; i < xar_numerus(clausura.capita); i++)
         {
-            _ingressum_c_addere(ingressus_out, "fasciculus",
-                *(chorda*)xar_obtinere(clausura.capita, i), piscina);
+            chorda via = *(chorda*)xar_obtinere(clausura.capita, i);
+
+            si (!chorda_incipit(via, chorda_ex_literis("build/",
+                    piscina)))
+            {
+                _ingressum_c_addere(ingressus_out, "fasciculus", via,
+                    piscina);
+            }
         }
         /* fabrica-7 T2: binaria domus quae probatio currit
          * (<aedilis instrumentum/>) - identitas eorum in clave */

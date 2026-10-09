@@ -370,7 +370,17 @@ _membrum_actionem_facere (
         (i32)magnitudo(FabricaIngressus));
     actio_out->exitus = xar_creare(piscina,
         (i32)magnitudo(FabricaExitus));
+    /* PRAECONDICIONES parentis (fabrica-7 T4): membrum eas hereditat
+     * ut 'post' - olim vacuae, ergo daemon aut capsula in arbore
+     * frigida pro membris numquam parabatur */
     actio_out->praecondiciones = fabricae_xar_chordarum(piscina);
+    per (i = ZEPHYRUM; parens->praecondiciones != NIHIL
+         && actio_out->praecondiciones != NIHIL
+         && i < xar_numerus(parens->praecondiciones); i++)
+    {
+        fabricae_chordam_addere(actio_out->praecondiciones,
+            *(chorda*)xar_obtinere(parens->praecondiciones, i));
+    }
     actio_out->vestigia = xar_creare(piscina,
         (i32)magnitudo(FabricaLocus));
     actio_out->communia = xar_creare(piscina,

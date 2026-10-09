@@ -313,8 +313,9 @@ _lectiones_ambitus_libri (
 
 /* DEBITA NOTARE (fabrica-7 T3): post cursum membri cum debitis -
  * <area>debita.txt: "cursus\ttransiit|fractus", deinde viae debitorum
- * quas photographiae ante/post mutatas ostendunt (fabrica_debitum_
- * iudicare eam legit). Sine photographia nihil scribitur (IGNOTUM). */
+ * quas membrum USURPAVIT - photographiae ante/post mutatas ostendunt
+ * aut liber lectionum nominat (fabrica_debitum_iudicare eam legit).
+ * Sine photographia nihil scribitur (IGNOTUM). */
 interior vacuum
 _debita_notare (
     constans FabricaSutura* sutura,
@@ -374,6 +375,50 @@ _debita_notare (
             }
             i++;
             j++;
+        }
+    }
+    /* LIBER LECTIONUM quoque (fabrica-7 T4): scriptura TRANSIENS
+     * (creata et deleta intra cursum - sqlite, sera, scripta ficta)
+     * photographias fallit; via in libro nominata (S scripsit, L/X/A
+     * legit aut quaesivit) = usus debiti. Lineae E (ambitus) omissae */
+    {
+        chorda liber;
+           i32 initium;
+           i32 k;
+
+        si (   sutura->legere != NIHIL
+            && sutura->legere(sutura->datum, chorda_ut_cstr(
+                   fabrica_liber_via(actio->titulus, piscina), piscina),
+                   piscina, &liber))
+        {
+            initium = ZEPHYRUM;
+            per (k = ZEPHYRUM; k <= liber.mensura; k++)
+            {
+                chorda versus;
+                chorda via;
+
+                si (k < liber.mensura && liber.datum[k] != '\n')
+                {
+                    perge;
+                }
+                versus   = chorda_sectio(liber, initium, k);
+                initium  = k + I;
+                si (   versus.mensura < III || versus.datum[I] != '\t'
+                    || versus.datum[0] == 'E')
+                {
+                    perge;
+                }
+                via = chorda_sectio(versus, II, versus.mensura);
+                si (   sutura->radix.mensura > 0
+                    && via.mensura > sutura->radix.mensura
+                    && chorda_incipit(via, sutura->radix)
+                    && via.datum[sutura->radix.mensura] == '/')
+                {
+                    via = chorda_sectio(via, sutura->radix.mensura + I,
+                        via.mensura);
+                }
+                fabricae_chordam_addere(mutata, via);
+            }
         }
     }
     (vacuum)chorda_aedificator_appendere_literis(a, transiit

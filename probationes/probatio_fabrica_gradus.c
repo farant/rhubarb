@@ -367,6 +367,8 @@ _clausura_c_ficta (
     alioquin si (strcmp(scopus, "t/probatio_b.c") == ZEPHYRUM)
     {
         _c_addere(clausura_out->fontes, "lib/y.c", piscina);
+        /* T4: capsula generata (productum praecondicionis) */
+        _c_addere(clausura_out->fontes, "build/gen/capsula.c", piscina);
         _c_addere(clausura_out->capita, "include/y.h", piscina);
     }
     alioquin si (strcmp(scopus, "t/probatio_c.c") == ZEPHYRUM)
@@ -1213,6 +1215,28 @@ _probare_probationes_c (
         CREDO_NON_NIHIL(membrum_c);
         CREDO_NIHIL(_actio_explicata(explicata,
             "probationes_t/probatio_zeta"));
+        /* T4: fons sub build/ (capsula generata) NON in clave - per
+         * exstantiam solam, ut porta_aedilis */
+        {
+            FabricaActio* b = _actio_explicata(explicata,
+                "probationes_t/probatio_b");
+                     b32 capsula  = FALSUM;
+                     b32 y_c      = FALSUM;
+
+            per (k = ZEPHYRUM; b != NIHIL
+                 && k < xar_numerus(b->ingressus); k++)
+            {
+                chorda v = ((FabricaIngressus*)xar_obtinere(
+                    b->ingressus, k))->via;
+
+                capsula = capsula || chorda_aequalis_literis(v,
+                    "build/gen/capsula.c");
+                y_c = y_c || chorda_aequalis_literis(v, "lib/y.c");
+            }
+            CREDO_NON_NIHIL(b);
+            CREDO_VERUM(y_c);
+            CREDO_FALSUM(capsula);
+        }
         si (membrum_a != NIHIL)
         {
             b32 x_c = FALSUM;
@@ -1271,7 +1295,9 @@ _probare_probationes_c (
         }
         CREDO_AEQUALIS_I32(_c_nexus, III);
         CREDO_AEQUALIS_I32(_c_cursus, II);
-        CREDO_AEQUALIS_I32(_c_compilationes, V);
+        /* VI: capsula generata b (T4) compilatur et nectitur, clavis
+         * tantum eam non fert */
+        CREDO_AEQUALIS_I32(_c_compilationes, VI);
         CREDO_AEQUALIS_I32(_c_nexus_compagis, I);
         CREDO_VERUM(mundi_contentum_est(&discus, verdicta[II],
             "probationes_t/probatio_c: transiit (nexus solum: facultas "
@@ -1795,6 +1821,10 @@ hic_manens constans character* _d_via_a = NIHIL;
 
 hic_manens constans character* _d_via_b = NIHIL;
 
+/* T4: scriptura TRANSIENS - via in libro solo (S), nullus fasciculus
+ * manens (sqlite, sera, scripta ficta deleta) */
+hic_manens constans character* _d_liber_a = NIHIL;
+
 interior b32
 _in_area_currere_debita (
                 vacuum* datum,
@@ -1813,7 +1843,9 @@ _in_area_currere_debita (
     (vacuum)ambitus;
     (vacuum)acta_via;
     fons = *(constans chorda*)xar_obtinere(argv, I);
-    mundi_ponere(discus, liber_via, "");
+    mundi_ponere(discus, liber_via,
+        chorda_aequalis_literis(fons, "t/a.c") && _d_liber_a != NIHIL
+        ? _d_liber_a : "");
     si (chorda_aequalis_literis(fons, "t/a.c") && _d_via_a != NIHIL)
     {
         mundi_ponere(discus, _d_via_a, "scriptum a\n");
@@ -2019,6 +2051,11 @@ _probare_debita (
             piscina);
         debitum_b = _debitum_addere(parens.debita, "b", "build/b/",
             piscina);
+        parens.praecondiciones = xar_creare(piscina,
+            (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(parens.praecondiciones) =
+            chorda_ex_literis(
+            "daemon", piscina);
         novum = parens;
         novum.debita = xar_creare(piscina,
             (i32)magnitudo(FabricaDebitum));
@@ -2052,6 +2089,17 @@ _probare_debita (
         CREDO_FALSUM(_vestigium_habet(membrum_b, "build/a.db"));
         CREDO_AEQUALIS_I32(membrum_a != NIHIL && membrum_a->debita
             != NIHIL ? xar_numerus(membrum_a->debita) : ZEPHYRUM, I);
+        /* T4: praecondiciones parentis hereditatae (daemon, capsula in
+         * arbore frigida membris quoque parantur) */
+        CREDO_AEQUALIS_I32(membrum_a != NIHIL
+            && membrum_a->praecondiciones != NIHIL
+            ? xar_numerus(membrum_a->praecondiciones) : ZEPHYRUM, I);
+        si (   membrum_a != NIHIL && membrum_a->praecondiciones != NIHIL
+            && xar_numerus(membrum_a->praecondiciones) == I)
+        {
+            CREDO_VERUM(chorda_aequalis_literis(*(chorda*)xar_obtinere(
+                membrum_a->praecondiciones, ZEPHYRUM), "daemon"));
+        }
 
         /* III. sanare: a scribit debitum suum (plagula), b suum
          * (arbor) -> SANATA, debita SCRIPTA; nondum cursum ->
@@ -2109,6 +2157,17 @@ _probare_debita (
             : (i32)XCIX, (i32)FABRICA_SANATUM);
         CREDO_AEQUALIS_I32((i32)fabrica_debitum_iudicare(&sutura,
             &parens, debitum_a, piscina), (i32)FABRICA_DEBITUM_STALUM);
+
+        /* Vb (T4). scriptura transiens: nullus fasciculus manens, sed
+         * via in libro lectionum (S) - SCRIPTUM, non STALUM */
+        _d_liber_a = "S\tbuild/a.db\nE\tPATH\n";
+        mundi_ponere(&discus, "t/a.c", "a IIb\n");
+        (vacuum)_s_sanare(&sutura, ordo, electa, "probationes_t/a",
+            FABRICA_SANATUM, piscina);
+        CREDO_AEQUALIS_I32((i32)fabrica_debitum_iudicare(&sutura,
+            &parens, debitum_a, piscina),
+            (i32)FABRICA_DEBITUM_SCRIPTUM);
+        _d_liber_a = NIHIL;
 
         /* VI. a fractum sine scriptura -> IGNOTUM (fractura non probat
          * debitum mortuum) */

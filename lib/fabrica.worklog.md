@@ -2485,3 +2485,76 @@ scriptum; b writing it -> FRACTUM naming build/a.db; a stops -> stalum).
 Plants (planta): debt on every member, unknown member accepted,
 duplicate accepted, writes not recorded, failure recorded as pass ->
 gradus red; census counting members -> fumus XLIII red.
+
+## 2026-10-09 - fabrica-7 T4: probationes_radicis, first heal
+
+Declared `probationes_radicis` in aedificatio.stml: `probationes_c` over
+`probationes/probatio_*.c` minus `probatio_*_benchmark.c` = 256 members
+(257 files - 1 benchmark; aedilis_porta.sh skips the same one - 2^8 is a
+coincidence, checked file-by-file against the areas), `praecondicio`
+tabulariumd + speculum_hospes, 4 declared env switches, and the 36 build/
+writes porta_aedilis allowed EVERY test turned into debts with one owner
+each (the three that looked shared - natura_canones dir, probatio_sent.*,
+probatio_villa.* - each had a single writer).
+
+What the first real heal found, in order:
+1. A never-judged output as a member input is refused ("praecondicio
+   sola licet") - the hospes speculum capsule is in two members' aedilis
+   closures (obiectum annotation). Members now key sources/headers under
+   build/ by EXISTENCE only (the porta_aedilis approximation Fran approved
+   10-06; the capsule embeds time+commit, content keying would re-run
+   them on every regeneration). `post` can't consume it either -> the
+   capsule's producer is a praecondicio.
+2. Members did not inherit `praecondiciones` (empty Xar) - in a cold tree
+   neither the daemon nor the capsule would be built for them. Inherited
+   now, like `post`.
+3. speculum_hospes had never run under fabrica: speculum_generare.sh runs
+   aedilis on its consumer -> build/aedilis/probatio_vitrea_hospes/
+   undeclared (declared now), and with no SPECULUM_VEXILLA its proventus
+   lost -std=c89 (probatio_speculum_fontium red) - it now sources
+   tools/vexilla.sh when no runner passes flags.
+4. Four undeclared env reads: PICTOR_DOCUMENTUM_AURUM_SCRIBERE,
+   QUADRANS_AURUM_SCRIBERE, PLIST_AREA, VILLA_SSH (the test sets it, its
+   child reads it) -> declared.
+
+Then 256/256. Costs: first cold heal 7 min 5 s wall (158 s user); warm
+iudicare 11 s; no-op sanare 44 s (full judge + 256 closures); census
+1.5 s (it explicates); vs compile_tests.sh 80-115 s and aedilis gate
+180-210 s recently. T5/T6 measure properly.
+
+Debts: census said 18 of 36 stale - FALSE. All 18 owners write
+TRANSIENTLY (create then delete inside the run: sqlite -wal/-shm, lock
+file, rm -f via system(), scratch trees); a before/after snapshot cannot
+see that (nor can the outside-write check - pre-existing blind spot,
+ledger …HC0Q). Fix part 1: `_debita_notare` also takes every path the
+member's reads log names (S/L/X/A lines, radix-stripped; E skipped) ->
+11 of 18 seen. Part 2 (Fran chose option 1): the three tests whose use
+left no trace at all - sententiae_horreum and villa_agens (tabulariumd
+child writes sqlite, cleanup by system("rm -f ...")) and git (own I/O) -
+now put their scratch in a per-process dir `$TMPDIR/<name>.<pid>`
+(= member area under fabrica, system tmp under compile_tests.sh; any
+leftover of a reused pid deleted first) and delete it at the end; their
+11 debts are gone. Bonus: the old cleanup `pkill -f
+'... -scrinium build/probatio_sent.db'` matched a RELATIVE path - one
+tree's run could kill another tree's daemon; the unique absolute path
+ends that. Traps: (1) first version used mkdtemp + realpath + PATH_MAX
+- clang was happy, but the pre-commit `examen` refused all three files:
+silva's POSIX lexicon (silva/fontes/systema_posix.h) knows none of them,
+so mkdtemp's char* read as an implicit int. getpid IS in the lexicon ->
+pid-named dir via house filum_ calls instead. (2) macOS TMPDIR ends in
+'/': the path had 'T//...', git's path normalisation collapsed it and the
+git test's string compare failed - trailing '/' stripped (it was NOT the
+/var -> /private/var symlink, as first assumed). Census now: debita 25,
+all scriptum.
+
+Tests/plants: gradus covers inherited praecondiciones, build/ source not
+keyed (compiled+linked, compile count 5 -> 6), transient write seen via
+the log (Vb); plants: no inheritance, build/ keyed, log ignored -> red.
+
+Addendum (T4 commit, same day): fumus XXXII refused the first T4 commit -
+T3 taught the PARSER `<debitum_scripturae>` but not `aedificatio.canon`,
+and no T3 test used a real aedificatio.stml (fumus XLIII writes a temp one
+that XXXII never examines), so the gap only showed when the root file got
+real debts. Canon entry added (actio child + element: membrum/via/causa
+required). Lesson: a new declaration element = parser + canon in the same
+task; the canon gate only sees subsystem files.

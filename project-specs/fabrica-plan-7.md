@@ -81,11 +81,19 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
 
 ### T4: `probationes_radicis`
 
-- [ ] Declare the action (`probationes_c exemplar="probationes/probatio_*.c"`,
+- [x] Declare the action (`probationes_c exemplar="probationes/probatio_*.c"`,
   `praecondicio tabulariumd`, `post` producers, the slice-5 writes as
   debts with owners); first full heal in quinta; each refusal fixed in
   the test or turned into a named debt. Record first-heal cost.
   **Commit.**
+- As built (2026-10-09): 256 members (benchmark excluded), 256/256;
+  speculum_hospes is a praecondicio (never-judged output), members
+  inherit praecondiciones and key build/ sources by existence; 4 env
+  switches declared; 36 debts -> 25 (three tests moved scratch to a
+  unique TMPDIR dir after the census exposed transient writes); debt use
+  = snapshot change OR reads-log path. First cold heal 7 min 5 s; warm
+  iudicare 11 s, no-op sanare 44 s, census 1.5 s. Blind spot for
+  transient writes outside the area filed (…HC0Q).
 
 ### T5: the oracle
 

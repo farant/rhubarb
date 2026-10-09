@@ -24,8 +24,58 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>   /* getpid */
 #include "json.h"
 #include "filum.h"
+
+/* SCRATCH (fabrica-7 T4): directorium UNICUM sub TMPDIR (per pid) - sub
+ * fabrica area membri ipsa (TMPDIR = <area>tmp; debita
+ * build/probatio_villa* soluta), sub compile_tests.sh directorium
+ * systematis. Nomen unicum: arbores duae nec scrinium commune habent
+ * nec daemonem alienum necant (olim 'pkill -f ... -scrinium
+ * build/probatio_villa.db' via relativa omnes arbores tangebat).
+ * Scriptura TRANSIENS in build/ photographiam fabricae fallebat (census
+ * debitum 'stalum' falso nominabat). */
+hic_manens character _scratch[DXII];
+
+interior b32
+_scratch_parare (vacuum)
+{
+    constans character* tmp = getenv("TMPDIR");
+        memoriae_index  n;
+
+    si (tmp == NIHIL || tmp[0] == '\0')
+    {
+        tmp = "/tmp";
+    }
+    /* '/' finalis (TMPDIR macOS) demitur: via '//' a git normalizata
+     * cum via probationis non congruebat */
+    n = strlen(tmp);
+    dum (n > I && tmp[n - I] == '/')
+    {
+        n--;
+    }
+    /* unicum per processum (getpid): processus concurrentes numquam
+     * idem; reliquiae pid iterati prius deletae */
+    sprintf(_scratch, "%.*s/probatio_villa.%d", (integer)(n
+        > CD ? CD : n), tmp,
+        (integer)getpid());
+    (vacuum)filum_arborem_delere(_scratch);
+    redde filum_directorium_creare_cum_parentibus(_scratch);
+}
+
+/* "<scratch>/<titulus>" in piscina */
+interior constans character*
+_in_scratch (
+               Piscina* piscina,
+    constans character* titulus)
+{
+    character* via = (character*)piscina_allocare(piscina,
+        strlen(_scratch) + strlen(titulus) + II);
+
+    sprintf(via, "%s/%s", _scratch, titulus);
+    redde via;
+}
 
 #define STIPES "probationes/fixa/villa/ssh_stipes.sh"
 
@@ -500,23 +550,22 @@ s32 principale (vacuum)
               i32 k;
 
         imprimere("\n--- X. eventus in annalibus ---\n");
-        /* glob, non nomina tria: sqlite '-wal' et '-shm' comites
-		 * relinquit quos lista explicita praeterit (id ipsum hic
-		 * accidit - porta sordes suas in build/ reliquit) */
-        (vacuum)system("rm -f build/probatio_villa.*");
+        /* scratch unicum (fabrica-7 T4): sqlite '-wal' et '-shm'
+         * comites cum directorio toto delentur */
+        CREDO_VERUM (_scratch_parare());
         /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
          * semel struit): probatio currit, non struit (fabrica plan 5
          * T5b) */
         CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
-        CREDO_VERUM (system("gesta/build/tabulariumd -portus 0"
-            " -scrinium build/probatio_villa.db"
-            " -annales build/probatio_villa.jsonl"
-            " > build/probatio_villa.portus 2> /dev/null &")
-            == ZEPHYRUM);
+        sprintf(imperium, "gesta/build/tabulariumd -portus 0"
+            " -scrinium %s/villa.db -annales %s/villa.jsonl"
+            " > %s/villa.portus 2> /dev/null &", _scratch, _scratch,
+            _scratch);
+        CREDO_VERUM (system(imperium) == ZEPHYRUM);
         per (k = ZEPHYRUM; k < XXV; k++)
         {
-            FILE* pf = lectiones_fopen("build/probatio_villa.portus",
-                "r");
+            FILE* pf = lectiones_fopen(_in_scratch(piscina,
+                "villa.portus"), "r");
 
             si (pf != NIHIL)
             {
@@ -596,7 +645,7 @@ s32 principale (vacuum)
 				 * cum provenientia recta, non textum in summario. */
                 {
                     chorda annales = filum_legere_totum(
-                        "build/probatio_villa.jsonl", piscina);
+                        _in_scratch(piscina, "villa.jsonl"), piscina);
 
                     CREDO_VERUM (annales.mensura > ZEPHYRUM);
                     CREDO_CHORDA_CONTINET (annales,
@@ -637,9 +686,9 @@ s32 principale (vacuum)
             }
         }
         sprintf(imperium, "pkill -f 'tabulariumd -portus 0"
-            " -scrinium build/probatio_villa.db' > /dev/null 2>&1");
+            " -scrinium %s/villa.db' > /dev/null 2>&1", _scratch);
         (vacuum)system(imperium);
-        (vacuum)system("rm -f build/probatio_villa.*");
+        (vacuum)filum_arborem_delere(_scratch);
     }
 
 

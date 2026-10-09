@@ -1033,13 +1033,16 @@ fabrica_acta_via (
 
 /* DEBITA (fabrica-7 T3): status debiti post cursum ULTIMUM membri ex
  * <area>debita.txt (a fabrica post cursum scripta: linea prima
- * "cursus\ttransiit|fractus", deinde viae debitorum quas membrum vere
- * scripsit) */
+ * "cursus\ttransiit|fractus", deinde viae debitorum quas membrum
+ * usurpavit: photographia aut liber lectionum) */
 nomen enumeratio {
-    FABRICA_DEBITUM_SCRIPTUM = ZEPHYRUM, /* membrum ibi scripsit -
-                                          * debitum vivum */
-    FABRICA_DEBITUM_STALUM,              /* transiit, non scripsit -
-                                          * delendum */
+    FABRICA_DEBITUM_SCRIPTUM = ZEPHYRUM, /* membrum ibi usum: mutatio
+                                          * manens aut via in libro
+                                          * lectionum - debitum vivum */
+    FABRICA_DEBITUM_STALUM,              /* transiit, usus nullus
+                                          * visus - delendum, NISI
+                                          * scriptura transiens extra
+                                          * librum (verifica) */
     FABRICA_DEBITUM_IGNOTUM              /* nondum cucurrit, aut
                                           * fractum sine scriptura */
 } FabricaDebitiStatus;
