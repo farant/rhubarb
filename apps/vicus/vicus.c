@@ -121,6 +121,8 @@ principale (
     {
         redde I;
     }
+    /* S4: horologium locale in linea tabularum */
+    vicus_horologium_ponere(app.vicus, vicus_horologium_locale, NIHIL);
 
     cfg.titulus   = "vicus";
     cfg.latitudo  = latitudo_fenestrae * SCALA;

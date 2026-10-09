@@ -149,6 +149,13 @@ nomen structura {
            i32 focus;       /* VICUS_SINISTRUM aut VICUS_DEXTRUM */
 } VicusTabula;
 
+/* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
+ * ("7:52 PM"). Fons: hora 0-23, minutum 0-59. NIHIL (ordinarium) =
+ * nullum horologium - probationes et specimina constant; applicationes
+ * vicus_horologium_locale ponunt. vicus_pulsare horam legit et VERUM
+ * reddit cum minutum mutatur. */
+nomen vacuum (*VicusHorologium) (vacuum* ctx, s32* hora, s32* minutum);
+
 nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -166,6 +173,10 @@ nomen structura {
                   Motus* motus;       /* ligatus (T3a); NIHIL nullus */
                     Xar* petitiones;  /* S3c: aperitiones in acervo
                                        * pendentes (vicus_pulsare) */
+        VicusHorologium  horologium;  /* S4: NIHIL = nullum */
+                 vacuum* horologium_ctx;
+                    s32  hora;        /* ultima lecta; -1 = nulla */
+                    s32  minutum;
 } Vicus;
 
 Vicus*
@@ -298,6 +309,19 @@ vicus_dispensatorem_ligare (
 b32
 vicus_pulsare (
     Vicus* v);
+
+vacuum
+vicus_horologium_ponere (
+              Vicus* v,
+    VicusHorologium  horologium,
+             vacuum* ctx);
+
+/* hora locali systematis (time.h: time, localtime) */
+vacuum
+vicus_horologium_locale (
+    vacuum* ctx,
+       s32* hora,
+       s32* minutum);
 
 /* S3c: latus (genus, argumentum) in acervo tabulae activae: iam
  * praesens in frontem venit, aliter montatur (id novum: id

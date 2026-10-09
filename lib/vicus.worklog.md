@@ -399,3 +399,16 @@ then the front of the right stack - overriding the saved focus. Only
 at open: switching tabs keeps the last focus (a deliberate click into
 scriba in tab 1 survives Cmd+2, Cmd+1). Tests: probatio_vicus_latera
 section 0; the twin replay session now clicks into scriba first.
+
+## 2026-10-09 - S4 clock in the tab bar (Fran)
+
+"7:52 PM" right-aligned in the tab bar, one cell margin. The vicus has
+NO clock by default (`horologium` NIHIL, hora/minutum -1): every
+existing test and golden composes a vicus, and a real clock would
+make them change every minute. The two app mains (apps/vicus/vicus.c
+and vicus_terminalis.c) install `vicus_horologium_locale`
+(time/localtime, plain C89 <time.h>); tests inject a fake one.
+vicus_pulsare reads the clock each pulse and returns VERUM only when
+(hour, minute) changed, so the app repaints once a minute for it.
+vicus_horologium_ponere reads once immediately so the first frame has
+the time. Format: hour % 12 with 0 -> 12, minutes %02d, AM below 12.

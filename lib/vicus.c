@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 /* dispositio (S2a): plagula nova - forma vetus 'vicus/tabulae' non
  * legitur (volumina vetera dispositionem ordinariam accipiunt) */
@@ -682,6 +683,20 @@ figura_tabularum (
                                             : COLOR_TEXT));
         x += lat;
     }
+    /* S4: horologium ad dextrum ("7:52 PM"), cellula marginis */
+    si (v && v->hora >= ZEPHYRUM && v->minutum >= ZEPHYRUM)
+    {
+        character horae[XVI];
+           chorda textus;
+
+        sprintf(horae, "%d:%02d %s",
+            (integer)(v->hora % XII == ZEPHYRUM ? XII : v->hora % XII),
+            (integer)v->minutum, v->hora < XII ? "AM" : "PM");
+        textus = chorda_ex_literis(horae, m->piscina);
+        mandata_textus(m, c->fines.latitudo - VICUS_CELLULA_LATITUDO
+            - (s32)textus.mensura * VICUS_CELLULA_LATITUDO, ZEPHYRUM,
+            textus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+    }
 }
 
 /* <purus/> divisor laterum (S2a): rectangulum plenum componentis sui
@@ -1010,7 +1025,70 @@ vicus_creare (
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     v->petitiones  = xar_creare(piscina,
         (i32)magnitudo(PetitioAcervi));
+    v->hora     = -I;
+    v->minutum  = -I;
     redde v;
+}
+
+/* S4: horam legere; VERUM si mutata (aut prima) */
+interior b32
+horam_legere (
+    Vicus* v)
+{
+    s32 hora;
+    s32 minutum;
+
+    si (!v->horologium)
+    {
+        redde FALSUM;
+    }
+    hora     = -I;
+    minutum  = -I;
+    v->horologium(v->horologium_ctx, &hora, &minutum);
+    si (hora == v->hora && minutum == v->minutum)
+    {
+        redde FALSUM;
+    }
+    v->hora     = hora;
+    v->minutum  = minutum;
+    redde VERUM;
+}
+
+vacuum
+vicus_horologium_ponere (
+              Vicus* v,
+    VicusHorologium  horologium,
+             vacuum* ctx)
+{
+    si (!v)
+    {
+        redde;
+    }
+    v->horologium      = horologium;
+    v->horologium_ctx  = ctx;
+    v->hora            = -I;
+    v->minutum         = -I;
+    (vacuum)horam_legere(v);
+}
+
+vacuum
+vicus_horologium_locale (
+    vacuum* ctx,
+       s32* hora,
+       s32* minutum)
+{
+       time_t nunc;
+    struct tm* t;
+
+    (vacuum)ctx;
+    nunc  = time(NIHIL);
+    t     = localtime(&nunc);
+    si (!t)
+    {
+        redde;
+    }
+    *hora     = (s32)t->tm_hour;
+    *minutum  = (s32)t->tm_min;
 }
 
 b32
@@ -1660,6 +1738,11 @@ vicus_pulsare (
         redde FALSUM;
     }
     pingendum = FALSUM;
+    /* S4: horologium - quadrum solum cum minutum mutatur */
+    si (horam_legere(v))
+    {
+        pingendum = VERUM;
+    }
     /* S3c: aperitiones pendentes extra tractationem eventus */
     per (i = ZEPHYRUM; v->petitiones
                        && i < xar_numerus(v->petitiones); i++)
