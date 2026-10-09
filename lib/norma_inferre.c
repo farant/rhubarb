@@ -5,6 +5,7 @@
 #include "norma_inferre.h"
 #include "utf8.h"
 
+#include <stdio.h>
 #include <string.h>
 
 /* formae probatae, ordine praeferentiae; bit i = forma i adhuc viva */
@@ -940,6 +941,28 @@ _objectum_normam (
                   i32   i;
                   i32   k;
 
+    /* positio tabulae similis: claves multae, nulla in plus quam
+     * dimidio instantiarum - objectum apertum cum nota (typus tabulae,
+     * 'ceteri', fasciculus posterior) */
+    si (n > XXXII)
+    {
+        b32 rarae = VERUM;
+
+        per (i = 0; i < n && rarae; i++)
+        {
+            rarae = (s64)((CampusFigurae*)xar_obtinere(f->campi,
+                i))->praesentia * II <= (s64)f->genera[JSON_OBJECTUM];
+        }
+        si (rarae)
+        {
+            character nuntius[CXXVIII];
+
+            sprintf(nuntius, "inferentia: positio tabulae similis (%u"
+                " claves distinctae)", (insignatus integer)n);
+            redde norma_descriptio(norma_modus(norma_objectum(p),
+                NORMA_APERTUM), nuntius);
+        }
+    }
     si (!omittere && !f->partitio)
     {
         constans CandidatusDiscriminis* c = _discrimen_eligere(f);
@@ -988,6 +1011,93 @@ _objectum_normam (
             ordo[i]->praesentia == f->genera[JSON_OBJECTUM]);
     }
     redde o;
+}
+
+/* electio et fines ROGATI (§III): ex observatis, solum si exempla
+ * >= exempla_minima; electio solum si distincti <= electio_maxima */
+interior vacuum
+_fines_et_electio (
+    constans Inferentia* inf,
+        constans Figura* f,
+                  Norma* n,
+                Piscina* p)
+{
+    NormaVisus v       = norma_visus(n);
+           i32 minima  = inf->optiones.exempla_minima;
+
+    si (inf->optiones.fines)
+    {
+        si (   v.genus                 == NORMA_INTEGER
+            && f->genera[JSON_INTEGER] >= minima)
+        {
+            norma_intra(n, f->integrum_minimum, f->integrum_maximum);
+        }
+        alioquin si (   v.genus == NORMA_NUMERUS
+                     && f->genera[JSON_INTEGER]
+                         + f->genera[JSON_FLUITANS]
+                        >= minima)
+        {
+            f64 infimum = f->habet_fluitans ? f->fluitans_minimum
+                                         : (f64)f->integrum_minimum;
+            f64 summum  = f->habet_fluitans ? f->fluitans_maximum
+                                         : (f64)f->integrum_maximum;
+
+            si (f->habet_integrum && (f64)f->integrum_minimum < infimum)
+            {
+                infimum = (f64)f->integrum_minimum;
+            }
+            si (f->habet_integrum && (f64)f->integrum_maximum > summum)
+            {
+                summum = (f64)f->integrum_maximum;
+            }
+            norma_intra_fluitans(n, infimum, summum);
+        }
+        alioquin si (   v.genus                == NORMA_TEXTUS
+                     && f->genera[JSON_CHORDA] >= minima)
+        {
+            norma_longitudo(n, f->longitudo_minima,
+                f->longitudo_maxima);
+        }
+        alioquin si (   v.genus                   == NORMA_TABULATUM
+                     && f->genera[JSON_TABULATUM] >= minima)
+        {
+            norma_longitudo(n, f->tabulatum_minimum,
+                f->tabulatum_maximum);
+        }
+    }
+    si (   inf->optiones.electio && v.genus == NORMA_TEXTUS
+        && f->genera[JSON_CHORDA]    >= minima && !f->distincti_superati
+        && xar_numerus(f->distincti) > 0
+        && xar_numerus(f->distincti) <= inf->optiones.electio_maxima)
+    {
+                       i32   d = xar_numerus(f->distincti);
+        constans character** licita = (constans character**)
+            piscina_allocare(p, (memoriae_index)(d + I)
+                                * magnitudo(character*));
+                    i32 i;
+                    i32 k;
+
+        per (i = 0; i < d; i++)
+        {
+            licita[i] =
+                chorda_ut_cstr(*(chorda*)xar_obtinere(f->distincti,
+                i), p);
+        }
+        per (i = I; i < d; i++)
+        {
+            constans character* x = licita[i];
+
+            k = i;
+            dum (k > 0 && strcmp(licita[k - I], x) > 0)
+            {
+                licita[k] = licita[k - I];
+                k--;
+            }
+            licita[k] = x;
+        }
+        licita[d] = NIHIL;
+        norma_electio(n, licita);
+    }
 }
 
 interior Norma*
@@ -1060,6 +1170,7 @@ _figuram_normam (
     {
         n = _objectum_normam(inf, f, p, NIHIL);
     }
+    _fines_et_electio(inf, f, n, p);
     si (f->genera[JSON_NULLUM] > 0)
     {
         norma_aut_nullum(n);

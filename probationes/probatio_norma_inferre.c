@@ -9,6 +9,8 @@
 #include "norma_inferre.h"
 #include "norma_gignere.h"
 #include "chorda_aedificator.h"
+#include "herbarium.h"
+#include "norma_stml.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -527,6 +529,165 @@ probatio_lex_restitutionis (
         p);
 }
 
+/* ---- B1.3: positio tabulae similis, electio et fines rogati, fumus ---- */
+
+interior vacuum
+probatio_tabula_similis(Piscina* p)
+{
+    Inferentia* inf = inferentia_creare(p, NIHIL);
+     character  exemplum[CXXVIII];
+         Norma* n;
+    NormaVisus  v;
+           i32  i;
+
+    imprimere("\n--- Probans positionem tabulae similem ---\n");
+    per (i = 0; i < XL; i++)
+    {
+        sprintf(exemplum,
+            "{\"usage_per_model\":{\"model_%u\":{\"in\":%u}}}",
+            (insignatus integer)i, (insignatus integer)i);
+        inferentia_addere(inf, json_legere_literis(exemplum, p).radix);
+    }
+    n = inferentia_normam(inf, p);
+    v = norma_visus(((NormaCampus*)xar_obtinere(norma_visus(n).campi,
+        0))->valor);
+    CREDO_VERUM(v.genus == NORMA_OBJECTUM);
+    CREDO_VERUM(v.modus == NORMA_APERTUM);
+    CREDO_AEQUALIS_I32(xar_numerus(v.campi), 0);
+    CREDO_VERUM(chorda_continet(v.descriptio, chorda_ex_literis(
+        "tabulae similis (40 claves distinctae)", p)));
+    /* sanitas: sine notis */
+    sprintf(exemplum,
+        "{\"usage_per_model\":{\"model_novum\":{\"in\":1}}}");
+    CREDO_AEQUALIS_I32(xar_numerus(norma_iudicare(n,
+        json_legere_literis(
+        exemplum, p).radix, p).notae), 0);
+}
+
+interior chorda
+_cum_optionibus (
+    constans character* constans* exempla,
+                             b32  electio,
+                             b32  fines,
+                        Piscina* p)
+{
+    InferentiaOptiones  o = inferentia_optiones_ordinariae();
+            Inferentia* inf;
+                   i32  i;
+
+    o.electio  = electio;
+    o.fines    = fines;
+    inf        = inferentia_creare(p, &o);
+    per (i = 0; exempla[i]; i++)
+    {
+        inferentia_addere(inf, json_legere_literis(exempla[i],
+            p).radix);
+    }
+    redde _js(inferentia_normam(inf, p), p);
+}
+
+interior vacuum
+probatio_electio_et_fines(Piscina* p)
+{
+    constans character* constans causae[] = {
+        "\"tool_use\"", "\"end_turn\"", "\"end_turn\"",
+            "\"max_tokens\"",
+        "\"end_turn\"", "\"tool_use\"", NIHIL };
+    constans character* constans paucae[] = {
+        "\"a\"", "\"b\"", NIHIL };
+    constans character* constans multae[] = {
+        "\"a\"", "\"b\"", "\"c\"", "\"d\"", "\"e\"", "\"f\"", "\"g\"",
+        "\"h\"", "\"i\"", NIHIL };
+    constans character* constans numeri[] = {
+        "3", "9", "4", "5", "6", NIHIL };
+    constans character* constans fluitantes[] = {
+        "3", "9.5", "4", "-1.25", "6", NIHIL };
+    constans character* constans textus[] = {
+        "\"ab\"", "\"abcdef\"", "\"abc\"", "\"abcd\"", "\"abcde\"",
+            NIHIL };
+
+    imprimere("\n--- Probans electionem et fines rogatos ---\n");
+    /* electio ordine octetorum; non rogata -> nulla */
+    CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(causae, VERUM, FALSUM,
+        p),
+        "{\"type\":\"string\",\"enum\":[\"end_turn\",\"max_tokens\","
+        "\"tool_use\"]}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(causae, FALSUM,
+        FALSUM, p),
+        "{\"type\":\"string\"}");
+    /* exempla pauciora quam V; distincti plures quam VIII */
+    CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(paucae, VERUM, FALSUM,
+        p),
+        "{\"type\":\"string\"}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(multae, VERUM, FALSUM,
+        p),
+        "{\"type\":\"string\"}");
+    /* fines observati */
+    CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(numeri, FALSUM, VERUM,
+        p),
+        "{\"type\":\"integer\",\"minimum\":3,\"maximum\":9}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(fluitantes, FALSUM,
+        VERUM,
+        p), "{\"type\":\"number\",\"minimum\":-1.25,\"maximum\":9.5}");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_cum_optionibus(textus, FALSUM, VERUM,
+        p),
+        "{\"type\":\"string\",\"minLength\":2,\"maxLength\":6}");
+}
+
+/* lex IV (fumus): specimina vatis commissa (status CC) -> adumbratio
+ * sana, scriptor eam scribit */
+interior vacuum
+probatio_fumus_speciminum(Piscina* p)
+{
+    Xar* sp = herbarium_enumerare(p,
+        "probationes/fixa/vates/herbarium");
+       Inferentia* inf = inferentia_creare(p, NIHIL);
+            Norma* n;
+    NormaNominata  nn;
+           chorda  causa;
+              i32  i;
+              i32  usa = 0;
+
+    imprimere("\n--- Lex IV: fumus in speciminibus vatis ---\n");
+    per (i = 0; i < xar_numerus(sp); i++)
+    {
+        HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp, i);
+             JsonResultus  j;
+
+        si (h->status != CC)
+        {
+            perge;
+        }
+        j = json_legere(h->corpus, p);
+        si (j.successus)
+        {
+            inferentia_addere(inf, j.radix);
+            usa++;
+        }
+    }
+    CREDO_MAIOR_I32(usa, 0);
+    n = inferentia_normam(inf, p);
+    CREDO_NON_NIHIL(n);
+    per (i = 0; i < xar_numerus(sp); i++)
+    {
+        HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp, i);
+             JsonResultus  j;
+
+        si (h->status != CC)
+        {
+            perge;
+        }
+        j = json_legere(h->corpus, p);
+        si (j.successus)
+        {
+            CREDO_VERUM(norma_iudicare(n, j.radix, p).validum);
+        }
+    }
+    nn.titulus  = chorda_ex_literis("responsum", p);
+    nn.norma    = n;
+    CREDO_MAIOR_I32(norma_stml_scribere(&nn, I, p, &causa).mensura, 0);
+}
+
 s32
 principale (vacuum)
 {
@@ -544,6 +705,10 @@ principale (vacuum)
     /* B1.2 */
     probatio_discrimen(p);
     probatio_lex_restitutionis(p);
+    /* B1.3 */
+    probatio_tabula_similis(p);
+    probatio_electio_et_fines(p);
+    probatio_fumus_speciminum(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

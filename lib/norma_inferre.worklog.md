@@ -59,3 +59,27 @@
   answered). Whole suite < 0.4 s.
 - Plants (all red): discriminator never chosen; evidence threshold off;
   merge keeping a candidate dead on one side; tag field kept in variants.
+
+## 2026-10-09 - map-like flag, opt-in enums/bounds, bin/norma inferre (B1.3)
+
+- Map-like position: > XXXII distinct keys, none present in more than
+  half the object instances -> `apertum` objectum with no fields and the
+  descriptio "inferentia: positio tabulae similis (N claves distinctae)";
+  checked before discriminator selection. NOTANDUM soundness holds (an
+  open object raises no notes).
+- Opt-in only (InferentiaOptiones.electio / .fines), both needing >=
+  exempla_minima samples: enums from the distinct set when not over the
+  cap and <= electio_maxima, sorted bytewise; bounds from observed
+  min/max (numerus takes the min/max over integers AND floats). Plant (b)
+  - enums without opt-in - was caught by the "values never leak" check
+  (SECRETUM appeared), which is exactly that check's purpose.
+- `bin/norma inferre [-titulus T] [-status N] [-electio] [-fines]
+  [-sine_formis] [-clausum] <via>...`: a via is a herbarium pile when
+  `herbarium_enumerare` finds specimens there (filtered by status,
+  default 200), else read as one .json file; non-JSON skipped and
+  counted; "N exempla, M omissa" on stderr; exit 2 when nothing usable.
+- Smoke on the committed vates specimens: 4 samples, a sound draft that
+  `bin/norma c` and canon accept. It also shows the evidence rule on real
+  data: one `server_tool_use` block among several `text` blocks gives no
+  second repeated value, so `content[]` stays one object with optional
+  fields - the reviewer sees it; B2's evidence report will say why.

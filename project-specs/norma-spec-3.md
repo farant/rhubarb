@@ -201,3 +201,14 @@ into `aut_nullum`; format proposed when one sample fails it.
 - The gain rule's behaviour on real piles where a variant has only one
   sample (every key "required" within it) - B1.3 smoke shows it; B2's
   evidence report is where it becomes visible to the reviewer.
+
+## As built (B1, 2026-10-09, quarta feefdf65..)
+
+B1.0 header feefdf65; B1.1 core bbcb998b; B1.2 discriminator 1ba96bb9;
+B1.3 map flag, opt-in enums/bounds, `bin/norma inferre` (this commit).
+Departures: the discriminator evidence threshold (§IV, amended B1.2);
+law 4 runs in-library in the suite (`herbarium_enumerare` over the
+committed specimens) and through the CLI by hand; on real data the
+threshold leaves `content[]` undivided while a variant has one sample
+(seen in the smoke draft) - B2's evidence report is where a reviewer
+learns why.
