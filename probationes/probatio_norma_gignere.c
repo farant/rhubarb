@@ -230,6 +230,31 @@ probatio_functiones(Piscina* p)
         p).valor);
 }
 
+/* titulus sine functione: generator ordinarius, octetis idem
+ * (norma-plan-3 A1) */
+interior vacuum
+probatio_titulus_sine_functione(Piscina* p)
+{
+    s64 semen;
+    i32 diversa = 0;
+
+    imprimere("\n--- Probans titulum sine functione ---\n");
+    per (semen = 0; semen < L; semen++)
+    {
+        NormaGenitum a = norma_gignere(norma_gignens_titulus(
+            norma_textus(p), "sententia"), NORMA_TYPICA, semen, p);
+        NormaGenitum b = norma_gignere(norma_textus(p), NORMA_TYPICA,
+            semen, p);
+
+        si (!chorda_aequalis(json_scribere(a.valor, p),
+                             json_scribere(b.valor, p)))
+        {
+            diversa++;
+        }
+    }
+    CREDO_AEQUALIS_I32(diversa, 0);
+}
+
 s32
 principale (vacuum)
 {
@@ -258,6 +283,7 @@ principale (vacuum)
     }
     probatio_determinismus_et_stabilitas(p);
     probatio_functiones(p);
+    probatio_titulus_sine_functione(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

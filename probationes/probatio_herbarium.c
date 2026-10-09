@@ -13,6 +13,7 @@
 #include "iter_directoria.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -545,6 +546,174 @@ probatio_reddere(Piscina* piscina)
     _purgare(dir, piscina);
 }
 
+/* ---- herbarium-spec-2 H1: iudex ante usum, sedes ordinaria ---- */
+
+nomen structura {
+    i32 vocationes;
+} IudexProbationis;
+
+/* iudex probationis: corpus 'x' continens = inexspectatum */
+interior chorda
+_iudex_x (
+      HttpPetitio* petitio,
+    HttpResponsum* responsum,
+          Piscina* piscina,
+           vacuum* datum)
+{
+    IudexProbationis* probans = (IudexProbationis*)datum;
+
+    (vacuum)petitio;
+    probans->vocationes++;
+    si (chorda_continet(responsum->corpus, chorda_ex_literis("x",
+            piscina)))
+    {
+        redde chorda_ex_literis("habet x", piscina);
+    }
+    redde chorda_ex_literis("", piscina);
+}
+
+interior vacuum
+probatio_iudex(Piscina* piscina)
+{
+            character  dir[CCLVI];
+    ResponsumScriptum  responsa[III];
+             Scriptor  s;
+    HerbariumOptiones  o;
+     IudexProbationis  probans;
+            Herbarium* h;
+          HttpVectura  v;
+         HttpResultus  r;
+                  i32  i;
+
+    imprimere("\n--- Probans iudicem ante usum ---\n");
+    _directorium(dir, "iudex");
+    _purgare(dir, piscina);
+    /* 0: CC cum 'x' -> premitur causa iudicis; 1: CC sine 'x' -> nihil;
+     * 2: CDXXIX -> premitur 'status', iudex NON vocatur */
+    responsa[0].status         = CC;
+    responsa[0].corpus         = "{\"ok\":\"x\"}";
+    responsa[0].caput_titulus  = NIHIL;
+    responsa[0].caput_valor    = NIHIL;
+    responsa[I]                = responsa[0];
+    responsa[I].corpus         = "{\"ok\":true}";
+    responsa[II]               = responsa[0];
+    responsa[II].status        = CDXXIX;
+    responsa[II].corpus =
+        "{\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\"}}";
+    s.responsa          = responsa;
+    s.numerus           = III;
+    s.index             = 0;
+    probans.vocationes  = 0;
+    o                   = herbarium_optiones_ordinariae();
+    o.directorium       = dir;
+    o.iudex             = _iudex_x;
+    o.iudex_datum       = &probans;
+    h                   = herbarium_aperire(piscina, &o);
+    CREDO_NON_NIHIL(h);
+    v = herbarium_vectura(h, _scripta(&s));
+    per (i = 0; i < III; i++)
+    {
+        r = http_vectura_exsequi(v, _petitio(piscina), piscina);
+        CREDO_VERUM(r.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(r.responsum->corpus,
+            responsa[i].corpus);
+        si (i == 0)
+        {
+            /* ANTE redditionem: specimen iam in disco */
+            CREDO_AEQUALIS_I32(_specimina_numerare(dir, piscina), I);
+        }
+    }
+    CREDO_AEQUALIS_I32(probans.vocationes, II);
+    CREDO_AEQUALIS_I32(_specimina_numerare(dir, piscina), II);
+    CREDO_CHORDA_CONTINET(_omnia_legere(dir, piscina),
+        chorda_ex_literis("habet x", piscina));
+    _purgare(dir, piscina);
+}
+
+/* ambitus temporarius: valorem servat, ponit (NIHIL = removet) */
+interior character*
+_ambitum_ponere (
+    constans character* titulus,
+    constans character* valor,
+               Piscina* piscina)
+{
+    character* vetus = getenv(titulus);
+    character* copia = NIHIL;
+
+    si (vetus)
+    {
+        copia = chorda_ut_cstr(chorda_ex_literis(vetus, piscina),
+            piscina);
+    }
+    si (valor)
+    {
+        (vacuum)setenv(titulus, valor, I);
+    }
+    alioquin
+    {
+        (vacuum)unsetenv(titulus);
+    }
+    redde copia;
+}
+
+interior vacuum
+probatio_sedes_ordinaria(Piscina* piscina)
+{
+    character  dir[CCLVI];
+    character  exspectata[DXII];
+    character* herbarium_vetus;
+    character* domus_vetus;
+       chorda  causa;
+       chorda  sedes;
+
+    imprimere("\n--- Probans sedem ordinariam ---\n");
+    _directorium(dir, "sedes");
+    (vacuum)mkdir(dir, 0755);
+    /* $RHUBARB_HERBARIUM directorium exstans -> <dir>/<hospes> */
+    herbarium_vetus = _ambitum_ponere("RHUBARB_HERBARIUM", dir,
+        piscina);
+    sedes = herbarium_sedes_ordinaria("api.example.com", piscina,
+        &causa);
+    sprintf(exspectata, "%s/api.example.com", dir);
+    CREDO_CHORDA_AEQUALIS_LITERIS(sedes, exspectata);
+    /* nomen non exstans -> vacua + causa, numquam tacite alio */
+    (vacuum)_ambitum_ponere("RHUBARB_HERBARIUM",
+        "/tmp/probatio_herbarium_numquam_creatum", piscina);
+    sedes = herbarium_sedes_ordinaria("api.example.com", piscina,
+        &causa);
+    CREDO_AEQUALIS_I32(sedes.mensura, 0);
+    CREDO_CHORDA_CONTINET(causa, chorda_ex_literis("RHUBARB_HERBARIUM",
+        piscina));
+    /* sine ambitu: $HOME/.rhubarb/herbarium/<hospes> */
+    (vacuum)_ambitum_ponere("RHUBARB_HERBARIUM", NIHIL, piscina);
+    domus_vetus = _ambitum_ponere("HOME", dir, piscina);
+    sedes = herbarium_sedes_ordinaria("api.example.com", piscina,
+        &causa);
+    sprintf(exspectata, "%s/.rhubarb/herbarium/api.example.com", dir);
+    CREDO_CHORDA_AEQUALIS_LITERIS(sedes, exspectata);
+    /* $HOME deest */
+    (vacuum)_ambitum_ponere("HOME", NIHIL, piscina);
+    sedes = herbarium_sedes_ordinaria("api.example.com", piscina,
+        &causa);
+    CREDO_AEQUALIS_I32(sedes.mensura, 0);
+    CREDO_CHORDA_CONTINET(causa, chorda_ex_literis("HOME", piscina));
+    (vacuum)_ambitum_ponere("HOME", dir, piscina);
+    /* hospes pravus */
+    CREDO_AEQUALIS_I32(herbarium_sedes_ordinaria("a/b", piscina,
+        &causa).mensura, 0);
+    CREDO_AEQUALIS_I32(herbarium_sedes_ordinaria("..", piscina,
+        &causa).mensura, 0);
+    CREDO_AEQUALIS_I32(herbarium_sedes_ordinaria("", piscina,
+        &causa).mensura, 0);
+    CREDO_AEQUALIS_I32(herbarium_sedes_ordinaria(NIHIL, piscina,
+        &causa).mensura, 0);
+    /* ambitus restitutus */
+    (vacuum)_ambitum_ponere("HOME", domus_vetus, piscina);
+    (vacuum)_ambitum_ponere("RHUBARB_HERBARIUM", herbarium_vetus,
+        piscina);
+    (vacuum)rmdir(dir);
+}
+
 s32
 principale (vacuum)
 {
@@ -559,6 +728,9 @@ principale (vacuum)
     probatio_premere_explicite(piscina);
     probatio_captura_defectus(piscina);
     probatio_reddere(piscina);
+    /* herbarium-spec-2 H1 */
+    probatio_iudex(piscina);
+    probatio_sedes_ordinaria(piscina);
 
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();

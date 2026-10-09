@@ -11,11 +11,19 @@
 #include "filum.h"
 #include "herbarium.h"
 #include "vates.h"
+#include "norma.h"
+#include "norma_gignere.h"
+#include "norma_stml.h"
+#include "vates_responsum_norma.h"
+#include "internamentum.h"
+#include "stml.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 
 interior chorda
 _c (
@@ -781,6 +789,311 @@ probatio_forma_viva(Piscina* piscina)
 }
 
 
+/* norma-plan-3 A6: aedificator VETUS (copia verbatim lib/vates.c ante
+ * migrationem) - oraculum solum: schema ex .norma idem dicere debet */
+interior Norma*
+_forma_responsi_vetus (
+    Piscina* p)
+{
+    Norma* textus     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* petitum    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* cogitatio  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* redacta    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* blocus = norma_modus(norma_discrimen(p, "type"),
+        NORMA_NOTANDUM);
+    Norma* cc    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* usus  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+    Norma* r     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+
+    norma_campus(textus, "text", norma_textus(p), VERUM);
+    norma_campus(textus, "citations", norma_liberum(p), FALSUM);
+    norma_campus(petitum, "id", norma_textus(p), VERUM);
+    norma_campus(petitum, "name", norma_textus(p), VERUM);
+    norma_campus(petitum, "input", norma_liberum(p), VERUM);
+    norma_campus(cogitatio, "thinking", norma_textus(p), VERUM);
+    norma_campus(cogitatio, "signature", norma_textus(p), VERUM);
+    norma_campus(redacta, "data", norma_textus(p), VERUM);
+    norma_variatio(blocus, "text", textus);
+    norma_variatio(blocus, "tool_use", petitum);
+    norma_variatio(blocus, "thinking", cogitatio);
+    norma_variatio(blocus, "redacted_thinking", redacta);
+    norma_campus(cc, "ephemeral_5m_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(cc, "ephemeral_1h_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "input_tokens", norma_integer(p), VERUM);
+    norma_campus(usus, "output_tokens", norma_integer(p), VERUM);
+    norma_campus(usus, "cache_read_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "cache_creation_input_tokens", norma_integer(p),
+        FALSUM);
+    norma_campus(usus, "cache_creation", cc, FALSUM);
+    norma_campus(usus, "output_tokens_details", norma_liberum(p),
+        FALSUM);
+    norma_campus(usus, "service_tier",
+        norma_aut_nullum(norma_textus(p)), FALSUM);
+    norma_campus(usus, "inference_geo",
+        norma_aut_nullum(norma_textus(p)), FALSUM);
+    norma_campus(r, "id", norma_textus(p), VERUM);
+    norma_campus(r, "type", norma_textus(p), VERUM);
+    norma_campus(r, "role", norma_textus(p), VERUM);
+    norma_campus(r, "model", norma_textus(p), VERUM);
+    norma_campus(r, "content", norma_tabulatum(p, blocus), VERUM);
+    norma_campus(r, "stop_reason", norma_aut_nullum(norma_textus(p)),
+        VERUM);
+    norma_campus(r, "stop_sequence", norma_aut_nullum(norma_textus(p)),
+        FALSUM);
+    norma_campus(r, "stop_details", norma_liberum(p), FALSUM);
+    norma_campus(r, "usage", usus, VERUM);
+    norma_campus(r, "container", norma_liberum(p), FALSUM);
+    norma_campus(r, "diagnostics", norma_liberum(p), FALSUM);
+    redde r;
+}
+
+interior b32
+_iudicia_aequalia (
+    NormaIudicium a,
+    NormaIudicium b)
+{
+    i32 i;
+
+    si (   a.validum            != b.validum
+        || xar_numerus(a.vitia) != xar_numerus(b.vitia)
+        || xar_numerus(a.notae) != xar_numerus(b.notae))
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i < xar_numerus(a.vitia) + xar_numerus(a.notae); i++)
+    {
+                b32  vit  = i < xar_numerus(a.vitia);
+                i32  k    = vit ? i : i - xar_numerus(a.vitia);
+        NormaVitium* x =
+            (NormaVitium*)xar_obtinere(vit ? a.vitia : a.notae, k);
+        NormaVitium* y =
+            (NormaVitium*)xar_obtinere(vit ? b.vitia : b.notae, k);
+
+        si (x->causa != y->causa || !chorda_aequalis(x->via, y->via))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* norma-plan-3 A6: schema ex .norma generatum idem dicit ac aedificator
+ * vetus (exportatio + iudicia super valores ab utroque genitos) */
+interior vacuum
+probatio_forma_ex_norma(Piscina* p)
+{
+    Norma* vetus  = _forma_responsi_vetus(p);
+    Norma* nova   = vates_norma_responsum(p);
+    i32 diversa   = 0;
+    s64 semen;
+    i32 m;
+    i32 q;
+    chorda fons = filum_legere_totum("lib/vates_responsum.norma", p);
+    StmlResultus r = stml_legere(fons, p, internamentum_creare(p));
+
+    imprimere("\n--- Probans formam responsi ex .norma ---\n");
+    CREDO_CHORDA_AEQUALIS(json_scribere(norma_json_schema(vetus, p), p),
+                          json_scribere(norma_json_schema(nova, p), p));
+    per (q = 0; q < II; q++)
+    {
+        per (semen = 0; semen < L; semen++)
+        {
+            per (m = (i32)NORMA_TYPICA; m <= (i32)NORMA_INVALIDA; m++)
+            {
+                NormaGenitum g = norma_gignere(q == 0 ? vetus : nova,
+                    (NormaModusGignendi)m, semen, p);
+
+                si (g.valor && !_iudicia_aequalia(norma_iudicare(vetus,
+                        g.valor, p), norma_iudicare(nova, g.valor, p)))
+                {
+                    diversa++;
+                }
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32(diversa, 0);
+    /* oraculum V: plagula forma pulchra */
+    CREDO_VERUM(r.successus);
+    CREDO_CHORDA_AEQUALIS(stml_scribere(r.radix, p, VERUM), fons);
+    /* lector eam sine vitio legit, sine notis (nullus gignens) */
+    CREDO_VERUM(norma_stml_legere(fons, NIHIL, 0, p).successus);
+}
+
+/* ---- herbarium-spec-2 H2: custos ante usum ---- */
+
+hic_manens character _sedes_temporaria[CCLVI];
+
+/* specimina et index directorii <radix>/<hospes> delere */
+interior vacuum
+_acervum_purgare (
+    constans character* radix,
+    constans character* hospes,
+               Piscina* piscina)
+{
+    character  via[DXII];
+          Xar* sp;
+          i32  i;
+
+    sprintf(via, "%s/%s", radix, hospes);
+    sp = herbarium_enumerare(piscina, via);
+    per (i = 0; i < xar_numerus(sp); i++)
+    {
+         HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp, i);
+                 character  plena[DXII];
+
+        sprintf(plena, "%s/specimina/%.*s-%u.json", via,
+            (integer)h->sigillum.mensura,
+            (constans character*)h->sigillum.datum, h->variantes_index);
+        (vacuum)unlink(plena);
+    }
+    sprintf(via, "%s/%s/index.jsonl", radix, hospes);
+    (vacuum)unlink(via);
+    sprintf(via, "%s/%s/specimina", radix, hospes);
+    (vacuum)rmdir(via);
+    sprintf(via, "%s/%s", radix, hospes);
+    (vacuum)rmdir(via);
+}
+
+/* causa inter specimina acervi */
+interior b32
+_causa_in_acervo (
+    constans character* acervus,
+    constans character* causa,
+               Piscina* piscina)
+{
+    Xar* sp = herbarium_enumerare(piscina, acervus);
+    i32  i;
+
+    per (i = 0; i < xar_numerus(sp); i++)
+    {
+        si (chorda_continet(((HerbariumSpecimen*)xar_obtinere(sp,
+                i))->causa, chorda_ex_literis(causa, piscina)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* casus unus: Vates fictus, sedes ORDINARIA (herbarium_via NIHIL),
+ * conatus unus; reddit errorem vatis */
+interior VatesError
+_casus (
+                   i32  status,
+    constans character* corpus,
+               Piscina* piscina)
+{
+     VatesOptiones  o = vates_optiones_ordinariae();
+             Vates* v;
+    VatesResponsum* r;
+
+    o.conatus_maximi  = I;
+    v                 = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, status, corpus);
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    redde r->error;
+}
+
+interior vacuum
+probatio_custos_ante_usum(Piscina* piscina)
+{
+        character  acervus[DXII];
+        character  nunquam[CCLVI];
+    VatesOptiones  o = vates_optiones_ordinariae();
+            Vates* v;
+
+    imprimere("\n--- Probans custodem ante usum ---\n");
+    sprintf(acervus, "%s/fictus", _sedes_temporaria);
+    /* inexspectata: omnia in disco, errores vatis immutati */
+    CREDO_VERUM(_casus(CC, "non est JSON", piscina)
+        == VATES_ERROR_PARSE);
+    CREDO_VERUM(_casus(CC, "[1,2]", piscina) == VATES_ERROR_PARSE);
+    CREDO_VERUM(_casus(CCIV, "", piscina) == VATES_ERROR_STATUS);
+    CREDO_VERUM(_casus(CCCII, "", piscina) == VATES_ERROR_STATUS);
+    (vacuum)_casus(CC,
+        "{\"id\":\"m\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\","
+        "\"content\":[],\"stop_reason\":\"end_turn\",\"novum_campum\":1,"
+        "\"usage\":{\"input_tokens\":1,\"output_tokens\":1}}", piscina);
+    (vacuum)_casus(CC,
+        "{\"id\":\"m\",\"type\":\"message\",\"role\":\"assistant\","
+        "\"content\":[],\"stop_reason\":\"end_turn\","
+        "\"usage\":{\"input_tokens\":1,\"output_tokens\":1}}", piscina);
+    (vacuum)_casus(CC,
+        "{\"id\":\"m\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\","
+        "\"content\":[],\"stop_reason\":\"mysterium\","
+        "\"usage\":{\"input_tokens\":1,\"output_tokens\":2}}", piscina);
+    CREDO_VERUM(_causa_in_acervo(acervus, "corpus non JSON", piscina));
+    CREDO_VERUM(_causa_in_acervo(acervus, "radix non objectum",
+        piscina));
+    CREDO_VERUM(_causa_in_acervo(acervus, "status inexspectatus: 204",
+        piscina));
+    CREDO_VERUM(_causa_in_acervo(acervus, "status inexspectatus: 302",
+        piscina));
+    CREDO_VERUM(_causa_in_acervo(acervus, "novum_campum", piscina));
+    CREDO_VERUM(_causa_in_acervo(acervus, "model", piscina));
+    CREDO_VERUM(_causa_in_acervo(acervus,
+        "stop_reason ignota: mysterium",
+        piscina));
+    /* exspectatum: nihil premitur */
+    _acervum_purgare(_sedes_temporaria, "fictus", piscina);
+    CREDO_VERUM(_casus(CC, _textus_bonus, piscina) == VATES_OK);
+    CREDO_AEQUALIS_I32(xar_numerus(herbarium_enumerare(piscina,
+        acervus)),
+        0);
+    /* status >= CD: premitur ut olim ('status'), iudex non vocatur */
+    (vacuum)_casus(CDXXIX,
+        "{\"type\":\"error\",\"error\":{\"type\":\"rate_limit_error\",\"message\":\"x\"}}",
+        piscina);
+    CREDO_VERUM(_causa_in_acervo(acervus, "status", piscina));
+    _acervum_purgare(_sedes_temporaria, "fictus", piscina);
+    /* provisor Anthropic: acervus per hospitem URL (api.anthropic.com) */
+    {
+        VatesOptiones oa = vates_optiones_ordinariae();
+        ScriptorVatis sv;
+             Scriptum scriptum;
+            character acervus_anthropic[DXII];
+
+        scriptum.status       = CC;
+        scriptum.corpus       = "<html>non est JSON</html>";
+        scriptum.retry_after  = NIHIL;
+        memset(&sv, 0, magnitudo(sv));
+        sv.scripta = &scriptum;
+        sv.numerus = I;
+        oa.conatus_maximi = I;
+        oa.vectura.exsequi = _scriptor_exsequi;
+        oa.vectura.datum = &sv;
+        v = vates_anthropic_aperire(piscina, _c("k", piscina), &oa);
+        (vacuum)vates_mittere(v, _petitio_simplex(piscina), _c("t",
+            piscina), piscina);
+        sprintf(acervus_anthropic, "%s/api.anthropic.com",
+            _sedes_temporaria);
+        CREDO_VERUM(_causa_in_acervo(acervus_anthropic,
+            "corpus non JSON",
+            piscina));
+    }
+    /* sine_herbario: nihil, ne in sede ordinaria quidem */
+    o.conatus_maximi  = I;
+    o.sine_herbario   = VERUM;
+    v                 = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, CC, "non est JSON");
+    (vacuum)vates_mittere(v, _petitio_simplex(piscina), _c("t",
+        piscina),
+        piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(herbarium_enumerare(piscina,
+        acervus)),
+        0);
+    /* sedes ordinaria irrita ($RHUBARB_HERBARIUM non exstans): vates
+     * sine captura pergit, vocatio non frangitur */
+    sprintf(nunquam, "%s_nunquam", _sedes_temporaria);
+    (vacuum)setenv("RHUBARB_HERBARIUM", nunquam, I);
+    CREDO_VERUM(_casus(CC, _textus_bonus, piscina) == VATES_OK);
+    (vacuum)setenv("RHUBARB_HERBARIUM", _sedes_temporaria, I);
+}
+
 s32
 principale (vacuum)
 {
@@ -789,6 +1102,12 @@ principale (vacuum)
 
     piscina = piscina_generare_dynamicum("probatio_vates", M * M);
     credo_aperire(piscina);
+    /* herbarium-spec-2: captura nunc ORDINARIA - probationes numquam in
+     * ~/.rhubarb/herbarium veram scribunt: sedes temporaria per ambitum */
+    sprintf(_sedes_temporaria, "/tmp/probatio_vates_sedes_%ld",
+        (longus)getpid());
+    (vacuum)mkdir(_sedes_temporaria, 0755);
+    (vacuum)setenv("RHUBARB_HERBARIUM", _sedes_temporaria, I);
 
     /* T3 */
     probatio_corpus_minimum(piscina);
@@ -808,6 +1127,13 @@ principale (vacuum)
     probatio_specimina_commissa(piscina);
     /* T7b */
     probatio_forma_viva(piscina);
+    /* norma-plan-3 A6 */
+    probatio_forma_ex_norma(piscina);
+    /* herbarium-spec-2 H2 */
+    probatio_custos_ante_usum(piscina);
+    _acervum_purgare(_sedes_temporaria, "fictus", piscina);
+    _acervum_purgare(_sedes_temporaria, "api.anthropic.com", piscina);
+    (vacuum)rmdir(_sedes_temporaria);
 
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();

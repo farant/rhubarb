@@ -93,3 +93,15 @@ GENUS mutation of a nullable node -> "vitia 0".
 json_scribere -> json_legere and are accepted (300 seeds). The path-hash
 choice (SHA-256 prefix) is now fixed: changing it changes every
 generated value.
+
+## 2026-10-08 - generator NAME (norma-plan-3 A1)
+
+`norma_gignens_titulus(n, "sententia")` records a generator's name; the
+function pointer may stay NIHIL. Why: a function pointer has no name, so
+neither the `.norma` writer nor the C emitter (norma-spec-2) could write
+one out, and a loader without a registry would otherwise lose it. The
+generator needed no change: it tests the POINTER (`v.gignens`,
+lib/norma_gignere.c:272), so a name alone means default generation for
+the genus - asserted byte-for-byte over L seeds in
+`probatio_titulus_sine_functione`. Plant (visus not copying the field)
+turned `probatio_gignens_titulus` red at its first assertion.

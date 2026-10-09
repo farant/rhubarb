@@ -39,3 +39,25 @@ down please" and "limit 99" is absent; the plant is now red. Lesson
 (the approved header's `sceleti` proves the oracle knows sceletus),
 summ->summarium_petitionis, probatio_sceleton->probatio_sceleti,
 probatio_redditio->probatio_reddere.
+
+## 2026-10-09 - the guard before use, herbarium side (herbarium-spec-2 H1)
+
+- **Judge.** `HerbariumOptiones.iudex` is called in `_exsequi_capiens`
+  for successful responses BELOW `status_minimus`, after the inner
+  transport returns and BEFORE the wrapper returns - a flagged response
+  is on disk before the consumer sees a byte. Responses at or above the
+  threshold are pressed as "status" exactly as before and never reach the
+  judge (asserted: call count II of III). `iudex` NIHIL = old behaviour.
+  herbarium stays generic: it knows no JSON and no norma; the consumer
+  brings the judge. The test checks the specimen count INSIDE the request
+  loop, right after the first (flagged) response returns.
+- **Default location** `herbarium_sedes_ordinaria(hospes)`: an explicit
+  `$RHUBARB_HERBARIUM` must name an existing directory (refused with a
+  named cause otherwise - a typo never silently captures into $HOME);
+  else `$HOME/.rhubarb/herbarium`; then `/<hospes>`. Empty host, '/' or
+  '..' refused. Not created here (`herbarium_aperire` creates with
+  parents). Pattern taken from main's gesta/fontes/annales_sedes.c.
+- Tests save and restore `HOME` and `RHUBARB_HERBARIUM` around the
+  location cases (setenv/unsetenv, POSIX via postulata_posix.h).
+- Plants: judge never called -> four assertions red; missing env
+  directory falling through to $HOME -> two red.
