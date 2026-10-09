@@ -2361,3 +2361,47 @@ originals saved, byte-compare after restore): scope dropped from natura
 -> XLI red; canon's call deleted -> red; mode made a no-op (`for S in;`)
 -> red via the behavioural check (the list check alone would have
 passed - the reason it exists). Summary line now XLI/XLI.
+
+## 2026-10-09 - fabrica-7 T1: credo sections in member verdicts
+
+`probationes_c` now runs every member with `CREDO_VERDICTA=<area>credo.tsv`
+added by the step itself (inserted in name order into the base env; the
+action does not declare it). After the run `_sectiones_explicare` reads
+the file through `fabrica_sectiones_legere` (sutura->legere, so the fake
+world exercises the same code):
+
+- converted suite: pass note `sectiones N/N`; failure tail gets the first
+  three non-passing sections prepended (`sectio 'beta' FRACTA 1/2 ad
+  t/probatio_a.c:12`, then `+N aliae`), the old output tail kept after
+  `; `.
+- unconverted suite (no file): fabrica writes a SYNTHETICA record (a
+  `SYNTHETICA` line, one `SECTIO ... totum`, a `SUITA` line - credo's own
+  format, so one reader) via verdictum_ponere; counts come from the LAST
+  `Totalis:` / `Praeteriti:` lines of the member's acta log; note
+  `totum P/T`, or bare `totum` when the binary printed no compendium
+  (fumus fixtures: plain `main`s).
+- SUITA line absent -> member FRACTUM even with exit 0 ("ruina post
+  sectionem ultimam notatam"); malformed record -> FRACTUM naming
+  `<via>:<line>:` - a broken contract is red, never ignored.
+
+Not obvious: the step code is not part of any member's key, so changing
+it re-runs nothing - proving on probationes_toml meant deleting the 13
+verdict files first (13 SANATUM, notes `totum 137/137` ... `totum
+12358/12358`). The note is deterministic (no ms) as the sealed verdict
+requires; assertion counts are deterministic for every toml suite.
+
+SECTIO records in the area outlive the verdict: an IGNOTUM member
+(source changed) still shows its LAST run's sections. They are
+explanation, not reuse (spec III.5); consumers read them that way.
+
+`-machina`: `SECTIO <id> <titulus> <exitus> <praeteriti> <totales>
+<fractura>` after each member IUDICIUM (no timing). Human iudicare
+prints only non-passing sections and "SUITA absens". pythonica's
+`_machina_humana` names failing sections the same way. Also fixed:
+`_summa_fracturae` for generic-form gates now prefers a `FRACTUM` line
+before falling back to the first relatio line (the XL plant was
+reported as "XVII ... -> FRACT. OK" because 'exitus' matched first).
+
+Plants (silva.planta): synthetic not written, SUITA-absent ignored,
+CREDO_VERDICTA misnamed, unknown exitus accepted, fractura site dropped
+-> gradus red each; SECTIO record dropped from -machina -> fumus XL red.

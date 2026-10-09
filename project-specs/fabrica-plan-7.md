@@ -17,26 +17,31 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
   <fractura>`, no timing); `CREDO_VERDICTA` in the `probationes_c` base
   environment, `CREDO_SECTIO` never inherited.
 - [ ] Headers written into `include/fabrica.h` and `include/aedilis.h`
-  with the first task that uses them (T1, T2, T3).
+  with the first task that uses them (T1: sections DONE; T2, T3).
 
 ### T1: sections in member verdicts
 
-- [ ] **Step 1: failing test** (probatio_fabrica_gradus, a new section):
+- [x] **Step 1: failing test** (probatio_fabrica_gradus, a new section):
   a 2-member fixture over the fake world - one converted suite (two
   sections, one FRACTA), one classic suite - `fabrica_sectiones_legere`
   reads both; the classic one has the synthetic `totum`; a record
   without `SUITA` -> `completa` FALSUM; a malformed line -> refusal
   naming it.
-- [ ] **Step 2:** `probationes_c` sets `CREDO_VERDICTA=<area>/credo.tsv`;
+- [x] **Step 2:** `probationes_c` sets `CREDO_VERDICTA=<area>/credo.tsv`;
   after the run writes the synthetic record when absent (exit code +
   compendium counts from the member's output); pass note `sectiones
   N/N` (deterministic: no ms); failure tail names the first failing
   sections. **Plant:** synthetic record skipped -> classic member red.
-- [ ] **Step 3:** `iudicare` / `VERDICTUM` show sections (through the
+- [x] **Step 3:** `iudicare` / `VERDICTUM` show sections (through the
   note/tail); `-machina` emits SECTIO records; fumus XL knows SECTIO;
   silva.py's machine reader accepts it. Proven on `probationes_toml`
   (unconverted -> `totum`, 13 members). **Plant:** SECTIO line dropped
   -> fumus stage red. **Commit.**
+- As built (2026-10-09): synthetic note is `totum P/T` (bare `totum` with
+  no compendium); human iudicare lists non-passing sections under the
+  member line (VERDICTUM line itself unchanged); sections live in the
+  area's credo.tsv only - build/fabrica.db storage not needed yet (no
+  reader wants them without the area). See lib/fabrica.worklog.md.
 
 ### T2: annotations - `instrumentum` and `facultas` from sources
 

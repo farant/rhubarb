@@ -135,6 +135,31 @@ nomen structura {
     chorda fons;    /* via fontis (arbori relativa); vacua licet */
 } FabricaMembrum;
 
+/* SECTIO (fabrica-7, credo v2): verdictum sectionis membri gradus, ex
+ * plagula <area>/credo.tsv (CREDO_VERDICTA, lineae SECTIO). Suita non
+ * conversa: probationes_c post cursum ipsa plagulam syntheticam
+ * scribit - sectio una 'totum' (exitus ex codice, numeri ex compendio
+ * effusionis) - ergo lector unus, forma una. */
+nomen structura {
+    chorda titulus;
+    chorda exitus;      /* TRANSIIT | FRACTA | VACUA | ABORTA (credo);
+                         * gradus II credo: OMISSA, NOTA_FRACTA,
+                         * INOPINATA */
+       i32 praeteriti;
+       i32 totales;
+       i32 ms;          /* tempus - NUMQUAM in verdicto sigillato
+                         * (non deterministicum); cursus solum */
+    chorda fractura;    /* "filum:versus genus expressio"; vacua si
+                         * transiit */
+} FabricaSectio;
+
+nomen structura {
+     Xar* sectiones;     /* FabricaSectio, ordine plagulae */
+     b32  completa;      /* linea SUITA adest; FALSUM = ruina post
+                         * sectionem ultimam notatam */
+     b32 synthetica;    /* 'totum' a fabrica scriptum */
+} FabricaSectiones;
+
 nomen structura {
                   chorda  titulus;
     FabricaGenusActionis  genus;
@@ -984,6 +1009,19 @@ chorda
 fabrica_acta_via (
      chorda  titulus,
     Piscina* piscina);
+
+/* SECTIONES (fabrica-7 T1): plagula 'via' (CREDO_VERDICTA - lineae
+ * "SECTIO\t<titulus>\t<exitus>\t<praeteriti>\t<totales>\t<ms>\t
+ * <fractura>" et "SUITA\t..."; aliae ignorantur) per sutura->legere ->
+ * sectiones_out. Plagula absens aut linea SECTIO deformis -> FALSUM +
+ * causa (linea nominata). synthetica = sectio unica 'totum'. */
+b32
+fabrica_sectiones_legere (
+    constans FabricaSutura* sutura,
+        constans character* via,
+                   Piscina* piscina,
+          FabricaSectiones* sectiones_out,
+                    chorda* causa_out);
 
 /* AMBITUS BASIS: PATH fixum (/usr/bin:/bin:/usr/sbin:/sbin - systema
  * solum, ~/.bin ingressus non declaratus esset), HOME (sutura->

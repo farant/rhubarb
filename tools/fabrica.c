@@ -508,10 +508,96 @@ _electum (
     redde FALSUM;
 }
 
+/* SECTIONES MEMBRI (fabrica-7 T1): post IUDICIUM verdicti membri
+ * (build/fabrica/area/<id>/verdictum.txt) plagula credo.tsv eiusdem
+ * areae - machina: SECTIO pro omni sectione (sine tempore); homo:
+ * sectiones non transeuntes et SUITA absens solae. Plagula absens
+ * (nondum cursum, nexus solum) = nihil. */
+interior vacuum
+_sectiones_imprimere (
+    constans FabricaSutura* sutura,
+                    chorda  artificium,
+                   Piscina* piscina)
+{
+    constans character* praefixum  = "build/fabrica/area/";
+    constans character* suffixum   = "/verdictum.txt";
+      FabricaSectiones  sectiones;
+                chorda  id;
+                chorda  causa;
+        memoriae_index  p;
+        memoriae_index  q;
+                   i32  i;
+
+    p = strlen(praefixum);
+    q = strlen(suffixum);
+    si (   (memoriae_index)artificium.mensura     <= p + q
+        || memcmp(artificium.datum, praefixum, p) != ZEPHYRUM
+        || memcmp(artificium.datum + artificium.mensura - (i32)q,
+               suffixum, q) != ZEPHYRUM)
+    {
+        redde;
+    }
+    id = chorda_sectio(artificium, (i32)p, artificium.mensura - (i32)q);
+    causa = chorda_ex_literis("", piscina);
+    si (!fabrica_sectiones_legere(sutura,
+        chorda_ut_cstr(chorda_concatenare(
+            chorda_ex_literis(praefixum, piscina),
+            chorda_concatenare(id,
+            chorda_ex_literis("/credo.tsv", piscina), piscina),
+            piscina),
+            piscina), piscina, &sectiones, &causa))
+    {
+        si (   !suturae_machina && !chorda_incipit(causa,
+                chorda_ex_literis("plagula sectionum absens", piscina)))
+        {
+            printf("  sectiones: %.*s\n", (s32)causa.mensura,
+                (constans character*)causa.datum);
+        }
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sectiones.sectiones); i++)
+    {
+        constans FabricaSectio* s = (constans FabricaSectio*)
+            xar_obtinere(sectiones.sectiones, i);
+
+        si (suturae_machina)
+        {
+            fputs("SECTIO", stdout);
+            suturae_campus(id);
+            suturae_campus(s->titulus);
+            suturae_campus(s->exitus);
+            _campus_numerus((longus)s->praeteriti);
+            _campus_numerus((longus)s->totales);
+            suturae_campus(s->fractura);
+            putchar('\n');
+        }
+        alioquin si (!chorda_aequalis_literis(s->exitus, "TRANSIIT"))
+        {
+            printf("  sectio '%.*s' %.*s %u/%u%s%.*s\n",
+                (s32)s->titulus.mensura,
+                (constans character*)s->titulus.datum,
+                (s32)s->exitus.mensura,
+                (constans character*)s->exitus.datum,
+                (insignatus integer)s->praeteriti,
+                (insignatus integer)s->totales,
+                s->fractura.mensura > ZEPHYRUM ? " ad " : "",
+                (s32)s->fractura.mensura,
+                (constans character*)s->fractura.datum);
+        }
+    }
+    si (!suturae_machina && !sectiones.completa)
+    {
+        printf("  SUITA absens (ruina post sectionem ultimam "
+            "notatam)\n");
+    }
+}
+
 interior vacuum
 _sententiam_imprimere (
-    constans Sententia* sententia,
-                   b32  omnia)
+    constans FabricaSutura* sutura,
+                   Piscina* piscina,
+        constans Sententia* sententia,
+                       b32  omnia)
 {
     constans character* signum;
 
@@ -544,6 +630,8 @@ _sententiam_imprimere (
         suturae_campus(sententia->iudicium.artificium);
         suturae_campus(sententia->iudicium.causa);
         putchar('\n');
+        _sectiones_imprimere(sutura, sententia->iudicium.artificium,
+            piscina);
         redde;
     }
     printf("%s %.*s - %.*s\n", signum,
@@ -551,6 +639,8 @@ _sententiam_imprimere (
         (constans character*)sententia->iudicium.artificium.datum,
         (s32)sententia->iudicium.causa.mensura,
         (constans character*)sententia->iudicium.causa.datum);
+    _sectiones_imprimere(sutura, sententia->iudicium.artificium,
+        piscina);
 }
 
 /* status ut verbum (lineae machinae) */
@@ -1150,7 +1240,8 @@ _iudicare_imprimere (
         si (chorda_aequalis_literis(s->iudicium.artificium,
                 "bin/fabrica"))
         {
-            _sententiam_imprimere(s, t->omnia);
+            _sententiam_imprimere(&t->cursus.sutura,
+                t->cursus.piscina, s, t->omnia);
         }
     }
     per (i = ZEPHYRUM; i < xar_numerus(t->sententiae); i++)
@@ -1176,7 +1267,8 @@ _iudicare_imprimere (
         si (!chorda_aequalis_literis(s->iudicium.artificium,
                 "bin/fabrica"))
         {
-            _sententiam_imprimere(s, t->omnia);
+            _sententiam_imprimere(&t->cursus.sutura,
+                t->cursus.piscina, s, t->omnia);
         }
     }
 }

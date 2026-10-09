@@ -1732,6 +1732,11 @@ def _summa_fracturae(f):
     for l in f.relatio.splitlines():
         if re.search(r'FRACTA \(|Conditio:|FATALE|error:|Segmentation', l):
             return l.strip()
+    # fumi (forma generica): gradus 'XL FRACTUM (...)' - non linea prima
+    # relationis ('XVII ... -> FRACT. OK' per 'exitus' capta, 2026-10-09)
+    for l in f.relatio.splitlines():
+        if re.search(r'\bFRACTUM\b', l):
+            return l.strip()
     ls = f.relatio.splitlines()
     return ls[0].strip() if ls else '?'
 
@@ -1827,6 +1832,12 @@ def _machina_humana(ordines):
     for o in ordines:
         if o[0] == 'IUDICIUM' and len(o) >= 4:
             lineae.append('%s %s - %s' % (o[1], o[2], o[3]))
+        elif o[0] == 'SECTIO' and len(o) >= 7:
+            # fabrica-7 T1: sectiones membri (cursus ultimi) - non
+            # transeuntes solae nominantur
+            if o[3] != 'TRANSIIT':
+                lineae.append("  sectio '%s' %s %s/%s%s" % (
+                    o[2], o[3], o[4], o[5], ' ad ' + o[6] if o[6] else ''))
         elif o[0] == 'SANANDA' and len(o) >= 4:
             lineae.append('  %s   # %s (%s)' % (o[3] or '(sanatio non declarata)',
                                                 o[1], o[2]))

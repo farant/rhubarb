@@ -1389,6 +1389,369 @@ _probare_probationes_c (
 
 
 /* ==================================================
+ * SECTIONES (fabrica-7 T1): cursus fictus - probatio_a suita CONVERSA
+ * (plagulam ad CREDO_VERDICTA scribit, _s_plagula_a), probatio_b
+ * suita CLASSICA (effusio cum compendio in acta, nulla plagula) -
+ * fabrica plagulam legit aut syntheticam 'totum' scribit
+ * ================================================== */
+
+hic_manens constans character* _s_plagula_a  = NIHIL;
+
+hic_manens                 s32 _s_codex_a    = ZEPHYRUM;
+
+hic_manens constans character* _s_effusio_b  = "";
+
+hic_manens                 s32 _s_codex_b    = ZEPHYRUM;
+
+hic_manens            character _s_verdicta_a[CCLVI];
+
+interior b32
+_in_area_currere_sectiones (
+                vacuum* datum,
+          constans Xar* argv,
+    constans character* area,
+          constans Xar* ambitus,
+    constans character* liber_via,
+    constans character* acta_via,
+               Piscina* piscina,
+          FabricaActum* actum_out)
+{
+     DiscusFictus* discus = (DiscusFictus*)datum;
+           chorda  primum;
+           chorda  via_verdictorum;
+              i32  i;
+
+    primum = *(constans chorda*)xar_obtinere(argv, ZEPHYRUM);
+    si (chorda_aequalis_literis(primum, "clang"))
+    {
+        redde _in_area_currere_c(datum, argv, area, ambitus, liber_via,
+            acta_via, piscina, actum_out);
+    }
+    via_verdictorum = chorda_ex_literis("", piscina);
+    per (i = ZEPHYRUM; ambitus != NIHIL
+        && i < xar_numerus(ambitus); i++)
+    {
+        chorda par = *(constans chorda*)xar_obtinere(ambitus, i);
+
+        si (chorda_incipit(par, chorda_ex_literis("CREDO_VERDICTA=",
+                piscina)))
+        {
+            via_verdictorum = chorda_sectio(par, XV, par.mensura);
+        }
+    }
+    actum_out->duratio_ms  = I;
+    actum_out->cauda       = chorda_ex_literis("", piscina);
+    mundi_ponere(discus, liber_via, "");
+    si (strstr(chorda_ut_cstr(primum, piscina), "probatio_a") != NIHIL)
+    {
+        sprintf(_s_verdicta_a, "%.*s", (integer)via_verdictorum.mensura,
+            (constans character*)via_verdictorum.datum);
+        si (_s_plagula_a != NIHIL && via_verdictorum.mensura > ZEPHYRUM)
+        {
+            mundi_ponere(discus, _s_verdicta_a, _s_plagula_a);
+        }
+        actum_out->codex = _s_codex_a;
+    }
+    alioquin
+    {
+        mundi_ponere(discus, acta_via, _s_effusio_b);
+        actum_out->codex = _s_codex_b;
+    }
+    si (actum_out->codex != ZEPHYRUM)
+    {
+        actum_out->cauda = chorda_ex_literis("probatio fracta",
+            piscina);
+    }
+    redde VERUM;
+}
+
+/* sanatio membri 'titulus' post sanationem; causa impressa si eventus
+ * non exspectatus */
+interior FabricaSanatio*
+_s_sanare (
+    constans FabricaSutura* sutura,
+              constans Xar* ordo,
+              constans Xar* electa,
+        constans character* titulus,
+            FabricaEventus  exspectatus,
+                   Piscina* piscina)
+{
+    FabricaSanatio* sanatio;
+               Xar* sanationes;
+            chorda  causa;
+
+    causa       = chorda_ex_literis("", piscina);
+    sanationes  = fabrica_sanare(sutura, ordo, electa, FALSUM, piscina,
+        &causa);
+    sanatio     = sanationes != NIHIL
+        ? mundi_sanatio_invenire(sanationes, titulus) : NIHIL;
+    si (sanatio != NIHIL && sanatio->eventus != exspectatus)
+    {
+        imprimere("  %s: eventus %d: %.*s\n", titulus,
+            (integer)sanatio->eventus, (integer)sanatio->causa.mensura,
+            (constans character*)sanatio->causa.datum);
+    }
+    redde sanatio;
+}
+
+interior vacuum
+_probare_sectiones (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                 DiscusFictus  discus;
+                FabricaSutura  sutura;
+          InternamentumChorda* intern = internamentum_creare(piscina);
+               FabricaSanatio* sanatio;
+             FabricaSectiones  sectiones;
+                FabricaSectio* s;
+                          Xar* actiones;
+                          Xar* explicata;
+                          Xar* ordo;
+                          Xar* electa;
+                       chorda  causa;
+           constans character* nomina_t[] = { "probatio_a.c",
+              "probatio_b.c" };
+          constans character* DECLARATIO =
+              "<aedificatio>\n"
+              "  <actio titulus=\"probationes_t\" genus=\"iudicium\">\n"
+              "    <probationes_c exemplar=\"t/probatio_*.c\"/>\n"
+              "  </actio>\n"
+              "</aedificatio>\n";
+          constans character* VERDICTUM_A =
+              "build/fabrica/area/probationes_t/probatio_a/"
+              "verdictum.txt";
+          constans character* VERDICTUM_B =
+              "build/fabrica/area/probationes_t/probatio_b/"
+              "verdictum.txt";
+          constans character* PLAGULA_B =
+              "build/fabrica/area/probationes_t/probatio_b/credo.tsv";
+          constans character* PLENA =
+              "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n"
+              "SECTIO\tfs\tbe\\tta\tFRACTA\t1\t2\t4\tt/probatio_a.c:12"
+              "\tAEQUALIS_I32\tx == y\n"
+              "=== linea alia ignoratur\n"
+              "SUITA\tfs\tFRACTA\t1\t2\t4\t5\t9\n";
+          constans character* SANA =
+              "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n"
+              "SECTIO\tfs\tbeta\tTRANSIIT\t2\t2\t4\t\t\t\n"
+              "SUITA\tfs\tTRANSIIT\t2\t2\t5\t5\t9\n";
+          constans character* FRACTA =
+              "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n"
+              "SECTIO\tfs\tbeta\tFRACTA\t1\t2\t4\tt/probatio_a.c:12"
+              "\tAEQUALIS_I32\tx == y\n"
+              "SUITA\tfs\tFRACTA\t1\t2\t4\t5\t9\n";
+
+        causa = chorda_ex_literis("", piscina);
+        mundi_discum_parare(&discus, &sutura, piscina);
+        sutura.lectiones_legere = mundi_lectiones_legere;
+        sutura.lectiones_scribere = mundi_lectiones_scribere;
+        sutura.ambitus = mundi_ambitus_fictum;
+        sutura.species = mundi_species_ficta;
+        sutura.identitas = mundi_identitatem_fictam_dare;
+        sutura.verdictum_ponere = mundi_verdictum_ponere;
+        sutura.area_parare = _area_parare_ficta;
+        sutura.in_area_currere = _in_area_currere_sectiones;
+        sutura.clausura_c = _clausura_c_ficta;
+        sutura.compilare = _compilare_fictum;
+        sutura.exitus_noti = tabula_dispersa_creare_chorda(piscina, 16);
+
+        /* I. lector: plena (fractura, effugium), sine SUITA, deformes,
+         * absens */
+        mundi_ponere(&discus, "x.tsv", PLENA);
+        CREDO_VERUM(fabrica_sectiones_legere(&sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_AEQUALIS_I32(xar_numerus(sectiones.sectiones), II);
+        CREDO_VERUM(sectiones.completa);
+        CREDO_FALSUM(sectiones.synthetica);
+        si (xar_numerus(sectiones.sectiones) == II)
+        {
+            s = (FabricaSectio*)xar_obtinere(sectiones.sectiones,
+                ZEPHYRUM);
+            CREDO_VERUM(chorda_aequalis_literis(s->titulus, "alpha"));
+            CREDO_VERUM(chorda_aequalis_literis(s->exitus, "TRANSIIT"));
+            CREDO_AEQUALIS_I32(s->totales, III);
+            CREDO_AEQUALIS_I32(s->ms, V);
+            CREDO_AEQUALIS_I32(s->fractura.mensura, ZEPHYRUM);
+            s = (FabricaSectio*)xar_obtinere(sectiones.sectiones, I);
+            CREDO_VERUM(chorda_aequalis_literis(s->titulus, "be\tta"));
+            CREDO_VERUM(chorda_aequalis_literis(s->exitus, "FRACTA"));
+            CREDO_AEQUALIS_I32(s->praeteriti, I);
+            CREDO_AEQUALIS_I32(s->totales, II);
+            CREDO_VERUM(chorda_aequalis_literis(s->fractura,
+                "t/probatio_a.c:12 AEQUALIS_I32 x == y"));
+        }
+        mundi_ponere(&discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n");
+        CREDO_VERUM(fabrica_sectiones_legere(&sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_FALSUM(sectiones.completa);
+        CREDO_AEQUALIS_I32(xar_numerus(sectiones.sectiones), I);
+        mundi_ponere(&discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n"
+            "SECTIO\tfs\tbeta\tTRANSIIT\t3\n");
+        CREDO_FALSUM(fabrica_sectiones_legere(&sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(mundi_continet(causa, "x.tsv:2: linea SECTIO "
+            "deformis", piscina));
+        mundi_ponere(&discus, "x.tsv",
+            "SECTIO\tfs\talpha\tMIRA\t3\t3\t5\t\t\t\n");
+        CREDO_FALSUM(fabrica_sectiones_legere(&sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(mundi_continet(causa, "x.tsv:1: exitus sectionis "
+            "ignotus", piscina));
+        mundi_ponere(&discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3a\t3\t5\t\t\t\n");
+        CREDO_FALSUM(fabrica_sectiones_legere(&sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(mundi_continet(causa, "numerus sectionis",
+            piscina));
+        mundi_ponere(&discus, "x.tsv", "SUITA\tfs\tTRANSIIT\t1\n");
+        CREDO_FALSUM(fabrica_sectiones_legere(&sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(mundi_continet(causa, "linea SUITA deformis",
+            piscina));
+        CREDO_FALSUM(fabrica_sectiones_legere(&sutura, "nulla.tsv",
+            piscina, &sectiones, &causa));
+        CREDO_VERUM(mundi_continet(causa, "absens", piscina));
+
+        /* II. sanare: a conversa (sectiones 2/2), b classica (totum
+         * 7/7 ex compendio, plagula synthetica) */
+        mundi_ponere(&discus, "t/probatio_a.c", "a I\n");
+        mundi_ponere(&discus, "t/probatio_b.c", "b I\n");
+        mundi_ponere(&discus, "lib/x.c", "x I\n");
+        mundi_ponere(&discus, "lib/y.c", "y I\n");
+        mundi_ponere(&discus, "include/x.h", "xh I\n");
+        mundi_ponere(&discus, "include/y.h", "yh I\n");
+        mundi_ponere(&discus, "aedilis.stml", "<aedilis/>\n");
+        mundi_directorium_ponere(&discus, "t/", nomina_t, II);
+        actiones = fabrica_declarationes_legere(chorda_ex_literis(
+            DECLARATIO, piscina), "t.stml", piscina, intern, &causa);
+        explicata = actiones
+            != NIHIL ? fabrica_gradus_explicare(&sutura,
+            actiones, piscina, &causa) : NIHIL;
+        ordo = explicata != NIHIL ? fabrica_ordinare(explicata, piscina,
+            &causa) : NIHIL;
+        CREDO_NON_NIHIL(ordo);
+        si (ordo == NIHIL)
+        {
+            imprimere("  fixum: %.*s\n", (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde;
+        }
+        electa = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(VERDICTUM_A,
+            piscina);
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(VERDICTUM_B,
+            piscina);
+        _s_plagula_a  = SANA;
+        _s_codex_a    = ZEPHYRUM;
+        _s_effusio_b  = "$ b\n=== CREDO COMPENDIUM ===\n"
+                        "Totalis:    7\nPraeteriti: 7\nFracti:     0\n";
+        _s_codex_b    = ZEPHYRUM;
+        sanatio = _s_sanare(&sutura, ordo, electa,
+            "probationes_t/probatio_a", FABRICA_SANATUM, piscina);
+        CREDO_NON_NIHIL(sanatio);
+        CREDO_AEQUALIS_I32(sanatio != NIHIL ? (i32)sanatio->eventus
+            : ZEPHYRUM, (i32)FABRICA_SANATUM);
+        CREDO_VERUM(strcmp(_s_verdicta_a,
+            "build/fabrica/area/probationes_t/probatio_a/credo.tsv")
+            == ZEPHYRUM);
+        CREDO_VERUM(mundi_contentum_est(&discus, VERDICTUM_A,
+            "probationes_t/probatio_a: transiit (sectiones 2/2)\n"));
+        CREDO_VERUM(mundi_contentum_est(&discus, VERDICTUM_B,
+            "probationes_t/probatio_b: transiit (totum 7/7)\n"));
+        CREDO_VERUM(fabrica_sectiones_legere(&sutura, PLAGULA_B,
+            piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(sectiones.synthetica);
+        CREDO_VERUM(sectiones.completa);
+        CREDO_AEQUALIS_I32(xar_numerus(sectiones.sectiones), I);
+        si (xar_numerus(sectiones.sectiones) == I)
+        {
+            s = (FabricaSectio*)xar_obtinere(sectiones.sectiones,
+                ZEPHYRUM);
+            CREDO_VERUM(chorda_aequalis_literis(s->titulus, "totum"));
+            CREDO_VERUM(chorda_aequalis_literis(s->exitus, "TRANSIIT"));
+            CREDO_AEQUALIS_I32(s->praeteriti, VII);
+            CREDO_AEQUALIS_I32(s->totales, VII);
+        }
+
+        /* III. a: sectio fracta nominatur (titulus, numeri, sedes) */
+        _s_plagula_a  = FRACTA;
+        _s_codex_a    = I;
+        mundi_ponere(&discus, "t/probatio_a.c", "a II\n");
+        sanatio = _s_sanare(&sutura, ordo, electa,
+            "probationes_t/probatio_a", FABRICA_FRACTUM, piscina);
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+            CREDO_VERUM(mundi_continet(sanatio->causa, "sectio 'beta' "
+                "FRACTA 1/2 ad t/probatio_a.c:12", piscina));
+            CREDO_VERUM(mundi_continet(sanatio->causa,
+                "probatio fracta", piscina));
+        }
+
+        /* IV. a: codex 0 sed SUITA absens -> fractum */
+        _s_plagula_a  = "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n";
+        _s_codex_a    = ZEPHYRUM;
+        mundi_ponere(&discus, "t/probatio_a.c", "a III\n");
+        sanatio = _s_sanare(&sutura, ordo, electa,
+            "probationes_t/probatio_a", FABRICA_FRACTUM, piscina);
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+            CREDO_VERUM(mundi_continet(sanatio->causa, "SUITA absens",
+                piscina));
+        }
+
+        /* V. a: plagula deformis, codex 0 -> fractum, linea nominata */
+        _s_plagula_a  = "SECTIO\tfs\talpha\n";
+        mundi_ponere(&discus, "t/probatio_a.c", "a IV\n");
+        sanatio = _s_sanare(&sutura, ordo, electa,
+            "probationes_t/probatio_a", FABRICA_FRACTUM, piscina);
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+            CREDO_VERUM(mundi_continet(sanatio->causa,
+                "credo.tsv:1: linea SECTIO deformis", piscina));
+        }
+
+        /* VI. b classica fracta: synthetica 'totum' FRACTA 5/7 */
+        _s_effusio_b  = "$ b\n=== CREDO COMPENDIUM ===\n"
+                        "Totalis:    7\nPraeteriti: 5\nFracti:     2\n";
+        _s_codex_b    = I;
+        mundi_ponere(&discus, "t/probatio_b.c", "b II\n");
+        sanatio = _s_sanare(&sutura, ordo, electa,
+            "probationes_t/probatio_b", FABRICA_FRACTUM, piscina);
+        CREDO_NON_NIHIL(sanatio);
+        CREDO_VERUM(fabrica_sectiones_legere(&sutura, PLAGULA_B,
+            piscina,
+            &sectiones, &causa));
+        CREDO_VERUM(sectiones.synthetica);
+        si (xar_numerus(sectiones.sectiones) == I)
+        {
+            s = (FabricaSectio*)xar_obtinere(sectiones.sectiones,
+                ZEPHYRUM);
+            CREDO_VERUM(chorda_aequalis_literis(s->exitus, "FRACTA"));
+            CREDO_AEQUALIS_I32(s->praeteriti, V);
+            CREDO_AEQUALIS_I32(s->totales, VII);
+        }
+        _s_plagula_a = NIHIL;
+    }
+}
+
+
+/* ==================================================
  * CHASSIS GRADUUM (fabrica-6 T5): omne genus gradus registratum
  * fixum conformitatis habet (T6: probationes_c)
  * ================================================== */
@@ -1439,6 +1802,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "probationes_c (gradus C)",
       _probare_probationes_c,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sectiones in verdicto (fabrica-7 T1)",
+      _probare_sectiones,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "chassis: registrum graduum",
       _probare_registrum_graduum,

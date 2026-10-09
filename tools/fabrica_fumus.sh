@@ -504,12 +504,14 @@ if [ "$rc1" -eq 0 ] && [ -n "$lg" ] && [ -n "$la" ] && [ "$lg" -lt "$la" ] \
 # generata, oraculum toml): arbor XXXIX, b mutatus. iudicare -machina:
 # IUDICIUM per membrum, VERDICTUM <c> 1 2 <b>, SUMMA; sanare -machina:
 # SANATIO b, VERDICTUM <c> 2 2; OMNIS linea genus notum fert (nulla forma
-# humana in modo machinae)
+# humana in modo machinae); SECTIO post IUDICIUM membri (fabrica-7 T1:
+# suita classica -> 'totum' syntheticum, 0 0 sine compendio credo)
 (cd "$T/r" && "$F" iudicare -plenus -machina probationes_t) > "$T/m1" 2>/dev/null; rc1=$?
 (cd "$T/r" && "$F" sanare -machina probationes_t) > "$T/m2" 2>/dev/null; rc2=$?
-ignotae=$(cat "$T/m1" "$T/m2" | awk -F'\t' '$1 !~ /^(IUDICIUM|COMPOSITUM|VERDICTUM|SANANDA|ORPHANUM|BINARIA|PRAECONDICIO|SANATIO|AGITUR|UNDA|NOTA|SUMMA)$/ || NF < 2' | wc -l | tr -d ' ')
+ignotae=$(cat "$T/m1" "$T/m2" | awk -F'\t' '$1 !~ /^(IUDICIUM|SECTIO|COMPOSITUM|VERDICTUM|SANANDA|ORPHANUM|BINARIA|PRAECONDICIO|SANATIO|AGITUR|UNDA|NOTA|SUMMA)$/ || NF < 2' | wc -l | tr -d ' ')
 if [ "$rc1" -eq 1 ] && grep -q "^IUDICIUM	RECENS	build/fabrica/area/probationes_t/probatio_a/verdictum.txt	" "$T/m1" \
    && grep -qE "^IUDICIUM	(STALUM|IGNOTUM)	build/fabrica/area/probationes_t/probatio_b/verdictum.txt	" "$T/m1" \
+   && grep -A1 "^IUDICIUM	RECENS	build/fabrica/area/probationes_t/probatio_a/verdictum.txt	" "$T/m1" | grep -q "^SECTIO	probationes_t/probatio_a	totum	TRANSIIT	0	0	$" \
    && grep -q "^VERDICTUM	probationes_t	1	2	probationes_t/probatio_b$" "$T/m1" \
    && grep -q "^SUMMA	" "$T/m1" \
    && [ "$rc2" -eq 0 ] && grep -q "^SANATIO	SANATUM	probationes_t/probatio_b	" "$T/m2" \
