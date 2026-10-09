@@ -922,6 +922,41 @@ rotulam_tractare (
     aemulator_hospes_visum_movere(tc->app->hospes, lineae);
 }
 
+/* punctum eventus muris in spatium NODI (terminalis in vico: latus
+ * dextrum sub linea tabularum). Codificator cellulam ex pixelis per
+ * cellulam dividit - punctum schirmi cellulam alienam dabat (Franus:
+ * ictus in tabulas tmux nihil agebant). Applicatio sola: nodus ad
+ * originem, idem. */
+interior Eventus
+ad_nodum (
+    constans Componens* nodus,
+      constans Eventus* ev)
+{
+    Eventus e;
+    Punctum p;
+
+    e = *ev;
+    si (!nodus)
+    {
+        redde e;
+    }
+    si (ev->genus == EVENTUS_MUS_ROTULA)
+    {
+        p.x               = ev->datum.rotula.x;
+        p.y               = ev->datum.rotula.y;
+        p                 = destinatio_ad_locale(nodus, p);
+        e.datum.rotula.x  = p.x;
+        e.datum.rotula.y  = p.y;
+        redde e;
+    }
+    p.x            = ev->datum.mus.x;
+    p.y            = ev->datum.mus.y;
+    p              = destinatio_ad_locale(nodus, p);
+    e.datum.mus.x  = p.x;
+    e.datum.mus.y  = p.y;
+    redde e;
+}
+
 interior b32
 terminale_clavis (
     InsulaRepositorium* repo,
@@ -933,12 +968,12 @@ terminale_clavis (
 {
     TerminaleContextus* tc;
                Eventus  par[II];
+               Eventus  localis;
                    s32  lineae;
 
     (vacuum)repo;
     (vacuum)motus;
     (vacuum)destinatio;
-    (vacuum)nodus;
     tc = (TerminaleContextus*)ctx;
     /* Cmd (super) = brevitates fenestrae (Cmd+V glutinat per menu,
      * D6c), numquam programmati - ut Terminal.app, iTerm; codificator
@@ -980,7 +1015,8 @@ terminale_clavis (
         casus EVENTUS_MUS_MOTUS:
             /* codificator decernit (mus non petitus: nihil) */
             pendentem_effundere(tc);
-            eventa_mittere(tc, ev, I);
+            localis = ad_nodum(nodus, ev);
+            eventa_mittere(tc, &localis, I);
             redde VERUM;
         casus EVENTUS_FOCUS:
         casus EVENTUS_DEFOCUS:
@@ -997,7 +1033,8 @@ terminale_clavis (
                                  * (s32)tc->app->cellula_altitudo;
             si (lineae != ZEPHYRUM)
             {
-                rotulam_tractare(tc, ev, lineae);
+                localis = ad_nodum(nodus, ev);
+                rotulam_tractare(tc, &localis, lineae);
             }
             redde VERUM;
         ordinarius:
