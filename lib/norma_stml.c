@@ -194,7 +194,10 @@ _fluitans (
 
     errno  = 0;
     v      = strtod(s, &finis);
-    si (   finis == s || *finis != '\0' || errno == ERANGE
+    /* ERANGE: subnormalis finitus et non nullus licet (strtod macOS
+     * eum notat); in nihilum evanescens aut infinitus non */
+    si (   finis == s || *finis != '\0'
+        || (errno == ERANGE && (v == 0.0 || v - v != 0.0))
         || v     != v || v - v != 0.0)
     {
         sprintf(nuntius,
@@ -793,6 +796,12 @@ norma_stml_legere (
         v->nuntius  = r.error;
         redde l;
     }
+    si (!r.elementum_radix)
+    {
+        _vitium(&lector, NIHIL, NORMA_STML_FRACTUM,
+            "documentum sine elemento radicis");
+        redde l;
+    }
     canon = canon_legere(norma_canon_textus(piscina), piscina, in,
         &causa);
     si (!canon)
@@ -810,10 +819,12 @@ norma_stml_legere (
 
         sprintf(nuntius, "%s%s%.*s%s%.*s", canon_nuntius(c->genus),
             c->elementum ? ": <" : "",
-            c->elementum ? (integer)c->elementum->mensura : 0,
+            c->elementum ? (integer)(c->elementum->mensura > CC ? CC
+                                     : c->elementum->mensura) : 0,
             c->elementum ? (constans character*)c->elementum->datum : "",
             c->detail ? "> " : (c->elementum ? ">" : ""),
-            c->detail ? (integer)c->detail->mensura : 0,
+            c->detail ? (integer)(c->detail->mensura > CC ? CC
+                                  : c->detail->mensura) : 0,
             c->detail ? (constans character*)c->detail->datum : "");
         _vitium(&lector, c->nodus, NORMA_STML_CANON, nuntius);
     }
@@ -1014,6 +1025,81 @@ _fluitans_scribere (
     }
 }
 
+/* forma multilineae '<tag\>' lineam novam primam ut marginem legit,
+ * marginem finalem abicit, lineas sequentes praefixo communi spatiorum
+ * dedentat et lineam spatiis solis recusat (recensio externa,
+ * mensuratum). Textus fidelis = nulla linea nova initialis aut finalis,
+ * nulla linea sequens spatio incipiens, nulla linea spatiis solis
+ * (linea VACUA interior licet - paragraphi; mensuratum), nullum spatium
+ * ante lineam novam. */
+interior b32
+_multilinea_fidelis (
+    chorda t)
+{
+    i32 i;
+    i32 initium = 0;
+
+    si (   t.mensura              == 0 || t.datum[0] == '\n'
+        || t.datum[t.mensura - I] == '\n')
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i <= t.mensura; i++)
+    {
+        si (i == t.mensura || t.datum[i] == '\n')
+        {
+            i32 k;
+            b32 sola_spatia = VERUM;
+
+            per (k = initium; k < i; k++)
+            {
+                si (t.datum[k] != ' ' && t.datum[k] != '\t')
+                {
+                    sola_spatia = FALSUM;
+                }
+            }
+            si (sola_spatia && i > initium)
+            {
+                redde FALSUM;    /* spatiis solis (vacua licet) */
+            }
+            si (   initium > 0 && (t.datum[initium] == ' '
+                                || t.datum[initium] == '\t'))
+            {
+                redde FALSUM;    /* dedentatio */
+            }
+            si (   i > initium && (t.datum[i - I] == ' '
+                                || t.datum[i - I] == '\t'))
+            {
+                redde FALSUM;    /* spatium finale lineae */
+            }
+            initium = i + I;
+        }
+    }
+    redde VERUM;
+}
+
+/* signa generis canonis: compositum [A-Za-z0-9_*-], nomen [A-Za-z0-9_*] */
+interior b32
+_signa_generis (
+    chorda c,
+       b32 lineola)
+{
+    i32 i;
+
+    per (i = 0; i < c.mensura; i++)
+    {
+        character k = (character)c.datum[i];
+
+        si (!(   (k >= 'a' && k <= 'z') || (k >= 'A' && k <= 'Z')
+              || (k >= '0' && k <= '9') || k == '_' || k == '*'
+              || (lineola && k == '-')))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* elementum textus: linea nova in textu ordinario STML MOLLIS est
  * (spatium relegitur) - textus cum linea nova forma multilineae
  * '<tag\>' scribitur, ubi lineae novae contentum sunt */
@@ -1032,8 +1118,22 @@ _textum_scribere (
         si (textus.datum[i] == '\n')
         {
             e->multilinea = VERUM;
-            frange;
         }
+        si (textus.datum[i] == '\r')
+        {
+            _recusare(s,
+                "textus cum '\\r' STML ferre nequit (lexator eum"
+                         " abicit)");
+            redde;
+        }
+    }
+    si (e->multilinea && !_multilinea_fidelis(textus))
+    {
+        _recusare(s, "textus multilineae quem forma '<tag\\>' mutaret:"
+            " linea nova initialis aut finalis, linea vacua spatiis,"
+            " linea sequens spatio incipiens, aut spatium ante lineam"
+            " novam (dedentatio et margines STML)");
+        redde;
     }
     stml_textum_addere(e, s->p, s->in, chorda_ut_cstr(textus, s->p));
 }
@@ -1099,6 +1199,111 @@ _index_normae (
         }
     }
     redde s->numerus;
+}
+
+/* circulus inter normas nominatas (a -> b -> a): scriptor ad nomen
+ * alienum non descendit (<ad>), ergo profunditas eum non capit -
+ * quaeritur ante scriptionem, more lectoris (status 0/I/II + catena) */
+interior b32
+_nomen_visitare (
+    Scriptor* s,
+         i32  index,
+         i32* status,
+         Xar* catena);
+
+interior b32
+_nomina_ambulare (
+          Scriptor* s,
+    constans Norma* n,
+               i32  profunditas,
+               i32* status,
+               Xar* catena)
+{
+    NormaVisus v;
+           i32 k;
+           i32 i;
+
+    si (!n || profunditas > CXXVIII)
+    {
+        redde VERUM;   /* scriptor ipse profunditatem recusat */
+    }
+    k = _index_normae(s, n);
+    si (k < s->numerus && profunditas > 0)
+    {
+        redde _nomen_visitare(s, k, status, catena);
+    }
+    v = norma_visus(n);
+    si (   v.elementum
+        && !_nomina_ambulare(s, v.elementum, profunditas + I,
+            status, catena))
+    {
+        redde FALSUM;
+    }
+    per (i = 0; v.campi && i < xar_numerus(v.campi); i++)
+    {
+        si (!_nomina_ambulare(s, ((NormaCampus*)xar_obtinere(v.campi,
+                i))->valor, profunditas + I, status, catena))
+        {
+            redde FALSUM;
+        }
+    }
+    per (i = 0; v.variationes && i < xar_numerus(v.variationes); i++)
+    {
+        si (!_nomina_ambulare(s, ((NormaVariatio*)xar_obtinere(
+                v.variationes, i))->objectum, profunditas + I, status,
+                catena))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_nomen_visitare (
+    Scriptor* s,
+         i32  index,
+         i32* status,
+         Xar* catena)
+{
+    si (status[index] == II)
+    {
+        redde VERUM;
+    }
+    si (status[index] == I)
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(s->p, CXXVIII);
+                      i32  i;
+                      b32  intra = FALSUM;
+
+        chorda_aedificator_appendere_literis(a, "circulus: ");
+        per (i = 0; i < xar_numerus(catena); i++)
+        {
+            i32 k = *(i32*)xar_obtinere(catena, i);
+
+            intra = intra || k == index;
+            si (intra)
+            {
+                chorda_aedificator_appendere_chorda(a,
+                    s->normae[k].titulus);
+                chorda_aedificator_appendere_literis(a, " -> ");
+            }
+        }
+        chorda_aedificator_appendere_chorda(a,
+            s->normae[index].titulus);
+        _recusare(s, chorda_ut_cstr(chorda_aedificator_finire(a),
+            s->p));
+        redde FALSUM;
+    }
+    status[index]              = I;
+    *(i32*)xar_addere(catena)  = index;
+    si (!_nomina_ambulare(s, s->normae[index].norma, 0, status, catena))
+    {
+        redde FALSUM;
+    }
+    xar_removere_ultimum(catena);
+    status[index] = II;
+    redde VERUM;
 }
 
 interior vacuum
@@ -1175,6 +1380,14 @@ _nodum_scribere (
     }
     si (v.genus == NORMA_NUMERUS && v.habet_intra_fluitans)
     {
+        si (   v.minimum_fluitans != v.minimum_fluitans
+            || v.minimum_fluitans - v.minimum_fluitans != 0.0
+            || v.maximum_fluitans != v.maximum_fluitans
+            || v.maximum_fluitans - v.maximum_fluitans != 0.0)
+        {
+            _recusare(s, "finis fluitans non finitus (inf, nan)");
+            redde;
+        }
         _fluitans_scribere(v.minimum_fluitans, buffer);
         _attr_literae(s, e, "minimum", buffer);
         _fluitans_scribere(v.maximum_fluitans, buffer);
@@ -1189,6 +1402,12 @@ _nodum_scribere (
     }
     si (v.forma.mensura > 0)
     {
+        si (!_signa_generis(v.forma, VERUM))
+        {
+            _recusare(s, "forma extra genus canonis compositum"
+                         " [A-Za-z0-9_*-]");
+            redde;
+        }
         _attr(s, e, "forma", v.forma, "forma");
     }
     simplex = v.licita && xar_numerus(v.licita) > 0
@@ -1214,6 +1433,12 @@ _nodum_scribere (
     }
     si (v.gignens_titulus.mensura > 0)
     {
+        si (!_signa_generis(v.gignens_titulus, FALSUM))
+        {
+            _recusare(s,
+                "gignens extra genus canonis nomen [A-Za-z0-9_*]");
+            redde;
+        }
         _attr(s, e, "gignens", v.gignens_titulus, "gignens");
     }
     alioquin si (v.gignens)
@@ -1312,6 +1537,22 @@ norma_stml_scribere (
     si (causa)
     {
         *causa = vacua;
+    }
+    {
+         i32* status = (i32*)piscina_allocare(piscina,
+                           (memoriae_index)((numerus
+                               + I) * magnitudo(i32)));
+         Xar* catena = xar_creare(piscina, (i32)magnitudo(i32));
+
+        memset(status, 0, (size_t)((numerus + I) * magnitudo(i32)));
+        per (i = 0; i < numerus && !s.fractum; i++)
+        {
+            _nomen_visitare(&s, i, status, catena);
+        }
+        si (s.fractum)
+        {
+            redde vacua;
+        }
     }
     radix = _elementum(&s, NIHIL, "normae");
     _attr_literae(&s, radix, "versio", "1");

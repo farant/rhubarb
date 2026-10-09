@@ -835,6 +835,187 @@ probatio_textus_fidelis(Piscina* p)
         0);
 }
 
+/* recensio externa (norma-plan-3, recensor alter): scriptor aut
+ * fideliter scribit aut nominatim recusat; lector numquam ruit;
+ * circulus inter normas nominatas recusatur */
+interior b32
+_textus_recusatus (
+    constans character* textus,
+               Piscina* p)
+{
+    NormaNominata nn;
+           chorda causa;
+
+    nn.titulus  = chorda_ex_literis("x", p);
+    nn.norma    = norma_descriptio(norma_textus(p), textus);
+    redde norma_stml_scribere(&nn, I, p, &causa).mensura == 0;
+}
+
+interior b32
+_textus_redit (
+    constans character* textus,
+               Piscina* p)
+{
+      NormaNominata nn;
+    NormaStmlLectio l;
+             chorda causa;
+             chorda s;
+
+    nn.titulus  = chorda_ex_literis("x", p);
+    nn.norma    = norma_descriptio(norma_textus(p), textus);
+    s           = norma_stml_scribere(&nn, I, p, &causa);
+    si (s.mensura == 0)
+    {
+        redde FALSUM;
+    }
+    l = norma_stml_legere(s, NIHIL, 0, p);
+    redde l.successus && _idem_dicunt(nn.norma,
+        norma_stml_quaerere(&l, "x"), p) == 0;
+}
+
+/* scriptor recusat (mensura 0) et causa verbum continet */
+interior b32
+_recusat (
+                 Norma* n,
+    constans character* verbum,
+               Piscina* p)
+{
+    NormaNominata nn;
+           chorda causa;
+           chorda s;
+
+    nn.titulus  = chorda_ex_literis("x", p);
+    nn.norma    = n;
+    s           = norma_stml_scribere(&nn, I, p, &causa);
+    redde s.mensura == 0 && chorda_continet(causa,
+        chorda_ex_literis(verbum, p));
+}
+
+interior b32
+_redit (
+      Norma* n,
+    Piscina* p)
+{
+      NormaNominata nn;
+    NormaStmlLectio l;
+             chorda causa;
+             chorda s;
+
+    nn.titulus  = chorda_ex_literis("x", p);
+    nn.norma    = n;
+    s           = norma_stml_scribere(&nn, I, p, &causa);
+    si (s.mensura == 0)
+    {
+        imprimere("  recusatum: %.*s\n", (integer)causa.mensura,
+            (constans character*)causa.datum);
+        redde FALSUM;
+    }
+    l = norma_stml_legere(s, NIHIL, 0, p);
+    redde l.successus && _idem_dicunt(n, norma_stml_quaerere(&l, "x"),
+        p) == 0;
+}
+
+interior vacuum
+probatio_recensio_externa(Piscina* p)
+{
+    constans character* constans licita[] = { "a\n b", NIHIL };
+          character  longum[MMMCC];
+          character  documentum[MMMD];
+      NormaNominata  nn[II];
+    NormaStmlLectio  l;
+             chorda  causa;
+              Norma* a;
+              Norma* b;
+
+    imprimere("\n--- Probans recensionem externam ---\n");
+    /* I. textus multilineae: aut idem redit aut recusatur */
+    CREDO_VERUM(_textus_redit("Linea prima.\nLinea secunda.", p));
+    CREDO_VERUM(_textus_redit("a\nb\nc", p));
+    CREDO_VERUM(_textus_redit("  a\nb", p));
+    CREDO_VERUM(_textus_redit("Paragraphus primus.\n\nParagraphus secundus.",
+        p));
+    CREDO_VERUM(_textus_recusatus("  a\n  b", p));
+    CREDO_VERUM(_textus_recusatus("a\n  b", p));
+    CREDO_VERUM(_textus_recusatus("\ta\n\tb", p));
+    CREDO_VERUM(_textus_recusatus(" a\n b ", p));
+    CREDO_VERUM(_textus_recusatus("a \nb", p));
+    CREDO_VERUM(_textus_recusatus("a\n", p));
+    CREDO_VERUM(_textus_recusatus("a\n\n", p));
+    CREDO_VERUM(_textus_recusatus("\na", p));
+    CREDO_VERUM(_textus_recusatus("\n\na", p));
+    CREDO_VERUM(_textus_recusatus("a\r\nb", p));
+    CREDO_VERUM(_textus_recusatus("a\n  \nb", p));
+    CREDO_VERUM(_recusat(norma_electio(norma_textus(p), licita),
+        "multilineae", p));
+    /* II. forma et gignens generibus canonis subiecta */
+    CREDO_VERUM(_recusat(norma_forma(norma_textus(p), "date time"),
+        "forma", p));
+    CREDO_VERUM(_recusat(norma_forma(norma_textus(p), "x.y"), "forma",
+        p));
+    CREDO_VERUM(_redit(norma_forma(norma_textus(p), "date-time"), p));
+    CREDO_VERUM(_recusat(norma_gignens_titulus(norma_textus(p),
+        "my-gen"),
+        "gignens", p));
+    CREDO_VERUM(_recusat(norma_gignens_titulus(norma_textus(p), "a b"),
+        "gignens", p));
+    /* III. fines fluitantes: non finiti recusantur, subnormales redeunt */
+    CREDO_VERUM(_recusat(norma_intra_fluitans(norma_numerus(p), 0.0,
+        HUGE_VAL), "finitus", p));
+    CREDO_VERUM(_recusat(norma_intra_fluitans(norma_numerus(p),
+        -HUGE_VAL,
+        0.0), "finitus", p));
+    CREDO_VERUM(_redit(norma_intra_fluitans(norma_numerus(p),
+        4.9406564584124654e-324, 1.0), p));
+    CREDO_VERUM(_redit(norma_intra_fluitans(norma_numerus(p), -1e-320,
+        1e-320), p));
+    l = _lege(CAPUT "<numerus minimum=\"1e-400\" maximum=\"1\"/>" CAUDA,
+        p);
+    CREDO_VERUM(_vitium_primum(l) != NIHIL
+        && _vitium_primum(l)->causa == NORMA_STML_FINIS_PRAVUS);
+    /* IV. documentum sine elemento radicis: vitium, non ruina */
+    CREDO_NON_RUIT((vacuum)norma_stml_legere(chorda_ex_literis("  \n\t ",
+        p),
+        NIHIL, 0, p));
+    CREDO_NON_RUIT((vacuum)norma_stml_legere(chorda_ex_literis(
+        "<!-- x -->", p), NIHIL, 0, p));
+    l = _lege("  \n\t ", p);
+    CREDO_FALSUM(l.successus);
+    CREDO_VERUM(_vitium_primum(l) != NIHIL
+        && _vitium_primum(l)->causa == NORMA_STML_FRACTUM);
+    /* V. nomina longa in nuntiis canonis: non ruina */
+    memset(longum, 'A', MMMCC - I);
+    longum[MMMCC - I] = '\0';
+    sprintf(documentum,
+        "<normae versio=\"1\">\n<norma titulus=\"a\"><%s/>"
+        "</norma>\n</normae>\n", longum);
+    CREDO_NON_RUIT((vacuum)norma_stml_legere(chorda_ex_literis(documentum,
+        p), NIHIL, 0, p));
+    sprintf(documentum, "<normae versio=\"1\">\n<norma titulus=\"a\">"
+        "<ad norma=\"%s\"/></norma>\n</normae>\n", longum);
+    CREDO_NON_RUIT((vacuum)norma_stml_legere(chorda_ex_literis(documentum,
+        p), NIHIL, 0, p));
+    l = _lege(documentum, p);
+    CREDO_VERUM(_vitium_primum(l) != NIHIL
+        && _vitium_primum(l)->causa == NORMA_STML_CANON);
+    /* VI. circulus inter normas nominatas: scriptor et emissor recusant */
+    a = norma_objectum(p);
+    b = norma_objectum(p);
+    norma_campus(a, "b", b, VERUM);
+    norma_campus(b, "a", a, VERUM);
+    nn[0].titulus  = chorda_ex_literis("a", p);
+    nn[0].norma    = a;
+    nn[I].titulus  = chorda_ex_literis("b", p);
+    nn[I].norma    = b;
+    CREDO_AEQUALIS_I32(norma_stml_scribere(nn, II, p, &causa).mensura,
+        0);
+    CREDO_VERUM(chorda_continet(causa, chorda_ex_literis("a -> b -> a",
+        p)));
+    CREDO_AEQUALIS_I32(norma_ad_c(nn, II, "x_", "x.h", "x.norma", p,
+        &causa).corpus.mensura, 0);
+    CREDO_VERUM(chorda_continet(causa, chorda_ex_literis("a -> b -> a",
+        p)));
+}
+
 s32
 principale (vacuum)
 {
@@ -852,6 +1033,7 @@ principale (vacuum)
     probatio_oraculum_tertium(p);
     probatio_emissor_recusat(p);
     probatio_textus_fidelis(p);
+    probatio_recensio_externa(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

@@ -195,6 +195,115 @@ _index_normae (
     redde em->numerus;
 }
 
+/* circulus inter normas nominatas (a -> b -> a): emissor ad nomen
+ * alienum vocationem scribit, non descendit, ergo profunditas eum non
+ * capit; C generatum _struere_a -> _struere_b -> _struere_a ante
+ * memoriam 'facta' acervum exhauriret. Quaeritur ante emissionem, more
+ * lectoris et scriptoris (status 0/I/II + catena). */
+interior b32
+_nomen_visitare (
+    Emissor* em,
+        i32  index,
+        i32* status,
+        Xar* catena);
+
+interior b32
+_nomina_ambulare (
+           Emissor* em,
+    constans Norma* n,
+               i32  profunditas,
+               i32* status,
+               Xar* catena)
+{
+    NormaVisus v;
+           i32 k;
+           i32 i;
+
+    si (!n || profunditas > CXXVIII)
+    {
+        redde VERUM;   /* emissor ipse profunditatem recusat */
+    }
+    k = _index_normae(em, n);
+    si (k < em->numerus && profunditas > 0)
+    {
+        redde _nomen_visitare(em, k, status, catena);
+    }
+    v = norma_visus(n);
+    si (   v.elementum
+        && !_nomina_ambulare(em, v.elementum, profunditas + I,
+            status, catena))
+    {
+        redde FALSUM;
+    }
+    per (i = 0; v.campi && i < xar_numerus(v.campi); i++)
+    {
+        si (!_nomina_ambulare(em, ((NormaCampus*)xar_obtinere(v.campi,
+                i))->valor, profunditas + I, status, catena))
+        {
+            redde FALSUM;
+        }
+    }
+    per (i = 0; v.variationes && i < xar_numerus(v.variationes); i++)
+    {
+        si (!_nomina_ambulare(em, ((NormaVariatio*)xar_obtinere(
+                v.variationes, i))->objectum, profunditas + I, status,
+                catena))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_nomen_visitare (
+     Emissor* em,
+         i32  index,
+         i32* status,
+         Xar* catena)
+{
+    si (status[index] == II)
+    {
+        redde VERUM;
+    }
+    si (status[index] == I)
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(em->p,
+            CXXVIII);
+                      i32 i;
+                      b32 intra = FALSUM;
+
+        chorda_aedificator_appendere_literis(a, "circulus: ");
+        per (i = 0; i < xar_numerus(catena); i++)
+        {
+            i32 k = *(i32*)xar_obtinere(catena, i);
+
+            intra = intra || k == index;
+            si (intra)
+            {
+                chorda_aedificator_appendere_chorda(a,
+                    em->normae[k].titulus);
+                chorda_aedificator_appendere_literis(a, " -> ");
+            }
+        }
+        chorda_aedificator_appendere_chorda(a,
+            em->normae[index].titulus);
+        _recusare(em, chorda_ut_cstr(chorda_aedificator_finire(a),
+            em->p));
+        redde FALSUM;
+    }
+    status[index]              = I;
+    *(i32*)xar_addere(catena)  = index;
+    si (!_nomina_ambulare(em, em->normae[index].norma, 0, status,
+        catena))
+    {
+        redde FALSUM;
+    }
+    xar_removere_ultimum(catena);
+    status[index] = II;
+    redde VERUM;
+}
+
 interior constans character*
 _constructor (
     NormaGenus g)
@@ -490,6 +599,22 @@ norma_ad_c (
     {
         _recusare(&em, "praefixum non identificator aut fons cum '*/'");
         redde fons;
+    }
+    {
+         i32* status = (i32*)piscina_allocare(piscina,
+                           (memoriae_index)((numerus
+                               + I) * magnitudo(i32)));
+         Xar* catena = xar_creare(piscina, (i32)magnitudo(i32));
+
+        memset(status, 0, (size_t)((numerus + I) * magnitudo(i32)));
+        per (i = 0; i < numerus && !em.fractum; i++)
+        {
+            _nomen_visitare(&em, i, status, catena);
+        }
+        si (em.fractum)
+        {
+            redde fons;
+        }
     }
     /* functiones _struere_ + titulus */
     per (i = 0; i < numerus && !em.fractum; i++)

@@ -116,3 +116,38 @@ back as something ELSE without any error:
 `probatio_textus_fidelis` watched both fail first. Cases probed and
 fine: double spaces, leading space, enum values with edge spaces, empty
 enum value, tab and apostrophe in keys, key "true".
+
+## 2026-10-09 - external review (fresh reviewer, build/norma-plan-3.recensio.md)
+
+A separate reviewer (Fran: "a separate reviewer is fine, I avoid
+subagents for implementation") ran 111 builder round trips, compiled
+emitted C under the house flags, and threw 47 hostile inputs at the
+reader. Six Important findings, all fixed with tests watched red first
+(`probatio_recensio_externa`):
+
+1. The multi-line form is not a free carrier: it reads the first newline
+   as margin, drops the closing margin, dedents continuation lines by
+   their common whitespace prefix, refuses whitespace-only lines, and
+   the lexer drops '\r'. `_multilinea_fidelis` admits only text it
+   carries exactly - no leading/trailing newline, no continuation line
+   starting with space/tab, no whitespace-only line, no space before a
+   newline; '\r' anywhere is refused. Measured: an EMPTY interior line
+   is carried (paragraphs allowed, asserted).
+2. `forma` must fit canon genus compositum, `gignens` genus nomen - the
+   writer checks before writing (it used to write files canon refused).
+3. Non-finite float bounds refused by the writer; the reader accepts a
+   subnormal (macOS strtod sets ERANGE on it) and refuses only underflow
+   to zero or overflow.
+4. A document with no root element (whitespace, a lone comment) parsed
+   "successfully" with `elementum_radix == NIHIL` -> NULL dereference;
+   now FRACTUM "documentum sine elemento radicis".
+5. Canon messages copied element names / attribute values unbounded
+   into a 512-byte stack buffer (fortify trapped a 3000-char name); both
+   widths clamped to CC.
+6. A cycle between two NAMED normae (a -> b -> a) slipped past the depth
+   guard (each side stops at the other's name): the writer wrote it and
+   the emitter produced C that overflows the stack at run time. Both
+   now walk the name graph first (status 0/I/II + chain, like the
+   reader) and refuse "circulus: a -> b -> a". The walker is duplicated
+   in lib/norma_ad_c.c (static) - the approved headers expose no shared
+   home for it; two copies of ~70 lines, noted.
