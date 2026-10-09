@@ -89,7 +89,8 @@ s32 principale (vacuum)
         "<stratum titulus=\"fundus\" visibilis=\"verum\" ordo=\"0\"/>"
         "</pictor>",
         "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
-        " color_secundus=\"5\" magnitudo=\"1\" stratum_activum=\"0\""
+        " color_secundus=\"5\" magnitudo_penicilli=\"1\""
+        " stratum_activum=\"0\""
         " zoom=\"1\" focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
     insula_ponere_canonem(repo, INSULA_DURABILIS, durabilis);
@@ -106,12 +107,13 @@ s32 principale (vacuum)
     res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
                                  piscina, intern);
     CREDO_VERUM(res.successus);
-    /* XV: + superficies_latitudo/_altitudo, scriptor dispensator
+    /* XVI: + superficies_latitudo/_altitudo, scriptor dispensator
      * (modulus 013 B1); + semen, scriptor aspergillum.ictus; +
-     * exemplar, scriptor exemplar.ponere (P3) */
+     * exemplar, scriptor exemplar.ponere (P3); magnitudo ->
+     * magnitudo_penicilli + magnitudo_aspergilli (P4a) */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_EPHEMERA,
                                              res.elementum_radix),
-                                             XV);
+                                             XVI);
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_DURABILIS,
                                              res.elementum_radix), I);
     insula_scriptorem_ponere(repo,

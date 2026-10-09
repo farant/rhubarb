@@ -243,3 +243,31 @@ Fran's plan: the eraser paints the canvas background. Named `spongia`
 - Fran: pattern palette options use the chosen fg/bg (title
   "exemplar:<n>:<fg>:<bg>", same as the bar square); both none falls
   back to 1-bit text colour so the patterns stay legible.
+
+## 2026-10-09 - P4a brush sizes
+
+- Sizes are PER TOOL now (Fran agreed): ephemeral `magnitudo_penicilli`
+  (brush diameter px; options 1 2 3 4 6 8 12 16 32 64 - Fran asked for
+  32/64) and `magnitudo_aspergilli` (spray multiplier, UI in P4b). The
+  generic `magnitudo` left canon/init/domini. The LOG keeps one
+  `magnitudo`, written from the current tool's attribute (eraser: 1).
+- Brush = disc (pictor_disci_pixelum: doubled coords from centre,
+  a^2 + b^2 <= n^2; n <= 3 full square) swept by `verrere`: per
+  segment clip with margin n-1, stamp the clipped start, walk, then
+  stamp each point. At n = 1 that is exactly the old
+  delineare_lineam + 1x1 rect, including off-canvas strokes.
+- TIE RULE: delineare_lineam uses STRICT comparisons (e2 > -dy,
+  e2 < dx); my P2 eraser walk used >= / <=. Python brute force over
+  120x120 slopes: each side differs on ~16% of slopes, x-side ties only
+  on steep lines like (1:2). pictor_lineam_ambulare uses delineare's
+  rule so old drawings replay identically. The eraser moved onto it
+  too (edge pixels can differ at ties for strokes made since P2 today).
+  The aurum seals did NOT pin this (plant M7 survived): test VIII now
+  draws 8 lines incl. both tie kinds and compares against
+  delineare_lineam itself as the oracle.
+- Preview: stamps every max(1, n/4) steps + segment end (a 64 brush
+  swept per pixel = ~25k rects/frame); real colour, pattern only on
+  release. Name collisions on the way: `magnitudo` (= sizeof macro)
+  and `Sigillum` (sigillum.h hash seal type).
+- Twin: status text x 136 -> cell 23 (tessellation rounds to NEAREST:
+  110 -> 18, 136 -> 23).

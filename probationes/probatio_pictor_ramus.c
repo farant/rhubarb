@@ -81,7 +81,8 @@ s32 principale (vacuum)
         "<pictor id=\"p2\" latitudo=\"8\" altitudo=\"8\"/></hospes>",
         "<hospes focus=\"tabula\">"
         "<pictor id=\"p1\" instrumentum=\"nihil\" color_primus=\"3\""
-        " magnitudo=\"1\" zoom=\"1\" superficies_latitudo=\"120\""
+        " magnitudo_penicilli=\"1\" zoom=\"1\""
+        " superficies_latitudo=\"120\""
         " superficies_altitudo=\"64\"/>"
         "<pictor id=\"p2\" instrumentum=\"nihil\"/></hospes>");
     CREDO_NON_NIHIL(repo);

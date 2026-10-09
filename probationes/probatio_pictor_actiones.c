@@ -86,7 +86,7 @@ s32 principale (vacuum)
     repo = insula_repositorium_creare(piscina, intern,
         "<pictor latitudo=\"320\" altitudo=\"200\"/>",
         "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
-        " magnitudo=\"1\" zoom=\"1\"/>");
+        " magnitudo_penicilli=\"1\" zoom=\"1\"/>");
     fons = filum_legere_totum("apps/pictor/canones/ephemera.canon",
         piscina);
     ephemera = canon_legere(fons, piscina, intern, &causa);

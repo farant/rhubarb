@@ -224,7 +224,11 @@ ictum_scribere (
     s = chorda_concatenare(s, chorda_ex_literis("\" magnitudo=\"", p),
         p);
     s = chorda_concatenare(s,
-        chorda_ex_s32(attributum_s32(ramus, "magnitudo", I), p), p);
+        chorda_ex_s32(instrumentum == litterae_penicillus
+            ? attributum_s32(ramus, "magnitudo_penicilli", I)
+            : instrumentum == litterae_aspergillum
+            ? attributum_s32(ramus, "magnitudo_aspergilli", I) : I, p),
+        p);
     si (pa)
     {
         s = chorda_concatenare(s, chorda_ex_literis("\" semen=\"", p),
@@ -609,6 +613,56 @@ pictor_exemplar_ponere (
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }
 
+/* P4a: magnitudines optionum (pixela penicilli) */
+hic_manens constans s32 magnitudines[X] = {
+    I, II, III, IV, VI, VIII, XII, XVI, XXXII, LXIV
+};
+
+/* <tractator/> */
+b32
+pictor_magnitudinem_ponere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+      InsulaRamus ramus;
+    ColorPonendus cp;
+           chorda valor;
+              i32 k;
+              b32 nota;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    si (!repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    valor          = post_praefixum(nodus, "optio.magnitudo.");
+    cp.attributum  = "magnitudo_penicilli";
+    si (valor.mensura == ZEPHYRUM || !chorda_ut_s32(valor, &cp.valor))
+    {
+        redde FALSUM;
+    }
+    nota = FALSUM;
+    per (k = ZEPHYRUM; k < X; k++)
+    {
+        si (magnitudines[k] == cp.valor)
+        {
+            nota = VERUM;
+        }
+    }
+    si (!nota)
+    {
+        redde FALSUM;
+    }
+    ramus = ramus_pictoris(repo, ctx);
+    (vacuum)palettam_claudere(&ramus);
+    redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
+}
+
 vacuum
 pictor_actiones_registrare (
     ActioRegistrum* reg,
@@ -632,6 +686,8 @@ pictor_actiones_registrare (
         ctx);
     actio_registrare(reg, "exemplar.ponere", pictor_exemplar_ponere,
         ctx);
+    actio_registrare(reg, "magnitudo.ponere",
+        pictor_magnitudinem_ponere, ctx);
     actio_registrare(reg, "instrumentum.eligere",
                      pictor_instrumentum_eligere, ctx);
 }

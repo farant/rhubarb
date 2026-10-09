@@ -144,6 +144,12 @@ quadratum_addere (
     componens_addere_liberum(status, q);
 }
 
+/* P4a: magnitudines penicilli (pixela) - eaedem ac
+ * pictor_magnitudinem_ponere accipit */
+hic_manens constans s32 magnitudines[X] = {
+    I, II, III, IV, VI, VIII, XII, XVI, XXXII, LXIV
+};
+
 /* P1b: palette (PARTES_DIALOGUS) supra quadratum (x, y radicis):
  * optiones XX x XX, II inter, IV margo, VI per lineam (exemplaria X).
  * genus 'instrumentum', 'color_primus'/'color_secundus' aut
@@ -165,6 +171,7 @@ palettam_componere (
               Componens* o;
                     b32  colores;
                     b32  exemplaria;
+                    b32  mensurae;
                     s32  n;
                     s32  per_lineam;
                     s32  k;
@@ -179,12 +186,15 @@ palettam_componere (
     instrumenta[I]         = "aspergillum";
     instrumenta[II]        = "spongia";
     exemplaria             = chorda_aequalis_literis(genus, "exemplar");
-    colores     = !exemplaria
+    mensurae = chorda_aequalis_literis(genus,
+        "magnitudo");
+    colores     = !exemplaria && !mensurae
                && !chorda_aequalis_literis(genus, "instrumentum");
-    n           = exemplaria ? (s32)EXEMPLAR_NUMERUS : colores ? XVII
-                                                               : III;
-    /* P3: exemplaria X per lineam (IV lineae), cetera VI */
-    per_lineam  = exemplaria ? X : VI;
+    n           = exemplaria ? (s32)EXEMPLAR_NUMERUS : mensurae ? X
+                : colores ? XVII : III;
+    /* P3: exemplaria (IV lineae) et magnitudines X per lineam, cetera
+     * VI */
+    per_lineam  = (exemplaria || mensurae) ? X : VI;
     latitudo = IV + (n < per_lineam ? n : per_lineam) * (XX + II) - II
              + IV;
     altitudo = IV + ((n + per_lineam - I) / per_lineam) * (XX + II) - II
@@ -193,7 +203,13 @@ palettam_componere (
         y_quadrati - altitudo - II, latitudo, altitudo);
     per (k = ZEPHYRUM; k < n; k++)
     {
-        si (exemplaria)
+        si (mensurae)
+        {
+            sprintf(id, "optio.magnitudo.%d", (integer)magnitudines[k]);
+            sprintf(titulus, "magnitudo:%d%s", (integer)magnitudines[k],
+                magnitudines[k] == color_currens ? ":electum" : "");
+        }
+        alioquin si (exemplaria)
         {
             /* Franus: optiones coloribus electis (ut quadratum) */
             sprintf(id, "optio.exemplar.%d", (integer)k);
@@ -221,7 +237,8 @@ palettam_componere (
             IV + (k / per_lineam) * (XX + II), XX, XX);
         componens_ponere_titulum(o, titulus);
         /* actio = dominus attributi (domini.stml) */
-        componens_ponere_actio(o, exemplaria ? "exemplar.ponere"
+        componens_ponere_actio(o, mensurae ? "magnitudo.ponere"
+            : exemplaria ? "exemplar.ponere"
             : !colores ? "instrumentum.eligere"
             : chorda_aequalis_literis(genus, "color_primus")
             ? "color_primus.ponere" : "color_secundus.ponere");
@@ -388,7 +405,7 @@ pictor_componere (
                     ZEPHYRUM),
                 (integer)(PICTOR_ASPERGILLI_RADIUS
                           * attributum_s32(&ramus, INSULA_EPHEMERA,
-                                "magnitudo", I)),
+                                "magnitudo_aspergilli", I)),
                 (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
                     "color_primus", ZEPHYRUM),
                 (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
@@ -403,10 +420,34 @@ pictor_componere (
         {
             character titulus_spongiae[XVI];
 
-            sprintf(titulus_spongiae, "%d", (integer)(
-                PICTOR_SPONGIAE_LATUS * attributum_s32(&ramus,
-                    INSULA_EPHEMERA, "magnitudo", I)));
+            /* spongia: latus fixum (acta magnitudo="1") */
+            sprintf(titulus_spongiae, "%d",
+                (integer)PICTOR_SPONGIAE_LATUS);
             componens_ponere_titulum(tabula, titulus_spongiae);
+        }
+        /* P4a penicillus: "diametrus color" - color praevisionis:
+         * primus, aut secundus si primus nullus sub exemplari; -1
+         * nihil */
+        si (chorda_aequalis_literis(instrumentum, "penicillus"))
+        {
+            character titulus_penicilli[XXIV];
+                  s32 primus;
+                  s32 secundus;
+                  s32 color;
+
+            primus    = attributum_s32(&ramus, INSULA_EPHEMERA,
+                "color_primus", ZEPHYRUM);
+            secundus  = attributum_s32(&ramus, INSULA_EPHEMERA,
+                "color_secundus", -I);
+            color     = (primus >= ZEPHYRUM && primus < XVI) ? primus
+                : (attributum_s32(&ramus, INSULA_EPHEMERA, "exemplar",
+                       ZEPHYRUM) != ZEPHYRUM
+                   && secundus >= ZEPHYRUM && secundus < XVI) ? secundus
+                : -I;
+            sprintf(titulus_penicilli, "%d %d", (integer)attributum_s32(
+                &ramus, INSULA_EPHEMERA, "magnitudo_penicilli", I),
+                (integer)color);
+            componens_ponere_titulum(tabula, titulus_penicilli);
         }
     }
 
@@ -448,6 +489,11 @@ pictor_componere (
                 "color_secundus", -I));
         quadratum_addere(piscina, intern, status, "quadratum.exemplar",
             IV * cw + III * XX, y, t);
+        /* P4a: magnitudo penicilli */
+        sprintf(t, "magnitudo:%d", (integer)attributum_s32(&ramus,
+            INSULA_EPHEMERA, "magnitudo_penicilli", I));
+        quadratum_addere(piscina, intern, status, "quadratum.magnitudo",
+            V * cw + IV * XX, y, t);
     }
 
     componens_addere_liberum(prospectus, tabula);
@@ -468,18 +514,24 @@ pictor_componere (
             : chorda_aequalis_literis(palette, "color_secundus")
             ? III * cw + II * XX
             : chorda_aequalis_literis(palette, "exemplar")
-            ? IV * cw + III * XX : cw;
+            ? IV * cw + III * XX
+            : chorda_aequalis_literis(palette, "magnitudo")
+            ? V * cw + IV * XX : cw;
         si (   chorda_aequalis_literis(palette, "instrumentum")
             || chorda_aequalis_literis(palette, "color_primus")
             || chorda_aequalis_literis(palette, "color_secundus")
-            || chorda_aequalis_literis(palette, "exemplar"))
+            || chorda_aequalis_literis(palette, "exemplar")
+            || chorda_aequalis_literis(palette, "magnitudo"))
         {
             componens_addere_liberum(radix, palettam_componere(piscina,
                 intern, palette, fs.x + qx, qy, instrumentum,
                 attributum_s32(&ramus, INSULA_EPHEMERA,
-                    chorda_ut_cstr(palette, piscina),
+                    chorda_aequalis_literis(palette, "magnitudo")
+                    ? "magnitudo_penicilli"
+                    : chorda_ut_cstr(palette, piscina),
                     chorda_aequalis_literis(palette, "color_secundus")
-                    ? -I : ZEPHYRUM),
+                    ? -I : chorda_aequalis_literis(palette, "magnitudo")
+                    ? I : ZEPHYRUM),
                 attributum_s32(&ramus, INSULA_EPHEMERA, "color_primus",
                     ZEPHYRUM),
                 attributum_s32(&ramus, INSULA_EPHEMERA,

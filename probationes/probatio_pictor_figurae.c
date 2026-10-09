@@ -66,6 +66,7 @@ s32 principale (vacuum)
                                      i32  n;
                                      i32  imagines;
                                      i32  lineae;
+                                     i32  accentus;
                                      i32  textus;
                                   chorda  sigillum;
                                      i32  niger;
@@ -119,6 +120,7 @@ s32 principale (vacuum)
     sigillum  = pictor_documentum_sigillum_hex(doc, piscina);
     imagines  = ZEPHYRUM;
     lineae    = ZEPHYRUM;
+    accentus  = ZEPHYRUM;
     textus    = ZEPHYRUM;
     n         = mandata_numerus(m);
     per (i = ZEPHYRUM; i < n; i++)
@@ -130,13 +132,21 @@ s32 principale (vacuum)
             CREDO_VERUM(chorda_aequalis(x->textus, sigillum));
             CREDO_AEQUALIS_S32(x->fines.latitudo, XL);
         }
-        /* lineae ictus pendentis solae (colore accentus): crux
-         * coloris nulli in linea status (P1a) non numeratur */
+        /* ictus pendens (P4a): disci I colore vero (palette 0), non
+         * linea accentus */
+        si (   x->genus          == MANDATUM_RECTANGULUM
+            && x->fines.latitudo == I && x->fines.altitudo == I
+            && x->color.genus    == COLOR_MANDATI_RGBA
+            && x->color.valor
+               == color_ad_pixelum(color_ex_palette(ZEPHYRUM)))
+        {
+            lineae++;
+        }
         si (   x->genus       == MANDATUM_LINEA
             && x->color.genus == COLOR_MANDATI_THEMA
             && x->color.valor == (i32)COLOR_ACCENT_PRIMARY)
         {
-            lineae++;
+            accentus++;
         }
         si (x->genus == MANDATUM_TEXTUS)
         {
@@ -145,7 +155,9 @@ s32 principale (vacuum)
         }
     }
     CREDO_AEQUALIS_I32(imagines, I);
-    CREDO_AEQUALIS_I32(lineae, I);          /* II puncta -> I linea */
+    /* (X, X) -> (XX, XV): punctum primum + X gradus lineae */
+    CREDO_AEQUALIS_I32(lineae, XI);
+    CREDO_AEQUALIS_I32(accentus, ZEPHYRUM);
     CREDO_AEQUALIS_I32(textus, I);
 
     imprimere("\n--- Fons imaginum: sigillum -> proiectio ---\n");

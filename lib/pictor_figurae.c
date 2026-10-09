@@ -27,45 +27,112 @@ color_thematis (
 /* color palettae Aquinas (ut ictus pinguntur): RGBA ex
  * color_ex_palette - non COLOR_MANDATI_INDEX, quod rasterizatores per
  * indices colorationis (munera syntaxeos) resolvunt */
-/* spongia (praevisio): quadratum latus x latus centratum in (cx, cy),
- * colore fundi - ut quadratum_spongiae documenti */
+/* praevisio verrendi (penicillus, spongia): sigillum in puncto primo
+ * et per lineam (pictor_lineam_ambulare, regula documenti); gradus >
+ * I (penicillus magnus): sigillum quoque gradu et in fine segmenti
+ * solum - fasciae minus, ora vix differt */
+nomen structura {
+         Mandata* m;
+             s32  n;
+             b32  quadratum;
+    ColorMandati  color;
+             s32  gradus;
+             s32  numerus;
+} Praevidendum;
+
+/* sigillum: quadratum n x n aut discus per fascias (lineas I altas)
+ * centratum in (cx, cy) - [c - n/2, c - n/2 + n) */
 interior vacuum
-quadratum_spongiae (
-    Mandata* m,
-        s32  cx,
-        s32  cy,
-        s32  latus)
+sigillum_praevidere (
+    Praevidendum* pv,
+             s32  cx,
+             s32  cy)
 {
     Fines g;
+      s32 i;
+      s32 j;
+      s32 a;
 
-    g.x         = cx - latus / II;
-    g.y         = cy - latus / II;
-    g.latitudo  = latus;
-    g.altitudo  = latus;
-    mandata_rectangulum(m, g, color_thematis(COLOR_BACKGROUND), VERUM);
+    si (pv->quadratum)
+    {
+        g.x         = cx - pv->n / II;
+        g.y         = cy - pv->n / II;
+        g.latitudo  = pv->n;
+        g.altitudo  = pv->n;
+        mandata_rectangulum(pv->m, g, pv->color, VERUM);
+        redde;
+    }
+    per (j = ZEPHYRUM; j < pv->n; j++)
+    {
+        a = -I;
+        per (i = ZEPHYRUM; i <= pv->n; i++)
+        {
+            si (i < pv->n && pictor_disci_pixelum(pv->n, i, j))
+            {
+                si (a < ZEPHYRUM)
+                {
+                    a = i;
+                }
+            }
+            alioquin si (a >= ZEPHYRUM)
+            {
+                g.x         = cx - pv->n / II + a;
+                g.y         = cy - pv->n / II + j;
+                g.latitudo  = i - a;
+                g.altitudo  = I;
+                mandata_rectangulum(pv->m, g, pv->color, VERUM);
+                a = -I;
+            }
+        }
+    }
 }
 
-/* spongia (praevisio): regula documenti (spongiam_applicare) -
- * quadratum in puncto primo, deinde in quoque puncto lineae
- * (Bresenham) post initium segmenti; margo cursoris in fine */
+interior vacuum
+vestigium_praevidendi (
+       s32  x,
+       s32  y,
+    vacuum* ctx)
+{
+    Praevidendum* pv;
+
+    pv = (Praevidendum*)ctx;
+    pv->numerus++;
+    si (pv->numerus % pv->gradus == ZEPHYRUM)
+    {
+        sigillum_praevidere(pv, x, y);
+    }
+}
+
+interior vacuum
+verrere_praevidere (
+       constans Componens* c,
+             Praevidendum* pv)
+{
+    i32 i;
+
+    sigillum_praevidere(pv, c->puncta[ZEPHYRUM].x,
+        c->puncta[ZEPHYRUM].y);
+    per (i = I; i < c->numerus_punctorum; i++)
+    {
+        pv->numerus = ZEPHYRUM;
+        pictor_lineam_ambulare(c->puncta[i - I].x, c->puncta[i - I].y,
+            c->puncta[i].x, c->puncta[i].y, vestigium_praevidendi, pv);
+        si (pv->numerus % pv->gradus != ZEPHYRUM)
+        {
+            sigillum_praevidere(pv, c->puncta[i].x, c->puncta[i].y);
+        }
+    }
+}
+
+/* spongia (praevisio): quadrata colore fundi; margo cursoris in fine */
 interior vacuum
 spongiam_praevidere (
     constans Componens* c,
                Mandata* m)
 {
-    integer latus;
-        s32 x;
-        s32 y;
-        s32 x1;
-        s32 y1;
-        s32 dx;
-        s32 dy;
-        s32 sx;
-        s32 sy;
-        s32 error;
-        s32 e2;
-        i32 i;
-      Fines g;
+         integer latus;
+    Praevidendum pv;
+           Fines g;
 
     latus = ZEPHYRUM;
     (vacuum)sscanf(chorda_ut_cstr(c->titulus, m->piscina), "%d",
@@ -74,38 +141,19 @@ spongiam_praevidere (
     {
         redde;
     }
-    x = c->puncta[ZEPHYRUM].x;
-    y = c->puncta[ZEPHYRUM].y;
-    quadratum_spongiae(m, x, y, (s32)latus);
-    per (i = I; i < c->numerus_punctorum; i++)
-    {
-        x1     = c->puncta[i].x;
-        y1     = c->puncta[i].y;
-        dx     = x1 > x ? x1 - x : x - x1;
-        dy     = -(y1 > y ? y1 - y : y - y1);
-        sx     = x < x1 ? I : -I;
-        sy     = y < y1 ? I : -I;
-        error  = dx + dy;
-        dum (x != x1 || y != y1)
-        {
-            e2 = II * error;
-            si (e2 >= dy)
-            {
-                error  += dy;
-                x      += sx;
-            }
-            si (e2 <= dx)
-            {
-                error  += dx;
-                y      += sy;
-            }
-            quadratum_spongiae(m, x, y, (s32)latus);
-        }
-    }
-    g.x         = x - (s32)latus / II;
-    g.y         = y - (s32)latus / II;
-    g.latitudo  = (s32)latus;
-    g.altitudo  = (s32)latus;
+    pv.m          = m;
+    pv.n          = (s32)latus;
+    pv.quadratum  = VERUM;
+    pv.color      = color_thematis(COLOR_BACKGROUND);
+    pv.gradus     = I;
+    pv.numerus    = ZEPHYRUM;
+    verrere_praevidere(c, &pv);
+    g.x = c->puncta[c->numerus_punctorum - I].x - (s32)latus
+        / II;
+    g.y = c->puncta[c->numerus_punctorum - I].y - (s32)latus
+        / II;
+    g.latitudo = (s32)latus;
+    g.altitudo = (s32)latus;
     mandata_rectangulum(m, g, color_thematis(COLOR_BORDER), FALSUM);
 }
 
@@ -144,6 +192,35 @@ figura_prospectus (
         mandata_rectangulum_exemplar(m, f, color_thematis(COLOR_BORDER),
             EXEMPLAR_FOCI);
     }
+}
+
+/* P4a penicillus (praevisio): disci per fascias colore vero (titulus
+ * "amplitudo color"; color -1 nihil); gradus n/IV - exemplar in
+ * solutione solum apparet */
+interior vacuum
+penicillum_praevidere (
+    constans Componens* c,
+               Mandata* m)
+{
+         integer amplitudo;
+         integer color;
+    Praevidendum pv;
+
+    amplitudo  = I;
+    color      = -I;
+    (vacuum)sscanf(chorda_ut_cstr(c->titulus, m->piscina), "%d %d",
+        &amplitudo, &color);
+    si (amplitudo < I || color < ZEPHYRUM || color >= XVI)
+    {
+        redde;
+    }
+    pv.m          = m;
+    pv.n          = (s32)amplitudo;
+    pv.quadratum  = FALSUM;
+    pv.color      = color_thematis_index((s32)color);
+    pv.gradus     = pv.n / IV > I ? pv.n / IV : I;
+    pv.numerus    = ZEPHYRUM;
+    verrere_praevidere(c, &pv);
 }
 
 /* <purus/> */
@@ -241,6 +318,12 @@ figura_tabulae (
                  && chorda_aequalis_literis(c->actio, "spongia.ictus"))
     {
         spongiam_praevidere(c, m);
+    }
+    alioquin si (   c->numerus_punctorum > ZEPHYRUM
+                 && chorda_aequalis_literis(c->actio,
+                 "penicillus.ictus"))
+    {
+        penicillum_praevidere(c, m);
     }
     alioquin
     {
@@ -468,6 +551,39 @@ figura_quadrati (
     si (chorda_aequalis_literis(t, "instrumentum:spongia"))
     {
         iconem_pingere(m, icon_spongiae, II, II);
+        redde;
+    }
+    /* P4a: magnitudo - discus diametri n centratus (n > XVI:
+     * numerus) */
+    si (   t.mensura > X
+        && memcmp(t.datum, "magnitudo:", X) == ZEPHYRUM)
+    {
+        Praevidendum pv;
+             integer n;
+
+        n = ZEPHYRUM;
+        (vacuum)sscanf(chorda_ut_cstr(t, m->piscina) + X, "%d", &n);
+        si (n > XVI)
+        {
+            reliquum.datum    = t.datum + X;
+            reliquum.mensura  = t.mensura - X;
+            mandata_textus(m, (c->fines.latitudo
+                - (s32)reliquum.mensura * VI) / II,
+                (c->fines.altitudo - VIII) / II, reliquum, ZEPHYRUM,
+                color_thematis(COLOR_TEXT));
+            redde;
+        }
+        si (n >= I)
+        {
+            pv.m          = m;
+            pv.n          = (s32)n;
+            pv.quadratum  = FALSUM;
+            pv.color      = color_thematis(COLOR_TEXT);
+            pv.gradus     = I;
+            pv.numerus    = ZEPHYRUM;
+            sigillum_praevidere(&pv, c->fines.latitudo / II,
+                c->fines.altitudo / II);
+        }
         redde;
     }
     /* P3: exemplar - "exemplar:<n>" 1-bit colore textus (optio),

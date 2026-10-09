@@ -200,7 +200,8 @@ pictor_montare (
         || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
                elementum(piscina, id,
                    " instrumentum=\"penicillus\" color_primus=\"0\""
-                   " color_secundus=\"-1\" magnitudo=\"1\" zoom=\"1\""
+                   " color_secundus=\"-1\" magnitudo_penicilli=\"1\""
+                   " magnitudo_aspergilli=\"1\" zoom=\"1\""
                    " focus=\"tabula\"")))
     {
         fprintf(stderr, "pictor: elementum initiale: %.*s\n",

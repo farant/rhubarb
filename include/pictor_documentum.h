@@ -16,7 +16,8 @@
  * semine. instrumentum "spongia": quadratum SPONGIAE_LATUS x magnitudo
  * centratum in quoque puncto lineae inter puncta, colore fundi
  * thematis (ut vacatio); color ignoratur. Instrumentum absens aut
- * aliud: penicillus.
+ * aliud: penicillus: discus diametri magnitudo (pixela) in puncto primo
+ * et in quoque puncto lineae inter puncta (pictor_lineam_ambulare).
  * exemplar (P3; exemplaria.h, absens = 0 solidus): pixelum quod
  * penicillus aut aspergillum pingit colorem 'color' accipit ubi bitus
  * exemplaris ad (x, y) TABULAE positus est, 'color_secundus' ubi non;
@@ -44,6 +45,29 @@
 #define PICTOR_GUTTAE_PUNCTO      VI
 #define PICTOR_GUTTA_MS           VIII
 #define PICTOR_SPONGIAE_LATUS     XVI    /* x magnitudo */
+
+/* vestigium lineae: vocatur in puncto (x, y) */
+nomen vacuum (*PictorVestigium) (s32 x, s32 y, vacuum* ctx);
+
+/* puncta lineae (Bresenham) a (x0, y0) ad (x1, y1), initio EXCLUSO,
+ * fine incluso - regula penicilli et spongiae (documentum et
+ * praevisio eandem sequuntur) */
+vacuum
+pictor_lineam_ambulare (
+                s32  x0,
+                s32  y0,
+                s32  x1,
+                s32  y1,
+    PictorVestigium  vestigium,
+             vacuum* ctx);
+
+/* discus penicilli diametri n: pixelum (i, j) quadrati n x n (origo
+ * [x - n/2, y - n/2]) intra discum? (n <= III: quadratum plenum) */
+b32
+pictor_disci_pixelum (
+    s32 n,
+    s32 i,
+    s32 j);
 
 /* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
  * determinatus ex (semen, i, k) per sors */

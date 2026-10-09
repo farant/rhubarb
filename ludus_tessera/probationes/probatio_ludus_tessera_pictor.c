@@ -243,9 +243,9 @@ principale (vacuum)
             != color_mensae);
     }
     /* 013 B3 / P1a: linea status in lineis III ULTIMIS; titulus in
-     * media (centratus), post quadrata IV (P3: x CX -> columna XVIII;
-     * olim LXXXIV = XIV) */
-    CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XVIII,
+     * media (centratus), post quadrata V (P4a: x CXXXVI -> columna
+     * XXIII, proxima; P3 CX = XVIII; olim LXXXIV = XIV) */
+    CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XXIII,
         LINEAE - II).signum, (i32)'p');
 
     imprimere("\n--- IV. amplitudo mutata: linea status sequitur"
@@ -262,7 +262,7 @@ principale (vacuum)
         ludus_tessera_quadrum(lt, M + CC);
         CREDO_VERUM (tessera_praesentare(opus));
         CREDO_AEQUALIS_I32 ((i32)tessera_altitudo(opus), XX);
-        CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XVIII,
+        CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XXIII,
             XVIII).signum, (i32)'p');
     }
 

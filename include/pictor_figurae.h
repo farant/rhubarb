@@ -57,7 +57,8 @@ figura_tabulae (
  * "exemplar:<n>" (exemplar 1-bit colore textus; optio palettae),
  * "exemplar:<n>:<primus>:<secundus>" (exemplar coloribus veris, ut
  * pingetur - quadratum et optiones palettae; nullus = fundus
- * quadrati; ambo nulli: 1-bit).
+ * quadrati; ambo nulli: 1-bit), "magnitudo:<n>" (discus diametri n
+ * centratus colore textus; n > XVI: numerus).
  * Margo colore marginis; titulus in ":electum" desinens (optio
  * electa in palette, P1b): margo colore accentus. */
 vacuum

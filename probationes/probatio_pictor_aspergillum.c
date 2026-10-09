@@ -402,12 +402,13 @@ s32 principale (vacuum)
         }
         /* icon aspergilli: XLIV pixela ('#'); crux coloris nulli: II
          * lineae; color primus 0 impletus bis (quadratum coloris et
-         * exemplar solidum, P3); textus post quadrata (LXXXIV + XX +
-         * VI) */
-        CREDO_AEQUALIS_I32(icon, XLIV);
+         * exemplar solidum, P3); textus post quadrata (CX + XX + VI,
+         * P4a quadratum quintum) */
+        /* + discus magnitudinis I (pixelum unum colore textus) */
+        CREDO_AEQUALIS_I32(icon, XLIV + I);
         CREDO_AEQUALIS_I32(crux, II);
         CREDO_AEQUALIS_I32(impletum, II);
-        CREDO_AEQUALIS_S32(textus_x, CX);
+        CREDO_AEQUALIS_S32(textus_x, CXXXVI);
     }
 
     imprimere("\n--- VII: praevisio ante solutionem ---\n");

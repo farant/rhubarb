@@ -6,12 +6,15 @@
     <attributum nomen="instrumentum"    genus="nomen"/>
     <attributum nomen="color_primus"    genus="numerus"/>
     <attributum nomen="color_secundus"  genus="numerus"/>
-    <attributum nomen="magnitudo"       genus="numerus"/>
+    <attributum nomen="magnitudo_penicilli" genus="numerus"
+      nota="P4a: diametrus penicilli (pixela); absens = 1"/>
+    <attributum nomen="magnitudo_aspergilli" genus="numerus"
+      nota="P4: multiplex radii aspergilli; absens = 1"/>
     <attributum nomen="exemplar"        genus="numerus"
       nota="P3: exemplaria.h (0 solidus); absens = 0"/>
     <attributum nomen="palette"         genus="nomen"
       nota="P1b: palette aperta (instrumentum, color_primus,
-            color_secundus, exemplar); absens = nulla"/>
+            color_secundus, exemplar, magnitudo); absens = nulla"/>
     <attributum nomen="semen"           genus="numerus"
       nota="aspergillum: semen ictus currentis (praevisio guttarum)"/>
     <attributum nomen="stratum_activum" genus="numerus"/>

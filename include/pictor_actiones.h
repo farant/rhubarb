@@ -67,7 +67,7 @@ pictor_spongia_ictus (
 
 /* <tractator/> quadratum lineae status ictum: palettam suam aperit
  * (ephemera 'palette' = instrumentum / color_primus / color_secundus
- * / exemplar);
+ * / exemplar / magnitudo);
  * eadem iterum: claudit */
 b32
 pictor_palettam_aperire (
@@ -96,6 +96,18 @@ pictor_colorem_ponere (
  * attributi 'exemplar' */
 b32
 pictor_exemplar_ponere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> optio magnitudinis ictum ('optio.magnitudo.<n>'):
+ * magnitudinem penicilli ponit, palettam claudit. Dominus attributorum
+ * 'magnitudo_penicilli' et 'magnitudo_aspergilli' */
+b32
+pictor_magnitudinem_ponere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,
