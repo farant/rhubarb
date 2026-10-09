@@ -4,6 +4,8 @@
 #include "thema.h"
 #include "exemplaria.h"
 
+#include <stdio.h>
+
 /* indicium foci: exemplar marginis lateris focati (vicus-latera) */
 #define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
 
@@ -89,10 +91,44 @@ figura_tabulae (
         mandata_rectangulum(m, margo, color_thematis(COLOR_BORDER),
                             FALSUM);
     }
-    per (i = I; i < c->numerus_punctorum; i++)
+    /* aspergillum (actio): guttae puncti cuiusque ex semine et radio
+     * in titulo - eaedem ac in actu (pictor_gutta), sine morae
+     * guttis (eae solutione apparent) */
+    si (   c->numerus_punctorum > ZEPHYRUM
+        && chorda_aequalis_literis(c->actio, "aspergillum.ictus"))
     {
-        mandata_linea(m, c->puncta[i - I], c->puncta[i], I,
-                      color_thematis(COLOR_ACCENT_PRIMARY));
+      longus semen;
+     integer radius;
+         s32 dx;
+         s32 dy;
+         i32 k;
+       Fines g;
+
+        semen   = ZEPHYRUM;
+        radius  = ZEPHYRUM;
+        (vacuum)sscanf(chorda_ut_cstr(c->titulus, m->piscina), "%ld %d",
+            &semen, &radius);
+        g.latitudo = I;
+        g.altitudo = I;
+        per (i = ZEPHYRUM; i < c->numerus_punctorum; i++)
+        {
+            per (k = ZEPHYRUM; k < PICTOR_GUTTAE_PUNCTO; k++)
+            {
+                pictor_gutta((s64)semen, i, k, (s32)radius, &dx, &dy);
+                g.x = c->puncta[i].x + dx;
+                g.y = c->puncta[i].y + dy;
+                mandata_rectangulum(m, g,
+                    color_thematis(COLOR_ACCENT_PRIMARY), VERUM);
+            }
+        }
+    }
+    alioquin
+    {
+        per (i = I; i < c->numerus_punctorum; i++)
+        {
+            mandata_linea(m, c->puncta[i - I], c->puncta[i], I,
+                          color_thematis(COLOR_ACCENT_PRIMARY));
+        }
     }
     si (c->numerus_punctorum > ZEPHYRUM)
     {

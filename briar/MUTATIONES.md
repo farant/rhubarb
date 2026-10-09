@@ -19,6 +19,11 @@ Leges chartae:
 
 ## inedita
 
+- corpus: pictor - aspergillum (MacPaint): `PictorActiones` campos
+  `tempora`, `semen` addit; `pictor_aspergillum_ictus`, `pictor_gutta`
+  novae; actum `<ictus instrumentum="aspergillum" semen>` cum `t`
+  punctorum.
+
 - corpus: fons 6x8 - XL glyphae Latin-1 olim vacuae (× © ® ¹ ³ ¾,
   capitales accentuatae, ã õ ø ý þ ð...); sedes vacua nunc TOFU, non
   invisibilis.

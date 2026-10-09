@@ -2,6 +2,7 @@
  * cauda per historia */
 
 #include "pictor_documentum.h"
+#include "sors.h"
 #include "delineare_mandata.h"
 #include "delineare.h"
 #include "thema.h"
@@ -133,6 +134,103 @@ segmentum_praecidere (
     }
 }
 
+/* gutta: sors ex (semen, puncto, gutta) - rivus derivatus, nulla
+ * dependentia ordinis; rejectio in disco (XVI tentamina; deinde
+ * centrum) */
+vacuum
+pictor_gutta (
+    s64  semen,
+    i32  i,
+    i32  k,
+    s32  radius,
+    s32* dx,
+    s32* dy)
+{
+    Sors s;
+     s32 x;
+     s32 y;
+     i32 n;
+
+    *dx = ZEPHYRUM;
+    *dy = ZEPHYRUM;
+    si (radius < I)
+    {
+        redde;
+    }
+    sors_seminare(&s, (i64)semen, (i64)i * (i64)M + (i64)k);
+    per (n = ZEPHYRUM; n < XVI; n++)
+    {
+        x = sors_inter(&s, -radius, radius);
+        y = sors_inter(&s, -radius, radius);
+        si (x * x + y * y <= radius * radius)
+        {
+            *dx = x;
+            *dy = y;
+            redde;
+        }
+    }
+}
+
+/* aspergillum: guttae circa quodque punctum (vide caput) */
+interior vacuum
+guttas_applicare (
+    PictorDocumentum* doc,
+           StmlNodus* ictus,
+               Color  color,
+                 s32  magnitudo_penicilli)
+{
+    StmlNodus* punctum;
+          s64  semen;
+          s32  radius;
+          s32  x;
+          s32  y;
+          s32  t;
+          s32  t_ante;
+          s32  dx;
+          s32  dy;
+          s32  numerus;
+          i32  i;
+          i32  k;
+          i32  n;
+          i32  ordo;
+
+    semen   = (s64)attributum_s32(ictus, "semen", ZEPHYRUM);
+    radius  = PICTOR_ASPERGILLI_RADIUS * magnitudo_penicilli;
+    n       = stml_numerus_liberorum(ictus);
+    t_ante  = ZEPHYRUM;
+    ordo    = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        punctum = stml_liberum_ad_indicem(ictus, i);
+        si (punctum->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        x        = attributum_s32(punctum, "x", ZEPHYRUM);
+        y        = attributum_s32(punctum, "y", ZEPHYRUM);
+        t        = attributum_s32(punctum, "t", t_ante);
+        numerus  = PICTOR_GUTTAE_PUNCTO;
+        si (ordo > ZEPHYRUM && t > t_ante)
+        {
+            numerus += (t - t_ante) / PICTOR_GUTTA_MS;
+        }
+        per (k = ZEPHYRUM; k < (i32)numerus; k++)
+        {
+            pictor_gutta(semen, ordo, k, radius, &dx, &dy);
+            si (   x + dx >= ZEPHYRUM && y + dy >= ZEPHYRUM
+                && x + dx < (s32)doc->tabula->latitudo
+                && y + dy < (s32)doc->tabula->altitudo)
+            {
+                tabula_pixelorum_ponere_pixelum(doc->tabula,
+                    (i32)(x + dx), (i32)(y + dy),
+                    color_ad_pixelum(color));
+            }
+        }
+        t_ante = t;
+        ordo++;
+    }
+}
+
 /* <ictus instrumentum color magnitudo><punctum x y/>...</ictus> */
 interior vacuum
 ictum_applicare (
@@ -171,6 +269,14 @@ ictum_applicare (
     si (magnitudo_penicilli < I)
     {
         magnitudo_penicilli = I;
+    }
+    si (   stml_attributum_capere(ictus, "instrumentum")
+        && chorda_aequalis_literis(*stml_attributum_capere(ictus,
+               "instrumentum"), "aspergillum"))
+    {
+        guttas_applicare(doc, ictus, color, magnitudo_penicilli);
+        delineare_restituere_contextum(ctx);
+        redde;
     }
     lat     = (s64)doc->tabula->latitudo;
     alt     = (s64)doc->tabula->altitudo;

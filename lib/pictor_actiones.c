@@ -33,7 +33,20 @@ punctum_addere (
  * Mutator insulae
  * ================================================== */
 
-hic_manens character litterae_penicillus[] = "penicillus";
+hic_manens character litterae_penicillus[]  = "penicillus";
+hic_manens character litterae_aspergillum[] = "aspergillum";
+
+/* aspergillum: semen ictus in ephemera (praevisio guttarum) */
+interior vacuum
+semen_ponere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "semen",
+        chorda_ut_cstr(chorda_ex_s64(*(constans s64*)ctx, p), p));
+}
 
 interior vacuum
 instrumentum_ponere (
@@ -84,19 +97,24 @@ attributum_s32 (
     redde praestitutum;
 }
 
+/* actum ictus pendentis; pa NIHIL = penicillus, aliter aspergillum
+ * (semen, t cuiusque puncti ab initio ictus) */
 interior chorda
 ictum_scribere (
-    constans InsulaRamus* ramus,
-          constans Motus* motus,
-                 Piscina* p)
+       constans InsulaRamus* ramus,
+             constans Motus* motus,
+    constans PictorActiones* pa,
+                    Piscina* p)
 {
      chorda  s;
     Punctum* q;
         i32  i;
         i32  n;
+        s64  t0;
 
-    s = chorda_ex_literis("<ictus instrumentum=\"penicillus\" color=\"",
-        p);
+    s = chorda_ex_literis(pa ? "<ictus instrumentum=\"aspergillum\""
+                             : "<ictus instrumentum=\"penicillus\"", p);
+    s = chorda_concatenare(s, chorda_ex_literis(" color=\"", p), p);
     s = chorda_concatenare(s,
         chorda_ex_s32(attributum_s32(ramus, "color_primus", ZEPHYRUM),
         p), p);
@@ -104,8 +122,16 @@ ictum_scribere (
         p);
     s = chorda_concatenare(s,
         chorda_ex_s32(attributum_s32(ramus, "magnitudo", I), p), p);
+    si (pa)
+    {
+        s = chorda_concatenare(s, chorda_ex_literis("\" semen=\"", p),
+            p);
+        s = chorda_concatenare(s, chorda_ex_s64(pa->semen, p), p);
+    }
     s = chorda_concatenare(s, chorda_ex_literis("\">", p), p);
     n = xar_numerus(motus->ictus_pendens);
+    t0 = (pa && pa->tempora && xar_numerus(pa->tempora) > ZEPHYRUM)
+        ? *(s64*)xar_obtinere(pa->tempora, ZEPHYRUM) : ZEPHYRUM;
     per (i = ZEPHYRUM; i < n; i++)
     {
         q = (Punctum*)xar_obtinere(motus->ictus_pendens, i);
@@ -114,6 +140,13 @@ ictum_scribere (
         s = chorda_concatenare(s, chorda_ex_s32(q->x, p), p);
         s = chorda_concatenare(s, chorda_ex_literis("\" y=\"", p), p);
         s = chorda_concatenare(s, chorda_ex_s32(q->y, p), p);
+        si (pa && pa->tempora && i < xar_numerus(pa->tempora))
+        {
+            s = chorda_concatenare(s, chorda_ex_literis("\" t=\"", p),
+                p);
+            s = chorda_concatenare(s, chorda_ex_s64(
+                *(s64*)xar_obtinere(pa->tempora, i) - t0, p), p);
+        }
         s = chorda_concatenare(s, chorda_ex_literis("\"/>", p), p);
     }
     s = chorda_concatenare(s, chorda_ex_literis("</ictus>", p), p);
@@ -125,15 +158,34 @@ ictum_scribere (
  * Tractatores
  * ================================================== */
 
-/* <tractator/> */
-b32
-pictor_penicillus_ictus (
+/* tempus puncti (aspergillum) */
+interior vacuum
+tempus_addere (
+     PictorActiones* pa,
+                s64  tempus)
+{
+    si (!pa->tempora)
+    {
+        pa->tempora = xar_creare(pa->doc->piscina,
+            (i32)magnitudo(s64));
+    }
+    si (pa->tempora)
+    {
+        *(s64*)xar_addere(pa->tempora) = tempus;
+    }
+}
+
+/* ictus communis penicilli et aspergilli (actio instrumentum figit -
+ * tractator de statu instrumenti non ramificat) */
+interior b32
+ictum_tractare (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,
              Componens* nodus,
       constans Eventus* ev,
-                vacuum* ctx)
+                vacuum* ctx,
+                   b32  aspergillum)
 {
        InsulaRamus  ramus;
     PictorActiones* pa;
@@ -157,6 +209,23 @@ pictor_penicillus_ictus (
             motus_captura_ponere(motus, nodus->id);
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             mutare_motum(motus, punctum_addere, &p, ev->tempus);
+            si (aspergillum)
+            {
+                /* semen ex tempore et cursore historiae: ictus diversi
+                 * (etiam eodem loco) guttas diversas */
+                pa->semen = ((s64)ev->tempus
+                             + (s64)pictor_documentum_cursor(pa->doc)
+                               * ((s64)M * (s64)M + (s64)III))
+                          & (s64)0x7FFFFFFF;
+                si (pa->tempora)
+                {
+                    xar_vacare(pa->tempora);
+                }
+                tempus_addere(pa, ev->tempus);
+                ramus = ramus_pictoris(repo, ctx);
+                (vacuum)mutare_ramum(&ramus, INSULA_EPHEMERA,
+                    semen_ponere, &pa->semen);
+            }
             redde VERUM;
         casus EVENTUS_MUS_MOTUS:
             si (chorda_vacua(motus->captura))
@@ -164,15 +233,27 @@ pictor_penicillus_ictus (
                 redde FALSUM;
             }
             mutare_motum(motus, punctum_addere, &p, ev->tempus);
+            si (aspergillum)
+            {
+                tempus_addere(pa, ev->tempus);
+            }
             redde VERUM;
         casus EVENTUS_MUS_LIBERATUS:
             si (chorda_vacua(motus->captura))
             {
                 redde FALSUM;
             }
+            /* aspergillum: punctum solutionis - mora ante eam guttas
+             * addit */
+            si (aspergillum)
+            {
+                mutare_motum(motus, punctum_addere, &p, ev->tempus);
+                tempus_addere(pa, ev->tempus);
+            }
             ramus = ramus_pictoris(repo, ctx);
             pictor_documentum_actum(pa->doc,
-                ictum_scribere(&ramus, motus, pa->doc->piscina));
+                ictum_scribere(&ramus, motus, aspergillum ? pa : NIHIL,
+                pa->doc->piscina));
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             /* ictus finitus ephemera non tangit */
             motus->sordida = FALSUM;
@@ -195,6 +276,34 @@ pictor_penicillus_ictus (
 
 /* <tractator/> */
 b32
+pictor_penicillus_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    redde ictum_tractare(repo, motus, destinatio, nodus, ev, ctx,
+        FALSUM);
+}
+
+/* <tractator/> */
+b32
+pictor_aspergillum_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    redde ictum_tractare(repo, motus, destinatio, nodus, ev, ctx,
+        VERUM);
+}
+
+/* <tractator/> */
+b32
 pictor_instrumentum_eligere (
     InsulaRepositorium* repo,
                  Motus* motus,
@@ -213,13 +322,15 @@ pictor_instrumentum_eligere (
     }
     /* clavis LOGICA (runa sine maiuscula, dispositionis praesentis);
      * sub Cmd/Ctrl brevitas est (Cmd+P imprimere), non 'p' (A5) */
-    si (   ev->datum.clavis.runa == 'p'
+    si (   (ev->datum.clavis.runa == 'p'
+        || ev->datum.clavis.runa == 'a')
         && (ev->datum.clavis.modificantes & (MOD_SUPER | MOD_IMPERIUM))
                == ZEPHYRUM)
     {
         ramus = ramus_pictoris(repo, ctx);
         redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
-            litterae_penicillus);
+            ev->datum.clavis.runa == 'p' ? litterae_penicillus
+                                         : litterae_aspergillum);
     }
     redde FALSUM;
 }
@@ -234,6 +345,8 @@ pictor_actiones_registrare (
         redde;
     }
     actio_registrare(reg, "penicillus.ictus", pictor_penicillus_ictus,
+        ctx);
+    actio_registrare(reg, "aspergillum.ictus", pictor_aspergillum_ictus,
         ctx);
     actio_registrare(reg, "instrumentum.eligere",
                      pictor_instrumentum_eligere, ctx);

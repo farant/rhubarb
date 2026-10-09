@@ -14,12 +14,17 @@
 #include "latina.h"
 #include "actio.h"
 #include "pictor_documentum.h"
+#include "xar.h"
 
 nomen structura {
     PictorDocumentum* doc;
          InsulaRamus  ramus;   /* R3: status pictoris; repo NIHIL =
                                 * radix repositorii tractatori dati -
                                 * structuram TOTAM nulla (memset) */
+                 Xar* tempora; /* aspergillum: tempus (ms) cuiusque
+                                * puncti pendentis; NIHIL donec
+                                * primum */
+                 s64 semen;   /* aspergillum: semen ictus currentis */
 } PictorActiones;
 
 vacuum
@@ -37,7 +42,19 @@ pictor_penicillus_ictus (
       constans Eventus* ev,
                 vacuum* ctx);
 
-/* <tractator/> */
+/* <tractator/> aspergillum (MacPaint): ut penicillus capit et puncta
+ * colligit; actum cum semine et tempore cuiusque puncti scribit
+ * (punctum solutionis quoque: mora ante solutionem guttas addit) */
+b32
+pictor_aspergillum_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> 'p' penicillus, 'a' aspergillum */
 b32
 pictor_instrumentum_eligere (
     InsulaRepositorium* repo,

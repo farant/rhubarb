@@ -3,7 +3,9 @@
 #include "pictor_componentia.h"
 #include "xar.h"
 #include "dispositio.h"
+#include "pictor_documentum.h"
 
+#include <stdio.h>
 #include <string.h>
 
 
@@ -103,6 +105,10 @@ pictor_actio_instrumenti (
     si (chorda_aequalis_literis(instrumentum, "penicillus"))
     {
         redde "penicillus.ictus";
+    }
+    si (chorda_aequalis_literis(instrumentum, "aspergillum"))
+    {
+        redde "aspergillum.ictus";
     }
     redde "";
 }
@@ -257,6 +263,20 @@ pictor_componere (
                                                         i);
         }
         tabula->numerus_punctorum = n;
+        /* aspergillum: praevisio guttarum - semen et radius in titulo
+         * tabulae (data, ut puncta; figura ex eis guttas pingit) */
+        si (chorda_aequalis_literis(instrumentum, "aspergillum"))
+        {
+            character titulus_guttarum[XLVIII];
+
+            sprintf(titulus_guttarum, "%ld %d",
+                (longus)attributum_s32(&ramus, INSULA_EPHEMERA, "semen",
+                    ZEPHYRUM),
+                (integer)(PICTOR_ASPERGILLI_RADIUS
+                          * attributum_s32(&ramus, INSULA_EPHEMERA,
+                                "magnitudo", I)));
+            componens_ponere_titulum(tabula, titulus_guttarum);
+        }
     }
 
     status = nodus(piscina, intern, "status", PARTES_TITULUS, fs.x,

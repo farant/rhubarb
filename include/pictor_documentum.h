@@ -6,8 +6,12 @@
  * hic pars pictoris sola: pixela RGBA, vacatio alba, ictus pingere,
  * manifestum 'documentum' (dimensiones, intervallum).
  *
- * Acta v1: <ictus instrumentum color magnitudo><punctum x y/>...
- * </ictus>, <ramus ab/>. Cetera (§4) ignorantur cum nota.
+ * Acta v1: <ictus instrumentum color magnitudo [semen]><punctum x y
+ * [t]/>...</ictus>, <ramus ab/>. Cetera (§4) ignorantur cum nota.
+ * instrumentum "aspergillum" (MacPaint): guttae (pixela singula) in
+ * disco circa quodque punctum; GUTTAE_PUNCTO per punctum et una plus
+ * per GUTTA_MS morae (t, ms ab initio ictus) - eaedem semper ex
+ * semine. Instrumentum absens aut aliud: penicillus.
  */
 
 #ifndef PICTOR_DOCUMENTUM_H
@@ -25,6 +29,21 @@
 #include "tabula_pixelorum.h"   /* typus solus: fenestra.h Cocoa
                                   * in terminalem trahebat (013 A4) */
 #include "imago_typus.h"
+
+#define PICTOR_ASPERGILLI_RADIUS  VIII   /* x magnitudo */
+#define PICTOR_GUTTAE_PUNCTO      VI
+#define PICTOR_GUTTA_MS           VIII
+
+/* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
+ * determinatus ex (semen, i, k) per sors */
+vacuum
+pictor_gutta (
+    s64  semen,
+    i32  i,
+    i32  k,
+    s32  radius,
+    s32* dx,
+    s32* dy);
 
 nomen structura {
                 Volumen* volumen;
