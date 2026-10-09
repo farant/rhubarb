@@ -85,3 +85,49 @@ line): exactly those three plus probatio_manus, which re-opens before
 its read and was already fine. Lesson for the substrate: a gate whose
 "pass" is the absence of a failure record cannot distinguish "closed"
 from "passed"; only a positive count can.
+
+## 2026-10-09 - credo v2: sections, verdict file, NECESSE (header approved by Fran)
+
+Additive: `CredoSectio` tables + `credo_suitam_currere(suita, sectiones)`;
+the 488 existing credo files are untouched and move when touched. Each
+section gets its OWN piscina (destroyed after `purgare`), runs
+parare -> probare -> purgare (purgare always, also after a NECESSE abort),
+and gets one TSV record (`CREDO_VERDICTA=<path>`): SECTIO suita titulus
+exitus praeteriti totales ms filum:versus genus expressio; then SUITA.
+Lines are written AND flushed per section, so a missing SUITA line =
+the suite crashed, and the record still names what finished.
+`CREDO_SECTIO=<titulus>` runs one section; an unknown title is a named
+refusal (rc 1, SUITA FRACTA 0/0). Human output unchanged (Probans
+headers, dots, FRACTA lines, compendium) plus one `=== SECTIONES: k/n
+===` line and a one-line note per non-passing section - runners,
+pythonica's relatio and fabrica (exit code + tail) need no change.
+
+NECESSE = record, then `longjmp` to the runner. setjmp sits in a tiny
+function whose locals never change after it (post-longjmp locals are
+indeterminate otherwise). In a CREDO_NON_RUIT child the copied jmp_buf
+would resume the RUNNER in the child and run the rest of the suite
+twice - so credo now tracks `_credo_in_filio` (set in
+credo_processus_incipere) and a child's NECESSE `_exit`s. Time via
+gettimeofday: in the POSIX lexicon; clock_gettime is not, and a tempus
+dependency would ripple into every test's closure.
+
+Gate `credo` = tools/credo_fumus.sh (three inline fixture suites:
+mixed outcomes, all-green + filter + no-file, crash mid-suite). Plants
+(silva.planta, fumus as callable gate), all red: purgare skipped after
+abort; NECESSE not jumping; child jumping; no per-section flush; tab
+not escaped; VACUA read as TRANSIIT. TRAP: the no-flush plant stayed
+GREEN while the crash fixture used abort() - macOS abort() flushes
+stdio. A real crash (SIGKILL, SEGV) flushes nothing: fixture now
+raise(SIGKILL).
+
+Pilot: the six fabrica suites (38 sections) converted by script - each
+`{ ... }` block in principale became `_probare_<title>` with the block
+kept VERBATIM as a nested block (no re-indentation), `piscina =
+c->piscina` only where used, the Probans line dropped (the runner
+prints it). Oracle: per-section passed/total from the OLD run (dots
+between headers; sums matched the known totals) == the new verdict
+records: 38/38 sections, same titles and order, 836 assertions. A
+fabrica plant now lands as `SECTIO ... familias FRACTA 40/42
+<file:line> credo_nihil <expression>`. Lint: function names use forms
+the lexicon knows (provenientia_exclusa, regenerationes_praevidere, no
+'chassis'); glossary: 'suita' entry, 'strategias' form.

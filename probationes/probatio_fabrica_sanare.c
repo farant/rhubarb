@@ -52,25 +52,18 @@ _causa_sanationis (
         : chorda_ex_literis("", piscina);
 }
 
-s32 principale (vacuum)
+
+/* ==================================================
+ * PROBARE: sanare (plan 1b T3, Review Focus 2-4)
+ * ================================================== */
+
+interior vacuum
+_probare_sanare (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_fabrica_sanare", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * PROBARE: sanare (plan 1b T3, Review Focus 2-4)
-     * ================================================== */
-
+    piscina = c->piscina;
     {
           DiscusFictus  discus;
          FabricaSutura  sutura;
@@ -89,7 +82,6 @@ s32 principale (vacuum)
                    i32  i;
                    i32  praeparata;
 
-        imprimere("\n--- Probans sanare ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
 
@@ -366,12 +358,20 @@ s32 principale (vacuum)
             piscina, &causa));
         CREDO_VERUM(mundi_continet(causa, "nusquam", piscina));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: sanare PARALLELE (plan 2 T6)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: sanare PARALLELE (plan 2 T6)
+ * ================================================== */
 
+interior vacuum
+_probare_sanare_parallele (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           DiscusFictus  discus;
          FabricaSutura  sutura;
@@ -384,7 +384,6 @@ s32 principale (vacuum)
                    s32  index_d;
                    i32  i;
 
-        imprimere("\n--- Probans sanare parallele ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
 
@@ -999,12 +998,20 @@ s32 principale (vacuum)
         }
         CREDO_VERUM(mundi_contentum_est(&discus, "XG", "vetus\n"));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: cursus et aestimationes (plan 1b T7)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: cursus et aestimationes (plan 1b T7)
+ * ================================================== */
 
+interior vacuum
+_probare_cursum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           DiscusFictus  discus;
          FabricaSutura  sutura;
@@ -1015,7 +1022,6 @@ s32 principale (vacuum)
                 chorda  causa;
                    i32  scripti;
 
-        imprimere("\n--- Probans cursum ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
         /* A frangitur (actum: scribitur), C omittitur (non scribitur),
@@ -1142,19 +1148,23 @@ s32 principale (vacuum)
             && ((CursusFictus*)xar_obtinere(discus.cursus_ficti,
             ZEPHYRUM))->duratio_ms == VII);
     }
+}
 
-    imprimere("\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "sanare",
+      _probare_sanare,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sanare parallele",
+      _probare_sanare_parallele,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "cursum",
+      _probare_cursum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fabrica_sanare", SECTIONES);
 }

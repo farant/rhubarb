@@ -87,28 +87,15 @@ _photographia (
 }
 
 
-s32 principale (vacuum)
+/* ================================================== */
+
+interior vacuum
+_probare_ordinem (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_fabrica_ordo", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ================================================== */
-
-    /* PROBARE: ordo dependentiae                          */
-
-
-    /* ================================================== */
-
+    piscina = c->piscina;
     {
                  Xar* actiones;
                  Xar* ordo;
@@ -116,7 +103,6 @@ s32 principale (vacuum)
         FabricaActio* a;
         FabricaActio* b;
 
-        imprimere("\n--- Probans ordinem ---\n");
         actiones = xar_creare(piscina, (i32)magnitudo(FabricaActio));
 
         /* B legit exitum A; datae ordine B, A -> A ante B */
@@ -163,12 +149,20 @@ s32 principale (vacuum)
         CREDO_VERUM(mundi_continet(causa, "D", piscina));
         CREDO_VERUM(mundi_continet(causa, "cyclus", piscina));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: vestigia et undae (plan 1b T4)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: vestigia et undae (plan 1b T4)
+ * ================================================== */
 
+interior vacuum
+_probare_vestigia_et_undas (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           DiscusFictus  discus;
          FabricaSutura  sutura;
@@ -182,7 +176,6 @@ s32 principale (vacuum)
         FabricaSanatio* sanatio;
                 chorda  causa;
 
-        imprimere("\n--- Probans vestigia et undas ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
         mundi_discum_parare(&discus, &sutura, piscina);
@@ -344,12 +337,20 @@ s32 principale (vacuum)
         undae  = fabrica_undas_formare(ordo, piscina);
         CREDO_AEQUALIS_I32(xar_numerus(undae), II);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: dependentiae per locos (plan 1b T5)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: dependentiae per locos (plan 1b T5)
+ * ================================================== */
 
+interior vacuum
+_probare_dependentias_per_locos (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           DiscusFictus  discus;
          FabricaSutura  sutura;
@@ -363,7 +364,6 @@ s32 principale (vacuum)
         FabricaSanatio* sanatio;
                 chorda  causa;
 
-        imprimere("\n--- Probans dependentias per locos ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
 
@@ -557,19 +557,23 @@ s32 principale (vacuum)
                 xar_obtinere(actiones, I))->dependentiae), ZEPHYRUM);
         }
     }
+}
 
-    imprimere("\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "ordinem",
+      _probare_ordinem,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vestigia et undas",
+      _probare_vestigia_et_undas,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dependentias per locos",
+      _probare_dependentias_per_locos,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fabrica_ordo", SECTIONES);
 }

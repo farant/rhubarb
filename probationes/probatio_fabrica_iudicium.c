@@ -166,28 +166,15 @@ _vestigium_numerare (
 }
 
 
-s32 principale (vacuum)
+/* ================================================== */
+
+interior vacuum
+_probare_regenerationem (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_fabrica_iudicium", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ================================================== */
-
-    /* PROBARE: regeneratio (Review Focus 4)               */
-
-
-    /* ================================================== */
-
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -195,7 +182,6 @@ s32 principale (vacuum)
                FabricaExitus* exitus;
              FabricaIudicium  iudicium;
 
-        imprimere("\n--- Probans regenerationem ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "data/fons.txt", "datum\n");
         mundi_ponere(&discus, "gen/exitus.c", "linea I\nlinea II\n");
@@ -258,15 +244,18 @@ s32 principale (vacuum)
             piscina));
         CREDO_AEQUALIS_I32(discus.cursus, ZEPHYRUM);
     }
+}
 
 
-    /* ================================================== */
+/* ================================================== */
 
-    /* PROBARE: relatio '-provenientia'                    */
+interior vacuum
+_probare_relationem (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
-
-    /* ================================================== */
-
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -277,7 +266,6 @@ s32 principale (vacuum)
                    character  hex[SIGILLUM_HEX_MENSURA];
                    character  relatio[256];
 
-        imprimere("\n--- Probans relationem ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "lib/manus.c", "int manus;\n");
         a = mundi_actio(piscina, "manus", FABRICA_ACTIO_INSTITUTIO);
@@ -308,15 +296,23 @@ s32 principale (vacuum)
         CREDO_VERUM(mundi_continet(iudicium.causa, "sine provenientia",
             piscina));
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: vestigia lectionum (plan 2 T2) - actio
-     * lectiones="verum" clavatur libro suo: RECENS sine regeneratione
-     * si omnia aequalia; contentum (L), absentia (A), nomina (D)
-     * mutata -> regeneratio; fractus -> nullum vestigium
-     * ================================================== */
+/* ==================================================
+ * PROBARE: vestigia lectionum (plan 2 T2) - actio
+ * lectiones="verum" clavatur libro suo: RECENS sine regeneratione
+ * si omnia aequalia; contentum (L), absentia (A), nomina (D)
+ * mutata -> regeneratio; fractus -> nullum vestigium
+ * ================================================== */
 
+interior vacuum
+_probare_vestigia_lectionum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -327,7 +323,6 @@ s32 principale (vacuum)
           constans character* radix_nomina[I];
           constans character* radix_plus[II];
 
-        imprimere("\n--- Probans vestigia lectionum ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         sutura.lectiones_legere    = mundi_lectiones_legere;
         sutura.lectiones_scribere  = mundi_lectiones_scribere;
@@ -555,12 +550,20 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32(discus.vestigia_scripta, ante);
         }
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: memoria verificationum (T6, Review Focus 1)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: memoria verificationum (T6, Review Focus 1)
+ * ================================================== */
 
+interior vacuum
+_probare_memoriam_verificationum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -568,7 +571,6 @@ s32 principale (vacuum)
                FabricaExitus* exitus;
              FabricaIudicium  iudicium;
 
-        imprimere("\n--- Probans memoriam verificationum ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         sutura.meminisse   = _meminisse;
         sutura.inscribere  = _inscribere;
@@ -624,12 +626,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)iudicium.status,
             (i32)FABRICA_NON_IUDICATUM);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: mandatum in clave memoriae (T6)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: mandatum in clave memoriae (T6)
+ * ================================================== */
 
+interior vacuum
+_probare_mandatum_in_memoria (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -638,7 +648,6 @@ s32 principale (vacuum)
              FabricaIudicium  iudicium;
                       chorda* verbum;
 
-        imprimere("\n--- Probans mandatum in memoria ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         sutura.meminisse   = _meminisse;
         sutura.inscribere  = _inscribere;
@@ -663,12 +672,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_RECENS);
         CREDO_AEQUALIS_I32(discus.cursus, I);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: regeneratio semel per actionem et cursum (T6)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: regeneratio semel per actionem et cursum (T6)
+ * ================================================== */
 
+interior vacuum
+_probare_regenerationem_per_actionem (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -677,7 +694,6 @@ s32 principale (vacuum)
                FabricaExitus* secundus;
              FabricaIudicium  iudicium;
 
-        imprimere("\n--- Probans regenerationem per actionem ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         sutura.regenerationes = tabula_dispersa_creare_chorda(piscina,
             16);
@@ -734,12 +750,20 @@ s32 principale (vacuum)
             piscina));
         CREDO_AEQUALIS_I32(discus.cursus, I);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: PRAEVISIO regenerationum (T6b): iudicium simul
-     * ================================================== */
+/* ==================================================
+ * PROBARE: PRAEVISIO regenerationum (T6b): iudicium simul
+ * ================================================== */
 
+interior vacuum
+_probare_regenerationes_praevidere (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           DiscusFictus  discus;
          FabricaSutura  sutura;
@@ -749,7 +773,6 @@ s32 principale (vacuum)
                    i32  i;
                    i32  stala;
 
-        imprimere("\n--- Probans praevisionem regenerationum ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_memorias_parare(&sutura, piscina);
         sutura.currere_simul = mundi_currere_simul;
@@ -828,20 +851,27 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(xar_numerus(discus.undae_currendi),
             ZEPHYRUM);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: celer="verum" - regeneratio vilis sub iudicio celeri
-     * (plan 1b T5)
-     * ================================================== */
+/* ==================================================
+ * PROBARE: celer="verum" - regeneratio vilis sub iudicio celeri
+ * (plan 1b T5)
+ * ================================================== */
 
+interior vacuum
+_probare_celer (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
           DiscusFictus  discus;
          FabricaSutura  sutura;
           FabricaActio* a;
        FabricaIudicium  iudicium;
 
-        imprimere("\n--- Probans celer ---\n");
         mundi_discum_parare(&discus, &sutura, piscina);
         mundi_ponere(&discus, "a", "a\n");
         mundi_ponere(&discus, "X", "vetus\n");
@@ -865,16 +895,24 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)iudicium.status, (i32)FABRICA_STALUM);
         CREDO_AEQUALIS_I32(discus.cursus, I);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: iudicium (fabrica spec 3 T5a) - porta ut actio:
-     * declaratio iudicium sine lectiones et verdictum extra iudicium
-     * recusat; strategia verdictum NUMQUAM currit (verdictum absens
-     * STALUM, sine vestigio IGNOTUM); sanare sine argumentis iudicium
-     * omittit, nominatum agit
-     * ================================================== */
+/* ==================================================
+ * PROBARE: iudicium (fabrica spec 3 T5a) - porta ut actio:
+ * declaratio iudicium sine lectiones et verdictum extra iudicium
+ * recusat; strategia verdictum NUMQUAM currit (verdictum absens
+ * STALUM, sine vestigio IGNOTUM); sanare sine argumentis iudicium
+ * omittit, nominatum agit
+ * ================================================== */
 
+interior vacuum
+_probare_iudicium (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -890,7 +928,6 @@ s32 principale (vacuum)
                          Xar* electa;
          InternamentumChorda* intern_iudicii;
 
-        imprimere("\n--- Probans iudicium (porta ut actio) ---\n");
         causa.datum     = NIHIL;
         causa.mensura   = ZEPHYRUM;
         intern_iudicii  = internamentum_creare(piscina);
@@ -1016,18 +1053,26 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(mundi_sanatio_invenire(sanationes, "porta_x"));
         CREDO_AEQUALIS_I32(discus.acta, II);
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: transitus (fabrica spec 3 T5b) - sanare iudicium in
-     * loco vestigium libri sui servat; leges: S = exitus (omittitur),
-     * build/ cum domino declarato, radices systematis omissae, viae
-     * absolutae ceterae sigillatae, E externa clavata / interna
-     * omissa; iudicium post: RECENS sine cursu; lectio, ambitus,
-     * fontatio, identitas mutata -> STALUM aut IGNOTUM; build/ sine
-     * domino et FIFO -> transitus non servatus, vestigium vetus deletum
-     * ================================================== */
+/* ==================================================
+ * PROBARE: transitus (fabrica spec 3 T5b) - sanare iudicium in
+ * loco vestigium libri sui servat; leges: S = exitus (omittitur),
+ * build/ cum domino declarato, radices systematis omissae, viae
+ * absolutae ceterae sigillatae, E externa clavata / interna
+ * omissa; iudicium post: RECENS sine cursu; lectio, ambitus,
+ * fontatio, identitas mutata -> STALUM aut IGNOTUM; build/ sine
+ * domino et FIFO -> transitus non servatus, vestigium vetus deletum
+ * ================================================== */
 
+interior vacuum
+_probare_transitum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -1053,7 +1098,6 @@ s32 principale (vacuum)
              "E\tRADIX_FICTA\t/repo\n"
              "E\tOMNIA\n";
 
-        imprimere("\n--- Probans transitum (vestigium portae) ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
         mundi_discum_parare(&discus, &sutura, piscina);
@@ -1351,16 +1395,24 @@ s32 principale (vacuum)
         mundi_ambitus_ficti[0]  = NIHIL;
         mundi_effectus_effusio  = "";   /* ordinarium sequentibus */
     }
+}
 
 
-    /* ==================================================
-     * PROBARE: SIGNUM (fabrica plan 5 T3) - bin/fabrica cursorem portae
-     * IPSE currit et verdictum IPSE scribit ('<nomen>: <signum>
-     * <verbum>'): signum absens aut FRACT in compendio = FRACTUM;
-     * verdictum vetus
-     * ANTE cursum deletum - silva.py extra omnem clavem
-     * ================================================== */
+/* ==================================================
+ * PROBARE: SIGNUM (fabrica plan 5 T3) - bin/fabrica cursorem portae
+ * IPSE currit et verdictum IPSE scribit ('<nomen>: <signum>
+ * <verbum>'): signum absens aut FRACT in compendio = FRACTUM;
+ * verdictum vetus
+ * ANTE cursum deletum - silva.py extra omnem clavem
+ * ================================================== */
 
+interior vacuum
+_probare_signum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
          DiscusFictus  discus;
         FabricaSutura  sutura;
@@ -1372,7 +1424,6 @@ s32 principale (vacuum)
        FabricaSanatio* sanatio;
                chorda  causa;
 
-        imprimere("\n--- Probans signum (verdictum in C) ---\n");
         causa.datum    = NIHIL;
         causa.mensura  = ZEPHYRUM;
         mundi_discum_parare(&discus, &sutura, piscina);
@@ -1443,19 +1494,47 @@ s32 principale (vacuum)
         CREDO_NIHIL(mundi_fasciculum_invenire(&discus,
             "verdicta/y.txt"));
     }
+}
 
-    imprimere("\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "regenerationem",
+      _probare_regenerationem,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "relationem",
+      _probare_relationem,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vestigia lectionum",
+      _probare_vestigia_lectionum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "memoriam verificationum",
+      _probare_memoriam_verificationum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mandatum in memoria",
+      _probare_mandatum_in_memoria,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "regenerationem per actionem",
+      _probare_regenerationem_per_actionem,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "praevisionem regenerationum",
+      _probare_regenerationes_praevidere,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "celer",
+      _probare_celer,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "iudicium (porta ut actio)",
+      _probare_iudicium,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "transitum (vestigium portae)",
+      _probare_transitum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "signum (verdictum in C)",
+      _probare_signum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fabrica_iudicium", SECTIONES);
 }
