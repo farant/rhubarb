@@ -109,3 +109,13 @@ text is a NEW undo unit (plant caught: without the reset `u` removed
 the text before the click too). Insert mode is kept; visual returns to
 normal with the selection cleared. House vim has only line-visual
 (`V`); `v` does nothing - a test that used `v` failed for that reason.
+
+## 2026-10-08 - Ctrl-[ = Esc (Fran)
+
+`fd` already left insert mode (lib/vim.c, 300 ms; tested in
+probatio_scriba_actiones V). Ctrl-[ is new: with Ctrl held fenestra
+sends no text event, only DEPRESSUS with `runa = '['` (key without
+modifiers) and `producta = 0x1B` (what the key produces). The handler
+accepts either, so a layout where `[` sits on another key still works;
+it maps to VIM_CLAVIS_ESCAPE through `clavem_tractare` (flush and all).
+Three plants caught (whole branch, each field alone).

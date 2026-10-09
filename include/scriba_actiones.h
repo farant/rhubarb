@@ -9,11 +9,11 @@
  * INGRESSUS: characteres imprimibiles EX TEXTU COMMISSO solo (fontes
  * veri etiam DEPRESSUS pro eis mittunt - ignoratur, aliter littera
  * bis); claves nominatae (Esc, Enter, Tab, Backspace, Delete,
- * sagittae, Home, End) et Ctrl-R ex DEPRESSUS. Octeti >= 0x80 v1
- * ignorantur (folium octetorum). Ictus sinister (S3a) cursorem in
- * cellulam ictam ponit: gestus effunditur et insertio clauditur
- * (unitas revocandi nova), modus inserendi manet, visualis ad
- * normalem redit.
+ * sagittae, Home, End), Ctrl-R et Ctrl-[ (= Esc) ex DEPRESSUS.
+ * Octeti >= 0x80 v1 ignorantur (folium octetorum). Ictus sinister
+ * (S3a) cursorem in cellulam ictam ponit: gestus effunditur et
+ * insertio clauditur (unitas revocandi nova), modus inserendi manet,
+ * visualis ad normalem redit.
  *
  * SERVATIO (Franus): modus normalis/visualis - mutatio clave finita,
  * statim effunditur; inserere - post SCRIBA_QUIES_MS sine clave

@@ -711,6 +711,16 @@ scriba_pagina_clavis (
             ev->datum.clavis.clavis == CLAVIS_DEXTER ? I : -I);
         redde VERUM;
     }
+    /* Ctrl-[ = Esc (ut in terminali; Franus): runa '[' aut character
+     * productus ESC (dispositiones ubi '[' alibi iacet) */
+    si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)
+        && (   ev->datum.clavis.runa == '['
+            || ev->datum.clavis.producta == XXVII))
+    {
+        clavem_tractare(&ramus, motus, sa, VIM_CLAVIS_ESCAPE,
+            ev->tempus);
+        redde VERUM;
+    }
     /* Ctrl-R in modo normali: reficere */
     si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)
         && ev->datum.clavis.runa == 'r')
