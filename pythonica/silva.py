@@ -1619,6 +1619,10 @@ PORTAE = {
     'sera': (['./tools/sera_fumus.sh'], r'fumus sera: (sanum|FRACTUM)'),
     'frigida': (['./gesta/frigida_fumus.sh'],
                 r'fumus frigida: (sanum|FRACTUM)'),
+    # sedes annalium (domus tota, non arbor): custos, genesis expressa,
+    # scriptores simul, restitutio - in sedibus temporariis solum
+    'annales': (['./gesta/annales_fumus.sh'],
+                r'fumus annalium: (sanum|FRACTUM)'),
     # fumi sine oculis (2026-09-24, ex inventario 'suitae
     # probationum'): villa crure faciei omisso, silex sine -agere
     'villa': (['./apps/villa/fumus.sh', '-sine-facie'],
