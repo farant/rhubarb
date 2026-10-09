@@ -64,6 +64,8 @@
 #   XL   lineae machinae (H1): iudicare/sanare -machina, genera nota sola
 #   XLI  familiae installatorum: actio cum II+ manifestis -> installator
 #        '-familia' cum scopis OMNIBUS (arbor frigida, quaestio …J3108ZW6)
+#   XLII instrumentum (fabrica-7 T2): <aedilis instrumentum="bin/X"/> ->
+#        linea ingressus binarii in clave membri, commissum non
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -546,6 +548,24 @@ if [ -x "$RADIX/bin/aedilis" ] && [ -f "$MX" ]; then
 fi
 if [ "$xli_n" -ge 2 ] && [ -z "$xli" ]; then echo "  XLI  familiae installatorum ($xli_n): -familia == manifesta declarata, manifestum absens renascitur OK"; else echo "  XLI  FRACTUM (familiae $xli_n):$xli"; fracta=1; fi
 
+# XLII (fabrica-7 T2): INSTRUMENTUM VERE - b declarat <aedilis
+# instrumentum="bin/instr"/> (aedilis verus); bin/instr = scriptum cuius
+# '-provenientia' lineam ingressus dat. Linea ingressus mutata -> b solum
+# iterum; linea commissum sola mutata -> nihil (provenientia, ut
+# instrumentum_domus actionum)
+radix_c
+mkdir -p "$T/r/bin"
+printf '#!/bin/sh\necho "ingressus I"\necho "commissum I"\n' > "$T/r/bin/instr"; chmod +x "$T/r/bin/instr"
+printf '/* <aedilis instrumentum="bin/instr"/> */\nint main(void) { return 0; }\n' > "$T/r/t/probatio_b.c"
+(cd "$T/r" && "$F" sanare "$VA" "$VB") > "$T/o" 2>&1; rc1=$?
+printf '#!/bin/sh\necho "ingressus I"\necho "commissum II"\n' > "$T/r/bin/instr"
+(cd "$T/r" && "$F" sanare "$VA" "$VB") > "$T/o2" 2>&1; rc2=$?
+printf '#!/bin/sh\necho "ingressus II"\necho "commissum II"\n' > "$T/r/bin/instr"
+(cd "$T/r" && "$F" sanare "$VA" "$VB") > "$T/o3" 2>&1; rc3=$?
+if [ "$rc1" -eq 0 ] && [ "$(grep -c '^SANATUM' "$T/o")" -eq 2 ] \
+   && [ "$rc2" -eq 0 ] && ! grep -q '^SANATUM' "$T/o2" \
+   && [ "$rc3" -eq 0 ] && grep -q '^SANATUM *probationes_t/probatio_b' "$T/o3" && ! grep -q 'probatio_a' "$T/o3"; then echo "  XLII instrumentum: ingressus binarii in clave, commissum non OK"; else echo "  XLII FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -20; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XLI/XLI)"
+echo "fumus fabricae: sanum (XLII/XLII)"
 exit 0

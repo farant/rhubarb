@@ -2405,3 +2405,41 @@ reported as "XVII ... -> FRACT. OK" because 'exitus' matched first).
 Plants (silva.planta): synthetic not written, SUITA-absent ignored,
 CREDO_VERDICTA misnamed, unknown exitus accepted, fractura site dropped
 -> gradus red each; SECTIO record dropped from -machina -> fumus XL red.
+
+## 2026-10-09 - fabrica-7 T2: instrumentum and facultas live in the sources
+
+New aedilis annotation `<aedilis instrumentum="bin/X"/>` (AedilisFructus.
+instrumenta): the house binaries a test RUNS. Same rules as facultas -
+scope file only (a header cannot declare it for every includer), plus:
+path must start with `bin/`, no `..`, no trailing `/`, and declaring the
+same binary twice is refused ("instrumentum duplex"). bin/X is not
+required to exist at derivation time (bin/ is build output; a cold tree
+has none) - the fabrica side is where absence matters.
+
+fabrica: FabricaClausuraC.instrumenta (real sutura copies it from the
+fructus; both clausura_c call sites set it NIHIL first, so a future
+implementor that forgets it cannot leave garbage), and
+`_probationes_c_ingressus` adds one `instrumentum_domus` input per
+binary. That genus keys on the `ingressus` line of `<bin> -provenientia`
+(the commit line is excluded - otherwise every commit would re-run every
+test using bin/natura). A binary without -provenientia (bin/generare
+today) falls back to its content digest: cautious, re-runs more often.
+
+Proof: gradus VIIIb (fake world, content digest) - bin/natura changed ->
+only probatio_a re-runs and links; fumus XLII (real aedilis + real
+fabrica): a script `bin/instr` printing an ingressus line - commissum
+line changed -> nothing; ingressus changed -> only b. Plants (planta):
+scope check off, bin/ check off, duplicate accepted -> probatio_aedilis
+red; instrumenta not added to ingressus -> gradus red; sutura not
+copying them -> fumus XLII red.
+
+Annotated sources (step 3): instrumentum on probatio_natura_quaesitor
+(bin/natura), natura_glossae, natura_canones, generare; facultas on the
+17 build-only tests (14 fenestra = aedilis_porta.sh GUI_LISTA, rete =
+tls/tcp, repositorium = git). Checked by contradiction that the REAL
+files are parsed: breaking one of each kind -> AEDILIS RECUSAT naming
+it. The hand lists in compile_tests.sh / aedilis_porta.sh stay until T7.
+Not annotated: probatio_provenientia only passes the string "bin/manus"
+to provenientia_respondere (never executes it); the tabulariumd tests
+run gesta/build/tabulariumd, which is T4's praecondicio, not a bin/
+instrument.

@@ -8,6 +8,7 @@
  *   2. Run: ./bin/probatio_capsula_caudae
  */
 
+/* <aedilis facultas="fenestra"/> */
 #include "../include/latina.h"
 #include "../include/piscina.h"
 #include "../include/capsula_caudae.h"

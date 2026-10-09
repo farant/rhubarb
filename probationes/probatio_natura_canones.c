@@ -43,6 +43,7 @@
  * dicit. Loco eorum RELATIONES asseruntur (census se ipsum
  * reconciliat; canones cocti tot sunt quot exemplaria + I).
  */
+/* <aedilis instrumentum="bin/natura_canones"/> */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "credo.h"

@@ -17,7 +17,8 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
   <fractura>`, no timing); `CREDO_VERDICTA` in the `probationes_c` base
   environment, `CREDO_SECTIO` never inherited.
 - [ ] Headers written into `include/fabrica.h` and `include/aedilis.h`
-  with the first task that uses them (T1: sections DONE; T2, T3).
+  with the first task that uses them (T1: sections DONE; T2:
+  instrumenta DONE; T3).
 
 ### T1: sections in member verdicts
 
@@ -45,18 +46,22 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
 
 ### T2: annotations - `instrumentum` and `facultas` from sources
 
-- [ ] **Step 1: failing test** (probatio_aedilis): `<aedilis
+- [x] **Step 1: failing test** (probatio_aedilis): `<aedilis
   instrumentum="bin/X"/>` in the scope -> `instrumenta`; in a non-scope
   file or outside bin/ -> named refusal.
-- [ ] **Step 2:** aedilis parses it; `FabricaClausuraC.instrumenta`;
+- [x] **Step 2:** aedilis parses it; `FabricaClausuraC.instrumenta`;
   `probationes_c` keys the member on each binary's identity
   (`instrumentum_domus`). **Plant:** annotation ignored -> the keying
   assertion red (binary changed, member still RECENS).
-- [ ] **Step 3:** annotate the root tests that run house binaries
+- [x] **Step 3:** annotate the root tests that run house binaries
   (bin/generare, bin/manus, bin/natura*) and give the 17 build-only
   tests `facultas` (14 fenestra, 2 rete, 1 repositorium), so the facts
   live in the sources. The runner scripts' hand lists stay until T7.
   **Commit.**
+- As built (2026-10-09): instrumentum also refuses duplicates; 4 tests
+  annotated (natura, natura_glossae, natura_canones, generare - bin/manus
+  is never executed by a root test); keying is on the provenance
+  `ingressus` line (commit line ignored), proven by fumus XLII.
 
 ### T3: write debts
 

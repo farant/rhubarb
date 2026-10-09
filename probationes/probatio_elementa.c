@@ -1,4 +1,5 @@
 /* Probatio pro elementa GUI components */
+/* <aedilis facultas="fenestra"/> */
 #include "latina.h"
 #include "fenestra.h"
 #include "elementa.h"

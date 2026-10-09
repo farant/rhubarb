@@ -352,10 +352,14 @@ _clausura_c_ficta (
         (i32)magnitudo(chorda));
     clausura_out->facultates     = xar_creare(piscina,
         (i32)magnitudo(chorda));
+    clausura_out->instrumenta    = xar_creare(piscina,
+        (i32)magnitudo(chorda));
     _c_addere(clausura_out->fontes, scopus, piscina);
     si (strcmp(scopus, "t/probatio_a.c") == ZEPHYRUM)
     {
         _c_addere(clausura_out->fontes, "lib/x.c", piscina);
+        /* fabrica-7 T2: a binarium domus currit */
+        _c_addere(clausura_out->instrumenta, "bin/natura", piscina);
         _c_addere(clausura_out->capita, "include/x.h", piscina);
         _c_addere(clausura_out->vexilla_nexus, "-framework Cocoa",
             piscina);
@@ -1144,6 +1148,7 @@ _probare_probationes_c (
         mundi_ponere(&discus, "include/y.h", "yh I\n");
         mundi_ponere(&discus, "aedilis.stml", "<aedilis/>\n");
         mundi_ponere(&discus, "data/communis.txt", "communis I\n");
+        mundi_ponere(&discus, "bin/natura", "natura I\n");
         mundi_directorium_ponere(&discus, "t/", nomina_t, V);
 
         /* I. declaratio: elementum gradus et ambitus legitur */
@@ -1310,6 +1315,35 @@ _probare_probationes_c (
             &causa);
         CREDO_AEQUALIS_I32(_c_nexus, nexus + V);
         CREDO_AEQUALIS_I32(_c_cursus, cursus + IV);
+
+        /* VIIIb (fabrica-7 T2). instrumentum a (bin/natura, ex
+         * <aedilis instrumentum/>) mutatum: a solum - clavis membri
+         * identitatem binarii sequitur */
+        nexus   = _c_nexus;
+        cursus  = _c_cursus;
+        mundi_ponere(&discus, "bin/natura", "natura II\n");
+        (vacuum)fabrica_sanare(&sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        CREDO_AEQUALIS_I32(_c_cursus, cursus + I);
+        CREDO_VERUM(strstr(_c_cursus_ultimus, "probatio_a") != NIHIL);
+        CREDO_AEQUALIS_I32(_c_nexus, nexus + I);
+        si (membrum_a != NIHIL)
+        {
+            b32 instrumentum = FALSUM;
+
+            per (k = ZEPHYRUM; k
+                < xar_numerus(membrum_a->ingressus); k++)
+            {
+                constans FabricaIngressus* g = (FabricaIngressus*)
+                    xar_obtinere(membrum_a->ingressus, k);
+
+                instrumentum = instrumentum || (chorda_aequalis_literis(
+                    g->via, "bin/natura") && g->genus != NIHIL
+                    && strcmp(g->genus->titulus, "instrumentum_domus")
+                    == ZEPHYRUM);
+            }
+            CREDO_VERUM(instrumentum);
+        }
 
         /* IX. cursus b fractus: FRACTUM, deinde iterum currit */
         _c_fractus_cursus = "probatio_b";

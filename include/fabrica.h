@@ -127,6 +127,10 @@ nomen structura {
                           * spatio separata) */
     Xar* facultates;     /* chorda: scopi solius (fenestra, rete,
                           * repositorium) */
+    Xar* instrumenta;    /* chorda: binaria domus quae scopus currit
+                          * (<aedilis instrumentum="bin/X"/>, fabrica-7
+                          * T2) -> ingressus instrumentum_domus; NIHIL
+                          * licet (nulla) */
 } FabricaClausuraC;
 
 /* MEMBRUM gradus (fabrica-6 T5): id stabilis = "<actio>/<titulus>" */

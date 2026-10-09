@@ -162,6 +162,13 @@ nomen structura {
                                 * | rete | repositorium. In plagula
                                 * non-scopo aut valor ignotus ->
                                 * recusatio nominata */
+       Xar* instrumenta;       /* chorda: <aedilis instrumentum=
+                                * "bin/X"/> SCOPI solius (fabrica-7
+                                * T2): binaria domus quae scopus
+                                * currit (clavis membri identitatem
+                                * eorum sequitur). Extra bin/, in
+                                * plagula non-scopo aut duplex ->
+                                * recusatio nominata */
 } AedilisFructus;
 
 /* Clausuram scopi derivare (punctum fixum trans plagulas).

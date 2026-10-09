@@ -1,3 +1,4 @@
+/* <aedilis facultas="fenestra"/> */
 #include "piscina.h"
 #include "persistentia.h"
 #include "entitas_repositorium.h"

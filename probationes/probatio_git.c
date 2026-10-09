@@ -15,6 +15,7 @@
  * committi non poterat. Arbor laborans nihil ad caput pertinet.
  */
 
+/* <aedilis facultas="repositorium"/> */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

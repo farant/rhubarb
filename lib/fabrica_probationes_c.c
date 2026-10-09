@@ -147,7 +147,8 @@ _ingressum_c_addere (
     novus->suffixa  = chorda_ex_literis("", piscina);
 }
 
-/* clavis statica: fontes et capita clausurae, aedilis.stml (vexilla),
+/* clavis statica: fontes et capita clausurae, instrumenta domus
+ * (linea ingressus provenientiae binariorum), aedilis.stml (vexilla),
  * identitas clang. Clausura recusata: fons solus - membrum in agere
  * causam aedilis nominat et FRACTUM manet (defectus numquam servatur),
  * declarationes ceterae non recusantur */
@@ -166,7 +167,8 @@ _probationes_c_ingressus (
 
     (vacuum)actio;
     (vacuum)causa_out;
-    causa = chorda_ex_literis("", piscina);
+    causa                 = chorda_ex_literis("", piscina);
+    clausura.instrumenta  = NIHIL;
     si (   sutura->clausura_c != NIHIL
         && sutura->clausura_c(sutura->datum, chorda_ut_cstr(
                membrum->fons, piscina), piscina, &clausura, &causa))
@@ -180,6 +182,15 @@ _probationes_c_ingressus (
         {
             _ingressum_c_addere(ingressus_out, "fasciculus",
                 *(chorda*)xar_obtinere(clausura.capita, i), piscina);
+        }
+        /* fabrica-7 T2: binaria domus quae probatio currit
+         * (<aedilis instrumentum/>) - identitas eorum in clave */
+        per (i = ZEPHYRUM; clausura.instrumenta != NIHIL
+             && i < xar_numerus(clausura.instrumenta); i++)
+        {
+            _ingressum_c_addere(ingressus_out, "instrumentum_domus",
+                *(chorda*)xar_obtinere(clausura.instrumenta, i),
+                piscina);
         }
     }
     alioquin
@@ -731,7 +742,8 @@ _probationes_c_agere (
             "compilare aut in_area_currere", piscina);
         redde FALSUM;
     }
-    causa = chorda_ex_literis("", piscina);
+    causa                 = chorda_ex_literis("", piscina);
+    clausura.instrumenta  = NIHIL;
     si (!sutura->clausura_c(sutura->datum, chorda_ut_cstr(membrum->fons,
             piscina), piscina, &clausura, &causa))
     {

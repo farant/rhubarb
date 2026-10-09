@@ -1,4 +1,5 @@
 /* Probatio pro tempus - functiones temporis et animationis */
+/* <aedilis facultas="fenestra"/> */
 #include "latina.h"
 #include "fenestra.h"
 #include "delineare.h"
