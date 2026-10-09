@@ -688,6 +688,99 @@ probatio_fumus_speciminum(Piscina* p)
     CREDO_MAIOR_I32(norma_stml_scribere(&nn, I, p, &causa).mensura, 0);
 }
 
+/* ---- norma-spec-4 B2.1: testimonia ---- */
+
+/* testimonium campi 'titulus' objecti n */
+interior chorda
+_testimonium_campi (
+                   Norma* n,
+      constans character* titulus,
+    InferentiaTestimonia* t,
+                 Piscina* p)
+{
+    NormaVisus v = norma_visus(n);
+           i32 i;
+
+    per (i = 0; v.campi && i < xar_numerus(v.campi); i++)
+    {
+        NormaCampus* c = (NormaCampus*)xar_obtinere(v.campi, i);
+
+        si (chorda_aequalis_literis(c->titulus, titulus))
+        {
+            redde inferentia_commentarius(c->valor, p, t);
+        }
+    }
+    redde chorda_ex_literis("(campus abest)", p);
+}
+
+interior vacuum
+probatio_testimonia(Piscina* p)
+{
+    constans character* constans corpus[] = {
+        "{\"a\":1,\"b\":\"x\",\"t\":[1]}",
+        "{\"a\":2.5,\"t\":[1,2]}",
+        "{\"a\":3,\"b\":null,\"t\":[3]}", NIHIL };
+    constans character* constans bloci[] = {
+        "{\"type\":\"text\",\"text\":\"a\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t1\",\"name\":\"n\",\"input\":{}}",
+        "{\"type\":\"text\",\"text\":\"b\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t2\",\"name\":\"m\",\"input\":{}}",
+        NIHIL };
+    /* ut specimina vatis: unus valor bis visus */
+    constans character* constans rari[] = {
+        "{\"type\":\"text\",\"text\":\"a\"}",
+        "{\"type\":\"text\",\"text\":\"b\"}",
+        "{\"type\":\"text\",\"text\":\"c\"}",
+        "{\"type\":\"server_tool_use\",\"id\":\"s\"}", NIHIL };
+    constans character* constans dies[] = {
+        "\"2026-10-09T01:02:03Z\"", "\"2026-10-09T01:02:04Z\"",
+        "\"2026-10-09T01:02:05Z\"", "\"2026-10-09T01:02:06Z\"",
+        "\"2026-10-09T01:02:07Z\"", NIHIL };
+    constans character* constans secreta[] = {
+        "{\"t\":\"SECRETUM_I\",\"k\":{\"type\":\"SECRETUM_X\"}}",
+        "{\"t\":\"SECRETUM_II\",\"k\":{\"type\":\"SECRETUM_Y\"}}",
+        "{\"t\":\"SECRETUM_III\"}", NIHIL };
+    InferentiaTestimonia* t;
+                   Norma* n;
+           NormaNominata  nn;
+                  chorda  causa;
+                  chorda  s;
+
+    imprimere("\n--- Probans testimonia ---\n");
+    n = inferentia_normam_testatam(_inferentia(corpus, p), p, &t);
+    CREDO_CHORDA_AEQUALIS_LITERIS(inferentia_commentarius(n, p, t),
+        "3 exempla");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_testimonium_campi(n, "a", t, p),
+        "visum 3/3; genera: integer 2, fluitans 1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_testimonium_campi(n, "b", t, p),
+        "visum 2/3; genera: nullum 1, textus 1; distincti 1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(_testimonium_campi(n, "t", t, p),
+        "visum 3/3; longitudo 1..2");
+    /* discrimen electum */
+    n = inferentia_normam_testatam(_inferentia(bloci, p), p, &t);
+    CREDO_VERUM(chorda_continet(inferentia_commentarius(n, p, t),
+        chorda_ex_literis("discrimen 'type': lucrum 4", p)));
+    /* discrimen reiectum, causa nominata */
+    n = inferentia_normam_testatam(_inferentia(rari, p), p, &t);
+    CREDO_VERUM(chorda_continet(inferentia_commentarius(n, p, t),
+        chorda_ex_literis("discrimen 'type' reiectum: valores bis visi 1 "
+        "(2 postulati)", p)));
+    /* forma */
+    n = inferentia_normam_testatam(_inferentia(dies, p), p, &t);
+    CREDO_VERUM(chorda_continet(inferentia_commentarius(n, p, t),
+        chorda_ex_literis("forma date-time: 5/5", p)));
+    /* valores numquam in commentis, per scriptorem */
+    n = inferentia_normam_testatam(_inferentia(secreta, p), p, &t);
+    nn.titulus = chorda_ex_literis("x", p);
+    nn.norma = n;
+    s = norma_stml_scribere_cum_commentis(&nn, I, p, &causa,
+        inferentia_commentarius, t);
+    CREDO_VERUM(s.mensura > 0);
+    CREDO_VERUM(chorda_continet(s, chorda_ex_literis("<!-- 3 exempla",
+        p)));
+    CREDO_FALSUM(chorda_continet(s, chorda_ex_literis("SECRETUM", p)));
+}
+
 s32
 principale (vacuum)
 {
@@ -709,6 +802,8 @@ principale (vacuum)
     probatio_tabula_similis(p);
     probatio_electio_et_fines(p);
     probatio_fumus_speciminum(p);
+    /* norma-spec-4 B2.1 */
+    probatio_testimonia(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

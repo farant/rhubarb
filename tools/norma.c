@@ -4,7 +4,8 @@
  *   norma c <x.norma> -praefixum P -caput <h> -corpus <c>
  *   norma iudicare <x.norma> <valor.json> [-norma <titulus>]
  *   norma inferre [-titulus T] [-status N] [-electio] [-fines]
- *                 [-sine_formis] [-clausum] <via>...   (norma-spec-3 §V)
+ *                 [-sine_formis] [-clausum] [-sine_testimoniis] <via>...
+ *     (norma-spec-3 §V; testimonia ut commenta, norma-spec-4 §III)
  *     via = plagula .json (exemplum unum) aut acervus herbarii
  *     (specimina status N, ordinarie CC); adumbratio .norma in stdout,
  *     'N exempla, M omissa' in stderr.
@@ -31,7 +32,8 @@ _usus (vacuum)
     fputs("usus: norma c <x.norma> -praefixum P -caput <h> -corpus <c>\n"
           "      norma iudicare <x.norma> <valor.json> [-norma <titulus>]\n"
           "      norma inferre [-titulus T] [-status N] [-electio] [-fines]\n"
-          "                    [-sine_formis] [-clausum] <via>...\n",
+          "                    [-sine_formis] [-clausum] [-sine_testimoniis]"
+          " <via>...\n",
           stderr);
     redde II;
 }
@@ -212,7 +214,9 @@ _inferre (
           NormaNominata  nn;
                  chorda  causa;
                  chorda  scriptum;
-                    i32  omissa   = 0;
+                    i32  omissa             = 0;
+                    b32  testimonia_rogata  = VERUM;
+   InferentiaTestimonia* testimonia         = NIHIL;
                 integer  i;
 
     per (i = II; i < argc && argv[i][0] == '-'; i++)
@@ -240,6 +244,10 @@ _inferre (
         alioquin si (strcmp(argv[i], "-clausum") == 0)
         {
             o.modus = NORMA_CLAUSUM;
+        }
+        alioquin si (strcmp(argv[i], "-sine_testimoniis") == 0)
+        {
+            testimonia_rogata = FALSUM;
         }
         alioquin
         {
@@ -292,14 +300,16 @@ _inferre (
     fprintf(stderr, "norma inferre: %u exempla, %u omissa\n",
         (insignatus integer)inferentia_numerus(inf),
         (insignatus integer)omissa);
-    n = inferentia_normam(inf, p);
+    n = inferentia_normam_testatam(inf, p, &testimonia);
     si (!n)
     {
         redde II;
     }
     nn.titulus  = chorda_ex_literis(titulus, p);
     nn.norma    = n;
-    scriptum    = norma_stml_scribere(&nn, I, p, &causa);
+    scriptum    = norma_stml_scribere_cum_commentis(&nn, I, p, &causa,
+        testimonia_rogata ? inferentia_commentarius : NIHIL,
+        testimonia);
     si (scriptum.mensura == 0)
     {
         fprintf(stderr, "norma inferre: %.*s\n", (integer)causa.mensura,

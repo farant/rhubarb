@@ -83,3 +83,25 @@
   data: one `server_tool_use` block among several `text` blocks gives no
   second repeated value, so `content[]` stays one object with optional
   fields - the reviewer sees it; B2's evidence report will say why.
+
+## 2026-10-09 - evidence in the draft (norma-spec-4 B2.1)
+
+- `inferentia_normam_testatam` records a text per draft node (a small
+  Norma* -> chorda table); `inferentia_commentarius` hands it to the
+  writer hook. The library still calls no STML function.
+- `_figuram_normam` became a thin wrapper over `_figuram_normam_nuda`
+  that records the node's evidence after building it (no early return
+  inside the old body had to change); callers prefix context: fields
+  "visum P/Q", variants "instantiae N", the root "N exempla".
+- Evidence parts, in order: genera (only when > 1, JsonGenus order),
+  "distincti K" / "distincti > 16", "forma F: n/n", "longitudo a..b",
+  then discriminator decisions for every live candidate with >= II
+  values. The per-candidate gain computation moved into
+  `_candidatum_aestimare`, used by BOTH selection and evidence - the
+  explanation cannot disagree with the decision.
+- On the committed vates pile the draft now says why content[] stays
+  undivided: "discrimen 'type' reiectum: valores bis visi 1 (2
+  postulati)". It also reports rejected 'id' / 'stop_reason' at the root
+  - correct, slightly noisy (deferred minor).
+- Plants (red): presence +1; (stml) comment after the element; '--' not
+  refused.

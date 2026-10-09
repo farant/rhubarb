@@ -4,6 +4,7 @@
  * (ordo exemplorum adumbrationem non mutat - lex coniunctionis). */
 #include "norma_inferre.h"
 #include "utf8.h"
+#include "chorda_aedificator.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -735,11 +736,110 @@ _comparare_chordas (
     redde a.mensura < b.mensura ? -I : (a.mensura > b.mensura ? I : 0);
 }
 
+
+/* ====================================================================
+ * D. TESTIMONIA (norma-spec-4 §III)
+ * ==================================================================== */
+
+nomen structura {
+     constans Norma* nodus;
+             chorda  textus;
+} TestimoniumNodi;
+
+structura InferentiaTestimonia {
+    Piscina* piscina;
+        Xar* paria;     /* TestimoniumNodi */
+};
+
+interior TestimoniumNodi*
+_testimonium_invenire (
+    InferentiaTestimonia* t,
+          constans Norma* nodus)
+{
+    i32 i;
+
+    per (i = 0; i < xar_numerus(t->paria); i++)
+    {
+        TestimoniumNodi* tn = (TestimoniumNodi*)xar_obtinere(t->paria,
+            i);
+
+        si (tn->nodus == nodus)
+        {
+            redde tn;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_testimonium_ponere (
+    InferentiaTestimonia* t,
+          constans Norma* nodus,
+                  chorda  textus)
+{
+    TestimoniumNodi* tn;
+
+    si (!t || !nodus)
+    {
+        redde;
+    }
+    tn = _testimonium_invenire(t, nodus);
+    si (!tn)
+    {
+        tn         = (TestimoniumNodi*)xar_addere(t->paria);
+        tn->nodus  = nodus;
+    }
+    tn->textus = textus;
+}
+
+/* praefixum ante testimonium nodi ('visum 3/3; ...') */
+interior vacuum
+_testimonium_praeponere (
+    InferentiaTestimonia* t,
+          constans Norma* nodus,
+      constans character* praefixum)
+{
+      TestimoniumNodi* tn;
+    ChordaAedificator* a;
+
+    si (!t || !nodus)
+    {
+        redde;
+    }
+    tn  = _testimonium_invenire(t, nodus);
+    a   = chorda_aedificator_creare(t->piscina, CXXVIII);
+    chorda_aedificator_appendere_literis(a, praefixum);
+    si (tn && tn->textus.mensura > 0)
+    {
+        chorda_aedificator_appendere_literis(a, "; ");
+        chorda_aedificator_appendere_chorda(a, tn->textus);
+    }
+    _testimonium_ponere(t, nodus, chorda_aedificator_finire(a));
+}
+
+hic_manens constans character* constans _genera_nomina[VII] = {
+    "nullum", "boolean", "integer", "fluitans", "textus", "tabulatum",
+    "objectum"
+};
+
+interior vacuum
+_pars_addere (
+     ChordaAedificator* a,
+    constans character* pars)
+{
+    si (chorda_aedificator_longitudo(a) > 0)
+    {
+        chorda_aedificator_appendere_literis(a, "; ");
+    }
+    chorda_aedificator_appendere_literis(a, pars);
+}
+
 interior Norma*
 _figuram_normam (
-    constans Inferentia* inf,
-        constans Figura* f,
-                Piscina* p);
+     constans Inferentia* inf,
+    InferentiaTestimonia* t,
+         constans Figura* f,
+                 Piscina* p);
 
 interior i32
 _requisita (
@@ -797,6 +897,45 @@ _claves_aequales (
  * claves 'requisitas' facit, unde campus quasi-identificator (valor
  * novus per exemplum) discrimen falsum fiebat. Variatio semel visa in
  * adumbratione tamen manet. */
+/* lucrum candidati; d = valores bis saltem visi; VERUM si aptus */
+interior b32
+_candidatum_aestimare (
+                   constans Figura* f,
+    constans CandidatusDiscriminis* c,
+                               s64* lucrum,
+                               i32* d,
+                               b32* differunt)
+{
+    i32 k;
+    i32 m;
+
+    *d          = 0;
+    *lucrum     = 0;
+    *differunt  = FALSUM;
+    per (k = 0; k < xar_numerus(c->valores); k++)
+    {
+        constans ValorDiscriminis* prior = (ValorDiscriminis*)
+            xar_obtinere(c->valores, k);
+
+        si (prior->instantiae < II)
+        {
+            perge;
+        }
+        (*d)++;
+        *lucrum += (s64)_requisita(prior->figura);
+        per (m = k + I; m < xar_numerus(c->valores) && !*differunt; m++)
+        {
+            constans ValorDiscriminis* posterior = (ValorDiscriminis*)
+                xar_obtinere(c->valores, m);
+
+            *differunt = posterior->instantiae >= II
+                && !_claves_aequales(prior->figura, posterior->figura);
+        }
+    }
+    *lucrum -= (s64)*d * (s64)_requisita(f);
+    redde *d >= II && *lucrum > 0 && *differunt;
+}
+
 interior constans CandidatusDiscriminis*
 _discrimen_eligere (
     constans Figura* f)
@@ -804,15 +943,13 @@ _discrimen_eligere (
     constans CandidatusDiscriminis* optimus         = NIHIL;
                                s64  lucrum_optimum  = 0;
                                i32  i;
-                               i32  k;
-                               i32  m;
 
     per (i = 0; i < xar_numerus(f->candidati); i++)
     {
         constans CandidatusDiscriminis* c = (CandidatusDiscriminis*)
             xar_obtinere(f->candidati, i);
                                     s64 lucrum;
-                                    b32 differunt = FALSUM;
+                                    b32 differunt;
                                     i32 d;
                                     b32 melior;
 
@@ -820,33 +957,7 @@ _discrimen_eligere (
         {
             perge;
         }
-        d       = 0;
-        lucrum  = 0;
-        per (k = 0; k < xar_numerus(c->valores); k++)
-        {
-            constans ValorDiscriminis* prior = (ValorDiscriminis*)
-                xar_obtinere(c->valores, k);
-
-            si (prior->instantiae < II)
-            {
-                perge;
-            }
-            d++;
-            lucrum += (s64)_requisita(prior->figura);
-            per (m = k + I; m < xar_numerus(c->valores)
-                && !differunt; m++)
-            {
-                constans ValorDiscriminis* posterior =
-                    (ValorDiscriminis*)
-                    xar_obtinere(c->valores, m);
-
-                differunt = posterior->instantiae >= II
-                    && !_claves_aequales(prior->figura,
-                    posterior->figura);
-            }
-        }
-        lucrum -= (s64)d * (s64)_requisita(f);
-        si (d < II || lucrum <= 0 || !differunt)
+        si (!_candidatum_aestimare(f, c, &lucrum, &d, &differunt))
         {
             perge;
         }
@@ -881,14 +992,16 @@ _discrimen_eligere (
 
 interior Norma*
 _objectum_normam (
-    constans Inferentia* inf,
-        constans Figura* f,
-                Piscina* p,
-        constans chorda* omittere);
+     constans Inferentia* inf,
+    InferentiaTestimonia* t,
+         constans Figura* f,
+                 Piscina* p,
+         constans chorda* omittere);
 
 interior Norma*
 _discrimen_normam (
                   constans Inferentia* inf,
+                 InferentiaTestimonia* t,
        constans CandidatusDiscriminis* c,
                               Piscina* p)
 {
@@ -922,8 +1035,20 @@ _discrimen_normam (
     per (i = 0; i < n; i++)
     {
         /* tag in variatione implicite declaratur: campus omittitur */
-        norma_variatio(d, chorda_ut_cstr(ordo[i]->valor, p),
-            _objectum_normam(inf, ordo[i]->figura, p, &c->clavis));
+        Norma* variatio = _objectum_normam(inf, t, ordo[i]->figura,
+            p,
+            &c->clavis);
+        character instantiae[XLVIII];
+
+        sprintf(instantiae, "instantiae %u",
+            (insignatus integer)ordo[i]->instantiae);
+        si (t)
+        {
+            _testimonium_ponere(t, variatio,
+                chorda_ex_literis(instantiae,
+                t->piscina));
+        }
+        norma_variatio(d, chorda_ut_cstr(ordo[i]->valor, p), variatio);
     }
     redde d;
 }
@@ -931,6 +1056,7 @@ _discrimen_normam (
 interior Norma*
 _objectum_normam (
      constans Inferentia* inf,
+    InferentiaTestimonia* t,
          constans Figura* f,
                  Piscina* p,
          constans chorda* omittere)
@@ -969,7 +1095,7 @@ _objectum_normam (
 
         si (c)
         {
-            redde _discrimen_normam(inf, c, p);
+            redde _discrimen_normam(inf, t, c, p);
         }
     }
     o = norma_modus(norma_objectum(p), inf->optiones.modus);
@@ -1006,9 +1132,18 @@ _objectum_normam (
             perge;
         }
 
-        norma_campus(o, titulus, _figuram_normam(inf, ordo[i]->figura,
-            p),
-            ordo[i]->praesentia == f->genera[JSON_OBJECTUM]);
+        {
+            Norma* filius = _figuram_normam(inf, t, ordo[i]->figura,
+                p);
+            character visum[LXIV];
+
+            sprintf(visum, "visum %u/%u",
+                (insignatus integer)ordo[i]->praesentia,
+                (insignatus integer)f->genera[JSON_OBJECTUM]);
+            _testimonium_praeponere(t, filius, visum);
+            norma_campus(o, titulus, filius,
+                ordo[i]->praesentia == f->genera[JSON_OBJECTUM]);
+        }
     }
     redde o;
 }
@@ -1101,10 +1236,11 @@ _fines_et_electio (
 }
 
 interior Norma*
-_figuram_normam (
-    constans Inferentia* inf,
-        constans Figura* f,
-                Piscina* p)
+_figuram_normam_nuda (
+     constans Inferentia* inf,
+    InferentiaTestimonia* t,
+         constans Figura* f,
+                 Piscina* p)
 {
       i32  non_nulla = 0;
       i32  g;
@@ -1164,11 +1300,12 @@ _figuram_normam (
     alioquin si (solum == JSON_TABULATUM)
     {
         n = norma_tabulatum(p, f->elementum
-            ? _figuram_normam(inf, f->elementum, p) : norma_liberum(p));
+            ? _figuram_normam(inf, t, f->elementum,
+            p) : norma_liberum(p));
     }
     alioquin
     {
-        n = _objectum_normam(inf, f, p, NIHIL);
+        n = _objectum_normam(inf, t, f, p, NIHIL);
     }
     _fines_et_electio(inf, f, n, p);
     si (f->genera[JSON_NULLUM] > 0)
@@ -1176,6 +1313,206 @@ _figuram_normam (
         norma_aut_nullum(n);
     }
     redde n;
+}
+
+/* testimonium figurae pro nodo n (§III): genera, distincti, forma,
+ * longitudo, decisiones discriminis - numeri, numquam valores */
+interior chorda
+_testimonium_figurae (
+     constans Inferentia* inf,
+         constans Figura* f,
+          constans Norma* n,
+                 Piscina* p)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(p, CXXVIII);
+           NormaVisus  v = norma_visus(n);
+            character  pars[CCLVI];
+                  i32  genera = 0;
+                  i32  g;
+
+    per (g = 0; g < VII; g++)
+    {
+        si (f->genera[g] > 0)
+        {
+            genera++;
+        }
+    }
+    si (genera > I)
+    {
+        ChordaAedificator* b = chorda_aedificator_creare(p, LXIV);
+
+        chorda_aedificator_appendere_literis(b, "genera: ");
+        genera = 0;
+        per (g = 0; g < VII; g++)
+        {
+            si (f->genera[g] > 0)
+            {
+                sprintf(pars, "%s%s %u", genera > 0 ? ", " : "",
+                    _genera_nomina[g],
+                    (insignatus integer)f->genera[g]);
+                chorda_aedificator_appendere_literis(b, pars);
+                genera++;
+            }
+        }
+        _pars_addere(a, chorda_ut_cstr(chorda_aedificator_finire(b),
+            p));
+    }
+    si (f->genera[JSON_CHORDA] > 0)
+    {
+        si (f->distincti_superati)
+        {
+            sprintf(pars, "distincti > %u", (insignatus integer)
+                (_limes_distinctorum(&inf->optiones) - I));
+        }
+        alioquin
+        {
+            sprintf(pars, "distincti %u",
+                (insignatus integer)xar_numerus(
+                f->distincti));
+        }
+        _pars_addere(a, pars);
+    }
+    si (v.forma.mensura > 0)
+    {
+        sprintf(pars, "forma %.*s: %u/%u", (integer)v.forma.mensura,
+            (constans character*)v.forma.datum,
+            (insignatus integer)f->genera[JSON_CHORDA],
+            (insignatus integer)f->genera[JSON_CHORDA]);
+        _pars_addere(a, pars);
+    }
+    si (f->habet_tabulatum)
+    {
+        sprintf(pars, "longitudo %u..%u",
+            (insignatus integer)f->tabulatum_minimum,
+            (insignatus integer)f->tabulatum_maximum);
+        _pars_addere(a, pars);
+    }
+    si (!f->partitio && f->genera[JSON_OBJECTUM] > 0)
+    {
+        constans CandidatusDiscriminis* electus = _discrimen_eligere(f);
+                                    i32 i;
+
+        per (i = 0; i < xar_numerus(f->candidati); i++)
+        {
+            constans CandidatusDiscriminis* c = (CandidatusDiscriminis*)
+                xar_obtinere(f->candidati, i);
+                                    s64 lucrum;
+                                    i32 d;
+                                    b32 differunt;
+                                    b32 aptus;
+
+            si (!c->vivus || xar_numerus(c->valores) < II)
+            {
+                perge;
+            }
+            aptus = _candidatum_aestimare(f, c, &lucrum, &d,
+                &differunt);
+            si (c == electus && v.genus == NORMA_DISCRIMEN)
+            {
+                sprintf(pars, "discrimen '%.*s': lucrum %ld",
+                    (integer)c->clavis.mensura,
+                    (constans character*)c->clavis.datum,
+                    (longus)lucrum);
+            }
+            alioquin si (aptus)
+            {
+                sprintf(pars, "alter '%.*s' lucrum %ld",
+                    (integer)c->clavis.mensura,
+                    (constans character*)c->clavis.datum,
+                    (longus)lucrum);
+            }
+            alioquin si (d < II)
+            {
+                sprintf(pars,
+                    "discrimen '%.*s' reiectum: valores bis visi"
+                    " %u (2 postulati)", (integer)c->clavis.mensura,
+                    (constans character*)c->clavis.datum,
+                    (insignatus integer)d);
+            }
+            alioquin si (lucrum <= 0)
+            {
+                sprintf(pars, "discrimen '%.*s' reiectum: lucrum %ld",
+                    (integer)c->clavis.mensura,
+                    (constans character*)c->clavis.datum,
+                    (longus)lucrum);
+            }
+            alioquin
+            {
+                sprintf(pars, "discrimen '%.*s' reiectum: claves"
+                    " partitionum aequales", (integer)c->clavis.mensura,
+                    (constans character*)c->clavis.datum);
+            }
+            _pars_addere(a, pars);
+        }
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior Norma*
+_figuram_normam (
+     constans Inferentia* inf,
+    InferentiaTestimonia* t,
+         constans Figura* f,
+                 Piscina* p)
+{
+    Norma* n = _figuram_normam_nuda(inf, t, f, p);
+
+    si (t)
+    {
+        _testimonium_ponere(t, n, _testimonium_figurae(inf, f, n,
+            t->piscina));
+    }
+    redde n;
+}
+
+Norma*
+inferentia_normam_testatam (
+     constans Inferentia*  inferentia,
+                 Piscina*  piscina,
+    InferentiaTestimonia** testimonia)
+{
+    InferentiaTestimonia* t;
+                   Norma* n;
+               character  exempla[XLVIII];
+
+    si (testimonia)
+    {
+        *testimonia = NIHIL;
+    }
+    si (!inferentia || inferentia->numerus == 0 || !piscina)
+    {
+        redde NIHIL;
+    }
+    t = (InferentiaTestimonia*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(InferentiaTestimonia));
+    t->piscina = piscina;
+    t->paria = xar_creare(piscina, (i32)magnitudo(TestimoniumNodi));
+    n = _figuram_normam(inferentia, t, inferentia->radix, piscina);
+    sprintf(exempla, "%u exempla",
+        (insignatus integer)inferentia->numerus);
+    _testimonium_praeponere(t, n, exempla);
+    si (testimonia)
+    {
+        *testimonia = t;
+    }
+    redde n;
+}
+
+chorda
+inferentia_commentarius (
+    constans Norma* nodus,
+           Piscina* piscina,
+            vacuum* testimonia)
+{
+    InferentiaTestimonia* t = (InferentiaTestimonia*)testimonia;
+         TestimoniumNodi* tn;
+
+    si (!t || !nodus)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    tn = _testimonium_invenire(t, nodus);
+    redde tn ? tn->textus : chorda_ex_literis("", piscina);
 }
 
 Norma*
@@ -1187,5 +1524,6 @@ inferentia_normam (
     {
         redde NIHIL;
     }
-    redde _figuram_normam(inferentia, inferentia->radix, piscina);
+    redde _figuram_normam(inferentia, NIHIL, inferentia->radix,
+        piscina);
 }
