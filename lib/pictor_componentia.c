@@ -134,7 +134,73 @@ quadratum_addere (
 
     q = nodus(piscina, intern, id, PARTES_BOTTONE, x, y, XX, XX);
     componens_ponere_titulum(q, titulus);
+    /* P1b: ictus palettam suam aperit */
+    componens_ponere_actio(q, "palette.aperire");
     componens_addere_liberum(status, q);
+}
+
+/* P1b: palette (PARTES_DIALOGUS) supra quadratum (x, y radicis):
+ * optiones XX x XX, II inter, IV margo, VI per lineam. genus
+ * 'instrumentum' aut 'color_primus'/'color_secundus'; electum =
+ * valor currens (titulus ':electum') */
+interior Componens*
+palettam_componere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda  genus,
+                    s32  x,
+                    s32  y_quadrati,
+                 chorda  instrumentum,
+                    s32  color_currens)
+{
+              Componens* palette;
+              Componens* o;
+                    b32  colores;
+                    s32  n;
+                    s32  k;
+                    s32  latitudo;
+                    s32  altitudo;
+                    s32  valor;
+              character  id[LXIV];
+              character  titulus[LXIV];
+     constans character* instrumenta[II];
+
+    instrumenta[ZEPHYRUM] = "penicillus";
+    instrumenta[I] = "aspergillum";
+    colores = !chorda_aequalis_literis(genus, "instrumentum");
+    n = colores ? XVII : II;
+    latitudo = IV + (n < VI ? n : VI) * (XX + II) - II + IV;
+    altitudo = IV + ((n + V) / VI) * (XX + II) - II + IV;
+    palette   = nodus(piscina, intern, "palette", PARTES_DIALOGUS, x,
+        y_quadrati - altitudo - II, latitudo, altitudo);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (colores)
+        {
+            valor = k - I;   /* -1 nullus, deinde 0..15 */
+            sprintf(id, "optio.%s.%d", chorda_ut_cstr(genus, piscina),
+                (integer)valor);
+            sprintf(titulus, "color:%d%s", (integer)valor,
+                valor == color_currens ? ":electum" : "");
+        }
+        alioquin
+        {
+            sprintf(id, "optio.instrumentum.%s", instrumenta[k]);
+            sprintf(titulus, "instrumentum:%s%s", instrumenta[k],
+                chorda_aequalis_literis(instrumentum, instrumenta[k])
+                    ? ":electum" : "");
+        }
+        o = nodus(piscina, intern, id, PARTES_BOTTONE,
+            IV + (k % VI) * (XX + II), IV + (k / VI) * (XX + II), XX,
+            XX);
+        componens_ponere_titulum(o, titulus);
+        /* actio = dominus attributi (domini.stml) */
+        componens_ponere_actio(o, !colores ? "instrumentum.eligere"
+            : chorda_aequalis_literis(genus, "color_primus")
+            ? "color_primus.ponere" : "color_secundus.ponere");
+        componens_addere_liberum(palette, o);
+    }
+    redde palette;
 }
 
 /* <componens/> <purus/> */
@@ -331,5 +397,31 @@ pictor_componere (
     componens_addere_liberum(prospectus, tabula);
     componens_addere_liberum(radix, prospectus);
     componens_addere_liberum(radix, status);
+    /* P1b: palette aperta - filius ULTIMUS radicis (super tabulam
+     * pingitur, ictus primum capit) */
+    {
+        chorda palette;
+           s32 qx;
+           s32 qy;
+
+        palette = attributum_chorda(&ramus, INSULA_EPHEMERA, "palette");
+        qy = fs.y + (fs.altitudo > XX ? (fs.altitudo - XX) / II
+                                      : ZEPHYRUM);
+        qx = chorda_aequalis_literis(palette, "color_primus")
+            ? II * cw + XX
+            : chorda_aequalis_literis(palette, "color_secundus")
+            ? III * cw + II * XX : cw;
+        si (   chorda_aequalis_literis(palette, "instrumentum")
+            || chorda_aequalis_literis(palette, "color_primus")
+            || chorda_aequalis_literis(palette, "color_secundus"))
+        {
+            componens_addere_liberum(radix, palettam_componere(piscina,
+                intern, palette, fs.x + qx, qy, instrumentum,
+                attributum_s32(&ramus, INSULA_EPHEMERA,
+                    chorda_ut_cstr(palette, piscina),
+                    chorda_aequalis_literis(palette, "color_primus")
+                    ? ZEPHYRUM : -I)));
+        }
+    }
     redde radix;
 }

@@ -2,7 +2,12 @@
  * status). P1a (2026-10-09): status = linea instrumentorum III
  * cellularum: quadrata 'quadratum.instrumentum',
  * 'quadratum.color_primus', 'quadratum.color_secundus' (titulus = quid
- * pingatur, figura_quadrati), deinde nomen instrumenti.
+ * pingatur, figura_quadrati), deinde nomen instrumenti. P1b: quadrata
+ * actionem 'palette.aperire' ferunt; ephemera 'palette' posita:
+ * nodus 'palette' (PARTES_DIALOGUS, radicis filius ULTIMUS - super
+ * tabulam pingitur et ictus primum capit) supra quadratum suum, cum
+ * optionibus 'optio.<genus>.<valor>' (quadrata, actio domini
+ * attributi), electa ':electum'.
  *
  * <componens/> <purus/>: arbor logica ex insulis (lectio) et motu
  * (lectio) in piscinam datam; nihil scribit. Partes sunt DATA

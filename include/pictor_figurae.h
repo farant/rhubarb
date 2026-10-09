@@ -54,9 +54,19 @@ figura_tabulae (
 /* <purus/> quadratum lineae status (PARTES_BOTTONE): titulus dicit
  * quid pingatur - "instrumentum:<nomen>" (icon 1-bit XVI x XVI),
  * "color:<index>" (palette colorationis), "color:-1" (nullus: crux).
- * Margo colore marginis. P1b: ictus palettam aperit. */
+ * Margo colore marginis; titulus in ":electum" desinens (optio
+ * electa in palette, P1b): margo colore accentus. */
 vacuum
 figura_quadrati (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx);
+
+/* <purus/> palette (PARTES_DIALOGUS, P1b): fundus superficiei et
+ * margo; optiones = quadrata filia (figura_quadrati) */
+vacuum
+figura_palettae (
     constans Componens* c,
                Mandata* m,
                    i32  thema,

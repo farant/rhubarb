@@ -7,6 +7,9 @@
     <attributum nomen="color_primus"    genus="numerus"/>
     <attributum nomen="color_secundus"  genus="numerus"/>
     <attributum nomen="magnitudo"       genus="numerus"/>
+    <attributum nomen="palette"         genus="nomen"
+      nota="P1b: palette aperta (instrumentum, color_primus,
+            color_secundus); absens = nulla"/>
     <attributum nomen="semen"           genus="numerus"
       nota="aspergillum: semen ictus currentis (praevisio guttarum)"/>
     <attributum nomen="stratum_activum" genus="numerus"/>

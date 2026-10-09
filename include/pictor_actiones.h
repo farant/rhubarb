@@ -54,7 +54,34 @@ pictor_aspergillum_ictus (
       constans Eventus* ev,
                 vacuum* ctx);
 
-/* <tractator/> 'p' penicillus, 'a' aspergillum */
+/* <tractator/> quadratum lineae status ictum: palettam suam aperit
+ * (ephemera 'palette' = instrumentum / color_primus / color_secundus);
+ * eadem iterum: claudit */
+b32
+pictor_palettam_aperire (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> optio coloris ictum ('optio.color_primus.<n>',
+ * 'optio.color_secundus.<n>'; n = -1 nullus): colorem ponit, palettam
+ * claudit. Registratur ut 'color_primus.ponere' et
+ * 'color_secundus.ponere' (domini harum attributorum) */
+b32
+pictor_colorem_ponere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> 'p' penicillus, 'a' aspergillum; ictus in optionem
+ * instrumenti ('optio.instrumentum.<nomen>') idem ponit et palettam
+ * claudit; Esc palettam apertam claudit */
 b32
 pictor_instrumentum_eligere (
     InsulaRepositorium* repo,

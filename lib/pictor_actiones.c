@@ -3,6 +3,8 @@
 #include "pictor_actiones.h"
 #include "xar.h"
 
+#include <string.h>
+
 
 /* ==================================================
  * Mutatores motus
@@ -59,6 +61,43 @@ instrumentum_ponere (
                              (constans character*)ctx);
 }
 
+/* P1b: palette aperta (ctx = nomen) aut clausa (ctx NIHIL: tollitur) */
+interior vacuum
+palettam_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    si (!ctx)
+    {
+        (vacuum)insula_attributum_tollere(radix, "palette");
+        redde;
+    }
+    insula_attributum_ponere(radix, p, in, "palette",
+                             (constans character*)ctx);
+}
+
+/* P1b: colorem (ctx = ColorPonendus) ponere */
+nomen structura {
+     constans character* attributum;
+                    s32  valor;
+} ColorPonendus;
+
+interior vacuum
+colorem_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans ColorPonendus* cp;
+
+    cp = (constans ColorPonendus*)ctx;
+    insula_attributum_ponere(radix, p, in, cp->attributum,
+        chorda_ut_cstr(chorda_ex_s32(cp->valor, p), p));
+}
+
 
 /* ==================================================
  * Actum ictus
@@ -78,6 +117,44 @@ ramus_pictoris (
         redde pa->ramus;
     }
     redde insula_ramus_radix(repo);
+}
+
+/* P1b: palette aperta? */
+interior b32
+palette_aperta (
+    constans InsulaRamus* ramus)
+{
+    redde insula_ramus_attributum(ramus, INSULA_EPHEMERA, "palette")
+        != NIHIL;
+}
+
+interior b32
+palettam_claudere (
+    constans InsulaRamus* ramus)
+{
+    redde mutare_ramum(ramus, INSULA_EPHEMERA, palettam_mutator, NIHIL);
+}
+
+/* id nodi post praefixum ('optio.color_primus.' -> '7'); vacua si
+ * praefixum abest */
+interior chorda
+post_praefixum (
+    constans Componens* nodus,
+    constans character* praefixum)
+{
+    chorda c;
+       i32 n;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    n          = (i32)strlen(praefixum);
+    si (   nodus && nodus->id.mensura > n
+        && memcmp(nodus->id.datum, praefixum, (size_t)n) == ZEPHYRUM)
+    {
+        c.datum    = nodus->id.datum + n;
+        c.mensura  = nodus->id.mensura - n;
+    }
+    redde c;
 }
 
 interior s32
@@ -206,6 +283,13 @@ ictum_tractare (
     commutatio (ev->genus)
     {
         casus EVENTUS_MUS_DEPRESSUS:
+            /* P1b: palette aperta - ictus eam solum claudit */
+            ramus = ramus_pictoris(repo, ctx);
+            si (palette_aperta(&ramus))
+            {
+                (vacuum)palettam_claudere(&ramus);
+                redde VERUM;
+            }
             motus_captura_ponere(motus, nodus->id);
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             mutare_motum(motus, punctum_addere, &p, ev->tempus);
@@ -313,11 +397,36 @@ pictor_instrumentum_eligere (
                 vacuum* ctx)
 {
     InsulaRamus ramus;
+         chorda nomen_instrumenti;
     (vacuum)motus;
     (vacuum)destinatio;
-    (vacuum)nodus;
-    si (!repo || !ev || ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    si (!repo || !ev)
     {
+        redde FALSUM;
+    }
+    /* P1b: optio instrumenti in palette */
+    nomen_instrumenti = post_praefixum(nodus, "optio.instrumentum.");
+    si (   ev->genus == EVENTUS_MUS_DEPRESSUS
+        && nomen_instrumenti.mensura > ZEPHYRUM)
+    {
+        ramus = ramus_pictoris(repo, ctx);
+        (vacuum)palettam_claudere(&ramus);
+        redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
+            chorda_aequalis_literis(nomen_instrumenti, "aspergillum")
+            ? litterae_aspergillum : litterae_penicillus);
+    }
+    si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    /* P1b: Esc palettam apertam claudit */
+    si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    {
+        ramus = ramus_pictoris(repo, ctx);
+        si (palette_aperta(&ramus))
+        {
+            redde palettam_claudere(&ramus);
+        }
         redde FALSUM;
     }
     /* clavis LOGICA (runa sine maiuscula, dispositionis praesentis);
@@ -335,6 +444,80 @@ pictor_instrumentum_eligere (
     redde FALSUM;
 }
 
+/* <tractator/> */
+b32
+pictor_palettam_aperire (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    InsulaRamus  ramus;
+         chorda  genus;
+         chorda* aperta;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    si (!repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    genus = post_praefixum(nodus, "quadratum.");
+    si (genus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    ramus = ramus_pictoris(repo, ctx);
+    aperta = insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+        "palette");
+    si (aperta && chorda_aequalis(*aperta, genus))
+    {
+        redde palettam_claudere(&ramus);
+    }
+    redde mutare_ramum(&ramus, INSULA_EPHEMERA, palettam_mutator,
+        (vacuum*)chorda_ut_cstr(genus, ((PictorActiones*)ctx)->doc
+            ->piscina));
+}
+
+/* <tractator/> */
+b32
+pictor_colorem_ponere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+      InsulaRamus ramus;
+    ColorPonendus cp;
+           chorda valor;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    si (!repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    valor          = post_praefixum(nodus, "optio.color_primus.");
+    cp.attributum  = "color_primus";
+    si (valor.mensura == ZEPHYRUM)
+    {
+        valor          = post_praefixum(nodus, "optio.color_secundus.");
+        cp.attributum  = "color_secundus";
+    }
+    si (   valor.mensura == ZEPHYRUM || !chorda_ut_s32(valor, &cp.valor)
+        || cp.valor < -I || cp.valor > XV)
+    {
+        redde FALSUM;
+    }
+    ramus = ramus_pictoris(repo, ctx);
+    (vacuum)palettam_claudere(&ramus);
+    redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
+}
+
 vacuum
 pictor_actiones_registrare (
     ActioRegistrum* reg,
@@ -347,6 +530,13 @@ pictor_actiones_registrare (
     actio_registrare(reg, "penicillus.ictus", pictor_penicillus_ictus,
         ctx);
     actio_registrare(reg, "aspergillum.ictus", pictor_aspergillum_ictus,
+        ctx);
+    actio_registrare(reg, "palette.aperire", pictor_palettam_aperire,
+        ctx);
+    actio_registrare(reg, "color_primus.ponere", pictor_colorem_ponere,
+        ctx);
+    actio_registrare(reg, "color_secundus.ponere",
+        pictor_colorem_ponere,
         ctx);
     actio_registrare(reg, "instrumentum.eligere",
                      pictor_instrumentum_eligere, ctx);

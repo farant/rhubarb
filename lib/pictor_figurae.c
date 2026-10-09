@@ -291,11 +291,22 @@ figura_quadrati (
       Fines intus;
     Punctum a;
     Punctum b;
+     chorda t;
      chorda reliquum;
         s32 index;
+        b32 electum;
 
     (vacuum)thema;
     (vacuum)ctx;
+    /* P1b: ':electum' - optio electa, margo accentus */
+    t        = c->titulus;
+    electum  = t.mensura > VIII
+        && memcmp(t.datum + t.mensura - VIII, ":electum", VIII)
+           == ZEPHYRUM;
+    si (electum)
+    {
+        t.mensura -= VIII;
+    }
     f.x             = ZEPHYRUM;
     f.y             = ZEPHYRUM;
     f.latitudo      = c->fines.latitudo;
@@ -305,22 +316,34 @@ figura_quadrati (
     intus.latitudo  = c->fines.latitudo - IV;
     intus.altitudo  = c->fines.altitudo - IV;
     mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
-    mandata_rectangulum(m, f, color_thematis(COLOR_BORDER), FALSUM);
-    si (chorda_aequalis_literis(c->titulus, "instrumentum:penicillus"))
+    mandata_rectangulum(m, f, color_thematis(electum
+        ? COLOR_ACCENT_PRIMARY : COLOR_BORDER), FALSUM);
+    si (electum)
+    {
+        Fines g;
+
+        g.x         = I;
+        g.y         = I;
+        g.latitudo  = f.latitudo - II;
+        g.altitudo  = f.altitudo - II;
+        mandata_rectangulum(m, g, color_thematis(COLOR_ACCENT_PRIMARY),
+            FALSUM);
+    }
+    si (chorda_aequalis_literis(t, "instrumentum:penicillus"))
     {
         iconem_pingere(m, icon_penicilli, II, II);
         redde;
     }
-    si (chorda_aequalis_literis(c->titulus, "instrumentum:aspergillum"))
+    si (chorda_aequalis_literis(t, "instrumentum:aspergillum"))
     {
         iconem_pingere(m, icon_aspergilli, II, II);
         redde;
     }
-    si (   c->titulus.mensura > VI
-        && memcmp(c->titulus.datum, "color:", VI) == ZEPHYRUM)
+    si (   t.mensura > VI
+        && memcmp(t.datum, "color:", VI) == ZEPHYRUM)
     {
-        reliquum.datum    = c->titulus.datum + VI;
-        reliquum.mensura  = c->titulus.mensura - VI;
+        reliquum.datum    = t.datum + VI;
+        reliquum.mensura  = t.mensura - VI;
         si (   chorda_ut_s32(reliquum, &index) && index >= ZEPHYRUM
             && index < XVI)
         {
@@ -340,6 +363,26 @@ figura_quadrati (
     }
 }
 
+/* <purus/> palette: fundus superficiei, margo */
+vacuum
+figura_palettae (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    Fines f;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    f.x         = ZEPHYRUM;
+    f.y         = ZEPHYRUM;
+    f.latitudo  = c->fines.latitudo;
+    f.altitudo  = c->fines.altitudo;
+    mandata_rectangulum(m, f, color_thematis(COLOR_SUPERFICIES), VERUM);
+    mandata_rectangulum(m, f, color_thematis(COLOR_BORDER), FALSUM);
+}
+
 vacuum
 pictor_figurae_registrare (
     FiguraRegistrum* reg,
@@ -353,6 +396,8 @@ pictor_figurae_registrare (
     figura_registrare(reg, PARTES_TABULA, thema, figura_tabulae, ctx);
     figura_registrare(reg, PARTES_TITULUS, thema, figura_tituli, ctx);
     figura_registrare(reg, PARTES_BOTTONE, thema, figura_quadrati, ctx);
+    figura_registrare(reg, PARTES_DIALOGUS, thema, figura_palettae,
+        ctx);
     figura_registrare(reg, PARTES_PROSPECTUS, thema, figura_prospectus,
                       ctx);
 }

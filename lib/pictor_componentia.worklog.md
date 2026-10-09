@@ -72,3 +72,22 @@ bar). Tests: probatio_pictor_aspergillum VIII (titles, swatch fill,
 cross, icon pixel count, text offset); goldens: pictor.arbor,
 pictor_prima, tessellation scene VII line 29, montatio 440, twin text
 column 14 on the bar's middle line.
+
+## 2026-10-09 - P1b: palettes
+
+A click on a bar square opens its palette (ephemeral `palette` =
+instrumentum / color_primus / color_secundus; same square again
+closes, another switches). The composer adds node `palette`
+(PARTES_DIALOGUS) as the LAST child of the root - drawn over the
+canvas, hit first - just above the square: options are squares
+(`optio.<genus>.<valor>`, same title encoding and figure as the bar),
+6 per row, the current one titled `...:electum` (accent border).
+Ownership drives the action names: each option carries the action
+that OWNS its attribute in domini.stml (`color_primus.ponere`,
+`color_secundus.ponere`, `instrumentum.eligere`), so one colour
+handler is registered under both colour names and reads which from
+the option id. Closing: option click, Esc (`instrumentum.eligere` key
+path - the root's action sees keys the canvas does not take), and a
+canvas press while open (closes only, draws nothing, like a menu).
+Note: the theme's colouring palette repeats entries (slots 0, 13, 14,
+15 are the same dark green), so the colour palette shows duplicates.
