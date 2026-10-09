@@ -370,6 +370,7 @@
   <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
   <vocabulum lemma="cauchy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: A.-L. Cauchy (limes radicum 1 + max |f_i|; lib/extensio.c)"/>
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
+  <vocabulum lemma="kronecker" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: L. Kronecker (symbolum Kronecker, character realis discriminantis; theorema Kronecker-Weber; lib/extensio.c)"/>
   <vocabulum lemma="arf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Cahit Arf (invarians Arf nodi, V(i) = (-1)^Arf)"/>
   <vocabulum lemma="phi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: phi(n) Euleri, Phi_n polynomium cyclotomicum"/>
   <vocabulum lemma="mu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: mu(n) functio Moebius"/>
@@ -1037,7 +1038,8 @@
   <vocabulum lemma="ephemera" lingua="latina" classis="substantivum" nota="Graeca: res diei unius (insula: contra durabile)"><forma textus="ephemera"/></vocabulum>
   <vocabulum lemma="rotula" lingua="latina" classis="substantivum" nota="Latina: rota parva (fenestra: rotula muris)"><forma textus="rotula"/><forma textus="rotulae"/><forma textus="rotulam"/></vocabulum>
   <vocabulum lemma="schirmum" lingua="latina" classis="substantivum" nota="coinage domus (pictor, ex Germanico Schirm): screen (manus_ludus)"><forma textus="schirmum"/><forma textus="schirmi"/><forma textus="schirmus"/></vocabulum>
-  <vocabulum lemma="strategia" lingua="latina" classis="substantivum" nota="Graeca: ratio ducis (destinatio, dispensator)"><forma textus="strategia"/><forma textus="strategiam"/><forma textus="strategiae"/></vocabulum>
+  <vocabulum lemma="strategia" lingua="latina" classis="substantivum" nota="Graeca: ratio ducis (destinatio, dispensator)"><forma textus="strategia"/><forma textus="strategiam"/><forma textus="strategiae"/><forma textus="strategias"/></vocabulum>
+  <vocabulum lemma="suita" lingua="latina" classis="substantivum" nota="domus: suita probationum (credo v2 sectiones; non Latina classica)"><forma textus="suita"/><forma textus="suitam"/><forma textus="suitae"/><forma textus="suitarum"/><forma textus="suitas"/></vocabulum>
   <vocabulum lemma="dctx" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio pictor (delineare_mandata: contextus delineandi) - renominanda si placet"/>
   <vocabulum lemma="toy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: ludus_toy.h fixtura - renominanda si placet"/>
   <vocabulum lemma="botton" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor (fenestra): button? - renominandum si placet"><forma textus="bottonis"/></vocabulum>

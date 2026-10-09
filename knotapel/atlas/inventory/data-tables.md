@@ -2758,7 +2758,7 @@ z8 (24 entries, solvable) vs 2I random 24-subsets (10-trial mean, non-solvable):
 | 7 | 197 | 672 | 72003 | 241854 | 2I |
 | 8 | 1 | 1 | 57449 | 375756 | z8 |
 
-N=6 XOR: 2I wins by 78%. N=7 XOR: 2I wins ~3.4x. N=8: both XOR near zero (pigeonhole), but 2I AND = 375K vs z8 AND = 57K (6.5x).
+N=6 XOR: 2I wins by 78%. N=7 XOR: 2I wins ~3.4x. N=8: both XOR near zero (pigeonhole), but 2I AND = 375K vs z8 AND = 57K (6.5x). **[Correction, D119: N=7/8 compare a scaled 2I mean with raw z8 sample counts; on one scale N=7 XOR is even (0.99x) and z8 leads N=7/8 AND. See demo_119_exact_capacity/findings.md.]**
 
 **Provenance:** Demo 94, Phase 2.
 

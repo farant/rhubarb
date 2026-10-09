@@ -254,14 +254,108 @@ chordam_scribere (
     fwrite(c.datum, I, (size_t)c.mensura, f);
 }
 
+/* codex PD nodi k ut textus "1,5,2,4,..." in alveum (NUL terminatum);
+ * longitudo reddita. Alveus DCCC litteras capit (XIII transitus: LII
+ * numeri <= XXVI, ~150 litterae). */
+interior i32
+pd_formare (
+          i32  k,
+    character* alveus)
+{
+    i32 j;
+    i32 n;
+
+    n          = ZEPHYRUM;
+    alveus[0]  = '\0';
+    per (j = ZEPHYRUM; j < IV * nodi[k].transitus; j++)
+    {
+        n += (i32)sprintf(alveus + n, j > ZEPHYRUM ? ",%u" : "%u",
+            piscina_pd[nodi[k].initium_pd + j]);
+    }
+    redde n;
+}
+
+/* textus in litteram C scribendus: nulla '"', nulla '\\', nihil non
+ * imprimibile (aliter litteram frangeret) */
+interior vacuum
+textum_probare (
+    constans character* textus,
+                   i32  mensura,
+    constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < mensura; i++)
+    {
+        si (   textus[i] == '"' || textus[i] == '\\'
+            || textus[i] < ' ' || textus[i] > '~')
+        {
+            fracta("textus cum littera vetita in nodo ", titulus);
+        }
+    }
+}
+
+/* TEXTUS IN SECTIONE __const (2026-10-09): litterae C quae directe in
+ * structura stant in __cstring binarii eunt, quam macOS pro omni
+ * aedificatione distincta processus log scribentis in
+ * /private/var/db/uuidtext servat - ~3.3 MB tabulae nodorum in omni
+ * probatione radicis, 42 GB uno die. Tabula NOMINATA (ut textus_dr
+ * bibliae) in __const stat, quam uuidtext non servat (mensuratum: 1.14
+ * MB litterarum -> plagula uuidtext 150 B). Ergo textus quisque in
+ * tabula una 'TEXTUS_<campus>' per NUL separatus; structura per
+ * offset monstrat. Lexemata ~2 plura per campum (limen silvae 2^20
+ * longe abest). */
+interior vacuum
+textum_scribere (
+                   FILE* f,
+     constans character* titulus_tabulae,
+                    i32  campus)
+{
+    character alveus[DCCC];
+          i32 k;
+
+    fprintf(f, "hic_manens constans character %s[] =\n",
+        titulus_tabulae);
+    per (k = ZEPHYRUM; k < numerus_nodorum; k++)
+    {
+        fprintf(f, "    \"");
+        si (campus == ZEPHYRUM)
+        {
+            textum_probare(nodi[k].titulus,
+                (i32)strlen(nodi[k].titulus),
+                nodi[k].titulus);
+            fprintf(f, "%s", nodi[k].titulus);
+        }
+        alioquin si (campus == I)
+        {
+            (vacuum)pd_formare(k, alveus);
+            fprintf(f, "%s", alveus);
+        }
+        alioquin
+        {
+            chorda c = (campus
+                == II) ? nodi[k].alexander : nodi[k].jones;
+
+            textum_probare((constans character*)c.datum, c.mensura,
+                nodi[k].titulus);
+            chordam_scribere(f, c);
+        }
+        fprintf(f, k + I < numerus_nodorum ? "\\0\"\n" : "\";\n\n");
+    }
+}
+
 interior vacuum
 scribere (
     constans character* fixum,
     constans character* via)
 {
-    FILE* f = fopen(via, "w");
-     i32  k;
-     i32  j;
+         FILE* f = fopen(via, "w");
+          i32  k;
+          i32  o_titulus;
+          i32  o_pd;
+          i32  o_alexander;
+          i32  o_jones;
+    character  alveus[DCCC];
 
     si (f == NIHIL)
     {
@@ -290,23 +384,33 @@ scribere (
      * numerorum: tabula numerorum (DCLVII milia, ~2.4M lexemata cum
      * commatibus) limen lexematum silvae (2^20) excedebat - plagula
      * iudicari non poterat. Textus brevis (<= ~150 litterae ad XIII
-     * transitus) lexema unum est. */
+     * transitus) lexema unum est. Textus omnes in tabulis nominatis
+     * (__const, non __cstring - vide textum_scribere). */
+    fprintf(f, "/* textus in tabulis NOMINATIS (__const): litterae in "
+        "structura\n * ipsa in __cstring irent, quam macOS in uuidtext "
+        "pro omni\n * aedificatione servat "
+        "(tools/tabula_nodorum_generare.c,\n * textum_scribere) */\n");
+    textum_scribere(f, "TEXTUS_TITULORUM", ZEPHYRUM);
+    textum_scribere(f, "TEXTUS_PD", I);
+    textum_scribere(f, "TEXTUS_ALEXANDER", II);
+    textum_scribere(f, "TEXTUS_JONES", III);
     fprintf(f, "constans NodusTabulae TABULA_NODORUM[] = {\n");
+    o_titulus    = ZEPHYRUM;
+    o_pd         = ZEPHYRUM;
+    o_alexander  = ZEPHYRUM;
+    o_jones      = ZEPHYRUM;
     per (k = ZEPHYRUM; k < numerus_nodorum; k++)
     {
-        fprintf(f, "    { \"%s\", %u, %s,\n        \"",
-            nodi[k].titulus,
-            nodi[k].transitus, nodi[k].symmetria);
-        per (j = ZEPHYRUM; j < IV * nodi[k].transitus; j++)
-        {
-            fprintf(f, j > ZEPHYRUM ? ",%u" : "%u",
-                piscina_pd[nodi[k].initium_pd + j]);
-        }
-        fprintf(f, "\",\n        \"");
-        chordam_scribere(f, nodi[k].alexander);
-        fprintf(f, "\",\n        \"");
-        chordam_scribere(f, nodi[k].jones);
-        fprintf(f, "\" },\n");
+        fprintf(f, "    { TEXTUS_TITULORUM + %u, %u, %s,\n"
+            "        TEXTUS_PD + %u,\n"
+            "        TEXTUS_ALEXANDER + %u,\n"
+            "        TEXTUS_JONES + %u },\n",
+            o_titulus, nodi[k].transitus, nodi[k].symmetria, o_pd,
+            o_alexander, o_jones);
+        o_titulus    += (i32)strlen(nodi[k].titulus) + I;
+        o_pd         += pd_formare(k, alveus) + I;
+        o_alexander  += nodi[k].alexander.mensura + I;
+        o_jones      += nodi[k].jones.mensura + I;
     }
     fprintf(f, "};\n\nconstans i32 TABULA_NODORUM_NUMERUS = %u;\n",
         numerus_nodorum);

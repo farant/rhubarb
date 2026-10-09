@@ -344,3 +344,120 @@ exact text); signum results unchanged. Fixed:
   E35, E40 (doubling only), E41 (approximation error underestimated - the
   exact certification corrects R, so approximation quality affects speed,
   never correctness). 195 tests, 1.6 s.
+
+## 2026-10-08 - abelian fields: everything into Q(cos 2 pi/n)
+
+API approved by Fran 2026-10-08 (for Demo 119: D94's cells compare values
+of Q(sqrt 5) against cos(m pi/12), which needs sqrt 2, sqrt 3, sqrt 6 too).
+
+**Scope decision:** no general compositum. Q(alpha, beta) for arbitrary
+alpha, beta needs the minimal polynomial of alpha + c beta, i.e. a factor
+of a resultant, i.e. factoring over Q (Zassenhaus/LLL - a library of its
+own, parked). Everything D119 needs is ABELIAN, and every real abelian
+number lies in some Q(cos 2 pi/n) (Kronecker-Weber), which
+`extensio_cosinus(n)` already builds with exact signs. So: embed into one
+cosine field (D119: n = 120, degree 16).
+
+- Fields now remember their kind (private `genus`, `parametrum`: d of
+  quadratica, n of cosinus; GENERALE for ex_polynomio even when it is
+  the same field).
+- `extensio_conductor`: D for Q(sqrt d), d > 0 (s or 4s, s squarefree
+  part); m, or m/2 if m = 2 mod 4 (Q(cos 2pi/10) = Q(cos 2pi/5)), for
+  cosinus(m); 1 for degree 1; 0 for generic and imaginary fields.
+- `algebraicus_cosinus(K, j)` = 2 cos(2 pi j/n) = D_j(alpha) by the Dickson
+  recurrence D_(j+1) = alpha D_j - D_(j-1); j reduced mod n and folded to
+  <= n/2.
+- `algebraicus_radix_quadrata(K, d)`: d = s r^2; sqrt s from the Gauss sum
+  of the real character of discriminant D (Kronecker symbol (D/a)):
+  sum_a chi(a) 2 cos(2 pi a/D) = 2 sqrt D (the character is even, so the
+  imaginary parts cancel); sqrt s = S/2 (D = s) or S/4 (D = 4s). Every
+  result is VERIFIED (x^2 = s, x > 0) before it is returned - a wrong
+  Kronecker sign would refuse, not lie. In Q(sqrt d') it is alpha/r' when
+  the squarefree parts agree.
+- `algebraicus_immergere(a, K)`: generator image (sqrt d, or 2 cos(2pi/m)
+  as D_(n/m), or for m = 2 mod 4 with h = m/2 odd: cos(pi/h) =
+  -cos(2 pi ((h-1)/2)/h)), then Horner on the numerator, then / denominator.
+  A ring homomorphism that keeps the chosen real root, so signs agree.
+
+**Tests (+47, 245 total):**
+- conductors;
+- rational angles (2, -2, 0, +-1, negative and > n indices);
+- classical identities in Q(cos 2pi/120): 2cos(pi/12) = (sqrt6 + sqrt2)/2,
+  2cos(2pi/5) = (sqrt5 - 1)/2, 2cos(pi/5) = (1 + sqrt5)/2;
+- (2cos(pi/8))^2 = 2 + sqrt2 in Q(cos 2pi/16);
+- a Gauss-sum sweep: sqrt s for all 30 squarefree s in 2..50, each in its
+  own conductor field (degree up to 46), exact square and sign, plus
+  certified digits (ad_ostendendum, 12) against libm sqrt;
+- 50 random Q(sqrt5) pairs into Q(cos 2pi/120): sum, product, sign, and a
+  f64 value check;
+- cos(10) -> cos(5) gives alpha_5 + 1 (= phi), and the 2-path commutation
+  10 -> 5 -> 120 == 10 -> 120 on 20 random elements;
+- refusals: sqrt7 in K120, sqrt2 in K5, d <= 0, generic fields,
+  imaginary Q(i), a non-cosine target, cos(7) into K120.
+
+**GOTCHA (test oracle):** my first float oracle evaluated the element by
+f64 Horner at alpha = 2cos(2pi/D). At degree 30-46 that LOSES its digits
+to cancellation and "failed" 6 correct roots (s = 31..47, D > 120). The
+exact values were right (probe: sqrt 31 = 5.567764362830). Replaced by the
+library's certified decimal digits vs libm sqrt. A float oracle for a
+high-degree element must not go through the power basis.
+
+**Plants (13):** Dickson sign, no folding of j, Kronecker sign at 2,
+divisor 2/4 swapped, conductor without m/2, wrong index for m | n,
+missing negation for m = 2 mod 4, denominator dropped, squarefree-part
+test inverted, discriminant always s, cosinus kind not recorded, factor r
+dropped - all RED. The x^2 = s self-check removed SURVIVES by design (a
+safety net that correct code never trips).
+
+Glossary: kronecker (proper name, like sturm/cauchy/horner).
+
+## 2026-10-08 - review ABEL (recensor, RECENSIO_ABEL.md)
+
+**Confirmed against oracles that never use the conductor formula, 0
+failures:**
+- 304k Kronecker values;
+- 203 conductors against brute force;
+- 22,800 containment decisions ((m, n) <= 60, d <= 200) against a Galois
+  test - no false accept, no false refusal;
+- 1,444 cos/sqrt values to 30 certified digits;
+- 4,144 homomorphism, sign and value checks under ASan.
+The Gauss sum (tau(chi_D) = sqrt D) and the sign are right.
+
+**Fixed:**
+- **M1 - signum hung in high-degree cosine fields.** This was pre-existing
+  code, newly exposed: the zero certificate 1/M^(d-1) was built as an
+  EXACT magnus_potentia(M, d-1), and at degree ~500 that power never
+  returned (radix_quadrata(cosinus(997), 997) > 120 s, killed).
+  - Now the bound is taken in bits: M < 2^B, so 2^-(d-1)B < 1/M^(d-1).
+  - _infra_potentiam tests p/q < 2^-e as bita(p) + e <= bita(q) - 1. It
+    is conservative and costs nothing; the step limit uses the same
+    exponent.
+  - Degree 498 now finishes: sqrt 997 in 54 s, the sign of
+    cos(2pi 300/997) in 9 s, 20 certified digits in 54 s (right value).
+    That is slow but bounded; the cost is ordinary degree-500
+    arithmetic. K120 is unaffected (<= 0.2 ms).
+- **T1 - a surviving mutant made sqrt 2 -> 0 with the suite green.** The
+  m = 2 mod 4 path, mutated to accept m = 0 mod 4, embedded
+  Q(cos 2pi/8) into Q(cos 2pi/12) with sqrt 2 -> 0. Tests added: cos 8
+  -> cos 12 and cos 16 -> cos 24 are refused; cos 10 -> cos 15 is
+  accepted (phi^2 = phi + 1). The plant is red.
+- **A17 - squared primes removed only once** (80 = 4^2 5, 144 = 12^2).
+  sqrt 80 = 4 sqrt 5 and sqrt 144 = 12 are now tested. Red.
+- **A9/A10 - generic fields.** Generic fields are always refused, even at
+  degree 1 and even for a perfect square. This is now documented in the
+  header and tested.
+- **Certificate soundness test.** The plant "exponent without the factor
+  d - 1" (bound 1/M instead of 1/M^(d-1)) survived. It is UNSOUND: a
+  unit has a tiny value with large conjugates. Test: u = 2^(1/3) - 1
+  (norm 1, conjugates ~1.96), so |u^30| ~ 0.26^30 is below 1/M but
+  above 1/M^2. sign(u^30) = +1 and sign((1 - 2^(1/3))^31) = -1; the
+  plant is red. The plant "never certify zero" is equivalent in
+  outcome: the routine still refuses at the computed step limit, so it
+  only makes the refusal slower.
+
+**Not done (documented in the header):** P1 - immergere recomputes the
+generator's image on every call (Gauss sum or Dickson). That is
+~0.1 ms/element in K120 and 0.26 s at n = 840. The wish is an immersio
+handle (an API change - ask Fran). Demo 119 keeps its own cached image.
+
+Suite 254.

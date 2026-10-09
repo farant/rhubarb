@@ -479,28 +479,20 @@ hic_manens constans character* constans _fixa_graduum[] = {
 };
 
 
-s32 principale (vacuum)
+/* ==================================================
+ * GRADUS (fabrica-6 T5): membra ut actiones syntheticae - id
+ * stabilis, area propria, ambitus basis solus, transitus servati,
+ * defectus iterum currunt, scriptura extra aream et ambitus non
+ * declaratus recusati, areae orphanae nuntiatae
+ * ================================================== */
+
+interior vacuum
+_probare_gradus (
+    CredoContextus* c)
 {
-        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum(
-        "probatio_fabrica_gradus", 262144);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-    credo_aperire(piscina);
-
-
-    /* ==================================================
-     * GRADUS (fabrica-6 T5): membra ut actiones syntheticae - id
-     * stabilis, area propria, ambitus basis solus, transitus servati,
-     * defectus iterum currunt, scriptura extra aream et ambitus non
-     * declaratus recusati, areae orphanae nuntiatae
-     * ================================================== */
-
+    piscina = c->piscina;
     {
                 DiscusFictus  discus;
                FabricaSutura  sutura;
@@ -530,8 +522,6 @@ s32 principale (vacuum)
           constans character* VERDICTUM_B =
               "build/fabrica/area/probationes_t/b/verdictum.txt";
 
-        imprimere("\n--- Probans gradus (membra, areae, ambitus)"
-            " ---\n");
         causa = chorda_ex_literis("", piscina);
         mundi_discum_parare(&discus, &sutura, piscina);
         sutura.lectiones_legere = mundi_lectiones_legere;
@@ -828,15 +818,23 @@ s32 principale (vacuum)
         CREDO_VERUM(mundi_continet(causa, "t.stml:3", piscina));
         mundi_ambitus_ficti[0] = NIHIL;
     }
+}
 
 
-    /* ==================================================
-     * POST ET COMPOSITA (fabrica-6 T7): <post actio=/> ordinat
-     * (productor ante membra, sanatus primum) sed non clavat - membrum
-     * quod productum legit per vestigium suum clavatur, alterum non;
-     * compositum gradus per actionem, verdictum '<titulus>: N/M'
-     * ================================================== */
+/* ==================================================
+ * POST ET COMPOSITA (fabrica-6 T7): <post actio=/> ordinat
+ * (productor ante membra, sanatus primum) sed non clavat - membrum
+ * quod productum legit per vestigium suum clavatur, alterum non;
+ * compositum gradus per actionem, verdictum '<titulus>: N/M'
+ * ================================================== */
 
+interior vacuum
+_probare_post_et_composita (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                  DiscusFictus  discus;
                 FabricaSutura  sutura;
@@ -866,7 +864,6 @@ s32 principale (vacuum)
           constans character* VB =
               "build/fabrica/area/probationes_t/b/verdictum.txt";
 
-        imprimere("\n--- Probans post et composita (T7) ---\n");
         causa = chorda_ex_literis("", piscina);
         mundi_discum_parare(&discus, &sutura, piscina);
         sutura.lectiones_legere = mundi_lectiones_legere;
@@ -1069,17 +1066,25 @@ s32 principale (vacuum)
         }
         _gradus_lectio_fons = NIHIL;
     }
+}
 
 
-    /* ==================================================
-     * PROBATIONES_C (fabrica-6 T6c): elementum gradus in declaratione,
-     * membra per exemplar/praeter, clavis = clausura + vexilla +
-     * identitas clang + vestigium cursus; mutatio fontis bibliothecae,
-     * capitis, probationis aut lectionis membra SOLA tangentia iterum
-     * nectit et currit; facultas: nexum, non cursum; defectus cursus et
-     * compilationis FRACTUM nominatum
-     * ================================================== */
+/* ==================================================
+ * PROBATIONES_C (fabrica-6 T6c): elementum gradus in declaratione,
+ * membra per exemplar/praeter, clavis = clausura + vexilla +
+ * identitas clang + vestigium cursus; mutatio fontis bibliothecae,
+ * capitis, probationis aut lectionis membra SOLA tangentia iterum
+ * nectit et currit; facultas: nexum, non cursum; defectus cursus et
+ * compilationis FRACTUM nominatum
+ * ================================================== */
 
+interior vacuum
+_probare_probationes_c (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
                  DiscusFictus  discus;
                 FabricaSutura  sutura;
@@ -1116,7 +1121,6 @@ s32 principale (vacuum)
               "verdictum.txt"
           };
 
-        imprimere("\n--- Probans probationes_c (gradus C) ---\n");
         causa = chorda_ex_literis("", piscina);
         mundi_discum_parare(&discus, &sutura, piscina);
         sutura.lectiones_legere = mundi_lectiones_legere;
@@ -1381,17 +1385,24 @@ s32 principale (vacuum)
         _c_fractus_cursus   = NIHIL;
         (vacuum)membrum_c;
     }
+}
 
 
-    /* ==================================================
-     * CHASSIS GRADUUM (fabrica-6 T5): omne genus gradus registratum
-     * fixum conformitatis habet (T6: probationes_c)
-     * ================================================== */
+/* ==================================================
+ * CHASSIS GRADUUM (fabrica-6 T5): omne genus gradus registratum
+ * fixum conformitatis habet (T6: probationes_c)
+ * ================================================== */
 
+interior vacuum
+_probare_registrum_graduum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
     {
         i32 g;
 
-        imprimere("\n--- Probans chassis: registrum graduum ---\n");
         CREDO_NIHIL(fabrica_gradus_obtinere(fabrica_graduum_numerus()));
         CREDO_NIHIL(fabrica_gradus_invenire(chorda_ex_literis(
             "ludicrum", piscina)));
@@ -1417,19 +1428,26 @@ s32 principale (vacuum)
             CREDO_VERUM(fixum);
         }
     }
+}
 
-    imprimere("\n");
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "gradus (membra, areae, ambitus)",
+      _probare_gradus,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "post et composita (T7)",
+      _probare_post_et_composita,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "probationes_c (gradus C)",
+      _probare_probationes_c,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chassis: registrum graduum",
+      _probare_registrum_graduum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("fabrica_gradus", SECTIONES);
 }

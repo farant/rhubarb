@@ -238,3 +238,37 @@ NIHIL. Also NIHIL for n == NIHIL and the trivial knot.
 
 Callers: only this suite. knotapel demo 116's snapshot embeds its own
 frozen copy and is untouched; no live demo calls the accessor.
+
+## 2026-10-09 - strings out of __cstring (the 42 GB log cache)
+
+Found from Fran's disk alarm: /private/var/db/uuidtext (macOS log
+string cache) grew to 42 GB in a day, 99% rhubarb test binaries. Chain,
+each link measured: (1) compile_tests.sh links every lib object plus
+Cocoa/Security/WebKit into EVERY root test; (2) loading any of those
+frameworks makes a process write to the system log at startup (a
+two-line program + `-framework Security` gets a uuidtext entry; without
+frameworks, none; OS_ACTIVITY_MODE=disable does NOT prevent it -
+tested on a real test binary given a fresh LC_UUID and re-signed);
+(3) the entry copies the binary's __TEXT,__cstring - 3.33 MB per test,
+of which the 12,965 PD strings of this table (cd292cfb, the switch from
+numbers to strings for silva's 2^20-token cap) were nearly all; (4)
+every distinct build that runs leaves one file: edits, plants, five
+worktrees, umbrae clones, frigida temp trees.
+
+Fix here (generator, API unchanged): every string of the table goes
+into one of four NAMED arrays (`TEXTUS_TITULORUM`, `TEXTUS_PD`,
+`TEXTUS_ALEXANDER`, `TEXTUS_JONES`; one literal per knot ending
+"\0"), entries point `TEXTUS_PD + offset`. Named arrays live in
+__TEXT,__const, which uuidtext does not copy - measured on a probe:
+1.14 MB of literals -> uuidtext file 1.14 MB; the same as named arrays
+-> 150 bytes. Precedent: biblia_dr's `textus_dr[]`. Generator refuses
+'"', '\\' and non-printables in any string. Tokens: ~2 more per field
+(well under silva's cap); examen ACCIPE in 1.7 s.
+
+Oracle: a program printing every field of all 12,966 knots (+ FONS,
+NUMERUS), built against the OLD and the NEW data file: byte-identical.
+__cstring of the table alone 3.0 MB -> 169 B; of a root test
+(probatio_piscina) 3.3 MB -> 280 KB, so each cached build ~12x smaller.
+The rest of the 280 KB is other libraries' strings in every test -
+slice 7's per-test closures (only GUI tests load Cocoa) stop most tests
+logging at all. Cleanup + monitoring: tools/uuidtext_census.py.

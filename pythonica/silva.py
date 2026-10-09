@@ -1623,6 +1623,8 @@ PORTAE = {
     # scriptores simul, restitutio - in sedibus temporariis solum
     'annales': (['./gesta/annales_fumus.sh'],
                 r'fumus annalium: (sanum|FRACTUM)'),
+    # credo v2 (sectiones, plagula verdictorum, NECESSE): suitae fictae
+    'credo': (['./tools/credo_fumus.sh'], r'fumus credo: (sanum|FRACTUM)'),
     # fumi sine oculis (2026-09-24, ex inventario 'suitae
     # probationum'): villa crure faciei omisso, silex sine -agere
     'villa': (['./apps/villa/fumus.sh', '-sine-facie'],
