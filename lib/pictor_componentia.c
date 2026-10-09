@@ -354,12 +354,16 @@ pictor_componere (
         {
             character titulus_guttarum[XLVIII];
 
-            sprintf(titulus_guttarum, "%ld %d",
+            /* "semen radius color" - color primus (Franus: praevisio
+             * colore vero, non accentus) */
+            sprintf(titulus_guttarum, "%ld %d %d",
                 (longus)attributum_s32(&ramus, INSULA_EPHEMERA, "semen",
                     ZEPHYRUM),
                 (integer)(PICTOR_ASPERGILLI_RADIUS
                           * attributum_s32(&ramus, INSULA_EPHEMERA,
-                                "magnitudo", I)));
+                                "magnitudo", I)),
+                (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
+                    "color_primus", ZEPHYRUM));
             componens_ponere_titulum(tabula, titulus_guttarum);
         }
     }

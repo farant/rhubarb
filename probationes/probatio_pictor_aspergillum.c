@@ -176,6 +176,63 @@ actum_ultimum (
     redde ultimum;
 }
 
+/* guttae praevisionis (I x I, RGBA) coloris palettae 'color'; -1 =
+ * quaelibet RGBA I x I */
+interior i32
+guttae_praevisae (
+    PictorApplicatio* app,
+                 s32  color)
+{
+     Mandata* md;
+    Mandatum* x;
+         i32  i;
+         i32  n;
+
+    md = mandata_creare(piscina, intern);
+    pingere(dispensator_arbor(app->d), app->figurae, ZEPHYRUM, md);
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < mandata_numerus(md); i++)
+    {
+        x = mandata_obtinere(md, i);
+        si (   x->genus          == MANDATUM_RECTANGULUM
+            && x->fines.latitudo == I
+            && x->fines.altitudo == I
+            && x->color.genus    == COLOR_MANDATI_RGBA
+            && (color < ZEPHYRUM || x->color.valor
+                == color_ad_pixelum(color_ex_palette((i32)color))))
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior vacuum
+color_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "color_primus",
+        chorda_ut_cstr(chorda_ex_s32(*(s32*)ctx, p), p));
+}
+
+/* color primus per dominum suum (color_primus.ponere) */
+interior vacuum
+colorem_primum_ponere (
+    PictorApplicatio* app,
+                 s32  color)
+{
+    InsulaRamus r;
+
+    r = insula_ramus_radix(app->repo);
+    insula_scriptorem_ponere(app->repo, chorda_ex_literis(
+        "color_primus.ponere", piscina));
+    (vacuum)mutare_ramum(&r, INSULA_EPHEMERA, color_mutator, &color);
+    insula_scriptorem_ponere(app->repo, chorda_ex_literis("", piscina));
+}
+
 /* ictus aspergilli: pressio (x, y) t0, motus per puncta, solutio */
 interior vacuum
 aspergere (
@@ -354,37 +411,27 @@ s32 principale (vacuum)
 
     imprimere("\n--- VII: praevisio ante solutionem ---\n");
     {
-          Mandata* md;
         Componens* t;
-              i32  i;
-              i32  guttae;
 
         mus(app.d, EVENTUS_MUS_DEPRESSUS, XL, XL, M);
         mus(app.d, EVENTUS_MUS_MOTUS, L, XL, M + XVI);
         dispensator_recomponere(app.d);
         t = nodus_arboris(&app, "tabula");
         CREDO_AEQUALIS_I32(t->numerus_punctorum, II);
-        /* titulus = "semen radius" */
-        CREDO_VERUM(chorda_continet(t->titulus, chorda_ex_literis(" 8",
+        /* titulus = "semen radius color" */
+        CREDO_VERUM(chorda_continet(t->titulus,
+            chorda_ex_literis(" 8 0",
             piscina)));
-        md = mandata_creare(piscina, intern);
-        pingere(dispensator_arbor(app.d), app.figurae, ZEPHYRUM, md);
-        guttae = ZEPHYRUM;
-        per (i = ZEPHYRUM; i < mandata_numerus(md); i++)
-        {
-            si (   mandata_obtinere(md, i)->genus
-                == MANDATUM_RECTANGULUM
-                && mandata_obtinere(md, i)->fines.latitudo == I
-                && mandata_obtinere(md, i)->fines.altitudo == I
-                /* guttae colore accentus; icones lineae status (P1a)
-                 * quoque I x I, sed colore textus */
-                && mandata_obtinere(md, i)->color.valor
-                   == (i32)COLOR_ACCENT_PRIMARY)
-            {
-                guttae++;
-            }
-        }
-        CREDO_AEQUALIS_I32(guttae, II * PICTOR_GUTTAE_PUNCTO);
+        /* guttae colore VERO (color primus 0, palette Aquinas; Franus
+         * - olim accentus) */
+        CREDO_AEQUALIS_I32(guttae_praevisae(&app, ZEPHYRUM),
+            II * PICTOR_GUTTAE_PUNCTO);
+        /* color primus nullus: praevisio nulla (ut ictus) */
+        colorem_primum_ponere(&app, -I);
+        dispensator_recomponere(app.d);
+        CREDO_AEQUALIS_I32(guttae_praevisae(&app, -I), ZEPHYRUM);
+        colorem_primum_ponere(&app, ZEPHYRUM);
+        dispensator_recomponere(app.d);
         /* nihil in documento ante solutionem */
         CREDO_AEQUALIS_I32(picta(doc), ZEPHYRUM);
         mus(app.d, EVENTUS_MUS_LIBERATUS, L, XL, M + XXXII);

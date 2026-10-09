@@ -81,3 +81,13 @@ spec rule "the handler never branches on the tool STATE": the tool is
 fixed by which action runs (penicillus.ictus / aspergillum.ictus).
 Preview data travels in the canvas node like the points: the composer
 puts "semen radius" in the tabula's title while spraying.
+
+## 2026-10-09 - spray preview in the real colour (Fran)
+
+The preview dots were drawn in COLOR_ACCENT_PRIMARY (green), copying
+the brush preview line's convention; Fran: draw them in the real
+colour. The composer's canvas title is now "semen radius color" (the
+foreground palette index) and the figure draws each preview dot in
+that palette colour; foreground "none" (-1) previews nothing, as the
+stroke paints nothing. The brush's thin preview line is still accent
+green (not asked).

@@ -109,14 +109,15 @@ figura_tabulae (
         mandata_rectangulum(m, margo, color_thematis(COLOR_BORDER),
                             FALSUM);
     }
-    /* aspergillum (actio): guttae puncti cuiusque ex semine et radio
-     * in titulo - eaedem ac in actu (pictor_gutta), sine morae
-     * guttis (eae solutione apparent) */
+    /* aspergillum (actio): guttae puncti cuiusque ex semine, radio et
+     * colore in titulo - eaedem ac in actu (pictor_gutta) et colore
+     * vero, sine morae guttis (eae solutione apparent) */
     si (   c->numerus_punctorum > ZEPHYRUM
         && chorda_aequalis_literis(c->actio, "aspergillum.ictus"))
     {
       longus semen;
      integer radius;
+     integer color;
          s32 dx;
          s32 dy;
          i32 k;
@@ -124,11 +125,15 @@ figura_tabulae (
 
         semen   = ZEPHYRUM;
         radius  = ZEPHYRUM;
-        (vacuum)sscanf(chorda_ut_cstr(c->titulus, m->piscina), "%ld %d",
-            &semen, &radius);
+        color   = ZEPHYRUM;
+        (vacuum)sscanf(chorda_ut_cstr(c->titulus, m->piscina),
+            "%ld %d %d", &semen, &radius, &color);
         g.latitudo = I;
         g.altitudo = I;
-        per (i = ZEPHYRUM; i < c->numerus_punctorum; i++)
+        /* color primus nullus (-1): ictus nihil pingit, praevisio
+         * quoque nihil */
+        per (i = ZEPHYRUM; color >= ZEPHYRUM && color < XVI
+                           && i < c->numerus_punctorum; i++)
         {
             per (k = ZEPHYRUM; k < PICTOR_GUTTAE_PUNCTO; k++)
             {
@@ -136,7 +141,7 @@ figura_tabulae (
                 g.x = c->puncta[i].x + dx;
                 g.y = c->puncta[i].y + dy;
                 mandata_rectangulum(m, g,
-                    color_thematis(COLOR_ACCENT_PRIMARY), VERUM);
+                    color_thematis_index((s32)color), VERUM);
             }
         }
     }
