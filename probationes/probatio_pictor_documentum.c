@@ -169,9 +169,8 @@ s32 principale (vacuum)
     thema_initiare();
     /* vacatio: color fundi thematis (Franus 2026-10-09; olim
      * PALETTE_WHITE) */
-    fundus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
-    niger = color_ad_pixelum(thema_color_ex_indice_colorationis(
-        (i8)PALETTE_BLACK));
+    fundus  = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    niger   = color_ad_pixelum(color_ex_palette(PALETTE_BLACK));
 
     imprimere("\n--- Creatio: proiectio alba, cursor 0 ---\n");
     vol = volumen_temporarium(piscina, "probatio_pictor_documentum");

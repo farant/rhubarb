@@ -2,6 +2,7 @@
 
 #include "pictor_figurae.h"
 #include "thema.h"
+#include "color.h"
 #include "exemplaria.h"
 #include "xar.h"
 
@@ -23,14 +24,17 @@ color_thematis (
 }
 
 /* index palettae COLORATIONIS (colores ictuum), non semanticus */
+/* color palettae Aquinas (ut ictus pinguntur): RGBA ex
+ * color_ex_palette - non COLOR_MANDATI_INDEX, quod rasterizatores per
+ * indices colorationis (munera syntaxeos) resolvunt */
 interior ColorMandati
 color_thematis_index (
     s32 index)
 {
     ColorMandati cm;
 
-    cm.genus = COLOR_MANDATI_INDEX;
-    cm.valor = (i32)index;
+    cm.genus = COLOR_MANDATI_RGBA;
+    cm.valor = color_ad_pixelum(color_ex_palette((i32)index));
     redde cm;
 }
 

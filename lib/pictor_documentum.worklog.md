@@ -183,3 +183,17 @@ Migration: the background is not in the acts, but CHECKPOINTS store
 rendered pixels - drawings saved before this keep the old yellow
 wherever they restore from a checkpoint; new canvases are neutral.
 Goldens: aurum.txt (fingerprints only), pictor_prima specimen.
+
+## 2026-10-09 - stroke colours = the Aquinas palette itself
+
+Fran: the colour palette showed repeats ("there should be 16 unique
+colours"). The theme's Aquinas palette IS 16 distinct colours
+(`palette_aquinas`, `color_ex_palette`); pictor resolved stroke colours
+through `thema_color_ex_indice_colorationis`, which is not a palette
+but the SYNTAX-highlighting role map (0-12: command, tag, string...;
+13+ fall back to the text colour) - so 0/13/14/15 and 7/9 coincided,
+and "white" (5) was the gold of role "number". Strokes and swatches now
+use `color_ex_palette` (swatches as RGBA, since COLOR_MANDATI_INDEX is
+resolved through the role map by the rasterizers). Existing drawings
+re-render in the true palette colours. Test: the palette's 16 options
+are distinct (probatio_pictor_palette VIII).

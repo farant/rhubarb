@@ -234,6 +234,44 @@ s32 principale (vacuum)
         }
         /* electa (color primus III): margines duo accentus */
         CREDO_AEQUALIS_I32(accentus, II);
+        /* XVI colores optionum DISTINCTI (palette Aquinas ipsa; olim
+         * indices colorationis colores repetebant) */
+        {
+            i32 colores[XX];
+            i32 n;
+            i32 j;
+            i32 k;
+            i32 duplicata;
+
+            n = ZEPHYRUM;
+            per (i = ZEPHYRUM; i < mandata_numerus(md) && n < XX; i++)
+            {
+                x = mandata_obtinere(md, i);
+                si (   x->genus == MANDATUM_RECTANGULUM && x->impletum
+                    && x->color.genus == COLOR_MANDATI_RGBA
+                    && x->fines.latitudo == XVI)
+                {
+                    colores[n] = x->color.valor;
+                    n++;
+                }
+            }
+            /* quadrata in linea (primus III, secundus VII) + XVI
+             * optiones */
+            CREDO_AEQUALIS_I32(n, XVIII);
+            duplicata = ZEPHYRUM;
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                per (k = j + I; k < n; k++)
+                {
+                    si (colores[j] == colores[k])
+                    {
+                        duplicata++;
+                    }
+                }
+            }
+            /* III et VII bis (linea et palette), ceteri semel */
+            CREDO_AEQUALIS_I32(duplicata, II);
+        }
     }
 
     imprimere("\n");

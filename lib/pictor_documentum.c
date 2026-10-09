@@ -269,8 +269,12 @@ ictum_applicare (
     {
         redde;
     }
-    color = thema_color_ex_indice_colorationis(
-        (i8)attributum_s32(ictus, "color", (s32)PALETTE_BLACK));
+    /* palette Aquinas ipsa (XVI colores distincti; Franus 2026-10-09)
+     * - olim thema_color_ex_indice_colorationis, quae munera
+     * syntaxeos (0-12) colorat: XIII-XV et duplicata colorem textus
+     * dabant, V ('album') aurum */
+    color = color_ex_palette(
+        (i32)attributum_s32(ictus, "color", (s32)PALETTE_BLACK));
     magnitudo_penicilli = attributum_s32(ictus, "magnitudo", I);
     si (magnitudo_penicilli < I)
     {

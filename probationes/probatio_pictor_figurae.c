@@ -163,7 +163,7 @@ s32 principale (vacuum)
      * VIII - tabula ad cellulam I, ut folium scribae): schirmo y=13,
      * documentum x 1..40 */
         niger = color_ad_pixelum(
-            thema_color_ex_indice_colorationis((i8)PALETTE_BLACK));
+            color_ex_palette(PALETTE_BLACK));
     /* vacatio: color fundi thematis (Franus 2026-10-09) */
     fundus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XIII),

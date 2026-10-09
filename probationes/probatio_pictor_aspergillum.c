@@ -329,9 +329,11 @@ s32 principale (vacuum)
             {
                 crux++;
             }
+            /* palette Aquinas ipsa (RGBA), non indices colorationis */
             si (   x->genus       == MANDATUM_RECTANGULUM && x->impletum
-                && x->color.genus == COLOR_MANDATI_INDEX
-                && x->color.valor == ZEPHYRUM)
+                && x->color.genus == COLOR_MANDATI_RGBA
+                && x->color.valor
+                   == color_ad_pixelum(color_ex_palette(ZEPHYRUM)))
             {
                 impletum++;
             }
