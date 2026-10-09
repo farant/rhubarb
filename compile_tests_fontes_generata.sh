@@ -148,6 +148,7 @@ declare -a SOURCE_FILES=(
     "lib/norma_ad_c.c"
     "lib/norma_canon.c"
     "lib/norma_gignere.c"
+    "lib/norma_inferre.c"
     "lib/norma_stml.c"
     "lib/numerus_romanus.c"
     "lib/nuntium.c"

@@ -151,3 +151,15 @@ reader. Six Important findings, all fixed with tests watched red first
    reader) and refuse "circulus: a -> b -> a". The walker is duplicated
    in lib/norma_ad_c.c (static) - the approved headers expose no shared
    home for it; two copies of ~70 lines, noted.
+
+## 2026-10-09 - comment hook (norma-spec-4 B2.1)
+
+`norma_stml_scribere_cum_commentis` takes a `NormaCommentarius`; the
+comment for a node goes BEFORE the element that introduces it - before
+`<campus>` for a field value, before `<variatio>` for a variant object,
+before `<norma>` for a named root, inside `<tabulatum>` before an array's
+element (the one block-form case). Placed inside `<campus>` it would
+force block form (measured). STML writes comment text verbatim
+(`<!--x-->`), so the writer pads one space each side. Text with `--` is
+refused (it would end the STML comment). `norma_stml_scribere` is now the
+hook with NIHIL - byte-identical output (asserted).

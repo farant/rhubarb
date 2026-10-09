@@ -92,4 +92,24 @@ norma_stml_scribere (
                    Piscina* piscina,
                     chorda* causa);
 
+/* COMMENTARIUS (norma-spec-4 §II): textus pro nodo, chorda vacua =
+ * nullum. Scriptor commentum STML ANTE elementum nodi ponit (forma
+ * capturae servatur). Textus "--" continens recusatur (commentum
+ * STML frangeret). Generale: inferentia testimonia sua per hunc
+ * uncum dat, sed scriptor eam ignorat. */
+nomen chorda (*NormaCommentarius)(
+    constans Norma* nodus,
+           Piscina* piscina,
+            vacuum* datum);
+
+/* ut norma_stml_scribere, cum commentario (NIHIL = sine commentis) */
+chorda
+norma_stml_scribere_cum_commentis (
+    constans NormaNominata* normae,
+                       i32  numerus,
+                   Piscina* piscina,
+                    chorda* causa,
+         NormaCommentarius  commentarius,
+                    vacuum* datum);
+
 #endif /* NORMA_STML_H */
