@@ -8,9 +8,12 @@
  * semel - initialize clientium idempotens (innoxium).
  *
  * Usus: tabulariumd [-radix dir] [-portus N] [-scrinium via]
- *   [-annales via] [-signum hex] [-binarium via] [-manifestum via]
- * Ordinarii: portus 8753 (conditio Romae a.C.), mundus fori
- * (forum.db + gesta/annales/forum.jsonl), proiectiones NIHIL.
+ *   [-annales via] [-genesis] [-signum hex] [-binarium via]
+ *   [-manifestum via]
+ * Ordinarii: portus 8753 (conditio Romae a.C.), mundus fori in SEDE
+ * ANNALIUM (annales_sedes.h: forum.db + forum.jsonl; custos ante
+ * aperturam), proiectiones NIHIL. -scrinium/-annales expressa
+ * (fumi, mundi temporarii) sedem et custodem praetereunt.
  * Portus 0 = auto-selectus; portus ligatus in stdout imprimitur
  * ("portus N" - semen fumi). Ligatio fallita = daemon alter
  * fortasse vivit -> exitus 0 quietus (certamen start-if-absent se
@@ -19,6 +22,7 @@
 #include "postulata_posix.h"
 #include "tabularium.h"
 #include "tabellarius.h"
+#include "annales_sedes.h"
 #include "tcp.h"
 #include <string.h>
 #include <stdio.h>
@@ -76,10 +80,10 @@ principale (
     character** argv)
 {
     TabulariumConfiguratio  cfg;
-        constans character* radix        = ".";
-        constans character* via_scrinii  = "forum.db";
-        constans character* via_annalium =
-            "gesta/annales/forum.jsonl";
+        constans character* radix          = ".";
+        constans character* via_scrinii    = NIHIL;
+        constans character* via_annalium   = NIHIL;
+                       b32  genesis        = FALSUM;
         constans character* signum         = NIHIL;
         constans character* via_binarii    = NIHIL;
         constans character* via_manifesti  = NIHIL;
@@ -115,6 +119,10 @@ principale (
             via_annalium = argv[k + I];
             k++;
         }
+        alioquin si (strcmp(argv[k], "-genesis") == ZEPHYRUM)
+        {
+            genesis = VERUM;
+        }
         alioquin si (   strcmp(argv[k], "-signum") == ZEPHYRUM
                      && k + I < argc)
         {
@@ -134,6 +142,39 @@ principale (
             k++;
         }
     }
+    piscina = piscina_generare_dynamicum("tabulariumd", 268435456);
+    si (piscina == NIHIL)
+    {
+        fprintf(stderr, "tabulariumd: piscina fracta\n");
+        redde I;
+    }
+    /* SEDES ANNALIUM: viae ordinariae ex sede, custos ante aperturam
+     * (arbor recens mundum vacuum non incipit - MKMD2) */
+    si (via_scrinii == NIHIL || via_annalium == NIHIL)
+    {
+        AnnaliumSedes sedes;
+               chorda causa;
+
+        si (   !annales_sedem_invenire(radix, piscina, &sedes, &causa)
+            || !annales_custodire(&sedes, ANNALES_FORI,
+                   ANNALES_SCRINIUM_FORI, genesis, piscina, &causa))
+        {
+            fprintf(stderr, "tabulariumd: RECUSATUM - %.*s\n",
+                (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde I;
+        }
+        si (via_scrinii == NIHIL)
+        {
+            via_scrinii = chorda_ut_cstr(annales_via(&sedes,
+                ANNALES_SCRINIUM_FORI, piscina), piscina);
+        }
+        si (via_annalium == NIHIL)
+        {
+            via_annalium = chorda_ut_cstr(annales_via(&sedes,
+                ANNALES_FORI, piscina), piscina);
+        }
+    }
     cfg.radix             = radix;
     cfg.via_scrinii       = via_scrinii;
     cfg.via_annalium      = via_annalium;
@@ -150,12 +191,6 @@ principale (
                                    * - start-if-absent respawnat */
     cfg.renatus = FALSUM;
 
-    piscina = piscina_generare_dynamicum("tabulariumd", 268435456);
-    si (piscina == NIHIL)
-    {
-        fprintf(stderr, "tabulariumd: piscina fracta\n");
-        redde I;
-    }
     t = tabularium_creare(piscina, &cfg);
     si (t == NIHIL)
     {

@@ -17,7 +17,9 @@ RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
 fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
-AN="gesta/annales/tabularium.jsonl"
+# annales VIVI ex sede annalium (gesta/fontes/annales_sedes.h), non via fixa
+AN="$(./gesta/frigida.sh -sedes 2>/dev/null | awk -F'\t' '$1 == "annales" { print $2 }')"
+[ -f "$AN" ] || { echo "fumus frigida: annales vivi non inventi ($AN)"; exit 2; }
 ante=$(wc -l < "$AN" | tr -d ' ')
 
 # I. launcher aedificat, NECTIT et currit: sine argumentis = usus, exitus 2

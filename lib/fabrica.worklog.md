@@ -2216,3 +2216,116 @@ rewritten by regex). Oracle: 772/772, the 13 H4b views identical,
 fumus XL/XL. Plants: 'verum' read as FALSUM -> memorabilis assertion
 red; a name not appended -> praecondiciones and order assertions red.
 `_familiam_explicare` (244) is the next long one here.
+
+## 2026-10-08 - families as stages, tests pinned first
+
+`_familiam_explicare` (244 lines) is now 66: `ExplicatioFamiliae`
+carries the run (piscina, sedes, causa, attributes, prefix/suffix
+lengths computed once, the template and which slots it declares) and
+the stages run in the original order: `_familiae_attributa` (titulus,
+via, praefixum, suffixum, the enumerating hook), `_templum_invenire`
+(exactly one `<#@id>`), then per directory entry `_plagula_congruit`
+(pure prefix/suffix match) and `_vocationem_addere` (refuses `"`/`&`,
+builds `#@id basis="..." fons="..."` with one `_argumentum_addere` for
+both slots, records an `InstantiaFamiliae` pair instead of the old
+interleaved basis/fons array), `stml_expandere`, and
+`_instantias_colligere` (one `<actio>` per call, no titulus in the
+template, `familia:basis` title, `<ingressus genus="fasciculus">`).
+
+The finding that set the order: NO declaration in the repo uses
+`<familia>`, so the census/iudicare oracle of steps 1-3 says nothing
+about this code, and six refusals were reached by no test (no
+titulus/via, two templates or a non-template element, no template, a
+file name with `"` or `&`, an empty body, two actions in one body).
+They are now tested in a new 'familias' section of
+`probatio_fabrica_declarationes.c` - added and passing against the OLD
+code first - and the family section moved there from
+`probatio_fabrica_genera.c` (H3 had left it where it was): 794
+assertions (772 + 22), genera 258 -> 238, declarationes 84 -> 126.
+
+Oracle: a driver (scratchpad, built through aedilis from
+`build/oraculum_familiae/` - aedilis refuses a source outside the
+tree: "plagula imparsabilis") prints every action field or the full
+refusal for the 10 family texts of the suite x 6 setups (5 directory
+sets, no hook): 120 lines, byte-identical old vs new, all ten refusal
+kinds present. Plants through `silva.planta` (tolerans='spatia' for a
+two-line anchor): suffix ignored -> the moved count assertion red;
+call-count check disabled -> the new empty-body test red (it is the
+only test reaching the check after the loop). fumus XL/XL after
+healing. Also: the map comment at the top of `lib/fabrica.c` (files
+by flow, the three naming tiers), pointed to from fabrica_interna.h.
+
+## 2026-10-08 - the wave run as phases, gaps pinned first
+
+`_undam_agere` (283 lines) is now 39: `CursusUndae` holds the parallel
+per-member arrays (kept parallel - `agere_simul`'s signature is public
+API) plus status/stala/sanationes and the before-snapshot; phases:
+`_membra_ordinare` (title order), `_undam_parare` (arrays, log and
+trace-book paths), `_undam_currere` (snapshot, run together, clear the
+memo caches, batch post-conditions of the successful members, read
+each book's S lines), `_scripturas_ignotas` (`_extra_omnium` = the
+intersection of each member's outside-trace writes, then drop what
+any book recorded; `_viam_continet` replaces four inline search
+loops), `_causa_ignotarum` (computed once instead of per member), and
+`_membrum_iudicare`: the six-branch ladder becomes "find the first
+cause, then ONE `_post_agere(FALSUM, cause)`" instead of five copies.
+
+Coverage first, by plants (silva.planta, one per branch, against the
+six suites): 8 of 11 went red; three were green - a member left
+unstarted after a fracture (OMISSUM 'non incepta'), a member that
+never started ('non actum', only the cause text differs from the exit
+branch), and the plural '+N' of the unknown-writer cause. Fumus does
+not assert those texts either. New tests VI-VIII in 'sanare parallele'
+(fila_ficta = I; a command with no script; two silent writes), green
+on the OLD code, then the three plants red: 809 assertions.
+
+Oracle: the whole sanare suite compiled as a driver that prints every
+sanatio (title, outcome, cause, stale reason, duration) after each of
+its 19 heals: 63 lines identical old vs new, every wave cause present.
+Trap: credo prints its progress dots on the same line, so the first
+`grep '^ORACULUM'` silently dropped half the lines - strip the dots
+first. Plants on the new code: `_viam_continet` never matching -> IV
+red; the S-write cause ignored -> III red. fumus XL/XL.
+`_sanare_per_undas` (204, three copies of the "post fracturam"
+omission, two of "run one action alone") is next.
+
+## 2026-10-08 - the wave scheduler as phases, after-fracture paths pinned
+
+`_sanare_per_undas` (204 lines) is now 66 (most of it the scope list
+and setup): `CursusUndarum` carries sutura/ordo/status/stala/
+sanationes and the one flag that matters across waves, `fractum`; per
+wave: praevisio, `_undam_dividere` (judge-only after a fracture,
+skip what `_ante_agere` says needs nothing, split safe/other),
+`_ceteros_agere`, `_tutas_agere` (omit / one alone / `_undam_agere`).
+The duplicates are now one helper each: `_post_fracturam_omittere`
+(three copies of the 'post fracturam' omission) and `_solam_agere`
+(two copies of "run one action alone"). Every piece <= 40 lines.
+
+Coverage first: 14 plants, ONE per branch - only 3 red. Nothing
+asserted the after-fracture paths: their verdicts are mostly
+OMISSUM through more than one road (a dependent of a broken action
+is OMISSUM whether the fracture branch or `_ante_agere` catches it),
+so outcome-only assertions could not tell the branches apart. New
+tests IX-XII (wave fracture stops later waves: dependent 'dependentia
+fracta', independent 'post fracturam', fresh one silent; an unsafe
+member breaking omits the rest of its wave; a lone safe member
+breaking stops the next wave; fresh and unjudged actions never run),
+green on the OLD code; then 10 of the 11 remaining plants red. They
+read results through `_eventus_sanationis`/`_causa_sanationis`
+(NIHIL-safe: the Q11 plant first went "red" by SEGFAULT on an
+unguarded `->eventus`). The one survivor, excluding unjudged
+(`_actio_ignota`) actions from the waves, is an equivalent mutant
+here: `_ante_agere` sees no judged output, calls it fresh and skips
+it anyway - only the wave grouping could differ. Kept verbatim.
+
+Asymmetry kept, not fixed: an unsafe member's fracture stops later
+waves only if it is not a step member (T8), a lone safe member's
+always does. Step members are iudicium actions and iudicium is never
+'safe', so the second path cannot see one today.
+
+Oracle: the sanare suite as a driver, every sanatio after each of
+its 23 heals, each record starting on a fresh line (the credo-dots
+trap from the last entry): 80 lines identical old vs new. Plants on
+the new code: the omission recorded as SANATUM -> IX red; a step
+member's fracture stopping its siblings -> gradus XI red. 836
+assertions; fumus XL/XL.

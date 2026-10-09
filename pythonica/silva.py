@@ -1619,6 +1619,10 @@ PORTAE = {
     'sera': (['./tools/sera_fumus.sh'], r'fumus sera: (sanum|FRACTUM)'),
     'frigida': (['./gesta/frigida_fumus.sh'],
                 r'fumus frigida: (sanum|FRACTUM)'),
+    # sedes annalium (domus tota, non arbor): custos, genesis expressa,
+    # scriptores simul, restitutio - in sedibus temporariis solum
+    'annales': (['./gesta/annales_fumus.sh'],
+                r'fumus annalium: (sanum|FRACTUM)'),
     # fumi sine oculis (2026-09-24, ex inventario 'suitae
     # probationum'): villa crure faciei omisso, silex sine -agere
     'villa': (['./apps/villa/fumus.sh', '-sine-facie'],
@@ -2160,9 +2164,7 @@ def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True,
     return p
 
 
-VETITAE = ('FAQ.md', 'gesta/annales/tabula.md',
-           'gesta/annales/tabularium.jsonl',
-           'silva/grammatica/c89-formatted.stml')
+VETITAE = ('FAQ.md', 'silva/grammatica/c89-formatted.stml')
 
 
 def _trailer():
@@ -2899,11 +2901,21 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
     deletae = set(_curre(['git', 'diff', '--cached', '--name-only',
                           '--no-renames', '--diff-filter=D']).stdout.split())
+    # deletio in indice + plagula IGNORATA in disco = 'git rm --cached'
+    # (via e repositorio remota, plagula manet): non iterum additur
+    # (2026-10-08: annales extra arborem - 'git add' viam ignoratam
+    # recusabat POST portas omnes). Deleta sed non ignorata in disco =
+    # contentum novum, additur ut olim.
     addendae = []
     for v in viae:
+        if v in deletae and (
+                not os.path.exists(_absoluta(v))
+                or _curre(['git', 'check-ignore', '-q', '--no-index',
+                           '--', v]).returncode == 0):
+            continue
         if os.path.exists(_absoluta(v)):
             addendae.append(v)
-        elif v not in deletae:
+        else:
             raise SilvaError('via nec in disco nec deleta in indice: %s' % v)
     if addendae:
         r = _curre(['git', 'add', '--'] + addendae)
