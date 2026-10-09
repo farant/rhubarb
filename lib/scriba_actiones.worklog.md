@@ -132,3 +132,13 @@ verb failures return before any change. Colouring lives in
 scriba_figurae: after a line is drawn, `iussum_proximum` finds known
 tokens and redraws those glyphs in COLOR_ACCENT_PRIMARY (skipped on
 selected lines, and on lines without a `$`).
+
+## 2026-10-09 - S3b-2: messages
+
+`nuntius` is cleared at the TOP of `scriba_pagina_clavis` for any key
+press, committed text or mouse press - before anything else, because a
+click on a command may set a new message in the same event. Only
+written when present (one attribute read per event otherwise).
+`chorda_nulla()` is not declared in chorda.h (dispensator gets it from
+elsewhere) - the examen caught the implicit declaration; a local empty
+chorda does the job.

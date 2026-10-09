@@ -10,6 +10,7 @@
   <dominus genus="ephemera" attributum="fd_tempus"         scriptor="pagina.clavis"/>
   <dominus genus="ephemera" attributum="capsa"             scriptor="pagina.clavis"/>
   <dominus genus="ephemera" attributum="capsa_lineae"      scriptor="pagina.clavis"/>
+  <dominus genus="ephemera" attributum="nuntius"           scriptor="pagina.clavis"/>
   <dominus genus="ephemera" attributum="focus"             scriptor="dispensator"/>
   <dominus genus="ephemera" attributum="focus_acervus"     scriptor="dispensator"/>
   <dominus genus="ephemera" attributum="superficies_latitudo" scriptor="dispensator"/>

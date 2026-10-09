@@ -291,6 +291,24 @@ scriba_figura_paginae (
                    color_thematis(COLOR_TEXT));
 }
 
+/* <purus/> nuntius: titulus colore erroris, centratus ut status */
+vacuum
+scriba_figura_nuntii (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    s32 y;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    y = (c->fines.altitudo > VIII) ? (c->fines.altitudo - VIII) / II
+                                   : ZEPHYRUM;
+    mandata_textus(m, ZEPHYRUM, y, c->titulus, ZEPHYRUM,
+                   color_thematis(COLOR_ERROR));
+}
+
 vacuum
 scriba_figurae_registrare (
     FiguraRegistrum* reg,
@@ -309,5 +327,7 @@ scriba_figurae_registrare (
     figura_registrare(reg, PARTES_TITULUS, thema, scriba_figura_status,
                       ctx);
     figura_registrare(reg, PARTES_INDEX, thema, scriba_figura_paginae,
+                      ctx);
+    figura_registrare(reg, PARTES_DIALOGUS, thema, scriba_figura_nuntii,
                       ctx);
 }

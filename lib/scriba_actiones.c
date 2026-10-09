@@ -643,6 +643,41 @@ cursorem_ponere (
     status_scribere(ramus, sa, st, &capsa);
 }
 
+/* S3b-2: nuntius in linea status (vacuus = tollere) */
+interior vacuum
+nuntius_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    textum_ponere(radix, p, in, "nuntius", *(constans chorda*)ctx);
+}
+
+interior vacuum
+nuntium_ponere (
+    constans InsulaRamus* ramus,
+                  chorda  nuntius)
+{
+    (vacuum)mutare_ramum(ramus, INSULA_EPHEMERA, nuntius_mutator,
+        &nuntius);
+}
+
+/* S3b-2: nuntius ad clavem aut ictum proximum tollitur */
+interior vacuum
+nuntium_tollere (
+    constans InsulaRamus* ramus)
+{
+    chorda vacua;
+
+    si (insula_ramus_attributum(ramus, INSULA_EPHEMERA, "nuntius"))
+    {
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        nuntium_ponere(ramus, vacua);
+    }
+}
+
 /* S3b: substitutio iussi in folio laboris (intra gestum) */
 nomen structura {
       ScribaActiones* sa;
@@ -693,8 +728,9 @@ substitutio_mutator (
 /* S3b: iussum ictum currit. Gestus pendens primum effunditur;
  * consumens signum suum textu effectus substituit, aliter textus post
  * signum inseritur; mutatio commissio UNA (u signum restituit),
- * cursor post textum. Error (S3b-2: in linea status) aut functio
- * FALSUM: nihil mutatur. */
+ * cursor post textum. Error aut functio FALSUM: nihil mutatur,
+ * nuntius in linea status (S3b-2; FALSUM sine errore: "<verbum>:
+ * defecit"). */
 interior vacuum
 iussum_exsequi (
     constans InsulaRamus* ramus,
@@ -708,9 +744,16 @@ iussum_exsequi (
 
     (vacuum)motus_gestum_effundere(motus, ramus->repo);
     sa->insertio_commissa = FALSUM;
-    si (   !iussum_currere(sa->iussa, iussum, sa->doc->piscina, &eff)
-        || eff.error.mensura > ZEPHYRUM)
+    si (!iussum_currere(sa->iussa, iussum, sa->doc->piscina, &eff))
     {
+        nuntium_ponere(ramus, eff.error.mensura > ZEPHYRUM ? eff.error
+            : chorda_concatenare(iussum->verbum, chorda_ex_literis(
+                  ": defecit", sa->doc->piscina), sa->doc->piscina));
+        redde;
+    }
+    si (eff.error.mensura > ZEPHYRUM)
+    {
+        nuntium_ponere(ramus, eff.error);
         redde;
     }
     sub.sa        = sa;
@@ -757,6 +800,15 @@ scriba_pagina_clavis (
     }
     /* R4: status scribae per ramum (sine eo radix repositorii) */
     ramus = sa->ramus.repo ? sa->ramus : insula_ramus_radix(repo);
+    /* S3b-2: clavis aut ictus nuntium tollit (ante quidquam aliud:
+     * iussum ictum nuntium novum ponere potest) */
+    si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+        || ev->genus == EVENTUS_MUS_DEPRESSUS
+        || (   ev->genus == EVENTUS_TEXTUS
+            && ev->datum.textus.genus == EVENTUS_TEXTUS_COMMISSUM))
+    {
+        nuntium_tollere(&ramus);
+    }
     si (ev->genus == EVENTUS_MUS_DEPRESSUS)
     {
         si (!nodus || ev->datum.mus.botton != MUS_SINISTER)

@@ -44,7 +44,9 @@ nomen structura {
 } ContextusScribae;
 
 /* S3b: '$dies' -> dies hodiernus "MM/DD/YYYY" (forma concha vetus;
- * consumens, ut prunifex). Argumenta non accipit. */
+ * consumens, ut prunifex). S3b-2: '$dies(N)' = N dies ab hodie
+ * (signatus: -1 heri, 7 hebdomas post); mktime menses et annos
+ * normat. Argumentum non numerus aut plura: error. */
 interior b32
 dies_iussum (
     constans Iussum* iussum,
@@ -54,13 +56,24 @@ dies_iussum (
 {
           time_t nunc;
     structura tm* tm;
+    structura tm  dies;
+             s32 gradus;
        character textus[XXXII];
 
     (vacuum)ctx;
-    si (iussum->numerus_argumentorum > ZEPHYRUM)
+    gradus = ZEPHYRUM;
+    si (iussum->numerus_argumentorum > I)
     {
-        effectus->error = chorda_ex_literis("dies: nulla argumenta",
+        effectus->error = chorda_ex_literis("dies: unum argumentum",
             piscina);
+        redde VERUM;
+    }
+    si (   iussum->numerus_argumentorum == I
+        && !chorda_ut_s32(iussum->argumenta[ZEPHYRUM], &gradus))
+    {
+        effectus->error = chorda_concatenare(chorda_ex_literis(
+            "dies: numerus dierum non intellegitur: ", piscina),
+            iussum->argumenta[ZEPHYRUM], piscina);
         redde VERUM;
     }
     nunc  = time(NIHIL);
@@ -69,8 +82,15 @@ dies_iussum (
     {
         redde FALSUM;
     }
-    sprintf(textus, "%02d/%02d/%04d", tm->tm_mon + I, tm->tm_mday,
-        tm->tm_year + MCM);
+    dies           = *tm;
+    dies.tm_mday   += gradus;
+    dies.tm_isdst  = -I;
+    si (mktime(&dies) == (time_t)-I)
+    {
+        redde FALSUM;
+    }
+    sprintf(textus, "%02d/%02d/%04d", dies.tm_mon + I, dies.tm_mday,
+        dies.tm_year + MCM);
     effectus->textus = chorda_ex_literis(textus, piscina);
     redde VERUM;
 }

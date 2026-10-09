@@ -6,7 +6,11 @@
  * dato hodierno substituit (consumens, forma "MM/DD/YYYY"), cursor
  * post datum; latus alterum post pulsum idem videt. III: 'u' signum
  * restituit (commissio una). IV: ictus in '$foo' cursorem solum
- * ponit. V: '$dies(x)' (error: argumenta) nihil mutat. */
+ * ponit. V: '$dies(x)' (error: argumenta) nihil mutat. VI (S3b-2):
+ * nuntius erroris in linea status (arbor, pixela colore erroris),
+ * praecisus ante indicem paginae; clavis proxima et ictus proximus
+ * tollunt. VII: '$dies(-1)', '$dies(7)'; '$dies(1, 2)' error; verbum
+ * FALSUM sine errore -> "<verbum>: defecit". */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -24,6 +28,9 @@
 #include "ludus_fenestra.h"
 #include "scriba_documentum.h"
 #include "scriba_applicatio.h"
+#include "scriba_componentia.h"
+#include "componens.h"
+#include "iussum.h"
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "credo.h"
@@ -120,6 +127,96 @@ pixela_coloris (
     redde n;
 }
 
+/* quadrum sine fenestra; via non NIHIL: imago scribitur */
+interior TabulaPixelorum*
+quadrum_pingere (
+       VicusApplicatio* app,
+    constans character* via)
+{
+    TabulaPixelorum* tp;
+      LudusFenestra* lf;
+
+    tp = tabula_pixelorum_creare_nuda(piscina, CDLXXX, CDLXXX
+        + VICUS_ALTITUDO_TABULARUM);
+    lf = ludus_fenestra_creare(piscina, app->d,
+        vicus_figurae(app->vicus),
+        ZEPHYRUM, vicus_imago_fons, app->vicus, tp);
+    si (!lf)
+    {
+        redde NIHIL;
+    }
+    ludus_quadrum(lf, M);
+    si (via)
+    {
+        (vacuum)ludus_fenestra_imaginem_scribere(lf, via);
+    }
+    redde tp;
+}
+
+/* nodus 'id' in arbore scribae sinistrae composita; NIHIL si abest */
+interior Componens*
+nodus_status (
+                 Vicus* v,
+        ScribaMontatio* sm,
+    constans character* id)
+{
+    Componens* r;
+
+    r = scriba_componere(v->repo, NIHIL, piscina, intern,
+        &sm->compositio);
+    redde r ? componens_invenire_per_id(r, chorda_ex_literis(id,
+        piscina)) : NIHIL;
+}
+
+/* nuntius sinistri adest et praefixum (non vacuum) textus dati est */
+interior b32
+nuntius_est (
+                 Vicus* v,
+        ScribaMontatio* sm,
+    constans character* textus)
+{
+    Componens* n;
+
+    n = nodus_status(v, sm, "nuntius");
+    redde n && n->titulus.mensura > ZEPHYRUM
+        && (memoriae_index)n->titulus.mensura <= strlen(textus)
+        && memcmp(n->titulus.datum, textus,
+               (size_t)n->titulus.mensura) == ZEPHYRUM;
+}
+
+/* dies ab hodie, ut '$dies(N)' */
+interior vacuum
+dies_textus (
+          s32  gradus,
+    character* exitus)
+{
+          time_t nunc;
+    structura tm  dies;
+
+    nunc           = time(NIHIL);
+    dies           = *localtime(&nunc);
+    dies.tm_mday   += gradus;
+    dies.tm_isdst  = -I;
+    (vacuum)mktime(&dies);
+    sprintf(exitus, "%02d/%02d/%04d", dies.tm_mon + I, dies.tm_mday,
+        dies.tm_year + MCM);
+}
+
+/* verbum quod FALSUM sine errore reddit */
+interior b32
+frange_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* p,
+     IussumEffectus* effectus)
+{
+    (vacuum)iussum;
+    (vacuum)ctx;
+    (vacuum)p;
+    (vacuum)effectus;
+    redde FALSUM;
+}
+
 s32 principale (vacuum)
 {
            Volumen* vol;
@@ -160,17 +257,10 @@ s32 principale (vacuum)
     imprimere("\n--- I: '$dies' colore accentus, '$foo' non ---\n");
     {
         TabulaPixelorum* tp;
-          LudusFenestra* lf;
                     i32  accentus;
 
-        tp = tabula_pixelorum_creare_nuda(piscina, CDLXXX, CDLXXX
-            + VICUS_ALTITUDO_TABULARUM);
-        lf = ludus_fenestra_creare(piscina, app.d, vicus_figurae(v),
-            ZEPHYRUM, vicus_imago_fons, v, tp);
-        CREDO_NON_NIHIL(lf);
-        ludus_quadrum(lf, M);
-        CREDO_VERUM(ludus_fenestra_imaginem_scribere(lf,
-            "build/probatio_vicus_iussa.png"));
+        tp = quadrum_pingere(&app, NIHIL);
+        CREDO_NON_NIHIL(tp);
         accentus = (i32)color_ad_pixelum(thema_color(
             COLOR_ACCENT_PRIMARY));
         CREDO_VERUM(pixela_coloris(tp, LINEA, ZEPHYRUM, V, accentus)
@@ -204,8 +294,89 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), VII);
 
     imprimere("\n--- V: '$dies(x)' - error, nihil mutatur ---\n");
+    CREDO_NIHIL(nodus_status(v, sin, "nuntius"));
     ictus(m, LINEA, XIII);
     CREDO_VERUM(linea_est(sin, LINEA, "$dies $foo $dies(x)"));
+
+    imprimere("\n--- VI: nuntius in linea status ---\n");
+    {
+                 Componens* n;
+                 Componens* pg;
+           TabulaPixelorum* tp;
+                    chorda  plenus;
+                       s32  x;
+                       i32  error;
+                       i32  numerus;
+                       i32  fundum;
+
+        plenus = chorda_ex_literis(
+            "dies: numerus dierum non intellegitur: x", piscina);
+        n   = nodus_status(v, sin, "nuntius");
+        pg  = nodus_status(v, sin, "paginae");
+        CREDO_NON_NIHIL(n);
+        CREDO_NON_NIHIL(pg);
+        /* praecisus: praefixum nuntii, ante indicem cellula una */
+        CREDO_VERUM(n && n->titulus.mensura > ZEPHYRUM
+            && n->titulus.mensura < plenus.mensura
+            && memcmp(n->titulus.datum, plenus.datum,
+                   (size_t)n->titulus.mensura) == ZEPHYRUM);
+        CREDO_VERUM(n && pg && n->fines.x + n->fines.latitudo
+            <= pg->fines.x - VI);
+        /* pixela colore erroris in linea status sinistra */
+        tp = quadrum_pingere(&app, "build/probatio_vicus_iussa.png");
+        CREDO_NON_NIHIL(tp);
+        error    = (i32)color_ad_pixelum(thema_color(COLOR_ERROR));
+        fundum   = ZEPHYRUM;
+        numerus  = ZEPHYRUM;
+        per (x = ZEPHYRUM; x < CCXL; x++)
+        {
+            per (fundum = ZEPHYRUM; fundum < VIII; fundum++)
+            {
+                si ((i32)tabula_pixelorum_obtinere_pixelum(tp, (i32)x,
+                        (i32)(CDLXXX + VICUS_ALTITUDO_TABULARUM - VIII
+                        + fundum)) == error)
+                {
+                    numerus++;
+                }
+            }
+        }
+        CREDO_VERUM(numerus > ZEPHYRUM);
+    }
+    /* clavis proxima tollit */
+    CREDO_VERUM(manus_ludus_scribere(m, "l"));
+    CREDO_NIHIL(nodus_status(v, sin, "nuntius"));
+    /* ictus proximus tollit (etiam extra iussa) */
+    ictus(m, LINEA, XIII);
+    CREDO_NON_NIHIL(nodus_status(v, sin, "nuntius"));
+    ictus(m, LINEA, VII);
+    CREDO_NIHIL(nodus_status(v, sin, "nuntius"));
+
+    imprimere("\n--- VII: '$dies(N)', argumenta plura, defecit ---\n");
+    CREDO_VERUM(iussum_registrare(sin->actiones_ctx.iussa, "frange",
+        VERUM, frange_iussum, NIHIL));
+    ictus(m, V, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$dies(-1) x"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, VI, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$dies( 7 ) x"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, VII, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$dies(1, 2) $frange"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    ictus(m, V, II);
+    dies_textus(-I, hodie);
+    strcat(hodie, " x");
+    CREDO_VERUM(linea_est(sin, V, hodie));
+    ictus(m, VI, II);
+    dies_textus(VII, hodie);
+    strcat(hodie, " x");
+    CREDO_VERUM(linea_est(sin, VI, hodie));
+    ictus(m, VII, II);
+    CREDO_VERUM(linea_est(sin, VII, "$dies(1, 2) $frange"));
+    CREDO_VERUM(nuntius_est(v, sin, "dies: unum argumentum"));
+    ictus(m, VII, XIV);
+    CREDO_VERUM(linea_est(sin, VII, "$dies(1, 2) $frange"));
+    CREDO_VERUM(nuntius_est(v, sin, "frange: defecit"));
 
     imprimere("\n");
     credo_imprimere_compendium();

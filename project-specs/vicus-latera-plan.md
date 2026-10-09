@@ -328,8 +328,18 @@ scriba kind's ctx is now {page book, command registry}; `dies`
 registered there (no arguments; `$dies(x)` = error). Tests:
 probatio_iussum VIII (registry), probatio_vicus_iussa (pixels, click,
 other view, undo, unknown verb, error); seven plants caught.
-NEXT S3b-2: error/status messages in the status line (+ a verb with
-arguments).
+S3b-2 as built (2026-10-09): ephemeral `nuntius` on the view's branch
+(canon + dominus pagina.clavis) set when a clicked command errs (or
+fails silently: "<verb>: defecit"), cleared by the next key or click
+(vim's message line, no timer). Status line: message after mode and
+position (two cells), in COLOR_ERROR via `scriba_figura_nuntii`
+(PARTES_DIALOGUS, child of status), cut one cell before the page
+label. `$dies(N)` = N days from today (signed; mktime normalises),
+`$dies(x)` / `$dies(1, 2)` = errors. Tests in probatio_vicus_iussa
+VI-VII; nine plants caught. Note: in a narrow pane the message is cut
+hard (240 px test pane: ~13 characters) - if that bites, let a long
+message replace the position text.
+NEXT S3c: right-pane stack.
 
 ## AUDIENDA
 
