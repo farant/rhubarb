@@ -279,6 +279,77 @@ s32 principale (vacuum)
         "penicillus");
     CREDO_VERUM(manus_ludus_clavem(m, 'a', ZEPHYRUM));
 
+    imprimere("\n--- VIII: linea instrumentorum (P1a) ---\n");
+    {
+        Mandata* md;
+            i32  i;
+            i32  icon;
+            i32  crux;
+            i32  impletum;
+            s32  textus_x;
+       Mandatum* x;
+
+        dispensator_recomponere(app.d);
+        CREDO_NON_NIHIL(nodus_arboris(&app, "quadratum.instrumentum"));
+        CREDO_NON_NIHIL(nodus_arboris(&app, "quadratum.color_primus"));
+        CREDO_NON_NIHIL(nodus_arboris(&app,
+            "quadratum.color_secundus"));
+        si (   !nodus_arboris(&app, "quadratum.instrumentum")
+            || !nodus_arboris(&app, "quadratum.color_primus")
+            || !nodus_arboris(&app, "quadratum.color_secundus"))
+        {
+            credo_imprimere_compendium();
+            redde I;
+        }
+        CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
+            "quadratum.instrumentum")->titulus,
+            "instrumentum:aspergillum");
+        CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
+            "quadratum.color_primus")->titulus, "color:0");
+        CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
+            "quadratum.color_secundus")->titulus, "color:-1");
+        md = mandata_creare(piscina, intern);
+        pingere(dispensator_arbor(app.d), app.figurae, ZEPHYRUM, md);
+        icon      = ZEPHYRUM;
+        crux      = ZEPHYRUM;
+        impletum  = ZEPHYRUM;
+        textus_x  = -I;
+        per (i = ZEPHYRUM; i < mandata_numerus(md); i++)
+        {
+            x = mandata_obtinere(md, i);
+            si (   x->genus          == MANDATUM_RECTANGULUM
+                && x->fines.latitudo == I
+                && x->color.genus    == COLOR_MANDATI_THEMA
+                && x->color.valor    == (i32)COLOR_TEXT)
+            {
+                icon++;
+            }
+            si (   x->genus       == MANDATUM_LINEA
+                && x->color.valor == (i32)COLOR_TEXT)
+            {
+                crux++;
+            }
+            si (   x->genus       == MANDATUM_RECTANGULUM && x->impletum
+                && x->color.genus == COLOR_MANDATI_INDEX
+                && x->color.valor == ZEPHYRUM)
+            {
+                impletum++;
+            }
+            si (   x->genus == MANDATUM_TEXTUS
+                && chorda_aequalis_literis(x->textus, "aspergillum"))
+            {
+                textus_x = x->fines.x;
+            }
+        }
+        /* icon aspergilli: XLIV pixela ('#'); crux coloris nulli: II
+         * lineae; color primus 0 impletus; textus post quadrata
+         * (LVIII + XX + VI) */
+        CREDO_AEQUALIS_I32(icon, XLIV);
+        CREDO_AEQUALIS_I32(crux, II);
+        CREDO_AEQUALIS_I32(impletum, I);
+        CREDO_AEQUALIS_S32(textus_x, LXXXIV);
+    }
+
     imprimere("\n--- VII: praevisio ante solutionem ---\n");
     {
           Mandata* md;
@@ -302,7 +373,11 @@ s32 principale (vacuum)
             si (   mandata_obtinere(md, i)->genus
                 == MANDATUM_RECTANGULUM
                 && mandata_obtinere(md, i)->fines.latitudo == I
-                && mandata_obtinere(md, i)->fines.altitudo == I)
+                && mandata_obtinere(md, i)->fines.altitudo == I
+                /* guttae colore accentus; icones lineae status (P1a)
+                 * quoque I x I, sed colore textus */
+                && mandata_obtinere(md, i)->color.valor
+                   == (i32)COLOR_ACCENT_PRIMARY)
             {
                 guttae++;
             }

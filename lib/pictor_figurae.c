@@ -3,8 +3,10 @@
 #include "pictor_figurae.h"
 #include "thema.h"
 #include "exemplaria.h"
+#include "xar.h"
 
 #include <stdio.h>
+#include <string.h>
 
 /* indicium foci: exemplar marginis lateris focati (vicus-latera) */
 #define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
@@ -17,6 +19,18 @@ color_thematis (
 
     cm.genus = COLOR_MANDATI_THEMA;
     cm.valor = (i32)c;
+    redde cm;
+}
+
+/* index palettae COLORATIONIS (colores ictuum), non semanticus */
+interior ColorMandati
+color_thematis_index (
+    s32 index)
+{
+    ColorMandati cm;
+
+    cm.genus = COLOR_MANDATI_INDEX;
+    cm.valor = (i32)index;
     redde cm;
 }
 
@@ -148,7 +162,10 @@ figura_tituli (
                    i32  thema,
                 vacuum* ctx)
 {
-    Fines f;
+         Fines  f;
+           s32  x;
+           i32  i;
+     Componens* q;
 
     (vacuum)thema;
     (vacuum)ctx;
@@ -157,11 +174,21 @@ figura_tituli (
     f.latitudo  = c->fines.latitudo;
     f.altitudo  = c->fines.altitudo;
     mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
+    /* P1a: textus post quadratum filium ultimum (cellula inter) */
+    x = II;
+    per (i = ZEPHYRUM; c->liberi && i < xar_numerus(c->liberi); i++)
+    {
+        q = *(Componens**)xar_obtinere(c->liberi, i);
+        si (q->fines.x + q->fines.latitudo + VI > x)
+        {
+            x = q->fines.x + q->fines.latitudo + VI;
+        }
+    }
     /* 013 B3: linea status una cellula (VIII) - textus (fons 6x8)
      * verticaliter centratus, numquam infra fines (olim II fixum in
      * linea XII: in VIII pars inferior praecidebatur) */
-    mandata_textus(m, II, (f.altitudo > VIII) ? (f.altitudo - VIII) / II
-                                              : ZEPHYRUM,
+    mandata_textus(m, x, (f.altitudo > VIII) ? (f.altitudo - VIII) / II
+                                             : ZEPHYRUM,
                    c->titulus, ZEPHYRUM, color_thematis(COLOR_TEXT));
 }
 
@@ -185,6 +212,134 @@ pictor_imago_fons (
     redde NIHIL;
 }
 
+/* P1a: icones 1-bit XVI x XVI ('#' = pixelum colore textus) */
+hic_manens constans character* icon_penicilli[XVI] = {
+    "................",
+    "............##..",
+    "...........####.",
+    "..........#####.",
+    ".........#####..",
+    "........#####...",
+    ".......#####....",
+    "......#####.....",
+    ".....####.......",
+    "....#.##........",
+    "...###..........",
+    "..####..........",
+    ".####...........",
+    ".###............",
+    ".#..............",
+    "................"
+};
+
+hic_manens constans character* icon_aspergilli[XVI] = {
+    "................",
+    ".#..#...........",
+    "..#..#..##......",
+    ".#..#..####.....",
+    ".......#..#.....",
+    "......######....",
+    "......#....#....",
+    "......#....#....",
+    "......#.##.#....",
+    "......#.##.#....",
+    "......#....#....",
+    "......#....#....",
+    "......#....#....",
+    "......######....",
+    "................",
+    "................"
+};
+
+interior vacuum
+iconem_pingere (
+                Mandata*  m,
+     constans character** icon,
+                    s32   x0,
+                    s32   y0)
+{
+    Fines g;
+      s32 x;
+      s32 y;
+
+    g.latitudo = I;
+    g.altitudo = I;
+    per (y = ZEPHYRUM; y < XVI; y++)
+    {
+        per (x = ZEPHYRUM; x < XVI; x++)
+        {
+            si (icon[y][x] == '#')
+            {
+                g.x = x0 + x;
+                g.y = y0 + y;
+                mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
+                    VERUM);
+            }
+        }
+    }
+}
+
+/* <purus/> quadratum: margo, deinde icon aut color aut crux (nullus) */
+vacuum
+figura_quadrati (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+      Fines f;
+      Fines intus;
+    Punctum a;
+    Punctum b;
+     chorda reliquum;
+        s32 index;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    f.x             = ZEPHYRUM;
+    f.y             = ZEPHYRUM;
+    f.latitudo      = c->fines.latitudo;
+    f.altitudo      = c->fines.altitudo;
+    intus.x         = II;
+    intus.y         = II;
+    intus.latitudo  = c->fines.latitudo - IV;
+    intus.altitudo  = c->fines.altitudo - IV;
+    mandata_rectangulum(m, f, color_thematis(COLOR_BACKGROUND), VERUM);
+    mandata_rectangulum(m, f, color_thematis(COLOR_BORDER), FALSUM);
+    si (chorda_aequalis_literis(c->titulus, "instrumentum:penicillus"))
+    {
+        iconem_pingere(m, icon_penicilli, II, II);
+        redde;
+    }
+    si (chorda_aequalis_literis(c->titulus, "instrumentum:aspergillum"))
+    {
+        iconem_pingere(m, icon_aspergilli, II, II);
+        redde;
+    }
+    si (   c->titulus.mensura > VI
+        && memcmp(c->titulus.datum, "color:", VI) == ZEPHYRUM)
+    {
+        reliquum.datum    = c->titulus.datum + VI;
+        reliquum.mensura  = c->titulus.mensura - VI;
+        si (   chorda_ut_s32(reliquum, &index) && index >= ZEPHYRUM
+            && index < XVI)
+        {
+            mandata_rectangulum(m, intus, color_thematis_index(index),
+                VERUM);
+            redde;
+        }
+        /* nullus: crux */
+        a.x = intus.x;
+        a.y = intus.y;
+        b.x = intus.x + intus.latitudo - I;
+        b.y = intus.y + intus.altitudo - I;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        a.x = b.x;
+        b.x = intus.x;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+    }
+}
+
 vacuum
 pictor_figurae_registrare (
     FiguraRegistrum* reg,
@@ -197,6 +352,7 @@ pictor_figurae_registrare (
     }
     figura_registrare(reg, PARTES_TABULA, thema, figura_tabulae, ctx);
     figura_registrare(reg, PARTES_TITULUS, thema, figura_tituli, ctx);
+    figura_registrare(reg, PARTES_BOTTONE, thema, figura_quadrati, ctx);
     figura_registrare(reg, PARTES_PROSPECTUS, thema, figura_prospectus,
                       ctx);
 }

@@ -242,9 +242,10 @@ principale (vacuum)
         CREDO_VERUM (tessera_cellulam_legere(opus, VI, V).color_fundi
             != color_mensae);
     }
-    /* 013 B3: linea status in linea ULTIMA superficiei */
-    CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
-        LINEAE - I).signum, (i32)'p');
+    /* 013 B3 / P1a: linea status in lineis III ULTIMIS; titulus in
+     * media (centratus), post quadrata (x LXXXIV = columna XIV) */
+    CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XIV,
+        LINEAE - II).signum, (i32)'p');
 
     imprimere("\n--- IV. amplitudo mutata: linea status sequitur"
               " ---\n");
@@ -260,8 +261,8 @@ principale (vacuum)
         ludus_tessera_quadrum(lt, M + CC);
         CREDO_VERUM (tessera_praesentare(opus));
         CREDO_AEQUALIS_I32 ((i32)tessera_altitudo(opus), XX);
-        CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, ZEPHYRUM,
-            XIX).signum, (i32)'p');
+        CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, XIV,
+            XVIII).signum, (i32)'p');
     }
 
     /* volumina temporaria claudenda: aliter /tmp/lt_pictor_*-N

@@ -12,7 +12,9 @@
 /* Modulus: glyphus fons_6x8 = cellula */
 #define CELLULA_LATITUDO  VI
 #define CELLULA_ALTITUDO  VIII
-#define STATUS_LINEAE     I      /* Franus 2026-10-03: linea una */
+#define STATUS_LINEAE     III    /* P1a (Franus 2026-10-09): linea
+                                  * instrumentorum, quadrata XX x XX;
+                                  * olim linea una (2026-10-03) */
 /* tabula nova (vicus-latera S2c): prospectus superficiei minus margo
  * cellulae utrimque (ut folium scribae; altitudo etiam minus linea
  * status), non hoc minimo minus */
@@ -198,7 +200,7 @@ pictor_montare (
         || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
                elementum(piscina, id,
                    " instrumentum=\"penicillus\" color_primus=\"0\""
-                   " color_secundus=\"5\" magnitudo=\"1\" zoom=\"1\""
+                   " color_secundus=\"-1\" magnitudo=\"1\" zoom=\"1\""
                    " focus=\"tabula\"")))
     {
         fprintf(stderr, "pictor: elementum initiale: %.*s\n",

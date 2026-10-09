@@ -1,5 +1,8 @@
 /* pictor_componentia.h - componere pictoris (P3: prospectus, tabula,
- * status)
+ * status). P1a (2026-10-09): status = linea instrumentorum III
+ * cellularum: quadrata 'quadratum.instrumentum',
+ * 'quadratum.color_primus', 'quadratum.color_secundus' (titulus = quid
+ * pingatur, figura_quadrati), deinde nomen instrumenti.
  *
  * <componens/> <purus/>: arbor logica ex insulis (lectio) et motu
  * (lectio) in piscinam datam; nihil scribit. Partes sunt DATA

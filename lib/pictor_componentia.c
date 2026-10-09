@@ -118,6 +118,25 @@ pictor_actio_instrumenti (
  * Componere
  * ================================================== */
 
+/* P1a: quadratum lineae status (PARTES_BOTTONE, XX x XX) filium
+ * status addere */
+interior vacuum
+quadratum_addere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+              Componens* status,
+     constans character* id,
+                    s32  x,
+                    s32  y,
+     constans character* titulus)
+{
+    Componens* q;
+
+    q = nodus(piscina, intern, id, PARTES_BOTTONE, x, y, XX, XX);
+    componens_ponere_titulum(q, titulus);
+    componens_addere_liberum(status, q);
+}
+
 /* <componens/> <purus/> */
 /* indicium foci (vicus-latera): ramus focatus - sine Motu aut ramo
  * radicis (applicatio sola) semper; in vico spatium Motus = id rami */
@@ -286,6 +305,28 @@ pictor_componere (
         chorda_vacua(instrumentum) ? "nihil"
                                    : chorda_ut_cstr(instrumentum,
                                    piscina));
+
+    /* P1a: quadrata (XX x XX, cellula inter se, centrata in linea):
+     * instrumentum, color primus, color secundus (nullus ordinarie,
+     * -1) - titulus dicit quid figura pingat */
+    {
+        character t[XLVIII];
+              s32 y;
+
+        y = fs.altitudo > XX ? (fs.altitudo - XX) / II : ZEPHYRUM;
+        sprintf(t, "instrumentum:%s", chorda_vacua(instrumentum)
+            ? "nihil" : chorda_ut_cstr(instrumentum, piscina));
+        quadratum_addere(piscina, intern, status,
+            "quadratum.instrumentum", cw, y, t);
+        sprintf(t, "color:%d", (integer)attributum_s32(&ramus,
+            INSULA_EPHEMERA, "color_primus", ZEPHYRUM));
+        quadratum_addere(piscina, intern, status,
+            "quadratum.color_primus", II * cw + XX, y, t);
+        sprintf(t, "color:%d", (integer)attributum_s32(&ramus,
+            INSULA_EPHEMERA, "color_secundus", -I));
+        quadratum_addere(piscina, intern, status,
+            "quadratum.color_secundus", III * cw + II * XX, y, t);
+    }
 
     componens_addere_liberum(prospectus, tabula);
     componens_addere_liberum(radix, prospectus);

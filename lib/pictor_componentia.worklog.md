@@ -52,3 +52,23 @@ and right; stroke and pending line shifted with the canvas), and the
 tessellation scene VII in probatio_tessellatio (canvas outline one
 column/row in). Pixel pins in probatio_pictor_figurae moved by (6, 8)
 and now also pin the TOP border pixel - the visible proof.
+
+## 2026-10-09 - P1a: the tool bar
+
+Fran: pictor's controls live at the bottom - squares showing the
+current selection, palettes on click (P1b). The status line became 3
+cells (STATUS_LINEAE in pictor_applicatio.c): children
+`quadratum.instrumentum`, `quadratum.color_primus`,
+`quadratum.color_secundus` (PARTES_BOTTONE, 20 x 20), each TITLED with
+what to draw ("instrumentum:aspergillum", "color:0", "color:-1") -
+data, like the canvas points; `figura_quadrati` draws icon / swatch /
+cross, `figura_tituli` starts its text after the last child. Icons are
+16 x 16 '.#' string grids (brush 16 rows; spray 44 pixels). Swatches
+use COLOR_MANDATI_INDEX - the COLOURING palette, the one stroke colours
+use (not the semantic palette). The app's initial `color_secundus` was
+5 ("white" = the yellow, same confusion as the canvas) - now -1
+(none) until patterns use it. New canvases are 16 px shorter (taller
+bar). Tests: probatio_pictor_aspergillum VIII (titles, swatch fill,
+cross, icon pixel count, text offset); goldens: pictor.arbor,
+pictor_prima, tessellation scene VII line 29, montatio 440, twin text
+column 14 on the bar's middle line.

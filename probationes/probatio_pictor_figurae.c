@@ -130,7 +130,11 @@ s32 principale (vacuum)
             CREDO_VERUM(chorda_aequalis(x->textus, sigillum));
             CREDO_AEQUALIS_S32(x->fines.latitudo, XL);
         }
-        si (x->genus == MANDATUM_LINEA)
+        /* lineae ictus pendentis solae (colore accentus): crux
+         * coloris nulli in linea status (P1a) non numeratur */
+        si (   x->genus       == MANDATUM_LINEA
+            && x->color.genus == COLOR_MANDATI_THEMA
+            && x->color.valor == (i32)COLOR_ACCENT_PRIMARY)
         {
             lineae++;
         }
