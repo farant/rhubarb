@@ -2558,3 +2558,36 @@ that XXXII never examines), so the gap only showed when the root file got
 real debts. Canon entry added (actio child + element: membrum/via/causa
 required). Lesson: a new declaration element = parser + canon in the same
 task; the canon gate only sees subsystem files.
+
+## 2026-10-09 - fabrica-7 T5: the root oracle
+
+`tools/radix_gradus_oraculum.sh` (model: toml_gradus_oraculum.sh): one
+tree, compile_tests.sh then `sanare` + `iudicare -plenus -omnia -machina
+probationes_radicis`. Per test: category (transiit | fracta | aedificata
+- runner: GUI_LISTA / RETICULARIS EXCLUSUM; fabrica: verdict note 'nexus
+solum') AND assertions p/t (runner: LAST credo compendium in
+build/test_logs/singulae/<t>.log; fabrica: sum of the member's SECTIO
+records). ~3.5 min per run.
+
+First run 254/256:
+- probatio_json "0/0 vs 482/482" was the ORACLE: macOS awk under a UTF-8
+  locale aborts ('towc: multibyte conversion failure') on the test's
+  deliberately invalid UTF-8 output, and my `|| printf 0/0` fallback hid
+  it. `export LC_ALL=C` for the whole script; no silent fallback.
+- probatio_git "transiit 99/99 vs aedificata" was REAL: T2 gave it
+  facultas="repositorium" from aedilis_porta's list, and facultas meant
+  link-only - after T7 nothing would run it (Fran 10-06: the root runner
+  runs it). Fran chose: facultas repositorium = RUN, with the
+  `repositorium` input (HEAD commit) in the member key -> once per
+  commit, reused otherwise (better than the runner: always). Only
+  facultates other than repositorium make a member link-only.
+
+Then 256/256 (240 run by both + 16 build-only; git now runs under
+fabrica: 'totum 99/99'). Plants via planta with the oracle as the gate
+(green = rc 0 and both failure lists empty; the driver asserts names):
+broken assertion in probatio_base64 -> both name probatio_base64 only,
+oracle still 256/256, fabrica re-ran 1 member; base64 alphabet swapped in
+lib/base64.c -> both name base64 + plist, fabrica re-ran exactly the 5
+members whose aedilis closure holds lib/base64.c (runner: all 240).
+Gradus section 'facultas repositorium currit' + plants (no commit in key,
+link-only) red.

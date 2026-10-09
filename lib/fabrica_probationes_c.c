@@ -200,6 +200,20 @@ _probationes_c_ingressus (
                     piscina);
             }
         }
+        /* FACULTAS REPOSITORIUM (fabrica-7 T5): probatio repositorium
+         * VIVUM legit (HEAD, refs, sarcinae) - currit, et clavis
+         * commissum HEAD fert: semel per commissionem (Franus
+         * 2026-10-09; olim nexus solum, cursor radicis eam currebat) */
+        per (i = ZEPHYRUM; clausura.facultates != NIHIL
+             && i < xar_numerus(clausura.facultates); i++)
+        {
+            si (chorda_aequalis_literis(*(chorda*)xar_obtinere(
+                    clausura.facultates, i), "repositorium"))
+            {
+                _ingressum_c_addere(ingressus_out, "repositorium",
+                    chorda_ex_literis(".", piscina), piscina);
+            }
+        }
         /* fabrica-7 T2: binaria domus quae probatio currit
          * (<aedilis instrumentum/>) - identitas eorum in clave */
         per (i = ZEPHYRUM; clausura.instrumenta != NIHIL
@@ -749,6 +763,7 @@ _probationes_c_agere (
               chorda  verdicta;
                  b32  positum;
   constans character* acta;
+                 b32  nexus_solum;
                  i32  i;
 
     area_c = chorda_ex_literis(area, piscina);
@@ -830,7 +845,16 @@ _probationes_c_agere (
             actum_out->cauda, "");
         redde VERUM;
     }
-    si (xar_numerus(clausura.facultates) > ZEPHYRUM)
+    /* nexus solum: facultas quae hic currere nequit (fenestra, rete);
+     * repositorium currit (clavis commissum fert, vide ingressus) */
+    nexus_solum = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(clausura.facultates); i++)
+    {
+        nexus_solum = nexus_solum || !chorda_aequalis_literis(
+            *(chorda*)xar_obtinere(clausura.facultates, i),
+            "repositorium");
+    }
+    si (nexus_solum)
     {
         chorda nota;
 

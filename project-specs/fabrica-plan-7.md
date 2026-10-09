@@ -97,11 +97,16 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
 
 ### T5: the oracle
 
-- [ ] `tools/radix_gradus_oraculum.sh`: on one tree, compile_tests.sh
+- [x] `tools/radix_gradus_oraculum.sh`: on one tree, compile_tests.sh
   vs the composite - same pass/fail per test, same assertion totals per
   test (runner compendium vs member sections). Plants: a broken test ->
   both red naming it; a broken library source -> both red, the
   composite naming only members whose closure holds it. **Commit.**
+- As built (2026-10-09): 256/256 (category + p/t per test); oracle needed
+  LC_ALL=C (invalid UTF-8 output); facultas repositorium now RUNS with the
+  HEAD commit in the key (Fran) - probatio_git was link-only after T2.
+  Plants: broken test -> both name it, 1 member re-run; broken
+  lib/base64.c -> both name base64+plist, 5 members re-run (closure).
 
 ### T6: A/B reuse
 

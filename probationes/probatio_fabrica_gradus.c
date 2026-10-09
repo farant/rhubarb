@@ -375,6 +375,12 @@ _clausura_c_ficta (
     {
         _c_addere(clausura_out->facultates, "fenestra", piscina);
     }
+    alioquin si (strcmp(scopus, "t/probatio_d.c") == ZEPHYRUM)
+    {
+        /* fabrica-7 T5: repositorium vivum legit - currit, clavis
+         * commissum HEAD fert */
+        _c_addere(clausura_out->facultates, "repositorium", piscina);
+    }
     alioquin
     {
         *causa_out = chorda_ex_literis("clausura ficta ignota",
@@ -1812,6 +1818,141 @@ _probare_sectiones (
 
 
 /* ==================================================
+ * FACULTAS REPOSITORIUM (fabrica-7 T5): probatio repositorium vivum
+ * legens CURRIT (non nexus solum ut fenestra/rete) et clavis eius
+ * commissum HEAD fert - semel per commissionem, aliter servatur
+ * ================================================== */
+
+hic_manens constans character* _r_commissum = "aaaa";
+
+interior b32
+_repositorium_ficta (
+                vacuum* datum,
+    constans character* clavis,
+               Piscina* piscina,
+                chorda* valor_out)
+{
+    (vacuum)datum;
+    si (strcmp(clavis, "commissum") != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *valor_out = chorda_ex_literis(_r_commissum, piscina);
+    redde VERUM;
+}
+
+interior vacuum
+_probare_facultatem_repositorii (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+                 DiscusFictus  discus;
+                FabricaSutura  sutura;
+          InternamentumChorda* intern = internamentum_creare(piscina);
+               FabricaSanatio* sanatio;
+                 FabricaActio* membrum_d;
+                          Xar* actiones;
+                          Xar* explicata;
+                          Xar* ordo;
+                          Xar* electa;
+                       chorda  causa;
+                          i32  cursus;
+                          i32  k;
+                          b32  clavis_repositorii;
+           constans character* nomina_t[] = { "probatio_d.c" };
+           constans character* VERDICTUM_D =
+               "build/fabrica/area/probationes_t/probatio_d/"
+               "verdictum.txt";
+
+        causa = chorda_ex_literis("", piscina);
+        mundi_discum_parare(&discus, &sutura, piscina);
+        sutura.lectiones_legere = mundi_lectiones_legere;
+        sutura.lectiones_scribere = mundi_lectiones_scribere;
+        sutura.ambitus = mundi_ambitus_fictum;
+        sutura.species = mundi_species_ficta;
+        sutura.identitas = mundi_identitatem_fictam_dare;
+        sutura.verdictum_ponere = mundi_verdictum_ponere;
+        sutura.area_parare = _area_parare_ficta;
+        sutura.in_area_currere = _in_area_currere_c;
+        sutura.clausura_c = _clausura_c_ficta;
+        sutura.compilare = _compilare_fictum;
+        sutura.repositorium = _repositorium_ficta;
+        sutura.exitus_noti = tabula_dispersa_creare_chorda(piscina, 16);
+        mundi_ambitus_ficti[0] = NIHIL;
+        mundi_ponere(&discus, "t/probatio_d.c", "d I\n");
+        mundi_ponere(&discus, "aedilis.stml", "<aedilis/>\n");
+        mundi_ponere(&discus, "data/communis.txt", "communis I\n");
+        mundi_directorium_ponere(&discus, "t/", nomina_t, I);
+        _r_commissum = "aaaa";
+        actiones = fabrica_declarationes_legere(chorda_ex_literis(
+            "<aedificatio>\n"
+            "  <actio titulus=\"probationes_t\" genus=\"iudicium\">\n"
+            "    <probationes_c exemplar=\"t/probatio_*.c\"/>\n"
+            "  </actio>\n</aedificatio>\n", piscina), "t.stml", piscina,
+            intern, &causa);
+        explicata = actiones
+            != NIHIL ? fabrica_gradus_explicare(&sutura,
+            actiones, piscina, &causa) : NIHIL;
+        ordo = explicata != NIHIL ? fabrica_ordinare(explicata, piscina,
+            &causa) : NIHIL;
+        CREDO_NON_NIHIL(ordo);
+        si (ordo == NIHIL)
+        {
+            imprimere("  fixum: %.*s\n", (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde;
+        }
+        membrum_d = _actio_explicata(explicata,
+            "probationes_t/probatio_d");
+        clavis_repositorii = FALSUM;
+        per (k = ZEPHYRUM; membrum_d != NIHIL
+             && k < xar_numerus(membrum_d->ingressus); k++)
+        {
+            constans FabricaIngressus* g = (FabricaIngressus*)
+                xar_obtinere(membrum_d->ingressus, k);
+
+            clavis_repositorii = clavis_repositorii
+                || (g->genus != NIHIL
+                && strcmp(g->genus->titulus, "repositorium")
+                == ZEPHYRUM);
+        }
+        CREDO_VERUM(clavis_repositorii);
+        electa = xar_creare(piscina, (i32)magnitudo(chorda));
+        *(chorda*)xar_addere(electa) = chorda_ex_literis(VERDICTUM_D,
+            piscina);
+
+        /* I. currit (non nexus solum) */
+        cursus = _c_cursus;
+        sanatio = _s_sanare(&sutura, ordo, electa,
+            "probationes_t/probatio_d", FABRICA_SANATUM, piscina);
+        CREDO_AEQUALIS_I32(sanatio != NIHIL ? (i32)sanatio->eventus
+            : (i32)XCIX, (i32)FABRICA_SANATUM);
+        CREDO_AEQUALIS_I32(_c_cursus, cursus + I);
+        CREDO_FALSUM(mundi_continet(chorda_ex_literis(
+            mundi_fasciculum_invenire(&discus, VERDICTUM_D) != NIHIL
+            ? chorda_ut_cstr(mundi_fasciculum_invenire(&discus,
+            VERDICTUM_D)->contentum, piscina) : "", piscina),
+            "nexus solum", piscina));
+
+        /* II. commissum idem: servatur */
+        (vacuum)fabrica_sanare(&sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        CREDO_AEQUALIS_I32(_c_cursus, cursus + I);
+
+        /* III. HEAD novus: iterum currit */
+        _r_commissum = "bbbb";
+        (vacuum)fabrica_sanare(&sutura, ordo, electa, FALSUM, piscina,
+            &causa);
+        CREDO_AEQUALIS_I32(_c_cursus, cursus + II);
+        _r_commissum = "aaaa";
+    }
+}
+
+
+/* ==================================================
  * DEBITA SCRIPTURAE (fabrica-7 T3): cursus fictus ludicri - membrum
  * cuius fons 'fons' est viam _d_via_a / _d_via_b scribit (NIHIL =
  * nihil extra aream)
@@ -2241,6 +2382,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "debita scripturae (fabrica-7 T3)",
       _probare_debita,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "facultas repositorium currit (fabrica-7 T5)",
+      _probare_facultatem_repositorii,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "chassis: registrum graduum",
       _probare_registrum_graduum,
