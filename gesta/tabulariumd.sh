@@ -15,7 +15,8 @@ GESTA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$GESTA_DIR/.." && pwd)"
 BUILD_DIR="$GESTA_DIR/build"
 BIN="$BUILD_DIR/tabulariumd"
-mkdir -p "$BUILD_DIR" "$GESTA_DIR/annales"
+# annales NON hic creantur: sedes annalium (gesta/fontes/annales_sedes.h)
+mkdir -p "$BUILD_DIR"
 
 # vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
 source "$RADIX_DIR/tools/vexilla.sh"

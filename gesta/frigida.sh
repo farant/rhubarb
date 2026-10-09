@@ -20,7 +20,8 @@ GESTA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$GESTA_DIR/.." && pwd)"
 BUILD_DIR="$GESTA_DIR/build"
 BIN="$BUILD_DIR/nota_frigida"
-mkdir -p "$BUILD_DIR" "$GESTA_DIR/annales"
+# annales NON hic creantur: sedes annalium (gesta/fontes/annales_sedes.h)
+mkdir -p "$BUILD_DIR"
 
 # obiecta per launcher servi aedificantur (eadem vexilla; </dev/null
 # = servus statim EOF exit 0 post constructionem, scrinium intactum)

@@ -26,6 +26,31 @@ _chordam_addere_test (
     *(chorda*)xar_addere(xar) = chorda_ex_literis(valor, piscina);
 }
 
+/* eventus sanationis tituli; M si nulla (probatio non ruit) */
+interior i32
+_eventus_sanationis (
+                   Xar* sanationes,
+    constans character* titulus)
+{
+    FabricaSanatio* sanatio;
+
+    sanatio = mundi_sanatio_invenire(sanationes, titulus);
+    redde (sanatio != NIHIL) ? (i32)sanatio->eventus : (i32)M;
+}
+
+/* causa sanationis tituli; vacua si nulla */
+interior chorda
+_causa_sanationis (
+                   Xar* sanationes,
+    constans character* titulus,
+               Piscina* piscina)
+{
+    FabricaSanatio* sanatio;
+
+    sanatio = mundi_sanatio_invenire(sanationes, titulus);
+    redde (sanatio != NIHIL) ? sanatio->causa
+        : chorda_ex_literis("", piscina);
+}
 
 s32 principale (vacuum)
 {
@@ -653,6 +678,326 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32((i32)mundi_sanatio_invenire(sanationes,
                 "P2")->eventus, (i32)FABRICA_FRACTUM);
         }
+
+        /* VI. post fracturam membra ultra fila non incipiunt: P1
+         * fractum, P2 P3 OMISSUM 'non incepta' (fabrica-6, ante
+         * _undam_agere per gradus) */
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.agere_simul  = mundi_agere_simul;
+        discus.fila_ficta   = I;
+        mundi_ponere(&discus, "a1", "a1\n");
+        mundi_ponere(&discus, "a2", "a2\n");
+        mundi_ponere(&discus, "a3", "a3\n");
+        mundi_ponere(&discus, "X1", "vetus\n");
+        mundi_ponere(&discus, "X2", "vetus\n");
+        mundi_ponere(&discus, "X3", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", I,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_3", "X3", NIHIL, "n3\n", 0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+            "X1", "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "P2", "gen_2", "a2",
+            "X2", "regeneratio");
+        actiones[2] = mundi_actio_scripta(piscina, "P3", "gen_3", "a3",
+            "X3", "regeneratio");
+        per (i = ZEPHYRUM; i < III; i++)
+        {
+            actiones[i]->lectiones = VERUM;
+        }
+        ordo = mundi_ordinare_fictas(piscina, actiones, III);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_AEQUALIS_I32(discus.acta_simul, I);
+        si (sanationes != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)mundi_sanatio_invenire(sanationes,
+                "P1")->eventus, (i32)FABRICA_FRACTUM);
+            sanatio = mundi_sanatio_invenire(sanationes, "P2");
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_OMISSUM);
+            CREDO_VERUM(mundi_continet(sanatio->causa, "non incepta",
+                piscina));
+            CREDO_AEQUALIS_I32((i32)mundi_sanatio_invenire(sanationes,
+                "P3")->eventus, (i32)FABRICA_OMISSUM);
+        }
+
+        /* VII. membrum non actum (scriptum nullum: non incipit, cauda
+         * cum causa): FRACTUM 'non actum', frater SANATUM */
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.agere_simul = mundi_agere_simul;
+        mundi_ponere(&discus, "a1", "a1\n");
+        mundi_ponere(&discus, "a2", "a2\n");
+        mundi_ponere(&discus, "X1", "vetus\n");
+        mundi_ponere(&discus, "X2", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+            "X1", "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "P2", "gen_nullum",
+            "a2", "X2", "regeneratio");
+        actiones[0]->lectiones = VERUM;
+        actiones[1]->lectiones = VERUM;
+        ordo = mundi_ordinare_fictas(piscina, actiones, II);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        si (sanationes != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)mundi_sanatio_invenire(sanationes,
+                "P1")->eventus, (i32)FABRICA_SANATUM);
+            sanatio = mundi_sanatio_invenire(sanationes, "P2");
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+            CREDO_VERUM(mundi_continet(sanatio->causa, "non actum",
+                piscina));
+            CREDO_VERUM(mundi_continet(sanatio->causa,
+                "scriptum nullum",
+                piscina));
+        }
+
+        /* VIII. scripturae II non notatae extra vestigia undae: causa
+         * primam nominat et '+I' reliquarum */
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.agere_simul       = mundi_agere_simul;
+        sutura.vestigium_capere  = mundi_vestigium_capere;
+        mundi_ponere(&discus, "a1", "a1\n");
+        mundi_ponere(&discus, "a2", "a2\n");
+        mundi_ponere(&discus, "X1", "vetus\n");
+        mundi_ponere(&discus, "X2", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+            FALSUM);
+        ((ScriptumFictum*)xar_obtinere(discus.scripta,
+            ZEPHYRUM))->alia =
+            "tacitum_a";
+        ((ScriptumFictum*)xar_obtinere(discus.scripta, I))->alia =
+            "tacitum_b";
+        actiones[0] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+            "X1", "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "P2", "gen_2", "a2",
+            "X2", "regeneratio");
+        actiones[0]->lectiones = VERUM;
+        actiones[1]->lectiones = VERUM;
+        ordo = mundi_ordinare_fictas(piscina, actiones, II);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        si (sanationes != NIHIL)
+        {
+            sanatio = mundi_sanatio_invenire(sanationes, "P2");
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+            CREDO_VERUM(mundi_continet(sanatio->causa, "tacitum_a +I",
+                piscina));
+            CREDO_VERUM(mundi_continet(sanatio->causa,
+                "scriptor ignotus", piscina));
+        }
+
+        /* IX. fractura in unda SISTIT undas sequentes (fabrica-6, ante
+         * _sanare_per_undas per gradus): D (ex X2 fracto) OMISSUM
+         * 'dependentia fracta', W (ex X1 sano) OMISSUM 'post
+         * fracturam', R recens tacet (nulla sanatio) */
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.agere_simul = mundi_agere_simul;
+        mundi_ponere(&discus, "a1", "a1\n");
+        mundi_ponere(&discus, "a2", "a2\n");
+        mundi_ponere(&discus, "X1", "vetus\n");
+        mundi_ponere(&discus, "X2", "vetus\n");
+        mundi_ponere(&discus, "XD", "vetus\n");
+        mundi_ponere(&discus, "XW", "vetus\n");
+        mundi_ponere(&discus, "XR", "nr\n");
+        mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", I,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_d", "XD", NIHIL, "nd\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_w", "XW", NIHIL, "nw\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_r", "XR", NIHIL, "nr\n", 0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+            "X1", "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "P2", "gen_2", "a2",
+            "X2", "regeneratio");
+        actiones[2] = mundi_actio_scripta(piscina, "D", "gen_d", "X2",
+            "XD", "regeneratio");
+        actiones[3] = mundi_actio_scripta(piscina, "W", "gen_w", "X1",
+            "XW", "regeneratio");
+        actiones[4] = mundi_actio_scripta(piscina, "R", "gen_r", "X1",
+            "XR", "regeneratio");
+        per (i = ZEPHYRUM; i < V; i++)
+        {
+            actiones[i]->lectiones = VERUM;
+        }
+        ordo = mundi_ordinare_fictas(piscina, actiones, V);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        si (sanationes != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "P2"),
+                (i32)FABRICA_FRACTUM);
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "D"),
+                (i32)FABRICA_OMISSUM);
+            CREDO_VERUM(mundi_continet(_causa_sanationis(sanationes,
+                "D", piscina), "dependentia fracta", piscina));
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "W"),
+                (i32)FABRICA_OMISSUM);
+            CREDO_VERUM(mundi_continet(_causa_sanationis(sanationes,
+                "W", piscina), "post fracturam", piscina));
+            CREDO_NIHIL(mundi_sanatio_invenire(sanationes, "R"));
+        }
+        CREDO_FALSUM(mundi_contentum_est(&discus, "XW", "nw\n"));
+
+        /* X. non tuta fracta in unda: non tuta altera et tutae undae
+         * eiusdem OMISSAE 'post fracturam' (non incipiuntur) */
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.agere_simul = mundi_agere_simul;
+        mundi_ponere(&discus, "u1", "u1\n");
+        mundi_ponere(&discus, "u2", "u2\n");
+        mundi_ponere(&discus, "a1", "a1\n");
+        mundi_ponere(&discus, "a2", "a2\n");
+        mundi_ponere(&discus, "XU1", "vetus\n");
+        mundi_ponere(&discus, "XU2", "vetus\n");
+        mundi_ponere(&discus, "X1", "vetus\n");
+        mundi_ponere(&discus, "X2", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_u1", "XU1", NIHIL, "nu1\n",
+            I,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_u2", "XU2", NIHIL, "nu2\n",
+            0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "U1", "gen_u1", "u1",
+            "XU1", "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "U2", "gen_u2", "u2",
+            "XU2", "regeneratio");
+        actiones[2] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+            "X1", "regeneratio");
+        actiones[3] = mundi_actio_scripta(piscina, "P2", "gen_2", "a2",
+            "X2", "regeneratio");
+        actiones[2]->lectiones = VERUM;
+        actiones[3]->lectiones = VERUM;
+        ordo = mundi_ordinare_fictas(piscina, actiones, IV);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_AEQUALIS_I32(discus.acta, I);
+        si (sanationes != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "U1"),
+                (i32)FABRICA_FRACTUM);
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "U2"),
+                (i32)FABRICA_OMISSUM);
+            CREDO_VERUM(mundi_continet(_causa_sanationis(sanationes,
+                "U2", piscina), "post fracturam", piscina));
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "P1"),
+                (i32)FABRICA_OMISSUM);
+            CREDO_VERUM(mundi_continet(_causa_sanationis(sanationes,
+                "P1", piscina), "post fracturam", piscina));
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "P2"),
+                (i32)FABRICA_OMISSUM);
+        }
+
+        /* XI. tuta SOLA fracta (via vetus): unda sequens non incipitur
+         * - W (ex XH sano) OMISSUM 'post fracturam' */
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.agere_simul = mundi_agere_simul;
+        mundi_ponere(&discus, "a1", "a1\n");
+        mundi_ponere(&discus, "h", "h\n");
+        mundi_ponere(&discus, "X1", "vetus\n");
+        mundi_ponere(&discus, "XH", "vetus\n");
+        mundi_ponere(&discus, "XW", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", I,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_h", "XH", NIHIL, "nh\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_w", "XW", NIHIL, "nw\n", 0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "S1", "gen_1", "a1",
+            "X1", "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "H", "gen_h", "h",
+            "XH", "regeneratio");
+        actiones[2] = mundi_actio_scripta(piscina, "W", "gen_w", "XH",
+            "XW", "regeneratio");
+        actiones[0]->lectiones = VERUM;
+        actiones[2]->lectiones = VERUM;
+        ordo = mundi_ordinare_fictas(piscina, actiones, III);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        si (sanationes != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "S1"),
+                (i32)FABRICA_FRACTUM);
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "H"),
+                (i32)FABRICA_SANATUM);
+            CREDO_AEQUALIS_I32(_eventus_sanationis(sanationes, "W"),
+                (i32)FABRICA_OMISSUM);
+            CREDO_VERUM(mundi_continet(_causa_sanationis(sanationes,
+                "W", piscina), "post fracturam", piscina));
+        }
+
+        /* XII. recens et ignota (exitus non iudicatus) numquam aguntur
+         * per undas: F recens, G ignota - nulla sanatio, acta II */
+        mundi_discum_parare(&discus, &sutura, piscina);
+        mundi_memorias_parare(&sutura, piscina);
+        sutura.agere_simul = mundi_agere_simul;
+        mundi_ponere(&discus, "a1", "a1\n");
+        mundi_ponere(&discus, "a2", "a2\n");
+        mundi_ponere(&discus, "f", "f\n");
+        mundi_ponere(&discus, "g", "g\n");
+        mundi_ponere(&discus, "X1", "vetus\n");
+        mundi_ponere(&discus, "X2", "vetus\n");
+        mundi_ponere(&discus, "XF", "nf\n");
+        mundi_ponere(&discus, "XG", "vetus\n");
+        mundi_scriptum_addere(&discus, "gen_1", "X1", NIHIL, "n1\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_2", "X2", NIHIL, "n2\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_f", "XF", NIHIL, "nf\n", 0,
+            FALSUM);
+        mundi_scriptum_addere(&discus, "gen_g", "XG", NIHIL, "ng\n", 0,
+            FALSUM);
+        actiones[0] = mundi_actio_scripta(piscina, "P1", "gen_1", "a1",
+            "X1", "regeneratio");
+        actiones[1] = mundi_actio_scripta(piscina, "P2", "gen_2", "a2",
+            "X2", "regeneratio");
+        actiones[2] = mundi_actio_scripta(piscina, "F", "gen_f", "f",
+            "XF", "regeneratio");
+        actiones[3] = mundi_actio_scripta(piscina, "G", "gen_g", "g",
+            "XG", "ignota");
+        per (i = ZEPHYRUM; i < IV; i++)
+        {
+            actiones[i]->lectiones = VERUM;
+        }
+        ordo = mundi_ordinare_fictas(piscina, actiones, IV);
+        sanationes = fabrica_sanare(&sutura, ordo, NIHIL, FALSUM,
+            piscina, &causa);
+        CREDO_NON_NIHIL(sanationes);
+        CREDO_AEQUALIS_I32(discus.acta, II);
+        si (sanationes != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(xar_numerus(sanationes), II);
+            CREDO_NIHIL(mundi_sanatio_invenire(sanationes, "F"));
+            CREDO_NIHIL(mundi_sanatio_invenire(sanationes, "G"));
+        }
+        CREDO_VERUM(mundi_contentum_est(&discus, "XG", "vetus\n"));
     }
 
 

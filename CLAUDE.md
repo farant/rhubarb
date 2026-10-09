@@ -262,8 +262,11 @@ division of records (one thing, one home):
 - MEMORY.md: orientation reflexes and pointers, never ledgers
 
 when the resident is down: ./gesta/frigida.sh writes cold.
-truth is gesta/annales/tabularium.jsonl (committed); the .db is a
-rebuildable projection of it.
+
+truth is ~/.rhubarb/annales/tabularium.jsonl (its own git repo, 
+shared by every worktree; ./gesta/frigida.sh -sedes prints the 
+paths); the .db is a rebuildable projection of it 
+(./gesta/frigida.sh -restituere).
 
 
 
