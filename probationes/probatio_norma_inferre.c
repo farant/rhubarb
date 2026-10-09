@@ -7,9 +7,12 @@
 #include "json.h"
 #include "norma.h"
 #include "norma_inferre.h"
+#include "norma_gignere.h"
+#include "chorda_aedificator.h"
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 interior chorda
 _js (
@@ -213,6 +216,317 @@ probatio_lex_coniunctionis(Piscina* p)
     CREDO_AEQUALIS_I32(inferentia_numerus(a), III);
 }
 
+/* ---- B1.2: discrimen ---- */
+
+interior vacuum
+probatio_discrimen(Piscina* p)
+{
+    constans character* constans bloci[] = {
+        "{\"type\":\"text\",\"text\":\"a\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t1\",\"name\":\"n\",\"input\":{}}",
+        "{\"type\":\"text\",\"text\":\"b\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t2\",\"name\":\"m\",\"input\":{}}",
+        NIHIL };
+    /* clavis tag semel absens: non candidatus */
+    constans character* constans absens[] = {
+        "{\"type\":\"text\",\"text\":\"a\"}",
+        "{\"id\":\"t1\",\"name\":\"n\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t2\",\"name\":\"m\"}",
+        NIHIL };
+    /* claves eaedem in omni partitione: nullum lucrum */
+    constans character* constans aequales[] = {
+        "{\"type\":\"a\",\"x\":1}", "{\"type\":\"b\",\"x\":2}", NIHIL };
+    /* aequalitas lucri: 'type' praefertur */
+    constans character* constans par[] = {
+        "{\"genus\":\"p\",\"type\":\"p\",\"a\":1}",
+        "{\"genus\":\"q\",\"type\":\"q\",\"b\":2}",
+        "{\"genus\":\"p\",\"type\":\"p\",\"a\":3}",
+        "{\"genus\":\"q\",\"type\":\"q\",\"b\":4}", NIHIL };
+    /* valor semel visus non testimonium: quasi-identificator non tag */
+    constans character* constans singuli[] = {
+        "{\"type\":\"text\",\"text\":\"a\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t1\"}", NIHIL };
+             character  corpus[XVIII][LXIV];
+    constans character* multa[XIX];
+                 Norma* n;
+            NormaVisus  v;
+                   i32  i;
+
+    imprimere("\n--- Probans discrimen ---\n");
+    n = inferentia_normam(_inferentia(bloci, p), p);
+    v = norma_visus(n);
+    CREDO_VERUM(v.genus == NORMA_DISCRIMEN);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.clavis_discriminis, "type");
+    CREDO_AEQUALIS_I32(xar_numerus(v.variationes), II);
+    si (xar_numerus(v.variationes) == II)
+    {
+        NormaVariatio* va = (NormaVariatio*)xar_obtinere(v.variationes,
+            0);
+        NormaVariatio* vb = (NormaVariatio*)xar_obtinere(v.variationes,
+            I);
+
+        /* ordo octetorum; variatio ex partitione sua sola, tag implicitum */
+        CREDO_CHORDA_AEQUALIS_LITERIS(va->valor, "text");
+        CREDO_CHORDA_AEQUALIS_LITERIS(vb->valor, "tool_use");
+        CREDO_AEQUALIS_I32(xar_numerus(norma_visus(va->objectum).campi),
+            I);
+        CREDO_AEQUALIS_I32(xar_numerus(norma_visus(vb->objectum).campi),
+            III);
+    }
+    /* omne exemplum schema suum transit, etiam per discrimen */
+    per (i = 0; bloci[i]; i++)
+    {
+        CREDO_VERUM(norma_iudicare(n, json_legere_literis(bloci[i],
+            p).radix, p).validum);
+    }
+    CREDO_VERUM(norma_visus(inferentia_normam(_inferentia(absens, p),
+        p)).genus == NORMA_OBJECTUM);
+    CREDO_VERUM(norma_visus(inferentia_normam(_inferentia(aequales, p),
+        p)).genus == NORMA_OBJECTUM);
+    CREDO_VERUM(norma_visus(inferentia_normam(_inferentia(singuli, p),
+        p)).genus == NORMA_OBJECTUM);
+    /* lex coniunctionis cum candidatis: 'type' in B solo moritur */
+    {
+        Inferentia* a      = _inferentia(bloci, p);
+        Inferentia* b      = _inferentia(absens, p);
+        Inferentia* totum  = _inferentia(bloci, p);
+
+        per (i = 0; absens[i]; i++)
+        {
+            inferentia_addere(totum, json_legere_literis(absens[i],
+                p).radix);
+        }
+        CREDO_CHORDA_AEQUALIS(_js(inferentia_normam(inferentia_coniungere(
+            a, b, p), p), p), _js(inferentia_normam(totum, p), p));
+        CREDO_CHORDA_AEQUALIS(_js(inferentia_normam(inferentia_coniungere(
+            b, a, p), p), p), _js(inferentia_normam(totum, p), p));
+    }
+    v = norma_visus(inferentia_normam(_inferentia(par, p), p));
+    CREDO_VERUM(v.genus == NORMA_DISCRIMEN);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v.clavis_discriminis, "type");
+    /* plures quam XVI valores distincti: non discrimen */
+    per (i = 0; i < XVIII; i++)
+    {
+        sprintf(corpus[i], "{\"type\":\"v%u\",\"k%u\":1}",
+            (insignatus integer)i, (insignatus integer)i);
+        multa[i] = corpus[i];
+    }
+    multa[XVIII] = NIHIL;
+    CREDO_VERUM(norma_visus(inferentia_normam(_inferentia(multa, p),
+        p)).genus == NORMA_OBJECTUM);
+}
+
+/* sceleton structurae: genus, nullabile, campi (nomen, requisitum),
+ * discrimen (clavis, variationes), elementum - non formae, electiones,
+ * fines, descriptiones, modi */
+interior vacuum
+_sceletum (
+       constans Norma* n,
+    ChordaAedificator* a)
+{
+    NormaVisus v = norma_visus(n);
+           i32 i;
+
+    commutatio (v.genus)
+    {
+        casus NORMA_LIBERUM:   chorda_aedificator_appendere_literis(a,
+                                   "*");
+                               frange;
+        casus NORMA_NULLUM:    chorda_aedificator_appendere_literis(a,
+                                   "null");
+                               frange;
+        casus NORMA_BOOLEAN:   chorda_aedificator_appendere_literis(a,
+                                   "b");
+                               frange;
+        casus NORMA_INTEGER:   chorda_aedificator_appendere_literis(a,
+                                   "i");
+                               frange;
+        casus NORMA_NUMERUS:   chorda_aedificator_appendere_literis(a,
+                                   "n");
+                               frange;
+        casus NORMA_TEXTUS:    chorda_aedificator_appendere_literis(a,
+                                   "s");
+                               frange;
+        casus NORMA_TABULATUM:
+            chorda_aedificator_appendere_literis(a, "[");
+            _sceletum(v.elementum, a);
+            chorda_aedificator_appendere_literis(a, "]");
+            frange;
+        casus NORMA_OBJECTUM:
+        {
+            /* campi ordine octetorum (aedificator ordinem suum habet) */
+            i32  numerus = xar_numerus(v.campi);
+            i32* ordo = (i32*)malloc((size_t)(numerus
+                + I) * magnitudo(i32));
+            i32 k;
+
+            per (i = 0; i < numerus; i++)
+            {
+                ordo[i] = i;
+            }
+            per (i = I; i < numerus; i++)
+            {
+                i32 x = ordo[i];
+
+                k = i;
+                dum (   k > 0
+                     && chorda_comparare(((NormaCampus*)xar_obtinere(
+                        v.campi, ordo[k - I]))->titulus,
+                        ((NormaCampus*)xar_obtinere(v.campi,
+                        x))->titulus)
+                        > 0)
+                {
+                    ordo[k] = ordo[k - I];
+                    k--;
+                }
+                ordo[k] = x;
+            }
+            chorda_aedificator_appendere_literis(a, "{");
+            per (i = 0; i < numerus; i++)
+            {
+                NormaCampus* c = (NormaCampus*)xar_obtinere(v.campi,
+                    ordo[i]);
+
+                chorda_aedificator_appendere_chorda(a, c->titulus);
+                chorda_aedificator_appendere_literis(a,
+                    c->requiritur ? ":" : "?:");
+                _sceletum(c->valor, a);
+                chorda_aedificator_appendere_literis(a, ",");
+            }
+            chorda_aedificator_appendere_literis(a, "}");
+            free(ordo);
+            frange;
+        }
+        casus NORMA_DISCRIMEN:
+            chorda_aedificator_appendere_literis(a, "D(");
+            chorda_aedificator_appendere_chorda(a,
+                v.clavis_discriminis);
+            chorda_aedificator_appendere_literis(a, "){");
+            per (i = 0; i < xar_numerus(v.variationes); i++)
+            {
+                NormaVariatio* va = (NormaVariatio*)xar_obtinere(
+                    v.variationes, i);
+
+                chorda_aedificator_appendere_chorda(a, va->valor);
+                chorda_aedificator_appendere_literis(a, "=");
+                _sceletum(va->objectum, a);
+                chorda_aedificator_appendere_literis(a, ";");
+            }
+            chorda_aedificator_appendere_literis(a, "}");
+            frange;
+    }
+    si (v.aut_nullum && v.genus != NORMA_NULLUM)
+    {
+        chorda_aedificator_appendere_literis(a, "|null");
+    }
+}
+
+interior chorda
+_sceletum_chorda (
+    constans Norma* n,
+           Piscina* p)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(p, CCLVI);
+
+    _sceletum(n, a);
+    redde chorda_aedificator_finire(a);
+}
+
+/* schemata nota (ex probatio_norma_gignere, cum unione summa) */
+interior Norma*
+_schema_responsi (
+    Piscina* p)
+{
+    constans character* constans fines[] = { "end_turn", "tool_use",
+        "max_tokens", NIHIL };
+    Norma* textus   = norma_objectum(p);
+    Norma* petitum  = norma_objectum(p);
+    Norma* blocus   = norma_discrimen(p, "type");
+    Norma* usus     = norma_objectum(p);
+    Norma* r        = norma_objectum(p);
+
+    norma_campus(textus, "text", norma_textus(p), VERUM);
+    norma_campus(petitum, "id", norma_textus(p), VERUM);
+    norma_campus(petitum, "name", norma_textus(p), VERUM);
+    norma_campus(petitum, "input", norma_modus(norma_objectum(p),
+        NORMA_APERTUM), VERUM);
+    norma_variatio(blocus, "text", textus);
+    norma_variatio(blocus, "tool_use", petitum);
+    norma_campus(usus, "input_tokens", norma_intra(norma_integer(p), 0,
+        M * M), VERUM);
+    norma_campus(usus, "output_tokens", norma_intra(norma_integer(p), 0,
+        M * M), VERUM);
+    norma_campus(r, "id", norma_textus(p), VERUM);
+    norma_campus(r, "content", norma_tabulatum(p, blocus), VERUM);
+    norma_campus(r, "stop_reason", norma_electio(norma_textus(p),
+        fines),
+        VERUM);
+    norma_campus(r, "usage", usus, VERUM);
+    redde r;
+}
+
+interior Norma*
+_schema_unionis (
+    Piscina* p)
+{
+    Norma* a = norma_objectum(p);
+    Norma* b = norma_objectum(p);
+    Norma* d = norma_discrimen(p, "kind");
+
+    norma_campus(a, "x", norma_integer(p), VERUM);
+    norma_campus(a, "y", norma_textus(p), FALSUM);
+    norma_campus(a, "nota", norma_aut_nullum(norma_textus(p)), VERUM);
+    norma_campus(b, "z", norma_boolean(p), VERUM);
+    norma_campus(b, "w", norma_tabulatum(p, norma_integer(p)), VERUM);
+    norma_variatio(d, "alpha", a);
+    norma_variatio(d, "beta", b);
+    redde d;
+}
+
+/* restitutio: CCC valores (TYPICA et FINES) ex schemate noto -> idem
+ * sceleton (genera, campi, requisita, discrimina, nullabilia) */
+interior vacuum
+_restituere (
+       Norma* nota,
+    constans character* titulus,
+     Piscina* p)
+{
+    Inferentia* inf = inferentia_creare(p, NIHIL);
+           s64  semen;
+        chorda  ante;
+        chorda  post;
+
+    per (semen = 0; semen < CCC; semen++)
+    {
+        NormaGenitum g = norma_gignere(nota, (semen % II) == 0
+            ? NORMA_TYPICA : NORMA_FINES, semen, p);
+
+        inferentia_addere(inf, g.valor);
+    }
+    ante = _sceletum_chorda(nota, p);
+    post = _sceletum_chorda(inferentia_normam(inf, p), p);
+    si (!chorda_aequalis(ante, post))
+    {
+        imprimere("  %s\n    notum:   %.*s\n    inventum: %.*s\n",
+            titulus,
+            (integer)ante.mensura, (constans character*)ante.datum,
+            (integer)post.mensura, (constans character*)post.datum);
+    }
+    CREDO_CHORDA_AEQUALIS(post, ante);
+}
+
+interior vacuum
+probatio_lex_restitutionis (
+    Piscina* p)
+{
+    imprimere("\n--- Lex III: restitutio ex norma_gignere ---\n");
+    _restituere(_schema_responsi(p),
+        "responsum (discrimen in tabulato)",
+        p);
+    _restituere(_schema_unionis(p), "unio summa (discrimen radicis)",
+        p);
+}
+
 s32
 principale (vacuum)
 {
@@ -227,6 +541,9 @@ principale (vacuum)
     probatio_limites(p);
     probatio_lex_sanitatis(p);
     probatio_lex_coniunctionis(p);
+    /* B1.2 */
+    probatio_discrimen(p);
+    probatio_lex_restitutionis(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

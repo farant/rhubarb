@@ -15,6 +15,19 @@ hic_manens constans character* constans _formae[INFERENTIA_FORMAE] = {
 
 nomen structura Figura Figura;
 
+/* discrimen (norma-spec-3 §IV): valor tag et partitio eius */
+nomen structura {
+     chorda  valor;
+        i32  instantiae;
+     Figura* figura;    /* partitio: instantiae objecti cum hoc valore */
+} ValorDiscriminis;
+
+nomen structura {
+    chorda  clavis;
+       b32  vivus;      /* in omni instantia, semper textus, valores pauci */
+       Xar* valores;    /* ValorDiscriminis */
+} CandidatusDiscriminis;
+
 nomen structura {
                chorda  titulus;
                   i32  praesentia;   /* instantiae objecti cum clave */
@@ -45,6 +58,11 @@ structura Figura {
                   i32  tabulatum_maximum;
     /* objectum */
                   Xar* campi;               /* CampusFigurae */
+                  Xar* candidati;           /* CandidatusDiscriminis */
+                  b32  partitio;            /* VERUM: figura partitionis -
+                                             * candidatos SUOS non servat
+                                             * (aliter se ipsam in
+                                             * infinitum partiretur) */
 };
 
 structura Inferentia {
@@ -68,9 +86,11 @@ _figura_nova (
         (memoriae_index)magnitudo(Figura));
 
     memset(f, 0, magnitudo(*f));
-    f->distincti     = xar_creare(p, (i32)magnitudo(chorda));
-    f->campi         = xar_creare(p, (i32)magnitudo(CampusFigurae));
-    f->formae_vivae  = ((i32)I << INFERENTIA_FORMAE) - I;
+    f->distincti  = xar_creare(p, (i32)magnitudo(chorda));
+    f->campi      = xar_creare(p, (i32)magnitudo(CampusFigurae));
+    f->candidati = xar_creare(p,
+        (i32)magnitudo(CandidatusDiscriminis));
+    f->formae_vivae = ((i32)I << INFERENTIA_FORMAE) - I;
     redde f;
 }
 
@@ -140,6 +160,129 @@ _campum_invenire (
     c->praesentia  = 0;
     c->figura      = _figura_nova(inf->piscina);
     redde c;
+}
+
+interior vacuum
+_figuram_addere (
+    Inferentia* inf,
+        Figura* f,
+     JsonValor* v);
+
+interior Figura*
+_partitio_nova (
+    Piscina* p)
+{
+    Figura* f = _figura_nova(p);
+
+    f->partitio = VERUM;
+    redde f;
+}
+
+interior ValorDiscriminis*
+_valorem_invenire (
+    CandidatusDiscriminis* c,
+                   chorda  valor)
+{
+    i32 i;
+
+    per (i = 0; i < xar_numerus(c->valores); i++)
+    {
+        ValorDiscriminis* vd =
+            (ValorDiscriminis*)xar_obtinere(c->valores,
+            i);
+
+        si (chorda_aequalis(vd->valor, valor))
+        {
+            redde vd;
+        }
+    }
+    redde NIHIL;
+}
+
+interior JsonValor*
+_valor_clavis (
+     JsonValor* objectum,
+        chorda  clavis)
+{
+    JsonObjectumIterator  it = json_objectum_iterator(objectum);
+                  chorda  k;
+               JsonValor* valor;
+
+    dum (json_objectum_iterator_proxima(&it, &k, &valor))
+    {
+        si (chorda_aequalis(k, clavis))
+        {
+            redde valor;
+        }
+    }
+    redde NIHIL;
+}
+
+/* candidati ex instantia PRIMA nascuntur (claves textus); deinde quisque
+ * moritur si clavis deest, non textus est, aut valores > maximum */
+interior vacuum
+_candidatos_addere (
+    Inferentia* inf,
+        Figura* f,
+     JsonValor* v)
+{
+    i32 i;
+
+    si (f->genera[JSON_OBJECTUM] == I)
+    {
+        JsonObjectumIterator  it = json_objectum_iterator(v);
+                      chorda  k;
+                   JsonValor* valor;
+
+        dum (json_objectum_iterator_proxima(&it, &k, &valor))
+        {
+            si (json_genus(valor) == JSON_CHORDA)
+            {
+                CandidatusDiscriminis* c = (CandidatusDiscriminis*)
+                    xar_addere(f->candidati);
+
+                c->clavis  = chorda_transcribere(k, inf->piscina);
+                c->vivus   = VERUM;
+                c->valores  = xar_creare(inf->piscina,
+                    (i32)magnitudo(ValorDiscriminis));
+            }
+        }
+    }
+    per (i = 0; i < xar_numerus(f->candidati); i++)
+    {
+        CandidatusDiscriminis* c = (CandidatusDiscriminis*)xar_obtinere(
+            f->candidati, i);
+                   JsonValor* t;
+            ValorDiscriminis* vd;
+
+        si (!c->vivus)
+        {
+            perge;
+        }
+        t = _valor_clavis(v, c->clavis);
+        si (!t || json_genus(t) != JSON_CHORDA)
+        {
+            c->vivus = FALSUM;
+            perge;
+        }
+        vd = _valorem_invenire(c, json_ad_chorda(t));
+        si (!vd)
+        {
+            si (xar_numerus(c->valores)
+                >= inf->optiones.discrimen_maximum)
+            {
+                c->vivus = FALSUM;
+                perge;
+            }
+            vd = (ValorDiscriminis*)xar_addere(c->valores);
+            vd->valor       = chorda_transcribere(json_ad_chorda(t),
+                inf->piscina);
+            vd->instantiae  = 0;
+            vd->figura      = _partitio_nova(inf->piscina);
+        }
+        vd->instantiae++;
+        _figuram_addere(inf, vd->figura, v);
+    }
 }
 
 interior vacuum
@@ -250,10 +393,114 @@ _figuram_addere (
                 c->praesentia++;
                 _figuram_addere(inf, c->figura, valor);
             }
+            si (!f->partitio)
+            {
+                _candidatos_addere(inf, f, v);
+            }
             frange;
         }
         ordinarius:
             frange;
+    }
+}
+
+interior vacuum
+_figuras_miscere (
+         Inferentia* inf,
+             Figura* dest,
+    constans Figura* fons);
+
+/* candidatus vivit si in utraque parte vivit (lex: idem ac additio
+ * singula); dest vacua -> candidati fontis copiantur */
+interior vacuum
+_candidatos_miscere (
+         Inferentia* inf,
+             Figura* dest,
+    constans Figura* fons,
+                b32  dest_vacua)
+{
+    i32 i;
+    i32 k;
+
+    si (dest_vacua)
+    {
+        per (i = 0; i < xar_numerus(fons->candidati); i++)
+        {
+            CandidatusDiscriminis* fc = (CandidatusDiscriminis*)
+                xar_obtinere(fons->candidati, i);
+            CandidatusDiscriminis* dc = (CandidatusDiscriminis*)
+                xar_addere(dest->candidati);
+
+            dc->clavis  = chorda_transcribere(fc->clavis,
+                inf->piscina);
+            dc->vivus   = fc->vivus;
+            dc->valores  = xar_creare(inf->piscina,
+                (i32)magnitudo(ValorDiscriminis));
+            per (k = 0; k < xar_numerus(fc->valores); k++)
+            {
+                ValorDiscriminis* fv = (ValorDiscriminis*)xar_obtinere(
+                    fc->valores, k);
+                ValorDiscriminis* dv = (ValorDiscriminis*)xar_addere(
+                    dc->valores);
+
+                dv->valor       = chorda_transcribere(fv->valor,
+                    inf->piscina);
+                dv->instantiae  = fv->instantiae;
+                dv->figura      = _partitio_nova(inf->piscina);
+                _figuras_miscere(inf, dv->figura, fv->figura);
+            }
+        }
+        redde;
+    }
+    per (i = 0; i < xar_numerus(dest->candidati); i++)
+    {
+        CandidatusDiscriminis* dc =
+            (CandidatusDiscriminis*)xar_obtinere(
+            dest->candidati, i);
+        CandidatusDiscriminis* fc = NIHIL;
+
+        si (!dc->vivus)
+        {
+            perge;
+        }
+        per (k = 0; k < xar_numerus(fons->candidati); k++)
+        {
+            CandidatusDiscriminis* x = (CandidatusDiscriminis*)
+                xar_obtinere(fons->candidati, k);
+
+            si (chorda_aequalis(x->clavis, dc->clavis))
+            {
+                fc = x;
+            }
+        }
+        si (!fc || !fc->vivus)
+        {
+            dc->vivus = FALSUM;
+            perge;
+        }
+        per (k = 0; k < xar_numerus(fc->valores) && dc->vivus; k++)
+        {
+            ValorDiscriminis* fv = (ValorDiscriminis*)xar_obtinere(
+                fc->valores, k);
+            ValorDiscriminis* dv = _valorem_invenire(dc, fv->valor);
+
+            si (!dv)
+            {
+                si (xar_numerus(dc->valores)
+                    >= inf->optiones.discrimen_maximum)
+                {
+                    dc->vivus = FALSUM;
+                    frange;
+                }
+                dv = (ValorDiscriminis*)xar_addere(dc->valores);
+                dv->valor       = chorda_transcribere(fv->valor,
+                    inf->piscina);
+                dv->instantiae  = 0;
+                dv->figura      = _partitio_nova(inf->piscina);
+            }
+            dv->instantiae += fv->instantiae;
+            _figuras_miscere(inf, dv->figura, fv->figura);
+        }
     }
 }
 
@@ -265,7 +512,14 @@ _figuras_miscere (
       constans Figura* fons)
 {
     i32 i;
+    b32 dest_vacua = dest->genera[JSON_OBJECTUM] == 0;
+    b32 fons_vacua = fons->genera[JSON_OBJECTUM] == 0;
 
+    /* candidati: ante summas generum (vacuitas ex numeris veteribus) */
+    si (!dest->partitio && !fons_vacua)
+    {
+        _candidatos_miscere(inf, dest, fons, dest_vacua);
+    }
     dest->instantiae += fons->instantiae;
     per (i = 0; i < VII; i++)
     {
@@ -486,19 +740,216 @@ _figuram_normam (
         constans Figura* f,
                 Piscina* p);
 
+interior i32
+_requisita (
+    constans Figura* f)
+{
+    i32 i;
+    i32 n = 0;
+
+    per (i = 0; i < xar_numerus(f->campi); i++)
+    {
+        si (((CampusFigurae*)xar_obtinere(f->campi, i))->praesentia
+            == f->genera[JSON_OBJECTUM])
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior b32
+_claves_aequales (
+    constans Figura* a,
+    constans Figura* b)
+{
+    i32 i;
+    i32 k;
+
+    si (xar_numerus(a->campi) != xar_numerus(b->campi))
+    {
+        redde FALSUM;
+    }
+    per (i = 0; i < xar_numerus(a->campi); i++)
+    {
+        chorda t = ((CampusFigurae*)xar_obtinere(a->campi, i))->titulus;
+           b32 inventa = FALSUM;
+
+        per (k = 0; k < xar_numerus(b->campi) && !inventa; k++)
+        {
+            inventa = chorda_aequalis(t, ((CampusFigurae*)xar_obtinere(
+                b->campi, k))->titulus);
+        }
+        si (!inventa)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* §IV: lucrum = summa requisitorum per valorem - valores x requisita
+ * communia; candidatus aptus si lucrum > 0 et claves partitionum
+ * differunt; maximum lucrum vincit; aequalitas: 'type', deinde ordo.
+ * TESTIMONIUM (B1.2, mensuratum): solum valores bis saltem visi
+ * numerantur, et duo tales requiruntur - partitio unius exempli omnes
+ * claves 'requisitas' facit, unde campus quasi-identificator (valor
+ * novus per exemplum) discrimen falsum fiebat. Variatio semel visa in
+ * adumbratione tamen manet. */
+interior constans CandidatusDiscriminis*
+_discrimen_eligere (
+    constans Figura* f)
+{
+    constans CandidatusDiscriminis* optimus         = NIHIL;
+                               s64  lucrum_optimum  = 0;
+                               i32  i;
+                               i32  k;
+                               i32  m;
+
+    per (i = 0; i < xar_numerus(f->candidati); i++)
+    {
+        constans CandidatusDiscriminis* c = (CandidatusDiscriminis*)
+            xar_obtinere(f->candidati, i);
+                                    s64 lucrum;
+                                    b32 differunt = FALSUM;
+                                    i32 d;
+                                    b32 melior;
+
+        si (!c->vivus || xar_numerus(c->valores) < II)
+        {
+            perge;
+        }
+        d       = 0;
+        lucrum  = 0;
+        per (k = 0; k < xar_numerus(c->valores); k++)
+        {
+            constans ValorDiscriminis* prior = (ValorDiscriminis*)
+                xar_obtinere(c->valores, k);
+
+            si (prior->instantiae < II)
+            {
+                perge;
+            }
+            d++;
+            lucrum += (s64)_requisita(prior->figura);
+            per (m = k + I; m < xar_numerus(c->valores)
+                && !differunt; m++)
+            {
+                constans ValorDiscriminis* posterior =
+                    (ValorDiscriminis*)
+                    xar_obtinere(c->valores, m);
+
+                differunt = posterior->instantiae >= II
+                    && !_claves_aequales(prior->figura,
+                    posterior->figura);
+            }
+        }
+        lucrum -= (s64)d * (s64)_requisita(f);
+        si (d < II || lucrum <= 0 || !differunt)
+        {
+            perge;
+        }
+        si (!optimus || lucrum > lucrum_optimum)
+        {
+            melior = VERUM;
+        }
+        alioquin si (lucrum < lucrum_optimum)
+        {
+            melior = FALSUM;
+        }
+        alioquin si (chorda_aequalis_literis(optimus->clavis, "type"))
+        {
+            melior = FALSUM;
+        }
+        alioquin si (chorda_aequalis_literis(c->clavis, "type"))
+        {
+            melior = VERUM;
+        }
+        alioquin
+        {
+            melior = _comparare_chordas(c->clavis, optimus->clavis) < 0;
+        }
+        si (melior)
+        {
+            optimus         = c;
+            lucrum_optimum  = lucrum;
+        }
+    }
+    redde optimus;
+}
+
 interior Norma*
 _objectum_normam (
     constans Inferentia* inf,
         constans Figura* f,
-                Piscina* p)
+                Piscina* p,
+        constans chorda* omittere);
+
+interior Norma*
+_discrimen_normam (
+                  constans Inferentia* inf,
+       constans CandidatusDiscriminis* c,
+                              Piscina* p)
 {
-                Norma* o = norma_modus(norma_objectum(p),
-                               inf->optiones.modus);
+                       Norma* d = norma_modus(norma_discrimen(p,
+                                      chorda_ut_cstr(c->clavis, p)),
+                                      inf->optiones.modus);
+                          i32   n = xar_numerus(c->valores);
+    constans ValorDiscriminis** ordo;
+                          i32   i;
+                          i32   k;
+
+    ordo = (constans ValorDiscriminis**)piscina_allocare(p,
+        (memoriae_index)n * magnitudo(ValorDiscriminis*));
+    per (i = 0; i < n; i++)
+    {
+        ordo[i] = (ValorDiscriminis*)xar_obtinere(c->valores, i);
+    }
+    per (i = I; i < n; i++)
+    {
+        constans ValorDiscriminis* x = ordo[i];
+
+        k = i;
+        dum (   k > 0
+             && _comparare_chordas(ordo[k - I]->valor, x->valor) > 0)
+        {
+            ordo[k] = ordo[k - I];
+            k--;
+        }
+        ordo[k] = x;
+    }
+    per (i = 0; i < n; i++)
+    {
+        /* tag in variatione implicite declaratur: campus omittitur */
+        norma_variatio(d, chorda_ut_cstr(ordo[i]->valor, p),
+            _objectum_normam(inf, ordo[i]->figura, p, &c->clavis));
+    }
+    redde d;
+}
+
+interior Norma*
+_objectum_normam (
+     constans Inferentia* inf,
+         constans Figura* f,
+                 Piscina* p,
+         constans chorda* omittere)
+{
+                Norma*  o;
                   i32   n = xar_numerus(f->campi);
         CampusFigurae** ordo;
                   i32   i;
                   i32   k;
 
+    si (!omittere && !f->partitio)
+    {
+        constans CandidatusDiscriminis* c = _discrimen_eligere(f);
+
+        si (c)
+        {
+            redde _discrimen_normam(inf, c, p);
+        }
+    }
+    o = norma_modus(norma_objectum(p), inf->optiones.modus);
     si (n == 0)
     {
         redde o;
@@ -526,6 +977,11 @@ _objectum_normam (
     per (i = 0; i < n; i++)
     {
         character* titulus = chorda_ut_cstr(ordo[i]->titulus, p);
+
+        si (omittere && chorda_aequalis(ordo[i]->titulus, *omittere))
+        {
+            perge;
+        }
 
         norma_campus(o, titulus, _figuram_normam(inf, ordo[i]->figura,
             p),
@@ -602,7 +1058,7 @@ _figuram_normam (
     }
     alioquin
     {
-        n = _objectum_normam(inf, f, p);
+        n = _objectum_normam(inf, f, p, NIHIL);
     }
     si (f->genera[JSON_NULLUM] > 0)
     {

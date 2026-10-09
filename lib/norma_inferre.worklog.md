@@ -26,3 +26,36 @@
 - Plants (all red): required as "present in any"; null not folded into
   aut_nullum; merge assigning presence instead of summing; a failed
   format bit never cleared.
+
+## 2026-10-09 - discriminator detection (norma-spec-3 B1.2)
+
+- Object positions keep CANDIDATES born from the first instance's string
+  keys; a candidate dies when its key is absent, not a string, or exceeds
+  discrimen_maximum distinct values. Each live candidate keeps one
+  sub-shape per tag value (a PARTITION). A partition shape must not keep
+  candidates of its own object level - it would re-partition itself
+  forever (`partitio` flag); its nested positions do keep theirs, so
+  discriminators inside variants are recovered.
+- Merge: a candidate survives iff alive on both sides (empty dest copies
+  the source's); value sets unioned under the cap. Checked by a merge-law
+  case where the tag key dies only in B, both merge orders.
+- Selection (§IV): gain = sum of required keys per partition - partitions
+  x required keys overall; needs gain > 0 and differing key sets; max
+  gain wins; ties prefer `type`, then bytewise order.
+- **Evidence threshold (spec amended):** only values seen >= II times
+  count toward gain and key-set difference, and >= II such values are
+  needed. Found by B1.1's own test: two samples with an id-like string
+  field (a new value each) made one-sample partitions where every key
+  looks "required" -> a false discriminator. A variant seen once still
+  appears in the draft (as its own variatio); it just cannot be the
+  evidence for the split.
+- Variants are drafted from their partition WITHOUT the tag field (the
+  core declares it implicitly); values sorted bytewise.
+- Law III (recovery): CCC values (TYPICA/FINES alternating) from a
+  response schema (discriminator inside content[]) and a top-level union
+  (nullable field, optional field, array) -> identical skeleton (genus,
+  fields, required-ness, discriminator key + variants, nullable). The
+  generator omits optional fields and emits nulls often enough (AUDIENDA
+  answered). Whole suite < 0.4 s.
+- Plants (all red): discriminator never chosen; evidence threshold off;
+  merge keeping a candidate dead on one side; tag field kept in variants.

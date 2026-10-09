@@ -117,6 +117,12 @@ At draft time, for each candidate with >= II distinct values:
   key sets.
 - The qualifying candidate with the largest gain wins; ties prefer the
   key named `type`, then the lexically smallest name.
+- **Evidence (amended B1.2, measured):** only tag values seen at least
+  twice count toward gain and toward "different key sets", and at least
+  two such values are required. A one-sample partition makes every key
+  "required", so an id-like string field (new value per sample) would
+  otherwise become a false discriminator. A value seen once still gets
+  its own `variatio` in the draft.
 
 The winner becomes `discrimen(T)` with `modus` from the options and one
 `variatio` per value, each variant's `objectum` drafted from its own
