@@ -790,6 +790,51 @@ probatio_emissor_recusat(Piscina* p)
         "\"a\\?\\?-b \\\"c\\\"\\nd\\\\e\"", p)));
 }
 
+/* recensio finalis (norma-plan-3): textus FIDELIS per scriptorem et
+ * lectorem - linea nova in descriptione et in licito servatur (STML
+ * lineas novas textus ordinarii molles facit); clavis VACUA recusatur
+ * (STML attributum vacuum nudum scribit, quod 'true' relegitur) */
+interior vacuum
+probatio_textus_fidelis(Piscina* p)
+{
+    constans character* constans licita[] = { "a\nb", "c", NIHIL };
+      NormaNominata nn;
+    NormaStmlLectio l;
+             chorda causa;
+             chorda s;
+
+    imprimere("\n--- Probans textum fidelem ---\n");
+    nn.titulus = chorda_ex_literis("x", p);
+    nn.norma   = norma_descriptio(norma_electio(norma_textus(p),
+        licita),
+        "Linea prima.\nLinea secunda.");
+    s = norma_stml_scribere(&nn, I, p, &causa);
+    CREDO_VERUM(s.mensura > 0);
+    l = norma_stml_legere(s, NIHIL, 0, p);
+    CREDO_VERUM(l.successus);
+    si (l.successus)
+    {
+        CREDO_AEQUALIS_I32(_idem_dicunt(nn.norma,
+            norma_stml_quaerere(&l, "x"), p), 0);
+        CREDO_CHORDA_AEQUALIS(_scribe(l.normae, p), s);
+        CREDO_VERUM(_formatum(s, p));
+    }
+    /* clavis vacua, valor variationis vacuus, clavis discriminis vacua */
+    nn.norma = norma_campus(norma_objectum(p), "", norma_textus(p),
+        VERUM);
+    CREDO_AEQUALIS_I32(norma_stml_scribere(&nn, I, p, &causa).mensura,
+        0);
+    CREDO_VERUM(chorda_continet(causa, chorda_ex_literis("vacu", p)));
+    nn.norma = norma_variatio(norma_discrimen(p, "type"), "",
+        norma_objectum(p));
+    CREDO_AEQUALIS_I32(norma_stml_scribere(&nn, I, p, &causa).mensura,
+        0);
+    nn.norma = norma_variatio(norma_discrimen(p, ""), "a",
+        norma_objectum(p));
+    CREDO_AEQUALIS_I32(norma_stml_scribere(&nn, I, p, &causa).mensura,
+        0);
+}
+
 s32
 principale (vacuum)
 {
@@ -806,6 +851,7 @@ principale (vacuum)
     probatio_scriptor_communis_et_recusationes(p);
     probatio_oraculum_tertium(p);
     probatio_emissor_recusat(p);
+    probatio_textus_fidelis(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

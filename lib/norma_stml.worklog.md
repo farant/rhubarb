@@ -94,3 +94,25 @@ against a registry. Every class has a fixture; a bitmask over
   (TYPICA, FINES, INVALIDA; L seeds).
 - Plants: no `requiritur="falsum"` -> I, II red; shared nodes inlined ->
   I + pointer equality red; reader ignoring `modus` -> II red.
+
+## 2026-10-08 - final review: two silent corruptions in the writer (fixed)
+
+A probe of text the plan's tests never fed found two files that read
+back as something ELSE without any error:
+
+1. **Newline in text folded to a space.** STML's ordinary text has SOFT
+   newlines (a newline run reads back as one space). A builder's
+   multi-line `descriptio` ("Linea prima.\nLinea secunda.") or a
+   `<licitum>` value "a\nb" round-tripped as "... prima. Linea ..." /
+   "a b". Fix: `_textum_scribere` writes such text in the multi-line form
+   `<descriptio\>` (`StmlNodus.multilinea`), where newlines ARE content.
+   Canon accepts it; reader unchanged.
+2. **Empty attribute value -> `true`.** STML prints an attribute with an
+   empty value bare (`<campus titulus>`), which reads back as "true" - a
+   JSON key "" became "true". Fix: `_attr` refuses empty values with a
+   named reason (keys, variant tags, discriminator keys). An empty key is
+   legal JSON but rare; refusing is honest, corrupting is not.
+
+`probatio_textus_fidelis` watched both fail first. Cases probed and
+fine: double spaces, leading space, enum values with edge spaces, empty
+enum value, tab and apostrophe in keys, key "true".

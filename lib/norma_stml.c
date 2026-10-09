@@ -966,6 +966,14 @@ _attr (
 {
     character nuntius[CCLVI];
 
+    si (valor.mensura == 0)
+    {
+        sprintf(nuntius,
+            "%s vacuus STML ferre nequit (attributum vacuum"
+            " nudum scribitur et 'true' relegitur)", quid);
+        _recusare(s, nuntius);
+        redde;
+    }
     si (!_tutum(valor))
     {
         sprintf(nuntius, "%s '%.*s' STML ferre nequit (\" & < > linea"
@@ -1004,6 +1012,30 @@ _fluitans_scribere (
             redde;
         }
     }
+}
+
+/* elementum textus: linea nova in textu ordinario STML MOLLIS est
+ * (spatium relegitur) - textus cum linea nova forma multilineae
+ * '<tag\>' scribitur, ubi lineae novae contentum sunt */
+interior vacuum
+_textum_scribere (
+               Scriptor* s,
+              StmlNodus* parens,
+     constans character* titulus,
+                 chorda  textus)
+{
+     StmlNodus* e = _elementum(s, parens, titulus);
+           i32  i;
+
+    per (i = 0; i < textus.mensura; i++)
+    {
+        si (textus.datum[i] == '\n')
+        {
+            e->multilinea = VERUM;
+            frange;
+        }
+    }
+    stml_textum_addere(e, s->p, s->in, chorda_ut_cstr(textus, s->p));
 }
 
 interior constans character*
@@ -1193,16 +1225,14 @@ _nodum_scribere (
     /* liberi: descriptio primum, licita, typi */
     si (v.descriptio.mensura > 0)
     {
-        stml_textum_addere(_elementum(s, e, "descriptio"), s->p, s->in,
-            chorda_ut_cstr(v.descriptio, s->p));
+        _textum_scribere(s, e, "descriptio", v.descriptio);
     }
     si (v.licita && xar_numerus(v.licita) > 0 && !simplex)
     {
         per (i = 0; i < xar_numerus(v.licita); i++)
         {
-            stml_textum_addere(_elementum(s, e, "licitum"), s->p, s->in,
-                chorda_ut_cstr(*(chorda*)xar_obtinere(v.licita, i),
-                s->p));
+            _textum_scribere(s, e, "licitum",
+                *(chorda*)xar_obtinere(v.licita, i));
         }
     }
     si (v.genus == NORMA_TABULATUM)
