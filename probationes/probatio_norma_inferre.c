@@ -954,9 +954,39 @@ probatio_comparatio_sui(Piscina* p)
         p), inf, p)), 0);
 }
 
+/* discrepantiae quae schema a specimine VIOLATUM dicunt (non solum
+ * 'numquam visum' aut 'fortasse requisitum'); impressae, numeratae */
+interior i32
+_violationes (
+    Xar* d)
+{
+    i32 i;
+    i32 n = 0;
+
+    per (i = 0; i < xar_numerus(d); i++)
+    {
+        NormaDiscrepantia* x = (NormaDiscrepantia*)xar_obtinere(d, i);
+
+        si (   x->genus == NORMA_DISCREPANTIA_REQUISITUM_ABSENS
+            || x->genus == NORMA_DISCREPANTIA_NON_DECLARATUM
+            || x->genus == NORMA_DISCREPANTIA_GENUS_LATIUS
+            || x->genus == NORMA_DISCREPANTIA_NULLUM_NOVUM
+            || x->genus == NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA)
+        {
+            imprimere("  violatio %s %.*s\n",
+                norma_discrepantia_descriptio(x->genus),
+                (integer)x->via.mensura,
+                (constans character*)x->via.datum);
+            n++;
+        }
+    }
+    redde n;
+}
+
 /* fumus: lib/vates_responsum.norma contra specimina vatis commissa -
- * schema omnem variationem commissam declarat (2026-10-09, ex captura):
- * specimen cum bloco novo sine schemate renovato hic rubet */
+ * CUSTOS (2026-10-09, ex captura): schema omne specimen commissum
+ * accipit; specimen cum bloco aut campo novo sine schemate renovato
+ * hic rubet */
 interior vacuum
 probatio_comparatio_vatis(Piscina* p)
 {
@@ -983,8 +1013,7 @@ probatio_comparatio_vatis(Piscina* p)
     r = norma_comparare(norma_stml_quaerere(&l, "responsum"), inf, p);
     CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NUMQUAM_VISA,
         "$.content[]", p));
-    CREDO_FALSUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA,
-        "$.content[]", p));
+    CREDO_AEQUALIS_I32(_violationes(r), 0);
 }
 
 s32

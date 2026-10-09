@@ -1,0 +1,23 @@
+{
+  "clavis": "200:{container:z,content:[{text:s,type:s}],diagnostics:z,id:s,model:s,role:s,stop_details:z,stop_reason:s,stop_sequence:z,type:s,usage:{cache_creation:{ephemeral_1h_input_tokens:n,ephemeral_5m_input_tokens:n},cache_creation_input_tokens:n,cache_read_input_tokens:n,inference_geo:s,input_tokens:n,output_tokens:n,output_tokens_details:{thinking_tokens:n},service_tier:s}}",
+  "causa": "exemplum 05_max_tokens.json",
+  "status": 200,
+  "capita": [
+    {
+      "titulus": "Content-Type",
+      "valor": "application/json"
+    },
+    {
+      "titulus": "request-id",
+      "valor": "req_011Cfs9NE976EVaRzN4SREvh"
+    }
+  ],
+  "corpus": "{\"model\":\"claude-haiku-5-5\",\"id\":\"msg_011Cfs9NEUh17pKm5heJbSe3\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"One, two, three\"}],\"container\":null,\"stop_reason\":\"max_tokens\",\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":22,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":5,\"output_tokens_details\":{\"thinking_tokens\":0},\"service_tier\":\"standard\",\"inference_geo\":\"global\"},\"diagnostics\":null}",
+  "primum_visum": "2026-10-09T14:34:51Z",
+  "methodus": "POST",
+  "hospes": "api.anthropic.com",
+  "via": "/v1/messages",
+  "summarium": {
+    "model": "claude-haiku-5-5"
+  }
+}
