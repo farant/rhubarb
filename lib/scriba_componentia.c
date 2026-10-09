@@ -5,6 +5,7 @@
 #include "chorda.h"
 
 #include <stdio.h>
+#include <string.h>
 
 
 /* ==================================================
@@ -141,6 +142,7 @@ scriba_componere (
              Componens* prospectus;
              Componens* pagina;
              Componens* status;
+             Componens* paginae;
             Dispositio* dispositio;
        DispositioForma  forma;
                    s32  d_radix;
@@ -159,7 +161,11 @@ scriba_componere (
                    s32  sl;
                    b32  visualis;
              character  titulus[XLVIII];
+             character  index[XLVIII];
     constans character* modus;
+                   s32  positio;
+                   s32  numerus;
+                   s32  ix;
 
     (vacuum)motus;
     si (!repo || !piscina || !intern || !ctx)
@@ -252,6 +258,26 @@ scriba_componere (
             : modus[ZEPHYRUM] == 'v' ? "VISUALIS" : "NORMALIS",
             (integer)(cl + I), (integer)(cc + I));
     componens_ponere_titulum(status, titulus);
+    /* index paginae (visus super librum, vicus-latera S2b): dextrorsum,
+     * cellula ab ora; omittitur si textum status tangeret */
+    positio = attributum_s32(&ramus, INSULA_EPHEMERA, "pagina_positio",
+        ZEPHYRUM);
+    numerus = attributum_s32(&ramus, INSULA_EPHEMERA, "paginae_numerus",
+        ZEPHYRUM);
+    si (positio > ZEPHYRUM && numerus > ZEPHYRUM)
+    {
+        sprintf(index, "pagina %d/%d", (integer)positio,
+            (integer)numerus);
+        ix = fs.latitudo - (s32)(strlen(index) + I) * cw;
+        si (ix >= II + (s32)(strlen(titulus) + II) * cw)
+        {
+            paginae = nodus(piscina, intern, "paginae", PARTES_INDEX,
+                fines(ix, ZEPHYRUM, (s32)strlen(index) * cw,
+                fs.altitudo));
+            componens_ponere_titulum(paginae, index);
+            componens_addere_liberum(status, paginae);
+        }
+    }
 
     componens_addere_liberum(prospectus, pagina);
     componens_addere_liberum(radix, prospectus);

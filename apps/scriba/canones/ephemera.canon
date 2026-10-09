@@ -33,5 +33,10 @@
     <attributum nomen="capsa"           genus="textus"
       nota="lineae iunctae per '\n', effugitae; absens = vacua"/>
     <attributum nomen="capsa_lineae"    genus="numerus"/>
+    <attributum nomen="pagina_positio"  genus="numerus"
+      nota="visus super librum (vicus-latera S2b): pagina 1..n; absens =
+            documentum proprium (scriba_reficere scribit)"/>
+    <attributum nomen="paginae_numerus" genus="numerus"
+      nota="paginae libri; crescit cum visus alius paginam creat"/>
   </elementum>
 </canon>

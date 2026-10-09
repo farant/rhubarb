@@ -250,6 +250,15 @@ NOT done: the standalone scriba app still passes NIHIL (its own
 document, old layout) - giving it a book hides existing standalone
 documents until they are migrated into `paginae/`; decision for Fran.
 
+S2b-3b (Fran: show the page): "pagina i/n" right-aligned in scriba's
+status line, one cell from the edge, left out if it would touch the
+mode/position text. Data: ephemeral `pagina_positio` / `paginae_numerus`
+on the view's branch, written by `paginam_indicare` (scriba_applicatio:
+at mount, and from `scriba_reficere` when the view's page changed or
+the book's count changed - another view made a page). Drawn by
+`scriba_figura_paginae` (PARTES_INDEX, child of status). No book = no
+label. With named pages (S3) it becomes "<name> i/n".
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);

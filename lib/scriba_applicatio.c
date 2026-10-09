@@ -135,6 +135,65 @@ elementum (
     redde chorda_ut_cstr(c, piscina);
 }
 
+nomen structura {
+    s32 positio;
+    s32 numerus;
+} IndexPaginae;
+
+interior vacuum
+index_mutator (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans IndexPaginae* indicium;
+
+    indicium = (constans IndexPaginae*)ctx;
+    insula_attributum_ponere(nodus, p, in, "pagina_positio",
+        chorda_ut_cstr(chorda_ex_s32(indicium->positio, p), p));
+    insula_attributum_ponere(nodus, p, in, "paginae_numerus",
+        chorda_ut_cstr(chorda_ex_s32(indicium->numerus, p), p));
+}
+
+/* S2b: index paginae in ramo ephemero (linea status) - pagina visus
+ * (plagula) et numerus libri. Sine coactione solum si numerus mutatus
+ * (visus alius paginam creavit); VERUM si scriptum. */
+interior b32
+paginam_indicare (
+    ScribaMontatio* m,
+               b32  cogere)
+{
+    IndexPaginae  indicium;
+          chorda  pagina;
+          chorda* a;
+             s32  vetus;
+             b32  inventum;
+
+    si (!m->liber)
+    {
+        redde FALSUM;
+    }
+    indicium.numerus = (s32)scriba_liber_numerus(m->liber);
+    a = insula_ramus_attributum(&m->ramus, INSULA_EPHEMERA,
+        "paginae_numerus");
+    si (   !cogere && a && chorda_ut_s32(*a, &vetus)
+        && vetus == indicium.numerus)
+    {
+        redde FALSUM;
+    }
+    pagina = volumen_plagulam_promere(m->doc->volumen,
+        m->actiones_ctx.visus, m->doc->piscina, &inventum);
+    indicium.positio = (inventum ? scriba_liber_index(m->liber, pagina)
+                           : ZEPHYRUM) + I;
+    si (indicium.positio < I)
+    {
+        indicium.positio = I;
+    }
+    redde mutare_ramum(&m->ramus, INSULA_EPHEMERA, index_mutator,
+        &indicium);
+}
+
 b32
 scriba_montare (
          ScribaMontatio* m,
@@ -265,6 +324,7 @@ scriba_montare (
     m->compositio.cellula_altitudo   = CELLULA_ALTITUDO;
     m->compositio.status_lineae      = STATUS_LINEAE;
     m->compositio.ramus              = m->ramus;
+    (vacuum)paginam_indicare(m, VERUM);
     redde VERUM;
 }
 
@@ -283,6 +343,10 @@ scriba_reficere (
     sa       = &m->actiones_ctx;
     mutatum  = m->doc != sa->doc;
     m->doc   = sa->doc;
+    si (paginam_indicare(m, mutatum))
+    {
+        mutatum = VERUM;
+    }
     /* visus stalus: alius visus commisit (solus focatus scribit -
      * hic gestus pendens nullus) */
     si (scriba_documentum_cursor(sa->doc) != sa->cursor_laboris)

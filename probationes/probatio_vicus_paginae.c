@@ -22,8 +22,12 @@
 #include "tabula_characterum.h"
 #include "scriba_documentum.h"
 #include "scriba_applicatio.h"
+#include "scriba_componentia.h"
+#include "componens.h"
 #include "vicus.h"
 #include "vicus_applicatio.h"
+#include "tabula_pixelorum.h"
+#include "ludus_fenestra.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -67,6 +71,23 @@ continet (
         }
     }
     redde FALSUM;
+}
+
+/* index paginae in linea status (arbor scribae visus composita);
+ * vacuus si nodus abest */
+interior chorda
+index_paginae (
+              Vicus* v,
+     ScribaMontatio* sm)
+{
+    Componens* r;
+    Componens* c;
+
+    r = scriba_componere(v->repo, NIHIL, piscina, intern,
+        &sm->compositio);
+    c = r ? componens_invenire_per_id(r, chorda_ex_literis("paginae",
+        piscina)) : NIHIL;
+    redde c ? c->titulus : chorda_ex_literis("", piscina);
 }
 
 /* Ctrl+Shift+sagitta (manus sagittas non mittit) */
@@ -134,6 +155,8 @@ s32 principale (vacuum)
     CREDO_VERUM(sin->liber == dex->liber);
     CREDO_VERUM(sin->actiones_ctx.doc == dex->actiones_ctx.doc);
     CREDO_VERUM(sin->doc == dex->doc);
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin), "pagina 1/1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, dex), "pagina 1/1");
 
     imprimere("\n--- II: textus sinistri in dextro post ictum ---\n");
     /* sine Esc: insertio in gestu sinistri pendet */
@@ -185,16 +208,54 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(pagina_visus(vol,
         "3_sinistrum_scriba"),
         "2");
+    /* index: sinister in pagina nova, dexter numerum novum (pulsus) */
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin), "pagina 2/2");
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, dex), "pagina 1/2");
     /* retro: pagina '1' iterum, documentum dextri idem */
     paginam_mutare(app.d, CLAVIS_SINISTER, M * C + I);
     CREDO_VERUM(sin->actiones_ctx.doc == dex->actiones_ctx.doc);
     CREDO_VERUM(continet(sin, 'X'));
+    CREDO_VERUM(vicus_pulsare(v));
+    CREDO_CHORDA_AEQUALIS_LITERIS(index_paginae(v, sin), "pagina 1/2");
     /* ante primam: nihil */
     paginam_mutare(app.d, CLAVIS_SINISTER, M * C + II);
     CREDO_CHORDA_AEQUALIS_LITERIS(pagina_visus(vol,
         "3_sinistrum_scriba"),
         "1");
     paginam_mutare(app.d, CLAVIS_DEXTER, M * C + III);
+    /* imago sine fenestra (oculis inspicienda): "pagina 2/2" sinistra,
+     * "pagina 1/2" dextra, in lineis status */
+    (vacuum)vicus_pulsare(v);
+    {
+        TabulaPixelorum* tp;
+          LudusFenestra* lf;
+                    i32  x;
+                    i32  y;
+                    i32  diversi;
+                    i32  fundum;
+
+        tp = tabula_pixelorum_creare_nuda(piscina, CDLXXX, CDLXXX
+            + VICUS_ALTITUDO_TABULARUM);
+        lf = ludus_fenestra_creare(piscina, app.d, vicus_figurae(v),
+            ZEPHYRUM, vicus_imago_fons, v, tp);
+        CREDO_NON_NIHIL(lf);
+        ludus_quadrum(lf, M * C + IV);
+        CREDO_VERUM(ludus_fenestra_imaginem_scribere(lf,
+            "build/probatio_vicus_paginae.png"));
+        /* index PICTUS: in linea status sinistra (infima, VIII),
+         * dextra textus status (x >= CXX), pixela a fundo diversa */
+        y        = CDLXXX + VICUS_ALTITUDO_TABULARUM - IV;
+        fundum   = tabula_pixelorum_obtinere_pixelum(tp, C, y);
+        diversi  = ZEPHYRUM;
+        per (x = CXX; x < CCXXXVI; x++)
+        {
+            si (tabula_pixelorum_obtinere_pixelum(tp, x, y) != fundum)
+            {
+                diversi++;
+            }
+        }
+        CREDO_VERUM(diversi > ZEPHYRUM);
+    }
 
     imprimere("\n--- VI: commissio per quietem, scribere pergit ---\n");
     /* insertio commissa post quietem (SCRIBA_QUIES_MS) dum scribitur:

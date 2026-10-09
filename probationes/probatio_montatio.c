@@ -108,6 +108,9 @@ s32 principale (vacuum)
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus,
         INSULA_EPHEMERA, "modus"), "normalis"));
     CREDO_VERUM(plagula_exstat(vol, "p1/documentum"));
+    /* sine libro (documentum proprium): nullus index paginae */
+    CREDO_NIHIL(insula_ramus_attributum(&m1.ramus, INSULA_EPHEMERA,
+        "pagina_positio"));
     CREDO_VERUM(plagula_exstat(vol, "s1/documentum"));
     CREDO_VERUM(plagula_exstat(vol, "s2/documentum"));
     CREDO_FALSUM(plagula_exstat(vol, "documentum"));
