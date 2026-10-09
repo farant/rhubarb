@@ -370,6 +370,8 @@
   <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
   <vocabulum lemma="cauchy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: A.-L. Cauchy (limes radicum 1 + max |f_i|; lib/extensio.c)"/>
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
+  <vocabulum lemma="montgomery" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: P. L. Montgomery (reductio Montgomery, 1985; lib/agmen.c)"/>
+  <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
   <vocabulum lemma="kronecker" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: L. Kronecker (symbolum Kronecker, character realis discriminantis; theorema Kronecker-Weber; lib/extensio.c)"/>
   <vocabulum lemma="arf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Cahit Arf (invarians Arf nodi, V(i) = (-1)^Arf)"/>
   <vocabulum lemma="phi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="littera Graeca: phi(n) Euleri, Phi_n polynomium cyclotomicum"/>
