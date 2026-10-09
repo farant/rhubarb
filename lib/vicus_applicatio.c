@@ -423,6 +423,8 @@ terminale_describere (
     f->pulsare         = terminale_pulsare_in_vico;
     f->pulsare_ctx     = m;
     f->vivit_in_fundo  = VERUM;
+    /* Franus: 'tmux a' statim post aperturam ad concham, non scribam */
+    f->focus_in_apertura = VERUM;
 }
 
 /* folium paginae novae (S2b): lateris sinistri cellulae (dimidium

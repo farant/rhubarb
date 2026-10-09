@@ -388,3 +388,14 @@ Cmd never crosses a terminal, so tabs switch by clicking the tab bar
 (the twin replay test now clicks). `prior` is still recorded in the
 ephemeral layer but nothing reads it. Test renamed
 probatio_vicus_praefixum -> probatio_vicus_claves.
+
+## 2026-10-09 - a terminal pane takes focus when vicus opens
+
+Fran typed `tmux a` right after launching and the keys went to
+scriba in normal mode (`u` undid his text). vicus knows no kinds, so
+the kind says it: `VicusFacies.focus_in_apertura` (terminale sets it).
+`vicus_aperire` gives each tab's focus to such a pane - left first,
+then the front of the right stack - overriding the saved focus. Only
+at open: switching tabs keeps the last focus (a deliberate click into
+scriba in tab 1 survives Cmd+2, Cmd+1). Tests: probatio_vicus_latera
+section 0; the twin replay session now clicks into scriba first.

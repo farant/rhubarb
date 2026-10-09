@@ -1125,6 +1125,22 @@ vicus_aperire (
         (vacuum)mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
                              &ac);
     }
+    /* latera quae focum in apertura petunt (terminale): sinistrum
+     * prius, deinde frons acervi */
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (   t->sinistrum.montata
+            && t->sinistrum.facies.focus_in_apertura)
+        {
+            t->focus = VICUS_SINISTRUM;
+        }
+        alioquin si (   frons_acervi(t) && frons_acervi(t)->montata
+                     && frons_acervi(t)->facies.focus_in_apertura)
+        {
+            t->focus = VICUS_DEXTRUM;
+        }
+    }
     si (!inventum)
     {
         (vacuum)indicem_scribere(v);

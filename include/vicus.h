@@ -97,6 +97,10 @@ nomen structura {
        VicusPulsator  pulsare;        /* NIHIL = non vivit */
               vacuum* pulsare_ctx;
                  b32  vivit_in_fundo; /* pulsatur etiam non activa */
+                 b32  focus_in_apertura; /* latus hoc focum capit cum
+                                          * vicus aperitur (terminale:
+                                          * programma statim scribendum;
+                                          * Franus 2026-10-09) */
     /* ictus qui latus focat etiam agit, si latus vult (Franus: iussum
      * uno ictu). Post focum mutatum vocatur (motus iam lateri
      * aptatus); arbor = arbor composita. VERUM = actum. NIHIL = ictus
