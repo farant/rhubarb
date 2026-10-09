@@ -138,11 +138,41 @@ _larvare (
     redde chorda_aedificator_finire(aed);
 }
 
+/* ordinatio insertionis chordarum (ordo octetorum) */
 interior vacuum
-_sceletum_scribere (
-    ChordaAedificator* aed,
-            JsonValor* v)
+_chordas_ordinare (
+    chorda* c,
+       i32  n)
 {
+    i32 i;
+    i32 k;
+
+    per (i = I; i < n; i++)
+    {
+        chorda x = c[i];
+
+        k = i;
+        dum (k > 0 && chorda_comparare(c[k - I], x) > 0)
+        {
+            c[k] = c[k - I];
+            k--;
+        }
+        c[k] = x;
+    }
+}
+
+/* SCELETON (genus clavis): claves et genera, valores omissi. ORDINE NON
+ * PENDET (Franus 2026-10-09): claves objecti ordinatae; tabulatum =
+ * UNIO formarum elementorum (distinctae, ordinatae, '|' iunctae) -
+ * elementum formae novae ubicumque in tabulato genus novum facit */
+interior chorda
+_sceletum (
+    JsonValor* v,
+      Piscina* p)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(p, LXIV);
+                  i32  i;
+
     commutatio (json_genus(v))
     {
         casus JSON_OBJECTUM:
@@ -150,31 +180,73 @@ _sceletum_scribere (
             JsonObjectumIterator  it = json_objectum_iterator(v);
                           chorda  clavis;
                        JsonValor* filius;
-                             b32  primus = VERUM;
+                             i32  n = (i32)json_objectum_numerus(v);
+                          chorda* partes = (chorda*)piscina_allocare(p,
+                              (memoriae_index)(n
+                                  + I) * magnitudo(chorda));
+                             i32 k = 0;
 
-            chorda_aedificator_appendere_character(aed, '{');
-            dum (json_objectum_iterator_proxima(&it, &clavis, &filius))
+            dum (json_objectum_iterator_proxima(&it, &clavis, &filius)
+                 && k < n)
             {
-                si (!primus)
+                ChordaAedificator* par = chorda_aedificator_creare(p,
+                    LXIV);
+
+                chorda_aedificator_appendere_chorda(par, clavis);
+                chorda_aedificator_appendere_character(par, ':');
+                chorda_aedificator_appendere_chorda(par,
+                    _sceletum(filius, p));
+                partes[k++] = chorda_aedificator_finire(par);
+            }
+            _chordas_ordinare(partes, k);
+            chorda_aedificator_appendere_character(aed, '{');
+            per (i = 0; i < k; i++)
+            {
+                si (i > 0)
                 {
                     chorda_aedificator_appendere_character(aed, ',');
                 }
-                primus = FALSUM;
-                chorda_aedificator_appendere_chorda(aed, clavis);
-                chorda_aedificator_appendere_character(aed, ':');
-                _sceletum_scribere(aed, filius);
+                chorda_aedificator_appendere_chorda(aed, partes[i]);
             }
             chorda_aedificator_appendere_character(aed, '}');
             frange;
         }
         casus JSON_TABULATUM:
-            chorda_aedificator_appendere_character(aed, '[');
-            si (json_tabulatum_numerus(v) > 0)
+        {
+               i32  n = (i32)json_tabulatum_numerus(v);
+            chorda* formae = (chorda*)piscina_allocare(p,
+                (memoriae_index)(n + I) * magnitudo(chorda));
+               i32 k = 0;
+               i32 m;
+
+            per (i = 0; i < n; i++)
             {
-                _sceletum_scribere(aed, json_tabulatum_obtinere(v, 0));
+                chorda forma = _sceletum(json_tabulatum_obtinere(v, i),
+                    p);
+                   b32 visa = FALSUM;
+
+                per (m = 0; m < k && !visa; m++)
+                {
+                    visa = chorda_aequalis(formae[m], forma);
+                }
+                si (!visa)
+                {
+                    formae[k++] = forma;
+                }
+            }
+            _chordas_ordinare(formae, k);
+            chorda_aedificator_appendere_character(aed, '[');
+            per (i = 0; i < k; i++)
+            {
+                si (i > 0)
+                {
+                    chorda_aedificator_appendere_character(aed, '|');
+                }
+                chorda_aedificator_appendere_chorda(aed, formae[i]);
             }
             chorda_aedificator_appendere_character(aed, ']');
             frange;
+        }
         casus JSON_CHORDA:
             chorda_aedificator_appendere_character(aed, 's');
             frange;
@@ -189,6 +261,7 @@ _sceletum_scribere (
             chorda_aedificator_appendere_character(aed, 'z');
             frange;
     }
+    redde chorda_aedificator_finire(aed);
 }
 
 interior b32
@@ -606,7 +679,8 @@ herbarium_clavis_sceleti (
     j = json_legere(responsum->corpus, piscina);
     si (j.successus)
     {
-        _sceletum_scribere(aed, j.radix);
+        chorda_aedificator_appendere_chorda(aed, _sceletum(j.radix,
+            piscina));
     }
     alioquin
     {

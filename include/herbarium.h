@@ -134,7 +134,10 @@ herbarium_premere (
 
 /* Clavis ordinaria: status + sceleton JSON corporis (claves et genera,
  * recursive, valores omissi; corpus non-JSON -> status + content-type
- * + classis longitudinis). Publica ut consumptores eam componant. */
+ * + classis longitudinis). ORDINE NON PENDET (2026-10-09): claves
+ * objecti ordinatae; tabulatum = unio formarum elementorum (distinctae,
+ * ordinatae) - elementum formae novae ubicumque genus novum facit.
+ * Publica ut consumptores eam componant. */
 chorda
 herbarium_clavis_sceleti (
       HttpPetitio* petitio,

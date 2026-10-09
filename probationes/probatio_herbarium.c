@@ -278,6 +278,62 @@ probatio_sceleti(Piscina* piscina)
     CREDO_CHORDA_INCIPIT(herbarium_clavis_sceleti(NIHIL, &d, piscina,
         NIHIL),
                          chorda_ex_literis("502:crudum:", piscina));
+    /* tabulata: UNIO formarum elementorum, ordine non pendens; claves
+     * objectorum ordinatae (Franus 2026-10-09) */
+    {
+        HttpResponsum e;
+        HttpResponsum f;
+        HttpResponsum g;
+        HttpResponsum h;
+        HttpResponsum k;
+
+        memset(&e, 0, magnitudo(e));
+        e.status  = CC;
+        f         = e;
+        g         = e;
+        h         = e;
+        k         = e;
+        e.corpus = chorda_ex_literis(
+            "{\"content\":[{\"type\":\"text\",\"text\":\"a\"}]}",
+            piscina);
+        f.corpus = chorda_ex_literis(
+            "{\"content\":[{\"type\":\"text\",\"text\":\"a\"},"
+            "{\"type\":\"tool_use\",\"id\":\"x\",\"input\":{}}]}",
+            piscina);
+        g.corpus = chorda_ex_literis(
+            "{\"content\":[{\"type\":\"tool_use\",\"id\":\"y\",\"input\":{}},"
+            "{\"type\":\"text\",\"text\":\"b\"}]}", piscina);
+        h.corpus = chorda_ex_literis(
+            "{\"content\":[{\"type\":\"text\",\"text\":\"a\"},"
+            "{\"type\":\"tool_use\",\"id\":\"x\",\"input\":{}},"
+            "{\"text\":\"c\",\"type\":\"text\"}]}", piscina);
+        k.corpus = chorda_ex_literis(
+            "{\"content\":[{\"text\":\"z\",\"type\":\"text\"}]}",
+            piscina);
+        /* elementum formae novae (non primum) -> genus aliud */
+        CREDO_FALSUM(chorda_aequalis(herbarium_clavis_sceleti(NIHIL, &e,
+            piscina, NIHIL), herbarium_clavis_sceleti(NIHIL, &f,
+            piscina,
+            NIHIL)));
+        /* ordo elementorum, elementa iterata, ordo clavium: idem genus */
+        CREDO_CHORDA_AEQUALIS(herbarium_clavis_sceleti(NIHIL, &f,
+            piscina,
+            NIHIL), herbarium_clavis_sceleti(NIHIL, &g, piscina,
+            NIHIL));
+        CREDO_CHORDA_AEQUALIS(herbarium_clavis_sceleti(NIHIL, &f,
+            piscina,
+            NIHIL), herbarium_clavis_sceleti(NIHIL, &h, piscina,
+            NIHIL));
+        CREDO_CHORDA_AEQUALIS(herbarium_clavis_sceleti(NIHIL, &e,
+            piscina,
+            NIHIL), herbarium_clavis_sceleti(NIHIL, &k, piscina,
+            NIHIL));
+        /* forma fixa */
+        CREDO_CHORDA_AEQUALIS_LITERIS(herbarium_clavis_sceleti(NIHIL,
+            &f,
+            piscina, NIHIL),
+            "200:{content:[{id:s,input:{},type:s}|{text:s,type:s}]}");
+    }
 }
 
 interior vacuum

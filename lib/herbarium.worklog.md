@@ -61,3 +61,25 @@ probatio_redditio->probatio_reddere.
   location cases (setenv/unsetenv, POSIX via postulata_posix.h).
 - Plants: judge never called -> four assertions red; missing env
   directory falling through to $HOME -> two red.
+
+## 2026-10-09 - kind key: order-independent, arrays as a union of shapes
+
+Found by the deliberate shape capture (tools/specimina_colligere): the
+skeleton summarized an array by its FIRST element only, so every 200
+reply whose `content` began with a plain text block collapsed into one
+kind - and with variantes_maximae III the citations and max_tokens replies
+were counted but not stored. Fran: "arrays keyed by the union type of
+their elements ... not order dependent ... if one of the elements is a
+shape we've never seen before that's a legitimate outlier."
+
+Now `_sceletum` returns the skeleton as a string: object keys sorted
+(`{a,b}` == `{b,a}`), arrays = the distinct element skeletons, sorted,
+joined by '|' (`[{id:s,input:{},type:s}|{text:s,type:s}]`). Element order
+and repetition do not change the kind; a new element shape anywhere does.
+Kinds of piles captured before this change no longer line up with new
+captures (file names are hashes of the key) - nothing depends on that.
+
+The capture tool keeps variantes_maximae XXXII (deliberate capture wants
+every example); the always-on outlier capture keeps III (a disk bound per
+kind; the number of kinds is unbounded and every sighting is counted).
+Plants (red): first element only; object keys unsorted.
