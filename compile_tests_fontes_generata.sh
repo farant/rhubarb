@@ -218,6 +218,7 @@ declare -a SOURCE_FILES=(
     "lib/stml.c"
     "lib/stml_html.c"
     "lib/stml_macros.c"
+    "lib/surdus.c"
     "lib/symbola.c"
     "lib/tabellarius.c"
     "lib/tabula_characterum.c"
