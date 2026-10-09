@@ -2245,8 +2245,74 @@ _usus (vacuum);
  * chassis, TSV - 'genus<TAB>titulus<TAB>particulae<TAB>reproducibile
  * <TAB>sumptus<TAB>enumerat<TAB>locat'. Additio quae proprietatem
  * implere nequit hic CLASSIFICATUR (signum designi), non recusatur. */
+/* DEBITA SCRIPTURAE (fabrica-7 T3): linea 'debitum' per debitum
+ * declaratum (actio, membrum, via, status cursus ultimi, causa, sedes),
+ * deinde summa - numerus ad nihil ducendus. Declarationes solae et
+ * areae membrorum leguntur (nulla explicatio, nulla clausura). */
+interior vacuum
+_debita_censere (
+    Piscina* piscina)
+{
+    FabricaSutura  levis;
+              Xar* actiones;
+              Xar* composita;
+              i32  numerus     = ZEPHYRUM;
+              i32  actiones_n  = ZEPHYRUM;
+              i32  stala       = ZEPHYRUM;
+              i32  ignota      = ZEPHYRUM;
+              i32  i;
+              i32  j;
+
+    actiones = _declarationes_colligere(piscina, &composita);
+    si (actiones == NIHIL)
+    {
+        printf("census: debita nescita (declarationes non lectae)\n");
+        redde;
+    }
+    suturae_legentem_parare(&levis);
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        constans FabricaActio* actio = (constans FabricaActio*)
+            xar_obtinere(actiones, i);
+
+        /* parentes soli: membrum copiam debitorum suorum fert */
+        si (   actio->membrum != NIHIL || actio->debita == NIHIL
+            || xar_numerus(actio->debita) == 0)
+        {
+            perge;
+        }
+        actiones_n++;
+        per (j = ZEPHYRUM; j < xar_numerus(actio->debita); j++)
+        {
+            constans FabricaDebitum* d = (constans FabricaDebitum*)
+                xar_obtinere(actio->debita, j);
+                FabricaDebitiStatus status;
+
+            status = fabrica_debitum_iudicare(&levis, actio, d,
+                piscina);
+            numerus++;
+            stala   += status == FABRICA_DEBITUM_STALUM ? I : ZEPHYRUM;
+            ignota  += status == FABRICA_DEBITUM_IGNOTUM ? I : ZEPHYRUM;
+            fputs("debitum", stdout);
+            suturae_campus(actio->titulus);
+            suturae_campus(d->membrum);
+            suturae_campus(d->via);
+            _campus_literis(status == FABRICA_DEBITUM_SCRIPTUM
+                ? "scriptum" : status == FABRICA_DEBITUM_STALUM
+                ? "stalum" : "ignotum");
+            suturae_campus(d->causa);
+            suturae_campus(d->sedes);
+            putchar('\n');
+        }
+    }
+    printf("census: debita %d (actiones %d, stala %d, ignota %d)\n",
+        (integer)numerus, (integer)actiones_n, (integer)stala,
+        (integer)ignota);
+}
+
 interior s32
-_censum (vacuum)
+_censum (
+    Piscina* piscina)
 {
     i32 i;
     i32 nominatae       = ZEPHYRUM;
@@ -2287,6 +2353,7 @@ _censum (vacuum)
         " quaestionibus inversis invisibilia %d)\n",
         (integer)fabrica_genera_numerus(), (integer)nominatae,
         (integer)reproducibilia, (integer)invisibilia);
+    _debita_censere(piscina);
     redde ZEPHYRUM;
 }
 
@@ -2439,7 +2506,7 @@ principale (
     }
     alioquin si (strcmp(argv[1], "census") == 0)
     {
-        exitus = _censum();
+        exitus = _censum(piscina);
     }
     alioquin
     {

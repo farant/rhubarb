@@ -18,7 +18,8 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
   environment, `CREDO_SECTIO` never inherited.
 - [ ] Headers written into `include/fabrica.h` and `include/aedilis.h`
   with the first task that uses them (T1: sections DONE; T2:
-  instrumenta DONE; T3).
+  instrumenta DONE; T3: debita DONE, plus FabricaDebitiStatus +
+  fabrica_debitum_iudicare approved 2026-10-09).
 
 ### T1: sections in member verdicts
 
@@ -65,14 +66,18 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
 
 ### T3: write debts
 
-- [ ] **Step 1: failing test:** `<debitum_scripturae membrum via
+- [x] **Step 1: failing test:** `<debitum_scripturae membrum via
   causa/>` parsed (duplicate via, unknown member -> refusal); the owning
   member may write there; another member writing there -> refused;
   `census` counts debts; a debt not written by its member in the last
   run -> reported stale.
-- [ ] **Step 2:** implement (declaration, member enforcement, census).
+- [x] **Step 2:** implement (declaration, member enforcement, census).
   **Plant:** ownership not checked -> the foreign-write assertion red.
   **Commit.**
+- As built (2026-10-09): record = `<area>debita.txt` (first line
+  `cursus\ttransiit|fractus`); a failed run without the write = IGNOTUM,
+  not stale; census explicates members (cheap today, re-measure in T4);
+  fumus XLIII proves it with the real snapshot.
 
 ### T4: `probationes_radicis`
 

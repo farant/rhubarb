@@ -169,4 +169,12 @@ fabricae_area_membri (
     constans FabricaActio* actio,
                   Piscina* piscina);
 
+/* locus debiti (fabrica-7 T3): via in '/' desinens -> ARBOR (sine '/'
+ * finali), aliter PLAGULA - regula una vestigio membri et notationi */
+vacuum
+fabricae_locum_debiti_addere (
+                        Xar* loci,
+    constans FabricaDebitum* debitum,
+                    Piscina* piscina);
+
 #endif /* FABRICA_INTERNA_H */

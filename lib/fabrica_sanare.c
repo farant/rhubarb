@@ -6,6 +6,7 @@
 #include "fabrica.h"
 #include "fabrica_interna.h"
 #include "numerus_romanus.h"
+#include "chorda_aedificator.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -310,6 +311,104 @@ _lectiones_ambitus_libri (
     redde lectiones;
 }
 
+/* DEBITA NOTARE (fabrica-7 T3): post cursum membri cum debitis -
+ * <area>debita.txt: "cursus\ttransiit|fractus", deinde viae debitorum
+ * quas photographiae ante/post mutatas ostendunt (fabrica_debitum_
+ * iudicare eam legit). Sine photographia nihil scribitur (IGNOTUM). */
+interior vacuum
+_debita_notare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+                       b32  transiit,
+                   Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  Xar* mutata;
+               chorda  contentum;
+                  i32  i;
+                  i32  j;
+                  i32  d;
+
+    si (   actio->debita              == NIHIL
+        || xar_numerus(actio->debita) == ZEPHYRUM)
+    {
+        redde;
+    }
+    mutata  = fabricae_xar_chordarum(piscina);
+    a       = chorda_aedificator_creare(piscina, CCLVI);
+    si (mutata == NIHIL || a == NIHIL)
+    {
+        redde;
+    }
+    i = ZEPHYRUM;
+    j = ZEPHYRUM;
+    dum (i < xar_numerus(ante) || j < xar_numerus(post))
+    {
+        constans FabricaVestigium* x = i < xar_numerus(ante)
+            ? (constans FabricaVestigium*)xar_obtinere(ante, i) : NIHIL;
+        constans FabricaVestigium* y = j < xar_numerus(post)
+            ? (constans FabricaVestigium*)xar_obtinere(post, j) : NIHIL;
+                              s32 ordo;
+
+        ordo = x == NIHIL ? I : y == NIHIL ? -I
+            : chorda_comparare(x->via, y->via);
+        si (ordo < ZEPHYRUM)
+        {
+            fabricae_chordam_addere(mutata, x->via);
+            i++;
+        }
+        alioquin si (ordo > ZEPHYRUM)
+        {
+            fabricae_chordam_addere(mutata, y->via);
+            j++;
+        }
+        alioquin
+        {
+            si (   x->tempus_ns != y->tempus_ns
+                || x->mensura   != y->mensura)
+            {
+                fabricae_chordam_addere(mutata, x->via);
+            }
+            i++;
+            j++;
+        }
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a, transiit
+        ? "cursus\ttransiit\n" : "cursus\tfractus\n");
+    per (d = ZEPHYRUM; d < xar_numerus(actio->debita); d++)
+    {
+        constans FabricaDebitum* debitum = (constans FabricaDebitum*)
+            xar_obtinere(actio->debita, d);
+                            Xar* locus;
+                            b32  scriptum = FALSUM;
+
+        locus = xar_creare(piscina, (i32)magnitudo(FabricaLocus));
+        si (locus == NIHIL)
+        {
+            redde;
+        }
+        fabricae_locum_debiti_addere(locus, debitum, piscina);
+        per (i = ZEPHYRUM; i < xar_numerus(mutata) && !scriptum; i++)
+        {
+            scriptum = fabricae_in_locis(locus, *(chorda*)xar_obtinere(
+                mutata, i), piscina);
+        }
+        si (scriptum)
+        {
+            (vacuum)chorda_aedificator_appendere_chorda(a,
+                debitum->via);
+            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+        }
+    }
+    contentum = chorda_aedificator_finire(a);
+    (vacuum)sutura->verdictum_ponere(sutura->datum, chorda_ut_cstr(
+        fabricae_iungere(piscina, "", area, "debita.txt"), piscina),
+        &contentum);
+}
+
 /* MEMBRUM AGERE (T5): verdictum vetus deletum, area parata et vacua,
  * ambitus basis, genus gradus agit; deinde scriptura extra vestigium,
  * ambitus non declaratus -> FALSUM nominatum; transitus -> verdictum
@@ -384,6 +483,19 @@ _membrum_agere (
             actum.cauda, "");
         redde FALSUM;
     }
+    /* photographia post STATIM (fabrica-7 T3): debita notantur etiam
+     * cursu fracto (fractura debitum mortuum non probat) */
+    si (   ante != NIHIL
+        && !sutura->vestigium_capere(sutura->datum, piscina, &post))
+    {
+        post = NIHIL;
+    }
+    si (post != NIHIL)
+    {
+        _debita_notare(sutura, actio, area, ante, post, actum.codex
+            == 0,
+            piscina);
+    }
     si (actum.codex != 0)
     {
         sprintf(numerus, "exitus %d: ", (integer)actum.codex);
@@ -391,8 +503,7 @@ _membrum_agere (
             "");
         redde FALSUM;
     }
-    si (   ante != NIHIL
-        && sutura->vestigium_capere(sutura->datum, piscina, &post))
+    si (post != NIHIL)
     {
         Xar* extra;
 

@@ -139,6 +139,19 @@ nomen structura {
     chorda fons;    /* via fontis (arbori relativa); vacua licet */
 } FabricaMembrum;
 
+/* DEBITUM SCRIPTURAE (fabrica-7 T3): exceptio nominata - membrum UNUM
+ * extra aream suam scribere licet, in via una, causa dicta
+ * (<debitum_scripturae membrum via causa/> in actione gradus). Via in
+ * '/' desinens = directorium (arbor), aliter plagula. Membrum aliud
+ * ibi scribens recusatur ut quaevis scriptura extra vestigium. Numerus
+ * ad nihil ducendus (census). */
+nomen structura {
+    chorda membrum;     /* titulus membri ('probatio_ct') */
+    chorda via;
+    chorda causa;
+    chorda sedes;       /* "plagula:versus" declarationis */
+} FabricaDebitum;
+
 /* SECTIO (fabrica-7, credo v2): verdictum sectionis membri gradus, ex
  * plagula <area>/credo.tsv (CREDO_VERDICTA, lineae SECTIO). Suita non
  * conversa: probationes_c post cursum ipsa plagulam syntheticam
@@ -232,6 +245,10 @@ nomen structura {
                                          * suum clavatur, cetera non.
                                          * Membra gradus a parente
                                          * hereditant. NIHIL licet. */
+                       Xar* debita;     /* FabricaDebitum (fabrica-7
+                                         * T3): parens = omnia
+                                         * declarata; membrum = sua
+                                         * sola. NIHIL licet. */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -1013,6 +1030,26 @@ chorda
 fabrica_acta_via (
      chorda  titulus,
     Piscina* piscina);
+
+/* DEBITA (fabrica-7 T3): status debiti post cursum ULTIMUM membri ex
+ * <area>debita.txt (a fabrica post cursum scripta: linea prima
+ * "cursus\ttransiit|fractus", deinde viae debitorum quas membrum vere
+ * scripsit) */
+nomen enumeratio {
+    FABRICA_DEBITUM_SCRIPTUM = ZEPHYRUM, /* membrum ibi scripsit -
+                                          * debitum vivum */
+    FABRICA_DEBITUM_STALUM,              /* transiit, non scripsit -
+                                          * delendum */
+    FABRICA_DEBITUM_IGNOTUM              /* nondum cucurrit, aut
+                                          * fractum sine scriptura */
+} FabricaDebitiStatus;
+
+FabricaDebitiStatus
+fabrica_debitum_iudicare (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* parens,     /* actio gradus declarans */
+    constans FabricaDebitum* debitum,
+                    Piscina* piscina);
 
 /* SECTIONES (fabrica-7 T1): plagula 'via' (CREDO_VERDICTA - lineae
  * "SECTIO\t<titulus>\t<exitus>\t<praeteriti>\t<totales>\t<ms>\t

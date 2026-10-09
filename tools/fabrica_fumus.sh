@@ -66,6 +66,8 @@
 #        '-familia' cum scopis OMNIBUS (arbor frigida, quaestio …J3108ZW6)
 #   XLII instrumentum (fabrica-7 T2): <aedilis instrumentum="bin/X"/> ->
 #        linea ingressus binarii in clave membri, commissum non
+#   XLIII debita scripturae (fabrica-7 T3): membrum debitum suum extra
+#        aream scribit; alienum ibi recusatur; census scriptum/stalum
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 set -u
@@ -566,6 +568,27 @@ if [ "$rc1" -eq 0 ] && [ "$(grep -c '^SANATUM' "$T/o")" -eq 2 ] \
    && [ "$rc2" -eq 0 ] && ! grep -q '^SANATUM' "$T/o2" \
    && [ "$rc3" -eq 0 ] && grep -q '^SANATUM *probationes_t/probatio_b' "$T/o3" && ! grep -q 'probatio_a' "$T/o3"; then echo "  XLII instrumentum: ingressus binarii in clave, commissum non OK"; else echo "  XLII FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/o2" "$T/o3" | sed 's/^/      /' | head -20; fracta=1; fi
 
+# XLIII (fabrica-7 T3): DEBITA SCRIPTURAE VERE - a debitum suum
+# build/a.db scribit (photographia vera, extra aream): SANATUM, census
+# 'scriptum'; b ibi scribens -> FRACTUM nominatum; a non iam scribens ->
+# census 'stalum'
+radix_c
+SCRIBENS='#include <stdio.h>\n#include "bib.h"\nint main(void) { FILE* f = fopen("build/a.db", "w"); if (f) { fputs("a\\n", f); fclose(f); } return bib() == 3 ? 0 : 1; }\n'
+printf "$SCRIBENS" > "$T/r/t/probatio_a.c"
+printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n    <debitum_scripturae membrum="probatio_a" via="build/a.db" causa="fumus"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" sanare "$VA" "$VB") > "$T/o" 2>&1; rc1=$?
+(cd "$T/r" && "$F" census) > "$T/c1" 2>&1
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("build/a.db", "w"); if (f) { fputs("b\\n", f); fclose(f); } return 0; }\n' > "$T/r/t/probatio_b.c"
+(cd "$T/r" && "$F" sanare "$VB") > "$T/o2" 2>&1; rc2=$?
+printf '#include "bib.h"\nint main(void) { return bib() == 3 ? 0 : 1; }\n' > "$T/r/t/probatio_a.c"
+(cd "$T/r" && "$F" sanare "$VA") > "$T/o3" 2>&1; rc3=$?
+(cd "$T/r" && "$F" census) > "$T/c2" 2>&1
+if [ "$rc1" -eq 0 ] && grep -q "^debitum	probationes_t	probatio_a	build/a.db	scriptum	fumus	" "$T/c1" \
+   && grep -q '^census: debita 1 (actiones 1, stala 0, ignota 0)$' "$T/c1" \
+   && [ "$rc2" -eq 1 ] && grep -q '^FRACTUM *probationes_t/probatio_b .*build/a.db' "$T/o2" \
+   && [ "$rc3" -eq 0 ] && grep -q "^debitum	probationes_t	probatio_a	build/a.db	stalum	" "$T/c2" \
+   && grep -q '^census: debita 1 (actiones 1, stala 1, ignota 0)$' "$T/c2"; then echo "  XLIII debita scripturae: suum scribit, alienum recusatur, stalum nominatur OK"; else echo "  XLIII FRACTUM (rc=$rc1 $rc2 $rc3)"; cat "$T/o" "$T/c1" "$T/o2" "$T/o3" "$T/c2" | grep -v '^genus' | sed 's/^/      /' | head -24; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (XLII/XLII)"
+echo "fumus fabricae: sanum (XLIII/XLIII)"
 exit 0

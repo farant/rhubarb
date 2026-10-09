@@ -2443,3 +2443,45 @@ Not annotated: probatio_provenientia only passes the string "bin/manus"
 to provenientia_respondere (never executes it); the tabulariumd tests
 run gesta/build/tabulariumd, which is T4's praecondicio, not a bin/
 instrument.
+
+## 2026-10-09 - fabrica-7 T3: write debts
+
+`<debitum_scripturae membrum via causa/>` on a step action (refused on
+an action without a step, without all three attributes, or with a path
+already declared). `FabricaActio.debita`: the parent holds all of them,
+each synthetic member a copy of its own. Unknown member -> refused in
+`fabrica_gradus_explicare` (members are only known after enumeration),
+naming the debt's own line.
+
+Enforcement needed no new check: a member's allowed places were already
+ONLY its area (the parent's `<vestigium>`s are not inherited), so the
+debt path is just added to the owner's vestigia via
+`fabricae_locum_debiti_addere` (path ending in `/` = ARBOR without the
+slash, else PLAGULA) - the same helper decides what counts as "written"
+when recording, so placement and recording cannot disagree. A foreign
+member writing there fails the existing "scripsit extra vestigium" check.
+
+Recording: `_membrum_agere` now takes the post snapshot right after the
+run, BEFORE the exit-code check (it used to be taken only on success),
+and `_debita_notare` writes `<area>debita.txt`: `cursus\ttransiit|fractus`
+then the debt paths whose files changed between the snapshots.
+`fabrica_debitum_iudicare` reads it: path listed -> SCRIPTUM; run passed
+and path absent -> STALUM (removable); no file, or a failed run without
+the write -> IGNOTUM (a failure does not prove the debt dead).
+
+`bin/fabrica census` prints one `debitum` line per debt (action, member,
+path, status, cause, sedes) + `census: debita N (actiones M, stala K,
+ignota J)`. Trap found by fumus XLIII: `_declarationes_colligere` returns
+the EXPLICATED actions, members included, each carrying its own copy -
+census counted every debt twice until it skipped `actio->membrum`. Also
+means census does explicate (member closures); 0.07 s today with warm
+caches - re-measure after T4 adds the ~256 root members.
+
+Proof: gradus section "debita scripturae" (parse + 3 refusals, unknown
+member, placement on owner only, SCRIPTUM / foreign write FRACTUM /
+STALUM / IGNOTUM after a failure / IGNOTUM before any run); fumus XLIII
+with real C tests and the real snapshot (a writes build/a.db ->
+scriptum; b writing it -> FRACTUM naming build/a.db; a stops -> stalum).
+Plants (planta): debt on every member, unknown member accepted,
+duplicate accepted, writes not recorded, failure recorded as pass ->
+gradus red; census counting members -> fumus XLIII red.
