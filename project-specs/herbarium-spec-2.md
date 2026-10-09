@@ -170,3 +170,21 @@ no longer computes or returns novelty, and the press after `_legere` in
   metadata, the kind key is unchanged).
 - Not verified: herbarium tests' current transport-scripting helper can
   return arbitrary statuses (H1 reads it).
+
+## As built (2026-10-09, quarta dcf7589b..4b18fa1c)
+
+Done as specified (H0 headers, H1 herbarium d983bffa, H2 vates 4b18fa1c).
+Departures:
+
+- **Order test.** The "judge without `vates_mittere`" variant of §IV
+  would need vates' judge public; it stays static. Order is proven by
+  H1's in-loop count (the wrapper has the specimen on disk when the first
+  flagged response returns) and H2's non-JSON case (saved although vates'
+  own parse exits early - the measured gap).
+- **Hosts.** Anthropic's host is derived from `VATES_URL_ANTHROPIC`; the
+  `fictus` test provider captures into its own pile `<sedes>/fictus` so
+  fake responses never join the real one.
+- **Not a part of this slice but seen during it:** the `aedilis` gate
+  once returned rc=1 with an all-green log (ledger …CD1ZY, third
+  sighting across worktrees) - suspected tabularium resident rewriting
+  `gesta/build/` during the gate.
