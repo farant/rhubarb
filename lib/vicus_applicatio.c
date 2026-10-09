@@ -4,8 +4,10 @@
 #include "pictor_applicatio.h"
 #include "scriba_applicatio.h"
 #include "terminale.h"
+#include "iussum.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 /* dispositio ordinaria (vicus-latera decisio IX, Franus 2026-10-08):
  * decem tabulae - I scriba | terminale, II scriba | pictor, III-X
@@ -34,6 +36,45 @@
  * Genera (VicusMontator, VicusDescriptor)
  * ================================================== */
 
+/* S2b/S3b: contextus generis scribae - liber paginarum et iussa,
+ * communia omnibus visibus */
+nomen structura {
+        ScribaLiber* liber;
+    IussumRegistrum* iussa;
+} ContextusScribae;
+
+/* S3b: '$dies' -> dies hodiernus "MM/DD/YYYY" (forma concha vetus;
+ * consumens, ut prunifex). Argumenta non accipit. */
+interior b32
+dies_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+          time_t nunc;
+    structura tm* tm;
+       character textus[XXXII];
+
+    (vacuum)ctx;
+    si (iussum->numerus_argumentorum > ZEPHYRUM)
+    {
+        effectus->error = chorda_ex_literis("dies: nulla argumenta",
+            piscina);
+        redde VERUM;
+    }
+    nunc  = time(NIHIL);
+    tm    = localtime(&nunc);
+    si (!tm)
+    {
+        redde FALSUM;
+    }
+    sprintf(textus, "%02d/%02d/%04d", tm->tm_mon + I, tm->tm_mday,
+        tm->tm_year + MCM);
+    effectus->textus = chorda_ex_literis(textus, piscina);
+    redde VERUM;
+}
+
 interior b32
 scribam_montare (
                  vacuum* sedes,
@@ -47,10 +88,19 @@ scribam_montare (
                     i32  altitudo,
                  vacuum* ctx)
 {
-    /* S2b: ctx = liber paginarum communis (aedificare) */
-    redde scriba_montare((ScribaMontatio*)sedes, piscina, intern,
-        volumen, repo, id, radix, latitudo, altitudo,
-        (ScribaLiber*)ctx);
+    ContextusScribae* cs;
+      ScribaMontatio* m;
+
+    /* S2b/S3b: ctx = contextus communis (aedificare) */
+    cs  = (ContextusScribae*)ctx;
+    m   = (ScribaMontatio*)sedes;
+    si (!scriba_montare(m, piscina, intern, volumen, repo, id, radix,
+            latitudo, altitudo, cs->liber))
+    {
+        redde FALSUM;
+    }
+    m->actiones_ctx.iussa = cs->iussa;
+    redde VERUM;
 }
 
 /* focus advenit (S2b): visus stalus PRIMUM reficitur - aliter clavis
@@ -257,8 +307,8 @@ vicus_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo)
 {
-         chorda  causa;
-    ScribaLiber* liber;
+              chorda  causa;
+    ContextusScribae* cs;
 
     si (!app || !piscina || !intern || !volumen)
     {
@@ -273,12 +323,18 @@ vicus_applicatio_aedificare (
     /* S2b: liber paginarum UNUS pro omnibus visibus scribae; paginae
      * novae magnitudine lateris (dimidium cellulis rotundatum, minus
      * margines et status - ut folium S2c) */
-    liber = scriba_liber_aperire(piscina, intern, volumen,
+    cs = (ContextusScribae*)piscina_allocare(piscina,
+        magnitudo(ContextusScribae));
+    cs->liber = scriba_liber_aperire(piscina, intern, volumen,
         folii_columnae(latitudo), folii_lineae(altitudo));
-    si (   !app->vicus || !liber
+    /* S3b: iussa omnium visuum scribae */
+    cs->iussa = iussum_registrum_creare(piscina);
+    si (   !app->vicus || !cs->liber || !cs->iussa
+        || !iussum_registrare(cs->iussa, "dies", VERUM, dies_iussum,
+               NIHIL)
         || !vicus_genus_addere(app->vicus, "scriba",
                magnitudo(ScribaMontatio), scribam_montare,
-               scribam_describere, liber)
+               scribam_describere, cs)
         || !vicus_genus_addere(app->vicus, "pictor",
                magnitudo(PictorMontatio), pictorem_montare,
                pictorem_describere, NIHIL)

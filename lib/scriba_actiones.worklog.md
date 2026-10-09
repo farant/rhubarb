@@ -119,3 +119,16 @@ modifiers) and `producta = 0x1B` (what the key produces). The handler
 accepts either, so a layout where `[` sits on another key still works;
 it maps to VIM_CLAVIS_ESCAPE through `clavem_tractare` (flush and all).
 Three plants caught (whole branch, each field alone).
+
+## 2026-10-08 - S3b-1: clicking a command
+
+The click path is now: cell under the click (`cellulam_ictam`), then
+either `iussum_exsequi` (known token there) or `cursorem_ponere`. The
+substitution runs as a gesture mutator on the working sheet
+(delete the token's cells, `tabula_inserere_spatium` + write the text,
+`albare`), and `cursorem_ponere` afterwards flushes - so the whole
+command is ONE commit and `u` brings the token back. Errors and
+verb failures return before any change. Colouring lives in
+scriba_figurae: after a line is drawn, `iussum_proximum` finds known
+tokens and redraws those glyphs in COLOR_ACCENT_PRIMARY (skipped on
+selected lines, and on lines without a `$`).

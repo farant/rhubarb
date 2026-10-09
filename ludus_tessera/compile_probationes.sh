@@ -119,6 +119,7 @@ declare -a RADIX_FONTES=(
     "scriba_documentum"
     # vicus-latera S2b: liber paginarum scribae
     "scriba_liber"
+    "iussum"
     "scriba_figurae"
     "vim"
     "tabula_characterum"

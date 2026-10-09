@@ -333,3 +333,13 @@ arrives (`scribae_gestum` refreshes before installing the gesture).
 (b) is not redundant: a click into a stale view with no pulse in
 between would otherwise type onto the old sheet and the commit would
 REVERT the other view's text (plant caught).
+
+## 2026-10-08 - S3b-1: the scriba kind's ctx is a struct now
+
+`ContextusScribae { liber, iussa }` replaces the bare page book as the
+scriba kind's ctx, so every scriba view shares one command registry as
+well as one book; `scribam_montare` sets `actiones_ctx.iussa` after
+`scriba_montare`. `$dies` lives here (host owns verbs). Also: a new
+library called from scriba must be added BY HAND to
+ludus_tessera/compile_probationes.sh (`iussum`, like `scriba_liber`
+before) - the root suite's list is generated, that one is not.

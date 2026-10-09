@@ -20,3 +20,14 @@ Gotcha: `tabula_cellula(t, l, c)` with s32 coordinates trips
 `cellula()` helper with explicit casts. And the installed `scribe`
 judges against main's repo, so in a worktree it writes but answers
 "via extra repositorium" (exit 4) - judge with ./silva/examen.sh.
+
+## 2026-10-08 - S3b-1: the registry
+
+Opaque `IussumRegistrum` over a Xar (a handful of verbs - linear
+lookup is fine). A verb must have the same shape as in text
+(`[a-z][a-z0-9_]*`), otherwise it could never be clicked; registering
+an existing verb REPLACES it (plant: appending instead left the old
+entry winning the lookup). `iussum_currere` clears the effect before
+calling, so a verb never sees a stale error. Gotcha: `registrum` is a
+latina.h macro (`register`) - the examen rejected it as a parameter
+name; the `IussumNotum`-shaped function takes `ctx`.

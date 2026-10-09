@@ -7,7 +7,9 @@
  * '$5', '$Magnus', '$' ultimum, '$foo(' apertum, '$-x'); '($dies)'
  * iussum est. IV: verba ignota prosa manent. V: proximum per lineam
  * ordine. VI: exitus copia est (tabula postea mutata). VII: argumenta
- * mala recusantur. */
+ * mala recusantur. VIII (S3b): registrum - nota, consumit, currere
+ * (ctx, effectus vacuatus, iussum datum), substitutio, verba
+ * invalida. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -49,6 +51,41 @@ notum (
     (vacuum)ctx;
     redde chorda_aequalis_literis(verbum, "dies")
         || chorda_aequalis_literis(verbum, "scriba");
+}
+
+/* functio probationis: ctx = numerus vocationum; textus = verbum +
+ * argumentum primum */
+interior b32
+probare_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* p,
+     IussumEffectus* effectus)
+{
+    s32* n;
+
+    n = (s32*)ctx;
+    (*n)++;
+    effectus->textus = iussum->numerus_argumentorum > ZEPHYRUM
+        ? chorda_concatenare(iussum->verbum,
+        iussum->argumenta[ZEPHYRUM],
+              p)
+        : iussum->verbum;
+    redde VERUM;
+}
+
+interior b32
+falsum_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* p,
+     IussumEffectus* effectus)
+{
+    (vacuum)iussum;
+    (vacuum)ctx;
+    (vacuum)p;
+    effectus->error = chorda_ex_literis("nihil", piscina);
+    redde FALSUM;
 }
 
 s32 principale (vacuum)
@@ -205,6 +242,76 @@ s32 principale (vacuum)
         NIHIL, NIHIL, &i));
     CREDO_FALSUM(iussum_proximum(&tabula, ZEPHYRUM, ZEPHYRUM, NIHIL,
         NIHIL, piscina, NIHIL));
+
+    imprimere("\n--- VIII: registrum (S3b) ---\n");
+    {
+        IussumRegistrum* r;
+         IussumEffectus  eff;
+                    s32  n;
+                    s32  n2;
+
+        n   = ZEPHYRUM;
+        n2  = ZEPHYRUM;
+        r   = iussum_registrum_creare(piscina);
+        CREDO_NON_NIHIL(r);
+        CREDO_NIHIL(iussum_registrum_creare(NIHIL));
+        CREDO_VERUM(iussum_registrare(r, "dies", VERUM, probare_iussum,
+            &n));
+        CREDO_VERUM(iussum_registrare(r, "terminale", FALSUM,
+            probare_iussum, &n2));
+        /* verba invalida: forma textus non habent */
+        CREDO_FALSUM(iussum_registrare(r, "", VERUM, probare_iussum,
+            &n));
+        CREDO_FALSUM(iussum_registrare(r, "Dies", VERUM, probare_iussum,
+            &n));
+        CREDO_FALSUM(iussum_registrare(r, "a-b", VERUM, probare_iussum,
+            &n));
+        CREDO_FALSUM(iussum_registrare(r, "x", VERUM, NIHIL, &n));
+        CREDO_FALSUM(iussum_registrare(NIHIL, "x", VERUM,
+            probare_iussum,
+            &n));
+        CREDO_VERUM(iussum_registrum_notum(chorda_ex_literis("dies",
+            piscina), r));
+        CREDO_FALSUM(iussum_registrum_notum(chorda_ex_literis("foo",
+            piscina), r));
+        CREDO_FALSUM(iussum_registrum_notum(chorda_ex_literis("di",
+            piscina), r));
+        CREDO_FALSUM(iussum_registrum_notum(chorda_ex_literis("dies",
+            piscina), NIHIL));
+        CREDO_VERUM(iussum_consumit(r, chorda_ex_literis("dies",
+            piscina)));
+        CREDO_FALSUM(iussum_consumit(r, chorda_ex_literis("terminale",
+            piscina)));
+        CREDO_FALSUM(iussum_consumit(r, chorda_ex_literis("foo",
+            piscina)));
+        /* registrum ut IussumNotum in textu */
+        ponere("$foo $dies(x)");
+        CREDO_FALSUM(iussum_ad_locum(&tabula, ZEPHYRUM, I,
+            iussum_registrum_notum, r, piscina, &i));
+        CREDO_VERUM(iussum_ad_locum(&tabula, ZEPHYRUM, VI,
+            iussum_registrum_notum, r, piscina, &i));
+        /* currere: functio verbi cum ctx suo et iusso dato */
+        eff.error = chorda_ex_literis("vetus", piscina);
+        CREDO_VERUM(iussum_currere(r, &i, piscina, &eff));
+        CREDO_AEQUALIS_S32(n, I);
+        CREDO_AEQUALIS_S32(n2, ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(eff.textus, "diesx");
+        CREDO_AEQUALIS_I32(eff.error.mensura, ZEPHYRUM);
+        /* iterum registratum substituit (numerus verborum idem) */
+        CREDO_VERUM(iussum_registrare(r, "dies", FALSUM, falsum_iussum,
+            NIHIL));
+        CREDO_FALSUM(iussum_consumit(r, chorda_ex_literis("dies",
+            piscina)));
+        CREDO_FALSUM(iussum_currere(r, &i, piscina, &eff));
+        CREDO_CHORDA_AEQUALIS_LITERIS(eff.error, "nihil");
+        CREDO_AEQUALIS_S32(n, I);
+        /* ignotum */
+        ponere("$foo");
+        CREDO_VERUM(ad(ZEPHYRUM, &i));
+        CREDO_FALSUM(iussum_currere(r, &i, piscina, &eff));
+        CREDO_FALSUM(iussum_currere(r, NIHIL, piscina, &eff));
+        CREDO_FALSUM(iussum_currere(r, &i, piscina, NIHIL));
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

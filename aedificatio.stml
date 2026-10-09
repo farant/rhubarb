@@ -900,6 +900,7 @@
     <vestigium via="build/probatio_vigilia_manifestum" forma="plagula"/>
     <vestigium via="build/probatio_terminale.png" forma="plagula"/>
     <vestigium via="build/probatio_vicus_paginae.png" forma="plagula"/>
+    <vestigium via="build/probatio_vicus_iussa.png" forma="plagula"/>
     <vestigium via="build/probatio_volumen.db" forma="plagula"/>
     <vestigium via="build/probatio_volumen_aut.db" forma="plagula"/>
     <vestigium via="build/probatio_sent.db" forma="plagula"/>

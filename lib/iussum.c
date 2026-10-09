@@ -1,6 +1,7 @@
 /* iussum.c - iussa in textu (vicus-latera S3a). Ratio in capite. */
 
 #include "iussum.h"
+#include "xar.h"
 
 #include <string.h>
 
@@ -236,4 +237,149 @@ iussum_ad_locum (
         a = exitus->finis;
     }
     redde FALSUM;
+}
+
+
+/* ==================================================
+ * Registrum
+ * ================================================== */
+
+nomen structura {
+           chorda  verbum;
+              b32  consumit;
+    IussumFunctio  functio;
+           vacuum* ctx;
+} VerbumRegistratum;
+
+structura IussumRegistrum {
+    Piscina* piscina;
+        Xar* verba;   /* VerbumRegistratum */
+};
+
+interior VerbumRegistratum*
+invenire (
+    constans IussumRegistrum* r,
+                      chorda  verbum)
+{
+    VerbumRegistratum* v;
+                  i32  i;
+
+    si (!r)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(r->verba); i++)
+    {
+        v = (VerbumRegistratum*)xar_obtinere(r->verba, i);
+        si (chorda_aequalis(v->verbum, verbum))
+        {
+            redde v;
+        }
+    }
+    redde NIHIL;
+}
+
+IussumRegistrum*
+iussum_registrum_creare (
+    Piscina* piscina)
+{
+    IussumRegistrum* r;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+    r = (IussumRegistrum*)piscina_allocare(piscina,
+        magnitudo(IussumRegistrum));
+    r->piscina = piscina;
+    r->verba = xar_creare(piscina,
+        (i32)magnitudo(VerbumRegistratum));
+    redde r;
+}
+
+b32
+iussum_registrare (
+        IussumRegistrum* r,
+     constans character* verbum,
+                    b32  consumit,
+          IussumFunctio  functio,
+                 vacuum* ctx)
+{
+    VerbumRegistratum* v;
+               chorda  c;
+                  i32  i;
+
+    si (!r || !verbum || !functio)
+    {
+        redde FALSUM;
+    }
+    c = chorda_ex_literis(verbum, r->piscina);
+    /* forma eadem ac in textu: '[a-z][a-z0-9_]*' */
+    si (   c.mensura == ZEPHYRUM
+        || !verbi_initium((character)c.datum[ZEPHYRUM]))
+    {
+        redde FALSUM;
+    }
+    per (i = I; i < c.mensura; i++)
+    {
+        si (!verbi_sequens((character)c.datum[i]))
+        {
+            redde FALSUM;
+        }
+    }
+    v = invenire(r, c);
+    si (!v)
+    {
+        v = (VerbumRegistratum*)xar_addere(r->verba);
+        si (!v)
+        {
+            redde FALSUM;
+        }
+    }
+    v->verbum    = c;
+    v->consumit  = consumit;
+    v->functio   = functio;
+    v->ctx       = ctx;
+    redde VERUM;
+}
+
+b32
+iussum_registrum_notum (
+    chorda  verbum,
+    vacuum* ctx)
+{
+    redde invenire((constans IussumRegistrum*)ctx, verbum) != NIHIL;
+}
+
+b32
+iussum_consumit (
+    constans IussumRegistrum* r,
+                      chorda  verbum)
+{
+    VerbumRegistratum* v;
+
+    v = invenire(r, verbum);
+    redde v ? v->consumit : FALSUM;
+}
+
+b32
+iussum_currere (
+       IussumRegistrum* r,
+       constans Iussum* iussum,
+               Piscina* piscina,
+        IussumEffectus* effectus)
+{
+    VerbumRegistratum* v;
+
+    si (!iussum || !piscina || !effectus)
+    {
+        redde FALSUM;
+    }
+    memset(effectus, ZEPHYRUM, magnitudo(IussumEffectus));
+    v = invenire(r, iussum->verbum);
+    si (!v)
+    {
+        redde FALSUM;
+    }
+    redde v->functio(iussum, v->ctx, piscina, effectus);
 }

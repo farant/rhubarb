@@ -309,6 +309,28 @@ new undo unit, insert mode kept, visual -> normal, selection and
 pending key cleared; right button ignored). Test: probatio_vicus_latera
 section VI on the real composition; five plants caught.
 
+S3b decisions (Fran 2026-10-08): consuming is PER VERB; `$dies`
+consumes (prunifex) and inserts the date in the legacy format
+`MM/DD/YYYY`. Ctrl-[ = Esc added in scriba (0c1c7270; `fd` existed).
+
+S3b-1 as built: `iussum.h` registry (opaque `IussumRegistrum`;
+`iussum_registrare(r, verb, consumit, fn, ctx)`, re-registering
+replaces; `iussum_registrum_notum` has the `IussumNotum` shape;
+`iussum_consumit`; `iussum_currere` clears the effect then calls the
+verb; `IussumEffectus { textus, error }`). `ScribaActiones.iussa`
+(NIHIL = no commands), set by the host after mounting. scriba draws
+known tokens in COLOR_ACCENT_PRIMARY over the text; a left click on a
+known token runs it: pending gesture flushed, consuming verbs have the
+token replaced by the effect text, others get it inserted after the
+token, ONE commit (`u` restores the token), cursor after the text. An
+effect with an error changes nothing (shown in S3b-2). vicus: the
+scriba kind's ctx is now {page book, command registry}; `dies`
+registered there (no arguments; `$dies(x)` = error). Tests:
+probatio_iussum VIII (registry), probatio_vicus_iussa (pixels, click,
+other view, undo, unknown verb, error); seven plants caught.
+NEXT S3b-2: error/status messages in the status line (+ a verb with
+arguments).
+
 ## AUDIENDA
 
 - **vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader**: tmux

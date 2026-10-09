@@ -38,6 +38,7 @@
 #include "tabula_characterum.h"
 #include "scriba_documentum.h"
 #include "scriba_liber.h"
+#include "iussum.h"
 
 #define SCRIBA_QUIES_MS M   /* insertio in cursu servatur post ~1 s */
 
@@ -59,6 +60,10 @@ nomen structura {
           ScribaLiber* liber;
     /* S2b: clavis plagulae paginae visus ('scriba/visus/<id>') */
                chorda visus;
+    /* S3b: iussa ('$verbum'); NIHIL = nulla (ictus cursorem solum
+     * ponit). Hospes post montationem ponit (ut liber); verba nota
+     * colorantur, ictus in iussum id currit */
+      IussumRegistrum* iussa;
 } ScribaActiones;
 
 /* folium laboris = copia proiectionis documenti */

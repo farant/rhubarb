@@ -59,4 +59,54 @@ iussum_proximum (
                        Piscina* piscina,
                         Iussum* exitus);
 
+/* ---- Registrum (S3b): verba nota et quid faciunt ---- */
+
+nomen structura IussumRegistrum IussumRegistrum;   /* opacum */
+
+/* effectus iussi: textus inserendus et/aut error. textus: consumens
+ * signum substituit, aliter post signum inseritur. error non vacuus:
+ * nihil mutatur, nuntius ostenditur (S3b-2: linea status). */
+nomen structura {
+    chorda textus;
+    chorda error;
+} IussumEffectus;
+
+nomen b32 (*IussumFunctio)(constans Iussum* iussum, vacuum* ctx,
+                           Piscina* piscina, IussumEffectus* effectus);
+
+IussumRegistrum*
+iussum_registrum_creare (
+    Piscina* piscina);
+
+/* consumit: VERUM = signum ictu deletur (creatores, $dies); FALSUM =
+ * signum manet ut bottone (aperientes, $terminale). Verbum iterum
+ * registratum priorem substituit. FALSUM si verbum invalidum. */
+b32
+iussum_registrare (
+        IussumRegistrum* r,
+     constans character* verbum,
+                    b32  consumit,
+          IussumFunctio  functio,
+                 vacuum* ctx);
+
+/* forma IussumNotum: ctx = IussumRegistrum* */
+b32
+iussum_registrum_notum (
+    chorda  verbum,
+    vacuum* ctx);
+
+b32
+iussum_consumit (
+    constans IussumRegistrum* r,
+                      chorda  verbum);
+
+/* effectus vacuatur, deinde functio verbi currit; FALSUM si verbum
+ * ignotum aut functio FALSUM reddit */
+b32
+iussum_currere (
+       IussumRegistrum* r,
+       constans Iussum* iussum,
+               Piscina* piscina,
+        IussumEffectus* effectus);
+
 #endif /* IUSSUM_H */
