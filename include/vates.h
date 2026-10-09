@@ -243,8 +243,12 @@ nomen structura {
     constans VatesPretium* pretia;
                     i32  pretia_numerus;
     constans character*  rationarium_via;        /* NIHIL = sine rationario */
-    constans character*  herbarium_via;          /* NIHIL = sine captura */
-            HttpVectura  vectura;                /* exsequi NIHIL = ordinaria */
+    constans character*  herbarium_via;          /* NIHIL = sedes ordinaria
+                                                  * (herbarium_sedes_ordinaria,
+                                                  * hospes provisoris) */
+                    b32 sine_herbario;          /* VERUM = sine captura
+                                                  * (expresse; herbarium-spec-2) */
+            HttpVectura vectura;                /* exsequi NIHIL = ordinaria */
 } VatesOptiones;
 
 nomen structura Vates Vates;   /* opacum */

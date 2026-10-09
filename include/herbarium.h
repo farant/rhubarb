@@ -7,7 +7,8 @@
  * reddit, ut probationes contra responsa VERA currant sine rete.
  *
  * STATUS: PROBATUM a Frano 2026-10-07 (vates-plan-1 T3); implementatio
- * in vates-plan-2.
+ * in vates-plan-2. iudex et sedes ordinaria: PROBATUM a Frano 2026-10-09 (herbarium-spec-2
+ * H0).
  *
  * USUS (captura):
  *   HerbariumOptiones o = herbarium_optiones_ordinariae();
@@ -43,6 +44,17 @@ nomen chorda (*HerbariumClavis)(
     Piscina*       piscina,
     vacuum*        datum);
 
+/* Functio IUDICIS (herbarium-spec-2, custos ante usum): causa cur
+ * responsum INEXSPECTATUM sit; chorda vacua = exspectatum. Vocatur in
+ * vectura capiente pro responsis sub status_minimus, ANTE redditionem -
+ * specimen in disco antequam consumptor octetum videt. Solum codicem
+ * hostili introitu tutum adhibeat (status, json_legere, norma_iudicare). */
+nomen chorda (*HerbariumIudex)(
+    HttpPetitio*   petitio,
+    HttpResponsum* responsum,
+    Piscina*       piscina,
+    vacuum*        datum);
+
 nomen structura {
      constans character* directorium;      /* NIHIL = captura exstincta */
                     i32  status_minimus;   /* 0 = CD */
@@ -51,6 +63,8 @@ nomen structura {
                  vacuum* clavis_datum;
     constans character* constans* capita_admissa;   /* NIHIL-terminatum; ADDUNTUR ordinariis */
     constans character* constans* campi_petitionis; /* campi JSON corporis petitionis in summario (e.g. "model"); NIHIL-terminatum */
+         HerbariumIudex  iudex;            /* NIHIL = status solus */
+                 vacuum* iudex_datum;
 } HerbariumOptiones;
 
 nomen structura Herbarium Herbarium;   /* opacum */
@@ -79,6 +93,18 @@ nomen structura {
 
 HerbariumOptiones
 herbarium_optiones_ordinariae (vacuum);
+
+/* Sedes ordinaria speciminum (herbarium-spec-2 §II.b):
+ * $RHUBARB_HERBARIUM, aliter ~/.rhubarb/herbarium; deinde '/<hospes>'
+ * (acervus unus per hospitem API). Chorda vacua + causa si
+ * $RHUBARB_HERBARIUM directorium non exstans nominat (numquam tacite
+ * alio cadit), si $HOME deest, aut si hospes vacuus est aut '/' aut
+ * '..' continet. Directorium non creatur (herbarium_aperire creat). */
+chorda
+herbarium_sedes_ordinaria (
+    constans character* hospes,
+               Piscina* piscina,
+                chorda* causa);
 
 /* Aperire. directorium creatur si abest. NIHIL si creari non potest
  * (nuntius in stderr) - vocans sine captura pergit. */
