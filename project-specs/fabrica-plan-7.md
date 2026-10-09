@@ -110,9 +110,14 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
 
 ### T6: A/B reuse
 
-- [ ] `tools/reusus_retro.sh` over the root members (same history as
+- [x] `tools/reusus_retro.sh` over the root members (same history as
   the toml A/B); record runner-verdict vs per-member reuse, whatever it
   shows. **Commit.**
+- As built (2026-10-09), 150 commits: runner reused 0/150; members 91%
+  reused; test runs 38400 -> 3261 (-91%); time -92% (flattering: compiles
+  not counted for members). Top cause aedilis.stml (whole-file key, 1020
+  invalidations). Tools: PORTA '-' mode, annotations in -fons, family
+  binaries via manifests.
 
 ### T7: the switch
 

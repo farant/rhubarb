@@ -2591,3 +2591,35 @@ lib/base64.c -> both name base64 + plist, fabrica re-ran exactly the 5
 members whose aedilis closure holds lib/base64.c (runner: all 240).
 Gradus section 'facultas repositorium currit' + plants (no commit in key,
 link-only) red.
+
+## 2026-10-09 - fabrica-7 T6: A/B reuse over the root suite
+
+`./tools/reusus_gradus_ab.sh probationes_radicis - probationes -n 150
+-cursor "compile_tests.sh compile_tests_fontes_generata.sh
+tools/vexilla.sh" -porta-titulus radix` (20 min). Two tool extensions:
+PORTA '-' = runner with no declared action (radix runs via silva.porta,
+no trace in fabrica.db): its verdict is reusable only if ALL members are
+reused and no runner file changed; its time = median radix gate time in
+build/portae/tempora.tsv (118 s, 12 runs). `reusus_retro.sh -fons` now
+reads the T2/T5 annotations: instrumentum -> binary closure, facultas
+repositorium -> rule C (every commit invalid). Fix on the way: family
+binaries (bin/natura has no tools/natura.c) fell back to one rule on
+bin/natura itself, which git never sees - `_fontes_binarii` now takes the
+scope sources from the manifests the producing action declares (597
+rules instead of 1).
+
+Result, last 150 first-parent commits:
+- runner verdict reused 0/150 (every commit touched its inputs) -> 38400
+  test runs, ~17670 s;
+- composite fully reused 0/150 (probatio_git re-runs every commit, by
+  design);
+- members reused 35139/38400 (91%) -> 3261 test runs (-91%), ~1356 s
+  (-92%). The time ratio FLATTERS fabrica: runner time includes compiles,
+  member time is the run alone (compiles via the shared thesaurus are not
+  counted on either side) - the test-run count is the robust number.
+- worst members: math tier (tabula_nodorum 73%, quaternio 74%, extensio
+  75%) - the libraries that moved most in the window.
+- causes: aedilis.stml 1020 (4 edits x ~256: every member keys the WHOLE
+  file for its flags - a per-member slice would remove most; follow-up,
+  not this slice), piscina.h 502, eventus.h 247, credo.h 242,
+  lectiones.h 202, repositorium 150 (git), xar.h 140.
