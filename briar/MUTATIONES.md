@@ -19,6 +19,9 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `iussum` nova - iussa in textu stilo acme (`$verbum(arg,
+  arg)`): iussum ad cellulam aut proximum in linea, verba nota solum.
+
 - corpus: scriba - `scriba_montare` argumentum ultimum `ScribaLiber*
   liber` accipit (NIHIL = documentum proprium, mos vetus; liber = visus
   super paginas communes) et `scriba_reficere` nova (visum stalum

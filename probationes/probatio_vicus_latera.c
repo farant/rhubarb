@@ -4,11 +4,12 @@
  * Compositio VERA (vicus_applicatio: dispositio ordinaria, tabula 3 =
  * scriba | scriba; concha /bin/sh pro tabula 1). Claves ad latus
  * focatum solum; ictus in latus non focatum id focat et NIHIL aliud
- * agit, ictus secundus agit (in pictore, tabula 2 - scriba ictum non
- * tractat); Motus (ramus, spatium) latus sequitur;
+ * agit, ictus secundus agit (in pictore, tabula 2 - ictus pictus
+ * visibilis); Motus (ramus, spatium) latus sequitur;
  * gestus relinquentis effunditur; focus durabilis; super cum spatio
  * suo (idem id 'pagina' in utroque latere); Ctrl-A 0 = tabula
- * decima. */
+ * decima. S3a: ictus in scriba cursorem ponit (inserendo modum servat,
+ * unitatem revocandi frangit; visualis ad normalem; dexter nihil). */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -25,6 +26,9 @@
 #include "pictor_applicatio.h"
 #include "vicus.h"
 #include "vicus_applicatio.h"
+#include "eventus.h"
+#include "tabula_characterum.h"
+#include "scriba_documentum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,6 +64,66 @@ cursor_columna (
         redde ZEPHYRUM;
     }
     redde n;
+}
+
+interior s32
+cursor_linea (
+    Vicus* v,
+      i32  quod)
+{
+     VicusLatus* l;
+    InsulaRamus  r;
+         chorda* a;
+            s32  n;
+
+    l = vicus_latus(vicus_activa(v), quod);
+    r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
+    a = insula_ramus_attributum(&r, INSULA_EPHEMERA, "cursor_linea");
+    si (!a || !chorda_ut_s32(*a, &n))
+    {
+        redde -I;
+    }
+    redde n;
+}
+
+interior b32
+modus_est (
+                  Vicus* v,
+     constans character* modus)
+{
+     VicusLatus* l;
+    InsulaRamus  r;
+         chorda* a;
+
+    l = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
+    r = insula_ramus(v->repo, "scriba", chorda_ut_cstr(l->id, piscina));
+    a = insula_ramus_attributum(&r, INSULA_EPHEMERA, "modus");
+    redde a && chorda_aequalis_literis(*a, modus);
+}
+
+/* punctum schirmi cellulae (linea, columna) paginae sinistrae: pagina
+ * a cellula I lateris, latus sub tabulis */
+interior vacuum
+ictus_sinister (
+    ManusLudus* m,
+           s32  linea,
+           s32  columna)
+{
+    (vacuum)manus_ludus_premere_ad(m, VI + columna * VI + III,
+        VICUS_ALTITUDO_TABULARUM + VIII + linea * VIII + IV);
+}
+
+/* cellula documenti sinistri (commissi) */
+interior character
+cellula (
+    ScribaMontatio* sm,
+               s32  linea,
+               s32  columna)
+{
+    constans TabulaCharacterum* t;
+
+    t = scriba_documentum_tabula(sm->doc);
+    redde t->cellulae[(i32)linea * t->latitudo + (i32)columna];
 }
 
 interior b32
@@ -134,8 +198,8 @@ s32 principale (vacuum)
     CREDO_VERUM(linea_prima(scriba(v, VICUS_DEXTRUM), "abcdef"));
 
     imprimere("\n--- III: ictus primus focat, secundus agit ---\n");
-    /* scriba ictum non tractat (cursor non movetur): probatio in
-     * pictore, tabula 2 = scriba | pictor */
+    /* probatio in pictore (ictus pictus visibilis), tabula 2 =
+     * scriba | pictor */
     CREDO_VERUM(vicus_activam_ponere(v, "2"));
     dispensator_recomponere(app.d);
     pm = (PictorMontatio*)vicus_latus(vicus_activa(v),
@@ -174,6 +238,65 @@ s32 principale (vacuum)
     CREDO_VERUM(manus_ludus_scribere(m, "1"));
     CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "1");
     CREDO_FALSUM(insula_mendacium(v->repo));
+
+    imprimere("\n--- VI: ictus cursorem ponit (S3a) ---\n");
+    CREDO_VERUM(vicus_activam_ponere(v, "3"));
+    dispensator_recomponere(app.d);
+    CREDO_VERUM(vicus_latus_focatum(v)
+        == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
+    /* sinister in inserendo ex sectione I (sine Esc) */
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(modus_est(v, "normalis"));
+    ictus_sinister(m, II, IV);
+    CREDO_AEQUALIS_S32(cursor_linea(v, VICUS_SINISTRUM), II);
+    CREDO_AEQUALIS_S32(cursor_columna(v, VICUS_SINISTRUM), IV);
+    /* in inserendo: ictus modum servat, insertionem claudit */
+    CREDO_VERUM(manus_ludus_scribere(m, "iab"));
+    ictus_sinister(m, II, X);
+    CREDO_VERUM(modus_est(v, "inserere"));
+    CREDO_AEQUALIS_S32(cursor_columna(v, VICUS_SINISTRUM), X);
+    CREDO_VERUM(manus_ludus_scribere(m, "c"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(cellula(scriba(v, VICUS_SINISTRUM), II, IV) == 'a');
+    CREDO_VERUM(cellula(scriba(v, VICUS_SINISTRUM), II, V) == 'b');
+    CREDO_VERUM(cellula(scriba(v, VICUS_SINISTRUM), II, X) == 'c');
+    /* 'u': unitas post ictum sola revocatur */
+    CREDO_VERUM(manus_ludus_scribere(m, "u"));
+    CREDO_FALSUM(cellula(scriba(v, VICUS_SINISTRUM), II, X) == 'c');
+    CREDO_VERUM(cellula(scriba(v, VICUS_SINISTRUM), II, IV) == 'a');
+    /* visualis (domus: lineae solum, 'V'): ictus ad normalem,
+     * selectio tollitur */
+    CREDO_VERUM(manus_ludus_scribere(m, "Vj"));
+    CREDO_VERUM(modus_est(v, "visualis"));
+    ictus_sinister(m, I, I);
+    CREDO_VERUM(modus_est(v, "normalis"));
+    CREDO_AEQUALIS_S32(cursor_linea(v, VICUS_SINISTRUM), I);
+    CREDO_AEQUALIS_S32(cursor_columna(v, VICUS_SINISTRUM), I);
+    {
+        InsulaRamus  r;
+             chorda* a;
+                s32  n;
+
+        r = insula_ramus(v->repo, "scriba", "3_sinistrum_scriba");
+        a = insula_ramus_attributum(&r, INSULA_EPHEMERA,
+            "selectio_linea");
+        CREDO_VERUM(a && chorda_ut_s32(*a, &n) && n == -I);
+    }
+    /* bottone dextro: nihil */
+    {
+        Eventus e;
+
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus        = EVENTUS_MUS_DEPRESSUS;
+        e.tempus       = M * M;
+        e.datum.mus.x  = VI + VII * VI + III;
+        e.datum.mus.y       = VICUS_ALTITUDO_TABULARUM + VIII + III
+            * VIII + IV;
+        e.datum.mus.botton  = MUS_DEXTER;
+        dispensator_tractare(app.d, &e);
+    }
+    CREDO_AEQUALIS_S32(cursor_linea(v, VICUS_SINISTRUM), I);
+    CREDO_AEQUALIS_S32(cursor_columna(v, VICUS_SINISTRUM), I);
 
     imprimere("\n");
     credo_imprimere_compendium();

@@ -112,6 +112,7 @@ declare -a SOURCE_FILES=(
     "lib/internuntius.c"
     "lib/interpres_terminalis.c"
     "lib/iter_directoria.c"
+    "lib/iussum.c"
     "lib/js_lexema.c"
     "lib/json.c"
     "lib/lapifex_generare.c"

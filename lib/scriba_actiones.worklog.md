@@ -97,3 +97,15 @@ Page navigation (Ctrl+Shift+Left/Right) lives in the key handler next
 to Ctrl-R because cursor/mode are owned by pagina.clavis; it flushes
 the gesture first, and resizes laboris only if the new page's
 dimensions differ.
+
+## 2026-10-08 - S3a: a click places the cursor
+
+`pagina.clavis` now also takes EVENTUS_MUS_DEPRESSUS (left button):
+the cell comes from `destinatio_ad_locale(nodus, screen point)` divided
+by the cell size (node width / sheet width - the handler does not know
+CELLULA_LATITUDO). Like vim, a click ends the insert run for undo: the
+gesture is flushed and `insertio_commissa` reset, so the next typed
+text is a NEW undo unit (plant caught: without the reset `u` removed
+the text before the click too). Insert mode is kept; visual returns to
+normal with the selection cleared. House vim has only line-visual
+(`V`); `v` does nothing - a test that used `v` failed for that reason.

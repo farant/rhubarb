@@ -270,6 +270,45 @@ the named action through the host's registry; the open-widget verbs
 (`terminale`, `scriba(doc)`, `pictor(doc)`) push onto the right stack
 with the identity rule; a first non-widget command or two.
 
+S3 slices (Fran approved 2026-10-08): S3a recognition (pure) + click
+places the cursor; S3b host verb table, known verbs coloured, click
+runs, a first harmless verb (`$dies`); S3c right-pane stack (`$terminale`,
+`$scriba(name)`, `$pictor(name)`; identity; background terminals;
+durable); S3d page commands (name/rename -> status "<name> i/n",
+`#next #prev #N #name/#tag` links).
+
+S3 decisions (Fran 2026-10-08): arguments = text up to the FIRST `)` on
+the same line, split on commas, trimmed, no quoting or nesting; a click
+on a `$verb` in the right scriba runs too; argument errors show briefly
+in the clicked view's status line. From prunifex (../prunifex, Swift,
+EditorViewController.swift): ONLY KNOWN verbs are commands (the host
+answers) - everything else stays prose (`$5.00`, a stray `$foo(`), so
+no escaping and no "unknown verb" error. OPEN for S3b: does a click
+CONSUME the token (prunifex: `$aula` `$year` `$expenses` delete
+themselves, one-shot) or keep it as a button (concha, acme)? Proposed:
+per verb - widget openers stay, creators consume.
+
+prunifex ideas for later: find-or-create pages (`$expenses` jumps to
+the existing one - the identity rule for pages); `#tag` = next page
+containing the tag, wrapping, `#12` = page 12 (HashtagIndex); verb
+families with arguments (`$august-2027`, `$this-month`, `$next-month`
+find-or-create month pages - ours would be `$mensis(2027, 8)`); typed
+pages ("cards": year, month, expenses, game `$aula`, epub, image) =
+pages that are not plain text; `@1850s` timeline links to year pages;
+`$delete` clears the current page/card; inline structured tags
+(`<expense ...>`) indexed across pages (ExpenseIndex).
+
+S3a as built: `include/iussum.h` + lib (pure): `iussum_ad_locum`
+(token covering a cell) and `iussum_proximum` (next token from a
+column, for colouring); verb `[a-z][a-z0-9_]*` after `$` at line start
+or after a non-word character; `$verb(` without `)` on the line is not
+a command; `IussumNotum` predicate (NIHIL = all known). Test
+probatio_iussum (table of edge cases); eight plants caught. scriba: a
+left click on the page puts the cursor on the clicked cell (flush,
+new undo unit, insert mode kept, visual -> normal, selection and
+pending key cleared; right button ignored). Test: probatio_vicus_latera
+section VI on the real composition; five plants caught.
+
 ## AUDIENDA
 
 - **vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader**: tmux

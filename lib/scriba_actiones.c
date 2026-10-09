@@ -4,6 +4,7 @@
 #include "vim.h"
 #include "eventus.h"
 #include "stml.h"
+#include "destinatio.h"
 
 #include <string.h>
 
@@ -575,6 +576,62 @@ paginam_mutare (
         doc);
 }
 
+/* S3a: ictus sinister cursorem in cellulam ictam ponit (praecisus ad
+ * folium). Gestus pendens primum effunditur et insertio clauditur
+ * (ut vim: ictus unitatem revocandi frangit), modus inserendi
+ * manet; visualis ad normalem redit, selectio et clavis praecedens
+ * tolluntur. Cellula ex fines nodi (folium in pixelis) / folium. */
+interior vacuum
+cursorem_ponere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+      constans Componens* nodus,
+        constans Eventus* ev)
+{
+    VimClipboard capsa;
+       VimStatus st;
+         Punctum p;
+             s32 cw;
+             s32 ch;
+             s32 linea;
+             s32 columna;
+
+    cw = nodus->fines.latitudo / (s32)sa->laboris.latitudo;
+    ch = nodus->fines.altitudo / (s32)sa->laboris.altitudo;
+    si (cw <= ZEPHYRUM || ch <= ZEPHYRUM)
+    {
+        redde;
+    }
+    p.x      = ev->datum.mus.x;
+    p.y      = ev->datum.mus.y;
+    p        = destinatio_ad_locale(nodus, p);
+    columna  = p.x < ZEPHYRUM ? ZEPHYRUM : p.x / cw;
+    linea    = p.y < ZEPHYRUM ? ZEPHYRUM : p.y / ch;
+    si (columna >= (s32)sa->laboris.latitudo)
+    {
+        columna = (s32)sa->laboris.latitudo - I;
+    }
+    si (linea >= (s32)sa->laboris.altitudo)
+    {
+        linea = (s32)sa->laboris.altitudo - I;
+    }
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
+    sa->insertio_commissa  = FALSUM;
+    st                     = status_legere(ramus, sa, &capsa);
+    st.cursor_linea        = (i32)linea;
+    st.cursor_columna      = (i32)columna;
+    si (st.modo == MODO_VIM_VISUALIS)
+    {
+        st.modo = MODO_VIM_NORMALIS;
+    }
+    st.selectio_initium_linea    = -I;
+    st.selectio_initium_columna  = ZEPHYRUM;
+    st.clavis_praecedens         = '\0';
+    st.esperans_fd               = FALSUM;
+    status_scribere(ramus, sa, st, &capsa);
+}
+
 /* <tractator/> */
 b32
 scriba_pagina_clavis (
@@ -594,7 +651,6 @@ scriba_pagina_clavis (
                  i8  o;
 
     (vacuum)destinatio;
-    (vacuum)nodus;
     sa = (ScribaActiones*)ctx;
     si (!repo || !motus || !ev || !sa)
     {
@@ -602,6 +658,15 @@ scriba_pagina_clavis (
     }
     /* R4: status scribae per ramum (sine eo radix repositorii) */
     ramus = sa->ramus.repo ? sa->ramus : insula_ramus_radix(repo);
+    si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        si (!nodus || ev->datum.mus.botton != MUS_SINISTER)
+        {
+            redde FALSUM;
+        }
+        cursorem_ponere(&ramus, motus, sa, nodus, ev);
+        redde VERUM;
+    }
     si (ev->genus == EVENTUS_TEXTUS)
     {
         si (ev->datum.textus.genus != EVENTUS_TEXTUS_COMMISSUM)
