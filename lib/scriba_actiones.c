@@ -510,46 +510,29 @@ dimensiones_mutator (
         chorda_ut_cstr(chorda_ex_s32((s32)doc->altitudo, p), p));
 }
 
-/* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam
- * nova, ante primam nihil. Gestus pendens primum effunditur; deinde
- * documentum, folium laboris, plagula visus, cursor ad 0,0 modo
- * normali (status pagina.clavis est - ideo hic), dimensiones folii in
- * ramo durabili. */
-interior vacuum
-paginam_mutare (
+/* S2b/S3d: visus ad paginam 'novum' libri. Gestus pendens primum
+ * effunditur; deinde documentum, folium laboris, plagula visus, cursor
+ * ad (linea, columna) praecisus, modo normali (status pagina.clavis est
+ * - ideo hic), dimensiones folii in ramo durabili. FALSUM si pagina
+ * aperiri nequit. */
+interior b32
+paginam_ponere (
     constans InsulaRamus* ramus,
                    Motus* motus,
           ScribaActiones* sa,
-                     s32  gradus)
+                  chorda  novum,
+                     s32  linea,
+                     s32  columna)
 {
          VimClipboard  capsa;
             VimStatus  st;
-               chorda  currens;
-               chorda  novum;
-                  b32  inventum;
-                  s32  i;
      ScribaDocumentum* doc;
 
     (vacuum)motus_gestum_effundere(motus, ramus->repo);
-    currens = volumen_plagulam_promere(sa->doc->volumen, sa->visus,
-        sa->doc->piscina, &inventum);
-    i = inventum ? scriba_liber_index(sa->liber, currens) : -I;
-    si (i < ZEPHYRUM)
-    {
-        i = ZEPHYRUM;
-    }
-    i += gradus;
-    si (i < ZEPHYRUM)
-    {
-        redde;
-    }
-    novum = i >= (s32)scriba_liber_numerus(sa->liber)
-          ? scriba_liber_pagina_nova(sa->liber)
-          : scriba_liber_nomen(sa->liber, (i32)i);
     doc = scriba_liber_pagina(sa->liber, novum);
     si (!doc)
     {
-        redde;
+        redde FALSUM;
     }
     si (   doc->latitudo != sa->laboris.latitudo
         || doc->altitudo != sa->laboris.altitudo)
@@ -564,8 +547,10 @@ paginam_mutare (
     (vacuum)volumen_plagulam_condere(doc->volumen, sa->visus, novum,
         "scriba:visus");
     st                           = status_legere(ramus, sa, &capsa);
-    st.cursor_linea              = ZEPHYRUM;
-    st.cursor_columna            = ZEPHYRUM;
+    st.cursor_linea              = (i32)(linea < (s32)doc->altitudo
+                                         ? linea : ZEPHYRUM);
+    st.cursor_columna            = (i32)(columna < (s32)doc->latitudo
+                                         ? columna : ZEPHYRUM);
     st.modo                      = MODO_VIM_NORMALIS;
     st.selectio_initium_linea    = -I;
     st.selectio_initium_columna  = ZEPHYRUM;
@@ -574,6 +559,46 @@ paginam_mutare (
     status_scribere(ramus, sa, st, &capsa);
     (vacuum)mutare_ramum(ramus, INSULA_DURABILIS, dimensiones_mutator,
         doc);
+    redde VERUM;
+}
+
+/* index paginae visus in libro (plagula visus; absens aut ignota: 0) */
+interior s32
+index_visus (
+    constans ScribaActiones* sa)
+{
+    chorda currens;
+       b32 inventum;
+       s32 i;
+
+    currens = volumen_plagulam_promere(sa->doc->volumen, sa->visus,
+        sa->doc->piscina, &inventum);
+    i = inventum ? scriba_liber_index(sa->liber, currens) : -I;
+    redde i < ZEPHYRUM ? ZEPHYRUM : i;
+}
+
+/* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam
+ * nova, ante primam nihil; cursor ad 0,0 */
+interior vacuum
+paginam_mutare (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                     s32  gradus)
+{
+    chorda novum;
+       s32 i;
+
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
+    i = index_visus(sa) + gradus;
+    si (i < ZEPHYRUM)
+    {
+        redde;
+    }
+    novum = i >= (s32)scriba_liber_numerus(sa->liber)
+          ? scriba_liber_pagina_nova(sa->liber)
+          : scriba_liber_nomen(sa->liber, (i32)i);
+    (vacuum)paginam_ponere(ramus, motus, sa, novum, ZEPHYRUM, ZEPHYRUM);
 }
 
 /* S3a: cellula sub puncto schirmi ex fines nodi (folium in pixelis)
@@ -768,6 +793,108 @@ iussum_exsequi (
         ? sub.columna : (s32)sa->laboris.latitudo - I);
 }
 
+/* verbum nexus numerus totus? ('#3' = pagina id III) */
+interior b32
+numerus_est (
+    chorda c)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (c.datum[i] < '0' || c.datum[i] > '9')
+        {
+            redde FALSUM;
+        }
+    }
+    redde c.mensura > ZEPHYRUM;
+}
+
+/* S3d: nexus ictus (Franus: paginae numeris solis nominantur; tags
+ * per paginas cycli). '#next' '#prev' ut Ctrl+Shift+sagittae, '#first'
+ * '#last', '#N' pagina id N; ceteri tags: pagina ALIA proxima (post
+ * visam, circulo) quae '#tag' continet, cursor in eo. Nihil: nuntius
+ * ('nulla pagina' / 'nulla alia pagina'). */
+interior vacuum
+nexum_sequi (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                  chorda  verbum)
+{
+    constans TabulaCharacterum* t;
+                        Iussum  x;
+                        chorda  nomen_paginae;
+                           s32  n;
+                           s32  i;
+                           s32  k;
+                           s32  l;
+                           s32  a;
+                       Piscina* p;
+
+    p = sa->doc->piscina;
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
+    sa->insertio_commissa  = FALSUM;
+    n                      = (s32)scriba_liber_numerus(sa->liber);
+    si (   chorda_aequalis_literis(verbum, "next")
+        || chorda_aequalis_literis(verbum, "prev"))
+    {
+        paginam_mutare(ramus, motus, sa,
+            chorda_aequalis_literis(verbum, "next") ? I : -I);
+        redde;
+    }
+    si (   (chorda_aequalis_literis(verbum, "first")
+            || chorda_aequalis_literis(verbum, "last"))
+        && n > ZEPHYRUM)
+    {
+        (vacuum)paginam_ponere(ramus, motus, sa, scriba_liber_nomen(
+            sa->liber, chorda_aequalis_literis(verbum, "first")
+            ? ZEPHYRUM : (i32)(n - I)), ZEPHYRUM, ZEPHYRUM);
+        redde;
+    }
+    si (   numerus_est(verbum) && scriba_liber_index(sa->liber, verbum)
+            >= ZEPHYRUM)
+    {
+        (vacuum)paginam_ponere(ramus, motus, sa, verbum, ZEPHYRUM,
+            ZEPHYRUM);
+        redde;
+    }
+    si (!numerus_est(verbum))
+    {
+        i = index_visus(sa);
+        /* paginae ALIAE solum (visa ipsa: nuntius 'nulla alia') */
+        per (k = I; k < n; k++)
+        {
+            nomen_paginae = scriba_liber_nomen(sa->liber,
+                (i32)((i + k) % n));
+            si (!scriba_liber_pagina(sa->liber, nomen_paginae))
+            {
+                perge;
+            }
+            t = scriba_documentum_tabula(scriba_liber_pagina(sa->liber,
+                nomen_paginae));
+            per (l = ZEPHYRUM; l < (s32)t->altitudo; l++)
+            {
+                a = ZEPHYRUM;
+                dum (iussum_nexus_proximus(t, l, a, p, &x))
+                {
+                    si (chorda_aequalis(x.verbum, verbum))
+                    {
+                        (vacuum)paginam_ponere(ramus, motus, sa,
+                            nomen_paginae, l, x.initium);
+                        redde;
+                    }
+                    a = x.finis;
+                }
+            }
+        }
+    }
+    nuntium_ponere(ramus, chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("#", p), verbum, p), chorda_ex_literis(
+        numerus_est(verbum) ? ": nulla pagina" : ": nulla alia pagina",
+        p), p));
+}
+
 b32
 scriba_iussum_ad_punctum (
             ScribaActiones* sa,
@@ -778,13 +905,19 @@ scriba_iussum_ad_punctum (
        s32 linea;
        s32 columna;
 
-    si (   !sa || !sa->iussa || !pagina || !sa->doc
+    si (   !sa || !pagina || !sa->doc
         || !cellulam_ictam(sa, pagina, schirmi, &linea, &columna))
     {
         redde FALSUM;
     }
-    redde iussum_ad_locum(&sa->laboris, linea, columna,
-        iussum_registrum_notum, sa->iussa, sa->doc->piscina, &iussum);
+    /* S3d: nexus quoque uno ictu */
+    redde (   sa->iussa
+           && iussum_ad_locum(&sa->laboris, linea, columna,
+                  iussum_registrum_notum, sa->iussa, sa->doc->piscina,
+                  &iussum))
+        || (   sa->liber
+            && iussum_nexus_ad_locum(&sa->laboris, linea, columna,
+                   sa->doc->piscina, &iussum));
 }
 
 /* <tractator/> */
@@ -844,6 +977,14 @@ scriba_pagina_clavis (
                    &iussum))
         {
             iussum_exsequi(&ramus, motus, sa, &iussum, ev->tempus);
+            redde VERUM;
+        }
+        /* S3d: nexus (sine libro nulli) */
+        si (   sa->liber
+            && iussum_nexus_ad_locum(&sa->laboris, linea, columna,
+                   sa->doc->piscina, &iussum))
+        {
+            nexum_sequi(&ramus, motus, sa, iussum.verbum);
             redde VERUM;
         }
         cursorem_ponere(&ramus, motus, sa, linea, columna);

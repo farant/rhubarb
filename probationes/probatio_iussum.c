@@ -313,6 +313,63 @@ s32 principale (vacuum)
         CREDO_FALSUM(iussum_currere(r, &i, piscina, NIHIL));
     }
 
+    imprimere("\n--- IX: nexus '#verbum' (S3d) ---\n");
+    {
+        Iussum x;
+
+        ponere("#notae et #3");
+        CREDO_VERUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, ZEPHYRUM,
+            piscina, &x));
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.verbum, "notae");
+        CREDO_AEQUALIS_S32(x.initium, ZEPHYRUM);
+        CREDO_AEQUALIS_S32(x.finis, VI);
+        CREDO_AEQUALIS_I32(x.numerus_argumentorum, ZEPHYRUM);
+        CREDO_FALSUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, VI,
+            piscina,
+            &x));
+        CREDO_VERUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, XI,
+            piscina,
+            &x));
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.verbum, "3");
+        /* proximus per lineam */
+        CREDO_VERUM(iussum_nexus_proximus(&tabula, ZEPHYRUM, I, piscina,
+            &x));
+        CREDO_AEQUALIS_S32(x.initium, X);
+        CREDO_FALSUM(iussum_nexus_proximus(&tabula, ZEPHYRUM, XI,
+            piscina, &x));
+        /* '-' et '_' in verbo; post '-' nexus incipit */
+        ponere("x-#a-b_c.");
+        CREDO_VERUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, II,
+            piscina,
+            &x));
+        CREDO_CHORDA_AEQUALIS_LITERIS(x.verbum, "a-b_c");
+        CREDO_AEQUALIS_S32(x.finis, VIII);
+        /* non nexus: post litteram, '#' cum spatio, maiuscula, solus */
+        ponere("a#b");
+        CREDO_FALSUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, I,
+            piscina,
+            &x));
+        ponere("# titulus");
+        CREDO_FALSUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, ZEPHYRUM,
+            piscina, &x));
+        ponere("#Notae");
+        CREDO_FALSUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, ZEPHYRUM,
+            piscina, &x));
+        ponere("abcdefghijklmnopqr #");
+        CREDO_FALSUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, XIX,
+            piscina, &x));
+        /* '$' non nexus, '#' non iussum */
+        ponere("$dies #dies");
+        CREDO_FALSUM(iussum_nexus_ad_locum(&tabula, ZEPHYRUM, ZEPHYRUM,
+            piscina, &x));
+        CREDO_FALSUM(ad(VI, &x));
+        CREDO_FALSUM(iussum_nexus_ad_locum(NIHIL, ZEPHYRUM, ZEPHYRUM,
+            piscina, &x));
+        CREDO_FALSUM(iussum_nexus_proximus(&tabula, I, ZEPHYRUM,
+            piscina,
+            &x));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
     redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;

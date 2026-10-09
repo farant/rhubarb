@@ -142,3 +142,15 @@ written when present (one attribute read per event otherwise).
 `chorda_nulla()` is not declared in chorda.h (dispensator gets it from
 elsewhere) - the examen caught the implicit declaration; a local empty
 chorda does the job.
+
+## 2026-10-09 - S3d-1: links
+
+`paginam_mutare` became `paginam_ponere(novum, linea, columna)` + the
++-1 step, so links reuse the page switch and can land the cursor on a
+tag. Tag cycle searches OTHER pages only: including the viewed page
+(as the last stop of the wrap) made a tag present only here "found",
+so the user got no message - caught by the first test run. Pages are
+opened lazily by the search (scriba_liber_pagina), committed text
+only; the click flushes the pending gesture first, so the viewed
+page's own edits are in. Links need the page book (standalone scriba:
+no colour, no follow).

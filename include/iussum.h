@@ -59,6 +59,29 @@ iussum_proximum (
                        Piscina* piscina,
                         Iussum* exitus);
 
+/* ---- Nexus (S3d): '#verbum' ---- */
+
+/* nexus '#verbum' ('[a-z0-9_-]+'; ante: initium lineae aut character
+ * non verbalis); argumenta nulla - Iussum idem, verbum sine '#'. Omnis
+ * nexus nexus est (non solum noti): tags ('#notae') per paginas
+ * cycli, '#3' pagina id III, '#next' '#prev' '#first' '#last'. */
+b32
+iussum_nexus_ad_locum (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  columna,
+                       Piscina* piscina,
+                        Iussum* exitus);
+
+/* nexus proximus in linea cuius '#' a columna data aut post iacet */
+b32
+iussum_nexus_proximus (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  a_columna,
+                       Piscina* piscina,
+                        Iussum* exitus);
+
 /* ---- Registrum (S3b): verba nota et quid faciunt ---- */
 
 nomen structura IussumRegistrum IussumRegistrum;   /* opacum */
