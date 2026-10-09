@@ -19,6 +19,10 @@ Leges chartae:
 
 ## inedita
 
+- corpus: fons 6x8 - XL glyphae Latin-1 olim vacuae (× © ® ¹ ³ ¾,
+  capitales accentuatae, ã õ ø ý þ ð...); sedes vacua nunc TOFU, non
+  invisibilis.
+
 - corpus: `exemplaria` nova (exemplaria classica Mac 8x8, ex delineare
   translata; enum EXEMPLAR_* nunc ibi). `Mandatum.exemplar` et
   `mandata_rectangulum_exemplar` (rectangulum exemplari impletum).
