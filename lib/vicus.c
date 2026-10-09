@@ -618,15 +618,13 @@ radicem_tractare (
       constans Eventus* ev,
                 vacuum* ctx)
 {
-     Vicus* v;
-    chorda* prior;
-       s32  r;
-       b32  pendens;
+          Vicus* v;
+         chorda* prior;
+            s32  r;
+            b32  pendens;
+     VicusLatus* l;
 
-    (vacuum)repo;
-    (vacuum)motus;
     (vacuum)destinatio;
-    (vacuum)nodus;
     v = (Vicus*)ctx;
     si (!ev || !v)
     {
@@ -641,7 +639,18 @@ radicem_tractare (
     }
     si (ev->genus == EVENTUS_MUS_DEPRESSUS)
     {
-        redde latus_ictu_focare(v, ev);
+        si (!latus_ictu_focare(v, ev))
+        {
+            redde FALSUM;
+        }
+        /* ictus primus etiam agit si latus vult (scriba: iussum) */
+        l = vicus_latus_focatum(v);
+        si (l && l->montata && l->facies.ictus_primus)
+        {
+            (vacuum)l->facies.ictus_primus(l->facies.ictus_primus_ctx,
+                repo, motus, nodus, ev);
+        }
+        redde VERUM;
     }
     pendens = praefixum_pendet(v);
     si (est_imperium_a(ev))

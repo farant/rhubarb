@@ -265,6 +265,52 @@ scribam_pulsare (
     redde p;
 }
 
+/* ictus primus (Franus): ictus qui latus scribae focat iussum sub se
+ * statim currit - ut si latus iam focatum esset. Pagina in spatio
+ * lateris quaeritur (arbor composita); ictus extra iussum focat
+ * solum */
+interior b32
+scribae_ictus_primus (
+                 vacuum* ctx,
+     InsulaRepositorium* repo,
+                  Motus* motus,
+              Componens* arbor,
+       constans Eventus* ev)
+{
+    ScribaMontatio* m;
+         Componens* pagina;
+           Punctum  p;
+            chorda  prior;
+               b32  actum;
+
+    m = (ScribaMontatio*)ctx;
+    si (   !m || !arbor || ev->genus != EVENTUS_MUS_DEPRESSUS
+        || ev->datum.mus.botton != MUS_SINISTER)
+    {
+        redde FALSUM;
+    }
+    pagina = componens_invenire_in_spatio(arbor, m->ramus.id,
+        chorda_ex_literis("pagina", m->actiones_ctx.doc->piscina));
+    p.x = ev->datum.mus.x;
+    p.y = ev->datum.mus.y;
+    si (   !pagina
+        || !scriba_iussum_ad_punctum(&m->actiones_ctx, pagina, p))
+    {
+        redde FALSUM;
+    }
+    /* scriptor = actio paginae: domini status scribae (cursor, modus,
+     * nuntius) 'pagina.clavis' solum admittunt - intra tractatorem
+     * radicis vici scriptor alius est et scripturae tacite
+     * recusarentur */
+    prior = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("pagina.clavis",
+        m->actiones_ctx.doc->piscina));
+    actum = scriba_pagina_clavis(repo, motus, NIHIL, pagina, ev,
+        &m->actiones_ctx);
+    insula_scriptorem_ponere(repo, prior);
+    redde actum;
+}
+
 interior vacuum
 scribam_describere (
          vacuum* montatio,
@@ -272,15 +318,17 @@ scribam_describere (
 {
     ScribaMontatio* m;
 
-    m                 = (ScribaMontatio*)montatio;
-    f->actiones       = m->actiones;
-    f->figurae        = m->figurae;
-    f->componere      = scriba_componere;
-    f->componere_ctx  = &m->compositio;
-    f->gestum_ponere  = scribae_gestum;
-    f->gestum_ctx     = m;
-    f->pulsare        = scribam_pulsare;
-    f->pulsare_ctx    = m;
+    m                    = (ScribaMontatio*)montatio;
+    f->actiones          = m->actiones;
+    f->figurae           = m->figurae;
+    f->componere         = scriba_componere;
+    f->componere_ctx     = &m->compositio;
+    f->gestum_ponere     = scribae_gestum;
+    f->gestum_ctx        = m;
+    f->pulsare           = scribam_pulsare;
+    f->pulsare_ctx       = m;
+    f->ictus_primus      = scribae_ictus_primus;
+    f->ictus_primus_ctx  = m;
 }
 
 interior b32

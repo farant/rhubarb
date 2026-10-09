@@ -389,6 +389,18 @@ EXEMPLAR_FOCI in scriba_figurae.c / pictor_figurae.c - sparser:
 CINEREUM_LEVE, RARISSIMUS). Goldens promoted: pictor.arbor (titulus),
 pictor_prima specimen (dots in the surround only). Nine plants caught.
 
+One-click commands (Fran 2026-10-09: "a click on a command should
+execute and run the command in one step"): `VicusFacies.ictus_primus`
+- after the root handler focuses a pane, the pane may act on the same
+click; scriba's hook (vicus_applicatio) finds its `pagina` in its own
+scope and, if `scriba_iussum_ad_punctum` says a known command is under
+the point, runs the normal page handler. Plain text and pictor still
+only focus on the first click (Fran: cursor placement might join
+later). Trap found by a test: inside the vicus root handler the repo's
+writer is `vicus.radix`, and scriba's domini let only `pagina.clavis`
+write cursor/mode/message - those writes were silently refused (the
+document edit still worked); the hook sets the writer for the call.
+
 ## AUDIENDA
 
 - **vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader**: tmux

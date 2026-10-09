@@ -34,8 +34,8 @@
 hic_manens Piscina*             piscina;
 hic_manens InternamentumChorda* intern;
 
-/* ictus in cellulam paginae sinistrae; latus sinistrum non focatum:
- * ictus primus solum focat */
+/* ictus UNUS in cellulam paginae sinistrae: latus non focatum focat
+ * et iussum sub ictu statim currit (Franus) */
 interior vacuum
 ictus (
          Vicus* v,
@@ -43,17 +43,9 @@ ictus (
            s32  linea,
            s32  columna)
 {
-    s32 x;
-    s32 y;
-
-    x = VI + columna * VI + III;
-    y = VICUS_ALTITUDO_TABULARUM + VIII + linea * VIII + IV;
-    si (vicus_latus_focatum(v) != vicus_latus(vicus_activa(v),
-            VICUS_SINISTRUM))
-    {
-        (vacuum)manus_ludus_premere_ad(m, x, y);
-    }
-    (vacuum)manus_ludus_premere_ad(m, x, y);
+    (vacuum)v;
+    (vacuum)manus_ludus_premere_ad(m, VI + columna * VI + III,
+        VICUS_ALTITUDO_TABULARUM + VIII + linea * VIII + IV);
 }
 
 interior i32

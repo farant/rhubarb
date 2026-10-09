@@ -576,19 +576,18 @@ paginam_mutare (
         doc);
 }
 
-/* S3a: cellula icta ex fines nodi (folium in pixelis) / folium,
- * praecisa ad folium; FALSUM si nodus folio minor */
+/* S3a: cellula sub puncto schirmi ex fines nodi (folium in pixelis)
+ * / folium, praecisa ad folium; FALSUM si nodus folio minor */
 interior b32
 cellulam_ictam (
         constans ScribaActiones* sa,
              constans Componens* nodus,
-               constans Eventus* ev,
+                        Punctum  p,
                             s32* linea,
                             s32* columna)
 {
-    Punctum p;
-        s32 cw;
-        s32 ch;
+    s32 cw;
+    s32 ch;
 
     cw = nodus->fines.latitudo / (s32)sa->laboris.latitudo;
     ch = nodus->fines.altitudo / (s32)sa->laboris.altitudo;
@@ -596,8 +595,6 @@ cellulam_ictam (
     {
         redde FALSUM;
     }
-    p.x       = ev->datum.mus.x;
-    p.y       = ev->datum.mus.y;
     p         = destinatio_ad_locale(nodus, p);
     *columna  = p.x < ZEPHYRUM ? ZEPHYRUM : p.x / cw;
     *linea    = p.y < ZEPHYRUM ? ZEPHYRUM : p.y / ch;
@@ -771,6 +768,25 @@ iussum_exsequi (
         ? sub.columna : (s32)sa->laboris.latitudo - I);
 }
 
+b32
+scriba_iussum_ad_punctum (
+            ScribaActiones* sa,
+        constans Componens* pagina,
+                   Punctum  schirmi)
+{
+    Iussum iussum;
+       s32 linea;
+       s32 columna;
+
+    si (   !sa || !sa->iussa || !pagina || !sa->doc
+        || !cellulam_ictam(sa, pagina, schirmi, &linea, &columna))
+    {
+        redde FALSUM;
+    }
+    redde iussum_ad_locum(&sa->laboris, linea, columna,
+        iussum_registrum_notum, sa->iussa, sa->doc->piscina, &iussum);
+}
+
 /* <tractator/> */
 b32
 scriba_pagina_clavis (
@@ -791,6 +807,7 @@ scriba_pagina_clavis (
                 s32  linea;
                 s32  columna;
              Iussum  iussum;
+            Punctum  punctum;
 
     (vacuum)destinatio;
     sa = (ScribaActiones*)ctx;
@@ -815,7 +832,9 @@ scriba_pagina_clavis (
         {
             redde FALSUM;
         }
-        si (!cellulam_ictam(sa, nodus, ev, &linea, &columna))
+        punctum.x = ev->datum.mus.x;
+        punctum.y = ev->datum.mus.y;
+        si (!cellulam_ictam(sa, nodus, punctum, &linea, &columna))
         {
             redde FALSUM;
         }

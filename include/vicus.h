@@ -97,6 +97,14 @@ nomen structura {
        VicusPulsator  pulsare;        /* NIHIL = non vivit */
               vacuum* pulsare_ctx;
                  b32  vivit_in_fundo; /* pulsatur etiam non activa */
+    /* ictus qui latus focat etiam agit, si latus vult (Franus: iussum
+     * uno ictu). Post focum mutatum vocatur (motus iam lateri
+     * aptatus); arbor = arbor composita. VERUM = actum. NIHIL = ictus
+     * primus focat solum. */
+                 b32  (*ictus_primus)(vacuum* ctx,
+                          InsulaRepositorium* repo, Motus* motus,
+                          Componens* arbor, constans Eventus* ev);
+              vacuum* ictus_primus_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(

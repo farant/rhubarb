@@ -359,3 +359,16 @@ their derived ids. Moving a pane to the front copies VicusLatus
 structs within the Xar; nothing outside holds VicusLatus pointers
 across a pulse (Motus keeps the branch by value and the montatio
 pointer, which does not move).
+
+## 2026-10-09 - first click runs commands (ictus_primus)
+
+A pane can act on the click that focused it (`VicusFacies.ictus_primus`,
+called from the root handler after `vicus_focum_ponere`, so Motus is
+already the pane's). Lesson: when a pane's handler is called from
+INSIDE another action, the repository's writer is that other action
+(`vicus.radix`), and the pane's domini refuse its writes WITHOUT an
+error - the date was inserted (document commit) but cursor and message
+silently stayed. Any hook that calls into a pane's action must set the
+writer to that action's name for the call (scribae_ictus_primus does).
+A test only caught it after its text was changed so the cursor would
+actually move - the original assertion passed by coincidence.

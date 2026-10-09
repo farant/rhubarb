@@ -94,4 +94,14 @@ scriba_pagina_clavis (
       constans Eventus* ev,
                 vacuum* ctx);
 
+/* iussum notum sub puncto schirmi in pagina (componens 'pagina'
+ * compositus)? FALSUM sine iussis. Hospes ictum primum (latus nondum
+ * focatum) ita iudicat: iussum uno ictu currit (vicus-latera,
+ * Franus) */
+b32
+scriba_iussum_ad_punctum (
+            ScribaActiones* sa,
+        constans Componens* pagina,
+                   Punctum  schirmi);
+
 #endif /* SCRIBA_ACTIONES_H */

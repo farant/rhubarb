@@ -10,7 +10,8 @@
  * nuntius erroris in linea status (arbor, pixela colore erroris),
  * praecisus ante indicem paginae; clavis proxima et ictus proximus
  * tollunt. VII: '$dies(-1)', '$dies(7)'; '$dies(1, 2)' error; verbum
- * FALSUM sine errore -> "<verbum>: defecit". */
+ * FALSUM sine errore -> "<verbum>: defecit". VIII: ictus primus in
+ * latus non focatum iussum statim currit; extra iussum focat solum. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -377,6 +378,31 @@ s32 principale (vacuum)
     ictus(m, VII, XIV);
     CREDO_VERUM(linea_est(sin, VII, "$dies(1, 2) $frange"));
     CREDO_VERUM(nuntius_est(v, sin, "frange: defecit"));
+
+    imprimere("\n--- VIII: ictus primus - iussum uno ictu ---\n");
+    ictus(m, IX, ZEPHYRUM);
+    CREDO_VERUM(manus_ludus_scribere(m, "i$dies $foo xyz"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    /* dexter focatus; ictus UNUS in '$dies' sinistri: focat, currit */
+    CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), XIV);
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    dispensator_recomponere(app.d);
+    ictus(m, IX, II);
+    CREDO_VERUM(vicus_latus_focatum(v)
+        == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
+    dies_textus(ZEPHYRUM, hodie);
+    strcat(hodie, " $foo xyz");
+    CREDO_VERUM(linea_est(sin, IX, hodie));
+    /* status scribae scriptus (domini: scriptor pagina.clavis) */
+    CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), X);
+    /* ictus primus extra iussum ('$foo' ignotum): focat solum */
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    dispensator_recomponere(app.d);
+    ictus(m, IX, XII);
+    CREDO_VERUM(vicus_latus_focatum(v)
+        == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
+    CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), X);
+    CREDO_VERUM(linea_est(sin, IX, hodie));
 
     imprimere("\n");
     credo_imprimere_compendium();
