@@ -41,6 +41,10 @@ for f in "${FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
+# manifesta familiae TOTIUS ante binarium primum (digestum actionis
+# 'canon' utrumque poscit - arbor frigida, quaestio …J3108ZW6)
+"$SCRIPT_DIR/provenientia_obiectum.sh" -familia tools/canon_examen.c \
+    tools/canon_coquere.c || exit 1
 PROV_OBJ="$("$SCRIPT_DIR/provenientia_obiectum.sh" canon_examen bin/canon_examen tools/canon_examen.c canon)" || exit 1
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SCRIPT_DIR/canon_examen.c" \
