@@ -954,7 +954,9 @@ probatio_comparatio_sui(Piscina* p)
         p), inf, p)), 0);
 }
 
-/* fumus: lib/vates_responsum.norma contra specimina vatis commissa */
+/* fumus: lib/vates_responsum.norma contra specimina vatis commissa -
+ * schema omnem variationem commissam declarat (2026-10-09, ex captura):
+ * specimen cum bloco novo sine schemate renovato hic rubet */
 interior vacuum
 probatio_comparatio_vatis(Piscina* p)
 {
@@ -981,7 +983,7 @@ probatio_comparatio_vatis(Piscina* p)
     r = norma_comparare(norma_stml_quaerere(&l, "responsum"), inf, p);
     CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NUMQUAM_VISA,
         "$.content[]", p));
-    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA,
+    CREDO_FALSUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA,
         "$.content[]", p));
 }
 
