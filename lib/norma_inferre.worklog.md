@@ -105,3 +105,28 @@
   - correct, slightly noisy (deferred minor).
 - Plants (red): presence +1; (stml) comment after the element; '--' not
   refused.
+
+## 2026-10-09 - drift: norma_comparare + bin/norma comparare (norma-spec-4 B2.2)
+
+- The walk compares the declared schema with the inferred SHAPES (which
+  have counts), not with the inferred draft: object fields (never seen /
+  required but absent / optional but always present / undeclared),
+  genera outside the declared one (integer under numerus fine, anything
+  under liberum fine), null where not aut_nullum, discriminators via the
+  live candidate on the declared key (each declared variant against ITS
+  partition with the tag omitted; undeclared partitions reported; no live
+  candidate -> NON_COMPARABILE, no descent), array elements.
+- Paths mirror the judge's (`.k` simple, else `["k"]` JSON-escaped; array
+  element `[]`) - a static copy of norma.c's rule, noted as duplication.
+- Law: samples against their own inferred draft = no discrepancy
+  (asserted; also by hand on the vates pile: exit 0).
+- First real report, lib/vates_responsum.norma vs the committed
+  specimens: variants tool_use / thinking / redacted_thinking never seen,
+  server_tool_use undeclared, citations never seen, stop_sequence and the
+  cache_creation fields optional-but-always-present - coverage gaps of
+  the specimen set, exactly what this is for.
+- Plants (red): FORTASSE_REQUISITUM never raised; variant compared to the
+  whole shape (foreign variant fields became NON_DECLARATUM); children
+  compared against the parent shape.
+- Minor (deferred): a finding inside a variant names the path but not
+  the variant ("$.content[].citations").

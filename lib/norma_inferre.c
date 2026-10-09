@@ -1527,3 +1527,380 @@ inferentia_normam (
     redde _figuram_normam(inferentia, NIHIL, inferentia->radix,
         piscina);
 }
+
+
+/* ====================================================================
+ * E. DISCREPANTIA (norma-spec-4 §IV): schema declaratum ambulat iuxta
+ * figuras exemplorum - numeri, numquam valores
+ * ==================================================================== */
+
+nomen structura {
+    Piscina* p;
+        Xar* inventa;   /* NormaDiscrepantia */
+} Comparator;
+
+/* via clavis: forma iudicis (lib/norma.c _via_clavis) - '.k' si
+ * simplex, aliter '["k"]' cum effugio JSON */
+interior chorda
+_via_clavis_comparatoris (
+     chorda  via,
+     chorda  clavis,
+    Piscina* p)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(p,
+        (memoriae_index)(via.mensura + clavis.mensura + VIII));
+                   b32 simplex = clavis.mensura > 0;
+                   i32 i;
+
+    per (i = 0; i < clavis.mensura && simplex; i++)
+    {
+        character k = (character)clavis.datum[i];
+
+        simplex = (k >= 'a' && k <= 'z') || (k >= 'A' && k <= 'Z')
+            || k == '_' || (i > 0 && k >= '0' && k <= '9');
+    }
+    chorda_aedificator_appendere_chorda(a, via);
+    si (simplex)
+    {
+        chorda_aedificator_appendere_character(a, '.');
+        chorda_aedificator_appendere_chorda(a, clavis);
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(a, "[\"");
+        chorda_aedificator_appendere_evasus_json(a, clavis);
+        chorda_aedificator_appendere_literis(a, "\"]");
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior chorda
+_via_addere (
+                  chorda  via,
+      constans character* cauda,
+                 Piscina* p)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(p,
+        (memoriae_index)via.mensura + VIII);
+
+    chorda_aedificator_appendere_chorda(a, via);
+    chorda_aedificator_appendere_literis(a, cauda);
+    redde chorda_aedificator_finire(a);
+}
+
+interior vacuum
+_discrepantiam_addere (
+                Comparator* c,
+                    chorda  via,
+    NormaDiscrepantiaGenus  genus,
+        constans character* nuntius)
+{
+    NormaDiscrepantia* d = (NormaDiscrepantia*)xar_addere(c->inventa);
+
+    d->via      = via;
+    d->genus    = genus;
+    d->nuntius  = chorda_ex_literis(nuntius, c->p);
+}
+
+interior b32
+_genus_licitum (
+    NormaGenus declaratum,
+           i32 visum)
+{
+    commutatio (declaratum)
+    {
+        casus NORMA_LIBERUM:    redde VERUM;
+        casus NORMA_NULLUM:     redde visum == JSON_NULLUM;
+        casus NORMA_BOOLEAN:    redde visum == JSON_BOOLEAN;
+        casus NORMA_INTEGER:    redde visum == JSON_INTEGER;
+        casus NORMA_NUMERUS:    redde visum == JSON_INTEGER
+                                      || visum == JSON_FLUITANS;
+        casus NORMA_TEXTUS:     redde visum == JSON_CHORDA;
+        casus NORMA_TABULATUM:  redde visum == JSON_TABULATUM;
+        casus NORMA_OBJECTUM:
+        casus NORMA_DISCRIMEN:  redde visum == JSON_OBJECTUM;
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_comparare (
+         Comparator* c,
+     constans Norma* d,
+    constans Figura* f,
+             chorda  via,
+    constans chorda* omittere);
+
+interior vacuum
+_objecta_comparare (
+          Comparator* c,
+      constans Norma* d,
+     constans Figura* f,
+              chorda  via,
+     constans chorda* omittere)
+{
+    NormaVisus v        = norma_visus(d);
+           i32 objecta  = f->genera[JSON_OBJECTUM];
+           i32 i;
+           i32 k;
+     character nuntius[CXXVIII];
+
+    per (i = 0; v.campi && i < xar_numerus(v.campi); i++)
+    {
+          NormaCampus* dc = (NormaCampus*)xar_obtinere(v.campi, i);
+        CampusFigurae* fc = NIHIL;
+                  i32  visum;
+               chorda  via_campi = _via_clavis_comparatoris(via,
+                   dc->titulus,
+                   c->p);
+
+        per (k = 0; k < xar_numerus(f->campi) && !fc; k++)
+        {
+            CampusFigurae* x = (CampusFigurae*)xar_obtinere(f->campi,
+                k);
+
+            si (chorda_aequalis(x->titulus, dc->titulus))
+            {
+                fc = x;
+            }
+        }
+        visum = fc ? fc->praesentia : 0;
+        sprintf(nuntius, "visum %u/%u", (insignatus integer)visum,
+            (insignatus integer)objecta);
+        si (visum == 0)
+        {
+            _discrepantiam_addere(c, via_campi,
+                NORMA_DISCREPANTIA_NUMQUAM_VISUM, nuntius);
+            perge;
+        }
+        si (dc->requiritur && visum < objecta)
+        {
+            _discrepantiam_addere(c, via_campi,
+                NORMA_DISCREPANTIA_REQUISITUM_ABSENS, nuntius);
+        }
+        si (!dc->requiritur && visum == objecta)
+        {
+            _discrepantiam_addere(c, via_campi,
+                NORMA_DISCREPANTIA_FORTASSE_REQUISITUM, nuntius);
+        }
+        _comparare(c, dc->valor, fc->figura, via_campi, NIHIL);
+    }
+    per (k = 0; k < xar_numerus(f->campi); k++)
+    {
+        CampusFigurae* x = (CampusFigurae*)xar_obtinere(f->campi, k);
+                  b32  declaratum = FALSUM;
+
+        si (omittere && chorda_aequalis(x->titulus, *omittere))
+        {
+            perge;   /* tag variationis implicite declaratur */
+        }
+        per (i = 0; v.campi && i < xar_numerus(v.campi)
+            && !declaratum; i++)
+        {
+            declaratum = chorda_aequalis(x->titulus,
+                ((NormaCampus*)xar_obtinere(v.campi, i))->titulus);
+        }
+        si (!declaratum && x->praesentia > 0)
+        {
+            sprintf(nuntius, "visum %u/%u",
+                (insignatus integer)x->praesentia,
+                (insignatus integer)objecta);
+            _discrepantiam_addere(c, _via_clavis_comparatoris(via,
+                x->titulus, c->p), NORMA_DISCREPANTIA_NON_DECLARATUM,
+                nuntius);
+        }
+    }
+}
+
+interior vacuum
+_discrimen_comparare (
+          Comparator* c,
+      constans Norma* d,
+     constans Figura* f,
+              chorda  via)
+{
+                        NormaVisus  v     = norma_visus(d);
+    constans CandidatusDiscriminis* cand  = NIHIL;
+                               i32  i;
+                               i32  k;
+                         character  nuntius[CXXVIII];
+
+    per (i = 0; i < xar_numerus(f->candidati) && !cand; i++)
+    {
+        constans CandidatusDiscriminis* x = (CandidatusDiscriminis*)
+            xar_obtinere(f->candidati, i);
+
+        si (   x->vivus
+            && chorda_aequalis(x->clavis, v.clavis_discriminis))
+        {
+            cand = x;
+        }
+    }
+    si (!cand)
+    {
+        sprintf(nuntius,
+            "clavis '%.*s' non candidatus (deest, non textus,"
+            " aut valores plures quam %u)",
+            (integer)(v.clavis_discriminis.mensura > LX ? LX
+                      : v.clavis_discriminis.mensura),
+            (constans character*)v.clavis_discriminis.datum, XVI);
+        _discrepantiam_addere(c, via,
+            NORMA_DISCREPANTIA_NON_COMPARABILE,
+            nuntius);
+        redde;
+    }
+    per (i = 0; v.variationes && i < xar_numerus(v.variationes); i++)
+    {
+        NormaVariatio* va = (NormaVariatio*)xar_obtinere(v.variationes,
+            i);
+        constans ValorDiscriminis* vd = NIHIL;
+
+        per (k = 0; k < xar_numerus(cand->valores) && !vd; k++)
+        {
+            constans ValorDiscriminis* x =
+                (ValorDiscriminis*)xar_obtinere(
+                cand->valores, k);
+
+            si (chorda_aequalis(x->valor, va->valor))
+            {
+                vd = x;
+            }
+        }
+        si (!vd)
+        {
+            sprintf(nuntius, "variatio '%.*s': visa 0",
+                (integer)(va->valor.mensura
+                    > LX ? LX : va->valor.mensura),
+                (constans character*)va->valor.datum);
+            _discrepantiam_addere(c, via,
+                NORMA_DISCREPANTIA_VARIATIO_NUMQUAM_VISA, nuntius);
+            perge;
+        }
+        /* variatio contra partitionem SUAM, tag omisso */
+        _objecta_comparare(c, va->objectum, vd->figura, via,
+            &v.clavis_discriminis);
+    }
+    per (k = 0; k < xar_numerus(cand->valores); k++)
+    {
+        constans ValorDiscriminis* x = (ValorDiscriminis*)xar_obtinere(
+            cand->valores, k);
+                               b32 declarata = FALSUM;
+
+        per (i = 0; v.variationes && i < xar_numerus(v.variationes)
+            && !declarata; i++)
+        {
+            declarata = chorda_aequalis(x->valor, ((NormaVariatio*)
+                xar_obtinere(v.variationes, i))->valor);
+        }
+        si (!declarata)
+        {
+            sprintf(nuntius, "variatio '%.*s': visa %u",
+                (integer)(x->valor.mensura
+                    > LX ? LX : x->valor.mensura),
+                (constans character*)x->valor.datum,
+                (insignatus integer)x->instantiae);
+            _discrepantiam_addere(c, via,
+                NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA, nuntius);
+        }
+    }
+}
+
+interior vacuum
+_comparare (
+          Comparator* c,
+      constans Norma* d,
+     constans Figura* f,
+              chorda  via,
+     constans chorda* omittere)
+{
+    NormaVisus v = norma_visus(d);
+           i32 g;
+     character nuntius[CXXVIII];
+
+    si (!d || !f || f->instantiae == 0)
+    {
+        redde;
+    }
+    per (g = JSON_BOOLEAN; g <= JSON_OBJECTUM; g++)
+    {
+        si (f->genera[g] > 0 && !_genus_licitum(v.genus, g))
+        {
+            sprintf(nuntius, "genus visum %s %u/%u", _genera_nomina[g],
+                (insignatus integer)f->genera[g],
+                (insignatus integer)f->instantiae);
+            _discrepantiam_addere(c, via,
+                NORMA_DISCREPANTIA_GENUS_LATIUS,
+                nuntius);
+        }
+    }
+    si (   f->genera[JSON_NULLUM] > 0 && !v.aut_nullum
+        && v.genus != NORMA_NULLUM && v.genus != NORMA_LIBERUM)
+    {
+        sprintf(nuntius, "null visum %u/%u",
+            (insignatus integer)f->genera[JSON_NULLUM],
+            (insignatus integer)f->instantiae);
+        _discrepantiam_addere(c, via, NORMA_DISCREPANTIA_NULLUM_NOVUM,
+            nuntius);
+    }
+    si (v.genus == NORMA_OBJECTUM && f->genera[JSON_OBJECTUM] > 0)
+    {
+        _objecta_comparare(c, d, f, via, omittere);
+    }
+    alioquin si (   v.genus == NORMA_DISCRIMEN
+                 && f->genera[JSON_OBJECTUM] > 0)
+    {
+        _discrimen_comparare(c, d, f, via);
+    }
+    alioquin si (v.genus == NORMA_TABULATUM && f->elementum)
+    {
+        _comparare(c, v.elementum, f->elementum, _via_addere(via, "[]",
+            c->p), NIHIL);
+    }
+}
+
+Xar*
+norma_comparare (
+         constans Norma* declarata,
+    constans Inferentia* inferentia,
+                Piscina* piscina)
+{
+    Comparator c;
+
+    si (!declarata || !inferentia || !piscina)
+    {
+        redde NIHIL;
+    }
+    c.p        = piscina;
+    c.inventa  = xar_creare(piscina, (i32)magnitudo(NormaDiscrepantia));
+    _comparare(&c, declarata, inferentia->radix, chorda_ex_literis("$",
+        piscina), NIHIL);
+    redde c.inventa;
+}
+
+constans character*
+norma_discrepantia_descriptio (
+    NormaDiscrepantiaGenus genus)
+{
+    commutatio (genus)
+    {
+        casus NORMA_DISCREPANTIA_FORTASSE_REQUISITUM:
+            redde "FORTASSE_REQUISITUM";
+        casus NORMA_DISCREPANTIA_REQUISITUM_ABSENS:
+            redde "REQUISITUM_ABSENS";
+        casus NORMA_DISCREPANTIA_NUMQUAM_VISUM:
+            redde "NUMQUAM_VISUM";
+        casus NORMA_DISCREPANTIA_NON_DECLARATUM:
+            redde "NON_DECLARATUM";
+        casus NORMA_DISCREPANTIA_GENUS_LATIUS:
+            redde "GENUS_LATIUS";
+        casus NORMA_DISCREPANTIA_NULLUM_NOVUM:
+            redde "NULLUM_NOVUM";
+        casus NORMA_DISCREPANTIA_VARIATIO_NUMQUAM_VISA:
+            redde "VARIATIO_NUMQUAM_VISA";
+        casus NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA:
+            redde "VARIATIO_NON_DECLARATA";
+        casus NORMA_DISCREPANTIA_NON_COMPARABILE:
+            redde "NON_COMPARABILE";
+    }
+    redde "IGNOTUM";
+}

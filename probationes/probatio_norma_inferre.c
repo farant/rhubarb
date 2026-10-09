@@ -11,6 +11,7 @@
 #include "chorda_aedificator.h"
 #include "herbarium.h"
 #include "norma_stml.h"
+#include "filum.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -781,6 +782,209 @@ probatio_testimonia(Piscina* p)
     CREDO_FALSUM(chorda_continet(s, chorda_ex_literis("SECRETUM", p)));
 }
 
+/* ---- norma-spec-4 B2.2: discrepantia ---- */
+
+/* discrepantiae declaratae contra exempla */
+interior Xar*
+_comparatio (
+              Norma* declarata,
+    constans character* constans* exempla,
+              Piscina* p)
+{
+    redde norma_comparare(declarata, _inferentia(exempla, p), p);
+}
+
+/* inventum (genus, via) inter discrepantias - tacite */
+interior b32
+_invenitur (
+                       Xar* d,
+    NormaDiscrepantiaGenus  genus,
+        constans character* via)
+{
+    i32 i;
+
+    per (i = 0; i < xar_numerus(d); i++)
+    {
+        NormaDiscrepantia* x = (NormaDiscrepantia*)xar_obtinere(d, i);
+
+        si (x->genus == genus && chorda_aequalis_literis(x->via, via))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* inventum (genus, via) inter discrepantias; nuntium imprimit si deest */
+interior b32
+_habet (
+                       Xar* d,
+    NormaDiscrepantiaGenus  genus,
+        constans character* via,
+                   Piscina* p)
+{
+    i32 i;
+
+    (vacuum)p;
+    per (i = 0; i < xar_numerus(d); i++)
+    {
+        NormaDiscrepantia* x = (NormaDiscrepantia*)xar_obtinere(d, i);
+
+        si (x->genus == genus && chorda_aequalis_literis(x->via, via))
+        {
+            redde VERUM;
+        }
+    }
+    imprimere("  deest %s %s; inventa:\n",
+        norma_discrepantia_descriptio(genus),
+        via);
+    per (i = 0; i < xar_numerus(d); i++)
+    {
+        NormaDiscrepantia* x = (NormaDiscrepantia*)xar_obtinere(d, i);
+
+        imprimere("    %.*s %s %.*s\n", (integer)x->via.mensura,
+            (constans character*)x->via.datum,
+            norma_discrepantia_descriptio(x->genus),
+            (integer)x->nuntius.mensura,
+            (constans character*)x->nuntius.datum);
+    }
+    redde FALSUM;
+}
+
+interior i32
+_numerus_generis (
+                       Xar* d,
+    NormaDiscrepantiaGenus  genus)
+{
+    i32 i;
+    i32 n = 0;
+
+    per (i = 0; i < xar_numerus(d); i++)
+    {
+        si (((NormaDiscrepantia*)xar_obtinere(d, i))->genus == genus)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior vacuum
+probatio_discrepantia(Piscina* p)
+{
+    constans character* constans campi[] = {
+        "{\"a\":1,\"b\":\"x\",\"c\":\"y\",\"e\":1,\"a.b\":1}",
+        "{\"a\":2.5,\"b\":\"z\",\"n\":null}", NIHIL };
+    constans character* constans bloci[] = {
+        "{\"type\":\"text\",\"text\":\"a\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t1\"}",
+        "{\"type\":\"text\",\"text\":\"b\"}",
+        "{\"type\":\"tool_use\",\"id\":\"t2\"}", NIHIL };
+    constans character* constans sine_tag[] = {
+        "{\"type\":\"text\",\"text\":\"a\"}", "{\"text\":\"b\"}",
+            NIHIL };
+    constans character* constans tabulata[] = {
+        "[{\"k\":1,\"l\":2}]", "[{\"k\":3}]", NIHIL };
+    Norma* o = norma_objectum(p);
+    Norma* d;
+    Norma* t;
+    Norma* x;
+      Xar* r;
+
+    imprimere("\n--- Probans discrepantias ---\n");
+    norma_campus(o, "a", norma_integer(p), VERUM);
+    norma_campus(o, "b", norma_textus(p), FALSUM);
+    norma_campus(o, "c", norma_textus(p), VERUM);
+    norma_campus(o, "d", norma_boolean(p), FALSUM);
+    norma_campus(o, "n", norma_textus(p), FALSUM);
+    norma_campus(o, "a.b", norma_integer(p), FALSUM);
+    r = _comparatio(o, campi, p);
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_GENUS_LATIUS, "$.a", p));
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_FORTASSE_REQUISITUM, "$.b",
+        p));
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_REQUISITUM_ABSENS, "$.c",
+        p));
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_NUMQUAM_VISUM, "$.d", p));
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_NON_DECLARATUM, "$.e", p));
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_NULLUM_NOVUM, "$.n", p));
+    /* via clavis rarae: forma iudicis */
+    CREDO_AEQUALIS_I32(_numerus_generis(r,
+        NORMA_DISCREPANTIA_NON_DECLARATUM), I);
+    CREDO_FALSUM(_invenitur(r, NORMA_DISCREPANTIA_NUMQUAM_VISUM,
+        "$[\"a.b\"]"));
+    CREDO_VERUM(_invenitur(r, NORMA_DISCREPANTIA_FORTASSE_REQUISITUM,
+        "$[\"a.b\"]") == FALSUM);
+    /* discrimen: variationes contra partitiones */
+    d = norma_discrimen(p, "type");
+    t = norma_objectum(p);
+    x = norma_objectum(p);
+    norma_campus(t, "text", norma_textus(p), VERUM);
+    norma_campus(x, "thinking", norma_textus(p), VERUM);
+    norma_variatio(d, "text", t);
+    norma_variatio(d, "thinking", x);
+    r = norma_comparare(d, _inferentia(bloci, p), p);
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NUMQUAM_VISA, "$",
+        p));
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA,
+        "$",
+        p));
+    /* variatio 'text' contra partitionem suam solam: 'id' alienum non
+     * 'non declaratum' */
+    CREDO_AEQUALIS_I32(_numerus_generis(r,
+        NORMA_DISCREPANTIA_NON_DECLARATUM), 0);
+    /* tag non candidatus */
+    r = norma_comparare(d, _inferentia(sine_tag, p), p);
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_NON_COMPARABILE, "$", p));
+    /* tabulatum: via elementi */
+    r = norma_comparare(norma_tabulatum(p,
+        norma_campus(norma_objectum(p),
+        "k", norma_integer(p), VERUM)), _inferentia(tabulata, p), p);
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_NON_DECLARATUM, "$[].l",
+        p));
+}
+
+/* lex: exempla contra adumbrationem suam = nulla discrepantia */
+interior vacuum
+probatio_comparatio_sui(Piscina* p)
+{
+    Inferentia* inf = _inferentia(_corpus, p);
+
+    imprimere("\n--- Lex: exempla contra adumbrationem suam ---\n");
+    CREDO_AEQUALIS_I32(xar_numerus(norma_comparare(inferentia_normam(inf,
+        p), inf, p)), 0);
+}
+
+/* fumus: lib/vates_responsum.norma contra specimina vatis commissa */
+interior vacuum
+probatio_comparatio_vatis(Piscina* p)
+{
+    Xar* sp = herbarium_enumerare(p,
+        "probationes/fixa/vates/herbarium");
+         Inferentia* inf = inferentia_creare(p, NIHIL);
+    NormaStmlLectio  l = norma_stml_legere(filum_legere_totum(
+        "lib/vates_responsum.norma", p), NIHIL, 0, p);
+    Xar* r;
+    i32  i;
+
+    imprimere("\n--- Fumus: responsum declaratum contra specimina ---\n");
+    CREDO_VERUM(l.successus);
+    per (i = 0; i < xar_numerus(sp); i++)
+    {
+        HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp, i);
+             JsonResultus  j = json_legere(h->corpus, p);
+
+        si (h->status == CC && j.successus)
+        {
+            inferentia_addere(inf, j.radix);
+        }
+    }
+    r = norma_comparare(norma_stml_quaerere(&l, "responsum"), inf, p);
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NUMQUAM_VISA,
+        "$.content[]", p));
+    CREDO_VERUM(_habet(r, NORMA_DISCREPANTIA_VARIATIO_NON_DECLARATA,
+        "$.content[]", p));
+}
+
 s32
 principale (vacuum)
 {
@@ -804,6 +1008,10 @@ principale (vacuum)
     probatio_fumus_speciminum(p);
     /* norma-spec-4 B2.1 */
     probatio_testimonia(p);
+    /* norma-spec-4 B2.2 */
+    probatio_discrepantia(p);
+    probatio_comparatio_sui(p);
+    probatio_comparatio_vatis(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

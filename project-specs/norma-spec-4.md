@@ -174,3 +174,14 @@ load error.
 - Not decided: evidence on discriminator VARIANT objects (presence within
   the partition, `visum P/Q` against partition instances) - B2.1 uses
   partition counts, stated in the comment.
+
+## As built (2026-10-09, quarta ba05c872..)
+
+B2.0 headers ba05c872; B2.1 evidence + writer hook f9bc606b; B2.2 drift
+(this commit). Departures: a field's comment goes before `<campus>` (and
+a variant's before `<variatio>`), keeping capture form - only array
+elements take block form (AUDIENDA resolved); variant evidence is
+`instantiae N` of the partition. The vates report names real coverage
+gaps (three declared variants never seen, `server_tool_use` undeclared).
+Deferred minors: rejected-candidate noise at the root for id-like
+fields; variant name missing from findings inside variants.

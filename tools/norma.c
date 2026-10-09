@@ -3,6 +3,8 @@
  * Verba:
  *   norma c <x.norma> -praefixum P -caput <h> -corpus <c>
  *   norma iudicare <x.norma> <valor.json> [-norma <titulus>]
+ *   norma comparare <x.norma> [-norma T] [-status N] <via>...
+ *     (norma-spec-4 §IV; exitus 1 si discrepantia)
  *   norma inferre [-titulus T] [-status N] [-electio] [-fines]
  *                 [-sine_formis] [-clausum] [-sine_testimoniis] <via>...
  *     (norma-spec-3 §V; testimonia ut commenta, norma-spec-4 §III)
@@ -31,6 +33,7 @@ _usus (vacuum)
 {
     fputs("usus: norma c <x.norma> -praefixum P -caput <h> -corpus <c>\n"
           "      norma iudicare <x.norma> <valor.json> [-norma <titulus>]\n"
+          "      norma comparare <x.norma> [-norma T] [-status N] <via>...\n"
           "      norma inferre [-titulus T] [-status N] [-electio] [-fines]\n"
           "                    [-sine_formis] [-clausum] [-sine_testimoniis]"
           " <via>...\n",
@@ -200,6 +203,137 @@ _exemplum_addere (
     redde VERUM;
 }
 
+/* viae ab 'initium': acervus herbarii (specimina status 'status') aut
+ * plagula .json; reddit numerum omissorum (non JSON / illegibilia) */
+interior i32
+_exempla_colligere (
+              Inferentia*  inf,
+                 integer   argc,
+               character** argv,
+                 integer   initium,
+                     i32   status,
+      constans character*  verbum,
+                 Piscina*  p)
+{
+        i32 omissa = 0;
+    integer i;
+
+    per (i = initium; i < argc; i++)
+    {
+        Xar* sp = herbarium_enumerare(p, argv[i]);
+
+        si (xar_numerus(sp) > 0)
+        {
+            i32 k;
+
+            per (k = 0; k < xar_numerus(sp); k++)
+            {
+                HerbariumSpecimen* h =
+                    (HerbariumSpecimen*)xar_obtinere(sp,
+                    k);
+
+                si (h->status != status)
+                {
+                    perge;
+                }
+                si (!_exemplum_addere(inf, h->corpus, p))
+                {
+                    omissa++;
+                }
+            }
+        }
+        alioquin
+        {
+            chorda corpus = filum_legere_totum(argv[i], p);
+
+            si (   corpus.mensura == 0
+                || !_exemplum_addere(inf, corpus, p))
+            {
+                fprintf(stderr,
+                    "norma %s: %s omissum (non JSON aut legi non"
+                    " potuit)\n", verbum, argv[i]);
+                omissa++;
+            }
+        }
+    }
+    fprintf(stderr, "norma %s: %u exempla, %u omissa\n", verbum,
+        (insignatus integer)inferentia_numerus(inf),
+        (insignatus integer)omissa);
+    redde omissa;
+}
+
+/* norma comparare <x.norma> [-norma T] [-status N] <via>... :
+ * schema declaratum contra exempla (norma-spec-4 §IV); exitus 0 sine
+ * discrepantia, 1 cum discrepantia, 2 usus/lectio */
+interior s32
+_comparare (
+       integer   argc,
+     character** argv,
+       Piscina*  p)
+{
+     constans character* titulus  = NIHIL;
+                    i32  status   = CC;
+        NormaStmlLectio  l;
+             Inferentia* inf;
+                  Norma* declarata;
+                    Xar* inventa;
+                integer  i;
+                    i32  k;
+
+    si (argc < IV)
+    {
+        redde _usus();
+    }
+    per (i = III; i < argc && argv[i][0] == '-'; i++)
+    {
+        si (strcmp(argv[i], "-norma") == 0 && i + I < argc)
+        {
+            titulus = argv[++i];
+        }
+        alioquin si (strcmp(argv[i], "-status") == 0 && i + I < argc)
+        {
+            status = (i32)atoi(argv[++i]);
+        }
+        alioquin
+        {
+            redde _usus();
+        }
+    }
+    si (i >= argc || !_legere(argv[II], &l, p))
+    {
+        redde i >= argc ? _usus() : II;
+    }
+    declarata = titulus ? norma_stml_quaerere(&l, titulus)
+        : (xar_numerus(l.normae) > 0
+           ? ((NormaNominata*)xar_obtinere(l.normae,
+           0))->norma : NIHIL);
+    si (!declarata)
+    {
+        fprintf(stderr, "norma comparare: norma abest\n");
+        redde II;
+    }
+    inf = inferentia_creare(p, NIHIL);
+    (vacuum)_exempla_colligere(inf, argc, argv, i, status, "comparare",
+        p);
+    si (inferentia_numerus(inf) == 0)
+    {
+        redde II;
+    }
+    inventa = norma_comparare(declarata, inf, p);
+    per (k = 0; k < xar_numerus(inventa); k++)
+    {
+        NormaDiscrepantia* d = (NormaDiscrepantia*)xar_obtinere(inventa,
+            k);
+
+        printf("%.*s: %s: %.*s\n", (integer)d->via.mensura,
+            (constans character*)d->via.datum,
+            norma_discrepantia_descriptio(d->genus),
+            (integer)d->nuntius.mensura,
+            (constans character*)d->nuntius.datum);
+    }
+    redde xar_numerus(inventa) > 0 ? I : 0;
+}
+
 interior s32
 _inferre (
        integer   argc,
@@ -214,7 +348,6 @@ _inferre (
           NormaNominata  nn;
                  chorda  causa;
                  chorda  scriptum;
-                    i32  omissa             = 0;
                     b32  testimonia_rogata  = VERUM;
    InferentiaTestimonia* testimonia         = NIHIL;
                 integer  i;
@@ -259,47 +392,8 @@ _inferre (
         redde _usus();
     }
     inf = inferentia_creare(p, &o);
-    per (; i < argc; i++)
-    {
-        Xar* sp = herbarium_enumerare(p, argv[i]);
-
-        si (xar_numerus(sp) > 0)
-        {
-            i32 k;
-
-            per (k = 0; k < xar_numerus(sp); k++)
-            {
-                HerbariumSpecimen* h =
-                    (HerbariumSpecimen*)xar_obtinere(sp,
-                    k);
-
-                si (h->status != status)
-                {
-                    perge;
-                }
-                si (!_exemplum_addere(inf, h->corpus, p))
-                {
-                    omissa++;
-                }
-            }
-        }
-        alioquin
-        {
-            chorda corpus = filum_legere_totum(argv[i], p);
-
-            si (   corpus.mensura == 0
-                || !_exemplum_addere(inf, corpus, p))
-            {
-                fprintf(stderr,
-                    "norma inferre: %s omissum (non JSON aut"
-                    " legi non potuit)\n", argv[i]);
-                omissa++;
-            }
-        }
-    }
-    fprintf(stderr, "norma inferre: %u exempla, %u omissa\n",
-        (insignatus integer)inferentia_numerus(inf),
-        (insignatus integer)omissa);
+    (vacuum)_exempla_colligere(inf, argc, argv, i, status, "inferre",
+        p);
     n = inferentia_normam_testatam(inf, p, &testimonia);
     si (!n)
     {
@@ -344,6 +438,10 @@ principale (
     alioquin si (strcmp(argv[I], "inferre") == 0)
     {
         exitus = _inferre(argc, argv, p);
+    }
+    alioquin si (strcmp(argv[I], "comparare") == 0)
+    {
+        exitus = _comparare(argc, argv, p);
     }
     alioquin
     {
