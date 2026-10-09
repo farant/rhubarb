@@ -71,3 +71,11 @@ check now runs under a 5 s cap (`tecto`; 124 = did not refuse).
 Next (Fran's step): move the data to ~/.rhubarb/annales (own git
 repo), git rm --cached the in-repo copies + .gitignore; then drop them
 from VETITAE / generata table; close …MKMD2, …VSY50E.
+
+## 2026-10-08 (later) - the gate depended on the file it protects against
+
+After Fran deleted the old in-tree copies, `annales` went red: stage VII
+seeded its fake fresh worktree with `head -5 gesta/annales/tabularium.jsonl`
+- the live in-repo journal, which no longer exists. It now takes its five
+lines from the temp ledger written in stage IV. Lesson: a gate about
+moving data must not read the data's old location, even read-only.

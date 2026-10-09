@@ -120,8 +120,11 @@ RHUBARB_ANNALES="$T/forum_vacuum" tecto "$TD" -portus 0 -radix "$RADIX"; rc=$?
     && [ -z "$(ls -A "$T/forum_vacuum")" ]; credo $? "VI daemon fori recusat, nihil creatum (erat $rc; 124 = non recusavit, currebat)"
 
 # VII. arbor recens (legatum): annales commissi, scrinium nullum
+# annales arboris FICTI ex sede temporaria (numquam ex tabulario vivo -
+# olim 'head -5 gesta/annales/tabularium.jsonl', quae via post
+# translationem 2026-10-08 non iam exstat: porta rubra sine causa vera)
 mkdir -p "$T/arbor/gesta/annales" "$T/domus"
-head -5 gesta/annales/tabularium.jsonl > "$T/arbor/gesta/annales/tabularium.jsonl"
+head -5 "$T/s/tabularium.jsonl" > "$T/arbor/gesta/annales/tabularium.jsonl"
 tecto env -u RHUBARB_ANNALES HOME="$T/domus" "$TB" -mcp -radix "$T/arbor"; rc=$?
 [ "$rc" -eq 1 ] && grep -q 'annales sine scrinio' "$T/effusus" \
     && [ ! -e "$T/arbor/tabularium.db" ] \
