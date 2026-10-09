@@ -813,14 +813,16 @@ numerus_est (
 /* S3d: nexus ictus (Franus: paginae numeris solis nominantur; tags
  * per paginas cycli). '#next' '#prev' ut Ctrl+Shift+sagittae, '#first'
  * '#last', '#N' pagina id N; ceteri tags: pagina ALIA proxima (post
- * visam, circulo) quae '#tag' continet, cursor in eo. Nihil: nuntius
- * ('nulla pagina' / 'nulla alia pagina'). */
+ * visam, circulo) quae '#tag' continet, cursor in eo; retro
+ * (Shift+ictus, Franus): ANTE visam. Nihil: nuntius ('nulla pagina' /
+ * 'nulla alia pagina'). */
 interior vacuum
 nexum_sequi (
     constans InsulaRamus* ramus,
                    Motus* motus,
           ScribaActiones* sa,
-                  chorda  verbum)
+                  chorda  verbum,
+                     b32  retro)
 {
     constans TabulaCharacterum* t;
                         Iussum  x;
@@ -866,7 +868,7 @@ nexum_sequi (
         per (k = I; k < n; k++)
         {
             nomen_paginae = scriba_liber_nomen(sa->liber,
-                (i32)((i + k) % n));
+                (i32)((retro ? i + n - k : i + k) % n));
             si (!scriba_liber_pagina(sa->liber, nomen_paginae))
             {
                 perge;
@@ -984,7 +986,8 @@ scriba_pagina_clavis (
             && iussum_nexus_ad_locum(&sa->laboris, linea, columna,
                    sa->doc->piscina, &iussum))
         {
-            nexum_sequi(&ramus, motus, sa, iussum.verbum);
+            nexum_sequi(&ramus, motus, sa, iussum.verbum,
+                (ev->datum.mus.modificantes & MOD_SHIFT) != ZEPHYRUM);
             redde VERUM;
         }
         cursorem_ponere(&ramus, motus, sa, linea, columna);

@@ -7,7 +7,8 @@
  * I: '#2' paginam id II. II: tag '#notae' per paginas cyclus (1 -> 2
  * -> 3 -> 1, circulo), cursor in tag. III: '#nihil' et '#9' nuntium
  * ponunt, pagina manet. IV: '#last' '#first' '#next' '#prev'. V: ictus
- * unus in latus non focatum. VI: nexus colore accentus secundi. */
+ * unus in latus non focatum. VI: nexus colore accentus secundi. VII:
+ * Shift+ictus in tag retro (1 -> 3 -> 2 -> 1). */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -42,6 +43,31 @@ ictus (
 {
     (vacuum)manus_ludus_premere_ad(m, VI + columna * VI + III,
         VICUS_ALTITUDO_TABULARUM + VIII + linea * VIII + IV);
+}
+
+/* Shift+ictus in cellulam (linea, columna) paginae sinistrae */
+interior vacuum
+ictus_retro (
+    Dispensator* d,
+            s32  linea,
+            s32  columna)
+{
+    hic_manens s64 tempus = CM * M;
+           Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus        = EVENTUS_MUS_DEPRESSUS;
+    e.tempus       = tempus;
+    e.datum.mus.x  = VI + columna * VI + III;
+    e.datum.mus.y            = VICUS_ALTITUDO_TABULARUM + VIII
+                             + linea * VIII + IV;
+    e.datum.mus.botton        = MUS_SINISTER;
+    e.datum.mus.modificantes  = MOD_SHIFT;
+    dispensator_tractare(d, &e);
+    e.genus   = EVENTUS_MUS_LIBERATUS;
+    e.tempus  = tempus + X;
+    dispensator_tractare(d, &e);
+    tempus += C;
 }
 
 /* linea scribitur: ictus ad initium, inserere, Esc */
@@ -218,6 +244,17 @@ s32 principale (vacuum)
     CREDO_VERUM(cursor_est(v, IV, II));
     /* circulo: post ultimam prima */
     ictus(m, IV, III);
+    CREDO_VERUM(pagina_est(vol, "1"));
+    CREDO_VERUM(cursor_est(v, I, VI));
+
+    imprimere("\n--- VII: Shift+ictus - tag retro ---\n");
+    ictus_retro(app.d, I, VII);
+    CREDO_VERUM(pagina_est(vol, "3"));
+    CREDO_VERUM(cursor_est(v, IV, II));
+    ictus_retro(app.d, IV, III);
+    CREDO_VERUM(pagina_est(vol, "2"));
+    CREDO_VERUM(cursor_est(v, III, V));
+    ictus_retro(app.d, III, VI);
     CREDO_VERUM(pagina_est(vol, "1"));
     CREDO_VERUM(cursor_est(v, I, VI));
 

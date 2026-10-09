@@ -154,3 +154,14 @@ opened lazily by the search (scriba_liber_pagina), committed text
 only; the click flushes the pending gesture first, so the viewed
 page's own edits are in. Links need the page book (standalone scriba:
 no colour, no follow).
+
+## 2026-10-09 - Shift+click on a #tag goes backwards (Fran)
+
+nexum_sequi takes `retro`: the page search runs (i + n - k) % n instead
+of (i + k) % n, still OTHER pages only and still landing on the first
+occurrence of the tag on that page (page-level cycle both ways, so
+next-then-prev returns to the same page). Both click paths (focused,
+and vicus's one-click ictus_primus hook) pass the event through
+scriba_pagina_clavis, so one call site reads MOD_SHIFT. #next/#prev
+ignore Shift (not asked). manus_ludus_premere_ad carries no modifiers;
+probatio_vicus_nexus VII builds the Shift events by hand.
