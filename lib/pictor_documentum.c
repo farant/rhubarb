@@ -42,12 +42,18 @@ attributum_s32 (
     redde praestitutum;
 }
 
+/* vacatio: color fundi thematis (Franus 2026-10-09: ut scriba et
+ * terminale; olim PALETTE_WHITE, in themate flavum clarum) - fundus
+ * non in actis: picturae omnes novo fundo reddi */
 interior vacuum
-vacare_albam (
+vacare_fundo (
     PictorDocumentum* doc)
 {
+    /* color semanticus ipse (thema_color), non index: colores ictuum
+     * palettam COLORATIONIS legunt, semantici palettam aliam - index
+     * fundi in coloratione colorem atramenti dabat */
     tabula_pixelorum_vacare(doc->tabula, color_ad_pixelum(
-        thema_color_ex_indice_colorationis((i8)PALETTE_WHITE)));
+        thema_color(COLOR_BACKGROUND)));
 }
 
 
@@ -349,7 +355,7 @@ interior vacuum
 proiectio_vacare (
     vacuum* ctx)
 {
-    vacare_albam((PictorDocumentum*)ctx);
+    vacare_fundo((PictorDocumentum*)ctx);
 }
 
 interior vacuum

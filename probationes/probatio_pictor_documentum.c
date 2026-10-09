@@ -155,7 +155,7 @@ s32 principale (vacuum)
                     s64  q3;
                     s64  q4;
                     s64  massae_ante;
-                    i32  albus;
+                    i32  fundus;
                     i32  niger;
                     i32  i;
 
@@ -167,8 +167,9 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
-    albus = color_ad_pixelum(thema_color_ex_indice_colorationis(
-        (i8)PALETTE_WHITE));
+    /* vacatio: color fundi thematis (Franus 2026-10-09; olim
+     * PALETTE_WHITE) */
+    fundus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
     niger = color_ad_pixelum(thema_color_ex_indice_colorationis(
         (i8)PALETTE_BLACK));
 
@@ -180,7 +181,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(doc);
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc), ZEPHYRUM);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), V, V),
-                       albus);
+                       fundus);
     s1 = pictor_documentum_sigillum_hex(doc, piscina);
     CREDO_AEQUALIS_I32(s1.mensura, LXIV);
 
@@ -203,7 +204,7 @@ s32 principale (vacuum)
                        niger);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         III),
-                       albus);
+                       fundus);
     s2 = pictor_documentum_sigillum_hex(doc, piscina);
     CREDO_FALSUM(chorda_aequalis(s1, s2));
     /* checkpoint post ictum II (intervallum II): plagula + massa */
@@ -223,7 +224,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc), q2);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         VIII),
-                       albus);
+                       fundus);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X, V),
                        niger);
     CREDO_VERUM(pictor_documentum_revocare(doc));
@@ -233,7 +234,7 @@ s32 principale (vacuum)
     /* nihil ultra */
     CREDO_FALSUM(pictor_documentum_revocare(doc));
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X, II),
-                       albus);
+                       fundus);
 
     imprimere("\n--- Reficere: ad q3, sigillum idem ---\n");
     CREDO_VERUM(pictor_documentum_reficere(doc));
@@ -253,7 +254,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), III);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         VIII),
-                       albus);   /* mortuus */
+                       fundus);   /* mortuus */
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         XII),
                        niger);
@@ -312,7 +313,7 @@ s32 principale (vacuum)
         (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, V, VIII,
             -X, VIII));
         im = pictor_documentum_proiectio(d);
-        /* sinistrorsum: x 0..5 lineae VIII nigra, margo dexter albus */
+        /* sinistrorsum: x 0..5 lineae VIII nigra, dexter fundus */
         CREDO_AEQUALIS_I32(numerare(im, ZEPHYRUM, VIII, VI, I, niger),
             VI);
         CREDO_AEQUALIS_I32(numerare(im, XVI, ZEPHYRUM, XVI, XVI, niger),

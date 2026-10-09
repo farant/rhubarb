@@ -168,3 +168,18 @@ first in a CREDO_NON_PENDET child with its own temporary volume (a
 forked child must not write the parent's volume); the pixel checks run
 only if that passed. Plants: no clipping and no trivial reject = named
 hang; wrong left/bottom edge = pixel checks.
+
+## 2026-10-09 - canvas clears to the theme background (Fran: no yellow)
+
+`vacare_fundo` clears to `thema_color(COLOR_BACKGROUND)` (scriba and
+terminale's background) instead of colouring-palette entry
+PALETTE_WHITE, which the theme renders as bright yellow. Trap: there
+are TWO palettes - `thema_color` (semantic) resolves through
+`color_ex_palette`, while stroke colours index the COLOURING palette
+(`thema_color_ex_indice_colorationis`); the semantic colour's index
+(`thema_palette_index`) read in the colouring palette gave the ink
+colour, and the spray test went blank. Use the semantic colour itself.
+Migration: the background is not in the acts, but CHECKPOINTS store
+rendered pixels - drawings saved before this keep the old yellow
+wherever they restore from a checkpoint; new canvases are neutral.
+Goldens: aurum.txt (fingerprints only), pictor_prima specimen.

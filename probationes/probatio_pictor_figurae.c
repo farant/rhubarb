@@ -69,7 +69,7 @@ s32 principale (vacuum)
                                      i32  textus;
                                   chorda  sigillum;
                                      i32  niger;
-                                     i32  albus;
+                                     i32  fundus;
 
     piscina = piscina_generare_dynamicum("probatio_pictor_figurae",
         LXIV * M);
@@ -160,12 +160,12 @@ s32 principale (vacuum)
      * documentum x 1..40 */
         niger = color_ad_pixelum(
             thema_color_ex_indice_colorationis((i8)PALETTE_BLACK));
-    albus = color_ad_pixelum(
-        thema_color_ex_indice_colorationis((i8)PALETTE_WHITE));
+    /* vacatio: color fundi thematis (Franus 2026-10-09) */
+    fundus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XIII),
                        niger);
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XIV),
-                       albus);
+                       fundus);
     /* extra documentum dextrorsum (x=41): MENSA in cellula marginis */
     CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XLI, XVIII),
         color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));

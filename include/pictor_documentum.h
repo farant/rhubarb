@@ -3,7 +3,8 @@
  * Veritas est ACTA (volumen: solum-appende); proiectio (bitmap) est
  * derivata. Machina caudae - rami, checkpoints, cursor, revocare,
  * reficere, verificare - est `historia` (scriba-plan H2; leges ibi);
- * hic pars pictoris sola: pixela RGBA, vacatio alba, ictus pingere,
+ * hic pars pictoris sola: pixela RGBA, vacatio colore fundi thematis
+ * (COLOR_BACKGROUND), ictus pingere,
  * manifestum 'documentum' (dimensiones, intervallum).
  *
  * Acta v1: <ictus instrumentum color magnitudo [semen]><punctum x y
