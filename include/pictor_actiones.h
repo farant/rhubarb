@@ -54,6 +54,17 @@ pictor_aspergillum_ictus (
       constans Eventus* ev,
                 vacuum* ctx);
 
+/* <tractator/> spongia: ut penicillus capit et puncta colligit; actum
+ * sine colore scribit (documentum colore fundi pingit) */
+b32
+pictor_spongia_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
 /* <tractator/> quadratum lineae status ictum: palettam suam aperit
  * (ephemera 'palette' = instrumentum / color_primus / color_secundus);
  * eadem iterum: claudit */
@@ -79,9 +90,9 @@ pictor_colorem_ponere (
       constans Eventus* ev,
                 vacuum* ctx);
 
-/* <tractator/> 'p' penicillus, 'a' aspergillum; ictus in optionem
- * instrumenti ('optio.instrumentum.<nomen>') idem ponit et palettam
- * claudit; Esc palettam apertam claudit */
+/* <tractator/> 'p' penicillus, 'a' aspergillum, 'e' spongia; ictus
+ * in optionem instrumenti ('optio.instrumentum.<nomen>') idem ponit et
+ * palettam claudit; Esc palettam apertam claudit */
 b32
 pictor_instrumentum_eligere (
     InsulaRepositorium* repo,

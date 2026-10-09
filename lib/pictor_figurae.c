@@ -27,6 +27,88 @@ color_thematis (
 /* color palettae Aquinas (ut ictus pinguntur): RGBA ex
  * color_ex_palette - non COLOR_MANDATI_INDEX, quod rasterizatores per
  * indices colorationis (munera syntaxeos) resolvunt */
+/* spongia (praevisio): quadratum latus x latus centratum in (cx, cy),
+ * colore fundi - ut quadratum_spongiae documenti */
+interior vacuum
+quadratum_spongiae (
+    Mandata* m,
+        s32  cx,
+        s32  cy,
+        s32  latus)
+{
+    Fines g;
+
+    g.x         = cx - latus / II;
+    g.y         = cy - latus / II;
+    g.latitudo  = latus;
+    g.altitudo  = latus;
+    mandata_rectangulum(m, g, color_thematis(COLOR_BACKGROUND), VERUM);
+}
+
+/* spongia (praevisio): regula documenti (spongiam_applicare) -
+ * quadratum in puncto primo, deinde in quoque puncto lineae
+ * (Bresenham) post initium segmenti; margo cursoris in fine */
+interior vacuum
+spongiam_praevidere (
+    constans Componens* c,
+               Mandata* m)
+{
+    integer latus;
+        s32 x;
+        s32 y;
+        s32 x1;
+        s32 y1;
+        s32 dx;
+        s32 dy;
+        s32 sx;
+        s32 sy;
+        s32 error;
+        s32 e2;
+        i32 i;
+      Fines g;
+
+    latus = ZEPHYRUM;
+    (vacuum)sscanf(chorda_ut_cstr(c->titulus, m->piscina), "%d",
+        &latus);
+    si (latus < I)
+    {
+        redde;
+    }
+    x = c->puncta[ZEPHYRUM].x;
+    y = c->puncta[ZEPHYRUM].y;
+    quadratum_spongiae(m, x, y, (s32)latus);
+    per (i = I; i < c->numerus_punctorum; i++)
+    {
+        x1     = c->puncta[i].x;
+        y1     = c->puncta[i].y;
+        dx     = x1 > x ? x1 - x : x - x1;
+        dy     = -(y1 > y ? y1 - y : y - y1);
+        sx     = x < x1 ? I : -I;
+        sy     = y < y1 ? I : -I;
+        error  = dx + dy;
+        dum (x != x1 || y != y1)
+        {
+            e2 = II * error;
+            si (e2 >= dy)
+            {
+                error  += dy;
+                x      += sx;
+            }
+            si (e2 <= dx)
+            {
+                error  += dx;
+                y      += sy;
+            }
+            quadratum_spongiae(m, x, y, (s32)latus);
+        }
+    }
+    g.x         = x - (s32)latus / II;
+    g.y         = y - (s32)latus / II;
+    g.latitudo  = (s32)latus;
+    g.altitudo  = (s32)latus;
+    mandata_rectangulum(m, g, color_thematis(COLOR_BORDER), FALSUM);
+}
+
 interior ColorMandati
 color_thematis_index (
     s32 index)
@@ -145,6 +227,11 @@ figura_tabulae (
             }
         }
     }
+    alioquin si (   c->numerus_punctorum > ZEPHYRUM
+                 && chorda_aequalis_literis(c->actio, "spongia.ictus"))
+    {
+        spongiam_praevidere(c, m);
+    }
     alioquin
     {
         per (i = I; i < c->numerus_punctorum; i++)
@@ -260,6 +347,26 @@ hic_manens constans character* icon_aspergilli[XVI] = {
     "................"
 };
 
+/* P2: spongia - truncus obliquus */
+hic_manens constans character* icon_spongiae[XVI] = {
+    "................",
+    "................",
+    "................",
+    "......#########.",
+    ".....#.......##.",
+    "....#.......#.#.",
+    "...#.......#..#.",
+    "..#.......#...#.",
+    ".#########....#.",
+    ".#.......#...#..",
+    ".#.......#..#...",
+    ".#.......#.#....",
+    ".#.......##.....",
+    ".#########......",
+    "................",
+    "................"
+};
+
 interior vacuum
 iconem_pingere (
                 Mandata*  m,
@@ -346,6 +453,11 @@ figura_quadrati (
     si (chorda_aequalis_literis(t, "instrumentum:aspergillum"))
     {
         iconem_pingere(m, icon_aspergilli, II, II);
+        redde;
+    }
+    si (chorda_aequalis_literis(t, "instrumentum:spongia"))
+    {
+        iconem_pingere(m, icon_spongiae, II, II);
         redde;
     }
     si (   t.mensura > VI

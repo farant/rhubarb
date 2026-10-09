@@ -104,13 +104,16 @@ s32 principale (vacuum)
     radix = dispensator_arbor(app.d);
     CREDO_VERUM(p && *(Componens**)xar_obtinere(radix->liberi,
         xar_numerus(radix->liberi) - I) == p);
-    CREDO_VERUM(p && xar_numerus(p->liberi) == II);
+    CREDO_VERUM(p && xar_numerus(p->liberi) == III);
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
         "optio.instrumentum.penicillus")->titulus,
         "instrumentum:penicillus:electum");
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
         "optio.instrumentum.aspergillum")->titulus,
         "instrumentum:aspergillum");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
+        "optio.instrumentum.spongia")->titulus,
+        "instrumentum:spongia");
 
     imprimere("\n--- II: idem claudit, aliud commutat ---\n");
     CREDO_VERUM(manus_ludus_premere_ad(m, XVI, QY));

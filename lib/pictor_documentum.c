@@ -237,6 +237,115 @@ guttas_applicare (
     }
 }
 
+/* spongia: quadratum latus x latus centratum in (cx, cy) - [cx -
+ * latus/2, cx + latus/2) - ad tabulam praecisum */
+interior vacuum
+quadratum_spongiae (
+    PictorDocumentum* doc,
+                 s32  cx,
+                 s32  cy,
+                 s32  latus,
+                 i32  pixelum)
+{
+    s32 x;
+    s32 y;
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+
+    x0 = cx - latus / II;
+    y0 = cy - latus / II;
+    x1 = x0 + latus;
+    y1 = y0 + latus;
+    x0 = x0 < ZEPHYRUM ? ZEPHYRUM : x0;
+    y0 = y0 < ZEPHYRUM ? ZEPHYRUM : y0;
+    x1 = x1 > (s32)doc->tabula->latitudo ? (s32)doc->tabula->latitudo
+                                          : x1;
+    y1 = y1 > (s32)doc->tabula->altitudo ? (s32)doc->tabula->altitudo
+                                          : y1;
+    per (y = y0; y < y1; y++)
+    {
+        per (x = x0; x < x1; x++)
+        {
+            tabula_pixelorum_ponere_pixelum(doc->tabula, (i32)x, (i32)y,
+                pixelum);
+        }
+    }
+}
+
+/* spongia (vide caput): quadratum in puncto primo, deinde in quoque
+ * puncto lineae (Bresenham) post initium segmenti cuiusque - figura
+ * praevisionis eandem regulam sequitur */
+interior vacuum
+spongiam_applicare (
+    PictorDocumentum* doc,
+           StmlNodus* ictus,
+                 s32  magnitudo_penicilli)
+{
+    StmlNodus* punctum;
+          i32  pixelum;
+          s32  latus;
+          s32  x;
+          s32  y;
+          s32  x1;
+          s32  y1;
+          s32  dx;
+          s32  dy;
+          s32  sx;
+          s32  sy;
+          s32  error;
+          s32  e2;
+          b32  primum;
+          i32  i;
+          i32  n;
+
+    pixelum  = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    latus    = PICTOR_SPONGIAE_LATUS * magnitudo_penicilli;
+    n        = stml_numerus_liberorum(ictus);
+    primum   = VERUM;
+    x        = ZEPHYRUM;
+    y        = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        punctum = stml_liberum_ad_indicem(ictus, i);
+        si (punctum->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        x1 = attributum_s32(punctum, "x", ZEPHYRUM);
+        y1 = attributum_s32(punctum, "y", ZEPHYRUM);
+        si (primum)
+        {
+            x       = x1;
+            y       = y1;
+            primum  = FALSUM;
+            quadratum_spongiae(doc, x, y, latus, pixelum);
+            perge;
+        }
+        dx     = x1 > x ? x1 - x : x - x1;
+        dy     = -(y1 > y ? y1 - y : y - y1);
+        sx     = x < x1 ? I : -I;
+        sy     = y < y1 ? I : -I;
+        error  = dx + dy;
+        dum (x != x1 || y != y1)
+        {
+            e2 = II * error;
+            si (e2 >= dy)
+            {
+                error  += dy;
+                x      += sx;
+            }
+            si (e2 <= dx)
+            {
+                error  += dx;
+                y      += sy;
+            }
+            quadratum_spongiae(doc, x, y, latus, pixelum);
+        }
+    }
+}
+
 /* <ictus instrumentum color magnitudo><punctum x y/>...</ictus> */
 interior vacuum
 ictum_applicare (
@@ -285,6 +394,14 @@ ictum_applicare (
                "instrumentum"), "aspergillum"))
     {
         guttas_applicare(doc, ictus, color, magnitudo_penicilli);
+        delineare_restituere_contextum(ctx);
+        redde;
+    }
+    si (   stml_attributum_capere(ictus, "instrumentum")
+        && chorda_aequalis_literis(*stml_attributum_capere(ictus,
+               "instrumentum"), "spongia"))
+    {
+        spongiam_applicare(doc, ictus, magnitudo_penicilli);
         delineare_restituere_contextum(ctx);
         redde;
     }

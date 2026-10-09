@@ -197,3 +197,26 @@ use `color_ex_palette` (swatches as RGBA, since COLOR_MANDATI_INDEX is
 resolved through the role map by the rasterizers). Existing drawings
 re-render in the true palette colours. Test: the palette's 16 options
 are distinct (probatio_pictor_palette VIII).
+
+## 2026-10-09 - P2 spongia (eraser)
+
+Fran's plan: the eraser paints the canvas background. Named `spongia`
+(Romans wiped wet ink off with a sponge); key `e`.
+
+- Log: `<ictus instrumentum="spongia" magnitudo>` with points and NO
+  colour - replay paints `thema_color(COLOR_BACKGROUND)`, the same call
+  as `vacare_fundo`, so erased areas and a fresh canvas always agree.
+  (Checkpoints hold pixels, so a theme change would still show the old
+  background wherever a checkpoint restores - same caveat as P0.)
+- Size: square of PICTOR_SPONGIAE_LATUS (16) x magnitudo, centred
+  `[c - latus/2, c + latus/2)`. A 1x1 eraser (brush's size) is useless,
+  so it gets its own base like the spray radius.
+- Sweep rule: a square at the first point, then at EVERY Bresenham
+  point after the start of each segment. A fast drag gives two points
+  far apart; stamping only at points left gaps (plant S2 caught it).
+  The preview figure (pictor_figurae.c spongiam_praevidere) follows
+  the same rule and the test counts the squares exactly (40..50 = 11),
+  so the two copies of the walk cannot drift silently.
+- ictum_tractare / ictum_scribere now take the tool's litterae instead
+  of a b32 aspergillum; pointer comparison against the static
+  litterae_* is deliberate (one tag per tool).

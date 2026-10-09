@@ -37,6 +37,7 @@ punctum_addere (
 
 hic_manens character litterae_penicillus[]  = "penicillus";
 hic_manens character litterae_aspergillum[] = "aspergillum";
+hic_manens character litterae_spongia[]     = "spongia";
 
 /* aspergillum: semen ictus in ephemera (praevisio guttarum) */
 interior vacuum
@@ -174,12 +175,13 @@ attributum_s32 (
     redde praestitutum;
 }
 
-/* actum ictus pendentis; pa NIHIL = penicillus, aliter aspergillum
- * (semen, t cuiusque puncti ab initio ictus) */
+/* actum ictus pendentis instrumenti; pa (aspergillum solum): semen, t
+ * cuiusque puncti ab initio ictus; spongia sine colore */
 interior chorda
 ictum_scribere (
        constans InsulaRamus* ramus,
              constans Motus* motus,
+         constans character* instrumentum,
     constans PictorActiones* pa,
                     Piscina* p)
 {
@@ -189,12 +191,17 @@ ictum_scribere (
         i32  n;
         s64  t0;
 
-    s = chorda_ex_literis(pa ? "<ictus instrumentum=\"aspergillum\""
-                             : "<ictus instrumentum=\"penicillus\"", p);
-    s = chorda_concatenare(s, chorda_ex_literis(" color=\"", p), p);
-    s = chorda_concatenare(s,
-        chorda_ex_s32(attributum_s32(ramus, "color_primus", ZEPHYRUM),
-        p), p);
+    s = chorda_ex_literis("<ictus instrumentum=\"", p);
+    s = chorda_concatenare(s, chorda_ex_literis(instrumentum, p), p);
+    si (instrumentum != litterae_spongia)
+    {
+        s = chorda_concatenare(s, chorda_ex_literis("\" color=\"", p),
+            p);
+        s = chorda_concatenare(s,
+            chorda_ex_s32(attributum_s32(ramus, "color_primus",
+            ZEPHYRUM),
+            p), p);
+    }
     s = chorda_concatenare(s, chorda_ex_literis("\" magnitudo=\"", p),
         p);
     s = chorda_concatenare(s,
@@ -252,8 +259,8 @@ tempus_addere (
     }
 }
 
-/* ictus communis penicilli et aspergilli (actio instrumentum figit -
- * tractator de statu instrumenti non ramificat) */
+/* ictus communis penicilli, aspergilli, spongiae (actio instrumentum
+ * figit - tractator de statu instrumenti non ramificat) */
 interior b32
 ictum_tractare (
     InsulaRepositorium* repo,
@@ -262,13 +269,15 @@ ictum_tractare (
              Componens* nodus,
       constans Eventus* ev,
                 vacuum* ctx,
-                   b32  aspergillum)
+    constans character* instrumentum)
 {
        InsulaRamus  ramus;
     PictorActiones* pa;
            Punctum  p;
+               b32  aspergillum;
 
-    pa = (PictorActiones*)ctx;
+    pa           = (PictorActiones*)ctx;
+    aspergillum  = instrumentum == litterae_aspergillum;
     si (!repo || !motus || !destinatio || !nodus || !ev || !pa)
     {
         redde FALSUM;
@@ -336,8 +345,8 @@ ictum_tractare (
             }
             ramus = ramus_pictoris(repo, ctx);
             pictor_documentum_actum(pa->doc,
-                ictum_scribere(&ramus, motus, aspergillum ? pa : NIHIL,
-                pa->doc->piscina));
+                ictum_scribere(&ramus, motus, instrumentum,
+                aspergillum ? pa : NIHIL, pa->doc->piscina));
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             /* ictus finitus ephemera non tangit */
             motus->sordida = FALSUM;
@@ -369,7 +378,7 @@ pictor_penicillus_ictus (
                 vacuum* ctx)
 {
     redde ictum_tractare(repo, motus, destinatio, nodus, ev, ctx,
-        FALSUM);
+        litterae_penicillus);
 }
 
 /* <tractator/> */
@@ -383,7 +392,37 @@ pictor_aspergillum_ictus (
                 vacuum* ctx)
 {
     redde ictum_tractare(repo, motus, destinatio, nodus, ev, ctx,
-        VERUM);
+        litterae_aspergillum);
+}
+
+/* <tractator/> */
+b32
+pictor_spongia_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    redde ictum_tractare(repo, motus, destinatio, nodus, ev, ctx,
+        litterae_spongia);
+}
+
+/* nomen instrumenti -> litterae (penicillus si ignotum) */
+interior character*
+litterae_instrumenti (
+    chorda nomen_instrumenti)
+{
+    si (chorda_aequalis_literis(nomen_instrumenti, "aspergillum"))
+    {
+        redde litterae_aspergillum;
+    }
+    si (chorda_aequalis_literis(nomen_instrumenti, "spongia"))
+    {
+        redde litterae_spongia;
+    }
+    redde litterae_penicillus;
 }
 
 /* <tractator/> */
@@ -412,8 +451,7 @@ pictor_instrumentum_eligere (
         ramus = ramus_pictoris(repo, ctx);
         (vacuum)palettam_claudere(&ramus);
         redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
-            chorda_aequalis_literis(nomen_instrumenti, "aspergillum")
-            ? litterae_aspergillum : litterae_penicillus);
+            litterae_instrumenti(nomen_instrumenti));
     }
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
@@ -432,14 +470,16 @@ pictor_instrumentum_eligere (
     /* clavis LOGICA (runa sine maiuscula, dispositionis praesentis);
      * sub Cmd/Ctrl brevitas est (Cmd+P imprimere), non 'p' (A5) */
     si (   (ev->datum.clavis.runa == 'p'
-        || ev->datum.clavis.runa == 'a')
+        || ev->datum.clavis.runa == 'a'
+        || ev->datum.clavis.runa == 'e')
         && (ev->datum.clavis.modificantes & (MOD_SUPER | MOD_IMPERIUM))
                == ZEPHYRUM)
     {
         ramus = ramus_pictoris(repo, ctx);
         redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
             ev->datum.clavis.runa == 'p' ? litterae_penicillus
-                                         : litterae_aspergillum);
+            : ev->datum.clavis.runa == 'a' ? litterae_aspergillum
+                                           : litterae_spongia);
     }
     redde FALSUM;
 }
@@ -531,6 +571,7 @@ pictor_actiones_registrare (
         ctx);
     actio_registrare(reg, "aspergillum.ictus", pictor_aspergillum_ictus,
         ctx);
+    actio_registrare(reg, "spongia.ictus", pictor_spongia_ictus, ctx);
     actio_registrare(reg, "palette.aperire", pictor_palettam_aperire,
         ctx);
     actio_registrare(reg, "color_primus.ponere", pictor_colorem_ponere,

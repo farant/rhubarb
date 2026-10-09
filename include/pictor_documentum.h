@@ -12,7 +12,10 @@
  * instrumentum "aspergillum" (MacPaint): guttae (pixela singula) in
  * disco circa quodque punctum; GUTTAE_PUNCTO per punctum et una plus
  * per GUTTA_MS morae (t, ms ab initio ictus) - eaedem semper ex
- * semine. Instrumentum absens aut aliud: penicillus.
+ * semine. instrumentum "spongia": quadratum SPONGIAE_LATUS x magnitudo
+ * centratum in quoque puncto lineae inter puncta, colore fundi
+ * thematis (ut vacatio); color ignoratur. Instrumentum absens aut
+ * aliud: penicillus.
  */
 
 #ifndef PICTOR_DOCUMENTUM_H
@@ -34,6 +37,7 @@
 #define PICTOR_ASPERGILLI_RADIUS  VIII   /* x magnitudo */
 #define PICTOR_GUTTAE_PUNCTO      VI
 #define PICTOR_GUTTA_MS           VIII
+#define PICTOR_SPONGIAE_LATUS     XVI    /* x magnitudo */
 
 /* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
  * determinatus ex (semen, i, k) per sors */

@@ -110,6 +110,10 @@ pictor_actio_instrumenti (
     {
         redde "aspergillum.ictus";
     }
+    si (chorda_aequalis_literis(instrumentum, "spongia"))
+    {
+        redde "spongia.ictus";
+    }
     redde "";
 }
 
@@ -163,12 +167,13 @@ palettam_componere (
                     s32  valor;
               character  id[LXIV];
               character  titulus[LXIV];
-     constans character* instrumenta[II];
+     constans character* instrumenta[III];
 
     instrumenta[ZEPHYRUM] = "penicillus";
     instrumenta[I] = "aspergillum";
+    instrumenta[II] = "spongia";
     colores = !chorda_aequalis_literis(genus, "instrumentum");
-    n = colores ? XVII : II;
+    n = colores ? XVII : III;
     latitudo = IV + (n < VI ? n : VI) * (XX + II) - II + IV;
     altitudo = IV + ((n + V) / VI) * (XX + II) - II + IV;
     palette   = nodus(piscina, intern, "palette", PARTES_DIALOGUS, x,
@@ -365,6 +370,17 @@ pictor_componere (
                 (integer)attributum_s32(&ramus, INSULA_EPHEMERA,
                     "color_primus", ZEPHYRUM));
             componens_ponere_titulum(tabula, titulus_guttarum);
+        }
+        /* spongia: latus quadrati in titulo (figura quadrata colore
+         * fundi pingit) */
+        si (chorda_aequalis_literis(instrumentum, "spongia"))
+        {
+            character titulus_spongiae[XVI];
+
+            sprintf(titulus_spongiae, "%d", (integer)(
+                PICTOR_SPONGIAE_LATUS * attributum_s32(&ramus,
+                    INSULA_EPHEMERA, "magnitudo", I)));
+            componens_ponere_titulum(tabula, titulus_spongiae);
         }
     }
 
