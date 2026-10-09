@@ -14,7 +14,7 @@
  * II.  mutatio magnitudinis (pons et aemulator simul)
  * III. quadra fortuita (sors, semen fixum): cellulae, stili RGB et
  *      nativi, ornamenta, latae, replere, cursor
- * IV.  applicatio vera (vicus: scriba, Ctrl-A n, pictor, ictus)
+ * IV.  applicatio vera (vicus: scriba, Cmd+2, pictor, ictus)
  *
  * Colores PLENI: tessera RGB integrum emittit (CCLVI quantizaret).
  * Graphemata plurium runarum absunt (aemulator v2: notae iungentes
@@ -433,8 +433,8 @@ principale (vacuum)
         ludus_tessera_quadrum(lt, M * II);
         CREDO_VERUM(quadrum(&r));
         CREDO_VERUM(conferre(&r, "IV scriptio"));
-        CREDO_VERUM(manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-        CREDO_VERUM(manus_ludus_scribere(m, "n"));
+        /* Cmd+2 (olim Ctrl-A n; Franus 2026-10-09) */
+        CREDO_VERUM(manus_ludus_clavem(m, '2', MOD_SUPER));
         ludus_tessera_quadrum(lt, M * III);
         CREDO_VERUM(quadrum(&r));
         CREDO_VERUM(conferre(&r, "IV pictor"));

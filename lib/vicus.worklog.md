@@ -372,3 +372,19 @@ silently stayed. Any hook that calls into a pane's action must set the
 writer to that action's name for the call (scribae_ictus_primus does).
 A test only caught it after its text was changed so the cursor would
 actually move - the original assertion passed by coincidence.
+
+## 2026-10-09 - Ctrl-A prefix removed, Cmd+digit switches tabs
+
+Fran uses Ctrl-A as tmux's leader inside terminale panes, so vicus no
+longer binds it: the prefix state (`praefixum` attribute, tinted tab
+bar, n/p, Ctrl-A Ctrl-A for the previous tab) is gone and Ctrl-A
+reaches the focused pane. Cmd+1..9 / Cmd+0 switch tabs. The routing
+rule in `destinare` is NOT redundant even though a Cmd key unhandled by
+scriba bubbles up to the root anyway: terminale consumes EVERY Cmd key
+(window shortcuts never go to the program), so with the terminal
+focused Cmd+digit would die there - a plant that removed the rule
+survived until the test focused the terminal first. Terminal twin:
+Cmd never crosses a terminal, so tabs switch by clicking the tab bar
+(the twin replay test now clicks). `prior` is still recorded in the
+ephemeral layer but nothing reads it. Test renamed
+probatio_vicus_praefixum -> probatio_vicus_claves.

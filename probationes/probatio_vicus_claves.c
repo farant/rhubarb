@@ -1,12 +1,11 @@
-/* probatio_vicus_praefixum.c - commutatio per claves et ictum
- * (insula-rami-plan T3b)
+/* probatio_vicus_claves.c - commutatio tabularum per claves et ictum
+ * (olim probatio_vicus_praefixum, insula-rami-plan T3b)
  *
- * Ctrl-A praefixum hospitis (applicatio id numquam videt): deinde n /
- * p / 1-9 (in textu agitur, clavis devoratur), Ctrl-A iterum = tabula
- * prior, Esc aut cetera = abolitio. Linea tabularum dum pendet
- * tingitur. Litterae praefixi in scribam non effluunt; insertio trans
- * commutationem perstat. Ictus in tabulam eam activat. vicus-latera
- * S2a: tabula = par laterum, latus sinistrum focatum. */
+ * Franus 2026-10-09: Cmd+1..9, Cmd+0 = tabula (hospes; applicatio eas
+ * numquam videt); praefixum Ctrl-A remotum - Ctrl-A ad latus focatum it
+ * (tmux in terminali). Numerus sine tabula: nihil. Insertio trans
+ * commutationem perstat. Linea tabularum numquam tingitur. Ictus in
+ * tabulam eam activat. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -113,14 +112,6 @@ pictorem_describere (
 }
 
 interior b32
-valor_est (
-                chorda* a,
-    constans character* v)
-{
-    redde a ? chorda_aequalis_literis(*a, v) : FALSUM;
-}
-
-interior b32
 activa_est (
                  Vicus* v,
     constans character* id)
@@ -128,19 +119,13 @@ activa_est (
     redde chorda_aequalis_literis(v->activa, id);
 }
 
+/* Cmd+numerus */
 interior b32
-pendet (
-    Vicus* v)
+tabulam (
+     ManusLudus* m,
+      character  numerus)
 {
-    redde valor_est(insula_attributum(v->repo, INSULA_EPHEMERA,
-        "praefixum"), "1");
-}
-
-interior b32
-imperium_a (
-    ManusLudus* m)
-{
-    redde manus_ludus_clavem(m, 'a', MOD_IMPERIUM);
+    redde manus_ludus_clavem(m, numerus, MOD_SUPER);
 }
 
 /* linea l folii (spatiis finalibus omissis) == expectata */
@@ -232,71 +217,41 @@ s32 principale (vacuum)
     CREDO_FALSUM(color(COLOR_ACCENT_PRIMARY)
         == color(COLOR_BACKGROUND));
 
-    imprimere("\n--- I: Ctrl-A - praefixum pendens, linea tincta\n");
+    imprimere("\n--- I: Cmd+2 - tabula secunda; nihil effluit ---\n");
     CREDO_VERUM(manus_ludus_scribere(m, "iab"));
-    CREDO_AEQUALIS_I32(pixelum_lineae(v, d), color(COLOR_BACKGROUND));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(pendet(v));
-    CREDO_VERUM(activa_est(v, "s1"));
-    CREDO_AEQUALIS_I32(pixelum_lineae(v, d),
-        color(COLOR_ACCENT_PRIMARY));
-
-    imprimere("\n--- II: n - proxima; littera non effluit ---\n");
-    CREDO_VERUM(manus_ludus_scribere(m, "n"));
+    CREDO_VERUM(tabulam(m, '2'));
     CREDO_VERUM(activa_est(v, "p1"));
-    CREDO_FALSUM(pendet(v));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(s1->doc), ZEPHYRUM,
         "ab"));
+    /* linea tabularum numquam tincta (praefixum nullum) */
     CREDO_AEQUALIS_I32(pixelum_lineae(v, d), color(COLOR_BACKGROUND));
 
-    imprimere("\n--- III: p - prior in ordine; insertio perstat ---\n");
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "p"));
+    imprimere("\n--- II: Cmd+1 - redit; insertio perstat ---\n");
+    CREDO_VERUM(tabulam(m, '1'));
     CREDO_VERUM(activa_est(v, "s1"));
     CREDO_VERUM(manus_ludus_scribere(m, "c"));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "n"));
+    CREDO_VERUM(tabulam(m, '3'));
+    CREDO_VERUM(activa_est(v, "s2"));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(s1->doc), ZEPHYRUM,
         "abc"));
 
-    imprimere("\n--- IV: numerus; Ctrl-A Ctrl-A = tabula prior ---\n");
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "3"));
+    imprimere("\n--- III: numerus sine tabula - nihil ---\n");
+    CREDO_VERUM(tabulam(m, '0'));
     CREDO_VERUM(activa_est(v, "s2"));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(activa_est(v, "p1"));
-    CREDO_FALSUM(pendet(v));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(activa_est(v, "s2"));
-    /* p in prima: ultima (circulus) */
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "1"));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "p"));
+    CREDO_VERUM(tabulam(m, '9'));
     CREDO_VERUM(activa_est(v, "s2"));
 
-    imprimere("\n--- V: abolitio - Esc, littera alia, numerus\n");
+    imprimere("\n--- IV: Ctrl-A ad latus focatum, non hospitis ---\n");
+    /* olim praefixum: 'n' tabulam mutabat et devorabatur */
     CREDO_VERUM(manus_ludus_scribere(m, "i"));
-    CREDO_VERUM(imperium_a(m));
+    CREDO_VERUM(manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
+    CREDO_VERUM(manus_ludus_scribere(m, "ny"));
+    CREDO_VERUM(activa_est(v, "s2"));
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
-    CREDO_FALSUM(pendet(v));
-    CREDO_VERUM(activa_est(v, "s2"));
-    /* Esc devoratus: scriba in modo inserendi manet */
-    CREDO_VERUM(manus_ludus_scribere(m, "z"));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "x"));
-    CREDO_FALSUM(pendet(v));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "9"));
-    CREDO_FALSUM(pendet(v));
-    CREDO_VERUM(activa_est(v, "s2"));
-    CREDO_VERUM(manus_ludus_scribere(m, "y"));
-    CREDO_VERUM(imperium_a(m));
-    CREDO_VERUM(manus_ludus_scribere(m, "1"));
     CREDO_VERUM(linea_est(scriba_documentum_tabula(s2->doc), ZEPHYRUM,
-        "zy"));
+        "ny"));
+    CREDO_NIHIL(insula_attributum(v->repo, INSULA_EPHEMERA,
+        "praefixum"));
 
     imprimere("\n--- VI: ictus in tabulam ---\n");
     {

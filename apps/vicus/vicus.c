@@ -5,8 +5,8 @@
  * fenestra ad SCALA II (pixelum nostrum = II puncta, ut terminale)
  * in plena visione (vicus-latera S2c; -fumus: magnitudo fixa);
  * tabulae vivae pulsantur (vicus-latera S1c);
- * gemellus vicus_terminalis.c (insula-rami-plan T4). Ctrl-A, deinde
- * n / p / 1-9 aut Ctrl-A (tabula prior); ictus in tabulam. -fumus:
+ * gemellus vicus_terminalis.c (insula-rami-plan T4). Cmd+1..9, Cmd+0
+ * = tabula (Ctrl-A ad latus focatum - tmux); ictus in tabulam. -fumus:
  * volumen temporarium, XXX quadra, exitus; -volumen <via>
  * (ordinarie vicus.volumen).
  */

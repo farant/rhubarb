@@ -3,7 +3,8 @@
  * Compositio communis (vicus_applicatio) + glutinum tesserae
  * (ludus_tessera): terminalis terminalem possidet, tessera pingit.
  * Superficies = amplitudo terminalis x modulus VI x VIII; linea
- * tabularum = linea prima. Ctrl-A, deinde n / p / 1-9 aut Ctrl-A.
+ * tabularum = linea prima. Tabulae ictu solo (Cmd per terminalem
+ * non transit; Ctrl-A ad latus focatum).
  * Ctrl-C exit. -fumus: volumen temporarium, XXX quadra, exitus.
  */
 #include "latina.h"

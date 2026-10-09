@@ -4,14 +4,15 @@
  * Compositio EADEM ac principalia (vicus_applicatio: dispositio
  * ordinaria - tabula 1 scriba | terminale cum /bin/sh, 2 scriba |
  * pictor; volumina temporaria, canones e radice). Sessio fenestrae
- * notata: scriptio in scriba, Ctrl-A n, ictus focans in pictore
- * (latus dextrum, S2a), tractus in pictore (centra cellularum -
- * terminalis sola centra narrat), Ctrl-A p, scriptio,
- * Esc, Ctrl-A Ctrl-A, ictus in tabulam. Eadem notata per terminalem
+ * notata: scriptio in scriba, ictus in tabulam 2, ictus focans in
+ * pictore (latus dextrum, S2a), tractus in pictore (centra cellularum
+ * - terminalis sola centra narrat), ictus in tabulam 1, scriptio,
+ * Esc, ictus in tabulam 2, ictus in tabulam 1 (Cmd+numerus per
+ * terminalem non transit). Eadem notata per terminalem
  * iterantur (codificator -> rivus -> ludus_tessera_tractare;
  * transitus ut probatio_ludus_tessera_scriba: clavis cum textu suo
  * par, ESC solus post moram). Status idem: insulae vici ambae (rami,
- * praefixum, prior, activa), sigilla documentorum ambo, acta
+ * prior, activa), sigilla documentorum ambo, acta
  * voluminis.
  */
 #include "postulata_posix.h"
@@ -305,8 +306,10 @@ principale (vacuum)
     }
     m = manus_ludus_creare(piscina, f.d);
     CREDO_VERUM (manus_ludus_scribere(m, "isalve"));
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM (manus_ludus_scribere(m, "n"));
+    /* ictus in tabulam '2 pictor' (x LXXVIII + XXX): olim Ctrl-A n;
+     * Cmd+numerus (Franus 2026-10-09) per terminalem non transit -
+     * geminus terminalis tabulas ictu solo mutat */
+    CREDO_VERUM (manus_ludus_premere_ad(m, CVIII, IV));
     CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "2");
     /* S2a: pictor = latus dextrum (columnae XL..): ictus primus
      * focat */
@@ -317,12 +320,10 @@ principale (vacuum)
     CREDO_VERUM (_ictus(m, LII, VIII, LVIII, XI));
     CREDO_VERUM (pictor_documentum_cursor(pictor_p1(&f)->doc)
         > ZEPHYRUM);
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM (manus_ludus_scribere(m, "p"));
+    CREDO_VERUM (manus_ludus_premere_ad(m, II * VI + III, IV));
     CREDO_VERUM (manus_ludus_scribere(m, " munde"));
     CREDO_VERUM (manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
+    CREDO_VERUM (manus_ludus_premere_ad(m, CVIII, IV));
     CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "2");
     /* ictus in tabulam '1 terminale' (linea prima, centrum cellulae
      * II) */

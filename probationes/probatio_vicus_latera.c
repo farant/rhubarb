@@ -7,7 +7,7 @@
  * agit, ictus secundus agit (in pictore, tabula 2 - ictus pictus
  * visibilis); Motus (ramus, spatium) latus sequitur;
  * gestus relinquentis effunditur; focus durabilis; super cum spatio
- * suo (idem id 'pagina' in utroque latere); Ctrl-A 0 = tabula
+ * suo (idem id 'pagina' in utroque latere); Cmd+0 = tabula
  * decima. S3a: ictus in scriba cursorem ponit (inserendo modum servat,
  * unitatem revocandi frangit; visualis ad normalem; dexter nihil).
  * VII: indicium foci - exemplar in margine lateris focati solum. */
@@ -276,12 +276,19 @@ s32 principale (vacuum)
     CREDO_CHORDA_AEQUALIS_LITERIS(dispensator_super(app.d), "pagina");
     CREDO_VERUM(spatium_est(app.d->super_spatium, "3_dextrum_scriba"));
 
-    imprimere("\n--- V: Ctrl-A 0 = tabula decima ---\n");
-    CREDO_VERUM(manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM(manus_ludus_scribere(m, "0"));
+    imprimere("\n--- V: Cmd+0 = tabula decima ---\n");
+    CREDO_VERUM(manus_ludus_clavem(m, '0', MOD_SUPER));
     CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "10");
-    CREDO_VERUM(manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM(manus_ludus_scribere(m, "1"));
+    CREDO_VERUM(manus_ludus_clavem(m, '1', MOD_SUPER));
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "1");
+    /* terminalis focatus omnem Cmd devorat (brevitates fenestrae):
+     * hospes Cmd+numerus ANTE eum capit */
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    dispensator_recomponere(app.d);
+    CREDO_VERUM(spatium_est(motus->spatium, "1_dextrum_terminale"));
+    CREDO_VERUM(manus_ludus_clavem(m, '2', MOD_SUPER));
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "2");
+    CREDO_VERUM(manus_ludus_clavem(m, '1', MOD_SUPER));
     CREDO_CHORDA_AEQUALIS_LITERIS(v->activa, "1");
     CREDO_FALSUM(insula_mendacium(v->repo));
 

@@ -403,9 +403,13 @@ document edit still worked); the hook sets the writer for the call.
 
 ## AUDIENDA
 
-- **vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader**: tmux
-  inside a vicus terminal pane never sees Ctrl-A. The prefix needs
-  another key before tmux is used inside vicus.
+- ~~vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader~~
+  RESOLVED 2026-10-09 (Fran): the prefix is gone; Cmd+1..9 / Cmd+0
+  switch tabs (routed to the host BEFORE the focused pane - terminale
+  swallows every Cmd key); Ctrl-A goes to the focused pane (tmux).
+  Terminal twin: tabs by click only (Cmd never crosses a terminal).
+  Also fixed the same day: mouse reports in a vicus terminal pane used
+  SCREEN pixels (tmux tab clicks landed half a screen right).
 - **Two panes of the same kind collide** (found 2026-10-08 planning
   S2a): figura registry keyed by (partes, thema) - miscere refuses
   collisions; action registry keyed by name; component ids ('pagina')

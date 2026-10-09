@@ -276,8 +276,9 @@ vicus_componere (
  *   pan/zoom in ramum RELINQUENTIS effunduntur (gestus non effusus
  *   commutationem recusat), captura et ictus pendens abiciuntur,
  *   deinde ramus et gestus advenientis ponuntur.
- * - destinatio hospitis: Ctrl-A et, dum praefixum pendet, claves et
- *   textus ad radicem (applicatio ea numquam videt); cetera
+ * - destinatio hospitis: Cmd+1..9 / Cmd+0 ad radicem (tabula;
+ *   applicatio eas numquam videt; Franus 2026-10-09 - olim praefixum
+ *   Ctrl-A, quod nunc ad latus focatum it, tmux eo utitur); cetera
  *   geometrica. */
 vacuum
 vicus_dispensatorem_ligare (
