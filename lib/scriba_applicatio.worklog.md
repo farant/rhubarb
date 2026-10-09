@@ -47,3 +47,20 @@ build). Proof (probatio_montatio): pictor + two scribae in one store and
 one volume - elements, namespaced documents, branch canons and owners,
 componere from a branch, a remount on the same volume reopens the tab's
 own document. Glossary: montare, montatio, initiatio.
+
+## 2026-10-08 - page indicator: data in the branch, refreshed on change only
+
+The status line is composed purely from the branch, so the page
+indicator is two ephemeral attributes (`pagina_positio`,
+`paginae_numerus`) rather than something the composer asks the book.
+`paginam_indicare` writes them; it reads the view's page from the
+volume plagula, so it only runs when needed: forced at mount and when
+`scriba_reficere` sees the document change (page navigation), otherwise
+only when the book's count differs from the stored one (another view
+created a page). Page navigation itself (in scriba_actiones) does not
+write them - the next pulse/focus refresh does, one frame later.
+Proof: probatio_vicus_paginae checks the composed tree's "paginae"
+node on both views across new-page/back, and PIXELS in the left status
+line (the tree checks alone cannot see an unregistered figura);
+a headless PNG lands in build/probatio_vicus_paginae.png. Five plants
+caught.

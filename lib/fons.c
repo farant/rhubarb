@@ -3,12 +3,31 @@
  *
  * Strategia mappationis:
  * 1. ASCII (U+0000-007F) -> directum
- * 2. Latin-1 supplement (U+00A0-00FF) -> directum (accentuata)
+ * 2. Latin-1 supplement (U+00A0-00FF) -> directum (accentuata), nisi
+ *    sedes vacua (tunc 3, deinde 4)
  * 3. Typographica communia -> substitutio
  * 4. Cetera -> TOFU
  */
 
 #include "fons.h"
+#include "fons_6x8.h"
+
+/* sedes fontis sine pixelo (U+00AD, lineola mollis, consulto vacua) */
+interior b32
+glypha_vacua (
+    s32 codepoint)
+{
+    i32 r;
+
+    per (r = ZEPHYRUM; r < VIII; r++)
+    {
+        si (fons_6x8[codepoint][r] != ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
 
 i8
 fons_codepoint_ad_glypham (
@@ -36,10 +55,14 @@ fons_codepoint_ad_glypham (
      * Haec includit characteres accentuatos:
      * e-acutum (é), n-tilde (ñ), u-umlaut (ü), etc.
      */
-    si (codepoint >= 0x00A1 && codepoint <= 0x00FF)
+    si (   codepoint >= 0x00A1 && codepoint <= 0x00FF
+        && (codepoint == 0x00AD || !glypha_vacua(codepoint)))
     {
         redde (i8)codepoint;
     }
+    /* sedes vacua (2026-10-09: '×' et XL alii vacui pingebantur,
+     * substitutiones infra numquam attingebantur): ad substitutiones,
+     * deinde TOFU - numquam invisibile */
 
     /* Characteres typographici communes (substitutiones) */
     commutatio (codepoint)

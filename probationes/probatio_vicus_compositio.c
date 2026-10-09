@@ -6,7 +6,9 @@
  * pixela), arbor activae infra eam translata. Superficies ramorum =
  * fenestra minus linea (aperire, mutatio magnitudinis). Ictus in
  * coordinatis schirmi translationem sequitur. Commutatio: arbor
- * pictoris. Pixela lineae: activa colore selectionis. */
+ * pictoris. Pixela lineae: activa colore selectionis. vicus-latera
+ * S2a: latera dimidia (sinistrum cellulis rotundatum), radix lateris
+ * in spatio suo, divisor supra latera. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -40,12 +42,16 @@ scribam_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)argumentum;
+    (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo);
+                         latitudo, altitudo, NIHIL);
 }
 
 interior b32
@@ -56,10 +62,14 @@ pictorem_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)argumentum;
+    (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo);
 }
@@ -204,20 +214,27 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "scriba",
         magnitudo(ScribaMontatio),
-        scribam_montare, scribam_describere));
+        scribam_montare, scribam_describere, NIHIL));
     CREDO_VERUM(vicus_genus_addere(v, "pictor",
         magnitudo(PictorMontatio),
-        pictorem_montare, pictorem_describere));
+        pictorem_montare, pictorem_describere, NIHIL));
     CREDO_VERUM(vicus_aperire(v,
         "<tabulae activa=\"s1\">"
-        "<tabula id=\"s1\" genus=\"scriba\" titulus=\"scriba\"/>"
-        "<tabula id=\"p1\" genus=\"pictor\" titulus=\"pictor\"/>"
+        "<tabula id=\"s1\"><latus genus=\"scriba\"/>"
+        "<acervus><latus genus=\"pictor\"/></acervus></tabula>"
+        "<tabula id=\"p1\"><latus genus=\"pictor\"/></tabula>"
         "</tabulae>"));
 
     imprimere("\n--- I: superficies ramorum post aperire ---\n");
-    /* fenestra CDLXXX, linea VIII: rami CDLXXX x CDLXXII */
-    CREDO_VERUM(superficies_est(v, "scriba", "s1", "480", "472"));
-    CREDO_VERUM(superficies_est(v, "pictor", "p1", "480", "472"));
+    /* fenestra CDLXXX, linea VIII: latera CCXL x CDLXXII (S2a) */
+    CREDO_VERUM(superficies_est(v, "scriba", "s1_sinistrum_scriba",
+        "240",
+        "472"));
+    CREDO_VERUM(superficies_est(v, "pictor", "s1_dextrum_pictor", "240",
+        "472"));
+    CREDO_VERUM(superficies_est(v, "pictor", "p1_sinistrum_pictor",
+        "240",
+        "472"));
 
     imprimere("\n--- II: arbor - radix, linea, activa translata ---\n");
     d = dispensator_creare(piscina, intern, v->repo, vicus_actiones(v),
@@ -243,7 +260,18 @@ s32 principale (vacuum)
         p    = manus_ludus_ad_schirmum(m, c, p);
         CREDO_AEQUALIS_S32(p.y, CDLXXII);
     }
-    CREDO_NIHIL(liberum(d, "tabula"));
+    /* latus dextrum: radix pictoris in spatio suo, x CCXL */
+    c = componens_invenire_in_spatio(dispensator_arbor(d),
+        chorda_ex_literis("s1_dextrum_pictor", piscina),
+        chorda_ex_literis("radix", piscina));
+    CREDO_NON_NIHIL(c);
+    si (c)
+    {
+        CREDO_AEQUALIS_S32(c->fines.x, CCXL);
+        CREDO_AEQUALIS_S32(c->fines.y, VIII);
+        CREDO_CHORDA_AEQUALIS_LITERIS(c->spatium, "s1_dextrum_pictor");
+    }
+    CREDO_NON_NIHIL(liberum(d, "vicus.divisor"));
 
     imprimere("\n--- III: ictus in coordinatis schirmi ---\n");
     /* y XII = linea marginis scribae (translata); sine translatione
@@ -263,8 +291,15 @@ s32 principale (vacuum)
     }
     CREDO_VERUM(valor_est(insula_attributum(v->repo, INSULA_EPHEMERA,
         "superficies_altitudo"), "320"));
-    CREDO_VERUM(superficies_est(v, "scriba", "s1", "300", "312"));
-    CREDO_VERUM(superficies_est(v, "pictor", "p1", "300", "312"));
+    /* dimidium CL (cellulis rotundatum), reliquum CL */
+    CREDO_VERUM(superficies_est(v, "scriba", "s1_sinistrum_scriba",
+        "150",
+        "312"));
+    CREDO_VERUM(superficies_est(v, "pictor", "s1_dextrum_pictor", "150",
+        "312"));
+    CREDO_VERUM(superficies_est(v, "pictor", "p1_sinistrum_pictor",
+        "150",
+        "312"));
     c = liberum(d, "status");
     CREDO_NON_NIHIL(c);
     si (c)
@@ -286,19 +321,23 @@ s32 principale (vacuum)
         t = tabula_pixelorum_creare_nuda(piscina, CCC, CCCXX);
         tabula_pixelorum_vacare(t, color(COLOR_SUPERFICIES));
         delineare_mandata(md, t, vicus_imago_fons, v);
-        /* activa 'scriba' (cellulae 0..7): fundus selectionis */
+        /* activa 's1 pictor' (S2a: genus dextri a sinistro differt;
+         * cellulae 0..10): fundus selectionis */
         CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, I, I),
             color(COLOR_SELECTION));
         /* titulus activae inversus: colore fundi, nullum textus */
-        CREDO_VERUM(numerare(t, VI, ZEPHYRUM, XXXVI, VIII,
+        CREDO_VERUM(numerare(t, VI, ZEPHYRUM, LIV, VIII,
             color(COLOR_BACKGROUND)) > ZEPHYRUM);
-        CREDO_AEQUALIS_I32(numerare(t, VI, ZEPHYRUM, XXXVI, VIII,
+        CREDO_AEQUALIS_I32(numerare(t, VI, ZEPHYRUM, LIV, VIII,
             color(COLOR_TEXT)), ZEPHYRUM);
-        /* 'pictor' (cellulae 8..15): fundus, textus */
-        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XLIX,
+        /* 'p1' (cellulae 11..14): fundus, textus */
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, LXVII,
             I), color(COLOR_BACKGROUND));
-        CREDO_VERUM(numerare(t, LIV, ZEPHYRUM, XXXVI, VIII,
+        CREDO_VERUM(numerare(t, LXXII, ZEPHYRUM, XII, VIII,
             color(COLOR_TEXT)) > ZEPHYRUM);
+        /* divisor in x CL (dimidium post mutationem), supra latera */
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, CL, C),
+            color(COLOR_BORDER));
         /* ultra tabulas: fundus lineae, non mensa */
         CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, CC, IV),
             color(COLOR_BACKGROUND));

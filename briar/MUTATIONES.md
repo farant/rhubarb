@@ -19,6 +19,53 @@ Leges chartae:
 
 ## inedita
 
+- corpus: fons 6x8 - XL glyphae Latin-1 olim vacuae (× © ® ¹ ³ ¾,
+  capitales accentuatae, ã õ ø ý þ ð...); sedes vacua nunc TOFU, non
+  invisibilis.
+
+- corpus: `exemplaria` nova (exemplaria classica Mac 8x8, ex delineare
+  translata; enum EXEMPLAR_* nunc ibi). `Mandatum.exemplar` et
+  `mandata_rectangulum_exemplar` (rectangulum exemplari impletum).
+  scriba et pictor latus focatum exemplari in margine notant.
+
+- corpus: vicus - `VicusMontator` argumentum `argumentum` post `id`
+  accipit (montatores exstantes frangit); `VicusLatus.argumentum`;
+  `vicus_acervo_aperire` nova (latus in acervo dextro aperire aut in
+  frontem reddere, pulsu proximo); dispositio `id`/`argumentum`
+  lateris scribit. `scriba_liber_paginam_condere` nova (pagina
+  nominata).
+
+- corpus: `iussum` nova - iussa in textu stilo acme (`$verbum(arg,
+  arg)`): iussum ad cellulam aut proximum in linea, verba nota solum;
+  registrum verborum (`iussum_registrare`, `iussum_currere`, effectus
+  textus/error). `ScribaActiones.iussa`: scriba iussa nota colorat et
+  ictu currit.
+
+- corpus: scriba - `scriba_montare` argumentum ultimum `ScribaLiber*
+  liber` accipit (NIHIL = documentum proprium, mos vetus; liber = visus
+  super paginas communes) et `scriba_reficere` nova (visum stalum
+  reficit); `ScribaMontatio.liber`, `ScribaActiones.liber`/`.visus`/
+  `.cursor_laboris` - vocatores exstantes frangit.
+
+- corpus: vicus - `VicusMontator` et `vicus_genus_addere` argumentum
+  ultimum `vacuum* ctx` accipiunt (contextus generis montatori datus;
+  `VicusGenus.ctx`) - montatores exstantes frangit.
+
+- corpus: `scriba_liber` nova - liber paginarum scribae (paginae
+  nominatae in volumine, documentum unum per nomen, sine limite).
+
+- corpus: `fenestra_spatium_utile` (nova: rectangulum contenti fenestrae
+  quae aream visibilem schirmi implet) et `fenestra_spatium_schirmi`
+  (nova: schirmus totus, contentum plenae visionis); scriba_montare / pictor_montare
+  documentum NOVUM magnitudine superficiei creant (antea 68 x 56 et
+  320 x 200 fixa).
+
+- corpus: vicus = decem tabulae, par laterum (vicus-latera S2a-2):
+  `VicusLatus`, `VicusTabula` (sinistrum, acervus, focus),
+  `vicus_latus`, `vicus_latus_focatum`, `vicus_focum_ponere`;
+  `vicus_tabulam_addere` REMOTA; dispositio in plagula `vicus/latera`;
+  `Dispensator.super_spatium` (structura crevit, rebake).
+
 - corpus: glyphae_ductae v3 - litterae Graecae Latinis dissimiles,
   numeri supra et infra scripti, radices, << >> (LXI nova); fons.c
   Graeca Latinis similia in litteras Latinas vertit (antea TOFU).

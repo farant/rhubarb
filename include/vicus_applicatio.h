@@ -3,8 +3,9 @@
  *
  * Quod principalia vici (fenestra, terminalis) communicant: genera
  * scriba, pictor, terminale registrata (montare + describere - hic,
- * non in vico: vicus applicationes non novit), vicus apertus (index
- * ordinarius: scriba s1, pictor p1, terminale t1), dispensator super
+ * non in vico: vicus applicationes non novit), vicus apertus
+ * (dispositio ordinaria: decem tabulae - 1 scriba | terminale, 2
+ * scriba | pictor, 3-10 scriba | scriba), dispensator super
  * repositorium vici ligatus (Motus, destinatio). Glutina accipiunt
  * d, registra figurarum vici (vicus_figurae) et fontem imaginum
  * (vicus_imago_fons, ctx = vicus) - indices semel dati, numquam

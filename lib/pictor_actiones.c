@@ -144,7 +144,13 @@ pictor_penicillus_ictus (
     {
         redde FALSUM;
     }
-    p = destinatio->punctum_locale;
+    /* punctum in spatio NODI (tabulae), non ictus geometrici: dum
+     * captura tenet, mus super aliud jacet (linea status, latus
+     * alterum) et punctum_locale ad id pertinet - tractus ad marginem
+     * oppositum saliebat (Franus 2026-10-08; destinatio.h) */
+    p.x  = (s32)ev->datum.mus.x;
+    p.y  = (s32)ev->datum.mus.y;
+    p    = destinatio_ad_locale(nodus, p);
     commutatio (ev->genus)
     {
         casus EVENTUS_MUS_DEPRESSUS:

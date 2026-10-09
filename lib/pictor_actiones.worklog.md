@@ -39,3 +39,18 @@ Gate: `probatio_pictor_actiones` (35). Planted faults: the point
 loop emptied — red at the three-points count; capture not released
 on liberatus — red at the empty-capture assertion. Both green on
 revert. Examen ACCIPE; formator 0 after five long lines.
+
+## 2026-10-08 - drag off the canvas jumped to the opposite edge (the real cause)
+
+Fran, after the clipping fix in pictor_documentum: the line still
+jumped, already in the preview, while the mouse hovered scriba (other
+pane) or pictor's own status line with the button down. The points
+themselves were wrong: `pictor_penicillus_ictus` read
+`destinatio->punctum_locale`, which destinatio.h documents as local to
+the GEOMETRIC hit - during a capture that is whatever lies under the
+mouse (scriba's page, the status line at y ~ 3), not the captured
+canvas. Now the point is `destinatio_ad_locale(nodus, screen point)`:
+same value on a press, the canvas's own space while captured (negative
+or beyond the edges, then clipped when drawn). pictor was the only
+reader of punctum_locale. Test: probatio_pictor_actiones last section,
+a drag from the canvas onto the status line must store y=207.

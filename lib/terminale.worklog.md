@@ -331,3 +331,16 @@ environment, wrong id) caught; the environment plant needed `+ III`
 Known duplication: apps/terminale/terminale.c and the twin keep their
 own copy of the environment list (they spawn their own child); removing
 it needs a one-line public accessor - asked Fran.
+
+## 2026-10-09 - mouse in vicus: screen point -> node space
+
+Fran: clicking tmux's tabs in a vicus terminal pane did nothing. The
+encoder turns a mouse event into a cell by dividing PIXELS by the cell
+size; terminale passed the event's screen coordinates through. In the
+standalone app the grid sits at the window origin, so it was right; in
+vicus the pane is the right half under the tab bar, so every report
+named a cell ~half a screen to the right (outside tmux's columns).
+Now `ad_nodum` converts clicks, drags and wheel events to the input
+node's space (`destinatio_ad_locale`, as pictor does) before encoding.
+Test: the terminal tree inside a parent at (243, 9) - a click at
+(243+13, 9+17) reports cell (3, 3) like (13, 17) standalone; wheel too.

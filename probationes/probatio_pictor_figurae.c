@@ -155,29 +155,29 @@ s32 principale (vacuum)
     tabula_pixelorum_vacare(t,
         color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
     delineare_mandata(m, t, pictor_imago_fons, &pf);
-    /* linea documenti y=2 sub pan (-5,3): schirmo y=5, x 0..34 nigra;
-     * x=35..: fundus (documentum album ibi absens? non: documentum
-     * 40 latum, pan -5 -> schirmo -5..34) */
+    /* linea documenti y=2 sub pan (-5,3) et margine cellulae (VI,
+     * VIII - tabula ad cellulam I, ut folium scribae): schirmo y=13,
+     * documentum x 1..40 */
         niger = color_ad_pixelum(
             thema_color_ex_indice_colorationis((i8)PALETTE_BLACK));
     albus = color_ad_pixelum(
         thema_color_ex_indice_colorationis((i8)PALETTE_WHITE));
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, V),
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XIII),
                        niger);
-        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, VI),
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XIV),
                        albus);
-    /* extra documentum (x=40): MENSA prospectus (013: superficies
-     * circa paginam - prospectus figuram suam habet) */
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XXXV, X),
+    /* extra documentum dextrorsum (x=41): MENSA in cellula marginis */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XLI, XVIII),
         color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
-    /* margo paginae: cellula TOTA extra documentum (VI x VIII; schirmo
-     * documentum x -5..34, y 3..32 -> margo x -11..40, y -5..40):
-     * dextra x=40 videtur; ceterae extra prospectum (XL alto). Ubi
-     * margo vetus erat (y=33, I pixelum infra) nunc mensa */
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XL, X),
+    /* margo paginae: cellula TOTA extra documentum (schirmo documentum
+     * x 1..40, y 11..40 -> margo x -5..46, y 3..48): dexter x=46 et
+     * SUMMUS y=3 nunc videntur (olim summus extra prospectum - margo
+     * nusquam in vico visus, Franus 2026-10-08) */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XLVI,
+        XVIII),
         color_ad_pixelum(thema_color(COLOR_BORDER)));
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XXXIII),
-        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, III),
+        color_ad_pixelum(thema_color(COLOR_BORDER)));
     captura = imago_ex_tabula(t);
     sf = specimen_iudicare(&captura, "pictor_prima",
         specimen_regula_solita("probationes/pictor/specimina"),

@@ -69,6 +69,32 @@ rebuilt on the insula-native apps.*
 13. **New documents are sized to their pane** (pictor canvas, scriba
     page) at creation; existing documents keep their size.
 
+### Legacy pages (read 2026-10-08, before S2b)
+
+`lib/schirmata.c` + `lib/libro_paginarum.c` + `lib/pagina.c` = the
+design vicus revives: TEN screens (Ctrl-A), ONE `LibroPaginarum` shared
+by all screens, PER-SCREEN view state (`SchirmaLibroStatus`: page index,
+cursor line/column, vim mode - saved/restored on screen switch; only the
+left panel viewed the book, so only one live view). Pages: fixed 68x56
+grid + vim, optional NAME, navigating past the last creates one, 32-step
+back history, max 100. Navigation: Ctrl+Shift+Left/Right; clicked
+`#next #prev #back #last #N #name` links; `$goto $new $rename` commands.
+Persistence: one entity per page (`LibroPagina`) in the entity
+repository, saved on navigate + debounced. Click regions:
+`pagina_obtinere_regio_ad_punctum` - a word starting `$` (command) or
+`#` (link).
+
+### S2b decisions (Fran, 2026-10-08)
+
+14. **No page limit** (legacy's 100 dropped): pages are documents in the
+    volume.
+15. **A scriba view = which page + its cursor/mode**; the text lives once
+    in the page document. Each VIEW keeps its own gesture (uncommitted
+    edit) - "a gesture per instance, not per document".
+16. **Other views of the same page see committed text** debounced, on
+    switching to normal mode, or on a pane switch - not keystroke by
+    keystroke.
+
 ## II. What exists (read 2026-10-08)
 
 - **vicus** (`include/vicus.h`, `lib/vicus.c`, `lib/vicus_applicatio.c`,
@@ -157,6 +183,82 @@ sixteen plants. Found on the way: the dispatcher CANNOT clear focus -
 old value stays (pre-existing; see lib/dispensator.worklog.md).
 Pending Fran: `Dispensator.super_spatium` (hover across panes).
 
+S2a-2 as built (headers approved 2026-10-08): `VicusLatus` (one
+mount) and `VicusTabula` = left pane + right stack + focus;
+`vicus_latus`, `vicus_latus_focatum`, `vicus_focum_ponere`;
+`vicus_tabulam_addere` gone (slots fixed); `Dispensator.super_spatium`.
+Pane id = `<tab>_<side>_<kind>` (canon `nomen` refuses dots) = branch
+= scope. Layout in plagula `vicus/latera`; ten default tabs from
+vicus_applicatio; Ctrl-A 0 = tab 10. Left = half width rounded down to
+a cell; 1 px divider; titles derived (id + right kind if different +
+"[exitus]"). Click into the other pane only focuses it (strategy sends
+the press to the host root). Tests: all vicus tests converted; new
+`probatio_vicus_latera` (keys to the focused pane, first click
+focuses / second acts in pictor, typed text handed over on a pane
+switch, Motus follows, hover scope, focus durable, Ctrl-A 0);
+fourteen plants. Parked: formator false positive inside a macro
+expansion (terminal-planning parks/014).
+
+S2c as built: `fenestra_spatium_utile` (approved header) - vicus opens
+filling the screen's usable area (here 960 x 573 of our pixels;
+`-fumus` keeps the fixed size); new scriba pages and pictor canvases
+take the size of the surface they are mounted on (floors 20 x 10 and
+64), existing documents keep theirs. Tests: probatio_fenestra_spatium
+(plausibility, NIHIL refused), probatio_montatio (sizes, floors,
+remount keeps size); five plants. Follow-up (Fran: full screen after
+launch left new documents short): vicus OPENS in full screen -
+`fenestra_spatium_schirmi` (screen minus notch) sizes mounts and new
+documents; the window starts at the usable area with an even height
+so the buffer scale is exactly II; two more plants.
+
+S2b design (Fran 2026-10-08, approved): a page BOOK (`scriba_liber`)
+hands out one shared document per page name; a scriba view = page
+name (durable, in its branch) + cursor/mode; vicus passes a `ctx` to
+mounts (the book). Commits on every pane focus change and tab switch
+mean only the focused view ever holds an uncommitted edit - no
+simultaneous edits; what remains is a STALE view, handled by
+`scriba_reficere` (clean + document moved -> re-copy; pulse and on
+focus). Ctrl+Shift+Left/Right = previous/next page (past the last
+creates one). Slices: S2b-1 book, S2b-2 mount ctx, S2b-3 scriba view.
+
+S2b-1 as built: `include/scriba_liber.h` + lib; probatio_scriba_liber
+(new volume, same name = same object, unknown name, new page + reopen
+keeps order and text, never reuses a name, 121 pages); three plants.
+
+S2b-3 as built: `scriba_montare(..., ScribaLiber* liber)`; with a book
+the view's page name lives in plagula `scriba/visus/<mount id>` (first
+page if absent or unknown) and `m->doc` is that page's shared document.
+`ScribaActiones` carries `liber`, `visus` and `cursor_laboris` (the
+document's history cursor when the working sheet was last equal to the
+projection - set on refresh AND after the view's own commit).
+`scriba_reficere` re-copies the projection when the cursor moved; vicus
+calls it from the scriba kind's pulse and before handing the gesture
+to a newly focused view. Ctrl+Shift+Right/Left flush the gesture and
+move the view to the next/previous page (past the last creates one,
+before the first does nothing), resetting cursor/mode/selection.
+vicus_applicatio opens the book and gives it to the scriba kind as its
+ctx; new documents are sized from the half-screen pane. Test
+probatio_vicus_paginae (real composition, tab 3): one document for both
+views; unflushed text reaches the other view via the click; pulse
+refreshes the unfocused view (and reports change only once); focus
+refreshes without a pulse; next/previous/new page, view page durable
+across reopen; an idle commit mid-typing does not erase the letters
+typed after it. Six plants caught (the last one, cursor_laboris after
+the view's own commit, looked harmless and was not: without it the
+pulse treats the focused view as stale and wipes uncommitted letters).
+NOT done: the standalone scriba app still passes NIHIL (its own
+document, old layout) - giving it a book hides existing standalone
+documents until they are migrated into `paginae/`; decision for Fran.
+
+S2b-3b (Fran: show the page): "pagina i/n" right-aligned in scriba's
+status line, one cell from the edge, left out if it would touch the
+mode/position text. Data: ephemeral `pagina_positio` / `paginae_numerus`
+on the view's branch, written by `paginam_indicare` (scriba_applicatio:
+at mount, and from `scriba_reficere` when the view's page changed or
+the book's count changed - another view made a page). Drawn by
+`scriba_figura_paginae` (PARTES_INDEX, child of status). No book = no
+label. With named pages (S3) it becomes "<name> i/n".
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);
@@ -168,11 +270,146 @@ the named action through the host's registry; the open-widget verbs
 (`terminale`, `scriba(doc)`, `pictor(doc)`) push onto the right stack
 with the identity rule; a first non-widget command or two.
 
+S3 slices (Fran approved 2026-10-08): S3a recognition (pure) + click
+places the cursor; S3b host verb table, known verbs coloured, click
+runs, a first harmless verb (`$dies`); S3c right-pane stack (`$terminale`,
+`$scriba(name)`, `$pictor(name)`; identity; background terminals;
+durable); S3d page commands (name/rename -> status "<name> i/n",
+`#next #prev #N #name/#tag` links).
+
+S3 decisions (Fran 2026-10-08): arguments = text up to the FIRST `)` on
+the same line, split on commas, trimmed, no quoting or nesting; a click
+on a `$verb` in the right scriba runs too; argument errors show briefly
+in the clicked view's status line. From prunifex (../prunifex, Swift,
+EditorViewController.swift): ONLY KNOWN verbs are commands (the host
+answers) - everything else stays prose (`$5.00`, a stray `$foo(`), so
+no escaping and no "unknown verb" error. OPEN for S3b: does a click
+CONSUME the token (prunifex: `$aula` `$year` `$expenses` delete
+themselves, one-shot) or keep it as a button (concha, acme)? Proposed:
+per verb - widget openers stay, creators consume.
+
+prunifex ideas for later: find-or-create pages (`$expenses` jumps to
+the existing one - the identity rule for pages); `#tag` = next page
+containing the tag, wrapping, `#12` = page 12 (HashtagIndex); verb
+families with arguments (`$august-2027`, `$this-month`, `$next-month`
+find-or-create month pages - ours would be `$mensis(2027, 8)`); typed
+pages ("cards": year, month, expenses, game `$aula`, epub, image) =
+pages that are not plain text; `@1850s` timeline links to year pages;
+`$delete` clears the current page/card; inline structured tags
+(`<expense ...>`) indexed across pages (ExpenseIndex).
+
+S3a as built: `include/iussum.h` + lib (pure): `iussum_ad_locum`
+(token covering a cell) and `iussum_proximum` (next token from a
+column, for colouring); verb `[a-z][a-z0-9_]*` after `$` at line start
+or after a non-word character; `$verb(` without `)` on the line is not
+a command; `IussumNotum` predicate (NIHIL = all known). Test
+probatio_iussum (table of edge cases); eight plants caught. scriba: a
+left click on the page puts the cursor on the clicked cell (flush,
+new undo unit, insert mode kept, visual -> normal, selection and
+pending key cleared; right button ignored). Test: probatio_vicus_latera
+section VI on the real composition; five plants caught.
+
+S3b decisions (Fran 2026-10-08): consuming is PER VERB; `$dies`
+consumes (prunifex) and inserts the date in the legacy format
+`MM/DD/YYYY`. Ctrl-[ = Esc added in scriba (0c1c7270; `fd` existed).
+
+S3b-1 as built: `iussum.h` registry (opaque `IussumRegistrum`;
+`iussum_registrare(r, verb, consumit, fn, ctx)`, re-registering
+replaces; `iussum_registrum_notum` has the `IussumNotum` shape;
+`iussum_consumit`; `iussum_currere` clears the effect then calls the
+verb; `IussumEffectus { textus, error }`). `ScribaActiones.iussa`
+(NIHIL = no commands), set by the host after mounting. scriba draws
+known tokens in COLOR_ACCENT_PRIMARY over the text; a left click on a
+known token runs it: pending gesture flushed, consuming verbs have the
+token replaced by the effect text, others get it inserted after the
+token, ONE commit (`u` restores the token), cursor after the text. An
+effect with an error changes nothing (shown in S3b-2). vicus: the
+scriba kind's ctx is now {page book, command registry}; `dies`
+registered there (no arguments; `$dies(x)` = error). Tests:
+probatio_iussum VIII (registry), probatio_vicus_iussa (pixels, click,
+other view, undo, unknown verb, error); seven plants caught.
+S3b-2 as built (2026-10-09): ephemeral `nuntius` on the view's branch
+(canon + dominus pagina.clavis) set when a clicked command errs (or
+fails silently: "<verb>: defecit"), cleared by the next key or click
+(vim's message line, no timer). Status line: message after mode and
+position (two cells), in COLOR_ERROR via `scriba_figura_nuntii`
+(PARTES_DIALOGUS, child of status), cut one cell before the page
+label. `$dies(N)` = N days from today (signed; mktime normalises),
+`$dies(x)` / `$dies(1, 2)` = errors. Tests in probatio_vicus_iussa
+VI-VII; nine plants caught. Note: in a narrow pane the message is cut
+hard (240 px test pane: ~13 characters) - if that bites, let a long
+message replace the position text.
+
+S3c decisions (Fran 2026-10-09): opening a widget moves focus to the
+right pane; `$pictor(name)` = identity only for now (each stacked
+pictor keeps its own drawing under its pane id) - shared named
+drawings later (pictor mount API).
+
+S3c as built: `VicusMontator` gains `argumentum` (after id);
+`VicusLatus.argumentum`; identity = kind + argument. Layout writes `id`
+(and `argumentum` if any) for every pane - bringing a pane forward
+reorders the stack, so ids cannot be derived from order; absent id =
+the old derived one. `vicus_acervo_aperire(v, genus, arg)` QUEUES a
+request (`Vicus.petitiones`) applied in `vicus_pulsare` - never inside
+event handling (the command runs inside scriba's handler); applying:
+same kind+arg -> moved to the front, others keep their order; else
+mounted with a new id (`<tab>_dextrum_<kind>`, then `_2`, `_3`...);
+focus -> right; registries/Motus re-fitted; layout saved. The frame's
+EVENTUS_NIHIL recomposes the tree, so the change shows next frame.
+Verbs (non-consuming, registered in vicus_applicatio): `$terminale`,
+`$scriba`, `$scriba(name)` (page created if missing via
+`scriba_liber_paginam_condere`, names `[a-z0-9_-]+`; the view starts
+there, a saved view page wins), `$pictor`, `$pictor(name)`; errors:
+more than one argument, invalid page name. Background terminals were
+already pulsed (`vivit_in_fundo`). Tests: probatio_vicus_acervus
+(I-VII incl. reopen), probatio_scriba_liber VII; 13 plants caught.
+
+FOCUS INDICATOR (Fran 2026-10-09, next): today nothing shows which
+pane has focus. Fran: the margin cells around scriba's page and
+pictor's canvas (line border + differently coloured cells) could be
+a 1-bit MacPaint-style PATTERN in the focused pane instead of flat
+colour. The house has pattern code (find it); the pane needs to know
+it is focused (vicus focus -> an ephemeral attribute the composer
+reads?).
+
+Focus indicator as built (2026-10-09, Fran approved the plan; "light
+gray dots, just enough to be noticeable"): the 38 classic Mac patterns
+moved from lib/delineare.c into `exemplaria.h` (`exemplar_obtinere`,
+`exemplar_punctum`; enum EXEMPLAR_* moved there, delineare.h includes
+it). `Mandatum.exemplar` + `mandata_rectangulum_exemplar`: set bits
+only, in the given colour, anchored to the PIXEL BUFFER (neighbouring
+fills line up); two colours = a flat fill first. Serialised only when
+non-zero (old mandata snapshots unchanged). delineare_mandata draws it;
+tessellatio (character cells) cannot and leaves the flat fill. A pane
+is focused when its composer's Motus `spatium` is its branch id (no
+Motus or the root branch = standalone app = focused); the composer
+titles the prospectus "focatum" and the surround figure adds
+EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA in COLOR_BORDER (constant
+EXEMPLAR_FOCI in scriba_figurae.c / pictor_figurae.c - sparser:
+CINEREUM_LEVE, RARISSIMUS). Goldens promoted: pictor.arbor (titulus),
+pictor_prima specimen (dots in the surround only). Nine plants caught.
+
+One-click commands (Fran 2026-10-09: "a click on a command should
+execute and run the command in one step"): `VicusFacies.ictus_primus`
+- after the root handler focuses a pane, the pane may act on the same
+click; scriba's hook (vicus_applicatio) finds its `pagina` in its own
+scope and, if `scriba_iussum_ad_punctum` says a known command is under
+the point, runs the normal page handler. Plain text and pictor still
+only focus on the first click (Fran: cursor placement might join
+later). Trap found by a test: inside the vicus root handler the repo's
+writer is `vicus.radix`, and scriba's domini let only `pagina.clavis`
+write cursor/mode/message - those writes were silently refused (the
+document edit still worked); the hook sets the writer for the call.
+
 ## AUDIENDA
 
-- **vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader**: tmux
-  inside a vicus terminal pane never sees Ctrl-A. The prefix needs
-  another key before tmux is used inside vicus.
+- ~~vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader~~
+  RESOLVED 2026-10-09 (Fran): the prefix is gone; Cmd+1..9 / Cmd+0
+  switch tabs (routed to the host BEFORE the focused pane - terminale
+  swallows every Cmd key); Ctrl-A goes to the focused pane (tmux).
+  Terminal twin: tabs by click only (Cmd never crosses a terminal).
+  Also fixed the same day: mouse reports in a vicus terminal pane used
+  SCREEN pixels (tmux tab clicks landed half a screen right).
 - **Two panes of the same kind collide** (found 2026-10-08 planning
   S2a): figura registry keyed by (partes, thema) - miscere refuses
   collisions; action registry keyed by name; component ids ('pagina')

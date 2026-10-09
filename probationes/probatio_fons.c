@@ -1,9 +1,18 @@
 /* probatio_fons.c - Probationes mappationis glypharum */
 #include "latina.h"
 #include "fons.h"
+#include "fons_6x8.h"
 #include "piscina.h"
 #include "credo.h"
 #include <stdio.h>
+
+/* index glyphae ut numerus (i8 signatum: 0x80.. negativa essent) */
+interior s32
+glypha (
+    s32 cp)
+{
+    redde (s32)(insignatus character)fons_codepoint_ad_glypham(cp);
+}
 
 s32 principale(vacuum)
 {
@@ -218,6 +227,65 @@ s32 principale(vacuum)
         /* Non mappatum */
         CREDO_FALSUM(fons_est_mappatum(0x1F600));  /* emoji */
         CREDO_FALSUM(fons_est_mappatum(0x03C0));   /* pi */
+    }
+
+
+    /* ==================================================
+     * Probare nullam glypham mappatam vacuam (2026-10-09)
+     * ================================================== */
+
+    {
+        s32 cp;
+        i32 g;
+        i32 r;
+        b32 plena;
+        i32 vacuae;
+
+        imprimere("\n--- Probans nullam glypham invisibilem ---\n");
+        /* lineola mollis consulto invisibilis manet (non TOFU) */
+        CREDO_AEQUALIS_S32(glypha(0x00AD), 0xAD);
+        /* '×' olim sedem vacuam habebat: invisibile, non TOFU */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00D7),
+            0xD7);
+        /* quidquid mappatur pixela habet, praeter consulto vacua:
+         * NUL, spatium, lineola mollis (U+00AD) */
+        vacuae = ZEPHYRUM;
+        per (cp = ZEPHYRUM; cp < 0x3000; cp++)
+        {
+            g = (i32)glypha(cp);
+            si (g == ZEPHYRUM || g == 0x20 || g == 0xAD)
+            {
+                perge;
+            }
+            plena = FALSUM;
+            per (r = ZEPHYRUM; r < VIII; r++)
+            {
+                si (fons_6x8[g][r] != ZEPHYRUM)
+                {
+                    plena = VERUM;
+                }
+            }
+            si (!plena)
+            {
+                imprimere("  vacua: U+%04X -> 0x%02X\n", (unsigned)cp,
+                    (unsigned)g);
+                vacuae++;
+            }
+        }
+        CREDO_AEQUALIS_I32(vacuae, ZEPHYRUM);
+        /* Latin-1 totum glyphas suas habet (sedes vacua TOFU daret):
+         * XL glyphae 2026-10-09 additae hic tenentur */
+        vacuae = ZEPHYRUM;
+        per (cp = 0x00A1; cp <= 0x00FF; cp++)
+        {
+            si (   cp         != 0x00AD
+                && glypha(cp) != cp)
+            {
+                imprimere("  sine glypha: U+%04X\n", (unsigned)cp);
+                vacuae++;
+            }
+        }
+        CREDO_AEQUALIS_I32(vacuae, ZEPHYRUM);
     }
 
 

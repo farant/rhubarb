@@ -61,6 +61,8 @@ nomen structura {
                  vacuum* componere_ctx;
               Componens* arbor;
                  chorda  super;
+                 chorda  super_spatium;   /* S2a: spatium componentis
+                                           * sub mure */
                     s64  quies_ms;
                     Xar* effusio;                /* Xar de Eventus */
                     Xar* differenda;             /* ad limen */

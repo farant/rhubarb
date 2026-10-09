@@ -5,7 +5,8 @@
  * ramum activum (radix nihil accipit). Commutatio: gestus relinquentis
  * effunditur (insertio scribae pendens committitur), captura et ictus
  * pendens abiciuntur, gestus advenientis ponitur; focus per tabulam
- * servatur. */
+ * servatur. vicus-latera S2a: tabula = par laterum; latus sinistrum
+ * focatum, ramus = via lateris. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -35,12 +36,16 @@ scribam_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)argumentum;
+    (vacuum)ctx;
     redde scriba_montare((ScribaMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo);
+                         latitudo, altitudo, NIHIL);
 }
 
 interior b32
@@ -51,10 +56,14 @@ pictorem_montare (
                 Volumen* v,
      InsulaRepositorium* r,
      constans character* id,
+     constans character* argumentum,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+                 vacuum* ctx)
 {
+    (vacuum)argumentum;
+    (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
                          latitudo, altitudo);
 }
@@ -207,17 +216,19 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(v);
     CREDO_VERUM(vicus_genus_addere(v, "scriba",
         magnitudo(ScribaMontatio),
-        scribam_montare, scribam_describere));
+        scribam_montare, scribam_describere, NIHIL));
     CREDO_VERUM(vicus_genus_addere(v, "pictor",
         magnitudo(PictorMontatio),
-        pictorem_montare, pictorem_describere));
+        pictorem_montare, pictorem_describere, NIHIL));
     CREDO_VERUM(vicus_aperire(v,
         "<tabulae activa=\"s1\">"
-        "<tabula id=\"s1\" genus=\"scriba\" titulus=\"scriba\"/>"
-        "<tabula id=\"p1\" genus=\"pictor\" titulus=\"pictor\"/>"
+        "<tabula id=\"s1\"><latus genus=\"scriba\"/></tabula>"
+        "<tabula id=\"p1\"><latus genus=\"pictor\"/></tabula>"
         "</tabulae>"));
-    sm = (ScribaMontatio*)vicus_tabula(v, ZEPHYRUM)->montatio;
-    pm = (PictorMontatio*)vicus_tabula(v, I)->montatio;
+    sm = (ScribaMontatio*)vicus_latus(vicus_tabula(v, ZEPHYRUM),
+        VICUS_SINISTRUM)->montatio;
+    pm = (PictorMontatio*)vicus_latus(vicus_tabula(v, I),
+        VICUS_SINISTRUM)->montatio;
     d = dispensator_creare(piscina, intern, v->repo, vicus_actiones(v),
         vicus_componere, v, CCC);
     m      = manus_ludus_creare(piscina, d);
@@ -250,7 +261,8 @@ s32 principale (vacuum)
     CREDO_VERUM(motus->sordida);
     dispensator_pulsare(d, C * M + M);
     CREDO_FALSUM(motus->sordida);
-    CREDO_VERUM(valor_est(rami_attributum(v, "pictor", "p1", "pan_x"),
+    CREDO_VERUM(valor_est(rami_attributum(v, "pictor",
+        "p1_sinistrum_pictor", "pan_x"),
         "0"));
     CREDO_NIHIL(insula_attributum(v->repo, INSULA_EPHEMERA, "pan_x"));
     murem_mittere(d, m, EVENTUS_MUS_LIBERATUS, XV, C * M + M + XX);
@@ -261,12 +273,14 @@ s32 principale (vacuum)
     dispensator_recomponere(d);
     CREDO_VERUM(focus_est(d, "pagina"));
     CREDO_VERUM(motus->gestus.status == (vacuum*)&sm->actiones_ctx);
-    CREDO_VERUM(valor_est(rami_attributum(v, "pictor", "p1", "focus"),
+    CREDO_VERUM(valor_est(rami_attributum(v, "pictor",
+        "p1_sinistrum_pictor", "focus"),
         "tabula"));
 
     imprimere("\n--- V: focus in ramum, non radicem ---\n");
     dispensator_focus_ponere(d, chorda_ex_literis("status", piscina));
-    CREDO_VERUM(valor_est(rami_attributum(v, "scriba", "s1", "focus"),
+    CREDO_VERUM(valor_est(rami_attributum(v, "scriba",
+        "s1_sinistrum_scriba", "focus"),
         "status"));
     CREDO_NIHIL(insula_attributum(v->repo, INSULA_EPHEMERA, "focus"));
     dispensator_focus_ponere(d, chorda_ex_literis("pagina", piscina));

@@ -9,6 +9,7 @@ declare -a RADIX_FONTES=(
     "delineare"
     "delineare_mandata"
     "eventus_cauda"
+    "exemplaria"
     "fenestra_textus"
     "figura"
     "filum"

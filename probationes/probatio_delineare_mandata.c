@@ -10,6 +10,7 @@
 #include "mandatum.h"
 #include "delineare.h"
 #include "delineare_mandata.h"
+#include "exemplaria.h"
 #include "imago_typus.h"
 #include "specimen.h"
 #include "credo.h"
@@ -491,6 +492,80 @@ s32 principale (vacuum)
             }
         }
         CREDO_VERUM(lucet);
+    }
+
+    imprimere("\n--- exemplar (indicium foci): tabulae alligatum"
+              " ---\n");
+    {
+        TabulaPixelorum* te = tabula_pixelorum_creare_nuda(piscina, XX,
+            XX);
+                 Mandata* me;
+                   Fines  fe;
+                   Fines  fc;
+                     i32  fundus;
+                     i32  rubeus;
+                     s32  x;
+                     s32  y;
+                     i32  errores;
+                     i32  picti;
+
+        fundus = color_ad_pixelum(color_ex_rgb((i8)ZEPHYRUM,
+            (i8)ZEPHYRUM, (i8)ZEPHYRUM));
+        rubeus = rgba((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM).valor;
+        tabula_pixelorum_vacare(te, fundus);
+        me = mandata_creare(piscina, intern);
+        /* coetus translatus (III, II): rectangulum locale (-VI, I, XII,
+         * X) = tabula (-III..8, 3..12) - praecisum ad x 0 */
+        fc.x = ZEPHYRUM; fc.y = ZEPHYRUM; fc.latitudo  = XX;
+        fc.altitudo                                    = XX;
+        {
+            i32 c;
+
+            c = mandata_coetus_incipere(me, fc, FALSUM, III, II, I,
+                chorda_ex_literis("coetus", piscina));
+            fe.x = -VI; fe.y = I; fe.latitudo = XII; fe.altitudo = X;
+            mandata_rectangulum_exemplar(me, fe, rgba((i8)CCLV,
+                (i8)ZEPHYRUM, (i8)ZEPHYRUM),
+                EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA);
+            mandata_coetus_finire(me, c);
+        }
+        delineare_mandata(me, te, NIHIL, NIHIL);
+        errores  = ZEPHYRUM;
+        picti    = ZEPHYRUM;
+        per (y = ZEPHYRUM; y < XX; y++)
+        {
+            per (x = ZEPHYRUM; x < XX; x++)
+            {
+                b32 intus;
+                b32 debet;
+
+                intus = x < IX && y >= III && y < XIII;
+                debet = intus && exemplar_punctum(
+                    EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA, x, y);
+                si (tabula_pixelorum_obtinere_pixelum(te, (i32)x,
+                    (i32)y)
+                    != (debet ? rubeus : fundus))
+                {
+                    errores++;
+                }
+                si (debet)
+                {
+                    picti++;
+                }
+            }
+        }
+        CREDO_AEQUALIS_I32(errores, ZEPHYRUM);
+        CREDO_VERUM(picti > ZEPHYRUM);
+        /* id invalidum: nihil */
+        tabula_pixelorum_vacare(te, fundus);
+        me = mandata_creare(piscina, intern);
+        mandata_rectangulum_exemplar(me, fc, rgba((i8)CCLV,
+            (i8)ZEPHYRUM,
+            (i8)ZEPHYRUM), CC);
+        delineare_mandata(me, te, NIHIL, NIHIL);
+        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(te,
+            ZEPHYRUM,
+            ZEPHYRUM), fundus);
     }
 
     imprimere("\n");

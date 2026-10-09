@@ -131,3 +131,14 @@ FRACTA line shows. A plant that breaks the LIBRARY build (unused
 static under -Werror) makes the runner exit 2 = nothing ran - not
 "survived".
 
+
+## 2026-10-08 - focus clearing FIXED (no new API)
+
+The "focus requested, id still missing -> cleared" branch now works:
+`attr_ponere` REMOVES the attribute when the value is empty
+(`insula_attributum_tollere` - it already existed, scriba uses it since
+S1c; I proposed it as new without searching first). Writing "" could
+never work: the interner refuses empty strings. Test: probatio_spatium
+VI (scoped and unscoped); plant (branch disabled) caught by both.
+Full suites unchanged (236/236, ludus_tessera 8/8): nothing relied on
+the stale focus.

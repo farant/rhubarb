@@ -4,6 +4,7 @@
 #include "vim.h"
 #include "eventus.h"
 #include "stml.h"
+#include "destinatio.h"
 
 #include <string.h>
 
@@ -102,6 +103,8 @@ laboris_reficere (
            (size_t)(t->latitudo * t->altitudo));
     memcpy(sa->laboris.indentatio, t->indentatio,
            (size_t)t->altitudo * magnitudo(s32));
+    /* S2b: folium laboris ex hac versione */
+    sa->cursor_laboris = scriba_documentum_cursor(sa->doc);
 }
 
 
@@ -394,6 +397,8 @@ gestum_effundere (
     seq = sa->insertio_commissa
         ? scriba_documentum_committere_coniunctum(sa->doc, &sa->laboris)
         : scriba_documentum_committere(sa->doc, &sa->laboris);
+    /* S2b: proiectio == folium laboris post commissionem */
+    sa->cursor_laboris = scriba_documentum_cursor(sa->doc);
     si (sa->inserere)
     {
         si (seq > ZEPHYRUM)
@@ -488,6 +493,300 @@ clavis_nominata (
  * Tractator
  * ================================================== */
 
+/* dimensiones folii in ramo durabili (S2b: pagina mutata) */
+interior vacuum
+dimensiones_mutator (
+              StmlNodus* nodus,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans ScribaDocumentum* doc;
+
+    doc = (constans ScribaDocumentum*)ctx;
+    insula_attributum_ponere(nodus, p, in, "latitudo",
+        chorda_ut_cstr(chorda_ex_s32((s32)doc->latitudo, p), p));
+    insula_attributum_ponere(nodus, p, in, "altitudo",
+        chorda_ut_cstr(chorda_ex_s32((s32)doc->altitudo, p), p));
+}
+
+/* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam
+ * nova, ante primam nihil. Gestus pendens primum effunditur; deinde
+ * documentum, folium laboris, plagula visus, cursor ad 0,0 modo
+ * normali (status pagina.clavis est - ideo hic), dimensiones folii in
+ * ramo durabili. */
+interior vacuum
+paginam_mutare (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                     s32  gradus)
+{
+         VimClipboard  capsa;
+            VimStatus  st;
+               chorda  currens;
+               chorda  novum;
+                  b32  inventum;
+                  s32  i;
+     ScribaDocumentum* doc;
+
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
+    currens = volumen_plagulam_promere(sa->doc->volumen, sa->visus,
+        sa->doc->piscina, &inventum);
+    i = inventum ? scriba_liber_index(sa->liber, currens) : -I;
+    si (i < ZEPHYRUM)
+    {
+        i = ZEPHYRUM;
+    }
+    i += gradus;
+    si (i < ZEPHYRUM)
+    {
+        redde;
+    }
+    novum = i >= (s32)scriba_liber_numerus(sa->liber)
+          ? scriba_liber_pagina_nova(sa->liber)
+          : scriba_liber_nomen(sa->liber, (i32)i);
+    doc = scriba_liber_pagina(sa->liber, novum);
+    si (!doc)
+    {
+        redde;
+    }
+    si (   doc->latitudo != sa->laboris.latitudo
+        || doc->altitudo != sa->laboris.altitudo)
+    {
+        tabula_initiare(&sa->laboris, doc->piscina, doc->latitudo,
+            doc->altitudo);
+    }
+    sa->doc                = doc;
+    sa->inserere           = FALSUM;
+    sa->insertio_commissa  = FALSUM;
+    laboris_reficere(sa);
+    (vacuum)volumen_plagulam_condere(doc->volumen, sa->visus, novum,
+        "scriba:visus");
+    st                           = status_legere(ramus, sa, &capsa);
+    st.cursor_linea              = ZEPHYRUM;
+    st.cursor_columna            = ZEPHYRUM;
+    st.modo                      = MODO_VIM_NORMALIS;
+    st.selectio_initium_linea    = -I;
+    st.selectio_initium_columna  = ZEPHYRUM;
+    st.clavis_praecedens         = '\0';
+    st.esperans_fd               = FALSUM;
+    status_scribere(ramus, sa, st, &capsa);
+    (vacuum)mutare_ramum(ramus, INSULA_DURABILIS, dimensiones_mutator,
+        doc);
+}
+
+/* S3a: cellula sub puncto schirmi ex fines nodi (folium in pixelis)
+ * / folium, praecisa ad folium; FALSUM si nodus folio minor */
+interior b32
+cellulam_ictam (
+        constans ScribaActiones* sa,
+             constans Componens* nodus,
+                        Punctum  p,
+                            s32* linea,
+                            s32* columna)
+{
+    s32 cw;
+    s32 ch;
+
+    cw = nodus->fines.latitudo / (s32)sa->laboris.latitudo;
+    ch = nodus->fines.altitudo / (s32)sa->laboris.altitudo;
+    si (cw <= ZEPHYRUM || ch <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    p         = destinatio_ad_locale(nodus, p);
+    *columna  = p.x < ZEPHYRUM ? ZEPHYRUM : p.x / cw;
+    *linea    = p.y < ZEPHYRUM ? ZEPHYRUM : p.y / ch;
+    si (*columna >= (s32)sa->laboris.latitudo)
+    {
+        *columna = (s32)sa->laboris.latitudo - I;
+    }
+    si (*linea >= (s32)sa->laboris.altitudo)
+    {
+        *linea = (s32)sa->laboris.altitudo - I;
+    }
+    redde VERUM;
+}
+
+/* S3a: cursor in cellulam (linea, columna). Gestus pendens primum
+ * effunditur et insertio clauditur (ut vim: ictus unitatem revocandi
+ * frangit), modus inserendi manet; visualis ad normalem redit,
+ * selectio et clavis praecedens tolluntur. */
+interior vacuum
+cursorem_ponere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                     s32  linea,
+                     s32  columna)
+{
+    VimClipboard capsa;
+       VimStatus st;
+
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
+    sa->insertio_commissa  = FALSUM;
+    st                     = status_legere(ramus, sa, &capsa);
+    st.cursor_linea        = (i32)linea;
+    st.cursor_columna      = (i32)columna;
+    si (st.modo == MODO_VIM_VISUALIS)
+    {
+        st.modo = MODO_VIM_NORMALIS;
+    }
+    st.selectio_initium_linea    = -I;
+    st.selectio_initium_columna  = ZEPHYRUM;
+    st.clavis_praecedens         = '\0';
+    st.esperans_fd               = FALSUM;
+    status_scribere(ramus, sa, st, &capsa);
+}
+
+/* S3b-2: nuntius in linea status (vacuus = tollere) */
+interior vacuum
+nuntius_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    textum_ponere(radix, p, in, "nuntius", *(constans chorda*)ctx);
+}
+
+interior vacuum
+nuntium_ponere (
+    constans InsulaRamus* ramus,
+                  chorda  nuntius)
+{
+    (vacuum)mutare_ramum(ramus, INSULA_EPHEMERA, nuntius_mutator,
+        &nuntius);
+}
+
+/* S3b-2: nuntius ad clavem aut ictum proximum tollitur */
+interior vacuum
+nuntium_tollere (
+    constans InsulaRamus* ramus)
+{
+    chorda vacua;
+
+    si (insula_ramus_attributum(ramus, INSULA_EPHEMERA, "nuntius"))
+    {
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        nuntium_ponere(ramus, vacua);
+    }
+}
+
+/* S3b: substitutio iussi in folio laboris (intra gestum) */
+nomen structura {
+      ScribaActiones* sa;
+     constans Iussum* iussum;
+                 b32  consumit;
+              chorda  textus;
+                 s32  columna;    /* exitus: post textum insertum */
+} Substitutio;
+
+interior vacuum
+substitutio_mutator (
+     Motus* motus,
+    vacuum* ctx)
+{
+          Substitutio* sub;
+    TabulaCharacterum* t;
+                  s32  a;
+                  s32  i;
+
+    (vacuum)motus;
+    sub  = (Substitutio*)ctx;
+    t    = &sub->sa->laboris;
+    a    = sub->consumit ? sub->iussum->initium : sub->iussum->finis;
+    si (sub->consumit)
+    {
+        per (i = sub->iussum->initium; i < sub->iussum->finis; i++)
+        {
+            tabula_delere_characterem(t, (i32)sub->iussum->linea,
+                (i32)a);
+        }
+    }
+    sub->columna = a;
+    si (   sub->textus.mensura > ZEPHYRUM
+        && tabula_inserere_spatium(t, (i32)sub->iussum->linea, (i32)a,
+               sub->textus.mensura))
+    {
+        per (i = ZEPHYRUM; i < (s32)sub->textus.mensura
+                           && a + i < (s32)t->latitudo; i++)
+        {
+            t->cellulae[(i32)sub->iussum->linea * t->latitudo
+                + (i32)(a + i)] = (character)sub->textus.datum[i];
+        }
+        sub->columna = a + i;
+    }
+    albare(t);
+}
+
+/* S3b: iussum ictum currit. Gestus pendens primum effunditur;
+ * consumens signum suum textu effectus substituit, aliter textus post
+ * signum inseritur; mutatio commissio UNA (u signum restituit),
+ * cursor post textum. Error aut functio FALSUM: nihil mutatur,
+ * nuntius in linea status (S3b-2; FALSUM sine errore: "<verbum>:
+ * defecit"). */
+interior vacuum
+iussum_exsequi (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+         constans Iussum* iussum,
+                     s64  tempus)
+{
+    IussumEffectus eff;
+       Substitutio sub;
+
+    (vacuum)motus_gestum_effundere(motus, ramus->repo);
+    sa->insertio_commissa = FALSUM;
+    si (!iussum_currere(sa->iussa, iussum, sa->doc->piscina, &eff))
+    {
+        nuntium_ponere(ramus, eff.error.mensura > ZEPHYRUM ? eff.error
+            : chorda_concatenare(iussum->verbum, chorda_ex_literis(
+                  ": defecit", sa->doc->piscina), sa->doc->piscina));
+        redde;
+    }
+    si (eff.error.mensura > ZEPHYRUM)
+    {
+        nuntium_ponere(ramus, eff.error);
+        redde;
+    }
+    sub.sa        = sa;
+    sub.iussum    = iussum;
+    sub.consumit  = iussum_consumit(sa->iussa, iussum->verbum);
+    sub.textus    = eff.textus;
+    sub.columna   = iussum->finis;
+    si (sub.consumit || sub.textus.mensura > ZEPHYRUM)
+    {
+        mutare_gestum(motus, substitutio_mutator, &sub, tempus);
+    }
+    /* cursorem_ponere effundit: substitutio commissio una */
+    cursorem_ponere(ramus, motus, sa, iussum->linea,
+        sub.columna < (s32)sa->laboris.latitudo
+        ? sub.columna : (s32)sa->laboris.latitudo - I);
+}
+
+b32
+scriba_iussum_ad_punctum (
+            ScribaActiones* sa,
+        constans Componens* pagina,
+                   Punctum  schirmi)
+{
+    Iussum iussum;
+       s32 linea;
+       s32 columna;
+
+    si (   !sa || !sa->iussa || !pagina || !sa->doc
+        || !cellulam_ictam(sa, pagina, schirmi, &linea, &columna))
+    {
+        redde FALSUM;
+    }
+    redde iussum_ad_locum(&sa->laboris, linea, columna,
+        iussum_registrum_notum, sa->iussa, sa->doc->piscina, &iussum);
+}
+
 /* <tractator/> */
 b32
 scriba_pagina_clavis (
@@ -505,9 +804,12 @@ scriba_pagina_clavis (
                 s32  clavis;
                 i32  i;
                  i8  o;
+                s32  linea;
+                s32  columna;
+             Iussum  iussum;
+            Punctum  punctum;
 
     (vacuum)destinatio;
-    (vacuum)nodus;
     sa = (ScribaActiones*)ctx;
     si (!repo || !motus || !ev || !sa)
     {
@@ -515,6 +817,38 @@ scriba_pagina_clavis (
     }
     /* R4: status scribae per ramum (sine eo radix repositorii) */
     ramus = sa->ramus.repo ? sa->ramus : insula_ramus_radix(repo);
+    /* S3b-2: clavis aut ictus nuntium tollit (ante quidquam aliud:
+     * iussum ictum nuntium novum ponere potest) */
+    si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+        || ev->genus == EVENTUS_MUS_DEPRESSUS
+        || (   ev->genus == EVENTUS_TEXTUS
+            && ev->datum.textus.genus == EVENTUS_TEXTUS_COMMISSUM))
+    {
+        nuntium_tollere(&ramus);
+    }
+    si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        si (!nodus || ev->datum.mus.botton != MUS_SINISTER)
+        {
+            redde FALSUM;
+        }
+        punctum.x = ev->datum.mus.x;
+        punctum.y = ev->datum.mus.y;
+        si (!cellulam_ictam(sa, nodus, punctum, &linea, &columna))
+        {
+            redde FALSUM;
+        }
+        si (   sa->iussa
+            && iussum_ad_locum(&sa->laboris, linea, columna,
+                   iussum_registrum_notum, sa->iussa, sa->doc->piscina,
+                   &iussum))
+        {
+            iussum_exsequi(&ramus, motus, sa, &iussum, ev->tempus);
+            redde VERUM;
+        }
+        cursorem_ponere(&ramus, motus, sa, linea, columna);
+        redde VERUM;
+    }
     si (ev->genus == EVENTUS_TEXTUS)
     {
         si (ev->datum.textus.genus != EVENTUS_TEXTUS_COMMISSUM)
@@ -543,6 +877,31 @@ scriba_pagina_clavis (
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
         redde FALSUM;
+    }
+    /* S2b: Ctrl+Shift+Sinister/Dexter - pagina prior/proxima (sine
+     * libro: non tractatur) */
+    si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)
+        && (ev->datum.clavis.modificantes & MOD_SHIFT)
+        && (   ev->datum.clavis.clavis == CLAVIS_DEXTER
+            || ev->datum.clavis.clavis == CLAVIS_SINISTER))
+    {
+        si (!sa->liber)
+        {
+            redde FALSUM;
+        }
+        paginam_mutare(&ramus, motus, sa,
+            ev->datum.clavis.clavis == CLAVIS_DEXTER ? I : -I);
+        redde VERUM;
+    }
+    /* Ctrl-[ = Esc (ut in terminali; Franus): runa '[' aut character
+     * productus ESC (dispositiones ubi '[' alibi iacet) */
+    si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)
+        && (   ev->datum.clavis.runa == '['
+            || ev->datum.clavis.producta == XXVII))
+    {
+        clavem_tractare(&ramus, motus, sa, VIM_CLAVIS_ESCAPE,
+            ev->tempus);
+        redde VERUM;
     }
     /* Ctrl-R in modo normali: reficere */
     si (   (ev->datum.clavis.modificantes & MOD_IMPERIUM)

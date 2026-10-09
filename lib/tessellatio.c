@@ -271,6 +271,11 @@ _rectangulum_ponere (
                    i32  color;
     TessellatioCellula* cellula;
 
+    /* exemplar (indicium foci) in cellulis non pingitur */
+    si (x->impletum && x->exemplar != ZEPHYRUM)
+    {
+        redde;
+    }
     color  = _color(x->color);
     c0     = modulus_columna_proxima(ctx->modulus, px);
     c1     = modulus_columna_proxima(ctx->modulus,

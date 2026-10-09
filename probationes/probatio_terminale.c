@@ -555,6 +555,53 @@ murem_probare (vacuum)
     CREDO_VERUM(captum_est(&mc,
         "\x1B[<0;3;3M\x1B[<32;4;3M\x1B[<0;4;3m"));
     terminale_claudere(&mc.app);
+    /* translatus (vicus: latus dextrum sub linea tabularum): punctum
+     * SCHIRMI in spatium nodi - olim cellula ex pixelis schirmi
+     * (Franus: ictus in tabulas tmux nihil agebant). Arbor intra
+     * patrem ad (CCXLIII, IX); ictus (CCXLIII + XIII, IX + XVII) =
+     * cellula (3, 3) ut in applicatione sola; rotula idem. */
+    CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1000h\x1B[?1006h"));
+    {
+        Componens* pater;
+        Componens* arbor;
+        Componens* nodus;
+          ActioFn  fn;
+           vacuum* ctx;
+            Fines  f;
+
+        f.x = CCXLIII; f.y = IX; f.latitudo  = LXXX * CELL_X;
+        f.altitudo                           = XXIV * CELL_Y;
+        pater = componens_creare(piscina, intern, "latus",
+            PARTES_NULLUM);
+        componens_ponere_fines(pater, f);
+        arbor = terminale_componere(mc.app.repo, NIHIL, piscina, intern,
+            &mc.app);
+        componens_addere_liberum(pater, arbor);
+        nodus = componens_invenire_per_id(pater, chorda_ex_literis(
+            "schirmum", piscina));
+        CREDO_NON_NIHIL(nodus);
+        CREDO_VERUM(actio_invenire(mc.app.actiones, chorda_ex_literis(
+            "terminale.clavis", piscina), &fn, &ctx));
+        memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+        ev.genus             = EVENTUS_MUS_DEPRESSUS;
+        ev.datum.mus.x       = CCXLIII + XIII;
+        ev.datum.mus.y       = IX + XVII;
+        ev.datum.mus.botton  = MUS_SINISTER;
+        (vacuum)fn(mc.app.repo, dispensator_motus(mc.app.d), NIHIL,
+            nodus, &ev, ctx);
+        (vacuum)quadrum(&mc, ZEPHYRUM);
+        CREDO_VERUM(captum_est(&mc, "\x1B[<0;3;3M"));
+        memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+        ev.genus            = EVENTUS_MUS_ROTULA;
+        ev.datum.rotula.x   = CCXLIII + XIII;
+        ev.datum.rotula.y   = IX + XVII;
+        ev.datum.rotula.dy  = (s32)CELL_Y;
+        (vacuum)fn(mc.app.repo, dispensator_motus(mc.app.d), NIHIL,
+            nodus, &ev, ctx);
+        (vacuum)quadrum(&mc, ZEPHYRUM);
+        CREDO_VERUM(captum_est(&mc, "\x1B[<0;3;3M\x1B[<64;3;3M"));
+    }
+    terminale_claudere(&mc.app);
     /* ?1000 solum: forma X10 (ordinaria terminalis) */
     CREDO_VERUM(machinam_effusione(&mc, "\x1B[?1000h"));
     CREDO_VERUM(manus_ludus_premere_ad(mc.manus, XIII, XVII));

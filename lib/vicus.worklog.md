@@ -223,3 +223,168 @@ cell centre on row 0, through the encoder.
   set `SHELL=/bin/sh` first (no login shell with the tester's
   dotfiles); the two ludus_tessera vicus tests too.
 
+## 2026-10-08 - vicus-latera S2a-2: ten tabs, two panes each
+
+- A tab is now a left pane + a right STACK (front = last, never empty:
+  a missing stack repeats the left kind). A pane is one mount; its id
+  is the path `<tab>_<side>_<kind>` and is at the same time the store
+  BRANCH id and the tree SCOPE (S2a-1). Underscores, not dots: the
+  apps' canons type `id` as `nomen` (letters, digits, `_`, `*`) - with
+  dots every mount was refused ("montatio defecit"); found by probing
+  `vicus_causa` after the first converted test went red everywhere.
+- Layout lives in plagula `vicus/latera` (new key; old `vicus/tabulae`
+  volumes just get the default). At most VICUS_TABULAE (10) are read.
+  The default (1 scriba|terminale, 2 scriba|pictor, 3-10 scriba|scriba)
+  is vicus_applicatio's, vicus knows no kinds.
+- Geometry: left = half the width rounded DOWN to a 6 px cell, right =
+  the rest; each pane's surface written to its branch. A 1 px divider
+  component after the panes (host scope "", PARTES_NULLUM figure that
+  draws only for id `vicus.divisor` - the root gets the same figure
+  and draws nothing, and pane roots never see it: lookups are strict).
+- Click focus: the strategy compares the pressed component's scope
+  with Motus.spatium; another pane -> the press goes to the host root,
+  whose handler focuses the side under x. FIRST CLICK ONLY FOCUSES.
+  The strategy has no ctx, so the decision is made where the data is
+  (Motus) and the action where the Vicus is (root handler) - no
+  dispatcher hook needed.
+- Motus follows the focused pane: ramus, spatium, gesture; switching
+  pane = same handover as switching tab (motum_relinquere).
+- Titles are derived: id, + front kind when it differs from the left
+  kind, + " [exitus]" when a visible pane finished. One function for
+  the drawn title and the hit zone.
+- scriba does not handle mouse presses at all (no cursor move on
+  click): the "first click only focuses, second acts" proof uses
+  pictor (stroke count). House vim's Esc leaves the cursor where it
+  is (real vim steps back one).
+- Plant lesson again: the gesture-flush plant survived while the test
+  typed `iuno` + Esc - Esc commits scriba's text by itself. The test now
+  types WITHOUT Esc before switching panes.
+- `vicus_latus` takes a mutable `VicusTabula*` (approved header said
+  constans; returning a mutable pane from a const tab is a cast-qual
+  error and vicus_tabula hands out mutable tabs anyway).
+
+## 2026-10-08 - vicus-latera S2c: window fills the screen, new docs fit their pane
+
+- `fenestra_spatium_utile` (new, fenestra_macos.m): the primary
+  screen's visibleFrame through `contentRectForFrameRect:` for the
+  ordinary window style = the content rect of a titled window filling
+  the usable area. Here: 0,0 1920x1147 points -> 960x573 of our pixels
+  at SCALA II -> panes 480x565 (80 x 70 cells).
+- vicus main asks BEFORE building the composition (mounts take their
+  size, new documents their size from the mount); `-fumus` keeps the
+  fixed size so screenshots stay deterministic. The window opens at
+  the usable rectangle; the twin and the standalone apps unchanged.
+- New documents from the mount size (scriba_montare, pictor_montare -
+  standalone mounts too, a window is a pane): scriba page = cells
+  minus margins (and the status line in height), floor 20 x 10;
+  pictor canvas = prospect (status line off the height), floor 64.
+  Existing documents keep theirs (tested by remounting at another
+  size). `i32` is unsigned: the subtraction is done in s32.
+- The window main itself has no test (it needs a window); the query,
+  the size rules and their floors do (5 plants).
+
+## 2026-10-08 - S2c follow-up: open in FULL SCREEN
+
+Fran went full screen after launch: the window grew 573 -> 600 of our
+pixels but new documents had been sized for 573 (scriba ~4 rows,
+pictor ~27 px short). Fran works full screen, so vicus now opens in
+it: `fenestra_spatium_schirmi` (new) = the screen's frame minus the
+notch (`safeAreaInsets.top`, macOS 12+) - here 1920 x 1200 -> mounts
+and new documents get 960 x 600. The window starts at the usable
+rectangle with FENESTRA_PLENA_VISIO; its height is a whole number of
+OUR pixels (573 x 2 = 1146 points) because the buffer's scale is fixed
+at creation (window height / buffer height) and kept on resize:
+1147/573 = 2.0017 would make full screen 599, a pixel shorter than the
+documents. Checked headless first: at 960 x 573 page and canvas fit
+exactly - the mismatch was only the later full-screen growth.
+
+
+## 2026-10-08 - full screen AFTER the buffer (scale trap)
+
+The first full-screen version passed FENESTRA_PLENA_VISIO to
+fenestra_creare, which starts the transition before it returns; the
+pixel buffer was created after, from the window's CURRENT (already
+growing) height, so the scale came out above 2 and the logical area
+shrank below the documents' size - Fran: one column too wide, one row
+too tall. Now: create window, create buffer (scale exactly 2), then
+`fenestra_commutare_plenam_visionem`. Fran confirmed the page fits.
+Rule: anything that fixes a scale at creation must run before any
+size transition starts.
+
+## 2026-10-08 - S2b-2: a context per kind, handed to every mount
+
+`VicusMontator` gained a final `vacuum* ctx`; `vicus_genus_addere`
+takes it and `VicusGenus.ctx` keeps it; `latus_montare` passes it on.
+Purpose: every scriba mount must receive the SAME page book (S2b-3);
+vicus still knows no kind - the composition (vicus_applicatio) owns the
+book and registers it with the scriba kind. Other kinds pass NIHIL.
+Proof: the pulse test's toy kind records the ctx it was mounted with
+(registered with a marker pointer, a second kind with NIHIL); plant
+(vicus passes NIHIL) caught.
+
+## 2026-10-08 - S2b-3: shared pages need two refresh points
+
+Fran's simplification: every focus change and tab switch commits the
+leaving view's gesture, so only the focused view can hold uncommitted
+text - no rebase, only stale unfocused views. Refresh happens (a) in
+the scriba kind's pulse (`scribam_pulsare` -> `scriba_reficere`;
+returns VERUM once, so the frame repaints once) and (b) when focus
+arrives (`scribae_gestum` refreshes before installing the gesture).
+(b) is not redundant: a click into a stale view with no pulse in
+between would otherwise type onto the old sheet and the commit would
+REVERT the other view's text (plant caught).
+
+## 2026-10-08 - S3b-1: the scriba kind's ctx is a struct now
+
+`ContextusScribae { liber, iussa }` replaces the bare page book as the
+scriba kind's ctx, so every scriba view shares one command registry as
+well as one book; `scribam_montare` sets `actiones_ctx.iussa` after
+`scriba_montare`. `$dies` lives here (host owns verbs). Also: a new
+library called from scriba must be added BY HAND to
+ludus_tessera/compile_probationes.sh (`iussum`, like `scriba_liber`
+before) - the root suite's list is generated, that one is not.
+
+## 2026-10-09 - S3c: the right-pane stack opens by command
+
+Two traps avoided by design: (1) a command click runs INSIDE scriba's
+event handler, so opening a pane there would swap registries and the
+Motus gesture mid-dispatch - `vicus_acervo_aperire` only queues, and
+`vicus_pulsare` applies (the next frame's EVENTUS_NIHIL recomposes,
+so nothing waits for input). (2) ids were derived from position
+(`<tab>_<side>_<kind>`); with several panes of one kind and reordering
+on bring-forward, a derived id would hand one pane's state (branch,
+pictor document, scriba visus plagula) to another after a restart -
+so the layout now stores each pane's id. Old layouts without ids keep
+their derived ids. Moving a pane to the front copies VicusLatus
+structs within the Xar; nothing outside holds VicusLatus pointers
+across a pulse (Motus keeps the branch by value and the montatio
+pointer, which does not move).
+
+## 2026-10-09 - first click runs commands (ictus_primus)
+
+A pane can act on the click that focused it (`VicusFacies.ictus_primus`,
+called from the root handler after `vicus_focum_ponere`, so Motus is
+already the pane's). Lesson: when a pane's handler is called from
+INSIDE another action, the repository's writer is that other action
+(`vicus.radix`), and the pane's domini refuse its writes WITHOUT an
+error - the date was inserted (document commit) but cursor and message
+silently stayed. Any hook that calls into a pane's action must set the
+writer to that action's name for the call (scribae_ictus_primus does).
+A test only caught it after its text was changed so the cursor would
+actually move - the original assertion passed by coincidence.
+
+## 2026-10-09 - Ctrl-A prefix removed, Cmd+digit switches tabs
+
+Fran uses Ctrl-A as tmux's leader inside terminale panes, so vicus no
+longer binds it: the prefix state (`praefixum` attribute, tinted tab
+bar, n/p, Ctrl-A Ctrl-A for the previous tab) is gone and Ctrl-A
+reaches the focused pane. Cmd+1..9 / Cmd+0 switch tabs. The routing
+rule in `destinare` is NOT redundant even though a Cmd key unhandled by
+scriba bubbles up to the root anyway: terminale consumes EVERY Cmd key
+(window shortcuts never go to the program), so with the terminal
+focused Cmd+digit would die there - a plant that removed the rule
+survived until the test focused the terminal first. Terminal twin:
+Cmd never crosses a terminal, so tabs switch by clicking the tab bar
+(the twin replay test now clicks). `prior` is still recorded in the
+ephemeral layer but nothing reads it. Test renamed
+probatio_vicus_praefixum -> probatio_vicus_claves.
