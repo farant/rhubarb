@@ -92,7 +92,8 @@ surdus_est_nullum (
 /* ==================================================
  * Arithmetica custodita: FALSUM si s64 excederetur (exitus non
  * tangitur). Coefficientes extra basin spatii (S >= 2^k) nulli esse
- * debent - contractus non custoditur in adde/subtrahe/scala.
+ * debent: multiplica, signum et compara eos RECUSANT (FALSUM);
+ * adde/subtrahe/scala spatium non vident et eos tantum transferunt.
  * ================================================== */
 
 b32
@@ -125,8 +126,8 @@ surdus_multiplica (
  * Signum
  * ================================================== */
 
-/* -1, 0, +1 EXACTE; FALSUM solum si gradus 3 excederet (exitus non
- * tangitur) */
+/* -1, 0, +1 EXACTE; FALSUM (exitus non tangitur) solum si gradus 3
+ * excederet aut coefficiens extra basin non nullus */
 b32
 surdus_signum (
     constans SurdiSpatium* sp,

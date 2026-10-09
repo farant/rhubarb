@@ -203,3 +203,17 @@ the pragma BEFORE the marker - between marker and loop it trips the
 placement check instead, red for the wrong reason, twice now).
 Lesson: a new `lib/*.c` owes the `silva` gate for reasons beyond size -
 silva's census reads every construct in the corpus.
+
+## 2026-10-09 - review (recensor-extensio, 102a393f)
+
+Verified: T + qp < 2pR < 2^64 at every call site, single conditional
+subtraction, productum accumulator < 2^63 for any numerus < 2^32; 10.4M
+checks vs plain '%' (composite odd p, 2^31 - 1, p - 1 inputs), 0 bad.
+
+- A1 (MEDIUM): the vectorization gate did not bind a marker to its
+  function: "AGMEN VECTORIZANDA: adde" on a vectorizable helper loop plus
+  pragma-disabled agmen_adde_modulo printed "sana". The gate now finds
+  each marker's enclosing function (house style: name alone at column
+  0) and demands agmen_<name>_modulo, one marker per kernel. Plant (the
+  reviewer's exact scenario) red: "nota 'adde' in functione
+  'agminis_auxilium_plantatum'".

@@ -8,8 +8,10 @@
 #
 #   I    omnis ansa nota 'AGMEN VECTORIZANDA: <nucleus>' vectorizata
 #        (-Rpass=loop-vectorize, vexilla domus)
-#   II   nota una per nucleum publicum (agmen_*_modulo) - nucleus novus
-#        sine nota non tacet
+#   II   nota una per nucleum publicum (agmen_*_modulo), INTRA eum:
+#        nota 'X' in functione agmen_X_modulo stare debet (recensio A1:
+#        nota in ansa auxilii posita portam aliter fallebat) - nucleus
+#        novus sine nota non tacet
 #   III  NULLA ansa alia vectorizata: via relata (agminis_*_scalaris)
 #        scalaris manet, aliter oraculum et mensura NEON contra NEON
 #
@@ -35,14 +37,21 @@ fi
 # lineae ansarum vectorizatarum
 grep -E "^$FONS:[0-9]+:[0-9]+: remark: vectorized loop" "$T/remarcae" \
     | cut -d: -f2 | sort -n > "$T/vectorizatae"
-# notae: linea notae + 1 = linea ansae
-grep -n 'AGMEN VECTORIZANDA:' "$FONS" | sed -E 's/^([0-9]+):.*AGMEN VECTORIZANDA: ([a-z_]+).*/\1 \2/' \
-    > "$T/notae"
+# notae: linea notae + 1 = linea ansae; functio includens = nomen ultimum
+# in columna 0 ante notam (stilus domus: 'nomen (' in linea sua)
+awk '/^[A-Za-z_][A-Za-z_0-9]* \($/ { functio = $1 }
+     /AGMEN VECTORIZANDA:/ {
+         n = $0; sub(/.*AGMEN VECTORIZANDA: /, "", n); sub(/[^a-z_].*/, "", n)
+         print NR, n, functio
+     }' "$FONS" > "$T/notae"
 [ -s "$T/notae" ] || { echo "agmen_vectorizatio: nullae notae in $FONS"; echo "vectorizatio agminis: FRACTA"; exit 1; }
 
 # I
 : > "$T/notatae"
-while read -r linea nucleus; do
+while read -r linea nucleus functio; do
+    if [ "$functio" != "agmen_${nucleus}_modulo" ]; then
+        credo 1 "II   nota '$nucleus' (linea $linea) in functione '$functio', non agmen_${nucleus}_modulo"
+    fi
     ansa=$((linea + 1))
     echo "$ansa" >> "$T/notatae"
     if ! sed -n "${ansa}p" "$FONS" | grep -q '^ *per ('; then
@@ -61,7 +70,7 @@ done < "$T/notae"
 
 # II
 grep -E '^agmen_[a-z_]+_modulo \($' "$FONS" | sed -E 's/^agmen_([a-z_]+)_modulo \($/\1/' | sort > "$T/nuclei"
-cut -d' ' -f2 "$T/notae" | sort > "$T/notae_nomina"
+cut -d' ' -f3 "$T/notae" | sed -E 's/^agmen_([a-z_]+)_modulo$/\1/' | sort > "$T/notae_nomina"
 if cmp -s "$T/nuclei" "$T/notae_nomina"; then
     credo 0 "II   nota una per nucleum ($(wc -l < "$T/nuclei" | tr -d ' ') nuclei)"
 else

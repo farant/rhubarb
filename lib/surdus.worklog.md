@@ -54,3 +54,23 @@ xn/yn -> x_proximus/y_proximus.
 
 Next: D120 uses surdus for D119's exact path (benchmark + regression:
 D119's counts reproduced), then the zeta_8 derived-series audit.
+
+## 2026-10-09 - review (recensor-extensio, 102a393f)
+
+Verified sound by the reviewer: the filter bound (incl. |c| > 2^53, FMA
+contraction; ~29,700 signs placed within +-3E of zero under -O2, ASan
+and -ffp-contract=fast, 0 wrong), the tier-3 split and recursion, add/sub
+refusing exactly at overflow; 20,249 fuzz signs over 9 prime spaces vs
+an exact oracle, 0 wrong.
+
+- S1 (MEDIUM, UB): `_est_primus` formed d*d in s32 before the 2^15 bound
+  was checked - surdi_spatium({2^31 - 1}) overflowed (46341^2). Now the
+  bound comes first and the loop runs d <= p/d. Test: 2^31 - 1 refused.
+- S2 (MEDIUM, test gap): dropping k from the fast-path precheck survived
+  the suite and is real UB: all 8 coefficients 2^29 - 1 over {2, 3, 5}
+  give 29 + 29 + 5 = 63 without k, yet the product overflows. That
+  product is now a must-refuse test; plant "0 * k" red.
+- S3 (LOW): coefficients with S >= 2^k were read as 0 by signum and
+  multiplica but as nonzero by est_nullum. multiplica, signum and
+  compara now refuse them; adde/subtrahe/scala (no space argument) only
+  carry them. Plant red.

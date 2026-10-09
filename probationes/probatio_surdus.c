@@ -203,6 +203,10 @@ s32 principale (vacuum)
         CREDO_VERUM (surdi_spatium(primi, I, &sp));
         primi[ZEPHYRUM] = 65537;
         CREDO_FALSUM (surdi_spatium(primi, I, &sp));
+        /* 2^31 - 1: limes ANTE primalitatem (d*d s32 excederet -
+         * recensio S1) */
+        primi[ZEPHYRUM] = 2147483647;
+        CREDO_FALSUM (surdi_spatium(primi, I, &sp));
     }
 
     /* oraculum: Q(cos 2 pi/120) continet sqrt 2, 3, 5 */
@@ -263,6 +267,39 @@ s32 principale (vacuum)
             _surdus(0, 0x80000000LL, 0, 0, 0, 0, 0, 0),
             _surdus(0, 0x80000000LL, 0, 0, 0, 0, 0, 0), &r));
         CREDO_VERUM (_aequales(r, surdus_ex_s64(VII)));
+        /* via celeris: k in limite necessarius (recensio S2) - omnes
+         * VIII coefficientes 2^29 - 1 super {2, 3, 5}: bA + bB + bP = 63
+         * sine k, verum productum s64 excedit -> RECUSARI debet */
+        {
+            Surdus magnus;
+               s32 j;
+
+            per (j = ZEPHYRUM; j < VIII; j++)
+            {
+                magnus.c[j] = 0x1FFFFFFFLL;
+            }
+            r = surdus_ex_s64(VII);
+            CREDO_FALSUM (surdus_multiplica(&spatium, magnus, magnus,
+                &r));
+            CREDO_VERUM (_aequales(r, surdus_ex_s64(VII)));
+        }
+        /* coefficiens extra basin (S >= 2^k) recusatur (recensio S3) */
+        {
+            SurdiSpatium duo;
+                     s32 primi_duo[II];
+                     s32 signum = XCIX;
+
+            primi_duo[ZEPHYRUM]  = II;
+            primi_duo[I]         = III;
+            CREDO_VERUM (surdi_spatium(primi_duo, II, &duo));
+            x = _surdus(1, 0, 0, 0, 5, 0, 0, 0);
+            CREDO_FALSUM (surdus_signum(&duo, x, &signum));
+            CREDO_AEQUALIS_S32 (signum, XCIX);
+            CREDO_FALSUM (surdus_multiplica(&duo, x, surdus_ex_s64(I),
+                &r));
+            CREDO_FALSUM (surdus_compara(&duo, x, surdus_ex_s64(0),
+                &signum));
+        }
         /* in ipso limite ACCIPITUR (custodia non nimis stricta) */
         CREDO_VERUM (surdus_subtrahe(surdus_ex_s64(-1LL),
             surdus_ex_s64(0x7FFFFFFFFFFFFFFFLL), &r));

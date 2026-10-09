@@ -228,7 +228,8 @@ _est_primus (
     {
         redde FALSUM;
     }
-    per (d = II; d * d <= p; d++)
+    /* d <= p/d: d*d numquam formatur (p prope 2^31 excederet s32) */
+    per (d = II; d <= p / d; d++)
     {
         si (p % d == 0)
         {
@@ -254,7 +255,7 @@ surdi_spatium (
     }
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        si (   !_est_primus(primi[i]) || primi[i] >= 32768
+        si (   primi[i] >= 32768 || !_est_primus(primi[i])
             || (i > 0 && primi[i] <= primi[i - I]))
         {
             redde FALSUM;
@@ -396,6 +397,26 @@ surdus_scala (
     redde VERUM;
 }
 
+/* coefficiens extra basin spatii (S >= 2^k) non nullus? Tales
+ * recusantur: aliter signum et productum eos ut 0 legerent, est_nullum
+ * ut non nullos (recensio 2026-10-09, S3) */
+interior b32
+_extra_basin (
+    constans SurdiSpatium* sp,
+    constans       Surdus* x)
+{
+    s32 s;
+
+    per (s = (s32)I << sp->numerus; s < VIII; s++)
+    {
+        si (x->c[s] != 0)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 b32
 surdus_multiplica (
     constans SurdiSpatium* sp,
@@ -403,6 +424,10 @@ surdus_multiplica (
                    Surdus  b,
                    Surdus* exitus)
 {
+    si (_extra_basin(sp, &a) || _extra_basin(sp, &b))
+    {
+        redde FALSUM;
+    }
     redde _multiplica_k(sp, &a, &b, sp->numerus, exitus);
 }
 
@@ -519,7 +544,8 @@ surdi_signum_gradu (
     s32 signum;
     s32 g;
 
-    si (!_signum_k(sp, &x, sp->numerus, filtrum, &signum, &g))
+    si (   _extra_basin(sp, &x)
+        || !_signum_k(sp, &x, sp->numerus, filtrum, &signum, &g))
     {
         redde FALSUM;
     }

@@ -24,8 +24,10 @@ where the time goes.**
 - The statistics match to the last decision: 2,046,598,563 masks,
   224,397,659 exact sums, 138,718 zero sums, 397,565,109 exact sector
   decisions and 93,638,928 exact axis decisions (all exact ties, as in
-  D119). D120 therefore makes the same exact decisions at the same
-  places; only the arithmetic underneath changed.
+  D119). For sectors this pins the decisions: every exact sector
+  decision is a boundary hit in both runs. For axes it shows equal
+  counts of exact decisions and ties, plus identical tables; the tie
+  sets themselves are not compared mask by mask (review D1).
 - `surdus` never refused (0 fallbacks to extensio).
 
 | | D119 (extensio) | D120 (surdus) | |
