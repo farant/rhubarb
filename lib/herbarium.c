@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #define HERBARIUM_VIA_MAXIMA  MXXIV
 
@@ -454,6 +455,21 @@ _exsequi_capiens (
         _premere(inv->herbarium, petitio, res.responsum,
                  chorda_ex_literis("status", piscina));
     }
+    alioquin si (   res.successus && res.responsum
+                 && inv->herbarium->optiones.iudex)
+    {
+        /* custos ante usum (herbarium-spec-2): iudex consumptoris
+         * responsum iudicat ANTE redditionem - inexspectatum in disco
+         * antequam consumptor octetum videt */
+        chorda causa = inv->herbarium->optiones.iudex(petitio,
+            res.responsum, piscina,
+            inv->herbarium->optiones.iudex_datum);
+
+        si (causa.mensura > 0)
+        {
+            _premere(inv->herbarium, petitio, res.responsum, causa);
+        }
+    }
     redde res;
 }
 
@@ -476,6 +492,82 @@ herbarium_vectura (
     v.exsequi       = _exsequi_capiens;
     v.datum         = inv;
     redde v;
+}
+
+chorda
+herbarium_sedes_ordinaria (
+    constans character* hospes,
+               Piscina* piscina,
+                chorda* causa)
+{
+    constans character* ambitus = getenv("RHUBARB_HERBARIUM");
+    constans character* domus;
+             character  via[HERBARIUM_VIA_MAXIMA];
+             character  nuntius[CCLVI];
+           structura stat st;
+                chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
+    si (causa)
+    {
+        *causa = vacua;
+    }
+    si (   !hospes || !*hospes || strchr(hospes, '/')
+        || strstr(hospes, ".."))
+    {
+        si (causa)
+        {
+            *causa = chorda_ex_literis("hospes vacuus aut '/' aut '..'"
+                " continet", piscina);
+        }
+        redde vacua;
+    }
+    si (ambitus && *ambitus)
+    {
+        si (stat(ambitus, &st) != 0 || !S_ISDIR(st.st_mode))
+        {
+            si (causa)
+            {
+                sprintf(nuntius, "$RHUBARB_HERBARIUM directorium non"
+                    " exstans nominat: %.150s", ambitus);
+                *causa = chorda_ex_literis(nuntius, piscina);
+            }
+            redde vacua;
+        }
+        si (strlen(ambitus) + strlen(hospes) + II > magnitudo(via))
+        {
+            si (causa)
+            {
+                *causa = chorda_ex_literis("via sedis nimis longa",
+                    piscina);
+            }
+            redde vacua;
+        }
+        sprintf(via, "%s/%s", ambitus, hospes);
+        redde chorda_ex_literis(via, piscina);
+    }
+    domus = getenv("HOME");
+    si (!domus || !*domus)
+    {
+        si (causa)
+        {
+            *causa = chorda_ex_literis("$HOME deest: sedes ordinaria"
+                " ignota", piscina);
+        }
+        redde vacua;
+    }
+    si (strlen(domus) + strlen(hospes) + XXIV > magnitudo(via))
+    {
+        si (causa)
+        {
+            *causa = chorda_ex_literis("via sedis nimis longa",
+                piscina);
+        }
+        redde vacua;
+    }
+    sprintf(via, "%s/.rhubarb/herbarium/%s", domus, hospes);
+    redde chorda_ex_literis(via, piscina);
 }
 
 vacuum
