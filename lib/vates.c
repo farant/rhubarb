@@ -729,8 +729,8 @@ _legere (
         }
     }
 
-    /* novitates OMNES per schema declaratum (norma, NOTANDUM) */
-    _novitates_ex_norma(j.radix, novitas, piscina);
+    /* novitates per schema: IUDEX in vectura (herbarium-spec-2), ante
+     * hanc lectionem - non hic */
 
     usus           = json_objectum_capere(j.radix, "usage");
     r->usus.input  = json_capere_integer(usus, "input_tokens", 0);
@@ -988,20 +988,112 @@ _anthropic_struere (
     redde v;
 }
 
+/* novitas corporis Anthropic: stop_reason ignota, deinde notae et vitia
+ * schematis declarati (lib/vates_responsum.norma) */
+interior chorda
+_novitates_corporis (
+    JsonValor* radix,
+      Piscina* piscina)
+{
+    chorda novitas = _vacua();
+
+    (vacuum)_causa_finis(json_capere_chorda(radix, "stop_reason",
+        _vacua()), &novitas, piscina);
+    _novitates_ex_norma(radix, &novitas, piscina);
+    redde novitas;
+}
+
+/* IUDEX (herbarium-spec-2 §III): ante usum, ex statu et octetis solis,
+ * codice hostili introitu tuto (json_legere, norma_iudicare). Responsa
+ * >= CD herbarium ipsum 'status' premit; hic sub CD. */
+interior chorda
+_iudex_anthropic (
+      HttpPetitio* petitio,
+    HttpResponsum* responsum,
+          Piscina* piscina,
+           vacuum* datum)
+{
+    JsonResultus j;
+       character nuntius[LXIV];
+
+    (vacuum)petitio;
+    (vacuum)datum;
+    si (responsum->status != CC)
+    {
+        sprintf(nuntius, "status inexspectatus: %u",
+            (insignatus integer)responsum->status);
+        redde chorda_ex_literis(nuntius, piscina);
+    }
+    j = json_legere(responsum->corpus, piscina);
+    si (!j.successus)
+    {
+        redde chorda_ex_literis("corpus non JSON", piscina);
+    }
+    si (!json_est_objectum(j.radix))
+    {
+        redde chorda_ex_literis("radix non objectum", piscina);
+    }
+    redde _novitates_corporis(j.radix, piscina);
+}
+
+/* hospes ex URL ('https://hospes/...'): acervus per hospitem */
+interior constans character*
+_hospes_ex_url (
+    constans character* url,
+               Piscina* piscina)
+{
+    constans character* initium = strstr(url, "://");
+    constans character* finis;
+             character* hospes;
+                size_t  longitudo;
+
+    initium    = initium ? initium + III : url;
+    finis      = strchr(initium, '/');
+    longitudo  = finis ? (size_t)(finis - initium) : strlen(initium);
+    hospes     = (character*)piscina_allocare(piscina,
+        (memoriae_index)longitudo + I);
+    memcpy(hospes, initium, longitudo);
+    hospes[longitudo] = '\0';
+    redde hospes;
+}
+
+/* captura ORDINARIA (herbarium-spec-2 §II.b): herbarium_via, aliter
+ * sedes ordinaria + hospes; sine_herbario expresse exstinguit. Sedes
+ * irrita: sine captura, semel in stderr - vocatio numquam frangitur */
 interior vacuum
 _herbarium_adiungere (
-    Vates* v)
+                 Vates* v,
+    constans character* hospes)
 {
     HerbariumOptiones optiones_herbarii;
+               chorda sedes;
+               chorda causa;
 
-    si (!v->optiones.herbarium_via)
+    si (v->optiones.sine_herbario)
     {
         redde;
     }
     optiones_herbarii = herbarium_optiones_ordinariae();
-    optiones_herbarii.directorium = v->optiones.herbarium_via;
+    si (v->optiones.herbarium_via)
+    {
+        optiones_herbarii.directorium = v->optiones.herbarium_via;
+    }
+    alioquin
+    {
+        sedes = herbarium_sedes_ordinaria(hospes, v->piscina, &causa);
+        si (sedes.mensura == 0)
+        {
+            fprintf(stderr, "vates: herbarium sine sede (%.*s) - sine"
+                " captura\n", (integer)causa.mensura,
+                (constans character*)causa.datum);
+            redde;
+        }
+        optiones_herbarii.directorium = chorda_ut_cstr(sedes,
+            v->piscina);
+    }
     optiones_herbarii.clavis = _clavis_anthropic;
     optiones_herbarii.campi_petitionis = _campi_anthropic;
+    optiones_herbarii.iudex = _iudex_anthropic;
     v->herbarium = herbarium_aperire(v->piscina, &optiones_herbarii);
     v->vectura = herbarium_vectura(v->herbarium, v->vectura);
 }
@@ -1017,7 +1109,8 @@ vates_anthropic_aperire (
 
     si (v)
     {
-        _herbarium_adiungere(v);
+        _herbarium_adiungere(v, _hospes_ex_url(VATES_URL_ANTHROPIC,
+            v->piscina));
     }
     redde v;
 }
@@ -1074,7 +1167,8 @@ vates_fictus_aperire (
     v->fictus_petitiones  = xar_creare(piscina, (i32)magnitudo(chorda));
     v->vectura.exsequi    = _fictus_exsequi;
     v->vectura.datum      = v;
-    _herbarium_adiungere(v);
+    /* acervus proprius: responsa ficta numquam inter vera */
+    _herbarium_adiungere(v, "fictus");
     redde v;
 }
 
@@ -1603,13 +1697,10 @@ vates_mittere (
         {
             chorda novitas;
 
+            /* inexspectata iam in disco: iudex in vectura capiente
+             * (herbarium-spec-2) ante hanc lectionem premit */
             r = _legere(resultus_http.responsum->status,
                 resultus_http.responsum->corpus, piscina, &novitas);
-            si (novitas.mensura > 0 && vates->herbarium)
-            {
-                herbarium_premere(vates->herbarium, hp,
-                    resultus_http.responsum, novitas);
-            }
             iterandum = _status_iterandus(r->status_http);
         }
         r->usus.mora_ms = _ms_nunc() - initium;

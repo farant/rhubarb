@@ -208,3 +208,39 @@ Plants: `stop_sequence` made required + regenerated -> export and
 judgment oracle red (the committed specimens all carry the field, so the
 specimen test stays green - it is not this change's witness); one byte of
 the generated C edited -> fabrica STALUM with the healing command.
+
+## 2026-10-09 - the guard before use, vates side (herbarium-spec-2 H2)
+
+Fran's floor: "is this an outlier payload that I need to save as a
+specimen before I do anything else". Measured before: a 200 whose body
+was not JSON (or whose root was not an object) was NEVER saved -
+`_legere` returned VATES_ERROR_PARSE before computing novelty, and the
+press came after `_legere`; statuses 201..399 were neither parsed nor
+saved. Plant b re-creates exactly that (late press back, judge off): the
+schema-note case stays green, the non-JSON / array / 204 / 302 cases go
+red.
+
+Now:
+- `_iudex_anthropic` runs INSIDE herbarium's transport wrapper, before
+  vates sees the response: status != 200 -> "status inexspectatus: N";
+  not JSON -> "corpus non JSON"; root not object -> "radix non objectum";
+  else `_novitates_corporis` (unknown stop_reason + schema notes/errors,
+  i.e. the old novelty, unchanged in wording). Uses only status,
+  json_legere, norma_iudicare. The late press in `vates_mittere` and the
+  schema call in `_legere` are gone - one capture point.
+- Capture is ON by default: `herbarium_via` NIHIL = the default location
+  (`herbarium_sedes_ordinaria`) + host; the Anthropic host is derived
+  from VATES_URL_ANTHROPIC ("api.anthropic.com"); the fictus provider
+  uses host "fictus" so fake responses never join the real pile.
+  `sine_herbario` switches it off. An unresolvable default (e.g.
+  $RHUBARB_HERBARIUM naming a missing directory) prints one stderr line
+  and the call proceeds without capture.
+- Test isolation: `principale` points $RHUBARB_HERBARIUM at
+  /tmp/probatio_vates_sedes_<pid> before any Vates exists and removes
+  the piles at the end; ~/.rhubarb/herbarium verified untouched.
+- Ruling: the spec's "judge without vates_mittere" test would need the
+  judge public; it stays static. Order is proven by H1's in-loop count
+  (wrapper presses before return) plus the non-JSON case here (saved
+  although vates' parse exits early).
+- The judge parses the body once more than before (json_legere in the
+  judge, again in `_legere`) - cost accepted, noted.
