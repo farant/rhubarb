@@ -15,8 +15,8 @@ decided by EXACT ties, so this demo recounts D94's tables exactly.
 
 Run: `./bin/aedilis knotapel/demo_119_exact_capacity/main.c && bash
 build/aedilis/main/struere.sh && ./build/aedilis/main/main`
-- 46 min, 17 checks, 2.05 billion mask evaluations;
-- `DEMO119_CELER=1` runs Part A plus zeta_8 N <= 4 in 1 s (12 checks;
+- 46 min, 23 checks, 2.05 billion mask evaluations;
+- `DEMO119_CELER=1` runs Part A plus zeta_8 N <= 4 in 1 s (13 checks;
   used by the plants).
 
 Oracle: `python3 -I oracle.py [maxN]` re-derives the zeta_8 verdicts
@@ -25,28 +25,50 @@ Oracle: `python3 -I oracle.py [maxN]` re-derives the zeta_8 verdicts
 boundary compared, and "possible" per distinct vector by backtracking.
 It agrees with main.c on all 18 counts.
 
+Second oracle: `python3 -I oracle_2i.py {z8|b24|a60} N`, written by the
+review agent independently of main.c and oracle.py, in Q(sqrt2, sqrt3,
+sqrt5). It covers the 2I rows: first-24 N = 3, 4 and all-60 N = 3 agree
+with main.c on every count.
+
 ## Headline
 
-**D94's comparison survives exactly, and gets stronger. D94's float
-counts are not exact, though: ties are everywhere and the floats break
-them arbitrarily.**
+**D94's comparison at N <= 6 survives exactly, with a larger margin
+under the robust count and a smaller one under "possible". Its N = 7
+claim does not: D94 compared a population-scaled 2I mean with a raw
+zeta_8 sample count. D94's float counts are not exact either: ties are
+everywhere and the floats break them arbitrarily.**
 
 | claim (D94) | D94 float | exact rule | robust | possible |
 |---|---|---|---|---|
 | N=6 XOR: 2I random-24 mean vs zeta_8 | 23137 vs 12983 (+78.2%) | 22414 vs 12268 (+82.7%) | 19552 vs 10070 (**+94.2%**) | 31521 vs 22979 (+37.2%) |
-| N=7 XOR: 2I random-24 mean vs zeta_8 | 672 vs 197 (3.41x) | 626 vs 161 | 449 vs 122 (**3.68x**) | 2666 vs 796 (3.35x) |
+| N=7 XOR: 2I random-24 mean vs zeta_8, one scale | 672 vs 682 (0.99x) | 626 vs 557 (1.12x) | 449 vs 422 (1.06x) | 2666 vs 2755 (0.97x) |
 | depth-matched first-24 / zeta_8, N=6 XOR | 1.67x | 1.71x | **1.69x** | - |
 | depth-matched first-24 / zeta_8, N=7 XOR | 0.84x | 0.94x | **0.84x** | - |
 
-- "2I beats zeta_8 at the same catalog size" holds under every tie
-  rule, with a larger margin when robust.
+- "2I beats zeta_8 at the same catalog size" holds for XOR at N = 3..6
+  under every tie rule (checked), with a larger margin when robust
+  (+94%) and a smaller one under "possible" (+37%).
+- **D94's N = 7 and N = 8 comparisons mixed scales.** Part E (as D94)
+  multiplies each sampled 2I count by C(24,N)/100000 (3.46 at N = 7,
+  7.35 at N = 8); D94's zeta_8 rows at N = 7, 8 are raw counts out of
+  100,000 samples. D94 printed "N=7 XOR: z8=197 2I_mean=672 2I WINS"
+  (3.4x) and "N=7 AND: 2I massively wins (241854 vs 72003)"; the
+  explorers' log repeats both. On one scale (Part F):
+  - N = 7 XOR: 2I / zeta_8 = 0.99 float, 1.12 rule, 1.06 robust, 0.97
+    possible - even, within about 12% (checked);
+  - N = 7 AND: zeta_8 ahead, 249,205 vs 241,854 in floats; N = 8 AND:
+    zeta_8 ahead, 422,521 vs 375,756 (D94: "2I 6.5x") (checked).
+  The 2I advantage is an N <= 6 claim. The depth-matched ratios
+  (percentages on both sides) were never affected.
   - The earlier audit (notes 47-48) already refuted the *interpretation*
     ("solvability is the bottleneck") with a Haar control.
   - This demo settles only the *numbers*.
 - **The float counts are tie-rule artifacts:**
   - zeta_8 N=6 XOR is 12,983 in floats against 12,268 for D94's formula
     evaluated exactly (5.8% overcount) and 10,070 robust (28.9%).
-  - D94's single N=8 XOR success for the first 24 of 2I is 0 exactly.
+  - D94's single N=8 XOR success for the first 24 of 2I is 0 under the
+    exact rule and robust (5 under "possible": the floats picked one
+    of the admissible resolutions).
   - For 2I with all 60 the float count is close to robust (N=6 XOR
     74,250 vs 72,876, +1.9%).
 - **The exact rule can exceed the float count:**
@@ -56,7 +78,7 @@ them arbitrarily.**
   The floats are not uniformly pessimistic or optimistic; they are
   arbitrary at ties.
 - **Ties are the rule, not the exception.**
-  - 397,565,108 sector decisions fell within 1e-9 of a boundary, and
+  - 397,565,109 sector decisions fell within 1e-9 of a boundary, and
     EVERY one was an exact boundary hit, i.e. a tie.
   - 93,638,928 direction decisions fell within 1e-9 of a second axis,
     and EVERY one was an exact tie.
@@ -129,11 +151,21 @@ demo's output.
   - Axis: (v.u_j)^2 |u_l|^2 against (v.u_l)^2 |u_j|^2 in the small field.
   - Zero: exact.
   - Far from every boundary the float cell is exact. A sum of at most 8
-    unit quaternions has absolute error around 1e-15 (8 additions of
-    terms <= 1), so a value farther than 1e-9 from a boundary (or a gap
-    larger than 1e-9 between the two best axes) cannot have the wrong
-    side. Boundaries are at least about 0.008 apart, so one exact
-    comparison decides the sector.
+    unit quaternions has absolute error around 1e-14. The compared
+    values are NORMALIZED (a/|S|, and |cos| to the axes over |v|), so
+    the argument needs a lower bound on nonzero norms, which algebra
+    gives: 2I coordinates lie in Z[sqrt5]/4, so |S|^2 = (P + Q sqrt5)/16
+    with P^2 - 5Q^2 a nonzero integer, and the Galois conjugate of S is
+    again a sum of at most 8 unit quaternions (|S'|^2 <= 64). Hence
+    |S|^2 >= 1/(256 * 64) and |S| >= 1/128; the same for the vector part
+    v, and 1/32 for zeta_8 (Z[sqrt2]/2). Normalized errors are then
+    about 1e-12, 2.5 orders of magnitude inside the 1e-9 margin. The
+    demo records the smallest nonzero |S| and |v| it meets and checks
+    them against these bounds. The actual minima are far larger: |S|
+    0.317 and |v| 0.121 (zeta_8), |S| 0.236 = sqrt5 - 2 and |v| 0.126
+    (2I).
+    Boundaries cos(m pi/k) are at least 0.0255 apart (k = 24), so one
+    exact comparison decides the sector.
 - **Verdicts per k, then OR-ed over k = 6, 12, 24 as D94 does.**
   - Exact rule: D94's formula on the exact values. The sector is the
     floor of the exact angle, so a boundary hit takes the upper sector;
@@ -147,7 +179,7 @@ demo's output.
     the label of cell c, and each mask needs a tied cell with its
     label. It is solved by DPLL with unit propagation and a decision
     budget; no set exceeded it ("undecided" stays 0).
-- **Plants (12, all red, on the 1 s mode):**
+- **Plants (14, all red, on the 1 s mode):**
   - filter margin 1e-18 (filter blind)
   - boundary tie without m-1
   - axis ties dropped
@@ -160,6 +192,8 @@ demo's output.
   - wrong generator image in the big field
   - only k = 12
   - robust computed as the rule
+  - smallest norm not recorded (bound check vacuous)
+  - zero vector parts counted in the smallest |v|
   
   The opposite-sign and boundary-side plants first survived: no set in
   zeta_8 N <= 4 reaches those branches. Direct unit checks now kill
@@ -182,6 +216,17 @@ demo's output.
 - A pool-lifetime bug in my own code: boundaries cached inside a
   per-mask pool mark were freed by the rollback ("sign refused"). They
   are now prepared once per field, outside every mark.
+
+- **Review (2026-10-08, recensor-extensio):**
+  - The N = 7 headline row compared scaled with raw counts (above);
+    Part F now prints the comparison on one scale, with checks.
+  - The filter was sound, but only through the norm bound, which was
+    unstated (the header claimed "five orders" inside the margin; it is
+    2.5). Now stated and checked.
+  - Part E's undecided count was never printed or checked; now checked.
+  - The reviewer recounted 42 exact numbers with independent code
+    (zeta_8 N = 3, 4; 2I first-24 N = 3, 4; 2I all-60 N = 3): all equal.
+    That code is oracle_2i.py.
 
 ## Not covered
 

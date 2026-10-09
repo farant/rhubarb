@@ -4004,6 +4004,16 @@ Z[√5] algebra: (1+√5)(1-√5) = -4, φ·φ⁻¹ = 1. Generator verification:
 - N=8 XOR: both near zero (tie), but 2I AND = 375K vs z8 AND = 57K (6.5x)
 - **Solvability IS the bottleneck**: non-solvable 2I consistently outperforms solvable z8
 
+**Correction (2026-10-08, Demo 119):** the N=7 and N=8 rows above mix
+scales. The 2I means multiply each sampled count by C(24,N)/100000
+(3.46 at N=7, 7.35 at N=8); the z8 rows at N=7, 8 are raw counts out
+of 100,000 samples. On one scale: N=7 XOR z8 = 682 vs 2I 672 (0.99x,
+even; exact robust 1.06x); N=7 AND z8 = 249,205 vs 241,854 and N=8
+AND z8 = 422,521 vs 375,756 (z8 ahead). The 2I advantage holds for
+N <= 6 only (N=6 XOR: +78% float, +94% exact robust). The Phase 2b
+ratios (percentages) are unaffected. See
+demo_119_exact_capacity/findings.md.
+
 ### Phase 2b: Depth-Matched (first 24 from 2I by BFS, 12 directions, 156 cells)
 
 The cleanest possible comparison: first 24 entries from 2I by BFS order (d0=5, d1=8, d2=11) vs all 24 from z8. Same size, controlled depth.

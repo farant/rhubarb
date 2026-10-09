@@ -22,7 +22,13 @@
  *     boundaries cos(m pi/k) in Q(cos 2 pi/48) / Q(cos 2 pi/240) via
  *     extensio's abelian embedding). Far from every boundary the float
  *     cell is exact: sums of at most 8 unit quaternions carry absolute
- *     error ~1e-15, five orders of magnitude inside the margin;
+ *     error ~1e-14, and a NONZERO sum or vector part has norm >= 7.8e-3
+ *     (2I) / 1/32 (zeta_8) - coordinates in Z[sqrt5]/4 (Z[sqrt2]/2), so
+ *     |S|^2 = (P + Q sqrt d)/16 (/4) with P^2 - d Q^2 a nonzero integer,
+ *     and the Galois conjugate is again a sum of <= 8 unit quaternions
+ *     (|S'|^2 <= 64). Normalized values then err by ~1e-12, 2.5 orders of
+ *     magnitude inside the margin. The demo records the smallest nonzero
+ *     norms it meets and checks them against these bounds;
  *   - exact ties (a sum ON a boundary or equidistant from two axes) give
  *     a set of admissible cells. Verdicts, as in D118:
  *       exact rule  D94's formula evaluated exactly (floor of the exact
@@ -615,6 +621,9 @@ static long st_sector_ties = 0;
 static long st_dir_exact = 0;
 static long st_dir_ties = 0;
 static long st_zero = 0;
+/* smallest nonzero |S| and |v| met, per small field (0 zeta_8, 1 2I) */
+static double st_min_norm[2] = { 1e9, 1e9 };
+static double st_min_vec[2] = { 1e9, 1e9 };
 
 /* boundaries b_m = cos(m pi/k) in the big field, with sign and square,
  * and the image of the small field's generator; per big field */
@@ -846,6 +855,9 @@ mask_base (
             return;
         }
     }
+    if (sqrt(b->n2) < st_min_norm[cat->big_n == 48 ? 0 : 1]) {
+        st_min_norm[cat->big_n == 48 ? 0 : 1] = sqrt(b->n2);
+    }
     /* vector part exactly zero? */
     if (b->rv * b->rv < 1e-6 * b->n2 + 1e-12) {
         need_exact(cat, idx, n_w, mask, b);
@@ -857,6 +869,9 @@ mask_base (
             b->dir_rule = cat->nd;
             return;
         }
+    }
+    if (b->rv < st_min_vec[cat->big_n == 48 ? 0 : 1]) {
+        st_min_vec[cat->big_n == 48 ? 0 : 1] = b->rv;
     }
     {
         double best = -2.0;
@@ -972,7 +987,7 @@ mask_cell (
             sec_set[n_sec++] = s;
             sec_rule = s;
         } else if (b->n2 >= 1e-6) {
-            /* one boundary within MARGIN; the others are >= 0.008 away */
+            /* one boundary within MARGIN; boundaries are >= 0.0255 apart */
             int cmpv;
 
             need_exact(cat, idx, n_w, mask, b);
@@ -1625,6 +1640,30 @@ run_table (
     return ok;
 }
 
+/* the filter's premise: every NONZERO sum and vector part met is at
+ * least the algebraic bound (zeta_8 1/32, 2I 1/128; see the header),
+ * and something was recorded at all */
+static void
+norm_bound_check (
+    int with_2i)
+{
+    static const double bound[2] = { 1.0 / 32.0, 1.0 / 128.0 };
+    char msg[200];
+    int  f;
+
+    for (f = 0; f <= with_2i; f++) {
+        printf("  smallest nonzero |S| %.4g, |v| %.4g (%s, bound %.4g)\n",
+            st_min_norm[f], st_min_vec[f], f == 0 ? "zeta_8" : "2I",
+            bound[f]);
+        sprintf(msg, "%s: nonzero |S|, |v| >= %s (normalized float error "
+            "~1e-12 << MARGIN)", f == 0 ? "zeta_8" : "2I",
+            f == 0 ? "1/32" : "1/128");
+        check(msg, st_min_norm[f] >= bound[f] - 1e-12
+            && st_min_vec[f] >= bound[f] - 1e-12
+            && st_min_norm[f] <= 8.0 && st_min_vec[f] <= 8.0);
+    }
+}
+
 int
 main (void)
 {
@@ -1766,6 +1805,7 @@ main (void)
     }
     if (quick) {
         printf("\n  (DEMO119_CELER: zeta_8 N <= 4 only)\n");
+        norm_bound_check(0);
         printf("\n%d passed, %d failed\n", n_pass, n_fail);
         piscina_destruere(pool);
         return n_fail == 0 ? 0 : 1;
@@ -1874,6 +1914,81 @@ main (void)
         }
         check("2I trials: float replica XOR means == D94's printed means", ok);
     }
+    {
+        long undecided = 0;
+        int  fn;
+
+        for (i = 0; i < 6; i++) {
+            for (fn = 0; fn < 3; fn++) {
+                undecided += ttrial[i][fn].n_undecided;
+            }
+        }
+        sprintf(msg, "2I trials: no set undecided (got %ld)", undecided);
+        check(msg, undecided == 0);
+    }
+
+    /* ---------- Part F: the comparison on ONE scale ---------- */
+    /* Part E scales each sampled count to the population (x C(24,N) /
+     * 100000, as D94 does). Part B's zeta_8 rows at N = 7, 8 are RAW
+     * counts out of 100000 samples, and D94 compared the two directly
+     * ("N=7 XOR: z8=197 2I_mean=672 2I WINS"). Here zeta_8 gets the same
+     * scale; N <= 6 is exhaustive on both sides (scale 1). */
+    printf("\n=== Part F: 2I random-24 mean vs zeta_8, one scale ===\n");
+    printf("    N fn  | float z8 / 2I (ratio)    | exact rule             "
+        "| robust                 | possible\n");
+    {
+        double ratio[6][3][4];
+        int    xor_ahead = 1;
+        int    n7_even = 1;
+        int    and_z8_ahead = 1;
+
+        for (i = 0; i < 6; i++) {
+            long   cn = comb_nk(24, 3 + i);
+            double scale = cn <= 200000 ? 1.0 : (double)cn / 100000.0;
+            int    fn;
+
+            for (fn = 0; fn < 3; fn++) {
+                const Tally *t = &tz8[i][fn];
+                double z[4];
+                double w[4];
+                int    col;
+
+                z[0] = (double)t->n_float * scale;
+                z[1] = (double)t->n_rule * scale;
+                z[2] = (double)t->n_robust * scale;
+                z[3] = (double)t->n_possible * scale;
+                w[0] = trial_float[i][fn] / 10.0;
+                w[1] = trial_rule[i][fn] / 10.0;
+                w[2] = trial_robust[i][fn] / 10.0;
+                w[3] = trial_possible[i][fn] / 10.0;
+                printf("    %d %s |", 3 + i, FN_NAME[fn]);
+                for (col = 0; col < 4; col++) {
+                    ratio[i][fn][col] = z[col] > 0.0 ? w[col] / z[col] : 0.0;
+                    printf(" %7.0f / %6.0f (%4.2f) |", z[col], w[col],
+                        ratio[i][fn][col]);
+                }
+                printf("\n");
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            int col;
+
+            for (col = 0; col < 4; col++) {
+                xor_ahead &= ratio[i][0][col] > 1.0;
+                if (i == 0) {
+                    n7_even &= ratio[4][0][col] > 0.9
+                        && ratio[4][0][col] < 1.15;
+                }
+            }
+        }
+        and_z8_ahead = ratio[4][1][0] < 1.0 && ratio[5][1][0] < 1.0;
+        check("XOR, N = 3..6: the 2I mean exceeds zeta_8 under float, rule, "
+            "robust and possible", xor_ahead);
+        check("N = 7 XOR on one scale: 2I / zeta_8 within [0.9, 1.15] under "
+            "all four (D94: 3.4x)", n7_even);
+        check("N = 7, 8 AND on one scale: zeta_8 ahead in floats (D94: 2I "
+            "'massively wins')", and_z8_ahead);
+    }
 
     /* ---------- statistics ---------- */
     printf("\n=== Certification statistics ===\n");
@@ -1884,6 +1999,7 @@ main (void)
         st_sector_exact, st_sector_ties);
     printf("  direction decided exactly: %ld (exact ties: %ld)\n",
         st_dir_exact, st_dir_ties);
+    norm_bound_check(1);
 
     printf("\n%d passed, %d failed\n", n_pass, n_fail);
     piscina_destruere(pool);

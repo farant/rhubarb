@@ -5139,7 +5139,7 @@ The binary icosahedral group 2I (order 120, unique non-solvable finite SU(2) sub
 
 - **Phase 0 — Z[sqrt5] exact arithmetic**: All group operations in exact integer arithmetic. Generators: s = (1+i+j+k)/2 (order 6), t = (phi+phi_inv*i+j)/2 (order 10). 11 verification tests.
 - **Phase 1 — BFS closure**: |2I| = 60 (mod sign), 7 BFS rounds. Depth profile: 5,8,11,12,11,8,4,1 (symmetric diamond). 9 conjugacy classes, ~31 S^2 directions (vs 13 for z8).
-- **Phase 2 — Size-controlled comparison (24 vs 24)**: N=6 XOR: 2I wins by 78% (23137 vs 12983). N=7 XOR: 2I wins ~3.4x. N=7 AND: 2I wins ~3.4x.
+- **Phase 2 — Size-controlled comparison (24 vs 24)**: N=6 XOR: 2I wins by 78% (23137 vs 12983). N=7 XOR: 2I wins ~3.4x. N=7 AND: 2I wins ~3.4x. **[Correction, D119: N=7/8 compare a scaled 2I mean with raw z8 sample counts; on one scale N=7 XOR is even (0.99x) and z8 leads N=7/8 AND. See demo_119_exact_capacity/findings.md.]**
 - **Phase 2b — Depth-matched**: 2I advantage ACCELERATES: 1.07x (N=3) → 1.14x (N=4) → 1.21x (N=5) → 1.67x (N=6).
 - **Phase 3 — Full 2I (60 entries, 384 cells)**: AND/XOR ratio 1.25→68827 (N=3→8). Hierarchy universal across groups. N=7 XOR: 2I=2.38% vs z12=0.02% (119x).
 - **Phase 4 — Three-way**: Crossover at N=6: z12 wins small N (angular variety), 2I wins N=6-7 (non-solvability at computational boundary).
