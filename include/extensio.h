@@ -131,6 +131,15 @@ extensio_radices_reales (
        Piscina* piscina,
            i32* exitus);
 
+/* minimus n cum K in Q(cos 2 pi/n): conductor. Q(sqrt d), d > 0: D
+ * (discriminans: s si s = 1 mod 4, aliter 4s; s pars libera quadratis
+ * = d); cosinus(m): m (m/2 si m = 2 mod 4), 1 si gradus 1. 0 pro
+ * corporibus generalibus (ex_polynomio, etiam si eadem sunt) et Q(sqrt
+ * d), d < 0 (non reale). */
+i32
+extensio_conductor (
+    constans Extensio* k);
+
 /* corpus pro matrix (elementa Algebraicus, titulus "Q(...)"): corpus et
  * integrum; divide_exacte = divisio (FALSUM solum si divisor nullus).
  * Una descriptio per corpus; elementa alterius corporis refutantur. */
@@ -187,6 +196,50 @@ algebraicus_est_validum (
 constans Extensio*
 algebraicus_corpus (
     Algebraicus a);
+
+
+/* ==================================================
+ * Corpora abeliana: omnia in Q(cos 2 pi/n) (Kronecker-Weber)
+ * ================================================== */
+
+/* 2 cos(2 pi j/n) in K = Q(cos 2 pi/n) (extensio_cosinus(n)), j
+ * quilibet: D_j(alpha), D_j Dickson (2 cos(j t) = D_j(2 cos t)), j
+ * modulo n et n - j reductus. FALSUM si K non cosinus. */
+b32
+algebraicus_cosinus (
+    constans Extensio* k,
+                  s64  j,
+              Piscina* piscina,
+          Algebraicus* exitus);
+
+/* sqrt d (d > 0, d < 2^31) in K = Q(cos 2 pi/n) aut in Q(sqrt d')
+ * eiusdem partis liberae; FALSUM si sqrt d in K non est (conductor non
+ * dividit n), aut K generalis. Per summam Gauss characteris realis
+ * discriminantis D: sqrt D = sum chi(a) cos(2 pi a/D), chi Kronecker
+ * (D/a); radix POSITIVA, PROBATA (x^2 = d, x > 0) antequam redditur.
+ * Corpus generale (ex_polynomio) semper FALSUM, etiam d quadratum. */
+b32
+algebraicus_radix_quadrata (
+    constans Extensio* k,
+                  s64  d,
+              Piscina* piscina,
+          Algebraicus* exitus);
+
+/* imago a (elementi Q(sqrt d), d > 0, aut Q(cos 2 pi/m)) in corpore
+ * cosinus K = Q(cos 2 pi/n): alpha -> sqrt d, aut alpha_m -> 2 cos(2
+ * pi/m) in K. Homomorphismus anulorum qui radicem realem electam servat
+ * (signa congruunt). FALSUM si corpus a in K non continetur (conductor
+ * non dividit n), K non cosinus, aut corpus a generale (etiam gradu 1).
+ * Imago generatoris in OMNI vocatione computatur (summa Gauss aut
+ * Dickson): in K = Q(cos 2 pi/120) ~0.1 ms, n = 840 ~0.26 s per
+ * elementum - vocans multa elementa imaginem generatoris semel faciat
+ * (recensio ABEL P1; ansa immersionis desideratum). */
+b32
+algebraicus_immergere (
+          Algebraicus  a,
+    constans Extensio* k,
+              Piscina* piscina,
+          Algebraicus* exitus);
 
 
 /* ==================================================

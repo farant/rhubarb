@@ -1034,16 +1034,17 @@ s32 principale (vacuum)
                    Algebraicus a     = _fortuitum(k, &s);
                    Algebraicus b     = _fortuitum(k, &s);
                            f64 valor;
-                           s32 sa = ZEPHYRUM;
-                           s32 ab = ZEPHYRUM;
-                           s32 ba = ZEPHYRUM;
+                           s32 signum_fontis  = ZEPHYRUM;
+                           s32 ab             = ZEPHYRUM;
+                           s32 ba             = ZEPHYRUM;
 
                 valor = _valor(a, radices[c], extensio_gradus(k));
                 si (fabs(valor) > 1e-6)
                 {
                     probata++;
-                    si (   !algebraicus_signum(a, piscina, &sa)
-                        || sa != (valor > 0.0 ? I : -I))
+                    si (   !algebraicus_signum(a, piscina,
+                        &signum_fontis)
+                        || signum_fontis != (valor > 0.0 ? I : -I))
                     {
                         signum_bene = FALSUM;
                     }
@@ -1611,6 +1612,336 @@ s32 principale (vacuum)
             &alienum, piscina, &s));
         CREDO_NIHIL (extensio_anulus(extensio_quadratica(-I,
             piscina))->signum);
+    }
+
+
+    /* ==================================================
+     * CORPORA ABELIANA: conductor, cosinus, radices, immersio
+     * ================================================== */
+
+    {
+           Extensio* k120            = extensio_cosinus(CXX, piscina);
+           Extensio* k5              = extensio_quadratica(V, piscina);
+           Extensio* corpus_quinque  = extensio_cosinus(V, piscina);
+           Extensio* corpus_decem    = extensio_cosinus(X, piscina);
+           Extensio* corpus_sedecim  = extensio_cosinus(XVI, piscina);
+           Extensio* corpus_generale  =
+               extensio_ex_polynomio(_p("t^2 - 5"), I,
+               piscina);
+        Algebraicus x;
+        Algebraicus y;
+        Algebraicus r2;
+        Algebraicus r5;
+        Algebraicus r6;
+                s32 signum = ZEPHYRUM;
+                i32 j;
+
+        imprimere("\n--- Corpora abeliana ---\n");
+        /* conductores */
+        CREDO_AEQUALIS_I32 (extensio_conductor(k5), V);
+        CREDO_AEQUALIS_I32 (extensio_conductor(extensio_quadratica(II,
+            piscina)), VIII);
+        CREDO_AEQUALIS_I32 (extensio_conductor(extensio_quadratica(III,
+            piscina)), XII);
+        CREDO_AEQUALIS_I32 (extensio_conductor(extensio_quadratica(-I,
+            piscina)), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (extensio_conductor(corpus_quinque), V);
+        CREDO_AEQUALIS_I32 (extensio_conductor(corpus_decem), V);
+        CREDO_AEQUALIS_I32 (extensio_conductor(k120), CXX);
+        CREDO_AEQUALIS_I32 (extensio_conductor(extensio_cosinus(III,
+            piscina)), I);
+        CREDO_AEQUALIS_I32 (extensio_conductor(corpus_generale),
+            ZEPHYRUM);
+
+        /* 2 cos(2 pi j/120): anguli rationales */
+        CREDO_VERUM (algebraicus_cosinus(k120, ZEPHYRUM, piscina, &x)
+            && _textus_est(x, "2"));
+        CREDO_VERUM (algebraicus_cosinus(k120, LX, piscina, &x)
+            && _textus_est(x, "-2"));
+        CREDO_VERUM (algebraicus_cosinus(k120, XXX, piscina, &x)
+            && _textus_est(x, "0"));
+        CREDO_VERUM (algebraicus_cosinus(k120, XX, piscina, &x)
+            && _textus_est(x, "1"));
+        CREDO_VERUM (algebraicus_cosinus(k120, XL, piscina, &x)
+            && _textus_est(x, "-1"));
+        CREDO_VERUM (algebraicus_cosinus(k120, -XX, piscina, &x)
+            && _textus_est(x, "1"));
+        CREDO_VERUM (algebraicus_cosinus(k120, CXL, piscina, &x)
+            && _textus_est(x, "1"));
+        CREDO_FALSUM (algebraicus_cosinus(k5, I, piscina, &x));
+
+        /* radices quadratae; identitates classicae */
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, II, piscina,
+            &r2));
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, V, piscina, &r5));
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, VI, piscina,
+            &r6));
+        /* 2 cos(pi/12) = (sqrt 6 + sqrt 2)/2 */
+        CREDO_VERUM (algebraicus_cosinus(k120, V, piscina, &x)
+            && algebraicus_aequalis(x, algebraicus_multiplica(
+            algebraicus_adde(r6, r2, piscina), _a(k120, "1/2"),
+            piscina)));
+        /* 2 cos(2 pi/5) = (sqrt 5 - 1)/2; 2 cos(pi/5) = (1 + sqrt
+         * 5)/2 */
+        CREDO_VERUM (algebraicus_cosinus(k120, XXIV, piscina, &x)
+            && algebraicus_aequalis(x, algebraicus_multiplica(
+            algebraicus_subtrahe(r5, _a(k120, "1"), piscina), _a(k120,
+            "1/2"), piscina)));
+        CREDO_VERUM (algebraicus_cosinus(k120, XII, piscina, &x)
+            && algebraicus_aequalis(x, algebraicus_multiplica(
+            algebraicus_adde(r5, _a(k120, "1"), piscina), _a(k120,
+            "1/2"),
+            piscina)));
+        /* sqrt 8 = 2 sqrt 2, sqrt 4 = 2 (rationalis), sqrt 30 */
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, VIII, piscina, &x)
+            && algebraicus_aequalis(x, algebraicus_adde(r2, r2,
+            piscina)));
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, IV, piscina, &x)
+            && _textus_est(x, "2"));
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, XXX, piscina, &x)
+            && algebraicus_aequalis(algebraicus_multiplica(x, x,
+            piscina),
+            _a(k120, "30")));
+        /* refutationes: conductor non dividit, d <= 0 */
+        CREDO_FALSUM (algebraicus_radix_quadrata(k120, VII, piscina,
+            &x));
+        CREDO_FALSUM (algebraicus_radix_quadrata(corpus_quinque, II,
+            piscina, &x));
+        CREDO_FALSUM (algebraicus_radix_quadrata(k120, ZEPHYRUM,
+            piscina,
+            &x));
+        CREDO_FALSUM (algebraicus_radix_quadrata(k120, -V, piscina,
+            &x));
+        CREDO_FALSUM (algebraicus_radix_quadrata(corpus_generale, V,
+            piscina, &x));
+        /* in Q(sqrt 5): sqrt 20 = 2 alpha; sqrt 3 non adest */
+        CREDO_VERUM (algebraicus_radix_quadrata(k5, XX, piscina, &x)
+            && _textus_est(x, "2a"));
+        CREDO_FALSUM (algebraicus_radix_quadrata(k5, III, piscina, &x));
+        /* (2 cos(pi/8))^2 = 2 + sqrt 2 in Q(cos 2 pi/16) */
+        CREDO_VERUM (algebraicus_cosinus(corpus_sedecim, I, piscina, &x)
+            && algebraicus_radix_quadrata(corpus_sedecim, II, piscina,
+            &y)
+            && algebraicus_aequalis(algebraicus_multiplica(x, x,
+            piscina),
+            algebraicus_adde(y, _a(corpus_sedecim, "2"), piscina)));
+        /* cos(pi/12) > (1 + sqrt 5)/4 (comparatio D119) */
+        CREDO_VERUM (algebraicus_cosinus(k120, V, piscina, &x)
+            && algebraicus_cosinus(k120, XII, piscina, &y)
+            && algebraicus_compara(x, y, piscina, &signum)
+            && signum == I);
+
+        /* summae Gauss: sqrt s, s liber quadratis 2..50, in Q(cos 2
+         * pi/D), D discriminans; probatio exacta (x^2 = s, x > 0) et
+         * oraculum independens: digiti certi (ad_ostendendum) contra
+         * sqrt libm (Hornerus f64 gradu 30-46 cancellatione perit) */
+        {
+            i32 successus   = ZEPHYRUM;
+            i32 exspectati  = ZEPHYRUM;
+
+            per (j = II; j <= L; j++)
+            {
+                     i32  p;
+                     b32  liber = VERUM;
+                     i32  discriminans;
+                Extensio* corpus_discriminantis;
+
+                per (p = II; p * p <= j; p++)
+                {
+                    si (j % (p * p) == ZEPHYRUM)
+                    {
+                        liber = FALSUM;
+                    }
+                }
+                si (!liber)
+                {
+                    perge;
+                }
+                exspectati++;
+                discriminans = j % IV == I ? j : IV * j;
+                corpus_discriminantis =
+                    extensio_cosinus(discriminans, piscina);
+                si (   corpus_discriminantis != NIHIL
+                    && extensio_conductor(corpus_discriminantis)
+                    == discriminans
+                    && algebraicus_radix_quadrata(corpus_discriminantis,
+                    (s64)j, piscina,
+                    &x)
+                    && algebraicus_aequalis(algebraicus_multiplica(x, x,
+                    piscina),
+                    algebraicus_ex_fractione(corpus_discriminantis,
+                    fractio_ex_s64(
+                    (s64)j), piscina))
+                    && algebraicus_signum(x, piscina, &signum) && signum
+                    == I
+                    && fabs(strtod(chorda_ut_cstr(
+                    algebraicus_ad_ostendendum(x, XII, piscina),
+                    piscina),
+                    NIHIL) - sqrt((f64)j)) < 1e-11)
+                {
+                    successus++;
+                }
+                alioquin
+                {
+                    imprimere("  radix fracta: s = %u\n", j);
+                }
+            }
+            CREDO_AEQUALIS_I32 (successus, exspectati);
+            CREDO_AEQUALIS_I32 (exspectati, XXX);
+        }
+
+        /* immersio Q(sqrt 5) -> Q(cos 2 pi/120): homomorphismus, signa,
+         * valor f64 */
+        {
+            Sors s;
+             i32 bona = ZEPHYRUM;
+
+            sors_seminare(&s, CMXCIX, IV);
+            per (j = ZEPHYRUM; j < L; j++)
+            {
+                Algebraicus a = _fortuitum(k5, &s);
+                Algebraicus b = _fortuitum(k5, &s);
+                Algebraicus imago_a;
+                Algebraicus imago_b;
+                Algebraicus imago_summae;
+                Algebraicus imago_producti;
+                        s32 signum_fontis    = ZEPHYRUM;
+                        s32 signum_imaginis  = ZEPHYRUM;
+
+                si (   algebraicus_immergere(a, k120, piscina, &imago_a)
+                    && algebraicus_immergere(b, k120, piscina, &imago_b)
+                    && algebraicus_immergere(algebraicus_adde(a, b,
+                    piscina), k120, piscina, &imago_summae)
+                    && algebraicus_immergere(algebraicus_multiplica(a,
+                    b,
+                    piscina), k120, piscina, &imago_producti)
+                    && algebraicus_aequalis(imago_summae,
+                    algebraicus_adde(imago_a, imago_b,
+                    piscina))
+                    && algebraicus_aequalis(imago_producti,
+                    algebraicus_multiplica(imago_a,
+                    imago_b, piscina))
+                    && algebraicus_signum(a, piscina, &signum_fontis)
+                    && algebraicus_signum(imago_a, piscina,
+                    &signum_imaginis)
+                    && signum_fontis == signum_imaginis
+                    && fabs(_valor(imago_a, 2.0 * cos(2.0
+                    * 3.14159265358979323846 / 120.0), XVI) - _valor(a,
+                    sqrt(5.0), II)) < 1e-6)
+                {
+                    bona++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (bona, L);
+            CREDO_VERUM (algebraicus_immergere(algebraicus_generator(k5,
+                piscina), k120, piscina, &x) && algebraicus_aequalis(x,
+                r5));
+        }
+        /* cosinus: 10 -> 5 (2 cos(pi/5) = alpha_5 + 1), via 5 ad 120 =
+         * directe 10 ad 120 */
+        CREDO_VERUM (algebraicus_immergere(algebraicus_generator(
+            corpus_decem, piscina), corpus_quinque, piscina, &x)
+                && algebraicus_aequalis(x,
+            algebraicus_adde(algebraicus_generator(corpus_quinque,
+            piscina),
+            _a(corpus_quinque,
+            "1"), piscina)));
+        {
+            Sors s;
+             i32 bona = ZEPHYRUM;
+
+            sors_seminare(&s, DCCCLXXXVIII, V);
+            per (j = ZEPHYRUM; j < XX; j++)
+            {
+                Algebraicus a = _fortuitum(corpus_decem, &s);
+                Algebraicus via;
+                Algebraicus directa;
+
+                si (   algebraicus_immergere(a, corpus_quinque, piscina,
+                    &via)
+                    && algebraicus_immergere(via, k120, piscina, &via)
+                    && algebraicus_immergere(a, k120, piscina, &directa)
+                    && algebraicus_aequalis(via, directa))
+                {
+                    bona++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (bona, XX);
+        }
+        /* via m = 2 mod 4 SOLUM: Q(cos 2pi/8) (sqrt 2) non in Q(cos
+         * 2pi/12), Q(cos 2pi/16) non in Q(cos 2pi/24); Q(cos 2pi/10) =
+         * Q(cos 2pi/5) in Q(cos 2pi/15) (recensio ABEL T1: planta
+         * m = 0 mod 4 sqrt 2 -> 0 immergebat) */
+        CREDO_FALSUM (algebraicus_immergere(algebraicus_generator(
+            extensio_cosinus(VIII, piscina), piscina),
+            extensio_cosinus(XII,
+            piscina), piscina, &x));
+        CREDO_FALSUM (algebraicus_immergere(algebraicus_generator(
+            extensio_cosinus(XVI, piscina), piscina),
+            extensio_cosinus(XXIV,
+            piscina), piscina, &x));
+        {
+            Extensio* k15 = extensio_cosinus(XV, piscina);
+
+            CREDO_VERUM (algebraicus_immergere(algebraicus_generator(
+                corpus_decem, piscina), k15, piscina, &x)
+                && algebraicus_aequalis(algebraicus_multiplica(x, x,
+                piscina), algebraicus_adde(x, _a(k15, "1"), piscina)));
+        }
+        /* pars libera: p^2 saepius (80 = 4^2 5, 144 = 12^2) - recensio
+         * ABEL A17 */
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, LXXX, piscina, &x)
+            && algebraicus_aequalis(x,
+            algebraicus_adde(algebraicus_adde(
+            r5, r5, piscina), algebraicus_adde(r5, r5, piscina),
+            piscina)));
+        CREDO_VERUM (algebraicus_radix_quadrata(k120, CXLIV, piscina,
+            &x)
+            && _textus_est(x, "12"));
+        /* testimonium nullius exponente (d-1) B: unitas unitas = 2^(1/3) - 1
+         * (norma 1, conjugatae ~1.96): |unitas^30| ~ 0.26^30 < 1/M sed >=
+         * 1/M^2 - signum, non "nullum" (recensio ABEL M1: limes 1/M
+         * sine gradu falso nullum probaret) */
+        {
+               Extensio* corpus_cubicum =
+                   extensio_ex_polynomio(_p("t^3 - 2"),
+                   ZEPHYRUM, piscina);
+            Algebraicus unitas;
+
+            CREDO_VERUM (corpus_cubicum != NIHIL
+                && algebraicus_potentia(_a(corpus_cubicum,
+                "a - 1"), XXX, piscina, &unitas)
+                    && algebraicus_signum(unitas,
+                piscina, &signum) && signum == I);
+            CREDO_VERUM (algebraicus_potentia(_a(corpus_cubicum,
+                "1 - a"), XXXI,
+                piscina, &unitas)
+                    && algebraicus_signum(unitas, piscina, &signum)
+                && signum == -I);
+        }
+        /* corpora generalia semper refutantur (etiam gradu 1, etiam
+         * quadrata perfecta) - recensio ABEL A9/A10 */
+        CREDO_FALSUM (algebraicus_radix_quadrata(corpus_generale, IV,
+            piscina, &x));
+        CREDO_FALSUM (algebraicus_immergere(_a(extensio_ex_polynomio(_p(
+            "t - 3"), ZEPHYRUM, piscina), "5"), k120, piscina, &x));
+        /* Q (gradus 1) ubique; refutationes */
+        CREDO_VERUM (algebraicus_immergere(_a(extensio_cosinus(III,
+            piscina), "7/3"), k120, piscina, &x)
+                && _textus_est(x, "7/3"));
+        CREDO_FALSUM (algebraicus_immergere(_a(extensio_quadratica(VII,
+            piscina), "a"), k120, piscina, &x));
+        CREDO_FALSUM (algebraicus_immergere(_a(extensio_quadratica(-I,
+            piscina), "a"), k120, piscina, &x));
+        CREDO_FALSUM (algebraicus_immergere(_a(corpus_generale, "a"),
+            k120,
+            piscina,
+            &x));
+        CREDO_FALSUM (algebraicus_immergere(_a(corpus_quinque, "a"), k5,
+            piscina,
+            &x));
+        CREDO_FALSUM (algebraicus_immergere(_a(extensio_cosinus(VII,
+            piscina), "a"), k120, piscina, &x));
     }
 
     credo_imprimere_compendium();
