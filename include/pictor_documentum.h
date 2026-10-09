@@ -11,9 +11,10 @@
  * [exemplar] [semen]><punctum x y [t]/>...</ictus>, <ramus ab/>.
  * Cetera (§4) ignorantur cum nota.
  * instrumentum "aspergillum" (MacPaint): guttae (pixela singula) in
- * disco circa quodque punctum; GUTTAE_PUNCTO per punctum et una plus
- * per GUTTA_MS morae (t, ms ab initio ictus) - eaedem semper ex
- * semine. instrumentum "spongia": quadratum SPONGIAE_LATUS x magnitudo
+ * disco radii ASPERGILLI_RADIUS x magnitudo circa quodque punctum;
+ * GUTTAE_PUNCTO x magnitudo per punctum et magnitudo plus per GUTTA_MS
+ * morae (t, ms ab initio ictus) - eaedem semper ex semine.
+ * instrumentum "spongia": quadratum SPONGIAE_LATUS x magnitudo
  * centratum in quoque puncto lineae inter puncta, colore fundi
  * thematis (ut vacatio); color ignoratur. Instrumentum absens aut
  * aliud: penicillus: discus diametri magnitudo (pixela) in puncto primo

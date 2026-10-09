@@ -299,7 +299,10 @@ figura_tabulae (
          * documentum); color nullus (-1): nihil, ut ictus */
         per (i = ZEPHYRUM; i < c->numerus_punctorum; i++)
         {
-            per (k = ZEPHYRUM; k < PICTOR_GUTTAE_PUNCTO; k++)
+            /* P4b: VI x m guttae, m = radius / ASPERGILLI_RADIUS */
+            per (k = ZEPHYRUM; k < (i32)(PICTOR_GUTTAE_PUNCTO
+                     * (radius / PICTOR_ASPERGILLI_RADIUS > I
+                        ? radius / PICTOR_ASPERGILLI_RADIUS : I)); k++)
             {
                 pictor_gutta((s64)semen, i, k, (s32)radius, &dx, &dy);
                 g.x = c->puncta[i].x + dx;
@@ -560,7 +563,53 @@ figura_quadrati (
     {
         Praevidendum pv;
              integer n;
+               Fines g;
+                 s32 r;
+                 s32 dx;
+                 s32 dy;
+                 s32 k;
+                 s32 gradus;
 
+        /* P4b aspergillum: guttae in disco radii II + III x log2(m) /
+         * II (II..VIII) - semen fixum */
+        si (   t.mensura > XXII
+            && memcmp(t.datum, "magnitudo:aspergillum:", XXII)
+               == ZEPHYRUM)
+        {
+            n = I;
+            (vacuum)sscanf(chorda_ut_cstr(t, m->piscina) + XXII, "%d",
+                &n);
+            gradus = ZEPHYRUM;
+            dum ((I << gradus) < (s32)n && gradus < IV)
+            {
+                gradus++;
+            }
+            r           = II + (III * gradus) / II;
+            g.latitudo  = I;
+            g.altitudo  = I;
+            per (k = ZEPHYRUM; k < IV + III * gradus; k++)
+            {
+                pictor_gutta((s64)CCCXXI, ZEPHYRUM, (i32)k, r, &dx,
+                    &dy);
+                g.x = c->fines.latitudo / II + dx;
+                g.y = c->fines.altitudo / II + dy;
+                mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
+                    VERUM);
+            }
+            redde;
+        }
+        /* P4b spongia: magnitudo fixa - quadratum hebes */
+        si (   t.mensura > XVIII
+            && memcmp(t.datum, "magnitudo:spongia:", XVIII) == ZEPHYRUM)
+        {
+            g.x         = IV;
+            g.y         = IV;
+            g.latitudo  = c->fines.latitudo - VIII;
+            g.altitudo  = c->fines.altitudo - VIII;
+            mandata_rectangulum(m, g, color_thematis(COLOR_BORDER),
+                FALSUM);
+            redde;
+        }
         n = ZEPHYRUM;
         (vacuum)sscanf(chorda_ut_cstr(t, m->piscina) + X, "%d", &n);
         si (n > XVI)

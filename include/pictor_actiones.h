@@ -104,8 +104,10 @@ pictor_exemplar_ponere (
                 vacuum* ctx);
 
 /* <tractator/> optio magnitudinis ictum ('optio.magnitudo.<n>'):
- * magnitudinem penicilli ponit, palettam claudit. Dominus attributorum
- * 'magnitudo_penicilli' et 'magnitudo_aspergilli' */
+ * magnitudinem instrumenti currentis ponit - penicillus diametrum
+ * (I II III IV VI VIII XII XVI XXXII LXIV), aspergillum multiplicem
+ * radii (I II IV VIII XVI); spongia nihil - palettam claudit. Dominus
+ * attributorum 'magnitudo_penicilli' et 'magnitudo_aspergilli' */
 b32
 pictor_magnitudinem_ponere (
     InsulaRepositorium* repo,

@@ -268,13 +268,16 @@ guttas_applicare (
         {
             perge;
         }
-        x        = attributum_s32(punctum, "x", ZEPHYRUM);
-        y        = attributum_s32(punctum, "y", ZEPHYRUM);
-        t        = attributum_s32(punctum, "t", t_ante);
-        numerus  = PICTOR_GUTTAE_PUNCTO;
+        x = attributum_s32(punctum, "x", ZEPHYRUM);
+        y = attributum_s32(punctum, "y", ZEPHYRUM);
+        t = attributum_s32(punctum, "t", t_ante);
+        /* P4b: densitas linearis - magnitudo m: VI x m per punctum, m
+         * per GUTTA_MS morae (m I: ut ante) */
+        numerus  = PICTOR_GUTTAE_PUNCTO * magnitudo_penicilli;
         si (ordo > ZEPHYRUM && t > t_ante)
         {
-            numerus += (t - t_ante) / PICTOR_GUTTA_MS;
+            numerus += (t - t_ante) / PICTOR_GUTTA_MS
+                     * magnitudo_penicilli;
         }
         per (k = ZEPHYRUM; k < (i32)numerus; k++)
         {

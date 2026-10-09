@@ -6,7 +6,10 @@
  * scriptus: instrumentum, semen, t cuiusque puncti, punctum solutionis.
  * IV: guttae solae, intra discos punctorum. V: revocare / reficere /
  * reapertio - pixela EADEM. VI: mora (tenere immotum) guttas addit.
- * VII: praevisio - guttae ante solutionem (titulus tabulae, figura). */
+ * VII: praevisio - guttae ante solutionem (titulus tabulae, figura).
+ * IX (P4b): magnitudo aspergilli IV - radius XXXII, guttae VI x IV per
+ * punctum, actum, praevisio; quadratum instrumenti currentis, palette
+ * V optionum (penicillus intactus); spongia: nulla palette. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -233,6 +236,32 @@ colorem_primum_ponere (
     insula_scriptorem_ponere(app->repo, chorda_ex_literis("", piscina));
 }
 
+/* magnitudo aspergilli per dominum suum (magnitudo.ponere) */
+interior vacuum
+magnitudo_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "magnitudo_aspergilli",
+        chorda_ut_cstr(chorda_ex_s32(*(s32*)ctx, p), p));
+}
+
+interior vacuum
+magnitudinem_ponere (
+    PictorApplicatio* app,
+                 s32  m)
+{
+    InsulaRamus r;
+
+    r = insula_ramus_radix(app->repo);
+    insula_scriptorem_ponere(app->repo, chorda_ex_literis(
+        "magnitudo.ponere", piscina));
+    (vacuum)mutare_ramum(&r, INSULA_EPHEMERA, magnitudo_mutator, &m);
+    insula_scriptorem_ponere(app->repo, chorda_ex_literis("", piscina));
+}
+
 /* ictus aspergilli: pressio (x, y) t0, motus per puncta, solutio */
 interior vacuum
 aspergere (
@@ -404,8 +433,9 @@ s32 principale (vacuum)
          * lineae; color primus 0 impletus bis (quadratum coloris et
          * exemplar solidum, P3); textus post quadrata (CX + XX + VI,
          * P4a quadratum quintum) */
-        /* + discus magnitudinis I (pixelum unum colore textus) */
-        CREDO_AEQUALIS_I32(icon, XLIV + I);
+        /* + quadratum magnitudinis aspergilli I: guttae IV colore
+         * textus (P4b; P4a discus penicilli I erat) */
+        CREDO_AEQUALIS_I32(icon, XLIV + IV);
         CREDO_AEQUALIS_I32(crux, II);
         CREDO_AEQUALIS_I32(impletum, II);
         CREDO_AEQUALIS_S32(textus_x, CXXXVI);
@@ -534,6 +564,114 @@ s32 principale (vacuum)
     /* imago (oculis inspicienda): ictus longae morae */
     (vacuum)imago_png_scribere(pictor_documentum_proiectio(doc),
         "build/probatio_pictor_aspergillum.png", piscina);
+
+    imprimere("\n--- IX: magnitudo aspergilli (P4b) ---\n");
+    {
+        i32  x;
+        i32  y;
+        i32  n;
+        i32  extra;
+        i32  longe;
+        i32  album;
+        s32  d2;
+  Componens* t;
+  Componens* p;
+
+        dum (pictor_documentum_revocare(doc))
+        {
+        }
+        CREDO_AEQUALIS_I32(picta(doc), ZEPHYRUM);
+        CREDO_VERUM(manus_ludus_clavem(m, 'a', ZEPHYRUM));
+        magnitudinem_ponere(&app, IV);
+        /* pressio et solutio eodem loco tempore: puncta II, guttae
+         * VI x IV utriusque */
+        mus(app.d, EVENTUS_MUS_DEPRESSUS, CC, CC, V * M);
+        mus(app.d, EVENTUS_MUS_LIBERATUS, CC, CC, V * M);
+        album = (i32)tabula_pixelorum_obtinere_pixelum(doc->tabula,
+            ZEPHYRUM, ZEPHYRUM);
+        n      = ZEPHYRUM;
+        extra  = ZEPHYRUM;
+        longe  = ZEPHYRUM;
+        per (y = ZEPHYRUM; y < doc->tabula->altitudo; y++)
+        {
+            per (x = ZEPHYRUM; x < doc->tabula->latitudo; x++)
+            {
+                si ((i32)tabula_pixelorum_obtinere_pixelum(doc->tabula,
+                    x,
+                    y) == album)
+                {
+                    perge;
+                }
+                n++;
+                d2 = ((s32)x - CC) * ((s32)x - CC)
+                    + ((s32)y - CC) * ((s32)y - CC);
+                si (d2 > XXXII * XXXII)
+                {
+                    extra++;
+                }
+                si (d2 > LXIV)
+                {
+                    longe++;
+                }
+            }
+        }
+        CREDO_AEQUALIS_I32(extra, ZEPHYRUM);
+        CREDO_VERUM(longe > ZEPHYRUM);
+        CREDO_VERUM(n <= II * PICTOR_GUTTAE_PUNCTO * IV);
+        CREDO_VERUM(n > PICTOR_GUTTAE_PUNCTO * IV + VIII);
+        CREDO_VERUM(chorda_continet(actum_ultimum(vol),
+            chorda_ex_literis(
+            "magnitudo=\"4\"", piscina)));
+        /* mora LXXX ms: + (LXXX / GUTTA_MS) x IV = XL guttae (non X) */
+        CREDO_VERUM(pictor_documentum_revocare(doc));
+        mus(app.d, EVENTUS_MUS_DEPRESSUS, CC, CC, V * M + C);
+        mus(app.d, EVENTUS_MUS_LIBERATUS, CC, CC, V * M + C + LXXX);
+        n = picta(doc);
+        imprimere("  guttae cum mora: %d\n", (int)n);
+        CREDO_VERUM(n <= II * PICTOR_GUTTAE_PUNCTO * IV + XL);
+        CREDO_VERUM(n > II * PICTOR_GUTTAE_PUNCTO * IV + X + VIII);
+
+        /* praevisio: radius XXXII, guttae VI x IV per punctum */
+        mus(app.d, EVENTUS_MUS_DEPRESSUS, CCC, CC, VI * M);
+        mus(app.d, EVENTUS_MUS_MOTUS, CCCX, CC, VI * M + XVI);
+        dispensator_recomponere(app.d);
+        t = nodus_arboris(&app, "tabula");
+        CREDO_VERUM(chorda_continet(t->titulus,
+            chorda_ex_literis(" 32 ",
+            piscina)));
+        CREDO_AEQUALIS_I32(guttae_praevisae(&app, ZEPHYRUM),
+            II * PICTOR_GUTTAE_PUNCTO * IV);
+        mus(app.d, EVENTUS_MUS_LIBERATUS, CCCX, CC, VI * M + XXXII);
+
+        /* quadratum instrumenti currentis; palette V optionum */
+        dispensator_recomponere(app.d);
+        CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
+            "quadratum.magnitudo")->titulus, "magnitudo:aspergillum:4");
+        CREDO_VERUM(manus_ludus_premere_ad(m, CXX, CDLXVIII));
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+            "magnitudo");
+        p = nodus_arboris(&app, "palette");
+        CREDO_VERUM(p && xar_numerus(p->liberi) == V);
+        CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
+            "optio.magnitudo.4")->titulus,
+            "magnitudo:aspergillum:4:electum");
+        /* optio III (VIII): x CX + IV + III x XXII + X, y CDXLII */
+        CREDO_VERUM(manus_ludus_premere_ad(m, CX + IV + III * XXII + X,
+            CDXXVIII + IV + X));
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "magnitudo_aspergilli"), "8");
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "magnitudo_penicilli"), "1");
+
+        /* spongia: quadratum fixum, nulla palette */
+        CREDO_VERUM(manus_ludus_clavem(m, 'e', ZEPHYRUM));
+        dispensator_recomponere(app.d);
+        CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
+            "quadratum.magnitudo")->titulus, "magnitudo:spongia:16");
+        (vacuum)manus_ludus_premere_ad(m, CXX, CDLXVIII);
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+            "");
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

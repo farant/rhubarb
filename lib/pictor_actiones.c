@@ -618,6 +618,11 @@ hic_manens constans s32 magnitudines[X] = {
     I, II, III, IV, VI, VIII, XII, XVI, XXXII, LXIV
 };
 
+/* P4b: magnitudines aspergilli (multiplex radii) */
+hic_manens constans s32 magnitudines_aspergilli[V] = {
+    I, II, IV, VIII, XVI
+};
+
 /* <tractator/> */
 b32
 pictor_magnitudinem_ponere (
@@ -628,11 +633,14 @@ pictor_magnitudinem_ponere (
       constans Eventus* ev,
                 vacuum* ctx)
 {
-      InsulaRamus ramus;
-    ColorPonendus cp;
-           chorda valor;
-              i32 k;
-              b32 nota;
+         InsulaRamus  ramus;
+       ColorPonendus  cp;
+              chorda  valor;
+              chorda* instrumentum;
+        constans s32* tabula;
+                 i32  numerus;
+                 i32  k;
+                 b32  nota;
 
     (vacuum)motus;
     (vacuum)destinatio;
@@ -640,16 +648,38 @@ pictor_magnitudinem_ponere (
     {
         redde FALSUM;
     }
-    valor          = post_praefixum(nodus, "optio.magnitudo.");
-    cp.attributum  = "magnitudo_penicilli";
+    valor = post_praefixum(nodus, "optio.magnitudo.");
     si (valor.mensura == ZEPHYRUM || !chorda_ut_s32(valor, &cp.valor))
     {
         redde FALSUM;
     }
-    nota = FALSUM;
-    per (k = ZEPHYRUM; k < X; k++)
+    /* P4b: instrumentum currens - penicillus diametrum, aspergillum
+     * multiplicem; ceteri (spongia) nihil */
+    ramus         = ramus_pictoris(repo, ctx);
+    instrumentum  = insula_ramus_attributum(&ramus, INSULA_EPHEMERA,
+        "instrumentum");
+    si (   instrumentum && chorda_aequalis_literis(*instrumentum,
+        "aspergillum"))
     {
-        si (magnitudines[k] == cp.valor)
+        cp.attributum  = "magnitudo_aspergilli";
+        tabula         = magnitudines_aspergilli;
+        numerus        = V;
+    }
+    alioquin si (instrumentum && chorda_aequalis_literis(*instrumentum,
+                 "penicillus"))
+    {
+        cp.attributum  = "magnitudo_penicilli";
+        tabula         = magnitudines;
+        numerus        = X;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    nota = FALSUM;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (tabula[k] == cp.valor)
         {
             nota = VERUM;
         }
@@ -658,7 +688,6 @@ pictor_magnitudinem_ponere (
     {
         redde FALSUM;
     }
-    ramus = ramus_pictoris(repo, ctx);
     (vacuum)palettam_claudere(&ramus);
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }

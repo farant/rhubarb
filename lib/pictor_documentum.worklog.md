@@ -271,3 +271,20 @@ Fran's plan: the eraser paints the canvas background. Named `spongia`
   and `Sigillum` (sigillum.h hash seal type).
 - Twin: status text x 136 -> cell 23 (tessellation rounds to NEAREST:
   110 -> 18, 136 -> 23).
+
+## 2026-10-09 - P4b spray sizes
+
+- Fran's options: 1 2 4 8 16 (radius 8..128). Density is LINEAR (Fran
+  agreed): 6 x m dots per point and m per 8 ms of dwell. Constant
+  density would be 6 x m^2 = 1536 per point at 16, too heavy for the
+  live preview (1x1 mandata). m = 1 unchanged.
+- The size square follows the current tool: brush "magnitudo:<n>",
+  spray "magnitudo:aspergillum:<m>", eraser "magnitudo:spongia:16"
+  dimmed with an EMPTY action (clicking opens nothing). It never
+  disappears, so the status text does not jump between tools.
+- magnitudo.ponere reads the current tool and checks the value against
+  that tool's own table; the two tables are duplicated in
+  pictor_actiones.c and pictor_componentia.c (tests click the last
+  option of each to pin them).
+- First draft of section IX never held the spray still, so dwell
+  scaling was unpinned; added an 80 ms hold (plant B7).
