@@ -73,6 +73,7 @@ declare -a SOURCE_FILES=(
     "lib/eventus_stml.c"
     "lib/excerptum.c"
     "lib/exemplar.c"
+    "lib/exemplaria.c"
     "lib/extensio.c"
     "lib/fabrica.c"
     "lib/fabrica_declarationes.c"

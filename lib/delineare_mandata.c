@@ -278,6 +278,55 @@ _plenum_secare (
                                  (i32)(y1 - y0), color);
 }
 
+/* Rectangulum exemplari impletum (vicus-latera, indicium foci):
+ * praecisum ut _plenum_secare; bitus positi solum colore, exemplar ad
+ * coordinatas TABULAE alligatum. Id invalidum: nihil. */
+interior vacuum
+_exemplar_secare (
+    ContextusDelineandi* ctx,
+        TabulaPixelorum* t,
+                    s32  x,
+                    s32  y,
+                    s32  latitudo,
+                    s32  altitudo,
+                  Color  color,
+                    i32  exemplar)
+{
+    s32 x0 = x;
+    s32 y0 = y;
+    s32 x1 = x + latitudo;
+    s32 y1 = y + altitudo;
+    s32 a;
+    s32 b;
+
+    si (x0 < ZEPHYRUM)
+    {
+        x0 = ZEPHYRUM;
+    }
+    si (y0 < ZEPHYRUM)
+    {
+        y0 = ZEPHYRUM;
+    }
+    si (x1 > (s32)t->latitudo)
+    {
+        x1 = (s32)t->latitudo;
+    }
+    si (y1 > (s32)t->altitudo)
+    {
+        y1 = (s32)t->altitudo;
+    }
+    per (b = y0; b < y1; b++)
+    {
+        per (a = x0; a < x1; a++)
+        {
+            si (exemplar_punctum(exemplar, a, b))
+            {
+                delineare_pixelum(ctx, (i32)a, (i32)b, color);
+            }
+        }
+    }
+}
+
 /* Linea in spatio signato: Bresenham IDEM ac delineare_lineam,
  * pixela solum in quadrante positivo (fines superiores et praecisio
  * per delineare_pixelum) */
@@ -390,7 +439,12 @@ primitivum_pingere (
     commutatio (x->genus)
     {
         casus MANDATUM_RECTANGULUM:
-            si (x->impletum)
+            si (x->impletum && x->exemplar != ZEPHYRUM)
+            {
+                _exemplar_secare(ctx, t, sx, sy, lat, alt, color,
+                    x->exemplar);
+            }
+            alioquin si (x->impletum)
             {
                 _plenum_secare(ctx, t, sx, sy, lat, alt, color);
             }

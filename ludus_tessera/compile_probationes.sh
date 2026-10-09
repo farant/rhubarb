@@ -76,6 +76,7 @@ declare -a RADIX_FONTES=(
     "imago_opus"
     "color"
     "delineare"
+    "exemplaria"
     "delineare_mandata"
     "fenestra_textus"
     "fons"

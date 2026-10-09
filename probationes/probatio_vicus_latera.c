@@ -9,7 +9,8 @@
  * gestus relinquentis effunditur; focus durabilis; super cum spatio
  * suo (idem id 'pagina' in utroque latere); Ctrl-A 0 = tabula
  * decima. S3a: ictus in scriba cursorem ponit (inserendo modum servat,
- * unitatem revocandi frangit; visualis ad normalem; dexter nihil). */
+ * unitatem revocandi frangit; visualis ad normalem; dexter nihil).
+ * VII: indicium foci - exemplar in margine lateris focati solum. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -29,6 +30,9 @@
 #include "eventus.h"
 #include "tabula_characterum.h"
 #include "scriba_documentum.h"
+#include "color.h"
+#include "tabula_pixelorum.h"
+#include "ludus_fenestra.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -124,6 +128,48 @@ cellula (
 
     t = scriba_documentum_tabula(sm->doc);
     redde t->cellulae[(i32)linea * t->latitudo + (i32)columna];
+}
+
+/* quadrum sine fenestra; pixela colore marginis in x [a, b), linea
+ * marginis summa sub tabulis (intra lineam ipsam) */
+interior i32
+puncta_marginis (
+    VicusApplicatio* app,
+                s32  a,
+                s32  b)
+{
+    TabulaPixelorum* tp;
+      LudusFenestra* lf;
+                i32  margo;
+                i32  n;
+                s32  x;
+                s32  y;
+
+    tp = tabula_pixelorum_creare_nuda(piscina, CDLXXX, CDLXXX
+        + VICUS_ALTITUDO_TABULARUM);
+    lf = ludus_fenestra_creare(piscina, app->d,
+        vicus_figurae(app->vicus),
+        ZEPHYRUM, vicus_imago_fons, app->vicus, tp);
+    si (!lf)
+    {
+        redde ZEPHYRUM;
+    }
+    ludus_quadrum(lf, M);
+    margo  = (i32)color_ad_pixelum(thema_color(COLOR_BORDER));
+    n      = ZEPHYRUM;
+    per (y = VICUS_ALTITUDO_TABULARUM + I;
+         y < VICUS_ALTITUDO_TABULARUM + VII; y++)
+    {
+        per (x = a; x < b; x++)
+        {
+            si ((i32)tabula_pixelorum_obtinere_pixelum(tp, (i32)x,
+                    (i32)y) == margo)
+            {
+                n++;
+            }
+        }
+    }
+    redde n;
 }
 
 interior b32
@@ -297,6 +343,17 @@ s32 principale (vacuum)
     }
     CREDO_AEQUALIS_S32(cursor_linea(v, VICUS_SINISTRUM), I);
     CREDO_AEQUALIS_S32(cursor_columna(v, VICUS_SINISTRUM), I);
+
+    imprimere("\n--- VII: indicium foci - exemplar in margine ---\n");
+    /* linea marginis summa (y T+1..T+6, intra lineam marginis): puncta
+     * colore marginis solum in latere focato */
+    CREDO_VERUM(vicus_latus_focatum(v)
+        == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
+    CREDO_VERUM(puncta_marginis(&app, I, CCXXX) > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(puncta_marginis(&app, CCL, CDLXX), ZEPHYRUM);
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    CREDO_AEQUALIS_I32(puncta_marginis(&app, I, CCXXX), ZEPHYRUM);
+    CREDO_VERUM(puncta_marginis(&app, CCL, CDLXX) > ZEPHYRUM);
 
     imprimere("\n");
     credo_imprimere_compendium();

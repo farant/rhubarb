@@ -130,6 +130,22 @@ mandata_rectangulum (
 }
 
 vacuum
+mandata_rectangulum_exemplar (
+         Mandata* m,
+           Fines  fines,
+    ColorMandati  color,
+             i32  exemplar)
+{
+    Mandatum* md;
+
+    md            = mandatum_novum(m, MANDATUM_RECTANGULUM);
+    md->fines     = fines;
+    md->color     = color;
+    md->impletum  = VERUM;
+    md->exemplar  = exemplar;
+}
+
+vacuum
 mandata_linea (
          Mandata* m,
          Punctum  a,
@@ -340,6 +356,11 @@ mandatum_scribere (
         stml_attributum_addere(nodus, m->piscina, m->intern, "impletum",
                                md->impletum ? "verum" : "falsum");
     }
+    /* exemplar solum si non plenum: imagines veteres manent */
+    si (md->genus == MANDATUM_RECTANGULUM && md->exemplar != ZEPHYRUM)
+    {
+        attributum_numericum(nodus, m, "exemplar", md->exemplar);
+    }
     si (md->genus == MANDATUM_LINEA)
     {
         attributum_numericum(nodus, m, "crassitudo", md->crassitudo);
@@ -534,6 +555,7 @@ mandatum_legere (
     }
     md->color.valor   = attributum_i32(nodus, "color");
     md->impletum      = attributum_b32(nodus, "impletum");
+    md->exemplar      = attributum_i32(nodus, "exemplar");
     md->crassitudo    = attributum_i32(nodus, "crassitudo");
     md->fons          = attributum_i32(nodus, "fons");
     md->sectio        = attributum_b32(nodus, "sectio");
@@ -629,7 +651,8 @@ mandata_aequalia (
         { redde FALSUM;
         }
         si (   x->impletum   != y->impletum
-            || x->crassitudo != y->crassitudo)
+            || x->crassitudo != y->crassitudo
+            || x->exemplar   != y->exemplar)
         { redde FALSUM;
         }
         si (   x->fons  != y->fons || x->sectio != y->sectio

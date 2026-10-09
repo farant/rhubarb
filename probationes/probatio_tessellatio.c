@@ -462,6 +462,34 @@ s32 principale (vacuum)
                 | expect.b);
     }
 
+    imprimere("\n--- IVb. exemplar in cellulis non pingitur ---\n");
+    /* rectangulum plenum, deinde exemplar (indicium foci) super eum:
+     * cellulae fundum pleni servant */
+    m = mandata_creare(piscina, intern);
+    {
+        ColorMandati index_c;
+        ColorMandati alius_c;
+               Color expect;
+
+        index_c.genus = COLOR_MANDATI_INDEX;
+        index_c.valor = VII;
+        alius_c.genus = COLOR_MANDATI_INDEX;
+        alius_c.valor = III;
+        mandata_rectangulum(m, _fines(ZEPHYRUM, ZEPHYRUM, XII, VIII),
+            index_c, VERUM);
+        mandata_rectangulum_exemplar(m, _fines(ZEPHYRUM, ZEPHYRUM, XII,
+            VIII), alius_c, XXI);
+        tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+            NIGER, NIHIL, NIHIL, NIHIL, cellulae);
+        expect = thema_color_ex_indice_colorationis((i8)VII);
+        CREDO_AEQUALIS_I32(cellulae[ZEPHYRUM].color_fundi,
+            ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
+                | expect.b);
+        CREDO_AEQUALIS_I32(cellulae[I].color_fundi,
+            ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
+                | expect.b);
+    }
+
     imprimere("\n--- V. via pixelorum (T4, praedicta) ---\n");
     pixela       = piscina_generare_dynamicum("tessellatio_pixela",
         IV * M * M);

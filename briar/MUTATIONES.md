@@ -19,6 +19,11 @@ Leges chartae:
 
 ## inedita
 
+- corpus: `exemplaria` nova (exemplaria classica Mac 8x8, ex delineare
+  translata; enum EXEMPLAR_* nunc ibi). `Mandatum.exemplar` et
+  `mandata_rectangulum_exemplar` (rectangulum exemplari impletum).
+  scriba et pictor latus focatum exemplari in margine notant.
+
 - corpus: vicus - `VicusMontator` argumentum `argumentum` post `id`
   accipit (montatores exstantes frangit); `VicusLatus.argumentum`;
   `vicus_acervo_aperire` nova (latus in acervo dextro aperire aut in

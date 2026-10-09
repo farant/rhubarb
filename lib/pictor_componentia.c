@@ -113,6 +113,17 @@ pictor_actio_instrumenti (
  * ================================================== */
 
 /* <componens/> <purus/> */
+/* indicium foci (vicus-latera): ramus focatus - sine Motu aut ramo
+ * radicis (applicatio sola) semper; in vico spatium Motus = id rami */
+interior b32
+focatum_est (
+    constans Motus* motus,
+       InsulaRamus  ramus)
+{
+    redde !motus || chorda_vacua(ramus.id)
+        || chorda_aequalis(motus->spatium, ramus.id);
+}
+
 Componens*
 pictor_componere (
      InsulaRepositorium* repo,
@@ -214,6 +225,11 @@ pictor_componere (
     prospectus = nodus(piscina, intern, "prospectus", PARTES_PROSPECTUS,
                        fp.x, fp.y, fp.latitudo, fp.altitudo);
     componens_ponere_sectio(prospectus, VERUM);
+    /* indicium foci: figura prospectus exemplar addit */
+    si (focatum_est(motus, ramus))
+    {
+        componens_ponere_titulum(prospectus, "focatum");
+    }
     componens_ponere_transformatio(prospectus,
         motus ? motus->pan.x : ZEPHYRUM,
         motus ? motus->pan.y : ZEPHYRUM,

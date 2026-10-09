@@ -175,8 +175,13 @@ s32 principale (vacuum)
 
     imprimere("\n--- II: pixela - mensa, charta, margo, cursor ---\n");
     t = reddere(r, &sf);
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, CCC, C),
+    /* mensa: superficies; arbor sine Motu = focata, ergo puncta
+     * exemplaris foci (PUNCTA_DUPLICIA_DISPERSA, tabulae alligata):
+     * y C = linea IV (0x88), x CCC = bitus IV positus, CCCI non */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, CCCI, C),
                        color(COLOR_SUPERFICIES));
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, CCC, C),
+                       color(COLOR_BORDER));
     CREDO_AEQUALIS_I32(in_cellula(t, FOLIUM_X(XII), FOLIUM_Y(IV),
         color(COLOR_BACKGROUND)), XLVIII);                 /* charta */
     /* margo in cellula marginis (x = 0), non in charta */

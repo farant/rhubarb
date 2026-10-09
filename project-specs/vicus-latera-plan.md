@@ -372,6 +372,23 @@ colour. The house has pattern code (find it); the pane needs to know
 it is focused (vicus focus -> an ephemeral attribute the composer
 reads?).
 
+Focus indicator as built (2026-10-09, Fran approved the plan; "light
+gray dots, just enough to be noticeable"): the 38 classic Mac patterns
+moved from lib/delineare.c into `exemplaria.h` (`exemplar_obtinere`,
+`exemplar_punctum`; enum EXEMPLAR_* moved there, delineare.h includes
+it). `Mandatum.exemplar` + `mandata_rectangulum_exemplar`: set bits
+only, in the given colour, anchored to the PIXEL BUFFER (neighbouring
+fills line up); two colours = a flat fill first. Serialised only when
+non-zero (old mandata snapshots unchanged). delineare_mandata draws it;
+tessellatio (character cells) cannot and leaves the flat fill. A pane
+is focused when its composer's Motus `spatium` is its branch id (no
+Motus or the root branch = standalone app = focused); the composer
+titles the prospectus "focatum" and the surround figure adds
+EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA in COLOR_BORDER (constant
+EXEMPLAR_FOCI in scriba_figurae.c / pictor_figurae.c - sparser:
+CINEREUM_LEVE, RARISSIMUS). Goldens promoted: pictor.arbor (titulus),
+pictor_prima specimen (dots in the surround only). Nine plants caught.
+
 ## AUDIENDA
 
 - **vicus's Ctrl-A prefix (T3b) collides with Fran's tmux leader**: tmux

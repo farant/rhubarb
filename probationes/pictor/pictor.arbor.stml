@@ -16,6 +16,7 @@
   <componens
               id="prospectus"
           partes="prospectus"
+         titulus="focatum"
                x="0"
                y="0"
         latitudo="320"
