@@ -7,7 +7,7 @@
  *
  *   clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 -O2 -g demo-snapshot.c -o demo-snapshot
  *
- * Commit (library closure clean): db098b73a17d3f02623ba0e0080910a8e8509681
+ * Commit (library closure clean): 526aa6e2bee7192f9e8f1d748d0699c011c86c56
  * Regenerate: ./knotapel/archive.sh knotapel/demo_121_exact_derived_series/main.c
  * Verified: live build and snapshot gave byte-identical output.
  * Sources (git blob hashes):
@@ -40,7 +40,7 @@
  *   673a0b2c3f9258626883b6ecaed2ff76e4d060a8  lib/polynomium.c
  *   5a51ebda66712dbf61f5c9e5e987f8d59e834da8  lib/quaternio.c
  *   6e3945b8a0ce6a556478fbe4249ff3c6fb5cdbe4  lib/surdus.c
- *   33333e6a83dbed15606248514edb5dd3cda15ced  knotapel/demo_121_exact_derived_series/main.c (uncommitted, embedded verbatim)
+ *   b6683d702cf3225f9026dabc63cabeeaed2a1c19  knotapel/demo_121_exact_derived_series/main.c (uncommitted, embedded verbatim)
  */
 
 #line 1 "include/postulata_posix.h"
@@ -25915,6 +25915,22 @@ judge_claims (void)
         }
     }
     check("D96 'C most important at N = 3..5, B at N = 6' holds ROBUSTLY", ok);
+
+    /* D96: "A is a synergy enhancer; the optimal catalog is A+B+C" -
+     * B+C alone beats A+B+C(+E) at every N, in D96's own floats too
+     * (review L4) */
+    ok = 1;
+    for (ni = 0; ni < 4; ni++) {
+        const Tally *bc = &t96[7].t[ni][0];
+        const Tally *abc = &t96[10].t[ni][0];
+
+        ok &= rate_gt(bc->n_float, bc->sets, abc->n_float, abc->sets)
+            && rate_gt(bc->n_rule, bc->sets, abc->n_rule, abc->sets)
+            && rate_gt(bc->n_robust, bc->sets, abc->n_robust, abc->sets);
+    }
+    check("D96 'A is a synergy enhancer, the optimal catalog is A+B+C' "
+        "FAILS: B+C alone beats A+B+C(+E) at every N in float, rule and "
+        "robust", ok);
 
     /* D95: COMM survives N = 7, NON-COMM dies */
     check("D95 'COMM survives N = 7 (8), NON-COMM dies (0)' holds under "

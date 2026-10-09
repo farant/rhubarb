@@ -2425,6 +2425,22 @@ judge_claims (void)
     }
     check("D96 'C most important at N = 3..5, B at N = 6' holds ROBUSTLY", ok);
 
+    /* D96: "A is a synergy enhancer; the optimal catalog is A+B+C" -
+     * B+C alone beats A+B+C(+E) at every N, in D96's own floats too
+     * (review L4) */
+    ok = 1;
+    for (ni = 0; ni < 4; ni++) {
+        const Tally *bc = &t96[7].t[ni][0];
+        const Tally *abc = &t96[10].t[ni][0];
+
+        ok &= rate_gt(bc->n_float, bc->sets, abc->n_float, abc->sets)
+            && rate_gt(bc->n_rule, bc->sets, abc->n_rule, abc->sets)
+            && rate_gt(bc->n_robust, bc->sets, abc->n_robust, abc->sets);
+    }
+    check("D96 'A is a synergy enhancer, the optimal catalog is A+B+C' "
+        "FAILS: B+C alone beats A+B+C(+E) at every N in float, rule and "
+        "robust", ok);
+
     /* D95: COMM survives N = 7, NON-COMM dies */
     check("D95 'COMM survives N = 7 (8), NON-COMM dies (0)' holds under "
         "every resolution (COMM robust 8 = possible 8; NON-COMM possible 0)",

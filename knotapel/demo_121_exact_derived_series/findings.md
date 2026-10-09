@@ -17,7 +17,7 @@ D120's engine.
 
 Run: `./bin/aedilis knotapel/demo_121_exact_derived_series/main.c &&
 bash build/aedilis/main/struere.sh && ./build/aedilis/main/main`
-- full run: 34 s, 25 checks;
+- full run: 34 s, 26 checks;
 - `DEMO121_CELER=1`: Part A plus D96's cells and pairs, 0.4 s, 10
   checks (for plants).
 
@@ -39,7 +39,9 @@ Oracle: `python3 -I oracle.py CELLS N` (XOR).
 
 **Most of D95/D96's qualitative claims hold exactly, even under every
 tie resolution. The ones that rest on the 90° (null) elements do not:
-those elements put every sum exactly on a sector boundary.**
+those elements put every sum exactly on a sector boundary. One more, D96's
+"optimal catalog is A+B+C", fails outright, on D96's own float numbers
+as well.**
 
 | claim | float (D95/D96) | exact rule | robust | possible | verdict |
 |---|---|---|---|---|---|
@@ -51,8 +53,9 @@ those elements put every sum exactly on a sector boundary.**
 | 2I first 12 beats ζ₈-COMM at N = 3–5, crossover at 6–7 | 1.56, 1.64, 2.15× | | 1.56, 1.63, 1.98× | | holds robustly |
 | "0 + 0 = 26%" (all-null N = 4) | 33/126 | 27 | **15 (11.9%)** | **102 (81%)** | magnitude is a tie artifact |
 | all-null "zero elsewhere" (N = 3, 5, 6) | 0, 0, 0 | 0, 0, 0 | 0, 0, 0 | **80, 72, 25** | robust only |
-| null halves "dead alone" | 0 | 0 | 0 | outer-null N = 3: **16/20**; Q₈: **1/1** | robust only |
+| null halves "dead alone" | 0 | 0 | 0 | outer-null N = 3, 4: **16/20, 3/15**; Q₈ (one set, N = 3 only): **1/1** | robust only |
 | cell C at N = 6 | 16/28 (57%) | 16 | **4 (14%)** | **28 (100%)** | decided by ties |
+| A is a "synergy enhancer"; optimal catalog = A+B+C | — | | B+C 96.7, 92.8, 71.7, 29.0% vs A+B+C(+E) 74.1, 74.8, 40.9, 10.3% | | **fails**, in D96's own floats too (B+C 96.7, 94.0, 73.2, 31.0 vs 74.1, 77.5, 45.1, 13.0%) |
 
 ## The 90° mechanism
 
@@ -63,10 +66,12 @@ exactly 180°, which is the sector boundary m = k/2 for every k in
 
 **Every set of every null subset is tied** (checked). So the "0 + 0"
 result is decided by how acos(0) rounds and by the axis tie-breaks:
-- robustly, the mix does more than either half (15/126 at N = 4,
-  against 0 and 0);
+- robustly, the mix computes where the outer half does not (15/126
+  at N = 4 against 0/15; the Q₈ half has 3 elements and no N = 4
+  sets at all);
 - that robust gain is 11.9%, not 26%;
-- under "possible" both halves can compute, and so can the mix at
+- under "possible" the outer half computes at N = 3 and 4 (16/20, 3/15;
+  0 at N = 5, 6), Q₈'s single N = 3 set passes, and the mix computes at
   every N.
 
 "Algebra wins over geometry at matched half-angle" survives only in
@@ -86,8 +91,10 @@ its robust, weaker form.
   the same rule.
 - D94 builds its floats by float BFS (products of cos/sin generators).
   D95 converts its exact integers ((a + b√2)/2).
-- The floats differ in the last bit, and at exact ties that bit, plus
-  the order of the axis list, decides.
+- The floats differ in the last bit, and at exact ties that bit
+  decides. Both demos list the axes in the same order; the exact rule
+  (which does depend on that order) gives the same counts for both, so
+  the float representation alone accounts for the difference.
 - D121's exact counts equal D119's exact counts at every N ≤ 6, XOR
   and AND (checked). Once exact, the two implementations agree.
 - New exact numbers at N = 7 (exhaustive; D94 only sampled):
@@ -137,6 +144,23 @@ its robust, weaker form.
 
 The first G2 plant (`level >= 1 && level != 1`) was an equivalent
 mutant: it is the same set, so it survived correctly. It was re-planted.
+
+## Review (2026-10-09, recensor-extensio)
+
+No errors in numbers or checks. The reviewer confirmed the subset
+construction against D95/D96 (BFS and generator order, cells from
+level × null, triples including E) and found that the float and axis
+match cannot be coincidence. It also confirmed each judge_claims check
+and the 90° argument; no axis ties are needed for "every set tied".
+The oracle's free-reuse step was shown sound, and 14 more oracle rows
+agree. LOW findings, applied:
+- the "0 + 0" wording (Q₈ has no N = 4 sets; outer-null "possible" at
+  N = 3–4 only);
+- the axis-order attribution for the D94/D95 difference, removed;
+- "Q₈-null 0 at all N" is vacuous beyond N = 3;
+- an unjudged D96 headline ("A is a synergy enhancer, optimal catalog
+  A+B+C") fails on D96's own numbers, so it is now a claims row and a
+  check.
 
 ## Not covered
 
