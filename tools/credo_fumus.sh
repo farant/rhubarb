@@ -12,6 +12,9 @@
 #   IV   filtrum CREDO_SECTIO: sectio sola; ignotum -> I, nominatum
 #   V    sine CREDO_VERDICTA: nulla plagula
 #   VI   ruina media: sectiones priores notae, linea SUITA absens
+#   VII  signa (credo II): vocabulum clausum (lentus rete fenestra
+#        repositorium), CREDO_SIGNA_OMITTE -> OMISSA nominata, omnes
+#        omissae -> VACUA, signum ignotum (tabula aut ambitus) -> FRACTA
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
@@ -179,7 +182,71 @@ s32 principale (vacuum)
 }
 FONS
 
-for s in mixta sana ruina; do
+cat > "$T/signata.c" <<'FONS'
+#include "credo.h"
+
+interior vacuum _transit (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "localis", _transit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "retis", _transit, NIHIL, NIHIL, "rete", NIHIL },
+    { "lenta", _transit, NIHIL, NIHIL, "lentus rete", NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("signata", SECTIONES);
+}
+FONS
+
+cat > "$T/omnes_signatae.c" <<'FONS'
+#include "credo.h"
+
+interior vacuum _transit (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "prima", _transit, NIHIL, NIHIL, "rete", NIHIL },
+    { "secunda", _transit, NIHIL, NIHIL, "rete", NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("omnes_signatae", SECTIONES);
+}
+FONS
+
+cat > "$T/ignota.c" <<'FONS'
+#include "credo.h"
+
+interior vacuum _transit (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "prima", _transit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tarda", _transit, NIHIL, NIHIL, "tardus", NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("ignota", SECTIONES);
+}
+FONS
+
+for s in mixta sana ruina signata omnes_signatae ignota; do
     struere "$s.c" "$s" || { echo "credo_fumus: $s non compilat:"; cat "$T/$s.err"; exit 2; }
 done
 
@@ -224,6 +291,27 @@ CREDO_SECTIO=nulla CREDO_VERDICTA="$T/v_nulla.tsv" "$T/sana" > "$T/o_nulla" 2>&1
 # subshell: nuntius "Killed" testae ipsius tacetur (ruina consulta)
 ( CREDO_VERDICTA="$T/v_ruina.tsv" "$T/ruina" > "$T/o_ruina" 2>&1; exit $? ) 2>/dev/null; rc=$?
 [ "$rc" -ne 0 ] && grep -q "^SECTIO	ruina	ante	TRANSIIT	1	1	" "$T/v_ruina.tsv" && ! grep -q '^SUITA' "$T/v_ruina.tsv"; credo $? "VI ruina: sectio prior nota, SUITA absens (erat $rc)"
+
+# VII (credo II, T1): SIGNA - vocabulum clausum, OMISSA per
+# CREDO_SIGNA_OMITTE (nominata, numquam tacita), omnes omissae = VACUA
+env -u CREDO_SIGNA_OMITTE CREDO_VERDICTA="$T/v_sig.tsv" "$T/signata" > "$T/o_sig" 2>&1; rc=$?
+[ "$rc" -eq 0 ] && [ "$(grep -c '	TRANSIIT	' "$T/v_sig.tsv")" -eq 4 ]; credo $? "VII signa sine omissione: omnes currunt (erat $rc)"
+CREDO_SIGNA_OMITTE=rete CREDO_VERDICTA="$T/v_om.tsv" "$T/signata" > "$T/o_om" 2>&1; rc=$?
+V="$T/v_om.tsv"
+[ "$rc" -eq 0 ] && grep -q "^SECTIO	signata	localis	TRANSIIT	1	1	" "$V" \
+    && grep -q "^SECTIO	signata	retis	OMISSA	0	0	" "$V" && grep -q "^SECTIO	signata	lenta	OMISSA	0	0	" "$V" \
+    && grep -q "^SUITA	signata	TRANSIIT	1	1	" "$V"; credo $? "VII CREDO_SIGNA_OMITTE=rete: II OMISSA in plagula, suita transit cursa I (erat $rc)"
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 10) || ($1 == "SUITA" && NF != 8)' "$V" | wc -l | tr -d ' ')
+[ "$mali" -eq 0 ]; credo $? "VII lineae OMISSA campos X ferunt ($mali malae)"
+grep -q "OMISSA retis (signum rete)" "$T/o_om" && grep -q "OMISSA lenta (signum rete)" "$T/o_om" \
+    && ! grep -q -- '--- Probans retis ---' "$T/o_om"; credo $? "VII omissa in effusione nominatae, non cursae"
+CREDO_SIGNA_OMITTE=rete CREDO_VERDICTA="$T/v_vac.tsv" "$T/omnes_signatae" > "$T/o_vac" 2>&1; rc=$?
+[ "$rc" -eq 1 ] && grep -q "^SUITA	omnes_signatae	VACUA	0	0	" "$T/v_vac.tsv"; credo $? "VII omnes omissae: SUITA VACUA, exitus 1 (erat $rc)"
+CREDO_VERDICTA="$T/v_ign.tsv" "$T/ignota" > "$T/o_ign" 2>&1; rc=$?
+[ "$rc" -eq 1 ] && grep -q "signum ignotum 'tardus'" "$T/o_ign" && grep -q "tarda" "$T/o_ign" \
+    && ! grep -q '^SECTIO' "$T/v_ign.tsv" && grep -q "^SUITA	ignota	FRACTA	0	0	" "$T/v_ign.tsv"; credo $? "VII signum ignotum in tabula: FRACTA nominatum, nihil cursum (erat $rc)"
+CREDO_SIGNA_OMITTE=retis CREDO_VERDICTA="$T/v_ign2.tsv" "$T/signata" > "$T/o_ign2" 2>&1; rc=$?
+[ "$rc" -eq 1 ] && grep -q "CREDO_SIGNA_OMITTE: signum ignotum 'retis'" "$T/o_ign2" && ! grep -q '^SECTIO' "$T/v_ign2.tsv"; credo $? "VII signum ignotum in CREDO_SIGNA_OMITTE: FRACTA, nihil cursum (erat $rc)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

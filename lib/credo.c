@@ -1056,6 +1056,130 @@ _credo_sectionem_scribere (
     (vacuum)fflush(plagula);
 }
 
+/* SIGNA (credo II): vocabulum CLAUSUM - facultates domus (fabrica-7
+ * annotatio 'facultas') et 'lentus'. Verbum ignotum = vitium scribae,
+ * non signum novum tacitum */
+hic_manens constans character* constans _credo_signa_nota[] = {
+    "lentus", "rete", "fenestra", "repositorium", NIHIL
+};
+
+interior b32
+_credo_signum_notum (
+     constans character* verbum,
+         memoriae_index  mensura)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; _credo_signa_nota[i] != NIHIL; i++)
+    {
+        si (   strlen(_credo_signa_nota[i]) == mensura
+            && strncmp(_credo_signa_nota[i], verbum, mensura)
+                == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* signa (verba spatio separata) omnia nota? primum ignotum in 'ignotum'
+ * (capacitas XXXII) */
+interior b32
+_credo_signa_probare (
+    constans character* signa,
+             character* ignotum)
+{
+    constans character* p = signa;
+
+    dum (p != NIHIL && *p != '\0')
+    {
+        memoriae_index n;
+
+        dum (*p == ' ')
+        {
+            p++;
+        }
+        n = ZEPHYRUM;
+        dum (p[n] != '\0' && p[n] != ' ')
+        {
+            n++;
+        }
+        si (n > ZEPHYRUM && !_credo_signum_notum(p, n))
+        {
+            sprintf(ignotum, "%.*s", (integer)(n > XXXI ? XXXI : n), p);
+            redde FALSUM;
+        }
+        p += n;
+    }
+    redde VERUM;
+}
+
+/* signum commune 'signa' et 'omittenda'? id in 'commune' (capacitas
+ * XXXII) */
+interior b32
+_credo_signum_commune (
+    constans character* signa,
+    constans character* omittenda,
+             character* commune)
+{
+    constans character* p = signa;
+
+    dum (p != NIHIL && omittenda != NIHIL && *p != '\0')
+    {
+            memoriae_index  n;
+        constans character* q = omittenda;
+
+        dum (*p == ' ')
+        {
+            p++;
+        }
+        n = ZEPHYRUM;
+        dum (p[n] != '\0' && p[n] != ' ')
+        {
+            n++;
+        }
+        dum (n > ZEPHYRUM && *q != '\0')
+        {
+            memoriae_index m;
+
+            dum (*q == ' ')
+            {
+                q++;
+            }
+            m = ZEPHYRUM;
+            dum (q[m] != '\0' && q[m] != ' ')
+            {
+                m++;
+            }
+            si (m == n && strncmp(p, q, n) == ZEPHYRUM)
+            {
+                sprintf(commune, "%.*s", (integer)(n > XXXI ? XXXI : n),
+                    p);
+                redde VERUM;
+            }
+            q += m;
+        }
+        p += n;
+    }
+    redde FALSUM;
+}
+
+/* suita recusata ante cursum (filtrum, signum ignotum): SUITA FRACTA
+ * 0/0, plagula clausa */
+interior vacuum
+_credo_suitam_recusare (
+                  FILE* plagula,
+    constans character* titulus_suitae)
+{
+    si (plagula != NIHIL)
+    {
+        fputs("SUITA\t", plagula);
+        _credo_literas_scribere(plagula, titulus_suitae);
+        fputs("\tFRACTA\t0\t0\t0\t0\t0\n", plagula);
+        fclose(plagula);
+    }
+}
+
 s32
 credo_suitam_currere (
       constans character* titulus_suitae,
@@ -1063,10 +1187,13 @@ credo_suitam_currere (
 {
     constans character* filtrum;
     constans character* via_verdictorum;
+    constans character* omittenda;
                   FILE* plagula;
          memoriae_index  cursae;
          memoriae_index  transeuntes;
+         memoriae_index  omissae;
                     b32  inventa;
+              character  signum[XXXII];
                     f64  initium_suitae;
                     i32  i;
 
@@ -1108,17 +1235,33 @@ credo_suitam_currere (
     {
         imprimere("FRACTA: CREDO_SECTIO '%s' - sectio nulla in suita"
             " %s\n", filtrum, titulus_suitae);
-        si (plagula != NIHIL)
-        {
-            fputs("SUITA\t", plagula);
-            _credo_literas_scribere(plagula, titulus_suitae);
-            fputs("\tFRACTA\t0\t0\t0\t0\t0\n", plagula);
-            fclose(plagula);
-        }
+        _credo_suitam_recusare(plagula, titulus_suitae);
         redde I;
+    }
+    /* SIGNA (credo II): vocabulum clausum in tabula et in ambitu ANTE
+     * cursum - verbum ignotum nihil omitteret tacite */
+    omittenda = getenv("CREDO_SIGNA_OMITTE");
+    si (omittenda != NIHIL && !_credo_signa_probare(omittenda, signum))
+    {
+        imprimere("FRACTA: CREDO_SIGNA_OMITTE: signum ignotum '%s'"
+            " (lentus rete fenestra repositorium)\n", signum);
+        _credo_suitam_recusare(plagula, titulus_suitae);
+        redde I;
+    }
+    per (i = ZEPHYRUM; sectiones[i].titulus != NIHIL; i++)
+    {
+        si (!_credo_signa_probare(sectiones[i].signa, signum))
+        {
+            imprimere("FRACTA: signum ignotum '%s' in sectione %s"
+                " (lentus rete fenestra repositorium)\n", signum,
+                sectiones[i].titulus);
+            _credo_suitam_recusare(plagula, titulus_suitae);
+            redde I;
+        }
     }
     cursae          = ZEPHYRUM;
     transeuntes     = ZEPHYRUM;
+    omissae         = ZEPHYRUM;
     initium_suitae  = _credo_ms_nunc();
     per (i = ZEPHYRUM; sectiones[i].titulus != NIHIL; i++)
     {
@@ -1133,6 +1276,26 @@ credo_suitam_currere (
         si (   filtrum != NIHIL && strcmp(sectio->titulus, filtrum)
                 != ZEPHYRUM)
         {
+            perge;
+        }
+        /* OMISSA (credo II): signum in CREDO_SIGNA_OMITTE - nominata in
+         * effusione et plagula, numquam tacita, numquam numerata ut
+         * cursa */
+        si (_credo_signum_commune(sectio->signa, omittenda, signum))
+        {
+            imprimere("\n--- OMISSA %s (signum %s) ---\n",
+                sectio->titulus,
+                signum);
+            omissae++;
+            si (plagula != NIHIL)
+            {
+                summa.exitus      = "OMISSA";
+                summa.praeteriti  = ZEPHYRUM;
+                summa.totales     = ZEPHYRUM;
+                summa.fractura    = NIHIL;
+                _credo_sectionem_scribere(plagula, titulus_suitae,
+                    sectio->titulus, summa, 0.0);
+            }
             perge;
         }
         imprimere("\n--- Probans %s ---\n", sectio->titulus);
@@ -1173,15 +1336,28 @@ credo_suitam_currere (
         }
         (vacuum)fflush(stdout);
     }
-    imprimere("\n=== SECTIONES: %lu/%lu transierunt ===\n",
-        (insignatus longus)transeuntes, (insignatus longus)cursae);
+    si (omissae > ZEPHYRUM)
+    {
+        imprimere("\n=== SECTIONES: %lu/%lu transierunt (%lu omissae)"
+            " ===\n",
+            (insignatus longus)transeuntes, (insignatus longus)cursae,
+            (insignatus longus)omissae);
+    }
+    alioquin
+    {
+        imprimere("\n=== SECTIONES: %lu/%lu transierunt ===\n",
+            (insignatus longus)transeuntes, (insignatus longus)cursae);
+    }
     credo_imprimere_compendium();
     si (plagula != NIHIL)
     {
         fputs("SUITA\t", plagula);
         _credo_literas_scribere(plagula, titulus_suitae);
+        /* VACUA (credo II): nulla sectio cursa (omnes omissae) - non
+         * transitus */
         fprintf(plagula, "\t%s\t%lu\t%lu\t%lu\t%lu\t%.0f\n",
-            (transeuntes == cursae && cursae > ZEPHYRUM
+            cursae == ZEPHYRUM ? "VACUA"
+            : (transeuntes == cursae
                 && credo_numerus_fracti() == ZEPHYRUM)
                 ? "TRANSIIT" : "FRACTA",
             (insignatus longus)transeuntes, (insignatus longus)cursae,

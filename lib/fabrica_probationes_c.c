@@ -625,6 +625,7 @@ _sectiones_explicare (
               chorda nota;
                  i32 transeuntes;
                  i32 fractae;
+                 i32 omissae;
                  i32 i;
 
     via = fabricae_iungere(piscina, "", area_c, "credo.tsv");
@@ -676,6 +677,7 @@ _sectiones_explicare (
     }
     transeuntes  = ZEPHYRUM;
     fractae      = ZEPHYRUM;
+    omissae      = ZEPHYRUM;
     nota         = chorda_ex_literis("", piscina);
     per (i = ZEPHYRUM; i < xar_numerus(sectiones.sectiones); i++)
     {
@@ -686,6 +688,12 @@ _sectiones_explicare (
         si (chorda_aequalis_literis(s->exitus, "TRANSIIT"))
         {
             transeuntes++;
+            perge;
+        }
+        /* OMISSA (credo II): signo omissa - nec cursa nec fracta */
+        si (chorda_aequalis_literis(s->exitus, "OMISSA"))
+        {
+            omissae++;
             perge;
         }
         fractae++;
@@ -728,9 +736,19 @@ _sectiones_explicare (
     {
         character numeri[LXIV];
 
-        sprintf(numeri, "sectiones %u/%u", (insignatus integer)
-            transeuntes, (insignatus integer)xar_numerus(
-            sectiones.sectiones));
+        si (omissae > ZEPHYRUM)
+        {
+            sprintf(numeri, "sectiones %u/%u, omissae %u",
+                (insignatus integer)transeuntes, (insignatus integer)(
+                xar_numerus(sectiones.sectiones) - omissae),
+                (insignatus integer)omissae);
+        }
+        alioquin
+        {
+            sprintf(numeri, "sectiones %u/%u", (insignatus integer)
+                transeuntes, (insignatus integer)xar_numerus(
+                sectiones.sectiones));
+        }
         actum_out->cauda = chorda_ex_literis(numeri, piscina);
         redde;
     }

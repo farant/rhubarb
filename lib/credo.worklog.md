@@ -225,3 +225,26 @@ showed that a silva check could enforce, from most to least valuable:
 These are pattern checks on the AST (calls inside functions referenced
 from a CredoSectio table, file-scope declarations) - silva selectors can
 express them; none needs flow analysis except "purgare writes X".
+
+## 2026-10-10 - credo II T1: signa and OMISSA
+
+`signa` (reserved since slice 1) is live: words from a CLOSED vocabulary
+(`lentus rete fenestra repositorium` - the fabrica facultas words plus
+'lentus'). Checked BEFORE anything runs, in the table AND in
+`CREDO_SIGNA_OMITTE` - a typo in the environment would otherwise skip
+nothing silently; both refusals print the vocabulary and write
+`SUITA FRACTA 0/0` via `_credo_suitam_recusare` (the CREDO_SECTIO
+refusal now shares it). A section carrying an omitted tag is printed
+`--- OMISSA <t> (signum <s>) ---` and recorded `SECTIO ... OMISSA 0 0 0`
+(10 fields, fractura empty); it counts neither as run nor as failed.
+Suite exitus gains VACUA: nothing ran (all omitted) is not a pass
+(exit 1). The summary line names omissions: `=== SECTIONES: 1/1
+transierunt (2 omissae) ===`.
+
+Fabrica: `_sectiones_explicare` counted every non-TRANSIIT section as
+failing; OMISSA is now counted apart and named in the pass note
+(`sectiones 1/1, omissae 1`).
+
+Proof: credo_fumus VII (6 checks); gradus IIb. Plants (planta): omission
+not recorded, unknown tag accepted, all-omitted suite TRANSIIT ->
+credo fumus red; OMISSA counted as failure -> gradus red.

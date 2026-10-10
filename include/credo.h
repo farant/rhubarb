@@ -648,8 +648,14 @@ nomen structura CredoSectio {
            CredoFunctio parare;            /* NIHIL = nihil */
            CredoFunctio purgare;           /* NIHIL = nihil; SEMPER
                                             * vocatur */
-    constans character* signa;             /* RESERVATUM (gradus II):
-                                            * "lentus rete" */
+    constans character* signa;             /* (II) verba spatio separata
+                                            * ex vocabulario CLAUSO:
+                                            * lentus rete fenestra
+                                            * repositorium; ignotum ->
+                                            * suita FRACTA nominans.
+                                            * CREDO_SIGNA_OMITTE="rete"
+                                            * -> sectio OMISSA (in
+                                            * plagula, nominata) */
     constans character* exspectata_fracta; /* RESERVATUM (gradus II):
                                             * id tabularii */
 } CredoSectio;
@@ -658,6 +664,9 @@ nomen structura CredoSectio {
  *   CREDO_SECTIO=<titulus>  sectio sola (ceterae non currunt, non
  *                           numerantur); titulus ignotus = I, nihil
  *                           cursum, nominatum
+ *   CREDO_SIGNA_OMITTE=<verba>  sectiones cum signo quovis horum
+ *                           OMISSAE (credo II); verbum ignotum = I,
+ *                           nihil cursum, nominatum
  *   CREDO_VERDICTA=<via>    plagula verdictorum (TSV) scribitur
  * Plagula: linea per sectionem STATIM post eam (effluxa), deinde linea
  * SUITA - linea SUITA absens = suita ruit (sectiones priores tamen
@@ -669,9 +678,9 @@ nomen structura CredoSectio {
  *   SUITA   suita  exitus  transeuntes  sectiones  praeteriti  totales
  *           ms
  * exitus sectionis: TRANSIIT | FRACTA | VACUA (nulla assertio = non
- * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum); RESERVATA
- * (gradus II): OMISSA, NOTA_FRACTA, INOPINATA. exitus suitae: TRANSIIT
- * | FRACTA.
+ * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum) | OMISSA
+ * (signum omissum, credo II); RESERVATA: NOTA_FRACTA, INOPINATA.
+ * exitus suitae: TRANSIIT | FRACTA | VACUA (nulla sectio cursa).
  * Effusio humana ut olim (--- Probans <titulus> ---, puncta, FRACTA,
  * compendium). Redde ZEPHYRUM si omnes sectiones cursae transierunt, I
  * aliter. */

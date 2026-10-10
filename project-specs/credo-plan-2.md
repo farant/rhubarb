@@ -13,9 +13,11 @@ in `../rhubarb-quinta`; merges by the ritual.
   `credo_area`; `CREDO_SIGNA_OMITTE`, `CREDO_ORDO`; SECTIO 11th field.
 
 ### T1: signa and OMISSA
-- [ ] credo_fumus stage: unknown signum -> suite FRACTA naming it;
+- [x] credo_fumus stage: unknown signum -> suite FRACTA naming it;
   `CREDO_SIGNA_OMITTE` -> OMISSA in record and output; all omitted ->
   VACUA. Plant: omission silent (no record) -> red. Commit.
+  As built (2026-10-10): unknown words refused in the table AND in
+  CREDO_SIGNA_OMITTE; fabrica pass note counts omissions apart.
 
 ### T2: known failures
 - [ ] stage: failing section with reason -> NOTA_FRACTA, suite exit 0;
