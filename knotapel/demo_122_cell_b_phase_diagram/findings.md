@@ -177,3 +177,13 @@ also qualifies D121's "possible" numbers for the null subsets
   sector and axis numbering. It has no geometric meaning and is not
   recomputed.
 - MAJ and AND were not swept, as in D97.
+
+## Superseded placement (2026-10-10, D123)
+
+D123 (`demo_123_cell_b_integer_degrees`) places every integer degree
+1°–90° into this diagram exactly with `radices`. tan²(k°) is root k of
+S₁₈₀(u) = Σ C(180, 2l+1)(−1)^l u^l, identified by position. The float
+margin above is no longer needed. Part D's float placements were all
+right: 84 of the 89 integer degrees agree, and the 5 refusals are
+exactly the multiples of 15°, which lie on breakpoints. At integer
+resolution, the N = 5 band is exactly 34°–38°.

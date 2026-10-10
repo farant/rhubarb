@@ -124,3 +124,27 @@ wrong. fuzz_roots seeds 1-2 x 90: 928 roots, 0 wrong, 0 refused, 0
 decimal refusals. Same seeds on the pre-fix binary: 13 wrong compares
 (seeds 1-3) and 6 decimal refusals (seed 1), so the fuzz still detects
 both bugs.
+
+## 2026-10-10 - first consumer (knotapel D123): cost profile and two parks
+
+D123 isolates S_180(u) = sum_l C(180, 2l+1)(-1)^l u^l (degree 89; 89
+real roots tan^2(k pi/180)) in 4.2 s, and 154 scaled S_24 isolations
+plus 12,499 compares in under 1 s. A first version narrowed all 89 roots
+to 2^-200 and took 48 s. `sample` put nearly all of it in radix_angusta
+-> _seca_medio -> polynomium_valor -> fractio_multiplica ->
+magnus_divisor_communis: evaluation at a dyadic point in Fractio
+arithmetic, with a gcd on every multiply.
+
+**Park 1 (speed):** evaluate f at m/2^e in integers as
+sum c_i m^i 2^(e(d-i)) (only its sign is needed, so no gcds at all).
+Every point VCA and _seca_medio evaluate is dyadic, except exact rational
+roots from radix_ex_fractione and decimal tests in ad_chordam.
+
+**Park 2 (memory):** S_360 (degree 179) killed the probe (exit 137),
+with all garbage kept in one piscina. Candidates: a scratch piscina per
+isolation (copy the results out, then reset it), or fewer temporaries
+in _seca_medio.
+
+Observed in D123: H1 (2b71cfed) cannot fire there, because the only
+exact point (u = 1) is a root of every polynomial whose intervals touch
+it. Consumer demos are no substitute for the library's own H1 test.
