@@ -532,6 +532,18 @@ figura_quadrati (
 
     (vacuum)thema;
     (vacuum)ctx;
+    /* L4: index insertionis ordinis stratorum - fascia accentus sola,
+     * sine margine quadrati */
+    si (chorda_aequalis_literis(c->titulus, "strata:index"))
+    {
+        f.x         = ZEPHYRUM;
+        f.y         = ZEPHYRUM;
+        f.latitudo  = c->fines.latitudo;
+        f.altitudo  = c->fines.altitudo;
+        mandata_rectangulum(m, f, color_thematis(COLOR_ACCENT_PRIMARY),
+            VERUM);
+        redde;
+    }
     /* P1b: ':electum' - optio electa, margo accentus */
     t        = c->titulus;
     electum  = t.mensura > VIII

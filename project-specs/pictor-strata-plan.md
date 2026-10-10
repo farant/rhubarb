@@ -105,6 +105,13 @@ Each control writes the matching log entry.
 
 Press a row, drag, release over a position; one reorder entry.
 
+**L1-L4 DONE (2026-10-09/10, secunda):** L1 3f6c5721 (historia hooks),
+L2 0e70d1b6 (layered document; old drawings composite = old seals
+7/7), L3 2c14a21c (bar button + panel), L4 (drag reorder: press a
+name row, drag past 3 px, release inside the panel; accent insertion
+line; Esc or release outside cancels). Follow-up still open: per-layer
+cached seals (~29 ms per stroke with 8 layers).
+
 ## IV. AUDIENDA (not yet verified)
 
 - ~~Cost of the seal over N raw layers per stroke~~ MEASURED in L2

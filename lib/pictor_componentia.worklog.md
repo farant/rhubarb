@@ -112,3 +112,26 @@ Note: the theme's colouring palette repeats entries (slots 0, 13, 14,
   size square (variable q) and the eraser's "empty action on q" line,
   and reused q - the eraser's dead size square opened a palette again
   (probatio_pictor_aspergillum IX caught it). Own variable now.
+
+## 2026-10-10 - pictor-strata L4: drag to reorder layers
+
+- Pressing a name row selects it AND captures the mouse (motus
+  captura = the row id, the press point in ictus_pendens - absolute
+  window coordinates); motion updates point 2; release writes ONE
+  <stratum actio="ordo"> if the drag moved more than 3 px and ended
+  inside the panel (geometric node = palette / stratum.* / oculus.* /
+  strata.*). Target row = dragged row + round(dy / 22), clamped.
+- Esc needed no code: keys go to the canvas, and every canvas tool's
+  Esc clears whatever holds the capture.
+- The composer copied ictus_pendens into the canvas preview whatever
+  held the capture - a row drag drew a stray line. Now only when the
+  capture is "tabula"; probatio_pictor_componentia and _figurae built
+  pending strokes WITHOUT a capture (never happens live) and now set
+  it like a real stroke.
+- Insertion line 'strata.index' (title "strata:index", drawn as a bare
+  accent bar before the generic square frame) sits in the 2 px gap
+  above/below the target row; same rounding rule duplicated in the
+  composer (ordo_tractus) and actions (ordo_destinatus).
+- The 3 px threshold is not independently observable: rounding to
+  whole rows already makes small moves a no-op (no plant can redden
+  it). Kept as intent.

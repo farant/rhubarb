@@ -6,7 +6,10 @@
  * aperta manet. III: ictus in strato currenti (stratum="2"). IV:
  * oculus occultat (actum), revocatio restituit. V: ordo electus ictus
  * dirigit (stratum I: sine attributo). VI: '-' currens delet, inferius
- * currens; ultimum numquam. VII: Esc palettam claudit. */
+ * currens; ultimum numquam. VII: Esc palettam claudit. VIII (L4):
+ * ordo trahendo - index insertionis dum trahitur, solutio actum
+ * 'ordo' scribit; ictus sine motu eligit solum; solutio extra
+ * palettam et Esc abiciunt; revocatio ordinem restituit. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -185,6 +188,72 @@ premere_quadratum (
     dispensator_recomponere(app->d);
 }
 
+/* eventus muris ad punctum FENESTRAE (absolutum) */
+interior vacuum
+mus_absolutus (
+      Dispensator* d,
+  eventus_genus_t  genus,
+              s32  x,
+              s32  y,
+              s64  t)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = genus;
+    e.tempus            = t;
+    e.datum.mus.x       = x;
+    e.datum.mus.y       = y;
+    e.datum.mus.botton  = MUS_SINISTER;
+    dispensator_tractare(d, &e);
+}
+
+/* centrum absolutum nodi palettae */
+interior Punctum
+centrum_in_palette (
+           PictorApplicatio* app,
+         constans character* id)
+{
+     Componens* p;
+     Componens* c;
+       Punctum  q;
+
+    q.x  = ZEPHYRUM;
+    q.y  = ZEPHYRUM;
+    p    = nodus_arboris(app, "palette");
+    c    = nodus_arboris(app, id);
+    si (p && c)
+    {
+        q.x = p->fines.x + c->fines.x + c->fines.latitudo / II;
+        q.y = p->fines.y + c->fines.y + c->fines.altitudo / II;
+    }
+    redde q;
+}
+
+/* trahere: pressio in nodo, motus dy, (solutio) */
+interior vacuum
+trahere (
+    PictorApplicatio* app,
+  constans character* id,
+                 s32  dy,
+                 b32  solvere,
+                 s64  t)
+{
+    Punctum q;
+
+    q = centrum_in_palette(app, id);
+    mus_absolutus(app->d, EVENTUS_MUS_DEPRESSUS, q.x, q.y, t);
+    mus_absolutus(app->d, EVENTUS_MUS_MOTUS, q.x, q.y + dy / II, t + X);
+    mus_absolutus(app->d, EVENTUS_MUS_MOTUS, q.x, q.y + dy, t + XX);
+    dispensator_recomponere(app->d);
+    si (solvere)
+    {
+        mus_absolutus(app->d, EVENTUS_MUS_LIBERATUS, q.x, q.y + dy,
+            t + XXX);
+        dispensator_recomponere(app->d);
+    }
+}
+
 interior b32
 titulus_est (
            PictorApplicatio* app,
@@ -296,6 +365,74 @@ s32 principale (vacuum)
     imprimere("\n--- VII: Esc claudit ---\n");
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
+
+    imprimere("\n--- VIII: ordo trahendo ---\n");
+    {
+        s64 finis;
+
+        /* strata 1, 2, 3 (ab imo; id = maximum + I) - ordines summo
+         * primo: 3, 2, 1 */
+        premere_quadratum(&app, m, "quadratum.strata");
+        premere_in_palette(&app, m, "strata.novum");
+        premere_in_palette(&app, m, "strata.novum");
+        CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(doc),
+            III);
+        CREDO_AEQUALIS_S32(pictor_documentum_stratum(doc, ZEPHYRUM)->id,
+            I);
+        CREDO_AEQUALIS_S32(pictor_documentum_stratum(doc, II)->id, III);
+        /* trahere 'stratum.3' (summum) II ordines deorsum, nondum
+         * solvere: index insertionis, nihil scriptum */
+        finis = pictor_documentum_finis(doc);
+        trahere(&app, "stratum.3", XLIV, FALSUM, X * M);
+        CREDO_NON_NIHIL(nodus_arboris(&app, "strata.index"));
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        /* praevisio tabulae puncta trahendi non ostendit */
+        CREDO_AEQUALIS_I32(nodus_arboris(&app, "tabula")
+            ->numerus_punctorum, ZEPHYRUM);
+        mus_absolutus(app.d, EVENTUS_MUS_LIBERATUS,
+            centrum_in_palette(&app, "stratum.3").x,
+            centrum_in_palette(&app, "stratum.3").y + XLIV, X * M
+                + XXX);
+        dispensator_recomponere(app.d);
+        /* summo primo: 2, 1, 3 -> ab imo "3 1 2" */
+        CREDO_VERUM(chorda_continet(actum_ultimum(vol),
+            chorda_ex_literis(
+            "actio=\"ordo\" ids=\"3 1 2\"", piscina)));
+        CREDO_AEQUALIS_S32(pictor_documentum_stratum(doc, ZEPHYRUM)->id,
+            III);
+        CREDO_VERUM(nodus_arboris(&app, "strata.index") == NIHIL);
+        CREDO_VERUM(chorda_vacua(dispensator_motus(app.d)->captura));
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+            "strata");
+
+        /* ictus sine motu (II pixela): eligit solum */
+        finis = pictor_documentum_finis(doc);
+        trahere(&app, "stratum.1", II, VERUM, XI * M);
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+            "stratum_activum"), "1");
+
+        /* solutio extra palettam (infra fenestram) abicit - ordo
+         * destinatus ALIUS esset (stratum 2 summum, deorsum) */
+        finis = pictor_documentum_finis(doc);
+        trahere(&app, "stratum.2", CC, VERUM, XII * M);
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+        CREDO_VERUM(chorda_vacua(dispensator_motus(app.d)->captura));
+
+        /* Esc dum trahitur abicit */
+        trahere(&app, "stratum.2", XXII, FALSUM, XIII * M);
+        CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+        dispensator_recomponere(app.d);
+        CREDO_VERUM(chorda_vacua(dispensator_motus(app.d)->captura));
+        CREDO_VERUM(nodus_arboris(&app, "strata.index") == NIHIL);
+        CREDO_VERUM(pictor_documentum_finis(doc) == finis);
+
+        /* revocatio ordinem restituit (ab imo 1, 2, 3) */
+        CREDO_VERUM(pictor_documentum_revocare(doc));
+        CREDO_AEQUALIS_S32(pictor_documentum_stratum(doc, ZEPHYRUM)->id,
+            I);
+        CREDO_AEQUALIS_S32(pictor_documentum_stratum(doc, II)->id, III);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

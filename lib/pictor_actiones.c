@@ -870,6 +870,134 @@ pictor_magnitudinem_ponere (
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }
 
+/* L4: ordo trahendi - ordo destinatus (summo primo) strati tracti ex
+ * dy (pixela), ordines XX + II alti; eadem regula in compositore
+ * (index insertionis) */
+interior s32
+ordo_destinatus (
+    s32 ordo_tracti,
+    s32 dy,
+    i32 n)
+{
+    s32 gradus;
+    s32 r;
+
+    gradus  = dy >= ZEPHYRUM ? (dy + XI) / (XX + II)
+                             : -((-dy + XI) / (XX + II));
+    r = ordo_tracti + gradus;
+    r = r < ZEPHYRUM ? ZEPHYRUM : r;
+    r = r > (s32)n - I ? (s32)n - I : r;
+    redde r;
+}
+
+/* L4: solutio intra palettam stratorum (nodus geometricus) */
+interior b32
+intra_palettam (
+    constans Destinatio* destinatio,
+                Piscina* p)
+{
+    chorda g;
+
+    g = destinatio->id_geometricum;
+    redde chorda_aequalis_literis(g, "palette")
+        || chorda_incipit(g, chorda_ex_literis("stratum.", p))
+        || chorda_incipit(g, chorda_ex_literis("oculus.", p))
+        || chorda_incipit(g, chorda_ex_literis("strata.", p));
+}
+
+/* L4: solutio tractus: ordo novus si motus > III et intra palettam */
+interior vacuum
+tractum_solvere (
+        PictorActiones* pa,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+                   s32  id,
+                   s64  tempus)
+{
+    Punctum p0;
+    Punctum p1;
+        s32 dx;
+        s32 dy;
+        s32 index;
+        s32 r_tracti;
+        s32 r;
+        i32 n;
+        i32 k;
+        s32 summo_primo[PICTOR_STRATA_MAXIMA];
+        i32 m;
+     chorda actum;
+
+    n = pictor_documentum_numerus_stratorum(pa->doc);
+    si (xar_numerus(motus->ictus_pendens) < II)
+    {
+        lineam_abicere(motus, tempus);
+        redde;
+    }
+    p0 = *(Punctum*)xar_obtinere(motus->ictus_pendens, ZEPHYRUM);
+    p1 = *(Punctum*)xar_obtinere(motus->ictus_pendens, I);
+    dx = p1.x - p0.x;
+    dy = p1.y - p0.y;
+    lineam_abicere(motus, tempus);
+    si (   (dx * dx + dy * dy <= IX)
+        || !intra_palettam(destinatio, pa->doc->piscina))
+    {
+        redde;
+    }
+    index = -I;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (pictor_documentum_stratum(pa->doc, k)->id == id)
+        {
+            index = (s32)k;
+        }
+    }
+    si (index < ZEPHYRUM)
+    {
+        redde;
+    }
+    r_tracti  = (s32)n - I - index;
+    r         = ordo_destinatus(r_tracti, dy, n);
+    si (r == r_tracti)
+    {
+        redde;
+    }
+    /* summo primo sine tracto, tractum in r inserere */
+    m = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        s32 alius;
+
+        alius = pictor_documentum_stratum(pa->doc, n - I - k)->id;
+        si (alius != id)
+        {
+            summo_primo[m] = alius;
+            m++;
+        }
+    }
+    per (k = m; (s32)k > r; k--)
+    {
+        summo_primo[k] = summo_primo[k - I];
+    }
+    summo_primo[r] = id;
+    /* ab imo */
+    actum = chorda_ex_literis("<stratum actio=\"ordo\" ids=\"",
+        pa->doc->piscina);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (k > ZEPHYRUM)
+        {
+            actum = chorda_concatenare(actum, chorda_ex_literis(" ",
+                pa->doc->piscina), pa->doc->piscina);
+        }
+        actum = chorda_concatenare(actum, chorda_ex_s32(
+            summo_primo[n - I - k], pa->doc->piscina),
+            pa->doc->piscina);
+    }
+    actum = chorda_concatenare(actum, chorda_ex_literis("\"/>",
+        pa->doc->piscina), pa->doc->piscina);
+    pictor_documentum_actum(pa->doc, actum);
+}
+
 /* <tractator/> */
 b32
 pictor_strata_agere (
@@ -893,10 +1021,8 @@ pictor_strata_agere (
                character  actum[XCVI];
   constans PictorStratum* s;
 
-    (vacuum)motus;
-    (vacuum)destinatio;
     pa = (PictorActiones*)ctx;
-    si (!repo || !ev || !pa || ev->genus != EVENTUS_MUS_DEPRESSUS)
+    si (!repo || !ev || !pa || !motus || !destinatio)
     {
         redde FALSUM;
     }
@@ -904,13 +1030,43 @@ pictor_strata_agere (
     currens        = stratum_currens(&ramus, pa->doc);
     n              = pictor_documentum_numerus_stratorum(pa->doc);
     cp.attributum  = "stratum_activum";
-    /* 'stratum.<id>': eligere */
+    /* 'stratum.<id>': ictus eligit et trahere incipit (L4: captura,
+     * punctum absolutum pressionis); motus, solutio */
     valor = post_praefixum(nodus, "stratum.");
     si (valor.mensura > ZEPHYRUM && chorda_ut_s32(valor, &id))
     {
-        cp.valor = id;
-        redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
-            &cp);
+        Punctum q;
+
+        q.x = (s32)ev->datum.mus.x;
+        q.y = (s32)ev->datum.mus.y;
+        si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+        {
+            motus_captura_ponere(motus, nodus->id);
+            mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
+            mutare_motum(motus, punctum_addere, &q, ev->tempus);
+            cp.valor = id;
+            redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+                &cp);
+        }
+        si (chorda_vacua(motus->captura))
+        {
+            redde FALSUM;
+        }
+        si (ev->genus == EVENTUS_MUS_MOTUS)
+        {
+            mutare_motum(motus, punctum_finale_ponere, &q, ev->tempus);
+            redde VERUM;
+        }
+        si (ev->genus == EVENTUS_MUS_LIBERATUS)
+        {
+            tractum_solvere(pa, motus, destinatio, id, ev->tempus);
+            redde VERUM;
+        }
+        redde FALSUM;
+    }
+    si (ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
     }
     /* 'oculus.<id>': visibilitas in actis */
     valor = post_praefixum(nodus, "oculus.");

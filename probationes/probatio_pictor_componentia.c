@@ -72,6 +72,9 @@ s32 principale (vacuum)
         " focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
     motus_initiare(&motus, piscina);
+    /* ictus pendens = captura tabulae (ut penicillus in pressione):
+     * compositor puncta sola tabulae capturae ostendit (L4) */
+    motus_captura_ponere(&motus, chorda_ex_literis("tabula", piscina));
     mutare_motum(&motus, pan_ponere, NIHIL, M);
     p.x = X;
     p.y = XX;
