@@ -107,6 +107,18 @@ pictor_volumen_aperire (
         via_voluminis ? via_voluminis : "pictor.volumen");
 }
 
+/* S3e: clavis memoriae: spatium, aut "." pro radice ("" clavis
+ * tabulae dispersae non est; '.' in id rami numquam - canon) */
+interior chorda
+clavis_memoriae (
+    constans character* spatium,
+               Piscina* p)
+{
+    redde chorda_ex_literis(spatium
+        && spatium[ZEPHYRUM] ? spatium : ".",
+        p);
+}
+
 /* elementum initiale: <pictor [id="…"] attributa/> */
 interior constans character*
 elementum (
@@ -172,6 +184,13 @@ pictor_montare (
     {
         fprintf(stderr, "pictor: documentum\n");
         redde FALSUM;
+    }
+    /* S3e: memoria picturarum ostensarum, prima haec */
+    m->documenta = tabula_dispersa_creare_chorda(piscina, XVI);
+    si (m->documenta)
+    {
+        (vacuum)tabula_dispersa_inserere(m->documenta,
+            clavis_memoriae(spatium, piscina), m->doc);
     }
     m->ramus = id ? insula_ramus(repo, "pictor", id)
                   : insula_ramus_radix(repo);
@@ -240,6 +259,93 @@ pictor_montare (
     m->compositio.status_lineae      = STATUS_LINEAE;
     m->compositio.ramus              = m->ramus;
     redde VERUM;
+}
+
+/* S3e: dimensiones durabiles ex documento (ctx) */
+interior vacuum
+dimensiones_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans PictorDocumentum* doc;
+
+    doc = (constans PictorDocumentum*)ctx;
+    insula_attributum_ponere(radix, p, in, "latitudo", chorda_ut_cstr(
+        chorda_ex_s32((s32)doc->latitudo, p), p));
+    insula_attributum_ponere(radix, p, in, "altitudo", chorda_ut_cstr(
+        chorda_ex_s32((s32)doc->altitudo, p), p));
+}
+
+/* S3e: spatium in bibliotheca? (plagula alterius originis - scriba -
+ * documentum pictoris non est, etsi "spatium/documentum") */
+interior b32
+in_bibliotheca (
+            Volumen* volumen,
+             chorda  spatium,
+            Piscina* piscina)
+{
+    Xar* l;
+    i32  i;
+
+    l = pictor_documenta_enumerare(volumen, piscina);
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(l, i), spatium))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+b32
+pictor_picturam_ponere (
+         PictorMontatio* m,
+     constans character* spatium)
+{
+    PictorDocumentum* doc;
+              vacuum* valor;
+              chorda  clavis;
+             Piscina* p;
+
+    si (!m || !m->doc || !spatium)
+    {
+        redde FALSUM;
+    }
+    p       = m->doc->piscina;
+    clavis  = clavis_memoriae(spatium, p);
+    doc     = NIHIL;
+    valor   = NIHIL;
+    si (   m->documenta
+        && tabula_dispersa_invenire(m->documenta, clavis, &valor))
+    {
+        doc = (PictorDocumentum*)valor;
+    }
+    si (!doc)
+    {
+        si (!in_bibliotheca(m->doc->volumen, chorda_ex_literis(spatium,
+                p), p))
+        {
+            redde FALSUM;
+        }
+        doc = pictor_documentum_aperire(p, m->doc->intern,
+            m->doc->volumen, spatium);
+        si (!doc)
+        {
+            redde FALSUM;
+        }
+        si (m->documenta)
+        {
+            (vacuum)tabula_dispersa_inserere(m->documenta, clavis, doc);
+        }
+    }
+    m->doc               = doc;
+    m->actiones_ctx.doc  = doc;
+    m->figurae_ctx.doc   = doc;
+    redde mutare_ramum(&m->ramus, INSULA_DURABILIS, dimensiones_mutator,
+        doc);
 }
 
 b32

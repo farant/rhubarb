@@ -70,6 +70,14 @@ pictor_disci_pixelum (
     s32 i,
     s32 j);
 
+/* S3e: bibliotheca - spatia omnium documentorum pictoris in volumine
+ * (plagulae originis "pictor:documentum"), ordine viae; Xar de chorda
+ * ("" = documentum nudum radicis) */
+Xar*
+pictor_documenta_enumerare (
+     Volumen* volumen,
+     Piscina* piscina);
+
 /* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
  * determinatus ex (semen, i, k) per sors */
 vacuum

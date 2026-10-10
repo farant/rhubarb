@@ -26,6 +26,7 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "pictor_figurae.h"
+#include "tabula_dispersa.h"
 
 /* MONTATIO (insula-rami-plan T1a): pictor in repositorio dato, ramo
  * <pictor id> (aut radice): documentum in spatio id, canones et
@@ -39,6 +40,8 @@ nomen structura {
         FiguraRegistrum* figurae;
           PictorFigurae  figurae_ctx;
        PictorCompositio  compositio;
+         TabulaDispersa* documenta;   /* S3e: spatium -> documentum
+                                       * (picturae iam ostensae) */
 } PictorMontatio;
 
 nomen structura {
@@ -52,6 +55,15 @@ nomen structura {
         FiguraRegistrum* figurae;    /* = montatio.figurae */
             Dispensator* d;
 } PictorApplicatio;
+
+/* S3e: picturam spatii (exsistentem) in montatione ostendere -
+ * documentum ex memoria aut apertum; contextus actionum et figurarum
+ * et dimensiones durabiles (latitudo, altitudo) aptantur. FALSUM si
+ * nullum documentum ibi. */
+b32
+pictor_picturam_ponere (
+         PictorMontatio* m,
+     constans character* spatium);
 
 /* pictorem montare: id NIHIL = radix repositorii (elementum radicis
  * 'pictor' iam exstat); aliter liberum <pictor id> creatur si abest.

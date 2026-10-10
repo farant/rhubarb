@@ -651,6 +651,51 @@ proiectio_facere (
  * Vita
  * ================================================== */
 
+Xar*
+pictor_documenta_enumerare (
+     Volumen* volumen,
+     Piscina* piscina)
+{
+               Xar* plagulae;
+               Xar* l;
+    VolumenPlagula* pl;
+            chorda  spatium;
+               i32  i;
+
+    si (!volumen || !piscina)
+    {
+        redde NIHIL;
+    }
+    l         = xar_creare(piscina, (i32)magnitudo(chorda));
+    plagulae  = volumen_plagulas_enumerare(volumen, piscina);
+    per (i = ZEPHYRUM; l && plagulae && i < xar_numerus(plagulae); i++)
+    {
+        pl = (VolumenPlagula*)xar_obtinere(plagulae, i);
+        si (!chorda_aequalis_literis(pl->origo, "pictor:documentum"))
+        {
+            perge;
+        }
+        /* "documentum" (nuda) aut "<spatium>/documentum" */
+        si (chorda_aequalis_literis(pl->via, "documentum"))
+        {
+            spatium = chorda_ex_literis("", piscina);
+        }
+        alioquin si (   pl->via.mensura > XI
+                     && memcmp(pl->via.datum + pl->via.mensura - XI,
+                            "/documentum", XI) == ZEPHYRUM)
+        {
+            spatium.datum    = pl->via.datum;
+            spatium.mensura  = pl->via.mensura - XI;
+        }
+        alioquin
+        {
+            perge;
+        }
+        *(chorda*)xar_addere(l) = spatium;
+    }
+    redde l;
+}
+
 /* clavis manifesti: "spatium/documentum" (spatium vacuum: nuda) */
 interior chorda
 clavis_manifesti (
