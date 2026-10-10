@@ -9,6 +9,8 @@ strength: moderate
 source: "extractions/group-e-knotapel-relevance.md, Connection 11"
 ---
 
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures were float tie noise. D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+
 Paper 2 demonstrated more data is not always better -- structured augmentation of less data beats brute-force more. DKC discovered the same in multiple forms:
 
 1. Pruning helps (D96): 21 entries > 24 because the 3 removed Q8-null entries contribute noise without directional coverage.

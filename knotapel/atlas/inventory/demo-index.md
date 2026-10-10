@@ -4331,6 +4331,21 @@ Jones normalization destroys exactly 2 XOR levels of computational capacity at e
 
 ## Demo 84: Null States and Logarithmic Structure
 
+> **Correction (2026-10-10, Demo 124, `demo_124_exact_null_states`).** Exact arithmetic with D84's own cell semantics overturns the capacity claims below.
+> - Removing the 9 nulls does **not** reduce ζ₈ capacity: full and non-null both reach max **XOR8** under the exact rule and robustly. Only the winner count drops: XOR8 weight sets 402 → 106 under the rule, 218 → 36 robustly.
+> - The null-only subset computes **nothing** (0) under the rule and robustly.
+> - All 10,000 random 15-subsets reach exactly XOR8, so non-null equals random.
+> - Nulls are **under**-represented among all 402 exact XOR8 winners (ratio 0.50, not 0.79).
+> - At k_sec = 1 null-only does not beat non-null (0 = 0).
+>
+> The recorded figures (non-null XOR6, null-only XOR6, "worse than random") are not reproduced even by D84's own code, rebuilt here; that prints non-null XOR8 and null-only 0. 12.8% of its float cell decisions are exact ties, mostly null sums at a half-angle of exactly 90°, i.e. on a sector boundary. Float noise of order 10⁻¹⁷ resolves them, and no consistent tie rule gives the recorded numbers.
+>
+> **What stands:**
+> - Parts A, B and E: the census, the gap theorem and the 6 + 4 + 3 axis geometry are exact.
+> - The k_sec = 1 synergy: null-only 0 + non-null 0, yet the full catalog finds 36 XOR6 sets, exactly and robustly.
+>
+> See `demo_124_exact_null_states/findings.md`.
+
 - **Status**: COMPLETE
 - **File**: `demo_84_null_states/main.c` (~1330 lines)
 - **Tests**: 17/17 pass
@@ -4596,6 +4611,12 @@ The delta-parameterized Gram matrix approach universally diverges on a single pr
 ---
 
 ## Demo 87: Null Indispensability at zeta_12
+
+> **Correction (2026-10-10, Demo 124).** The ζ₈ baseline does not show "removing nulls destroys XOR8".
+> - The non-null subset's XOR8 = 4 is greater than 0, and the full catalog's 32 is the MAX_WIN cap.
+> - Exactly, non-null reaches max XOR8, as the full catalog does; only the number of winners drops (D124).
+>
+> So the "regime transition" has no ζ₈ side: nulls are dispensable at ζ₈ too. The ζ₁₂ comparison here (32 = 32 at every level) compares MAX_WIN-capped counts. It has not yet been audited exactly (planned with the D82 / ζ₁₂ audit); D117 corrected its axis counts. See `demo_124_exact_null_states/findings.md`.
 
 - **Status**: COMPLETE
 - **File**: `demo_87_null_indispensability/main.c` (~907 lines)

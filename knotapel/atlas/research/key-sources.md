@@ -1,5 +1,7 @@
 # Key Sources: Particularly Valuable Papers with Notes
 
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures were float tie noise. D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+
 Papers that have directly shaped DKC research, with specific notes on what we extracted and how they connect.
 
 ---

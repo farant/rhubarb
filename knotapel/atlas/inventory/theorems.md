@@ -1241,24 +1241,28 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Null Indispensability Theorem
 - **Statement:** In the ζ₈ catalog, the 9 bracket-null entries (Re(q)=0, Kauffman trace vanishes) cannot be removed without destroying XOR capacity. The non-null-only subset (15 entries, 7 directions) achieves only XOR6; the full catalog (24 entries, 13 directions) achieves XOR8. The non-null-only subset performs below the random-15-entry baseline (mean max_xor 7.8), confirming nulls are disproportionately important rather than merely incidentally present.
 - **Status:** DEMONSTRATED (exhaustive; non-null-only subset tested alongside 100-trial random controls)
+- **Correction (2026-10-10, Demo 124):** REFUTED exactly. Non-null reaches max XOR8 like the full catalog (exact rule and robust); null-only computes nothing; non-null equals random 15-subsets (all of 10,000 reach XOR8). The recorded XOR6 figures were float tie noise (null sums sit on a sector boundary). See `demo_124_exact_null_states/findings.md`.
 - **Demo provenance:** Demo 84
 - **Significance:** Refutes the assumption that bracket-null states are computational dead weight. In the ζ₈ regime, nulls contribute 6 directions (cube-edge-midpoints) exclusively unavailable to the 15 non-null entries, and these directions are necessary for XOR8 solutions.
 
 ### Null Directional Efficiency
 - **Statement:** Each null entry in the ζ₈ catalog covers a unique S² direction not shared with other null entries (1.00 direction per null entry), while non-null entries share directions (0.47 direction per non-null entry). Null entries are maximally efficient as directional vocabulary; their contribution to S² coverage is strictly greater per entry than non-null entries.
 - **Status:** DEMONSTRATED (direction geometry fully characterized: 6 null-only, 4 non-null-only, 3 shared directions)
+- **Correction (2026-10-10, Demo 124):** the geometry stands exactly (6 null-only, 4 non-null-only, 3 shared axes). The "Significance" (removing nulls costs more than random removal) does not: removing them costs no capacity.
 - **Demo provenance:** Demo 84
 - **Significance:** Explains mechanistically why removing nulls costs more than removing random entries: nulls hold exclusive geometric territory that non-null entries cannot cover.
 
 ### S¹ Flatness of Null-Only
 - **Statement:** All bracket-null entries in the ζ₈ catalog have half-angle exactly 90°, placing them at a single point on S¹. The null-only subset (9 entries) occupies a single S¹ sector and derives its entire computational contribution from S² directional diversity. XOR6 count for the null-only subset is flat across all tested k_sec values (k=1,2,4,6,8), confirming S¹ provides zero additional discriminating power for this subset.
 - **Status:** DEMONSTRATED (k_sec sweep confirmed; flatness is exact, not approximate)
+- **Correction (2026-10-10, Demo 124):** the half-angle of exactly 90° stands. The null-only subset has no computational contribution under D84's rule or robustly (XOR6 = 0 at every k_sec). Its count is "flat" (80 at k ≥ 2) only under "possible" tie resolution, where every null sum is a two-way tie.
 - **Demo provenance:** Demo 84
 - **Significance:** Provides a clean decomposition: nulls live on one point of S¹ (zero angular vocabulary) but cover 9 distinct directions on S² (maximal directional vocabulary). They are pure S² resources.
 
 ### Logarithmic Partner Hypothesis
 - **Statement:** The LCFT (logarithmic conformal field theory) interpretation of null states is consistent with all Demo 84 results. In LCFT, null states |N⟩ satisfy ⟨N|N⟩=0 but |N⟩≠0, paired with logarithmic partners via Jordan-cell L₀ action. The 6 null-only directions (cube-edge-midpoints, no non-null partner in the catalog) correspond to null states lacking logarithmic partners — and removing them destroys capacity rather than merely reducing it.
 - **Status:** SUPPORTED (consistent with all geometric and capacity results; Jordan-cell structure not yet made explicit)
+- **Correction (2026-10-10, Demo 124):** its capacity support ("consistent with all Demo 84 results") rested on null indispensability, which does not hold exactly. The geometric facts stand; the computational reading is unsupported.
 - **Demo provenance:** Demo 84
 - **Significance:** Connects DKC null states to LCFT (Gurarie 1993, Flohr 1996, Gaberdiel-Kausch 1996). The three shared-direction entries (coordinate axes, appearing in both null and non-null subsets) are candidate Jordan-cell pairs — null state with vanishing trace, non-null partner carrying computational content.
 
@@ -1271,6 +1275,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Null Dispensability at Infinite Groups
 - **Statement:** At ζ₁₂ (infinite group, 4096 entries, 121 null entries = 3.0%), removing all bracket-null entries preserves full XOR capacity (XOR6/8/10/12 all 32 winners, identical to full catalog). Null entries are directionally indispensable (67 exclusive S² axes) but computationally dispensable. This contrasts with ζ₈ where removing nulls destroys XOR8 capacity (32 → 4 winners).
 - **Status:** DEMONSTRATED (exhaustive; non-null-only subset tested at all XOR levels)
+- **Correction (2026-10-10, Demo 124):** the ζ₁₂ comparison (32 = 32 at every level) compares MAX_WIN-capped counts and is not yet audited exactly (planned with the D82 / ζ₁₂ audit). Nulls are dispensable at ζ₈ too (D124).
 - **Demo provenance:** Demo 87
 - **Cross-references:** Null Indispensability Theorem (Demo 84), Null Fraction Dilution Conjecture (Demo 84), Regime Transition Theorem (below)
 - **Significance:** Null indispensability does NOT generalize from finite to infinite groups. The transition mechanism is direction density — when the non-null direction count is large enough (1976 out of 2043), losing 67 null-only directions cannot constrain combinatorial search.
@@ -1278,6 +1283,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Regime Transition Theorem (Null Indispensability)
 - **Statement:** There is a qualitative transition between finite groups (ζ₈: nulls computationally critical, 37.5% of catalog, 6/13 exclusive directions in a sparse direction set) and infinite groups (ζ₁₂: nulls computationally redundant, 3% of catalog, 67/2043 exclusive directions in a dense direction set). Directional indispensability (owning exclusive S² axes) is necessary but not sufficient for computational indispensability.
 - **Status:** DEMONSTRATED (two-root comparison)
+- **Correction (2026-10-10, Demo 124):** REFUTED on the ζ₈ side: nulls are computationally dispensable at ζ₈ as well (non-null max XOR8 = full, exactly). No transition is shown.
 - **Demo provenance:** Demo 87
 - **Cross-references:** Null Indispensability Theorem (Demo 84), Null Dispensability at Infinite Groups (above)
 - **Significance:** Establishes that the controlling variable for null indispensability is direction density, not null fraction per se. At ζ₈ the non-null directions are too sparse; at ζ₁₂ they are dense enough.
@@ -1285,6 +1291,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Two-Role Direction Theorem
 - **Statement:** In the ζ₈ cuboctahedral direction set, the 13 directions serve two distinct computational roles: the 4 non-null body-diagonal directions are rigid computational anchors (perturbation-sensitive, load-bearing for XOR), and the 6 null-only edge-midpoint directions are flexible topological scaffolding (perturbation-tolerant, movable, provide S² coverage). At eps=10° perturbation: null-only causes -2.4% XOR loss (actually a gain), non-null-only causes 8.0% loss.
 - **Status:** DEMONSTRATED
+- **Correction (2026-10-10, Demo 124):** its cross-reference to the Null Indispensability Theorem is superseded (D124). D88's perturbation result itself is float-continuous by design and not audited.
 - **Demo provenance:** Demo 88
 - **Cross-references:** Anti-Correlation Theorem (Demo 72), Null Indispensability Theorem (Demo 84), Null Directional Efficiency (Demo 84)
 - **Significance:** The initial prediction (null directions more sensitive) was INVERTED. Non-null body-diagonal directions are the fragile, load-bearing anchors; null edge-midpoint directions are redundant scaffolding.

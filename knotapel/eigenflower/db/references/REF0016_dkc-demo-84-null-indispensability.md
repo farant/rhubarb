@@ -8,6 +8,8 @@ summary: "Bracket-null entries (37.5% of z8 catalog, Re(q)=0) are computationall
 related: []
 ---
 
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures were float tie noise. D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+
 ## Description
 
 Demo 84 established that bracket-null entries (those with vanishing scalar trace, Re(q)=0) constitute 37.5% of the z8 catalog and are computationally indispensable. Removing them drops XOR capacity below even a random-removal baseline. These null entries are "invisible" to the scalar bracket but carry directional information (specific eigenvector directions on S2) essential for parity computation. They cover 6 S2 directions absent from all non-null entries.

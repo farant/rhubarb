@@ -1,5 +1,7 @@
 # Novelty Assessment: DKC Research Program
 
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures were float tie noise. D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+
 Assessment date: 2026-02-20. Updated 2026-02-21 (added D38, D39, D60, D63, D39 Parts G-J; added D64-D71 S² arc; added D72-D82 automaton/group/capacity arc; added D83-D84 framing/null-states arc). Updated 2026-02-23 (added D85-D92 indecomposability/depth-law-mechanism/parity-lock arc; added P04). Updated 2026-02-24 (added D93-D94 circuit complexity hierarchy/solvability bottleneck arc; added D95-D101 commutator/synergy arc and multi-strand arc). Updated 2026-02-26 (added D102-D109 Barrington-Radical/multi-strand-scaling/entropy-null/algebraic-graph/dual-channel arc). Based on
 76+ cataloged papers (literature-index.md), 109 demos, 4 proofs, and the theorem inventory.
 Honest where uncertain.

@@ -1,5 +1,7 @@
 # DKC Future Demos Backlog
 
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures were float tie noise. D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+
 Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals. Updated 2026-02-21 with D83-D84 results, Arc 7 renumbering, and new proposals from D83-D84 open questions + explorer's log seeds. Updated 2026-02-24 with D85-D92 results, Arc 8/9 completion, new proposals from D85-D92 open questions, and vision-alignment Paths H/I/J. Updated 2026-02-24 with D95-D101 results (multi-strand DKC arc), new proposals from D95-D101 open questions. Updated 2026-02-26 with D102-D109 results (multi-strand scaling/diagnostics arc + topological entropy + Raqiya graph analysis), new proposals from D102-D109 open questions.
 
 97 demos completed (D01-D29, D35, D38-D39, D45-D109). D102-D109 added 2026-02-26.
