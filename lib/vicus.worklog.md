@@ -467,3 +467,19 @@ the library) shown in the tab's front pictor pane; no pane -> one opens.
   commands in tab 2 (section VIII) prefixed line II for tab 3 too and
   "$pictor-next$pictor-next" made the second '$' non-command (after
   't'). Section X writes fresh lines.
+
+## 2026-10-10 - S4b: clock <-> date toggle (Fran)
+
+Clicking the clock shows "Friday, October 9th, 2026" (English, as
+Fran wrote it) right-aligned; clicking again returns to the time.
+- VicusHorologium now fills a VicusTempus (year, month, day, weekday,
+  hour, minute); the pulse compares the WHOLE struct, so the date
+  updates at midnight even if hour/minute were equal.
+- The click lands in radicem_tractare (bar clicks outside a tab's own
+  zone fall through to the root); the hit area runs from the current
+  text's left edge to the bar's right edge, so it tracks the wider
+  date. Tab clicks never reach the root (their zone has its own
+  action) - the meaningful negative test is a click on EMPTY bar
+  space, which plant C5 needed.
+- Ordinals: 11th/12th/13th before the 1/2/3 rule (x % 100 in 11..13).
+- The toggle is session state (Vicus.horologium_dies), not saved.

@@ -155,11 +155,23 @@ nomen structura {
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
- * ("7:52 PM"). Fons: hora 0-23, minutum 0-59. NIHIL (ordinarium) =
+ * ("7:52 PM"); ictus in eo diem ostendit ("Friday, October 9th,
+ * 2026"), iterum horam (Franus 2026-10-10). NIHIL (ordinarium) =
  * nullum horologium - probationes et specimina constant; applicationes
- * vicus_horologium_locale ponunt. vicus_pulsare horam legit et VERUM
- * reddit cum minutum mutatur. */
-nomen vacuum (*VicusHorologium) (vacuum* ctx, s32* hora, s32* minutum);
+ * vicus_horologium_locale ponunt. vicus_pulsare tempus legit et VERUM
+ * reddit cum mutatur (minutum aut dies). */
+
+/* S4: tempus horologii (locale) */
+nomen structura {
+    s32 annus;            /* 2026 */
+    s32 mensis;           /* 1-12 */
+    s32 dies;             /* 1-31 */
+    s32 dies_hebdomadis;  /* 0 dominica - 6 sabbatum */
+    s32 hora;             /* 0-23 */
+    s32 minutum;          /* 0-59 */
+} VicusTempus;
+
+nomen vacuum (*VicusHorologium) (vacuum* ctx, VicusTempus* tempus);
 
 nomen structura {
                 Piscina* piscina;
@@ -180,8 +192,9 @@ nomen structura {
                                        * pendentes (vicus_pulsare) */
         VicusHorologium  horologium;  /* S4: NIHIL = nullum */
                  vacuum* horologium_ctx;
-                    s32  hora;        /* ultima lecta; -1 = nulla */
-                    s32  minutum;
+            VicusTempus  tempus;          /* ultimum lectum; hora -1 =
+                                           * nullum */
+                    b32 horologium_dies; /* ictus: dies pro hora */
 } Vicus;
 
 Vicus*
@@ -324,9 +337,8 @@ vicus_horologium_ponere (
 /* hora locali systematis (time.h: time, localtime) */
 vacuum
 vicus_horologium_locale (
-    vacuum* ctx,
-       s32* hora,
-       s32* minutum);
+         vacuum* ctx,
+    VicusTempus* tempus);
 
 /* S3e: latus frontale generis in acervo tabulae activae argumentum
  * novum accipit (facies.argumentum_ponere) et in frontem venit; focus

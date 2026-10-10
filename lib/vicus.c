@@ -472,6 +472,47 @@ destinare (
     redde d;
 }
 
+/* S4: textus horologii - hora ("7:52 PM") aut dies ("Friday, October
+ * 9th, 2026"); FALSUM si nullum tempus. Exitus >= LXIV. */
+interior b32
+horologii_textus (
+    constans Vicus* v,
+         character* exitus)
+{
+    hic_manens constans character* dies_nomina[VII] = {
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+        "Friday", "Saturday"
+    };
+    hic_manens constans character* menses[XII] = {
+        "January", "February", "March", "April", "May", "June", "July",
+        "August", "September", "October", "November", "December"
+    };
+    constans VicusTempus* t;
+      constans character* ordo;
+
+    t = &v->tempus;
+    si (t->hora < ZEPHYRUM || t->minutum < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (   !v->horologium_dies || t->mensis < I || t->mensis > XII
+        || t->dies_hebdomadis < ZEPHYRUM || t->dies_hebdomadis > VI)
+    {
+        sprintf(exitus, "%d:%02d %s",
+            (integer)(t->hora % XII == ZEPHYRUM ? XII : t->hora % XII),
+            (integer)t->minutum, t->hora < XII ? "AM" : "PM");
+        redde VERUM;
+    }
+    /* 1st 2nd 3rd, 11th 12th 13th, 21st 22nd 23rd, 31st */
+    ordo = (t->dies % C >= XI && t->dies % C <= XIII) ? "th"
+         : t->dies % X == I ? "st" : t->dies % X == II ? "nd"
+         : t->dies % X == III ? "rd" : "th";
+    sprintf(exitus, "%s, %s %d%s, %d", dies_nomina[t->dies_hebdomadis],
+        menses[t->mensis - I], (integer)t->dies, ordo,
+        (integer)t->annus);
+    redde VERUM;
+}
+
 /* tabula per numerum ('1'..'9', '0' = decima); absens aut non montata:
  * nihil */
 interior vacuum
@@ -546,6 +587,24 @@ radicem_tractare (
     }
     si (ev->genus == EVENTUS_MUS_DEPRESSUS)
     {
+        /* S4: ictus in horologio (a margine textus sinistro ad
+         * dextrum lineae): dies <-> hora */
+        si (ev->datum.mus.y < VICUS_ALTITUDO_TABULARUM)
+        {
+            character horae[LXIV];
+                  s32 latitudo;
+
+            latitudo = attributum_radicis(v->repo,
+                "superficies_latitudo",
+                (s32)v->latitudo);
+            si (   horologii_textus(v, horae)
+                && ev->datum.mus.x >= latitudo - VICUS_CELLULA_LATITUDO
+                       - (s32)strlen(horae) * VICUS_CELLULA_LATITUDO)
+            {
+                v->horologium_dies = !v->horologium_dies;
+                redde VERUM;
+            }
+        }
         si (!latus_ictu_focare(v, ev))
         {
             redde FALSUM;
@@ -685,19 +744,20 @@ figura_tabularum (
                                             : COLOR_TEXT));
         x += lat;
     }
-    /* S4: horologium ad dextrum ("7:52 PM"), cellula marginis */
-    si (v && v->hora >= ZEPHYRUM && v->minutum >= ZEPHYRUM)
+    /* S4: horologium ad dextrum ("7:52 PM" aut dies), cellula
+     * marginis */
+    si (v)
     {
-        character horae[XVI];
+        character horae[LXIV];
            chorda textus;
 
-        sprintf(horae, "%d:%02d %s",
-            (integer)(v->hora % XII == ZEPHYRUM ? XII : v->hora % XII),
-            (integer)v->minutum, v->hora < XII ? "AM" : "PM");
-        textus = chorda_ex_literis(horae, m->piscina);
-        mandata_textus(m, c->fines.latitudo - VICUS_CELLULA_LATITUDO
-            - (s32)textus.mensura * VICUS_CELLULA_LATITUDO, ZEPHYRUM,
-            textus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+        si (horologii_textus(v, horae))
+        {
+            textus = chorda_ex_literis(horae, m->piscina);
+            mandata_textus(m, c->fines.latitudo - VICUS_CELLULA_LATITUDO
+                - (s32)textus.mensura * VICUS_CELLULA_LATITUDO,
+                ZEPHYRUM, textus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+        }
     }
 }
 
@@ -1027,8 +1087,8 @@ vicus_creare (
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     v->petitiones  = xar_creare(piscina,
         (i32)magnitudo(PetitioAcervi));
-    v->hora     = -I;
-    v->minutum  = -I;
+    v->tempus.hora     = -I;
+    v->tempus.minutum  = -I;
     redde v;
 }
 
@@ -1037,22 +1097,22 @@ interior b32
 horam_legere (
     Vicus* v)
 {
-    s32 hora;
-    s32 minutum;
+    VicusTempus t;
 
     si (!v->horologium)
     {
         redde FALSUM;
     }
-    hora     = -I;
-    minutum  = -I;
-    v->horologium(v->horologium_ctx, &hora, &minutum);
-    si (hora == v->hora && minutum == v->minutum)
+    memset(&t, ZEPHYRUM, magnitudo(t));
+    t.hora     = -I;
+    t.minutum  = -I;
+    v->horologium(v->horologium_ctx, &t);
+    /* tempus totum: minutum aut dies (medianocte) mutatum */
+    si (memcmp(&t, &v->tempus, magnitudo(t)) == ZEPHYRUM)
     {
         redde FALSUM;
     }
-    v->hora     = hora;
-    v->minutum  = minutum;
+    v->tempus = t;
     redde VERUM;
 }
 
@@ -1068,16 +1128,16 @@ vicus_horologium_ponere (
     }
     v->horologium      = horologium;
     v->horologium_ctx  = ctx;
-    v->hora            = -I;
-    v->minutum         = -I;
+    memset(&v->tempus, ZEPHYRUM, magnitudo(v->tempus));
+    v->tempus.hora     = -I;
+    v->tempus.minutum  = -I;
     (vacuum)horam_legere(v);
 }
 
 vacuum
 vicus_horologium_locale (
-    vacuum* ctx,
-       s32* hora,
-       s32* minutum)
+         vacuum* ctx,
+    VicusTempus* tempus)
 {
        time_t nunc;
     struct tm* t;
@@ -1089,8 +1149,12 @@ vicus_horologium_locale (
     {
         redde;
     }
-    *hora     = (s32)t->tm_hour;
-    *minutum  = (s32)t->tm_min;
+    tempus->annus            = (s32)t->tm_year + MCM;
+    tempus->mensis           = (s32)t->tm_mon + I;
+    tempus->dies             = (s32)t->tm_mday;
+    tempus->dies_hebdomadis  = (s32)t->tm_wday;
+    tempus->hora             = (s32)t->tm_hour;
+    tempus->minutum          = (s32)t->tm_min;
 }
 
 b32
