@@ -403,3 +403,38 @@ when debugging child output.
 The daemon start-up (tabulariumd -portus 0 in a dir, poll the port file
 0.2 s x 25) now exists THREE times (cliens, sententiae_horreum,
 villa_agens). Candidate for a shared test helper once a fourth appears.
+
+## 2026-10-10 - credo II T6: CREDO_ORDO=mixtus
+
+`CREDO_ORDO=mixtus:<seed>` -> Fisher-Yates over a table-position index
+array, xorshift32 in credo itself (sors is not in every subsystem link
+list). The seed is premixed (`seed * 2654435761 + golden`, 8 warm-up
+rounds) because raw xorshift from tiny seeds (1, 2, 3...) gives nearly
+identical first outputs - neighbouring seeds must give unrelated orders.
+Bare `mixtus` picks a seed from time ^ pid and NAMES it
+(`=== ORDO mixtus semen N ===` + record line `ORDO <suite> mixtus N`)
+so any failing run can be repeated. `tabula`/empty = table order;
+anything else refuses the suite before running (a typo must not
+silently mean "table order"). The section index `i` stays the TABLE
+position, so credo_area paths do not move with the shuffle.
+
+Fumus XII lesson: my first "different seeds give different orders"
+check counted orders that differ FROM TABLE ORDER - a plant that ignored
+the seed entirely (same shuffled order every time) passed it 8/8. Now it
+counts DISTINCT orders; the plant goes red at 1/8. Second time today a
+check proved less than its name (cf. the planta summary, …FV3X).
+
+The dependent fixture (`legens` relies on `ponens` having run) passes in
+table order and fails under seed 1 - the shape the tool exists for.
+
+FIRST REAL FIND (tools/credo_ordo_mixtus.sh, seeds 1-5): 
+probatio_fabrica_gradus FRACTA under all five - `_gradus_areae_paratae
+== II` received 17. Ten file-scope variables (call counters of the fake
+steps, `_c_*` compile/link counters, three "last seen" buffers) were
+never reset by `_mundum_purgare`; in table order the section reading
+them ran first and saw zero by luck. Adoption test 1 (78cae599) had
+reset the 14 POINTER fakes and missed every counter. All ten now reset;
+20/20 seeds clean, then all 13 suites clean over seeds 100-114.
+This is precisely T7 lint check (1) - "mutable file-scope state that no
+purgare writes" - with a real historical instance to plant against
+(revert the ten resets -> the lint must name them).

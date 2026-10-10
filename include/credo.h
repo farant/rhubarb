@@ -680,6 +680,14 @@ nomen structura CredoSectio {
  *   CREDO_SIGNA_OMITTE=<verba>  sectiones cum signo quovis horum
  *                           OMISSAE (credo II); verbum ignotum = I,
  *                           nihil cursum, nominatum
+ *   CREDO_ORDO=mixtus[:<semen>]  ordo sectionum permutatus (credo
+ *                           II; Fisher-Yates, semen IX cifrarum ad
+ *                           summum; sine semine ex tempore electum) -
+ *                           semen NOMINATUR ("=== ORDO mixtus semen N
+ *                           ===", linea ORDO) ut cursus iteretur;
+ *                           instrumentum status communis occulti, non
+ *                           ordinarium. "tabula"/vacuum = ordo tabulae;
+ *                           valor alius = I, nihil cursum, nominatum
  *   CREDO_VERDICTA=<via>    plagula verdictorum (TSV) scribitur
  * Plagula: linea per sectionem STATIM post eam (effluxa), deinde linea
  * SUITA - linea SUITA absens = suita ruit (sectiones priores tamen
@@ -690,6 +698,8 @@ nomen structura CredoSectio {
  *           vacua si transiit; gradus = CREDO_GRADUS currens, credo II)
  *   SUITA   suita  exitus  transeuntes  sectiones  praeteriti  totales
  *           ms
+ *   ORDO    suita  mixtus  semen          (credo II; ante sectiones,
+ *                                         solum si CREDO_ORDO mixtus)
  * exitus sectionis: TRANSIIT | FRACTA | VACUA (nulla assertio = non
  * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum) | OMISSA
  * (signum omissum, credo II) | NOTA_FRACTA (fractura exspectata, suita

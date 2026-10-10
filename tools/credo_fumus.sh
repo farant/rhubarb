@@ -23,6 +23,10 @@
 #   IX   fixura suitae (credo II): credo_suitam_currere_cum - parare et
 #        purgare suitae SEMEL, c->suita in sectionibus, purgare post
 #        abortum et post parare fractum
+#   XII  ordo (credo II): CREDO_ORDO=mixtus:<semen> permutatio
+#        reproducibilis, semen nominatum (effusio + linea ORDO);
+#        'mixtus' sine semine semen eligit et nominat; valor ignotus ->
+#        I, nihil cursum; status communis occultus ordine mixto patet
 #   XI   area (credo II): credo_area(c) pigra sub TMPDIR
 #        (<suita>.<n>.<pid>, suitae <suita>.suita.<pid>), eadem in
 #        sectione, alia in alia, deleta post purgare (etiam post NECESSE
@@ -571,7 +575,70 @@ s32 principale (vacuum)
 }
 FONS
 
-for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua suita_communis suita_fracta gradus area; do
+cat > "$T/ordo.c" <<'FONS'
+#include "credo.h"
+#include <stdio.h>
+
+interior vacuum _nominare (CredoContextus* c)
+{
+    imprimere("ORDO-SECTIO %s\n", c->titulus);
+    CREDO_VERUM(VERUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "a", _nominare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "b", _nominare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "c", _nominare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "d", _nominare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "e", _nominare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("ordo", SECTIONES);
+}
+FONS
+
+# status communis OCCULTUS: 'legens' innititur 'ponenti' ante se cursae
+cat > "$T/dependens.c" <<'FONS'
+#include "credo.h"
+
+hic_manens s32 _communis = ZEPHYRUM;
+
+interior vacuum _ponens (CredoContextus* c)
+{
+    (vacuum)c;
+    _communis = VII;
+    CREDO_VERUM(VERUM);
+}
+
+interior vacuum _legens (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_AEQUALIS_S32(_communis, VII);
+}
+
+interior vacuum _alia (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(VERUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "ponens", _ponens, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "alia", _alia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "legens", _legens, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("dependens", SECTIONES);
+}
+FONS
+
+for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua suita_communis suita_fracta gradus area ordo dependens; do
     struere "$s.c" "$s" || { echo "credo_fumus: $s non compilat:"; cat "$T/$s.err"; exit 2; }
 done
 
@@ -704,6 +771,34 @@ grep -q "AREA prima $T/tmp_area/area_fumi\.1\.[0-9]*$" "$T/o_ar" && grep -q "ARE
     && grep -q "AREA suita $T/tmp_area/area_fumi\.suita\.[0-9]*$" "$T/o_ar"; credo $? "XI via: <TMPDIR>/<suita>.<n>.<pid> ('/' finalis demptus, titulus sanatus), suitae .suita."
 grep -q 'PURGARE necesse adest$' "$T/o_ar" && grep -q 'PURGARE SUITAE adest$' "$T/o_ar" && grep -q 'AREA filius ' "$T/o_ar"; credo $? "XI area in purgare adhuc adest (sectio et suita); filius aream creavit"
 [ -z "$(ls -A "$T/tmp_area")" ]; credo $? "XI post cursum TMPDIR vacuum: omnes areae deletae (NECESSE, filius, suita, profunda) - reliquiae: $(ls -A "$T/tmp_area" | tr '\n' ' ')"
+
+# XII (credo II, T6): ORDO - permutatio reproducibilis per semen; semen
+# nominatum; valor ignotus recusatus; ordo tabulae sine CREDO_ORDO
+ordo_legere () { grep -o 'ORDO-SECTIO [a-e]$' "$1" | cut -d' ' -f2 | tr -d '\n'; }
+"$T/ordo" > "$T/o_o0" 2>&1
+[ "$(ordo_legere "$T/o_o0")" = "abcde" ] && ! grep -q 'ORDO mixtus' "$T/o_o0"; credo $? "XII sine CREDO_ORDO: ordo tabulae, nihil nominatum"
+CREDO_ORDO=mixtus:7 CREDO_VERDICTA="$T/v_o7.tsv" "$T/ordo" > "$T/o_o7" 2>&1; rc7=$?
+CREDO_ORDO=mixtus:7 "$T/ordo" > "$T/o_o7b" 2>&1
+o7="$(ordo_legere "$T/o_o7")"
+[ "$rc7" -eq 0 ] && [ "$o7" = "$(ordo_legere "$T/o_o7b")" ] && [ "$(echo "$o7" | fold -w1 | sort | tr -d '\n')" = "abcde" ]; credo $? "XII mixtus:7 permutatio (omnes semel), idem bis ($o7)"
+# ordines DISTINCTI numerantur (semen neglectum = ordo unus semper)
+for semen in 1 2 3 4 5 6 8 9; do
+    CREDO_ORDO=mixtus:$semen "$T/ordo" > "$T/o_ox" 2>&1; ordo_legere "$T/o_ox"; echo
+done | sort -u > "$T/ordines"
+diversi="$(grep -c . "$T/ordines")"
+[ "$diversi" -ge 5 ]; credo $? "XII semina alia ordines alios dant ($diversi/8 distincti)"
+grep -q '=== ORDO mixtus semen 7 ===' "$T/o_o7" && grep -q "^ORDO	ordo	mixtus	7$" "$T/v_o7.tsv" \
+    && [ "$(grep -c '^SECTIO	' "$T/v_o7.tsv")" -eq 5 ] && grep -q '^SUITA	ordo	TRANSIIT	5	5	' "$T/v_o7.tsv"; credo $? "XII semen in effusione et linea ORDO plagulae; SECTIO V, SUITA TRANSIIT"
+CREDO_ORDO=mixtus "$T/ordo" > "$T/o_oa" 2>&1
+semen="$(sed -n 's/^=== ORDO mixtus semen \([0-9]*\) ===$/\1/p' "$T/o_oa")"
+[ -n "$semen" ] && [ "$(ordo_legere "$T/o_oa")" = "$(CREDO_ORDO=mixtus:$semen "$T/ordo" 2>&1 > "$T/o_ob"; ordo_legere "$T/o_ob")" ]; credo $? "XII 'mixtus' sine semine: semen electum nominatur et ordinem reddit (semen $semen)"
+CREDO_ORDO=confusus "$T/ordo" > "$T/o_oi" 2>&1; rci=$?
+[ "$rci" -eq 1 ] && grep -q "CREDO_ORDO ignotus 'confusus'" "$T/o_oi" && ! grep -q 'ORDO-SECTIO' "$T/o_oi"; credo $? "XII valor ignotus: exitus 1, nominatus, nihil cursum"
+"$T/dependens" > /dev/null 2>&1; rcd=$?
+fractum=""; for semen in $(seq 1 30); do
+    CREDO_ORDO=mixtus:$semen "$T/dependens" > /dev/null 2>&1 || { fractum=$semen; break; }
+done
+[ "$rcd" -eq 0 ] && [ -n "$fractum" ]; credo $? "XII status communis occultus: ordine tabulae transit, ordine mixto (semen $fractum) frangitur"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

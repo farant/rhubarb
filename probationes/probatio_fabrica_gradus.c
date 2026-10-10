@@ -1557,6 +1557,7 @@ _probare_sectiones (
           constans character* PLAGULA_B =
               "build/fabrica/area/probationes_t/probatio_b/credo.tsv";
           constans character* PLENA =
+              "ORDO\tfs\tmixtus\t7\n"
               "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n"
               "SECTIO\tfs\tbe\\tta\tFRACTA\t1\t2\t4\tt/probatio_a.c:12"
               "\tAEQUALIS_I32\tx == y\n"
@@ -2414,6 +2415,19 @@ _mundum_purgare (
     _d_via_b                = NIHIL;
     _d_liber_a              = NIHIL;
     mundi_ambitus_ficti[0]  = NIHIL;
+    /* numeratores et 'ultima' quoque (credo II T6: CREDO_ORDO=mixtus
+     * eos invenit - ordine tabulae sectio quae eos legit prima
+     * currebat, ergo ZEPHYRUM fortuito videbat) */
+    _gradus_cursus           = ZEPHYRUM;
+    _gradus_areae_paratae    = ZEPHYRUM;
+    _gradus_ambitus_ultimus  = NIHIL;
+    _gradus_area_ultima[0]   = '\0';
+    _c_compilationes         = ZEPHYRUM;
+    _c_nexus                 = ZEPHYRUM;
+    _c_nexus_compagis        = ZEPHYRUM;
+    _c_cursus                = ZEPHYRUM;
+    _c_cursus_ultimus[0]     = '\0';
+    _s_verdicta_a[0]         = '\0';
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

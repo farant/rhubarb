@@ -61,8 +61,17 @@ in `../rhubarb-quinta`; merges by the ritual.
   section, steps I-VIII via CREDO_GRADUS) - 13 converted suites now.
 
 ### T6: order
-- [ ] stage: CREDO_ORDO=mixtus:<seed> reproducible order, seed recorded;
+- [x] stage: CREDO_ORDO=mixtus:<seed> reproducible order, seed recorded;
   run over the 10 converted suites, record what it finds. Commit.
+  As built (2026-10-10): seed printed + `ORDO` record line (fabrica
+  reader ignores it); bare `mixtus` picks and names a seed; unknown
+  value refuses the suite. Tool `tools/credo_ordo_mixtus.sh [-semina N]
+  [-initium S] [suita...]` (baseline in table order first; names the
+  seed and the failing sections). FIRST RUN FOUND REAL HIDDEN STATE:
+  probatio_fabrica_gradus failed under 5/5 seeds - ten file-scope
+  counters/"last" buffers never reset by purgare (adoption test 1 reset
+  the 14 pointer fakes, missed the counters). Fixed; then 13/13 suites
+  clean over seeds 1-5 and 100-114.
 
 ### T7: lint
 - [ ] silva checks 1-4 (spec II), each born red by a plant that

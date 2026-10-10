@@ -288,7 +288,8 @@ _obiectum_nominare (
  * SYNTHETICA a gradu scripta, sectio una 'totum' (exitus ex codice,
  * numeri ex compendio effusionis) - lector unus, forma una. Linea
  * SECTIO: campi X (credo I) aut XI (credo II: gradus fracturae, in
- * fractura "[gradus ...]" fit)
+ * fractura "[gradus ...]" fit); lineae aliae (ORDO credo II)
+ * praetereuntur
  * ================================================== */
 
 hic_manens constans character* constans _exitus_sectionis[] = {

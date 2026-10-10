@@ -1272,6 +1272,112 @@ credo_area (
     redde area->via;
 }
 
+
+/* ==================================================
+ * ORDO (credo II): CREDO_ORDO=mixtus[:semen] - permutatio sectionum
+ * reproducibilis (Fisher-Yates super xorshift32). Instrumentum quod
+ * statum communem occultum invenit, non ordinarium, non porta.
+ * Generator proprius: subsystemata credo sine 'sors' ligant.
+ * ================================================== */
+
+/* VERUM si valor notus: NIHIL/""/"tabula" -> ordo tabulae; "mixtus"
+ * -> semen ex tempore et pid; "mixtus:<cifrae, IX ad summum>" */
+interior b32
+_credo_ordinem_legere (
+     constans character* valor,
+                    b32* mixtus,
+      insignatus longus* semen)
+{
+    i32 i;
+
+    *mixtus  = FALSUM;
+    *semen   = ZEPHYRUM;
+    si (   valor                   == NIHIL || valor[0] == '\0'
+        || strcmp(valor, "tabula") == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (strncmp(valor, "mixtus", VI) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *mixtus = VERUM;
+    si (valor[VI] == '\0')
+    {
+        *semen = ((insignatus longus)time(NIHIL)
+            ^ ((insignatus longus)getpid() << XVI)) % 1000000000UL;
+        redde VERUM;
+    }
+    si (valor[VI] != ':' || valor[VII] == '\0')
+    {
+        redde FALSUM;
+    }
+    per (i = VII; valor[i] != '\0'; i++)
+    {
+        si (valor[i] < '0' || valor[i] > '9' || i >= VII + IX)
+        {
+            redde FALSUM;
+        }
+        *semen = *semen * X + (insignatus longus)(valor[i] - '0');
+    }
+    redde VERUM;
+}
+
+/* xorshift32 (status numquam ZEPHYRUM) */
+interior insignatus longus
+_credo_fortuitum (
+    insignatus longus* status)
+{
+    insignatus longus x = *status;
+
+    x        ^= (x << XIII) & 0xFFFFFFFFUL;
+    x        ^= x >> XVII;
+    x        ^= (x << V) & 0xFFFFFFFFUL;
+    *status  = x;
+    redde x;
+}
+
+/* ordo[] = 0..n-1, permutatus si mixtus (semen mixtum: semina parva
+ * vicina ordines dissimiles dant) */
+interior vacuum
+_credo_ordinem_parare (
+                  i32* ordo,
+                  i32  n,
+                  b32  mixtus,
+    insignatus longus  semen)
+{
+    insignatus longus status;
+                  i32 k;
+                  i32 j;
+                  i32 t;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        ordo[k] = k;
+    }
+    si (!mixtus)
+    {
+        redde;
+    }
+    status = (semen * 2654435761UL + 0x9E3779B9UL) & 0xFFFFFFFFUL;
+    si (status == ZEPHYRUM)
+    {
+        status = I;
+    }
+    per (k = ZEPHYRUM; k < VIII; k++)
+    {
+        (vacuum)_credo_fortuitum(&status);
+    }
+    per (k = n - I; k > ZEPHYRUM; k--)
+    {
+        j        = (i32)(_credo_fortuitum(&status)
+            % (insignatus longus)(k + I));
+        t        = ordo[k];
+        ordo[k]  = ordo[j];
+        ordo[j]  = t;
+    }
+}
+
 /* SIGNA (credo II): vocabulum CLAUSUM - facultates domus (fabrica-7
  * annotatio 'facultas') et 'lentus'. Verbum ignotum = vitium scribae,
  * non signum novum tacitum */
@@ -1443,6 +1549,11 @@ credo_suitam_currere_cum (
               character  signum[XXXII];
                     f64  initium_suitae;
                     i32  i;
+                    i32  k;
+                    i32  numerus_sectionum;
+                   i32* ordo;
+                    b32  mixtus;
+      insignatus longus  semen;
 
     si (_credo_piscina == NIHIL)
     {
@@ -1516,6 +1627,39 @@ credo_suitam_currere_cum (
             redde I;
         }
     }
+    /* ORDO (credo II): valor ignotus ordinem tacite non mutaret */
+    si (!_credo_ordinem_legere(getenv("CREDO_ORDO"), &mixtus, &semen))
+    {
+        imprimere("FRACTA: CREDO_ORDO ignotus '%s' (tabula | mixtus |"
+            " mixtus:<semen>)\n", getenv("CREDO_ORDO"));
+        _credo_suitam_recusare(plagula, titulus_suitae);
+        redde I;
+    }
+    numerus_sectionum = ZEPHYRUM;
+    dum (sectiones[numerus_sectionum].titulus != NIHIL)
+    {
+        numerus_sectionum++;
+    }
+    ordo = (i32*)piscina_allocare(_credo_piscina, (memoriae_index)(
+        numerus_sectionum + I) * magnitudo(i32));
+    si (ordo == NIHIL)
+    {
+        imprimere("FATALE: credo ordo sectionum\n");
+        _credo_suitam_recusare(plagula, titulus_suitae);
+        redde I;
+    }
+    _credo_ordinem_parare(ordo, numerus_sectionum, mixtus, semen);
+    si (mixtus)
+    {
+        /* semen NOMINATUM: cursus fractus eodem semine iteratur */
+        imprimere("\n=== ORDO mixtus semen %lu ===\n", semen);
+        si (plagula != NIHIL)
+        {
+            fputs("ORDO\t", plagula);
+            _credo_literas_scribere(plagula, titulus_suitae);
+            fprintf(plagula, "\tmixtus\t%lu\n", semen);
+        }
+    }
     cursae          = ZEPHYRUM;
     transeuntes     = ZEPHYRUM;
     omissae         = ZEPHYRUM;
@@ -1578,7 +1722,7 @@ credo_suitam_currere_cum (
             redde I;
         }
     }
-    per (i = ZEPHYRUM; sectiones[i].titulus != NIHIL; i++)
+    per (k = ZEPHYRUM; k < numerus_sectionum; k++)
     {
         constans CredoSectio* sectio;
               CredoContextus  contextus;
@@ -1587,7 +1731,9 @@ credo_suitam_currere_cum (
                          b32  aborta;
                          f64  initium;
 
-        sectio = &sectiones[i];
+        /* i = sedes in tabula (area '<suita>.<i+1>.<pid>' stabilis) */
+        i       = ordo[k];
+        sectio  = &sectiones[i];
         si (   filtrum != NIHIL && strcmp(sectio->titulus, filtrum)
                 != ZEPHYRUM)
         {
