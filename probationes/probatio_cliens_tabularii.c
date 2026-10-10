@@ -9,12 +9,14 @@
  * probatio_fori.c) - nulla rete externa, nullus daemon vivus tactus.
  *
  * SECTIONES (credo v2/II, 2026-10-10): daemon SUITAE unus
- * (credo_suitam_currere_cum: parare_suitae incipit in scratch sub
- * TMPDIR, purgare_suitae necat et delet - etiam post sectionem
- * abortam); quaeque sectio clientem SUUM habet (status clientis
- * sectionis est, non suitae - sectiones statum suitae non mutant).
+ * (credo_suitam_currere_cum: parare_suitae incipit in credo_area
+ * suitae, purgare_suitae necat, credo aream delet - etiam post
+ * sectionem abortam); quaeque sectio clientem SUUM habet (status
+ * clientis sectionis est, non suitae - sectiones statum suitae non
+ * mutant).
  * 'defectus citus' daemonem necat, ergo daemonem PRIVATUM habet
- * (parare/purgare sectionis). Daemon unus: 0.96 s pro 1.81 s (daemon
+ * (parare/purgare sectionis; area sectionis propria - nomen scratch
+ * alienum non iam opus). Daemon unus: 0.96 s pro 1.81 s (daemon
  * per sectionem, adoptio II) - mora initii (portus per 0.2 s) semel.
  * Olim gradus
  * I-VII daemonem unum communem sequebantur (III res_id ex II, V
@@ -33,10 +35,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>   /* getpid */
 
-/* DAEMON SECTIONIS: scratch per processum sub TMPDIR (area membri sub
- * fabrica; olim build/probatio_ct.* - debita VI), portus, cliens */
+/* DAEMON SECTIONIS: scratch = credo_area contextus (credo II T5; sub
+ * fabrica intra aream membri; olim build/probatio_ct.* - debita VI),
+ * portus, cliens */
 nomen structura {
           character scratch[DXII];
             integer portus;
@@ -56,16 +58,14 @@ _in_scratch (
     redde via;
 }
 
-/* daemon in scratch '<TMPDIR>/<titulus>.<pid>' incipere; datum in
- * c->datum */
+/* daemon in credo_area(c) incipere (area contextus: suitae aut
+ * sectionis; credo eam post purgare delet); datum in c->datum */
 interior vacuum
 _daemon_incipere (
-         CredoContextus* c,
-    constans character* titulus)
+    CredoContextus* c)
 {
        DaemonSectionis* d;
-    constans character* tmp = getenv("TMPDIR");
-        memoriae_index  n;
+    constans character* area;
              character  imperium[MMXLVIII];
                integer  k;
 
@@ -73,20 +73,11 @@ _daemon_incipere (
         magnitudo(DaemonSectionis));
     CREDO_NECESSE_NON_NIHIL(d);
     memset(d, ZEPHYRUM, magnitudo(DaemonSectionis));
-    c->datum = d;
-    si (tmp == NIHIL || tmp[0] == '\0')
-    {
-        tmp = "/tmp";
-    }
-    n = strlen(tmp);
-    dum (n > I && tmp[n - I] == '/')
-    {
-        n--;
-    }
-    sprintf(d->scratch, "%.*s/%s.%d", (integer)(n > CD ? CD : n), tmp,
-        titulus, (integer)getpid());
-    (vacuum)filum_arborem_delere(d->scratch);
-    CREDO_NECESSE(filum_directorium_creare_cum_parentibus(d->scratch));
+    c->datum  = d;
+    area      = credo_area(c);
+    CREDO_NECESSE_NON_NIHIL(area);
+    CREDO_NECESSE(strlen(area) < magnitudo(d->scratch));
+    sprintf(d->scratch, "%s", area);
     /* daemon PRAESTRUCTUS (actio tabulariumd): probatio currit, non
      * struit (fabrica plan 5 T5b) */
     CREDO_NECESSE(filum_existit("gesta/build/tabulariumd"));
@@ -121,7 +112,7 @@ interior vacuum
 _daemon_suitae_parare (
     CredoContextus* c)
 {
-    _daemon_incipere(c, "probatio_ct");
+    _daemon_incipere(c);
 }
 
 /* daemon PRIVATUS sectionis (defectus citus eum necat) */
@@ -129,7 +120,7 @@ interior vacuum
 _daemon_privatum_parare (
     CredoContextus* c)
 {
-    _daemon_incipere(c, "probatio_ct_privatus");
+    _daemon_incipere(c);
 }
 
 /* cliens SECTIONIS ad daemonem suitae: status clientis (index
@@ -151,8 +142,8 @@ _clientem_parare (
     c->datum = d;
 }
 
-/* SEMPER (etiam post NECESSE fractum): daemon necatur, scratch
- * deletur */
+/* SEMPER (etiam post NECESSE fractum): daemon necatur; scratch
+ * (credo_area) credo ipse post purgare delet */
 interior vacuum
 _daemon_purgare (
     CredoContextus* c)
@@ -166,7 +157,6 @@ _daemon_purgare (
     }
     sprintf(imperium, "kill $(cat %s/pid.txt) 2>/dev/null", d->scratch);
     (vacuum)system(imperium);
-    (vacuum)filum_arborem_delere(d->scratch);
 }
 
 /* 'pipatum' unum addere (pro sectionibus quae eo innituntur);

@@ -349,3 +349,57 @@ Tool note: `silva.planta`'s red summary ("fractae: credo (ok I suita
 mixta ...)") quoted an `ok` line, not the failing one, for credo fumus -
 the acta had the right line (`FRACTUM X ...`). Read the acta, not the
 summary, until the summarizer picks FRACTUM lines.
+
+## 2026-10-10 - credo II T5: credo_area
+
+`credo_area(c)` -> `<TMPDIR>/<suite>.<n>.<pid>` for a section (n = table
+position from 1), `<suite>.suita.<pid>` for the suite context (callable
+in parare_suitae / purgare_suitae). Suite title sanitised to
+[A-Za-z0-9_-]; trailing '/' of TMPDIR stripped (macOS TMPDIR ends in '/',
+and git normalises '//' - the git test had tripped on that before).
+
+Design points:
+- Two static slots (section, suite), each {context pointer, path,
+  created}. The path is computed BEFORE the context runs; credo_area
+  matches the context pointer, creates lazily (removing pid-reuse
+  leftovers first), returns the same path afterwards. No struct change
+  - the approved header was the function, and a field would invite
+  reading c->area before creation.
+- Removal after purgare is by PATH, not by the `created` flag: a
+  CREDO_NON_RUIT child can create the area (fork copies the slot), the
+  parent never learns, and must still remove it. Plant: delete only if
+  the parent created it -> fumus XI "TMPDIR vacuum" red.
+- credo has its own lstat/opendir/unlink/rmdir tree removal (~40
+  lines) instead of filum_arborem_delere: the subsystem test builds
+  (silva, materia, md, html, officina, oratio, tessera...) link credo
+  from explicit lists WITHOUT filum/lectiones. Symlinks are unlinked,
+  never followed. A failed removal prints `credo: area non deleta`.
+- Removal failure is a printed warning, not a fracture - revisit if
+  leftovers ever matter (a leak elsewhere: ledger …V3QXC, 312 empty
+  `<word>-probatio-<epoch>` dirs from some unknown suite).
+
+Three of the four hand helpers were in OLD-style suites, so T5 converted
+them (helper replacement needs a context):
+- git: suite fixture opens the repository + resolves HEAD under NECESSE
+  (a broken repo = '(parare suitae)' ABORTA, which is what the old
+  hand-rolled early return was for); 9 sections, old titles kept. The
+  repository allocates in its CREATION piscina (the suite's), so section
+  pools never leak into it - checked before converting.
+- villa_agens: suite fixture = VILLA_SSH + cfg; each section takes a
+  struct COPY of cfg (never mutates suite state); every section already
+  set its own VILLA_STIPES_MODUS, so order-free. Section X's daemon in
+  its section area.
+- sententiae_horreum: ONE scenario section (its header says the blocks
+  are NOT independent - V kills what IV tests), daemon in parare via
+  credo_area, pkill in purgare, steps I-VIII as CREDO_GRADUS.
+Assertion counts: git 101, villa 150 (149 + fixture NECESSE),
+sententiae 35 (33 + two NECESSE in parare).
+
+Fixture lesson in the fumus: a CREDO_NON_RUIT child exits via _exit, so
+its stdout buffer is lost unless flushed - the "AREA filius" line was
+missing until the fixture flushed. Not a credo bug, but worth knowing
+when debugging child output.
+
+The daemon start-up (tabulariumd -portus 0 in a dir, poll the port file
+0.2 s x 25) now exists THREE times (cliens, sententiae_horreum,
+villa_agens). Candidate for a shared test helper once a fourth appears.

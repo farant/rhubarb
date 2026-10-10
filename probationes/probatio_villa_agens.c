@@ -24,56 +24,20 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <unistd.h>   /* getpid */
 #include "json.h"
 #include "filum.h"
 
-/* SCRATCH (fabrica-7 T4): directorium UNICUM sub TMPDIR (per pid) - sub
- * fabrica area membri ipsa (TMPDIR = <area>tmp; debita
- * build/probatio_villa* soluta), sub compile_tests.sh directorium
- * systematis. Nomen unicum: arbores duae nec scrinium commune habent
- * nec daemonem alienum necant (olim 'pkill -f ... -scrinium
- * build/probatio_villa.db' via relativa omnes arbores tangebat).
- * Scriptura TRANSIENS in build/ photographiam fabricae fallebat (census
- * debitum 'stalum' falso nominabat). */
-hic_manens character _scratch[DXII];
-
-interior b32
-_scratch_parare (vacuum)
-{
-    constans character* tmp = getenv("TMPDIR");
-        memoriae_index  n;
-
-    si (tmp == NIHIL || tmp[0] == '\0')
-    {
-        tmp = "/tmp";
-    }
-    /* '/' finalis (TMPDIR macOS) demitur: via '//' a git normalizata
-     * cum via probationis non congruebat */
-    n = strlen(tmp);
-    dum (n > I && tmp[n - I] == '/')
-    {
-        n--;
-    }
-    /* unicum per processum (getpid): processus concurrentes numquam
-     * idem; reliquiae pid iterati prius deletae */
-    sprintf(_scratch, "%.*s/probatio_villa.%d", (integer)(n
-        > CD ? CD : n), tmp,
-        (integer)getpid());
-    (vacuum)filum_arborem_delere(_scratch);
-    redde filum_directorium_creare_cum_parentibus(_scratch);
-}
-
-/* "<scratch>/<titulus>" in piscina */
+/* "<area>/<titulus>" in piscina (area = credo_area sectionis) */
 interior constans character*
-_in_scratch (
+_in_area (
                Piscina* piscina,
+    constans character* area,
     constans character* titulus)
 {
     character* via = (character*)piscina_allocare(piscina,
-        strlen(_scratch) + strlen(titulus) + II);
+        strlen(area) + strlen(titulus) + II);
 
-    sprintf(via, "%s/%s", _scratch, titulus);
+    sprintf(via, "%s/%s", area, titulus);
     redde via;
 }
 
@@ -124,800 +88,874 @@ _ad_finem_pulsare (
     redde VERUM;
 }
 
-s32 principale (vacuum)
+/* MUNDUS SUITAE: configuratio una (sutura ambientis VILLA_SSH semel
+ * lecta) - sectiones COPIAM legunt, numquam mutant */
+nomen structura {
+    VillaConfiguratio cfg;
+} MundusVillae;
+
+interior vacuum
+_mundum_parare (
+    CredoContextus* c)
 {
-              Piscina* piscina;
-    VillaConfiguratio  cfg;
-                  b32  praeteritus;
-               chorda  causa;
+    MundusVillae* m;
+          chorda  causa;
 
-    piscina = piscina_generare_dynamicum("probatio_villa_agens",
-        16777216);
-    si (!piscina)
+    m = (MundusVillae*)piscina_allocare(c->piscina,
+        magnitudo(MundusVillae));
+    CREDO_NECESSE_NON_NIHIL(m);
+    causa = chorda_ex_literis("", c->piscina);
+    setenv("VILLA_SSH", STIPES, I);
+    CREDO_NECESSE(villa_configurationem_parare(&m->cfg, c->piscina,
+        &causa));
+    c->datum = m;
+}
+
+
+/* ==============================================================
+ * I. CONFIGURATIO - sutura ambientis, directorium 0700
+ * ============================================================== */
+
+interior vacuum
+_sectio_configuratio (
+    CredoContextus* c)
+{
+    constans MundusVillae* m = (constans MundusVillae*)c->suita;
+
+    /* SUTURA UNA: ambiens semel lectus, in configuratione
+     * habitans - semita probationis et semita vera eandem
+     * premunt */
+    CREDO_NON_NIHIL (m->cfg.via_ssh);
+    si (m->cfg.via_ssh != NIHIL)
     {
-        imprimere("FRACTA: piscina\n");
-        redde I;
+        CREDO_VERUM (strcmp(m->cfg.via_ssh, STIPES) == ZEPHYRUM);
     }
-    credo_aperire(piscina);
+    CREDO_CHORDA_NON_VACUA (m->cfg.via_moderandi);
+    CREDO_CHORDA_CONTINET (m->cfg.via_moderandi,
+        chorda_ex_literis(".rhubarb/cm", c->piscina));
+    /* terminus viae moderandi: expansa sub C octetis manere
+     * debet, alioquin ssh multiplicationem tacite deserit */
+    CREDO_VERUM (m->cfg.via_moderandi.mensura + I
+        + (i32)VILLA_MODERANDI_SIGILLUM
+        <= (i32)VILLA_MODERANDI_TERMINUS);
+}
 
 
-    /* ==============================================================
-	 * I. CONFIGURATIO - sutura ambientis, directorium 0700
-	 * ============================================================== */
+/* ==============================================================
+ * II. CUSTOS NOMINUM - vector iniectionis quem concha REMOTA
+ * aperit (latus locale vectorem argumentorum habet, sed nomina
+ * unitatum in scriptum NOSTRUM interpolantur)
+ * ============================================================== */
 
+interior vacuum
+_sectio_custos_nominum (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    /* formae VERAE systemd */
+    CREDO_VERUM (villa_unitas_valida(
+        chorda_ex_literis("nginx.service", piscina)));
+    CREDO_VERUM (villa_unitas_valida(
+        chorda_ex_literis("getty@tty1.service", piscina)));
+    CREDO_VERUM (villa_unitas_valida(
+        chorda_ex_literis("systemd-udevd.service", piscina)));
+    CREDO_VERUM (villa_unitas_valida(
+        chorda_ex_literis("user@1000.service", piscina)));
+
+    /* quidquid conchae significat RECUSATUR */
+    CREDO_FALSUM (villa_unitas_valida(
+        chorda_ex_literis("x; curl malum|sh", piscina)));
+    CREDO_FALSUM (villa_unitas_valida(
+        chorda_ex_literis("a b", piscina)));
+    CREDO_FALSUM (villa_unitas_valida(
+        chorda_ex_literis("$(rm -rf /)", piscina)));
+    CREDO_FALSUM (villa_unitas_valida(
+        chorda_ex_literis("`id`", piscina)));
+    CREDO_FALSUM (villa_unitas_valida(
+        chorda_ex_literis("a\nb", piscina)));
+    CREDO_FALSUM (villa_unitas_valida(
+        chorda_ex_literis("a&b", piscina)));
+    CREDO_FALSUM (villa_unitas_valida(
+        chorda_ex_literis("", piscina)));
+
+    /* TERMINUS LONGITUDINIS ambobus lateribus (porta uno
+     * latere sola probata in aeternum uno errare potest):
+     * CCLV licitum, CCLVI recusatum - terminus systemd
+     * ipsius, et sine eo nomen longum capacitatem scripti
+     * (CXXVIII per unitatem) sprintf superscriberet */
     {
-        imprimere("\n--- I. configuratio ---\n");
-        causa = chorda_ex_literis("", piscina);
+        chorda longum;
 
-        setenv("VILLA_SSH", STIPES, I);
-        CREDO_VERUM (villa_configurationem_parare(&cfg, piscina,
-            &causa));
-        /* SUTURA UNA: ambiens semel lectus, in configuratione
-		 * habitans - semita probationis et semita vera eandem
-		 * premunt */
-        CREDO_NON_NIHIL (cfg.via_ssh);
-        si (cfg.via_ssh != NIHIL)
+        longum.datum = (i8*)piscina_allocare(piscina,
+            (memoriae_index)CCLVI);
+        CREDO_NON_NIHIL (longum.datum);
+        si (longum.datum != NIHIL)
         {
-            CREDO_VERUM (strcmp(cfg.via_ssh, STIPES) == ZEPHYRUM);
-        }
-        CREDO_CHORDA_NON_VACUA (cfg.via_moderandi);
-        CREDO_CHORDA_CONTINET (cfg.via_moderandi,
-            chorda_ex_literis(".rhubarb/cm", piscina));
-        /* terminus viae moderandi: expansa sub C octetis manere
-		 * debet, alioquin ssh multiplicationem tacite deserit */
-        CREDO_VERUM (cfg.via_moderandi.mensura + I
-            + (i32)VILLA_MODERANDI_SIGILLUM
-            <= (i32)VILLA_MODERANDI_TERMINUS);
-    }
-
-
-    /* ==============================================================
-	 * II. CUSTOS NOMINUM - vector iniectionis quem concha REMOTA
-	 * aperit (latus locale vectorem argumentorum habet, sed nomina
-	 * unitatum in scriptum NOSTRUM interpolantur)
-	 * ============================================================== */
-
-    {
-        imprimere("\n--- II. custos nominum unitatum ---\n");
-
-        /* formae VERAE systemd */
-        CREDO_VERUM (villa_unitas_valida(
-            chorda_ex_literis("nginx.service", piscina)));
-        CREDO_VERUM (villa_unitas_valida(
-            chorda_ex_literis("getty@tty1.service", piscina)));
-        CREDO_VERUM (villa_unitas_valida(
-            chorda_ex_literis("systemd-udevd.service", piscina)));
-        CREDO_VERUM (villa_unitas_valida(
-            chorda_ex_literis("user@1000.service", piscina)));
-
-        /* quidquid conchae significat RECUSATUR */
-        CREDO_FALSUM (villa_unitas_valida(
-            chorda_ex_literis("x; curl malum|sh", piscina)));
-        CREDO_FALSUM (villa_unitas_valida(
-            chorda_ex_literis("a b", piscina)));
-        CREDO_FALSUM (villa_unitas_valida(
-            chorda_ex_literis("$(rm -rf /)", piscina)));
-        CREDO_FALSUM (villa_unitas_valida(
-            chorda_ex_literis("`id`", piscina)));
-        CREDO_FALSUM (villa_unitas_valida(
-            chorda_ex_literis("a\nb", piscina)));
-        CREDO_FALSUM (villa_unitas_valida(
-            chorda_ex_literis("a&b", piscina)));
-        CREDO_FALSUM (villa_unitas_valida(
-            chorda_ex_literis("", piscina)));
-
-        /* TERMINUS LONGITUDINIS ambobus lateribus (porta uno
-		 * latere sola probata in aeternum uno errare potest):
-		 * CCLV licitum, CCLVI recusatum - terminus systemd
-		 * ipsius, et sine eo nomen longum capacitatem scripti
-		 * (CXXVIII per unitatem) sprintf superscriberet */
-        {
-            chorda longum;
-
-            longum.datum = (i8*)piscina_allocare(piscina,
-                (memoriae_index)CCLVI);
-            CREDO_NON_NIHIL (longum.datum);
-            si (longum.datum != NIHIL)
-            {
-                memset(longum.datum, 'a', (memoriae_index)CCLVI);
-                longum.mensura = (i32)CCLV;
-                CREDO_VERUM (villa_unitas_valida(longum));
-                longum.mensura = (i32)CCLVI;
-                CREDO_FALSUM (villa_unitas_valida(longum));
-            }
-        }
-    }
-
-
-    /* ==============================================================
-	 * III. SCRIPTUM PROBATIONIS - nomen pravum NUMQUAM intrat
-	 * ============================================================== */
-
-    {
-           Xar* u       = xar_creare(piscina, (i32)magnitudo(chorda));
-           i32  omissa  = ZEPHYRUM;
-        chorda  s;
-
-        imprimere("\n--- III. scriptum probationis ---\n");
-        _addere_chordam(u, piscina, "nginx.service");
-        _addere_chordam(u, piscina, "x; curl malum|sh");
-        _addere_chordam(u, piscina, "getty@tty1.service");
-
-        s = villa_scriptum_probationis(u, &omissa, piscina);
-
-        /* OMISSIO NOMINATA, non tacita: vocator scire debet se
-		 * minus probasse quam petivit */
-        CREDO_AEQUALIS_I32 (omissa, (i32)I);
-        CREDO_CHORDA_CONTINET (s,
-            chorda_ex_literis("nginx.service", piscina));
-        CREDO_CHORDA_CONTINET (s,
-            chorda_ex_literis("getty@tty1.service", piscina));
-        /* NOMEN PRAVUM ABEST - adsertio quae totum custodem portat.
-		 *
-		 * CAUTIO ADSERTIONIS: 'nullum ";" adest' adserere FALSUM
-		 * est - scriptum ipsum semicola in definitione functionis
-		 * suae fert ('s(){ ...; shift; ...; }'). Adsertio nimis
-		 * lata custodem non probat sed generatorem accusat. Ergo
-		 * nomen pravum IPSUM quaerimus, per partes suas. */
-        CREDO_FALSUM (chorda_continet(s,
-            chorda_ex_literis("curl malum", piscina)));
-        CREDO_FALSUM (chorda_continet(s,
-            chorda_ex_literis("x; curl", piscina)));
-        CREDO_FALSUM (chorda_continet(s,
-            chorda_ex_literis("|sh", piscina)));
-
-        /* sectiones omnes emittuntur */
-        CREDO_CHORDA_CONTINET (s,
-            chorda_ex_literis("s unitates ", piscina));
-        CREDO_CHORDA_CONTINET (s,
-            chorda_ex_literis("s nginx ", piscina));
-        CREDO_CHORDA_CONTINET (s,
-            chorda_ex_literis("s memoria ", piscina));
-
-        /* nulla unitas valida -> 'true', NON 'systemctl show' sine
-		 * argumentis (quod OMNES unitates capsae redderet) */
-        {
-            Xar* solum_prava = xar_creare(piscina,
-                (i32)magnitudo(chorda));
-            chorda s2;
-
-            _addere_chordam(solum_prava, piscina, "a;b");
-            s2 = villa_scriptum_probationis(solum_prava, &omissa,
-                piscina);
-            CREDO_AEQUALIS_I32 (omissa, (i32)I);
-            CREDO_CHORDA_CONTINET (s2,
-                chorda_ex_literis("s servitia true", piscina));
+            memset(longum.datum, 'a', (memoriae_index)CCLVI);
+            longum.mensura = (i32)CCLV;
+            CREDO_VERUM (villa_unitas_valida(longum));
+            longum.mensura = (i32)CCLVI;
+            CREDO_FALSUM (villa_unitas_valida(longum));
         }
     }
+}
 
 
-    /* ==============================================================
-	 * IV. PROBATIO PLENA per stipitem - catena tota
-	 * ============================================================== */
+/* ==============================================================
+ * III. SCRIPTUM PROBATIONIS - nomen pravum NUMQUAM intrat
+ * ============================================================== */
 
+interior vacuum
+_sectio_scriptum (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+                   Xar* u = xar_creare(piscina, (i32)magnitudo(chorda));
+                   i32  omissa = ZEPHYRUM;
+                chorda  s;
+
+    _addere_chordam(u, piscina, "nginx.service");
+    _addere_chordam(u, piscina, "x; curl malum|sh");
+    _addere_chordam(u, piscina, "getty@tty1.service");
+
+    s = villa_scriptum_probationis(u, &omissa, piscina);
+
+    /* OMISSIO NOMINATA, non tacita: vocator scire debet se
+     * minus probasse quam petivit */
+    CREDO_AEQUALIS_I32 (omissa, (i32)I);
+    CREDO_CHORDA_CONTINET (s,
+        chorda_ex_literis("nginx.service", piscina));
+    CREDO_CHORDA_CONTINET (s,
+        chorda_ex_literis("getty@tty1.service", piscina));
+    /* NOMEN PRAVUM ABEST - adsertio quae totum custodem portat.
+     *
+     * CAUTIO ADSERTIONIS: 'nullum ";" adest' adserere FALSUM
+     * est - scriptum ipsum semicola in definitione functionis
+     * suae fert ('s(){ ...; shift; ...; }'). Adsertio nimis
+     * lata custodem non probat sed generatorem accusat. Ergo
+     * nomen pravum IPSUM quaerimus, per partes suas. */
+    CREDO_FALSUM (chorda_continet(s,
+        chorda_ex_literis("curl malum", piscina)));
+    CREDO_FALSUM (chorda_continet(s,
+        chorda_ex_literis("x; curl", piscina)));
+    CREDO_FALSUM (chorda_continet(s,
+        chorda_ex_literis("|sh", piscina)));
+
+    /* sectiones omnes emittuntur */
+    CREDO_CHORDA_CONTINET (s,
+        chorda_ex_literis("s unitates ", piscina));
+    CREDO_CHORDA_CONTINET (s,
+        chorda_ex_literis("s nginx ", piscina));
+    CREDO_CHORDA_CONTINET (s,
+        chorda_ex_literis("s memoria ", piscina));
+
+    /* nulla unitas valida -> 'true', NON 'systemctl show' sine
+     * argumentis (quod OMNES unitates capsae redderet) */
     {
-        VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
-        Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
-        constans ProbatioServi* p;
+        Xar* solum_prava = xar_creare(piscina,
+            (i32)magnitudo(chorda));
+        chorda s2;
 
-        imprimere("\n--- IV. probatio plena ---\n");
-        CREDO_NON_NIHIL (a);
-        _addere_chordam(u, piscina, "nginx.service");
-
-        setenv("VILLA_STIPES_MODUS", "bene", I);
-        CREDO_VERUM (villa_probationem_incipere(a,
-            chorda_ex_literis("s1", piscina),
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        /* NON OBSTAT: probatio in cursu est statim post initium */
-        CREDO_AEQUALIS_I32 (villa_probationes_currentes(a), (i32)I);
-        CREDO_VERUM (_ad_finem_pulsare(a));
-
-        p = villa_probatio_ultima(a, chorda_ex_literis("s1",
-            piscina));
-        CREDO_NON_NIHIL (p);
-        si (p != NIHIL)
-        {
-            CREDO_VERUM (p->perfecta);
-            CREDO_VERUM (p->felix);
-            /* nulla querela = omnes sectiones advenerunt */
-            CREDO_CHORDA_VACUA (p->querelae);
-
-            /* lectiones parsatae, non solum receptae */
-            CREDO_NON_NIHIL (p->unitates);
-            CREDO_AEQUALIS_I32 (xar_numerus(p->unitates), (i32)XXV);
-            CREDO_NON_NIHIL (p->servitia);
-            CREDO_AEQUALIS_I32 (xar_numerus(p->servitia), (i32)III);
-            CREDO_NON_NIHIL (p->situs);
-            CREDO_AEQUALIS_I32 (xar_numerus(p->situs), (i32)IV);
-            CREDO_CHORDA_AEQUALIS_LITERIS (p->discus.systema,
-                "/dev/vda1");
-            CREDO_VERUM (p->memoria.summa_kb > ZEPHYRUM);
-            CREDO_VERUM (p->tempus_activum > ZEPHYRUM);
-        }
-    }
-
-
-    /* ==============================================================
-	 * V. DEFECTUS PARTIALIS - sectio una cadit, ceterae valent.
-	 * Probatio partim felix TACITE dimidiata pessimum genus est.
-	 * ============================================================== */
-
-    {
-        VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
-        Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
-        constans ProbatioServi* p;
-
-        imprimere("\n--- V. defectus partialis ---\n");
-        _addere_chordam(u, piscina, "nginx.service");
-        setenv("VILLA_STIPES_MODUS", "nginx_fractum", I);
-        CREDO_VERUM (villa_probationem_incipere(a,
-            chorda_ex_literis("s1", piscina),
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        (vacuum)_ad_finem_pulsare(a);
-
-        p = villa_probatio_ultima(a, chorda_ex_literis("s1",
-            piscina));
-        CREDO_NON_NIHIL (p);
-        si (p != NIHIL)
-        {
-            /* ssh ipse SUCCESSIT (codex 0) - defectus intra
-			 * sectionem est, quod aliud est */
-            CREDO_VERUM (p->felix);
-            /* sed querela nginx NOMINATUR */
-            CREDO_CHORDA_CONTINET (p->querelae,
-                chorda_ex_literis("nginx", piscina));
-            CREDO_NIHIL (p->situs);
-            /* ceterae sectiones INTACTAE - defectus unius alias
-			 * non corrumpit */
-            CREDO_NON_NIHIL (p->unitates);
-            CREDO_CHORDA_AEQUALIS_LITERIS (p->discus.systema,
-                "/dev/vda1");
-        }
-    }
-
-    /* VI. sectio ABSENS + effusio ABSCISSA */
-    {
-        VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
-        Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
-        constans ProbatioServi* p;
-
-        imprimere("\n--- VI. sectio absens, effusio abscissa ---\n");
-        _addere_chordam(u, piscina, "nginx.service");
-
-        setenv("VILLA_STIPES_MODUS", "sectio_absens", I);
-        CREDO_VERUM (villa_probationem_incipere(a,
-            chorda_ex_literis("s1", piscina),
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        (vacuum)_ad_finem_pulsare(a);
-        p = villa_probatio_ultima(a, chorda_ex_literis("s1",
-            piscina));
-        CREDO_NON_NIHIL (p);
-        si (p != NIHIL)
-        {
-            CREDO_CHORDA_CONTINET (p->querelae,
-                chorda_ex_literis("memoria", piscina));
-            CREDO_NON_NIHIL (p->unitates);
-        }
-
-        setenv("VILLA_STIPES_MODUS", "abscissum", I);
-        CREDO_VERUM (villa_probationem_incipere(a,
-            chorda_ex_literis("s2", piscina),
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        (vacuum)_ad_finem_pulsare(a);
-        p = villa_probatio_ultima(a, chorda_ex_literis("s2",
-            piscina));
-        CREDO_NON_NIHIL (p);
-        si (p != NIHIL)
-        {
-            /* sectio non clausa: contentum eius NON FIDENDUM,
-			 * ergo querela */
-            CREDO_CHORDA_NON_VACUA (p->querelae);
-        }
-    }
-
-    /* VII. ssh IPSE cadit - causa NOMINATA, non 'defecit' nudum */
-    {
-        VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
-        Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
-        constans ProbatioServi* p;
-
-        imprimere("\n--- VII. ssh ipse cadit ---\n");
-        _addere_chordam(u, piscina, "nginx.service");
-
-        setenv("VILLA_STIPES_MODUS", "hospes_ignotus", I);
-        CREDO_VERUM (villa_probationem_incipere(a,
-            chorda_ex_literis("s1", piscina),
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        (vacuum)_ad_finem_pulsare(a);
-        p = villa_probatio_ultima(a, chorda_ex_literis("s1",
-            piscina));
-        CREDO_NON_NIHIL (p);
-        si (p != NIHIL)
-        {
-            CREDO_VERUM (p->perfecta);
-            CREDO_FALSUM (p->felix);
-            CREDO_VERUM (p->causa.genus
-                == VILLA_EXITUS_HOSPES_IGNOTUS);
-            CREDO_VERUM (p->causa.ssh_ipse);
-        }
-
-        setenv("VILLA_STIPES_MODUS", "permissio", I);
-        CREDO_VERUM (villa_probationem_incipere(a,
-            chorda_ex_literis("s2", piscina),
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        (vacuum)_ad_finem_pulsare(a);
-        p = villa_probatio_ultima(a, chorda_ex_literis("s2",
-            piscina));
-        CREDO_NON_NIHIL (p);
-        si (p != NIHIL)
-        {
-            CREDO_VERUM (p->causa.genus == VILLA_EXITUS_PERMISSIO);
-        }
-    }
-
-    /* VIII. ARENAE GEMINAE: photographia ultima VIVA manet dum
-	 * probatio nova currit. Sine hoc facies id quod eodem tictu
-	 * legit deleret - insectum quod solum sub onere appareret. */
-    {
-        VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
-        Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
-        constans ProbatioServi* prior;
-        chorda      clavis = chorda_ex_literis("s1", piscina);
-
-        imprimere("\n--- VIII. arenae geminae ---\n");
-        _addere_chordam(u, piscina, "nginx.service");
-        setenv("VILLA_STIPES_MODUS", "bene", I);
-
-        CREDO_VERUM (villa_probationem_incipere(a, clavis,
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        (vacuum)_ad_finem_pulsare(a);
-        prior = villa_probatio_ultima(a, clavis);
-        CREDO_NON_NIHIL (prior);
-
-        /* probatio SECUNDA incipit: prior adhuc legibilis esse
-		 * debet dum haec currit */
-        CREDO_VERUM (villa_probationem_incipere(a, clavis,
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        si (prior != NIHIL)
-        {
-            CREDO_CHORDA_AEQUALIS_LITERIS (prior->discus.systema,
-                "/dev/vda1");
-            CREDO_NON_NIHIL (prior->unitates);
-            CREDO_AEQUALIS_I32 (xar_numerus(prior->unitates),
-                (i32)XXV);
-        }
-        (vacuum)_ad_finem_pulsare(a);
-
-        /* probatio dupla eiusdem servi RECUSATUR dum currit */
-        CREDO_VERUM (villa_probationem_incipere(a, clavis,
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        CREDO_FALSUM (villa_probationem_incipere(a, clavis,
-            chorda_ex_literis("gemma", piscina), u, &causa));
-        CREDO_CHORDA_CONTINET (causa,
-            chorda_ex_literis("iam currit", piscina));
-        (vacuum)_ad_finem_pulsare(a);
-    }
-
-    /* IX. ACTIO - imperium curritur, causa discernitur.
-	 * (Scriptura eventus sine daemone probari non potest; hic
-	 * cliens NIHIL est, ergo semita actionis sola custoditur -
-	 * eventus in porta vivi V6 custodietur.) */
-    {
-        VillaAgens* a = villa_agens_creare(&cfg, NIHIL,
+        _addere_chordam(solum_prava, piscina, "a;b");
+        s2 = villa_scriptum_probationis(solum_prava, &omissa,
             piscina);
-        ResultusActionis r;
+        CREDO_AEQUALIS_I32 (omissa, (i32)I);
+        CREDO_CHORDA_CONTINET (s2,
+            chorda_ex_literis("s servitia true", piscina));
+    }
+}
 
-        imprimere("\n--- IX. actio ---\n");
+
+/* ==============================================================
+ * IV. PROBATIO PLENA per stipitem - catena tota
+ * ============================================================== */
+
+interior vacuum
+_sectio_probatio_plena (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+                 chorda  causa = chorda_ex_literis("", c->piscina);
+    VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
+    Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
+    constans ProbatioServi* p;
+
+    CREDO_NON_NIHIL (a);
+    _addere_chordam(u, piscina, "nginx.service");
+
+    setenv("VILLA_STIPES_MODUS", "bene", I);
+    CREDO_VERUM (villa_probationem_incipere(a,
+        chorda_ex_literis("s1", piscina),
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    /* NON OBSTAT: probatio in cursu est statim post initium */
+    CREDO_AEQUALIS_I32 (villa_probationes_currentes(a), (i32)I);
+    CREDO_VERUM (_ad_finem_pulsare(a));
+
+    p = villa_probatio_ultima(a, chorda_ex_literis("s1",
+        piscina));
+    CREDO_NON_NIHIL (p);
+    si (p != NIHIL)
+    {
+        CREDO_VERUM (p->perfecta);
+        CREDO_VERUM (p->felix);
+        /* nulla querela = omnes sectiones advenerunt */
+        CREDO_CHORDA_VACUA (p->querelae);
+
+        /* lectiones parsatae, non solum receptae */
+        CREDO_NON_NIHIL (p->unitates);
+        CREDO_AEQUALIS_I32 (xar_numerus(p->unitates), (i32)XXV);
+        CREDO_NON_NIHIL (p->servitia);
+        CREDO_AEQUALIS_I32 (xar_numerus(p->servitia), (i32)III);
+        CREDO_NON_NIHIL (p->situs);
+        CREDO_AEQUALIS_I32 (xar_numerus(p->situs), (i32)IV);
+        CREDO_CHORDA_AEQUALIS_LITERIS (p->discus.systema,
+            "/dev/vda1");
+        CREDO_VERUM (p->memoria.summa_kb > ZEPHYRUM);
+        CREDO_VERUM (p->tempus_activum > ZEPHYRUM);
+    }
+}
+
+
+/* ==============================================================
+ * V. DEFECTUS PARTIALIS - sectio una cadit, ceterae valent.
+ * Probatio partim felix TACITE dimidiata pessimum genus est.
+ * ============================================================== */
+
+interior vacuum
+_sectio_defectus_sectionis (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+                 chorda  causa = chorda_ex_literis("", c->piscina);
+    VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
+    Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
+    constans ProbatioServi* p;
+
+    _addere_chordam(u, piscina, "nginx.service");
+    setenv("VILLA_STIPES_MODUS", "nginx_fractum", I);
+    CREDO_VERUM (villa_probationem_incipere(a,
+        chorda_ex_literis("s1", piscina),
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    (vacuum)_ad_finem_pulsare(a);
+
+    p = villa_probatio_ultima(a, chorda_ex_literis("s1",
+        piscina));
+    CREDO_NON_NIHIL (p);
+    si (p != NIHIL)
+    {
+        /* ssh ipse SUCCESSIT (codex 0) - defectus intra
+         * sectionem est, quod aliud est */
+        CREDO_VERUM (p->felix);
+        /* sed querela nginx NOMINATUR */
+        CREDO_CHORDA_CONTINET (p->querelae,
+            chorda_ex_literis("nginx", piscina));
+        CREDO_NIHIL (p->situs);
+        /* ceterae sectiones INTACTAE - defectus unius alias
+         * non corrumpit */
+        CREDO_NON_NIHIL (p->unitates);
+        CREDO_CHORDA_AEQUALIS_LITERIS (p->discus.systema,
+            "/dev/vda1");
+    }
+}
+
+/* VI. sectio ABSENS + effusio ABSCISSA */
+interior vacuum
+_sectio_absens (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+                 chorda  causa = chorda_ex_literis("", c->piscina);
+    VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
+    Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
+    constans ProbatioServi* p;
+
+    _addere_chordam(u, piscina, "nginx.service");
+
+    setenv("VILLA_STIPES_MODUS", "sectio_absens", I);
+    CREDO_VERUM (villa_probationem_incipere(a,
+        chorda_ex_literis("s1", piscina),
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    (vacuum)_ad_finem_pulsare(a);
+    p = villa_probatio_ultima(a, chorda_ex_literis("s1",
+        piscina));
+    CREDO_NON_NIHIL (p);
+    si (p != NIHIL)
+    {
+        CREDO_CHORDA_CONTINET (p->querelae,
+            chorda_ex_literis("memoria", piscina));
+        CREDO_NON_NIHIL (p->unitates);
+    }
+
+    setenv("VILLA_STIPES_MODUS", "abscissum", I);
+    CREDO_VERUM (villa_probationem_incipere(a,
+        chorda_ex_literis("s2", piscina),
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    (vacuum)_ad_finem_pulsare(a);
+    p = villa_probatio_ultima(a, chorda_ex_literis("s2",
+        piscina));
+    CREDO_NON_NIHIL (p);
+    si (p != NIHIL)
+    {
+        /* sectio non clausa: contentum eius NON FIDENDUM,
+         * ergo querela */
+        CREDO_CHORDA_NON_VACUA (p->querelae);
+    }
+}
+
+/* VII. ssh IPSE cadit - causa NOMINATA, non 'defecit' nudum */
+interior vacuum
+_sectio_ssh_cadit (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+                 chorda  causa = chorda_ex_literis("", c->piscina);
+    VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
+    Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
+    constans ProbatioServi* p;
+
+    _addere_chordam(u, piscina, "nginx.service");
+
+    setenv("VILLA_STIPES_MODUS", "hospes_ignotus", I);
+    CREDO_VERUM (villa_probationem_incipere(a,
+        chorda_ex_literis("s1", piscina),
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    (vacuum)_ad_finem_pulsare(a);
+    p = villa_probatio_ultima(a, chorda_ex_literis("s1",
+        piscina));
+    CREDO_NON_NIHIL (p);
+    si (p != NIHIL)
+    {
+        CREDO_VERUM (p->perfecta);
+        CREDO_FALSUM (p->felix);
+        CREDO_VERUM (p->causa.genus
+            == VILLA_EXITUS_HOSPES_IGNOTUS);
+        CREDO_VERUM (p->causa.ssh_ipse);
+    }
+
+    setenv("VILLA_STIPES_MODUS", "permissio", I);
+    CREDO_VERUM (villa_probationem_incipere(a,
+        chorda_ex_literis("s2", piscina),
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    (vacuum)_ad_finem_pulsare(a);
+    p = villa_probatio_ultima(a, chorda_ex_literis("s2",
+        piscina));
+    CREDO_NON_NIHIL (p);
+    si (p != NIHIL)
+    {
+        CREDO_VERUM (p->causa.genus == VILLA_EXITUS_PERMISSIO);
+    }
+}
+
+/* VIII. ARENAE GEMINAE: photographia ultima VIVA manet dum
+ * probatio nova currit. Sine hoc facies id quod eodem tictu
+ * legit deleret - insectum quod solum sub onere appareret. */
+interior vacuum
+_sectio_arenae_geminae (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+                 chorda  causa = chorda_ex_literis("", c->piscina);
+    VillaAgens* a = villa_agens_creare(&cfg, NIHIL, piscina);
+    Xar*        u = xar_creare(piscina, (i32)magnitudo(chorda));
+    constans ProbatioServi* prior;
+    chorda      clavis = chorda_ex_literis("s1", piscina);
+
+    _addere_chordam(u, piscina, "nginx.service");
+    setenv("VILLA_STIPES_MODUS", "bene", I);
+
+    CREDO_VERUM (villa_probationem_incipere(a, clavis,
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    (vacuum)_ad_finem_pulsare(a);
+    prior = villa_probatio_ultima(a, clavis);
+    CREDO_NON_NIHIL (prior);
+
+    /* probatio SECUNDA incipit: prior adhuc legibilis esse
+     * debet dum haec currit */
+    CREDO_VERUM (villa_probationem_incipere(a, clavis,
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    si (prior != NIHIL)
+    {
+        CREDO_CHORDA_AEQUALIS_LITERIS (prior->discus.systema,
+            "/dev/vda1");
+        CREDO_NON_NIHIL (prior->unitates);
+        CREDO_AEQUALIS_I32 (xar_numerus(prior->unitates),
+            (i32)XXV);
+    }
+    (vacuum)_ad_finem_pulsare(a);
+
+    /* probatio dupla eiusdem servi RECUSATUR dum currit */
+    CREDO_VERUM (villa_probationem_incipere(a, clavis,
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    CREDO_FALSUM (villa_probationem_incipere(a, clavis,
+        chorda_ex_literis("gemma", piscina), u, &causa));
+    CREDO_CHORDA_CONTINET (causa,
+        chorda_ex_literis("iam currit", piscina));
+    (vacuum)_ad_finem_pulsare(a);
+}
+
+/* IX. ACTIO - imperium curritur, causa discernitur.
+ * (Scriptura eventus sine daemone probari non potest; hic
+ * cliens NIHIL est, ergo semita actionis sola custoditur -
+ * eventus in porta vivi V6 custodietur.) */
+interior vacuum
+_sectio_actio (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+             VillaAgens* a = villa_agens_creare(&cfg, NIHIL,
+                 piscina);
+    ResultusActionis r;
+
+    setenv("VILLA_STIPES_MODUS", "imperium", I);
+    r = villa_actionem_agere(a,
+        chorda_ex_literis("gemma", piscina),
+        chorda_ex_literis("", piscina),
+        chorda_ex_literis("systemctl restart nginx", piscina),
+        piscina);
+    CREDO_VERUM (r.successus);
+    CREDO_VERUM (r.causa.genus == VILLA_EXITUS_SUCCESSUS);
+    CREDO_CHORDA_CONTINET (r.effusio,
+        chorda_ex_literis("servitium restitutum", piscina));
+    /* cliens NIHIL -> nullus eventus, sed actio tamen currit */
+    CREDO_FALSUM (r.eventus_scriptus);
+
+    setenv("VILLA_STIPES_MODUS", "imperium_malum", I);
+    r = villa_actionem_agere(a,
+        chorda_ex_literis("gemma", piscina),
+        chorda_ex_literis("", piscina),
+        chorda_ex_literis("systemctl restart nulla", piscina),
+        piscina);
+    CREDO_FALSUM (r.successus);
+    CREDO_VERUM (r.causa.genus == VILLA_EXITUS_IMPERIUM_FRACTUM);
+    CREDO_AEQUALIS_I32 (r.causa.codex, (i32)III);
+    CREDO_CHORDA_CONTINET (r.erratum,
+        chorda_ex_literis("Unit not found", piscina));
+}
+
+
+/* ==============================================================
+ * X. EVENTUS - actio in ANNALES scribitur
+ *
+ * Daemon EPHEMERUS (-portus 0, scrinium/annales in credo_area):
+ * tabularium VERUM Franis numquam tangitur. Haec est adsertio
+ * quam specificatio §IX.2 nominatim petivit, et sine ea
+ * 'actiones eventus pariunt' spes esset, non factum.
+ * ============================================================== */
+
+interior vacuum
+_sectio_eventus (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+     constans character* area = credo_area(c);
+              character  imperium[1024];
+                integer  portus_int = ZEPHYRUM;
+                    i32  k;
+
+    /* area sectionis (credo II T5; olim scratch manu, fabrica-7 T4):
+     * sqlite '-wal' et '-shm' comites cum directorio toto a credo
+     * post sectionem delentur */
+    CREDO_NECESSE_NON_NIHIL (area);
+    /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
+     * semel struit): probatio currit, non struit (fabrica plan 5
+     * T5b) */
+    CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
+    sprintf(imperium, "gesta/build/tabulariumd -portus 0"
+        " -scrinium %s/villa.db -annales %s/villa.jsonl"
+        " > %s/villa.portus 2> /dev/null &", area, area, area);
+    CREDO_VERUM (system(imperium) == ZEPHYRUM);
+    per (k = ZEPHYRUM; k < XXV; k++)
+    {
+        FILE* pf = lectiones_fopen(_in_area(piscina, area,
+            "villa.portus"), "r");
+
+        si (pf != NIHIL)
+        {
+            si (   fscanf(pf, "portus %d", &portus_int) == I
+                && portus_int > 0)
+            {
+                fclose(pf);
+                frange;
+            }
+            fclose(pf);
+        }
+        (vacuum)system("sleep 0.2");
+    }
+    CREDO_VERUM (portus_int > 0);
+
+    si (portus_int > 0)
+    {
+         ClientTabularii  cliens;
+              VillaAgens* a;
+        ResultusActionis  r;
+                  chorda  culpa = chorda_ex_literis("",
+                      piscina);
+                  chorda  res_id;
+               JsonValor* args;
+                  chorda  resp;
+
+        cliens_tabularii_incipere(&cliens, (i32)portus_int);
+        cliens.praefixum  = "[probatio]";
+        cliens.actor      = "villa";
+        /* launcher VACUUS: daemon iam currit, et start-if-absent
+         * hic daemonem portus ALTERIUS excitaret */
+        cliens.launcher  = NIHIL;
+        cliens.genitus   = VERUM;
+
+        a = villa_agens_creare(&cfg, &cliens, piscina);
+        CREDO_NON_NIHIL (a);
+
+        /* rem servi creare ut eventum ferat */
+        args = json_objectum_creare(piscina);
+        json_objectum_ponere(args, "genus",
+            json_chorda_creare(piscina,
+                chorda_ex_literis("nota", piscina)));
+        json_objectum_ponere(args, "titulus",
+            json_chorda_creare(piscina,
+                chorda_ex_literis("Servus probationis", piscina)));
+        resp = cliens_tabularii_vocare(&cliens, piscina,
+            "addere", args, &culpa);
+        res_id = cliens_tabularii_res_id(resp, piscina);
+        CREDO_CHORDA_NON_VACUA (res_id);
+
         setenv("VILLA_STIPES_MODUS", "imperium", I);
         r = villa_actionem_agere(a,
-            chorda_ex_literis("gemma", piscina),
-            chorda_ex_literis("", piscina),
-            chorda_ex_literis("systemctl restart nginx", piscina),
-            piscina);
+            chorda_ex_literis("gemma", piscina), res_id,
+            chorda_ex_literis("systemctl restart nginx",
+                piscina), piscina);
         CREDO_VERUM (r.successus);
-        CREDO_VERUM (r.causa.genus == VILLA_EXITUS_SUCCESSUS);
-        CREDO_CHORDA_CONTINET (r.effusio,
-            chorda_ex_literis("servitium restitutum", piscina));
-        /* cliens NIHIL -> nullus eventus, sed actio tamen currit */
-        CREDO_FALSUM (r.eventus_scriptus);
+        CREDO_VERUM (r.eventus_scriptus);
 
+        /* EVENTUS VERE ADEST: rem relegimus et notam quaerimus */
+        {
+            JsonValor* q = json_objectum_creare(piscina);
+               chorda  lectio;
+
+            json_objectum_ponere(q, "res",
+                json_chorda_creare(piscina, res_id));
+            lectio = cliens_tabularii_vocare(&cliens, piscina,
+                "res", q, &culpa);
+            CREDO_CHORDA_CONTINET (lectio,
+                chorda_ex_literis("systemctl restart nginx",
+                    piscina));
+
+            /* ORIGO in ANNALIBUS quaerenda, non in effusione
+             * 'res': origo columna PROPRIA tessellae est, non
+             * pars dati, et compendium 'res' eam non reddit.
+             * Adsertio contra annales praestat quia id probat
+             * quod vere durat - eventum in actis DURABILIBUS
+             * cum provenientia recta, non textum in summario. */
+            {
+                chorda annales = filum_legere_totum(
+                    _in_area(piscina, area, "villa.jsonl"), piscina);
+
+                CREDO_VERUM (annales.mensura > ZEPHYRUM);
+                CREDO_CHORDA_CONTINET (annales,
+                    chorda_ex_literis("\"origo\":\"villa\"",
+                        piscina));
+                CREDO_CHORDA_CONTINET (annales,
+                    chorda_ex_literis(
+                        "\"genus_eventus\":\"nota\"", piscina));
+                /* NUMQUAM 'mutatio': ea contra campos generis
+                 * iudicaretur et notam custodiae in OMNI
+                 * restitutione pareret */
+                CREDO_FALSUM (chorda_continet(annales,
+                    chorda_ex_literis(
+                        "\"genus_eventus\":\"mutatio\"",
+                        piscina)));
+            }
+        }
+
+        /* actio FRACTA quoque eventum parit - defectus
+         * silentium non est */
         setenv("VILLA_STIPES_MODUS", "imperium_malum", I);
         r = villa_actionem_agere(a,
-            chorda_ex_literis("gemma", piscina),
-            chorda_ex_literis("", piscina),
-            chorda_ex_literis("systemctl restart nulla", piscina),
-            piscina);
+            chorda_ex_literis("gemma", piscina), res_id,
+            chorda_ex_literis("systemctl restart nulla",
+                piscina), piscina);
         CREDO_FALSUM (r.successus);
-        CREDO_VERUM (r.causa.genus == VILLA_EXITUS_IMPERIUM_FRACTUM);
-        CREDO_AEQUALIS_I32 (r.causa.codex, (i32)III);
-        CREDO_CHORDA_CONTINET (r.erratum,
-            chorda_ex_literis("Unit not found", piscina));
+        CREDO_VERUM (r.eventus_scriptus);
+        {
+            JsonValor* q = json_objectum_creare(piscina);
+               chorda  lectio;
+
+            json_objectum_ponere(q, "res",
+                json_chorda_creare(piscina, res_id));
+            lectio = cliens_tabularii_vocare(&cliens, piscina,
+                "res", q, &culpa);
+            CREDO_CHORDA_CONTINET (lectio,
+                chorda_ex_literis("imperium fractum", piscina));
+        }
+    }
+    sprintf(imperium, "pkill -f 'tabulariumd -portus 0"
+        " -scrinium %s/villa.db' > /dev/null 2>&1", area);
+    (vacuum)system(imperium);
+}
+
+
+/* ==============================================================
+ * XI. IUDICIUM PUNCTI - regulae tripartitae (decisae 2026-07-30)
+ * ============================================================== */
+
+interior vacuum
+_sectio_iudicium (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+         ProbatioServi  p;
+
+
+    CREDO_VERUM (villa_iudicare(NIHIL) == VILLA_IUDICIUM_IGNOTUS);
+
+    memset(&p, 0, magnitudo(ProbatioServi));
+    CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_IGNOTUS);
+
+    p.perfecta  = VERUM;
+    p.felix     = FALSUM;
+    CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_FRACTUS);
+
+    p.felix = VERUM;
+    CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_SANUS);
+
+    /* querelae -> flavum (sectio lapsa, non servus mortuus) */
+    p.querelae = chorda_ex_literis("memoria", piscina);
+    CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_LANGUIDUS);
+    p.querelae = chorda_ex_literis("", piscina);
+
+    /* discus: terminus XC ambobus lateribus */
+    p.discus.capacitas = 89;
+    CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_SANUS);
+    p.discus.capacitas = (i32)XC;
+    CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_LANGUIDUS);
+    p.discus.capacitas = ZEPHYRUM;
+
+    /* servitium observatum non-sanum = RUBRUM, etiam probatione
+     * felici - tres viae (fracta / non currit / non inventa) */
+    {
+        StatusServitii* s;
+
+        p.servitia = xar_creare(piscina,
+            (i32)magnitudo(StatusServitii));
+        s = (StatusServitii*)xar_addere(p.servitia);
+        CREDO_NON_NIHIL (s);
+        si (s != NIHIL)
+        {
+            memset(s, 0, magnitudo(StatusServitii));
+            s->inventa  = VERUM;
+            s->currit   = VERUM;
+            CREDO_VERUM (villa_iudicare(&p)
+                == VILLA_IUDICIUM_SANUS);
+
+            s->fracta = VERUM;
+            CREDO_VERUM (villa_iudicare(&p)
+                == VILLA_IUDICIUM_FRACTUS);
+            s->fracta = FALSUM;
+
+            s->currit = FALSUM;
+            CREDO_VERUM (villa_iudicare(&p)
+                == VILLA_IUDICIUM_FRACTUS);
+            s->currit = VERUM;
+
+            s->inventa = FALSUM;
+            CREDO_VERUM (villa_iudicare(&p)
+                == VILLA_IUDICIUM_FRACTUS);
+            s->inventa = VERUM;
+
+            /* rubrum vincit flavum */
+            s->fracta   = VERUM;
+            p.querelae  = chorda_ex_literis("nginx", piscina);
+            CREDO_VERUM (villa_iudicare(&p)
+                == VILLA_IUDICIUM_FRACTUS);
+        }
     }
 
+    CREDO_VERUM (strcmp(villa_iudicium_nomen(
+        VILLA_IUDICIUM_FRACTUS), "fractus") == ZEPHYRUM);
+}
 
-    /* ==============================================================
-	 * X. EVENTUS - actio in ANNALES scribitur
-	 *
-	 * Daemon EPHEMERUS (-portus 0, scrinium/annales in build/):
-	 * tabularium VERUM Franis numquam tangitur. Haec est adsertio
-	 * quam specificatio §IX.2 nominatim petivit, et sine ea
-	 * 'actiones eventus pariunt' spes esset, non factum.
-	 * ============================================================== */
 
+/* ==============================================================
+ * XII. ACTIO INCREMENTALIS - sedes altera, arena gemina.
+ * Semita faciei: incipere statim redit, pulsus perficit,
+ * fructus ultimus vivus manet dum actio nova currit.
+ * ============================================================== */
+
+interior vacuum
+_sectio_actio_incrementalis (
+    CredoContextus* c)
+{
+                Piscina* piscina = c->piscina;
+      VillaConfiguratio  cfg = ((constans MundusVillae*)c->suita)->cfg;
+                 chorda  causa = chorda_ex_literis("", c->piscina);
+             VillaAgens* a = villa_agens_creare(&cfg, NIHIL,
+                 piscina);
+    chorda      clavis     = chorda_ex_literis("s1", piscina);
+    chorda      gemma      = chorda_ex_literis("gemma", piscina);
+    chorda      vacua_res  = chorda_ex_literis("", piscina);
+    constans ResultusActionis* r;
+    constans ResultusActionis* prior;
+    i32         gradus;
+
+    CREDO_NON_NIHIL (a);
+
+    CREDO_FALSUM (villa_actio_currit(a, clavis));
+    CREDO_NIHIL (villa_actio_ultima(a, clavis));
+
+    setenv("VILLA_STIPES_MODUS", "imperium", I);
+    CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
+        vacua_res, chorda_ex_literis("systemctl restart nginx",
+            piscina), &causa));
+    /* NON OBSTAT: actio statim in cursu */
+    CREDO_VERUM (villa_actio_currit(a, clavis));
+
+    /* actio dupla eiusdem servi RECUSATUR dum currit */
+    CREDO_FALSUM (villa_actionem_incipere(a, clavis, gemma,
+        vacua_res, chorda_ex_literis("uptime", piscina),
+        &causa));
+    CREDO_CHORDA_CONTINET (causa,
+        chorda_ex_literis("iam currit", piscina));
+
+    gradus = ZEPHYRUM;
+    dum (villa_actio_currit(a, clavis) && gradus < 2000000)
     {
-        character imperium[1024];
-          integer portus_int = ZEPHYRUM;
-              i32 k;
+        (vacuum)villa_agens_pulsare(a);
+        gradus++;
+    }
+    CREDO_FALSUM (villa_actio_currit(a, clavis));
 
-        imprimere("\n--- X. eventus in annalibus ---\n");
-        /* scratch unicum (fabrica-7 T4): sqlite '-wal' et '-shm'
-         * comites cum directorio toto delentur */
-        CREDO_VERUM (_scratch_parare());
-        /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
-         * semel struit): probatio currit, non struit (fabrica plan 5
-         * T5b) */
-        CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
-        sprintf(imperium, "gesta/build/tabulariumd -portus 0"
-            " -scrinium %s/villa.db -annales %s/villa.jsonl"
-            " > %s/villa.portus 2> /dev/null &", _scratch, _scratch,
-            _scratch);
-        CREDO_VERUM (system(imperium) == ZEPHYRUM);
-        per (k = ZEPHYRUM; k < XXV; k++)
-        {
-            FILE* pf = lectiones_fopen(_in_scratch(piscina,
-                "villa.portus"), "r");
-
-            si (pf != NIHIL)
-            {
-                si (   fscanf(pf, "portus %d", &portus_int) == I
-                    && portus_int > 0)
-                {
-                    fclose(pf);
-                    frange;
-                }
-                fclose(pf);
-            }
-            (vacuum)system("sleep 0.2");
-        }
-        CREDO_VERUM (portus_int > 0);
-
-        si (portus_int > 0)
-        {
-             ClientTabularii  cliens;
-                  VillaAgens* a;
-            ResultusActionis  r;
-                      chorda  culpa = chorda_ex_literis("",
-                          piscina);
-                      chorda  res_id;
-                   JsonValor* args;
-                      chorda  resp;
-
-            cliens_tabularii_incipere(&cliens, (i32)portus_int);
-            cliens.praefixum  = "[probatio]";
-            cliens.actor      = "villa";
-            /* launcher VACUUS: daemon iam currit, et start-if-absent
-			 * hic daemonem portus ALTERIUS excitaret */
-            cliens.launcher  = NIHIL;
-            cliens.genitus   = VERUM;
-
-            a = villa_agens_creare(&cfg, &cliens, piscina);
-            CREDO_NON_NIHIL (a);
-
-            /* rem servi creare ut eventum ferat */
-            args = json_objectum_creare(piscina);
-            json_objectum_ponere(args, "genus",
-                json_chorda_creare(piscina,
-                    chorda_ex_literis("nota", piscina)));
-            json_objectum_ponere(args, "titulus",
-                json_chorda_creare(piscina,
-                    chorda_ex_literis("Servus probationis", piscina)));
-            resp = cliens_tabularii_vocare(&cliens, piscina,
-                "addere", args, &culpa);
-            res_id = cliens_tabularii_res_id(resp, piscina);
-            CREDO_CHORDA_NON_VACUA (res_id);
-
-            setenv("VILLA_STIPES_MODUS", "imperium", I);
-            r = villa_actionem_agere(a,
-                chorda_ex_literis("gemma", piscina), res_id,
-                chorda_ex_literis("systemctl restart nginx",
-                    piscina), piscina);
-            CREDO_VERUM (r.successus);
-            CREDO_VERUM (r.eventus_scriptus);
-
-            /* EVENTUS VERE ADEST: rem relegimus et notam quaerimus */
-            {
-                JsonValor* q = json_objectum_creare(piscina);
-                   chorda  lectio;
-
-                json_objectum_ponere(q, "res",
-                    json_chorda_creare(piscina, res_id));
-                lectio = cliens_tabularii_vocare(&cliens, piscina,
-                    "res", q, &culpa);
-                CREDO_CHORDA_CONTINET (lectio,
-                    chorda_ex_literis("systemctl restart nginx",
-                        piscina));
-
-                /* ORIGO in ANNALIBUS quaerenda, non in effusione
-				 * 'res': origo columna PROPRIA tessellae est, non
-				 * pars dati, et compendium 'res' eam non reddit.
-				 * Adsertio contra annales praestat quia id probat
-				 * quod vere durat - eventum in actis DURABILIBUS
-				 * cum provenientia recta, non textum in summario. */
-                {
-                    chorda annales = filum_legere_totum(
-                        _in_scratch(piscina, "villa.jsonl"), piscina);
-
-                    CREDO_VERUM (annales.mensura > ZEPHYRUM);
-                    CREDO_CHORDA_CONTINET (annales,
-                        chorda_ex_literis("\"origo\":\"villa\"",
-                            piscina));
-                    CREDO_CHORDA_CONTINET (annales,
-                        chorda_ex_literis(
-                            "\"genus_eventus\":\"nota\"", piscina));
-                    /* NUMQUAM 'mutatio': ea contra campos generis
-					 * iudicaretur et notam custodiae in OMNI
-					 * restitutione pareret */
-                    CREDO_FALSUM (chorda_continet(annales,
-                        chorda_ex_literis(
-                            "\"genus_eventus\":\"mutatio\"",
-                            piscina)));
-                }
-            }
-
-            /* actio FRACTA quoque eventum parit - defectus
-			 * silentium non est */
-            setenv("VILLA_STIPES_MODUS", "imperium_malum", I);
-            r = villa_actionem_agere(a,
-                chorda_ex_literis("gemma", piscina), res_id,
-                chorda_ex_literis("systemctl restart nulla",
-                    piscina), piscina);
-            CREDO_FALSUM (r.successus);
-            CREDO_VERUM (r.eventus_scriptus);
-            {
-                JsonValor* q = json_objectum_creare(piscina);
-                   chorda  lectio;
-
-                json_objectum_ponere(q, "res",
-                    json_chorda_creare(piscina, res_id));
-                lectio = cliens_tabularii_vocare(&cliens, piscina,
-                    "res", q, &culpa);
-                CREDO_CHORDA_CONTINET (lectio,
-                    chorda_ex_literis("imperium fractum", piscina));
-            }
-        }
-        sprintf(imperium, "pkill -f 'tabulariumd -portus 0"
-            " -scrinium %s/villa.db' > /dev/null 2>&1", _scratch);
-        (vacuum)system(imperium);
-        (vacuum)filum_arborem_delere(_scratch);
+    r = villa_actio_ultima(a, clavis);
+    CREDO_NON_NIHIL (r);
+    si (r != NIHIL)
+    {
+        CREDO_VERUM (r->successus);
+        CREDO_VERUM (r->causa.genus == VILLA_EXITUS_SUCCESSUS);
+        CREDO_CHORDA_CONTINET (r->effusio,
+            chorda_ex_literis("servitium restitutum", piscina));
+        /* cliens NIHIL -> nullus eventus */
+        CREDO_FALSUM (r->eventus_scriptus);
     }
 
-
-    /* ==============================================================
-	 * XI. IUDICIUM PUNCTI - regulae tripartitae (decisae 2026-07-30)
-	 * ============================================================== */
-
+    /* ARENA GEMINA: fructus prior legibilis manet dum actio
+     * nova currit (idem quod §VIII probationibus probat) */
+    prior = r;
+    setenv("VILLA_STIPES_MODUS", "imperium_malum", I);
+    CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
+        vacua_res, chorda_ex_literis("systemctl restart nulla",
+            piscina), &causa));
+    si (prior != NIHIL)
     {
-        ProbatioServi p;
-
-        imprimere("\n--- XI. iudicium puncti ---\n");
-
-        CREDO_VERUM (villa_iudicare(NIHIL) == VILLA_IUDICIUM_IGNOTUS);
-
-        memset(&p, 0, magnitudo(ProbatioServi));
-        CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_IGNOTUS);
-
-        p.perfecta  = VERUM;
-        p.felix     = FALSUM;
-        CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_FRACTUS);
-
-        p.felix = VERUM;
-        CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_SANUS);
-
-        /* querelae -> flavum (sectio lapsa, non servus mortuus) */
-        p.querelae = chorda_ex_literis("memoria", piscina);
-        CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_LANGUIDUS);
-        p.querelae = chorda_ex_literis("", piscina);
-
-        /* discus: terminus XC ambobus lateribus */
-        p.discus.capacitas = 89;
-        CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_SANUS);
-        p.discus.capacitas = (i32)XC;
-        CREDO_VERUM (villa_iudicare(&p) == VILLA_IUDICIUM_LANGUIDUS);
-        p.discus.capacitas = ZEPHYRUM;
-
-        /* servitium observatum non-sanum = RUBRUM, etiam probatione
-		 * felici - tres viae (fracta / non currit / non inventa) */
-        {
-            StatusServitii* s;
-
-            p.servitia = xar_creare(piscina,
-                (i32)magnitudo(StatusServitii));
-            s = (StatusServitii*)xar_addere(p.servitia);
-            CREDO_NON_NIHIL (s);
-            si (s != NIHIL)
-            {
-                memset(s, 0, magnitudo(StatusServitii));
-                s->inventa  = VERUM;
-                s->currit   = VERUM;
-                CREDO_VERUM (villa_iudicare(&p)
-                    == VILLA_IUDICIUM_SANUS);
-
-                s->fracta = VERUM;
-                CREDO_VERUM (villa_iudicare(&p)
-                    == VILLA_IUDICIUM_FRACTUS);
-                s->fracta = FALSUM;
-
-                s->currit = FALSUM;
-                CREDO_VERUM (villa_iudicare(&p)
-                    == VILLA_IUDICIUM_FRACTUS);
-                s->currit = VERUM;
-
-                s->inventa = FALSUM;
-                CREDO_VERUM (villa_iudicare(&p)
-                    == VILLA_IUDICIUM_FRACTUS);
-                s->inventa = VERUM;
-
-                /* rubrum vincit flavum */
-                s->fracta   = VERUM;
-                p.querelae  = chorda_ex_literis("nginx", piscina);
-                CREDO_VERUM (villa_iudicare(&p)
-                    == VILLA_IUDICIUM_FRACTUS);
-            }
-        }
-
-        CREDO_VERUM (strcmp(villa_iudicium_nomen(
-            VILLA_IUDICIUM_FRACTUS), "fractus") == ZEPHYRUM);
+        CREDO_CHORDA_CONTINET (prior->effusio,
+            chorda_ex_literis("servitium restitutum", piscina));
+    }
+    gradus = ZEPHYRUM;
+    dum (villa_actio_currit(a, clavis) && gradus < 2000000)
+    {
+        (vacuum)villa_agens_pulsare(a);
+        gradus++;
+    }
+    r = villa_actio_ultima(a, clavis);
+    CREDO_NON_NIHIL (r);
+    si (r != NIHIL)
+    {
+        CREDO_FALSUM (r->successus);
+        CREDO_VERUM (r->causa.genus
+            == VILLA_EXITUS_IMPERIUM_FRACTUM);
     }
 
+    /* abrumpere: actio finitur, fructus adest; iterum vocata
+     * sine actione currente nihil agit */
+    setenv("VILLA_STIPES_MODUS", "imperium", I);
+    CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
+        vacua_res, chorda_ex_literis("uptime", piscina),
+        &causa));
+    villa_actionem_abrumpere(a, clavis);
+    CREDO_FALSUM (villa_actio_currit(a, clavis));
+    CREDO_NON_NIHIL (villa_actio_ultima(a, clavis));
+    villa_actionem_abrumpere(a, clavis);
 
-    /* ==============================================================
-	 * XII. ACTIO INCREMENTALIS - sedes altera, arena gemina.
-	 * Semita faciei: incipere statim redit, pulsus perficit,
-	 * fructus ultimus vivus manet dum actio nova currit.
-	 * ============================================================== */
-
+    /* probatio et actio SIMUL in eadem sede - arenae separatae,
+     * pulsus unus ambas provehit */
     {
-        VillaAgens* a = villa_agens_creare(&cfg, NIHIL,
-            piscina);
-        chorda      clavis     = chorda_ex_literis("s1", piscina);
-        chorda      gemma      = chorda_ex_literis("gemma", piscina);
-        chorda      vacua_res  = chorda_ex_literis("", piscina);
-        constans ResultusActionis* r;
-        constans ResultusActionis* prior;
-        i32         gradus;
+        Xar* u = xar_creare(piscina, (i32)magnitudo(chorda));
+        constans ProbatioServi* pr;
 
-        imprimere("\n--- XII. actio incrementalis ---\n");
-        CREDO_NON_NIHIL (a);
-
-        CREDO_FALSUM (villa_actio_currit(a, clavis));
-        CREDO_NIHIL (villa_actio_ultima(a, clavis));
-
+        _addere_chordam(u, piscina, "nginx.service");
+        setenv("VILLA_STIPES_MODUS", "bene", I);
+        CREDO_VERUM (villa_probationem_incipere(a, clavis,
+            gemma, u, &causa));
         setenv("VILLA_STIPES_MODUS", "imperium", I);
         CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
-            vacua_res, chorda_ex_literis("systemctl restart nginx",
-                piscina), &causa));
-        /* NON OBSTAT: actio statim in cursu */
-        CREDO_VERUM (villa_actio_currit(a, clavis));
-
-        /* actio dupla eiusdem servi RECUSATUR dum currit */
-        CREDO_FALSUM (villa_actionem_incipere(a, clavis, gemma,
             vacua_res, chorda_ex_literis("uptime", piscina),
             &causa));
-        CREDO_CHORDA_CONTINET (causa,
-            chorda_ex_literis("iam currit", piscina));
-
         gradus = ZEPHYRUM;
-        dum (villa_actio_currit(a, clavis) && gradus < 2000000)
+        dum (   (villa_probationes_currentes(a) > ZEPHYRUM
+                || villa_actio_currit(a, clavis))
+             && gradus < 2000000)
         {
             (vacuum)villa_agens_pulsare(a);
             gradus++;
         }
-        CREDO_FALSUM (villa_actio_currit(a, clavis));
-
+        pr = villa_probatio_ultima(a, clavis);
+        CREDO_NON_NIHIL (pr);
+        si (pr != NIHIL)
+        {
+            CREDO_VERUM (pr->felix);
+        }
         r = villa_actio_ultima(a, clavis);
         CREDO_NON_NIHIL (r);
         si (r != NIHIL)
         {
             CREDO_VERUM (r->successus);
-            CREDO_VERUM (r->causa.genus == VILLA_EXITUS_SUCCESSUS);
-            CREDO_CHORDA_CONTINET (r->effusio,
-                chorda_ex_literis("servitium restitutum", piscina));
-            /* cliens NIHIL -> nullus eventus */
-            CREDO_FALSUM (r->eventus_scriptus);
         }
-
-        /* ARENA GEMINA: fructus prior legibilis manet dum actio
-		 * nova currit (idem quod §VIII probationibus probat) */
-        prior = r;
-        setenv("VILLA_STIPES_MODUS", "imperium_malum", I);
-        CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
-            vacua_res, chorda_ex_literis("systemctl restart nulla",
-                piscina), &causa));
-        si (prior != NIHIL)
-        {
-            CREDO_CHORDA_CONTINET (prior->effusio,
-                chorda_ex_literis("servitium restitutum", piscina));
-        }
-        gradus = ZEPHYRUM;
-        dum (villa_actio_currit(a, clavis) && gradus < 2000000)
-        {
-            (vacuum)villa_agens_pulsare(a);
-            gradus++;
-        }
-        r = villa_actio_ultima(a, clavis);
-        CREDO_NON_NIHIL (r);
-        si (r != NIHIL)
-        {
-            CREDO_FALSUM (r->successus);
-            CREDO_VERUM (r->causa.genus
-                == VILLA_EXITUS_IMPERIUM_FRACTUM);
-        }
-
-        /* abrumpere: actio finitur, fructus adest; iterum vocata
-		 * sine actione currente nihil agit */
-        setenv("VILLA_STIPES_MODUS", "imperium", I);
-        CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
-            vacua_res, chorda_ex_literis("uptime", piscina),
-            &causa));
-        villa_actionem_abrumpere(a, clavis);
-        CREDO_FALSUM (villa_actio_currit(a, clavis));
-        CREDO_NON_NIHIL (villa_actio_ultima(a, clavis));
-        villa_actionem_abrumpere(a, clavis);
-
-        /* probatio et actio SIMUL in eadem sede - arenae separatae,
-		 * pulsus unus ambas provehit */
-        {
-            Xar* u = xar_creare(piscina, (i32)magnitudo(chorda));
-            constans ProbatioServi* pr;
-
-            _addere_chordam(u, piscina, "nginx.service");
-            setenv("VILLA_STIPES_MODUS", "bene", I);
-            CREDO_VERUM (villa_probationem_incipere(a, clavis,
-                gemma, u, &causa));
-            setenv("VILLA_STIPES_MODUS", "imperium", I);
-            CREDO_VERUM (villa_actionem_incipere(a, clavis, gemma,
-                vacua_res, chorda_ex_literis("uptime", piscina),
-                &causa));
-            gradus = ZEPHYRUM;
-            dum (   (villa_probationes_currentes(a) > ZEPHYRUM
-                    || villa_actio_currit(a, clavis))
-                 && gradus < 2000000)
-            {
-                (vacuum)villa_agens_pulsare(a);
-                gradus++;
-            }
-            pr = villa_probatio_ultima(a, clavis);
-            CREDO_NON_NIHIL (pr);
-            si (pr != NIHIL)
-            {
-                CREDO_VERUM (pr->felix);
-            }
-            r = villa_actio_ultima(a, clavis);
-            CREDO_NON_NIHIL (r);
-            si (r != NIHIL)
-            {
-                CREDO_VERUM (r->successus);
-            }
-        }
-
-        /* enumeratio sediumm (fundamentum villa_status faciei) */
-        CREDO_AEQUALIS_I32 (villa_sedes_numerus(a), (i32)I);
-        CREDO_CHORDA_AEQUALIS_LITERIS (villa_sedes_clavis(a,
-            ZEPHYRUM), "s1");
-        CREDO_AEQUALIS_I32 (villa_sedes_clavis(a, (i32)V).mensura,
-            ZEPHYRUM);
-        CREDO_FALSUM (villa_probatio_currit(a, clavis));
     }
 
-    imprimere("\n");
-    credo_imprimere_compendium();
+    /* enumeratio sediumm (fundamentum villa_status faciei) */
+    CREDO_AEQUALIS_I32 (villa_sedes_numerus(a), (i32)I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (villa_sedes_clavis(a,
+        ZEPHYRUM), "s1");
+    CREDO_AEQUALIS_I32 (villa_sedes_clavis(a, (i32)V).mensura,
+        ZEPHYRUM);
+    CREDO_FALSUM (villa_probatio_currit(a, clavis));
+}
 
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "I. configuratio", _sectio_configuratio, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "II. custos nominum unitatum", _sectio_custos_nominum, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "III. scriptum probationis", _sectio_scriptum, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IV. probatio plena", _sectio_probatio_plena, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "V. defectus partialis", _sectio_defectus_sectionis, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "VI. sectio absens, effusio abscissa", _sectio_absens, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "VII. ssh ipse cadit", _sectio_ssh_cadit, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "VIII. arenae geminae", _sectio_arenae_geminae, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IX. actio", _sectio_actio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "X. eventus in annalibus", _sectio_eventus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XI. iudicium puncti", _sectio_iudicium, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XII. actio incrementalis", _sectio_actio_incrementalis, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    redde I;
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere_cum("villa_agens", SECTIONES,
+        _mundum_parare,
+        NIHIL);
 }

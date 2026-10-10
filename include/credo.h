@@ -713,6 +713,18 @@ vacuum
 credo_gradum_ponere (
     constans character* titulus);
 
+/* AREA (credo II): directorium proprium contextus sub TMPDIR -
+ * sectionis '<TMPDIR>/<suita>.<n>.<pid>' (n = ordo in tabula, ab I),
+ * suitae (in parare_suitae/purgare_suitae) '<suita>.suita.<pid>';
+ * titulus suitae sanatur (praeter [A-Za-z0-9_-] -> '_'). Creatur PIGRE
+ * ad vocationem primam (eadem via deinde), deletur tota post purgare
+ * (etiam post NECESSE, etiam si filius CREDO_NON_RUIT eam creavit).
+ * Sub fabrica TMPDIR = area membri. NIHIL si creari non potest aut c
+ * contextus currens non est. Via usque ad deletionem valet. */
+constans character*
+credo_area (
+    CredoContextus* c);
+
 /* SUITA CUM FIXURA COMMUNI (credo II): parare_suitae SEMEL ante
  * sectiones (contextus suitae: piscina sua; datum eius -> c->suita
  * omnium sectionum), purgare_suitae SEMPER post ultimam - etiam post

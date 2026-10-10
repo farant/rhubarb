@@ -30,9 +30,10 @@
  * eius contra sectiones IV-VI examina - non ad finem adice sperans.
  * ------------------------------------------------------------------
  *
- * Daemon EPHEMERUS (-portus 0, scrinium et annales in scratch sub
- * TMPDIR - fabrica-7 T4; olim build/):
- * tabularium VERUM Franis numquam tangitur.
+ * SECTIO UNA (credo II): scaena gradibus I-VIII nominatis (CREDO_GRADUS)
+ * - ordo gradus intra sectionem stat, ubi pertinet; fractura gradum
+ * nominat. Daemon EPHEMERUS (-portus 0, scrinium et annales in
+ * credo_area): tabularium VERUM Franis numquam tangitur.
  * ==================================================================== */
 
 #include "postulata_posix.h"
@@ -49,56 +50,30 @@
 #include "lectiones.h"
 
 #include <stdio.h>
-#include <stdlib.h>   /* system, getenv */
-#include <unistd.h>   /* getpid */
+#include <stdlib.h>   /* system */
 #include <string.h>
 
-/* SCRATCH (fabrica-7 T4): directorium UNICUM sub TMPDIR (per pid) - sub
- * fabrica area membri ipsa (TMPDIR = <area>tmp; debita
- * build/probatio_sent* soluta), sub compile_tests.sh directorium
- * systematis. Nomen unicum: arbores duae nec scrinium commune habent
- * nec daemonem alienum necant (olim 'pkill -f ... -scrinium
- * build/probatio_sent.db' via relativa omnes arbores tangebat).
- * Scriptura TRANSIENS in build/ photographiam fabricae fallebat (census
- * debitum 'stalum' falso nominabat). */
-hic_manens character _scratch[DXII];
-
-interior b32
-_scratch_parare (vacuum)
-{
-    constans character* tmp = getenv("TMPDIR");
-        memoriae_index  n;
-
-    si (tmp == NIHIL || tmp[0] == '\0')
-    {
-        tmp = "/tmp";
-    }
-    /* '/' finalis (TMPDIR macOS) demitur: via '//' a git normalizata
-     * cum via probationis non congruebat */
-    n = strlen(tmp);
-    dum (n > I && tmp[n - I] == '/')
-    {
-        n--;
-    }
-    /* unicum per processum (getpid): processus concurrentes numquam
-     * idem; reliquiae pid iterati prius deletae */
-    sprintf(_scratch, "%.*s/probatio_sent.%d", (integer)(n
-        > CD ? CD : n), tmp,
-        (integer)getpid());
-    (vacuum)filum_arborem_delere(_scratch);
-    redde filum_directorium_creare_cum_parentibus(_scratch);
-}
+/* MUNDUS SECTIONIS: daemon in credo_area (credo II T5; sub fabrica intra
+ * aream membri, olim scratch manu sub TMPDIR, ante build/probatio_sent*)
+ * - area per sectionem et processum: arbores duae nec scrinium commune
+ * habent nec daemonem alienum necant (olim 'pkill -f ... -scrinium
+ * build/probatio_sent.db' via relativa omnes arbores tangebat) */
+nomen structura {
+    character scratch[DXII];
+      integer portus;
+} MundusHorrei;
 
 /* "<scratch>/<titulus>" in piscina */
 interior constans character*
 _in_scratch (
-               Piscina* piscina,
-    constans character* titulus)
+    constans MundusHorrei* m,
+                  Piscina* piscina,
+       constans character* titulus)
 {
     character* via = (character*)piscina_allocare(piscina,
-        strlen(_scratch) + strlen(titulus) + II);
+        strlen(m->scratch) + strlen(titulus) + II);
 
-    sprintf(via, "%s/%s", _scratch, titulus);
+    sprintf(via, "%s/%s", m->scratch, titulus);
     redde via;
 }
 
@@ -250,314 +225,330 @@ _mutare_et_legere (
     redde cliens_tabularii_vocare(cliens, piscina, "res", q, &culpa);
 }
 
+/* I. daemon ephemerus in credo_area; portus NECESSE (sine eo scaena
+ * nihil probat) */
+interior vacuum
+_daemon_parare (
+    CredoContextus* c)
+{
+          MundusHorrei* m;
+    constans character* area;
+             character  imperium[MXXIV];
+               integer  k;
+
+    CREDO_GRADUS("I. daemon ephemerus");
+    m = (MundusHorrei*)piscina_allocare(c->piscina,
+        magnitudo(MundusHorrei));
+    CREDO_NECESSE_NON_NIHIL(m);
+    memset(m, ZEPHYRUM, magnitudo(MundusHorrei));
+    c->datum  = m;
+    area      = credo_area(c);
+    CREDO_NECESSE_NON_NIHIL(area);
+    CREDO_NECESSE(strlen(area) < magnitudo(m->scratch));
+    sprintf(m->scratch, "%s", area);
+    /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum semel
+     * struit): probatio currit, non struit (fabrica plan 5 T5b) */
+    CREDO_NECESSE(filum_existit("gesta/build/tabulariumd"));
+    sprintf(imperium, "gesta/build/tabulariumd -portus 0"
+        " -scrinium %s/sent.db -annales %s/sent.jsonl"
+        " > %s/sent.portus 2> /dev/null &", m->scratch, m->scratch,
+        m->scratch);
+    CREDO_NECESSE(system(imperium) == ZEPHYRUM);
+
+    per (k = ZEPHYRUM; k < XXV; k++)
+    {
+        FILE* pf = lectiones_fopen(_in_scratch(m, c->piscina,
+            "sent.portus"), "r");
+
+        si (pf != NIHIL)
+        {
+            si (   fscanf(pf, "portus %d", &m->portus) == I
+                && m->portus > 0)
+            { fclose(pf); frange;
+            }
+            fclose(pf);
+        }
+        (vacuum)system("sleep 0.2");
+    }
+    CREDO_NECESSE(m->portus > 0);
+}
+
+/* SEMPER (etiam post NECESSE): daemon necatur; aream credo delet */
+interior vacuum
+_daemon_purgare (
+    CredoContextus* c)
+{
+    constans MundusHorrei* m = (constans MundusHorrei*)c->datum;
+                character  imperium[MXXIV];
+
+    si (m == NIHIL || m->scratch[0] == '\0')
+    {
+        redde;
+    }
+    sprintf(imperium, "pkill -f 'tabulariumd -portus 0"
+        " -scrinium %s/sent.db' > /dev/null 2>&1", m->scratch);
+    (vacuum)system(imperium);
+}
+
+/* gradus II-VIII: conditorium per scaenam (ordo gradus refert - vide
+ * caput plagulae) */
+interior vacuum
+_scaena (
+    CredoContextus* c)
+{
+    constans MundusHorrei* m        = (constans MundusHorrei*)c->datum;
+                  Piscina* piscina  = c->piscina;
+          ClientTabularii  cliens;
+                   chorda  culpa    = chorda_ex_literis("", piscina);
+                   chorda  fons_originalis;
+                   chorda  res_id   = chorda_ex_literis("", piscina);
+                    Liber  ante;
+                      i32  k;
+
+    cliens_tabularii_incipere(&cliens, (i32)m->portus);
+    cliens.praefixum  = "[probatio]";
+    cliens.actor      = "sententiae";
+    cliens.launcher   = NIHIL;   /* daemon iam currit */
+    cliens.genitus    = VERUM;
+
+    fons_originalis = filum_legere_totum(FX_LIBER, piscina);
+    si (fons_originalis.mensura == ZEPHYRUM)
+    { imprimere("  FIXUM ABEST: %s\n", FX_LIBER);
+    }
+    CREDO_VERUM (fons_originalis.mensura > ZEPHYRUM);
+
+    ante = sententiae_legere(fons_originalis, piscina);
+    CREDO_VERUM (ante.successus);
+    CREDO_AEQUALIS_I32 (xar_numerus(ante.sententiae), (i32)273);
+
+    CREDO_GRADUS("II. genus 'liber': custos tabulam GENERA legit");
+    {
+        chorda resp;
+
+        CREDO_FALSUM (_genus_adest(&cliens, piscina, "liber"));
+        resp = _liber_definire(&cliens, piscina, "Liber", VERUM);
+        CREDO_CHORDA_CONTINET (resp, _ch(piscina, "creata"));
+        CREDO_VERUM (_genus_adest(&cliens, piscina, "liber"));
+    }
+
+    CREDO_GRADUS("III. iter per conditorium: OCTETUS PRO OCTETO");
+    {
+        JsonValor* datum  = json_objectum_creare(piscina);
+        JsonValor* args   = json_objectum_creare(piscina);
+           chorda  resp;
+
+        json_objectum_ponere(datum, "siglum",
+            json_chorda_creare(piscina,
+            _ch(piscina, "DI")));
+        json_objectum_ponere(datum, "slug",
+            json_chorda_creare(piscina,
+            _ch(piscina, "de-imagine")));
+        json_objectum_ponere(datum, "status_libri",
+            json_chorda_creare(piscina, _ch(piscina, "DRAFT")));
+        json_objectum_ponere(datum, "fons",
+            json_chorda_creare(piscina,
+            fons_originalis));
+
+        json_objectum_ponere(args, "genus",
+            json_chorda_creare(piscina,
+            _ch(piscina, "liber")));
+        json_objectum_ponere(args, "titulus",
+            json_chorda_creare(piscina,
+            _ch(piscina, "De Imagine")));
+        json_objectum_ponere(args, "datum",
+            json_chorda_creare(piscina,
+            json_scribere(datum, piscina)));
+
+        resp = cliens_tabularii_vocare(&cliens, piscina, "addere",
+            args, &culpa);
+        res_id = cliens_tabularii_res_id(resp, piscina);
+        CREDO_CHORDA_NON_VACUA (res_id);
+    }
+
+    {
+        JsonValor* entia;
+           chorda  fons_reditus = chorda_ex_literis("", piscina);
+            Liber  post;
+
+        entia = cliens_tabularii_legere(&cliens, piscina,
+            _ch(piscina, "liber"), (i32)X, &culpa);
+        CREDO_NON_NIHIL (entia);
+        si (entia != NIHIL && json_est_tabulatum(entia))
+        {
+            JsonValor* e;
+
+            CREDO_AEQUALIS_I32 (json_tabulatum_numerus(entia),
+                (i32)1);
+            e = json_tabulatum_obtinere(entia, (i32)ZEPHYRUM);
+            CREDO_NON_NIHIL (e);
+            si (e != NIHIL)
+            {
+                JsonValor* d = json_objectum_capere(e, "datum");
+
+                CREDO_NON_NIHIL (d);
+                si (d != NIHIL)
+                {
+                    JsonValor* f = json_objectum_capere(d, "fons");
+
+                    CREDO_NON_NIHIL (f);
+                    si (f != NIHIL && json_est_chorda(f))
+                    { fons_reditus = json_ad_chorda(f);
+                    }
+                }
+            }
+        }
+
+        /* ADSERTIO PRAECIPUA I: octetus pro octeto. */
+        CREDO_AEQUALIS_I32 (fons_reditus.mensura,
+                            fons_originalis.mensura);
+        CREDO_CHORDA_AEQUALIS (fons_reditus, fons_originalis);
+
+        /* ADSERTIO PRAECIPUA II: et ergo NULLA ancora frangitur.
+         * Adsertio octetorum sola dicit textum parem esse; haec
+         * dicit quod REFERT - sigilla omnia congruere, ergo
+         * commentaria omnia iter superstitura. */
+        post = sententiae_legere(fons_reditus, piscina);
+        CREDO_VERUM (post.successus);
+        CREDO_AEQUALIS_I32 (xar_numerus(post.sententiae), (i32)273);
+
+        {
+            i32 congruentia = ZEPHYRUM;
+
+            per (k = ZEPHYRUM; k
+                < xar_numerus(ante.sententiae); k++)
+            {
+                Sententia* a =
+                    (Sententia*)xar_obtinere(ante.sententiae,
+                    (i32)k);
+                Sententia* b =
+                    (Sententia*)xar_obtinere(post.sententiae,
+                    (i32)k);
+
+                si (a == NIHIL || b == NIHIL)
+                { perge;
+                }
+                si (   chorda_aequalis(a->locus, b->locus)
+                    && sigillum_aequale(&a->sigillum, &b->sigillum))
+                { congruentia++;
+                }
+            }
+            CREDO_AEQUALIS_I32 (congruentia, (i32)273);
+        }
+    }
+
+    /* CAVE ORDINIS: haec sectio ANTE sectionem V currere DEBET.
+     * Sectio V genus consulto collidit et iudicium camporum
+     * EXSTINGUIT; post eam quaelibet adsertio hic TACITE
+     * praeteriret (campus ignotus notam non pareret, et adsertio
+     * negativa laeta esset ob causam prorsus falsam).
+     *
+     * Sectionem novam quae iudicium spectat inter IV et V NE
+     * INSERAS nisi cur constet. Vide caput plagulae. */
+    CREDO_GRADUS("IV. iudicium camporum vivit");
+    {
+        chorda lectio;
+
+        /* Villa 'nota' adhibuit quia campum declaratum non habebat.
+         * Hic 'fons' declaratus est, ergo mutatio MUNDA est - et
+         * mutatio RECTA est, quia nota campum non ponit. */
+        lectio = _mutare_et_legere(&cliens, piscina, res_id, "fons",
+            "# Breve\n\n```\n1. Nova sententia.\n```\n");
+        CREDO_CHORDA_NON_VACUA (lectio);
+        CREDO_FALSUM (chorda_continet(lectio,
+            _ch(piscina, "violatio camporum")));
+
+        /* et campus IGNOTUS notam custodiae PARIT - ergo silentium
+         * supra iudicium est, non taciturnitas */
+        lectio = _mutare_et_legere(&cliens, piscina, res_id,
+            "campus_ignotus", "quidlibet");
+        CREDO_CHORDA_CONTINET (lectio,
+            _ch(piscina, "violatio camporum"));
+    }
+
+    CREDO_GRADUS("V. collisio: responsum MUNDUM, iudicium DELETUM");
+    {
+        chorda resp;
+        chorda lectio;
+
+        /* Doctrina dicebat: 'responsum addere pro iam occupata
+         * inspice'. Non operatur - et pretium non est nuntius
+         * amissus sed SCHEMA RAPTUM. */
+        resp = _liber_definire(&cliens, piscina, "Liber Alter",
+            FALSUM);
+
+        /* (a) responsum successus MUNDUS est */
+        CREDO_CHORDA_CONTINET (resp, _ch(piscina, "creata"));
+        CREDO_FALSUM (chorda_continet(resp,
+            _ch(piscina, "iam occupata")));
+
+        /* (b) et IUDICIUM NUNC TACET. Definitio collidens sine
+         * campis registrum rapuit; genus sine campis omnino non
+         * iudicatur. Ergo campus ignotus qui modo notam peperit
+         * nunc TACITE transit.
+         *
+         * Hoc primo conatu huius portae ACCIDIT: sectio collisionis
+         * ante sectionem iudicii posita erat, et sectionem iudicii
+         * tacite fregit. Nunc adseritur, non patitur. */
+        lectio = _mutare_et_legere(&cliens, piscina, res_id,
+            "alius_campus_ignotus", "quidlibet");
+        CREDO_CHORDA_NON_VACUA (lectio);
+        CREDO_FALSUM (chorda_continet(lectio,
+            _ch(piscina, "alius_campus_ignotus")));
+    }
+
+    CREDO_GRADUS("VI. recuperatio: definitio recta iudicium reddit");
+    {
+        chorda lectio;
+
+        (vacuum)_liber_definire(&cliens, piscina, "Liber", VERUM);
+
+        lectio = _mutare_et_legere(&cliens, piscina, res_id,
+            "tertius_campus_ignotus", "quidlibet");
+        CREDO_CHORDA_CONTINET (lectio,
+            _ch(piscina, "tertius_campus_ignotus"));
+    }
+
+    CREDO_GRADUS("VII. 'breviter' corpus NON effundit");
+    {
+        JsonValor* q = json_objectum_creare(piscina);
+           chorda  brevis_lectio;
+
+        json_objectum_ponere(q, "res", json_chorda_creare(piscina,
+            res_id));
+        json_objectum_ponere(q, "breviter",
+            json_chorda_creare(piscina,
+            _ch(piscina, "verum")));
+        brevis_lectio = cliens_tabularii_vocare(&cliens, piscina,
+            "res",
+            q, &culpa);
+
+        /* 'res' plenum datum crudum verbatim imprimit - in libro
+         * XLV KB in responsum funderet. Porta ne quis eam semitam
+         * in app aut in usu meo post compactionem adhibeat. */
+        CREDO_MINOR_S32 ((s32)brevis_lectio.mensura, (s32)4096);
+    }
+
+    CREDO_GRADUS("VIII. annales: mutatio scripta");
+    {
+        chorda annales = filum_legere_totum(
+            _in_scratch(m, piscina, "sent.jsonl"), piscina);
+
+        CREDO_VERUM (annales.mensura > ZEPHYRUM);
+        CREDO_CHORDA_CONTINET (annales,
+            _ch(piscina, "\"genus_eventus\":\"mutatio\""));
+        CREDO_CHORDA_CONTINET (annales,
+            _ch(piscina, "\"clavis\":\"fons\""));
+    }
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "iter per conditorium", _scaena, _daemon_parare, _daemon_purgare,
+      NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
 s32
 principale (vacuum)
 {
-    Piscina* piscina;
-        b32  praeteritus;
-    integer  portus_int = ZEPHYRUM;
-        i32  k;
-
-    piscina = piscina_generare_dynamicum("probatio_sent_horreum",
-        33554432);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-
-    imprimere("\n--- I. daemon ephemerus ---\n");
-    {
-        character imperium[MXXIV];
-
-        CREDO_VERUM (_scratch_parare());
-        /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
-         * semel struit): probatio currit, non struit (fabrica plan 5
-         * T5b) */
-        CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
-        sprintf(imperium, "gesta/build/tabulariumd -portus 0"
-            " -scrinium %s/sent.db -annales %s/sent.jsonl"
-            " > %s/sent.portus 2> /dev/null &", _scratch, _scratch,
-            _scratch);
-        CREDO_VERUM (system(imperium) == ZEPHYRUM);
-
-        per (k = ZEPHYRUM; k < XXV; k++)
-        {
-            FILE* pf = lectiones_fopen(_in_scratch(piscina,
-                "sent.portus"), "r");
-
-            si (pf != NIHIL)
-            {
-                si (   fscanf(pf, "portus %d", &portus_int) == I
-                    && portus_int > 0)
-                { fclose(pf); frange;
-                }
-                fclose(pf);
-            }
-            (vacuum)system("sleep 0.2");
-        }
-        CREDO_VERUM (portus_int > 0);
-    }
-
-    si (portus_int > 0)
-    {
-        ClientTabularii cliens;
-                 chorda culpa = chorda_ex_literis("", piscina);
-                 chorda fons_originalis;
-                 chorda res_id = chorda_ex_literis("",
-                     piscina);
-                  Liber ante;
-
-        cliens_tabularii_incipere(&cliens, (i32)portus_int);
-        cliens.praefixum  = "[probatio]";
-        cliens.actor      = "sententiae";
-        cliens.launcher   = NIHIL;   /* daemon iam currit */
-        cliens.genitus    = VERUM;
-
-        fons_originalis = filum_legere_totum(FX_LIBER, piscina);
-        si (fons_originalis.mensura == ZEPHYRUM)
-        { imprimere("  FIXUM ABEST: %s\n", FX_LIBER);
-        }
-        CREDO_VERUM (fons_originalis.mensura > ZEPHYRUM);
-
-        ante = sententiae_legere(fons_originalis, piscina);
-        CREDO_VERUM (ante.successus);
-        CREDO_AEQUALIS_I32 (xar_numerus(ante.sententiae), (i32)273);
-
-        imprimere("\n--- II. genus 'liber': custos tabulam GENERA legit ---\n");
-        {
-            chorda resp;
-
-            CREDO_FALSUM (_genus_adest(&cliens, piscina, "liber"));
-            resp = _liber_definire(&cliens, piscina, "Liber", VERUM);
-            CREDO_CHORDA_CONTINET (resp, _ch(piscina, "creata"));
-            CREDO_VERUM (_genus_adest(&cliens, piscina, "liber"));
-        }
-
-        imprimere("\n--- III. iter per conditorium: OCTETUS PRO OCTETO ---\n");
-        {
-            JsonValor* datum  = json_objectum_creare(piscina);
-            JsonValor* args   = json_objectum_creare(piscina);
-               chorda  resp;
-
-            json_objectum_ponere(datum, "siglum",
-                json_chorda_creare(piscina,
-                _ch(piscina, "DI")));
-            json_objectum_ponere(datum, "slug",
-                json_chorda_creare(piscina,
-                _ch(piscina, "de-imagine")));
-            json_objectum_ponere(datum, "status_libri",
-                json_chorda_creare(piscina, _ch(piscina, "DRAFT")));
-            json_objectum_ponere(datum, "fons",
-                json_chorda_creare(piscina,
-                fons_originalis));
-
-            json_objectum_ponere(args, "genus",
-                json_chorda_creare(piscina,
-                _ch(piscina, "liber")));
-            json_objectum_ponere(args, "titulus",
-                json_chorda_creare(piscina,
-                _ch(piscina, "De Imagine")));
-            json_objectum_ponere(args, "datum",
-                json_chorda_creare(piscina,
-                json_scribere(datum, piscina)));
-
-            resp = cliens_tabularii_vocare(&cliens, piscina, "addere",
-                args, &culpa);
-            res_id = cliens_tabularii_res_id(resp, piscina);
-            CREDO_CHORDA_NON_VACUA (res_id);
-        }
-
-        {
-            JsonValor* entia;
-               chorda  fons_reditus = chorda_ex_literis("", piscina);
-                Liber  post;
-
-            entia = cliens_tabularii_legere(&cliens, piscina,
-                _ch(piscina, "liber"), (i32)X, &culpa);
-            CREDO_NON_NIHIL (entia);
-            si (entia != NIHIL && json_est_tabulatum(entia))
-            {
-                JsonValor* e;
-
-                CREDO_AEQUALIS_I32 (json_tabulatum_numerus(entia),
-                    (i32)1);
-                e = json_tabulatum_obtinere(entia, (i32)ZEPHYRUM);
-                CREDO_NON_NIHIL (e);
-                si (e != NIHIL)
-                {
-                    JsonValor* d = json_objectum_capere(e, "datum");
-
-                    CREDO_NON_NIHIL (d);
-                    si (d != NIHIL)
-                    {
-                        JsonValor* f = json_objectum_capere(d, "fons");
-
-                        CREDO_NON_NIHIL (f);
-                        si (f != NIHIL && json_est_chorda(f))
-                        { fons_reditus = json_ad_chorda(f);
-                        }
-                    }
-                }
-            }
-
-            /* ADSERTIO PRAECIPUA I: octetus pro octeto. */
-            CREDO_AEQUALIS_I32 (fons_reditus.mensura,
-                                fons_originalis.mensura);
-            CREDO_CHORDA_AEQUALIS (fons_reditus, fons_originalis);
-
-            /* ADSERTIO PRAECIPUA II: et ergo NULLA ancora frangitur.
-             * Adsertio octetorum sola dicit textum parem esse; haec
-             * dicit quod REFERT - sigilla omnia congruere, ergo
-             * commentaria omnia iter superstitura. */
-            post = sententiae_legere(fons_reditus, piscina);
-            CREDO_VERUM (post.successus);
-            CREDO_AEQUALIS_I32 (xar_numerus(post.sententiae), (i32)273);
-
-            {
-                i32 congruentia = ZEPHYRUM;
-
-                per (k = ZEPHYRUM; k
-                    < xar_numerus(ante.sententiae); k++)
-                {
-                    Sententia* a =
-                        (Sententia*)xar_obtinere(ante.sententiae,
-                        (i32)k);
-                    Sententia* b =
-                        (Sententia*)xar_obtinere(post.sententiae,
-                        (i32)k);
-
-                    si (a == NIHIL || b == NIHIL)
-                    { perge;
-                    }
-                    si (   chorda_aequalis(a->locus, b->locus)
-                        && sigillum_aequale(&a->sigillum, &b->sigillum))
-                    { congruentia++;
-                    }
-                }
-                CREDO_AEQUALIS_I32 (congruentia, (i32)273);
-            }
-        }
-
-        /* CAVE ORDINIS: haec sectio ANTE sectionem V currere DEBET.
-         * Sectio V genus consulto collidit et iudicium camporum
-         * EXSTINGUIT; post eam quaelibet adsertio hic TACITE
-         * praeteriret (campus ignotus notam non pareret, et adsertio
-         * negativa laeta esset ob causam prorsus falsam).
-         *
-         * Sectionem novam quae iudicium spectat inter IV et V NE
-         * INSERAS nisi cur constet. Vide caput plagulae. */
-        imprimere("\n--- IV. iudicium camporum vivit ---\n");
-        {
-            chorda lectio;
-
-            /* Villa 'nota' adhibuit quia campum declaratum non habebat.
-             * Hic 'fons' declaratus est, ergo mutatio MUNDA est - et
-             * mutatio RECTA est, quia nota campum non ponit. */
-            lectio = _mutare_et_legere(&cliens, piscina, res_id, "fons",
-                "# Breve\n\n```\n1. Nova sententia.\n```\n");
-            CREDO_CHORDA_NON_VACUA (lectio);
-            CREDO_FALSUM (chorda_continet(lectio,
-                _ch(piscina, "violatio camporum")));
-
-            /* et campus IGNOTUS notam custodiae PARIT - ergo silentium
-             * supra iudicium est, non taciturnitas */
-            lectio = _mutare_et_legere(&cliens, piscina, res_id,
-                "campus_ignotus", "quidlibet");
-            CREDO_CHORDA_CONTINET (lectio,
-                _ch(piscina, "violatio camporum"));
-        }
-
-        imprimere("\n--- V. collisio: responsum MUNDUM, iudicium DELETUM ---\n");
-        {
-            chorda resp;
-            chorda lectio;
-
-            /* Doctrina dicebat: 'responsum addere pro iam occupata
-             * inspice'. Non operatur - et pretium non est nuntius
-             * amissus sed SCHEMA RAPTUM. */
-            resp = _liber_definire(&cliens, piscina, "Liber Alter",
-                FALSUM);
-
-            /* (a) responsum successus MUNDUS est */
-            CREDO_CHORDA_CONTINET (resp, _ch(piscina, "creata"));
-            CREDO_FALSUM (chorda_continet(resp,
-                _ch(piscina, "iam occupata")));
-
-            /* (b) et IUDICIUM NUNC TACET. Definitio collidens sine
-             * campis registrum rapuit; genus sine campis omnino non
-             * iudicatur. Ergo campus ignotus qui modo notam peperit
-             * nunc TACITE transit.
-             *
-             * Hoc primo conatu huius portae ACCIDIT: sectio collisionis
-             * ante sectionem iudicii posita erat, et sectionem iudicii
-             * tacite fregit. Nunc adseritur, non patitur. */
-            lectio = _mutare_et_legere(&cliens, piscina, res_id,
-                "alius_campus_ignotus", "quidlibet");
-            CREDO_CHORDA_NON_VACUA (lectio);
-            CREDO_FALSUM (chorda_continet(lectio,
-                _ch(piscina, "alius_campus_ignotus")));
-        }
-
-        imprimere("\n--- VI. recuperatio: definitio recta iudicium reddit ---\n");
-        {
-            chorda lectio;
-
-            (vacuum)_liber_definire(&cliens, piscina, "Liber", VERUM);
-
-            lectio = _mutare_et_legere(&cliens, piscina, res_id,
-                "tertius_campus_ignotus", "quidlibet");
-            CREDO_CHORDA_CONTINET (lectio,
-                _ch(piscina, "tertius_campus_ignotus"));
-        }
-
-        imprimere("\n--- VII. 'breviter' corpus NON effundit ---\n");
-        {
-            JsonValor* q = json_objectum_creare(piscina);
-               chorda  brevis_lectio;
-
-            json_objectum_ponere(q, "res", json_chorda_creare(piscina,
-                res_id));
-            json_objectum_ponere(q, "breviter",
-                json_chorda_creare(piscina,
-                _ch(piscina, "verum")));
-            brevis_lectio = cliens_tabularii_vocare(&cliens, piscina,
-                "res",
-                q, &culpa);
-
-            /* 'res' plenum datum crudum verbatim imprimit - in libro
-             * XLV KB in responsum funderet. Porta ne quis eam semitam
-             * in app aut in usu meo post compactionem adhibeat. */
-            CREDO_MINOR_S32 ((s32)brevis_lectio.mensura, (s32)4096);
-        }
-
-        imprimere("\n--- VIII. annales: mutatio scripta ---\n");
-        {
-            chorda annales = filum_legere_totum(
-                _in_scratch(piscina, "sent.jsonl"), piscina);
-
-            CREDO_VERUM (annales.mensura > ZEPHYRUM);
-            CREDO_CHORDA_CONTINET (annales,
-                _ch(piscina, "\"genus_eventus\":\"mutatio\""));
-            CREDO_CHORDA_CONTINET (annales,
-                _ch(piscina, "\"clavis\":\"fons\""));
-        }
-    }
-
-    {
-        character imperium[1024];
-
-        sprintf(imperium, "pkill -f 'tabulariumd -portus 0"
-            " -scrinium %s/sent.db' > /dev/null 2>&1", _scratch);
-        (vacuum)system(imperium);
-        (vacuum)filum_arborem_delere(_scratch);
-    }
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-    praeteritus = credo_omnia_praeterierunt();
-    piscina_destruere(piscina);
-    si (praeteritus)
-    { redde ZEPHYRUM;
-    }
-    redde I;
+    redde credo_suitam_currere("sententiae_horreum", SECTIONES);
 }

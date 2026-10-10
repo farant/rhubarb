@@ -11,6 +11,9 @@
 #include <setjmp.h>
 #include <sys/time.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <errno.h>
 
 
 /* ======================================================
@@ -1101,6 +1104,174 @@ credo_gradum_ponere (
     }
 }
 
+
+/* ==================================================
+ * AREA (credo II): via contextus ANTE cursum eius computatur,
+ * directorium in credo_area PIGRE creatur, post purgare deletur
+ * quidquid ibi stat (filius CREDO_NON_RUIT aream creare potest - parens
+ * nescit, via tamen eadem). credo filum.c NON vocat: suitae
+ * subsystematum credo sine filo ligant (silva, materia, ...).
+ * ================================================== */
+
+nomen structura {
+     constans CredoContextus* contextus;   /* NIHIL = nulla area */
+                   character  via[DXII];
+                         b32  creata;
+} CredoArea;
+
+hic_manens CredoArea _credo_area_sectionis;
+hic_manens CredoArea _credo_area_suitae;
+
+/* arbor deleta (nexus ipse removetur, numquam destinatio); absens =
+ * VERUM */
+interior b32
+_credo_arborem_delere (
+    constans character* via)
+{
+    structura stat    st;
+              DIR*    d;
+    structura dirent* e;
+         character    filius[DXII];
+               b32    bene;
+
+    si (lstat(via, &st) != ZEPHYRUM)
+    {
+        redde errno == ENOENT;
+    }
+    si (!S_ISDIR(st.st_mode))
+    {
+        redde unlink(via) == ZEPHYRUM;
+    }
+    d = opendir(via);
+    si (d == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = VERUM;
+    dum ((e = readdir(d)) != NIHIL)
+    {
+        si (   strcmp(e->d_name, ".")  == ZEPHYRUM
+            || strcmp(e->d_name, "..") == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (strlen(via) + strlen(e->d_name) + II > magnitudo(filius))
+        {
+            bene = FALSUM;
+            perge;
+        }
+        sprintf(filius, "%s/%s", via, e->d_name);
+        si (!_credo_arborem_delere(filius))
+        {
+            bene = FALSUM;
+        }
+    }
+    (vacuum)closedir(d);
+    redde bene && rmdir(via) == ZEPHYRUM;
+}
+
+/* '<TMPDIR>/<suita sanata>.<signum>.<pid>' - '/' finalis TMPDIR
+ * (macOS) demitur; nihil creatur */
+interior vacuum
+_credo_aream_ponere (
+                  CredoArea* area,
+    constans CredoContextus* contextus,
+         constans character* titulus_suitae,
+         constans character* signum)
+{
+     constans character* tmp;
+         memoriae_index  n;
+         memoriae_index  i;
+              character  ch;
+
+    tmp = getenv("TMPDIR");
+    si (tmp == NIHIL || tmp[0] == '\0')
+    {
+        tmp = "/tmp";
+    }
+    n = strlen(tmp);
+    dum (n > I && tmp[n - I] == '/')
+    {
+        n--;
+    }
+    si (n > CD)
+    {
+        n = CD;
+    }
+    memcpy(area->via, tmp, n);
+    area->via[n] = '/';
+    n++;
+    per (i = ZEPHYRUM; titulus_suitae[i] != '\0' && i < LXIV; i++)
+    {
+        ch = titulus_suitae[i];
+        si (!(   (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+              || (ch >= '0' && ch <= '9') || ch == '_' || ch == '-'))
+        {
+            ch = '_';
+        }
+        area->via[n] = ch;
+        n++;
+    }
+    si (i == ZEPHYRUM)
+    {
+        area->via[n] = '_';
+        n++;
+    }
+    sprintf(area->via + n, ".%s.%ld", signum, (longus)getpid());
+    area->contextus  = contextus;
+    area->creata     = FALSUM;
+}
+
+/* post purgare: quidquid in via stat deletur; deletio fracta
+ * nominatur (reliquiae sub TMPDIR) */
+interior vacuum
+_credo_aream_delere (
+    CredoArea* area)
+{
+    si (area->contextus == NIHIL)
+    {
+        redde;
+    }
+    si (!_credo_arborem_delere(area->via))
+    {
+        imprimere("\n  credo: area non deleta: %s\n", area->via);
+    }
+    area->contextus  = NIHIL;
+    area->creata     = FALSUM;
+}
+
+constans character*
+credo_area (
+    CredoContextus* c)
+{
+    CredoArea* area;
+
+    area = NIHIL;
+    si (c != NIHIL && c == _credo_area_sectionis.contextus)
+    {
+        area = &_credo_area_sectionis;
+    }
+    alioquin si (c != NIHIL && c == _credo_area_suitae.contextus)
+    {
+        area = &_credo_area_suitae;
+    }
+    si (area == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!area->creata)
+    {
+        /* reliquiae pid iterati prius deletae */
+        si (   !_credo_arborem_delere(area->via)
+            || mkdir(area->via, 0700) != ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        area->creata = VERUM;
+    }
+    redde area->via;
+}
+
 /* SIGNA (credo II): vocabulum CLAUSUM - facultates domus (fabrica-7
  * annotatio 'facultas') et 'lentus'. Verbum ignotum = vitium scribae,
  * non signum novum tacitum */
@@ -1245,6 +1416,7 @@ _credo_suitam_purgare (
     {
         purgare_suitae(suitae);
     }
+    _credo_aream_delere(&_credo_area_suitae);
     si (suitae->piscina != NIHIL)
     {
         piscina_destruere(suitae->piscina);
@@ -1353,6 +1525,8 @@ credo_suitam_currere_cum (
      * notatur, purgare_suitae tamen */
     memset(&suitae, ZEPHYRUM, magnitudo(suitae));
     suitae.titulus = titulus_suitae;
+    _credo_aream_ponere(&_credo_area_suitae, &suitae, titulus_suitae,
+        "suita");
     si (parare_suitae != NIHIL || purgare_suitae != NIHIL)
     {
         suitae.piscina = piscina_generare_dynamicum(titulus_suitae,
@@ -1452,6 +1626,9 @@ credo_suitam_currere_cum (
             _credo_suitam_purgare(purgare_suitae, &suitae);
             redde I;
         }
+        sprintf(signum, "%lu", (insignatus longus)(i + I));
+        _credo_aream_ponere(&_credo_area_sectionis, &contextus,
+            titulus_suitae, signum);
         ante           = _credo_nunc;
         initium        = _credo_ms_nunc();
         _credo_gradus  = NIHIL;
@@ -1461,6 +1638,7 @@ credo_suitam_currere_cum (
         {
             sectio->purgare(&contextus);
         }
+        _credo_aream_delere(&_credo_area_sectionis);
         summa = _credo_sectionem_summare(ante, aborta);
         piscina_destruere(contextus.piscina);
         cursae++;

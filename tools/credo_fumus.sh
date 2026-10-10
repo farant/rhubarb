@@ -23,6 +23,10 @@
 #   IX   fixura suitae (credo II): credo_suitam_currere_cum - parare et
 #        purgare suitae SEMEL, c->suita in sectionibus, purgare post
 #        abortum et post parare fractum
+#   XI   area (credo II): credo_area(c) pigra sub TMPDIR
+#        (<suita>.<n>.<pid>, suitae <suita>.suita.<pid>), eadem in
+#        sectione, alia in alia, deleta post purgare (etiam post NECESSE
+#        et in filio creata), nulla sine usu
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
@@ -30,7 +34,8 @@ RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
 source tools/vexilla.sh
 T="$(mktemp -d "${TMPDIR:-/tmp}/credo_fumus.XXXXXX")" || exit 2
-trap 'rm -rf "${T:?}"' EXIT
+# CREDO_FUMUS_SERVA=1: $T servatur (inspectio effusionum)
+trap '[ -n "${CREDO_FUMUS_SERVA:-}" ] || rm -rf "${T:?}"' EXIT
 fracta=0
 credo () { if [ "$1" -eq 0 ]; then echo "  ok   $2"; else echo "  FRACTUM $2"; fracta=$((fracta + 1)); fi; }
 struere () {   # $1 = fons in $T, $2 = binarium
@@ -438,7 +443,135 @@ s32 principale (vacuum)
 }
 FONS
 
-for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua suita_communis suita_fracta gradus; do
+cat > "$T/area.c" <<'FONS'
+#include "postulata_posix.h"
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+
+/* copiae viarum (area post sectionem deletur): prior, suitae, necesse */
+hic_manens character _prior[DXII];
+hic_manens character _suitae[DXII];
+hic_manens character _necesse_via[DXII];
+
+interior b32 _adest (constans character* via)
+{
+    structura stat st;
+
+    redde stat(via, &st) == ZEPHYRUM && S_ISDIR(st.st_mode);
+}
+
+interior vacuum _scribere (constans character* dir, constans character* titulus)
+{
+    character via[DXII];
+    FILE* f;
+
+    sprintf(via, "%s/%s", dir, titulus);
+    f = fopen(via, "w");
+    si (f != NIHIL) { fputs("x\n", f); fclose(f); }
+}
+
+interior vacuum _parare_suitae (CredoContextus* c)
+{
+    constans character* a = credo_area(c);
+
+    CREDO_NECESSE_NON_NIHIL(a);
+    _scribere(a, "suitae.txt");
+    imprimere("AREA suita %s\n", a);
+    sprintf(_suitae, "%s", a);
+}
+
+interior vacuum _purgare_suitae (CredoContextus* c)
+{
+    (vacuum)c;
+    imprimere("PURGARE SUITAE %s\n", _adest(_suitae) ? "adest" : "abest");
+}
+
+interior vacuum _prima (CredoContextus* c)
+{
+    constans character* a = credo_area(c);
+
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_VERUM(_adest(a));
+    CREDO_VERUM(strcmp(credo_area(c), a) == ZEPHYRUM);
+    CREDO_VERUM(strcmp(a, _suitae) != ZEPHYRUM);
+    CREDO_VERUM(_adest(_suitae));
+    _scribere(a, "prima.txt");
+    sprintf(_prior, "%s", a);
+    imprimere("AREA prima %s\n", a);
+}
+
+interior vacuum _secunda (CredoContextus* c)
+{
+    constans character* a = credo_area(c);
+
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_VERUM(strcmp(a, _prior) != ZEPHYRUM);
+    CREDO_FALSUM(_adest(_prior));
+    imprimere("AREA secunda %s\n", a);
+}
+
+/* NECESSE post usum: area in purgare adhuc adest, post eam deletur */
+interior vacuum _necesse (CredoContextus* c)
+{
+    constans character* a = credo_area(c);
+    character sub[DXII];
+
+    CREDO_NECESSE_NON_NIHIL(a);
+    sprintf(sub, "%s/profundum", a);
+    (vacuum)mkdir(sub, 0700);
+    _scribere(sub, "f.txt");
+    imprimere("AREA necesse %s\n", a);
+    sprintf(_necesse_via, "%s", a);
+    CREDO_NECESSE(FALSUM);
+}
+
+interior vacuum _purgare_necesse (CredoContextus* c)
+{
+    (vacuum)c;
+    imprimere("PURGARE necesse %s\n", _adest(_necesse_via) ? "adest"
+        : "abest");
+}
+
+/* area in FILIO solo creata (CREDO_NON_RUIT): parens eam tamen delet */
+interior vacuum _in_filio_corpus (CredoContextus* c)
+{
+    constans character* a = credo_area(c);
+
+    /* filius per _exit finit: effusio statim effluenda */
+    si (a != NIHIL) { _scribere(a, "filius.txt"); imprimere("AREA filius %s\n", a); }
+    (vacuum)fflush(stdout);
+}
+
+interior vacuum _in_filio (CredoContextus* c)
+{
+    CREDO_NON_RUIT(_in_filio_corpus(c));
+}
+
+interior vacuum _sine (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(VERUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "prima", _prima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "secunda", _secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "necesse", _necesse, NIHIL, _purgare_necesse, NIHIL, NIHIL },
+    { "in_filio", _in_filio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sine", _sine, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere_cum("area fumi", SECTIONES, _parare_suitae,
+        _purgare_suitae);
+}
+FONS
+
+for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua suita_communis suita_fracta gradus area; do
     struere "$s.c" "$s" || { echo "credo_fumus: $s non compilat:"; cat "$T/$s.err"; exit 2; }
 done
 
@@ -558,6 +691,19 @@ V="$T/v_gr.tsv"
 awk -F'\t' '$1 == "SECTIO" && ($3 == "sine_gradu" || $3 == "post") && NF == 11 && $11 == ""' "$V" | wc -l | grep -q '^ *2$'; credo $? "X sine gradu campus vacuus; gradus sectionis prioris non manet"
 grep -q ' FRACTA (credo_aequalis): I == II at .*gradus.c:[0-9]* (in gradu II: secundus)$' "$T/o_gr" \
     && grep -q -- '-- gradus I: primus --' "$T/o_gr" && grep -q -- '-- gradus III: tertius --' "$T/o_gr"; credo $? "X effusio: gradus nominati, fractura 'in gradu'"
+
+# XI (credo II, T5): AREA - credo_area(c) pigra sub TMPDIR, deleta post
+# purgare (sectionis aut suitae), etiam post NECESSE et in filio creata;
+# TMPDIR proprium: post cursum VACUUM esse debet
+mkdir -p "$T/tmp_area/"
+TMPDIR="$T/tmp_area/" CREDO_VERDICTA="$T/v_ar.tsv" "$T/area" > "$T/o_ar" 2>&1; rc=$?
+V="$T/v_ar.tsv"
+[ "$rc" -eq 1 ] && grep -q "^SECTIO	area fumi	prima	TRANSIIT	5	5	" "$V" && grep -q "^SECTIO	area fumi	secunda	TRANSIIT	3	3	" "$V" \
+    && grep -q "^SECTIO	area fumi	necesse	ABORTA	" "$V" && grep -q "^SECTIO	area fumi	sine	TRANSIIT	" "$V"; credo $? "XI sectiones: eadem area in sectione, alia in alia, prior deleta (erat $rc)"
+grep -q "AREA prima $T/tmp_area/area_fumi\.1\.[0-9]*$" "$T/o_ar" && grep -q "AREA secunda $T/tmp_area/area_fumi\.2\.[0-9]*$" "$T/o_ar" \
+    && grep -q "AREA suita $T/tmp_area/area_fumi\.suita\.[0-9]*$" "$T/o_ar"; credo $? "XI via: <TMPDIR>/<suita>.<n>.<pid> ('/' finalis demptus, titulus sanatus), suitae .suita."
+grep -q 'PURGARE necesse adest$' "$T/o_ar" && grep -q 'PURGARE SUITAE adest$' "$T/o_ar" && grep -q 'AREA filius ' "$T/o_ar"; credo $? "XI area in purgare adhuc adest (sectio et suita); filius aream creavit"
+[ -z "$(ls -A "$T/tmp_area")" ]; credo $? "XI post cursum TMPDIR vacuum: omnes areae deletae (NECESSE, filius, suita, profunda) - reliquiae: $(ls -A "$T/tmp_area" | tr '\n' ' ')"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

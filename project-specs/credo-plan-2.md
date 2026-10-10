@@ -48,9 +48,17 @@ in `../rhubarb-quinta`; merges by the ritual.
   Speratus/Receptus printed NULL via %s for empty values - fixed.
 
 ### T5: area
-- [ ] stage: credo_area created lazily, removed after purgare (also
+- [x] stage: credo_area created lazily, removed after purgare (also
   after NECESSE); two sections get different dirs. Replace the four
   hand helpers (sententiae_horreum, villa_agens, git, cliens). Commit.
+  As built (2026-10-10): suite context has an area too
+  (`<suite>.suita.<pid>`, removed after purgare_suitae); removal is by
+  PATH, so an area a CREDO_NON_RUIT child created is removed as well.
+  credo does its own mkdir/tree removal (subsystem builds link credo
+  without filum). Three of the four helpers lived in OLD-style suites,
+  so T5 converted them: git (suite fixture + 9 sections), villa_agens
+  (suite fixture = cfg + 12 sections), sententiae_horreum (one scenario
+  section, steps I-VIII via CREDO_GRADUS) - 13 converted suites now.
 
 ### T6: order
 - [ ] stage: CREDO_ORDO=mixtus:<seed> reproducible order, seed recorded;
