@@ -3,10 +3,15 @@
 # tools/aedilis_porta.sh - PORTA CORPORIS aedilis (Phasis B)
 #
 # Quaeque probatio radicis: (1) derivatio + emissio scriptorum
-# (bin/aedilis), (2) structura per scriptum emissum, (3) cursus
-# probationis (nisi GUI/reticularis/repositorium vivum), (4)
+# (bin/aedilis), (2) structura per scriptum emissum, (3)
 # differentia-clausurae contra clang -MM (unio super TU clausurae).
 # Porta per codicem exitus; summarium demum.
+#
+# CURSUS PROBATIONUM NON HIC (fabrica-7 T7): probationes ipsae membra
+# 'probationes_radicis' sunt (porta radix per fabricam) - indices manu
+# (GUI, reticulares, repositorium vivum) nunc annotationes facultatis
+# in fontibus, scripta in build/ debita membrorum. Haec porta CORPUS
+# aedilis probat: derivatio, scriptum emissum, clausura vera.
 #
 # Praesupponit: bin/aedilis paratum (./tools/aedilis_struere.sh)
 # et artificia generata recentia (suite semel cursa - capsulae
@@ -17,24 +22,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 mkdir -p build/aedilis
 
-# ex compile_tests.sh: aedificantur, non curruntur
-GUI_LISTA="probatio_fenestra probatio_vitrea probatio_vitrea_tabella probatio_vitrea_hospes probatio_delineare probatio_tempus probatio_pagina probatio_navigator probatio_combinado probatio_gradientum probatio_capsula_caudae probatio_elementa probatio_imago probatio_dithering"
-# aedificantur; cursus retem vivam requirit
-RETICULARIS_LISTA="probatio_tls probatio_tcp"
-# aedificantur et conferuntur; cursus REPOSITORIUM VIVUM legit (HEAD,
-# refs, sarcinae - omnis commissio verdictum portae irritum faceret;
-# fabrica plan 5 T5b, Fran 2026-10-06). Radix eas currit. Desideratum:
-# repositorium fixum commissum ut probatio HEAD non pendeat.
-REPOSITORIUM_VIVUM_LISTA="probatio_git"
-
-est_in_lista () {
-    local quaesitum="$1"
-    local v
-    for v in $2; do
-        [ "$v" = "$quaesitum" ] && return 0
-    done
-    return 1
-}
 
 numerus=0
 fracta=""
@@ -70,15 +57,6 @@ for f in probationes/probatio_*.c; do
         tail -5 "build/aedilis/porta_$basis.err"
         fracta="$fracta $basis(structura)"
         continue
-    fi
-    if ! est_in_lista "$basis" "$GUI_LISTA" \
-        && ! est_in_lista "$basis" "$RETICULARIS_LISTA" \
-        && ! est_in_lista "$basis" "$REPOSITORIUM_VIVUM_LISTA"; then
-        if ! "build/aedilis/$basis/$basis" > /dev/null 2>&1; then
-            echo "FRACTA (cursus): $basis"
-            fracta="$fracta $basis(cursus)"
-            continue
-        fi
     fi
     if ! ./bin/aedilis "$f" --differentia --memoria-oraculi "$MEMORIA_ORACULI" \
             --thesaurus build/aedilis/obiecta \

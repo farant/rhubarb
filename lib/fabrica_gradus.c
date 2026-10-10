@@ -254,6 +254,75 @@ _membra_ordinare (
         ((constans FabricaMembrum*)b)->titulus);
 }
 
+vacuum
+fabricae_locum_debiti_addere (
+                        Xar* loci,
+    constans FabricaDebitum* debitum,
+                    Piscina* piscina)
+{
+    si (   debitum->via.mensura > I
+        && debitum->via.datum[debitum->via.mensura - I] == '/')
+    {
+        fabricae_locum_addere(loci, FABRICA_LOCUS_ARBOR, chorda_sectio(
+            debitum->via, ZEPHYRUM, debitum->via.mensura - I),
+            chorda_ex_literis("", piscina));
+    }
+    alioquin
+    {
+        fabricae_locum_addere(loci, FABRICA_LOCUS_PLAGULA, debitum->via,
+            chorda_ex_literis("", piscina));
+    }
+}
+
+FabricaDebitiStatus
+fabrica_debitum_iudicare (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* parens,
+    constans FabricaDebitum* debitum,
+                    Piscina* piscina)
+{
+    chorda contentum;
+    chorda via;
+    chorda versus;
+       i32 initium;
+       i32 i;
+       b32 transiit;
+       b32 prima;
+
+    via = fabricae_iungere(piscina, "",
+        fabrica_area_via(parens->titulus,
+        debitum->membrum, piscina), "debita.txt");
+    si (   sutura->legere == NIHIL
+        || !sutura->legere(sutura->datum, chorda_ut_cstr(via, piscina),
+               piscina, &contentum))
+    {
+        redde FABRICA_DEBITUM_IGNOTUM;
+    }
+    transiit  = FALSUM;
+    prima     = VERUM;
+    initium   = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= contentum.mensura; i++)
+    {
+        si (i < contentum.mensura && contentum.datum[i] != '\n')
+        {
+            perge;
+        }
+        versus   = chorda_sectio(contentum, initium, i);
+        initium  = i + I;
+        si (prima)
+        {
+            transiit  = chorda_aequalis_literis(versus,
+                "cursus\ttransiit");
+            prima     = FALSUM;
+        }
+        alioquin si (chorda_aequalis(versus, debitum->via))
+        {
+            redde FABRICA_DEBITUM_SCRIPTUM;
+        }
+    }
+    redde transiit ? FABRICA_DEBITUM_STALUM : FABRICA_DEBITUM_IGNOTUM;
+}
+
 /* actio synthetica membri: iudicium in area sua (vide caput) */
 interior b32
 _membrum_actionem_facere (
@@ -269,6 +338,7 @@ _membrum_actionem_facere (
                 FabricaExitus* exitus;
                        chorda  area;
                        chorda  causa;
+                          i32  i;
 
     memset(actio_out, ZEPHYRUM, magnitudo(FabricaActio));
     copia = (FabricaMembrum*)piscina_allocare(piscina,
@@ -300,7 +370,17 @@ _membrum_actionem_facere (
         (i32)magnitudo(FabricaIngressus));
     actio_out->exitus = xar_creare(piscina,
         (i32)magnitudo(FabricaExitus));
+    /* PRAECONDICIONES parentis (fabrica-7 T4): membrum eas hereditat
+     * ut 'post' - olim vacuae, ergo daemon aut capsula in arbore
+     * frigida pro membris numquam parabatur */
     actio_out->praecondiciones = fabricae_xar_chordarum(piscina);
+    per (i = ZEPHYRUM; parens->praecondiciones != NIHIL
+         && actio_out->praecondiciones != NIHIL
+         && i < xar_numerus(parens->praecondiciones); i++)
+    {
+        fabricae_chordam_addere(actio_out->praecondiciones,
+            *(chorda*)xar_obtinere(parens->praecondiciones, i));
+    }
     actio_out->vestigia = xar_creare(piscina,
         (i32)magnitudo(FabricaLocus));
     actio_out->communia = xar_creare(piscina,
@@ -346,6 +426,32 @@ _membrum_actionem_facere (
     fabricae_locum_addere(actio_out->vestigia, FABRICA_LOCUS_ARBOR,
         chorda_sectio(area, ZEPHYRUM, area.mensura - I),
         chorda_ex_literis("", piscina));
+    /* DEBITA SUA (fabrica-7 T3): via debiti in vestigio HUIUS membri
+     * solius - membrum aliud ibi scribens recusatur ut quaevis
+     * scriptura extra vestigium */
+    per (i = ZEPHYRUM; parens->debita != NIHIL
+         && i < xar_numerus(parens->debita); i++)
+    {
+        constans FabricaDebitum* debitum = (constans FabricaDebitum*)
+            xar_obtinere(parens->debita, i);
+
+        si (!chorda_aequalis(debitum->membrum, membrum->titulus))
+        {
+            perge;
+        }
+        si (actio_out->debita == NIHIL)
+        {
+            actio_out->debita = xar_creare(piscina,
+                (i32)magnitudo(FabricaDebitum));
+            si (actio_out->debita == NIHIL)
+            {
+                redde FALSUM;
+            }
+        }
+        *(FabricaDebitum*)xar_addere(actio_out->debita) = *debitum;
+        fabricae_locum_debiti_addere(actio_out->vestigia, debitum,
+            piscina);
+    }
     redde VERUM;
 }
 
@@ -389,6 +495,33 @@ fabrica_gradus_explicare (
             redde NIHIL;
         }
         xar_ordinare(membra, _membra_ordinare);
+        /* debitum membri ignoti (fabrica-7 T3): declaratio putrida -
+         * sedes debiti nominatur */
+        per (j = ZEPHYRUM; actio->debita != NIHIL
+             && j < xar_numerus(actio->debita); j++)
+        {
+            constans FabricaDebitum* debitum =
+                (constans FabricaDebitum*)
+                xar_obtinere(actio->debita, j);
+                                i32 k;
+                                b32 notum = FALSUM;
+
+            per (k = ZEPHYRUM; k < xar_numerus(membra) && !notum; k++)
+            {
+                notum = chorda_aequalis(debitum->membrum,
+                    ((constans FabricaMembrum*)xar_obtinere(membra,
+                    k))->titulus);
+            }
+            si (!notum)
+            {
+                *causa_out =
+                    chorda_concatenare(fabricae_iungere(piscina,
+                    "", debitum->sedes, ": debitum scripturae: membrum "
+                    "ignotum '"), fabricae_iungere(piscina, "",
+                    debitum->membrum, "'"), piscina);
+                redde NIHIL;
+            }
+        }
         per (j = ZEPHYRUM; j < xar_numerus(membra); j++)
         {
             constans FabricaMembrum* membrum =

@@ -2465,9 +2465,10 @@ judge_claims (void)
         "robust 15 (11.9%), possible 102",
         t95[5].t[1][0].n_float == 33 && t95[5].t[1][0].n_rule == 27
         && t95[5].t[1][0].n_robust == 15 && t95[5].t[1][0].n_possible == 102);
-    check("D95 'zero elsewhere' and 'each half is dead' hold only robustly: "
-        "possible all-null N = 3, 5, 6 = 80, 72, 25; outer-null N = 3 = 16; "
-        "Q8-null 1 of 1",
+    check("D95 'zero elsewhere' and 'each half is dead' hold under the exact "
+        "rule and robustly; 'possible' (all-null N = 3, 5, 6 = 80, 72, 25; "
+        "outer-null N = 3 = 16; Q8-null 1 of 1) is near-vacuous here: every "
+        "null vector is tied two ways (D122 review)",
         t95[5].t[0][0].n_robust == 0 && t95[5].t[0][0].n_possible == 80
         && t95[5].t[2][0].n_possible == 72 && t95[5].t[3][0].n_possible == 25
         && t95[4].t[0][0].n_robust == 0 && t95[4].t[0][0].n_possible == 16

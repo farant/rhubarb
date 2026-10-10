@@ -22,6 +22,8 @@
 #   N  in directorio via plagula addita/deleta nomine exemplar (glob)
 #                                        (D, nomina, globus)
 #   T  quidvis sub via mutatum           (arbor)
+#   C  OMNIS commissio irrita            (facultas repositorium:
+#                                         clavis commissum HEAD)
 # Exitus: 0 relatio scripta · 2 usus / memoria absens.
 #
 # APPROXIMATIONES (nominatae): viae sub build/ et absolutae (systema)
@@ -52,12 +54,32 @@ REG="$T/regulae.tsv"
 # via servanda? (relativa, non build/)
 _servanda () { case "$1" in /*|build/*|*/build/*|'') return 1 ;; esac; return 0; }
 
-# clausura binarii domus bin/X: lectiones aedilis super tools/X.c
+# clausura binarii domus bin/X: lectiones aedilis super fontem eius -
+# tools/X.c, aliter (familia binariorum, e.g. bin/natura - fabrica-7 T6)
+# scopi manifestorum quae actio producens bin/X declarat
+_fontes_binarii () {
+    local bin="$1" m
+    if [ -f "tools/$(basename "$bin").c" ]; then
+        echo "tools/$(basename "$bin").c"; return
+    fi
+    # shellcheck disable=SC2086 (plagulae: verba consulto scissa)
+    awk -v e="$bin" '
+        /<actio titulus="/ { n = 0 }
+        /genus="manifestum"/ { v = $0; sub(/.*via="/, "", v); sub(/".*/, "", v); m[++n] = v }
+        $0 ~ "<exitus via=\"" e "\"" { for (i = 1; i <= n; i++) print m[i]; exit }' $PLAGULAE_AED |
+    while read -r m; do
+        [ -f "$m" ] && sed -n 's/.*scopus="\([^"]*\)".*/\1/p' "$m" | head -1
+    done
+}
+
 _clausura () {
-    local bin="$1" fons="tools/$(basename "$1").c" g v
-    [ -f "$fons" ] || { printf 'F\t%s\t\tprovenientia %s\n' "$bin" "$bin"; return; }
+    local bin="$1" fontes fons g v
+    fontes="$(_fontes_binarii "$bin")"
+    [ -n "$fontes" ] || { printf 'F\t%s\t\tprovenientia %s\n' "$bin" "$bin"; return; }
     rm -f "$T/cl.txt"
-    FABRICA_LECTIONES="$T/cl.txt" bin/aedilis "$fons" --enumerare > /dev/null 2>&1
+    for fons in $fontes; do
+        FABRICA_LECTIONES="$T/cl.txt" bin/aedilis "$fons" --enumerare > /dev/null 2>&1
+    done
     while IFS=$'\t' read -r g v _; do
         v="${v#./}"
         _servanda "$v" || continue
@@ -146,6 +168,13 @@ _ingressus () {
     if [ -n "$FONS" ]; then
         printf 'F\t%s\t\tfons membri %s\n' "$FONS" "$FONS"
         printf 'F\taedilis.stml\t\tvexilla aedilis.stml\n'
+        # annotationes fontis (fabrica-7 T2/T5): instrumentum = clausura
+        # binarii domus (provenientia); facultas repositorium = clavis
+        # commissum HEAD (omnis commissio)
+        sed -n 's/.*<aedilis instrumentum="\([^"]*\)"\/>.*/\1/p' "$FONS" |
+        while read -r b; do _clausura "$b"; done
+        grep -q '<aedilis facultas="repositorium"/>' "$FONS" &&
+            printf 'C\t-\t\tcommissum HEAD (facultas repositorium)\n'
         bin/aedilis "$FONS" --partes 2>/dev/null | while IFS=$'\t' read -r g v; do
             case "$g" in
                 O|C|V) _servanda "$v" && printf 'F\t%s\t\tclausura %s\n' "$v" "$v" ;;
@@ -181,11 +210,12 @@ awk -F'\t' -v titulus="$TITULUS" '
         else if ($1 == "E") E[$2] = $4
         else if ($1 == "N") { nN++; Nd[nN] = $2; Nre[nN] = glob_re($3); Nc[nN] = $4 }
         else if ($1 == "T") { nT++; Td[nT] = $2; Tc[nT] = $4 }
+        else if ($1 == "C") omnis = $4
         next
     }
     {
         c = $1
-        if (!(c in visa)) { visa[c] = 1; ordo[++nc] = c }
+        if (!(c in visa)) { visa[c] = 1; ordo[++nc] = c; if (omnis != "") causa[c] = omnis }
         if ($2 == "-") next
         if (causa[c] != "") next
         s = substr($2, 1, 1); v = $3

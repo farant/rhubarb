@@ -1,4 +1,5 @@
 /* Probatio pro delineare - functiones graphicae */
+/* <aedilis facultas="fenestra"/> */
 #include "latina.h"
 #include "fenestra.h"
 #include "delineare.h"

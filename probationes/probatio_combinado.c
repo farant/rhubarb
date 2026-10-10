@@ -1,4 +1,5 @@
 /* probatio_combinado.c - Demo applicatio cum Concha */
+/* <aedilis facultas="fenestra"/> */
 #include "concha.h"
 #include <stdio.h>
 #include <time.h>

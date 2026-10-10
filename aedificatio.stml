@@ -693,7 +693,12 @@
       <verbum! (>compile_tests.sh
     </mandatum>
     <vestigium via="build/speculum/hospes"/>
+    <!-- speculum_generare.sh aedilis super consumptorem currit (manifestum
+         eius legit): derivatio in build/aedilis/<consumptor>/ (fabrica-7
+         T4 - prius sub compile_tests.sh solo, numquam iudicata) -->
+    <vestigium via="build/aedilis/probatio_vitrea_hospes"/>
     <ingressus genus="fasciculus" via="tools/speculum_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/vexilla.sh"/>
     <exitus via="build/speculum/hospes/capsula_speculi_hospes.c" provenientia="ignota"/>
     <exitus via="build/speculum/hospes/capsula_speculi_hospes.h" provenientia="ignota"/>
   </actio>
@@ -775,11 +780,17 @@
     <mandatum>
       <verbum! (>./tools/canon_coquere.sh
     </mandatum>
+    <praecondicio actio="canon"/>
     <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="fasciculus" via="cocta.registrum"/>
     <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
     <ingressus genus="fasciculus" via="natura/cocta/planta.canon"/>
     <ingressus genus="fasciculus" via="tools/canon_coquere.sh"/>
+    <!-- instrumentum quod scriptum currit (fabrica-7, arbor frigida:
+         'bin/canon_coquere abest' fractum): praecondicio canon ORDINEM
+         dat (instrumentum_domus loci nullos habet consulto - cyclus
+         bootstrap), ingressus clavem per provenientiam binarii -->
+    <ingressus genus="instrumentum_domus" via="bin/canon_coquere"/>
     <ingressus genus="manifestum" via="build/aedilis/canon_coquere/manifestum.stml"/>
     <ingressus genus="fasciculus" via="silva/formator.sh"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/formator.c"/>
@@ -903,78 +914,74 @@
     <exitus via="probationes/capsula_assets.h" provenientia="regeneratio"/>
   </actio>
   <!-- PORTA aedilis ut verdictum (fabrica plan 5 T5b): bin/fabrica
-       cursorem ipse currit (signum). Clausura C per librum lectionum
-       (bin/aedilis, probationes - canalis T5a); cursor ipse et stipes
-       ssh villae (probatio_villa_agens per execvp vocat: lectiones
-       bash librum non intrant) per effectus. struere.sh generata
-       (build/aedilis/probatio_*) clang directe vocant: fontes eorum
-       aedilis ipse legit et notat - identitas clang declaratur. -->
+       cursorem ipse currit (signum). CORPUS aedilis solum (fabrica-7
+       T7): derivatio, scripta emissa (build/aedilis/probatio_*) per
+       clang directe structa - fontes eorum aedilis ipse legit et notat,
+       identitas clang declaratur -, clausura contra clang -MM.
+       Probationes NON currit: membra probationes_radicis sunt (porta
+       radix); vestigia build/ probationum, praecondicio tabulariumd,
+       binaria quae probationes currebant et stipes ssh villae inde
+       sublata (debita membrorum, annotationes instrumenti). -->
   <actio titulus="porta_aedilis" genus="iudicium" lectiones="verum"
       signum="PORTA AEDILIS:">
     <mandatum>
       <verbum! (>./tools/aedilis_porta.sh
     </mandatum>
-    <praecondicio actio="tabulariumd"/>
     <vestigium via="build/aedilis" communis="verum"/>
-    <!-- scripta probationum radicis in build/ (nominatim, Fran
-         2026-10-06: area una omnium probationum = desideratum) -->
-    <vestigium via="build/probatio_generare_instrumenta"/>
-    <vestigium via="build/probatio_git_arbores"/>
-    <vestigium via="build/probatio_natura_canones"/>
-    <vestigium via="build/probatio_silex_area"/>
-    <vestigium via="build/probatio_thesaurus"/>
-    <vestigium via="build/manus_ultimum.js" forma="plagula"/>
-    <vestigium via="build/probatio_ct.db" forma="plagula"/>
-    <vestigium via="build/probatio_ct.db-shm" forma="plagula"/>
-    <vestigium via="build/probatio_ct.db-wal" forma="plagula"/>
-    <vestigium via="build/probatio_ct.jsonl" forma="plagula"/>
-    <vestigium via="build/probatio_ct_pid.txt" forma="plagula"/>
-    <vestigium via="build/probatio_ct_portus.txt" forma="plagula"/>
-    <vestigium via="build/probatio_filum.sera" forma="plagula"/>
-    <vestigium via="build/probatio_glossae.html" forma="plagula"/>
-    <vestigium via="build/probatio_lectiones.tsv" forma="plagula"/>
-    <vestigium via="build/probatio_lectiones_s.txt" forma="plagula"/>
-    <vestigium via="build/probatio_ludus_imago_pictor.png" forma="plagula"/>
-    <vestigium via="build/probatio_ludus_imago_quattuor.png" forma="plagula"/>
-    <vestigium via="build/probatio_mensa.db" forma="plagula"/>
-    <vestigium via="build/probatio_vigilia_binarium" forma="plagula"/>
-    <vestigium via="build/probatio_vigilia_commissum" forma="plagula"/>
-    <vestigium via="build/probatio_vigilia_fons.c" forma="plagula"/>
-    <vestigium via="build/probatio_vigilia_manifestum" forma="plagula"/>
-    <vestigium via="build/probatio_terminale.png" forma="plagula"/>
-    <vestigium via="build/probatio_vicus_paginae.png" forma="plagula"/>
-    <vestigium via="build/probatio_vicus_iussa.png" forma="plagula"/>
-    <vestigium via="build/probatio_pictor_aspergillum.png" forma="plagula"/>
-    <vestigium via="build/probatio_pictor_palette.png" forma="plagula"/>
-    <vestigium via="build/probatio_volumen.db" forma="plagula"/>
-    <vestigium via="build/probatio_volumen_aut.db" forma="plagula"/>
-    <vestigium via="build/probatio_sent.db" forma="plagula"/>
-    <vestigium via="build/probatio_sent.db-shm" forma="plagula"/>
-    <vestigium via="build/probatio_sent.db-wal" forma="plagula"/>
-    <vestigium via="build/probatio_sent.jsonl" forma="plagula"/>
-    <vestigium via="build/probatio_sent.portus" forma="plagula"/>
-    <vestigium via="build/probatio_villa.db" forma="plagula"/>
-    <vestigium via="build/probatio_villa.db-shm" forma="plagula"/>
-    <vestigium via="build/probatio_villa.db-wal" forma="plagula"/>
-    <vestigium via="build/probatio_villa.jsonl" forma="plagula"/>
-    <vestigium via="build/probatio_villa.portus" forma="plagula"/>
     <ingressus genus="effectus" via="tools/aedilis_porta.sh"/>
-    <ingressus genus="effectus" via="probationes/fixa/villa/ssh_stipes.sh"/>
     <ingressus genus="instrumentum_domus" via="bin/aedilis"/>
-    <!-- binaria quae probationes per system() currunt: exsecutio
-         librum non intrat (lectiones filii C eum intrant) -->
-    <ingressus genus="instrumentum_domus" via="bin/generare"/>
-    <ingressus genus="instrumentum_domus" via="bin/manus"/>
-    <ingressus genus="instrumentum_domus" via="bin/natura"/>
-    <ingressus genus="instrumentum_domus" via="bin/natura_canones"/>
-    <ingressus genus="instrumentum_domus" via="bin/natura_glossae"/>
-    <!-- daemon tabularii (praecondicio tabulariumd, numquam iudicata):
-         fontes eius per manifesta fragmenti, non octeti binarii -->
-    <ingressus genus="manifesta" via="build/fabrica/clausurae/gesta__tabulariumd_fontes_generata"/>
-    <ingressus genus="fasciculus" via="gesta/tabulariumd.sh"/>
-    <ingressus genus="fasciculus" via="gesta/tabulariumd_fontes_generata.sh"/>
     <ingressus genus="identitas_clang" via="clang"/>
     <exitus via="build/fabrica/verdicta/aedilis.txt" provenientia="verdictum"/>
+  </actio>
+
+  <!-- PROBATIONES RADICIS (fabrica-7 T4): suita radicis ut gradus -
+       quaeque probationes/probatio_*.c actio sua (clausura aedilis,
+       thesaurus, area, ambitus basis, vestigium suum, sectiones credo,
+       instrumenta et facultates ex annotationibus). ORACULA usque ad
+       commutationem (T7): compile_tests.sh (porta radix) et
+       aedilis_porta.sh. Scripta extra aream = DEBITA nominata, quodque
+       membri unius (spec 7 IV; olim vestigia porta_aedilis omnibus
+       communia) - numerus ad nihil ducendus: scratch ad TMPDIR (area
+       ipsa) et linea debiti delenda. -->
+  <actio titulus="probationes_radicis" genus="iudicium">
+    <probationes_c exemplar="probationes/probatio_*.c" praeter="probatio_*_benchmark.c"/>
+    <praecondicio actio="tabulariumd"/>
+    <praecondicio actio="speculum_hospes"/>
+    <!-- commutatores manu (aurum rescribere, area plutil) et stipes ssh
+         quem probatio ipsa ponit et filius legit -->
+    <ambitus variabilis="PICTOR_DOCUMENTUM_AURUM_SCRIBERE"/>
+    <ambitus variabilis="QUADRANS_AURUM_SCRIBERE"/>
+    <ambitus variabilis="PLIST_AREA"/>
+    <ambitus variabilis="VILLA_SSH"/>
+    <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
+    <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
+    <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>
+    <debitum_scripturae membrum="probatio_thesaurus" via="build/probatio_thesaurus/" causa="thesaurus probationis (scratch)"/>
+    <debitum_scripturae membrum="probatio_manus" via="build/manus_ultimum.js" causa="effusio manus ultima ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_filum" via="build/probatio_filum.sera" causa="sera probationis"/>
+    <debitum_scripturae membrum="probatio_natura_glossae" via="build/probatio_glossae.html" causa="glossae HTML ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_lectiones" via="build/probatio_lectiones.tsv" causa="liber lectionum probationis"/>
+    <debitum_scripturae membrum="probatio_lectiones" via="build/probatio_lectiones_s.txt" causa="liber lectionum probationis"/>
+    <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_pictor.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_quattuor.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_mensa" via="build/probatio_mensa.db" causa="sqlite probationis"/>
+    <debitum_scripturae membrum="probatio_terminale" via="build/probatio_terminale.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_vicus_paginae" via="build/probatio_vicus_paginae.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_vicus_iussa" via="build/probatio_vicus_iussa.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_pictor_aspergillum" via="build/probatio_pictor_aspergillum.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_pictor_palette" via="build/probatio_pictor_palette.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_volumen" via="build/probatio_volumen.db" causa="sqlite probationis"/>
+    <debitum_scripturae membrum="probatio_volumen" via="build/probatio_volumen_aut.db" causa="sqlite probationis"/>
+    <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_binarium" causa="vigilia: artificia ficta probationis"/>
+    <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_commissum" causa="vigilia: artificia ficta probationis"/>
+    <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_fons.c" causa="vigilia: artificia ficta probationis"/>
+    <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_manifestum" causa="vigilia: artificia ficta probationis"/>
+    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db" causa="tabulariumd probationis (scrinium, annales, portus)"/>
+    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db-shm" causa="tabulariumd probationis (scrinium, annales, portus)"/>
+    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.db-wal" causa="tabulariumd probationis (scrinium, annales, portus)"/>
+    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct.jsonl" causa="tabulariumd probationis (scrinium, annales, portus)"/>
+    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct_pid.txt" causa="tabulariumd probationis (scrinium, annales, portus)"/>
+    <debitum_scripturae membrum="probatio_cliens_tabularii" via="build/probatio_ct_portus.txt" causa="tabulariumd probationis (scrinium, annales, portus)"/>
   </actio>
 
   <!-- INSTITUTIONES (1b T5, Q42): copia ~/.bin actio sua - fasciculus

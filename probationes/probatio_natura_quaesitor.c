@@ -11,6 +11,7 @@
  * super binarium, assertiones in effusione).
  * ================================================== */
 
+/* <aedilis instrumentum="bin/natura"/> */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "credo.h"

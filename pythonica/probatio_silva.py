@@ -1065,9 +1065,20 @@ try:
     pg = silva.porta('ficta-g')
     credo(not pg.sana and pg.rc == 1 and len(pg.fracturae) == 1
           and pg.fracturae[0].nomen == 'gradus_fictus/b'
-          and 'probatio fracta' in pg.fracturae[0].relatio[0],
+          and 'probatio fracta' in pg.fracturae[0].relatio,
           'porta gradus: 1/2 -> FRACTA, membrum fractum nominatum (%r)'
           % (pg.fracturae,))
+    # relatio TEXTUS esse debet (fabrica-7 T7): relatio_fracturarum et
+    # _summa_fracturae .splitlines() vocant - lista olim hic ruisset
+    try:
+        textus_relationis = silva.relatio_fracturarum(pg.fracturae)
+        _ = [silva._summa_fracturae(f) for f in pg.fracturae]
+    except AttributeError as e:
+        textus_relationis = 'RUIT: %s' % e
+    credo('gradus_fictus/b' in textus_relationis
+          and 'probatio fracta' in textus_relationis,
+          'porta gradus: relatio fracturarum legibilis (%r)'
+          % textus_relationis[:120])
     silva.FABRICA_BIN = _fabrica_gradus('sera')
     pg = silva.porta('ficta-g')
     credo(pg.sana and pg.compendium == 'fictum: sanum',
@@ -1084,9 +1095,46 @@ try:
           and '<actio titulus="probationes_toml" genus="iudicium">'
           in open(os.path.join(RADIX, 'toml', 'aedificatio.stml')).read(),
           'portae graduum: toml -> probationes_toml declaratum')
+    # RESIDUA (fabrica-7 T7): 'prae' ANTE sanare, 'post' POST; sana
+    # solum si omnes; residua fracta nominata (residua_<gradus>)
+    ordo_log = os.path.join(T, 'residua_ordo.txt')
+    open(ordo_log, 'w').close()
+    fab = _fabrica_gradus('transit')
+    with open(fab) as f:
+        corpus_fab = f.read()
+    with open(fab, 'w') as f:
+        f.write(corpus_fab.replace('#!/bin/bash\n', '#!/bin/bash\necho '
+                                   'sanare >> %s\n' % ordo_log, 1))
+    def _residuum(nomen, sanum):
+        return ['bash', '-c', 'echo %s >> %s; echo "RESIDUA: %s"; exit %d'
+                % (nomen, ordo_log, 'sana' if sanum else 'FRACTA ' + nomen,
+                   0 if sanum else 1)]
+    silva.FABRICA_BIN = fab
+    silva.PORTAE_RESIDUA['ficta-g'] = [
+        ('prae', _residuum('prae', True), 'RESIDUA: sana'),
+        ('post', _residuum('post', True), 'RESIDUA: sana')]
+    pg = silva.porta('ficta-g')
+    ordo = open(ordo_log).read().split()
+    credo(pg.sana and ordo == ['prae', 'sanare', 'post']
+          and 'prae RESIDUA: sana' in pg.compendium
+          and 'post RESIDUA: sana' in pg.compendium,
+          'residua: prae ante sanare, post post (%r, %s)'
+          % (ordo, pg.compendium))
+    silva.PORTAE_RESIDUA['ficta-g'][1] = (
+        'post', _residuum('post', False), 'RESIDUA: sana')
+    pg = silva.porta('ficta-g')
+    credo(not pg.sana and pg.rc == 1
+          and [f.nomen for f in pg.fracturae] == ['residua_post']
+          and 'FRACTA post' in silva.relatio_fracturarum(pg.fracturae),
+          'residua: post fracta -> porta FRACTA, residua_post nominata (%r)'
+          % ([f.nomen for f in pg.fracturae],))
+    credo([g for g, _, _ in silva.PORTAE_RESIDUA.get('radix', [])]
+          == ['prae', 'post'],
+          'residua: radix prae + post declarata')
 finally:
     silva.FABRICA_BIN = _fb_gradus_vera
     silva.PORTAE_GRADUUM.pop('ficta-g', None)
+    silva.PORTAE_RESIDUA.pop('ficta-g', None)
     silva.PORTAE.pop('ficta-g', None)
     silva.PORTAE.pop('ficta-v', None)
     for _v in (_vv, os.path.join(RADIX, 'build', 'fabrica', 'acta', 'porta_ficta-v.log')):

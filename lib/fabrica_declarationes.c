@@ -796,6 +796,82 @@ _vestigia_legere (
     redde VERUM;
 }
 
+/* DEBITA SCRIPTURAE (fabrica-7 T3): <debitum_scripturae membrum via
+ * causa/> in actione GRADUS solum (membra extra aream scribunt; actio
+ * ordinaria vestigia sua habet); attributa tria postulata, via duplex
+ * recusatur. Membrum ignotum in explicatione recusatur (membra tum
+ * nota). */
+interior b32
+_debita_legere (
+    constans LectorActionum* l,
+                  StmlNodus* nodus,
+               FabricaActio* actio)
+{
+    Xar* filii;
+    i32  j;
+    i32  k;
+
+    filii = stml_invenire_omnes_liberos(nodus, "debitum_scripturae",
+        l->piscina);
+    si (filii == NIHIL || xar_numerus(filii) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (actio->gradus == NIHIL)
+    {
+        redde _lectio_recusata(l, _sedes(l->piscina, l->via,
+            *(StmlNodus**)xar_obtinere(filii, ZEPHYRUM)),
+            "debitum extra actionem gradus", actio->titulus);
+    }
+    actio->debita = xar_creare(l->piscina,
+        (i32)magnitudo(FabricaDebitum));
+    si (actio->debita == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(filii); j++)
+    {
+             StmlNodus* filius;
+                chorda* membrum;
+                chorda* via;
+                chorda* causa;
+                chorda  sedes;
+        FabricaDebitum* debitum;
+
+        filius   = *(StmlNodus**)xar_obtinere(filii, j);
+        sedes    = _sedes(l->piscina, l->via, filius);
+        membrum  = stml_attributum_capere(filius, "membrum");
+        via      = stml_attributum_capere(filius, "via");
+        causa    = stml_attributum_capere(filius, "causa");
+        si (   membrum == NIHIL || via == NIHIL || causa == NIHIL
+            || membrum->mensura == ZEPHYRUM || via->mensura == ZEPHYRUM
+            || causa->mensura == ZEPHYRUM)
+        {
+            redde _lectio_recusata(l, sedes, "debitum_scripturae "
+                "membrum, via et causa postulat", l->nihil);
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(actio->debita); k++)
+        {
+            si (chorda_aequalis(((FabricaDebitum*)xar_obtinere(
+                    actio->debita, k))->via, *via))
+            {
+                redde _lectio_recusata(l, sedes, "debitum duplex",
+                    *via);
+            }
+        }
+        debitum = (FabricaDebitum*)xar_addere(actio->debita);
+        si (debitum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        debitum->membrum  = *membrum;
+        debitum->via      = *via;
+        debitum->causa    = *causa;
+        debitum->sedes    = sedes;
+    }
+    redde VERUM;
+}
+
 /* ingressus: genus (alias) AUT res+clavis, via, suffixa; actio gradus
  * (membra ingressus ferunt) sola sine ingressu */
 interior b32
@@ -1018,7 +1094,7 @@ _actionem_probare (
 
 /* <actio> una -> FabricaActio, gradibus ordine fixo (prima recusatio
  * vincit): attributa, gradus, ambitus, post, praecondiciones, vestigia,
- * ingressus, exitus, regulae trans campos */
+ * debita, ingressus, exitus, regulae trans campos */
 interior b32
 _actionem_legere (
     constans LectorActionum* l,
@@ -1040,6 +1116,7 @@ _actionem_legere (
         && _nomina_filiorum(l, nodus, "praecondicio", "actio",
                "praecondicio sine actione", &actio->praecondiciones)
         && _vestigia_legere(l, nodus, actio)
+        && _debita_legere(l, nodus, actio)
         && _ingressus_legere(l, nodus, actio)
         && _exitus_legere(l, nodus, actio)
         && _actionem_probare(l, actio);

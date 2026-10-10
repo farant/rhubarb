@@ -259,6 +259,48 @@ polynomium_est_symmetricum (
 
 
 /* ==================================================
+ * Derivata, divisor communis, pars libera, translatio Taylor
+ * (radices.h his innititur)
+ * ================================================== */
+
+/* p' : t^e -> e t^(e-1) (Laurent licet); FALSUM si exponens extra
+ * fines */
+b32
+polynomium_derivata (
+    Polynomium  p,
+       Piscina* piscina,
+    Polynomium* exitus);
+
+/* maximus divisor communis in Q[t], forma primitiva, coefficiente
+ * summo > 0 (unicus); gcd(0, 0) = 0, gcd(a, 0) = forma primitiva a.
+ * Polynomia ORDINARIA solum (exponentes >= 0): in Z[t, t^-1] divisor
+ * usque ad unitatem t^k ambiguus - FALSUM si exponens negativus adest. */
+b32
+polynomium_divisor_communis (
+    Polynomium  a,
+    Polynomium  b,
+       Piscina* piscina,
+    Polynomium* exitus);
+
+/* pars libera quadratis: p / gcd(p, p'), primitiva, coefficiente summo
+ * > 0 - easdem radices DISTINCTAS habet, simplices. nullum -> nullum,
+ * constans -> 1. FALSUM sicut polynomium_divisor_communis. */
+b32
+polynomium_pars_libera (
+    Polynomium  p,
+       Piscina* piscina,
+    Polynomium* exitus);
+
+/* p(t + c), translatio Taylor; FALSUM si exponens negativus adest */
+b32
+polynomium_translatum (
+    Polynomium  p,
+        Magnus  c,
+       Piscina* piscina,
+    Polynomium* exitus);
+
+
+/* ==================================================
  * Valor
  * ================================================== */
 

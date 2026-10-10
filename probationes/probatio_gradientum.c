@@ -1,3 +1,4 @@
+/* <aedilis facultas="fenestra"/> */
 #include "piscina.h"
 #include "fenestra.h"
 #include "delineare.h"

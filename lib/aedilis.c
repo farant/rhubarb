@@ -858,6 +858,7 @@ aedilis_derivare (
     fructus->inresolutae  = _xar_chordarum(piscina);
     fructus->pura         = _xar_chordarum(piscina);
     fructus->facultates   = _xar_chordarum(piscina);
+    fructus->instrumenta  = _xar_chordarum(piscina);
 
     machina.piscina       = piscina;
     machina.configuratio  = configuratio;
@@ -1160,6 +1161,47 @@ aedilis_derivare (
                     redde NIHIL;
                 }
                 _chordam_addere(fructus->facultates, reliquum);
+            }
+            alioquin si (chorda_aequalis_literis(verbum,
+                         "instrumentum"))
+            {
+                /* INSTRUMENTUM (fabrica-7 T2): binarium domus quod
+                 * scopus currit - clavis membri identitatem eius
+                 * sequitur. Scopi solius (ut facultas); via sub bin/
+                 * sine '..' (binarium arboris, non scriptum nec
+                 * systema); bis declaratum = error scribae */
+                i32 k;
+
+                si (!chorda_aequalis(fons, fructus->scopus))
+                {
+                    _causam_ponere(causa_out, piscina,
+                        "instrumentum extra scopum (solum in scopo): ",
+                        fons);
+                    redde NIHIL;
+                }
+                si (   reliquum.mensura                     <= IV
+                    || !chorda_incipit(reliquum, chorda_ex_literis(
+                           "bin/", piscina))
+                    || reliquum.datum[reliquum.mensura - I] == '/'
+                    || chorda_invenire_index(reliquum,
+                           chorda_ex_literis("..", piscina)) >= 0)
+                {
+                    _causam_ponere(causa_out, piscina,
+                        "instrumentum extra bin/ (binarium domus "
+                        "solum): ", annotatio);
+                    redde NIHIL;
+                }
+                per (k = 0; k < xar_numerus(fructus->instrumenta); k++)
+                {
+                    si (chorda_aequalis(*(chorda*)xar_obtinere(
+                            fructus->instrumenta, k), reliquum))
+                    {
+                        _causam_ponere(causa_out, piscina,
+                            "instrumentum duplex: ", annotatio);
+                        redde NIHIL;
+                    }
+                }
+                _chordam_addere(fructus->instrumenta, reliquum);
             }
             alioquin
             {

@@ -108,6 +108,7 @@
     <liberum nomen="probationes_c" maximum="1"/>
     <liberum nomen="ambitus"/>
     <liberum nomen="post"/>
+    <liberum nomen="debitum_scripturae"/>
   </elementum>
 
   <elementum nomen="post"
@@ -132,6 +133,19 @@
             ('*' globus), e.g. toml/probationes/probatio_*.c"/>
     <attributum nomen="praeter" genus="textus"
       nota="forma nominum exclusorum, e.g. *_benchmark.c"/>
+  </elementum>
+
+  <elementum nomen="debitum_scripturae"
+    nota="DEBITUM SCRIPTURAE (fabrica-7 T3): actionis GRADUS solum -
+          membrum UNUM extra aream suam in via una scribere licet (via
+          in vestigio eius solius; membrum aliud ibi scribens FRACTUM).
+          Via in '/' desinens = directorium. Via duplex, membrum
+          ignotum recusantur. bin/fabrica census debita numerat (ad
+          nihil ducenda: scratch ad TMPDIR, linea delenda)">
+    <attributum nomen="membrum" genus="nomen" necessarium="verum"
+      nota="titulus membri, e.g. probatio_ct"/>
+    <attributum nomen="via" genus="textus" necessarium="verum"/>
+    <attributum nomen="causa" genus="textus" necessarium="verum"/>
   </elementum>
 
   <elementum nomen="ambitus"

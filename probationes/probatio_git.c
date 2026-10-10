@@ -15,6 +15,8 @@
  * committi non poterat. Arbor laborans nihil ad caput pertinet.
  */
 
+/* <aedilis facultas="repositorium"/> */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -27,7 +29,44 @@
 #include "processus.h"
 
 #include <stdio.h>
+#include <stdlib.h>   /* getenv */
+#include <unistd.h>   /* getpid */
 #include <string.h>
+
+/* SCRATCH (fabrica-7 T4): directorium UNICUM sub TMPDIR (per pid) - sub
+ * fabrica area membri ipsa (TMPDIR = <area>tmp; debitum
+ * build/probatio_git_arbores/ soluta), sub compile_tests.sh directorium
+ * systematis. Nomen unicum: arbores duae non concurrunt. Scriptura
+ * TRANSIENS in build/ photographiam fabricae fallebat (census debitum
+ * 'stalum' falso nominabat). */
+hic_manens character _scratch[DXII];
+
+interior b32
+_scratch_parare (vacuum)
+{
+    constans character* tmp = getenv("TMPDIR");
+        memoriae_index  n;
+
+    si (tmp == NIHIL || tmp[0] == '\0')
+    {
+        tmp = "/tmp";
+    }
+    /* '/' finalis (TMPDIR macOS) demitur: via '//' a git normalizata
+     * cum via probationis non congruebat */
+    n = strlen(tmp);
+    dum (n > I && tmp[n - I] == '/')
+    {
+        n--;
+    }
+    /* unicum per processum (getpid): processus concurrentes numquam
+     * idem; reliquiae pid iterati prius deletae */
+    sprintf(_scratch, "%.*s/probatio_git_arbores.%d", (integer)(n
+        > CD ? CD : n), tmp,
+        (integer)getpid());
+    (vacuum)filum_arborem_delere(_scratch);
+    redde filum_directorium_creare_cum_parentibus(_scratch);
+}
+
 
 interior b32
 _est_sha_hex (
@@ -144,15 +183,15 @@ s32 principale (vacuum)
     /* ARBOR OPERIS (git worktree add; quaestio …QY4, desideratum
      * …JF8ZMD): '.git' ibi PLAGULA est ('gitdir: <via>'), gitdir HEAD
      * proprium tenet et 'commondir' ad directorium commune (objects,
-     * refs, packed-refs) monstrat. Structura synthetica in build/, git
-     * ipso non vocato. git_aperire directoria parentum ascendit: sine
+     * refs, packed-refs) monstrat. Structura synthetica in scratch sub
+     * TMPDIR (fabrica-7 T4; olim build/), git ipso non vocato.
+     * git_aperire directoria parentum ascendit: sine
      * '.git' plagula intellecta repositorium VERUM supra inveniret,
      * ergo via_git == gitdir syntheticum asseritur, non apertio
      * sola. */
     {
-        constans character* radix_arborum = chorda_ut_cstr(
-            via_absoluta(chorda_ex_literis("build/probatio_git_arbores",
-                piscina), piscina), piscina);
+        constans character* radix_arborum = _scratch_parare()
+            ? _scratch : "";
         constans character* communis   = repositorium->via_communis;
         constans character* gitdir     = _serere(piscina, radix_arborum,
             "/duo/gitdir", "");
@@ -167,6 +206,7 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans arborem operis ('.git' plagula, "
             "commondir) ---\n");
+        CREDO_VERUM(radix_arborum[0] != '\0');
         (vacuum)filum_arborem_delere(radix_arborum);
         CREDO_VERUM(filum_directorium_creare_cum_parentibus(gitdir));
         CREDO_VERUM(filum_directorium_creare_cum_parentibus(arbor_duo));

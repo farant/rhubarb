@@ -30,10 +30,12 @@
  * eius contra sectiones IV-VI examina - non ad finem adice sperans.
  * ------------------------------------------------------------------
  *
- * Daemon EPHEMERUS (-portus 0, scrinium et annales in build/):
+ * Daemon EPHEMERUS (-portus 0, scrinium et annales in scratch sub
+ * TMPDIR - fabrica-7 T4; olim build/):
  * tabularium VERUM Franis numquam tangitur.
  * ==================================================================== */
 
+#include "postulata_posix.h"
 #include "latina.h"
 #include "credo.h"
 #include "sententiae.h"
@@ -47,8 +49,58 @@
 #include "lectiones.h"
 
 #include <stdio.h>
-#include <stdlib.h>   /* system */
+#include <stdlib.h>   /* system, getenv */
+#include <unistd.h>   /* getpid */
 #include <string.h>
+
+/* SCRATCH (fabrica-7 T4): directorium UNICUM sub TMPDIR (per pid) - sub
+ * fabrica area membri ipsa (TMPDIR = <area>tmp; debita
+ * build/probatio_sent* soluta), sub compile_tests.sh directorium
+ * systematis. Nomen unicum: arbores duae nec scrinium commune habent
+ * nec daemonem alienum necant (olim 'pkill -f ... -scrinium
+ * build/probatio_sent.db' via relativa omnes arbores tangebat).
+ * Scriptura TRANSIENS in build/ photographiam fabricae fallebat (census
+ * debitum 'stalum' falso nominabat). */
+hic_manens character _scratch[DXII];
+
+interior b32
+_scratch_parare (vacuum)
+{
+    constans character* tmp = getenv("TMPDIR");
+        memoriae_index  n;
+
+    si (tmp == NIHIL || tmp[0] == '\0')
+    {
+        tmp = "/tmp";
+    }
+    /* '/' finalis (TMPDIR macOS) demitur: via '//' a git normalizata
+     * cum via probationis non congruebat */
+    n = strlen(tmp);
+    dum (n > I && tmp[n - I] == '/')
+    {
+        n--;
+    }
+    /* unicum per processum (getpid): processus concurrentes numquam
+     * idem; reliquiae pid iterati prius deletae */
+    sprintf(_scratch, "%.*s/probatio_sent.%d", (integer)(n
+        > CD ? CD : n), tmp,
+        (integer)getpid());
+    (vacuum)filum_arborem_delere(_scratch);
+    redde filum_directorium_creare_cum_parentibus(_scratch);
+}
+
+/* "<scratch>/<titulus>" in piscina */
+interior constans character*
+_in_scratch (
+               Piscina* piscina,
+    constans character* titulus)
+{
+    character* via = (character*)piscina_allocare(piscina,
+        strlen(_scratch) + strlen(titulus) + II);
+
+    sprintf(via, "%s/%s", _scratch, titulus);
+    redde via;
+}
 
 #define FX_LIBER "probationes/fixa/sententiae/de_imagine.md"
 
@@ -215,21 +267,23 @@ principale (vacuum)
 
     imprimere("\n--- I. daemon ephemerus ---\n");
     {
-        (vacuum)system("rm -f build/probatio_sent.*");
+        character imperium[MXXIV];
+
+        CREDO_VERUM (_scratch_parare());
         /* daemon PRAESTRUCTUS (actio tabulariumd; cursor radicis eum
          * semel struit): probatio currit, non struit (fabrica plan 5
          * T5b) */
         CREDO_VERUM (filum_existit("gesta/build/tabulariumd"));
-        CREDO_VERUM (system("gesta/build/tabulariumd -portus 0"
-            " -scrinium build/probatio_sent.db"
-            " -annales build/probatio_sent.jsonl"
-            " > build/probatio_sent.portus 2> /dev/null &")
-                == ZEPHYRUM);
+        sprintf(imperium, "gesta/build/tabulariumd -portus 0"
+            " -scrinium %s/sent.db -annales %s/sent.jsonl"
+            " > %s/sent.portus 2> /dev/null &", _scratch, _scratch,
+            _scratch);
+        CREDO_VERUM (system(imperium) == ZEPHYRUM);
 
         per (k = ZEPHYRUM; k < XXV; k++)
         {
-            FILE* pf = lectiones_fopen("build/probatio_sent.portus",
-                "r");
+            FILE* pf = lectiones_fopen(_in_scratch(piscina,
+                "sent.portus"), "r");
 
             si (pf != NIHIL)
             {
@@ -479,7 +533,7 @@ principale (vacuum)
         imprimere("\n--- VIII. annales: mutatio scripta ---\n");
         {
             chorda annales = filum_legere_totum(
-                "build/probatio_sent.jsonl", piscina);
+                _in_scratch(piscina, "sent.jsonl"), piscina);
 
             CREDO_VERUM (annales.mensura > ZEPHYRUM);
             CREDO_CHORDA_CONTINET (annales,
@@ -493,9 +547,9 @@ principale (vacuum)
         character imperium[1024];
 
         sprintf(imperium, "pkill -f 'tabulariumd -portus 0"
-            " -scrinium build/probatio_sent.db' > /dev/null 2>&1");
+            " -scrinium %s/sent.db' > /dev/null 2>&1", _scratch);
         (vacuum)system(imperium);
-        (vacuum)system("rm -f build/probatio_sent.*");
+        (vacuum)filum_arborem_delere(_scratch);
     }
 
     imprimere("\n");

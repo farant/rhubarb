@@ -1,5 +1,6 @@
 /* probatio_generare.c - Probationes pro generare directivis */
 
+/* <aedilis instrumentum="bin/generare"/> */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

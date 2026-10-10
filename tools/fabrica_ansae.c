@@ -163,7 +163,8 @@ suturae_clausura_c (
         (i32)magnitudo(chorda));
     clausura_out->vexilla_nexus  = xar_creare(piscina,
         (i32)magnitudo(chorda));
-    clausura_out->facultates     = fructus->facultates;
+    clausura_out->facultates   = fructus->facultates;
+    clausura_out->instrumenta  = fructus->instrumenta;
     /* scopus PRIMUS: fructus eum inter obiecta non fert (struere.sh
      * aedilis eum post obiecta compilat) */
     _chordam_unicam_addere(clausura_out->fontes,
