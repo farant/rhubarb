@@ -2623,3 +2623,49 @@ Result, last 150 first-parent commits:
   file for its flags - a per-member slice would remove most; follow-up,
   not this slice), piscina.h 502, eventus.h 247, credo.h 242,
   lectiones.h 202, repositorium 150 (git), xar.h 140.
+
+## 2026-10-09 - fabrica-7 T7: the switch
+
+`PORTAE_GRADUUM['radix'] = 'probationes_radicis'`. Before flipping, an
+audit of what a full compile_tests.sh run checks BESIDES the 240 tests
+found five things the composite alone would have dropped: every lib/*.c
+compiles (also files no test links), generare, speculum incl. the JS
+syntax check and the JS/CoreImage probes, and the two Apple oracles
+(plutil against the plist test binary, iconutil against build/*.o).
+amalgamata already has its own gate; GUI compile is covered by link-only
+members. Fran chose option 1: `compile_tests.sh --residua` does all of
+that except per-test runs (~15 s), and `PORTAE_RESIDUA['radix']` runs it
+AFTER the composite (the plutil oracle reads the member's binary via
+PLIST_BINARIUM). Gate = sana only if composite N/N AND 'RESIDUA: sana';
+the compendium carries both. Warm radix gate 76 s (old median 118 s).
+
+Latent bug fixed on the way: `_porta_per_gradum` built Fractura.relatio
+as a LIST; every reader calls .splitlines() - the first red step gate
+(toml or radix) would have crashed its own failure report.
+
+aedilis_porta.sh no longer runs tests: GUI/RETICULARIS/REPOSITORIUM_VIVUM
+lists gone (now facultas annotations), porta_aedilis loses 37 vestigia +
+9 ingressus that existed only because it ran tests (build/ scratch, the
+tabulariumd precondition and its sources, generare/manus/natura*, villa
+ssh stub). aedilis gate 74 s (was 180-210 s). The oracle reads the
+runner's GUI builds from its output ('GUI APP BUILT') instead of that
+list. Oracle after the switch: 256/256 (240 run + 16 build-only).
+
+Plants (planta, gate 'radix' via the composite): broken assertion in
+probatio_base64 -> 255/256 naming it, RESIDUA sana; broken speculum.js ->
+composite 256/256, RESIDUA: FRACTA speculum_js. The JS plant also showed
+the T4 existence-only approximation in action: no speculum member re-ran
+- a behaviour (not syntax) change to the capsule's inputs would go unseen
+by the composite (ledger, speculum question).
+
+NOT done here on purpose: the ledger inventory rows (radix 'currit
+binaria', aedilis 'currit binaria' still lists generare/natura/manus) -
+the ledger is shared by every tree, so re-deriving now would change
+main's owed gates before this code is merged. Re-derive in main after the
+merge (tools/inventarium_suitarum.py).
+Addendum (T7 commit): the pythonica gate refused the first attempt -
+probatio_silva.py asserted the OLD list shape (`relatio[0]`), i.e. the
+test encoded the bug. Now it checks the string AND that
+relatio_fracturarum/_summa_fracturae render the failure (the property the
+list broke); planting the list form back -> "RUIT: 'list' object has no
+attribute 'splitlines'", PYTHONICA FRACTA 2.

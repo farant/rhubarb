@@ -1811,7 +1811,14 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 # gradus (membra = probationes singulae) - linea 'VERDICTUM <c>: N/M'
 # bin/fabrica, non signum cursoris. Cursor (PORTAE[nomen]) manet: filtrum,
 # umbra, bin/fabrica absens, oraculum (tools/toml_gradus_oraculum.sh).
-PORTAE_GRADUUM = {'toml': 'probationes_toml'}
+PORTAE_GRADUUM = {'toml': 'probationes_toml',
+                  'radix': 'probationes_radicis'}
+# RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat, post
+# compositum (membra binaria praebent quae oracula legunt) - portae
+# radix: bibliothecae omnes, generare, speculum + JS, oracula Apple.
+# Sana SOLUM si compositum et residua sana.
+PORTAE_RESIDUA = {'radix': (['./compile_tests.sh', '--residua'],
+                            'RESIDUA: sana')}
 
 
 def _machina_legere(textus):
@@ -1906,12 +1913,28 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
          + (' +%d' % (len(non_recentia) - 3) if len(non_recentia) > 3 else ''))
         if non_recentia else '', len(cursa), omnia)
     fr = [] if sana else [
-        Fractura(o[2], [('%s: %s' % (o[1], o[4]))[:300]])
+        # relatio = TEXTUS (relatio_fracturarum / _summa_fracturae
+        # .splitlines() vocant; olim lista - porta gradus rubra ruisset)
+        Fractura(o[2], ('%s: %s' % (o[1], o[4]))[:300])
         for o in cursa if o[1] != 'SANATUM']
+    acta = _ANSI.sub('', r.stdout + r.stderr
+                     + (rj.stdout if rj is not r else ''))
+    residua = PORTAE_RESIDUA.get(nomen)
+    if residua is not None:
+        rr = _curre(residua[0])
+        textus = _ANSI.sub('', rr.stdout + rr.stderr)
+        residua_sana = rr.returncode == 0 and residua[1] in textus
+        m = re.search(r'^RESIDUA: .*$', textus, re.M)
+        compendium += ' | ' + (m.group(0) if m else
+                               'RESIDUA: exitus %d sine linea' % rr.returncode)
+        if not residua_sana:
+            fr.append(Fractura('residua', '\n'.join(
+                [l for l in textus.splitlines() if l.strip()][-10:])))
+        sana = sana and residua_sana
+        acta += '\n== residua ==\n' + textus
     _tempus_notare('porta', nomen, initium, sana, 0 if sana else 1)
     return Porta(nomen, True, sana, compendium, 0 if sana else 1,
-                 _ANSI.sub('', r.stdout + r.stderr
-                           + (rj.stdout if rj is not r else '')), fr, False)
+                 acta, fr, False)
 
 
 def _portae_verdictorum():

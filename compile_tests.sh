@@ -1010,6 +1010,7 @@ WATCH_MODE=0
 DEBUG_MODE=0
 CLEAN_MODE=0
 OBIECTA_MODE=0
+RESIDUA_MODE=0
 RETICULARIS=0
 MACHINA=0
 for arg in "$@"; do
@@ -1021,6 +1022,8 @@ for arg in "$@"; do
         CLEAN_MODE=1
     elif [ "$arg" == "--obiecta" ]; then
         OBIECTA_MODE=1
+    elif [ "$arg" == "--residua" ]; then
+        RESIDUA_MODE=1
     elif [ "$arg" == "-reticularis" ] || [ "$arg" == "--reticularis" ]; then
         RETICULARIS=1
     elif [ "$arg" == "-machina" ] || [ "$arg" == "--machina" ]; then
@@ -1112,6 +1115,46 @@ fi
 # '--libs-only': filtrum quod nihil congruebat, exitus 2 'nihil cursum'.
 if [ $OBIECTA_MODE -eq 1 ]; then
     compile_libraries || exit 1
+    exit 0
+fi
+
+# --residua (fabrica-7 T7): quod porta radix PRAETER probationes
+# singulas probat - probationes ipsae membra 'probationes_radicis'
+# sunt (fabrica). Bibliothecae OMNES compilatae (etiam quas nulla
+# probatio nectit; amalgamata), generare, speculum + syntaxis JS,
+# oracula Apple (plutil contra binarium membri probatio_plist,
+# iconutil). Exitus 2 oraculi = NIHIL CURSUM nominatum (ut cursus
+# plenus). 'RESIDUA: sana' / 'RESIDUA: FRACTA <nomina>'; exitus 0/1.
+if [ $RESIDUA_MODE -eq 1 ]; then
+    residua_fractae=""
+    compile_libraries || residua_fractae="$residua_fractae bibliothecae"
+    if [ -z "$residua_fractae" ]; then
+        run_generare || residua_fractae="$residua_fractae generare"
+        run_speculum || residua_fractae="$residua_fractae speculum_js"
+    fi
+    mkdir -p build/test_logs/singulae
+    for oraculum in plist_plutil icones_iconutil; do
+        [ -x "probationes/probatio_$oraculum.sh" ] || continue
+        PLIST_BINARIUM=build/fabrica/area/probationes_radicis/probatio_plist/probatio_plist \
+            "./probationes/probatio_$oraculum.sh" \
+            > "build/test_logs/singulae/$oraculum.log" 2>&1
+        rc=$?
+        if [ "$rc" = "0" ]; then
+            echo -e "${BLUE}oraculum $oraculum: sanum${RESET}"
+        elif [ "$rc" = "2" ]; then
+            echo -e "${YELLOW}oraculum $oraculum: NIHIL CURSUM (praerequisita desunt)${RESET}"
+            head -3 "build/test_logs/singulae/$oraculum.log"
+        else
+            echo -e "${RED}✗ oraculum $oraculum fractum${RESET}"
+            head -10 "build/test_logs/singulae/$oraculum.log"
+            residua_fractae="$residua_fractae $oraculum"
+        fi
+    done
+    if [ -n "$residua_fractae" ]; then
+        echo "RESIDUA: FRACTA$residua_fractae"
+        exit 1
+    fi
+    echo "RESIDUA: sana"
     exit 0
 fi
 

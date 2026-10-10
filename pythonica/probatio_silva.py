@@ -1065,9 +1065,20 @@ try:
     pg = silva.porta('ficta-g')
     credo(not pg.sana and pg.rc == 1 and len(pg.fracturae) == 1
           and pg.fracturae[0].nomen == 'gradus_fictus/b'
-          and 'probatio fracta' in pg.fracturae[0].relatio[0],
+          and 'probatio fracta' in pg.fracturae[0].relatio,
           'porta gradus: 1/2 -> FRACTA, membrum fractum nominatum (%r)'
           % (pg.fracturae,))
+    # relatio TEXTUS esse debet (fabrica-7 T7): relatio_fracturarum et
+    # _summa_fracturae .splitlines() vocant - lista olim hic ruisset
+    try:
+        textus_relationis = silva.relatio_fracturarum(pg.fracturae)
+        _ = [silva._summa_fracturae(f) for f in pg.fracturae]
+    except AttributeError as e:
+        textus_relationis = 'RUIT: %s' % e
+    credo('gradus_fictus/b' in textus_relationis
+          and 'probatio fracta' in textus_relationis,
+          'porta gradus: relatio fracturarum legibilis (%r)'
+          % textus_relationis[:120])
     silva.FABRICA_BIN = _fabrica_gradus('sera')
     pg = silva.porta('ficta-g')
     credo(pg.sana and pg.compendium == 'fictum: sanum',

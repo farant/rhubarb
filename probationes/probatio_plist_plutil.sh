@@ -20,7 +20,9 @@ RADIX="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$RADIX" || exit 2
 
 FIXUM=probationes/fixa/plist/apple_info.plist
-BINARIUM=build/probationes/probatio_plist
+# binarium probationis: cursoris radicis aut (porta radix per fabricam,
+# compile_tests.sh --residua) membri probatio_plist (fabrica-7 T7)
+BINARIUM="${PLIST_BINARIUM:-build/probationes/probatio_plist}"
 
 [ -x /usr/bin/plutil ] || { echo "NIHIL CURSUM: plutil abest" >&2; exit 2; }
 [ -f "$FIXUM" ] || { echo "NIHIL CURSUM: fixum abest: $FIXUM" >&2; exit 2; }

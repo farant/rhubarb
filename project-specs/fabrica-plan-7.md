@@ -121,10 +121,15 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
 
 ### T7: the switch
 
-- [ ] `PORTAE_GRADUUM['radix'] = 'probationes_radicis'`; gate radix via
+- [x] `PORTAE_GRADUUM['radix'] = 'probationes_radicis'`; gate radix via
   the composite; `aedilis_porta.sh` stops RUNNING tests (keeps
   derivation, emitted scripts, `clang -MM` comparison), its hand lists
   and per-test inputs removed (now annotations and debts). **Commit.**
+- As built (2026-10-09): radix = composite + `compile_tests.sh --residua`
+  (all libraries, generare, speculum + JS, plutil/iconutil oracles - what
+  the composite does not cover; Fran option 1); warm 76 s vs 118 s.
+  aedilis gate 74 s (was 180-210 s). Fractura list bug fixed. Inventory
+  rows re-derived in main after the merge (shared ledger).
 
 ### T8: close
 

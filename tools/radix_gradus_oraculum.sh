@@ -39,7 +39,7 @@ numeri () {
 }
 
 # I. cursor: verdicta per probationem ex .res (rc tc tr), GUI ex lineis
-#    'Building GUI app' / reticulares ex 'RETICULARIS EXCLUSUM'
+#    'GUI APP BUILT' / reticulares ex 'RETICULARIS EXCLUSUM'
 ./compile_tests.sh > "$T/cursor" 2>&1
 : > "$T/c"
 for r in "$SINGULAE"/*.res; do
@@ -53,12 +53,11 @@ done
 sed 's/\x1b\[[0-9;]*m//g' "$T/cursor" \
     | sed -n 's/.*RETICULARIS EXCLUSUM: \(probatio_[a-z0-9_]*\).*/\1/p' \
     | while read -r n; do printf '%s aedificata 0/0\n' "$n"; done >> "$T/c"
-for f in tools/aedilis_porta.sh; do
-    # GUI: index manu cursoris (aedificantur, non curruntur) - idem
-    # quem aedilis_porta.sh tenet (GUI_LISTA) usque ad T7
-    sed -n 's/^GUI_LISTA="\(.*\)"$/\1/p' "$f" | tr ' ' '\n' | grep . \
-        | while read -r n; do printf '%s aedificata 0/0\n' "$n"; done >> "$T/c"
-done
+# GUI: quod cursor VERE struxit ('GUI APP BUILT: <nomen>'); structura
+# fracta = fracta (fabrica-7 T7: olim index GUI_LISTA aedilis_porta.sh)
+sed 's/\x1b\[[0-9;]*m//g' "$T/cursor" \
+    | sed -n 's/.*GUI APP BUILT: \(probatio_[a-z0-9_]*\).*/\1 aedificata 0\/0/p;
+              s/.*BUILD FAILED: \(probatio_[a-z0-9_]*\).*/\1 fracta 0\/0/p' >> "$T/c"
 sort -u -k1,1 "$T/c" -o "$T/c"
 [ "$(grep -c ' transiit ' "$T/c")" -gt 0 ] || { echo "oraculum radicis: cursor nihil cucurrit" >&2; tail -5 "$T/cursor" >&2; exit 2; }
 
