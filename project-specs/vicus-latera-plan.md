@@ -259,6 +259,25 @@ the book's count changed - another view made a page). Drawn by
 `scriba_figura_paginae` (PARTES_INDEX, child of status). No book = no
 label. With named pages (S3) it becomes "<name> i/n".
 
+S3d decisions (Fran 2026-10-09): NO page naming - pages keep their
+increasing number ids; `#word` tags cycling through pages cover what
+names would do; S3d-2 (rename) dropped. (`$scriba(name)` from S3c can
+still create a non-numeric page; left as is.)
+
+S3d-1 as built (links): `iussum_nexus_ad_locum` / `_proximus`: `#` +
+`[a-z0-9_-]+`, at line start or after a non-word character, no
+arguments; every `#word` is a link (drawn in COLOR_ACCENT_SECONDARY,
+only where a page book exists). Click (one click, also in an unfocused
+pane): `#next` `#prev` = Ctrl+Shift+arrows (past the last creates one),
+`#first` `#last`, `#N` = the page whose id is N, any other word = tag:
+the next OTHER page (after the viewed one, wrapping) containing
+`#word`, cursor placed on it; none: "#w: nulla alia pagina" ("#N:
+nulla pagina" for a missing id). `paginam_mutare` split into
+`paginam_ponere` (page + cursor) + the step. Tests: probatio_iussum IX,
+probatio_vicus_nexus (I-VI); eight plants caught. Not pinned: `#N` by
+id vs position (they coincide in the test). Legacy `#back` (history)
+not done.
+
 **S2 - two panes.** A tab = left editor + right stack (decision 5);
 each pane's rectangle written to its branch; focus (clicking a pane
 focuses it; opening a widget focuses the right pane - to confirm);

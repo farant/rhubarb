@@ -127,6 +127,10 @@ nomen structura {
                           * spatio separata) */
     Xar* facultates;     /* chorda: scopi solius (fenestra, rete,
                           * repositorium) */
+    Xar* instrumenta;    /* chorda: binaria domus quae scopus currit
+                          * (<aedilis instrumentum="bin/X"/>, fabrica-7
+                          * T2) -> ingressus instrumentum_domus; NIHIL
+                          * licet (nulla) */
 } FabricaClausuraC;
 
 /* MEMBRUM gradus (fabrica-6 T5): id stabilis = "<actio>/<titulus>" */
@@ -134,6 +138,44 @@ nomen structura {
     chorda titulus; /* intra actionem: "probatio_x" */
     chorda fons;    /* via fontis (arbori relativa); vacua licet */
 } FabricaMembrum;
+
+/* DEBITUM SCRIPTURAE (fabrica-7 T3): exceptio nominata - membrum UNUM
+ * extra aream suam scribere licet, in via una, causa dicta
+ * (<debitum_scripturae membrum via causa/> in actione gradus). Via in
+ * '/' desinens = directorium (arbor), aliter plagula. Membrum aliud
+ * ibi scribens recusatur ut quaevis scriptura extra vestigium. Numerus
+ * ad nihil ducendus (census). */
+nomen structura {
+    chorda membrum;     /* titulus membri ('probatio_ct') */
+    chorda via;
+    chorda causa;
+    chorda sedes;       /* "plagula:versus" declarationis */
+} FabricaDebitum;
+
+/* SECTIO (fabrica-7, credo v2): verdictum sectionis membri gradus, ex
+ * plagula <area>/credo.tsv (CREDO_VERDICTA, lineae SECTIO). Suita non
+ * conversa: probationes_c post cursum ipsa plagulam syntheticam
+ * scribit - sectio una 'totum' (exitus ex codice, numeri ex compendio
+ * effusionis) - ergo lector unus, forma una. */
+nomen structura {
+    chorda titulus;
+    chorda exitus;      /* TRANSIIT | FRACTA | VACUA | ABORTA (credo);
+                         * gradus II credo: OMISSA, NOTA_FRACTA,
+                         * INOPINATA */
+       i32 praeteriti;
+       i32 totales;
+       i32 ms;          /* tempus - NUMQUAM in verdicto sigillato
+                         * (non deterministicum); cursus solum */
+    chorda fractura;    /* "filum:versus genus expressio"; vacua si
+                         * transiit */
+} FabricaSectio;
+
+nomen structura {
+     Xar* sectiones;     /* FabricaSectio, ordine plagulae */
+     b32  completa;      /* linea SUITA adest; FALSUM = ruina post
+                         * sectionem ultimam notatam */
+     b32 synthetica;    /* 'totum' a fabrica scriptum */
+} FabricaSectiones;
 
 nomen structura {
                   chorda  titulus;
@@ -203,6 +245,10 @@ nomen structura {
                                          * suum clavatur, cetera non.
                                          * Membra gradus a parente
                                          * hereditant. NIHIL licet. */
+                       Xar* debita;     /* FabricaDebitum (fabrica-7
+                                         * T3): parens = omnia
+                                         * declarata; membrum = sua
+                                         * sola. NIHIL licet. */
 } FabricaActio;
 
 /* COMPOSITUM (spec 1b par. II.3): artificium ex artificiis - lista
@@ -984,6 +1030,42 @@ chorda
 fabrica_acta_via (
      chorda  titulus,
     Piscina* piscina);
+
+/* DEBITA (fabrica-7 T3): status debiti post cursum ULTIMUM membri ex
+ * <area>debita.txt (a fabrica post cursum scripta: linea prima
+ * "cursus\ttransiit|fractus", deinde viae debitorum quas membrum
+ * usurpavit: photographia aut liber lectionum) */
+nomen enumeratio {
+    FABRICA_DEBITUM_SCRIPTUM = ZEPHYRUM, /* membrum ibi usum: mutatio
+                                          * manens aut via in libro
+                                          * lectionum - debitum vivum */
+    FABRICA_DEBITUM_STALUM,              /* transiit, usus nullus
+                                          * visus - delendum, NISI
+                                          * scriptura transiens extra
+                                          * librum (verifica) */
+    FABRICA_DEBITUM_IGNOTUM              /* nondum cucurrit, aut
+                                          * fractum sine scriptura */
+} FabricaDebitiStatus;
+
+FabricaDebitiStatus
+fabrica_debitum_iudicare (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* parens,     /* actio gradus declarans */
+    constans FabricaDebitum* debitum,
+                    Piscina* piscina);
+
+/* SECTIONES (fabrica-7 T1): plagula 'via' (CREDO_VERDICTA - lineae
+ * "SECTIO\t<titulus>\t<exitus>\t<praeteriti>\t<totales>\t<ms>\t
+ * <fractura>" et "SUITA\t..."; aliae ignorantur) per sutura->legere ->
+ * sectiones_out. Plagula absens aut linea SECTIO deformis -> FALSUM +
+ * causa (linea nominata). synthetica = sectio unica 'totum'. */
+b32
+fabrica_sectiones_legere (
+    constans FabricaSutura* sutura,
+        constans character* via,
+                   Piscina* piscina,
+          FabricaSectiones* sectiones_out,
+                    chorda* causa_out);
 
 /* AMBITUS BASIS: PATH fixum (/usr/bin:/bin:/usr/sbin:/sbin - systema
  * solum, ~/.bin ingressus non declaratus esset), HOME (sutura->

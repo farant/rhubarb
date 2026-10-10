@@ -99,6 +99,8 @@ principale (
     {
         redde I;
     }
+    /* S4: horologium locale in linea tabularum */
+    vicus_horologium_ponere(app.vicus, vicus_horologium_locale, NIHIL);
     /* terminalia montata: ornamenta ut cellulae, non pixela (ut
      * terminale_terminalis) - tessellatio lineas in cellulas
      * verteret */

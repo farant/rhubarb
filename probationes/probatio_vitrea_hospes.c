@@ -18,6 +18,7 @@
  *        aperitur et linea fontis noti per pontem confirmatur
  */
 
+/* <aedilis facultas="fenestra"/> */
 #include "fenestra.h"
 #include "vitrea.h"
 #include "internuntius.h"

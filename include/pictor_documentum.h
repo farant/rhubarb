@@ -3,11 +3,27 @@
  * Veritas est ACTA (volumen: solum-appende); proiectio (bitmap) est
  * derivata. Machina caudae - rami, checkpoints, cursor, revocare,
  * reficere, verificare - est `historia` (scriba-plan H2; leges ibi);
- * hic pars pictoris sola: pixela RGBA, vacatio alba, ictus pingere,
+ * hic pars pictoris sola: pixela RGBA, vacatio colore fundi thematis
+ * (COLOR_BACKGROUND), ictus pingere,
  * manifestum 'documentum' (dimensiones, intervallum).
  *
- * Acta v1: <ictus instrumentum color magnitudo><punctum x y/>...
- * </ictus>, <ramus ab/>. Cetera (§4) ignorantur cum nota.
+ * Acta v1: <ictus instrumentum color magnitudo [color_secundus]
+ * [exemplar] [semen]><punctum x y [t]/>...</ictus>, <ramus ab/>.
+ * Cetera (§4) ignorantur cum nota.
+ * instrumentum "aspergillum" (MacPaint): guttae (pixela singula) in
+ * disco radii ASPERGILLI_RADIUS x magnitudo circa quodque punctum;
+ * GUTTAE_PUNCTO x magnitudo per punctum et magnitudo plus per GUTTA_MS
+ * morae (t, ms ab initio ictus) - eaedem semper ex semine.
+ * instrumentum "spongia": quadratum SPONGIAE_LATUS x magnitudo
+ * centratum in quoque puncto lineae inter puncta, colore fundi
+ * thematis (ut vacatio); color ignoratur. Instrumentum absens aut
+ * aliud: penicillus: discus diametri magnitudo (pixela) in puncto primo
+ * et in quoque puncto lineae inter puncta (pictor_lineam_ambulare).
+ * exemplar (P3; exemplaria.h, absens = 0 solidus): pixelum quod
+ * penicillus aut aspergillum pingit colorem 'color' accipit ubi bitus
+ * exemplaris ad (x, y) TABULAE positus est, 'color_secundus' ubi non;
+ * color -1 (nullus; color_secundus absens = -1) = pixelum intactum.
+ * Spongia exemplar ignorat.
  */
 
 #ifndef PICTOR_DOCUMENTUM_H
@@ -25,6 +41,53 @@
 #include "tabula_pixelorum.h"   /* typus solus: fenestra.h Cocoa
                                   * in terminalem trahebat (013 A4) */
 #include "imago_typus.h"
+
+#define PICTOR_ASPERGILLI_RADIUS  VIII   /* x magnitudo */
+#define PICTOR_GUTTAE_PUNCTO      VI
+#define PICTOR_GUTTA_MS           VIII
+#define PICTOR_SPONGIAE_LATUS     XVI    /* x magnitudo */
+
+/* vestigium lineae: vocatur in puncto (x, y) */
+nomen vacuum (*PictorVestigium) (s32 x, s32 y, vacuum* ctx);
+
+/* puncta lineae (Bresenham) a (x0, y0) ad (x1, y1), initio EXCLUSO,
+ * fine incluso - regula penicilli et spongiae (documentum et
+ * praevisio eandem sequuntur) */
+vacuum
+pictor_lineam_ambulare (
+                s32  x0,
+                s32  y0,
+                s32  x1,
+                s32  y1,
+    PictorVestigium  vestigium,
+             vacuum* ctx);
+
+/* discus penicilli diametri n: pixelum (i, j) quadrati n x n (origo
+ * [x - n/2, y - n/2]) intra discum? (n <= III: quadratum plenum) */
+b32
+pictor_disci_pixelum (
+    s32 n,
+    s32 i,
+    s32 j);
+
+/* S3e: bibliotheca - spatia omnium documentorum pictoris in volumine
+ * (plagulae originis "pictor:documentum"), ordine viae; Xar de chorda
+ * ("" = documentum nudum radicis) */
+Xar*
+pictor_documenta_enumerare (
+     Volumen* volumen,
+     Piscina* piscina);
+
+/* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
+ * determinatus ex (semen, i, k) per sors */
+vacuum
+pictor_gutta (
+    s64  semen,
+    i32  i,
+    i32  k,
+    s32  radius,
+    s32* dx,
+    s32* dy);
 
 nomen structura {
                 Volumen* volumen;

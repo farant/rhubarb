@@ -10,6 +10,7 @@
 #include "stml.h"
 #include "canon.h"
 #include "thema.h"
+#include "color.h"
 #include "volumen.h"
 #include "insula.h"
 #include "motus.h"
@@ -85,7 +86,7 @@ s32 principale (vacuum)
     repo = insula_repositorium_creare(piscina, intern,
         "<pictor latitudo=\"320\" altitudo=\"200\"/>",
         "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
-        " magnitudo=\"1\" zoom=\"1\"/>");
+        " magnitudo_penicilli=\"1\" zoom=\"1\"/>");
     fons = filum_legere_totum("apps/pictor/canones/ephemera.canon",
         piscina);
     ephemera = canon_legere(fons, piscina, intern, &causa);
@@ -172,10 +173,10 @@ s32 principale (vacuum)
            constans i8* px;
                  Color  niger_c;
                    i32  niger_r;
-        im = pictor_documentum_proiectio(doc);
-        px = im->pixela + (XXV * im->latitudo + XV) * IV;
-        niger_c = thema_color_ex_indice_colorationis((i8)PALETTE_BLACK);
-        niger_r = (i32)color_obtinere_r(niger_c);
+        im       = pictor_documentum_proiectio(doc);
+        px       = im->pixela + (XXV * im->latitudo + XV) * IV;
+        niger_c  = color_ex_palette(PALETTE_BLACK);
+        niger_r  = (i32)color_obtinere_r(niger_c);
         CREDO_AEQUALIS_I32((i32)px[ZEPHYRUM], niger_r);
         CREDO_AEQUALIS_I32((i32)px[III], CCLV);
     }

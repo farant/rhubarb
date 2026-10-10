@@ -142,6 +142,37 @@ _extractor_fixturarum (
         /* caput pro includentibus facultatem declarare nequit */
         _fix_addere(*annotationes_out, "facultas rete", piscina);
     }
+    alioquin si (strstr(via, "fons/instrumentalis.c") != NIHIL)
+    {
+        /* instrumentum (fabrica-7 T2): binaria domus quae scopus
+         * currit - scopi solius, sub bin/ */
+        _fix_addere(*annotationes_out, "instrumentum bin/natura",
+            piscina);
+        _fix_addere(*annotationes_out, "instrumentum bin/generare",
+            piscina);
+    }
+    alioquin si (strstr(via, "fons/instrumentum_extra.c") != NIHIL)
+    {
+        _fix_addere(*annotationes_out, "instrumentum tools/natura.sh",
+            piscina);
+    }
+    alioquin si (strstr(via, "fons/instrumentum_duplex.c") != NIHIL)
+    {
+        _fix_addere(*annotationes_out, "instrumentum bin/natura",
+            piscina);
+        _fix_addere(*annotationes_out, "instrumentum bin/natura",
+            piscina);
+    }
+    alioquin si (strstr(via, "fons/includens_instrumentum.c") != NIHIL)
+    {
+        _fix_addere(*directivae_out, "instrumentum_caput.h", piscina);
+    }
+    alioquin si (strstr(via, "include/instrumentum_caput.h") != NIHIL)
+    {
+        /* caput pro includentibus instrumentum declarare nequit */
+        _fix_addere(*annotationes_out, "instrumentum bin/natura",
+            piscina);
+    }
     alioquin si (strstr(via, "fons/corpus_malus.c") != NIHIL)
     {
         _fix_addere(*annotationes_out,
@@ -1216,6 +1247,89 @@ s32 principale (vacuum)
             chorda_ex_literis("facultas extra scopum", piscina));
         CREDO_CHORDA_CONTINET(causa,
             chorda_ex_literis("facultas_caput.h", piscina));
+    }
+
+
+    /* ==================================================
+     * PROBARE: instrumentum (fabrica-7 T2) - <aedilis
+     * instrumentum="bin/X"/> in SCOPO solo, via sub bin/ (binarium
+     * domus quod probatio currit; clavis membri identitatem eius
+     * sequitur); extra bin/, in capite aut duplex -> recusatio
+     * nominata; sine annotatione vacua
+     * ================================================== */
+
+    {
+        AedilisConfiguratio* configuratio;
+             AedilisFructus* fructus;
+                     chorda  causa;
+
+        imprimere("\n--- Probans instrumentum ---\n");
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        configuratio = aedilis_configurationem_legere(piscina,
+            "probationes/fixa/aedilis/aedilis.stml", &causa);
+        CREDO_NON_NIHIL(configuratio);
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/instrumentalis.c", NIHIL, _extractor_fixturarum,
+            NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+        si (fructus != NIHIL)
+        {
+            CREDO_NON_NIHIL(fructus->instrumenta);
+        }
+        si (fructus != NIHIL && fructus->instrumenta != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(xar_numerus(fructus->instrumenta), II);
+            si (xar_numerus(fructus->instrumenta) == II)
+            {
+                CREDO_VERUM(chorda_aequalis_literis(
+                    *(chorda*)xar_obtinere(fructus->instrumenta,
+                    ZEPHYRUM), "bin/natura"));
+                CREDO_VERUM(chorda_aequalis_literis(
+                    *(chorda*)xar_obtinere(fructus->instrumenta, I),
+                    "bin/generare"));
+            }
+            CREDO_AEQUALIS_I32(xar_numerus(fructus->facultates),
+                ZEPHYRUM);
+        }
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/scopus.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NON_NIHIL(fructus);
+        si (fructus != NIHIL && fructus->instrumenta != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(xar_numerus(fructus->instrumenta),
+                ZEPHYRUM);
+        }
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/instrumentum_extra.c", NIHIL, _extractor_fixturarum,
+            NIHIL, &causa);
+        CREDO_NIHIL(fructus);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("instrumentum extra bin/", piscina));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("tools/natura.sh", piscina));
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/instrumentum_duplex.c", NIHIL, _extractor_fixturarum,
+            NIHIL, &causa);
+        CREDO_NIHIL(fructus);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("instrumentum duplex", piscina));
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/includens_instrumentum.c", NIHIL,
+            _extractor_fixturarum, NIHIL, &causa);
+        CREDO_NIHIL(fructus);
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("instrumentum extra scopum", piscina));
+        CREDO_CHORDA_CONTINET(causa,
+            chorda_ex_literis("instrumentum_caput.h", piscina));
     }
 
 

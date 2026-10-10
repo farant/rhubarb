@@ -9,6 +9,7 @@
  * Instrumentum per processum exsecutum (ut probatio_natura_canones):
  * effusio (stdout) capta, assertio in lineis TSV modi -machina fit.
  */
+/* <aedilis instrumentum="bin/natura_glossae"/> */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "credo.h"

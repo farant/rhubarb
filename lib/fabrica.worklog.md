@@ -2361,3 +2361,341 @@ originals saved, byte-compare after restore): scope dropped from natura
 -> XLI red; canon's call deleted -> red; mode made a no-op (`for S in;`)
 -> red via the behavioural check (the list check alone would have
 passed - the reason it exists). Summary line now XLI/XLI.
+
+## 2026-10-09 - fabrica-7 T1: credo sections in member verdicts
+
+`probationes_c` now runs every member with `CREDO_VERDICTA=<area>credo.tsv`
+added by the step itself (inserted in name order into the base env; the
+action does not declare it). After the run `_sectiones_explicare` reads
+the file through `fabrica_sectiones_legere` (sutura->legere, so the fake
+world exercises the same code):
+
+- converted suite: pass note `sectiones N/N`; failure tail gets the first
+  three non-passing sections prepended (`sectio 'beta' FRACTA 1/2 ad
+  t/probatio_a.c:12`, then `+N aliae`), the old output tail kept after
+  `; `.
+- unconverted suite (no file): fabrica writes a SYNTHETICA record (a
+  `SYNTHETICA` line, one `SECTIO ... totum`, a `SUITA` line - credo's own
+  format, so one reader) via verdictum_ponere; counts come from the LAST
+  `Totalis:` / `Praeteriti:` lines of the member's acta log; note
+  `totum P/T`, or bare `totum` when the binary printed no compendium
+  (fumus fixtures: plain `main`s).
+- SUITA line absent -> member FRACTUM even with exit 0 ("ruina post
+  sectionem ultimam notatam"); malformed record -> FRACTUM naming
+  `<via>:<line>:` - a broken contract is red, never ignored.
+
+Not obvious: the step code is not part of any member's key, so changing
+it re-runs nothing - proving on probationes_toml meant deleting the 13
+verdict files first (13 SANATUM, notes `totum 137/137` ... `totum
+12358/12358`). The note is deterministic (no ms) as the sealed verdict
+requires; assertion counts are deterministic for every toml suite.
+
+SECTIO records in the area outlive the verdict: an IGNOTUM member
+(source changed) still shows its LAST run's sections. They are
+explanation, not reuse (spec III.5); consumers read them that way.
+
+`-machina`: `SECTIO <id> <titulus> <exitus> <praeteriti> <totales>
+<fractura>` after each member IUDICIUM (no timing). Human iudicare
+prints only non-passing sections and "SUITA absens". pythonica's
+`_machina_humana` names failing sections the same way. Also fixed:
+`_summa_fracturae` for generic-form gates now prefers a `FRACTUM` line
+before falling back to the first relatio line (the XL plant was
+reported as "XVII ... -> FRACT. OK" because 'exitus' matched first).
+
+Plants (silva.planta): synthetic not written, SUITA-absent ignored,
+CREDO_VERDICTA misnamed, unknown exitus accepted, fractura site dropped
+-> gradus red each; SECTIO record dropped from -machina -> fumus XL red.
+
+## 2026-10-09 - fabrica-7 T2: instrumentum and facultas live in the sources
+
+New aedilis annotation `<aedilis instrumentum="bin/X"/>` (AedilisFructus.
+instrumenta): the house binaries a test RUNS. Same rules as facultas -
+scope file only (a header cannot declare it for every includer), plus:
+path must start with `bin/`, no `..`, no trailing `/`, and declaring the
+same binary twice is refused ("instrumentum duplex"). bin/X is not
+required to exist at derivation time (bin/ is build output; a cold tree
+has none) - the fabrica side is where absence matters.
+
+fabrica: FabricaClausuraC.instrumenta (real sutura copies it from the
+fructus; both clausura_c call sites set it NIHIL first, so a future
+implementor that forgets it cannot leave garbage), and
+`_probationes_c_ingressus` adds one `instrumentum_domus` input per
+binary. That genus keys on the `ingressus` line of `<bin> -provenientia`
+(the commit line is excluded - otherwise every commit would re-run every
+test using bin/natura). A binary without -provenientia (bin/generare
+today) falls back to its content digest: cautious, re-runs more often.
+
+Proof: gradus VIIIb (fake world, content digest) - bin/natura changed ->
+only probatio_a re-runs and links; fumus XLII (real aedilis + real
+fabrica): a script `bin/instr` printing an ingressus line - commissum
+line changed -> nothing; ingressus changed -> only b. Plants (planta):
+scope check off, bin/ check off, duplicate accepted -> probatio_aedilis
+red; instrumenta not added to ingressus -> gradus red; sutura not
+copying them -> fumus XLII red.
+
+Annotated sources (step 3): instrumentum on probatio_natura_quaesitor
+(bin/natura), natura_glossae, natura_canones, generare; facultas on the
+17 build-only tests (14 fenestra = aedilis_porta.sh GUI_LISTA, rete =
+tls/tcp, repositorium = git). Checked by contradiction that the REAL
+files are parsed: breaking one of each kind -> AEDILIS RECUSAT naming
+it. The hand lists in compile_tests.sh / aedilis_porta.sh stay until T7.
+Not annotated: probatio_provenientia only passes the string "bin/manus"
+to provenientia_respondere (never executes it); the tabulariumd tests
+run gesta/build/tabulariumd, which is T4's praecondicio, not a bin/
+instrument.
+
+## 2026-10-09 - fabrica-7 T3: write debts
+
+`<debitum_scripturae membrum via causa/>` on a step action (refused on
+an action without a step, without all three attributes, or with a path
+already declared). `FabricaActio.debita`: the parent holds all of them,
+each synthetic member a copy of its own. Unknown member -> refused in
+`fabrica_gradus_explicare` (members are only known after enumeration),
+naming the debt's own line.
+
+Enforcement needed no new check: a member's allowed places were already
+ONLY its area (the parent's `<vestigium>`s are not inherited), so the
+debt path is just added to the owner's vestigia via
+`fabricae_locum_debiti_addere` (path ending in `/` = ARBOR without the
+slash, else PLAGULA) - the same helper decides what counts as "written"
+when recording, so placement and recording cannot disagree. A foreign
+member writing there fails the existing "scripsit extra vestigium" check.
+
+Recording: `_membrum_agere` now takes the post snapshot right after the
+run, BEFORE the exit-code check (it used to be taken only on success),
+and `_debita_notare` writes `<area>debita.txt`: `cursus\ttransiit|fractus`
+then the debt paths whose files changed between the snapshots.
+`fabrica_debitum_iudicare` reads it: path listed -> SCRIPTUM; run passed
+and path absent -> STALUM (removable); no file, or a failed run without
+the write -> IGNOTUM (a failure does not prove the debt dead).
+
+`bin/fabrica census` prints one `debitum` line per debt (action, member,
+path, status, cause, sedes) + `census: debita N (actiones M, stala K,
+ignota J)`. Trap found by fumus XLIII: `_declarationes_colligere` returns
+the EXPLICATED actions, members included, each carrying its own copy -
+census counted every debt twice until it skipped `actio->membrum`. Also
+means census does explicate (member closures); 0.07 s today with warm
+caches - re-measure after T4 adds the ~256 root members.
+
+Proof: gradus section "debita scripturae" (parse + 3 refusals, unknown
+member, placement on owner only, SCRIPTUM / foreign write FRACTUM /
+STALUM / IGNOTUM after a failure / IGNOTUM before any run); fumus XLIII
+with real C tests and the real snapshot (a writes build/a.db ->
+scriptum; b writing it -> FRACTUM naming build/a.db; a stops -> stalum).
+Plants (planta): debt on every member, unknown member accepted,
+duplicate accepted, writes not recorded, failure recorded as pass ->
+gradus red; census counting members -> fumus XLIII red.
+
+## 2026-10-09 - fabrica-7 T4: probationes_radicis, first heal
+
+Declared `probationes_radicis` in aedificatio.stml: `probationes_c` over
+`probationes/probatio_*.c` minus `probatio_*_benchmark.c` = 256 members
+(257 files - 1 benchmark; aedilis_porta.sh skips the same one - 2^8 is a
+coincidence, checked file-by-file against the areas), `praecondicio`
+tabulariumd + speculum_hospes, 4 declared env switches, and the 36 build/
+writes porta_aedilis allowed EVERY test turned into debts with one owner
+each (the three that looked shared - natura_canones dir, probatio_sent.*,
+probatio_villa.* - each had a single writer).
+
+What the first real heal found, in order:
+1. A never-judged output as a member input is refused ("praecondicio
+   sola licet") - the hospes speculum capsule is in two members' aedilis
+   closures (obiectum annotation). Members now key sources/headers under
+   build/ by EXISTENCE only (the porta_aedilis approximation Fran approved
+   10-06; the capsule embeds time+commit, content keying would re-run
+   them on every regeneration). `post` can't consume it either -> the
+   capsule's producer is a praecondicio.
+2. Members did not inherit `praecondiciones` (empty Xar) - in a cold tree
+   neither the daemon nor the capsule would be built for them. Inherited
+   now, like `post`.
+3. speculum_hospes had never run under fabrica: speculum_generare.sh runs
+   aedilis on its consumer -> build/aedilis/probatio_vitrea_hospes/
+   undeclared (declared now), and with no SPECULUM_VEXILLA its proventus
+   lost -std=c89 (probatio_speculum_fontium red) - it now sources
+   tools/vexilla.sh when no runner passes flags.
+4. Four undeclared env reads: PICTOR_DOCUMENTUM_AURUM_SCRIBERE,
+   QUADRANS_AURUM_SCRIBERE, PLIST_AREA, VILLA_SSH (the test sets it, its
+   child reads it) -> declared.
+
+Then 256/256. Costs: first cold heal 7 min 5 s wall (158 s user); warm
+iudicare 11 s; no-op sanare 44 s (full judge + 256 closures); census
+1.5 s (it explicates); vs compile_tests.sh 80-115 s and aedilis gate
+180-210 s recently. T5/T6 measure properly.
+
+Debts: census said 18 of 36 stale - FALSE. All 18 owners write
+TRANSIENTLY (create then delete inside the run: sqlite -wal/-shm, lock
+file, rm -f via system(), scratch trees); a before/after snapshot cannot
+see that (nor can the outside-write check - pre-existing blind spot,
+ledger …HC0Q). Fix part 1: `_debita_notare` also takes every path the
+member's reads log names (S/L/X/A lines, radix-stripped; E skipped) ->
+11 of 18 seen. Part 2 (Fran chose option 1): the three tests whose use
+left no trace at all - sententiae_horreum and villa_agens (tabulariumd
+child writes sqlite, cleanup by system("rm -f ...")) and git (own I/O) -
+now put their scratch in a per-process dir `$TMPDIR/<name>.<pid>`
+(= member area under fabrica, system tmp under compile_tests.sh; any
+leftover of a reused pid deleted first) and delete it at the end; their
+11 debts are gone. Bonus: the old cleanup `pkill -f
+'... -scrinium build/probatio_sent.db'` matched a RELATIVE path - one
+tree's run could kill another tree's daemon; the unique absolute path
+ends that. Traps: (1) first version used mkdtemp + realpath + PATH_MAX
+- clang was happy, but the pre-commit `examen` refused all three files:
+silva's POSIX lexicon (silva/fontes/systema_posix.h) knows none of them,
+so mkdtemp's char* read as an implicit int. getpid IS in the lexicon ->
+pid-named dir via house filum_ calls instead. (2) macOS TMPDIR ends in
+'/': the path had 'T//...', git's path normalisation collapsed it and the
+git test's string compare failed - trailing '/' stripped (it was NOT the
+/var -> /private/var symlink, as first assumed). Census now: debita 25,
+all scriptum.
+
+Tests/plants: gradus covers inherited praecondiciones, build/ source not
+keyed (compiled+linked, compile count 5 -> 6), transient write seen via
+the log (Vb); plants: no inheritance, build/ keyed, log ignored -> red.
+
+Addendum (T4 commit, same day): fumus XXXII refused the first T4 commit -
+T3 taught the PARSER `<debitum_scripturae>` but not `aedificatio.canon`,
+and no T3 test used a real aedificatio.stml (fumus XLIII writes a temp one
+that XXXII never examines), so the gap only showed when the root file got
+real debts. Canon entry added (actio child + element: membrum/via/causa
+required). Lesson: a new declaration element = parser + canon in the same
+task; the canon gate only sees subsystem files.
+
+## 2026-10-09 - fabrica-7 T5: the root oracle
+
+`tools/radix_gradus_oraculum.sh` (model: toml_gradus_oraculum.sh): one
+tree, compile_tests.sh then `sanare` + `iudicare -plenus -omnia -machina
+probationes_radicis`. Per test: category (transiit | fracta | aedificata
+- runner: GUI_LISTA / RETICULARIS EXCLUSUM; fabrica: verdict note 'nexus
+solum') AND assertions p/t (runner: LAST credo compendium in
+build/test_logs/singulae/<t>.log; fabrica: sum of the member's SECTIO
+records). ~3.5 min per run.
+
+First run 254/256:
+- probatio_json "0/0 vs 482/482" was the ORACLE: macOS awk under a UTF-8
+  locale aborts ('towc: multibyte conversion failure') on the test's
+  deliberately invalid UTF-8 output, and my `|| printf 0/0` fallback hid
+  it. `export LC_ALL=C` for the whole script; no silent fallback.
+- probatio_git "transiit 99/99 vs aedificata" was REAL: T2 gave it
+  facultas="repositorium" from aedilis_porta's list, and facultas meant
+  link-only - after T7 nothing would run it (Fran 10-06: the root runner
+  runs it). Fran chose: facultas repositorium = RUN, with the
+  `repositorium` input (HEAD commit) in the member key -> once per
+  commit, reused otherwise (better than the runner: always). Only
+  facultates other than repositorium make a member link-only.
+
+Then 256/256 (240 run by both + 16 build-only; git now runs under
+fabrica: 'totum 99/99'). Plants via planta with the oracle as the gate
+(green = rc 0 and both failure lists empty; the driver asserts names):
+broken assertion in probatio_base64 -> both name probatio_base64 only,
+oracle still 256/256, fabrica re-ran 1 member; base64 alphabet swapped in
+lib/base64.c -> both name base64 + plist, fabrica re-ran exactly the 5
+members whose aedilis closure holds lib/base64.c (runner: all 240).
+Gradus section 'facultas repositorium currit' + plants (no commit in key,
+link-only) red.
+
+## 2026-10-09 - fabrica-7 T6: A/B reuse over the root suite
+
+`./tools/reusus_gradus_ab.sh probationes_radicis - probationes -n 150
+-cursor "compile_tests.sh compile_tests_fontes_generata.sh
+tools/vexilla.sh" -porta-titulus radix` (20 min). Two tool extensions:
+PORTA '-' = runner with no declared action (radix runs via silva.porta,
+no trace in fabrica.db): its verdict is reusable only if ALL members are
+reused and no runner file changed; its time = median radix gate time in
+build/portae/tempora.tsv (118 s, 12 runs). `reusus_retro.sh -fons` now
+reads the T2/T5 annotations: instrumentum -> binary closure, facultas
+repositorium -> rule C (every commit invalid). Fix on the way: family
+binaries (bin/natura has no tools/natura.c) fell back to one rule on
+bin/natura itself, which git never sees - `_fontes_binarii` now takes the
+scope sources from the manifests the producing action declares (597
+rules instead of 1).
+
+Result, last 150 first-parent commits:
+- runner verdict reused 0/150 (every commit touched its inputs) -> 38400
+  test runs, ~17670 s;
+- composite fully reused 0/150 (probatio_git re-runs every commit, by
+  design);
+- members reused 35139/38400 (91%) -> 3261 test runs (-91%), ~1356 s
+  (-92%). The time ratio FLATTERS fabrica: runner time includes compiles,
+  member time is the run alone (compiles via the shared thesaurus are not
+  counted on either side) - the test-run count is the robust number.
+- worst members: math tier (tabula_nodorum 73%, quaternio 74%, extensio
+  75%) - the libraries that moved most in the window.
+- causes: aedilis.stml 1020 (4 edits x ~256: every member keys the WHOLE
+  file for its flags - a per-member slice would remove most; follow-up,
+  not this slice), piscina.h 502, eventus.h 247, credo.h 242,
+  lectiones.h 202, repositorium 150 (git), xar.h 140.
+
+## 2026-10-09 - fabrica-7 T7: the switch
+
+`PORTAE_GRADUUM['radix'] = 'probationes_radicis'`. Before flipping, an
+audit of what a full compile_tests.sh run checks BESIDES the 240 tests
+found five things the composite alone would have dropped: every lib/*.c
+compiles (also files no test links), generare, speculum incl. the JS
+syntax check and the JS/CoreImage probes, and the two Apple oracles
+(plutil against the plist test binary, iconutil against build/*.o).
+amalgamata already has its own gate; GUI compile is covered by link-only
+members. Fran chose option 1: `compile_tests.sh --residua` does all of
+that except per-test runs (~15 s), and `PORTAE_RESIDUA['radix']` runs it
+AFTER the composite (the plutil oracle reads the member's binary via
+PLIST_BINARIUM). Gate = sana only if composite N/N AND 'RESIDUA: sana';
+the compendium carries both. Warm radix gate 76 s (old median 118 s).
+
+Latent bug fixed on the way: `_porta_per_gradum` built Fractura.relatio
+as a LIST; every reader calls .splitlines() - the first red step gate
+(toml or radix) would have crashed its own failure report.
+
+aedilis_porta.sh no longer runs tests: GUI/RETICULARIS/REPOSITORIUM_VIVUM
+lists gone (now facultas annotations), porta_aedilis loses 37 vestigia +
+9 ingressus that existed only because it ran tests (build/ scratch, the
+tabulariumd precondition and its sources, generare/manus/natura*, villa
+ssh stub). aedilis gate 74 s (was 180-210 s). The oracle reads the
+runner's GUI builds from its output ('GUI APP BUILT') instead of that
+list. Oracle after the switch: 256/256 (240 run + 16 build-only).
+
+Plants (planta, gate 'radix' via the composite): broken assertion in
+probatio_base64 -> 255/256 naming it, RESIDUA sana; broken speculum.js ->
+composite 256/256, RESIDUA: FRACTA speculum_js. The JS plant also showed
+the T4 existence-only approximation in action: no speculum member re-ran
+- a behaviour (not syntax) change to the capsule's inputs would go unseen
+by the composite (ledger, speculum question).
+
+NOT done here on purpose: the ledger inventory rows (radix 'currit
+binaria', aedilis 'currit binaria' still lists generare/natura/manus) -
+the ledger is shared by every tree, so re-deriving now would change
+main's owed gates before this code is merged. Re-derive in main after the
+merge (tools/inventarium_suitarum.py).
+Addendum (T7 commit): the pythonica gate refused the first attempt -
+probatio_silva.py asserted the OLD list shape (`relatio[0]`), i.e. the
+test encoded the bug. Now it checks the string AND that
+relatio_fracturarum/_summa_fracturae render the failure (the property the
+list broke); planting the list form back -> "RUIT: 'list' object has no
+attribute 'splitlines'", PYTHONICA FRACTA 2.
+
+## 2026-10-09 - fabrica-7: cold-tree check of the switch
+
+frigida_probare (4188a1e9) ran all suites green, but through the RAW
+runners - it says nothing about the new radix gate. Ran porta('radix')
+in the kept fresh tree:
+1. red: `lectores_cocti` (generator) runs bin/canon_coquere without
+   declaring it; warm trees never ran it. Fix: `<praecondicio
+   actio="canon"/>` (ORDER) + `instrumentum_domus bin/canon_coquere`
+   (KEY). Tried first to give instrumentum_domus a location instead -
+   probatio_fabrica_ordo test II shows "loci nulli" is deliberate (a
+   bootstrap cycle otherwise).
+2. bin/generare has NO producer action: residua (which builds it) ran
+   AFTER the composite, so probatio_generare would run first in a cold
+   tree. Residua split: `--residua-prae` (libraries, generare, speculum
+   + JS) BEFORE the composite, `--residua-post` (Apple oracles, which
+   read member binaries) after; `--residua` = both. PORTAE_RESIDUA['radix']
+   = [prae, post]; pythonica asserts the order (planted: wrong order ->
+   red).
+3. A `<praecondicio actio="natura"/>` on probationes_radicis pulled
+   natura's whole upstream graph into the heal, where glossae_pagina
+   also runs an undeclared house binary (bin/natura_glossae) - and the
+   serial heal then skipped everything after the first fracture,
+   aedilis included. Dropped: the bar is a fresh tree AFTER the
+   documented bootstrap (worktree-quinta memory). Self-healing from
+   nothing = ledger question (generators must declare the binaries they
+   run).
+Result: fresh tree + bootstrap step 2 (natura_struere, canon_struere),
+member areas / bin/generare / speculum capsule deleted -> porta radix
+SANA 256/256, prae and post sana, 6 min 44 s cold.

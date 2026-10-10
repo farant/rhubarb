@@ -4,7 +4,8 @@
  * Compositio EADEM ac principalia (vicus_applicatio: dispositio
  * ordinaria - tabula 1 scriba | terminale cum /bin/sh, 2 scriba |
  * pictor; volumina temporaria, canones e radice). Sessio fenestrae
- * notata: scriptio in scriba, ictus in tabulam 2, ictus focans in
+ * notata: ictus in scribam (terminale in apertura focatum), scriptio
+ * in scriba, ictus in tabulam 2, ictus focans in
  * pictore (latus dextrum, S2a), tractus in pictore (centra cellularum
  * - terminalis sola centra narrat), ictus in tabulam 1, scriptio,
  * Esc, ictus in tabulam 2, ictus in tabulam 1 (Cmd+numerus per
@@ -305,6 +306,15 @@ principale (vacuum)
         dispensator_tractare(f.d, &e);
     }
     m = manus_ludus_creare(piscina, f.d);
+    /* terminale in apertura focatum (Franus: 'tmux a' statim);
+     * ictus in scribam (latus sinistrum, cellula III, IV) focat */
+    CREDO_VERUM (vicus_latus_focatum(f.vicus)
+        == vicus_latus(vicus_tabula(f.vicus, ZEPHYRUM), VICUS_DEXTRUM));
+    CREDO_VERUM (manus_ludus_premere_ad(m, III * VI + III,
+        IV * VIII + IV));
+    CREDO_VERUM (vicus_latus_focatum(f.vicus)
+        == vicus_latus(vicus_tabula(f.vicus, ZEPHYRUM),
+        VICUS_SINISTRUM));
     CREDO_VERUM (manus_ludus_scribere(m, "isalve"));
     /* ictus in tabulam '2 pictor' (x LXXVIII + XXX): olim Ctrl-A n;
      * Cmd+numerus (Franus 2026-10-09) per terminalem non transit -

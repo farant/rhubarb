@@ -216,6 +216,12 @@ s32 principale (vacuum)
     m      = manus_ludus_creare(piscina, app.d);
     motus  = dispensator_motus(app.d);
 
+    imprimere("\n--- 0: terminale focum in apertura capit ---\n");
+    /* Franus: 'tmux a' statim post aperturam ad concham */
+    CREDO_AEQUALIS_I32(vicus_tabula(v, ZEPHYRUM)->focus, VICUS_DEXTRUM);
+    CREDO_AEQUALIS_I32(vicus_tabula(v, II)->focus, VICUS_SINISTRUM);
+    CREDO_VERUM(spatium_est(motus->spatium, "1_dextrum_terminale"));
+
     imprimere("\n--- I: scriba | scriba - claves ad sinistrum ---\n");
     CREDO_VERUM(vicus_activam_ponere(v, "3"));
     dispensator_recomponere(app.d);

@@ -35,11 +35,13 @@ verbi_initium (
     redde c >= 'a' && c <= 'z';
 }
 
+/* S3e: '-' intra verbum (non in fine - vide legere) */
 interior b32
 verbi_sequens (
     character c)
 {
-    redde (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_';
+    redde (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_'
+        || c == '-';
 }
 
 /* cellula vacua ('\0') ut spatium */
@@ -116,6 +118,11 @@ legere (
     dum (j < latitudo && verbi_sequens(cellula(t, linea, j)))
     {
         j++;
+    }
+    /* '-' finale verbum non est: "$dies-" = $dies et '-' */
+    dum (cellula(t, linea, j - I) == '-')
+    {
+        j--;
     }
     exitus->linea    = linea;
     exitus->initium  = c;
@@ -241,6 +248,113 @@ iussum_ad_locum (
 
 
 /* ==================================================
+ * Nexus (S3d)
+ * ================================================== */
+
+interior b32
+nexus_character (
+    character c)
+{
+    redde (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_'
+        || c == '-';
+}
+
+/* nexus cuius '#' in columna c legere */
+interior b32
+nexum_legere (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  c,
+                       Piscina* piscina,
+                        Iussum* exitus)
+{
+    s32 j;
+
+    si (cellula(t, linea, c) != '#')
+    {
+        redde FALSUM;
+    }
+    si (c > ZEPHYRUM && verbi_character(cellula(t, linea, c - I)))
+    {
+        redde FALSUM;
+    }
+    j = c + I;
+    dum (j < (s32)t->latitudo && nexus_character(cellula(t, linea, j)))
+    {
+        j++;
+    }
+    si (j == c + I)
+    {
+        redde FALSUM;
+    }
+    exitus->linea    = linea;
+    exitus->initium  = c;
+    exitus->finis    = j;
+    exitus->verbum = segmentum(t, linea, c + I, j,
+        piscina);
+    exitus->numerus_argumentorum  = ZEPHYRUM;
+    exitus->argumenta             = NIHIL;
+    redde VERUM;
+}
+
+b32
+iussum_nexus_proximus (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  a_columna,
+                       Piscina* piscina,
+                        Iussum* exitus)
+{
+    s32 c;
+
+    si (   !t || !piscina || !exitus || linea < ZEPHYRUM
+        || linea >= (s32)t->altitudo)
+    {
+        redde FALSUM;
+    }
+    per (c = a_columna < ZEPHYRUM ? ZEPHYRUM : a_columna;
+         c < (s32)t->latitudo; c++)
+    {
+        si (nexum_legere(t, linea, c, piscina, exitus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+b32
+iussum_nexus_ad_locum (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  columna,
+                       Piscina* piscina,
+                        Iussum* exitus)
+{
+    s32 a;
+
+    si (!t || columna < ZEPHYRUM || columna >= (s32)t->latitudo)
+    {
+        redde FALSUM;
+    }
+    a = ZEPHYRUM;
+    dum (iussum_nexus_proximus(t, linea, a, piscina, exitus))
+    {
+        si (exitus->initium > columna)
+        {
+            redde FALSUM;
+        }
+        si (columna < exitus->finis)
+        {
+            redde VERUM;
+        }
+        a = exitus->finis;
+    }
+    redde FALSUM;
+}
+
+
+/* ==================================================
  * Registrum
  * ================================================== */
 
@@ -314,9 +428,10 @@ iussum_registrare (
         redde FALSUM;
     }
     c = chorda_ex_literis(verbum, r->piscina);
-    /* forma eadem ac in textu: '[a-z][a-z0-9_]*' */
-    si (   c.mensura == ZEPHYRUM
-        || !verbi_initium((character)c.datum[ZEPHYRUM]))
+    /* forma eadem ac in textu: '[a-z][a-z0-9_-]*', '-' non finale */
+    si (   c.mensura              == ZEPHYRUM
+        || !verbi_initium((character)c.datum[ZEPHYRUM])
+        || c.datum[c.mensura - I] == '-')
     {
         redde FALSUM;
     }

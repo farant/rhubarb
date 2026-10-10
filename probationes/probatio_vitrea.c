@@ -9,6 +9,7 @@
  * -> postMessage -> cauda + excitatio -> dispatch -> responsum ->
  * promissum solutum) sine inspectione visuali probat. */
 
+/* <aedilis facultas="fenestra"/> */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

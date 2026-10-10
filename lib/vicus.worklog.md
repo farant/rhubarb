@@ -388,3 +388,62 @@ Cmd never crosses a terminal, so tabs switch by clicking the tab bar
 (the twin replay test now clicks). `prior` is still recorded in the
 ephemeral layer but nothing reads it. Test renamed
 probatio_vicus_praefixum -> probatio_vicus_claves.
+
+## 2026-10-09 - a terminal pane takes focus when vicus opens
+
+Fran typed `tmux a` right after launching and the keys went to
+scriba in normal mode (`u` undid his text). vicus knows no kinds, so
+the kind says it: `VicusFacies.focus_in_apertura` (terminale sets it).
+`vicus_aperire` gives each tab's focus to such a pane - left first,
+then the front of the right stack - overriding the saved focus. Only
+at open: switching tabs keeps the last focus (a deliberate click into
+scriba in tab 1 survives Cmd+2, Cmd+1). Tests: probatio_vicus_latera
+section 0; the twin replay session now clicks into scriba first.
+
+## 2026-10-09 - S4 clock in the tab bar (Fran)
+
+"7:52 PM" right-aligned in the tab bar, one cell margin. The vicus has
+NO clock by default (`horologium` NIHIL, hora/minutum -1): every
+existing test and golden composes a vicus, and a real clock would
+make them change every minute. The two app mains (apps/vicus/vicus.c
+and vicus_terminalis.c) install `vicus_horologium_locale`
+(time/localtime, plain C89 <time.h>); tests inject a fake one.
+vicus_pulsare reads the clock each pulse and returns VERUM only when
+(hour, minute) changed, so the app repaints once a minute for it.
+vicus_horologium_ponere reads once immediately so the first frame has
+the time. Format: hour % 12 with 0 -> 12, minutes %02d, AM below 12.
+
+## 2026-10-09 - S3e-3: $pictor-next / $pictor-prev (Fran, option A)
+
+- vicus_acervo_mutare queues a PetitioAcervi with `mutare`: at pulse
+  the front-most pane of the genus (last in the stack) gets the new
+  argumentum via facies.argumentum_ponere, moves to the front, focus
+  untouched, layout saved (indicem_scribere). No pane of the genus:
+  falls through to the ordinary open path (focus right).
+- Selection lives in vicus_applicatio (cyclus_iussum): library order,
+  wrap, skip the current drawing and any drawing shown by ANOTHER
+  pictor pane in any tab. A pane's drawing = its argumentum if that
+  names a library drawing, else its id (old $pictor(x) identity-only
+  arguments keep working).
+- ONE document object per drawing: all pictor panes share the cache
+  (ContextusPictoris.documenta, put into PictorMontatio.documenta at
+  mount). Per-pane caches would go stale: pane A shows X and leaves,
+  pane B opens X and draws, A comes back with an old history cursor
+  and its next stroke would fork/corrupt X's log (plant P5).
+- Known: a brand-new pane (tab without a pictor) still creates its own
+  blank id-drawing before switching, so the library gains one blank
+  drawing per such tab. Two clicks within one frame both compute from
+  the same current drawing.
+
+## 2026-10-09 - skip rule dropped (Fran)
+
+With one shared document object per drawing the "skip drawings shown
+in another pane" rule protected nothing: strokes commit on mouse
+release, a focus/tab switch runs motum_relinquere first, and there is
+one pointer and one focused pane - so all writes to a drawing go
+through one history in order (Fran's reasoning). $pictor-next now
+visits every library drawing except the one the pane already shows;
+the same drawing can be open in several tabs or side by side, each
+pane with its own tool/colour/zoom state. probatio_vicus_pictura I
+draws in tab 3's pane on tab 2's drawing and sees the stroke in tab
+2's document (same object).

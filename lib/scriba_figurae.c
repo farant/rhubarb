@@ -86,6 +86,37 @@ iussa_colorare (
     }
 }
 
+/* S3d: nexus ('#verbum') lineae l colore accentus secundi */
+interior vacuum
+nexus_colorare (
+                        Mandata* m,
+     constans TabulaCharacterum* t,
+                            s32  l,
+                         chorda  linea,
+                            s32  cw,
+                            s32  ch)
+{
+    Iussum i;
+    chorda signum;
+       s32 a;
+
+    a = ZEPHYRUM;
+    dum (iussum_nexus_proximus(t, l, a, m->piscina, &i))
+    {
+        si (i.initium >= (s32)linea.mensura)
+        {
+            frange;
+        }
+        signum.datum    = linea.datum + i.initium;
+        signum.mensura  = (i32)((i.finis < (s32)linea.mensura
+                                 ? i.finis : (s32)linea.mensura)
+                                - i.initium);
+        mandata_textus(m, i.initium * cw, l * ch, signum, ZEPHYRUM,
+            color_thematis(COLOR_ACCENT_SECONDARY));
+        a = i.finis;
+    }
+}
+
 
 /* ==================================================
  * Figurae
@@ -221,6 +252,12 @@ scriba_figura_folii (
             && memchr(linea.datum, '$', (size_t)finis))
         {
             iussa_colorare(m, t, sf->sa->iussa, l, linea, cw, ch);
+        }
+        /* S3d: nexus (solum cum libro paginarum) */
+        si (   sf->sa->liber && !(l >= sel_a && l <= sel_b)
+            && memchr(linea.datum, '#', (size_t)finis))
+        {
+            nexus_colorare(m, t, l, linea, cw, ch);
         }
     }
 

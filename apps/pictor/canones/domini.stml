@@ -2,7 +2,10 @@
   <dominus genus="ephemera" attributum="instrumentum"    scriptor="instrumentum.eligere"/>
   <dominus genus="ephemera" attributum="color_primus"    scriptor="color_primus.ponere"/>
   <dominus genus="ephemera" attributum="color_secundus"  scriptor="color_secundus.ponere"/>
-  <dominus genus="ephemera" attributum="magnitudo"       scriptor="magnitudo.ponere"/>
+  <dominus genus="ephemera" attributum="exemplar"        scriptor="exemplar.ponere"/>
+  <dominus genus="ephemera" attributum="magnitudo_penicilli"  scriptor="magnitudo.ponere"/>
+  <dominus genus="ephemera" attributum="magnitudo_aspergilli" scriptor="magnitudo.ponere"/>
+  <dominus genus="ephemera" attributum="semen"           scriptor="aspergillum.ictus"/>
   <dominus genus="ephemera" attributum="zoom"            scriptor="motus"/>
   <dominus genus="ephemera" attributum="pan_x"           scriptor="motus"/>
   <dominus genus="ephemera" attributum="pan_y"           scriptor="motus"/>

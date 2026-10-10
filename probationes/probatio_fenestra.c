@@ -1,4 +1,5 @@
 /* Probatio pro fenestra et tabula pixelorum */
+/* <aedilis facultas="fenestra"/> */
 #include "latina.h"
 #include "fenestra.h"
 #include "chorda.h"

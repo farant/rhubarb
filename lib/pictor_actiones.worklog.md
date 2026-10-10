@@ -54,3 +54,40 @@ same value on a press, the canvas's own space while captured (negative
 or beyond the edges, then clipped when drawn). pictor was the only
 reader of punctum_locale. Test: probatio_pictor_actiones last section,
 a drag from the canvas onto the status line must store y=207.
+
+## 2026-10-09 - aspergillum (MacPaint spray can), variant A
+
+Fran: a MacPaint spray can. Key `a` selects it (`p` the brush); the
+status line shows the tool. Strokes are the log (`<ictus ...>`), so
+the randomness must replay: the act carries `semen` (from the press
+time and the history cursor - the same stroke at another time sprays
+differently, undo + redo redraws identically) and each point carries
+`t` (ms since the press). `pictor_gutta(semen, i, k, r)` is the ONE
+dot generator (sors PCG32, derived stream per (point, dot), rejection
+into the disc) used by both the renderer (pictor_documentum) and the
+live preview (pictor_figurae) - so the preview's dots are exactly the
+first GUTTAE_PUNCTO of each point's dots. Dwell: one extra dot per
+GUTTA_MS between points; the RELEASE point is recorded for the spray
+so holding still before releasing counts.
+
+Variant A limits (Fran chose A, B later): dots from dwell appear only
+at the next move/release; the preview shows per-point dots only. B =
+a timer that appends the current position every ~30 ms while the
+button is held (pictor needs a pulse hook; vicus pulses panes, the
+standalone app would need its own) - then the dwell term can go.
+
+The shared stroke routine `ictum_tractare(..., aspergillum)` keeps the
+spec rule "the handler never branches on the tool STATE": the tool is
+fixed by which action runs (penicillus.ictus / aspergillum.ictus).
+Preview data travels in the canvas node like the points: the composer
+puts "semen radius" in the tabula's title while spraying.
+
+## 2026-10-09 - spray preview in the real colour (Fran)
+
+The preview dots were drawn in COLOR_ACCENT_PRIMARY (green), copying
+the brush preview line's convention; Fran: draw them in the real
+colour. The composer's canvas title is now "semen radius color" (the
+foreground palette index) and the figure draws each preview dot in
+that palette colour; foreground "none" (-1) previews nothing, as the
+stroke paints nothing. The brush's thin preview line is still accent
+green (not asked).

@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 /* dispositio (S2a): plagula nova - forma vetus 'vicus/tabulae' non
  * legitur (volumina vetera dispositionem ordinariam accipiunt) */
@@ -26,11 +27,13 @@ hic_manens constans character id_divisoris[] = "vicus.divisor";
  * Auxilia
  * ================================================== */
 
-/* S3c: aperitio in acervo pendens (vicus_acervo_aperire) */
+/* S3c: aperitio in acervo pendens (vicus_acervo_aperire); S3e:
+ * mutare = argumentum frontis generis mutatur (vicus_acervo_mutare) */
 nomen structura {
     chorda tabula;
     chorda genus;
     chorda argumentum;
+       b32 mutare;
 } PetitioAcervi;
 
 interior chorda
@@ -682,6 +685,20 @@ figura_tabularum (
                                             : COLOR_TEXT));
         x += lat;
     }
+    /* S4: horologium ad dextrum ("7:52 PM"), cellula marginis */
+    si (v && v->hora >= ZEPHYRUM && v->minutum >= ZEPHYRUM)
+    {
+        character horae[XVI];
+           chorda textus;
+
+        sprintf(horae, "%d:%02d %s",
+            (integer)(v->hora % XII == ZEPHYRUM ? XII : v->hora % XII),
+            (integer)v->minutum, v->hora < XII ? "AM" : "PM");
+        textus = chorda_ex_literis(horae, m->piscina);
+        mandata_textus(m, c->fines.latitudo - VICUS_CELLULA_LATITUDO
+            - (s32)textus.mensura * VICUS_CELLULA_LATITUDO, ZEPHYRUM,
+            textus, ZEPHYRUM, color_thematis(COLOR_TEXT));
+    }
 }
 
 /* <purus/> divisor laterum (S2a): rectangulum plenum componentis sui
@@ -1010,7 +1027,70 @@ vicus_creare (
     v->tabulae   = xar_creare(piscina, (i32)magnitudo(VicusTabula));
     v->petitiones  = xar_creare(piscina,
         (i32)magnitudo(PetitioAcervi));
+    v->hora     = -I;
+    v->minutum  = -I;
     redde v;
+}
+
+/* S4: horam legere; VERUM si mutata (aut prima) */
+interior b32
+horam_legere (
+    Vicus* v)
+{
+    s32 hora;
+    s32 minutum;
+
+    si (!v->horologium)
+    {
+        redde FALSUM;
+    }
+    hora     = -I;
+    minutum  = -I;
+    v->horologium(v->horologium_ctx, &hora, &minutum);
+    si (hora == v->hora && minutum == v->minutum)
+    {
+        redde FALSUM;
+    }
+    v->hora     = hora;
+    v->minutum  = minutum;
+    redde VERUM;
+}
+
+vacuum
+vicus_horologium_ponere (
+              Vicus* v,
+    VicusHorologium  horologium,
+             vacuum* ctx)
+{
+    si (!v)
+    {
+        redde;
+    }
+    v->horologium      = horologium;
+    v->horologium_ctx  = ctx;
+    v->hora            = -I;
+    v->minutum         = -I;
+    (vacuum)horam_legere(v);
+}
+
+vacuum
+vicus_horologium_locale (
+    vacuum* ctx,
+       s32* hora,
+       s32* minutum)
+{
+       time_t nunc;
+    struct tm* t;
+
+    (vacuum)ctx;
+    nunc  = time(NIHIL);
+    t     = localtime(&nunc);
+    si (!t)
+    {
+        redde;
+    }
+    *hora     = (s32)t->tm_hour;
+    *minutum  = (s32)t->tm_min;
 }
 
 b32
@@ -1124,6 +1204,22 @@ vicus_aperire (
         ac.prior.datum    = NIHIL;
         (vacuum)mutare_ramum(&radix, INSULA_EPHEMERA, activam_mutator,
                              &ac);
+    }
+    /* latera quae focum in apertura petunt (terminale): sinistrum
+     * prius, deinde frons acervi */
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (   t->sinistrum.montata
+            && t->sinistrum.facies.focus_in_apertura)
+        {
+            t->focus = VICUS_SINISTRUM;
+        }
+        alioquin si (   frons_acervi(t) && frons_acervi(t)->montata
+                     && frons_acervi(t)->facies.focus_in_apertura)
+        {
+            t->focus = VICUS_DEXTRUM;
+        }
     }
     si (!inventum)
     {
@@ -1542,6 +1638,47 @@ petitionem_applicare (
         redde FALSUM;
     }
     n = xar_numerus(t->acervus);
+    /* S3e: mutare - frons generis (ultimus eius generis in acervo)
+     * argumentum novum accipit et in frontem venit; focus manet.
+     * Nullum: aperitio ut S3c (infra) */
+    si (p->mutare)
+    {
+        s32 j;
+
+        per (j = (s32)n - I; j >= ZEPHYRUM; j--)
+        {
+            l = (VicusLatus*)xar_obtinere(t->acervus, (i32)j);
+            si (!chorda_aequalis(l->genus, p->genus))
+            {
+                perge;
+            }
+            si (   !l->montata || !l->facies.argumentum_ponere
+                || !l->facies.argumentum_ponere(
+                       l->facies.argumentum_ponere_ctx,
+                       chorda_ut_cstr(p->argumentum, v->piscina)))
+            {
+                si (activa)
+                {
+                    motum_aptare(v);
+                }
+                redde FALSUM;
+            }
+            l->argumentum  = p->argumentum;
+            frons          = *l;
+            per (k = (i32)j; k < n - I; k++)
+            {
+                *(VicusLatus*)xar_obtinere(t->acervus, k) =
+                    *(VicusLatus*)xar_obtinere(t->acervus, k + I);
+            }
+            *(VicusLatus*)xar_obtinere(t->acervus, n - I) = frons;
+            si (activa)
+            {
+                registra_reficere(v);
+                motum_aptare(v);
+            }
+            redde indicem_scribere(v);
+        }
+    }
     per (k = ZEPHYRUM; k < n; k++)
     {
         l = (VicusLatus*)xar_obtinere(t->acervus, k);
@@ -1595,11 +1732,13 @@ petitionem_applicare (
     redde indicem_scribere(v);
 }
 
-b32
-vicus_acervo_aperire (
+/* S3c/S3e: petitio in acervo tabulae activae addenda */
+interior b32
+petitionem_addere (
                   Vicus* v,
      constans character* genus,
-     constans character* argumentum)
+     constans character* argumentum,
+                    b32  mutare)
 {
     PetitioAcervi* p;
            chorda  g;
@@ -1624,7 +1763,26 @@ vicus_acervo_aperire (
                    ? chorda_transcribere(chorda_ex_literis(argumentum,
                          v->piscina), v->piscina)
                    : chorda_nulla_vici();
+    p->mutare      = mutare;
     redde VERUM;
+}
+
+b32
+vicus_acervo_aperire (
+                  Vicus* v,
+     constans character* genus,
+     constans character* argumentum)
+{
+    redde petitionem_addere(v, genus, argumentum, FALSUM);
+}
+
+b32
+vicus_acervo_mutare (
+                  Vicus* v,
+     constans character* genus,
+     constans character* argumentum)
+{
+    redde petitionem_addere(v, genus, argumentum, VERUM);
 }
 
 b32
@@ -1644,6 +1802,11 @@ vicus_pulsare (
         redde FALSUM;
     }
     pingendum = FALSUM;
+    /* S4: horologium - quadrum solum cum minutum mutatur */
+    si (horam_legere(v))
+    {
+        pingendum = VERUM;
+    }
     /* S3c: aperitiones pendentes extra tractationem eventus */
     per (i = ZEPHYRUM; v->petitiones
                        && i < xar_numerus(v->petitiones); i++)

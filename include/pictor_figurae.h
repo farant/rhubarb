@@ -51,7 +51,36 @@ figura_tabulae (
                    i32  thema,
                 vacuum* ctx);
 
-/* <purus/> */
+/* <purus/> quadratum lineae status (PARTES_BOTTONE): titulus dicit
+ * quid pingatur - "instrumentum:<nomen>" (icon 1-bit XVI x XVI),
+ * "color:<index>" (palette Aquinas, XVI), "color:-1" (nullus: crux),
+ * "exemplar:<n>" (exemplar 1-bit colore textus; optio palettae),
+ * "exemplar:<n>:<primus>:<secundus>" (exemplar coloribus veris, ut
+ * pingetur - quadratum et optiones palettae; nullus = fundus
+ * quadrati; ambo nulli: 1-bit), "magnitudo:<n>" (discus diametri n
+ * centratus colore textus; n > XVI: numerus),
+ * "magnitudo:aspergillum:<m>" (guttae in disco crescente),
+ * "magnitudo:spongia:<n>" (quadratum hebes; magnitudo fixa).
+ * Margo colore marginis; titulus in ":electum" desinens (optio
+ * electa in palette, P1b): margo colore accentus. */
+vacuum
+figura_quadrati (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx);
+
+/* <purus/> palette (PARTES_DIALOGUS, P1b): fundus superficiei et
+ * margo; optiones = quadrata filia (figura_quadrati) */
+vacuum
+figura_palettae (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx);
+
+/* <purus/> linea status: fundus et titulus (textus post quadratum
+ * filium ultimum, cellula interposita) */
 vacuum
 figura_tituli (
     constans Componens* c,

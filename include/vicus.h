@@ -97,6 +97,10 @@ nomen structura {
        VicusPulsator  pulsare;        /* NIHIL = non vivit */
               vacuum* pulsare_ctx;
                  b32  vivit_in_fundo; /* pulsatur etiam non activa */
+                 b32  focus_in_apertura; /* latus hoc focum capit cum
+                                          * vicus aperitur (terminale:
+                                          * programma statim scribendum;
+                                          * Franus 2026-10-09) */
     /* ictus qui latus focat etiam agit, si latus vult (Franus: iussum
      * uno ictu). Post focum mutatum vocatur (motus iam lateri
      * aptatus); arbor = arbor composita. VERUM = actum. NIHIL = ictus
@@ -105,6 +109,11 @@ nomen structura {
                           InsulaRepositorium* repo, Motus* motus,
                           Componens* arbor, constans Eventus* ev);
               vacuum* ictus_primus_ctx;
+    /* S3e: argumentum lateris mutatum (vicus_acervo_mutare): latus se
+     * aptat (pictor: picturam aliam ostendit). NIHIL = non potest */
+                 b32  (*argumentum_ponere)(vacuum* ctx,
+                          constans character* argumentum);
+              vacuum* argumentum_ponere_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -145,6 +154,13 @@ nomen structura {
            i32 focus;       /* VICUS_SINISTRUM aut VICUS_DEXTRUM */
 } VicusTabula;
 
+/* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
+ * ("7:52 PM"). Fons: hora 0-23, minutum 0-59. NIHIL (ordinarium) =
+ * nullum horologium - probationes et specimina constant; applicationes
+ * vicus_horologium_locale ponunt. vicus_pulsare horam legit et VERUM
+ * reddit cum minutum mutatur. */
+nomen vacuum (*VicusHorologium) (vacuum* ctx, s32* hora, s32* minutum);
+
 nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -162,6 +178,10 @@ nomen structura {
                   Motus* motus;       /* ligatus (T3a); NIHIL nullus */
                     Xar* petitiones;  /* S3c: aperitiones in acervo
                                        * pendentes (vicus_pulsare) */
+        VicusHorologium  horologium;  /* S4: NIHIL = nullum */
+                 vacuum* horologium_ctx;
+                    s32  hora;        /* ultima lecta; -1 = nulla */
+                    s32  minutum;
 } Vicus;
 
 Vicus*
@@ -294,6 +314,30 @@ vicus_dispensatorem_ligare (
 b32
 vicus_pulsare (
     Vicus* v);
+
+vacuum
+vicus_horologium_ponere (
+              Vicus* v,
+    VicusHorologium  horologium,
+             vacuum* ctx);
+
+/* hora locali systematis (time.h: time, localtime) */
+vacuum
+vicus_horologium_locale (
+    vacuum* ctx,
+       s32* hora,
+       s32* minutum);
+
+/* S3e: latus frontale generis in acervo tabulae activae argumentum
+ * novum accipit (facies.argumentum_ponere) et in frontem venit; focus
+ * manet; dispositio servatur. Nullum eius generis: ut
+ * vicus_acervo_aperire. PETITIO (vicus_pulsare proximo). FALSUM si
+ * genus ignotum. */
+b32
+vicus_acervo_mutare (
+                 Vicus* v,
+    constans character* genus,
+    constans character* argumentum);
 
 /* S3c: latus (genus, argumentum) in acervo tabulae activae: iam
  * praesens in frontem venit, aliter montatur (id novum: id

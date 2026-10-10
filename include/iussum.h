@@ -1,8 +1,10 @@
 /* iussum.h - iussa in textu, stilo acme (vicus-latera S3a)
  *
  * '$verbum' aut '$verbum(arg, arg)' in tabula characterum: verbum
- * '[a-z][a-z0-9_]*', '$' in initio lineae aut post characterem non
- * verbalem (littera, numerus, '_'), ergo 'a$b' iussum non est.
+ * '[a-z][a-z0-9_-]*' - litterae minusculae, numeri, '_' et '-' (intra
+ * solum: '-' finale verbum non est - "$dies-" = $dies et '-'; S3e),
+ * '$' in initio lineae aut post characterem non verbalem (littera,
+ * numerus, '_'), ergo 'a$b' iussum non est.
  * Argumenta: '(' statim post verbum, ')' prima in EADEM linea;
  * commatibus divisa, spatia extrema dempta; '()' = nulla. '$verbum('
  * sine ')' iussum NON est (dimidium iussi numquam currit). Solum
@@ -56,6 +58,29 @@ iussum_proximum (
                            s32  a_columna,
                    IussumNotum  notum,
                         vacuum* ctx,
+                       Piscina* piscina,
+                        Iussum* exitus);
+
+/* ---- Nexus (S3d): '#verbum' ---- */
+
+/* nexus '#verbum' ('[a-z0-9_-]+'; ante: initium lineae aut character
+ * non verbalis); argumenta nulla - Iussum idem, verbum sine '#'. Omnis
+ * nexus nexus est (non solum noti): tags ('#notae') per paginas
+ * cycli, '#3' pagina id III, '#next' '#prev' '#first' '#last'. */
+b32
+iussum_nexus_ad_locum (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  columna,
+                       Piscina* piscina,
+                        Iussum* exitus);
+
+/* nexus proximus in linea cuius '#' a columna data aut post iacet */
+b32
+iussum_nexus_proximus (
+    constans TabulaCharacterum* t,
+                           s32  linea,
+                           s32  a_columna,
                        Piscina* piscina,
                         Iussum* exitus);
 

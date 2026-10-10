@@ -9,6 +9,7 @@
  * "[tabella] lectio" imprimunt - gyrus status plenus (JS -> C
  * scribere -> JS -> C legere -> DOM) sine inspectione visuali. */
 
+/* <aedilis facultas="fenestra"/> */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"

@@ -8,6 +8,11 @@
 #   ./tools/reusus_gradus_ab.sh GRADUS PORTA DIRECTORIUM [-n N]
 #   e.g. ./tools/reusus_gradus_ab.sh probationes_toml porta_toml \
 #            toml/probationes -n 150
+#   PORTA '-' (fabrica-7 T6): cursor sine actione declarata (radix:
+#   compile_tests.sh per silva.porta) - verdictum totum reusum solum si
+#   OMNIA membra reusa et plagulae cursoris (-cursor 'a b ...')
+#   immutatae; tempus = mediana portae in build/portae/tempora.tsv
+#   (-porta-titulus, e.g. radix)
 #
 # Mensurae: commissiones quibus porta reusa esset; quibus compositum
 # gradus totum reusum esset; membra reusa (membrum x commissio);
@@ -21,10 +26,12 @@ cd "$RADIX" || exit 2
 GRADUS="${1:-}"; PORTA="${2:-}"; DIR="${3:-}"
 [ -n "$GRADUS" ] && [ -n "$PORTA" ] && [ -n "$DIR" ] || { sed -n '7,9p' "$0" >&2; exit 2; }
 shift 3
-N=150
+N=150; CURSOR=""; PORTA_TITULUS=""
 while [ $# -gt 0 ]; do
     case "$1" in
         -n) N="$2"; shift 2 ;;
+        -cursor) CURSOR="$2"; shift 2 ;;
+        -porta-titulus) PORTA_TITULUS="$2"; shift 2 ;;
         *) echo "reusus_gradus_ab: optio ignota $1" >&2; exit 2 ;;
     esac
 done
@@ -37,9 +44,23 @@ _ms () {   # duratio cursus ultimi SANATI tituli
         AND eventus = 'SANATUM' ORDER BY initium DESC LIMIT 1"
 }
 
-./tools/reusus_retro.sh "$PORTA" -n "$N" > "$T/porta.txt" || exit 2
-sed -nE 's/^([0-9a-f]+)  (REUSUS|IRRITUM).*/\1\t\2/p' "$T/porta.txt" > "$T/porta.tsv"
-printf '%s\t%s\n' "$PORTA" "$(_ms "$PORTA")" > "$T/tempora.tsv"
+if [ "$PORTA" != "-" ]; then
+    ./tools/reusus_retro.sh "$PORTA" -n "$N" > "$T/porta.txt" || exit 2
+    sed -nE 's/^([0-9a-f]+)  (REUSUS|IRRITUM).*/\1\t\2/p' "$T/porta.txt" > "$T/porta.tsv"
+    printf '%s\t%s\n' "$PORTA" "$(_ms "$PORTA")" > "$T/tempora.tsv"
+else
+    [ -n "$PORTA_TITULUS" ] || { echo "reusus_gradus_ab: PORTA '-' postulat -porta-titulus" >&2; exit 2; }
+    PORTA="cursor_$PORTA_TITULUS"
+    ms=$(awk -F'\t' -v t="$PORTA_TITULUS" '$2 == "porta" && $3 == t {print $4}' build/portae/tempora.tsv |
+        sort -n | awk '{a[NR] = $1} END {if (NR) printf "%d", a[int((NR + 1) / 2)] * 1000}')
+    [ -n "$ms" ] || { echo "reusus_gradus_ab: tempus portae $PORTA_TITULUS nullum in build/portae/tempora.tsv" >&2; exit 2; }
+    printf '%s\t%s\n' "$PORTA" "$ms" > "$T/tempora.tsv"
+    # commissiones quae plagulam cursoris tangunt (porta.tsv post membra)
+    : > "$T/cursor_tacta"
+    for f in $CURSOR; do
+        git log --first-parent -n "$N" --format='%h' -- "$f" >> "$T/cursor_tacta"
+    done
+fi
 
 : > "$T/membra.tsv"
 sqlite3 build/fabrica.db "SELECT DISTINCT titulus FROM lectiones
@@ -52,6 +73,17 @@ while read -r m; do
     sed -nE "s#^([0-9a-f]+)  (REUSUS|IRRITUM) *(.*)#$m\t\1\t\2\t\3#p" "$T/m.txt" >> "$T/membra.tsv"
     printf '%s\t%s\n' "$m" "$(_ms "$m")" >> "$T/tempora.tsv"
 done < "$T/nomina"
+
+# PORTA '-': verdictum totum cursoris = omnia membra reusa et cursor
+# intactus (commissiones ordine membrorum)
+if [ ! -f "$T/porta.tsv" ]; then
+    awk -F'\t' 'FILENAME ~ /cursor_tacta/ { tacta[$1] = 1; next }
+        { c = $2; if (!(c in visa)) { visa[c] = 1; ordo[++n] = c }
+          if ($3 != "REUSUS") irr[c] = 1 }
+        END { for (i = 1; i <= n; i++) { c = ordo[i]
+              print c "\t" ((c in irr) || (c in tacta) ? "IRRITUM" : "REUSUS") } }' \
+        "$T/cursor_tacta" "$T/membra.tsv" > "$T/porta.tsv"
+fi
 
 awk -F'\t' -v gradus="$GRADUS" -v porta="$PORTA" -v n_arg="$N" '
     FILENAME ~ /tempora/ { ms[$1] = $2 + 0; next }

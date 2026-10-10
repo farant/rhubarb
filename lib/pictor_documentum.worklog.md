@@ -168,3 +168,123 @@ first in a CREDO_NON_PENDET child with its own temporary volume (a
 forked child must not write the parent's volume); the pixel checks run
 only if that passed. Plants: no clipping and no trivial reject = named
 hang; wrong left/bottom edge = pixel checks.
+
+## 2026-10-09 - canvas clears to the theme background (Fran: no yellow)
+
+`vacare_fundo` clears to `thema_color(COLOR_BACKGROUND)` (scriba and
+terminale's background) instead of colouring-palette entry
+PALETTE_WHITE, which the theme renders as bright yellow. Trap: there
+are TWO palettes - `thema_color` (semantic) resolves through
+`color_ex_palette`, while stroke colours index the COLOURING palette
+(`thema_color_ex_indice_colorationis`); the semantic colour's index
+(`thema_palette_index`) read in the colouring palette gave the ink
+colour, and the spray test went blank. Use the semantic colour itself.
+Migration: the background is not in the acts, but CHECKPOINTS store
+rendered pixels - drawings saved before this keep the old yellow
+wherever they restore from a checkpoint; new canvases are neutral.
+Goldens: aurum.txt (fingerprints only), pictor_prima specimen.
+
+## 2026-10-09 - stroke colours = the Aquinas palette itself
+
+Fran: the colour palette showed repeats ("there should be 16 unique
+colours"). The theme's Aquinas palette IS 16 distinct colours
+(`palette_aquinas`, `color_ex_palette`); pictor resolved stroke colours
+through `thema_color_ex_indice_colorationis`, which is not a palette
+but the SYNTAX-highlighting role map (0-12: command, tag, string...;
+13+ fall back to the text colour) - so 0/13/14/15 and 7/9 coincided,
+and "white" (5) was the gold of role "number". Strokes and swatches now
+use `color_ex_palette` (swatches as RGBA, since COLOR_MANDATI_INDEX is
+resolved through the role map by the rasterizers). Existing drawings
+re-render in the true palette colours. Test: the palette's 16 options
+are distinct (probatio_pictor_palette VIII).
+
+## 2026-10-09 - P2 spongia (eraser)
+
+Fran's plan: the eraser paints the canvas background. Named `spongia`
+(Romans wiped wet ink off with a sponge); key `e`.
+
+- Log: `<ictus instrumentum="spongia" magnitudo>` with points and NO
+  colour - replay paints `thema_color(COLOR_BACKGROUND)`, the same call
+  as `vacare_fundo`, so erased areas and a fresh canvas always agree.
+  (Checkpoints hold pixels, so a theme change would still show the old
+  background wherever a checkpoint restores - same caveat as P0.)
+- Size: square of PICTOR_SPONGIAE_LATUS (16) x magnitudo, centred
+  `[c - latus/2, c + latus/2)`. A 1x1 eraser (brush's size) is useless,
+  so it gets its own base like the spray radius.
+- Sweep rule: a square at the first point, then at EVERY Bresenham
+  point after the start of each segment. A fast drag gives two points
+  far apart; stamping only at points left gaps (plant S2 caught it).
+  The preview figure (pictor_figurae.c spongiam_praevidere) follows
+  the same rule and the test counts the squares exactly (40..50 = 11),
+  so the two copies of the walk cannot drift silently.
+- ictum_tractare / ictum_scribere now take the tool's litterae instead
+  of a b32 aspergillum; pointer comparison against the static
+  litterae_* is deliberate (one tag per tool).
+
+## 2026-10-09 - P3 exemplaria (patterns)
+
+- Rule: a pixel the brush or spray touches gets `color` where the
+  pattern bit at its CANVAS (x, y) is set, `color_secundus` where not;
+  colour -1 = leave the pixel alone. Pattern 0 = solid. Both new log
+  attributes are written only when non-default, so old logs mean what
+  they meant.
+- Brush = two passes through delineare's existing MODUS_EXEMPLAR:
+  foreground with the pattern, background with the INVERTED bytes
+  (`~bitus[k]`). Solid strokes stay in MODUS_SOLIDUS, so pre-P3
+  drawings replay byte-identically (aurum seals unchanged).
+  `penicillum_pingere` is the old brush loop pulled out so it can run
+  twice.
+- Spray sets single pixels, so each dot asks `atramenti_pixelum`.
+- Bug fixed on the way: a brush stroke with foreground "none" (-1)
+  called color_ex_palette(-1), reading 3 bytes BEFORE the palette
+  array. "none" is now a skipped pass (test IV pins it: plant X4).
+- Twin/tessellation: the 4th bar square moved the status text from
+  x 84 (= cell 14 exactly) to x 110 -> cell 18 in the terminal twin.
+- Fran: pattern palette options use the chosen fg/bg (title
+  "exemplar:<n>:<fg>:<bg>", same as the bar square); both none falls
+  back to 1-bit text colour so the patterns stay legible.
+
+## 2026-10-09 - P4a brush sizes
+
+- Sizes are PER TOOL now (Fran agreed): ephemeral `magnitudo_penicilli`
+  (brush diameter px; options 1 2 3 4 6 8 12 16 32 64 - Fran asked for
+  32/64) and `magnitudo_aspergilli` (spray multiplier, UI in P4b). The
+  generic `magnitudo` left canon/init/domini. The LOG keeps one
+  `magnitudo`, written from the current tool's attribute (eraser: 1).
+- Brush = disc (pictor_disci_pixelum: doubled coords from centre,
+  a^2 + b^2 <= n^2; n <= 3 full square) swept by `verrere`: per
+  segment clip with margin n-1, stamp the clipped start, walk, then
+  stamp each point. At n = 1 that is exactly the old
+  delineare_lineam + 1x1 rect, including off-canvas strokes.
+- TIE RULE: delineare_lineam uses STRICT comparisons (e2 > -dy,
+  e2 < dx); my P2 eraser walk used >= / <=. Python brute force over
+  120x120 slopes: each side differs on ~16% of slopes, x-side ties only
+  on steep lines like (1:2). pictor_lineam_ambulare uses delineare's
+  rule so old drawings replay identically. The eraser moved onto it
+  too (edge pixels can differ at ties for strokes made since P2 today).
+  The aurum seals did NOT pin this (plant M7 survived): test VIII now
+  draws 8 lines incl. both tie kinds and compares against
+  delineare_lineam itself as the oracle.
+- Preview: stamps every max(1, n/4) steps + segment end (a 64 brush
+  swept per pixel = ~25k rects/frame); real colour, pattern only on
+  release. Name collisions on the way: `magnitudo` (= sizeof macro)
+  and `Sigillum` (sigillum.h hash seal type).
+- Twin: status text x 136 -> cell 23 (tessellation rounds to NEAREST:
+  110 -> 18, 136 -> 23).
+
+## 2026-10-09 - P4b spray sizes
+
+- Fran's options: 1 2 4 8 16 (radius 8..128). Density is LINEAR (Fran
+  agreed): 6 x m dots per point and m per 8 ms of dwell. Constant
+  density would be 6 x m^2 = 1536 per point at 16, too heavy for the
+  live preview (1x1 mandata). m = 1 unchanged.
+- The size square follows the current tool: brush "magnitudo:<n>",
+  spray "magnitudo:aspergillum:<m>", eraser "magnitudo:spongia:16"
+  dimmed with an EMPTY action (clicking opens nothing). It never
+  disappears, so the status text does not jump between tools.
+- magnitudo.ponere reads the current tool and checks the value against
+  that tool's own table; the two tables are duplicated in
+  pictor_actiones.c and pictor_componentia.c (tests click the last
+  option of each to pin them).
+- First draft of section IX never held the spray still, so dwell
+  scaling was unpinned; added an 80 ms hold (plant B7).
