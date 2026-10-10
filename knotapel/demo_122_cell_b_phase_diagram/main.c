@@ -1242,6 +1242,60 @@ judge (
     return v;
 }
 
+/* one FIXED tie rule (review M1): at a tie take the lower (0) or upper
+ * (1) sector, the first (0) or last (1) maximal axis; XOR sets passing
+ * at position p for N, OR over k as D97 */
+static int
+fixed_rule_count (
+    Position p,
+    int      n_w,
+    int      upper,
+    int      last)
+{
+    int combo[8];
+    int count = 0;
+    int i;
+
+    for (i = 0; i < n_w; i++) combo[i] = i;
+    do {
+        int tt[MAX_MASKS];
+        int n_masks = 1 << n_w;
+        int pass = 0;
+        int t;
+        int m;
+
+        for (m = 0; m < n_masks; m++) tt[m] = popcount(m) & 1;
+        for (t = 0; t < 3 && !pass; t++) {
+            for (m = 0; m < n_masks; m++) {
+                int n0;
+                int nv[N_AXES];
+                int lo_sec = 99;
+                int hi_sec = -1;
+                int lo_ax = 99;
+                int hi_ax = -1;
+                int j;
+
+                mask_numbers(combo, n_w, m, &n0, nv);
+                exact_cell(p, n0, nv, KS[t], &g_mc[m]);
+                for (j = 0; j < g_mc[m].n_ties; j++) {
+                    int sec = g_mc[m].ties[j] / N_VOR;
+                    int ax = g_mc[m].ties[j] % N_VOR;
+
+                    if (sec < lo_sec) lo_sec = sec;
+                    if (sec > hi_sec) hi_sec = sec;
+                    if (ax < lo_ax) lo_ax = ax;
+                    if (ax > hi_ax) hi_ax = ax;
+                }
+                g_mc[m].exact_cell = (upper ? hi_sec : lo_sec) * N_VOR
+                    + (last ? hi_ax : lo_ax);
+            }
+            pass = labels_pass(g_mc, n_masks, tt, 0);
+        }
+        count += pass;
+    } while (next_combo(combo, n_w, 6));
+    return count;
+}
+
 /* capacity signature at a position: per N = 3..6, counts of rule,
  * robust, possible, tied */
 typedef struct {
@@ -1316,20 +1370,27 @@ closed_form (
         long n0 = bp[best].n0;
         long q;
 
+        long qb;
+
         while (h) { long t = g % h; g = h; h = t; }
         a /= g;
         b /= g;
+        /* coefficient sqrt(a/b), a/b in lowest terms */
         for (q = 1; q * q < a; q++) { }
-        if (q * q == a) {
-            n0 = q;
+        for (qb = 1; qb * qb < b; qb++) { }
+        (void)n0;
+        if (q * q == a && qb * qb == b) {
+            if (qb == 1) {
+                sprintf(out, "arctan(%ld tan(%d pi/24))", q, bp[best].jj);
+            } else {
+                sprintf(out, "arctan(%ld/%ld tan(%d pi/24))", q, qb,
+                    bp[best].jj);
+            }
+        } else if (b == 1) {
+            sprintf(out, "arctan(sqrt(%ld) tan(%d pi/24))", a, bp[best].jj);
         } else {
-            b = bp[best].r;
-        }
-        if (b == 1) {
-            sprintf(out, "arctan(%ld tan(%d pi/24))", n0, bp[best].jj);
-        } else {
-            sprintf(out, "arctan(%ld tan(%d pi/24)/sqrt %ld)", n0,
-                bp[best].jj, b);
+            sprintf(out, "arctan(sqrt(%ld/%ld) tan(%d pi/24))", a, b,
+                bp[best].jj);
         }
     }
 }
@@ -1716,6 +1777,14 @@ main (void)
                 && sg->c[3][1] == 1;
             ok = full == inside;
         }
+        for (i = 0; i < n_rank && ok; i++) {
+            const Signature *sg = &sig_pt[i];
+            int inside = (i > r_lo && i < r_d1) || (i > r_d2 && i < r_hi);
+
+            full = sg->c[0][1] == 20 && sg->c[1][1] == 15 && sg->c[2][1] == 6
+                && sg->c[3][1] == 1;
+            ok = full == inside;
+        }
         check("robust 100% at every N on exactly TWO open plateaus: "
             "(arctan(3 tan pi/24), arctan(5 tan pi/24)) = (21.552, 33.355) "
             "and (arctan(3 tan pi/12), arctan(tan(11pi/24)/sqrt2)) = (38.794, "
@@ -1732,12 +1801,33 @@ main (void)
             "the plateau's midpoint (59.12)", p.kind == 1
             && sig_at(p)->c[0][1] == 20 && sig_at(p)->c[1][1] == 15
             && sig_at(p)->c[2][1] == 6 && sig_at(p)->c[3][1] == 1);
-        check("90 degrees: robust 0 at every N, possible 100% at every N "
-            "(every sum a tie at 180 degrees)",
-            sig_90.c[0][1] == 0 && sig_90.c[1][1] == 0 && sig_90.c[2][1] == 0
-            && sig_90.c[3][1] == 0 && sig_90.c[0][2] == 20
-            && sig_90.c[1][2] == 15 && sig_90.c[2][2] == 6
-            && sig_90.c[3][2] == 1);
+        {
+            /* at 90 every non-zero sum is tied between k/2 - 1 and k/2, so
+             * 'possible' may put each vector on the side of its own truth
+             * value: it passes ANY function constant on vectors - vacuous
+             * there. The collapse is real under every FIXED tie rule. */
+            int upper;
+            int last;
+            int n;
+
+            p.kind = 2;
+            p.rank = 0;
+            ok = sig_90.c[0][1] == 0 && sig_90.c[1][1] == 0
+                && sig_90.c[2][1] == 0 && sig_90.c[3][1] == 0
+                && sig_90.c[0][2] == 20 && sig_90.c[1][2] == 15
+                && sig_90.c[2][2] == 6 && sig_90.c[3][2] == 1;
+            for (upper = 0; upper < 2; upper++) {
+                for (last = 0; last < 2; last++) {
+                    for (n = 3; n <= 6; n++) {
+                        ok &= fixed_rule_count(p, n, upper, last) == 0;
+                    }
+                }
+            }
+            check("90 degrees: D97's 'total collapse' HOLDS - 0 at every N "
+                "under all four fixed tie rules (lower/upper sector x "
+                "first/last axis) and robustly; 'possible' 100% is vacuous "
+                "there (every vector tied two ways)", ok);
+        }
         ok = 1;
         for (i = 0; i <= n_rank; i++) {
             int n;

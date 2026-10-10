@@ -42,20 +42,20 @@ the mask, independent of θ. So:
 
 | half-angle θ | N = 3 / 4 / 5 / 6 (of 20 / 15 / 6 / 1) | upper end, closed form |
 |---|---|---|
-| (0°, 4.347°] | 0 / 3 / 0 / 0 | arctan(tan(π/24)/√3) |
-| (4.347°, 5.318°] | 8 / 3 / 0 / 0 | arctan(tan(π/24)/√2) |
+| (0°, 4.347°] | 0 / 3 / 0 / 0 | arctan(√(1/3) tan(π/24)) |
+| (4.347°, 5.318°] | 8 / 3 / 0 / 0 | arctan(√(1/2) tan(π/24)) |
 | (5.318°, 7.5°] | 8 / 3 / 0 / 1 | π/24 |
-| (7.5°, 10.547°] | 20 / 3 / 0 / 1 | arctan(2 tan(π/24)/√2) |
-| (10.547°, 20.424°) | 20 / 15 / 0 / 1 | arctan(4 tan(π/24)/√2) |
-| [20.424°, 20.754°] | 20 / 3 / 0 / 1 | arctan(2 tan(π/12)/√2) |
+| (7.5°, 10.547°] | 20 / 3 / 0 / 1 | arctan(√2 tan(π/24)) |
+| (10.547°, 20.424°) | 20 / 15 / 0 / 1 | arctan(√8 tan(π/24)) |
+| [20.424°, 20.754°] | 20 / 3 / 0 / 1 | arctan(√2 tan(π/12)) |
 | (20.754°, 21.552°] | 20 / 15 / 0 / 1 | arctan(3 tan(π/24)) |
 | **(21.552°, 33.355°)** | **20 / 15 / 6 / 1** | arctan(5 tan(π/24)) |
 | [33.355°, 38.794°] | 20 / 15 / 0 / 1 | arctan(3 tan(π/12)) |
-| **(38.794°, 79.453°)** | **20 / 15 / 6 / 1** | arctan(tan(11π/24)/√2) |
-| [79.453°, 80.840°) | 20 / 15 / 6 / 0 | arctan(2 tan(11π/24)/√6) |
+| **(38.794°, 79.453°)** | **20 / 15 / 6 / 1** | arctan(√(1/2) tan(11π/24)) |
+| [79.453°, 80.840°) | 20 / 15 / 6 / 0 | arctan(√(2/3) tan(11π/24)) |
 | [80.840°, 82.5°) | 20 / 3 / 6 / 0 | 11π/24 |
-| [82.5°, 84.396°) | 20 / 0 / 6 / 0 | arctan(3 tan(11π/24)/√5) |
-| [84.396°, 85.653°) | 20 / 0 / 0 / 0 | arctan(3 tan(11π/24)/√3) |
+| [82.5°, 84.396°) | 20 / 0 / 6 / 0 | arctan(√(9/5) tan(11π/24)) |
+| [84.396°, 85.653°) | 20 / 0 / 0 / 0 | arctan(√3 tan(11π/24)) |
 | [85.653°, 87.487°) | 12 / 0 / 0 / 0 | arctan(3 tan(11π/24)) |
 | [87.487°, 90°] | 0 / 0 / 0 / 0 | |
 
@@ -68,16 +68,18 @@ diagram as well.
 | D97 | exactly |
 |---|---|
 | plateau 25°–75°, 100% at every N | **two plateaus**: (arctan(3 tan π/24), arctan(5 tan π/24)) = (21.552°, 33.355°) and (arctan(3 tan π/12), arctan(tan(11π/24)/√2)) = (38.794°, 79.453°) |
-| 35°: "isolated resonance" (N = 5 fails) | a **5.44°-wide band** [33.355°, 38.794°] where N = 5 fails robustly and under every resolution ("possible" 0 inside it). It is a genuine geometric band, not a resonance and not a tie |
+| 35°: "isolated resonance" (N = 5 fails) | a **5.44°-wide band** where N = 5 fails: robustly on the closed band [33.355°, 38.794°], and under every resolution ("possible" 0) on the open band; at the two endpoints themselves "possible" passes N = 5 (6/6). A genuine geometric band, not a resonance and not a tie |
 | 45° is the plateau midpoint, not a magic angle | 45° sits **on** a breakpoint (u = 1) and is robustly 100%. It is not the midpoint (the upper plateau's is 59.12°). "Not magic" holds |
-| total collapse at 90° | robust 0 at every N, but **possible 100% at every N**: every sum is exactly at 180°, and some tie resolution separates everything. The collapse is a tie artifact |
+| total collapse at 90° | **holds**: 0 at every N under each of the four fixed tie rules (lower/upper sector × first/last axis) and robustly. "Possible" reports 100%, but that is vacuous there: every non-zero sum is tied between sectors k/2 − 1 and k/2, so a per-vector choice can put each sum on the side of its own truth value and pass any function constant on vectors (zero vector parts are zero sums at 90°) |
 | below 25°, N = 5 fails while N = 6 is 100% (10°–20°) | correct: N = 5 robustly fails below 21.552°, and N = 6 holds on (5.318°, 79.453°) |
 
 **D97's float sweep was right.** At all 21 of its angles, its float
 counts equal the exact rule. Only "possible" differs, at 10° (N = 4:
-15, not 3) and at 90°. What was wrong was the reading: interpolating
-from samples 5° apart missed the plateau's true edges, called a band a
-resonance, and took a tie collapse at 90° as real.
+15, not 3) and at 90°. What was wrong was the reading:
+interpolating from samples 5° apart missed the plateau's true edges and
+called a band a resonance. Its 90° collapse is real. A first version
+of this demo called it a tie artifact; the review showed that "possible"
+is vacuous there (see below).
 
 ## Checks
 
@@ -87,12 +89,18 @@ resonance, and took a tie collapse at 90° as real.
   floats.
 - **Breakpoints:** sorted exactly. Equal values share one rank, and
   distinct values strictly increase.
-- **D97's angles placed exactly:** multiples of 15° exactly (tan² is in
-  Q(√2, √3)); the others by a certified float gap (refused below
-  10⁻⁹).
-- **Claim checks:** the two plateaus exactly, the band, 45° on a
-  breakpoint, 90°, rule = robust on every open interval, and D97's
-  floats = the exact rule.
+- **D97's angles placed:** multiples of 15° exactly (tan² is in
+  Q(√2, √3)). The others are placed by a float margin of 10⁻⁹ over
+  libm's tan, which is a margin, not a proof. D97's angles clear it by
+  far.
+- **Claim checks:**
+  - the two plateaus exactly, open intervals and every interior
+    breakpoint;
+  - the band;
+  - 45° on a breakpoint;
+  - 90° under the four fixed tie rules;
+  - rule = robust on every open interval;
+  - D97's floats = the exact rule.
 - **Oracle:** `python3 -I oracle.py U` uses a different formulation: no
   tan, no breakpoints. It compares cos² of each sum's half-angle,
   n₀²/(n₀² + r·u), with cos²(mπ/k) in Q(√2, √3), with Fractions and
@@ -121,12 +129,47 @@ checked the rank invariant, and the oracle had been compared only at
 rational points (30°, 45°, 60° lie inside a plateau). Hence the rank
 self-check and the boundary-point oracle check.
 
-**Equivalent mutants (2):**
+**Equivalent mutants (8):** byte-identical output. Two were found here,
+six more by the review.
 - **The replica's √2 shortened.** D97's axes are b/|b| = ±1 for any
   √2 constant.
-- **The 90° clash key ignoring the real part.** At 90° no two masks
-  with the same vector part have different truth values, so the clash
-  test never fires either way.
+- **The vector-clash test**, including the 90° key ignoring the real
+  part. In this family it never fires at any position: equal (n₀, n)
+  means 4-bit pair flips, so the two masks have the same truth value.
+- **Axis rule = last maximal axis.**
+- **The r = 0, n₀ < 0 cell placed in sector 0.**
+- **The robust shortcut removed** before the SAT check.
+- **closed_form choosing the largest n₀.**
+- **place_float's gap set to 0.**
+
+These are inert in this family, not untested code paths that matter.
+
+A 13th plant after the review, a "fixed" rule that picks its sector by
+the mask's truth value, makes the 90° check red.
+
+## Review (2026-10-10, recensor-extensio)
+
+The arithmetic is right. The reviewer checked it four ways:
+- the reduction re-derived;
+- a dense sweep of 1,789 angles against D97's floats (0 mismatches);
+- a raw-quaternion recount at 490 rational angles with no reduction,
+  tan or ranks (0 mismatches);
+- `oracle.py` at all 133 intervals, all 154 breakpoints and 90°
+  (0 mismatches).
+
+Findings applied:
+- **M1:** "possible 100% at 90°" is vacuous, so "the collapse is a tie
+  artifact" was backwards. It is now checked under four fixed tie
+  rules.
+- **L1:** the band's endpoints pass under "possible".
+- **L2:** the plateau check now covers interior breakpoints.
+- **L3:** closed forms reduced.
+- **P1:** six more equivalent mutants.
+- **P2:** the float margin is not a certificate.
+
+The M1 argument applies wherever every vector is tied two ways. It
+also qualifies D121's "possible" numbers for the null subsets
+(see D121's findings).
 
 ## Not covered
 
