@@ -197,3 +197,62 @@ bulk conversion of root suites to sections (incremental, Q8); deleting
 - Flaky tests: per-member reuse makes a flake visible as a member that
   fails on a re-run with unchanged inputs; no retry mechanism (credo
   wishlist: measure, never retry).
+
+## IX. As built (2026-10-09, quinta; commits 175d048a .. 54d3574b)
+
+What "Done means" became, item by item:
+
+- **256 members, not 239** (257 root test files minus the benchmark).
+  `iudicare` judges them; a failing member's tail names its failing
+  sections (`sectio 'beta' FRACTA 1/2 ad t/probatio_a.c:12`), and
+  `-machina` emits `SECTIO` records after each member's `IUDICIUM` line.
+  Unconverted suites get a synthetic `totum` record with compendium counts.
+  Sections live in the member's area (`credo.tsv`) only - no reader needs
+  them in `build/fabrica.db` yet.
+- **Gate `radix` = composite + `compile_tests.sh --residua`.** The audit
+  before the switch found five checks a full runner pass did besides the
+  tests (all libraries compile, generare, speculum + JS syntax/probes,
+  plutil and iconutil oracles); `--residua` keeps them in the gate (Fran,
+  option 1; ~15 s). Warm radix gate 76 s vs the old 118 s median.
+- **Oracle 256/256** (`tools/radix_gradus_oraculum.sh`: category and
+  assertion counts per test). Plants: a broken test is named by both and
+  re-runs 1 member; a broken `lib/base64.c` is named identically by both
+  and re-runs exactly the 5 members whose closure holds it (the runner:
+  240).
+- **A/B over 150 commits:** runner verdict reused 0/150; members 91%
+  reused; test runs 38400 -> 3261 (-91%); estimated time -92%
+  (flattering - member compiles not counted). Top invalidator:
+  `aedilis.stml`, keyed whole by every member.
+- **Debts: 25**, each owned by one member, all in use
+  (`census: debita 25 (actiones 1, stala 0, ignota 0)`). The 36 shared
+  porta_aedilis exceptions became 36 owned debts; the census then showed
+  18 false "stale" (transient writes - created and deleted inside the
+  run); the reads log fixed 11, and three tests moved their scratch to a
+  per-process `$TMPDIR` dir (Fran, option 1), removing 11 debts.
+- **`aedilis_porta.sh` no longer runs tests** (74 s, was 180-210 s); its
+  GUI/reticular/live-repository lists are now `facultas` annotations.
+  `compile_tests.sh` remains the human entry.
+- **Plants** for every item above, each red then green (`silva.planta`).
+
+Changes to the design during the slice:
+
+- `facultas repositorium` RUNS with the HEAD commit in the key (Fran,
+  T5) - the AUDIENDA guess "link-only until a fixed repository exists"
+  would have stopped running `probatio_git` after the switch.
+- Members inherit their parent's `praecondiciones`; sources under `build/`
+  are keyed by existence only (porta_aedilis' approximation).
+- A debt is "in use" if the before/after snapshot changed OR the member's
+  reads log names a path inside it.
+- `<debitum_scripturae>` is in `aedificatio.canon` (T3 had taught only
+  the parser).
+
+AUDIENDA, resolved: first cold heal 7 min 5 s (runner ~2 min); every root
+closure does link through aedilis alone; flakes - none seen in four full
+heals and four oracle runs.
+
+Open, filed in the ledger: transient writes outside a member's area go
+unseen by the write check (…HC0Q); speculum members key the generated
+capsule by existence, so a behaviour change in its inputs re-runs none
+of them (…0DESC); the gate inventory lives in the ledger, not the repo
+(…MXPC). The ledger's inventory rows for radix and aedilis are
+re-derived in main after the merge.

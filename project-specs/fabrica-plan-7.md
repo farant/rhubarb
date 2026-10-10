@@ -133,8 +133,8 @@ code. Work happens in `../rhubarb-quinta`; merges by the ritual
 
 ### T8: close
 
-- [ ] spec "As built", worklogs, MEMORY; ledger …ZS closed; credo
-  slice 2 next (Fran 2026-10-09).
+- [x] spec "As built" (IX), worklogs, MEMORY; ledger …ZS -> tractum,
+  closed at the merge into main; credo slice 2 next (Fran 2026-10-09).
 
 ## Not in this plan (stated)
 
