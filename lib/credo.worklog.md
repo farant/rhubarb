@@ -131,3 +131,40 @@ fabrica plant now lands as `SECTIO ... familias FRACTA 40/42
 <file:line> credo_nihil <expression>`. Lint: function names use forms
 the lexicon knows (provenientia_exclusa, regenerationes_praevidere, no
 'chassis'); glossary: 'suita' entry, 'strategias' form.
+
+## 2026-10-10 - adoption test 1: probatio_fabrica_gradus uses parare/purgare/NECESSE
+
+Before credo slice 2, the v2 API was tried properly on one pilot suite
+(Fran: test adoption before building more on it). The six pilot suites
+had been converted mechanically only: section table + per-section piscina,
+but parare/purgare NIHIL in 41/41 sections and 0 uses of CREDO_NECESSE.
+
+Change: `MundusSectionis` (fake disk + sutura + intern) built by two
+parare variants (`_mundum_ludicrum_parare`, `_mundum_c_parare`) into
+`c->datum`; `_mundum_purgare` resets every fake global the sections set;
+the shape `CREDO_NON_NIHIL(x); si (x != NIHIL) { ... }` -> 
+`CREDO_NECESSE_NON_NIHIL(x);` + dedented body (15 sites). Numbers: guards
+22 -> 7, fixture setups 6 -> 1 (8-12 duplicated lines gone per section),
+file size unchanged (2399 -> ~2400: what went out of the sections came
+back as parare/purgare + one-line pointers), assertions 245 -> 251 (+1
+per section: the NECESSE inside parare).
+
+What the API felt like - findings for slice 2:
+1. In C89 the guard block was ALSO a declaration scope. Where the guarded
+   body starts with declarations (1 of 15 here) NECESSE needs a bare
+   `{ ... }` after it - the conversion is not purely "delete the if".
+2. NECESSE makes purgare MANDATORY, not optional. Old style: a failed
+   assertion did not stop the section, so the hand resets at its end
+   always ran. With NECESSE they are skipped. Shown by plants: a section
+   aborted after setting `_gradus_fractus` -> with purgare resetting it,
+   6/7 sections pass; with that one reset removed from purgare, two LATER
+   sections (post et composita, debita) fail. Docs (and maybe a lint)
+   should say: a suite with NECESSE and file-scope state needs purgare.
+3. `c->datum` is `vacuum*`; every section opens with
+   `&((MundusSectionis*)c->datum)->discus` - verbose; a per-suite accessor
+   macro would read better (C89 has no generics; that is the honest cost).
+4. The 7 guards left are compound (`x != NIHIL && xar_numerus(x) == I`):
+   making them NECESSE would turn a count check fatal - left as is.
+5. Assertion totals move under refactoring (parare's own NECESSE counts) -
+   fine for the oracle (both runners count the same binary) but worth
+   knowing before anyone treats totals as fixed.
