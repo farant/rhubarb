@@ -22,6 +22,9 @@ universalis   CredoNotatio* _credo_primus   = NIHIL;
 universalis   CredoNotatio* _credo_nunc     = NIHIL;
 universalis memoriae_index  _credo_numerus  = ZEPHYRUM;
 
+/* GRADUS (credo II): CREDO_GRADUS currens - notationibus additur */
+hic_manens constans character* _credo_gradus = NIHIL;
+
 /* FRACTURAE EXSPECTATAE (credo II): assertiones fractae sectionum quae
  * 'exspectata_fracta' ferunt (NOTA_FRACTA) - suitam non frangunt;
  * suitae veteres numquam ponunt (ZEPHYRUM) */
@@ -96,6 +99,7 @@ credo_aperire (
     _credo_nunc               = NIHIL;
     _credo_numerus            = ZEPHYRUM;
     _credo_fracti_exspectati  = ZEPHYRUM;
+    _credo_gradus             = NIHIL;
 }
 
 vacuum
@@ -108,6 +112,7 @@ credo_claudere (
     _credo_nunc               = NIHIL;
     _credo_numerus            = ZEPHYRUM;
     _credo_fracti_exspectati  = ZEPHYRUM;
+    _credo_gradus             = NIHIL;
 }
 
 
@@ -294,6 +299,8 @@ _credo_notare (
     notatio->versus = versus;
     notatio->praeteritus = praeteritus;
     notatio->ordo = _credo_numerus;
+    notatio->gradus = chorda_ex_literis(_credo_gradus != NIHIL
+        ? _credo_gradus : "", _credo_piscina);
 
     _credo_concatenare(notatio);
 
@@ -305,17 +312,24 @@ _credo_notare (
     alioquin
     {
         imprimere("F");
-        imprimere("\n FRACTA (%s): %s at %s:%d\n",
+        imprimere("\n FRACTA (%s): %s at %s:%d",
                   chorda_ut_cstr(notatio->genus, _credo_piscina),
                   chorda_ut_cstr(notatio->expressio, _credo_piscina),
                   chorda_ut_cstr(notatio->filum, _credo_piscina),
                   versus);
-        imprimere("  Speratus: %s\n",
-                  chorda_ut_cstr(notatio->valor_secundus,
-                  _credo_piscina));
-        imprimere("  Receptus: %s\n",
-                  chorda_ut_cstr(notatio->valor_primus,
-                  _credo_piscina));
+        si (_credo_gradus != NIHIL)
+        {
+            imprimere(" (in gradu %s)", _credo_gradus);
+        }
+        imprimere("\n");
+        /* chorda vacua: chorda_ut_cstr NIHIL reddit - "%.*s" cum
+         * mensura numquam NIHIL ad "%s" dat (NECESSE, furca) */
+        imprimere("  Speratus: %.*s\n",
+                  (integer)notatio->valor_secundus.mensura,
+                  (constans character*)notatio->valor_secundus.datum);
+        imprimere("  Receptus: %.*s\n",
+                  (integer)notatio->valor_primus.mensura,
+                  (constans character*)notatio->valor_primus.datum);
         /* effluere statim: probatio post fracturam saepe NIHIL
          * dereferens cadit, et per fistulam buffer plenus cum
          * relatione perit - segfault relationem absorbebat
@@ -1064,13 +1078,27 @@ _credo_sectionem_scribere (
         _credo_chordam_scribere(plagula, summa.fractura->genus);
         fputc('\t', plagula);
         _credo_chordam_scribere(plagula, summa.fractura->expressio);
+        /* campus XI (credo II): gradus fracturae primae */
+        fputc('\t', plagula);
+        _credo_chordam_scribere(plagula, summa.fractura->gradus);
     }
     alioquin
     {
-        fputs("\t\t", plagula);
+        fputs("\t\t\t", plagula);
     }
     fputc('\n', plagula);
     (vacuum)fflush(plagula);
+}
+
+vacuum
+credo_gradum_ponere (
+    constans character* titulus)
+{
+    _credo_gradus = titulus;
+    si (titulus != NIHIL)
+    {
+        imprimere("\n  -- gradus %s --\n", titulus);
+    }
 }
 
 /* SIGNA (credo II): vocabulum CLAUSUM - facultates domus (fabrica-7
@@ -1424,9 +1452,11 @@ credo_suitam_currere_cum (
             _credo_suitam_purgare(purgare_suitae, &suitae);
             redde I;
         }
-        ante     = _credo_nunc;
-        initium  = _credo_ms_nunc();
-        aborta   = _credo_sectionem_agere(sectio, &contextus);
+        ante           = _credo_nunc;
+        initium        = _credo_ms_nunc();
+        _credo_gradus  = NIHIL;
+        aborta         = _credo_sectionem_agere(sectio, &contextus);
+        _credo_gradus  = NIHIL;
         si (sectio->purgare != NIHIL)
         {
             sectio->purgare(&contextus);

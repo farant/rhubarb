@@ -21,6 +21,8 @@ nomen structura CredoNotatio {
                                                b32 praeteritus;
                                     memoriae_index ordo;
     structura CredoNotatio* sequens;
+    /* credo II: CREDO_GRADUS currens (vacua si nullus) */
+                                            chorda gradus;
 } CredoNotatio;
 
 
@@ -684,8 +686,8 @@ nomen structura CredoSectio {
  * notae). Campi tabulatione separati; '\t' '\n' '\\' in valoribus
  * effugiuntur:
  *   SECTIO  suita  titulus  exitus  praeteriti  totales  ms
- *           filum:versus  genus  expressio      (fractura prima; vacua
- *                                                si transiit)
+ *           filum:versus  genus  expressio  gradus  (fractura prima;
+ *           vacua si transiit; gradus = CREDO_GRADUS currens, credo II)
  *   SUITA   suita  exitus  transeuntes  sectiones  praeteriti  totales
  *           ms
  * exitus sectionis: TRANSIIT | FRACTA | VACUA (nulla assertio = non
@@ -700,6 +702,16 @@ s32
 credo_suitam_currere (
       constans character* titulus_suitae,
     constans CredoSectio* sectiones);
+
+/* GRADUS intra sectionem (credo II): nomen gradus currentis; fractura
+ * prima eum fert ("... at f:12 (in gradu VI: nuntius)", campus XI
+ * plagulae SECTIO) - nominatio sola, nulla isolatio. Gradus ad initium
+ * cuiusque sectionis vacatur; titulus durare debet (litterae). */
+#define CREDO_GRADUS(titulus) credo_gradum_ponere(titulus)
+
+vacuum
+credo_gradum_ponere (
+    constans character* titulus);
 
 /* SUITA CUM FIXURA COMMUNI (credo II): parare_suitae SEMEL ante
  * sectiones (contextus suitae: piscina sua; datum eius -> c->suita

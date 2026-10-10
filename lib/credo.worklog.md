@@ -317,3 +317,35 @@ typedef) - compiler error at once, but a candidate for the T7 lint list
 Plants: purgare_suitae not called at the end (hand-done: the call exists
 three times, only one at that indent), c->suita not set, failed parare
 ignored -> credo fumus IX red.
+
+## 2026-10-10 - credo II T4: named steps (CREDO_GRADUS)
+
+`CREDO_GRADUS("VI: nuntius")` = `credo_gradum_ponere(titulus)`: sets a
+static `_credo_gradus` (the pointer only - title must outlive the step,
+string literals do) and prints `  -- gradus VI: ... --`. `_credo_notare`
+copies it into the notatio (`CredoNotatio.gradus`, new LAST field - the
+struct is credo-allocated, so position is free, but end keeps the rule)
+and appends ` (in gradu ...)` to the FRACTA line. The SECTIO record gains
+field 11 = step of the first fracture (empty otherwise, three tabs in the
+pass branch). The step is cleared before AND after each section, so a step
+never leaks into the next section (plant: both resets removed -> fumus X
+"sine gradu campus vacuus" red). Reset in aperire/claudere too: old-style
+suites can call CREDO_GRADUS (it's just a global) - a migration bridge.
+
+fabrica reader: SECTIO with 10 OR 11 fields (old binaries in build/ still
+read); field 11 non-empty -> fractura gets ` [gradus ...]`, so the tail and
+`fabrica sanare` name the step. vicus_iussa: its eight `--- I: ... ---`
+prints became CREDO_GRADUS.
+
+Found on the way: `CREDO_NECESSE` failures printed `Speratus: (null)`.
+`chorda_ut_cstr` returns NIHIL for an empty chorda (datum NULL), and
+`%s` with NULL is UB (macOS prints "(null)", glibc too, others crash).
+Hit every failure with an empty expected/received value: NECESSE, fork
+failure, string compare against "". Fixed by printing `%.*s` with the
+chorda's own mensura (the house idiom). fumus I now asserts no "(null)"
+in the human output (red before the fix).
+
+Tool note: `silva.planta`'s red summary ("fractae: credo (ok I suita
+mixta ...)") quoted an `ok` line, not the failing one, for credo fumus -
+the acta had the right line (`FRACTUM X ...`). Read the acta, not the
+summary, until the summarizer picks FRACTUM lines.

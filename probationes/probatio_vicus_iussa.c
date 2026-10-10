@@ -295,7 +295,7 @@ _probare_iussa (
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
     CREDO_VERUM(linea_est(sin, LINEA, "$dies $foo $dies(x)"));
 
-    imprimere("\n--- I: '$dies' colore accentus, '$foo' non ---\n");
+    CREDO_GRADUS("I: '$dies' colore accentus, '$foo' non");
     {
         TabulaPixelorum* tp;
                     i32  accentus;
@@ -312,7 +312,7 @@ _probare_iussa (
             > ZEPHYRUM);
     }
 
-    imprimere("\n--- II: ictus in '$dies' - datum hodiernum ---\n");
+    CREDO_GRADUS("II: ictus in '$dies' - datum hodiernum");
     nunc  = time(NIHIL);
     tm    = localtime(&nunc);
     sprintf(hodie, "%02d/%02d/%04d $foo", tm->tm_mon + I, tm->tm_mday,
@@ -325,21 +325,21 @@ _probare_iussa (
     (vacuum)vicus_pulsare(v);
     CREDO_VERUM(linea_est(dex, LINEA, hodie));
 
-    imprimere("\n--- III: 'u' signum restituit ---\n");
+    CREDO_GRADUS("III: 'u' signum restituit");
     CREDO_VERUM(manus_ludus_scribere(m, "u"));
     CREDO_VERUM(linea_est(sin, LINEA, "$dies $foo $dies(x)"));
 
-    imprimere("\n--- IV: '$foo' ignotum - cursor solus ---\n");
+    CREDO_GRADUS("IV: '$foo' ignotum - cursor solus");
     ictus(m, LINEA, VII);
     CREDO_VERUM(linea_est(sin, LINEA, "$dies $foo $dies(x)"));
     CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), VII);
 
-    imprimere("\n--- V: '$dies(x)' - error, nihil mutatur ---\n");
+    CREDO_GRADUS("V: '$dies(x)' - error, nihil mutatur");
     CREDO_NIHIL(nodus_status(v, sin, "nuntius"));
     ictus(m, LINEA, XIII);
     CREDO_VERUM(linea_est(sin, LINEA, "$dies $foo $dies(x)"));
 
-    imprimere("\n--- VI: nuntius in linea status ---\n");
+    CREDO_GRADUS("VI: nuntius in linea status");
     {
                  Componens* n;
                  Componens* pg;
@@ -392,7 +392,7 @@ _probare_iussa (
     ictus(m, LINEA, VII);
     CREDO_NIHIL(nodus_status(v, sin, "nuntius"));
 
-    imprimere("\n--- VII: '$dies(N)', argumenta plura, defecit ---\n");
+    CREDO_GRADUS("VII: '$dies(N)', argumenta plura, defecit");
     CREDO_VERUM(iussum_registrare(sin->actiones_ctx.iussa, "frange",
         VERUM, frange_iussum, NIHIL));
     ictus(m, V, ZEPHYRUM);
@@ -419,7 +419,7 @@ _probare_iussa (
     CREDO_VERUM(linea_est(sin, VII, "$dies(1, 2) $frange"));
     CREDO_VERUM(nuntius_est(v, sin, "frange: defecit"));
 
-    imprimere("\n--- VIII: ictus primus - iussum uno ictu ---\n");
+    CREDO_GRADUS("VIII: ictus primus - iussum uno ictu");
     ictus(m, IX, ZEPHYRUM);
     CREDO_VERUM(manus_ludus_scribere(m, "i$dies $foo xyz"));
     CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));

@@ -286,7 +286,9 @@ _obiectum_nominare (
  * SECTIONES (fabrica-7 T1): plagula CREDO_VERDICTA (<area>credo.tsv)
  * legitur post cursum; suita non conversa (plagula absens) -> plagula
  * SYNTHETICA a gradu scripta, sectio una 'totum' (exitus ex codice,
- * numeri ex compendio effusionis) - lector unus, forma una
+ * numeri ex compendio effusionis) - lector unus, forma una. Linea
+ * SECTIO: campi X (credo I) aut XI (credo II: gradus fracturae, in
+ * fractura "[gradus ...]" fit)
  * ================================================== */
 
 hic_manens constans character* constans _exitus_sectionis[] = {
@@ -475,11 +477,12 @@ fabrica_sectiones_legere (
         {
             FabricaSectio* sectio;
 
-            si (n != X)
+            /* X campi (credo I) aut XI (credo II: + gradus) */
+            si (n != X && n != XI)
             {
                 *causa_out = _lineam_recusare(via, linea,
                     "linea SECTIO "
-                    "deformis (campi X exspectati)", piscina);
+                    "deformis (campi X aut XI exspectati)", piscina);
                 redde FALSUM;
             }
             sectio =
@@ -510,6 +513,13 @@ fabrica_sectiones_legere (
                     " "), piscina);
                 sectio->fractura = chorda_concatenare(sectio->fractura,
                     _campum_solvere(campi[IX], piscina), piscina);
+                si (n == XI && campi[X].mensura > ZEPHYRUM)
+                {
+                    sectio->fractura = chorda_concatenare(
+                        sectio->fractura, fabricae_iungere(piscina,
+                        " [gradus ", _campum_solvere(campi[X], piscina),
+                        "]"), piscina);
+                }
             }
         }
     }

@@ -1600,6 +1600,21 @@ _probare_sectiones (
             CREDO_VERUM(chorda_aequalis_literis(s->fractura,
                 "t/probatio_a.c:12 AEQUALIS_I32 x == y"));
         }
+        /* Ib (credo II T4): campus XI = gradus fracturae; X campi
+         * (binaria vetera) etiam leguntur */
+        mundi_ponere(discus, "x.tsv",
+            "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\t\n"
+            "SECTIO\tfs\tbeta\tFRACTA\t1\t2\t4\tt/probatio_a.c:12"
+            "\tAEQUALIS_I32\tx == y\tVI: nuntius\n");
+        CREDO_NECESSE(fabrica_sectiones_legere(sutura, "x.tsv", piscina,
+            &sectiones, &causa));
+        CREDO_NECESSE(xar_numerus(sectiones.sectiones) == II);
+        s = (FabricaSectio*)xar_obtinere(sectiones.sectiones, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(s->fractura.mensura, ZEPHYRUM);
+        s = (FabricaSectio*)xar_obtinere(sectiones.sectiones, I);
+        CREDO_VERUM(chorda_aequalis_literis(s->fractura,
+            "t/probatio_a.c:12 AEQUALIS_I32 x == y [gradus VI: "
+            "nuntius]"));
         mundi_ponere(discus, "x.tsv",
             "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n");
         CREDO_VERUM(fabrica_sectiones_legere(sutura, "x.tsv", piscina,

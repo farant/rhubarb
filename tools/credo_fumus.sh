@@ -18,6 +18,8 @@
 #   VIII fracturae exspectatae (credo II): causa in fonte; fracta ->
 #        NOTA_FRACTA (suita transit), transiens -> INOPINATA (suita
 #        FRACTA), causa vacua recusata
+#   X    gradus (credo II): CREDO_GRADUS nominat; fractura prima eum fert
+#        (effusio et campus XI SECTIO)
 #   IX   fixura suitae (credo II): credo_suitam_currere_cum - parare et
 #        purgare suitae SEMEL, c->suita in sectionibus, purgare post
 #        abortum et post parare fractum
@@ -403,7 +405,40 @@ s32 principale (vacuum)
 }
 FONS
 
-for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua suita_communis suita_fracta; do
+cat > "$T/gradus.c" <<'FONS'
+#include "credo.h"
+
+interior vacuum _scaena (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_GRADUS("I: primus");
+    CREDO_VERUM(I == I);
+    CREDO_GRADUS("II: secundus");
+    CREDO_AEQUALIS_S32(I, II);
+    CREDO_GRADUS("III: tertius");
+    CREDO_VERUM(I == III);
+}
+
+interior vacuum _sine_gradu (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == II);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "scaena", _scaena, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sine_gradu", _sine_gradu, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "post", _sine_gradu, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("gradus", SECTIONES);
+}
+FONS
+
+for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua suita_communis suita_fracta gradus; do
     struere "$s.c" "$s" || { echo "credo_fumus: $s non compilat:"; cat "$T/$s.err"; exit 2; }
 done
 
@@ -416,6 +451,9 @@ linea transiens | grep -q "	TRANSIIT	2	2	"; credo $? "I transiens: TRANSIIT 2/2,
 linea fracta | awk -F'\t' '$4 == "FRACTA" && $5 == 2 && $6 == 3 && $8 ~ /mixta\.c:[0-9]+$/ && $9 == "credo_aequalis" && $10 == "I == II"' | grep -q .; credo $? "I fracta: FRACTA 2/3, fractura prima nominata (filum:versus genus expressio), cursus pergit"
 linea aborta | awk -F'\t' '$4 == "ABORTA" && $5 == 1 && $6 == 2 && $9 == "credo_necesse_non_nihil" && $10 == "nullum"' | grep -q .; credo $? "I aborta: ABORTA 1/2 per NECESSE in adiutore"
 ! grep -q 'NUMQUAM' "$T/o_mixta"; credo $? "I post NECESSE nihil currit (nec adiutor nec sectio)"
+# chorda vacua -> chorda_ut_cstr NIHIL -> printf("%s", NULL) (UB; macOS
+# "(null)"): Speratus/Receptus vacui scribuntur vacui (credo II T4)
+! grep -q '(null)' "$T/o_mixta"; credo $? "I Speratus/Receptus vacui numquam '(null)' (NECESSE)"
 # puncta credo eandem lineam praecedunt: ancora sine '^'
 grep -q 'PURGARE transiens$' "$T/o_mixta" && grep -q 'PURGARE aborta$' "$T/o_mixta"; credo $? "I purgare post transitum ET post abortum"
 linea vacua | grep -q "	VACUA	0	0	"; credo $? "I vacua: VACUA 0/0"
@@ -423,8 +461,8 @@ grep -q "^SECTIO	mixta	cum\\\\ttabulatione	TRANSIIT	" "$V"; credo $? "I titulus 
 [ "$(grep -c 'POST FILIUM$' "$T/o_mixta")" -eq 1 ] && [ "$(grep -c -- '--- Probans ultima ---' "$T/o_mixta")" -eq 1 ]; credo $? "I NECESSE in filio: filius exit, suita reliqua SEMEL (non in filio)"
 linea filius | grep -q "	TRANSIIT	1	1	"; credo $? "I filius: CREDO_NON_RUIT transiit (filius normaliter exiit)"
 grep -q "^SUITA	mixta	FRACTA	4	7	8	10	" "$V"; credo $? "I SUITA FRACTA 4/7 sectiones, 8/10 assertiones"
-mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 10) || ($1 == "SUITA" && NF != 8) || ($1 != "SECTIO" && $1 != "SUITA")' "$V" | wc -l | tr -d ' ')
-[ "$mali" -eq 0 ] && [ "$(grep -c '^SECTIO	' "$V")" -eq 7 ]; credo $? "II campi: SECTIO X, SUITA VIII, VII lineae SECTIO ($mali malae)"
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8) || ($1 != "SECTIO" && $1 != "SUITA")' "$V" | wc -l | tr -d ' ')
+[ "$mali" -eq 0 ] && [ "$(grep -c '^SECTIO	' "$V")" -eq 7 ]; credo $? "II campi: SECTIO XI (gradus, credo II), SUITA VIII, VII lineae SECTIO ($mali malae)"
 grep -q -- '--- Probans fracta ---' "$T/o_mixta" && grep -q ' FRACTA (credo_aequalis): I == II at ' "$T/o_mixta" \
     && grep -q '^=== SECTIONES: ' "$T/o_mixta" && grep -q '^Totalis:' "$T/o_mixta" && grep -q '^Conditio: FRACTA$' "$T/o_mixta"; credo $? "I effusio humana ut olim (Probans, FRACTA at, compendium)"
 
@@ -458,8 +496,8 @@ V="$T/v_om.tsv"
 [ "$rc" -eq 0 ] && grep -q "^SECTIO	signata	localis	TRANSIIT	1	1	" "$V" \
     && grep -q "^SECTIO	signata	retis	OMISSA	0	0	" "$V" && grep -q "^SECTIO	signata	lenta	OMISSA	0	0	" "$V" \
     && grep -q "^SUITA	signata	TRANSIIT	1	1	" "$V"; credo $? "VII CREDO_SIGNA_OMITTE=rete: II OMISSA in plagula, suita transit cursa I (erat $rc)"
-mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 10) || ($1 == "SUITA" && NF != 8)' "$V" | wc -l | tr -d ' ')
-[ "$mali" -eq 0 ]; credo $? "VII lineae OMISSA campos X ferunt ($mali malae)"
+mali=$(awk -F'\t' '($1 == "SECTIO" && NF != 11) || ($1 == "SUITA" && NF != 8)' "$V" | wc -l | tr -d ' ')
+[ "$mali" -eq 0 ]; credo $? "VII lineae OMISSA campos XI ferunt ($mali malae)"
 grep -q "OMISSA retis (signum rete)" "$T/o_om" && grep -q "OMISSA lenta (signum rete)" "$T/o_om" \
     && ! grep -q -- '--- Probans retis ---' "$T/o_om"; credo $? "VII omissa in effusione nominatae, non cursae"
 CREDO_SIGNA_OMITTE=rete CREDO_VERDICTA="$T/v_vac.tsv" "$T/omnes_signatae" > "$T/o_vac" 2>&1; rc=$?
@@ -510,6 +548,16 @@ CREDO_VERDICTA="$T/v_sf.tsv" "$T/suita_fracta" > "$T/o_sf" 2>&1; rc=$?
 [ "$rc" -eq 1 ] && ! grep -q -- '--- Probans prima ---' "$T/o_sf" && grep -q 'PURGARE SUITAE FRACTAE$' "$T/o_sf" \
     && grep -q "^SECTIO	suita_fracta	(parare suitae)	ABORTA	" "$T/v_sf.tsv" \
     && grep -q "^SUITA	suita_fracta	FRACTA	" "$T/v_sf.tsv"; credo $? "IX parare_suitae fracta: nulla sectio, notata, purgare tamen (erat $rc)"
+
+# X (credo II, T4): GRADUS - CREDO_GRADUS gradum currentem nominat;
+# fractura PRIMA eum fert (effusio et campus XI plagulae); sine gradu
+# vacuus; gradus inter sectiones non manet
+CREDO_VERDICTA="$T/v_gr.tsv" "$T/gradus" > "$T/o_gr" 2>&1; rc=$?
+V="$T/v_gr.tsv"
+[ "$rc" -eq 1 ] && awk -F'\t' '$1 == "SECTIO" && $3 == "scaena" && $4 == "FRACTA" && $5 == 1 && $6 == 3 && $10 == "I == II" && $11 == "II: secundus"' "$V" | grep -q .; credo $? "X fractura prima gradum suum fert (campus XI) (erat $rc)"
+awk -F'\t' '$1 == "SECTIO" && ($3 == "sine_gradu" || $3 == "post") && NF == 11 && $11 == ""' "$V" | wc -l | grep -q '^ *2$'; credo $? "X sine gradu campus vacuus; gradus sectionis prioris non manet"
+grep -q ' FRACTA (credo_aequalis): I == II at .*gradus.c:[0-9]* (in gradu II: secundus)$' "$T/o_gr" \
+    && grep -q -- '-- gradus I: primus --' "$T/o_gr" && grep -q -- '-- gradus III: tertius --' "$T/o_gr"; credo $? "X effusio: gradus nominati, fractura 'in gradu'"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

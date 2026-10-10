@@ -38,9 +38,14 @@ in `../rhubarb-quinta`; merges by the ritual.
   that kills a daemon keeps a private one.
 
 ### T4: steps
-- [ ] stage: CREDO_GRADUS in the fracture and as the 11th field;
+- [x] stage: CREDO_GRADUS in the fracture and as the 11th field;
   fabrica reader accepts 10/11, tail names the step. vicus_iussa names
   I-VIII. Plants. Commit.
+  As built (2026-10-10): fracture line "... at f:12 (in gradu VI: ...)",
+  field 11 = step of the FIRST fracture; fabrica appends "[gradus ...]"
+  to the fractura; step reset at each section start/end and in
+  aperire/claudere (old-style suites may use it too). Found on the way:
+  Speratus/Receptus printed NULL via %s for empty values - fixed.
 
 ### T5: area
 - [ ] stage: credo_area created lazily, removed after purgare (also
