@@ -349,6 +349,43 @@ pictor_picturam_ponere (
 }
 
 b32
+pictor_picturam_condere (
+         PictorMontatio* m,
+     constans character* spatium)
+{
+    PictorDocumentum* doc;
+             Piscina* p;
+
+    si (!m || !m->doc || !spatium || !spatium[ZEPHYRUM])
+    {
+        redde FALSUM;
+    }
+    p = m->doc->piscina;
+    si (in_bibliotheca(m->doc->volumen, chorda_ex_literis(spatium, p),
+            p))
+    {
+        redde FALSUM;
+    }
+    /* magnitudo tabulae novae (ut pictor_montare): superficies minus
+     * margines et linea status */
+    doc = pictor_documentum_creare(p, m->doc->intern, m->doc->volumen,
+        spatium, tabulae_dimensio((i32)m->compositio.fenestra_latitudo,
+        II * CELLULA_LATITUDO), tabulae_dimensio(
+        (i32)m->compositio.fenestra_altitudo,
+        (STATUS_LINEAE + II) * CELLULA_ALTITUDO), LXIV);
+    si (!doc)
+    {
+        redde FALSUM;
+    }
+    si (m->documenta)
+    {
+        (vacuum)tabula_dispersa_inserere(m->documenta,
+            clavis_memoriae(spatium, p), doc);
+    }
+    redde pictor_picturam_ponere(m, spatium);
+}
+
+b32
 pictor_applicatio_aedificare (
        PictorApplicatio* app,
                 Piscina* piscina,

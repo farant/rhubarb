@@ -330,8 +330,9 @@ vicus_horologium_locale (
 
 /* S3e: latus frontale generis in acervo tabulae activae argumentum
  * novum accipit (facies.argumentum_ponere) et in frontem venit; focus
- * manet; dispositio servatur. Nullum eius generis: ut
- * vicus_acervo_aperire. PETITIO (vicus_pulsare proximo). FALSUM si
+ * manet; dispositio servatur. Nullum eius generis: latus montatur
+ * (ut vicus_acervo_aperire), deinde facies.argumentum_ponere
+ * vocatur. PETITIO (vicus_pulsare proximo). FALSUM si
  * genus ignotum. */
 b32
 vicus_acervo_mutare (

@@ -447,3 +447,23 @@ the same drawing can be open in several tabs or side by side, each
 pane with its own tool/colour/zoom state. probatio_vicus_pictura I
 draws in tab 3's pane on tab 2's drawing and sees the stroke in tab
 2's document (same object).
+
+## 2026-10-09 - S3f: $pictor-new (Fran)
+
+New blank drawing "pictura_<n>" (first free n from 1, checked against
+the library) shown in the tab's front pictor pane; no pane -> one opens.
+- Creation rides the existing argumentum hook: pictor's hook is now
+  "show it, or create it if the library lacks it"
+  (pictor_picturam_ponere || pictor_picturam_condere). Only
+  $pictor-new produces unknown names - next/prev pick from the library.
+- vicus_acervo_mutare against a tab WITHOUT a pane of the genus now
+  mounts and THEN calls facies.argumentum_ponere (was: mount only).
+  Mounting alone left the new pane on its own blank id-drawing, which
+  looks identical to the new one - plant N2 survived until the test
+  asserted pictura_3 actually exists in the library.
+- Size = what a fresh pane's canvas gets (compositio.fenestra_* minus
+  margins and status line, same formula as pictor_montare).
+- Test gotcha: every tab's left scriba shows the SAME page, so typing
+  commands in tab 2 (section VIII) prefixed line II for tab 3 too and
+  "$pictor-next$pictor-next" made the second '$' non-command (after
+  't'). Section X writes fresh lines.

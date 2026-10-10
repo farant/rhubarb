@@ -1722,6 +1722,14 @@ petitionem_applicare (
         latus_superficiem_scribere(v, l, (s32)v->latitudo - ls,
             altitudo_laterum((s32)v->altitudo));
         insula_scriptorem_ponere(v->repo, prior);
+        /* S3f: mutare sine latere generis - latus novum argumentum per
+         * faciem ponit (pictor: picturam novam condit) */
+        si (p->mutare && l->facies.argumentum_ponere)
+        {
+            (vacuum)l->facies.argumentum_ponere(
+                l->facies.argumentum_ponere_ctx,
+                chorda_ut_cstr(p->argumentum, v->piscina));
+        }
     }
     t->focus = VICUS_DEXTRUM;
     si (activa)
