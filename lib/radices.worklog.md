@@ -148,3 +148,20 @@ in _seca_medio.
 Observed in D123: H1 (2b71cfed) cannot fire there, because the only
 exact point (u = 1) is a root of every polynomial whose intervals touch
 it. Consumer demos are no substitute for the library's own H1 test.
+
+## 2026-10-10 - correction to the entry above (D123 review L1, L2)
+
+"The only exact point (u = 1)" was FALSE. D123's isolations yield 24
+exact roots, all with nonlinear f (45 and 60 degrees from S_180; 22
+breakpoints with values such as 1/2, 3/2, 2, 3, 9, 75 from scaled
+S_24). Dyadic rational roots routinely become exact: never assume an
+exact RadixRealis has a linear f (that was H1 itself).
+
+H1 still cannot fire in D123, for a structural reason. Values sharing
+an irrational root force the same primitive polynomial, so the
+isolations are identical. tan^2(k degrees) is in Q(sqrt2, sqrt3) only
+when 15 | k, and those values are roots of S_180. The reviewer checked
+every (inexact, exact) pair exhaustively.
+
+Park 2 has an addendum: integer degrees (S_180) already peak at 3.1 GB
+RSS (4.2 GB when pre-narrowed to 2^-48).

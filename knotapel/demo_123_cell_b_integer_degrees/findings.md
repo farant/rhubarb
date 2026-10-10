@@ -93,9 +93,15 @@ them the signature equals that of both neighbouring degrees.
   from Cell B's masks. It computes every value with 100-digit Decimal
   (no radices, no surdus, no S_N) and places all 89 integer degrees.
   Its positions are embedded as constants and equal the demo's at
-  every k. It also reports the gaps above. It is not exact, but its
-  smallest gap (10⁻³) is 77 orders of magnitude above its equality
-  threshold of 10⁻⁸⁰.
+  every k. It also reports the gaps above. Its equality test (10⁻⁸⁰)
+  is sound for an exact reason (review P2). Every breakpoint lies in
+  Q(√2, √3), and tan²(k°) lies in Q(√2, √3) only when 15 | k. So off
+  the multiples of 15 equality is impossible, and on them it holds
+  exactly.
+- **What the pairwise check does not cover:** both sorts take the same
+  breakpoint list (collect_breakpoints). So it does not revalidate that
+  the list is complete; D122's review covered that. It does validate
+  the order that place_degree relies on.
 
 ## Plants (7)
 
@@ -110,23 +116,43 @@ them the signature equals that of both neighbouring degrees.
 
 **Survives (1): radices' H1 bug reintroduced in the library.** H1 was
 fixed in 2b71cfed: `radix_compara` returned 0 when b was an exact root
-of a nonlinear f and a was another root of that f. The plant survives
-even with pre-narrowing reduced to 1 bit. It **cannot fire in this
-family**:
-- The only (|n₀|, r) pairs sharing a ratio n₀²/r are (1, 1) and (2, 4).
-  Both reduce to the same squarefree S₂₄, so their isolating intervals
-  are identical.
-- The only exact point anywhere is u = 1 (45°), and it is itself a
-  root of S₂₄ and of S₁₈₀. Every isolating interval next to it
-  therefore ends exactly at 1.
-- So the disjointness test decides before the faulty branch is
-  reached. The library's own tests cover H1; this demo does not, and
-  structurally cannot.
+of a nonlinear f and a was another root of that f. The plant survives,
+and the pre-fix library passes 19/19 at every pre-narrowing tried
+(none, 2⁰, 2⁻¹, 2⁻², 2⁻⁴; checked by the review). H1 **cannot fire in
+this family**.
+
+Exact roots are not rare here. build_roots yields 24 of them, all with
+nonlinear f:
+- 45° = 1 and 60° = 3, with f = S₁₈₀;
+- 22 breakpoints with dyadic-reachable rational values (1/2, 1, 3/2, 2,
+  3, 4, 6, 8, 9, 12, 24, 25, 27, 75), with f a scaled S₂₄.
+
+H1 needs an inexact x that is a root of an exact y's polynomial, with
+y strictly inside x's isolating interval. The structure rules that out:
+- **Between breakpoints:** T(j) = tan²(jπ/24) is irrational except at
+  j = 6, 8 and 4 (values 1, 3 and 1/3). So for an irrational value,
+  sharing a root with f_y forces the same ratio n₀²/r, hence the same
+  primitive polynomial, hence the same isolation. y is then a root of
+  f_x too, and cannot lie strictly inside x's interval.
+- **Between a degree and a breakpoint:** tan²(k°) lies in Q(√2, √3)
+  only when 15 | k, and those values are themselves roots of S₁₈₀.
+
+The review checked this exhaustively over all (inexact x, exact y)
+pairs of the 243 roots:
+- at 2⁻²⁴ and at 2⁻¹: no y strictly inside any x;
+- with no pre-narrowing: 12 such pairs, 4 with x a root of f_y. All 4
+  are equal values (breakpoint 3 against 60° = 3), where 0 is the
+  correct answer.
+
+The library's own tests cover H1; this demo does not, and structurally
+cannot. (A first version of this paragraph said "the only exact point
+is u = 1". That was false, as the review found; the conclusion stands.)
 
 ## Cost, and a radices finding
 
 The run takes about 5 s, against D122's 0.15 s. Isolating S₁₈₀ takes
-4.2 s of that.
+4.2 s of that. Peak memory is 3.1 GB (4.2 GB with pre-narrowing at
+2⁻⁴⁸): nothing allocated during isolation is freed.
 
 A first version pre-narrowed every root to 2⁻²⁰⁰ and took 48 s.
 Profiling showed nearly all of it in `radix_angusta` → `_seca_medio` →
@@ -138,8 +164,9 @@ the run also takes 4.9 s, and at 2⁻⁴⁸ it takes 6.3 s.
 **Recorded for radices:**
 - evaluation at a dyadic point m/2^e can be done in integers,
   Σ cᵢ mⁱ 2^(e(d−i)), with no gcds;
-- half-degrees (S₃₆₀, degree 179) ran out of memory in a probe. The
-  piscina keeps every bisection's garbage.
+- half-degrees (S₃₆₀, degree 179) ran out of memory in a probe, and
+  integer degrees already peak at 3.1 GB. The piscina keeps every
+  bisection's garbage.
 
 ## Not covered
 
