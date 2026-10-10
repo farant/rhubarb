@@ -54,6 +54,20 @@ pictor_aspergillum_ictus (
       constans Eventus* ev,
                 vacuum* ctx);
 
+/* <tractator/> linea (Franus): ictus primus initium figit (captura
+ * manet); motus sine botone praevisionem ad indicatorem movet; ictus
+ * secundus segmentum scribit - cum Shift punctum eius initium novum
+ * (series), aliter finitur. Esc aut ictus extra tabulam pendentem
+ * abicit. Segmentum = ictus unus (revocatio per segmentum). */
+b32
+pictor_linea_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
 /* <tractator/> spongia: ut penicillus capit et puncta colligit; actum
  * sine colore scribit (documentum colore fundi pingit) */
 b32
@@ -106,7 +120,8 @@ pictor_exemplar_ponere (
 /* <tractator/> optio magnitudinis ictum ('optio.magnitudo.<n>'):
  * magnitudinem instrumenti currentis ponit - penicillus diametrum
  * (I II III IV VI VIII XII XVI XXXII LXIV), aspergillum multiplicem
- * radii (I II IV VIII XVI); spongia nihil - palettam claudit. Dominus
+ * radii (I II IV VIII XVI), linea latitudinem (I II IV VIII XVI);
+ * spongia nihil - palettam claudit. Dominus
  * attributorum 'magnitudo_penicilli' et 'magnitudo_aspergilli' */
 b32
 pictor_magnitudinem_ponere (
@@ -117,7 +132,8 @@ pictor_magnitudinem_ponere (
       constans Eventus* ev,
                 vacuum* ctx);
 
-/* <tractator/> 'p' penicillus, 'a' aspergillum, 'e' spongia; ictus
+/* <tractator/> 'p' penicillus, 'a' aspergillum, 'e' spongia, 'l'
+ * linea; ictus
  * in optionem instrumenti ('optio.instrumentum.<nomen>') idem ponit et
  * palettam claudit; Esc palettam apertam claudit */
 b32

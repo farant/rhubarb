@@ -115,6 +115,10 @@ pictor_actio_instrumenti (
     {
         redde "spongia.ictus";
     }
+    si (chorda_aequalis_literis(instrumentum, "linea"))
+    {
+        redde "linea.ictus";
+    }
     redde "";
 }
 
@@ -156,6 +160,11 @@ hic_manens constans s32 magnitudines_aspergilli[V] = {
     I, II, IV, VIII, XVI
 };
 
+/* linea: latitudines (pixela) - eaedem */
+hic_manens constans s32 magnitudines_lineae[V] = {
+    I, II, IV, VIII, XVI
+};
+
 /* P1b: palette (PARTES_DIALOGUS) supra quadratum (x, y radicis):
  * optiones XX x XX, II inter, IV margo, VI per lineam (exemplaria X).
  * genus 'instrumentum', 'color_primus'/'color_secundus' aut
@@ -187,21 +196,26 @@ palettam_componere (
                     s32  valor;
               character  id[LXIV];
               character  titulus[LXIV];
-     constans character* instrumenta[III];
+     constans character* instrumenta[IV];
+                    b32  lineae;
 
     instrumenta[ZEPHYRUM]  = "penicillus";
     instrumenta[I]         = "aspergillum";
     instrumenta[II]        = "spongia";
+    instrumenta[III]       = "linea";
     exemplaria             = chorda_aequalis_literis(genus, "exemplar");
     mensurae = chorda_aequalis_literis(genus,
         "magnitudo");
     aspergilli  = mensurae && chorda_aequalis_literis(instrumentum,
         "aspergillum");
+    lineae      = mensurae && chorda_aequalis_literis(instrumentum,
+        "linea");
     colores     = !exemplaria && !mensurae
                && !chorda_aequalis_literis(genus, "instrumentum");
-    n           = exemplaria ? (s32)EXEMPLAR_NUMERUS : aspergilli ? V
+    n           = exemplaria ? (s32)EXEMPLAR_NUMERUS
+                : (aspergilli || lineae) ? V
                 : mensurae ? X
-                : colores ? XVII : III;
+                : colores ? XVII : IV;
     /* P3: exemplaria (IV lineae) et magnitudines X per lineam, cetera
      * VI */
     per_lineam  = (exemplaria || mensurae) ? X : VI;
@@ -213,7 +227,16 @@ palettam_componere (
         y_quadrati - altitudo - II, latitudo, altitudo);
     per (k = ZEPHYRUM; k < n; k++)
     {
-        si (mensurae && aspergilli)
+        si (lineae)
+        {
+            sprintf(id, "optio.magnitudo.%d",
+                (integer)magnitudines_lineae[k]);
+            sprintf(titulus, "magnitudo:linea:%d%s",
+                (integer)magnitudines_lineae[k],
+                magnitudines_lineae[k]
+                    == color_currens ? ":electum" : "");
+        }
+        alioquin si (mensurae && aspergilli)
         {
             sprintf(id, "optio.magnitudo.%d",
                 (integer)magnitudines_aspergilli[k]);
@@ -444,10 +467,11 @@ pictor_componere (
                 (integer)PICTOR_SPONGIAE_LATUS);
             componens_ponere_titulum(tabula, titulus_spongiae);
         }
-        /* P4a penicillus: "diametrus color" - color praevisionis:
-         * primus, aut secundus si primus nullus sub exemplari; -1
-         * nihil */
-        si (chorda_aequalis_literis(instrumentum, "penicillus"))
+        /* P4a penicillus (et linea): "diametrus color" - color
+         * praevisionis: primus, aut secundus si primus nullus sub
+         * exemplari; -1 nihil */
+        si (   chorda_aequalis_literis(instrumentum, "penicillus")
+            || chorda_aequalis_literis(instrumentum, "linea"))
         {
             character titulus_penicilli[XXIV];
                   s32 primus;
@@ -464,7 +488,9 @@ pictor_componere (
                    && secundus >= ZEPHYRUM && secundus < XVI) ? secundus
                 : -I;
             sprintf(titulus_penicilli, "%d %d", (integer)attributum_s32(
-                &ramus, INSULA_EPHEMERA, "magnitudo_penicilli", I),
+                &ramus, INSULA_EPHEMERA,
+                chorda_aequalis_literis(instrumentum, "linea")
+                ? "magnitudo_lineae" : "magnitudo_penicilli", I),
                 (integer)color);
             componens_ponere_titulum(tabula, titulus_penicilli);
         }
@@ -517,6 +543,11 @@ pictor_componere (
                 attributum_s32(&ramus, INSULA_EPHEMERA,
                     "magnitudo_aspergilli", I));
         }
+        alioquin si (chorda_aequalis_literis(instrumentum, "linea"))
+        {
+            sprintf(t, "magnitudo:linea:%d", (integer)attributum_s32(
+                &ramus, INSULA_EPHEMERA, "magnitudo_lineae", I));
+        }
         alioquin si (chorda_aequalis_literis(instrumentum, "spongia"))
         {
             sprintf(t, "magnitudo:spongia:%d",
@@ -568,7 +599,9 @@ pictor_componere (
                     chorda_aequalis_literis(palette, "magnitudo")
                     ? (chorda_aequalis_literis(instrumentum,
                     "aspergillum")
-                       ? "magnitudo_aspergilli" : "magnitudo_penicilli")
+                       ? "magnitudo_aspergilli"
+                       : chorda_aequalis_literis(instrumentum, "linea")
+                       ? "magnitudo_lineae" : "magnitudo_penicilli")
                     : chorda_ut_cstr(palette, piscina),
                     chorda_aequalis_literis(palette, "color_secundus")
                     ? -I : chorda_aequalis_literis(palette, "magnitudo")

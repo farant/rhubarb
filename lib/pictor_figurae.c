@@ -323,8 +323,10 @@ figura_tabulae (
         spongiam_praevidere(c, m);
     }
     alioquin si (   c->numerus_punctorum > ZEPHYRUM
-                 && chorda_aequalis_literis(c->actio,
-                 "penicillus.ictus"))
+                 && (   chorda_aequalis_literis(c->actio,
+                            "penicillus.ictus")
+                     || chorda_aequalis_literis(c->actio,
+                     "linea.ictus")))
     {
         penicillum_praevidere(c, m);
     }
@@ -443,6 +445,26 @@ hic_manens constans character* icon_aspergilli[XVI] = {
     "................"
 };
 
+/* linea: tractus obliquus */
+hic_manens constans character* icon_lineae[XVI] = {
+    "................",
+    "..............#.",
+    ".............##.",
+    "............##..",
+    "...........##...",
+    "..........##....",
+    ".........##.....",
+    "........##......",
+    ".......##.......",
+    "......##........",
+    ".....##.........",
+    "....##..........",
+    "...##...........",
+    "..##............",
+    ".##.............",
+    "................"
+};
+
 /* P2: spongia - truncus obliquus */
 hic_manens constans character* icon_spongiae[XVI] = {
     "................",
@@ -556,6 +578,11 @@ figura_quadrati (
         iconem_pingere(m, icon_spongiae, II, II);
         redde;
     }
+    si (chorda_aequalis_literis(t, "instrumentum:linea"))
+    {
+        iconem_pingere(m, icon_lineae, II, II);
+        redde;
+    }
     /* P4a: magnitudo - discus diametri n centratus (n > XVI:
      * numerus) */
     si (   t.mensura > X
@@ -596,6 +623,23 @@ figura_quadrati (
                 mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
                     VERUM);
             }
+            redde;
+        }
+        /* linea: tractus latitudinis n (XVI ad summum), colore
+         * textus */
+        si (   t.mensura > XVI
+            && memcmp(t.datum, "magnitudo:linea:", XVI) == ZEPHYRUM)
+        {
+            n = I;
+            (vacuum)sscanf(chorda_ut_cstr(t, m->piscina) + XVI, "%d",
+                &n);
+            n           = n > XVI ? XVI : n < I ? I : n;
+            g.x         = III;
+            g.y         = (c->fines.altitudo - (s32)n) / II;
+            g.latitudo  = c->fines.latitudo - VI;
+            g.altitudo  = (s32)n;
+            mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
+                VERUM);
             redde;
         }
         /* P4b spongia: magnitudo fixa - quadratum hebes */

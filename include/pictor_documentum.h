@@ -19,6 +19,7 @@
  * thematis (ut vacatio); color ignoratur. Instrumentum absens aut
  * aliud: penicillus: discus diametri magnitudo (pixela) in puncto primo
  * et in quoque puncto lineae inter puncta (pictor_lineam_ambulare).
+ * instrumentum "linea": ut penicillus (puncta II, segmentum).
  * exemplar (P3; exemplaria.h, absens = 0 solidus): pixelum quod
  * penicillus aut aspergillum pingit colorem 'color' accipit ubi bitus
  * exemplaris ad (x, y) TABULAE positus est, 'color_secundus' ubi non;

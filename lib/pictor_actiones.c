@@ -20,6 +20,21 @@ puncta_vacare (
     xar_vacare(motus->ictus_pendens);
 }
 
+/* linea: punctum secundum (finis praevisionis) ponere aut addere */
+interior vacuum
+punctum_finale_ponere (
+     Motus* motus,
+    vacuum* ctx)
+{
+    si (xar_numerus(motus->ictus_pendens) >= II)
+    {
+        *(Punctum*)xar_obtinere(motus->ictus_pendens, I) =
+            *(Punctum*)ctx;
+        redde;
+    }
+    *(Punctum*)xar_addere(motus->ictus_pendens) = *(Punctum*)ctx;
+}
+
 interior vacuum
 punctum_addere (
      Motus* motus,
@@ -39,6 +54,7 @@ punctum_addere (
 hic_manens character litterae_penicillus[]  = "penicillus";
 hic_manens character litterae_aspergillum[] = "aspergillum";
 hic_manens character litterae_spongia[]     = "spongia";
+hic_manens character litterae_linea[]       = "linea";
 
 /* aspergillum: semen ictus in ephemera (praevisio guttarum) */
 interior vacuum
@@ -227,7 +243,9 @@ ictum_scribere (
         chorda_ex_s32(instrumentum == litterae_penicillus
             ? attributum_s32(ramus, "magnitudo_penicilli", I)
             : instrumentum == litterae_aspergillum
-            ? attributum_s32(ramus, "magnitudo_aspergilli", I) : I, p),
+            ? attributum_s32(ramus, "magnitudo_aspergilli", I)
+            : instrumentum == litterae_linea
+            ? attributum_s32(ramus, "magnitudo_lineae", I) : I, p),
         p);
     si (pa)
     {
@@ -432,6 +450,100 @@ pictor_spongia_ictus (
         litterae_spongia);
 }
 
+/* linea pendens abicitur: puncta, captura */
+interior vacuum
+lineam_abicere (
+     Motus* motus,
+       s64  tempus)
+{
+    mutare_motum(motus, puncta_vacare, NIHIL, tempus);
+    motus->sordida = FALSUM;
+    motus_captura_tollere(motus);
+}
+
+/* <tractator/> */
+b32
+pictor_linea_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+       InsulaRamus  ramus;
+    PictorActiones* pa;
+           Punctum  p;
+               b32  pendens;
+
+    pa = (PictorActiones*)ctx;
+    si (!repo || !motus || !destinatio || !nodus || !ev || !pa)
+    {
+        redde FALSUM;
+    }
+    pendens  = !chorda_vacua(motus->captura);
+    p.x      = (s32)ev->datum.mus.x;
+    p.y      = (s32)ev->datum.mus.y;
+    p        = destinatio_ad_locale(nodus, p);
+    commutatio (ev->genus)
+    {
+        casus EVENTUS_MUS_DEPRESSUS:
+            ramus = ramus_pictoris(repo, ctx);
+            si (!pendens && palette_aperta(&ramus))
+            {
+                (vacuum)palettam_claudere(&ramus);
+                redde VERUM;
+            }
+            si (!pendens)
+            {
+                /* ictus primus: initium */
+                motus_captura_ponere(motus, nodus->id);
+                mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
+                mutare_motum(motus, punctum_addere, &p, ev->tempus);
+                redde VERUM;
+            }
+            /* captura: ictus extra tabulam (geometrice) abicit */
+            si (!chorda_aequalis(destinatio->id_geometricum, nodus->id))
+            {
+                lineam_abicere(motus, ev->tempus);
+                redde VERUM;
+            }
+            mutare_motum(motus, punctum_finale_ponere, &p, ev->tempus);
+            pictor_documentum_actum(pa->doc, ictum_scribere(&ramus,
+                motus,
+                litterae_linea, NIHIL, pa->doc->piscina));
+            mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
+            si ((ev->datum.mus.modificantes & MOD_SHIFT) != ZEPHYRUM)
+            {
+                /* series: finis initium novum */
+                mutare_motum(motus, punctum_addere, &p, ev->tempus);
+                motus->sordida = FALSUM;
+                redde VERUM;
+            }
+            lineam_abicere(motus, ev->tempus);
+            redde VERUM;
+        casus EVENTUS_MUS_MOTUS:
+            si (!pendens)
+            {
+                redde FALSUM;
+            }
+            mutare_motum(motus, punctum_finale_ponere, &p, ev->tempus);
+            redde VERUM;
+        casus EVENTUS_MUS_LIBERATUS:
+            /* solutio ictus primi: captura manet */
+            redde pendens;
+        casus EVENTUS_CLAVIS_DEPRESSUS:
+            si (!pendens || ev->datum.clavis.clavis != CLAVIS_EFFUGIUM)
+            {
+                redde FALSUM;
+            }
+            lineam_abicere(motus, ev->tempus);
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
 /* nomen instrumenti -> litterae (penicillus si ignotum) */
 interior character*
 litterae_instrumenti (
@@ -440,6 +552,10 @@ litterae_instrumenti (
     si (chorda_aequalis_literis(nomen_instrumenti, "aspergillum"))
     {
         redde litterae_aspergillum;
+    }
+    si (chorda_aequalis_literis(nomen_instrumenti, "linea"))
+    {
+        redde litterae_linea;
     }
     si (chorda_aequalis_literis(nomen_instrumenti, "spongia"))
     {
@@ -460,7 +576,6 @@ pictor_instrumentum_eligere (
 {
     InsulaRamus ramus;
          chorda nomen_instrumenti;
-    (vacuum)motus;
     (vacuum)destinatio;
     si (!repo || !ev)
     {
@@ -473,6 +588,11 @@ pictor_instrumentum_eligere (
     {
         ramus = ramus_pictoris(repo, ctx);
         (vacuum)palettam_claudere(&ramus);
+        /* linea pendens instrumento mutato abicitur */
+        si (motus && !chorda_vacua(motus->captura))
+        {
+            lineam_abicere(motus, ev->tempus);
+        }
         redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
             litterae_instrumenti(nomen_instrumenti));
     }
@@ -494,14 +614,21 @@ pictor_instrumentum_eligere (
      * sub Cmd/Ctrl brevitas est (Cmd+P imprimere), non 'p' (A5) */
     si (   (ev->datum.clavis.runa == 'p'
         || ev->datum.clavis.runa == 'a'
-        || ev->datum.clavis.runa == 'e')
+        || ev->datum.clavis.runa == 'e'
+        || ev->datum.clavis.runa == 'l')
         && (ev->datum.clavis.modificantes & (MOD_SUPER | MOD_IMPERIUM))
                == ZEPHYRUM)
     {
         ramus = ramus_pictoris(repo, ctx);
+        /* linea pendens instrumento mutato abicitur */
+        si (motus && !chorda_vacua(motus->captura))
+        {
+            lineam_abicere(motus, ev->tempus);
+        }
         redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
             ev->datum.clavis.runa == 'p' ? litterae_penicillus
             : ev->datum.clavis.runa == 'a' ? litterae_aspergillum
+            : ev->datum.clavis.runa == 'l' ? litterae_linea
                                            : litterae_spongia);
     }
     redde FALSUM;
@@ -623,6 +750,11 @@ hic_manens constans s32 magnitudines_aspergilli[V] = {
     I, II, IV, VIII, XVI
 };
 
+/* linea: latitudines (pixela) */
+hic_manens constans s32 magnitudines_lineae[V] = {
+    I, II, IV, VIII, XVI
+};
+
 /* <tractator/> */
 b32
 pictor_magnitudinem_ponere (
@@ -666,6 +798,13 @@ pictor_magnitudinem_ponere (
         numerus        = V;
     }
     alioquin si (instrumentum && chorda_aequalis_literis(*instrumentum,
+                 "linea"))
+    {
+        cp.attributum  = "magnitudo_lineae";
+        tabula         = magnitudines_lineae;
+        numerus        = V;
+    }
+    alioquin si (instrumentum && chorda_aequalis_literis(*instrumentum,
                  "penicillus"))
     {
         cp.attributum  = "magnitudo_penicilli";
@@ -706,6 +845,7 @@ pictor_actiones_registrare (
     actio_registrare(reg, "aspergillum.ictus", pictor_aspergillum_ictus,
         ctx);
     actio_registrare(reg, "spongia.ictus", pictor_spongia_ictus, ctx);
+    actio_registrare(reg, "linea.ictus", pictor_linea_ictus, ctx);
     actio_registrare(reg, "palette.aperire", pictor_palettam_aperire,
         ctx);
     actio_registrare(reg, "color_primus.ponere", pictor_colorem_ponere,

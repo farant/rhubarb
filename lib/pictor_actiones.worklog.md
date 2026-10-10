@@ -91,3 +91,25 @@ foreground palette index) and the figure draws each preview dot in
 that palette colour; foreground "none" (-1) previews nothing, as the
 stroke paints nothing. The brush's thin preview line is still accent
 green (not asked).
+
+## 2026-10-09 - line tool (linea, Fran)
+
+Click-click with a rubber-band preview, Shift+click chains, Esc or a
+click outside the canvas cancels (Fran). Mechanics:
+- The canvas keeps the motus CAPTURE between the two clicks:
+  destinatio routes every mouse-position event to the captured node
+  regardless of buttons, so hover motion reaches linea.ictus for the
+  preview. The first click's release returns VERUM and keeps the
+  capture; nothing else releases it except vicus motum_relinquere
+  (tab/pane switch), which also clears pending points - free cancel.
+- "Outside the canvas" = destinatio->id_geometricum != the tabula id
+  while captured; that click is consumed (the palette square under it
+  does NOT open).
+- Each segment is its own stroke (two points, undo per segment),
+  logged instrumentum="linea" with magnitudo from magnitudo_lineae
+  (1 2 4 8 16). The document needed NO change: unknown tools already
+  render as the brush, i.e. the disc sweep with patterns.
+- Keys still reach the radix through the canvas (non-Esc keys return
+  FALSUM), so switching tool with p/a/e/l while a line is pending
+  goes through instrumentum.eligere, which now drops the pending line
+  (else the brush would inherit a captured 2-point preview).
