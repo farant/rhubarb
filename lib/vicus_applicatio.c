@@ -447,42 +447,11 @@ pictura_lateris (
     redde l->id;
 }
 
-/* S3e: pictura in latere pictoris ALIO (omnium tabularum) ostensa? */
-interior b32
-pictura_alibi (
-                     Vicus* v,
-       constans VicusLatus* hoc,
-              constans Xar* bibliotheca,
-                    chorda  pictura)
-{
-    VicusTabula* t;
-     VicusLatus* l;
-            i32  i;
-            i32  k;
-
-    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
-    {
-        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
-        per (k = ZEPHYRUM; k <= xar_numerus(t->acervus); k++)
-        {
-            l = k == xar_numerus(t->acervus) ? &t->sinistrum
-                : (VicusLatus*)xar_obtinere(t->acervus, k);
-            si (   l != hoc && l->montata
-                && chorda_aequalis_literis(l->genus, "pictor")
-                && chorda_aequalis(pictura_lateris(l, bibliotheca),
-                       pictura))
-            {
-                redde VERUM;
-            }
-        }
-    }
-    redde FALSUM;
-}
-
 /* S3e: $pictor-next / $pictor-prev (Franus): frons pictoris tabulae
  * activae picturam proximam bibliothecae (ordine viae, circulo)
- * ostendit - picturae in latere alio ostensae praetereuntur (documentum
- * unum, latus unum). Nullus pictor in acervo: latus novum. PETITIO. */
+ * ostendit - etiam in latere alio ostensam (documentum unum, memoria
+ * communis: latera plura tuta; Franus regulam praeteritionis
+ * removit). Nullus pictor in acervo: latus novum. PETITIO. */
 interior b32
 cyclus_iussum (
     constans Iussum* iussum,
@@ -546,9 +515,7 @@ cyclus_iussum (
             ? (cc->directio > ZEPHYRUM ? k - I : n - k)
             : ((initium + cc->directio * k) % n + n) % n;
         pictura = *(chorda*)xar_obtinere(bibliotheca, (i32)index);
-        si (   chorda_vacua(pictura)
-            || chorda_aequalis(pictura, currens)
-            || pictura_alibi(cc->vicus, frons, bibliotheca, pictura))
+        si (chorda_vacua(pictura) || chorda_aequalis(pictura, currens))
         {
             perge;
         }

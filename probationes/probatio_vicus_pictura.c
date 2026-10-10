@@ -2,14 +2,15 @@
  *
  * Compositio VERA (vicus_applicatio). Bibliotheca: "2_dextrum_pictor"
  * (tabula 2, montata), "x1" (C x LX), "x2" (LX x XL). In tabula 3
- * (scriba | scriba) pagina: "$pictor-next $pictor-prev". I: next sine
- * pictore in acervo: latus novum '3_dextrum_pictor' picturam primam
- * liberam ostendit (x1; "2_..." alibi aperta praeteritur). II: next -
- * x2, latus idem. III: next - circulo, "2_..." praeteritur, pictura
- * lateris ipsius. IV: prev - x2. V: dispositio argumentum servat;
- * reapertura x2 ostendit. VI: argumenta recusantur. VII: memoria
- * communis - tabula 2 x1 ostendit documento EODEM. VIII: nulla alia
- * pictura - nuntius. */
+ * (scriba | scriba) pagina: "$pictor-next $pictor-prev". Franus: nulla
+ * regula praeteritionis - documentum unum per picturam, laterum
+ * plurium tutum. I: next sine pictore: latus novum '3_dextrum_pictor'
+ * picturam primam ostendit ("2_..." - documento EODEM ac tabula 2);
+ * ictus in eo in documento tabulae 2 apparet. II-IV: next - "3_...",
+ * x1, x2, circulo "2_...". V: prev circulo - x2. VI: dispositio
+ * argumentum servat; reapertura x2 ostendit. VII: argumenta
+ * recusantur. VIII: memoria communis - tabula 2 x1 ostendit documento
+ * eodem. IX: nulla alia pictura - nuntius. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -170,10 +171,41 @@ s32 principale (vacuum)
     scribere(m, III, "$pictor-next(a)");
     CREDO_VERUM(chorda_aequalis_literis(frons(v)->genus, "scriba"));
 
-    imprimere("\n--- I: next sine pictore - latus novum, x1 ---\n");
+    imprimere("\n--- I: next sine pictore - '2_...' communis ---\n");
+    {
+        PictorDocumentum* documentum_tabulae;
+                     i32  vivi;
+
+        CREDO_VERUM(vicus_activam_ponere(v, "2"));
+        documentum_tabulae = pictura_frontis(v);
+        CREDO_VERUM(vicus_activam_ponere(v, "3"));
+        dispensator_recomponere(app.d);
+        iussum(&app, m, II, III);
+        CREDO_VERUM(chorda_aequalis_literis(frons(v)->id,
+            "3_dextrum_pictor"));
+        CREDO_VERUM(argumentum_est(v, "2_dextrum_pictor"));
+        CREDO_NON_NIHIL(documentum_tabulae);
+        CREDO_VERUM(pictura_frontis(v) == documentum_tabulae);
+        latus_pictoris = frons(v);
+        /* ictus in latere dextro (primus focat, secundus pingit):
+         * tabula ad (CCXL + VI, linea + VIII) */
+        vivi =
+            documentum_tabulae ? pictor_documentum_numerus_vivorum(documentum_tabulae)
+                        : ZEPHYRUM;
+        (vacuum)manus_ludus_premere_ad(m, CCXL + VI + X,
+            VICUS_ALTITUDO_TABULARUM + VIII + X);
+        (vacuum)manus_ludus_premere_ad(m, CCXL + VI + XX,
+            VICUS_ALTITUDO_TABULARUM + VIII + X);
+        CREDO_VERUM(documentum_tabulae
+            && pictor_documentum_numerus_vivorum(
+            documentum_tabulae) > vivi);
+    }
+
+    imprimere("\n--- II-IV: next - '3_...', x1, x2, circulo ---\n");
     iussum(&app, m, II, III);
-    CREDO_VERUM(chorda_aequalis_literis(frons(v)->id,
-        "3_dextrum_pictor"));
+    CREDO_VERUM(frons(v) == latus_pictoris);
+    CREDO_VERUM(argumentum_est(v, "3_dextrum_pictor"));
+    iussum(&app, m, II, III);
     CREDO_VERUM(argumentum_est(v, "x1"));
     x1 = pictura_frontis(v);
     CREDO_NON_NIHIL(x1);
@@ -183,26 +215,19 @@ s32 principale (vacuum)
         redde I;
     }
     CREDO_VERUM(x1->latitudo == C && x1->altitudo == LX);
-    latus_pictoris = frons(v);
-
-    imprimere("\n--- II: next - x2, latus idem ---\n");
     iussum(&app, m, II, III);
-    CREDO_VERUM(frons(v) == latus_pictoris);
     CREDO_VERUM(argumentum_est(v, "x2"));
     CREDO_VERUM(pictura_frontis(v) && pictura_frontis(v)->latitudo == LX
         && pictura_frontis(v)->altitudo == XL);
-
-    imprimere("\n--- III: next - circulo, '2_...' praeteritur ---\n");
     iussum(&app, m, II, III);
-    CREDO_VERUM(argumentum_est(v, "3_dextrum_pictor"));
+    CREDO_VERUM(argumentum_est(v, "2_dextrum_pictor"));
 
-    imprimere("\n--- IV: prev - x2 ---\n");
+    imprimere("\n--- V: prev circulo - x2 ---\n");
     iussum(&app, m, II, XV);
     CREDO_VERUM(argumentum_est(v, "x2"));
-    CREDO_VERUM(pictura_frontis(v) && pictura_frontis(v)->latitudo
-        == LX);
+    CREDO_VERUM(frons(v) == latus_pictoris);
 
-    imprimere("\n--- V: dispositio et reapertura ---\n");
+    imprimere("\n--- VI: dispositio et reapertura ---\n");
     CREDO_VERUM(index_continet(vol,
         "id=\"3_dextrum_pictor\" argumentum=\"x2\""));
     CREDO_VERUM(vicus_applicatio_aedificare(&app_altera, piscina,
@@ -212,24 +237,24 @@ s32 principale (vacuum)
     CREDO_VERUM(pictura_frontis(app_altera.vicus)
         && pictura_frontis(app_altera.vicus)->latitudo == LX);
 
-    imprimere("\n--- VI: argumenta recusantur ---\n");
+    imprimere("\n--- VII: argumenta recusantur ---\n");
     ictus(m, III, III);
     CREDO_VERUM(nuntius_est(v, "pictor-next: nulla argumenta"));
     (vacuum)vicus_pulsare(v);
     CREDO_VERUM(argumentum_est(v, "x2"));
 
-    imprimere("\n--- VII: memoria communis - tabula 2 ---\n");
+    imprimere("\n--- VIII: memoria communis - tabula 2 ---\n");
     CREDO_VERUM(vicus_activam_ponere(v, "2"));
     dispensator_recomponere(app.d);
     scribere(m, II, "$pictor-next $pictor-prev");
-    /* 2_... -> 3_dextrum_pictor (liber: latus 3 x2 ostendit) -> x1 */
+    /* 2_... -> 3_dextrum_pictor -> x1 */
     iussum(&app, m, II, III);
     CREDO_VERUM(argumentum_est(v, "3_dextrum_pictor"));
     iussum(&app, m, II, III);
     CREDO_VERUM(argumentum_est(v, "x1"));
     CREDO_VERUM(pictura_frontis(v) == x1);
 
-    imprimere("\n--- VIII: nulla alia pictura ---\n");
+    imprimere("\n--- IX: nulla alia pictura ---\n");
     vol_solus = volumen_temporarium(piscina,
         "probatio_vicus_pictura_s");
     CREDO_VERUM(vicus_applicatio_aedificare(&app_sola, piscina, intern,

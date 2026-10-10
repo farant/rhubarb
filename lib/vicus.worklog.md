@@ -434,3 +434,16 @@ the time. Format: hour % 12 with 0 -> 12, minutes %02d, AM below 12.
   blank id-drawing before switching, so the library gains one blank
   drawing per such tab. Two clicks within one frame both compute from
   the same current drawing.
+
+## 2026-10-09 - skip rule dropped (Fran)
+
+With one shared document object per drawing the "skip drawings shown
+in another pane" rule protected nothing: strokes commit on mouse
+release, a focus/tab switch runs motum_relinquere first, and there is
+one pointer and one focused pane - so all writes to a drawing go
+through one history in order (Fran's reasoning). $pictor-next now
+visits every library drawing except the one the pane already shows;
+the same drawing can be open in several tabs or side by side, each
+pane with its own tool/colour/zoom state. probatio_vicus_pictura I
+draws in tab 3's pane on tab 2's drawing and sees the stroke in tab
+2's document (same object).
