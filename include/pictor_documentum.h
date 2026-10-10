@@ -19,11 +19,32 @@
  * thematis (ut vacatio); color ignoratur. Instrumentum absens aut
  * aliud: penicillus: discus diametri magnitudo (pixela) in puncto primo
  * et in quoque puncto lineae inter puncta (pictor_lineam_ambulare).
+ * instrumentum "linea": ut penicillus (puncta II, segmentum).
  * exemplar (P3; exemplaria.h, absens = 0 solidus): pixelum quod
  * penicillus aut aspergillum pingit colorem 'color' accipit ubi bitus
  * exemplaris ad (x, y) TABULAE positus est, 'color_secundus' ubi non;
  * color -1 (nullus; color_secundus absens = -1) = pixelum intactum.
  * Spongia exemplar ignorat.
+ *
+ * STRATA (pictor-strata L2; project-specs/pictor-strata-plan.md):
+ *   <ictus ... stratum="2">...</ictus>          ictus in strato 2
+ *                                              (absens = 1)
+ *   <stratum actio="novum" id="2" supra="1"/>   stratum 2 supra 1
+ *   <stratum actio="deletum" id="2"/>           ultimum numquam
+ *   <stratum actio="ordo" ids="1 3 2"/>         imum primum;
+ *                                              permutatio sola
+ *   <stratum actio="visibile" id="2" valor="0"/>  occultare (1:
+ *                                              ostendere)
+ *   <imago stratum x y latitudo altitudo massa/>  imago glutinata
+ *                                              (L5): indices palettae
+ *                                              deflati in massa
+ *                                              voluminis (0xFF
+ *                                              perspicuum)
+ * Strata perspicua incipiunt (alpha 0); tabula = COMPOSITUM: color
+ * fundi thematis, deinde strata visibilia ab imo. Spongia stratum
+ * suum ad perspicuum purgat. Checkpoint codificatus ("STRATA1",
+ * flatura); checkpoint vetus (massa cruda) recusatur -> reproiectio ex
+ * actis.
  */
 
 #ifndef PICTOR_DOCUMENTUM_H
@@ -46,6 +67,9 @@
 #define PICTOR_GUTTAE_PUNCTO      VI
 #define PICTOR_GUTTA_MS           VIII
 #define PICTOR_SPONGIAE_LATUS     XVI    /* x magnitudo */
+#define PICTOR_STRATA_MAXIMA      XVI    /* Franus: augebitur - nulla
+                                          * forma servata hunc numerum
+                                          * supponit */
 
 /* vestigium lineae: vocatur in puncto (x, y) */
 nomen vacuum (*PictorVestigium) (s32 x, s32 y, vacuum* ctx);
@@ -89,6 +113,14 @@ pictor_gutta (
     s32* dx,
     s32* dy);
 
+/* stratum (pictor-strata L2): id (1, 2, ... - nomen "stratum <id>"),
+ * visibile, pixela RGBA (alpha 0 = perspicuum) */
+nomen structura {
+                s32  id;
+                b32  visibile;
+    TabulaPixelorum* pixela;
+} PictorStratum;
+
 nomen structura {
                 Volumen* volumen;
                 Piscina* piscina;
@@ -96,8 +128,11 @@ nomen structura {
                     i32  latitudo;
                     i32  altitudo;
                     i32  intervallum;    /* acta per checkpoint */
-        TabulaPixelorum* tabula;         /* proiectio (memoria) */
+        TabulaPixelorum* tabula;         /* COMPOSITUM (L2) */
                   Imago  proiectio;      /* eadem memoria */
+          PictorStratum  strata[PICTOR_STRATA_MAXIMA]; /* ordine: imum
+                                                        * primum */
+                    i32  numerus_stratorum;
                Historia* historia;       /* cauda, cursor, sigillum */
 } PictorDocumentum;
 
@@ -161,5 +196,51 @@ pictor_documentum_finis (
 i32
 pictor_documentum_numerus_vivorum (
     constans PictorDocumentum* doc);
+
+/* imago RGBA -> indices palettae Aquinas, "contain" in tabulam
+ * (latitudo x altitudo): scala (area deorsum, bilinearis sursum),
+ * Atkinson colorum (XVI), alpha < CXXVIII perspicuum (0xFF),
+ * centrata - (x, y) et dimensiones in exitibus. NIHIL si fons vacua. */
+i8*
+pictor_imaginem_aptare (
+    constans Imago* fons,
+               i32  latitudo,
+               i32  altitudo,
+           Piscina* piscina,
+               s32* x,
+               s32* y,
+               i32* lat,
+               i32* alt);
+
+/* indices (lat x alt, 0xFF perspicuum) in stratum NOVUM supra
+ * 'supra' ad (x, y): massa deflata in volumine, acta <stratum
+ * novum> + <imago> coniuncta (revocatio una). Redde id strati novi
+ * aut 0. */
+s32
+pictor_documentum_imaginem_inserere (
+     PictorDocumentum* doc,
+          constans i8* indices,
+                  i32  lat,
+                  i32  alt,
+                  s32  x,
+                  s32  y,
+                  s32  supra);
+
+/* strata ordine (imum primum); NIHIL si index extra */
+constans PictorStratum*
+pictor_documentum_stratum (
+    constans PictorDocumentum* doc,
+                          i32  index);
+
+i32
+pictor_documentum_numerus_stratorum (
+    constans PictorDocumentum* doc);
+
+/* sigillum compositi (pixela visa) - picturae ante strata: idem ac
+ * sigillum vetus */
+chorda
+pictor_documentum_sigillum_compositi_hex (
+    constans PictorDocumentum* doc,
+                      Piscina* piscina);
 
 #endif /* PICTOR_DOCUMENTUM_H */

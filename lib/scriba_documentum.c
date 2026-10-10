@@ -486,6 +486,8 @@ proiectio_facere (
 {
     HistoriaProiectio p;
 
+    /* hami codicis (L1) nulli: memoria cruda */
+    memset(&p, ZEPHYRUM, magnitudo(p));
     p.memoria    = doc->memoria;
     p.mensura    = doc->mensura;
     p.vacare     = proiectio_vacare;

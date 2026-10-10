@@ -447,3 +447,39 @@ the same drawing can be open in several tabs or side by side, each
 pane with its own tool/colour/zoom state. probatio_vicus_pictura I
 draws in tab 3's pane on tab 2's drawing and sees the stroke in tab
 2's document (same object).
+
+## 2026-10-09 - S3f: $pictor-new (Fran)
+
+New blank drawing "pictura_<n>" (first free n from 1, checked against
+the library) shown in the tab's front pictor pane; no pane -> one opens.
+- Creation rides the existing argumentum hook: pictor's hook is now
+  "show it, or create it if the library lacks it"
+  (pictor_picturam_ponere || pictor_picturam_condere). Only
+  $pictor-new produces unknown names - next/prev pick from the library.
+- vicus_acervo_mutare against a tab WITHOUT a pane of the genus now
+  mounts and THEN calls facies.argumentum_ponere (was: mount only).
+  Mounting alone left the new pane on its own blank id-drawing, which
+  looks identical to the new one - plant N2 survived until the test
+  asserted pictura_3 actually exists in the library.
+- Size = what a fresh pane's canvas gets (compositio.fenestra_* minus
+  margins and status line, same formula as pictor_montare).
+- Test gotcha: every tab's left scriba shows the SAME page, so typing
+  commands in tab 2 (section VIII) prefixed line II for tab 3 too and
+  "$pictor-next$pictor-next" made the second '$' non-command (after
+  't'). Section X writes fresh lines.
+
+## 2026-10-10 - S4b: clock <-> date toggle (Fran)
+
+Clicking the clock shows "Friday, October 9th, 2026" (English, as
+Fran wrote it) right-aligned; clicking again returns to the time.
+- VicusHorologium now fills a VicusTempus (year, month, day, weekday,
+  hour, minute); the pulse compares the WHOLE struct, so the date
+  updates at midnight even if hour/minute were equal.
+- The click lands in radicem_tractare (bar clicks outside a tab's own
+  zone fall through to the root); the hit area runs from the current
+  text's left edge to the bar's right edge, so it tracks the wider
+  date. Tab clicks never reach the root (their zone has its own
+  action) - the meaningful negative test is a click on EMPTY bar
+  space, which plant C5 needed.
+- Ordinals: 11th/12th/13th before the 1/2/3 rule (x % 100 in 11..13).
+- The toggle is session state (Vicus.horologium_dies), not saved.

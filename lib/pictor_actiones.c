@@ -4,6 +4,7 @@
 #include "xar.h"
 #include "exemplaria.h"
 
+#include <stdio.h>
 #include <string.h>
 
 
@@ -18,6 +19,21 @@ puncta_vacare (
 {
     (vacuum)ctx;
     xar_vacare(motus->ictus_pendens);
+}
+
+/* linea: punctum secundum (finis praevisionis) ponere aut addere */
+interior vacuum
+punctum_finale_ponere (
+     Motus* motus,
+    vacuum* ctx)
+{
+    si (xar_numerus(motus->ictus_pendens) >= II)
+    {
+        *(Punctum*)xar_obtinere(motus->ictus_pendens, I) =
+            *(Punctum*)ctx;
+        redde;
+    }
+    *(Punctum*)xar_addere(motus->ictus_pendens) = *(Punctum*)ctx;
 }
 
 interior vacuum
@@ -39,6 +55,7 @@ punctum_addere (
 hic_manens character litterae_penicillus[]  = "penicillus";
 hic_manens character litterae_aspergillum[] = "aspergillum";
 hic_manens character litterae_spongia[]     = "spongia";
+hic_manens character litterae_linea[]       = "linea";
 
 /* aspergillum: semen ictus in ephemera (praevisio guttarum) */
 interior vacuum
@@ -176,6 +193,34 @@ attributum_s32 (
     redde praestitutum;
 }
 
+/* L3: stratum currens - ephemera stratum_activum si in documento est,
+ * aliter summum */
+interior s32
+stratum_currens (
+         constans InsulaRamus* ramus,
+    constans PictorDocumentum* doc)
+{
+    chorda* a;
+       s32  id;
+       i32  k;
+       i32  n;
+
+    n = pictor_documentum_numerus_stratorum(doc);
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA,
+        "stratum_activum");
+    si (a && chorda_ut_s32(*a, &id))
+    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (pictor_documentum_stratum(doc, k)->id == id)
+            {
+                redde id;
+            }
+        }
+    }
+    redde n > ZEPHYRUM ? pictor_documentum_stratum(doc, n - I)->id : I;
+}
+
 /* actum ictus pendentis instrumenti; pa (aspergillum solum): semen, t
  * cuiusque puncti ab initio ictus; spongia sine colore */
 interior chorda
@@ -184,13 +229,15 @@ ictum_scribere (
              constans Motus* motus,
          constans character* instrumentum,
     constans PictorActiones* pa,
+  constans PictorDocumentum* doc,
                     Piscina* p)
 {
-     chorda  s;
-    Punctum* q;
-        i32  i;
-        i32  n;
-        s64  t0;
+         s32  stratum;
+      chorda  s;
+     Punctum* q;
+         i32  i;
+         i32  n;
+         s64  t0;
 
     s = chorda_ex_literis("<ictus instrumentum=\"", p);
     s = chorda_concatenare(s, chorda_ex_literis(instrumentum, p), p);
@@ -221,13 +268,23 @@ ictum_scribere (
                 "exemplar", ZEPHYRUM), p), p);
         }
     }
+    /* L3: stratum currens (I absens - acta vetera idem significant) */
+    stratum = stratum_currens(ramus, doc);
+    si (stratum != I)
+    {
+        s = chorda_concatenare(s, chorda_ex_literis("\" stratum=\"", p),
+            p);
+        s = chorda_concatenare(s, chorda_ex_s32(stratum, p), p);
+    }
     s = chorda_concatenare(s, chorda_ex_literis("\" magnitudo=\"", p),
         p);
     s = chorda_concatenare(s,
         chorda_ex_s32(instrumentum == litterae_penicillus
             ? attributum_s32(ramus, "magnitudo_penicilli", I)
             : instrumentum == litterae_aspergillum
-            ? attributum_s32(ramus, "magnitudo_aspergilli", I) : I, p),
+            ? attributum_s32(ramus, "magnitudo_aspergilli", I)
+            : instrumentum == litterae_linea
+            ? attributum_s32(ramus, "magnitudo_lineae", I) : I, p),
         p);
     si (pa)
     {
@@ -369,7 +426,7 @@ ictum_tractare (
             ramus = ramus_pictoris(repo, ctx);
             pictor_documentum_actum(pa->doc,
                 ictum_scribere(&ramus, motus, instrumentum,
-                aspergillum ? pa : NIHIL, pa->doc->piscina));
+                aspergillum ? pa : NIHIL, pa->doc, pa->doc->piscina));
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             /* ictus finitus ephemera non tangit */
             motus->sordida = FALSUM;
@@ -432,6 +489,155 @@ pictor_spongia_ictus (
         litterae_spongia);
 }
 
+/* linea pendens abicitur: puncta, captura */
+interior vacuum
+lineam_abicere (
+     Motus* motus,
+       s64  tempus)
+{
+    mutare_motum(motus, puncta_vacare, NIHIL, tempus);
+    motus->sordida = FALSUM;
+    motus_captura_tollere(motus);
+}
+
+/* <tractator/> */
+b32
+pictor_linea_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+       InsulaRamus  ramus;
+    PictorActiones* pa;
+           Punctum  p;
+               b32  pendens;
+
+    pa = (PictorActiones*)ctx;
+    si (!repo || !motus || !destinatio || !nodus || !ev || !pa)
+    {
+        redde FALSUM;
+    }
+    pendens  = !chorda_vacua(motus->captura);
+    p.x      = (s32)ev->datum.mus.x;
+    p.y      = (s32)ev->datum.mus.y;
+    p        = destinatio_ad_locale(nodus, p);
+    commutatio (ev->genus)
+    {
+        casus EVENTUS_MUS_DEPRESSUS:
+            ramus = ramus_pictoris(repo, ctx);
+            si (!pendens && palette_aperta(&ramus))
+            {
+                (vacuum)palettam_claudere(&ramus);
+                redde VERUM;
+            }
+            si (!pendens)
+            {
+                /* ictus primus: initium */
+                motus_captura_ponere(motus, nodus->id);
+                mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
+                mutare_motum(motus, punctum_addere, &p, ev->tempus);
+                redde VERUM;
+            }
+            /* captura: ictus extra tabulam (geometrice) abicit */
+            si (!chorda_aequalis(destinatio->id_geometricum, nodus->id))
+            {
+                lineam_abicere(motus, ev->tempus);
+                redde VERUM;
+            }
+            mutare_motum(motus, punctum_finale_ponere, &p, ev->tempus);
+            pictor_documentum_actum(pa->doc, ictum_scribere(&ramus,
+                motus, litterae_linea, NIHIL, pa->doc,
+                pa->doc->piscina));
+            mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
+            si ((ev->datum.mus.modificantes & MOD_SHIFT) != ZEPHYRUM)
+            {
+                /* series: finis initium novum */
+                mutare_motum(motus, punctum_addere, &p, ev->tempus);
+                motus->sordida = FALSUM;
+                redde VERUM;
+            }
+            lineam_abicere(motus, ev->tempus);
+            redde VERUM;
+        casus EVENTUS_MUS_MOTUS:
+            si (!pendens)
+            {
+                redde FALSUM;
+            }
+            mutare_motum(motus, punctum_finale_ponere, &p, ev->tempus);
+            redde VERUM;
+        casus EVENTUS_MUS_LIBERATUS:
+            /* solutio ictus primi: captura manet */
+            redde pendens;
+        casus EVENTUS_CLAVIS_DEPRESSUS:
+            si (!pendens || ev->datum.clavis.clavis != CLAVIS_EFFUGIUM)
+            {
+                redde FALSUM;
+            }
+            lineam_abicere(motus, ev->tempus);
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* L5: Cmd+V - imago e porta (clipboard) in stratum novum supra currens,
+ * quod currens fit. stratum_activum dominum 'strata.agere' habet:
+ * scriptura sub nomine eius (ut vicus ictus_primus), deinde prior */
+interior b32
+imaginem_glutinare (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+       PictorActiones* pa;
+         ImagoFructus  f;
+          InsulaRamus  ramus;
+        ColorPonendus  cp;
+               chorda  prior;
+                   i8* indices;
+                  s32  x;
+                  s32  y;
+                  i32  lat;
+                  i32  alt;
+                  s32  id;
+                  b32  scriptum;
+
+    pa = (PictorActiones*)ctx;
+    si (!pa || !pa->doc || !pa->imago_capere)
+    {
+        redde FALSUM;
+    }
+    f = pa->imago_capere(pa->imago_ctx, pa->doc->piscina);
+    si (!f.successus)
+    {
+        redde FALSUM;
+    }
+    indices = pictor_imaginem_aptare(&f.imago, pa->doc->latitudo,
+        pa->doc->altitudo, pa->doc->piscina, &x, &y, &lat, &alt);
+    si (!indices)
+    {
+        redde FALSUM;
+    }
+    ramus  = ramus_pictoris(repo, ctx);
+    id     = pictor_documentum_imaginem_inserere(pa->doc, indices, lat,
+        alt, x, y, stratum_currens(&ramus, pa->doc));
+    si (id == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    cp.attributum  = "stratum_activum";
+    cp.valor       = id;
+    prior          = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("strata.agere",
+        pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+        &cp);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
 /* nomen instrumenti -> litterae (penicillus si ignotum) */
 interior character*
 litterae_instrumenti (
@@ -440,6 +646,10 @@ litterae_instrumenti (
     si (chorda_aequalis_literis(nomen_instrumenti, "aspergillum"))
     {
         redde litterae_aspergillum;
+    }
+    si (chorda_aequalis_literis(nomen_instrumenti, "linea"))
+    {
+        redde litterae_linea;
     }
     si (chorda_aequalis_literis(nomen_instrumenti, "spongia"))
     {
@@ -460,7 +670,6 @@ pictor_instrumentum_eligere (
 {
     InsulaRamus ramus;
          chorda nomen_instrumenti;
-    (vacuum)motus;
     (vacuum)destinatio;
     si (!repo || !ev)
     {
@@ -473,6 +682,11 @@ pictor_instrumentum_eligere (
     {
         ramus = ramus_pictoris(repo, ctx);
         (vacuum)palettam_claudere(&ramus);
+        /* linea pendens instrumento mutato abicitur */
+        si (motus && !chorda_vacua(motus->captura))
+        {
+            lineam_abicere(motus, ev->tempus);
+        }
         redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
             litterae_instrumenti(nomen_instrumenti));
     }
@@ -490,18 +704,58 @@ pictor_instrumentum_eligere (
         }
         redde FALSUM;
     }
+    /* Cmd+Z revocat, Cmd+Shift+Z reficit (historia: gradus multi);
+     * linea pendens (captura) abicitur solum */
+    si (   ev->datum.clavis.runa                       == 'z'
+        && (ev->datum.clavis.modificantes & MOD_SUPER) != ZEPHYRUM)
+    {
+        PictorActiones* pa;
+
+        pa = (PictorActiones*)ctx;
+        si (motus && !chorda_vacua(motus->captura))
+        {
+            lineam_abicere(motus, ev->tempus);
+            redde VERUM;
+        }
+        si (!pa || !pa->doc)
+        {
+            redde FALSUM;
+        }
+        si ((ev->datum.clavis.modificantes & MOD_SHIFT) != ZEPHYRUM)
+        {
+            (vacuum)pictor_documentum_reficere(pa->doc);
+        }
+        alioquin
+        {
+            (vacuum)pictor_documentum_revocare(pa->doc);
+        }
+        redde VERUM;
+    }
+    /* L5: Cmd+V - imago glutinata */
+    si (   ev->datum.clavis.runa                       == 'v'
+        && (ev->datum.clavis.modificantes & MOD_SUPER) != ZEPHYRUM)
+    {
+        redde imaginem_glutinare(repo, ctx);
+    }
     /* clavis LOGICA (runa sine maiuscula, dispositionis praesentis);
      * sub Cmd/Ctrl brevitas est (Cmd+P imprimere), non 'p' (A5) */
     si (   (ev->datum.clavis.runa == 'p'
         || ev->datum.clavis.runa == 'a'
-        || ev->datum.clavis.runa == 'e')
+        || ev->datum.clavis.runa == 'e'
+        || ev->datum.clavis.runa == 'l')
         && (ev->datum.clavis.modificantes & (MOD_SUPER | MOD_IMPERIUM))
                == ZEPHYRUM)
     {
         ramus = ramus_pictoris(repo, ctx);
+        /* linea pendens instrumento mutato abicitur */
+        si (motus && !chorda_vacua(motus->captura))
+        {
+            lineam_abicere(motus, ev->tempus);
+        }
         redde mutare_ramum(&ramus, INSULA_EPHEMERA, instrumentum_ponere,
             ev->datum.clavis.runa == 'p' ? litterae_penicillus
             : ev->datum.clavis.runa == 'a' ? litterae_aspergillum
+            : ev->datum.clavis.runa == 'l' ? litterae_linea
                                            : litterae_spongia);
     }
     redde FALSUM;
@@ -623,6 +877,11 @@ hic_manens constans s32 magnitudines_aspergilli[V] = {
     I, II, IV, VIII, XVI
 };
 
+/* linea: latitudines (pixela) */
+hic_manens constans s32 magnitudines_lineae[V] = {
+    I, II, IV, VIII, XVI
+};
+
 /* <tractator/> */
 b32
 pictor_magnitudinem_ponere (
@@ -666,6 +925,13 @@ pictor_magnitudinem_ponere (
         numerus        = V;
     }
     alioquin si (instrumentum && chorda_aequalis_literis(*instrumentum,
+                 "linea"))
+    {
+        cp.attributum  = "magnitudo_lineae";
+        tabula         = magnitudines_lineae;
+        numerus        = V;
+    }
+    alioquin si (instrumentum && chorda_aequalis_literis(*instrumentum,
                  "penicillus"))
     {
         cp.attributum  = "magnitudo_penicilli";
@@ -692,6 +958,272 @@ pictor_magnitudinem_ponere (
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }
 
+/* L4: ordo trahendi - ordo destinatus (summo primo) strati tracti ex
+ * dy (pixela), ordines XX + II alti; eadem regula in compositore
+ * (index insertionis) */
+interior s32
+ordo_destinatus (
+    s32 ordo_tracti,
+    s32 dy,
+    i32 n)
+{
+    s32 gradus;
+    s32 r;
+
+    gradus  = dy >= ZEPHYRUM ? (dy + XI) / (XX + II)
+                             : -((-dy + XI) / (XX + II));
+    r = ordo_tracti + gradus;
+    r = r < ZEPHYRUM ? ZEPHYRUM : r;
+    r = r > (s32)n - I ? (s32)n - I : r;
+    redde r;
+}
+
+/* L4: solutio intra palettam stratorum (nodus geometricus) */
+interior b32
+intra_palettam (
+    constans Destinatio* destinatio,
+                Piscina* p)
+{
+    chorda g;
+
+    g = destinatio->id_geometricum;
+    redde chorda_aequalis_literis(g, "palette")
+        || chorda_incipit(g, chorda_ex_literis("stratum.", p))
+        || chorda_incipit(g, chorda_ex_literis("oculus.", p))
+        || chorda_incipit(g, chorda_ex_literis("strata.", p));
+}
+
+/* L4: solutio tractus: ordo novus si motus > III et intra palettam */
+interior vacuum
+tractum_solvere (
+        PictorActiones* pa,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+                   s32  id,
+                   s64  tempus)
+{
+    Punctum p0;
+    Punctum p1;
+        s32 dx;
+        s32 dy;
+        s32 index;
+        s32 r_tracti;
+        s32 r;
+        i32 n;
+        i32 k;
+        s32 summo_primo[PICTOR_STRATA_MAXIMA];
+        i32 m;
+     chorda actum;
+
+    n = pictor_documentum_numerus_stratorum(pa->doc);
+    si (xar_numerus(motus->ictus_pendens) < II)
+    {
+        lineam_abicere(motus, tempus);
+        redde;
+    }
+    p0 = *(Punctum*)xar_obtinere(motus->ictus_pendens, ZEPHYRUM);
+    p1 = *(Punctum*)xar_obtinere(motus->ictus_pendens, I);
+    dx = p1.x - p0.x;
+    dy = p1.y - p0.y;
+    lineam_abicere(motus, tempus);
+    si (   (dx * dx + dy * dy <= IX)
+        || !intra_palettam(destinatio, pa->doc->piscina))
+    {
+        redde;
+    }
+    index = -I;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (pictor_documentum_stratum(pa->doc, k)->id == id)
+        {
+            index = (s32)k;
+        }
+    }
+    si (index < ZEPHYRUM)
+    {
+        redde;
+    }
+    r_tracti  = (s32)n - I - index;
+    r         = ordo_destinatus(r_tracti, dy, n);
+    si (r == r_tracti)
+    {
+        redde;
+    }
+    /* summo primo sine tracto, tractum in r inserere */
+    m = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        s32 alius;
+
+        alius = pictor_documentum_stratum(pa->doc, n - I - k)->id;
+        si (alius != id)
+        {
+            summo_primo[m] = alius;
+            m++;
+        }
+    }
+    per (k = m; (s32)k > r; k--)
+    {
+        summo_primo[k] = summo_primo[k - I];
+    }
+    summo_primo[r] = id;
+    /* ab imo */
+    actum = chorda_ex_literis("<stratum actio=\"ordo\" ids=\"",
+        pa->doc->piscina);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (k > ZEPHYRUM)
+        {
+            actum = chorda_concatenare(actum, chorda_ex_literis(" ",
+                pa->doc->piscina), pa->doc->piscina);
+        }
+        actum = chorda_concatenare(actum, chorda_ex_s32(
+            summo_primo[n - I - k], pa->doc->piscina),
+            pa->doc->piscina);
+    }
+    actum = chorda_concatenare(actum, chorda_ex_literis("\"/>",
+        pa->doc->piscina), pa->doc->piscina);
+    pictor_documentum_actum(pa->doc, actum);
+}
+
+/* <tractator/> */
+b32
+pictor_strata_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+             InsulaRamus  ramus;
+          PictorActiones* pa;
+           ColorPonendus  cp;
+                  chorda  valor;
+                     s32  id;
+                     s32  currens;
+                     s32  maximum;
+                     s32  index;
+                     i32  k;
+                     i32  n;
+               character  actum[XCVI];
+  constans PictorStratum* s;
+
+    pa = (PictorActiones*)ctx;
+    si (!repo || !ev || !pa || !motus || !destinatio)
+    {
+        redde FALSUM;
+    }
+    ramus          = ramus_pictoris(repo, ctx);
+    currens        = stratum_currens(&ramus, pa->doc);
+    n              = pictor_documentum_numerus_stratorum(pa->doc);
+    cp.attributum  = "stratum_activum";
+    /* 'stratum.<id>': ictus eligit et trahere incipit (L4: captura,
+     * punctum absolutum pressionis); motus, solutio */
+    valor = post_praefixum(nodus, "stratum.");
+    si (valor.mensura > ZEPHYRUM && chorda_ut_s32(valor, &id))
+    {
+        Punctum q;
+
+        q.x = (s32)ev->datum.mus.x;
+        q.y = (s32)ev->datum.mus.y;
+        si (ev->genus == EVENTUS_MUS_DEPRESSUS)
+        {
+            motus_captura_ponere(motus, nodus->id);
+            mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
+            mutare_motum(motus, punctum_addere, &q, ev->tempus);
+            cp.valor = id;
+            redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+                &cp);
+        }
+        si (chorda_vacua(motus->captura))
+        {
+            redde FALSUM;
+        }
+        si (ev->genus == EVENTUS_MUS_MOTUS)
+        {
+            mutare_motum(motus, punctum_finale_ponere, &q, ev->tempus);
+            redde VERUM;
+        }
+        si (ev->genus == EVENTUS_MUS_LIBERATUS)
+        {
+            tractum_solvere(pa, motus, destinatio, id, ev->tempus);
+            redde VERUM;
+        }
+        redde FALSUM;
+    }
+    si (ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    /* 'oculus.<id>': visibilitas in actis */
+    valor = post_praefixum(nodus, "oculus.");
+    si (valor.mensura > ZEPHYRUM && chorda_ut_s32(valor, &id))
+    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            s = pictor_documentum_stratum(pa->doc, k);
+            si (s->id == id)
+            {
+                sprintf(actum, "<stratum actio=\"visibile\" id=\"%d\""
+                    " valor=\"%d\"/>", (integer)id,
+                    s->visibile ? ZEPHYRUM : I);
+                pictor_documentum_actum(pa->doc,
+                    chorda_ex_literis(actum,
+                    pa->doc->piscina));
+            }
+        }
+        redde VERUM;
+    }
+    si (nodus && chorda_aequalis_literis(nodus->id, "strata.novum"))
+    {
+        si (n >= (i32)PICTOR_STRATA_MAXIMA)
+        {
+            redde VERUM;
+        }
+        maximum = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            s        = pictor_documentum_stratum(pa->doc, k);
+            maximum  = s->id > maximum ? s->id : maximum;
+        }
+        sprintf(actum,
+            "<stratum actio=\"novum\" id=\"%d\" supra=\"%d\"/>",
+            (integer)(maximum + I), (integer)currens);
+        pictor_documentum_actum(pa->doc, chorda_ex_literis(actum,
+            pa->doc->piscina));
+        cp.valor = maximum + I;
+        redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+            &cp);
+    }
+    si (nodus && chorda_aequalis_literis(nodus->id, "strata.deletum"))
+    {
+        si (n <= I)
+        {
+            redde VERUM;
+        }
+        index = -I;
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (pictor_documentum_stratum(pa->doc, k)->id == currens)
+            {
+                index = (s32)k;
+            }
+        }
+        /* inferius currens fit (imum: superius) */
+        cp.valor = pictor_documentum_stratum(pa->doc, (i32)(index
+            > ZEPHYRUM
+            ? index - I : index + I))->id;
+        sprintf(actum, "<stratum actio=\"deletum\" id=\"%d\"/>",
+            (integer)currens);
+        pictor_documentum_actum(pa->doc, chorda_ex_literis(actum,
+            pa->doc->piscina));
+        redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+            &cp);
+    }
+    redde FALSUM;
+}
+
 vacuum
 pictor_actiones_registrare (
     ActioRegistrum* reg,
@@ -706,6 +1238,8 @@ pictor_actiones_registrare (
     actio_registrare(reg, "aspergillum.ictus", pictor_aspergillum_ictus,
         ctx);
     actio_registrare(reg, "spongia.ictus", pictor_spongia_ictus, ctx);
+    actio_registrare(reg, "linea.ictus", pictor_linea_ictus, ctx);
+    actio_registrare(reg, "strata.agere", pictor_strata_agere, ctx);
     actio_registrare(reg, "palette.aperire", pictor_palettam_aperire,
         ctx);
     actio_registrare(reg, "color_primus.ponere", pictor_colorem_ponere,

@@ -104,7 +104,7 @@ s32 principale (vacuum)
     radix = dispensator_arbor(app.d);
     CREDO_VERUM(p && *(Componens**)xar_obtinere(radix->liberi,
         xar_numerus(radix->liberi) - I) == p);
-    CREDO_VERUM(p && xar_numerus(p->liberi) == III);
+    CREDO_VERUM(p && xar_numerus(p->liberi) == IV);
     CREDO_CHORDA_AEQUALIS_LITERIS(nodus_arboris(&app,
         "optio.instrumentum.penicillus")->titulus,
         "instrumentum:penicillus:electum");

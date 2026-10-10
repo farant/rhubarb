@@ -2,7 +2,10 @@
  *
  * Proiectio: VIII numeratores (i8); actum "k" numeratorem k auget.
  * Contextus applicationes numerat - revocatio ex checkpoint probatur
- * numero applicationum, non solum fructu. */
+ * numero applicationum, non solum fructu. XVI (pictor-strata L1):
+ * cliens CODEX - sine memoria fixa, signat et codificat ipse
+ * ("C:<numeratores>"); restitutio per decodificare, codex recusatus ->
+ * reproiectio ex nihilo; hami partiales recusantur. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -53,6 +56,7 @@ proiectio (
 {
     HistoriaProiectio p;
 
+    memset(&p, ZEPHYRUM, magnitudo(p));
     p.memoria    = l->numeratores;
     p.mensura    = magnitudo(l->numeratores);
     p.vacare     = ludicra_vacare;
@@ -88,6 +92,134 @@ numeratores_sunt (
                 imprimere("%d", (integer)l->numeratores[i]);
             }
             imprimere(" (expectati %s)\n", expectati);
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* L1: cliens codex - numeratores sine memoria historiae */
+nomen structura {
+     i8 numeratores[VIII];
+    i32 applicationes;
+    i32 vacationes;
+    i32 codificationes;
+    i32 decodificationes;
+    b32 recusare;
+} Codex;
+
+interior vacuum
+codex_vacare (
+    vacuum* ctx)
+{
+    Codex* c;
+
+    c = (Codex*)ctx;
+    memset(c->numeratores, ZEPHYRUM, magnitudo(c->numeratores));
+    c->vacationes++;
+}
+
+interior vacuum
+codex_applicare (
+    vacuum* ctx,
+    chorda  actum)
+{
+    Codex* c;
+      s32  k;
+
+    c = (Codex*)ctx;
+    c->applicationes++;
+    si (chorda_ut_s32(actum, &k) && k >= ZEPHYRUM && k < VIII)
+    {
+        c->numeratores[k]++;
+    }
+}
+
+interior vacuum
+codex_sigillare (
+      vacuum* ctx,
+    Sigillum* exitus)
+{
+    SigillumContextus sc;
+
+    sigillum_incipere(&sc);
+    sigillum_addere(&sc, ((Codex*)ctx)->numeratores, VIII);
+    *exitus = sigillum_finire(&sc);
+}
+
+interior chorda
+codex_codificare (
+     vacuum* ctx,
+    Piscina* p)
+{
+        Codex* c;
+    character  t[XI];
+          i32  i;
+
+    c = (Codex*)ctx;
+    c->codificationes++;
+    t[ZEPHYRUM]  = 'C';
+    t[I]         = ':';
+    per (i = ZEPHYRUM; i < VIII; i++)
+    {
+        t[II + i] = (character)('0' + c->numeratores[i]);
+    }
+    t[X] = '\0';
+    redde chorda_ex_literis(t, p);
+}
+
+interior b32
+codex_decodificare (
+    vacuum* ctx,
+    chorda  codex)
+{
+    Codex* c;
+      i32  i;
+
+    c = (Codex*)ctx;
+    c->decodificationes++;
+    si (   c->recusare || codex.mensura != X
+        || codex.datum[ZEPHYRUM] != 'C'
+        || codex.datum[I]        != ':')
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < VIII; i++)
+    {
+        c->numeratores[i] = (i8)(codex.datum[II + i] - '0');
+    }
+    redde VERUM;
+}
+
+interior HistoriaProiectio
+proiectio_codicis (
+    Codex* c)
+{
+    HistoriaProiectio p;
+
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    p.memoria       = NIHIL;
+    p.mensura       = ZEPHYRUM;
+    p.vacare        = codex_vacare;
+    p.applicare     = codex_applicare;
+    p.ctx           = c;
+    p.sigillare     = codex_sigillare;
+    p.codificare    = codex_codificare;
+    p.decodificare  = codex_decodificare;
+    redde p;
+}
+
+interior b32
+codicis_numeratores_sunt (
+                 Codex* c,
+    constans character* expectati)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < VIII; i++)
+    {
+        si (c->numeratores[i] != (i8)(expectati[i] - '0'))
+        {
             redde FALSUM;
         }
     }
@@ -532,6 +664,124 @@ s32 principale (vacuum)
                                 "probatio:checkpoint", II, mala));
     CREDO_NIHIL(historia_actum(NIHIL, chorda_ex_literis("1", piscina))
                 == ZEPHYRUM ? NIHIL : h);
+
+    imprimere("\n--- XVI: cliens codex (pictor-strata L1) ---\n");
+    {
+              Volumen* vc;
+             Historia* historia_codicis;
+             Historia* historia_altera;
+                Codex  c;
+                Codex  r;
+                  i32  j;
+                  i32  codices;
+               chorda  sig_h;
+               chorda  hex;
+               chorda  massa;
+                  b32  inv;
+       VolumenPlagula* pl_c;
+    HistoriaProiectio  proiectio_mala;
+
+        vc = volumen_temporarium(piscina, "probatio_historia_codex");
+        memset(&c, ZEPHYRUM, magnitudo(c));
+        historia_codicis = historia_creare(piscina, intern, vc, "",
+            "numerus",
+            "probatio:checkpoint", II, proiectio_codicis(&c));
+        CREDO_NON_NIHIL(historia_codicis);
+        si (!historia_codicis)
+        {
+            credo_imprimere_compendium();
+            redde I;
+        }
+        (vacuum)actum(historia_codicis, piscina, I);
+        (vacuum)actum(historia_codicis, piscina, I);
+        (vacuum)actum(historia_codicis, piscina, III);
+        (vacuum)actum(historia_codicis, piscina, ZEPHYRUM);
+        (vacuum)actum(historia_codicis, piscina, VII);
+        CREDO_VERUM(codicis_numeratores_sunt(&c, "12010001"));
+        /* checkpoints post II et IV viva: codificatio cliens */
+        CREDO_AEQUALIS_I32(c.codificationes, II);
+        codices   = ZEPHYRUM;
+        plagulae  = volumen_plagulas_enumerare(vc, piscina);
+        per (j = ZEPHYRUM; j < xar_numerus(plagulae); j++)
+        {
+            pl_c = (VolumenPlagula*)xar_obtinere(plagulae, j);
+            si (!chorda_incipit(pl_c->via, chorda_ex_literis(
+                    "checkpoint/", piscina)))
+            {
+                perge;
+            }
+            hex = volumen_plagulam_promere(vc, pl_c->via, piscina,
+                &inv);
+            massa = inv ? volumen_massam_promere(vc, hex, piscina, &inv)
+                        : hex;
+            si (   inv && massa.mensura == X
+                && massa.datum[ZEPHYRUM] == 'C')
+            {
+                codices++;
+            }
+        }
+        CREDO_AEQUALIS_I32(codices, II);
+        sig_h = historia_sigillum_hex(historia_codicis, piscina);
+        /* revocare: ex checkpoint per decodificare */
+        CREDO_VERUM(historia_revocare(historia_codicis));
+        CREDO_VERUM(c.decodificationes >= I);
+        CREDO_VERUM(codicis_numeratores_sunt(&c, "12010000"));
+        /* sigillum statum sequitur (non constans) */
+        CREDO_FALSUM(chorda_aequalis(sig_h, historia_sigillum_hex(
+            historia_codicis, piscina)));
+        CREDO_VERUM(historia_reficere(historia_codicis));
+        CREDO_CHORDA_AEQUALIS(historia_sigillum_hex(historia_codicis,
+            piscina),
+            sig_h);
+        CREDO_VERUM(historia_verificare(historia_codicis));
+
+        /* aperire: checkpoint IV decodificatus, actum unum post */
+        memset(&r, ZEPHYRUM, magnitudo(r));
+        historia_altera = historia_aperire(piscina, intern, vc, "",
+            "numerus",
+            "probatio:checkpoint", II, proiectio_codicis(&r));
+        CREDO_NON_NIHIL(historia_altera);
+        CREDO_AEQUALIS_I32(r.decodificationes, I);
+        CREDO_AEQUALIS_I32(r.applicationes, I);
+        CREDO_VERUM(codicis_numeratores_sunt(&r, "12010001"));
+        CREDO_VERUM(historia_altera
+            && chorda_aequalis(historia_sigillum_hex(historia_altera,
+            piscina), sig_h));
+        CREDO_VERUM(historia_altera
+            && historia_verificare(historia_altera));
+
+        /* codex recusatus: reproiectio ex nihilo, idem */
+        memset(&r, ZEPHYRUM, magnitudo(r));
+        r.recusare = VERUM;
+        historia_altera = historia_aperire(piscina, intern, vc, "",
+            "numerus",
+            "probatio:checkpoint", II, proiectio_codicis(&r));
+        CREDO_NON_NIHIL(historia_altera);
+        CREDO_AEQUALIS_I32(r.decodificationes, I);
+        CREDO_AEQUALIS_I32(r.applicationes, V);
+        CREDO_VERUM(codicis_numeratores_sunt(&r, "12010001"));
+        CREDO_VERUM(historia_altera
+            && chorda_aequalis(historia_sigillum_hex(historia_altera,
+            piscina), sig_h));
+
+        /* hami partiales recusantur */
+        proiectio_mala             = proiectio_codicis(&r);
+        proiectio_mala.codificare  = NIHIL;
+        CREDO_NIHIL(historia_creare(piscina, intern, vc, "", "numerus",
+            "probatio:checkpoint", II, proiectio_mala));
+        proiectio_mala               = proiectio_codicis(&r);
+        proiectio_mala.decodificare  = NIHIL;
+        CREDO_NIHIL(historia_creare(piscina, intern, vc, "", "numerus",
+            "probatio:checkpoint", II, proiectio_mala));
+        /* sine hamis memoria NIHIL recusatur (ut ante) */
+        proiectio_mala               = proiectio_codicis(&r);
+        proiectio_mala.sigillare     = NIHIL;
+        proiectio_mala.codificare    = NIHIL;
+        proiectio_mala.decodificare  = NIHIL;
+        CREDO_NIHIL(historia_creare(piscina, intern, vc, "", "numerus",
+            "probatio:checkpoint", II, proiectio_mala));
+        volumen_claudere(vc);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

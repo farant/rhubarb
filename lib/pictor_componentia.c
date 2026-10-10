@@ -115,6 +115,10 @@ pictor_actio_instrumenti (
     {
         redde "spongia.ictus";
     }
+    si (chorda_aequalis_literis(instrumentum, "linea"))
+    {
+        redde "linea.ictus";
+    }
     redde "";
 }
 
@@ -156,6 +160,11 @@ hic_manens constans s32 magnitudines_aspergilli[V] = {
     I, II, IV, VIII, XVI
 };
 
+/* linea: latitudines (pixela) - eaedem */
+hic_manens constans s32 magnitudines_lineae[V] = {
+    I, II, IV, VIII, XVI
+};
+
 /* P1b: palette (PARTES_DIALOGUS) supra quadratum (x, y radicis):
  * optiones XX x XX, II inter, IV margo, VI per lineam (exemplaria X).
  * genus 'instrumentum', 'color_primus'/'color_secundus' aut
@@ -187,21 +196,26 @@ palettam_componere (
                     s32  valor;
               character  id[LXIV];
               character  titulus[LXIV];
-     constans character* instrumenta[III];
+     constans character* instrumenta[IV];
+                    b32  lineae;
 
     instrumenta[ZEPHYRUM]  = "penicillus";
     instrumenta[I]         = "aspergillum";
     instrumenta[II]        = "spongia";
+    instrumenta[III]       = "linea";
     exemplaria             = chorda_aequalis_literis(genus, "exemplar");
     mensurae = chorda_aequalis_literis(genus,
         "magnitudo");
     aspergilli  = mensurae && chorda_aequalis_literis(instrumentum,
         "aspergillum");
+    lineae      = mensurae && chorda_aequalis_literis(instrumentum,
+        "linea");
     colores     = !exemplaria && !mensurae
                && !chorda_aequalis_literis(genus, "instrumentum");
-    n           = exemplaria ? (s32)EXEMPLAR_NUMERUS : aspergilli ? V
+    n           = exemplaria ? (s32)EXEMPLAR_NUMERUS
+                : (aspergilli || lineae) ? V
                 : mensurae ? X
-                : colores ? XVII : III;
+                : colores ? XVII : IV;
     /* P3: exemplaria (IV lineae) et magnitudines X per lineam, cetera
      * VI */
     per_lineam  = (exemplaria || mensurae) ? X : VI;
@@ -213,7 +227,16 @@ palettam_componere (
         y_quadrati - altitudo - II, latitudo, altitudo);
     per (k = ZEPHYRUM; k < n; k++)
     {
-        si (mensurae && aspergilli)
+        si (lineae)
+        {
+            sprintf(id, "optio.magnitudo.%d",
+                (integer)magnitudines_lineae[k]);
+            sprintf(titulus, "magnitudo:linea:%d%s",
+                (integer)magnitudines_lineae[k],
+                magnitudines_lineae[k]
+                    == color_currens ? ":electum" : "");
+        }
+        alioquin si (mensurae && aspergilli)
         {
             sprintf(id, "optio.magnitudo.%d",
                 (integer)magnitudines_aspergilli[k]);
@@ -266,6 +289,184 @@ palettam_componere (
     redde palette;
 }
 
+/* L3: stratum currens (ut in actionibus): ephemera stratum_activum si
+ * in documento, aliter summum */
+interior s32
+stratum_currens_compositum (
+           constans InsulaRamus* ramus,
+      constans PictorDocumentum* doc)
+{
+    chorda* a;
+       s32  id;
+       i32  k;
+       i32  n;
+
+    n = pictor_documentum_numerus_stratorum(doc);
+    a = insula_ramus_attributum(ramus, INSULA_EPHEMERA,
+        "stratum_activum");
+    si (a && chorda_ut_s32(*a, &id))
+    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (pictor_documentum_stratum(doc, k)->id == id)
+            {
+                redde id;
+            }
+        }
+    }
+    redde n > ZEPHYRUM ? pictor_documentum_stratum(doc, n - I)->id : I;
+}
+
+/* L4: ordo destinatus tractus (summo primo) - eadem regula ac
+ * ordo_destinatus actionum (pictor_actiones.c) */
+interior s32
+ordo_tractus (
+    s32 ordo_tracti,
+    s32 dy,
+    i32 n)
+{
+    s32 gradus;
+    s32 r;
+
+    gradus  = dy >= ZEPHYRUM ? (dy + XI) / (XX + II)
+                             : -((-dy + XI) / (XX + II));
+    r = ordo_tracti + gradus;
+    r = r < ZEPHYRUM ? ZEPHYRUM : r;
+    r = r > (s32)n - I ? (s32)n - I : r;
+    redde r;
+}
+
+/* L4: index insertionis ('strata.index', II altus, in rima inter
+ * ordines) dum ordo trahitur: captura 'stratum.<id>', puncta II,
+ * motus > III, ordo destinatus alius */
+interior vacuum
+indicem_tractus_addere (
+                    Piscina* piscina,
+        InternamentumChorda* intern,
+                  Componens* palette,
+             constans Motus* motus,
+  constans PictorDocumentum* doc)
+{
+    Componens* o;
+      Punctum  p0;
+      Punctum  p1;
+          s32  dx;
+          s32  dy;
+          s32  id;
+          s32  r_tracti;
+          s32  r;
+          i32  n;
+          i32  k;
+       chorda  valor;
+
+    si (   !motus || !motus->ictus_pendens
+        || xar_numerus(motus->ictus_pendens) < II
+        || motus->captura.mensura                         <= VIII
+        || memcmp(motus->captura.datum, "stratum.", VIII) != ZEPHYRUM)
+    {
+        redde;
+    }
+    valor.datum = motus->captura.datum + VIII;
+    valor.mensura = motus->captura.mensura - VIII;
+    p0 = *(Punctum*)xar_obtinere(motus->ictus_pendens, ZEPHYRUM);
+    p1 = *(Punctum*)xar_obtinere(motus->ictus_pendens, I);
+    dx = p1.x - p0.x;
+    dy = p1.y - p0.y;
+    si (!chorda_ut_s32(valor, &id) || dx * dx + dy * dy <= IX)
+    {
+        redde;
+    }
+    n         = pictor_documentum_numerus_stratorum(doc);
+    r_tracti  = -I;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (pictor_documentum_stratum(doc, k)->id == id)
+        {
+            r_tracti = (s32)n - I - (s32)k;
+        }
+    }
+    si (r_tracti < ZEPHYRUM)
+    {
+        redde;
+    }
+    r = ordo_tractus(r_tracti, dy, n);
+    si (r == r_tracti)
+    {
+        redde;
+    }
+    o = nodus(piscina, intern, "strata.index", PARTES_BOTTONE,
+        IV + XX + II, IV + r * (XX + II) + (r > r_tracti ? XX : -II), C,
+        II);
+    componens_ponere_titulum(o, "strata:index");
+    componens_addere_liberum(palette, o);
+}
+
+/* L3: palette stratorum (PARTES_DIALOGUS 'palette') supra quadratum,
+ * margine dextro ad dextrum eius (x_dextrum): ordines summo primo -
+ * oculus (XX x XX, 'oculus.<id>', "oculus:<0|1>") et nomen (C x XX,
+ * 'stratum.<id>', "stratum:<id>[:electum]"); infra '+' et '-' */
+interior Componens*
+strata_palettam_componere (
+                    Piscina* piscina,
+        InternamentumChorda* intern,
+  constans PictorDocumentum* doc,
+                        s32  currens,
+                        s32  x_dextrum,
+                        s32  y_quadrati)
+{
+               Componens* palette;
+               Componens* o;
+                     i32  n;
+                     i32  k;
+                     s32  r;
+                     s32  latitudo;
+                     s32  altitudo;
+               character  id[XXXII];
+               character  titulus[XXXII];
+  constans PictorStratum* s;
+
+    n         = pictor_documentum_numerus_stratorum(doc);
+    latitudo  = IV + XX + II + C + IV;
+    altitudo  = IV + ((s32)n + I) * (XX + II) - II + IV;
+    palette   = nodus(piscina, intern, "palette", PARTES_DIALOGUS,
+        x_dextrum - latitudo, y_quadrati - altitudo - II, latitudo,
+        altitudo);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        /* summum primum */
+        s = pictor_documentum_stratum(doc, n - I - k);
+        r = IV + (s32)k * (XX + II);
+        sprintf(id, "oculus.%d", (integer)s->id);
+        sprintf(titulus, "oculus:%d", s->visibile ? I : ZEPHYRUM);
+        o = nodus(piscina, intern, id, PARTES_BOTTONE, IV, r, XX, XX);
+        componens_ponere_titulum(o, titulus);
+        componens_ponere_actio(o, "strata.agere");
+        componens_addere_liberum(palette, o);
+        sprintf(id, "stratum.%d", (integer)s->id);
+        sprintf(titulus, "stratum:%d%s", (integer)s->id,
+            s->id == currens ? ":electum" : "");
+        o = nodus(piscina, intern, id, PARTES_BOTTONE, IV + XX + II, r,
+            C,
+            XX);
+        componens_ponere_titulum(o, titulus);
+        componens_ponere_actio(o, "strata.agere");
+        componens_addere_liberum(palette, o);
+    }
+    r = IV + (s32)n * (XX + II);
+    o = nodus(piscina, intern, "strata.novum", PARTES_BOTTONE, IV, r,
+        XX,
+        XX);
+    componens_ponere_titulum(o, "strata:novum");
+    componens_ponere_actio(o, "strata.agere");
+    componens_addere_liberum(palette, o);
+    o = nodus(piscina, intern, "strata.deletum", PARTES_BOTTONE,
+        IV + XX + II, r, XX, XX);
+    componens_ponere_titulum(o, "strata:deletum");
+    componens_ponere_actio(o, "strata.agere");
+    componens_addere_liberum(palette, o);
+    redde palette;
+}
+
 /* <componens/> <purus/> */
 /* indicium foci (vicus-latera): ramus focatus - sine Motu aut ramo
  * radicis (applicatio sola) semper; in vico spatium Motus = id rami */
@@ -286,6 +487,7 @@ pictor_componere (
     InternamentumChorda* intern,
                  vacuum* ctx)
 {
+             Componens* quadratum_stratorum;
            InsulaRamus  ramus;
       PictorCompositio* cfg;
              Componens* radix;
@@ -314,7 +516,8 @@ pictor_componere (
     {
         redde NIHIL;
     }
-    cfg = (PictorCompositio*)ctx;
+    quadratum_stratorum  = NIHIL;
+    cfg                  = (PictorCompositio*)ctx;
     /* R3: status pictoris per ramum (sine eo radix repositorii) */
     ramus = cfg->ramus.repo ? cfg->ramus : insula_ramus_radix(repo);
     /* 013 B3: superficies STATUS est (dispensator scribit); ante
@@ -397,9 +600,11 @@ pictor_componere (
     componens_ponere_focusabilis(tabula, VERUM);
     componens_ponere_actio(tabula,
         pictor_actio_instrumenti(instrumentum));
-    n = motus
-        && motus->ictus_pendens ? xar_numerus(motus->ictus_pendens)
-                                      : ZEPHYRUM;
+    /* puncta pendentia tabulae solae (L4: tractus ordinis stratorum
+     * puncta quoque in motu fert - captura alia) */
+    n = motus && motus->ictus_pendens
+        && chorda_aequalis_literis(motus->captura, "tabula")
+        ? xar_numerus(motus->ictus_pendens) : ZEPHYRUM;
     si (n > ZEPHYRUM)
     {
         tabula->puncta = (Punctum*)piscina_allocare(piscina,
@@ -444,10 +649,11 @@ pictor_componere (
                 (integer)PICTOR_SPONGIAE_LATUS);
             componens_ponere_titulum(tabula, titulus_spongiae);
         }
-        /* P4a penicillus: "diametrus color" - color praevisionis:
-         * primus, aut secundus si primus nullus sub exemplari; -1
-         * nihil */
-        si (chorda_aequalis_literis(instrumentum, "penicillus"))
+        /* P4a penicillus (et linea): "diametrus color" - color
+         * praevisionis: primus, aut secundus si primus nullus sub
+         * exemplari; -1 nihil */
+        si (   chorda_aequalis_literis(instrumentum, "penicillus")
+            || chorda_aequalis_literis(instrumentum, "linea"))
         {
             character titulus_penicilli[XXIV];
                   s32 primus;
@@ -464,7 +670,9 @@ pictor_componere (
                    && secundus >= ZEPHYRUM && secundus < XVI) ? secundus
                 : -I;
             sprintf(titulus_penicilli, "%d %d", (integer)attributum_s32(
-                &ramus, INSULA_EPHEMERA, "magnitudo_penicilli", I),
+                &ramus, INSULA_EPHEMERA,
+                chorda_aequalis_literis(instrumentum, "linea")
+                ? "magnitudo_lineae" : "magnitudo_penicilli", I),
                 (integer)color);
             componens_ponere_titulum(tabula, titulus_penicilli);
         }
@@ -517,6 +725,11 @@ pictor_componere (
                 attributum_s32(&ramus, INSULA_EPHEMERA,
                     "magnitudo_aspergilli", I));
         }
+        alioquin si (chorda_aequalis_literis(instrumentum, "linea"))
+        {
+            sprintf(t, "magnitudo:linea:%d", (integer)attributum_s32(
+                &ramus, INSULA_EPHEMERA, "magnitudo_lineae", I));
+        }
         alioquin si (chorda_aequalis_literis(instrumentum, "spongia"))
         {
             sprintf(t, "magnitudo:spongia:%d",
@@ -529,6 +742,23 @@ pictor_componere (
         }
         q = quadratum_addere(piscina, intern, status,
             "quadratum.magnitudo", V * cw + IV * XX, y, t);
+        /* L3: quadratum stratorum ad dextrum lineae (LXX latum): nomen
+         * strati currentis; palettam 'strata' aperit. Filius RADICIS,
+         * non lineae status: figura tituli textum post quadratum
+         * ultimum lineae ponit */
+        si (cfg->doc)
+        {
+            sprintf(t, "strata:stratum %d", (integer)
+                stratum_currens_compositum(&ramus, cfg->doc));
+            /* variabilis propria: q (quadratum magnitudinis) infra
+             * actionem vacuam spongiae accipit */
+            quadratum_stratorum = nodus(piscina, intern,
+                "quadratum.strata", PARTES_BOTTONE,
+                fs.x + fs.latitudo - cw - LXX, fs.y + y, LXX, XX);
+            componens_ponere_titulum(quadratum_stratorum, t);
+            componens_ponere_actio(quadratum_stratorum,
+                "palette.aperire");
+        }
         si (chorda_aequalis_literis(instrumentum, "spongia"))
         {
             componens_ponere_actio(q, "");
@@ -538,6 +768,10 @@ pictor_componere (
     componens_addere_liberum(prospectus, tabula);
     componens_addere_liberum(radix, prospectus);
     componens_addere_liberum(radix, status);
+    si (quadratum_stratorum)
+    {
+        componens_addere_liberum(radix, quadratum_stratorum);
+    }
     /* P1b: palette aperta - filius ULTIMUS radicis (super tabulam
      * pingitur, ictus primum capit) */
     {
@@ -556,6 +790,18 @@ pictor_componere (
             ? IV * cw + III * XX
             : chorda_aequalis_literis(palette, "magnitudo")
             ? V * cw + IV * XX : cw;
+        /* L3: palette stratorum (margine dextro ad quadratum) */
+        si (chorda_aequalis_literis(palette, "strata") && cfg->doc)
+        {
+            Componens* ps;
+
+            ps = strata_palettam_componere(piscina, intern, cfg->doc,
+                stratum_currens_compositum(&ramus, cfg->doc),
+                fs.x + fs.latitudo - cw, qy);
+            indicem_tractus_addere(piscina, intern, ps, motus,
+                cfg->doc);
+            componens_addere_liberum(radix, ps);
+        }
         si (   chorda_aequalis_literis(palette, "instrumentum")
             || chorda_aequalis_literis(palette, "color_primus")
             || chorda_aequalis_literis(palette, "color_secundus")
@@ -568,7 +814,9 @@ pictor_componere (
                     chorda_aequalis_literis(palette, "magnitudo")
                     ? (chorda_aequalis_literis(instrumentum,
                     "aspergillum")
-                       ? "magnitudo_aspergilli" : "magnitudo_penicilli")
+                       ? "magnitudo_aspergilli"
+                       : chorda_aequalis_literis(instrumentum, "linea")
+                       ? "magnitudo_lineae" : "magnitudo_penicilli")
                     : chorda_ut_cstr(palette, piscina),
                     chorda_aequalis_literis(palette, "color_secundus")
                     ? -I : chorda_aequalis_literis(palette, "magnitudo")

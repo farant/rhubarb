@@ -91,3 +91,47 @@ path - the root's action sees keys the canvas does not take), and a
 canvas press while open (closes only, draws nothing, like a menu).
 Note: the theme's colouring palette repeats entries (slots 0, 13, 14,
 15 are the same dark green), so the colour palette shows duplicates.
+
+## 2026-10-10 - pictor-strata L3: layers panel
+
+- Bar button "quadratum.strata" (LXX wide) at the right end of the
+  bar, a child of the ROOT, not of the status node: figura_tituli puts
+  the tool name after the LAST square of the status node, so as a
+  status child the button pushed the name off-screen.
+- Panel = genus "strata" of the existing palette mechanism (open/close
+  via palette.aperire, Esc, canvas click); right edge aligned to the
+  button. Rows top layer first: 'oculus.<id>' + 'stratum.<id>', then
+  'strata.novum' / 'strata.deletum'. Every panel node runs
+  "strata.agere" (one owner for stratum_activum); the panel stays open.
+- The composer needed the document (layer list): PictorCompositio.doc,
+  kept in step with drawing swaps (pictor_picturam_ponere). Flagged to
+  Fran - the field was not in the approved header text.
+- Current layer = stratum_activum if that layer exists, else the TOP
+  layer; strokes log stratum="<id>" unless it is 1.
+- Bug on the way: the button code was inserted between creating the
+  size square (variable q) and the eraser's "empty action on q" line,
+  and reused q - the eraser's dead size square opened a palette again
+  (probatio_pictor_aspergillum IX caught it). Own variable now.
+
+## 2026-10-10 - pictor-strata L4: drag to reorder layers
+
+- Pressing a name row selects it AND captures the mouse (motus
+  captura = the row id, the press point in ictus_pendens - absolute
+  window coordinates); motion updates point 2; release writes ONE
+  <stratum actio="ordo"> if the drag moved more than 3 px and ended
+  inside the panel (geometric node = palette / stratum.* / oculus.* /
+  strata.*). Target row = dragged row + round(dy / 22), clamped.
+- Esc needed no code: keys go to the canvas, and every canvas tool's
+  Esc clears whatever holds the capture.
+- The composer copied ictus_pendens into the canvas preview whatever
+  held the capture - a row drag drew a stray line. Now only when the
+  capture is "tabula"; probatio_pictor_componentia and _figurae built
+  pending strokes WITHOUT a capture (never happens live) and now set
+  it like a real stroke.
+- Insertion line 'strata.index' (title "strata:index", drawn as a bare
+  accent bar before the generic square frame) sits in the 2 px gap
+  above/below the target row; same rounding rule duplicated in the
+  composer (ordo_tractus) and actions (ordo_destinatus).
+- The 3 px threshold is not independently observable: rounding to
+  whole rows already makes small moves a no-op (no plant can redden
+  it). Kept as intent.

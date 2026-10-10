@@ -323,8 +323,10 @@ figura_tabulae (
         spongiam_praevidere(c, m);
     }
     alioquin si (   c->numerus_punctorum > ZEPHYRUM
-                 && chorda_aequalis_literis(c->actio,
-                 "penicillus.ictus"))
+                 && (   chorda_aequalis_literis(c->actio,
+                            "penicillus.ictus")
+                     || chorda_aequalis_literis(c->actio,
+                     "linea.ictus")))
     {
         penicillum_praevidere(c, m);
     }
@@ -443,6 +445,26 @@ hic_manens constans character* icon_aspergilli[XVI] = {
     "................"
 };
 
+/* linea: tractus obliquus */
+hic_manens constans character* icon_lineae[XVI] = {
+    "................",
+    "..............#.",
+    ".............##.",
+    "............##..",
+    "...........##...",
+    "..........##....",
+    ".........##.....",
+    "........##......",
+    ".......##.......",
+    "......##........",
+    ".....##.........",
+    "....##..........",
+    "...##...........",
+    "..##............",
+    ".##.............",
+    "................"
+};
+
 /* P2: spongia - truncus obliquus */
 hic_manens constans character* icon_spongiae[XVI] = {
     "................",
@@ -510,6 +532,18 @@ figura_quadrati (
 
     (vacuum)thema;
     (vacuum)ctx;
+    /* L4: index insertionis ordinis stratorum - fascia accentus sola,
+     * sine margine quadrati */
+    si (chorda_aequalis_literis(c->titulus, "strata:index"))
+    {
+        f.x         = ZEPHYRUM;
+        f.y         = ZEPHYRUM;
+        f.latitudo  = c->fines.latitudo;
+        f.altitudo  = c->fines.altitudo;
+        mandata_rectangulum(m, f, color_thematis(COLOR_ACCENT_PRIMARY),
+            VERUM);
+        redde;
+    }
     /* P1b: ':electum' - optio electa, margo accentus */
     t        = c->titulus;
     electum  = t.mensura > VIII
@@ -556,6 +590,72 @@ figura_quadrati (
         iconem_pingere(m, icon_spongiae, II, II);
         redde;
     }
+    si (chorda_aequalis_literis(t, "instrumentum:linea"))
+    {
+        iconem_pingere(m, icon_lineae, II, II);
+        redde;
+    }
+    /* L3 strata: '+' / '-' (strata:novum / strata:deletum), nomen
+     * strati currentis ("strata:<nomen>"), ordo ("stratum:<id>"),
+     * oculus ("oculus:<0|1>": plenum visibile, vacuum occultum) */
+    si (chorda_aequalis_literis(t, "strata:novum"))
+    {
+        a.x = c->fines.latitudo / II;
+        a.y = V;
+        b.x = a.x;
+        b.y = c->fines.altitudo - VI;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        a.x = V;
+        a.y = c->fines.altitudo / II;
+        b.x = c->fines.latitudo - VI;
+        b.y = a.y;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (chorda_aequalis_literis(t, "strata:deletum"))
+    {
+        a.x = V;
+        a.y = c->fines.altitudo / II;
+        b.x = c->fines.latitudo - VI;
+        b.y = a.y;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (t.mensura > VII && memcmp(t.datum, "strata:", VII) == ZEPHYRUM)
+    {
+        reliquum.datum    = t.datum + VII;
+        reliquum.mensura  = t.mensura - VII;
+        mandata_textus(m, IV, (c->fines.altitudo - VIII) / II, reliquum,
+            ZEPHYRUM, color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (   t.mensura > VIII
+        && memcmp(t.datum, "stratum:", VIII) == ZEPHYRUM)
+    {
+        reliquum.datum    = t.datum + VIII;
+        reliquum.mensura  = t.mensura - VIII;
+        mandata_textus(m, IV, (c->fines.altitudo - VIII) / II,
+            chorda_concatenare(chorda_ex_literis("stratum ",
+            m->piscina),
+            reliquum, m->piscina), ZEPHYRUM,
+            color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (chorda_aequalis_literis(t, "oculus:1"))
+    {
+        Fines g;
+
+        g.x         = V;
+        g.y         = V;
+        g.latitudo  = c->fines.latitudo - X;
+        g.altitudo  = c->fines.altitudo - X;
+        mandata_rectangulum(m, g, color_thematis(COLOR_TEXT), VERUM);
+        redde;
+    }
+    si (chorda_aequalis_literis(t, "oculus:0"))
+    {
+        redde;
+    }
     /* P4a: magnitudo - discus diametri n centratus (n > XVI:
      * numerus) */
     si (   t.mensura > X
@@ -596,6 +696,23 @@ figura_quadrati (
                 mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
                     VERUM);
             }
+            redde;
+        }
+        /* linea: tractus latitudinis n (XVI ad summum), colore
+         * textus */
+        si (   t.mensura > XVI
+            && memcmp(t.datum, "magnitudo:linea:", XVI) == ZEPHYRUM)
+        {
+            n = I;
+            (vacuum)sscanf(chorda_ut_cstr(t, m->piscina) + XVI, "%d",
+                &n);
+            n           = n > XVI ? XVI : n < I ? I : n;
+            g.x         = III;
+            g.y         = (c->fines.altitudo - (s32)n) / II;
+            g.latitudo  = c->fines.latitudo - VI;
+            g.altitudo  = (s32)n;
+            mandata_rectangulum(m, g, color_thematis(COLOR_TEXT),
+                VERUM);
             redde;
         }
         /* P4b spongia: magnitudo fixa - quadratum hebes */

@@ -288,3 +288,67 @@ Fran's plan: the eraser paints the canvas background. Named `spongia`
   option of each to pin them).
 - First draft of section IX never held the spray still, so dwell
   scaling was unpinned; added an 80 ms hold (plant B7).
+
+## 2026-10-09 - pictor-strata L2: layered document
+
+Plan: project-specs/pictor-strata-plan.md. Grammar in the header.
+- Layers live in PictorDocumentum.strata[16] (bottom first). Buffers
+  are never freed (arena): slots beyond numerus_stratorum keep spare
+  buffers - delete moves the deleted buffer there, add reuses it.
+- Strokes paint into their layer by pointing doc->tabula at the layer
+  buffer around ictum_pingere (every rasteriser reads doc->tabula);
+  doc->tabula is the COMPOSITE the rest of the app and every test
+  reads. The eraser now writes alpha 0 (transparent) on its layer.
+- Compositing runs inside the history's sigillare hook - historia calls
+  it exactly when the state settles (after an action, after a replay,
+  after vacare), so there is no "remember to composite" call site.
+- Old drawings: the old raw checkpoint fails decodificare (no
+  "STRATA1 " magic) -> replay. Evidence they look identical: the
+  golden test now asserts, at every step, that the COMPOSITE's raw
+  hash equals the old seal recorded in the frozen
+  probationes/fixa/pictor_documentum/aurum_ante_strata.txt (7/7). The
+  byte golden aurum.txt was re-promoted (named format change): only
+  seals and checkpoint hashes changed, plus the new "compositum" lines.
+- Measured (test build, 468x440, 8 layers): ~29 ms per stroke commit
+  (paid on mouse-up), ~43 ms to reopen from an encoded checkpoint.
+  Mostly SHA-256 over every layer per stroke; follow-up = per-layer
+  cached seals, re-hash only the touched layer (needs PictorStratum
+  fields -> header approval).
+- Bench gotcha: a fortify trap (EXC_BREAKPOINT in __chk_fail_overflow)
+  was my bench's own sprintf into a 128-byte buffer, not L2.
+
+## 2026-10-10 - L5: paste an image as a new layer (Fran)
+
+- Existing pieces did most of the work: dithering_atkinson_colorum
+  (indices 0-15; its 8-bit AQUINAS_PALETTE is exactly the theme's
+  6-bit palette x4, same order - checked entry by entry), imago_scalare
+  (area down / bilinear up), clipboard_capere_imaginem (macOS
+  pasteboard TIFF/PNG -> RGBA).
+- pictor_imaginem_aptare: contain-fit (the side that hits the edge
+  first, aspect kept, small images scale UP too), centred, Atkinson,
+  source alpha < 128 -> 0xFF (transparent).
+- The DITHERED result is stored (Fran): indices deflated into a
+  content-addressed volume massa; log <stratum novum> + <imago ...
+  massa=hash> as a coniunctum group (one undo removes both). Replay
+  never depends on the dithering code.
+- Cmd+V on macOS is a MENU key equivalent: AppKit sends it to
+  fenestra_macos.m paste:, which only read text, so an image paste
+  vanished before reaching the app. paste: now turns "no text on the
+  pasteboard" into a synthetic Cmd+V key-down. Not testable headless -
+  needs a manual check.
+- Actions do no I/O: the clipboard read is a port in PictorActiones.
+  In vicus all pictor panes call a trampoline into ContextusPictoris,
+  whose port only apps/vicus/vicus.c sets (vicus_terminalis links
+  vicus_applicatio and must not pull Cocoa - its manifest has no
+  clipboard_platform). apps/pictor/pictor.c sets it directly.
+
+## 2026-10-10 - CORRECTION: image pasted twice (Fran)
+
+My L5 premise was wrong: Cmd+V DOES reach the app as a key. The
+fenestra poll loop (fenestra_macos.m, nextEventMatchingMask) turns
+EVERY NSEventTypeKeyDown - Cmd chords included - into an app key event
+BEFORE [NSApp sendEvent:] lets the menu see it. So the real Cmd+V
+pasted once, then the menu's paste: (no text on the pasteboard) pushed
+my synthetic Cmd+V and it pasted again: two layers per paste. The
+synthetic key is gone; paste: does nothing without text again. The
+library side was right all along (one Cmd+V = one layer, tested).
