@@ -111,4 +111,9 @@ in `../rhubarb-quinta`; merges by the ritual.
   on every call - concurrent calls break each other (…WB6Q3H).
 
 ### T9: close
-- [ ] spec "As built", worklogs, MEMORY; merge.
+- [x] spec "As built", worklogs, MEMORY; merge.
+  As built (2026-10-10): spec §VI; ledger note on …42JH9 (slice II
+  complete, rest named); census of the 246 old root suites (50 mechanically
+  convertible) in lib/credo.worklog.md; parked: runner split
+  (…W51P785, credo_suitam_currere_cum 340 lines). Merge by the quinta
+  ritual.

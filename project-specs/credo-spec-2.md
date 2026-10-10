@@ -83,3 +83,44 @@ facultas per SECTION in fabrica (possible later via signa).
 - Lint checks 1-4 live and planted; converter converts xar's and stml's
   originals byte-for-byte to what the scratch script produced (modulo
   function names) and refuses the other shapes.
+
+## VI. As built (2026-10-10, quinta; T1-T8 commits d2c91f9e -> 485a0b00)
+
+All of V met, with these departures - each decided during the slice and
+recorded where it was decided (plan "As built" lines, worklogs, ledger):
+
+1. **Lint lives in examen, not in a separate instrument** (Fran,
+   ledger …P81256): codes 92 CREDO_STATUS_NON_PURGATUS, 93
+   CREDO_SECTIO_SINE_ASSERTIONE, 94 CREDO_SUITA_MUTATA (VIOLATIO domus,
+   like 91 - block, `<tolera>`-able with a reason) and 95
+   CREDO_TITULUS_IMPRESSUS (DOMESTICUM, warning). Check (1) was
+   broadened: the real bug (T6) involved no NECESSE - any persistent
+   variable a section body writes (including fakes it installs as
+   function pointers) must be written by that section's parare/purgare.
+   Writes come from a second data-flow build under a credo policy.
+   Limits parked: resets in another file (…JSV0E9), parare-set state.
+2. **Areas belong to the suite context too** (`<suite>.suita.<pid>`),
+   and removal is by PATH (an area a CREDO_NON_RUIT child created is
+   removed by the parent). credo does its own tree removal: subsystem
+   builds link credo without filum.
+3. **T5 converted three old suites** (git, villa_agens,
+   sententiae_horreum) - replacing a scratch helper needs a context.
+4. **Converter output differs from the scratch script for stml in two
+   places, deliberately**: a two-line title the regex missed is its own
+   section (68, not 67), a title nested in a block becomes CREDO_GRADUS.
+   xar is byte-identical. Names `_sectio_<ordinal>` (Roman numerals are
+   new words for the Latin lint).
+5. **Found on the way and fixed**: `Speratus: (null)` (printf %s NULL)
+   in every empty-value failure (T4); ten never-reset counters in
+   probatio_fabrica_gradus (T6, CREDO_ORDO's first run); seven
+   fake-world leaks in probatio_fabrica_genera/iudicium (T7's first
+   run); two leftover titles in probatio_stml.
+6. **Tooling finds parked**: selecta.sh relinks on every call - concurrent
+   calls break each other (…WB6Q3H); silva.planta mangles Python
+   indentation (…6DP7RG); planta's red summary quotes an 'ok' line
+   (…FV3X); stray `<word>-probatio-<epoch>` dirs in TMPDIR from an
+   unknown suite (…V3QXC).
+
+State at close: 13 root suites are credo v2 sections (subsystems: none);
+the converter census over the remaining old root suites is in
+lib/credo.worklog.md.

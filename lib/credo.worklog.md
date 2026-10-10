@@ -487,3 +487,29 @@ in 10 places (…WB6Q3H; alone it is green); silva.planta on a .py file goes
 through Editio's whitespace-tolerant C-lexeme replace and re-indented the
 plant (IndentationError), so all four planta runs "broke the build" - the
 plants were done by hand instead (…6DP7RG; memory updated).
+
+## 2026-10-10 - credo II close: converter census (246 old root suites)
+
+`./tools/credo_convertere.py -probare` over every root probationes/*.c with
+credo_aperire and without credo_suitam_currere, run SERIALLY (6-wide made
+selecta race, …WB6Q3H):
+
+  convertible 50 (shape A 42, shape B 8)
+  refused 196:
+    149 no '--- Probans T ---' titles - of these 127 DO use '--- T ---':
+        ~52 unnumbered titles (look like independent sections: a third
+            mechanical shape is plausible - widen the title pattern?)
+        ~49 numbered ('--- I: ...', '--- I. ...', '--- 0. ...') = the
+            SCENARIO style (vicus, villa, sententiae): steps often depend
+            on each other; converting them to independent sections is
+            wrong when they share statics/daemons, which the shared-local
+            check cannot see -> CREDO_GRADUS in one section, by hand
+        22 no '---'/'===' titles at all
+     11 statement before the blocks, 10 between blocks, 8 block without a
+     single title, 7 statement before the first title, 9 principale local
+     shared by sections (= suite fixture by hand), 2 redde in a section
+
+Reading: incremental migration through the commit note reaches ~20% of
+the old suites mechanically; the rest are judgement conversions (the T5
+kind). Widening to unnumbered '--- T ---' titles is the obvious next
+lever - Fran's call (numbered titles must stay excluded).
