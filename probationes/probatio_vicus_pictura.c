@@ -189,9 +189,12 @@ s32 principale (vacuum)
         latus_pictoris = frons(v);
         /* ictus in latere dextro (primus focat, secundus pingit):
          * tabula ad (CCXL + VI, linea + VIII) */
-        vivi =
-            documentum_tabulae ? pictor_documentum_numerus_vivorum(documentum_tabulae)
-                        : ZEPHYRUM;
+        vivi = ZEPHYRUM;
+        si (documentum_tabulae)
+        {
+            vivi =
+                pictor_documentum_numerus_vivorum(documentum_tabulae);
+        }
         (vacuum)manus_ludus_premere_ad(m, CCXL + VI + X,
             VICUS_ALTITUDO_TABULARUM + VIII + X);
         (vacuum)manus_ludus_premere_ad(m, CCXL + VI + XX,
