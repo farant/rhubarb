@@ -1023,7 +1023,11 @@ for arg in "$@"; do
     elif [ "$arg" == "--obiecta" ]; then
         OBIECTA_MODE=1
     elif [ "$arg" == "--residua" ]; then
+        RESIDUA_MODE=3
+    elif [ "$arg" == "--residua-prae" ]; then
         RESIDUA_MODE=1
+    elif [ "$arg" == "--residua-post" ]; then
+        RESIDUA_MODE=2
     elif [ "$arg" == "-reticularis" ] || [ "$arg" == "--reticularis" ]; then
         RETICULARIS=1
     elif [ "$arg" == "-machina" ] || [ "$arg" == "--machina" ]; then
@@ -1125,15 +1129,21 @@ fi
 # oracula Apple (plutil contra binarium membri probatio_plist,
 # iconutil). Exitus 2 oraculi = NIHIL CURSUM nominatum (ut cursus
 # plenus). 'RESIDUA: sana' / 'RESIDUA: FRACTA <nomina>'; exitus 0/1.
-if [ $RESIDUA_MODE -eq 1 ]; then
+# Gradus duo (arbor frigida: bin/generare ante membra, binaria membrorum
+# ante oracula): --residua-prae (bibliothecae, generare, speculum + JS),
+# --residua-post (oracula); --residua = ambo.
+if [ $RESIDUA_MODE -ne 0 ]; then
     residua_fractae=""
-    compile_libraries || residua_fractae="$residua_fractae bibliothecae"
-    if [ -z "$residua_fractae" ]; then
-        run_generare || residua_fractae="$residua_fractae generare"
-        run_speculum || residua_fractae="$residua_fractae speculum_js"
+    if [ $((RESIDUA_MODE & 1)) -ne 0 ]; then
+        compile_libraries || residua_fractae="$residua_fractae bibliothecae"
+        if [ -z "$residua_fractae" ]; then
+            run_generare || residua_fractae="$residua_fractae generare"
+            run_speculum || residua_fractae="$residua_fractae speculum_js"
+        fi
     fi
     mkdir -p build/test_logs/singulae
     for oraculum in plist_plutil icones_iconutil; do
+        [ $((RESIDUA_MODE & 2)) -ne 0 ] || continue
         [ -x "probationes/probatio_$oraculum.sh" ] || continue
         PLIST_BINARIUM=build/fabrica/area/probationes_radicis/probatio_plist/probatio_plist \
             "./probationes/probatio_$oraculum.sh" \

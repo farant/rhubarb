@@ -256,3 +256,11 @@ capsule by existence, so a behaviour change in its inputs re-runs none
 of them (…0DESC); the gate inventory lives in the ledger, not the repo
 (…MXPC). The ledger's inventory rows for radix and aedilis are
 re-derived in main after the merge.
+
+Cold-tree addendum (after T8): the radix gate needs a fresh tree to be
+BOOTSTRAPPED first (natura, canon...), like every other gate; residua is
+split prae/post so bin/generare exists before the members run;
+lectores_cocti declares canon as its precondition. Verified: fresh tree
+from 4188a1e9 + bootstrap -> 256/256, residua sana, 6 min 44 s. A tree
+healing itself from nothing is open (ledger, generators running
+undeclared house binaries).

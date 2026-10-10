@@ -2669,3 +2669,33 @@ test encoded the bug. Now it checks the string AND that
 relatio_fracturarum/_summa_fracturae render the failure (the property the
 list broke); planting the list form back -> "RUIT: 'list' object has no
 attribute 'splitlines'", PYTHONICA FRACTA 2.
+
+## 2026-10-09 - fabrica-7: cold-tree check of the switch
+
+frigida_probare (4188a1e9) ran all suites green, but through the RAW
+runners - it says nothing about the new radix gate. Ran porta('radix')
+in the kept fresh tree:
+1. red: `lectores_cocti` (generator) runs bin/canon_coquere without
+   declaring it; warm trees never ran it. Fix: `<praecondicio
+   actio="canon"/>` (ORDER) + `instrumentum_domus bin/canon_coquere`
+   (KEY). Tried first to give instrumentum_domus a location instead -
+   probatio_fabrica_ordo test II shows "loci nulli" is deliberate (a
+   bootstrap cycle otherwise).
+2. bin/generare has NO producer action: residua (which builds it) ran
+   AFTER the composite, so probatio_generare would run first in a cold
+   tree. Residua split: `--residua-prae` (libraries, generare, speculum
+   + JS) BEFORE the composite, `--residua-post` (Apple oracles, which
+   read member binaries) after; `--residua` = both. PORTAE_RESIDUA['radix']
+   = [prae, post]; pythonica asserts the order (planted: wrong order ->
+   red).
+3. A `<praecondicio actio="natura"/>` on probationes_radicis pulled
+   natura's whole upstream graph into the heal, where glossae_pagina
+   also runs an undeclared house binary (bin/natura_glossae) - and the
+   serial heal then skipped everything after the first fracture,
+   aedilis included. Dropped: the bar is a fresh tree AFTER the
+   documented bootstrap (worktree-quinta memory). Self-healing from
+   nothing = ledger question (generators must declare the binaries they
+   run).
+Result: fresh tree + bootstrap step 2 (natura_struere, canon_struere),
+member areas / bin/generare / speculum capsule deleted -> porta radix
+SANA 256/256, prae and post sana, 6 min 44 s cold.

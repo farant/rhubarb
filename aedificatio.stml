@@ -780,11 +780,17 @@
     <mandatum>
       <verbum! (>./tools/canon_coquere.sh
     </mandatum>
+    <praecondicio actio="canon"/>
     <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="fasciculus" via="cocta.registrum"/>
     <ingressus genus="fasciculus" via="silva/quaestiones.canon"/>
     <ingressus genus="fasciculus" via="natura/cocta/planta.canon"/>
     <ingressus genus="fasciculus" via="tools/canon_coquere.sh"/>
+    <!-- instrumentum quod scriptum currit (fabrica-7, arbor frigida:
+         'bin/canon_coquere abest' fractum): praecondicio canon ORDINEM
+         dat (instrumentum_domus loci nullos habet consulto - cyclus
+         bootstrap), ingressus clavem per provenientiam binarii -->
+    <ingressus genus="instrumentum_domus" via="bin/canon_coquere"/>
     <ingressus genus="manifestum" via="build/aedilis/canon_coquere/manifestum.stml"/>
     <ingressus genus="fasciculus" via="silva/formator.sh"/>
     <ingressus genus="fasciculus" via="silva/instrumenta/principalia/formator.c"/>

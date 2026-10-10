@@ -1813,12 +1813,14 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 # umbra, bin/fabrica absens, oraculum (tools/toml_gradus_oraculum.sh).
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
                   'radix': 'probationes_radicis'}
-# RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat, post
-# compositum (membra binaria praebent quae oracula legunt) - portae
-# radix: bibliothecae omnes, generare, speculum + JS, oracula Apple.
-# Sana SOLUM si compositum et residua sana.
-PORTAE_RESIDUA = {'radix': (['./compile_tests.sh', '--residua'],
-                            'RESIDUA: sana')}
+# RESIDUA (fabrica-7 T7): quod porta PRAETER membra probat - portae
+# radix: 'prae' ANTE compositum (bibliothecae omnes, generare ->
+# bin/generare quod probatio_generare currit, speculum + JS), 'post'
+# POST eum (oracula Apple binaria membrorum legunt). Arbor frigida
+# ordinem hunc docuit. Sana SOLUM si compositum et residua sana.
+PORTAE_RESIDUA = {'radix': [
+    ('prae', ['./compile_tests.sh', '--residua-prae'], 'RESIDUA: sana'),
+    ('post', ['./compile_tests.sh', '--residua-post'], 'RESIDUA: sana')]}
 
 
 def _machina_legere(textus):
@@ -1881,6 +1883,9 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
                 pass
     if auditus is None:
         auditus = bool(os.environ.get('FABRICA_AUDITUS'))
+    residua = PORTAE_RESIDUA.get(nomen, [])
+    residua_facta = [(g, _curre(cmd), signum) for g, cmd, signum in residua
+                     if g == 'prae']
     r = _curre([FABRICA_BIN, 'sanare', '-machina']
                + (['-audit'] if auditus else []) + [compositum])
     if r.returncode == 2:
@@ -1919,19 +1924,20 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
         for o in cursa if o[1] != 'SANATUM']
     acta = _ANSI.sub('', r.stdout + r.stderr
                      + (rj.stdout if rj is not r else ''))
-    residua = PORTAE_RESIDUA.get(nomen)
-    if residua is not None:
-        rr = _curre(residua[0])
+    residua_facta += [(g, _curre(cmd), signum) for g, cmd, signum
+                      in residua if g == 'post']
+    for g, rr, signum in residua_facta:
         textus = _ANSI.sub('', rr.stdout + rr.stderr)
-        residua_sana = rr.returncode == 0 and residua[1] in textus
+        residua_sana = rr.returncode == 0 and signum in textus
         m = re.search(r'^RESIDUA: .*$', textus, re.M)
-        compendium += ' | ' + (m.group(0) if m else
-                               'RESIDUA: exitus %d sine linea' % rr.returncode)
+        compendium += ' | %s %s' % (g, m.group(0) if m else
+                                    'RESIDUA: exitus %d sine linea'
+                                    % rr.returncode)
         if not residua_sana:
-            fr.append(Fractura('residua', '\n'.join(
+            fr.append(Fractura('residua_' + g, '\n'.join(
                 [l for l in textus.splitlines() if l.strip()][-10:])))
         sana = sana and residua_sana
-        acta += '\n== residua ==\n' + textus
+        acta += '\n== residua %s ==\n%s' % (g, textus)
     _tempus_notare('porta', nomen, initium, sana, 0 if sana else 1)
     return Porta(nomen, True, sana, compendium, 0 if sana else 1,
                  acta, fr, False)
