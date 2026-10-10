@@ -166,8 +166,8 @@ The categories above say where floats *appear*. Exact audits show where
 they *decide*. A float sector or Voronoi decision is only as good as the
 distance to its boundary. In these lattices many sums sit exactly ON a
 boundary: a sum with Re = 0 has a half-angle of exactly 90°, and the
-cuboctahedral axes give equal |dot| products. Float noise of order 10⁻¹⁷
-then picks the side, and different machines or libms pick differently.
+cuboctahedral axes give equal |dot| products. Rounding of noise of order
+10⁻¹⁷ then picks the side: deterministically, but not by the exact rule.
 
 - **D84 (audited by D124):**
   - 12.8% of its 21M cell decisions are exact ties. Every float decision
@@ -175,7 +175,9 @@ then picks the side, and different machines or libms pick differently.
   - The recorded capacity claims (non-null XOR6, null-only XOR6, "worse
     than random") are not reproduced even by D84's own code here, and are
     false exactly: non-null max XOR8, null-only 0.
-  - No consistent tie rule gives them.
+  - None of four fixed tie rules gives them. Where the recorded figures
+    came from is unknown; every build tried agrees with this machine, so
+    it is not platform noise.
 - **D95–D97 (audited by D121–D123):** rule / robust / possible
   separated the readings. D97's "35° resonance" is a band, and its 90°
   collapse is real.

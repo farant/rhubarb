@@ -1732,15 +1732,9 @@ sm_subset (
         perm[i] = perm[j];
         perm[j] = t;
     }
+    /* permutation order, as D84 loads its subsets: the axis table (and
+     * so the first-maximum rule) follows it (review L3) */
     for (i = 0; i < size; i++) subset[i] = perm[i];
-    /* catalog order, as D84's subsets after load (the table order) */
-    for (i = 1; i < size; i++) {
-        int x = subset[i];
-        int j = i - 1;
-
-        while (j >= 0 && subset[j] > x) { subset[j + 1] = subset[j]; j--; }
-        subset[j + 1] = x;
-    }
 }
 
 /* ================================================================
@@ -2200,9 +2194,8 @@ main (void)
             double p8 = (double)ehist[0][MODE_RULE][8] / (double)n_ext;
 
             sprintf(msg, "non-null (exact rule XOR8) is NOT worse than random "
-                "15-subsets: %.1f%% of 10,000 reach XOR8, none more; the "
-                "non-null subset sits at the top of the distribution",
-                100.0 * p8);
+                "15-subsets: %.1f%% of the 10,000 sampled reach XOR8, none "
+                "more (a sample of 1,307,504)", 100.0 * p8);
             check(msg, cap_nn[MODE_RULE].max_xor >= 8
                 && ehist[0][MODE_RULE][10] == 0 && ehist[0][MODE_RULE][12] == 0
                 && ehist[0][MODE_RULE][14] == 0);
@@ -2270,6 +2263,43 @@ main (void)
                 <= ex[1][MODE_RULE][0]);
         }
         {
+            /* review L4: the k = 1 'synergy' (0 + 0 = 36). The full
+             * catalog's 36 XOR6 sets by null count, and the pure subsets
+             * with the full 13-axis table */
+            int by_null[4] = { 0, 0, 0, 0 };
+            int nn13 = 0;
+            int no13 = 0;
+            int a;
+            int b;
+            int c;
+
+            memo_reset(&full_table);
+            for (a = 0; a < e_cat_size; a++)
+            for (b = a + 1; b < e_cat_size; b++)
+            for (c = b + 1; c < e_cat_size; c++) {
+                int w[3];
+
+                w[0] = a; w[1] = b; w[2] = c;
+                if (separable(w, 3, 1, MODE_RULE)) {
+                    int nulls = e_null[a] + e_null[b] + e_null[c];
+
+                    by_null[nulls]++;
+                    if (nulls == 0) nn13++;
+                    if (nulls == 3) no13++;
+                }
+            }
+            printf("    k = 1 full catalog XOR6 sets by null count 0/1/2/3: "
+                "%d %d %d %d (pure sets pass only with the 13-axis table: "
+                "non-null %d, null-only %d)\n", by_null[0], by_null[1],
+                by_null[2], by_null[3], nn13, no13);
+            check("the k = 1 'synergy' (0 + 0 = 36) is confounded by the "
+                "activation table: 36 = 8 pure non-null + 12 + 12 + 4 pure "
+                "null; like-for-like, 24 mixed sets",
+                by_null[0] == 8 && by_null[1] == 12 && by_null[2] == 12
+                && by_null[3] == 4 && ex[0][MODE_RULE][0] == 36
+                && ex[0][MODE_ROBUST][0] == 36);
+        }
+        {
             int lv;
 
             printf("    nulls among ALL exact-rule winners (full catalog): ");
@@ -2312,8 +2342,8 @@ main (void)
             "among all XOR8 winners %.2f\n", null_ratio[4]);
         printf("    a fixed tie rule giving the atlas's (8, 6, 6): %s\n",
             any >= 0 ? "yes" : "none of the four");
-        check("no consistent tie rule reproduces the atlas: all four fixed "
-            "rules give (full, non-null, null-only) = (8, 8, 0)", any < 0
+        check("none of the four fixed tie rules reproduces the atlas: all "
+            "give (full, non-null, null-only) = (8, 8, 0)", any < 0
             && fixed_max[0][1] == 8 && fixed_max[1][1] == 8
             && fixed_max[2][1] == 8 && fixed_max[3][1] == 8
             && fixed_max[0][2] == 0 && fixed_max[1][2] == 0

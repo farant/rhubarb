@@ -1,6 +1,6 @@
 # Research Director Pitch: Atlas Structural Improvements
 
-> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures were float tie noise. D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures are not reproduced by D84's own code on any build tried (cause unknown). D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
 **Date:** 2026-02-26
 
 Four proposals for new atlas documents, each targeting a specific gap in the research team's ability to recover context, avoid duplicate work, and navigate 109 demos worth of accumulated knowledge.

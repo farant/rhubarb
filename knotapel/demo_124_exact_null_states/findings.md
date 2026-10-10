@@ -20,11 +20,21 @@ run on this machine, it prints:
 - null-only XOR6 = 0;
 - 0 = 0 at k_sec = 1.
 
-The decisive decisions are exact ties, and float noise resolves them.
+Where the atlas figures came from is **unknown**. The review rebuilt
+D84 on every variant it could (arm64 and x86 under Rosetta, −O0 / −O2,
+three fp-contract modes, an emulated glibc `rand()`), and every build
+prints the same as here.
+
+The atlas's own Part D figures (XOR6 0.344 / 0.31, XOR8 1.188 / 0.79)
+equal this machine's output exactly. So the original run made the same
+full-catalog float decisions bit for bit, and only its Part C numbers
+differ. A different code version, or a transcription error, is more
+likely than the platform. Whatever their origin, the claims are false
+exactly.
 
 Run: `./bin/aedilis knotapel/demo_124_exact_null_states/main.c &&
 bash build/aedilis/main/struere.sh && ./build/aedilis/main/main`.
-It takes about 55 s and runs 13 checks.
+It takes about 55 s and runs 14 checks.
 
 ## What D84 recorded, what its code prints, and what is exact
 
@@ -33,7 +43,7 @@ It takes about 55 s and runs 13 checks.
 | full catalog (24) | XOR8 | XOR8 | XOR8 | XOR8 |
 | non-null (15) | **XOR6** | XOR8 | **XOR8** | **XOR8** |
 | null-only (9) | **XOR6** | 0 | **0** | **0** |
-| random 15-subsets, mean max | 7.8 | 7.7 | **8.000** (10,000 of 10,000 at XOR8) | 7.984 |
+| random 15-subsets, mean max | 7.8 | 7.7 | **8.000** (all 10,000 sampled at XOR8) | 7.984 |
 | non-null vs random | "worse" | equal or better | **equal** | equal |
 | null-only XOR6, k = 1, 2, 4, 6, 8 | flat, beats non-null at k = 1 | 0 everywhere | 0 everywhere | 0 everywhere |
 | nulls per XOR8 winner / random | 0.79 | (first 32 winners) | **0.50** (all 402 winners) | |
@@ -45,7 +55,7 @@ Definitions:
 - **Robust:** passes under every resolution of every tie.
 - **Possible:** passes under some resolution, chosen per sum.
 
-## Why: the decisive decisions are ties
+## One float decision in eight is a tie
 
 **Part C** replays every cell decision D84's float search makes, all
 20,965,173 of them, against the exact cell of the same sum:
@@ -57,32 +67,36 @@ Definitions:
 | float outside the tie set (a real float error) | **0** |
 
 So the float code never miscomputes. But one decision in eight is a
-tie, and float noise picks the side.
+tie, and the side it lands on is an accident of rounding. It is
+IEEE-deterministic, so every build tried gives the same result, but
+it is not the exact rule.
 
 The largest source is the **null sums**: 3,977,481 decisions at even k.
 - A sum with Re = 0 has half-angle exactly 90°, so it sits on the
   boundary between sectors k/2 − 1 and k/2 for every even k.
 - In float its real part is closure noise of order 10⁻¹⁷. Its size
-  decides the sector.
+  decides the sector, deterministically: below about 1.1 × 10⁻¹⁶
+  relative, acos rounds to exactly π/2 and the sum lands in k/2.
 - Float put 578,730 of these decisions (14.6%) in sector k/2 − 1.
 - **Every one of them had a nonzero float real part.** Whenever the
   float Re was exactly 0, the sum landed in k/2, where the exact rule
-  puts it. The noise in Re is the whole mechanism.
+  puts it.
 
 **Axis ties** (equal |v·u| to two axes of the cuboctahedron) add
 1,395,665 decisions, and **sector-boundary ties** of non-null sums
 4,285,855.
 
-This explains how D84's atlas and its code can disagree with nothing
-changed in the code. A different libm, compiler or machine resolves
-the noise differently, and these numbers are exactly where that
-matters.
+These ties change counts substantially (Part F), but they do **not**
+explain the atlas. The first version of this file said they did, and
+the review showed otherwise (M1, above).
 
-**No consistent tie rule gives the atlas's numbers.** Four fixed rules
+**None of the four fixed tie rules gives the atlas's numbers.** Rules
 (sector lower/upper × axis first/last, as in D122) all give (full,
-non-null, null-only) = (8, 8, 0), the same as the exact rule. The
-atlas's (8, 6, 6) needs tie choices that vary from sum to sum, and
-float noise supplies exactly that.
+non-null, null-only) = (8, 8, 0), the same as the exact rule. That is
+the statement, and no more. D84's search is greedy (first 32 winners),
+so per-sum adversarial resolutions are not bounded by these four. 84
+"possible" triples precede the first triple of a robust non-null XOR8
+set, enough to fill all 32 slots (review L1).
 
 ## Capacity exactly (Part D)
 
@@ -122,19 +136,25 @@ Sets passing at some ladder k, by weight count n = 3 … 7:
 ## Random controls (Part E)
 
 D84's own 100 + 100 subsets come from the same `rand()` sequence, and
-10,000 + 10,000 more from a fixed splitmix64.
+10,000 + 10,000 more from a fixed splitmix64. Both keep D84's load
+order (permutation order), which fixes the axis table and so the
+first-maximum rule.
 
 | | exact rule | robust |
 |---|---|---|
 | random-15, D84's 100 | all XOR8 (mean 8.00) | 98 XOR8, 2 XOR6 (7.96) |
 | random-15, 10,000 | **all XOR8** (8.000) | 9,922 XOR8, 78 XOR6 (7.984) |
 | random-9, D84's 100 | 36 XOR8, 64 XOR6 (6.72) | 23 / 77 (6.46) |
-| random-9, 10,000 | 3,966 / 6,034 (6.793) | 2,387 / 7,613 (6.477) |
+| random-9, 10,000 | 3,992 / 6,008 (6.798) | 2,387 / 7,613 (6.477) |
 
-Every 15-subset of the ζ₈ catalog reaches XOR8 exactly, and none goes
-higher. The non-null subset is one of them. "Worse than random" came
-from noise pulling float maxima below 8: D84's mean was 7.7, the
-atlas's 7.8.
+All 10,000 sampled 15-subsets reach exactly XOR8 under the rule, and
+none goes higher. That is a sample of 1,307,504, not all of them. The
+review counts 20,115 distinct ordered axis tables, so an exhaustive
+check in C is feasible but has not been run. The non-null subset
+equals the sampled distribution.
+
+D84's float search finds a mean of 7.7 here: its tie resolutions lose
+XOR8 in some subsets. The atlas records 7.8.
 
 ## The k_sec sweep and null prevalence (Part F)
 
@@ -154,6 +174,14 @@ XOR6 sets per k_sec (all triples of the subset):
 - Null-only is "flat" only under "possible", where every null triple
   that separates at all does so by choosing sides at its ties. Under
   the rule it is 0 at every k.
+- **The k = 1 "synergy" (null-only 0 + non-null 0, full 36) is
+  confounded by the activation table (review L4).** The full catalog's
+  36 XOR6 sets at k = 1 have 0, 1, 2 and 3 nulls in 8, 12, 12 and 4
+  cases. The 8 pure non-null and 4 pure null triples pass only because
+  the full catalog's 13-axis table is finer than the subsets' own; with
+  that table, non-null alone gives 8 and null-only 4. Like-for-like,
+  the synergy is the **24 mixed sets**, not "0 + 0 = 36". The demo
+  checks this decomposition.
 
 **Null prevalence, among all winners:**
 - XOR6: 0.933 nulls per set, against 1.125 for random sets of 3 (ratio
@@ -222,6 +250,42 @@ against the backup each time.
 is tested. Output is identical. That is expected, and it shows
 downward closure in practice: no candidate with a failing subset ever
 separates.
+
+## Review (2026-10-10, recensor-extensio)
+
+The exact numbers are right and the overturn holds. The reviewer's
+independent recount (int-pair Z[√2], own BFS, own SAT) equals the demo
+on every rule, robust and possible count it finished, including the
+13-axis tables.
+
+- **M1 (applied): the explanation of the atlas figures was
+  unsupported.** The first version said float tie noise on another
+  libm, compiler or machine produced them. Against that:
+  - every rebuild prints the same: arm64 and x86/Rosetta, −O0/−O2,
+    three fp-contract modes, emulated glibc `rand()`;
+  - cos/sin(π/4) are correctly rounded on both libms, so the catalog is
+    bit-identical;
+  - a null sum's side is IEEE-deterministic;
+  - the atlas's own Part D ratios match this machine exactly.
+
+  Now: "not reproduced on any build tried; cause unknown".
+- **L1 (applied):** "no consistent tie rule" became "none of the four
+  fixed rules". D84's greedy search is not bounded by robust XOR8.
+- **L2 (applied):** "every 15-subset" became "all 10,000 sampled". An
+  exhaustive pass over the 1,307,504 subsets is feasible but not run.
+- **L3 (applied):** the extended sample no longer sorts its subsets; it
+  keeps D84's permutation order. random-9 under the rule went from
+  3,966 to 3,992 XOR8; random-15 was unchanged.
+- **L4 (applied, and checked in code):** the k = 1 synergy is
+  confounded by the activation table; like-for-like it is 24 mixed sets.
+- **P1 (noted):** same-point clashes exist. Among nulls q₁₅ + q₂₂ = q₁₇
+  exactly, giving 32 full 3-sets, 4 null 3-sets and 24 null 4-sets
+  where two masks of opposite parity have the same sum. Per-point
+  semantics excludes them under every rule. A per-mask float evaluation
+  could in principle split them at a tie; on this machine none passes.
+- **P2 (noted):** D84's search stops at XOR12, so "possible XOR14" is
+  outside anything D84 could have reported. It is an exact statement
+  only.
 
 ## Not covered
 

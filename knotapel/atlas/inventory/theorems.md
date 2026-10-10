@@ -1241,7 +1241,7 @@ Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, 
 ### Null Indispensability Theorem
 - **Statement:** In the ζ₈ catalog, the 9 bracket-null entries (Re(q)=0, Kauffman trace vanishes) cannot be removed without destroying XOR capacity. The non-null-only subset (15 entries, 7 directions) achieves only XOR6; the full catalog (24 entries, 13 directions) achieves XOR8. The non-null-only subset performs below the random-15-entry baseline (mean max_xor 7.8), confirming nulls are disproportionately important rather than merely incidentally present.
 - **Status:** DEMONSTRATED (exhaustive; non-null-only subset tested alongside 100-trial random controls)
-- **Correction (2026-10-10, Demo 124):** REFUTED exactly. Non-null reaches max XOR8 like the full catalog (exact rule and robust); null-only computes nothing; non-null equals random 15-subsets (all of 10,000 reach XOR8). The recorded XOR6 figures were float tie noise (null sums sit on a sector boundary). See `demo_124_exact_null_states/findings.md`.
+- **Correction (2026-10-10, Demo 124):** REFUTED exactly. Non-null reaches max XOR8 like the full catalog (exact rule and robust); null-only computes nothing; non-null equals random 15-subsets (all 10,000 sampled reach XOR8). The recorded XOR6 figures are not reproduced by D84's code on any build tried; their origin is unknown. See `demo_124_exact_null_states/findings.md`.
 - **Demo provenance:** Demo 84
 - **Significance:** Refutes the assumption that bracket-null states are computational dead weight. In the ζ₈ regime, nulls contribute 6 directions (cube-edge-midpoints) exclusively unavailable to the 15 non-null entries, and these directions are necessary for XOR8 solutions.
 

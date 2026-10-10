@@ -9,7 +9,7 @@ strength: moderate
 source: "extractions/group-a-knotapel-relevance.md, Connection 2"
 ---
 
-> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures were float tie noise. D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures are not reproduced by D84's own code on any build tried (cause unknown). D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
 
 BitNet includes 0 in {-1, 0, +1}, enabling explicit feature filtering -- the network learns to ignore certain inputs. DKC's bracket-null entries (Re(q)=0) are "invisible" to the scalar bracket trace yet carry directional information essential for computation.
 

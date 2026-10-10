@@ -7,11 +7,11 @@
 > - Nulls are **under**-represented among all 402 exact XOR8 winners (ratio 0.50, not 0.79).
 > - At k_sec = 1 null-only does not beat non-null (0 = 0).
 >
-> The recorded figures (non-null XOR6, null-only XOR6, "worse than random") are not reproduced even by D84's own code, rebuilt here; that prints non-null XOR8 and null-only 0. 12.8% of its float cell decisions are exact ties, mostly null sums at a half-angle of exactly 90°, i.e. on a sector boundary. Float noise of order 10⁻¹⁷ resolves them, and no consistent tie rule gives the recorded numbers.
+> The recorded figures (non-null XOR6, null-only XOR6, "worse than random") are not reproduced by D84's own code on any build tried. It prints non-null XOR8 and null-only 0, and the atlas's own Part D ratios match that run exactly. Their origin is unknown: a different code version or a transcription is likelier than the platform. Separately, 12.8% of D84's float cell decisions are exact ties (mostly null sums at a half-angle of exactly 90°, on a sector boundary), resolved by rounding rather than by the exact rule. None of four fixed tie rules gives the recorded numbers.
 >
 > **What stands:**
 > - Parts A, B and E: the census, the gap theorem and the 6 + 4 + 3 axis geometry are exact.
-> - The k_sec = 1 synergy: null-only 0 + non-null 0, yet the full catalog finds 36 XOR6 sets, exactly and robustly.
+> - A k_sec = 1 synergy: the full catalog finds 36 XOR6 sets, exactly and robustly. But 12 of them (8 pure non-null, 4 pure null) pass only with the full 13-axis table, so the like-for-like synergy is the 24 mixed sets, not "0 + 0 = 36".
 >
 > See `demo_124_exact_null_states/findings.md`.
 
