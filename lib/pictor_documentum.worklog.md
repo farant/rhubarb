@@ -341,3 +341,14 @@ Plan: project-specs/pictor-strata-plan.md. Grammar in the header.
   whose port only apps/vicus/vicus.c sets (vicus_terminalis links
   vicus_applicatio and must not pull Cocoa - its manifest has no
   clipboard_platform). apps/pictor/pictor.c sets it directly.
+
+## 2026-10-10 - CORRECTION: image pasted twice (Fran)
+
+My L5 premise was wrong: Cmd+V DOES reach the app as a key. The
+fenestra poll loop (fenestra_macos.m, nextEventMatchingMask) turns
+EVERY NSEventTypeKeyDown - Cmd chords included - into an app key event
+BEFORE [NSApp sendEvent:] lets the menu see it. So the real Cmd+V
+pasted once, then the menu's paste: (no text on the pasteboard) pushed
+my synthetic Cmd+V and it pasted again: two layers per paste. The
+synthetic key is gone; paste: does nothing without text again. The
+library side was right all along (one Cmd+V = one layer, tested).
