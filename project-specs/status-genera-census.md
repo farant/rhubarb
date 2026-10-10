@@ -229,7 +229,7 @@ code). What strained the vocabulary:
 Vocabulary used: organum genus / ligamina (ligamen a="parens") /
 portae (porta modus="petitio|eventus") / actiones (actio systema) /
 status campus (nomen typus vita=persistens|transiens|probatio
-rhythmus=kineticus sedes=motus absens scriptor|scriptores referentia
+rhythmus=mobilis sedes=motus absens scriptor|scriptores referentia
 orbatus) / basis / montationes.
 
 **Decided (Fran, 2026-10-10) on finding 1:** the island canon is

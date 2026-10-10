@@ -86,14 +86,14 @@
 
     <!-- ===== persistens, kinetic: settle in motus, flushed at quiet ===== -->
     <campus nomen="zoom"  typus="numerus" vita="persistens"
-            rhythmus="kineticus" absens="1" scriptor="motus"/>
+            rhythmus="mobilis" absens="1" scriptor="motus"/>
     <campus nomen="pan_x" typus="numerus" vita="persistens"
-            rhythmus="kineticus" absens="0" scriptor="motus"
+            rhythmus="mobilis" absens="0" scriptor="motus"
             nota="FINDING-5: flushed to the island, but pictor reads
                   Motus.pan and nothing restores Motus from the island:
                   persisted pan never comes back"/>
     <campus nomen="pan_y" typus="numerus" vita="persistens"
-            rhythmus="kineticus" absens="0" scriptor="motus"
+            rhythmus="mobilis" absens="0" scriptor="motus"
             nota="FINDING-5"/>
 
     <!-- ===== transiens, discrete: island yes, disk no ===== -->
@@ -109,19 +109,19 @@
     <!-- FINDING-3: these live in memory structs (sedes="motus"), not
          as island attributes; declared so the census is complete. -->
     <campus nomen="semen" typus="numerus" vita="transiens"
-            rhythmus="kineticus" sedes="motus" scriptor="aspergillum.ictus"
+            rhythmus="mobilis" sedes="motus" scriptor="aspergillum.ictus"
             nota="spray stroke seed (preview). TODAY: ephemera island
                   AND PictorActiones.semen - duplicated"/>
     <campus nomen="tempora" typus="series" vita="transiens"
-            rhythmus="kineticus" sedes="motus" scriptor="aspergillum.ictus"
+            rhythmus="mobilis" sedes="motus" scriptor="aspergillum.ictus"
             nota="ms of each pending spray point. TODAY:
                   PictorActiones.tempora (off-island)"/>
     <campus nomen="captura" typus="textus" vita="transiens"
-            rhythmus="kineticus" sedes="motus" scriptor="motus"
+            rhythmus="mobilis" sedes="motus" scriptor="motus"
             nota="pointer capture: stroke, line rubber band, layer
                   drag. Motus.captura (one per dispatcher)"/>
     <campus nomen="ictus_pendens" typus="series" vita="transiens"
-            rhythmus="kineticus" sedes="motus"
+            rhythmus="mobilis" sedes="motus"
             nota="points of the stroke in flight. Motus.ictus_pendens"/>
 
     <!-- ===== probatio: test-only (today: nota prose) ===== -->

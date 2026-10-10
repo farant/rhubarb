@@ -53,4 +53,5 @@
 # <normae>, extensio .norma. Canon in lib/norma_canon.c INFIXUS est
 # (tools/norma_canon_infigere.sh) - lector sine plagula vivit.
 <normae>	norma.canon
+<organum>	organum.canon
 .norma	norma.canon

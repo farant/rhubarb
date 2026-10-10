@@ -1,0 +1,12 @@
+<!-- basis probationis (status S1): campi communes organorum, forma
+     organum-commune minima - id et focus. -->
+<organum genus="commune" versio="1">
+  <actiones>
+    <actio nomen="dispensator" systema="verum"/>
+  </actiones>
+  <status>
+    <campus nomen="id"    typus="nomen"  vita="persistens"/>
+    <campus nomen="focus" typus="textus" vita="persistens"
+            scriptor="dispensator"/>
+  </status>
+</organum>

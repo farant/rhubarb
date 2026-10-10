@@ -1,0 +1,153 @@
+<!-- status S0 (2026-10-10): pictor's widget manifest, written BY HAND
+     as a vocabulary test (project-specs/status-plan.md). Not loaded
+     by anything. Replaces, when S2 lands: apps/pictor/canones/
+     durabilis.canon + ephemera.canon + domini.stml.
+
+     Every field below was traced to the code that reads/writes it
+     (lib/pictor_actiones.c, lib/pictor_componentia.c,
+     lib/pictor_applicatio.c, lib/motus.c). Findings that strain the
+     vocabulary are marked FINDING-n and collected in
+     status-genera-census.md section IX.
+
+     Island schema: each <campus> carries its type (typus), so the
+     island canon is DERIVED from the campus list (FINDING-1: an
+     embedded <canon> section collides with the reserved canon
+     infixus). -->
+
+<organum genus="pictor" versio="1">
+
+  <!-- which entities this widget shows. a="parens": the mounting
+       parent supplies the value (props); vicus today passes it as
+       the pane's argumentum, standalone pictor uses "" (root space).
+       Held today in PictorMontatio.doc + vicus's layout index file,
+       NOT on pictor's island. -->
+  <ligamina>
+    <ligamen nomen="documentum" genus="pictor-documentum" a="parens"/>
+  </ligamina>
+
+  <!-- observation ports: the world, sampled; never stored.
+       modus="petitio" = pulled on demand (Cmd+V); horologium-like
+       ports would be modus="eventus" (pushed). -->
+  <portae>
+    <porta nomen="imago" modus="petitio"
+      nota="clipboard image - PictorActiones.imago_capere"/>
+  </portae>
+
+  <!-- what scriptor= may name: the 11 registered actions + framework
+       writers (systema). -->
+  <actiones>
+    <actio nomen="penicillus.ictus"/>
+    <actio nomen="aspergillum.ictus"/>
+    <actio nomen="spongia.ictus"/>
+    <actio nomen="linea.ictus"/>
+    <actio nomen="strata.agere"/>
+    <actio nomen="palette.aperire"/>
+    <actio nomen="color_primus.ponere"/>
+    <actio nomen="color_secundus.ponere"/>
+    <actio nomen="exemplar.ponere"/>
+    <actio nomen="magnitudo.ponere"/>
+    <actio nomen="instrumentum.eligere"/>
+    <actio nomen="motus"       systema="verum"/>
+    <actio nomen="dispensator" systema="verum"/>
+  </actiones>
+
+  <status>
+    <!-- ===== persistens, discrete: restored across sessions ===== -->
+    <campus nomen="instrumentum" typus="electio" vita="persistens"
+            scriptor="instrumentum.eligere"
+            nota="absent = no tool (bar shows 'nihil')">
+      <optio>penicillus</optio>
+      <optio>aspergillum</optio>
+      <optio>spongia</optio>
+      <optio>linea</optio>
+    </campus>
+    <campus nomen="color_primus"   typus="numerus" vita="persistens"
+            absens="0"  scriptor="color_primus.ponere"/>
+    <campus nomen="color_secundus" typus="numerus" vita="persistens"
+            absens="-1" scriptor="color_secundus.ponere"
+            nota="-1 = nullus (solidus)"/>
+    <campus nomen="exemplar"       typus="numerus" vita="persistens"
+            absens="0"  scriptor="exemplar.ponere"
+            nota="exemplaria.h; 0 = solidus"/>
+    <campus nomen="magnitudo_penicilli"  typus="numerus" vita="persistens"
+            absens="1" scriptor="magnitudo.ponere"/>
+    <campus nomen="magnitudo_aspergilli" typus="numerus" vita="persistens"
+            absens="1" scriptor="magnitudo.ponere"/>
+    <campus nomen="magnitudo_lineae"     typus="numerus" vita="persistens"
+            absens="1" scriptor="magnitudo.ponere"/>
+
+    <!-- reference into the bound document. orbatus = what happens
+         when the target is gone (undo removed the layer, another
+         pane deleted it): today stratum_currens() falls back to the
+         TOP layer by hand. -->
+    <campus nomen="stratum_activum" typus="numerus" vita="persistens"
+            scriptor="strata.agere"
+            referentia="documentum/stratum" orbatus="summum"/>
+
+    <!-- ===== persistens, kinetic: settle in motus, flushed at quiet ===== -->
+    <campus nomen="zoom"  typus="numerus" vita="persistens"
+            rhythmus="mobilis" absens="1" scriptor="motus"/>
+    <campus nomen="pan_x" typus="numerus" vita="persistens"
+            rhythmus="mobilis" absens="0" scriptor="motus"
+            nota="FINDING-5: flushed to the island, but pictor reads
+                  Motus.pan and nothing restores Motus from the island:
+                  persisted pan never comes back"/>
+    <campus nomen="pan_y" typus="numerus" vita="persistens"
+            rhythmus="mobilis" absens="0" scriptor="motus"
+            nota="FINDING-5"/>
+
+    <!-- ===== transiens, discrete: island yes, disk no ===== -->
+    <!-- FINDING-2 (resolved, census X): eight actions wrote it -
+         an aspect, not a field with many owners. Opening is owned;
+         closing (Esc, outside click, any other act, another popover
+         opening) is the dismissal SYSTEM's. -->
+    <campus nomen="palette" typus="nomen" vita="transiens"
+            aspectus="popover" scriptor="palette.aperire"
+            nota="which palette is open; absent = none"/>
+
+    <!-- ===== transiens, kinetic: in-flight, never on the island ===== -->
+    <!-- FINDING-3: these live in memory structs (sedes="motus"), not
+         as island attributes; declared so the census is complete. -->
+    <campus nomen="semen" typus="numerus" vita="transiens"
+            rhythmus="mobilis" sedes="motus" scriptor="aspergillum.ictus"
+            nota="spray stroke seed (preview). TODAY: ephemera island
+                  AND PictorActiones.semen - duplicated"/>
+    <campus nomen="tempora" typus="series" vita="transiens"
+            rhythmus="mobilis" sedes="motus" scriptor="aspergillum.ictus"
+            nota="ms of each pending spray point. TODAY:
+                  PictorActiones.tempora (off-island)"/>
+    <campus nomen="captura" typus="textus" vita="transiens"
+            rhythmus="mobilis" sedes="motus" scriptor="motus"
+            nota="pointer capture: stroke, line rubber band, layer
+                  drag. Motus.captura (one per dispatcher)"/>
+    <campus nomen="ictus_pendens" typus="series" vita="transiens"
+            rhythmus="mobilis" sedes="motus"
+            nota="points of the stroke in flight. Motus.ictus_pendens"/>
+
+    <!-- ===== probatio: test-only (today: nota prose) ===== -->
+    <campus nomen="puncta"        typus="numerus" vita="probatio"/>
+    <campus nomen="ictus_numerus" typus="numerus" vita="probatio"/>
+    <campus nomen="fuga"          typus="textus"  vita="probatio"/>
+    <campus nomen="numerus"       typus="numerus" vita="probatio"/>
+  </status>
+
+  <!-- FINDING-4: framework fields every widget carries (id, focus,
+       focus_acervus, superficies_*). Declared ONCE in a common base
+       manifest, not per widget; superficies is an observation (window
+       size), focus is app-level. -->
+  <basis genus="organum-commune"/>
+
+  <!-- children this widget mounts: none. (calendarium will have
+       <montatio nomen="pagina" genus="scriba"/>) -->
+  <montationes/>
+
+  <!-- REMOVED from today's canons (census: dead or copied):
+       durable latitudo, altitudo  copied document facts - read from
+                                   the bound document (FINDING-6)
+       durable paletta, titulus    never read or written
+       durable sigillum            owner 'documentum' declared, never
+                                   written
+       durable <stratum> element   predates L2 (layers are in the log)
+       ephemera selectio_x/_y/_latitudo/_altitudo  never used
+       ephemera cursus, gradus     reserved for flows (P5), never used -->
+</organum>

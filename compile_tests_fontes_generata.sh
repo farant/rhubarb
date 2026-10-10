@@ -154,6 +154,8 @@ declare -a SOURCE_FILES=(
     "lib/nuntium.c"
     "lib/nuntium_schema.c"
     "lib/nuntium_schema_generare.c"
+    "lib/organum.c"
+    "lib/organum_canon.c"
     "lib/pagina.c"
     "lib/paginarium.c"
     "lib/paginatio.c"
