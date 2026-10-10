@@ -1641,6 +1641,11 @@ PORTAE = {
     # reficere memoriam non delet (recensio polynomium-II, 2026-10-06)
     'venenum': (['./tools/venenum_probare.sh'],
                 r'venenum: (sana|FRACTA)'),
+    # nexus instrumentorum solum si stalum, atomice (tools/
+    # instrumentum_nectere.sh; …WB6Q3H - selecta.sh in OMNI vocatione
+    # nectebat, vocationes concurrentes inter se frangebant)
+    'nexus-instrumentorum': (['./tools/instrumenta_nexus_fumus.sh'],
+                             r'fumus nexus: (sanum|FRACTUM)'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
