@@ -1202,9 +1202,39 @@ credo_suitam_currere (
       constans character* titulus_suitae,
     constans CredoSectio* sectiones)
 {
-    constans character* filtrum;
-    constans character* via_verdictorum;
-    constans character* omittenda;
+    redde credo_suitam_currere_cum(titulus_suitae, sectiones, NIHIL,
+        NIHIL);
+}
+
+/* purgare_suitae (si data) et piscina suitae destruitur - SEMEL, in
+ * omni exitu post parare_suitae */
+interior vacuum
+_credo_suitam_purgare (
+      CredoFunctio  purgare_suitae,
+    CredoContextus* suitae)
+{
+    si (purgare_suitae != NIHIL)
+    {
+        purgare_suitae(suitae);
+    }
+    si (suitae->piscina != NIHIL)
+    {
+        piscina_destruere(suitae->piscina);
+        suitae->piscina = NIHIL;
+    }
+}
+
+s32
+credo_suitam_currere_cum (
+      constans character* titulus_suitae,
+    constans CredoSectio* sectiones,
+            CredoFunctio  parare_suitae,
+            CredoFunctio  purgare_suitae)
+{
+         CredoContextus  suitae;
+     constans character* filtrum;
+     constans character* via_verdictorum;
+     constans character* omittenda;
                   FILE* plagula;
          memoriae_index  cursae;
          memoriae_index  transeuntes;
@@ -1290,6 +1320,62 @@ credo_suitam_currere (
     transeuntes     = ZEPHYRUM;
     omissae         = ZEPHYRUM;
     initium_suitae  = _credo_ms_nunc();
+    /* FIXURA SUITAE (credo II): parare_suitae per viam sectionis
+     * (NECESSE capitur); fractum -> nulla sectio, '(parare suitae)'
+     * notatur, purgare_suitae tamen */
+    memset(&suitae, ZEPHYRUM, magnitudo(suitae));
+    suitae.titulus = titulus_suitae;
+    si (parare_suitae != NIHIL || purgare_suitae != NIHIL)
+    {
+        suitae.piscina = piscina_generare_dynamicum(titulus_suitae,
+            1048576);
+        si (suitae.piscina == NIHIL)
+        {
+            imprimere("FATALE: piscina suitae %s fracta\n",
+                titulus_suitae);
+            redde I;
+        }
+    }
+    si (parare_suitae != NIHIL)
+    {
+                 CredoSectio  pseudo;
+                CredoNotatio* ante;
+         CredoSectionisSumma  summa;
+                         b32  aborta;
+
+        memset(&pseudo, ZEPHYRUM, magnitudo(pseudo));
+        pseudo.titulus = "(parare suitae)";
+        pseudo.probare = parare_suitae;
+        imprimere("\n--- Parans suitam %s ---\n", titulus_suitae);
+        ante    = _credo_nunc;
+        aborta  = _credo_sectionem_agere(&pseudo, &suitae);
+        summa   = _credo_sectionem_summare(ante, aborta);
+        si (   strcmp(summa.exitus, "FRACTA") == ZEPHYRUM
+            || strcmp(summa.exitus, "ABORTA") == ZEPHYRUM)
+        {
+            imprimere("\n  parare suitae: %s - nulla sectio currit\n",
+                summa.exitus);
+            si (plagula != NIHIL)
+            {
+                _credo_sectionem_scribere(plagula, titulus_suitae,
+                    pseudo.titulus, summa, _credo_ms_nunc()
+                    - initium_suitae);
+            }
+            _credo_suitam_purgare(purgare_suitae, &suitae);
+            credo_imprimere_compendium();
+            si (plagula != NIHIL)
+            {
+                fputs("SUITA\t", plagula);
+                _credo_literas_scribere(plagula, titulus_suitae);
+                fprintf(plagula, "\tFRACTA\t0\t0\t%lu\t%lu\t%.0f\n",
+                    (insignatus longus)credo_numerus_praeteriti(),
+                    (insignatus longus)credo_numerus_totalis(),
+                    _credo_ms_nunc() - initium_suitae);
+                fclose(plagula);
+            }
+            redde I;
+        }
+    }
     per (i = ZEPHYRUM; sectiones[i].titulus != NIHIL; i++)
     {
         constans CredoSectio* sectio;
@@ -1330,10 +1416,12 @@ credo_suitam_currere (
             262144);
         contextus.datum    = NIHIL;
         contextus.titulus  = sectio->titulus;
+        contextus.suita    = suitae.datum;
         si (contextus.piscina == NIHIL)
         {
             imprimere("FATALE: piscina sectionis %s fracta\n",
                 sectio->titulus);
+            _credo_suitam_purgare(purgare_suitae, &suitae);
             redde I;
         }
         ante     = _credo_nunc;
@@ -1395,6 +1483,7 @@ credo_suitam_currere (
         }
         (vacuum)fflush(stdout);
     }
+    _credo_suitam_purgare(purgare_suitae, &suitae);
     si (omissae > ZEPHYRUM)
     {
         imprimere("\n=== SECTIONES: %lu/%lu transierunt (%lu omissae)"

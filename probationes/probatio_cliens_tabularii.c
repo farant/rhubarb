@@ -8,10 +8,15 @@
  * OFFLINE: daemon EPHEMERUS portu 0 in mundo scratch (exemplar
  * probatio_fori.c) - nulla rete externa, nullus daemon vivus tactus.
  *
- * SECTIONES (credo v2, 2026-10-10): quaeque sectio daemonem SUUM habet
- * (parare incipit in scratch sub TMPDIR, purgare necat et delet -
- * etiam post NECESSE fractum), ergo sectiones ordine liberae sunt. Olim
- * gradus
+ * SECTIONES (credo v2/II, 2026-10-10): daemon SUITAE unus
+ * (credo_suitam_currere_cum: parare_suitae incipit in scratch sub
+ * TMPDIR, purgare_suitae necat et delet - etiam post sectionem
+ * abortam); quaeque sectio clientem SUUM habet (status clientis
+ * sectionis est, non suitae - sectiones statum suitae non mutant).
+ * 'defectus citus' daemonem necat, ergo daemonem PRIVATUM habet
+ * (parare/purgare sectionis). Daemon unus: 0.96 s pro 1.81 s (daemon
+ * per sectionem, adoptio II) - mora initii (portus per 0.2 s) semel.
+ * Olim gradus
  * I-VII daemonem unum communem sequebantur (III res_id ex II, V
  * 'pipatum' ab II additum legebat, VII daemonem omnium necabat).
  */
@@ -51,9 +56,12 @@ _in_scratch (
     redde via;
 }
 
+/* daemon in scratch '<TMPDIR>/<titulus>.<pid>' incipere; datum in
+ * c->datum */
 interior vacuum
-_daemon_parare (
-    CredoContextus* c)
+_daemon_incipere (
+         CredoContextus* c,
+    constans character* titulus)
 {
        DaemonSectionis* d;
     constans character* tmp = getenv("TMPDIR");
@@ -75,9 +83,8 @@ _daemon_parare (
     {
         n--;
     }
-    sprintf(d->scratch, "%.*s/probatio_ct.%d", (integer)(n
-        > CD ? CD : n),
-        tmp, (integer)getpid());
+    sprintf(d->scratch, "%.*s/%s.%d", (integer)(n > CD ? CD : n), tmp,
+        titulus, (integer)getpid());
     (vacuum)filum_arborem_delere(d->scratch);
     CREDO_NECESSE(filum_directorium_creare_cum_parentibus(d->scratch));
     /* daemon PRAESTRUCTUS (actio tabulariumd): probatio currit, non
@@ -107,6 +114,41 @@ _daemon_parare (
     }
     CREDO_NECESSE(d->portus > 0);
     cliens_tabularii_incipere(&d->cliens, (i32)d->portus);
+}
+
+/* daemon SUITAE (semel) */
+interior vacuum
+_daemon_suitae_parare (
+    CredoContextus* c)
+{
+    _daemon_incipere(c, "probatio_ct");
+}
+
+/* daemon PRIVATUS sectionis (defectus citus eum necat) */
+interior vacuum
+_daemon_privatum_parare (
+    CredoContextus* c)
+{
+    _daemon_incipere(c, "probatio_ct_privatus");
+}
+
+/* cliens SECTIONIS ad daemonem suitae: status clientis (index
+ * petitionis) sectionis est, suita non mutatur */
+interior vacuum
+_clientem_parare (
+    CredoContextus* c)
+{
+    constans DaemonSectionis* suitae;
+             DaemonSectionis* d;
+
+    suitae = (constans DaemonSectionis*)c->suita;
+    CREDO_NECESSE_NON_NIHIL(suitae);
+    d = (DaemonSectionis*)piscina_allocare(c->piscina,
+        magnitudo(DaemonSectionis));
+    CREDO_NECESSE_NON_NIHIL(d);
+    *d = *suitae;
+    cliens_tabularii_incipere(&d->cliens, (i32)d->portus);
+    c->datum = d;
 }
 
 /* SEMPER (etiam post NECESSE fractum): daemon necatur, scratch
@@ -290,22 +332,23 @@ _probare_defectus_citus (
 
 hic_manens constans CredoSectio SECTIONES[] = {
     { "initium clientis", _probare_initium,
-      _daemon_parare, _daemon_purgare, NIHIL, NIHIL },
+      _clientem_parare, NIHIL, NIHIL, NIHIL },
     { "vocare (addere) et res_id", _probare_vocare,
-      _daemon_parare, _daemon_purgare, NIHIL, NIHIL },
+      _clientem_parare, NIHIL, NIHIL, NIHIL },
     { "index petitionis", _probare_index,
-      _daemon_parare, _daemon_purgare, NIHIL, NIHIL },
+      _clientem_parare, NIHIL, NIHIL, NIHIL },
     { "legere", _probare_legere,
-      _daemon_parare, _daemon_purgare, NIHIL, NIHIL },
+      _clientem_parare, NIHIL, NIHIL, NIHIL },
     { "transmittere", _probare_transmittere,
-      _daemon_parare, _daemon_purgare, NIHIL, NIHIL },
+      _clientem_parare, NIHIL, NIHIL, NIHIL },
     { "defectus citus", _probare_defectus_citus,
-      _daemon_parare, _daemon_purgare, NIHIL, NIHIL },
+      _daemon_privatum_parare, _daemon_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
 s32
 principale (vacuum)
 {
-    redde credo_suitam_currere("cliens_tabularii", SECTIONES);
+    redde credo_suitam_currere_cum("cliens_tabularii", SECTIONES,
+        _daemon_suitae_parare, _daemon_purgare);
 }

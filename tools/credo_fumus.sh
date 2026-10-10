@@ -18,6 +18,9 @@
 #   VIII fracturae exspectatae (credo II): causa in fonte; fracta ->
 #        NOTA_FRACTA (suita transit), transiens -> INOPINATA (suita
 #        FRACTA), causa vacua recusata
+#   IX   fixura suitae (credo II): credo_suitam_currere_cum - parare et
+#        purgare suitae SEMEL, c->suita in sectionibus, purgare post
+#        abortum et post parare fractum
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
@@ -319,7 +322,88 @@ s32 principale (vacuum)
 }
 FONS
 
-for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua; do
+cat > "$T/suita_communis.c" <<'FONS'
+#include "credo.h"
+#include <stdio.h>
+
+interior vacuum _parare_suitae (CredoContextus* c)
+{
+    s32* n;
+
+    n = (s32*)piscina_allocare(c->piscina, magnitudo(s32));
+    CREDO_NECESSE_NON_NIHIL(n);
+    *n = XLII;
+    c->datum = n;
+    imprimere("PARARE SUITAE\n");
+}
+
+interior vacuum _purgare_suitae (CredoContextus* c)
+{
+    imprimere("PURGARE SUITAE %d\n", c->datum != NIHIL
+        ? (integer)*(s32*)c->datum : -I);
+}
+
+interior vacuum _legit (CredoContextus* c)
+{
+    CREDO_NECESSE_NON_NIHIL(c->suita);
+    CREDO_AEQUALIS_S32(*(s32*)c->suita, XLII);
+}
+
+interior vacuum _abortat (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_NECESSE(FALSUM);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "prima", _legit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "secunda", _abortat, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tertia", _legit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere_cum("suita_communis", SECTIONES,
+        _parare_suitae, _purgare_suitae);
+}
+FONS
+
+cat > "$T/suita_fracta.c" <<'FONS'
+#include "credo.h"
+#include <stdio.h>
+
+interior vacuum _parare_suitae (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_NECESSE(I == II);
+}
+
+interior vacuum _purgare_suitae (CredoContextus* c)
+{
+    (vacuum)c;
+    imprimere("PURGARE SUITAE FRACTAE\n");
+}
+
+interior vacuum _legit (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "prima", _legit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere_cum("suita_fracta", SECTIONES,
+        _parare_suitae, _purgare_suitae);
+}
+FONS
+
+for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua suita_communis suita_fracta; do
     struere "$s.c" "$s" || { echo "credo_fumus: $s non compilat:"; cat "$T/$s.err"; exit 2; }
 done
 
@@ -409,6 +493,23 @@ tools/credo_fracturae_notae.py "$T/nota.c" "$T/sanata.c" > "$T/o_census" 2>&1; r
 [ "$rc" -eq 0 ] && grep -q "nota.c:[0-9]*	nota	I != II nondum (tabularium ...ABCDEF)$" "$T/o_census" \
     && grep -q "sanata.c:[0-9]*	sanata	olim fracta$" "$T/o_census" \
     && grep -q "^fracturae exspectatae: 2$" "$T/o_census" && ! grep -q "	bona	" "$T/o_census"; credo $? "VIII census: II fracturae exspectatae cum sede et causa (silva), bona non (erat $rc)"
+
+# IX (credo II, T3): FIXURA SUITAE - parare_suitae SEMEL, datum in
+# c->suita omnium sectionum, purgare_suitae SEMEL post ultimam (etiam
+# post sectionem abortam); parare_suitae fracta -> nulla sectio, purgare
+# tamen
+CREDO_VERDICTA="$T/v_sc.tsv" "$T/suita_communis" > "$T/o_sc" 2>&1; rc=$?
+V="$T/v_sc.tsv"
+[ "$rc" -eq 1 ] && [ "$(grep -c 'PARARE SUITAE$' "$T/o_sc")" -eq 1 ] \
+    && [ "$(grep -c 'PURGARE SUITAE 42$' "$T/o_sc")" -eq 1 ]; credo $? "IX parare_suitae et purgare_suitae SEMEL, datum servatum (erat $rc)"
+grep -q "^SECTIO	suita_communis	prima	TRANSIIT	2	2	" "$V" \
+    && grep -q "^SECTIO	suita_communis	secunda	ABORTA	" "$V" \
+    && grep -q "^SECTIO	suita_communis	tertia	TRANSIIT	2	2	" "$V"; credo $? "IX c->suita in omni sectione, etiam post abortam"
+awk '/--- Probans tertia ---/ {t = NR} /PURGARE SUITAE 42$/ {p = NR} END {exit !(t && p > t)}' "$T/o_sc"; credo $? "IX purgare_suitae post sectionem ultimam"
+CREDO_VERDICTA="$T/v_sf.tsv" "$T/suita_fracta" > "$T/o_sf" 2>&1; rc=$?
+[ "$rc" -eq 1 ] && ! grep -q -- '--- Probans prima ---' "$T/o_sf" && grep -q 'PURGARE SUITAE FRACTAE$' "$T/o_sf" \
+    && grep -q "^SECTIO	suita_fracta	(parare suitae)	ABORTA	" "$T/v_sf.tsv" \
+    && grep -q "^SUITA	suita_fracta	FRACTA	" "$T/v_sf.tsv"; credo $? "IX parare_suitae fracta: nulla sectio, notata, purgare tamen (erat $rc)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

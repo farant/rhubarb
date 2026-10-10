@@ -285,3 +285,35 @@ path pattern must not cross lines.
 Plants: NOTA not set, INOPINATA not set, empty reason accepted, expected
 fracti not subtracted -> credo fumus red; census reads the 5th field ->
 red; fabrica counts NOTA_FRACTA as failing -> gradus red.
+
+## 2026-10-10 - credo II T3: suite fixture
+
+`credo_suitam_currere_cum(titulus, sectiones, parare_suitae,
+purgare_suitae)`; `credo_suitam_currere` is now a one-line wrapper (NIHIL,
+NIHIL). The suite context has its own piscina (1 MB); parare_suitae runs
+through `_credo_sectionem_agere` as a pseudo-section "(parare suitae)",
+so a NECESSE inside it is caught like any section's. Failed -> no section
+runs, the pseudo-section is recorded (ABORTA/FRACTA - fabrica names it),
+purgare_suitae still runs, SUITA FRACTA. Otherwise its datum reaches every
+section as `c->suita` (CredoContextus gained `suita` at the end; credo
+builds the struct, no user code initialises it). `_credo_suitam_purgare`
+runs once on every exit after parare: the normal end (before the summary,
+so its output follows the last section), the section-pool failure, the
+failed parare.
+
+Real use: cliens_tabularii - suite daemon once; each section builds its
+own CLIENT in its own parare from c->suita (the client's request counter
+is section state: sections must not mutate suite state); "defectus citus"
+kills a daemon, so it has a PRIVATE daemon (own parare/purgare, scratch
+`probatio_ct_privatus.<pid>` - same pid-based name would have deleted the
+suite's). Time: 0.96 s vs 1.81 s per-section (-47%) - the cost was not the
+daemon but its start-up wait (port polled every 0.2 s), paid once now.
+Original shared version: 1.77 s.
+
+I named a parameter `nomen` AGAIN (second time today; latina.h macro =
+typedef) - compiler error at once, but a candidate for the T7 lint list
+(identifier equal to a latina.h macro), cheaper than relying on habit.
+
+Plants: purgare_suitae not called at the end (hand-done: the call exists
+three times, only one at that indent), c->suita not set, failed parare
+ignored -> credo fumus IX red.

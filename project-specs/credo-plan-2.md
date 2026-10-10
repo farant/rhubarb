@@ -29,10 +29,13 @@ in `../rhubarb-quinta`; merges by the ritual.
   known failures in the repo today.
 
 ### T3: suite fixture
-- [ ] stage: parare_suitae once, c->suita in every section,
+- [x] stage: parare_suitae once, c->suita in every section,
   purgare_suitae always (also after an aborted section). Convert
   cliens_tabularii to one suite daemon; record time vs per-section.
   Plant: purgare_suitae skipped after abort -> red. Commit.
+  As built (2026-10-10): cliens 0.96 s vs 1.81 s (-47%; start-up wait
+  paid once); sections build their own client from c->suita; the section
+  that kills a daemon keeps a private one.
 
 ### T4: steps
 - [ ] stage: CREDO_GRADUS in the fracture and as the 11th field;

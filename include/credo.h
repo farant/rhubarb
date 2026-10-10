@@ -636,7 +636,10 @@ nomen structura CredoContextus {
                 Piscina* piscina;   /* sectionis propria */
                  vacuum* datum;     /* parare ponit, probare/purgare
                                      * legunt */
-    constans character* titulus;   /* sectio currens */
+     constans character* titulus;   /* sectio currens */
+                 vacuum* suita;     /* (II) datum parare_suitae;
+                                     * sectiones LEGUNT, numquam mutant
+                                     * (lint); NIHIL sine fixura */
 } CredoContextus;
 
 nomen vacuum (*CredoFunctio)(CredoContextus* c);
@@ -697,6 +700,21 @@ s32
 credo_suitam_currere (
       constans character* titulus_suitae,
     constans CredoSectio* sectiones);
+
+/* SUITA CUM FIXURA COMMUNI (credo II): parare_suitae SEMEL ante
+ * sectiones (contextus suitae: piscina sua; datum eius -> c->suita
+ * omnium sectionum), purgare_suitae SEMPER post ultimam - etiam post
+ * sectionem abortam aut parare_suitae fractum. parare_suitae fractum
+ * (assertio aut NECESSE) -> nulla sectio currit, '(parare suitae)' in
+ * plagula notatur, suita FRACTA. NIHIL licet (= credo_suitam_currere).
+ * Fixura cara (daemon, applicatio) semel aedificatur; sectiones tamen
+ * ordine liberae manent quia statum suitae non mutant. */
+s32
+credo_suitam_currere_cum (
+      constans character* titulus_suitae,
+    constans CredoSectio* sectiones,
+            CredoFunctio  parare_suitae,
+            CredoFunctio  purgare_suitae);
 
 /* NECESSE: assertio FATALIS - fracta sectionem finit (longjmp ad
  * cursorem; purgare tamen vocatur), loco custodiarum
