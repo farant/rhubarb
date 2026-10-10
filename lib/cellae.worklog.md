@@ -61,3 +61,56 @@ Plants (7, all red):
 Test syntax notes: extensio's parser takes "-a/2" and "(100a - 99)/100",
 not "-(a/2)" or "a - 99/100". Lint: `histogramma` became `distributio`
 and `f_tors` became `f_torsio`.
+
+## 2026-10-10 - T3: activatio (axis table, exact cells, tie sets)
+
+D82/D84's combined_cell, exactly:
+- **Axis table:** catalog vector parts in first-appearance order. The
+  key is the vector part divided by its first nonzero component, so
+  antipodes and scalings merge. The cap (axes_maximae) sets an explicit
+  TRUNCATED flag (`activatio_truncata`: a small API addition in the
+  spirit of T2's decision that nothing is capped silently).
+- **Cells:**
+  - zero sum, real sum and null sum as in D84;
+  - the null tie {k/2 − 1, k/2} at even k only;
+  - general sums: tan²h = |v|²/a² in Q(√d) placed against tan²(mπ/k),
+    roots of S_k by position (D123), with radix_compara.
+- **Minimal polynomial of tan²h:** t² − Tr·t + N from extensio's trace
+  and norm. The root is picked by sign(T − Tr/2) (larger root iff
+  positive); a rational T goes through radix_ex_fractione.
+- **Axis ties:** quaternio_proximi (T1) with antipodes identified.
+- **Cache:** a Punctum per exact point, keyed by T2's sign-normalized
+  text (s and −s share a cell); per-k entries hold the rule and the
+  tie list, valid while the activation lives.
+- **Ring guard:** an extensio Anulus has contextus = its Extensio, and
+  extensio_anulus(contextus) is that same anulus (address arithmetic
+  only, nothing dereferenced). Any other ring is refused before its
+  parts could be misread as Algebraicus (test: Hurwitz units over Q).
+
+Credo (62 in the suite):
+- **Axes:** zeta_8 has 13; the cap of 5 gives 5, truncated; zeta_12
+  uncapped has **2,043** (D117's count); the cap of 512 gives 512,
+  truncated.
+- **Hand cells:** zero sum, real sum, a null element at k = 6 (sector 3,
+  tied with 2) and k = 5 (sector 2, untied); refusals.
+- **Independent integer oracle** in the test (Z[√2] s64, no cellae, no
+  radices). Boundaries are exact where tan²(mπ/k) ∈ Q(√2) (m/k in 1/8,
+  1/6, 1/4, 1/3, 3/8), a double with a checked 1e-9 margin elsewhere.
+  It compared **90,900** cells (all sums of 1 or 2 entries, triples
+  within the first 12; 10 values of k) on rule and full tie set: **0
+  disagreements**, 28,850 tied, 13,620 null sums.
+
+Plants (8, all red):
+- null tie dropped;
+- sector tie dropped;
+- boundary equality counted below;
+- axis ties reduced to the first;
+- the wrong root of tan²h;
+- axis key not normalized (13 axes no longer);
+- cap not flagged;
+- zero sum in sector k.
+
+Lint: `activatio` (the approved API name) is a neo-Latin coinage, so it
+got a glossary entry modelled on `glossarium` (the oratio gate runs in
+the commit). Other renames: `sectores` became `sectiones`; the test's
+oracle names became Latin (`Binomium`, `binomium_*`, `o_axis`, ...).

@@ -98,4 +98,63 @@ catalogus_pars (
                Piscina*  piscina,
              Catalogus** exitus);
 
+
+/* ==================================================
+ * Activatio: tabula axium et cella summae (semantica D82/D84
+ * combined_cell, exacte)
+ *
+ * Tabula: axes partium vectoriarum catalogi, ordine primae apparitionis,
+ * antipodes idem; axes_maximae (0 omnes) secat et TRUNCATAM notat (D82:
+ * D). Cella summae s = (a, v) ad k, nd = numerus axium:
+ *   - s = 0: (k - 1)(nd + 1) + nd;
+ *   - v = 0: sector 0, axis nd (cella nd);
+ *   - a = 0 (nulla): sector floor(k/2); k par: paritas cum k/2 - 1;
+ *   - aliter: sector = #{m < k/2 : tan^2 h >= tan^2(m pi/k)}, tan^2 h =
+ *     |v|^2 / a^2; paritas si aequalitas ad aliquod m (sector m vel
+ *     m - 1);
+ *   - axis: primus maximus (v.u)^2 / |u|^2 (quaternio_proximi);
+ *     paritas: omnes maximi.
+ * cella = sector (nd + 1) + axis; regula = sector floor, axis primus;
+ * ligatae = omnes combinationes (regula inclusa).
+ *
+ * v1: corpus QUADRATICUM ordinatum (Q(sqrt d)): tan^2 h radix
+ * polynomii t^2 - Tr t + N, termini tan^2(m pi/k) radices S_k(u) = sum
+ * C(k, 2l+1) (-1)^l u^l per POSITIONEM (radices). Aliter FALSUM.
+ * Memoria cellarum per punctum exactum (s et -s idem) in piscina
+ * activationis.
+ * ================================================== */
+
+nomen structura Activatio Activatio;
+
+nomen structura {
+             i32  regula;
+             i32  numerus;     /* ligatae, regula inclusa */
+    constans i32* ligatae;     /* valida dum activatio vivit */
+} Cella;
+
+/* FALSUM si corpus non quadraticum ordinatum, aut catalogus sine axe */
+b32
+activatio_ex_catalogo (
+    constans Catalogus*  catalogus,
+                   i32   axes_maximae,
+               Piscina*  piscina,
+             Activatio** exitus);
+
+i32
+activatio_axes (
+    constans Activatio* activatio);
+
+/* axes_maximae axem novum refutavit */
+b32
+activatio_truncata (
+    constans Activatio* activatio);
+
+/* k >= 1; summa in anulo catalogi; FALSUM aliter */
+b32
+activatio_cella (
+     Activatio* activatio,
+     Quaternio  summa,
+           i32  k,
+         Cella* exitus);
+
 #endif /* CELLAE_H */
