@@ -638,6 +638,8 @@ proiectio_facere (
 {
     HistoriaProiectio p;
 
+    /* hami codicis (L1) nulli: memoria cruda */
+    memset(&p, ZEPHYRUM, magnitudo(p));
     p.memoria    = (i8*)doc->tabula->pixela;
     p.mensura    = mensura_pixelorum(doc);
     p.vacare     = proiectio_vacare;

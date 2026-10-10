@@ -53,13 +53,23 @@
 
 /* Proiectio clientis: memoria fixae mensurae quam historia
  * checkpointis implet et sigillo signat; vacare = status ante actum
- * primum; applicare = actum unum (datum crudum, genere clientis). */
+ * primum; applicare = actum unum (datum crudum, genere clientis).
+ *
+ * pictor-strata L1: proiectio SINE memoria fixa - cliens ipse statum
+ * signat (sigillare: status crudus canonicus, post omne actum) et
+ * checkpoint codificat (codificare; mensura 0 = nullus) et restituit
+ * (decodificare; FALSUM = codex inutilis, e.g. formae veteris -
+ * reproiectio ex nihilo). Aut omnes tres aut nullus; cum eis memoria
+ * NIHIL et mensura 0 licent. Sine eis: memoria cruda, ut ante. */
 nomen structura {
                 i8* memoria;
     memoriae_index  mensura;
             vacuum (*vacare)(vacuum* ctx);
             vacuum (*applicare)(vacuum* ctx, chorda actum);
             vacuum* ctx;
+            vacuum (*sigillare)(vacuum* ctx, Sigillum* exitus);
+            chorda (*codificare)(vacuum* ctx, Piscina* piscina);
+               b32 (*decodificare)(vacuum* ctx, chorda codex);
 } HistoriaProiectio;
 
 nomen structura {

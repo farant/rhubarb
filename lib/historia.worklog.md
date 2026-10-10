@@ -116,3 +116,27 @@ scriba's two-mount test now asserts the undone text STAYS undone after
 reopening. Plants: no marker on undo; stale marker honoured; no marker
 on redo - all caught (the stale one first written as `FALSUM && …` in
 an `||` chain: -Wlogical-op-parentheses, redone).
+
+## 2026-10-09 - pictor-strata L1: client-encoded checkpoints
+
+Plan: project-specs/pictor-strata-plan.md (layers; Fran's decisions).
+HistoriaProiectio gains three optional hooks - sigillare (seal the
+client's RAW canonical state after every action), codificare (the
+checkpoint's stored bytes; length 0 = skip) and decodificare (restore;
+FALSUM = unusable, e.g. an old-format block -> replay from nothing).
+All three or none (historia_creare refuses a partial set); with them,
+memoria NIHIL / mensura 0 are allowed. Without them every path is the
+old raw-block one (scriba; pictor until L2) - the callers now memset
+the struct, since they used to set fields one by one and the new
+pointers would have been garbage.
+
+Why the seal stays raw and only the checkpoint is encoded: the seal is
+recomputed after EVERY action; compressing N layers per stroke just to
+hash them would be slow, while a checkpoint is written once per 64
+live actions. The compatibility hinge for old pictor drawings is
+decodificare returning FALSUM on the old raw block: proicere_ad then
+replays the log from nothing (same as the old size-mismatch path).
+
+Test gotcha: if the history ignored the client's seal, the seal would
+be a constant (hash of 0 bytes) and every equality check still passes -
+section XVI asserts the seal CHANGES after undo (plant H1).

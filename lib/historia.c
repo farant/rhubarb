@@ -21,10 +21,23 @@ seq_chorda (
     redde chorda_ex_f64((f64)seq, ZEPHYRUM, piscina);
 }
 
+/* L1: cliens codex (hami sigillare/codificare/decodificare)? */
+interior b32
+codex_est (
+    constans Historia* h)
+{
+    redde h->proiectio.sigillare != NIHIL;
+}
+
 interior vacuum
 sigillum_renovare (
     Historia* h)
 {
+    si (codex_est(h))
+    {
+        h->proiectio.sigillare(h->proiectio.ctx, &h->sigillum);
+        redde;
+    }
     h->sigillum = sigillum_computare(h->proiectio.memoria,
                                      h->proiectio.mensura);
 }
@@ -244,8 +257,18 @@ proicere_ad (
                   ? volumen_massam_promere(h->volumen, hex, h->piscina,
                                            &inventum)
                   : hex;
-            si (   inventum
-                && massa.mensura == (i32)h->proiectio.mensura)
+            /* L1: cliens codex restituit (FALSUM = codex inutilis,
+             * formae veteris: reproiectio ex nihilo); aliter memoria
+             * cruda, mensura eadem */
+            si (inventum && codex_est(h))
+            {
+                si (!h->proiectio.decodificare(h->proiectio.ctx, massa))
+                {
+                    basis = ZEPHYRUM;
+                }
+            }
+            alioquin si (   inventum
+                         && massa.mensura == (i32)h->proiectio.mensura)
             {
                 memcpy(h->proiectio.memoria, massa.datum,
                        h->proiectio.mensura);
@@ -281,8 +304,21 @@ checkpoint_condere (
        chorda contentum;
        chorda clavis;
 
-    contentum.datum    = h->proiectio.memoria;
-    contentum.mensura  = (i32)h->proiectio.mensura;
+    si (codex_est(h))
+    {
+        /* L1: codex clientis (mensura 0 = nullus) */
+        contentum = h->proiectio.codificare(h->proiectio.ctx,
+            h->piscina);
+        si (contentum.mensura == ZEPHYRUM)
+        {
+            redde;
+        }
+    }
+    alioquin
+    {
+        contentum.datum    = h->proiectio.memoria;
+        contentum.mensura  = (i32)h->proiectio.mensura;
+    }
     si (!volumen_massam_condere(h->volumen, contentum, hex))
     {
         redde;
@@ -336,9 +372,21 @@ historia_struere (
     Historia* h;
 
     si (   !piscina || !intern || !volumen || !genus
-        || !origo_checkpoint || !proiectio.memoria
-        || proiectio.mensura == ZEPHYRUM || !proiectio.vacare
+        || !origo_checkpoint || !proiectio.vacare
         || !proiectio.applicare)
+    {
+        redde NIHIL;
+    }
+    /* L1: hami codicis omnes aut nulli; sine eis memoria cruda */
+    si (   (proiectio.sigillare != NIHIL)
+           != (proiectio.codificare != NIHIL)
+        || (proiectio.sigillare != NIHIL)
+           != (proiectio.decodificare != NIHIL))
+    {
+        redde NIHIL;
+    }
+    si (   !proiectio.sigillare
+        && (!proiectio.memoria || proiectio.mensura == ZEPHYRUM))
     {
         redde NIHIL;
     }
