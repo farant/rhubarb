@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
 
 /* fons GENERATUS a bin/norma c (oraculum III, norma-plan-3 A5) */
@@ -1016,6 +1017,103 @@ probatio_recensio_externa(Piscina* p)
         p)));
 }
 
+/* ---- norma-spec-4 B2.1: commentarius scriptoris ---- */
+
+interior chorda
+_commentarius_probationis (
+    constans Norma* nodus,
+           Piscina* p,
+            vacuum* datum)
+{
+    NormaVisus v = norma_visus(nodus);
+
+    si (datum && v.genus == NORMA_TEXTUS)
+    {
+        redde chorda_ex_literis("textus -- fractus", p);
+    }
+    si (v.genus == NORMA_INTEGER)
+    {
+        redde chorda_ex_literis("numerus integer", p);
+    }
+    si (v.genus == NORMA_OBJECTUM)
+    {
+        redde chorda_ex_literis("radix", p);
+    }
+    redde chorda_ex_literis("", p);
+}
+
+/* linea post commentum incipit cum 'initium' (spatiis omissis) */
+interior b32
+_commentum_ante (
+                chorda  s,
+    constans character* commentum,
+    constans character* initium)
+{
+    character* t = (character*)malloc((size_t)s.mensura + I);
+    character* c;
+          b32  bonum = FALSUM;
+
+    memcpy(t, s.datum, (size_t)s.mensura);
+    t[s.mensura]  = '\0';
+    c             = strstr(t, commentum);
+    si (c)
+    {
+        c = strchr(c, '\n');
+        si (c)
+        {
+            c++;
+            dum (*c == ' ')
+            {
+                c++;
+            }
+            bonum = strncmp(c, initium, strlen(initium)) == 0;
+        }
+    }
+    free(t);
+    redde bonum;
+}
+
+interior vacuum
+probatio_commentarius(Piscina* p)
+{
+              Norma* o = norma_objectum(p);
+      NormaNominata  nn;
+    NormaStmlLectio  l;
+             chorda  causa;
+             chorda  s;
+
+    imprimere("\n--- Probans commentarium scriptoris ---\n");
+    norma_campus(o, "a", norma_integer(p), VERUM);
+    norma_campus(o, "b", norma_textus(p), FALSUM);
+    norma_campus(o, "t", norma_tabulatum(p, norma_integer(p)), VERUM);
+    nn.titulus  = chorda_ex_literis("x", p);
+    nn.norma    = o;
+    s = norma_stml_scribere_cum_commentis(&nn, I, p, &causa,
+        _commentarius_probationis, NIHIL);
+    CREDO_VERUM(s.mensura > 0);
+    /* commentum ANTE elementum quod introducit nodum: campus, norma */
+    CREDO_VERUM(_commentum_ante(s, "<!-- numerus integer -->",
+        "<campus titulus=\"a\""));
+    CREDO_VERUM(_commentum_ante(s, "<!-- radix -->",
+        "<norma titulus=\"x\""));
+    /* relegitur idem; forma formatoris */
+    l = norma_stml_legere(s, NIHIL, 0, p);
+    CREDO_VERUM(l.successus);
+    si (l.successus)
+    {
+        CREDO_CHORDA_AEQUALIS(_js(norma_stml_quaerere(&l, "x"), p),
+            _js(o, p));
+    }
+    CREDO_VERUM(_formatum(s, p));
+    /* sine commentario = scriptor ordinarius, octetis idem */
+    CREDO_CHORDA_AEQUALIS(norma_stml_scribere_cum_commentis(&nn, I, p,
+        &causa, NIHIL, NIHIL), norma_stml_scribere(&nn, I, p, &causa));
+    /* '--' recusatur */
+    CREDO_AEQUALIS_I32(norma_stml_scribere_cum_commentis(&nn, I, p,
+        &causa, _commentarius_probationis, &nn).mensura, 0);
+    CREDO_VERUM(chorda_continet(causa, chorda_ex_literis("--", p)));
+}
+
 s32
 principale (vacuum)
 {
@@ -1034,6 +1132,8 @@ principale (vacuum)
     probatio_emissor_recusat(p);
     probatio_textus_fidelis(p);
     probatio_recensio_externa(p);
+    /* norma-spec-4 B2.1 */
+    probatio_commentarius(p);
     credo_imprimere_compendium();
     successus = credo_omnia_praeterierunt();
     credo_claudere();

@@ -915,6 +915,8 @@ nomen structura {
                        i32  radix;     /* index normae quae scribitur */
                     chorda* causa;
                        b32  fractum;
+         NormaCommentarius  commentarius;   /* NIHIL = sine commentis */
+                    vacuum* commentarii_datum;
 } Scriptor;
 
 interior vacuum
@@ -950,6 +952,49 @@ _tutum (
         }
     }
     redde VERUM;
+}
+
+/* commentum nodi (norma-spec-4): ANTE elementum quod nodum introducit
+ * (campus, variatio, norma; in tabulato ante elementum ipsum) */
+interior vacuum
+_commentum_addere (
+          Scriptor* s,
+         StmlNodus* parens,
+    constans Norma* n)
+{
+    chorda textus;
+       i32 i;
+
+    si (!s->commentarius || s->fractum || !n)
+    {
+        redde;
+    }
+    textus = s->commentarius(n, s->p, s->commentarii_datum);
+    si (textus.mensura == 0)
+    {
+        redde;
+    }
+    per (i = 0; i + I < textus.mensura; i++)
+    {
+        si (textus.datum[i] == '-' && textus.datum[i + I] == '-')
+        {
+            _recusare(s, "commentarius textum cum '--' reddidit"
+                         " (commentum STML frangeret)");
+            redde;
+        }
+    }
+    {
+        /* spatia circum textum: '<!-- x -->' ut manu scriptum */
+        character* c = (character*)piscina_allocare(s->p,
+            (memoriae_index)textus.mensura + III);
+
+        c[0] = ' ';
+        memcpy(c + I, textus.datum, (size_t)textus.mensura);
+        c[textus.mensura + I]   = ' ';
+        c[textus.mensura + II]  = '\0';
+        stml_liberum_addere(parens, stml_commentum_creare(s->p, s->in,
+            c));
+    }
 }
 
 interior StmlNodus*
@@ -1462,13 +1507,17 @@ _nodum_scribere (
     }
     si (v.genus == NORMA_TABULATUM)
     {
+        _commentum_addere(s, e, v.elementum);
         _nodum_scribere(s, v.elementum, e, profunditas + I, VERUM);
     }
     per (i = 0; v.genus == NORMA_OBJECTUM
         && i < xar_numerus(v.campi); i++)
     {
         NormaCampus* c   = (NormaCampus*)xar_obtinere(v.campi, i);
-          StmlNodus* ce  = _elementum(s, e, "campus");
+          StmlNodus* ce;
+
+        _commentum_addere(s, e, c->valor);
+        ce = _elementum(s, e, "campus");
 
         _attr(s, ce, "titulus", c->titulus, "clavis campi");
         si (!c->requiritur)
@@ -1482,7 +1531,10 @@ _nodum_scribere (
     {
         NormaVariatio* va = (NormaVariatio*)xar_obtinere(v.variationes,
             i);
-            StmlNodus* ve = _elementum(s, e, "variatio");
+            StmlNodus* ve;
+
+        _commentum_addere(s, e, va->objectum);
+        ve = _elementum(s, e, "variatio");
 
         _attr(s, ve, "valor", va->valor, "valor variationis");
         /* canon: variatio objectum ipsum postulat - numquam referentiam */
@@ -1520,6 +1572,20 @@ norma_stml_scribere (
                    Piscina* piscina,
                     chorda* causa)
 {
+    redde norma_stml_scribere_cum_commentis(normae, numerus, piscina,
+        causa,
+        NIHIL, NIHIL);
+}
+
+chorda
+norma_stml_scribere_cum_commentis (
+    constans NormaNominata* normae,
+                       i32  numerus,
+                   Piscina* piscina,
+                    chorda* causa,
+         NormaCommentarius  commentarius,
+                    vacuum* datum)
+{
      Scriptor  s;
     StmlNodus* radix;
           i32  i;
@@ -1529,11 +1595,13 @@ norma_stml_scribere (
     vacua.datum    = NIHIL;
     vacua.mensura  = 0;
     memset(&s, 0, magnitudo(s));
-    s.p        = piscina;
-    s.in       = internamentum_creare(piscina);
-    s.normae   = normae;
-    s.numerus  = numerus;
-    s.causa    = causa;
+    s.p                  = piscina;
+    s.in                 = internamentum_creare(piscina);
+    s.normae             = normae;
+    s.numerus            = numerus;
+    s.causa              = causa;
+    s.commentarius       = commentarius;
+    s.commentarii_datum  = datum;
     si (causa)
     {
         *causa = vacua;
@@ -1566,6 +1634,7 @@ norma_stml_scribere (
                 "titulus normae vacuus aut extra [A-Za-z0-9_] (canon genus nomen)");
             frange;
         }
+        _commentum_addere(&s, radix, normae[i].norma);
         nn = _elementum(&s, radix, "norma");
         _attr(&s, nn, "titulus", normae[i].titulus,
             "titulus normae");

@@ -1,0 +1,1 @@
+{"model":"claude-haiku-5-5","max_tokens":1024,"tools":[{"name":"get_weather","description":"Get current weather for a location","input_schema":{"type":"object","properties":{"location":{"type":"string","description":"City name"}},"required":["location"]}}],"messages":[{"role":"user","content":"Use the get_weather tool to check the weather in Rome."}]}

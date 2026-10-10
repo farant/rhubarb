@@ -680,7 +680,7 @@ probatio_novitas_pressa(Piscina* piscina)
     v                = vates_fictus_aperire(piscina, &o);
     vates_fictus_crudum(v, CC,
         "{\"id\":\"m\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"m\","
-        "\"content\":[{\"type\":\"server_tool_use\",\"id\":\"s\"}],\"stop_reason\":\"end_turn\","
+        "\"content\":[{\"type\":\"blocus_futurus\",\"id\":\"s\"}],\"stop_reason\":\"end_turn\","
         "\"stop_sequence\":null,\"usage\":{\"input_tokens\":1,\"output_tokens\":1}}");
     r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
         piscina);
@@ -691,7 +691,7 @@ probatio_novitas_pressa(Piscina* piscina)
         HerbariumSpecimen* h = (HerbariumSpecimen*)xar_obtinere(sp, i);
 
         si (chorda_aequalis_literis(h->causa,
-            "blocus ignotus: server_tool_use"))
+            "blocus ignotus: blocus_futurus"))
         {
             inventa = VERUM;
         }
@@ -789,133 +789,70 @@ probatio_forma_viva(Piscina* piscina)
 }
 
 
-/* norma-plan-3 A6: aedificator VETUS (copia verbatim lib/vates.c ante
- * migrationem) - oraculum solum: schema ex .norma idem dicere debet */
-interior Norma*
-_forma_responsi_vetus (
-    Piscina* p)
+/* figurae instrumentorum servi ex captura 2026-10-09 (acervus
+ * api.anthropic.com-exempla, bin/norma inferre): web_search,
+ * code_execution, caller, usage.server_tool_use - nulla novitas */
+interior vacuum
+probatio_forma_instrumentorum_servi(Piscina* piscina)
 {
-    Norma* textus     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* petitum    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* cogitatio  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* redacta    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* blocus = norma_modus(norma_discrimen(p, "type"),
-        NORMA_NOTANDUM);
-    Norma* cc    = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* usus  = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
-    Norma* r     = norma_modus(norma_objectum(p), NORMA_NOTANDUM);
+     VatesOptiones  o = vates_optiones_ordinariae();
+             Vates* v;
+    VatesResponsum* r;
+         character  via_herbarii[CCLVI];
+         character  via[DXII];
 
-    norma_campus(textus, "text", norma_textus(p), VERUM);
-    norma_campus(textus, "citations", norma_liberum(p), FALSUM);
-    norma_campus(petitum, "id", norma_textus(p), VERUM);
-    norma_campus(petitum, "name", norma_textus(p), VERUM);
-    norma_campus(petitum, "input", norma_liberum(p), VERUM);
-    norma_campus(cogitatio, "thinking", norma_textus(p), VERUM);
-    norma_campus(cogitatio, "signature", norma_textus(p), VERUM);
-    norma_campus(redacta, "data", norma_textus(p), VERUM);
-    norma_variatio(blocus, "text", textus);
-    norma_variatio(blocus, "tool_use", petitum);
-    norma_variatio(blocus, "thinking", cogitatio);
-    norma_variatio(blocus, "redacted_thinking", redacta);
-    norma_campus(cc, "ephemeral_5m_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(cc, "ephemeral_1h_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(usus, "input_tokens", norma_integer(p), VERUM);
-    norma_campus(usus, "output_tokens", norma_integer(p), VERUM);
-    norma_campus(usus, "cache_read_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(usus, "cache_creation_input_tokens", norma_integer(p),
-        FALSUM);
-    norma_campus(usus, "cache_creation", cc, FALSUM);
-    norma_campus(usus, "output_tokens_details", norma_liberum(p),
-        FALSUM);
-    norma_campus(usus, "service_tier",
-        norma_aut_nullum(norma_textus(p)), FALSUM);
-    norma_campus(usus, "inference_geo",
-        norma_aut_nullum(norma_textus(p)), FALSUM);
-    norma_campus(r, "id", norma_textus(p), VERUM);
-    norma_campus(r, "type", norma_textus(p), VERUM);
-    norma_campus(r, "role", norma_textus(p), VERUM);
-    norma_campus(r, "model", norma_textus(p), VERUM);
-    norma_campus(r, "content", norma_tabulatum(p, blocus), VERUM);
-    norma_campus(r, "stop_reason", norma_aut_nullum(norma_textus(p)),
-        VERUM);
-    norma_campus(r, "stop_sequence", norma_aut_nullum(norma_textus(p)),
-        FALSUM);
-    norma_campus(r, "stop_details", norma_liberum(p), FALSUM);
-    norma_campus(r, "usage", usus, VERUM);
-    norma_campus(r, "container", norma_liberum(p), FALSUM);
-    norma_campus(r, "diagnostics", norma_liberum(p), FALSUM);
-    redde r;
+    imprimere("\n--- Probans instrumenta servi: nulla novitas ---\n");
+    sprintf(via_herbarii, "/tmp/probatio_vates_servi_%ld",
+        (longus)getpid());
+    o.herbarium_via  = via_herbarii;
+    v                = vates_fictus_aperire(piscina, &o);
+    vates_fictus_crudum(v, CC,
+        "{\"id\":\"msg_1\",\"type\":\"message\",\"role\":\"assistant\","
+        "\"model\":\"claude-sonnet-5-5\",\"content\":["
+        "{\"type\":\"server_tool_use\",\"id\":\"srvtoolu_1\","
+        "\"name\":\"web_search\",\"input\":{\"query\":\"q\"},"
+        "\"caller\":{\"type\":\"c\",\"tool_id\":\"t\"}},"
+        "{\"type\":\"web_search_tool_result\",\"tool_use_id\":\"srvtoolu_1\","
+        "\"content\":[{\"type\":\"web_search_result\",\"url\":\"https://x\","
+        "\"title\":\"t\",\"encrypted_content\":\"e\",\"page_age\":null}],"
+        "\"caller\":{\"type\":\"c\",\"tool_id\":\"t\"}},"
+        "{\"type\":\"server_tool_use\",\"id\":\"srvtoolu_2\","
+        "\"name\":\"code_execution\",\"input\":{\"code\":\"print(1)\"}},"
+        "{\"type\":\"code_execution_tool_result\",\"tool_use_id\":\"srvtoolu_2\","
+        "\"content\":{\"type\":\"code_execution_result\",\"stdout\":\"1\","
+        "\"stderr\":\"\",\"return_code\":0,\"content\":[]}},"
+        "{\"type\":\"tool_use\",\"id\":\"toolu_1\",\"name\":\"tempestas\","
+        "\"input\":{\"location\":\"Roma\"},\"caller\":{\"type\":\"direct\"}},"
+        "{\"type\":\"text\",\"text\":\"ok\"}],"
+        "\"stop_reason\":\"tool_use\",\"stop_sequence\":null,"
+        "\"usage\":{\"input_tokens\":1,\"output_tokens\":1,"
+        "\"server_tool_use\":{\"web_search_requests\":1,"
+        "\"web_fetch_requests\":0}}}");
+    r = vates_mittere(v, _petitio_simplex(piscina), _c("t", piscina),
+        piscina);
+    CREDO_VERUM(r->successus);
+    CREDO_AEQUALIS_I32(xar_numerus(herbarium_enumerare(piscina,
+        via_herbarii)), 0);
+    sprintf(via, "%s/index.jsonl", via_herbarii);
+    (vacuum)unlink(via);
+    sprintf(via, "%s/specimina", via_herbarii);
+    (vacuum)rmdir(via);
+    (vacuum)rmdir(via_herbarii);
 }
 
-interior b32
-_iudicia_aequalia (
-    NormaIudicium a,
-    NormaIudicium b)
-{
-    i32 i;
-
-    si (   a.validum            != b.validum
-        || xar_numerus(a.vitia) != xar_numerus(b.vitia)
-        || xar_numerus(a.notae) != xar_numerus(b.notae))
-    {
-        redde FALSUM;
-    }
-    per (i = 0; i < xar_numerus(a.vitia) + xar_numerus(a.notae); i++)
-    {
-                b32  vit  = i < xar_numerus(a.vitia);
-                i32  k    = vit ? i : i - xar_numerus(a.vitia);
-        NormaVitium* x =
-            (NormaVitium*)xar_obtinere(vit ? a.vitia : a.notae, k);
-        NormaVitium* y =
-            (NormaVitium*)xar_obtinere(vit ? b.vitia : b.notae, k);
-
-        si (x->causa != y->causa || !chorda_aequalis(x->via, y->via))
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
-
-/* norma-plan-3 A6: schema ex .norma generatum idem dicit ac aedificator
- * vetus (exportatio + iudicia super valores ab utroque genitos) */
+/* norma-plan-3 A6: plagula .norma forma pulchra et lectori grata.
+ * Oraculum aedificatoris VETERIS (copia lib/vates.c ante migrationem)
+ * remotum 2026-10-09: schema nunc crescit (instrumenta servi), et
+ * aequalitas C generati cum .norma porta 'generata' iudicat */
 interior vacuum
 probatio_forma_ex_norma(Piscina* p)
 {
-    Norma* vetus  = _forma_responsi_vetus(p);
-    Norma* nova   = vates_norma_responsum(p);
-    i32 diversa   = 0;
-    s64 semen;
-    i32 m;
-    i32 q;
-    chorda fons = filum_legere_totum("lib/vates_responsum.norma", p);
+          chorda fons = filum_legere_totum("lib/vates_responsum.norma",
+              p);
     StmlResultus r = stml_legere(fons, p, internamentum_creare(p));
 
     imprimere("\n--- Probans formam responsi ex .norma ---\n");
-    CREDO_CHORDA_AEQUALIS(json_scribere(norma_json_schema(vetus, p), p),
-                          json_scribere(norma_json_schema(nova, p), p));
-    per (q = 0; q < II; q++)
-    {
-        per (semen = 0; semen < L; semen++)
-        {
-            per (m = (i32)NORMA_TYPICA; m <= (i32)NORMA_INVALIDA; m++)
-            {
-                NormaGenitum g = norma_gignere(q == 0 ? vetus : nova,
-                    (NormaModusGignendi)m, semen, p);
-
-                si (g.valor && !_iudicia_aequalia(norma_iudicare(vetus,
-                        g.valor, p), norma_iudicare(nova, g.valor, p)))
-                {
-                    diversa++;
-                }
-            }
-        }
-    }
-    CREDO_AEQUALIS_I32(diversa, 0);
-    /* oraculum V: plagula forma pulchra */
+    CREDO_NON_NIHIL(vates_norma_responsum(p));
     CREDO_VERUM(r.successus);
     CREDO_CHORDA_AEQUALIS(stml_scribere(r.radix, p, VERUM), fons);
     /* lector eam sine vitio legit, sine notis (nullus gignens) */
@@ -1127,6 +1064,7 @@ principale (vacuum)
     probatio_specimina_commissa(piscina);
     /* T7b */
     probatio_forma_viva(piscina);
+    probatio_forma_instrumentorum_servi(piscina);
     /* norma-plan-3 A6 */
     probatio_forma_ex_norma(piscina);
     /* herbarium-spec-2 H2 */

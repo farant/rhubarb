@@ -244,3 +244,49 @@ Now:
   although vates' parse exits early).
 - The judge parses the body once more than before (json_legere in the
   judge, again in `_legere`) - cost accepted, noted.
+
+## 2026-10-09 — schema grows from the real capture; A6 oracle retired
+
+Capture pile `~/.rhubarb/herbarium/api.anthropic.com-exempla` (14 bodies with
+status 200, specimina_colligere) -> `bin/norma comparare` named the gaps;
+`lib/vates_responsum.norma` gained variants `server_tool_use`,
+`web_search_tool_result`, `code_execution_tool_result` (insides `liberum`:
+tool-specific and still moving), optional `caller` on `tool_use` and the two
+web-search blocks (NOT on code_execution: seen 0/4 - a speculative field shows
+up as NUMQUAM_VISUM, so declare only what the pile shows), optional
+`usage.server_tool_use`. Always-present-but-optional fields stay optional on
+purpose (NOTANDUM mode: a later absence would be silent, not a false error).
+Remaining drift = `redacted_thinking` never seen (no test trigger).
+
+`probatio_novitas_pressa` used `server_tool_use` as its unknown block - now
+`blocus_futurus`. The A6 oracle (`_forma_responsi_vetus`, verbatim copy of the
+pre-migration builder) is removed: it pinned the schema to its 10-08 shape, and
+generated-C == .norma is the `generata` gate's job. Kept: .norma is
+formatter-canonical and the reader accepts it.
+
+Formatter note: `stml formare` lays out a capture of up to 3 children one per
+line but puts `((((>` (4 children) on ONE line; use explicit-close
+`<objectum ...>` ... `</>` for 4+ fields. Once a discrimen holds explicit
+closes the formatter writes its own closer as `</discrimen>`.
+
+## 2026-10-09 — five live specimens committed; the fixture guard
+
+Promoted from the capture pile (Fran: "any that you think are useful"), read in
+full first: `vivum_instrumentum_haiku_5_5` (tool_use + caller),
+`vivum_max_tokens_haiku_5_5`, `vivum_stop_sequence_haiku_5_5`,
+`vivum_citationes_haiku_5_5` (char_location citation), and
+`vivum_quaestio_retis_sonnet_5_5` (29 KB: code_execution calling web_search via
+`caller`, both code-execution result kinds, an empty-text `thinking` block with
+signature, object `container`, `usage.server_tool_use`). Kept headers are only
+content-type + request-id; request summary only `model`. The web-search one
+quotes ~1.5 KB of Wikipedia (CC BY-SA) in code-execution stdout.
+
+`semen_blocus_ignotus` deleted: hand-written `{"type":"server_tool_use","id":..}`
+from when that type meant "undeclared"; it now VIOLATED the schema (no
+name/input) and the real specimen covers the blocks. Opaque parsing of unknown
+blocks keeps its inline unit test.
+
+`probatio_comparatio_vatis` (probatio_norma_inferre.c) is now a guard: zero
+violating discrepancies (REQUISITUM_ABSENS, NON_DECLARATUM, GENUS_LATIUS,
+NULLUM_NOVUM, VARIATIO_NON_DECLARATA) between lib/vates_responsum.norma and every
+committed specimen. Plant: the old seed -> red naming $.content[].name/input.
