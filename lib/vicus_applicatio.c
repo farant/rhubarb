@@ -109,7 +109,29 @@ nomen structura {
  * copiam veterem) */
 nomen structura {
     TabulaDispersa* documenta;
+    /* L5: porta imaginis (applicatio ponit; NIHIL = nulla) */
+      ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina);
+            vacuum* porta_ctx;
 } ContextusPictoris;
+
+/* L5: porta lateris pictoris - ad portam communem (tempore vocationis
+ * lecta: latera ante portam positam montata eam quoque vident) */
+interior ImagoFructus
+imaginem_capere_communem (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    ContextusPictoris* cp;
+         ImagoFructus  f;
+
+    cp = (ContextusPictoris*)ctx;
+    si (cp && cp->porta)
+    {
+        redde cp->porta(cp->porta_ctx, piscina);
+    }
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    redde f;
+}
 
 /* S3e: $pictor-next / $pictor-prev */
 nomen structura {
@@ -372,6 +394,9 @@ pictorem_montare (
     {
         redde FALSUM;
     }
+    /* L5: porta imaginis communis */
+    m->actiones_ctx.imago_capere  = imaginem_capere_communem;
+    m->actiones_ctx.imago_ctx     = cp;
     /* S3e: memoria communis - documentum spatii huius, si iam
      * apertum, idem fit */
     si (cp && cp->documenta && id && id[ZEPHYRUM])
@@ -734,6 +759,23 @@ vicus_volumen_aperire (
         via_voluminis ? via_voluminis : "vicus.volumen");
 }
 
+vacuum
+vicus_applicatio_imaginis_portam_ponere (
+     VicusApplicatio* app,
+        ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
+              vacuum* ctx)
+{
+    ContextusPictoris* cp;
+
+    si (!app || !app->pictoris)
+    {
+        redde;
+    }
+    cp             = (ContextusPictoris*)app->pictoris;
+    cp->porta      = porta;
+    cp->porta_ctx  = ctx;
+}
+
 b32
 vicus_applicatio_aedificare (
         VicusApplicatio* app,
@@ -766,8 +808,11 @@ vicus_applicatio_aedificare (
         magnitudo(ContextusPictoris));
     si (cp)
     {
-        cp->documenta = tabula_dispersa_creare_chorda(piscina, XVI);
+        cp->documenta  = tabula_dispersa_creare_chorda(piscina, XVI);
+        cp->porta      = NIHIL;
+        cp->porta_ctx  = NIHIL;
     }
+    app->pictoris = cp;
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
     cs->liber = scriba_liber_aperire(piscina, intern, volumen,

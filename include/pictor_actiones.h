@@ -15,6 +15,7 @@
 #include "actio.h"
 #include "pictor_documentum.h"
 #include "xar.h"
+#include "imago.h"
 
 nomen structura {
     PictorDocumentum* doc;
@@ -25,6 +26,10 @@ nomen structura {
                                 * puncti pendentis; NIHIL donec
                                 * primum */
                  s64 semen;   /* aspergillum: semen ictus currentis */
+    /* L5: porta imaginis (Cmd+V) - NIHIL = nulla; applicationes
+     * clipboard_capere_imaginem ponunt, probationes fictam */
+    ImagoFructus (*imago_capere)(vacuum* ctx, Piscina* piscina);
+          vacuum* imago_ctx;
 } PictorActiones;
 
 vacuum
@@ -148,7 +153,8 @@ pictor_magnitudinem_ponere (
                 vacuum* ctx);
 
 /* <tractator/> 'p' penicillus, 'a' aspergillum, 'e' spongia, 'l'
- * linea; ictus
+ * linea; Cmd+V: imago e porta in stratum novum supra currens (fit
+ * currens); ictus
  * in optionem instrumenti ('optio.instrumentum.<nomen>') idem ponit et
  * palettam claudit; Esc palettam apertam claudit */
 b32

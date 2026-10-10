@@ -11,6 +11,8 @@
 #include "stml.h"
 #include "xar.h"
 #include "flatura.h"
+#include "dithering.h"
+#include "imago_opus.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -818,6 +820,72 @@ stratum_applicare (
     }
 }
 
+/* L5: <imago stratum x y latitudo altitudo massa/> - indices ex massa
+ * (deflati) in stratum: palette Aquinas, 0xFF perspicuum (intactum) */
+interior vacuum
+imaginem_applicare (
+    PictorDocumentum* doc,
+           StmlNodus* n)
+{
+            chorda* massa_hex;
+            chorda  massa;
+               b32  inventum;
+    FlaturaFructus  fructus;
+               s32  index;
+               s32  x0;
+               s32  y0;
+               s32  lat;
+               s32  alt;
+               s32  x;
+               s32  y;
+               i32  k;
+               i32* pixela;
+
+    index      = strati_index(doc, attributum_s32(n, "stratum", I));
+    massa_hex  = stml_attributum_capere(n, "massa");
+    x0         = attributum_s32(n, "x", ZEPHYRUM);
+    y0         = attributum_s32(n, "y", ZEPHYRUM);
+    lat        = attributum_s32(n, "latitudo", ZEPHYRUM);
+    alt        = attributum_s32(n, "altitudo", ZEPHYRUM);
+    si (   index < ZEPHYRUM || !massa_hex || lat <= ZEPHYRUM
+        || alt <= ZEPHYRUM || !doc->strata[index].pixela)
+    {
+        redde;
+    }
+    massa = volumen_massam_promere(doc->volumen, *massa_hex,
+        doc->piscina, &inventum);
+    si (!inventum)
+    {
+        redde;
+    }
+    fructus = flatura_inflare(massa.datum, massa.mensura, doc->piscina);
+    si (   fructus.status       != FLATURA_STATUS_OK
+        || (s32)fructus.mensura != lat * alt)
+    {
+        redde;
+    }
+    pixela = doc->strata[index].pixela->pixela;
+    per (y = ZEPHYRUM; y < alt; y++)
+    {
+        si (y0 + y < ZEPHYRUM || y0 + y >= (s32)doc->altitudo)
+        {
+            perge;
+        }
+        per (x = ZEPHYRUM; x < lat; x++)
+        {
+            k = (i32)(y * lat + x);
+            si (   x0 + x < ZEPHYRUM || x0 + x >= (s32)doc->latitudo
+                || fructus.datum[k] >= XVI)
+            {
+                perge;
+            }
+            pixela[(i32)(y0 + y) * doc->latitudo + (i32)(x0 + x)] =
+                color_ad_pixelum(color_ex_palette(
+                    (i32)fructus.datum[k]));
+        }
+    }
+}
+
 interior vacuum
 actum_applicare (
     PictorDocumentum* doc,
@@ -839,6 +907,11 @@ actum_applicare (
                  "stratum"))
     {
         stratum_applicare(doc, res.elementum_radix);
+    }
+    alioquin si (chorda_aequalis_literis(*res.elementum_radix->titulus,
+                 "imago"))
+    {
+        imaginem_applicare(doc, res.elementum_radix);
     }
     /* ramus: nihil pingit; cetera v1 ignorata (worklog) */
 }
@@ -1360,6 +1433,129 @@ pictor_documentum_finis (
     constans PictorDocumentum* doc)
 {
     redde doc ? historia_finis(doc->historia) : ZEPHYRUM;
+}
+
+i8*
+pictor_imaginem_aptare (
+    constans Imago* fons,
+               i32  latitudo,
+               i32  altitudo,
+           Piscina* piscina,
+               s32* x,
+               s32* y,
+               i32* lat,
+               i32* alt)
+{
+               Imago scalata;
+    DitheringFructus df;
+                 b32 activi[XVI];
+                 i32 nl;
+                 i32 na;
+                 i32 i;
+
+    si (   !fons || !fons->pixela || fons->latitudo == ZEPHYRUM
+        || fons->altitudo == ZEPHYRUM || latitudo == ZEPHYRUM
+        || altitudo       == ZEPHYRUM || !piscina)
+    {
+        redde NIHIL;
+    }
+    /* contain: latus quod prius marginem tangit (aspectus servatur) */
+    si (fons->latitudo * altitudo >= fons->altitudo * latitudo)
+    {
+        nl = latitudo;
+        na = fons->altitudo * latitudo / fons->latitudo;
+    }
+    alioquin
+    {
+        na = altitudo;
+        nl = fons->latitudo * altitudo / fons->altitudo;
+    }
+    nl = nl < I ? I : nl;
+    na = na < I ? I : na;
+    scalata = imago_scalare(fons, nl, na, nl < fons->latitudo
+        ? IMAGO_SCALA_AREA : IMAGO_SCALA_BILINEARIS, piscina);
+    si (!scalata.pixela)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < XVI; i++)
+    {
+        activi[i] = VERUM;
+    }
+    df = dithering_atkinson_colorum(scalata.pixela, nl, na, activi,
+        piscina);
+    si (!df.successus || !df.indices)
+    {
+        redde NIHIL;
+    }
+    /* alpha < CXXVIII: perspicuum */
+    per (i = ZEPHYRUM; i < nl * na; i++)
+    {
+        si (scalata.pixela[i * IV + III] < CXXVIII)
+        {
+            df.indices[i] = (i8)CCLV;
+        }
+    }
+    *x    = (s32)(latitudo - nl) / II;
+    *y    = (s32)(altitudo - na) / II;
+    *lat  = nl;
+    *alt  = na;
+    redde df.indices;
+}
+
+s32
+pictor_documentum_imaginem_inserere (
+     PictorDocumentum* doc,
+          constans i8* indices,
+                  i32  lat,
+                  i32  alt,
+                  s32  x,
+                  s32  y,
+                  s32  supra)
+{
+    FlaturaFructus fructus;
+            chorda contentum;
+         character hex[SIGILLUM_HEX_MENSURA];
+         character actum[CCLVI];
+               s32 id;
+               i32 k;
+
+    si (   !doc || !indices || lat == ZEPHYRUM || alt == ZEPHYRUM
+        || doc->numerus_stratorum >= (i32)PICTOR_STRATA_MAXIMA)
+    {
+        redde ZEPHYRUM;
+    }
+    id = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < doc->numerus_stratorum; k++)
+    {
+        id = doc->strata[k].id > id ? doc->strata[k].id : id;
+    }
+    id++;
+    fructus = flatura_deflare(indices, (i32)(lat * alt),
+        FLATURA_COMPRESSIO_ORDINARIA, doc->piscina);
+    si (fructus.status != FLATURA_STATUS_OK)
+    {
+        redde ZEPHYRUM;
+    }
+    contentum.datum    = fructus.datum;
+    contentum.mensura  = fructus.mensura;
+    si (!volumen_massam_condere(doc->volumen, contentum, hex))
+    {
+        redde ZEPHYRUM;
+    }
+    sprintf(actum, "<stratum actio=\"novum\" id=\"%d\" supra=\"%d\"/>",
+        (integer)id, (integer)supra);
+    si (historia_actum(doc->historia, chorda_ex_literis(actum,
+            doc->piscina)) == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    sprintf(actum, "<imago stratum=\"%d\" x=\"%d\" y=\"%d\""
+        " latitudo=\"%d\" altitudo=\"%d\" massa=\"%s\"/>", (integer)id,
+        (integer)x, (integer)y, (integer)lat, (integer)alt, hex);
+    (vacuum)historia_actum_coniunctum(doc->historia, chorda_ex_literis(
+        actum, doc->piscina));
+    redde id;
 }
 
 constans PictorStratum*

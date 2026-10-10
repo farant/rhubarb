@@ -35,6 +35,11 @@
  *                                              permutatio sola
  *   <stratum actio="visibile" id="2" valor="0"/>  occultare (1:
  *                                              ostendere)
+ *   <imago stratum x y latitudo altitudo massa/>  imago glutinata
+ *                                              (L5): indices palettae
+ *                                              deflati in massa
+ *                                              voluminis (0xFF
+ *                                              perspicuum)
  * Strata perspicua incipiunt (alpha 0); tabula = COMPOSITUM: color
  * fundi thematis, deinde strata visibilia ab imo. Spongia stratum
  * suum ad perspicuum purgat. Checkpoint codificatus ("STRATA1",
@@ -191,6 +196,35 @@ pictor_documentum_finis (
 i32
 pictor_documentum_numerus_vivorum (
     constans PictorDocumentum* doc);
+
+/* imago RGBA -> indices palettae Aquinas, "contain" in tabulam
+ * (latitudo x altitudo): scala (area deorsum, bilinearis sursum),
+ * Atkinson colorum (XVI), alpha < CXXVIII perspicuum (0xFF),
+ * centrata - (x, y) et dimensiones in exitibus. NIHIL si fons vacua. */
+i8*
+pictor_imaginem_aptare (
+    constans Imago* fons,
+               i32  latitudo,
+               i32  altitudo,
+           Piscina* piscina,
+               s32* x,
+               s32* y,
+               i32* lat,
+               i32* alt);
+
+/* indices (lat x alt, 0xFF perspicuum) in stratum NOVUM supra
+ * 'supra' ad (x, y): massa deflata in volumine, acta <stratum
+ * novum> + <imago> coniuncta (revocatio una). Redde id strati novi
+ * aut 0. */
+s32
+pictor_documentum_imaginem_inserere (
+     PictorDocumentum* doc,
+          constans i8* indices,
+                  i32  lat,
+                  i32  alt,
+                  s32  x,
+                  s32  y,
+                  s32  supra);
 
 /* strata ordine (imum primum); NIHIL si index extra */
 constans PictorStratum*

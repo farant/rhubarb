@@ -99,6 +99,20 @@ _focum_impellere (
     utf8 = textus ? [textus UTF8String] : NULL;
     si (!utf8 || utf8[ZEPHYRUM] == '\0')
     {
+        /* pictor-strata L5: sine textu (imago...) Cmd+V ut CLAVIS
+         * transit - applicatio ipsa tabulam communem legit (aequivalentia
+         * menu clavem aliter consumit) */
+        Eventus eventus;
+
+        memset(&eventus, ZEPHYRUM, magnitudo(Eventus));
+        eventus.genus                     = EVENTUS_CLAVIS_DEPRESSUS;
+        eventus.tempus                    = fenestra_tempus_ms();
+        eventus.datum.clavis.clavis       = (clavis_t)'v';
+        eventus.datum.clavis.runa         = 'v';
+        eventus.datum.clavis.modificantes = MOD_SUPER;
+        eventus.datum.clavis.codex        = claves_codex_ex_macos(IX);
+        eventus.datum.clavis.actio        = EVENTUS_ACTIO_PRESSA;
+        (vacuum)eventus_caudae_impellere(&self.fenestra->cauda, &eventus);
         redde;
     }
     (vacuum)eventus_caudae_textum_impellere(&self.fenestra->cauda,

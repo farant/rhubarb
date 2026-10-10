@@ -316,3 +316,28 @@ Plan: project-specs/pictor-strata-plan.md. Grammar in the header.
   fields -> header approval).
 - Bench gotcha: a fortify trap (EXC_BREAKPOINT in __chk_fail_overflow)
   was my bench's own sprintf into a 128-byte buffer, not L2.
+
+## 2026-10-10 - L5: paste an image as a new layer (Fran)
+
+- Existing pieces did most of the work: dithering_atkinson_colorum
+  (indices 0-15; its 8-bit AQUINAS_PALETTE is exactly the theme's
+  6-bit palette x4, same order - checked entry by entry), imago_scalare
+  (area down / bilinear up), clipboard_capere_imaginem (macOS
+  pasteboard TIFF/PNG -> RGBA).
+- pictor_imaginem_aptare: contain-fit (the side that hits the edge
+  first, aspect kept, small images scale UP too), centred, Atkinson,
+  source alpha < 128 -> 0xFF (transparent).
+- The DITHERED result is stored (Fran): indices deflated into a
+  content-addressed volume massa; log <stratum novum> + <imago ...
+  massa=hash> as a coniunctum group (one undo removes both). Replay
+  never depends on the dithering code.
+- Cmd+V on macOS is a MENU key equivalent: AppKit sends it to
+  fenestra_macos.m paste:, which only read text, so an image paste
+  vanished before reaching the app. paste: now turns "no text on the
+  pasteboard" into a synthetic Cmd+V key-down. Not testable headless -
+  needs a manual check.
+- Actions do no I/O: the clipboard read is a port in PictorActiones.
+  In vicus all pictor panes call a trampoline into ContextusPictoris,
+  whose port only apps/vicus/vicus.c sets (vicus_terminalis links
+  vicus_applicatio and must not pull Cocoa - its manifest has no
+  clipboard_platform). apps/pictor/pictor.c sets it directly.

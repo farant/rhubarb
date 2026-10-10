@@ -583,6 +583,61 @@ pictor_linea_ictus (
     }
 }
 
+/* L5: Cmd+V - imago e porta (clipboard) in stratum novum supra currens,
+ * quod currens fit. stratum_activum dominum 'strata.agere' habet:
+ * scriptura sub nomine eius (ut vicus ictus_primus), deinde prior */
+interior b32
+imaginem_glutinare (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+       PictorActiones* pa;
+         ImagoFructus  f;
+          InsulaRamus  ramus;
+        ColorPonendus  cp;
+               chorda  prior;
+                   i8* indices;
+                  s32  x;
+                  s32  y;
+                  i32  lat;
+                  i32  alt;
+                  s32  id;
+                  b32  scriptum;
+
+    pa = (PictorActiones*)ctx;
+    si (!pa || !pa->doc || !pa->imago_capere)
+    {
+        redde FALSUM;
+    }
+    f = pa->imago_capere(pa->imago_ctx, pa->doc->piscina);
+    si (!f.successus)
+    {
+        redde FALSUM;
+    }
+    indices = pictor_imaginem_aptare(&f.imago, pa->doc->latitudo,
+        pa->doc->altitudo, pa->doc->piscina, &x, &y, &lat, &alt);
+    si (!indices)
+    {
+        redde FALSUM;
+    }
+    ramus  = ramus_pictoris(repo, ctx);
+    id     = pictor_documentum_imaginem_inserere(pa->doc, indices, lat,
+        alt, x, y, stratum_currens(&ramus, pa->doc));
+    si (id == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    cp.attributum  = "stratum_activum";
+    cp.valor       = id;
+    prior          = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("strata.agere",
+        pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator,
+        &cp);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
 /* nomen instrumenti -> litterae (penicillus si ignotum) */
 interior character*
 litterae_instrumenti (
@@ -648,6 +703,12 @@ pictor_instrumentum_eligere (
             redde palettam_claudere(&ramus);
         }
         redde FALSUM;
+    }
+    /* L5: Cmd+V - imago glutinata */
+    si (   ev->datum.clavis.runa                       == 'v'
+        && (ev->datum.clavis.modificantes & MOD_SUPER) != ZEPHYRUM)
+    {
+        redde imaginem_glutinare(repo, ctx);
     }
     /* clavis LOGICA (runa sine maiuscula, dispositionis praesentis);
      * sub Cmd/Ctrl brevitas est (Cmd+P imprimere), non 'p' (A5) */

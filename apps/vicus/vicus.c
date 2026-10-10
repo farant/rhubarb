@@ -19,6 +19,7 @@
 #include "delineare_mandata.h"
 #include "ludus_fenestra.h"
 #include "vicus_applicatio.h"
+#include "clipboard_platform.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -36,6 +37,16 @@ vicum_pulsare (
     vacuum* ctx)
 {
     redde vicus_pulsare((Vicus*)ctx);
+}
+
+/* L5: porta imaginis - clipboard systematis (Cmd+V in pictore) */
+interior ImagoFructus
+imaginem_glutinatam (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde clipboard_capere_imaginem(piscina);
 }
 
 s32
@@ -123,6 +134,9 @@ principale (
     }
     /* S4: horologium locale in linea tabularum */
     vicus_horologium_ponere(app.vicus, vicus_horologium_locale, NIHIL);
+    /* L5: Cmd+V in pictore: imago e clipboard in stratum novum */
+    vicus_applicatio_imaginis_portam_ponere(&app, imaginem_glutinatam,
+        NIHIL);
 
     cfg.titulus   = "vicus";
     cfg.latitudo  = latitudo_fenestrae * SCALA;

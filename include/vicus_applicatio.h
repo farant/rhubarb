@@ -22,6 +22,7 @@
 #include "volumen.h"
 #include "dispensator.h"
 #include "vicus.h"
+#include "imago.h"
 
 nomen structura {
                 Piscina* piscina;
@@ -29,6 +30,8 @@ nomen structura {
                 Volumen* volumen;
                   Vicus* vicus;
             Dispensator* d;
+                 vacuum* pictoris;   /* L5: contextus communis pictoris
+                                      * (opacus) - porta imaginis */
 } VicusApplicatio;
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
@@ -52,5 +55,14 @@ vicus_applicatio_aedificare (
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo);
+
+/* L5: porta imaginis (Cmd+V, clipboard) omnium laterum pictoris -
+ * NIHIL = nulla (gemellus terminalis sine Cocoa); applicatio fenestrae
+ * clipboard_capere_imaginem ponit. Latera iam montata quoque. */
+vacuum
+vicus_applicatio_imaginis_portam_ponere (
+     VicusApplicatio* app,
+        ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
+              vacuum* ctx);
 
 #endif /* VICUS_APPLICATIO_H */
