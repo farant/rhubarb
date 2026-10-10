@@ -549,6 +549,82 @@ s32 principale (vacuum)
         directiones[I]         = _q(z, "[-100, 2, 1, 0]");
         CREDO_VERUM (quaternio_proximus(i, directiones, II, FALSUM,
             piscina, &index) && index == I);
+        /* omnes proximi (paritas exacta): i, j, k; v = (1, 1, 0) inter
+         * i et j, v = (1, 1, 1) inter omnes, v = (2, 1, 0) unus */
+        {
+                  i32 proximi[IV];
+                  i32 numerus_proximi = XCIX;
+            Quaternio tres[III];
+            Quaternio axes[III];
+
+            tres[ZEPHYRUM]  = i;
+            tres[I]         = j;
+            tres[II]        = k;
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, 1, 0]"), tres,
+                III,
+                FALSUM, piscina, proximi, &numerus_proximi)
+                    && numerus_proximi == II
+                && proximi[ZEPHYRUM] == ZEPHYRUM && proximi[I] == I);
+            CREDO_VERUM (quaternio_proximi(_q(z, "[5, 1, 1, 1]"), tres,
+                III,
+                FALSUM, piscina, proximi, &numerus_proximi)
+                    && numerus_proximi == III
+                && proximi[II] == II);
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 2, 1, 0]"), tres,
+                III,
+                FALSUM, piscina, proximi, &numerus_proximi)
+                    && numerus_proximi == I
+                && proximi[ZEPHYRUM] == ZEPHYRUM);
+            /* antipodes: (1, -1, 0) - cum |cos| i et j aequales, sine
+             * |cos| i solus (cos j negativum) */
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, -1, 0]"), tres,
+                III,
+                VERUM, piscina, proximi, &numerus_proximi)
+                    && numerus_proximi == II);
+            CREDO_VERUM (quaternio_proximi(_q(z, "[0, 1, -1, 0]"), tres,
+                III,
+                FALSUM, piscina, proximi, &numerus_proximi)
+                    && numerus_proximi == I
+                && proximi[ZEPHYRUM] == ZEPHYRUM);
+            /* paritas IRRATIONALIS in Q(sqrt 2): v = (1, sqrt2 - 1, 0) ab
+             * axibus (1, 0, 0) et (1, 1, 0) aequaliter distat (cos pi/8
+             * utrimque); (0, 1, 0) longius. Primus = quaternio_proximus. */
+            {
+                       Extensio* k2 = extensio_quadratica(II,
+                           piscina);
+                constans Anulus* q2      = extensio_anulus(k2);
+                            i32  primus  = XCIX;
+
+                axes[ZEPHYRUM]  = _q(q2, "[0, 0, 1, 0]");
+                axes[I]         = _q(q2, "[0, 1, 0, 0]");
+                axes[II]        = _q(q2, "[0, 1, 1, 0]");
+                CREDO_VERUM (quaternio_proximi(_q(q2,
+                    "[0, 1, a - 1, 0]"),
+                    axes, III, VERUM, piscina, proximi,
+                    &numerus_proximi)
+                    && numerus_proximi == II && proximi[ZEPHYRUM] == I
+                    && proximi[I] == II);
+                CREDO_VERUM (quaternio_proximus(_q(q2,
+                    "[0, 1, a - 1, 0]"),
+                    axes, III, VERUM, piscina, &primus) && primus == I);
+                /* paulo aliter: (1, sqrt2 - 1 + 1/100, 0) ad (1, 1, 0) */
+                CREDO_VERUM (quaternio_proximi(_q(q2,
+                    "[0, 1, (100a - 99)/100, 0]"), axes, III, VERUM,
+                    piscina,
+                    proximi, &numerus_proximi) && numerus_proximi == I
+                        && proximi[ZEPHYRUM]
+                    == II);
+            }
+            /* FALSUM -> exitus non tangitur: directio vectore nullo in
+             * loco ultimo */
+            tres[II]           = _q(z, "[1, 0, 0, 0]");
+            numerus_proximi    = XCIX;
+            proximi[ZEPHYRUM]  = XCIX;
+            CREDO_FALSUM (quaternio_proximi(_q(z, "[0, 1, 1, 0]"), tres,
+                III, FALSUM, piscina, proximi, &numerus_proximi));
+            CREDO_VERUM (numerus_proximi == XCIX
+                && proximi[ZEPHYRUM] == XCIX);
+        }
         /* directio sine parte vectoria (+-1 in 2I) refutatur; anulus
          * directionis alienus refutatur */
         directiones[ZEPHYRUM]  = _q(z, "[1, 0, 0, 0]");

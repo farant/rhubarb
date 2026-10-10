@@ -114,3 +114,33 @@ Hamilton tables and N R derived independently). Findings and fixes:
 Plants: 23 (12 original + 8 survivors + M1 x2 + rollback removal), all
 red; M1b (matrix_nulla into exitus) goes red by a crash on the success
 path, not an assertion. Suite 82 checks.
+
+## 2026-10-10 - quaternio_proximi (cellae plan T1)
+
+`quaternio_proximus` returns only the FIRST maximal axis, so exact ties
+were invisible. The cellae engine (project-specs/cellae-plan.md) needs
+the whole tie set: robust and possible separability decide by it.
+
+`quaternio_proximi` returns all indices whose comparison with the best
+is exactly 0, in ascending order. indices[0] equals quaternio_proximus.
+`_proximus` gained an optional collector: it resets on a strictly better
+axis and appends on equality.
+
+The FALSUM contract (outputs untouched) holds: the indices are collected
+in a scratch buffer in the piscina and copied out only on success; the
+reset happens after the copy.
+
+Credo:
+- integer ties among i, j, k: 2 axes, 3 axes, and a unique one;
+- antipodes with and without |cos|;
+- an IRRATIONAL tie in Q(√2): v = (1, √2 − 1, 0) is exactly equidistant
+  from (1, 0, 0) and (1, 1, 0) (cos π/8 on both sides);
+- a nearby value (√2 − 0.99) that is unique;
+- the FALSUM contract on a direction with a null vector part.
+
+Plants (4, all red): ties not collected; a better axis keeping stale
+ties; copy-out of only the first; collection writing directly into the
+caller's array (breaks the FALSUM contract).
+
+Test syntax note: extensio's parser rejects "a - 99/100"; it accepts
+"(100a - 99)/100".

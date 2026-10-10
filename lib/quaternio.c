@@ -790,6 +790,7 @@ _aestimatio (
     redde _summa_duorum(anulus, nullum, exitus, -I, piscina);
 }
 
+/* indices NIHIL: index primus solum; aliter omnes paritate maximi */
 interior b32
 _proximus (
              Quaternio  v,
@@ -797,7 +798,9 @@ _proximus (
                    i32  numerus,
                    b32  antipodes_idem,
                Piscina* piscina,
-                   i32* index)
+                   i32* index,
+                   i32* indices,
+                   i32* numerus_proximorum)
 {
      constans Anulus* anulus             = v.anulus;
                   i8* scalare_optimum    = NIHIL;
@@ -841,6 +844,11 @@ _proximus (
             scalare_optimum    = scalare;
             quadratum_optimum  = quadratum;
             signum_optimum     = signum;
+            si (indices != NIHIL)
+            {
+                indices[ZEPHYRUM]    = ZEPHYRUM;
+                *numerus_proximorum  = I;
+            }
             perge;
         }
         {
@@ -863,6 +871,14 @@ _proximus (
                 quadratum_optimum  = quadratum;
                 signum_optimum     = signum;
                 optimum            = k;
+                si (indices != NIHIL)
+                {
+                    indices[ZEPHYRUM]    = k;
+                    *numerus_proximorum  = I;
+                }
+            } alioquin si (comparatio == ZEPHYRUM && indices != NIHIL)
+            {
+                indices[(*numerus_proximorum)++] = k;
             }
         }
     }
@@ -928,8 +944,46 @@ quaternio_proximus (
 {
     PiscinaNotatio nota  = piscina_notare(piscina);
                b32 bene  = _proximus(v, directiones, numerus,
-                   antipodes_idem, piscina, index);
+                   antipodes_idem, piscina, index, NIHIL, NIHIL);
 
+    piscina_reficere(piscina, nota);
+    redde bene;
+}
+
+b32
+quaternio_proximi (
+             Quaternio  v,
+    constans Quaternio* directiones,
+                   i32  numerus,
+                   b32  antipodes_idem,
+               Piscina* piscina,
+                   i32* indices,
+                   i32* numerus_proximorum)
+{
+    PiscinaNotatio  nota   = piscina_notare(piscina);
+               i32  index  = ZEPHYRUM;
+               i32  n      = ZEPHYRUM;
+               i32  k;
+               i32* operis;
+               b32  bene;
+
+    /* FALSUM -> exitus non tangitur: in alveo temporario colligitur */
+    si (numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    operis = (i32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(i32));
+    bene = _proximus(v, directiones, numerus, antipodes_idem, piscina,
+        &index, operis, &n);
+    si (bene)
+    {
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            indices[k] = operis[k];
+        }
+        *numerus_proximorum = n;
+    }
     piscina_reficere(piscina, nota);
     redde bene;
 }
