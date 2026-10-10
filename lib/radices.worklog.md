@@ -81,3 +81,46 @@ the `taylor` glossary entry lowered the English oracle by one permille) and
 `_cartesius_unum` -> `_variationes_unum` (Cartesius is a real Latin form;
 glossary entries for real forms shadow the oracle). Both glossary entries
 removed; no glossary change in this commit.
+
+## 2026-10-09 - review (recensor-extensio, 4680ff65): H1 M1 L1 L2 fixed
+
+**H1 (HIGH): radix_compara returned 0 for DIFFERENT numbers.** When b was
+exact, the loop took `signum(b.f, a) == 0` to mean a == b ("f_b linear").
+But exact points come from dyadic midpoints that land on a root (in
+radices_reales, radix_angusta, the internal bisection), and those keep the
+FULL f. So b.f(a) = 0 for ANY root of b.f. Repro: sqrt2 from t^2 - 2
+against exact 1 from (t - 1)(t^2 - 2) gave 0. Fix: when b is exact, the
+answer IS sign(a - q) = sign of (den t - num) at a, with a single call and
+no loop. The in-loop exact branch is dead and removed. Reviewer fuzz: 13
+of 9797 queries were wrong before the fix, 0 of 10242 after (their
+one-line variant). Lesson: "infra == supra" says only "rational root",
+never "f is linear".
+
+**M1: radix_ad_chordam refused non-dyadic terminating decimals** (1/5,
+-3/10). When r = k/10^d exactly, `infra < r <= supra` holds forever, so
+supra * 10^d <= m + 1 never fires; it gave up after 2048 bisections. Fix:
+before each bisection, test c = (m+1)/10^d strictly inside (infra, supra)
+with f(c) = 0, and if so the root is exactly c. The strict `c < supra` is
+an EQUIVALENT mutant against `<=`: c == supra means supra * 10^d == m + 1,
+and the termination check returns first.
+
+**L1:** digiti = 0 now prints "1", not "1.". "-0.00" for -0.003 stays
+(documented): the sign is information, the value lies in (-0.01, 0).
+**L2:** the struct comment now states that the implication runs one way
+only (1/5 from 5t - 1 comes back as an interval) and that the root sits
+in the OPEN interval. **P1:** documented that ad_chordam refuses beyond
+about 600 digits (LIMES_BISECTIONUM). Every limit path refuses and never
+answers wrong (reviewer checked: Mignotte a = 3^440 -> FALSUM at depth
+4096). **P2** (s == 0 branch cannot clear a non-dyadic endpoint of b
+that is a root of f_b; only reachable with a hand-built RadixRealis):
+not fixed; noted here.
+
+Plants: H1 (old b.f path), M1 (check off), L1 (point always): all red.
+
+Independent re-check of THIS fix (not the reviewer's variant), using the
+reviewer's harness (hrad.c + Sturm/Fraction oracle orac.py) built against
+the tree in the scratchpad. fuzz_cmp seeds 1-6 x 60: 15029 queries, 0
+wrong. fuzz_roots seeds 1-2 x 90: 928 roots, 0 wrong, 0 refused, 0
+decimal refusals. Same seeds on the pre-fix binary: 13 wrong compares
+(seeds 1-3) and 6 decimal refusals (seed 1), so the fuzz still detects
+both bugs.

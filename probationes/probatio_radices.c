@@ -341,6 +341,74 @@ s32 principale (vacuum)
             && s == 0);
     }
 
+
+    /* ==================================================
+     * RECENSIO (4680ff65): radix exacta f non linearis; decimales
+     * ================================================== */
+
+    {
+        RadixRealis* a;
+        RadixRealis* m;
+        RadixRealis* c3;
+        RadixRealis* duodecim;
+        RadixRealis* r;
+                i32  na  = ZEPHYRUM;
+                i32  nm  = ZEPHYRUM;
+                i32  nc  = ZEPHYRUM;
+                i32  nd  = ZEPHYRUM;
+                i32  n   = ZEPHYRUM;
+                s32  s   = XCIX;
+             chorda  c;
+
+        imprimere("\n--- Probans recensionem: exacta non linearis,"
+            " decimales ---\n");
+        /* H1: 1 punctum exactum ex (t - 1)(t^2 - 2); sqrt2 radix f eius
+         * sed non 1 - olim 0 */
+        CREDO_VERUM (_radices("t^2 - 2", &a, &na));
+        CREDO_VERUM (_radices("t^3 - t^2 - 2t + 2", &m, &nm));
+        CREDO_AEQUALIS_I32 (nm, III);
+        CREDO_VERUM (fractio_compara(m[I].infra, m[I].supra, piscina)
+            == 0);
+        CREDO_VERUM (radix_compara(a[I], m[I], piscina, &s));
+        CREDO_AEQUALIS_S32 (s, I);
+        CREDO_VERUM (radix_compara(m[I], a[I], piscina, &s));
+        CREDO_AEQUALIS_S32 (s, -(s32)I);
+        CREDO_VERUM (radix_compara(a[ZEPHYRUM], m[I], piscina, &s));
+        CREDO_AEQUALIS_S32 (s, -(s32)I);
+        /* sqrt3 contra 1 et 2 exacta ex 2T_12(x/2) - 2 */
+        CREDO_VERUM (_radices("t^2 - 3", &c3, &nc));
+        CREDO_VERUM (_radices("t^12 - 12t^10 + 54t^8 - 112t^6 + 105t^4 - 36t^2",
+            &duodecim, &nd));
+        CREDO_AEQUALIS_I32 (nd, VII);
+        CREDO_VERUM (fractio_compara(duodecim[IV].infra,
+            duodecim[IV].supra, piscina) == 0);
+        CREDO_VERUM (radix_compara(c3[I], duodecim[IV], piscina, &s));
+        CREDO_AEQUALIS_S32 (s, I);
+        CREDO_VERUM (radix_compara(c3[I], duodecim[VI], piscina, &s));
+        CREDO_AEQUALIS_S32 (s, -(s32)I);
+        CREDO_VERUM (radix_compara(c3[I], duodecim[V], piscina, &s));
+        CREDO_AEQUALIS_S32 (s, ZEPHYRUM);
+
+        /* M1: radix rationalis decimalis non dyadica (1/5, -3/10) */
+        CREDO_VERUM (_radices("5t - 1", &r, &n));
+        CREDO_AEQUALIS_I32 (n, I);
+        CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], I, piscina, &c)
+            && _textus_aequalis(c, "0.2"));
+        CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], IV, piscina, &c)
+            && _textus_aequalis(c, "0.2000"));
+        CREDO_VERUM (_radices("10t + 3", &r, &n));
+        CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], II, piscina, &c)
+            && _textus_aequalis(c, "-0.30"));
+        /* L1: n = 0 sine puncto; negativa parva signum servat */
+        CREDO_VERUM (radix_ad_chordam(a[I], ZEPHYRUM, piscina, &c)
+            && _textus_aequalis(c, "1"));
+        CREDO_VERUM (radix_ad_chordam(a[ZEPHYRUM], ZEPHYRUM, piscina,
+            &c) && _textus_aequalis(c, "-1"));
+        CREDO_VERUM (_radices("1000t + 3", &r, &n));
+        CREDO_VERUM (radix_ad_chordam(r[ZEPHYRUM], II, piscina, &c)
+            && _textus_aequalis(c, "-0.00"));
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

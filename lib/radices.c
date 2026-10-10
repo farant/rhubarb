@@ -687,6 +687,14 @@ radix_compara (
         *exitus = -s;
         redde VERUM;
     }
+    /* b = q exacta: signum(a - q) = signum (den t - num) in a. Non b.f -
+     * punctum medium in radicem incidens f plenum servat, et b.f(a) = 0
+     * pro QUAVIS radice b.f */
+    si (_est_exacta(b, piscina))
+    {
+        redde radix_signum_polynomii(radix_ex_fractione(b.infra,
+            piscina).f, a, piscina, exitus);
+    }
     si (!radix_signum_polynomii(b.f, a, piscina, &s))
     {
         redde FALSUM;
@@ -703,12 +711,7 @@ radix_compara (
         si (s == 0)
         {
             /* a radix f_b: a == b sse a in intervallo b (ibi radix f_b
-             * una) */
-            si (_est_exacta(b, piscina))
-            {
-                *exitus = ZEPHYRUM;      /* f_b linearis: a = b */
-                redde VERUM;
-            }
+             * una); b hic numquam exacta (supra), sola a secatur */
             si (   fractio_compara(b.infra, a.infra, piscina) <= 0
                 && fractio_compara(a.supra, b.supra, piscina) <= 0)
             {
@@ -775,8 +778,8 @@ _decimalis (
     chorda c = magnus_ad_chordam(m, piscina);
        i32 integra = c.mensura > digiti ? c.mensura
            - digiti : ZEPHYRUM;
-       i32 longitudo = (integra > ZEPHYRUM ? integra : I) + I
-           + digiti
+       i32 longitudo = (integra > ZEPHYRUM ? integra : I)
+           + (digiti > ZEPHYRUM ? I + digiti : ZEPHYRUM)
            + (negativa ? I : ZEPHYRUM);
     i8* datum = (i8*)piscina_allocare(piscina,
         (memoriae_index)longitudo);
@@ -796,7 +799,10 @@ _decimalis (
     {
         datum[j++] = c.datum[i];
     }
-    datum[j++] = (i8)'.';
+    si (digiti > ZEPHYRUM)
+    {
+        datum[j++] = (i8)'.';
+    }
     per (i = ZEPHYRUM; i < digiti; i++)
     {
         /* digiti post punctum: zephyra praefixa si m < 10^(d-1) */
@@ -857,6 +863,27 @@ radix_ad_chordam (
         {
             *exitus = _decimalis(m, digiti, negativa, piscina);
             redde VERUM;
+        }
+        /* radix ipsa (m + 1) / 10^d? tunc supra numquam infra eam
+         * descendit (bisectio dyadica 1/5 numquam attingit) */
+        {
+            Fractio c   = fractio_ex_s64(ZEPHYRUM);
+                s32 sc  = ZEPHYRUM;
+
+            si (   !fractio_ex_magnis(magnus_adde(m, magnus_ex_s64(I),
+                    piscina), fractio_numerator(scala), piscina, &c)
+                || !_signum_ad(a.f, c, piscina, &sc))
+            {
+                redde FALSUM;
+            }
+            si (   sc == 0
+                && fractio_compara(a.infra, c, piscina) < 0
+                && fractio_compara(c, a.supra, piscina) < 0)
+            {
+                a.infra = c;
+                a.supra = c;
+                perge;
+            }
         }
         si (!_seca_medio(&a, piscina))
         {

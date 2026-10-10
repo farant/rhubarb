@@ -37,7 +37,11 @@
 nomen structura {
     Polynomium f;                  /* liber quadratis, primitivus, lc > 0 */
        Fractio infra;
-       Fractio supra;              /* infra == supra: radix rationalis */
+       Fractio supra;              /* infra == supra -> radix rationalis
+                                    * (non vice versa: 1/5 ex 5t - 1
+                                    * intervallum est); aliter radix in
+                                    * (infra, supra) APERTO, termini radices
+                                    * f aliae esse possunt */
 } RadixRealis;
 
 /* omnes radices reales DISTINCTAE f, ordine crescente (multiplicitas
@@ -84,7 +88,9 @@ radix_angusta (
     RadixRealis* exitus);
 
 /* decimalis CERTA: n digiti post punctum, versus nullum truncata
- * ("-1.4142" pro -sqrt 2, n = 4) */
+ * ("-1.4142" pro -sqrt 2, n = 4; "-0.00" pro -0.003, n = 2 - signum
+ * servatur; n = 0 sine puncto: "1"). FALSUM si plus quam ~600 digiti
+ * (limes bisectionum, MMXLVIII) */
 b32
 radix_ad_chordam (
     RadixRealis  a,
