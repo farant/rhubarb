@@ -134,7 +134,7 @@ clang "${GCC_FLAGS[@]}" -Iinclude -Isilva/fontes \
     build/capsula_corpus_silicis.c \
     $bibliothecae_obiecta \
     $silva_obiecta \
-    -framework Cocoa -framework Security -framework WebKit \
+    -framework Cocoa -framework Security -framework WebKit -framework IOKit \
     -o bin/silex || exit 1
 echo "aedificatum: bin/silex"
 

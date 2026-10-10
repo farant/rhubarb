@@ -173,6 +173,11 @@ nomen structura {
 
 nomen vacuum (*VicusHorologium) (vacuum* ctx, VicusTempus* tempus);
 
+/* S5: pila in linea tabularum, ad dextrum horologii ("87%", "87%+"
+ * cum oneratur). NIHIL = nulla (probationes); applicationes portam
+ * per energia_status ponunt. Legitur cum horologio (minuto). */
+nomen b32 (*VicusPila) (vacuum* ctx, s32* centesimae, b32* oneratur);
+
 nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -194,7 +199,11 @@ nomen structura {
                  vacuum* horologium_ctx;
             VicusTempus  tempus;          /* ultimum lectum; hora -1 =
                                            * nullum */
-                    b32 horologium_dies; /* ictus: dies pro hora */
+                    b32  horologium_dies; /* ictus: dies pro hora */
+              VicusPila  pila;            /* S5: NIHIL = nulla */
+                 vacuum* pila_ctx;
+                    s32  pila_centesimae; /* -1 = nulla */
+                    b32  pila_oneratur;
 } Vicus;
 
 Vicus*
@@ -333,6 +342,12 @@ vicus_horologium_ponere (
               Vicus* v,
     VicusHorologium  horologium,
              vacuum* ctx);
+
+vacuum
+vicus_pilam_ponere (
+          Vicus* v,
+      VicusPila  pila,
+         vacuum* ctx);
 
 /* hora locali systematis (time.h: time, localtime) */
 vacuum

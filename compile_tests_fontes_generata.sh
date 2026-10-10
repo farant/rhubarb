@@ -279,6 +279,7 @@ declare -a SOURCE_FILES=(
 )
 declare -a OBJC_SOURCES=(
     "lib/clipboard_platform_macos.m"
+    "lib/energia_macos.m"
     "lib/fenestra_macos.m"
     "lib/tls_macos.m"
     "lib/vitrea_macos.m"
