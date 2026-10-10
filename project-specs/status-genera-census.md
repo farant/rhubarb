@@ -189,3 +189,143 @@ widget mounts (`<montatio nomen="pagina" genus="scriba"/>`), the
 parent binding each child's `ligamen` (props); the child's manifest
 judges its own subtree. Mapping: ligamen = props, status = local
 state, actiones = handlers, montationes = children.
+
+## IX. S0 findings - pictor's manifest by hand (2026-10-10)
+
+Draft: project-specs/status-s0-pictor.stml (every field traced to
+code). What strained the vocabulary:
+
+1. **Embedded `<canon>` collides with canon infixus.** `canon` as the
+   first child of a root is RESERVED: it is the document's OWN
+   contract, so it cannot also be the island's schema. And no canon
+   can say "judge this subtree by another dialect" (canon.canon). Draft
+   instead: each `<campus>` carries `typus` (+ `<optio>` for electio),
+   and the island canon is DERIVED from the campus list (canon_ex_nodo
+   over a synthesized tree). Alternative: a general canon feature for
+   foreign-dialect subtrees (XML-namespace analogue).
+2. **One owner per field does not fit transient UI state.** `palette`
+   is opened by palette.aperire and closed by 7 other actions (every
+   pick, any stroke). Draft uses `scriptores="..."`; alternative: a
+   declared dismissal behaviour (a popover closes on any other act),
+   which would be generic across widgets.
+3. **In-flight kinetic state is structured** (point lists, timings,
+   capture) and lives in memory structs, not island attributes:
+   `sedes="motus"`. Spray `tempora` and `semen` are off-island today
+   (PictorActiones) and `semen` is duplicated in the ephemera island;
+   they belong next to Motus.ictus_pendens (or in the gesture slot).
+4. **Framework fields belong to a common base** (id, focus,
+   focus_acervus, superficies_*), declared once: `<basis
+   genus="organum-commune"/>`. superficies is an observation.
+5. **Persisted pan is write-only**: motus flushes pan_x/pan_y to the
+   island at quiet, pictor reads Motus.pan, nothing restores Motus
+   from the island - pan never survives a restart. (zoom is read from
+   the island, so it does.) A bug the manifest makes visible.
+6. **Copied document facts**: durable latitudo/altitudo are copies of
+   the bound document's size; read from the document instead.
+7. Dead declarations: durable paletta, titulus, sigillum (owner
+   declared, never written), `<stratum>` element; ephemera selectio_*,
+   cursus, gradus.
+
+Vocabulary used: organum genus / ligamina (ligamen a="parens") /
+portae (porta modus="petitio|eventus") / actiones (actio systema) /
+status campus (nomen typus vita=persistens|transiens|probatio
+rhythmus=kineticus sedes=motus absens scriptor|scriptores referentia
+orbatus) / basis / montationes.
+
+**Decided (Fran, 2026-10-10) on finding 1:** the island canon is
+GENERATED from the campus list - one definition, no two sources to
+keep in sync.
+
+**Correction on finding 5:** no widget pans today. Nothing outside
+tests changes Motus.pan (or Motus.zoom); the pan/zoom plumbing is
+scaffolding from pictor-spec (prospectus). The missing restore is
+latent - it bites the day panning exists.
+
+## X. Ownership principle: systems over aspects (Fran, 2026-10-10)
+
+From comparing Redux/Elm (state declares which events affect it), the
+web platform (`popover="auto"` light dismiss), React (controlled vs
+uncontrolled, lifting state up), Solid (ownership by capability),
+Marko (serialization derived by the compiler) and Muratori's "Big
+OOPs" (Sketchpad: one shared structure + generic operations; the
+35-year mistake = encapsulation boundaries around domain things
+instead of around systems). Agreed lessons:
+
+1. **One store is the Sketchpad move** (already made): widgets are
+   views into the shared island tree, not owners of private state.
+2. **Per-field owners are encapsulation in miniature**: keep `scriptor`
+   as an invariant for VALUE fields (one writer), never as the
+   organising principle. Many writers on one field = it is an aspect.
+3. **Cross-cutting behaviour = a system over a declared aspect**
+   (ECS for UI state). Aspects so far: persistence (vita), kinetic
+   (rhythmus; motus flush), reference (referentia/orbatus;
+   re-validation after acts/undo), popover (dismissal: Esc, outside
+   click, other act, another popover opening), observation (portae),
+   binding (ligamina). Candidates: focus, selection.
+
+Consequences:
+- `scriptores` lists dropped. palette = `aspectus="popover"
+  scriptor="palette.aperire"`: opening owned, closing is the system's.
+- Lifting state up is declared in `<montationes>`: a parent binds a
+  child's field to its own (controlled) or leaves it (uncontrolled).
+- Admission rule (PULL): an aspect enters the vocabulary when a second
+  widget needs the same behaviour; until then it is widget code.
+
+## XI. A hierarchy of states (Fran, 2026-10-10)
+
+Fran: "the trick is to classify state... if you try to rigorously
+apply [one general strategy] to all kinds of state (like react) you
+end up with something awkward. but if you accept that there is a
+hierarchy of states then you have the most general model, and then
+different models proven / fitting well for real categories."
+
+Evidence: React's ecosystem IS a list of specialised state models for
+categories the general model (useState/props/effects) handled badly -
+server cache (React Query/SWR), forms (react-hook-form, uncontrolled
+on purpose), animation (refs/springs, bypassing render), URL (routers),
+global (Redux/Zustand). The reverse failure: redux-form (general store
+forced onto form state) was abandoned. Our own precedent: documents
+got a specialised model (historia) instead of island attributes, and
+undo/sharing/compatibility fell out.
+
+- **General model** (everything satisfies it): a field in the one
+  store, written through the gate, canon-checked, rehydratable,
+  inspectable. State whose category is not understood STAYS here -
+  a legitimate home, not a failure.
+- **Specialised models per proven category**: document -> historia
+  (proven); persisted value -> plain field (proven); kinetic -> motus
+  (proven); observation -> ports (proven); transient -> not saved
+  (to build); popover -> dismissal (candidate); reference ->
+  validation (candidate); app-wide non-document -> unknown, general
+  model for now.
+- Open: strict hierarchy, or a base + orthogonal properties
+  (lifetime, rhythm, relation) + whole models for some categories?
+  zoom = persisted+kinetic, stratum_activum = persisted+reference
+  suggest the latter. Let more widgets answer.
+
+Risks and mitigations:
+1. Invisible action at a distance - AOP (AspectJ) failed on woven
+   behaviour; Redux sagas/middleware drew the same complaint. Aspects
+   are NAMED on the field in the manifest; no pattern matching; few,
+   named systems. The manifest is where the invisible becomes visible.
+2. Aspect interactions grow ~n^2. Test: an aspect must compose with
+   the others without special cases ("unless it is also X" = not one
+   aspect).
+3. Frozen wrong categories (Eskil: API first). Hand migrations before
+   the generator; promotion from the general model only when a second
+   consumer proves the category.
+4. Over-rigour the other way: inventing a category so odd state has a
+   home. The general model being respectable prevents it.
+5. Cost: systems walk the store; store copy already parked (010);
+   measure at S8.
+
+**Positioning (Fran, 2026-10-10):** JS/browser frameworks cannot
+realize the ideal state model because they build on layers they do not
+own (the DOM keeps focus, selection, scroll, input values, IME state;
+hydration exists because server and client are different runtimes).
+We own every layer (fenestra's event pump, draw commands, the store,
+the volume format, silva's lints), so we can learn from their
+explorations and keep optimizing toward the ideal model, changing a
+lower layer when the model needs it. Corollary: separate their
+PRINCIPLES from their WORKAROUNDS - "keep UI state out of the store"
+is a workaround for React's re-render cost, not a principle.

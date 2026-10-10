@@ -30,26 +30,39 @@ widgets are migrated by hand.*
    (Redux's real shape), branches addressed by path at any depth.
 4. Iterate as dogfooding teaches; raise state-model friction
    explicitly.
+5. **The island canon is GENERATED from the campus list** (census IX):
+   one definition.
+6. **Systems over aspects** (census X): `scriptor` = one writer for
+   VALUE fields; cross-cutting behaviour (persistence, kinetic,
+   reference, popover, ...) = a framework system over an aspect named
+   on the field. An aspect is admitted when a second widget needs it.
+7. **A hierarchy of states** (census XI): a general model everything
+   satisfies + specialised models for proven categories; state whose
+   category is not understood stays in the general model.
 
 ## II. Arcs and slices
 
 ### Arc I — vocabulary, proven on pictor
 
-- **S0** pictor's manifest written by hand (doc only; Fran reviews) -
-  find the missing words.
-- **S1** `organum.canon` + loader library: manifest -> island canon(s),
-  owner list, field table. Tests: valid pictor manifest; each citation
+- **S0** DONE (2026-10-10): pictor's manifest by hand -
+  project-specs/status-s0-pictor.stml; findings in census IX.
+- **S1** `organum.canon` + loader library: manifest -> GENERATED
+  island canon(s), owner list, field table (with aspects). Tests: valid pictor manifest; each citation
   failure (unknown attribute, undeclared action, unknown binding);
   completeness (attribute without campus).
 - **S2** pictor loads from its manifest; its three files deleted.
   Behaviour identical (suites). Two-island split kept.
-- **S3** transient fields never reach disk (palette open -> quit ->
+- **S3** the PERSISTENCE system: transient fields never reach disk (palette open -> quit ->
   reopen -> closed); in-process rehydration keeps them. Starts by
   reading how islands are saved.
 - **S4** defaults from the manifest (`absens`), replacing C
   hard-codes and `nota` prose; test-only fields `vita="probatio"`.
-- **S5** references with fallback (`referentia` + `orbatus`) checked
+- **S5** the REFERENCE system: `referentia` + `orbatus` checked
   after every document act and undo; replaces `stratum_currens`.
+- **S5b** the POPOVER system: `aspectus="popover"` fields closed by the
+  dispatcher (Esc, outside click, any other act, another popover
+  opening); pictor's seven `palettam_claudere` calls disappear.
+  Second consumer: the calendar's day popups.
 - **Decision point**: collapse to one island per widget ("durable" =
   the binding only)?
 
