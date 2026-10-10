@@ -60,37 +60,21 @@ _pulchrum_probare(Piscina*             piscina,
     imprimere("  %s\n", titulus);
 }
 
-s32 principale(vacuum)
-{
-                Piscina* piscina;
-    InternamentumChorda* intern;
-                    b32  praeteritus;
-
-    /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_stml", IV * MXXIV);
-    si (!piscina)
-    {
-        imprimere("FRACTA: piscina_generatio\n");
-        redde I;
-    }
-
-    intern = internamentum_creare(piscina);
-    si (!intern)
-    {
-        imprimere("FRACTA: internamentum_creare\n");
-        piscina_destruere(piscina);
-        redde I;
-    }
-
-    credo_aperire(piscina);
-
 
     /* ==================================================
      * Probare stml_elementum_creare
      * ================================================== */
 
-    imprimere("\n--- Probans stml_elementum_creare ---\n");
+interior vacuum
+_probare_stml_elementum_creare (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
 
@@ -102,14 +86,23 @@ s32 principale(vacuum)
 
         imprimere("  Elementum 'root' creatum: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_textum_creare
      * ================================================== */
 
-    imprimere("\n--- Probans stml_textum_creare ---\n");
+interior vacuum
+_probare_stml_textum_creare (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
 
@@ -122,14 +115,23 @@ s32 principale(vacuum)
 
         imprimere("  Textus 'Hello World' creatum: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_attributum_addere
      * ================================================== */
 
-    imprimere("\n--- Probans stml_attributum_addere ---\n");
+interior vacuum
+_probare_stml_attributum_addere (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
            chorda* valor;
@@ -152,14 +154,23 @@ s32 principale(vacuum)
 
         imprimere("  Attributa addita et obtenta: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_attributum_boolean_addere
      * ================================================== */
 
-    imprimere("\n--- Probans stml_attributum_boolean_addere ---\n");
+interior vacuum
+_probare_stml_attributum_boolean_addere (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
            chorda* valor;
@@ -177,14 +188,23 @@ s32 principale(vacuum)
 
         imprimere("  Boolean attributum 'disabled': VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_liberum_addere
      * ================================================== */
 
-    imprimere("\n--- Probans stml_liberum_addere ---\n");
+interior vacuum
+_probare_stml_liberum_addere (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* parens;
         StmlNodus* liberum;
@@ -200,14 +220,23 @@ s32 principale(vacuum)
 
         imprimere("  Liberum additum: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere simplex
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere simplex ---\n");
+interior vacuum
+_probare_stml_legere_simplex (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -222,14 +251,23 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio '<root/>': VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare lineas nodorum (metadatum parsationis)
      * ================================================== */
 
-    imprimere("\n--- Probans lineas nodorum ---\n");
+interior vacuum
+_probare_lineas_nodorum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* radix_e;
@@ -278,14 +316,23 @@ s32 principale(vacuum)
 
         imprimere("  Lineae nodorum: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere cum attributis
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere cum attributis ---\n");
+interior vacuum
+_probare_stml_legere_cum_attributis (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
               chorda* val;
@@ -305,14 +352,23 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio attributa: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere boolean attributes
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere boolean attributes ---\n");
+interior vacuum
+_probare_stml_legere_attributa_sine_valore (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -333,14 +389,23 @@ s32 principale(vacuum)
 
         imprimere("  Boolean attribute 'disabled': VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere cum apostrophis (single quotes)
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere cum apostrophis ---\n");
+interior vacuum
+_probare_stml_legere_cum_apostrophis (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -355,14 +420,23 @@ s32 principale(vacuum)
 
         imprimere("  Recusatio apostrophorum: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere cum valoribus nudis (bare values)
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere cum valoribus nudis ---\n");
+interior vacuum
+_probare_stml_legere_cum_valoribus_nudis (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
               chorda* val;
@@ -386,14 +460,23 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio valoribus nudis: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere cum valoribus mixtis
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere cum valoribus mixtis ---\n");
+interior vacuum
+_probare_stml_legere_cum_valoribus_mixtis (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
               chorda* val;
@@ -422,14 +505,23 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio valoribus mixtis: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere cum liberis
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere cum liberis ---\n");
+interior vacuum
+_probare_stml_legere_cum_liberis (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* lib;
@@ -446,14 +538,23 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio liberis: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere cum textu
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere cum textu ---\n");
+interior vacuum
+_probare_stml_legere_cum_textu (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
               chorda textus;
@@ -469,14 +570,23 @@ s32 principale(vacuum)
 
         imprimere("  Parsatio textus: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere raw content tags (!)
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere raw content ---\n");
+interior vacuum
+_probare_stml_legere_raw_content (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
               chorda textus;
@@ -495,14 +605,23 @@ s32 principale(vacuum)
 
         imprimere("  Raw content '<code!>': VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare forward capture operators
      * ================================================== */
 
-    imprimere("\n--- Probans forward capture operator ---\n");
+interior vacuum
+_probare_forward_capture_operator (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* wrapper;
@@ -523,14 +642,23 @@ s32 principale(vacuum)
 
         imprimere("  Forward capture <wrapper (>: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare backward capture operators
      * ================================================== */
 
-    imprimere("\n--- Probans backward capture operator ---\n");
+interior vacuum
+_probare_backward_capture_operator (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* wrapper;
@@ -551,14 +679,23 @@ s32 principale(vacuum)
 
         imprimere("  Backward capture <) wrapper>: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare sandwich capture operators
      * ================================================== */
 
-    imprimere("\n--- Probans sandwich capture operator ---\n");
+interior vacuum
+_probare_operatorem_inclusum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* wrapper;
@@ -584,14 +721,23 @@ s32 principale(vacuum)
 
         imprimere("  Sandwich capture <= wrapper =>: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_scribere simplex
      * ================================================== */
 
-    imprimere("\n--- Probans stml_scribere simplex ---\n");
+interior vacuum
+_probare_stml_scribere_simplex (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
            chorda  output;
@@ -604,14 +750,23 @@ s32 principale(vacuum)
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<empty/>");
     }
+}
 
 
     /* ==================================================
      * Probare stml_scribere cum attributis
      * ================================================== */
 
-    imprimere("\n--- Probans stml_scribere cum attributis ---\n");
+interior vacuum
+_probare_stml_scribere_cum_attributis (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
            chorda  output;
@@ -625,14 +780,23 @@ s32 principale(vacuum)
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<item id=\"42\"/>");
     }
+}
 
 
     /* ==================================================
      * Probare stml_scribere boolean attributes
      * ================================================== */
 
-    imprimere("\n--- Probans stml_scribere boolean attr ---\n");
+interior vacuum
+_probare_stml_scribere_boolean_attr (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
            chorda  output;
@@ -648,14 +812,23 @@ s32 principale(vacuum)
         /* Boolean attributes should be serialized without ="true" */
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<button disabled/>");
     }
+}
 
 
     /* ==================================================
      * Probare stml_scribere cum liberis
      * ================================================== */
 
-    imprimere("\n--- Probans stml_scribere cum liberis ---\n");
+interior vacuum
+_probare_stml_scribere_cum_liberis (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* parens;
         StmlNodus* liberum;
@@ -672,14 +845,23 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output,
             "<parent><child/></parent>");
     }
+}
 
 
     /* ==================================================
      * Probare stml_scribere cum textu
      * ================================================== */
 
-    imprimere("\n--- Probans stml_scribere cum textu ---\n");
+interior vacuum
+_probare_stml_scribere_cum_textu (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
            chorda  output;
@@ -694,14 +876,23 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output,
             "<greeting>Hello</greeting>");
     }
+}
 
 
     /* ==================================================
      * Probare stml_scribere raw content
      * ================================================== */
 
-    imprimere("\n--- Probans stml_scribere raw content ---\n");
+interior vacuum
+_probare_stml_scribere_raw_content (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
         StmlNodus* textus;
@@ -720,14 +911,23 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output,
             "<code!><div>&amp;</div></code>");
     }
+}
 
 
     /* ==================================================
      * Probare roundtrip (parse -> serialize)
      * ================================================== */
 
-    imprimere("\n--- Probans roundtrip ---\n");
+interior vacuum
+_probare_roundtrip (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         constans character* stml_original =
             "<root attr=\"value\"><child>text</child></root>";
@@ -773,14 +973,23 @@ s32 principale(vacuum)
 
         imprimere("  Roundtrip: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere errores
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere errores ---\n");
+interior vacuum
+_probare_stml_legere_errores (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -790,14 +999,23 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(res.status, STML_ERROR_VACUUM_INPUT);
         imprimere("  Empty input detectum: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_legere cum commento
      * ================================================== */
 
-    imprimere("\n--- Probans stml_legere cum commento ---\n");
+interior vacuum
+_probare_stml_legere_cum_commento (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -813,14 +1031,23 @@ s32 principale(vacuum)
 
         imprimere("  Commenta parsata: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare stml_invenire_omnes_liberos
      * ================================================== */
 
-    imprimere("\n--- Probans stml_invenire_omnes_liberos ---\n");
+interior vacuum
+_probare_stml_invenire_omnes_liberos (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
                  Xar* items;
@@ -843,14 +1070,23 @@ s32 principale(vacuum)
         imprimere("  Invenire omnes 'item': %d (expected 3)\n",
             xar_numerus(items));
     }
+}
 
 
     /* ==================================================
      * Probare multiple forward captures
      * ================================================== */
 
-    imprimere("\n--- Probans multiple forward captures ---\n");
+interior vacuum
+_probare_capta_plura_priora (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* wrapper;
@@ -880,14 +1116,23 @@ s32 principale(vacuum)
 
         imprimere("  Multiple forward capture ((: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare errores: malformed tags
      * ================================================== */
 
-    imprimere("\n--- Probans errores malformed tags ---\n");
+interior vacuum
+_probare_errores_formae_pravae (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -939,14 +1184,23 @@ s32 principale(vacuum)
         CREDO_FALSUM(res.successus);
         imprimere("  Multiple closing tags detectum: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare errores: edge cases
      * ================================================== */
 
-    imprimere("\n--- Probans errores edge cases ---\n");
+interior vacuum
+_probare_errores_extremi (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -1030,14 +1284,23 @@ s32 principale(vacuum)
             XX);
         imprimere("  Many siblings (20): VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare capture edge cases
      * ================================================== */
 
-    imprimere("\n--- Probans capture edge cases ---\n");
+interior vacuum
+_probare_capta_extrema (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* outer;
@@ -1094,14 +1357,23 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "captured text");
         imprimere("  Text capture: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare PI and DOCTYPE
      * ================================================== */
 
-    imprimere("\n--- Probans PI et DOCTYPE ---\n");
+interior vacuum
+_probare_pi_et_doctype (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
 
@@ -1127,14 +1399,23 @@ s32 principale(vacuum)
             "html"));
         imprimere("  DOCTYPE: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare raw content edge cases
      * ================================================== */
 
-    imprimere("\n--- Probans raw content edge cases ---\n");
+interior vacuum
+_probare_contentum_crudum_extremum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
               chorda textus;
@@ -1194,14 +1475,23 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "TAB = test");
         imprimere("  Raw content with TAB word: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare serialization edge cases
      * ================================================== */
 
-    imprimere("\n--- Probans serialization edge cases ---\n");
+interior vacuum
+_probare_serialization_extrema (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
               chorda output;
@@ -1243,14 +1533,23 @@ s32 principale(vacuum)
             piscina)));
         imprimere("  Multiple attributes: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare parser.test.ts equivalents
      * ================================================== */
 
-    imprimere("\n--- Probans parser features ---\n");
+interior vacuum
+_probare_parser_features (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* p;
@@ -1332,14 +1631,23 @@ s32 principale(vacuum)
 
         imprimere("  Direct children search: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare capture-operators.test.ts equivalents
      * ================================================== */
 
-    imprimere("\n--- Probans capture operators (extended) ---\n");
+interior vacuum
+_probare_operatores_alteri (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* div;
@@ -1513,14 +1821,23 @@ s32 principale(vacuum)
 
         imprimere("  Partial capture: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare smart whitespace trimming
      * ================================================== */
 
-    imprimere("\n--- Probans smart whitespace trimming ---\n");
+interior vacuum
+_probare_spatia_resecta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* textus;
@@ -1680,14 +1997,23 @@ s32 principale(vacuum)
 
         imprimere("  Spatium album -> clausurae, circuitus exactus: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare tituli (labels)
      * ================================================== */
 
-    imprimere("\n--- Probans tituli (labels) ---\n");
+interior vacuum
+_probare_tituli_labels (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlNodus* nodus;
 
@@ -1875,14 +2201,23 @@ s32 principale(vacuum)
 
         imprimere("  HTML class compat: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare Navigatio (Traversal)
      * ================================================== */
 
-    imprimere("\n--- Probans navigatio ---\n");
+interior vacuum
+_probare_navigatio (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* div;
@@ -2030,14 +2365,23 @@ s32 principale(vacuum)
 
         imprimere("  stml_proximus_maior: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare Mutatio (Mutation)
      * ================================================== */
 
-    imprimere("\n--- Probans mutatio ---\n");
+interior vacuum
+_probare_mutatio (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* div;
@@ -2192,14 +2536,23 @@ s32 principale(vacuum)
 
         imprimere("  stml_substituere: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare Duplicatio (Cloning)
      * ================================================== */
 
-    imprimere("\n--- Probans duplicatio ---\n");
+interior vacuum
+_probare_duplicatio (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* div;
@@ -2260,14 +2613,23 @@ s32 principale(vacuum)
 
         imprimere("  stml_duplicare_superficialiter: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare Entity Unescaping
      * ================================================== */
 
-    imprimere("\n--- Probans Entity Unescaping ---\n");
+interior vacuum
+_probare_entitates_solutas (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* p;
@@ -2389,14 +2751,23 @@ s32 principale(vacuum)
 
         imprimere("  Unknown entities preserved: VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Probare Capture Operator Serialization (Roundtrip)
      * ================================================== */
 
-    imprimere("\n--- Probans Capture Operator Serialization ---\n");
+interior vacuum
+_probare_capture_operator_serialization (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus res;
               chorda serialized;
@@ -2627,6 +2998,7 @@ s32 principale(vacuum)
 
         imprimere("  limen tecti LXXII/LXXIII: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -2635,8 +3007,16 @@ s32 principale(vacuum)
      * latitudo dispositionem eligit, non formam
      * ================================================== */
 
-    imprimere("\n--- Probans collapsum verticalem ---\n");
+interior vacuum
+_probare_collapsum_verticalem (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* exemplar §0.2: catena captorum + terminalis bloci in
          * linea recenti, gradu uno altius, clausura suo gradu
@@ -2714,6 +3094,7 @@ s32 principale(vacuum)
 
         imprimere("  re-derivatio auctoris: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -2721,8 +3102,16 @@ s32 principale(vacuum)
      * - una aut duae servantur, plures ad duas cadunt
      * ================================================== */
 
-    imprimere("\n--- Probans lineas vacuas ---\n");
+interior vacuum
+_probare_lineas_vacuas (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* linea vacua inter fratres blocorum (et ante commentum)
          * servatur */
@@ -2788,6 +3177,7 @@ s32 principale(vacuum)
 
         imprimere("  vacua gradus documenti: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -2796,8 +3186,16 @@ s32 principale(vacuum)
      * tectum = max(LXXII, indentatio + XL)
      * ================================================== */
 
-    imprimere("\n--- Probans tectum profundum ---\n");
+interior vacuum
+_probare_tectum_profundum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* gradus XX (XL columnae indentationis): spina '<t(> '
          * + XXX litterae = XXXV columnae contenti - tectum
@@ -2840,6 +3238,7 @@ s32 principale(vacuum)
 
         imprimere("  fundus XL sub gradu XX: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -2847,8 +3246,16 @@ s32 principale(vacuum)
      * stml_textus_fluxus - genus declaratum accessorem vincit
      * ================================================== */
 
-    imprimere("\n--- Probans accessores valor/fluxus (M3) ---\n");
+interior vacuum
+_probare_accessores_valor_fluxus_m3 (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* VALOR: concatenatio valorum textus, sine triviis.
          * Contentum '\' iam dedentatum in exemplari vivit */
@@ -2954,6 +3361,7 @@ s32 principale(vacuum)
 
         imprimere("  fluxus: lectio prosae: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -2962,8 +3370,16 @@ s32 principale(vacuum)
      * servatae ('\' = exceptio authoris)
      * ================================================== */
 
-    imprimere("\n--- Probans re-involutionem fluxus ---\n");
+interior vacuum
+_probare_re_involutionem_fluxus (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* iunctio + cascas capturae: valor multilineus iunctus
          * intra tectum cadit -> forma capturae */
@@ -3073,6 +3489,7 @@ s32 principale(vacuum)
 
         imprimere("  margines sordidi verbatim: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -3090,8 +3507,16 @@ s32 principale(vacuum)
      * quae inline cadit recolligitur.
      * ================================================== */
 
-    imprimere("\n--- Probans attributa multilinea ---\n");
+interior vacuum
+_probare_attributa_multilinea (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* columna basalis: post titulum tagi ('=' col. XI),
          * clausura '/>' glutinata */
@@ -3208,6 +3633,7 @@ s32 principale(vacuum)
             "</>",
             "'>' glutinata + liberi bloci: PRAETERITUM");
     }
+}
 
 
     /* ==================================================
@@ -3219,8 +3645,16 @@ s32 principale(vacuum)
      * numquam ultra tres.
      * ================================================== */
 
-    imprimere("\n--- Probans capturam multiplicem ---\n");
+interior vacuum
+_probare_capturam_multiplicem (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* tres liberi -> '(((>' */
         _pulchrum_probare(piscina, intern,
@@ -3306,14 +3740,23 @@ s32 principale(vacuum)
 
         imprimere("  fidelitas multilinea (custos): PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
      * Fragment Tests
      * ================================================== */
 
-    imprimere("\n--- Probans Fragmenta ---\n");
+interior vacuum
+_probare_fragmenta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* Anonymous fragment parsing */
         StmlResultus  res;
@@ -3486,6 +3929,7 @@ s32 principale(vacuum)
 
         imprimere("  Nested fragments: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -3498,8 +3942,16 @@ s32 principale(vacuum)
      * explicita; hereditatem futuram obstruit).
      * ================================================== */
 
-    imprimere("\n--- Probans elementa attributorum ---\n");
+interior vacuum
+_probare_elementa_attributorum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* Forma parsatur: liberum titulo '@', titulus attributi
          * in campo proprio */
@@ -3747,6 +4199,7 @@ s32 principale(vacuum)
 
         imprimere("  Lex positionis (licitae): PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -3755,8 +4208,16 @@ s32 principale(vacuum)
      * linea stampata '<#01KYRF (> textus' res tabularii gignit)
      * ================================================== */
 
-    imprimere("\n--- Probans fragmenta capturantia ---\n");
+interior vacuum
+_probare_fragmenta_capta (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* Fragmentum nominatum capturans: textus frater captus,
          * circuitus octetim identicus (forma stampata) */
@@ -3905,6 +4366,7 @@ s32 principale(vacuum)
 
         imprimere("  Blocus articuli fragmentis binis: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -3912,8 +4374,16 @@ s32 principale(vacuum)
      * proximum claudit; forma authoris octetim servatur
      * ================================================== */
 
-    imprimere("\n--- Probans clausuram anonymam ---\n");
+interior vacuum
+_probare_clausuram_anonymam (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* proximum claudit - recursio ipsa 'proximum' dat */
         StmlResultus  res;
@@ -3971,14 +4441,23 @@ s32 principale(vacuum)
 
         imprimere("  Clausura anonyma orba errat: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
      * Transclusion Tests
      * ================================================== */
 
-    imprimere("\n--- Probans Transclusio ---\n");
+interior vacuum
+_probare_transclusio (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* Basic transclusion parsing */
         StmlResultus  res;
@@ -4104,6 +4583,7 @@ s32 principale(vacuum)
 
         imprimere("  Mixed content transclusion: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -4111,8 +4591,16 @@ s32 principale(vacuum)
      * (reliquum lineae CRUDUM - sine tags, sine entiis)
      * ================================================== */
 
-    imprimere("\n--- Probans capturam lineae crudae ---\n");
+interior vacuum
+_probare_capturam_lineae_crudae (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* Asperitates crudae: anguli, ampersand, quotae -
          * verbatim ad finem lineae */
@@ -4416,6 +4904,7 @@ s32 principale(vacuum)
 
         imprimere("  stml_strictum: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -4428,7 +4917,16 @@ s32 principale(vacuum)
      * lenis manet (strictum TITULUS_VACUUS iudicat, supra).
      * ================================================== */
 
-    imprimere("\n--- Probans titulum illegaliter incipientem ---\n");
+interior vacuum
+_probare_titulum_male_incipientem (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus r;
 
@@ -4463,6 +4961,7 @@ s32 principale(vacuum)
 
         imprimere("  titulus illegalis: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -4473,7 +4972,16 @@ s32 principale(vacuum)
      * dein character initialis normalis. Attributa numquam.
      * ================================================== */
 
-    imprimere("\n--- Probans titulos punctatos ---\n");
+interior vacuum
+_probare_titulos_punctatos (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus r;
               chorda scripta;
@@ -4516,6 +5024,7 @@ s32 principale(vacuum)
 
         imprimere("  tituli punctati: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -4529,7 +5038,16 @@ s32 principale(vacuum)
      * illegaliter incipiens) - grammatica aperta, non mutata.
      * ================================================== */
 
-    imprimere("\n--- Probans augmentationem ---\n");
+interior vacuum
+_probare_augmentationem (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  r;
            StmlNodus* aug;
@@ -4602,6 +5120,7 @@ s32 principale(vacuum)
 
         imprimere("  augmentatio: PRAETERITUM\n");
     }
+}
 
 
     /* ==================================================
@@ -4618,8 +5137,16 @@ s32 principale(vacuum)
      * pretium vetus 'forma interna plana' pretium manet sed fides
      * numquam laeditur. */
 
-    imprimere("\n--- Probans scriptionem pulchram contenti mixti ---\n");
+interior vacuum
+_probare_scripturam_pulchram_contenti_mixti (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     /* NOTA DE CLAUSURIS: modus pulcher clausuram TACITAM ('</>')
      * eligit dum contentum breve sit (vide STML_CLAUSURA_TACITA_
      * LINEAE). Liberi inline pulchrum=FALSUM ferunt, ergo formam
@@ -5065,14 +5592,23 @@ s32 principale(vacuum)
 
         imprimere("  E fidelitas: scriptio octetim eadem\n");
     }
+}
 
 
     /* ==================================================
      * Canonicalizatio CRLF (spec triviae §3)
      * ================================================== */
 
-    imprimere("\n--- Probans canonicalizationem CRLF ---\n");
+interior vacuum
+_probare_lineas_crlf (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* A. DOCUMENTUM CRLF: vexillum positum, arbor formam LF
          * videt, scriptio non-pulchra formam LF octetim reddit -
@@ -5159,14 +5695,23 @@ s32 principale(vacuum)
 
         imprimere("  D captura cruda sub CRLF: valor sine '\\r'\n");
     }
+}
 
 
     /* ==================================================
      * Scala generum textus: '<tag\>' (spec triviae §1.4)
      * ================================================== */
 
-    imprimere("\n--- Probans multilineam '<tag\\>' ---\n");
+interior vacuum
+_probare_multilineam_tag (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* A. BLOCUS VERSUUM: dedentatio in parsatione, structura
          * relativa servata, circuitus octetim, internus exactus */
@@ -5418,14 +5963,23 @@ s32 principale(vacuum)
         imprimere("  H formae (attributa/auto/vacuum/lineae "
                   "vacuae): VERUM\n");
     }
+}
 
 
     /* ==================================================
      * Trivia intra tagum (spec triviae §1.6)
      * ================================================== */
 
-    imprimere("\n--- Probans trivia intra tagum ---\n");
+interior vacuum
+_probare_trivia_intra_tagum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* A. TAG MULTILINEARIS: dispositio attributorum circuitum
          * octetim superest (foramen fidelitatis vetus clausum) */
@@ -5509,6 +6063,7 @@ s32 principale(vacuum)
 
         imprimere("  D pulcher dispositionem regenerat: VERUM\n");
     }
+}
 
 
     /* ==================================================
@@ -5523,8 +6078,16 @@ s32 principale(vacuum)
      * OMNES fragmenta sunt - exemplar unum.
      * ================================================== */
 
-    imprimere("\n--- Probans saccharum fragmenti nudi <> ---\n");
+interior vacuum
+_probare_saccharum_fragmenti_nudi (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         StmlResultus  res;
            StmlNodus* nodus;
@@ -5591,10 +6154,16 @@ s32 principale(vacuum)
 
         imprimere("  saccharum <> + clausura anonyma: VERUM\n");
     }
+}
 
 
-    imprimere("\n--- Probans scalam fugae clausurae crudae ---\n");
+interior vacuum
+_probare_scalam_fugae_clausurae_crudae (
+    CredoContextus* c)
+{
+    Piscina* piscina;
 
+    piscina = c->piscina;
     {
         /* SCALA FUGAE: '<' + solidi inversi N + '/T' +
          * delimitator. Gradus ZEPHYRUM TERMINAT; gradus maior
@@ -5694,10 +6263,19 @@ s32 principale(vacuum)
         imprimere("  scala fugae: gradus ZEPHYRUM-III per "
             "delimitatores III\n");
     }
+}
 
 
-    imprimere("\n--- Probans circuitum scalae fugae ---\n");
+interior vacuum
+_probare_circuitum_scalae_fugae (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
 
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
     {
         /* CIRCUITUS SOLUS NON SATIS EST: probat lectorem et
          * scriptorem INVERSOS esse, non verum dicere - ambo eodem
@@ -5788,27 +6366,156 @@ s32 principale(vacuum)
         imprimere("  circuitus scalae: valor ET octeti, utraque "
             "via\n");
     }
+}
 
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "stml_elementum_creare", _probare_stml_elementum_creare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "stml_textum_creare", _probare_stml_textum_creare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "stml_attributum_addere", _probare_stml_attributum_addere, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "stml_attributum_boolean_addere",
+        _probare_stml_attributum_boolean_addere, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "stml_liberum_addere", _probare_stml_liberum_addere, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "stml_legere simplex", _probare_stml_legere_simplex, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "lineas nodorum", _probare_lineas_nodorum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "stml_legere cum attributis", _probare_stml_legere_cum_attributis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_legere boolean attributes",
+        _probare_stml_legere_attributa_sine_valore, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "stml_legere cum apostrophis",
+        _probare_stml_legere_cum_apostrophis, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "stml_legere cum valoribus nudis",
+        _probare_stml_legere_cum_valoribus_nudis, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "stml_legere cum valoribus mixtis",
+        _probare_stml_legere_cum_valoribus_mixtis, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "stml_legere cum liberis", _probare_stml_legere_cum_liberis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_legere cum textu", _probare_stml_legere_cum_textu, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "stml_legere raw content", _probare_stml_legere_raw_content,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "forward capture operator", _probare_forward_capture_operator,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "backward capture operator", _probare_backward_capture_operator,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sandwich capture operator", _probare_operatorem_inclusum,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_scribere simplex", _probare_stml_scribere_simplex, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "stml_scribere cum attributis",
+        _probare_stml_scribere_cum_attributis, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "stml_scribere boolean attr", _probare_stml_scribere_boolean_attr,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_scribere cum liberis", _probare_stml_scribere_cum_liberis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_scribere cum textu", _probare_stml_scribere_cum_textu,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_scribere raw content", _probare_stml_scribere_raw_content,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "roundtrip", _probare_roundtrip, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_legere errores", _probare_stml_legere_errores, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "stml_legere cum commento", _probare_stml_legere_cum_commento,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "stml_invenire_omnes_liberos",
+        _probare_stml_invenire_omnes_liberos, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "multiple forward captures", _probare_capta_plura_priora,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "errores malformed tags", _probare_errores_formae_pravae, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "errores edge cases", _probare_errores_extremi, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "capture edge cases", _probare_capta_extrema, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "PI et DOCTYPE", _probare_pi_et_doctype, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "raw content edge cases", _probare_contentum_crudum_extremum,
+        NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "serialization edge cases", _probare_serialization_extrema,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "parser features", _probare_parser_features, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "capture operators (extended)",
+        _probare_operatores_alteri, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "smart whitespace trimming", _probare_spatia_resecta,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tituli (labels)", _probare_tituli_labels, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "navigatio", _probare_navigatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mutatio", _probare_mutatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "duplicatio", _probare_duplicatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "Entity Unescaping", _probare_entitates_solutas, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Capture Operator Serialization",
+        _probare_capture_operator_serialization, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "collapsum verticalem", _probare_collapsum_verticalem, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "lineas vacuas", _probare_lineas_vacuas, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "tectum profundum", _probare_tectum_profundum, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "accessores valor/fluxus (M3)",
+        _probare_accessores_valor_fluxus_m3, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "re-involutionem fluxus", _probare_re_involutionem_fluxus, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "attributa multilinea", _probare_attributa_multilinea, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "capturam multiplicem", _probare_capturam_multiplicem, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "Fragmenta", _probare_fragmenta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "elementa attributorum", _probare_elementa_attributorum, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "fragmenta capturantia", _probare_fragmenta_capta, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "clausuram anonymam", _probare_clausuram_anonymam, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "Transclusio", _probare_transclusio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "capturam lineae crudae", _probare_capturam_lineae_crudae, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "titulum illegaliter incipientem",
+        _probare_titulum_male_incipientem, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "titulos punctatos", _probare_titulos_punctatos, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "augmentationem", _probare_augmentationem, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scriptionem pulchram contenti mixti",
+        _probare_scripturam_pulchram_contenti_mixti, NIHIL, NIHIL,
+            NIHIL, NIHIL },
+    { "canonicalizationem CRLF", _probare_lineas_crlf,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "multilineam '<tag\\>'", _probare_multilineam_tag, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "trivia intra tagum", _probare_trivia_intra_tagum, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "saccharum fragmenti nudi <>", _probare_saccharum_fragmenti_nudi,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scalam fugae clausurae crudae",
+        _probare_scalam_fugae_clausurae_crudae, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "circuitum scalae fugae", _probare_circuitum_scalae_fugae, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
 
-    /* ==================================================
-     * Compendium
-     * ================================================== */
-
-    imprimere("\n");
-    credo_imprimere_compendium();
-
-    praeteritus = credo_omnia_praeterierunt();
-
-    /* Purificatio */
-    credo_claudere();
-    piscina_destruere(piscina);
-
-    si (praeteritus)
-    {
-        redde ZEPHYRUM;
-    }
-    alioquin
-    {
-        redde I;
-    }
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("stml", SECTIONES);
 }

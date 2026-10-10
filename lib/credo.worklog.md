@@ -168,3 +168,60 @@ What the API felt like - findings for slice 2:
 5. Assertion totals move under refactoring (parare's own NECESSE counts) -
    fine for the oracle (both runners count the same binary) but worth
    knowing before anyone treats totals as fixed.
+
+## 2026-10-10 - adoption test 2: four non-fabrica suites, four shapes
+
+| suite | shape | result |
+|---|---|---|
+| probatio_xar | 34 independent blocks, title INSIDE each | 34 sections, mechanical (script) |
+| probatio_stml | 67 sections, title BEFORE the block, some bare calls, shared `intern` | 67 sections, mechanical (script, 2nd mode); per-section intern - no block depended on a shared one |
+| probatio_cliens_tabularii | ONE daemon shared by dependent steps | 6 sections, daemon per section in parare/purgare (+0.8 s); 6 build/ debts gone ($TMPDIR scratch) |
+| probatio_vicus_iussa | scenario: one app fixture, steps I-VIII build on each other | ONE section; parare builds the app, purgare closes the volume |
+
+Findings (for credo slice 2):
+1. VACUA paid off at once: xar's "status_imprimere" block had asserted
+   nothing for months; v2 refused to call it a pass. Now asserts.
+2. purgare is what makes NECESSE safe - confirmed twice more: the daemon
+   is killed and its scratch removed after an aborted section; the
+   temporary volume is closed (plant without the close -> the
+   .volumen/-shm/-wal files stay in /tmp; tests leaking volumes once
+   turned a gate red on unchanged code).
+3. GAP - no suite-level fixture. Sections must be order-independent and
+   only per-section parare/purgare exist, so an expensive shared fixture
+   (daemon, app) is either rebuilt per section (cliens: cheap enough,
+   +0.8 s) or forces one big section (vicus: an app per step would be
+   absurd). Slice 2 candidate: suite parare/purgare.
+4. GAP - no named STEP inside a section. Scenario tests keep their
+   "--- VI: ... ---" prints; a failure says "section X FRACTA at line N",
+   not "step VI". Candidate: CREDO_GRADUS("VI ...") recorded in the
+   fracture.
+5. CANDIDATE HELPER - per-section scratch dir: the $TMPDIR/<name>.<pid>
+   helper now exists in 4 test files (sententiae_horreum, villa_agens,
+   git, cliens_tabularii). credo could hand each section `c->area` under
+   TMPDIR, removed after purgare (API change - needs Fran).
+6. CONVERTER: two old shapes are purely mechanical (title inside the
+   block / title before it); a scratch script did xar (34) and stml (67)
+   with refusals for anything else (statement between blocks, untitled
+   block, redde inside, shared variables). Traps it hit: a stale
+   "Compendium" banner before blocks added later, an 8-space banner,
+   blocks that never touch the shared pool (-Werror unused var), and
+   TITLE -> FUNCTION NAME brought English words into identifiers (the
+   Latin lint refused 16) - a real converter should name functions by
+   its own rule, not by the title.
+
+Lint (Fran 10-10: would silva linting help?). Conventions these suites
+showed that a silva check could enforce, from most to least valuable:
+- NECESSE in a suite that has file-scope mutable state (`hic_manens`
+  non-const) and no purgare that writes it -> warn (finding 2; the leak
+  is invisible until a section aborts).
+- a section function with no CREDO_* call reachable -> VACUA at run time
+  already; a lint would say it BEFORE running (finding 1).
+- `imprimere("--- Probans ...")` inside a converted suite -> credo
+  prints the header itself (duplicate headers seen in stml).
+- old-style suite (principale with credo_aperire + compendium) touched
+  by a commit -> inform "convertible" (drives incremental migration).
+- writes to build/ from a test without a debt -> fabrica already refuses
+  at run time; lint could point at TMPDIR earlier.
+These are pattern checks on the AST (calls inside functions referenced
+from a CredoSectio table, file-scope declarations) - silva selectors can
+express them; none needs flow analysis except "purgare writes X".

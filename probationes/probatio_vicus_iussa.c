@@ -218,36 +218,76 @@ frange_iussum (
     redde FALSUM;
 }
 
-s32 principale (vacuum)
-{
-           Volumen* vol;
-   VicusApplicatio  app;
-             Vicus* v;
-        ManusLudus* m;
-    ScribaMontatio* sin;
-    ScribaMontatio* dex;
-         character  hodie[XXXII];
-            time_t  nunc;
-     structura tm* tm;
+/* MUNDUS APPLICATIONIS (credo v2): applicatio vicus cum volumine
+ * temporario - parare aedificat, purgare volumen SEMPER claudit (etiam post NECESSE
+ * fractum: volumina temporaria relicta portas olim fregerunt). Gradus
+ * I-VIII scenarium UNUM sunt (quisque statum priorem sequitur), ergo
+ * sectio una, non sectiones ordine liberae. */
+nomen structura {
+             Volumen* vol;
+     VicusApplicatio  app;
+               Vicus* v;
+          ManusLudus* m;
+      ScribaMontatio* sin;
+      ScribaMontatio* dex;
+} MundusApplicationis;
 
-    piscina = piscina_generare_dynamicum("probatio_vicus_iussa",
-        LXIV * M);
-    si (!piscina)
-    { imprimere("FRACTA: piscina\n"); redde I;
-    }
-    credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+interior vacuum
+_applicationem_parare (
+    CredoContextus* c)
+{
+    MundusApplicationis* ms;
+
+    /* auxilia (attributum, nodus_status...) piscinam et intern
+     * fasciculi legunt: sectionis sunt */
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    CREDO_NECESSE_NON_NIHIL(intern);
+    ms = (MundusApplicationis*)piscina_allocare(piscina,
+        magnitudo(MundusApplicationis));
+    CREDO_NECESSE_NON_NIHIL(ms);
+    memset(ms, ZEPHYRUM, magnitudo(MundusApplicationis));
+    c->datum = ms;
     thema_initiare();
     (vacuum)setenv("SHELL", "/bin/sh", I);
-    vol = volumen_temporarium(piscina, "probatio_vicus_iussa");
-    CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern, vol,
-        NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
-    v = app.vicus;
-    m = manus_ludus_creare(piscina, app.d);
-    CREDO_VERUM(vicus_activam_ponere(v, "3"));
-    dispensator_recomponere(app.d);
-    sin = visus(v, VICUS_SINISTRUM);
-    dex = visus(v, VICUS_DEXTRUM);
+    ms->vol = volumen_temporarium(piscina, "probatio_vicus_iussa");
+    CREDO_NECESSE_NON_NIHIL(ms->vol);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&ms->app, piscina, intern,
+        ms->vol, NIHIL, CDLXXX, CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    ms->v = ms->app.vicus;
+    ms->m = manus_ludus_creare(piscina, ms->app.d);
+    CREDO_NECESSE(vicus_activam_ponere(ms->v, "3"));
+    dispensator_recomponere(ms->app.d);
+    ms->sin = visus(ms->v, VICUS_SINISTRUM);
+    ms->dex = visus(ms->v, VICUS_DEXTRUM);
+}
+
+interior vacuum
+_applicationem_purgare (
+    CredoContextus* c)
+{
+    MundusApplicationis* ms = (MundusApplicationis*)c->datum;
+
+    si (ms != NIHIL && ms->vol != NIHIL)
+    {
+        volumen_claudere(ms->vol);
+    }
+}
+
+interior vacuum
+_probare_iussa (
+    CredoContextus* c)
+{
+      MundusApplicationis* ms   = (MundusApplicationis*)c->datum;
+          VicusApplicatio* app  = &ms->app;
+                    Vicus* v    = ms->v;
+               ManusLudus* m    = ms->m;
+           ScribaMontatio* sin  = ms->sin;
+           ScribaMontatio* dex  = ms->dex;
+                character  hodie[XXXII];
+                   time_t  nunc;
+       structura tm* tm;
+
     CREDO_NON_NIHIL(sin->actiones_ctx.iussa);
     CREDO_VERUM(sin->actiones_ctx.iussa == dex->actiones_ctx.iussa);
     ictus(m, LINEA, ZEPHYRUM);
@@ -260,7 +300,7 @@ s32 principale (vacuum)
         TabulaPixelorum* tp;
                     i32  accentus;
 
-        tp = quadrum_pingere(&app, NIHIL);
+        tp = quadrum_pingere(app, NIHIL);
         CREDO_NON_NIHIL(tp);
         accentus = (i32)color_ad_pixelum(thema_color(
             COLOR_ACCENT_PRIMARY));
@@ -324,7 +364,7 @@ s32 principale (vacuum)
         CREDO_VERUM(n && pg && n->fines.x + n->fines.latitudo
             <= pg->fines.x - VI);
         /* pixela colore erroris in linea status sinistra */
-        tp = quadrum_pingere(&app, "build/probatio_vicus_iussa.png");
+        tp = quadrum_pingere(app, "build/probatio_vicus_iussa.png");
         CREDO_NON_NIHIL(tp);
         error    = (i32)color_ad_pixelum(thema_color(COLOR_ERROR));
         fundum   = ZEPHYRUM;
@@ -386,7 +426,7 @@ s32 principale (vacuum)
     /* dexter focatus; ictus UNUS in '$dies' sinistri: focat, currit */
     CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), XIV);
     CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
-    dispensator_recomponere(app.d);
+    dispensator_recomponere(app->d);
     ictus(m, IX, II);
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
@@ -397,15 +437,22 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), X);
     /* ictus primus extra iussum ('$foo' ignotum): focat solum */
     CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
-    dispensator_recomponere(app.d);
+    dispensator_recomponere(app->d);
     ictus(m, IX, XII);
     CREDO_VERUM(vicus_latus_focatum(v)
         == vicus_latus(vicus_activa(v), VICUS_SINISTRUM));
     CREDO_AEQUALIS_S32(attributum(v, "cursor_columna"), X);
     CREDO_VERUM(linea_est(sin, IX, hodie));
+}
 
-    imprimere("\n");
-    credo_imprimere_compendium();
-    volumen_claudere(vol);
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "iussa in pagina scribae (scenarium I-VIII)", _probare_iussa,
+      _applicationem_parare, _applicationem_purgare, NIHIL, NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (vacuum)
+{
+    redde credo_suitam_currere("vicus_iussa", SECTIONES);
 }
