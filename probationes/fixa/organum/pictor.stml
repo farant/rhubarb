@@ -1,6 +1,6 @@
 <!-- status S0 (2026-10-10): pictor's widget manifest, written BY HAND
      as a vocabulary test (project-specs/status-plan.md). Not loaded
-     by anything. Replaces, when S2 lands: apps/pictor/canones/
+     by anything. Replaced at S2 (apps/pictor/organum.stml): apps/pictor/canones/
      durabilis.canon + ephemera.canon + domini.stml.
 
      Every field below was traced to the code that reads/writes it

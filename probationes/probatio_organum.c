@@ -389,7 +389,8 @@ _probare_canonem_generatum (
 
     /* insula sana: persistens, transiens, probatio */
     CREDO_AEQUALIS_S32((s32)vitia_insulae(canon,
-        "<pictor instrumentum=\"linea\" zoom=\"2\" color_secundus=\"-1\""
+        "<pictor instrumentum=\"linea\" zoom=\"2\""
+        " color_secundus=\"-1\""
         " palette=\"color_primus\" stratum_activum=\"3\" puncta=\"4\""
         " fuga=\"x\"/>", c->piscina, in), ZEPHYRUM);
 
@@ -514,8 +515,9 @@ _probare_dominos (
     CREDO_NIHIL(scriptor_domini(domini, "fuga"));
 
     /* congruit cum domini.stml hodierno pro attributis communibus */
-    fons = filum_legere_totum("apps/pictor/canones/domini.stml",
-        c->piscina);
+    /* tabula manu scripta ante S2, congelata */
+    fons = filum_legere_totum(
+        "probationes/fixa/organum/domini_ante_s2.stml", c->piscina);
     CREDO_NECESSE(fons.mensura > ZEPHYRUM);
     r = stml_legere(fons, c->piscina, in);
     CREDO_NECESSE(r.successus);
@@ -545,6 +547,96 @@ _probare_dominos (
         }
     }
     CREDO_AEQUALIS_S32((s32)congruentes, XI);
+}
+
+
+/* ==================================================
+ * VII. S2: manifestum VIVUM pictoris = tabula ante S2
+ * ================================================== */
+
+/* manifestum vivum (apps/pictor/organum.stml + basis communis) dominos
+ * generat qui tabulam manu scriptam ante S2 aequant: omnis dominus
+ * novus idem scriptor; veteres absentes soli mortui (cursus, gradus,
+ * sigillum - census IX inventum 7) */
+interior vacuum
+_probare_pictorem_vivum (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                Organum* o;
+                Organum* basis;
+                    Xar* vitia;
+              StmlNodus* domini;
+              StmlNodus* ante;
+           StmlResultus  r;
+                    i32  i;
+                    s32  novi;
+                    s32  absentes;
+
+    in    = internamentum_creare(c->piscina);
+    o     = legere_plagulam(c->piscina, in, "apps/pictor/organum.stml",
+        &vitia);
+    vitia_imprimere(vitia);
+    basis = legere_plagulam(c->piscina, in, "apps/organum_commune.stml",
+        &vitia);
+    vitia_imprimere(vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_NECESSE_NON_NIHIL(basis);
+    CREDO_NECESSE(organum_basim_addere(o, basis));
+    domini = organum_dominos_generare(o, c->piscina, in);
+    CREDO_NECESSE_NON_NIHIL(domini);
+    r = stml_legere(filum_legere_totum(
+        "probationes/fixa/organum/domini_ante_s2.stml", c->piscina),
+        c->piscina, in);
+    CREDO_NECESSE(r.successus);
+    ante = stml_invenire_liberum(r.radix, "domini");
+    CREDO_NECESSE_NON_NIHIL(ante);
+
+    /* novus -> idem in tabula vetere */
+    novi = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(domini->liberi); i++)
+    {
+        StmlNodus* d;
+           chorda* a;
+           chorda* vetus;
+
+        d = *(StmlNodus**)xar_obtinere(domini->liberi, i);
+        a = stml_attributum_capere(d, "attributum");
+        CREDO_NECESSE_NON_NIHIL(a);
+        vetus = scriptor_domini(ante, chorda_ut_cstr(*a, c->piscina));
+        CREDO_NON_NIHIL(vetus);
+        si (vetus)
+        {
+            CREDO_CHORDA_AEQUALIS(*vetus,
+                *stml_attributum_capere(d, "scriptor"));
+        }
+        novi++;
+    }
+    CREDO_AEQUALIS_S32(novi, XVI);
+
+    /* vetus sine novo: soli mortui */
+    absentes = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(ante->liberi); i++)
+    {
+        StmlNodus* d;
+           chorda* a;
+
+        d = *(StmlNodus**)xar_obtinere(ante->liberi, i);
+        si (d->genus != STML_NODUS_ELEMENTUM)
+        {
+            perge;
+        }
+        a = stml_attributum_capere(d, "attributum");
+        si (   a && !scriptor_domini(domini, chorda_ut_cstr(*a,
+                c->piscina)))
+        {
+            CREDO_VERUM(chorda_aequalis_literis(*a, "cursus")
+                || chorda_aequalis_literis(*a, "gradus")
+                || chorda_aequalis_literis(*a, "sigillum"));
+            absentes++;
+        }
+    }
+    CREDO_AEQUALIS_S32(absentes, III);
 }
 
 
@@ -608,6 +700,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "domini",            _probare_dominos,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "basis",             _probare_basim,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pictor_vivus",      _probare_pictorem_vivum,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

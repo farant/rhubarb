@@ -329,3 +329,29 @@ explorations and keep optimizing toward the ideal model, changing a
 lower layer when the model needs it. Corollary: separate their
 PRINCIPLES from their WORKAROUNDS - "keep UI state out of the store"
 is a workaround for React's re-render cost, not a principle.
+
+## XII. CORRECTION: islands never reach disk (2026-10-10, before S2)
+
+Section I claimed "the ephemera island is today ALSO saved to disk".
+WRONG - measured: no app calls `insula_scribere` to a file, none
+installs an `InsulaActarius`, `insula_restituere` is in-process
+rehydration only. Both islands (durable and ephemera) are rebuilt
+from scratch at every launch: pictor's tool, colours, zoom, scriba's
+cursor all reset on restart today.
+
+What DOES persist across sessions (all in volumes, outside the island
+model): document logs (historia), vicus's layout index
+(`indicem_scribere`, plagula "vicus:latera"), scriba's pane -> page
+mapping (`scriba/visus/<id>`, vicus_applicatio).
+
+Consequences:
+- "vita persistens" is today a promise nothing keeps. S3 is not
+  "stop transient fields reaching disk" but "BUILD persistence of
+  persistens fields" (transient ones simply never get it).
+- No saved island exists, so no old island data needs migrating; the
+  durable island's latitudo/altitudo are in-memory copies of the
+  drawing's own `<documentum latitudo altitudo>` manifest (plagula
+  "documentum" in the drawing's volume - the truth, present in every
+  old drawing).
+- Once S3 writes islands, THEN island compatibility starts to matter:
+  saved islands need a version and a migration rule from day one.

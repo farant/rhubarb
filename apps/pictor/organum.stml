@@ -1,0 +1,107 @@
+<!-- organum.stml - manifestum pictoris (status-plan S2). Ex eo
+     generantur canon insulae (ambarum insularum dum divisio manet) et
+     domini; basis apps/organum_commune.stml ante campos proprios.
+
+     S2 = NULLA mutatio morum: campi ut hodie vivunt. Differentiae ab
+     S0 (project-specs/status-s0-pictor.stml), consulto:
+     - semen in INSULA manet (hodie ibi scribitur); in motum transit
+       postea (census IX inventum 3)
+     - latitudo, altitudo manent: copiae dimensionum documenti
+       (inventum 6; Franus: servare dum migratio munda paratur)
+     - declarationes mortuae omissae: paletta, titulus, sigillum,
+       <stratum>, selectio_*, cursus, gradus (census IX inventum 7)
+
+     Nulla insula hodie ad discum it (census XII): vita persistens
+     promissum est quod S3 servabit. -->
+<organum genus="pictor" versio="1">
+
+  <ligamina>
+    <ligamen nomen="documentum" genus="pictor-documentum" a="parens"/>
+  </ligamina>
+
+  <portae>
+    <porta nomen="imago" modus="petitio"
+      nota="imago glutinata - PictorActiones.imago_capere"/>
+  </portae>
+
+  <actiones>
+    <actio nomen="penicillus.ictus"/>
+    <actio nomen="aspergillum.ictus"/>
+    <actio nomen="spongia.ictus"/>
+    <actio nomen="linea.ictus"/>
+    <actio nomen="strata.agere"/>
+    <actio nomen="palette.aperire"/>
+    <actio nomen="color_primus.ponere"/>
+    <actio nomen="color_secundus.ponere"/>
+    <actio nomen="exemplar.ponere"/>
+    <actio nomen="magnitudo.ponere"/>
+    <actio nomen="instrumentum.eligere"/>
+    <actio nomen="motus" systema="verum"/>
+  </actiones>
+
+  <status>
+    <!-- dimensiones documenti (insula durabilis hodie) -->
+    <campus nomen="latitudo" typus="numerus" vita="persistens"
+            nota="copia latitudinis documenti (inventum 6)"/>
+    <campus nomen="altitudo" typus="numerus" vita="persistens"
+            nota="copia altitudinis documenti (inventum 6)"/>
+
+    <!-- persistens, discretus -->
+    <campus nomen="instrumentum" typus="nomen" vita="persistens"
+            scriptor="instrumentum.eligere"
+            nota="absens = nullum (linea ostendit 'nihil'). S2: nomen ut
+                  hodie; electio (optiones) restrictio est, postea"/>
+    <campus nomen="color_primus"   typus="numerus" vita="persistens"
+            absens="0"  scriptor="color_primus.ponere"/>
+    <campus nomen="color_secundus" typus="numerus" vita="persistens"
+            absens="-1" scriptor="color_secundus.ponere"
+            nota="-1 = nullus (solidus)"/>
+    <campus nomen="exemplar"       typus="numerus" vita="persistens"
+            absens="0"  scriptor="exemplar.ponere"
+            nota="exemplaria.h; 0 = solidus"/>
+    <campus nomen="magnitudo_penicilli"  typus="numerus" vita="persistens"
+            absens="1" scriptor="magnitudo.ponere"/>
+    <campus nomen="magnitudo_aspergilli" typus="numerus" vita="persistens"
+            absens="1" scriptor="magnitudo.ponere"/>
+    <campus nomen="magnitudo_lineae"     typus="numerus" vita="persistens"
+            absens="1" scriptor="magnitudo.ponere"/>
+    <campus nomen="stratum_activum" typus="numerus" vita="persistens"
+            scriptor="strata.agere"
+            referentia="documentum/stratum" orbatus="summum"/>
+
+    <!-- persistens, mobilis -->
+    <campus nomen="zoom"  typus="numerus" vita="persistens"
+            rhythmus="mobilis" absens="1" scriptor="motus"/>
+    <campus nomen="pan_x" typus="numerus" vita="persistens"
+            rhythmus="mobilis" absens="0" scriptor="motus"
+            nota="motus effundit; pictor Motus.pan legit (inventum 5)"/>
+    <campus nomen="pan_y" typus="numerus" vita="persistens"
+            rhythmus="mobilis" absens="0" scriptor="motus"/>
+
+    <!-- transiens -->
+    <campus nomen="palette" typus="nomen" vita="transiens"
+            aspectus="popover" scriptor="palette.aperire"
+            nota="palette aperta; absens = nulla"/>
+    <campus nomen="semen" typus="numerus" vita="transiens"
+            scriptor="aspergillum.ictus"
+            nota="semen ictus aspergilli (praevisio); in motum postea"/>
+
+    <!-- transiens, mobilis: in structura, non in insula -->
+    <campus nomen="tempora" typus="series" vita="transiens"
+            rhythmus="mobilis" sedes="motus" scriptor="aspergillum.ictus"
+            nota="hodie PictorActiones.tempora"/>
+    <campus nomen="captura" typus="textus" vita="transiens"
+            rhythmus="mobilis" sedes="motus" scriptor="motus"/>
+    <campus nomen="ictus_pendens" typus="series" vita="transiens"
+            rhythmus="mobilis" sedes="motus"/>
+
+    <!-- probatio -->
+    <campus nomen="puncta"        typus="numerus" vita="probatio"/>
+    <campus nomen="ictus_numerus" typus="numerus" vita="probatio"/>
+    <campus nomen="fuga"          typus="textus"  vita="probatio"/>
+    <campus nomen="numerus"       typus="numerus" vita="probatio"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

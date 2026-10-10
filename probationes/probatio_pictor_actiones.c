@@ -21,6 +21,7 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "credo.h"
+#include "pictor_organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -67,8 +68,6 @@ s32 principale (vacuum)
                     Xar* acta;
            VolumenActum* a;
                     i32  versio_ante;
-                 chorda  causa;
-                 chorda  fons;
                   Canon* ephemera;
               character  nihil_instr[] = "nihil";
 
@@ -87,21 +86,14 @@ s32 principale (vacuum)
         "<pictor latitudo=\"320\" altitudo=\"200\"/>",
         "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
         " magnitudo_penicilli=\"1\" zoom=\"1\"/>");
-    fons = filum_legere_totum("apps/pictor/canones/ephemera.canon",
-        piscina);
-    ephemera = canon_legere(fons, piscina, intern, &causa);
-    CREDO_NON_NIHIL(ephemera);
-    insula_ponere_canonem(repo, INSULA_EPHEMERA, ephemera);
     {
-              chorda domini;
-        StmlResultus res;
-        domini = filum_legere_totum("apps/pictor/canones/domini.stml",
-                                    piscina);
-        res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-                                     piscina, intern);
-        CREDO_VERUM(res.successus);
-        insula_dominos_legere(repo, INSULA_EPHEMERA,
-            res.elementum_radix);
+        StmlNodus* domini;
+
+        CREDO_VERUM(pictor_organum_parare(piscina, intern, &ephemera,
+            &domini));
+        CREDO_NON_NIHIL(ephemera);
+        insula_ponere_canonem(repo, INSULA_EPHEMERA, ephemera);
+        insula_dominos_legere(repo, INSULA_EPHEMERA, domini);
     }
     reg           = actio_registrum_creare(piscina, intern);
     memset(&actiones, ZEPHYRUM, magnitudo(actiones));

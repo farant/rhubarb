@@ -24,22 +24,12 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "credo.h"
+#include "pictor_organum_probationis.h"
 #include <stdio.h>
 #include <string.h>
 
 hic_manens Piscina*             piscina;
 hic_manens InternamentumChorda* intern;
-
-interior Canon*
-canonem_legere (
-    constans character* via)
-{
-    chorda causa;
-
-    redde canon_legere(filum_legere_totum(via, piscina), piscina,
-        intern,
-                       &causa);
-}
 
 interior b32
 valor_est (
@@ -88,18 +78,16 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(repo);
     p1 = insula_ramus(repo, "pictor", "p1");
     p2 = insula_ramus(repo, "pictor", "p2");
-    insula_ramus_canonem_ponere(&p1, INSULA_DURABILIS,
-        canonem_legere("apps/pictor/canones/durabilis.canon"));
-    insula_ramus_canonem_ponere(&p1, INSULA_EPHEMERA,
-        canonem_legere("apps/pictor/canones/ephemera.canon"));
     {
-        StmlResultus res;
+            Canon* canon;
+        StmlNodus* domini;
 
-        res = stml_legere_ex_literis(chorda_ut_cstr(filum_legere_totum(
-            "apps/pictor/canones/domini.stml", piscina), piscina),
-            piscina, intern);
+        CREDO_VERUM(pictor_organum_parare(piscina, intern, &canon,
+            &domini));
+        insula_ramus_canonem_ponere(&p1, INSULA_DURABILIS, canon);
+        insula_ramus_canonem_ponere(&p1, INSULA_EPHEMERA, canon);
         CREDO_VERUM(insula_ramus_dominos_legere(&p1, INSULA_EPHEMERA,
-            res.elementum_radix) > ZEPHYRUM);
+            domini) > ZEPHYRUM);
     }
     reg             = actio_registrum_creare(piscina, intern);
     memset(&actiones, ZEPHYRUM, magnitudo(actiones));

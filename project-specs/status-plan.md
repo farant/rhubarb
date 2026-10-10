@@ -46,11 +46,11 @@ widgets are migrated by hand.*
 
 - **S0** DONE (2026-10-10): pictor's manifest by hand -
   project-specs/status-s0-pictor.stml; findings in census IX.
-- **S1** `organum.canon` + loader library: manifest -> GENERATED
+- **S1** DONE 2026-10-10 (33c7c859; lib/organum.worklog.md). `organum.canon` + loader library: manifest -> GENERATED
   island canon(s), owner list, field table (with aspects). Tests: valid pictor manifest; each citation
   failure (unknown attribute, undeclared action, unknown binding);
   completeness (attribute without campus).
-- **S2** pictor loads from its manifest; its three files deleted.
+- **S2** DONE 2026-10-10 (lib/organum.worklog.md). pictor loads from its manifest; its three files deleted.
   Behaviour identical (suites). Two-island split kept.
 - **S3** the PERSISTENCE system: transient fields never reach disk (palette open -> quit ->
   reopen -> closed); in-process rehydration keeps them. Starts by

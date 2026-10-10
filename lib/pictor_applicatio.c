@@ -6,6 +6,7 @@
 #include "filum.h"
 #include "stml.h"
 #include "canon.h"
+#include "organum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -50,29 +51,56 @@ _via (
     redde chorda_ut_cstr(c, p);
 }
 
-interior Canon*
-canonem_legere (
+/* manifestum legere (radix + via); NIHIL si deest aut malum - vitia
+ * in stderr */
+interior Organum*
+manifestum_legere (
                 Piscina* p,
     InternamentumChorda* in,
+     constans character* radix,
      constans character* via)
 {
-    chorda  fons;
-    chorda  causa;
-     Canon* c;
+     chorda  fons;
+    Organum* o;
+        Xar* vitia;
+        i32  i;
 
-    fons = filum_legere_totum(via, p);
+    fons = filum_legere_totum(_via(p, radix, via), p);
     si (fons.mensura == ZEPHYRUM)
     {
-        fprintf(stderr, "pictor: canon abest: %s\n", via);
+        fprintf(stderr, "pictor: manifestum abest: %s\n", via);
         redde NIHIL;
     }
-    c = canon_legere(fons, p, in, &causa);
-    si (!c)
+    o = organum_legere(fons, p, in, &vitia);
+    per (i = ZEPHYRUM; i < xar_numerus(vitia); i++)
     {
-        fprintf(stderr, "pictor: canon malus %s: %.*s\n", via,
-                (int)causa.mensura, causa.datum);
+        chorda* v;
+
+        v = (chorda*)xar_obtinere(vitia, i);
+        fprintf(stderr, "pictor: %s: %.*s\n", via, (int)v->mensura,
+                (constans character*)v->datum);
     }
-    redde c;
+    redde o;
+}
+
+/* status-plan S2: manifestum pictoris cum basi communi */
+interior Organum*
+organum_pictoris (
+                Piscina* p,
+    InternamentumChorda* in,
+     constans character* radix)
+{
+    Organum* o;
+    Organum* basis;
+
+    o = manifestum_legere(p, in, radix, "apps/pictor/organum.stml");
+    basis = manifestum_legere(p, in, radix,
+        "apps/organum_commune.stml");
+    si (!o || !basis || !organum_basim_addere(o, basis))
+    {
+        redde NIHIL;
+    }
+    redde o;
 }
 
 Volumen*
@@ -157,10 +185,12 @@ pictor_montare (
                     i32  latitudo,
                     i32  altitudo)
 {
-                 chorda  domini;
-           StmlResultus  res;
                  chorda  durabilis;
      constans character* spatium;
+                Organum* organum;
+                  Canon* canon;
+                 chorda  causa;
+              StmlNodus* domini;
 
     si (!m || !piscina || !intern || !volumen || !repo)
     {
@@ -195,13 +225,25 @@ pictor_montare (
     m->ramus = id ? insula_ramus(repo, "pictor", id)
                   : insula_ramus_radix(repo);
 
-    /* canones PRIMUM: hospes elementum montatum numquam videt */
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS,
-        canonem_legere(piscina, intern, _via(piscina, radix,
-        "apps/pictor/canones/durabilis.canon")));
-    insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA,
-        canonem_legere(piscina, intern, _via(piscina, radix,
-        "apps/pictor/canones/ephemera.canon")));
+    /* canones PRIMUM (hospes elementum montatum numquam videt): ex
+     * manifesto GENERATI (status-plan S2), idem utrique insulae dum
+     * divisio manet */
+    organum = organum_pictoris(piscina, intern, radix);
+    si (!organum)
+    {
+        redde FALSUM;
+    }
+    causa.mensura = ZEPHYRUM;
+    causa.datum = NIHIL;
+    canon = organum_canonem_generare(organum, piscina, intern, &causa);
+    si (!canon)
+    {
+        fprintf(stderr, "pictor: canon generatus: %.*s\n",
+                (int)causa.mensura, (constans character*)causa.datum);
+        redde FALSUM;
+    }
+    insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS, canon);
+    insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA, canon);
 
     /* elementum initiale */
     durabilis = chorda_ex_literis(" latitudo=\"", piscina);
@@ -229,17 +271,14 @@ pictor_montare (
         redde FALSUM;
     }
 
-    /* domini POST initiationem */
-    domini = filum_legere_totum(_via(piscina, radix,
-        "apps/pictor/canones/domini.stml"), piscina);
-    res = stml_legere_ex_literis(chorda_ut_cstr(domini, piscina),
-        piscina, intern);
-    si (res.successus)
+    /* domini POST initiationem, ex manifesto generati */
+    domini = organum_dominos_generare(organum, piscina, intern);
+    si (domini)
     {
         (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_EPHEMERA,
-            res.elementum_radix);
+            domini);
         (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_DURABILIS,
-            res.elementum_radix);
+            domini);
     }
 
     /* contextus et registra propria */
