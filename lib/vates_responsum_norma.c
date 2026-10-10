@@ -52,7 +52,7 @@ _struere_usus (
     Piscina* piscina,
      Norma** facta)
 {
-    Norma* nodi[11];
+    Norma* nodi[12];
 
     si (facta[1])
     {
@@ -82,6 +82,8 @@ _struere_usus (
     nodi[10] = norma_textus(piscina);
     norma_aut_nullum(nodi[10]);
     norma_campus(nodi[0], "inference_geo", nodi[10], FALSUM);
+    nodi[11] = norma_liberum(piscina);
+    norma_campus(nodi[0], "server_tool_use", nodi[11], FALSUM);
     norma_modus(nodi[0], NORMA_NOTANDUM);
     facta[1] = nodi[0];
     redde nodi[0];
@@ -92,7 +94,7 @@ _struere_blocus (
     Piscina* piscina,
      Norma** facta)
 {
-    Norma* nodi[13];
+    Norma* nodi[26];
 
     si (facta[2])
     {
@@ -113,20 +115,49 @@ _struere_blocus (
     norma_campus(nodi[4], "name", nodi[6], VERUM);
     nodi[7] = norma_liberum(piscina);
     norma_campus(nodi[4], "input", nodi[7], VERUM);
+    nodi[8] = norma_liberum(piscina);
+    norma_campus(nodi[4], "caller", nodi[8], FALSUM);
     norma_modus(nodi[4], NORMA_NOTANDUM);
     norma_variatio(nodi[0], "tool_use", nodi[4]);
-    nodi[8] = norma_objectum(piscina);
-    nodi[9] = norma_textus(piscina);
-    norma_campus(nodi[8], "thinking", nodi[9], VERUM);
+    nodi[9] = norma_objectum(piscina);
     nodi[10] = norma_textus(piscina);
-    norma_campus(nodi[8], "signature", nodi[10], VERUM);
-    norma_modus(nodi[8], NORMA_NOTANDUM);
-    norma_variatio(nodi[0], "thinking", nodi[8]);
-    nodi[11] = norma_objectum(piscina);
-    nodi[12] = norma_textus(piscina);
-    norma_campus(nodi[11], "data", nodi[12], VERUM);
-    norma_modus(nodi[11], NORMA_NOTANDUM);
-    norma_variatio(nodi[0], "redacted_thinking", nodi[11]);
+    norma_campus(nodi[9], "thinking", nodi[10], VERUM);
+    nodi[11] = norma_textus(piscina);
+    norma_campus(nodi[9], "signature", nodi[11], VERUM);
+    norma_modus(nodi[9], NORMA_NOTANDUM);
+    norma_variatio(nodi[0], "thinking", nodi[9]);
+    nodi[12] = norma_objectum(piscina);
+    nodi[13] = norma_textus(piscina);
+    norma_campus(nodi[12], "data", nodi[13], VERUM);
+    norma_modus(nodi[12], NORMA_NOTANDUM);
+    norma_variatio(nodi[0], "redacted_thinking", nodi[12]);
+    nodi[14] = norma_objectum(piscina);
+    nodi[15] = norma_textus(piscina);
+    norma_campus(nodi[14], "id", nodi[15], VERUM);
+    nodi[16] = norma_textus(piscina);
+    norma_campus(nodi[14], "name", nodi[16], VERUM);
+    nodi[17] = norma_liberum(piscina);
+    norma_campus(nodi[14], "input", nodi[17], VERUM);
+    nodi[18] = norma_liberum(piscina);
+    norma_campus(nodi[14], "caller", nodi[18], FALSUM);
+    norma_modus(nodi[14], NORMA_NOTANDUM);
+    norma_variatio(nodi[0], "server_tool_use", nodi[14]);
+    nodi[19] = norma_objectum(piscina);
+    nodi[20] = norma_textus(piscina);
+    norma_campus(nodi[19], "tool_use_id", nodi[20], VERUM);
+    nodi[21] = norma_liberum(piscina);
+    norma_campus(nodi[19], "content", nodi[21], VERUM);
+    nodi[22] = norma_liberum(piscina);
+    norma_campus(nodi[19], "caller", nodi[22], FALSUM);
+    norma_modus(nodi[19], NORMA_NOTANDUM);
+    norma_variatio(nodi[0], "web_search_tool_result", nodi[19]);
+    nodi[23] = norma_objectum(piscina);
+    nodi[24] = norma_textus(piscina);
+    norma_campus(nodi[23], "tool_use_id", nodi[24], VERUM);
+    nodi[25] = norma_liberum(piscina);
+    norma_campus(nodi[23], "content", nodi[25], VERUM);
+    norma_modus(nodi[23], NORMA_NOTANDUM);
+    norma_variatio(nodi[0], "code_execution_tool_result", nodi[23]);
     norma_modus(nodi[0], NORMA_NOTANDUM);
     facta[2] = nodi[0];
     redde nodi[0];

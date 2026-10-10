@@ -1,0 +1,23 @@
+{
+  "clavis": "200:{container:z,content:[{caller:{type:s},id:s,input:{location:s},name:s,type:s}],diagnostics:z,id:s,model:s,role:s,stop_details:z,stop_reason:s,stop_sequence:z,type:s,usage:{cache_creation:{ephemeral_1h_input_tokens:n,ephemeral_5m_input_tokens:n},cache_creation_input_tokens:n,cache_read_input_tokens:n,inference_geo:s,input_tokens:n,output_tokens:n,output_tokens_details:{thinking_tokens:n},service_tier:s}}",
+  "causa": "exemplum 02_instrumentum.json",
+  "status": 200,
+  "capita": [
+    {
+      "titulus": "Content-Type",
+      "valor": "application/json"
+    },
+    {
+      "titulus": "request-id",
+      "valor": "req_011Cfs9MwPnku2ASBTRopM4h"
+    }
+  ],
+  "corpus": "{\"model\":\"claude-haiku-5-5\",\"id\":\"msg_011Cfs9Mwm7s2EngwngcbQHp\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_01Qs6nUS5vZM9S5fvwN86k52\",\"name\":\"get_weather\",\"input\":{\"location\":\"Rome\"},\"caller\":{\"type\":\"direct\"}}],\"container\":null,\"stop_reason\":\"tool_use\",\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":390,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":50,\"output_tokens_details\":{\"thinking_tokens\":0},\"service_tier\":\"standard\",\"inference_geo\":\"global\"},\"diagnostics\":null}",
+  "primum_visum": "2026-10-09T14:34:47Z",
+  "methodus": "POST",
+  "hospes": "api.anthropic.com",
+  "via": "/v1/messages",
+  "summarium": {
+    "model": "claude-haiku-5-5"
+  }
+}

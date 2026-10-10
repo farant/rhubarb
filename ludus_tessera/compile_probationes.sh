@@ -76,6 +76,7 @@ declare -a RADIX_FONTES=(
     "imago_opus"
     "color"
     "delineare"
+    "exemplaria"
     "delineare_mandata"
     "fenestra_textus"
     "fons"
@@ -117,6 +118,9 @@ declare -a RADIX_FONTES=(
     "scriba_actiones"
     "scriba_componentia"
     "scriba_documentum"
+    # vicus-latera S2b: liber paginarum scribae
+    "scriba_liber"
+    "iussum"
     "scriba_figurae"
     "vim"
     "tabula_characterum"

@@ -43,6 +43,34 @@ ictus (
     redde s;
 }
 
+/* ictus duorum punctorum (x0, y0) -> (x1, y1), magnitudine I */
+interior chorda
+ictus_duo (
+    Piscina* p,
+        s32  x0,
+        s32  y0,
+        s32  x1,
+        s32  y1)
+{
+    chorda s;
+
+    s = chorda_ex_literis("<ictus instrumentum=\"penicillus\" color=\"",
+                          p);
+    s = chorda_concatenare(s, chorda_ex_s32((s32)PALETTE_BLACK, p), p);
+    s = chorda_concatenare(s, chorda_ex_literis("\" magnitudo=\"1\">"
+                                                "<punctum x=\"", p), p);
+    s = chorda_concatenare(s, chorda_ex_s32(x0, p), p);
+    s = chorda_concatenare(s, chorda_ex_literis("\" y=\"", p), p);
+    s = chorda_concatenare(s, chorda_ex_s32(y0, p), p);
+    s = chorda_concatenare(s, chorda_ex_literis("\"/><punctum x=\"", p),
+                           p);
+    s = chorda_concatenare(s, chorda_ex_s32(x1, p), p);
+    s = chorda_concatenare(s, chorda_ex_literis("\" y=\"", p), p);
+    s = chorda_concatenare(s, chorda_ex_s32(y1, p), p);
+    s = chorda_concatenare(s, chorda_ex_literis("\"/></ictus>", p), p);
+    redde s;
+}
+
 interior i32
 pixelum (
     constans Imago* im,
@@ -54,6 +82,59 @@ pixelum (
     p = im->pixela + (y * (s32)im->latitudo + x) * IV;
     redde color_ad_pixelum(color_ex_rgba(p[ZEPHYRUM], p[I], p[II],
         p[III]));
+}
+
+/* in FILIO (CREDO_NON_PENDET): ictus extra tabulam in volumine suo -
+ * revolutio coordinatarum lineam ad x ~ 4e9 ducebat et pendebat */
+interior b32
+ictus_extra_in_filio (
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+             Volumen* v;
+    PictorDocumentum* d;
+
+    v = volumen_temporarium(piscina, "probatio_pictor_extra");
+    d = pictor_documentum_creare(piscina, intern, v, "", XXXII, XVI,
+        II);
+    (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, V, VIII, -X,
+        VIII));
+    (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, V, VIII, V,
+        XXX));
+    (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, X, X, -XX,
+        XL));
+    (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, -XX, -V, -V,
+        -XX));
+    volumen_claudere(v);
+    redde VERUM;
+}
+
+/* pixela coloris dati in rectangulo (x, y, latitudo, altitudo) */
+interior i32
+numerare (
+    constans Imago* im,
+               s32  x,
+               s32  y,
+               s32  latitudo,
+               s32  altitudo,
+               i32  color)
+{
+    s32 i;
+    s32 j;
+    i32 n;
+
+    n = ZEPHYRUM;
+    per (j = y; j < y + altitudo; j++)
+    {
+        per (i = x; i < x + latitudo; i++)
+        {
+            si (pixelum(im, i, j) == color)
+            {
+                n++;
+            }
+        }
+    }
+    redde n;
 }
 
 s32 principale (vacuum)
@@ -74,7 +155,7 @@ s32 principale (vacuum)
                     s64  q3;
                     s64  q4;
                     s64  massae_ante;
-                    i32  albus;
+                    i32  fundus;
                     i32  niger;
                     i32  i;
 
@@ -86,10 +167,10 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     thema_initiare();
-    albus = color_ad_pixelum(thema_color_ex_indice_colorationis(
-        (i8)PALETTE_WHITE));
-    niger = color_ad_pixelum(thema_color_ex_indice_colorationis(
-        (i8)PALETTE_BLACK));
+    /* vacatio: color fundi thematis (Franus 2026-10-09; olim
+     * PALETTE_WHITE) */
+    fundus  = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    niger   = color_ad_pixelum(color_ex_palette(PALETTE_BLACK));
 
     imprimere("\n--- Creatio: proiectio alba, cursor 0 ---\n");
     vol = volumen_temporarium(piscina, "probatio_pictor_documentum");
@@ -99,7 +180,7 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL(doc);
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc), ZEPHYRUM);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), V, V),
-                       albus);
+                       fundus);
     s1 = pictor_documentum_sigillum_hex(doc, piscina);
     CREDO_AEQUALIS_I32(s1.mensura, LXIV);
 
@@ -122,7 +203,7 @@ s32 principale (vacuum)
                        niger);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         III),
-                       albus);
+                       fundus);
     s2 = pictor_documentum_sigillum_hex(doc, piscina);
     CREDO_FALSUM(chorda_aequalis(s1, s2));
     /* checkpoint post ictum II (intervallum II): plagula + massa */
@@ -142,7 +223,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_S64(pictor_documentum_cursor(doc), q2);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         VIII),
-                       albus);
+                       fundus);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X, V),
                        niger);
     CREDO_VERUM(pictor_documentum_revocare(doc));
@@ -152,7 +233,7 @@ s32 principale (vacuum)
     /* nihil ultra */
     CREDO_FALSUM(pictor_documentum_revocare(doc));
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X, II),
-                       albus);
+                       fundus);
 
     imprimere("\n--- Reficere: ad q3, sigillum idem ---\n");
     CREDO_VERUM(pictor_documentum_reficere(doc));
@@ -172,7 +253,7 @@ s32 principale (vacuum)
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(doc), III);
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         VIII),
-                       albus);   /* mortuus */
+                       fundus);   /* mortuus */
     CREDO_AEQUALIS_I32(pixelum(pictor_documentum_proiectio(doc), X,
         XII),
                        niger);
@@ -206,6 +287,58 @@ s32 principale (vacuum)
         t1 = fenestra_tempus_ms();
         imprimere("  revocare unum: %ld ms\n", (long)(t1 - t0));
         CREDO_VERUM(t1 >= t0);
+    }
+
+    imprimere("\n--- Ictus extra tabulam: praeciditur ---\n");
+    {
+        PictorDocumentum* d;
+          constans Imago* im;
+
+        /* Franus 2026-10-08: tractus extra marginem sinistrum aut
+         * infimum ad marginem oppositum saliebat (coordinatae negativae
+         * ut i32 insignatum = ingentes) */
+        /* primum in filio: revolutio pendebat, non fallebat */
+        CREDO_NON_PENDET(ictus_extra_in_filio(piscina, intern), MM);
+        si (!credo_omnia_praeterierunt())
+        {
+            imprimere("  ictus extra tabulam pendet - pixela omissa\n");
+            credo_imprimere_compendium();
+            volumen_claudere(vol);
+            redde I;
+        }
+        d = pictor_documentum_creare(piscina, intern, vol, "extra",
+            XXXII, XVI, II);
+        CREDO_NON_NIHIL(d);
+        (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, V, VIII,
+            -X, VIII));
+        im = pictor_documentum_proiectio(d);
+        /* sinistrorsum: x 0..5 lineae VIII nigra, dexter fundus */
+        CREDO_AEQUALIS_I32(numerare(im, ZEPHYRUM, VIII, VI, I, niger),
+            VI);
+        CREDO_AEQUALIS_I32(numerare(im, XVI, ZEPHYRUM, XVI, XVI, niger),
+            ZEPHYRUM);
+        (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, V, VIII,
+            V,
+            XXX));
+        im = pictor_documentum_proiectio(d);
+        /* deorsum: columna V a VIII ad XV nigra, summum album */
+        CREDO_AEQUALIS_I32(numerare(im, V, VIII, I, VIII, niger), VIII);
+        CREDO_AEQUALIS_I32(numerare(im, ZEPHYRUM, ZEPHYRUM, XXXII, VII,
+            niger), ZEPHYRUM);
+        (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, X, X, -XX,
+            XL));
+        im = pictor_documentum_proiectio(d);
+        /* oblique extra: dimidium dextrum et summum alba manent */
+        CREDO_AEQUALIS_I32(numerare(im, XVI, ZEPHYRUM, XVI, XVI, niger),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32(numerare(im, ZEPHYRUM, ZEPHYRUM, XXXII, VII,
+            niger), ZEPHYRUM);
+        /* ictus totus extra: nihil */
+        (vacuum)pictor_documentum_actum(d, ictus_duo(piscina, -XX, -V,
+            -V, -XX));
+        im = pictor_documentum_proiectio(d);
+        CREDO_AEQUALIS_I32(numerare(im, XVI, ZEPHYRUM, XVI, XVI, niger),
+            ZEPHYRUM);
     }
 
     imprimere("\n");

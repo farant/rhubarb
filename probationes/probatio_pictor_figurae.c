@@ -66,10 +66,11 @@ s32 principale (vacuum)
                                      i32  n;
                                      i32  imagines;
                                      i32  lineae;
+                                     i32  accentus;
                                      i32  textus;
                                   chorda  sigillum;
                                      i32  niger;
-                                     i32  albus;
+                                     i32  fundus;
 
     piscina = piscina_generare_dynamicum("probatio_pictor_figurae",
         LXIV * M);
@@ -119,6 +120,7 @@ s32 principale (vacuum)
     sigillum  = pictor_documentum_sigillum_hex(doc, piscina);
     imagines  = ZEPHYRUM;
     lineae    = ZEPHYRUM;
+    accentus  = ZEPHYRUM;
     textus    = ZEPHYRUM;
     n         = mandata_numerus(m);
     per (i = ZEPHYRUM; i < n; i++)
@@ -130,9 +132,21 @@ s32 principale (vacuum)
             CREDO_VERUM(chorda_aequalis(x->textus, sigillum));
             CREDO_AEQUALIS_S32(x->fines.latitudo, XL);
         }
-        si (x->genus == MANDATUM_LINEA)
+        /* ictus pendens (P4a): disci I colore vero (palette 0), non
+         * linea accentus */
+        si (   x->genus          == MANDATUM_RECTANGULUM
+            && x->fines.latitudo == I && x->fines.altitudo == I
+            && x->color.genus    == COLOR_MANDATI_RGBA
+            && x->color.valor
+               == color_ad_pixelum(color_ex_palette(ZEPHYRUM)))
         {
             lineae++;
+        }
+        si (   x->genus       == MANDATUM_LINEA
+            && x->color.genus == COLOR_MANDATI_THEMA
+            && x->color.valor == (i32)COLOR_ACCENT_PRIMARY)
+        {
+            accentus++;
         }
         si (x->genus == MANDATUM_TEXTUS)
         {
@@ -141,7 +155,9 @@ s32 principale (vacuum)
         }
     }
     CREDO_AEQUALIS_I32(imagines, I);
-    CREDO_AEQUALIS_I32(lineae, I);          /* II puncta -> I linea */
+    /* (X, X) -> (XX, XV): punctum primum + X gradus lineae */
+    CREDO_AEQUALIS_I32(lineae, XI);
+    CREDO_AEQUALIS_I32(accentus, ZEPHYRUM);
     CREDO_AEQUALIS_I32(textus, I);
 
     imprimere("\n--- Fons imaginum: sigillum -> proiectio ---\n");
@@ -155,29 +171,29 @@ s32 principale (vacuum)
     tabula_pixelorum_vacare(t,
         color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
     delineare_mandata(m, t, pictor_imago_fons, &pf);
-    /* linea documenti y=2 sub pan (-5,3): schirmo y=5, x 0..34 nigra;
-     * x=35..: fundus (documentum album ibi absens? non: documentum
-     * 40 latum, pan -5 -> schirmo -5..34) */
+    /* linea documenti y=2 sub pan (-5,3) et margine cellulae (VI,
+     * VIII - tabula ad cellulam I, ut folium scribae): schirmo y=13,
+     * documentum x 1..40 */
         niger = color_ad_pixelum(
-            thema_color_ex_indice_colorationis((i8)PALETTE_BLACK));
-    albus = color_ad_pixelum(
-        thema_color_ex_indice_colorationis((i8)PALETTE_WHITE));
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, V),
+            color_ex_palette(PALETTE_BLACK));
+    /* vacatio: color fundi thematis (Franus 2026-10-09) */
+    fundus = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XIII),
                        niger);
-        CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, VI),
-                       albus);
-    /* extra documentum (x=40): MENSA prospectus (013: superficies
-     * circa paginam - prospectus figuram suam habet) */
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XXXV, X),
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XIV),
+                       fundus);
+    /* extra documentum dextrorsum (x=41): MENSA in cellula marginis */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XLI, XVIII),
         color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
-    /* margo paginae: cellula TOTA extra documentum (VI x VIII; schirmo
-     * documentum x -5..34, y 3..32 -> margo x -11..40, y -5..40):
-     * dextra x=40 videtur; ceterae extra prospectum (XL alto). Ubi
-     * margo vetus erat (y=33, I pixelum infra) nunc mensa */
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XL, X),
+    /* margo paginae: cellula TOTA extra documentum (schirmo documentum
+     * x 1..40, y 11..40 -> margo x -5..46, y 3..48): dexter x=46 et
+     * SUMMUS y=3 nunc videntur (olim summus extra prospectum - margo
+     * nusquam in vico visus, Franus 2026-10-08) */
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XLVI,
+        XVIII),
         color_ad_pixelum(thema_color(COLOR_BORDER)));
-    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, XXXIII),
-        color_ad_pixelum(thema_color(COLOR_SUPERFICIES)));
+    CREDO_AEQUALIS_I32(tabula_pixelorum_obtinere_pixelum(t, XX, III),
+        color_ad_pixelum(thema_color(COLOR_BORDER)));
     captura = imago_ex_tabula(t);
     sf = specimen_iudicare(&captura, "pictor_prima",
         specimen_regula_solita("probationes/pictor/specimina"),

@@ -77,6 +77,7 @@ declare -a RADIX_FONTES=(
     # mensa 2026-10-01 - sine Cocoa (tabula_pixelorum.h, T4a)
     "color"
     "delineare"
+    "exemplaria"
     "delineare_mandata"
     "fenestra_textus"
     "fons"

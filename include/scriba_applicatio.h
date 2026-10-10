@@ -38,6 +38,10 @@ nomen structura {
         FiguraRegistrum* figurae;
           ScribaFigurae  figurae_ctx;
        ScribaCompositio  compositio;
+    /* S2b: liber paginarum communis (NIHIL = documentum proprium);
+     * doc = pagina CURRENS - scriba_reficere eum cum actionibus
+     * concordat post navigationem */
+            ScribaLiber* liber;
 } ScribaMontatio;
 
 nomen structura {
@@ -55,7 +59,12 @@ nomen structura {
 /* scribam montare: id NIHIL = radix repositorii (elementum radicis
  * 'scriba' iam exstat); aliter liberum <scriba id> creatur si abest.
  * Ordo: canones, elementum initiale, domini (scriptura initialis
- * anonyma ne recusetur). radix = praefixum viarum canonum. */
+ * anonyma ne recusetur). radix = praefixum viarum canonum. Folium
+ * NOVUM (vicus-latera S2c) magnitudine superficiei: cellulae minus
+ * margines et linea status (XX x X minimum); exstans suum servat.
+ * liber (S2b): visus paginae libri - pagina ex plagula
+ * 'scriba/visus/<id>' (absens: prima), documentum libri (commune);
+ * NIHIL = documentum proprium in spatio id (mos prior). */
 b32
 scriba_montare (
          ScribaMontatio* m,
@@ -66,7 +75,18 @@ scriba_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo);
+                    i32  altitudo,
+            ScribaLiber* liber);
+
+/* Visus stalus reficitur (vicus-latera S2b): si alius visus paginam
+ * commisit (cursor documenti != cursor_laboris), folium laboris ex
+ * proiectione - visus sine gestu pendente solum (commissio in omni
+ * commutatione foci et tabulae: solus visus focatus scribit). m->doc
+ * cum actionibus concordat (post navigationem). VERUM si mutatum
+ * (quadrum pingendum). Vicus in pulsu et ante focum vocat. */
+b32
+scriba_reficere (
+    ScribaMontatio* m);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "scriba.volumen"). Reddit volumen apertum aut NIHIL. */

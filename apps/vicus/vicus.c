@@ -2,10 +2,11 @@
  * FENESTRA
  *
  * Compositio communis (vicus_applicatio) + glutinum fenestrae;
- * fenestra ad SCALA II (pixelum nostrum = II puncta, ut terminale);
+ * fenestra ad SCALA II (pixelum nostrum = II puncta, ut terminale)
+ * in plena visione (vicus-latera S2c; -fumus: magnitudo fixa);
  * tabulae vivae pulsantur (vicus-latera S1c);
- * gemellus vicus_terminalis.c (insula-rami-plan T4). Ctrl-A, deinde
- * n / p / 1-9 aut Ctrl-A (tabula prior); ictus in tabulam. -fumus:
+ * gemellus vicus_terminalis.c (insula-rami-plan T4). Cmd+1..9, Cmd+0
+ * = tabula (Ctrl-A ad latus focatum - tmux); ictus in tabulam. -fumus:
  * volumen temporarium, XXX quadra, exitus; -volumen <via>
  * (ordinarie vicus.volumen).
  */
@@ -54,6 +55,13 @@ principale (
                                         s32  exitus;
                          constans character* via_imaginis;
                                         s32  k;
+                                        i32  latitudo;
+                                        i32  altitudo;
+                                        i32  spatium_lat;
+                                        i32  spatium_alt;
+                                        i32  latitudo_fenestrae;
+                                        i32  altitudo_fenestrae;
+                                        b32  plena;
 
     piscina = piscina_generare_dynamicum("vicus", VIII * M * M);
     si (!piscina)
@@ -78,19 +86,47 @@ principale (
         fprintf(stderr, "vicus: volumen aperiri non potuit\n");
         redde I;
     }
+    /* S2c: vicus in PLENA VISIONE aperitur (Franus 2026-10-08: sic
+     * laborat) - compositio et documenta nova magnitudine schirmi
+     * totius; fenestra ante transitum spatium utile tenet, altitudine
+     * pixelis nostris integra, ut scala tabulae II exacte sit (scala in
+     * creatione figitur: 1147/573 = 2.0017 schirmum 599 non 600
+     * daret). fumus: magnitudo fixa, sine plena visione (imagines
+     * certae). */
+    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
+    cfg.x               = C;
+    cfg.y               = C;
+    cfg.vexilla         = FENESTRA_ORDINARIA;
+    latitudo            = VICUS_LATITUDO;
+    altitudo            = VICUS_ALTITUDO;
+    altitudo_fenestrae  = VICUS_ALTITUDO;
+    latitudo_fenestrae  = VICUS_LATITUDO;
+    si (   !fumus
+        && fenestra_spatium_schirmi(&spatium_lat, &spatium_alt))
+    {
+        latitudo            = spatium_lat / SCALA;
+        altitudo            = spatium_alt / SCALA;
+        latitudo_fenestrae  = latitudo;
+        altitudo_fenestrae  = altitudo;
+        si (fenestra_spatium_utile(&cfg.x, &cfg.y, &spatium_lat,
+                &spatium_alt))
+        {
+            latitudo_fenestrae = spatium_lat / SCALA;
+            altitudo_fenestrae = spatium_alt / SCALA;
+        }
+        plena = VERUM;
+    }
     si (!vicus_applicatio_aedificare(&app, piscina, intern, vol, NIHIL,
-            VICUS_LATITUDO, VICUS_ALTITUDO))
+            latitudo, altitudo))
     {
         redde I;
     }
+    /* S4: horologium locale in linea tabularum */
+    vicus_horologium_ponere(app.vicus, vicus_horologium_locale, NIHIL);
 
-    memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));
     cfg.titulus   = "vicus";
-    cfg.x         = C;
-    cfg.y         = C;
-    cfg.latitudo  = VICUS_LATITUDO * SCALA;
-    cfg.altitudo  = VICUS_ALTITUDO * SCALA;
-    cfg.vexilla   = FENESTRA_ORDINARIA;
+    cfg.latitudo  = latitudo_fenestrae * SCALA;
+    cfg.altitudo  = altitudo_fenestrae * SCALA;
     fenestra      = fenestra_creare(piscina, &cfg);
     si (!fenestra)
     {
@@ -98,7 +134,16 @@ principale (
         redde I;
     }
     tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
-                                               VICUS_ALTITUDO);
+                                               altitudo_fenestrae);
+    /* plena visio POST tabulam: scala in creatione tabulae ex
+     * altitudine fenestrae CURRENTE figitur - vexillum PLENA_VISIO
+     * transitum in fenestra_creare incipit, et fenestra iam crescens
+     * scalam > II dabat (spatium logicum minus documentis: columna et
+     * linea nimiae, Franus) */
+    si (plena)
+    {
+        fenestra_commutare_plenam_visionem(fenestra);
+    }
     lf = ludus_fenestra_creare(piscina, app.d, vicus_figurae(app.vicus),
                                ZEPHYRUM, vicus_imago_fons, app.vicus,
                                tabula);

@@ -1,0 +1,1 @@
+{"model":"claude-sonnet-5-5","max_tokens":4000,"thinking":{"type":"adaptive","display":"summarized"},"output_config":{"effort":"medium"},"messages":[{"role":"user","content":"A bat and a ball cost 1.10 in total. The bat costs 1.00 more than the ball. How much does the ball cost? Think it through, then answer in one line."}]}

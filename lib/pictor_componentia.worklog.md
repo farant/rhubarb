@@ -35,3 +35,59 @@ promoted — it shows the stroke in flight (`puncta="10,20 12,22"`)
 and the pan as `translatio_x="-5"`, the signed serializer at work.
 Planted fault: the stroke copy skipped — red at `numerus_punctorum`
 and at the exemplar, green on revert. Examen ACCIPE; formator 0.
+
+## 2026-10-08 - canvas one cell in from the prospect (border visible, like scriba)
+
+Fran: no border around the pictor canvas in vicus. The border existed
+(figura_tabulae draws the page margin one whole CELL outside the
+document) but S2c sized new canvases to fill the whole prospect, so the
+margin lay outside the view. Now the canvas node sits at (cw, ch) in
+the prospect (like scriba's page at its margin cell) and new canvases
+are the prospect minus one cell on each side (pictor_applicatio). The
+margin cell and border show on all sides in a fitting pane.
+
+Goldens moved with it, each inspected before promotion: pictor.arbor
+(only the tabula's x/y), specimen pictor_prima (border now visible top
+and right; stroke and pending line shifted with the canvas), and the
+tessellation scene VII in probatio_tessellatio (canvas outline one
+column/row in). Pixel pins in probatio_pictor_figurae moved by (6, 8)
+and now also pin the TOP border pixel - the visible proof.
+
+## 2026-10-09 - P1a: the tool bar
+
+Fran: pictor's controls live at the bottom - squares showing the
+current selection, palettes on click (P1b). The status line became 3
+cells (STATUS_LINEAE in pictor_applicatio.c): children
+`quadratum.instrumentum`, `quadratum.color_primus`,
+`quadratum.color_secundus` (PARTES_BOTTONE, 20 x 20), each TITLED with
+what to draw ("instrumentum:aspergillum", "color:0", "color:-1") -
+data, like the canvas points; `figura_quadrati` draws icon / swatch /
+cross, `figura_tituli` starts its text after the last child. Icons are
+16 x 16 '.#' string grids (brush 16 rows; spray 44 pixels). Swatches
+use COLOR_MANDATI_INDEX - the COLOURING palette, the one stroke colours
+use (not the semantic palette). The app's initial `color_secundus` was
+5 ("white" = the yellow, same confusion as the canvas) - now -1
+(none) until patterns use it. New canvases are 16 px shorter (taller
+bar). Tests: probatio_pictor_aspergillum VIII (titles, swatch fill,
+cross, icon pixel count, text offset); goldens: pictor.arbor,
+pictor_prima, tessellation scene VII line 29, montatio 440, twin text
+column 14 on the bar's middle line.
+
+## 2026-10-09 - P1b: palettes
+
+A click on a bar square opens its palette (ephemeral `palette` =
+instrumentum / color_primus / color_secundus; same square again
+closes, another switches). The composer adds node `palette`
+(PARTES_DIALOGUS) as the LAST child of the root - drawn over the
+canvas, hit first - just above the square: options are squares
+(`optio.<genus>.<valor>`, same title encoding and figure as the bar),
+6 per row, the current one titled `...:electum` (accent border).
+Ownership drives the action names: each option carries the action
+that OWNS its attribute in domini.stml (`color_primus.ponere`,
+`color_secundus.ponere`, `instrumentum.eligere`), so one colour
+handler is registered under both colour names and reads which from
+the option id. Closing: option click, Esc (`instrumentum.eligere` key
+path - the root's action sees keys the canvas does not take), and a
+canvas press while open (closes only, draws nothing, like a menu).
+Note: the theme's colouring palette repeats entries (slots 0, 13, 14,
+15 are the same dark green), so the colour palette shows duplicates.

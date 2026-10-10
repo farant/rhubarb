@@ -1625,6 +1625,10 @@ PORTAE = {
                 r'fumus annalium: (sanum|FRACTUM)'),
     # credo v2 (sectiones, plagula verdictorum, NECESSE): suitae fictae
     'credo': (['./tools/credo_fumus.sh'], r'fumus credo: (sanum|FRACTUM)'),
+    # agmen (SIMD per compilatorem): ansae nuclei notatae vectorizatae,
+    # via relata scalaris - celeritas invisibilis aliter tacite periret
+    'agmen-vectorizatio': (['./tools/agmen_vectorizatio.sh'],
+                           r'vectorizatio agminis: (sana|FRACTA|nihil actum)'),
     # fumi sine oculis (2026-09-24, ex inventario 'suitae
     # probationum'): villa crure faciei omisso, silex sine -agere
     'villa': (['./apps/villa/fumus.sh', '-sine-facie'],

@@ -462,6 +462,34 @@ s32 principale (vacuum)
                 | expect.b);
     }
 
+    imprimere("\n--- IVb. exemplar in cellulis non pingitur ---\n");
+    /* rectangulum plenum, deinde exemplar (indicium foci) super eum:
+     * cellulae fundum pleni servant */
+    m = mandata_creare(piscina, intern);
+    {
+        ColorMandati index_c;
+        ColorMandati alius_c;
+               Color expect;
+
+        index_c.genus = COLOR_MANDATI_INDEX;
+        index_c.valor = VII;
+        alius_c.genus = COLOR_MANDATI_INDEX;
+        alius_c.valor = III;
+        mandata_rectangulum(m, _fines(ZEPHYRUM, ZEPHYRUM, XII, VIII),
+            index_c, VERUM);
+        mandata_rectangulum_exemplar(m, _fines(ZEPHYRUM, ZEPHYRUM, XII,
+            VIII), alius_c, XXI);
+        tessellatio_computare(m, &modulus, RUNAE_POLITICA_GRAPHEMATUM,
+            NIGER, NIHIL, NIHIL, NIHIL, cellulae);
+        expect = thema_color_ex_indice_colorationis((i8)VII);
+        CREDO_AEQUALIS_I32(cellulae[ZEPHYRUM].color_fundi,
+            ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
+                | expect.b);
+        CREDO_AEQUALIS_I32(cellulae[I].color_fundi,
+            ((i32)expect.r << XVI) | ((i32)expect.g << VIII)
+                | expect.b);
+    }
+
     imprimere("\n--- V. via pixelorum (T4, praedicta) ---\n");
     pixela       = piscina_generare_dynamicum("tessellatio_pixela",
         IV * M * M);
@@ -631,6 +659,8 @@ s32 principale (vacuum)
      constans character* exspectata[XXX];
               character  medium[CXXVIII];
               character  summum[CCLVI];        /* ─ = III octeti */
+              character  tabulae_summum[CCLVI];
+              character  tabulae_medium[CXXVIII];
 
         fons =
             filum_legere_totum("probationes/pictor/pictor.arbor.stml",
@@ -674,14 +704,42 @@ s32 principale (vacuum)
             strcat(medium, " ");
         }
         strcat(medium, "\xE2\x94\x82       ");
-        exspectata[ZEPHYRUM] = summum;
-        per (l = I; l < XXIX; l++)
+        /* tabula ad cellulam I prospectus (margo pictoris,
+         * vicus-latera 2026-10-08): x VI*II-V = VII -> columna I, y
+         * VIII*II+III = XIX -> linea II; margo summus tabulae (ad
+         * marginem dextrum prospectus iungitur), deinde latus sinistrum
+         * intra prospectum; imus extra (tabula prospectu altior) */
+        strcpy(tabulae_summum, "\xE2\x94\x82\xE2\x94\x8C");
+        per (l = ZEPHYRUM; l < L; l++)
         {
-            exspectata[l] = medium;
+            strcat(tabulae_summum, "\xE2\x94\x80");
         }
+        strcat(tabulae_summum, "\xE2\x94\xBC       ");
+        strcpy(tabulae_medium, "\xE2\x94\x82\xE2\x94\x82");
+        per (l = ZEPHYRUM; l < L; l++)
+        {
+            strcat(tabulae_medium, " ");
+        }
+        strcat(tabulae_medium, "\xE2\x94\x82       ");
+        exspectata[ZEPHYRUM]  = summum;
+        exspectata[I]         = medium;
+        exspectata[II]        = tabulae_summum;
+        per (l = III; l < XXIX; l++)
+        {
+            exspectata[l] = tabulae_medium;
+        }
+        /* P1a: quadrata lineae status (XX x XX, x VI/XXXII/LVIII;
+         * P3 LXXXIV exemplar, P4a CX magnitudo) ut
+         * fines (figura_finium probationis) - margines summi super
+         * titulum (figura tituli probationis textum non promovet;
+         * linea status hic VIII alta, quadrata infra eam exeunt) */
         exspectata[XXIX] =
-            "penicillus                                        "
-            "          ";
+            "p\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
+            "c\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x80\xE2\x94\x90"
+            "s\xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
+            " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x90"
+            " \xE2\x94\x8C\xE2\x94\x80\xE2\x94\x80\xE2\x94\x90"
+            "                                      ";
         CREDO_VERUM(_scaena_congruit(grandes, LX, XXX, exspectata));
     }
 

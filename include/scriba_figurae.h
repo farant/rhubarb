@@ -3,7 +3,9 @@
  * <purus/>: figurae arborem (data paginae: puncta, titulus) et
  * contextum (folium laboris) legunt. Mensa (prospectus), folium
  * (campus: charta, margo, selectio, cursor, textus), status (titulus:
- * modus colore suo, positio).
+ * modus colore suo, positio), index paginae (filius status, dextrorsum:
+ * "pagina i/n" - visus super librum solum, vicus-latera S2b),
+ * nuntius (filius status, colore erroris - S3b-2).
  *
  * Cursor stabilis (sine nictatu: horologium unum - nictatus ex
  * tempore muri vetaretur); quadratum plenum colore status modi sui
@@ -50,6 +52,24 @@ scriba_figura_folii (
 /* <purus/> */
 vacuum
 scriba_figura_status (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx);
+
+/* <purus/> index paginae (PARTES_INDEX, filius status): titulus textu
+ * in fines suos; fundum status iam pinxit */
+vacuum
+scriba_figura_paginae (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx);
+
+/* <purus/> nuntius (PARTES_DIALOGUS, filius status): titulus colore
+ * erroris in fines suos; fundum status iam pinxit */
+vacuum
+scriba_figura_nuntii (
     constans Componens* c,
                Mandata* m,
                    i32  thema,

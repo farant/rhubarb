@@ -2,6 +2,10 @@
 
 #include "scriba_figurae.h"
 #include "thema.h"
+#include "exemplaria.h"
+
+/* indicium foci: exemplar marginis lateris focati (vicus-latera) */
+#define EXEMPLAR_FOCI EXEMPLAR_PUNCTA_DUPLICIA_DISPERSA
 
 #include <string.h>
 
@@ -48,6 +52,71 @@ visibilis (
     redde (o >= XXXII && o < CXXVII) ? c : ' ';
 }
 
+/* S3b: signa iussorum notorum lineae l iterum pinguntur colore
+ * accentus (iidem glyphi super textum iam pictum) */
+interior vacuum
+iussa_colorare (
+                        Mandata* m,
+     constans TabulaCharacterum* t,
+                IussumRegistrum* iussa,
+                            s32  l,
+                         chorda  linea,
+                            s32  cw,
+                            s32  ch)
+{
+    Iussum i;
+    chorda signum;
+       s32 a;
+
+    a = ZEPHYRUM;
+    dum (iussum_proximum(t, l, a, iussum_registrum_notum, iussa,
+             m->piscina, &i))
+    {
+        si (i.initium >= (s32)linea.mensura)
+        {
+            frange;
+        }
+        signum.datum    = linea.datum + i.initium;
+        signum.mensura  = (i32)((i.finis < (s32)linea.mensura
+                                 ? i.finis : (s32)linea.mensura)
+                                - i.initium);
+        mandata_textus(m, i.initium * cw, l * ch, signum, ZEPHYRUM,
+            color_thematis(COLOR_ACCENT_PRIMARY));
+        a = i.finis;
+    }
+}
+
+/* S3d: nexus ('#verbum') lineae l colore accentus secundi */
+interior vacuum
+nexus_colorare (
+                        Mandata* m,
+     constans TabulaCharacterum* t,
+                            s32  l,
+                         chorda  linea,
+                            s32  cw,
+                            s32  ch)
+{
+    Iussum i;
+    chorda signum;
+       s32 a;
+
+    a = ZEPHYRUM;
+    dum (iussum_nexus_proximus(t, l, a, m->piscina, &i))
+    {
+        si (i.initium >= (s32)linea.mensura)
+        {
+            frange;
+        }
+        signum.datum    = linea.datum + i.initium;
+        signum.mensura  = (i32)((i.finis < (s32)linea.mensura
+                                 ? i.finis : (s32)linea.mensura)
+                                - i.initium);
+        mandata_textus(m, i.initium * cw, l * ch, signum, ZEPHYRUM,
+            color_thematis(COLOR_ACCENT_SECONDARY));
+        a = i.finis;
+    }
+}
+
 
 /* ==================================================
  * Figurae
@@ -65,6 +134,13 @@ scriba_figura_mensae (
     (vacuum)ctx;
     mandata_rectangulum(m, fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo,
         c->fines.altitudo), color_thematis(COLOR_SUPERFICIES), VERUM);
+    /* indicium foci (Franus): puncta levia super superficiem */
+    si (chorda_aequalis_literis(c->titulus, "focatum"))
+    {
+        mandata_rectangulum_exemplar(m, fines(ZEPHYRUM, ZEPHYRUM,
+            c->fines.latitudo, c->fines.altitudo),
+            color_thematis(COLOR_BORDER), EXEMPLAR_FOCI);
+    }
 }
 
 /* <purus/> folium: charta, margo, selectio, cursor, textus */
@@ -170,6 +246,19 @@ scriba_figura_folii (
         mandata_textus(m, ZEPHYRUM, l * ch, linea, ZEPHYRUM,
             color_thematis((l >= sel_a && l <= sel_b) ? COLOR_BACKGROUND
                                                       : COLOR_TEXT));
+        /* S3b: iussa nota colore accentus super textum (lineae
+         * selectae non: textus ibi colore chartae) */
+        si (   sf->sa->iussa && !(l >= sel_a && l <= sel_b)
+            && memchr(linea.datum, '$', (size_t)finis))
+        {
+            iussa_colorare(m, t, sf->sa->iussa, l, linea, cw, ch);
+        }
+        /* S3d: nexus (solum cum libro paginarum) */
+        si (   sf->sa->liber && !(l >= sel_a && l <= sel_b)
+            && memchr(linea.datum, '#', (size_t)finis))
+        {
+            nexus_colorare(m, t, l, linea, cw, ch);
+        }
     }
 
     /* character sub cursore colore chartae */
@@ -231,6 +320,43 @@ scriba_figura_status (
     }
 }
 
+/* <purus/> index paginae: "pagina i/n" textu, centratus in altitudine
+ * ut status */
+vacuum
+scriba_figura_paginae (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    s32 y;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    y = (c->fines.altitudo > VIII) ? (c->fines.altitudo - VIII) / II
+                                   : ZEPHYRUM;
+    mandata_textus(m, ZEPHYRUM, y, c->titulus, ZEPHYRUM,
+                   color_thematis(COLOR_TEXT));
+}
+
+/* <purus/> nuntius: titulus colore erroris, centratus ut status */
+vacuum
+scriba_figura_nuntii (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    s32 y;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    y = (c->fines.altitudo > VIII) ? (c->fines.altitudo - VIII) / II
+                                   : ZEPHYRUM;
+    mandata_textus(m, ZEPHYRUM, y, c->titulus, ZEPHYRUM,
+                   color_thematis(COLOR_ERROR));
+}
+
 vacuum
 scriba_figurae_registrare (
     FiguraRegistrum* reg,
@@ -247,5 +373,9 @@ scriba_figurae_registrare (
     figura_registrare(reg, PARTES_CAMPUS, thema, scriba_figura_folii,
         ctx);
     figura_registrare(reg, PARTES_TITULUS, thema, scriba_figura_status,
+                      ctx);
+    figura_registrare(reg, PARTES_INDEX, thema, scriba_figura_paginae,
+                      ctx);
+    figura_registrare(reg, PARTES_DIALOGUS, thema, scriba_figura_nuntii,
                       ctx);
 }

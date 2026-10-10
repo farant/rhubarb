@@ -1,0 +1,1 @@
+{"model":"claude-haiku-5-5","max_tokens":128,"stop_sequences":["ZZZ"],"messages":[{"role":"user","content":"Reply with exactly this text and nothing else: alpha beta ZZZ gamma"}]}

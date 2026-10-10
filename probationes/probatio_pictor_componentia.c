@@ -119,6 +119,10 @@ s32 principale (vacuum)
     CREDO_VERUM(c->focusabilis);
     CREDO_AEQUALIS_S32(c->fines.latitudo, CCCXX);
     CREDO_AEQUALIS_S32(c->fines.altitudo, CC);
+    /* margo cellulae utrimque (ut scriba): tabula ad cellulam I, margo
+     * paginae (figura) in cellulis marginis visibilis */
+    CREDO_AEQUALIS_S32(c->fines.x, VI);
+    CREDO_AEQUALIS_S32(c->fines.y, VIII);
     CREDO_CHORDA_AEQUALIS_LITERIS(c->actio, "penicillus.ictus");
     CREDO_AEQUALIS_I32(c->numerus_punctorum, II);
     CREDO_AEQUALIS_S32(c->puncta[I].x, XII);

@@ -19,6 +19,7 @@
 #include "motus.h"
 #include "actio.h"
 #include "dispensator.h"
+#include "eventus.h"
 #include "manus_ludus.h"
 #include "scriba_documentum.h"
 #include "scriba_actiones.h"
@@ -299,6 +300,25 @@ s32 principale (vacuum)
     CREDO_VERUM(ephemera_est(repo, "modus", "inserere"));
     effugium(m);
     CREDO_VERUM(linea_est(t, I, "fdfoo"));
+    /* Ctrl-[ = Esc (Franus): runa '[' (manus) et character productus
+     * ESC solus (fenestra: dispositio ubi '[' alibi) */
+    CREDO_VERUM(manus_ludus_scribere(m, "i"));
+    CREDO_VERUM(ephemera_est(repo, "modus", "inserere"));
+    CREDO_VERUM(manus_ludus_clavem(m, '[', MOD_IMPERIUM));
+    CREDO_VERUM(ephemera_est(repo, "modus", "normalis"));
+    CREDO_VERUM(manus_ludus_scribere(m, "i"));
+    {
+        Eventus e;
+
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+        e.tempus                     = M * M;
+        e.datum.clavis.producta      = XXVII;
+        e.datum.clavis.modificantes  = MOD_IMPERIUM;
+        dispensator_tractare(d, &e);
+    }
+    CREDO_VERUM(ephemera_est(repo, "modus", "normalis"));
+    CREDO_VERUM(memchr(t->cellulae, '[', (size_t)(LAT * ALT)) == NIHIL);
 
     imprimere("\n--- VI: finire insertionem apertam servat ---\n");
     mutationes = acta_generis(vol, "mutatio");

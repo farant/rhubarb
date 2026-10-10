@@ -966,6 +966,10 @@
     <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_quattuor.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_mensa" via="build/probatio_mensa.db" causa="sqlite probationis"/>
     <debitum_scripturae membrum="probatio_terminale" via="build/probatio_terminale.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_vicus_paginae" via="build/probatio_vicus_paginae.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_vicus_iussa" via="build/probatio_vicus_iussa.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_pictor_aspergillum" via="build/probatio_pictor_aspergillum.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_pictor_palette" via="build/probatio_pictor_palette.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_volumen" via="build/probatio_volumen.db" causa="sqlite probationis"/>
     <debitum_scripturae membrum="probatio_volumen" via="build/probatio_volumen_aut.db" causa="sqlite probationis"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_binarium" causa="vigilia: artificia ficta probationis"/>

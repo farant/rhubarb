@@ -1,16 +1,19 @@
 /* probatio_ludus_tessera_vicus.c - vicus verus per glutinum
  * tesserae, sine terminali (insula-rami-plan T4)
  *
- * Compositio EADEM ac principalia (vicus_applicatio: scriba s1,
- * pictor p1, terminale t1 cum /bin/sh; volumina temporaria, canones
- * e radice). Sessio fenestrae notata: scriptio in scriba, Ctrl-A n,
- * ictus in pictore (centra cellularum - terminalis sola centra
- * narrat), Ctrl-A p, scriptio,
- * Esc, Ctrl-A Ctrl-A, ictus in tabulam. Eadem notata per terminalem
+ * Compositio EADEM ac principalia (vicus_applicatio: dispositio
+ * ordinaria - tabula 1 scriba | terminale cum /bin/sh, 2 scriba |
+ * pictor; volumina temporaria, canones e radice). Sessio fenestrae
+ * notata: ictus in scribam (terminale in apertura focatum), scriptio
+ * in scriba, ictus in tabulam 2, ictus focans in
+ * pictore (latus dextrum, S2a), tractus in pictore (centra cellularum
+ * - terminalis sola centra narrat), ictus in tabulam 1, scriptio,
+ * Esc, ictus in tabulam 2, ictus in tabulam 1 (Cmd+numerus per
+ * terminalem non transit). Eadem notata per terminalem
  * iterantur (codificator -> rivus -> ludus_tessera_tractare;
  * transitus ut probatio_ludus_tessera_scriba: clavis cum textu suo
  * par, ESC solus post moram). Status idem: insulae vici ambae (rami,
- * praefixum, prior, activa), sigilla documentorum ambo, acta
+ * prior, activa), sigilla documentorum ambo, acta
  * voluminis.
  */
 #include "postulata_posix.h"
@@ -69,14 +72,17 @@ interior ScribaMontatio*
 scriba_s1 (
     VicusApplicatio* app)
 {
-    redde (ScribaMontatio*)vicus_tabula(app->vicus, ZEPHYRUM)->montatio;
+    redde (ScribaMontatio*)vicus_latus(vicus_tabula(app->vicus,
+        ZEPHYRUM),
+        VICUS_SINISTRUM)->montatio;
 }
 
 interior PictorMontatio*
 pictor_p1 (
     VicusApplicatio* app)
 {
-    redde (PictorMontatio*)vicus_tabula(app->vicus, I)->montatio;
+    redde (PictorMontatio*)vicus_latus(vicus_tabula(app->vicus, I),
+        VICUS_DEXTRUM)->montatio;
 }
 
 /* insulae vici ambae + sigilla documentorum ambo */
@@ -300,23 +306,39 @@ principale (vacuum)
         dispensator_tractare(f.d, &e);
     }
     m = manus_ludus_creare(piscina, f.d);
+    /* terminale in apertura focatum (Franus: 'tmux a' statim);
+     * ictus in scribam (latus sinistrum, cellula III, IV) focat */
+    CREDO_VERUM (vicus_latus_focatum(f.vicus)
+        == vicus_latus(vicus_tabula(f.vicus, ZEPHYRUM), VICUS_DEXTRUM));
+    CREDO_VERUM (manus_ludus_premere_ad(m, III * VI + III,
+        IV * VIII + IV));
+    CREDO_VERUM (vicus_latus_focatum(f.vicus)
+        == vicus_latus(vicus_tabula(f.vicus, ZEPHYRUM),
+        VICUS_SINISTRUM));
     CREDO_VERUM (manus_ludus_scribere(m, "isalve"));
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM (manus_ludus_scribere(m, "n"));
-    CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "p1");
-    CREDO_VERUM (_ictus(m, XII, VIII, XVIII, XI));
+    /* ictus in tabulam '2 pictor' (x LXXVIII + XXX): olim Ctrl-A n;
+     * Cmd+numerus (Franus 2026-10-09) per terminalem non transit -
+     * geminus terminalis tabulas ictu solo mutat */
+    CREDO_VERUM (manus_ludus_premere_ad(m, CVIII, IV));
+    CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "2");
+    /* S2a: pictor = latus dextrum (columnae XL..): ictus primus
+     * focat */
+    CREDO_VERUM (manus_ludus_premere_ad(m, L * VI + III,
+        XII * VIII + IV));
+    CREDO_VERUM (vicus_latus_focatum(f.vicus)
+        == vicus_latus(vicus_tabula(f.vicus, I), VICUS_DEXTRUM));
+    CREDO_VERUM (_ictus(m, LII, VIII, LVIII, XI));
     CREDO_VERUM (pictor_documentum_cursor(pictor_p1(&f)->doc)
         > ZEPHYRUM);
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM (manus_ludus_scribere(m, "p"));
+    CREDO_VERUM (manus_ludus_premere_ad(m, II * VI + III, IV));
     CREDO_VERUM (manus_ludus_scribere(m, " munde"));
     CREDO_VERUM (manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_VERUM (manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-    CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "p1");
-    /* ictus in tabulam 'scriba' (linea prima, centrum cellulae II) */
+    CREDO_VERUM (manus_ludus_premere_ad(m, CVIII, IV));
+    CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "2");
+    /* ictus in tabulam '1 terminale' (linea prima, centrum cellulae
+     * II) */
     CREDO_VERUM (manus_ludus_premere_ad(m, II * VI + III, IV));
-    CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "s1");
+    CREDO_CHORDA_AEQUALIS_LITERIS (f.vicus->activa, "1");
     dispensator_finire(f.d);
     dispensator_notarium_ponere(f.d, NIHIL);
     CREDO_VERUM (memcmp(scriba_documentum_tabula(
@@ -345,24 +367,26 @@ principale (vacuum)
         notata, MANUS_ITERATIO_SEMANTICA, NIHIL, _transire, &tr);
     _pendentem_mittere(&tr);
     dispensator_finire(t.d);
-    CREDO_CHORDA_AEQUALIS_LITERIS (t.vicus->activa, "s1");
+    CREDO_CHORDA_AEQUALIS_LITERIS (t.vicus->activa, "1");
     CREDO_AEQUALIS_S64 (scriba_documentum_cursor(scriba_s1(&t)->doc),
         scriba_documentum_cursor(scriba_s1(&f)->doc));
     CREDO_AEQUALIS_S64 (pictor_documentum_cursor(pictor_p1(&t)->doc),
         pictor_documentum_cursor(pictor_p1(&f)->doc));
-    CREDO_AEQUALIS_I32 (_acta(vol_t, "s1/mutatio", piscina),
-        _acta(vol_f, "s1/mutatio", piscina));
-    CREDO_VERUM (_acta(vol_t, "s1/mutatio", piscina) > ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_acta(vol_t, "paginae/1/mutatio",
+        piscina), _acta(vol_f, "paginae/1/mutatio", piscina));
+    CREDO_VERUM (_acta(vol_t, "paginae/1/mutatio", piscina)
+        > ZEPHYRUM);
     CREDO_VERUM (chorda_aequalis(_status(&t, piscina),
         _status(&f, piscina)));
 
     imprimere("\n--- III. quadrum in cellulas ---\n");
     ludus_tessera_quadrum(lt, M * X);
     CREDO_VERUM (tessera_praesentare(opus));
-    /* linea tabularum in linea PRIMA, scriba activa infra */
+    /* linea tabularum in linea PRIMA ('1 terminale'), scriba activa
+     * infra */
     CREDO_AEQUALIS_I32 (tessera_cellulam_legere(opus, I,
         ZEPHYRUM).signum,
-        (i32)'s');
+        (i32)'1');
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm), "pictor"));
     CREDO_VERUM (_continet(tessera_pons_memoriae_captum(pm),
         "salve munde"));

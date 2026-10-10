@@ -3,6 +3,7 @@
 #include "piscina.h"
 #include "internamentum.h"
 #include "mandatum.h"
+#include "chorda.h"
 #include "credo.h"
 #include <stdio.h>
 
@@ -85,6 +86,34 @@ s32 principale (vacuum)
     md           = mandata_obtinere(m2, I);
     md->fines.x  = md->fines.x + I;
     CREDO_FALSUM (mandata_aequalia(m, m2));
+
+    imprimere("\n--- Probans exemplar (indicium foci) ---\n");
+    {
+        Mandata* me;
+        Mandata* me_lecta;
+         chorda  ts;
+
+        me = mandata_creare(piscina, intern);
+        mandata_rectangulum_exemplar(me, f, color_thema(II), XXI);
+        mandata_rectangulum(me, f, color_thema(II), VERUM);
+        md = mandata_obtinere(me, ZEPHYRUM);
+        CREDO_VERUM(md->impletum);
+        CREDO_AEQUALIS_I32(md->exemplar, XXI);
+        CREDO_AEQUALIS_I32(mandata_obtinere(me, I)->exemplar, ZEPHYRUM);
+        ts = mandata_scribere_stml(me, piscina, VERUM);
+        CREDO_VERUM(chorda_continet(ts, chorda_ex_literis(
+            "exemplar=\"21\"", piscina)));
+        /* plenum attributum non scribit: unum tantum */
+        CREDO_AEQUALIS_I32(chorda_numerare_occurrentia(ts,
+            chorda_ex_literis(
+            "exemplar=", piscina)), I);
+        me_lecta = mandata_legere_stml(chorda_ut_cstr(ts, piscina),
+            piscina,
+            intern);
+        CREDO_VERUM(mandata_aequalia(me, me_lecta));
+        mandata_obtinere(me_lecta, ZEPHYRUM)->exemplar = XII;
+        CREDO_FALSUM(mandata_aequalia(me, me_lecta));
+    }
 
     imprimere("\n--- Probans vacare ---\n");
     mandata_vacare(m);

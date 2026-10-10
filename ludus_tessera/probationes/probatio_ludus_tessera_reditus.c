@@ -14,7 +14,7 @@
  * II.  mutatio magnitudinis (pons et aemulator simul)
  * III. quadra fortuita (sors, semen fixum): cellulae, stili RGB et
  *      nativi, ornamenta, latae, replere, cursor
- * IV.  applicatio vera (vicus: scriba, Ctrl-A n, pictor, ictus)
+ * IV.  applicatio vera (vicus: scriba, Cmd+2, pictor, ictus)
  *
  * Colores PLENI: tessera RGB integrum emittit (CCLVI quantizaret).
  * Graphemata plurium runarum absunt (aemulator v2: notae iungentes
@@ -415,8 +415,8 @@ principale (vacuum)
             cfg.altitudo  = XXX;
             r.aem         = aemulator_creare(piscina, &cfg);
         }
-        /* tabula t1 ordinaria = terminale: concha brevis, non
-         * initialis cum ambitu probantis (vicus-latera S1c) */
+        /* tabula 1 ordinaria: latus dextrum terminale - concha brevis,
+         * non initialis cum ambitu probantis (vicus-latera S1c) */
         (vacuum)setenv("SHELL", "/bin/sh", I);
         CREDO_VERUM(vicus_applicatio_aedificare(&app, piscina, intern,
             volumen_temporarium(piscina, "lt_reditus"),
@@ -433,11 +433,14 @@ principale (vacuum)
         ludus_tessera_quadrum(lt, M * II);
         CREDO_VERUM(quadrum(&r));
         CREDO_VERUM(conferre(&r, "IV scriptio"));
-        CREDO_VERUM(manus_ludus_clavem(m, 'a', MOD_IMPERIUM));
-        CREDO_VERUM(manus_ludus_scribere(m, "n"));
+        /* Cmd+2 (olim Ctrl-A n; Franus 2026-10-09) */
+        CREDO_VERUM(manus_ludus_clavem(m, '2', MOD_SUPER));
         ludus_tessera_quadrum(lt, M * III);
         CREDO_VERUM(quadrum(&r));
         CREDO_VERUM(conferre(&r, "IV pictor"));
+        /* vicus-latera S2a: pictor = latus DEXTRUM tabulae 2 - focus
+         * ante tractum (ictus primus solum focaret) */
+        CREDO_VERUM(vicus_focum_ponere(app.vicus, VICUS_DEXTRUM));
         p[0].x = X;
         p[0].y = X;
         p[1].x = XL;
