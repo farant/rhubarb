@@ -1287,3 +1287,239 @@ polynomium_apex_officinarum (
 {
     redde _apex_officinarum;
 }
+
+
+/* ==================================================
+ * Derivata, divisor communis, pars libera, translatio Taylor
+ * ================================================== */
+
+b32
+polynomium_derivata (
+    Polynomium  p,
+       Piscina* piscina,
+    Polynomium* exitus)
+{
+    Magnus* c;
+       s32  imus;
+       s32  summus;
+       s32  e;
+
+    si (polynomium_est_nullum(p))
+    {
+        *exitus = p;
+        redde VERUM;
+    }
+    imus    = polynomium_gradus_imus(p);
+    summus  = polynomium_gradus_summus(p);
+    si (imus - I < -POLYNOMIUM_EXPONENS_MAXIMUS)
+    {
+        redde FALSUM;
+    }
+    c = (Magnus*)piscina_allocare(piscina, (memoriae_index)(summus
+        - imus
+        + I) * magnitudo(Magnus));
+    per (e = imus; e <= summus; e++)
+    {
+        c[e - imus] = magnus_multiplica(polynomium_coefficiens(p, e),
+            magnus_ex_s64((s64)e), piscina);
+    }
+    redde polynomium_ex_coefficientibus(c, (i32)(summus - imus + I),
+        imus - I, piscina, exitus);
+}
+
+/* p / contentum, coefficiens summus > 0 */
+interior Polynomium
+_primitiva_positiva (
+    Polynomium  p,
+       Piscina* piscina)
+{
+    Magnus g;
+
+    si (polynomium_est_nullum(p))
+    {
+        redde p;
+    }
+    g = polynomium_contentum(p, piscina);
+    si (magnus_signum(polynomium_coefficiens(p,
+            polynomium_gradus_summus(p))) < ZEPHYRUM)
+    {
+        g = magnus_nega(g, piscina);
+    }
+    si (magnus_compara(g, magnus_ex_s64(I)) != ZEPHYRUM)
+    {
+        (vacuum)polynomium_divide_exacte(p, polynomium_constans(g,
+            piscina), piscina, &p);
+    }
+    redde p;
+}
+
+/* pseudo-residuum scala POSITIVA |lc(b)|^k a mod b (extensio.c _residuum;
+ * limes structuralis passuum) */
+interior Polynomium
+_pseudo_residuum (
+    Polynomium  a,
+    Polynomium  b,
+       Piscina* piscina)
+{
+       s32 gradus_b   = polynomium_gradus_summus(b);
+    Magnus lc_b       = polynomium_coefficiens(b, gradus_b);
+    Magnus absolutum  = magnus_absolutum(lc_b, piscina);
+       s32 signum_b   = magnus_signum(lc_b);
+       s32 gradus_initium;
+       s32 iteratio;
+
+    si (polynomium_est_nullum(a))
+    {
+        redde a;
+    }
+    gradus_initium = polynomium_gradus_summus(a);
+    per (iteratio = ZEPHYRUM; iteratio <= gradus_initium - gradus_b
+        && !polynomium_est_nullum(a)
+        && polynomium_gradus_summus(a) >= gradus_b; iteratio++)
+    {
+               s32 gradus_a   = polynomium_gradus_summus(a);
+            Magnus lc_a       = polynomium_coefficiens(a, gradus_a);
+        Polynomium translata  = polynomium_nullum();
+
+        (vacuum)polynomium_translata(b, gradus_a - gradus_b, piscina,
+            &translata);
+        si (signum_b < ZEPHYRUM)
+        {
+            lc_a = magnus_nega(lc_a, piscina);
+        }
+        a = polynomium_subtrahe(polynomium_multiplica_scalari(a,
+            absolutum, piscina),
+            polynomium_multiplica_scalari(translata,
+            lc_a, piscina), piscina);
+    }
+    redde a;
+}
+
+b32
+polynomium_divisor_communis (
+    Polynomium  a,
+    Polynomium  b,
+       Piscina* piscina,
+    Polynomium* exitus)
+{
+    s32 iteratio;
+    s32 limes;
+
+    si (   (!polynomium_est_nullum(a)
+        && polynomium_gradus_imus(a) < ZEPHYRUM)
+        || (!polynomium_est_nullum(b)
+        && polynomium_gradus_imus(b) < ZEPHYRUM))
+    {
+        redde FALSUM;
+    }
+    a = _primitiva_positiva(a, piscina);
+    b = _primitiva_positiva(b, piscina);
+    si (   !polynomium_est_nullum(a) && !polynomium_est_nullum(b)
+        && polynomium_gradus_summus(a) < polynomium_gradus_summus(b))
+    {
+        Polynomium t = a;
+
+        a = b;
+        b = t;
+    }
+    /* gradus b strictim decrescit: limes structuralis */
+    limes = polynomium_est_nullum(b) ? ZEPHYRUM
+        : polynomium_gradus_summus(b) + II;
+    per (iteratio = ZEPHYRUM; iteratio < limes
+        && !polynomium_est_nullum(b); iteratio++)
+    {
+        Polynomium r = _primitiva_positiva(_pseudo_residuum(a, b,
+            piscina),
+            piscina);
+
+        a = b;
+        b = r;
+    }
+    si (!polynomium_est_nullum(b))
+    {
+        redde FALSUM;               /* non accidit: limes structuralis */
+    }
+    *exitus = _primitiva_positiva(a, piscina);
+    redde VERUM;
+}
+
+b32
+polynomium_pars_libera (
+    Polynomium  p,
+       Piscina* piscina,
+    Polynomium* exitus)
+{
+    Polynomium derivata  = polynomium_nullum();
+    Polynomium g         = polynomium_nullum();
+    Polynomium q         = polynomium_nullum();
+
+    si (polynomium_est_nullum(p))
+    {
+        *exitus = p;
+        redde VERUM;
+    }
+    si (polynomium_gradus_imus(p) < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (polynomium_gradus_summus(p) == ZEPHYRUM)
+    {
+        *exitus = polynomium_constans(magnus_ex_s64(I), piscina);
+        redde VERUM;
+    }
+    si (   !polynomium_derivata(p, piscina, &derivata)
+        || !polynomium_divisor_communis(p, derivata, piscina, &g)
+        || !polynomium_divide_exacte(_primitiva_positiva(p, piscina), g,
+        piscina, &q))
+    {
+        redde FALSUM;
+    }
+    *exitus = _primitiva_positiva(q, piscina);
+    redde VERUM;
+}
+
+b32
+polynomium_translatum (
+    Polynomium  p,
+        Magnus  c,
+       Piscina* piscina,
+    Polynomium* exitus)
+{
+    Polynomium effectus = polynomium_nullum();
+    Polynomium linearis = polynomium_nullum();
+           s32 e;
+
+    si (polynomium_est_nullum(p))
+    {
+        *exitus = p;
+        redde VERUM;
+    }
+    si (polynomium_gradus_imus(p) < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    {
+        Magnus duo[II];
+
+        duo[ZEPHYRUM]  = c;
+        duo[I]         = magnus_ex_s64(I);
+        (vacuum)polynomium_ex_coefficientibus(duo, II, ZEPHYRUM,
+            piscina,
+            &linearis);           /* t + c */
+    }
+    /* Horner: ((a_n (t+c) + a_{n-1}) (t+c) + ...) */
+    per (e = polynomium_gradus_summus(p); e >= ZEPHYRUM; e--)
+    {
+        Polynomium productum = polynomium_nullum();
+
+        si (!polynomium_multiplica(effectus, linearis, piscina,
+            &productum))
+        {
+            redde FALSUM;
+        }
+        effectus = polynomium_adde(productum, polynomium_constans(
+            polynomium_coefficiens(p, e), piscina), piscina);
+    }
+    *exitus = effectus;
+    redde VERUM;
+}

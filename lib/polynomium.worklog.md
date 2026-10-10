@@ -198,3 +198,28 @@ Oracles: involution; valor of p(1/t) at x = valor of p at 1/x; p·p(1/t)
 and p + p(1/t) always symmetric; symmetric ⇔ p = t^(low+high)·p(1/t)
 (via `translata`) on 300 random polynomials. Plants: no reversal, wrong
 low exponent, last pair skipped — all red.
+
+## 2026-10-10 - derivata, divisor_communis, pars_libera, taylor (public)
+
+For lib/radices.c (approved by Fran with the radices sketch). gcd = primitive
+PRS with extensio's positive-scale pseudo-remainder (same structural step
+limit), result primitive with lc > 0; ordinary polynomials only (in Z[t,
+t^-1] a gcd is ambiguous up to the unit t^k - refused). pars_libera = p /
+gcd(p, p'). taylor = Horner with (t + c). derivata accepts Laurent
+(t^e -> e t^(e-1), bound checked). Tests: known factors, content/sign
+normalization, degree-5 shared factor, multiplicities, Taylor against
+evaluation at 7 shifts and inverse shift round trip. extensio keeps its
+private copies for now; moving extensio onto these is a later slice.
+
+## 2026-10-09 - polynomium_taylor renamed polynomium_translatum (before commit)
+
+The commit's oratio gate went red: probatio_oratio_oraculum's English UD
+(en_ewt) primary score fell 786 -> 785 permille against its only-rising
+floor. Cause: the glossary entry `taylor` (lingua anglica,
+ignotum-permissum) added so the identifier would pass the Latin lint -
+"Taylor" is a real English name in that corpus, and the entry shadowed its
+analysis. Removing the entry alone restored 786. The function is now
+`polynomium_translatum` (p(t + c) = the translated polynomial); comments
+still say "translatio Taylor" (the lint judges identifiers only). Rule: a
+glossary entry for a word that is real in ANY oracle language (Latin or
+English) can move the oracle - rename instead.
