@@ -10,7 +10,10 @@
  * x1, x2, circulo "2_...". V: prev circulo - x2. VI: dispositio
  * argumentum servat; reapertura x2 ostendit. VII: argumenta
  * recusantur. VIII: memoria communis - tabula 2 x1 ostendit documento
- * eodem. IX: nulla alia pictura - nuntius. */
+ * eodem. IX: nulla alia pictura - nuntius. X (S3f): $pictor-new -
+ * pictura_1, pictura_2 vacuae magnitudine tabulae novae, in
+ * bibliotheca, next eas visitat; argumenta recusantur; tabula sine
+ * pictore: latus novum picturam novam ostendit. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -115,6 +118,27 @@ index_continet (
         piscina), piscina, &inventum);
     redde inventum && chorda_continet(c, chorda_ex_literis(textus,
         piscina));
+}
+
+/* pictura in bibliotheca voluminis? */
+interior b32
+in_bibliotheca (
+                Volumen* vol,
+     constans character* pictura)
+{
+    Xar* l;
+    i32  i;
+
+    l = pictor_documenta_enumerare(vol, piscina);
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        si (chorda_aequalis_literis(*(chorda*)xar_obtinere(l, i),
+            pictura))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* linea scribitur in pagina sinistra */
@@ -270,6 +294,61 @@ s32 principale (vacuum)
     CREDO_VERUM(nuntius_est(app_sola.vicus,
         "pictor-next: nulla alia pictura"));
     CREDO_VERUM(argumentum_est(app_sola.vicus, ""));
+
+    imprimere("\n--- X: $pictor-new ---\n");
+    {
+          ManusLudus* mn;
+    PictorDocumentum* propria;
+    PictorDocumentum* nova;
+
+        v   = app.vicus;
+        mn  = manus_ludus_creare(piscina, app.d);
+        CREDO_VERUM(vicus_activam_ponere(v, "3"));
+        dispensator_recomponere(app.d);
+        /* pagina communis tabularum: lineae novae (linea II in VIII
+         * iterum scripta est) */
+        scribere(mn, V, "$pictor-new $pictor-new(x)");
+        scribere(mn, VI, "$pictor-next $pictor-prev");
+        /* magnitudo tabulae novae = pictura propria lateris 3 */
+        propria = pictor_documentum_aperire(piscina, intern, vol,
+            "3_dextrum_pictor");
+        CREDO_NON_NIHIL(propria);
+        iussum(&app, mn, V, III);
+        CREDO_VERUM(frons(v) == latus_pictoris);
+        CREDO_VERUM(argumentum_est(v, "pictura_1"));
+        nova = pictura_frontis(v);
+        CREDO_VERUM(   nova && propria
+                    && nova->latitudo == propria->latitudo
+                    && nova->altitudo == propria->altitudo);
+        CREDO_VERUM(nova && pictor_documentum_numerus_vivorum(nova)
+            == ZEPHYRUM);
+        CREDO_VERUM(in_bibliotheca(vol, "pictura_1"));
+        iussum(&app, mn, V, III);
+        CREDO_VERUM(argumentum_est(v, "pictura_2"));
+        /* bibliotheca: 2_ 3_ pictura_1 pictura_2 x1 x2 */
+        iussum(&app, mn, VI, III);
+        CREDO_VERUM(argumentum_est(v, "x1"));
+        iussum(&app, mn, VI, XV);
+        CREDO_VERUM(argumentum_est(v, "pictura_2"));
+        ictus(mn, V, XV);
+        CREDO_VERUM(nuntius_est(v, "pictor-new: nulla argumenta"));
+        (vacuum)vicus_pulsare(v);
+        CREDO_VERUM(argumentum_est(v, "pictura_2"));
+        /* tabula 4 sine pictore */
+        CREDO_VERUM(vicus_activam_ponere(v, "4"));
+        dispensator_recomponere(app.d);
+        scribere(mn, VII, "$pictor-new");
+        iussum(&app, mn, VII, III);
+        CREDO_VERUM(chorda_aequalis_literis(frons(v)->id,
+            "4_dextrum_pictor"));
+        CREDO_VERUM(argumentum_est(v, "pictura_3"));
+        /* pictura nova vere condita et ostensa (non pictura lateris
+         * propria, aeque vacua) */
+        CREDO_VERUM(in_bibliotheca(vol, "pictura_3"));
+        CREDO_VERUM(pictura_frontis(v)
+            && pictor_documentum_numerus_vivorum(pictura_frontis(v))
+               == ZEPHYRUM);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

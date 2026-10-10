@@ -1,5 +1,7 @@
 # Group E x Knotapel: Cross-Reference Analysis
 
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures are not reproduced by D84's own code on any build tried (cause unknown). D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+
 Date: 2026-02-26
 
 This document maps connections between the two Group E papers (Inverse Knowledge Search / SciencePedia, and Agent Learning via Early Experience) and specific knotapel computational results, demos, code, and techniques.

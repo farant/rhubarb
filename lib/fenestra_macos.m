@@ -97,6 +97,10 @@ _focum_impellere (
     textus = [[NSPasteboard generalPasteboard]
         stringForType:NSPasteboardTypeString];
     utf8 = textus ? [textus UTF8String] : NULL;
+    /* sine textu nihil: clavis Cmd+V IPSA iam applicationi venit
+     * (perscrutatio NSEventTypeKeyDown ante sendEvent - menu postea);
+     * pictor imaginem per eam glutinat. Clavis synthetica hic addita
+     * imaginem BIS glutinabat (Franus 2026-10-10). */
     si (!utf8 || utf8[ZEPHYRUM] == '\0')
     {
         redde;

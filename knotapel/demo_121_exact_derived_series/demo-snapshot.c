@@ -7,7 +7,7 @@
  *
  *   clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 -O2 -g demo-snapshot.c -o demo-snapshot
  *
- * Commit (library closure clean): 526aa6e2bee7192f9e8f1d748d0699c011c86c56
+ * Commit (library closure clean): eca2cb82457de8692c25414b72d233f56b871851
  * Regenerate: ./knotapel/archive.sh knotapel/demo_121_exact_derived_series/main.c
  * Verified: live build and snapshot gave byte-identical output.
  * Sources (git blob hashes):
@@ -40,7 +40,7 @@
  *   673a0b2c3f9258626883b6ecaed2ff76e4d060a8  lib/polynomium.c
  *   5a51ebda66712dbf61f5c9e5e987f8d59e834da8  lib/quaternio.c
  *   6e3945b8a0ce6a556478fbe4249ff3c6fb5cdbe4  lib/surdus.c
- *   b6683d702cf3225f9026dabc63cabeeaed2a1c19  knotapel/demo_121_exact_derived_series/main.c (uncommitted, embedded verbatim)
+ *   69cc38f0b34ab9c6be649115284fa27c8155e3cc  knotapel/demo_121_exact_derived_series/main.c (uncommitted, embedded verbatim)
  */
 
 #line 1 "include/postulata_posix.h"
@@ -25956,9 +25956,10 @@ judge_claims (void)
         "robust 15 (11.9%), possible 102",
         t95[5].t[1][0].n_float == 33 && t95[5].t[1][0].n_rule == 27
         && t95[5].t[1][0].n_robust == 15 && t95[5].t[1][0].n_possible == 102);
-    check("D95 'zero elsewhere' and 'each half is dead' hold only robustly: "
-        "possible all-null N = 3, 5, 6 = 80, 72, 25; outer-null N = 3 = 16; "
-        "Q8-null 1 of 1",
+    check("D95 'zero elsewhere' and 'each half is dead' hold under the exact "
+        "rule and robustly; 'possible' (all-null N = 3, 5, 6 = 80, 72, 25; "
+        "outer-null N = 3 = 16; Q8-null 1 of 1) is near-vacuous here: every "
+        "null vector is tied two ways (D122 review)",
         t95[5].t[0][0].n_robust == 0 && t95[5].t[0][0].n_possible == 80
         && t95[5].t[2][0].n_possible == 72 && t95[5].t[3][0].n_possible == 25
         && t95[4].t[0][0].n_robust == 0 && t95[4].t[0][0].n_possible == 16

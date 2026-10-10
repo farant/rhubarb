@@ -65,6 +65,15 @@ pictor_picturam_ponere (
          PictorMontatio* m,
      constans character* spatium);
 
+/* S3f: picturam NOVAM (vacuam) in spatio condere et ostendere -
+ * dimensiones ut tabula nova huius montationis (superficies, ut
+ * pictor_montare); in memoriam (communem) ponitur. FALSUM si spatium
+ * iam in bibliotheca est. */
+b32
+pictor_picturam_condere (
+         PictorMontatio* m,
+     constans character* spatium);
+
 /* pictorem montare: id NIHIL = radix repositorii (elementum radicis
  * 'pictor' iam exstat); aliter liberum <pictor id> creatur si abest.
  * Ordo: canones, elementum initiale, domini. radix = praefixum viarum

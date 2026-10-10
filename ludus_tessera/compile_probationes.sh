@@ -108,6 +108,7 @@ declare -a RADIX_FONTES=(
     "pictor_actiones"
     "pictor_componentia"
     "pictor_documentum"
+    "flatura"          # pictor-strata L2: checkpoints deflati
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

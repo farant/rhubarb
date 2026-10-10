@@ -1,5 +1,20 @@
 ## Demo 84: Null States and Logarithmic Structure
 
+> **Correction (2026-10-10, Demo 124, `demo_124_exact_null_states`).** Exact arithmetic with D84's own cell semantics overturns the capacity claims below.
+> - Removing the 9 nulls does **not** reduce ζ₈ capacity: full and non-null both reach max **XOR8** under the exact rule and robustly. Only the winner count drops: XOR8 weight sets 402 → 106 under the rule, 218 → 36 robustly.
+> - The null-only subset computes **nothing** (0) under the rule and robustly.
+> - All 10,000 random 15-subsets reach exactly XOR8, so non-null equals random.
+> - Nulls are **under**-represented among all 402 exact XOR8 winners (ratio 0.50, not 0.79).
+> - At k_sec = 1 null-only does not beat non-null (0 = 0).
+>
+> The recorded figures (non-null XOR6, null-only XOR6, "worse than random") are not reproduced by D84's own code on any build tried. It prints non-null XOR8 and null-only 0, and the atlas's own Part D ratios match that run exactly. Their origin is unknown: a different code version or a transcription is likelier than the platform. Separately, 12.8% of D84's float cell decisions are exact ties (mostly null sums at a half-angle of exactly 90°, on a sector boundary), resolved by rounding rather than by the exact rule. None of four fixed tie rules gives the recorded numbers.
+>
+> **What stands:**
+> - Parts A, B and E: the census, the gap theorem and the 6 + 4 + 3 axis geometry are exact.
+> - A k_sec = 1 synergy: the full catalog finds 36 XOR6 sets, exactly and robustly. But 12 of them (8 pure non-null, 4 pure null) pass only with the full 13-axis table, so the like-for-like synergy is the 24 mixed sets, not "0 + 0 = 36".
+>
+> See `demo_124_exact_null_states/findings.md`.
+
 - **Status**: COMPLETE
 - **File**: `demo_84_null_states/main.c` (~1330 lines)
 - **Tests**: 17/17 pass

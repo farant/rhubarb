@@ -8,6 +8,8 @@
     <attributum nomen="color_secundus"  genus="numerus"/>
     <attributum nomen="magnitudo_penicilli" genus="numerus"
       nota="P4a: diametrus penicilli (pixela); absens = 1"/>
+    <attributum nomen="magnitudo_lineae" genus="numerus"
+      nota="linea: latitudo (pixela); absens = 1"/>
     <attributum nomen="magnitudo_aspergilli" genus="numerus"
       nota="P4: multiplex radii aspergilli; absens = 1"/>
     <attributum nomen="exemplar"        genus="numerus"

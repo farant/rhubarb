@@ -15,6 +15,7 @@
 #include "delineare_mandata.h"
 #include "ludus_fenestra.h"
 #include "pictor_applicatio.h"
+#include "clipboard_platform.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -23,6 +24,16 @@
 #define QUADRA_FUMI       XXX
 /* pixelum nostrum = II puncta fenestrae (ut terminale) */
 #define SCALA             II
+
+/* L5: porta imaginis - clipboard systematis (Cmd+V in pictore) */
+interior ImagoFructus
+imaginem_glutinatam (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    (vacuum)ctx;
+    redde clipboard_capere_imaginem(piscina);
+}
 
 s32
 principale (
@@ -70,6 +81,9 @@ principale (
     {
         redde I;
     }
+    /* L5: Cmd+V imaginem e clipboard in stratum novum glutinat */
+    app.montatio.actiones_ctx.imago_capere  = imaginem_glutinatam;
+    app.montatio.actiones_ctx.imago_ctx     = NIHIL;
 
     /* fenestra */
     memset(&cfg, ZEPHYRUM, magnitudo(FenestraConfiguratio));

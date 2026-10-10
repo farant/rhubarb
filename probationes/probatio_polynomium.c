@@ -3876,6 +3876,109 @@ s32 principale (vacuum)
         }
     }
 
+
+    /* ==================================================
+     * DERIVATA, DIVISOR COMMUNIS, PARS LIBERA, TAYLOR
+     * ================================================== */
+
+    {
+        Polynomium q = polynomium_nullum();
+        Polynomium g = polynomium_nullum();
+
+        imprimere("\n--- Probans derivatam, divisorem, partem liberam, "
+            "Taylor ---\n");
+        /* derivata: Laurent quoque */
+        CREDO_VERUM (polynomium_derivata(_p("3t^4 - 2t + 7"), piscina,
+            &q));
+        CREDO_VERUM (polynomium_aequalis(_c(q), _p("12t^3 - 2")));
+        CREDO_VERUM (polynomium_derivata(_p("t^-2 + 5"), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(q), _p("-2t^-3")));
+        CREDO_VERUM (polynomium_derivata(_p("9"), piscina, &q));
+        CREDO_VERUM (polynomium_est_nullum(q));
+
+        /* divisor communis: factores noti, contentum et signum
+         * abiciuntur, forma primitiva coefficiente summo > 0 */
+        CREDO_VERUM (polynomium_divisor_communis(
+            _multiplica(_p("6t^2 - 12"), _p("t + 3")),
+            _multiplica(_p("-4t^2 + 8"), _p("t - 5")), piscina, &g));
+        CREDO_VERUM (polynomium_aequalis(_c(g), _p("t^2 - 2")));
+        CREDO_VERUM (polynomium_divisor_communis(_p("t^3 - t"),
+            _p("t^2 + t"), piscina, &g));
+        CREDO_VERUM (polynomium_aequalis(_c(g), _p("t^2 + t")));
+        CREDO_VERUM (polynomium_divisor_communis(_p("t^2 + 1"),
+            _p("t^2 + 2"), piscina, &g));
+        CREDO_VERUM (polynomium_aequalis(_c(g), _p("1")));
+        CREDO_VERUM (polynomium_divisor_communis(_p("-4t + 2"), _p("0"),
+            piscina, &g));
+        CREDO_VERUM (polynomium_aequalis(_c(g), _p("2t - 1")));
+        CREDO_VERUM (polynomium_divisor_communis(_p("0"), _p("0"),
+            piscina,
+            &g));
+        CREDO_VERUM (polynomium_est_nullum(g));
+        CREDO_FALSUM (polynomium_divisor_communis(_p("t^-1 + 1"),
+            _p("t + 1"), piscina, &g));
+        /* gradus altior: (t^5 - 3t + 1)(t^4 + t + 7) et (t^5 - 3t + 1)
+         * (2t^3 - 9) */
+        CREDO_VERUM (polynomium_divisor_communis(
+            _multiplica(_p("t^5 - 3t + 1"), _p("t^4 + t + 7")),
+            _multiplica(_p("t^5 - 3t + 1"), _p("2t^3 - 9")), piscina,
+            &g));
+        CREDO_VERUM (polynomium_aequalis(_c(g), _p("t^5 - 3t + 1")));
+
+        /* pars libera: radices multiplices simplices fiunt */
+        CREDO_VERUM (polynomium_pars_libera(_multiplica(_multiplica(
+            _p("t - 1"), _p("t - 1")),
+            _multiplica(_multiplica(_p("2t + 3"),
+            _p("2t + 3")), _p("2t + 3"))), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(q), _p("2t^2 + t - 3")));
+        CREDO_VERUM (polynomium_pars_libera(_p("-3t^2 + 6"), piscina,
+            &q));
+        CREDO_VERUM (polynomium_aequalis(_c(q), _p("t^2 - 2")));
+        CREDO_VERUM (polynomium_pars_libera(_p("t^4"), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(q), _p("t")));
+        CREDO_VERUM (polynomium_pars_libera(_p("-7"), piscina, &q));
+        CREDO_VERUM (polynomium_aequalis(_c(q), _p("1")));
+
+        /* Taylor: p(t + c) contra valorem, et inversa (c, -c) */
+        {
+            constans character* textus[IV] = { "t^3 - 2t + 5",
+                "4t^6 - t^5 + 3t^2 - 11", "t", "-2t^9 + t^4 - t + 1" };
+            s32 i;
+            s32 c;
+
+            per (i = ZEPHYRUM; i < IV; i++)
+            {
+                Polynomium p = _p(textus[i]);
+
+                per (c = -III; c <= III; c++)
+                {
+                    Polynomium r = polynomium_nullum();
+                       Fractio x = fractio_ex_s64(VII);
+                       Fractio v1;
+                       Fractio v2;
+                       Fractio x_translatum;
+
+                    CREDO_VERUM (polynomium_translatum(p,
+                        magnus_ex_s64((s64)c),
+                        piscina, &q));
+                    x_translatum = fractio_adde(x,
+                        fractio_ex_s64((s64)c), piscina);
+                    CREDO_VERUM (polynomium_valor(_c(q), x, piscina,
+                        &v1)
+                        && polynomium_valor(p, x_translatum, piscina,
+                        &v2)
+                        && fractio_aequalis(v1, v2));
+                    CREDO_VERUM (polynomium_translatum(q,
+                        magnus_ex_s64((s64)-c), piscina, &r));
+                    CREDO_VERUM (polynomium_aequalis(_c(r), p));
+                }
+            }
+            CREDO_FALSUM (polynomium_translatum(_p("t^-1"),
+                magnus_ex_s64(I),
+                piscina, &q));
+        }
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

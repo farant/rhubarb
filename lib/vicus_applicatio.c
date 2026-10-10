@@ -109,7 +109,29 @@ nomen structura {
  * copiam veterem) */
 nomen structura {
     TabulaDispersa* documenta;
+    /* L5: porta imaginis (applicatio ponit; NIHIL = nulla) */
+      ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina);
+            vacuum* porta_ctx;
 } ContextusPictoris;
+
+/* L5: porta lateris pictoris - ad portam communem (tempore vocationis
+ * lecta: latera ante portam positam montata eam quoque vident) */
+interior ImagoFructus
+imaginem_capere_communem (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    ContextusPictoris* cp;
+         ImagoFructus  f;
+
+    cp = (ContextusPictoris*)ctx;
+    si (cp && cp->porta)
+    {
+        redde cp->porta(cp->porta_ctx, piscina);
+    }
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    redde f;
+}
 
 /* S3e: $pictor-next / $pictor-prev */
 nomen structura {
@@ -372,6 +394,9 @@ pictorem_montare (
     {
         redde FALSUM;
     }
+    /* L5: porta imaginis communis */
+    m->actiones_ctx.imago_capere  = imaginem_capere_communem;
+    m->actiones_ctx.imago_ctx     = cp;
     /* S3e: memoria communis - documentum spatii huius, si iam
      * apertum, idem fit */
     si (cp && cp->documenta && id && id[ZEPHYRUM])
@@ -405,7 +430,9 @@ pictoris_argumentum_ponere (
                  vacuum* ctx,
      constans character* argumentum)
 {
-    redde pictor_picturam_ponere((PictorMontatio*)ctx, argumentum);
+    /* S3f: pictura ignota ($pictor-new) conditur */
+    redde pictor_picturam_ponere((PictorMontatio*)ctx, argumentum)
+        || pictor_picturam_condere((PictorMontatio*)ctx, argumentum);
 }
 
 interior vacuum
@@ -534,6 +561,62 @@ cyclus_iussum (
     redde VERUM;
 }
 
+/* S3f: $pictor-new (Franus): pictura nova vacua "pictura_<n>" (n
+ * primum liberum ab I) in fronte pictoris tabulae activae; nullus
+ * pictor: latus novum. PETITIO. */
+interior b32
+novum_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    constans ContextusCycli* cc;
+                        Xar* bibliotheca;
+                  character  titulus[XXXII];
+                        s32  n;
+                        i32  i;
+                        b32  liberum;
+
+    cc = (constans ContextusCycli*)ctx;
+    si (iussum->numerus_argumentorum > ZEPHYRUM)
+    {
+        effectus->error =
+            chorda_concatenare(chorda_ex_literis(cc->verbum,
+            piscina), chorda_ex_literis(": nulla argumenta", piscina),
+            piscina);
+        redde VERUM;
+    }
+    bibliotheca = pictor_documenta_enumerare(cc->vicus->volumen,
+        piscina);
+    per (n = I; n < M; n++)
+    {
+        sprintf(titulus, "pictura_%d", (integer)n);
+        liberum = VERUM;
+        per (i = ZEPHYRUM; bibliotheca && i < xar_numerus(bibliotheca);
+             i++)
+        {
+            si (chorda_aequalis_literis(*(chorda*)xar_obtinere(
+                bibliotheca, i), titulus))
+            {
+                liberum = FALSUM;
+            }
+        }
+        si (liberum)
+        {
+            frange;
+        }
+    }
+    si (!vicus_acervo_mutare(cc->vicus, "pictor", titulus))
+    {
+        effectus->error =
+            chorda_concatenare(chorda_ex_literis(cc->verbum,
+            piscina), chorda_ex_literis(": condi non potest", piscina),
+            piscina);
+    }
+    redde VERUM;
+}
+
 interior b32
 cyclum_registrare (
         IussumRegistrum* r,
@@ -553,7 +636,8 @@ cyclum_registrare (
     cc->vicus     = v;
     cc->directio  = directio;
     cc->verbum    = verbum;
-    redde iussum_registrare(r, verbum, FALSUM, cyclus_iussum, cc);
+    redde iussum_registrare(r, verbum, FALSUM, directio == ZEPHYRUM
+        ? novum_iussum : cyclus_iussum, cc);
 }
 
 /* terminale (vicus-latera S1c): concha nova in omni apertura (decisio
@@ -675,6 +759,23 @@ vicus_volumen_aperire (
         via_voluminis ? via_voluminis : "vicus.volumen");
 }
 
+vacuum
+vicus_applicatio_imaginis_portam_ponere (
+     VicusApplicatio* app,
+        ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina),
+              vacuum* ctx)
+{
+    ContextusPictoris* cp;
+
+    si (!app || !app->pictoris)
+    {
+        redde;
+    }
+    cp             = (ContextusPictoris*)app->pictoris;
+    cp->porta      = porta;
+    cp->porta_ctx  = ctx;
+}
+
 b32
 vicus_applicatio_aedificare (
         VicusApplicatio* app,
@@ -707,8 +808,11 @@ vicus_applicatio_aedificare (
         magnitudo(ContextusPictoris));
     si (cp)
     {
-        cp->documenta = tabula_dispersa_creare_chorda(piscina, XVI);
+        cp->documenta  = tabula_dispersa_creare_chorda(piscina, XVI);
+        cp->porta      = NIHIL;
+        cp->porta_ctx  = NIHIL;
     }
+    app->pictoris = cp;
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
     cs->liber = scriba_liber_aperire(piscina, intern, volumen,
@@ -728,6 +832,8 @@ vicus_applicatio_aedificare (
                piscina)
         || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
                piscina)
+        || !cyclum_registrare(cs->iussa, app->vicus, "pictor-new",
+               ZEPHYRUM, piscina)
         || !vicus_genus_addere(app->vicus, "scriba",
                magnitudo(ScribaMontatio), scribam_montare,
                scribam_describere, cs)

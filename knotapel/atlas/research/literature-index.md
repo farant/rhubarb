@@ -1,5 +1,7 @@
 # Literature Index — DKC Research Program
 
+> **Correction (2026-10-10, Demo 124):** D84's "null indispensability" at ζ₈ does not hold exactly. Removing the nulls keeps max XOR8, null-only computes nothing, and nulls are under-represented among winners; the recorded figures are not reproduced by D84's own code on any build tried (cause unknown). D87's "regime transition" therefore has no ζ₈ side. Statements here that rely on either are superseded; see `knotapel/demo_124_exact_null_states/findings.md`.
+
 One-line-per-paper quick reference across all knotapel literature surveys and demo references. Deduplicated, sorted alphabetically by first author. Generated 2026-02-20, updated 2026-02-26 (added D102-D109 references: Amy-Glaudell-Ross, Band-Boyland, Bigelow/Krammer, Boufounos-Baraniuk, Boyland-Aref-Stremler, Caruso, Fadell-Neuwirth, Harary, Plaza-Ryom-Hansen, Thurston-FLP; updated source lists for existing entries).
 
 ## Relevance Tags

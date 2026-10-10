@@ -15,6 +15,7 @@
 #include "actio.h"
 #include "pictor_documentum.h"
 #include "xar.h"
+#include "imago.h"
 
 nomen structura {
     PictorDocumentum* doc;
@@ -25,6 +26,10 @@ nomen structura {
                                 * puncti pendentis; NIHIL donec
                                 * primum */
                  s64 semen;   /* aspergillum: semen ictus currentis */
+    /* L5: porta imaginis (Cmd+V) - NIHIL = nulla; applicationes
+     * clipboard_capere_imaginem ponunt, probationes fictam */
+    ImagoFructus (*imago_capere)(vacuum* ctx, Piscina* piscina);
+          vacuum* imago_ctx;
 } PictorActiones;
 
 vacuum
@@ -47,6 +52,35 @@ pictor_penicillus_ictus (
  * (punctum solutionis quoque: mora ante solutionem guttas addit) */
 b32
 pictor_aspergillum_ictus (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> strata (pictor-strata L3): ictus in palette stratorum -
+ * 'stratum.<id>' eligit (ephemera stratum_activum), 'oculus.<id>'
+ * visibilitatem in actis mutat, 'strata.novum' stratum novum supra
+ * currens (fit currens), 'strata.deletum' currens delet (inferius fit
+ * currens; ultimum numquam). Dominus 'stratum_activum'. Palette
+ * aperta manet. */
+b32
+pictor_strata_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> linea (Franus): ictus primus initium figit (captura
+ * manet); motus sine botone praevisionem ad indicatorem movet; ictus
+ * secundus segmentum scribit - cum Shift punctum eius initium novum
+ * (series), aliter finitur. Esc aut ictus extra tabulam pendentem
+ * abicit. Segmentum = ictus unus (revocatio per segmentum). */
+b32
+pictor_linea_ictus (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,
@@ -106,7 +140,8 @@ pictor_exemplar_ponere (
 /* <tractator/> optio magnitudinis ictum ('optio.magnitudo.<n>'):
  * magnitudinem instrumenti currentis ponit - penicillus diametrum
  * (I II III IV VI VIII XII XVI XXXII LXIV), aspergillum multiplicem
- * radii (I II IV VIII XVI); spongia nihil - palettam claudit. Dominus
+ * radii (I II IV VIII XVI), linea latitudinem (I II IV VIII XVI);
+ * spongia nihil - palettam claudit. Dominus
  * attributorum 'magnitudo_penicilli' et 'magnitudo_aspergilli' */
 b32
 pictor_magnitudinem_ponere (
@@ -117,7 +152,10 @@ pictor_magnitudinem_ponere (
       constans Eventus* ev,
                 vacuum* ctx);
 
-/* <tractator/> 'p' penicillus, 'a' aspergillum, 'e' spongia; ictus
+/* <tractator/> 'p' penicillus, 'a' aspergillum, 'e' spongia, 'l'
+ * linea; Cmd+V: imago e porta in stratum novum supra currens (fit
+ * currens); Cmd+Z revocat, Cmd+Shift+Z reficit (linea pendens:
+ * abicitur solum); ictus
  * in optionem instrumenti ('optio.instrumentum.<nomen>') idem ponit et
  * palettam claudit; Esc palettam apertam claudit */
 b32

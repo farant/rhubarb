@@ -38,8 +38,11 @@ Oracle: `python3 -I oracle.py CELLS N` (XOR).
 ## Headline
 
 **Most of D95/D96's qualitative claims hold exactly, even under every
-tie resolution. The ones that rest on the 90° (null) elements do not:
-those elements put every sum exactly on a sector boundary. One more, D96's
+tie resolution. The ones that rest on the 90° (null) elements are
+decided by ties: those elements put every sum exactly on a sector
+boundary. Their magnitudes ("0 + 0 = 26%") do not survive. Their zeros
+hold under the exact rule and robustly; "possible" is near-vacuous for
+them. One more, D96's
 "optimal catalog is A+B+C", fails outright, on D96's own float numbers
 as well.**
 
@@ -52,8 +55,8 @@ as well.**
 | COMM survives N = 7 (8), NON-COMM dies (0) | 8 / 0 | 8 / 0 | 8 / 0 | 8 / 0 | holds under every resolution |
 | 2I first 12 beats ζ₈-COMM at N = 3–5, crossover at 6–7 | 1.56, 1.64, 2.15× | | 1.56, 1.63, 1.98× | | holds robustly |
 | "0 + 0 = 26%" (all-null N = 4) | 33/126 | 27 | **15 (11.9%)** | **102 (81%)** | magnitude is a tie artifact |
-| all-null "zero elsewhere" (N = 3, 5, 6) | 0, 0, 0 | 0, 0, 0 | 0, 0, 0 | **80, 72, 25** | robust only |
-| null halves "dead alone" | 0 | 0 | 0 | outer-null N = 3, 4: **16/20, 3/15**; Q₈ (one set, N = 3 only): **1/1** | robust only |
+| all-null "zero elsewhere" (N = 3, 5, 6) | 0, 0, 0 | 0, 0, 0 | 0, 0, 0 | 80, 72, 25 (near-vacuous, see below) | holds under the rule and robustly |
+| null halves "dead alone" | 0 | 0 | 0 | outer-null N = 3, 4: 16/20, 3/15; Q₈ (one set, N = 3 only): 1/1 (near-vacuous) | holds under the rule and robustly |
 | cell C at N = 6 | 16/28 (57%) | 16 | **4 (14%)** | **28 (100%)** | decided by ties |
 | A is a "synergy enhancer"; optimal catalog = A+B+C | — | | B+C 96.7, 92.8, 71.7, 29.0% vs A+B+C(+E) 74.1, 74.8, 40.9, 10.3% | | **fails**, in D96's own floats too (B+C 96.7, 94.0, 73.2, 31.0 vs 74.1, 77.5, 45.1, 13.0%) |
 
@@ -70,9 +73,14 @@ result is decided by how acos(0) rounds and by the axis tie-breaks:
   at N = 4 against 0/15; the Q₈ half has 3 elements and no N = 4
   sets at all);
 - that robust gain is 11.9%, not 26%;
-- under "possible" the outer half computes at N = 3 and 4 (16/20, 3/15;
-  0 at N = 5, 6), Q₈'s single N = 3 set passes, and the mix computes at
-  every N.
+- "possible" reports the outer half at N = 3 and 4 (16/20, 3/15;
+  0 at N = 5, 6), Q₈'s single N = 3 set, and the mix at every N. These
+  numbers say little. **Correction from the D122 review:** when every
+  vector is tied between sectors k/2 − 1 and k/2, a per-vector tie
+  choice can put each sum on the side of its own truth value. "Possible"
+  then passes every set without two masks at the same point, so it
+  measures the absence of such clashes, not capacity. The zeros hold
+  under the exact rule (a fixed rule) and robustly.
 
 "Algebra wins over geometry at matched half-angle" survives only in
 its robust, weaker form.

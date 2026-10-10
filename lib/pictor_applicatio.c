@@ -258,6 +258,7 @@ pictor_montare (
     m->compositio.cellula_altitudo   = CELLULA_ALTITUDO;
     m->compositio.status_lineae      = STATUS_LINEAE;
     m->compositio.ramus              = m->ramus;
+    m->compositio.doc                = m->doc;
     redde VERUM;
 }
 
@@ -344,8 +345,46 @@ pictor_picturam_ponere (
     m->doc               = doc;
     m->actiones_ctx.doc  = doc;
     m->figurae_ctx.doc   = doc;
+    m->compositio.doc    = doc;
     redde mutare_ramum(&m->ramus, INSULA_DURABILIS, dimensiones_mutator,
         doc);
+}
+
+b32
+pictor_picturam_condere (
+         PictorMontatio* m,
+     constans character* spatium)
+{
+    PictorDocumentum* doc;
+             Piscina* p;
+
+    si (!m || !m->doc || !spatium || !spatium[ZEPHYRUM])
+    {
+        redde FALSUM;
+    }
+    p = m->doc->piscina;
+    si (in_bibliotheca(m->doc->volumen, chorda_ex_literis(spatium, p),
+            p))
+    {
+        redde FALSUM;
+    }
+    /* magnitudo tabulae novae (ut pictor_montare): superficies minus
+     * margines et linea status */
+    doc = pictor_documentum_creare(p, m->doc->intern, m->doc->volumen,
+        spatium, tabulae_dimensio((i32)m->compositio.fenestra_latitudo,
+        II * CELLULA_LATITUDO), tabulae_dimensio(
+        (i32)m->compositio.fenestra_altitudo,
+        (STATUS_LINEAE + II) * CELLULA_ALTITUDO), LXIV);
+    si (!doc)
+    {
+        redde FALSUM;
+    }
+    si (m->documenta)
+    {
+        (vacuum)tabula_dispersa_inserere(m->documenta,
+            clavis_memoriae(spatium, p), doc);
+    }
+    redde pictor_picturam_ponere(m, spatium);
 }
 
 b32
