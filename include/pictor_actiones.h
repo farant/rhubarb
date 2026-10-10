@@ -154,7 +154,8 @@ pictor_magnitudinem_ponere (
 
 /* <tractator/> 'p' penicillus, 'a' aspergillum, 'e' spongia, 'l'
  * linea; Cmd+V: imago e porta in stratum novum supra currens (fit
- * currens); ictus
+ * currens); Cmd+Z revocat, Cmd+Shift+Z reficit (linea pendens:
+ * abicitur solum); ictus
  * in optionem instrumenti ('optio.instrumentum.<nomen>') idem ponit et
  * palettam claudit; Esc palettam apertam claudit */
 b32

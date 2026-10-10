@@ -704,6 +704,33 @@ pictor_instrumentum_eligere (
         }
         redde FALSUM;
     }
+    /* Cmd+Z revocat, Cmd+Shift+Z reficit (historia: gradus multi);
+     * linea pendens (captura) abicitur solum */
+    si (   ev->datum.clavis.runa                       == 'z'
+        && (ev->datum.clavis.modificantes & MOD_SUPER) != ZEPHYRUM)
+    {
+        PictorActiones* pa;
+
+        pa = (PictorActiones*)ctx;
+        si (motus && !chorda_vacua(motus->captura))
+        {
+            lineam_abicere(motus, ev->tempus);
+            redde VERUM;
+        }
+        si (!pa || !pa->doc)
+        {
+            redde FALSUM;
+        }
+        si ((ev->datum.clavis.modificantes & MOD_SHIFT) != ZEPHYRUM)
+        {
+            (vacuum)pictor_documentum_reficere(pa->doc);
+        }
+        alioquin
+        {
+            (vacuum)pictor_documentum_revocare(pa->doc);
+        }
+        redde VERUM;
+    }
     /* L5: Cmd+V - imago glutinata */
     si (   ev->datum.clavis.runa                       == 'v'
         && (ev->datum.clavis.modificantes & MOD_SUPER) != ZEPHYRUM)
