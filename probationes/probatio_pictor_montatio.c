@@ -1,7 +1,8 @@
 /* probatio_pictor_montatio.c - montatio vera pictoris (status-plan
  * S2): canon et domini EX MANIFESTO in ramo montato vigent (via
  * pictor_applicatio_aedificare -> pictor_montare, non insulae manu
- * structae); manifestum absens = montatio recusatur. */
+ * structae); manifestum absens = montatio recusatur; S3: status
+ * persistens per sessiones servatur. */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -123,10 +124,72 @@ _probare_manifestum_absens (
     volumen_claudere(vol);
 }
 
+/* valor in ramo aequat literas? (NIHIL = abest) */
+interior b32
+valor_est (
+        PictorApplicatio* app,
+      constans character* titulus,
+      constans character* valor)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&app->montatio.ramus, INSULA_EPHEMERA,
+        titulus);
+    si (!valor)
+    {
+        redde a == NIHIL;
+    }
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+/* S3: status persistens in volumine applicationis; sessio altera
+ * (repositorium recens, idem volumen) eum restituit; transiens non */
+interior vacuum
+_probare_conservationem (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                 Volumen* vol;
+        PictorApplicatio  prima;
+        PictorApplicatio  altera;
+
+    in = internamentum_creare(c->piscina);
+    thema_initiare();
+    vol = volumen_temporarium(c->piscina, "probatio_pictor_montatio");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    memset(&prima, ZEPHYRUM, magnitudo(prima));
+    CREDO_NECESSE(pictor_applicatio_aedificare(&prima, c->piscina, in,
+        vol, NIHIL, CDLXXX, CDLXXX));
+    CREDO_VERUM(valor_est(&prima, "instrumentum", "penicillus"));
+    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA,
+        "instrumentum.eligere",
+        "instrumentum=linea"));
+    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "color_primus.ponere",
+        "color_primus=5"));
+    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "motus", "zoom=2"));
+    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "quilibet",
+        "palette=color_primus"));
+
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE(pictor_applicatio_aedificare(&altera, c->piscina, in,
+        vol, NIHIL, CDLXXX, CDLXXX));
+    CREDO_VERUM(valor_est(&altera, "instrumentum", "linea"));
+    CREDO_VERUM(valor_est(&altera, "color_primus", "5"));
+    CREDO_VERUM(valor_est(&altera, "zoom", "2"));
+    /* transiens: palette clausa */
+    CREDO_VERUM(valor_est(&altera, "palette", NIHIL));
+    /* domini post restitutionem vigent */
+    CREDO_FALSUM(scribere(&altera, INSULA_EPHEMERA, "zoom.ponere",
+        "zoom=3"));
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",         _probare_montationem,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "manifestum_absens", _probare_manifestum_absens,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "conservatio",      _probare_conservationem,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

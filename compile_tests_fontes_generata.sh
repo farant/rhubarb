@@ -48,6 +48,7 @@ declare -a SOURCE_FILES=(
     "lib/componens.c"
     "lib/concha.c"
     "lib/congruentia.c"
+    "lib/conservatio.c"
     "lib/copia_terminalis.c"
     "lib/credo.c"
     "lib/css_lexema.c"

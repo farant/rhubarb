@@ -111,6 +111,7 @@ declare -a RADIX_FONTES=(
     "flatura"          # pictor-strata L2: checkpoints deflati
     "organum"          # status S2: canon et domini ex manifesto
     "organum_canon"
+    "conservatio"      # status S3: systema persistentiae
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

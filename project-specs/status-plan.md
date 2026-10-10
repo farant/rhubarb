@@ -52,7 +52,7 @@ widgets are migrated by hand.*
   completeness (attribute without campus).
 - **S2** DONE 2026-10-10 (lib/organum.worklog.md). pictor loads from its manifest; its three files deleted.
   Behaviour identical (suites). Two-island split kept.
-- **S3** the PERSISTENCE system: transient fields never reach disk (palette open -> quit ->
+- **S3** DONE 2026-10-10 (lib/conservatio.worklog.md; census XII: it BUILT persistence - islands never reached disk before). The PERSISTENCE system: transient fields never reach disk (palette open -> quit ->
   reopen -> closed); in-process rehydration keeps them. Starts by
   reading how islands are saved.
 - **S4** defaults from the manifest (`absens`), replacing C

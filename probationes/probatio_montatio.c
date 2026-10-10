@@ -81,7 +81,7 @@ s32 principale (vacuum)
 
     imprimere("\n--- I: montare - elementa, documenta in spatiis\n");
     CREDO_VERUM(pictor_montare(&pm, piscina, intern, vol, repo, "p1",
-        NIHIL, CDLXXX, CDLXXX));
+        NIHIL, CDLXXX, CDLXXX, NIHIL));
     CREDO_VERUM(scriba_montare(&m1, piscina, intern, vol,
         repo, "s1",
         NIHIL, CDLXXX, CDLXXX, NIHIL));
@@ -190,7 +190,7 @@ s32 principale (vacuum)
             X);
         CREDO_VERUM(pictor_montare(&pp, piscina, intern, vol,
             repo_parvum,
-            "p9", NIHIL, LX, XL));
+            "p9", NIHIL, LX, XL, NIHIL));
         CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,
             INSULA_DURABILIS, "latitudo"), "64"));
         CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,

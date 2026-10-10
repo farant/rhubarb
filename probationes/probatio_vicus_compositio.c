@@ -71,7 +71,7 @@ pictorem_montare (
     (vacuum)argumentum;
     (vacuum)ctx;
     redde pictor_montare((PictorMontatio*)sedes, p, in, v, r, id, radix,
-                         latitudo, altitudo);
+                         latitudo, altitudo, NIHIL);
 }
 
 interior vacuum

@@ -3,8 +3,9 @@
      in ramo cuiusque organi scribit. Additur per organum_basim_addere
      ANTE campos proprios.
 
-     superficies = observatio (magnitudo fenestrae), focus = status
-     applicationis: classificatio propria postea (census V). -->
+     superficies = observatio (magnitudo fenestrae; S3: transiens),
+     focus = status applicationis: classificatio propria postea
+     (census V). -->
 <organum genus="organum_commune" versio="1">
   <actiones>
     <actio nomen="dispensator" systema="verum"/>
@@ -16,9 +17,11 @@
             scriptor="dispensator"/>
     <campus nomen="focus_acervus" typus="textus" vita="persistens"
             scriptor="dispensator"/>
-    <campus nomen="superficies_latitudo" typus="numerus" vita="persistens"
+    <!-- S3: observatio (magnitudo fenestrae) in omni cursu metitur -
+         restitutio stala esset: transiens -->
+    <campus nomen="superficies_latitudo" typus="numerus" vita="transiens"
             scriptor="dispensator" nota="dispensator scribit (013 B1)"/>
-    <campus nomen="superficies_altitudo" typus="numerus" vita="persistens"
+    <campus nomen="superficies_altitudo" typus="numerus" vita="transiens"
             scriptor="dispensator" nota="dispensator scribit (013 B1)"/>
   </status>
 </organum>

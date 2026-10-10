@@ -355,3 +355,10 @@ Consequences:
   old drawing).
 - Once S3 writes islands, THEN island compatibility starts to matter:
   saved islands need a version and a migration rule from day one.
+
+**S3 reclassifications (2026-10-10):** the first system that cares
+about lifetime moved two fields: superficies_* (an observation) and
+pictor latitudo/altitudo (derived from the drawing) -> transiens.
+Both had been labelled with the nearest category; restoring them could
+only be stale. Candidate for a real category later: "derived" (state
+recomputed from an entity at mount).

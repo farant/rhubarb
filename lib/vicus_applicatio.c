@@ -112,6 +112,9 @@ nomen structura {
     /* L5: porta imaginis (applicatio ponit; NIHIL = nulla) */
       ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina);
             vacuum* porta_ctx;
+    /* status-plan S3: systema persistentiae repositorii vici (unum -
+     * actarius unus); latera pictoris status suos servant */
+       Conservatio* conservatio;
 } ContextusPictoris;
 
 /* L5: porta lateris pictoris - ad portam communem (tempore vocationis
@@ -389,8 +392,16 @@ pictorem_montare (
 
     m   = (PictorMontatio*)sedes;
     cp  = (ContextusPictoris*)ctx;
+    /* S3: systema persistentiae repositorii vici - latus primum id
+     * creat (repositorium in vicus_aperire nascitur, ante montationes
+     * eius ab extra adiri non potest), cetera communicant */
+    si (cp && !cp->conservatio)
+    {
+        cp->conservatio = conservatio_creare(piscina, intern, volumen,
+            repo);
+    }
     si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
-            latitudo, altitudo))
+            latitudo, altitudo, cp ? cp->conservatio : NIHIL))
     {
         redde FALSUM;
     }
@@ -808,9 +819,11 @@ vicus_applicatio_aedificare (
         magnitudo(ContextusPictoris));
     si (cp)
     {
-        cp->documenta  = tabula_dispersa_creare_chorda(piscina, XVI);
-        cp->porta      = NIHIL;
-        cp->porta_ctx  = NIHIL;
+        cp->documenta    = tabula_dispersa_creare_chorda(piscina, XVI);
+        cp->porta        = NIHIL;
+        cp->porta_ctx    = NIHIL;
+        cp->conservatio  = NIHIL;   /* latus primum creat (repositorium
+                                    * in vicus_aperire nascitur) */
     }
     app->pictoris = cp;
     cs = (ContextusScribae*)piscina_allocare(piscina,

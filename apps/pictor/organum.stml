@@ -40,10 +40,11 @@
   </actiones>
 
   <status>
-    <!-- dimensiones documenti (insula durabilis hodie) -->
-    <campus nomen="latitudo" typus="numerus" vita="persistens"
+    <!-- dimensiones documenti (insula durabilis hodie). S3: transiens -
+         ad montationem ex documento derivantur; restitutio stala esset -->
+    <campus nomen="latitudo" typus="numerus" vita="transiens"
             nota="copia latitudinis documenti (inventum 6)"/>
-    <campus nomen="altitudo" typus="numerus" vita="persistens"
+    <campus nomen="altitudo" typus="numerus" vita="transiens"
             nota="copia altitudinis documenti (inventum 6)"/>
 
     <!-- persistens, discretus -->

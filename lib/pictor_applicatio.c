@@ -183,7 +183,8 @@ pictor_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo)
+                    i32  altitudo,
+            Conservatio* conservatio)
 {
                  chorda  durabilis;
      constans character* spatium;
@@ -269,6 +270,15 @@ pictor_montare (
                 (int)insula_causa(repo).mensura,
                 insula_causa(repo).datum);
         redde FALSUM;
+    }
+
+    /* S3: status servatus restituitur (post initiationem, ante
+     * dominos - scriptura anonyma), ramus deinde servatur */
+    si (conservatio)
+    {
+        (vacuum)conservatio_ramum_addere(conservatio, &m->ramus,
+            organum,
+            id ? id : "pictor");
     }
 
     /* domini POST initiationem, ex manifesto generati */
@@ -450,7 +460,8 @@ pictor_applicatio_aedificare (
         "<pictor focus=\"tabula\"/>");
     si (   !app->repo
         || !pictor_montare(&app->montatio, piscina, intern, volumen,
-               app->repo, NIHIL, radix, latitudo, altitudo))
+               app->repo, NIHIL, radix, latitudo, altitudo,
+               conservatio_creare(piscina, intern, volumen, app->repo)))
     {
         redde FALSUM;
     }

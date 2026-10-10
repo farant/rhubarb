@@ -26,6 +26,7 @@
 #include "pictor_componentia.h"
 #include "pictor_actiones.h"
 #include "pictor_figurae.h"
+#include "conservatio.h"
 #include "tabula_dispersa.h"
 
 /* MONTATIO (insula-rami-plan T1a): pictor in repositorio dato, ramo
@@ -79,7 +80,10 @@ pictor_picturam_condere (
  * Ordo: canones, elementum initiale, domini. radix = praefixum viarum
  * canonum. Tabula NOVA (vicus-latera S2c) magnitudine prospectus
  * superficiei minus margo cellulae utrimque (altitudo etiam minus
- * linea status; LXIV minimum); exstans suam servat. */
+ * linea status; LXIV minimum); exstans suam servat. conservatio
+ * (status-plan S3): systema persistentiae repositorii - ramus
+ * registratur et status servatus restituitur post elementum initiale,
+ * ante dominos; NIHIL = sine persistentia (probationes). */
 b32
 pictor_montare (
          PictorMontatio* m,
@@ -90,7 +94,8 @@ pictor_montare (
      constans character* id,
      constans character* radix,
                     i32  latitudo,
-                    i32  altitudo);
+                    i32  altitudo,
+            Conservatio* conservatio);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "pictor.volumen"). Reddit volumen apertum aut NIHIL. */
