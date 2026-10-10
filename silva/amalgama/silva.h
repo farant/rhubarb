@@ -1904,6 +1904,13 @@ typedef enum {
     /* 91 (2026-09-25, silva-migratio T17b): extensio compilatoris
      * (__attribute__) in codice domus - violatio suppressibilis */
     EXAMEN_CODEX_EXTENSIO_COMPILATORIS,
+    /* 92-95 (2026-10-10, credo II T7): mores credo - status non
+     * purgatus, sectio sine assertione, suita mutata (violatio domus),
+     * titulus manu impressus (domesticum) */
+    EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS,
+    EXAMEN_CODEX_CREDO_SECTIO_SINE_ASSERTIONE,
+    EXAMEN_CODEX_CREDO_SUITA_MUTATA,
+    EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

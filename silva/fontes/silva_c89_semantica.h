@@ -544,6 +544,35 @@ nomen enumeratio {
      * (packed, aligned, cleanup, noreturn...) addunt modulum silvae
      * ea non videre (erasio). */
     EXAMEN_CODEX_EXTENSIO_COMPILATORIS,       /* VIOLATIO */
+    /* MORES CREDO (credo II T7, DECISUM Fran 2026-10-10: regulae
+     * fluxuum domus in examine - bibliothecae oecosystema sunt).
+     * SOLUM in plagula cum tabula CredoSectio (suita sectionum);
+     * suitae veteres tacent. Sectio = ordo tabulae {titulus,
+     * probare, parare, purgare, ...}; "attingit" = clausura
+     * vocationum INTRA plagulam. VIOLATIO domus (exemplar 91):
+     * clang accipit, domus non; <tolera> cum causa suppressibilis.
+     * 92 = variabilis SCOPI PLAGULAE mutabilis quam probare sectionis
+     *      (aut quod attingit) scribit, sed nec parare nec purgare
+     *      EIUSDEM sectionis (clausurae) scribit - status inter
+     *      sectiones manet, ordo eum celat (T6: decem numeratores in
+     *      probatio_fabrica_gradus, CREDO_ORDO=mixtus eos invenit).
+     *      Scriptiones = eventa DEFINITIO* fluxus datorum sub politica
+     *      credo (variabiles plagulae tractatae, non locales): ++,
+     *      +=, membrum, &x et decasus aciei ad parametrum non
+     *      constantem;
+     * 93 = probare sectionis nullam assertionem attingit (vocatio
+     *      _credo_notare* / _credo_necesse / credo_processus_iudicare)
+     *      - VACUA ante cursum;
+     * 94 = c->suita mutatum: assignatum, aut conversum/initiatum/
+     *      assignatum ad monstratorem NON constantem (sectiones
+     *      statum suitae legunt, numquam mutant - credo II Q3);
+     * 95 = titulus '--- ... ---' manu impressus in clausura sectionis
+     *      (DOMESTICUM, monitum): credo titulum ipse imprimit,
+     *      gradus = CREDO_GRADUS. */
+    EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS,   /* VIOLATIO domus */
+    EXAMEN_CODEX_CREDO_SECTIO_SINE_ASSERTIONE, /* VIOLATIO domus */
+    EXAMEN_CODEX_CREDO_SUITA_MUTATA,          /* VIOLATIO domus */
+    EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS,     /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

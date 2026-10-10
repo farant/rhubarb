@@ -438,3 +438,18 @@ reset the 14 POINTER fakes and missed every counter. All ten now reset;
 This is precisely T7 lint check (1) - "mutable file-scope state that no
 purgare writes" - with a real historical instance to plant against
 (revert the ten resets -> the lint must name them).
+
+## 2026-10-10 - credo II T7: conventions as examen codes 92-95
+
+Detail in silva/fontes/silva_c89_semantica.worklog.md. What it found on
+first contact with the 13 v2 suites: probatio_fabrica_genera (5) and
+probatio_fabrica_iudicium (4) mutate the shared fake world
+(mundi_ambitus_ficti, mundi_effectus_effusio, mundi_identitas_ficta, ...)
+with NO purgare at all - pilot suites converted mechanically. Latent, not
+active: CREDO_ORDO=mixtus found nothing because no later section happens
+to read those values today. Both now have `_mundum_reponere` as every
+row's purgare. stml had two leftover `--- Probans` sub-headings inside
+merged sections -> CREDO_GRADUS. And plant R1 showed the first version of
+92 MISSED the very T6 bug it was built for (fake installed as a function
+pointer) - a lint must be planted against the real case it exists for,
+not only against unit snippets.

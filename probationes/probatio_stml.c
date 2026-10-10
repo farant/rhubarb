@@ -2854,8 +2854,7 @@ _probare_capture_operator_serialization (
      * - collapsus T3, 2026-08-24
      * ================================================== */
 
-    imprimere("\n--- Probans regulam capturae + parentheses"
-              " glutinatas ---\n");
+    CREDO_GRADUS("regula capturae + parentheses glutinatae");
 
     {
         /* spatium post captorem = spatia_post captoris, elementum
@@ -4810,7 +4809,7 @@ _probare_capturam_lineae_crudae (
                        Xar* vitia;
         StmlStrictumVitium* v;
 
-        imprimere("\n--- Probans stml_strictum ---\n");
+        CREDO_GRADUS("stml_strictum");
 
         /* sanum: nihil */
         r = stml_legere_ex_literis("<a n=\"1\"><b>x</b></a>",

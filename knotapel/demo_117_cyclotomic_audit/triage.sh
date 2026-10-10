@@ -35,6 +35,7 @@ one() {
     [ -d "$KNOTAPEL/raqiya" ] && cp -R "$KNOTAPEL/raqiya" "$out/raqiya"
     rm -f "$out/src/"*.o
     start=$(date +%s)
+    # <tolera codex="lint:vexilla-domus" (>auditus UBSan: vexilla sanitizatoris EXPERIMENTUM sunt, non aedificatio domus (D117)
     if ! clang -std=c89 -O1 -g -fsanitize=undefined -fno-omit-frame-pointer \
             -o "$out/demo" "$out/src/main.c" -lm > "$out/build.log" 2>&1; then
         printf '%s\tbuild_error\t0\t0\t0\t-\n' "$demo"

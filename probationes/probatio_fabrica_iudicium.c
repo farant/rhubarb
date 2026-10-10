@@ -1496,40 +1496,56 @@ _probare_signum (
     }
 }
 
+/* PURGARE omnium sectionum (credo II T7, codex examinis 92): mundus
+ * fictus communis (fabrica_mundus_fictus.c) et ficta huius plagulae ad
+ * valores initiales - 'transitum (vestigium portae)' eos mutabat nec
+ * reponebat; ordo tabulae id celabat. Valores = initiatores
+ * declarationum. */
+interior vacuum
+_mundum_reponere (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    mundi_ambitus_ficti[0]  = NIHIL;
+    mundi_effectus_effusio  = "";
+    mundi_identitas_ficta   = "clang I";
+    mundi_via_alia_ficta    = NIHIL;
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "regenerationem",
       _probare_regenerationem,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "relationem",
       _probare_relationem,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "vestigia lectionum",
       _probare_vestigia_lectionum,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "memoriam verificationum",
       _probare_memoriam_verificationum,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "mandatum in memoria",
       _probare_mandatum_in_memoria,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "regenerationem per actionem",
       _probare_regenerationem_per_actionem,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "praevisionem regenerationum",
       _probare_regenerationes_praevidere,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "celer",
       _probare_celer,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "iudicium (porta ut actio)",
       _probare_iudicium,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "transitum (vestigium portae)",
       _probare_transitum,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { "signum (verdictum in C)",
       _probare_signum,
-      NIHIL, NIHIL, NIHIL, NIHIL },
+      NIHIL, _mundum_reponere, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

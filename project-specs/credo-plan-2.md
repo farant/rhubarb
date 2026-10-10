@@ -74,8 +74,23 @@ in `../rhubarb-quinta`; merges by the ritual.
   clean over seeds 1-5 and 100-114.
 
 ### T7: lint
-- [ ] silva checks 1-4 (spec II), each born red by a plant that
+- [x] silva checks 1-4 (spec II), each born red by a plant that
   compiles; wired into the existing lint/hook path. Commit.
+  As built (2026-10-10, DECISUM Fran: examen house codes, not a separate
+  instrument - ledger …P81256): examen codes 92 CREDO_STATUS_NON_PURGATUS,
+  93 CREDO_SECTIO_SINE_ASSERTIONE, 94 CREDO_SUITA_MUTATA (VIOLATIO domus,
+  like 91) and 95 CREDO_TITULUS_IMPRESSUS (DOMESTICUM); all <tolera>-able.
+  Writes come from a SECOND data-flow build under a credo policy (file-scope
+  and static variables tracked instead of locals); calls/values via the
+  semantic nexus; 94 via conversion types. Path: examen-custos post-edit,
+  examen at commit, examen_vectis section VII, examen-corpus. First run
+  found 7 real leaks in genera/iudicium (fake world, no purgare) + 2 stml
+  titles; 2 false positives (static initialisers, 2D const arrays) fixed
+  with regression cases. Plant R1 (revert a T6 reset) first stayed GREEN:
+  fakes are installed as function pointers in parare and called by the
+  library during probare - fixed with value-reference edges (functions
+  used as values count as section body; resets count only via calls).
+  Cross-file resets parked (…JSV0E9: <reponit> contract on helpers).
 
 ### T8: converter
 - [ ] silva-based converter + the commit-time "convertible" note (lint

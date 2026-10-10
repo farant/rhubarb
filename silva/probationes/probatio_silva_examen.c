@@ -2199,6 +2199,193 @@ s32 principale (vacuum)
         " return a + b + c; }\n",
         (s32)EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM, II);
 
+
+    /* ==================================================
+     * 92-95: MORES CREDO (credo II T7) - regulae domus suitarum
+     * sectionum, solum in plagula cum tabula CredoSectio. Praeludium
+     * = credo.h minimum (C nudum, ut ceterae probationes).
+     * ================================================== */
+
+    imprimere("\n--- Probans mores credo (92-95) ---\n");
+#define CREDO_PRAELUDIUM \
+    "typedef struct { void* piscina; void* datum;" \
+    " const char* titulus; void* suita; } CredoContextus;\n" \
+    "typedef void (*CredoFunctio)(CredoContextus* c);\n" \
+    "typedef struct { const char* titulus; CredoFunctio probare;" \
+    " CredoFunctio parare; CredoFunctio purgare; const char* signa;" \
+    " const char* exspectata_fracta; } CredoSectio;\n" \
+    "void _credo_notare(int v);\n" \
+    "int printf(const char* f, ...);\n" \
+    "int credo_suitam_currere(const char* t, const CredoSectio* s);\n"
+#define CREDO_PRINCIPALE \
+    "int main(void) { return credo_suitam_currere(\"s\", S); }\n"
+
+    /* 92: numerator scribitur in sectione, nec parare nec purgare
+     * eum reponit (exemplar T6: _gradus_areae_paratae) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static int n = 0;\n"
+        "static void a(CredoContextus* c) { (void)c; n++;"
+        " _credo_notare(n == 1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, I);
+    /* 92: per adiutorem (functio ficta a sectione vocata) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static int vocationes = 0;\n"
+        "static void fictus(void) { vocationes = vocationes + 1; }\n"
+        "static void a(CredoContextus* c) { (void)c; fictus();"
+        " _credo_notare(vocationes == 1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, I);
+    /* 92: acies per decasum ad parametrum non constantem scripta
+     * (sprintf(_ultima, ...) T6) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static char ultima[8];\n"
+        "void scribe(char* p);\n"
+        "static void a(CredoContextus* c) { (void)c; scribe(ultima);"
+        " _credo_notare(1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, I);
+    /* 92: fictum ut VALOR in parare installatum, in probare a
+     * bibliotheca vocatum (T7 R1 - _area_parare_ficta per suturam);
+     * installatio in parare repositio non est */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "typedef struct { void (*f)(void); } Sutura;\n"
+        "void bibliotheca(const Sutura* s);\n"
+        "static Sutura sutura;\n"
+        "static int paratae = 0;\n"
+        "static void fictum(void) { paratae++; }\n"
+        "static void r(CredoContextus* c) { (void)c;"
+        " sutura.f = fictum; }\n"
+        "static void a(CredoContextus* c) { (void)c;"
+        " bibliotheca(&sutura); _credo_notare(paratae == 1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, r, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, I);  /* paratae;
+        * sutura a parare ipsa scripta = posita ante omnem sectionem */
+    /* 92 tacet: purgare reponit */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static int n = 0;\n"
+        "static void a(CredoContextus* c) { (void)c; n++;"
+        " _credo_notare(n == 1); }\n"
+        "static void p(CredoContextus* c) { (void)c; n = 0; }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, p, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, ZEPHYRUM);
+    /* 92 tacet: parare reponit (ante omnem cursum) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static int n = 0;\n"
+        "static void r(CredoContextus* c) { (void)c; n = 0; }\n"
+        "static void a(CredoContextus* c) { (void)c; n++;"
+        " _credo_notare(n == 1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, r, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, ZEPHYRUM);
+    /* 92 tacet: localis et constans scopi plagulae */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static const int k = 3;\n"
+        "static void a(CredoContextus* c) { int n = k; (void)c; n++;"
+        " _credo_notare(n == 4); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, ZEPHYRUM);
+    /* 92 tacet: statica functionis cum initiatore (semel oneratur)
+     * et acies bidimensionalis constans (probatio_stml ALIENA,
+     * probatio_fabrica_genera paria - falsa positiva cursus primi) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) {"
+        " static const char* aliena[] = { \"x\", \"y\" };"
+        " static const char* const paria[][2] = { { \"a\", \"b\" } };"
+        " (void)c; _credo_notare(aliena[0] != paria[0][1]); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, ZEPHYRUM);
+    /* 92: statica functionis SCRIPTA post initiationem - manet */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) { static int visa = 0;"
+        " (void)c; visa++; _credo_notare(visa == 1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, I);
+    /* 92 tacet: suita vetus (sine tabula) statum suum libere scribit */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static int n = 0;\n"
+        "int main(void) { n++; _credo_notare(n == 1); return 0; }\n",
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, ZEPHYRUM);
+    /* 92 tolerata: causa in fonte (consulto communis) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static int n = 0;\n"
+        "static void a(CredoContextus* c) { (void)c;\n"
+        "  /* <tolera codex=\"CREDO_STATUS_NON_PURGATUS\" (>probatio"
+        " */\n"
+        "  n++; _credo_notare(n >= 1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_STATUS_NON_PURGATUS, ZEPHYRUM);
+
+    /* 93: sectio sine assertione attingibili (VACUA ante cursum) */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) { (void)c;"
+        " printf(\"x\\n\"); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_SECTIO_SINE_ASSERTIONE, I);
+    /* 93 tacet: assertio per adiutorem */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void adiutor(int v) { _credo_notare(v); }\n"
+        "static void a(CredoContextus* c) { (void)c; adiutor(1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_SECTIO_SINE_ASSERTIONE, ZEPHYRUM);
+
+    /* 94: c->suita scripta - assignatio, conversio non constans,
+     * initiatio monstratoris non constantis */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) { c->suita = 0;"
+        " _credo_notare(1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, I);
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) { ((int*)c->suita)[0] = 1;"
+        " _credo_notare(1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, I);
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) { int* m = c->suita;"
+        " _credo_notare(m != 0); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, I);
+    /* 94 tacet: lectio per monstratorem constantem */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) {"
+        " const int* m = (const int*)c->suita;"
+        " _credo_notare(m != 0); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_SUITA_MUTATA, ZEPHYRUM);
+
+    /* 95 (domesticum): titulus '--- ... ---' manu impressus in
+     * sectione - credo titulum ipse imprimit; gradus = CREDO_GRADUS */
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) { (void)c;"
+        " printf(\"\\n--- Probans a ---\\n\"); _credo_notare(1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS, I);
+    _codicem_probare(piscina, CREDO_PRAELUDIUM
+        "static void a(CredoContextus* c) { (void)c;"
+        " printf(\"  fixum: %s\\n\", \"x\"); _credo_notare(1); }\n"
+        "static const CredoSectio S[] = { { \"a\", a, 0, 0, 0, 0 },"
+        " { 0, 0, 0, 0, 0, 0 } };\n" CREDO_PRINCIPALE,
+        (s32)EXAMEN_CODEX_CREDO_TITULUS_IMPRESSUS, ZEPHYRUM);
+#undef CREDO_PRAELUDIUM
+#undef CREDO_PRINCIPALE
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
