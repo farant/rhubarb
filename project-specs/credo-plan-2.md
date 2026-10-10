@@ -93,8 +93,22 @@ in `../rhubarb-quinta`; merges by the ritual.
   Cross-file resets parked (…JSV0E9: <reponit> contract on helpers).
 
 ### T8: converter
-- [ ] silva-based converter + the commit-time "convertible" note (lint
+- [x] silva-based converter + the commit-time "convertible" note (lint
   5); reproduces xar/stml conversions, refuses other shapes. Commit.
+  As built (2026-10-10): tools/credo_convertere.py [-probare] [-ad V]
+  [-suita T] - structure by silva selectors (principale > corpus > *,
+  blocks, titles by their literal, redde/salta, identifier uses), text
+  copied by line ranges; names '_sectio_<ordinal>' (prima ... CXCIX; Roman
+  numerals are NEW words for the lint, ordinals are not). xar: byte-equal
+  to the scratch output. stml: equal except TWO deliberate fixes - the
+  two-line title the scratch regex missed is its own section (68, not 67),
+  and a title nested in a block becomes CREDO_GRADUS. Refused (real
+  history): git (redde in section), villa/sententiae/cliens/vicus (no
+  'Probans' titles). Note: silva.notae_convertibilium in commissio(_umbra)
+  after the lint pre-pass, never blocks. Fixtures probationes/fixa/
+  credo_convertere/*.vetus/.exspectata (non-.c: no lint/corpus). Plants by
+  HAND (planta mangles .py indentation, …6DP7RG). Found: selecta.sh relinks
+  on every call - concurrent calls break each other (…WB6Q3H).
 
 ### T9: close
 - [ ] spec "As built", worklogs, MEMORY; merge.

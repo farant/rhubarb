@@ -2820,6 +2820,36 @@ def _fabricam_exigere(viae, sine_fabrica=None):
         " sine_fabrica='<causa>'." % (genus, '\n  '.join(lineae[-40:])))
 
 
+def notae_convertibilium(viae):
+    """LINT 5 (credo II T8): suitae VETERES tactae (probationes/probatio_*.c
+    cum credo_aperire, sine credo_suitam_currere) quas
+    tools/credo_convertere.py vertere potest - lineae notae, NUMQUAM
+    obstaculum (migratio incrementalis: suita convertitur cum tangitur).
+    Recusatio converteris tacet (forma non mechanica = fixura manu)."""
+    lineae = []
+    for via in viae:
+        if not re.search(r'(?:^|/)probationes/probatio_[^/]+\.c$', via):
+            continue
+        plena = _absoluta(via)
+        if not os.path.exists(plena):
+            continue
+        textus = open(plena, errors='replace').read()
+        if 'credo_suitam_currere' in textus or 'credo_aperire' not in textus:
+            continue
+        try:
+            r = _curre([sys.executable, 'tools/credo_convertere.py',
+                        '-probare', via])
+        except Exception:
+            continue
+        if r.returncode == 0:
+            m = re.search(r'\(forma (\w), sectiones (\d+)\)', r.stdout)
+            lineae.append('nota: %s convertibilis%s - ./tools/'
+                          'credo_convertere.py %s (credo v2: sectiones)'
+                          % (via, ' (forma %s, %s sectiones)' % m.groups()
+                             if m else '', via))
+    return lineae
+
+
 def _lint_praevium_exigere(viae):
     sana, relatio = lint_latinus_praevium(viae)
     if not sana:
@@ -2887,6 +2917,8 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         initium = time.time()
         _lint_praevium_exigere(viae)
         _tempus_notare('phasis', 'lint', initium)
+        for nota in notae_convertibilium(viae):
+            print(nota)
     if not _fabrica_facta:
         initium = time.time()
         _fabricam_exigere(viae, sine_fabrica)
@@ -3647,6 +3679,8 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
     if verificare:
         _formam_praeparare(viae)
         _lint_praevium_exigere(viae)
+        for nota in notae_convertibilium(viae):
+            print(nota)
     _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:
         if not str(sine_debitis).strip():

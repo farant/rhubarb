@@ -453,3 +453,37 @@ merged sections -> CREDO_GRADUS. And plant R1 showed the first version of
 92 MISSED the very T6 bug it was built for (fake installed as a function
 pointer) - a lint must be planted against the real case it exists for,
 not only against unit snippets.
+
+## 2026-10-10 - credo II T8: converter + convertible note
+
+tools/credo_convertere.py replaces the scratch regex script. Structure from
+silva (selectors over `definitio-functionis:definit(main)` - NB `main`, not
+`principale`: :definit matches the declarator AFTER latina expansion, which
+cost a probe), text from line ranges, so comments/format are untouched.
+Shapes: A (title in every top-level block), B (title before the section;
+title nested in a block -> CREDO_GRADUS). Everything else is refused with
+a named cause and the file untouched; -probare writes nothing; an already
+converted suite exits 2.
+
+The AST version is MORE right than the scratch: stml's original has a title
+split over two source lines; the scratch's one-line regex merged it into
+the previous section, which is precisely what T7's code 95 later flagged.
+So stml's oracle differs from the scratch output in two documented places
+(the split title is section 68; the nested title becomes a step); xar is
+byte-identical.
+
+Function names: '_sectio_' + Latin ordinal (prima, ..., vicesima_prima,
+..., centesima_...). Tested against the lint first: 'XLVII' is a NEW word,
+all 19 ordinal words are known.
+
+Commit note (lint 5): silva.notae_convertibilium(viae) - touched old-style
+probationes/probatio_*.c that the converter accepts get one 'nota:' line
+naming the command; never blocks. Path match is suffix-based so the fumus
+can test it from a temp dir without writing into the tree.
+
+Two tooling finds (ledger): selecta.sh relinks its binary on EVERY call -
+running the converter census 6-wide made the concurrent credo fumus fail
+in 10 places (…WB6Q3H; alone it is green); silva.planta on a .py file goes
+through Editio's whitespace-tolerant C-lexeme replace and re-indented the
+plant (IndentationError), so all four planta runs "broke the build" - the
+plants were done by hand instead (…6DP7RG; memory updated).

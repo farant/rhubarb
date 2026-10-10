@@ -27,6 +27,12 @@
 #        reproducibilis, semen nominatum (effusio + linea ORDO);
 #        'mixtus' sine semine semen eligit et nominat; valor ignotus ->
 #        I, nihil cursum; status communis occultus ordine mixto patet
+#   XIII convertor (credo II T8): tools/credo_convertere.py - formae A
+#        (titulus in bloco) et B (titulus ante sectionem; titulus in bloco
+#        -> CREDO_GRADUS) convertuntur, COMPILANTUR, currunt; recusationes
+#        nominatae plagulam intactam relinquunt; -probare nihil scribit;
+#        conversa -> exitus 2; xar/stml vetera == exspectata octetim;
+#        nota commissionis (lint 5) solum pro convertibili
 #   XI   area (credo II): credo_area(c) pigra sub TMPDIR
 #        (<suita>.<n>.<pid>, suitae <suita>.suita.<pid>), eadem in
 #        sectione, alia in alia, deleta post purgare (etiam post NECESSE
@@ -799,6 +805,145 @@ fractum=""; for semen in $(seq 1 30); do
     CREDO_ORDO=mixtus:$semen "$T/dependens" > /dev/null 2>&1 || { fractum=$semen; break; }
 done
 [ "$rcd" -eq 0 ] && [ -n "$fractum" ]; credo $? "XII status communis occultus: ordine tabulae transit, ordine mixto (semen $fractum) frangitur"
+
+# XIII (credo II, T8): CONVERTOR - structura per silvam, textus verbatim
+mkdir -p "$T/conv"
+vetus () {   # $1 = titulus, stdin = corpus inter credo_aperire et caudam
+    { cat <<'CAPUT'
+#include "latina.h"
+#include "credo.h"
+#include "piscina.h"
+
+s32 principale (vacuum)
+{
+    Piscina* piscina;
+        b32  praeteritus;
+
+    piscina = piscina_generare_dynamicum("conv", 4096);
+    credo_aperire(piscina);
+
+CAPUT
+    cat
+    cat <<'CAUDA'
+
+    imprimere("\n");
+    credo_imprimere_compendium();
+    praeteritus = credo_omnia_praeterierunt();
+    piscina_destruere(piscina);
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    redde I;
+}
+CAUDA
+    } > "$T/conv/probatio_$1.c"
+}
+vetus forma_a <<'C'
+    {
+        imprimere("\n--- Probans prima ---\n");
+        CREDO_VERUM(VERUM);
+    }
+
+    /* commentum secundae */
+    {
+        imprimere("\n--- Probans secunda ---\n");
+
+        CREDO_NON_NIHIL(piscina);
+    }
+C
+vetus forma_b <<'C'
+    imprimere("\n--- Probans prima ---\n");
+    CREDO_VERUM(VERUM);
+    {
+        imprimere("\n--- Probans gradus internus ---\n");
+        CREDO_VERUM(I == I);
+    }
+
+    imprimere("\n--- Probans titulus"
+              " fissus ---\n");
+    CREDO_NON_NIHIL(piscina);
+C
+vetus inter <<'C'
+    {
+        imprimere("\n--- Probans prima ---\n");
+        CREDO_VERUM(VERUM);
+    }
+    praeteritus = VERUM;
+    {
+        imprimere("\n--- Probans secunda ---\n");
+        CREDO_VERUM(praeteritus);
+    }
+C
+vetus sine_titulo <<'C'
+    {
+        imprimere("\n--- Probans prima ---\n");
+        CREDO_VERUM(VERUM);
+    }
+    {
+        CREDO_VERUM(VERUM);
+    }
+C
+vetus redde <<'C'
+    {
+        imprimere("\n--- Probans prima ---\n");
+        si (piscina == NIHIL) { redde I; }
+        CREDO_VERUM(VERUM);
+    }
+C
+vetus duplices <<'C'
+    {
+        imprimere("\n--- Probans eadem ---\n");
+        CREDO_VERUM(VERUM);
+    }
+    {
+        imprimere("\n--- Probans eadem ---\n");
+        CREDO_VERUM(VERUM);
+    }
+C
+# communis: variabilis principalis in sectionibus (status communis)
+sed 's/        b32  praeteritus;/        b32  praeteritus;\n        s32  numerus = ZEPHYRUM;/' "$T/conv/probatio_forma_a.c" \
+    | sed 's/CREDO_VERUM(VERUM);/numerus++; CREDO_VERUM(numerus > 0);/' > "$T/conv/probatio_communis.c"
+CONV=./tools/credo_convertere.py
+for f in forma_a forma_b; do
+    cp "$T/conv/probatio_$f.c" "$T/conv/$f.orig"
+    $CONV "$T/conv/probatio_$f.c" > "$T/conv/$f.out" 2>&1; rcc=$?
+    struere "conv/probatio_$f.c" "conv_$f" || { cat "$T/conv_$f.err" | head -5; }
+    CREDO_VERDICTA="$T/conv/v_$f.tsv" "$T/conv_$f" > "$T/conv/o_$f" 2>&1; rcr=$?
+    echo "$f $rcc $rcr" >> "$T/conv/rc"
+done
+read -r _ ca ra < <(grep '^forma_a ' "$T/conv/rc"); read -r _ cb rb < <(grep '^forma_b ' "$T/conv/rc")
+[ "$ca" -eq 0 ] && [ "$ra" -eq 0 ] && grep -q "^SUITA	forma_a	TRANSIIT	2	2	" "$T/conv/v_forma_a.tsv" \
+    && grep -q '^_sectio_prima ($' "$T/conv/probatio_forma_a.c" && grep -q '^    /\* commentum secundae \*/$' "$T/conv/probatio_forma_a.c" \
+    && ! grep -q 'Probans' "$T/conv/probatio_forma_a.c"; credo $? "XIII forma A: conversa, compilata, SUITA TRANSIIT 2/2, nomina ordinalia, vexillum servatum (rc $ca/$ra)"
+[ "$cb" -eq 0 ] && [ "$rb" -eq 0 ] && grep -q "^SUITA	forma_b	TRANSIIT	2	2	" "$T/conv/v_forma_b.tsv" \
+    && grep -q 'CREDO_GRADUS("gradus internus");' "$T/conv/probatio_forma_b.c" \
+    && grep -q '{ "titulus fissus", _sectio_secunda,' "$T/conv/probatio_forma_b.c"; credo $? "XIII forma B: titulus in bloco -> CREDO_GRADUS, titulus fissus = sectio sua; currit (rc $cb/$rb)"
+recusa () {   # $1 = fixura, $2 = causa (substringa)
+    cp "$T/conv/probatio_$1.c" "$T/conv/$1.orig"
+    $CONV "$T/conv/probatio_$1.c" > "$T/conv/$1.out" 2>&1; rcx=$?
+    [ "$rcx" -eq 1 ] && grep -q "recusata: .* - .*$2" "$T/conv/$1.out" && cmp -s "$T/conv/probatio_$1.c" "$T/conv/$1.orig"
+    credo $? "XIII recusata '$1': exitus 1, causa '$2', plagula intacta (rc $rcx: $(cut -c1-90 "$T/conv/$1.out" | sed 's/.* - //'))"
+}
+recusa inter "statutum inter blocos"
+recusa sine_titulo "tituli 0"
+recusa redde "redde/salta intra sectionem"
+recusa duplices "tituli duplices"
+recusa communis "variabilis principalis 'numerus'"
+cp "$T/conv/forma_a.orig" "$T/conv/probatio_probare.c"
+$CONV -probare "$T/conv/probatio_probare.c" > "$T/conv/probare.out" 2>&1; rcp=$?
+[ "$rcp" -eq 0 ] && grep -q '^convertibilis: .*(forma A, sectiones 2)$' "$T/conv/probare.out" && cmp -s "$T/conv/probatio_probare.c" "$T/conv/forma_a.orig"; credo $? "XIII -probare: convertibilis nominata, nihil scriptum (rc $rcp)"
+$CONV "$T/conv/probatio_forma_a.c" > "$T/conv/iterum.out" 2>&1; rci=$?
+[ "$rci" -eq 2 ] && grep -q 'iam conversa' "$T/conv/iterum.out"; credo $? "XIII iam conversa: exitus 2, nihil mutatum (rc $rci)"
+FX=probationes/fixa/credo_convertere
+$CONV -suita xar -ad "$T/conv/xar.c" "$FX/xar.vetus" > /dev/null 2>&1 && cmp -s "$T/conv/xar.c" "$FX/xar.exspectata"; credo $? "XIII xar vetus -> exspectata octetim (forma A, XXXIV sectiones)"
+$CONV -suita stml -ad "$T/conv/stml.c" "$FX/stml.vetus" > /dev/null 2>&1 && cmp -s "$T/conv/stml.c" "$FX/stml.exspectata"; credo $? "XIII stml vetus -> exspectata octetim (forma B, LXVIII sectiones)"
+# nota commissionis (lint 5): convertibilis nominatur, conversa et lib tacent
+mkdir -p "$T/conv/probationes"; cp "$T/conv/forma_a.orig" "$T/conv/probationes/probatio_nota.c"
+nota="$(python3 -c "
+import sys; sys.path.insert(0, 'pythonica'); import silva
+for l in silva.notae_convertibilium(['$T/conv/probationes/probatio_nota.c', 'probationes/probatio_xar.c', 'lib/xar.c']): print(l)" 2>&1)"
+[ "$(printf '%s\n' "$nota" | grep -c 'convertibilis')" -eq 1 ] && printf '%s\n' "$nota" | grep -q 'probatio_nota.c convertibilis (forma A, 2 sectiones)'; credo $? "XIII nota commissionis: convertibilis sola nominata ($(printf '%s' "$nota" | cut -c1-60))"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi
