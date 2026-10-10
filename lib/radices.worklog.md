@@ -165,3 +165,64 @@ every (inexact, exact) pair exhaustively.
 
 Park 2 has an addendum: integer degrees (S_180) already peak at 3.1 GB
 RSS (4.2 GB when pre-narrowed to 2^-48).
+
+## 2026-10-10 - parks 1 and 2 done: integer signs, in-place Taylor shift, scratch arenas
+
+Probe: S_N(u) = sum C(N, 2l+1)(-1)^l u^l (roots tan^2(k pi/N)), isolate,
+then 10-digit decimals of every root, -O2:
+
+| N (degree) | before | after |
+|---|---|---|
+| 120 (59) | 0.55 s, 864 MB | 0.14 s, 8 MB |
+| 180 (89) | 4.05 s, 3.85 GB | 0.79 s, 32 MB |
+| 360 (179) | killed (out of memory) | 23.7 s, 450 MB, all 179 agree with libm |
+
+D123 (live build): 4.8 s / 3.12 GB -> 1.37 s / 33 MB, output byte-identical.
+
+Three changes:
+1. `_signum_ad`: sign of f(p/q), q > 0, as a homogeneous Horner in
+   integers, sum c_i p^i q^(d-i). There are no gcds; Fractio Horner
+   took a gcd on every multiply. `_signum_iuxta` uses it for f and f'.
+   This cut memory (3.85 -> 2.98 GB), not isolation time, which was the
+   Taylor shift.
+2. `polynomium_translatum` (polynomium.c) is now the in-place Taylor
+   shift, a_j += c a_(j+1) for i = 0..n-1, j = n-1..i, with additions
+   only when c = 1 (VCA). It used to be Horner through
+   polynomium_multiplica, building a new polynomial at every step.
+   Isolation at N = 180 went from 4.1 s to 0.92 s.
+3. Scratch arenas.
+   - Every public function works in its own piscinae (`status` holds
+     surviving endpoints; `opus` is reset after every iteration). Only
+     results are transcribed into the caller's piscina, and
+     compara/signum allocate nothing there.
+   - VCA (`_separa_intra`) gives each stack entry a mark (PiscinaNotatio)
+     taken before its q and c are transcribed. Popping an entry resets
+     the stack arena to its mark: entries above it are already popped,
+     and entries below it were allocated earlier. This is safe because
+     the children are computed in `opus` first, then the stack is reset,
+     then the children are transcribed. Memory is now depth x one
+     polynomial, not the sum of all nodes.
+
+Guards:
+- `venenum` gate: radices added (sanitizers + 0xA5 fill after reset).
+- Test section MEMORIA: the caller's piscina holds 1,880 bytes after a
+  degree-24 isolation (1,355,208 with the old code, red). Compare (now
+  including a cross-polynomial pair that needs the narrowing loop) and
+  signum leave usage unchanged. Narrowing by 200 bisections and a
+  60-digit decimal each add < 1 KB.
+
+Plants (9, all red):
+- V1 stack entry not transcribed; V2 bisection endpoint not
+  transcribed; V3 stack reset before the children are computed; V4
+  angusta endpoints not transcribed; V5 root f left in the scratch
+  arena: all caught by venenum (0xA5 loads / sanitizer).
+- M1 compara working in the caller's piscina: radix suite (memory
+  test). First SURVIVED, because both compares in the test were decided
+  by disjoint intervals with no loop. Added the sqrt3 vs
+  sqrt(2.999999) compare.
+- S1 Horner power of p instead of q: radix suite.
+- S2 shift with c always 1, S3 shift with j > i: polynomium suite.
+
+Remaining cost at N = 360 (450 MB) is mostly the opus arena of one
+degree-179 Taylor shift (d^2/2 big additions) plus the stack of deep
+polynomials; not chased further.

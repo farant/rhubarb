@@ -18,6 +18,14 @@
  * intervallum) = signum f(x), aut si f(x) = 0 signum f'(x) (dextrum)
  * vel -signum f'(x) (sinistrum). Bisectio et probatio radicis communis
  * hoc signo utuntur.
+ *
+ * Memoria: in piscina vocantis effecta sola (radices, f, termini,
+ * chorda); comparatio et signum nihil ibi allocant. Temporaria in
+ * piscinis propriis: VCA acervum habet LIFO per notas (opus extractum
+ * cum omnibus post eum allocatis liberatur) et opus post quodque opus
+ * refectum; ansae angustationis opus post quamque iterationem reficiunt,
+ * termini novi in status transcribuntur. Porta venenum (0xA5) lectionem
+ * post refectionem capit.
  * Vide lib/radices.worklog.md.
  */
 #include "radices.h"
@@ -193,6 +201,53 @@ _variationes_in (
     redde _variationes_unum(p, piscina, v);
 }
 
+interior b32
+_exponentes_ordinarii (
+    Polynomium p)
+{
+    redde polynomium_est_nullum(p)
+        || polynomium_gradus_imus(p) >= ZEPHYRUM;
+}
+
+/* signum f(p/q), q > 0: signum sum_i c_i p^i q^(d - i) - Horner
+ * homogeneus in integris, sine divisore communi (Fractio in omni
+ * multiplicatione divisorem communem quaerebat: XC centesimae temporis
+ * angustationis, worklog 2026-10-10) */
+interior b32
+_signum_ad (
+    Polynomium  f,
+       Fractio  x,
+       Piscina* piscina,
+           s32* s)
+{
+       s32 d = _gradus(f);
+    Magnus p = fractio_numerator(x);
+    Magnus q = fractio_denominator(x);
+    Magnus summa;
+    Magnus potentia_q = magnus_ex_s64(I);
+       s32 i;
+
+    si (!_exponentes_ordinarii(f))
+    {
+        redde FALSUM;
+    }
+    si (d < ZEPHYRUM)
+    {
+        *s = ZEPHYRUM;
+        redde VERUM;
+    }
+    summa = polynomium_coefficiens(f, d);
+    per (i = d - I; i >= ZEPHYRUM; i--)
+    {
+        potentia_q  = magnus_multiplica(potentia_q, q, piscina);
+        summa       = magnus_adde(magnus_multiplica(summa, p, piscina),
+            magnus_multiplica(polynomium_coefficiens(f, i), potentia_q,
+            piscina), piscina);
+    }
+    *s = magnus_signum(summa);
+    redde VERUM;
+}
+
 /* signum f iuxta x: dextrum (latus > 0) aut sinistrum (latus < 0);
  * f liber quadratis */
 interior b32
@@ -203,42 +258,24 @@ _signum_iuxta (
        Piscina* piscina,
            s32* s)
 {
-       Fractio v;
-    Polynomium d = polynomium_nullum();
+    Polynomium d   = polynomium_nullum();
+           s32 sd  = ZEPHYRUM;
 
-    si (!polynomium_valor(f, x, piscina, &v))
+    si (!_signum_ad(f, x, piscina, s))
     {
         redde FALSUM;
     }
-    *s = fractio_signum(v);
     si (*s != 0)
     {
         redde VERUM;
     }
     si (   !polynomium_derivata(f, piscina, &d)
-        || !polynomium_valor(d, x, piscina, &v))
+        || !_signum_ad(d, x, piscina, &sd))
     {
         redde FALSUM;
     }
-    *s = latus > 0 ? fractio_signum(v) : -fractio_signum(v);
+    *s = latus > 0 ? sd : -sd;
     redde *s != 0;               /* radix multiplex: contractus fractus */
-}
-
-interior b32
-_signum_ad (
-    Polynomium  f,
-       Fractio  x,
-       Piscina* piscina,
-           s32* s)
-{
-    Fractio v;
-
-    si (!polynomium_valor(f, x, piscina, &v))
-    {
-        redde FALSUM;
-    }
-    *s = fractio_signum(v);
-    redde VERUM;
 }
 
 /* c 2^k / 2^h */
@@ -257,53 +294,97 @@ _fractio_binaria (
     redde q;
 }
 
-interior b32
-_exponentes_ordinarii (
-    Polynomium p)
-{
-    redde polynomium_est_nullum(p)
-        || polynomium_gradus_imus(p) >= ZEPHYRUM;
-}
-
 
 /* ==================================================
  * Isolatio (VCA)
  * ================================================== */
 
 nomen structura {
-    Polynomium q;
-        Magnus c;
-           s32 h;
-           b32 exacta;             /* radix media: c/2^h exacte */
+        Polynomium q;
+            Magnus c;
+               s32 h;
+               b32 exacta;         /* radix media: c/2^h exacte */
+    PiscinaNotatio nota;           /* acervi, ante q et c huius operis */
 } Opus;
+
+/* piscina temporaria; NIHIL si memoria deest */
+interior Piscina*
+_piscina_temporaria (vacuum)
+{
+    redde piscina_generare_dynamicum("radices", (memoriae_index)65536);
+}
+
+/* piscinae temporariae functionis publicae (NIHIL toleratur) */
+interior vacuum
+_piscinae_destrue (
+    Piscina* status,
+    Piscina* opus)
+{
+    si (status != NIHIL)
+    {
+        piscina_destruere(status);
+    }
+    si (opus != NIHIL)
+    {
+        piscina_destruere(opus);
+    }
+}
+
+/* opus in acervum: nota ante q et c (ordo LIFO: opus extractum cum
+ * omnibus post eum allocatis per notam suam liberatur) */
+interior vacuum
+_opus_pone (
+          Opus* o,
+    Polynomium  q,
+        Magnus  c,
+           s32  h,
+           b32  exacta,
+       Piscina* acervus_piscina)
+{
+    o->nota    = piscina_notare(acervus_piscina);
+    o->q       = polynomium_transcribe(q, acervus_piscina);
+    o->c       = magnus_transcribe(c, acervus_piscina);
+    o->h       = h;
+    o->exacta  = exacta;
+}
 
 /* radices positivae g (g(0) != 0, liber quadratis), ordine crescente;
  * negativae = VERUM: g iam speculatum, radices negantur (ordo a vocante
- * invertitur) */
+ * invertitur). Termini in piscina; polynomia acervi in acervus_piscina
+ * (LIFO per notas), cetera in opus_piscina (post quodque opus refecta):
+ * memoria = profunditas x polynomium, non summa omnium operum */
 interior b32
-_separa_positivas (
+_separa_intra (
      Polynomium  g,
      Polynomium  f,
             b32  negativae,
         Piscina* piscina,
+        Piscina* acervus_piscina,
+        Piscina* opus_piscina,
     RadixRealis* radices,
             i32* n)
 {
-      Opus* acervus;
-       i32  capacitas;
-       i32  altitudo;
-       s32  k;
-    Magnus  maximus = magnus_ex_s64(ZEPHYRUM);
-       s32  i;
+              Opus* acervus;
+               i32  capacitas;
+               i32  altitudo;
+               s32  k;
+            Magnus  maximus = magnus_ex_s64(ZEPHYRUM);
+               s32  i;
+    PiscinaNotatio  basis;
 
     si (_gradus(g) < I)
     {
         redde VERUM;
     }
+    /* acervus: profunditas ternis operibus per gradum */
+    capacitas = (i32)(III * (LIMES_PROFUNDITATIS + II));
+    acervus = (Opus*)piscina_allocare(acervus_piscina,
+        (memoriae_index)capacitas * magnitudo(Opus));
+    basis = piscina_notare(opus_piscina);
     per (i = ZEPHYRUM; i <= _gradus(g); i++)
     {
         Magnus a = magnus_absolutum(polynomium_coefficiens(g, i),
-            piscina);
+            opus_piscina);
 
         si (magnus_compara(a, maximus) > 0)
         {
@@ -311,18 +392,13 @@ _separa_positivas (
         }
     }
     k = (s32)magnus_bitorum(maximus) + I;    /* 2^k > 2 max >= Cauchy */
-    /* acervus: profunditas ternis operibus per gradum */
-    capacitas = (i32)(III * (LIMES_PROFUNDITATIS + II));
-    acervus = (Opus*)piscina_allocare(piscina, (memoriae_index)capacitas
-        * magnitudo(Opus));
-    acervus[ZEPHYRUM].q = _primitiva(_scala_coefficientium(g,
-        magnus_potentia(magnus_ex_s64(II), (i32)k, piscina), FALSUM,
-        piscina),
-        piscina);
-    acervus[ZEPHYRUM].c       = magnus_ex_s64(ZEPHYRUM);
-    acervus[ZEPHYRUM].h       = ZEPHYRUM;
-    acervus[ZEPHYRUM].exacta  = FALSUM;
-    altitudo                  = I;
+    _opus_pone(&acervus[ZEPHYRUM], _primitiva(_scala_coefficientium(g,
+        magnus_potentia(magnus_ex_s64(II), (i32)k, opus_piscina),
+        FALSUM,
+        opus_piscina), opus_piscina), magnus_ex_s64(ZEPHYRUM), ZEPHYRUM,
+        FALSUM, acervus_piscina);
+    piscina_reficere(opus_piscina, basis);
+    altitudo = I;
     dum (altitudo > ZEPHYRUM)
     {
               Opus o = acervus[--altitudo];
@@ -341,21 +417,18 @@ _separa_positivas (
                 piscina) : m;
             radices[*n].supra = radices[*n].infra;
             (*n)++;
+            piscina_reficere(acervus_piscina, o.nota);
             perge;
         }
-        si (!_variationes_unum(o.q, piscina, &v))
+        si (!_variationes_unum(o.q, opus_piscina, &v))
         {
             redde FALSUM;
-        }
-        si (v == ZEPHYRUM)
-        {
-            perge;
         }
         si (v == I)
         {
             Fractio a = _fractio_binaria(o.c, k, o.h, piscina);
             Fractio b = _fractio_binaria(magnus_adde(o.c,
-                magnus_ex_s64(I), piscina),
+                magnus_ex_s64(I), opus_piscina),
                 k, o.h, piscina);
 
             radices[*n].f = f;
@@ -364,6 +437,11 @@ _separa_positivas (
             radices[*n].supra = negativae ? fractio_nega(a,
                 piscina) : b;
             (*n)++;
+        }
+        si (v <= I)
+        {
+            piscina_reficere(acervus_piscina, o.nota);
+            piscina_reficere(opus_piscina, basis);
             perge;
         }
         si (o.h >= LIMES_PROFUNDITATIS || altitudo + III > capacitas)
@@ -372,49 +450,68 @@ _separa_positivas (
         }
         sinistrum = _primitiva(_scala_coefficientium(o.q,
             magnus_ex_s64(II),
-            VERUM, piscina), piscina);
-        si (!polynomium_translatum(sinistrum, magnus_ex_s64(I), piscina,
-                &dextrum))
+            VERUM, opus_piscina), opus_piscina);
+        si (!polynomium_translatum(sinistrum, magnus_ex_s64(I),
+                opus_piscina, &dextrum))
         {
             redde FALSUM;
         }
-        duplex_c = magnus_multiplica(o.c, magnus_ex_s64(II), piscina);
+        duplex_c = magnus_multiplica(o.c, magnus_ex_s64(II),
+            opus_piscina);
         per (i = ZEPHYRUM; i <= _gradus(sinistrum); i++)
         {
             summa = magnus_adde(summa, polynomium_coefficiens(sinistrum,
                 i),
-                piscina);
+                opus_piscina);
         }
-        /* acervus: dextrum, [radix media], sinistrum */
-        acervus[altitudo].q = _primitiva(dextrum, piscina);
-        acervus[altitudo].c = magnus_adde(duplex_c, magnus_ex_s64(I),
-            piscina);
-        acervus[altitudo].h       = o.h + I;
-        acervus[altitudo].exacta  = FALSUM;
-        altitudo++;
+        /* o.q mortuum (filii in opus_piscina); acervus: dextrum, [radix
+         * media], sinistrum */
+        piscina_reficere(acervus_piscina, o.nota);
+        _opus_pone(&acervus[altitudo++], _primitiva(dextrum,
+            opus_piscina),
+            magnus_adde(duplex_c, magnus_ex_s64(I), opus_piscina), o.h
+                + I,
+            FALSUM, acervus_piscina);
         si (magnus_signum(summa) == 0)
         {
-            acervus[altitudo].q = polynomium_nullum();
-            acervus[altitudo].c = magnus_adde(duplex_c,
-                magnus_ex_s64(I),
-                piscina);
-            acervus[altitudo].h       = o.h + I;
-            acervus[altitudo].exacta  = VERUM;
-            altitudo++;
+            _opus_pone(&acervus[altitudo++], polynomium_nullum(),
+                magnus_adde(duplex_c, magnus_ex_s64(I), opus_piscina),
+                o.h + I, VERUM, acervus_piscina);
         }
-        acervus[altitudo].q       = sinistrum;
-        acervus[altitudo].c       = duplex_c;
-        acervus[altitudo].h       = o.h + I;
-        acervus[altitudo].exacta  = FALSUM;
-        altitudo++;
+        _opus_pone(&acervus[altitudo++], sinistrum, duplex_c, o.h + I,
+            FALSUM, acervus_piscina);
+        piscina_reficere(opus_piscina, basis);
     }
     redde VERUM;
 }
 
-b32
-radices_reales (
+interior b32
+_separa_positivas (
+     Polynomium  g,
+     Polynomium  f,
+            b32  negativae,
+        Piscina* piscina,
+    RadixRealis* radices,
+            i32* n)
+{
+     Piscina* acervus_piscina  = _piscina_temporaria();
+     Piscina* opus_piscina     = _piscina_temporaria();
+         b32  bene             = FALSUM;
+
+    si (acervus_piscina != NIHIL && opus_piscina != NIHIL)
+    {
+        bene = _separa_intra(g, f, negativae, piscina, acervus_piscina,
+            opus_piscina, radices, n);
+    }
+    _piscinae_destrue(acervus_piscina, opus_piscina);
+    redde bene;
+}
+
+interior b32
+_reales_intra (
      Polynomium   f,
         Piscina*  piscina,
+        Piscina*  opus,
     RadixRealis** exitus,
             i32*  numerus)
 {
@@ -427,25 +524,26 @@ radices_reales (
             s32  gradus;
 
     si (   polynomium_est_nullum(f) || !_exponentes_ordinarii(f)
-        || !polynomium_pars_libera(f, piscina, &g))
+        || !polynomium_pars_libera(f, opus, &g))
     {
         redde FALSUM;
     }
     gradus = _gradus(g);
     r = (RadixRealis*)piscina_allocare(piscina, (memoriae_index)(gradus
         + I) * magnitudo(RadixRealis));
-    neg = (RadixRealis*)piscina_allocare(piscina,
+    neg = (RadixRealis*)piscina_allocare(opus,
         (memoriae_index)(gradus
         + I) * magnitudo(RadixRealis));
     g0 = g;
     si (   gradus                                             >= I
         && magnus_signum(polynomium_coefficiens(g, ZEPHYRUM)) == 0)
     {
-        (vacuum)polynomium_translata(g, -(s32)I, piscina, &g0);   /* g / t */
+        (vacuum)polynomium_translata(g, -(s32)I, opus, &g0);   /* g / t */
     }
+    g = polynomium_transcribe(g, piscina);   /* f omnium radicum */
     si (!_separa_positivas(_scala_coefficientium(g0,
         magnus_ex_s64(-(s64)I),
-            FALSUM, piscina), g, VERUM, piscina, neg, &n_neg))
+            FALSUM, opus), g, VERUM, piscina, neg, &n_neg))
     {
         redde FALSUM;
     }
@@ -472,6 +570,25 @@ radices_reales (
     *exitus   = r;
     *numerus  = n;
     redde VERUM;
+}
+
+b32
+radices_reales (
+     Polynomium   f,
+        Piscina*  piscina,
+    RadixRealis** exitus,
+            i32*  numerus)
+{
+     Piscina* opus = _piscina_temporaria();
+         b32  bene;
+
+    si (opus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    bene = _reales_intra(f, piscina, opus, exitus, numerus);
+    piscina_destruere(opus);
+    redde bene;
 }
 
 RadixRealis
@@ -516,27 +633,30 @@ _dimidium (
 }
 
 /* bisectio una (f radicem unam in (infra, supra), termini non radices);
- * radix rationalis in medio -> punctum */
+ * radix rationalis in medio -> punctum. Computatio in opus, terminus
+ * novus in status: vocans opus post quamque iterationem reficit */
 interior b32
 _seca_medio (
     RadixRealis* a,
-        Piscina* piscina)
+        Piscina* opus,
+        Piscina* status)
 {
     Fractio m;
         s32 sm = ZEPHYRUM;
         s32 sl = ZEPHYRUM;
 
-    si (_est_exacta(*a, piscina))
+    si (_est_exacta(*a, opus))
     {
         redde VERUM;
     }
-    m = fractio_multiplica(fractio_adde(a->infra, a->supra, piscina),
-        _dimidium(piscina), piscina);
-    si (   !_signum_ad(a->f, m, piscina, &sm)
-        || !_signum_iuxta(a->f, a->infra, I, piscina, &sl))
+    m = fractio_multiplica(fractio_adde(a->infra, a->supra, opus),
+        _dimidium(opus), opus);
+    si (   !_signum_ad(a->f, m, opus, &sm)
+        || !_signum_iuxta(a->f, a->infra, I, opus, &sl))
     {
         redde FALSUM;
     }
+    m = fractio_transcribe(m, status);
     si (sm == 0)
     {
         a->infra = m;
@@ -578,32 +698,25 @@ _ordo_intervallorum (
  * Signum polynomii, comparatio
  * ================================================== */
 
-b32
-radix_signum_polynomii (
+interior b32
+_signum_polynomii_intra (
      Polynomium  h,
     RadixRealis  a,
-        Piscina* piscina,
+        Piscina* status,
+        Piscina* opus,
             s32* exitus)
 {
-    Polynomium g = polynomium_nullum();
-           s32 iteratio;
+        Polynomium g = polynomium_nullum();
+               s32 iteratio;
+    PiscinaNotatio basis;
 
-    si (!_exponentes_ordinarii(h))
+    si (_est_exacta(a, opus))
     {
-        redde FALSUM;
-    }
-    si (polynomium_est_nullum(h))
-    {
-        *exitus = ZEPHYRUM;
-        redde VERUM;
-    }
-    si (_est_exacta(a, piscina))
-    {
-        redde _signum_ad(h, a.infra, piscina, exitus);
+        redde _signum_ad(h, a.infra, opus, exitus);
     }
     /* a radix gcd(f, h)? g | f liber quadratis: radicem summum unam in
      * intervallo aperto; adest sse signum g iuxta terminos intra mutatur */
-    si (!polynomium_divisor_communis(a.f, h, piscina, &g))
+    si (!polynomium_divisor_communis(a.f, h, opus, &g))
     {
         redde FALSUM;
     }
@@ -612,8 +725,8 @@ radix_signum_polynomii (
         s32 sl = ZEPHYRUM;
         s32 sr = ZEPHYRUM;
 
-        si (   !_signum_iuxta(g, a.infra, I, piscina, &sl)
-            || !_signum_iuxta(g, a.supra, -(s32)I, piscina, &sr))
+        si (   !_signum_iuxta(g, a.infra, I, opus, &sl)
+            || !_signum_iuxta(g, a.supra, -(s32)I, opus, &sr))
         {
             redde FALSUM;
         }
@@ -624,29 +737,143 @@ radix_signum_polynomii (
         }
     }
     /* h(a) != 0: angusta donec h nullam radicem in intervallo habet */
+    basis = piscina_notare(opus);
     per (iteratio = ZEPHYRUM; iteratio < LIMES_BISECTIONUM; iteratio++)
     {
         s32 v = ZEPHYRUM;
 
-        si (_est_exacta(a, piscina))
+        si (_est_exacta(a, opus))
         {
-            redde _signum_ad(h, a.infra, piscina, exitus);
+            redde _signum_ad(h, a.infra, opus, exitus);
         }
-        si (!_variationes_in(h, a.infra, a.supra, piscina, &v))
+        si (!_variationes_in(h, a.infra, a.supra, opus, &v))
         {
             redde FALSUM;
         }
         si (v == ZEPHYRUM)
         {
             redde _signum_ad(h, fractio_multiplica(fractio_adde(a.infra,
-                a.supra, piscina), _dimidium(piscina), piscina),
-                piscina,
-                exitus);
+                a.supra, opus), _dimidium(opus), opus), opus, exitus);
         }
-        si (!_seca_medio(&a, piscina))
+        si (!_seca_medio(&a, opus, status))
         {
             redde FALSUM;
         }
+        piscina_reficere(opus, basis);
+    }
+    redde FALSUM;
+}
+
+b32
+radix_signum_polynomii (
+     Polynomium  h,
+    RadixRealis  a,
+        Piscina* piscina,
+            s32* exitus)
+{
+     Piscina* status;
+     Piscina* opus;
+         b32  bene = FALSUM;
+
+    (vacuum)piscina;             /* exitus s32: nihil in piscina vocantis */
+    si (!_exponentes_ordinarii(h))
+    {
+        redde FALSUM;
+    }
+    si (polynomium_est_nullum(h))
+    {
+        *exitus = ZEPHYRUM;
+        redde VERUM;
+    }
+    status  = _piscina_temporaria();
+    opus    = _piscina_temporaria();
+    si (status != NIHIL && opus != NIHIL)
+    {
+        bene = _signum_polynomii_intra(h, a, status, opus, exitus);
+    }
+    _piscinae_destrue(status, opus);
+    redde bene;
+}
+
+interior b32
+_compara_intra (
+    RadixRealis  a,
+    RadixRealis  b,
+        Piscina* status,
+        Piscina* opus,
+            s32* exitus)
+{
+               s32 s = ZEPHYRUM;
+               s32 ordo;
+               s32 iteratio;
+    PiscinaNotatio basis;
+
+    si (_est_exacta(a, opus) && _est_exacta(b, opus))
+    {
+        *exitus = fractio_compara(a.infra, b.infra, opus);
+        redde VERUM;
+    }
+    ordo = _ordo_intervallorum(a, b, opus);
+    si (ordo != 0)
+    {
+        *exitus = ordo;
+        redde VERUM;
+    }
+    /* a radix f_b? */
+    si (_est_exacta(a, opus))
+    {
+        si (!_compara_intra(b, a, status, opus, &s))
+        {
+            redde FALSUM;
+        }
+        *exitus = -s;
+        redde VERUM;
+    }
+    /* b = q exacta: signum(a - q) = signum (den t - num) in a. Non b.f -
+     * punctum medium in radicem incidens f plenum servat, et b.f(a) = 0
+     * pro QUAVIS radice b.f */
+    si (_est_exacta(b, opus))
+    {
+        redde radix_signum_polynomii(radix_ex_fractione(b.infra,
+            opus).f, a, opus, exitus);
+    }
+    si (!radix_signum_polynomii(b.f, a, opus, &s))
+    {
+        redde FALSUM;
+    }
+    basis = piscina_notare(opus);
+    per (iteratio = ZEPHYRUM; iteratio
+        < II * LIMES_BISECTIONUM; iteratio++)
+    {
+        ordo = _ordo_intervallorum(a, b, opus);
+        si (ordo != 0)
+        {
+            *exitus = ordo;
+            redde VERUM;
+        }
+        si (s == 0)
+        {
+            /* a radix f_b: a == b sse a in intervallo b (ibi radix f_b
+             * una); b hic numquam exacta (supra), sola a secatur */
+            si (   fractio_compara(b.infra, a.infra, opus) <= 0
+                && fractio_compara(a.supra, b.supra, opus) <= 0)
+            {
+                *exitus = ZEPHYRUM;
+                redde VERUM;
+            }
+            si (!_seca_medio(&a, opus, status))
+            {
+                redde FALSUM;
+            }
+        } alioquin
+        {
+            si (   !_seca_medio(&a, opus, status)
+                || !_seca_medio(&b, opus, status))
+            {
+                redde FALSUM;
+            }
+        }
+        piscina_reficere(opus, basis);
     }
     redde FALSUM;
 }
@@ -658,85 +885,51 @@ radix_compara (
         Piscina* piscina,
             s32* exitus)
 {
-    s32 s = ZEPHYRUM;
-    s32 ordo;
-    s32 iteratio;
+     Piscina* status  = _piscina_temporaria();
+     Piscina* opus    = _piscina_temporaria();
+         b32  bene    = FALSUM;
 
-    si (_est_exacta(a, piscina) && _est_exacta(b, piscina))
+    (vacuum)piscina;             /* exitus s32: nihil in piscina vocantis */
+    si (status != NIHIL && opus != NIHIL)
     {
-        *exitus = fractio_compara(a.infra, b.infra, piscina);
-        redde VERUM;
+        bene = _compara_intra(a, b, status, opus, exitus);
     }
-    ordo = _ordo_intervallorum(a, b, piscina);
-    si (ordo != 0)
-    {
-        *exitus = ordo;
-        redde VERUM;
-    }
-    /* a radix f_b? */
-    si (_est_exacta(a, piscina))
-    {
-        RadixRealis t = a;
-
-        a = b;
-        b = t;
-        si (!radix_compara(a, b, piscina, &s))
-        {
-            redde FALSUM;
-        }
-        *exitus = -s;
-        redde VERUM;
-    }
-    /* b = q exacta: signum(a - q) = signum (den t - num) in a. Non b.f -
-     * punctum medium in radicem incidens f plenum servat, et b.f(a) = 0
-     * pro QUAVIS radice b.f */
-    si (_est_exacta(b, piscina))
-    {
-        redde radix_signum_polynomii(radix_ex_fractione(b.infra,
-            piscina).f, a, piscina, exitus);
-    }
-    si (!radix_signum_polynomii(b.f, a, piscina, &s))
-    {
-        redde FALSUM;
-    }
-    per (iteratio = ZEPHYRUM; iteratio
-        < II * LIMES_BISECTIONUM; iteratio++)
-    {
-        ordo = _ordo_intervallorum(a, b, piscina);
-        si (ordo != 0)
-        {
-            *exitus = ordo;
-            redde VERUM;
-        }
-        si (s == 0)
-        {
-            /* a radix f_b: a == b sse a in intervallo b (ibi radix f_b
-             * una); b hic numquam exacta (supra), sola a secatur */
-            si (   fractio_compara(b.infra, a.infra, piscina) <= 0
-                && fractio_compara(a.supra, b.supra, piscina) <= 0)
-            {
-                *exitus = ZEPHYRUM;
-                redde VERUM;
-            }
-            si (!_seca_medio(&a, piscina))
-            {
-                redde FALSUM;
-            }
-        } alioquin
-        {
-            si (!_seca_medio(&a, piscina) || !_seca_medio(&b, piscina))
-            {
-                redde FALSUM;
-            }
-        }
-    }
-    redde FALSUM;
+    _piscinae_destrue(status, opus);
+    redde bene;
 }
 
 
 /* ==================================================
  * Angustatio publica, decimalis
  * ================================================== */
+
+interior b32
+_angusta_intra (
+    RadixRealis  a,
+        Fractio  latitudo,
+        Piscina* status,
+        Piscina* opus,
+    RadixRealis* exitus)
+{
+               s32 iteratio;
+    PiscinaNotatio basis = piscina_notare(opus);
+
+    per (iteratio = ZEPHYRUM; iteratio < LIMES_BISECTIONUM; iteratio++)
+    {
+        si (   _est_exacta(a, opus) || fractio_compara(fractio_subtrahe(
+                a.supra, a.infra, opus), latitudo, opus) < 0)
+        {
+            *exitus = a;
+            redde VERUM;
+        }
+        si (!_seca_medio(&a, opus, status))
+        {
+            redde FALSUM;
+        }
+        piscina_reficere(opus, basis);
+    }
+    redde FALSUM;
+}
 
 b32
 radix_angusta (
@@ -745,26 +938,27 @@ radix_angusta (
         Piscina* piscina,
     RadixRealis* exitus)
 {
-    s32 iteratio;
+        Piscina* status;
+        Piscina* opus;
+    RadixRealis  e;
+            b32  bene = FALSUM;
 
     si (fractio_signum(latitudo) <= 0)
     {
         redde FALSUM;
     }
-    per (iteratio = ZEPHYRUM; iteratio < LIMES_BISECTIONUM; iteratio++)
+    status  = _piscina_temporaria();
+    opus    = _piscina_temporaria();
+    si (   status != NIHIL && opus != NIHIL
+        && _angusta_intra(a, latitudo, status, opus, &e))
     {
-        si (_est_exacta(a, piscina) || fractio_compara(fractio_subtrahe(
-                a.supra, a.infra, piscina), latitudo, piscina) < 0)
-        {
-            *exitus = a;
-            redde VERUM;
-        }
-        si (!_seca_medio(&a, piscina))
-        {
-            redde FALSUM;
-        }
+        exitus->f      = a.f;
+        exitus->infra  = fractio_transcribe(e.infra, piscina);
+        exitus->supra  = fractio_transcribe(e.supra, piscina);
+        bene           = VERUM;
     }
-    redde FALSUM;
+    _piscinae_destrue(status, opus);
+    redde bene;
 }
 
 /* m (>= 0) / 10^d ut textus "i.dddd" */
@@ -815,27 +1009,33 @@ _decimalis (
     redde e;
 }
 
-b32
-radix_ad_chordam (
+interior b32
+_ad_chordam_intra (
     RadixRealis  a,
             i32  digiti,
         Piscina* piscina,
+        Piscina* status,
+        Piscina* opus,
          chorda* exitus)
 {
-    Fractio scala = fractio_ex_magno(magnus_potentia(magnus_ex_s64(X),
-        digiti, piscina));
-    b32 negativa = FALSUM;
-    s32 iteratio;
+           Fractio scala =
+               fractio_ex_magno(magnus_potentia(magnus_ex_s64(X),
+               digiti, status));
+               b32 negativa = FALSUM;
+               s32 iteratio;
+    PiscinaNotatio basis = piscina_notare(opus);
 
     /* signum notum facere: intervallum non 0 transiens */
-    per (iteratio = ZEPHYRUM; !_est_exacta(a, piscina)
+    per (iteratio = ZEPHYRUM; !_est_exacta(a, opus)
         && fractio_signum(a.infra) < 0 && fractio_signum(a.supra) > 0;
         iteratio++)
     {
-        si (iteratio >= LIMES_BISECTIONUM || !_seca_medio(&a, piscina))
+        si (   iteratio >= LIMES_BISECTIONUM
+            || !_seca_medio(&a, opus, status))
         {
             redde FALSUM;
         }
+        piscina_reficere(opus, basis);
     }
     si (fractio_signum(a.supra) <= 0 && !(fractio_signum(a.supra) == 0
         && fractio_signum(a.infra) == 0))
@@ -845,21 +1045,21 @@ radix_ad_chordam (
 
         negativa = VERUM;
         b.f = _scala_coefficientium(a.f, magnus_ex_s64(-(s64)I), FALSUM,
-            piscina);
-        b.infra  = fractio_nega(a.supra, piscina);
-        b.supra  = fractio_nega(a.infra, piscina);
+            status);
+        b.infra  = fractio_nega(a.supra, status);
+        b.supra  = fractio_nega(a.infra, status);
         a        = b;
     }
     per (iteratio = ZEPHYRUM; iteratio < LIMES_BISECTIONUM; iteratio++)
     {
         Magnus m = fractio_pavimentum(fractio_multiplica(a.infra, scala,
-            piscina), piscina);
+            opus), opus);
 
-        si (   _est_exacta(a, piscina)
+        si (   _est_exacta(a, opus)
             || fractio_compara(fractio_multiplica(a.supra, scala,
-            piscina),
-            fractio_ex_magno(magnus_adde(m, magnus_ex_s64(I), piscina)),
-            piscina) <= 0)
+            opus),
+            fractio_ex_magno(magnus_adde(m, magnus_ex_s64(I), opus)),
+            opus) <= 0)
         {
             *exitus = _decimalis(m, digiti, negativa, piscina);
             redde VERUM;
@@ -871,24 +1071,46 @@ radix_ad_chordam (
                 s32 sc  = ZEPHYRUM;
 
             si (   !fractio_ex_magnis(magnus_adde(m, magnus_ex_s64(I),
-                    piscina), fractio_numerator(scala), piscina, &c)
-                || !_signum_ad(a.f, c, piscina, &sc))
+                    opus), fractio_numerator(scala), opus, &c)
+                || !_signum_ad(a.f, c, opus, &sc))
             {
                 redde FALSUM;
             }
             si (   sc == 0
-                && fractio_compara(a.infra, c, piscina) < 0
-                && fractio_compara(c, a.supra, piscina) < 0)
+                && fractio_compara(a.infra, c, opus) < 0
+                && fractio_compara(c, a.supra, opus) < 0)
             {
-                a.infra = c;
-                a.supra = c;
+                a.infra = fractio_transcribe(c, status);
+                a.supra = a.infra;
+                piscina_reficere(opus, basis);
                 perge;
             }
         }
-        si (!_seca_medio(&a, piscina))
+        si (!_seca_medio(&a, opus, status))
         {
             redde FALSUM;
         }
+        piscina_reficere(opus, basis);
     }
     redde FALSUM;
+}
+
+b32
+radix_ad_chordam (
+    RadixRealis  a,
+            i32  digiti,
+        Piscina* piscina,
+         chorda* exitus)
+{
+     Piscina* status  = _piscina_temporaria();
+     Piscina* opus    = _piscina_temporaria();
+         b32  bene    = FALSUM;
+
+    si (status != NIHIL && opus != NIHIL)
+    {
+        bene = _ad_chordam_intra(a, digiti, piscina, status, opus,
+            exitus);
+    }
+    _piscinae_destrue(status, opus);
+    redde bene;
 }

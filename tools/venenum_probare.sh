@@ -17,7 +17,9 @@
 #     (officinae), matrix (Bareiss in officinis alternis), laqueus,
 #     extensio (inversa et norma per Bareiss), quaternio (nullam
 #     piscinam ipse reficit, sed icosianos super extensionem et Q per
-#     sanitatores agit), sub veneno et sanitatoribus.
+#     sanitatores agit), radices (acervus VCA per notas LIFO, opus post
+#     quodque opus et quamque bisectionem refectum), sub veneno et
+#     sanitatoribus.
 # Exitus 0 sana | 1 FRACTA | 2 nihil actum.
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -71,7 +73,9 @@ lib/anulus.c lib/matrix.c lib/situs.c lib/laqueus.c" \
     "extensio:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
 lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c" \
     "quaternio:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
-lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/quaternio.c"; do
+lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/quaternio.c" \
+    "radices:lib/magnus.c lib/fractio.c lib/polynomium.c lib/congruentia.c \
+lib/anulus.c lib/matrix.c lib/cyclotomia.c lib/extensio.c lib/radices.c"; do
     titulus="${suita%%:*}"
     read -r -a fontes <<< "${suita#*:}"
     if ! clang "${VEXILLA_C89[@]}" -Wno-overlength-strings -Iinclude \

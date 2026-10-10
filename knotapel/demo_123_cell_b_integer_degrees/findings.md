@@ -174,3 +174,11 @@ the run also takes 4.9 s, and at 2⁻⁴⁸ it takes 6.3 s.
 - Placement of angles that are not rational multiples of π. Any angle
   whose tan² is a real algebraic number works the same way: give its
   polynomial and its root's position.
+
+## Later: radices parks done (2026-10-10)
+
+With radices after its speed/memory pass (integer signs, in-place Taylor
+shift, scratch arenas; see lib/radices.worklog.md), the live build of
+this demo runs in 1.37 s with a 33 MB peak (was 4.8 s and 3.1 GB). Its
+output is byte-identical. demo-snapshot.c stays frozen with the library
+as of ec825eb8.

@@ -223,3 +223,13 @@ analysis. Removing the entry alone restored 786. The function is now
 still say "translatio Taylor" (the lint judges identifiers only). Rule: a
 glossary entry for a word that is real in ANY oracle language (Latin or
 English) can move the oracle - rename instead.
+
+## 2026-10-10 - polynomium_translatum: in-place Taylor shift
+
+Horner through polynomium_multiplica (a new polynomial per step, a
+multiply by (t + c) each time) is replaced by the classic in-place shift
+a_j += c a_(j+1) (i = 0..n-1, j = n-1..i), with no multiplications when
+c = 1. Same API and results (the Taylor tests at 7 shifts plus the
+inverse round trip pass; plants S2 "c always 1" and S3 "j > i" are red).
+For radices' VCA at degree 89 it cut isolation from 4.1 s to 0.92 s (see
+radices.worklog.md).

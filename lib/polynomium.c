@@ -1485,9 +1485,11 @@ polynomium_translatum (
        Piscina* piscina,
     Polynomium* exitus)
 {
-    Polynomium effectus = polynomium_nullum();
-    Polynomium linearis = polynomium_nullum();
-           s32 e;
+       s32  n;
+       s32  i;
+       s32  j;
+       b32  unus;
+    Magnus* a;
 
     si (polynomium_est_nullum(p))
     {
@@ -1498,28 +1500,27 @@ polynomium_translatum (
     {
         redde FALSUM;
     }
+    /* translatio Taylor in loco (Horner iteratus): pro i = 0..n-1, pro j
+     * = n-1 .. i: a_j += c a_(j+1). Additiones solae si c = 1 (VCA);
+     * olim Horner per polynomium_multiplica, polynomium novum in omni
+     * gradu (worklog 2026-10-10) */
+    n = polynomium_gradus_summus(p);
+    a = (Magnus*)piscina_allocare(piscina, (memoriae_index)(n + I)
+        * magnitudo(Magnus));
+    per (i = ZEPHYRUM; i <= n; i++)
     {
-        Magnus duo[II];
-
-        duo[ZEPHYRUM]  = c;
-        duo[I]         = magnus_ex_s64(I);
-        (vacuum)polynomium_ex_coefficientibus(duo, II, ZEPHYRUM,
-            piscina,
-            &linearis);           /* t + c */
+        a[i] = polynomium_coefficiens(p, i);
     }
-    /* Horner: ((a_n (t+c) + a_{n-1}) (t+c) + ...) */
-    per (e = polynomium_gradus_summus(p); e >= ZEPHYRUM; e--)
+    unus = magnus_compara(c, magnus_ex_s64(I)) == ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
     {
-        Polynomium productum = polynomium_nullum();
-
-        si (!polynomium_multiplica(effectus, linearis, piscina,
-            &productum))
+        per (j = n - I; j >= i; j--)
         {
-            redde FALSUM;
+            a[j] = magnus_adde(a[j], unus ? a[j + I]
+                : magnus_multiplica(c, a[j + I], piscina), piscina);
         }
-        effectus = polynomium_adde(productum, polynomium_constans(
-            polynomium_coefficiens(p, e), piscina), piscina);
     }
-    *exitus = effectus;
-    redde VERUM;
+    redde polynomium_ex_coefficientibus(a, (i32)(n + I), ZEPHYRUM,
+        piscina,
+        exitus);
 }

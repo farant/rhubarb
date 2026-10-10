@@ -409,6 +409,80 @@ s32 principale (vacuum)
             && _textus_aequalis(c, "-0.00"));
     }
 
+
+    /* ==================================================
+     * MEMORIA: temporaria in piscinis propriis, in piscina vocantis
+     * sola effecta (worklog 2026-10-10: D123 3.1 GB -> 33 MB)
+     * ================================================== */
+
+    {
+              Piscina* p = piscina_generare_dynamicum("radices_memoria",
+                  (memoriae_index)65536);
+          RadixRealis* r;
+          RadixRealis* m;
+                  i32  n   = ZEPHYRUM;
+                  i32  nm  = ZEPHYRUM;
+                  s32  s   = XCIX;
+          RadixRealis  angusta;
+              Fractio  latitudo = fractio_ex_s64(ZEPHYRUM);
+               chorda  c;
+       memoriae_index  ante;
+
+        imprimere("\n--- Probans memoriam: piscina vocantis effecta sola ---\n");
+        CREDO_VERUM (p != NIHIL);
+        si (p != NIHIL)
+        {
+            /* gradus XXIV: radices XIII, f et termini - nulla temporaria */
+            CREDO_VERUM (radices_reales(_p(exempla[IV].polynomium), p,
+                &r,
+                &n));
+            CREDO_AEQUALIS_I32 (n, XIII);
+            imprimere("    radices_reales gradus XXIV: %lu octeti in piscina "
+                "vocantis\n", (unsigned long)piscina_summa_usus(p));
+            CREDO_VERUM (piscina_summa_usus(p) < (memoriae_index)16384);
+            CREDO_VERUM (radices_reales(_p(exempla[V].polynomium), p,
+                &m,
+                &nm));
+            CREDO_AEQUALIS_I32 (nm, III);
+            /* comparatio et signum: nihil in piscina vocantis */
+            ante = piscina_summa_usus(p);
+            CREDO_VERUM (radix_compara(m[ZEPHYRUM], m[I], p, &s));
+            CREDO_AEQUALIS_S32 (s, -(s32)I);         /* geminae Mignotte */
+            CREDO_VERUM (radix_compara(r[IX], r[X], p, &s));
+            CREDO_AEQUALIS_S32 (s, -(s32)I);
+            /* polynomia diversa, valores propinqui: circuitus angustationis
+             * (sqrt3 contra sqrt(2.999999)) */
+            {
+                RadixRealis* q;
+                        i32  nq = ZEPHYRUM;
+
+                CREDO_VERUM (radices_reales(_p("1000000t^2 - 2999999"),
+                    piscina, &q, &nq));
+                CREDO_VERUM (nq == II
+                    && radix_compara(r[X], q[I], p, &s));
+                CREDO_AEQUALIS_S32 (s, I);
+            }
+            CREDO_VERUM (radix_signum_polynomii(_p("t^2 - 3"), r[X], p,
+                &s));
+            CREDO_AEQUALIS_S32 (s, ZEPHYRUM);         /* sqrt3 */
+            CREDO_VERUM (piscina_summa_usus(p) == ante);
+            /* angustatio CC bisectionum: termini duo soli */
+            CREDO_VERUM (fractio_ex_magnis(magnus_ex_s64(I),
+                magnus_potentia(magnus_ex_s64(II), CC, piscina),
+                piscina,
+                &latitudo));
+            ante = piscina_summa_usus(p);
+            CREDO_VERUM (radix_angusta(r[IX], latitudo, p, &angusta));
+            CREDO_VERUM (piscina_summa_usus(p) - ante
+                < (memoriae_index)1024);
+            ante = piscina_summa_usus(p);
+            CREDO_VERUM (radix_ad_chordam(r[IX], LX, p, &c));
+            CREDO_VERUM (piscina_summa_usus(p) - ante
+                < (memoriae_index)1024);
+            piscina_destruere(p);
+        }
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();
