@@ -13,7 +13,12 @@
  * - Akritas) super partem liberam quadratis, a limite Cauchy; radix
  * rationalis in medio puncto inventa exacte redditur.
  *
- * Valores in piscina, sicut polynomium; nihil liberatur.
+ * Valores in piscina vocantis, sicut polynomium; nihil ibi liberatur.
+ * Ibi effecta SOLA (radices, f, termini, chorda): comparatio et signum
+ * nihil allocant; temporaria in piscinis propriis, refectis et
+ * destructis (radices_interna.h apices metitur). FALSUM si piscina
+ * temporaria creari non potest; allocatio deficiens INTRA eam fatalis
+ * est, ut in omni piscina.
  *
  * USUS:
  *   RadixRealis* r;

@@ -226,3 +226,54 @@ Plants (9, all red):
 Remaining cost at N = 360 (450 MB) is mostly the opus arena of one
 degree-179 Taylor shift (d^2/2 big additions) plus the stack of deep
 polynomials; not chased further.
+
+## 2026-10-10 - review II (recensor-extensio, e52e2f3f): L1 fixed, P1 documented
+
+No H/M findings, and no lifetime bug, by reading and under fuzz on an
+ASan + UBSan + PISCINA_VENENUM build:
+- roots: 1,398;
+- compares: 10,242;
+- gcd: 1,600;
+- translatum vs exact binomial shift: 3,000;
+- _signum_ad vs Fraction: 3,000.
+
+The reviewer confirmed LIFO soundness (children are pushed only after
+the reset) and piscina_reficere across alvei.
+
+**L1: MEMORIA guarded only the caller's piscina, not the scratch
+arenas** - which is where the gain is. Three plants stayed green: T1 VCA
+without the opus reset (S_180: 38 MB -> 1.05 GB), T2 no stack reset
+before the children, T3 angusta without the opus reset.
+Fix: include/radices_interna.h (house *_interna.h pattern, NOT API)
+exposes radicum_apices_purgare / radicum_apex_acervi /
+radicum_apex_officinae. These are the high-water marks
+(piscina_summa_apex_usus), recorded when each scratch piscina is
+destroyed.
+
+The test isolates S_120 (degree 59), built in the test from binomials.
+Byte counts are deterministic, so the bounds can be tight:
+
+| measure | now | bound | under its plant |
+|---|---|---|---|
+| stack | 3,937,096 | < 4.5 MB | 5,692,220 (T2) |
+| work | 2,400,116 | < 6 MB | hundreds of MB (T1) |
+| angusta (200 bisections, degree 59), work | 360,064 | < 1 MB | over it (T3) |
+
+All three plants are now red.
+
+**P1:** documented in radices.h. FALSUM covers only the failure to
+create a scratch piscina; an allocation failure inside one is fatal, as
+with every piscina.
+
+**P2 (noted, not changed):** every public call creates 2 dynamic
+piscinae (4 for compara with an exact b, through the public signum),
+and _separa_intra allocates the full 3 x 4098 Opus stack (~0.7 MB). That
+is fine at D123's scale (12k compares in 1.4 s). If a consumer ever
+makes millions of compares, pass arenas down (an _intra variant of
+signum) or size the stack from the degree.
+
+Reviewer's measurements:
+- D123: 4.8 s / 3.12 GB -> 1.64 s / 34 MB;
+- S_120: 679 MB -> 10.5 MB;
+- Mignotte a = 3^350: 31.9 s / 1.03 GB -> 22.0 s / 16 MB;
+- a = 3^440: still refuses cleanly (19 MB).

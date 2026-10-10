@@ -29,6 +29,7 @@
  * Vide lib/radices.worklog.md.
  */
 #include "radices.h"
+#include "radices_interna.h"
 
 /* limites: separatio 2^-2048 longe ultra usum (geminae Mignotte gradu
  * 7 ~2^-25); limes vitium in ansam lentam (minuta) non vertit */
@@ -314,20 +315,54 @@ _piscina_temporaria (vacuum)
     redde piscina_generare_dynamicum("radices", (memoriae_index)65536);
 }
 
-/* piscinae temporariae functionis publicae (NIHIL toleratur) */
+/* apices piscinarum temporariarum (radices_interna.h): probationes
+ * refectiones metiuntur, non piscinam vocantis solam */
+interior memoriae_index _apex_acervi     = ZEPHYRUM;
+interior memoriae_index _apex_officinae  = ZEPHYRUM;
+
+vacuum
+radicum_apices_purgare (vacuum)
+{
+    _apex_acervi     = ZEPHYRUM;
+    _apex_officinae  = ZEPHYRUM;
+}
+
+memoriae_index
+radicum_apex_acervi (vacuum)
+{
+    redde _apex_acervi;
+}
+
+memoriae_index
+radicum_apex_officinae (vacuum)
+{
+    redde _apex_officinae;
+}
+
+/* piscinam destruere, apicem eius notare (NIHIL toleratur) */
+interior vacuum
+_piscina_destrue (
+           Piscina* piscina,
+    memoriae_index* apex)
+{
+    si (piscina != NIHIL)
+    {
+        si (piscina_summa_apex_usus(piscina) > *apex)
+        {
+            *apex = piscina_summa_apex_usus(piscina);
+        }
+        piscina_destruere(piscina);
+    }
+}
+
+/* piscinae temporariae functionis publicae */
 interior vacuum
 _piscinae_destrue (
     Piscina* status,
     Piscina* opus)
 {
-    si (status != NIHIL)
-    {
-        piscina_destruere(status);
-    }
-    si (opus != NIHIL)
-    {
-        piscina_destruere(opus);
-    }
+    _piscina_destrue(status, &_apex_officinae);
+    _piscina_destrue(opus, &_apex_officinae);
 }
 
 /* opus in acervum: nota ante q et c (ordo LIFO: opus extractum cum
@@ -503,7 +538,8 @@ _separa_positivas (
         bene = _separa_intra(g, f, negativae, piscina, acervus_piscina,
             opus_piscina, radices, n);
     }
-    _piscinae_destrue(acervus_piscina, opus_piscina);
+    _piscina_destrue(acervus_piscina, &_apex_acervi);
+    _piscina_destrue(opus_piscina, &_apex_officinae);
     redde bene;
 }
 
@@ -587,7 +623,7 @@ radices_reales (
         redde FALSUM;
     }
     bene = _reales_intra(f, piscina, opus, exitus, numerus);
-    piscina_destruere(opus);
+    _piscina_destrue(opus, &_apex_officinae);
     redde bene;
 }
 

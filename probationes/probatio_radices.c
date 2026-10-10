@@ -19,6 +19,7 @@
 #include "polynomium.h"
 #include "extensio.h"
 #include "radices.h"
+#include "radices_interna.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -110,6 +111,34 @@ _radices (
                    i32*  n)
 {
     redde radices_reales(_p(textus), piscina, r, n);
+}
+
+/* S_N(u) = sum_l C(N, 2l+1) (-1)^l u^l: radices tan^2(k pi/N), k = 1 ..
+ * N/2 - 1 (knotapel D123) - gradus magnus pro probatione memoriae */
+interior Polynomium
+_tangentium (
+    s32 N)
+{
+        Magnus binomium = magnus_ex_s64(I);
+        Magnus c[LXIV];
+    Polynomium q = polynomium_nullum();
+           s32 m;
+
+    per (m = I; m <= N; m++)
+    {
+        (vacuum)magnus_divide(magnus_multiplica(binomium,
+            magnus_ex_s64((s64)(N - m + I)), piscina), magnus_ex_s64(m),
+            piscina, &binomium, NIHIL);
+        si (m % II == I)
+        {
+            c[m / II] = (m / II) % II == I ? magnus_nega(binomium,
+                piscina)
+                : binomium;
+        }
+    }
+    (vacuum)polynomium_ex_coefficientibus(c, (i32)(N / II), ZEPHYRUM,
+        piscina, &q);
+    redde q;
 }
 
 s32 principale (vacuum)
@@ -479,6 +508,37 @@ s32 principale (vacuum)
             CREDO_VERUM (radix_ad_chordam(r[IX], LX, p, &c));
             CREDO_VERUM (piscina_summa_usus(p) - ante
                 < (memoriae_index)1024);
+            /* piscinae TEMPORARIAE: acervus VCA profunditas x polynomium,
+             * officina post quodque opus refecta (S_120, gradus LIX: olim
+             * 679 MB) */
+            {
+                RadixRealis* t;
+                        i32  nt = ZEPHYRUM;
+
+                radicum_apices_purgare();
+                CREDO_VERUM (radices_reales(_tangentium(CXX), p, &t,
+                    &nt));
+                CREDO_AEQUALIS_I32 (nt, LIX);
+                imprimere("    S_120: apex acervi %lu, officinae %lu octeti\n",
+                    (unsigned long)radicum_apex_acervi(),
+                    (unsigned long)radicum_apex_officinae());
+                /* numeri octetorum certi (non tempora): acervus 3937096,
+                 * sine refectione acervi ante filios 5692220 (planta T2),
+                 * officina sine refectione per opus centena MB (T1) */
+                CREDO_VERUM (radicum_apex_acervi()
+                    < (memoriae_index)4500000);
+                CREDO_VERUM (radicum_apex_officinae()
+                    < (memoriae_index)6000000);
+                radicum_apices_purgare();
+                CREDO_VERUM (nt == LIX
+                    && radix_angusta(t[XXX], latitudo, p,
+                    &angusta));
+                imprimere("    angustatio CC bisectionum gradu LIX: apex "
+                    "officinae %lu octeti\n",
+                    (unsigned long)radicum_apex_officinae());
+                CREDO_VERUM (radicum_apex_officinae()
+                    < (memoriae_index)1000000);
+            }
             piscina_destruere(p);
         }
     }
