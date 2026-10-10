@@ -248,3 +248,40 @@ failing; OMISSA is now counted apart and named in the pass note
 Proof: credo_fumus VII (6 checks); gradus IIb. Plants (planta): omission
 not recorded, unknown tag accepted, all-omitted suite TRANSIIT ->
 credo fumus red; OMISSA counted as failure -> gradus red.
+
+## 2026-10-10 - credo II T2: known failures (reason in the source)
+
+`exspectata_fracta` is live. Fran changed the design in the interview:
+the field is a REASON written in the source, never a ledger id that
+credo or a gate would have to look up (principle …RBA4W73: what changes
+an outcome lives in the repo). Empty reason -> refused before anything
+runs.
+
+After a section runs: FRACTA/ABORTA + reason -> NOTA_FRACTA (counted as
+passing; its failed assertions go into `_credo_fracti_exspectati`, reset
+by credo_aperire/claudere); TRANSIIT + reason -> INOPINATA (counted as
+failing: "fractura exspectata sanata ... linea delenda"); VACUA stays
+VACUA. Suite pass = all sections passed-or-noted AND fracti == expected.
+The compendium prints `Exspectati: N (NOTA_FRACTA - causa in fonte)` and
+`Conditio: OMNIA PRAETERIERUNT (fracturis exspectatis exceptis)` - an
+exit-0 suite never says "Conditio: FRACTA". credo_omnia_praeterierunt
+uses the same rule (old suites: expected 0, unchanged).
+
+Fabrica member note: NOTA_FRACTA counts as passing and is named
+(`sectiones 2/2, notae fractae 1`); the note is now composed from parts
+(omissae, notae fractae) instead of the T1 if/else.
+
+Census: `tools/credo_fracturae_notae.py [-tabularium] [VIA...]` - rows of
+CredoSectio tables via silva (`declaratio:habet(typus-nominatus
+[tok_titulus="CredoSectio"]) congeries congeries`), sixth field = reason,
+adjacent literals joined like C, commas inside strings kept. Default scope
+= converted suites (probationes/, */probationes/ calling
+credo_suitam_currere); 0 known failures in the repo today. `-tabularium`
+is a REPORT: ids in reasons (…XXXXXX) looked up via frigida -res, closed
+-> "fortasse sanata"; never part of a gate (the fumus checks the census
+only). Trap: `^\[(.*):` under re.S swallowed every row but the last -
+path pattern must not cross lines.
+
+Plants: NOTA not set, INOPINATA not set, empty reason accepted, expected
+fracti not subtracted -> credo fumus red; census reads the 5th field ->
+red; fabrica counts NOTA_FRACTA as failing -> gradus red.

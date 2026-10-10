@@ -1711,6 +1711,22 @@ _probare_sectiones (
             "probationes_t/probatio_a: transiit (sectiones 1/1, "
             "omissae 1)\n"));
 
+        /* IIc (credo II T2). a: sectio NOTA_FRACTA (causa in fonte) -
+         * transiens numeratur, nota eam nominat */
+        _s_plagula_a  = "SECTIO\tfs\talpha\tTRANSIIT\t3\t3\t5\t\t\t\n"
+                        "SECTIO\tfs\tbeta\tNOTA_FRACTA\t1\t2\t4\t"
+                        "t/probatio_a.c:12\tAEQUALIS_I32\tx == y\n"
+                        "SUITA\tfs\tTRANSIIT\t2\t2\t4\t5\t9\n";
+        _s_codex_a    = ZEPHYRUM;
+        mundi_ponere(discus, "t/probatio_a.c", "a Ic\n");
+        sanatio = _s_sanare(sutura, ordo, electa,
+            "probationes_t/probatio_a", FABRICA_SANATUM, piscina);
+        CREDO_AEQUALIS_I32(sanatio != NIHIL ? (i32)sanatio->eventus
+            : (i32)XCIX, (i32)FABRICA_SANATUM);
+        CREDO_VERUM(mundi_contentum_est(discus, VERDICTUM_A,
+            "probationes_t/probatio_a: transiit (sectiones 2/2, notae "
+            "fractae 1)\n"));
+
         /* III. a: sectio fracta nominatur (titulus, numeri, sedes) */
         _s_plagula_a  = FRACTA;
         _s_codex_a    = I;

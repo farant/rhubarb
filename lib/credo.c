@@ -22,6 +22,11 @@ universalis   CredoNotatio* _credo_primus   = NIHIL;
 universalis   CredoNotatio* _credo_nunc     = NIHIL;
 universalis memoriae_index  _credo_numerus  = ZEPHYRUM;
 
+/* FRACTURAE EXSPECTATAE (credo II): assertiones fractae sectionum quae
+ * 'exspectata_fracta' ferunt (NOTA_FRACTA) - suitam non frangunt;
+ * suitae veteres numquam ponunt (ZEPHYRUM) */
+hic_manens memoriae_index _credo_fracti_exspectati = ZEPHYRUM;
+
 /* sectiones (credo v2): punctum saltus NECESSE, et num cursor sectionem
  * currit / num in filio furcato sumus (ibi saltus vetitus) */
 interior        jmp_buf  _credo_saltus;
@@ -86,10 +91,11 @@ vacuum
 credo_aperire (
     Piscina* piscina)
 {
-    _credo_piscina  = piscina;
-    _credo_primus   = NIHIL;
-    _credo_nunc     = NIHIL;
-    _credo_numerus  = ZEPHYRUM;
+    _credo_piscina            = piscina;
+    _credo_primus             = NIHIL;
+    _credo_nunc               = NIHIL;
+    _credo_numerus            = ZEPHYRUM;
+    _credo_fracti_exspectati  = ZEPHYRUM;
 }
 
 vacuum
@@ -97,10 +103,11 @@ credo_claudere (
     vacuum)
 {
     /* Piscina manet; conditio solum reficitur */
-    _credo_piscina  = NIHIL;
-    _credo_primus   = NIHIL;
-    _credo_nunc     = NIHIL;
-    _credo_numerus  = ZEPHYRUM;
+    _credo_piscina            = NIHIL;
+    _credo_primus             = NIHIL;
+    _credo_nunc               = NIHIL;
+    _credo_numerus            = ZEPHYRUM;
+    _credo_fracti_exspectati  = ZEPHYRUM;
 }
 
 
@@ -154,7 +161,7 @@ credo_omnia_praeterierunt (
     {
         redde FALSUM;
     }
-    redde credo_numerus_fracti() == ZEPHYRUM;
+    redde credo_numerus_fracti() == _credo_fracti_exspectati;
 }
 
 /* Fractas invenire. COPIAS reddit, non catenam filtratam: 'sequens'
@@ -229,6 +236,11 @@ credo_imprimere_compendium (
     imprimere("Totalis:    %lu\n", (insignatus longus)totalis);
     imprimere("Praeteriti: %lu\n", (insignatus longus)praeteriti);
     imprimere("Fracti:     %lu\n", (insignatus longus)fracti);
+    si (_credo_fracti_exspectati > ZEPHYRUM)
+    {
+        imprimere("Exspectati: %lu (NOTA_FRACTA - causa in fonte)\n",
+            (insignatus longus)_credo_fracti_exspectati);
+    }
 
     si (totalis == ZEPHYRUM)
     {
@@ -236,9 +248,14 @@ credo_imprimere_compendium (
          * credo_omnia_praeterierunt FALSUM reddit */
         imprimere("\nConditio: NIHIL PROBATUM\n");
     }
-    alioquin si (fracti > ZEPHYRUM)
+    alioquin si (fracti > _credo_fracti_exspectati)
     {
         imprimere("\nConditio: FRACTA\n");
+    }
+    alioquin si (fracti > ZEPHYRUM)
+    {
+        imprimere("\nConditio: OMNIA PRAETERIERUNT (fracturis "
+            "exspectatis exceptis)\n");
     }
     alioquin
     {
@@ -1258,6 +1275,16 @@ credo_suitam_currere (
             _credo_suitam_recusare(plagula, titulus_suitae);
             redde I;
         }
+        /* fractura exspectata sine causa = vitium scribae (credo II):
+         * causa in fonte est TOTA memoria fracturae */
+        si (   sectiones[i].exspectata_fracta    != NIHIL
+            && sectiones[i].exspectata_fracta[0] == '\0')
+        {
+            imprimere("FRACTA: exspectata_fracta vacua in sectione %s"
+                " (causa scribenda)\n", sectiones[i].titulus);
+            _credo_suitam_recusare(plagula, titulus_suitae);
+            redde I;
+        }
     }
     cursae          = ZEPHYRUM;
     transeuntes     = ZEPHYRUM;
@@ -1319,9 +1346,41 @@ credo_suitam_currere (
         summa = _credo_sectionem_summare(ante, aborta);
         piscina_destruere(contextus.piscina);
         cursae++;
+        /* FRACTURA EXSPECTATA (credo II): fracta -> NOTA_FRACTA (suita
+         * transit, fractura servata); transiens -> INOPINATA (suita
+         * frangitur: fractura sanata, linea delenda); VACUA manet */
+        si (sectio->exspectata_fracta != NIHIL)
+        {
+            si (   strcmp(summa.exitus, "FRACTA") == ZEPHYRUM
+                || strcmp(summa.exitus, "ABORTA") == ZEPHYRUM)
+            {
+                _credo_fracti_exspectati += summa.totales
+                    - summa.praeteriti;
+                summa.exitus = "NOTA_FRACTA";
+            }
+            alioquin si (strcmp(summa.exitus, "TRANSIIT") == ZEPHYRUM)
+            {
+                summa.exitus = "INOPINATA";
+            }
+        }
         si (strcmp(summa.exitus, "TRANSIIT") == ZEPHYRUM)
         {
             transeuntes++;
+        }
+        alioquin si (strcmp(summa.exitus, "NOTA_FRACTA") == ZEPHYRUM)
+        {
+            transeuntes++;
+            imprimere("\n  sectio %s: NOTA_FRACTA (%lu/%lu) - causa:"
+                " %s\n",
+                sectio->titulus, (insignatus longus)summa.praeteriti,
+                (insignatus longus)summa.totales,
+                sectio->exspectata_fracta);
+        }
+        alioquin si (strcmp(summa.exitus, "INOPINATA") == ZEPHYRUM)
+        {
+            imprimere("\n  sectio %s: INOPINATA - fractura exspectata "
+                "sanata ('%s'): linea exspectata_fracta delenda\n",
+                sectio->titulus, sectio->exspectata_fracta);
         }
         alioquin
         {
@@ -1358,7 +1417,7 @@ credo_suitam_currere (
         fprintf(plagula, "\t%s\t%lu\t%lu\t%lu\t%lu\t%.0f\n",
             cursae == ZEPHYRUM ? "VACUA"
             : (transeuntes == cursae
-                && credo_numerus_fracti() == ZEPHYRUM)
+                && credo_numerus_fracti() == _credo_fracti_exspectati)
                 ? "TRANSIIT" : "FRACTA",
             (insignatus longus)transeuntes, (insignatus longus)cursae,
             (insignatus longus)credo_numerus_praeteriti(),
@@ -1367,5 +1426,6 @@ credo_suitam_currere (
         fclose(plagula);
     }
     redde (transeuntes == cursae && cursae > ZEPHYRUM
-           && credo_numerus_fracti() == ZEPHYRUM) ? ZEPHYRUM : I;
+           && credo_numerus_fracti()
+               == _credo_fracti_exspectati) ? ZEPHYRUM : I;
 }

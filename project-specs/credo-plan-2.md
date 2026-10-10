@@ -20,10 +20,13 @@ in `../rhubarb-quinta`; merges by the ritual.
   CREDO_SIGNA_OMITTE; fabrica pass note counts omissions apart.
 
 ### T2: known failures
-- [ ] stage: failing section with reason -> NOTA_FRACTA, suite exit 0;
+- [x] stage: failing section with reason -> NOTA_FRACTA, suite exit 0;
   passing one -> INOPINATA, suite exit 1; empty reason -> refused.
   Fabrica: member note counts NOTA_FRACTA. Silva census query + report
   tool (ledger cross-check, never a gate). Plants. Commit.
+  As built (2026-10-10): census = tools/credo_fracturae_notae.py (silva
+  rows; -tabularium report); compendium names expected fractures; 0
+  known failures in the repo today.
 
 ### T3: suite fixture
 - [ ] stage: parare_suitae once, c->suita in every section,

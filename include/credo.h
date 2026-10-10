@@ -656,8 +656,16 @@ nomen structura CredoSectio {
                                             * CREDO_SIGNA_OMITTE="rete"
                                             * -> sectio OMISSA (in
                                             * plagula, nominata) */
-    constans character* exspectata_fracta; /* RESERVATUM (gradus II):
-                                            * id tabularii */
+    constans character* exspectata_fracta; /* (II) CAUSA in fonte
+                                            * scripta (non vacua; id
+                                            * tabularii intra licet,
+                                            * numquam legitur): fracta
+                                            * -> NOTA_FRACTA (suita
+                                            * transit), transiens ->
+                                            * INOPINATA (suita FRACTA:
+                                            * linea delenda). Census:
+                                            * tools/credo_fracturae_
+                                            * notae.py */
 } CredoSectio;
 
 /* Suitam currere: sectiones ordine usque ad titulum NIHIL. Ambitus:
@@ -679,7 +687,8 @@ nomen structura CredoSectio {
  *           ms
  * exitus sectionis: TRANSIIT | FRACTA | VACUA (nulla assertio = non
  * transiit, ut NIHIL PROBATUM) | ABORTA (NECESSE fractum) | OMISSA
- * (signum omissum, credo II); RESERVATA: NOTA_FRACTA, INOPINATA.
+ * (signum omissum, credo II) | NOTA_FRACTA (fractura exspectata, suita
+ * transit) | INOPINATA (exspectata fracta transiit - suita FRACTA).
  * exitus suitae: TRANSIIT | FRACTA | VACUA (nulla sectio cursa).
  * Effusio humana ut olim (--- Probans <titulus> ---, puncta, FRACTA,
  * compendium). Redde ZEPHYRUM si omnes sectiones cursae transierunt, I

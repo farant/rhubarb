@@ -15,6 +15,9 @@
 #   VII  signa (credo II): vocabulum clausum (lentus rete fenestra
 #        repositorium), CREDO_SIGNA_OMITTE -> OMISSA nominata, omnes
 #        omissae -> VACUA, signum ignotum (tabula aut ambitus) -> FRACTA
+#   VIII fracturae exspectatae (credo II): causa in fonte; fracta ->
+#        NOTA_FRACTA (suita transit), transiens -> INOPINATA (suita
+#        FRACTA), causa vacua recusata
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 set -u
@@ -246,7 +249,77 @@ s32 principale (vacuum)
 }
 FONS
 
-for s in mixta sana ruina signata omnes_signatae ignota; do
+cat > "$T/nota.c" <<'FONS'
+#include "credo.h"
+
+interior vacuum _transit (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+interior vacuum _fracta (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+    CREDO_AEQUALIS_S32(I, II);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "bona", _transit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nota", _fracta, NIHIL, NIHIL, NIHIL,
+      "I != II nondum (tabularium ...ABCDEF)" },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("nota", SECTIONES);
+}
+FONS
+
+cat > "$T/sanata.c" <<'FONS'
+#include "credo.h"
+
+interior vacuum _transit (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "sanata", _transit, NIHIL, NIHIL, NIHIL, "olim fracta" },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("sanata", SECTIONES);
+}
+FONS
+
+cat > "$T/causa_vacua.c" <<'FONS'
+#include "credo.h"
+
+interior vacuum _transit (CredoContextus* c)
+{
+    (vacuum)c;
+    CREDO_VERUM(I == I);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "prima", _transit, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sine_causa", _transit, NIHIL, NIHIL, NIHIL, "" },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32 principale (vacuum)
+{
+    redde credo_suitam_currere("causa_vacua", SECTIONES);
+}
+FONS
+
+for s in mixta sana ruina signata omnes_signatae ignota nota sanata causa_vacua; do
     struere "$s.c" "$s" || { echo "credo_fumus: $s non compilat:"; cat "$T/$s.err"; exit 2; }
 done
 
@@ -312,6 +385,30 @@ CREDO_VERDICTA="$T/v_ign.tsv" "$T/ignota" > "$T/o_ign" 2>&1; rc=$?
     && ! grep -q '^SECTIO' "$T/v_ign.tsv" && grep -q "^SUITA	ignota	FRACTA	0	0	" "$T/v_ign.tsv"; credo $? "VII signum ignotum in tabula: FRACTA nominatum, nihil cursum (erat $rc)"
 CREDO_SIGNA_OMITTE=retis CREDO_VERDICTA="$T/v_ign2.tsv" "$T/signata" > "$T/o_ign2" 2>&1; rc=$?
 [ "$rc" -eq 1 ] && grep -q "CREDO_SIGNA_OMITTE: signum ignotum 'retis'" "$T/o_ign2" && ! grep -q '^SECTIO' "$T/v_ign2.tsv"; credo $? "VII signum ignotum in CREDO_SIGNA_OMITTE: FRACTA, nihil cursum (erat $rc)"
+
+# VIII (credo II, T2): FRACTURAE EXSPECTATAE - causa in fonte;
+# fracta -> NOTA_FRACTA (suita transit), transiens -> INOPINATA (suita
+# FRACTA), causa vacua recusatur
+CREDO_VERDICTA="$T/v_nota.tsv" "$T/nota" > "$T/o_nota" 2>&1; rc=$?
+V="$T/v_nota.tsv"
+[ "$rc" -eq 0 ] && grep -q "^SECTIO	nota	bona	TRANSIIT	1	1	" "$V" \
+    && awk -F'\t' '$1 == "SECTIO" && $3 == "nota" && $4 == "NOTA_FRACTA" && $5 == 1 && $6 == 2 && $9 == "credo_aequalis"' "$V" | grep -q . \
+    && grep -q "^SUITA	nota	TRANSIIT	2	2	" "$V"; credo $? "VIII fracta exspectata: NOTA_FRACTA cum fractura, suita TRANSIIT, exitus 0 (erat $rc)"
+grep -q "sectio nota: NOTA_FRACTA (1/2) - causa: I != II nondum (tabularium ...ABCDEF)" "$T/o_nota" \
+    && ! grep -q '^Conditio: FRACTA$' "$T/o_nota" && grep -q 'exspectat' "$T/o_nota"; credo $? "VIII effusio: causa nominata, compendium non 'FRACTA' sed exspectatas nominans"
+CREDO_VERDICTA="$T/v_san.tsv" "$T/sanata" > "$T/o_san" 2>&1; rc=$?
+[ "$rc" -eq 1 ] && grep -q "^SECTIO	sanata	sanata	INOPINATA	1	1	" "$T/v_san.tsv" \
+    && grep -q "^SUITA	sanata	FRACTA	0	1	" "$T/v_san.tsv" \
+    && grep -q "INOPINATA" "$T/o_san" && grep -q "olim fracta" "$T/o_san" && grep -q "delenda" "$T/o_san"; credo $? "VIII fractura exspectata sanata: INOPINATA, suita FRACTA, linea delenda nominata (erat $rc)"
+CREDO_VERDICTA="$T/v_cv.tsv" "$T/causa_vacua" > "$T/o_cv" 2>&1; rc=$?
+[ "$rc" -eq 1 ] && grep -q "exspectata_fracta vacua in sectione sine_causa" "$T/o_cv" \
+    && ! grep -q '^SECTIO' "$T/v_cv.tsv" && grep -q "^SUITA	causa_vacua	FRACTA	0	0	" "$T/v_cv.tsv"; credo $? "VIII causa vacua: recusata ante cursum, nominata (erat $rc)"
+
+# census fracturarum exspectatarum ex repositorio (silva, sine tabulario)
+tools/credo_fracturae_notae.py "$T/nota.c" "$T/sanata.c" > "$T/o_census" 2>&1; rc=$?
+[ "$rc" -eq 0 ] && grep -q "nota.c:[0-9]*	nota	I != II nondum (tabularium ...ABCDEF)$" "$T/o_census" \
+    && grep -q "sanata.c:[0-9]*	sanata	olim fracta$" "$T/o_census" \
+    && grep -q "^fracturae exspectatae: 2$" "$T/o_census" && ! grep -q "	bona	" "$T/o_census"; credo $? "VIII census: II fracturae exspectatae cum sede et causa (silva), bona non (erat $rc)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus credo: sanum"; exit 0; fi

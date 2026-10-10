@@ -626,6 +626,7 @@ _sectiones_explicare (
                  i32 transeuntes;
                  i32 fractae;
                  i32 omissae;
+                 i32 notae;
                  i32 i;
 
     via = fabricae_iungere(piscina, "", area_c, "credo.tsv");
@@ -678,6 +679,7 @@ _sectiones_explicare (
     transeuntes  = ZEPHYRUM;
     fractae      = ZEPHYRUM;
     omissae      = ZEPHYRUM;
+    notae        = ZEPHYRUM;
     nota         = chorda_ex_literis("", piscina);
     per (i = ZEPHYRUM; i < xar_numerus(sectiones.sectiones); i++)
     {
@@ -694,6 +696,14 @@ _sectiones_explicare (
         si (chorda_aequalis_literis(s->exitus, "OMISSA"))
         {
             omissae++;
+            perge;
+        }
+        /* NOTA_FRACTA (credo II): fractura exspectata, causa in fonte -
+         * transiens numeratur, in nota nominatur */
+        si (chorda_aequalis_literis(s->exitus, "NOTA_FRACTA"))
+        {
+            transeuntes++;
+            notae++;
             perge;
         }
         fractae++;
@@ -736,18 +746,20 @@ _sectiones_explicare (
     {
         character numeri[LXIV];
 
+        /* 'sectiones T/N' (N = cursae), deinde omissae et notae
+         * fractae si adsunt - deterministica (sine ms) */
+        sprintf(numeri, "sectiones %u/%u", (insignatus integer)
+            transeuntes, (insignatus integer)(xar_numerus(
+            sectiones.sectiones) - omissae));
         si (omissae > ZEPHYRUM)
         {
-            sprintf(numeri, "sectiones %u/%u, omissae %u",
-                (insignatus integer)transeuntes, (insignatus integer)(
-                xar_numerus(sectiones.sectiones) - omissae),
+            sprintf(numeri + strlen(numeri), ", omissae %u",
                 (insignatus integer)omissae);
         }
-        alioquin
+        si (notae > ZEPHYRUM)
         {
-            sprintf(numeri, "sectiones %u/%u", (insignatus integer)
-                transeuntes, (insignatus integer)xar_numerus(
-                sectiones.sectiones));
+            sprintf(numeri + strlen(numeri), ", notae fractae %u",
+                (insignatus integer)notae);
         }
         actum_out->cauda = chorda_ex_literis(numeri, piscina);
         redde;
