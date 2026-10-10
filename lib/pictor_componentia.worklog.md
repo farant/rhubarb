@@ -91,3 +91,24 @@ path - the root's action sees keys the canvas does not take), and a
 canvas press while open (closes only, draws nothing, like a menu).
 Note: the theme's colouring palette repeats entries (slots 0, 13, 14,
 15 are the same dark green), so the colour palette shows duplicates.
+
+## 2026-10-10 - pictor-strata L3: layers panel
+
+- Bar button "quadratum.strata" (LXX wide) at the right end of the
+  bar, a child of the ROOT, not of the status node: figura_tituli puts
+  the tool name after the LAST square of the status node, so as a
+  status child the button pushed the name off-screen.
+- Panel = genus "strata" of the existing palette mechanism (open/close
+  via palette.aperire, Esc, canvas click); right edge aligned to the
+  button. Rows top layer first: 'oculus.<id>' + 'stratum.<id>', then
+  'strata.novum' / 'strata.deletum'. Every panel node runs
+  "strata.agere" (one owner for stratum_activum); the panel stays open.
+- The composer needed the document (layer list): PictorCompositio.doc,
+  kept in step with drawing swaps (pictor_picturam_ponere). Flagged to
+  Fran - the field was not in the approved header text.
+- Current layer = stratum_activum if that layer exists, else the TOP
+  layer; strokes log stratum="<id>" unless it is 1.
+- Bug on the way: the button code was inserted between creating the
+  size square (variable q) and the eraser's "empty action on q" line,
+  and reused q - the eraser's dead size square opened a palette again
+  (probatio_pictor_aspergillum IX caught it). Own variable now.

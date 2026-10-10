@@ -111,10 +111,11 @@ s32 principale (vacuum)
      * (modulus 013 B1); + semen, scriptor aspergillum.ictus; +
      * exemplar, scriptor exemplar.ponere (P3); magnitudo ->
      * magnitudo_penicilli + magnitudo_aspergilli (P4a); +
-     * magnitudo_lineae (linea) */
+     * magnitudo_lineae (linea); + stratum_activum (strata.agere,
+     * L3) */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_EPHEMERA,
                                              res.elementum_radix),
-                                             XVII);
+                                             XVIII);
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_DURABILIS,
                                              res.elementum_radix), I);
     insula_scriptorem_ponere(repo,

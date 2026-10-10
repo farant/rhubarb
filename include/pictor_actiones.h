@@ -54,6 +54,21 @@ pictor_aspergillum_ictus (
       constans Eventus* ev,
                 vacuum* ctx);
 
+/* <tractator/> strata (pictor-strata L3): ictus in palette stratorum -
+ * 'stratum.<id>' eligit (ephemera stratum_activum), 'oculus.<id>'
+ * visibilitatem in actis mutat, 'strata.novum' stratum novum supra
+ * currens (fit currens), 'strata.deletum' currens delet (inferius fit
+ * currens; ultimum numquam). Dominus 'stratum_activum'. Palette
+ * aperta manet. */
+b32
+pictor_strata_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
 /* <tractator/> linea (Franus): ictus primus initium figit (captura
  * manet); motus sine botone praevisionem ad indicatorem movet; ictus
  * secundus segmentum scribit - cum Shift punctum eius initium novum

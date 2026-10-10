@@ -6,6 +6,7 @@
   <dominus genus="ephemera" attributum="magnitudo_penicilli"  scriptor="magnitudo.ponere"/>
   <dominus genus="ephemera" attributum="magnitudo_aspergilli" scriptor="magnitudo.ponere"/>
   <dominus genus="ephemera" attributum="magnitudo_lineae" scriptor="magnitudo.ponere"/>
+  <dominus genus="ephemera" attributum="stratum_activum" scriptor="strata.agere"/>
   <dominus genus="ephemera" attributum="semen"           scriptor="aspergillum.ictus"/>
   <dominus genus="ephemera" attributum="zoom"            scriptor="motus"/>
   <dominus genus="ephemera" attributum="pan_x"           scriptor="motus"/>

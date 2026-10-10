@@ -258,6 +258,7 @@ pictor_montare (
     m->compositio.cellula_altitudo   = CELLULA_ALTITUDO;
     m->compositio.status_lineae      = STATUS_LINEAE;
     m->compositio.ramus              = m->ramus;
+    m->compositio.doc                = m->doc;
     redde VERUM;
 }
 
@@ -344,6 +345,7 @@ pictor_picturam_ponere (
     m->doc               = doc;
     m->actiones_ctx.doc  = doc;
     m->figurae_ctx.doc   = doc;
+    m->compositio.doc    = doc;
     redde mutare_ramum(&m->ramus, INSULA_DURABILIS, dimensiones_mutator,
         doc);
 }

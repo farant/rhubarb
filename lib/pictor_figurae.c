@@ -583,6 +583,67 @@ figura_quadrati (
         iconem_pingere(m, icon_lineae, II, II);
         redde;
     }
+    /* L3 strata: '+' / '-' (strata:novum / strata:deletum), nomen
+     * strati currentis ("strata:<nomen>"), ordo ("stratum:<id>"),
+     * oculus ("oculus:<0|1>": plenum visibile, vacuum occultum) */
+    si (chorda_aequalis_literis(t, "strata:novum"))
+    {
+        a.x = c->fines.latitudo / II;
+        a.y = V;
+        b.x = a.x;
+        b.y = c->fines.altitudo - VI;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        a.x = V;
+        a.y = c->fines.altitudo / II;
+        b.x = c->fines.latitudo - VI;
+        b.y = a.y;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (chorda_aequalis_literis(t, "strata:deletum"))
+    {
+        a.x = V;
+        a.y = c->fines.altitudo / II;
+        b.x = c->fines.latitudo - VI;
+        b.y = a.y;
+        mandata_linea(m, a, b, I, color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (t.mensura > VII && memcmp(t.datum, "strata:", VII) == ZEPHYRUM)
+    {
+        reliquum.datum    = t.datum + VII;
+        reliquum.mensura  = t.mensura - VII;
+        mandata_textus(m, IV, (c->fines.altitudo - VIII) / II, reliquum,
+            ZEPHYRUM, color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (   t.mensura > VIII
+        && memcmp(t.datum, "stratum:", VIII) == ZEPHYRUM)
+    {
+        reliquum.datum    = t.datum + VIII;
+        reliquum.mensura  = t.mensura - VIII;
+        mandata_textus(m, IV, (c->fines.altitudo - VIII) / II,
+            chorda_concatenare(chorda_ex_literis("stratum ",
+            m->piscina),
+            reliquum, m->piscina), ZEPHYRUM,
+            color_thematis(COLOR_TEXT));
+        redde;
+    }
+    si (chorda_aequalis_literis(t, "oculus:1"))
+    {
+        Fines g;
+
+        g.x         = V;
+        g.y         = V;
+        g.latitudo  = c->fines.latitudo - X;
+        g.altitudo  = c->fines.altitudo - X;
+        mandata_rectangulum(m, g, color_thematis(COLOR_TEXT), VERUM);
+        redde;
+    }
+    si (chorda_aequalis_literis(t, "oculus:0"))
+    {
+        redde;
+    }
     /* P4a: magnitudo - discus diametri n centratus (n > XVI:
      * numerus) */
     si (   t.mensura > X

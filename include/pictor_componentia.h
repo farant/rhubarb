@@ -30,6 +30,7 @@
 #include "componens.h"
 #include "insula.h"
 #include "motus.h"
+#include "pictor_documentum.h"
 
 nomen structura {
     /* superficies si superficies_* absunt (ante nuntium glutini
@@ -45,6 +46,8 @@ nomen structura {
     /* R3: status pictoris; repo NIHIL = radix repositorii componenti
      * dati - structuram TOTAM nulla (memset) ante campos */
     InsulaRamus ramus;
+    /* pictor-strata L3: documentum ostensum (strata palettae) */
+    constans PictorDocumentum* doc;
 } PictorCompositio;
 
 /* "penicillus" -> "penicillus.ictus"; ignotum -> "" */
