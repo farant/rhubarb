@@ -412,3 +412,25 @@ vicus_pulsare reads the clock each pulse and returns VERUM only when
 (hour, minute) changed, so the app repaints once a minute for it.
 vicus_horologium_ponere reads once immediately so the first frame has
 the time. Format: hour % 12 with 0 -> 12, minutes %02d, AM below 12.
+
+## 2026-10-09 - S3e-3: $pictor-next / $pictor-prev (Fran, option A)
+
+- vicus_acervo_mutare queues a PetitioAcervi with `mutare`: at pulse
+  the front-most pane of the genus (last in the stack) gets the new
+  argumentum via facies.argumentum_ponere, moves to the front, focus
+  untouched, layout saved (indicem_scribere). No pane of the genus:
+  falls through to the ordinary open path (focus right).
+- Selection lives in vicus_applicatio (cyclus_iussum): library order,
+  wrap, skip the current drawing and any drawing shown by ANOTHER
+  pictor pane in any tab. A pane's drawing = its argumentum if that
+  names a library drawing, else its id (old $pictor(x) identity-only
+  arguments keep working).
+- ONE document object per drawing: all pictor panes share the cache
+  (ContextusPictoris.documenta, put into PictorMontatio.documenta at
+  mount). Per-pane caches would go stale: pane A shows X and leaves,
+  pane B opens X and draws, A comes back with an old history cursor
+  and its next stroke would fork/corrupt X's log (plant P5).
+- Known: a brand-new pane (tab without a pictor) still creates its own
+  blank id-drawing before switching, so the library gains one blank
+  drawing per such tab. Two clicks within one frame both compute from
+  the same current drawing.

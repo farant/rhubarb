@@ -27,11 +27,13 @@ hic_manens constans character id_divisoris[] = "vicus.divisor";
  * Auxilia
  * ================================================== */
 
-/* S3c: aperitio in acervo pendens (vicus_acervo_aperire) */
+/* S3c: aperitio in acervo pendens (vicus_acervo_aperire); S3e:
+ * mutare = argumentum frontis generis mutatur (vicus_acervo_mutare) */
 nomen structura {
     chorda tabula;
     chorda genus;
     chorda argumentum;
+       b32 mutare;
 } PetitioAcervi;
 
 interior chorda
@@ -1636,6 +1638,47 @@ petitionem_applicare (
         redde FALSUM;
     }
     n = xar_numerus(t->acervus);
+    /* S3e: mutare - frons generis (ultimus eius generis in acervo)
+     * argumentum novum accipit et in frontem venit; focus manet.
+     * Nullum: aperitio ut S3c (infra) */
+    si (p->mutare)
+    {
+        s32 j;
+
+        per (j = (s32)n - I; j >= ZEPHYRUM; j--)
+        {
+            l = (VicusLatus*)xar_obtinere(t->acervus, (i32)j);
+            si (!chorda_aequalis(l->genus, p->genus))
+            {
+                perge;
+            }
+            si (   !l->montata || !l->facies.argumentum_ponere
+                || !l->facies.argumentum_ponere(
+                       l->facies.argumentum_ponere_ctx,
+                       chorda_ut_cstr(p->argumentum, v->piscina)))
+            {
+                si (activa)
+                {
+                    motum_aptare(v);
+                }
+                redde FALSUM;
+            }
+            l->argumentum  = p->argumentum;
+            frons          = *l;
+            per (k = (i32)j; k < n - I; k++)
+            {
+                *(VicusLatus*)xar_obtinere(t->acervus, k) =
+                    *(VicusLatus*)xar_obtinere(t->acervus, k + I);
+            }
+            *(VicusLatus*)xar_obtinere(t->acervus, n - I) = frons;
+            si (activa)
+            {
+                registra_reficere(v);
+                motum_aptare(v);
+            }
+            redde indicem_scribere(v);
+        }
+    }
     per (k = ZEPHYRUM; k < n; k++)
     {
         l = (VicusLatus*)xar_obtinere(t->acervus, k);
@@ -1689,11 +1732,13 @@ petitionem_applicare (
     redde indicem_scribere(v);
 }
 
-b32
-vicus_acervo_aperire (
+/* S3c/S3e: petitio in acervo tabulae activae addenda */
+interior b32
+petitionem_addere (
                   Vicus* v,
      constans character* genus,
-     constans character* argumentum)
+     constans character* argumentum,
+                    b32  mutare)
 {
     PetitioAcervi* p;
            chorda  g;
@@ -1718,7 +1763,26 @@ vicus_acervo_aperire (
                    ? chorda_transcribere(chorda_ex_literis(argumentum,
                          v->piscina), v->piscina)
                    : chorda_nulla_vici();
+    p->mutare      = mutare;
     redde VERUM;
+}
+
+b32
+vicus_acervo_aperire (
+                  Vicus* v,
+     constans character* genus,
+     constans character* argumentum)
+{
+    redde petitionem_addere(v, genus, argumentum, FALSUM);
+}
+
+b32
+vicus_acervo_mutare (
+                  Vicus* v,
+     constans character* genus,
+     constans character* argumentum)
+{
+    redde petitionem_addere(v, genus, argumentum, VERUM);
 }
 
 b32

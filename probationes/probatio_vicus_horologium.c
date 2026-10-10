@@ -151,7 +151,12 @@ s32 principale (vacuum)
     thema_initiare();
     vol  = volumen_temporarium(piscina, "probatio_vicus_horologium");
     v    = vicus_creare(piscina, intern, vol, NIHIL, CDLXXX, CDLXXX);
-    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NON_NIHIL(v);
+    si (!v)
+    {
+        credo_imprimere_compendium();
+        redde I;
+    }
     CREDO_VERUM(vicus_genus_addere(v, "quietus", I, quietum_montare,
         quietum_describere, NIHIL));
     CREDO_VERUM(vicus_aperire(v,
@@ -160,7 +165,12 @@ s32 principale (vacuum)
         "<latus genus=\"quietus\"/></acervus></tabula></tabulae>"));
     d = dispensator_creare(piscina, intern, v->repo, vicus_actiones(v),
         vicus_componere, v, CCC);
-    CREDO_NECESSE_NON_NIHIL(d);
+    CREDO_NON_NIHIL(d);
+    si (!d)
+    {
+        credo_imprimere_compendium();
+        redde I;
+    }
 
     imprimere("\n--- I: sine horologio ---\n");
     CREDO_AEQUALIS_I32(horae_textus(d, v), ZEPHYRUM);

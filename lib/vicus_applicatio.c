@@ -103,6 +103,21 @@ nomen structura {
      constans character* genus;
 } ContextusAperiendi;
 
+/* S3e: contextus generis pictoris - memoria picturarum COMMUNIS omnium
+ * laterum (documentum unum per spatium: latus quod picturam relinquit
+ * et postea redit documentum alterius lateris recens videt, non
+ * copiam veterem) */
+nomen structura {
+    TabulaDispersa* documenta;
+} ContextusPictoris;
+
+/* S3e: $pictor-next / $pictor-prev */
+nomen structura {
+                  Vicus* vicus;
+                    s32  directio;     /* I next, -I prev */
+     constans character* verbum;
+} ContextusCycli;
+
 interior b32
 nomen_paginae_validum (
     chorda c)
@@ -345,12 +360,52 @@ pictorem_montare (
                     i32  altitudo,
                  vacuum* ctx)
 {
-    (vacuum)ctx;
-    /* S3c: argumentum identitatem solam dat (documentum per id
-     * lateris) - picturae nominatae communes postea */
-    (vacuum)argumentum;
-    redde pictor_montare((PictorMontatio*)sedes, piscina, intern,
-        volumen, repo, id, radix, latitudo, altitudo);
+     PictorMontatio* m;
+  ContextusPictoris* cp;
+             vacuum* valor;
+             chorda  clavis;
+
+    m   = (PictorMontatio*)sedes;
+    cp  = (ContextusPictoris*)ctx;
+    si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
+            latitudo, altitudo))
+    {
+        redde FALSUM;
+    }
+    /* S3e: memoria communis - documentum spatii huius, si iam
+     * apertum, idem fit */
+    si (cp && cp->documenta && id && id[ZEPHYRUM])
+    {
+        clavis  = chorda_ex_literis(id, piscina);
+        valor   = NIHIL;
+        si (tabula_dispersa_invenire(cp->documenta, clavis, &valor))
+        {
+            m->documenta = cp->documenta;
+            (vacuum)pictor_picturam_ponere(m, id);
+        }
+        alioquin
+        {
+            (vacuum)tabula_dispersa_inserere(cp->documenta, clavis,
+                m->doc);
+            m->documenta = cp->documenta;
+        }
+    }
+    /* S3e: argumentum picturam bibliothecae nominans ostenditur;
+     * aliter (S3c, identitas sola) pictura lateris ipsius */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)pictor_picturam_ponere(m, argumentum);
+    }
+    redde VERUM;
+}
+
+/* S3e: facies.argumentum_ponere pictoris */
+interior b32
+pictoris_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde pictor_picturam_ponere((PictorMontatio*)ctx, argumentum);
 }
 
 interior vacuum
@@ -360,13 +415,178 @@ pictorem_describere (
 {
     PictorMontatio* m;
 
-    m                 = (PictorMontatio*)montatio;
-    f->actiones       = m->actiones;
-    f->figurae        = m->figurae;
-    f->componere      = pictor_componere;
-    f->componere_ctx  = &m->compositio;
-    f->fons           = pictor_imago_fons;
-    f->fons_ctx       = &m->figurae_ctx;
+    m                         = (PictorMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = pictor_componere;
+    f->componere_ctx          = &m->compositio;
+    f->fons                   = pictor_imago_fons;
+    f->fons_ctx               = &m->figurae_ctx;
+    f->argumentum_ponere      = pictoris_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+}
+
+/* S3e: pictura lateris pictoris: argumentum si picturam bibliothecae
+ * nominat, aliter id lateris */
+interior chorda
+pictura_lateris (
+       constans VicusLatus* l,
+              constans Xar* bibliotheca)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; !chorda_vacua(l->argumentum)
+                       && i < xar_numerus(bibliotheca); i++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(bibliotheca, i),
+            l->argumentum))
+        {
+            redde l->argumentum;
+        }
+    }
+    redde l->id;
+}
+
+/* S3e: pictura in latere pictoris ALIO (omnium tabularum) ostensa? */
+interior b32
+pictura_alibi (
+                     Vicus* v,
+       constans VicusLatus* hoc,
+              constans Xar* bibliotheca,
+                    chorda  pictura)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+            i32  i;
+            i32  k;
+
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        per (k = ZEPHYRUM; k <= xar_numerus(t->acervus); k++)
+        {
+            l = k == xar_numerus(t->acervus) ? &t->sinistrum
+                : (VicusLatus*)xar_obtinere(t->acervus, k);
+            si (   l != hoc && l->montata
+                && chorda_aequalis_literis(l->genus, "pictor")
+                && chorda_aequalis(pictura_lateris(l, bibliotheca),
+                       pictura))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+/* S3e: $pictor-next / $pictor-prev (Franus): frons pictoris tabulae
+ * activae picturam proximam bibliothecae (ordine viae, circulo)
+ * ostendit - picturae in latere alio ostensae praetereuntur (documentum
+ * unum, latus unum). Nullus pictor in acervo: latus novum. PETITIO. */
+interior b32
+cyclus_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    constans ContextusCycli* cc;
+                VicusTabula* t;
+                 VicusLatus* l;
+                 VicusLatus* frons;
+                        Xar* bibliotheca;
+                     chorda  currens;
+                     chorda  pictura;
+                        s32  n;
+                        s32  initium;
+                        s32  k;
+                        s32  index;
+                        i32  i;
+
+    cc = (constans ContextusCycli*)ctx;
+    si (iussum->numerus_argumentorum > ZEPHYRUM)
+    {
+        effectus->error =
+            chorda_concatenare(chorda_ex_literis(cc->verbum,
+            piscina), chorda_ex_literis(": nulla argumenta", piscina),
+            piscina);
+        redde VERUM;
+    }
+    bibliotheca  = pictor_documenta_enumerare(cc->vicus->volumen,
+        piscina);
+    t      = vicus_activa(cc->vicus);
+    frons  = NIHIL;
+    per (i = ZEPHYRUM; t && i < xar_numerus(t->acervus); i++)
+    {
+        l = (VicusLatus*)xar_obtinere(t->acervus, i);
+        si (chorda_aequalis_literis(l->genus, "pictor"))
+        {
+            frons = l;
+        }
+    }
+    currens.datum    = NIHIL;
+    currens.mensura  = ZEPHYRUM;
+    si (frons && bibliotheca)
+    {
+        currens = pictura_lateris(frons, bibliotheca);
+    }
+    n        = bibliotheca ? (s32)xar_numerus(bibliotheca) : ZEPHYRUM;
+    initium  = -I;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (chorda_aequalis(*(chorda*)xar_obtinere(bibliotheca, (i32)k),
+            currens))
+        {
+            initium = k;
+        }
+    }
+    per (k = I; k <= n; k++)
+    {
+        index = initium < ZEPHYRUM
+            ? (cc->directio > ZEPHYRUM ? k - I : n - k)
+            : ((initium + cc->directio * k) % n + n) % n;
+        pictura = *(chorda*)xar_obtinere(bibliotheca, (i32)index);
+        si (   chorda_vacua(pictura)
+            || chorda_aequalis(pictura, currens)
+            || pictura_alibi(cc->vicus, frons, bibliotheca, pictura))
+        {
+            perge;
+        }
+        si (!vicus_acervo_mutare(cc->vicus, "pictor",
+                chorda_ut_cstr(pictura, piscina)))
+        {
+            effectus->error = chorda_concatenare(chorda_ex_literis(
+                cc->verbum, piscina), chorda_ex_literis(
+                ": mutari non potest", piscina), piscina);
+        }
+        redde VERUM;
+    }
+    effectus->error = chorda_concatenare(chorda_ex_literis(cc->verbum,
+        piscina), chorda_ex_literis(": nulla alia pictura", piscina),
+        piscina);
+    redde VERUM;
+}
+
+interior b32
+cyclum_registrare (
+        IussumRegistrum* r,
+                  Vicus* v,
+     constans character* verbum,
+                    s32  directio,
+                Piscina* piscina)
+{
+    ContextusCycli* cc;
+
+    cc = (ContextusCycli*)piscina_allocare(piscina,
+        magnitudo(ContextusCycli));
+    si (!cc)
+    {
+        redde FALSUM;
+    }
+    cc->vicus     = v;
+    cc->directio  = directio;
+    cc->verbum    = verbum;
+    redde iussum_registrare(r, verbum, FALSUM, cyclus_iussum, cc);
 }
 
 /* terminale (vicus-latera S1c): concha nova in omni apertura (decisio
@@ -500,6 +720,7 @@ vicus_applicatio_aedificare (
 {
               chorda  causa;
     ContextusScribae* cs;
+   ContextusPictoris* cp;
 
     si (!app || !piscina || !intern || !volumen)
     {
@@ -514,6 +735,13 @@ vicus_applicatio_aedificare (
     /* S2b: liber paginarum UNUS pro omnibus visibus scribae; paginae
      * novae magnitudine lateris (dimidium cellulis rotundatum, minus
      * margines et status - ut folium S2c) */
+    /* S3e: memoria picturarum communis */
+    cp = (ContextusPictoris*)piscina_allocare(piscina,
+        magnitudo(ContextusPictoris));
+    si (cp)
+    {
+        cp->documenta = tabula_dispersa_creare_chorda(piscina, XVI);
+    }
     cs = (ContextusScribae*)piscina_allocare(piscina,
         magnitudo(ContextusScribae));
     cs->liber = scriba_liber_aperire(piscina, intern, volumen,
@@ -529,12 +757,16 @@ vicus_applicatio_aedificare (
                piscina)
         || !aperiens_registrare(cs->iussa, app->vicus, "pictor",
                piscina)
+        || !cyclum_registrare(cs->iussa, app->vicus, "pictor-next", I,
+               piscina)
+        || !cyclum_registrare(cs->iussa, app->vicus, "pictor-prev", -I,
+               piscina)
         || !vicus_genus_addere(app->vicus, "scriba",
                magnitudo(ScribaMontatio), scribam_montare,
                scribam_describere, cs)
         || !vicus_genus_addere(app->vicus, "pictor",
                magnitudo(PictorMontatio), pictorem_montare,
-               pictorem_describere, NIHIL)
+               pictorem_describere, cp)
         || !vicus_genus_addere(app->vicus, "terminale",
                magnitudo(TerminaleApplicatio),
                terminale_montare_in_vico, terminale_describere, NIHIL)

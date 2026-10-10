@@ -3,12 +3,12 @@
  * Applicatio pictoris vera (radix, spatium ""), volumen temporarium;
  * pictura altera "b" (C x LX) documento directo; plagula
  * "c/documentum" originis alienae (scriba: dimensiones quoque habet,
- * aperiri posset). I: pictor_documenta_enumerare - "b" et "" (ordine
- * viae), "c" non. II: pictor_picturam_ponere "b" - documentum, contextus
- * actionum et figurarum, dimensiones durabiles, tabula composita. III:
- * ictus in "b" scribitur, radix intacta. IV: memoria - redire et
- * iterum: documenta eadem. V: spatium sine pictura: FALSUM, nihil
- * mutatum. */
+ * aperiri posset). I: pictor_documenta_enumerare - "b" et ""
+ * (ordine viae), "c" non. II: pictor_picturam_ponere "b" -
+ * documentum, contextus actionum et figurarum, dimensiones durabiles,
+ * tabula composita. III: ictus in "b" scribitur, radix intacta. IV:
+ * memoria - redire et iterum: documenta eadem. V: spatium sine
+ * pictura: FALSUM, nihil mutatum. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -76,7 +76,12 @@ s32 principale (vacuum)
     radix  = app.montatio.doc;
     b      = pictor_documentum_creare(piscina, intern, vol, "b", C, LX,
         LXIV);
-    CREDO_NECESSE_NON_NIHIL(b);
+    CREDO_NON_NIHIL(b);
+    si (!b)
+    {
+        credo_imprimere_compendium();
+        redde I;
+    }
     (vacuum)pictor_documentum_actum(b, chorda_ex_literis(
         "<ictus instrumentum=\"penicillus\" color=\"0\""
         " magnitudo=\"1\"><punctum x=\"1\" y=\"1\"/></ictus>",
@@ -91,9 +96,9 @@ s32 principale (vacuum)
         Xar* l;
 
         l = pictor_documenta_enumerare(vol, piscina);
-        CREDO_NECESSE_NON_NIHIL(l);
-        CREDO_AEQUALIS_I32(xar_numerus(l), II);
-        si (xar_numerus(l) == II)
+        CREDO_NON_NIHIL(l);
+        CREDO_VERUM(l && xar_numerus(l) == II);
+        si (l && xar_numerus(l) == II)
         {
             CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(l,
                 ZEPHYRUM), "b");
