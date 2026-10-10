@@ -9,7 +9,13 @@
  * H1-H2) idem textus OCTETIS IISDEM exire debet.
  *
  * PICTOR_DOCUMENTUM_AURUM_SCRIBERE=1 aurum scribit (solum ante
- * sectionem, aut mutatione formae voluminis NOMINATA). */
+ * sectionem, aut mutatione formae voluminis NOMINATA).
+ *
+ * pictor-strata L2 (mutatio formae NOMINATA): checkpoints codificati,
+ * sigillum status stratorum - aurum repromotum. Aurum VETUS congelatum
+ * (fixa/pictor_documentum/aurum_ante_strata.txt): sigillum COMPOSITI
+ * omnis gradus = sigillum vetus eius gradus - picturae ante strata
+ * pixelis iisdem redduntur. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -27,6 +33,50 @@
 #include <string.h>
 
 #define AURUM_VIA "probationes/fixa/pictor_documentum/aurum.txt"
+#define AURUM_ANTE_STRATA \
+    "probationes/fixa/pictor_documentum/aurum_ante_strata.txt"
+
+hic_manens Piscina* piscina_aurei;
+
+/* sigillum gradus in auro vetere ("gradus <g>" ... "  sigillum <h>") */
+interior chorda
+sigillum_vetus (
+    constans character* gradus)
+{
+      FILE* f;
+ character  linea[CCLVI];
+ character  quaesitum[CXXVIII];
+       b32  in_gradu;
+       i32  n;
+
+    sprintf(quaesitum, "gradus %s\n", gradus);
+    in_gradu  = FALSUM;
+    f         = lectiones_fopen(AURUM_ANTE_STRATA, "rb");
+    si (!f)
+    {
+        redde chorda_ex_literis("", piscina_aurei);
+    }
+    dum (fgets(linea, (integer)magnitudo(linea), f))
+    {
+        si (strcmp(linea, quaesitum) == ZEPHYRUM)
+        {
+            in_gradu = VERUM;
+            perge;
+        }
+        si (in_gradu && strncmp(linea, "  sigillum ", XI) == ZEPHYRUM)
+        {
+            fclose(f);
+            n = (i32)strlen(linea + XI);
+            si (n > ZEPHYRUM && linea[XI + n - I] == '\n')
+            {
+                linea[XI + n - I] = '\0';
+            }
+            redde chorda_ex_literis(linea + XI, piscina_aurei);
+        }
+    }
+    fclose(f);
+    redde chorda_ex_literis("", piscina_aurei);
+}
 
 /* ictus unus: linea horizontalis (x0..x1, y) magnitudine I */
 interior chorda
@@ -79,6 +129,14 @@ status_effundere (
     chorda_aedificator_appendere_chorda(a,
         pictor_documentum_sigillum_hex(doc, p));
     chorda_aedificator_appendere_character(a, '\n');
+    chorda_aedificator_appendere_literis(a, "  compositum ");
+    chorda_aedificator_appendere_chorda(a,
+        pictor_documentum_sigillum_compositi_hex(doc, p));
+    chorda_aedificator_appendere_character(a, '\n');
+    /* pixela visa = picturae veteris (aurum ante strata) */
+    imprimere("  gradus %s: compositum = sigillum vetus\n", gradus);
+    CREDO_CHORDA_AEQUALIS(pictor_documentum_sigillum_compositi_hex(doc,
+        p), sigillum_vetus(gradus));
 }
 
 /* volumen totum: acta (sine momento), plagulae cum contento */
@@ -172,7 +230,8 @@ s32 principale (vacuum)
     { imprimere("FRACTA: piscina\n"); redde I;
     }
     credo_aperire(piscina);
-    intern = internamentum_creare(piscina);
+    piscina_aurei  = piscina;
+    intern         = internamentum_creare(piscina);
     thema_initiare();
     a = chorda_aedificator_creare(piscina, (memoriae_index)(LXIV * M));
 

@@ -288,3 +288,31 @@ Fran's plan: the eraser paints the canvas background. Named `spongia`
   option of each to pin them).
 - First draft of section IX never held the spray still, so dwell
   scaling was unpinned; added an 80 ms hold (plant B7).
+
+## 2026-10-09 - pictor-strata L2: layered document
+
+Plan: project-specs/pictor-strata-plan.md. Grammar in the header.
+- Layers live in PictorDocumentum.strata[16] (bottom first). Buffers
+  are never freed (arena): slots beyond numerus_stratorum keep spare
+  buffers - delete moves the deleted buffer there, add reuses it.
+- Strokes paint into their layer by pointing doc->tabula at the layer
+  buffer around ictum_pingere (every rasteriser reads doc->tabula);
+  doc->tabula is the COMPOSITE the rest of the app and every test
+  reads. The eraser now writes alpha 0 (transparent) on its layer.
+- Compositing runs inside the history's sigillare hook - historia calls
+  it exactly when the state settles (after an action, after a replay,
+  after vacare), so there is no "remember to composite" call site.
+- Old drawings: the old raw checkpoint fails decodificare (no
+  "STRATA1 " magic) -> replay. Evidence they look identical: the
+  golden test now asserts, at every step, that the COMPOSITE's raw
+  hash equals the old seal recorded in the frozen
+  probationes/fixa/pictor_documentum/aurum_ante_strata.txt (7/7). The
+  byte golden aurum.txt was re-promoted (named format change): only
+  seals and checkpoint hashes changed, plus the new "compositum" lines.
+- Measured (test build, 468x440, 8 layers): ~29 ms per stroke commit
+  (paid on mouse-up), ~43 ms to reopen from an encoded checkpoint.
+  Mostly SHA-256 over every layer per stroke; follow-up = per-layer
+  cached seals, re-hash only the touched layer (needs PictorStratum
+  fields -> header approval).
+- Bench gotcha: a fortify trap (EXC_BREAKPOINT in __chk_fail_overflow)
+  was my bench's own sprintf into a 128-byte buffer, not L2.

@@ -107,10 +107,11 @@ Press a row, drag, release over a position; one reorder entry.
 
 ## IV. AUDIENDA (not yet verified)
 
-- Cost of the seal over N raw layers per stroke (today: one ~0.8 MB
-  buffer). To be measured in L2 before committing to "seal = raw
-  layers"; a fallback is sealing only the layers the action touched
-  plus the table.
+- ~~Cost of the seal over N raw layers per stroke~~ MEASURED in L2
+  (2026-10-09, test build, 468x440, 8 layers): ~29 ms per stroke
+  commit, ~43 ms reopen from an encoded checkpoint. Acceptable (paid on
+  mouse-up); follow-up: cache a seal per layer and re-hash only the
+  layer an action touched (adds PictorStratum fields).
 - Whether `volumen` massae deduplicate identical checkpoint encodings
   (they are content-addressed - expected yes, unmeasured here).
 - Memory: every drawing a pane has shown stays cached (vicus S3e); with

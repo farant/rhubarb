@@ -2,45 +2,52 @@ gradus creatum
   cursor 0
   finis 0
   vivi 0
-  sigillum 1bc066d97e0e90c9b81eec627ace72e83a02bb2302f64aa9ece6233281d59884
+  sigillum 6ba6fe04e972390f4fe81c4d43cbe4474ac744feadf533d2cfbf0111346fa14c
+  compositum 1bc066d97e0e90c9b81eec627ace72e83a02bb2302f64aa9ece6233281d59884
 gradus quinque_ictus
   cursor 9
   finis 9
   vivi 5
-  sigillum f51061eafff6983ce1275aee0a6ff98ce699a1a29fb9d7e8901b17ad3a22fdac
+  sigillum 7097bebb591b135132c3ad0c3a2b3ecd776bb54bc55028302dc7359f43cb2b34
+  compositum f51061eafff6983ce1275aee0a6ff98ce699a1a29fb9d7e8901b17ad3a22fdac
 gradus revocata_tria
   cursor 4
   finis 9
   vivi 2
-  sigillum 6aeea5ff55a84c7fa25b3a7f655e2151edc6cddd181346c44e55f7aab4f0a177
+  sigillum 58863a2fe01f33d80c7916e90c4e52850f9c559779f3418e0aa77990edeabee7
+  compositum 6aeea5ff55a84c7fa25b3a7f655e2151edc6cddd181346c44e55f7aab4f0a177
 gradus ramus_duo_ictus
   cursor 15
   finis 15
   vivi 4
-  sigillum 0e477ddeeab6e4364197bede75e712c311a4c11bfed5353a032d441600fed3a4
+  sigillum edc9711ed4a9e906513cf4c213978fd30cfbd143bc0cfde8b0cb4bb17d0d6666
+  compositum 0e477ddeeab6e4364197bede75e712c311a4c11bfed5353a032d441600fed3a4
 gradus revocatum_post_ramum
   cursor 14
   finis 15
   vivi 3
-  sigillum 5cba94754ddd98108edae8345cf8f38d710d74a5a6fbc447a64e952b31df28e0
+  sigillum b4e6591a99b5d2da640a1b96f454c07311ee0355d638ef969e4f9d6450449196
+  compositum 5cba94754ddd98108edae8345cf8f38d710d74a5a6fbc447a64e952b31df28e0
 gradus refectum
   cursor 15
   finis 15
   vivi 4
-  sigillum 0e477ddeeab6e4364197bede75e712c311a4c11bfed5353a032d441600fed3a4
+  sigillum edc9711ed4a9e906513cf4c213978fd30cfbd143bc0cfde8b0cb4bb17d0d6666
+  compositum 0e477ddeeab6e4364197bede75e712c311a4c11bfed5353a032d441600fed3a4
 gradus apertum
   cursor 15
   finis 15
   vivi 4
-  sigillum 0e477ddeeab6e4364197bede75e712c311a4c11bfed5353a032d441600fed3a4
+  sigillum edc9711ed4a9e906513cf4c213978fd30cfbd143bc0cfde8b0cb4bb17d0d6666
+  compositum 0e477ddeeab6e4364197bede75e712c311a4c11bfed5353a032d441600fed3a4
 actum 1 volumen-creatum {"versio":1}
 actum 2 plagula-condita {"via":"documentum","sigillum":"81c47fa5e553ed73e05776d419226e799452e17ecd3174f04faed684fc8bca61","origo":"pictor:documentum"}
 actum 3 ictus <ictus instrumentum="penicillus" color="0" magnitudo="1"><punctum x="0" y="2"/><punctum x="31" y="2"/></ictus>
 actum 4 ictus <ictus instrumentum="penicillus" color="0" magnitudo="1"><punctum x="0" y="5"/><punctum x="31" y="5"/></ictus>
-actum 5 plagula-condita {"via":"checkpoint/4","sigillum":"12b5546d1b9c8a8f8fb20b1f63025cf6b2249ffa1098dc7f1d7e83c45ec3639e","origo":"pictor:checkpoint"}
+actum 5 plagula-condita {"via":"checkpoint/4","sigillum":"19f68dcc68db4c25263bb5d308bf2018e997511b3994e0c1d61d3537aa6c6764","origo":"pictor:checkpoint"}
 actum 6 ictus <ictus instrumentum="penicillus" color="0" magnitudo="1"><punctum x="0" y="8"/><punctum x="31" y="8"/></ictus>
 actum 7 ictus <ictus instrumentum="penicillus" color="0" magnitudo="1"><punctum x="0" y="11"/><punctum x="31" y="11"/></ictus>
-actum 8 plagula-condita {"via":"checkpoint/7","sigillum":"1752f9b3bc345a45eb02fcb48d0b912e0e1cc296570b966962730167bfbfa752","origo":"pictor:checkpoint"}
+actum 8 plagula-condita {"via":"checkpoint/7","sigillum":"ba9621ffda6c02fde4362525a59fd3c6c8d43a98df3d01778b13998c62e9f693","origo":"pictor:checkpoint"}
 actum 9 ictus <ictus instrumentum="penicillus" color="0" magnitudo="1"><punctum x="0" y="14"/><punctum x="31" y="14"/></ictus>
 actum 10 cursor <cursor ad="7"/>
 actum 11 cursor <cursor ad="6"/>
@@ -48,15 +55,15 @@ actum 12 cursor <cursor ad="4"/>
 actum 13 ramus <ramus ab="4"/>
 actum 14 ictus <ictus instrumentum="penicillus" color="0" magnitudo="1"><punctum x="0" y="3"/><punctum x="31" y="3"/></ictus>
 actum 15 ictus <ictus instrumentum="penicillus" color="0" magnitudo="1"><punctum x="0" y="4"/><punctum x="31" y="4"/></ictus>
-actum 16 plagula-condita {"via":"checkpoint/15","sigillum":"c2cdc663e32cc61ef9cbb09e4d3bf58f6d032638377ef0a42091235f856cc6e0","origo":"pictor:checkpoint"}
+actum 16 plagula-condita {"via":"checkpoint/15","sigillum":"1939d1f06de32ca7282e29866c943dc1bf1bd66bbfd7a57cacae9a1d40ece0fb","origo":"pictor:checkpoint"}
 actum 17 cursor <cursor ad="14"/>
 actum 18 cursor <cursor ad="15"/>
-plagula checkpoint/15 pictor:checkpoint c2cdc663e32cc61ef9cbb09e4d3bf58f6d032638377ef0a42091235f856cc6e0
-  contentum 0e477ddeeab6e4364197bede75e712c311a4c11bfed5353a032d441600fed3a4
-plagula checkpoint/4 pictor:checkpoint 12b5546d1b9c8a8f8fb20b1f63025cf6b2249ffa1098dc7f1d7e83c45ec3639e
-  contentum 6aeea5ff55a84c7fa25b3a7f655e2151edc6cddd181346c44e55f7aab4f0a177
-plagula checkpoint/7 pictor:checkpoint 1752f9b3bc345a45eb02fcb48d0b912e0e1cc296570b966962730167bfbfa752
-  contentum 9ec54c1b46253f5ba0f701b379e8a5fd96c61c1e7ba584116ac372acec034940
+plagula checkpoint/15 pictor:checkpoint 1939d1f06de32ca7282e29866c943dc1bf1bd66bbfd7a57cacae9a1d40ece0fb
+  contentum ed4b761598362c66f8879188f429494ebc39268f3bf71ce8d00c21c5157c4cf9
+plagula checkpoint/4 pictor:checkpoint 19f68dcc68db4c25263bb5d308bf2018e997511b3994e0c1d61d3537aa6c6764
+  contentum 37b8c12616b3a1282829cda749000ff3506956ef0dba102ab66a81374bc59a7e
+plagula checkpoint/7 pictor:checkpoint ba9621ffda6c02fde4362525a59fd3c6c8d43a98df3d01778b13998c62e9f693
+  contentum 071a91627f72535252f8e57dd0cc8c8ab65c3751ed8a141566211307f6558aad
 plagula documentum pictor:documentum 81c47fa5e553ed73e05776d419226e799452e17ecd3174f04faed684fc8bca61
   contentum <documentum latitudo="32" altitudo="16" intervallum="2"/>
 summa_actorum 18

@@ -10,7 +10,10 @@
 #include "color.h"
 #include "stml.h"
 #include "xar.h"
+#include "flatura.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -41,20 +44,6 @@ attributum_s32 (
         redde v;
     }
     redde praestitutum;
-}
-
-/* vacatio: color fundi thematis (Franus 2026-10-09: ut scriba et
- * terminale; olim PALETTE_WHITE, in themate flavum clarum) - fundus
- * non in actis: picturae omnes novo fundo reddi */
-interior vacuum
-vacare_fundo (
-    PictorDocumentum* doc)
-{
-    /* color semanticus ipse (thema_color), non index: colores ictuum
-     * palettam COLORATIONIS legunt, semantici palettam aliam - index
-     * fundi in coloratione colorem atramenti dabat */
-    tabula_pixelorum_vacare(doc->tabula, color_ad_pixelum(
-        thema_color(COLOR_BACKGROUND)));
 }
 
 
@@ -488,10 +477,12 @@ spongiam_applicare (
 {
     Impressio g;
 
-    g.doc        = doc;
-    g.ctx        = NIHIL;
-    g.color      = thema_color(COLOR_BACKGROUND);
-    g.pixelum    = color_ad_pixelum(g.color);
+    g.doc    = doc;
+    g.ctx    = NIHIL;
+    g.color  = thema_color(COLOR_BACKGROUND);
+    /* L2: stratum suum ad perspicuum (alpha 0) - olim color fundi in
+     * tabula unica */
+    g.pixelum    = ZEPHYRUM;
     g.n          = PICTOR_SPONGIAE_LATUS * magnitudo_penicilli;
     g.quadratum  = VERUM;
     verrere(doc, ictus, &g);
@@ -519,9 +510,10 @@ penicillum_pingere (
 }
 
 /* <ictus instrumentum color magnitudo [color_secundus] [exemplar]>
- * <punctum x y/>...</ictus> */
+ * <punctum x y/>...</ictus> - in tabulam doc->tabula (stratum, per
+ * ictum_applicare) */
 interior vacuum
-ictum_applicare (
+ictum_pingere (
     PictorDocumentum* doc,
            StmlNodus* ictus)
 {
@@ -596,6 +588,236 @@ ictum_applicare (
     delineare_restituere_contextum(ctx);
 }
 
+
+/* ==================================================
+ * Strata (pictor-strata L2)
+ * ================================================== */
+
+/* index strati per id; -1 si abest */
+interior s32
+strati_index (
+    constans PictorDocumentum* doc,
+                          s32  id)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < doc->numerus_stratorum; k++)
+    {
+        si (doc->strata[k].id == id)
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+/* tabula loci k: reservata (stratum deletum) aut nova; perspicua */
+interior TabulaPixelorum*
+strati_tabula (
+    PictorDocumentum* doc,
+                 i32  k)
+{
+    si (!doc->strata[k].pixela)
+    {
+        doc->strata[k].pixela =
+            tabula_pixelorum_creare_nuda(doc->piscina,
+            doc->latitudo, doc->altitudo);
+    }
+    si (doc->strata[k].pixela)
+    {
+        tabula_pixelorum_vacare(doc->strata[k].pixela, ZEPHYRUM);
+    }
+    redde doc->strata[k].pixela;
+}
+
+/* status ante actum primum: stratum unum (id I) perspicuum; tabulae
+ * locorum ceterorum reservantur */
+interior vacuum
+strata_vacare (
+    PictorDocumentum* doc)
+{
+    doc->numerus_stratorum          = I;
+    doc->strata[ZEPHYRUM].id        = I;
+    doc->strata[ZEPHYRUM].visibile  = VERUM;
+    (vacuum)strati_tabula(doc, ZEPHYRUM);
+}
+
+/* compositum: color fundi, deinde strata visibilia ab imo (alpha 0 =
+ * perspicuum). Fundus = color SEMANTICUS thematis (thema_color), non
+ * index colorationis (Franus 2026-10-09: ut scriba et terminale; olim
+ * PALETTE_WHITE, flavum clarum) - in actis non est: picturae omnes
+ * fundo hodierno redduntur */
+interior vacuum
+componere (
+    PictorDocumentum* doc)
+{
+    i32* c;
+    i32* s;
+    i32  n;
+    i32  i;
+    i32  k;
+
+    tabula_pixelorum_vacare(doc->tabula, color_ad_pixelum(
+        thema_color(COLOR_BACKGROUND)));
+    c = doc->tabula->pixela;
+    n = doc->latitudo * doc->altitudo;
+    per (k = ZEPHYRUM; k < doc->numerus_stratorum; k++)
+    {
+        si (!doc->strata[k].visibile || !doc->strata[k].pixela)
+        {
+            perge;
+        }
+        s = doc->strata[k].pixela->pixela;
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            si ((s[i] >> XXIV) != ZEPHYRUM)
+            {
+                c[i] = s[i];
+            }
+        }
+    }
+}
+
+/* ictus in strato suo ("stratum", absens = I; stratum ignotum: nihil):
+ * tabula doc->tabula ad stratum dum pingitur (rasteres omnes eam
+ * legunt), deinde compositum restituitur */
+interior vacuum
+ictum_applicare (
+    PictorDocumentum* doc,
+           StmlNodus* ictus)
+{
+     TabulaPixelorum* compositum;
+                 s32  index;
+
+    index = strati_index(doc, attributum_s32(ictus, "stratum", I));
+    si (index < ZEPHYRUM || !doc->strata[index].pixela)
+    {
+        redde;
+    }
+    compositum   = doc->tabula;
+    doc->tabula  = doc->strata[index].pixela;
+    ictum_pingere(doc, ictus);
+    doc->tabula  = compositum;
+}
+
+/* <stratum actio=.../> (vide caput) */
+interior vacuum
+stratum_applicare (
+    PictorDocumentum* doc,
+           StmlNodus* n)
+{
+             chorda* actio;
+             chorda* ids;
+                s32  id;
+                s32  index;
+                s32  supra;
+                i32  k;
+      PictorStratum  stratum;
+    TabulaPixelorum* reservata;
+
+    actio  = stml_attributum_capere(n, "actio");
+    id     = attributum_s32(n, "id", ZEPHYRUM);
+    si (!actio)
+    {
+        redde;
+    }
+    index = strati_index(doc, id);
+    si (chorda_aequalis_literis(*actio, "novum"))
+    {
+        si (   id < I || index >= ZEPHYRUM
+            || doc->numerus_stratorum >= (i32)PICTOR_STRATA_MAXIMA)
+        {
+            redde;
+        }
+        supra = strati_index(doc, attributum_s32(n, "supra", ZEPHYRUM));
+        supra = supra < ZEPHYRUM ? (s32)doc->numerus_stratorum - I
+                                 : supra;
+        /* tabula reservata loci numerus (si qua) stratum novum fit */
+        reservata = doc->strata[doc->numerus_stratorum].pixela;
+        per (k = doc->numerus_stratorum; k > (i32)(supra + I); k--)
+        {
+            doc->strata[k] = doc->strata[k - I];
+        }
+        doc->strata[supra + I].id        = id;
+        doc->strata[supra + I].visibile  = VERUM;
+        doc->strata[supra + I].pixela    = reservata;
+        doc->numerus_stratorum++;
+        (vacuum)strati_tabula(doc, (i32)(supra + I));
+        redde;
+    }
+    si (chorda_aequalis_literis(*actio, "deletum"))
+    {
+        si (index < ZEPHYRUM || doc->numerus_stratorum <= I)
+        {
+            redde;
+        }
+        reservata = doc->strata[index].pixela;
+        per (k = (i32)index; k + I < doc->numerus_stratorum; k++)
+        {
+            doc->strata[k] = doc->strata[k + I];
+        }
+        doc->numerus_stratorum--;
+        doc->strata[doc->numerus_stratorum].id        = ZEPHYRUM;
+        doc->strata[doc->numerus_stratorum].visibile  = FALSUM;
+        doc->strata[doc->numerus_stratorum].pixela    = reservata;
+        redde;
+    }
+    si (chorda_aequalis_literis(*actio, "visibile"))
+    {
+        si (index >= ZEPHYRUM)
+        {
+            doc->strata[index].visibile =
+                attributum_s32(n, "valor", I) != ZEPHYRUM;
+        }
+        redde;
+    }
+    si (chorda_aequalis_literis(*actio, "ordo"))
+    {
+        PictorStratum  ordo[PICTOR_STRATA_MAXIMA];
+                  b32  usus[PICTOR_STRATA_MAXIMA];
+            character* s;
+            character* finis;
+                 long  v;
+                  i32  numerus;
+
+        ids = stml_attributum_capere(n, "ids");
+        si (!ids)
+        {
+            redde;
+        }
+        memset(usus, ZEPHYRUM, magnitudo(usus));
+        s        = chorda_ut_cstr(*ids, doc->piscina);
+        numerus  = ZEPHYRUM;
+        dum (*s)
+        {
+            v = strtol(s, &finis, X);
+            si (finis == s)
+            {
+                frange;
+            }
+            s      = finis;
+            index  = strati_index(doc, (s32)v);
+            si (   index < ZEPHYRUM || usus[index]
+                || numerus >= doc->numerus_stratorum)
+            {
+                redde;
+            }
+            usus[index]    = VERUM;
+            ordo[numerus]  = doc->strata[index];
+            numerus++;
+        }
+        si (numerus != doc->numerus_stratorum)
+        {
+            redde;
+        }
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            stratum         = ordo[k];
+            doc->strata[k]  = stratum;
+        }
+    }
+}
+
 interior vacuum
 actum_applicare (
     PictorDocumentum* doc,
@@ -613,15 +835,218 @@ actum_applicare (
     {
         ictum_applicare(doc, res.elementum_radix);
     }
+    alioquin si (chorda_aequalis_literis(*res.elementum_radix->titulus,
+                 "stratum"))
+    {
+        stratum_applicare(doc, res.elementum_radix);
+    }
     /* ramus: nihil pingit; cetera v1 ignorata (worklog) */
 }
 
-/* proiectio pro historia: memoria = pixela tabulae */
+/* proiectio pro historia (L2): strata; compositum in sigillare
+ * (historia id vocat cum status constat - post actum, reproiectionem,
+ * vacationem) */
 interior vacuum
 proiectio_vacare (
     vacuum* ctx)
 {
-    vacare_fundo((PictorDocumentum*)ctx);
+    strata_vacare((PictorDocumentum*)ctx);
+}
+
+/* status crudus canonicus: numerus, (id, visibile) per stratum, pixela
+ * stratorum; compositum renovatur */
+interior vacuum
+proiectio_sigillare (
+      vacuum* ctx,
+    Sigillum* exitus)
+{
+     PictorDocumentum* doc;
+    SigillumContextus  sc;
+                  i32  k;
+                  s32  caput[II];
+
+    doc = (PictorDocumentum*)ctx;
+    componere(doc);
+    sigillum_incipere(&sc);
+    sigillum_addere(&sc, &doc->numerus_stratorum,
+        magnitudo(doc->numerus_stratorum));
+    per (k = ZEPHYRUM; k < doc->numerus_stratorum; k++)
+    {
+        caput[ZEPHYRUM]  = doc->strata[k].id;
+        caput[I]         = doc->strata[k].visibile ? I : ZEPHYRUM;
+        sigillum_addere(&sc, caput, magnitudo(caput));
+        si (doc->strata[k].pixela)
+        {
+            sigillum_addere(&sc, doc->strata[k].pixela->pixela,
+                mensura_pixelorum(doc));
+        }
+    }
+    *exitus = sigillum_finire(&sc);
+}
+
+/* checkpoint: "STRATA1 <n> <id>:<visibile>...\n" deinde per stratum
+ * longitudo (IV octeti, maior primus) et pixela deflata */
+interior chorda
+proiectio_codificare (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+      PictorDocumentum* doc;
+        FlaturaFructus  fructus[PICTOR_STRATA_MAXIMA];
+                chorda  caput;
+                chorda  codex;
+             character  par[XXIV];
+                   i32  k;
+                   i32  mensura;
+                   i32  locus;
+
+    doc            = (PictorDocumentum*)ctx;
+    codex.datum    = NIHIL;
+    codex.mensura  = ZEPHYRUM;
+    sprintf(par, "STRATA1 %d", (integer)doc->numerus_stratorum);
+    caput = chorda_ex_literis(par, piscina);
+    per (k = ZEPHYRUM; k < doc->numerus_stratorum; k++)
+    {
+        sprintf(par, " %d:%d", (integer)doc->strata[k].id,
+            doc->strata[k].visibile ? I : ZEPHYRUM);
+        caput = chorda_concatenare(caput, chorda_ex_literis(par,
+            piscina),
+            piscina);
+    }
+    caput = chorda_concatenare(caput, chorda_ex_literis("\n", piscina),
+        piscina);
+    mensura = caput.mensura;
+    per (k = ZEPHYRUM; k < doc->numerus_stratorum; k++)
+    {
+        si (!doc->strata[k].pixela)
+        {
+            redde codex;
+        }
+        fructus[k] = flatura_deflare((constans i8*)doc->strata[k].pixela
+            ->pixela, (i32)mensura_pixelorum(doc),
+            FLATURA_COMPRESSIO_RAPIDA, piscina);
+        si (fructus[k].status != FLATURA_STATUS_OK)
+        {
+            redde codex;
+        }
+        mensura += IV + fructus[k].mensura;
+    }
+    codex.datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura);
+    si (!codex.datum)
+    {
+        redde codex;
+    }
+    memcpy(codex.datum, caput.datum, (size_t)caput.mensura);
+    locus = caput.mensura;
+    per (k = ZEPHYRUM; k < doc->numerus_stratorum; k++)
+    {
+        codex.datum[locus]        = (i8)(fructus[k].mensura >> XXIV);
+        codex.datum[locus + I]    = (i8)(fructus[k].mensura >> XVI);
+        codex.datum[locus + II]   = (i8)(fructus[k].mensura >> VIII);
+        codex.datum[locus + III]  = (i8)fructus[k].mensura;
+        locus                     += IV;
+        memcpy(codex.datum + locus, fructus[k].datum,
+            (size_t)fructus[k].mensura);
+        locus += fructus[k].mensura;
+    }
+    codex.mensura = mensura;
+    redde codex;
+}
+
+/* restitutio; FALSUM (forma vetus - massa cruda - aut corrupta):
+ * historia reproicit ex nihilo */
+interior b32
+proiectio_decodificare (
+    vacuum* ctx,
+    chorda  codex)
+{
+     PictorDocumentum* doc;
+       FlaturaFructus  fructus;
+                  i32  locus;
+                  i32  finis_capitis;
+                  i32  numerus;
+                  i32  k;
+                  i32  longitudo;
+            character  caput[CCLVI];
+            character* s;
+            character* post;
+                 long  v;
+                 long  vis;
+
+    doc = (PictorDocumentum*)ctx;
+    si (   codex.mensura < VIII
+        || memcmp(codex.datum, "STRATA1 ", VIII) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    finis_capitis = ZEPHYRUM;
+    dum (   finis_capitis < codex.mensura && finis_capitis < CCLV
+         && codex.datum[finis_capitis] != '\n')
+    {
+        finis_capitis++;
+    }
+    si (finis_capitis >= codex.mensura || finis_capitis >= CCLV)
+    {
+        redde FALSUM;
+    }
+    memcpy(caput, codex.datum, (size_t)finis_capitis);
+    caput[finis_capitis]  = '\0';
+    s                     = caput + VIII;
+    v                     = strtol(s, &post, X);
+    si (post == s || v < I || v > (long)PICTOR_STRATA_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    numerus  = (i32)v;
+    s        = post;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        v = strtol(s, &post, X);
+        si (post == s || *post != ':')
+        {
+            redde FALSUM;
+        }
+        s    = post + I;
+        vis  = strtol(s, &post, X);
+        si (post == s)
+        {
+            redde FALSUM;
+        }
+        s                        = post;
+        doc->strata[k].id        = (s32)v;
+        doc->strata[k].visibile  = vis != ZEPHYRUM;
+    }
+    locus = finis_capitis + I;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (locus + IV > codex.mensura)
+        {
+            redde FALSUM;
+        }
+        longitudo = ((i32)(i8)codex.datum[locus] << XXIV)
+                  | ((i32)(i8)codex.datum[locus + I] << XVI)
+                  | ((i32)(i8)codex.datum[locus + II] << VIII)
+                  | (i32)(i8)codex.datum[locus + III];
+        locus += IV;
+        si (longitudo > codex.mensura - locus)
+        {
+            redde FALSUM;
+        }
+        fructus = flatura_inflare(codex.datum + locus, longitudo,
+            doc->piscina);
+        si (   fructus.status                  != FLATURA_STATUS_OK
+            || (memoriae_index)fructus.mensura != mensura_pixelorum(doc)
+            || !strati_tabula(doc, k))
+        {
+            redde FALSUM;
+        }
+        memcpy(doc->strata[k].pixela->pixela, fructus.datum,
+            mensura_pixelorum(doc));
+        locus += longitudo;
+    }
+    doc->numerus_stratorum = numerus;
+    redde VERUM;
 }
 
 interior vacuum
@@ -638,13 +1063,16 @@ proiectio_facere (
 {
     HistoriaProiectio p;
 
-    /* hami codicis (L1) nulli: memoria cruda */
+    /* L2: cliens codex (historia L1) - strata, non memoria fixa */
     memset(&p, ZEPHYRUM, magnitudo(p));
-    p.memoria    = (i8*)doc->tabula->pixela;
-    p.mensura    = mensura_pixelorum(doc);
-    p.vacare     = proiectio_vacare;
-    p.applicare  = proiectio_applicare;
-    p.ctx        = doc;
+    p.memoria       = NIHIL;
+    p.mensura       = ZEPHYRUM;
+    p.vacare        = proiectio_vacare;
+    p.applicare     = proiectio_applicare;
+    p.ctx           = doc;
+    p.sigillare     = proiectio_sigillare;
+    p.codificare    = proiectio_codificare;
+    p.decodificare  = proiectio_decodificare;
     redde p;
 }
 
@@ -932,6 +1360,42 @@ pictor_documentum_finis (
     constans PictorDocumentum* doc)
 {
     redde doc ? historia_finis(doc->historia) : ZEPHYRUM;
+}
+
+constans PictorStratum*
+pictor_documentum_stratum (
+    constans PictorDocumentum* doc,
+                          i32  index)
+{
+    si (!doc || index >= doc->numerus_stratorum)
+    {
+        redde NIHIL;
+    }
+    redde &doc->strata[index];
+}
+
+i32
+pictor_documentum_numerus_stratorum (
+    constans PictorDocumentum* doc)
+{
+    redde doc ? doc->numerus_stratorum : ZEPHYRUM;
+}
+
+chorda
+pictor_documentum_sigillum_compositi_hex (
+    constans PictorDocumentum* doc,
+                      Piscina* piscina)
+{
+     Sigillum s;
+    character hex[SIGILLUM_HEX_MENSURA];
+
+    si (!doc || !piscina)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    s = sigillum_computare(doc->tabula->pixela, mensura_pixelorum(doc));
+    sigillum_hex(&s, hex);
+    redde chorda_ex_literis(hex, piscina);
 }
 
 i32
