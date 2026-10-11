@@ -395,12 +395,14 @@ dispensator_ponere_strategiam (
  * Dispensatio
  * ================================================== */
 
-/* Ascensum ambulare: prima actio quae consumit sistit. */
+/* Ascensum ambulare: prima actio quae consumit sistit. S5c: *actor =
+ * componens cuius actio consumpsit (NIHIL si nulla) */
 interior b32
 mittere (
-            Dispensator* d,
-    constans Destinatio* des,
-       constans Eventus* e)
+            Dispensator*  d,
+    constans Destinatio*  des,
+       constans Eventus*  e,
+              Componens** actor)
 {
      Componens* c;
        ActioFn  fn;
@@ -409,6 +411,7 @@ mittere (
            i32  n;
            b32  consumptus;
 
+    *actor = NIHIL;
     si (!des->ascensus)
     {
         redde FALSUM;
@@ -432,6 +435,7 @@ mittere (
         insula_scriptorem_ponere(d->repo, chorda_nulla());
         si (consumptus)
         {
+            *actor = c;
             redde VERUM;
         }
     }
@@ -504,6 +508,7 @@ limen_transire (
      Destinatio  des;
         Eventus  e;
       Componens* c;
+      Componens* actor;
             i32  i;
             i32  n;
             Xar* praesentia;
@@ -532,7 +537,9 @@ limen_transire (
         e.genus   = x->genus;
         e.tempus  = x->tempus;
         des       = destinatio_ex_componente(c, d->scratch);
-        mittere(d, &des, &e);
+        /* derivata hamos medios non transeunt (dimissio = input
+         * crudum) */
+        (vacuum)mittere(d, &des, &e, &actor);
     }
     dispensator_recomponere(d);
 }
@@ -585,6 +592,7 @@ tractare_unum (
             chorda  spatium_super;
          Componens* radix;
          Componens* destinatum;
+         Componens* actor;
                b32  consumptus;
 
     nota = piscina_notare(d->scratch);
@@ -633,7 +641,20 @@ tractare_unum (
         focus = destinatum->id;
     }
 
-    consumptus = mittere(d, &des, e);
+    /* S5c: hami medii (dimissio) - ante actionem, post consumentem */
+    actor = NIHIL;
+    si (d->ante && d->ante(d->medium_ctx, d, &des, e))
+    {
+        consumptus = VERUM;
+    }
+    alioquin
+    {
+        consumptus = mittere(d, &des, e, &actor);
+        si (consumptus && actor && d->post)
+        {
+            d->post(d->medium_ctx, d, actor, e);
+        }
+    }
 
     /* Tab innatus per clavem LOGICAM (eventus A5): typus '\t' etiam
      * Ctrl+I fert. Shift = MOD_SHIFT (olim '& I' - qui bitus lateris
@@ -722,6 +743,22 @@ dispensator_notarium_ponere (
     {
         d->notata = notata;
     }
+}
+
+vacuum
+dispensator_medium_ponere (
+        Dispensator* d,
+    DispensatorAnte  ante,
+    DispensatorPost  post,
+             vacuum* ctx)
+{
+    si (!d)
+    {
+        redde;
+    }
+    d->ante        = ante;
+    d->post        = post;
+    d->medium_ctx  = ctx;
 }
 
 vacuum

@@ -64,7 +64,7 @@ widgets are migrated by hand.*
 - **S5b** DONE 2026-10-10 (lib/relatio.worklog.md). the REFERENCE system (historia observer + entity enumeration
   registered by the document library + repair as system 'relatio'): `referentia` + `orbatus` checked
   after every document act and undo; replaces `stratum_currens`.
-- **S5c** the POPOVER system: `aspectus="popover"` fields closed by the
+- **S5c** DONE 2026-10-10 (lib/dimissio.worklog.md; Esc yields to an in-flight gesture). the POPOVER system: `aspectus="popover"` fields closed by the
   dispatcher (Esc, outside click, any other act, another popover
   opening); pictor's seven `palettam_claudere` calls disappear.
   Second consumer: the calendar's day popups.
@@ -107,3 +107,18 @@ widgets are migrated by hand.*
   agenda pointer) needs its own declaration form (S6/S7).
 - Store-copy cost with nesting (S8).
 - Root element name of the manifest (`organum` is a placeholder).
+
+### Note (Fran, 2026-10-10): persistent STML trees as a library primitive
+
+The insula write gate copies the WHOLE store per write (serialize,
+re-parse, full canon, serialize again for rehydration - park 010:
+13.6 us at 2 tabs, 52.7 us at 11). The general fix belongs in the
+STML layer (or materia - check first), not in insula: a persistent
+tree with structural sharing (path copying; old root stays valid;
+"unchanged" = pointer identity, so owner checks, canon judging and the
+persistence system skip untouched subtrees). Real design problem:
+memory - arenas plus sharing; candidate = compaction at quiet (copy
+the live tree into a fresh arena). Read project-specs/stml-visio.md
+and check materia before designing. Timing: S8 (nesting grows the
+store; re-measure park 010). The one-island collapse makes it simpler
+(one tree, one path).

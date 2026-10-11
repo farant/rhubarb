@@ -113,6 +113,7 @@ declare -a RADIX_FONTES=(
     "organum_canon"
     "conservatio"      # status S3: systema persistentiae
     "relatio"          # status S5b: systema relationum
+    "dimissio"         # status S5c: systema dimissionis
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

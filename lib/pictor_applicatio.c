@@ -331,6 +331,13 @@ pictor_montare (
             "documentum", m->doc, m->doc->historia);
     }
 
+    /* S5c: dimissio - campi popover rami (palette) */
+    si (m->systemata.dimissio)
+    {
+        (vacuum)dimissio_ramum_addere(m->systemata.dimissio, &m->ramus,
+            organum);
+    }
+
     /* contextus et registra propria */
     m->actiones            = actio_registrum_creare(piscina, intern);
     m->actiones_ctx.doc    = m->doc;
@@ -513,6 +520,8 @@ pictor_applicatio_aedificare (
             volumen, app->repo);
         systemata.relatio     = relatio_creare(piscina, intern,
             app->repo);
+        systemata.dimissio    = dimissio_creare(piscina, intern,
+            app->repo);
     }
     si (   !app->repo
         || !pictor_montare(&app->montatio, piscina, intern, volumen,
@@ -526,5 +535,7 @@ pictor_applicatio_aedificare (
     app->d = dispensator_creare(piscina, intern, app->repo,
         app->montatio.actiones, pictor_componere,
         &app->montatio.compositio, CCC);
+    /* S5c: dimissio in via eventus */
+    dimissio_dispensatori_ligare(systemata.dimissio, app->d);
     redde app->d ? VERUM : FALSUM;
 }

@@ -28,6 +28,7 @@
 #include "pictor_figurae.h"
 #include "conservatio.h"
 #include "relatio.h"
+#include "dimissio.h"
 #include "tabula_dispersa.h"
 
 /* systemata status repositorii (status-plan S3-S5): NIHIL in campo =
@@ -35,6 +36,7 @@
 nomen structura {
     Conservatio* conservatio;
         Relatio* relatio;
+       Dimissio* dimissio;
 } StatusSystemata;
 
 /* MONTATIO (insula-rami-plan T1a): pictor in repositorio dato, ramo

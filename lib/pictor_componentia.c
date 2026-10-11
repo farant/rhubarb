@@ -284,6 +284,8 @@ palettam_componere (
             : !colores ? "instrumentum.eligere"
             : chorda_aequalis_literis(genus, "color_primus")
             ? "color_primus.ponere" : "color_secundus.ponere");
+        /* S5c: electio palettam claudit (dimissio post actionem) */
+        o->claudit = VERUM;
         componens_addere_liberum(palette, o);
     }
     redde palette;

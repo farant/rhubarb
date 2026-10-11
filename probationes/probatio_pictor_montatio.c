@@ -100,9 +100,13 @@ _probare_montationem (
         "focus=quadratum"));
     CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "dispensator",
         "focus=quadratum"));
-    /* aspectus popover: sine domino */
-    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "quilibet",
+    /* S5c: popover - dominus aperiens et systema dimissio soli */
+    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "quilibet",
         "palette=color_primus"));
+    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "palette.aperire",
+        "palette=color_primus"));
+    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "dimissio",
+        "palette=exemplar"));
     /* S5a: systema relatio referentiam scribit, nihil aliud */
     CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "relatio",
         "stratum_activum=9"));
@@ -175,7 +179,7 @@ _probare_conservationem (
     CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "color_primus.ponere",
         "color_primus=5"));
     CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "motus", "zoom=2"));
-    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "quilibet",
+    CREDO_VERUM(scribere(&prima, INSULA_EPHEMERA, "palette.aperire",
         "palette=color_primus"));
 
     memset(&altera, ZEPHYRUM, magnitudo(altera));

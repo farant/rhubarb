@@ -401,6 +401,8 @@ pictorem_montare (
             volumen, repo);
         cp->systemata.relatio     = relatio_creare(piscina, intern,
             repo);
+        cp->systemata.dimissio    = dimissio_creare(piscina, intern,
+            repo);
     }
     si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
             latitudo, altitudo, cp ? &cp->systemata : NIHIL))
@@ -828,6 +830,7 @@ vicus_applicatio_aedificare (
          * nascitur) */
         cp->systemata.conservatio  = NIHIL;
         cp->systemata.relatio      = NIHIL;
+        cp->systemata.dimissio     = NIHIL;
     }
     app->pictoris = cp;
     cs = (ContextusScribae*)piscina_allocare(piscina,
@@ -883,5 +886,10 @@ vicus_applicatio_aedificare (
         redde FALSUM;
     }
     vicus_dispensatorem_ligare(app->vicus, app->d);
+    /* S5c: dimissio (si latus pictoris eam creavit) in via eventus */
+    si (cp && cp->systemata.dimissio)
+    {
+        dimissio_dispensatori_ligare(cp->systemata.dimissio, app->d);
+    }
     redde VERUM;
 }

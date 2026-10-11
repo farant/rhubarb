@@ -105,13 +105,13 @@ s32 principale (vacuum)
     CREDO_FALSUM(mutare_durabile(repo, ponere_paletta, NIHIL));
 
     imprimere("\n--- Domini leguntur; motus solus zoom scribit ---\n");
-    /* XVI: XI pictoris (scriptor sine aspectu, insula) + semen
+    /* XVII: XII pictoris (scriptor, insula; S5c palette quoque) + semen
      * (aspergillum.ictus, in insula usque ad migrationem) + IV basis
      * (focus, focus_acervus, superficies_*: dispensator). Olim
      * XVIII: cursus, gradus (mortui) abierunt. Durabilis: olim I
      * (sigillum, numquam scriptum), nunc nullus. */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_EPHEMERA,
-                                             domini), XVI);
+                                             domini), XVII);
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo, INSULA_DURABILIS,
                                              domini), ZEPHYRUM);
     insula_scriptorem_ponere(repo,
@@ -119,9 +119,12 @@ s32 principale (vacuum)
     CREDO_FALSUM(mutare_ephemera(repo, ponere_zoom, NIHIL));
     insula_scriptorem_ponere(repo, chorda_ex_literis("motus", piscina));
     CREDO_VERUM(mutare_ephemera(repo, ponere_zoom, NIHIL));
-    /* aspectus systematis: palette sine domino */
+    /* S5c: palette - dominus aperiens et systema dimissio soli */
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("quilibet", piscina));
+    CREDO_FALSUM(mutare_ephemera(repo, ponere_palettam, NIHIL));
+    insula_scriptorem_ponere(repo,
+        chorda_ex_literis("palette.aperire", piscina));
     CREDO_VERUM(mutare_ephemera(repo, ponere_palettam, NIHIL));
     CREDO_VERUM(insula_restituere(repo));
 

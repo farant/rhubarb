@@ -813,8 +813,7 @@ organum_dominos_generare (
 
         k = (constans OrganumCampus*)xar_obtinere(organum->campi, i);
         si (   k->sedes            != ORGANUM_SEDES_INSULA
-            || k->scriptor.mensura == ZEPHYRUM
-            || k->aspectus.mensura > ZEPHYRUM)
+            || k->scriptor.mensura == ZEPHYRUM)
         {
             perge;
         }
@@ -825,11 +824,22 @@ organum_dominos_generare (
             "attributum", k->titulus);
         (vacuum)stml_attributum_addere_chorda(d, piscina, intern,
             "scriptor", k->scriptor);
-        /* S5a: referentia - systema relatio quoque reparat */
-        si (k->referentia.mensura > ZEPHYRUM)
+        /* S5a: referentia - systema relatio quoque reparat; S5c:
+         * aspectus popover - systema dimissio claudit */
         {
-            (vacuum)stml_attributum_addere(d, piscina, intern,
-                "systemata", "relatio");
+            constans character* systemata;
+                           b32  rel;
+                           b32  pop;
+
+            rel = k->referentia.mensura > ZEPHYRUM;
+            pop = chorda_aequalis_literis(k->aspectus, "popover");
+            systemata = (rel && pop) ? "relatio dimissio"
+                      : rel ? "relatio" : pop ? "dimissio" : NIHIL;
+            si (systemata)
+            {
+                (vacuum)stml_attributum_addere(d, piscina, intern,
+                    "systemata", systemata);
+            }
         }
         (vacuum)stml_liberum_addere(domini, d);
     }

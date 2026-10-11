@@ -12,6 +12,7 @@
 #include "insula.h"
 #include "vicus.h"
 #include "vicus_applicatio.h"
+#include "dispensator.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -88,7 +89,8 @@ _probare_latus_pictoris (
     CREDO_VERUM(scribere(&prima, "instrumentum.eligere",
         "instrumentum=spongia"));
     CREDO_VERUM(scribere(&prima, "motus", "zoom=4"));
-    CREDO_VERUM(scribere(&prima, "quilibet", "palette=color_primus"));
+    CREDO_VERUM(scribere(&prima, "palette.aperire",
+        "palette=color_primus"));
 
     CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina, in,
         vol, NIHIL, CM, DC));
@@ -98,8 +100,51 @@ _probare_latus_pictoris (
     volumen_claudere(vol);
 }
 
+/* S5c: dimissio in vico ligata - latus pictoris in acervo tabulae
+ * activae, palette aperta, Esc per dispensatorem verum eam claudit */
+interior vacuum
+_probare_dimissionem (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                 Volumen* vol;
+         VicusApplicatio  app;
+             InsulaRamus  ramus;
+                 Eventus  e;
+                  chorda* a;
+               character  par[] = "palette=color_primus";
+
+    in = internamentum_creare(c->piscina);
+    thema_initiare();
+    vol = volumen_temporarium(c->piscina, "probatio_vicus_conservatio");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    CREDO_NECESSE(vicus_applicatio_aedificare(&app, c->piscina, in, vol,
+        NIHIL, CM, DC));
+    CREDO_NECESSE(vicus_acervo_aperire(app.vicus, "pictor", ""));
+    (vacuum)vicus_pulsare(app.vicus);
+    dispensator_recomponere(app.d);
+    ramus = insula_ramus(app.vicus->repo, "pictor", "1_dextrum_pictor");
+    CREDO_NECESSE(insula_ramus_nodus(&ramus, INSULA_EPHEMERA) != NIHIL);
+    insula_scriptorem_ponere(app.vicus->repo, chorda_ex_literis(
+        "palette.aperire", c->piscina));
+    CREDO_NECESSE(mutare_ramum(&ramus, INSULA_EPHEMERA, ponere, par));
+    dispensator_recomponere(app.d);
+    app.d->motus.spatium = chorda_ex_literis("1_dextrum_pictor",
+        c->piscina);
+    memset(&e, ZEPHYRUM, magnitudo(e));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis    = CLAVIS_EFFUGIUM;
+    e.datum.clavis.producta  = XXVII;
+    dispensator_tractare(app.d, &e);
+    a = insula_ramus_attributum(&ramus, INSULA_EPHEMERA, "palette");
+    CREDO_VERUM(a == NIHIL);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latus_pictoris", _probare_latus_pictoris,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "dimissio", _probare_dimissionem,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

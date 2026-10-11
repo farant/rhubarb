@@ -502,12 +502,13 @@ _probare_dominos (
         g = stml_attributum_capere(d, "genus");
         CREDO_VERUM(g && chorda_aequalis_literis(*g, "ephemera"));
     }
-    /* XI campi insulae cum scriptore sine aspectu */
-    CREDO_AEQUALIS_S32((s32)numerus, XI);
+    /* XII campi insulae cum scriptore (S5c: palette quoque) */
+    CREDO_AEQUALIS_S32((s32)numerus, XII);
     CREDO_NON_NIHIL(scriptor_domini(domini, "zoom"));
     CREDO_CHORDA_AEQUALIS_LITERIS(*scriptor_domini(domini,
         "stratum_activum"), "strata.agere");
-    /* S5a: referentia -> systema relatio; ceteri sine systematibus */
+    /* S5a: referentia -> systema relatio; S5c: popover -> dimissio;
+     * ceteri sine systematibus */
     per (i = ZEPHYRUM; i < xar_numerus(domini->liberi); i++)
     {
         StmlNodus* d;
@@ -521,13 +522,18 @@ _probare_dominos (
         {
             CREDO_VERUM(sy && chorda_aequalis_literis(*sy, "relatio"));
         }
+        alioquin si (a && chorda_aequalis_literis(*a, "palette"))
+        {
+            CREDO_VERUM(sy && chorda_aequalis_literis(*sy, "dimissio"));
+        }
         alioquin
         {
             CREDO_NIHIL(sy);
         }
     }
-    /* aspectus systematis est */
-    CREDO_NIHIL(scriptor_domini(domini, "palette"));
+    /* S5c: aspectus popover - dominus aperiens, systema claudit */
+    CREDO_CHORDA_AEQUALIS_LITERIS(*scriptor_domini(domini, "palette"),
+        "palette.aperire");
     /* motus extra insulam */
     CREDO_NIHIL(scriptor_domini(domini, "semen"));
     /* sine scriptore */
@@ -664,6 +670,13 @@ _probare_pictorem_vivum (
         a = stml_attributum_capere(d, "attributum");
         CREDO_NECESSE_NON_NIHIL(a);
         vetus = scriptor_domini(ante, chorda_ut_cstr(*a, c->piscina));
+        /* S5c: palette dominum NOVUM habet (olim sine domino) */
+        si (chorda_aequalis_literis(*a, "palette"))
+        {
+            CREDO_NIHIL(vetus);
+            novi++;
+            perge;
+        }
         CREDO_NON_NIHIL(vetus);
         si (vetus)
         {
@@ -672,7 +685,7 @@ _probare_pictorem_vivum (
         }
         novi++;
     }
-    CREDO_AEQUALIS_S32(novi, XVI);
+    CREDO_AEQUALIS_S32(novi, XVII);
 
     /* vetus sine novo: soli mortui */
     absentes = ZEPHYRUM;

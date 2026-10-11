@@ -73,6 +73,9 @@ nomen structura Componens {
                  Punctum* puncta;             /* polygonum */
                      i32  numerus_punctorum;
                      b32  focusabilis;
+                     /* S5c: actio successa popover rami sui claudit
+                      * (dimissio) */
+                     b32 claudit;
                      /* praecidere liberos ad fines */
                      b32  sectio;
                  Punctum  translatio;         /* liberis applicata */

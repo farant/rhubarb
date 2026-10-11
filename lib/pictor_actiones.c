@@ -138,15 +138,6 @@ ramus_pictoris (
     redde insula_ramus_radix(repo);
 }
 
-/* P1b: palette aperta? */
-interior b32
-palette_aperta (
-    constans InsulaRamus* ramus)
-{
-    redde insula_ramus_attributum(ramus, INSULA_EPHEMERA, "palette")
-        != NIHIL;
-}
-
 interior b32
 palettam_claudere (
     constans InsulaRamus* ramus)
@@ -372,13 +363,9 @@ ictum_tractare (
     commutatio (ev->genus)
     {
         casus EVENTUS_MUS_DEPRESSUS:
-            /* P1b: palette aperta - ictus eam solum claudit */
+            /* P1b: palette aperta - ictus eam solum claudit: systema
+             * dimissio (S5c) ictum ante actionem deglutit */
             ramus = ramus_pictoris(repo, ctx);
-            si (palette_aperta(&ramus))
-            {
-                (vacuum)palettam_claudere(&ramus);
-                redde VERUM;
-            }
             motus_captura_ponere(motus, nodus->id);
             mutare_motum(motus, puncta_vacare, NIHIL, ev->tempus);
             mutare_motum(motus, punctum_addere, &p, ev->tempus);
@@ -528,11 +515,7 @@ pictor_linea_ictus (
     {
         casus EVENTUS_MUS_DEPRESSUS:
             ramus = ramus_pictoris(repo, ctx);
-            si (!pendens && palette_aperta(&ramus))
-            {
-                (vacuum)palettam_claudere(&ramus);
-                redde VERUM;
-            }
+            /* palette aperta: dimissio (S5c) ictum deglutit */
             si (!pendens)
             {
                 /* ictus primus: initium */
@@ -681,7 +664,7 @@ pictor_instrumentum_eligere (
         && nomen_instrumenti.mensura > ZEPHYRUM)
     {
         ramus = ramus_pictoris(repo, ctx);
-        (vacuum)palettam_claudere(&ramus);
+        /* palette: optio 'claudit' - dimissio post actionem (S5c) */
         /* linea pendens instrumento mutato abicitur */
         si (motus && !chorda_vacua(motus->captura))
         {
@@ -694,14 +677,10 @@ pictor_instrumentum_eligere (
     {
         redde FALSUM;
     }
-    /* P1b: Esc palettam apertam claudit */
+    /* P1b: Esc palettam apertam claudit - systema dimissio (S5c) eum
+     * ante actionem consumit; hic Esc nihil agit */
     si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
     {
-        ramus = ramus_pictoris(repo, ctx);
-        si (palette_aperta(&ramus))
-        {
-            redde palettam_claudere(&ramus);
-        }
         redde FALSUM;
     }
     /* Cmd+Z revocat, Cmd+Shift+Z reficit (historia: gradus multi);
@@ -831,7 +810,6 @@ pictor_colorem_ponere (
         redde FALSUM;
     }
     ramus = ramus_pictoris(repo, ctx);
-    (vacuum)palettam_claudere(&ramus);
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }
 
@@ -863,7 +841,6 @@ pictor_exemplar_ponere (
         redde FALSUM;
     }
     ramus = ramus_pictoris(repo, ctx);
-    (vacuum)palettam_claudere(&ramus);
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }
 
@@ -954,7 +931,6 @@ pictor_magnitudinem_ponere (
     {
         redde FALSUM;
     }
-    (vacuum)palettam_claudere(&ramus);
     redde mutare_ramum(&ramus, INSULA_EPHEMERA, colorem_mutator, &cp);
 }
 

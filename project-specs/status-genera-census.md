@@ -362,3 +362,39 @@ pictor latitudo/altitudo (derived from the drawing) -> transiens.
 Both had been labelled with the nearest category; restoring them could
 only be stale. Candidate for a real category later: "derived" (state
 recomputed from an entity at mount).
+
+## XIII. S5c design: popover dismissal (Fran, 2026-10-10)
+
+Decided: D1 "outside" by component tree (DIALOGUS subtree), the
+field's owner action (its opener, `scriptor`) exempt so it can toggle;
+D2 outside click SWALLOWED within the widget (today's behaviour),
+passed through across panes; D3 picks close via a markup flag on the
+option component (`claudit`), the system closes after the action
+succeeds - no closing code in pick actions; the layers panel's rows
+stay unmarked (stays open); D4 popovers take Esc first; D5 opening a
+popover closes other open ones; D6 a dispatcher hook (read the event
+path before the header); D7 system/writer name `dimissio`, aspect value
+stays `popover`.
+
+Two genuinely new edges, recorded as open threads:
+1. **State <-> view link.** First system relating a STATE field to a
+   piece of the COMPONENT tree. S5c assumes one popover field per
+   widget (DIALOGUS = inside). General form, when a second popover
+   field exists: the component declares which field it renders - the
+   manifest stays view-agnostic.
+2. **Input-mediating systems.** Persistence and references react after
+   changes; dismissal sits IN the event path (consumes Esc, swallows
+   clicks) - neighbour of focus/keyboard routing. Several transient
+   things compete for Esc today with hand-written checks (open
+   popover, pending line, layer drag; later vim modes, calendar
+   popups) -> candidate ESCAPE STACK ("Esc cancels the innermost
+   transient thing") owned by one system. Not built (one consumer).
+
+Not acted on: per-kind swallow (menu vs hover card), keyboard focus
+inside a popover, gestures crossing the boundary (decided at
+mouse-down - already today's behaviour).
+
+**S5c outcome (2026-10-10):** D4 refined by the regression net - an
+in-flight pointer gesture (motus.captura: layer drag inside the panel,
+pending line) is INNER and takes Esc first; the next Esc closes the
+popover. The escape stack's ordering rule, in its smallest form.
