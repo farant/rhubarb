@@ -103,6 +103,12 @@ _probare_montationem (
     /* aspectus popover: sine domino */
     CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "quilibet",
         "palette=color_primus"));
+    /* S5a: systema relatio referentiam scribit, nihil aliud */
+    CREDO_VERUM(scribere(&app, INSULA_EPHEMERA, "relatio",
+        "stratum_activum=9"));
+    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "quilibet",
+        "stratum_activum=8"));
+    CREDO_FALSUM(scribere(&app, INSULA_EPHEMERA, "relatio", "zoom=5"));
 
     volumen_claudere(vol);
 }

@@ -507,6 +507,25 @@ _probare_dominos (
     CREDO_NON_NIHIL(scriptor_domini(domini, "zoom"));
     CREDO_CHORDA_AEQUALIS_LITERIS(*scriptor_domini(domini,
         "stratum_activum"), "strata.agere");
+    /* S5a: referentia -> systema relatio; ceteri sine systematibus */
+    per (i = ZEPHYRUM; i < xar_numerus(domini->liberi); i++)
+    {
+        StmlNodus* d;
+           chorda* a;
+           chorda* sy;
+
+        d   = *(StmlNodus**)xar_obtinere(domini->liberi, i);
+        a   = stml_attributum_capere(d, "attributum");
+        sy  = stml_attributum_capere(d, "systemata");
+        si (a && chorda_aequalis_literis(*a, "stratum_activum"))
+        {
+            CREDO_VERUM(sy && chorda_aequalis_literis(*sy, "relatio"));
+        }
+        alioquin
+        {
+            CREDO_NIHIL(sy);
+        }
+    }
     /* aspectus systematis est */
     CREDO_NIHIL(scriptor_domini(domini, "palette"));
     /* motus extra insulam */

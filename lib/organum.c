@@ -825,6 +825,12 @@ organum_dominos_generare (
             "attributum", k->titulus);
         (vacuum)stml_attributum_addere_chorda(d, piscina, intern,
             "scriptor", k->scriptor);
+        /* S5a: referentia - systema relatio quoque reparat */
+        si (k->referentia.mensura > ZEPHYRUM)
+        {
+            (vacuum)stml_attributum_addere(d, piscina, intern,
+                "systemata", "relatio");
+        }
         (vacuum)stml_liberum_addere(domini, d);
     }
     redde domini;

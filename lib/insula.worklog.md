@@ -128,3 +128,17 @@ matters, now in the header: register the branch canon BEFORE (the host
 canon never sees an undelegated mount), owners AFTER (scriba's `modus`
 is owned by `pagina.clavis`; an anonymous initial write would be
 refused - a plant moving owners first makes `scriba_montare` fail).
+
+## 2026-10-10 — S5a: system writers in the owner table (status-plan)
+
+`InsulaDominus.systemata`: an owner entry may also list SYSTEMS allowed
+to write that field (space-separated, whole-word match - a prefix like
+"rel" or the whole list as one writer is refused). Read from
+`<dominus ... systemata="relatio"/>`; the refusal message names the
+systems. Census X: owners for value fields, systems for cross-cutting
+aspects - this replaces the "set repo->scriptor to the owner's name"
+workaround (domini-scriptor-silent-refusal memory), which lied in the
+log about who wrote. organum generates systemata="relatio" for fields
+with a `referentia` (S5b's reference system will repair them).
+Popover fields stay ownerless until S5c moves closing into the system
+(an owner now would refuse the seven closing actions).

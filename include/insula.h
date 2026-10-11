@@ -60,6 +60,8 @@ nomen vacuum (*InsulaActarius)(
 nomen structura {
     chorda attributum;
     chorda dominus;     /* scriptor solus qui attributum mutat */
+    chorda systemata;   /* S5a: systemata quoque licita, spatiis
+                         * separata ("relatio"); vacua = nulla */
     chorda elementum;   /* ramus (R1): vacua = radix */
     chorda id;
 } InsulaDominus;
@@ -283,8 +285,11 @@ insula_dominum_ponere (
     constans character* attributum,
     constans character* dominus);
 
-/* <domini><dominus genus attributum scriptor/>...</domini>: lineae
- * generis dati leguntur; redde numerum lectarum. */
+/* <domini><dominus genus attributum scriptor [systemata]/>...</domini>:
+ * lineae generis dati leguntur; redde numerum lectarum. systemata
+ * (S5a, status-plan): nomina systematum quae attributum quoque
+ * scribere licet - possessio pro valoribus, systemata pro aspectibus
+ * transversis (census X). */
 i32
 insula_dominos_legere (
     InsulaRepositorium* repo,

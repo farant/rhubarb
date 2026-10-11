@@ -182,7 +182,8 @@ organum_canonem_generare (
 
 /* <domini> generatus pro insula_ramus_dominos_legere: campi sedis
  * INSULAE cum scriptore et SINE aspectu (aspectus = systematis);
- * genus="ephemera" (S2 divisionem insularum servat) */
+ * genus="ephemera" (S2 divisionem insularum servat). S5a: campus cum
+ * referentia systemata="relatio" fert (systema relationum reparat). */
 StmlNodus*
 organum_dominos_generare (
        constans Organum* organum,

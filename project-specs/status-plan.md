@@ -57,9 +57,14 @@ widgets are migrated by hand.*
   reading how islands are saved.
 - **S4** DONE 2026-10-10 (lib/organum.worklog.md: starting values; reading fallbacks wait for S9). defaults from the manifest (`absens`), replacing C
   hard-codes and `nota` prose; test-only fields `vita="probatio"`.
-- **S5** the REFERENCE system: `referentia` + `orbatus` checked
+- **S5a** DONE 2026-10-10: system writers in the owner table
+  (`InsulaDominus.systemata`; lib/insula.worklog.md). Fran: S5 split
+  a/b/c; undo after an orphan repair is LOSSY for now (selection does
+  not return to the restored entity - remembered repair is a follow-up).
+- **S5b** the REFERENCE system (historia observer + entity enumeration
+  registered by the document library + repair as system 'relatio'): `referentia` + `orbatus` checked
   after every document act and undo; replaces `stratum_currens`.
-- **S5b** the POPOVER system: `aspectus="popover"` fields closed by the
+- **S5c** the POPOVER system: `aspectus="popover"` fields closed by the
   dispatcher (Esc, outside click, any other act, another popover
   opening); pictor's seven `palettam_claudere` calls disappear.
   Second consumer: the calendar's day popups.

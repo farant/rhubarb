@@ -267,6 +267,39 @@ attributum_mutatum (
     redde !chorda_aequalis(*a, *b);
 }
 
+/* S5a: scriptor inter systemata (spatiis separata, verbum totum)? */
+interior b32
+inter_systemata (
+    chorda systemata,
+    chorda scriptor)
+{
+    i32 i;
+    i32 initium;
+
+    si (scriptor.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= systemata.mensura; i++)
+    {
+        chorda verbum;
+
+        si (i < systemata.mensura && systemata.datum[i] != ' ')
+        {
+            perge;
+        }
+        verbum.datum    = systemata.datum + initium;
+        verbum.mensura  = i - initium;
+        si (chorda_aequalis(verbum, scriptor))
+        {
+            redde VERUM;
+        }
+        initium = i + I;
+    }
+    redde FALSUM;
+}
+
 /* causa vacua = licet */
 interior chorda
 dominos_iudicare (
@@ -293,7 +326,8 @@ dominos_iudicare (
         {
             perge;
         }
-        si (chorda_aequalis(d->dominus, repo->scriptor))
+        si (   chorda_aequalis(d->dominus, repo->scriptor)
+            || inter_systemata(d->systemata, repo->scriptor))
         {
             perge;
         }
@@ -303,6 +337,16 @@ dominos_iudicare (
             chorda_ex_literis(" possidetur a ", repo->piscina),
             repo->piscina);
         causa = chorda_concatenare(causa, d->dominus, repo->piscina);
+        si (d->systemata.mensura > ZEPHYRUM)
+        {
+            causa = chorda_concatenare(causa,
+                chorda_ex_literis(" (et systematibus: ", repo->piscina),
+                repo->piscina);
+            causa = chorda_concatenare(causa, d->systemata,
+                repo->piscina);
+            causa = chorda_concatenare(causa,
+                chorda_ex_literis(")", repo->piscina), repo->piscina);
+        }
         causa = chorda_concatenare(causa,
             chorda_ex_literis("; scriptor '", repo->piscina),
             repo->piscina);
@@ -657,11 +701,13 @@ dominum_addere (
                 chorda  elementum,
                 chorda  id,
     constans character* attributum,
-    constans character* dominus)
+    constans character* dominus,
+    constans character* systemata)
 {
     InsulaDominus* d;
            chorda* a;
            chorda* s;
+           chorda* y;
 
     si (!repo || !genus_sanum(genus) || !attributum || !dominus)
     {
@@ -674,9 +720,12 @@ dominum_addere (
     {
         redde FALSUM;
     }
+    y = (systemata && systemata[ZEPHYRUM])
+        ? chorda_internare_ex_literis(repo->intern, systemata) : NIHIL;
     d              = (InsulaDominus*)xar_addere(repo->domini[genus]);
     d->attributum  = *a;
     d->dominus     = *s;
+    d->systemata   = y ? *y : chorda_nulla_insulae();
     d->elementum   = elementum;
     d->id          = id;
     redde VERUM;
@@ -690,7 +739,8 @@ insula_dominum_ponere (
     constans character* dominus)
 {
     redde dominum_addere(repo, genus, chorda_nulla_insulae(),
-                         chorda_nulla_insulae(), attributum, dominus);
+                         chorda_nulla_insulae(), attributum, dominus,
+                         NIHIL);
 }
 
 interior i32
@@ -706,6 +756,7 @@ dominos_legere (
                 chorda* g;
                 chorda* a;
                 chorda* s;
+                chorda* y;
                    i32  i;
                    i32  k;
                    i32  lecti;
@@ -728,6 +779,7 @@ dominos_legere (
         g = stml_attributum_capere(n, "genus");
         a = stml_attributum_capere(n, "attributum");
         s = stml_attributum_capere(n, "scriptor");
+        y = stml_attributum_capere(n, "systemata");
         si (   !g || !a || !s
             || !chorda_aequalis_literis(*g, titulus_generis))
         {
@@ -735,7 +787,8 @@ dominos_legere (
         }
         si (dominum_addere(repo, genus, elementum, id,
                 chorda_ut_cstr(*a, repo->piscina),
-                chorda_ut_cstr(*s, repo->piscina)))
+                chorda_ut_cstr(*s, repo->piscina),
+                y ? chorda_ut_cstr(*y, repo->piscina) : NIHIL))
         {
             lecti++;
         }
@@ -875,7 +928,7 @@ insula_ramus_dominum_ponere (
     }
     redde dominum_addere(ramus->repo, genus, ramus->elementum,
         ramus->id,
-                         attributum, dominus);
+                         attributum, dominus, NIHIL);
 }
 
 i32
