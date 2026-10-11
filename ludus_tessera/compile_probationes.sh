@@ -112,6 +112,7 @@ declare -a RADIX_FONTES=(
     "organum"          # status S2: canon et domini ex manifesto
     "organum_canon"
     "conservatio"      # status S3: systema persistentiae
+    "relatio"          # status S5b: systema relationum
     # scriba H2: cauda documenti per historia
     "historia"
     "pictor_figurae"

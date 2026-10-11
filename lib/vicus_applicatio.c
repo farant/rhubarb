@@ -112,9 +112,9 @@ nomen structura {
     /* L5: porta imaginis (applicatio ponit; NIHIL = nulla) */
       ImagoFructus (*porta)(vacuum* ctx, Piscina* piscina);
             vacuum* porta_ctx;
-    /* status-plan S3: systema persistentiae repositorii vici (unum -
-     * actarius unus); latera pictoris status suos servant */
-       Conservatio* conservatio;
+    /* status-plan S3-S5: systemata status repositorii vici (una -
+     * actarius unus); latus primum ea creat */
+    StatusSystemata systemata;
 } ContextusPictoris;
 
 /* L5: porta lateris pictoris - ad portam communem (tempore vocationis
@@ -395,13 +395,15 @@ pictorem_montare (
     /* S3: systema persistentiae repositorii vici - latus primum id
      * creat (repositorium in vicus_aperire nascitur, ante montationes
      * eius ab extra adiri non potest), cetera communicant */
-    si (cp && !cp->conservatio)
+    si (cp && !cp->systemata.conservatio)
     {
-        cp->conservatio = conservatio_creare(piscina, intern, volumen,
+        cp->systemata.conservatio = conservatio_creare(piscina, intern,
+            volumen, repo);
+        cp->systemata.relatio     = relatio_creare(piscina, intern,
             repo);
     }
     si (!pictor_montare(m, piscina, intern, volumen, repo, id, radix,
-            latitudo, altitudo, cp ? cp->conservatio : NIHIL))
+            latitudo, altitudo, cp ? &cp->systemata : NIHIL))
     {
         redde FALSUM;
     }
@@ -819,11 +821,13 @@ vicus_applicatio_aedificare (
         magnitudo(ContextusPictoris));
     si (cp)
     {
-        cp->documenta    = tabula_dispersa_creare_chorda(piscina, XVI);
-        cp->porta        = NIHIL;
-        cp->porta_ctx    = NIHIL;
-        cp->conservatio  = NIHIL;   /* latus primum creat (repositorium
-                                    * in vicus_aperire nascitur) */
+        cp->documenta  = tabula_dispersa_creare_chorda(piscina, XVI);
+        cp->porta      = NIHIL;
+        cp->porta_ctx  = NIHIL;
+        /* latus primum creat (repositorium in vicus_aperire
+         * nascitur) */
+        cp->systemata.conservatio  = NIHIL;
+        cp->systemata.relatio      = NIHIL;
     }
     app->pictoris = cp;
     cs = (ContextusScribae*)piscina_allocare(piscina,

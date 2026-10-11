@@ -83,6 +83,25 @@ manifestum_legere (
     redde o;
 }
 
+/* S5b: enumerator stratorum (relatio) - ordine imum primum */
+interior i32
+strata_numerus (
+    constans vacuum* documentum)
+{
+    redde pictor_documentum_numerus_stratorum(
+        (constans PictorDocumentum*)documentum);
+}
+
+interior chorda
+strati_id (
+     constans vacuum* documentum,
+                 i32  index,
+             Piscina* piscina)
+{
+    redde chorda_ex_s32(pictor_documentum_stratum(
+        (constans PictorDocumentum*)documentum, index)->id, piscina);
+}
+
 /* status-plan S2: manifestum pictoris cum basi communi */
 interior Organum*
 organum_pictoris (
@@ -184,7 +203,7 @@ pictor_montare (
      constans character* radix,
                     i32  latitudo,
                     i32  altitudo,
-            Conservatio* conservatio)
+        StatusSystemata* systemata)
 {
                  chorda  durabilis;
      constans character* spatium;
@@ -276,11 +295,14 @@ pictor_montare (
 
     /* S3: status servatus restituitur (post initiationem, ante
      * dominos - scriptura anonyma), ramus deinde servatur */
-    si (conservatio)
+    si (systemata)
     {
-        (vacuum)conservatio_ramum_addere(conservatio, &m->ramus,
-            organum,
-            id ? id : "pictor");
+        m->systemata = *systemata;
+    }
+    si (m->systemata.conservatio)
+    {
+        (vacuum)conservatio_ramum_addere(m->systemata.conservatio,
+            &m->ramus, organum, id ? id : "pictor");
     }
 
     /* domini POST initiationem, ex manifesto generati */
@@ -291,6 +313,22 @@ pictor_montare (
             domini);
         (vacuum)insula_ramus_dominos_legere(&m->ramus, INSULA_DURABILIS,
             domini);
+    }
+
+    /* S5b: relatio - strata documenti enumerantur, ramus registratur,
+     * documentum ligatur (stratum_activum statim verificatur) */
+    si (m->systemata.relatio)
+    {
+        RelatioEnumerator en;
+
+        en.numerus  = strata_numerus;
+        en.id       = strati_id;
+        (vacuum)relatio_genus_addere(m->systemata.relatio,
+            "pictor-documentum", "stratum", en);
+        (vacuum)relatio_ramum_addere(m->systemata.relatio, &m->ramus,
+            organum);
+        (vacuum)relatio_ligare(m->systemata.relatio, &m->ramus,
+            "documentum", m->doc, m->doc->historia);
     }
 
     /* contextus et registra propria */
@@ -397,6 +435,12 @@ pictor_picturam_ponere (
     m->actiones_ctx.doc  = doc;
     m->figurae_ctx.doc   = doc;
     m->compositio.doc    = doc;
+    /* S5b: ligatio nova - stratum_activum contra documentum novum */
+    si (m->systemata.relatio)
+    {
+        (vacuum)relatio_ligare(m->systemata.relatio, &m->ramus,
+            "documentum", doc, doc->historia);
+    }
     redde mutare_ramum(&m->ramus, INSULA_DURABILIS, dimensiones_mutator,
         doc);
 }
@@ -448,6 +492,9 @@ pictor_applicatio_aedificare (
                     i32  latitudo,
                     i32  altitudo)
 {
+    StatusSystemata systemata;
+
+    memset(&systemata, ZEPHYRUM, magnitudo(systemata));
     si (!app || !piscina || !intern || !volumen)
     {
         redde FALSUM;
@@ -460,10 +507,16 @@ pictor_applicatio_aedificare (
     /* repositorium cuius radix IPSA pictor est; montatio in radice */
     app->repo = insula_repositorium_creare(piscina, intern, "<pictor/>",
         "<pictor focus=\"tabula\"/>");
+    si (app->repo)
+    {
+        systemata.conservatio = conservatio_creare(piscina, intern,
+            volumen, app->repo);
+        systemata.relatio     = relatio_creare(piscina, intern,
+            app->repo);
+    }
     si (   !app->repo
         || !pictor_montare(&app->montatio, piscina, intern, volumen,
-               app->repo, NIHIL, radix, latitudo, altitudo,
-               conservatio_creare(piscina, intern, volumen, app->repo)))
+               app->repo, NIHIL, radix, latitudo, altitudo, &systemata))
     {
         redde FALSUM;
     }

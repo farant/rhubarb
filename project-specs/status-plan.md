@@ -61,7 +61,7 @@ widgets are migrated by hand.*
   (`InsulaDominus.systemata`; lib/insula.worklog.md). Fran: S5 split
   a/b/c; undo after an orphan repair is LOSSY for now (selection does
   not return to the restored entity - remembered repair is a follow-up).
-- **S5b** the REFERENCE system (historia observer + entity enumeration
+- **S5b** DONE 2026-10-10 (lib/relatio.worklog.md). the REFERENCE system (historia observer + entity enumeration
   registered by the document library + repair as system 'relatio'): `referentia` + `orbatus` checked
   after every document act and undo; replaces `stratum_currens`.
 - **S5c** the POPOVER system: `aspectus="popover"` fields closed by the
