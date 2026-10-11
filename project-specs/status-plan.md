@@ -55,7 +55,7 @@ widgets are migrated by hand.*
 - **S3** DONE 2026-10-10 (lib/conservatio.worklog.md; census XII: it BUILT persistence - islands never reached disk before). The PERSISTENCE system: transient fields never reach disk (palette open -> quit ->
   reopen -> closed); in-process rehydration keeps them. Starts by
   reading how islands are saved.
-- **S4** defaults from the manifest (`absens`), replacing C
+- **S4** DONE 2026-10-10 (lib/organum.worklog.md: starting values; reading fallbacks wait for S9). defaults from the manifest (`absens`), replacing C
   hard-codes and `nota` prose; test-only fields `vita="probatio"`.
 - **S5** the REFERENCE system: `referentia` + `orbatus` checked
   after every document act and undo; replaces `stratum_currens`.

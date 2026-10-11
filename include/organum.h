@@ -162,6 +162,14 @@ organum_porta_index (
  * Generatio
  * ================================================== */
 
+/* valores initiales (status-plan S4): attributa ' titulus="absens"'
+ * camporum sedis INSULAE cum absente, ordine manifesti - textus pro
+ * insula_ramum_initiare. Vacua si nullus. */
+chorda
+organum_initium (
+    constans Organum* organum,
+             Piscina* piscina);
+
 /* canon insulae GENERATUS: campi sedis INSULAE soli (motus extra),
  * radix = elementum nominatum 'genus' organi (mos per-ramum);
  * NIHIL si generatio deficit (causa) */

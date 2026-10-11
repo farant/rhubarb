@@ -11,6 +11,8 @@
 #include "volumen.h"
 #include "insula.h"
 #include "pictor_applicatio.h"
+#include "filum.h"
+#include "organum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -184,12 +186,59 @@ _probare_conservationem (
     volumen_claudere(vol);
 }
 
+/* S4: insula initialis = absentes manifesti VIVI (omnis campus
+ * insulae cum absente, valore suo) + focus pictoris */
+interior vacuum
+_probare_initium (
+    CredoContextus* c)
+{
+     InternamentumChorda* in;
+                 Volumen* vol;
+        PictorApplicatio  app;
+                 Organum* o;
+                     Xar* vitia;
+                     i32  i;
+                     s32  numerati;
+
+    in = internamentum_creare(c->piscina);
+    thema_initiare();
+    o = organum_legere(filum_legere_totum("apps/pictor/organum.stml",
+        c->piscina), c->piscina, in, &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    vol = volumen_temporarium(c->piscina, "probatio_pictor_montatio");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    memset(&app, ZEPHYRUM, magnitudo(app));
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, c->piscina, in,
+        vol,
+        NIHIL, CDLXXX, CDLXXX));
+    numerati = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < organum_numerus_camporum(o); i++)
+    {
+        constans OrganumCampus* k;
+
+        k = organum_campus_index(o, i);
+        si (!k->habet_absens || k->sedes != ORGANUM_SEDES_INSULA)
+        {
+            perge;
+        }
+        CREDO_VERUM(valor_est(&app, chorda_ut_cstr(k->titulus,
+            c->piscina), chorda_ut_cstr(k->absens, c->piscina)));
+        numerati++;
+    }
+    CREDO_AEQUALIS_S32(numerati, X);
+    CREDO_VERUM(valor_est(&app, "instrumentum", "penicillus"));
+    CREDO_VERUM(valor_est(&app, "focus", "tabula"));
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "montatio",         _probare_montationem,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "manifestum_absens", _probare_manifestum_absens,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "conservatio",      _probare_conservationem,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "initium",          _probare_initium,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

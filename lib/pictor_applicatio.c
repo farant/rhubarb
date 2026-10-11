@@ -246,7 +246,10 @@ pictor_montare (
     insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS, canon);
     insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA, canon);
 
-    /* elementum initiale */
+    /* elementum initiale: durabilis = dimensiones documenti
+     * (derivatae);
+     * ephemera = absentes manifesti (status-plan S4) + focus pictoris
+     * (id componentis - basis communis eum scire nequit) */
     durabilis = chorda_ex_literis(" latitudo=\"", piscina);
     durabilis = chorda_concatenare(durabilis,
         chorda_ex_s32((s32)m->doc->latitudo, piscina), piscina);
@@ -260,11 +263,10 @@ pictor_montare (
                elementum(piscina, id, chorda_ut_cstr(durabilis,
                piscina)))
         || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
-               elementum(piscina, id,
-                   " instrumentum=\"penicillus\" color_primus=\"0\""
-                   " color_secundus=\"-1\" magnitudo_penicilli=\"1\""
-                   " magnitudo_aspergilli=\"1\" zoom=\"1\""
-                   " focus=\"tabula\"")))
+               elementum(piscina, id, chorda_ut_cstr(chorda_concatenare(
+                   organum_initium(organum, piscina),
+                   chorda_ex_literis(" focus=\"tabula\"", piscina),
+                   piscina), piscina))))
     {
         fprintf(stderr, "pictor: elementum initiale: %.*s\n",
                 (int)insula_causa(repo).mensura,

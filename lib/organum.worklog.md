@@ -83,3 +83,25 @@ Follow-up: the "read manifest + base, generate, set on branch" code
 lives in pictor_applicatio.c and a test helper
 (probationes/pictor_organum_probationis.h); scriba (S6) is the second
 consumer - then it becomes a generic function (header to Fran).
+
+## 2026-10-10 — S4: starting values from the manifest
+
+"Default" had been two facts: the STARTING value (hard-coded init
+string in pictor_montare) and the READING fallback (~15
+`attributum_s32(ramus, "zoom", I)` calls). They disagreed for
+`instrumentum` (starts "penicillus", fallback/S0 note "nihil").
+
+Now: `organum_initium` = ' titulus="absens"' for every island campus
+with an absens, manifest order; pictor_montare's ephemera init =
+organum_initium + `focus="tabula"` (a pictor component id on a BASE
+field - the base cannot know it). Durable init stays derived from the
+drawing. instrumentum gets absens="penicillus". The mounted island now
+also carries exemplar, magnitudo_lineae, pan_x, pan_y explicitly (same
+values the fallbacks assumed - no visible change).
+
+Reading fallbacks stay until typed accessors (S9); for a mounted widget
+they are unreachable (every defaulted field present from mount). Test
+`probatio_pictor_montatio initium`: the mounted island holds every
+manifest absens (10 fields). Plant note: "edit a manifest default" is
+NOT a meaningful plant - mount and expectation both follow the
+manifest; the real plant is "mount ignores the manifest" (caught).

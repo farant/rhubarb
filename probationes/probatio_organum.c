@@ -551,6 +551,47 @@ _probare_dominos (
 
 
 /* ==================================================
+ * VIII. S4: valores initiales ex absentibus
+ * ================================================== */
+
+interior vacuum
+_probare_initium (
+    CredoContextus* c)
+{
+    InternamentumChorda* in;
+                Organum* o;
+                    Xar* vitia;
+
+    in  = internamentum_creare(c->piscina);
+    o   = legere_plagulam(c->piscina, in, via_pictoris, &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    /* fixa S0: absentes ordine manifesti; instrumentum ibi sine
+     * absente; semen/palette/motus/probatio nulli */
+    CREDO_CHORDA_AEQUALIS_LITERIS(organum_initium(o, c->piscina),
+        " color_primus=\"0\" color_secundus=\"-1\" exemplar=\"0\""
+        " magnitudo_penicilli=\"1\" magnitudo_aspergilli=\"1\""
+        " magnitudo_lineae=\"1\" zoom=\"1\" pan_x=\"0\" pan_y=\"0\"");
+
+    /* nullus absens: vacua */
+    o = legere_campum(c->piscina, in,
+        "<campus nomen=\"x\" typus=\"numerus\" vita=\"persistens\"/>",
+        &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_CHORDA_VACUA(organum_initium(o, c->piscina));
+
+    /* sedes motus cum absente: extra insulam, non initialis */
+    o = legere_campum(c->piscina, in,
+        "<campus nomen=\"m\" typus=\"numerus\" vita=\"transiens\""
+        " rhythmus=\"mobilis\" sedes=\"motus\" absens=\"3\"/>"
+        "<campus nomen=\"n\" typus=\"numerus\" vita=\"transiens\""
+        " absens=\"4\"/>", &vitia);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_CHORDA_AEQUALIS_LITERIS(organum_initium(o, c->piscina),
+        " n=\"4\"");
+}
+
+
+/* ==================================================
  * VII. S2: manifestum VIVUM pictoris = tabula ante S2
  * ================================================== */
 
@@ -702,6 +743,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "basis",             _probare_basim,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "pictor_vivus",      _probare_pictorem_vivum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "initium",           _probare_initium,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

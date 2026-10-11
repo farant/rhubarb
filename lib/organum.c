@@ -353,7 +353,8 @@ campum_legere (
                   : attributum_est(n, "vita", "probatio")
                   ? ORGANUM_VITA_PROBATIO : ORGANUM_VITA_PERSISTENS;
     k->rhythmus   = attributum_est(n, "rhythmus", "mobilis")
-                  ? ORGANUM_RHYTHMUS_MOBILIS : ORGANUM_RHYTHMUS_DISCRETUS;
+                  ? ORGANUM_RHYTHMUS_MOBILIS
+                  : ORGANUM_RHYTHMUS_DISCRETUS;
     k->sedes      = attributum_est(n, "sedes", "motus")
                   ? ORGANUM_SEDES_MOTUS : ORGANUM_SEDES_INSULA;
     a                = stml_attributum_capere(n, "absens");
@@ -676,6 +677,37 @@ organum_porta_index (
 /* ==================================================
  * Generatio
  * ================================================== */
+
+chorda
+organum_initium (
+    constans Organum* organum,
+             Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  i32  i;
+
+    si (!organum)
+    {
+        redde vacua();
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    per (i = ZEPHYRUM; i < xar_numerus(organum->campi); i++)
+    {
+        constans OrganumCampus* k;
+
+        k = (constans OrganumCampus*)xar_obtinere(organum->campi, i);
+        si (!k->habet_absens || k->sedes != ORGANUM_SEDES_INSULA)
+        {
+            perge;
+        }
+        chorda_aedificator_appendere_literis(a, " ");
+        chorda_aedificator_appendere_chorda(a, k->titulus);
+        chorda_aedificator_appendere_literis(a, "=\"");
+        chorda_aedificator_appendere_chorda(a, k->absens);
+        chorda_aedificator_appendere_literis(a, "\"");
+    }
+    redde chorda_aedificator_finire(a);
+}
 
 /* textus effugitus pro <optio> (& < >) */
 interior vacuum

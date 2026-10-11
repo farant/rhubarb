@@ -49,9 +49,9 @@
 
     <!-- persistens, discretus -->
     <campus nomen="instrumentum" typus="nomen" vita="persistens"
-            scriptor="instrumentum.eligere"
-            nota="absens = nullum (linea ostendit 'nihil'). S2: nomen ut
-                  hodie; electio (optiones) restrictio est, postea"/>
+            absens="penicillus" scriptor="instrumentum.eligere"
+            nota="S4: pictor penicillo incipit. S2: nomen ut hodie;
+                  electio (optiones) restrictio est, postea"/>
     <campus nomen="color_primus"   typus="numerus" vita="persistens"
             absens="0"  scriptor="color_primus.ponere"/>
     <campus nomen="color_secundus" typus="numerus" vita="persistens"
