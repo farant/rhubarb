@@ -265,10 +265,11 @@ pictor_montare (
     insula_ramus_canonem_ponere(&m->ramus, INSULA_DURABILIS, canon);
     insula_ramus_canonem_ponere(&m->ramus, INSULA_EPHEMERA, canon);
 
-    /* elementum initiale: durabilis = dimensiones documenti
-     * (derivatae);
-     * ephemera = absentes manifesti (status-plan S4) + focus pictoris
-     * (id componentis - basis communis eum scire nequit) */
+    /* elementum initiale: durabilis VACUUM (status-plan C1 - insula
+     * una; ramus solum, donec genus durabile tollitur); ephemera =
+     * dimensiones documenti (derivatae) + absentes manifesti (S4) +
+     * focus pictoris (id componentis - basis communis eum scire
+     * nequit) */
     durabilis = chorda_ex_literis(" latitudo=\"", piscina);
     durabilis = chorda_concatenare(durabilis,
         chorda_ex_s32((s32)m->doc->latitudo, piscina), piscina);
@@ -278,14 +279,15 @@ pictor_montare (
         chorda_ex_s32((s32)m->doc->altitudo, piscina), piscina);
     durabilis = chorda_concatenare(durabilis,
         chorda_ex_literis("\"", piscina), piscina);
+    durabilis = chorda_concatenare(durabilis,
+        organum_initium(organum, piscina), piscina);
+    durabilis = chorda_concatenare(durabilis,
+        chorda_ex_literis(" focus=\"tabula\"", piscina), piscina);
     si (   !insula_ramum_initiare(&m->ramus, INSULA_DURABILIS,
-               elementum(piscina, id, chorda_ut_cstr(durabilis,
-               piscina)))
+               elementum(piscina, id, ""))
         || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
-               elementum(piscina, id, chorda_ut_cstr(chorda_concatenare(
-                   organum_initium(organum, piscina),
-                   chorda_ex_literis(" focus=\"tabula\"", piscina),
-                   piscina), piscina))))
+               elementum(piscina, id, chorda_ut_cstr(durabilis,
+               piscina))))
     {
         fprintf(stderr, "pictor: elementum initiale: %.*s\n",
                 (int)insula_causa(repo).mensura,
@@ -448,7 +450,7 @@ pictor_picturam_ponere (
         (vacuum)relatio_ligare(m->systemata.relatio, &m->ramus,
             "documentum", doc, doc->historia);
     }
-    redde mutare_ramum(&m->ramus, INSULA_DURABILIS, dimensiones_mutator,
+    redde mutare_ramum(&m->ramus, INSULA_EPHEMERA, dimensiones_mutator,
         doc);
 }
 

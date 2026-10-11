@@ -398,3 +398,17 @@ mouse-down - already today's behaviour).
 in-flight pointer gesture (motus.captura: layer drag inside the panel,
 pending line) is INNER and takes Esc first; the next Esc closes the
 popover. The escape stack's ordering rule, in its smallest form.
+
+**Open thread 4 - ordering between systems (2026-10-10).** insula is
+copy-on-write + atomic swap (two pools per island = memory recycling,
+NOT frame-delayed reads: a read after a successful write sees it
+immediately). Frame-like lag exists only elsewhere: the component tree
+(hit-testing uses the last composed tree; derived events delivered at
+the threshold against the new one) and kinetic fields (motus live,
+island stale until quiet). With several systems reacting to the same
+event - relatio (document observer), dimissio (before the action),
+conservatio (after each write) - their order is implicit call order.
+Correct today, unguaranteed as systems multiply. Candidates: explicit
+system phases per event (before action / after write / at quiet), or
+game-style frame snapshots (read frame N, write N+1). Same family as
+the escape stack (thread 2). Decide when a 4th system needs ordering.

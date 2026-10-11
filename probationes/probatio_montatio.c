@@ -16,6 +16,7 @@
 #include "componens.h"
 #include "pictor_applicatio.h"
 #include "scriba_applicatio.h"
+#include "xar.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -90,21 +91,29 @@ s32 principale (vacuum)
         NIHIL, CDLXXX, CDLXXX, NIHIL));
     CREDO_AEQUALIS_I32(stml_numerus_liberorum(insula_radix(repo,
         INSULA_DURABILIS)), III);
+    /* status-plan C1: insula durabilis exhausta - rami solum id ferunt
+     * (dimensiones in ephemera) */
+    CREDO_AEQUALIS_I32(xar_numerus(insula_ramus_nodus(&pm.ramus,
+        INSULA_DURABILIS)->attributa), I);
+    CREDO_AEQUALIS_I32(xar_numerus(insula_ramus_nodus(&m1.ramus,
+        INSULA_DURABILIS)->attributa), I);
+    CREDO_AEQUALIS_I32(xar_numerus(insula_ramus_nodus(&m2.ramus,
+        INSULA_DURABILIS)->attributa), I);
     /* S2c: documentum novum magnitudine superficiei - pictor:
      * superficies minus linea status (P1a: III cellulae, XXIV) et
      * margo cellulae utrimque (CDLXXX - XII x CDLXXX - XXIV - XVI) */
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_DURABILIS, "latitudo"), "468"));
+        INSULA_EPHEMERA, "latitudo"), "468"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
-        INSULA_DURABILIS, "altitudo"), "440"));
+        INSULA_EPHEMERA, "altitudo"), "440"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&pm.ramus,
         INSULA_EPHEMERA, "instrumentum"), "penicillus"));
     /* scriba: cellulae VI x VIII minus margines (II) et status (I) -
      * LXXX - II x LX - III */
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m1.ramus,
-        INSULA_DURABILIS, "latitudo"), "78"));
+        INSULA_EPHEMERA, "latitudo"), "78"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m1.ramus,
-        INSULA_DURABILIS, "altitudo"), "57"));
+        INSULA_EPHEMERA, "altitudo"), "57"));
     CREDO_VERUM(valor_est(insula_ramus_attributum(&m2.ramus,
         INSULA_EPHEMERA, "modus"), "normalis"));
     CREDO_VERUM(plagula_exstat(vol, "p1/documentum"));
@@ -192,9 +201,9 @@ s32 principale (vacuum)
             repo_parvum,
             "p9", NIHIL, LX, XL, NIHIL));
         CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,
-            INSULA_DURABILIS, "latitudo"), "64"));
+            INSULA_EPHEMERA, "latitudo"), "64"));
         CREDO_VERUM(valor_est(insula_ramus_attributum(&pp.ramus,
-            INSULA_DURABILIS, "altitudo"), "64"));
+            INSULA_EPHEMERA, "altitudo"), "64"));
     }
 
     imprimere("\n");

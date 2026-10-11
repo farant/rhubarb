@@ -122,3 +122,14 @@ the live tree into a fresh arena). Read project-specs/stml-visio.md
 and check materia before designing. Timing: S8 (nesting grows the
 store; re-measure park 010). The one-island collapse makes it simpler
 (one tree, one path).
+
+### One island per widget (Fran, 2026-10-10: collapse)
+
+Decided after Arc I. Reordered on contact (canon merging avoided):
+- **C1** DONE 2026-10-10: durable island drained - pictor/scriba sizes
+  moved to ephemera; durable branches carry only `id`.
+- **C2** remove the durable genus from insula (API without genus;
+  callers ~100, tests ~43, durable canons deleted, ludus_fenestra
+  version sum).
+- **C3** saved-state versio 2 (one child), migration from versio 1
+  tested on a real v1 save.

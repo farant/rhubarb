@@ -83,8 +83,9 @@ s32 principale (vacuum)
     doc = pictor_documentum_creare(piscina, intern, vol, "", CCCXX, CC,
         LXIV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<pictor latitudo=\"320\" altitudo=\"200\"/>",
-        "<pictor instrumentum=\"penicillus\" color_primus=\"0\""
+        "<pictor/>",
+        "<pictor latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" color_primus=\"0\""
         " magnitudo_penicilli=\"1\" zoom=\"1\"/>");
     {
         StmlNodus* domini;

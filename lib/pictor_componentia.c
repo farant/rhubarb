@@ -567,9 +567,9 @@ pictor_componere (
         altitudo / ch, latitudo, altitudo, cw, ch);
     instrumentum = attributum_chorda(&ramus, INSULA_EPHEMERA,
         "instrumentum");
-    doc_latitudo = attributum_s32(&ramus, INSULA_DURABILIS, "latitudo",
+    doc_latitudo = attributum_s32(&ramus, INSULA_EPHEMERA, "latitudo",
         I);
-    doc_altitudo = attributum_s32(&ramus, INSULA_DURABILIS, "altitudo",
+    doc_altitudo = attributum_s32(&ramus, INSULA_EPHEMERA, "altitudo",
         I);
     zoom = attributum_s32(&ramus, INSULA_EPHEMERA, "zoom", I);
     si (zoom < I)

@@ -5,6 +5,10 @@
           nudum scribit, relectum 'true')">
     <attributum nomen="id" genus="nomen"
       nota="montatio (insula rami R4): radix sola aut ramus"/>
+    <attributum nomen="latitudo" genus="numerus"
+      nota="status-plan C1: ex insula durabili (folium fixum)"/>
+    <attributum nomen="altitudo" genus="numerus"
+      nota="status-plan C1: ex insula durabili (folium fixum)"/>
     <attributum nomen="focus"           genus="textus"/>
     <attributum nomen="focus_acervus"   genus="textus"/>
     <attributum nomen="superficies_latitudo" genus="numerus"

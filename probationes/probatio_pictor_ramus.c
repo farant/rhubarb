@@ -67,14 +67,15 @@ s32 principale (vacuum)
     doc = pictor_documentum_creare(piscina, intern, vol, "p1", XL, XXX,
                                    LXIV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<hospes><pictor id=\"p1\" latitudo=\"40\" altitudo=\"30\"/>"
-        "<pictor id=\"p2\" latitudo=\"8\" altitudo=\"8\"/></hospes>",
+        "<hospes><pictor id=\"p1\"/><pictor id=\"p2\"/></hospes>",
         "<hospes focus=\"tabula\">"
-        "<pictor id=\"p1\" instrumentum=\"nihil\" color_primus=\"3\""
+        "<pictor id=\"p1\" latitudo=\"40\" altitudo=\"30\""
+        " instrumentum=\"nihil\" color_primus=\"3\""
         " magnitudo_penicilli=\"1\" zoom=\"1\""
         " superficies_latitudo=\"120\""
         " superficies_altitudo=\"64\"/>"
-        "<pictor id=\"p2\" instrumentum=\"nihil\"/></hospes>");
+        "<pictor id=\"p2\" latitudo=\"8\" altitudo=\"8\""
+        " instrumentum=\"nihil\"/></hospes>");
     CREDO_NON_NIHIL(repo);
     p1 = insula_ramus(repo, "pictor", "p1");
     p2 = insula_ramus(repo, "pictor", "p2");

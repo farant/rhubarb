@@ -282,12 +282,14 @@ scriba_montare (
     attributa = chorda_concatenare(attributa,
         chorda_ex_s32((s32)folium->altitudo, piscina), piscina);
     attributa = chorda_concatenare(attributa,
-        chorda_ex_literis("\"", piscina), piscina);
+        chorda_ex_literis("\" modus=\"normalis\" focus=\"pagina\"",
+        piscina), piscina);
+    /* status-plan C1: dimensiones folii in ephemera (insula una);
+     * durabilis vacua donec genus tollitur */
     si (   !insula_ramum_initiare(&m->ramus, INSULA_DURABILIS,
-               elementum(piscina, id, attributa))
+               elementum(piscina, id, chorda_ex_literis("", piscina)))
         || !insula_ramum_initiare(&m->ramus, INSULA_EPHEMERA,
-               elementum(piscina, id, chorda_ex_literis(
-                   " modus=\"normalis\" focus=\"pagina\"", piscina))))
+               elementum(piscina, id, attributa)))
     {
         fprintf(stderr, "scriba: elementum initiale: %.*s\n",
                 (int)insula_causa(repo).mensura,

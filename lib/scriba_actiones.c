@@ -557,7 +557,7 @@ paginam_ponere (
     st.clavis_praecedens         = '\0';
     st.esperans_fd               = FALSUM;
     status_scribere(ramus, sa, st, &capsa);
-    (vacuum)mutare_ramum(ramus, INSULA_DURABILIS, dimensiones_mutator,
+    (vacuum)mutare_ramum(ramus, INSULA_EPHEMERA, dimensiones_mutator,
         doc);
     redde VERUM;
 }

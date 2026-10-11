@@ -120,11 +120,12 @@ s32 principale (vacuum)
         "s2", XVI, VI,
                                     IV);
     repo = insula_repositorium_creare(piscina, intern,
-        "<hospes><scriba id=\"s1\" latitudo=\"16\" altitudo=\"6\"/>"
-        "<scriba id=\"s2\" latitudo=\"16\" altitudo=\"6\"/></hospes>",
+        "<hospes><scriba id=\"s1\"/><scriba id=\"s2\"/></hospes>",
         "<hospes focus=\"pagina\">"
-        "<scriba id=\"s1\" modus=\"normalis\"/>"
-        "<scriba id=\"s2\" modus=\"normalis\"/></hospes>");
+        "<scriba id=\"s1\" latitudo=\"16\" altitudo=\"6\""
+        " modus=\"normalis\"/>"
+        "<scriba id=\"s2\" latitudo=\"16\" altitudo=\"6\""
+        " modus=\"normalis\"/></hospes>");
     CREDO_NON_NIHIL(repo);
     s1 = insula_ramus(repo, "scriba", "s1");
     s2 = insula_ramus(repo, "scriba", "s2");

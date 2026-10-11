@@ -67,8 +67,9 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     intern = internamentum_creare(piscina);
     repo = insula_repositorium_creare(piscina, intern,
-        "<pictor latitudo=\"320\" altitudo=\"200\"/>",
-        "<pictor instrumentum=\"penicillus\" zoom=\"2\""
+        "<pictor/>",
+        "<pictor latitudo=\"320\" altitudo=\"200\""
+        " instrumentum=\"penicillus\" zoom=\"2\""
         " focus=\"tabula\"/>");
     CREDO_NON_NIHIL(repo);
     motus_initiare(&motus, piscina);
@@ -153,8 +154,8 @@ s32 principale (vacuum)
     {
         InsulaRepositorium* repo2;
         repo2 = insula_repositorium_creare(piscina, intern,
-            "<pictor latitudo=\"16\" altitudo=\"8\"/>",
-            "<pictor/>");
+            "<pictor/>",
+            "<pictor latitudo=\"16\" altitudo=\"8\"/>");
         arbor2 = pictor_componere(repo2, &motus, piscina, intern, &ctx);
         c = componens_invenire_per_id(arbor2,
                 chorda_ex_literis("prospectus", piscina));
@@ -169,8 +170,9 @@ s32 principale (vacuum)
     {
         InsulaRepositorium* repo_superficiei;
         repo_superficiei = insula_repositorium_creare(piscina, intern,
-            "<pictor latitudo=\"320\" altitudo=\"200\"/>",
-            "<pictor instrumentum=\"penicillus\""
+            "<pictor/>",
+            "<pictor latitudo=\"320\" altitudo=\"200\""
+            " instrumentum=\"penicillus\""
             " superficies_latitudo=\"480\""
             " superficies_altitudo=\"163\"/>");
         arbor2 = pictor_componere(repo_superficiei, &motus, piscina,

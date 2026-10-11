@@ -142,3 +142,22 @@ log about who wrote. organum generates systemata="relatio" for fields
 with a `referentia` (S5b's reference system will repair them).
 Popover fields stay ownerless until S5c moves closing into the system
 (an owner now would refuse the seven closing actions).
+
+## 2026-10-10 — C1: durable island drained (status-plan, one-island collapse)
+
+Plan reordered on contact: "one tree inside insula, API unchanged" would
+need MERGING canons (scriba and vicus still have two hand canons with
+closed vocabularies - each would refuse the other's attributes in one
+tree). Instead: drain first. The only durable contents were pictor's and
+scriba's latitudo/altitudo (copies of drawing/page size); terminale and
+vicus durable trees were empty. Both moved to the ephemera island (init,
+writer, reader; scriba's two canon attributes folded into
+ephemera.canon). Durable branches now carry only `id`
+(probatio_montatio asserts it; 3 plants caught). 10 test fixtures that
+built islands by hand with sizes in the durable string were updated.
+Next: C2 removes the durable genus from the API; C3 saved-state v2.
+
+Pre-existing finding (not fixed here): apps/scriba and apps/vicus canons
+fail `bin/canon_examen` - dialectus "scriba-ephemera" has a hyphen, the
+canon-of-canons types dialectus as nomen. Runtime loading accepts them.
+They disappear in C2 (durable) and S6/S7 (manifests).

@@ -227,8 +227,8 @@ scriba_componere (
         / cw,
                    altitudo / ch, latitudo, altitudo, cw, ch);
 
-    folium_x = attributum_s32(&ramus, INSULA_DURABILIS, "latitudo", I);
-    folium_y = attributum_s32(&ramus, INSULA_DURABILIS, "altitudo", I);
+    folium_x = attributum_s32(&ramus, INSULA_EPHEMERA, "latitudo", I);
+    folium_y = attributum_s32(&ramus, INSULA_EPHEMERA, "altitudo", I);
     cl = attributum_s32(&ramus, INSULA_EPHEMERA, "cursor_linea",
         ZEPHYRUM);
     cc = attributum_s32(&ramus, INSULA_EPHEMERA, "cursor_columna",
