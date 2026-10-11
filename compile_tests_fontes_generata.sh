@@ -3,6 +3,11 @@
 # regeneratio: ./tools/compile_tests_fontes_generare.sh
 declare -a SOURCE_FILES=(
     "book_assets/capsula_libri.c"
+    "crusta/fontes/crusta_arbor.c"
+    "crusta/fontes/crusta_arithmetica.c"
+    "crusta/fontes/crusta_lector.c"
+    "crusta/fontes/crusta_lexicon.c"
+    "crusta/fontes/crusta_registrum_coctum.c"
     "lib/actio.c"
     "lib/actor.c"
     "lib/aedilis.c"
@@ -171,6 +176,7 @@ declare -a SOURCE_FILES=(
     "lib/planta_lectio.c"
     "lib/plist.c"
     "lib/polynomium.c"
+    "lib/portae.c"
     "lib/processus_posix.c"
     "lib/provenientia.c"
     "lib/pseudoterminale.c"

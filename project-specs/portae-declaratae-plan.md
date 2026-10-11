@@ -14,11 +14,17 @@ calls, prints, and - for migration scaffolding - compares temporarily.
   <tsv>`, TSV contract DEBITUM / INTECTUM / RECUSATIO.
 
 ### T1: declarations reader
-- [ ] C tests first (fake sutura: in-memory files + registry):
+- [x] C tests first (fake sutura: in-memory files + registry):
   annotated runners -> PortaDeclarata list; refusals BY NAME for a
   malformed annotation, an unknown `titulus`, a PORTAE key with no
   runner, two runners for one key; manual gates (`manu causa`).
   `materia_annotationes` through the crusta client. Plants. Commit.
+  As built (2026-10-10): include/portae.h (PortaeIngressus, PortaeSutura
+  with `tabula_portarum` - `registrum` is a latina macro, PortaDeclarata,
+  portae_declaratas_legere); lib/portae.c; probatio_portae (5 sections, 45
+  assertions: sane read, strings/other annotations ignored, 9 refusals,
+  all causes, causes across files). compile_tests.sh gained -Icrusta/fontes;
+  compile_tests_fontes_generata.sh regenerated. Plants III red.
 
 ### T2: derivation
 - [ ] per declared runner: the runner itself; what it executes/sources/
