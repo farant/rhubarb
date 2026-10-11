@@ -27,13 +27,20 @@ calls, prints, and - for migration scaffolding - compares temporarily.
   compile_tests_fontes_generata.sh regenerated. Plants III red.
 
 ### T2: derivation
-- [ ] per declared runner: the runner itself; what it executes/sources/
+- [x] per declared runner: the runner itself; what it executes/sources/
   reads (crusta_effectus); sources it compiles and `-I` dirs (port of
   inventarium_suitarum `fontes`); programs its tests launch (port of
   `currit`, all suites not only the root); aedilis closures. C tests on
   fixtures mirroring the census cases (credo_fumus -> credo_convertere.py,
   ludus_tessera -> tessera/*, compile_tests -> tabulariumd). Record any
   C pain against the scriba checklist (FR-008). Commit.
+  As built (2026-10-10): `portae_operturas_derivare` -> PortaeOpertura
+  {exemplaria, fontes_c, ignota}; sutura gained `effectus` and
+  `litterae_vocationum` callbacks (NIHIL = named unknown), PortaeIngressus
+  gained `probationes` (suite dir); enumerator = all tracked paths, only
+  `.sh` read. Closures matched in T3 (fontes_c). `-I` dirs: named gap,
+  carried by `tegit`. probatio_portae 8 sections / 103 assertions; plants
+  VI red (P5 exposed a fixture that never exercised its rule).
 
 ### T3: owed gates + CLI
 - [ ] portae_debita_computare (derived + `tegit`/`currit`, exemplar globs,

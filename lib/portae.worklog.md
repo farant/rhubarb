@@ -35,3 +35,51 @@ Dogfooding (principle …Z2Y555, checklist lapide FR-008 "scriba"):
 - compile_tests.sh's -I list says it mirrors aedilis.stml <inclusa> but is
   a hand-kept SUBSET (7 of ~30 dirs): lib/portae.c needed -Icrusta/fontes
   added by hand. Derive it from aedilis.stml (one source) - candidate.
+
+## 2026-10-10 - T2 derivation (portae_operturas_derivare)
+
+- **effectus and silva are sutura callbacks, not calls.** crusta_effectus_derivare
+  reads the disk itself (follows sources), and "which programs does a test
+  launch" needs silva lexemes (macros expanded, comments gone). Both stay out
+  of the pure core: `sutura->effectus(cursor)` and
+  `sutura->litterae_vocationum(fons)`; NIHIL = unknown -> a NAMED entry in
+  `opertura->ignota`, never a refusal. The CLI (T3, tools/fabrica.c) wires
+  them, as fabrica already does for `clausura_c`.
+- **The enumerator is now ALL tracked paths** (git ls-files); only `.sh` are read
+  for annotations. Derivation needs the tree for existence checks, suite test
+  listing and binary -> entry-source mapping.
+- **Rules for effectus sites:** lectio/exsecutio/fontatio/probatio/enumeratio
+  only; classis arbor; resolutio plena; `.` skipped; any element with
+  `custodia` (the processus AND the guarded site in the parent) is skipped
+  with its subtree, following effectus's own doctrine that guarded builders
+  are outside the verdict chain. Partial prefixes such as `lib/` from
+  `for src in lib/*` are excluded on purpose: aedilis closures cover lib
+  precisely, and Python OMISSA dropped include/lib too.
+- **Compiled sources:** a `.c` site goes into `fontes_c` so T3 can match its
+  closure. A `.c` glob site is expanded over the tree. This is how the old
+  `fontes` mode (the `$X_DIR/sub/*.c` regex) gets ported. **-I dirs are still a
+  gap**: the effectus clang entry does not record -I, so the annotation's
+  `tegit` carries them (T4 will show which rows need it).
+- **Glob matcher:** this uses `directorium_titulus_congruit` (iter_directoria).
+  There `*` crosses `/`, which matches Python fnmatch, so the shadow
+  comparison stays honest. It has no `[...]` classes. A path-glob routine
+  living in the directory iterator is a dogfooding find: path globs want
+  their own home, next to the FR-008 scriba "sorted glob".
+- **String building:** reasons are assembled with a local
+  `_ratio(piscina, ante, a, medium, b, post)` helper. That is today's stand-in
+  for the planned checked formatter: ledger region "sprintf and printf
+  replacement" (01M3AZRFAH7A5C9S1HPGHNS05F, `chorda_formare` with `%C` for
+  chorda). Adopt it here once it lands. Also found that
+  `chorda_aedificator_appendere_i32` exists, so T1's `sprintf(":%u")` into a
+  fixed buffer is gone and the file no longer includes stdio.h.
+- **Plant P5 find:** the "suite directory only, not subdirectories" check stayed
+  GREEN with the check removed. `sub/probatio_x.c` already fails the
+  `probatio_` prefix test, so the fixture never exercised the rule. The
+  fixture is now `probatio_veteres/probatio_x.c`. Six plants (custodia,
+  resolutio, globus expansion, probationes/ exclusion, subdirectory,
+  dedupe) all went red, then green.
+- **Divergence from Python, on purpose:** Python's `currit` only scanned tests
+  that nexus showed calling system/processus_*. C asks the sutura about every
+  suite test and leaves the cost (prefiltering) to the CLI.
+- **Not yet run on the real tree.** Fixtures mirror the census shapes. The first
+  real run is the T3 CLI, and the full comparison is T4.
