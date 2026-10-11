@@ -60,8 +60,13 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 
 EMITTE_SRC="$SILVA_DIR/instrumenta/principalia/emitte.c"
 EMITTE_BIN="$BUILD_DIR/emitte"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$EMITTE_SRC" $obj_files \
-    -o "$EMITTE_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$EMITTE_BIN" "$EMITTE_SRC" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$EMITTE_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 exec "$EMITTE_BIN" "$@"

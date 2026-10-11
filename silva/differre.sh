@@ -77,8 +77,13 @@ done
 
 DIFFERRE_SRC="$SILVA_DIR/instrumenta/principalia/differre.c"
 DIFFERRE_BIN="$BUILD_DIR/differre"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$DIFFERRE_SRC" $obj_files \
-    -o "$DIFFERRE_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$DIFFERRE_BIN" "$DIFFERRE_SRC" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$DIFFERRE_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 exec "$DIFFERRE_BIN" "$@"

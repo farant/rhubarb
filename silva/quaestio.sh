@@ -68,8 +68,13 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 
 QUAESTIO_SRC="$SILVA_DIR/instrumenta/principalia/quaestio.c"
 QUAESTIO_BIN="$BUILD_DIR/quaestio"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$QUAESTIO_SRC" $obj_files \
-    -o "$QUAESTIO_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$QUAESTIO_BIN" "$QUAESTIO_SRC" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$QUAESTIO_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 

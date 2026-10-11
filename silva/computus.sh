@@ -65,8 +65,13 @@ done
 
 COMPUTUS_SRC="$SILVA_DIR/instrumenta/principalia/computus.c"
 COMPUTUS_BIN="$BUILD_DIR/computus"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$COMPUTUS_SRC" $obj_files \
-    -o "$COMPUTUS_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$COMPUTUS_BIN" "$COMPUTUS_SRC" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$COMPUTUS_SRC" $obj_files || exit 1
 
 cd "$RADIX_DIR"
 exec "$COMPUTUS_BIN" "$@"

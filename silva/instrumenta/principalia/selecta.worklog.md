@@ -61,3 +61,31 @@ at its named check. The other 18 wrappers with the same unguarded link
 (examen, formator, quaestio, arbor, censor, ...; officina cursor/fusor/
 interpretare) are the follow-up: add each to INVOLUCRA, switch to the
 helper.
+
+## 2026-10-10 - all 19 tool wrappers on tools/instrumentum_nectere.sh
+
+The other 18 wrappers had the same unguarded link (14 silva, 3 officina,
+renominare guarded but not atomic and blind to silva_lexicon.c). Several
+said why: "Semper renectere (obiecta mutata aliter in binario vetusto
+latent)" - always relink, because changed objects hide in a stale binary.
+So the helper had to answer that reason, not just skip the link:
+- inputs = tool source + EVERY extra .c on the link line (silva_lexicon.c,
+  silva_iudicium.c) + $obj_files + instrumenta/*.h and principalia/*.h
+  (silva_formator.h, silva_iudicium.h, silva_lexicon.h live outside the
+  callers' newest_header dirs) + vexilla.sh + the wrapper;
+- comparison with FULL timestamps: one `find <inputs> -maxdepth 0 -newer
+  <bin> -print -quit` (14 ms). The fumus' stage V found that bash's `-nt`
+  (seconds) missed an edit made in the same second as the previous link -
+  a silently stale binary, exactly what "semper renectere" guarded
+  against. Plant P3 (back to -nt) turns II red for several tools.
+Conversion done by one script per link block (sources and exit code
+read from the block), comments justifying "always relink" rewritten.
+
+Fumus: 19 wrappers x I-IV with cheap fixture calls; modes 'rc' (computus,
+percursus, fusor print timings - exit code compared, binary checks as
+strict) and 'solum' (officina cursor runs the whole corpus, 281 s;
+interpretare loads 253 modules: INSTRUMENTUM_NECTERE_SOLUM=1 makes the
+wrapper exit right after the link step - also usable to pre-build a tool).
+V: touching silva_lexicon.h and silva_lexicon.c relinks examen. 78 checks,
+~45 s. Plants: lexicon.c not an input, header globs dropped, -nt for find -
+all red.

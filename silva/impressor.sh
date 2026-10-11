@@ -64,11 +64,16 @@ source "$RADIX_DIR/silva/materia_substratum.sh"
 materia_substratum_struere "$BUILD_DIR" "${GCC_FLAGS[@]}" || exit 1
 obj_files="$obj_files $MATERIA_OBIECTA"
 
-# Semper renectere: obiecta mutata (tabulae regeneratae!) aliter
-# in binario vetusto latent - fons erroris classicus
+# Olim 'semper renectere': obiecta mutata (tabulae regeneratae!) in
+# binario vetusto latebant - nunc obiecta INGRESSUS nexus sunt (infra)
 IMPRESSOR_SRC="$SILVA_DIR/instrumenta/principalia/impressor.c"
 IMPRESSOR_BIN="$BUILD_DIR/impressor"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$IMPRESSOR_SRC" $obj_files \
-    -o "$IMPRESSOR_BIN" || exit 1
+# nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
+# …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
+# binarium vetustum mutationem celare non potest
+source "$RADIX_DIR/tools/instrumentum_nectere.sh"
+instrumentum_nectere "$IMPRESSOR_BIN" "$IMPRESSOR_SRC" $obj_files \
+    "$SILVA_DIR"/instrumenta/*.h "$SILVA_DIR"/instrumenta/principalia/*.h -- \
+    "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$IMPRESSOR_SRC" $obj_files || exit 1
 
 exec "$IMPRESSOR_BIN" "$@"
