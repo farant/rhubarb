@@ -1046,3 +1046,28 @@ directories are cloned before loose files' parents are made.
 MEASURED (final profile): suite 421.8 -> 246.3 s; _clonare_ignorata
 102.5 -> 23.8 s (8 snapshots, ~3 s each); cp 102 -> 0 s; children
 351 -> 231 s. With S2 (closures, ~40 s) this is the gain; S1 none.
+
+## 2026-10-10 - gates without an inventory row (ledger …K0KX)
+
+portae_debitae computes owed gates from the 'suitae probationum' inventory
+('tegit viae', 'tegit fontes', 'currit binaria'). Three PORTAE had NO row
+and so were never owed by any edit - measured before the fix:
+- venenum (ASan/UBSan + PISCINA_VENENUM over the temp-pool suites): not
+  owed by lib/piscina.c, the math tier, their tests, or its own script;
+- ludus_tessera: its fontes/ and probationes/ were INTECTA (no gate);
+- aequivalentia: only the shell-flags lint.
+Rows added from what each gate actually runs (venenum: BASIS + the per
+suite source lists in tools/venenum_probare.sh). aequivalentia modelled
+MANUAL (porta n.a., manu tantum): -conferre needs a basis built by hand
+before a parser optimisation (exit 2 without), so an automatic debt would
+refuse commits; and NO 'currit binaria' (arbor.c's closure is nearly all
+of silva+lib - every edit would print a manual debt). Re-measured after:
+each path owes its gate.
+
+Guard: silva.portae_sine_ordine() - PORTAE whose runner has no row; printed
+as a 'nota:' line in commissio/commissio_umbra after the lint pre-pass,
+NEVER blocking (a gate reading the ledger to decide red/green would break
+principle …RBA4W73). Test in the fake-inventory section (css has no row,
+radix/gesta/pythonica/crusta/html do); hand plant (always []) red. Live:
+[]. The deeper question - coverage in the repo instead of the ledger - is
+the open ledger question (…GGMGY94).

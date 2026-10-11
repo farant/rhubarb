@@ -2586,6 +2586,18 @@ def portae_debitae(viae, inventarium_res=INVENTARIUM_SUITARUM):
     return debita, [v for v in viae if v not in tecta]
 
 
+def portae_sine_ordine(inventarium_res=INVENTARIUM_SUITARUM):
+    """portae PORTAE quarum cursor (argumentum primum) ordinem NULLUM in
+    inventario habet - debitum earum per 'tegit viae' / 'currit binaria'
+    numquam computatur (…K0KX: venenum nec a lib/piscina.c nec a scripto
+    suo debebatur). NOTA sola, numquam obstaculum: tabula exitum non
+    decernit (principium …RBA4W73)."""
+    inv = inventarium(inventarium_res)
+    ordines = {_via_normata(o) for o in inv.ordines}
+    return sorted(n for n, v in PORTAE.items()
+                  if _via_normata(v[0][0]) not in ordines)
+
+
 def viae_mutatae():
     """viae arboris mutatae contra HEAD: mutatae (tractae et paratae),
     deletae, et novae non ignoratae - quod 'portae_debitae.sh' sine
@@ -2924,6 +2936,9 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
         _tempus_notare('phasis', 'lint', initium)
         for nota in notae_convertibilium(viae):
             print(nota)
+        for porta_nuda in portae_sine_ordine():
+            print('nota: porta %s sine ordine inventarii - debita eius non'
+                  ' computantur (…K0KX)' % porta_nuda)
     if not _fabrica_facta:
         initium = time.time()
         _fabricam_exigere(viae, sine_fabrica)
@@ -3686,6 +3701,9 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         _lint_praevium_exigere(viae)
         for nota in notae_convertibilium(viae):
             print(nota)
+        for porta_nuda in portae_sine_ordine():
+            print('nota: porta %s sine ordine inventarii - debita eius non'
+                  ' computantur (…K0KX)' % porta_nuda)
     _fabricam_exigere(viae, sine_fabrica)
     if sine_debitis is not None:
         if not str(sine_debitis).strip():
